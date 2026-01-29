@@ -1,0 +1,15 @@
+{
+  "name": "social-organizer",
+  "private": true,
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "concurrently \"npm run relay\" \"npm run client\"",
+    "client": "npm --prefix client run dev",
+    "relay": "npm --prefix relay run dev",
+    "install:all": "npm --prefix client install && npm --prefix relay install",
+    "build": "npm --prefix client run build"
+  },
+  "devDependencies": {
+    "concurrently": "^9.0.0"
+  }
+}
