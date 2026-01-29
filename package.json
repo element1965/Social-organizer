@@ -7,7 +7,9 @@
     "client": "npm --prefix client run dev",
     "relay": "npm --prefix relay run dev",
     "install:all": "npm --prefix client install && npm --prefix relay install",
-    "build": "npm --prefix client run build"
+    "postinstall": "npm --prefix relay install",
+    "build": "npm --prefix client run build",
+    "start": "npm --prefix relay start"
   },
   "devDependencies": {
     "concurrently": "^9.0.0"
