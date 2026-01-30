@@ -9,7 +9,7 @@
     "install:all": "npm --prefix client install && npm --prefix relay install",
     "postinstall": "npm --prefix relay install",
     "build": "npm --prefix client run build",
-    "start": "npm --prefix relay start"
+    "start": "node relay/server.js"
   },
   "devDependencies": {
     "concurrently": "^9.0.0"
