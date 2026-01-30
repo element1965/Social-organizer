@@ -7,7 +7,7 @@
     "client": "npm --prefix client run dev",
     "relay": "npm --prefix relay run dev",
     "install:all": "npm --prefix client install && npm --prefix relay install",
-    "postinstall": "npm --prefix relay install",
+    "postinstall": "npm --prefix relay install && npm --prefix client install --include=dev",
     "build": "npm --prefix client run build",
     "start": "node relay/server.js"
   },
