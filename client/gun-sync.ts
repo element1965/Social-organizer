@@ -13,7 +13,11 @@ import { ALLOWED_TRANSITIONS } from '../shared/types';
 export type { Participant, Connection, Obligation, ObligationType, ObligationStatus };
 export { ALLOWED_TRANSITIONS };
 
-const RELAY_URL = import.meta.env.VITE_RELAY_URL || 'http://localhost:8765/gun';
+const RELAY_URL = import.meta.env.VITE_RELAY_URL || (
+  typeof window !== 'undefined' && window.location.hostname !== 'localhost'
+    ? `${window.location.origin}/gun`
+    : 'http://localhost:8765/gun'
+);
 
 const gun = Gun({ peers: [RELAY_URL] });
 
