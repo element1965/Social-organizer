@@ -10,5 +10,9 @@
 
 # Railway
 - Token: 995be95f-d629-4def-957a-eb22274285b7
-- Деплой через `railway up` или git push (автодеплой)
+- Деплой только через git push (автодеплой при пуше в main)
+- URL: https://social-organizer-production.up.railway.app
+- Healthcheck: /health
 - GitHub репо: element1965/Social-organizer
+- Проект: ravishing-expression (9a699980-4ee1-4582-8d32-a9c865722736)
+- Сервисы: Social-organizer (API), PostgreSQL, Redis
