@@ -8,7 +8,7 @@ import { Button } from '../components/ui/button';
 import { Badge } from '../components/ui/badge';
 import { Progress } from '../components/ui/progress';
 import { Spinner } from '../components/ui/spinner';
-import { PlusCircle, Users, ArrowRight } from 'lucide-react';
+import { PlusCircle, Users, ArrowRight, Heart, UserPlus } from 'lucide-react';
 
 const LazyCloudBackground = lazy(() =>
   import('@so/graph-3d').then((m) => ({ default: m.CloudBackground })),
@@ -33,6 +33,20 @@ export function DashboardPage() {
         </Suspense>
       </div>
 
+      {/* Гейт: нужна минимум 1 связь */}
+      {connectionCount != null && connectionCount.count === 0 && (
+        <Card>
+          <CardContent className="py-8 text-center">
+            <UserPlus className="w-12 h-12 text-blue-600 mx-auto mb-4" />
+            <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-2">{t('dashboard.addFirstConnection', 'Добавь первую связь')}</h2>
+            <p className="text-sm text-gray-500 mb-4">{t('dashboard.addFirstConnectionDesc', 'Организатор работает через связи между людьми. Начни с одного человека — того, кому доверяешь.')}</p>
+            <Button className="w-full" size="lg" onClick={() => navigate('/network')}>
+              <UserPlus className="w-4 h-4 mr-2" /> {t('dashboard.goToNetwork', 'Перейти к сети')}
+            </Button>
+          </CardContent>
+        </Card>
+      )}
+
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-xl font-bold text-gray-900 dark:text-white">{t('dashboard.title', 'Дашборд')}</h1>
@@ -42,6 +56,11 @@ export function DashboardPage() {
           {me?.photoUrl ? <img src={me.photoUrl} className="w-full h-full object-cover" alt="" /> : <span className="text-sm font-bold text-gray-600 dark:text-gray-300">{me?.name?.[0]}</span>}
         </button>
       </div>
+
+      {/* Кнопка «Мне нужна помощь» — SPEC: главный CTA на дашборде */}
+      <Button className="w-full" size="lg" variant="default" onClick={() => navigate('/create')}>
+        <Heart className="w-5 h-5 mr-2" /> {t('dashboard.needHelp', 'Мне нужна помощь')}
+      </Button>
 
       <Card>
         <CardHeader>
@@ -59,7 +78,7 @@ export function DashboardPage() {
                 <button key={col.id} onClick={() => navigate(`/collection/${col.id}`)} className="w-full text-left p-3 rounded-lg bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700">
                   <div className="flex items-center justify-between mb-1">
                     <Badge variant={col.status === 'ACTIVE' ? 'success' : 'warning'}>{col.status}</Badge>
-                    <span className="text-sm font-medium text-gray-900 dark:text-white">{col.amount} {col.currency}</span>
+                    <span className="text-sm font-medium text-gray-900 dark:text-white">{col.amount != null ? `${col.amount} ${col.currency}` : col.currency}</span>
                   </div>
                   <div className="text-xs text-gray-500">{col._count.obligations} {t('dashboard.obligations', 'обязательств')}</div>
                 </button>

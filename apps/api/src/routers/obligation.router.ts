@@ -28,16 +28,18 @@ export const obligationRouter = router({
         },
       });
 
-      // Check if collection should be blocked
-      const totalAmount = await ctx.db.obligation.aggregate({
-        where: { collectionId: input.collectionId },
-        _sum: { amount: true },
-      });
-      if ((totalAmount._sum.amount ?? 0) >= collection.amount) {
-        await ctx.db.collection.update({
-          where: { id: input.collectionId },
-          data: { status: 'BLOCKED', blockedAt: new Date() },
+      // Check if collection should be blocked (only if target amount is set)
+      if (collection.amount != null) {
+        const totalAmount = await ctx.db.obligation.aggregate({
+          where: { collectionId: input.collectionId },
+          _sum: { amount: true },
         });
+        if ((totalAmount._sum.amount ?? 0) >= collection.amount) {
+          await ctx.db.collection.update({
+            where: { id: input.collectionId },
+            data: { status: 'BLOCKED', blockedAt: new Date() },
+          });
+        }
       }
 
       return obligation;

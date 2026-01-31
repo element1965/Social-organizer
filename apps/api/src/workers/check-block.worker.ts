@@ -15,6 +15,9 @@ export async function processCheckBlock(job: Job<{ collectionId: string }>): Pro
 
   if (!collection || collection.status !== 'ACTIVE') return;
 
+  // Спецпрофильные сборы (без целевой суммы) не блокируются
+  if (collection.amount == null) return;
+
   const totalAmount = await db.obligation.aggregate({
     where: { collectionId },
     _sum: { amount: true },

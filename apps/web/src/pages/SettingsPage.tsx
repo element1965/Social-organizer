@@ -9,7 +9,7 @@ import { Button } from '../components/ui/button';
 import { Select } from '../components/ui/select';
 import { Avatar } from '../components/ui/avatar';
 import { Spinner } from '../components/ui/spinner';
-import { Settings, Globe, Palette, Volume2, Link, UserX, Trash2, LogOut } from 'lucide-react';
+import { Settings, Globe, Palette, Volume2, Link, UserX, Trash2, LogOut, Type } from 'lucide-react';
 import { cn } from '../lib/utils';
 
 export function SettingsPage() {
@@ -24,6 +24,7 @@ export function SettingsPage() {
   const updateLanguage = trpc.settings.updateLanguage.useMutation({ onSuccess: () => utils.settings.get.invalidate() });
   const updateTheme = trpc.settings.updateTheme.useMutation({ onSuccess: () => utils.settings.get.invalidate() });
   const updateSound = trpc.settings.updateSound.useMutation({ onSuccess: () => utils.settings.get.invalidate() });
+  const updateFontScale = trpc.settings.updateFontScale.useMutation({ onSuccess: () => utils.settings.get.invalidate() });
   const removeIgnore = trpc.settings.removeIgnore.useMutation({ onSuccess: () => utils.settings.ignoreList.invalidate() });
   const generateCode = trpc.auth.generateLinkCode.useMutation();
   const deleteAccount = trpc.user.delete.useMutation({ onSuccess: () => { logout(); navigate('/login'); } });
@@ -61,6 +62,17 @@ export function SettingsPage() {
           <div className={cn('w-5 h-5 rounded-full bg-white shadow absolute top-0.5 transition-all', settings?.soundEnabled ? 'left-6' : 'left-0.5')} />
         </button>
       </div></CardContent></Card>
+
+      <Card><CardContent className="py-3">
+        <div className="flex items-center gap-3 mb-2"><Type className="w-5 h-5 text-gray-500" /><span className="text-sm font-medium text-gray-700 dark:text-gray-300">{t('settings.fontSize', 'Размер шрифта')}</span></div>
+        <div className="grid grid-cols-2 gap-2">
+          {([{ value: 1.0, label: 'settings.fontStandard', fallback: 'Стандартный' }, { value: 1.25, label: 'settings.fontLarge', fallback: 'Увеличенный' }] as const).map((opt) => (
+            <button key={opt.value} onClick={() => { updateFontScale.mutate({ fontScale: opt.value }); document.documentElement.style.fontSize = `${opt.value * 100}%`; }} className={cn('py-2 rounded-lg text-sm font-medium border transition-colors', (settings?.fontScale ?? 1.0) === opt.value ? 'border-blue-600 bg-blue-50 dark:bg-blue-950/30 text-blue-600' : 'border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400')}>
+              {t(opt.label, opt.fallback)}
+            </button>
+          ))}
+        </div>
+      </CardContent></Card>
 
       <Card><CardContent className="py-3">
         <div className="flex items-center gap-3 mb-2"><Link className="w-5 h-5 text-gray-500" /><span className="text-sm font-medium text-gray-700 dark:text-gray-300">{t('settings.linkAccount', 'Связать аккаунт')}</span></div>

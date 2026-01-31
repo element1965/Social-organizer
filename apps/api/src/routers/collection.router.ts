@@ -8,23 +8,58 @@ export const collectionRouter = router({
   create: protectedProcedure
     .input(z.object({
       type: z.enum(['EMERGENCY', 'REGULAR']),
-      amount: z.number().min(MIN_COLLECTION_AMOUNT),
+      amount: z.number().min(MIN_COLLECTION_AMOUNT).nullable().optional(),
       currency: z.string().refine((c) => CURRENCY_CODES.includes(c), 'Unsupported currency'),
       chatLink: z.string().url(),
     }))
     .mutation(async ({ ctx, input }) => {
+      // Проверить роль создателя
+      const creator = await ctx.db.user.findUnique({
+        where: { id: ctx.userId },
+        select: { role: true },
+      });
+      if (!creator) throw new TRPCError({ code: 'NOT_FOUND', message: 'User not found' });
+
+      const isSpecial = creator.role === 'AUTHOR' || creator.role === 'DEVELOPER';
+
+      // Обычные пользователи обязаны указать сумму
+      if (!isSpecial && (input.amount == null || input.amount < MIN_COLLECTION_AMOUNT)) {
+        throw new TRPCError({ code: 'BAD_REQUEST', message: `Amount must be at least ${MIN_COLLECTION_AMOUNT}` });
+      }
+
+      // Лимит: макс 1 экстренный + 1 регулярный одновременно
+      const existingActive = await ctx.db.collection.count({
+        where: {
+          creatorId: ctx.userId,
+          type: input.type,
+          status: { in: ['ACTIVE', 'BLOCKED'] },
+        },
+      });
+      if (existingActive > 0) {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: `You already have an active ${input.type.toLowerCase()} collection`,
+        });
+      }
+
       const collection = await ctx.db.collection.create({
         data: {
           creatorId: ctx.userId,
           type: input.type,
-          amount: input.amount,
+          amount: input.amount ?? null,
           currency: input.currency,
           chatLink: input.chatLink,
           currentCycleStart: input.type === 'REGULAR' ? new Date() : null,
         },
       });
-      const maxRecipients = Math.ceil(input.amount / NOTIFICATION_RATIO);
-      await sendCollectionNotifications(ctx.db, collection.id, ctx.userId, 'NEW_COLLECTION', 1, maxRecipients);
+
+      // BFS-рассылка НЕ отправляется для спецпрофилей (Автор/Разработчик)
+      // Их уведомления приходят через special-notify worker после первого обязательства
+      if (!isSpecial && input.amount != null) {
+        const maxRecipients = Math.ceil(input.amount / NOTIFICATION_RATIO);
+        await sendCollectionNotifications(ctx.db, collection.id, ctx.userId, 'NEW_COLLECTION', 1, maxRecipients);
+      }
+
       return collection;
     }),
 
