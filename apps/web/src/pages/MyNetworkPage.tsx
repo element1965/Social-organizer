@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, lazy, Suspense } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { trpc } from '../lib/trpc';
@@ -7,16 +7,24 @@ import { Button } from '../components/ui/button';
 import { Avatar } from '../components/ui/avatar';
 import { Progress } from '../components/ui/progress';
 import { Spinner } from '../components/ui/spinner';
-import { Users, Share2, QrCode } from 'lucide-react';
+import { Users, Share2, QrCode, Globe, List } from 'lucide-react';
 import { QRCodeSVG } from 'qrcode.react';
+const LazyNetworkGraph = lazy(() =>
+  import('@so/graph-3d').then((m) => ({ default: m.NetworkGraph })),
+);
 
 export function MyNetworkPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [showQR, setShowQR] = useState(false);
+  const [view, setView] = useState<'list' | '3d'>('list');
 
   const { data: connections, isLoading } = trpc.connection.list.useQuery(undefined, { refetchInterval: 30000 });
   const { data: connectionCount } = trpc.connection.getCount.useQuery();
+  const { data: graphData } = trpc.connection.graphSlice.useQuery(undefined, {
+    enabled: view === '3d',
+    refetchInterval: 60000,
+  });
   const generateInvite = trpc.invite.generate.useMutation();
 
   const handleShare = async () => {
@@ -40,7 +48,10 @@ export function MyNetworkPage() {
           <Users className="w-5 h-5" /> {t('network.title', 'Моя сеть')}
         </h1>
         <div className="flex gap-2">
-          <Button variant="outline" size="sm" onClick={handleShare}><Share2 className="w-4 h-4 mr-1" /> {t('network.invite', 'Пригласить')}</Button>
+          <Button variant="outline" size="sm" onClick={() => setView(view === 'list' ? '3d' : 'list')}>
+            {view === 'list' ? <Globe className="w-4 h-4" /> : <List className="w-4 h-4" />}
+          </Button>
+          <Button variant="outline" size="sm" onClick={handleShare}><Share2 className="w-4 h-4" /></Button>
           <Button variant="outline" size="sm" onClick={handleQR}><QrCode className="w-4 h-4" /></Button>
         </div>
       </div>
@@ -62,21 +73,44 @@ export function MyNetworkPage() {
         </CardContent></Card>
       )}
 
-      {isLoading ? <div className="flex justify-center py-12"><Spinner /></div> : !connections || connections.length === 0 ? (
-        <div className="text-center py-12">
-          <Users className="w-12 h-12 mx-auto text-gray-300 dark:text-gray-700 mb-3" />
-          <p className="text-gray-500">{t('network.empty', 'Нет связей')}</p>
-          <p className="text-sm text-gray-400 mt-1">{t('network.emptyHint', 'Пригласите первого человека')}</p>
+      {view === '3d' ? (
+        <div className="rounded-xl overflow-hidden bg-gray-950" style={{ height: 'calc(100vh - 240px)' }}>
+          <Suspense fallback={<div className="flex justify-center py-12"><Spinner /></div>}>
+            {graphData ? (
+              <LazyNetworkGraph
+                nodes={graphData.nodes.map((n) => ({
+                  ...n,
+                  isCenter: n.id === connections?.[0]?.userId,
+                }))}
+                edges={graphData.edges.map((e) => ({ source: e.from, target: e.to }))}
+                width={window.innerWidth - 32}
+                height={window.innerHeight - 240}
+                onNodeClick={(id) => navigate(`/profile/${id}`)}
+              />
+            ) : (
+              <div className="flex justify-center py-12"><Spinner /></div>
+            )}
+          </Suspense>
         </div>
       ) : (
-        <div className="space-y-1">
-          {connections.map((conn) => (
-            <button key={conn.id} onClick={() => navigate(`/profile/${conn.userId}`)} className="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
-              <Avatar src={conn.photoUrl} name={conn.name} size="md" />
-              <span className="text-sm font-medium text-gray-900 dark:text-white">{conn.name}</span>
-            </button>
-          ))}
-        </div>
+        <>
+          {isLoading ? <div className="flex justify-center py-12"><Spinner /></div> : !connections || connections.length === 0 ? (
+            <div className="text-center py-12">
+              <Users className="w-12 h-12 mx-auto text-gray-300 dark:text-gray-700 mb-3" />
+              <p className="text-gray-500">{t('network.empty', 'Нет связей')}</p>
+              <p className="text-sm text-gray-400 mt-1">{t('network.emptyHint', 'Пригласите первого человека')}</p>
+            </div>
+          ) : (
+            <div className="space-y-1">
+              {connections.map((conn) => (
+                <button key={conn.id} onClick={() => navigate(`/profile/${conn.userId}`)} className="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                  <Avatar src={conn.photoUrl} name={conn.name} size="md" />
+                  <span className="text-sm font-medium text-gray-900 dark:text-white">{conn.name}</span>
+                </button>
+              ))}
+            </div>
+          )}
+        </>
       )}
     </div>
   );

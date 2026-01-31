@@ -1,3 +1,4 @@
+import { lazy, Suspense } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { trpc } from '../lib/trpc';
@@ -8,6 +9,10 @@ import { Badge } from '../components/ui/badge';
 import { Progress } from '../components/ui/progress';
 import { Spinner } from '../components/ui/spinner';
 import { PlusCircle, Users, ArrowRight } from 'lucide-react';
+
+const LazyCloudBackground = lazy(() =>
+  import('@so/graph-3d').then((m) => ({ default: m.CloudBackground })),
+);
 
 export function DashboardPage() {
   const { t } = useTranslation();
@@ -20,7 +25,14 @@ export function DashboardPage() {
   const { data: connectionCount } = trpc.connection.getCount.useQuery(undefined, { refetchInterval: 60000 });
 
   return (
-    <div className="p-4 space-y-4">
+    <div className="p-4 space-y-4 relative">
+      {/* 3D облака графа на фоне дашборда */}
+      <div className="absolute inset-0 -z-10 opacity-30 pointer-events-none" style={{ height: 300 }}>
+        <Suspense fallback={null}>
+          <LazyCloudBackground particleCount={200} />
+        </Suspense>
+      </div>
+
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-xl font-bold text-gray-900 dark:text-white">{t('dashboard.title', 'Дашборд')}</h1>

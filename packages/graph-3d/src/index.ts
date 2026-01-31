@@ -1,16 +1,11 @@
-// @so/graph-3d — Three.js visualization (stub, Phase 3)
-export function PlanetScene(): void {
-  // TODO: Procedural planet with shaders
-}
+export { PlanetScene } from './PlanetScene';
+export type { PlanetSceneProps } from './PlanetScene';
 
-export function CloudBackground(): void {
-  // TODO: Decorative cloud background
-}
+export { CloudBackground } from './CloudBackground';
+export type { CloudBackgroundProps } from './CloudBackground';
 
-export function NetworkGraph(): void {
-  // TODO: react-force-graph-3d interactive network
-}
+export { NetworkGraph } from './NetworkGraph';
+export type { NetworkGraphProps, GraphNode, GraphEdge } from './NetworkGraph';
 
-export function HandshakePath(): void {
-  // TODO: Highlight handshake chain
-}
+export { HandshakePath } from './HandshakePath';
+export type { HandshakePathProps, HandshakeUser } from './HandshakePath';
