@@ -11,7 +11,8 @@
     "back": "Назад",
     "next": "Далее",
     "done": "Готово",
-    "search": "Поиск"
+    "search": "Поиск",
+    "notFound": "Не найдено"
   },
   "auth": {
     "loginWith": "Войти через {{platform}}",
@@ -19,11 +20,53 @@
     "enterCode": "Введите 6-значный код",
     "codeExpires": "Код истекает через {{minutes}} мин"
   },
+  "login": {
+    "subtitle": "Координация помощи через доверенные связи"
+  },
+  "onboarding": {
+    "step1": {
+      "title": "У тебя есть люди, которым не всё равно",
+      "text": "Это социальный организатор. Он не переводит деньги и не собирает взносы. Он помогает людям быстро скоординироваться, если кому-то нужна поддержка."
+    },
+    "step2": {
+      "title": "Один сигнал — и нужные люди узнают",
+      "text": "Если кому-то нужна помощь — система уведомит тех, кто может откликнуться. Уведомление приходит один раз. Никакого спама и давления."
+    },
+    "step3": {
+      "title": "Всё на виду",
+      "text": "Каждое действие сохраняется. Доверие строится на прозрачности, а не на контроле."
+    },
+    "step4": {
+      "title": "Добавь первого человека",
+      "text": "Организатор работает через связи между людьми. Начни с одного человека — того, кому доверяешь."
+    },
+    "start": "Начать",
+    "next": "Далее",
+    "invite": "Отправить приглашение",
+    "qrCode": "Показать QR-код"
+  },
+  "nav": {
+    "home": "Главная",
+    "notifications": "Уведомления",
+    "create": "Создать",
+    "network": "Сеть",
+    "settings": "Настройки"
+  },
   "dashboard": {
+    "title": "Дашборд",
+    "needHelp": "Мне нужна помощь",
+    "addFirstConnection": "Добавь первую связь",
+    "addFirstConnectionDesc": "Организатор работает через связи между людьми. Начни с одного человека — того, кому доверяешь.",
+    "goToNetwork": "Перейти к сети",
     "myCollections": "Мои сборы",
+    "create": "Создать",
+    "noCollections": "Нет активных сборов",
+    "obligations": "обязательств",
     "myObligations": "Мои обязательства",
+    "noObligations": "Нет обязательств",
     "myNetwork": "Моя сеть",
-    "notifications": "Уведомления"
+    "view": "Смотреть",
+    "connections": "связей"
   },
   "collection": {
     "create": "Создать сбор",
@@ -37,7 +80,30 @@
     "closed": "Закрыт",
     "cancelled": "Отменён",
     "progress": "{{current}} / {{target}} {{currency}}",
-    "obligationsCount": "{{count}} обязательств"
+    "obligationsCount": "{{count}} обязательств",
+    "collected": "Собрано",
+    "goal": "Цель",
+    "openChat": "Открыть чат",
+    "takeObligation": "Взять обязательство",
+    "amountPlaceholder": "Сумма (мин. 10)",
+    "submit": "Помочь",
+    "close": "Закрыть сбор",
+    "participants": "Участники",
+    "noParticipants": "Пока никто не вписался",
+    "minAmount": "Минимум 10"
+  },
+  "create": {
+    "title": "Создать сбор",
+    "emergency": "Экстренный",
+    "regular": "Регулярный",
+    "amount": "Сумма",
+    "largeAmountWarning": "Вы потревожите большое количество людей. Убедитесь, что помощь действительно необходима.",
+    "largeAmountConfirm": "Подтверждаю, сумма верная",
+    "currency": "Валюта",
+    "chatLink": "Ссылка на чат",
+    "submit": "Создать сбор",
+    "minAmount": "Минимум 10",
+    "invalidUrl": "Невалидный URL"
   },
   "obligation": {
     "create": "Взять обязательство",
@@ -46,11 +112,30 @@
     "unsubscribe": "Отписаться"
   },
   "network": {
-    "connections": "Связи",
+    "title": "Моя сеть",
+    "connections": "Связей",
     "addConnection": "Добавить связь",
     "connectionLimit": "Лимит: {{current}}/{{max}}",
     "invite": "Пригласить",
-    "qrCode": "QR-код"
+    "qrCode": "QR-код",
+    "empty": "Нет связей",
+    "emptyHint": "Пригласите первого человека"
+  },
+  "notifications": {
+    "title": "Уведомления",
+    "empty": "Нет уведомлений",
+    "new": "Новый",
+    "reNotify": "Напоминание",
+    "closed": "Закрыт",
+    "blocked": "Заблокирован",
+    "specialAuthor": "Автор",
+    "specialDeveloper": "Разработчик",
+    "handshakes": "рукопожатий",
+    "via": "через",
+    "view": "Открыть",
+    "dismiss": "Закрыть",
+    "loadMore": "Загрузить ещё",
+    "expiresIn": "Истекает через {{hours}}ч {{minutes}}м"
   },
   "notification": {
     "newCollection": "{{name}} нуждается в помощи",
@@ -63,26 +148,49 @@
     "phone": "Телефон",
     "stats": "Статистика",
     "ignore": "Игнорировать",
-    "addToNetwork": "Добавить в сеть"
+    "addToNetwork": "Добавить в сеть",
+    "addConnection": "Добавить в связи",
+    "connections": "Связей",
+    "collectionsCreated": "Сборов",
+    "obligationsGiven": "Раз помог",
+    "totalPledged": "Всего обязался",
+    "editSettings": "Настройки",
+    "edit": "Редактировать профиль",
+    "name": "Имя",
+    "save": "Сохранить",
+    "pledgedByCurrency": "по валютам",
+    "myConnections": "Мои связи",
+    "noConnections": "Связей пока нет"
   },
   "settings": {
     "title": "Настройки",
     "language": "Язык",
     "theme": "Тема",
+    "light": "Светлая",
+    "dark": "Тёмная",
+    "system": "Авто",
     "sounds": "Звуки",
+    "sound": "Звуки",
     "fontSize": "Размер шрифта",
+    "fontStandard": "Стандартный",
+    "fontLarge": "Увеличенный",
     "linkedAccounts": "Привязанные аккаунты",
-    "ignoreList": "Список игнора",
-    "deleteAccount": "Удалить аккаунт"
+    "linkAccount": "Связать аккаунт",
+    "codeExpires": "Действителен 5 минут",
+    "generateCode": "Сгенерировать код",
+    "ignoreList": "Игнор-лист",
+    "noIgnored": "Список пуст",
+    "unignore": "Убрать",
+    "logout": "Выйти",
+    "deleteAccount": "Удалить аккаунт",
+    "deleteConfirm": "Вы уверены? Это действие необратимо.",
+    "confirmDelete": "Удалить"
   },
-  "onboarding": {
-    "step1Title": "Твоя сеть",
-    "step1Text": "Связывайся с людьми, которым доверяешь",
-    "step2Title": "Как это работает",
-    "step2Text": "Создавай сборы, бери обязательства",
-    "step3Title": "Прозрачность",
-    "step3Text": "Все видят цепочку доверия",
-    "step4Title": "Начни",
-    "step4Text": "Добавь первую связь"
+  "invite": {
+    "title": "Приглашение",
+    "from": "{{name}} приглашает вас",
+    "accept": "Принять и связаться",
+    "alreadyUsed": "Это приглашение уже использовано",
+    "success": "Связь установлена!"
   }
 }

@@ -1,17 +1,19 @@
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { Home, Bell, PlusCircle, Users, Settings } from 'lucide-react';
 import { trpc } from '../lib/trpc';
 import { cn } from '../lib/utils';
 
 const navItems = [
-  { path: '/', icon: Home, label: 'Home' },
-  { path: '/notifications', icon: Bell, label: 'Notifications', badge: true },
-  { path: '/create', icon: PlusCircle, label: 'Create' },
-  { path: '/network', icon: Users, label: 'Network' },
-  { path: '/settings', icon: Settings, label: 'Settings' },
+  { path: '/', icon: Home, labelKey: 'nav.home' },
+  { path: '/notifications', icon: Bell, labelKey: 'nav.notifications', badge: true },
+  { path: '/create', icon: PlusCircle, labelKey: 'nav.create' },
+  { path: '/network', icon: Users, labelKey: 'nav.network' },
+  { path: '/settings', icon: Settings, labelKey: 'nav.settings' },
 ];
 
 export function Layout() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const location = useLocation();
   const { data: unread } = trpc.notification.unreadCount.useQuery(undefined, {
@@ -41,7 +43,7 @@ export function Layout() {
                   {unread.count > 9 ? '9+' : unread.count}
                 </span>
               )}
-              <span className="text-[10px] mt-0.5">{item.label}</span>
+              <span className="text-[10px] mt-0.5">{t(item.labelKey)}</span>
             </button>
           );
         })}

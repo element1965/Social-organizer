@@ -13,6 +13,7 @@ import { CreateCollectionPage } from './pages/CreateCollectionPage';
 import { MyNetworkPage } from './pages/MyNetworkPage';
 import { ProfilePage } from './pages/ProfilePage';
 import { SettingsPage } from './pages/SettingsPage';
+import { InvitePage } from './pages/InvitePage';
 
 export function App() {
   const [queryClient] = useState(() => new QueryClient({
@@ -27,6 +28,7 @@ export function App() {
           <Routes>
             <Route path="/login" element={<LoginPage />} />
             <Route path="/onboarding" element={<OnboardingPage />} />
+            <Route path="/invite/:token" element={<InvitePage />} />
             <Route element={<ProtectedRoute><Layout /></ProtectedRoute>}>
               <Route path="/" element={<DashboardPage />} />
               <Route path="/notifications" element={<NotificationsPage />} />

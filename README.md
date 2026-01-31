@@ -149,21 +149,22 @@ React 19 SPA с tRPC-клиентом.
 | Страница | Путь | Описание |
 |----------|------|----------|
 | LoginPage | `/login` | Вход через платформу (FB/TG/Apple/Google) |
-| OnboardingPage | `/onboarding` | 4 экрана онбординга |
-| DashboardPage | `/` | Мои сборы, обязательства, сеть |
-| NotificationsPage | `/notifications` | Уведомления с handshake path |
+| OnboardingPage | `/onboarding` | 4 экрана онбординга с приглашением |
+| DashboardPage | `/` | Мои сборы, обязательства, сеть, «Мне нужна помощь» |
+| NotificationsPage | `/notifications` | Уведомления с handshake path и таймером 24ч |
 | CreateCollectionPage | `/create` | Создание сбора (USD/EUR) |
 | CollectionPage | `/collection/:id` | Детали сбора + обязательства |
 | MyNetworkPage | `/network` | Список связей + приглашения |
-| ProfilePage | `/profile/:userId` | Профиль с статистикой |
-| SettingsPage | `/settings` | Язык, тема, звуки, игнор-лист |
+| ProfilePage | `/profile/:userId` | Профиль с редактированием, списком связей, статистикой по валютам |
+| SettingsPage | `/settings` | Язык, тема, звуки, размер шрифта, игнор-лист |
+| InvitePage | `/invite/:token` | Принятие пригласительной ссылки |
 
 ### Технологии фронтенда
 
 - **State:** Zustand (auth, theme) + tRPC React Query (серверные данные)
 - **Роутинг:** React Router v7 с ProtectedRoute
 - **UI:** shadcn-стиль компоненты + Tailwind CSS 3
-- **i18n:** i18next v25 + react-i18next (en/ru)
+- **i18n:** i18next v25 + react-i18next (en/ru), автодетект языка через navigator.language
 - **Иконки:** lucide-react
 - **QR:** qrcode.react
 - **3D:** Three.js + @react-three/fiber (lazy loaded)
