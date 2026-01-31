@@ -11,7 +11,8 @@
     "back": "Back",
     "next": "Next",
     "done": "Done",
-    "search": "Search"
+    "search": "Search",
+    "notFound": "Not found"
   },
   "auth": {
     "loginWith": "Log in with {{platform}}",
@@ -19,11 +20,53 @@
     "enterCode": "Enter 6-digit code",
     "codeExpires": "Code expires in {{minutes}} min"
   },
+  "login": {
+    "subtitle": "Help coordination through trusted connections"
+  },
+  "onboarding": {
+    "step1": {
+      "title": "You have people who care",
+      "text": "This is a social organizer. It doesn't transfer money or collect payments. It helps people quickly coordinate when someone needs support."
+    },
+    "step2": {
+      "title": "One signal — and the right people know",
+      "text": "If someone needs help — the system notifies those who can respond. The notification comes once. No spam, no pressure."
+    },
+    "step3": {
+      "title": "Everything is transparent",
+      "text": "Every action is recorded. Trust is built on transparency, not control."
+    },
+    "step4": {
+      "title": "Add your first person",
+      "text": "The organizer works through connections between people. Start with one person — someone you trust."
+    },
+    "start": "Get Started",
+    "next": "Next",
+    "invite": "Send Invite",
+    "qrCode": "Show QR Code"
+  },
+  "nav": {
+    "home": "Home",
+    "notifications": "Alerts",
+    "create": "Create",
+    "network": "Network",
+    "settings": "Settings"
+  },
   "dashboard": {
+    "title": "Dashboard",
+    "needHelp": "I need help",
+    "addFirstConnection": "Add your first connection",
+    "addFirstConnectionDesc": "The organizer works through connections between people. Start with one person — someone you trust.",
+    "goToNetwork": "Go to Network",
     "myCollections": "My Collections",
+    "create": "Create",
+    "noCollections": "No active collections",
+    "obligations": "obligations",
     "myObligations": "My Obligations",
+    "noObligations": "No obligations",
     "myNetwork": "My Network",
-    "notifications": "Notifications"
+    "view": "View",
+    "connections": "connections"
   },
   "collection": {
     "create": "Create Collection",
@@ -37,7 +80,30 @@
     "closed": "Closed",
     "cancelled": "Cancelled",
     "progress": "{{current}} / {{target}} {{currency}}",
-    "obligationsCount": "{{count}} obligations"
+    "obligationsCount": "{{count}} obligations",
+    "collected": "Collected",
+    "goal": "Goal",
+    "openChat": "Open chat",
+    "takeObligation": "Take an obligation",
+    "amountPlaceholder": "Amount (min. 10)",
+    "submit": "Help",
+    "close": "Close collection",
+    "participants": "Participants",
+    "noParticipants": "No one has joined yet",
+    "minAmount": "Minimum 10"
+  },
+  "create": {
+    "title": "Create Collection",
+    "emergency": "Emergency",
+    "regular": "Regular",
+    "amount": "Amount",
+    "largeAmountWarning": "You will disturb a large number of people. Make sure the help is truly needed.",
+    "largeAmountConfirm": "I confirm the amount is correct",
+    "currency": "Currency",
+    "chatLink": "Chat link",
+    "submit": "Create Collection",
+    "minAmount": "Minimum 10",
+    "invalidUrl": "Invalid URL"
   },
   "obligation": {
     "create": "Take Obligation",
@@ -46,11 +112,30 @@
     "unsubscribe": "Unsubscribe"
   },
   "network": {
+    "title": "My Network",
     "connections": "Connections",
     "addConnection": "Add Connection",
     "connectionLimit": "Limit: {{current}}/{{max}}",
     "invite": "Invite",
-    "qrCode": "QR Code"
+    "qrCode": "QR Code",
+    "empty": "No connections",
+    "emptyHint": "Invite your first person"
+  },
+  "notifications": {
+    "title": "Notifications",
+    "empty": "No notifications",
+    "new": "New",
+    "reNotify": "Reminder",
+    "closed": "Closed",
+    "blocked": "Blocked",
+    "specialAuthor": "Author",
+    "specialDeveloper": "Developer",
+    "handshakes": "handshakes",
+    "via": "via",
+    "view": "Open",
+    "dismiss": "Dismiss",
+    "loadMore": "Load more",
+    "expiresIn": "Expires in {{hours}}h {{minutes}}m"
   },
   "notification": {
     "newCollection": "{{name}} needs help",
@@ -63,26 +148,49 @@
     "phone": "Phone",
     "stats": "Statistics",
     "ignore": "Ignore",
-    "addToNetwork": "Add to Network"
+    "addToNetwork": "Add to Network",
+    "addConnection": "Add to connections",
+    "connections": "Connections",
+    "collectionsCreated": "Collections",
+    "obligationsGiven": "Times helped",
+    "totalPledged": "Total pledged",
+    "editSettings": "Settings",
+    "edit": "Edit Profile",
+    "name": "Name",
+    "save": "Save",
+    "pledgedByCurrency": "by currency",
+    "myConnections": "My Connections",
+    "noConnections": "No connections yet"
   },
   "settings": {
     "title": "Settings",
     "language": "Language",
     "theme": "Theme",
+    "light": "Light",
+    "dark": "Dark",
+    "system": "Auto",
     "sounds": "Sounds",
+    "sound": "Sounds",
     "fontSize": "Font Size",
+    "fontStandard": "Standard",
+    "fontLarge": "Enlarged",
     "linkedAccounts": "Linked Accounts",
+    "linkAccount": "Link Account",
+    "codeExpires": "Valid for 5 minutes",
+    "generateCode": "Generate Code",
     "ignoreList": "Ignore List",
-    "deleteAccount": "Delete Account"
+    "noIgnored": "List is empty",
+    "unignore": "Remove",
+    "logout": "Log Out",
+    "deleteAccount": "Delete Account",
+    "deleteConfirm": "Are you sure? This action is irreversible.",
+    "confirmDelete": "Delete"
   },
-  "onboarding": {
-    "step1Title": "Your Network",
-    "step1Text": "Connect with people you trust",
-    "step2Title": "How it Works",
-    "step2Text": "Create collections, take obligations",
-    "step3Title": "Transparency",
-    "step3Text": "Everyone sees the chain of trust",
-    "step4Title": "Get Started",
-    "step4Text": "Add your first connection"
+  "invite": {
+    "title": "Invitation",
+    "from": "{{name}} invites you",
+    "accept": "Accept & Connect",
+    "alreadyUsed": "This invite has already been used",
+    "success": "Connected!"
   }
 }
