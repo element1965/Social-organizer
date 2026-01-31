@@ -1,0 +1,196 @@
+{
+  "common": {
+    "appName": "Social Organizer",
+    "loading": "Indl\u00e6ser...",
+    "error": "Der opstod en fejl",
+    "retry": "Pr\u00f8v igen",
+    "save": "Gem",
+    "cancel": "Annuller",
+    "delete": "Slet",
+    "confirm": "Bekr\u00e6ft",
+    "back": "Tilbage",
+    "next": "N\u00e6ste",
+    "done": "F\u00e6rdig",
+    "search": "S\u00f8g",
+    "notFound": "Ikke fundet"
+  },
+  "auth": {
+    "loginWith": "Log ind med {{platform}}",
+    "linking": "Tilknyt konto",
+    "enterCode": "Indtast 6-cifret kode",
+    "codeExpires": "Koden udl\u00f8ber om {{minutes}} min"
+  },
+  "login": {
+    "subtitle": "Hj\u00e6lpkoordinering gennem betroede forbindelser"
+  },
+  "onboarding": {
+    "step1": {
+      "title": "Du har mennesker, der bekymrer sig om dig",
+      "text": "Dette er en social organisator. Den overf\u00f8rer ikke penge eller opkr\u00e6ver betalinger. Den hj\u00e6lper folk med hurtigt at koordinere, n\u00e5r nogen har brug for st\u00f8tte."
+    },
+    "step2": {
+      "title": "Et signal \u2014 og de rigtige mennesker ved det",
+      "text": "Hvis nogen har brug for hj\u00e6lp \u2014 giver systemet besked til dem, der kan reagere. Beskeden kommer \u00e9n gang. Ingen spam, intet pres."
+    },
+    "step3": {
+      "title": "Alt er gennemsigtigt",
+      "text": "Hver handling registreres. Tillid bygges p\u00e5 gennemsigtighed, ikke p\u00e5 kontrol."
+    },
+    "step4": {
+      "title": "Tilf\u00f8j din f\u00f8rste person",
+      "text": "Organisatoren fungerer gennem forbindelser mellem mennesker. Start med \u00e9n person \u2014 en du stoler p\u00e5."
+    },
+    "start": "Kom i gang",
+    "next": "N\u00e6ste",
+    "invite": "Send invitation",
+    "qrCode": "Vis QR-kode"
+  },
+  "nav": {
+    "home": "Hjem",
+    "notifications": "Advarsler",
+    "create": "Opret",
+    "network": "Netv\u00e6rk",
+    "settings": "Indstillinger"
+  },
+  "dashboard": {
+    "title": "Oversigt",
+    "needHelp": "Jeg har brug for hj\u00e6lp",
+    "addFirstConnection": "Tilf\u00f8j din f\u00f8rste forbindelse",
+    "addFirstConnectionDesc": "Organisatoren fungerer gennem forbindelser mellem mennesker. Start med \u00e9n person \u2014 en du stoler p\u00e5.",
+    "goToNetwork": "G\u00e5 til Netv\u00e6rk",
+    "myCollections": "Mine indsamlinger",
+    "create": "Opret",
+    "noCollections": "Ingen aktive indsamlinger",
+    "obligations": "forpligtelser",
+    "myObligations": "Mine forpligtelser",
+    "noObligations": "Ingen forpligtelser",
+    "myNetwork": "Mit netv\u00e6rk",
+    "view": "Se",
+    "connections": "forbindelser"
+  },
+  "collection": {
+    "create": "Opret indsamling",
+    "amount": "Bel\u00f8b",
+    "currency": "Valuta",
+    "chatLink": "Chatlink",
+    "emergency": "Akut",
+    "regular": "Almindelig",
+    "active": "Aktiv",
+    "blocked": "Blokeret",
+    "closed": "Lukket",
+    "cancelled": "Annulleret",
+    "progress": "{{current}} / {{target}} {{currency}}",
+    "obligationsCount": "{{count}} forpligtelser",
+    "collected": "Indsamlet",
+    "goal": "M\u00e5l",
+    "openChat": "\u00c5bn chat",
+    "takeObligation": "P\u00e5tag dig en forpligtelse",
+    "amountPlaceholder": "Bel\u00f8b (min. 10)",
+    "submit": "Hj\u00e6lp",
+    "close": "Luk indsamling",
+    "participants": "Deltagere",
+    "noParticipants": "Ingen har deltaget endnu",
+    "minAmount": "Minimum 10"
+  },
+  "create": {
+    "title": "Opret indsamling",
+    "emergency": "Akut",
+    "regular": "Almindelig",
+    "amount": "Bel\u00f8b",
+    "largeAmountWarning": "Du vil forstyrre et stort antal mennesker. S\u00f8rg for, at hj\u00e6lpen virkelig er n\u00f8dvendig.",
+    "largeAmountConfirm": "Jeg bekr\u00e6fter, at bel\u00f8bet er korrekt",
+    "currency": "Valuta",
+    "chatLink": "Chatlink",
+    "submit": "Opret indsamling",
+    "minAmount": "Minimum 10",
+    "invalidUrl": "Ugyldig URL"
+  },
+  "obligation": {
+    "create": "P\u00e5tag dig forpligtelse",
+    "amount": "Bel\u00f8b (min {{min}})",
+    "subscribe": "Abonner m\u00e5nedligt",
+    "unsubscribe": "Opsig abonnement"
+  },
+  "network": {
+    "title": "Mit netv\u00e6rk",
+    "connections": "Forbindelser",
+    "addConnection": "Tilf\u00f8j forbindelse",
+    "connectionLimit": "Gr\u00e6nse: {{current}}/{{max}}",
+    "invite": "Inviter",
+    "qrCode": "QR-kode",
+    "empty": "Ingen forbindelser",
+    "emptyHint": "Inviter din f\u00f8rste person"
+  },
+  "notifications": {
+    "title": "Notifikationer",
+    "empty": "Ingen notifikationer",
+    "new": "Ny",
+    "reNotify": "P\u00e5mindelse",
+    "closed": "Lukket",
+    "blocked": "Blokeret",
+    "specialAuthor": "Forfatter",
+    "specialDeveloper": "Udvikler",
+    "handshakes": "h\u00e5ndtryk",
+    "via": "via",
+    "view": "\u00c5bn",
+    "dismiss": "Afvis",
+    "loadMore": "Indl\u00e6s flere",
+    "expiresIn": "Udl\u00f8ber om {{hours}} t {{minutes}} min"
+  },
+  "notification": {
+    "newCollection": "{{name}} har brug for hj\u00e6lp",
+    "handshake": "via {{path}}",
+    "markRead": "Marker som l\u00e6st",
+    "dismiss": "Afvis"
+  },
+  "profile": {
+    "bio": "Om",
+    "phone": "Telefon",
+    "stats": "Statistik",
+    "ignore": "Ignorer",
+    "addToNetwork": "Tilf\u00f8j til netv\u00e6rk",
+    "addConnection": "Tilf\u00f8j til forbindelser",
+    "connections": "Forbindelser",
+    "collectionsCreated": "Indsamlinger",
+    "obligationsGiven": "Gange hjulpet",
+    "totalPledged": "Samlet tilsagn",
+    "editSettings": "Indstillinger",
+    "edit": "Rediger profil",
+    "name": "Navn",
+    "save": "Gem",
+    "pledgedByCurrency": "efter valuta",
+    "myConnections": "Mine forbindelser",
+    "noConnections": "Ingen forbindelser endnu"
+  },
+  "settings": {
+    "title": "Indstillinger",
+    "language": "Sprog",
+    "theme": "Tema",
+    "light": "Lyst",
+    "dark": "M\u00f8rkt",
+    "system": "Automatisk",
+    "sounds": "Lyde",
+    "sound": "Lyde",
+    "fontSize": "Skriftst\u00f8rrelse",
+    "fontStandard": "Standard",
+    "fontLarge": "Forst\u00f8rret",
+    "linkedAccounts": "Tilknyttede konti",
+    "linkAccount": "Tilknyt konto",
+    "codeExpires": "Gyldig i 5 minutter",
+    "generateCode": "Generer kode",
+    "ignoreList": "Ignoreringsliste",
+    "noIgnored": "Listen er tom",
+    "unignore": "Fjern",
+    "logout": "Log ud",
+    "deleteAccount": "Slet konto",
+    "deleteConfirm": "Er du sikker? Denne handling kan ikke fortrydes.",
+    "confirmDelete": "Slet"
+  },
+  "invite": {
+    "title": "Invitation",
+    "from": "{{name}} inviterer dig",
+    "accept": "Accepter og forbind",
+    "alreadyUsed": "Denne invitation er allerede brugt",
+    "success": "Forbundet!"
+  }
+}

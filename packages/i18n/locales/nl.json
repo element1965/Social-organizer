@@ -1,0 +1,196 @@
+{
+  "common": {
+    "appName": "Social Organizer",
+    "loading": "Laden...",
+    "error": "Er is een fout opgetreden",
+    "retry": "Opnieuw proberen",
+    "save": "Opslaan",
+    "cancel": "Annuleren",
+    "delete": "Verwijderen",
+    "confirm": "Bevestigen",
+    "back": "Terug",
+    "next": "Volgende",
+    "done": "Klaar",
+    "search": "Zoeken",
+    "notFound": "Niet gevonden"
+  },
+  "auth": {
+    "loginWith": "Inloggen met {{platform}}",
+    "linking": "Account koppelen",
+    "enterCode": "Voer de 6-cijferige code in",
+    "codeExpires": "Code verloopt over {{minutes}} min"
+  },
+  "login": {
+    "subtitle": "Hulpcoordinatie via vertrouwde connecties"
+  },
+  "onboarding": {
+    "step1": {
+      "title": "Er zijn mensen die om je geven",
+      "text": "Dit is een sociale organisator. Het maakt geen geld over en int geen betalingen. Het helpt mensen snel te coordineren wanneer iemand steun nodig heeft."
+    },
+    "step2": {
+      "title": "Een signaal — en de juiste mensen weten het",
+      "text": "Als iemand hulp nodig heeft — informeert het systeem degenen die kunnen reageren. De melding komt een keer. Geen spam, geen druk."
+    },
+    "step3": {
+      "title": "Alles is transparant",
+      "text": "Elke actie wordt vastgelegd. Vertrouwen wordt gebouwd op transparantie, niet op controle."
+    },
+    "step4": {
+      "title": "Voeg je eerste persoon toe",
+      "text": "De organisator werkt via verbindingen tussen mensen. Begin met een persoon — iemand die je vertrouwt."
+    },
+    "start": "Aan de slag",
+    "next": "Volgende",
+    "invite": "Uitnodiging versturen",
+    "qrCode": "QR-code tonen"
+  },
+  "nav": {
+    "home": "Home",
+    "notifications": "Meldingen",
+    "create": "Aanmaken",
+    "network": "Netwerk",
+    "settings": "Instellingen"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "needHelp": "Ik heb hulp nodig",
+    "addFirstConnection": "Voeg je eerste connectie toe",
+    "addFirstConnectionDesc": "De organisator werkt via verbindingen tussen mensen. Begin met een persoon — iemand die je vertrouwt.",
+    "goToNetwork": "Ga naar Netwerk",
+    "myCollections": "Mijn inzamelingen",
+    "create": "Aanmaken",
+    "noCollections": "Geen actieve inzamelingen",
+    "obligations": "verplichtingen",
+    "myObligations": "Mijn verplichtingen",
+    "noObligations": "Geen verplichtingen",
+    "myNetwork": "Mijn netwerk",
+    "view": "Bekijken",
+    "connections": "connecties"
+  },
+  "collection": {
+    "create": "Inzameling aanmaken",
+    "amount": "Bedrag",
+    "currency": "Valuta",
+    "chatLink": "Chatlink",
+    "emergency": "Noodgeval",
+    "regular": "Regulier",
+    "active": "Actief",
+    "blocked": "Geblokkeerd",
+    "closed": "Gesloten",
+    "cancelled": "Geannuleerd",
+    "progress": "{{current}} / {{target}} {{currency}}",
+    "obligationsCount": "{{count}} verplichtingen",
+    "collected": "Opgehaald",
+    "goal": "Doel",
+    "openChat": "Chat openen",
+    "takeObligation": "Toezegging doen",
+    "amountPlaceholder": "Bedrag (min. 10)",
+    "submit": "Help",
+    "close": "Inzameling sluiten",
+    "participants": "Deelnemers",
+    "noParticipants": "Nog niemand heeft meegedaan",
+    "minAmount": "Minimaal 10"
+  },
+  "create": {
+    "title": "Inzameling aanmaken",
+    "emergency": "Noodgeval",
+    "regular": "Regulier",
+    "amount": "Bedrag",
+    "largeAmountWarning": "Je zult een groot aantal mensen storen. Zorg ervoor dat de hulp echt nodig is.",
+    "largeAmountConfirm": "Ik bevestig dat het bedrag correct is",
+    "currency": "Valuta",
+    "chatLink": "Chatlink",
+    "submit": "Inzameling aanmaken",
+    "minAmount": "Minimaal 10",
+    "invalidUrl": "Ongeldige URL"
+  },
+  "obligation": {
+    "create": "Toezegging doen",
+    "amount": "Bedrag (min {{min}})",
+    "subscribe": "Maandelijks abonneren",
+    "unsubscribe": "Uitschrijven"
+  },
+  "network": {
+    "title": "Mijn netwerk",
+    "connections": "Connecties",
+    "addConnection": "Connectie toevoegen",
+    "connectionLimit": "Limiet: {{current}}/{{max}}",
+    "invite": "Uitnodigen",
+    "qrCode": "QR-code",
+    "empty": "Geen connecties",
+    "emptyHint": "Nodig je eerste persoon uit"
+  },
+  "notifications": {
+    "title": "Meldingen",
+    "empty": "Geen meldingen",
+    "new": "Nieuw",
+    "reNotify": "Herinnering",
+    "closed": "Gesloten",
+    "blocked": "Geblokkeerd",
+    "specialAuthor": "Auteur",
+    "specialDeveloper": "Ontwikkelaar",
+    "handshakes": "handdrukken",
+    "via": "via",
+    "view": "Openen",
+    "dismiss": "Negeren",
+    "loadMore": "Meer laden",
+    "expiresIn": "Verloopt over {{hours}} u {{minutes}} min"
+  },
+  "notification": {
+    "newCollection": "{{name}} heeft hulp nodig",
+    "handshake": "via {{path}}",
+    "markRead": "Markeer als gelezen",
+    "dismiss": "Negeren"
+  },
+  "profile": {
+    "bio": "Over",
+    "phone": "Telefoon",
+    "stats": "Statistieken",
+    "ignore": "Negeren",
+    "addToNetwork": "Toevoegen aan netwerk",
+    "addConnection": "Toevoegen aan connecties",
+    "connections": "Connecties",
+    "collectionsCreated": "Inzamelingen",
+    "obligationsGiven": "Keer geholpen",
+    "totalPledged": "Totaal toegezegd",
+    "editSettings": "Instellingen",
+    "edit": "Profiel bewerken",
+    "name": "Naam",
+    "save": "Opslaan",
+    "pledgedByCurrency": "per valuta",
+    "myConnections": "Mijn connecties",
+    "noConnections": "Nog geen connecties"
+  },
+  "settings": {
+    "title": "Instellingen",
+    "language": "Taal",
+    "theme": "Thema",
+    "light": "Licht",
+    "dark": "Donker",
+    "system": "Automatisch",
+    "sounds": "Geluiden",
+    "sound": "Geluiden",
+    "fontSize": "Lettergrootte",
+    "fontStandard": "Standaard",
+    "fontLarge": "Vergroot",
+    "linkedAccounts": "Gekoppelde accounts",
+    "linkAccount": "Account koppelen",
+    "codeExpires": "5 minuten geldig",
+    "generateCode": "Code genereren",
+    "ignoreList": "Negeerlijst",
+    "noIgnored": "Lijst is leeg",
+    "unignore": "Verwijderen",
+    "logout": "Uitloggen",
+    "deleteAccount": "Account verwijderen",
+    "deleteConfirm": "Weet je het zeker? Deze actie is onomkeerbaar.",
+    "confirmDelete": "Verwijderen"
+  },
+  "invite": {
+    "title": "Uitnodiging",
+    "from": "{{name}} nodigt je uit",
+    "accept": "Accepteren en verbinden",
+    "alreadyUsed": "Deze uitnodiging is al gebruikt",
+    "success": "Verbonden!"
+  }
+}

@@ -1,0 +1,196 @@
+{
+  "common": {
+    "appName": "Social Organizer",
+    "loading": "लोड हो रहा है...",
+    "error": "एक त्रुटि हुई",
+    "retry": "पुनः प्रयास करें",
+    "save": "सहेजें",
+    "cancel": "रद्द करें",
+    "delete": "हटाएं",
+    "confirm": "पुष्टि करें",
+    "back": "वापस",
+    "next": "अगला",
+    "done": "हो गया",
+    "search": "खोजें",
+    "notFound": "नहीं मिला"
+  },
+  "auth": {
+    "loginWith": "{{platform}} से लॉग इन करें",
+    "linking": "खाता जोड़ें",
+    "enterCode": "6 अंकों का कोड दर्ज करें",
+    "codeExpires": "कोड {{minutes}} मिनट में समाप्त होगा"
+  },
+  "login": {
+    "subtitle": "विश्वसनीय संबंधों के माध्यम से सहायता समन्वय"
+  },
+  "onboarding": {
+    "step1": {
+      "title": "आपके पास ऐसे लोग हैं जो आपकी परवाह करते हैं",
+      "text": "यह एक सोशल ऑर्गनाइज़र है। यह पैसे ट्रांसफर नहीं करता और न ही भुगतान लेता है। यह लोगों को तब तेज़ी से समन्वय करने में मदद करता है जब किसी को सहायता की ज़रूरत होती है।"
+    },
+    "step2": {
+      "title": "एक संकेत — और सही लोगों को पता चल जाता है",
+      "text": "अगर किसी को मदद चाहिए — सिस्टम उन्हें सूचित करता है जो जवाब दे सकते हैं। सूचना एक बार आती है। कोई स्पैम नहीं, कोई दबाव नहीं।"
+    },
+    "step3": {
+      "title": "सब कुछ पारदर्शी है",
+      "text": "हर कार्य रिकॉर्ड होता है। विश्वास पारदर्शिता पर बनता है, नियंत्रण पर नहीं।"
+    },
+    "step4": {
+      "title": "अपना पहला व्यक्ति जोड़ें",
+      "text": "ऑर्गनाइज़र लोगों के बीच संबंधों के ज़रिए काम करता है। एक व्यक्ति से शुरू करें — कोई जिस पर आपको भरोसा है।"
+    },
+    "start": "शुरू करें",
+    "next": "अगला",
+    "invite": "निमंत्रण भेजें",
+    "qrCode": "QR कोड दिखाएं"
+  },
+  "nav": {
+    "home": "होम",
+    "notifications": "अलर्ट",
+    "create": "बनाएं",
+    "network": "नेटवर्क",
+    "settings": "सेटिंग्स"
+  },
+  "dashboard": {
+    "title": "डैशबोर्ड",
+    "needHelp": "मुझे मदद चाहिए",
+    "addFirstConnection": "अपना पहला कनेक्शन जोड़ें",
+    "addFirstConnectionDesc": "ऑर्गनाइज़र लोगों के बीच संबंधों के ज़रिए काम करता है। एक व्यक्ति से शुरू करें — कोई जिस पर आपको भरोसा है।",
+    "goToNetwork": "नेटवर्क पर जाएं",
+    "myCollections": "मेरे संग्रह",
+    "create": "बनाएं",
+    "noCollections": "कोई सक्रिय संग्रह नहीं",
+    "obligations": "दायित्व",
+    "myObligations": "मेरे दायित्व",
+    "noObligations": "कोई दायित्व नहीं",
+    "myNetwork": "मेरा नेटवर्क",
+    "view": "देखें",
+    "connections": "कनेक्शन"
+  },
+  "collection": {
+    "create": "संग्रह बनाएं",
+    "amount": "राशि",
+    "currency": "मुद्रा",
+    "chatLink": "चैट लिंक",
+    "emergency": "आपातकालीन",
+    "regular": "सामान्य",
+    "active": "सक्रिय",
+    "blocked": "अवरुद्ध",
+    "closed": "बंद",
+    "cancelled": "रद्द",
+    "progress": "{{current}} / {{target}} {{currency}}",
+    "obligationsCount": "{{count}} दायित्व",
+    "collected": "एकत्रित",
+    "goal": "लक्ष्य",
+    "openChat": "चैट खोलें",
+    "takeObligation": "सहायता का वचन दें",
+    "amountPlaceholder": "राशि (न्यूनतम 10)",
+    "submit": "मदद करें",
+    "close": "संग्रह बंद करें",
+    "participants": "प्रतिभागी",
+    "noParticipants": "अभी तक कोई शामिल नहीं हुआ",
+    "minAmount": "न्यूनतम 10"
+  },
+  "create": {
+    "title": "संग्रह बनाएं",
+    "emergency": "आपातकालीन",
+    "regular": "सामान्य",
+    "amount": "राशि",
+    "largeAmountWarning": "आप बड़ी संख्या में लोगों को परेशान करेंगे। सुनिश्चित करें कि मदद वाकई ज़रूरी है।",
+    "largeAmountConfirm": "मैं पुष्टि करता/करती हूं कि राशि सही है",
+    "currency": "मुद्रा",
+    "chatLink": "चैट लिंक",
+    "submit": "संग्रह बनाएं",
+    "minAmount": "न्यूनतम 10",
+    "invalidUrl": "अमान्य URL"
+  },
+  "obligation": {
+    "create": "सहायता का वचन दें",
+    "amount": "राशि (न्यूनतम {{min}})",
+    "subscribe": "मासिक सदस्यता लें",
+    "unsubscribe": "सदस्यता रद्द करें"
+  },
+  "network": {
+    "title": "मेरा नेटवर्क",
+    "connections": "कनेक्शन",
+    "addConnection": "कनेक्शन जोड़ें",
+    "connectionLimit": "सीमा: {{current}}/{{max}}",
+    "invite": "निमंत्रण",
+    "qrCode": "QR कोड",
+    "empty": "कोई कनेक्शन नहीं",
+    "emptyHint": "अपने पहले व्यक्ति को आमंत्रित करें"
+  },
+  "notifications": {
+    "title": "सूचनाएं",
+    "empty": "कोई सूचना नहीं",
+    "new": "नया",
+    "reNotify": "अनुस्मारक",
+    "closed": "बंद",
+    "blocked": "अवरुद्ध",
+    "specialAuthor": "लेखक",
+    "specialDeveloper": "डेवलपर",
+    "handshakes": "हैंडशेक",
+    "via": "के माध्यम से",
+    "view": "खोलें",
+    "dismiss": "खारिज करें",
+    "loadMore": "और लोड करें",
+    "expiresIn": "{{hours}} घंटे {{minutes}} मिनट में समाप्त होगा"
+  },
+  "notification": {
+    "newCollection": "{{name}} को मदद चाहिए",
+    "handshake": "{{path}} के माध्यम से",
+    "markRead": "पढ़ा हुआ चिह्नित करें",
+    "dismiss": "खारिज करें"
+  },
+  "profile": {
+    "bio": "परिचय",
+    "phone": "फ़ोन",
+    "stats": "आंकड़े",
+    "ignore": "अनदेखा करें",
+    "addToNetwork": "नेटवर्क में जोड़ें",
+    "addConnection": "कनेक्शन में जोड़ें",
+    "connections": "कनेक्शन",
+    "collectionsCreated": "संग्रह",
+    "obligationsGiven": "मदद की बार",
+    "totalPledged": "कुल वचनबद्ध राशि",
+    "editSettings": "सेटिंग्स",
+    "edit": "प्रोफ़ाइल संपादित करें",
+    "name": "नाम",
+    "save": "सहेजें",
+    "pledgedByCurrency": "मुद्रा के अनुसार",
+    "myConnections": "मेरे कनेक्शन",
+    "noConnections": "अभी तक कोई कनेक्शन नहीं"
+  },
+  "settings": {
+    "title": "सेटिंग्स",
+    "language": "भाषा",
+    "theme": "थीम",
+    "light": "लाइट",
+    "dark": "डार्क",
+    "system": "स्वचालित",
+    "sounds": "ध्वनियाँ",
+    "sound": "ध्वनियाँ",
+    "fontSize": "फ़ॉन्ट आकार",
+    "fontStandard": "मानक",
+    "fontLarge": "बड़ा",
+    "linkedAccounts": "जुड़े हुए खाते",
+    "linkAccount": "खाता जोड़ें",
+    "codeExpires": "5 मिनट के लिए मान्य",
+    "generateCode": "कोड जनरेट करें",
+    "ignoreList": "अनदेखा सूची",
+    "noIgnored": "सूची खाली है",
+    "unignore": "हटाएं",
+    "logout": "लॉग आउट",
+    "deleteAccount": "खाता हटाएं",
+    "deleteConfirm": "क्या आप सुनिश्चित हैं? यह क्रिया अपरिवर्तनीय है।",
+    "confirmDelete": "हटाएं"
+  },
+  "invite": {
+    "title": "निमंत्रण",
+    "from": "{{name}} ने आपको आमंत्रित किया है",
+    "accept": "स्वीकार करें और जुड़ें",
+    "alreadyUsed": "यह निमंत्रण पहले ही उपयोग हो चुका है",
+    "success": "जुड़ गए!"
+  }
+}

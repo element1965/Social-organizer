@@ -1,0 +1,196 @@
+{
+  "common": {
+    "appName": "Social Organizer",
+    "loading": "جارٍ التحميل...",
+    "error": "حدث خطأ",
+    "retry": "إعادة المحاولة",
+    "save": "حفظ",
+    "cancel": "إلغاء",
+    "delete": "حذف",
+    "confirm": "تأكيد",
+    "back": "رجوع",
+    "next": "التالي",
+    "done": "تم",
+    "search": "بحث",
+    "notFound": "غير موجود"
+  },
+  "auth": {
+    "loginWith": "تسجيل الدخول عبر {{platform}}",
+    "linking": "ربط الحساب",
+    "enterCode": "أدخل الرمز المكون من 6 أرقام",
+    "codeExpires": "ينتهي الرمز خلال {{minutes}} دقيقة"
+  },
+  "login": {
+    "subtitle": "تنسيق المساعدة من خلال العلاقات الموثوقة"
+  },
+  "onboarding": {
+    "step1": {
+      "title": "لديك أشخاص يهتمون بك",
+      "text": "هذا منظّم اجتماعي. لا يقوم بتحويل الأموال أو تحصيل المدفوعات. بل يساعد الناس على التنسيق بسرعة عندما يحتاج شخص ما إلى الدعم."
+    },
+    "step2": {
+      "title": "إشارة واحدة — والأشخاص المناسبون يعلمون",
+      "text": "إذا احتاج شخص ما للمساعدة — يُبلّغ النظام من يستطيعون الاستجابة. يصل الإشعار مرة واحدة فقط. بدون إزعاج، بدون ضغط."
+    },
+    "step3": {
+      "title": "كل شيء شفاف",
+      "text": "كل إجراء يتم تسجيله. الثقة تُبنى على الشفافية، لا على السيطرة."
+    },
+    "step4": {
+      "title": "أضف أول شخص",
+      "text": "يعمل المنظّم من خلال الروابط بين الناس. ابدأ بشخص واحد — شخص تثق به."
+    },
+    "start": "ابدأ",
+    "next": "التالي",
+    "invite": "إرسال دعوة",
+    "qrCode": "عرض رمز QR"
+  },
+  "nav": {
+    "home": "الرئيسية",
+    "notifications": "التنبيهات",
+    "create": "إنشاء",
+    "network": "الشبكة",
+    "settings": "الإعدادات"
+  },
+  "dashboard": {
+    "title": "لوحة التحكم",
+    "needHelp": "أحتاج مساعدة",
+    "addFirstConnection": "أضف أول اتصال لك",
+    "addFirstConnectionDesc": "يعمل المنظّم من خلال الروابط بين الناس. ابدأ بشخص واحد — شخص تثق به.",
+    "goToNetwork": "الذهاب إلى الشبكة",
+    "myCollections": "مجموعاتي",
+    "create": "إنشاء",
+    "noCollections": "لا توجد مجموعات نشطة",
+    "obligations": "التزامات",
+    "myObligations": "التزاماتي",
+    "noObligations": "لا توجد التزامات",
+    "myNetwork": "شبكتي",
+    "view": "عرض",
+    "connections": "اتصالات"
+  },
+  "collection": {
+    "create": "إنشاء مجموعة",
+    "amount": "المبلغ",
+    "currency": "العملة",
+    "chatLink": "رابط المحادثة",
+    "emergency": "طارئ",
+    "regular": "عادي",
+    "active": "نشط",
+    "blocked": "محظور",
+    "closed": "مغلق",
+    "cancelled": "ملغى",
+    "progress": "{{current}} / {{target}} {{currency}}",
+    "obligationsCount": "{{count}} التزامات",
+    "collected": "تم جمعه",
+    "goal": "الهدف",
+    "openChat": "فتح المحادثة",
+    "takeObligation": "تعهّد بالمساعدة",
+    "amountPlaceholder": "المبلغ (الحد الأدنى 10)",
+    "submit": "ساعد",
+    "close": "إغلاق المجموعة",
+    "participants": "المشاركون",
+    "noParticipants": "لم ينضم أحد بعد",
+    "minAmount": "الحد الأدنى 10"
+  },
+  "create": {
+    "title": "إنشاء مجموعة",
+    "emergency": "طارئ",
+    "regular": "عادي",
+    "amount": "المبلغ",
+    "largeAmountWarning": "ستزعج عددًا كبيرًا من الأشخاص. تأكد أن المساعدة مطلوبة فعلاً.",
+    "largeAmountConfirm": "أؤكد أن المبلغ صحيح",
+    "currency": "العملة",
+    "chatLink": "رابط المحادثة",
+    "submit": "إنشاء مجموعة",
+    "minAmount": "الحد الأدنى 10",
+    "invalidUrl": "رابط غير صالح"
+  },
+  "obligation": {
+    "create": "تعهّد بالمساعدة",
+    "amount": "المبلغ (الحد الأدنى {{min}})",
+    "subscribe": "اشتراك شهري",
+    "unsubscribe": "إلغاء الاشتراك"
+  },
+  "network": {
+    "title": "شبكتي",
+    "connections": "الاتصالات",
+    "addConnection": "إضافة اتصال",
+    "connectionLimit": "الحد: {{current}}/{{max}}",
+    "invite": "دعوة",
+    "qrCode": "رمز QR",
+    "empty": "لا توجد اتصالات",
+    "emptyHint": "ادعُ أول شخص"
+  },
+  "notifications": {
+    "title": "الإشعارات",
+    "empty": "لا توجد إشعارات",
+    "new": "جديد",
+    "reNotify": "تذكير",
+    "closed": "مغلق",
+    "blocked": "محظور",
+    "specialAuthor": "المؤلف",
+    "specialDeveloper": "المطور",
+    "handshakes": "مصافحات",
+    "via": "عبر",
+    "view": "فتح",
+    "dismiss": "تجاهل",
+    "loadMore": "تحميل المزيد",
+    "expiresIn": "ينتهي خلال {{hours}} س {{minutes}} د"
+  },
+  "notification": {
+    "newCollection": "{{name}} يحتاج مساعدة",
+    "handshake": "عبر {{path}}",
+    "markRead": "تعيين كمقروء",
+    "dismiss": "تجاهل"
+  },
+  "profile": {
+    "bio": "نبذة",
+    "phone": "الهاتف",
+    "stats": "الإحصائيات",
+    "ignore": "تجاهل",
+    "addToNetwork": "إضافة إلى الشبكة",
+    "addConnection": "إضافة إلى الاتصالات",
+    "connections": "الاتصالات",
+    "collectionsCreated": "المجموعات",
+    "obligationsGiven": "مرات المساعدة",
+    "totalPledged": "إجمالي التعهدات",
+    "editSettings": "الإعدادات",
+    "edit": "تعديل الملف الشخصي",
+    "name": "الاسم",
+    "save": "حفظ",
+    "pledgedByCurrency": "حسب العملة",
+    "myConnections": "اتصالاتي",
+    "noConnections": "لا توجد اتصالات بعد"
+  },
+  "settings": {
+    "title": "الإعدادات",
+    "language": "اللغة",
+    "theme": "المظهر",
+    "light": "فاتح",
+    "dark": "داكن",
+    "system": "تلقائي",
+    "sounds": "الأصوات",
+    "sound": "الأصوات",
+    "fontSize": "حجم الخط",
+    "fontStandard": "عادي",
+    "fontLarge": "كبير",
+    "linkedAccounts": "الحسابات المرتبطة",
+    "linkAccount": "ربط حساب",
+    "codeExpires": "صالح لمدة 5 دقائق",
+    "generateCode": "إنشاء رمز",
+    "ignoreList": "قائمة التجاهل",
+    "noIgnored": "القائمة فارغة",
+    "unignore": "إزالة",
+    "logout": "تسجيل الخروج",
+    "deleteAccount": "حذف الحساب",
+    "deleteConfirm": "هل أنت متأكد؟ هذا الإجراء لا يمكن التراجع عنه.",
+    "confirmDelete": "حذف"
+  },
+  "invite": {
+    "title": "دعوة",
+    "from": "{{name}} يدعوك",
+    "accept": "قبول والاتصال",
+    "alreadyUsed": "تم استخدام هذه الدعوة بالفعل",
+    "success": "تم الاتصال!"
+  }
+}
