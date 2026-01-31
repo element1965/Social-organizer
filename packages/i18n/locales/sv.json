@@ -1,0 +1,196 @@
+{
+  "common": {
+    "appName": "Social Organizer",
+    "loading": "Laddar...",
+    "error": "Ett fel uppstod",
+    "retry": "F\u00f6rs\u00f6k igen",
+    "save": "Spara",
+    "cancel": "Avbryt",
+    "delete": "Radera",
+    "confirm": "Bekr\u00e4fta",
+    "back": "Tillbaka",
+    "next": "N\u00e4sta",
+    "done": "Klar",
+    "search": "S\u00f6k",
+    "notFound": "Hittades inte"
+  },
+  "auth": {
+    "loginWith": "Logga in med {{platform}}",
+    "linking": "Koppla konto",
+    "enterCode": "Ange 6-siffrig kod",
+    "codeExpires": "Koden g\u00e5r ut om {{minutes}} min"
+  },
+  "login": {
+    "subtitle": "Hj\u00e4lpkoordinering genom betrodda kontakter"
+  },
+  "onboarding": {
+    "step1": {
+      "title": "Du har m\u00e4nniskor som bryr sig",
+      "text": "Det h\u00e4r \u00e4r en social organisat\u00f6r. Den \u00f6verf\u00f6r inte pengar eller tar emot betalningar. Den hj\u00e4lper m\u00e4nniskor att snabbt samordna n\u00e4r n\u00e5gon beh\u00f6ver st\u00f6d."
+    },
+    "step2": {
+      "title": "En signal \u2014 och r\u00e4tt personer vet",
+      "text": "Om n\u00e5gon beh\u00f6ver hj\u00e4lp \u2014 meddelar systemet dem som kan svara. Aviseringen kommer en g\u00e5ng. Ingen spam, ingen press."
+    },
+    "step3": {
+      "title": "Allt \u00e4r transparent",
+      "text": "Varje handling registreras. F\u00f6rtroende byggs p\u00e5 transparens, inte p\u00e5 kontroll."
+    },
+    "step4": {
+      "title": "L\u00e4gg till din f\u00f6rsta person",
+      "text": "Organisat\u00f6rn fungerar genom kopplingar mellan m\u00e4nniskor. B\u00f6rja med en person \u2014 n\u00e5gon du litar p\u00e5."
+    },
+    "start": "Kom ig\u00e5ng",
+    "next": "N\u00e4sta",
+    "invite": "Skicka inbjudan",
+    "qrCode": "Visa QR-kod"
+  },
+  "nav": {
+    "home": "Hem",
+    "notifications": "Aviseringar",
+    "create": "Skapa",
+    "network": "N\u00e4tverk",
+    "settings": "Inst\u00e4llningar"
+  },
+  "dashboard": {
+    "title": "\u00d6versikt",
+    "needHelp": "Jag beh\u00f6ver hj\u00e4lp",
+    "addFirstConnection": "L\u00e4gg till din f\u00f6rsta kontakt",
+    "addFirstConnectionDesc": "Organisat\u00f6rn fungerar genom kopplingar mellan m\u00e4nniskor. B\u00f6rja med en person \u2014 n\u00e5gon du litar p\u00e5.",
+    "goToNetwork": "G\u00e5 till N\u00e4tverk",
+    "myCollections": "Mina insamlingar",
+    "create": "Skapa",
+    "noCollections": "Inga aktiva insamlingar",
+    "obligations": "\u00e5taganden",
+    "myObligations": "Mina \u00e5taganden",
+    "noObligations": "Inga \u00e5taganden",
+    "myNetwork": "Mitt n\u00e4tverk",
+    "view": "Visa",
+    "connections": "kontakter"
+  },
+  "collection": {
+    "create": "Skapa insamling",
+    "amount": "Belopp",
+    "currency": "Valuta",
+    "chatLink": "Chattl\u00e4nk",
+    "emergency": "Akut",
+    "regular": "Vanlig",
+    "active": "Aktiv",
+    "blocked": "Blockerad",
+    "closed": "St\u00e4ngd",
+    "cancelled": "Avbruten",
+    "progress": "{{current}} / {{target}} {{currency}}",
+    "obligationsCount": "{{count}} \u00e5taganden",
+    "collected": "Insamlat",
+    "goal": "M\u00e5l",
+    "openChat": "\u00d6ppna chatt",
+    "takeObligation": "G\u00f6ra ett \u00e5tagande",
+    "amountPlaceholder": "Belopp (min. 10)",
+    "submit": "Hj\u00e4lp till",
+    "close": "St\u00e4ng insamling",
+    "participants": "Deltagare",
+    "noParticipants": "Ingen har g\u00e5tt med \u00e4nnu",
+    "minAmount": "Minimum 10"
+  },
+  "create": {
+    "title": "Skapa insamling",
+    "emergency": "Akut",
+    "regular": "Vanlig",
+    "amount": "Belopp",
+    "largeAmountWarning": "Du kommer att st\u00f6ra ett stort antal m\u00e4nniskor. Se till att hj\u00e4lpen verkligen beh\u00f6vs.",
+    "largeAmountConfirm": "Jag bekr\u00e4ftar att beloppet \u00e4r korrekt",
+    "currency": "Valuta",
+    "chatLink": "Chattl\u00e4nk",
+    "submit": "Skapa insamling",
+    "minAmount": "Minimum 10",
+    "invalidUrl": "Ogiltig URL"
+  },
+  "obligation": {
+    "create": "G\u00f6ra \u00e5tagande",
+    "amount": "Belopp (min {{min}})",
+    "subscribe": "Prenumerera m\u00e5nadsvis",
+    "unsubscribe": "Avsluta prenumeration"
+  },
+  "network": {
+    "title": "Mitt n\u00e4tverk",
+    "connections": "Kontakter",
+    "addConnection": "L\u00e4gg till kontakt",
+    "connectionLimit": "Gr\u00e4ns: {{current}}/{{max}}",
+    "invite": "Bjud in",
+    "qrCode": "QR-kod",
+    "empty": "Inga kontakter",
+    "emptyHint": "Bjud in din f\u00f6rsta person"
+  },
+  "notifications": {
+    "title": "Aviseringar",
+    "empty": "Inga aviseringar",
+    "new": "Ny",
+    "reNotify": "P\u00e5minnelse",
+    "closed": "St\u00e4ngd",
+    "blocked": "Blockerad",
+    "specialAuthor": "F\u00f6rfattare",
+    "specialDeveloper": "Utvecklare",
+    "handshakes": "handskakningar",
+    "via": "via",
+    "view": "\u00d6ppna",
+    "dismiss": "Avf\u00e4rda",
+    "loadMore": "Ladda fler",
+    "expiresIn": "G\u00e5r ut om {{hours}} tim {{minutes}} min"
+  },
+  "notification": {
+    "newCollection": "{{name}} beh\u00f6ver hj\u00e4lp",
+    "handshake": "via {{path}}",
+    "markRead": "Markera som l\u00e4st",
+    "dismiss": "Avf\u00e4rda"
+  },
+  "profile": {
+    "bio": "Om",
+    "phone": "Telefon",
+    "stats": "Statistik",
+    "ignore": "Ignorera",
+    "addToNetwork": "L\u00e4gg till i n\u00e4tverk",
+    "addConnection": "L\u00e4gg till i kontakter",
+    "connections": "Kontakter",
+    "collectionsCreated": "Insamlingar",
+    "obligationsGiven": "G\u00e5nger hj\u00e4lpt",
+    "totalPledged": "Totalt utlovat",
+    "editSettings": "Inst\u00e4llningar",
+    "edit": "Redigera profil",
+    "name": "Namn",
+    "save": "Spara",
+    "pledgedByCurrency": "per valuta",
+    "myConnections": "Mina kontakter",
+    "noConnections": "Inga kontakter \u00e4nnu"
+  },
+  "settings": {
+    "title": "Inst\u00e4llningar",
+    "language": "Spr\u00e5k",
+    "theme": "Tema",
+    "light": "Ljust",
+    "dark": "M\u00f6rkt",
+    "system": "Automatiskt",
+    "sounds": "Ljud",
+    "sound": "Ljud",
+    "fontSize": "Textstorlek",
+    "fontStandard": "Standard",
+    "fontLarge": "F\u00f6rstorad",
+    "linkedAccounts": "Kopplade konton",
+    "linkAccount": "Koppla konto",
+    "codeExpires": "Giltig i 5 minuter",
+    "generateCode": "Generera kod",
+    "ignoreList": "Ignoreringslista",
+    "noIgnored": "Listan \u00e4r tom",
+    "unignore": "Ta bort",
+    "logout": "Logga ut",
+    "deleteAccount": "Radera konto",
+    "deleteConfirm": "\u00c4r du s\u00e4ker? Denna \u00e5tg\u00e4rd kan inte \u00e5ngras.",
+    "confirmDelete": "Radera"
+  },
+  "invite": {
+    "title": "Inbjudan",
+    "from": "{{name}} bjuder in dig",
+    "accept": "Acceptera och anslut",
+    "alreadyUsed": "Denna inbjudan har redan anv\u00e4nts",
+    "success": "Ansluten!"
+  }
+}

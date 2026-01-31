@@ -1,0 +1,196 @@
+{
+  "common": {
+    "appName": "Social Organizer",
+    "loading": "Yükleniyor...",
+    "error": "Bir hata oluştu",
+    "retry": "Tekrar dene",
+    "save": "Kaydet",
+    "cancel": "İptal",
+    "delete": "Sil",
+    "confirm": "Onayla",
+    "back": "Geri",
+    "next": "İleri",
+    "done": "Tamam",
+    "search": "Ara",
+    "notFound": "Bulunamadı"
+  },
+  "auth": {
+    "loginWith": "{{platform}} ile giriş yap",
+    "linking": "Hesap bağla",
+    "enterCode": "6 haneli kodu girin",
+    "codeExpires": "Kod {{minutes}} dakika içinde geçersiz olacak"
+  },
+  "login": {
+    "subtitle": "Güvenilir bağlantılar aracılığıyla yardım koordinasyonu"
+  },
+  "onboarding": {
+    "step1": {
+      "title": "Sizi önemseyen insanlar var",
+      "text": "Bu bir sosyal organizatördür. Para transferi yapmaz veya ödeme almaz. Birinin desteğe ihtiyacı olduğunda insanların hızlıca koordine olmasına yardımcı olur."
+    },
+    "step2": {
+      "title": "Bir sinyal — ve doğru kişiler haberdar olur",
+      "text": "Biri yardıma ihtiyaç duyarsa — sistem yanıt verebilecekleri bilgilendirir. Bildirim bir kez gelir. Spam yok, baskı yok."
+    },
+    "step3": {
+      "title": "Her şey şeffaf",
+      "text": "Her işlem kaydedilir. Güven şeffaflık üzerine kurulur, kontrol üzerine değil."
+    },
+    "step4": {
+      "title": "İlk kişinizi ekleyin",
+      "text": "Organizatör insanlar arasındaki bağlantılar üzerinden çalışır. Bir kişiyle başlayın — güvendiğiniz biri."
+    },
+    "start": "Başla",
+    "next": "İleri",
+    "invite": "Davet Gönder",
+    "qrCode": "QR Kodu Göster"
+  },
+  "nav": {
+    "home": "Ana Sayfa",
+    "notifications": "Uyarılar",
+    "create": "Oluştur",
+    "network": "Ağ",
+    "settings": "Ayarlar"
+  },
+  "dashboard": {
+    "title": "Gösterge Paneli",
+    "needHelp": "Yardıma ihtiyacım var",
+    "addFirstConnection": "İlk bağlantınızı ekleyin",
+    "addFirstConnectionDesc": "Organizatör insanlar arasındaki bağlantılar üzerinden çalışır. Bir kişiyle başlayın — güvendiğiniz biri.",
+    "goToNetwork": "Ağa Git",
+    "myCollections": "Koleksiyonlarım",
+    "create": "Oluştur",
+    "noCollections": "Aktif koleksiyon yok",
+    "obligations": "taahhütler",
+    "myObligations": "Taahhütlerim",
+    "noObligations": "Taahhüt yok",
+    "myNetwork": "Ağım",
+    "view": "Görüntüle",
+    "connections": "bağlantılar"
+  },
+  "collection": {
+    "create": "Koleksiyon Oluştur",
+    "amount": "Miktar",
+    "currency": "Para Birimi",
+    "chatLink": "Sohbet Linki",
+    "emergency": "Acil",
+    "regular": "Normal",
+    "active": "Aktif",
+    "blocked": "Engelli",
+    "closed": "Kapalı",
+    "cancelled": "İptal Edildi",
+    "progress": "{{current}} / {{target}} {{currency}}",
+    "obligationsCount": "{{count}} taahhüt",
+    "collected": "Toplanan",
+    "goal": "Hedef",
+    "openChat": "Sohbeti aç",
+    "takeObligation": "Taahhütte bulun",
+    "amountPlaceholder": "Miktar (min. 10)",
+    "submit": "Yardım Et",
+    "close": "Koleksiyonu kapat",
+    "participants": "Katılımcılar",
+    "noParticipants": "Henüz kimse katılmadı",
+    "minAmount": "Minimum 10"
+  },
+  "create": {
+    "title": "Koleksiyon Oluştur",
+    "emergency": "Acil",
+    "regular": "Normal",
+    "amount": "Miktar",
+    "largeAmountWarning": "Çok sayıda insanı rahatsız edeceksiniz. Yardımın gerçekten gerekli olduğundan emin olun.",
+    "largeAmountConfirm": "Miktarın doğru olduğunu onaylıyorum",
+    "currency": "Para Birimi",
+    "chatLink": "Sohbet linki",
+    "submit": "Koleksiyon Oluştur",
+    "minAmount": "Minimum 10",
+    "invalidUrl": "Geçersiz URL"
+  },
+  "obligation": {
+    "create": "Taahhütte Bulun",
+    "amount": "Miktar (min {{min}})",
+    "subscribe": "Aylık abone ol",
+    "unsubscribe": "Aboneliği iptal et"
+  },
+  "network": {
+    "title": "Ağım",
+    "connections": "Bağlantılar",
+    "addConnection": "Bağlantı Ekle",
+    "connectionLimit": "Limit: {{current}}/{{max}}",
+    "invite": "Davet Et",
+    "qrCode": "QR Kodu",
+    "empty": "Bağlantı yok",
+    "emptyHint": "İlk kişinizi davet edin"
+  },
+  "notifications": {
+    "title": "Bildirimler",
+    "empty": "Bildirim yok",
+    "new": "Yeni",
+    "reNotify": "Hatırlatma",
+    "closed": "Kapalı",
+    "blocked": "Engelli",
+    "specialAuthor": "Yazar",
+    "specialDeveloper": "Geliştirici",
+    "handshakes": "el sıkışmalar",
+    "via": "üzerinden",
+    "view": "Aç",
+    "dismiss": "Kapat",
+    "loadMore": "Daha fazla yükle",
+    "expiresIn": "{{hours}} sa {{minutes}} dk içinde sona erer"
+  },
+  "notification": {
+    "newCollection": "{{name}} yardıma ihtiyaç duyuyor",
+    "handshake": "{{path}} üzerinden",
+    "markRead": "Okundu işaretle",
+    "dismiss": "Kapat"
+  },
+  "profile": {
+    "bio": "Hakkında",
+    "phone": "Telefon",
+    "stats": "İstatistikler",
+    "ignore": "Yoksay",
+    "addToNetwork": "Ağa Ekle",
+    "addConnection": "Bağlantılara ekle",
+    "connections": "Bağlantılar",
+    "collectionsCreated": "Koleksiyonlar",
+    "obligationsGiven": "Yardım sayısı",
+    "totalPledged": "Toplam taahhüt",
+    "editSettings": "Ayarlar",
+    "edit": "Profili Düzenle",
+    "name": "İsim",
+    "save": "Kaydet",
+    "pledgedByCurrency": "para birimine göre",
+    "myConnections": "Bağlantılarım",
+    "noConnections": "Henüz bağlantı yok"
+  },
+  "settings": {
+    "title": "Ayarlar",
+    "language": "Dil",
+    "theme": "Tema",
+    "light": "Açık",
+    "dark": "Koyu",
+    "system": "Otomatik",
+    "sounds": "Sesler",
+    "sound": "Sesler",
+    "fontSize": "Yazı Boyutu",
+    "fontStandard": "Standart",
+    "fontLarge": "Büyük",
+    "linkedAccounts": "Bağlı Hesaplar",
+    "linkAccount": "Hesap Bağla",
+    "codeExpires": "5 dakika geçerli",
+    "generateCode": "Kod Oluştur",
+    "ignoreList": "Yoksayılanlar",
+    "noIgnored": "Liste boş",
+    "unignore": "Kaldır",
+    "logout": "Çıkış Yap",
+    "deleteAccount": "Hesabı Sil",
+    "deleteConfirm": "Emin misiniz? Bu işlem geri alınamaz.",
+    "confirmDelete": "Sil"
+  },
+  "invite": {
+    "title": "Davet",
+    "from": "{{name}} sizi davet ediyor",
+    "accept": "Kabul Et ve Bağlan",
+    "alreadyUsed": "Bu davet zaten kullanılmış",
+    "success": "Bağlandı!"
+  }
+}

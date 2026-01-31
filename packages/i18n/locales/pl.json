@@ -1,0 +1,196 @@
+{
+  "common": {
+    "appName": "Social Organizer",
+    "loading": "Ładowanie...",
+    "error": "Wystąpił błąd",
+    "retry": "Ponów",
+    "save": "Zapisz",
+    "cancel": "Anuluj",
+    "delete": "Usuń",
+    "confirm": "Potwierdź",
+    "back": "Wstecz",
+    "next": "Dalej",
+    "done": "Gotowe",
+    "search": "Szukaj",
+    "notFound": "Nie znaleziono"
+  },
+  "auth": {
+    "loginWith": "Zaloguj się przez {{platform}}",
+    "linking": "Połącz konto",
+    "enterCode": "Wprowadź 6-cyfrowy kod",
+    "codeExpires": "Kod wygasa za {{minutes}} min"
+  },
+  "login": {
+    "subtitle": "Koordynacja pomocy poprzez zaufane kontakty"
+  },
+  "onboarding": {
+    "step1": {
+      "title": "Masz ludzi, którym na Tobie zależy",
+      "text": "To jest organizator społeczny. Nie przesyła pieniędzy ani nie pobiera opłat. Pomaga ludziom szybko się skoordynować, gdy ktoś potrzebuje wsparcia."
+    },
+    "step2": {
+      "title": "Jeden sygnał — i właściwe osoby wiedzą",
+      "text": "Jeśli ktoś potrzebuje pomocy — system powiadamia tych, którzy mogą odpowiedzieć. Powiadomienie przychodzi raz. Bez spamu, bez presji."
+    },
+    "step3": {
+      "title": "Wszystko jest transparentne",
+      "text": "Każde działanie jest rejestrowane. Zaufanie buduje się na przejrzystości, nie na kontroli."
+    },
+    "step4": {
+      "title": "Dodaj swoją pierwszą osobę",
+      "text": "Organizator działa przez połączenia między ludźmi. Zacznij od jednej osoby — kogoś, komu ufasz."
+    },
+    "start": "Rozpocznij",
+    "next": "Dalej",
+    "invite": "Wyślij zaproszenie",
+    "qrCode": "Pokaż kod QR"
+  },
+  "nav": {
+    "home": "Strona główna",
+    "notifications": "Powiadomienia",
+    "create": "Utwórz",
+    "network": "Sieć",
+    "settings": "Ustawienia"
+  },
+  "dashboard": {
+    "title": "Panel główny",
+    "needHelp": "Potrzebuję pomocy",
+    "addFirstConnection": "Dodaj swoje pierwsze połączenie",
+    "addFirstConnectionDesc": "Organizator działa przez połączenia między ludźmi. Zacznij od jednej osoby — kogoś, komu ufasz.",
+    "goToNetwork": "Przejdź do Sieci",
+    "myCollections": "Moje zbiórki",
+    "create": "Utwórz",
+    "noCollections": "Brak aktywnych zbiórek",
+    "obligations": "zobowiązania",
+    "myObligations": "Moje zobowiązania",
+    "noObligations": "Brak zobowiązań",
+    "myNetwork": "Moja sieć",
+    "view": "Zobacz",
+    "connections": "połączenia"
+  },
+  "collection": {
+    "create": "Utwórz zbiórkę",
+    "amount": "Kwota",
+    "currency": "Waluta",
+    "chatLink": "Link do czatu",
+    "emergency": "Pilne",
+    "regular": "Zwykłe",
+    "active": "Aktywna",
+    "blocked": "Zablokowana",
+    "closed": "Zamknięta",
+    "cancelled": "Anulowana",
+    "progress": "{{current}} / {{target}} {{currency}}",
+    "obligationsCount": "{{count}} zobowiązań",
+    "collected": "Zebrano",
+    "goal": "Cel",
+    "openChat": "Otwórz czat",
+    "takeObligation": "Zadeklaruj pomoc",
+    "amountPlaceholder": "Kwota (min. 10)",
+    "submit": "Pomóż",
+    "close": "Zamknij zbiórkę",
+    "participants": "Uczestnicy",
+    "noParticipants": "Nikt jeszcze nie dołączył",
+    "minAmount": "Minimum 10"
+  },
+  "create": {
+    "title": "Utwórz zbiórkę",
+    "emergency": "Pilne",
+    "regular": "Zwykłe",
+    "amount": "Kwota",
+    "largeAmountWarning": "Zaniepokojesz dużą liczbę osób. Upewnij się, że pomoc jest naprawdę potrzebna.",
+    "largeAmountConfirm": "Potwierdzam, że kwota jest prawidłowa",
+    "currency": "Waluta",
+    "chatLink": "Link do czatu",
+    "submit": "Utwórz zbiórkę",
+    "minAmount": "Minimum 10",
+    "invalidUrl": "Nieprawidłowy URL"
+  },
+  "obligation": {
+    "create": "Zadeklaruj pomoc",
+    "amount": "Kwota (min {{min}})",
+    "subscribe": "Subskrybuj miesięcznie",
+    "unsubscribe": "Anuluj subskrypcję"
+  },
+  "network": {
+    "title": "Moja sieć",
+    "connections": "Połączenia",
+    "addConnection": "Dodaj połączenie",
+    "connectionLimit": "Limit: {{current}}/{{max}}",
+    "invite": "Zaproś",
+    "qrCode": "Kod QR",
+    "empty": "Brak połączeń",
+    "emptyHint": "Zaproś swoją pierwszą osobę"
+  },
+  "notifications": {
+    "title": "Powiadomienia",
+    "empty": "Brak powiadomień",
+    "new": "Nowe",
+    "reNotify": "Przypomnienie",
+    "closed": "Zamknięte",
+    "blocked": "Zablokowane",
+    "specialAuthor": "Autor",
+    "specialDeveloper": "Deweloper",
+    "handshakes": "uściski dłoni",
+    "via": "przez",
+    "view": "Otwórz",
+    "dismiss": "Odrzuć",
+    "loadMore": "Załaduj więcej",
+    "expiresIn": "Wygasa za {{hours}} godz. {{minutes}} min"
+  },
+  "notification": {
+    "newCollection": "{{name}} potrzebuje pomocy",
+    "handshake": "przez {{path}}",
+    "markRead": "Oznacz jako przeczytane",
+    "dismiss": "Odrzuć"
+  },
+  "profile": {
+    "bio": "O mnie",
+    "phone": "Telefon",
+    "stats": "Statystyki",
+    "ignore": "Ignoruj",
+    "addToNetwork": "Dodaj do sieci",
+    "addConnection": "Dodaj do połączeń",
+    "connections": "Połączenia",
+    "collectionsCreated": "Zbiórki",
+    "obligationsGiven": "Razy pomógł",
+    "totalPledged": "Łącznie zadeklarowano",
+    "editSettings": "Ustawienia",
+    "edit": "Edytuj profil",
+    "name": "Imię",
+    "save": "Zapisz",
+    "pledgedByCurrency": "wg waluty",
+    "myConnections": "Moje połączenia",
+    "noConnections": "Brak połączeń"
+  },
+  "settings": {
+    "title": "Ustawienia",
+    "language": "Język",
+    "theme": "Motyw",
+    "light": "Jasny",
+    "dark": "Ciemny",
+    "system": "Automatyczny",
+    "sounds": "Dźwięki",
+    "sound": "Dźwięki",
+    "fontSize": "Rozmiar czcionki",
+    "fontStandard": "Standardowy",
+    "fontLarge": "Powiększony",
+    "linkedAccounts": "Połączone konta",
+    "linkAccount": "Połącz konto",
+    "codeExpires": "Ważny przez 5 minut",
+    "generateCode": "Wygeneruj kod",
+    "ignoreList": "Lista ignorowanych",
+    "noIgnored": "Lista jest pusta",
+    "unignore": "Usuń",
+    "logout": "Wyloguj się",
+    "deleteAccount": "Usuń konto",
+    "deleteConfirm": "Czy na pewno? Tej operacji nie można cofnąć.",
+    "confirmDelete": "Usuń"
+  },
+  "invite": {
+    "title": "Zaproszenie",
+    "from": "{{name}} zaprasza Cię",
+    "accept": "Zaakceptuj i połącz się",
+    "alreadyUsed": "To zaproszenie zostało już wykorzystane",
+    "success": "Połączono!"
+  }
+}

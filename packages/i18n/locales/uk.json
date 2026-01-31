@@ -1,0 +1,196 @@
+{
+  "common": {
+    "appName": "Social Organizer",
+    "loading": "Завантаження...",
+    "error": "Сталася помилка",
+    "retry": "Повторити",
+    "save": "Зберегти",
+    "cancel": "Скасувати",
+    "delete": "Видалити",
+    "confirm": "Підтвердити",
+    "back": "Назад",
+    "next": "Далі",
+    "done": "Готово",
+    "search": "Пошук",
+    "notFound": "Не знайдено"
+  },
+  "auth": {
+    "loginWith": "Увійти через {{platform}}",
+    "linking": "Прив'язати акаунт",
+    "enterCode": "Введіть 6-значний код",
+    "codeExpires": "Код діє ще {{minutes}} хв"
+  },
+  "login": {
+    "subtitle": "Координація допомоги через довірені зв'язки"
+  },
+  "onboarding": {
+    "step1": {
+      "title": "У вас є люди, яким не байдуже",
+      "text": "Це соціальний організатор. Він не переказує гроші й не збирає платежі. Він допомагає людям швидко скоординуватися, коли комусь потрібна підтримка."
+    },
+    "step2": {
+      "title": "Один сигнал — і потрібні люди знають",
+      "text": "Якщо комусь потрібна допомога — система повідомляє тих, хто може відгукнутися. Сповіщення приходить один раз. Без спаму, без тиску."
+    },
+    "step3": {
+      "title": "Все прозоро",
+      "text": "Кожна дія фіксується. Довіра будується на прозорості, а не на контролі."
+    },
+    "step4": {
+      "title": "Додайте першу людину",
+      "text": "Організатор працює через зв'язки між людьми. Почніть з однієї людини — когось, кому ви довіряєте."
+    },
+    "start": "Почати",
+    "next": "Далі",
+    "invite": "Надіслати запрошення",
+    "qrCode": "Показати QR-код"
+  },
+  "nav": {
+    "home": "Головна",
+    "notifications": "Сповіщення",
+    "create": "Створити",
+    "network": "Мережа",
+    "settings": "Налаштування"
+  },
+  "dashboard": {
+    "title": "Панель",
+    "needHelp": "Мені потрібна допомога",
+    "addFirstConnection": "Додайте перший контакт",
+    "addFirstConnectionDesc": "Організатор працює через зв'язки між людьми. Почніть з однієї людини — когось, кому ви довіряєте.",
+    "goToNetwork": "Перейти до Мережі",
+    "myCollections": "Мої збори",
+    "create": "Створити",
+    "noCollections": "Немає активних зборів",
+    "obligations": "зобов'язання",
+    "myObligations": "Мої зобов'язання",
+    "noObligations": "Немає зобов'язань",
+    "myNetwork": "Моя мережа",
+    "view": "Переглянути",
+    "connections": "контакти"
+  },
+  "collection": {
+    "create": "Створити збір",
+    "amount": "Сума",
+    "currency": "Валюта",
+    "chatLink": "Посилання на чат",
+    "emergency": "Терміновий",
+    "regular": "Звичайний",
+    "active": "Активний",
+    "blocked": "Заблокований",
+    "closed": "Закритий",
+    "cancelled": "Скасований",
+    "progress": "{{current}} / {{target}} {{currency}}",
+    "obligationsCount": "{{count}} зобов'язань",
+    "collected": "Зібрано",
+    "goal": "Мета",
+    "openChat": "Відкрити чат",
+    "takeObligation": "Взяти зобов'язання",
+    "amountPlaceholder": "Сума (мін. 10)",
+    "submit": "Допомогти",
+    "close": "Закрити збір",
+    "participants": "Учасники",
+    "noParticipants": "Ще ніхто не приєднався",
+    "minAmount": "Мінімум 10"
+  },
+  "create": {
+    "title": "Створити збір",
+    "emergency": "Терміновий",
+    "regular": "Звичайний",
+    "amount": "Сума",
+    "largeAmountWarning": "Ви потурбуєте велику кількість людей. Переконайтеся, що допомога справді потрібна.",
+    "largeAmountConfirm": "Я підтверджую, що сума правильна",
+    "currency": "Валюта",
+    "chatLink": "Посилання на чат",
+    "submit": "Створити збір",
+    "minAmount": "Мінімум 10",
+    "invalidUrl": "Невірне посилання"
+  },
+  "obligation": {
+    "create": "Взяти зобов'язання",
+    "amount": "Сума (мін {{min}})",
+    "subscribe": "Підписатися щомісяця",
+    "unsubscribe": "Відписатися"
+  },
+  "network": {
+    "title": "Моя мережа",
+    "connections": "Контакти",
+    "addConnection": "Додати контакт",
+    "connectionLimit": "Ліміт: {{current}}/{{max}}",
+    "invite": "Запросити",
+    "qrCode": "QR-код",
+    "empty": "Немає контактів",
+    "emptyHint": "Запросіть свою першу людину"
+  },
+  "notifications": {
+    "title": "Сповіщення",
+    "empty": "Немає сповіщень",
+    "new": "Нове",
+    "reNotify": "Нагадування",
+    "closed": "Закрите",
+    "blocked": "Заблоковане",
+    "specialAuthor": "Автор",
+    "specialDeveloper": "Розробник",
+    "handshakes": "рукостискань",
+    "via": "через",
+    "view": "Відкрити",
+    "dismiss": "Приховати",
+    "loadMore": "Завантажити ще",
+    "expiresIn": "Спливає через {{hours}} год {{minutes}} хв"
+  },
+  "notification": {
+    "newCollection": "{{name}} потребує допомоги",
+    "handshake": "через {{path}}",
+    "markRead": "Позначити як прочитане",
+    "dismiss": "Приховати"
+  },
+  "profile": {
+    "bio": "Про себе",
+    "phone": "Телефон",
+    "stats": "Статистика",
+    "ignore": "Ігнорувати",
+    "addToNetwork": "Додати до мережі",
+    "addConnection": "Додати до контактів",
+    "connections": "Контакти",
+    "collectionsCreated": "Збори",
+    "obligationsGiven": "Разів допоміг",
+    "totalPledged": "Всього пообіцяно",
+    "editSettings": "Налаштування",
+    "edit": "Редагувати профіль",
+    "name": "Ім'я",
+    "save": "Зберегти",
+    "pledgedByCurrency": "за валютою",
+    "myConnections": "Мої контакти",
+    "noConnections": "Поки немає контактів"
+  },
+  "settings": {
+    "title": "Налаштування",
+    "language": "Мова",
+    "theme": "Тема",
+    "light": "Світла",
+    "dark": "Темна",
+    "system": "Автоматична",
+    "sounds": "Звуки",
+    "sound": "Звуки",
+    "fontSize": "Розмір шрифту",
+    "fontStandard": "Стандартний",
+    "fontLarge": "Збільшений",
+    "linkedAccounts": "Прив'язані акаунти",
+    "linkAccount": "Прив'язати акаунт",
+    "codeExpires": "Дійсний 5 хвилин",
+    "generateCode": "Згенерувати код",
+    "ignoreList": "Список ігнорованих",
+    "noIgnored": "Список порожній",
+    "unignore": "Видалити",
+    "logout": "Вийти",
+    "deleteAccount": "Видалити акаунт",
+    "deleteConfirm": "Ви впевнені? Цю дію неможливо скасувати.",
+    "confirmDelete": "Видалити"
+  },
+  "invite": {
+    "title": "Запрошення",
+    "from": "{{name}} запрошує вас",
+    "accept": "Прийняти та з'єднатися",
+    "alreadyUsed": "Це запрошення вже використано",
+    "success": "З'єднано!"
+  }
+}
