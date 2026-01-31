@@ -1,0 +1,196 @@
+{
+  "common": {
+    "appName": "Social Organizer",
+    "loading": "Načítání...",
+    "error": "Došlo k chybě",
+    "retry": "Zkusit znovu",
+    "save": "Uložit",
+    "cancel": "Zrušit",
+    "delete": "Smazat",
+    "confirm": "Potvrdit",
+    "back": "Zpět",
+    "next": "Další",
+    "done": "Hotovo",
+    "search": "Hledat",
+    "notFound": "Nenalezeno"
+  },
+  "auth": {
+    "loginWith": "Přihlásit se přes {{platform}}",
+    "linking": "Propojit účet",
+    "enterCode": "Zadejte 6místný kód",
+    "codeExpires": "Kód vyprší za {{minutes}} min"
+  },
+  "login": {
+    "subtitle": "Koordinace pomoci prostřednictvím důvěryhodných spojení"
+  },
+  "onboarding": {
+    "step1": {
+      "title": "Máte lidi, kterým na vás záleží",
+      "text": "Toto je sociální organizátor. Nepřevádí peníze ani nevybírá platby. Pomáhá lidem rychle se zkoordinovat, když někdo potřebuje podporu."
+    },
+    "step2": {
+      "title": "Jeden signál — a správní lidé se dozví",
+      "text": "Pokud někdo potřebuje pomoc — systém upozorní ty, kteří mohou pomoci. Upozornění přijde jednou. Žádný spam, žádný nátlak."
+    },
+    "step3": {
+      "title": "Vše je transparentní",
+      "text": "Každá akce se zaznamenává. Důvěra je postavena na transparentnosti, ne na kontrole."
+    },
+    "step4": {
+      "title": "Přidejte svou první osobu",
+      "text": "Organizátor funguje prostřednictvím spojení mezi lidmi. Začněte jednou osobou — někým, komu důvěřujete."
+    },
+    "start": "Začít",
+    "next": "Další",
+    "invite": "Odeslat pozvánku",
+    "qrCode": "Zobrazit QR kód"
+  },
+  "nav": {
+    "home": "Domů",
+    "notifications": "Upozornění",
+    "create": "Vytvořit",
+    "network": "Síť",
+    "settings": "Nastavení"
+  },
+  "dashboard": {
+    "title": "Přehled",
+    "needHelp": "Potřebuji pomoc",
+    "addFirstConnection": "Přidejte své první spojení",
+    "addFirstConnectionDesc": "Organizátor funguje prostřednictvím spojení mezi lidmi. Začněte jednou osobou — někým, komu důvěřujete.",
+    "goToNetwork": "Přejít na síť",
+    "myCollections": "Moje sbírky",
+    "create": "Vytvořit",
+    "noCollections": "Žádné aktivní sbírky",
+    "obligations": "závazky",
+    "myObligations": "Moje závazky",
+    "noObligations": "Žádné závazky",
+    "myNetwork": "Moje síť",
+    "view": "Zobrazit",
+    "connections": "spojení"
+  },
+  "collection": {
+    "create": "Vytvořit sbírku",
+    "amount": "Částka",
+    "currency": "Měna",
+    "chatLink": "Odkaz na chat",
+    "emergency": "Naléhavé",
+    "regular": "Běžné",
+    "active": "Aktivní",
+    "blocked": "Zablokováno",
+    "closed": "Uzavřeno",
+    "cancelled": "Zrušeno",
+    "progress": "{{current}} / {{target}} {{currency}}",
+    "obligationsCount": "{{count}} závazků",
+    "collected": "Vybráno",
+    "goal": "Cíl",
+    "openChat": "Otevřít chat",
+    "takeObligation": "Převzít závazek",
+    "amountPlaceholder": "Částka (min. 10)",
+    "submit": "Pomoci",
+    "close": "Uzavřít sbírku",
+    "participants": "Účastníci",
+    "noParticipants": "Zatím se nikdo nepřipojil",
+    "minAmount": "Minimálně 10"
+  },
+  "create": {
+    "title": "Vytvořit sbírku",
+    "emergency": "Naléhavé",
+    "regular": "Běžné",
+    "amount": "Částka",
+    "largeAmountWarning": "Budete obtěžovat velké množství lidí. Ujistěte se, že pomoc je skutečně potřeba.",
+    "largeAmountConfirm": "Potvrzuji, že částka je správná",
+    "currency": "Měna",
+    "chatLink": "Odkaz na chat",
+    "submit": "Vytvořit sbírku",
+    "minAmount": "Minimálně 10",
+    "invalidUrl": "Neplatná URL"
+  },
+  "obligation": {
+    "create": "Převzít závazek",
+    "amount": "Částka (min. {{min}})",
+    "subscribe": "Předplatit měsíčně",
+    "unsubscribe": "Zrušit předplatné"
+  },
+  "network": {
+    "title": "Moje síť",
+    "connections": "Spojení",
+    "addConnection": "Přidat spojení",
+    "connectionLimit": "Limit: {{current}}/{{max}}",
+    "invite": "Pozvat",
+    "qrCode": "QR kód",
+    "empty": "Žádná spojení",
+    "emptyHint": "Pozvěte svou první osobu"
+  },
+  "notifications": {
+    "title": "Upozornění",
+    "empty": "Žádná upozornění",
+    "new": "Nové",
+    "reNotify": "Připomínka",
+    "closed": "Uzavřeno",
+    "blocked": "Zablokováno",
+    "specialAuthor": "Autor",
+    "specialDeveloper": "Vývojář",
+    "handshakes": "podání rukou",
+    "via": "přes",
+    "view": "Otevřít",
+    "dismiss": "Zavřít",
+    "loadMore": "Načíst další",
+    "expiresIn": "Vyprší za {{hours}}h {{minutes}}m"
+  },
+  "notification": {
+    "newCollection": "{{name}} potřebuje pomoc",
+    "handshake": "přes {{path}}",
+    "markRead": "Označit jako přečtené",
+    "dismiss": "Zavřít"
+  },
+  "profile": {
+    "bio": "O mně",
+    "phone": "Telefon",
+    "stats": "Statistiky",
+    "ignore": "Ignorovat",
+    "addToNetwork": "Přidat do sítě",
+    "addConnection": "Přidat do spojení",
+    "connections": "Spojení",
+    "collectionsCreated": "Sbírky",
+    "obligationsGiven": "Kolikrát pomohl/a",
+    "totalPledged": "Celkem přislíbeno",
+    "editSettings": "Nastavení",
+    "edit": "Upravit profil",
+    "name": "Jméno",
+    "save": "Uložit",
+    "pledgedByCurrency": "podle měny",
+    "myConnections": "Moje spojení",
+    "noConnections": "Zatím žádná spojení"
+  },
+  "settings": {
+    "title": "Nastavení",
+    "language": "Jazyk",
+    "theme": "Motiv",
+    "light": "Světlý",
+    "dark": "Tmavý",
+    "system": "Automatický",
+    "sounds": "Zvuky",
+    "sound": "Zvuky",
+    "fontSize": "Velikost písma",
+    "fontStandard": "Standardní",
+    "fontLarge": "Zvětšené",
+    "linkedAccounts": "Propojené účty",
+    "linkAccount": "Propojit účet",
+    "codeExpires": "Platný 5 minut",
+    "generateCode": "Vygenerovat kód",
+    "ignoreList": "Seznam ignorovaných",
+    "noIgnored": "Seznam je prázdný",
+    "unignore": "Odebrat",
+    "logout": "Odhlásit se",
+    "deleteAccount": "Smazat účet",
+    "deleteConfirm": "Jste si jisti? Tuto akci nelze vrátit.",
+    "confirmDelete": "Smazat"
+  },
+  "invite": {
+    "title": "Pozvánka",
+    "from": "{{name}} vás zve",
+    "accept": "Přijmout a propojit",
+    "alreadyUsed": "Tato pozvánka již byla použita",
+    "success": "Propojeno!"
+  }
+}

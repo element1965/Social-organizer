@@ -1,0 +1,196 @@
+{
+  "common": {
+    "appName": "Social Organizer",
+    "loading": "Đang tải...",
+    "error": "Đã xảy ra lỗi",
+    "retry": "Thử lại",
+    "save": "Lưu",
+    "cancel": "Hủy",
+    "delete": "Xóa",
+    "confirm": "Xác nhận",
+    "back": "Quay lại",
+    "next": "Tiếp",
+    "done": "Xong",
+    "search": "Tìm kiếm",
+    "notFound": "Không tìm thấy"
+  },
+  "auth": {
+    "loginWith": "Đăng nhập bằng {{platform}}",
+    "linking": "Liên kết tài khoản",
+    "enterCode": "Nhập mã 6 chữ số",
+    "codeExpires": "Mã hết hạn sau {{minutes}} phút"
+  },
+  "login": {
+    "subtitle": "Phối hợp hỗ trợ thông qua các mối quan hệ tin cậy"
+  },
+  "onboarding": {
+    "step1": {
+      "title": "Bạn có những người quan tâm đến bạn",
+      "text": "Đây là công cụ tổ chức xã hội. Nó không chuyển tiền hay thu phí. Nó giúp mọi người phối hợp nhanh chóng khi ai đó cần hỗ trợ."
+    },
+    "step2": {
+      "title": "Một tín hiệu — và đúng người sẽ biết",
+      "text": "Nếu ai đó cần giúp đỡ — hệ thống sẽ thông báo cho những người có thể hỗ trợ. Thông báo chỉ đến một lần. Không spam, không áp lực."
+    },
+    "step3": {
+      "title": "Mọi thứ đều minh bạch",
+      "text": "Mọi hành động đều được ghi lại. Niềm tin được xây dựng trên sự minh bạch, không phải sự kiểm soát."
+    },
+    "step4": {
+      "title": "Thêm người đầu tiên",
+      "text": "Hệ thống hoạt động thông qua các kết nối giữa mọi người. Hãy bắt đầu với một người — ai đó bạn tin tưởng."
+    },
+    "start": "Bắt đầu",
+    "next": "Tiếp",
+    "invite": "Gửi lời mời",
+    "qrCode": "Hiện mã QR"
+  },
+  "nav": {
+    "home": "Trang chủ",
+    "notifications": "Thông báo",
+    "create": "Tạo",
+    "network": "Mạng lưới",
+    "settings": "Cài đặt"
+  },
+  "dashboard": {
+    "title": "Bảng điều khiển",
+    "needHelp": "Tôi cần giúp đỡ",
+    "addFirstConnection": "Thêm kết nối đầu tiên",
+    "addFirstConnectionDesc": "Hệ thống hoạt động thông qua các kết nối giữa mọi người. Hãy bắt đầu với một người — ai đó bạn tin tưởng.",
+    "goToNetwork": "Đi tới mạng lưới",
+    "myCollections": "Quyên góp của tôi",
+    "create": "Tạo",
+    "noCollections": "Không có quyên góp nào đang hoạt động",
+    "obligations": "cam kết",
+    "myObligations": "Cam kết của tôi",
+    "noObligations": "Không có cam kết",
+    "myNetwork": "Mạng lưới của tôi",
+    "view": "Xem",
+    "connections": "kết nối"
+  },
+  "collection": {
+    "create": "Tạo quyên góp",
+    "amount": "Số tiền",
+    "currency": "Tiền tệ",
+    "chatLink": "Liên kết chat",
+    "emergency": "Khẩn cấp",
+    "regular": "Thường",
+    "active": "Đang hoạt động",
+    "blocked": "Đã chặn",
+    "closed": "Đã đóng",
+    "cancelled": "Đã hủy",
+    "progress": "{{current}} / {{target}} {{currency}}",
+    "obligationsCount": "{{count}} cam kết",
+    "collected": "Đã quyên góp",
+    "goal": "Mục tiêu",
+    "openChat": "Mở chat",
+    "takeObligation": "Nhận cam kết",
+    "amountPlaceholder": "Số tiền (tối thiểu 10)",
+    "submit": "Giúp đỡ",
+    "close": "Đóng quyên góp",
+    "participants": "Người tham gia",
+    "noParticipants": "Chưa có ai tham gia",
+    "minAmount": "Tối thiểu 10"
+  },
+  "create": {
+    "title": "Tạo quyên góp",
+    "emergency": "Khẩn cấp",
+    "regular": "Thường",
+    "amount": "Số tiền",
+    "largeAmountWarning": "Bạn sẽ làm phiền nhiều người. Hãy chắc chắn rằng sự giúp đỡ thực sự cần thiết.",
+    "largeAmountConfirm": "Tôi xác nhận số tiền là chính xác",
+    "currency": "Tiền tệ",
+    "chatLink": "Liên kết chat",
+    "submit": "Tạo quyên góp",
+    "minAmount": "Tối thiểu 10",
+    "invalidUrl": "URL không hợp lệ"
+  },
+  "obligation": {
+    "create": "Nhận cam kết",
+    "amount": "Số tiền (tối thiểu {{min}})",
+    "subscribe": "Đăng ký hàng tháng",
+    "unsubscribe": "Hủy đăng ký"
+  },
+  "network": {
+    "title": "Mạng lưới của tôi",
+    "connections": "Kết nối",
+    "addConnection": "Thêm kết nối",
+    "connectionLimit": "Giới hạn: {{current}}/{{max}}",
+    "invite": "Mời",
+    "qrCode": "Mã QR",
+    "empty": "Không có kết nối",
+    "emptyHint": "Mời người đầu tiên của bạn"
+  },
+  "notifications": {
+    "title": "Thông báo",
+    "empty": "Không có thông báo",
+    "new": "Mới",
+    "reNotify": "Nhắc lại",
+    "closed": "Đã đóng",
+    "blocked": "Đã chặn",
+    "specialAuthor": "Tác giả",
+    "specialDeveloper": "Nhà phát triển",
+    "handshakes": "bắt tay",
+    "via": "qua",
+    "view": "Mở",
+    "dismiss": "Bỏ qua",
+    "loadMore": "Tải thêm",
+    "expiresIn": "Hết hạn sau {{hours}}g {{minutes}}p"
+  },
+  "notification": {
+    "newCollection": "{{name}} cần giúp đỡ",
+    "handshake": "qua {{path}}",
+    "markRead": "Đánh dấu đã đọc",
+    "dismiss": "Bỏ qua"
+  },
+  "profile": {
+    "bio": "Giới thiệu",
+    "phone": "Điện thoại",
+    "stats": "Thống kê",
+    "ignore": "Bỏ qua",
+    "addToNetwork": "Thêm vào mạng lưới",
+    "addConnection": "Thêm vào kết nối",
+    "connections": "Kết nối",
+    "collectionsCreated": "Quyên góp",
+    "obligationsGiven": "Số lần giúp đỡ",
+    "totalPledged": "Tổng cam kết",
+    "editSettings": "Cài đặt",
+    "edit": "Chỉnh sửa hồ sơ",
+    "name": "Tên",
+    "save": "Lưu",
+    "pledgedByCurrency": "theo tiền tệ",
+    "myConnections": "Kết nối của tôi",
+    "noConnections": "Chưa có kết nối"
+  },
+  "settings": {
+    "title": "Cài đặt",
+    "language": "Ngôn ngữ",
+    "theme": "Giao diện",
+    "light": "Sáng",
+    "dark": "Tối",
+    "system": "Tự động",
+    "sounds": "Âm thanh",
+    "sound": "Âm thanh",
+    "fontSize": "Cỡ chữ",
+    "fontStandard": "Chuẩn",
+    "fontLarge": "Phóng to",
+    "linkedAccounts": "Tài khoản liên kết",
+    "linkAccount": "Liên kết tài khoản",
+    "codeExpires": "Hiệu lực trong 5 phút",
+    "generateCode": "Tạo mã",
+    "ignoreList": "Danh sách bỏ qua",
+    "noIgnored": "Danh sách trống",
+    "unignore": "Gỡ bỏ",
+    "logout": "Đăng xuất",
+    "deleteAccount": "Xóa tài khoản",
+    "deleteConfirm": "Bạn có chắc chắn? Hành động này không thể hoàn tác.",
+    "confirmDelete": "Xóa"
+  },
+  "invite": {
+    "title": "Lời mời",
+    "from": "{{name}} mời bạn",
+    "accept": "Chấp nhận và kết nối",
+    "alreadyUsed": "Lời mời này đã được sử dụng",
+    "success": "Đã kết nối!"
+  }
+}

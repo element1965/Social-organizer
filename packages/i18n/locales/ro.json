@@ -1,0 +1,196 @@
+{
+  "common": {
+    "appName": "Social Organizer",
+    "loading": "Se încarcă...",
+    "error": "A apărut o eroare",
+    "retry": "Reîncearcă",
+    "save": "Salvează",
+    "cancel": "Anulează",
+    "delete": "Șterge",
+    "confirm": "Confirmă",
+    "back": "Înapoi",
+    "next": "Următor",
+    "done": "Gata",
+    "search": "Caută",
+    "notFound": "Nu a fost găsit"
+  },
+  "auth": {
+    "loginWith": "Autentifică-te cu {{platform}}",
+    "linking": "Conectează contul",
+    "enterCode": "Introdu codul din 6 cifre",
+    "codeExpires": "Codul expiră în {{minutes}} min"
+  },
+  "login": {
+    "subtitle": "Coordonarea ajutorului prin conexiuni de încredere"
+  },
+  "onboarding": {
+    "step1": {
+      "title": "Ai oameni cărora le pasă",
+      "text": "Acesta este un organizator social. Nu transferă bani și nu colectează plăți. Ajută oamenii să se coordoneze rapid atunci când cineva are nevoie de sprijin."
+    },
+    "step2": {
+      "title": "Un singur semnal — și oamenii potriviți află",
+      "text": "Dacă cineva are nevoie de ajutor — sistemul notifică pe cei care pot răspunde. Notificarea vine o singură dată. Fără spam, fără presiune."
+    },
+    "step3": {
+      "title": "Totul este transparent",
+      "text": "Fiecare acțiune este înregistrată. Încrederea se construiește pe transparență, nu pe control."
+    },
+    "step4": {
+      "title": "Adaugă prima ta persoană",
+      "text": "Organizatorul funcționează prin conexiuni între oameni. Începe cu o persoană — cineva în care ai încredere."
+    },
+    "start": "Începe",
+    "next": "Următor",
+    "invite": "Trimite invitația",
+    "qrCode": "Arată codul QR"
+  },
+  "nav": {
+    "home": "Acasă",
+    "notifications": "Alerte",
+    "create": "Creează",
+    "network": "Rețea",
+    "settings": "Setări"
+  },
+  "dashboard": {
+    "title": "Panou",
+    "needHelp": "Am nevoie de ajutor",
+    "addFirstConnection": "Adaugă prima ta conexiune",
+    "addFirstConnectionDesc": "Organizatorul funcționează prin conexiuni între oameni. Începe cu o persoană — cineva în care ai încredere.",
+    "goToNetwork": "Mergi la rețea",
+    "myCollections": "Colectele mele",
+    "create": "Creează",
+    "noCollections": "Nicio colectă activă",
+    "obligations": "obligații",
+    "myObligations": "Obligațiile mele",
+    "noObligations": "Nicio obligație",
+    "myNetwork": "Rețeaua mea",
+    "view": "Vezi",
+    "connections": "conexiuni"
+  },
+  "collection": {
+    "create": "Creează colectă",
+    "amount": "Sumă",
+    "currency": "Monedă",
+    "chatLink": "Link chat",
+    "emergency": "Urgență",
+    "regular": "Obișnuită",
+    "active": "Activă",
+    "blocked": "Blocată",
+    "closed": "Închisă",
+    "cancelled": "Anulată",
+    "progress": "{{current}} / {{target}} {{currency}}",
+    "obligationsCount": "{{count}} obligații",
+    "collected": "Colectat",
+    "goal": "Obiectiv",
+    "openChat": "Deschide chat",
+    "takeObligation": "Asumă o obligație",
+    "amountPlaceholder": "Sumă (min. 10)",
+    "submit": "Ajută",
+    "close": "Închide colecta",
+    "participants": "Participanți",
+    "noParticipants": "Nimeni nu s-a alăturat încă",
+    "minAmount": "Minimum 10"
+  },
+  "create": {
+    "title": "Creează colectă",
+    "emergency": "Urgență",
+    "regular": "Obișnuită",
+    "amount": "Sumă",
+    "largeAmountWarning": "Vei deranja un număr mare de persoane. Asigură-te că ajutorul este cu adevărat necesar.",
+    "largeAmountConfirm": "Confirm că suma este corectă",
+    "currency": "Monedă",
+    "chatLink": "Link chat",
+    "submit": "Creează colectă",
+    "minAmount": "Minimum 10",
+    "invalidUrl": "URL invalid"
+  },
+  "obligation": {
+    "create": "Asumă obligație",
+    "amount": "Sumă (min. {{min}})",
+    "subscribe": "Abonează-te lunar",
+    "unsubscribe": "Dezabonează-te"
+  },
+  "network": {
+    "title": "Rețeaua mea",
+    "connections": "Conexiuni",
+    "addConnection": "Adaugă conexiune",
+    "connectionLimit": "Limită: {{current}}/{{max}}",
+    "invite": "Invită",
+    "qrCode": "Cod QR",
+    "empty": "Nicio conexiune",
+    "emptyHint": "Invită prima ta persoană"
+  },
+  "notifications": {
+    "title": "Notificări",
+    "empty": "Nicio notificare",
+    "new": "Nouă",
+    "reNotify": "Reamintire",
+    "closed": "Închisă",
+    "blocked": "Blocată",
+    "specialAuthor": "Autor",
+    "specialDeveloper": "Dezvoltator",
+    "handshakes": "strângeri de mână",
+    "via": "prin",
+    "view": "Deschide",
+    "dismiss": "Respinge",
+    "loadMore": "Încarcă mai multe",
+    "expiresIn": "Expiră în {{hours}}h {{minutes}}m"
+  },
+  "notification": {
+    "newCollection": "{{name}} are nevoie de ajutor",
+    "handshake": "prin {{path}}",
+    "markRead": "Marchează ca citit",
+    "dismiss": "Respinge"
+  },
+  "profile": {
+    "bio": "Despre",
+    "phone": "Telefon",
+    "stats": "Statistici",
+    "ignore": "Ignoră",
+    "addToNetwork": "Adaugă în rețea",
+    "addConnection": "Adaugă la conexiuni",
+    "connections": "Conexiuni",
+    "collectionsCreated": "Colecte",
+    "obligationsGiven": "Ajutoare acordate",
+    "totalPledged": "Total promis",
+    "editSettings": "Setări",
+    "edit": "Editează profilul",
+    "name": "Nume",
+    "save": "Salvează",
+    "pledgedByCurrency": "pe monedă",
+    "myConnections": "Conexiunile mele",
+    "noConnections": "Nicio conexiune încă"
+  },
+  "settings": {
+    "title": "Setări",
+    "language": "Limbă",
+    "theme": "Temă",
+    "light": "Luminoasă",
+    "dark": "Întunecată",
+    "system": "Automată",
+    "sounds": "Sunete",
+    "sound": "Sunete",
+    "fontSize": "Dimensiune font",
+    "fontStandard": "Standard",
+    "fontLarge": "Mărit",
+    "linkedAccounts": "Conturi conectate",
+    "linkAccount": "Conectează cont",
+    "codeExpires": "Valabil 5 minute",
+    "generateCode": "Generează cod",
+    "ignoreList": "Lista de ignorați",
+    "noIgnored": "Lista este goală",
+    "unignore": "Elimină",
+    "logout": "Deconectare",
+    "deleteAccount": "Șterge contul",
+    "deleteConfirm": "Ești sigur? Această acțiune este ireversibilă.",
+    "confirmDelete": "Șterge"
+  },
+  "invite": {
+    "title": "Invitație",
+    "from": "{{name}} te invită",
+    "accept": "Acceptă și conectează",
+    "alreadyUsed": "Această invitație a fost deja folosită",
+    "success": "Conectat!"
+  }
+}

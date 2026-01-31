@@ -1,0 +1,196 @@
+{
+  "common": {
+    "appName": "Social Organizer",
+    "loading": "Memuat...",
+    "error": "Terjadi kesalahan",
+    "retry": "Coba lagi",
+    "save": "Simpan",
+    "cancel": "Batal",
+    "delete": "Hapus",
+    "confirm": "Konfirmasi",
+    "back": "Kembali",
+    "next": "Berikutnya",
+    "done": "Selesai",
+    "search": "Cari",
+    "notFound": "Tidak ditemukan"
+  },
+  "auth": {
+    "loginWith": "Masuk dengan {{platform}}",
+    "linking": "Hubungkan akun",
+    "enterCode": "Masukkan kode 6 digit",
+    "codeExpires": "Kode kedaluwarsa dalam {{minutes}} menit"
+  },
+  "login": {
+    "subtitle": "Koordinasi bantuan melalui koneksi terpercaya"
+  },
+  "onboarding": {
+    "step1": {
+      "title": "Kamu punya orang-orang yang peduli",
+      "text": "Ini adalah pengorganisir sosial. Tidak mentransfer uang atau mengumpulkan pembayaran. Ini membantu orang berkoordinasi dengan cepat ketika seseorang membutuhkan dukungan."
+    },
+    "step2": {
+      "title": "Satu sinyal — dan orang yang tepat tahu",
+      "text": "Jika seseorang membutuhkan bantuan — sistem memberi tahu mereka yang bisa membantu. Notifikasi datang sekali saja. Tanpa spam, tanpa tekanan."
+    },
+    "step3": {
+      "title": "Semuanya transparan",
+      "text": "Setiap tindakan dicatat. Kepercayaan dibangun atas transparansi, bukan kontrol."
+    },
+    "step4": {
+      "title": "Tambahkan orang pertamamu",
+      "text": "Pengorganisir bekerja melalui koneksi antar orang. Mulai dengan satu orang — seseorang yang kamu percaya."
+    },
+    "start": "Mulai",
+    "next": "Berikutnya",
+    "invite": "Kirim Undangan",
+    "qrCode": "Tampilkan Kode QR"
+  },
+  "nav": {
+    "home": "Beranda",
+    "notifications": "Notifikasi",
+    "create": "Buat",
+    "network": "Jaringan",
+    "settings": "Pengaturan"
+  },
+  "dashboard": {
+    "title": "Dasbor",
+    "needHelp": "Saya butuh bantuan",
+    "addFirstConnection": "Tambahkan koneksi pertamamu",
+    "addFirstConnectionDesc": "Pengorganisir bekerja melalui koneksi antar orang. Mulai dengan satu orang — seseorang yang kamu percaya.",
+    "goToNetwork": "Buka Jaringan",
+    "myCollections": "Penggalangan Saya",
+    "create": "Buat",
+    "noCollections": "Tidak ada penggalangan aktif",
+    "obligations": "komitmen",
+    "myObligations": "Komitmen Saya",
+    "noObligations": "Tidak ada komitmen",
+    "myNetwork": "Jaringan Saya",
+    "view": "Lihat",
+    "connections": "koneksi"
+  },
+  "collection": {
+    "create": "Buat Penggalangan",
+    "amount": "Jumlah",
+    "currency": "Mata Uang",
+    "chatLink": "Tautan Chat",
+    "emergency": "Darurat",
+    "regular": "Biasa",
+    "active": "Aktif",
+    "blocked": "Diblokir",
+    "closed": "Ditutup",
+    "cancelled": "Dibatalkan",
+    "progress": "{{current}} / {{target}} {{currency}}",
+    "obligationsCount": "{{count}} komitmen",
+    "collected": "Terkumpul",
+    "goal": "Target",
+    "openChat": "Buka chat",
+    "takeObligation": "Ambil komitmen",
+    "amountPlaceholder": "Jumlah (min. 10)",
+    "submit": "Bantu",
+    "close": "Tutup penggalangan",
+    "participants": "Peserta",
+    "noParticipants": "Belum ada yang bergabung",
+    "minAmount": "Minimum 10"
+  },
+  "create": {
+    "title": "Buat Penggalangan",
+    "emergency": "Darurat",
+    "regular": "Biasa",
+    "amount": "Jumlah",
+    "largeAmountWarning": "Kamu akan mengganggu banyak orang. Pastikan bantuan benar-benar diperlukan.",
+    "largeAmountConfirm": "Saya konfirmasi jumlahnya benar",
+    "currency": "Mata Uang",
+    "chatLink": "Tautan chat",
+    "submit": "Buat Penggalangan",
+    "minAmount": "Minimum 10",
+    "invalidUrl": "URL tidak valid"
+  },
+  "obligation": {
+    "create": "Ambil Komitmen",
+    "amount": "Jumlah (min. {{min}})",
+    "subscribe": "Berlangganan bulanan",
+    "unsubscribe": "Berhenti berlangganan"
+  },
+  "network": {
+    "title": "Jaringan Saya",
+    "connections": "Koneksi",
+    "addConnection": "Tambah Koneksi",
+    "connectionLimit": "Batas: {{current}}/{{max}}",
+    "invite": "Undang",
+    "qrCode": "Kode QR",
+    "empty": "Tidak ada koneksi",
+    "emptyHint": "Undang orang pertamamu"
+  },
+  "notifications": {
+    "title": "Notifikasi",
+    "empty": "Tidak ada notifikasi",
+    "new": "Baru",
+    "reNotify": "Pengingat",
+    "closed": "Ditutup",
+    "blocked": "Diblokir",
+    "specialAuthor": "Penulis",
+    "specialDeveloper": "Pengembang",
+    "handshakes": "jabat tangan",
+    "via": "melalui",
+    "view": "Buka",
+    "dismiss": "Abaikan",
+    "loadMore": "Muat lebih banyak",
+    "expiresIn": "Kedaluwarsa dalam {{hours}}j {{minutes}}m"
+  },
+  "notification": {
+    "newCollection": "{{name}} butuh bantuan",
+    "handshake": "melalui {{path}}",
+    "markRead": "Tandai sudah dibaca",
+    "dismiss": "Abaikan"
+  },
+  "profile": {
+    "bio": "Tentang",
+    "phone": "Telepon",
+    "stats": "Statistik",
+    "ignore": "Abaikan",
+    "addToNetwork": "Tambah ke Jaringan",
+    "addConnection": "Tambah ke koneksi",
+    "connections": "Koneksi",
+    "collectionsCreated": "Penggalangan",
+    "obligationsGiven": "Jumlah bantuan",
+    "totalPledged": "Total dijanjikan",
+    "editSettings": "Pengaturan",
+    "edit": "Edit Profil",
+    "name": "Nama",
+    "save": "Simpan",
+    "pledgedByCurrency": "per mata uang",
+    "myConnections": "Koneksi Saya",
+    "noConnections": "Belum ada koneksi"
+  },
+  "settings": {
+    "title": "Pengaturan",
+    "language": "Bahasa",
+    "theme": "Tema",
+    "light": "Terang",
+    "dark": "Gelap",
+    "system": "Otomatis",
+    "sounds": "Suara",
+    "sound": "Suara",
+    "fontSize": "Ukuran Font",
+    "fontStandard": "Standar",
+    "fontLarge": "Diperbesar",
+    "linkedAccounts": "Akun Terhubung",
+    "linkAccount": "Hubungkan Akun",
+    "codeExpires": "Berlaku selama 5 menit",
+    "generateCode": "Buat Kode",
+    "ignoreList": "Daftar Abaikan",
+    "noIgnored": "Daftar kosong",
+    "unignore": "Hapus",
+    "logout": "Keluar",
+    "deleteAccount": "Hapus Akun",
+    "deleteConfirm": "Apakah kamu yakin? Tindakan ini tidak dapat dibatalkan.",
+    "confirmDelete": "Hapus"
+  },
+  "invite": {
+    "title": "Undangan",
+    "from": "{{name}} mengundangmu",
+    "accept": "Terima & Hubungkan",
+    "alreadyUsed": "Undangan ini sudah digunakan",
+    "success": "Terhubung!"
+  }
+}

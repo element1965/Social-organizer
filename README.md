@@ -36,7 +36,7 @@ Social organizer/
 - **Мобильное:** React Native (Expo) + NativeWind
 - **3D:** Three.js + react-force-graph-3d
 - **Бэкап:** Gun.js (IndexedDB)
-- **i18n:** i18next (en, ru)
+- **i18n:** i18next (25 языков: en, ru, es, fr, de, pt, it, zh, ja, ko, ar, hi, tr, pl, uk, nl, sv, da, fi, no, cs, ro, th, vi, id)
 
 ## Быстрый старт
 
@@ -164,7 +164,7 @@ React 19 SPA с tRPC-клиентом.
 - **State:** Zustand (auth, theme) + tRPC React Query (серверные данные)
 - **Роутинг:** React Router v7 с ProtectedRoute
 - **UI:** shadcn-стиль компоненты + Tailwind CSS 3
-- **i18n:** i18next v25 + react-i18next (en/ru), автодетект языка через navigator.language
+- **i18n:** i18next v25 + react-i18next (25 языков), автодетект языка через navigator.language
 - **Иконки:** lucide-react
 - **QR:** qrcode.react
 - **3D:** Three.js + @react-three/fiber (lazy loaded)

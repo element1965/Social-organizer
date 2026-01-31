@@ -1,0 +1,196 @@
+{
+  "common": {
+    "appName": "Social Organizer",
+    "loading": "Laster...",
+    "error": "En feil oppsto",
+    "retry": "Prøv igjen",
+    "save": "Lagre",
+    "cancel": "Avbryt",
+    "delete": "Slett",
+    "confirm": "Bekreft",
+    "back": "Tilbake",
+    "next": "Neste",
+    "done": "Ferdig",
+    "search": "Søk",
+    "notFound": "Ikke funnet"
+  },
+  "auth": {
+    "loginWith": "Logg inn med {{platform}}",
+    "linking": "Koble konto",
+    "enterCode": "Skriv inn 6-sifret kode",
+    "codeExpires": "Koden utløper om {{minutes}} min"
+  },
+  "login": {
+    "subtitle": "Hjelpekoordinering gjennom pålitelige forbindelser"
+  },
+  "onboarding": {
+    "step1": {
+      "title": "Du har folk som bryr seg",
+      "text": "Dette er en sosial organisator. Den overfører ikke penger eller samler inn betalinger. Den hjelper folk med å raskt koordinere når noen trenger støtte."
+    },
+    "step2": {
+      "title": "Ett signal — og de rette personene vet",
+      "text": "Hvis noen trenger hjelp — varsler systemet de som kan hjelpe. Varselet kommer én gang. Ingen spam, ingen press."
+    },
+    "step3": {
+      "title": "Alt er transparent",
+      "text": "Hver handling registreres. Tillit bygges på åpenhet, ikke kontroll."
+    },
+    "step4": {
+      "title": "Legg til din første person",
+      "text": "Organisatoren fungerer gjennom forbindelser mellom mennesker. Start med én person — noen du stoler på."
+    },
+    "start": "Kom i gang",
+    "next": "Neste",
+    "invite": "Send invitasjon",
+    "qrCode": "Vis QR-kode"
+  },
+  "nav": {
+    "home": "Hjem",
+    "notifications": "Varsler",
+    "create": "Opprett",
+    "network": "Nettverk",
+    "settings": "Innstillinger"
+  },
+  "dashboard": {
+    "title": "Oversikt",
+    "needHelp": "Jeg trenger hjelp",
+    "addFirstConnection": "Legg til din første forbindelse",
+    "addFirstConnectionDesc": "Organisatoren fungerer gjennom forbindelser mellom mennesker. Start med én person — noen du stoler på.",
+    "goToNetwork": "Gå til nettverk",
+    "myCollections": "Mine innsamlinger",
+    "create": "Opprett",
+    "noCollections": "Ingen aktive innsamlinger",
+    "obligations": "forpliktelser",
+    "myObligations": "Mine forpliktelser",
+    "noObligations": "Ingen forpliktelser",
+    "myNetwork": "Mitt nettverk",
+    "view": "Vis",
+    "connections": "forbindelser"
+  },
+  "collection": {
+    "create": "Opprett innsamling",
+    "amount": "Beløp",
+    "currency": "Valuta",
+    "chatLink": "Chat-lenke",
+    "emergency": "Nødstilfelle",
+    "regular": "Vanlig",
+    "active": "Aktiv",
+    "blocked": "Blokkert",
+    "closed": "Lukket",
+    "cancelled": "Kansellert",
+    "progress": "{{current}} / {{target}} {{currency}}",
+    "obligationsCount": "{{count}} forpliktelser",
+    "collected": "Samlet inn",
+    "goal": "Mål",
+    "openChat": "Åpne chat",
+    "takeObligation": "Ta en forpliktelse",
+    "amountPlaceholder": "Beløp (min. 10)",
+    "submit": "Hjelp",
+    "close": "Lukk innsamling",
+    "participants": "Deltakere",
+    "noParticipants": "Ingen har blitt med ennå",
+    "minAmount": "Minimum 10"
+  },
+  "create": {
+    "title": "Opprett innsamling",
+    "emergency": "Nødstilfelle",
+    "regular": "Vanlig",
+    "amount": "Beløp",
+    "largeAmountWarning": "Du vil forstyrre mange mennesker. Sørg for at hjelpen virkelig trengs.",
+    "largeAmountConfirm": "Jeg bekrefter at beløpet er riktig",
+    "currency": "Valuta",
+    "chatLink": "Chat-lenke",
+    "submit": "Opprett innsamling",
+    "minAmount": "Minimum 10",
+    "invalidUrl": "Ugyldig URL"
+  },
+  "obligation": {
+    "create": "Ta forpliktelse",
+    "amount": "Beløp (min. {{min}})",
+    "subscribe": "Abonner månedlig",
+    "unsubscribe": "Avslutt abonnement"
+  },
+  "network": {
+    "title": "Mitt nettverk",
+    "connections": "Forbindelser",
+    "addConnection": "Legg til forbindelse",
+    "connectionLimit": "Grense: {{current}}/{{max}}",
+    "invite": "Inviter",
+    "qrCode": "QR-kode",
+    "empty": "Ingen forbindelser",
+    "emptyHint": "Inviter din første person"
+  },
+  "notifications": {
+    "title": "Varsler",
+    "empty": "Ingen varsler",
+    "new": "Ny",
+    "reNotify": "Påminnelse",
+    "closed": "Lukket",
+    "blocked": "Blokkert",
+    "specialAuthor": "Forfatter",
+    "specialDeveloper": "Utvikler",
+    "handshakes": "håndtrykk",
+    "via": "via",
+    "view": "Åpne",
+    "dismiss": "Avvis",
+    "loadMore": "Last flere",
+    "expiresIn": "Utløper om {{hours}}t {{minutes}}m"
+  },
+  "notification": {
+    "newCollection": "{{name}} trenger hjelp",
+    "handshake": "via {{path}}",
+    "markRead": "Merk som lest",
+    "dismiss": "Avvis"
+  },
+  "profile": {
+    "bio": "Om",
+    "phone": "Telefon",
+    "stats": "Statistikk",
+    "ignore": "Ignorer",
+    "addToNetwork": "Legg til i nettverk",
+    "addConnection": "Legg til forbindelser",
+    "connections": "Forbindelser",
+    "collectionsCreated": "Innsamlinger",
+    "obligationsGiven": "Ganger hjulpet",
+    "totalPledged": "Totalt lovet",
+    "editSettings": "Innstillinger",
+    "edit": "Rediger profil",
+    "name": "Navn",
+    "save": "Lagre",
+    "pledgedByCurrency": "etter valuta",
+    "myConnections": "Mine forbindelser",
+    "noConnections": "Ingen forbindelser ennå"
+  },
+  "settings": {
+    "title": "Innstillinger",
+    "language": "Språk",
+    "theme": "Tema",
+    "light": "Lyst",
+    "dark": "Mørkt",
+    "system": "Automatisk",
+    "sounds": "Lyder",
+    "sound": "Lyder",
+    "fontSize": "Skriftstørrelse",
+    "fontStandard": "Standard",
+    "fontLarge": "Forstørret",
+    "linkedAccounts": "Koblede kontoer",
+    "linkAccount": "Koble konto",
+    "codeExpires": "Gyldig i 5 minutter",
+    "generateCode": "Generer kode",
+    "ignoreList": "Ignoreringsliste",
+    "noIgnored": "Listen er tom",
+    "unignore": "Fjern",
+    "logout": "Logg ut",
+    "deleteAccount": "Slett konto",
+    "deleteConfirm": "Er du sikker? Denne handlingen kan ikke angres.",
+    "confirmDelete": "Slett"
+  },
+  "invite": {
+    "title": "Invitasjon",
+    "from": "{{name}} inviterer deg",
+    "accept": "Godta og koble til",
+    "alreadyUsed": "Denne invitasjonen er allerede brukt",
+    "success": "Tilkoblet!"
+  }
+}
