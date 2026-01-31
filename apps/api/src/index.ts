@@ -21,7 +21,11 @@ const PORT = Number(process.env.PORT) || 3001;
 const HOST = process.env.HOST || '0.0.0.0';
 
 // Путь к собранному веб-фронтенду
-const WEB_DIST = resolve(__dirname, '../../web/dist');
+// В production (Railway) — копируется в dist/public при билде
+// В dev — прямо в apps/web/dist
+const WEB_DIST = existsSync(resolve(__dirname, 'public'))
+  ? resolve(__dirname, 'public')
+  : resolve(__dirname, '../../web/dist');
 
 async function start() {
   try {
