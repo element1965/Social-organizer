@@ -130,11 +130,19 @@ export const collectionRouter = router({
     }),
 
   myActive: protectedProcedure.query(async ({ ctx }) => {
-    return ctx.db.collection.findMany({
+    const collections = await ctx.db.collection.findMany({
       where: { creatorId: ctx.userId, status: { in: ['ACTIVE', 'BLOCKED'] } },
-      include: { _count: { select: { obligations: true } } },
+      include: {
+        _count: { select: { obligations: true } },
+        obligations: { select: { amount: true } },
+      },
       orderBy: { createdAt: 'desc' },
     });
+    return collections.map((col) => ({
+      ...col,
+      currentAmount: col.obligations.reduce((sum, o) => sum + o.amount, 0),
+      obligations: undefined,
+    }));
   }),
 
   myParticipating: protectedProcedure.query(async ({ ctx }) => {

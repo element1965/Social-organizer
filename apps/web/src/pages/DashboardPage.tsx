@@ -74,15 +74,24 @@ export function DashboardPage() {
             <p className="text-sm text-gray-500 text-center py-4">{t('dashboard.noCollections', 'Нет активных сборов')}</p>
           ) : (
             <div className="space-y-3">
-              {myCollections.map((col) => (
-                <button key={col.id} onClick={() => navigate(`/collection/${col.id}`)} className="w-full text-left p-3 rounded-lg bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700">
-                  <div className="flex items-center justify-between mb-1">
-                    <Badge variant={col.status === 'ACTIVE' ? 'success' : 'warning'}>{col.status}</Badge>
-                    <span className="text-sm font-medium text-gray-900 dark:text-white">{col.amount != null ? `${col.amount} ${col.currency}` : col.currency}</span>
-                  </div>
-                  <div className="text-xs text-gray-500">{col._count.obligations} {t('dashboard.obligations', 'обязательств')}</div>
-                </button>
-              ))}
+              {myCollections.map((col) => {
+                const hasGoal = col.amount != null && col.amount > 0;
+                const current = (col as any).currentAmount ?? 0;
+                const pct = hasGoal ? Math.min((current / col.amount!) * 100, 100) : 0;
+                return (
+                  <button key={col.id} onClick={() => navigate(`/collection/${col.id}`)} className="w-full text-left p-3 rounded-lg bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700">
+                    <div className="flex items-center justify-between mb-1">
+                      <div className="flex items-center gap-2">
+                        <Badge variant={col.status === 'ACTIVE' ? 'success' : 'warning'}>{col.status}</Badge>
+                        <Badge variant={col.type === 'EMERGENCY' ? 'danger' : 'info'}>{col.type === 'EMERGENCY' ? t('collection.emergency') : t('collection.regular')}</Badge>
+                      </div>
+                      <span className="text-sm font-medium text-gray-900 dark:text-white">{hasGoal ? `${current} / ${col.amount} ${col.currency}` : `${current} ${col.currency}`}</span>
+                    </div>
+                    {hasGoal && <Progress value={current} max={col.amount!} className="mt-1" />}
+                    <div className="text-xs text-gray-500 mt-1">{col._count.obligations} {t('dashboard.obligations')}</div>
+                  </button>
+                );
+              })}
             </div>
           )}
         </CardContent>
