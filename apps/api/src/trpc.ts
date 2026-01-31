@@ -8,10 +8,18 @@ export const router = t.router;
 export const publicProcedure = t.procedure;
 export const middleware = t.middleware;
 
-// Auth middleware — ensures user is authenticated
-const isAuthed = middleware(({ ctx, next }) => {
+// Auth middleware — ensures user is authenticated and not deleted
+const isAuthed = middleware(async ({ ctx, next }) => {
   if (!ctx.userId) {
     throw new TRPCError({ code: 'UNAUTHORIZED', message: 'Not authenticated' });
+  }
+  // Проверка: удалённые пользователи не могут выполнять действия
+  const user = await ctx.db.user.findUnique({
+    where: { id: ctx.userId },
+    select: { deletedAt: true },
+  });
+  if (user?.deletedAt) {
+    throw new TRPCError({ code: 'FORBIDDEN', message: 'Account has been deleted' });
   }
   return next({ ctx: { ...ctx, userId: ctx.userId } });
 });

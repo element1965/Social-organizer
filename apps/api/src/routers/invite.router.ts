@@ -2,6 +2,7 @@ import { z } from 'zod';
 import { randomBytes } from 'crypto';
 import { router, protectedProcedure } from '../trpc';
 import { TRPCError } from '@trpc/server';
+import { MAX_CONNECTIONS } from '@so/shared';
 
 export const inviteRouter = router({
   generate: protectedProcedure.mutation(async ({ ctx }) => {
@@ -22,6 +23,22 @@ export const inviteRouter = router({
       if (invite.usedById) throw new TRPCError({ code: 'BAD_REQUEST', message: 'Invite already used' });
       if (invite.inviterId === ctx.userId) {
         throw new TRPCError({ code: 'BAD_REQUEST', message: 'Cannot accept own invite' });
+      }
+
+      // Проверка лимита связей у обоих
+      const [myCount, inviterCount] = await Promise.all([
+        ctx.db.connection.count({
+          where: { OR: [{ userAId: ctx.userId }, { userBId: ctx.userId }] },
+        }),
+        ctx.db.connection.count({
+          where: { OR: [{ userAId: invite.inviterId }, { userBId: invite.inviterId }] },
+        }),
+      ]);
+      if (myCount >= MAX_CONNECTIONS) {
+        throw new TRPCError({ code: 'FORBIDDEN', message: `Connection limit reached (${MAX_CONNECTIONS})` });
+      }
+      if (inviterCount >= MAX_CONNECTIONS) {
+        throw new TRPCError({ code: 'FORBIDDEN', message: 'Inviter has reached connection limit' });
       }
 
       await ctx.db.inviteLink.update({

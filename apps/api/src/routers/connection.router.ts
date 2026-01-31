@@ -30,11 +30,20 @@ export const connectionRouter = router({
       if (input.userId === ctx.userId) {
         throw new TRPCError({ code: 'BAD_REQUEST', message: 'Cannot connect to yourself' });
       }
-      const count = await ctx.db.connection.count({
-        where: { OR: [{ userAId: ctx.userId }, { userBId: ctx.userId }] },
-      });
-      if (count >= MAX_CONNECTIONS) {
+      // Проверка лимита у обоих пользователей (связь обоюдная — оба тратят слот)
+      const [myCount, targetCount] = await Promise.all([
+        ctx.db.connection.count({
+          where: { OR: [{ userAId: ctx.userId }, { userBId: ctx.userId }] },
+        }),
+        ctx.db.connection.count({
+          where: { OR: [{ userAId: input.userId }, { userBId: input.userId }] },
+        }),
+      ]);
+      if (myCount >= MAX_CONNECTIONS) {
         throw new TRPCError({ code: 'FORBIDDEN', message: `Connection limit reached (${MAX_CONNECTIONS})` });
+      }
+      if (targetCount >= MAX_CONNECTIONS) {
+        throw new TRPCError({ code: 'FORBIDDEN', message: 'Target user has reached connection limit' });
       }
       const [userAId, userBId] = [ctx.userId, input.userId].sort();
       const existing = await ctx.db.connection.findUnique({

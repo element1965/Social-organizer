@@ -176,7 +176,7 @@ model Notification {
   user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
   collection Collection @relation(fields: [collectionId], references: [id], onDelete: Cascade)
 
-  @@unique([userId, collectionId, wave])
+  @@unique([userId, collectionId, type, wave])
   @@index([userId, status])
   @@index([expiresAt])
   @@map("notifications")
