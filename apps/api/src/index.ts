@@ -1,5 +1,9 @@
+import { fileURLToPath } from 'node:url';
+import { dirname, resolve } from 'node:path';
+import { existsSync } from 'node:fs';
 import Fastify from 'fastify';
 import cors from '@fastify/cors';
+import fastifyStatic from '@fastify/static';
 import {
   fastifyTRPCPlugin,
   type FastifyTRPCPluginOptions,
@@ -8,10 +12,16 @@ import { appRouter, type AppRouter } from './routers/index';
 import { createContext } from './context';
 import { setupQueues } from './workers/index';
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
 const app = Fastify({ logger: true, maxParamLength: 5000 });
 
 const PORT = Number(process.env.PORT) || 3001;
 const HOST = process.env.HOST || '0.0.0.0';
+
+// Путь к собранному веб-фронтенду
+const WEB_DIST = resolve(__dirname, '../../web/dist');
 
 async function start() {
   try {
@@ -34,6 +44,22 @@ async function start() {
     app.get('/health', async () => {
       return { status: 'ok', timestamp: new Date().toISOString() };
     });
+
+    // Раздача веб-фронтенда (если dist существует)
+    if (existsSync(WEB_DIST)) {
+      await app.register(fastifyStatic, {
+        root: WEB_DIST,
+        prefix: '/',
+        wildcard: false,
+      });
+
+      // SPA fallback: все не-API роуты → index.html
+      app.setNotFoundHandler((_req, reply) => {
+        reply.sendFile('index.html', WEB_DIST);
+      });
+
+      console.log(`Serving web frontend from ${WEB_DIST}`);
+    }
 
     // BullMQ workers (only if Redis is available)
     if (process.env.REDIS_URL) {
