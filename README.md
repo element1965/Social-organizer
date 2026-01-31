@@ -95,18 +95,55 @@ pnpm dev
 DATABASE_URL="postgresql://postgres:1111@localhost:5434/social_organizer?schema=public"
 ```
 
-### apps/api (планируется)
+### apps/api
 ```
 PORT=3001
-DATABASE_URL=...
+DATABASE_URL=postgresql://postgres:1111@localhost:5434/social_organizer?schema=public
 REDIS_URL=redis://localhost:6379
-JWT_SECRET=...
+JWT_SECRET=your-secret-key
 ```
+
+## API (tRPC-эндпоинты)
+
+| Роутер | Процедуры |
+|--------|-----------|
+| `auth` | loginWithPlatform, refresh, generateLinkCode, linkAccount |
+| `user` | me, update, getById, getStats, delete |
+| `connection` | list, add (лимит 150), getCount, graphSlice (2-3 уровня) |
+| `collection` | create, getById, close, cancel, myActive, myParticipating |
+| `obligation` | create, myList, unsubscribe |
+| `notification` | list (курсорная пагинация), markRead, dismiss, unreadCount |
+| `settings` | get, updateLanguage/Theme/Sound/FontScale, ignoreList/addIgnore/removeIgnore |
+| `invite` | generate, accept, getByToken |
+| `stats` | profile |
+
+## Сервисы
+
+- **Auth** — JWT (HS256), 30 мин access / 30 дн refresh, 6-значные коды привязки
+- **BFS** — рекурсивный CTE в PostgreSQL для обхода графа связей и рассылки уведомлений
+- **Notifications** — BFS-рассылка с учётом ignore-списка и handshake path
+
+## BullMQ-задачи
+
+| Воркер | Описание | Расписание |
+|--------|----------|------------|
+| `re-notify` | Повторные уведомления по активным сборам | Каждые 12ч |
+| `cycle-close` | Автозакрытие 28-дневного цикла регулярных сборов | Каждый час |
+| `special-notify` | Уведомления о сборах Автора/Разработчика (3-й день) | Каждый час |
+| `expire-notifications` | Протухшие уведомления (24ч) → EXPIRED | Каждый час |
+| `check-block` | Проверка суммы обязательств → BLOCKED | По событию |
+
+## Деплой
+
+- **Railway:** автодеплой при `git push` в main
+- **URL:** https://social-organizer-production.up.railway.app
+- **Healthcheck:** /health
+- **Сервисы:** PostgreSQL 17, Redis 7, Fastify API
 
 ## Текущий статус
 
 - [x] **Фаза 0:** Инфраструктура монорепо
-- [ ] **Фаза 1:** Бэкенд (API)
+- [x] **Фаза 1:** Бэкенд (API) — tRPC роутеры, сервисы, BullMQ воркеры
 - [ ] **Фаза 2:** Веб-фронтенд (MVP)
 - [ ] **Фаза 3:** 3D и оптимизация
 - [ ] **Фаза 4:** Деплой и тестирование

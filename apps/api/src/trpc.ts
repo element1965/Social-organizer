@@ -1,0 +1,25 @@
+import { initTRPC, TRPCError } from '@trpc/server';
+import { z } from 'zod';
+import type { Context } from './context';
+
+const t = initTRPC.context<Context>().create();
+
+export const router = t.router;
+export const publicProcedure = t.procedure;
+export const middleware = t.middleware;
+
+// Auth middleware — ensures user is authenticated
+const isAuthed = middleware(({ ctx, next }) => {
+  if (!ctx.userId) {
+    throw new TRPCError({ code: 'UNAUTHORIZED', message: 'Not authenticated' });
+  }
+  return next({ ctx: { ...ctx, userId: ctx.userId } });
+});
+
+export const protectedProcedure = t.procedure.use(isAuthed);
+
+// Pagination input schema
+export const paginationInput = z.object({
+  cursor: z.string().optional(),
+  limit: z.number().min(1).max(100).default(20),
+});
