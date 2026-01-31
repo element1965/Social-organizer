@@ -1,5 +1,5 @@
-import { MIN_OBLIGATION_AMOUNT, MIN_COLLECTION_AMOUNT, MAX_CONNECTIONS } from './constants';
-import { isSupportedCurrency } from './currencies';
+import { MIN_OBLIGATION_AMOUNT, MIN_COLLECTION_AMOUNT, MAX_CONNECTIONS } from './constants.js';
+import { isSupportedCurrency } from './currencies.js';
 
 export function validateCollectionAmount(amount: number): string | null {
   if (!Number.isFinite(amount) || amount < MIN_COLLECTION_AMOUNT) {
