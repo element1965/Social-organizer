@@ -1,8 +1,8 @@
 import { z } from 'zod';
-import { router, protectedProcedure } from '../trpc';
+import { router, protectedProcedure } from '../trpc.js';
 import { TRPCError } from '@trpc/server';
 import { MAX_CONNECTIONS, GRAPH_SLICE_DEPTH } from '@so/shared';
-import { getGraphSlice } from '../services/bfs.service';
+import { getGraphSlice } from '../services/bfs.service.js';
 
 export const connectionRouter = router({
   list: protectedProcedure.query(async ({ ctx }) => {

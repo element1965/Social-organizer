@@ -1,7 +1,7 @@
 import type { Job } from 'bullmq';
 import { getDb } from '@so/db';
 import { NOTIFICATION_RATIO } from '@so/shared';
-import { sendCollectionNotifications } from '../services/notification.service';
+import { sendCollectionNotifications } from '../services/notification.service.js';
 
 /**
  * Каждые 12 часов: находим активные сборы и рассылаем повторные уведомления

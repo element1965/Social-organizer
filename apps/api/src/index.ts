@@ -8,9 +8,9 @@ import {
   fastifyTRPCPlugin,
   type FastifyTRPCPluginOptions,
 } from '@trpc/server/adapters/fastify';
-import { appRouter, type AppRouter } from './routers/index';
-import { createContext } from './context';
-import { setupQueues } from './workers/index';
+import { appRouter, type AppRouter } from './routers/index.js';
+import { createContext } from './context.js';
+import { setupQueues } from './workers/index.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);

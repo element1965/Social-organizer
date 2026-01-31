@@ -1,8 +1,8 @@
 import { z } from 'zod';
-import { router, protectedProcedure } from '../trpc';
+import { router, protectedProcedure } from '../trpc.js';
 import { TRPCError } from '@trpc/server';
 import { MIN_COLLECTION_AMOUNT, CURRENCY_CODES, NOTIFICATION_RATIO } from '@so/shared';
-import { sendCollectionNotifications } from '../services/notification.service';
+import { sendCollectionNotifications } from '../services/notification.service.js';
 
 export const collectionRouter = router({
   create: protectedProcedure

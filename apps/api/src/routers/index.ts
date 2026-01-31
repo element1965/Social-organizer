@@ -1,13 +1,13 @@
-import { router } from '../trpc';
-import { authRouter } from './auth.router';
-import { userRouter } from './user.router';
-import { connectionRouter } from './connection.router';
-import { collectionRouter } from './collection.router';
-import { obligationRouter } from './obligation.router';
-import { notificationRouter } from './notification.router';
-import { settingsRouter } from './settings.router';
-import { inviteRouter } from './invite.router';
-import { statsRouter } from './stats.router';
+import { router } from '../trpc.js';
+import { authRouter } from './auth.router.js';
+import { userRouter } from './user.router.js';
+import { connectionRouter } from './connection.router.js';
+import { collectionRouter } from './collection.router.js';
+import { obligationRouter } from './obligation.router.js';
+import { notificationRouter } from './notification.router.js';
+import { settingsRouter } from './settings.router.js';
+import { inviteRouter } from './invite.router.js';
+import { statsRouter } from './stats.router.js';
 
 export const appRouter = router({
   auth: authRouter,
