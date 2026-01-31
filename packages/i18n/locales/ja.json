@@ -1,0 +1,196 @@
+{
+  "common": {
+    "appName": "Social Organizer",
+    "loading": "読み込み中...",
+    "error": "エラーが発生しました",
+    "retry": "再試行",
+    "save": "保存",
+    "cancel": "キャンセル",
+    "delete": "削除",
+    "confirm": "確認",
+    "back": "戻る",
+    "next": "次へ",
+    "done": "完了",
+    "search": "検索",
+    "notFound": "見つかりません"
+  },
+  "auth": {
+    "loginWith": "{{platform}} でログイン",
+    "linking": "アカウントを連携",
+    "enterCode": "6桁のコードを入力",
+    "codeExpires": "コードは {{minutes}} 分で期限切れ"
+  },
+  "login": {
+    "subtitle": "信頼できるつながりを通じた助け合いの調整"
+  },
+  "onboarding": {
+    "step1": {
+      "title": "あなたを大切に思う人がいます",
+      "text": "これはソーシャルオーガナイザーです。送金や支払いの回収は行いません。誰かが支援を必要としている時に、人々が素早く連携できるよう手助けします。"
+    },
+    "step2": {
+      "title": "一つの合図で適切な人に届く",
+      "text": "誰かが助けを必要としている時、システムが対応できる人に通知します。通知は一度だけ。スパムもプレッシャーもありません。"
+    },
+    "step3": {
+      "title": "すべてが透明です",
+      "text": "すべてのアクションが記録されます。信頼は管理ではなく、透明性によって築かれます。"
+    },
+    "step4": {
+      "title": "最初の人を追加しましょう",
+      "text": "オーガナイザーは人と人とのつながりで機能します。信頼できる一人から始めましょう。"
+    },
+    "start": "始める",
+    "next": "次へ",
+    "invite": "招待を送る",
+    "qrCode": "QRコードを表示"
+  },
+  "nav": {
+    "home": "ホーム",
+    "notifications": "通知",
+    "create": "作成",
+    "network": "ネットワーク",
+    "settings": "設定"
+  },
+  "dashboard": {
+    "title": "ダッシュボード",
+    "needHelp": "助けが必要です",
+    "addFirstConnection": "最初のつながりを追加",
+    "addFirstConnectionDesc": "オーガナイザーは人と人とのつながりで機能します。信頼できる一人から始めましょう。",
+    "goToNetwork": "ネットワークへ",
+    "myCollections": "マイ募集",
+    "create": "作成",
+    "noCollections": "アクティブな募集はありません",
+    "obligations": "件の約束",
+    "myObligations": "マイ約束",
+    "noObligations": "約束はありません",
+    "myNetwork": "マイネットワーク",
+    "view": "表示",
+    "connections": "件のつながり"
+  },
+  "collection": {
+    "create": "募集を作成",
+    "amount": "金額",
+    "currency": "通貨",
+    "chatLink": "チャットリンク",
+    "emergency": "緊急",
+    "regular": "通常",
+    "active": "進行中",
+    "blocked": "凍結済み",
+    "closed": "終了",
+    "cancelled": "キャンセル済み",
+    "progress": "{{current}} / {{target}} {{currency}}",
+    "obligationsCount": "{{count}} 件の約束",
+    "collected": "募集済み",
+    "goal": "目標",
+    "openChat": "チャットを開く",
+    "takeObligation": "約束する",
+    "amountPlaceholder": "金額（最低 10）",
+    "submit": "助ける",
+    "close": "募集を終了",
+    "participants": "参加者",
+    "noParticipants": "まだ参加者はいません",
+    "minAmount": "最低 10"
+  },
+  "create": {
+    "title": "募集を作成",
+    "emergency": "緊急",
+    "regular": "通常",
+    "amount": "金額",
+    "largeAmountWarning": "多くの人に通知が届きます。本当に助けが必要かご確認ください。",
+    "largeAmountConfirm": "金額が正しいことを確認します",
+    "currency": "通貨",
+    "chatLink": "チャットリンク",
+    "submit": "募集を作成",
+    "minAmount": "最低 10",
+    "invalidUrl": "無効なURL"
+  },
+  "obligation": {
+    "create": "約束する",
+    "amount": "金額（最低 {{min}}）",
+    "subscribe": "月額で購読",
+    "unsubscribe": "購読を解除"
+  },
+  "network": {
+    "title": "マイネットワーク",
+    "connections": "つながり",
+    "addConnection": "つながりを追加",
+    "connectionLimit": "上限：{{current}}/{{max}}",
+    "invite": "招待",
+    "qrCode": "QRコード",
+    "empty": "つながりはありません",
+    "emptyHint": "最初の人を招待しましょう"
+  },
+  "notifications": {
+    "title": "通知",
+    "empty": "通知はありません",
+    "new": "新着",
+    "reNotify": "リマインダー",
+    "closed": "終了",
+    "blocked": "凍結済み",
+    "specialAuthor": "発起人",
+    "specialDeveloper": "開発者",
+    "handshakes": "回のハンドシェイク",
+    "via": "経由",
+    "view": "開く",
+    "dismiss": "非表示",
+    "loadMore": "もっと見る",
+    "expiresIn": "{{hours}}時間{{minutes}}分で期限切れ"
+  },
+  "notification": {
+    "newCollection": "{{name}} が助けを求めています",
+    "handshake": "{{path}} 経由",
+    "markRead": "既読にする",
+    "dismiss": "非表示"
+  },
+  "profile": {
+    "bio": "自己紹介",
+    "phone": "電話番号",
+    "stats": "統計",
+    "ignore": "ブロック",
+    "addToNetwork": "ネットワークに追加",
+    "addConnection": "つながりに追加",
+    "connections": "つながり",
+    "collectionsCreated": "募集",
+    "obligationsGiven": "助けた回数",
+    "totalPledged": "合計約束額",
+    "editSettings": "設定",
+    "edit": "プロフィールを編集",
+    "name": "名前",
+    "save": "保存",
+    "pledgedByCurrency": "通貨別",
+    "myConnections": "マイつながり",
+    "noConnections": "まだつながりはありません"
+  },
+  "settings": {
+    "title": "設定",
+    "language": "言語",
+    "theme": "テーマ",
+    "light": "ライト",
+    "dark": "ダーク",
+    "system": "自動",
+    "sounds": "サウンド",
+    "sound": "サウンド",
+    "fontSize": "文字サイズ",
+    "fontStandard": "標準",
+    "fontLarge": "拡大",
+    "linkedAccounts": "連携済みアカウント",
+    "linkAccount": "アカウントを連携",
+    "codeExpires": "5分間有効",
+    "generateCode": "コードを生成",
+    "ignoreList": "ブロックリスト",
+    "noIgnored": "リストは空です",
+    "unignore": "解除",
+    "logout": "ログアウト",
+    "deleteAccount": "アカウントを削除",
+    "deleteConfirm": "本当によろしいですか？この操作は元に戻せません。",
+    "confirmDelete": "削除"
+  },
+  "invite": {
+    "title": "招待",
+    "from": "{{name}} からの招待",
+    "accept": "承認してつながる",
+    "alreadyUsed": "この招待は既に使用されています",
+    "success": "つながりました！"
+  }
+}

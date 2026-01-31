@@ -1,0 +1,196 @@
+{
+  "common": {
+    "appName": "Social Organizer",
+    "loading": "Chargement...",
+    "error": "Une erreur est survenue",
+    "retry": "Réessayer",
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "delete": "Supprimer",
+    "confirm": "Confirmer",
+    "back": "Retour",
+    "next": "Suivant",
+    "done": "Terminé",
+    "search": "Rechercher",
+    "notFound": "Non trouvé"
+  },
+  "auth": {
+    "loginWith": "Se connecter avec {{platform}}",
+    "linking": "Lier le compte",
+    "enterCode": "Entrez le code à 6 chiffres",
+    "codeExpires": "Le code expire dans {{minutes}} min"
+  },
+  "login": {
+    "subtitle": "Coordination d'entraide grâce à des liens de confiance"
+  },
+  "onboarding": {
+    "step1": {
+      "title": "Vous avez des gens qui tiennent à vous",
+      "text": "Ceci est un organisateur social. Il ne transfère pas d'argent et ne collecte pas de paiements. Il aide les gens à se coordonner rapidement quand quelqu'un a besoin de soutien."
+    },
+    "step2": {
+      "title": "Un signal — et les bonnes personnes sont informées",
+      "text": "Si quelqu'un a besoin d'aide — le système notifie ceux qui peuvent répondre. La notification est envoyée une seule fois. Pas de spam, pas de pression."
+    },
+    "step3": {
+      "title": "Tout est transparent",
+      "text": "Chaque action est enregistrée. La confiance se construit sur la transparence, pas sur le contrôle."
+    },
+    "step4": {
+      "title": "Ajoutez votre première personne",
+      "text": "L'organisateur fonctionne grâce aux liens entre les personnes. Commencez par une personne — quelqu'un en qui vous avez confiance."
+    },
+    "start": "Commencer",
+    "next": "Suivant",
+    "invite": "Envoyer une invitation",
+    "qrCode": "Afficher le code QR"
+  },
+  "nav": {
+    "home": "Accueil",
+    "notifications": "Alertes",
+    "create": "Créer",
+    "network": "Réseau",
+    "settings": "Paramètres"
+  },
+  "dashboard": {
+    "title": "Tableau de bord",
+    "needHelp": "J'ai besoin d'aide",
+    "addFirstConnection": "Ajoutez votre première connexion",
+    "addFirstConnectionDesc": "L'organisateur fonctionne grâce aux liens entre les personnes. Commencez par une personne — quelqu'un en qui vous avez confiance.",
+    "goToNetwork": "Aller au réseau",
+    "myCollections": "Mes collectes",
+    "create": "Créer",
+    "noCollections": "Aucune collecte active",
+    "obligations": "engagements",
+    "myObligations": "Mes engagements",
+    "noObligations": "Aucun engagement",
+    "myNetwork": "Mon réseau",
+    "view": "Voir",
+    "connections": "connexions"
+  },
+  "collection": {
+    "create": "Créer une collecte",
+    "amount": "Montant",
+    "currency": "Devise",
+    "chatLink": "Lien du chat",
+    "emergency": "Urgente",
+    "regular": "Régulière",
+    "active": "Active",
+    "blocked": "Bloquée",
+    "closed": "Fermée",
+    "cancelled": "Annulée",
+    "progress": "{{current}} / {{target}} {{currency}}",
+    "obligationsCount": "{{count}} engagements",
+    "collected": "Collecté",
+    "goal": "Objectif",
+    "openChat": "Ouvrir le chat",
+    "takeObligation": "Prendre un engagement",
+    "amountPlaceholder": "Montant (min. 10)",
+    "submit": "Aider",
+    "close": "Fermer la collecte",
+    "participants": "Participants",
+    "noParticipants": "Personne ne s'est encore inscrit",
+    "minAmount": "Minimum 10"
+  },
+  "create": {
+    "title": "Créer une collecte",
+    "emergency": "Urgente",
+    "regular": "Régulière",
+    "amount": "Montant",
+    "largeAmountWarning": "Vous allez déranger un grand nombre de personnes. Assurez-vous que l'aide est vraiment nécessaire.",
+    "largeAmountConfirm": "Je confirme que le montant est correct",
+    "currency": "Devise",
+    "chatLink": "Lien du chat",
+    "submit": "Créer la collecte",
+    "minAmount": "Minimum 10",
+    "invalidUrl": "URL invalide"
+  },
+  "obligation": {
+    "create": "Prendre un engagement",
+    "amount": "Montant (min. {{min}})",
+    "subscribe": "S'abonner mensuellement",
+    "unsubscribe": "Se désabonner"
+  },
+  "network": {
+    "title": "Mon réseau",
+    "connections": "Connexions",
+    "addConnection": "Ajouter une connexion",
+    "connectionLimit": "Limite : {{current}}/{{max}}",
+    "invite": "Inviter",
+    "qrCode": "Code QR",
+    "empty": "Aucune connexion",
+    "emptyHint": "Invitez votre première personne"
+  },
+  "notifications": {
+    "title": "Notifications",
+    "empty": "Aucune notification",
+    "new": "Nouvelle",
+    "reNotify": "Rappel",
+    "closed": "Fermée",
+    "blocked": "Bloquée",
+    "specialAuthor": "Auteur",
+    "specialDeveloper": "Développeur",
+    "handshakes": "poignées de main",
+    "via": "via",
+    "view": "Ouvrir",
+    "dismiss": "Ignorer",
+    "loadMore": "Charger plus",
+    "expiresIn": "Expire dans {{hours}}h {{minutes}}m"
+  },
+  "notification": {
+    "newCollection": "{{name}} a besoin d'aide",
+    "handshake": "via {{path}}",
+    "markRead": "Marquer comme lu",
+    "dismiss": "Ignorer"
+  },
+  "profile": {
+    "bio": "À propos",
+    "phone": "Téléphone",
+    "stats": "Statistiques",
+    "ignore": "Ignorer",
+    "addToNetwork": "Ajouter au réseau",
+    "addConnection": "Ajouter aux connexions",
+    "connections": "Connexions",
+    "collectionsCreated": "Collectes",
+    "obligationsGiven": "Fois aidé",
+    "totalPledged": "Total engagé",
+    "editSettings": "Paramètres",
+    "edit": "Modifier le profil",
+    "name": "Nom",
+    "save": "Enregistrer",
+    "pledgedByCurrency": "par devise",
+    "myConnections": "Mes connexions",
+    "noConnections": "Aucune connexion pour le moment"
+  },
+  "settings": {
+    "title": "Paramètres",
+    "language": "Langue",
+    "theme": "Thème",
+    "light": "Clair",
+    "dark": "Sombre",
+    "system": "Automatique",
+    "sounds": "Sons",
+    "sound": "Sons",
+    "fontSize": "Taille de police",
+    "fontStandard": "Standard",
+    "fontLarge": "Agrandi",
+    "linkedAccounts": "Comptes liés",
+    "linkAccount": "Lier un compte",
+    "codeExpires": "Valide pendant 5 minutes",
+    "generateCode": "Générer un code",
+    "ignoreList": "Liste des ignorés",
+    "noIgnored": "La liste est vide",
+    "unignore": "Retirer",
+    "logout": "Se déconnecter",
+    "deleteAccount": "Supprimer le compte",
+    "deleteConfirm": "Êtes-vous sûr ? Cette action est irréversible.",
+    "confirmDelete": "Supprimer"
+  },
+  "invite": {
+    "title": "Invitation",
+    "from": "{{name}} vous invite",
+    "accept": "Accepter et se connecter",
+    "alreadyUsed": "Cette invitation a déjà été utilisée",
+    "success": "Connecté !"
+  }
+}

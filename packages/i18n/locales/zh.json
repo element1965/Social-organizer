@@ -1,0 +1,196 @@
+{
+  "common": {
+    "appName": "Social Organizer",
+    "loading": "加载中...",
+    "error": "发生错误",
+    "retry": "重试",
+    "save": "保存",
+    "cancel": "取消",
+    "delete": "删除",
+    "confirm": "确认",
+    "back": "返回",
+    "next": "下一步",
+    "done": "完成",
+    "search": "搜索",
+    "notFound": "未找到"
+  },
+  "auth": {
+    "loginWith": "使用 {{platform}} 登录",
+    "linking": "关联账户",
+    "enterCode": "输入6位验证码",
+    "codeExpires": "验证码将在 {{minutes}} 分钟后过期"
+  },
+  "login": {
+    "subtitle": "通过信任关系协调互助"
+  },
+  "onboarding": {
+    "step1": {
+      "title": "你身边有关心你的人",
+      "text": "这是一个社交组织工具。它不转账也不收款。它帮助人们在有人需要帮助时快速协调。"
+    },
+    "step2": {
+      "title": "一个信号 — 合适的人就会知道",
+      "text": "如果有人需要帮助 — 系统会通知能够响应的人。通知只发送一次。没有骚扰，没有压力。"
+    },
+    "step3": {
+      "title": "一切公开透明",
+      "text": "每个操作都有记录。信任建立在透明之上，而非控制。"
+    },
+    "step4": {
+      "title": "添加你的第一个联系人",
+      "text": "组织工具通过人与人之间的连接运作。从一个人开始 — 一个你信任的人。"
+    },
+    "start": "开始使用",
+    "next": "下一步",
+    "invite": "发送邀请",
+    "qrCode": "显示二维码"
+  },
+  "nav": {
+    "home": "首页",
+    "notifications": "通知",
+    "create": "创建",
+    "network": "人脉",
+    "settings": "设置"
+  },
+  "dashboard": {
+    "title": "仪表盘",
+    "needHelp": "我需要帮助",
+    "addFirstConnection": "添加你的第一个连接",
+    "addFirstConnectionDesc": "组织工具通过人与人之间的连接运作。从一个人开始 — 一个你信任的人。",
+    "goToNetwork": "前往人脉",
+    "myCollections": "我的募集",
+    "create": "创建",
+    "noCollections": "暂无进行中的募集",
+    "obligations": "承诺",
+    "myObligations": "我的承诺",
+    "noObligations": "暂无承诺",
+    "myNetwork": "我的人脉",
+    "view": "查看",
+    "connections": "个连接"
+  },
+  "collection": {
+    "create": "创建募集",
+    "amount": "金额",
+    "currency": "货币",
+    "chatLink": "聊天链接",
+    "emergency": "紧急",
+    "regular": "常规",
+    "active": "进行中",
+    "blocked": "已冻结",
+    "closed": "已关闭",
+    "cancelled": "已取消",
+    "progress": "{{current}} / {{target}} {{currency}}",
+    "obligationsCount": "{{count}} 个承诺",
+    "collected": "已募集",
+    "goal": "目标",
+    "openChat": "打开聊天",
+    "takeObligation": "做出承诺",
+    "amountPlaceholder": "金额（最少 10）",
+    "submit": "帮助",
+    "close": "关闭募集",
+    "participants": "参与者",
+    "noParticipants": "暂无人参与",
+    "minAmount": "最少 10"
+  },
+  "create": {
+    "title": "创建募集",
+    "emergency": "紧急",
+    "regular": "常规",
+    "amount": "金额",
+    "largeAmountWarning": "你将打扰很多人。请确认确实需要帮助。",
+    "largeAmountConfirm": "我确认金额无误",
+    "currency": "货币",
+    "chatLink": "聊天链接",
+    "submit": "创建募集",
+    "minAmount": "最少 10",
+    "invalidUrl": "无效的链接"
+  },
+  "obligation": {
+    "create": "做出承诺",
+    "amount": "金额（最少 {{min}}）",
+    "subscribe": "按月订阅",
+    "unsubscribe": "取消订阅"
+  },
+  "network": {
+    "title": "我的人脉",
+    "connections": "连接",
+    "addConnection": "添加连接",
+    "connectionLimit": "上限：{{current}}/{{max}}",
+    "invite": "邀请",
+    "qrCode": "二维码",
+    "empty": "暂无连接",
+    "emptyHint": "邀请你的第一个联系人"
+  },
+  "notifications": {
+    "title": "通知",
+    "empty": "暂无通知",
+    "new": "新的",
+    "reNotify": "提醒",
+    "closed": "已关闭",
+    "blocked": "已冻结",
+    "specialAuthor": "发起人",
+    "specialDeveloper": "开发者",
+    "handshakes": "次握手",
+    "via": "通过",
+    "view": "查看",
+    "dismiss": "忽略",
+    "loadMore": "加载更多",
+    "expiresIn": "{{hours}}小时{{minutes}}分钟后过期"
+  },
+  "notification": {
+    "newCollection": "{{name}} 需要帮助",
+    "handshake": "通过 {{path}}",
+    "markRead": "标记为已读",
+    "dismiss": "忽略"
+  },
+  "profile": {
+    "bio": "简介",
+    "phone": "电话",
+    "stats": "统计",
+    "ignore": "屏蔽",
+    "addToNetwork": "添加到人脉",
+    "addConnection": "添加到连接",
+    "connections": "连接",
+    "collectionsCreated": "募集",
+    "obligationsGiven": "帮助次数",
+    "totalPledged": "总承诺额",
+    "editSettings": "设置",
+    "edit": "编辑资料",
+    "name": "姓名",
+    "save": "保存",
+    "pledgedByCurrency": "按货币",
+    "myConnections": "我的连接",
+    "noConnections": "暂无连接"
+  },
+  "settings": {
+    "title": "设置",
+    "language": "语言",
+    "theme": "主题",
+    "light": "浅色",
+    "dark": "深色",
+    "system": "跟随系统",
+    "sounds": "声音",
+    "sound": "声音",
+    "fontSize": "字体大小",
+    "fontStandard": "标准",
+    "fontLarge": "放大",
+    "linkedAccounts": "已关联的账户",
+    "linkAccount": "关联账户",
+    "codeExpires": "5分钟内有效",
+    "generateCode": "生成验证码",
+    "ignoreList": "屏蔽列表",
+    "noIgnored": "列表为空",
+    "unignore": "移除",
+    "logout": "退出登录",
+    "deleteAccount": "删除账户",
+    "deleteConfirm": "确定吗？此操作不可撤销。",
+    "confirmDelete": "删除"
+  },
+  "invite": {
+    "title": "邀请",
+    "from": "{{name}} 邀请你",
+    "accept": "接受并连接",
+    "alreadyUsed": "此邀请已被使用",
+    "success": "已连接！"
+  }
+}
