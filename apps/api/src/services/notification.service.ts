@@ -48,9 +48,10 @@ export async function sendCollectionNotifications(
     try {
       await db.notification.upsert({
         where: {
-          userId_collectionId_wave: {
+          userId_collectionId_type_wave: {
             userId: recipient.userId,
             collectionId,
+            type,
             wave,
           },
         },

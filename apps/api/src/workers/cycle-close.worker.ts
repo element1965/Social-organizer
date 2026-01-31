@@ -1,10 +1,11 @@
 import type { Job } from 'bullmq';
 import { getDb } from '@so/db';
-import { REGULAR_CYCLE_DAYS } from '@so/shared';
+import { REGULAR_CYCLE_DAYS, NOTIFICATION_TTL_HOURS } from '@so/shared';
 
 /**
  * Каждый час: проверяем регулярные сборы, у которых прошёл 28-дневный цикл.
- * Закрываем текущий цикл и открываем новый (сброс обязательств, инкремент cycleNumber).
+ * Закрываем текущий цикл и открываем новый.
+ * Обязательства НЕ удаляются (сохраняются для истории/статистики).
  */
 export async function processCycleClose(_job: Job): Promise<void> {
   const db = getDb();
@@ -16,9 +17,23 @@ export async function processCycleClose(_job: Job): Promise<void> {
       status: { in: ['ACTIVE', 'BLOCKED'] },
       currentCycleStart: { lte: cutoff },
     },
+    select: {
+      id: true,
+      amount: true,
+      currency: true,
+      cycleNumber: true,
+      obligations: { select: { amount: true, userId: true } },
+    },
   });
 
+  const expiresAt = new Date(Date.now() + NOTIFICATION_TTL_HOURS * 60 * 60 * 1000);
+
   for (const collection of expiredCycles) {
+    // Проверяем недобор (только для сборов с целевой суммой)
+    const currentAmount = collection.obligations.reduce((sum, o) => sum + o.amount, 0);
+    const hasGoal = collection.amount != null;
+    const undercollected = hasGoal && currentAmount < collection.amount!;
+
     await db.$transaction(async (tx) => {
       // Закрываем текущий цикл → новый
       await tx.collection.update({
@@ -31,15 +46,25 @@ export async function processCycleClose(_job: Job): Promise<void> {
         },
       });
 
-      // Удаляем одноразовые обязательства (не подписки)
-      await tx.obligation.deleteMany({
-        where: {
-          collectionId: collection.id,
-          isSubscription: false,
-        },
-      });
+      // Уведомление о закрытии цикла (с недобором если нужно)
+      const notifType = undercollected ? 'COLLECTION_CLOSED' : 'COLLECTION_CLOSED';
+      const participantIds = [...new Set(collection.obligations.map((o) => o.userId))];
+      for (const userId of participantIds) {
+        try {
+          await tx.notification.create({
+            data: {
+              userId,
+              collectionId: collection.id,
+              type: notifType,
+              handshakePath: [],
+              expiresAt,
+              wave: collection.cycleNumber, // wave = номер завершённого цикла
+            },
+          });
+        } catch { /* skip duplicates */ }
+      }
 
-      // Удаляем отписавшиеся подписки
+      // Удаляем ТОЛЬКО отписавшиеся подписки (одноразовые обязательства сохраняются для статистики)
       await tx.obligation.deleteMany({
         where: {
           collectionId: collection.id,

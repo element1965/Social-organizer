@@ -90,10 +90,29 @@ export const collectionRouter = router({
       if (collection.status !== 'ACTIVE' && collection.status !== 'BLOCKED') {
         throw new TRPCError({ code: 'BAD_REQUEST', message: 'Collection not active' });
       }
-      return ctx.db.collection.update({
+      const updated = await ctx.db.collection.update({
         where: { id: input.id },
         data: { status: 'CLOSED', closedAt: new Date() },
       });
+
+      // Рассылка COLLECTION_CLOSED всем ранее уведомлённым
+      const notifiedUsers = await ctx.db.notification.findMany({
+        where: { collectionId: input.id },
+        select: { userId: true },
+        distinct: ['userId'],
+      });
+      const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000);
+      for (const { userId } of notifiedUsers) {
+        try {
+          await ctx.db.notification.upsert({
+            where: { userId_collectionId_type_wave: { userId, collectionId: input.id, type: 'COLLECTION_CLOSED', wave: 0 } },
+            create: { userId, collectionId: input.id, type: 'COLLECTION_CLOSED', handshakePath: [], expiresAt, wave: 0 },
+            update: { type: 'COLLECTION_CLOSED', status: 'UNREAD', expiresAt },
+          });
+        } catch { /* skip */ }
+      }
+
+      return updated;
     }),
 
   cancel: protectedProcedure

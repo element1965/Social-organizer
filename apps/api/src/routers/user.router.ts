@@ -29,13 +29,17 @@ export const userRouter = router({
     .input(z.object({ userId: z.string() }))
     .query(async ({ ctx, input }) => {
       const user = await ctx.db.user.findUnique({
-        where: { id: input.userId, deletedAt: null },
+        where: { id: input.userId },
         select: {
           id: true, name: true, bio: true, phone: true,
-          photoUrl: true, role: true, createdAt: true,
+          photoUrl: true, role: true, createdAt: true, deletedAt: true,
         },
       });
       if (!user) throw new TRPCError({ code: 'NOT_FOUND' });
+      // Удалённый профиль — «серый»: имя заменено, данные скрыты
+      if (user.deletedAt) {
+        return { ...user, name: 'Удалённый пользователь', bio: null, phone: null, photoUrl: null };
+      }
       return user;
     }),
 
@@ -53,10 +57,37 @@ export const userRouter = router({
     }),
 
   delete: protectedProcedure.mutation(async ({ ctx }) => {
-    await ctx.db.user.update({
-      where: { id: ctx.userId },
-      data: { deletedAt: new Date() },
+    await ctx.db.$transaction(async (tx) => {
+      // 1. Очистка профиля (серый профиль по SPEC)
+      await tx.user.update({
+        where: { id: ctx.userId },
+        data: {
+          deletedAt: new Date(),
+          name: 'Удалённый пользователь',
+          bio: null,
+          phone: null,
+          photoUrl: null,
+        },
+      });
+
+      // 2. Аннулирование обязательств в активных сборах
+      await tx.obligation.deleteMany({
+        where: {
+          userId: ctx.userId,
+          collection: { status: { in: ['ACTIVE', 'BLOCKED'] } },
+        },
+      });
+
+      // 3. Отмена активных собственных сборов
+      await tx.collection.updateMany({
+        where: {
+          creatorId: ctx.userId,
+          status: { in: ['ACTIVE', 'BLOCKED'] },
+        },
+        data: { status: 'CANCELLED' },
+      });
     });
+
     return { success: true };
   }),
 });

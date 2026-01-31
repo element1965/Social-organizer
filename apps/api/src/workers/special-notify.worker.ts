@@ -55,7 +55,7 @@ export async function processSpecialNotify(_job: Job): Promise<void> {
       try {
         await db.notification.upsert({
           where: {
-            userId_collectionId_wave: { userId: uid, collectionId: col.id, wave: 0 },
+            userId_collectionId_type_wave: { userId: uid, collectionId: col.id, type, wave: 0 },
           },
           create: {
             userId: uid,
