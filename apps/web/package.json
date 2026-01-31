@@ -11,6 +11,8 @@
     "clean": "rm -rf dist *.tsbuildinfo"
   },
   "dependencies": {
+    "@so/graph-3d": "workspace:*",
+    "@so/gun-backup": "workspace:*",
     "@so/i18n": "workspace:*",
     "@so/shared": "workspace:*",
     "@tanstack/react-query": "^5.62.0",
