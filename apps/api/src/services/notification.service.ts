@@ -4,7 +4,7 @@ import { findRecipientsViaBfs } from './bfs.service';
 
 /**
  * Рассылка уведомлений о сборе через BFS-обход графа связей.
- * Создаёт уведомления для всех найденных пользователей с путём рукопожатий.
+ * Количество получателей = maxRecipients (по умолчанию amount / NOTIFICATION_RATIO).
  */
 export async function sendCollectionNotifications(
   db: PrismaClient,
@@ -12,6 +12,7 @@ export async function sendCollectionNotifications(
   creatorId: string,
   type: 'NEW_COLLECTION' | 'RE_NOTIFY' | 'COLLECTION_BLOCKED' | 'COLLECTION_CLOSED',
   wave: number = 1,
+  maxRecipients?: number,
 ): Promise<number> {
   // Получить ignore-список создателя (те, кого он игнорирует, и те, кто его игнорирует)
   const ignoreEntries = await db.ignoreEntry.findMany({
@@ -25,7 +26,17 @@ export async function sendCollectionNotifications(
     ignoredUserIds.add(entry.fromUserId === creatorId ? entry.toUserId : entry.fromUserId);
   }
 
-  const recipients = await findRecipientsViaBfs(db, creatorId, undefined, undefined, [...ignoredUserIds]);
+  // Также исключаем тех, кто уже получал уведомление о данном сборе
+  const alreadyNotified = await db.notification.findMany({
+    where: { collectionId },
+    select: { userId: true },
+    distinct: ['userId'],
+  });
+  for (const n of alreadyNotified) {
+    ignoredUserIds.add(n.userId);
+  }
+
+  const recipients = await findRecipientsViaBfs(db, creatorId, undefined, maxRecipients, [...ignoredUserIds]);
 
   if (recipients.length === 0) return 0;
 
