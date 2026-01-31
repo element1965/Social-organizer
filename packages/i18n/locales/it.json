@@ -1,0 +1,196 @@
+{
+  "common": {
+    "appName": "Social Organizer",
+    "loading": "Caricamento...",
+    "error": "Si è verificato un errore",
+    "retry": "Riprova",
+    "save": "Salva",
+    "cancel": "Annulla",
+    "delete": "Elimina",
+    "confirm": "Conferma",
+    "back": "Indietro",
+    "next": "Avanti",
+    "done": "Fatto",
+    "search": "Cerca",
+    "notFound": "Non trovato"
+  },
+  "auth": {
+    "loginWith": "Accedi con {{platform}}",
+    "linking": "Collega account",
+    "enterCode": "Inserisci il codice a 6 cifre",
+    "codeExpires": "Il codice scade tra {{minutes}} min"
+  },
+  "login": {
+    "subtitle": "Coordinamento degli aiuti attraverso connessioni fidate"
+  },
+  "onboarding": {
+    "step1": {
+      "title": "Hai persone a cui importa di te",
+      "text": "Questo è un organizzatore sociale. Non trasferisce denaro e non raccoglie pagamenti. Aiuta le persone a coordinarsi rapidamente quando qualcuno ha bisogno di supporto."
+    },
+    "step2": {
+      "title": "Un segnale — e le persone giuste lo sanno",
+      "text": "Se qualcuno ha bisogno di aiuto — il sistema notifica chi può rispondere. La notifica viene inviata una sola volta. Niente spam, niente pressioni."
+    },
+    "step3": {
+      "title": "Tutto è trasparente",
+      "text": "Ogni azione viene registrata. La fiducia si costruisce sulla trasparenza, non sul controllo."
+    },
+    "step4": {
+      "title": "Aggiungi la tua prima persona",
+      "text": "L'organizzatore funziona attraverso le connessioni tra le persone. Inizia con una persona — qualcuno di cui ti fidi."
+    },
+    "start": "Inizia",
+    "next": "Avanti",
+    "invite": "Invia invito",
+    "qrCode": "Mostra codice QR"
+  },
+  "nav": {
+    "home": "Home",
+    "notifications": "Avvisi",
+    "create": "Crea",
+    "network": "Rete",
+    "settings": "Impostazioni"
+  },
+  "dashboard": {
+    "title": "Pannello",
+    "needHelp": "Ho bisogno di aiuto",
+    "addFirstConnection": "Aggiungi la tua prima connessione",
+    "addFirstConnectionDesc": "L'organizzatore funziona attraverso le connessioni tra le persone. Inizia con una persona — qualcuno di cui ti fidi.",
+    "goToNetwork": "Vai alla Rete",
+    "myCollections": "Le mie raccolte",
+    "create": "Crea",
+    "noCollections": "Nessuna raccolta attiva",
+    "obligations": "impegni",
+    "myObligations": "I miei impegni",
+    "noObligations": "Nessun impegno",
+    "myNetwork": "La mia rete",
+    "view": "Vedi",
+    "connections": "connessioni"
+  },
+  "collection": {
+    "create": "Crea raccolta",
+    "amount": "Importo",
+    "currency": "Valuta",
+    "chatLink": "Link della chat",
+    "emergency": "Urgente",
+    "regular": "Regolare",
+    "active": "Attiva",
+    "blocked": "Bloccata",
+    "closed": "Chiusa",
+    "cancelled": "Annullata",
+    "progress": "{{current}} / {{target}} {{currency}}",
+    "obligationsCount": "{{count}} impegni",
+    "collected": "Raccolto",
+    "goal": "Obiettivo",
+    "openChat": "Apri chat",
+    "takeObligation": "Prendi un impegno",
+    "amountPlaceholder": "Importo (min. 10)",
+    "submit": "Aiuta",
+    "close": "Chiudi raccolta",
+    "participants": "Partecipanti",
+    "noParticipants": "Nessuno si è ancora unito",
+    "minAmount": "Minimo 10"
+  },
+  "create": {
+    "title": "Crea raccolta",
+    "emergency": "Urgente",
+    "regular": "Regolare",
+    "amount": "Importo",
+    "largeAmountWarning": "Disturberai molte persone. Assicurati che l'aiuto sia davvero necessario.",
+    "largeAmountConfirm": "Confermo che l'importo è corretto",
+    "currency": "Valuta",
+    "chatLink": "Link della chat",
+    "submit": "Crea raccolta",
+    "minAmount": "Minimo 10",
+    "invalidUrl": "URL non valido"
+  },
+  "obligation": {
+    "create": "Prendi un impegno",
+    "amount": "Importo (min. {{min}})",
+    "subscribe": "Abbonamento mensile",
+    "unsubscribe": "Annulla abbonamento"
+  },
+  "network": {
+    "title": "La mia rete",
+    "connections": "Connessioni",
+    "addConnection": "Aggiungi connessione",
+    "connectionLimit": "Limite: {{current}}/{{max}}",
+    "invite": "Invita",
+    "qrCode": "Codice QR",
+    "empty": "Nessuna connessione",
+    "emptyHint": "Invita la tua prima persona"
+  },
+  "notifications": {
+    "title": "Notifiche",
+    "empty": "Nessuna notifica",
+    "new": "Nuova",
+    "reNotify": "Promemoria",
+    "closed": "Chiusa",
+    "blocked": "Bloccata",
+    "specialAuthor": "Autore",
+    "specialDeveloper": "Sviluppatore",
+    "handshakes": "strette di mano",
+    "via": "tramite",
+    "view": "Apri",
+    "dismiss": "Ignora",
+    "loadMore": "Carica altro",
+    "expiresIn": "Scade tra {{hours}}h {{minutes}}m"
+  },
+  "notification": {
+    "newCollection": "{{name}} ha bisogno di aiuto",
+    "handshake": "tramite {{path}}",
+    "markRead": "Segna come letto",
+    "dismiss": "Ignora"
+  },
+  "profile": {
+    "bio": "Chi sono",
+    "phone": "Telefono",
+    "stats": "Statistiche",
+    "ignore": "Ignora",
+    "addToNetwork": "Aggiungi alla rete",
+    "addConnection": "Aggiungi alle connessioni",
+    "connections": "Connessioni",
+    "collectionsCreated": "Raccolte",
+    "obligationsGiven": "Volte aiutato",
+    "totalPledged": "Totale impegnato",
+    "editSettings": "Impostazioni",
+    "edit": "Modifica profilo",
+    "name": "Nome",
+    "save": "Salva",
+    "pledgedByCurrency": "per valuta",
+    "myConnections": "Le mie connessioni",
+    "noConnections": "Nessuna connessione al momento"
+  },
+  "settings": {
+    "title": "Impostazioni",
+    "language": "Lingua",
+    "theme": "Tema",
+    "light": "Chiaro",
+    "dark": "Scuro",
+    "system": "Automatico",
+    "sounds": "Suoni",
+    "sound": "Suoni",
+    "fontSize": "Dimensione carattere",
+    "fontStandard": "Standard",
+    "fontLarge": "Ingrandito",
+    "linkedAccounts": "Account collegati",
+    "linkAccount": "Collega account",
+    "codeExpires": "Valido per 5 minuti",
+    "generateCode": "Genera codice",
+    "ignoreList": "Lista ignorati",
+    "noIgnored": "La lista è vuota",
+    "unignore": "Rimuovi",
+    "logout": "Esci",
+    "deleteAccount": "Elimina account",
+    "deleteConfirm": "Sei sicuro? Questa azione è irreversibile.",
+    "confirmDelete": "Elimina"
+  },
+  "invite": {
+    "title": "Invito",
+    "from": "{{name}} ti invita",
+    "accept": "Accetta e connetti",
+    "alreadyUsed": "Questo invito è già stato utilizzato",
+    "success": "Connesso!"
+  }
+}

@@ -1,0 +1,196 @@
+{
+  "common": {
+    "appName": "Social Organizer",
+    "loading": "로딩 중...",
+    "error": "오류가 발생했습니다",
+    "retry": "다시 시도",
+    "save": "저장",
+    "cancel": "취소",
+    "delete": "삭제",
+    "confirm": "확인",
+    "back": "뒤로",
+    "next": "다음",
+    "done": "완료",
+    "search": "검색",
+    "notFound": "찾을 수 없음"
+  },
+  "auth": {
+    "loginWith": "{{platform}}으로 로그인",
+    "linking": "계정 연결",
+    "enterCode": "6자리 코드를 입력하세요",
+    "codeExpires": "코드가 {{minutes}}분 후 만료됩니다"
+  },
+  "login": {
+    "subtitle": "신뢰할 수 있는 관계를 통한 도움 조율"
+  },
+  "onboarding": {
+    "step1": {
+      "title": "당신을 소중히 여기는 사람들이 있습니다",
+      "text": "이것은 소셜 오거나이저입니다. 송금이나 결제를 하지 않습니다. 누군가 도움이 필요할 때 사람들이 빠르게 협력할 수 있도록 돕습니다."
+    },
+    "step2": {
+      "title": "하나의 신호로 적절한 사람에게 전달",
+      "text": "누군가 도움이 필요하면 시스템이 도울 수 있는 사람에게 알립니다. 알림은 한 번만 전송됩니다. 스팸도, 압박도 없습니다."
+    },
+    "step3": {
+      "title": "모든 것이 투명합니다",
+      "text": "모든 행동이 기록됩니다. 신뢰는 통제가 아닌 투명성 위에 세워집니다."
+    },
+    "step4": {
+      "title": "첫 번째 사람을 추가하세요",
+      "text": "오거나이저는 사람 간의 연결로 작동합니다. 신뢰할 수 있는 한 사람부터 시작하세요."
+    },
+    "start": "시작하기",
+    "next": "다음",
+    "invite": "초대 보내기",
+    "qrCode": "QR 코드 보기"
+  },
+  "nav": {
+    "home": "홈",
+    "notifications": "알림",
+    "create": "만들기",
+    "network": "네트워크",
+    "settings": "설정"
+  },
+  "dashboard": {
+    "title": "대시보드",
+    "needHelp": "도움이 필요합니다",
+    "addFirstConnection": "첫 번째 연결을 추가하세요",
+    "addFirstConnectionDesc": "오거나이저는 사람 간의 연결로 작동합니다. 신뢰할 수 있는 한 사람부터 시작하세요.",
+    "goToNetwork": "네트워크로 이동",
+    "myCollections": "내 모금",
+    "create": "만들기",
+    "noCollections": "진행 중인 모금이 없습니다",
+    "obligations": "약속",
+    "myObligations": "내 약속",
+    "noObligations": "약속이 없습니다",
+    "myNetwork": "내 네트워크",
+    "view": "보기",
+    "connections": "개의 연결"
+  },
+  "collection": {
+    "create": "모금 만들기",
+    "amount": "금액",
+    "currency": "통화",
+    "chatLink": "채팅 링크",
+    "emergency": "긴급",
+    "regular": "일반",
+    "active": "진행 중",
+    "blocked": "차단됨",
+    "closed": "종료됨",
+    "cancelled": "취소됨",
+    "progress": "{{current}} / {{target}} {{currency}}",
+    "obligationsCount": "{{count}}개의 약속",
+    "collected": "모금됨",
+    "goal": "목표",
+    "openChat": "채팅 열기",
+    "takeObligation": "약속하기",
+    "amountPlaceholder": "금액 (최소 10)",
+    "submit": "돕기",
+    "close": "모금 종료",
+    "participants": "참여자",
+    "noParticipants": "아직 참여자가 없습니다",
+    "minAmount": "최소 10"
+  },
+  "create": {
+    "title": "모금 만들기",
+    "emergency": "긴급",
+    "regular": "일반",
+    "amount": "금액",
+    "largeAmountWarning": "많은 사람에게 알림이 갑니다. 도움이 정말 필요한지 확인하세요.",
+    "largeAmountConfirm": "금액이 정확함을 확인합니다",
+    "currency": "통화",
+    "chatLink": "채팅 링크",
+    "submit": "모금 만들기",
+    "minAmount": "최소 10",
+    "invalidUrl": "잘못된 URL"
+  },
+  "obligation": {
+    "create": "약속하기",
+    "amount": "금액 (최소 {{min}})",
+    "subscribe": "월간 구독",
+    "unsubscribe": "구독 취소"
+  },
+  "network": {
+    "title": "내 네트워크",
+    "connections": "연결",
+    "addConnection": "연결 추가",
+    "connectionLimit": "한도: {{current}}/{{max}}",
+    "invite": "초대",
+    "qrCode": "QR 코드",
+    "empty": "연결이 없습니다",
+    "emptyHint": "첫 번째 사람을 초대하세요"
+  },
+  "notifications": {
+    "title": "알림",
+    "empty": "알림이 없습니다",
+    "new": "새로운",
+    "reNotify": "리마인더",
+    "closed": "종료됨",
+    "blocked": "차단됨",
+    "specialAuthor": "작성자",
+    "specialDeveloper": "개발자",
+    "handshakes": "번의 핸드셰이크",
+    "via": "경유",
+    "view": "열기",
+    "dismiss": "무시",
+    "loadMore": "더 보기",
+    "expiresIn": "{{hours}}시간 {{minutes}}분 후 만료"
+  },
+  "notification": {
+    "newCollection": "{{name}}님이 도움을 요청합니다",
+    "handshake": "{{path}} 경유",
+    "markRead": "읽음으로 표시",
+    "dismiss": "무시"
+  },
+  "profile": {
+    "bio": "소개",
+    "phone": "전화번호",
+    "stats": "통계",
+    "ignore": "차단",
+    "addToNetwork": "네트워크에 추가",
+    "addConnection": "연결에 추가",
+    "connections": "연결",
+    "collectionsCreated": "모금",
+    "obligationsGiven": "도운 횟수",
+    "totalPledged": "총 약속 금액",
+    "editSettings": "설정",
+    "edit": "프로필 수정",
+    "name": "이름",
+    "save": "저장",
+    "pledgedByCurrency": "통화별",
+    "myConnections": "내 연결",
+    "noConnections": "아직 연결이 없습니다"
+  },
+  "settings": {
+    "title": "설정",
+    "language": "언어",
+    "theme": "테마",
+    "light": "라이트",
+    "dark": "다크",
+    "system": "자동",
+    "sounds": "소리",
+    "sound": "소리",
+    "fontSize": "글꼴 크기",
+    "fontStandard": "표준",
+    "fontLarge": "크게",
+    "linkedAccounts": "연결된 계정",
+    "linkAccount": "계정 연결",
+    "codeExpires": "5분간 유효",
+    "generateCode": "코드 생성",
+    "ignoreList": "차단 목록",
+    "noIgnored": "목록이 비어 있습니다",
+    "unignore": "해제",
+    "logout": "로그아웃",
+    "deleteAccount": "계정 삭제",
+    "deleteConfirm": "정말요? 이 작업은 되돌릴 수 없습니다.",
+    "confirmDelete": "삭제"
+  },
+  "invite": {
+    "title": "초대",
+    "from": "{{name}}님이 초대합니다",
+    "accept": "수락하고 연결",
+    "alreadyUsed": "이 초대는 이미 사용되었습니다",
+    "success": "연결되었습니다!"
+  }
+}

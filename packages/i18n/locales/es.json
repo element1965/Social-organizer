@@ -1,0 +1,196 @@
+{
+  "common": {
+    "appName": "Social Organizer",
+    "loading": "Cargando...",
+    "error": "Ocurrió un error",
+    "retry": "Reintentar",
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "delete": "Eliminar",
+    "confirm": "Confirmar",
+    "back": "Atrás",
+    "next": "Siguiente",
+    "done": "Listo",
+    "search": "Buscar",
+    "notFound": "No encontrado"
+  },
+  "auth": {
+    "loginWith": "Iniciar sesión con {{platform}}",
+    "linking": "Vincular cuenta",
+    "enterCode": "Ingrese el código de 6 dígitos",
+    "codeExpires": "El código expira en {{minutes}} min"
+  },
+  "login": {
+    "subtitle": "Coordinación de ayuda a través de conexiones de confianza"
+  },
+  "onboarding": {
+    "step1": {
+      "title": "Tienes personas que se preocupan por ti",
+      "text": "Este es un organizador social. No transfiere dinero ni cobra pagos. Ayuda a las personas a coordinarse rápidamente cuando alguien necesita apoyo."
+    },
+    "step2": {
+      "title": "Una señal — y las personas indicadas lo saben",
+      "text": "Si alguien necesita ayuda — el sistema notifica a quienes pueden responder. La notificación se envía una vez. Sin spam, sin presión."
+    },
+    "step3": {
+      "title": "Todo es transparente",
+      "text": "Cada acción queda registrada. La confianza se construye con transparencia, no con control."
+    },
+    "step4": {
+      "title": "Añade a tu primera persona",
+      "text": "El organizador funciona a través de conexiones entre personas. Empieza con una persona — alguien en quien confíes."
+    },
+    "start": "Comenzar",
+    "next": "Siguiente",
+    "invite": "Enviar invitación",
+    "qrCode": "Mostrar código QR"
+  },
+  "nav": {
+    "home": "Inicio",
+    "notifications": "Alertas",
+    "create": "Crear",
+    "network": "Red",
+    "settings": "Ajustes"
+  },
+  "dashboard": {
+    "title": "Panel",
+    "needHelp": "Necesito ayuda",
+    "addFirstConnection": "Añade tu primera conexión",
+    "addFirstConnectionDesc": "El organizador funciona a través de conexiones entre personas. Empieza con una persona — alguien en quien confíes.",
+    "goToNetwork": "Ir a la Red",
+    "myCollections": "Mis colectas",
+    "create": "Crear",
+    "noCollections": "Sin colectas activas",
+    "obligations": "compromisos",
+    "myObligations": "Mis compromisos",
+    "noObligations": "Sin compromisos",
+    "myNetwork": "Mi red",
+    "view": "Ver",
+    "connections": "conexiones"
+  },
+  "collection": {
+    "create": "Crear colecta",
+    "amount": "Monto",
+    "currency": "Moneda",
+    "chatLink": "Enlace al chat",
+    "emergency": "Urgente",
+    "regular": "Regular",
+    "active": "Activa",
+    "blocked": "Bloqueada",
+    "closed": "Cerrada",
+    "cancelled": "Cancelada",
+    "progress": "{{current}} / {{target}} {{currency}}",
+    "obligationsCount": "{{count}} compromisos",
+    "collected": "Recaudado",
+    "goal": "Meta",
+    "openChat": "Abrir chat",
+    "takeObligation": "Asumir un compromiso",
+    "amountPlaceholder": "Monto (mín. 10)",
+    "submit": "Ayudar",
+    "close": "Cerrar colecta",
+    "participants": "Participantes",
+    "noParticipants": "Nadie se ha unido todavía",
+    "minAmount": "Mínimo 10"
+  },
+  "create": {
+    "title": "Crear colecta",
+    "emergency": "Urgente",
+    "regular": "Regular",
+    "amount": "Monto",
+    "largeAmountWarning": "Vas a molestar a muchas personas. Asegúrate de que la ayuda sea realmente necesaria.",
+    "largeAmountConfirm": "Confirmo que el monto es correcto",
+    "currency": "Moneda",
+    "chatLink": "Enlace al chat",
+    "submit": "Crear colecta",
+    "minAmount": "Mínimo 10",
+    "invalidUrl": "URL no válida"
+  },
+  "obligation": {
+    "create": "Asumir compromiso",
+    "amount": "Monto (mín. {{min}})",
+    "subscribe": "Suscripción mensual",
+    "unsubscribe": "Cancelar suscripción"
+  },
+  "network": {
+    "title": "Mi red",
+    "connections": "Conexiones",
+    "addConnection": "Añadir conexión",
+    "connectionLimit": "Límite: {{current}}/{{max}}",
+    "invite": "Invitar",
+    "qrCode": "Código QR",
+    "empty": "Sin conexiones",
+    "emptyHint": "Invita a tu primera persona"
+  },
+  "notifications": {
+    "title": "Notificaciones",
+    "empty": "Sin notificaciones",
+    "new": "Nueva",
+    "reNotify": "Recordatorio",
+    "closed": "Cerrada",
+    "blocked": "Bloqueada",
+    "specialAuthor": "Autor",
+    "specialDeveloper": "Desarrollador",
+    "handshakes": "apretones de manos",
+    "via": "a través de",
+    "view": "Abrir",
+    "dismiss": "Descartar",
+    "loadMore": "Cargar más",
+    "expiresIn": "Expira en {{hours}}h {{minutes}}m"
+  },
+  "notification": {
+    "newCollection": "{{name}} necesita ayuda",
+    "handshake": "a través de {{path}}",
+    "markRead": "Marcar como leída",
+    "dismiss": "Descartar"
+  },
+  "profile": {
+    "bio": "Acerca de",
+    "phone": "Teléfono",
+    "stats": "Estadísticas",
+    "ignore": "Ignorar",
+    "addToNetwork": "Añadir a la red",
+    "addConnection": "Añadir a conexiones",
+    "connections": "Conexiones",
+    "collectionsCreated": "Colectas",
+    "obligationsGiven": "Veces que ayudó",
+    "totalPledged": "Total comprometido",
+    "editSettings": "Ajustes",
+    "edit": "Editar perfil",
+    "name": "Nombre",
+    "save": "Guardar",
+    "pledgedByCurrency": "por moneda",
+    "myConnections": "Mis conexiones",
+    "noConnections": "Aún sin conexiones"
+  },
+  "settings": {
+    "title": "Ajustes",
+    "language": "Idioma",
+    "theme": "Tema",
+    "light": "Claro",
+    "dark": "Oscuro",
+    "system": "Automático",
+    "sounds": "Sonidos",
+    "sound": "Sonidos",
+    "fontSize": "Tamaño de fuente",
+    "fontStandard": "Estándar",
+    "fontLarge": "Ampliado",
+    "linkedAccounts": "Cuentas vinculadas",
+    "linkAccount": "Vincular cuenta",
+    "codeExpires": "Válido por 5 minutos",
+    "generateCode": "Generar código",
+    "ignoreList": "Lista de ignorados",
+    "noIgnored": "La lista está vacía",
+    "unignore": "Quitar",
+    "logout": "Cerrar sesión",
+    "deleteAccount": "Eliminar cuenta",
+    "deleteConfirm": "¿Estás seguro? Esta acción es irreversible.",
+    "confirmDelete": "Eliminar"
+  },
+  "invite": {
+    "title": "Invitación",
+    "from": "{{name}} te invita",
+    "accept": "Aceptar y conectar",
+    "alreadyUsed": "Esta invitación ya fue utilizada",
+    "success": "¡Conectado!"
+  }
+}

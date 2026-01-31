@@ -1,0 +1,196 @@
+{
+  "common": {
+    "appName": "Social Organizer",
+    "loading": "Laden...",
+    "error": "Ein Fehler ist aufgetreten",
+    "retry": "Erneut versuchen",
+    "save": "Speichern",
+    "cancel": "Abbrechen",
+    "delete": "Löschen",
+    "confirm": "Bestätigen",
+    "back": "Zurück",
+    "next": "Weiter",
+    "done": "Fertig",
+    "search": "Suchen",
+    "notFound": "Nicht gefunden"
+  },
+  "auth": {
+    "loginWith": "Anmelden mit {{platform}}",
+    "linking": "Konto verknüpfen",
+    "enterCode": "6-stelligen Code eingeben",
+    "codeExpires": "Code läuft in {{minutes}} Min. ab"
+  },
+  "login": {
+    "subtitle": "Hilfskoordination durch vertrauensvolle Verbindungen"
+  },
+  "onboarding": {
+    "step1": {
+      "title": "Du hast Menschen, denen du wichtig bist",
+      "text": "Dies ist ein sozialer Organisator. Er überweist kein Geld und zieht keine Zahlungen ein. Er hilft Menschen, sich schnell zu koordinieren, wenn jemand Unterstützung braucht."
+    },
+    "step2": {
+      "title": "Ein Signal — und die richtigen Leute wissen Bescheid",
+      "text": "Wenn jemand Hilfe braucht — benachrichtigt das System diejenigen, die helfen können. Die Benachrichtigung kommt einmal. Kein Spam, kein Druck."
+    },
+    "step3": {
+      "title": "Alles ist transparent",
+      "text": "Jede Aktion wird aufgezeichnet. Vertrauen entsteht durch Transparenz, nicht durch Kontrolle."
+    },
+    "step4": {
+      "title": "Füge deine erste Person hinzu",
+      "text": "Der Organisator funktioniert über Verbindungen zwischen Menschen. Beginne mit einer Person — jemandem, dem du vertraust."
+    },
+    "start": "Loslegen",
+    "next": "Weiter",
+    "invite": "Einladung senden",
+    "qrCode": "QR-Code anzeigen"
+  },
+  "nav": {
+    "home": "Startseite",
+    "notifications": "Benachrichtigungen",
+    "create": "Erstellen",
+    "network": "Netzwerk",
+    "settings": "Einstellungen"
+  },
+  "dashboard": {
+    "title": "Übersicht",
+    "needHelp": "Ich brauche Hilfe",
+    "addFirstConnection": "Füge deine erste Verbindung hinzu",
+    "addFirstConnectionDesc": "Der Organisator funktioniert über Verbindungen zwischen Menschen. Beginne mit einer Person — jemandem, dem du vertraust.",
+    "goToNetwork": "Zum Netzwerk",
+    "myCollections": "Meine Sammlungen",
+    "create": "Erstellen",
+    "noCollections": "Keine aktiven Sammlungen",
+    "obligations": "Zusagen",
+    "myObligations": "Meine Zusagen",
+    "noObligations": "Keine Zusagen",
+    "myNetwork": "Mein Netzwerk",
+    "view": "Ansehen",
+    "connections": "Verbindungen"
+  },
+  "collection": {
+    "create": "Sammlung erstellen",
+    "amount": "Betrag",
+    "currency": "Währung",
+    "chatLink": "Chat-Link",
+    "emergency": "Dringend",
+    "regular": "Regulär",
+    "active": "Aktiv",
+    "blocked": "Gesperrt",
+    "closed": "Geschlossen",
+    "cancelled": "Abgebrochen",
+    "progress": "{{current}} / {{target}} {{currency}}",
+    "obligationsCount": "{{count}} Zusagen",
+    "collected": "Gesammelt",
+    "goal": "Ziel",
+    "openChat": "Chat öffnen",
+    "takeObligation": "Zusage machen",
+    "amountPlaceholder": "Betrag (mind. 10)",
+    "submit": "Helfen",
+    "close": "Sammlung schließen",
+    "participants": "Teilnehmer",
+    "noParticipants": "Noch niemand beigetreten",
+    "minAmount": "Mindestens 10"
+  },
+  "create": {
+    "title": "Sammlung erstellen",
+    "emergency": "Dringend",
+    "regular": "Regulär",
+    "amount": "Betrag",
+    "largeAmountWarning": "Du wirst viele Menschen stören. Stelle sicher, dass die Hilfe wirklich benötigt wird.",
+    "largeAmountConfirm": "Ich bestätige, dass der Betrag korrekt ist",
+    "currency": "Währung",
+    "chatLink": "Chat-Link",
+    "submit": "Sammlung erstellen",
+    "minAmount": "Mindestens 10",
+    "invalidUrl": "Ungültige URL"
+  },
+  "obligation": {
+    "create": "Zusage machen",
+    "amount": "Betrag (mind. {{min}})",
+    "subscribe": "Monatlich abonnieren",
+    "unsubscribe": "Abbestellen"
+  },
+  "network": {
+    "title": "Mein Netzwerk",
+    "connections": "Verbindungen",
+    "addConnection": "Verbindung hinzufügen",
+    "connectionLimit": "Limit: {{current}}/{{max}}",
+    "invite": "Einladen",
+    "qrCode": "QR-Code",
+    "empty": "Keine Verbindungen",
+    "emptyHint": "Lade deine erste Person ein"
+  },
+  "notifications": {
+    "title": "Benachrichtigungen",
+    "empty": "Keine Benachrichtigungen",
+    "new": "Neu",
+    "reNotify": "Erinnerung",
+    "closed": "Geschlossen",
+    "blocked": "Gesperrt",
+    "specialAuthor": "Autor",
+    "specialDeveloper": "Entwickler",
+    "handshakes": "Handschläge",
+    "via": "über",
+    "view": "Öffnen",
+    "dismiss": "Verwerfen",
+    "loadMore": "Mehr laden",
+    "expiresIn": "Läuft ab in {{hours}}h {{minutes}}m"
+  },
+  "notification": {
+    "newCollection": "{{name}} braucht Hilfe",
+    "handshake": "über {{path}}",
+    "markRead": "Als gelesen markieren",
+    "dismiss": "Verwerfen"
+  },
+  "profile": {
+    "bio": "Über mich",
+    "phone": "Telefon",
+    "stats": "Statistiken",
+    "ignore": "Ignorieren",
+    "addToNetwork": "Zum Netzwerk hinzufügen",
+    "addConnection": "Zu Verbindungen hinzufügen",
+    "connections": "Verbindungen",
+    "collectionsCreated": "Sammlungen",
+    "obligationsGiven": "Male geholfen",
+    "totalPledged": "Gesamt zugesagt",
+    "editSettings": "Einstellungen",
+    "edit": "Profil bearbeiten",
+    "name": "Name",
+    "save": "Speichern",
+    "pledgedByCurrency": "nach Währung",
+    "myConnections": "Meine Verbindungen",
+    "noConnections": "Noch keine Verbindungen"
+  },
+  "settings": {
+    "title": "Einstellungen",
+    "language": "Sprache",
+    "theme": "Design",
+    "light": "Hell",
+    "dark": "Dunkel",
+    "system": "Automatisch",
+    "sounds": "Töne",
+    "sound": "Töne",
+    "fontSize": "Schriftgröße",
+    "fontStandard": "Standard",
+    "fontLarge": "Vergrößert",
+    "linkedAccounts": "Verknüpfte Konten",
+    "linkAccount": "Konto verknüpfen",
+    "codeExpires": "Gültig für 5 Minuten",
+    "generateCode": "Code generieren",
+    "ignoreList": "Ignorierliste",
+    "noIgnored": "Die Liste ist leer",
+    "unignore": "Entfernen",
+    "logout": "Abmelden",
+    "deleteAccount": "Konto löschen",
+    "deleteConfirm": "Bist du sicher? Diese Aktion ist unwiderruflich.",
+    "confirmDelete": "Löschen"
+  },
+  "invite": {
+    "title": "Einladung",
+    "from": "{{name}} lädt dich ein",
+    "accept": "Annehmen und verbinden",
+    "alreadyUsed": "Diese Einladung wurde bereits verwendet",
+    "success": "Verbunden!"
+  }
+}
