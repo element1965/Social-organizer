@@ -1,12 +1,12 @@
 import { z } from 'zod';
-import { router, publicProcedure, protectedProcedure } from '../trpc';
+import { router, publicProcedure, protectedProcedure } from '../trpc.js';
 import { TRPCError } from '@trpc/server';
 import {
   createAccessToken,
   createRefreshToken,
   verifyToken,
   generateLinkingCode,
-} from '../services/auth.service';
+} from '../services/auth.service.js';
 import { LINKING_CODE_TTL_MINUTES } from '@so/shared';
 
 export const authRouter = router({

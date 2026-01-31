@@ -1,6 +1,6 @@
 import type { PrismaClient } from '@so/db';
 import { NOTIFICATION_TTL_HOURS } from '@so/shared';
-import { findRecipientsViaBfs } from './bfs.service';
+import { findRecipientsViaBfs } from './bfs.service.js';
 
 /**
  * Рассылка уведомлений о сборе через BFS-обход графа связей.

@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { router, protectedProcedure } from '../trpc';
+import { router, protectedProcedure } from '../trpc.js';
 import { TRPCError } from '@trpc/server';
 
 export const userRouter = router({

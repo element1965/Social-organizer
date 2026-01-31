@@ -1,10 +1,10 @@
 import { Queue, Worker } from 'bullmq';
 import IORedis from 'ioredis';
-import { processReNotify } from './re-notify.worker';
-import { processCycleClose } from './cycle-close.worker';
-import { processSpecialNotify } from './special-notify.worker';
-import { processExpireNotifications } from './expire-notifications.worker';
-import { processCheckBlock } from './check-block.worker';
+import { processReNotify } from './re-notify.worker.js';
+import { processCycleClose } from './cycle-close.worker.js';
+import { processSpecialNotify } from './special-notify.worker.js';
+import { processExpireNotifications } from './expire-notifications.worker.js';
+import { processCheckBlock } from './check-block.worker.js';
 
 let connection: IORedis | null = null;
 

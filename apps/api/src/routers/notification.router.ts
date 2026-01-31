@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { router, protectedProcedure, paginationInput } from '../trpc';
+import { router, protectedProcedure, paginationInput } from '../trpc.js';
 
 export const notificationRouter = router({
   list: protectedProcedure
