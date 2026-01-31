@@ -124,7 +124,7 @@ model Collection {
   id                String           @id @default(cuid())
   creatorId         String
   type              CollectionType
-  amount            Float
+  amount            Float?
   currency          String
   chatLink          String
   status            CollectionStatus @default(ACTIVE)

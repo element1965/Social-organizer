@@ -31,7 +31,8 @@ export function CollectionPage() {
 
   const isOwner = collection.creatorId === userId;
   const hasObligation = collection.obligations.some((o) => o.userId === userId);
-  const percentage = collection.amount > 0 ? (collection.currentAmount / collection.amount) * 100 : 0;
+  const hasGoal = collection.amount != null && collection.amount > 0;
+  const percentage = hasGoal ? (collection.currentAmount / collection.amount!) * 100 : 0;
   const statusVariant = collection.status === 'ACTIVE' ? 'success' : collection.status === 'BLOCKED' ? 'warning' : collection.status === 'CLOSED' ? 'default' : 'danger';
 
   const handleSubmitObligation = () => {
@@ -58,11 +59,10 @@ export function CollectionPage() {
       <Card>
         <CardContent className="py-4">
           <div className="flex justify-between items-end mb-2">
-            <div><p className="text-sm text-gray-500">{t('collection.collected', 'Собрано')}</p><p className="text-2xl font-bold text-gray-900 dark:text-white">{collection.currentAmount.toFixed(2)}</p></div>
-            <div className="text-right"><p className="text-sm text-gray-500">{t('collection.goal', 'Цель')}</p><p className="text-2xl font-bold text-gray-900 dark:text-white">{collection.amount} {collection.currency}</p></div>
+            <div><p className="text-sm text-gray-500">{t('collection.collected', 'Собрано')}</p><p className="text-2xl font-bold text-gray-900 dark:text-white">{collection.currentAmount.toFixed(2)} {collection.currency}</p></div>
+            {hasGoal && <div className="text-right"><p className="text-sm text-gray-500">{t('collection.goal', 'Цель')}</p><p className="text-2xl font-bold text-gray-900 dark:text-white">{collection.amount} {collection.currency}</p></div>}
           </div>
-          <Progress value={collection.currentAmount} max={collection.amount} />
-          <p className="text-xs text-gray-500 mt-1 text-right">{percentage.toFixed(0)}%</p>
+          {hasGoal && <><Progress value={collection.currentAmount} max={collection.amount!} /><p className="text-xs text-gray-500 mt-1 text-right">{percentage.toFixed(0)}%</p></>}
         </CardContent>
       </Card>
 

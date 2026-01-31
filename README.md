@@ -187,4 +187,4 @@ React 19 SPA с tRPC-клиентом.
 - [x] **Фаза 1:** Бэкенд (API) — tRPC роутеры, сервисы, BullMQ воркеры
 - [x] **Фаза 2:** Веб-фронтенд (MVP) — все 9 страниц, UI-компоненты, tRPC клиент, i18n
 - [x] **Фаза 3:** 3D и оптимизация — Three.js планета, облака, граф, Gun.js бэкап, code splitting
-- [ ] **Фаза 4:** Деплой и тестирование
+- [x] **Фаза 4:** Деплой и тестирование — Railway config, API serves web frontend, SPEC audit fixes

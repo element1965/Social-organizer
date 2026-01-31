@@ -48,11 +48,13 @@ export async function findRecipientsViaBfs(
       WHERE b.depth < $2
         AND NOT (CASE WHEN c."userAId" = b.user_id THEN c."userBId" ELSE c."userAId" END = ANY(b.path))
     )
-    SELECT DISTINCT ON (user_id) user_id, path, depth
-    FROM bfs
-    WHERE user_id != $1
-      AND user_id NOT IN (${excludeList})
-    ORDER BY user_id, depth
+    SELECT DISTINCT ON (b.user_id) b.user_id, b.path, b.depth
+    FROM bfs b
+    JOIN users u ON u.id = b.user_id
+    WHERE b.user_id != $1
+      AND b.user_id NOT IN (${excludeList})
+      AND u."deletedAt" IS NULL
+    ORDER BY b.user_id, b.depth
     LIMIT $3
   `, startUserId, maxDepth, maxRecipients);
 

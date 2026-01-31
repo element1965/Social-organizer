@@ -21,6 +21,9 @@ export async function processReNotify(_job: Job): Promise<void> {
   });
 
   for (const collection of activeCollections) {
+    // Спецпрофильные сборы (без суммы) не участвуют в доуведомлении
+    if (collection.amount == null) continue;
+
     const currentAmount = collection.obligations.reduce((sum, o) => sum + o.amount, 0);
     const remaining = collection.amount - currentAmount;
     if (remaining <= 0) continue;
