@@ -1,0 +1,88 @@
+{
+  "common": {
+    "appName": "Social Organizer",
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "retry": "Retry",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "confirm": "Confirm",
+    "back": "Back",
+    "next": "Next",
+    "done": "Done",
+    "search": "Search"
+  },
+  "auth": {
+    "loginWith": "Log in with {{platform}}",
+    "linking": "Link account",
+    "enterCode": "Enter 6-digit code",
+    "codeExpires": "Code expires in {{minutes}} min"
+  },
+  "dashboard": {
+    "myCollections": "My Collections",
+    "myObligations": "My Obligations",
+    "myNetwork": "My Network",
+    "notifications": "Notifications"
+  },
+  "collection": {
+    "create": "Create Collection",
+    "amount": "Amount",
+    "currency": "Currency",
+    "chatLink": "Chat Link",
+    "emergency": "Emergency",
+    "regular": "Regular",
+    "active": "Active",
+    "blocked": "Blocked",
+    "closed": "Closed",
+    "cancelled": "Cancelled",
+    "progress": "{{current}} / {{target}} {{currency}}",
+    "obligationsCount": "{{count}} obligations"
+  },
+  "obligation": {
+    "create": "Take Obligation",
+    "amount": "Amount (min {{min}})",
+    "subscribe": "Subscribe monthly",
+    "unsubscribe": "Unsubscribe"
+  },
+  "network": {
+    "connections": "Connections",
+    "addConnection": "Add Connection",
+    "connectionLimit": "Limit: {{current}}/{{max}}",
+    "invite": "Invite",
+    "qrCode": "QR Code"
+  },
+  "notification": {
+    "newCollection": "{{name}} needs help",
+    "handshake": "via {{path}}",
+    "markRead": "Mark as read",
+    "dismiss": "Dismiss"
+  },
+  "profile": {
+    "bio": "About",
+    "phone": "Phone",
+    "stats": "Statistics",
+    "ignore": "Ignore",
+    "addToNetwork": "Add to Network"
+  },
+  "settings": {
+    "title": "Settings",
+    "language": "Language",
+    "theme": "Theme",
+    "sounds": "Sounds",
+    "fontSize": "Font Size",
+    "linkedAccounts": "Linked Accounts",
+    "ignoreList": "Ignore List",
+    "deleteAccount": "Delete Account"
+  },
+  "onboarding": {
+    "step1Title": "Your Network",
+    "step1Text": "Connect with people you trust",
+    "step2Title": "How it Works",
+    "step2Text": "Create collections, take obligations",
+    "step3Title": "Transparency",
+    "step3Text": "Everyone sees the chain of trust",
+    "step4Title": "Get Started",
+    "step4Text": "Add your first connection"
+  }
+}

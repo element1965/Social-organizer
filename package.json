@@ -1,17 +1,30 @@
 {
   "name": "social-organizer",
   "private": true,
-  "version": "0.0.1",
+  "version": "0.1.0",
+  "packageManager": "pnpm@10.4.1",
   "scripts": {
-    "dev": "concurrently \"npm run relay\" \"npm run client\"",
-    "client": "npm --prefix client run dev",
-    "relay": "npm --prefix relay run dev",
-    "install:all": "npm --prefix relay install && npm --prefix client install",
-    "postinstall": "cd relay && npm install && cd ../client && npm install",
-    "build": "npm --prefix client run build",
-    "start": "node relay/server.js"
+    "build": "turbo build",
+    "dev": "turbo dev",
+    "lint": "turbo lint",
+    "typecheck": "turbo typecheck",
+    "db:migrate": "pnpm --filter @so/db migrate",
+    "db:generate": "pnpm --filter @so/db generate",
+    "db:push": "pnpm --filter @so/db push",
+    "db:studio": "pnpm --filter @so/db studio",
+    "clean": "turbo clean && rm -rf node_modules"
   },
   "devDependencies": {
-    "concurrently": "^9.0.0"
+    "turbo": "^2.4.0",
+    "typescript": "^5.7.0"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "@prisma/client",
+      "@prisma/engines",
+      "esbuild",
+      "msgpackr-extract",
+      "prisma"
+    ]
   }
 }

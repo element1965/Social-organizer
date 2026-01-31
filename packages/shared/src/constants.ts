@@ -1,0 +1,16 @@
+export const MAX_CONNECTIONS = 150;
+export const MIN_OBLIGATION_AMOUNT = 10;
+export const MIN_COLLECTION_AMOUNT = 10;
+export const NOTIFICATION_TTL_HOURS = 24;
+export const RE_NOTIFY_INTERVAL_HOURS = 12;
+export const REGULAR_CYCLE_DAYS = 28;
+export const LINKING_CODE_TTL_MINUTES = 5;
+export const LINKING_CODE_LENGTH = 6;
+export const JWT_ACCESS_TTL_MINUTES = 30;
+export const JWT_REFRESH_TTL_DAYS = 30;
+export const SPECIAL_NOTIFY_AFTER_DAYS = 3;
+export const POLLING_INTERVAL_MS = 30_000;
+export const MAX_BFS_DEPTH = 6;
+export const MAX_BFS_RECIPIENTS = 10_000;
+export const FB_BUNDLE_SIZE_LIMIT_MB = 5;
+export const GRAPH_SLICE_DEPTH = 3;

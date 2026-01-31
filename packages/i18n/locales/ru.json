@@ -1,0 +1,88 @@
+{
+  "common": {
+    "appName": "Social Organizer",
+    "loading": "Загрузка...",
+    "error": "Произошла ошибка",
+    "retry": "Повторить",
+    "save": "Сохранить",
+    "cancel": "Отмена",
+    "delete": "Удалить",
+    "confirm": "Подтвердить",
+    "back": "Назад",
+    "next": "Далее",
+    "done": "Готово",
+    "search": "Поиск"
+  },
+  "auth": {
+    "loginWith": "Войти через {{platform}}",
+    "linking": "Привязать аккаунт",
+    "enterCode": "Введите 6-значный код",
+    "codeExpires": "Код истекает через {{minutes}} мин"
+  },
+  "dashboard": {
+    "myCollections": "Мои сборы",
+    "myObligations": "Мои обязательства",
+    "myNetwork": "Моя сеть",
+    "notifications": "Уведомления"
+  },
+  "collection": {
+    "create": "Создать сбор",
+    "amount": "Сумма",
+    "currency": "Валюта",
+    "chatLink": "Ссылка на чат",
+    "emergency": "Экстренный",
+    "regular": "Регулярный",
+    "active": "Активный",
+    "blocked": "Заблокирован",
+    "closed": "Закрыт",
+    "cancelled": "Отменён",
+    "progress": "{{current}} / {{target}} {{currency}}",
+    "obligationsCount": "{{count}} обязательств"
+  },
+  "obligation": {
+    "create": "Взять обязательство",
+    "amount": "Сумма (мин {{min}})",
+    "subscribe": "Подписаться ежемесячно",
+    "unsubscribe": "Отписаться"
+  },
+  "network": {
+    "connections": "Связи",
+    "addConnection": "Добавить связь",
+    "connectionLimit": "Лимит: {{current}}/{{max}}",
+    "invite": "Пригласить",
+    "qrCode": "QR-код"
+  },
+  "notification": {
+    "newCollection": "{{name}} нуждается в помощи",
+    "handshake": "через {{path}}",
+    "markRead": "Прочитано",
+    "dismiss": "Скрыть"
+  },
+  "profile": {
+    "bio": "О себе",
+    "phone": "Телефон",
+    "stats": "Статистика",
+    "ignore": "Игнорировать",
+    "addToNetwork": "Добавить в сеть"
+  },
+  "settings": {
+    "title": "Настройки",
+    "language": "Язык",
+    "theme": "Тема",
+    "sounds": "Звуки",
+    "fontSize": "Размер шрифта",
+    "linkedAccounts": "Привязанные аккаунты",
+    "ignoreList": "Список игнора",
+    "deleteAccount": "Удалить аккаунт"
+  },
+  "onboarding": {
+    "step1Title": "Твоя сеть",
+    "step1Text": "Связывайся с людьми, которым доверяешь",
+    "step2Title": "Как это работает",
+    "step2Text": "Создавай сборы, бери обязательства",
+    "step3Title": "Прозрачность",
+    "step3Text": "Все видят цепочку доверия",
+    "step4Title": "Начни",
+    "step4Text": "Добавь первую связь"
+  }
+}

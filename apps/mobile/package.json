@@ -1,0 +1,9 @@
+{
+  "name": "@so/mobile",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "build": "echo \"Mobile stub - no build yet\"",
+    "typecheck": "echo \"Mobile stub - no typecheck yet\""
+  }
+}

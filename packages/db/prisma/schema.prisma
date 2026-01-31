@@ -1,0 +1,224 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Platform {
+  FACEBOOK
+  TELEGRAM
+  APPLE
+  GOOGLE
+}
+
+enum UserRole {
+  REGULAR
+  AUTHOR
+  DEVELOPER
+}
+
+enum Theme {
+  LIGHT
+  DARK
+  SYSTEM
+}
+
+enum CollectionType {
+  EMERGENCY
+  REGULAR
+}
+
+enum CollectionStatus {
+  ACTIVE
+  BLOCKED
+  CLOSED
+  CANCELLED
+}
+
+enum NotificationType {
+  NEW_COLLECTION
+  COLLECTION_BLOCKED
+  COLLECTION_CLOSED
+  NEW_OBLIGATION
+  RE_NOTIFY
+  SPECIAL_AUTHOR
+  SPECIAL_DEVELOPER
+  INVITE_ACCEPTED
+}
+
+enum NotificationStatus {
+  UNREAD
+  READ
+  DISMISSED
+  RESPONDED
+  EXPIRED
+}
+
+model User {
+  id           String    @id @default(cuid())
+  name         String
+  bio          String?
+  phone        String?
+  photoUrl     String?
+  language     String    @default("en")
+  theme        Theme     @default(SYSTEM)
+  soundEnabled Boolean   @default(true)
+  fontScale    Float     @default(1.0)
+  role         UserRole  @default(REGULAR)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  deletedAt    DateTime?
+
+  platformAccounts PlatformAccount[]
+  connectionsFrom  Connection[]      @relation("connectionFromUser")
+  connectionsTo    Connection[]      @relation("connectionToUser")
+  collections      Collection[]
+  obligations      Obligation[]
+  notifications    Notification[]
+  ignoreFrom       IgnoreEntry[]     @relation("ignoreFrom")
+  ignoreTo         IgnoreEntry[]     @relation("ignoreTo")
+  linkingCodes     LinkingCode[]
+  invitesSent      InviteLink[]      @relation("inviter")
+  invitesUsed      InviteLink[]      @relation("inviteUsedBy")
+
+  @@map("users")
+}
+
+model PlatformAccount {
+  id           String   @id @default(cuid())
+  userId       String
+  platform     Platform
+  platformId   String
+  accessToken  String?
+  refreshToken String?
+  metadata     Json?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([platform, platformId])
+  @@index([userId])
+  @@map("platform_accounts")
+}
+
+model Connection {
+  id        String   @id @default(cuid())
+  userAId   String
+  userBId   String
+  createdAt DateTime @default(now())
+
+  userA User @relation("connectionFromUser", fields: [userAId], references: [id], onDelete: Cascade)
+  userB User @relation("connectionToUser", fields: [userBId], references: [id], onDelete: Cascade)
+
+  @@unique([userAId, userBId])
+  @@index([userAId])
+  @@index([userBId])
+  @@map("connections")
+}
+
+model Collection {
+  id                String           @id @default(cuid())
+  creatorId         String
+  type              CollectionType
+  amount            Float
+  currency          String
+  chatLink          String
+  status            CollectionStatus @default(ACTIVE)
+  currentCycleStart DateTime?
+  cycleNumber       Int              @default(1)
+  blockedAt         DateTime?
+  closedAt          DateTime?
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
+
+  creator       User           @relation(fields: [creatorId], references: [id], onDelete: Cascade)
+  obligations   Obligation[]
+  notifications Notification[]
+
+  @@index([creatorId])
+  @@index([status])
+  @@map("collections")
+}
+
+model Obligation {
+  id             String    @id @default(cuid())
+  collectionId   String
+  userId         String
+  amount         Float
+  isSubscription Boolean   @default(false)
+  unsubscribedAt DateTime?
+  createdAt      DateTime  @default(now())
+
+  collection Collection @relation(fields: [collectionId], references: [id], onDelete: Cascade)
+  user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([collectionId])
+  @@index([userId])
+  @@map("obligations")
+}
+
+model Notification {
+  id            String             @id @default(cuid())
+  userId        String
+  collectionId  String
+  type          NotificationType
+  handshakePath Json               @default("[]")
+  status        NotificationStatus @default(UNREAD)
+  expiresAt     DateTime
+  wave          Int                @default(1)
+  createdAt     DateTime           @default(now())
+  updatedAt     DateTime           @updatedAt
+
+  user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  collection Collection @relation(fields: [collectionId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, collectionId, wave])
+  @@index([userId, status])
+  @@index([expiresAt])
+  @@map("notifications")
+}
+
+model IgnoreEntry {
+  id         String   @id @default(cuid())
+  fromUserId String
+  toUserId   String
+  createdAt  DateTime @default(now())
+
+  fromUser User @relation("ignoreFrom", fields: [fromUserId], references: [id], onDelete: Cascade)
+  toUser   User @relation("ignoreTo", fields: [toUserId], references: [id], onDelete: Cascade)
+
+  @@unique([fromUserId, toUserId])
+  @@map("ignore_entries")
+}
+
+model LinkingCode {
+  id        String   @id @default(cuid())
+  userId    String
+  code      String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([code, expiresAt])
+  @@map("linking_codes")
+}
+
+model InviteLink {
+  id        String   @id @default(cuid())
+  inviterId String
+  token     String   @unique
+  usedById  String?
+  createdAt DateTime @default(now())
+  usedAt    DateTime?
+
+  inviter  User  @relation("inviter", fields: [inviterId], references: [id], onDelete: Cascade)
+  usedBy   User? @relation("inviteUsedBy", fields: [usedById], references: [id])
+
+  @@index([token])
+  @@map("invite_links")
+}
