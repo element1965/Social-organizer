@@ -1,0 +1,196 @@
+{
+  "common": {
+    "appName": "Social Organizer",
+    "loading": "Ladataan...",
+    "error": "Tapahtui virhe",
+    "retry": "Yritä uudelleen",
+    "save": "Tallenna",
+    "cancel": "Peruuta",
+    "delete": "Poista",
+    "confirm": "Vahvista",
+    "back": "Takaisin",
+    "next": "Seuraava",
+    "done": "Valmis",
+    "search": "Haku",
+    "notFound": "Ei löytynyt"
+  },
+  "auth": {
+    "loginWith": "Kirjaudu palvelulla {{platform}}",
+    "linking": "Yhdistä tili",
+    "enterCode": "Syötä 6-numeroinen koodi",
+    "codeExpires": "Koodi vanhenee {{minutes}} min kuluttua"
+  },
+  "login": {
+    "subtitle": "Avun koordinointia luotettujen yhteyksien kautta"
+  },
+  "onboarding": {
+    "step1": {
+      "title": "Sinulla on ihmisiä, jotka välittävät",
+      "text": "Tämä on sosiaalinen organisaattori. Se ei siirrä rahaa eikä kerää maksuja. Se auttaa ihmisiä koordinoimaan nopeasti, kun joku tarvitsee tukea."
+    },
+    "step2": {
+      "title": "Yksi signaali — ja oikeat ihmiset tietävät",
+      "text": "Jos joku tarvitsee apua — järjestelmä ilmoittaa niille, jotka voivat auttaa. Ilmoitus tulee kerran. Ei roskapostia, ei painostusta."
+    },
+    "step3": {
+      "title": "Kaikki on läpinäkyvää",
+      "text": "Jokainen toiminto tallennetaan. Luottamus perustuu läpinäkyvyyteen, ei kontrolliin."
+    },
+    "step4": {
+      "title": "Lisää ensimmäinen henkilösi",
+      "text": "Organisaattori toimii ihmisten välisten yhteyksien kautta. Aloita yhdestä henkilöstä — jostakusta, johon luotat."
+    },
+    "start": "Aloita",
+    "next": "Seuraava",
+    "invite": "Lähetä kutsu",
+    "qrCode": "Näytä QR-koodi"
+  },
+  "nav": {
+    "home": "Koti",
+    "notifications": "Ilmoitukset",
+    "create": "Luo",
+    "network": "Verkosto",
+    "settings": "Asetukset"
+  },
+  "dashboard": {
+    "title": "Hallintapaneeli",
+    "needHelp": "Tarvitsen apua",
+    "addFirstConnection": "Lisää ensimmäinen yhteytesi",
+    "addFirstConnectionDesc": "Organisaattori toimii ihmisten välisten yhteyksien kautta. Aloita yhdestä henkilöstä — jostakusta, johon luotat.",
+    "goToNetwork": "Siirry verkostoon",
+    "myCollections": "Omat keräykset",
+    "create": "Luo",
+    "noCollections": "Ei aktiivisia keräyksiä",
+    "obligations": "sitoumukset",
+    "myObligations": "Omat sitoumukset",
+    "noObligations": "Ei sitoumuksia",
+    "myNetwork": "Oma verkosto",
+    "view": "Näytä",
+    "connections": "yhteyksiä"
+  },
+  "collection": {
+    "create": "Luo keräys",
+    "amount": "Summa",
+    "currency": "Valuutta",
+    "chatLink": "Chat-linkki",
+    "emergency": "Hätätapaus",
+    "regular": "Tavallinen",
+    "active": "Aktiivinen",
+    "blocked": "Estetty",
+    "closed": "Suljettu",
+    "cancelled": "Peruutettu",
+    "progress": "{{current}} / {{target}} {{currency}}",
+    "obligationsCount": "{{count}} sitoumusta",
+    "collected": "Kerätty",
+    "goal": "Tavoite",
+    "openChat": "Avaa chat",
+    "takeObligation": "Ota sitoumus",
+    "amountPlaceholder": "Summa (väh. 10)",
+    "submit": "Auta",
+    "close": "Sulje keräys",
+    "participants": "Osallistujat",
+    "noParticipants": "Kukaan ei ole vielä liittynyt",
+    "minAmount": "Vähintään 10"
+  },
+  "create": {
+    "title": "Luo keräys",
+    "emergency": "Hätätapaus",
+    "regular": "Tavallinen",
+    "amount": "Summa",
+    "largeAmountWarning": "Häiritset suurta joukkoa ihmisiä. Varmista, että apu on todella tarpeen.",
+    "largeAmountConfirm": "Vahvistan, että summa on oikein",
+    "currency": "Valuutta",
+    "chatLink": "Chat-linkki",
+    "submit": "Luo keräys",
+    "minAmount": "Vähintään 10",
+    "invalidUrl": "Virheellinen URL"
+  },
+  "obligation": {
+    "create": "Ota sitoumus",
+    "amount": "Summa (väh. {{min}})",
+    "subscribe": "Tilaa kuukausittain",
+    "unsubscribe": "Peruuta tilaus"
+  },
+  "network": {
+    "title": "Oma verkosto",
+    "connections": "Yhteydet",
+    "addConnection": "Lisää yhteys",
+    "connectionLimit": "Raja: {{current}}/{{max}}",
+    "invite": "Kutsu",
+    "qrCode": "QR-koodi",
+    "empty": "Ei yhteyksiä",
+    "emptyHint": "Kutsu ensimmäinen henkilösi"
+  },
+  "notifications": {
+    "title": "Ilmoitukset",
+    "empty": "Ei ilmoituksia",
+    "new": "Uusi",
+    "reNotify": "Muistutus",
+    "closed": "Suljettu",
+    "blocked": "Estetty",
+    "specialAuthor": "Tekijä",
+    "specialDeveloper": "Kehittäjä",
+    "handshakes": "kättelyt",
+    "via": "kautta",
+    "view": "Avaa",
+    "dismiss": "Ohita",
+    "loadMore": "Lataa lisää",
+    "expiresIn": "Vanhenee {{hours}}t {{minutes}}min kuluttua"
+  },
+  "notification": {
+    "newCollection": "{{name}} tarvitsee apua",
+    "handshake": "kautta {{path}}",
+    "markRead": "Merkitse luetuksi",
+    "dismiss": "Ohita"
+  },
+  "profile": {
+    "bio": "Tietoja",
+    "phone": "Puhelin",
+    "stats": "Tilastot",
+    "ignore": "Ohita",
+    "addToNetwork": "Lisää verkostoon",
+    "addConnection": "Lisää yhteyksiin",
+    "connections": "Yhteydet",
+    "collectionsCreated": "Keräykset",
+    "obligationsGiven": "Auttamiskertoja",
+    "totalPledged": "Luvattu yhteensä",
+    "editSettings": "Asetukset",
+    "edit": "Muokkaa profiilia",
+    "name": "Nimi",
+    "save": "Tallenna",
+    "pledgedByCurrency": "valuutoittain",
+    "myConnections": "Omat yhteydet",
+    "noConnections": "Ei vielä yhteyksiä"
+  },
+  "settings": {
+    "title": "Asetukset",
+    "language": "Kieli",
+    "theme": "Teema",
+    "light": "Vaalea",
+    "dark": "Tumma",
+    "system": "Automaattinen",
+    "sounds": "Äänet",
+    "sound": "Äänet",
+    "fontSize": "Fonttikoko",
+    "fontStandard": "Tavallinen",
+    "fontLarge": "Suurennettu",
+    "linkedAccounts": "Yhdistetyt tilit",
+    "linkAccount": "Yhdistä tili",
+    "codeExpires": "Voimassa 5 minuuttia",
+    "generateCode": "Luo koodi",
+    "ignoreList": "Ohituslista",
+    "noIgnored": "Lista on tyhjä",
+    "unignore": "Poista",
+    "logout": "Kirjaudu ulos",
+    "deleteAccount": "Poista tili",
+    "deleteConfirm": "Oletko varma? Tätä toimintoa ei voi peruuttaa.",
+    "confirmDelete": "Poista"
+  },
+  "invite": {
+    "title": "Kutsu",
+    "from": "{{name}} kutsuu sinut",
+    "accept": "Hyväksy ja yhdistä",
+    "alreadyUsed": "Tämä kutsu on jo käytetty",
+    "success": "Yhdistetty!"
+  }
+}

@@ -1,0 +1,196 @@
+{
+  "common": {
+    "appName": "Social Organizer",
+    "loading": "กำลังโหลด...",
+    "error": "เกิดข้อผิดพลาด",
+    "retry": "ลองอีกครั้ง",
+    "save": "บันทึก",
+    "cancel": "ยกเลิก",
+    "delete": "ลบ",
+    "confirm": "ยืนยัน",
+    "back": "กลับ",
+    "next": "ถัดไป",
+    "done": "เสร็จ",
+    "search": "ค้นหา",
+    "notFound": "ไม่พบ"
+  },
+  "auth": {
+    "loginWith": "เข้าสู่ระบบด้วย {{platform}}",
+    "linking": "เชื่อมต่อบัญชี",
+    "enterCode": "กรอกรหัส 6 หลัก",
+    "codeExpires": "รหัสหมดอายุใน {{minutes}} นาที"
+  },
+  "login": {
+    "subtitle": "ประสานงานช่วยเหลือผ่านความสัมพันธ์ที่ไว้วางใจ"
+  },
+  "onboarding": {
+    "step1": {
+      "title": "คุณมีคนที่ห่วงใย",
+      "text": "นี่คือเครื่องมือจัดระเบียบทางสังคม ไม่ได้โอนเงินหรือเก็บเงิน แต่ช่วยให้ผู้คนประสานงานได้อย่างรวดเร็วเมื่อมีคนต้องการความช่วยเหลือ"
+    },
+    "step2": {
+      "title": "สัญญาณเดียว — คนที่ใช่ก็รับรู้",
+      "text": "หากมีคนต้องการความช่วยเหลือ — ระบบจะแจ้งเตือนผู้ที่สามารถช่วยได้ แจ้งเตือนเพียงครั้งเดียว ไม่มีสแปม ไม่กดดัน"
+    },
+    "step3": {
+      "title": "ทุกอย่างโปร่งใส",
+      "text": "ทุกการกระทำถูกบันทึก ความไว้วางใจสร้างจากความโปร่งใส ไม่ใช่การควบคุม"
+    },
+    "step4": {
+      "title": "เพิ่มคนแรกของคุณ",
+      "text": "ระบบทำงานผ่านความเชื่อมโยงระหว่างผู้คน เริ่มจากหนึ่งคน — คนที่คุณไว้ใจ"
+    },
+    "start": "เริ่มต้น",
+    "next": "ถัดไป",
+    "invite": "ส่งคำเชิญ",
+    "qrCode": "แสดง QR โค้ด"
+  },
+  "nav": {
+    "home": "หน้าแรก",
+    "notifications": "การแจ้งเตือน",
+    "create": "สร้าง",
+    "network": "เครือข่าย",
+    "settings": "ตั้งค่า"
+  },
+  "dashboard": {
+    "title": "แดชบอร์ด",
+    "needHelp": "ฉันต้องการความช่วยเหลือ",
+    "addFirstConnection": "เพิ่มการเชื่อมต่อแรกของคุณ",
+    "addFirstConnectionDesc": "ระบบทำงานผ่านความเชื่อมโยงระหว่างผู้คน เริ่มจากหนึ่งคน — คนที่คุณไว้ใจ",
+    "goToNetwork": "ไปที่เครือข่าย",
+    "myCollections": "การระดมของฉัน",
+    "create": "สร้าง",
+    "noCollections": "ไม่มีการระดมที่ใช้งานอยู่",
+    "obligations": "ข้อผูกพัน",
+    "myObligations": "ข้อผูกพันของฉัน",
+    "noObligations": "ไม่มีข้อผูกพัน",
+    "myNetwork": "เครือข่ายของฉัน",
+    "view": "ดู",
+    "connections": "การเชื่อมต่อ"
+  },
+  "collection": {
+    "create": "สร้างการระดม",
+    "amount": "จำนวน",
+    "currency": "สกุลเงิน",
+    "chatLink": "ลิงก์แชท",
+    "emergency": "ฉุกเฉิน",
+    "regular": "ปกติ",
+    "active": "ใช้งานอยู่",
+    "blocked": "ถูกบล็อก",
+    "closed": "ปิดแล้ว",
+    "cancelled": "ยกเลิกแล้ว",
+    "progress": "{{current}} / {{target}} {{currency}}",
+    "obligationsCount": "{{count}} ข้อผูกพัน",
+    "collected": "ระดมได้",
+    "goal": "เป้าหมาย",
+    "openChat": "เปิดแชท",
+    "takeObligation": "รับข้อผูกพัน",
+    "amountPlaceholder": "จำนวน (ขั้นต่ำ 10)",
+    "submit": "ช่วยเหลือ",
+    "close": "ปิดการระดม",
+    "participants": "ผู้เข้าร่วม",
+    "noParticipants": "ยังไม่มีผู้เข้าร่วม",
+    "minAmount": "ขั้นต่ำ 10"
+  },
+  "create": {
+    "title": "สร้างการระดม",
+    "emergency": "ฉุกเฉิน",
+    "regular": "ปกติ",
+    "amount": "จำนวน",
+    "largeAmountWarning": "คุณจะรบกวนผู้คนจำนวนมาก โปรดมั่นใจว่าความช่วยเหลือนี้จำเป็นจริง ๆ",
+    "largeAmountConfirm": "ฉันยืนยันว่าจำนวนเงินถูกต้อง",
+    "currency": "สกุลเงิน",
+    "chatLink": "ลิงก์แชท",
+    "submit": "สร้างการระดม",
+    "minAmount": "ขั้นต่ำ 10",
+    "invalidUrl": "URL ไม่ถูกต้อง"
+  },
+  "obligation": {
+    "create": "รับข้อผูกพัน",
+    "amount": "จำนวน (ขั้นต่ำ {{min}})",
+    "subscribe": "สมัครสมาชิกรายเดือน",
+    "unsubscribe": "ยกเลิกสมาชิก"
+  },
+  "network": {
+    "title": "เครือข่ายของฉัน",
+    "connections": "การเชื่อมต่อ",
+    "addConnection": "เพิ่มการเชื่อมต่อ",
+    "connectionLimit": "จำกัด: {{current}}/{{max}}",
+    "invite": "เชิญ",
+    "qrCode": "QR โค้ด",
+    "empty": "ไม่มีการเชื่อมต่อ",
+    "emptyHint": "เชิญคนแรกของคุณ"
+  },
+  "notifications": {
+    "title": "การแจ้งเตือน",
+    "empty": "ไม่มีการแจ้งเตือน",
+    "new": "ใหม่",
+    "reNotify": "เตือนซ้ำ",
+    "closed": "ปิดแล้ว",
+    "blocked": "ถูกบล็อก",
+    "specialAuthor": "ผู้สร้าง",
+    "specialDeveloper": "นักพัฒนา",
+    "handshakes": "การจับมือ",
+    "via": "ผ่าน",
+    "view": "เปิด",
+    "dismiss": "ปิด",
+    "loadMore": "โหลดเพิ่ม",
+    "expiresIn": "หมดอายุใน {{hours}} ชม. {{minutes}} นาที"
+  },
+  "notification": {
+    "newCollection": "{{name}} ต้องการความช่วยเหลือ",
+    "handshake": "ผ่าน {{path}}",
+    "markRead": "ทำเครื่องหมายว่าอ่านแล้ว",
+    "dismiss": "ปิด"
+  },
+  "profile": {
+    "bio": "เกี่ยวกับ",
+    "phone": "โทรศัพท์",
+    "stats": "สถิติ",
+    "ignore": "เพิกเฉย",
+    "addToNetwork": "เพิ่มในเครือข่าย",
+    "addConnection": "เพิ่มในการเชื่อมต่อ",
+    "connections": "การเชื่อมต่อ",
+    "collectionsCreated": "การระดม",
+    "obligationsGiven": "จำนวนครั้งที่ช่วย",
+    "totalPledged": "รวมที่สัญญา",
+    "editSettings": "ตั้งค่า",
+    "edit": "แก้ไขโปรไฟล์",
+    "name": "ชื่อ",
+    "save": "บันทึก",
+    "pledgedByCurrency": "ตามสกุลเงิน",
+    "myConnections": "การเชื่อมต่อของฉัน",
+    "noConnections": "ยังไม่มีการเชื่อมต่อ"
+  },
+  "settings": {
+    "title": "ตั้งค่า",
+    "language": "ภาษา",
+    "theme": "ธีม",
+    "light": "สว่าง",
+    "dark": "มืด",
+    "system": "อัตโนมัติ",
+    "sounds": "เสียง",
+    "sound": "เสียง",
+    "fontSize": "ขนาดตัวอักษร",
+    "fontStandard": "มาตรฐาน",
+    "fontLarge": "ขยาย",
+    "linkedAccounts": "บัญชีที่เชื่อมต่อ",
+    "linkAccount": "เชื่อมต่อบัญชี",
+    "codeExpires": "ใช้ได้ 5 นาที",
+    "generateCode": "สร้างรหัส",
+    "ignoreList": "รายการเพิกเฉย",
+    "noIgnored": "รายการว่างเปล่า",
+    "unignore": "นำออก",
+    "logout": "ออกจากระบบ",
+    "deleteAccount": "ลบบัญชี",
+    "deleteConfirm": "คุณแน่ใจหรือไม่? การกระทำนี้ไม่สามารถย้อนกลับได้",
+    "confirmDelete": "ลบ"
+  },
+  "invite": {
+    "title": "คำเชิญ",
+    "from": "{{name}} เชิญคุณ",
+    "accept": "ยอมรับและเชื่อมต่อ",
+    "alreadyUsed": "คำเชิญนี้ถูกใช้ไปแล้ว",
+    "success": "เชื่อมต่อแล้ว!"
+  }
+}
