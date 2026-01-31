@@ -140,10 +140,37 @@ JWT_SECRET=your-secret-key
 - **Healthcheck:** /health
 - **Сервисы:** PostgreSQL 17, Redis 7, Fastify API
 
+## Веб-фронтенд (apps/web)
+
+React 19 SPA с tRPC-клиентом.
+
+### Страницы
+
+| Страница | Путь | Описание |
+|----------|------|----------|
+| LoginPage | `/login` | Вход через платформу (FB/TG/Apple/Google) |
+| OnboardingPage | `/onboarding` | 4 экрана онбординга |
+| DashboardPage | `/` | Мои сборы, обязательства, сеть |
+| NotificationsPage | `/notifications` | Уведомления с handshake path |
+| CreateCollectionPage | `/create` | Создание сбора (USD/EUR) |
+| CollectionPage | `/collection/:id` | Детали сбора + обязательства |
+| MyNetworkPage | `/network` | Список связей + приглашения |
+| ProfilePage | `/profile/:userId` | Профиль с статистикой |
+| SettingsPage | `/settings` | Язык, тема, звуки, игнор-лист |
+
+### Технологии фронтенда
+
+- **State:** Zustand (auth, theme) + tRPC React Query (серверные данные)
+- **Роутинг:** React Router v7 с ProtectedRoute
+- **UI:** shadcn-стиль компоненты + Tailwind CSS 3
+- **i18n:** i18next v25 + react-i18next (en/ru)
+- **Иконки:** lucide-react
+- **QR:** qrcode.react
+
 ## Текущий статус
 
 - [x] **Фаза 0:** Инфраструктура монорепо
 - [x] **Фаза 1:** Бэкенд (API) — tRPC роутеры, сервисы, BullMQ воркеры
-- [ ] **Фаза 2:** Веб-фронтенд (MVP)
+- [x] **Фаза 2:** Веб-фронтенд (MVP) — все 9 страниц, UI-компоненты, tRPC клиент, i18n
 - [ ] **Фаза 3:** 3D и оптимизация
 - [ ] **Фаза 4:** Деплой и тестирование

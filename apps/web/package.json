@@ -11,10 +11,21 @@
     "clean": "rm -rf dist *.tsbuildinfo"
   },
   "dependencies": {
+    "@so/i18n": "workspace:*",
     "@so/shared": "workspace:*",
+    "@tanstack/react-query": "^5.62.0",
+    "@trpc/client": "^11.0.0",
+    "@trpc/react-query": "^11.0.0",
+    "clsx": "^2.1.1",
+    "i18next": "^25.0.0",
+    "lucide-react": "^0.563.0",
+    "qrcode.react": "^4.2.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "react-router-dom": "^7.1.0"
+    "react-i18next": "^16.5.4",
+    "react-router-dom": "^7.1.0",
+    "tailwind-merge": "^3.4.0",
+    "zustand": "^5.0.10"
   },
   "devDependencies": {
     "@types/react": "^19.0.0",
