@@ -11,6 +11,7 @@ import { Avatar } from '../components/ui/avatar';
 import { Spinner } from '../components/ui/spinner';
 import { Settings, Globe, Palette, Volume2, Link, UserX, Trash2, LogOut, Type } from 'lucide-react';
 import { cn } from '../lib/utils';
+import { languageNames } from '@so/i18n';
 
 export function SettingsPage() {
   const { t, i18n } = useTranslation();
@@ -42,7 +43,7 @@ export function SettingsPage() {
       </h1>
 
       <Card><CardContent className="py-3"><div className="flex items-center gap-3"><Globe className="w-5 h-5 text-gray-500 shrink-0" />
-        <Select id="language" label={t('settings.language', 'Язык')} value={settings?.language || 'en'} onChange={(e) => handleLanguageChange(e.target.value)} options={[{ value: 'en', label: 'English' }, { value: 'ru', label: 'Русский' }]} />
+        <Select id="language" label={t('settings.language', 'Язык')} value={settings?.language || 'en'} onChange={(e) => handleLanguageChange(e.target.value)} options={Object.entries(languageNames).map(([code, name]) => ({ value: code, label: name }))} />
       </div></CardContent></Card>
 
       <Card><CardContent className="py-3">
