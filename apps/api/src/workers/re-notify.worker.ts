@@ -1,20 +1,32 @@
 import type { Job } from 'bullmq';
 import { getDb } from '@so/db';
+import { NOTIFICATION_RATIO } from '@so/shared';
 import { sendCollectionNotifications } from '../services/notification.service';
 
 /**
  * Каждые 12 часов: находим активные сборы и рассылаем повторные уведомления
- * через BFS. Увеличиваем wave на 1.
+ * через BFS. Количество доуведомлений = (оставшаяся сумма) / NOTIFICATION_RATIO.
  */
 export async function processReNotify(_job: Job): Promise<void> {
   const db = getDb();
 
   const activeCollections = await db.collection.findMany({
     where: { status: 'ACTIVE' },
-    select: { id: true, creatorId: true },
+    select: {
+      id: true,
+      creatorId: true,
+      amount: true,
+      obligations: { select: { amount: true } },
+    },
   });
 
   for (const collection of activeCollections) {
+    const currentAmount = collection.obligations.reduce((sum, o) => sum + o.amount, 0);
+    const remaining = collection.amount - currentAmount;
+    if (remaining <= 0) continue;
+
+    const maxRecipients = Math.ceil(remaining / NOTIFICATION_RATIO);
+
     // Определяем номер волны: макс wave + 1
     const lastNotification = await db.notification.findFirst({
       where: { collectionId: collection.id, type: 'RE_NOTIFY' },
@@ -29,6 +41,7 @@ export async function processReNotify(_job: Job): Promise<void> {
       collection.creatorId,
       'RE_NOTIFY',
       nextWave,
+      maxRecipients,
     );
   }
 }

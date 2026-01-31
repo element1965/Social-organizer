@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { router, protectedProcedure } from '../trpc';
 import { TRPCError } from '@trpc/server';
-import { MIN_COLLECTION_AMOUNT, CURRENCY_CODES } from '@so/shared';
+import { MIN_COLLECTION_AMOUNT, CURRENCY_CODES, NOTIFICATION_RATIO } from '@so/shared';
 import { sendCollectionNotifications } from '../services/notification.service';
 
 export const collectionRouter = router({
@@ -23,7 +23,8 @@ export const collectionRouter = router({
           currentCycleStart: input.type === 'REGULAR' ? new Date() : null,
         },
       });
-      await sendCollectionNotifications(ctx.db, collection.id, ctx.userId, 'NEW_COLLECTION');
+      const maxRecipients = Math.ceil(input.amount / NOTIFICATION_RATIO);
+      await sendCollectionNotifications(ctx.db, collection.id, ctx.userId, 'NEW_COLLECTION', 1, maxRecipients);
       return collection;
     }),
 
