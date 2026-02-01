@@ -18,7 +18,7 @@ Social organizer/
 │   ├── api-client/      # @so/api-client: tRPC-клиент
 │   ├── i18n/            # @so/i18n: i18next (en + ru)
 │   ├── gun-backup/      # @so/gun-backup: Gun.js локальный бэкап (заглушка)
-│   ├── graph-3d/        # @so/graph-3d: Three.js визуализация (заглушка)
+│   ├── graph-3d/        # @so/graph-3d: Three.js визуализация (PlanetScene, GlobeNetwork, NetworkGraph)
 │   ├── fb-adapter/      # @so/fb-adapter: FB Instant Game SDK (заглушка)
 │   └── tg-adapter/      # @so/tg-adapter: Telegram WebApp (заглушка)
 ├── turbo.json
@@ -148,9 +148,10 @@ React 19 SPA с tRPC-клиентом.
 
 | Страница | Путь | Описание |
 |----------|------|----------|
+| LandingPage | `/welcome` | Публичный лендинг с 3D-глобусом и описанием проекта |
 | LoginPage | `/login` | Вход через платформу (FB/TG/Apple/Google) |
 | OnboardingPage | `/onboarding` | 4 экрана онбординга с приглашением |
-| DashboardPage | `/` | Мои сборы, обязательства, сеть, «Мне нужна помощь» |
+| DashboardPage | `/` | Мои сборы, обязательства, сеть, «Мне нужна помощь» (protected → /welcome) |
 | NotificationsPage | `/notifications` | Уведомления с handshake path и таймером 24ч |
 | CreateCollectionPage | `/create` | Создание сбора (USD/EUR) |
 | CollectionPage | `/collection/:id` | Детали сбора + обязательства |

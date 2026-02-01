@@ -3,6 +3,6 @@ import { useAuth } from '../hooks/useAuth';
 
 export function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const isAuthenticated = useAuth((s) => s.isAuthenticated);
-  if (!isAuthenticated) return <Navigate to="/login" replace />;
+  if (!isAuthenticated) return <Navigate to="/welcome" replace />;
   return <>{children}</>;
 }
