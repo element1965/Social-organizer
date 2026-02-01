@@ -1,12 +1,54 @@
-import { lazy, Suspense } from 'react';
+import { lazy, Suspense, useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Handshake, Heart, Eye, Users, Cog, Code, Globe, ChevronDown, ArrowRight } from 'lucide-react';
+import { Handshake, Heart, Eye, Users, Cog, Code, Globe, ChevronDown, ArrowRight, Languages } from 'lucide-react';
+import { languageNames } from '@so/i18n';
 import { useScrollProgress } from '../hooks/useScrollProgress';
 
 const LazyGlobeNetwork = lazy(() =>
   import('@so/graph-3d').then((m) => ({ default: m.GlobeNetwork })),
 );
+
+function LanguageSwitcher() {
+  const { i18n } = useTranslation();
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, []);
+
+  const current = (i18n.language?.slice(0, 2) || 'en') as keyof typeof languageNames;
+
+  return (
+    <div ref={ref} className="relative">
+      <button
+        onClick={() => setOpen(!open)}
+        className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/10 text-white text-sm transition-colors"
+      >
+        <Languages size={16} />
+        <span>{languageNames[current] || current}</span>
+      </button>
+      {open && (
+        <div className="absolute right-0 mt-2 w-48 max-h-72 overflow-y-auto rounded-xl bg-gray-900/95 backdrop-blur-md border border-white/10 shadow-xl z-50">
+          {Object.entries(languageNames).map(([code, name]) => (
+            <button
+              key={code}
+              onClick={() => { i18n.changeLanguage(code); localStorage.setItem('language', code); setOpen(false); }}
+              className={`w-full text-left px-4 py-2 text-sm hover:bg-white/10 transition-colors ${code === current ? 'text-teal-400 font-medium' : 'text-gray-300'}`}
+            >
+              {name}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
 
 export function LandingPage() {
   const { t } = useTranslation();
@@ -24,6 +66,11 @@ export function LandingPage() {
         <Suspense fallback={null}>
           <LazyGlobeNetwork scrollProgress={scrollProgress} />
         </Suspense>
+      </div>
+
+      {/* Language switcher — fixed top-right */}
+      <div className="fixed top-4 right-4 z-20">
+        <LanguageSwitcher />
       </div>
 
       {/* Scrolling content overlay */}
