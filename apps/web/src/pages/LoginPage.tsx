@@ -46,6 +46,23 @@ export function LoginPage() {
           <Button className="w-full bg-white hover:bg-gray-100 text-gray-900 border border-gray-300" size="lg" onClick={() => handleLogin('GOOGLE')} disabled={loading}>
             Google
           </Button>
+
+          <div className="relative my-4">
+            <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-white/10" /></div>
+            <div className="relative flex justify-center"><span className="bg-gray-950 px-3 text-gray-500 text-xs">{t('login.or', 'или')}</span></div>
+          </div>
+
+          <Button
+            className="w-full bg-emerald-600 hover:bg-emerald-500 text-white"
+            size="lg"
+            onClick={() => {
+              login('demo-token', 'demo-refresh', 'demo-user');
+              navigate('/');
+            }}
+            disabled={loading}
+          >
+            {t('login.demo', 'Демо-вход без регистрации')}
+          </Button>
         </div>
       </div>
     </div>

@@ -21,7 +21,9 @@
     "codeExpires": "Code expires in {{minutes}} min"
   },
   "login": {
-    "subtitle": "Help coordination through trusted connections"
+    "subtitle": "Help coordination through trusted connections",
+    "or": "or",
+    "demo": "Demo login without registration"
   },
   "onboarding": {
     "step1": {
