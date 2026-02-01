@@ -1,0 +1,563 @@
+// ============================================================
+// Demo mock data for all tRPC procedures
+// Used when accessToken === 'demo-token'
+// ============================================================
+
+const DEMO_USER_ID = 'demo-user';
+
+// ---------- User generation ----------
+
+const firstNames = [
+  'Алексей', 'Мария', 'Дмитрий', 'Елена', 'Сергей',
+  'Анна', 'Иван', 'Ольга', 'Андрей', 'Наталья',
+  'Михаил', 'Татьяна', 'Николай', 'Екатерина', 'Павел',
+  'Юлия', 'Владимир', 'Светлана', 'Артём', 'Ирина',
+];
+
+const lastNames = [
+  'Петров', 'Иванова', 'Сидоров', 'Козлова', 'Смирнов',
+  'Новикова', 'Морозов', 'Волкова', 'Лебедев', 'Соколова',
+];
+
+interface DemoUser {
+  id: string;
+  name: string;
+  photoUrl: string | null;
+  role: string;
+  createdAt: string;
+  deletedAt: null;
+  bio: string | null;
+  phone: string | null;
+  language: string;
+  theme: string;
+  soundEnabled: boolean;
+  fontScale: number;
+}
+
+const baseDate = new Date('2025-06-01T10:00:00Z');
+
+function makeUser(id: string, name: string, idx: number): DemoUser {
+  const d = new Date(baseDate);
+  d.setDate(d.getDate() - idx);
+  return {
+    id,
+    name,
+    photoUrl: null,
+    role: 'USER',
+    createdAt: d.toISOString(),
+    deletedAt: null,
+    bio: idx % 3 === 0 ? `Bio of ${name}` : null,
+    phone: idx % 4 === 0 ? `+7900${String(1000000 + idx).slice(1)}` : null,
+    language: 'ru',
+    theme: 'DARK',
+    soundEnabled: true,
+    fontScale: 1.0,
+  };
+}
+
+const demoUser: DemoUser = {
+  id: DEMO_USER_ID,
+  name: 'Алексей Петров',
+  photoUrl: null,
+  role: 'USER',
+  createdAt: '2025-01-15T08:00:00Z',
+  deletedAt: null,
+  bio: 'Демо-пользователь Social Organizer',
+  phone: '+79001234567',
+  language: 'ru',
+  theme: 'DARK',
+  soundEnabled: true,
+  fontScale: 1.0,
+};
+
+const users: DemoUser[] = [demoUser];
+let userIdx = 1;
+for (let fi = 0; fi < firstNames.length; fi++) {
+  for (let li = 0; li < lastNames.length; li++) {
+    const id = `user-${userIdx}`;
+    const name = `${firstNames[fi]} ${lastNames[li]}`;
+    users.push(makeUser(id, name, userIdx));
+    userIdx++;
+  }
+}
+
+const usersMap = new Map<string, DemoUser>();
+for (const u of users) usersMap.set(u.id, u);
+
+// ---------- Connections (12 direct) ----------
+
+const connectionUserIds = users.slice(1, 13).map((u) => u.id);
+
+const connections = connectionUserIds.map((uid, i) => ({
+  id: `conn-${i + 1}`,
+  userId: uid,
+  name: usersMap.get(uid)!.name,
+  photoUrl: null,
+  createdAt: new Date(Date.now() - (i + 1) * 86_400_000 * 3).toISOString(),
+}));
+
+// ---------- Graph slice (~60 nodes, ~80 edges, 3 levels) ----------
+
+function buildGraphSlice() {
+  const nodes: Array<{ id: string; name: string; photoUrl: string | null }> = [];
+  const edges: Array<{ from: string; to: string }> = [];
+  const added = new Set<string>();
+
+  const addNode = (id: string) => {
+    if (added.has(id)) return;
+    added.add(id);
+    const u = usersMap.get(id);
+    nodes.push({ id, name: u?.name ?? id, photoUrl: null });
+  };
+
+  // Level 0: demo-user
+  addNode(DEMO_USER_ID);
+
+  // Level 1: 12 direct connections
+  const level1 = connectionUserIds; // 12
+  for (const uid of level1) {
+    addNode(uid);
+    edges.push({ from: DEMO_USER_ID, to: uid });
+  }
+
+  // Level 2: each L1 user has 3-4 connections to new users
+  const level2: string[] = [];
+  let l2idx = 13;
+  for (const l1 of level1) {
+    const cnt = 3 + (l2idx % 2); // 3 or 4
+    for (let j = 0; j < cnt && l2idx < 50; j++) {
+      const uid = users[l2idx]!.id;
+      addNode(uid);
+      edges.push({ from: l1, to: uid });
+      level2.push(uid);
+      l2idx++;
+    }
+  }
+
+  // Level 3: some L2 users have 1-2 connections
+  let l3idx = 50;
+  for (let k = 0; k < level2.length && l3idx < 73; k += 2) {
+    const l2u = level2[k]!;
+    const cnt = 1 + (l3idx % 2);
+    for (let j = 0; j < cnt && l3idx < 73; j++) {
+      const uid = users[l3idx]!.id;
+      addNode(uid);
+      edges.push({ from: l2u, to: uid });
+      l3idx++;
+    }
+  }
+
+  // Cross-edges between some L2 nodes for visual density
+  for (let i = 0; i < level2.length - 1; i += 3) {
+    edges.push({ from: level2[i]!, to: level2[i + 1]! });
+  }
+
+  return { nodes, edges };
+}
+
+const graphSlice = buildGraphSlice();
+
+// ---------- Collections ----------
+
+const collections = [
+  {
+    id: 'coll-1',
+    creatorId: DEMO_USER_ID,
+    type: 'EMERGENCY' as const,
+    amount: 500,
+    currency: 'USD',
+    chatLink: 'https://t.me/demo_chat_1',
+    status: 'ACTIVE' as const,
+    currentCycleStart: null,
+    cycleNumber: 0,
+    createdAt: '2025-11-20T12:00:00Z',
+    updatedAt: '2025-11-20T12:00:00Z',
+    closedAt: null,
+    blockedAt: null,
+    currentAmount: 280,
+    _count: { obligations: 5 },
+    creator: { id: DEMO_USER_ID, name: demoUser.name, photoUrl: null },
+  },
+  {
+    id: 'coll-2',
+    creatorId: DEMO_USER_ID,
+    type: 'REGULAR' as const,
+    amount: 1000,
+    currency: 'EUR',
+    chatLink: 'https://t.me/demo_chat_2',
+    status: 'ACTIVE' as const,
+    currentCycleStart: '2025-11-01T00:00:00Z',
+    cycleNumber: 1,
+    createdAt: '2025-10-15T09:30:00Z',
+    updatedAt: '2025-11-01T00:00:00Z',
+    closedAt: null,
+    blockedAt: null,
+    currentAmount: 350,
+    _count: { obligations: 4 },
+    creator: { id: DEMO_USER_ID, name: demoUser.name, photoUrl: null },
+  },
+];
+
+// Obligations for collection details
+function collectionObligations(collId: string) {
+  const base = collId === 'coll-1'
+    ? [
+        { uid: 'user-1', amount: 50 },
+        { uid: 'user-2', amount: 80 },
+        { uid: 'user-3', amount: 50 },
+        { uid: 'user-5', amount: 60 },
+        { uid: 'user-7', amount: 40 },
+      ]
+    : [
+        { uid: 'user-2', amount: 100 },
+        { uid: 'user-4', amount: 100 },
+        { uid: 'user-6', amount: 75 },
+        { uid: 'user-8', amount: 75 },
+      ];
+
+  return base.map((o, i) => ({
+    id: `obl-${collId}-${i}`,
+    collectionId: collId,
+    userId: o.uid,
+    amount: o.amount,
+    isSubscription: collId === 'coll-2',
+    unsubscribedAt: null,
+    createdAt: new Date(Date.now() - i * 86_400_000).toISOString(),
+    updatedAt: new Date(Date.now() - i * 86_400_000).toISOString(),
+    user: {
+      id: o.uid,
+      name: usersMap.get(o.uid)!.name,
+      photoUrl: null,
+    },
+  }));
+}
+
+// ---------- My obligations ----------
+
+const myObligations = [
+  {
+    id: 'my-obl-1',
+    collectionId: 'ext-coll-1',
+    userId: DEMO_USER_ID,
+    amount: 50,
+    isSubscription: false,
+    unsubscribedAt: null,
+    createdAt: '2025-11-18T14:00:00Z',
+    updatedAt: '2025-11-18T14:00:00Z',
+    collection: {
+      id: 'ext-coll-1',
+      creatorId: 'user-3',
+      type: 'EMERGENCY',
+      amount: 300,
+      currency: 'USD',
+      chatLink: 'https://t.me/ext_chat_1',
+      status: 'ACTIVE',
+      currentCycleStart: null,
+      createdAt: '2025-11-10T10:00:00Z',
+      updatedAt: '2025-11-10T10:00:00Z',
+      closedAt: null,
+      blockedAt: null,
+      creator: { id: 'user-3', name: usersMap.get('user-3')!.name, photoUrl: null },
+    },
+  },
+  {
+    id: 'my-obl-2',
+    collectionId: 'ext-coll-2',
+    userId: DEMO_USER_ID,
+    amount: 100,
+    isSubscription: true,
+    unsubscribedAt: null,
+    createdAt: '2025-10-20T11:00:00Z',
+    updatedAt: '2025-10-20T11:00:00Z',
+    collection: {
+      id: 'ext-coll-2',
+      creatorId: 'user-5',
+      type: 'REGULAR',
+      amount: 800,
+      currency: 'EUR',
+      chatLink: 'https://t.me/ext_chat_2',
+      status: 'ACTIVE',
+      currentCycleStart: '2025-11-01T00:00:00Z',
+      createdAt: '2025-09-15T08:00:00Z',
+      updatedAt: '2025-11-01T00:00:00Z',
+      closedAt: null,
+      blockedAt: null,
+      creator: { id: 'user-5', name: usersMap.get('user-5')!.name, photoUrl: null },
+    },
+  },
+  {
+    id: 'my-obl-3',
+    collectionId: 'ext-coll-3',
+    userId: DEMO_USER_ID,
+    amount: 25,
+    isSubscription: false,
+    unsubscribedAt: null,
+    createdAt: '2025-11-22T16:00:00Z',
+    updatedAt: '2025-11-22T16:00:00Z',
+    collection: {
+      id: 'ext-coll-3',
+      creatorId: 'user-9',
+      type: 'EMERGENCY',
+      amount: 200,
+      currency: 'USD',
+      chatLink: 'https://t.me/ext_chat_3',
+      status: 'ACTIVE',
+      currentCycleStart: null,
+      createdAt: '2025-11-21T09:00:00Z',
+      updatedAt: '2025-11-21T09:00:00Z',
+      closedAt: null,
+      blockedAt: null,
+      creator: { id: 'user-9', name: usersMap.get('user-9')!.name, photoUrl: null },
+    },
+  },
+];
+
+// ---------- Notifications ----------
+
+const notificationTypes = [
+  'NEW_COLLECTION',
+  'COLLECTION_BLOCKED',
+  'OBLIGATION_RECEIVED',
+  'CYCLE_CLOSED',
+  'COLLECTION_CLOSED',
+] as const;
+
+const notifications = notificationTypes.map((type, i) => ({
+  id: `notif-${i + 1}`,
+  userId: DEMO_USER_ID,
+  collectionId: i < 2 ? 'ext-coll-1' : 'ext-coll-2',
+  type,
+  status: i < 3 ? 'UNREAD' : 'READ',
+  handshakePath: i === 0
+    ? [DEMO_USER_ID]
+    : [DEMO_USER_ID, `user-${i}`, `user-${i + 5}`],
+  wave: 1,
+  expiresAt: new Date(Date.now() + 24 * 3600_000).toISOString(),
+  createdAt: new Date(Date.now() - i * 3600_000 * 2).toISOString(),
+  updatedAt: new Date(Date.now() - i * 3600_000 * 2).toISOString(),
+  collection: {
+    id: i < 2 ? 'ext-coll-1' : 'ext-coll-2',
+    creatorId: i < 2 ? 'user-3' : 'user-5',
+    type: i < 2 ? 'EMERGENCY' : 'REGULAR',
+    amount: i < 2 ? 300 : 800,
+    currency: i < 2 ? 'USD' : 'EUR',
+    chatLink: i < 2 ? 'https://t.me/ext_chat_1' : 'https://t.me/ext_chat_2',
+    status: 'ACTIVE',
+    currentCycleStart: null,
+    createdAt: '2025-11-10T10:00:00Z',
+    updatedAt: '2025-11-10T10:00:00Z',
+    closedAt: null,
+    blockedAt: null,
+    creator: {
+      id: i < 2 ? 'user-3' : 'user-5',
+      name: usersMap.get(i < 2 ? 'user-3' : 'user-5')!.name,
+      photoUrl: null,
+    },
+  },
+}));
+
+// ---------- Settings state (mutable within demo session) ----------
+
+let settingsState = {
+  language: 'ru',
+  theme: 'DARK',
+  soundEnabled: true,
+  fontScale: 1.0,
+};
+
+// ---------- Router ----------
+
+export function handleDemoRequest(path: string, input: unknown): unknown {
+  const inp = input as Record<string, unknown> | undefined;
+
+  switch (path) {
+    // ---- Auth ----
+    case 'auth.generateLinkCode':
+      return { code: '123456', expiresAt: new Date(Date.now() + 5 * 60_000).toISOString() };
+    case 'auth.loginWithPlatform':
+      return { accessToken: 'demo-token', refreshToken: 'demo-refresh', userId: DEMO_USER_ID };
+    case 'auth.refresh':
+      return { accessToken: 'demo-token', refreshToken: 'demo-refresh' };
+    case 'auth.linkAccount':
+      return { success: true, linkedUserId: DEMO_USER_ID };
+
+    // ---- User ----
+    case 'user.me':
+      return {
+        ...demoUser,
+        platformAccounts: [{ platform: 'TELEGRAM', platformId: 'demo-tg-123' }],
+      };
+    case 'user.getById': {
+      const userId = inp?.userId as string;
+      const u = usersMap.get(userId);
+      if (!u) return { id: userId, name: 'Unknown', photoUrl: null, role: 'USER', createdAt: baseDate.toISOString(), deletedAt: null, bio: null, phone: null };
+      return { id: u.id, name: u.name, bio: u.bio, phone: u.phone, photoUrl: u.photoUrl, role: u.role, createdAt: u.createdAt, deletedAt: u.deletedAt };
+    }
+    case 'user.getStats': {
+      const uid = (inp?.userId as string) ?? DEMO_USER_ID;
+      if (uid === DEMO_USER_ID) return { connectionsCount: 12, collectionsCount: 2, obligationsCount: 3 };
+      return { connectionsCount: Math.floor(Math.random() * 20) + 1, collectionsCount: Math.floor(Math.random() * 3), obligationsCount: Math.floor(Math.random() * 5) };
+    }
+    case 'user.update':
+      return { ...demoUser, ...inp, platformAccounts: [{ platform: 'TELEGRAM', platformId: 'demo-tg-123' }] };
+    case 'user.delete':
+      return { success: true };
+
+    // ---- Connection ----
+    case 'connection.list':
+      return connections;
+    case 'connection.getCount':
+      return { count: 12, max: 150 };
+    case 'connection.add':
+      return { id: `conn-new-${Date.now()}`, userAId: DEMO_USER_ID, userBId: inp?.userId, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() };
+    case 'connection.graphSlice':
+      return graphSlice;
+
+    // ---- Collection ----
+    case 'collection.myActive':
+      return collections;
+    case 'collection.myParticipating':
+      return myObligations;
+    case 'collection.getById': {
+      const id = inp?.id as string;
+      const coll = collections.find((c) => c.id === id);
+      if (coll) {
+        return { ...coll, obligations: collectionObligations(id) };
+      }
+      // External collection
+      const extObl = myObligations.find((o) => o.collectionId === id);
+      if (extObl) {
+        return {
+          ...extObl.collection,
+          currentAmount: extObl.amount * 3,
+          obligations: [
+            { id: `obl-ext-0`, collectionId: id, userId: DEMO_USER_ID, amount: extObl.amount, isSubscription: false, unsubscribedAt: null, createdAt: extObl.createdAt, updatedAt: extObl.updatedAt, user: { id: DEMO_USER_ID, name: demoUser.name, photoUrl: null } },
+            { id: `obl-ext-1`, collectionId: id, userId: 'user-1', amount: extObl.amount + 20, isSubscription: false, unsubscribedAt: null, createdAt: extObl.createdAt, updatedAt: extObl.updatedAt, user: { id: 'user-1', name: usersMap.get('user-1')!.name, photoUrl: null } },
+            { id: `obl-ext-2`, collectionId: id, userId: 'user-2', amount: extObl.amount + 10, isSubscription: false, unsubscribedAt: null, createdAt: extObl.createdAt, updatedAt: extObl.updatedAt, user: { id: 'user-2', name: usersMap.get('user-2')!.name, photoUrl: null } },
+          ],
+          _count: { obligations: 3 },
+          creator: extObl.collection.creator,
+        };
+      }
+      return null;
+    }
+    case 'collection.create':
+      return {
+        id: `coll-new-${Date.now()}`,
+        creatorId: DEMO_USER_ID,
+        type: inp?.type ?? 'EMERGENCY',
+        amount: inp?.amount ?? null,
+        currency: inp?.currency ?? 'USD',
+        chatLink: inp?.chatLink ?? '',
+        status: 'ACTIVE',
+        currentCycleStart: inp?.type === 'REGULAR' ? new Date().toISOString() : null,
+        cycleNumber: 0,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        closedAt: null,
+        blockedAt: null,
+      };
+    case 'collection.close': {
+      const c = collections.find((x) => x.id === (inp?.id as string));
+      return { ...(c ?? collections[0]), status: 'CLOSED', closedAt: new Date().toISOString() };
+    }
+    case 'collection.cancel': {
+      const c = collections.find((x) => x.id === (inp?.id as string));
+      return { ...(c ?? collections[0]), status: 'CANCELLED' };
+    }
+
+    // ---- Obligation ----
+    case 'obligation.myList':
+      return myObligations;
+    case 'obligation.create':
+      return {
+        id: `obl-new-${Date.now()}`,
+        collectionId: inp?.collectionId,
+        userId: DEMO_USER_ID,
+        amount: inp?.amount ?? 50,
+        isSubscription: inp?.isSubscription ?? false,
+        unsubscribedAt: null,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      };
+    case 'obligation.unsubscribe':
+      return {
+        id: inp?.obligationId,
+        collectionId: 'ext-coll-2',
+        userId: DEMO_USER_ID,
+        amount: 100,
+        isSubscription: true,
+        unsubscribedAt: new Date().toISOString(),
+        createdAt: '2025-10-20T11:00:00Z',
+        updatedAt: new Date().toISOString(),
+      };
+
+    // ---- Notification ----
+    case 'notification.list':
+      return { items: notifications, nextCursor: undefined };
+    case 'notification.unreadCount':
+      return { count: 3 };
+    case 'notification.markRead': {
+      const n = notifications.find((x) => x.id === (inp?.id as string));
+      return n ? { ...n, status: 'READ' } : { id: inp?.id, status: 'READ' };
+    }
+    case 'notification.dismiss': {
+      const n = notifications.find((x) => x.id === (inp?.id as string));
+      return n ? { ...n, status: 'DISMISSED' } : { id: inp?.id, status: 'DISMISSED' };
+    }
+
+    // ---- Settings ----
+    case 'settings.get':
+      return { ...settingsState };
+    case 'settings.updateLanguage':
+      settingsState = { ...settingsState, language: (inp?.language as string) ?? settingsState.language };
+      return { ...demoUser, ...settingsState };
+    case 'settings.updateTheme':
+      settingsState = { ...settingsState, theme: (inp?.theme as string) ?? settingsState.theme };
+      return { ...demoUser, ...settingsState };
+    case 'settings.updateSound':
+      settingsState = { ...settingsState, soundEnabled: (inp?.soundEnabled as boolean) ?? settingsState.soundEnabled };
+      return { ...demoUser, ...settingsState };
+    case 'settings.updateFontScale':
+      settingsState = { ...settingsState, fontScale: (inp?.fontScale as number) ?? settingsState.fontScale };
+      return { ...demoUser, ...settingsState };
+    case 'settings.ignoreList':
+      return [];
+    case 'settings.addIgnore':
+      return { id: `ign-${Date.now()}`, fromUserId: DEMO_USER_ID, toUserId: inp?.userId, createdAt: new Date().toISOString() };
+    case 'settings.removeIgnore':
+      return { id: `ign-${Date.now()}`, fromUserId: DEMO_USER_ID, toUserId: inp?.userId, createdAt: new Date().toISOString() };
+
+    // ---- Stats ----
+    case 'stats.profile':
+      return {
+        connectionsCount: 12,
+        collectionsCreated: 3,
+        collectionsActive: 2,
+        obligationsGiven: 8,
+        totalAmountPledged: 450,
+        amountByCurrency: { USD: 200, EUR: 250 },
+      };
+
+    // ---- Invite ----
+    case 'invite.generate':
+      return { token: 'demo-invite-' + Date.now().toString(16), id: `inv-${Date.now()}` };
+    case 'invite.accept':
+      return { success: true, connectedWith: 'user-1' };
+    case 'invite.getByToken':
+      return {
+        id: 'inv-demo',
+        inviterId: 'user-1',
+        token: inp?.token ?? 'demo-token',
+        usedById: null,
+        usedAt: null,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        inviter: { id: 'user-1', name: usersMap.get('user-1')!.name, photoUrl: null },
+      };
+
+    default:
+      console.warn(`[Demo] Unhandled procedure: ${path}`);
+      return null;
+  }
+}
