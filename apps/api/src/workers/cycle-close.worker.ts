@@ -3,9 +3,9 @@ import { getDb } from '@so/db';
 import { REGULAR_CYCLE_DAYS, NOTIFICATION_TTL_HOURS } from '@so/shared';
 
 /**
- * Каждый час: проверяем регулярные сборы, у которых прошёл 28-дневный цикл.
- * Закрываем текущий цикл и открываем новый.
- * Обязательства НЕ удаляются (сохраняются для истории/статистики).
+ * Every hour: check regular collections with completed 28-day cycle.
+ * Close current cycle and open new one.
+ * Obligations are NOT deleted (kept for history/statistics).
  */
 export async function processCycleClose(_job: Job): Promise<void> {
   const db = getDb();
@@ -29,13 +29,13 @@ export async function processCycleClose(_job: Job): Promise<void> {
   const expiresAt = new Date(Date.now() + NOTIFICATION_TTL_HOURS * 60 * 60 * 1000);
 
   for (const collection of expiredCycles) {
-    // Проверяем недобор (только для сборов с целевой суммой)
+    // Check undercollection (only for collections with target amount)
     const currentAmount = collection.obligations.reduce((sum, o) => sum + o.amount, 0);
     const hasGoal = collection.amount != null;
     const undercollected = hasGoal && currentAmount < collection.amount!;
 
     await db.$transaction(async (tx) => {
-      // Закрываем текущий цикл → новый
+      // Close current cycle -> new one
       await tx.collection.update({
         where: { id: collection.id },
         data: {
@@ -46,7 +46,7 @@ export async function processCycleClose(_job: Job): Promise<void> {
         },
       });
 
-      // Уведомление о закрытии цикла (с недобором если нужно)
+      // Notification about cycle closure (with undercollection if needed)
       const notifType = undercollected ? 'COLLECTION_CLOSED' : 'COLLECTION_CLOSED';
       const participantIds = [...new Set(collection.obligations.map((o) => o.userId))];
       for (const userId of participantIds) {
@@ -64,7 +64,7 @@ export async function processCycleClose(_job: Job): Promise<void> {
         } catch { /* skip duplicates */ }
       }
 
-      // Удаляем ТОЛЬКО отписавшиеся подписки (одноразовые обязательства сохраняются для статистики)
+      // Delete ONLY unsubscribed subscriptions (one-time obligations are kept for statistics)
       await tx.obligation.deleteMany({
         where: {
           collectionId: collection.id,

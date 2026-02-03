@@ -3,8 +3,8 @@ import { NOTIFICATION_TTL_HOURS } from '@so/shared';
 import { findRecipientsViaBfs } from './bfs.service.js';
 
 /**
- * Рассылка уведомлений о сборе через BFS-обход графа связей.
- * Количество получателей = maxRecipients (по умолчанию amount / NOTIFICATION_RATIO).
+ * Send collection notifications via BFS traversal of connection graph.
+ * Number of recipients = maxRecipients (default: amount / NOTIFICATION_RATIO).
  */
 export async function sendCollectionNotifications(
   db: PrismaClient,
@@ -14,7 +14,7 @@ export async function sendCollectionNotifications(
   wave: number = 1,
   maxRecipients?: number,
 ): Promise<number> {
-  // Получить ignore-список создателя (те, кого он игнорирует, и те, кто его игнорирует)
+  // Get creator's ignore list (those they ignore and those who ignore them)
   const ignoreEntries = await db.ignoreEntry.findMany({
     where: {
       OR: [{ fromUserId: creatorId }, { toUserId: creatorId }],
@@ -26,7 +26,7 @@ export async function sendCollectionNotifications(
     ignoredUserIds.add(entry.fromUserId === creatorId ? entry.toUserId : entry.fromUserId);
   }
 
-  // Также исключаем тех, кто уже получал уведомление о данном сборе
+  // Also exclude those who already received notification about this collection
   const alreadyNotified = await db.notification.findMany({
     where: { collectionId },
     select: { userId: true },
@@ -42,7 +42,7 @@ export async function sendCollectionNotifications(
 
   const expiresAt = new Date(Date.now() + NOTIFICATION_TTL_HOURS * 60 * 60 * 1000);
 
-  // Массовая вставка с upsert (по unique [userId, collectionId, wave])
+  // Bulk insert with upsert (by unique [userId, collectionId, wave])
   let created = 0;
   for (const recipient of recipients) {
     try {
@@ -67,7 +67,7 @@ export async function sendCollectionNotifications(
       });
       created++;
     } catch {
-      // Пропускаем ошибки (напр. внешний ключ если пользователь удалён)
+      // Skip errors (e.g. foreign key if user is deleted)
     }
   }
 

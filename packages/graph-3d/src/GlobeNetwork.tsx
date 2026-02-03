@@ -218,7 +218,7 @@ function NetworkEdges({ scrollProgress }: { scrollProgress: number }) {
     return { edgePositions: new Float32Array(edges), edgeCount: edges.length / 6 };
   }, []);
 
-  // Предвычисляем arc positions (чуть выше поверхности)
+  // Precompute arc positions (slightly above surface)
   const arcPositions = useMemo(() => {
     const arc = new Float32Array(edgePositions.length);
     const lift = 1.05;

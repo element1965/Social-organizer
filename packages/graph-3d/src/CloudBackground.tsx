@@ -11,7 +11,7 @@ function CloudParticles({ count = 300 }: { count?: number }) {
     const pos = new Float32Array(count * 3);
     const col = new Float32Array(count * 3);
     for (let i = 0; i < count; i++) {
-      // Разброс в виде нескольких кластеров
+      // Scatter as multiple clusters
       const cluster = Math.floor(Math.random() * 5);
       const cx = (cluster % 3 - 1) * 3;
       const cy = (Math.floor(cluster / 3) - 0.5) * 2;
@@ -19,7 +19,7 @@ function CloudParticles({ count = 300 }: { count?: number }) {
       pos[i * 3 + 1] = cy + (Math.random() - 0.5) * 3;
       pos[i * 3 + 2] = (Math.random() - 0.5) * 2;
 
-      // Пастельные цвета: голубой → фиолетовый
+      // Pastel colors: blue -> purple
       const t = Math.random();
       col[i * 3] = 0.3 + t * 0.3;     // R
       col[i * 3 + 1] = 0.4 + t * 0.2; // G

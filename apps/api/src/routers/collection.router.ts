@@ -13,7 +13,7 @@ export const collectionRouter = router({
       chatLink: z.string().url(),
     }))
     .mutation(async ({ ctx, input }) => {
-      // Проверить роль создателя
+      // Check creator role
       const creator = await ctx.db.user.findUnique({
         where: { id: ctx.userId },
         select: { role: true },
@@ -22,12 +22,12 @@ export const collectionRouter = router({
 
       const isSpecial = creator.role === 'AUTHOR' || creator.role === 'DEVELOPER';
 
-      // Обычные пользователи обязаны указать сумму
+      // Regular users must specify amount
       if (!isSpecial && (input.amount == null || input.amount < MIN_COLLECTION_AMOUNT)) {
         throw new TRPCError({ code: 'BAD_REQUEST', message: `Amount must be at least ${MIN_COLLECTION_AMOUNT}` });
       }
 
-      // Лимит: макс 1 экстренный + 1 регулярный одновременно
+      // Limit: max 1 emergency + 1 regular at the same time
       const existingActive = await ctx.db.collection.count({
         where: {
           creatorId: ctx.userId,
@@ -53,8 +53,8 @@ export const collectionRouter = router({
         },
       });
 
-      // BFS-рассылка НЕ отправляется для спецпрофилей (Автор/Разработчик)
-      // Их уведомления приходят через special-notify worker после первого обязательства
+      // BFS distribution NOT sent for special profiles (Author/Developer)
+      // Their notifications come through special-notify worker after first intention
       if (!isSpecial && input.amount != null) {
         const maxRecipients = Math.ceil(input.amount / NOTIFICATION_RATIO);
         await sendCollectionNotifications(ctx.db, collection.id, ctx.userId, 'NEW_COLLECTION', 1, maxRecipients);
@@ -95,7 +95,7 @@ export const collectionRouter = router({
         data: { status: 'CLOSED', closedAt: new Date() },
       });
 
-      // Рассылка COLLECTION_CLOSED всем ранее уведомлённым
+      // Send COLLECTION_CLOSED to all previously notified
       const notifiedUsers = await ctx.db.notification.findMany({
         where: { collectionId: input.id },
         select: { userId: true },

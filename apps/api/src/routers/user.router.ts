@@ -37,9 +37,9 @@ export const userRouter = router({
         },
       });
       if (!user) throw new TRPCError({ code: 'NOT_FOUND' });
-      // Удалённый профиль — «серый»: имя заменено, данные скрыты
+      // Deleted profile - "gray": name replaced, data hidden
       if (user.deletedAt) {
-        return { ...user, name: 'Удалённый пользователь', bio: null, phone: null, photoUrl: null };
+        return { ...user, name: 'Deleted user', bio: null, phone: null, photoUrl: null };
       }
       return user;
     }),
@@ -119,19 +119,19 @@ export const userRouter = router({
 
   delete: protectedProcedure.mutation(async ({ ctx }) => {
     await ctx.db.$transaction(async (tx) => {
-      // 1. Очистка профиля (серый профиль по SPEC)
+      // 1. Clear profile (gray profile per SPEC)
       await tx.user.update({
         where: { id: ctx.userId },
         data: {
           deletedAt: new Date(),
-          name: 'Удалённый пользователь',
+          name: 'Deleted user',
           bio: null,
           phone: null,
           photoUrl: null,
         },
       });
 
-      // 2. Аннулирование обязательств в активных сборах
+      // 2. Cancel obligations in active collections
       await tx.obligation.deleteMany({
         where: {
           userId: ctx.userId,
@@ -139,7 +139,7 @@ export const userRouter = router({
         },
       });
 
-      // 3. Отмена активных собственных сборов
+      // 3. Cancel own active collections
       await tx.collection.updateMany({
         where: {
           creatorId: ctx.userId,

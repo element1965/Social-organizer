@@ -25,7 +25,7 @@ export const inviteRouter = router({
         throw new TRPCError({ code: 'BAD_REQUEST', message: 'Cannot accept own invite' });
       }
 
-      // Проверка лимита связей у обоих
+      // Check connection limit for both users
       const [myCount, inviterCount] = await Promise.all([
         ctx.db.connection.count({
           where: { OR: [{ userAId: ctx.userId }, { userBId: ctx.userId }] },

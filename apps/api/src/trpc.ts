@@ -13,7 +13,7 @@ const isAuthed = middleware(async ({ ctx, next }) => {
   if (!ctx.userId) {
     throw new TRPCError({ code: 'UNAUTHORIZED', message: 'Not authenticated' });
   }
-  // Проверка: удалённые пользователи не могут выполнять действия
+  // Check: deleted users cannot perform actions
   const user = await ctx.db.user.findUnique({
     where: { id: ctx.userId },
     select: { deletedAt: true },

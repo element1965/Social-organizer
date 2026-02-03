@@ -20,9 +20,9 @@ const app = Fastify({ logger: true, maxParamLength: 5000 });
 const PORT = Number(process.env.PORT) || 3001;
 const HOST = process.env.HOST || '0.0.0.0';
 
-// Путь к собранному веб-фронтенду
-// В production (Railway) — копируется в dist/public при билде
-// В dev — прямо в apps/web/dist
+// Path to built web frontend
+// In production (Railway) — copied to dist/public during build
+// In dev — directly in apps/web/dist
 const WEB_DIST = existsSync(resolve(__dirname, 'public'))
   ? resolve(__dirname, 'public')
   : resolve(__dirname, '../../web/dist');
@@ -49,7 +49,7 @@ async function start() {
       return { status: 'ok', timestamp: new Date().toISOString() };
     });
 
-    // Раздача веб-фронтенда (если dist существует)
+    // Serve web frontend (if dist exists)
     if (existsSync(WEB_DIST)) {
       await app.register(fastifyStatic, {
         root: WEB_DIST,
@@ -57,7 +57,7 @@ async function start() {
         wildcard: false,
       });
 
-      // SPA fallback: все не-API роуты → index.html
+      // SPA fallback: all non-API routes → index.html
       app.setNotFoundHandler((_req, reply) => {
         reply.sendFile('index.html', WEB_DIST);
       });
