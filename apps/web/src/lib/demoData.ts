@@ -55,7 +55,7 @@ function makeUser(id: string, name: string, idx: number): DemoUser {
   };
 }
 
-const demoUser: DemoUser & { onboardingCompleted: boolean } = {
+let demoUser: DemoUser & { onboardingCompleted: boolean } = {
   id: DEMO_USER_ID,
   name: 'Алексей Петров',
   photoUrl: null,
@@ -68,7 +68,7 @@ const demoUser: DemoUser & { onboardingCompleted: boolean } = {
   theme: 'DARK',
   soundEnabled: true,
   fontScale: 1.0,
-  onboardingCompleted: true,
+  onboardingCompleted: false,
 };
 
 const users: DemoUser[] = [demoUser];
@@ -404,6 +404,7 @@ export function handleDemoRequest(path: string, input: unknown): unknown {
     case 'user.delete':
       return { success: true };
     case 'user.completeOnboarding':
+      demoUser.onboardingCompleted = true;
       return { success: true };
     case 'user.getContacts': {
       const contactTypes = [
