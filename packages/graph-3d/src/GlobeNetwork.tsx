@@ -114,7 +114,7 @@ function Planet({ scrollProgress }: { scrollProgress: number }) {
 
   return (
     <mesh ref={meshRef}>
-      <sphereGeometry args={[1.8, 64, 64]} />
+      <sphereGeometry args={[1.5, 64, 64]} />
       <shaderMaterial
         vertexShader={vertexShader}
         fragmentShader={fragmentShader}
@@ -126,9 +126,9 @@ function Planet({ scrollProgress }: { scrollProgress: number }) {
 
 /* ---------- Узлы на поверхности (InstancedMesh) ---------- */
 
-const MIN_NODE_COUNT = 30;
-const MAX_NODE_COUNT = 120;
-const NODE_RADIUS = 2.0;
+const MIN_NODE_COUNT = 40;
+const MAX_NODE_COUNT = 150;
+const NODE_RADIUS = 1.7;
 const NODE_COLORS = [
   new THREE.Color(0x14b8a6), // teal
   new THREE.Color(0x3b82f6), // blue
@@ -202,8 +202,8 @@ function NetworkNodes({ scrollProgress }: { scrollProgress: number }) {
 
 /* ---------- Связи между ближними узлами (LineSegments) ---------- */
 
-const MIN_EDGES = 40;
-const MAX_EDGES = 200;
+const MIN_EDGES = 60;
+const MAX_EDGES = 300;
 
 function NetworkEdges({ scrollProgress }: { scrollProgress: number }) {
   const lineRef = useRef<THREE.LineSegments>(null);
@@ -217,7 +217,7 @@ function NetworkEdges({ scrollProgress }: { scrollProgress: number }) {
   const { allEdgePositions, totalEdgeCount } = useMemo(() => {
     const nodes = fibonacciSphere(MAX_NODE_COUNT, NODE_RADIUS);
     const edges: number[] = [];
-    const maxDist = 1.4; // Increased distance for better coverage
+    const maxDist = 1.2; // Distance for connections - ensures dense web coverage
 
     // Create edges ensuring full sphere coverage (including bottom)
     for (let i = 0; i < MAX_NODE_COUNT; i++) {
@@ -309,9 +309,9 @@ function AdaptiveCamera() {
   const { camera, size } = useThree();
 
   useEffect(() => {
-    // On mobile (width < 768), move camera further back so planet is fully visible
+    // On mobile (width < 768), move camera much further back so planet is fully visible
     const isMobile = size.width < 768;
-    const targetZ = isMobile ? 6.5 : 5;
+    const targetZ = isMobile ? 8.5 : 5.5;
     camera.position.z = targetZ;
     camera.updateProjectionMatrix();
   }, [camera, size.width]);
