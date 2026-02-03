@@ -15,6 +15,8 @@ function getNotificationBadge(type: string, t: (key: string) => string): { label
     case 'RE_NOTIFY': return { label: t('notifications.reNotify'), variant: 'warning' };
     case 'COLLECTION_CLOSED': return { label: t('notifications.closed'), variant: 'default' };
     case 'COLLECTION_BLOCKED': return { label: t('notifications.blocked'), variant: 'danger' };
+    case 'OBLIGATION_RECEIVED': return { label: t('notifications.obligationReceived'), variant: 'success' };
+    case 'CYCLE_CLOSED': return { label: t('notifications.cycleClosed'), variant: 'default' };
     case 'SPECIAL_AUTHOR': return { label: t('notifications.specialAuthor'), variant: 'success' };
     case 'SPECIAL_DEVELOPER': return { label: t('notifications.specialDeveloper'), variant: 'success' };
     default: return { label: type, variant: 'default' };
