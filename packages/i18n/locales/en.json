@@ -132,6 +132,8 @@
     "reNotify": "Reminder",
     "closed": "Closed",
     "blocked": "Blocked",
+    "obligationReceived": "Help",
+    "cycleClosed": "Cycle closed",
     "specialAuthor": "Author",
     "specialDeveloper": "Developer",
     "handshakes": "handshakes",

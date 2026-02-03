@@ -132,6 +132,8 @@
     "reNotify": "Напоминание",
     "closed": "Закрыт",
     "blocked": "Заблокирован",
+    "obligationReceived": "Помощь",
+    "cycleClosed": "Цикл закрыт",
     "specialAuthor": "Автор",
     "specialDeveloper": "Разработчик",
     "handshakes": "рукопожатий",
