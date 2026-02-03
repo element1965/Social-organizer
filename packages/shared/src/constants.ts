@@ -12,7 +12,7 @@ export const LARGE_AMOUNT_WARNING = 10_000;
 export const POLLING_INTERVAL_MS = 30_000;
 export const MAX_BFS_DEPTH = 6;
 export const MAX_BFS_RECIPIENTS = 10_000;
-export const NOTIFICATION_RATIO = 10; // сумма / 10 = количество уведомлений (т.к. мин. обязательство = 10)
+export const NOTIFICATION_RATIO = 1; // сумма = количество уведомлений (1:1)
 export const FB_BUNDLE_SIZE_LIMIT_MB = 5;
 export const GRAPH_SLICE_DEPTH = 3;
 
