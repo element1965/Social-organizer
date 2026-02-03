@@ -481,11 +481,37 @@ export function handleDemoRequest(path: string, input: unknown): unknown {
       }
       return { path };
     }
-    case 'connection.getNetworkStats':
+    case 'connection.getNetworkStats': {
+      // Generate users by depth for expandable lists
+      const usersByDepth: Record<number, Array<{ id: string; name: string; photoUrl: string | null }>> = {
+        1: connections.map((c) => ({ id: c.userId, name: c.name, photoUrl: c.photoUrl })),
+        2: Array.from({ length: 48 }, (_, i) => {
+          const u = usersMap.get(`user-${13 + i}`)!;
+          return { id: u.id, name: u.name, photoUrl: null };
+        }),
+        3: Array.from({ length: 72 }, (_, i) => {
+          const u = usersMap.get(`user-${61 + i}`) || users[(61 + i) % users.length]!;
+          return { id: u.id, name: u.name, photoUrl: null };
+        }),
+        4: Array.from({ length: 24 }, (_, i) => {
+          const u = usersMap.get(`user-${133 + i}`) || users[(133 + i) % users.length]!;
+          return { id: u.id, name: u.name, photoUrl: null };
+        }),
+      };
       return {
         totalReachable: 156,
         byDepth: { 1: 12, 2: 48, 3: 72, 4: 24 },
-        growth: { day: 3, week: 18, month: 47 },
+        usersByDepth,
+        growth: { day: 3, week: 18, month: 47, year: 156 },
+      };
+    }
+    case 'stats.help':
+      return {
+        given: { count: 7, totalAmount: 425, byCurrency: { USD: 275, EUR: 150 } },
+        received: { count: 2, totalAmount: 580, byCurrency: { USD: 280, EUR: 300 } },
+        activeIntentions: 3,
+        completedCollections: 1,
+        networkReach: 156,
       };
 
     // ---- Collection ----
