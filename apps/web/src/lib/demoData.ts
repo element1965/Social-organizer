@@ -323,39 +323,49 @@ const notificationTypes = [
   'COLLECTION_CLOSED',
 ] as const;
 
-const notifications = notificationTypes.map((type, i) => ({
-  id: `notif-${i + 1}`,
-  userId: DEMO_USER_ID,
-  collectionId: i < 2 ? 'ext-coll-1' : 'ext-coll-2',
-  type,
-  status: i < 3 ? 'UNREAD' : 'READ',
-  handshakePath: i === 0
-    ? [DEMO_USER_ID]
-    : [DEMO_USER_ID, `user-${i}`, `user-${i + 5}`],
-  wave: 1,
-  expiresAt: new Date(Date.now() + 24 * 3600_000).toISOString(),
-  createdAt: new Date(Date.now() - i * 3600_000 * 2).toISOString(),
-  updatedAt: new Date(Date.now() - i * 3600_000 * 2).toISOString(),
-  collection: {
-    id: i < 2 ? 'ext-coll-1' : 'ext-coll-2',
-    creatorId: i < 2 ? 'user-3' : 'user-5',
-    type: i < 2 ? 'EMERGENCY' : 'REGULAR',
-    amount: i < 2 ? 300 : 800,
-    currency: i < 2 ? 'USD' : 'EUR',
-    chatLink: i < 2 ? 'https://t.me/ext_chat_1' : 'https://t.me/ext_chat_2',
-    status: 'ACTIVE',
-    currentCycleStart: null,
-    createdAt: '2025-11-10T10:00:00Z',
-    updatedAt: '2025-11-10T10:00:00Z',
-    closedAt: null,
-    blockedAt: null,
-    creator: {
-      id: i < 2 ? 'user-3' : 'user-5',
-      name: usersMap.get(i < 2 ? 'user-3' : 'user-5')!.name,
+const notifications = notificationTypes.map((type, i) => {
+  const creatorId = i < 2 ? 'user-3' : 'user-5';
+  const creator = usersMap.get(creatorId)!;
+  return {
+    id: `notif-${i + 1}`,
+    userId: DEMO_USER_ID,
+    collectionId: i < 2 ? 'ext-coll-1' : 'ext-coll-2',
+    type,
+    status: i < 3 ? 'UNREAD' : 'READ',
+    readAt: i < 3 ? null : new Date(Date.now() - i * 3600_000).toISOString(),
+    handshakePath: i === 0
+      ? [DEMO_USER_ID]
+      : [DEMO_USER_ID, `user-${i}`, `user-${i + 5}`],
+    wave: 1,
+    expiresAt: new Date(Date.now() + 24 * 3600_000).toISOString(),
+    createdAt: new Date(Date.now() - i * 3600_000 * 2).toISOString(),
+    updatedAt: new Date(Date.now() - i * 3600_000 * 2).toISOString(),
+    sender: {
+      id: creatorId,
+      name: creator.name,
       photoUrl: null,
     },
-  },
-}));
+    collection: {
+      id: i < 2 ? 'ext-coll-1' : 'ext-coll-2',
+      creatorId,
+      type: i < 2 ? 'EMERGENCY' : 'REGULAR',
+      amount: i < 2 ? 300 : 800,
+      currency: i < 2 ? 'USD' : 'EUR',
+      chatLink: i < 2 ? 'https://t.me/ext_chat_1' : 'https://t.me/ext_chat_2',
+      status: 'ACTIVE',
+      currentCycleStart: null,
+      createdAt: '2025-11-10T10:00:00Z',
+      updatedAt: '2025-11-10T10:00:00Z',
+      closedAt: null,
+      blockedAt: null,
+      creator: {
+        id: creatorId,
+        name: creator.name,
+        photoUrl: null,
+      },
+    },
+  };
+});
 
 // ---------- Settings state (mutable within demo session) ----------
 
@@ -475,6 +485,7 @@ export function handleDemoRequest(path: string, input: unknown): unknown {
       return {
         totalReachable: 156,
         byDepth: { 1: 12, 2: 48, 3: 72, 4: 24 },
+        growth: { day: 3, week: 18, month: 47 },
       };
 
     // ---- Collection ----
