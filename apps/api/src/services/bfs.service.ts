@@ -66,6 +66,71 @@ export async function findRecipientsViaBfs(
 }
 
 /**
+ * BFS для поиска кратчайшего пути между двумя пользователями.
+ * Возвращает массив пользователей от fromUserId до toUserId включительно.
+ */
+export async function findPathBetweenUsers(
+  db: PrismaClient,
+  fromUserId: string,
+  toUserId: string,
+  maxDepth: number = MAX_BFS_DEPTH,
+): Promise<Array<{ id: string; name: string; photoUrl: string | null }>> {
+  if (fromUserId === toUserId) {
+    const user = await db.user.findUnique({
+      where: { id: fromUserId },
+      select: { id: true, name: true, photoUrl: true },
+    });
+    return user ? [user] : [];
+  }
+
+  const result = await db.$queryRawUnsafe<Array<{
+    user_id: string;
+    path: string[];
+    depth: number;
+  }>>(`
+    WITH RECURSIVE bfs AS (
+      SELECT
+        CASE WHEN c."userAId" = $1 THEN c."userBId" ELSE c."userAId" END AS user_id,
+        ARRAY[$1] AS path,
+        1 AS depth
+      FROM connections c
+      WHERE c."userAId" = $1 OR c."userBId" = $1
+
+      UNION ALL
+
+      SELECT
+        CASE WHEN c."userAId" = b.user_id THEN c."userBId" ELSE c."userAId" END AS user_id,
+        b.path || b.user_id,
+        b.depth + 1
+      FROM connections c
+      JOIN bfs b ON (c."userAId" = b.user_id OR c."userBId" = b.user_id)
+      WHERE b.depth < $3
+        AND NOT (CASE WHEN c."userAId" = b.user_id THEN c."userBId" ELSE c."userAId" END = ANY(b.path))
+    )
+    SELECT b.user_id, b.path, b.depth
+    FROM bfs b
+    WHERE b.user_id = $2
+    ORDER BY b.depth
+    LIMIT 1
+  `, fromUserId, toUserId, maxDepth);
+
+  if (result.length === 0) {
+    return [];
+  }
+
+  const { path } = result[0]!;
+  const fullPath = [...path, toUserId];
+
+  const users = await db.user.findMany({
+    where: { id: { in: fullPath } },
+    select: { id: true, name: true, photoUrl: true },
+  });
+
+  const userMap = new Map(users.map(u => [u.id, u]));
+  return fullPath.map(id => userMap.get(id)!).filter(Boolean);
+}
+
+/**
  * Получить срез графа для 3D-визуализации (2-3 уровня).
  */
 export async function getGraphSlice(

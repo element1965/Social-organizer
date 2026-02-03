@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { trpc } from '../lib/trpc';
 import { Button } from '../components/ui/button';
-import { Users, Zap, Eye, UserPlus, Share2, QrCode } from 'lucide-react';
+import { Users, Zap, Eye, UserPlus, Share2 } from 'lucide-react';
 import { cn } from '../lib/utils';
 
 const steps = [
@@ -22,6 +22,8 @@ export function OnboardingPage() {
   const isLast = step === steps.length - 1;
 
   const generateInvite = trpc.invite.generate.useMutation();
+  const completeOnboarding = trpc.user.completeOnboarding.useMutation();
+  const utils = trpc.useUtils();
   const [inviteLink, setInviteLink] = useState('');
 
   const handleInvite = async () => {
@@ -33,6 +35,13 @@ export function OnboardingPage() {
     } else {
       navigator.clipboard.writeText(link).catch(() => {});
     }
+  };
+
+  const handleStart = async () => {
+    await completeOnboarding.mutateAsync();
+    // Invalidate user query so ProtectedRoute sees updated onboardingCompleted
+    utils.user.me.invalidate();
+    navigate('/');
   };
 
   return (
@@ -65,7 +74,13 @@ export function OnboardingPage() {
                 <p className="text-xs text-green-700 dark:text-green-400 break-all">{inviteLink}</p>
               </div>
             )}
-            <Button className="w-full" variant="outline" size="lg" onClick={() => navigate('/')}>
+            <Button
+              className="w-full"
+              variant="outline"
+              size="lg"
+              onClick={handleStart}
+              disabled={completeOnboarding.isPending}
+            >
               {t('onboarding.start')}
             </Button>
           </div>

@@ -21,7 +21,9 @@
     "codeExpires": "ينتهي الرمز خلال {{minutes}} دقيقة"
   },
   "login": {
-    "subtitle": "تنسيق المساعدة من خلال العلاقات الموثوقة"
+    "subtitle": "تنسيق المساعدة من خلال العلاقات الموثوقة",
+    "or": "or",
+    "demo": "Demo login without registration"
   },
   "onboarding": {
     "step1": {
@@ -66,7 +68,10 @@
     "noObligations": "لا توجد التزامات",
     "myNetwork": "شبكتي",
     "view": "عرض",
-    "connections": "اتصالات"
+    "connections": "اتصالات",
+    "intentions": "intentions",
+    "myIntentions": "My Intentions",
+    "noIntentions": "No intentions"
   },
   "collection": {
     "create": "إنشاء مجموعة",
@@ -90,7 +95,10 @@
     "close": "إغلاق المجموعة",
     "participants": "المشاركون",
     "noParticipants": "لم ينضم أحد بعد",
-    "minAmount": "الحد الأدنى 10"
+    "minAmount": "الحد الأدنى 10",
+    "intentionsCount": "{{count}} intentions",
+    "expressIntention": "Express intention",
+    "connectionToCreator": "Connection to creator"
   },
   "create": {
     "title": "إنشاء مجموعة",
@@ -103,7 +111,8 @@
     "chatLink": "رابط المحادثة",
     "submit": "إنشاء مجموعة",
     "minAmount": "الحد الأدنى 10",
-    "invalidUrl": "رابط غير صالح"
+    "invalidUrl": "رابط غير صالح",
+    "networkReach": "Your signal will reach up to {{count}} people through handshake chains"
   },
   "obligation": {
     "create": "تعهّد بالمساعدة",
@@ -160,7 +169,9 @@
     "save": "حفظ",
     "pledgedByCurrency": "حسب العملة",
     "myConnections": "اتصالاتي",
-    "noConnections": "لا توجد اتصالات بعد"
+    "noConnections": "لا توجد اتصالات بعد",
+    "connectionPath": "Connection path",
+    "contacts": "Contacts"
   },
   "settings": {
     "title": "الإعدادات",
@@ -184,7 +195,9 @@
     "logout": "تسجيل الخروج",
     "deleteAccount": "حذف الحساب",
     "deleteConfirm": "هل أنت متأكد؟ هذا الإجراء لا يمكن التراجع عنه.",
-    "confirmDelete": "حذف"
+    "confirmDelete": "حذف",
+    "contacts": "Contacts",
+    "contactsDesc": "Add ways to contact you for network members"
   },
   "invite": {
     "title": "دعوة",
@@ -224,6 +237,33 @@
     "principleGlobalDesc": "Globally accessible. Automatic language detection.",
     "ctaTitle": "Ready to activate your p2p mutual aid environment?",
     "ctaButton": "إنشاء حساب",
-    "footer": "Social Organizer — an open p2p mutual aid and direct cooperation tool"
+    "footer": "Social Organizer — an open p2p mutual aid and direct cooperation tool",
+    "cardIntentionTitle": "Intention",
+    "cardIntentionDesc": "A voluntary decision to help. No pressure — everyone decides for themselves whether to participate.",
+    "githubLink": "View code on GitHub"
+  },
+  "intention": {
+    "create": "Express Intention",
+    "amount": "Amount (min {{min}})",
+    "subscribe": "Subscribe monthly",
+    "unsubscribe": "Unsubscribe"
+  },
+  "contacts": {
+    "telegram": "Telegram",
+    "whatsapp": "WhatsApp",
+    "facebook": "Facebook",
+    "instagram": "Instagram",
+    "twitter": "X (Twitter)",
+    "linkedin": "LinkedIn",
+    "vk": "VKontakte",
+    "email": "Email",
+    "website": "Website"
+  },
+  "hints": {
+    "collectionAmount": "Enter the amount you need. Minimum 10 units. The system will notify the right number of people.",
+    "collectionChatLink": "Link to a chat (Telegram, WhatsApp, etc.) where you can coordinate with those who respond.",
+    "intentionAmount": "Amount you're willing to provide. This is an intention, not a transfer — coordination happens in the chat.",
+    "profileBio": "Tell a bit about yourself. This helps other participants get to know you better.",
+    "profilePhone": "Phone is only visible to your direct connections (first handshake)."
   }
 }

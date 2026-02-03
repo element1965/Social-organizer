@@ -21,7 +21,9 @@
     "codeExpires": "Kod {{minutes}} dakika içinde geçersiz olacak"
   },
   "login": {
-    "subtitle": "Güvenilir bağlantılar aracılığıyla yardım koordinasyonu"
+    "subtitle": "Güvenilir bağlantılar aracılığıyla yardım koordinasyonu",
+    "or": "or",
+    "demo": "Demo login without registration"
   },
   "onboarding": {
     "step1": {
@@ -66,7 +68,10 @@
     "noObligations": "Taahhüt yok",
     "myNetwork": "Ağım",
     "view": "Görüntüle",
-    "connections": "bağlantılar"
+    "connections": "bağlantılar",
+    "intentions": "intentions",
+    "myIntentions": "My Intentions",
+    "noIntentions": "No intentions"
   },
   "collection": {
     "create": "Koleksiyon Oluştur",
@@ -90,7 +95,10 @@
     "close": "Koleksiyonu kapat",
     "participants": "Katılımcılar",
     "noParticipants": "Henüz kimse katılmadı",
-    "minAmount": "Minimum 10"
+    "minAmount": "Minimum 10",
+    "intentionsCount": "{{count}} intentions",
+    "expressIntention": "Express intention",
+    "connectionToCreator": "Connection to creator"
   },
   "create": {
     "title": "Koleksiyon Oluştur",
@@ -103,7 +111,8 @@
     "chatLink": "Sohbet linki",
     "submit": "Koleksiyon Oluştur",
     "minAmount": "Minimum 10",
-    "invalidUrl": "Geçersiz URL"
+    "invalidUrl": "Geçersiz URL",
+    "networkReach": "Your signal will reach up to {{count}} people through handshake chains"
   },
   "obligation": {
     "create": "Taahhütte Bulun",
@@ -160,7 +169,9 @@
     "save": "Kaydet",
     "pledgedByCurrency": "para birimine göre",
     "myConnections": "Bağlantılarım",
-    "noConnections": "Henüz bağlantı yok"
+    "noConnections": "Henüz bağlantı yok",
+    "connectionPath": "Connection path",
+    "contacts": "Contacts"
   },
   "settings": {
     "title": "Ayarlar",
@@ -184,7 +195,9 @@
     "logout": "Çıkış Yap",
     "deleteAccount": "Hesabı Sil",
     "deleteConfirm": "Emin misiniz? Bu işlem geri alınamaz.",
-    "confirmDelete": "Sil"
+    "confirmDelete": "Sil",
+    "contacts": "Contacts",
+    "contactsDesc": "Add ways to contact you for network members"
   },
   "invite": {
     "title": "Davet",
@@ -224,6 +237,33 @@
     "principleGlobalDesc": "Globally accessible. Automatic language detection.",
     "ctaTitle": "Ready to activate your p2p mutual aid environment?",
     "ctaButton": "Hesap oluştur",
-    "footer": "Social Organizer — an open p2p mutual aid and direct cooperation tool"
+    "footer": "Social Organizer — an open p2p mutual aid and direct cooperation tool",
+    "cardIntentionTitle": "Intention",
+    "cardIntentionDesc": "A voluntary decision to help. No pressure — everyone decides for themselves whether to participate.",
+    "githubLink": "View code on GitHub"
+  },
+  "intention": {
+    "create": "Express Intention",
+    "amount": "Amount (min {{min}})",
+    "subscribe": "Subscribe monthly",
+    "unsubscribe": "Unsubscribe"
+  },
+  "contacts": {
+    "telegram": "Telegram",
+    "whatsapp": "WhatsApp",
+    "facebook": "Facebook",
+    "instagram": "Instagram",
+    "twitter": "X (Twitter)",
+    "linkedin": "LinkedIn",
+    "vk": "VKontakte",
+    "email": "Email",
+    "website": "Website"
+  },
+  "hints": {
+    "collectionAmount": "Enter the amount you need. Minimum 10 units. The system will notify the right number of people.",
+    "collectionChatLink": "Link to a chat (Telegram, WhatsApp, etc.) where you can coordinate with those who respond.",
+    "intentionAmount": "Amount you're willing to provide. This is an intention, not a transfer — coordination happens in the chat.",
+    "profileBio": "Tell a bit about yourself. This helps other participants get to know you better.",
+    "profilePhone": "Phone is only visible to your direct connections (first handshake)."
   }
 }

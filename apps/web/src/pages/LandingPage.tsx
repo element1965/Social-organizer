@@ -1,7 +1,7 @@
 import { lazy, Suspense, useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Handshake, Heart, Eye, Users, Cog, Code, Globe, ChevronDown, ArrowRight, Languages } from 'lucide-react';
+import { Handshake, Heart, Eye, Users, Cog, Code, Globe, ChevronDown, ArrowRight, Languages, Github, ExternalLink } from 'lucide-react';
 import { languageNames } from '@so/i18n';
 import { useScrollProgress } from '../hooks/useScrollProgress';
 
@@ -126,13 +126,13 @@ export function LandingPage() {
               <p className="text-gray-400 text-sm leading-relaxed">{t('landing.cardHandshakeDesc')}</p>
             </div>
 
-            {/* Card: Obligation */}
+            {/* Card: Intention */}
             <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6">
               <div className="w-12 h-12 bg-rose-500/20 rounded-xl flex items-center justify-center mb-4">
                 <Heart className="text-rose-400" size={24} />
               </div>
-              <h3 className="text-white font-semibold text-lg mb-2">{t('landing.cardObligationTitle')}</h3>
-              <p className="text-gray-400 text-sm leading-relaxed">{t('landing.cardObligationDesc')}</p>
+              <h3 className="text-white font-semibold text-lg mb-2">{t('landing.cardIntentionTitle')}</h3>
+              <p className="text-gray-400 text-sm leading-relaxed">{t('landing.cardIntentionDesc')}</p>
             </div>
 
             {/* Card: Transparency */}
@@ -230,7 +230,15 @@ export function LandingPage() {
                 <Code className="text-green-400" size={20} />
               </div>
               <h3 className="text-white font-semibold mb-1">{t('landing.principleOpenTitle')}</h3>
-              <p className="text-gray-400 text-sm">{t('landing.principleOpenDesc')}</p>
+              <p className="text-gray-400 text-sm mb-3">{t('landing.principleOpenDesc')}</p>
+              <a
+                href="https://github.com/element1965/Social-organizer"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 text-sm text-green-400 hover:text-green-300 transition-colors"
+              >
+                <Github size={16} /> {t('landing.githubLink')} <ExternalLink size={12} />
+              </a>
             </div>
 
             {/* Global */}
@@ -257,7 +265,15 @@ export function LandingPage() {
           </button>
 
           <footer className="text-gray-500 text-sm text-center border-t border-white/5 pt-8 w-full max-w-xl">
-            {t('landing.footer')}
+            <p className="mb-3">{t('landing.footer')}</p>
+            <a
+              href="https://github.com/element1965/Social-organizer"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 text-gray-400 hover:text-white transition-colors"
+            >
+              <Github size={16} /> GitHub
+            </a>
           </footer>
         </section>
 

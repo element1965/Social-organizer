@@ -21,7 +21,9 @@
     "codeExpires": "Code verloopt over {{minutes}} min"
   },
   "login": {
-    "subtitle": "Hulpcoordinatie via vertrouwde connecties"
+    "subtitle": "Hulpcoordinatie via vertrouwde connecties",
+    "or": "or",
+    "demo": "Demo login without registration"
   },
   "onboarding": {
     "step1": {
@@ -66,7 +68,10 @@
     "noObligations": "Geen verplichtingen",
     "myNetwork": "Mijn netwerk",
     "view": "Bekijken",
-    "connections": "connecties"
+    "connections": "connecties",
+    "intentions": "intentions",
+    "myIntentions": "My Intentions",
+    "noIntentions": "No intentions"
   },
   "collection": {
     "create": "Inzameling aanmaken",
@@ -90,7 +95,10 @@
     "close": "Inzameling sluiten",
     "participants": "Deelnemers",
     "noParticipants": "Nog niemand heeft meegedaan",
-    "minAmount": "Minimaal 10"
+    "minAmount": "Minimaal 10",
+    "intentionsCount": "{{count}} intentions",
+    "expressIntention": "Express intention",
+    "connectionToCreator": "Connection to creator"
   },
   "create": {
     "title": "Inzameling aanmaken",
@@ -103,7 +111,8 @@
     "chatLink": "Chatlink",
     "submit": "Inzameling aanmaken",
     "minAmount": "Minimaal 10",
-    "invalidUrl": "Ongeldige URL"
+    "invalidUrl": "Ongeldige URL",
+    "networkReach": "Your signal will reach up to {{count}} people through handshake chains"
   },
   "obligation": {
     "create": "Toezegging doen",
@@ -160,7 +169,9 @@
     "save": "Opslaan",
     "pledgedByCurrency": "per valuta",
     "myConnections": "Mijn connecties",
-    "noConnections": "Nog geen connecties"
+    "noConnections": "Nog geen connecties",
+    "connectionPath": "Connection path",
+    "contacts": "Contacts"
   },
   "settings": {
     "title": "Instellingen",
@@ -184,7 +195,9 @@
     "logout": "Uitloggen",
     "deleteAccount": "Account verwijderen",
     "deleteConfirm": "Weet je het zeker? Deze actie is onomkeerbaar.",
-    "confirmDelete": "Verwijderen"
+    "confirmDelete": "Verwijderen",
+    "contacts": "Contacts",
+    "contactsDesc": "Add ways to contact you for network members"
   },
   "invite": {
     "title": "Uitnodiging",
@@ -224,6 +237,33 @@
     "principleGlobalDesc": "Globally accessible. Automatic language detection.",
     "ctaTitle": "Ready to activate your p2p mutual aid environment?",
     "ctaButton": "Account aanmaken",
-    "footer": "Social Organizer — an open p2p mutual aid and direct cooperation tool"
+    "footer": "Social Organizer — an open p2p mutual aid and direct cooperation tool",
+    "cardIntentionTitle": "Intention",
+    "cardIntentionDesc": "A voluntary decision to help. No pressure — everyone decides for themselves whether to participate.",
+    "githubLink": "View code on GitHub"
+  },
+  "intention": {
+    "create": "Express Intention",
+    "amount": "Amount (min {{min}})",
+    "subscribe": "Subscribe monthly",
+    "unsubscribe": "Unsubscribe"
+  },
+  "contacts": {
+    "telegram": "Telegram",
+    "whatsapp": "WhatsApp",
+    "facebook": "Facebook",
+    "instagram": "Instagram",
+    "twitter": "X (Twitter)",
+    "linkedin": "LinkedIn",
+    "vk": "VKontakte",
+    "email": "Email",
+    "website": "Website"
+  },
+  "hints": {
+    "collectionAmount": "Enter the amount you need. Minimum 10 units. The system will notify the right number of people.",
+    "collectionChatLink": "Link to a chat (Telegram, WhatsApp, etc.) where you can coordinate with those who respond.",
+    "intentionAmount": "Amount you're willing to provide. This is an intention, not a transfer — coordination happens in the chat.",
+    "profileBio": "Tell a bit about yourself. This helps other participants get to know you better.",
+    "profilePhone": "Phone is only visible to your direct connections (first handshake)."
   }
 }

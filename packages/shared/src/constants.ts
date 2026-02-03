@@ -15,3 +15,17 @@ export const MAX_BFS_RECIPIENTS = 10_000;
 export const NOTIFICATION_RATIO = 10; // сумма / 10 = количество уведомлений (т.к. мин. обязательство = 10)
 export const FB_BUNDLE_SIZE_LIMIT_MB = 5;
 export const GRAPH_SLICE_DEPTH = 3;
+
+export const CONTACT_TYPES = [
+  { type: 'telegram', label: 'Telegram', icon: 'telegram', placeholder: '@username или t.me/...' },
+  { type: 'whatsapp', label: 'WhatsApp', icon: 'whatsapp', placeholder: '+7...' },
+  { type: 'facebook', label: 'Facebook', icon: 'facebook', placeholder: 'facebook.com/...' },
+  { type: 'instagram', label: 'Instagram', icon: 'instagram', placeholder: '@username' },
+  { type: 'twitter', label: 'X (Twitter)', icon: 'twitter', placeholder: '@username' },
+  { type: 'linkedin', label: 'LinkedIn', icon: 'linkedin', placeholder: 'linkedin.com/in/...' },
+  { type: 'vk', label: 'VKontakte', icon: 'vk', placeholder: 'vk.com/...' },
+  { type: 'email', label: 'Email', icon: 'mail', placeholder: 'email@example.com' },
+  { type: 'website', label: 'Website', icon: 'globe', placeholder: 'https://...' },
+] as const;
+
+export type ContactType = typeof CONTACT_TYPES[number]['type'];

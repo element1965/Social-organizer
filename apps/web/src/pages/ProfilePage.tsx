@@ -8,7 +8,9 @@ import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { Avatar } from '../components/ui/avatar';
 import { Spinner } from '../components/ui/spinner';
-import { ArrowLeft, UserPlus, Ban, Pencil, X } from 'lucide-react';
+import { ArrowLeft, UserPlus, Ban, Pencil, X, ExternalLink } from 'lucide-react';
+import { HandshakePath } from '../components/HandshakePath';
+import { SocialIcon } from '../components/ui/social-icons';
 
 export function ProfilePage() {
   const { userId: paramId } = useParams<{ userId: string }>();
@@ -21,6 +23,14 @@ export function ProfilePage() {
   const { data: user, isLoading } = trpc.user.getById.useQuery({ userId: paramId! }, { enabled: !!paramId });
   const { data: stats } = trpc.stats.profile.useQuery({ userId: paramId }, { enabled: !!paramId });
   const { data: connections } = trpc.connection.list.useQuery(undefined, { enabled: isOwn });
+  const { data: pathData } = trpc.connection.findPath.useQuery(
+    { targetUserId: paramId! },
+    { enabled: !isOwn && !!paramId }
+  );
+  const { data: contacts } = trpc.user.getContacts.useQuery(
+    { userId: paramId },
+    { enabled: !!paramId }
+  );
   const addConnection = trpc.connection.add.useMutation();
   const addIgnore = trpc.settings.addIgnore.useMutation();
   const updateUser = trpc.user.update.useMutation({
@@ -57,8 +67,8 @@ export function ProfilePage() {
         {editing ? (
           <div className="w-full max-w-sm space-y-3">
             <Input id="edit-name" label={t('profile.name')} value={editName} onChange={(e) => setEditName(e.target.value)} />
-            <Input id="edit-bio" label={t('profile.bio')} value={editBio} onChange={(e) => setEditBio(e.target.value)} />
-            <Input id="edit-phone" label={t('profile.phone')} value={editPhone} onChange={(e) => setEditPhone(e.target.value)} />
+            <Input id="edit-bio" label={t('profile.bio')} hint={t('hints.profileBio')} value={editBio} onChange={(e) => setEditBio(e.target.value)} />
+            <Input id="edit-phone" label={t('profile.phone')} hint={t('hints.profilePhone')} value={editPhone} onChange={(e) => setEditPhone(e.target.value)} />
             <div className="flex gap-2">
               <Button className="flex-1" onClick={handleSave} disabled={updateUser.isPending}>{t('profile.save')}</Button>
               <Button variant="outline" className="flex-1" onClick={() => setEditing(false)}><X className="w-4 h-4 mr-1" /> {t('common.cancel')}</Button>
@@ -78,6 +88,15 @@ export function ProfilePage() {
           </>
         )}
       </div>
+
+      {!isOwn && pathData?.path && pathData.path.length > 1 && (
+        <Card>
+          <CardContent className="py-3">
+            <p className="text-xs text-gray-500 mb-2">{t('profile.connectionPath')}</p>
+            <HandshakePath path={pathData.path} onUserClick={(id) => navigate(`/profile/${id}`)} />
+          </CardContent>
+        </Card>
+      )}
 
       {!isOwn && (
         <div className="flex gap-2 justify-center">
@@ -111,6 +130,35 @@ export function ProfilePage() {
                 </div>
               </div>
             )}
+          </CardContent>
+        </Card>
+      )}
+
+      {contacts && contacts.filter((c: { value?: string }) => c.value).length > 0 && (
+        <Card>
+          <CardHeader><h2 className="font-semibold text-gray-900 dark:text-white">{t('profile.contacts')}</h2></CardHeader>
+          <CardContent>
+            <div className="flex flex-wrap gap-2">
+              {contacts.filter((c: { value?: string }) => c.value).map((contact: { type: string; value: string; icon?: string; label?: string }) => {
+                const url = contact.value.startsWith('http') ? contact.value :
+                  contact.type === 'telegram' ? `https://t.me/${contact.value.replace('@', '')}` :
+                  contact.type === 'email' ? `mailto:${contact.value}` :
+                  contact.type === 'whatsapp' ? `https://wa.me/${contact.value.replace(/\D/g, '')}` :
+                  contact.value;
+                return (
+                  <a
+                    key={contact.type}
+                    href={url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-sm transition-colors"
+                  >
+                    <SocialIcon type={contact.icon || contact.type} className="w-4 h-4" />
+                    <span className="text-gray-700 dark:text-gray-300">{contact.label || contact.type}</span>
+                  </a>
+                );
+              })}
+            </div>
           </CardContent>
         </Card>
       )}

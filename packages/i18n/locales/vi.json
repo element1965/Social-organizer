@@ -21,7 +21,9 @@
     "codeExpires": "Mã hết hạn sau {{minutes}} phút"
   },
   "login": {
-    "subtitle": "Phối hợp hỗ trợ thông qua các mối quan hệ tin cậy"
+    "subtitle": "Phối hợp hỗ trợ thông qua các mối quan hệ tin cậy",
+    "or": "or",
+    "demo": "Demo login without registration"
   },
   "onboarding": {
     "step1": {
@@ -66,7 +68,10 @@
     "noObligations": "Không có cam kết",
     "myNetwork": "Mạng lưới của tôi",
     "view": "Xem",
-    "connections": "kết nối"
+    "connections": "kết nối",
+    "intentions": "intentions",
+    "myIntentions": "My Intentions",
+    "noIntentions": "No intentions"
   },
   "collection": {
     "create": "Tạo quyên góp",
@@ -90,7 +95,10 @@
     "close": "Đóng quyên góp",
     "participants": "Người tham gia",
     "noParticipants": "Chưa có ai tham gia",
-    "minAmount": "Tối thiểu 10"
+    "minAmount": "Tối thiểu 10",
+    "intentionsCount": "{{count}} intentions",
+    "expressIntention": "Express intention",
+    "connectionToCreator": "Connection to creator"
   },
   "create": {
     "title": "Tạo quyên góp",
@@ -103,7 +111,8 @@
     "chatLink": "Liên kết chat",
     "submit": "Tạo quyên góp",
     "minAmount": "Tối thiểu 10",
-    "invalidUrl": "URL không hợp lệ"
+    "invalidUrl": "URL không hợp lệ",
+    "networkReach": "Your signal will reach up to {{count}} people through handshake chains"
   },
   "obligation": {
     "create": "Nhận cam kết",
@@ -160,7 +169,9 @@
     "save": "Lưu",
     "pledgedByCurrency": "theo tiền tệ",
     "myConnections": "Kết nối của tôi",
-    "noConnections": "Chưa có kết nối"
+    "noConnections": "Chưa có kết nối",
+    "connectionPath": "Connection path",
+    "contacts": "Contacts"
   },
   "settings": {
     "title": "Cài đặt",
@@ -184,7 +195,9 @@
     "logout": "Đăng xuất",
     "deleteAccount": "Xóa tài khoản",
     "deleteConfirm": "Bạn có chắc chắn? Hành động này không thể hoàn tác.",
-    "confirmDelete": "Xóa"
+    "confirmDelete": "Xóa",
+    "contacts": "Contacts",
+    "contactsDesc": "Add ways to contact you for network members"
   },
   "invite": {
     "title": "Lời mời",
@@ -224,6 +237,33 @@
     "principleGlobalDesc": "Globally accessible. Automatic language detection.",
     "ctaTitle": "Ready to activate your p2p mutual aid environment?",
     "ctaButton": "Tạo tài khoản",
-    "footer": "Social Organizer — an open p2p mutual aid and direct cooperation tool"
+    "footer": "Social Organizer — an open p2p mutual aid and direct cooperation tool",
+    "cardIntentionTitle": "Intention",
+    "cardIntentionDesc": "A voluntary decision to help. No pressure — everyone decides for themselves whether to participate.",
+    "githubLink": "View code on GitHub"
+  },
+  "intention": {
+    "create": "Express Intention",
+    "amount": "Amount (min {{min}})",
+    "subscribe": "Subscribe monthly",
+    "unsubscribe": "Unsubscribe"
+  },
+  "contacts": {
+    "telegram": "Telegram",
+    "whatsapp": "WhatsApp",
+    "facebook": "Facebook",
+    "instagram": "Instagram",
+    "twitter": "X (Twitter)",
+    "linkedin": "LinkedIn",
+    "vk": "VKontakte",
+    "email": "Email",
+    "website": "Website"
+  },
+  "hints": {
+    "collectionAmount": "Enter the amount you need. Minimum 10 units. The system will notify the right number of people.",
+    "collectionChatLink": "Link to a chat (Telegram, WhatsApp, etc.) where you can coordinate with those who respond.",
+    "intentionAmount": "Amount you're willing to provide. This is an intention, not a transfer — coordination happens in the chat.",
+    "profileBio": "Tell a bit about yourself. This helps other participants get to know you better.",
+    "profilePhone": "Phone is only visible to your direct connections (first handshake)."
   }
 }
