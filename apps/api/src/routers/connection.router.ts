@@ -78,12 +78,95 @@ export const connectionRouter = router({
   getNetworkStats: protectedProcedure.query(async ({ ctx }) => {
     const recipients = await findRecipientsViaBfs(ctx.db, ctx.userId, 6, 10000, []);
     const byDepth: Record<number, number> = {};
+    const userIdsByDepth: Record<number, string[]> = {};
+
     for (const r of recipients) {
       byDepth[r.depth] = (byDepth[r.depth] || 0) + 1;
+      if (!userIdsByDepth[r.depth]) userIdsByDepth[r.depth] = [];
+      userIdsByDepth[r.depth]!.push(r.userId);
     }
+
+    // Get all unique user IDs
+    const allUserIds = recipients.map((r) => r.userId);
+
+    // Fetch user details and their connection counts in parallel
+    const [users, connectionCounts] = await Promise.all([
+      ctx.db.user.findMany({
+        where: { id: { in: allUserIds } },
+        select: { id: true, name: true, photoUrl: true },
+      }),
+      // Count connections for each user (first handshake count)
+      ctx.db.$queryRaw<Array<{ user_id: string; count: bigint }>>`
+        SELECT u.id as user_id, COUNT(c.id)::bigint as count
+        FROM users u
+        LEFT JOIN connections c ON (c."userAId" = u.id OR c."userBId" = u.id)
+        WHERE u.id = ANY(${allUserIds})
+        GROUP BY u.id
+      `,
+    ]);
+
+    // Create maps for quick lookup
+    const userMap = new Map(users.map((u) => [u.id, u]));
+    const countMap = new Map(connectionCounts.map((c) => [c.user_id, Number(c.count)]));
+
+    // Build usersByDepth with connection counts
+    const usersByDepth: Record<number, Array<{ id: string; name: string; photoUrl: string | null; connectionCount: number }>> = {};
+    for (const [depth, userIds] of Object.entries(userIdsByDepth)) {
+      usersByDepth[Number(depth)] = userIds.map((id) => {
+        const user = userMap.get(id);
+        return {
+          id,
+          name: user?.name || 'Unknown',
+          photoUrl: user?.photoUrl || null,
+          connectionCount: countMap.get(id) || 0,
+        };
+      });
+    }
+
+    // Calculate growth (new connections in last day/week/month/year)
+    const now = new Date();
+    const dayAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+    const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+    const monthAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+    const yearAgo = new Date(now.getTime() - 365 * 24 * 60 * 60 * 1000);
+
+    const [dayCount, weekCount, monthCount, yearCount] = await Promise.all([
+      ctx.db.connection.count({
+        where: {
+          OR: [{ userAId: ctx.userId }, { userBId: ctx.userId }],
+          createdAt: { gte: dayAgo },
+        },
+      }),
+      ctx.db.connection.count({
+        where: {
+          OR: [{ userAId: ctx.userId }, { userBId: ctx.userId }],
+          createdAt: { gte: weekAgo },
+        },
+      }),
+      ctx.db.connection.count({
+        where: {
+          OR: [{ userAId: ctx.userId }, { userBId: ctx.userId }],
+          createdAt: { gte: monthAgo },
+        },
+      }),
+      ctx.db.connection.count({
+        where: {
+          OR: [{ userAId: ctx.userId }, { userBId: ctx.userId }],
+          createdAt: { gte: yearAgo },
+        },
+      }),
+    ]);
+
     return {
       totalReachable: recipients.length,
       byDepth,
+      usersByDepth,
+      growth: {
+        day: dayCount,
+        week: weekCount,
+        month: monthCount,
+        year: yearCount,
+      },
     };
   }),
 });

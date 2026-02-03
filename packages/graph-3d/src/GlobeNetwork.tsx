@@ -142,7 +142,7 @@ function NetworkNodes({ scrollProgress }: { scrollProgress: number }) {
   // Node count increases with scroll (densification effect)
   const nodeCount = Math.floor(MIN_NODE_COUNT + scrollProgress * (MAX_NODE_COUNT - MIN_NODE_COUNT));
 
-  const { nodePositions, colors } = useMemo(() => {
+  const { nodePositions, colors, shuffledIndices } = useMemo(() => {
     const pos = fibonacciSphere(MAX_NODE_COUNT, NODE_RADIUS);
     const col = new Float32Array(MAX_NODE_COUNT * 3);
     for (let i = 0; i < MAX_NODE_COUNT; i++) {
@@ -151,7 +151,15 @@ function NetworkNodes({ scrollProgress }: { scrollProgress: number }) {
       col[i * 3 + 1] = c.g;
       col[i * 3 + 2] = c.b;
     }
-    return { nodePositions: pos, colors: col };
+
+    // Create shuffled indices for even distribution across sphere
+    const indices = Array.from({ length: MAX_NODE_COUNT }, (_, i) => i);
+    for (let i = indices.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [indices[i], indices[j]] = [indices[j]!, indices[i]!];
+    }
+
+    return { nodePositions: pos, colors: col, shuffledIndices: indices };
   }, []);
 
   const dummy = useMemo(() => new THREE.Object3D(), []);
@@ -168,8 +176,11 @@ function NetworkNodes({ scrollProgress }: { scrollProgress: number }) {
 
     const rotMatrix = new THREE.Matrix4().makeRotationY(currentRotation.current);
 
+    // Use shuffled indices for even distribution across sphere
+    const visibleSet = new Set(shuffledIndices.slice(0, nodeCount));
+
     for (let i = 0; i < MAX_NODE_COUNT; i++) {
-      if (i < nodeCount) {
+      if (visibleSet.has(i)) {
         const idx = i * 3;
         const v = new THREE.Vector3(
           nodePositions[idx]!,
@@ -216,7 +227,8 @@ function NetworkEdges({ scrollProgress }: { scrollProgress: number }) {
   // Precompute all possible edges for full sphere coverage
   const { allEdgePositions, totalEdgeCount } = useMemo(() => {
     const nodes = fibonacciSphere(MAX_NODE_COUNT, NODE_RADIUS);
-    const edges: number[] = [];
+    // Store edges as groups of 6 numbers (2 vertices × 3 coordinates)
+    const edgeGroups: number[][] = [];
     const maxDist = 1.2; // Distance for connections - ensures dense web coverage
 
     // Create edges ensuring full sphere coverage (including bottom)
@@ -230,13 +242,23 @@ function NetworkEdges({ scrollProgress }: { scrollProgress: number }) {
         const dz = nodes[ix + 2]! - nodes[jx + 2]!;
         const dist = Math.sqrt(dx * dx + dy * dy + dz * dz);
         if (dist < maxDist) {
-          edges.push(
+          edgeGroups.push([
             nodes[ix]!, nodes[ix + 1]!, nodes[ix + 2]!,
             nodes[jx]!, nodes[jx + 1]!, nodes[jx + 2]!,
-          );
+          ]);
         }
       }
     }
+
+    // Shuffle edges to distribute them evenly across the sphere
+    // This ensures that at any scroll position, edges cover the entire sphere
+    for (let i = edgeGroups.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [edgeGroups[i], edgeGroups[j]] = [edgeGroups[j]!, edgeGroups[i]!];
+    }
+
+    // Flatten shuffled edges
+    const edges = edgeGroups.flat();
 
     // Lift edges slightly above surface
     const lift = 1.05;
@@ -245,7 +267,7 @@ function NetworkEdges({ scrollProgress }: { scrollProgress: number }) {
       liftedEdges[i] = edges[i]! * lift;
     }
 
-    return { allEdgePositions: liftedEdges, totalEdgeCount: edges.length / 6 };
+    return { allEdgePositions: liftedEdges, totalEdgeCount: edgeGroups.length };
   }, []);
 
   useFrame(() => {

@@ -13,8 +13,8 @@ export function Button({ className, variant = 'primary', size = 'md', ...props }
         {
           'bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500': variant === 'primary',
           'bg-gray-100 text-gray-900 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-100 dark:hover:bg-gray-700': variant === 'secondary',
-          'border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800': variant === 'outline',
-          'hover:bg-gray-100 dark:hover:bg-gray-800': variant === 'ghost',
+          'border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100 hover:bg-gray-50 dark:hover:bg-gray-800': variant === 'outline',
+          'text-gray-900 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-800': variant === 'ghost',
           'bg-red-600 text-white hover:bg-red-700 focus:ring-red-500': variant === 'danger',
         },
         {

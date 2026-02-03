@@ -258,7 +258,13 @@ export function DashboardPage() {
                             className="w-full flex items-center gap-2 p-2 hover:bg-gray-50 dark:hover:bg-gray-800/50"
                           >
                             <Avatar src={user.photoUrl} name={user.name} size="sm" />
-                            <span className="text-sm text-gray-700 dark:text-gray-300">{user.name}</span>
+                            <span className="flex-1 text-sm text-gray-700 dark:text-gray-300 text-left">{user.name}</span>
+                            {user.connectionCount != null && (
+                              <span className="flex items-center gap-1 text-xs text-gray-400">
+                                <Users className="w-3 h-3" />
+                                {user.connectionCount}
+                              </span>
+                            )}
                           </button>
                         ))}
                         {depthUsers.length > 20 && (
