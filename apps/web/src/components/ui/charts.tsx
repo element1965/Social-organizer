@@ -30,9 +30,11 @@ export function DonutChart({
   const percentage = max > 0 ? Math.min(value / max, 1) : 0;
   const offset = circumference * (1 - percentage);
 
-  // Calculate marker position (angle in radians, starting from top)
+  // Calculate marker position (angle in radians)
+  // SVG circle starts at 3 o'clock, CSS rotate-90 moves start to 12 o'clock
+  // So we just need percentage * 2π (no additional offset needed)
   const markerPercentage = marker && max > 0 ? marker / max : null;
-  const markerAngle = markerPercentage ? markerPercentage * 2 * Math.PI - Math.PI / 2 : null;
+  const markerAngle = markerPercentage !== null ? markerPercentage * 2 * Math.PI : null;
 
   return (
     <div className={cn('relative inline-flex items-center justify-center', className)}>
