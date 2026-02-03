@@ -9,6 +9,7 @@ import { Badge } from '../components/ui/badge';
 import { Progress } from '../components/ui/progress';
 import { Spinner } from '../components/ui/spinner';
 import { PlusCircle, Users, ArrowRight, Heart, UserPlus } from 'lucide-react';
+import { Avatar } from '../components/ui/avatar';
 
 const LazyCloudBackground = lazy(() =>
   import('@so/graph-3d').then((m) => ({ default: m.CloudBackground })),
@@ -98,20 +99,29 @@ export function DashboardPage() {
       </Card>
 
       <Card>
-        <CardHeader><h2 className="font-semibold text-gray-900 dark:text-white">{t('dashboard.myObligations', 'Мои обязательства')}</h2></CardHeader>
+        <CardHeader><h2 className="font-semibold text-gray-900 dark:text-white">{t('dashboard.myIntentions', 'Мои намерения')}</h2></CardHeader>
         <CardContent>
           {!myObligations ? <div className="flex justify-center py-4"><Spinner /></div> : myObligations.length === 0 ? (
-            <p className="text-sm text-gray-500 text-center py-4">{t('dashboard.noObligations', 'Нет обязательств')}</p>
+            <p className="text-sm text-gray-500 text-center py-4">{t('dashboard.noIntentions', 'Нет намерений')}</p>
           ) : (
             <div className="space-y-2">
               {myObligations.map((obl) => (
-                <button key={obl.id} onClick={() => navigate(`/collection/${obl.collectionId}`)} className="w-full text-left p-3 rounded-lg bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-gray-900 dark:text-white">{obl.collection.creator.name}</p>
-                    <p className="text-xs text-gray-500">{obl.amount} {obl.collection.currency}</p>
+                <div key={obl.id} className="p-3 rounded-lg bg-gray-50 dark:bg-gray-800 flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <button onClick={() => navigate(`/profile/${obl.collection.creatorId}`)} className="hover:opacity-80">
+                      <Avatar src={obl.collection.creator.photoUrl} name={obl.collection.creator.name} size="sm" />
+                    </button>
+                    <div>
+                      <button onClick={() => navigate(`/profile/${obl.collection.creatorId}`)} className="text-sm font-medium text-gray-900 dark:text-white hover:underline">
+                        {obl.collection.creator.name}
+                      </button>
+                      <p className="text-xs text-gray-500">{obl.amount} {obl.collection.currency}</p>
+                    </div>
                   </div>
-                  <ArrowRight className="w-4 h-4 text-gray-400" />
-                </button>
+                  <Button variant="ghost" size="sm" onClick={() => navigate(`/collection/${obl.collectionId}`)}>
+                    <ArrowRight className="w-4 h-4" />
+                  </Button>
+                </div>
               ))}
             </div>
           )}
