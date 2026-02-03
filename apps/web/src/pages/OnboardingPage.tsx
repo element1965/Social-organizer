@@ -75,7 +75,7 @@ export function OnboardingPage() {
               </div>
             )}
             <Button
-              className="w-full"
+              className="w-full border-gray-600 text-gray-300 hover:bg-gray-800 hover:text-white"
               variant="outline"
               size="lg"
               onClick={handleStart}
