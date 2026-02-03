@@ -266,12 +266,10 @@ export function DashboardPage() {
                           >
                             <Avatar src={user.photoUrl} name={user.name} size="sm" />
                             <span className="flex-1 text-sm text-gray-700 dark:text-gray-300 text-left">{user.name}</span>
-                            {user.connectionCount != null && (
-                              <span className="flex items-center gap-1 text-xs text-gray-400">
-                                <Users className="w-3 h-3" />
-                                {user.connectionCount}
-                              </span>
-                            )}
+                            <span className="flex items-center gap-1 text-xs text-gray-400">
+                              <Users className="w-3 h-3" />
+                              {user.connectionCount ?? 0}
+                            </span>
                           </button>
                         ))}
                         {depthUsers.length > 20 && (
