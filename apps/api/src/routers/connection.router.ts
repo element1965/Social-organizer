@@ -15,11 +15,27 @@ export const connectionRouter = router({
       orderBy: { createdAt: 'desc' },
     });
 
+    // Get all other user IDs
+    const otherUserIds = connections.map((c) =>
+      c.userAId === ctx.userId ? c.userBId : c.userAId
+    );
+
+    // Count connections for each user
+    const connectionCounts = await ctx.db.$queryRaw<Array<{ user_id: string; count: bigint }>>`
+      SELECT u.id as user_id, COUNT(c.id)::bigint as count
+      FROM users u
+      LEFT JOIN connections c ON (c."userAId" = u.id OR c."userBId" = u.id)
+      WHERE u.id = ANY(${otherUserIds})
+      GROUP BY u.id
+    `;
+    const countMap = new Map(connectionCounts.map((c) => [c.user_id, Number(c.count)]));
+
     return connections.map((c) => {
       const other = c.userAId === ctx.userId ? c.userB : c.userA;
       return {
         id: c.id, userId: other.id, name: other.name,
         photoUrl: other.photoUrl, createdAt: c.createdAt,
+        connectionCount: countMap.get(other.id) || 0,
       };
     });
   }),

@@ -105,7 +105,11 @@ export function MyNetworkPage() {
               {connections.map((conn) => (
                 <button key={conn.id} onClick={() => navigate(`/profile/${conn.userId}`)} className="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
                   <Avatar src={conn.photoUrl} name={conn.name} size="md" />
-                  <span className="text-sm font-medium text-gray-900 dark:text-white">{conn.name}</span>
+                  <span className="flex-1 text-sm font-medium text-gray-900 dark:text-white text-left">{conn.name}</span>
+                  <span className="flex items-center gap-1 text-xs text-gray-400">
+                    <Users className="w-3 h-3" />
+                    {(conn as any).connectionCount ?? 0}
+                  </span>
                 </button>
               ))}
             </div>

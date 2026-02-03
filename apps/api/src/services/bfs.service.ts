@@ -67,20 +67,26 @@ export async function findRecipientsViaBfs(
 
 /**
  * BFS for finding shortest path between two users.
- * Returns array of users from fromUserId to toUserId inclusive.
+ * Returns array of users from fromUserId to toUserId inclusive with connectionCount.
  */
 export async function findPathBetweenUsers(
   db: PrismaClient,
   fromUserId: string,
   toUserId: string,
   maxDepth: number = MAX_BFS_DEPTH,
-): Promise<Array<{ id: string; name: string; photoUrl: string | null }>> {
+): Promise<Array<{ id: string; name: string; photoUrl: string | null; connectionCount: number }>> {
   if (fromUserId === toUserId) {
     const user = await db.user.findUnique({
       where: { id: fromUserId },
       select: { id: true, name: true, photoUrl: true },
     });
-    return user ? [user] : [];
+    if (!user) return [];
+    const countResult = await db.$queryRaw<Array<{ count: bigint }>>`
+      SELECT COUNT(c.id)::bigint as count
+      FROM connections c
+      WHERE c."userAId" = ${fromUserId} OR c."userBId" = ${fromUserId}
+    `;
+    return [{ ...user, connectionCount: Number(countResult[0]?.count || 0) }];
   }
 
   const result = await db.$queryRawUnsafe<Array<{
@@ -121,13 +127,29 @@ export async function findPathBetweenUsers(
   const { path } = result[0]!;
   const fullPath = [...path, toUserId];
 
-  const users = await db.user.findMany({
-    where: { id: { in: fullPath } },
-    select: { id: true, name: true, photoUrl: true },
-  });
+  // Get users and their connection counts in parallel
+  const [users, connectionCounts] = await Promise.all([
+    db.user.findMany({
+      where: { id: { in: fullPath } },
+      select: { id: true, name: true, photoUrl: true },
+    }),
+    db.$queryRaw<Array<{ user_id: string; count: bigint }>>`
+      SELECT u.id as user_id, COUNT(c.id)::bigint as count
+      FROM users u
+      LEFT JOIN connections c ON (c."userAId" = u.id OR c."userBId" = u.id)
+      WHERE u.id = ANY(${fullPath})
+      GROUP BY u.id
+    `,
+  ]);
 
   const userMap = new Map(users.map(u => [u.id, u]));
-  return fullPath.map(id => userMap.get(id)!).filter(Boolean);
+  const countMap = new Map(connectionCounts.map((c) => [c.user_id, Number(c.count)]));
+
+  return fullPath.map(id => {
+    const user = userMap.get(id);
+    if (!user) return null;
+    return { ...user, connectionCount: countMap.get(id) || 0 };
+  }).filter(Boolean) as Array<{ id: string; name: string; photoUrl: string | null; connectionCount: number }>;
 }
 
 /**

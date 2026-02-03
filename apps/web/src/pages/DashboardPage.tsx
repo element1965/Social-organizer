@@ -129,11 +129,17 @@ export function DashboardPage() {
                   className="w-full text-left p-2 rounded bg-white/50 dark:bg-gray-900/50 hover:bg-white dark:hover:bg-gray-900"
                 >
                   <div className="flex items-center gap-2">
-                    <Avatar src={notif.sender?.photoUrl} name={notif.sender?.name || '?'} size="sm" />
+                    <Avatar src={notif.collection?.creator?.photoUrl} name={notif.collection?.creator?.name || '?'} size="sm" />
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
-                        {notif.sender?.name}
-                      </p>
+                      <div className="flex items-center gap-2">
+                        <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
+                          {notif.collection?.creator?.name}
+                        </p>
+                        <span className="flex items-center gap-0.5 text-xs text-gray-400 shrink-0">
+                          <Users className="w-3 h-3" />
+                          {(notif.collection?.creator as any)?.connectionCount ?? 0}
+                        </span>
+                      </div>
                       <p className="text-xs text-gray-500">
                         {notif.collection?.amount} {notif.collection?.currency}
                       </p>
@@ -454,12 +460,18 @@ export function DashboardPage() {
                           <Avatar src={obl.collection.creator.photoUrl} name={obl.collection.creator.name} size="sm" />
                         </button>
                         <div>
-                          <button
-                            onClick={() => navigate(`/profile/${obl.collection.creatorId}`)}
-                            className="text-sm font-medium text-gray-900 dark:text-white hover:underline"
-                          >
-                            {obl.collection.creator.name}
-                          </button>
+                          <div className="flex items-center gap-2">
+                            <button
+                              onClick={() => navigate(`/profile/${obl.collection.creatorId}`)}
+                              className="text-sm font-medium text-gray-900 dark:text-white hover:underline"
+                            >
+                              {obl.collection.creator.name}
+                            </button>
+                            <span className="flex items-center gap-0.5 text-xs text-gray-400">
+                              <Users className="w-3 h-3" />
+                              {(obl.collection.creator as any).connectionCount ?? 0}
+                            </span>
+                          </div>
                           <p className="text-xs text-gray-500">{obl.amount} {obl.collection.currency}</p>
                         </div>
                       </div>

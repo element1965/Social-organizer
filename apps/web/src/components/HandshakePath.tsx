@@ -1,10 +1,11 @@
-import { ChevronRight } from 'lucide-react';
+import { ChevronRight, Users } from 'lucide-react';
 import { Avatar } from './ui/avatar';
 
 interface PathUser {
   id: string;
   name: string;
   photoUrl: string | null;
+  connectionCount?: number;
 }
 
 interface HandshakePathProps {
@@ -37,6 +38,12 @@ export function HandshakePath({ path, onUserClick, compact = false }: HandshakeP
             <span className="text-xs font-medium text-gray-700 dark:text-gray-300 max-w-[80px] truncate">
               {user.name.split(' ')[0]}
             </span>
+            {user.connectionCount !== undefined && (
+              <span className="flex items-center gap-0.5 text-[10px] text-gray-400">
+                <Users className="w-2.5 h-2.5" />
+                {user.connectionCount}
+              </span>
+            )}
           </button>
           {idx < path.length - 1 && (
             <ChevronRight className="w-3 h-3 text-gray-400 mx-0.5 flex-shrink-0" />

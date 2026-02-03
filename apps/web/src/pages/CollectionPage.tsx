@@ -10,7 +10,7 @@ import { Badge } from '../components/ui/badge';
 import { Progress } from '../components/ui/progress';
 import { Avatar } from '../components/ui/avatar';
 import { Spinner } from '../components/ui/spinner';
-import { ExternalLink } from 'lucide-react';
+import { ExternalLink, Users } from 'lucide-react';
 import { HandshakePath } from '../components/HandshakePath';
 
 export function CollectionPage() {
@@ -52,8 +52,14 @@ export function CollectionPage() {
     <div className="p-4 space-y-4">
       <div className="flex items-center gap-3">
         <Avatar src={collection.creator.photoUrl} name={collection.creator.name} size="lg" />
-        <div>
-          <button onClick={() => navigate(`/profile/${collection.creatorId}`)} className="text-lg font-bold text-gray-900 dark:text-white hover:underline">{collection.creator.name}</button>
+        <div className="flex-1">
+          <div className="flex items-center gap-2">
+            <button onClick={() => navigate(`/profile/${collection.creatorId}`)} className="text-lg font-bold text-gray-900 dark:text-white hover:underline">{collection.creator.name}</button>
+            <span className="flex items-center gap-1 text-xs text-gray-400">
+              <Users className="w-3 h-3" />
+              {(collection.creator as any).connectionCount ?? 0}
+            </span>
+          </div>
           <div className="flex items-center gap-2 mt-1">
             <Badge variant={statusVariant}>{collection.status}</Badge>
             <Badge variant="info">{collection.type === 'EMERGENCY' ? t('collection.emergency', 'Экстренный') : t('collection.regular', 'Регулярный')}</Badge>
@@ -112,6 +118,10 @@ export function CollectionPage() {
                   <button onClick={() => navigate(`/profile/${obl.userId}`)} className="flex items-center gap-2 hover:underline">
                     <Avatar src={obl.user.photoUrl} name={obl.user.name} size="sm" />
                     <span className="text-sm text-gray-900 dark:text-white">{obl.user.name}</span>
+                    <span className="flex items-center gap-0.5 text-xs text-gray-400">
+                      <Users className="w-3 h-3" />
+                      {(obl.user as any).connectionCount ?? 0}
+                    </span>
                   </button>
                   <span className="text-sm font-medium text-gray-900 dark:text-white">{obl.amount} {collection.currency}</span>
                 </div>
