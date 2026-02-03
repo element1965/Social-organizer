@@ -142,7 +142,7 @@ function NetworkNodes({ scrollProgress }: { scrollProgress: number }) {
   // Node count increases with scroll (densification effect)
   const nodeCount = Math.floor(MIN_NODE_COUNT + scrollProgress * (MAX_NODE_COUNT - MIN_NODE_COUNT));
 
-  const { nodePositions, colors, shuffledIndices } = useMemo(() => {
+  const { nodePositions, colors } = useMemo(() => {
     const pos = fibonacciSphere(MAX_NODE_COUNT, NODE_RADIUS);
     const col = new Float32Array(MAX_NODE_COUNT * 3);
     for (let i = 0; i < MAX_NODE_COUNT; i++) {
@@ -151,15 +151,7 @@ function NetworkNodes({ scrollProgress }: { scrollProgress: number }) {
       col[i * 3 + 1] = c.g;
       col[i * 3 + 2] = c.b;
     }
-
-    // Create shuffled indices for even distribution across sphere
-    const indices = Array.from({ length: MAX_NODE_COUNT }, (_, i) => i);
-    for (let i = indices.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [indices[i], indices[j]] = [indices[j]!, indices[i]!];
-    }
-
-    return { nodePositions: pos, colors: col, shuffledIndices: indices };
+    return { nodePositions: pos, colors: col };
   }, []);
 
   const dummy = useMemo(() => new THREE.Object3D(), []);
@@ -176,11 +168,9 @@ function NetworkNodes({ scrollProgress }: { scrollProgress: number }) {
 
     const rotMatrix = new THREE.Matrix4().makeRotationY(currentRotation.current);
 
-    // Use shuffled indices for even distribution across sphere
-    const visibleSet = new Set(shuffledIndices.slice(0, nodeCount));
-
+    // Show first nodeCount nodes (Fibonacci spiral is already uniform)
     for (let i = 0; i < MAX_NODE_COUNT; i++) {
-      if (visibleSet.has(i)) {
+      if (i < nodeCount) {
         const idx = i * 3;
         const v = new THREE.Vector3(
           nodePositions[idx]!,
@@ -195,7 +185,6 @@ function NetworkNodes({ scrollProgress }: { scrollProgress: number }) {
         const color = new THREE.Color(colors[idx]!, colors[idx + 1]!, colors[idx + 2]!);
         meshRef.current.setColorAt(i, color);
       } else {
-        // Hide nodes beyond current count
         meshRef.current.setMatrixAt(i, hiddenMatrix);
       }
     }
@@ -213,85 +202,99 @@ function NetworkNodes({ scrollProgress }: { scrollProgress: number }) {
 
 /* ---------- Связи между ближними узлами (LineSegments) ---------- */
 
-const MIN_EDGES = 60;
-const MAX_EDGES = 300;
+const NEIGHBORS_PER_NODE = 4; // Each node connects to K nearest neighbors
 
 function NetworkEdges({ scrollProgress }: { scrollProgress: number }) {
   const lineRef = useRef<THREE.LineSegments>(null);
   const currentRotation = useRef(0);
   const geometryRef = useRef<THREE.BufferGeometry>(null);
 
-  // Edge count increases with scroll
-  const visibleEdgeCount = Math.floor(MIN_EDGES + scrollProgress * (MAX_EDGES - MIN_EDGES));
+  // Node count increases with scroll
+  const nodeCount = Math.floor(MIN_NODE_COUNT + scrollProgress * (MAX_NODE_COUNT - MIN_NODE_COUNT));
 
-  // Precompute all possible edges for full sphere coverage
-  const { allEdgePositions, totalEdgeCount } = useMemo(() => {
-    const nodes = fibonacciSphere(MAX_NODE_COUNT, NODE_RADIUS);
-    // Store edges as groups of 6 numbers (2 vertices × 3 coordinates)
-    const edgeGroups: number[][] = [];
-    const maxDist = 1.2; // Distance for connections - ensures dense web coverage
+  // Precompute node positions
+  const nodePositions = useMemo(() => fibonacciSphere(MAX_NODE_COUNT, NODE_RADIUS), []);
 
-    // Create edges ensuring full sphere coverage (including bottom)
+  // Precompute K nearest neighbors for each node
+  const neighborsMap = useMemo(() => {
+    const map: number[][] = [];
     for (let i = 0; i < MAX_NODE_COUNT; i++) {
       const ix = i * 3;
-      // Connect to nearby nodes
-      for (let j = i + 1; j < MAX_NODE_COUNT; j++) {
+      const distances: { j: number; dist: number }[] = [];
+
+      for (let j = 0; j < MAX_NODE_COUNT; j++) {
+        if (i === j) continue;
         const jx = j * 3;
-        const dx = nodes[ix]! - nodes[jx]!;
-        const dy = nodes[ix + 1]! - nodes[jx + 1]!;
-        const dz = nodes[ix + 2]! - nodes[jx + 2]!;
+        const dx = nodePositions[ix]! - nodePositions[jx]!;
+        const dy = nodePositions[ix + 1]! - nodePositions[jx + 1]!;
+        const dz = nodePositions[ix + 2]! - nodePositions[jx + 2]!;
         const dist = Math.sqrt(dx * dx + dy * dy + dz * dz);
-        if (dist < maxDist) {
-          edgeGroups.push([
-            nodes[ix]!, nodes[ix + 1]!, nodes[ix + 2]!,
-            nodes[jx]!, nodes[jx + 1]!, nodes[jx + 2]!,
-          ]);
+        distances.push({ j, dist });
+      }
+
+      // Sort by distance and take K nearest
+      distances.sort((a, b) => a.dist - b.dist);
+      map[i] = distances.slice(0, NEIGHBORS_PER_NODE).map(d => d.j);
+    }
+    return map;
+  }, [nodePositions]);
+
+  // Build edges dynamically based on visible nodes
+  const edgePositions = useMemo(() => {
+    const edgeSet = new Set<string>();
+    const edges: number[] = [];
+    const lift = 1.02;
+
+    // For each visible node, connect to its K nearest neighbors (if also visible)
+    for (let i = 0; i < nodeCount; i++) {
+      const neighbors = neighborsMap[i] || [];
+      for (const j of neighbors) {
+        if (j < nodeCount) {
+          // Avoid duplicate edges
+          const key = i < j ? `${i}-${j}` : `${j}-${i}`;
+          if (!edgeSet.has(key)) {
+            edgeSet.add(key);
+            const ix = i * 3;
+            const jx = j * 3;
+            edges.push(
+              nodePositions[ix]! * lift, nodePositions[ix + 1]! * lift, nodePositions[ix + 2]! * lift,
+              nodePositions[jx]! * lift, nodePositions[jx + 1]! * lift, nodePositions[jx + 2]! * lift,
+            );
+          }
         }
       }
     }
 
-    // Shuffle edges to distribute them evenly across the sphere
-    // This ensures that at any scroll position, edges cover the entire sphere
-    for (let i = edgeGroups.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [edgeGroups[i], edgeGroups[j]] = [edgeGroups[j]!, edgeGroups[i]!];
-    }
-
-    // Flatten shuffled edges
-    const edges = edgeGroups.flat();
-
-    // Lift edges slightly above surface
-    const lift = 1.05;
-    const liftedEdges = new Float32Array(edges.length);
-    for (let i = 0; i < edges.length; i++) {
-      liftedEdges[i] = edges[i]! * lift;
-    }
-
-    return { allEdgePositions: liftedEdges, totalEdgeCount: edgeGroups.length };
-  }, []);
+    return new Float32Array(edges);
+  }, [nodeCount, nodePositions, neighborsMap]);
 
   useFrame(() => {
-    if (!lineRef.current) return;
+    if (!lineRef.current || !geometryRef.current) return;
     const target = scrollProgress * Math.PI * 3;
     currentRotation.current += (target - currentRotation.current) * 0.08;
     lineRef.current.rotation.y = currentRotation.current;
-
-    // Update draw range to show only visible edges
-    if (geometryRef.current) {
-      const count = Math.min(visibleEdgeCount, totalEdgeCount) * 2; // 2 vertices per edge
-      geometryRef.current.setDrawRange(0, count);
-    }
   });
+
+  // Update geometry when edges change
+  useEffect(() => {
+    if (geometryRef.current) {
+      geometryRef.current.setAttribute(
+        'position',
+        new THREE.BufferAttribute(edgePositions, 3)
+      );
+      geometryRef.current.attributes.position!.needsUpdate = true;
+    }
+  }, [edgePositions]);
 
   return (
     <lineSegments ref={lineRef}>
       <bufferGeometry ref={geometryRef}>
         <bufferAttribute
           attach="attributes-position"
-          args={[allEdgePositions, 3]}
+          args={[edgePositions, 3]}
         />
       </bufferGeometry>
-      <lineBasicMaterial color="#6ee7b7" transparent opacity={0.25} />
+      <lineBasicMaterial color="#6ee7b7" transparent opacity={0.35} />
     </lineSegments>
   );
 }
