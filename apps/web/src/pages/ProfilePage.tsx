@@ -8,7 +8,7 @@ import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { Avatar } from '../components/ui/avatar';
 import { Spinner } from '../components/ui/spinner';
-import { ArrowLeft, UserPlus, Ban, Pencil, X, ExternalLink } from 'lucide-react';
+import { ArrowLeft, UserPlus, Ban, Pencil, X, ExternalLink, Users } from 'lucide-react';
 import { HandshakePath } from '../components/HandshakePath';
 import { SocialIcon } from '../components/ui/social-icons';
 
@@ -170,7 +170,11 @@ export function ProfilePage() {
                 {connections.map((conn) => (
                   <button key={conn.id} onClick={() => navigate(`/profile/${conn.userId}`)} className="w-full flex items-center gap-2 py-1 hover:bg-gray-50 dark:hover:bg-gray-800 rounded">
                     <Avatar src={conn.photoUrl} name={conn.name} size="sm" />
-                    <span className="text-sm text-gray-900 dark:text-white">{conn.name}</span>
+                    <span className="flex-1 text-sm text-gray-900 dark:text-white text-left">{conn.name}</span>
+                    <span className="flex items-center gap-1 text-xs text-gray-400">
+                      <Users className="w-3 h-3" />
+                      {(conn as any).connectionCount ?? 0}
+                    </span>
                   </button>
                 ))}
               </div>

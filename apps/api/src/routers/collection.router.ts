@@ -77,8 +77,34 @@ export const collectionRouter = router({
         },
       });
       if (!collection) throw new TRPCError({ code: 'NOT_FOUND' });
+
+      // Get connection counts for all participants and creator
+      const userIds = [collection.creatorId, ...collection.obligations.map((o) => o.userId)];
+      const connectionCounts = await ctx.db.$queryRaw<Array<{ user_id: string; count: bigint }>>`
+        SELECT u.id as user_id, COUNT(c.id)::bigint as count
+        FROM users u
+        LEFT JOIN connections c ON (c."userAId" = u.id OR c."userBId" = u.id)
+        WHERE u.id = ANY(${userIds})
+        GROUP BY u.id
+      `;
+      const countMap = new Map(connectionCounts.map((c) => [c.user_id, Number(c.count)]));
+
       const currentAmount = collection.obligations.reduce((sum, o) => sum + o.amount, 0);
-      return { ...collection, currentAmount };
+      return {
+        ...collection,
+        currentAmount,
+        creator: {
+          ...collection.creator,
+          connectionCount: countMap.get(collection.creatorId) || 0,
+        },
+        obligations: collection.obligations.map((o) => ({
+          ...o,
+          user: {
+            ...o.user,
+            connectionCount: countMap.get(o.userId) || 0,
+          },
+        })),
+      };
     }),
 
   close: protectedProcedure

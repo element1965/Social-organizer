@@ -6,7 +6,7 @@ import { Button } from '../components/ui/button';
 import { Badge } from '../components/ui/badge';
 import { Spinner } from '../components/ui/spinner';
 import { Avatar } from '../components/ui/avatar';
-import { Bell, X, Check, ChevronRight, Clock } from 'lucide-react';
+import { Bell, X, Check, ChevronRight, Clock, Users } from 'lucide-react';
 import { cn } from '../lib/utils';
 
 function getNotificationBadge(type: string, t: (key: string) => string): { label: string; variant: 'info' | 'warning' | 'default' | 'danger' | 'success' } {
@@ -64,7 +64,13 @@ export function NotificationsPage() {
                     <Avatar src={n.collection?.creator?.photoUrl} name={n.collection?.creator?.name} size="sm" />
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between">
-                        <p className="text-sm font-medium text-gray-900 dark:text-white truncate">{n.collection?.creator?.name}</p>
+                        <div className="flex items-center gap-2 min-w-0">
+                          <p className="text-sm font-medium text-gray-900 dark:text-white truncate">{n.collection?.creator?.name}</p>
+                          <span className="flex items-center gap-0.5 text-xs text-gray-400 shrink-0">
+                            <Users className="w-3 h-3" />
+                            {(n.collection?.creator as any)?.connectionCount ?? 0}
+                          </span>
+                        </div>
                         <Badge variant={badge.variant}>{badge.label}</Badge>
                       </div>
                       <p className="text-sm text-gray-600 dark:text-gray-400">

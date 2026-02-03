@@ -46,7 +46,7 @@ export const obligationRouter = router({
     }),
 
   myList: protectedProcedure.query(async ({ ctx }) => {
-    return ctx.db.obligation.findMany({
+    const obligations = await ctx.db.obligation.findMany({
       where: { userId: ctx.userId },
       include: {
         collection: {
@@ -55,6 +55,30 @@ export const obligationRouter = router({
       },
       orderBy: { createdAt: 'desc' },
     });
+
+    // Get connection counts for all creators
+    const creatorIds = [...new Set(obligations.map((o) => o.collection.creatorId))];
+    const connectionCounts = creatorIds.length > 0
+      ? await ctx.db.$queryRaw<Array<{ user_id: string; count: bigint }>>`
+          SELECT u.id as user_id, COUNT(c.id)::bigint as count
+          FROM users u
+          LEFT JOIN connections c ON (c."userAId" = u.id OR c."userBId" = u.id)
+          WHERE u.id = ANY(${creatorIds})
+          GROUP BY u.id
+        `
+      : [];
+    const countMap = new Map(connectionCounts.map((c) => [c.user_id, Number(c.count)]));
+
+    return obligations.map((o) => ({
+      ...o,
+      collection: {
+        ...o.collection,
+        creator: {
+          ...o.collection.creator,
+          connectionCount: countMap.get(o.collection.creatorId) || 0,
+        },
+      },
+    }));
   }),
 
   unsubscribe: protectedProcedure
