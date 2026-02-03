@@ -10,6 +10,7 @@ interface DonutChartProps {
   label?: string;
   sublabel?: string;
   className?: string;
+  marker?: number; // Value at which to show a marker tick
 }
 
 export function DonutChart({
@@ -22,11 +23,16 @@ export function DonutChart({
   label,
   sublabel,
   className,
+  marker,
 }: DonutChartProps) {
   const radius = (size - strokeWidth) / 2;
   const circumference = 2 * Math.PI * radius;
   const percentage = max > 0 ? Math.min(value / max, 1) : 0;
   const offset = circumference * (1 - percentage);
+
+  // Calculate marker position (angle in radians, starting from top)
+  const markerPercentage = marker && max > 0 ? marker / max : null;
+  const markerAngle = markerPercentage ? markerPercentage * 2 * Math.PI - Math.PI / 2 : null;
 
   return (
     <div className={cn('relative inline-flex items-center justify-center', className)}>
@@ -52,6 +58,18 @@ export function DonutChart({
           strokeLinecap="round"
           className="transition-all duration-500"
         />
+        {/* Marker tick */}
+        {markerAngle !== null && (
+          <line
+            x1={size / 2 + (radius - strokeWidth / 2 - 2) * Math.cos(markerAngle)}
+            y1={size / 2 + (radius - strokeWidth / 2 - 2) * Math.sin(markerAngle)}
+            x2={size / 2 + (radius + strokeWidth / 2 + 2) * Math.cos(markerAngle)}
+            y2={size / 2 + (radius + strokeWidth / 2 + 2) * Math.sin(markerAngle)}
+            stroke="#374151"
+            strokeWidth={2}
+            className="dark:stroke-gray-400"
+          />
+        )}
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center">
         {label && <span className="text-lg font-bold text-gray-900 dark:text-white">{label}</span>}
@@ -176,6 +194,42 @@ export function StatCard({ label, value, sublabel, icon, trend, className }: Sta
         </div>
         {icon && <div className="text-gray-400">{icon}</div>}
       </div>
+    </div>
+  );
+}
+
+interface ProgressBarWithMarkerProps {
+  value: number;
+  max: number;
+  color?: string;
+  bgColor?: string;
+  marker?: number; // Value at which to show a marker tick
+  className?: string;
+}
+
+export function ProgressBarWithMarker({
+  value,
+  max,
+  color = '#3b82f6',
+  bgColor = '#e5e7eb',
+  marker,
+  className,
+}: ProgressBarWithMarkerProps) {
+  const percentage = max > 0 ? Math.min(value / max, 1) * 100 : 0;
+  const markerPercentage = marker && max > 0 ? (marker / max) * 100 : null;
+
+  return (
+    <div className={cn('relative h-2 rounded-full overflow-visible', className)} style={{ backgroundColor: bgColor }}>
+      <div
+        className="h-full rounded-full transition-all duration-500"
+        style={{ width: `${percentage}%`, backgroundColor: color }}
+      />
+      {markerPercentage !== null && (
+        <div
+          className="absolute top-1/2 -translate-y-1/2 w-0.5 h-4 bg-gray-600 dark:bg-gray-300"
+          style={{ left: `${markerPercentage}%` }}
+        />
+      )}
     </div>
   );
 }

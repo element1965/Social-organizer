@@ -100,15 +100,11 @@ export function ProfilePage() {
 
       {!isOwn && (
         <div className="flex gap-2 justify-center">
-          <Button size="sm" onClick={() => addConnection.mutate({ userId: paramId! })} disabled={addConnection.isPending}>
-            <UserPlus className="w-4 h-4 mr-1" /> {t('profile.addConnection')}
-          </Button>
           <Button size="sm" variant="ghost" onClick={() => addIgnore.mutate({ userId: paramId! })} disabled={addIgnore.isPending}>
             <Ban className="w-4 h-4 mr-1" /> {t('profile.ignore')}
           </Button>
         </div>
       )}
-      {addConnection.error && <p className="text-sm text-red-500 text-center">{addConnection.error.message}</p>}
 
       {stats && (
         <Card>

@@ -9,7 +9,7 @@ import { Badge } from '../components/ui/badge';
 import { Progress } from '../components/ui/progress';
 import { Spinner } from '../components/ui/spinner';
 import { Avatar } from '../components/ui/avatar';
-import { DonutChart, SemiDonutChart, BarChart, StatCard, Tabs } from '../components/ui/charts';
+import { DonutChart, SemiDonutChart, BarChart, StatCard, Tabs, ProgressBarWithMarker } from '../components/ui/charts';
 import {
   PlusCircle,
   Users,
@@ -172,24 +172,39 @@ export function DashboardPage() {
       {/* === TAB: NETWORK === */}
       {activeTab === 'network' && (
         <Card>
-          <CardContent className="py-4 space-y-3">
-            {/* Total network summary */}
-            <div className="flex items-center justify-between p-3 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-950/30 dark:to-purple-950/30 rounded-xl">
-              <div>
-                <p className="text-sm text-gray-500">{t('dashboard.totalNetwork', 'Вся сеть')}</p>
-                <p className="text-3xl font-bold text-gray-900 dark:text-white">{totalReachable}</p>
+          <CardContent className="py-4 space-y-4">
+            {/* Total network summary with growth */}
+            <div className="p-4 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-950/30 dark:to-purple-950/30 rounded-xl">
+              <div className="flex items-center justify-between mb-3">
+                <div>
+                  <p className="text-sm text-gray-500">{t('dashboard.totalNetwork', 'Вся сеть')}</p>
+                  <p className="text-4xl font-bold text-gray-900 dark:text-white">{totalReachable}</p>
+                </div>
+                <DonutChart
+                  value={totalReachable}
+                  max={500}
+                  size={80}
+                  strokeWidth={8}
+                  color="#8b5cf6"
+                  marker={150}
+                  label={`${Math.round((totalReachable / 500) * 100)}%`}
+                />
               </div>
-              <DonutChart
-                value={totalReachable}
-                max={500}
-                size={80}
-                strokeWidth={8}
-                color="#8b5cf6"
-                label={`${Math.round((totalReachable / 500) * 100)}%`}
-              />
+              {/* Network growth inline */}
+              <div className="flex items-center gap-1 pt-3 border-t border-gray-200/50 dark:border-gray-700/50">
+                <TrendingUp className="w-3 h-3 text-green-600" />
+                <span className="text-xs text-gray-500">{t('dashboard.networkGrowth', 'Рост')}:</span>
+                <span className="text-xs font-medium text-green-600">+{growth.day} 24ч</span>
+                <span className="text-gray-300 dark:text-gray-600">•</span>
+                <span className="text-xs font-medium text-green-600">+{growth.week} нед</span>
+                <span className="text-gray-300 dark:text-gray-600">•</span>
+                <span className="text-xs font-medium text-green-600">+{growth.month} мес</span>
+                <span className="text-gray-300 dark:text-gray-600">•</span>
+                <span className="text-xs font-medium text-green-600">+{(growth as any).year || 0} год</span>
+              </div>
             </div>
 
-            {/* Handshakes by depth - expandable */}
+            {/* Handshakes by depth - compact mobile layout */}
             <div className="space-y-2">
               {Object.entries(byDepth).map(([depth, count]) => {
                 const depthNum = Number(depth);
@@ -202,35 +217,36 @@ export function DashboardPage() {
                   <div key={depth} className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
                     <button
                       onClick={() => toggleDepth(depthNum)}
-                      className="w-full flex items-center justify-between p-3 hover:bg-gray-50 dark:hover:bg-gray-800/50"
+                      className="w-full p-3 hover:bg-gray-50 dark:hover:bg-gray-800/50"
                     >
-                      <div className="flex items-center gap-3">
-                        <div
-                          className="w-8 h-8 rounded-full flex items-center justify-center text-white text-sm font-bold"
-                          style={{ backgroundColor: color }}
-                        >
-                          {depth}
-                        </div>
-                        <div className="text-left">
-                          <p className="text-sm font-medium text-gray-900 dark:text-white">
-                            {depth}-е рукопожатие
-                          </p>
-                          <p className="text-xs text-gray-500">{count as number} человек</p>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <div className="w-24 h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                      {/* First line: depth badge + count + chevron */}
+                      <div className="flex items-center justify-between mb-2">
+                        <div className="flex items-center gap-2">
                           <div
-                            className="h-full rounded-full transition-all"
-                            style={{ width: `${((count as number) / totalReachable) * 100}%`, backgroundColor: color }}
-                          />
+                            className="w-6 h-6 rounded-full flex items-center justify-center text-white text-xs font-bold"
+                            style={{ backgroundColor: color }}
+                          >
+                            {depth}
+                          </div>
+                          <span className="text-sm text-gray-600 dark:text-gray-400">{depth}-е рукопожатие</span>
                         </div>
-                        {isExpanded ? (
-                          <ChevronUp className="w-4 h-4 text-gray-400" />
-                        ) : (
-                          <ChevronDown className="w-4 h-4 text-gray-400" />
-                        )}
+                        <div className="flex items-center gap-2">
+                          <span className="text-xl font-bold text-gray-900 dark:text-white">{count as number}</span>
+                          {isExpanded ? (
+                            <ChevronUp className="w-4 h-4 text-gray-400" />
+                          ) : (
+                            <ChevronDown className="w-4 h-4 text-gray-400" />
+                          )}
+                        </div>
                       </div>
+                      {/* Second line: progress bar with marker at 50 */}
+                      <ProgressBarWithMarker
+                        value={count as number}
+                        max={150}
+                        color={color}
+                        marker={50}
+                        className="dark:bg-gray-700"
+                      />
                     </button>
 
                     {isExpanded && depthUsers.length > 0 && (
@@ -255,34 +271,6 @@ export function DashboardPage() {
                   </div>
                 );
               })}
-            </div>
-
-            {/* Network growth */}
-            <div className="p-3 bg-gray-50 dark:bg-gray-800/50 rounded-xl">
-              <div className="flex items-center gap-2 mb-3">
-                <TrendingUp className="w-4 h-4 text-green-600" />
-                <p className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                  {t('dashboard.networkGrowth', 'Рост сети')}
-                </p>
-              </div>
-              <div className="grid grid-cols-4 gap-2">
-                <div className="text-center">
-                  <p className="text-lg font-bold text-green-600">+{growth.day}</p>
-                  <p className="text-[10px] text-gray-500">24ч</p>
-                </div>
-                <div className="text-center">
-                  <p className="text-lg font-bold text-green-600">+{growth.week}</p>
-                  <p className="text-[10px] text-gray-500">неделя</p>
-                </div>
-                <div className="text-center">
-                  <p className="text-lg font-bold text-green-600">+{growth.month}</p>
-                  <p className="text-[10px] text-gray-500">месяц</p>
-                </div>
-                <div className="text-center">
-                  <p className="text-lg font-bold text-green-600">+{(growth as any).year || 0}</p>
-                  <p className="text-[10px] text-gray-500">год</p>
-                </div>
-              </div>
             </div>
 
             <Button variant="outline" size="sm" className="w-full" onClick={() => navigate('/network')}>
