@@ -39,8 +39,8 @@ export function OnboardingPage() {
 
   const handleStart = async () => {
     await completeOnboarding.mutateAsync();
-    // Invalidate user query so ProtectedRoute sees updated onboardingCompleted
-    utils.user.me.invalidate();
+    // Refetch user data so ProtectedRoute sees updated onboardingCompleted
+    await utils.user.me.refetch();
     navigate('/');
   };
 
