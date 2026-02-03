@@ -186,7 +186,7 @@ export function DashboardPage() {
                   size={80}
                   strokeWidth={8}
                   color="#8b5cf6"
-                  marker={150}
+                  marker={Math.floor(500 / 3)}
                   label={`${Math.round((totalReachable / 500) * 100)}%`}
                 />
               </div>
@@ -212,6 +212,9 @@ export function DashboardPage() {
                 const depthUsers = usersByDepth[depthNum] || [];
                 const colors = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899'];
                 const color = colors[(depthNum - 1) % colors.length];
+                // Max possible connections: 150^depth (Dunbar number exponential)
+                const maxForDepth = Math.pow(150, depthNum);
+                const markerForDepth = Math.floor(maxForDepth / 3);
 
                 return (
                   <div key={depth} className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
@@ -239,12 +242,12 @@ export function DashboardPage() {
                           )}
                         </div>
                       </div>
-                      {/* Second line: progress bar with marker at 50 */}
+                      {/* Second line: progress bar with marker at 1/3 */}
                       <ProgressBarWithMarker
                         value={count as number}
-                        max={150}
+                        max={maxForDepth}
                         color={color}
-                        marker={50}
+                        marker={markerForDepth}
                         className="dark:bg-gray-700"
                       />
                     </button>
