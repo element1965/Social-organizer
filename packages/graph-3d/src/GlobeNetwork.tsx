@@ -126,8 +126,8 @@ function Planet({ scrollProgress }: { scrollProgress: number }) {
 
 /* ---------- Узлы на поверхности (InstancedMesh) ---------- */
 
-const MIN_NODE_COUNT = 40;
-const MAX_NODE_COUNT = 150;
+const MIN_NODE_COUNT = 12;
+const MAX_NODE_COUNT = 300;
 const NODE_RADIUS = 1.7;
 const NODE_COLORS = [
   new THREE.Color(0x14b8a6), // teal
@@ -202,7 +202,7 @@ function NetworkNodes({ scrollProgress }: { scrollProgress: number }) {
 
 /* ---------- Связи между ближними узлами (LineSegments) ---------- */
 
-const NEIGHBORS_PER_NODE = 4; // Each node connects to K nearest neighbors
+const NEIGHBORS_PER_NODE = 6; // Each node connects to K nearest neighbors
 
 function NetworkEdges({ scrollProgress }: { scrollProgress: number }) {
   const lineRef = useRef<THREE.LineSegments>(null);
