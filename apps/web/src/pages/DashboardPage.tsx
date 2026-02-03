@@ -60,35 +60,35 @@ export function DashboardPage() {
         </Suspense>
       </div>
 
-      {/* Хедер */}
+      {/* Хедер с профилем */}
       <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-xl font-bold text-gray-900 dark:text-white">{t('dashboard.title', 'Дашборд')}</h1>
-          {me && <p className="text-sm text-gray-500">{me.name}</p>}
-        </div>
-        <div className="flex items-center gap-2">
-          <button
-            onClick={() => navigate('/notifications')}
-            className="relative w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-800 flex items-center justify-center"
-          >
-            <Bell className="w-5 h-5 text-gray-600 dark:text-gray-300" />
-            {emergencyNotifications.length > 0 && (
-              <span className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">
-                {emergencyNotifications.length}
-              </span>
-            )}
-          </button>
-          <button
-            onClick={() => navigate(`/profile/${userId}`)}
-            className="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-800 flex items-center justify-center overflow-hidden"
-          >
+        <button
+          onClick={() => navigate(`/profile/${userId}`)}
+          className="flex items-center gap-3 hover:opacity-80 transition-opacity"
+        >
+          <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center overflow-hidden ring-2 ring-white dark:ring-gray-800 shadow-lg">
             {me?.photoUrl ? (
               <img src={me.photoUrl} className="w-full h-full object-cover" alt="" />
             ) : (
-              <span className="text-sm font-bold text-gray-600 dark:text-gray-300">{me?.name?.[0]}</span>
+              <span className="text-lg font-bold text-white">{me?.name?.[0]}</span>
             )}
-          </button>
-        </div>
+          </div>
+          <div className="text-left">
+            <p className="text-lg font-bold text-gray-900 dark:text-white">{me?.name}</p>
+            <p className="text-xs text-gray-500">{t('dashboard.viewProfile', 'Открыть профиль')}</p>
+          </div>
+        </button>
+        <button
+          onClick={() => navigate('/notifications')}
+          className="relative w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-800 flex items-center justify-center hover:bg-gray-300 dark:hover:bg-gray-700 transition-colors"
+        >
+          <Bell className="w-5 h-5 text-gray-600 dark:text-gray-300" />
+          {emergencyNotifications.length > 0 && (
+            <span className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center animate-pulse">
+              {emergencyNotifications.length}
+            </span>
+          )}
+        </button>
       </div>
 
       {/* Экстренные уведомления */}
