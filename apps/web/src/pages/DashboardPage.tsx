@@ -46,7 +46,7 @@ export function DashboardPage() {
   const byDepth = networkStats?.byDepth ?? {};
   const growth = networkStats?.growth ?? { day: 0, week: 0, month: 0 };
 
-  // Фильтруем экстренные уведомления (непрочитанные)
+  // Filter emergency notifications (unread)
   const emergencyNotifications = notifications?.items?.filter(
     (n) => n.type === 'NEW_COLLECTION' && !n.readAt && n.collection?.type === 'EMERGENCY'
   ) ?? [];

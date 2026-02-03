@@ -4,8 +4,8 @@ import { NOTIFICATION_RATIO } from '@so/shared';
 import { sendCollectionNotifications } from '../services/notification.service.js';
 
 /**
- * Каждые 12 часов: находим активные сборы и рассылаем повторные уведомления
- * через BFS. Количество доуведомлений = (оставшаяся сумма) / NOTIFICATION_RATIO.
+ * Every 12 hours: find active collections and send re-notifications
+ * via BFS. Number of re-notifications = (remaining amount) / NOTIFICATION_RATIO.
  */
 export async function processReNotify(_job: Job): Promise<void> {
   const db = getDb();
@@ -21,7 +21,7 @@ export async function processReNotify(_job: Job): Promise<void> {
   });
 
   for (const collection of activeCollections) {
-    // Спецпрофильные сборы (без суммы) не участвуют в доуведомлении
+    // Special profile collections (without amount) do not participate in re-notification
     if (collection.amount == null) continue;
 
     const currentAmount = collection.obligations.reduce((sum, o) => sum + o.amount, 0);
@@ -30,7 +30,7 @@ export async function processReNotify(_job: Job): Promise<void> {
 
     const maxRecipients = Math.ceil(remaining / NOTIFICATION_RATIO);
 
-    // Определяем номер волны: макс wave + 1
+    // Determine wave number: max wave + 1
     const lastNotification = await db.notification.findFirst({
       where: { collectionId: collection.id, type: 'RE_NOTIFY' },
       orderBy: { wave: 'desc' },

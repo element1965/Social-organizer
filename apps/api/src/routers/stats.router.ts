@@ -15,14 +15,14 @@ export const statsRouter = router({
           ctx.db.collection.count({ where: { creatorId: targetUserId } }),
           ctx.db.collection.count({ where: { creatorId: targetUserId, status: 'ACTIVE' } }),
           ctx.db.obligation.count({ where: { userId: targetUserId } }),
-          // Получаем обязательства с валютой для разбивки по валютам
+          // Get obligations with currency for grouping by currency
           ctx.db.obligation.findMany({
             where: { userId: targetUserId },
             select: { amount: true, collection: { select: { currency: true } } },
           }),
         ]);
 
-      // Группировка сумм по валютам (SPEC: «На какую общую сумму — по каждой валюте отдельно»)
+      // Group amounts by currency (SPEC: "Total amount - separately for each currency")
       const amountByCurrency: Record<string, number> = {};
       for (const obl of obligations) {
         const cur = obl.collection.currency;

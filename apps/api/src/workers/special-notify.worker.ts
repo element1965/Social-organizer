@@ -3,14 +3,14 @@ import { getDb } from '@so/db';
 import { NOTIFICATION_TTL_HOURS } from '@so/shared';
 
 /**
- * Каждый час: находим пользователей, которые впервые помогли кому-то
- * (создали обязательство), но ещё не получали уведомление о сборах
- * Автора/Разработчика. Отправляем им уведомление.
+ * Every hour: find users who helped someone for the first time
+ * (created an obligation) but haven't received notification about
+ * Author/Developer collections yet. Send them a notification.
  */
 export async function processSpecialNotify(_job: Job): Promise<void> {
   const db = getDb();
 
-  // Найти активные сборы Автора и Разработчика
+  // Find active collections of Author and Developer
   const specialCollections = await db.collection.findMany({
     where: {
       status: 'ACTIVE',
@@ -23,8 +23,8 @@ export async function processSpecialNotify(_job: Job): Promise<void> {
 
   const specialCollectionIds = specialCollections.map((c) => c.id);
 
-  // Пользователи, у которых есть хотя бы 1 обязательство (они уже помогали)
-  // но нет уведомления о специальных сборах
+  // Users who have at least 1 obligation (they already helped)
+  // but no notification about special collections
   const usersWithObligations = await db.obligation.findMany({
     select: { userId: true },
     distinct: ['userId'],
@@ -34,7 +34,7 @@ export async function processSpecialNotify(_job: Job): Promise<void> {
 
   const userIds = usersWithObligations.map((o) => o.userId);
 
-  // Из них — те, кто ещё не получал уведомление о специальных сборах
+  // From them - those who haven't received notification about special collections yet
   const alreadyNotified = await db.notification.findMany({
     where: {
       collectionId: { in: specialCollectionIds },

@@ -8,8 +8,8 @@ export interface BfsRecipient {
 }
 
 /**
- * BFS через граф связей с использованием рекурсивного CTE в PostgreSQL.
- * Возвращает список пользователей с кратчайшим путём рукопожатий от startUserId.
+ * BFS through connection graph using recursive CTE in PostgreSQL.
+ * Returns list of users with shortest handshake path from startUserId.
  */
 export async function findRecipientsViaBfs(
   db: PrismaClient,
@@ -28,7 +28,7 @@ export async function findRecipientsViaBfs(
     depth: number;
   }>>(`
     WITH RECURSIVE bfs AS (
-      -- Уровень 1: прямые связи создателя
+      -- Level 1: creator's direct connections
       SELECT
         CASE WHEN c."userAId" = $1 THEN c."userBId" ELSE c."userAId" END AS user_id,
         ARRAY[$1] AS path,
@@ -38,7 +38,7 @@ export async function findRecipientsViaBfs(
 
       UNION ALL
 
-      -- Следующие уровни
+      -- Next levels
       SELECT
         CASE WHEN c."userAId" = b.user_id THEN c."userBId" ELSE c."userAId" END AS user_id,
         b.path || b.user_id,
@@ -66,8 +66,8 @@ export async function findRecipientsViaBfs(
 }
 
 /**
- * BFS для поиска кратчайшего пути между двумя пользователями.
- * Возвращает массив пользователей от fromUserId до toUserId включительно.
+ * BFS for finding shortest path between two users.
+ * Returns array of users from fromUserId to toUserId inclusive.
  */
 export async function findPathBetweenUsers(
   db: PrismaClient,
@@ -131,7 +131,7 @@ export async function findPathBetweenUsers(
 }
 
 /**
- * Получить срез графа для 3D-визуализации (2-3 уровня).
+ * Get graph slice for 3D visualization (2-3 levels).
  */
 export async function getGraphSlice(
   db: PrismaClient,
@@ -145,7 +145,7 @@ export async function getGraphSlice(
 
   for (const r of recipients) {
     userIds.add(r.userId);
-    // Добавляем рёбра из пути
+    // Add edges from path
     for (let i = 0; i < r.path.length - 1; i++) {
       edges.push({ from: r.path[i]!, to: r.path[i + 1]! });
     }
@@ -156,7 +156,7 @@ export async function getGraphSlice(
     select: { id: true, name: true, photoUrl: true },
   });
 
-  // Дедупликация рёбер
+  // Deduplicate edges
   const edgeSet = new Set<string>();
   const uniqueEdges: Array<{ from: string; to: string }> = [];
   for (const e of edges) {

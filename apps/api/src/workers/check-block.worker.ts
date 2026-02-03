@@ -2,7 +2,7 @@ import type { Job } from 'bullmq';
 import { getDb } from '@so/db';
 
 /**
- * По событию: проверяем, достигла ли сумма обязательств цели сбора → BLOCKED.
+ * On event: check if obligation total reached collection goal -> BLOCKED.
  */
 export async function processCheckBlock(job: Job<{ collectionId: string }>): Promise<void> {
   const db = getDb();
@@ -15,7 +15,7 @@ export async function processCheckBlock(job: Job<{ collectionId: string }>): Pro
 
   if (!collection || collection.status !== 'ACTIVE') return;
 
-  // Спецпрофильные сборы (без целевой суммы) не блокируются
+  // Special profile collections (without target amount) are not blocked
   if (collection.amount == null) return;
 
   const totalAmount = await db.obligation.aggregate({

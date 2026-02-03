@@ -30,7 +30,7 @@ export const connectionRouter = router({
       if (input.userId === ctx.userId) {
         throw new TRPCError({ code: 'BAD_REQUEST', message: 'Cannot connect to yourself' });
       }
-      // Проверка лимита у обоих пользователей (связь обоюдная — оба тратят слот)
+      // Check limit for both users (connection is mutual — both use a slot)
       const [myCount, targetCount] = await Promise.all([
         ctx.db.connection.count({
           where: { OR: [{ userAId: ctx.userId }, { userBId: ctx.userId }] },
