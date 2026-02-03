@@ -71,11 +71,11 @@ export function CreateCollectionPage() {
           )}
           <Select id="currency" label={t('create.currency')} value={currency} onChange={(e) => setCurrency(e.target.value)} options={[{ value: 'USD', label: '$ USD' }, { value: 'EUR', label: '\u20ac EUR' }]} />
           <Input id="chatLink" label={t('create.chatLink')} hint={t('hints.collectionChatLink')} type="url" placeholder="https://t.me/..." value={chatLink} onChange={(e) => setChatLink(e.target.value)} error={errors.chatLink} />
-          {networkStats && networkStats.totalReachable > 0 && (
+          {networkStats && Number(amount) >= 10 && (
             <div className="p-3 bg-blue-50 dark:bg-blue-950/30 rounded-lg flex items-center gap-2">
               <Users className="w-4 h-4 text-blue-600 dark:text-blue-400" />
               <p className="text-sm text-blue-700 dark:text-blue-300">
-                {t('create.networkReach', { count: networkStats.totalReachable })}
+                {t('create.networkReach', { count: Math.min(Number(amount), networkStats.totalReachable) })}
               </p>
             </div>
           )}
