@@ -21,7 +21,9 @@
     "codeExpires": "รหัสหมดอายุใน {{minutes}} นาที"
   },
   "login": {
-    "subtitle": "ประสานงานช่วยเหลือผ่านความสัมพันธ์ที่ไว้วางใจ"
+    "subtitle": "ประสานงานช่วยเหลือผ่านความสัมพันธ์ที่ไว้วางใจ",
+    "or": "or",
+    "demo": "Demo login without registration"
   },
   "onboarding": {
     "step1": {
@@ -66,7 +68,10 @@
     "noObligations": "ไม่มีข้อผูกพัน",
     "myNetwork": "เครือข่ายของฉัน",
     "view": "ดู",
-    "connections": "การเชื่อมต่อ"
+    "connections": "การเชื่อมต่อ",
+    "intentions": "intentions",
+    "myIntentions": "My Intentions",
+    "noIntentions": "No intentions"
   },
   "collection": {
     "create": "สร้างการระดม",
@@ -90,7 +95,10 @@
     "close": "ปิดการระดม",
     "participants": "ผู้เข้าร่วม",
     "noParticipants": "ยังไม่มีผู้เข้าร่วม",
-    "minAmount": "ขั้นต่ำ 10"
+    "minAmount": "ขั้นต่ำ 10",
+    "intentionsCount": "{{count}} intentions",
+    "expressIntention": "Express intention",
+    "connectionToCreator": "Connection to creator"
   },
   "create": {
     "title": "สร้างการระดม",
@@ -103,7 +111,8 @@
     "chatLink": "ลิงก์แชท",
     "submit": "สร้างการระดม",
     "minAmount": "ขั้นต่ำ 10",
-    "invalidUrl": "URL ไม่ถูกต้อง"
+    "invalidUrl": "URL ไม่ถูกต้อง",
+    "networkReach": "Your signal will reach up to {{count}} people through handshake chains"
   },
   "obligation": {
     "create": "รับข้อผูกพัน",
@@ -160,7 +169,9 @@
     "save": "บันทึก",
     "pledgedByCurrency": "ตามสกุลเงิน",
     "myConnections": "การเชื่อมต่อของฉัน",
-    "noConnections": "ยังไม่มีการเชื่อมต่อ"
+    "noConnections": "ยังไม่มีการเชื่อมต่อ",
+    "connectionPath": "Connection path",
+    "contacts": "Contacts"
   },
   "settings": {
     "title": "ตั้งค่า",
@@ -184,7 +195,9 @@
     "logout": "ออกจากระบบ",
     "deleteAccount": "ลบบัญชี",
     "deleteConfirm": "คุณแน่ใจหรือไม่? การกระทำนี้ไม่สามารถย้อนกลับได้",
-    "confirmDelete": "ลบ"
+    "confirmDelete": "ลบ",
+    "contacts": "Contacts",
+    "contactsDesc": "Add ways to contact you for network members"
   },
   "invite": {
     "title": "คำเชิญ",
@@ -224,6 +237,33 @@
     "principleGlobalDesc": "Globally accessible. Automatic language detection.",
     "ctaTitle": "Ready to activate your p2p mutual aid environment?",
     "ctaButton": "สร้างบัญชี",
-    "footer": "Social Organizer — an open p2p mutual aid and direct cooperation tool"
+    "footer": "Social Organizer — an open p2p mutual aid and direct cooperation tool",
+    "cardIntentionTitle": "Intention",
+    "cardIntentionDesc": "A voluntary decision to help. No pressure — everyone decides for themselves whether to participate.",
+    "githubLink": "View code on GitHub"
+  },
+  "intention": {
+    "create": "Express Intention",
+    "amount": "Amount (min {{min}})",
+    "subscribe": "Subscribe monthly",
+    "unsubscribe": "Unsubscribe"
+  },
+  "contacts": {
+    "telegram": "Telegram",
+    "whatsapp": "WhatsApp",
+    "facebook": "Facebook",
+    "instagram": "Instagram",
+    "twitter": "X (Twitter)",
+    "linkedin": "LinkedIn",
+    "vk": "VKontakte",
+    "email": "Email",
+    "website": "Website"
+  },
+  "hints": {
+    "collectionAmount": "Enter the amount you need. Minimum 10 units. The system will notify the right number of people.",
+    "collectionChatLink": "Link to a chat (Telegram, WhatsApp, etc.) where you can coordinate with those who respond.",
+    "intentionAmount": "Amount you're willing to provide. This is an intention, not a transfer — coordination happens in the chat.",
+    "profileBio": "Tell a bit about yourself. This helps other participants get to know you better.",
+    "profilePhone": "Phone is only visible to your direct connections (first handshake)."
   }
 }

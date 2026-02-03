@@ -21,7 +21,9 @@
     "codeExpires": "코드가 {{minutes}}분 후 만료됩니다"
   },
   "login": {
-    "subtitle": "신뢰할 수 있는 관계를 통한 도움 조율"
+    "subtitle": "신뢰할 수 있는 관계를 통한 도움 조율",
+    "or": "or",
+    "demo": "Demo login without registration"
   },
   "onboarding": {
     "step1": {
@@ -66,7 +68,10 @@
     "noObligations": "약속이 없습니다",
     "myNetwork": "내 네트워크",
     "view": "보기",
-    "connections": "개의 연결"
+    "connections": "개의 연결",
+    "intentions": "intentions",
+    "myIntentions": "My Intentions",
+    "noIntentions": "No intentions"
   },
   "collection": {
     "create": "모금 만들기",
@@ -90,7 +95,10 @@
     "close": "모금 종료",
     "participants": "참여자",
     "noParticipants": "아직 참여자가 없습니다",
-    "minAmount": "최소 10"
+    "minAmount": "최소 10",
+    "intentionsCount": "{{count}} intentions",
+    "expressIntention": "Express intention",
+    "connectionToCreator": "Connection to creator"
   },
   "create": {
     "title": "모금 만들기",
@@ -103,7 +111,8 @@
     "chatLink": "채팅 링크",
     "submit": "모금 만들기",
     "minAmount": "최소 10",
-    "invalidUrl": "잘못된 URL"
+    "invalidUrl": "잘못된 URL",
+    "networkReach": "Your signal will reach up to {{count}} people through handshake chains"
   },
   "obligation": {
     "create": "약속하기",
@@ -160,7 +169,9 @@
     "save": "저장",
     "pledgedByCurrency": "통화별",
     "myConnections": "내 연결",
-    "noConnections": "아직 연결이 없습니다"
+    "noConnections": "아직 연결이 없습니다",
+    "connectionPath": "Connection path",
+    "contacts": "Contacts"
   },
   "settings": {
     "title": "설정",
@@ -184,7 +195,9 @@
     "logout": "로그아웃",
     "deleteAccount": "계정 삭제",
     "deleteConfirm": "정말요? 이 작업은 되돌릴 수 없습니다.",
-    "confirmDelete": "삭제"
+    "confirmDelete": "삭제",
+    "contacts": "Contacts",
+    "contactsDesc": "Add ways to contact you for network members"
   },
   "invite": {
     "title": "초대",
@@ -224,6 +237,33 @@
     "principleGlobalDesc": "Globally accessible. Automatic language detection.",
     "ctaTitle": "Ready to activate your p2p mutual aid environment?",
     "ctaButton": "계정 만들기",
-    "footer": "Social Organizer — an open p2p mutual aid and direct cooperation tool"
+    "footer": "Social Organizer — an open p2p mutual aid and direct cooperation tool",
+    "cardIntentionTitle": "Intention",
+    "cardIntentionDesc": "A voluntary decision to help. No pressure — everyone decides for themselves whether to participate.",
+    "githubLink": "View code on GitHub"
+  },
+  "intention": {
+    "create": "Express Intention",
+    "amount": "Amount (min {{min}})",
+    "subscribe": "Subscribe monthly",
+    "unsubscribe": "Unsubscribe"
+  },
+  "contacts": {
+    "telegram": "Telegram",
+    "whatsapp": "WhatsApp",
+    "facebook": "Facebook",
+    "instagram": "Instagram",
+    "twitter": "X (Twitter)",
+    "linkedin": "LinkedIn",
+    "vk": "VKontakte",
+    "email": "Email",
+    "website": "Website"
+  },
+  "hints": {
+    "collectionAmount": "Enter the amount you need. Minimum 10 units. The system will notify the right number of people.",
+    "collectionChatLink": "Link to a chat (Telegram, WhatsApp, etc.) where you can coordinate with those who respond.",
+    "intentionAmount": "Amount you're willing to provide. This is an intention, not a transfer — coordination happens in the chat.",
+    "profileBio": "Tell a bit about yourself. This helps other participants get to know you better.",
+    "profilePhone": "Phone is only visible to your direct connections (first handshake)."
   }
 }

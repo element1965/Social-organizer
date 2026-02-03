@@ -58,19 +58,20 @@ enum NotificationStatus {
 }
 
 model User {
-  id           String    @id @default(cuid())
-  name         String
-  bio          String?
-  phone        String?
-  photoUrl     String?
-  language     String    @default("en")
-  theme        Theme     @default(SYSTEM)
-  soundEnabled Boolean   @default(true)
-  fontScale    Float     @default(1.0)
-  role         UserRole  @default(REGULAR)
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
-  deletedAt    DateTime?
+  id                  String    @id @default(cuid())
+  name                String
+  bio                 String?
+  phone               String?
+  photoUrl            String?
+  language            String    @default("en")
+  theme               Theme     @default(SYSTEM)
+  soundEnabled        Boolean   @default(true)
+  fontScale           Float     @default(1.0)
+  role                UserRole  @default(REGULAR)
+  onboardingCompleted Boolean   @default(false)
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+  deletedAt           DateTime?
 
   platformAccounts PlatformAccount[]
   connectionsFrom  Connection[]      @relation("connectionFromUser")
@@ -83,6 +84,7 @@ model User {
   linkingCodes     LinkingCode[]
   invitesSent      InviteLink[]      @relation("inviter")
   invitesUsed      InviteLink[]      @relation("inviteUsedBy")
+  contacts         UserContact[]
 
   @@map("users")
 }
@@ -221,4 +223,18 @@ model InviteLink {
 
   @@index([token])
   @@map("invite_links")
+}
+
+model UserContact {
+  id        String   @id @default(cuid())
+  userId    String
+  type      String   // telegram, whatsapp, facebook, instagram, twitter, linkedin, vk, email, website
+  value     String
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, type])
+  @@index([userId])
+  @@map("user_contacts")
 }

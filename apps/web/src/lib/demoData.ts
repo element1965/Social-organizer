@@ -55,7 +55,7 @@ function makeUser(id: string, name: string, idx: number): DemoUser {
   };
 }
 
-const demoUser: DemoUser = {
+const demoUser: DemoUser & { onboardingCompleted: boolean } = {
   id: DEMO_USER_ID,
   name: 'Алексей Петров',
   photoUrl: null,
@@ -68,6 +68,7 @@ const demoUser: DemoUser = {
   theme: 'DARK',
   soundEnabled: true,
   fontScale: 1.0,
+  onboardingCompleted: true,
 };
 
 const users: DemoUser[] = [demoUser];
@@ -402,6 +403,40 @@ export function handleDemoRequest(path: string, input: unknown): unknown {
       return { ...demoUser, ...inp, platformAccounts: [{ platform: 'TELEGRAM', platformId: 'demo-tg-123' }] };
     case 'user.delete':
       return { success: true };
+    case 'user.completeOnboarding':
+      return { success: true };
+    case 'user.getContacts': {
+      const contactTypes = [
+        { type: 'telegram', label: 'Telegram', icon: 'telegram', placeholder: '@username или t.me/...' },
+        { type: 'whatsapp', label: 'WhatsApp', icon: 'whatsapp', placeholder: '+7...' },
+        { type: 'facebook', label: 'Facebook', icon: 'facebook', placeholder: 'facebook.com/...' },
+        { type: 'instagram', label: 'Instagram', icon: 'instagram', placeholder: '@username' },
+        { type: 'twitter', label: 'X (Twitter)', icon: 'twitter', placeholder: '@username' },
+        { type: 'linkedin', label: 'LinkedIn', icon: 'linkedin', placeholder: 'linkedin.com/in/...' },
+        { type: 'vk', label: 'VKontakte', icon: 'vk', placeholder: 'vk.com/...' },
+        { type: 'email', label: 'Email', icon: 'mail', placeholder: 'email@example.com' },
+        { type: 'website', label: 'Website', icon: 'globe', placeholder: 'https://...' },
+      ];
+      const targetId = (inp?.userId as string) || DEMO_USER_ID;
+      const isOwn = targetId === DEMO_USER_ID;
+      // Demo contacts for demo user
+      const demoContacts = [
+        { type: 'telegram', value: '@demo_user' },
+        { type: 'email', value: 'demo@example.com' },
+      ];
+      if (isOwn) {
+        return contactTypes.map(ct => ({
+          ...ct,
+          value: demoContacts.find(c => c.type === ct.type)?.value || '',
+        }));
+      }
+      return demoContacts.map(c => {
+        const ct = contactTypes.find(t => t.type === c.type);
+        return { type: c.type, value: c.value, label: ct?.label, icon: ct?.icon };
+      });
+    }
+    case 'user.updateContacts':
+      return { success: true };
 
     // ---- Connection ----
     case 'connection.list':
@@ -412,6 +447,34 @@ export function handleDemoRequest(path: string, input: unknown): unknown {
       return { id: `conn-new-${Date.now()}`, userAId: DEMO_USER_ID, userBId: inp?.userId, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() };
     case 'connection.graphSlice':
       return graphSlice;
+    case 'connection.findPath': {
+      const targetId = inp?.targetUserId as string;
+      // Build a demo path to the target user
+      const targetUser = usersMap.get(targetId);
+      if (!targetUser) return { path: [] };
+      // Demo path: demo-user -> user-1 -> target (if different)
+      const path = [
+        { id: DEMO_USER_ID, name: demoUser.name, photoUrl: null },
+      ];
+      if (targetId !== DEMO_USER_ID) {
+        // Check if direct connection
+        if (connectionUserIds.includes(targetId)) {
+          path.push({ id: targetId, name: targetUser.name, photoUrl: null });
+        } else {
+          // Add intermediate user
+          const intermediateId = connectionUserIds[0]!;
+          const intermediate = usersMap.get(intermediateId)!;
+          path.push({ id: intermediateId, name: intermediate.name, photoUrl: null });
+          path.push({ id: targetId, name: targetUser.name, photoUrl: null });
+        }
+      }
+      return { path };
+    }
+    case 'connection.getNetworkStats':
+      return {
+        totalReachable: 156,
+        byDepth: { 1: 12, 2: 48, 3: 72, 4: 24 },
+      };
 
     // ---- Collection ----
     case 'collection.myActive':

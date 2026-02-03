@@ -1,6 +1,6 @@
 # Social Organizer
 
-Приложение для организации сборов и обязательств через доверенную сеть связей. Facebook Instant Game + Telegram WebApp.
+Приложение для координации помощи через доверенную сеть связей. Facebook Instant Game + Telegram WebApp.
 
 ## Архитектура
 
@@ -67,11 +67,12 @@ pnpm dev
 
 | Модель | Описание |
 |--------|----------|
-| User | Пользователь с настройками и ролью |
+| User | Пользователь с настройками, ролью и флагом онбординга |
+| UserContact | Контакты пользователя (соц.сети, мессенджеры) |
 | PlatformAccount | Привязка к FB/TG/Apple/Google |
 | Connection | Связь между пользователями (userAId < userBId) |
 | Collection | Сбор средств (экстренный/регулярный) |
-| Obligation | Обязательство по сбору |
+| Obligation | Намерение (intention) по сбору |
 | Notification | Уведомление с цепочкой рукопожатий |
 | IgnoreEntry | Запись игнора |
 | LinkingCode | 6-значный код привязки (5 мин TTL) |
@@ -108,8 +109,8 @@ JWT_SECRET=your-secret-key
 | Роутер | Процедуры |
 |--------|-----------|
 | `auth` | loginWithPlatform, refresh, generateLinkCode, linkAccount |
-| `user` | me, update, getById, getStats, delete |
-| `connection` | list, add (лимит 150), getCount, graphSlice (2-3 уровня) |
+| `user` | me, update, getById, getStats, getContacts, updateContacts, completeOnboarding, delete |
+| `connection` | list, add (лимит 150), getCount, graphSlice (2-3 уровня), findPath, getNetworkStats |
 | `collection` | create, getById, close, cancel, myActive, myParticipating |
 | `obligation` | create, myList, unsubscribe |
 | `notification` | list (курсорная пагинация), markRead, dismiss, unreadCount |
@@ -120,7 +121,7 @@ JWT_SECRET=your-secret-key
 ## Сервисы
 
 - **Auth** — JWT (HS256), 30 мин access / 30 дн refresh, 6-значные коды привязки
-- **BFS** — рекурсивный CTE в PostgreSQL для обхода графа связей и рассылки уведомлений
+- **BFS** — рекурсивный CTE в PostgreSQL для обхода графа связей, поиска пути между пользователями и рассылки уведомлений
 - **Notifications** — BFS-рассылка с учётом ignore-списка и handshake path
 
 ## BullMQ-задачи
@@ -129,9 +130,9 @@ JWT_SECRET=your-secret-key
 |--------|----------|------------|
 | `re-notify` | Повторные уведомления по активным сборам | Каждые 12ч |
 | `cycle-close` | Автозакрытие 28-дневного цикла регулярных сборов | Каждый час |
-| `special-notify` | Уведомления о сборах Автора/Разработчика (после первого обязательства) | Каждый час |
+| `special-notify` | Уведомления о сборах Автора/Разработчика (после первого намерения) | Каждый час |
 | `expire-notifications` | Протухшие уведомления (24ч) → EXPIRED | Каждый час |
-| `check-block` | Проверка суммы обязательств → BLOCKED | По событию |
+| `check-block` | Проверка суммы намерений → BLOCKED | По событию |
 
 ## Деплой
 
@@ -139,6 +140,7 @@ JWT_SECRET=your-secret-key
 - **URL:** https://social-organizer-production.up.railway.app
 - **Healthcheck:** /health
 - **Сервисы:** PostgreSQL 17, Redis 7, Fastify API
+- **GitHub:** https://github.com/element1965/Social-organizer
 
 ## Веб-фронтенд (apps/web)
 
@@ -150,23 +152,23 @@ React 19 SPA с tRPC-клиентом.
 |----------|------|----------|
 | LandingPage | `/welcome` | Публичный лендинг с 3D-глобусом и описанием проекта |
 | LoginPage | `/login` | Вход через платформу (FB/TG/Apple/Google) |
-| OnboardingPage | `/onboarding` | 4 экрана онбординга с приглашением |
-| DashboardPage | `/` | Мои сборы, обязательства, сеть, «Мне нужна помощь» (protected → /welcome) |
+| OnboardingPage | `/onboarding` | 4 экрана онбординга с приглашением (автоматически для новых пользователей) |
+| DashboardPage | `/` | Мои сборы, намерения, сеть, «Мне нужна помощь» (protected → /welcome) |
 | NotificationsPage | `/notifications` | Уведомления с handshake path и таймером 24ч |
-| CreateCollectionPage | `/create` | Создание сбора (USD/EUR) |
-| CollectionPage | `/collection/:id` | Детали сбора + обязательства |
+| CreateCollectionPage | `/create` | Создание сбора с показом охвата сети (USD/EUR) |
+| CollectionPage | `/collection/:id` | Детали сбора + намерения + цепочка рукопожатий до создателя |
 | MyNetworkPage | `/network` | Список связей + приглашения |
-| ProfilePage | `/profile/:userId` | Профиль с редактированием, списком связей, статистикой по валютам |
-| SettingsPage | `/settings` | Язык, тема, звуки, размер шрифта, игнор-лист |
+| ProfilePage | `/profile/:userId` | Профиль с редактированием, контактами, связями, цепочкой рукопожатий |
+| SettingsPage | `/settings` | Язык, тема, звуки, размер шрифта, контакты, игнор-лист |
 | InvitePage | `/invite/:token` | Принятие пригласительной ссылки |
 
 ### Технологии фронтенда
 
 - **State:** Zustand (auth, theme) + tRPC React Query (серверные данные)
-- **Роутинг:** React Router v7 с ProtectedRoute
-- **UI:** shadcn-стиль компоненты + Tailwind CSS 3
+- **Роутинг:** React Router v7 с ProtectedRoute (проверка онбординга)
+- **UI:** shadcn-стиль компоненты + Tailwind CSS 3 + Radix UI Tooltip
 - **i18n:** i18next v25 + react-i18next (25 языков), автодетект языка через navigator.language
-- **Иконки:** lucide-react
+- **Иконки:** lucide-react + кастомные SVG для соц.сетей
 - **QR:** qrcode.react
 - **3D:** Three.js + @react-three/fiber (lazy loaded)
 - **3D-граф:** react-force-graph-3d (lazy loaded)
@@ -192,14 +194,24 @@ React 19 SPA с tRPC-клиентом.
 - **12 прямых связей** — отображаются в Dashboard и MyNetwork
 - **3D-граф** — ~60 узлов + ~80 рёбер (3 уровня глубины)
 - **2 активных сбора** — EMERGENCY 500 USD (собрано 280) и REGULAR 1000 EUR (собрано 350)
-- **3 обязательства** — к чужим сборам (50 USD, 100 EUR, 25 USD)
+- **3 намерения** — к чужим сборам (50 USD, 100 EUR, 25 USD)
 - **5 уведомлений** — разных типов, 3 непрочитанных
-- **Статистика, настройки, приглашения** — все процедуры покрыты
+- **Статистика, настройки, контакты, приглашения** — все процедуры покрыты
+
+## Терминология (глоссарий)
+
+| Термин | Описание |
+|--------|----------|
+| **Рукопожатие** | Взаимное подтверждение существующей значимой связи между двумя людьми |
+| **Намерение** | Добровольное решение помочь. Никакого давления — каждый сам решает, участвовать или нет |
+| **Сигнал о помощи** | Создание сбора, когда нужна помощь. Сеть уведомляется через цепочки рукопожатий |
+| **Цепочка рукопожатий** | Путь связей между двумя пользователями через общих знакомых |
 
 ## Текущий статус
 
 - [x] **Фаза 0:** Инфраструктура монорепо
 - [x] **Фаза 1:** Бэкенд (API) — tRPC роутеры, сервисы, BullMQ воркеры
-- [x] **Фаза 2:** Веб-фронтенд (MVP) — все 9 страниц, UI-компоненты, tRPC клиент, i18n
+- [x] **Фаза 2:** Веб-фронтенд (MVP) — все 11 страниц, UI-компоненты, tRPC клиент, i18n
 - [x] **Фаза 3:** 3D и оптимизация — Three.js планета, облака, граф, Gun.js бэкап, code splitting
 - [x] **Фаза 4:** Деплой и тестирование — Railway config, API serves web frontend, SPEC audit fixes
+- [x] **Фаза 5:** UX улучшения — онбординг, цепочка рукопожатий, контакты, подсказки, терминология

@@ -2,7 +2,7 @@ import { z } from 'zod';
 import { router, protectedProcedure } from '../trpc.js';
 import { TRPCError } from '@trpc/server';
 import { MAX_CONNECTIONS, GRAPH_SLICE_DEPTH } from '@so/shared';
-import { getGraphSlice } from '../services/bfs.service.js';
+import { getGraphSlice, findPathBetweenUsers, findRecipientsViaBfs } from '../services/bfs.service.js';
 
 export const connectionRouter = router({
   list: protectedProcedure.query(async ({ ctx }) => {
@@ -67,4 +67,23 @@ export const connectionRouter = router({
     .query(async ({ ctx, input }) => {
       return getGraphSlice(ctx.db, ctx.userId, input?.depth ?? GRAPH_SLICE_DEPTH);
     }),
+
+  findPath: protectedProcedure
+    .input(z.object({ targetUserId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const path = await findPathBetweenUsers(ctx.db, ctx.userId, input.targetUserId);
+      return { path };
+    }),
+
+  getNetworkStats: protectedProcedure.query(async ({ ctx }) => {
+    const recipients = await findRecipientsViaBfs(ctx.db, ctx.userId, 6, 10000, []);
+    const byDepth: Record<number, number> = {};
+    for (const r of recipients) {
+      byDepth[r.depth] = (byDepth[r.depth] || 0) + 1;
+    }
+    return {
+      totalReachable: recipients.length,
+      byDepth,
+    };
+  }),
 });

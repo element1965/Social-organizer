@@ -11,6 +11,7 @@ import { Progress } from '../components/ui/progress';
 import { Avatar } from '../components/ui/avatar';
 import { Spinner } from '../components/ui/spinner';
 import { ExternalLink } from 'lucide-react';
+import { HandshakePath } from '../components/HandshakePath';
 
 export function CollectionPage() {
   const { id } = useParams<{ id: string }>();
@@ -20,6 +21,10 @@ export function CollectionPage() {
   const utils = trpc.useUtils();
 
   const { data: collection, isLoading } = trpc.collection.getById.useQuery({ id: id! }, { enabled: !!id, refetchInterval: 30000 });
+  const { data: pathToCreator } = trpc.connection.findPath.useQuery(
+    { targetUserId: collection?.creatorId! },
+    { enabled: !!collection && collection.creatorId !== userId }
+  );
   const createObligation = trpc.obligation.create.useMutation({ onSuccess: () => utils.collection.getById.invalidate({ id: id! }) });
   const closeCollection = trpc.collection.close.useMutation({ onSuccess: () => utils.collection.getById.invalidate({ id: id! }) });
 
@@ -56,6 +61,13 @@ export function CollectionPage() {
         </div>
       </div>
 
+      {pathToCreator?.path && pathToCreator.path.length > 1 && (
+        <div className="p-3 bg-gray-50 dark:bg-gray-800/50 rounded-lg">
+          <p className="text-xs text-gray-500 mb-2">{t('collection.connectionToCreator')}</p>
+          <HandshakePath path={pathToCreator.path} onUserClick={(uid) => navigate(`/profile/${uid}`)} />
+        </div>
+      )}
+
       <Card>
         <CardContent className="py-4">
           <div className="flex justify-between items-end mb-2">
@@ -74,10 +86,10 @@ export function CollectionPage() {
 
       {!isOwner && !hasObligation && collection.status === 'ACTIVE' && (
         <Card>
-          <CardHeader><h3 className="font-semibold text-gray-900 dark:text-white">{t('collection.takeObligation', 'Взять обязательство')}</h3></CardHeader>
+          <CardHeader><h3 className="font-semibold text-gray-900 dark:text-white">{t('collection.expressIntention')}</h3></CardHeader>
           <CardContent>
             <div className="flex gap-2">
-              <Input type="number" min={10} placeholder={t('collection.amountPlaceholder', 'Сумма (мин. 10)')} value={amount} onChange={(e) => setAmount(e.target.value)} error={error} />
+              <Input type="number" min={10} placeholder={t('collection.amountPlaceholder', 'Сумма (мин. 10)')} hint={t('hints.intentionAmount')} value={amount} onChange={(e) => setAmount(e.target.value)} error={error} />
               <Button onClick={handleSubmitObligation} disabled={createObligation.isPending}>{t('collection.submit', 'Помочь')}</Button>
             </div>
           </CardContent>

@@ -1,14 +1,30 @@
+import { HelpCircle } from 'lucide-react';
 import { cn } from '../../lib/utils';
+import { Tooltip } from './tooltip';
 
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: string;
   error?: string;
+  hint?: string;
 }
 
-export function Input({ className, label, error, id, ...props }: InputProps) {
+export function Input({ className, label, error, hint, id, ...props }: InputProps) {
   return (
     <div className="space-y-1">
-      {label && <label htmlFor={id} className="block text-sm font-medium text-gray-700 dark:text-gray-300">{label}</label>}
+      {label && (
+        <div className="flex items-center gap-1">
+          <label htmlFor={id} className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+            {label}
+          </label>
+          {hint && (
+            <Tooltip content={hint}>
+              <button type="button" className="text-gray-400 hover:text-gray-500 focus:outline-none">
+                <HelpCircle className="w-4 h-4" />
+              </button>
+            </Tooltip>
+          )}
+        </div>
+      )}
       <input
         id={id}
         className={cn(

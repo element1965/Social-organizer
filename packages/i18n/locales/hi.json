@@ -21,7 +21,9 @@
     "codeExpires": "कोड {{minutes}} मिनट में समाप्त होगा"
   },
   "login": {
-    "subtitle": "विश्वसनीय संबंधों के माध्यम से सहायता समन्वय"
+    "subtitle": "विश्वसनीय संबंधों के माध्यम से सहायता समन्वय",
+    "or": "or",
+    "demo": "Demo login without registration"
   },
   "onboarding": {
     "step1": {
@@ -66,7 +68,10 @@
     "noObligations": "कोई दायित्व नहीं",
     "myNetwork": "मेरा नेटवर्क",
     "view": "देखें",
-    "connections": "कनेक्शन"
+    "connections": "कनेक्शन",
+    "intentions": "intentions",
+    "myIntentions": "My Intentions",
+    "noIntentions": "No intentions"
   },
   "collection": {
     "create": "संग्रह बनाएं",
@@ -90,7 +95,10 @@
     "close": "संग्रह बंद करें",
     "participants": "प्रतिभागी",
     "noParticipants": "अभी तक कोई शामिल नहीं हुआ",
-    "minAmount": "न्यूनतम 10"
+    "minAmount": "न्यूनतम 10",
+    "intentionsCount": "{{count}} intentions",
+    "expressIntention": "Express intention",
+    "connectionToCreator": "Connection to creator"
   },
   "create": {
     "title": "संग्रह बनाएं",
@@ -103,7 +111,8 @@
     "chatLink": "चैट लिंक",
     "submit": "संग्रह बनाएं",
     "minAmount": "न्यूनतम 10",
-    "invalidUrl": "अमान्य URL"
+    "invalidUrl": "अमान्य URL",
+    "networkReach": "Your signal will reach up to {{count}} people through handshake chains"
   },
   "obligation": {
     "create": "सहायता का वचन दें",
@@ -160,7 +169,9 @@
     "save": "सहेजें",
     "pledgedByCurrency": "मुद्रा के अनुसार",
     "myConnections": "मेरे कनेक्शन",
-    "noConnections": "अभी तक कोई कनेक्शन नहीं"
+    "noConnections": "अभी तक कोई कनेक्शन नहीं",
+    "connectionPath": "Connection path",
+    "contacts": "Contacts"
   },
   "settings": {
     "title": "सेटिंग्स",
@@ -184,7 +195,9 @@
     "logout": "लॉग आउट",
     "deleteAccount": "खाता हटाएं",
     "deleteConfirm": "क्या आप सुनिश्चित हैं? यह क्रिया अपरिवर्तनीय है।",
-    "confirmDelete": "हटाएं"
+    "confirmDelete": "हटाएं",
+    "contacts": "Contacts",
+    "contactsDesc": "Add ways to contact you for network members"
   },
   "invite": {
     "title": "निमंत्रण",
@@ -224,6 +237,33 @@
     "principleGlobalDesc": "Globally accessible. Automatic language detection.",
     "ctaTitle": "Ready to activate your p2p mutual aid environment?",
     "ctaButton": "खाता बनाएं",
-    "footer": "Social Organizer — an open p2p mutual aid and direct cooperation tool"
+    "footer": "Social Organizer — an open p2p mutual aid and direct cooperation tool",
+    "cardIntentionTitle": "Intention",
+    "cardIntentionDesc": "A voluntary decision to help. No pressure — everyone decides for themselves whether to participate.",
+    "githubLink": "View code on GitHub"
+  },
+  "intention": {
+    "create": "Express Intention",
+    "amount": "Amount (min {{min}})",
+    "subscribe": "Subscribe monthly",
+    "unsubscribe": "Unsubscribe"
+  },
+  "contacts": {
+    "telegram": "Telegram",
+    "whatsapp": "WhatsApp",
+    "facebook": "Facebook",
+    "instagram": "Instagram",
+    "twitter": "X (Twitter)",
+    "linkedin": "LinkedIn",
+    "vk": "VKontakte",
+    "email": "Email",
+    "website": "Website"
+  },
+  "hints": {
+    "collectionAmount": "Enter the amount you need. Minimum 10 units. The system will notify the right number of people.",
+    "collectionChatLink": "Link to a chat (Telegram, WhatsApp, etc.) where you can coordinate with those who respond.",
+    "intentionAmount": "Amount you're willing to provide. This is an intention, not a transfer — coordination happens in the chat.",
+    "profileBio": "Tell a bit about yourself. This helps other participants get to know you better.",
+    "profilePhone": "Phone is only visible to your direct connections (first handshake)."
   }
 }

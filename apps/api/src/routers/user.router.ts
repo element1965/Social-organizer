@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { router, protectedProcedure } from '../trpc.js';
 import { TRPCError } from '@trpc/server';
+import { CONTACT_TYPES } from '@so/shared';
 
 export const userRouter = router({
   me: protectedProcedure.query(async ({ ctx }) => {
@@ -55,6 +56,66 @@ export const userRouter = router({
       ]);
       return { connectionsCount, collectionsCount, obligationsCount };
     }),
+
+  getContacts: protectedProcedure
+    .input(z.object({ userId: z.string().optional() }))
+    .query(async ({ ctx, input }) => {
+      const targetId = input.userId || ctx.userId;
+      const isOwn = targetId === ctx.userId;
+
+      const contacts = await ctx.db.userContact.findMany({
+        where: { userId: targetId },
+      });
+
+      // For own profile, return all contact types (filled and empty)
+      // For other profiles, return only filled contacts
+      if (isOwn) {
+        return CONTACT_TYPES.map(ct => ({
+          type: ct.type,
+          value: contacts.find(c => c.type === ct.type)?.value || '',
+          label: ct.label,
+          icon: ct.icon,
+          placeholder: ct.placeholder,
+        }));
+      }
+      return contacts.map(c => {
+        const ct = CONTACT_TYPES.find(t => t.type === c.type);
+        return {
+          type: c.type,
+          value: c.value,
+          label: ct?.label || c.type,
+          icon: ct?.icon || 'link',
+        };
+      });
+    }),
+
+  updateContacts: protectedProcedure
+    .input(z.array(z.object({ type: z.string(), value: z.string() })))
+    .mutation(async ({ ctx, input }) => {
+      // Upsert each contact
+      for (const { type, value } of input) {
+        if (value.trim()) {
+          await ctx.db.userContact.upsert({
+            where: { userId_type: { userId: ctx.userId, type } },
+            create: { userId: ctx.userId, type, value: value.trim() },
+            update: { value: value.trim() },
+          });
+        } else {
+          await ctx.db.userContact.deleteMany({
+            where: { userId: ctx.userId, type },
+          });
+        }
+      }
+      return { success: true };
+    }),
+
+  completeOnboarding: protectedProcedure.mutation(async ({ ctx }) => {
+    await ctx.db.user.update({
+      where: { id: ctx.userId },
+      data: { onboardingCompleted: true },
+    });
+    return { success: true };
+  }),
 
   delete: protectedProcedure.mutation(async ({ ctx }) => {
     await ctx.db.$transaction(async (tx) => {

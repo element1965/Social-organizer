@@ -6,11 +6,13 @@ import { Card, CardContent } from '../components/ui/card';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { Select } from '../components/ui/select';
-import { AlertTriangle } from 'lucide-react';
+import { AlertTriangle, Users } from 'lucide-react';
 
 export function CreateCollectionPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
+
+  const { data: networkStats } = trpc.connection.getNetworkStats.useQuery();
 
   const [type, setType] = useState<'EMERGENCY' | 'REGULAR'>('EMERGENCY');
   const [amount, setAmount] = useState('');
@@ -47,7 +49,7 @@ export function CreateCollectionPage() {
               {t('create.regular')}
             </button>
           </div>
-          <Input id="amount" label={t('create.amount')} type="number" min={10} placeholder="1000" value={amount} onChange={(e) => { setAmount(e.target.value); setLargeAmountConfirmed(false); }} error={errors.amount} />
+          <Input id="amount" label={t('create.amount')} hint={t('hints.collectionAmount')} type="number" min={10} placeholder="1000" value={amount} onChange={(e) => { setAmount(e.target.value); setLargeAmountConfirmed(false); }} error={errors.amount} />
           {isLargeAmount && (
             <div className="p-3 bg-yellow-50 dark:bg-yellow-950/30 border border-yellow-200 dark:border-yellow-800 rounded-lg">
               <div className="flex items-start gap-2">
@@ -68,7 +70,15 @@ export function CreateCollectionPage() {
             </div>
           )}
           <Select id="currency" label={t('create.currency')} value={currency} onChange={(e) => setCurrency(e.target.value)} options={[{ value: 'USD', label: '$ USD' }, { value: 'EUR', label: '\u20ac EUR' }]} />
-          <Input id="chatLink" label={t('create.chatLink')} type="url" placeholder="https://t.me/..." value={chatLink} onChange={(e) => setChatLink(e.target.value)} error={errors.chatLink} />
+          <Input id="chatLink" label={t('create.chatLink')} hint={t('hints.collectionChatLink')} type="url" placeholder="https://t.me/..." value={chatLink} onChange={(e) => setChatLink(e.target.value)} error={errors.chatLink} />
+          {networkStats && networkStats.totalReachable > 0 && (
+            <div className="p-3 bg-blue-50 dark:bg-blue-950/30 rounded-lg flex items-center gap-2">
+              <Users className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+              <p className="text-sm text-blue-700 dark:text-blue-300">
+                {t('create.networkReach', { count: networkStats.totalReachable })}
+              </p>
+            </div>
+          )}
           <Button className="w-full" size="lg" onClick={handleSubmit} disabled={create.isPending || (isLargeAmount && !largeAmountConfirmed)}>
             {create.isPending ? t('common.loading') : t('create.submit')}
           </Button>

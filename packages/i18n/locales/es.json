@@ -21,7 +21,9 @@
     "codeExpires": "El código expira en {{minutes}} min"
   },
   "login": {
-    "subtitle": "Coordinación de ayuda a través de conexiones de confianza"
+    "subtitle": "Coordinación de ayuda a través de conexiones de confianza",
+    "or": "or",
+    "demo": "Demo login without registration"
   },
   "onboarding": {
     "step1": {
@@ -66,7 +68,10 @@
     "noObligations": "Sin compromisos",
     "myNetwork": "Mi red",
     "view": "Ver",
-    "connections": "conexiones"
+    "connections": "conexiones",
+    "intentions": "intentions",
+    "myIntentions": "My Intentions",
+    "noIntentions": "No intentions"
   },
   "collection": {
     "create": "Crear colecta",
@@ -90,7 +95,10 @@
     "close": "Cerrar colecta",
     "participants": "Participantes",
     "noParticipants": "Nadie se ha unido todavía",
-    "minAmount": "Mínimo 10"
+    "minAmount": "Mínimo 10",
+    "intentionsCount": "{{count}} intentions",
+    "expressIntention": "Express intention",
+    "connectionToCreator": "Connection to creator"
   },
   "create": {
     "title": "Crear colecta",
@@ -103,7 +111,8 @@
     "chatLink": "Enlace al chat",
     "submit": "Crear colecta",
     "minAmount": "Mínimo 10",
-    "invalidUrl": "URL no válida"
+    "invalidUrl": "URL no válida",
+    "networkReach": "Your signal will reach up to {{count}} people through handshake chains"
   },
   "obligation": {
     "create": "Asumir compromiso",
@@ -160,7 +169,9 @@
     "save": "Guardar",
     "pledgedByCurrency": "por moneda",
     "myConnections": "Mis conexiones",
-    "noConnections": "Aún sin conexiones"
+    "noConnections": "Aún sin conexiones",
+    "connectionPath": "Connection path",
+    "contacts": "Contacts"
   },
   "settings": {
     "title": "Ajustes",
@@ -184,7 +195,9 @@
     "logout": "Cerrar sesión",
     "deleteAccount": "Eliminar cuenta",
     "deleteConfirm": "¿Estás seguro? Esta acción es irreversible.",
-    "confirmDelete": "Eliminar"
+    "confirmDelete": "Eliminar",
+    "contacts": "Contacts",
+    "contactsDesc": "Add ways to contact you for network members"
   },
   "invite": {
     "title": "Invitación",
@@ -224,6 +237,33 @@
     "principleGlobalDesc": "Accesible globalmente. Detección automática del idioma.",
     "ctaTitle": "¿Listo para activar su entorno p2p de ayuda mutua?",
     "ctaButton": "Crear cuenta",
-    "footer": "Social Organizer — herramienta abierta de ayuda mutua y cooperación directa p2p"
+    "footer": "Social Organizer — herramienta abierta de ayuda mutua y cooperación directa p2p",
+    "cardIntentionTitle": "Intention",
+    "cardIntentionDesc": "A voluntary decision to help. No pressure — everyone decides for themselves whether to participate.",
+    "githubLink": "View code on GitHub"
+  },
+  "intention": {
+    "create": "Express Intention",
+    "amount": "Amount (min {{min}})",
+    "subscribe": "Subscribe monthly",
+    "unsubscribe": "Unsubscribe"
+  },
+  "contacts": {
+    "telegram": "Telegram",
+    "whatsapp": "WhatsApp",
+    "facebook": "Facebook",
+    "instagram": "Instagram",
+    "twitter": "X (Twitter)",
+    "linkedin": "LinkedIn",
+    "vk": "VKontakte",
+    "email": "Email",
+    "website": "Website"
+  },
+  "hints": {
+    "collectionAmount": "Enter the amount you need. Minimum 10 units. The system will notify the right number of people.",
+    "collectionChatLink": "Link to a chat (Telegram, WhatsApp, etc.) where you can coordinate with those who respond.",
+    "intentionAmount": "Amount you're willing to provide. This is an intention, not a transfer — coordination happens in the chat.",
+    "profileBio": "Tell a bit about yourself. This helps other participants get to know you better.",
+    "profilePhone": "Phone is only visible to your direct connections (first handshake)."
   }
 }

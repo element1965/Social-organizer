@@ -21,7 +21,9 @@
     "codeExpires": "验证码将在 {{minutes}} 分钟后过期"
   },
   "login": {
-    "subtitle": "通过信任关系协调互助"
+    "subtitle": "通过信任关系协调互助",
+    "or": "or",
+    "demo": "Demo login without registration"
   },
   "onboarding": {
     "step1": {
@@ -66,7 +68,10 @@
     "noObligations": "暂无承诺",
     "myNetwork": "我的人脉",
     "view": "查看",
-    "connections": "个连接"
+    "connections": "个连接",
+    "intentions": "intentions",
+    "myIntentions": "My Intentions",
+    "noIntentions": "No intentions"
   },
   "collection": {
     "create": "创建募集",
@@ -90,7 +95,10 @@
     "close": "关闭募集",
     "participants": "参与者",
     "noParticipants": "暂无人参与",
-    "minAmount": "最少 10"
+    "minAmount": "最少 10",
+    "intentionsCount": "{{count}} intentions",
+    "expressIntention": "Express intention",
+    "connectionToCreator": "Connection to creator"
   },
   "create": {
     "title": "创建募集",
@@ -103,7 +111,8 @@
     "chatLink": "聊天链接",
     "submit": "创建募集",
     "minAmount": "最少 10",
-    "invalidUrl": "无效的链接"
+    "invalidUrl": "无效的链接",
+    "networkReach": "Your signal will reach up to {{count}} people through handshake chains"
   },
   "obligation": {
     "create": "做出承诺",
@@ -160,7 +169,9 @@
     "save": "保存",
     "pledgedByCurrency": "按货币",
     "myConnections": "我的连接",
-    "noConnections": "暂无连接"
+    "noConnections": "暂无连接",
+    "connectionPath": "Connection path",
+    "contacts": "Contacts"
   },
   "settings": {
     "title": "设置",
@@ -184,7 +195,9 @@
     "logout": "退出登录",
     "deleteAccount": "删除账户",
     "deleteConfirm": "确定吗？此操作不可撤销。",
-    "confirmDelete": "删除"
+    "confirmDelete": "删除",
+    "contacts": "Contacts",
+    "contactsDesc": "Add ways to contact you for network members"
   },
   "invite": {
     "title": "邀请",
@@ -224,6 +237,33 @@
     "principleGlobalDesc": "Globally accessible. Automatic language detection.",
     "ctaTitle": "Ready to activate your p2p mutual aid environment?",
     "ctaButton": "创建账户",
-    "footer": "Social Organizer — an open p2p mutual aid and direct cooperation tool"
+    "footer": "Social Organizer — an open p2p mutual aid and direct cooperation tool",
+    "cardIntentionTitle": "Intention",
+    "cardIntentionDesc": "A voluntary decision to help. No pressure — everyone decides for themselves whether to participate.",
+    "githubLink": "View code on GitHub"
+  },
+  "intention": {
+    "create": "Express Intention",
+    "amount": "Amount (min {{min}})",
+    "subscribe": "Subscribe monthly",
+    "unsubscribe": "Unsubscribe"
+  },
+  "contacts": {
+    "telegram": "Telegram",
+    "whatsapp": "WhatsApp",
+    "facebook": "Facebook",
+    "instagram": "Instagram",
+    "twitter": "X (Twitter)",
+    "linkedin": "LinkedIn",
+    "vk": "VKontakte",
+    "email": "Email",
+    "website": "Website"
+  },
+  "hints": {
+    "collectionAmount": "Enter the amount you need. Minimum 10 units. The system will notify the right number of people.",
+    "collectionChatLink": "Link to a chat (Telegram, WhatsApp, etc.) where you can coordinate with those who respond.",
+    "intentionAmount": "Amount you're willing to provide. This is an intention, not a transfer — coordination happens in the chat.",
+    "profileBio": "Tell a bit about yourself. This helps other participants get to know you better.",
+    "profilePhone": "Phone is only visible to your direct connections (first handshake)."
   }
 }

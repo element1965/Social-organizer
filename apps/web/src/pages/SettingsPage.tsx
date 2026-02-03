@@ -9,9 +9,11 @@ import { Button } from '../components/ui/button';
 import { Select } from '../components/ui/select';
 import { Avatar } from '../components/ui/avatar';
 import { Spinner } from '../components/ui/spinner';
-import { Settings, Globe, Palette, Volume2, Link, UserX, Trash2, LogOut, Type } from 'lucide-react';
+import { Settings, Globe, Palette, Volume2, Link, UserX, Trash2, LogOut, Type, Users } from 'lucide-react';
 import { cn } from '../lib/utils';
 import { languageNames } from '@so/i18n';
+import { Input } from '../components/ui/input';
+import { SocialIcon } from '../components/ui/social-icons';
 
 export function SettingsPage() {
   const { t, i18n } = useTranslation();
@@ -22,6 +24,11 @@ export function SettingsPage() {
 
   const { data: settings, isLoading } = trpc.settings.get.useQuery();
   const { data: ignoreList } = trpc.settings.ignoreList.useQuery();
+  const { data: contacts } = trpc.user.getContacts.useQuery({});
+  const updateContacts = trpc.user.updateContacts.useMutation({
+    onSuccess: () => utils.user.getContacts.invalidate(),
+  });
+  const [contactValues, setContactValues] = useState<Record<string, string>>({});
   const updateLanguage = trpc.settings.updateLanguage.useMutation({ onSuccess: () => utils.settings.get.invalidate() });
   const updateTheme = trpc.settings.updateTheme.useMutation({ onSuccess: () => utils.settings.get.invalidate() });
   const updateSound = trpc.settings.updateSound.useMutation({ onSuccess: () => utils.settings.get.invalidate() });
@@ -74,6 +81,47 @@ export function SettingsPage() {
           ))}
         </div>
       </CardContent></Card>
+
+      <Card>
+        <CardHeader>
+          <div className="flex items-center gap-2">
+            <Users className="w-5 h-5 text-gray-500" />
+            <h2 className="font-semibold text-gray-900 dark:text-white">{t('settings.contacts')}</h2>
+          </div>
+          <p className="text-xs text-gray-500 mt-1">{t('settings.contactsDesc')}</p>
+        </CardHeader>
+        <CardContent className="space-y-3">
+          {contacts?.map((contact) => (
+            <div key={contact.type} className="flex items-center gap-2">
+              <SocialIcon type={contact.icon} className="w-5 h-5 text-gray-500 flex-shrink-0" />
+              <Input
+                id={`contact-${contact.type}`}
+                placeholder={contact.placeholder}
+                value={contactValues[contact.type] ?? contact.value}
+                onChange={(e) => setContactValues(prev => ({ ...prev, [contact.type]: e.target.value }))}
+                className="flex-1"
+              />
+            </div>
+          ))}
+          {contacts && contacts.length > 0 && (
+            <Button
+              variant="outline"
+              size="sm"
+              className="w-full"
+              onClick={() => {
+                const updates = contacts.map(c => ({
+                  type: c.type,
+                  value: contactValues[c.type] ?? c.value,
+                }));
+                updateContacts.mutate(updates);
+              }}
+              disabled={updateContacts.isPending}
+            >
+              {updateContacts.isPending ? t('common.loading') : t('common.save')}
+            </Button>
+          )}
+        </CardContent>
+      </Card>
 
       <Card><CardContent className="py-3">
         <div className="flex items-center gap-3 mb-2"><Link className="w-5 h-5 text-gray-500" /><span className="text-sm font-medium text-gray-700 dark:text-gray-300">{t('settings.linkAccount', 'Связать аккаунт')}</span></div>
