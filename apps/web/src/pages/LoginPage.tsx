@@ -57,7 +57,8 @@ export function LoginPage() {
             size="lg"
             onClick={() => {
               login('demo-token', 'demo-refresh', 'demo-user');
-              navigate('/');
+              // Full reload to reinitialize tRPC client with demoLink
+              window.location.href = '/';
             }}
             disabled={loading}
           >
