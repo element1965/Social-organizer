@@ -1,5 +1,5 @@
-import { useRef, useMemo } from 'react';
-import { Canvas, useFrame } from '@react-three/fiber';
+import { useRef, useMemo, useState, useEffect } from 'react';
+import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
 
 /* ---------- GLSL: процедурная планета (simplex noise terrain) ---------- */
@@ -126,7 +126,8 @@ function Planet({ scrollProgress }: { scrollProgress: number }) {
 
 /* ---------- Узлы на поверхности (InstancedMesh) ---------- */
 
-const NODE_COUNT = 50;
+const MIN_NODE_COUNT = 30;
+const MAX_NODE_COUNT = 120;
 const NODE_RADIUS = 2.0;
 const NODE_COLORS = [
   new THREE.Color(0x14b8a6), // teal
@@ -138,10 +139,13 @@ function NetworkNodes({ scrollProgress }: { scrollProgress: number }) {
   const meshRef = useRef<THREE.InstancedMesh>(null);
   const currentRotation = useRef(0);
 
+  // Node count increases with scroll (densification effect)
+  const nodeCount = Math.floor(MIN_NODE_COUNT + scrollProgress * (MAX_NODE_COUNT - MIN_NODE_COUNT));
+
   const { nodePositions, colors } = useMemo(() => {
-    const pos = fibonacciSphere(NODE_COUNT, NODE_RADIUS);
-    const col = new Float32Array(NODE_COUNT * 3);
-    for (let i = 0; i < NODE_COUNT; i++) {
+    const pos = fibonacciSphere(MAX_NODE_COUNT, NODE_RADIUS);
+    const col = new Float32Array(MAX_NODE_COUNT * 3);
+    for (let i = 0; i < MAX_NODE_COUNT; i++) {
       const c = NODE_COLORS[i % NODE_COLORS.length]!;
       col[i * 3] = c.r;
       col[i * 3 + 1] = c.g;
@@ -151,6 +155,11 @@ function NetworkNodes({ scrollProgress }: { scrollProgress: number }) {
   }, []);
 
   const dummy = useMemo(() => new THREE.Object3D(), []);
+  const hiddenMatrix = useMemo(() => {
+    const m = new THREE.Matrix4();
+    m.makeScale(0, 0, 0);
+    return m;
+  }, []);
 
   useFrame(() => {
     if (!meshRef.current) return;
@@ -159,27 +168,32 @@ function NetworkNodes({ scrollProgress }: { scrollProgress: number }) {
 
     const rotMatrix = new THREE.Matrix4().makeRotationY(currentRotation.current);
 
-    for (let i = 0; i < NODE_COUNT; i++) {
-      const idx = i * 3;
-      const v = new THREE.Vector3(
-        nodePositions[idx]!,
-        nodePositions[idx + 1]!,
-        nodePositions[idx + 2]!,
-      ).applyMatrix4(rotMatrix);
-      dummy.position.copy(v);
-      dummy.scale.setScalar(1);
-      dummy.updateMatrix();
-      meshRef.current.setMatrixAt(i, dummy.matrix);
+    for (let i = 0; i < MAX_NODE_COUNT; i++) {
+      if (i < nodeCount) {
+        const idx = i * 3;
+        const v = new THREE.Vector3(
+          nodePositions[idx]!,
+          nodePositions[idx + 1]!,
+          nodePositions[idx + 2]!,
+        ).applyMatrix4(rotMatrix);
+        dummy.position.copy(v);
+        dummy.scale.setScalar(1);
+        dummy.updateMatrix();
+        meshRef.current.setMatrixAt(i, dummy.matrix);
 
-      const color = new THREE.Color(colors[idx]!, colors[idx + 1]!, colors[idx + 2]!);
-      meshRef.current.setColorAt(i, color);
+        const color = new THREE.Color(colors[idx]!, colors[idx + 1]!, colors[idx + 2]!);
+        meshRef.current.setColorAt(i, color);
+      } else {
+        // Hide nodes beyond current count
+        meshRef.current.setMatrixAt(i, hiddenMatrix);
+      }
     }
     meshRef.current.instanceMatrix.needsUpdate = true;
     if (meshRef.current.instanceColor) meshRef.current.instanceColor.needsUpdate = true;
   });
 
   return (
-    <instancedMesh ref={meshRef} args={[undefined, undefined, NODE_COUNT]}>
+    <instancedMesh ref={meshRef} args={[undefined, undefined, MAX_NODE_COUNT]}>
       <sphereGeometry args={[0.035, 8, 8]} />
       <meshBasicMaterial toneMapped={false} />
     </instancedMesh>
@@ -188,19 +202,28 @@ function NetworkNodes({ scrollProgress }: { scrollProgress: number }) {
 
 /* ---------- Связи между ближними узлами (LineSegments) ---------- */
 
+const MIN_EDGES = 40;
+const MAX_EDGES = 200;
+
 function NetworkEdges({ scrollProgress }: { scrollProgress: number }) {
   const lineRef = useRef<THREE.LineSegments>(null);
   const currentRotation = useRef(0);
+  const geometryRef = useRef<THREE.BufferGeometry>(null);
 
-  const { edgePositions, edgeCount } = useMemo(() => {
-    const nodes = fibonacciSphere(NODE_COUNT, NODE_RADIUS);
+  // Edge count increases with scroll
+  const visibleEdgeCount = Math.floor(MIN_EDGES + scrollProgress * (MAX_EDGES - MIN_EDGES));
+
+  // Precompute all possible edges for full sphere coverage
+  const { allEdgePositions, totalEdgeCount } = useMemo(() => {
+    const nodes = fibonacciSphere(MAX_NODE_COUNT, NODE_RADIUS);
     const edges: number[] = [];
-    const maxEdges = 80;
-    const maxDist = 1.2;
+    const maxDist = 1.4; // Increased distance for better coverage
 
-    for (let i = 0; i < NODE_COUNT && edges.length / 6 < maxEdges; i++) {
+    // Create edges ensuring full sphere coverage (including bottom)
+    for (let i = 0; i < MAX_NODE_COUNT; i++) {
       const ix = i * 3;
-      for (let j = i + 1; j < NODE_COUNT && edges.length / 6 < maxEdges; j++) {
+      // Connect to nearby nodes
+      for (let j = i + 1; j < MAX_NODE_COUNT; j++) {
         const jx = j * 3;
         const dx = nodes[ix]! - nodes[jx]!;
         const dy = nodes[ix + 1]! - nodes[jx + 1]!;
@@ -215,38 +238,35 @@ function NetworkEdges({ scrollProgress }: { scrollProgress: number }) {
       }
     }
 
-    return { edgePositions: new Float32Array(edges), edgeCount: edges.length / 6 };
-  }, []);
-
-  // Precompute arc positions (slightly above surface)
-  const arcPositions = useMemo(() => {
-    const arc = new Float32Array(edgePositions.length);
+    // Lift edges slightly above surface
     const lift = 1.05;
-    for (let i = 0; i < edgeCount; i++) {
-      const base = i * 6;
-      arc[base] = edgePositions[base]! * lift;
-      arc[base + 1] = edgePositions[base + 1]! * lift;
-      arc[base + 2] = edgePositions[base + 2]! * lift;
-      arc[base + 3] = edgePositions[base + 3]! * lift;
-      arc[base + 4] = edgePositions[base + 4]! * lift;
-      arc[base + 5] = edgePositions[base + 5]! * lift;
+    const liftedEdges = new Float32Array(edges.length);
+    for (let i = 0; i < edges.length; i++) {
+      liftedEdges[i] = edges[i]! * lift;
     }
-    return arc;
-  }, [edgePositions, edgeCount]);
+
+    return { allEdgePositions: liftedEdges, totalEdgeCount: edges.length / 6 };
+  }, []);
 
   useFrame(() => {
     if (!lineRef.current) return;
     const target = scrollProgress * Math.PI * 3;
     currentRotation.current += (target - currentRotation.current) * 0.08;
     lineRef.current.rotation.y = currentRotation.current;
+
+    // Update draw range to show only visible edges
+    if (geometryRef.current) {
+      const count = Math.min(visibleEdgeCount, totalEdgeCount) * 2; // 2 vertices per edge
+      geometryRef.current.setDrawRange(0, count);
+    }
   });
 
   return (
     <lineSegments ref={lineRef}>
-      <bufferGeometry>
+      <bufferGeometry ref={geometryRef}>
         <bufferAttribute
           attach="attributes-position"
-          args={[arcPositions, 3]}
+          args={[allEdgePositions, 3]}
         />
       </bufferGeometry>
       <lineBasicMaterial color="#6ee7b7" transparent opacity={0.25} />
@@ -283,6 +303,22 @@ function Stars({ count = 150 }: { count?: number }) {
   );
 }
 
+/* ---------- Адаптивная камера для мобильных ---------- */
+
+function AdaptiveCamera() {
+  const { camera, size } = useThree();
+
+  useEffect(() => {
+    // On mobile (width < 768), move camera further back so planet is fully visible
+    const isMobile = size.width < 768;
+    const targetZ = isMobile ? 6.5 : 5;
+    camera.position.z = targetZ;
+    camera.updateProjectionMatrix();
+  }, [camera, size.width]);
+
+  return null;
+}
+
 /* ---------- Экспорт ---------- */
 
 export interface GlobeNetworkProps {
@@ -294,6 +330,7 @@ export function GlobeNetwork({ className, scrollProgress }: GlobeNetworkProps) {
   return (
     <div className={className} style={{ width: '100%', height: '100%' }}>
       <Canvas camera={{ position: [0, 0, 5], fov: 45 }} gl={{ antialias: true, alpha: true }}>
+        <AdaptiveCamera />
         <ambientLight intensity={0.3} />
         <Planet scrollProgress={scrollProgress} />
         <NetworkNodes scrollProgress={scrollProgress} />
