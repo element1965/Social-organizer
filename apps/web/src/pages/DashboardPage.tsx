@@ -141,6 +141,12 @@ export function DashboardPage() {
                           <Users className="w-3 h-3" />
                           {(notif.collection?.creator as any)?.connectionCount ?? 0}
                         </span>
+                        {(notif.collection?.creator as any)?.remainingBudget > 0 && (
+                          <span className="flex items-center gap-0.5 text-xs text-green-600 dark:text-green-400 shrink-0">
+                            <Wallet className="w-3 h-3" />
+                            ${Math.round((notif.collection?.creator as any)?.remainingBudget)}
+                          </span>
+                        )}
                       </div>
                       <p className="text-xs text-gray-500">
                         {notif.collection?.amount} {notif.collection?.currency}
@@ -313,10 +319,18 @@ export function DashboardPage() {
                           >
                             <Avatar src={user.photoUrl} name={user.name} size="sm" />
                             <span className="flex-1 text-sm text-gray-700 dark:text-gray-300 text-left">{user.name}</span>
-                            <span className="flex items-center gap-1 text-xs text-gray-400">
-                              <Users className="w-3 h-3" />
-                              {user.connectionCount ?? 0}
-                            </span>
+                            <div className="flex items-center gap-2">
+                              <span className="flex items-center gap-1 text-xs text-gray-400">
+                                <Users className="w-3 h-3" />
+                                {user.connectionCount ?? 0}
+                              </span>
+                              {user.remainingBudget > 0 && (
+                                <span className="flex items-center gap-1 text-xs text-green-600 dark:text-green-400">
+                                  <Wallet className="w-3 h-3" />
+                                  ${Math.round(user.remainingBudget)}
+                                </span>
+                              )}
+                            </div>
                           </button>
                         ))}
                         {depthUsers.length > 20 && (
@@ -499,6 +513,12 @@ export function DashboardPage() {
                               <Users className="w-3 h-3" />
                               {(obl.collection.creator as any).connectionCount ?? 0}
                             </span>
+                            {(obl.collection.creator as any).remainingBudget > 0 && (
+                              <span className="flex items-center gap-0.5 text-xs text-green-600 dark:text-green-400">
+                                <Wallet className="w-3 h-3" />
+                                ${Math.round((obl.collection.creator as any).remainingBudget)}
+                              </span>
+                            )}
                           </div>
                           <p className="text-xs text-gray-500">{obl.amount} {obl.collection.currency}</p>
                         </div>

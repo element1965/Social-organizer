@@ -9,7 +9,7 @@ import { Button } from '../components/ui/button';
 import { Avatar } from '../components/ui/avatar';
 import { Progress } from '../components/ui/progress';
 import { Spinner } from '../components/ui/spinner';
-import { Users, Share2, QrCode, Globe, List } from 'lucide-react';
+import { Users, Share2, QrCode, Globe, List, Wallet } from 'lucide-react';
 import { QRCodeSVG } from 'qrcode.react';
 const LazyNetworkGraph = lazy(() =>
   import('@so/graph-3d').then((m) => ({ default: m.NetworkGraph })),
@@ -113,10 +113,18 @@ export function MyNetworkPage() {
                 <button key={conn.id} onClick={() => navigate(`/profile/${conn.userId}`)} className="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
                   <Avatar src={conn.photoUrl} name={conn.name} size="md" />
                   <span className="flex-1 text-sm font-medium text-gray-900 dark:text-white text-left">{conn.name}</span>
-                  <span className="flex items-center gap-1 text-xs text-gray-400">
-                    <Users className="w-3 h-3" />
-                    {(conn as any).connectionCount ?? 0}
-                  </span>
+                  <div className="flex items-center gap-3 text-xs text-gray-400">
+                    <span className="flex items-center gap-1">
+                      <Users className="w-3 h-3" />
+                      {conn.connectionCount ?? 0}
+                    </span>
+                    {conn.remainingBudget != null && conn.remainingBudget > 0 && (
+                      <span className="flex items-center gap-1 text-green-600 dark:text-green-400">
+                        <Wallet className="w-3 h-3" />
+                        ${Math.round(conn.remainingBudget)}
+                      </span>
+                    )}
+                  </div>
                 </button>
               ))}
             </div>
