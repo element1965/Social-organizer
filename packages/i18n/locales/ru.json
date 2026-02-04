@@ -18,7 +18,16 @@
     "loginWith": "Войти через {{platform}}",
     "linking": "Привязать аккаунт",
     "enterCode": "Введите 6-значный код",
-    "codeExpires": "Код истекает через {{minutes}} мин"
+    "codeExpires": "Код истекает через {{minutes}} мин",
+    "email": "Email",
+    "password": "Пароль",
+    "name": "Имя",
+    "login": "Войти",
+    "register": "Зарегистрироваться",
+    "haveAccount": "Уже есть аккаунт? Войти",
+    "noAccount": "Нет аккаунта? Зарегистрироваться",
+    "emailExists": "Этот email уже зарегистрирован",
+    "invalidCredentials": "Неверный email или пароль"
   },
   "login": {
     "subtitle": "Координация помощи через доверенные связи",

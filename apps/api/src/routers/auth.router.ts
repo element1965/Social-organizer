@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { router, publicProcedure, protectedProcedure } from '../trpc.js';
 import { TRPCError } from '@trpc/server';
+import * as bcrypt from 'bcryptjs';
 import {
   createAccessToken,
   createRefreshToken,
@@ -10,6 +11,61 @@ import {
 import { LINKING_CODE_TTL_MINUTES } from '@so/shared';
 
 export const authRouter = router({
+  registerWithEmail: publicProcedure
+    .input(z.object({
+      email: z.string().email(),
+      password: z.string().min(6),
+      name: z.string().min(1).optional(),
+    }))
+    .mutation(async ({ ctx, input }) => {
+      const existingUser = await ctx.db.user.findUnique({
+        where: { email: input.email.toLowerCase() },
+      });
+
+      if (existingUser) {
+        throw new TRPCError({ code: 'CONFLICT', message: 'Email already registered' });
+      }
+
+      const passwordHash = await bcrypt.hash(input.password, 10);
+      const user = await ctx.db.user.create({
+        data: {
+          email: input.email.toLowerCase(),
+          passwordHash,
+          name: input.name || input.email.split('@')[0] || 'User',
+        },
+      });
+
+      const accessToken = createAccessToken(user.id);
+      const refreshToken = createRefreshToken(user.id);
+
+      return { accessToken, refreshToken, userId: user.id };
+    }),
+
+  loginWithEmail: publicProcedure
+    .input(z.object({
+      email: z.string().email(),
+      password: z.string().min(1),
+    }))
+    .mutation(async ({ ctx, input }) => {
+      const user = await ctx.db.user.findUnique({
+        where: { email: input.email.toLowerCase() },
+      });
+
+      if (!user || !user.passwordHash) {
+        throw new TRPCError({ code: 'UNAUTHORIZED', message: 'Invalid email or password' });
+      }
+
+      const validPassword = await bcrypt.compare(input.password, user.passwordHash);
+      if (!validPassword) {
+        throw new TRPCError({ code: 'UNAUTHORIZED', message: 'Invalid email or password' });
+      }
+
+      const accessToken = createAccessToken(user.id);
+      const refreshToken = createRefreshToken(user.id);
+
+      return { accessToken, refreshToken, userId: user.id };
+    }),
+
   loginWithPlatform: publicProcedure
     .input(z.object({
       platform: z.enum(['FACEBOOK', 'TELEGRAM', 'APPLE', 'GOOGLE']),

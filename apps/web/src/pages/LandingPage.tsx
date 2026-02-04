@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { Handshake, Heart, Eye, Users, Cog, Code, Globe, ChevronDown, ChevronUp, ArrowRight, Languages, Github, ExternalLink } from 'lucide-react';
 import { languageNames } from '@so/i18n';
 import { useScrollProgress } from '../hooks/useScrollProgress';
+import { Logo } from '../components/Logo';
 
 const LazyGlobeNetwork = lazy(() =>
   import('@so/graph-3d').then((m) => ({ default: m.GlobeNetwork })),
@@ -54,6 +55,13 @@ export function LandingPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const scrollProgress = useScrollProgress();
+  const [scrollY, setScrollY] = useState(0);
+
+  useEffect(() => {
+    const handleScroll = () => setScrollY(window.scrollY);
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const scrollToContent = () => {
     window.scrollTo({ top: window.innerHeight, behavior: 'smooth' });
@@ -63,6 +71,12 @@ export function LandingPage() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  // Logo animation: starts at center, moves to top-left corner as user scrolls
+  const logoProgress = Math.min(scrollY / 300, 1); // 0 to 1 over first 300px of scroll
+  const logoScale = 1 - logoProgress * 0.6; // 1 -> 0.4
+  const logoOpacityInHero = 1 - logoProgress; // Fade out in hero
+  const logoOpacityFixed = logoProgress; // Fade in fixed
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-950 via-gray-950 to-blue-950">
       {/* Fixed 3D background */}
@@ -70,6 +84,14 @@ export function LandingPage() {
         <Suspense fallback={null}>
           <LazyGlobeNetwork scrollProgress={scrollProgress} />
         </Suspense>
+      </div>
+
+      {/* Fixed logo in top-left corner (appears on scroll) */}
+      <div
+        className="fixed top-4 left-4 z-20 transition-opacity duration-300"
+        style={{ opacity: logoOpacityFixed }}
+      >
+        <Logo size={50} className="text-teal-400" />
       </div>
 
       {/* Language switcher — fixed top-right */}
@@ -82,6 +104,16 @@ export function LandingPage() {
 
         {/* === Section 1: Hero (100vh) === */}
         <section className="min-h-screen flex flex-col items-center justify-center px-6 text-center">
+          {/* Logo with scroll animation - fades out and shrinks */}
+          <div
+            className="mb-4 transition-all duration-200"
+            style={{
+              opacity: logoOpacityInHero,
+              transform: `scale(${logoScale})`,
+            }}
+          >
+            <Logo size={120} className="text-teal-400" />
+          </div>
           <h1 className="text-5xl md:text-7xl font-bold text-white mb-4 tracking-tight">
             Social Organizer
           </h1>
