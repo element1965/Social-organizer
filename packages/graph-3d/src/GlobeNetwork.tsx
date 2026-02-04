@@ -2,12 +2,12 @@ import { useRef, useMemo, useEffect, useState } from 'react';
 import { Canvas, useFrame, useThree, useLoader } from '@react-three/fiber';
 import * as THREE from 'three';
 
-/* ---------- URL текстур NASA (jsdelivr CDN с CORS) ---------- */
+/* ---------- URL текстур (CDN с CORS) ---------- */
 
 const EARTH_TEXTURE_URL = 'https://cdn.jsdelivr.net/npm/three-globe@2.31.0/example/img/earth-blue-marble.jpg';
 const EARTH_BUMP_URL = 'https://cdn.jsdelivr.net/npm/three-globe@2.31.0/example/img/earth-topology.png';
 const EARTH_SPECULAR_URL = 'https://cdn.jsdelivr.net/npm/three-globe@2.31.0/example/img/earth-water.png';
-// Примечание: облака и луна используют процедурные материалы (текстуры недоступны на CDN)
+const MOON_TEXTURE_URL = 'https://unpkg.com/three@0.128.0/examples/textures/planets/moon_1024.jpg';
 
 /* ---------- GLSL: Атмосфера (внешнее свечение) ---------- */
 
@@ -74,14 +74,15 @@ const starsFragmentShader = `
     float dist = length(gl_PointCoord - vec2(0.5));
     if (dist > 0.5) discard;
 
-    // Мягкие края для реалистичности
-    float alpha = 1.0 - smoothstep(0.0, 0.5, dist);
-    alpha *= vBrightness;
+    // Яркое ядро с мягким свечением
+    float core = 1.0 - smoothstep(0.0, 0.15, dist);
+    float glow = 1.0 - smoothstep(0.0, 0.5, dist);
+    float alpha = (core * 1.5 + glow * 0.5) * vBrightness;
 
-    // Белый цвет с лёгким оттенком
-    vec3 color = vec3(1.0, 1.0, 0.98) * vBrightness;
+    // Белый цвет с лёгким голубоватым оттенком
+    vec3 color = vec3(0.95, 0.97, 1.0) * (vBrightness + 0.3);
 
-    gl_FragColor = vec4(color, alpha);
+    gl_FragColor = vec4(color, min(alpha, 1.0));
   }
 `;
 
@@ -158,109 +159,14 @@ function Earth({ scrollProgress }: { scrollProgress: number }) {
   );
 }
 
-/* ---------- Процедурная текстура Луны с кратерами ---------- */
-
-function createMoonTexture(): THREE.CanvasTexture {
-  const size = 512;
-  const canvas = document.createElement('canvas');
-  canvas.width = size;
-  canvas.height = size;
-  const ctx = canvas.getContext('2d')!;
-
-  // Базовый серый цвет луны
-  ctx.fillStyle = '#888888';
-  ctx.fillRect(0, 0, size, size);
-
-  // Добавляем noise для текстуры поверхности
-  const imageData = ctx.getImageData(0, 0, size, size);
-  const data = imageData.data;
-  for (let i = 0; i < data.length; i += 4) {
-    const noise = (Math.random() - 0.5) * 30;
-    data[i] = Math.max(0, Math.min(255, data[i]! + noise));
-    data[i + 1] = Math.max(0, Math.min(255, data[i + 1]! + noise));
-    data[i + 2] = Math.max(0, Math.min(255, data[i + 2]! + noise));
-  }
-  ctx.putImageData(imageData, 0, 0);
-
-  // Рисуем кратеры разных размеров
-  const craters = [
-    // Большие кратеры
-    { x: 0.25, y: 0.3, r: 0.12 },
-    { x: 0.7, y: 0.25, r: 0.1 },
-    { x: 0.5, y: 0.65, r: 0.14 },
-    { x: 0.15, y: 0.7, r: 0.08 },
-    { x: 0.8, y: 0.6, r: 0.09 },
-    // Средние кратеры
-    { x: 0.35, y: 0.15, r: 0.05 },
-    { x: 0.6, y: 0.45, r: 0.06 },
-    { x: 0.2, y: 0.5, r: 0.04 },
-    { x: 0.85, y: 0.35, r: 0.05 },
-    { x: 0.45, y: 0.85, r: 0.055 },
-    { x: 0.9, y: 0.8, r: 0.045 },
-    { x: 0.1, y: 0.15, r: 0.035 },
-    // Мелкие кратеры
-    ...Array.from({ length: 40 }, () => ({
-      x: Math.random(),
-      y: Math.random(),
-      r: 0.01 + Math.random() * 0.025,
-    })),
-  ];
-
-  for (const crater of craters) {
-    const cx = crater.x * size;
-    const cy = crater.y * size;
-    const radius = crater.r * size;
-
-    // Тень кратера (темнее)
-    const gradient = ctx.createRadialGradient(
-      cx - radius * 0.2, cy - radius * 0.2, 0,
-      cx, cy, radius
-    );
-    gradient.addColorStop(0, 'rgba(40, 40, 40, 0.7)');
-    gradient.addColorStop(0.5, 'rgba(60, 60, 60, 0.5)');
-    gradient.addColorStop(0.8, 'rgba(100, 100, 100, 0.3)');
-    gradient.addColorStop(1, 'rgba(120, 120, 120, 0)');
-
-    ctx.beginPath();
-    ctx.arc(cx, cy, radius, 0, Math.PI * 2);
-    ctx.fillStyle = gradient;
-    ctx.fill();
-
-    // Светлый ободок (освещённый край)
-    ctx.beginPath();
-    ctx.arc(cx, cy, radius * 0.95, 0, Math.PI * 2);
-    ctx.strokeStyle = 'rgba(180, 180, 180, 0.3)';
-    ctx.lineWidth = radius * 0.1;
-    ctx.stroke();
-  }
-
-  // Добавляем тёмные "моря" (mare)
-  const maria = [
-    { x: 0.4, y: 0.4, rx: 0.2, ry: 0.15 },
-    { x: 0.65, y: 0.55, rx: 0.12, ry: 0.18 },
-  ];
-
-  for (const mare of maria) {
-    ctx.beginPath();
-    ctx.ellipse(mare.x * size, mare.y * size, mare.rx * size, mare.ry * size, 0, 0, Math.PI * 2);
-    ctx.fillStyle = 'rgba(70, 70, 75, 0.4)';
-    ctx.fill();
-  }
-
-  const texture = new THREE.CanvasTexture(canvas);
-  texture.wrapS = THREE.RepeatWrapping;
-  texture.wrapT = THREE.RepeatWrapping;
-  return texture;
-}
-
-/* ---------- Луна с процедурными кратерами ---------- */
+/* ---------- Луна с реальной текстурой ---------- */
 
 function Moon({ scrollProgress }: { scrollProgress: number }) {
   const moonRef = useRef<THREE.Mesh>(null);
   const orbitRef = useRef<THREE.Group>(null);
   const currentOrbitAngle = useRef(0);
 
-  const moonTexture = useMemo(() => createMoonTexture(), []);
+  const moonTexture = useLoader(THREE.TextureLoader, MOON_TEXTURE_URL);
 
   useFrame(() => {
     if (orbitRef.current) {
@@ -269,29 +175,27 @@ function Moon({ scrollProgress }: { scrollProgress: number }) {
       orbitRef.current.rotation.y = currentOrbitAngle.current;
     }
     if (moonRef.current) {
-      moonRef.current.rotation.y = -currentOrbitAngle.current;
+      moonRef.current.rotation.y = -currentOrbitAngle.current * 0.5;
     }
   });
 
   return (
     <group ref={orbitRef}>
       <mesh ref={moonRef} position={[3.5, 0.3, 0]}>
-        <sphereGeometry args={[0.35, 32, 32]} />
+        <sphereGeometry args={[0.4, 64, 64]} />
         <meshStandardMaterial
           map={moonTexture}
-          roughness={0.95}
-          metalness={0.0}
-          bumpMap={moonTexture}
-          bumpScale={0.02}
+          roughness={1}
+          metalness={0}
         />
       </mesh>
     </group>
   );
 }
 
-/* ---------- Реалистичные мелкие звёзды ---------- */
+/* ---------- Яркие звёзды ---------- */
 
-function Stars({ count = 3000 }: { count?: number }) {
+function Stars({ count = 5000 }: { count?: number }) {
   const pointsRef = useRef<THREE.Points>(null);
   const { camera, pointer } = useThree();
 
@@ -303,8 +207,8 @@ function Stars({ count = 3000 }: { count?: number }) {
     const phases = new Float32Array(count);
 
     for (let i = 0; i < count; i++) {
-      // Звёзды очень далеко - от 50 до 150 единиц
-      const r = 50 + Math.random() * 100;
+      // Звёзды на сфере вокруг сцены
+      const r = 80 + Math.random() * 120;
       const theta = Math.random() * Math.PI * 2;
       const phi = Math.acos(2 * Math.random() - 1);
 
@@ -312,21 +216,21 @@ function Stars({ count = 3000 }: { count?: number }) {
       pos[i * 3 + 1] = r * Math.sin(phi) * Math.sin(theta);
       pos[i * 3 + 2] = r * Math.cos(phi);
 
-      // Размер - большинство очень мелкие, редко крупнее
+      // Размер - больше звёзд крупных
       const sizeRandom = Math.random();
-      if (sizeRandom < 0.7) {
-        sz[i] = 0.3 + Math.random() * 0.4; // 70% мелкие
-      } else if (sizeRandom < 0.95) {
-        sz[i] = 0.7 + Math.random() * 0.5; // 25% средние
+      if (sizeRandom < 0.5) {
+        sz[i] = 1.0 + Math.random() * 1.0; // 50% мелкие
+      } else if (sizeRandom < 0.85) {
+        sz[i] = 2.0 + Math.random() * 1.5; // 35% средние
       } else {
-        sz[i] = 1.2 + Math.random() * 0.6; // 5% яркие
+        sz[i] = 3.5 + Math.random() * 2.0; // 15% яркие
       }
 
-      // Яркость - большинство тусклые
-      bright[i] = 0.3 + Math.random() * 0.7;
+      // Яркость - большинство яркие
+      bright[i] = 0.6 + Math.random() * 0.4;
 
       // Медленное мерцание
-      speeds[i] = 0.3 + Math.random() * 1.5;
+      speeds[i] = 0.5 + Math.random() * 2.0;
       phases[i] = Math.random() * Math.PI * 2;
     }
 
@@ -566,20 +470,21 @@ function Scene({ scrollProgress }: { scrollProgress: number }) {
   const [texturesLoaded, setTexturesLoaded] = useState(false);
 
   useEffect(() => {
-    // Предзагрузка текстур Земли
+    // Предзагрузка текстур Земли и Луны
     const loader = new THREE.TextureLoader();
     Promise.all([
       loader.loadAsync(EARTH_TEXTURE_URL),
       loader.loadAsync(EARTH_BUMP_URL),
       loader.loadAsync(EARTH_SPECULAR_URL),
+      loader.loadAsync(MOON_TEXTURE_URL),
     ]).then(() => setTexturesLoaded(true)).catch(() => setTexturesLoaded(true));
   }, []);
 
   return (
     <>
       <AdaptiveCamera />
-      <ambientLight intensity={0.2} />
-      <directionalLight position={[5, 3, 5]} intensity={1.2} />
+      <ambientLight intensity={0.3} />
+      <directionalLight position={[5, 3, 5]} intensity={1.5} />
 
       {texturesLoaded ? (
         <>
@@ -592,7 +497,7 @@ function Scene({ scrollProgress }: { scrollProgress: number }) {
 
       <NetworkNodes scrollProgress={scrollProgress} />
       <NetworkEdges scrollProgress={scrollProgress} />
-      <Stars count={3000} />
+      <Stars count={6000} />
     </>
   );
 }
