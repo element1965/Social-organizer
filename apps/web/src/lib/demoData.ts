@@ -429,6 +429,7 @@ let settingsState = {
   language: 'ru',
   theme: 'DARK',
   soundEnabled: true,
+  voiceGender: 'FEMALE' as 'FEMALE' | 'MALE',
   fontScale: 1.0,
 };
 
@@ -585,6 +586,37 @@ export function handleDemoRequest(path: string, input: unknown): unknown {
         total: 12500,
         contributors: 87,
       };
+
+    case 'chat.send': {
+      const { message, language } = input as { message: string; language: string };
+      // Demo mode: return a helpful response based on keywords
+      const q = message.toLowerCase();
+      const isRu = language.startsWith('ru');
+
+      let response: string;
+      if (q.includes('рукопожатие') || q.includes('handshake') || q.includes('связь') || q.includes('connection')) {
+        response = isRu
+          ? 'Рукопожатие — это взаимное подтверждение связи между двумя людьми. Оба должны подтвердить. Лимит: 150 (число Данбара).'
+          : 'A handshake is a mutual confirmation of connection between two people. Both must confirm. Limit: 150 (Dunbar\'s number).';
+      } else if (q.includes('намерение') || q.includes('intention') || q.includes('помощь') || q.includes('help')) {
+        response = isRu
+          ? 'Намерение — ваше добровольное решение помочь кому-то. Это не обязательство! Записывается и видно всей сети.'
+          : 'An intention is your voluntary decision to help someone. It\'s not an obligation! Recorded and visible to the network.';
+      } else if (q.includes('возможности') || q.includes('capabilities') || q.includes('бюджет') || q.includes('budget')) {
+        response = isRu
+          ? 'Текущие возможности — сумма месячных бюджетов всех участников вашей сети. Показывает готовность помогать.'
+          : 'Current Capabilities is the sum of monthly budgets across your network. Shows collective willingness to help.';
+      } else if (q.includes('начать') || q.includes('start') || q.includes('как') || q.includes('how')) {
+        response = isRu
+          ? 'Начните с добавления рукопожатий с людьми, которых знаете лично. Затем установите месячный бюджет (необязательно). Когда кому-то нужна помощь — получите уведомление!'
+          : 'Start by adding handshakes with people you know personally. Then set your monthly budget (optional). When someone needs help — you\'ll get a notification!';
+      } else {
+        response = isRu
+          ? 'Я могу объяснить как работает приложение. Спросите о рукопожатиях, намерениях, текущих возможностях сети или как начать пользоваться.'
+          : 'I can explain how the app works. Ask about handshakes, intentions, current capabilities, or how to get started.';
+      }
+      return { response };
+    }
 
     // ---- Currency ----
     case 'currency.list':
@@ -784,6 +816,9 @@ export function handleDemoRequest(path: string, input: unknown): unknown {
       return { ...demoUser, ...settingsState };
     case 'settings.updateSound':
       settingsState = { ...settingsState, soundEnabled: (inp?.soundEnabled as boolean) ?? settingsState.soundEnabled };
+      return { ...demoUser, ...settingsState };
+    case 'settings.updateVoiceGender':
+      settingsState = { ...settingsState, voiceGender: (inp?.voiceGender as 'FEMALE' | 'MALE') ?? settingsState.voiceGender };
       return { ...demoUser, ...settingsState };
     case 'settings.updateFontScale':
       settingsState = { ...settingsState, fontScale: (inp?.fontScale as number) ?? settingsState.fontScale };

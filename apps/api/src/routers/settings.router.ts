@@ -6,7 +6,7 @@ export const settingsRouter = router({
   get: protectedProcedure.query(async ({ ctx }) => {
     const user = await ctx.db.user.findUnique({
       where: { id: ctx.userId },
-      select: { language: true, theme: true, soundEnabled: true, fontScale: true },
+      select: { language: true, theme: true, soundEnabled: true, voiceGender: true, fontScale: true },
     });
     if (!user) throw new TRPCError({ code: 'NOT_FOUND' });
     return user;
@@ -28,6 +28,12 @@ export const settingsRouter = router({
     .input(z.object({ soundEnabled: z.boolean() }))
     .mutation(async ({ ctx, input }) => {
       return ctx.db.user.update({ where: { id: ctx.userId }, data: { soundEnabled: input.soundEnabled } });
+    }),
+
+  updateVoiceGender: protectedProcedure
+    .input(z.object({ voiceGender: z.enum(['MALE', 'FEMALE']) }))
+    .mutation(async ({ ctx, input }) => {
+      return ctx.db.user.update({ where: { id: ctx.userId }, data: { voiceGender: input.voiceGender } });
     }),
 
   updateFontScale: protectedProcedure

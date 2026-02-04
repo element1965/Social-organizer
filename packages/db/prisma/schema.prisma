@@ -26,6 +26,11 @@ enum Theme {
   SYSTEM
 }
 
+enum VoiceGender {
+  MALE
+  FEMALE
+}
+
 enum CollectionType {
   EMERGENCY
   REGULAR
@@ -67,8 +72,9 @@ model User {
   photoUrl            String?
   language            String    @default("en")
   theme               Theme     @default(SYSTEM)
-  soundEnabled        Boolean   @default(true)
-  fontScale           Float     @default(1.0)
+  soundEnabled        Boolean     @default(true)
+  voiceGender         VoiceGender @default(FEMALE)
+  fontScale           Float       @default(1.0)
   role                UserRole  @default(REGULAR)
   onboardingCompleted Boolean   @default(false)
   preferredCurrency   String    @default("USD")
