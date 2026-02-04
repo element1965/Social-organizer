@@ -152,7 +152,8 @@
     "invite": "Mời",
     "qrCode": "Mã QR",
     "empty": "Không có kết nối",
-    "emptyHint": "Mời người đầu tiên của bạn"
+    "emptyHint": "Mời người đầu tiên của bạn",
+    "controlsHint": "Left-click: rotate, Scroll: zoom, Right-click: pan"
   },
   "notifications": {
     "title": "Thông báo",

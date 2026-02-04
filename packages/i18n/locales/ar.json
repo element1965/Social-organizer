@@ -152,7 +152,8 @@
     "invite": "دعوة",
     "qrCode": "رمز QR",
     "empty": "لا توجد اتصالات",
-    "emptyHint": "ادعُ أول شخص"
+    "emptyHint": "ادعُ أول شخص",
+    "controlsHint": "Left-click: rotate, Scroll: zoom, Right-click: pan"
   },
   "notifications": {
     "title": "الإشعارات",

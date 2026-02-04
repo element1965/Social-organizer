@@ -152,7 +152,8 @@
     "invite": "초대",
     "qrCode": "QR 코드",
     "empty": "연결이 없습니다",
-    "emptyHint": "첫 번째 사람을 초대하세요"
+    "emptyHint": "첫 번째 사람을 초대하세요",
+    "controlsHint": "Left-click: rotate, Scroll: zoom, Right-click: pan"
   },
   "notifications": {
     "title": "알림",

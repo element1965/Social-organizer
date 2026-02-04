@@ -152,7 +152,8 @@
     "invite": "Undang",
     "qrCode": "Kode QR",
     "empty": "Tidak ada koneksi",
-    "emptyHint": "Undang orang pertamamu"
+    "emptyHint": "Undang orang pertamamu",
+    "controlsHint": "Left-click: rotate, Scroll: zoom, Right-click: pan"
   },
   "notifications": {
     "title": "Notifikasi",

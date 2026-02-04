@@ -152,7 +152,8 @@
     "invite": "เชิญ",
     "qrCode": "QR โค้ด",
     "empty": "ไม่มีการเชื่อมต่อ",
-    "emptyHint": "เชิญคนแรกของคุณ"
+    "emptyHint": "เชิญคนแรกของคุณ",
+    "controlsHint": "Left-click: rotate, Scroll: zoom, Right-click: pan"
   },
   "notifications": {
     "title": "การแจ้งเตือน",

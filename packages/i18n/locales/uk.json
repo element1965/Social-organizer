@@ -147,7 +147,8 @@
     "invite": "Запросити",
     "qrCode": "QR-код",
     "empty": "Немає контактів",
-    "emptyHint": "Запросіть свою першу людину"
+    "emptyHint": "Запросіть свою першу людину",
+    "controlsHint": "Left-click: rotate, Scroll: zoom, Right-click: pan"
   },
   "notifications": {
     "title": "Сповіщення",

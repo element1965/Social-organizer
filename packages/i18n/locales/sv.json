@@ -152,7 +152,8 @@
     "invite": "Bjud in",
     "qrCode": "QR-kod",
     "empty": "Inga kontakter",
-    "emptyHint": "Bjud in din första person"
+    "emptyHint": "Bjud in din första person",
+    "controlsHint": "Left-click: rotate, Scroll: zoom, Right-click: pan"
   },
   "notifications": {
     "title": "Aviseringar",

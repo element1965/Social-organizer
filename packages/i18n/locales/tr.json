@@ -152,7 +152,8 @@
     "invite": "Davet Et",
     "qrCode": "QR Kodu",
     "empty": "Bağlantı yok",
-    "emptyHint": "İlk kişinizi davet edin"
+    "emptyHint": "İlk kişinizi davet edin",
+    "controlsHint": "Left-click: rotate, Scroll: zoom, Right-click: pan"
   },
   "notifications": {
     "title": "Bildirimler",
