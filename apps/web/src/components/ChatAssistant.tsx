@@ -258,7 +258,7 @@ export function ChatAssistant() {
           </div>
 
           {/* Input */}
-          <div className="p-3 border-t border-gray-200 dark:border-gray-700 flex gap-2">
+          <div className="p-3 border-t border-gray-200 dark:border-gray-700 flex items-center gap-1.5">
             <button
               onClick={toggleListening}
               disabled={isLoading}
@@ -278,17 +278,19 @@ export function ChatAssistant() {
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && !e.shiftKey && handleSubmit()}
               placeholder={t('chat.placeholder')}
-              className="flex-1"
+              className="flex-1 min-w-0"
               disabled={isListening || isLoading}
             />
-            <Button
+            <button
               onClick={handleSubmit}
               disabled={!input.trim() || isListening || isLoading}
-              size="sm"
-              className="shrink-0"
+              className={cn(
+                "p-2 rounded-full shrink-0 bg-blue-600 text-white transition-colors",
+                (!input.trim() || isListening || isLoading) ? "opacity-50 cursor-not-allowed" : "hover:bg-blue-700"
+              )}
             >
               <Send className="w-4 h-4" />
-            </Button>
+            </button>
           </div>
         </div>
       )}
