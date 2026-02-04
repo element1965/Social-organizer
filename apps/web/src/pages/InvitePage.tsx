@@ -64,14 +64,24 @@ export function InvitePage() {
               <p className="font-medium">{t('invite.success')}</p>
             </div>
           ) : (
-            <Button
-              className="w-full"
-              size="lg"
-              onClick={() => accept.mutate({ token: token! })}
-              disabled={accept.isPending}
-            >
-              <UserPlus className="w-4 h-4 mr-2" /> {t('invite.accept')}
-            </Button>
+            <div className="flex flex-col gap-2">
+              <Button
+                className="w-full"
+                size="lg"
+                onClick={() => accept.mutate({ token: token! })}
+                disabled={accept.isPending}
+              >
+                <UserPlus className="w-4 h-4 mr-2" /> {t('invite.accept')}
+              </Button>
+              <Button
+                className="w-full"
+                size="lg"
+                variant="outline"
+                onClick={() => navigate('/')}
+              >
+                {t('invite.decline')}
+              </Button>
+            </div>
           )}
           {accept.error && <p className="text-sm text-red-500 mt-2">{accept.error.message}</p>}
         </CardContent>

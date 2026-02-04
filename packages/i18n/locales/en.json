@@ -291,6 +291,7 @@
     "title": "Invitation",
     "from": "{{name}} invites you",
     "accept": "Accept & Connect",
+    "decline": "Decline",
     "alreadyUsed": "This invite has already been used",
     "success": "Connected!"
   },
