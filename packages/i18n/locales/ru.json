@@ -114,7 +114,14 @@
     "editBudget": "Изменить",
     "yourContribution": "Ваш вклад",
     "budgetDepletedHint": "Ваш месячный бюджет поддержки исчерпан. Хотите добавить?",
-    "updateBudget": "Обновить бюджет"
+    "updateBudget": "Обновить бюджет",
+    "helpGivenByPeriod": "Оказано помощи",
+    "periodAllTime": "За всё время",
+    "periodYear": "За год",
+    "periodMonth": "За месяц",
+    "periodWeek": "За неделю",
+    "periodDay": "За день",
+    "times": "раз"
   },
   "collection": {
     "create": "Подать сигнал о помощи",

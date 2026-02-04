@@ -47,6 +47,7 @@ export function DashboardPage() {
   const { data: networkStats } = trpc.connection.getNetworkStats.useQuery(undefined, { refetchInterval: 60000 });
   const { data: notifications } = trpc.notification.list.useQuery({ limit: 10 }, { refetchInterval: 30000 });
   const { data: helpStats } = trpc.stats.help.useQuery(undefined, { refetchInterval: 60000 });
+  const { data: helpByPeriod } = trpc.stats.helpGivenByPeriod.useQuery(undefined, { refetchInterval: 60000 });
   const { data: networkCapabilities } = trpc.stats.networkCapabilities.useQuery(undefined, { refetchInterval: 60000 });
 
   const totalReachable = networkStats?.totalReachable ?? 0;
@@ -420,6 +421,42 @@ export function DashboardPage() {
               sublabel="USD"
             />
           </div>
+
+          {/* Help given by period */}
+          <Card>
+            <CardHeader>
+              <h3 className="font-semibold text-gray-900 dark:text-white flex items-center gap-2">
+                <HandHeart className="w-5 h-5 text-green-600" />
+                {t('dashboard.helpGivenByPeriod')}
+              </h3>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-3">
+                {[
+                  { key: 'allTime', label: t('dashboard.periodAllTime') },
+                  { key: 'year', label: t('dashboard.periodYear') },
+                  { key: 'month', label: t('dashboard.periodMonth') },
+                  { key: 'week', label: t('dashboard.periodWeek') },
+                  { key: 'day', label: t('dashboard.periodDay') },
+                ].map(({ key, label }) => {
+                  const data = helpByPeriod?.[key as keyof typeof helpByPeriod];
+                  return (
+                    <div key={key} className="flex items-center justify-between py-2 border-b border-gray-100 dark:border-gray-800 last:border-0">
+                      <span className="text-sm text-gray-600 dark:text-gray-400">{label}</span>
+                      <div className="flex items-center gap-3">
+                        <span className="text-sm text-gray-500">
+                          {data?.count ?? 0} {t('dashboard.times')}
+                        </span>
+                        <span className="text-sm font-semibold text-green-600 dark:text-green-400">
+                          ${data?.amount ?? 0}
+                        </span>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </CardContent>
+          </Card>
         </div>
       )}
 
