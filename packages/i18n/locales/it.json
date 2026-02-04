@@ -234,6 +234,8 @@
     "success": "Connesso!"
   },
   "landing": {
+    "painQuote": "Quando i problemi arrivano — resti solo. Gli amici non lo sanno. Gli amici degli amici — ancora meno. Eppure qualcuno di loro potrebbe aiutare.",
+    "painSolution": "Social Organizer risolve questo — un segnale, e le persone giuste lo sapranno.",
     "heroSubtitle": "A social coordination tool — activating latent social connectivity into a p2p environment of mutual aid and direct cooperation",
     "heroStart": "Inizia",
     "heroLearnMore": "Scopri di più",

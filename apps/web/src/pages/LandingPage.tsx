@@ -107,6 +107,22 @@ export function LandingPage() {
           </button>
         </section>
 
+        {/* === Section: Pain Point Quote === */}
+        <section className="min-h-[50vh] flex flex-col items-center justify-center px-6 py-16">
+          <div className="max-w-3xl w-full">
+            <blockquote className="relative">
+              <div className="text-6xl text-teal-500/30 absolute -top-8 -left-4 font-serif">"</div>
+              <p className="text-xl md:text-2xl text-gray-300 leading-relaxed text-center italic pl-6 pr-6">
+                {t('landing.painQuote')}
+              </p>
+              <div className="text-6xl text-teal-500/30 absolute -bottom-12 right-0 font-serif">"</div>
+            </blockquote>
+            <p className="text-gray-500 text-center mt-8 text-sm">
+              {t('landing.painSolution')}
+            </p>
+          </div>
+        </section>
+
         {/* === Section 2: What is it === */}
         <section className="min-h-[80vh] flex flex-col items-center justify-center px-6 py-20">
           <h2 className="text-3xl md:text-5xl font-bold text-white mb-4 text-center">

@@ -234,6 +234,8 @@
     "success": "Đã kết nối!"
   },
   "landing": {
+    "painQuote": "Khi gặp khó khăn — bạn ở một mình. Bạn bè không biết. Bạn của bạn bè — càng không. Nhưng ai đó trong số họ có thể giúp được.",
+    "painSolution": "Social Organizer giải quyết điều này — một tín hiệu, và những người phù hợp sẽ biết.",
     "heroSubtitle": "A social coordination tool — activating latent social connectivity into a p2p environment of mutual aid and direct cooperation",
     "heroStart": "Bắt đầu",
     "heroLearnMore": "Tìm hiểu thêm",

@@ -234,6 +234,8 @@
     "success": "Forbundet!"
   },
   "landing": {
+    "painQuote": "Når problemer opstår — står du alene. Venner ved det ikke. Venners venner — endnu mindre. Men nogen af dem kunne hjælpe.",
+    "painSolution": "Social Organizer løser dette — ét signal, og de rigtige mennesker finder ud af det.",
     "heroSubtitle": "A social coordination tool — activating latent social connectivity into a p2p environment of mutual aid and direct cooperation",
     "heroStart": "Kom i gang",
     "heroLearnMore": "Læs mere",

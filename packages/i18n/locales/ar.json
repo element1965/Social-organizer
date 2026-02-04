@@ -234,6 +234,8 @@
     "success": "تم الاتصال!"
   },
   "landing": {
+    "painQuote": "عندما تحدث مشكلة — تبقى وحدك. الأصدقاء لا يعرفون. أصدقاء الأصدقاء — أقل من ذلك. لكن أحدهم كان بإمكانه المساعدة.",
+    "painSolution": "Social Organizer يحل هذه المشكلة — إشارة واحدة، والأشخاص المناسبون يعرفون.",
     "heroSubtitle": "A social coordination tool — activating latent social connectivity into a p2p environment of mutual aid and direct cooperation",
     "heroStart": "ابدأ",
     "heroLearnMore": "اعرف المزيد",

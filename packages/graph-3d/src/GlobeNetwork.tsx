@@ -158,12 +158,109 @@ function Earth({ scrollProgress }: { scrollProgress: number }) {
   );
 }
 
-/* ---------- Луна (процедурный материал - серая поверхность) ---------- */
+/* ---------- Процедурная текстура Луны с кратерами ---------- */
+
+function createMoonTexture(): THREE.CanvasTexture {
+  const size = 512;
+  const canvas = document.createElement('canvas');
+  canvas.width = size;
+  canvas.height = size;
+  const ctx = canvas.getContext('2d')!;
+
+  // Базовый серый цвет луны
+  ctx.fillStyle = '#888888';
+  ctx.fillRect(0, 0, size, size);
+
+  // Добавляем noise для текстуры поверхности
+  const imageData = ctx.getImageData(0, 0, size, size);
+  const data = imageData.data;
+  for (let i = 0; i < data.length; i += 4) {
+    const noise = (Math.random() - 0.5) * 30;
+    data[i] = Math.max(0, Math.min(255, data[i]! + noise));
+    data[i + 1] = Math.max(0, Math.min(255, data[i + 1]! + noise));
+    data[i + 2] = Math.max(0, Math.min(255, data[i + 2]! + noise));
+  }
+  ctx.putImageData(imageData, 0, 0);
+
+  // Рисуем кратеры разных размеров
+  const craters = [
+    // Большие кратеры
+    { x: 0.25, y: 0.3, r: 0.12 },
+    { x: 0.7, y: 0.25, r: 0.1 },
+    { x: 0.5, y: 0.65, r: 0.14 },
+    { x: 0.15, y: 0.7, r: 0.08 },
+    { x: 0.8, y: 0.6, r: 0.09 },
+    // Средние кратеры
+    { x: 0.35, y: 0.15, r: 0.05 },
+    { x: 0.6, y: 0.45, r: 0.06 },
+    { x: 0.2, y: 0.5, r: 0.04 },
+    { x: 0.85, y: 0.35, r: 0.05 },
+    { x: 0.45, y: 0.85, r: 0.055 },
+    { x: 0.9, y: 0.8, r: 0.045 },
+    { x: 0.1, y: 0.15, r: 0.035 },
+    // Мелкие кратеры
+    ...Array.from({ length: 40 }, () => ({
+      x: Math.random(),
+      y: Math.random(),
+      r: 0.01 + Math.random() * 0.025,
+    })),
+  ];
+
+  for (const crater of craters) {
+    const cx = crater.x * size;
+    const cy = crater.y * size;
+    const radius = crater.r * size;
+
+    // Тень кратера (темнее)
+    const gradient = ctx.createRadialGradient(
+      cx - radius * 0.2, cy - radius * 0.2, 0,
+      cx, cy, radius
+    );
+    gradient.addColorStop(0, 'rgba(40, 40, 40, 0.7)');
+    gradient.addColorStop(0.5, 'rgba(60, 60, 60, 0.5)');
+    gradient.addColorStop(0.8, 'rgba(100, 100, 100, 0.3)');
+    gradient.addColorStop(1, 'rgba(120, 120, 120, 0)');
+
+    ctx.beginPath();
+    ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+    ctx.fillStyle = gradient;
+    ctx.fill();
+
+    // Светлый ободок (освещённый край)
+    ctx.beginPath();
+    ctx.arc(cx, cy, radius * 0.95, 0, Math.PI * 2);
+    ctx.strokeStyle = 'rgba(180, 180, 180, 0.3)';
+    ctx.lineWidth = radius * 0.1;
+    ctx.stroke();
+  }
+
+  // Добавляем тёмные "моря" (mare)
+  const maria = [
+    { x: 0.4, y: 0.4, rx: 0.2, ry: 0.15 },
+    { x: 0.65, y: 0.55, rx: 0.12, ry: 0.18 },
+  ];
+
+  for (const mare of maria) {
+    ctx.beginPath();
+    ctx.ellipse(mare.x * size, mare.y * size, mare.rx * size, mare.ry * size, 0, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(70, 70, 75, 0.4)';
+    ctx.fill();
+  }
+
+  const texture = new THREE.CanvasTexture(canvas);
+  texture.wrapS = THREE.RepeatWrapping;
+  texture.wrapT = THREE.RepeatWrapping;
+  return texture;
+}
+
+/* ---------- Луна с процедурными кратерами ---------- */
 
 function Moon({ scrollProgress }: { scrollProgress: number }) {
   const moonRef = useRef<THREE.Mesh>(null);
   const orbitRef = useRef<THREE.Group>(null);
   const currentOrbitAngle = useRef(0);
+
+  const moonTexture = useMemo(() => createMoonTexture(), []);
 
   useFrame(() => {
     if (orbitRef.current) {
@@ -181,9 +278,11 @@ function Moon({ scrollProgress }: { scrollProgress: number }) {
       <mesh ref={moonRef} position={[3.5, 0.3, 0]}>
         <sphereGeometry args={[0.35, 32, 32]} />
         <meshStandardMaterial
-          color="#aaaaaa"
-          roughness={0.9}
+          map={moonTexture}
+          roughness={0.95}
           metalness={0.0}
+          bumpMap={moonTexture}
+          bumpScale={0.02}
         />
       </mesh>
     </group>
@@ -508,7 +607,12 @@ export interface GlobeNetworkProps {
 export function GlobeNetwork({ className, scrollProgress }: GlobeNetworkProps) {
   return (
     <div className={className} style={{ width: '100%', height: '100%' }}>
-      <Canvas camera={{ position: [0, 0, 5], fov: 45 }} gl={{ antialias: true, alpha: true }}>
+      <Canvas
+        camera={{ position: [0, 0, 5], fov: 45 }}
+        gl={{ antialias: true, alpha: false }}
+        style={{ background: 'linear-gradient(to bottom, #000510 0%, #020817 50%, #030b1a 100%)' }}
+      >
+        <color attach="background" args={['#020817']} />
         <Scene scrollProgress={scrollProgress} />
       </Canvas>
     </div>
