@@ -234,6 +234,8 @@
     "success": "Verbonden!"
   },
   "landing": {
+    "painQuote": "Als er problemen zijn — sta je alleen. Vrienden weten het niet. Vrienden van vrienden — nog minder. Maar iemand van hen had kunnen helpen.",
+    "painSolution": "Social Organizer lost dit op — één signaal, en de juiste mensen weten het.",
     "heroSubtitle": "A social coordination tool — activating latent social connectivity into a p2p environment of mutual aid and direct cooperation",
     "heroStart": "Beginnen",
     "heroLearnMore": "Meer weten",

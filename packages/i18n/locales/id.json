@@ -234,6 +234,8 @@
     "success": "Terhubung!"
   },
   "landing": {
+    "painQuote": "Ketika masalah datang — kamu sendirian. Teman tidak tahu. Teman dari teman — lebih tidak tahu lagi. Padahal seseorang dari mereka bisa membantu.",
+    "painSolution": "Social Organizer menyelesaikan ini — satu sinyal, dan orang yang tepat akan tahu.",
     "heroSubtitle": "A social coordination tool — activating latent social connectivity into a p2p environment of mutual aid and direct cooperation",
     "heroStart": "Mulai",
     "heroLearnMore": "Pelajari lebih lanjut",

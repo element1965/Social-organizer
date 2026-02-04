@@ -234,6 +234,8 @@
     "success": "Connecté !"
   },
   "landing": {
+    "painQuote": "Quand les problèmes arrivent — tu restes seul. Les amis ne savent pas. Les amis d'amis — encore moins. Pourtant, quelqu'un parmi eux pourrait aider.",
+    "painSolution": "Social Organizer résout ce problème — un signal, et les bonnes personnes sont informées.",
     "heroSubtitle": "Un outil de coordination sociale — activation de la connectivité sociale latente en un environnement p2p d'entraide et de coopération directe",
     "heroStart": "Commencer",
     "heroLearnMore": "En savoir plus",

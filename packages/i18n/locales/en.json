@@ -240,6 +240,8 @@
     "success": "Connected!"
   },
   "landing": {
+    "painQuote": "When trouble strikes — you're alone. Friends don't know. Friends of friends — even less so. Yet someone among them could help.",
+    "painSolution": "Social Organizer solves this — one signal, and the right people find out.",
     "heroSubtitle": "When you need help — the right people find out. No spam, no pressure, through those you trust.",
     "heroStart": "Get Started",
     "heroLearnMore": "Learn More",

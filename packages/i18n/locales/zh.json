@@ -234,6 +234,8 @@
     "success": "已连接！"
   },
   "landing": {
+    "painQuote": "当困难来临时——你独自面对。朋友不知道。朋友的朋友——更不知道。但他们中的某个人本可以帮忙。",
+    "painSolution": "Social Organizer 解决了这个问题——一个信号，合适的人就会知道。",
     "heroSubtitle": "A social coordination tool — activating latent social connectivity into a p2p environment of mutual aid and direct cooperation",
     "heroStart": "开始",
     "heroLearnMore": "了解更多",

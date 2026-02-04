@@ -234,6 +234,8 @@
     "success": "जुड़ गए!"
   },
   "landing": {
+    "painQuote": "जब मुसीबत आती है — आप अकेले रह जाते हैं। दोस्त नहीं जानते। दोस्तों के दोस्त — और भी कम। लेकिन उनमें से कोई मदद कर सकता था।",
+    "painSolution": "Social Organizer इस समस्या को हल करता है — एक संकेत, और सही लोगों को पता चल जाता है।",
     "heroSubtitle": "A social coordination tool — activating latent social connectivity into a p2p environment of mutual aid and direct cooperation",
     "heroStart": "शुरू करें",
     "heroLearnMore": "और जानें",

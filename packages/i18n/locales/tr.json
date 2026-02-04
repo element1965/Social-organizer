@@ -234,6 +234,8 @@
     "success": "Bağlandı!"
   },
   "landing": {
+    "painQuote": "Sorun çıktığında — yalnız kalırsın. Arkadaşlar bilmez. Arkadaşların arkadaşları — daha da az. Ama onlardan biri yardım edebilirdi.",
+    "painSolution": "Social Organizer bunu çözer — bir sinyal, ve doğru insanlar öğrenir.",
     "heroSubtitle": "A social coordination tool — activating latent social connectivity into a p2p environment of mutual aid and direct cooperation",
     "heroStart": "Başla",
     "heroLearnMore": "Daha fazla bilgi",

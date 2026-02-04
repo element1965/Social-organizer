@@ -234,6 +234,8 @@
     "success": "Yhdistetty!"
   },
   "landing": {
+    "painQuote": "Kun ongelmia ilmenee — jäät yksin. Ystävät eivät tiedä. Tuttujen tutut — vielä vähemmän. Mutta joku heistä voisi auttaa.",
+    "painSolution": "Social Organizer ratkaisee tämän — yksi signaali, ja oikeat ihmiset saavat tietää.",
     "heroSubtitle": "A social coordination tool — activating latent social connectivity into a p2p environment of mutual aid and direct cooperation",
     "heroStart": "Aloita",
     "heroLearnMore": "Lue lisää",

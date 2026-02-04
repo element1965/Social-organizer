@@ -234,6 +234,8 @@
     "success": "つながりました！"
   },
   "landing": {
+    "painQuote": "困った時 — 一人になってしまう。友達は知らない。友達の友達 — なおさら。でも彼らの誰かが助けてくれたかもしれない。",
+    "painSolution": "Social Organizerがこれを解決します — 一つのシグナルで、適切な人々に届きます。",
     "heroSubtitle": "A social coordination tool — activating latent social connectivity into a p2p environment of mutual aid and direct cooperation",
     "heroStart": "始める",
     "heroLearnMore": "詳しく見る",
