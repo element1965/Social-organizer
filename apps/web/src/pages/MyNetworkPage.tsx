@@ -45,7 +45,7 @@ export function MyNetworkPage() {
     <div className="p-4 space-y-4">
       <div className="flex items-center justify-between">
         <h1 className="text-xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
-          <Users className="w-5 h-5" /> {t('network.title', 'Моя сеть')}
+          <Users className="w-5 h-5" /> {t('network.title')}
         </h1>
         <div className="flex gap-2">
           <Button variant="outline" size="sm" onClick={() => setView(view === 'list' ? '3d' : 'list')}>
@@ -59,7 +59,7 @@ export function MyNetworkPage() {
       {connectionCount && (
         <div>
           <div className="flex items-center justify-between text-sm mb-1">
-            <span className="text-gray-500">{t('network.connections', 'Связей')}</span>
+            <span className="text-gray-500">{t('network.connections')}</span>
             <span className="font-medium text-gray-900 dark:text-white">{connectionCount.count} / {connectionCount.max}</span>
           </div>
           <Progress value={connectionCount.count} max={connectionCount.max} />
@@ -97,8 +97,8 @@ export function MyNetworkPage() {
           {isLoading ? <div className="flex justify-center py-12"><Spinner /></div> : !connections || connections.length === 0 ? (
             <div className="text-center py-12">
               <Users className="w-12 h-12 mx-auto text-gray-300 dark:text-gray-700 mb-3" />
-              <p className="text-gray-500">{t('network.empty', 'Нет связей')}</p>
-              <p className="text-sm text-gray-400 mt-1">{t('network.emptyHint', 'Пригласите первого человека')}</p>
+              <p className="text-gray-500">{t('network.empty')}</p>
+              <p className="text-sm text-gray-400 mt-1">{t('network.emptyHint')}</p>
             </div>
           ) : (
             <div className="space-y-1">

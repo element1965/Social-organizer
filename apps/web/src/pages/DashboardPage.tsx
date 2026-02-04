@@ -66,9 +66,9 @@ export function DashboardPage() {
   };
 
   const tabs = [
-    { id: 'network' as const, label: t('dashboard.tabNetwork', 'Сеть'), icon: <Network className="w-4 h-4" /> },
-    { id: 'stats' as const, label: t('dashboard.tabStats', 'Статистика'), icon: <BarChart3 className="w-4 h-4" /> },
-    { id: 'activity' as const, label: t('dashboard.tabActivity', 'Активность'), icon: <HandHeart className="w-4 h-4" /> },
+    { id: 'network' as const, label: t('dashboard.tabNetwork'), icon: <Network className="w-4 h-4" /> },
+    { id: 'stats' as const, label: t('dashboard.tabStats'), icon: <BarChart3 className="w-4 h-4" /> },
+    { id: 'activity' as const, label: t('dashboard.tabActivity'), icon: <HandHeart className="w-4 h-4" /> },
   ];
 
   return (
@@ -95,7 +95,7 @@ export function DashboardPage() {
           </div>
           <div className="text-left">
             <p className="text-lg font-bold text-gray-900 dark:text-white">{me?.name}</p>
-            <p className="text-xs text-gray-500">{t('dashboard.viewProfile', 'Открыть профиль')}</p>
+            <p className="text-xs text-gray-500">{t('dashboard.viewProfile')}</p>
           </div>
         </button>
         <button
@@ -118,7 +118,7 @@ export function DashboardPage() {
             <div className="flex items-center gap-2 mb-2">
               <AlertTriangle className="w-5 h-5 text-red-600" />
               <span className="font-semibold text-red-700 dark:text-red-400">
-                {t('dashboard.emergencyAlerts', 'Экстренные сигналы')} ({emergencyNotifications.length})
+                {t('dashboard.emergencyAlerts')} ({emergencyNotifications.length})
               </span>
             </div>
             <div className="space-y-2">
@@ -159,13 +159,13 @@ export function DashboardPage() {
           <CardContent className="py-8 text-center">
             <UserPlus className="w-12 h-12 text-blue-600 mx-auto mb-4" />
             <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-2">
-              {t('dashboard.addFirstConnection', 'Добавь первую связь')}
+              {t('dashboard.addFirstConnection')}
             </h2>
             <p className="text-sm text-gray-500 mb-4">
-              {t('dashboard.addFirstConnectionDesc', 'Органайзер работает через связи между людьми. Начни с одного человека — того, кому доверяешь.')}
+              {t('dashboard.addFirstConnectionDesc')}
             </p>
             <Button className="w-full" size="lg" onClick={() => navigate('/network')}>
-              <UserPlus className="w-4 h-4 mr-2" /> {t('dashboard.goToNetwork', 'Перейти к сети')}
+              <UserPlus className="w-4 h-4 mr-2" /> {t('dashboard.goToNetwork')}
             </Button>
           </CardContent>
         </Card>
@@ -173,7 +173,7 @@ export function DashboardPage() {
 
       {/* Main CTA */}
       <Button className="w-full" size="lg" variant="primary" onClick={() => navigate('/create')}>
-        <Heart className="w-5 h-5 mr-2" /> {t('dashboard.needHelp', 'Мне нужна помощь')}
+        <Heart className="w-5 h-5 mr-2" /> {t('dashboard.needHelp')}
       </Button>
 
       {/* Tabs */}
@@ -187,7 +187,7 @@ export function DashboardPage() {
             <div className="p-4 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-950/30 dark:to-purple-950/30 rounded-xl">
               <div className="flex items-center justify-between mb-3">
                 <div>
-                  <p className="text-sm text-gray-500">{t('dashboard.totalNetwork', 'Вся сеть')}</p>
+                  <p className="text-sm text-gray-500">{t('dashboard.totalNetwork')}</p>
                   <p className="text-4xl font-bold text-gray-900 dark:text-white">{totalReachable}</p>
                 </div>
                 <DonutChart
@@ -203,14 +203,14 @@ export function DashboardPage() {
               {/* Network growth inline */}
               <div className="flex items-center gap-1 pt-3 border-t border-gray-200/50 dark:border-gray-700/50">
                 <TrendingUp className="w-3 h-3 text-green-600" />
-                <span className="text-xs text-gray-500">{t('dashboard.networkGrowth', 'Рост')}:</span>
-                <span className="text-xs font-medium text-green-600">+{growth.day} 24ч</span>
+                <span className="text-xs text-gray-500">{t('dashboard.networkGrowth')}:</span>
+                <span className="text-xs font-medium text-green-600">+{growth.day} {t('dashboard.growth24h')}</span>
                 <span className="text-gray-300 dark:text-gray-600">•</span>
-                <span className="text-xs font-medium text-green-600">+{growth.week} нед</span>
+                <span className="text-xs font-medium text-green-600">+{growth.week} {t('dashboard.growthWeek')}</span>
                 <span className="text-gray-300 dark:text-gray-600">•</span>
-                <span className="text-xs font-medium text-green-600">+{growth.month} мес</span>
+                <span className="text-xs font-medium text-green-600">+{growth.month} {t('dashboard.growthMonth')}</span>
                 <span className="text-gray-300 dark:text-gray-600">•</span>
-                <span className="text-xs font-medium text-green-600">+{(growth as any).year || 0} год</span>
+                <span className="text-xs font-medium text-green-600">+{(growth as any).year || 0} {t('dashboard.growthYear')}</span>
               </div>
             </div>
 
@@ -241,7 +241,7 @@ export function DashboardPage() {
                           >
                             {depth}
                           </div>
-                          <span className="text-sm text-gray-600 dark:text-gray-400">{depth}-е рукопожатие</span>
+                          <span className="text-sm text-gray-600 dark:text-gray-400">{t('dashboard.handshakeOrdinal', { depth })}</span>
                         </div>
                         <div className="flex items-center gap-2">
                           <span className="text-xl font-bold text-gray-900 dark:text-white">{count as number}</span>
@@ -280,7 +280,7 @@ export function DashboardPage() {
                         ))}
                         {depthUsers.length > 20 && (
                           <p className="text-xs text-gray-400 text-center py-2">
-                            +{depthUsers.length - 20} ещё
+                            +{depthUsers.length - 20} {t('dashboard.more')}
                           </p>
                         )}
                       </div>
@@ -291,7 +291,7 @@ export function DashboardPage() {
             </div>
 
             <Button variant="outline" size="sm" className="w-full" onClick={() => navigate('/network')}>
-              <Users className="w-4 h-4 mr-2" /> {t('dashboard.viewNetwork', 'Открыть сеть')}
+              <Users className="w-4 h-4 mr-2" /> {t('dashboard.viewNetwork')}
             </Button>
           </CardContent>
         </Card>
@@ -304,7 +304,7 @@ export function DashboardPage() {
           <Card>
             <CardHeader>
               <h3 className="font-semibold text-gray-900 dark:text-white">
-                {t('dashboard.helpStats', 'Статистика поддержки')}
+                {t('dashboard.helpStats')}
               </h3>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -316,7 +316,7 @@ export function DashboardPage() {
                     size={120}
                     color="#10b981"
                     label={String(helpStats?.given?.count ?? 0)}
-                    sublabel={t('dashboard.helpGiven', 'Помог')}
+                    sublabel={t('dashboard.helpGiven')}
                   />
                   <p className="text-sm font-medium text-gray-600 dark:text-gray-400 mt-2">
                     {helpStats?.given?.totalAmount ?? 0} USD
@@ -329,7 +329,7 @@ export function DashboardPage() {
                     size={120}
                     color="#3b82f6"
                     label={String(helpStats?.received?.count ?? 0)}
-                    sublabel={t('dashboard.helpReceived', 'Помогли мне')}
+                    sublabel={t('dashboard.helpReceived')}
                   />
                   <p className="text-sm font-medium text-gray-600 dark:text-gray-400 mt-2">
                     {helpStats?.received?.totalAmount ?? 0} USD
@@ -340,7 +340,7 @@ export function DashboardPage() {
               {/* Bar chart by currency */}
               {helpStats?.given?.byCurrency && (
                 <div>
-                  <p className="text-xs text-gray-500 mb-2">{t('dashboard.byCurrency', 'По валютам')}</p>
+                  <p className="text-xs text-gray-500 mb-2">{t('dashboard.byCurrency')}</p>
                   <BarChart
                     data={Object.entries(helpStats.given.byCurrency as Record<string, number>).map(([currency, amount]) => ({
                       label: currency,
@@ -357,23 +357,23 @@ export function DashboardPage() {
           {/* Summary stats */}
           <div className="grid grid-cols-2 gap-3">
             <StatCard
-              label={t('dashboard.activeIntentions', 'Активных намерений')}
+              label={t('dashboard.activeIntentions')}
               value={helpStats?.activeIntentions ?? 0}
               icon={<Heart className="w-5 h-5" />}
             />
             <StatCard
-              label={t('dashboard.completedCollections', 'Закрыто сборов')}
+              label={t('dashboard.completedCollections')}
               value={helpStats?.completedCollections ?? 0}
               icon={<Users className="w-5 h-5" />}
             />
             <StatCard
-              label={t('dashboard.networkReach', 'Охват сети')}
+              label={t('dashboard.networkReach')}
               value={helpStats?.networkReach ?? 0}
-              sublabel={t('dashboard.people', 'человек')}
+              sublabel={t('dashboard.people')}
               trend={{ value: growth.month, isPositive: true }}
             />
             <StatCard
-              label={t('dashboard.totalGiven', 'Всего отдал')}
+              label={t('dashboard.totalGiven')}
               value={`${helpStats?.given?.totalAmount ?? 0}`}
               sublabel="USD"
             />
@@ -389,10 +389,10 @@ export function DashboardPage() {
             <CardHeader>
               <div className="flex items-center justify-between">
                 <h2 className="font-semibold text-gray-900 dark:text-white">
-                  {t('dashboard.myCollections', 'Мои сигналы')}
+                  {t('dashboard.myCollections')}
                 </h2>
                 <Button variant="ghost" size="sm" onClick={() => navigate('/create')}>
-                  <PlusCircle className="w-4 h-4 mr-1" /> {t('dashboard.create', 'Создать')}
+                  <PlusCircle className="w-4 h-4 mr-1" /> {t('dashboard.create')}
                 </Button>
               </div>
             </CardHeader>
@@ -401,7 +401,7 @@ export function DashboardPage() {
                 <div className="flex justify-center py-4"><Spinner /></div>
               ) : myCollections.length === 0 ? (
                 <p className="text-sm text-gray-500 text-center py-4">
-                  {t('dashboard.noCollections', 'Нет активных сигналов')}
+                  {t('dashboard.noCollections')}
                 </p>
               ) : (
                 <div className="space-y-3">
@@ -427,7 +427,7 @@ export function DashboardPage() {
                         </div>
                         {hasGoal && <Progress value={current} max={col.amount!} className="mt-1" />}
                         <div className="text-xs text-gray-500 mt-1">
-                          {col._count.obligations} {t('dashboard.intentions', 'намерений')}
+                          {col._count.obligations} {t('dashboard.intentions')}
                         </div>
                       </button>
                     );
@@ -441,7 +441,7 @@ export function DashboardPage() {
           <Card>
             <CardHeader>
               <h2 className="font-semibold text-gray-900 dark:text-white">
-                {t('dashboard.myIntentions', 'Мои намерения')}
+                {t('dashboard.myIntentions')}
               </h2>
             </CardHeader>
             <CardContent>
@@ -449,7 +449,7 @@ export function DashboardPage() {
                 <div className="flex justify-center py-4"><Spinner /></div>
               ) : myObligations.length === 0 ? (
                 <p className="text-sm text-gray-500 text-center py-4">
-                  {t('dashboard.noIntentions', 'Нет намерений')}
+                  {t('dashboard.noIntentions')}
                 </p>
               ) : (
                 <div className="space-y-2">
