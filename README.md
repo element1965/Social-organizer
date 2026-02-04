@@ -2,6 +2,11 @@
 
 A coordination app for mutual support through trusted networks. Facebook Instant Game + Telegram WebApp.
 
+## Live Demo
+
+- **Production:** https://social-organizer-production.up.railway.app
+- **Demo login:** Click "Demo login without registration" on the login page
+
 ## Architecture
 
 Turborepo monorepo with pnpm workspaces.
@@ -18,7 +23,7 @@ Social organizer/
 │   ├── api-client/      # @so/api-client: tRPC client
 │   ├── i18n/            # @so/i18n: i18next (en + ru + 23 more)
 │   ├── gun-backup/      # @so/gun-backup: Gun.js local backup (stub)
-│   ├── graph-3d/        # @so/graph-3d: Three.js visualization (PlanetScene, GlobeNetwork, NetworkGraph)
+│   ├── graph-3d/        # @so/graph-3d: Three.js visualization (Earth, Moon, Stars, Network)
 │   ├── fb-adapter/      # @so/fb-adapter: FB Instant Game SDK (stub)
 │   └── tg-adapter/      # @so/tg-adapter: Telegram WebApp (stub)
 ├── turbo.json
@@ -34,7 +39,7 @@ Social organizer/
 - **Backend:** Fastify + tRPC + Prisma + PostgreSQL 17 + BullMQ + Redis
 - **Frontend:** React 19 + Vite + Tailwind CSS + shadcn/ui
 - **Mobile:** React Native (Expo) + NativeWind
-- **3D:** Three.js + react-force-graph-3d
+- **3D:** Three.js + @react-three/fiber + NASA textures
 - **Backup:** Gun.js (IndexedDB)
 - **i18n:** i18next (25 languages: en, ru, es, fr, de, pt, it, zh, ja, ko, ar, hi, tr, pl, uk, nl, sv, da, fi, no, cs, ro, th, vi, id)
 
@@ -116,13 +121,13 @@ JWT_SECRET=your-secret-key
 | `notification` | list (cursor pagination), markRead, dismiss, unreadCount |
 | `settings` | get, updateLanguage/Theme/Sound/FontScale, ignoreList/addIgnore/removeIgnore |
 | `invite` | generate, accept, getByToken |
-| `stats` | profile |
+| `stats` | profile, help |
 
 ## Services
 
 - **Auth** — JWT (HS256), 30 min access / 30 days refresh, 6-digit linking codes
 - **BFS** — Recursive CTE in PostgreSQL for graph traversal, path finding, and notification distribution
-- **Notifications** — BFS distribution with ignore list and handshake path
+- **Notifications** — BFS distribution with 1:1 ratio (amount = notification count), ignore list, and handshake path
 
 ## BullMQ Workers
 
@@ -150,17 +155,25 @@ React 19 SPA with tRPC client.
 
 | Page | Path | Description |
 |------|------|-------------|
-| LandingPage | `/welcome` | Public landing with 3D globe and project description |
-| LoginPage | `/login` | Login via platform (FB/TG/Apple/Google) |
+| LandingPage | `/welcome` | Public landing with 3D Earth globe (NASA textures) and project description |
+| LoginPage | `/login` | Login via platform (FB/TG/Apple/Google) + demo mode |
 | OnboardingPage | `/onboarding` | 4-screen onboarding with invitation (auto for new users) |
-| DashboardPage | `/` | My collections, intentions, network, "I need support" (protected → /welcome) |
+| DashboardPage | `/` | Network stats, collections, intentions, emergency alerts (protected → /welcome) |
 | NotificationsPage | `/notifications` | Notifications with handshake path and 24h timer |
-| CreateCollectionPage | `/create` | Create collection with network reach display (USD/EUR) |
+| CreateCollectionPage | `/create` | Create collection with network reach display (1:1 ratio) |
 | CollectionPage | `/collection/:id` | Collection details + intentions + handshake path to creator |
-| MyNetworkPage | `/network` | Connection list + invitations |
+| MyNetworkPage | `/network` | Connection list with connection counts + invitations |
 | ProfilePage | `/profile/:userId` | Profile with editing, contacts, connections, handshake path |
 | SettingsPage | `/settings` | Language, theme, sounds, font scale, contacts, ignore list |
 | InvitePage | `/invite/:token` | Accept invitation link |
+
+### 3D Visualization (graph-3d)
+
+- **Earth:** NASA Blue Marble texture with bump map, specular (water), and animated clouds
+- **Moon:** Real lunar surface texture, orbiting Earth on scroll
+- **Stars:** 3000 realistic small stars with subtle twinkling, hover brightness effect
+- **Atmosphere:** Shader-based blue glow around Earth
+- **Network:** Animated nodes and edges on Earth's surface (Fibonacci sphere distribution)
 
 ### Frontend Technologies
 
@@ -178,25 +191,38 @@ React 19 SPA with tRPC client.
 
 | Chunk | Size | Gzip | Load |
 |-------|------|------|------|
-| index (main app + demo data) | 689 KB | 199 KB | Always |
-| three (Three.js core) | 1284 KB | 342 KB | Lazy |
-| r3f (React Three Fiber) | 169 KB | 54 KB | Lazy |
-| force-graph (ForceGraph3D) | 206 KB | 63 KB | Lazy |
-| CSS | 27 KB | 5 KB | Always |
-| **Total gzip** | | **~663 KB** | **< 5 MB FB limit** |
+| index (main app + demo data) | ~806 KB | ~228 KB | Always |
+| three (Three.js core) | ~1284 KB | ~342 KB | Lazy |
+| r3f (React Three Fiber) | ~171 KB | ~55 KB | Lazy |
+| force-graph (ForceGraph3D) | ~206 KB | ~63 KB | Lazy |
+| CSS | ~33 KB | ~6 KB | Always |
+| **Total gzip** | | **~694 KB** | **< 5 MB FB limit** |
 
 ## Demo Mode
 
 On the `/login` page, there's a "Demo login without registration" button. When clicked, `accessToken: 'demo-token'` is saved to localStorage, and the tRPC client switches to a custom link returning mock data without HTTP requests to the backend.
 
 Mock data (`apps/web/src/lib/demoData.ts`):
-- **200 users** — programmatically generated from 20 first names x 10 last names
-- **12 direct connections** — displayed in Dashboard and MyNetwork
+- **200 users** — programmatically generated from 20 first names × 10 last names
+- **12 direct connections** — displayed in Dashboard and MyNetwork with connection counts
 - **3D graph** — ~60 nodes + ~80 edges (3 depth levels)
-- **2 active collections** — EMERGENCY 500 USD (collected 280) and REGULAR 1000 EUR (collected 350)
+- **2 own collections** — EMERGENCY 500 USD (collected 280) and REGULAR 1000 EUR (collected 350)
+- **1 new collection** — without user participation (to demo the intention form)
 - **3 intentions** — to others' collections (50 USD, 100 EUR, 25 USD)
-- **5 notifications** — various types, 3 unread
+- **6 notifications** — including urgent unread, various types (NEW_COLLECTION, OBLIGATION_RECEIVED, CYCLE_CLOSED, etc.)
+- **Network stats** — 156 reachable users across 4 handshake levels with growth data
+- **Help stats** — given/received help, by currency breakdown
 - **Stats, settings, contacts, invitations** — all procedures covered
+
+## Key Features
+
+- **Connection count** — displayed next to every user throughout the app
+- **Handshake path** — shown when viewing profiles and collections of non-direct connections
+- **Network reach** — real-time calculation of how many people will receive notifications (min of amount or reachable users)
+- **1:1 notification ratio** — amount entered = number of people notified
+- **Localized statuses** — ACTIVE/BLOCKED/CLOSED/CANCELLED translated in all 25 languages
+- **Dark/Light theme** — system preference detection + manual toggle
+- **Onboarding** — auto-shown for new users, completable flag in database
 
 ## Terminology (Glossary)
 
@@ -206,6 +232,7 @@ Mock data (`apps/web/src/lib/demoData.ts`):
 | **Intention** | Voluntary decision to help. No pressure — everyone decides for themselves whether to participate |
 | **Signal for support** | Creating a collection when support is needed. The network is notified through handshake chains |
 | **Handshake chain** | Path of connections between two users through mutual acquaintances |
+| **Connection count** | Number of first-level connections (handshakes) a user has |
 
 ## Current Status
 
@@ -215,3 +242,8 @@ Mock data (`apps/web/src/lib/demoData.ts`):
 - [x] **Phase 3:** 3D and optimization — Three.js planet, clouds, graph, Gun.js backup, code splitting
 - [x] **Phase 4:** Deploy and testing — Railway config, API serves web frontend, SPEC audit fixes
 - [x] **Phase 5:** UX improvements — onboarding, handshake chain, contacts, tooltips, terminology
+- [x] **Phase 6:** Visual polish — NASA textures, realistic stars, connection counts everywhere
+
+## License
+
+MIT
