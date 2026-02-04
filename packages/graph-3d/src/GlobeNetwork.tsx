@@ -2,13 +2,13 @@ import { useRef, useMemo, useEffect, useState } from 'react';
 import { Canvas, useFrame, useThree, useLoader } from '@react-three/fiber';
 import * as THREE from 'three';
 
-/* ---------- URL текстур NASA ---------- */
+/* ---------- URL текстур NASA (jsdelivr CDN с CORS) ---------- */
 
-const EARTH_TEXTURE_URL = 'https://unpkg.com/three-globe@2.31.0/example/img/earth-blue-marble.jpg';
-const EARTH_BUMP_URL = 'https://unpkg.com/three-globe@2.31.0/example/img/earth-topology.png';
-const EARTH_SPECULAR_URL = 'https://unpkg.com/three-globe@2.31.0/example/img/earth-water.png';
-const EARTH_CLOUDS_URL = 'https://unpkg.com/three-globe@2.31.0/example/img/earth-clouds.png';
-const MOON_TEXTURE_URL = 'https://unpkg.com/three-globe@2.31.0/example/img/moon.jpg';
+const EARTH_TEXTURE_URL = 'https://cdn.jsdelivr.net/npm/three-globe@2.31.0/example/img/earth-blue-marble.jpg';
+const EARTH_BUMP_URL = 'https://cdn.jsdelivr.net/npm/three-globe@2.31.0/example/img/earth-topology.png';
+const EARTH_SPECULAR_URL = 'https://cdn.jsdelivr.net/npm/three-globe@2.31.0/example/img/earth-water.png';
+const EARTH_CLOUDS_URL = 'https://cdn.jsdelivr.net/npm/three-globe@2.31.0/example/img/earth-clouds.png';
+const MOON_TEXTURE_URL = 'https://cdn.jsdelivr.net/npm/three-globe@2.31.0/example/img/moon.jpg';
 
 /* ---------- GLSL: Атмосфера (внешнее свечение) ---------- */
 
