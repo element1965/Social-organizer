@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { router, protectedProcedure } from '../trpc.js';
+import { findRecipientsViaBfs } from '../services/bfs.service.js';
 
 export const statsRouter = router({
   profile: protectedProcedure
@@ -98,6 +99,30 @@ export const statsRouter = router({
       activeIntentions,
       completedCollections,
       networkReach,
+    };
+  }),
+
+  // Current network capabilities (sum of all remainingBudget in network)
+  networkCapabilities: protectedProcedure.query(async ({ ctx }) => {
+    const userId = ctx.userId;
+
+    // Get all users in network up to 3 levels
+    const recipients = await findRecipientsViaBfs(ctx.db, userId, 3, 10000, []);
+    const networkUserIds = [userId, ...recipients.map(r => r.userId)];
+
+    // Sum remainingBudget for all users with budget > 0
+    const result = await ctx.db.user.aggregate({
+      where: {
+        id: { in: networkUserIds },
+        remainingBudget: { gt: 0 },
+      },
+      _sum: { remainingBudget: true },
+      _count: { id: true },
+    });
+
+    return {
+      total: Math.round(result._sum.remainingBudget || 0),
+      contributors: result._count.id,
     };
   }),
 });

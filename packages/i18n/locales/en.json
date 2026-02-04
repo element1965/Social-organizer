@@ -51,10 +51,17 @@
       "title": "Add your first person",
       "text": "The organizer works through connections between people. Start with one person — someone you trust."
     },
+    "step5": {
+      "title": "Monthly Support Budget",
+      "text": "How much can you contribute to mutual support each month? This is completely voluntary and doesn't obligate you to anything. You can skip or change it anytime."
+    },
     "start": "Get Started",
     "next": "Next",
     "invite": "Send Invite",
-    "qrCode": "Show QR Code"
+    "qrCode": "Show QR Code",
+    "budgetNote": "This amount will be added to network capabilities",
+    "saveBudget": "Save budget & continue",
+    "skipAndStart": "Skip and start using"
   },
   "nav": {
     "home": "Home",
@@ -101,7 +108,13 @@
     "completedCollections": "Collections closed",
     "networkReach": "Network reach",
     "people": "people",
-    "totalGiven": "Total given"
+    "totalGiven": "Total given",
+    "currentCapabilities": "Current Capabilities",
+    "capabilitiesContributors": "from {{count}} contributors",
+    "editBudget": "Edit",
+    "yourContribution": "Your contribution",
+    "budgetDepletedHint": "Your monthly support budget is depleted. Would you like to add more?",
+    "updateBudget": "Update Budget"
   },
   "collection": {
     "create": "Send a help signal",
@@ -229,7 +242,21 @@
     "deleteConfirm": "Are you sure? This action is irreversible.",
     "confirmDelete": "Delete",
     "contacts": "Contacts",
-    "contactsDesc": "Add ways to contact you for network members"
+    "contactsDesc": "Add ways to contact you for network members",
+    "monthlyBudget": "Monthly Support Budget",
+    "budgetDesc": "How much you can contribute to mutual support each month",
+    "currentBudget": "Remaining",
+    "newBudgetPlaceholder": "New amount",
+    "updateBudget": "Update Budget"
+  },
+  "chat": {
+    "title": "Assistant",
+    "welcomeMessage": "Hi! I can help you understand how the app works. Ask about handshakes, intentions, or any other terms.",
+    "placeholder": "Ask a question...",
+    "speechNotSupported": "Speech recognition is not supported in your browser",
+    "openChat": "Open chat assistant",
+    "startListening": "Start voice input",
+    "stopListening": "Stop voice input"
   },
   "contacts": {
     "telegram": "Telegram",

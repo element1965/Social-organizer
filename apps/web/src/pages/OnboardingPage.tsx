@@ -3,14 +3,24 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { trpc } from '../lib/trpc';
 import { Button } from '../components/ui/button';
-import { Users, Zap, Eye, UserPlus, Share2 } from 'lucide-react';
+import { Input } from '../components/ui/input';
+import { Select } from '../components/ui/select';
+import { Users, Zap, Eye, UserPlus, Wallet, Share2 } from 'lucide-react';
 import { cn } from '../lib/utils';
 
-const steps = [
+interface Step {
+  icon: typeof Users;
+  titleKey: string;
+  textKey: string;
+  hasBudgetInput?: boolean;
+}
+
+const steps: Step[] = [
   { icon: Users, titleKey: 'onboarding.step1.title', textKey: 'onboarding.step1.text' },
   { icon: Zap, titleKey: 'onboarding.step2.title', textKey: 'onboarding.step2.text' },
   { icon: Eye, titleKey: 'onboarding.step3.title', textKey: 'onboarding.step3.text' },
   { icon: UserPlus, titleKey: 'onboarding.step4.title', textKey: 'onboarding.step4.text' },
+  { icon: Wallet, titleKey: 'onboarding.step5.title', textKey: 'onboarding.step5.text', hasBudgetInput: true },
 ];
 
 export function OnboardingPage() {
@@ -21,8 +31,19 @@ export function OnboardingPage() {
   const Icon = current.icon;
   const isLast = step === steps.length - 1;
 
+  // Budget state
+  const [budgetAmount, setBudgetAmount] = useState('');
+  const [budgetCurrency, setBudgetCurrency] = useState('USD');
+
+  const { data: currencies } = trpc.currency.list.useQuery();
+  const { data: preview } = trpc.currency.toUSD.useQuery(
+    { amount: Number(budgetAmount), from: budgetCurrency },
+    { enabled: !!budgetAmount && Number(budgetAmount) > 0 && budgetCurrency !== 'USD' }
+  );
+
   const generateInvite = trpc.invite.generate.useMutation();
   const completeOnboarding = trpc.user.completeOnboarding.useMutation();
+  const setBudget = trpc.user.setMonthlyBudget.useMutation();
   const utils = trpc.useUtils();
   const [inviteLink, setInviteLink] = useState('');
 
@@ -37,9 +58,18 @@ export function OnboardingPage() {
     }
   };
 
+  const handleSaveBudgetAndContinue = async () => {
+    if (budgetAmount && Number(budgetAmount) > 0) {
+      await setBudget.mutateAsync({
+        amount: Number(budgetAmount),
+        inputCurrency: budgetCurrency,
+      });
+    }
+    await handleInvite();
+  };
+
   const handleStart = async () => {
     await completeOnboarding.mutateAsync();
-    // Refetch user data so ProtectedRoute sees updated onboardingCompleted
     await utils.user.me.refetch();
     navigate('/');
   };
@@ -56,7 +86,35 @@ export function OnboardingPage() {
         <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">
           {t(current.textKey)}
         </p>
+
+        {/* Budget input on step 5 */}
+        {current.hasBudgetInput && (
+          <div className="w-full max-w-xs space-y-3 mt-6">
+            <div className="flex gap-2">
+              <Input
+                type="number"
+                value={budgetAmount}
+                onChange={(e) => setBudgetAmount(e.target.value)}
+                placeholder="0"
+                className="flex-1"
+                min={0}
+              />
+              <Select
+                id="budget-currency"
+                value={budgetCurrency}
+                onChange={(e) => setBudgetCurrency(e.target.value)}
+                options={currencies?.map(c => ({ value: c.code, label: `${c.symbol} ${c.code}` })) ?? [{ value: 'USD', label: '$ USD' }]}
+                className="w-28"
+              />
+            </div>
+            {budgetCurrency !== 'USD' && preview && Number(budgetAmount) > 0 && (
+              <p className="text-sm text-gray-500">≈ ${preview.result} USD</p>
+            )}
+            <p className="text-xs text-gray-400">{t('onboarding.budgetNote')}</p>
+          </div>
+        )}
       </div>
+
       <div className="w-full max-w-sm pb-8">
         <div className="flex justify-center gap-2 mb-6">
           {steps.map((_, i) => (
@@ -66,9 +124,20 @@ export function OnboardingPage() {
 
         {isLast ? (
           <div className="space-y-3">
-            <Button className="w-full" size="lg" onClick={handleInvite} disabled={generateInvite.isPending}>
-              <Share2 className="w-4 h-4 mr-2" /> {t('onboarding.invite')}
-            </Button>
+            {budgetAmount && Number(budgetAmount) > 0 ? (
+              <Button
+                className="w-full"
+                size="lg"
+                onClick={handleSaveBudgetAndContinue}
+                disabled={setBudget.isPending || generateInvite.isPending}
+              >
+                <Wallet className="w-4 h-4 mr-2" /> {t('onboarding.saveBudget')}
+              </Button>
+            ) : (
+              <Button className="w-full" size="lg" onClick={handleInvite} disabled={generateInvite.isPending}>
+                <Share2 className="w-4 h-4 mr-2" /> {t('onboarding.invite')}
+              </Button>
+            )}
             {inviteLink && (
               <div className="p-3 bg-green-50 dark:bg-green-950/30 rounded-lg text-center">
                 <p className="text-xs text-green-700 dark:text-green-400 break-all">{inviteLink}</p>
@@ -81,7 +150,7 @@ export function OnboardingPage() {
               onClick={handleStart}
               disabled={completeOnboarding.isPending}
             >
-              {t('onboarding.start')}
+              {t('onboarding.skipAndStart')}
             </Button>
           </div>
         ) : (

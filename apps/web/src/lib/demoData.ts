@@ -55,7 +55,13 @@ function makeUser(id: string, name: string, idx: number): DemoUser {
   };
 }
 
-let demoUser: DemoUser & { onboardingCompleted: boolean; preferredCurrency: string } = {
+let demoUser: DemoUser & {
+  onboardingCompleted: boolean;
+  preferredCurrency: string;
+  monthlyBudget: number | null;
+  remainingBudget: number | null;
+  budgetUpdatedAt: string | null;
+} = {
   id: DEMO_USER_ID,
   name: 'Алексей Петров',
   photoUrl: null,
@@ -70,6 +76,9 @@ let demoUser: DemoUser & { onboardingCompleted: boolean; preferredCurrency: stri
   soundEnabled: true,
   fontScale: 1.0,
   onboardingCompleted: false,
+  monthlyBudget: 200,
+  remainingBudget: 150,
+  budgetUpdatedAt: new Date().toISOString(),
 };
 
 const users: DemoUser[] = [demoUser];
@@ -466,6 +475,13 @@ export function handleDemoRequest(path: string, input: unknown): unknown {
     case 'user.setPreferredCurrency':
       demoUser.preferredCurrency = (inp?.currency as string) ?? 'USD';
       return { ...demoUser, platformAccounts: [{ platform: 'TELEGRAM', platformId: 'demo-tg-123' }] };
+    case 'user.setMonthlyBudget': {
+      const amount = (inp?.amount as number) ?? 0;
+      demoUser.monthlyBudget = amount;
+      demoUser.remainingBudget = amount;
+      demoUser.budgetUpdatedAt = new Date().toISOString();
+      return { ...demoUser, platformAccounts: [{ platform: 'TELEGRAM', platformId: 'demo-tg-123' }] };
+    }
     case 'user.getContacts': {
       const contactTypes = [
         { type: 'telegram', label: 'Telegram', icon: 'telegram', placeholder: '@username или t.me/...' },
@@ -562,6 +578,12 @@ export function handleDemoRequest(path: string, input: unknown): unknown {
         activeIntentions: 3,
         completedCollections: 1,
         networkReach: 156,
+      };
+
+    case 'stats.networkCapabilities':
+      return {
+        total: 12500,
+        contributors: 87,
       };
 
     // ---- Currency ----

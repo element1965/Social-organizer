@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Home, Bell, PlusCircle, Users, Settings } from 'lucide-react';
 import { trpc } from '../lib/trpc';
 import { cn } from '../lib/utils';
+import { ChatAssistant } from './ChatAssistant';
 
 const navItems = [
   { path: '/', icon: Home, labelKey: 'nav.home' },
@@ -25,6 +26,10 @@ export function Layout() {
       <main className="flex-1 pb-16 overflow-y-auto">
         <Outlet />
       </main>
+
+      {/* AI Chat Assistant */}
+      <ChatAssistant />
+
       <nav className="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 flex justify-around items-center h-16 z-50">
         {navItems.map((item) => {
           const active = location.pathname === item.path;
