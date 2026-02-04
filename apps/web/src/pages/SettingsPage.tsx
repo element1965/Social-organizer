@@ -46,37 +46,37 @@ export function SettingsPage() {
   return (
     <div className="p-4 space-y-4">
       <h1 className="text-xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
-        <Settings className="w-5 h-5" /> {t('settings.title', 'Настройки')}
+        <Settings className="w-5 h-5" /> {t('settings.title')}
       </h1>
 
       <Card><CardContent className="py-3"><div className="flex items-center gap-3"><Globe className="w-5 h-5 text-gray-500 shrink-0" />
-        <Select id="language" label={t('settings.language', 'Язык')} value={settings?.language || 'en'} onChange={(e) => handleLanguageChange(e.target.value)} options={Object.entries(languageNames).map(([code, name]) => ({ value: code, label: name }))} />
+        <Select id="language" label={t('settings.language')} value={settings?.language || 'en'} onChange={(e) => handleLanguageChange(e.target.value)} options={Object.entries(languageNames).map(([code, name]) => ({ value: code, label: name }))} />
       </div></CardContent></Card>
 
       <Card><CardContent className="py-3">
-        <div className="flex items-center gap-3 mb-2"><Palette className="w-5 h-5 text-gray-500" /><span className="text-sm font-medium text-gray-700 dark:text-gray-300">{t('settings.theme', 'Тема')}</span></div>
+        <div className="flex items-center gap-3 mb-2"><Palette className="w-5 h-5 text-gray-500" /><span className="text-sm font-medium text-gray-700 dark:text-gray-300">{t('settings.theme')}</span></div>
         <div className="grid grid-cols-3 gap-2">
           {(['LIGHT', 'DARK', 'SYSTEM'] as const).map((th) => (
             <button key={th} onClick={() => handleThemeChange(th)} className={cn('py-2 rounded-lg text-sm font-medium border transition-colors', mode === th.toLowerCase() ? 'border-blue-600 bg-blue-50 dark:bg-blue-950/30 text-blue-600' : 'border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400')}>
-              {th === 'LIGHT' ? t('settings.light', 'Светлая') : th === 'DARK' ? t('settings.dark', 'Тёмная') : t('settings.system', 'Авто')}
+              {th === 'LIGHT' ? t('settings.light') : th === 'DARK' ? t('settings.dark') : t('settings.system')}
             </button>
           ))}
         </div>
       </CardContent></Card>
 
       <Card><CardContent className="py-3"><div className="flex items-center justify-between">
-        <div className="flex items-center gap-3"><Volume2 className="w-5 h-5 text-gray-500" /><span className="text-sm font-medium text-gray-700 dark:text-gray-300">{t('settings.sound', 'Звуки')}</span></div>
+        <div className="flex items-center gap-3"><Volume2 className="w-5 h-5 text-gray-500" /><span className="text-sm font-medium text-gray-700 dark:text-gray-300">{t('settings.sound')}</span></div>
         <button onClick={() => updateSound.mutate({ soundEnabled: !settings?.soundEnabled })} className={cn('w-12 h-6 rounded-full transition-colors relative', settings?.soundEnabled ? 'bg-blue-600' : 'bg-gray-300 dark:bg-gray-600')}>
           <div className={cn('w-5 h-5 rounded-full bg-white shadow absolute top-0.5 transition-all', settings?.soundEnabled ? 'left-6' : 'left-0.5')} />
         </button>
       </div></CardContent></Card>
 
       <Card><CardContent className="py-3">
-        <div className="flex items-center gap-3 mb-2"><Type className="w-5 h-5 text-gray-500" /><span className="text-sm font-medium text-gray-700 dark:text-gray-300">{t('settings.fontSize', 'Размер шрифта')}</span></div>
+        <div className="flex items-center gap-3 mb-2"><Type className="w-5 h-5 text-gray-500" /><span className="text-sm font-medium text-gray-700 dark:text-gray-300">{t('settings.fontSize')}</span></div>
         <div className="grid grid-cols-2 gap-2">
-          {([{ value: 1.0, label: 'settings.fontStandard', fallback: 'Стандартный' }, { value: 1.25, label: 'settings.fontLarge', fallback: 'Увеличенный' }] as const).map((opt) => (
+          {([{ value: 1.0, label: 'settings.fontStandard' }, { value: 1.25, label: 'settings.fontLarge' }] as const).map((opt) => (
             <button key={opt.value} onClick={() => { updateFontScale.mutate({ fontScale: opt.value }); document.documentElement.style.fontSize = `${opt.value * 100}%`; }} className={cn('py-2 rounded-lg text-sm font-medium border transition-colors', (settings?.fontScale ?? 1.0) === opt.value ? 'border-blue-600 bg-blue-50 dark:bg-blue-950/30 text-blue-600' : 'border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400')}>
-              {t(opt.label, opt.fallback)}
+              {t(opt.label)}
             </button>
           ))}
         </div>
@@ -124,21 +124,21 @@ export function SettingsPage() {
       </Card>
 
       <Card><CardContent className="py-3">
-        <div className="flex items-center gap-3 mb-2"><Link className="w-5 h-5 text-gray-500" /><span className="text-sm font-medium text-gray-700 dark:text-gray-300">{t('settings.linkAccount', 'Связать аккаунт')}</span></div>
+        <div className="flex items-center gap-3 mb-2"><Link className="w-5 h-5 text-gray-500" /><span className="text-sm font-medium text-gray-700 dark:text-gray-300">{t('settings.linkAccount')}</span></div>
         {generateCode.data ? (
-          <div className="text-center py-2"><p className="text-3xl font-mono font-bold text-blue-600 tracking-widest">{generateCode.data.code}</p><p className="text-xs text-gray-500 mt-1">{t('settings.codeExpires', 'Действителен 5 минут')}</p></div>
-        ) : <Button variant="outline" size="sm" onClick={() => generateCode.mutate()} className="w-full">{t('settings.generateCode', 'Сгенерировать код')}</Button>}
+          <div className="text-center py-2"><p className="text-3xl font-mono font-bold text-blue-600 tracking-widest">{generateCode.data.code}</p><p className="text-xs text-gray-500 mt-1">{t('settings.codeExpires')}</p></div>
+        ) : <Button variant="outline" size="sm" onClick={() => generateCode.mutate()} className="w-full">{t('settings.generateCode')}</Button>}
       </CardContent></Card>
 
       <Card>
-        <CardHeader><div className="flex items-center gap-2"><UserX className="w-5 h-5 text-gray-500" /><h2 className="font-semibold text-gray-900 dark:text-white">{t('settings.ignoreList', 'Игнор-лист')}</h2></div></CardHeader>
+        <CardHeader><div className="flex items-center gap-2"><UserX className="w-5 h-5 text-gray-500" /><h2 className="font-semibold text-gray-900 dark:text-white">{t('settings.ignoreList')}</h2></div></CardHeader>
         <CardContent>
-          {!ignoreList || ignoreList.length === 0 ? <p className="text-sm text-gray-500 text-center py-2">{t('settings.noIgnored', 'Список пуст')}</p> : (
+          {!ignoreList || ignoreList.length === 0 ? <p className="text-sm text-gray-500 text-center py-2">{t('settings.noIgnored')}</p> : (
             <div className="space-y-2">
               {ignoreList.map((entry) => (
                 <div key={entry.toUser.id} className="flex items-center justify-between">
                   <div className="flex items-center gap-2"><Avatar src={entry.toUser.photoUrl} name={entry.toUser.name} size="sm" /><span className="text-sm text-gray-900 dark:text-white">{entry.toUser.name}</span></div>
-                  <Button variant="ghost" size="sm" onClick={() => removeIgnore.mutate({ userId: entry.toUser.id })}>{t('settings.unignore', 'Убрать')}</Button>
+                  <Button variant="ghost" size="sm" onClick={() => removeIgnore.mutate({ userId: entry.toUser.id })}>{t('settings.unignore')}</Button>
                 </div>
               ))}
             </div>
@@ -146,17 +146,17 @@ export function SettingsPage() {
         </CardContent>
       </Card>
 
-      <Button variant="outline" className="w-full" onClick={() => { logout(); navigate('/login'); }}><LogOut className="w-4 h-4 mr-2" /> {t('settings.logout', 'Выйти')}</Button>
+      <Button variant="outline" className="w-full" onClick={() => { logout(); navigate('/login'); }}><LogOut className="w-4 h-4 mr-2" /> {t('settings.logout')}</Button>
 
       <div className="pt-4">
         {!confirmDelete ? (
-          <Button variant="danger" className="w-full" onClick={() => setConfirmDelete(true)}><Trash2 className="w-4 h-4 mr-2" /> {t('settings.deleteAccount', 'Удалить аккаунт')}</Button>
+          <Button variant="danger" className="w-full" onClick={() => setConfirmDelete(true)}><Trash2 className="w-4 h-4 mr-2" /> {t('settings.deleteAccount')}</Button>
         ) : (
           <div className="space-y-2">
-            <p className="text-sm text-red-500 text-center">{t('settings.deleteConfirm', 'Вы уверены? Это действие необратимо.')}</p>
+            <p className="text-sm text-red-500 text-center">{t('settings.deleteConfirm')}</p>
             <div className="flex gap-2">
-              <Button variant="outline" className="flex-1" onClick={() => setConfirmDelete(false)}>{t('common.cancel', 'Отмена')}</Button>
-              <Button variant="danger" className="flex-1" onClick={() => deleteAccount.mutate()}>{t('settings.confirmDelete', 'Удалить')}</Button>
+              <Button variant="outline" className="flex-1" onClick={() => setConfirmDelete(false)}>{t('common.cancel')}</Button>
+              <Button variant="danger" className="flex-1" onClick={() => deleteAccount.mutate()}>{t('settings.confirmDelete')}</Button>
             </div>
           </div>
         )}

@@ -31,7 +31,7 @@ export function LoginPage() {
       <div className="flex flex-col items-center">
         <h1 className="text-3xl font-bold text-white mb-2">Social Organizer</h1>
         <p className="text-gray-400 text-sm mb-10 text-center max-w-xs">
-          {t('login.subtitle', 'Координация помощи через доверенные связи')}
+          {t('login.subtitle')}
         </p>
         <div className="w-full max-w-xs space-y-3">
           <Button className="w-full bg-[#1877F2] hover:bg-[#1565C0] text-white" size="lg" onClick={() => handleLogin('FACEBOOK')} disabled={loading}>
@@ -49,7 +49,7 @@ export function LoginPage() {
 
           <div className="relative my-4">
             <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-white/10" /></div>
-            <div className="relative flex justify-center"><span className="bg-gray-950 px-3 text-gray-500 text-xs">{t('login.or', 'или')}</span></div>
+            <div className="relative flex justify-center"><span className="bg-gray-950 px-3 text-gray-500 text-xs">{t('login.or')}</span></div>
           </div>
 
           <Button
@@ -62,7 +62,7 @@ export function LoginPage() {
             }}
             disabled={loading}
           >
-            {t('login.demo', 'Демо-вход без регистрации')}
+            {t('login.demo')}
           </Button>
         </div>
       </div>
