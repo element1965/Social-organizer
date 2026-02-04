@@ -258,12 +258,12 @@ export function ChatAssistant() {
           </div>
 
           {/* Input */}
-          <div className="pl-2 py-2 pr-1 border-t border-gray-200 dark:border-gray-700 flex items-center gap-1">
+          <div className="pl-2 py-2 pr-0 border-t border-gray-200 dark:border-gray-700 flex items-center">
             <button
               onClick={toggleListening}
               disabled={isLoading}
               className={cn(
-                "p-2 rounded-full shrink-0 transition-colors",
+                "p-2 rounded-full shrink-0 transition-colors mr-1",
                 isListening
                   ? "bg-red-100 dark:bg-red-900/30 text-red-600 animate-pulse"
                   : "bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700",
@@ -285,7 +285,7 @@ export function ChatAssistant() {
               onClick={handleSubmit}
               disabled={!input.trim() || isListening || isLoading}
               className={cn(
-                "w-10 h-10 rounded-full shrink-0 bg-blue-600 text-white transition-colors flex items-center justify-center",
+                "w-12 h-10 shrink-0 bg-blue-600 text-white transition-colors flex items-center justify-center rounded-r-xl rounded-l-full ml-1",
                 (!input.trim() || isListening || isLoading) ? "opacity-50 cursor-not-allowed" : "hover:bg-blue-700"
               )}
             >
