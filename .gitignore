@@ -29,6 +29,9 @@ packages/db/prisma/migrations/**/migration_lock.toml
 # Gun.js
 gun-data/
 
+# Claude Code local instructions (may contain secrets)
+CLAUDE.md
+
 # Logs
 *.log
 npm-debug.log*
