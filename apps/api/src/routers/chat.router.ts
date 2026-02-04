@@ -2,11 +2,17 @@ import { z } from 'zod';
 import OpenAI from 'openai';
 import { router, protectedProcedure } from '../trpc.js';
 
-// Grok API is compatible with OpenAI SDK
-const grok = new OpenAI({
-  apiKey: process.env.XAI_API_KEY,
-  baseURL: 'https://api.x.ai/v1',
-});
+// Grok API is compatible with OpenAI SDK — lazy init to avoid crash if key is missing at startup
+let grok: OpenAI | null = null;
+function getGrok(): OpenAI {
+  if (!grok) {
+    grok = new OpenAI({
+      apiKey: process.env.XAI_API_KEY || 'missing',
+      baseURL: 'https://api.x.ai/v1',
+    });
+  }
+  return grok;
+}
 
 const SYSTEM_PROMPT = `You are a helpful assistant for the Social Organizer app.
 
@@ -50,7 +56,7 @@ export const chatRouter = router({
       const { message, language } = input;
 
       try {
-        const response = await grok.chat.completions.create({
+        const response = await getGrok().chat.completions.create({
           model: 'grok-3-mini',
           max_tokens: 300,
           messages: [
