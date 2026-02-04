@@ -9,8 +9,8 @@ export const connectionRouter = router({
     const connections = await ctx.db.connection.findMany({
       where: { OR: [{ userAId: ctx.userId }, { userBId: ctx.userId }] },
       include: {
-        userA: { select: { id: true, name: true, photoUrl: true } },
-        userB: { select: { id: true, name: true, photoUrl: true } },
+        userA: { select: { id: true, name: true, photoUrl: true, remainingBudget: true } },
+        userB: { select: { id: true, name: true, photoUrl: true, remainingBudget: true } },
       },
       orderBy: { createdAt: 'desc' },
     });
@@ -36,6 +36,7 @@ export const connectionRouter = router({
         id: c.id, userId: other.id, name: other.name,
         photoUrl: other.photoUrl, createdAt: c.createdAt,
         connectionCount: countMap.get(other.id) || 0,
+        remainingBudget: other.remainingBudget,
       };
     });
   }),
@@ -109,7 +110,7 @@ export const connectionRouter = router({
     const [users, connectionCounts] = await Promise.all([
       ctx.db.user.findMany({
         where: { id: { in: allUserIds } },
-        select: { id: true, name: true, photoUrl: true },
+        select: { id: true, name: true, photoUrl: true, remainingBudget: true },
       }),
       // Count connections for each user (first handshake count)
       ctx.db.$queryRaw<Array<{ user_id: string; count: bigint }>>`
@@ -125,8 +126,8 @@ export const connectionRouter = router({
     const userMap = new Map(users.map((u) => [u.id, u]));
     const countMap = new Map(connectionCounts.map((c) => [c.user_id, Number(c.count)]));
 
-    // Build usersByDepth with connection counts
-    const usersByDepth: Record<number, Array<{ id: string; name: string; photoUrl: string | null; connectionCount: number }>> = {};
+    // Build usersByDepth with connection counts and budget
+    const usersByDepth: Record<number, Array<{ id: string; name: string; photoUrl: string | null; connectionCount: number; remainingBudget: number | null }>> = {};
     for (const [depth, userIds] of Object.entries(userIdsByDepth)) {
       usersByDepth[Number(depth)] = userIds.map((id) => {
         const user = userMap.get(id);
@@ -135,6 +136,7 @@ export const connectionRouter = router({
           name: user?.name || 'Unknown',
           photoUrl: user?.photoUrl || null,
           connectionCount: countMap.get(id) || 0,
+          remainingBudget: user?.remainingBudget ?? null,
         };
       });
     }

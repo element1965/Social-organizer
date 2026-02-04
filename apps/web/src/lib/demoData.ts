@@ -105,6 +105,8 @@ const connections = connectionUserIds.map((uid, i) => ({
   name: usersMap.get(uid)!.name,
   photoUrl: null,
   createdAt: new Date(Date.now() - (i + 1) * 86_400_000 * 3).toISOString(),
+  connectionCount: 5 + Math.floor(Math.random() * 20),
+  remainingBudget: Math.random() > 0.3 ? Math.floor(50 + Math.random() * 200) : null,
 }));
 
 // ---------- Graph slice (~60 nodes, ~80 edges, 3 levels) ----------
@@ -550,19 +552,19 @@ export function handleDemoRequest(path: string, input: unknown): unknown {
     }
     case 'connection.getNetworkStats': {
       // Generate users by depth for expandable lists
-      const usersByDepth: Record<number, Array<{ id: string; name: string; photoUrl: string | null }>> = {
-        1: connections.map((c) => ({ id: c.userId, name: c.name, photoUrl: c.photoUrl })),
+      const usersByDepth: Record<number, Array<{ id: string; name: string; photoUrl: string | null; connectionCount: number; remainingBudget: number | null }>> = {
+        1: connections.map((c) => ({ id: c.userId, name: c.name, photoUrl: c.photoUrl, connectionCount: c.connectionCount, remainingBudget: c.remainingBudget })),
         2: Array.from({ length: 48 }, (_, i) => {
           const u = usersMap.get(`user-${13 + i}`)!;
-          return { id: u.id, name: u.name, photoUrl: null };
+          return { id: u.id, name: u.name, photoUrl: null, connectionCount: 5 + Math.floor(Math.random() * 15), remainingBudget: Math.random() > 0.4 ? Math.floor(30 + Math.random() * 150) : null };
         }),
         3: Array.from({ length: 72 }, (_, i) => {
           const u = usersMap.get(`user-${61 + i}`) || users[(61 + i) % users.length]!;
-          return { id: u.id, name: u.name, photoUrl: null };
+          return { id: u.id, name: u.name, photoUrl: null, connectionCount: 3 + Math.floor(Math.random() * 10), remainingBudget: Math.random() > 0.5 ? Math.floor(20 + Math.random() * 100) : null };
         }),
         4: Array.from({ length: 24 }, (_, i) => {
           const u = usersMap.get(`user-${133 + i}`) || users[(133 + i) % users.length]!;
-          return { id: u.id, name: u.name, photoUrl: null };
+          return { id: u.id, name: u.name, photoUrl: null, connectionCount: 2 + Math.floor(Math.random() * 8), remainingBudget: Math.random() > 0.6 ? Math.floor(10 + Math.random() * 80) : null };
         }),
       };
       return {
