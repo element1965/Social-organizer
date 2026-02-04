@@ -323,49 +323,95 @@ const notificationTypes = [
   'COLLECTION_CLOSED',
 ] as const;
 
-const notifications = notificationTypes.map((type, i) => {
-  const creatorId = i < 2 ? 'user-3' : 'user-5';
-  const creator = usersMap.get(creatorId)!;
-  return {
-    id: `notif-${i + 1}`,
-    userId: DEMO_USER_ID,
-    collectionId: i < 2 ? 'ext-coll-1' : 'ext-coll-2',
-    type,
-    status: i < 3 ? 'UNREAD' : 'READ',
-    readAt: i < 3 ? null : new Date(Date.now() - i * 3600_000).toISOString(),
-    handshakePath: i === 0
-      ? [DEMO_USER_ID]
-      : [DEMO_USER_ID, `user-${i}`, `user-${i + 5}`],
-    wave: 1,
-    expiresAt: new Date(Date.now() + 24 * 3600_000).toISOString(),
-    createdAt: new Date(Date.now() - i * 3600_000 * 2).toISOString(),
-    updatedAt: new Date(Date.now() - i * 3600_000 * 2).toISOString(),
-    sender: {
-      id: creatorId,
-      name: creator.name,
+// New urgent notification - for collection where user hasn't participated yet
+const urgentNotification = {
+  id: 'notif-urgent',
+  userId: DEMO_USER_ID,
+  collectionId: 'ext-coll-new',
+  type: 'NEW_COLLECTION' as const,
+  status: 'UNREAD',
+  readAt: null,
+  handshakePath: [DEMO_USER_ID, 'user-1', 'user-3'],
+  wave: 1,
+  expiresAt: new Date(Date.now() + 23 * 3600_000).toISOString(),
+  createdAt: new Date(Date.now() - 30 * 60_000).toISOString(), // 30 min ago
+  updatedAt: new Date(Date.now() - 30 * 60_000).toISOString(),
+  sender: {
+    id: 'user-3',
+    name: usersMap.get('user-3')!.name,
+    photoUrl: null,
+    connectionCount: 7,
+  },
+  collection: {
+    id: 'ext-coll-new',
+    creatorId: 'user-3',
+    type: 'EMERGENCY' as const,
+    amount: 300,
+    currency: 'USD',
+    chatLink: 'https://t.me/help_needed_chat',
+    status: 'ACTIVE',
+    currentCycleStart: null,
+    createdAt: '2025-11-22T08:00:00Z',
+    updatedAt: '2025-11-22T08:00:00Z',
+    closedAt: null,
+    blockedAt: null,
+    creator: {
+      id: 'user-3',
+      name: usersMap.get('user-3')!.name,
       photoUrl: null,
+      connectionCount: 7,
     },
-    collection: {
-      id: i < 2 ? 'ext-coll-1' : 'ext-coll-2',
-      creatorId,
-      type: i < 2 ? 'EMERGENCY' : 'REGULAR',
-      amount: i < 2 ? 300 : 800,
-      currency: i < 2 ? 'USD' : 'EUR',
-      chatLink: i < 2 ? 'https://t.me/ext_chat_1' : 'https://t.me/ext_chat_2',
-      status: 'ACTIVE',
-      currentCycleStart: null,
-      createdAt: '2025-11-10T10:00:00Z',
-      updatedAt: '2025-11-10T10:00:00Z',
-      closedAt: null,
-      blockedAt: null,
-      creator: {
+  },
+};
+
+const notifications = [
+  urgentNotification,
+  ...notificationTypes.map((type, i) => {
+    const creatorId = i < 2 ? 'user-3' : 'user-5';
+    const creator = usersMap.get(creatorId)!;
+    return {
+      id: `notif-${i + 1}`,
+      userId: DEMO_USER_ID,
+      collectionId: i < 2 ? 'ext-coll-1' : 'ext-coll-2',
+      type,
+      status: i < 3 ? 'UNREAD' : 'READ',
+      readAt: i < 3 ? null : new Date(Date.now() - i * 3600_000).toISOString(),
+      handshakePath: i === 0
+        ? [DEMO_USER_ID]
+        : [DEMO_USER_ID, `user-${i}`, `user-${i + 5}`],
+      wave: 1,
+      expiresAt: new Date(Date.now() + 24 * 3600_000).toISOString(),
+      createdAt: new Date(Date.now() - i * 3600_000 * 2).toISOString(),
+      updatedAt: new Date(Date.now() - i * 3600_000 * 2).toISOString(),
+      sender: {
         id: creatorId,
         name: creator.name,
         photoUrl: null,
+        connectionCount: Math.floor(Math.random() * 12) + 3,
       },
-    },
-  };
-});
+      collection: {
+        id: i < 2 ? 'ext-coll-1' : 'ext-coll-2',
+        creatorId,
+        type: i < 2 ? 'EMERGENCY' : 'REGULAR',
+        amount: i < 2 ? 300 : 800,
+        currency: i < 2 ? 'USD' : 'EUR',
+        chatLink: i < 2 ? 'https://t.me/ext_chat_1' : 'https://t.me/ext_chat_2',
+        status: 'ACTIVE',
+        currentCycleStart: null,
+        createdAt: '2025-11-10T10:00:00Z',
+        updatedAt: '2025-11-10T10:00:00Z',
+        closedAt: null,
+        blockedAt: null,
+        creator: {
+          id: creatorId,
+          name: creator.name,
+          photoUrl: null,
+          connectionCount: Math.floor(Math.random() * 12) + 3,
+        },
+      },
+    };
+  }),
+];
 
 // ---------- Settings state (mutable within demo session) ----------
 
@@ -523,21 +569,51 @@ export function handleDemoRequest(path: string, input: unknown): unknown {
       const id = inp?.id as string;
       const coll = collections.find((c) => c.id === id);
       if (coll) {
-        return { ...coll, obligations: collectionObligations(id) };
+        const obls = collectionObligations(id);
+        return {
+          ...coll,
+          obligations: obls.map(o => ({ ...o, user: { ...o.user, connectionCount: Math.floor(Math.random() * 15) + 1 } })),
+          creator: { ...coll.creator, connectionCount: 12 },
+        };
       }
-      // External collection
+      // NEW collection where demo user has NOT participated yet (to show intention form)
+      if (id === 'ext-coll-new') {
+        return {
+          id: 'ext-coll-new',
+          creatorId: 'user-3',
+          type: 'EMERGENCY',
+          amount: 300,
+          currency: 'USD',
+          chatLink: 'https://t.me/help_needed_chat',
+          status: 'ACTIVE',
+          currentCycleStart: null,
+          createdAt: '2025-11-22T08:00:00Z',
+          updatedAt: '2025-11-22T08:00:00Z',
+          closedAt: null,
+          blockedAt: null,
+          currentAmount: 150,
+          obligations: [
+            { id: `obl-new-1`, collectionId: id, userId: 'user-1', amount: 50, isSubscription: false, unsubscribedAt: null, createdAt: '2025-11-22T09:00:00Z', updatedAt: '2025-11-22T09:00:00Z', user: { id: 'user-1', name: usersMap.get('user-1')!.name, photoUrl: null, connectionCount: 8 } },
+            { id: `obl-new-2`, collectionId: id, userId: 'user-4', amount: 60, isSubscription: false, unsubscribedAt: null, createdAt: '2025-11-22T10:00:00Z', updatedAt: '2025-11-22T10:00:00Z', user: { id: 'user-4', name: usersMap.get('user-4')!.name, photoUrl: null, connectionCount: 5 } },
+            { id: `obl-new-3`, collectionId: id, userId: 'user-6', amount: 40, isSubscription: false, unsubscribedAt: null, createdAt: '2025-11-22T11:00:00Z', updatedAt: '2025-11-22T11:00:00Z', user: { id: 'user-6', name: usersMap.get('user-6')!.name, photoUrl: null, connectionCount: 3 } },
+          ],
+          _count: { obligations: 3 },
+          creator: { id: 'user-3', name: usersMap.get('user-3')!.name, photoUrl: null, connectionCount: 7 },
+        };
+      }
+      // External collection where demo user already participated
       const extObl = myObligations.find((o) => o.collectionId === id);
       if (extObl) {
         return {
           ...extObl.collection,
           currentAmount: extObl.amount * 3,
           obligations: [
-            { id: `obl-ext-0`, collectionId: id, userId: DEMO_USER_ID, amount: extObl.amount, isSubscription: false, unsubscribedAt: null, createdAt: extObl.createdAt, updatedAt: extObl.updatedAt, user: { id: DEMO_USER_ID, name: demoUser.name, photoUrl: null } },
-            { id: `obl-ext-1`, collectionId: id, userId: 'user-1', amount: extObl.amount + 20, isSubscription: false, unsubscribedAt: null, createdAt: extObl.createdAt, updatedAt: extObl.updatedAt, user: { id: 'user-1', name: usersMap.get('user-1')!.name, photoUrl: null } },
-            { id: `obl-ext-2`, collectionId: id, userId: 'user-2', amount: extObl.amount + 10, isSubscription: false, unsubscribedAt: null, createdAt: extObl.createdAt, updatedAt: extObl.updatedAt, user: { id: 'user-2', name: usersMap.get('user-2')!.name, photoUrl: null } },
+            { id: `obl-ext-0`, collectionId: id, userId: DEMO_USER_ID, amount: extObl.amount, isSubscription: false, unsubscribedAt: null, createdAt: extObl.createdAt, updatedAt: extObl.updatedAt, user: { id: DEMO_USER_ID, name: demoUser.name, photoUrl: null, connectionCount: 12 } },
+            { id: `obl-ext-1`, collectionId: id, userId: 'user-1', amount: extObl.amount + 20, isSubscription: false, unsubscribedAt: null, createdAt: extObl.createdAt, updatedAt: extObl.updatedAt, user: { id: 'user-1', name: usersMap.get('user-1')!.name, photoUrl: null, connectionCount: 8 } },
+            { id: `obl-ext-2`, collectionId: id, userId: 'user-2', amount: extObl.amount + 10, isSubscription: false, unsubscribedAt: null, createdAt: extObl.createdAt, updatedAt: extObl.updatedAt, user: { id: 'user-2', name: usersMap.get('user-2')!.name, photoUrl: null, connectionCount: 6 } },
           ],
           _count: { obligations: 3 },
-          creator: extObl.collection.creator,
+          creator: { ...extObl.collection.creator, connectionCount: Math.floor(Math.random() * 10) + 3 },
         };
       }
       return null;
@@ -597,7 +673,7 @@ export function handleDemoRequest(path: string, input: unknown): unknown {
     case 'notification.list':
       return { items: notifications, nextCursor: undefined };
     case 'notification.unreadCount':
-      return { count: 3 };
+      return { count: 4 };
     case 'notification.markRead': {
       const n = notifications.find((x) => x.id === (inp?.id as string));
       return n ? { ...n, status: 'READ' } : { id: inp?.id, status: 'READ' };

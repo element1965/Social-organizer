@@ -40,6 +40,16 @@ export function CollectionPage() {
   const percentage = hasGoal ? (collection.currentAmount / collection.amount!) * 100 : 0;
   const statusVariant = collection.status === 'ACTIVE' ? 'success' : collection.status === 'BLOCKED' ? 'warning' : collection.status === 'CLOSED' ? 'default' : 'danger';
 
+  const getStatusLabel = (status: string) => {
+    switch (status) {
+      case 'ACTIVE': return t('collection.active');
+      case 'BLOCKED': return t('collection.blocked');
+      case 'CLOSED': return t('collection.closed');
+      case 'CANCELLED': return t('collection.cancelled');
+      default: return status;
+    }
+  };
+
   const handleSubmitObligation = () => {
     const num = Number(amount);
     if (!num || num < 10) { setError(t('collection.minAmount', 'Минимум 10')); return; }
@@ -61,7 +71,7 @@ export function CollectionPage() {
             </span>
           </div>
           <div className="flex items-center gap-2 mt-1">
-            <Badge variant={statusVariant}>{collection.status}</Badge>
+            <Badge variant={statusVariant}>{getStatusLabel(collection.status)}</Badge>
             <Badge variant="info">{collection.type === 'EMERGENCY' ? t('collection.emergency', 'Экстренный') : t('collection.regular', 'Регулярный')}</Badge>
           </div>
         </div>
