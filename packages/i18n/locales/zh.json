@@ -161,6 +161,8 @@
     "reNotify": "提醒",
     "closed": "已关闭",
     "blocked": "已冻结",
+    "obligationReceived": "Help",
+    "cycleClosed": "Cycle closed",
     "specialAuthor": "发起人",
     "specialDeveloper": "开发者",
     "handshakes": "次握手",

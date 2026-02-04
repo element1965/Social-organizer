@@ -161,6 +161,8 @@
     "reNotify": "अनुस्मारक",
     "closed": "बंद",
     "blocked": "अवरुद्ध",
+    "obligationReceived": "Help",
+    "cycleClosed": "Cycle closed",
     "specialAuthor": "लेखक",
     "specialDeveloper": "डेवलपर",
     "handshakes": "हैंडशेक",

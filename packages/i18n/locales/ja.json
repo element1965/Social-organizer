@@ -161,6 +161,8 @@
     "reNotify": "リマインダー",
     "closed": "終了",
     "blocked": "凍結済み",
+    "obligationReceived": "Help",
+    "cycleClosed": "Cycle closed",
     "specialAuthor": "発起人",
     "specialDeveloper": "開発者",
     "handshakes": "回のハンドシェイク",

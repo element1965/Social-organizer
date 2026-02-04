@@ -161,6 +161,8 @@
     "reNotify": "Herinnering",
     "closed": "Gesloten",
     "blocked": "Geblokkeerd",
+    "obligationReceived": "Help",
+    "cycleClosed": "Cycle closed",
     "specialAuthor": "Auteur",
     "specialDeveloper": "Ontwikkelaar",
     "handshakes": "handdrukken",
