@@ -422,6 +422,39 @@ export function DashboardPage() {
                 sublabel="USD"
               />
             </div>
+          </div>
+
+          {/* Section 2: Network Statistics */}
+          <div className="space-y-4">
+            <div className="flex items-center gap-2">
+              <Network className="w-5 h-5 text-purple-600" />
+              <h3 className="text-lg font-bold text-gray-900 dark:text-white">
+                {t('dashboard.networkStats')}
+              </h3>
+            </div>
+
+            <StatCard
+              label={t('dashboard.networkReach')}
+              value={helpStats?.networkReach ?? 0}
+              sublabel={t('dashboard.people')}
+              trend={{ value: growth.month, isPositive: true }}
+            />
+
+            {/* Current Capabilities */}
+            <div className="p-4 bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-950/30 dark:to-emerald-950/30 rounded-xl">
+              <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center gap-2">
+                  <Wallet className="w-5 h-5 text-green-600" />
+                  <span className="text-sm text-gray-500">{t('dashboard.currentCapabilities')}</span>
+                </div>
+              </div>
+              <p className="text-3xl font-bold text-green-700 dark:text-green-400">
+                ${networkCapabilities?.total ?? 0}
+              </p>
+              <p className="text-xs text-gray-500 mt-1">
+                {t('dashboard.capabilitiesContributors', { count: networkCapabilities?.contributors ?? 0 })}
+              </p>
+            </div>
 
             {/* Help given by period */}
             <Card>
@@ -458,39 +491,6 @@ export function DashboardPage() {
                 </div>
               </CardContent>
             </Card>
-          </div>
-
-          {/* Section 2: Network Statistics */}
-          <div className="space-y-4">
-            <div className="flex items-center gap-2">
-              <Network className="w-5 h-5 text-purple-600" />
-              <h3 className="text-lg font-bold text-gray-900 dark:text-white">
-                {t('dashboard.networkStats')}
-              </h3>
-            </div>
-
-            <StatCard
-              label={t('dashboard.networkReach')}
-              value={helpStats?.networkReach ?? 0}
-              sublabel={t('dashboard.people')}
-              trend={{ value: growth.month, isPositive: true }}
-            />
-
-            {/* Current Capabilities */}
-            <div className="p-4 bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-950/30 dark:to-emerald-950/30 rounded-xl">
-              <div className="flex items-center justify-between mb-2">
-                <div className="flex items-center gap-2">
-                  <Wallet className="w-5 h-5 text-green-600" />
-                  <span className="text-sm text-gray-500">{t('dashboard.currentCapabilities')}</span>
-                </div>
-              </div>
-              <p className="text-3xl font-bold text-green-700 dark:text-green-400">
-                ${networkCapabilities?.total ?? 0}
-              </p>
-              <p className="text-xs text-gray-500 mt-1">
-                {t('dashboard.capabilitiesContributors', { count: networkCapabilities?.contributors ?? 0 })}
-              </p>
-            </div>
           </div>
         </div>
       )}
