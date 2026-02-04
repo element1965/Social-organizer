@@ -18,7 +18,16 @@
     "loginWith": "Log in with {{platform}}",
     "linking": "Link account",
     "enterCode": "Enter 6-digit code",
-    "codeExpires": "Code expires in {{minutes}} min"
+    "codeExpires": "Code expires in {{minutes}} min",
+    "email": "Email",
+    "password": "Password",
+    "name": "Name",
+    "login": "Sign In",
+    "register": "Sign Up",
+    "haveAccount": "Already have an account? Sign in",
+    "noAccount": "Don't have an account? Sign up",
+    "emailExists": "This email is already registered",
+    "invalidCredentials": "Invalid email or password"
   },
   "login": {
     "subtitle": "Help coordination through trusted connections",
