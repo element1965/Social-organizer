@@ -236,6 +236,8 @@
   "landing": {
     "painQuote": "När problem uppstår — står du ensam. Vänner vet inte. Vänners vänner — ännu mindre. Men någon av dem kunde ha hjälpt.",
     "painSolution": "Social Organizer löser detta — en signal, och rätt människor får veta.",
+    "painQuote2": "Du är redo att hjälpa. Men det är svårt att lita på när du inte vet vem som är på andra sidan skärmen.",
+    "painSolution2": "Här byggs förtroende på kopplingar mellan riktiga människor. Du ser kedjan av handslag till alla.",
     "heroSubtitle": "A social coordination tool — activating latent social connectivity into a p2p environment of mutual aid and direct cooperation",
     "heroStart": "Kom igång",
     "heroLearnMore": "Läs mer",
