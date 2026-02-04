@@ -172,8 +172,8 @@ export function DashboardPage() {
       )}
 
       {/* Main CTA */}
-      <Button className="w-full" size="lg" variant="default" onClick={() => navigate('/create')}>
-        <Heart className="w-5 h-5 mr-2" /> {t('dashboard.needHelp', 'Мне нужна поддержка')}
+      <Button className="w-full" size="lg" variant="primary" onClick={() => navigate('/create')}>
+        <Heart className="w-5 h-5 mr-2" /> {t('dashboard.needHelp', 'Мне нужна помощь')}
       </Button>
 
       {/* Tabs */}
