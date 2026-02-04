@@ -1,7 +1,7 @@
 import { lazy, Suspense, useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Handshake, Heart, Eye, Users, Cog, Code, Globe, ChevronDown, ArrowRight, Languages, Github, ExternalLink } from 'lucide-react';
+import { Handshake, Heart, Eye, Users, Cog, Code, Globe, ChevronDown, ChevronUp, ArrowRight, Languages, Github, ExternalLink } from 'lucide-react';
 import { languageNames } from '@so/i18n';
 import { useScrollProgress } from '../hooks/useScrollProgress';
 
@@ -57,6 +57,10 @@ export function LandingPage() {
 
   const scrollToContent = () => {
     window.scrollTo({ top: window.innerHeight, behavior: 'smooth' });
+  };
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   return (
@@ -367,16 +371,25 @@ export function LandingPage() {
         </section>
 
         {/* === Footer === */}
-        <footer className="px-6 py-12 text-center border-t border-white/5">
+        <footer className="px-6 pt-12 pb-24 text-center border-t border-white/5">
           <p className="text-gray-500 text-sm mb-3">{t('landing.footer')}</p>
           <a
             href="https://github.com/element1965/Social-organizer"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 text-gray-400 hover:text-white transition-colors"
+            className="inline-flex items-center gap-1.5 text-gray-400 hover:text-white transition-colors mb-8"
           >
             <Github size={16} /> GitHub
           </a>
+          <div className="mt-8">
+            <button
+              onClick={scrollToTop}
+              className="mx-auto w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 border border-white/20 flex items-center justify-center text-white/60 hover:text-white transition-all animate-bounce"
+              aria-label="Scroll to top"
+            >
+              <ChevronUp size={24} />
+            </button>
+          </div>
         </footer>
 
       </div>
