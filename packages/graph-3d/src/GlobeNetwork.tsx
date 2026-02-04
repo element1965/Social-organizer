@@ -7,7 +7,7 @@ import * as THREE from 'three';
 const EARTH_TEXTURE_URL = 'https://cdn.jsdelivr.net/npm/three-globe@2.31.0/example/img/earth-blue-marble.jpg';
 const EARTH_BUMP_URL = 'https://cdn.jsdelivr.net/npm/three-globe@2.31.0/example/img/earth-topology.png';
 const EARTH_SPECULAR_URL = 'https://cdn.jsdelivr.net/npm/three-globe@2.31.0/example/img/earth-water.png';
-const MOON_TEXTURE_URL = 'https://unpkg.com/three@0.128.0/examples/textures/planets/moon_1024.jpg';
+const MOON_TEXTURE_URL = 'https://cdn.jsdelivr.net/gh/mrdoob/three.js@r152/examples/textures/planets/moon_1024.jpg';
 
 /* ---------- GLSL: Атмосфера (внешнее свечение) ---------- */
 
