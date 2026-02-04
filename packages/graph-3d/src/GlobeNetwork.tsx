@@ -7,8 +7,7 @@ import * as THREE from 'three';
 const EARTH_TEXTURE_URL = 'https://cdn.jsdelivr.net/npm/three-globe@2.31.0/example/img/earth-blue-marble.jpg';
 const EARTH_BUMP_URL = 'https://cdn.jsdelivr.net/npm/three-globe@2.31.0/example/img/earth-topology.png';
 const EARTH_SPECULAR_URL = 'https://cdn.jsdelivr.net/npm/three-globe@2.31.0/example/img/earth-water.png';
-const EARTH_CLOUDS_URL = 'https://cdn.jsdelivr.net/npm/three-globe@2.31.0/example/img/earth-clouds.png';
-const MOON_TEXTURE_URL = 'https://cdn.jsdelivr.net/npm/three-globe@2.31.0/example/img/moon.jpg';
+// Примечание: облака и луна используют процедурные материалы (текстуры недоступны на CDN)
 
 /* ---------- GLSL: Атмосфера (внешнее свечение) ---------- */
 
@@ -106,28 +105,22 @@ function fibonacciSphere(count: number, radius: number): Float32Array {
 
 function Earth({ scrollProgress }: { scrollProgress: number }) {
   const earthRef = useRef<THREE.Mesh>(null);
-  const cloudsRef = useRef<THREE.Mesh>(null);
   const atmosphereRef = useRef<THREE.Mesh>(null);
   const currentRotation = useRef(0);
 
-  // Загружаем текстуры
-  const [earthTexture, bumpMap, specularMap, cloudsTexture] = useLoader(THREE.TextureLoader, [
+  // Загружаем текстуры (без облаков - они недоступны на CDN)
+  const [earthTexture, bumpMap, specularMap] = useLoader(THREE.TextureLoader, [
     EARTH_TEXTURE_URL,
     EARTH_BUMP_URL,
     EARTH_SPECULAR_URL,
-    EARTH_CLOUDS_URL,
   ]);
 
-  useFrame((_state, delta) => {
+  useFrame(() => {
     const target = scrollProgress * Math.PI * 3;
     currentRotation.current += (target - currentRotation.current) * 0.08;
 
     if (earthRef.current) {
       earthRef.current.rotation.y = currentRotation.current;
-    }
-    if (cloudsRef.current) {
-      // Облака вращаются чуть быстрее
-      cloudsRef.current.rotation.y = currentRotation.current + delta * 0.02;
     }
     if (atmosphereRef.current) {
       atmosphereRef.current.rotation.y = currentRotation.current;
@@ -149,17 +142,6 @@ function Earth({ scrollProgress }: { scrollProgress: number }) {
         />
       </mesh>
 
-      {/* Облака */}
-      <mesh ref={cloudsRef} scale={1.01}>
-        <sphereGeometry args={[1.5, 64, 64]} />
-        <meshPhongMaterial
-          map={cloudsTexture}
-          transparent
-          opacity={0.4}
-          depthWrite={false}
-        />
-      </mesh>
-
       {/* Атмосфера */}
       <mesh ref={atmosphereRef} scale={1.12}>
         <sphereGeometry args={[1.5, 64, 64]} />
@@ -176,14 +158,12 @@ function Earth({ scrollProgress }: { scrollProgress: number }) {
   );
 }
 
-/* ---------- Реалистичная Луна с текстурой ---------- */
+/* ---------- Луна (процедурный материал - серая поверхность) ---------- */
 
 function Moon({ scrollProgress }: { scrollProgress: number }) {
   const moonRef = useRef<THREE.Mesh>(null);
   const orbitRef = useRef<THREE.Group>(null);
   const currentOrbitAngle = useRef(0);
-
-  const moonTexture = useLoader(THREE.TextureLoader, MOON_TEXTURE_URL);
 
   useFrame(() => {
     if (orbitRef.current) {
@@ -200,9 +180,10 @@ function Moon({ scrollProgress }: { scrollProgress: number }) {
     <group ref={orbitRef}>
       <mesh ref={moonRef} position={[3.5, 0.3, 0]}>
         <sphereGeometry args={[0.35, 32, 32]} />
-        <meshPhongMaterial
-          map={moonTexture}
-          shininess={1}
+        <meshStandardMaterial
+          color="#aaaaaa"
+          roughness={0.9}
+          metalness={0.0}
         />
       </mesh>
     </group>
@@ -486,11 +467,12 @@ function Scene({ scrollProgress }: { scrollProgress: number }) {
   const [texturesLoaded, setTexturesLoaded] = useState(false);
 
   useEffect(() => {
-    // Предзагрузка текстур
+    // Предзагрузка текстур Земли
     const loader = new THREE.TextureLoader();
     Promise.all([
       loader.loadAsync(EARTH_TEXTURE_URL),
-      loader.loadAsync(MOON_TEXTURE_URL),
+      loader.loadAsync(EARTH_BUMP_URL),
+      loader.loadAsync(EARTH_SPECULAR_URL),
     ]).then(() => setTexturesLoaded(true)).catch(() => setTexturesLoaded(true));
   }, []);
 
