@@ -25,6 +25,7 @@ export interface NetworkGraphProps {
   width?: number;
   height?: number;
   onNodeClick?: (nodeId: string) => void;
+  darkMode?: boolean;
 }
 
 /* ---------- Компонент ---------- */
@@ -39,9 +40,18 @@ export function NetworkGraph({
   width,
   height,
   onNodeClick,
+  darkMode = true,
 }: NetworkGraphProps) {
   const fgRef = useRef<FGRef>(null);
   const highlightSet = new Set(highlightPath ?? []);
+
+  // Фиксируем центральный узел в центре графа
+  const processedNodes = nodes.map((n) => ({
+    ...n,
+    fx: n.isCenter ? 0 : undefined,
+    fy: n.isCenter ? 0 : undefined,
+    fz: n.isCenter ? 0 : undefined,
+  }));
 
   useEffect(() => {
     if (fgRef.current) {
@@ -63,26 +73,50 @@ export function NetworkGraph({
   const nodeThreeObject = useCallback(
     (node: { id?: string | number; name?: string; isCenter?: boolean; isDeleted?: boolean }) => {
       const label = new SpriteText(String(node.name ?? ''));
+
+      // Цвета для тёмной и светлой темы
+      const colors = darkMode
+        ? {
+            deleted: '#888888',
+            center: '#3b82f6',
+            highlight: '#f59e0b',
+            normal: '#e2e8f0',
+            deletedBg: 'rgba(80,80,80,0.6)',
+            centerBg: 'rgba(59,130,246,0.2)',
+            highlightBg: 'rgba(245,158,11,0.2)',
+            normalBg: 'rgba(0,0,0,0.4)',
+          }
+        : {
+            deleted: '#9ca3af',
+            center: '#2563eb',
+            highlight: '#d97706',
+            normal: '#1f2937',
+            deletedBg: 'rgba(156,163,175,0.3)',
+            centerBg: 'rgba(37,99,235,0.15)',
+            highlightBg: 'rgba(217,119,6,0.15)',
+            normalBg: 'rgba(255,255,255,0.8)',
+          };
+
       label.color = node.isDeleted
-        ? '#888888'
+        ? colors.deleted
         : node.isCenter
-        ? '#3b82f6'
+        ? colors.center
         : highlightSet.has(String(node.id))
-        ? '#f59e0b'
-        : '#e2e8f0';
-      label.textHeight = node.isCenter ? 3 : 2;
+        ? colors.highlight
+        : colors.normal;
+      label.textHeight = node.isCenter ? 3.5 : 2;
       label.backgroundColor = node.isDeleted
-        ? 'rgba(80,80,80,0.6)'
+        ? colors.deletedBg
         : node.isCenter
-        ? 'rgba(59,130,246,0.15)'
+        ? colors.centerBg
         : highlightSet.has(String(node.id))
-        ? 'rgba(245,158,11,0.15)'
-        : 'rgba(0,0,0,0.3)';
+        ? colors.highlightBg
+        : colors.normalBg;
       label.padding = 2;
       label.borderRadius = 4;
       return label as unknown as Object3D;
     },
-    [highlightSet],
+    [highlightSet, darkMode],
   );
 
   const linkColor = useCallback(
@@ -92,9 +126,9 @@ export function NetworkGraph({
       if (src && tgt && highlightSet.has(src) && highlightSet.has(tgt)) {
         return 'rgba(245,158,11,0.8)';
       }
-      return 'rgba(100,140,200,0.2)';
+      return darkMode ? 'rgba(100,140,200,0.3)' : 'rgba(59,130,246,0.4)';
     },
-    [highlightSet],
+    [highlightSet, darkMode],
   );
 
   const linkWidth = useCallback(
@@ -107,7 +141,7 @@ export function NetworkGraph({
     [highlightSet],
   );
 
-  const graphData = { nodes, links: edges };
+  const graphData = { nodes: processedNodes, links: edges };
 
   return (
     <ForceGraph3D

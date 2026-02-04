@@ -2,6 +2,8 @@ import { useState, lazy, Suspense } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { trpc } from '../lib/trpc';
+import { useAuth } from '../hooks/useAuth';
+import { useTheme } from '../hooks/useTheme';
 import { Card, CardContent } from '../components/ui/card';
 import { Button } from '../components/ui/button';
 import { Avatar } from '../components/ui/avatar';
@@ -16,8 +18,11 @@ const LazyNetworkGraph = lazy(() =>
 export function MyNetworkPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const myId = useAuth((s) => s.userId);
+  const { mode } = useTheme();
   const [showQR, setShowQR] = useState(false);
   const [view, setView] = useState<'list' | '3d'>('list');
+  const isDark = mode === 'dark' || (mode === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
 
   const { data: connections, isLoading } = trpc.connection.list.useQuery(undefined, { refetchInterval: 30000 });
   const { data: connectionCount } = trpc.connection.getCount.useQuery();
@@ -74,18 +79,19 @@ export function MyNetworkPage() {
       )}
 
       {view === '3d' ? (
-        <div className="rounded-xl overflow-hidden bg-gray-950" style={{ height: 'calc(100vh - 240px)' }}>
+        <div className={`rounded-xl overflow-hidden ${isDark ? 'bg-gray-950' : 'bg-gray-100'}`} style={{ height: 'calc(100vh - 240px)' }}>
           <Suspense fallback={<div className="flex justify-center py-12"><Spinner /></div>}>
             {graphData ? (
               <LazyNetworkGraph
                 nodes={graphData.nodes.map((n) => ({
                   ...n,
-                  isCenter: n.id === connections?.[0]?.userId,
+                  isCenter: n.id === myId,
                 }))}
                 edges={graphData.edges.map((e) => ({ source: e.from, target: e.to }))}
                 width={window.innerWidth - 32}
                 height={window.innerHeight - 240}
                 onNodeClick={(id) => navigate(`/profile/${id}`)}
+                darkMode={isDark}
               />
             ) : (
               <div className="flex justify-center py-12"><Spinner /></div>
