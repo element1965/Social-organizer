@@ -61,7 +61,11 @@
     "qrCode": "Показать QR-код",
     "budgetNote": "Эта сумма добавится к текущим возможностям сети",
     "saveBudget": "Сохранить и продолжить",
-    "skipAndStart": "Пропустить и начать"
+    "skipAndStart": "Пропустить и начать",
+    "waitingForAccept": "Ожидание принятия...",
+    "connectionEstablished": "Связь установлена!",
+    "sendAnother": "Отправить ещё",
+    "skip": "Пропустить"
   },
   "nav": {
     "home": "Главная",
@@ -121,7 +125,9 @@
     "periodMonth": "За месяц",
     "periodWeek": "За неделю",
     "periodDay": "За день",
-    "times": "раз"
+    "times": "раз",
+    "personalStats": "Моя статистика",
+    "networkStats": "Статистика сети"
   },
   "collection": {
     "create": "Подать сигнал о помощи",

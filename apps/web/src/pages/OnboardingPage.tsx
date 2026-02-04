@@ -1,18 +1,17 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { trpc } from '../lib/trpc';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { Select } from '../components/ui/select';
-import { Users, Zap, Eye, UserPlus, Wallet, Share2 } from 'lucide-react';
+import { Users, Zap, Eye, UserPlus, Wallet, Share2, CheckCircle, Loader2 } from 'lucide-react';
 import { cn } from '../lib/utils';
 
 interface Step {
   icon: typeof Users;
   titleKey: string;
   textKey: string;
-  hasBudgetInput?: boolean;
 }
 
 const steps: Step[] = [
@@ -20,7 +19,7 @@ const steps: Step[] = [
   { icon: Zap, titleKey: 'onboarding.step2.title', textKey: 'onboarding.step2.text' },
   { icon: Eye, titleKey: 'onboarding.step3.title', textKey: 'onboarding.step3.text' },
   { icon: UserPlus, titleKey: 'onboarding.step4.title', textKey: 'onboarding.step4.text' },
-  { icon: Wallet, titleKey: 'onboarding.step5.title', textKey: 'onboarding.step5.text', hasBudgetInput: true },
+  { icon: Wallet, titleKey: 'onboarding.step5.title', textKey: 'onboarding.step5.text' },
 ];
 
 export function OnboardingPage() {
@@ -29,11 +28,15 @@ export function OnboardingPage() {
   const [step, setStep] = useState(0);
   const current = steps[step]!;
   const Icon = current.icon;
-  const isLast = step === steps.length - 1;
 
-  // Budget state
+  // Budget state (step 5)
   const [budgetAmount, setBudgetAmount] = useState('');
   const [budgetCurrency, setBudgetCurrency] = useState('USD');
+
+  // Invite state (step 4)
+  const [inviteToken, setInviteToken] = useState<string | null>(null);
+  const [inviteLink, setInviteLink] = useState('');
+  const [inviteAccepted, setInviteAccepted] = useState(false);
 
   const { data: currencies } = trpc.currency.list.useQuery();
   const { data: preview } = trpc.currency.toUSD.useQuery(
@@ -45,12 +48,29 @@ export function OnboardingPage() {
   const completeOnboarding = trpc.user.completeOnboarding.useMutation();
   const setBudget = trpc.user.setMonthlyBudget.useMutation();
   const utils = trpc.useUtils();
-  const [inviteLink, setInviteLink] = useState('');
+
+  // Polling: check invite acceptance every 3 seconds
+  const { data: inviteData } = trpc.invite.getByToken.useQuery(
+    { token: inviteToken! },
+    {
+      enabled: !!inviteToken && !inviteAccepted,
+      refetchInterval: 3000,
+    }
+  );
+
+  // Watch for invite acceptance
+  useEffect(() => {
+    if (inviteData && inviteData.usedById) {
+      setInviteAccepted(true);
+    }
+  }, [inviteData]);
 
   const handleInvite = async () => {
     const result = await generateInvite.mutateAsync();
     const link = `${window.location.origin}/invite/${result.token}`;
+    setInviteToken(result.token);
     setInviteLink(link);
+    setInviteAccepted(false);
     if (navigator.share) {
       navigator.share({ title: 'Social Organizer', url: link }).catch(() => {});
     } else {
@@ -58,21 +78,27 @@ export function OnboardingPage() {
     }
   };
 
-  const handleSaveBudgetAndContinue = async () => {
+  const handleSendAnother = async () => {
+    setInviteToken(null);
+    setInviteLink('');
+    setInviteAccepted(false);
+    await handleInvite();
+  };
+
+  const handleFinish = async () => {
     if (budgetAmount && Number(budgetAmount) > 0) {
       await setBudget.mutateAsync({
         amount: Number(budgetAmount),
         inputCurrency: budgetCurrency,
       });
     }
-    await handleInvite();
-  };
-
-  const handleStart = async () => {
     await completeOnboarding.mutateAsync();
     await utils.user.me.refetch();
     navigate('/');
   };
+
+  const isStep4 = step === 3;
+  const isStep5 = step === 4;
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-950 flex flex-col items-center justify-center px-6">
@@ -87,8 +113,61 @@ export function OnboardingPage() {
           {t(current.textKey)}
         </p>
 
-        {/* Budget input on step 5 */}
-        {current.hasBudgetInput && (
+        {/* Step 4: Invite section */}
+        {isStep4 && (
+          <div className="w-full max-w-xs space-y-4 mt-6">
+            {!inviteLink ? (
+              <Button
+                className="w-full"
+                size="lg"
+                onClick={handleInvite}
+                disabled={generateInvite.isPending}
+              >
+                <Share2 className="w-4 h-4 mr-2" /> {t('onboarding.invite')}
+              </Button>
+            ) : inviteAccepted ? (
+              <>
+                <div className="p-4 bg-green-50 dark:bg-green-950/30 rounded-lg text-center space-y-2">
+                  <CheckCircle className="w-10 h-10 text-green-600 mx-auto" />
+                  <p className="text-sm font-semibold text-green-700 dark:text-green-400">
+                    {t('onboarding.connectionEstablished')}
+                  </p>
+                </div>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="w-full"
+                  onClick={handleSendAnother}
+                  disabled={generateInvite.isPending}
+                >
+                  <Share2 className="w-4 h-4 mr-2" /> {t('onboarding.sendAnother')}
+                </Button>
+              </>
+            ) : (
+              <>
+                <div className="p-3 bg-blue-50 dark:bg-blue-950/30 rounded-lg text-center space-y-2">
+                  <p className="text-xs text-blue-700 dark:text-blue-400 break-all">{inviteLink}</p>
+                </div>
+                <div className="flex items-center justify-center gap-2 text-gray-500">
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  <span className="text-sm">{t('onboarding.waitingForAccept')}</span>
+                </div>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="w-full"
+                  onClick={handleSendAnother}
+                  disabled={generateInvite.isPending}
+                >
+                  <Share2 className="w-4 h-4 mr-2" /> {t('onboarding.sendAnother')}
+                </Button>
+              </>
+            )}
+          </div>
+        )}
+
+        {/* Step 5: Budget input */}
+        {isStep5 && (
           <div className="w-full max-w-xs space-y-3 mt-6">
             <div className="flex gap-2">
               <Input
@@ -122,38 +201,48 @@ export function OnboardingPage() {
           ))}
         </div>
 
-        {isLast ? (
+        {isStep5 ? (
+          /* Step 5: final buttons */
           <div className="space-y-3">
             {budgetAmount && Number(budgetAmount) > 0 ? (
               <Button
                 className="w-full"
                 size="lg"
-                onClick={handleSaveBudgetAndContinue}
-                disabled={setBudget.isPending || generateInvite.isPending}
+                onClick={handleFinish}
+                disabled={setBudget.isPending || completeOnboarding.isPending}
               >
                 <Wallet className="w-4 h-4 mr-2" /> {t('onboarding.saveBudget')}
               </Button>
-            ) : (
-              <Button className="w-full" size="lg" onClick={handleInvite} disabled={generateInvite.isPending}>
-                <Share2 className="w-4 h-4 mr-2" /> {t('onboarding.invite')}
-              </Button>
-            )}
-            {inviteLink && (
-              <div className="p-3 bg-green-50 dark:bg-green-950/30 rounded-lg text-center">
-                <p className="text-xs text-green-700 dark:text-green-400 break-all">{inviteLink}</p>
-              </div>
-            )}
+            ) : null}
             <Button
               variant="outline"
               size="lg"
               className="w-full"
-              onClick={handleStart}
+              onClick={handleFinish}
               disabled={completeOnboarding.isPending}
             >
-              {t('onboarding.skipAndStart')}
+              {budgetAmount && Number(budgetAmount) > 0 ? t('onboarding.skipAndStart') : t('onboarding.skipAndStart')}
+            </Button>
+          </div>
+        ) : isStep4 ? (
+          /* Step 4: Next (enabled when accepted) + Skip */
+          <div className="space-y-3">
+            {inviteAccepted && (
+              <Button className="w-full" size="lg" onClick={() => setStep(step + 1)}>
+                {t('onboarding.next')}
+              </Button>
+            )}
+            <Button
+              variant="ghost"
+              size="sm"
+              className="w-full text-gray-400"
+              onClick={() => setStep(step + 1)}
+            >
+              {t('onboarding.skip')}
             </Button>
           </div>
         ) : (
+          /* Steps 1-3: Next */
           <Button className="w-full" size="lg" onClick={() => setStep(step + 1)}>
             {t('onboarding.next')}
           </Button>
