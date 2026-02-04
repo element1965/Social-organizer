@@ -161,6 +161,8 @@
     "reNotify": "Hatırlatma",
     "closed": "Kapalı",
     "blocked": "Engelli",
+    "obligationReceived": "Help",
+    "cycleClosed": "Cycle closed",
     "specialAuthor": "Yazar",
     "specialDeveloper": "Geliştirici",
     "handshakes": "el sıkışmalar",

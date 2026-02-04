@@ -161,6 +161,8 @@
     "reNotify": "리마인더",
     "closed": "종료됨",
     "blocked": "차단됨",
+    "obligationReceived": "Help",
+    "cycleClosed": "Cycle closed",
     "specialAuthor": "작성자",
     "specialDeveloper": "개발자",
     "handshakes": "번의 핸드셰이크",

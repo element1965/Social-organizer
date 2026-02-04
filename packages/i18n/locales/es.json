@@ -161,6 +161,8 @@
     "reNotify": "Recordatorio",
     "closed": "Cerrada",
     "blocked": "Bloqueada",
+    "obligationReceived": "Help",
+    "cycleClosed": "Cycle closed",
     "specialAuthor": "Autor",
     "specialDeveloper": "Desarrollador",
     "handshakes": "apretones de manos",

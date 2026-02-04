@@ -156,6 +156,8 @@
     "reNotify": "Нагадування",
     "closed": "Закрите",
     "blocked": "Заблоковане",
+    "obligationReceived": "Help",
+    "cycleClosed": "Cycle closed",
     "specialAuthor": "Автор",
     "specialDeveloper": "Розробник",
     "handshakes": "рукостискань",

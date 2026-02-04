@@ -161,6 +161,8 @@
     "reNotify": "เตือนซ้ำ",
     "closed": "ปิดแล้ว",
     "blocked": "ถูกบล็อก",
+    "obligationReceived": "Help",
+    "cycleClosed": "Cycle closed",
     "specialAuthor": "ผู้สร้าง",
     "specialDeveloper": "นักพัฒนา",
     "handshakes": "การจับมือ",
