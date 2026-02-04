@@ -270,7 +270,7 @@ const myObligations = [
       updatedAt: '2025-11-10T10:00:00Z',
       closedAt: null,
       blockedAt: null,
-      creator: { id: 'user-3', name: usersMap.get('user-3')!.name, photoUrl: null },
+      creator: { id: 'user-3', name: usersMap.get('user-3')!.name, photoUrl: null, connectionCount: 15, remainingBudget: 120 },
     },
   },
   {
@@ -295,7 +295,7 @@ const myObligations = [
       updatedAt: '2025-11-01T00:00:00Z',
       closedAt: null,
       blockedAt: null,
-      creator: { id: 'user-5', name: usersMap.get('user-5')!.name, photoUrl: null },
+      creator: { id: 'user-5', name: usersMap.get('user-5')!.name, photoUrl: null, connectionCount: 22, remainingBudget: 85 },
     },
   },
   {
@@ -320,7 +320,7 @@ const myObligations = [
       updatedAt: '2025-11-21T09:00:00Z',
       closedAt: null,
       blockedAt: null,
-      creator: { id: 'user-9', name: usersMap.get('user-9')!.name, photoUrl: null },
+      creator: { id: 'user-9', name: usersMap.get('user-9')!.name, photoUrl: null, connectionCount: 8, remainingBudget: 200 },
     },
   },
 ];
@@ -353,6 +353,7 @@ const urgentNotification = {
     name: usersMap.get('user-3')!.name,
     photoUrl: null,
     connectionCount: 7,
+    remainingBudget: 120,
   },
   collection: {
     id: 'ext-coll-new',
@@ -372,6 +373,7 @@ const urgentNotification = {
       name: usersMap.get('user-3')!.name,
       photoUrl: null,
       connectionCount: 7,
+      remainingBudget: 120,
     },
   },
 };
@@ -400,6 +402,7 @@ const notifications = [
         name: creator.name,
         photoUrl: null,
         connectionCount: Math.floor(Math.random() * 12) + 3,
+        remainingBudget: Math.floor(50 + Math.random() * 150),
       },
       collection: {
         id: i < 2 ? 'ext-coll-1' : 'ext-coll-2',
@@ -419,6 +422,7 @@ const notifications = [
           name: creator.name,
           photoUrl: null,
           connectionCount: Math.floor(Math.random() * 12) + 3,
+          remainingBudget: Math.floor(50 + Math.random() * 150),
         },
       },
     };
