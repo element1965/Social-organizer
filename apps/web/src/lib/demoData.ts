@@ -497,6 +497,8 @@ export function handleDemoRequest(path: string, input: unknown): unknown {
       const contactTypes = [
         { type: 'telegram', label: 'Telegram', icon: 'telegram', placeholder: '@username или t.me/...' },
         { type: 'whatsapp', label: 'WhatsApp', icon: 'whatsapp', placeholder: '+7...' },
+        { type: 'viber', label: 'Viber', icon: 'viber', placeholder: '+7...' },
+        { type: 'signal', label: 'Signal', icon: 'signal', placeholder: '+7...' },
         { type: 'facebook', label: 'Facebook', icon: 'facebook', placeholder: 'facebook.com/...' },
         { type: 'instagram', label: 'Instagram', icon: 'instagram', placeholder: '@username' },
         { type: 'twitter', label: 'X (Twitter)', icon: 'twitter', placeholder: '@username' },

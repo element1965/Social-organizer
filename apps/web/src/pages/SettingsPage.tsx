@@ -180,14 +180,14 @@ export function SettingsPage() {
         </CardHeader>
         <CardContent className="space-y-3">
           {contacts?.map((contact) => (
-            <div key={contact.type} className="flex items-center gap-2">
-              <SocialIcon type={contact.icon} className="w-5 h-5 text-gray-500 flex-shrink-0" />
+            <div key={contact.type} className="relative">
+              <SocialIcon type={contact.icon} className="w-5 h-5 text-gray-500 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
               <Input
                 id={`contact-${contact.type}`}
                 placeholder={contact.placeholder}
                 value={contactValues[contact.type] ?? contact.value}
                 onChange={(e) => setContactValues(prev => ({ ...prev, [contact.type]: e.target.value }))}
-                className="flex-1"
+                className="w-full pl-10"
               />
             </div>
           ))}
