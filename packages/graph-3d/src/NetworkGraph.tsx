@@ -1,7 +1,7 @@
-import { useCallback, useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef, useMemo } from 'react';
 import ForceGraph3D from 'react-force-graph-3d';
 import SpriteText from 'three-spritetext';
-import type { Object3D } from 'three';
+import * as THREE from 'three';
 
 /* ---------- Типы ---------- */
 
@@ -26,6 +26,7 @@ export interface NetworkGraphProps {
   height?: number;
   onNodeClick?: (nodeId: string) => void;
   darkMode?: boolean;
+  controlsHint?: string;
 }
 
 /* ---------- Компонент ---------- */
@@ -41,9 +42,12 @@ export function NetworkGraph({
   height,
   onNodeClick,
   darkMode = true,
+  controlsHint,
 }: NetworkGraphProps) {
   const fgRef = useRef<FGRef>(null);
   const highlightSet = new Set(highlightPath ?? []);
+  const textureLoader = useMemo(() => new THREE.TextureLoader(), []);
+  const textureCache = useRef<Map<string, THREE.Texture>>(new Map());
 
   // Фиксируем центральный узел в центре графа
   const processedNodes = nodes.map((n) => ({
@@ -63,6 +67,24 @@ export function NetworkGraph({
     }
   }, []);
 
+  // Предзагрузка текстур аватарок
+  useEffect(() => {
+    nodes.forEach((node) => {
+      if (node.photoUrl && !textureCache.current.has(node.photoUrl)) {
+        textureLoader.load(
+          node.photoUrl,
+          (texture) => {
+            textureCache.current.set(node.photoUrl!, texture);
+          },
+          undefined,
+          () => {
+            // Ошибка загрузки - игнорируем
+          }
+        );
+      }
+    });
+  }, [nodes, textureLoader]);
+
   const handleNodeClick = useCallback(
     (node: { id?: string | number }) => {
       if (node.id && onNodeClick) onNodeClick(String(node.id));
@@ -71,8 +93,8 @@ export function NetworkGraph({
   );
 
   const nodeThreeObject = useCallback(
-    (node: { id?: string | number; name?: string; isCenter?: boolean; isDeleted?: boolean }) => {
-      const label = new SpriteText(String(node.name ?? ''));
+    (node: { id?: string | number; name?: string; photoUrl?: string | null; isCenter?: boolean; isDeleted?: boolean }) => {
+      const group = new THREE.Group();
 
       // Цвета для тёмной и светлой темы
       const colors = darkMode
@@ -97,6 +119,70 @@ export function NetworkGraph({
             normalBg: 'rgba(255,255,255,0.8)',
           };
 
+      const avatarSize = node.isCenter ? 8 : 5;
+      const textOffset = avatarSize / 2 + 2;
+
+      // Аватарка
+      const cachedTexture = node.photoUrl ? textureCache.current.get(node.photoUrl) : null;
+      if (cachedTexture) {
+        const spriteMaterial = new THREE.SpriteMaterial({
+          map: cachedTexture,
+          transparent: true,
+          opacity: node.isDeleted ? 0.5 : 1,
+        });
+        const avatar = new THREE.Sprite(spriteMaterial);
+        avatar.scale.set(avatarSize, avatarSize, 1);
+        group.add(avatar);
+
+        // Рамка вокруг аватарки для центрального узла
+        if (node.isCenter) {
+          const ringGeometry = new THREE.RingGeometry(avatarSize / 2 + 0.3, avatarSize / 2 + 0.8, 32);
+          const ringMaterial = new THREE.MeshBasicMaterial({
+            color: colors.center,
+            side: THREE.DoubleSide,
+            transparent: true,
+            opacity: 0.8,
+          });
+          const ring = new THREE.Mesh(ringGeometry, ringMaterial);
+          group.add(ring);
+        }
+      } else {
+        // Заглушка если нет аватарки - круг с инициалом
+        const initial = (String(node.name ?? '?')[0] || '?').toUpperCase();
+        const canvas = document.createElement('canvas');
+        canvas.width = 128;
+        canvas.height = 128;
+        const ctx = canvas.getContext('2d')!;
+
+        // Градиентный фон
+        const gradient = ctx.createLinearGradient(0, 0, 128, 128);
+        gradient.addColorStop(0, node.isCenter ? '#3b82f6' : '#6366f1');
+        gradient.addColorStop(1, node.isCenter ? '#1d4ed8' : '#4f46e5');
+        ctx.fillStyle = gradient;
+        ctx.beginPath();
+        ctx.arc(64, 64, 64, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Инициал
+        ctx.fillStyle = '#ffffff';
+        ctx.font = 'bold 64px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(initial, 64, 68);
+
+        const texture = new THREE.CanvasTexture(canvas);
+        const spriteMaterial = new THREE.SpriteMaterial({
+          map: texture,
+          transparent: true,
+          opacity: node.isDeleted ? 0.5 : 1,
+        });
+        const avatar = new THREE.Sprite(spriteMaterial);
+        avatar.scale.set(avatarSize, avatarSize, 1);
+        group.add(avatar);
+      }
+
+      // Текст с именем под аватаркой
+      const label = new SpriteText(String(node.name ?? ''));
       label.color = node.isDeleted
         ? colors.deleted
         : node.isCenter
@@ -104,7 +190,7 @@ export function NetworkGraph({
         : highlightSet.has(String(node.id))
         ? colors.highlight
         : colors.normal;
-      label.textHeight = node.isCenter ? 3.5 : 2;
+      label.textHeight = node.isCenter ? 2.5 : 1.8;
       label.backgroundColor = node.isDeleted
         ? colors.deletedBg
         : node.isCenter
@@ -112,9 +198,12 @@ export function NetworkGraph({
         : highlightSet.has(String(node.id))
         ? colors.highlightBg
         : colors.normalBg;
-      label.padding = 2;
-      label.borderRadius = 4;
-      return label as unknown as Object3D;
+      label.padding = 1.5;
+      label.borderRadius = 3;
+      label.position.y = -textOffset;
+      group.add(label);
+
+      return group;
     },
     [highlightSet, darkMode],
   );
@@ -144,21 +233,43 @@ export function NetworkGraph({
   const graphData = { nodes: processedNodes, links: edges };
 
   return (
-    <ForceGraph3D
-      ref={fgRef}
-      graphData={graphData}
-      width={width}
-      height={height}
-      backgroundColor="rgba(0,0,0,0)"
-      nodeThreeObject={nodeThreeObject}
-      nodeThreeObjectExtend={false}
-      linkColor={linkColor}
-      linkWidth={linkWidth}
-      linkOpacity={0.6}
-      onNodeClick={handleNodeClick}
-      enableNodeDrag={false}
-      warmupTicks={50}
-      cooldownTime={3000}
-    />
+    <div style={{ position: 'relative', width: width || '100%', height: height || '100%' }}>
+      <ForceGraph3D
+        ref={fgRef}
+        graphData={graphData}
+        width={width}
+        height={height}
+        backgroundColor="rgba(0,0,0,0)"
+        nodeThreeObject={nodeThreeObject}
+        nodeThreeObjectExtend={false}
+        linkColor={linkColor}
+        linkWidth={linkWidth}
+        linkOpacity={0.6}
+        onNodeClick={handleNodeClick}
+        enableNodeDrag={false}
+        warmupTicks={50}
+        cooldownTime={3000}
+        showNavInfo={false}
+      />
+      {controlsHint && (
+        <div
+          style={{
+            position: 'absolute',
+            bottom: 8,
+            left: '50%',
+            transform: 'translateX(-50%)',
+            padding: '4px 12px',
+            borderRadius: 6,
+            fontSize: 11,
+            color: darkMode ? 'rgba(255,255,255,0.6)' : 'rgba(0,0,0,0.5)',
+            backgroundColor: darkMode ? 'rgba(0,0,0,0.3)' : 'rgba(255,255,255,0.7)',
+            pointerEvents: 'none',
+            whiteSpace: 'nowrap',
+          }}
+        >
+          {controlsHint}
+        </div>
+      )}
+    </div>
   );
 }

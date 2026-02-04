@@ -152,7 +152,8 @@
     "invite": "निमंत्रण",
     "qrCode": "QR कोड",
     "empty": "कोई कनेक्शन नहीं",
-    "emptyHint": "अपने पहले व्यक्ति को आमंत्रित करें"
+    "emptyHint": "अपने पहले व्यक्ति को आमंत्रित करें",
+    "controlsHint": "Left-click: rotate, Scroll: zoom, Right-click: pan"
   },
   "notifications": {
     "title": "सूचनाएं",

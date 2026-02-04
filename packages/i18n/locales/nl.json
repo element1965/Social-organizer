@@ -152,7 +152,8 @@
     "invite": "Uitnodigen",
     "qrCode": "QR-code",
     "empty": "Geen connecties",
-    "emptyHint": "Nodig je eerste persoon uit"
+    "emptyHint": "Nodig je eerste persoon uit",
+    "controlsHint": "Left-click: rotate, Scroll: zoom, Right-click: pan"
   },
   "notifications": {
     "title": "Meldingen",

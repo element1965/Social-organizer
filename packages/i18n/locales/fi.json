@@ -152,7 +152,8 @@
     "invite": "Kutsu",
     "qrCode": "QR-koodi",
     "empty": "Ei yhteyksiä",
-    "emptyHint": "Kutsu ensimmäinen henkilösi"
+    "emptyHint": "Kutsu ensimmäinen henkilösi",
+    "controlsHint": "Left-click: rotate, Scroll: zoom, Right-click: pan"
   },
   "notifications": {
     "title": "Ilmoitukset",

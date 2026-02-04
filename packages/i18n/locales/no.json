@@ -152,7 +152,8 @@
     "invite": "Inviter",
     "qrCode": "QR-kode",
     "empty": "Ingen forbindelser",
-    "emptyHint": "Inviter din første person"
+    "emptyHint": "Inviter din første person",
+    "controlsHint": "Left-click: rotate, Scroll: zoom, Right-click: pan"
   },
   "notifications": {
     "title": "Varsler",

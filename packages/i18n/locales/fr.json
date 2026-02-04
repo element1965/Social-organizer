@@ -152,7 +152,8 @@
     "invite": "Inviter",
     "qrCode": "Code QR",
     "empty": "Aucune connexion",
-    "emptyHint": "Invitez votre première personne"
+    "emptyHint": "Invitez votre première personne",
+    "controlsHint": "Left-click: rotate, Scroll: zoom, Right-click: pan"
   },
   "notifications": {
     "title": "Notifications",

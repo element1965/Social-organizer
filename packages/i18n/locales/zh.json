@@ -152,7 +152,8 @@
     "invite": "邀请",
     "qrCode": "二维码",
     "empty": "暂无连接",
-    "emptyHint": "邀请你的第一个联系人"
+    "emptyHint": "邀请你的第一个联系人",
+    "controlsHint": "Left-click: rotate, Scroll: zoom, Right-click: pan"
   },
   "notifications": {
     "title": "通知",

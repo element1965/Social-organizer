@@ -92,6 +92,7 @@ export function MyNetworkPage() {
                 height={window.innerHeight - 240}
                 onNodeClick={(id) => navigate(`/profile/${id}`)}
                 darkMode={isDark}
+                controlsHint={t('network.controlsHint')}
               />
             ) : (
               <div className="flex justify-center py-12"><Spinner /></div>

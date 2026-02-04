@@ -152,7 +152,8 @@
     "invite": "招待",
     "qrCode": "QRコード",
     "empty": "つながりはありません",
-    "emptyHint": "最初の人を招待しましょう"
+    "emptyHint": "最初の人を招待しましょう",
+    "controlsHint": "Left-click: rotate, Scroll: zoom, Right-click: pan"
   },
   "notifications": {
     "title": "通知",

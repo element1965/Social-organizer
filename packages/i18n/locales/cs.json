@@ -152,7 +152,8 @@
     "invite": "Pozvat",
     "qrCode": "QR kód",
     "empty": "Žádná spojení",
-    "emptyHint": "Pozvěte svou první osobu"
+    "emptyHint": "Pozvěte svou první osobu",
+    "controlsHint": "Left-click: rotate, Scroll: zoom, Right-click: pan"
   },
   "notifications": {
     "title": "Upozornění",

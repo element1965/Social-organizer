@@ -152,7 +152,8 @@
     "invite": "Invită",
     "qrCode": "Cod QR",
     "empty": "Nicio conexiune",
-    "emptyHint": "Invită prima ta persoană"
+    "emptyHint": "Invită prima ta persoană",
+    "controlsHint": "Left-click: rotate, Scroll: zoom, Right-click: pan"
   },
   "notifications": {
     "title": "Notificări",
