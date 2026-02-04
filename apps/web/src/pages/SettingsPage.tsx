@@ -9,7 +9,7 @@ import { Button } from '../components/ui/button';
 import { Select } from '../components/ui/select';
 import { Avatar } from '../components/ui/avatar';
 import { Spinner } from '../components/ui/spinner';
-import { Settings, Globe, Palette, Volume2, Link, UserX, Trash2, LogOut, Type, Users, DollarSign, Wallet } from 'lucide-react';
+import { Settings, Globe, Palette, Volume2, Mic, Link, UserX, Trash2, LogOut, Type, Users, DollarSign, Wallet } from 'lucide-react';
 import { cn } from '../lib/utils';
 import { languageNames } from '@so/i18n';
 import { Input } from '../components/ui/input';
@@ -34,6 +34,7 @@ export function SettingsPage() {
   const updateLanguage = trpc.settings.updateLanguage.useMutation({ onSuccess: () => utils.settings.get.invalidate() });
   const updateTheme = trpc.settings.updateTheme.useMutation({ onSuccess: () => utils.settings.get.invalidate() });
   const updateSound = trpc.settings.updateSound.useMutation({ onSuccess: () => utils.settings.get.invalidate() });
+  const updateVoiceGender = trpc.settings.updateVoiceGender.useMutation({ onSuccess: () => utils.settings.get.invalidate() });
   const updateFontScale = trpc.settings.updateFontScale.useMutation({ onSuccess: () => utils.settings.get.invalidate() });
   const updateCurrency = trpc.user.setPreferredCurrency.useMutation({ onSuccess: () => utils.user.me.invalidate() });
   const setBudgetMutation = trpc.user.setMonthlyBudget.useMutation({ onSuccess: () => utils.user.me.invalidate() });
@@ -146,6 +147,17 @@ export function SettingsPage() {
           <div className={cn('w-5 h-5 rounded-full bg-white shadow absolute top-0.5 transition-all', settings?.soundEnabled ? 'left-6' : 'left-0.5')} />
         </button>
       </div></CardContent></Card>
+
+      <Card><CardContent className="py-3">
+        <div className="flex items-center gap-3 mb-2"><Mic className="w-5 h-5 text-gray-500" /><span className="text-sm font-medium text-gray-700 dark:text-gray-300">{t('settings.voiceGender')}</span></div>
+        <div className="grid grid-cols-2 gap-2">
+          {(['FEMALE', 'MALE'] as const).map((gender) => (
+            <button key={gender} onClick={() => updateVoiceGender.mutate({ voiceGender: gender })} className={cn('py-2 rounded-lg text-sm font-medium border transition-colors', settings?.voiceGender === gender ? 'border-blue-600 bg-blue-50 dark:bg-blue-950/30 text-blue-600' : 'border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400')}>
+              {gender === 'FEMALE' ? t('settings.voiceFemale') : t('settings.voiceMale')}
+            </button>
+          ))}
+        </div>
+      </CardContent></Card>
 
       <Card><CardContent className="py-3">
         <div className="flex items-center gap-3 mb-2"><Type className="w-5 h-5 text-gray-500" /><span className="text-sm font-medium text-gray-700 dark:text-gray-300">{t('settings.fontSize')}</span></div>

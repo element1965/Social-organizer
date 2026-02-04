@@ -1,10 +1,10 @@
 import { useState, useRef, useEffect } from 'react';
-import { MessageCircle, X, Send, Mic, MicOff } from 'lucide-react';
+import { MessageCircle, X, Send, Mic, MicOff, Loader2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { cn } from '../lib/utils';
-import { getLocalResponse } from '../lib/chatResponses';
+import { trpc } from '../lib/trpc';
 
 interface Message {
   id: string;
@@ -19,8 +19,13 @@ export function ChatAssistant() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [isListening, setIsListening] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const recognitionRef = useRef<SpeechRecognition | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const pendingVoiceRef = useRef(false);
+
+  const { data: settings } = trpc.settings.get.useQuery();
+  const chatMutation = trpc.chat.send.useMutation();
 
   // Scroll to bottom when messages change
   useEffect(() => {
@@ -34,8 +39,33 @@ export function ChatAssistant() {
       speechSynthesis.cancel();
 
       const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = i18n.language === 'ru' || i18n.language.startsWith('ru') ? 'ru-RU' : 'en-US';
+      // Map language code to speech synthesis language
+      const langMap: Record<string, string> = {
+        ru: 'ru-RU', en: 'en-US', es: 'es-ES', fr: 'fr-FR', de: 'de-DE',
+        pt: 'pt-BR', it: 'it-IT', zh: 'zh-CN', ja: 'ja-JP', ko: 'ko-KR',
+        ar: 'ar-SA', hi: 'hi-IN', tr: 'tr-TR', pl: 'pl-PL', uk: 'uk-UA',
+        nl: 'nl-NL', sv: 'sv-SE', da: 'da-DK', fi: 'fi-FI', no: 'nb-NO',
+        cs: 'cs-CZ', ro: 'ro-RO', th: 'th-TH', vi: 'vi-VN', id: 'id-ID',
+      };
+      const baseLang = i18n.language.split('-')[0];
+      const targetLang = langMap[baseLang] || 'en-US';
+      utterance.lang = targetLang;
       utterance.rate = 0.9;
+
+      // Select voice based on gender preference
+      const voices = speechSynthesis.getVoices();
+      const preferFemale = settings?.voiceGender !== 'MALE';
+
+      // Find a voice matching language and gender preference
+      const matchingVoice = voices.find(v =>
+        v.lang.startsWith(baseLang) &&
+        (preferFemale ? v.name.toLowerCase().includes('female') || !v.name.toLowerCase().includes('male') : v.name.toLowerCase().includes('male'))
+      ) || voices.find(v => v.lang.startsWith(baseLang));
+
+      if (matchingVoice) {
+        utterance.voice = matchingVoice;
+      }
+
       speechSynthesis.speak(utterance);
     }
   };
@@ -54,7 +84,13 @@ export function ChatAssistant() {
       setIsListening(false);
     } else {
       recognitionRef.current = new SpeechRecognitionAPI();
-      recognitionRef.current.lang = i18n.language === 'ru' || i18n.language.startsWith('ru') ? 'ru-RU' : 'en-US';
+      const baseLang = i18n.language.split('-')[0];
+      const langMap: Record<string, string> = {
+        ru: 'ru-RU', en: 'en-US', es: 'es-ES', fr: 'fr-FR', de: 'de-DE',
+        pt: 'pt-BR', it: 'it-IT', zh: 'zh-CN', ja: 'ja-JP', ko: 'ko-KR',
+        ar: 'ar-SA', hi: 'hi-IN', tr: 'tr-TR', pl: 'pl-PL', uk: 'uk-UA',
+      };
+      recognitionRef.current.lang = langMap[baseLang] || 'en-US';
       recognitionRef.current.continuous = false;
       recognitionRef.current.interimResults = false;
 
@@ -78,8 +114,8 @@ export function ChatAssistant() {
   };
 
   // Send message (text or voice)
-  const handleSendMessage = (text: string, viaVoice: boolean = false) => {
-    if (!text.trim()) return;
+  const handleSendMessage = async (text: string, viaVoice: boolean = false) => {
+    if (!text.trim() || isLoading) return;
 
     const userMessage: Message = {
       id: Date.now().toString(),
@@ -88,21 +124,41 @@ export function ChatAssistant() {
       viaVoice,
     };
 
-    const response = getLocalResponse(text, i18n.language);
-
-    const assistantMessage: Message = {
-      id: (Date.now() + 1).toString(),
-      role: 'assistant',
-      content: response,
-      viaVoice,
-    };
-
-    setMessages(prev => [...prev, userMessage, assistantMessage]);
+    setMessages(prev => [...prev, userMessage]);
     setInput('');
+    setIsLoading(true);
+    pendingVoiceRef.current = viaVoice;
 
-    // If user used voice, respond with voice
-    if (viaVoice) {
-      setTimeout(() => speakMessage(response), 300);
+    try {
+      const result = await chatMutation.mutateAsync({
+        message: text.trim(),
+        language: i18n.language,
+      });
+
+      const assistantMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        role: 'assistant',
+        content: result.response,
+        viaVoice,
+      };
+
+      setMessages(prev => [...prev, assistantMessage]);
+
+      // If user used voice, respond with voice
+      if (pendingVoiceRef.current) {
+        setTimeout(() => speakMessage(result.response), 300);
+      }
+    } catch (error) {
+      const errorMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        role: 'assistant',
+        content: t('common.error'),
+        viaVoice,
+      };
+      setMessages(prev => [...prev, errorMessage]);
+    } finally {
+      setIsLoading(false);
+      pendingVoiceRef.current = false;
     }
   };
 
@@ -111,7 +167,7 @@ export function ChatAssistant() {
     handleSendMessage(input, false);
   };
 
-  // Quick topic buttons for Russian language
+  // Quick topic buttons based on language
   const quickTopicsRu = ['рукопожатие', 'намерение', 'возможности', 'как начать'];
   const quickTopicsEn = ['handshake', 'intention', 'capabilities', 'how to start'];
   const quickTopics = i18n.language.startsWith('ru') ? quickTopicsRu : quickTopicsEn;
@@ -162,6 +218,7 @@ export function ChatAssistant() {
                       key={term}
                       onClick={() => handleSendMessage(term, false)}
                       className="text-xs px-3 py-1.5 bg-gray-100 dark:bg-gray-800 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+                      disabled={isLoading}
                     >
                       {term}
                     </button>
@@ -182,6 +239,12 @@ export function ChatAssistant() {
                 {msg.content}
               </div>
             ))}
+            {isLoading && (
+              <div className="flex items-center gap-2 text-gray-500">
+                <Loader2 className="w-4 h-4 animate-spin" />
+                <span className="text-sm">{t('common.loading')}</span>
+              </div>
+            )}
             <div ref={messagesEndRef} />
           </div>
 
@@ -189,11 +252,13 @@ export function ChatAssistant() {
           <div className="p-3 border-t border-gray-200 dark:border-gray-700 flex gap-2">
             <button
               onClick={toggleListening}
+              disabled={isLoading}
               className={cn(
                 "p-2 rounded-full shrink-0 transition-colors",
                 isListening
                   ? "bg-red-100 dark:bg-red-900/30 text-red-600 animate-pulse"
-                  : "bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700"
+                  : "bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700",
+                isLoading && "opacity-50 cursor-not-allowed"
               )}
               aria-label={isListening ? t('chat.stopListening') : t('chat.startListening')}
             >
@@ -205,11 +270,11 @@ export function ChatAssistant() {
               onKeyDown={(e) => e.key === 'Enter' && !e.shiftKey && handleSubmit()}
               placeholder={t('chat.placeholder')}
               className="flex-1"
-              disabled={isListening}
+              disabled={isListening || isLoading}
             />
             <Button
               onClick={handleSubmit}
-              disabled={!input.trim() || isListening}
+              disabled={!input.trim() || isListening || isLoading}
               size="sm"
               className="shrink-0"
             >
