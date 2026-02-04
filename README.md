@@ -72,7 +72,7 @@ pnpm dev
 
 | Model | Description |
 |-------|-------------|
-| User | User with settings, role, onboarding flag, and preferredCurrency |
+| User | User with settings, role, onboarding flag, preferredCurrency, monthlyBudget, remainingBudget |
 | UserContact | User contacts (social networks, messengers) |
 | PlatformAccount | Platform bindings (FB/TG/Apple/Google) |
 | Connection | Connection between users (userAId < userBId) |
@@ -114,14 +114,14 @@ JWT_SECRET=your-secret-key
 | Router | Procedures |
 |--------|------------|
 | `auth` | loginWithPlatform, refresh, generateLinkCode, linkAccount |
-| `user` | me, update, getById, getStats, getContacts, updateContacts, completeOnboarding, delete |
+| `user` | me, update, getById, getStats, getContacts, updateContacts, completeOnboarding, delete, setMonthlyBudget |
 | `connection` | list, add (limit 150), getCount, graphSlice (2-3 levels), findPath, getNetworkStats |
 | `collection` | create, getById, close, cancel, myActive, myParticipating |
 | `obligation` | create, myList, unsubscribe |
 | `notification` | list (cursor pagination), markRead, dismiss, unreadCount |
 | `settings` | get, updateLanguage/Theme/Sound/FontScale, ignoreList/addIgnore/removeIgnore |
 | `invite` | generate, accept, getByToken |
-| `stats` | profile, help |
+| `stats` | profile, help, networkCapabilities |
 | `currency` | list, detectCurrency, rates, convert, toUSD |
 
 ## Services
@@ -160,7 +160,7 @@ React 19 SPA with tRPC client.
 |------|------|-------------|
 | LandingPage | `/welcome` | Public landing with 3D Earth globe (NASA textures) and project description |
 | LoginPage | `/login` | Login via platform (FB/TG/Apple/Google) + demo mode |
-| OnboardingPage | `/onboarding` | 4-screen onboarding with invitation (auto for new users) |
+| OnboardingPage | `/onboarding` | 5-screen onboarding with invitation and monthly budget (auto for new users) |
 | DashboardPage | `/` | Network stats, collections, intentions, emergency alerts (protected → /welcome) |
 | NotificationsPage | `/notifications` | Notifications with handshake path and 24h timer |
 | CreateCollectionPage | `/create` | Create collection with network reach display (1:1 ratio) |
@@ -229,6 +229,8 @@ Mock data (`apps/web/src/lib/demoData.ts`):
 - **Dark/Light theme** — system preference detection + manual toggle
 - **Onboarding** — auto-shown for new users, completable flag in database
 - **Currency preference** — users can set preferred currency in settings; auto-detected by IP on first visit
+- **Monthly support budget** — users can set how much they're willing to contribute monthly; displayed as "Current Capabilities" network-wide sum on dashboard
+- **AI Chat Assistant** — floating button with glossary-based assistant; supports text and voice input with auto-speak for voice queries
 
 ## Terminology (Glossary)
 
@@ -239,6 +241,8 @@ Mock data (`apps/web/src/lib/demoData.ts`):
 | **Signal for support** | Creating a collection when support is needed. The network is notified through handshake chains |
 | **Handshake chain** | Path of connections between two users through mutual acquaintances |
 | **Connection count** | Number of first-level connections (handshakes) a user has |
+| **Current Capabilities** | Sum of remaining monthly budgets across the user's network (up to 3 handshake levels) |
+| **Monthly budget** | Optional amount a user is willing to contribute to mutual support each month (stored in USD) |
 
 ## Current Status
 
