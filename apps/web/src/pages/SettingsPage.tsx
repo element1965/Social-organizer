@@ -9,7 +9,7 @@ import { Button } from '../components/ui/button';
 import { Select } from '../components/ui/select';
 import { Avatar } from '../components/ui/avatar';
 import { Spinner } from '../components/ui/spinner';
-import { Settings, Globe, Palette, Volume2, Link, UserX, Trash2, LogOut, Type, Users } from 'lucide-react';
+import { Settings, Globe, Palette, Volume2, Link, UserX, Trash2, LogOut, Type, Users, DollarSign } from 'lucide-react';
 import { cn } from '../lib/utils';
 import { languageNames } from '@so/i18n';
 import { Input } from '../components/ui/input';
@@ -25,6 +25,8 @@ export function SettingsPage() {
   const { data: settings, isLoading } = trpc.settings.get.useQuery();
   const { data: ignoreList } = trpc.settings.ignoreList.useQuery();
   const { data: contacts } = trpc.user.getContacts.useQuery({});
+  const { data: me } = trpc.user.me.useQuery();
+  const { data: currencies } = trpc.currency.list.useQuery();
   const updateContacts = trpc.user.updateContacts.useMutation({
     onSuccess: () => utils.user.getContacts.invalidate(),
   });
@@ -33,6 +35,7 @@ export function SettingsPage() {
   const updateTheme = trpc.settings.updateTheme.useMutation({ onSuccess: () => utils.settings.get.invalidate() });
   const updateSound = trpc.settings.updateSound.useMutation({ onSuccess: () => utils.settings.get.invalidate() });
   const updateFontScale = trpc.settings.updateFontScale.useMutation({ onSuccess: () => utils.settings.get.invalidate() });
+  const updateCurrency = trpc.user.setPreferredCurrency.useMutation({ onSuccess: () => utils.user.me.invalidate() });
   const removeIgnore = trpc.settings.removeIgnore.useMutation({ onSuccess: () => utils.settings.ignoreList.invalidate() });
   const generateCode = trpc.auth.generateLinkCode.useMutation();
   const deleteAccount = trpc.user.delete.useMutation({ onSuccess: () => { logout(); navigate('/login'); } });
@@ -51,6 +54,16 @@ export function SettingsPage() {
 
       <Card><CardContent className="py-3"><div className="flex items-center gap-3"><Globe className="w-5 h-5 text-gray-500 shrink-0" />
         <Select id="language" label={t('settings.language')} value={settings?.language || 'en'} onChange={(e) => handleLanguageChange(e.target.value)} options={Object.entries(languageNames).map(([code, name]) => ({ value: code, label: name }))} />
+      </div></CardContent></Card>
+
+      <Card><CardContent className="py-3"><div className="flex items-center gap-3"><DollarSign className="w-5 h-5 text-gray-500 shrink-0" />
+        <Select
+          id="currency"
+          label={t('settings.currency')}
+          value={me?.preferredCurrency || 'USD'}
+          onChange={(e) => updateCurrency.mutate({ currency: e.target.value })}
+          options={currencies?.map((c) => ({ value: c.code, label: `${c.symbol} ${c.code} - ${c.name}` })) ?? [{ value: 'USD', label: '$ USD - US Dollar' }]}
+        />
       </div></CardContent></Card>
 
       <Card><CardContent className="py-3">

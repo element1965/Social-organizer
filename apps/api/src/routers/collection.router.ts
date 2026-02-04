@@ -3,13 +3,14 @@ import { router, protectedProcedure } from '../trpc.js';
 import { TRPCError } from '@trpc/server';
 import { MIN_COLLECTION_AMOUNT, CURRENCY_CODES, NOTIFICATION_RATIO } from '@so/shared';
 import { sendCollectionNotifications } from '../services/notification.service.js';
+import { convertToUSD } from '../services/currency.service.js';
 
 export const collectionRouter = router({
   create: protectedProcedure
     .input(z.object({
       type: z.enum(['EMERGENCY', 'REGULAR']),
       amount: z.number().min(MIN_COLLECTION_AMOUNT).nullable().optional(),
-      currency: z.string().refine((c) => CURRENCY_CODES.includes(c), 'Unsupported currency'),
+      inputCurrency: z.string().refine((c) => CURRENCY_CODES.includes(c), 'Unsupported currency'),
       chatLink: z.string().url(),
     }))
     .mutation(async ({ ctx, input }) => {
@@ -42,12 +43,20 @@ export const collectionRouter = router({
         });
       }
 
+      // Convert to USD if needed
+      let amountUSD = input.amount;
+      if (input.amount != null && input.inputCurrency !== 'USD') {
+        amountUSD = await convertToUSD(input.amount, input.inputCurrency);
+      }
+
       const collection = await ctx.db.collection.create({
         data: {
           creatorId: ctx.userId,
           type: input.type,
-          amount: input.amount ?? null,
-          currency: input.currency,
+          amount: amountUSD,
+          currency: 'USD', // Always store in USD
+          originalAmount: input.amount,
+          originalCurrency: input.inputCurrency,
           chatLink: input.chatLink,
           currentCycleStart: input.type === 'REGULAR' ? new Date() : null,
         },
@@ -55,8 +64,8 @@ export const collectionRouter = router({
 
       // BFS distribution NOT sent for special profiles (Author/Developer)
       // Their notifications come through special-notify worker after first intention
-      if (!isSpecial && input.amount != null) {
-        const maxRecipients = Math.ceil(input.amount / NOTIFICATION_RATIO);
+      if (!isSpecial && amountUSD != null) {
+        const maxRecipients = Math.ceil(amountUSD / NOTIFICATION_RATIO);
         await sendCollectionNotifications(ctx.db, collection.id, ctx.userId, 'NEW_COLLECTION', 1, maxRecipients);
       }
 

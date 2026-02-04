@@ -337,20 +337,7 @@ export function DashboardPage() {
                 </div>
               </div>
 
-              {/* Bar chart by currency */}
-              {helpStats?.given?.byCurrency && (
-                <div>
-                  <p className="text-xs text-gray-500 mb-2">{t('dashboard.byCurrency')}</p>
-                  <BarChart
-                    data={Object.entries(helpStats.given.byCurrency as Record<string, number>).map(([currency, amount]) => ({
-                      label: currency,
-                      value: amount,
-                      color: currency === 'USD' ? '#3b82f6' : '#10b981',
-                    }))}
-                    height={80}
-                  />
-                </div>
-              )}
+              {/* All amounts displayed in USD */}
             </CardContent>
           </Card>
 

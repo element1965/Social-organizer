@@ -207,6 +207,7 @@
   "settings": {
     "title": "Settings",
     "language": "Language",
+    "currency": "Default Currency",
     "theme": "Theme",
     "light": "Light",
     "dark": "Dark",

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { trpc } from '../lib/trpc';
@@ -6,24 +6,43 @@ import { Card, CardContent } from '../components/ui/card';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { Select } from '../components/ui/select';
-import { AlertTriangle, Users } from 'lucide-react';
+import { AlertTriangle, Users, ArrowRight } from 'lucide-react';
 
 export function CreateCollectionPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
 
+  const { data: me } = trpc.user.me.useQuery();
   const { data: networkStats } = trpc.connection.getNetworkStats.useQuery();
+  const { data: currencies } = trpc.currency.list.useQuery();
+  const { data: detectedCurrency } = trpc.currency.detectCurrency.useQuery();
 
   const [type, setType] = useState<'EMERGENCY' | 'REGULAR'>('EMERGENCY');
   const [amount, setAmount] = useState('');
-  const [currency, setCurrency] = useState('USD');
+  const [inputCurrency, setInputCurrency] = useState('USD');
   const [chatLink, setChatLink] = useState('');
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [largeAmountConfirmed, setLargeAmountConfirmed] = useState(false);
 
+  // Set initial currency from user preference or detected
+  useEffect(() => {
+    if (me?.preferredCurrency) {
+      setInputCurrency(me.preferredCurrency);
+    } else if (detectedCurrency?.currency) {
+      setInputCurrency(detectedCurrency.currency);
+    }
+  }, [me?.preferredCurrency, detectedCurrency?.currency]);
+
   const create = trpc.collection.create.useMutation({ onSuccess: (data) => navigate(`/collection/${data.id}`) });
 
-  const isLargeAmount = Number(amount) > 10000;
+  // Preview conversion to USD
+  const { data: preview } = trpc.currency.toUSD.useQuery(
+    { amount: Number(amount), from: inputCurrency },
+    { enabled: !!amount && Number(amount) > 0 && inputCurrency !== 'USD' }
+  );
+
+  const amountInUSD = inputCurrency === 'USD' ? Number(amount) : (preview?.result ?? 0);
+  const isLargeAmount = amountInUSD > 10000;
 
   const validate = () => {
     const e: Record<string, string> = {};
@@ -34,7 +53,16 @@ export function CreateCollectionPage() {
     return Object.keys(e).length === 0;
   };
 
-  const handleSubmit = () => { if (!validate()) return; create.mutate({ type, amount: Number(amount), currency, chatLink }); };
+  const handleSubmit = () => {
+    if (!validate()) return;
+    create.mutate({ type, amount: Number(amount), inputCurrency, chatLink });
+  };
+
+  // Build currency options for select
+  const currencyOptions = currencies?.map((c) => ({
+    value: c.code,
+    label: `${c.symbol} ${c.code}`,
+  })) ?? [{ value: 'USD', label: '$ USD' }];
 
   return (
     <div className="p-4">
@@ -49,7 +77,42 @@ export function CreateCollectionPage() {
               {t('create.regular')}
             </button>
           </div>
-          <Input id="amount" label={t('create.amount')} hint={t('hints.collectionAmount')} type="number" min={10} placeholder="1000" value={amount} onChange={(e) => { setAmount(e.target.value); setLargeAmountConfirmed(false); }} error={errors.amount} />
+
+          <div className="space-y-2">
+            <div className="flex gap-2">
+              <div className="flex-1">
+                <Input
+                  id="amount"
+                  label={t('create.amount')}
+                  hint={t('hints.collectionAmount')}
+                  type="number"
+                  min={10}
+                  placeholder="1000"
+                  value={amount}
+                  onChange={(e) => { setAmount(e.target.value); setLargeAmountConfirmed(false); }}
+                  error={errors.amount}
+                />
+              </div>
+              <div className="w-32">
+                <Select
+                  id="currency"
+                  label={t('create.currency')}
+                  value={inputCurrency}
+                  onChange={(e) => setInputCurrency(e.target.value)}
+                  options={currencyOptions}
+                />
+              </div>
+            </div>
+
+            {/* USD conversion preview */}
+            {inputCurrency !== 'USD' && Number(amount) > 0 && preview?.result != null && (
+              <div className="flex items-center gap-2 text-sm text-gray-500">
+                <ArrowRight className="w-4 h-4" />
+                <span>≈ ${preview.result} USD</span>
+              </div>
+            )}
+          </div>
+
           {isLargeAmount && (
             <div className="p-3 bg-yellow-50 dark:bg-yellow-950/30 border border-yellow-200 dark:border-yellow-800 rounded-lg">
               <div className="flex items-start gap-2">
@@ -69,16 +132,18 @@ export function CreateCollectionPage() {
               </div>
             </div>
           )}
-          <Select id="currency" label={t('create.currency')} value={currency} onChange={(e) => setCurrency(e.target.value)} options={[{ value: 'USD', label: '$ USD' }, { value: 'EUR', label: '\u20ac EUR' }]} />
+
           <Input id="chatLink" label={t('create.chatLink')} hint={t('hints.collectionChatLink')} type="url" placeholder="https://t.me/..." value={chatLink} onChange={(e) => setChatLink(e.target.value)} error={errors.chatLink} />
-          {networkStats && Number(amount) >= 10 && (
+
+          {networkStats && amountInUSD >= 10 && (
             <div className="p-3 bg-blue-50 dark:bg-blue-950/30 rounded-lg flex items-center gap-2">
               <Users className="w-4 h-4 text-blue-600 dark:text-blue-400" />
               <p className="text-sm text-blue-700 dark:text-blue-300">
-                {t('create.networkReach', { count: Math.min(Number(amount), networkStats.totalReachable) })}
+                {t('create.networkReach', { count: Math.min(amountInUSD, networkStats.totalReachable) })}
               </p>
             </div>
           )}
+
           <Button className="w-full" size="lg" onClick={handleSubmit} disabled={create.isPending || (isLargeAmount && !largeAmountConfirmed)}>
             {create.isPending ? t('common.loading') : t('create.submit')}
           </Button>
