@@ -583,6 +583,15 @@ export function handleDemoRequest(path: string, input: unknown): unknown {
         networkReach: 156,
       };
 
+    case 'stats.helpGivenByPeriod':
+      return {
+        allTime: { count: 47, amount: 2850 },
+        year: { count: 35, amount: 2100 },
+        month: { count: 8, amount: 520 },
+        week: { count: 3, amount: 175 },
+        day: { count: 1, amount: 50 },
+      };
+
     case 'stats.networkCapabilities':
       return {
         total: 12500,

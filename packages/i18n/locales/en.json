@@ -114,7 +114,14 @@
     "editBudget": "Edit",
     "yourContribution": "Your contribution",
     "budgetDepletedHint": "Your monthly support budget is depleted. Would you like to add more?",
-    "updateBudget": "Update Budget"
+    "updateBudget": "Update Budget",
+    "helpGivenByPeriod": "Help provided",
+    "periodAllTime": "All time",
+    "periodYear": "This year",
+    "periodMonth": "This month",
+    "periodWeek": "This week",
+    "periodDay": "Today",
+    "times": "times"
   },
   "collection": {
     "create": "Send a help signal",

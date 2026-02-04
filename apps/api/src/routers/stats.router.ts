@@ -102,6 +102,40 @@ export const statsRouter = router({
     };
   }),
 
+  // Help given statistics by time period
+  helpGivenByPeriod: protectedProcedure.query(async ({ ctx }) => {
+    const userId = ctx.userId;
+    const now = new Date();
+    const dayAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+    const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+    const monthAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+    const yearAgo = new Date(now.getTime() - 365 * 24 * 60 * 60 * 1000);
+
+    // Get all obligations given by user
+    const allObligations = await ctx.db.obligation.findMany({
+      where: { userId },
+      select: { amount: true, createdAt: true },
+    });
+
+    const calcStats = (since?: Date) => {
+      const filtered = since
+        ? allObligations.filter(o => o.createdAt >= since)
+        : allObligations;
+      return {
+        count: filtered.length,
+        amount: Math.round(filtered.reduce((sum, o) => sum + o.amount, 0)),
+      };
+    };
+
+    return {
+      allTime: calcStats(),
+      year: calcStats(yearAgo),
+      month: calcStats(monthAgo),
+      week: calcStats(weekAgo),
+      day: calcStats(dayAgo),
+    };
+  }),
+
   // Current network capabilities (sum of all remainingBudget in network)
   networkCapabilities: protectedProcedure.query(async ({ ctx }) => {
     const userId = ctx.userId;
