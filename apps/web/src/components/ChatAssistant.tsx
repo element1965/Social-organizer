@@ -2,7 +2,6 @@ import { useState, useRef, useEffect } from 'react';
 import { MessageCircle, X, Send, Mic, MicOff, Loader2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Button } from './ui/button';
-import { Input } from './ui/input';
 import { cn } from '../lib/utils';
 import { trpc } from '../lib/trpc';
 
@@ -273,19 +272,19 @@ export function ChatAssistant() {
             >
               {isListening ? <MicOff className="w-5 h-5" /> : <Mic className="w-5 h-5" />}
             </button>
-            <Input
+            <input
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && !e.shiftKey && handleSubmit()}
               placeholder={t('chat.placeholder')}
-              className="flex-1 min-w-0"
+              className="flex-1 min-w-0 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-3 py-2 text-sm text-gray-900 dark:text-gray-100 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               disabled={isListening || isLoading}
             />
             <button
               onClick={handleSubmit}
               disabled={!input.trim() || isListening || isLoading}
               className={cn(
-                "w-12 h-10 shrink-0 bg-blue-600 text-white transition-colors flex items-center justify-center rounded-r-xl rounded-l-full ml-1",
+                "w-12 h-10 shrink-0 bg-blue-600 text-white transition-colors flex items-center justify-center rounded-r-2xl rounded-l-full",
                 (!input.trim() || isListening || isLoading) ? "opacity-50 cursor-not-allowed" : "hover:bg-blue-700"
               )}
             >
