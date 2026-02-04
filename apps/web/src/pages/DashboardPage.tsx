@@ -355,108 +355,143 @@ export function DashboardPage() {
 
       {/* === TAB: STATS === */}
       {activeTab === 'stats' && (
-        <div className="space-y-4">
-          {/* Help given/received */}
-          <Card>
-            <CardHeader>
-              <h3 className="font-semibold text-gray-900 dark:text-white">
-                {t('dashboard.helpStats')}
+        <div className="space-y-6">
+          {/* Section 1: Personal Statistics */}
+          <div className="space-y-4">
+            <div className="flex items-center gap-2">
+              <Users className="w-5 h-5 text-blue-600" />
+              <h3 className="text-lg font-bold text-gray-900 dark:text-white">
+                {t('dashboard.personalStats')}
               </h3>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="flex flex-col items-center">
-                  <SemiDonutChart
-                    value={helpStats?.given?.count ?? 0}
-                    max={20}
-                    size={120}
-                    color="#10b981"
-                    label={String(helpStats?.given?.count ?? 0)}
-                    sublabel={t('dashboard.helpGiven')}
-                  />
-                  <p className="text-sm font-medium text-gray-600 dark:text-gray-400 mt-2">
-                    {helpStats?.given?.totalAmount ?? 0} USD
-                  </p>
-                </div>
-                <div className="flex flex-col items-center">
-                  <SemiDonutChart
-                    value={helpStats?.received?.count ?? 0}
-                    max={20}
-                    size={120}
-                    color="#3b82f6"
-                    label={String(helpStats?.received?.count ?? 0)}
-                    sublabel={t('dashboard.helpReceived')}
-                  />
-                  <p className="text-sm font-medium text-gray-600 dark:text-gray-400 mt-2">
-                    {helpStats?.received?.totalAmount ?? 0} USD
-                  </p>
-                </div>
-              </div>
+            </div>
 
-              {/* All amounts displayed in USD */}
-            </CardContent>
-          </Card>
+            {/* Help given/received */}
+            <Card>
+              <CardHeader>
+                <h3 className="font-semibold text-gray-900 dark:text-white">
+                  {t('dashboard.helpStats')}
+                </h3>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="flex flex-col items-center">
+                    <SemiDonutChart
+                      value={helpStats?.given?.count ?? 0}
+                      max={20}
+                      size={120}
+                      color="#10b981"
+                      label={String(helpStats?.given?.count ?? 0)}
+                      sublabel={t('dashboard.helpGiven')}
+                    />
+                    <p className="text-sm font-medium text-gray-600 dark:text-gray-400 mt-2">
+                      {helpStats?.given?.totalAmount ?? 0} USD
+                    </p>
+                  </div>
+                  <div className="flex flex-col items-center">
+                    <SemiDonutChart
+                      value={helpStats?.received?.count ?? 0}
+                      max={20}
+                      size={120}
+                      color="#3b82f6"
+                      label={String(helpStats?.received?.count ?? 0)}
+                      sublabel={t('dashboard.helpReceived')}
+                    />
+                    <p className="text-sm font-medium text-gray-600 dark:text-gray-400 mt-2">
+                      {helpStats?.received?.totalAmount ?? 0} USD
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
 
-          {/* Summary stats */}
-          <div className="grid grid-cols-2 gap-3">
-            <StatCard
-              label={t('dashboard.activeIntentions')}
-              value={helpStats?.activeIntentions ?? 0}
-              icon={<Heart className="w-5 h-5" />}
-            />
-            <StatCard
-              label={t('dashboard.completedCollections')}
-              value={helpStats?.completedCollections ?? 0}
-              icon={<Users className="w-5 h-5" />}
-            />
+            {/* Summary stats */}
+            <div className="grid grid-cols-2 gap-3">
+              <StatCard
+                label={t('dashboard.activeIntentions')}
+                value={helpStats?.activeIntentions ?? 0}
+                icon={<Heart className="w-5 h-5" />}
+              />
+              <StatCard
+                label={t('dashboard.completedCollections')}
+                value={helpStats?.completedCollections ?? 0}
+                icon={<Users className="w-5 h-5" />}
+              />
+              <StatCard
+                label={t('dashboard.totalGiven')}
+                value={`${helpStats?.given?.totalAmount ?? 0}`}
+                sublabel="USD"
+              />
+            </div>
+
+            {/* Help given by period */}
+            <Card>
+              <CardHeader>
+                <h3 className="font-semibold text-gray-900 dark:text-white flex items-center gap-2">
+                  <HandHeart className="w-5 h-5 text-green-600" />
+                  {t('dashboard.helpGivenByPeriod')}
+                </h3>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3">
+                  {[
+                    { key: 'allTime', label: t('dashboard.periodAllTime') },
+                    { key: 'year', label: t('dashboard.periodYear') },
+                    { key: 'month', label: t('dashboard.periodMonth') },
+                    { key: 'week', label: t('dashboard.periodWeek') },
+                    { key: 'day', label: t('dashboard.periodDay') },
+                  ].map(({ key, label }) => {
+                    const data = helpByPeriod?.[key as keyof typeof helpByPeriod];
+                    return (
+                      <div key={key} className="flex items-center justify-between py-2 border-b border-gray-100 dark:border-gray-800 last:border-0">
+                        <span className="text-sm text-gray-600 dark:text-gray-400">{label}</span>
+                        <div className="flex items-center gap-3">
+                          <span className="text-sm text-gray-500">
+                            {data?.count ?? 0} {t('dashboard.times')}
+                          </span>
+                          <span className="text-sm font-semibold text-green-600 dark:text-green-400">
+                            ${data?.amount ?? 0}
+                          </span>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Section 2: Network Statistics */}
+          <div className="space-y-4">
+            <div className="flex items-center gap-2">
+              <Network className="w-5 h-5 text-purple-600" />
+              <h3 className="text-lg font-bold text-gray-900 dark:text-white">
+                {t('dashboard.networkStats')}
+              </h3>
+            </div>
+
             <StatCard
               label={t('dashboard.networkReach')}
               value={helpStats?.networkReach ?? 0}
               sublabel={t('dashboard.people')}
               trend={{ value: growth.month, isPositive: true }}
             />
-            <StatCard
-              label={t('dashboard.totalGiven')}
-              value={`${helpStats?.given?.totalAmount ?? 0}`}
-              sublabel="USD"
-            />
-          </div>
 
-          {/* Help given by period */}
-          <Card>
-            <CardHeader>
-              <h3 className="font-semibold text-gray-900 dark:text-white flex items-center gap-2">
-                <HandHeart className="w-5 h-5 text-green-600" />
-                {t('dashboard.helpGivenByPeriod')}
-              </h3>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-3">
-                {[
-                  { key: 'allTime', label: t('dashboard.periodAllTime') },
-                  { key: 'year', label: t('dashboard.periodYear') },
-                  { key: 'month', label: t('dashboard.periodMonth') },
-                  { key: 'week', label: t('dashboard.periodWeek') },
-                  { key: 'day', label: t('dashboard.periodDay') },
-                ].map(({ key, label }) => {
-                  const data = helpByPeriod?.[key as keyof typeof helpByPeriod];
-                  return (
-                    <div key={key} className="flex items-center justify-between py-2 border-b border-gray-100 dark:border-gray-800 last:border-0">
-                      <span className="text-sm text-gray-600 dark:text-gray-400">{label}</span>
-                      <div className="flex items-center gap-3">
-                        <span className="text-sm text-gray-500">
-                          {data?.count ?? 0} {t('dashboard.times')}
-                        </span>
-                        <span className="text-sm font-semibold text-green-600 dark:text-green-400">
-                          ${data?.amount ?? 0}
-                        </span>
-                      </div>
-                    </div>
-                  );
-                })}
+            {/* Current Capabilities */}
+            <div className="p-4 bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-950/30 dark:to-emerald-950/30 rounded-xl">
+              <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center gap-2">
+                  <Wallet className="w-5 h-5 text-green-600" />
+                  <span className="text-sm text-gray-500">{t('dashboard.currentCapabilities')}</span>
+                </div>
               </div>
-            </CardContent>
-          </Card>
+              <p className="text-3xl font-bold text-green-700 dark:text-green-400">
+                ${networkCapabilities?.total ?? 0}
+              </p>
+              <p className="text-xs text-gray-500 mt-1">
+                {t('dashboard.capabilitiesContributors', { count: networkCapabilities?.contributors ?? 0 })}
+              </p>
+            </div>
+          </div>
         </div>
       )}
 

@@ -429,6 +429,10 @@ const notifications = [
   }),
 ];
 
+// ---------- Invite timing (simulates acceptance after 5 seconds) ----------
+
+let demoInviteGeneratedAt: number | null = null;
+
 // ---------- Settings state (mutable within demo session) ----------
 
 let settingsState = {
@@ -632,6 +636,9 @@ export function handleDemoRequest(path: string, input: unknown): unknown {
       }
       return { response };
     }
+    case 'chat.speak':
+      // Demo mode: return empty base64 (no real audio in demo)
+      return { audio: '' };
 
     // ---- Currency ----
     case 'currency.list':
@@ -858,20 +865,25 @@ export function handleDemoRequest(path: string, input: unknown): unknown {
 
     // ---- Invite ----
     case 'invite.generate':
+      demoInviteGeneratedAt = Date.now();
       return { token: 'demo-invite-' + Date.now().toString(16), id: `inv-${Date.now()}` };
     case 'invite.accept':
       return { success: true, connectedWith: 'user-1' };
-    case 'invite.getByToken':
+    case 'invite.getByToken': {
+      // Simulate acceptance after 5 seconds
+      const elapsed = demoInviteGeneratedAt ? Date.now() - demoInviteGeneratedAt : 0;
+      const accepted = elapsed > 5000;
       return {
         id: 'inv-demo',
-        inviterId: 'user-1',
+        inviterId: DEMO_USER_ID,
         token: inp?.token ?? 'demo-token',
-        usedById: null,
-        usedAt: null,
+        usedById: accepted ? 'user-1' : null,
+        usedAt: accepted ? new Date().toISOString() : null,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
-        inviter: { id: 'user-1', name: usersMap.get('user-1')!.name, photoUrl: null },
+        inviter: { id: DEMO_USER_ID, name: demoUser.name, photoUrl: null },
       };
+    }
 
     default:
       console.warn(`[Demo] Unhandled procedure: ${path}`);

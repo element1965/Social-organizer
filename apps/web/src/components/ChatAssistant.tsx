@@ -26,20 +26,33 @@ export function ChatAssistant() {
 
   const { data: settings } = trpc.settings.get.useQuery();
   const chatMutation = trpc.chat.send.useMutation();
+  const speakMutation = trpc.chat.speak.useMutation();
 
   // Scroll to bottom when messages change
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  // Speak message using Web Speech API
-  const speakMessage = (text: string) => {
+  // Speak message using OpenAI TTS with Web Speech API fallback
+  const speakMessage = async (text: string) => {
+    const voice = settings?.voiceGender === 'MALE' ? 'onyx' : 'nova';
+
+    try {
+      const result = await speakMutation.mutateAsync({ text, voice });
+      if (result.audio) {
+        const audio = new Audio(`data:audio/mp3;base64,${result.audio}`);
+        audio.play().catch(() => {});
+        return;
+      }
+    } catch {
+      // Fallback to Web Speech API
+    }
+
+    // Web Speech API fallback
     if ('speechSynthesis' in window) {
-      // Cancel any ongoing speech
       speechSynthesis.cancel();
 
       const utterance = new SpeechSynthesisUtterance(text);
-      // Map language code to speech synthesis language
       const langMap: Record<string, string> = {
         ru: 'ru-RU', en: 'en-US', es: 'es-ES', fr: 'fr-FR', de: 'de-DE',
         pt: 'pt-BR', it: 'it-IT', zh: 'zh-CN', ja: 'ja-JP', ko: 'ko-KR',
@@ -48,15 +61,11 @@ export function ChatAssistant() {
         cs: 'cs-CZ', ro: 'ro-RO', th: 'th-TH', vi: 'vi-VN', id: 'id-ID',
       };
       const baseLang = i18n.language.split('-')[0];
-      const targetLang = langMap[baseLang] || 'en-US';
-      utterance.lang = targetLang;
+      utterance.lang = langMap[baseLang] || 'en-US';
       utterance.rate = 0.9;
 
-      // Select voice based on gender preference
       const voices = speechSynthesis.getVoices();
       const preferFemale = settings?.voiceGender !== 'MALE';
-
-      // Find a voice matching language and gender preference
       const matchingVoice = voices.find(v =>
         v.lang.startsWith(baseLang) &&
         (preferFemale ? v.name.toLowerCase().includes('female') || !v.name.toLowerCase().includes('male') : v.name.toLowerCase().includes('male'))

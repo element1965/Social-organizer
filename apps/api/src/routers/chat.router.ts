@@ -14,6 +14,17 @@ function getGrok(): OpenAI {
   return grok;
 }
 
+// OpenAI TTS client — lazy init
+let openaiTts: OpenAI | null = null;
+function getOpenAITts(): OpenAI {
+  if (!openaiTts) {
+    openaiTts = new OpenAI({
+      apiKey: process.env.OPENAI_API_KEY || 'missing',
+    });
+  }
+  return openaiTts;
+}
+
 const SYSTEM_PROMPT = `You are a helpful assistant for the Social Organizer app.
 
 STRICT RULES:
@@ -79,6 +90,28 @@ export const chatRouter = router({
             ? 'Извините, произошла ошибка. Попробуйте позже.'
             : 'Sorry, an error occurred. Please try again later.',
         };
+      }
+    }),
+
+  speak: protectedProcedure
+    .input(z.object({
+      text: z.string().max(500),
+      voice: z.enum(['nova', 'onyx']).default('nova'),
+    }))
+    .mutation(async ({ input }) => {
+      try {
+        const response = await getOpenAITts().audio.speech.create({
+          model: 'tts-1',
+          voice: input.voice,
+          input: input.text,
+          response_format: 'mp3',
+        });
+
+        const buffer = Buffer.from(await response.arrayBuffer());
+        return { audio: buffer.toString('base64') };
+      } catch (error) {
+        console.error('OpenAI TTS error:', error);
+        throw new Error('TTS generation failed');
       }
     }),
 });

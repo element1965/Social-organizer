@@ -61,7 +61,11 @@
     "qrCode": "Show QR Code",
     "budgetNote": "This amount will be added to network capabilities",
     "saveBudget": "Save budget & continue",
-    "skipAndStart": "Skip and start using"
+    "skipAndStart": "Skip and start using",
+    "waitingForAccept": "Waiting for acceptance...",
+    "connectionEstablished": "Connection established!",
+    "sendAnother": "Send another invite",
+    "skip": "Skip"
   },
   "nav": {
     "home": "Home",
@@ -121,7 +125,9 @@
     "periodMonth": "This month",
     "periodWeek": "This week",
     "periodDay": "Today",
-    "times": "times"
+    "times": "times",
+    "personalStats": "My Statistics",
+    "networkStats": "Network Statistics"
   },
   "collection": {
     "create": "Send a help signal",
