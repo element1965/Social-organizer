@@ -240,7 +240,10 @@
     "footer": "Social Organizer — an open p2p mutual aid and direct cooperation tool",
     "cardIntentionTitle": "Intention",
     "cardIntentionDesc": "A voluntary decision to help. No pressure — everyone decides for themselves whether to participate.",
-    "githubLink": "View code on GitHub"
+    "githubLink": "View code on GitHub",
+    "downloadTitle": "앱 다운로드",
+    "downloadSubtitle": "모든 플랫폼에서 사용 가능",
+    "comingSoon": "출시 예정"
   },
   "intention": {
     "create": "Express Intention",

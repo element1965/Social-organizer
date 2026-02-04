@@ -245,6 +245,9 @@
     "principleGlobalDesc": "Globally accessible. Automatic language detection.",
     "ctaTitle": "Ready to activate your mutual aid network?",
     "ctaButton": "Create Account",
+    "downloadTitle": "Download the App",
+    "downloadSubtitle": "Available on all platforms",
+    "comingSoon": "Coming Soon",
     "footer": "Social Organizer — an open mutual aid tool",
     "githubLink": "View code on GitHub"
   },
