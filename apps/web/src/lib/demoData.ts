@@ -55,12 +55,13 @@ function makeUser(id: string, name: string, idx: number): DemoUser {
   };
 }
 
-let demoUser: DemoUser & { onboardingCompleted: boolean } = {
+let demoUser: DemoUser & { onboardingCompleted: boolean; preferredCurrency: string } = {
   id: DEMO_USER_ID,
   name: 'Алексей Петров',
   photoUrl: null,
   role: 'USER',
   createdAt: '2025-01-15T08:00:00Z',
+  preferredCurrency: 'UAH',
   deletedAt: null,
   bio: 'Демо-пользователь Social Organizer',
   phone: '+79001234567',
@@ -462,6 +463,9 @@ export function handleDemoRequest(path: string, input: unknown): unknown {
     case 'user.completeOnboarding':
       demoUser.onboardingCompleted = true;
       return { success: true };
+    case 'user.setPreferredCurrency':
+      demoUser.preferredCurrency = (inp?.currency as string) ?? 'USD';
+      return { ...demoUser, platformAccounts: [{ platform: 'TELEGRAM', platformId: 'demo-tg-123' }] };
     case 'user.getContacts': {
       const contactTypes = [
         { type: 'telegram', label: 'Telegram', icon: 'telegram', placeholder: '@username или t.me/...' },
@@ -553,12 +557,58 @@ export function handleDemoRequest(path: string, input: unknown): unknown {
     }
     case 'stats.help':
       return {
-        given: { count: 7, totalAmount: 425, byCurrency: { USD: 275, EUR: 150 } },
-        received: { count: 2, totalAmount: 580, byCurrency: { USD: 280, EUR: 300 } },
+        given: { count: 7, totalAmount: 425 },
+        received: { count: 2, totalAmount: 580 },
         activeIntentions: 3,
         completedCollections: 1,
         networkReach: 156,
       };
+
+    // ---- Currency ----
+    case 'currency.list':
+      return [
+        { code: 'USD', name: 'US Dollar', symbol: '$', decimals: 2 },
+        { code: 'EUR', name: 'Euro', symbol: '€', decimals: 2 },
+        { code: 'GBP', name: 'British Pound', symbol: '£', decimals: 2 },
+        { code: 'UAH', name: 'Ukrainian Hryvnia', symbol: '₴', decimals: 2 },
+        { code: 'RUB', name: 'Russian Ruble', symbol: '₽', decimals: 2 },
+        { code: 'PLN', name: 'Polish Zloty', symbol: 'zł', decimals: 2 },
+        { code: 'ILS', name: 'Israeli Shekel', symbol: '₪', decimals: 2 },
+        { code: 'JPY', name: 'Japanese Yen', symbol: '¥', decimals: 0 },
+        { code: 'CNY', name: 'Chinese Yuan', symbol: '¥', decimals: 2 },
+        { code: 'INR', name: 'Indian Rupee', symbol: '₹', decimals: 2 },
+        { code: 'BRL', name: 'Brazilian Real', symbol: 'R$', decimals: 2 },
+        { code: 'CAD', name: 'Canadian Dollar', symbol: 'C$', decimals: 2 },
+        { code: 'AUD', name: 'Australian Dollar', symbol: 'A$', decimals: 2 },
+        { code: 'CHF', name: 'Swiss Franc', symbol: 'CHF', decimals: 2 },
+        { code: 'KRW', name: 'South Korean Won', symbol: '₩', decimals: 0 },
+        { code: 'MXN', name: 'Mexican Peso', symbol: '$', decimals: 2 },
+        { code: 'TRY', name: 'Turkish Lira', symbol: '₺', decimals: 2 },
+        { code: 'ZAR', name: 'South African Rand', symbol: 'R', decimals: 2 },
+        { code: 'SEK', name: 'Swedish Krona', symbol: 'kr', decimals: 2 },
+        { code: 'NOK', name: 'Norwegian Krone', symbol: 'kr', decimals: 2 },
+      ];
+    case 'currency.detectCurrency':
+      return { currency: 'UAH', country: 'UA' };
+    case 'currency.rates':
+      return { USD: 1, EUR: 0.92, GBP: 0.79, UAH: 41.5, RUB: 92, PLN: 4.0, ILS: 3.7, JPY: 149, CNY: 7.2, INR: 83 };
+    case 'currency.convert': {
+      const rates: Record<string, number> = { USD: 1, EUR: 0.92, GBP: 0.79, UAH: 41.5, RUB: 92, PLN: 4.0, ILS: 3.7, JPY: 149, CNY: 7.2, INR: 83 };
+      const from = inp?.from as string || 'USD';
+      const to = inp?.to as string || 'USD';
+      const amount = inp?.amount as number || 0;
+      const fromRate = rates[from] || 1;
+      const toRate = rates[to] || 1;
+      const result = Math.round(amount / fromRate * toRate);
+      return { result, rate: toRate / fromRate };
+    }
+    case 'currency.toUSD': {
+      const rates: Record<string, number> = { USD: 1, EUR: 0.92, GBP: 0.79, UAH: 41.5, RUB: 92, PLN: 4.0, ILS: 3.7, JPY: 149, CNY: 7.2, INR: 83 };
+      const from = inp?.from as string || 'USD';
+      const amount = inp?.amount as number || 0;
+      const rate = rates[from] || 1;
+      return { result: Math.round(amount / rate) };
+    }
 
     // ---- Collection ----
     case 'collection.myActive':
@@ -618,13 +668,21 @@ export function handleDemoRequest(path: string, input: unknown): unknown {
       }
       return null;
     }
-    case 'collection.create':
+    case 'collection.create': {
+      // Convert to USD if needed (demo rates)
+      const rates: Record<string, number> = { USD: 1, EUR: 0.92, GBP: 0.79, UAH: 41.5, RUB: 92, PLN: 4.0, ILS: 3.7, JPY: 149 };
+      const inputCurrency = (inp?.inputCurrency as string) ?? 'USD';
+      const originalAmount = inp?.amount as number ?? null;
+      const rate = rates[inputCurrency] || 1;
+      const amountUSD = originalAmount != null ? Math.round(originalAmount / rate) : null;
       return {
         id: `coll-new-${Date.now()}`,
         creatorId: DEMO_USER_ID,
         type: inp?.type ?? 'EMERGENCY',
-        amount: inp?.amount ?? null,
-        currency: inp?.currency ?? 'USD',
+        amount: amountUSD,
+        currency: 'USD',
+        originalAmount,
+        originalCurrency: inputCurrency,
         chatLink: inp?.chatLink ?? '',
         status: 'ACTIVE',
         currentCycleStart: inp?.type === 'REGULAR' ? new Date().toISOString() : null,
@@ -634,6 +692,7 @@ export function handleDemoRequest(path: string, input: unknown): unknown {
         closedAt: null,
         blockedAt: null,
       };
+    }
     case 'collection.close': {
       const c = collections.find((x) => x.id === (inp?.id as string));
       return { ...(c ?? collections[0]), status: 'CLOSED', closedAt: new Date().toISOString() };
@@ -646,17 +705,26 @@ export function handleDemoRequest(path: string, input: unknown): unknown {
     // ---- Obligation ----
     case 'obligation.myList':
       return myObligations;
-    case 'obligation.create':
+    case 'obligation.create': {
+      // Convert to USD if needed (demo rates)
+      const rates: Record<string, number> = { USD: 1, EUR: 0.92, GBP: 0.79, UAH: 41.5, RUB: 92, PLN: 4.0, ILS: 3.7, JPY: 149 };
+      const inputCurrency = (inp?.inputCurrency as string) ?? 'USD';
+      const originalAmount = inp?.amount as number ?? 50;
+      const rate = rates[inputCurrency] || 1;
+      const amountUSD = Math.round(originalAmount / rate);
       return {
         id: `obl-new-${Date.now()}`,
         collectionId: inp?.collectionId,
         userId: DEMO_USER_ID,
-        amount: inp?.amount ?? 50,
+        amount: amountUSD,
+        originalAmount,
+        originalCurrency: inputCurrency,
         isSubscription: inp?.isSubscription ?? false,
         unsubscribedAt: null,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
       };
+    }
     case 'obligation.unsubscribe':
       return {
         id: inp?.obligationId,
