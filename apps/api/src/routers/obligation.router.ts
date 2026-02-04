@@ -38,6 +38,17 @@ export const obligationRouter = router({
         },
       });
 
+      // Decrease user's remaining budget if they have one
+      const user = await ctx.db.user.findUnique({ where: { id: ctx.userId } });
+      if (user?.remainingBudget != null && user.remainingBudget > 0) {
+        await ctx.db.user.update({
+          where: { id: ctx.userId },
+          data: {
+            remainingBudget: Math.max(0, user.remainingBudget - amountUSD),
+          },
+        });
+      }
+
       // Check if collection should be blocked (only if target amount is set)
       if (collection.amount != null) {
         const totalAmount = await ctx.db.obligation.aggregate({

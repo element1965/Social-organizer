@@ -2,6 +2,7 @@ import { z } from 'zod';
 import { router, protectedProcedure } from '../trpc.js';
 import { TRPCError } from '@trpc/server';
 import { CONTACT_TYPES, CURRENCY_CODES } from '@so/shared';
+import { convertToUSD } from '../services/currency.service.js';
 
 export const userRouter = router({
   me: protectedProcedure.query(async ({ ctx }) => {
@@ -125,6 +126,26 @@ export const userRouter = router({
       return ctx.db.user.update({
         where: { id: ctx.userId },
         data: { preferredCurrency: input.currency },
+      });
+    }),
+
+  setMonthlyBudget: protectedProcedure
+    .input(z.object({
+      amount: z.number().min(0),
+      inputCurrency: z.string().refine((c) => CURRENCY_CODES.includes(c), 'Unsupported currency'),
+    }))
+    .mutation(async ({ ctx, input }) => {
+      const amountUSD = input.inputCurrency === 'USD'
+        ? input.amount
+        : await convertToUSD(input.amount, input.inputCurrency);
+
+      return ctx.db.user.update({
+        where: { id: ctx.userId },
+        data: {
+          monthlyBudget: amountUSD,
+          remainingBudget: amountUSD,
+          budgetUpdatedAt: new Date(),
+        },
       });
     }),
 

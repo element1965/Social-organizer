@@ -9,7 +9,7 @@ import { Button } from '../components/ui/button';
 import { Select } from '../components/ui/select';
 import { Avatar } from '../components/ui/avatar';
 import { Spinner } from '../components/ui/spinner';
-import { Settings, Globe, Palette, Volume2, Link, UserX, Trash2, LogOut, Type, Users, DollarSign } from 'lucide-react';
+import { Settings, Globe, Palette, Volume2, Link, UserX, Trash2, LogOut, Type, Users, DollarSign, Wallet } from 'lucide-react';
 import { cn } from '../lib/utils';
 import { languageNames } from '@so/i18n';
 import { Input } from '../components/ui/input';
@@ -36,10 +36,17 @@ export function SettingsPage() {
   const updateSound = trpc.settings.updateSound.useMutation({ onSuccess: () => utils.settings.get.invalidate() });
   const updateFontScale = trpc.settings.updateFontScale.useMutation({ onSuccess: () => utils.settings.get.invalidate() });
   const updateCurrency = trpc.user.setPreferredCurrency.useMutation({ onSuccess: () => utils.user.me.invalidate() });
+  const setBudgetMutation = trpc.user.setMonthlyBudget.useMutation({ onSuccess: () => utils.user.me.invalidate() });
   const removeIgnore = trpc.settings.removeIgnore.useMutation({ onSuccess: () => utils.settings.ignoreList.invalidate() });
   const generateCode = trpc.auth.generateLinkCode.useMutation();
   const deleteAccount = trpc.user.delete.useMutation({ onSuccess: () => { logout(); navigate('/login'); } });
   const [confirmDelete, setConfirmDelete] = useState(false);
+  const [newBudget, setNewBudget] = useState('');
+  const [newBudgetCurrency, setNewBudgetCurrency] = useState(me?.preferredCurrency || 'USD');
+  const { data: budgetPreview } = trpc.currency.toUSD.useQuery(
+    { amount: Number(newBudget), from: newBudgetCurrency },
+    { enabled: !!newBudget && Number(newBudget) > 0 && newBudgetCurrency !== 'USD' }
+  );
 
   const handleLanguageChange = (lang: string) => { i18n.changeLanguage(lang); localStorage.setItem('language', lang); updateLanguage.mutate({ language: lang }); };
   const handleThemeChange = (theme: 'LIGHT' | 'DARK' | 'SYSTEM') => { setMode(theme.toLowerCase() as 'light' | 'dark' | 'system'); updateTheme.mutate({ theme }); };
@@ -65,6 +72,62 @@ export function SettingsPage() {
           options={currencies?.map((c) => ({ value: c.code, label: `${c.symbol} ${c.code} - ${c.name}` })) ?? [{ value: 'USD', label: '$ USD - US Dollar' }]}
         />
       </div></CardContent></Card>
+
+      <Card>
+        <CardHeader>
+          <div className="flex items-center gap-2">
+            <Wallet className="w-5 h-5 text-gray-500" />
+            <h2 className="font-semibold text-gray-900 dark:text-white">{t('settings.monthlyBudget')}</h2>
+          </div>
+          <p className="text-xs text-gray-500 mt-1">{t('settings.budgetDesc')}</p>
+        </CardHeader>
+        <CardContent className="space-y-3">
+          {me?.monthlyBudget != null && (
+            <div className="p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
+              <p className="text-sm text-gray-600 dark:text-gray-400">
+                {t('settings.currentBudget')}:
+                <span className="font-medium text-gray-900 dark:text-white ml-1">
+                  ${Math.round(me.remainingBudget || 0)} / ${Math.round(me.monthlyBudget)}
+                </span>
+              </p>
+            </div>
+          )}
+          <div className="flex gap-2">
+            <Input
+              type="number"
+              value={newBudget}
+              onChange={(e) => setNewBudget(e.target.value)}
+              placeholder={t('settings.newBudgetPlaceholder')}
+              className="flex-1"
+              min={0}
+            />
+            <Select
+              id="budget-currency"
+              value={newBudgetCurrency}
+              onChange={(e) => setNewBudgetCurrency(e.target.value)}
+              options={currencies?.map(c => ({ value: c.code, label: `${c.symbol} ${c.code}` })) ?? [{ value: 'USD', label: '$ USD' }]}
+              className="w-28"
+            />
+          </div>
+          {newBudgetCurrency !== 'USD' && budgetPreview && Number(newBudget) > 0 && (
+            <p className="text-sm text-gray-500">≈ ${budgetPreview.result} USD</p>
+          )}
+          <Button
+            variant="outline"
+            size="sm"
+            className="w-full"
+            onClick={() => {
+              if (newBudget && Number(newBudget) >= 0) {
+                setBudgetMutation.mutate({ amount: Number(newBudget), inputCurrency: newBudgetCurrency });
+                setNewBudget('');
+              }
+            }}
+            disabled={setBudgetMutation.isPending || !newBudget}
+          >
+            {setBudgetMutation.isPending ? t('common.loading') : t('settings.updateBudget')}
+          </Button>
+        </CardContent>
+      </Card>
 
       <Card><CardContent className="py-3">
         <div className="flex items-center gap-3 mb-2"><Palette className="w-5 h-5 text-gray-500" /><span className="text-sm font-medium text-gray-700 dark:text-gray-300">{t('settings.theme')}</span></div>

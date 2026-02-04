@@ -24,6 +24,7 @@ import {
   BarChart3,
   Network,
   HandHeart,
+  Wallet,
 } from 'lucide-react';
 
 const LazyCloudBackground = lazy(() =>
@@ -46,6 +47,7 @@ export function DashboardPage() {
   const { data: networkStats } = trpc.connection.getNetworkStats.useQuery(undefined, { refetchInterval: 60000 });
   const { data: notifications } = trpc.notification.list.useQuery({ limit: 10 }, { refetchInterval: 30000 });
   const { data: helpStats } = trpc.stats.help.useQuery(undefined, { refetchInterval: 60000 });
+  const { data: networkCapabilities } = trpc.stats.networkCapabilities.useQuery(undefined, { refetchInterval: 60000 });
 
   const totalReachable = networkStats?.totalReachable ?? 0;
   const byDepth = networkStats?.byDepth ?? {};
@@ -213,6 +215,45 @@ export function DashboardPage() {
                 <span className="text-xs font-medium text-green-600">+{(growth as any).year || 0} {t('dashboard.growthYear')}</span>
               </div>
             </div>
+
+            {/* Current Capabilities */}
+            <div className="p-4 bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-950/30 dark:to-emerald-950/30 rounded-xl">
+              <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center gap-2">
+                  <Wallet className="w-5 h-5 text-green-600" />
+                  <span className="text-sm text-gray-500">{t('dashboard.currentCapabilities')}</span>
+                </div>
+                <button
+                  onClick={() => navigate('/settings')}
+                  className="text-xs text-blue-600 hover:underline"
+                >
+                  {t('dashboard.editBudget')}
+                </button>
+              </div>
+              <p className="text-3xl font-bold text-green-700 dark:text-green-400">
+                ${networkCapabilities?.total ?? 0}
+              </p>
+              <p className="text-xs text-gray-500 mt-1">
+                {t('dashboard.capabilitiesContributors', { count: networkCapabilities?.contributors ?? 0 })}
+              </p>
+              {me?.remainingBudget != null && me.monthlyBudget != null && (
+                <p className="text-xs text-gray-400 mt-2">
+                  {t('dashboard.yourContribution')}: ${Math.round(me.remainingBudget)} / ${Math.round(me.monthlyBudget)}
+                </p>
+              )}
+            </div>
+
+            {/* Budget depleted hint */}
+            {me?.monthlyBudget != null && me.remainingBudget != null && me.remainingBudget <= 0 && (
+              <div className="p-3 bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 rounded-lg">
+                <p className="text-sm text-amber-700 dark:text-amber-400 mb-2">
+                  {t('dashboard.budgetDepletedHint')}
+                </p>
+                <Button variant="outline" size="sm" onClick={() => navigate('/settings')}>
+                  {t('dashboard.updateBudget')}
+                </Button>
+              </div>
+            )}
 
             {/* Handshakes by depth - compact mobile layout */}
             <div className="space-y-2">
