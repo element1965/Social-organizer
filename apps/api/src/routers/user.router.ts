@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { router, protectedProcedure } from '../trpc.js';
 import { TRPCError } from '@trpc/server';
-import { CONTACT_TYPES } from '@so/shared';
+import { CONTACT_TYPES, CURRENCY_CODES } from '@so/shared';
 
 export const userRouter = router({
   me: protectedProcedure.query(async ({ ctx }) => {
@@ -116,6 +116,17 @@ export const userRouter = router({
     });
     return { success: true };
   }),
+
+  setPreferredCurrency: protectedProcedure
+    .input(z.object({
+      currency: z.string().refine((c) => CURRENCY_CODES.includes(c), 'Unsupported currency'),
+    }))
+    .mutation(async ({ ctx, input }) => {
+      return ctx.db.user.update({
+        where: { id: ctx.userId },
+        data: { preferredCurrency: input.currency },
+      });
+    }),
 
   delete: protectedProcedure.mutation(async ({ ctx }) => {
     await ctx.db.$transaction(async (tx) => {

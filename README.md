@@ -72,12 +72,12 @@ pnpm dev
 
 | Model | Description |
 |-------|-------------|
-| User | User with settings, role, and onboarding flag |
+| User | User with settings, role, onboarding flag, and preferredCurrency |
 | UserContact | User contacts (social networks, messengers) |
 | PlatformAccount | Platform bindings (FB/TG/Apple/Google) |
 | Connection | Connection between users (userAId < userBId) |
-| Collection | Fundraising (emergency/regular) |
-| Obligation | Intention for a collection |
+| Collection | Fundraising (emergency/regular) with USD amount and original currency info |
+| Obligation | Intention for a collection with USD amount and original currency info |
 | Notification | Notification with handshake path |
 | IgnoreEntry | Ignore record |
 | LinkingCode | 6-digit linking code (5 min TTL) |
@@ -122,12 +122,15 @@ JWT_SECRET=your-secret-key
 | `settings` | get, updateLanguage/Theme/Sound/FontScale, ignoreList/addIgnore/removeIgnore |
 | `invite` | generate, accept, getByToken |
 | `stats` | profile, help |
+| `currency` | list, detectCurrency, rates, convert, toUSD |
 
 ## Services
 
 - **Auth** — JWT (HS256), 30 min access / 30 days refresh, 6-digit linking codes
 - **BFS** — Recursive CTE in PostgreSQL for graph traversal, path finding, and notification distribution
 - **Notifications** — BFS distribution with 1:1 ratio (amount = notification count), ignore list, and handshake path
+- **Currency** — Real-time exchange rates with Redis cache (1h TTL), automatic USD conversion for all amounts
+- **Geo** — IP-based country detection for currency auto-selection (ip-api.com)
 
 ## BullMQ Workers
 
@@ -216,6 +219,8 @@ Mock data (`apps/web/src/lib/demoData.ts`):
 
 ## Key Features
 
+- **Unified USD currency** — all amounts stored and displayed in USD; users enter in local currency with real-time conversion preview
+- **100+ currencies supported** — full ISO 4217 list with exchange rates from exchangerate-api.com (1h cache)
 - **Connection count** — displayed next to every user throughout the app
 - **Handshake path** — shown when viewing profiles and collections of non-direct connections
 - **Network reach** — real-time calculation of how many people will receive notifications (min of amount or reachable users)
@@ -223,6 +228,7 @@ Mock data (`apps/web/src/lib/demoData.ts`):
 - **Localized statuses** — ACTIVE/BLOCKED/CLOSED/CANCELLED translated in all 25 languages
 - **Dark/Light theme** — system preference detection + manual toggle
 - **Onboarding** — auto-shown for new users, completable flag in database
+- **Currency preference** — users can set preferred currency in settings; auto-detected by IP on first visit
 
 ## Terminology (Glossary)
 

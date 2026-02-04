@@ -71,6 +71,7 @@ model User {
   fontScale           Float     @default(1.0)
   role                UserRole  @default(REGULAR)
   onboardingCompleted Boolean   @default(false)
+  preferredCurrency   String    @default("USD")
   createdAt           DateTime  @default(now())
   updatedAt           DateTime  @updatedAt
   deletedAt           DateTime?
@@ -129,7 +130,9 @@ model Collection {
   creatorId         String
   type              CollectionType
   amount            Float?
-  currency          String
+  currency          String           @default("USD")
+  originalAmount    Float?
+  originalCurrency  String?
   chatLink          String
   status            CollectionStatus @default(ACTIVE)
   currentCycleStart DateTime?
@@ -149,13 +152,15 @@ model Collection {
 }
 
 model Obligation {
-  id             String    @id @default(cuid())
-  collectionId   String
-  userId         String
-  amount         Float
-  isSubscription Boolean   @default(false)
-  unsubscribedAt DateTime?
-  createdAt      DateTime  @default(now())
+  id               String    @id @default(cuid())
+  collectionId     String
+  userId           String
+  amount           Float
+  originalAmount   Float?
+  originalCurrency String?
+  isSubscription   Boolean   @default(false)
+  unsubscribedAt   DateTime?
+  createdAt        DateTime  @default(now())
 
   collection Collection @relation(fields: [collectionId], references: [id], onDelete: Cascade)
   user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)

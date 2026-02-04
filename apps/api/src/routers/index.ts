@@ -8,6 +8,7 @@ import { notificationRouter } from './notification.router.js';
 import { settingsRouter } from './settings.router.js';
 import { inviteRouter } from './invite.router.js';
 import { statsRouter } from './stats.router.js';
+import { currencyRouter } from './currency.router.js';
 
 export const appRouter = router({
   auth: authRouter,
@@ -19,6 +20,7 @@ export const appRouter = router({
   settings: settingsRouter,
   invite: inviteRouter,
   stats: statsRouter,
+  currency: currencyRouter,
 });
 
 export type AppRouter = typeof appRouter;

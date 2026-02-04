@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { trpc } from '../lib/trpc';
@@ -6,11 +6,12 @@ import { useAuth } from '../hooks/useAuth';
 import { Card, CardContent, CardHeader } from '../components/ui/card';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
+import { Select } from '../components/ui/select';
 import { Badge } from '../components/ui/badge';
 import { Progress } from '../components/ui/progress';
 import { Avatar } from '../components/ui/avatar';
 import { Spinner } from '../components/ui/spinner';
-import { ExternalLink, Users } from 'lucide-react';
+import { ExternalLink, Users, ArrowRight } from 'lucide-react';
 import { HandshakePath } from '../components/HandshakePath';
 
 export function CollectionPage() {
@@ -20,7 +21,9 @@ export function CollectionPage() {
   const userId = useAuth((s) => s.userId);
   const utils = trpc.useUtils();
 
+  const { data: me } = trpc.user.me.useQuery();
   const { data: collection, isLoading } = trpc.collection.getById.useQuery({ id: id! }, { enabled: !!id, refetchInterval: 30000 });
+  const { data: currencies } = trpc.currency.list.useQuery();
   const { data: pathToCreator } = trpc.connection.findPath.useQuery(
     { targetUserId: collection?.creatorId! },
     { enabled: !!collection && collection.creatorId !== userId }
@@ -29,7 +32,21 @@ export function CollectionPage() {
   const closeCollection = trpc.collection.close.useMutation({ onSuccess: () => utils.collection.getById.invalidate({ id: id! }) });
 
   const [amount, setAmount] = useState('');
+  const [inputCurrency, setInputCurrency] = useState('USD');
   const [error, setError] = useState('');
+
+  // Set initial currency from user preference
+  useEffect(() => {
+    if (me?.preferredCurrency) {
+      setInputCurrency(me.preferredCurrency);
+    }
+  }, [me?.preferredCurrency]);
+
+  // Preview conversion to USD
+  const { data: preview } = trpc.currency.toUSD.useQuery(
+    { amount: Number(amount), from: inputCurrency },
+    { enabled: !!amount && Number(amount) > 0 && inputCurrency !== 'USD' }
+  );
 
   if (isLoading) return <div className="flex justify-center py-12"><Spinner /></div>;
   if (!collection) return <div className="p-4 text-center text-gray-500">{t('common.notFound')}</div>;
@@ -54,9 +71,19 @@ export function CollectionPage() {
     const num = Number(amount);
     if (!num || num < 10) { setError(t('collection.minAmount')); return; }
     setError('');
-    createObligation.mutate({ collectionId: collection.id, amount: num });
+    createObligation.mutate({ collectionId: collection.id, amount: num, inputCurrency });
     setAmount('');
   };
+
+  // Build currency options for select
+  const currencyOptions = currencies?.map((c) => ({
+    value: c.code,
+    label: `${c.symbol} ${c.code}`,
+  })) ?? [{ value: 'USD', label: '$ USD' }];
+
+  // Check if collection has original currency info (for owner display)
+  const collectionData = collection as typeof collection & { originalAmount?: number; originalCurrency?: string };
+  const showOriginal = isOwner && collectionData.originalCurrency && collectionData.originalCurrency !== 'USD';
 
   return (
     <div className="p-4 space-y-4">
@@ -87,8 +114,21 @@ export function CollectionPage() {
       <Card>
         <CardContent className="py-4">
           <div className="flex justify-between items-end mb-2">
-            <div><p className="text-sm text-gray-500">{t('collection.collected')}</p><p className="text-2xl font-bold text-gray-900 dark:text-white">{collection.currentAmount.toFixed(2)} {collection.currency}</p></div>
-            {hasGoal && <div className="text-right"><p className="text-sm text-gray-500">{t('collection.goal')}</p><p className="text-2xl font-bold text-gray-900 dark:text-white">{collection.amount} {collection.currency}</p></div>}
+            <div>
+              <p className="text-sm text-gray-500">{t('collection.collected')}</p>
+              <p className="text-2xl font-bold text-gray-900 dark:text-white">${Math.round(collection.currentAmount)} USD</p>
+            </div>
+            {hasGoal && (
+              <div className="text-right">
+                <p className="text-sm text-gray-500">{t('collection.goal')}</p>
+                <p className="text-2xl font-bold text-gray-900 dark:text-white">${collection.amount} USD</p>
+                {showOriginal && (
+                  <p className="text-xs text-gray-400">
+                    ({collectionData.originalAmount} {collectionData.originalCurrency})
+                  </p>
+                )}
+              </div>
+            )}
           </div>
           {hasGoal && <><Progress value={collection.currentAmount} max={collection.amount!} /><p className="text-xs text-gray-500 mt-1 text-right">{percentage.toFixed(0)}%</p></>}
         </CardContent>
@@ -104,9 +144,28 @@ export function CollectionPage() {
         <Card>
           <CardHeader><h3 className="font-semibold text-gray-900 dark:text-white">{t('collection.expressIntention')}</h3></CardHeader>
           <CardContent>
-            <div className="flex gap-2">
-              <Input type="number" min={10} placeholder={t('collection.amountPlaceholder')} hint={t('hints.intentionAmount')} value={amount} onChange={(e) => setAmount(e.target.value)} error={error} />
-              <Button onClick={handleSubmitObligation} disabled={createObligation.isPending}>{t('collection.submit')}</Button>
+            <div className="space-y-2">
+              <div className="flex gap-2">
+                <div className="flex-1">
+                  <Input type="number" min={10} placeholder={t('collection.amountPlaceholder')} hint={t('hints.intentionAmount')} value={amount} onChange={(e) => setAmount(e.target.value)} error={error} />
+                </div>
+                <div className="w-28">
+                  <Select
+                    id="obligation-currency"
+                    value={inputCurrency}
+                    onChange={(e) => setInputCurrency(e.target.value)}
+                    options={currencyOptions}
+                  />
+                </div>
+                <Button onClick={handleSubmitObligation} disabled={createObligation.isPending}>{t('collection.submit')}</Button>
+              </div>
+              {/* USD conversion preview */}
+              {inputCurrency !== 'USD' && Number(amount) > 0 && preview?.result != null && (
+                <div className="flex items-center gap-2 text-sm text-gray-500">
+                  <ArrowRight className="w-4 h-4" />
+                  <span>≈ ${preview.result} USD</span>
+                </div>
+              )}
             </div>
           </CardContent>
         </Card>
@@ -123,19 +182,30 @@ export function CollectionPage() {
             <p className="text-sm text-gray-500 text-center py-2">{t('collection.noParticipants')}</p>
           ) : (
             <div className="space-y-2">
-              {collection.obligations.map((obl) => (
-                <div key={obl.id} className="flex items-center justify-between py-1">
-                  <button onClick={() => navigate(`/profile/${obl.userId}`)} className="flex items-center gap-2 hover:underline">
-                    <Avatar src={obl.user.photoUrl} name={obl.user.name} size="sm" />
-                    <span className="text-sm text-gray-900 dark:text-white">{obl.user.name}</span>
-                    <span className="flex items-center gap-0.5 text-xs text-gray-400">
-                      <Users className="w-3 h-3" />
-                      {(obl.user as any).connectionCount ?? 0}
-                    </span>
-                  </button>
-                  <span className="text-sm font-medium text-gray-900 dark:text-white">{obl.amount} {collection.currency}</span>
-                </div>
-              ))}
+              {collection.obligations.map((obl) => {
+                const oblData = obl as typeof obl & { originalAmount?: number; originalCurrency?: string };
+                const showOblOriginal = isOwner && oblData.originalCurrency && oblData.originalCurrency !== 'USD';
+                return (
+                  <div key={obl.id} className="flex items-center justify-between py-1">
+                    <button onClick={() => navigate(`/profile/${obl.userId}`)} className="flex items-center gap-2 hover:underline">
+                      <Avatar src={obl.user.photoUrl} name={obl.user.name} size="sm" />
+                      <span className="text-sm text-gray-900 dark:text-white">{obl.user.name}</span>
+                      <span className="flex items-center gap-0.5 text-xs text-gray-400">
+                        <Users className="w-3 h-3" />
+                        {(obl.user as any).connectionCount ?? 0}
+                      </span>
+                    </button>
+                    <div className="text-right">
+                      <span className="text-sm font-medium text-gray-900 dark:text-white">${Math.round(obl.amount)} USD</span>
+                      {showOblOriginal && (
+                        <p className="text-xs text-gray-400">
+                          ({oblData.originalAmount} {oblData.originalCurrency})
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           )}
         </CardContent>
