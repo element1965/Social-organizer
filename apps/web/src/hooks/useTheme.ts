@@ -10,14 +10,11 @@ interface ThemeState {
 
 function applyTheme(mode: ThemeMode) {
   const root = document.documentElement;
-  // In Telegram, always follow Telegram's colorScheme
-  if (isTelegramWebApp()) {
-    const isDark = getTGColorScheme() === 'dark';
-    root.classList.toggle('dark', isDark);
-    return;
-  }
   if (mode === 'system') {
-    const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    // In Telegram, "system" means follow Telegram's colorScheme
+    const isDark = isTelegramWebApp()
+      ? getTGColorScheme() === 'dark'
+      : window.matchMedia('(prefers-color-scheme: dark)').matches;
     root.classList.toggle('dark', isDark);
   } else {
     root.classList.toggle('dark', mode === 'dark');

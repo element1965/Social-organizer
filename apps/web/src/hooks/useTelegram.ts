@@ -17,8 +17,9 @@ import { useTheme } from './useTheme';
 import { trpc } from '../lib/trpc';
 
 function syncTelegramTheme() {
-  const scheme = getTGColorScheme();
-  useTheme.getState().setMode(scheme);
+  // Re-apply current theme mode (only affects "system" mode which follows Telegram)
+  const { mode, setMode } = useTheme.getState();
+  setMode(mode);
 }
 
 export function useTelegramInit() {
