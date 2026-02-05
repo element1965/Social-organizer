@@ -1,6 +1,7 @@
 import { lazy, Suspense, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { QRCodeSVG } from 'qrcode.react';
 import { trpc } from '../lib/trpc';
 import { buildInviteUrl } from '../lib/inviteUrl';
 import { useAuth } from '../hooks/useAuth';
@@ -10,7 +11,7 @@ import { Badge } from '../components/ui/badge';
 import { Progress } from '../components/ui/progress';
 import { Spinner } from '../components/ui/spinner';
 import { Avatar } from '../components/ui/avatar';
-import { SemiDonutChart, BarChart, StatCard, Tabs, ProgressBarWithMarker } from '../components/ui/charts';
+import { SemiDonutChart, StatCard, Tabs, ProgressBarWithMarker } from '../components/ui/charts';
 import {
   PlusCircle,
   Users,
@@ -26,6 +27,9 @@ import {
   Network,
   HandHeart,
   Wallet,
+  Copy,
+  Check,
+  X,
 } from 'lucide-react';
 
 const LazyCloudBackground = lazy(() =>
@@ -41,6 +45,9 @@ export function DashboardPage() {
 
   const [activeTab, setActiveTab] = useState<TabId>('network');
   const [expandedDepths, setExpandedDepths] = useState<Record<number, boolean>>({});
+  const [showInvitePopup, setShowInvitePopup] = useState(false);
+  const [inviteUrl, setInviteUrl] = useState('');
+  const [copied, setCopied] = useState(false);
 
   const { data: me } = trpc.user.me.useQuery(undefined, { refetchInterval: 30000 });
   const { data: myCollections } = trpc.collection.myActive.useQuery(undefined, { refetchInterval: 30000 });
@@ -177,29 +184,58 @@ export function DashboardPage() {
         </Card>
       )}
 
-      {/* Main CTAs */}
-      <div className="flex gap-2">
-        <Button className="flex-1" size="lg" variant="primary" onClick={() => navigate('/create')}>
-          <Heart className="w-5 h-5 mr-2 text-red-500 fill-red-500" /> {t('dashboard.needHelp')}
-        </Button>
-        <Button
-          className="flex-1"
-          size="lg"
-          variant="outline"
-          disabled={generateInvite.isPending}
-          onClick={async () => {
-            const result = await generateInvite.mutateAsync();
-            const url = buildInviteUrl(result.token);
-            if (navigator.share) {
-              navigator.share({ title: 'Social Organizer', url });
-            } else {
-              navigator.clipboard.writeText(url);
-            }
-          }}
-        >
-          <UserPlus className="w-5 h-5 mr-2" /> {t('network.invite')}
-        </Button>
-      </div>
+      {/* Invite CTA */}
+      <Button
+        className="w-full"
+        size="lg"
+        variant="outline"
+        disabled={generateInvite.isPending}
+        onClick={async () => {
+          const result = await generateInvite.mutateAsync();
+          const url = buildInviteUrl(result.token);
+          setInviteUrl(url);
+          setCopied(false);
+          setShowInvitePopup(true);
+        }}
+      >
+        <UserPlus className="w-5 h-5 mr-2" /> {t('network.invite')}
+      </Button>
+
+      {/* Invite popup */}
+      {showInvitePopup && inviteUrl && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50" onClick={() => setShowInvitePopup(false)}>
+          <div className="bg-white dark:bg-gray-900 rounded-2xl p-6 mx-4 max-w-sm w-full shadow-xl" onClick={(e) => e.stopPropagation()}>
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-bold text-gray-900 dark:text-white">{t('network.invite')}</h3>
+              <button onClick={() => setShowInvitePopup(false)} className="p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800">
+                <X className="w-5 h-5 text-gray-500" />
+              </button>
+            </div>
+            <div className="flex justify-center mb-4">
+              <div className="p-3 bg-white rounded-xl">
+                <QRCodeSVG value={inviteUrl} size={200} />
+              </div>
+            </div>
+            <div className="flex items-center gap-2 p-3 bg-gray-100 dark:bg-gray-800 rounded-lg">
+              <p className="flex-1 text-xs text-gray-600 dark:text-gray-400 break-all select-all">{inviteUrl}</p>
+              <button
+                onClick={() => {
+                  navigator.clipboard.writeText(inviteUrl);
+                  setCopied(true);
+                  setTimeout(() => setCopied(false), 2000);
+                }}
+                className="shrink-0 p-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+              >
+                {copied ? (
+                  <Check className="w-5 h-5 text-green-500" />
+                ) : (
+                  <Copy className="w-5 h-5 text-gray-500" />
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Tabs */}
       <Tabs tabs={tabs} activeTab={activeTab} onTabChange={(id) => setActiveTab(id as TabId)} />
