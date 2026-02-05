@@ -18,7 +18,19 @@
     "loginWith": "Увійти через {{platform}}",
     "linking": "Прив'язати акаунт",
     "enterCode": "Введіть 6-значний код",
-    "codeExpires": "Код діє ще {{minutes}} хв"
+    "codeExpires": "Код діє ще {{minutes}} хв",
+    "email": "Електронна пошта",
+    "password": "Пароль",
+    "name": "Ім'я",
+    "login": "Увійти",
+    "register": "Зареєструватися",
+    "haveAccount": "Вже є акаунт? Увійдіть",
+    "noAccount": "Немає акаунту? Зареєструйтеся",
+    "emailExists": "Ця електронна пошта вже зареєстрована",
+    "invalidCredentials": "Невірна пошта або пароль",
+    "telegramError": "Авторизація через Telegram не вдалася",
+    "telegramNotAvailable": "Відкрийте додаток через Telegram",
+    "googleNotInTelegram": "Вхід через Google недоступний у Telegram. Скористайтеся кнопкою Telegram"
   },
   "login": {
     "subtitle": "Координація допомоги через довірені зв'язки",
@@ -42,10 +54,21 @@
       "title": "Додайте першу людину",
       "text": "Організатор працює через зв'язки між людьми. Почніть з однієї людини — когось, кому ви довіряєте."
     },
+    "step5": {
+      "title": "Місячний бюджет підтримки",
+      "text": "Скільки ви можете виділяти на взаємну підтримку щомісяця? Це повністю добровільно і ні до чого вас не зобов'язує. Можете пропустити або змінити будь-коли."
+    },
     "start": "Почати",
     "next": "Далі",
     "invite": "Надіслати запрошення",
-    "qrCode": "Показати QR-код"
+    "qrCode": "Показати QR-код",
+    "budgetNote": "Ця сума буде додана до можливостей мережі",
+    "saveBudget": "Зберегти бюджет і продовжити",
+    "skipAndStart": "Пропустити і почати",
+    "waitingForAccept": "Очікування прийняття...",
+    "connectionEstablished": "Зв'язок встановлено!",
+    "sendAnother": "Надіслати ще запрошення",
+    "skip": "Пропустити"
   },
   "nav": {
     "home": "Головна",
@@ -92,7 +115,22 @@
     "completedCollections": "Закрито зборів",
     "networkReach": "Охоплення мережі",
     "people": "людей",
-    "totalGiven": "Всього віддав"
+    "totalGiven": "Всього віддав",
+    "currentCapabilities": "Поточні можливості",
+    "capabilitiesContributors": "від {{count}} учасників",
+    "editBudget": "Редагувати",
+    "yourContribution": "Ваш внесок",
+    "budgetDepletedHint": "Ваш місячний бюджет підтримки вичерпано. Бажаєте додати ще?",
+    "updateBudget": "Оновити бюджет",
+    "helpGivenByPeriod": "Надана допомога",
+    "periodAllTime": "За весь час",
+    "periodYear": "Цього року",
+    "periodMonth": "Цього місяця",
+    "periodWeek": "Цього тижня",
+    "periodDay": "Сьогодні",
+    "times": "разів",
+    "personalStats": "Моя статистика",
+    "networkStats": "Статистика мережі"
   },
   "collection": {
     "create": "Подати сигнал про допомогу",
@@ -148,7 +186,7 @@
     "qrCode": "QR-код",
     "empty": "Немає контактів",
     "emptyHint": "Запросіть свою першу людину",
-    "controlsHint": "Left-click: rotate, Scroll: zoom, Right-click: pan"
+    "controlsHint": "Ліва кнопка: обертання, Прокрутка: масштаб, Права кнопка: переміщення"
   },
   "notifications": {
     "title": "Сповіщення",
@@ -157,8 +195,8 @@
     "reNotify": "Нагадування",
     "closed": "Закрите",
     "blocked": "Заблоковане",
-    "obligationReceived": "Help",
-    "cycleClosed": "Cycle closed",
+    "obligationReceived": "Допомога",
+    "cycleClosed": "Цикл закрито",
     "specialAuthor": "Автор",
     "specialDeveloper": "Розробник",
     "handshakes": "рукостискань",
@@ -199,12 +237,16 @@
   "settings": {
     "title": "Налаштування",
     "language": "Мова",
+    "currency": "Валюта за замовчуванням",
     "theme": "Тема",
     "light": "Світла",
     "dark": "Темна",
     "system": "Автоматична",
     "sounds": "Звуки",
     "sound": "Звуки",
+    "voiceGender": "Голос асистента",
+    "voiceFemale": "Жіночий",
+    "voiceMale": "Чоловічий",
     "fontSize": "Розмір шрифту",
     "fontStandard": "Стандартний",
     "fontLarge": "Збільшений",
@@ -220,7 +262,21 @@
     "deleteConfirm": "Ви впевнені? Цю дію неможливо скасувати.",
     "confirmDelete": "Видалити",
     "contacts": "Контакти",
-    "contactsDesc": "Додайте способи зв'язку для учасників мережі"
+    "contactsDesc": "Додайте способи зв'язку для учасників мережі",
+    "monthlyBudget": "Місячний бюджет підтримки",
+    "budgetDesc": "Скільки ви можете виділяти на взаємну підтримку щомісяця",
+    "currentBudget": "Залишок",
+    "newBudgetPlaceholder": "Нова сума",
+    "updateBudget": "Оновити бюджет"
+  },
+  "chat": {
+    "title": "Асистент",
+    "welcomeMessage": "Привіт! Я можу допомогти розібратися, як працює додаток. Запитуйте про рукостискання, наміри або будь-які інші терміни.",
+    "placeholder": "Задайте питання...",
+    "speechNotSupported": "Розпізнавання мовлення не підтримується у вашому браузері",
+    "openChat": "Відкрити чат-асистент",
+    "startListening": "Почати голосовий ввід",
+    "stopListening": "Зупинити голосовий ввід"
   },
   "contacts": {
     "telegram": "Telegram",
@@ -230,6 +286,8 @@
     "twitter": "X (Twitter)",
     "linkedin": "LinkedIn",
     "vk": "ВКонтакте",
+    "viber": "Viber",
+    "signal": "Signal",
     "email": "Email",
     "website": "Сайт"
   },
@@ -237,6 +295,7 @@
     "title": "Запрошення",
     "from": "{{name}} запрошує вас",
     "accept": "Прийняти та з'єднатися",
+    "decline": "Відхилити",
     "alreadyUsed": "Це запрошення вже використано",
     "success": "З'єднано!",
     "loginToAccept": "Увійдіть, щоб прийняти"
@@ -276,11 +335,11 @@
     "principleGlobalDesc": "Доступний глобально. Автоматичне визначення мови.",
     "ctaTitle": "Готові активувати свою мережу взаємодопомоги?",
     "ctaButton": "Створити акаунт",
-    "footer": "Social Organizer — відкритий інструмент взаємодопомоги",
-    "githubLink": "Переглянути код на GitHub",
     "downloadTitle": "Завантажити додаток",
     "downloadSubtitle": "Доступно на всіх платформах",
-    "comingSoon": "Незабаром"
+    "comingSoon": "Незабаром",
+    "footer": "Social Organizer — відкритий інструмент взаємодопомоги",
+    "githubLink": "Переглянути код на GitHub"
   },
   "hints": {
     "collectionAmount": "Вкажіть суму, яка вам потрібна. Мінімум 10 одиниць. Система повідомить потрібну кількість людей.",
