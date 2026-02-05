@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { randomBytes } from 'crypto';
-import { router, protectedProcedure } from '../trpc.js';
+import { router, publicProcedure, protectedProcedure } from '../trpc.js';
 import { TRPCError } from '@trpc/server';
 import { MAX_CONNECTIONS } from '@so/shared';
 
@@ -57,7 +57,7 @@ export const inviteRouter = router({
       return { success: true, connectedWith: invite.inviterId };
     }),
 
-  getByToken: protectedProcedure
+  getByToken: publicProcedure
     .input(z.object({ token: z.string() }))
     .query(async ({ ctx, input }) => {
       const invite = await ctx.db.inviteLink.findUnique({
