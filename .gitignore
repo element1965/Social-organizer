@@ -22,6 +22,7 @@ dist/
 # OS
 .DS_Store
 Thumbs.db
+nul
 
 # Prisma
 packages/db/prisma/migrations/**/migration_lock.toml

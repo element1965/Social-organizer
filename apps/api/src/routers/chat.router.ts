@@ -95,25 +95,34 @@ export const chatRouter = router({
     .mutation(async ({ input }) => {
       const { message, language } = input;
 
+      const chatMessages: { role: 'system' | 'user'; content: string }[] = [
+        { role: 'system', content: getSystemPrompt(language) },
+        { role: 'user', content: message },
+      ];
+
+      // Try Grok first, fall back to OpenAI if it fails (e.g. no credits)
       try {
         const response = await getGrok().chat.completions.create({
           model: 'grok-3-mini',
           max_tokens: 300,
-          messages: [
-            {
-              role: 'system',
-              content: getSystemPrompt(language)
-            },
-            { role: 'user', content: message }
-          ],
+          messages: chatMessages,
         });
-
         const text = response.choices[0]?.message?.content;
-        return {
-          response: text || 'Sorry, I could not generate a response.',
-        };
+        if (text) return { response: text };
       } catch (error) {
-        console.error('Grok API error:', error);
+        console.error('Grok API error, falling back to OpenAI:', error);
+      }
+
+      try {
+        const response = await getOpenAITts().chat.completions.create({
+          model: 'gpt-4o-mini',
+          max_tokens: 300,
+          messages: chatMessages,
+        });
+        const text = response.choices[0]?.message?.content;
+        return { response: text || 'Sorry, I could not generate a response.' };
+      } catch (error) {
+        console.error('OpenAI fallback error:', error);
         return {
           response: language.startsWith('ru')
             ? 'Извините, произошла ошибка. Попробуйте позже.'
