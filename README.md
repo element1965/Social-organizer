@@ -41,7 +41,7 @@ Social organizer/
 - **Mobile:** React Native (Expo) + NativeWind
 - **3D:** Three.js + @react-three/fiber + NASA textures
 - **Backup:** Gun.js (IndexedDB)
-- **i18n:** i18next (25 languages: en, ru, es, fr, de, pt, it, zh, ja, ko, ar, hi, tr, pl, uk, nl, sv, da, fi, no, cs, ro, th, vi, id)
+- **i18n:** i18next (26 languages: en, ru, es, fr, de, pt, it, zh, ja, ko, ar, hi, tr, pl, uk, nl, sv, da, fi, no, cs, ro, th, vi, id, sr)
 
 ## Quick Start
 
@@ -188,7 +188,7 @@ React 19 SPA with tRPC client.
 - **State:** Zustand (auth, theme) + tRPC React Query (server data)
 - **Routing:** React Router v7 with ProtectedRoute (onboarding check)
 - **UI:** shadcn-style components + Tailwind CSS 3 + Radix UI Tooltip
-- **i18n:** i18next v25 + react-i18next (25 languages), auto-detect via navigator.language
+- **i18n:** i18next v25 + react-i18next (26 languages), auto-detect via navigator.language
 - **Icons:** lucide-react + custom SVGs for social networks
 - **QR:** qrcode.react
 - **3D:** Three.js + @react-three/fiber (lazy loaded)
@@ -230,7 +230,7 @@ Mock data (`apps/web/src/lib/demoData.ts`):
 - **Handshake path** — shown when viewing profiles and collections of non-direct connections
 - **Network reach** — real-time calculation of how many people will receive notifications (min of amount or reachable users)
 - **1:1 notification ratio** — amount entered = number of people notified
-- **Localized statuses** — ACTIVE/BLOCKED/CLOSED/CANCELLED translated in all 25 languages
+- **Localized statuses** — ACTIVE/BLOCKED/CLOSED/CANCELLED translated in all 26 languages
 - **Dark/Light theme** — system preference detection + manual toggle (auto-synced with Telegram theme in Mini App mode)
 - **Telegram Mini App** — auto-login via initData, BackButton navigation, haptic feedback on tab switches, theme sync, CSS variable injection from Telegram themeParams
 - **Onboarding** — auto-shown for new users, completable flag in database
