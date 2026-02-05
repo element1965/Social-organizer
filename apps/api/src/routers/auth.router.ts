@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { router, publicProcedure, protectedProcedure } from '../trpc.js';
 import { TRPCError } from '@trpc/server';
-import * as bcrypt from 'bcryptjs';
+import bcrypt from 'bcryptjs';
 import {
   createAccessToken,
   createRefreshToken,
