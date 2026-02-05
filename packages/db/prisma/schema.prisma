@@ -97,6 +97,7 @@ model User {
   invitesSent      InviteLink[]      @relation("inviter")
   invitesUsed      InviteLink[]      @relation("inviteUsedBy")
   contacts         UserContact[]
+  chatMessages     ChatMessage[]
 
   @@map("users")
 }
@@ -253,4 +254,21 @@ model UserContact {
   @@unique([userId, type])
   @@index([userId])
   @@map("user_contacts")
+}
+
+model ChatMessage {
+  id               String   @id @default(cuid())
+  userId           String
+  userMessage      String
+  assistantMessage String
+  isFeedback       Boolean  @default(false)
+  language         String   @default("en")
+  createdAt        DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([isFeedback])
+  @@index([createdAt])
+  @@map("chat_messages")
 }

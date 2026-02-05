@@ -29,6 +29,26 @@ function getOpenAITts(): OpenAI {
   return openaiTts;
 }
 
+// Keyword-based server-side feedback detection (fallback when LLM misses [FEEDBACK] tag)
+const FEEDBACK_PATTERNS_RU = [
+  /будет\s+ли\b/i, /добавь/i, /добавить/i, /хочу\s+чтобы/i, /хотелось\s+бы/i,
+  /было\s+бы\s+круто/i, /было\s+бы\s+здорово/i, /можно\s+ли\s+сделать/i,
+  /предлагаю/i, /предложение/i, /пожелание/i, /не\s+хватает/i,
+  /сделайте/i, /сделай/i, /нужна?\s+функци/i, /а\s+будет\b/i,
+  /почему\s+нет/i, /когда\s+будет/i, /планируете/i, /будете\s+делать/i,
+];
+const FEEDBACK_PATTERNS_EN = [
+  /will\s+there\s+be/i, /can\s+you\s+add/i, /please\s+add/i, /i\s+want/i,
+  /i\s+wish/i, /it\s+would\s+be\s+(nice|great|cool)/i, /feature\s+request/i,
+  /suggestion/i, /feedback/i, /missing\s+feature/i, /you\s+should\s+add/i,
+  /would\s+be\s+nice/i, /how\s+about\s+adding/i, /do\s+you\s+plan/i,
+];
+
+function detectFeedbackByKeywords(message: string): boolean {
+  const patterns = [...FEEDBACK_PATTERNS_RU, ...FEEDBACK_PATTERNS_EN];
+  return patterns.some((p) => p.test(message));
+}
+
 /** Send user feedback to Telegram group (fire-and-forget) */
 async function sendFeedbackToTelegram(userMessage: string, userId: string): Promise<void> {
   const botToken = process.env.TELEGRAM_BOT_TOKEN;
@@ -148,13 +168,31 @@ export const chatRouter = router({
         return { response: 'Sorry, I could not generate a response.' };
       }
 
-      // Detect [FEEDBACK] tag — forward to TG group and strip the tag
+      // Detect feedback: LLM tag OR server-side keyword matching
+      let isFeedback = false;
       if (responseText.startsWith('[FEEDBACK]')) {
         responseText = responseText.slice('[FEEDBACK]'.length).trimStart();
+        isFeedback = true;
+      } else if (detectFeedbackByKeywords(message)) {
+        isFeedback = true;
+      }
+
+      if (isFeedback) {
         sendFeedbackToTelegram(message, ctx.userId!).catch((err) =>
           console.error('Failed to send feedback to TG:', err),
         );
       }
+
+      // Save conversation to DB (fire-and-forget)
+      ctx.db.chatMessage.create({
+        data: {
+          userId: ctx.userId!,
+          userMessage: message,
+          assistantMessage: responseText,
+          isFeedback,
+          language,
+        },
+      }).catch((err) => console.error('Failed to save chat message:', err));
 
       return { response: responseText };
     }),
