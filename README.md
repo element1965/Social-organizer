@@ -1,6 +1,6 @@
 # Social Organizer
 
-A coordination app for mutual support through trusted networks. Facebook Instant Game + Telegram WebApp.
+A coordination app for mutual support through trusted networks. Works as a regular website and as a Telegram Mini App (single build, runtime detection).
 
 ## Live Demo
 
@@ -25,7 +25,7 @@ Social organizer/
 │   ├── gun-backup/      # @so/gun-backup: Gun.js local backup (stub)
 │   ├── graph-3d/        # @so/graph-3d: Three.js visualization (Earth, Moon, Stars, Network)
 │   ├── fb-adapter/      # @so/fb-adapter: FB Instant Game SDK (stub)
-│   └── tg-adapter/      # @so/tg-adapter: Telegram WebApp (stub)
+│   └── tg-adapter/      # @so/tg-adapter: Telegram WebApp SDK adapter
 ├── turbo.json
 ├── pnpm-workspace.yaml
 ├── tsconfig.base.json
@@ -107,13 +107,14 @@ PORT=3001
 DATABASE_URL=postgresql://postgres:1111@localhost:5434/social_organizer?schema=public
 REDIS_URL=redis://localhost:6379
 JWT_SECRET=your-secret-key
+TELEGRAM_BOT_TOKEN=your-bot-token    # Required for Telegram Mini App auth
 ```
 
 ## API (tRPC Endpoints)
 
 | Router | Procedures |
 |--------|------------|
-| `auth` | loginWithPlatform, refresh, generateLinkCode, linkAccount |
+| `auth` | loginWithPlatform, loginWithTelegram, refresh, generateLinkCode, linkAccount |
 | `user` | me, update, getById, getStats, getContacts, updateContacts, completeOnboarding, delete, setMonthlyBudget |
 | `connection` | list, add (limit 150), getCount, graphSlice (2-3 levels), findPath, getNetworkStats |
 | `collection` | create, getById, close, cancel, myActive, myParticipating |
@@ -126,7 +127,7 @@ JWT_SECRET=your-secret-key
 
 ## Services
 
-- **Auth** — JWT (HS256), 30 min access / 30 days refresh, 6-digit linking codes
+- **Auth** — JWT (HS256), 30 min access / 30 days refresh, 6-digit linking codes, Telegram initData HMAC-SHA256 validation
 - **BFS** — Recursive CTE in PostgreSQL for graph traversal, path finding, and notification distribution
 - **Notifications** — BFS distribution with 1:1 ratio (amount = notification count), ignore list, and handshake path
 - **Currency** — Real-time exchange rates with Redis cache (1h TTL), automatic USD conversion for all amounts
@@ -226,7 +227,8 @@ Mock data (`apps/web/src/lib/demoData.ts`):
 - **Network reach** — real-time calculation of how many people will receive notifications (min of amount or reachable users)
 - **1:1 notification ratio** — amount entered = number of people notified
 - **Localized statuses** — ACTIVE/BLOCKED/CLOSED/CANCELLED translated in all 25 languages
-- **Dark/Light theme** — system preference detection + manual toggle
+- **Dark/Light theme** — system preference detection + manual toggle (auto-synced with Telegram theme in Mini App mode)
+- **Telegram Mini App** — auto-login via initData, BackButton navigation, haptic feedback on tab switches, theme sync, CSS variable injection from Telegram themeParams
 - **Onboarding** — auto-shown for new users, completable flag in database
 - **Currency preference** — users can set preferred currency in settings; auto-detected by IP on first visit
 - **Monthly support budget** — users can set how much they're willing to contribute monthly; displayed as "Current Capabilities" network-wide sum on dashboard
@@ -253,6 +255,7 @@ Mock data (`apps/web/src/lib/demoData.ts`):
 - [x] **Phase 4:** Deploy and testing — Railway config, API serves web frontend, SPEC audit fixes
 - [x] **Phase 5:** UX improvements — onboarding, handshake chain, contacts, tooltips, terminology
 - [x] **Phase 6:** Visual polish — NASA textures, realistic stars, connection counts everywhere
+- [x] **Phase 7:** Telegram Mini App — auto-auth, BackButton, haptics, theme sync, CSS variables
 
 ## License
 

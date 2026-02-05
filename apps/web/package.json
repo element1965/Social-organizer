@@ -16,6 +16,7 @@
     "@so/gun-backup": "workspace:*",
     "@so/i18n": "workspace:*",
     "@so/shared": "workspace:*",
+    "@so/tg-adapter": "workspace:*",
     "@tanstack/react-query": "^5.62.0",
     "@trpc/client": "^11.0.0",
     "@trpc/react-query": "^11.0.0",
