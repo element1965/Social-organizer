@@ -21,7 +21,7 @@ export const userRouter = router({
       name: z.string().min(1).max(100).optional(),
       bio: z.string().max(500).optional(),
       phone: z.string().max(20).optional(),
-      photoUrl: z.string().url().optional(),
+      photoUrl: z.string().max(200000).optional(),
     }))
     .mutation(async ({ ctx, input }) => {
       return ctx.db.user.update({ where: { id: ctx.userId }, data: input });

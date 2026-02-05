@@ -8,7 +8,7 @@ import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { Avatar } from '../components/ui/avatar';
 import { Spinner } from '../components/ui/spinner';
-import { ArrowLeft, UserPlus, Ban, Pencil, X, ExternalLink, Users, Wallet } from 'lucide-react';
+import { UserPlus, Ban, Pencil, X, ExternalLink, Users, Wallet } from 'lucide-react';
 import { HandshakePath } from '../components/HandshakePath';
 import { SocialIcon } from '../components/ui/social-icons';
 
@@ -58,10 +58,6 @@ export function ProfilePage() {
 
   return (
     <div className="p-4 space-y-4">
-      <button onClick={() => navigate(-1)} className="flex items-center gap-1 text-sm text-gray-500 hover:text-gray-700 dark:hover:text-gray-300">
-        <ArrowLeft className="w-4 h-4" /> {t('common.back')}
-      </button>
-
       <div className="flex flex-col items-center text-center">
         <Avatar src={user.photoUrl} name={user.name} size="lg" className="mb-3" />
         {editing ? (

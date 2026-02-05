@@ -9,7 +9,7 @@ import { Button } from '../components/ui/button';
 import { Select } from '../components/ui/select';
 import { Avatar } from '../components/ui/avatar';
 import { Spinner } from '../components/ui/spinner';
-import { Settings, Globe, Palette, Volume2, Mic, Link, UserX, Trash2, LogOut, Type, Users, DollarSign, Wallet } from 'lucide-react';
+import { Settings, Globe, Palette, Volume2, Mic, Link, UserX, Trash2, LogOut, Type, Users, DollarSign, Wallet, Camera, Pencil, Check } from 'lucide-react';
 import { cn } from '../lib/utils';
 import { languageNames } from '@so/i18n';
 import { Input } from '../components/ui/input';
@@ -41,6 +41,9 @@ export function SettingsPage() {
   const removeIgnore = trpc.settings.removeIgnore.useMutation({ onSuccess: () => utils.settings.ignoreList.invalidate() });
   const generateCode = trpc.auth.generateLinkCode.useMutation();
   const deleteAccount = trpc.user.delete.useMutation({ onSuccess: () => { logout(); navigate('/login'); } });
+  const updateUser = trpc.user.update.useMutation({ onSuccess: () => { utils.user.me.invalidate(); setEditingName(false); } });
+  const [editingName, setEditingName] = useState(false);
+  const [editName, setEditName] = useState('');
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [newBudget, setNewBudget] = useState('');
   const [newBudgetCurrency, setNewBudgetCurrency] = useState(me?.preferredCurrency || 'USD');
@@ -52,6 +55,26 @@ export function SettingsPage() {
   const handleLanguageChange = (lang: string) => { i18n.changeLanguage(lang); localStorage.setItem('language', lang); updateLanguage.mutate({ language: lang }); };
   const handleThemeChange = (theme: 'LIGHT' | 'DARK' | 'SYSTEM') => { setMode(theme.toLowerCase() as 'light' | 'dark' | 'system'); updateTheme.mutate({ theme }); };
 
+  const handleAvatarUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      const size = 200;
+      canvas.width = size;
+      canvas.height = size;
+      const ctx = canvas.getContext('2d')!;
+      const min = Math.min(img.width, img.height);
+      const sx = (img.width - min) / 2;
+      const sy = (img.height - min) / 2;
+      ctx.drawImage(img, sx, sy, min, min, 0, 0, size, size);
+      const dataUrl = canvas.toDataURL('image/jpeg', 0.8);
+      updateUser.mutate({ photoUrl: dataUrl });
+    };
+    img.src = URL.createObjectURL(file);
+  };
+
   if (isLoading) return <div className="flex justify-center py-12"><Spinner /></div>;
 
   return (
@@ -59,6 +82,49 @@ export function SettingsPage() {
       <h1 className="text-xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
         <Settings className="w-5 h-5" /> {t('settings.title')}
       </h1>
+
+      <Card>
+        <CardContent className="py-4">
+          <div className="flex items-center gap-4">
+            <div className="relative">
+              <Avatar src={me?.photoUrl} name={me?.name || ''} size="lg" />
+              <label className="absolute -bottom-1 -right-1 w-7 h-7 bg-blue-600 rounded-full flex items-center justify-center cursor-pointer hover:bg-blue-500 transition-colors">
+                <Camera className="w-3.5 h-3.5 text-white" />
+                <input type="file" accept="image/*" className="hidden" onChange={handleAvatarUpload} />
+              </label>
+            </div>
+            <div className="flex-1 min-w-0">
+              {editingName ? (
+                <div className="flex items-center gap-2">
+                  <input
+                    value={editName}
+                    onChange={(e) => setEditName(e.target.value)}
+                    className="flex-1 px-2 py-1 text-lg font-bold rounded border border-gray-300 dark:border-gray-600 bg-transparent text-gray-900 dark:text-white focus:outline-none focus:border-blue-500"
+                    autoFocus
+                  />
+                  <button
+                    onClick={() => { updateUser.mutate({ name: editName }); }}
+                    className="text-green-500 hover:text-green-400"
+                  >
+                    <Check className="w-5 h-5" />
+                  </button>
+                </div>
+              ) : (
+                <div className="flex items-center gap-2">
+                  <h2 className="text-lg font-bold text-gray-900 dark:text-white truncate">{me?.name}</h2>
+                  <button
+                    onClick={() => { setEditName(me?.name || ''); setEditingName(true); }}
+                    className="text-gray-400 hover:text-gray-300"
+                  >
+                    <Pencil className="w-4 h-4" />
+                  </button>
+                </div>
+              )}
+              {me?.email && <p className="text-sm text-gray-500 truncate">{me.email}</p>}
+            </div>
+          </div>
+        </CardContent>
+      </Card>
 
       <Card><CardContent className="py-3"><div className="flex items-center gap-3"><Globe className="w-5 h-5 text-gray-500 shrink-0" />
         <Select id="language" label={t('settings.language')} value={settings?.language || 'en'} onChange={(e) => handleLanguageChange(e.target.value)} options={Object.entries(languageNames).map(([code, name]) => ({ value: code, label: name }))} />
