@@ -15,14 +15,19 @@ export interface TelegramUserData {
 
 export function validateTelegramInitData(initData: string): TelegramUserData | null {
   if (!TELEGRAM_BOT_TOKEN) {
-    console.warn('[Telegram] TELEGRAM_BOT_TOKEN not set, cannot validate initData');
+    console.error('[Telegram] TELEGRAM_BOT_TOKEN not set, cannot validate initData');
     return null;
   }
+
+  console.log('[Telegram] validating initData, length:', initData.length, 'token prefix:', TELEGRAM_BOT_TOKEN.slice(0, 5) + '...');
 
   try {
     const params = new URLSearchParams(initData);
     const hash = params.get('hash');
-    if (!hash) return null;
+    if (!hash) {
+      console.error('[Telegram] no hash in initData');
+      return null;
+    }
 
     // Remove hash from params for verification
     params.delete('hash');
@@ -41,12 +46,18 @@ export function validateTelegramInitData(initData: string): TelegramUserData | n
       .update(dataCheckString)
       .digest('hex');
 
-    if (computedHash !== hash) return null;
+    if (computedHash !== hash) {
+      console.error('[Telegram] hash mismatch, computed:', computedHash.slice(0, 10) + '...', 'received:', hash.slice(0, 10) + '...');
+      return null;
+    }
 
     // Check auth_date freshness
     const authDate = parseInt(params.get('auth_date') || '0', 10);
     const now = Math.floor(Date.now() / 1000);
-    if (now - authDate > INIT_DATA_MAX_AGE_SECONDS) return null;
+    if (now - authDate > INIT_DATA_MAX_AGE_SECONDS) {
+      console.error('[Telegram] initData expired, age:', now - authDate, 'seconds');
+      return null;
+    }
 
     // Parse user data
     const userStr = params.get('user');
