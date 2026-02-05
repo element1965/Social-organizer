@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { isTelegramWebApp, getStartParam } from '@so/tg-adapter';
 import { useTelegramInit, useTelegramBackButton } from '../hooks/useTelegram';
@@ -9,6 +9,7 @@ export function TelegramBootstrap({ children }: { children: React.ReactNode }) {
   const isAuthenticated = useAuth((s) => s.isAuthenticated);
   const navigate = useNavigate();
   const location = useLocation();
+  const startParamHandled = useRef(false);
 
   useTelegramBackButton();
 
@@ -16,15 +17,18 @@ export function TelegramBootstrap({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     if (!isTelegram || !isReady || !isAuthenticated) return;
 
-    // Check start_param for deep linking (e.g. invite tokens)
-    const startParam = getStartParam();
-    if (startParam) {
-      // Format: "invite_TOKEN" → navigate to /invite/TOKEN
-      if (startParam.startsWith('invite_')) {
-        const token = startParam.slice('invite_'.length);
-        if (token) {
-          navigate(`/invite/${token}`, { replace: true });
-          return;
+    // Check start_param for deep linking (only once per session)
+    if (!startParamHandled.current) {
+      const startParam = getStartParam();
+      if (startParam) {
+        startParamHandled.current = true;
+        // Format: "invite_TOKEN" → navigate to /invite/TOKEN
+        if (startParam.startsWith('invite_')) {
+          const token = startParam.slice('invite_'.length);
+          if (token) {
+            navigate(`/invite/${token}`, { replace: true });
+            return;
+          }
         }
       }
     }

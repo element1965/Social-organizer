@@ -293,7 +293,8 @@
     "accept": "Accept & Connect",
     "decline": "Decline",
     "alreadyUsed": "This invite has already been used",
-    "success": "Connected!"
+    "success": "Connected!",
+    "loginToAccept": "Log in to accept"
   },
   "landing": {
     "painQuote": "When trouble strikes — you're alone. Friends don't know. Friends of friends — even less so. Yet someone among them could help.",

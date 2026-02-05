@@ -1,16 +1,18 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { trpc } from '../lib/trpc';
+import { useAuth } from '../hooks/useAuth';
 import { Card, CardContent } from '../components/ui/card';
 import { Button } from '../components/ui/button';
 import { Avatar } from '../components/ui/avatar';
 import { Spinner } from '../components/ui/spinner';
-import { UserPlus, CheckCircle } from 'lucide-react';
+import { UserPlus, CheckCircle, LogIn } from 'lucide-react';
 
 export function InvitePage() {
   const { token } = useParams<{ token: string }>();
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const isAuthenticated = useAuth((s) => s.isAuthenticated);
 
   const { data: invite, isLoading, error } = trpc.invite.getByToken.useQuery(
     { token: token! },
@@ -63,6 +65,14 @@ export function InvitePage() {
               <CheckCircle className="w-10 h-10" />
               <p className="font-medium">{t('invite.success')}</p>
             </div>
+          ) : !isAuthenticated ? (
+            <Button
+              className="w-full"
+              size="lg"
+              onClick={() => navigate(`/login?redirect=/invite/${token}`)}
+            >
+              <LogIn className="w-4 h-4 mr-2" /> {t('invite.loginToAccept')}
+            </Button>
           ) : (
             <div className="flex flex-col gap-2">
               <Button

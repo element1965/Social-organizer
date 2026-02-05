@@ -36,28 +36,25 @@ export function useTelegramInit() {
     syncTelegramTheme();
     const unsub = onThemeChanged(syncTelegramTheme);
 
-    if (!isAuthenticated) {
-      const initData = getTGInitData();
-      console.log('[TG Auth] initData present:', !!initData, 'length:', initData?.length ?? 0);
-      if (initData) {
-        loginMutation
-          .mutateAsync({ initData })
-          .then((result) => {
-            console.log('[TG Auth] login success, userId:', result.userId);
-            login(result.accessToken, result.refreshToken, result.userId);
-            setIsReady(true);
-          })
-          .catch((err) => {
-            console.error('[TG Auth] loginWithTelegram failed:', err.message || err);
-            console.error('[TG Auth] full error:', JSON.stringify(err));
-            setIsReady(true);
-          });
-      } else {
-        console.warn('[TG Auth] no initData, skipping auto-login');
-        setIsReady(true);
-      }
+    // Always refresh token from Telegram initData (previous JWT may be expired)
+    const initData = getTGInitData();
+    console.log('[TG Auth] initData present:', !!initData, 'length:', initData?.length ?? 0);
+    if (initData) {
+      loginMutation
+        .mutateAsync({ initData })
+        .then((result) => {
+          console.log('[TG Auth] login success, userId:', result.userId);
+          login(result.accessToken, result.refreshToken, result.userId);
+          setIsReady(true);
+        })
+        .catch((err) => {
+          console.error('[TG Auth] loginWithTelegram failed:', err.message || err);
+          console.error('[TG Auth] full error:', JSON.stringify(err));
+          // If re-auth failed but we have a stored token, still proceed
+          setIsReady(true);
+        });
     } else {
-      syncTelegramTheme();
+      console.warn('[TG Auth] no initData, skipping auto-login');
       setIsReady(true);
     }
 
