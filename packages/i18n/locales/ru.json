@@ -27,7 +27,10 @@
     "haveAccount": "Уже есть аккаунт? Войти",
     "noAccount": "Нет аккаунта? Зарегистрироваться",
     "emailExists": "Этот email уже зарегистрирован",
-    "invalidCredentials": "Неверный email или пароль"
+    "invalidCredentials": "Неверный email или пароль",
+    "telegramError": "Ошибка авторизации через Telegram",
+    "telegramNotAvailable": "Откройте приложение через Telegram",
+    "googleNotInTelegram": "Google авторизация недоступна в Telegram. Используйте кнопку Telegram"
   },
   "login": {
     "subtitle": "Координация помощи через доверенные связи",

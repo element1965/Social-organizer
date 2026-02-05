@@ -5,7 +5,8 @@ import { useAuth } from '../hooks/useAuth';
 import { trpc } from '../lib/trpc';
 import { Button } from '../components/ui/button';
 import { Logo } from '../components/Logo';
-import { Mail, Eye, EyeOff } from 'lucide-react';
+import { Mail, Eye, EyeOff, Send } from 'lucide-react';
+import { isTelegramWebApp, getTGInitData } from '@so/tg-adapter';
 
 export function LoginPage() {
   const { t } = useTranslation();
@@ -58,13 +59,28 @@ export function LoginPage() {
     },
   });
 
-  const handleGoogleLogin = () => {
+  const telegramLoginMutation = trpc.auth.loginWithTelegram.useMutation({
+    onSuccess: (data) => {
+      login(data.accessToken, data.refreshToken, data.userId);
+      afterLogin('/');
+    },
+    onError: () => {
+      setError(t('auth.telegramError'));
+    },
+  });
+
+  const handleTelegramLogin = () => {
     setLoading(true);
-    const stubToken = `stub-GOOGLE-${Date.now()}`;
-    loginMutation.mutate(
-      { platform: 'GOOGLE', platformToken: stubToken },
-      { onSettled: () => setLoading(false) },
-    );
+    const initData = getTGInitData();
+    if (initData) {
+      telegramLoginMutation.mutate(
+        { initData },
+        { onSettled: () => setLoading(false) },
+      );
+    } else {
+      setError(t('auth.telegramNotAvailable'));
+      setLoading(false);
+    }
   };
 
   const handleEmailSubmit = (e: React.FormEvent) => {
@@ -165,10 +181,33 @@ export function LoginPage() {
         </div>
 
         <div className="w-full space-y-3">
+          {isTelegramWebApp() && (
+            <Button
+              className="w-full bg-[#2AABEE] hover:bg-[#229ED9] text-white"
+              size="lg"
+              onClick={handleTelegramLogin}
+              disabled={loading}
+            >
+              <Send size={18} className="mr-2" />
+              Telegram
+            </Button>
+          )}
+
           <Button
             className="w-full bg-white hover:bg-gray-100 text-gray-900 border border-gray-300"
             size="lg"
-            onClick={handleGoogleLogin}
+            onClick={() => {
+              if (isTelegramWebApp()) {
+                setError(t('auth.googleNotInTelegram'));
+                return;
+              }
+              setLoading(true);
+              const stubToken = `stub-GOOGLE-${Date.now()}`;
+              loginMutation.mutate(
+                { platform: 'GOOGLE', platformToken: stubToken },
+                { onSettled: () => setLoading(false) },
+              );
+            }}
             disabled={loading}
           >
             <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24">

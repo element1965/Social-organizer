@@ -27,7 +27,10 @@
     "haveAccount": "Already have an account? Sign in",
     "noAccount": "Don't have an account? Sign up",
     "emailExists": "This email is already registered",
-    "invalidCredentials": "Invalid email or password"
+    "invalidCredentials": "Invalid email or password",
+    "telegramError": "Telegram authorization failed",
+    "telegramNotAvailable": "Open the app via Telegram",
+    "googleNotInTelegram": "Google sign-in is not available in Telegram. Use the Telegram button"
   },
   "login": {
     "subtitle": "Help coordination through trusted connections",

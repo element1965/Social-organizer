@@ -180,7 +180,7 @@ export function DashboardPage() {
       {/* Main CTAs */}
       <div className="flex gap-2">
         <Button className="flex-1" size="lg" variant="primary" onClick={() => navigate('/create')}>
-          <Heart className="w-5 h-5 mr-2 text-red-500" /> {t('dashboard.needHelp')}
+          <Heart className="w-5 h-5 mr-2 text-red-500 fill-red-500" /> {t('dashboard.needHelp')}
         </Button>
         <Button
           className="flex-1"
