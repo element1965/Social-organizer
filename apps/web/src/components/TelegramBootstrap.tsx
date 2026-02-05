@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { isTelegramWebApp } from '@so/tg-adapter';
+import { isTelegramWebApp, getStartParam } from '@so/tg-adapter';
 import { useTelegramInit, useTelegramBackButton } from '../hooks/useTelegram';
 import { useAuth } from '../hooks/useAuth';
 
@@ -12,9 +12,24 @@ export function TelegramBootstrap({ children }: { children: React.ReactNode }) {
 
   useTelegramBackButton();
 
-  // Redirect away from public pages after Telegram auto-auth
+  // After Telegram auto-auth, navigate based on start_param or redirect from public pages
   useEffect(() => {
     if (!isTelegram || !isReady || !isAuthenticated) return;
+
+    // Check start_param for deep linking (e.g. invite tokens)
+    const startParam = getStartParam();
+    if (startParam) {
+      // Format: "invite_TOKEN" → navigate to /invite/TOKEN
+      if (startParam.startsWith('invite_')) {
+        const token = startParam.slice('invite_'.length);
+        if (token) {
+          navigate(`/invite/${token}`, { replace: true });
+          return;
+        }
+      }
+    }
+
+    // Default: redirect away from public pages
     if (location.pathname === '/welcome' || location.pathname === '/login') {
       navigate('/', { replace: true });
     }

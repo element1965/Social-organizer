@@ -11,6 +11,7 @@ import { Progress } from '../components/ui/progress';
 import { Spinner } from '../components/ui/spinner';
 import { Users, Share2, QrCode, Globe, List, Wallet } from 'lucide-react';
 import { QRCodeSVG } from 'qrcode.react';
+import { buildInviteUrl } from '../lib/inviteUrl';
 const LazyNetworkGraph = lazy(() =>
   import('@so/graph-3d').then((m) => ({ default: m.NetworkGraph })),
 );
@@ -34,7 +35,7 @@ export function MyNetworkPage() {
 
   const handleShare = async () => {
     const result = await generateInvite.mutateAsync();
-    const url = `${window.location.origin}/invite/${result.token}`;
+    const url = buildInviteUrl(result.token);
     if (navigator.share) { navigator.share({ title: 'Social Organizer', url }); }
     else { navigator.clipboard.writeText(url); }
   };
@@ -44,7 +45,7 @@ export function MyNetworkPage() {
     setShowQR(!showQR);
   };
 
-  const inviteUrl = generateInvite.data ? `${window.location.origin}/invite/${generateInvite.data.token}` : '';
+  const inviteUrl = generateInvite.data ? buildInviteUrl(generateInvite.data.token) : '';
 
   return (
     <div className="p-4 space-y-4">
