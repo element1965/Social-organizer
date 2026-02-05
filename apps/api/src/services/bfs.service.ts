@@ -74,11 +74,11 @@ export async function findPathBetweenUsers(
   fromUserId: string,
   toUserId: string,
   maxDepth: number = MAX_BFS_DEPTH,
-): Promise<Array<{ id: string; name: string; photoUrl: string | null; connectionCount: number }>> {
+): Promise<Array<{ id: string; name: string; photoUrl: string | null; connectionCount: number; remainingBudget: number | null }>> {
   if (fromUserId === toUserId) {
     const user = await db.user.findUnique({
       where: { id: fromUserId },
-      select: { id: true, name: true, photoUrl: true },
+      select: { id: true, name: true, photoUrl: true, remainingBudget: true },
     });
     if (!user) return [];
     const countResult = await db.$queryRaw<Array<{ count: bigint }>>`
@@ -131,7 +131,7 @@ export async function findPathBetweenUsers(
   const [users, connectionCounts] = await Promise.all([
     db.user.findMany({
       where: { id: { in: fullPath } },
-      select: { id: true, name: true, photoUrl: true },
+      select: { id: true, name: true, photoUrl: true, remainingBudget: true },
     }),
     db.$queryRaw<Array<{ user_id: string; count: bigint }>>`
       SELECT u.id as user_id, COUNT(c.id)::bigint as count
@@ -149,7 +149,7 @@ export async function findPathBetweenUsers(
     const user = userMap.get(id);
     if (!user) return null;
     return { ...user, connectionCount: countMap.get(id) || 0 };
-  }).filter(Boolean) as Array<{ id: string; name: string; photoUrl: string | null; connectionCount: number }>;
+  }).filter(Boolean) as Array<{ id: string; name: string; photoUrl: string | null; connectionCount: number; remainingBudget: number | null }>;
 }
 
 /**
