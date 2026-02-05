@@ -1,6 +1,8 @@
 import type { PrismaClient } from '@so/db';
 import { NOTIFICATION_TTL_HOURS } from '@so/shared';
 import { findRecipientsViaBfs } from './bfs.service.js';
+import { enqueueTgBroadcast } from '../workers/index.js';
+import type { TgBroadcastMessage } from '../workers/tg-broadcast.worker.js';
 
 /**
  * Send collection notifications via BFS traversal of connection graph.
@@ -71,5 +73,69 @@ export async function sendCollectionNotifications(
     }
   }
 
+  // Send Telegram notifications for NEW_COLLECTION
+  if (type === 'NEW_COLLECTION' && created > 0) {
+    dispatchTelegramNotifications(db, collectionId, creatorId, recipients.map((r) => r.userId)).catch((err) =>
+      console.error('[TG Notify] Failed to dispatch:', err),
+    );
+  }
+
   return created;
+}
+
+/** Find Telegram accounts of recipients and enqueue broadcast (non-blocking) */
+async function dispatchTelegramNotifications(
+  db: PrismaClient,
+  collectionId: string,
+  creatorId: string,
+  recipientUserIds: string[],
+): Promise<void> {
+  // Get collection info and creator name
+  const collection = await db.collection.findUnique({
+    where: { id: collectionId },
+    select: { type: true, amount: true, currency: true, originalAmount: true, originalCurrency: true },
+  });
+  if (!collection) return;
+
+  const creator = await db.user.findUnique({
+    where: { id: creatorId },
+    select: { name: true },
+  });
+  if (!creator) return;
+
+  // Find Telegram platform accounts for recipients
+  const tgAccounts = await db.platformAccount.findMany({
+    where: {
+      userId: { in: recipientUserIds },
+      platform: 'TELEGRAM',
+    },
+    select: { userId: true, platformId: true },
+  });
+
+  if (tgAccounts.length === 0) return;
+
+  const amount = collection.originalAmount ?? collection.amount;
+  const currency = collection.originalCurrency ?? collection.currency;
+  const collectionType = collection.type as 'EMERGENCY' | 'REGULAR';
+
+  const messages: TgBroadcastMessage[] = tgAccounts.map((acc) => {
+    const emoji = collectionType === 'EMERGENCY' ? '🚨' : '📢';
+    const typeLabel = collectionType === 'EMERGENCY' ? 'Emergency' : 'Regular';
+    const amountStr = amount != null ? `${amount} ${currency}` : 'open';
+    const text = `${emoji} <b>New ${typeLabel} Collection</b>\n\nFrom: <b>${creator.name}</b>\nAmount: ${amountStr}\n\nSomeone in your network needs support.`;
+
+    const botUsername = process.env.VITE_TELEGRAM_BOT_USERNAME || 'socialorganizer_bot';
+    const deepLink = `https://t.me/${botUsername}?startapp=collection_${collectionId}`;
+
+    return {
+      telegramId: acc.platformId,
+      text,
+      replyMarkup: {
+        inline_keyboard: [[{ text: '📱 Open', url: deepLink }]],
+      },
+    };
+  });
+
+  await enqueueTgBroadcast(messages);
+  console.log(`[TG Notify] Enqueued ${messages.length} messages for collection ${collectionId}`);
 }
