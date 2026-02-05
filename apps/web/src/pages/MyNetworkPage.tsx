@@ -119,12 +119,10 @@ export function MyNetworkPage() {
                       <Users className="w-3 h-3" />
                       {conn.connectionCount ?? 0}
                     </span>
-                    {conn.remainingBudget != null && conn.remainingBudget > 0 && (
-                      <span className="flex items-center gap-1 text-green-600 dark:text-green-400">
-                        <Wallet className="w-3 h-3" />
-                        ${Math.round(conn.remainingBudget)}
-                      </span>
-                    )}
+                    <span className="flex items-center gap-1 text-green-600 dark:text-green-400">
+                      <Wallet className="w-3 h-3" />
+                      ${Math.round(conn.remainingBudget ?? 0)}
+                    </span>
                   </div>
                 </button>
               ))}

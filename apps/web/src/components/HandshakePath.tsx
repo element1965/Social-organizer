@@ -1,4 +1,4 @@
-import { Users } from 'lucide-react';
+import { Users, Wallet } from 'lucide-react';
 import { Avatar } from './ui/avatar';
 
 interface PathUser {
@@ -6,6 +6,7 @@ interface PathUser {
   name: string;
   photoUrl: string | null;
   connectionCount?: number;
+  remainingBudget?: number | null;
 }
 
 interface HandshakePathProps {
@@ -45,12 +46,18 @@ export function HandshakePath({ path, onUserClick, compact = false }: HandshakeP
                 <span className="flex-1 text-sm font-medium text-gray-900 dark:text-white text-left truncate">
                   {user.name}
                 </span>
-                {user.connectionCount !== undefined && (
-                  <span className="flex items-center gap-1 text-xs text-gray-400">
-                    <Users className="w-3 h-3" />
-                    {user.connectionCount}
+                <div className="flex items-center gap-2">
+                  {user.connectionCount !== undefined && (
+                    <span className="flex items-center gap-1 text-xs text-gray-400">
+                      <Users className="w-3 h-3" />
+                      {user.connectionCount}
+                    </span>
+                  )}
+                  <span className="flex items-center gap-1 text-xs text-green-600 dark:text-green-400">
+                    <Wallet className="w-3 h-3" />
+                    ${Math.round(user.remainingBudget ?? 0)}
                   </span>
-                )}
+                </div>
               </button>
             </div>
 
