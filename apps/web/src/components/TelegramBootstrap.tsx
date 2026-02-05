@@ -17,19 +17,26 @@ export function TelegramBootstrap({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     if (!isTelegram || !isReady || !isAuthenticated) return;
 
-    // Check start_param for deep linking (only once per session)
+    // Check start_param or pending invite for deep linking (only once per session)
     if (!startParamHandled.current) {
+      startParamHandled.current = true;
+
+      // Priority 1: start_param from Telegram deep link
       const startParam = getStartParam();
-      if (startParam) {
-        startParamHandled.current = true;
-        // Format: "invite_TOKEN" → navigate to /invite/TOKEN
-        if (startParam.startsWith('invite_')) {
-          const token = startParam.slice('invite_'.length);
-          if (token) {
-            navigate(`/invite/${token}`, { replace: true });
-            return;
-          }
-        }
+      let inviteToken: string | null = null;
+      if (startParam?.startsWith('invite_')) {
+        inviteToken = startParam.slice('invite_'.length);
+      }
+
+      // Priority 2: pendingInviteToken saved in localStorage (from web invite flow → TG login)
+      if (!inviteToken) {
+        inviteToken = localStorage.getItem('pendingInviteToken');
+      }
+
+      if (inviteToken) {
+        localStorage.removeItem('pendingInviteToken');
+        navigate(`/invite/${inviteToken}`, { replace: true });
+        return;
       }
     }
 

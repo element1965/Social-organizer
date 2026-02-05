@@ -15,10 +15,15 @@ export function LoginPage() {
   const redirect = searchParams.get('redirect');
   const login = useAuth((s) => s.login);
 
+  // Use pendingInviteToken from localStorage as fallback redirect
+  const pendingInviteToken = localStorage.getItem('pendingInviteToken');
+  const effectiveRedirect = redirect || (pendingInviteToken ? `/invite/${pendingInviteToken}` : null);
+
   const afterLogin = (defaultPath: string) => {
-    if (redirect) {
+    localStorage.removeItem('pendingInviteToken');
+    if (effectiveRedirect) {
       // Full page reload to reinitialize trpcClient (important after demo mode)
-      window.location.href = redirect;
+      window.location.href = effectiveRedirect;
     } else {
       navigate(defaultPath);
     }
@@ -79,7 +84,12 @@ export function LoginPage() {
       );
     } else {
       // Not inside Telegram — open the bot so user can launch the WebApp
-      window.open('https://t.me/socialorganizer_bot', '_blank');
+      // Include invite token as startParam so it's not lost
+      const inviteToken = pendingInviteToken || (effectiveRedirect?.startsWith('/invite/') ? effectiveRedirect.slice('/invite/'.length) : null);
+      const botUrl = inviteToken
+        ? `https://t.me/socialorganizer_bot?startapp=invite_${inviteToken}`
+        : 'https://t.me/socialorganizer_bot';
+      window.open(botUrl, '_blank');
     }
   };
 

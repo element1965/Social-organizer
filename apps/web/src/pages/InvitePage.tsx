@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { trpc } from '../lib/trpc';
@@ -15,6 +16,13 @@ export function InvitePage() {
   const isAuthenticated = useAuth((s) => s.isAuthenticated);
   const isDemo = localStorage.getItem('accessToken') === 'demo-token';
   const isRealUser = isAuthenticated && !isDemo;
+
+  // Save invite token to localStorage so it survives auth redirects and tab switches
+  useEffect(() => {
+    if (!isRealUser && token) {
+      localStorage.setItem('pendingInviteToken', token);
+    }
+  }, [isRealUser, token]);
 
   const { data: invite, isLoading, error } = trpc.invite.getByToken.useQuery(
     { token: token! },
@@ -89,7 +97,10 @@ export function InvitePage() {
               <Button
                 className="w-full"
                 size="lg"
-                onClick={() => accept.mutate({ token: token! })}
+                onClick={() => {
+                  localStorage.removeItem('pendingInviteToken');
+                  accept.mutate({ token: token! });
+                }}
                 disabled={accept.isPending}
               >
                 {accept.isPending ? (
