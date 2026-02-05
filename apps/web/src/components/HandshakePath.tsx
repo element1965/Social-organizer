@@ -39,54 +39,47 @@ export function HandshakePath({ path, onUserClick, compact = false }: HandshakeP
             <div className={`flex ${isEven ? 'justify-start' : 'justify-end'}`}>
               <button
                 onClick={() => onUserClick?.(user.id)}
-                className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                className="flex items-center gap-2 p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
                 style={{ width: '70%' }}
               >
                 <Avatar name={user.name} src={user.photoUrl} size="md" />
-                <span className="flex-1 text-sm font-medium text-gray-900 dark:text-white text-left truncate">
-                  {user.name}
-                </span>
-                <div className="flex items-center gap-2">
-                  {user.connectionCount !== undefined && (
-                    <span className="flex items-center gap-1 text-xs text-gray-400">
-                      <Users className="w-3 h-3" />
-                      {user.connectionCount}
-                    </span>
-                  )}
-                  <span className="flex items-center gap-1 text-xs text-green-600 dark:text-green-400">
-                    <Wallet className="w-3 h-3" />
-                    ${Math.round(user.remainingBudget ?? 0)}
+                <div className="flex flex-col min-w-0">
+                  <span className="text-sm font-medium text-gray-900 dark:text-white text-left truncate">
+                    {user.name}
                   </span>
+                  <div className="flex items-center gap-2">
+                    {user.connectionCount !== undefined && (
+                      <span className="flex items-center gap-1 text-xs text-gray-400">
+                        <Users className="w-3 h-3" />
+                        {user.connectionCount}
+                      </span>
+                    )}
+                    <span className="flex items-center gap-1 text-xs text-green-600 dark:text-green-400">
+                      <Wallet className="w-3 h-3" />
+                      ${Math.round(user.remainingBudget ?? 0)}
+                    </span>
+                  </div>
                 </div>
               </button>
             </div>
 
-            {/* Arrow connector */}
+            {/* Straight diagonal arrow */}
             {!isLast && (
-              <div className={`flex ${isEven ? 'justify-start' : 'justify-end'} px-6`}>
+              <div className="px-2">
                 <svg
-                  width="120"
-                  height="28"
-                  viewBox="0 0 120 28"
-                  className={isEven ? '' : 'scale-x-[-1]'}
+                  width="100%"
+                  height="20"
+                  viewBox="0 0 200 20"
+                  preserveAspectRatio="none"
                 >
-                  {/* Elbow line going down then right */}
-                  <path
-                    d="M 20 0 L 20 14 L 100 14 L 100 28"
-                    fill="none"
+                  <line
+                    x1={isEven ? 30 : 170}
+                    y1="0"
+                    x2={isEven ? 170 : 30}
+                    y2="20"
                     stroke="#22c55e"
                     strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                  {/* Arrowhead */}
-                  <path
-                    d="M 94 22 L 100 28 L 106 22"
-                    fill="none"
-                    stroke="#22c55e"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
+                    vectorEffect="non-scaling-stroke"
                   />
                 </svg>
               </div>
