@@ -82,6 +82,7 @@ pnpm dev
 | IgnoreEntry | Ignore record |
 | LinkingCode | 6-digit linking code (5 min TTL) |
 | InviteLink | Invitation link |
+| ChatMessage | Chat conversation log (user message, assistant response, feedback flag, language) |
 
 ## Scripts
 
