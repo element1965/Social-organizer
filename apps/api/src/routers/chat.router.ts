@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import OpenAI from 'openai';
 import { router, protectedProcedure } from '../trpc.js';
+import { getDb } from '@so/db';
 import { GLOSSARY } from '../knowledge/glossary.js';
 import { SCREEN_GUIDE } from '../knowledge/screens.js';
 import { FAQ } from '../knowledge/faq.js';
@@ -34,7 +35,24 @@ async function sendFeedbackToTelegram(userMessage: string, userId: string): Prom
   const chatId = process.env.FEEDBACK_CHAT_ID;
   if (!botToken || !chatId) return;
 
-  const text = `💬 Feedback from user ${userId}:\n\n${userMessage}`;
+  const db = getDb();
+  const user = await db.user.findUnique({
+    where: { id: userId },
+    select: { name: true, email: true, phone: true, contacts: { select: { type: true, value: true } } },
+  });
+
+  const userName = user?.name || 'Unknown';
+  const contactLines: string[] = [];
+  if (user?.email) contactLines.push(`Email: ${user.email}`);
+  if (user?.phone) contactLines.push(`Phone: ${user.phone}`);
+  if (user?.contacts) {
+    for (const c of user.contacts) {
+      contactLines.push(`${c.type}: ${c.value}`);
+    }
+  }
+  const contactsStr = contactLines.length > 0 ? `\n${contactLines.join('\n')}` : '';
+
+  const text = `💬 <b>Feedback</b>\n\nFrom: <b>${userName}</b>${contactsStr}\n\n${userMessage}`;
   await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
