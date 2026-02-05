@@ -50,6 +50,13 @@ export function getTGInitData(): string | null {
   return data && data !== '' ? data : null;
 }
 
+// ---- Start param (deep linking) ----
+
+export function getStartParam(): string | null {
+  const param = window.Telegram?.WebApp?.initDataUnsafe?.start_param;
+  return param && param !== '' ? param : null;
+}
+
 // ---- Theme ----
 
 export function getTGColorScheme(): 'light' | 'dark' {

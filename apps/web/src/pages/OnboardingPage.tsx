@@ -7,6 +7,7 @@ import { Input } from '../components/ui/input';
 import { Select } from '../components/ui/select';
 import { Users, Zap, Eye, UserPlus, Wallet, Share2, CheckCircle, Loader2 } from 'lucide-react';
 import { cn } from '../lib/utils';
+import { buildInviteUrl } from '../lib/inviteUrl';
 
 interface Step {
   icon: typeof Users;
@@ -67,7 +68,7 @@ export function OnboardingPage() {
 
   const handleInvite = async () => {
     const result = await generateInvite.mutateAsync();
-    const link = `${window.location.origin}/invite/${result.token}`;
+    const link = buildInviteUrl(result.token);
     setInviteToken(result.token);
     setInviteLink(link);
     setInviteAccepted(false);
