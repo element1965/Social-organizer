@@ -193,7 +193,8 @@
     "myConnections": "Мої контакти",
     "noConnections": "Поки немає контактів",
     "connectionPath": "Шлях зв'язку",
-    "contacts": "Контакти"
+    "contacts": "Контакти",
+    "currentCapability": "Поточна можливість"
   },
   "settings": {
     "title": "Налаштування",

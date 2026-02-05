@@ -228,7 +228,8 @@
     "myConnections": "Мои связи",
     "noConnections": "Связей пока нет",
     "connectionPath": "Путь связи",
-    "contacts": "Контакты"
+    "contacts": "Контакты",
+    "currentCapability": "Текущая возможность"
   },
   "settings": {
     "title": "Настройки",

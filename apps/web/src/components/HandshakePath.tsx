@@ -1,4 +1,4 @@
-import { ChevronRight, Users } from 'lucide-react';
+import { Users } from 'lucide-react';
 import { Avatar } from './ui/avatar';
 
 interface PathUser {
@@ -27,29 +27,66 @@ export function HandshakePath({ path, onUserClick, compact = false }: HandshakeP
   }
 
   return (
-    <div className="flex items-center gap-1 flex-wrap">
-      {path.map((user, idx) => (
-        <div key={user.id} className="flex items-center">
-          <button
-            onClick={() => onUserClick?.(user.id)}
-            className="flex items-center gap-1.5 px-2 py-1 rounded-full bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
-          >
-            <Avatar name={user.name} src={user.photoUrl} size="xs" />
-            <span className="text-xs font-medium text-gray-700 dark:text-gray-300 max-w-[80px] truncate">
-              {user.name.split(' ')[0]}
-            </span>
-            {user.connectionCount !== undefined && (
-              <span className="flex items-center gap-0.5 text-[10px] text-gray-400">
-                <Users className="w-2.5 h-2.5" />
-                {user.connectionCount}
-              </span>
+    <div className="space-y-0">
+      {path.map((user, idx) => {
+        const isEven = idx % 2 === 0;
+        const isLast = idx === path.length - 1;
+
+        return (
+          <div key={user.id}>
+            {/* User row */}
+            <div className={`flex ${isEven ? 'justify-start' : 'justify-end'}`}>
+              <button
+                onClick={() => onUserClick?.(user.id)}
+                className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                style={{ width: '70%' }}
+              >
+                <Avatar name={user.name} src={user.photoUrl} size="md" />
+                <span className="flex-1 text-sm font-medium text-gray-900 dark:text-white text-left truncate">
+                  {user.name}
+                </span>
+                {user.connectionCount !== undefined && (
+                  <span className="flex items-center gap-1 text-xs text-gray-400">
+                    <Users className="w-3 h-3" />
+                    {user.connectionCount}
+                  </span>
+                )}
+              </button>
+            </div>
+
+            {/* Arrow connector */}
+            {!isLast && (
+              <div className={`flex ${isEven ? 'justify-start' : 'justify-end'} px-6`}>
+                <svg
+                  width="120"
+                  height="28"
+                  viewBox="0 0 120 28"
+                  className={isEven ? '' : 'scale-x-[-1]'}
+                >
+                  {/* Elbow line going down then right */}
+                  <path
+                    d="M 20 0 L 20 14 L 100 14 L 100 28"
+                    fill="none"
+                    stroke="#22c55e"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                  {/* Arrowhead */}
+                  <path
+                    d="M 94 22 L 100 28 L 106 22"
+                    fill="none"
+                    stroke="#22c55e"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </div>
             )}
-          </button>
-          {idx < path.length - 1 && (
-            <ChevronRight className="w-3 h-3 text-gray-400 mx-0.5 flex-shrink-0" />
-          )}
-        </div>
-      ))}
+          </div>
+        );
+      })}
     </div>
   );
 }

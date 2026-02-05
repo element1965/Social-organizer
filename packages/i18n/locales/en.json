@@ -228,7 +228,8 @@
     "myConnections": "My Connections",
     "noConnections": "No connections yet",
     "connectionPath": "Connection path",
-    "contacts": "Contacts"
+    "contacts": "Contacts",
+    "currentCapability": "Current capability"
   },
   "settings": {
     "title": "Settings",
