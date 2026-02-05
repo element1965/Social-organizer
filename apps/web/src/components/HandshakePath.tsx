@@ -63,26 +63,18 @@ export function HandshakePath({ path, onUserClick, compact = false }: HandshakeP
               </button>
             </div>
 
-            {/* Straight diagonal arrow */}
+            {/* Straight diagonal arrow between avatars */}
             {!isLast && (
-              <div className="px-2">
-                <svg
-                  width="100%"
-                  height="20"
-                  viewBox="0 0 200 20"
-                  preserveAspectRatio="none"
-                >
-                  <line
-                    x1={isEven ? 30 : 170}
-                    y1="0"
-                    x2={isEven ? 170 : 30}
-                    y2="20"
-                    stroke="#22c55e"
-                    strokeWidth="2"
-                    vectorEffect="non-scaling-stroke"
-                  />
-                </svg>
-              </div>
+              <svg width="100%" height="16" className="block">
+                <line
+                  x1={isEven ? '7%' : '37%'}
+                  y1="0"
+                  x2={isEven ? '37%' : '7%'}
+                  y2="16"
+                  stroke="#22c55e"
+                  strokeWidth="2"
+                />
+              </svg>
             )}
           </div>
         );
