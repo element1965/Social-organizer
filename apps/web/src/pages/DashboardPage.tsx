@@ -2,6 +2,7 @@ import { lazy, Suspense, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { trpc } from '../lib/trpc';
+import { buildInviteUrl } from '../lib/inviteUrl';
 import { useAuth } from '../hooks/useAuth';
 import { Card, CardContent, CardHeader } from '../components/ui/card';
 import { Button } from '../components/ui/button';
@@ -49,6 +50,7 @@ export function DashboardPage() {
   const { data: helpStats } = trpc.stats.help.useQuery(undefined, { refetchInterval: 60000 });
   const { data: helpByPeriod } = trpc.stats.helpGivenByPeriod.useQuery(undefined, { refetchInterval: 60000 });
   const { data: networkCapabilities } = trpc.stats.networkCapabilities.useQuery(undefined, { refetchInterval: 60000 });
+  const generateInvite = trpc.invite.generate.useMutation();
 
   const totalReachable = networkStats?.totalReachable ?? 0;
   const byDepth = networkStats?.byDepth ?? {};
@@ -185,10 +187,29 @@ export function DashboardPage() {
         </Card>
       )}
 
-      {/* Main CTA */}
-      <Button className="w-full" size="lg" variant="primary" onClick={() => navigate('/create')}>
-        <Heart className="w-5 h-5 mr-2" /> {t('dashboard.needHelp')}
-      </Button>
+      {/* Main CTAs */}
+      <div className="flex gap-2">
+        <Button className="flex-1" size="lg" variant="primary" onClick={() => navigate('/create')}>
+          <Heart className="w-5 h-5 mr-2 text-red-500" /> {t('dashboard.needHelp')}
+        </Button>
+        <Button
+          className="flex-1"
+          size="lg"
+          variant="outline"
+          disabled={generateInvite.isPending}
+          onClick={async () => {
+            const result = await generateInvite.mutateAsync();
+            const url = buildInviteUrl(result.token);
+            if (navigator.share) {
+              navigator.share({ title: 'Social Organizer', url });
+            } else {
+              navigator.clipboard.writeText(url);
+            }
+          }}
+        >
+          <UserPlus className="w-5 h-5 mr-2" /> {t('network.invite')}
+        </Button>
+      </div>
 
       {/* Tabs */}
       <Tabs tabs={tabs} activeTab={activeTab} onTabChange={(id) => setActiveTab(id as TabId)} />
