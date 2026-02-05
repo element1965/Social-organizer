@@ -187,4 +187,45 @@ export const connectionRouter = router({
       },
     };
   }),
+
+  growthHistory: protectedProcedure.query(async ({ ctx }) => {
+    const days = 30;
+    const since = new Date(Date.now() - days * 24 * 60 * 60 * 1000);
+
+    const rows = await ctx.db.$queryRaw<Array<{ day: Date; count: bigint }>>`
+      SELECT DATE_TRUNC('day', c."createdAt") AS day, COUNT(*)::bigint AS count
+      FROM connections c
+      WHERE (c."userAId" = ${ctx.userId} OR c."userBId" = ${ctx.userId})
+        AND c."createdAt" >= ${since}
+      GROUP BY DATE_TRUNC('day', c."createdAt")
+      ORDER BY day
+    `;
+
+    // Fill gaps with zeros
+    const countByDay = new Map(rows.map(r => [
+      new Date(r.day).toISOString().slice(0, 10),
+      Number(r.count),
+    ]));
+
+    const result: Array<{ date: string; count: number }> = [];
+    let cumulative = 0;
+
+    // Get total connections before the period
+    const beforeCount = await ctx.db.connection.count({
+      where: {
+        OR: [{ userAId: ctx.userId }, { userBId: ctx.userId }],
+        createdAt: { lt: since },
+      },
+    });
+    cumulative = beforeCount;
+
+    for (let i = 0; i < days; i++) {
+      const d = new Date(since.getTime() + i * 24 * 60 * 60 * 1000);
+      const key = d.toISOString().slice(0, 10);
+      cumulative += countByDay.get(key) ?? 0;
+      result.push({ date: key, count: cumulative });
+    }
+
+    return result;
+  }),
 });

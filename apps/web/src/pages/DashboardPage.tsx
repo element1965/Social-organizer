@@ -10,7 +10,7 @@ import { Badge } from '../components/ui/badge';
 import { Progress } from '../components/ui/progress';
 import { Spinner } from '../components/ui/spinner';
 import { Avatar } from '../components/ui/avatar';
-import { DonutChart, SemiDonutChart, BarChart, StatCard, Tabs, ProgressBarWithMarker } from '../components/ui/charts';
+import { SemiDonutChart, BarChart, StatCard, Tabs, ProgressBarWithMarker } from '../components/ui/charts';
 import {
   PlusCircle,
   Users,
@@ -50,21 +50,13 @@ export function DashboardPage() {
   const { data: helpStats } = trpc.stats.help.useQuery(undefined, { refetchInterval: 60000 });
   const { data: helpByPeriod } = trpc.stats.helpGivenByPeriod.useQuery(undefined, { refetchInterval: 60000 });
   const { data: networkCapabilities } = trpc.stats.networkCapabilities.useQuery(undefined, { refetchInterval: 60000 });
+  const { data: growthHistory } = trpc.connection.growthHistory.useQuery(undefined, { refetchInterval: 60000 });
   const generateInvite = trpc.invite.generate.useMutation();
 
   const totalReachable = networkStats?.totalReachable ?? 0;
   const byDepth = networkStats?.byDepth ?? {};
   const usersByDepth = (networkStats as any)?.usersByDepth ?? {};
   const growth = networkStats?.growth ?? { day: 0, week: 0, month: 0, year: 0 };
-
-  // Total max: 6 handshakes × 150 connections each (Dunbar number)
-  // 150^1 + 150^2 + ... + 150^6 ≈ 11.47 trillion
-  const MAX_DEPTH = 6;
-  const totalNetworkMax = Array.from({ length: MAX_DEPTH }, (_, i) => Math.pow(150, i + 1)).reduce((a, b) => a + b, 0);
-  // Use log scale for donut chart since linear is meaningless at this scale
-  const logPercent = totalReachable > 0
-    ? Math.round((Math.log10(totalReachable) / Math.log10(totalNetworkMax)) * 100)
-    : 0;
 
   // Filter emergency notifications (unread)
   const emergencyNotifications = notifications?.items?.filter(
@@ -223,14 +215,41 @@ export function DashboardPage() {
                   <p className="text-sm text-gray-500">{t('dashboard.totalNetwork')}</p>
                   <p className="text-4xl font-bold text-gray-900 dark:text-white">{totalReachable}</p>
                 </div>
-                <DonutChart
-                  value={logPercent}
-                  max={100}
-                  size={80}
-                  strokeWidth={8}
-                  color="#8b5cf6"
-                  label={`${logPercent}%`}
-                />
+                {/* Sparkline chart */}
+                {growthHistory && growthHistory.length > 1 && (() => {
+                  const values = growthHistory.map(p => p.count);
+                  const min = Math.min(...values);
+                  const max = Math.max(...values);
+                  const range = max - min || 1;
+                  const w = 120;
+                  const h = 40;
+                  const pad = 2;
+                  const points = values.map((v, i) => {
+                    const x = pad + (i / (values.length - 1)) * (w - pad * 2);
+                    const y = h - pad - ((v - min) / range) * (h - pad * 2);
+                    return `${x},${y}`;
+                  });
+                  const fillPoints = [`${pad},${h - pad}`, ...points, `${w - pad},${h - pad}`];
+                  return (
+                    <svg width={w} height={h} className="shrink-0">
+                      <defs>
+                        <linearGradient id="sparkFill" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="0%" stopColor="#22c55e" stopOpacity="0.3" />
+                          <stop offset="100%" stopColor="#22c55e" stopOpacity="0.05" />
+                        </linearGradient>
+                      </defs>
+                      <polygon points={fillPoints.join(' ')} fill="url(#sparkFill)" />
+                      <polyline
+                        points={points.join(' ')}
+                        fill="none"
+                        stroke="#22c55e"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  );
+                })()}
               </div>
               {/* Network growth inline */}
               <div className="flex items-center gap-1 pt-3 border-t border-gray-200/50 dark:border-gray-700/50">
