@@ -35,6 +35,7 @@ export const userRouter = router({
         select: {
           id: true, name: true, bio: true, phone: true,
           photoUrl: true, role: true, createdAt: true, deletedAt: true,
+          remainingBudget: true,
         },
       });
       if (!user) throw new TRPCError({ code: 'NOT_FOUND' });

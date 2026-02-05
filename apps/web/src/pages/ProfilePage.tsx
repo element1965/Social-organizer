@@ -8,7 +8,7 @@ import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { Avatar } from '../components/ui/avatar';
 import { Spinner } from '../components/ui/spinner';
-import { ArrowLeft, UserPlus, Ban, Pencil, X, ExternalLink, Users } from 'lucide-react';
+import { ArrowLeft, UserPlus, Ban, Pencil, X, ExternalLink, Users, Wallet } from 'lucide-react';
 import { HandshakePath } from '../components/HandshakePath';
 import { SocialIcon } from '../components/ui/social-icons';
 
@@ -99,11 +99,19 @@ export function ProfilePage() {
       )}
 
       {!isOwn && (
-        <div className="flex gap-2 justify-center">
-          <Button size="sm" variant="ghost" onClick={() => addIgnore.mutate({ userId: paramId! })} disabled={addIgnore.isPending}>
-            <Ban className="w-4 h-4 mr-1" /> {t('profile.ignore')}
-          </Button>
-        </div>
+        <Card>
+          <CardContent className="py-3">
+            <div className="flex items-center gap-3">
+              <Wallet className="w-5 h-5 text-green-500" />
+              <div>
+                <p className="text-xs text-gray-500">{t('profile.currentCapability')}</p>
+                <p className="text-lg font-bold text-green-600 dark:text-green-400">
+                  ${Math.round(user.remainingBudget ?? 0)}
+                </p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
       )}
 
       {stats && (
@@ -184,6 +192,14 @@ export function ProfilePage() {
       )}
 
       {isOwn && <Button variant="outline" className="w-full" onClick={() => navigate('/settings')}>{t('profile.editSettings')}</Button>}
+
+      {!isOwn && (
+        <div className="pt-4">
+          <Button size="sm" variant="ghost" className="w-full text-gray-400" onClick={() => addIgnore.mutate({ userId: paramId! })} disabled={addIgnore.isPending}>
+            <Ban className="w-4 h-4 mr-1" /> {t('profile.ignore')}
+          </Button>
+        </div>
+      )}
     </div>
   );
 }
