@@ -55,9 +55,14 @@ export function DashboardPage() {
   const usersByDepth = (networkStats as any)?.usersByDepth ?? {};
   const growth = networkStats?.growth ?? { day: 0, week: 0, month: 0, year: 0 };
 
-  // Calculate total max based on depths present (sum of 150^depth for each depth)
-  const maxDepth = Object.keys(byDepth).length > 0 ? Math.max(...Object.keys(byDepth).map(Number)) : 1;
-  const totalNetworkMax = Array.from({ length: maxDepth }, (_, i) => Math.pow(150, i + 1)).reduce((a, b) => a + b, 0);
+  // Total max: 6 handshakes × 150 connections each (Dunbar number)
+  // 150^1 + 150^2 + ... + 150^6 ≈ 11.47 trillion
+  const MAX_DEPTH = 6;
+  const totalNetworkMax = Array.from({ length: MAX_DEPTH }, (_, i) => Math.pow(150, i + 1)).reduce((a, b) => a + b, 0);
+  // Use log scale for donut chart since linear is meaningless at this scale
+  const logPercent = totalReachable > 0
+    ? Math.round((Math.log10(totalReachable) / Math.log10(totalNetworkMax)) * 100)
+    : 0;
 
   // Filter emergency notifications (unread)
   const emergencyNotifications = notifications?.items?.filter(
@@ -200,13 +205,12 @@ export function DashboardPage() {
                   <p className="text-4xl font-bold text-gray-900 dark:text-white">{totalReachable}</p>
                 </div>
                 <DonutChart
-                  value={totalReachable}
-                  max={totalNetworkMax}
+                  value={logPercent}
+                  max={100}
                   size={80}
                   strokeWidth={8}
                   color="#8b5cf6"
-                  marker={Math.floor(totalNetworkMax / 3)}
-                  label={`${totalNetworkMax > 0 ? Math.round((totalReachable / totalNetworkMax) * 100) : 0}%`}
+                  label={`${logPercent}%`}
                 />
               </div>
               {/* Network growth inline */}
