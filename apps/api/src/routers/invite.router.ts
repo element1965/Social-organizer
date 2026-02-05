@@ -16,6 +16,7 @@ export const inviteRouter = router({
   accept: protectedProcedure
     .input(z.object({ token: z.string() }))
     .mutation(async ({ ctx, input }) => {
+      console.log('[invite.accept] userId:', ctx.userId, 'token:', input.token.slice(0, 8) + '...');
       const invite = await ctx.db.inviteLink.findUnique({
         where: { token: input.token },
       });
@@ -54,6 +55,7 @@ export const inviteRouter = router({
         update: {},
       });
 
+      console.log('[invite.accept] connection created:', ctx.userId, '<->', invite.inviterId);
       return { success: true, connectedWith: invite.inviterId };
     }),
 

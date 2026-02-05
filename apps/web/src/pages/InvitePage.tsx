@@ -18,9 +18,7 @@ export function InvitePage() {
     { token: token! },
     { enabled: !!token },
   );
-  const accept = trpc.invite.accept.useMutation({
-    onSuccess: () => navigate('/'),
-  });
+  const accept = trpc.invite.accept.useMutation();
 
   if (isLoading) return <div className="flex justify-center py-12"><Spinner /></div>;
 
@@ -61,9 +59,12 @@ export function InvitePage() {
           <p className="text-sm text-gray-500 mb-6">{t('invite.title')}</p>
 
           {accept.isSuccess ? (
-            <div className="flex flex-col items-center gap-2 text-green-600">
-              <CheckCircle className="w-10 h-10" />
-              <p className="font-medium">{t('invite.success')}</p>
+            <div className="flex flex-col items-center gap-3">
+              <CheckCircle className="w-12 h-12 text-green-500" />
+              <p className="text-lg font-semibold text-green-600">{t('invite.success')}</p>
+              <Button className="w-full mt-2" size="lg" onClick={() => navigate('/network')}>
+                {t('network.title')}
+              </Button>
             </div>
           ) : !isAuthenticated ? (
             <Button
@@ -81,7 +82,11 @@ export function InvitePage() {
                 onClick={() => accept.mutate({ token: token! })}
                 disabled={accept.isPending}
               >
-                <UserPlus className="w-4 h-4 mr-2" /> {t('invite.accept')}
+                {accept.isPending ? (
+                  <Spinner />
+                ) : (
+                  <><UserPlus className="w-4 h-4 mr-2" /> {t('invite.accept')}</>
+                )}
               </Button>
               <Button
                 className="w-full"
@@ -93,7 +98,11 @@ export function InvitePage() {
               </Button>
             </div>
           )}
-          {accept.error && <p className="text-sm text-red-500 mt-2">{accept.error.message}</p>}
+          {accept.error && (
+            <div className="mt-4 p-3 bg-red-50 dark:bg-red-950 rounded-lg">
+              <p className="text-sm text-red-600 dark:text-red-400 font-medium">{accept.error.message}</p>
+            </div>
+          )}
         </CardContent>
       </Card>
     </div>
