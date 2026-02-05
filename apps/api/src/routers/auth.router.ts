@@ -8,6 +8,7 @@ import {
   verifyToken,
   generateLinkingCode,
 } from '../services/auth.service.js';
+import { validateTelegramInitData } from '../services/telegram.service.js';
 import { LINKING_CODE_TTL_MINUTES } from '@so/shared';
 
 export const authRouter = router({
@@ -64,6 +65,63 @@ export const authRouter = router({
       const refreshToken = createRefreshToken(user.id);
 
       return { accessToken, refreshToken, userId: user.id };
+    }),
+
+  loginWithTelegram: publicProcedure
+    .input(z.object({
+      initData: z.string().min(1),
+    }))
+    .mutation(async ({ ctx, input }) => {
+      const tgUser = validateTelegramInitData(input.initData);
+      if (!tgUser) {
+        throw new TRPCError({ code: 'UNAUTHORIZED', message: 'Invalid Telegram initData' });
+      }
+
+      const platformId = String(tgUser.id);
+
+      let platformAccount = await ctx.db.platformAccount.findUnique({
+        where: {
+          platform_platformId: {
+            platform: 'TELEGRAM',
+            platformId,
+          },
+        },
+        include: { user: true },
+      });
+
+      let userId: string;
+
+      if (platformAccount) {
+        userId = platformAccount.userId;
+        // Update user photo if changed
+        if (tgUser.photo_url && platformAccount.user.photoUrl !== tgUser.photo_url) {
+          await ctx.db.user.update({
+            where: { id: userId },
+            data: { photoUrl: tgUser.photo_url },
+          });
+        }
+      } else {
+        const name = [tgUser.first_name, tgUser.last_name].filter(Boolean).join(' ') || `User_${platformId}`;
+        const user = await ctx.db.user.create({
+          data: {
+            name,
+            photoUrl: tgUser.photo_url || null,
+            platformAccounts: {
+              create: {
+                platform: 'TELEGRAM',
+                platformId,
+                accessToken: input.initData,
+              },
+            },
+          },
+        });
+        userId = user.id;
+      }
+
+      const accessToken = createAccessToken(userId);
+      const refreshToken = createRefreshToken(userId);
+
+      return { accessToken, refreshToken, userId };
     }),
 
   loginWithPlatform: publicProcedure

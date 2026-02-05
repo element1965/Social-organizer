@@ -12,6 +12,7 @@ import { Spinner } from '../components/ui/spinner';
 import { Settings, Globe, Palette, Volume2, Mic, Link, UserX, Trash2, LogOut, Type, Users, DollarSign, Wallet } from 'lucide-react';
 import { cn } from '../lib/utils';
 import { languageNames } from '@so/i18n';
+import { isTelegramWebApp } from '@so/tg-adapter';
 import { Input } from '../components/ui/input';
 import { SocialIcon } from '../components/ui/social-icons';
 
@@ -130,6 +131,7 @@ export function SettingsPage() {
         </CardContent>
       </Card>
 
+      {!isTelegramWebApp() && (
       <Card><CardContent className="py-3">
         <div className="flex items-center gap-3 mb-2"><Palette className="w-5 h-5 text-gray-500" /><span className="text-sm font-medium text-gray-700 dark:text-gray-300">{t('settings.theme')}</span></div>
         <div className="grid grid-cols-3 gap-2">
@@ -140,6 +142,7 @@ export function SettingsPage() {
           ))}
         </div>
       </CardContent></Card>
+      )}
 
       <Card><CardContent className="py-3"><div className="flex items-center justify-between">
         <div className="flex items-center gap-3"><Volume2 className="w-5 h-5 text-gray-500" /><span className="text-sm font-medium text-gray-700 dark:text-gray-300">{t('settings.sound')}</span></div>

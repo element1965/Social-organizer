@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { isTelegramWebApp, getTGColorScheme } from '@so/tg-adapter';
 
 type ThemeMode = 'light' | 'dark' | 'system';
 
@@ -9,6 +10,12 @@ interface ThemeState {
 
 function applyTheme(mode: ThemeMode) {
   const root = document.documentElement;
+  // In Telegram, always follow Telegram's colorScheme
+  if (isTelegramWebApp()) {
+    const isDark = getTGColorScheme() === 'dark';
+    root.classList.toggle('dark', isDark);
+    return;
+  }
   if (mode === 'system') {
     const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
     root.classList.toggle('dark', isDark);

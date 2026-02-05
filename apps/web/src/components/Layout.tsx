@@ -1,9 +1,12 @@
+import { useEffect } from 'react';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Home, Bell, PlusCircle, Users, Settings } from 'lucide-react';
 import { trpc } from '../lib/trpc';
 import { cn } from '../lib/utils';
 import { ChatAssistant } from './ChatAssistant';
+import { isTelegramWebApp, getTGThemeParams, onThemeChanged } from '@so/tg-adapter';
+import { useTelegramHaptics } from '../hooks/useTelegram';
 
 const navItems = [
   { path: '/', icon: Home, labelKey: 'nav.home' },
@@ -13,6 +16,20 @@ const navItems = [
   { path: '/settings', icon: Settings, labelKey: 'nav.settings' },
 ];
 
+function injectTelegramCSSVars() {
+  if (!isTelegramWebApp()) return;
+  const params = getTGThemeParams();
+  const root = document.documentElement;
+  if (params.bgColor) root.style.setProperty('--tg-bg-color', params.bgColor);
+  if (params.textColor) root.style.setProperty('--tg-text-color', params.textColor);
+  if (params.hintColor) root.style.setProperty('--tg-hint-color', params.hintColor);
+  if (params.linkColor) root.style.setProperty('--tg-link-color', params.linkColor);
+  if (params.buttonColor) root.style.setProperty('--tg-button-color', params.buttonColor);
+  if (params.buttonTextColor) root.style.setProperty('--tg-button-text-color', params.buttonTextColor);
+  if (params.secondaryBgColor) root.style.setProperty('--tg-secondary-bg-color', params.secondaryBgColor);
+  if (params.headerBgColor) root.style.setProperty('--tg-header-bg-color', params.headerBgColor);
+}
+
 export function Layout() {
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -20,6 +37,13 @@ export function Layout() {
   const { data: unread } = trpc.notification.unreadCount.useQuery(undefined, {
     refetchInterval: 30000,
   });
+  const { selection } = useTelegramHaptics();
+
+  useEffect(() => {
+    if (!isTelegramWebApp()) return;
+    injectTelegramCSSVars();
+    return onThemeChanged(injectTelegramCSSVars);
+  }, []);
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-950 flex flex-col">
@@ -36,7 +60,10 @@ export function Layout() {
           return (
             <button
               key={item.path}
-              onClick={() => navigate(item.path)}
+              onClick={() => {
+                selection();
+                navigate(item.path);
+              }}
               className={cn(
                 'flex flex-col items-center justify-center w-full h-full relative',
                 active ? 'text-blue-600 dark:text-blue-400' : 'text-gray-500 dark:text-gray-400'

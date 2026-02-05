@@ -2,6 +2,18 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Telegram Mini App CSS custom properties */
+:root {
+  --tg-bg-color: #ffffff;
+  --tg-text-color: #000000;
+  --tg-hint-color: #999999;
+  --tg-link-color: #2481cc;
+  --tg-button-color: #2481cc;
+  --tg-button-text-color: #ffffff;
+  --tg-secondary-bg-color: #efeff3;
+  --tg-header-bg-color: #ffffff;
+}
+
 /* Dark scrollbar for dropdowns */
 .scrollbar-dark::-webkit-scrollbar {
   width: 6px;

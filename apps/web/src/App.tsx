@@ -3,6 +3,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useState } from 'react';
 import { trpc, getTrpcClient } from './lib/trpc';
 import { Layout } from './components/Layout';
+import { TelegramBootstrap } from './components/TelegramBootstrap';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { LoginPage } from './pages/LoginPage';
 import { LandingPage } from './pages/LandingPage';
@@ -26,6 +27,7 @@ export function App() {
     <trpc.Provider client={trpcClient} queryClient={queryClient}>
       <QueryClientProvider client={queryClient}>
         <BrowserRouter>
+          <TelegramBootstrap>
           <Routes>
             <Route path="/welcome" element={<LandingPage />} />
             <Route path="/login" element={<LoginPage />} />
@@ -41,6 +43,7 @@ export function App() {
               <Route path="/settings" element={<SettingsPage />} />
             </Route>
           </Routes>
+          </TelegramBootstrap>
         </BrowserRouter>
       </QueryClientProvider>
     </trpc.Provider>
