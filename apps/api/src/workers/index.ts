@@ -5,6 +5,7 @@ import { processCycleClose } from './cycle-close.worker.js';
 import { processSpecialNotify } from './special-notify.worker.js';
 import { processExpireNotifications } from './expire-notifications.worker.js';
 import { processCheckBlock } from './check-block.worker.js';
+import { processTgBroadcast, type TgBroadcastMessage } from './tg-broadcast.worker.js';
 
 let connection: IORedis | null = null;
 
@@ -50,6 +51,10 @@ export function setupQueues(): void {
   new Queue('collection:check-block', { connection: redis });
   new Worker('collection:check-block', processCheckBlock, { connection: redis });
 
+  // --- Telegram broadcast: вызывается по событию, без расписания ---
+  new Queue('telegram:broadcast', { connection: redis });
+  new Worker('telegram:broadcast', processTgBroadcast, { connection: redis });
+
   console.log('BullMQ: all queues and workers initialized');
 }
 
@@ -58,4 +63,12 @@ export async function enqueueCheckBlock(collectionId: string): Promise<void> {
   const redis = getRedisConnection();
   const queue = new Queue('collection:check-block', { connection: redis });
   await queue.add('check-block', { collectionId });
+}
+
+/** Enqueue Telegram broadcast messages */
+export async function enqueueTgBroadcast(messages: TgBroadcastMessage[]): Promise<void> {
+  if (messages.length === 0) return;
+  const redis = getRedisConnection();
+  const queue = new Queue('telegram:broadcast', { connection: redis });
+  await queue.add('tg-broadcast', { messages });
 }

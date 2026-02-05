@@ -1,6 +1,9 @@
 import { z } from 'zod';
 import OpenAI from 'openai';
 import { router, protectedProcedure } from '../trpc.js';
+import { GLOSSARY } from '../knowledge/glossary.js';
+import { SCREEN_GUIDE } from '../knowledge/screens.js';
+import { FAQ } from '../knowledge/faq.js';
 
 // Grok API is compatible with OpenAI SDK — lazy init to avoid crash if key is missing at startup
 let grok: OpenAI | null = null;
@@ -25,6 +28,20 @@ function getOpenAITts(): OpenAI {
   return openaiTts;
 }
 
+/** Send user feedback to Telegram group (fire-and-forget) */
+async function sendFeedbackToTelegram(userMessage: string, userId: string): Promise<void> {
+  const botToken = process.env.TELEGRAM_BOT_TOKEN;
+  const chatId = process.env.FEEDBACK_CHAT_ID;
+  if (!botToken || !chatId) return;
+
+  const text = `💬 Feedback from user ${userId}:\n\n${userMessage}`;
+  await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ chat_id: chatId, text, parse_mode: 'HTML' }),
+  });
+}
+
 function getSystemPrompt(language: string) {
   return `You are a helpful assistant for the Social Organizer.
 
@@ -33,42 +50,19 @@ STRICT RULES:
 2. If asked about ANYTHING else (weather, news, coding, math, jokes, etc.) — politely decline and redirect to organizer topics
 3. Keep responses concise (2-4 sentences)
 4. Always respond in the user's language: ${language}
+5. If the user's message is a wish, suggestion, feature request, or feedback about the app — start your response EXACTLY with [FEEDBACK] tag (this tag will be removed before showing to user). Then respond warmly, thank them for the feedback, and say it has been forwarded to the team.
 
 ---
 
-TERMINOLOGY:
+${GLOSSARY}
 
-HANDSHAKE
-Mutual confirmation of a meaningful connection between two people. Both must confirm. Limit: 150 connections per person (Dunbar's number — the cognitive limit of stable relationships humans can maintain).
+---
 
-HANDSHAKE CHAIN
-Path of connections between users through mutual acquaintances. Example: you → friend → their friend = 2 handshakes. Based on six degrees of separation theory. Notifications and visibility propagate through these chains.
+${SCREEN_GUIDE}
 
-INTENTION
-A recorded voluntary commitment to support another person. Not a debt, loan, or legal obligation. The actual transfer of funds happens outside the organizer — the organizer only records the intention and its fulfillment. Visible to the network as a sign of willingness to help.
+---
 
-SUPPORT SIGNAL (COLLECTION)
-A request for help when someone needs support. Two types:
-- Emergency: urgent need, notifications sent immediately through the network (up to 3 handshake levels)
-- Regular: 28-day cycles, auto-closes and can be renewed
-
-MONTHLY BUDGET
-Optional personal limit a user sets for their monthly support activity. Stored in USD equivalent. Decreases when intentions are fulfilled. This is not a pooled fund or shared account — it reflects individual readiness to help.
-
-CURRENT CAPABILITIES
-Aggregated sum of remaining monthly budgets across the user's network (up to 3 handshake levels). An indicator of collective readiness to help — not an actual account or guaranteed funds.
-
-NETWORK
-Your connections and their connections, up to several handshake levels deep. Notifications propagate through this network based on handshake chains.
-
-REPUTATION
-Emerges from fulfilled intentions visible in the user's profile. Not a score, rating, or algorithm — simply the observable history of recorded actions and their outcomes.
-
-PROFILE
-Shows user's activity: confirmed handshakes, participation in collections, fulfilled intentions. This history forms the user's reputation.
-
-IGNORE
-One-sided communication block. Stops notifications from a specific person but keeps the handshake intact. Reversible anytime.
+${FAQ}
 
 ---
 
@@ -92,13 +86,15 @@ export const chatRouter = router({
       message: z.string().min(1).max(1000),
       language: z.string().default('en'),
     }))
-    .mutation(async ({ input }) => {
+    .mutation(async ({ ctx, input }) => {
       const { message, language } = input;
 
       const chatMessages: { role: 'system' | 'user'; content: string }[] = [
         { role: 'system', content: getSystemPrompt(language) },
         { role: 'user', content: message },
       ];
+
+      let responseText: string | null = null;
 
       // Try Grok first, fall back to OpenAI if it fails (e.g. no credits)
       try {
@@ -107,28 +103,42 @@ export const chatRouter = router({
           max_tokens: 300,
           messages: chatMessages,
         });
-        const text = response.choices[0]?.message?.content;
-        if (text) return { response: text };
+        responseText = response.choices[0]?.message?.content || null;
       } catch (error) {
         console.error('Grok API error, falling back to OpenAI:', error);
       }
 
-      try {
-        const response = await getOpenAITts().chat.completions.create({
-          model: 'gpt-4o-mini',
-          max_tokens: 300,
-          messages: chatMessages,
-        });
-        const text = response.choices[0]?.message?.content;
-        return { response: text || 'Sorry, I could not generate a response.' };
-      } catch (error) {
-        console.error('OpenAI fallback error:', error);
-        return {
-          response: language.startsWith('ru')
-            ? 'Извините, произошла ошибка. Попробуйте позже.'
-            : 'Sorry, an error occurred. Please try again later.',
-        };
+      if (!responseText) {
+        try {
+          const response = await getOpenAITts().chat.completions.create({
+            model: 'gpt-4o-mini',
+            max_tokens: 300,
+            messages: chatMessages,
+          });
+          responseText = response.choices[0]?.message?.content || null;
+        } catch (error) {
+          console.error('OpenAI fallback error:', error);
+          return {
+            response: language.startsWith('ru')
+              ? 'Извините, произошла ошибка. Попробуйте позже.'
+              : 'Sorry, an error occurred. Please try again later.',
+          };
+        }
       }
+
+      if (!responseText) {
+        return { response: 'Sorry, I could not generate a response.' };
+      }
+
+      // Detect [FEEDBACK] tag — forward to TG group and strip the tag
+      if (responseText.startsWith('[FEEDBACK]')) {
+        responseText = responseText.slice('[FEEDBACK]'.length).trimStart();
+        sendFeedbackToTelegram(message, ctx.userId!).catch((err) =>
+          console.error('Failed to send feedback to TG:', err),
+        );
+      }
+
+      return { response: responseText };
     }),
 
   speak: protectedProcedure

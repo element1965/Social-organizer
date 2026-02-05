@@ -108,6 +108,7 @@ DATABASE_URL=postgresql://postgres:1111@localhost:5434/social_organizer?schema=p
 REDIS_URL=redis://localhost:6379
 JWT_SECRET=your-secret-key
 TELEGRAM_BOT_TOKEN=your-bot-token    # Required for Telegram Mini App auth
+FEEDBACK_CHAT_ID=-100xxxxxxxxxx      # Telegram group chat ID for user feedback
 ```
 
 ## API (tRPC Endpoints)
@@ -129,7 +130,8 @@ TELEGRAM_BOT_TOKEN=your-bot-token    # Required for Telegram Mini App auth
 
 - **Auth** — JWT (HS256), 30 min access / 30 days refresh, 6-digit linking codes, Telegram initData HMAC-SHA256 validation
 - **BFS** — Recursive CTE in PostgreSQL for graph traversal, path finding, and notification distribution
-- **Notifications** — BFS distribution with 1:1 ratio (amount = notification count), ignore list, and handshake path
+- **Notifications** — BFS distribution with 1:1 ratio (amount = notification count), ignore list, handshake path, and Telegram bot notifications
+- **Telegram Bot** — Collection notifications via Bot API with rate-limited broadcast (25 msg/sec batches via BullMQ)
 - **Currency** — Real-time exchange rates with Redis cache (1h TTL), automatic USD conversion for all amounts
 - **Geo** — IP-based country detection for currency auto-selection (ip-api.com)
 
@@ -142,6 +144,7 @@ TELEGRAM_BOT_TOKEN=your-bot-token    # Required for Telegram Mini App auth
 | `special-notify` | Notifications for Author/Developer collections (after first intention) | Every hour |
 | `expire-notifications` | Expired notifications (24h) → EXPIRED | Every hour |
 | `check-block` | Check intention sum → BLOCKED | On event |
+| `tg-broadcast` | Send Telegram bot messages in rate-limited batches (25/sec) | On event |
 
 ## Deployment
 
@@ -232,7 +235,9 @@ Mock data (`apps/web/src/lib/demoData.ts`):
 - **Onboarding** — auto-shown for new users, completable flag in database
 - **Currency preference** — users can set preferred currency in settings; auto-detected by IP on first visit
 - **Monthly support budget** — users can set how much they're willing to contribute monthly; displayed as "Current Capabilities" network-wide sum on dashboard
-- **AI Chat Assistant** — floating button with glossary-based assistant; supports text and voice input with auto-speak for voice queries
+- **AI Chat Assistant** — floating button with knowledge-base-powered assistant (glossary, screens guide, FAQ); supports text and voice input with auto-speak for voice queries
+- **Feedback to Telegram** — user feedback/suggestions from chat assistant are auto-forwarded to a Telegram group
+- **Telegram Bot Notifications** — new collection notifications sent to users' Telegram via bot with rate-limited broadcast (BullMQ worker, 25 msg/sec)
 
 ## Terminology (Glossary)
 
