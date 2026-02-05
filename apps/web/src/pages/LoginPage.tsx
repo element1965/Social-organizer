@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../hooks/useAuth';
 import { trpc } from '../lib/trpc';
@@ -10,7 +10,18 @@ import { Mail, Eye, EyeOff } from 'lucide-react';
 export function LoginPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const redirect = searchParams.get('redirect');
   const login = useAuth((s) => s.login);
+
+  const afterLogin = (defaultPath: string) => {
+    if (redirect) {
+      // Full page reload to reinitialize trpcClient (important after demo mode)
+      window.location.href = redirect;
+    } else {
+      navigate(defaultPath);
+    }
+  };
 
   const [loading, setLoading] = useState(false);
   const [isRegister, setIsRegister] = useState(false);
@@ -23,14 +34,14 @@ export function LoginPage() {
   const loginMutation = trpc.auth.loginWithPlatform.useMutation({
     onSuccess: (data) => {
       login(data.accessToken, data.refreshToken, data.userId);
-      navigate('/onboarding');
+      afterLogin('/onboarding');
     },
   });
 
   const registerMutation = trpc.auth.registerWithEmail.useMutation({
     onSuccess: (data) => {
       login(data.accessToken, data.refreshToken, data.userId);
-      navigate('/onboarding');
+      afterLogin('/onboarding');
     },
     onError: (err) => {
       setError(err.message === 'Email already registered' ? t('auth.emailExists') : err.message);
@@ -40,7 +51,7 @@ export function LoginPage() {
   const loginEmailMutation = trpc.auth.loginWithEmail.useMutation({
     onSuccess: (data) => {
       login(data.accessToken, data.refreshToken, data.userId);
-      navigate('/');
+      afterLogin('/');
     },
     onError: () => {
       setError(t('auth.invalidCredentials'));

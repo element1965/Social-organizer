@@ -13,6 +13,8 @@ export function InvitePage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const isAuthenticated = useAuth((s) => s.isAuthenticated);
+  const isDemo = localStorage.getItem('accessToken') === 'demo-token';
+  const isRealUser = isAuthenticated && !isDemo;
 
   const { data: invite, isLoading, error } = trpc.invite.getByToken.useQuery(
     { token: token! },
@@ -66,11 +68,19 @@ export function InvitePage() {
                 {t('network.title')}
               </Button>
             </div>
-          ) : !isAuthenticated ? (
+          ) : !isRealUser ? (
             <Button
               className="w-full"
               size="lg"
-              onClick={() => navigate(`/login?redirect=/invite/${token}`)}
+              onClick={() => {
+                // Clear demo tokens so trpcClient reinitializes with httpBatchLink after login
+                if (isDemo) {
+                  localStorage.removeItem('accessToken');
+                  localStorage.removeItem('refreshToken');
+                  localStorage.removeItem('userId');
+                }
+                window.location.href = `/login?redirect=/invite/${token}`;
+              }}
             >
               <LogIn className="w-4 h-4 mr-2" /> {t('invite.loginToAccept')}
             </Button>
