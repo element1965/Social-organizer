@@ -10,7 +10,10 @@ export function ProtectedRoute({ children }: { children: React.ReactNode }) {
   });
 
   if (!isAuthenticated) {
-    return <Navigate to="/welcome" replace />;
+    // Preserve current path as redirect so user returns after login
+    const redirectPath = location.pathname + location.search;
+    const target = redirectPath !== '/' ? `/welcome?redirect=${encodeURIComponent(redirectPath)}` : '/welcome';
+    return <Navigate to={target} replace />;
   }
 
   // Wait for user data to load
