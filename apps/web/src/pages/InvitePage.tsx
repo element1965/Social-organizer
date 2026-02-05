@@ -79,7 +79,7 @@ export function InvitePage() {
                   localStorage.removeItem('refreshToken');
                   localStorage.removeItem('userId');
                 }
-                window.location.href = `/login?redirect=/invite/${token}`;
+                window.location.href = `/welcome?redirect=/invite/${token}`;
               }}
             >
               <LogIn className="w-4 h-4 mr-2" /> {t('invite.loginToAccept')}

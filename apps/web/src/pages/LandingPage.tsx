@@ -1,5 +1,5 @@
 import { lazy, Suspense, useState, useRef, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Handshake, Heart, Eye, Users, Cog, Code, Globe, ChevronDown, ChevronUp, ArrowRight, Languages, Github, ExternalLink } from 'lucide-react';
 import { languageNames } from '@so/i18n';
@@ -54,6 +54,9 @@ function LanguageSwitcher() {
 export function LandingPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const redirect = searchParams.get('redirect');
+  const loginPath = redirect ? `/login?redirect=${encodeURIComponent(redirect)}` : '/login';
   const scrollProgress = useScrollProgress();
   const [scrollY, setScrollY] = useState(0);
 
@@ -122,7 +125,7 @@ export function LandingPage() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4">
             <button
-              onClick={() => navigate('/login')}
+              onClick={() => navigate(loginPath)}
               className="px-8 py-3 bg-teal-500 hover:bg-teal-400 text-white font-semibold rounded-xl transition-colors text-lg"
             >
               {t('landing.heroStart')}
@@ -325,7 +328,7 @@ export function LandingPage() {
             {t('landing.ctaTitle')}
           </h2>
           <button
-            onClick={() => navigate('/login')}
+            onClick={() => navigate(loginPath)}
             className="px-10 py-4 bg-teal-500 hover:bg-teal-400 text-white font-semibold rounded-xl transition-colors text-lg"
           >
             {t('landing.ctaButton')}
