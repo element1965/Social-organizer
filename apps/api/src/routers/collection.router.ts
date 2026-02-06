@@ -130,6 +130,12 @@ export const collectionRouter = router({
         data: { status: 'CLOSED', closedAt: new Date() },
       });
 
+      // Mark all NEW_COLLECTION and RE_NOTIFY notifications as read so they disappear from dashboards
+      await ctx.db.notification.updateMany({
+        where: { collectionId: input.id, type: { in: ['NEW_COLLECTION', 'RE_NOTIFY'] }, status: 'UNREAD' },
+        data: { status: 'READ' },
+      });
+
       // Send COLLECTION_CLOSED to all previously notified
       const notifiedUsers = await ctx.db.notification.findMany({
         where: { collectionId: input.id },
@@ -159,6 +165,11 @@ export const collectionRouter = router({
       if (collection.status !== 'ACTIVE') {
         throw new TRPCError({ code: 'BAD_REQUEST', message: 'Can only cancel active collections' });
       }
+      // Mark all NEW_COLLECTION and RE_NOTIFY notifications as read
+      await ctx.db.notification.updateMany({
+        where: { collectionId: input.id, type: { in: ['NEW_COLLECTION', 'RE_NOTIFY'] }, status: 'UNREAD' },
+        data: { status: 'READ' },
+      });
       return ctx.db.collection.update({
         where: { id: input.id }, data: { status: 'CANCELLED' },
       });
