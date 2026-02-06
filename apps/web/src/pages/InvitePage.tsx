@@ -8,6 +8,7 @@ import { Button } from '../components/ui/button';
 import { Avatar } from '../components/ui/avatar';
 import { Spinner } from '../components/ui/spinner';
 import { UserPlus, CheckCircle, LogIn } from 'lucide-react';
+import { Logo } from '../components/Logo';
 
 export function InvitePage() {
   const { token } = useParams<{ token: string }>();
@@ -62,6 +63,7 @@ export function InvitePage() {
     <div className="min-h-screen flex items-center justify-center px-6">
       <Card className="w-full max-w-sm">
         <CardContent className="py-8 text-center">
+          <Logo size={60} className="text-gray-900 dark:text-teal-400 mx-auto mb-4" />
           <Avatar src={invite.inviter.photoUrl} name={invite.inviter.name} size="lg" className="mx-auto mb-4" />
           <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-2">
             {t('invite.from', { name: invite.inviter.name })}
