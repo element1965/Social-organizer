@@ -183,6 +183,7 @@
     "addConnection": "Tambah Koneksi",
     "connectionLimit": "Batas: {{current}}/{{max}}",
     "invite": "Undang",
+    "inviteHint": "Tautan ini sekali pakai. Untuk mengundang orang lain, ketuk + lagi.",
     "qrCode": "Kode QR",
     "empty": "Tidak ada koneksi",
     "emptyHint": "Undang orang pertamamu",

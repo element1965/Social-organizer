@@ -183,6 +183,7 @@
     "addConnection": "Lagg till kontakt",
     "connectionLimit": "Grans: {{current}}/{{max}}",
     "invite": "Bjud in",
+    "inviteHint": "Denna länk är engångs. För att bjuda in en annan person, tryck på + igen.",
     "qrCode": "QR-kod",
     "empty": "Inga kontakter",
     "emptyHint": "Bjud in din forsta person",

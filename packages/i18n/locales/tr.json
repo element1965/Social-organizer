@@ -183,6 +183,7 @@
     "addConnection": "Bağlantı Ekle",
     "connectionLimit": "Limit: {{current}}/{{max}}",
     "invite": "Davet Et",
+    "inviteHint": "Bu bağlantı tek kullanımlıktır. Başka birini davet etmek için tekrar + düğmesine dokunun.",
     "qrCode": "QR Kodu",
     "empty": "Bağlantı yok",
     "emptyHint": "İlk kişinizi davet edin",

@@ -183,6 +183,7 @@
     "addConnection": "Aggiungi connessione",
     "connectionLimit": "Limite: {{current}}/{{max}}",
     "invite": "Invita",
+    "inviteHint": "Questo link è monouso. Per invitare un'altra persona, premi di nuovo +.",
     "qrCode": "Codice QR",
     "empty": "Nessuna connessione",
     "emptyHint": "Invita la tua prima persona",

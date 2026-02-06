@@ -183,6 +183,7 @@
     "addConnection": "إضافة اتصال",
     "connectionLimit": "الحد: {{current}}/{{max}}",
     "invite": "دعوة",
+    "inviteHint": "هذا الرابط للاستخدام مرة واحدة. لدعوة شخص آخر، اضغط على + مرة أخرى.",
     "qrCode": "رمز QR",
     "empty": "لا توجد اتصالات",
     "emptyHint": "ادعُ أول شخص",

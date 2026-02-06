@@ -183,6 +183,7 @@
     "addConnection": "つながりを追加",
     "connectionLimit": "上限：{{current}}/{{max}}",
     "invite": "招待",
+    "inviteHint": "このリンクは1回限りです。別の人を招待するには、もう一度 + をタップしてください。",
     "qrCode": "QRコード",
     "empty": "つながりはありません",
     "emptyHint": "最初の人を招待しましょう",

@@ -183,6 +183,7 @@
     "addConnection": "Lisää yhteys",
     "connectionLimit": "Raja: {{current}}/{{max}}",
     "invite": "Kutsu",
+    "inviteHint": "Tämä linkki on kertakäyttöinen. Kutsuaksesi toisen henkilön, paina + uudelleen.",
     "qrCode": "QR-koodi",
     "empty": "Ei yhteyksiä",
     "emptyHint": "Kutsu ensimmäinen henkilösi",
