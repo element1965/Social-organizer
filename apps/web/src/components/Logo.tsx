@@ -10,7 +10,7 @@ export function Logo({ size = 80, className = '' }: LogoProps) {
       className={className}
       style={{
         width: size,
-        height: size * 0.75,
+        height: size * 0.71,
         backgroundColor: 'currentColor',
         WebkitMaskImage: 'url(/logo.png)',
         WebkitMaskSize: 'contain',
