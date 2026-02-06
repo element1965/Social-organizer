@@ -184,6 +184,7 @@
     "connectionLimit": "Limit: {{current}}/{{max}}",
     "invite": "Davet Et",
     "inviteHint": "Bu bağlantı tek kullanımlıktır. Başka birini davet etmek için tekrar + düğmesine dokunun.",
+    "inviteCopied": "Kopyalandı! Bir sonraki davet için bağlantı güncellendi.",
     "qrCode": "QR Kodu",
     "empty": "Bağlantı yok",
     "emptyHint": "İlk kişinizi davet edin",

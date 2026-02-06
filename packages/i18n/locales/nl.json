@@ -184,6 +184,7 @@
     "connectionLimit": "Limiet: {{current}}/{{max}}",
     "invite": "Uitnodigen",
     "inviteHint": "Deze link is eenmalig. Om nog iemand uit te nodigen, tik opnieuw op +.",
+    "inviteCopied": "Gekopieerd! Link bijgewerkt voor de volgende uitnodiging.",
     "qrCode": "QR-code",
     "empty": "Geen connecties",
     "emptyHint": "Nodig je eerste persoon uit",

@@ -184,6 +184,7 @@
     "connectionLimit": "Limita: {{current}}/{{max}}",
     "invite": "Invita",
     "inviteHint": "Acest link este de unică folosință. Pentru a invita altă persoană, apăsați din nou pe +.",
+    "inviteCopied": "Copiat! Link actualizat pentru următoarea invitație.",
     "qrCode": "Cod QR",
     "empty": "Nicio conexiune",
     "emptyHint": "Invita prima ta persoana",

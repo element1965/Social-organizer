@@ -184,6 +184,7 @@
     "connectionLimit": "Limit: {{current}}/{{max}}",
     "invite": "Einladen",
     "inviteHint": "Dieser Link ist einmalig. Um eine weitere Person einzuladen, tippen Sie erneut auf +.",
+    "inviteCopied": "Kopiert! Link für die nächste Einladung aktualisiert.",
     "qrCode": "QR-Code",
     "empty": "Keine Verbindungen",
     "emptyHint": "Lade deine erste Person ein",

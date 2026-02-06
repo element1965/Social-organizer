@@ -184,6 +184,7 @@
     "connectionLimit": "上限：{{current}}/{{max}}",
     "invite": "邀请",
     "inviteHint": "此链接为一次性使用。要邀请其他人，请再次点击 +。",
+    "inviteCopied": "已复制！链接已更新，可用于下次邀请。",
     "qrCode": "二维码",
     "empty": "暂无连接",
     "emptyHint": "邀请你的第一个联系人",

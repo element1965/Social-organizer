@@ -184,6 +184,7 @@
     "connectionLimit": "Limit: {{current}}/{{max}}",
     "invite": "Pozvat",
     "inviteHint": "Tento odkaz je jednorázový. Pro pozvání další osoby klepněte znovu na +.",
+    "inviteCopied": "Zkopírováno! Odkaz aktualizován pro další pozvánku.",
     "qrCode": "QR kód",
     "empty": "Žádná spojení",
     "emptyHint": "Pozvěte svou první osobu",
