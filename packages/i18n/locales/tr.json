@@ -203,6 +203,7 @@
     "via": "üzerinden",
     "view": "Aç",
     "dismiss": "Kapat",
+    "dismissAll": "Tümünü kapat",
     "loadMore": "Daha fazla yükle",
     "expiresIn": "{{hours}} sa {{minutes}} dk içinde sona erer"
   },

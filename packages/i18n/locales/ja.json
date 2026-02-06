@@ -203,6 +203,7 @@
     "via": "経由",
     "view": "開く",
     "dismiss": "非表示",
+    "dismissAll": "すべて閉じる",
     "loadMore": "もっと見る",
     "expiresIn": "{{hours}}時間{{minutes}}分で期限切れ"
   },

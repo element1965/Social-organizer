@@ -203,6 +203,7 @@
     "via": "prin",
     "view": "Deschide",
     "dismiss": "Respinge",
+    "dismissAll": "Închide toate",
     "loadMore": "Incarca mai multe",
     "expiresIn": "Expira in {{hours}}h {{minutes}}m"
   },

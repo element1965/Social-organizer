@@ -203,6 +203,7 @@
     "via": "عبر",
     "view": "فتح",
     "dismiss": "تجاهل",
+    "dismissAll": "إغلاق الكل",
     "loadMore": "تحميل المزيد",
     "expiresIn": "ينتهي خلال {{hours}} س {{minutes}} د"
   },

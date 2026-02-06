@@ -203,6 +203,7 @@
     "via": "경유",
     "view": "열기",
     "dismiss": "무시",
+    "dismissAll": "모두 닫기",
     "loadMore": "더 보기",
     "expiresIn": "{{hours}}시간 {{minutes}}분 후 만료"
   },

@@ -203,6 +203,7 @@
     "via": "преко",
     "view": "Отвори",
     "dismiss": "Одбаци",
+    "dismissAll": "Затвори све",
     "loadMore": "Учитај још",
     "expiresIn": "Истиче за {{hours}}ч {{minutes}}мин"
   },

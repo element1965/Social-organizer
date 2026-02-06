@@ -203,6 +203,7 @@
     "via": "a través de",
     "view": "Abrir",
     "dismiss": "Descartar",
+    "dismissAll": "Cerrar todas",
     "loadMore": "Cargar más",
     "expiresIn": "Expira en {{hours}}h {{minutes}}m"
   },

@@ -203,6 +203,7 @@
     "via": "kautta",
     "view": "Avaa",
     "dismiss": "Ohita",
+    "dismissAll": "Sulje kaikki",
     "loadMore": "Lataa lisää",
     "expiresIn": "Vanhenee {{hours}}t {{minutes}}min kuluttua"
   },

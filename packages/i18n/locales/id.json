@@ -203,6 +203,7 @@
     "via": "melalui",
     "view": "Buka",
     "dismiss": "Abaikan",
+    "dismissAll": "Tutup semua",
     "loadMore": "Muat lebih banyak",
     "expiresIn": "Kedaluwarsa dalam {{hours}}j {{minutes}}m"
   },

@@ -203,6 +203,7 @@
     "via": "qua",
     "view": "Mở",
     "dismiss": "Bỏ qua",
+    "dismissAll": "Đóng tất cả",
     "loadMore": "Tải thêm",
     "expiresIn": "Hết hạn sau {{hours}}g {{minutes}}p"
   },
