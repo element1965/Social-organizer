@@ -8,7 +8,16 @@ export interface TgReplyMarkup {
 interface TgApiResponse {
   ok: boolean;
   description?: string;
+  result?: unknown;
   parameters?: { retry_after?: number };
+}
+
+interface TgUpdate {
+  message?: {
+    chat: { id: number };
+    text?: string;
+    from?: { first_name?: string };
+  };
 }
 
 /** Low-level wrapper: send a message via Telegram Bot API with 429 retry */
@@ -80,4 +89,68 @@ export async function sendCollectionNotificationTg(
   };
 
   return sendTelegramMessage(telegramId, text, replyMarkup);
+}
+
+/** Handle incoming Telegram bot update (webhook) */
+export async function handleTelegramUpdate(update: TgUpdate): Promise<void> {
+  const msg = update.message;
+  if (!msg?.text) return;
+
+  const chatId = msg.chat.id;
+  const text = msg.text.trim();
+
+  // Handle /start with invite deep link: /start invite_TOKEN
+  if (text.startsWith('/start')) {
+    const parts = text.split(/\s+/);
+    const param = parts[1]; // e.g. "invite_abc123..."
+
+    if (param?.startsWith('invite_')) {
+      const inviteToken = param.slice('invite_'.length);
+      const webAppUrl = `${WEB_APP_URL}/invite/${inviteToken}`;
+      const name = msg.from?.first_name || '';
+
+      console.log(`[TG Bot] /start invite from chat ${chatId}, token: ${inviteToken.slice(0, 8)}...`);
+
+      await sendTelegramMessage(
+        chatId,
+        `👋 ${name ? name + ', w' : 'W'}elcome to <b>Social Organizer</b>!\n\nYou've been invited to join a trusted support network.\nTap the button below to accept the invitation.`,
+        {
+          inline_keyboard: [[{ text: '🤝 Accept Invitation', web_app: { url: webAppUrl } }]],
+        },
+      );
+      return;
+    }
+
+    // Plain /start — open the app
+    await sendTelegramMessage(
+      chatId,
+      `👋 Welcome to <b>Social Organizer</b>!\n\nA platform for mutual support through trusted networks.`,
+      {
+        inline_keyboard: [[{ text: '📱 Open App', web_app: { url: WEB_APP_URL } }]],
+      },
+    );
+    return;
+  }
+}
+
+/** Register webhook URL with Telegram Bot API */
+export async function setTelegramWebhook(webhookUrl: string): Promise<boolean> {
+  if (!TELEGRAM_BOT_TOKEN) {
+    console.warn('[TG Bot] No TELEGRAM_BOT_TOKEN, skipping webhook setup');
+    return false;
+  }
+
+  const res = await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/setWebhook`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ url: webhookUrl, allowed_updates: ['message'] }),
+  });
+
+  const json = (await res.json()) as TgApiResponse;
+  if (json.ok) {
+    console.log(`[TG Bot] Webhook set to ${webhookUrl}`);
+  } else {
+    console.error(`[TG Bot] setWebhook failed: ${json.description}`);
+  }
+  return json.ok;
 }
