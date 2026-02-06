@@ -75,7 +75,8 @@
     "notifications": "การแจ้งเตือน",
     "create": "สร้าง",
     "network": "เครือข่าย",
-    "settings": "ตั้งค่า"
+    "settings": "ตั้งค่า",
+    "sos": "SOS"
   },
   "dashboard": {
     "title": "แดชบอร์ด",

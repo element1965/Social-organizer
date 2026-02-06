@@ -75,7 +75,8 @@
     "notifications": "알림",
     "create": "만들기",
     "network": "네트워크",
-    "settings": "설정"
+    "settings": "설정",
+    "sos": "SOS"
   },
   "dashboard": {
     "title": "대시보드",

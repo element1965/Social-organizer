@@ -75,7 +75,8 @@
     "notifications": "Alertas",
     "create": "Criar",
     "network": "Rede",
-    "settings": "Configurações"
+    "settings": "Configurações",
+    "sos": "SOS"
   },
   "dashboard": {
     "title": "Painel",

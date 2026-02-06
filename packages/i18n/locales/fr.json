@@ -75,7 +75,8 @@
     "notifications": "Alertes",
     "create": "Créer",
     "network": "Réseau",
-    "settings": "Paramètres"
+    "settings": "Paramètres",
+    "sos": "SOS"
   },
   "dashboard": {
     "title": "Tableau de bord",

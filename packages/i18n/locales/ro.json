@@ -75,7 +75,8 @@
     "notifications": "Alerte",
     "create": "Creeaza",
     "network": "Retea",
-    "settings": "Setari"
+    "settings": "Setari",
+    "sos": "SOS"
   },
   "dashboard": {
     "title": "Panou",

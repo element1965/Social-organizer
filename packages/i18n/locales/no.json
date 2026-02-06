@@ -75,7 +75,8 @@
     "notifications": "Varsler",
     "create": "Opprett",
     "network": "Nettverk",
-    "settings": "Innstillinger"
+    "settings": "Innstillinger",
+    "sos": "SOS"
   },
   "dashboard": {
     "title": "Oversikt",

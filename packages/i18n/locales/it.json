@@ -75,7 +75,8 @@
     "notifications": "Avvisi",
     "create": "Crea",
     "network": "Rete",
-    "settings": "Impostazioni"
+    "settings": "Impostazioni",
+    "sos": "SOS"
   },
   "dashboard": {
     "title": "Pannello",
