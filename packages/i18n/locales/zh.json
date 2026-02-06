@@ -203,6 +203,7 @@
     "via": "通过",
     "view": "查看",
     "dismiss": "忽略",
+    "dismissAll": "全部关闭",
     "loadMore": "加载更多",
     "expiresIn": "{{hours}}小时{{minutes}}分钟后过期"
   },

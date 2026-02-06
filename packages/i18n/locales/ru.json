@@ -203,6 +203,7 @@
     "via": "через",
     "view": "Открыть",
     "dismiss": "Закрыть",
+    "dismissAll": "Закрыть все",
     "loadMore": "Загрузить ещё",
     "expiresIn": "Истекает через {{hours}}ч {{minutes}}м"
   },

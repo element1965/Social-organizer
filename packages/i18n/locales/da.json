@@ -203,6 +203,7 @@
     "via": "via",
     "view": "Åbn",
     "dismiss": "Afvis",
+    "dismissAll": "Luk alle",
     "loadMore": "Indlæs flere",
     "expiresIn": "Udløber om {{hours}} t {{minutes}} min"
   },

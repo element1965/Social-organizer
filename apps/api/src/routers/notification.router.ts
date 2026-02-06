@@ -90,6 +90,15 @@ export const notificationRouter = router({
       });
     }),
 
+  dismissAll: protectedProcedure
+    .mutation(async ({ ctx }) => {
+      const result = await ctx.db.notification.updateMany({
+        where: { userId: ctx.userId, status: { in: ['UNREAD', 'READ'] } },
+        data: { status: 'DISMISSED' },
+      });
+      return { count: result.count };
+    }),
+
   unreadCount: protectedProcedure.query(async ({ ctx }) => {
     const count = await ctx.db.notification.count({
       where: { userId: ctx.userId, status: 'UNREAD' },

@@ -203,6 +203,7 @@
     "via": "via",
     "view": "Oppna",
     "dismiss": "Avfarda",
+    "dismissAll": "Stäng alla",
     "loadMore": "Ladda fler",
     "expiresIn": "Gar ut om {{hours}} tim {{minutes}} min"
   },

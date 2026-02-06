@@ -203,6 +203,7 @@
     "via": "ผ่าน",
     "view": "เปิด",
     "dismiss": "ปิด",
+    "dismissAll": "ปิดทั้งหมด",
     "loadMore": "โหลดเพิ่ม",
     "expiresIn": "หมดอายุใน {{hours}} ชม. {{minutes}} นาที"
   },

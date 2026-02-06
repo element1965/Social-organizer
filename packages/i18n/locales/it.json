@@ -203,6 +203,7 @@
     "via": "tramite",
     "view": "Apri",
     "dismiss": "Ignora",
+    "dismissAll": "Chiudi tutte",
     "loadMore": "Carica altro",
     "expiresIn": "Scade tra {{hours}}h {{minutes}}m"
   },

@@ -203,6 +203,7 @@
     "via": "přes",
     "view": "Otevřít",
     "dismiss": "Zavřít",
+    "dismissAll": "Zavřít vše",
     "loadMore": "Načíst další",
     "expiresIn": "Vyprší za {{hours}}h {{minutes}}m"
   },
