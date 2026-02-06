@@ -130,7 +130,8 @@
     "periodDay": "Idag",
     "times": "ganger",
     "personalStats": "Min statistik",
-    "networkStats": "Natverksstatistik"
+    "networkStats": "Natverksstatistik",
+    "dayCount": "Dag {{count}}"
   },
   "collection": {
     "create": "Skicka hjalpsignal",

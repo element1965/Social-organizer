@@ -130,7 +130,8 @@
     "periodDay": "Tänään",
     "times": "kertaa",
     "personalStats": "Omat tilastot",
-    "networkStats": "Verkoston tilastot"
+    "networkStats": "Verkoston tilastot",
+    "dayCount": "Päivä {{count}}"
   },
   "collection": {
     "create": "Lähetä apusignaali",

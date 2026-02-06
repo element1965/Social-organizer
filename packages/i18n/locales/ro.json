@@ -130,7 +130,8 @@
     "periodDay": "Astazi",
     "times": "ori",
     "personalStats": "Statisticile mele",
-    "networkStats": "Statisticile retelei"
+    "networkStats": "Statisticile retelei",
+    "dayCount": "Ziua {{count}}"
   },
   "collection": {
     "create": "Trimite un semnal de ajutor",

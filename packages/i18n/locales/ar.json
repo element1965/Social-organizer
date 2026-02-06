@@ -130,7 +130,8 @@
     "periodDay": "اليوم",
     "times": "مرات",
     "personalStats": "إحصائياتي",
-    "networkStats": "إحصائيات الشبكة"
+    "networkStats": "إحصائيات الشبكة",
+    "dayCount": "اليوم {{count}}"
   },
   "collection": {
     "create": "إرسال إشارة مساعدة",
