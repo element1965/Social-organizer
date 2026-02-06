@@ -141,12 +141,12 @@ export const connectionRouter = router({
       });
     }
 
-    // Calculate growth (new connections in last day/week/month/year)
+    // Calculate growth: 24h (real-time), 7d, 28d (period), 364d (13×28)
     const now = new Date();
     const dayAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000);
     const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
-    const monthAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
-    const yearAgo = new Date(now.getTime() - 365 * 24 * 60 * 60 * 1000);
+    const monthAgo = new Date(now.getTime() - 28 * 24 * 60 * 60 * 1000);
+    const yearAgo = new Date(now.getTime() - 13 * 28 * 24 * 60 * 60 * 1000);
 
     const [dayCount, weekCount, monthCount, yearCount] = await Promise.all([
       ctx.db.connection.count({
@@ -189,8 +189,14 @@ export const connectionRouter = router({
   }),
 
   growthHistory: protectedProcedure.query(async ({ ctx }) => {
-    const days = 30;
-    const since = new Date(Date.now() - days * 24 * 60 * 60 * 1000);
+    // Get user's registration date to show full history from day 1
+    const user = await ctx.db.user.findUnique({
+      where: { id: ctx.userId },
+      select: { createdAt: true },
+    });
+    const since = user?.createdAt ?? new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
+    const now = new Date();
+    const totalDays = Math.max(1, Math.ceil((now.getTime() - since.getTime()) / (24 * 60 * 60 * 1000)));
 
     const rows = await ctx.db.$queryRaw<Array<{ day: Date; count: bigint }>>`
       SELECT DATE_TRUNC('day', c."createdAt") AS day, COUNT(*)::bigint AS count
@@ -201,25 +207,16 @@ export const connectionRouter = router({
       ORDER BY day
     `;
 
-    // Fill gaps with zeros
     const countByDay = new Map(rows.map(r => [
       new Date(r.day).toISOString().slice(0, 10),
       Number(r.count),
     ]));
 
+    // Cumulative chart from registration date to today
     const result: Array<{ date: string; count: number }> = [];
     let cumulative = 0;
 
-    // Get total connections before the period
-    const beforeCount = await ctx.db.connection.count({
-      where: {
-        OR: [{ userAId: ctx.userId }, { userBId: ctx.userId }],
-        createdAt: { lt: since },
-      },
-    });
-    cumulative = beforeCount;
-
-    for (let i = 0; i < days; i++) {
+    for (let i = 0; i <= totalDays; i++) {
       const d = new Date(since.getTime() + i * 24 * 60 * 60 * 1000);
       const key = d.toISOString().slice(0, 10);
       cumulative += countByDay.get(key) ?? 0;
