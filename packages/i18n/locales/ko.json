@@ -148,13 +148,13 @@
     "collected": "모금됨",
     "goal": "목표",
     "openChat": "채팅 열기",
-    "expressIntention": "의사 표시하기",
-    "amountPlaceholder": "금액 (최소 10)",
-    "submit": "돕기",
+    "expressIntention": "참여하기",
+    "amountPlaceholder": "금액 (최소 1)",
+    "submit": "확인",
     "close": "모금 종료",
     "participants": "참여자",
     "noParticipants": "아직 참여자가 없습니다",
-    "minAmount": "최소 10",
+    "minAmount": "최소 1",
     "connectionToCreator": "생성자와의 연결"
   },
   "create": {

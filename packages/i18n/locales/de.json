@@ -148,13 +148,13 @@
     "collected": "Gesammelt",
     "goal": "Ziel",
     "openChat": "Chat öffnen",
-    "expressIntention": "Absicht bekunden",
-    "amountPlaceholder": "Betrag (mind. 10)",
-    "submit": "Helfen",
+    "expressIntention": "Teilnehmen",
+    "amountPlaceholder": "Betrag (mind. 1)",
+    "submit": "Bestätigen",
     "close": "Sammlung schließen",
     "participants": "Teilnehmer",
     "noParticipants": "Noch niemand beigetreten",
-    "minAmount": "Mindestens 10",
+    "minAmount": "Mindestens 1",
     "connectionToCreator": "Verbindung zum Ersteller"
   },
   "create": {

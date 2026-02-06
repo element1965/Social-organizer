@@ -148,13 +148,13 @@
     "collected": "Collected",
     "goal": "Goal",
     "openChat": "Open chat",
-    "expressIntention": "Express intention",
-    "amountPlaceholder": "Amount (min. 10)",
-    "submit": "Help",
+    "expressIntention": "Participate",
+    "amountPlaceholder": "Amount (min. 1)",
+    "submit": "Confirm",
     "close": "Close collection",
     "participants": "Participants",
     "noParticipants": "No one has joined yet",
-    "minAmount": "Minimum 10",
+    "minAmount": "Minimum 1",
     "connectionToCreator": "Connection to creator"
   },
   "create": {

@@ -148,13 +148,13 @@
     "collected": "Toplanan",
     "goal": "Hedef",
     "openChat": "Sohbeti aç",
-    "expressIntention": "Niyet belirt",
-    "amountPlaceholder": "Miktar (min. 10)",
-    "submit": "Yardım Et",
+    "expressIntention": "Katıl",
+    "amountPlaceholder": "Miktar (min. 1)",
+    "submit": "Onayla",
     "close": "Koleksiyonu kapat",
     "participants": "Katılımcılar",
     "noParticipants": "Henüz kimse katılmadı",
-    "minAmount": "Minimum 10",
+    "minAmount": "Minimum 1",
     "connectionToCreator": "Oluşturucuya bağlantı"
   },
   "create": {

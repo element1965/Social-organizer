@@ -148,13 +148,13 @@
     "collected": "已募集",
     "goal": "目标",
     "openChat": "打开聊天",
-    "expressIntention": "表达意愿",
-    "amountPlaceholder": "金额（最少 10）",
-    "submit": "帮助",
+    "expressIntention": "参与",
+    "amountPlaceholder": "金额（最少 1）",
+    "submit": "确认",
     "close": "关闭募集",
     "participants": "参与者",
     "noParticipants": "暂无人参与",
-    "minAmount": "最少 10",
+    "minAmount": "最少 1",
     "connectionToCreator": "与发起人的连接"
   },
   "create": {

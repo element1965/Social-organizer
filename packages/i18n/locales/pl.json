@@ -148,13 +148,13 @@
     "collected": "Zebrano",
     "goal": "Cel",
     "openChat": "Otwórz czat",
-    "expressIntention": "Wyraź intencję",
-    "amountPlaceholder": "Kwota (min. 10)",
-    "submit": "Pomóż",
+    "expressIntention": "Weź udział",
+    "amountPlaceholder": "Kwota (min. 1)",
+    "submit": "Potwierdź",
     "close": "Zamknij zbiórkę",
     "participants": "Uczestnicy",
     "noParticipants": "Nikt jeszcze nie dołączył",
-    "minAmount": "Minimum 10",
+    "minAmount": "Minimum 1",
     "connectionToCreator": "Połączenie z twórcą"
   },
   "create": {

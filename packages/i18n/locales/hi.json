@@ -148,13 +148,13 @@
     "collected": "एकत्रित",
     "goal": "लक्ष्य",
     "openChat": "चैट खोलें",
-    "expressIntention": "इरादा व्यक्त करें",
-    "amountPlaceholder": "राशि (न्यूनतम 10)",
-    "submit": "मदद करें",
+    "expressIntention": "भाग लें",
+    "amountPlaceholder": "राशि (न्यूनतम 1)",
+    "submit": "पुष्टि करें",
     "close": "संग्रह बंद करें",
     "participants": "प्रतिभागी",
     "noParticipants": "अभी तक कोई शामिल नहीं हुआ",
-    "minAmount": "न्यूनतम 10",
+    "minAmount": "न्यूनतम 1",
     "connectionToCreator": "निर्माता से संबंध"
   },
   "create": {

@@ -148,13 +148,13 @@
     "collected": "Зібрано",
     "goal": "Мета",
     "openChat": "Відкрити чат",
-    "expressIntention": "Виразити намір",
-    "amountPlaceholder": "Сума (мін. 10)",
-    "submit": "Допомогти",
+    "expressIntention": "Взяти участь",
+    "amountPlaceholder": "Сума (мін. 1)",
+    "submit": "Підтвердити",
     "close": "Закрити збір",
     "participants": "Учасники",
     "noParticipants": "Ще ніхто не приєднався",
-    "minAmount": "Мінімум 10",
+    "minAmount": "Мінімум 1",
     "connectionToCreator": "Зв'язок із творцем"
   },
   "create": {

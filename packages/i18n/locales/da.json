@@ -148,13 +148,13 @@
     "collected": "Indsamlet",
     "goal": "Mål",
     "openChat": "Åbn chat",
-    "expressIntention": "Udtryk intention",
-    "amountPlaceholder": "Beløb (min. 10)",
-    "submit": "Hjælp",
+    "expressIntention": "Deltag",
+    "amountPlaceholder": "Beløb (min. 1)",
+    "submit": "Bekræft",
     "close": "Luk indsamling",
     "participants": "Deltagere",
     "noParticipants": "Ingen har deltaget endnu",
-    "minAmount": "Minimum 10",
+    "minAmount": "Minimum 1",
     "connectionToCreator": "Forbindelse til opretter"
   },
   "create": {

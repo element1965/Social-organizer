@@ -148,13 +148,13 @@
     "collected": "Insamlat",
     "goal": "Mal",
     "openChat": "Oppna chatt",
-    "expressIntention": "Uttryck avsikt",
-    "amountPlaceholder": "Belopp (min. 10)",
-    "submit": "Hjalp till",
+    "expressIntention": "Delta",
+    "amountPlaceholder": "Belopp (min. 1)",
+    "submit": "Bekräfta",
     "close": "Stang insamling",
     "participants": "Deltagare",
     "noParticipants": "Ingen har gatt med annu",
-    "minAmount": "Minimum 10",
+    "minAmount": "Minimum 1",
     "connectionToCreator": "Anslutning till skapare"
   },
   "create": {

@@ -148,13 +148,13 @@
     "collected": "Собрано",
     "goal": "Цель",
     "openChat": "Открыть чат",
-    "expressIntention": "Выразить намерение",
-    "amountPlaceholder": "Сумма (мин. 10)",
-    "submit": "Помочь",
+    "expressIntention": "Участвовать",
+    "amountPlaceholder": "Сумма (мин. 1)",
+    "submit": "Подтвердить",
     "close": "Закрыть сбор",
     "participants": "Участники",
     "noParticipants": "Пока никто не вписался",
-    "minAmount": "Минимум 10",
+    "minAmount": "Минимум 1",
     "connectionToCreator": "Связь с создателем"
   },
   "create": {

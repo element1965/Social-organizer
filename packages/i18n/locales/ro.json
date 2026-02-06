@@ -148,13 +148,13 @@
     "collected": "Colectat",
     "goal": "Obiectiv",
     "openChat": "Deschide chat",
-    "expressIntention": "Exprima intentia",
-    "amountPlaceholder": "Suma (min. 10)",
-    "submit": "Ajuta",
+    "expressIntention": "Participă",
+    "amountPlaceholder": "Suma (min. 1)",
+    "submit": "Confirmă",
     "close": "Inchide colecta",
     "participants": "Participanti",
     "noParticipants": "Nimeni nu s-a alaturat inca",
-    "minAmount": "Minimum 10",
+    "minAmount": "Minimum 1",
     "connectionToCreator": "Conexiune catre creator"
   },
   "create": {

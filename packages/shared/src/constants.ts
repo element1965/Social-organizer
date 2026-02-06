@@ -1,5 +1,5 @@
 export const MAX_CONNECTIONS = 150;
-export const MIN_OBLIGATION_AMOUNT = 10;
+export const MIN_OBLIGATION_AMOUNT = 1;
 export const MIN_COLLECTION_AMOUNT = 10;
 export const NOTIFICATION_TTL_HOURS = 24;
 export const RE_NOTIFY_INTERVAL_HOURS = 12;

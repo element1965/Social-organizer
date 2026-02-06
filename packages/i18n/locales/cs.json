@@ -148,13 +148,13 @@
     "collected": "Vybráno",
     "goal": "Cíl",
     "openChat": "Otevřít chat",
-    "expressIntention": "Vyjádřit záměr",
-    "amountPlaceholder": "Částka (min. 10)",
-    "submit": "Pomoci",
+    "expressIntention": "Zúčastnit se",
+    "amountPlaceholder": "Částka (min. 1)",
+    "submit": "Potvrdit",
     "close": "Uzavřít sbírku",
     "participants": "Účastníci",
     "noParticipants": "Zatím se nikdo nepřipojil",
-    "minAmount": "Minimálně 10",
+    "minAmount": "Minimálně 1",
     "connectionToCreator": "Spojení s autorem"
   },
   "create": {

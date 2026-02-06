@@ -148,13 +148,13 @@
     "collected": "募集済み",
     "goal": "目標",
     "openChat": "チャットを開く",
-    "expressIntention": "意思を表明する",
-    "amountPlaceholder": "金額（最低 10）",
-    "submit": "助ける",
+    "expressIntention": "参加する",
+    "amountPlaceholder": "金額（最低 1）",
+    "submit": "確認",
     "close": "募集を終了",
     "participants": "参加者",
     "noParticipants": "まだ参加者はいません",
-    "minAmount": "最低 10",
+    "minAmount": "最低 1",
     "connectionToCreator": "発起人とのつながり"
   },
   "create": {
