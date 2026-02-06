@@ -31,8 +31,15 @@ export function ProfilePage() {
     { userId: paramId },
     { enabled: !!paramId }
   );
+  const { data: ignoreList } = trpc.settings.ignoreList.useQuery(undefined, { enabled: !isOwn });
+  const isIgnored = ignoreList?.some((e: { toUserId?: string; toUser?: { id: string } }) => (e.toUserId || e.toUser?.id) === paramId) ?? false;
   const addConnection = trpc.connection.add.useMutation();
-  const addIgnore = trpc.settings.addIgnore.useMutation();
+  const addIgnore = trpc.settings.addIgnore.useMutation({
+    onSuccess: () => { utils.settings.ignoreList.invalidate(); },
+  });
+  const removeIgnore = trpc.settings.removeIgnore.useMutation({
+    onSuccess: () => { utils.settings.ignoreList.invalidate(); },
+  });
   const updateUser = trpc.user.update.useMutation({
     onSuccess: () => { utils.user.getById.invalidate({ userId: paramId! }); utils.user.me.invalidate(); setEditing(false); },
   });
@@ -191,9 +198,27 @@ export function ProfilePage() {
 
       {!isOwn && (
         <div className="pt-4">
-          <Button size="sm" variant="ghost" className="w-full text-gray-400" onClick={() => addIgnore.mutate({ userId: paramId! })} disabled={addIgnore.isPending}>
-            <Ban className="w-4 h-4 mr-1" /> {t('profile.ignore')}
-          </Button>
+          {isIgnored ? (
+            <Button
+              size="sm"
+              variant="ghost"
+              className="w-full text-red-400"
+              onClick={() => removeIgnore.mutate({ userId: paramId! })}
+              disabled={removeIgnore.isPending}
+            >
+              <Ban className="w-4 h-4 mr-1" /> {t('settings.unignore')}
+            </Button>
+          ) : (
+            <Button
+              size="sm"
+              variant="ghost"
+              className="w-full text-gray-400"
+              onClick={() => addIgnore.mutate({ userId: paramId! })}
+              disabled={addIgnore.isPending}
+            >
+              <Ban className="w-4 h-4 mr-1" /> {t('profile.ignore')}
+            </Button>
+          )}
         </div>
       )}
     </div>
