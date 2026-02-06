@@ -36,18 +36,38 @@ export const notificationRouter = router({
         : [];
       const countMap = new Map(connectionCounts.map((c) => [c.user_id, Number(c.count)]));
 
-      const items = notifications.map((n) => ({
-        ...n,
-        collection: n.collection
-          ? {
-              ...n.collection,
-              creator: {
-                ...n.collection.creator,
-                connectionCount: countMap.get(n.collection.creatorId) || 0,
-              },
-            }
-          : null,
-      }));
+      // Resolve handshakePath user IDs to names
+      const allPathIds = new Set<string>();
+      for (const n of notifications) {
+        const path = n.handshakePath as string[] | null;
+        if (path) for (const id of path) allPathIds.add(id);
+      }
+      const pathUsers = allPathIds.size > 0
+        ? await ctx.db.user.findMany({
+            where: { id: { in: [...allPathIds] } },
+            select: { id: true, name: true },
+          })
+        : [];
+      const nameMap = new Map(pathUsers.map((u) => [u.id, u.name]));
+
+      const items = notifications.map((n) => {
+        const rawPath = n.handshakePath as string[] | null;
+        return {
+          ...n,
+          handshakePathResolved: rawPath
+            ? rawPath.map((id) => ({ id, name: nameMap.get(id) || id }))
+            : [],
+          collection: n.collection
+            ? {
+                ...n.collection,
+                creator: {
+                  ...n.collection.creator,
+                  connectionCount: countMap.get(n.collection.creatorId) || 0,
+                },
+              }
+            : null,
+        };
+      });
 
       return { items, nextCursor };
     }),
