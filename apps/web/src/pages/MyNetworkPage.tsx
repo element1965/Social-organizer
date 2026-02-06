@@ -9,7 +9,7 @@ import { Button } from '../components/ui/button';
 import { Avatar } from '../components/ui/avatar';
 import { Progress } from '../components/ui/progress';
 import { Spinner } from '../components/ui/spinner';
-import { Users, Share2, QrCode, Wallet } from 'lucide-react';
+import { Users, Share2, QrCode, Globe, List, Wallet } from 'lucide-react';
 import { QRCodeSVG } from 'qrcode.react';
 import { buildInviteUrl } from '../lib/inviteUrl';
 const LazyNetworkGraph = lazy(() =>
@@ -22,11 +22,15 @@ export function MyNetworkPage() {
   const myId = useAuth((s) => s.userId);
   const { mode } = useTheme();
   const [showQR, setShowQR] = useState(false);
+  const [view, setView] = useState<'list' | '3d'>('list');
   const isDark = mode === 'dark' || (mode === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
 
   const { data: connections, isLoading } = trpc.connection.list.useQuery(undefined, { refetchInterval: 30000 });
   const { data: connectionCount } = trpc.connection.getCount.useQuery();
-  const { data: graphData } = trpc.connection.graphSlice.useQuery(undefined, { refetchInterval: 60000 });
+  const { data: graphData } = trpc.connection.graphSlice.useQuery(undefined, {
+    enabled: view === '3d',
+    refetchInterval: 60000,
+  });
   const generateInvite = trpc.invite.generate.useMutation();
 
   const handleShare = async () => {
@@ -50,6 +54,9 @@ export function MyNetworkPage() {
           <Users className="w-5 h-5" /> {t('network.title')}
         </h1>
         <div className="flex gap-2">
+          <Button variant="outline" size="sm" onClick={() => setView(view === 'list' ? '3d' : 'list')}>
+            {view === 'list' ? <Globe className="w-4 h-4" /> : <List className="w-4 h-4" />}
+          </Button>
           <Button variant="outline" size="sm" onClick={handleShare}><Share2 className="w-4 h-4" /></Button>
           <Button variant="outline" size="sm" onClick={handleQR}><QrCode className="w-4 h-4" /></Button>
         </div>
@@ -72,54 +79,56 @@ export function MyNetworkPage() {
         </CardContent></Card>
       )}
 
-      {/* 3D Graph */}
-      <div className={`rounded-xl overflow-hidden ${isDark ? 'bg-gray-950' : 'bg-gray-100'}`} style={{ height: 300 }}>
-        <Suspense fallback={<div className="flex justify-center py-12"><Spinner /></div>}>
-          {graphData ? (
-            <LazyNetworkGraph
-              nodes={graphData.nodes.map((n) => ({
-                ...n,
-                isCenter: n.id === myId,
-              }))}
-              edges={graphData.edges.map((e) => ({ source: e.from, target: e.to }))}
-              width={window.innerWidth - 32}
-              height={300}
-              onNodeClick={(id) => navigate(`/profile/${id}`)}
-              darkMode={isDark}
-              controlsHint={t('network.controlsHint')}
-            />
-          ) : (
-            <div className="flex justify-center py-12"><Spinner /></div>
-          )}
-        </Suspense>
-      </div>
-
-      {/* Connections list */}
-      {isLoading ? <div className="flex justify-center py-12"><Spinner /></div> : !connections || connections.length === 0 ? (
-        <div className="text-center py-8">
-          <Users className="w-12 h-12 mx-auto text-gray-300 dark:text-gray-700 mb-3" />
-          <p className="text-gray-500">{t('network.empty')}</p>
-          <p className="text-sm text-gray-400 mt-1">{t('network.emptyHint')}</p>
+      {view === '3d' ? (
+        <div className={`rounded-xl overflow-hidden ${isDark ? 'bg-gray-950' : 'bg-gray-100'}`} style={{ height: 'calc(100vh - 240px)' }}>
+          <Suspense fallback={<div className="flex justify-center py-12"><Spinner /></div>}>
+            {graphData ? (
+              <LazyNetworkGraph
+                nodes={graphData.nodes.map((n) => ({
+                  ...n,
+                  isCenter: n.id === myId,
+                }))}
+                edges={graphData.edges.map((e) => ({ source: e.from, target: e.to }))}
+                width={window.innerWidth - 32}
+                height={window.innerHeight - 240}
+                onNodeClick={(id) => navigate(`/profile/${id}`)}
+                darkMode={isDark}
+                controlsHint={t('network.controlsHint')}
+              />
+            ) : (
+              <div className="flex justify-center py-12"><Spinner /></div>
+            )}
+          </Suspense>
         </div>
       ) : (
-        <div className="space-y-1">
-          {connections.map((conn) => (
-            <button key={conn.id} onClick={() => navigate(`/profile/${conn.userId}`)} className="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
-              <Avatar src={conn.photoUrl} name={conn.name} size="md" />
-              <span className="flex-1 text-sm font-medium text-gray-900 dark:text-white text-left">{conn.name}</span>
-              <div className="flex items-center gap-3 text-xs text-gray-400">
-                <span className="flex items-center gap-1">
-                  <Users className="w-3 h-3" />
-                  {conn.connectionCount ?? 0}
-                </span>
-                <span className="flex items-center gap-1 text-green-600 dark:text-green-400">
-                  <Wallet className="w-3 h-3" />
-                  ${Math.round(conn.remainingBudget ?? 0)}
-                </span>
-              </div>
-            </button>
-          ))}
-        </div>
+        <>
+          {isLoading ? <div className="flex justify-center py-12"><Spinner /></div> : !connections || connections.length === 0 ? (
+            <div className="text-center py-12">
+              <Users className="w-12 h-12 mx-auto text-gray-300 dark:text-gray-700 mb-3" />
+              <p className="text-gray-500">{t('network.empty')}</p>
+              <p className="text-sm text-gray-400 mt-1">{t('network.emptyHint')}</p>
+            </div>
+          ) : (
+            <div className="space-y-1">
+              {connections.map((conn) => (
+                <button key={conn.id} onClick={() => navigate(`/profile/${conn.userId}`)} className="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                  <Avatar src={conn.photoUrl} name={conn.name} size="md" />
+                  <span className="flex-1 text-sm font-medium text-gray-900 dark:text-white text-left">{conn.name}</span>
+                  <div className="flex items-center gap-3 text-xs text-gray-400">
+                    <span className="flex items-center gap-1">
+                      <Users className="w-3 h-3" />
+                      {conn.connectionCount ?? 0}
+                    </span>
+                    <span className="flex items-center gap-1 text-green-600 dark:text-green-400">
+                      <Wallet className="w-3 h-3" />
+                      ${Math.round(conn.remainingBudget ?? 0)}
+                    </span>
+                  </div>
+                </button>
+              ))}
+            </div>
+          )}
+        </>
       )}
     </div>
   );
