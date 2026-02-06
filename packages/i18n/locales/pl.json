@@ -233,7 +233,8 @@
     "noConnections": "Brak połączeń",
     "connectionPath": "Ścieżka połączenia",
     "contacts": "Kontakty",
-    "currentCapability": "Bieżąca możliwość"
+    "currentCapability": "Bieżąca możliwość",
+    "memberSince": "Członek od {{date}}"
   },
   "settings": {
     "title": "Ustawienia",

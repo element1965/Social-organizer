@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { router, protectedProcedure } from '../trpc.js';
 import { TRPCError } from '@trpc/server';
-import { MAX_CONNECTIONS, GRAPH_SLICE_DEPTH } from '@so/shared';
+import { MAX_CONNECTIONS, GRAPH_SLICE_DEPTH, MAX_BFS_DEPTH, MAX_BFS_RECIPIENTS } from '@so/shared';
 import { getGraphSlice, findPathBetweenUsers, findRecipientsViaBfs } from '../services/bfs.service.js';
 
 export const connectionRouter = router({
@@ -93,7 +93,7 @@ export const connectionRouter = router({
     }),
 
   getNetworkStats: protectedProcedure.query(async ({ ctx }) => {
-    const recipients = await findRecipientsViaBfs(ctx.db, ctx.userId, 6, 10000, []);
+    const recipients = await findRecipientsViaBfs(ctx.db, ctx.userId, MAX_BFS_DEPTH, MAX_BFS_RECIPIENTS, []);
     const byDepth: Record<number, number> = {};
     const userIdsByDepth: Record<number, string[]> = {};
 

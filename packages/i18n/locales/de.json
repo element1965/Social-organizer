@@ -233,7 +233,8 @@
     "noConnections": "Noch keine Verbindungen",
     "connectionPath": "Verbindungspfad",
     "contacts": "Kontakte",
-    "currentCapability": "Aktuelle Kapazität"
+    "currentCapability": "Aktuelle Kapazität",
+    "memberSince": "Mitglied seit {{date}}"
   },
   "settings": {
     "title": "Einstellungen",

@@ -233,7 +233,8 @@
     "noConnections": "Још нема веза",
     "connectionPath": "Путања везе",
     "contacts": "Контакти",
-    "currentCapability": "Тренутна могућност"
+    "currentCapability": "Тренутна могућност",
+    "memberSince": "Члан од {{date}}"
   },
   "settings": {
     "title": "Подешавања",

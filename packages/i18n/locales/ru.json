@@ -233,7 +233,8 @@
     "noConnections": "Связей пока нет",
     "connectionPath": "Путь связи",
     "contacts": "Контакты",
-    "currentCapability": "Текущая возможность"
+    "currentCapability": "Текущая возможность",
+    "memberSince": "Участник с {{date}}"
   },
   "settings": {
     "title": "Настройки",

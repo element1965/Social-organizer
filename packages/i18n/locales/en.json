@@ -233,7 +233,8 @@
     "noConnections": "No connections yet",
     "connectionPath": "Connection path",
     "contacts": "Contacts",
-    "currentCapability": "Current capability"
+    "currentCapability": "Current capability",
+    "memberSince": "Member since {{date}}"
   },
   "settings": {
     "title": "Settings",

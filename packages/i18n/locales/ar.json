@@ -233,7 +233,8 @@
     "noConnections": "لا توجد اتصالات بعد",
     "connectionPath": "مسار الاتصال",
     "contacts": "جهات الاتصال",
-    "currentCapability": "القدرة الحالية"
+    "currentCapability": "القدرة الحالية",
+    "memberSince": "عضو منذ {{date}}"
   },
   "settings": {
     "title": "الإعدادات",

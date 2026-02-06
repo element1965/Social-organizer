@@ -91,7 +91,7 @@ export function DashboardPage() {
       {/* Header with profile */}
       <div className="flex items-center justify-between">
         <button
-          onClick={() => navigate(`/profile/${userId}`)}
+          onClick={() => navigate('/settings')}
           className="flex items-center gap-3 hover:opacity-80 transition-opacity"
         >
           <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center overflow-hidden ring-2 ring-white dark:ring-gray-800 shadow-lg">
@@ -103,7 +103,7 @@ export function DashboardPage() {
           </div>
           <div className="text-left">
             <p className="text-lg font-bold text-gray-900 dark:text-white">{me?.name}</p>
-            <p className="text-xs text-gray-500">{t('dashboard.viewProfile')}</p>
+            <p className="text-xs text-gray-500">{t('settings.title')}</p>
           </div>
         </button>
         <button
@@ -332,9 +332,6 @@ export function DashboardPage() {
                 const depthUsers = usersByDepth[depthNum] || [];
                 const colors = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899'];
                 const color = colors[(depthNum - 1) % colors.length];
-                // Max possible connections: 150^depth (Dunbar number exponential)
-                const maxForDepth = Math.pow(150, depthNum);
-                const markerForDepth = Math.floor(maxForDepth / 3);
 
                 return (
                   <div key={depth} className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
@@ -362,14 +359,16 @@ export function DashboardPage() {
                           )}
                         </div>
                       </div>
-                      {/* Second line: progress bar with marker at 1/3 */}
-                      <ProgressBarWithMarker
-                        value={count as number}
-                        max={maxForDepth}
-                        color={color}
-                        marker={markerForDepth}
-                        className="dark:bg-gray-700"
-                      />
+                      {/* Progress bar only for 1st handshake (150 direct connections limit) */}
+                      {depthNum === 1 && (
+                        <ProgressBarWithMarker
+                          value={count as number}
+                          max={150}
+                          color={color}
+                          marker={50}
+                          className="dark:bg-gray-700"
+                        />
+                      )}
                     </button>
 
                     {isExpanded && depthUsers.length > 0 && (

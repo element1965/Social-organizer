@@ -233,7 +233,8 @@
     "noConnections": "Zatím žádná spojení",
     "connectionPath": "Cesta spojení",
     "contacts": "Kontakty",
-    "currentCapability": "Aktuální kapacita"
+    "currentCapability": "Aktuální kapacita",
+    "memberSince": "Členem od {{date}}"
   },
   "settings": {
     "title": "Nastavení",

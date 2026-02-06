@@ -233,7 +233,8 @@
     "noConnections": "まだつながりはありません",
     "connectionPath": "つながりの経路",
     "contacts": "連絡先",
-    "currentCapability": "現在の能力"
+    "currentCapability": "現在の能力",
+    "memberSince": "{{date}} から参加"
   },
   "settings": {
     "title": "設定",

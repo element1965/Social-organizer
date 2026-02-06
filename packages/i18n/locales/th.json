@@ -233,7 +233,8 @@
     "noConnections": "ยังไม่มีการเชื่อมต่อ",
     "connectionPath": "เส้นทางการเชื่อมต่อ",
     "contacts": "ช่องทางติดต่อ",
-    "currentCapability": "ศักยภาพปัจจุบัน"
+    "currentCapability": "ศักยภาพปัจจุบัน",
+    "memberSince": "สมาชิกตั้งแต่ {{date}}"
   },
   "settings": {
     "title": "ตั้งค่า",

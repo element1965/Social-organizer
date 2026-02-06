@@ -233,7 +233,8 @@
     "noConnections": "Ei vielä yhteyksiä",
     "connectionPath": "Yhteyspolku",
     "contacts": "Yhteystiedot",
-    "currentCapability": "Nykyinen kapasiteetti"
+    "currentCapability": "Nykyinen kapasiteetti",
+    "memberSince": "Jäsen {{date}} alkaen"
   },
   "settings": {
     "title": "Asetukset",
