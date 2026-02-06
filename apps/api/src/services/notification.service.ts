@@ -1,6 +1,7 @@
+import { createRequire } from 'node:module';
+import { dirname, resolve } from 'node:path';
 import type { PrismaClient } from '@so/db';
 import { NOTIFICATION_TTL_HOURS } from '@so/shared';
-import { resources, type SupportedLanguage } from '@so/i18n';
 import { findRecipientsViaBfs } from './bfs.service.js';
 import { sendTelegramMessage, type TgReplyMarkup } from './telegram-bot.service.js';
 import { enqueueTgBroadcast } from '../workers/index.js';
@@ -9,10 +10,27 @@ import type { TgBroadcastMessage } from '../workers/tg-broadcast.worker.js';
 const DIRECT_SEND_THRESHOLD = 25;
 const WEB_APP_URL = process.env.WEB_APP_URL || 'https://www.orginizer.com';
 
+/* Load locale JSON files via createRequire (avoids Node 18 ESM JSON import assertion issue) */
+const _require = createRequire(import.meta.url);
+const i18nDir = resolve(dirname(_require.resolve('@so/i18n')), '..');
+const localeCache = new Map<string, Record<string, string>>();
+
+function loadTgBot(lang: string): Record<string, string> {
+  if (localeCache.has(lang)) return localeCache.get(lang)!;
+  try {
+    const data = _require(resolve(i18nDir, 'locales', `${lang}.json`));
+    const tgBot = data.tgBot ?? {};
+    localeCache.set(lang, tgBot);
+    return tgBot;
+  } catch {
+    return loadTgBot('en');
+  }
+}
+
 /** Get tgBot translation for a given language, fallback to English */
 function tg(lang: string, key: string): string {
-  const loc = resources[lang as SupportedLanguage] ?? resources.en;
-  return (loc as any).tgBot?.[key] ?? (resources.en as any).tgBot[key] ?? key;
+  const loc = loadTgBot(lang);
+  return loc[key] ?? loadTgBot('en')[key] ?? key;
 }
 
 /**
