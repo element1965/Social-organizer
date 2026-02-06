@@ -1,5 +1,5 @@
 const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN || '';
-const TG_BOT_USERNAME = process.env.VITE_TELEGRAM_BOT_USERNAME || 'socialorganizer_bot';
+const WEB_APP_URL = process.env.WEB_APP_URL || 'https://www.orginizer.com';
 
 export interface TgReplyMarkup {
   inline_keyboard: Array<Array<{ text: string; url?: string; web_app?: { url: string } }>>;
@@ -73,10 +73,10 @@ export async function sendCollectionNotificationTg(
   const amountStr = amount != null ? `${amount} ${currency}` : 'open';
   const text = `${emoji} <b>New ${typeLabel} Collection</b>\n\nFrom: <b>${creatorName}</b>\nAmount: ${amountStr}\n\nSomeone in your network needs support.`;
 
-  const deepLink = `https://t.me/${TG_BOT_USERNAME}?startapp=collection_${collectionId}`;
+  const webAppLink = `${WEB_APP_URL}/collection/${collectionId}`;
 
   const replyMarkup: TgReplyMarkup = {
-    inline_keyboard: [[{ text: '📱 Open', url: deepLink }]],
+    inline_keyboard: [[{ text: '📱 Open', web_app: { url: webAppLink } }]],
   };
 
   return sendTelegramMessage(telegramId, text, replyMarkup);

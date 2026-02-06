@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../hooks/useAuth';
@@ -14,6 +14,16 @@ export function LoginPage() {
   const [searchParams] = useSearchParams();
   const redirect = searchParams.get('redirect');
   const login = useAuth((s) => s.login);
+
+  // If user was in demo mode, clear tokens and reload so tRPC client uses real HTTP link
+  useEffect(() => {
+    if (localStorage.getItem('accessToken') === 'demo-token') {
+      localStorage.removeItem('accessToken');
+      localStorage.removeItem('refreshToken');
+      localStorage.removeItem('userId');
+      window.location.reload();
+    }
+  }, []);
 
   // Use pendingInviteToken from localStorage as fallback redirect
   const pendingInviteToken = localStorage.getItem('pendingInviteToken');
@@ -39,6 +49,10 @@ export function LoginPage() {
 
   const loginMutation = trpc.auth.loginWithPlatform.useMutation({
     onSuccess: (data) => {
+      if (!data?.accessToken) {
+        setError('Login failed. Please try again.');
+        return;
+      }
       login(data.accessToken, data.refreshToken, data.userId);
       afterLogin('/onboarding');
     },
@@ -46,6 +60,10 @@ export function LoginPage() {
 
   const registerMutation = trpc.auth.registerWithEmail.useMutation({
     onSuccess: (data) => {
+      if (!data?.accessToken) {
+        setError('Registration failed. Please try again.');
+        return;
+      }
       login(data.accessToken, data.refreshToken, data.userId);
       afterLogin('/onboarding');
     },
@@ -56,6 +74,10 @@ export function LoginPage() {
 
   const loginEmailMutation = trpc.auth.loginWithEmail.useMutation({
     onSuccess: (data) => {
+      if (!data?.accessToken) {
+        setError(t('auth.invalidCredentials'));
+        return;
+      }
       login(data.accessToken, data.refreshToken, data.userId);
       afterLogin('/');
     },
