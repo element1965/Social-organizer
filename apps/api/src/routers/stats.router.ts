@@ -108,8 +108,8 @@ export const statsRouter = router({
     const now = new Date();
     const dayAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000);
     const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
-    const monthAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
-    const yearAgo = new Date(now.getTime() - 365 * 24 * 60 * 60 * 1000);
+    const monthAgo = new Date(now.getTime() - 28 * 24 * 60 * 60 * 1000);
+    const yearAgo = new Date(now.getTime() - 13 * 28 * 24 * 60 * 60 * 1000);
 
     // Get all obligations given by user
     const allObligations = await ctx.db.obligation.findMany({
