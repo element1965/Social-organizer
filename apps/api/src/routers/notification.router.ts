@@ -6,7 +6,7 @@ export const notificationRouter = router({
     .input(paginationInput)
     .query(async ({ ctx, input }) => {
       const notifications = await ctx.db.notification.findMany({
-        where: { userId: ctx.userId },
+        where: { userId: ctx.userId, status: { in: ['UNREAD', 'READ'] } },
         include: {
           collection: {
             include: { creator: { select: { id: true, name: true, photoUrl: true } } },
