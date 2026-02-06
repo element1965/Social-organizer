@@ -233,7 +233,8 @@
     "noConnections": "Aucune connexion pour le moment",
     "connectionPath": "Chemin de connexion",
     "contacts": "Contacts",
-    "currentCapability": "Capacité actuelle"
+    "currentCapability": "Capacité actuelle",
+    "memberSince": "Membre depuis {{date}}"
   },
   "settings": {
     "title": "Paramètres",

@@ -233,7 +233,8 @@
     "noConnections": "Ingen forbindelser endnu",
     "connectionPath": "Forbindelsesvej",
     "contacts": "Kontakter",
-    "currentCapability": "Nuværende kapacitet"
+    "currentCapability": "Nuværende kapacitet",
+    "memberSince": "Medlem siden {{date}}"
   },
   "settings": {
     "title": "Indstillinger",

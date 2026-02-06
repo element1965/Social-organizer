@@ -233,7 +233,8 @@
     "noConnections": "Nog geen connecties",
     "connectionPath": "Verbindingspad",
     "contacts": "Contactgegevens",
-    "currentCapability": "Huidige mogelijkheid"
+    "currentCapability": "Huidige mogelijkheid",
+    "memberSince": "Lid sinds {{date}}"
   },
   "settings": {
     "title": "Instellingen",

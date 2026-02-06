@@ -233,7 +233,8 @@
     "noConnections": "Henüz bağlantı yok",
     "connectionPath": "Bağlantı yolu",
     "contacts": "İletişim",
-    "currentCapability": "Mevcut olanak"
+    "currentCapability": "Mevcut olanak",
+    "memberSince": "{{date}} tarihinden beri üye"
   },
   "settings": {
     "title": "Ayarlar",

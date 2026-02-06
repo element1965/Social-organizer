@@ -9,7 +9,7 @@ import { Button } from '../components/ui/button';
 import { Select } from '../components/ui/select';
 import { Avatar } from '../components/ui/avatar';
 import { Spinner } from '../components/ui/spinner';
-import { Settings, Globe, Palette, Volume2, Mic, Link, UserX, Trash2, LogOut, Type, Users, DollarSign, Wallet, Camera, Pencil, Check } from 'lucide-react';
+import { Settings, Globe, Palette, Volume2, Mic, Link, Trash2, LogOut, Type, Users, DollarSign, Wallet, Camera, Pencil, Check } from 'lucide-react';
 import { cn } from '../lib/utils';
 import { languageNames } from '@so/i18n';
 import { Input } from '../components/ui/input';
@@ -23,7 +23,6 @@ export function SettingsPage() {
   const utils = trpc.useUtils();
 
   const { data: settings, isLoading } = trpc.settings.get.useQuery();
-  const { data: ignoreList } = trpc.settings.ignoreList.useQuery();
   const { data: contacts } = trpc.user.getContacts.useQuery({});
   const { data: me } = trpc.user.me.useQuery();
   const { data: currencies } = trpc.currency.list.useQuery();
@@ -38,7 +37,6 @@ export function SettingsPage() {
   const updateFontScale = trpc.settings.updateFontScale.useMutation({ onSuccess: () => utils.settings.get.invalidate() });
   const updateCurrency = trpc.user.setPreferredCurrency.useMutation({ onSuccess: () => utils.user.me.invalidate() });
   const setBudgetMutation = trpc.user.setMonthlyBudget.useMutation({ onSuccess: () => utils.user.me.invalidate() });
-  const removeIgnore = trpc.settings.removeIgnore.useMutation({ onSuccess: () => utils.settings.ignoreList.invalidate() });
   const generateCode = trpc.auth.generateLinkCode.useMutation();
   const deleteAccount = trpc.user.delete.useMutation({ onSuccess: () => { logout(); navigate('/login'); } });
   const updateUser = trpc.user.update.useMutation({ onSuccess: () => { utils.user.me.invalidate(); setEditingName(false); } });
@@ -284,21 +282,6 @@ export function SettingsPage() {
         ) : <Button variant="outline" size="sm" onClick={() => generateCode.mutate()} className="w-full">{t('settings.generateCode')}</Button>}
       </CardContent></Card>
 
-      <Card>
-        <CardHeader><div className="flex items-center gap-2"><UserX className="w-5 h-5 text-gray-500" /><h2 className="font-semibold text-gray-900 dark:text-white">{t('settings.ignoreList')}</h2></div></CardHeader>
-        <CardContent>
-          {!ignoreList || ignoreList.length === 0 ? <p className="text-sm text-gray-500 text-center py-2">{t('settings.noIgnored')}</p> : (
-            <div className="space-y-2">
-              {ignoreList.map((entry) => (
-                <div key={entry.toUser.id} className="flex items-center justify-between">
-                  <div className="flex items-center gap-2"><Avatar src={entry.toUser.photoUrl} name={entry.toUser.name} size="sm" /><span className="text-sm text-gray-900 dark:text-white">{entry.toUser.name}</span></div>
-                  <Button variant="ghost" size="sm" onClick={() => removeIgnore.mutate({ userId: entry.toUser.id })}>{t('settings.unignore')}</Button>
-                </div>
-              ))}
-            </div>
-          )}
-        </CardContent>
-      </Card>
 
       <Button variant="outline" className="w-full" onClick={() => { logout(); navigate('/login'); }}><LogOut className="w-4 h-4 mr-2" /> {t('settings.logout')}</Button>
 

@@ -233,7 +233,8 @@
     "noConnections": "Belum ada koneksi",
     "connectionPath": "Jalur koneksi",
     "contacts": "Kontak",
-    "currentCapability": "Kemampuan saat ini"
+    "currentCapability": "Kemampuan saat ini",
+    "memberSince": "Anggota sejak {{date}}"
   },
   "settings": {
     "title": "Pengaturan",

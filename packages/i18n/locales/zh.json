@@ -233,7 +233,8 @@
     "noConnections": "暂无连接",
     "connectionPath": "连接路径",
     "contacts": "联系方式",
-    "currentCapability": "当前能力"
+    "currentCapability": "当前能力",
+    "memberSince": "加入于 {{date}}"
   },
   "settings": {
     "title": "设置",

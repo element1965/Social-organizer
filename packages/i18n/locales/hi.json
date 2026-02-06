@@ -233,7 +233,8 @@
     "noConnections": "अभी तक कोई कनेक्शन नहीं",
     "connectionPath": "कनेक्शन पथ",
     "contacts": "संपर्क",
-    "currentCapability": "वर्तमान क्षमता"
+    "currentCapability": "वर्तमान क्षमता",
+    "memberSince": "{{date}} से सदस्य"
   },
   "settings": {
     "title": "सेटिंग्स",

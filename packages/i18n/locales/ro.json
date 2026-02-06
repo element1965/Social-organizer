@@ -233,7 +233,8 @@
     "noConnections": "Nicio conexiune inca",
     "connectionPath": "Calea conexiunii",
     "contacts": "Contacte",
-    "currentCapability": "Capacitate curenta"
+    "currentCapability": "Capacitate curenta",
+    "memberSince": "Membru din {{date}}"
   },
   "settings": {
     "title": "Setari",

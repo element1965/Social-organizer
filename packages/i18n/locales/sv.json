@@ -233,7 +233,8 @@
     "noConnections": "Inga kontakter annu",
     "connectionPath": "Anslutningsvag",
     "contacts": "Kontaktuppgifter",
-    "currentCapability": "Nuvarande mojlighet"
+    "currentCapability": "Nuvarande mojlighet",
+    "memberSince": "Medlem sedan {{date}}"
   },
   "settings": {
     "title": "Installningar",

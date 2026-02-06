@@ -233,7 +233,8 @@
     "noConnections": "Поки немає контактів",
     "connectionPath": "Шлях зв'язку",
     "contacts": "Контакти",
-    "currentCapability": "Поточна можливість"
+    "currentCapability": "Поточна можливість",
+    "memberSince": "Учасник з {{date}}"
   },
   "settings": {
     "title": "Налаштування",

@@ -233,7 +233,8 @@
     "noConnections": "Chưa có kết nối",
     "connectionPath": "Đường kết nối",
     "contacts": "Liên hệ",
-    "currentCapability": "Khả năng hiện tại"
+    "currentCapability": "Khả năng hiện tại",
+    "memberSince": "Thành viên từ {{date}}"
   },
   "settings": {
     "title": "Cài đặt",
