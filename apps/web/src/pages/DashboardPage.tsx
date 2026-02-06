@@ -65,9 +65,9 @@ export function DashboardPage() {
   const usersByDepth = (networkStats as any)?.usersByDepth ?? {};
   const growth = networkStats?.growth ?? { day: 0, week: 0, month: 0, year: 0 };
 
-  // Filter emergency notifications (unread)
+  // Filter emergency notifications (unread, only for active collections)
   const emergencyNotifications = notifications?.items?.filter(
-    (n) => n.type === 'NEW_COLLECTION' && !n.readAt && n.collection?.type === 'EMERGENCY'
+    (n) => n.type === 'NEW_COLLECTION' && n.status === 'UNREAD' && n.collection?.type === 'EMERGENCY' && n.collection?.status === 'ACTIVE'
   ) ?? [];
 
   const toggleDepth = (depth: number) => {
