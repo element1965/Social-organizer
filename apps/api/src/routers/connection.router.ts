@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { router, protectedProcedure } from '../trpc.js';
 import { TRPCError } from '@trpc/server';
-import { MAX_CONNECTIONS, GRAPH_SLICE_DEPTH, MAX_BFS_DEPTH, MAX_BFS_RECIPIENTS } from '@so/shared';
+import { GRAPH_SLICE_DEPTH, MAX_BFS_DEPTH, MAX_BFS_RECIPIENTS } from '@so/shared';
 import { getGraphSlice, findPathBetweenUsers, findRecipientsViaBfs } from '../services/bfs.service.js';
 
 export const connectionRouter = router({
@@ -47,21 +47,6 @@ export const connectionRouter = router({
       if (input.userId === ctx.userId) {
         throw new TRPCError({ code: 'BAD_REQUEST', message: 'Cannot connect to yourself' });
       }
-      // Check limit for both users (connection is mutual — both use a slot)
-      const [myCount, targetCount] = await Promise.all([
-        ctx.db.connection.count({
-          where: { OR: [{ userAId: ctx.userId }, { userBId: ctx.userId }] },
-        }),
-        ctx.db.connection.count({
-          where: { OR: [{ userAId: input.userId }, { userBId: input.userId }] },
-        }),
-      ]);
-      if (myCount >= MAX_CONNECTIONS) {
-        throw new TRPCError({ code: 'FORBIDDEN', message: `Connection limit reached (${MAX_CONNECTIONS})` });
-      }
-      if (targetCount >= MAX_CONNECTIONS) {
-        throw new TRPCError({ code: 'FORBIDDEN', message: 'Target user has reached connection limit' });
-      }
       const [userAId, userBId] = [ctx.userId, input.userId].sort();
       const existing = await ctx.db.connection.findUnique({
         where: { userAId_userBId: { userAId: userAId!, userBId: userBId! } },
@@ -76,7 +61,7 @@ export const connectionRouter = router({
     const count = await ctx.db.connection.count({
       where: { OR: [{ userAId: ctx.userId }, { userBId: ctx.userId }] },
     });
-    return { count, max: MAX_CONNECTIONS };
+    return { count };
   }),
 
   graphSlice: protectedProcedure
