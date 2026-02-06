@@ -2,7 +2,6 @@ import { z } from 'zod';
 import { randomBytes } from 'crypto';
 import { router, publicProcedure, protectedProcedure } from '../trpc.js';
 import { TRPCError } from '@trpc/server';
-import { MAX_CONNECTIONS } from '@so/shared';
 
 export const inviteRouter = router({
   generate: protectedProcedure.mutation(async ({ ctx }) => {
@@ -17,56 +16,74 @@ export const inviteRouter = router({
     .input(z.object({ token: z.string() }))
     .mutation(async ({ ctx, input }) => {
       console.log('[invite.accept] userId:', ctx.userId, 'token:', input.token.slice(0, 8) + '...');
+
+      // Try single-use invite token first
       const invite = await ctx.db.inviteLink.findUnique({
         where: { token: input.token },
       });
-      if (!invite) throw new TRPCError({ code: 'NOT_FOUND', message: 'Invite not found' });
-      if (invite.usedById) throw new TRPCError({ code: 'BAD_REQUEST', message: 'Invite already used' });
-      if (invite.inviterId === ctx.userId) {
-        throw new TRPCError({ code: 'BAD_REQUEST', message: 'Cannot accept own invite' });
-      }
 
-      // Check connection limit for both users
-      const [myCount, inviterCount] = await Promise.all([
-        ctx.db.connection.count({
-          where: { OR: [{ userAId: ctx.userId }, { userBId: ctx.userId }] },
-        }),
-        ctx.db.connection.count({
-          where: { OR: [{ userAId: invite.inviterId }, { userBId: invite.inviterId }] },
-        }),
-      ]);
-      if (myCount >= MAX_CONNECTIONS) {
-        throw new TRPCError({ code: 'FORBIDDEN', message: `Connection limit reached (${MAX_CONNECTIONS})` });
-      }
-      if (inviterCount >= MAX_CONNECTIONS) {
-        throw new TRPCError({ code: 'FORBIDDEN', message: 'Inviter has reached connection limit' });
-      }
+      let inviterId: string;
 
-      await ctx.db.inviteLink.update({
-        where: { id: invite.id },
-        data: { usedById: ctx.userId, usedAt: new Date() },
-      });
+      if (invite) {
+        if (invite.usedById) throw new TRPCError({ code: 'BAD_REQUEST', message: 'Invite already used' });
+        if (invite.inviterId === ctx.userId) {
+          throw new TRPCError({ code: 'BAD_REQUEST', message: 'Cannot accept own invite' });
+        }
+        inviterId = invite.inviterId;
+
+        await ctx.db.inviteLink.update({
+          where: { id: invite.id },
+          data: { usedById: ctx.userId, usedAt: new Date() },
+        });
+      } else {
+        // Try as permanent link (token = userId)
+        const user = await ctx.db.user.findUnique({ where: { id: input.token } });
+        if (!user) throw new TRPCError({ code: 'NOT_FOUND', message: 'Invite not found' });
+        if (user.id === ctx.userId) {
+          throw new TRPCError({ code: 'BAD_REQUEST', message: 'Cannot connect to yourself' });
+        }
+        inviterId = user.id;
+      }
 
       // Create bidirectional connection (sorted for dedup)
-      const [userAId, userBId] = [ctx.userId, invite.inviterId].sort();
+      const [userAId, userBId] = [ctx.userId, inviterId].sort();
       await ctx.db.connection.upsert({
         where: { userAId_userBId: { userAId: userAId!, userBId: userBId! } },
         create: { userAId: userAId!, userBId: userBId! },
         update: {},
       });
 
-      console.log('[invite.accept] connection created:', ctx.userId, '<->', invite.inviterId);
-      return { success: true, connectedWith: invite.inviterId };
+      console.log('[invite.accept] connection created:', ctx.userId, '<->', inviterId);
+      return { success: true, connectedWith: inviterId };
     }),
 
   getByToken: publicProcedure
     .input(z.object({ token: z.string() }))
     .query(async ({ ctx, input }) => {
+      // Try single-use invite first
       const invite = await ctx.db.inviteLink.findUnique({
         where: { token: input.token },
         include: { inviter: { select: { id: true, name: true, photoUrl: true } } },
       });
-      if (!invite) throw new TRPCError({ code: 'NOT_FOUND' });
-      return invite;
+      if (invite) return invite;
+
+      // Try as permanent link (token = userId)
+      const user = await ctx.db.user.findUnique({
+        where: { id: input.token },
+        select: { id: true, name: true, photoUrl: true },
+      });
+      if (user) {
+        return {
+          id: `permanent-${user.id}`,
+          token: input.token,
+          inviterId: user.id,
+          usedById: null,
+          usedAt: null,
+          createdAt: new Date(),
+          inviter: user,
+        };
+      }
+
+      throw new TRPCError({ code: 'NOT_FOUND' });
     }),
 });

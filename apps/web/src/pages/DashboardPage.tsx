@@ -11,7 +11,7 @@ import { Badge } from '../components/ui/badge';
 import { Progress } from '../components/ui/progress';
 import { Spinner } from '../components/ui/spinner';
 import { Avatar } from '../components/ui/avatar';
-import { SemiDonutChart, StatCard, Tabs, ProgressBarWithMarker } from '../components/ui/charts';
+import { SemiDonutChart, StatCard, Tabs } from '../components/ui/charts';
 import {
   PlusCircle,
   Users,
@@ -45,7 +45,6 @@ export function DashboardPage() {
   const [activeTab, setActiveTab] = useState<TabId>('network');
   const [expandedDepths, setExpandedDepths] = useState<Record<number, boolean>>({});
   const [showInvitePopup, setShowInvitePopup] = useState(false);
-  const [inviteUrl, setInviteUrl] = useState('');
   const [copied, setCopied] = useState(false);
 
   const { data: me } = trpc.user.me.useQuery(undefined, { refetchInterval: 30000 });
@@ -57,7 +56,7 @@ export function DashboardPage() {
   const { data: helpByPeriod } = trpc.stats.helpGivenByPeriod.useQuery(undefined, { refetchInterval: 60000 });
   const { data: networkCapabilities } = trpc.stats.networkCapabilities.useQuery(undefined, { refetchInterval: 60000 });
   const { data: growthHistory } = trpc.connection.growthHistory.useQuery(undefined, { refetchInterval: 60000 });
-  const generateInvite = trpc.invite.generate.useMutation();
+  const permanentInviteUrl = userId ? buildInviteUrl(userId) : '';
 
   const totalReachable = networkStats?.totalReachable ?? 0;
   const byDepth = networkStats?.byDepth ?? {};
@@ -106,15 +105,7 @@ export function DashboardPage() {
           </div>
         </button>
         <button
-          disabled={generateInvite.isPending}
-          onClick={async () => {
-            generateInvite.reset();
-            const result = await generateInvite.mutateAsync();
-            const url = buildInviteUrl(result.token);
-            setInviteUrl(url);
-            setCopied(false);
-            setShowInvitePopup(true);
-          }}
+          onClick={() => { setCopied(false); setShowInvitePopup(true); }}
           className="w-10 h-10 rounded-full bg-blue-600 hover:bg-blue-500 flex items-center justify-center transition-colors shadow-lg"
         >
           <UserPlus className="w-5 h-5 text-white" />
@@ -186,7 +177,7 @@ export function DashboardPage() {
       )}
 
       {/* Invite popup */}
-      {showInvitePopup && inviteUrl && (
+      {showInvitePopup && permanentInviteUrl && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50" onClick={() => setShowInvitePopup(false)}>
           <div className="bg-white dark:bg-gray-900 rounded-2xl p-6 mx-4 max-w-sm w-full shadow-xl" onClick={(e) => e.stopPropagation()}>
             <div className="flex items-center justify-between mb-4">
@@ -197,24 +188,18 @@ export function DashboardPage() {
             </div>
             <div className="flex justify-center mb-4">
               <div className="p-3 bg-white rounded-xl">
-                <QRCodeSVG value={inviteUrl} size={200} />
+                <QRCodeSVG value={permanentInviteUrl} size={200} />
               </div>
             </div>
             <button
-              onClick={async () => {
-                // Copy current link
-                navigator.clipboard.writeText(inviteUrl);
+              onClick={() => {
+                navigator.clipboard.writeText(permanentInviteUrl);
                 setCopied(true);
-                // Generate new link immediately for next invite
-                generateInvite.reset();
-                const result = await generateInvite.mutateAsync();
-                const url = buildInviteUrl(result.token);
-                setInviteUrl(url);
                 setTimeout(() => setCopied(false), 2000);
               }}
               className="w-full flex items-center gap-2 p-3 bg-gray-100 dark:bg-gray-800 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
             >
-              <p className="flex-1 text-xs text-gray-600 dark:text-gray-400 break-all text-left">{inviteUrl}</p>
+              <p className="flex-1 text-xs text-gray-600 dark:text-gray-400 break-all text-left">{permanentInviteUrl}</p>
               <div className="shrink-0">
                 {copied ? (
                   <Check className="w-5 h-5 text-green-500" />
@@ -223,9 +208,6 @@ export function DashboardPage() {
                 )}
               </div>
             </button>
-            <p className="text-xs text-gray-400 text-center mt-3">
-              {copied ? t('network.inviteCopied') : t('network.inviteHint')}
-            </p>
           </div>
         </div>
       )}
@@ -378,16 +360,6 @@ export function DashboardPage() {
                           )}
                         </div>
                       </div>
-                      {/* Progress bar only for 1st handshake (150 direct connections limit) */}
-                      {depthNum === 1 && (
-                        <ProgressBarWithMarker
-                          value={count as number}
-                          max={150}
-                          color={color}
-                          marker={50}
-                          className="dark:bg-gray-700"
-                        />
-                      )}
                     </button>
 
                     {isExpanded && depthUsers.length > 0 && (
