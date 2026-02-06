@@ -20,7 +20,6 @@ import {
   UserPlus,
   ChevronDown,
   ChevronUp,
-  Bell,
   AlertTriangle,
   TrendingUp,
   BarChart3,
@@ -108,15 +107,17 @@ export function DashboardPage() {
           </div>
         </button>
         <button
-          onClick={() => navigate('/notifications')}
-          className="relative w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-800 flex items-center justify-center hover:bg-gray-300 dark:hover:bg-gray-700 transition-colors"
+          disabled={generateInvite.isPending}
+          onClick={async () => {
+            const result = await generateInvite.mutateAsync();
+            const url = buildInviteUrl(result.token);
+            setInviteUrl(url);
+            setCopied(false);
+            setShowInvitePopup(true);
+          }}
+          className="w-10 h-10 rounded-full bg-blue-600 hover:bg-blue-500 flex items-center justify-center transition-colors shadow-lg"
         >
-          <Bell className="w-5 h-5 text-gray-600 dark:text-gray-300" />
-          {emergencyNotifications.length > 0 && (
-            <span className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center animate-pulse">
-              {emergencyNotifications.length}
-            </span>
-          )}
+          <UserPlus className="w-5 h-5 text-white" />
         </button>
       </div>
 
@@ -183,23 +184,6 @@ export function DashboardPage() {
           </CardContent>
         </Card>
       )}
-
-      {/* Invite CTA */}
-      <Button
-        className="w-full"
-        size="lg"
-        variant="outline"
-        disabled={generateInvite.isPending}
-        onClick={async () => {
-          const result = await generateInvite.mutateAsync();
-          const url = buildInviteUrl(result.token);
-          setInviteUrl(url);
-          setCopied(false);
-          setShowInvitePopup(true);
-        }}
-      >
-        <UserPlus className="w-5 h-5 mr-2" /> {t('network.invite')}
-      </Button>
 
       {/* Invite popup */}
       {showInvitePopup && inviteUrl && (
@@ -422,9 +406,6 @@ export function DashboardPage() {
               })}
             </div>
 
-            <Button variant="outline" size="sm" className="w-full" onClick={() => navigate('/network')}>
-              <Users className="w-4 h-4 mr-2" /> {t('dashboard.viewNetwork')}
-            </Button>
           </CardContent>
         </Card>
       )}
