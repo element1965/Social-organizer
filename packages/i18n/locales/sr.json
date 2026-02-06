@@ -75,7 +75,8 @@
     "notifications": "Обавештења",
     "create": "Креирај",
     "network": "Мрежа",
-    "settings": "Подешавања"
+    "settings": "Подешавања",
+    "sos": "SOS"
   },
   "dashboard": {
     "title": "Контролна табла",

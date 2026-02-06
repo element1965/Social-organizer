@@ -75,7 +75,8 @@
     "notifications": "Meldingen",
     "create": "Aanmaken",
     "network": "Netwerk",
-    "settings": "Instellingen"
+    "settings": "Instellingen",
+    "sos": "SOS"
   },
   "dashboard": {
     "title": "Dashboard",

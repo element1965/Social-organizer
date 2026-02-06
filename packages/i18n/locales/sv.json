@@ -75,7 +75,8 @@
     "notifications": "Aviseringar",
     "create": "Skapa",
     "network": "Natverk",
-    "settings": "Installningar"
+    "settings": "Installningar",
+    "sos": "SOS"
   },
   "dashboard": {
     "title": "Oversikt",

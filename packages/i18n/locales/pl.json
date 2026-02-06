@@ -75,7 +75,8 @@
     "notifications": "Powiadomienia",
     "create": "Utwórz",
     "network": "Sieć",
-    "settings": "Ustawienia"
+    "settings": "Ustawienia",
+    "sos": "SOS"
   },
   "dashboard": {
     "title": "Panel główny",

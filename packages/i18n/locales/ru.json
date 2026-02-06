@@ -75,7 +75,8 @@
     "notifications": "Уведомления",
     "create": "Создать",
     "network": "Сеть",
-    "settings": "Настройки"
+    "settings": "Настройки",
+    "sos": "SOS"
   },
   "dashboard": {
     "title": "Дашборд",

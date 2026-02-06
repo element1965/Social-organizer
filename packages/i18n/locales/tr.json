@@ -75,7 +75,8 @@
     "notifications": "Uyarılar",
     "create": "Oluştur",
     "network": "Ağ",
-    "settings": "Ayarlar"
+    "settings": "Ayarlar",
+    "sos": "SOS"
   },
   "dashboard": {
     "title": "Gösterge Paneli",

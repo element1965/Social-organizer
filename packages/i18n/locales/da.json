@@ -75,7 +75,8 @@
     "notifications": "Advarsler",
     "create": "Opret",
     "network": "Netværk",
-    "settings": "Indstillinger"
+    "settings": "Indstillinger",
+    "sos": "SOS"
   },
   "dashboard": {
     "title": "Oversigt",

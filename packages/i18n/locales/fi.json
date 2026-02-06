@@ -75,7 +75,8 @@
     "notifications": "Ilmoitukset",
     "create": "Luo",
     "network": "Verkosto",
-    "settings": "Asetukset"
+    "settings": "Asetukset",
+    "sos": "SOS"
   },
   "dashboard": {
     "title": "Hallintapaneeli",

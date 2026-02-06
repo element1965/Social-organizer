@@ -75,7 +75,8 @@
     "notifications": "Upozornění",
     "create": "Vytvořit",
     "network": "Síť",
-    "settings": "Nastavení"
+    "settings": "Nastavení",
+    "sos": "SOS"
   },
   "dashboard": {
     "title": "Přehled",

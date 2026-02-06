@@ -75,7 +75,8 @@
     "notifications": "التنبيهات",
     "create": "إنشاء",
     "network": "الشبكة",
-    "settings": "الإعدادات"
+    "settings": "الإعدادات",
+    "sos": "SOS"
   },
   "dashboard": {
     "title": "لوحة التحكم",
