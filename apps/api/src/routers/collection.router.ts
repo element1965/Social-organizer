@@ -2,7 +2,7 @@ import { z } from 'zod';
 import { router, protectedProcedure } from '../trpc.js';
 import { TRPCError } from '@trpc/server';
 import { MIN_COLLECTION_AMOUNT, CURRENCY_CODES, NOTIFICATION_RATIO } from '@so/shared';
-import { sendCollectionNotifications } from '../services/notification.service.js';
+import { sendCollectionNotifications, sendCollectionClosedTg } from '../services/notification.service.js';
 import { convertToUSD } from '../services/currency.service.js';
 
 export const collectionRouter = router({
@@ -152,6 +152,11 @@ export const collectionRouter = router({
           });
         } catch { /* skip */ }
       }
+
+      // Send Telegram notification about closure
+      sendCollectionClosedTg(ctx.db, input.id, ctx.userId).catch((err) =>
+        console.error('[TG Closed] Failed:', err),
+      );
 
       return updated;
     }),

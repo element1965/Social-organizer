@@ -86,6 +86,88 @@ export async function sendCollectionNotifications(
   return created;
 }
 
+/**
+ * Send Telegram notifications when a collection is closed.
+ * Notifies all previously notified users who have Telegram accounts.
+ */
+export async function sendCollectionClosedTg(
+  db: PrismaClient,
+  collectionId: string,
+  creatorId: string,
+): Promise<void> {
+  // Find all users who received notifications about this collection
+  const notifiedUsers = await db.notification.findMany({
+    where: { collectionId },
+    select: { userId: true },
+    distinct: ['userId'],
+  });
+  const recipientUserIds = notifiedUsers.map((n) => n.userId).filter((id) => id !== creatorId);
+  if (recipientUserIds.length === 0) return;
+
+  const tgAccounts = await db.platformAccount.findMany({
+    where: { userId: { in: recipientUserIds }, platform: 'TELEGRAM' },
+    select: { platformId: true },
+  });
+  if (tgAccounts.length === 0) return;
+
+  const creator = await db.user.findUnique({ where: { id: creatorId }, select: { name: true } });
+  const collection = await db.collection.findUnique({
+    where: { id: collectionId },
+    select: { amount: true, currency: true, originalAmount: true, originalCurrency: true },
+  });
+  if (!creator || !collection) return;
+
+  const amount = collection.originalAmount ?? collection.amount;
+  const currency = collection.originalCurrency ?? collection.currency;
+  const amountStr = amount != null ? `${amount} ${currency}` : '';
+  const botUsername = process.env.VITE_TELEGRAM_BOT_USERNAME || 'socialorganizer_bot';
+  const deepLink = `https://t.me/${botUsername}?startapp=collection_${collectionId}`;
+
+  const messages: TgBroadcastMessage[] = tgAccounts.map((acc) => ({
+    telegramId: acc.platformId,
+    text: `✅ <b>Collection Closed</b>\n\nFrom: <b>${creator.name}</b>${amountStr ? `\nAmount: ${amountStr}` : ''}\n\nThe collection has been closed by its creator.`,
+    replyMarkup: {
+      inline_keyboard: [[{ text: '📱 View', url: deepLink }]],
+    } as TgReplyMarkup,
+  }));
+
+  await sendTgMessages(messages);
+}
+
+/** Send an array of TG messages via direct send or BullMQ */
+async function sendTgMessages(messages: TgBroadcastMessage[]): Promise<void> {
+  if (messages.length === 0) return;
+
+  if (messages.length <= DIRECT_SEND_THRESHOLD) {
+    let sent = 0;
+    let failed = 0;
+    for (const msg of messages) {
+      try {
+        const ok = await sendTelegramMessage(msg.telegramId, msg.text, msg.replyMarkup);
+        if (ok) sent++; else failed++;
+      } catch { failed++; }
+    }
+    console.log(`[TG] Direct send: sent=${sent}, failed=${failed}`);
+    return;
+  }
+
+  try {
+    await enqueueTgBroadcast(messages);
+    console.log(`[TG] Enqueued ${messages.length} messages via BullMQ`);
+  } catch (err) {
+    console.error('[TG] BullMQ failed, fallback to direct:', err);
+    let sent = 0;
+    for (const msg of messages) {
+      try {
+        const ok = await sendTelegramMessage(msg.telegramId, msg.text, msg.replyMarkup);
+        if (ok) sent++;
+        if (sent % 25 === 0) await new Promise((r) => setTimeout(r, 1100));
+      } catch { /* continue */ }
+    }
+    console.log(`[TG] Fallback: ${sent}/${messages.length}`);
+  }
+}
+
 /** Find Telegram accounts of recipients and send notifications */
 async function dispatchTelegramNotifications(
   db: PrismaClient,
@@ -148,43 +230,5 @@ async function dispatchTelegramNotifications(
     };
   });
 
-  // For small batches, send directly (bypasses BullMQ/Redis dependency)
-  if (messages.length <= DIRECT_SEND_THRESHOLD) {
-    console.log(`[TG Notify] Sending ${messages.length} messages directly (below threshold)`);
-    let sent = 0;
-    let failed = 0;
-    for (const msg of messages) {
-      try {
-        const ok = await sendTelegramMessage(msg.telegramId, msg.text, msg.replyMarkup);
-        if (ok) sent++;
-        else failed++;
-      } catch (err) {
-        console.error(`[TG Notify] Direct send failed for ${msg.telegramId}:`, err);
-        failed++;
-      }
-    }
-    console.log(`[TG Notify] Direct send complete: sent=${sent}, failed=${failed}`);
-    return;
-  }
-
-  // For large batches, use BullMQ worker with rate limiting
-  try {
-    await enqueueTgBroadcast(messages);
-    console.log(`[TG Notify] Enqueued ${messages.length} messages via BullMQ`);
-  } catch (err) {
-    console.error('[TG Notify] BullMQ enqueue failed, falling back to direct send:', err);
-    // Fallback: send directly
-    let sent = 0;
-    for (const msg of messages) {
-      try {
-        const ok = await sendTelegramMessage(msg.telegramId, msg.text, msg.replyMarkup);
-        if (ok) sent++;
-        // Rate limit: pause every 25 messages
-        if (sent % 25 === 0) await new Promise((r) => setTimeout(r, 1100));
-      } catch {
-        // continue
-      }
-    }
-    console.log(`[TG Notify] Fallback direct send: ${sent}/${messages.length}`);
-  }
+  await sendTgMessages(messages);
 }
