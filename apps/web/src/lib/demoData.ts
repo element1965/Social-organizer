@@ -452,8 +452,9 @@ export function handleDemoRequest(path: string, input: unknown): unknown {
     // ---- Auth ----
     case 'auth.generateLinkCode':
       return { code: '123456', expiresAt: new Date(Date.now() + 5 * 60_000).toISOString() };
+    case 'auth.registerWithEmail':
+    case 'auth.loginWithEmail':
     case 'auth.loginWithTelegram':
-      return { accessToken: 'demo-token', refreshToken: 'demo-refresh', userId: DEMO_USER_ID };
     case 'auth.loginWithPlatform':
       return { accessToken: 'demo-token', refreshToken: 'demo-refresh', userId: DEMO_USER_ID };
     case 'auth.refresh':

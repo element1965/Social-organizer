@@ -24,6 +24,12 @@ export function TelegramBootstrap({ children }: { children: React.ReactNode }) {
       // Priority 1: start_param from Telegram deep link
       const startParam = getStartParam();
       let inviteToken: string | null = null;
+      if (startParam?.startsWith('collection_')) {
+        const collectionId = startParam.slice('collection_'.length);
+        navigate(`/collection/${collectionId}`, { replace: true });
+        return;
+      }
+
       if (startParam?.startsWith('invite_')) {
         inviteToken = startParam.slice('invite_'.length);
       }

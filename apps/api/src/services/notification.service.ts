@@ -7,7 +7,7 @@ import { enqueueTgBroadcast } from '../workers/index.js';
 import type { TgBroadcastMessage } from '../workers/tg-broadcast.worker.js';
 
 const DIRECT_SEND_THRESHOLD = 25;
-const BOT_USERNAME = process.env.VITE_TELEGRAM_BOT_USERNAME || 'socialorganizer_bot';
+const WEB_APP_URL = process.env.WEB_APP_URL || 'https://www.orginizer.com';
 
 /** Get tgBot translation for a given language, fallback to English */
 function tg(lang: string, key: string): string {
@@ -109,7 +109,7 @@ export async function sendCollectionClosedTg(
 
   const amount = collection.originalAmount ?? collection.amount;
   const currency = collection.originalCurrency ?? collection.currency;
-  const deepLink = `https://t.me/${BOT_USERNAME}?startapp=collection_${collectionId}`;
+  const webAppLink = `${WEB_APP_URL}/collection/${collectionId}`;
 
   const messages: TgBroadcastMessage[] = tgAccounts.map((acc) => {
     const lang = acc.user?.language || 'en';
@@ -119,7 +119,7 @@ export async function sendCollectionClosedTg(
       telegramId: acc.platformId,
       text,
       replyMarkup: {
-        inline_keyboard: [[{ text: `📱 ${tg(lang, 'view')}`, url: deepLink }]],
+        inline_keyboard: [[{ text: `📱 ${tg(lang, 'view')}`, web_app: { url: webAppLink } }]],
       } as TgReplyMarkup,
     };
   });
@@ -155,7 +155,7 @@ async function dispatchNewCollectionTg(
   const amount = collection.originalAmount ?? collection.amount;
   const currency = collection.originalCurrency ?? collection.currency;
   const isEmergency = collection.type === 'EMERGENCY';
-  const deepLink = `https://t.me/${BOT_USERNAME}?startapp=collection_${collectionId}`;
+  const webAppLink = `${WEB_APP_URL}/collection/${collectionId}`;
 
   const messages: TgBroadcastMessage[] = tgAccounts.map((acc) => {
     const lang = acc.user?.language || 'en';
@@ -167,7 +167,7 @@ async function dispatchNewCollectionTg(
       telegramId: acc.platformId,
       text,
       replyMarkup: {
-        inline_keyboard: [[{ text: `📱 ${tg(lang, 'open')}`, url: deepLink }]],
+        inline_keyboard: [[{ text: `📱 ${tg(lang, 'open')}`, web_app: { url: webAppLink } }]],
       } as TgReplyMarkup,
     };
   });

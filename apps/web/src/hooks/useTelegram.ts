@@ -44,6 +44,11 @@ export function useTelegramInit() {
       loginMutation
         .mutateAsync({ initData })
         .then((result) => {
+          if (!result?.accessToken) {
+            console.error('[TG Auth] login returned null/empty result');
+            setIsReady(true);
+            return;
+          }
           console.log('[TG Auth] login success, userId:', result.userId);
           login(result.accessToken, result.refreshToken, result.userId);
           setIsReady(true);
