@@ -130,7 +130,8 @@
     "periodDay": "Bugün",
     "times": "kez",
     "personalStats": "İstatistiklerim",
-    "networkStats": "Ağ İstatistikleri"
+    "networkStats": "Ağ İstatistikleri",
+    "dayCount": "{{count}}. gün"
   },
   "collection": {
     "create": "Yardım sinyali gönder",

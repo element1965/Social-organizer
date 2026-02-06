@@ -130,7 +130,8 @@
     "periodDay": "आज",
     "times": "बार",
     "personalStats": "मेरे आंकड़े",
-    "networkStats": "नेटवर्क आंकड़े"
+    "networkStats": "नेटवर्क आंकड़े",
+    "dayCount": "दिन {{count}}"
   },
   "collection": {
     "create": "मदद का संकेत भेजें",

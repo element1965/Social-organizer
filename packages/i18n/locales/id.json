@@ -130,7 +130,8 @@
     "periodDay": "Hari ini",
     "times": "kali",
     "personalStats": "Statistik Saya",
-    "networkStats": "Statistik Jaringan"
+    "networkStats": "Statistik Jaringan",
+    "dayCount": "Hari ke-{{count}}"
   },
   "collection": {
     "create": "Kirim sinyal bantuan",

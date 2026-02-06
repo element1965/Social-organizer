@@ -130,7 +130,8 @@
     "periodDay": "今日",
     "times": "回",
     "personalStats": "マイ統計",
-    "networkStats": "ネットワーク統計"
+    "networkStats": "ネットワーク統計",
+    "dayCount": "{{count}} 日目"
   },
   "collection": {
     "create": "助けの合図を送る",

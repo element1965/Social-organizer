@@ -130,7 +130,8 @@
     "periodDay": "今天",
     "times": "次",
     "personalStats": "我的统计",
-    "networkStats": "网络统计"
+    "networkStats": "网络统计",
+    "dayCount": "第 {{count}} 天"
   },
   "collection": {
     "create": "发送求助信号",

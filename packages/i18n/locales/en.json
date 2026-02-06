@@ -130,7 +130,8 @@
     "periodDay": "Today",
     "times": "times",
     "personalStats": "My Statistics",
-    "networkStats": "Network Statistics"
+    "networkStats": "Network Statistics",
+    "dayCount": "Day {{count}}"
   },
   "collection": {
     "create": "Send a help signal",

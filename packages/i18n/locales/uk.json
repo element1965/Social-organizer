@@ -130,7 +130,8 @@
     "periodDay": "Сьогодні",
     "times": "разів",
     "personalStats": "Моя статистика",
-    "networkStats": "Статистика мережі"
+    "networkStats": "Статистика мережі",
+    "dayCount": "День {{count}}"
   },
   "collection": {
     "create": "Подати сигнал про допомогу",

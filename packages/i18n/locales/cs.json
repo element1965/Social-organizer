@@ -130,7 +130,8 @@
     "periodDay": "Dnes",
     "times": "krát",
     "personalStats": "Moje statistiky",
-    "networkStats": "Statistiky sítě"
+    "networkStats": "Statistiky sítě",
+    "dayCount": "Den {{count}}"
   },
   "collection": {
     "create": "Vyslat signál o pomoci",

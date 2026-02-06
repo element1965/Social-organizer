@@ -130,7 +130,8 @@
     "periodDay": "Данас",
     "times": "пута",
     "personalStats": "Моја статистика",
-    "networkStats": "Статистика мреже"
+    "networkStats": "Статистика мреже",
+    "dayCount": "Дан {{count}}"
   },
   "collection": {
     "create": "Пошаљи сигнал за помоћ",

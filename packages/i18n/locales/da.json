@@ -130,7 +130,8 @@
     "periodDay": "I dag",
     "times": "gange",
     "personalStats": "Min statistik",
-    "networkStats": "Netværksstatistik"
+    "networkStats": "Netværksstatistik",
+    "dayCount": "Dag {{count}}"
   },
   "collection": {
     "create": "Send et hjælpesignal",

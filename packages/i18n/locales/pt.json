@@ -130,7 +130,8 @@
     "periodDay": "Hoje",
     "times": "vezes",
     "personalStats": "Minhas estatísticas",
-    "networkStats": "Estatísticas da rede"
+    "networkStats": "Estatísticas da rede",
+    "dayCount": "Dia {{count}}"
   },
   "collection": {
     "create": "Enviar sinal de ajuda",

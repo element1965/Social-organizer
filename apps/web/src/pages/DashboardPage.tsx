@@ -62,7 +62,6 @@ export function DashboardPage() {
   const totalReachable = networkStats?.totalReachable ?? 0;
   const byDepth = networkStats?.byDepth ?? {};
   const usersByDepth = (networkStats as any)?.usersByDepth ?? {};
-  const growth = networkStats?.growth ?? { day: 0, week: 0, month: 0, year: 0 };
 
   // Filter emergency notifications (unread, only for active collections)
   const emergencyNotifications = notifications?.items?.filter(
@@ -281,18 +280,22 @@ export function DashboardPage() {
                   );
                 })()}
               </div>
-              {/* Network growth inline */}
-              <div className="flex items-center gap-1 pt-3 border-t border-gray-200/50 dark:border-gray-700/50">
-                <TrendingUp className="w-3 h-3 text-green-600" />
-                <span className="text-xs text-gray-500">{t('dashboard.networkGrowth')}:</span>
-                <span className="text-xs font-medium text-green-600">+{growth.day} {t('dashboard.growth24h')}</span>
-                <span className="text-gray-300 dark:text-gray-600">•</span>
-                <span className="text-xs font-medium text-green-600">+{growth.week} {t('dashboard.growthWeek')}</span>
-                <span className="text-gray-300 dark:text-gray-600">•</span>
-                <span className="text-xs font-medium text-green-600">+{growth.month} {t('dashboard.growthMonth')}</span>
-                <span className="text-gray-300 dark:text-gray-600">•</span>
-                <span className="text-xs font-medium text-green-600">+{(growth as any).year || 0} {t('dashboard.growthYear')}</span>
-              </div>
+              {/* Day counter since registration (Kyiv timezone) */}
+              {me?.createdAt && (() => {
+                const kyivNow = new Date(new Date().toLocaleString('en-US', { timeZone: 'Europe/Kyiv' }));
+                const kyivReg = new Date(new Date(me.createdAt).toLocaleString('en-US', { timeZone: 'Europe/Kyiv' }));
+                const today = new Date(kyivNow.getFullYear(), kyivNow.getMonth(), kyivNow.getDate());
+                const regDay = new Date(kyivReg.getFullYear(), kyivReg.getMonth(), kyivReg.getDate());
+                const dayCount = Math.floor((today.getTime() - regDay.getTime()) / (24 * 60 * 60 * 1000)) + 1;
+                return (
+                  <div className="flex items-center gap-1 pt-3 border-t border-gray-200/50 dark:border-gray-700/50">
+                    <TrendingUp className="w-3 h-3 text-green-600" />
+                    <span className="text-xs font-medium text-green-600">
+                      {t('dashboard.dayCount', { count: dayCount })}
+                    </span>
+                  </div>
+                );
+              })()}
             </div>
 
             {/* Capabilities: Network + My */}
@@ -509,7 +512,7 @@ export function DashboardPage() {
               label={t('dashboard.networkReach')}
               value={helpStats?.networkReach ?? 0}
               sublabel={t('dashboard.people')}
-              trend={{ value: growth.month, isPositive: true }}
+              trend={undefined}
             />
 
             {/* Current Capabilities */}

@@ -130,7 +130,8 @@
     "periodDay": "Vandaag",
     "times": "keer",
     "personalStats": "Mijn statistieken",
-    "networkStats": "Netwerkstatistieken"
+    "networkStats": "Netwerkstatistieken",
+    "dayCount": "Dag {{count}}"
   },
   "collection": {
     "create": "Hulpsignaal verzenden",
