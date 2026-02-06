@@ -77,6 +77,12 @@ async function start() {
 
     await app.listen({ port: PORT, host: HOST });
     console.log(`API server running on http://${HOST}:${PORT}`);
+
+    // Startup diagnostics
+    const hasBotToken = !!process.env.TELEGRAM_BOT_TOKEN;
+    const hasFeedbackChat = !!process.env.FEEDBACK_CHAT_ID;
+    const hasRedis = !!process.env.REDIS_URL;
+    console.log(`[Startup] TELEGRAM_BOT_TOKEN: ${hasBotToken ? 'set' : 'MISSING'}, FEEDBACK_CHAT_ID: ${hasFeedbackChat ? 'set' : 'MISSING'}, REDIS_URL: ${hasRedis ? 'set' : 'MISSING'}`);
   } catch (err) {
     app.log.error(err);
     process.exit(1);
