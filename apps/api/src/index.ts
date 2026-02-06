@@ -11,6 +11,7 @@ import {
 import { appRouter, type AppRouter } from './routers/index.js';
 import { createContext } from './context.js';
 import { setupQueues } from './workers/index.js';
+import { handleTelegramUpdate, setTelegramWebhook } from './services/telegram-bot.service.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -49,6 +50,16 @@ async function start() {
       return { status: 'ok', timestamp: new Date().toISOString() };
     });
 
+    // Telegram Bot webhook — receives /start commands
+    app.post('/api/telegram-webhook', async (req, reply) => {
+      try {
+        await handleTelegramUpdate(req.body as Parameters<typeof handleTelegramUpdate>[0]);
+      } catch (err) {
+        console.error('[TG Webhook] error:', err);
+      }
+      return reply.send({ ok: true });
+    });
+
     // Serve web frontend (if dist exists)
     if (existsSync(WEB_DIST)) {
       await app.register(fastifyStatic, {
@@ -83,6 +94,11 @@ async function start() {
     const hasFeedbackChat = !!process.env.FEEDBACK_CHAT_ID;
     const hasRedis = !!process.env.REDIS_URL;
     console.log(`[Startup] TELEGRAM_BOT_TOKEN: ${hasBotToken ? 'set' : 'MISSING'}, FEEDBACK_CHAT_ID: ${hasFeedbackChat ? 'set' : 'MISSING'}, REDIS_URL: ${hasRedis ? 'set' : 'MISSING'}`);
+
+    // Register Telegram webhook (fire-and-forget)
+    if (process.env.TELEGRAM_BOT_TOKEN && process.env.WEB_APP_URL) {
+      setTelegramWebhook(`${process.env.WEB_APP_URL}/api/telegram-webhook`).catch(() => {});
+    }
   } catch (err) {
     app.log.error(err);
     process.exit(1);
