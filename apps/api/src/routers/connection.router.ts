@@ -194,7 +194,7 @@ export const connectionRouter = router({
       where: { id: ctx.userId },
       select: { createdAt: true },
     });
-    const since = user?.createdAt ?? new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
+    const since = user?.createdAt ?? new Date(Date.now() - 28 * 24 * 60 * 60 * 1000);
     const now = new Date();
     const totalDays = Math.max(1, Math.ceil((now.getTime() - since.getTime()) / (24 * 60 * 60 * 1000)));
 
