@@ -121,10 +121,11 @@ export async function handleTelegramUpdate(update: TgUpdate): Promise<void> {
       return;
     }
 
-    // Plain /start — open the app
+    // Plain /start — open the app + link to landing
+    const name = msg.from?.first_name || '';
     await sendTelegramMessage(
       chatId,
-      `👋 Welcome to <b>Social Organizer</b>!\n\nA platform for mutual support through trusted networks.`,
+      `👋 ${name ? name + ', w' : 'W'}elcome to <b>Social Organizer</b>!\n\nA platform for mutual support through trusted networks.\n\n🌐 <a href="${WEB_APP_URL}/welcome">Learn more about the project</a>`,
       {
         inline_keyboard: [[{ text: '📱 Open App', web_app: { url: WEB_APP_URL } }]],
       },
