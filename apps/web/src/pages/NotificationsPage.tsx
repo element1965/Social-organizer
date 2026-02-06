@@ -56,7 +56,7 @@ export function NotificationsPage() {
       ) : (
         <div className="space-y-2">
           {notifications.map((n) => {
-            const path = (n.handshakePath as string[]) || [];
+            const resolvedPath = (n as any).handshakePathResolved as Array<{ id: string; name: string }> | undefined;
             const badge = getNotificationBadge(n.type, t);
             const remaining = n.expiresAt ? timeRemaining(n.expiresAt) : null;
             return (
@@ -78,16 +78,21 @@ export function NotificationsPage() {
                       <p className="text-sm text-gray-600 dark:text-gray-400">
                         {n.collection?.amount != null ? `${n.collection.amount} ${n.collection.currency}` : n.collection?.currency}
                       </p>
-                      {path.length > 0 && (
+                      {resolvedPath && resolvedPath.length > 0 && (
                         <p className="text-xs text-gray-400 mt-1 flex items-center gap-0.5 flex-wrap">
                           {t('notifications.via')}{' '}
-                          {path.map((name, i) => (
-                            <span key={i} className="flex items-center gap-0.5">
+                          {resolvedPath.map((user, i) => (
+                            <span key={user.id} className="flex items-center gap-0.5">
                               {i > 0 && <ChevronRight className="w-3 h-3 shrink-0" />}
-                              <span className="text-gray-600 dark:text-gray-300">{name}</span>
+                              <button
+                                onClick={() => navigate(`/profile/${user.id}`)}
+                                className="text-gray-600 dark:text-gray-300 hover:text-blue-500 dark:hover:text-blue-400 transition-colors"
+                              >
+                                {user.name}
+                              </button>
                             </span>
                           ))}
-                          <span className="ml-1 text-gray-400">({path.length} {t('notifications.handshakes')})</span>
+                          <span className="ml-1 text-gray-400">({resolvedPath.length} {t('notifications.handshakes')})</span>
                         </p>
                       )}
                       {remaining && (
