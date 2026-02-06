@@ -148,13 +148,13 @@
     "collected": "Прикупљено",
     "goal": "Циљ",
     "openChat": "Отвори чат",
-    "expressIntention": "Изрази намеру",
-    "amountPlaceholder": "Износ (мин. 10)",
-    "submit": "Помози",
+    "expressIntention": "Учествуј",
+    "amountPlaceholder": "Износ (мин. 1)",
+    "submit": "Потврди",
     "close": "Затвори прикупљање",
     "participants": "Учесници",
     "noParticipants": "Још нико се није придружио",
-    "minAmount": "Минимум 10",
+    "minAmount": "Минимум 1",
     "connectionToCreator": "Веза са креатором"
   },
   "create": {

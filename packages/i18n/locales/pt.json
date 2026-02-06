@@ -148,13 +148,13 @@
     "collected": "Arrecadado",
     "goal": "Meta",
     "openChat": "Abrir chat",
-    "expressIntention": "Expressar intenção",
-    "amountPlaceholder": "Valor (mín. 10)",
-    "submit": "Ajudar",
+    "expressIntention": "Participar",
+    "amountPlaceholder": "Valor (mín. 1)",
+    "submit": "Confirmar",
     "close": "Encerrar vaquinha",
     "participants": "Participantes",
     "noParticipants": "Ninguém participou ainda",
-    "minAmount": "Mínimo 10",
+    "minAmount": "Mínimo 1",
     "connectionToCreator": "Conexão com o criador"
   },
   "create": {

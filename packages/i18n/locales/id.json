@@ -148,13 +148,13 @@
     "collected": "Terkumpul",
     "goal": "Target",
     "openChat": "Buka chat",
-    "expressIntention": "Nyatakan niat",
-    "amountPlaceholder": "Jumlah (min. 10)",
-    "submit": "Bantu",
+    "expressIntention": "Ikut serta",
+    "amountPlaceholder": "Jumlah (min. 1)",
+    "submit": "Konfirmasi",
     "close": "Tutup penggalangan",
     "participants": "Peserta",
     "noParticipants": "Belum ada yang bergabung",
-    "minAmount": "Minimum 10",
+    "minAmount": "Minimum 1",
     "connectionToCreator": "Koneksi ke pembuat"
   },
   "create": {

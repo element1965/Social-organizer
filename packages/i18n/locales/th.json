@@ -148,13 +148,13 @@
     "collected": "ระดมได้",
     "goal": "เป้าหมาย",
     "openChat": "เปิดแชท",
-    "expressIntention": "แสดงความตั้งใจ",
-    "amountPlaceholder": "จำนวน (ขั้นต่ำ 10)",
-    "submit": "ช่วยเหลือ",
+    "expressIntention": "เข้าร่วม",
+    "amountPlaceholder": "จำนวน (ขั้นต่ำ 1)",
+    "submit": "ยืนยัน",
     "close": "ปิดการระดม",
     "participants": "ผู้เข้าร่วม",
     "noParticipants": "ยังไม่มีผู้เข้าร่วม",
-    "minAmount": "ขั้นต่ำ 10",
+    "minAmount": "ขั้นต่ำ 1",
     "connectionToCreator": "ความเชื่อมโยงกับผู้สร้าง"
   },
   "create": {

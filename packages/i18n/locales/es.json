@@ -148,13 +148,13 @@
     "collected": "Recaudado",
     "goal": "Meta",
     "openChat": "Abrir chat",
-    "expressIntention": "Expresar intención",
-    "amountPlaceholder": "Monto (mín. 10)",
-    "submit": "Ayudar",
+    "expressIntention": "Participar",
+    "amountPlaceholder": "Monto (mín. 1)",
+    "submit": "Confirmar",
     "close": "Cerrar colecta",
     "participants": "Participantes",
     "noParticipants": "Nadie se ha unido todavía",
-    "minAmount": "Mínimo 10",
+    "minAmount": "Mínimo 1",
     "connectionToCreator": "Conexión con el creador"
   },
   "create": {

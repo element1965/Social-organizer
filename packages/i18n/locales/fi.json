@@ -148,13 +148,13 @@
     "collected": "Kerätty",
     "goal": "Tavoite",
     "openChat": "Avaa chat",
-    "expressIntention": "Ilmaise aikomus",
-    "amountPlaceholder": "Summa (väh. 10)",
-    "submit": "Auta",
+    "expressIntention": "Osallistu",
+    "amountPlaceholder": "Summa (väh. 1)",
+    "submit": "Vahvista",
     "close": "Sulje keräys",
     "participants": "Osallistujat",
     "noParticipants": "Kukaan ei ole vielä liittynyt",
-    "minAmount": "Vähintään 10",
+    "minAmount": "Vähintään 1",
     "connectionToCreator": "Yhteys luojaan"
   },
   "create": {

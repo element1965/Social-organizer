@@ -148,13 +148,13 @@
     "collected": "تم جمعه",
     "goal": "الهدف",
     "openChat": "فتح المحادثة",
-    "expressIntention": "التعبير عن النية",
-    "amountPlaceholder": "المبلغ (الحد الأدنى 10)",
-    "submit": "ساعد",
+    "expressIntention": "المشاركة",
+    "amountPlaceholder": "المبلغ (الحد الأدنى 1)",
+    "submit": "تأكيد",
     "close": "إغلاق المجموعة",
     "participants": "المشاركون",
     "noParticipants": "لم ينضم أحد بعد",
-    "minAmount": "الحد الأدنى 10",
+    "minAmount": "الحد الأدنى 1",
     "connectionToCreator": "الصلة بالمنشئ"
   },
   "create": {

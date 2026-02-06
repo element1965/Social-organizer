@@ -148,13 +148,13 @@
     "collected": "Opgehaald",
     "goal": "Doel",
     "openChat": "Chat openen",
-    "expressIntention": "Intentie uitspreken",
-    "amountPlaceholder": "Bedrag (min. 10)",
-    "submit": "Help",
+    "expressIntention": "Deelnemen",
+    "amountPlaceholder": "Bedrag (min. 1)",
+    "submit": "Bevestigen",
     "close": "Inzameling sluiten",
     "participants": "Deelnemers",
     "noParticipants": "Nog niemand heeft meegedaan",
-    "minAmount": "Minimaal 10",
+    "minAmount": "Minimaal 1",
     "connectionToCreator": "Verbinding met maker"
   },
   "create": {

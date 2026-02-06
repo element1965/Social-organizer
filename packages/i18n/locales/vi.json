@@ -148,13 +148,13 @@
     "collected": "Đã quyên góp",
     "goal": "Mục tiêu",
     "openChat": "Mở chat",
-    "expressIntention": "Bày tỏ ý định",
-    "amountPlaceholder": "Số tiền (tối thiểu 10)",
-    "submit": "Giúp đỡ",
+    "expressIntention": "Tham gia",
+    "amountPlaceholder": "Số tiền (tối thiểu 1)",
+    "submit": "Xác nhận",
     "close": "Đóng quyên góp",
     "participants": "Người tham gia",
     "noParticipants": "Chưa có ai tham gia",
-    "minAmount": "Tối thiểu 10",
+    "minAmount": "Tối thiểu 1",
     "connectionToCreator": "Kết nối với người tạo"
   },
   "create": {

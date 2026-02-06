@@ -31,7 +31,7 @@ export function CollectionPage() {
   const createObligation = trpc.obligation.create.useMutation({ onSuccess: () => utils.collection.getById.invalidate({ id: id! }) });
   const closeCollection = trpc.collection.close.useMutation({ onSuccess: () => utils.collection.getById.invalidate({ id: id! }) });
 
-  const [amount, setAmount] = useState('');
+  const [amount, setAmount] = useState('1');
   const [inputCurrency, setInputCurrency] = useState('USD');
   const [error, setError] = useState('');
 
@@ -69,7 +69,7 @@ export function CollectionPage() {
 
   const handleSubmitObligation = () => {
     const num = Number(amount);
-    if (!num || num < 10) { setError(t('collection.minAmount')); return; }
+    if (!num || num < 1) { setError(t('collection.minAmount')); return; }
     setError('');
     createObligation.mutate({ collectionId: collection.id, amount: num, inputCurrency });
     setAmount('');
@@ -147,11 +147,12 @@ export function CollectionPage() {
             <div className="space-y-2">
               <div className="flex gap-2">
                 <div className="flex-1">
-                  <Input type="number" min={10} placeholder={t('collection.amountPlaceholder')} hint={t('hints.intentionAmount')} value={amount} onChange={(e) => setAmount(e.target.value)} error={error} />
+                  <Input type="number" min={1} placeholder={t('collection.amountPlaceholder')} hint={t('hints.intentionAmount')} value={amount} onChange={(e) => setAmount(e.target.value)} error={error} />
                 </div>
                 <div className="w-28">
                   <Select
                     id="obligation-currency"
+                    className="h-[38px]"
                     value={inputCurrency}
                     onChange={(e) => setInputCurrency(e.target.value)}
                     options={currencyOptions}
