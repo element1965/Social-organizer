@@ -184,6 +184,7 @@
     "connectionLimit": "上限：{{current}}/{{max}}",
     "invite": "招待",
     "inviteHint": "このリンクは1回限りです。別の人を招待するには、もう一度 + をタップしてください。",
+    "inviteCopied": "コピーしました！次の招待用にリンクが更新されました。",
     "qrCode": "QRコード",
     "empty": "つながりはありません",
     "emptyHint": "最初の人を招待しましょう",

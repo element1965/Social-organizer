@@ -184,6 +184,7 @@
     "connectionLimit": "Giới hạn: {{current}}/{{max}}",
     "invite": "Mời",
     "inviteHint": "Liên kết này chỉ dùng một lần. Để mời người khác, hãy nhấn + lần nữa.",
+    "inviteCopied": "Đã sao chép! Liên kết đã cập nhật cho lần mời tiếp theo.",
     "qrCode": "Mã QR",
     "empty": "Không có kết nối",
     "emptyHint": "Mời người đầu tiên của bạn",

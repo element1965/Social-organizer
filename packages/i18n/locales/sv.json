@@ -184,6 +184,7 @@
     "connectionLimit": "Grans: {{current}}/{{max}}",
     "invite": "Bjud in",
     "inviteHint": "Denna länk är engångs. För att bjuda in en annan person, tryck på + igen.",
+    "inviteCopied": "Kopierat! Länken uppdaterad för nästa inbjudan.",
     "qrCode": "QR-kod",
     "empty": "Inga kontakter",
     "emptyHint": "Bjud in din forsta person",

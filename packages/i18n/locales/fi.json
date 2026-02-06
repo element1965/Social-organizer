@@ -184,6 +184,7 @@
     "connectionLimit": "Raja: {{current}}/{{max}}",
     "invite": "Kutsu",
     "inviteHint": "Tämä linkki on kertakäyttöinen. Kutsuaksesi toisen henkilön, paina + uudelleen.",
+    "inviteCopied": "Kopioitu! Linkki päivitetty seuraavaa kutsua varten.",
     "qrCode": "QR-koodi",
     "empty": "Ei yhteyksiä",
     "emptyHint": "Kutsu ensimmäinen henkilösi",

@@ -201,24 +201,32 @@ export function DashboardPage() {
                 <QRCodeSVG value={inviteUrl} size={200} />
               </div>
             </div>
-            <div className="flex items-center gap-2 p-3 bg-gray-100 dark:bg-gray-800 rounded-lg">
-              <p className="flex-1 text-xs text-gray-600 dark:text-gray-400 break-all select-all">{inviteUrl}</p>
-              <button
-                onClick={() => {
-                  navigator.clipboard.writeText(inviteUrl);
-                  setCopied(true);
-                  setTimeout(() => setCopied(false), 2000);
-                }}
-                className="shrink-0 p-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
-              >
+            <button
+              onClick={async () => {
+                // Copy current link
+                navigator.clipboard.writeText(inviteUrl);
+                setCopied(true);
+                // Generate new link immediately for next invite
+                generateInvite.reset();
+                const result = await generateInvite.mutateAsync();
+                const url = buildInviteUrl(result.token);
+                setInviteUrl(url);
+                setTimeout(() => setCopied(false), 2000);
+              }}
+              className="w-full flex items-center gap-2 p-3 bg-gray-100 dark:bg-gray-800 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+            >
+              <p className="flex-1 text-xs text-gray-600 dark:text-gray-400 break-all text-left">{inviteUrl}</p>
+              <div className="shrink-0">
                 {copied ? (
                   <Check className="w-5 h-5 text-green-500" />
                 ) : (
                   <Copy className="w-5 h-5 text-gray-500" />
                 )}
-              </button>
-            </div>
-            <p className="text-xs text-gray-400 text-center mt-3">{t('network.inviteHint')}</p>
+              </div>
+            </button>
+            <p className="text-xs text-gray-400 text-center mt-3">
+              {copied ? t('network.inviteCopied') : t('network.inviteHint')}
+            </p>
           </div>
         </div>
       )}

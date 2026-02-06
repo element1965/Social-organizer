@@ -184,6 +184,7 @@
     "connectionLimit": "한도: {{current}}/{{max}}",
     "invite": "초대",
     "inviteHint": "이 링크는 일회용입니다. 다른 사람을 초대하려면 +를 다시 탭하세요.",
+    "inviteCopied": "복사됨! 다음 초대를 위해 링크가 업데이트되었습니다.",
     "qrCode": "QR 코드",
     "empty": "연결이 없습니다",
     "emptyHint": "첫 번째 사람을 초대하세요",
