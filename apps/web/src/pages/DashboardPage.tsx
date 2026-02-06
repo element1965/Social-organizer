@@ -295,31 +295,37 @@ export function DashboardPage() {
               </div>
             </div>
 
-            {/* Current Capabilities */}
-            <div className="p-4 bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-950/30 dark:to-emerald-950/30 rounded-xl">
-              <div className="flex items-center justify-between mb-2">
-                <div className="flex items-center gap-2">
-                  <Wallet className="w-5 h-5 text-green-600" />
-                  <span className="text-sm text-gray-500">{t('dashboard.currentCapabilities')}</span>
+            {/* Capabilities: Network + My */}
+            <div className="grid grid-cols-2 gap-3">
+              <div className="p-4 bg-gradient-to-b from-green-50 to-emerald-50 dark:from-green-950/30 dark:to-emerald-950/30 rounded-xl">
+                <div className="flex items-center gap-1.5 mb-2">
+                  <Network className="w-4 h-4 text-green-600" />
+                  <span className="text-xs text-gray-500">{t('dashboard.currentCapabilities')}</span>
                 </div>
+                <p className="text-2xl font-bold text-green-700 dark:text-green-400">
+                  ${networkCapabilities?.total ?? 0}
+                </p>
+                <p className="text-xs text-gray-500 mt-1">
+                  {t('dashboard.capabilitiesContributors', { count: networkCapabilities?.contributors ?? 0 })}
+                </p>
+              </div>
+              <div className="p-4 bg-gradient-to-b from-blue-50 to-indigo-50 dark:from-blue-950/30 dark:to-indigo-950/30 rounded-xl">
+                <div className="flex items-center gap-1.5 mb-2">
+                  <Wallet className="w-4 h-4 text-blue-600" />
+                  <span className="text-xs text-gray-500">{t('dashboard.yourContribution')}</span>
+                </div>
+                <p className="text-xl font-bold text-blue-700 dark:text-blue-400">
+                  {me?.remainingBudget != null && me.monthlyBudget != null
+                    ? `$${Math.round(me.remainingBudget)} / $${Math.round(me.monthlyBudget)}`
+                    : '$0'}
+                </p>
                 <button
                   onClick={() => navigate('/settings')}
-                  className="text-xs text-blue-600 hover:underline"
+                  className="text-xs text-blue-600 hover:underline mt-1"
                 >
                   {t('dashboard.editBudget')}
                 </button>
               </div>
-              <p className="text-3xl font-bold text-green-700 dark:text-green-400">
-                ${networkCapabilities?.total ?? 0}
-              </p>
-              <p className="text-xs text-gray-500 mt-1">
-                {t('dashboard.capabilitiesContributors', { count: networkCapabilities?.contributors ?? 0 })}
-              </p>
-              {me?.remainingBudget != null && me.monthlyBudget != null && (
-                <p className="text-xs text-gray-400 mt-2">
-                  {t('dashboard.yourContribution')}: ${Math.round(me.remainingBudget)} / ${Math.round(me.monthlyBudget)}
-                </p>
-              )}
             </div>
 
             {/* Budget depleted hint */}
