@@ -342,6 +342,17 @@
     "footer": "Social Organizer — 一个开放的互助工具",
     "githubLink": "在 GitHub 上查看代码"
   },
+  "tgBot": {
+    "newEmergency": "新紧急募集",
+    "newRegular": "新募集",
+    "from": "来自",
+    "amount": "金额",
+    "networkSupport": "您网络中的某人需要帮助。",
+    "closed": "募集已关闭",
+    "closedBody": "募集已被创建者关闭。",
+    "open": "打开",
+    "view": "查看"
+  },
   "hints": {
     "collectionAmount": "输入你需要的金额。最少10个单位。系统会通知适当数量的人。",
     "collectionChatLink": "聊天链接（Telegram、WhatsApp 等），用于与响应者协调。",

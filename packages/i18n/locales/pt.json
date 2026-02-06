@@ -342,6 +342,17 @@
     "footer": "Social Organizer — uma ferramenta aberta de ajuda mútua",
     "githubLink": "Ver código no GitHub"
   },
+  "tgBot": {
+    "newEmergency": "Nova coleta de emergência",
+    "newRegular": "Nova coleta",
+    "from": "De",
+    "amount": "Valor",
+    "networkSupport": "Alguém na sua rede precisa de apoio.",
+    "closed": "Coleta encerrada",
+    "closedBody": "A coleta foi encerrada pelo criador.",
+    "open": "Abrir",
+    "view": "Ver"
+  },
   "hints": {
     "collectionAmount": "Insira o valor que você precisa. Mínimo 10 unidades. O sistema notificará o número adequado de pessoas.",
     "collectionChatLink": "Link para um chat (Telegram, WhatsApp, etc.) onde você pode se coordenar com quem responder.",

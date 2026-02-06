@@ -342,6 +342,17 @@
     "footer": "Social Organizer — ein offenes Werkzeug für gegenseitige Hilfe",
     "githubLink": "Code auf GitHub ansehen"
   },
+  "tgBot": {
+    "newEmergency": "Neue Notfall-Sammlung",
+    "newRegular": "Neue Sammlung",
+    "from": "Von",
+    "amount": "Betrag",
+    "networkSupport": "Jemand in Ihrem Netzwerk braucht Unterstützung.",
+    "closed": "Sammlung geschlossen",
+    "closedBody": "Die Sammlung wurde vom Ersteller geschlossen.",
+    "open": "Öffnen",
+    "view": "Ansehen"
+  },
   "hints": {
     "collectionAmount": "Gib den Betrag ein, den du benötigst. Mindestens 10 Einheiten. Das System benachrichtigt die richtige Anzahl von Personen.",
     "collectionChatLink": "Link zu einem Chat (Telegram, WhatsApp usw.), in dem du dich mit denen koordinieren kannst, die antworten.",

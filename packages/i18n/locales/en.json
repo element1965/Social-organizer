@@ -342,6 +342,17 @@
     "footer": "Social Organizer — an open mutual aid tool",
     "githubLink": "View code on GitHub"
   },
+  "tgBot": {
+    "newEmergency": "New Emergency Collection",
+    "newRegular": "New Regular Collection",
+    "from": "From",
+    "amount": "Amount",
+    "networkSupport": "Someone in your network needs support.",
+    "closed": "Collection Closed",
+    "closedBody": "The collection has been closed by its creator.",
+    "open": "Open",
+    "view": "View"
+  },
   "hints": {
     "collectionAmount": "Enter the amount you need. Minimum 10 units. The system will notify the right number of people.",
     "collectionChatLink": "Link to a chat (Telegram, WhatsApp, etc.) where you can coordinate with those who respond.",

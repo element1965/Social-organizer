@@ -342,6 +342,17 @@
     "footer": "Social Organizer — avoin keskinäisen avun työkalu",
     "githubLink": "Katso koodi GitHubissa"
   },
+  "tgBot": {
+    "newEmergency": "Uusi hätäkeräys",
+    "newRegular": "Uusi keräys",
+    "from": "Lähettäjä",
+    "amount": "Summa",
+    "networkSupport": "Joku verkostossasi tarvitsee tukea.",
+    "closed": "Keräys suljettu",
+    "closedBody": "Keräys on suljettu luojan toimesta.",
+    "open": "Avaa",
+    "view": "Näytä"
+  },
   "hints": {
     "collectionAmount": "Syötä tarvitsemasi summa. Vähintään 10 yksikköä. Järjestelmä ilmoittaa oikealle määrälle ihmisiä.",
     "collectionChatLink": "Linkki chattiin (Telegram, WhatsApp jne.), jossa voit koordinoida auttajien kanssa.",

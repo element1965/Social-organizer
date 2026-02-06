@@ -342,6 +342,17 @@
     "footer": "Social Organizer — 개방형 상호 지원 도구",
     "githubLink": "GitHub에서 코드 보기"
   },
+  "tgBot": {
+    "newEmergency": "새 긴급 모금",
+    "newRegular": "새 모금",
+    "from": "보낸 사람",
+    "amount": "금액",
+    "networkSupport": "네트워크의 누군가가 도움을 필요로 합니다.",
+    "closed": "모금 종료",
+    "closedBody": "모금이 생성자에 의해 종료되었습니다.",
+    "open": "열기",
+    "view": "보기"
+  },
   "hints": {
     "collectionAmount": "필요한 금액을 입력하세요. 최소 10 단위입니다. 시스템이 적절한 수의 사람들에게 알립니다.",
     "collectionChatLink": "채팅 링크(Telegram, WhatsApp 등)를 입력하여 응답자와 조율할 수 있습니다.",
