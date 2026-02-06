@@ -40,15 +40,20 @@ export function TelegramBootstrap({ children }: { children: React.ReactNode }) {
       }
 
       if (inviteToken) {
-        localStorage.removeItem('pendingInviteToken');
-        navigate(`/invite/${inviteToken}`, { replace: true });
+        // Save token so landing page and invite page can use it
+        localStorage.setItem('pendingInviteToken', inviteToken);
+        // Show landing page first so user understands the app before accepting
+        navigate(`/welcome?invite=${inviteToken}`, { replace: true });
         return;
       }
     }
 
-    // Default: redirect away from public pages
+    // Default: redirect away from public pages (but NOT if there's a pending invite)
     if (location.pathname === '/welcome' || location.pathname === '/login') {
-      navigate('/', { replace: true });
+      const hasPendingInvite = localStorage.getItem('pendingInviteToken');
+      if (!hasPendingInvite) {
+        navigate('/', { replace: true });
+      }
     }
   }, [isTelegram, isReady, isAuthenticated, location.pathname, navigate]);
 

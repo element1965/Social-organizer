@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { trpc } from '../lib/trpc';
@@ -17,6 +17,7 @@ export function InvitePage() {
   const isAuthenticated = useAuth((s) => s.isAuthenticated);
   const isDemo = localStorage.getItem('accessToken') === 'demo-token';
   const isRealUser = isAuthenticated && !isDemo;
+  const autoAcceptTriggered = useRef(false);
 
   // Save invite token to localStorage so it survives auth redirects and tab switches
   useEffect(() => {
@@ -29,7 +30,29 @@ export function InvitePage() {
     { token: token! },
     { enabled: !!token },
   );
-  const accept = trpc.invite.accept.useMutation();
+  const accept = trpc.invite.accept.useMutation({
+    onSuccess: () => {
+      localStorage.removeItem('pendingInviteToken');
+    },
+  });
+
+  // Auto-accept invite when authenticated user lands on this page
+  useEffect(() => {
+    if (
+      isRealUser &&
+      invite &&
+      !invite.usedById &&
+      !accept.isPending &&
+      !accept.isSuccess &&
+      !accept.error &&
+      !autoAcceptTriggered.current &&
+      token
+    ) {
+      autoAcceptTriggered.current = true;
+      localStorage.removeItem('pendingInviteToken');
+      accept.mutate({ token });
+    }
+  }, [isRealUser, invite, accept.isPending, accept.isSuccess, accept.error, token]);
 
   if (isLoading) return <div className="flex justify-center py-12"><Spinner /></div>;
 
@@ -46,7 +69,7 @@ export function InvitePage() {
     );
   }
 
-  if (invite.usedById) {
+  if (invite.usedById && !accept.isSuccess) {
     return (
       <div className="min-h-screen flex items-center justify-center px-6">
         <Card>
@@ -95,35 +118,24 @@ export function InvitePage() {
               <LogIn className="w-4 h-4 mr-2" /> {t('invite.loginToAccept')}
             </Button>
           ) : (
-            <div className="flex flex-col gap-2">
-              <Button
-                className="w-full"
-                size="lg"
-                onClick={() => {
-                  localStorage.removeItem('pendingInviteToken');
-                  accept.mutate({ token: token! });
-                }}
-                disabled={accept.isPending}
-              >
-                {accept.isPending ? (
-                  <Spinner />
-                ) : (
-                  <><UserPlus className="w-4 h-4 mr-2" /> {t('invite.accept')}</>
-                )}
-              </Button>
-              <Button
-                className="w-full"
-                size="lg"
-                variant="outline"
-                onClick={() => navigate('/')}
-              >
-                {t('invite.decline')}
-              </Button>
+            <div className="flex flex-col items-center gap-3">
+              <Spinner />
+              <p className="text-sm text-gray-500">{t('invite.accepting') || 'Accepting...'}</p>
             </div>
           )}
           {accept.error && (
             <div className="mt-4 p-3 bg-red-50 dark:bg-red-950 rounded-lg">
               <p className="text-sm text-red-600 dark:text-red-400 font-medium">{accept.error.message}</p>
+              <Button
+                className="w-full mt-3"
+                size="lg"
+                onClick={() => {
+                  autoAcceptTriggered.current = false;
+                  accept.reset();
+                }}
+              >
+                {t('common.retry') || 'Retry'}
+              </Button>
             </div>
           )}
         </CardContent>
