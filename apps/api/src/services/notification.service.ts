@@ -1,15 +1,22 @@
 import type { PrismaClient } from '@so/db';
 import { NOTIFICATION_TTL_HOURS } from '@so/shared';
+import { resources, type SupportedLanguage } from '@so/i18n';
 import { findRecipientsViaBfs } from './bfs.service.js';
 import { sendTelegramMessage, type TgReplyMarkup } from './telegram-bot.service.js';
 import { enqueueTgBroadcast } from '../workers/index.js';
 import type { TgBroadcastMessage } from '../workers/tg-broadcast.worker.js';
 
-const DIRECT_SEND_THRESHOLD = 25; // Send directly if fewer than 25 recipients
+const DIRECT_SEND_THRESHOLD = 25;
+const BOT_USERNAME = process.env.VITE_TELEGRAM_BOT_USERNAME || 'socialorganizer_bot';
+
+/** Get tgBot translation for a given language, fallback to English */
+function tg(lang: string, key: string): string {
+  const loc = resources[lang as SupportedLanguage] ?? resources.en;
+  return (loc as any).tgBot?.[key] ?? (resources.en as any).tgBot[key] ?? key;
+}
 
 /**
  * Send collection notifications via BFS traversal of connection graph.
- * Number of recipients = maxRecipients (default: amount / NOTIFICATION_RATIO).
  */
 export async function sendCollectionNotifications(
   db: PrismaClient,
@@ -19,11 +26,8 @@ export async function sendCollectionNotifications(
   wave: number = 1,
   maxRecipients?: number,
 ): Promise<number> {
-  // Get creator's ignore list (those they ignore and those who ignore them)
   const ignoreEntries = await db.ignoreEntry.findMany({
-    where: {
-      OR: [{ fromUserId: creatorId }, { toUserId: creatorId }],
-    },
+    where: { OR: [{ fromUserId: creatorId }, { toUserId: creatorId }] },
     select: { fromUserId: true, toUserId: true },
   });
   const ignoredUserIds = new Set<string>();
@@ -31,7 +35,6 @@ export async function sendCollectionNotifications(
     ignoredUserIds.add(entry.fromUserId === creatorId ? entry.toUserId : entry.fromUserId);
   }
 
-  // Also exclude those who already received notification about this collection
   const alreadyNotified = await db.notification.findMany({
     where: { collectionId },
     select: { userId: true },
@@ -42,43 +45,31 @@ export async function sendCollectionNotifications(
   }
 
   const recipients = await findRecipientsViaBfs(db, creatorId, undefined, maxRecipients, [...ignoredUserIds]);
-
   if (recipients.length === 0) return 0;
 
   const expiresAt = new Date(Date.now() + NOTIFICATION_TTL_HOURS * 60 * 60 * 1000);
 
-  // Bulk insert with upsert (by unique [userId, collectionId, wave])
   let created = 0;
   for (const recipient of recipients) {
     try {
       await db.notification.upsert({
         where: {
           userId_collectionId_type_wave: {
-            userId: recipient.userId,
-            collectionId,
-            type,
-            wave,
+            userId: recipient.userId, collectionId, type, wave,
           },
         },
         create: {
-          userId: recipient.userId,
-          collectionId,
-          type,
-          handshakePath: recipient.path,
-          expiresAt,
-          wave,
+          userId: recipient.userId, collectionId, type,
+          handshakePath: recipient.path, expiresAt, wave,
         },
         update: {},
       });
       created++;
-    } catch {
-      // Skip errors (e.g. foreign key if user is deleted)
-    }
+    } catch { /* skip */ }
   }
 
-  // Send Telegram notifications for NEW_COLLECTION
   if (type === 'NEW_COLLECTION' && created > 0) {
-    dispatchTelegramNotifications(db, collectionId, creatorId, recipients.map((r) => r.userId)).catch((err) =>
+    dispatchNewCollectionTg(db, collectionId, creatorId, recipients.map((r) => r.userId)).catch((err) =>
       console.error('[TG Notify] Failed to dispatch:', err),
     );
   }
@@ -88,14 +79,12 @@ export async function sendCollectionNotifications(
 
 /**
  * Send Telegram notifications when a collection is closed.
- * Notifies all previously notified users who have Telegram accounts.
  */
 export async function sendCollectionClosedTg(
   db: PrismaClient,
   collectionId: string,
   creatorId: string,
 ): Promise<void> {
-  // Find all users who received notifications about this collection
   const notifiedUsers = await db.notification.findMany({
     where: { collectionId },
     select: { userId: true },
@@ -104,9 +93,10 @@ export async function sendCollectionClosedTg(
   const recipientUserIds = notifiedUsers.map((n) => n.userId).filter((id) => id !== creatorId);
   if (recipientUserIds.length === 0) return;
 
+  // Get TG accounts + user language
   const tgAccounts = await db.platformAccount.findMany({
     where: { userId: { in: recipientUserIds }, platform: 'TELEGRAM' },
-    select: { platformId: true },
+    select: { platformId: true, user: { select: { language: true } } },
   });
   if (tgAccounts.length === 0) return;
 
@@ -119,17 +109,68 @@ export async function sendCollectionClosedTg(
 
   const amount = collection.originalAmount ?? collection.amount;
   const currency = collection.originalCurrency ?? collection.currency;
-  const amountStr = amount != null ? `${amount} ${currency}` : '';
-  const botUsername = process.env.VITE_TELEGRAM_BOT_USERNAME || 'socialorganizer_bot';
-  const deepLink = `https://t.me/${botUsername}?startapp=collection_${collectionId}`;
+  const deepLink = `https://t.me/${BOT_USERNAME}?startapp=collection_${collectionId}`;
 
-  const messages: TgBroadcastMessage[] = tgAccounts.map((acc) => ({
-    telegramId: acc.platformId,
-    text: `✅ <b>Collection Closed</b>\n\nFrom: <b>${creator.name}</b>${amountStr ? `\nAmount: ${amountStr}` : ''}\n\nThe collection has been closed by its creator.`,
-    replyMarkup: {
-      inline_keyboard: [[{ text: '📱 View', url: deepLink }]],
-    } as TgReplyMarkup,
-  }));
+  const messages: TgBroadcastMessage[] = tgAccounts.map((acc) => {
+    const lang = acc.user?.language || 'en';
+    const amountStr = amount != null ? `${amount} ${currency}` : '';
+    const text = `✅ <b>${tg(lang, 'closed')}</b>\n\n${tg(lang, 'from')}: <b>${creator.name}</b>${amountStr ? `\n${tg(lang, 'amount')}: ${amountStr}` : ''}\n\n${tg(lang, 'closedBody')}`;
+    return {
+      telegramId: acc.platformId,
+      text,
+      replyMarkup: {
+        inline_keyboard: [[{ text: `📱 ${tg(lang, 'view')}`, url: deepLink }]],
+      } as TgReplyMarkup,
+    };
+  });
+
+  await sendTgMessages(messages);
+}
+
+/** Send new collection Telegram notifications with per-user language */
+async function dispatchNewCollectionTg(
+  db: PrismaClient,
+  collectionId: string,
+  creatorId: string,
+  recipientUserIds: string[],
+): Promise<void> {
+  console.log(`[TG Notify] Starting dispatch for collection ${collectionId}, recipients: ${recipientUserIds.length}`);
+
+  const collection = await db.collection.findUnique({
+    where: { id: collectionId },
+    select: { type: true, amount: true, currency: true, originalAmount: true, originalCurrency: true },
+  });
+  if (!collection) return;
+
+  const creator = await db.user.findUnique({ where: { id: creatorId }, select: { name: true } });
+  if (!creator) return;
+
+  // Get TG accounts + user language
+  const tgAccounts = await db.platformAccount.findMany({
+    where: { userId: { in: recipientUserIds }, platform: 'TELEGRAM' },
+    select: { platformId: true, user: { select: { language: true } } },
+  });
+  if (tgAccounts.length === 0) return;
+
+  const amount = collection.originalAmount ?? collection.amount;
+  const currency = collection.originalCurrency ?? collection.currency;
+  const isEmergency = collection.type === 'EMERGENCY';
+  const deepLink = `https://t.me/${BOT_USERNAME}?startapp=collection_${collectionId}`;
+
+  const messages: TgBroadcastMessage[] = tgAccounts.map((acc) => {
+    const lang = acc.user?.language || 'en';
+    const emoji = isEmergency ? '🚨' : '📢';
+    const title = isEmergency ? tg(lang, 'newEmergency') : tg(lang, 'newRegular');
+    const amountStr = amount != null ? `${amount} ${currency}` : '';
+    const text = `${emoji} <b>${title}</b>\n\n${tg(lang, 'from')}: <b>${creator.name}</b>${amountStr ? `\n${tg(lang, 'amount')}: ${amountStr}` : ''}\n\n${tg(lang, 'networkSupport')}`;
+    return {
+      telegramId: acc.platformId,
+      text,
+      replyMarkup: {
+        inline_keyboard: [[{ text: `📱 ${tg(lang, 'open')}`, url: deepLink }]],
+      } as TgReplyMarkup,
+    };
+  });
 
   await sendTgMessages(messages);
 }
@@ -166,69 +207,4 @@ async function sendTgMessages(messages: TgBroadcastMessage[]): Promise<void> {
     }
     console.log(`[TG] Fallback: ${sent}/${messages.length}`);
   }
-}
-
-/** Find Telegram accounts of recipients and send notifications */
-async function dispatchTelegramNotifications(
-  db: PrismaClient,
-  collectionId: string,
-  creatorId: string,
-  recipientUserIds: string[],
-): Promise<void> {
-  console.log(`[TG Notify] Starting dispatch for collection ${collectionId}, recipients: ${recipientUserIds.length}`);
-
-  // Get collection info and creator name
-  const collection = await db.collection.findUnique({
-    where: { id: collectionId },
-    select: { type: true, amount: true, currency: true, originalAmount: true, originalCurrency: true },
-  });
-  if (!collection) {
-    console.warn('[TG Notify] Collection not found, skipping');
-    return;
-  }
-
-  const creator = await db.user.findUnique({
-    where: { id: creatorId },
-    select: { name: true },
-  });
-  if (!creator) {
-    console.warn('[TG Notify] Creator not found, skipping');
-    return;
-  }
-
-  // Find Telegram platform accounts for recipients
-  const tgAccounts = await db.platformAccount.findMany({
-    where: {
-      userId: { in: recipientUserIds },
-      platform: 'TELEGRAM',
-    },
-    select: { userId: true, platformId: true },
-  });
-
-  console.log(`[TG Notify] Found ${tgAccounts.length} Telegram accounts out of ${recipientUserIds.length} recipients`);
-
-  if (tgAccounts.length === 0) return;
-
-  const amount = collection.originalAmount ?? collection.amount;
-  const currency = collection.originalCurrency ?? collection.currency;
-  const collectionType = collection.type as 'EMERGENCY' | 'REGULAR';
-  const botUsername = process.env.VITE_TELEGRAM_BOT_USERNAME || 'socialorganizer_bot';
-  const deepLink = `https://t.me/${botUsername}?startapp=collection_${collectionId}`;
-
-  const messages: TgBroadcastMessage[] = tgAccounts.map((acc) => {
-    const emoji = collectionType === 'EMERGENCY' ? '🚨' : '📢';
-    const typeLabel = collectionType === 'EMERGENCY' ? 'Emergency' : 'Regular';
-    const amountStr = amount != null ? `${amount} ${currency}` : 'open';
-    const text = `${emoji} <b>New ${typeLabel} Collection</b>\n\nFrom: <b>${creator.name}</b>\nAmount: ${amountStr}\n\nSomeone in your network needs support.`;
-
-    return {
-      telegramId: acc.platformId,
-      text,
-      replyMarkup: {
-        inline_keyboard: [[{ text: '📱 Open', url: deepLink }]],
-      } as TgReplyMarkup,
-    };
-  });
-
-  await sendTgMessages(messages);
 }

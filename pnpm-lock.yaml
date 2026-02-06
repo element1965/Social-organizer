@@ -29,6 +29,9 @@ importers:
       '@so/db':
         specifier: workspace:*
         version: link:../../packages/db
+      '@so/i18n':
+        specifier: workspace:*
+        version: link:../../packages/i18n
       '@so/shared':
         specifier: workspace:*
         version: link:../../packages/shared

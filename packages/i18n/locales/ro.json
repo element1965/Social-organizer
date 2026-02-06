@@ -342,6 +342,17 @@
     "footer": "Social Organizer — un instrument deschis pentru ajutor reciproc",
     "githubLink": "Vezi codul pe GitHub"
   },
+  "tgBot": {
+    "newEmergency": "Nouă colectă de urgență",
+    "newRegular": "Nouă colectă",
+    "from": "De la",
+    "amount": "Suma",
+    "networkSupport": "Cineva din rețeaua ta are nevoie de sprijin.",
+    "closed": "Colectă închisă",
+    "closedBody": "Colecta a fost închisă de creator.",
+    "open": "Deschide",
+    "view": "Vezi"
+  },
   "hints": {
     "collectionAmount": "Introdu suma de care ai nevoie. Minimum 10 unitati. Sistemul va notifica numarul potrivit de persoane.",
     "collectionChatLink": "Link catre un chat (Telegram, WhatsApp etc.) unde te poti coordona cu cei care raspund.",

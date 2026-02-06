@@ -342,6 +342,17 @@
     "footer": "Social Organizer — alat saling bantu sumber terbuka",
     "githubLink": "Lihat kode di GitHub"
   },
+  "tgBot": {
+    "newEmergency": "Penggalangan darurat baru",
+    "newRegular": "Penggalangan baru",
+    "from": "Dari",
+    "amount": "Jumlah",
+    "networkSupport": "Seseorang di jaringan Anda membutuhkan dukungan.",
+    "closed": "Penggalangan ditutup",
+    "closedBody": "Penggalangan telah ditutup oleh pembuatnya.",
+    "open": "Buka",
+    "view": "Lihat"
+  },
   "hints": {
     "collectionAmount": "Masukkan jumlah yang kamu butuhkan. Minimum 10 unit. Sistem akan memberitahu jumlah orang yang tepat.",
     "collectionChatLink": "Tautan ke chat (Telegram, WhatsApp, dll.) tempat kamu bisa berkoordinasi dengan yang merespons.",

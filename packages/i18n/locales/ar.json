@@ -342,6 +342,17 @@
     "footer": "Social Organizer — أداة مفتوحة للمساعدة المتبادلة",
     "githubLink": "عرض الكود على GitHub"
   },
+  "tgBot": {
+    "newEmergency": "حملة طوارئ جديدة",
+    "newRegular": "حملة جديدة",
+    "from": "من",
+    "amount": "المبلغ",
+    "networkSupport": "شخص ما في شبكتك يحتاج إلى دعم.",
+    "closed": "تم إغلاق الحملة",
+    "closedBody": "تم إغلاق الحملة من قبل منشئها.",
+    "open": "فتح",
+    "view": "عرض"
+  },
   "hints": {
     "collectionAmount": "أدخل المبلغ الذي تحتاجه. الحد الأدنى 10 وحدات. سيقوم النظام بإعلام العدد المناسب من الأشخاص.",
     "collectionChatLink": "رابط محادثة (Telegram، WhatsApp، إلخ) للتنسيق مع من يستجيبون.",

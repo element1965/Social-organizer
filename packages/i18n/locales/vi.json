@@ -342,6 +342,17 @@
     "footer": "Social Organizer — công cụ hỗ trợ lẫn nhau mã nguồn mở",
     "githubLink": "Xem mã nguồn trên GitHub"
   },
+  "tgBot": {
+    "newEmergency": "Chiến dịch khẩn cấp mới",
+    "newRegular": "Chiến dịch mới",
+    "from": "Từ",
+    "amount": "Số tiền",
+    "networkSupport": "Ai đó trong mạng lưới của bạn cần hỗ trợ.",
+    "closed": "Chiến dịch đã đóng",
+    "closedBody": "Chiến dịch đã được đóng bởi người tạo.",
+    "open": "Mở",
+    "view": "Xem"
+  },
   "hints": {
     "collectionAmount": "Nhập số tiền bạn cần. Tối thiểu 10 đơn vị. Hệ thống sẽ thông báo đến đúng số người cần thiết.",
     "collectionChatLink": "Liên kết đến nhóm chat (Telegram, WhatsApp, v.v.) nơi bạn có thể phối hợp với người phản hồi.",

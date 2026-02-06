@@ -342,6 +342,17 @@
     "footer": "Social Organizer — オープンな相互支援ツール",
     "githubLink": "GitHubでコードを見る"
   },
+  "tgBot": {
+    "newEmergency": "新しい緊急募集",
+    "newRegular": "新しい募集",
+    "from": "送信者",
+    "amount": "金額",
+    "networkSupport": "あなたのネットワークの誰かがサポートを必要としています。",
+    "closed": "募集が終了しました",
+    "closedBody": "募集は作成者によって終了されました。",
+    "open": "開く",
+    "view": "表示"
+  },
   "hints": {
     "collectionAmount": "必要な金額を入力してください。最低10単位です。システムが適切な人数に通知します。",
     "collectionChatLink": "チャットリンク（Telegram、WhatsAppなど）を入力し、応答者と調整できます。",

@@ -342,6 +342,17 @@
     "footer": "Social Organizer — otevřený nástroj pro vzájemnou pomoc",
     "githubLink": "Zobrazit kód na GitHubu"
   },
+  "tgBot": {
+    "newEmergency": "Nová nouzová sbírka",
+    "newRegular": "Nová sbírka",
+    "from": "Od",
+    "amount": "Částka",
+    "networkSupport": "Někdo ve vaší síti potřebuje podporu.",
+    "closed": "Sbírka uzavřena",
+    "closedBody": "Sbírka byla uzavřena tvůrcem.",
+    "open": "Otevřít",
+    "view": "Zobrazit"
+  },
   "hints": {
     "collectionAmount": "Zadejte částku, kterou potřebujete. Minimálně 10 jednotek. Systém upozorní správný počet lidí.",
     "collectionChatLink": "Odkaz na chat (Telegram, WhatsApp atd.), kde se můžete koordinovat s těmi, kteří odpoví.",

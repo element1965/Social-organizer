@@ -342,6 +342,17 @@
     "footer": "Social Organizer — açık bir karşılıklı yardım aracı",
     "githubLink": "Kodu GitHub'da görüntüle"
   },
+  "tgBot": {
+    "newEmergency": "Yeni acil yardım kampanyası",
+    "newRegular": "Yeni yardım kampanyası",
+    "from": "Gönderen",
+    "amount": "Miktar",
+    "networkSupport": "Ağınızdaki biri desteğe ihtiyaç duyuyor.",
+    "closed": "Kampanya kapatıldı",
+    "closedBody": "Kampanya oluşturucu tarafından kapatıldı.",
+    "open": "Aç",
+    "view": "Görüntüle"
+  },
   "hints": {
     "collectionAmount": "İhtiyacınız olan miktarı girin. Minimum 10 birim. Sistem doğru sayıda kişiyi bilgilendirecektir.",
     "collectionChatLink": "Yanıt verenlerin koordinasyon sağlayabileceği bir sohbet bağlantısı (Telegram, WhatsApp, vb.).",

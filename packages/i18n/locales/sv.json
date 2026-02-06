@@ -342,6 +342,17 @@
     "footer": "Social Organizer — ett oppet verktyg for omsesidig hjalp",
     "githubLink": "Visa koden pa GitHub"
   },
+  "tgBot": {
+    "newEmergency": "Ny akut insamling",
+    "newRegular": "Ny insamling",
+    "from": "Från",
+    "amount": "Belopp",
+    "networkSupport": "Någon i ditt nätverk behöver stöd.",
+    "closed": "Insamling stängd",
+    "closedBody": "Insamlingen har stängts av skaparen.",
+    "open": "Öppna",
+    "view": "Visa"
+  },
   "hints": {
     "collectionAmount": "Ange beloppet du behover. Minimum 10 enheter. Systemet informerar ratt antal personer.",
     "collectionChatLink": "Lank till en chatt (Telegram, WhatsApp etc.) dar du kan samordna med dem som svarar.",
