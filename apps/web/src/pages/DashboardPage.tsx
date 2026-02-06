@@ -109,6 +109,7 @@ export function DashboardPage() {
         <button
           disabled={generateInvite.isPending}
           onClick={async () => {
+            generateInvite.reset();
             const result = await generateInvite.mutateAsync();
             const url = buildInviteUrl(result.token);
             setInviteUrl(url);
@@ -217,6 +218,7 @@ export function DashboardPage() {
                 )}
               </button>
             </div>
+            <p className="text-xs text-gray-400 text-center mt-3">{t('network.inviteHint')}</p>
           </div>
         </div>
       )}

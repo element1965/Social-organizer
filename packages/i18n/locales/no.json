@@ -183,6 +183,7 @@
     "addConnection": "Legg til forbindelse",
     "connectionLimit": "Grense: {{current}}/{{max}}",
     "invite": "Inviter",
+    "inviteHint": "Denne lenken er engangs. For å invitere en annen person, trykk på + igjen.",
     "qrCode": "QR-kode",
     "empty": "Ingen forbindelser",
     "emptyHint": "Inviter din første person",

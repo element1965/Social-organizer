@@ -183,6 +183,7 @@
     "addConnection": "Thêm kết nối",
     "connectionLimit": "Giới hạn: {{current}}/{{max}}",
     "invite": "Mời",
+    "inviteHint": "Liên kết này chỉ dùng một lần. Để mời người khác, hãy nhấn + lần nữa.",
     "qrCode": "Mã QR",
     "empty": "Không có kết nối",
     "emptyHint": "Mời người đầu tiên của bạn",

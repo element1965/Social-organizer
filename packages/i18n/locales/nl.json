@@ -183,6 +183,7 @@
     "addConnection": "Connectie toevoegen",
     "connectionLimit": "Limiet: {{current}}/{{max}}",
     "invite": "Uitnodigen",
+    "inviteHint": "Deze link is eenmalig. Om nog iemand uit te nodigen, tik opnieuw op +.",
     "qrCode": "QR-code",
     "empty": "Geen connecties",
     "emptyHint": "Nodig je eerste persoon uit",
