@@ -238,7 +238,8 @@
     "connectionPath": "Путања везе",
     "contacts": "Контакти",
     "currentCapability": "Тренутна могућност",
-    "memberSince": "Члан од {{date}}"
+    "memberSince": "Члан од {{date}}",
+    "nicknamePlaceholder": "Твоје име за њих..."
   },
   "settings": {
     "title": "Подешавања",

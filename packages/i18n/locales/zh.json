@@ -238,7 +238,8 @@
     "connectionPath": "连接路径",
     "contacts": "联系方式",
     "currentCapability": "当前能力",
-    "memberSince": "加入于 {{date}}"
+    "memberSince": "加入于 {{date}}",
+    "nicknamePlaceholder": "你给他们的备注名..."
   },
   "settings": {
     "title": "设置",

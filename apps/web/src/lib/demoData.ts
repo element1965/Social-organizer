@@ -99,15 +99,26 @@ for (const u of users) usersMap.set(u.id, u);
 
 const connectionUserIds = users.slice(1, 13).map((u) => u.id);
 
-const connections = connectionUserIds.map((uid, i) => ({
-  id: `conn-${i + 1}`,
-  userId: uid,
-  name: usersMap.get(uid)!.name,
-  photoUrl: null,
-  createdAt: new Date(Date.now() - (i + 1) * 86_400_000 * 3).toISOString(),
-  connectionCount: 5 + Math.floor(Math.random() * 20),
-  remainingBudget: Math.random() > 0.3 ? Math.floor(50 + Math.random() * 200) : null,
-}));
+const connectionNicknames: Record<string, string> = {
+  'user-1': 'Лёша работа',
+  'user-3': 'Маша соседка',
+};
+
+const connections = connectionUserIds.map((uid, i) => {
+  const nickname = connectionNicknames[uid] || null;
+  const name = usersMap.get(uid)!.name;
+  return {
+    id: `conn-${i + 1}`,
+    userId: uid,
+    name,
+    photoUrl: null,
+    createdAt: new Date(Date.now() - (i + 1) * 86_400_000 * 3).toISOString(),
+    connectionCount: 5 + Math.floor(Math.random() * 20),
+    remainingBudget: Math.random() > 0.3 ? Math.floor(50 + Math.random() * 200) : null,
+    nickname,
+    displayName: nickname || name,
+  };
+});
 
 // ---------- Graph slice (~60 nodes, ~80 edges, 3 levels) ----------
 
@@ -562,6 +573,22 @@ export function handleDemoRequest(path: string, input: unknown): unknown {
         }
       }
       return { path };
+    }
+    case 'connection.getNickname': {
+      const targetId = inp?.targetUserId as string;
+      const conn = connections.find((c) => c.userId === targetId);
+      if (!conn) return { nickname: null, isConnected: false };
+      return { nickname: conn.nickname, isConnected: true };
+    }
+    case 'connection.setNickname': {
+      const targetId = inp?.targetUserId as string;
+      const nickname = (inp?.nickname as string)?.trim() || null;
+      const conn = connections.find((c) => c.userId === targetId);
+      if (conn) {
+        (conn as any).nickname = nickname;
+        (conn as any).displayName = nickname || conn.name;
+      }
+      return { success: true, nickname };
     }
     case 'connection.getNetworkStats': {
       // Generate users by depth for expandable lists

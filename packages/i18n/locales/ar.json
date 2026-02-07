@@ -238,7 +238,8 @@
     "connectionPath": "مسار الاتصال",
     "contacts": "جهات الاتصال",
     "currentCapability": "القدرة الحالية",
-    "memberSince": "عضو منذ {{date}}"
+    "memberSince": "عضو منذ {{date}}",
+    "nicknamePlaceholder": "اسمك لهم..."
   },
   "settings": {
     "title": "الإعدادات",

@@ -238,7 +238,8 @@
     "connectionPath": "Forbindelsesvei",
     "contacts": "Kontakter",
     "currentCapability": "Nåværende kapasitet",
-    "memberSince": "Medlem siden {{date}}"
+    "memberSince": "Medlem siden {{date}}",
+    "nicknamePlaceholder": "Ditt navn for dem..."
   },
   "settings": {
     "title": "Innstillinger",

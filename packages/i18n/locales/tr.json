@@ -238,7 +238,8 @@
     "connectionPath": "Bağlantı yolu",
     "contacts": "İletişim",
     "currentCapability": "Mevcut olanak",
-    "memberSince": "{{date}} tarihinden beri üye"
+    "memberSince": "{{date}} tarihinden beri üye",
+    "nicknamePlaceholder": "Onlar için adınız..."
   },
   "settings": {
     "title": "Ayarlar",

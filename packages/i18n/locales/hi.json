@@ -238,7 +238,8 @@
     "connectionPath": "कनेक्शन पथ",
     "contacts": "संपर्क",
     "currentCapability": "वर्तमान क्षमता",
-    "memberSince": "{{date}} से सदस्य"
+    "memberSince": "{{date}} से सदस्य",
+    "nicknamePlaceholder": "उनके लिए आपका नाम..."
   },
   "settings": {
     "title": "सेटिंग्स",

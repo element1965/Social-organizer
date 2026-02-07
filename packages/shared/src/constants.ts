@@ -29,3 +29,20 @@ export const CONTACT_TYPES = [
 ] as const;
 
 export type ContactType = typeof CONTACT_TYPES[number]['type'];
+
+export function buildContactUrl(type: string, value: string): string {
+  if (value.startsWith('http')) return value;
+  const clean = value.replace(/^@/, '');
+  switch (type) {
+    case 'telegram': return `https://t.me/${clean}`;
+    case 'instagram': return `https://instagram.com/${clean}`;
+    case 'twitter': return `https://x.com/${clean}`;
+    case 'facebook': return `https://facebook.com/${clean}`;
+    case 'linkedin': return `https://linkedin.com/in/${clean}`;
+    case 'vk': return `https://vk.com/${clean}`;
+    case 'email': return `mailto:${value}`;
+    case 'whatsapp': return `https://wa.me/${value.replace(/\D/g, '')}`;
+    case 'website': return value.startsWith('http') ? value : `https://${value}`;
+    default: return value;
+  }
+}

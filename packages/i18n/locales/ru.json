@@ -238,7 +238,8 @@
     "connectionPath": "Путь связи",
     "contacts": "Контакты",
     "currentCapability": "Текущая возможность",
-    "memberSince": "Участник с {{date}}"
+    "memberSince": "Участник с {{date}}",
+    "nicknamePlaceholder": "Своё имя для них..."
   },
   "settings": {
     "title": "Настройки",

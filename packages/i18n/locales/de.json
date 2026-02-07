@@ -238,7 +238,8 @@
     "connectionPath": "Verbindungspfad",
     "contacts": "Kontakte",
     "currentCapability": "Aktuelle Kapazität",
-    "memberSince": "Mitglied seit {{date}}"
+    "memberSince": "Mitglied seit {{date}}",
+    "nicknamePlaceholder": "Dein Name für sie..."
   },
   "settings": {
     "title": "Einstellungen",

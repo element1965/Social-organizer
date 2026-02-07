@@ -31,12 +31,16 @@ export const connectionRouter = router({
     const countMap = new Map(connectionCounts.map((c) => [c.user_id, Number(c.count)]));
 
     return connections.map((c) => {
-      const other = c.userAId === ctx.userId ? c.userB : c.userA;
+      const isA = c.userAId === ctx.userId;
+      const other = isA ? c.userB : c.userA;
+      const nickname = isA ? c.nicknameByA : c.nicknameByB;
       return {
         id: c.id, userId: other.id, name: other.name,
         photoUrl: other.photoUrl, createdAt: c.createdAt,
         connectionCount: countMap.get(other.id) || 0,
         remainingBudget: other.remainingBudget,
+        nickname: nickname || null,
+        displayName: nickname || other.name,
       };
     });
   }),
@@ -172,6 +176,31 @@ export const connectionRouter = router({
       },
     };
   }),
+
+  getNickname: protectedProcedure
+    .input(z.object({ targetUserId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const [userAId, userBId] = [ctx.userId, input.targetUserId].sort();
+      const conn = await ctx.db.connection.findUnique({
+        where: { userAId_userBId: { userAId: userAId!, userBId: userBId! } },
+      });
+      if (!conn) return { nickname: null, isConnected: false };
+      const nickname = ctx.userId === conn.userAId ? conn.nicknameByA : conn.nicknameByB;
+      return { nickname: nickname || null, isConnected: true };
+    }),
+
+  setNickname: protectedProcedure
+    .input(z.object({ targetUserId: z.string(), nickname: z.string().max(100) }))
+    .mutation(async ({ ctx, input }) => {
+      const [userAId, userBId] = [ctx.userId, input.targetUserId].sort();
+      const field = ctx.userId === userAId ? 'nicknameByA' : 'nicknameByB';
+      const value = input.nickname.trim() || null;
+      const conn = await ctx.db.connection.update({
+        where: { userAId_userBId: { userAId: userAId!, userBId: userBId! } },
+        data: { [field]: value },
+      });
+      return { success: true, nickname: value };
+    }),
 
   growthHistory: protectedProcedure.query(async ({ ctx }) => {
     // Get user's registration date to show full history from day 1

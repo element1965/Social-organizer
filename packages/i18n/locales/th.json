@@ -238,7 +238,8 @@
     "connectionPath": "เส้นทางการเชื่อมต่อ",
     "contacts": "ช่องทางติดต่อ",
     "currentCapability": "ศักยภาพปัจจุบัน",
-    "memberSince": "สมาชิกตั้งแต่ {{date}}"
+    "memberSince": "สมาชิกตั้งแต่ {{date}}",
+    "nicknamePlaceholder": "ชื่อของคุณสำหรับพวกเขา..."
   },
   "settings": {
     "title": "ตั้งค่า",

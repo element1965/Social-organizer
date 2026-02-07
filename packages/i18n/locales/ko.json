@@ -238,7 +238,8 @@
     "connectionPath": "연결 경로",
     "contacts": "연락처",
     "currentCapability": "현재 역량",
-    "memberSince": "{{date}}부터 회원"
+    "memberSince": "{{date}}부터 회원",
+    "nicknamePlaceholder": "상대방에게 보이는 이름..."
   },
   "settings": {
     "title": "설정",

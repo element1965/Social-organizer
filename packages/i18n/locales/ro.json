@@ -238,7 +238,8 @@
     "connectionPath": "Calea conexiunii",
     "contacts": "Contacte",
     "currentCapability": "Capacitate curenta",
-    "memberSince": "Membru din {{date}}"
+    "memberSince": "Membru din {{date}}",
+    "nicknamePlaceholder": "Numele tău pentru ei..."
   },
   "settings": {
     "title": "Setari",

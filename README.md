@@ -75,7 +75,7 @@ pnpm dev
 | User | User with settings, role, onboarding flag, preferredCurrency, monthlyBudget, remainingBudget |
 | UserContact | User contacts (social networks, messengers) |
 | PlatformAccount | Platform bindings (FB/TG/Apple/Google) |
-| Connection | Connection between users (userAId < userBId) |
+| Connection | Connection between users (userAId < userBId) with optional nicknames (nicknameByA, nicknameByB) |
 | Collection | Fundraising (emergency/regular) with USD amount and original currency info |
 | Obligation | Intention for a collection with USD amount and original currency info |
 | Notification | Notification with handshake path |
@@ -118,7 +118,7 @@ FEEDBACK_CHAT_ID=-100xxxxxxxxxx      # Telegram group chat ID for user feedback
 |--------|------------|
 | `auth` | loginWithPlatform, loginWithTelegram, refresh, generateLinkCode, linkAccount |
 | `user` | me, update, getById, getStats, getContacts, updateContacts, completeOnboarding, delete, setMonthlyBudget |
-| `connection` | list, add (limit 150), getCount, graphSlice (2-3 levels), findPath, getNetworkStats |
+| `connection` | list, add (limit 150), getCount, graphSlice (2-3 levels), findPath, getNetworkStats, getNickname, setNickname |
 | `collection` | create, getById, close, cancel, myActive, myParticipating |
 | `obligation` | create, myList, unsubscribe |
 | `notification` | list (cursor pagination), markRead, dismiss, unreadCount |
@@ -232,6 +232,9 @@ Mock data (`apps/web/src/lib/demoData.ts`):
 - **1:1 notification ratio** — amount entered = number of people notified
 - **Localized statuses** — ACTIVE/BLOCKED/CLOSED/CANCELLED translated in all 26 languages
 - **Dark/Light theme** — system preference detection + manual toggle (auto-synced with Telegram theme in Mini App mode)
+- **Contact links** — all social network contact types (Telegram, Instagram, Twitter, LinkedIn, VK, Facebook, WhatsApp, Email, Website) open correct URLs via `buildContactUrl`
+- **TG username auto-save** — Telegram username automatically saved/updated as contact on each login
+- **Connection nicknames** — custom names for connections (like a phone book), editable from profile page, shown in network list
 - **Telegram Mini App** — auto-login via initData, BackButton navigation, haptic feedback on tab switches, theme sync, CSS variable injection from Telegram themeParams
 - **Onboarding** — auto-shown for new users, completable flag in database
 - **Currency preference** — users can set preferred currency in settings; auto-detected by IP on first visit
