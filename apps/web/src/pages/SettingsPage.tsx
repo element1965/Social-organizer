@@ -148,21 +148,19 @@ export function SettingsPage() {
         </CardHeader>
         <CardContent className="space-y-3">
           {me?.monthlyBudget != null && (
-            <div className="p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
-              <p className="text-sm text-gray-600 dark:text-gray-400">
-                {t('settings.currentBudget')}:
-                <span className="font-medium text-gray-900 dark:text-white ml-1">
-                  ${Math.round(me.remainingBudget || 0)} / ${Math.round(me.monthlyBudget)}
-                </span>
-              </p>
-            </div>
+            <p className="text-sm text-gray-600 dark:text-gray-400">
+              {t('settings.currentBudget')}:
+              <span className="font-medium text-gray-900 dark:text-white ml-1">
+                ${Math.round(me.remainingBudget || 0)} / ${Math.round(me.monthlyBudget)}
+              </span>
+            </p>
           )}
-          <div className="flex gap-2">
+          <div className="flex items-center gap-2">
             <Input
               type="number"
               value={newBudget}
               onChange={(e) => setNewBudget(e.target.value)}
-              placeholder={t('settings.newBudgetPlaceholder')}
+              placeholder={me?.monthlyBudget != null ? String(Math.round(me.monthlyBudget)) : t('settings.newBudgetPlaceholder')}
               className="flex-1"
               min={0}
             />
@@ -173,24 +171,22 @@ export function SettingsPage() {
               options={currencies?.map(c => ({ value: c.code, label: `${c.symbol} ${c.code}` })) ?? [{ value: 'USD', label: '$ USD' }]}
               className="w-28"
             />
+            {newBudget && Number(newBudget) >= 0 && (
+              <button
+                onClick={() => {
+                  setBudgetMutation.mutate({ amount: Number(newBudget), inputCurrency: newBudgetCurrency });
+                  setNewBudget('');
+                }}
+                disabled={setBudgetMutation.isPending}
+                className="text-green-500 hover:text-green-400 shrink-0"
+              >
+                <Check className="w-5 h-5" />
+              </button>
+            )}
           </div>
           {newBudgetCurrency !== 'USD' && budgetPreview && Number(newBudget) > 0 && (
             <p className="text-sm text-gray-500">≈ ${budgetPreview.result} USD</p>
           )}
-          <Button
-            variant="outline"
-            size="sm"
-            className="w-full"
-            onClick={() => {
-              if (newBudget && Number(newBudget) >= 0) {
-                setBudgetMutation.mutate({ amount: Number(newBudget), inputCurrency: newBudgetCurrency });
-                setNewBudget('');
-              }
-            }}
-            disabled={setBudgetMutation.isPending || !newBudget}
-          >
-            {setBudgetMutation.isPending ? t('common.loading') : t('settings.updateBudget')}
-          </Button>
         </CardContent>
       </Card>
 
@@ -245,37 +241,36 @@ export function SettingsPage() {
         <CardContent className="space-y-3">
           {contacts?.map((contact) => {
             const isTelegram = contact.type === 'telegram';
+            const currentVal = contactValues[contact.type];
+            const hasChanged = currentVal !== undefined && currentVal !== contact.value;
             return (
               <div key={contact.type} className="relative">
                 <SocialIcon type={contact.icon} className={`w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none ${isTelegram ? 'text-blue-500' : 'text-gray-500'}`} />
                 <Input
                   id={`contact-${contact.type}`}
                   placeholder={contact.placeholder}
-                  value={contactValues[contact.type] ?? contact.value}
+                  value={currentVal ?? contact.value}
                   onChange={(e) => !isTelegram && setContactValues(prev => ({ ...prev, [contact.type]: e.target.value }))}
-                  className={`w-full pl-10 ${isTelegram ? 'opacity-60 cursor-not-allowed bg-gray-50 dark:bg-gray-800/50' : ''}`}
+                  className={`w-full pl-10 ${hasChanged ? 'pr-10' : ''} ${isTelegram ? 'opacity-60 cursor-not-allowed bg-gray-50 dark:bg-gray-800/50' : ''}`}
                   disabled={isTelegram}
                 />
+                {hasChanged && (
+                  <button
+                    onClick={() => {
+                      const updates = contacts.map(c => ({
+                        type: c.type,
+                        value: contactValues[c.type] ?? c.value,
+                      }));
+                      updateContacts.mutate(updates);
+                    }}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-green-500 hover:text-green-400"
+                  >
+                    <Check className="w-5 h-5" />
+                  </button>
+                )}
               </div>
             );
           })}
-          {contacts && contacts.length > 0 && (
-            <Button
-              variant="outline"
-              size="sm"
-              className="w-full"
-              onClick={() => {
-                const updates = contacts.map(c => ({
-                  type: c.type,
-                  value: contactValues[c.type] ?? c.value,
-                }));
-                updateContacts.mutate(updates);
-              }}
-              disabled={updateContacts.isPending}
-            >
-              {updateContacts.isPending ? t('common.loading') : t('common.save')}
-            </Button>
-          )}
         </CardContent>
       </Card>
 
