@@ -9,7 +9,7 @@ import { Button } from '../components/ui/button';
 import { Select } from '../components/ui/select';
 import { Avatar } from '../components/ui/avatar';
 import { Spinner } from '../components/ui/spinner';
-import { Settings, Globe, Palette, Volume2, Mic, Link, Trash2, LogOut, Type, Users, DollarSign, Wallet, Camera, Pencil, Check } from 'lucide-react';
+import { Settings, Globe, Palette, Volume2, Mic, Link, Trash2, LogOut, Type, Users, Wallet, Camera, Pencil, Check } from 'lucide-react';
 import { cn } from '../lib/utils';
 import { languageNames } from '@so/i18n';
 import { Input } from '../components/ui/input';
@@ -35,7 +35,6 @@ export function SettingsPage() {
   const updateSound = trpc.settings.updateSound.useMutation({ onSuccess: () => utils.settings.get.invalidate() });
   const updateVoiceGender = trpc.settings.updateVoiceGender.useMutation({ onSuccess: () => utils.settings.get.invalidate() });
   const updateFontScale = trpc.settings.updateFontScale.useMutation({ onSuccess: () => utils.settings.get.invalidate() });
-  const updateCurrency = trpc.user.setPreferredCurrency.useMutation({ onSuccess: () => utils.user.me.invalidate() });
   const setBudgetMutation = trpc.user.setMonthlyBudget.useMutation({ onSuccess: () => utils.user.me.invalidate() });
   const generateCode = trpc.auth.generateLinkCode.useMutation();
   const deleteAccount = trpc.user.delete.useMutation({ onSuccess: () => { logout(); navigate('/login'); } });
@@ -124,19 +123,14 @@ export function SettingsPage() {
         </CardContent>
       </Card>
 
-      <Card><CardContent className="py-3"><div className="flex items-center gap-3"><Globe className="w-5 h-5 text-gray-500 shrink-0" />
-        <Select id="language" label={t('settings.language')} value={settings?.language || 'en'} onChange={(e) => handleLanguageChange(e.target.value)} options={Object.entries(languageNames).map(([code, name]) => ({ value: code, label: name }))} />
-      </div></CardContent></Card>
-
-      <Card><CardContent className="py-3"><div className="flex items-center gap-3"><DollarSign className="w-5 h-5 text-gray-500 shrink-0" />
-        <Select
-          id="currency"
-          label={t('settings.currency')}
-          value={me?.preferredCurrency || 'USD'}
-          onChange={(e) => updateCurrency.mutate({ currency: e.target.value })}
-          options={currencies?.map((c) => ({ value: c.code, label: `${c.symbol} ${c.code} - ${c.name}` })) ?? [{ value: 'USD', label: '$ USD - US Dollar' }]}
-        />
-      </div></CardContent></Card>
+      <Card><CardContent className="py-3">
+        <div className="flex items-center gap-3">
+          <Globe className="w-5 h-5 text-gray-500 shrink-0" />
+          <Select id="language" label={t('settings.language')} value={settings?.language || 'en'} onChange={(e) => handleLanguageChange(e.target.value)} options={Object.entries(languageNames).map(([code, name]) => ({ value: code, label: name }))} />
+          <Mic className="w-5 h-5 text-gray-500 shrink-0 ml-2" />
+          <Select id="voice-gender" label={t('settings.voiceGender')} value={settings?.voiceGender || 'FEMALE'} onChange={(e) => updateVoiceGender.mutate({ voiceGender: e.target.value as 'FEMALE' | 'MALE' })} options={[{ value: 'FEMALE', label: t('settings.voiceFemale') }, { value: 'MALE', label: t('settings.voiceMale') }]} />
+        </div>
+      </CardContent></Card>
 
       <Card>
         <CardHeader>
@@ -208,16 +202,6 @@ export function SettingsPage() {
         </button>
       </div></CardContent></Card>
 
-      <Card><CardContent className="py-3">
-        <div className="flex items-center gap-3 mb-2"><Mic className="w-5 h-5 text-gray-500" /><span className="text-sm font-medium text-gray-700 dark:text-gray-300">{t('settings.voiceGender')}</span></div>
-        <div className="grid grid-cols-2 gap-2">
-          {(['FEMALE', 'MALE'] as const).map((gender) => (
-            <button key={gender} onClick={() => updateVoiceGender.mutate({ voiceGender: gender })} className={cn('py-2 rounded-lg text-sm font-medium border transition-colors', settings?.voiceGender === gender ? 'border-blue-600 bg-blue-50 dark:bg-blue-950/30 text-blue-600' : 'border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400')}>
-              {gender === 'FEMALE' ? t('settings.voiceFemale') : t('settings.voiceMale')}
-            </button>
-          ))}
-        </div>
-      </CardContent></Card>
 
       <Card><CardContent className="py-3">
         <div className="flex items-center gap-3 mb-2"><Type className="w-5 h-5 text-gray-500" /><span className="text-sm font-medium text-gray-700 dark:text-gray-300">{t('settings.fontSize')}</span></div>
