@@ -626,10 +626,13 @@ export function handleDemoRequest(path: string, input: unknown): unknown {
     case 'stats.helpGivenByPeriod':
       return {
         allTime: { count: 47, amount: 2850 },
-        year: { count: 35, amount: 2100 },
-        month: { count: 8, amount: 520 },
-        week: { count: 3, amount: 175 },
-        day: { count: 1, amount: 50 },
+        months: [
+          { month: '2025-10', count: 5, amount: 320 },
+          { month: '2025-11', count: 8, amount: 520 },
+          { month: '2025-12', count: 12, amount: 780 },
+          { month: '2026-01', count: 15, amount: 930 },
+          { month: '2026-02', count: 7, amount: 300 },
+        ],
       };
 
     case 'stats.networkCapabilities':
