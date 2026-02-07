@@ -276,12 +276,21 @@
     "newBudgetPlaceholder": "New amount",
     "updateBudget": "Update Budget"
   },
+  "faq": {
+    "title": "FAQ",
+    "addItem": "Add",
+    "empty": "No questions yet",
+    "questionPlaceholder": "Question",
+    "answerPlaceholder": "Answer",
+    "deleteConfirm": "Delete this question?"
+  },
   "chat": {
     "title": "Assistant",
     "welcomeMessage": "Hi! I can help you understand how the app works. Ask about handshakes, intentions, or any other terms.",
     "placeholder": "Ask a question...",
     "speechNotSupported": "Speech recognition is not supported in your browser",
     "openChat": "Open chat assistant",
+    "openHelp": "Help",
     "startListening": "Start voice input",
     "stopListening": "Stop voice input"
   },

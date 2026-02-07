@@ -653,6 +653,21 @@ export function handleDemoRequest(path: string, input: unknown): unknown {
       return result;
     }
 
+    // ---- FAQ ----
+    case 'faq.list':
+      return [
+        { id: 'faq-demo-1', question: 'Что такое Social Organizer?', answer: 'Social Organizer — это инструмент координации взаимопомощи через доверенные связи. Он не переводит деньги. Он помогает людям быстро найти поддержку через цепочку знакомых.', language: 'ru', sortOrder: 1, createdById: 'admin', createdAt: '2025-01-01T00:00:00Z', updatedAt: '2025-01-01T00:00:00Z' },
+        { id: 'faq-demo-2', question: 'Что такое рукопожатие?', answer: 'Рукопожатие — это взаимное подтверждение значимой связи между двумя людьми. Оба участника должны подтвердить знакомство. Максимум 150 связей (число Данбара).', language: 'ru', sortOrder: 2, createdById: 'admin', createdAt: '2025-01-01T00:00:00Z', updatedAt: '2025-01-01T00:00:00Z' },
+        { id: 'faq-demo-3', question: 'Что такое намерение?', answer: 'Намерение — ваше добровольное решение помочь. Это не обязательство и не перевод денег. Координация помощи происходит в чате между участниками.', language: 'ru', sortOrder: 3, createdById: 'admin', createdAt: '2025-01-01T00:00:00Z', updatedAt: '2025-01-01T00:00:00Z' },
+        { id: 'faq-demo-4', question: 'Приложение переводит деньги?', answer: 'Нет. Social Organizer не переводит деньги и не обрабатывает платежи. Приложение только координирует — помогает нужным людям узнать о ситуации и связаться.', language: 'ru', sortOrder: 4, createdById: 'admin', createdAt: '2025-01-01T00:00:00Z', updatedAt: '2025-01-01T00:00:00Z' },
+      ];
+    case 'faq.isAdmin':
+      return { isAdmin: false };
+    case 'faq.create':
+    case 'faq.update':
+    case 'faq.delete':
+      return { success: true };
+
     case 'chat.send': {
       const { message, language } = input as { message: string; language: string };
       // Demo mode: return a helpful response based on keywords

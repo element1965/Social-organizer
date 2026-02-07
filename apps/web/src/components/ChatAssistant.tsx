@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
-import { MessageCircle, X, Send, Mic, MicOff, Loader2 } from 'lucide-react';
+import { MessageCircle, X, Send, Mic, MicOff, Loader2, HelpCircle } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { Button } from './ui/button';
+import { useNavigate } from 'react-router-dom';
 import { cn } from '../lib/utils';
 import { trpc } from '../lib/trpc';
 
@@ -12,9 +12,12 @@ interface Message {
   viaVoice?: boolean;
 }
 
+type ViewState = 'collapsed' | 'expanded' | 'chatOpen';
+
 export function ChatAssistant() {
   const { t, i18n } = useTranslation();
-  const [isOpen, setIsOpen] = useState(false);
+  const navigate = useNavigate();
+  const [viewState, setViewState] = useState<ViewState>('collapsed');
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [isListening, setIsListening] = useState(false);
@@ -180,20 +183,66 @@ export function ChatAssistant() {
   const quickTopicsEn = ['handshake', 'intention', 'capabilities', 'how to start'];
   const quickTopics = i18n.language.startsWith('ru') ? quickTopicsRu : quickTopicsEn;
 
+  const isOpen = viewState === 'chatOpen';
+
   return (
     <>
-      {/* Floating button */}
+      {/* Transparent overlay to close expanded menu */}
+      {viewState === 'expanded' && (
+        <div
+          className="fixed inset-0 z-30"
+          onClick={() => setViewState('collapsed')}
+        />
+      )}
+
+      {/* Sub-buttons (Chat + FAQ) */}
+      {viewState === 'expanded' && (
+        <div className="fixed bottom-36 right-4 z-40 flex flex-col items-end gap-2">
+          {/* FAQ button */}
+          <button
+            onClick={() => {
+              setViewState('collapsed');
+              navigate('/faq');
+            }}
+            className="flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-gray-800 text-gray-900 dark:text-white rounded-full shadow-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-200 animate-in fade-in slide-in-from-bottom-4"
+          >
+            <HelpCircle className="w-5 h-5 text-amber-500" />
+            <span className="text-sm font-medium">FAQ</span>
+          </button>
+          {/* Chat button */}
+          <button
+            onClick={() => setViewState('chatOpen')}
+            className="flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-gray-800 text-gray-900 dark:text-white rounded-full shadow-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-200 animate-in fade-in slide-in-from-bottom-4"
+            style={{ animationDelay: '50ms' }}
+          >
+            <MessageCircle className="w-5 h-5 text-blue-500" />
+            <span className="text-sm font-medium">{t('chat.title')}</span>
+          </button>
+        </div>
+      )}
+
+      {/* Main floating button */}
       <button
-        onClick={() => setIsOpen(true)}
+        onClick={() => {
+          if (viewState === 'collapsed') setViewState('expanded');
+          else if (viewState === 'expanded') setViewState('collapsed');
+        }}
         className={cn(
-          "fixed bottom-20 right-4 w-14 h-14 rounded-full bg-blue-600 text-white shadow-lg",
-          "flex items-center justify-center hover:bg-blue-700 transition-all z-40",
+          "fixed bottom-20 right-4 w-14 h-14 rounded-full shadow-lg",
+          "flex items-center justify-center transition-all z-40",
           "hover:scale-105 active:scale-95",
+          viewState === 'expanded'
+            ? "bg-gray-700 text-white hover:bg-gray-800"
+            : "bg-blue-600 text-white hover:bg-blue-700",
           isOpen && "hidden"
         )}
-        aria-label={t('chat.openChat')}
+        aria-label={t('chat.openHelp')}
       >
-        <MessageCircle className="w-6 h-6" />
+        {viewState === 'expanded' ? (
+          <X className="w-6 h-6" />
+        ) : (
+          <HelpCircle className="w-6 h-6" />
+        )}
       </button>
 
       {/* Chat panel */}
@@ -206,7 +255,7 @@ export function ChatAssistant() {
               {t('chat.title')}
             </h3>
             <button
-              onClick={() => setIsOpen(false)}
+              onClick={() => setViewState('collapsed')}
               className="p-1 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full"
             >
               <X className="w-5 h-5 text-gray-500" />

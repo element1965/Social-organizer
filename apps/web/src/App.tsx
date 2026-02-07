@@ -18,6 +18,7 @@ import { SettingsPage } from './pages/SettingsPage';
 import { InvitePage } from './pages/InvitePage';
 import { PrivacyPage } from './pages/PrivacyPage';
 import { TermsPage } from './pages/TermsPage';
+import { FaqPage } from './pages/FaqPage';
 
 export function App() {
   const [queryClient] = useState(() => new QueryClient({
@@ -46,6 +47,7 @@ export function App() {
               <Route path="/network" element={<MyNetworkPage />} />
               <Route path="/profile/:userId" element={<ProfilePage />} />
               <Route path="/settings" element={<SettingsPage />} />
+              <Route path="/faq" element={<FaqPage />} />
             </Route>
           </Routes>
           </TelegramBootstrap>
