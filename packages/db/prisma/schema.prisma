@@ -98,6 +98,7 @@ model User {
   invitesUsed      InviteLink[]      @relation("inviteUsedBy")
   contacts         UserContact[]
   chatMessages     ChatMessage[]
+  faqItems         FaqItem[]
 
   @@map("users")
 }
@@ -273,4 +274,20 @@ model ChatMessage {
   @@index([isFeedback])
   @@index([createdAt])
   @@map("chat_messages")
+}
+
+model FaqItem {
+  id          String   @id @default(cuid())
+  question    String
+  answer      String
+  language    String   @default("ru")
+  sortOrder   Int      @default(0)
+  createdById String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  createdBy User @relation(fields: [createdById], references: [id], onDelete: Cascade)
+
+  @@index([language, sortOrder])
+  @@map("faq_items")
 }
