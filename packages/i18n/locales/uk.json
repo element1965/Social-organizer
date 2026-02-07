@@ -238,7 +238,8 @@
     "connectionPath": "Шлях зв'язку",
     "contacts": "Контакти",
     "currentCapability": "Поточна можливість",
-    "memberSince": "Учасник з {{date}}"
+    "memberSince": "Учасник з {{date}}",
+    "nicknamePlaceholder": "Ваше ім'я для них..."
   },
   "settings": {
     "title": "Налаштування",

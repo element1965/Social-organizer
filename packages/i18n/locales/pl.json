@@ -238,7 +238,8 @@
     "connectionPath": "Ścieżka połączenia",
     "contacts": "Kontakty",
     "currentCapability": "Bieżąca możliwość",
-    "memberSince": "Członek od {{date}}"
+    "memberSince": "Członek od {{date}}",
+    "nicknamePlaceholder": "Twoja nazwa dla nich..."
   },
   "settings": {
     "title": "Ustawienia",

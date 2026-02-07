@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { trpc } from '../lib/trpc';
@@ -6,9 +6,10 @@ import { useAuth } from '../hooks/useAuth';
 import { Card, CardContent, CardHeader } from '../components/ui/card';
 import { Avatar } from '../components/ui/avatar';
 import { Spinner } from '../components/ui/spinner';
-import { Users, Wallet, Calendar } from 'lucide-react';
+import { Users, Wallet, Calendar, Pencil, Check, X } from 'lucide-react';
 import { HandshakePath } from '../components/HandshakePath';
 import { SocialIcon } from '../components/ui/social-icons';
+import { buildContactUrl } from '@so/shared';
 
 export function ProfilePage() {
   const { userId: paramId } = useParams<{ userId: string }>();
@@ -32,6 +33,20 @@ export function ProfilePage() {
     { userId: paramId },
     { enabled: !!paramId && !isOwn }
   );
+  const { data: nicknameData } = trpc.connection.getNickname.useQuery(
+    { targetUserId: paramId! },
+    { enabled: !!paramId && !isOwn }
+  );
+  const utils = trpc.useUtils();
+  const setNicknameMut = trpc.connection.setNickname.useMutation({
+    onSuccess: () => {
+      utils.connection.getNickname.invalidate({ targetUserId: paramId! });
+      utils.connection.list.invalidate();
+    },
+  });
+
+  const [editingNickname, setEditingNickname] = useState(false);
+  const [nicknameInput, setNicknameInput] = useState('');
 
   if (isOwn) return null;
   if (isLoading) return <div className="flex justify-center py-12"><Spinner /></div>;
@@ -45,7 +60,41 @@ export function ProfilePage() {
     <div className="p-4 space-y-4">
       <div className="flex flex-col items-center text-center">
         <Avatar src={user.photoUrl} name={user.name} size="lg" className="mb-3" />
-        <h1 className="text-xl font-bold text-gray-900 dark:text-white">{user.name}</h1>
+        <div className="flex items-center gap-2">
+          <h1 className="text-xl font-bold text-gray-900 dark:text-white">{user.name}</h1>
+          {nicknameData?.isConnected && !editingNickname && (
+            <button
+              onClick={() => { setNicknameInput(nicknameData.nickname || ''); setEditingNickname(true); }}
+              className="p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+            >
+              <Pencil className="w-3.5 h-3.5 text-gray-400" />
+            </button>
+          )}
+        </div>
+        {editingNickname && (
+          <div className="flex items-center gap-1.5 mt-1">
+            <input
+              autoFocus
+              value={nicknameInput}
+              onChange={(e) => setNicknameInput(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') { setNicknameMut.mutate({ targetUserId: paramId!, nickname: nicknameInput }); setEditingNickname(false); }
+                if (e.key === 'Escape') setEditingNickname(false);
+              }}
+              placeholder={t('profile.nicknamePlaceholder')}
+              className="px-2 py-1 text-sm border rounded-lg bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white outline-none focus:ring-1 focus:ring-blue-500 w-48"
+            />
+            <button onClick={() => { setNicknameMut.mutate({ targetUserId: paramId!, nickname: nicknameInput }); setEditingNickname(false); }} className="p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800">
+              <Check className="w-4 h-4 text-green-500" />
+            </button>
+            <button onClick={() => setEditingNickname(false)} className="p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800">
+              <X className="w-4 h-4 text-gray-400" />
+            </button>
+          </div>
+        )}
+        {!editingNickname && nicknameData?.nickname && (
+          <p className="text-xs text-gray-400 mt-0.5">{nicknameData.nickname}</p>
+        )}
         {user.bio && <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">{user.bio}</p>}
         {user.phone && <p className="text-sm text-gray-500 mt-1">{user.phone}</p>}
         {registrationDate && (
@@ -109,11 +158,7 @@ export function ProfilePage() {
           <CardContent>
             <div className="flex flex-wrap gap-2">
               {contacts.filter((c: { value?: string }) => c.value).map((contact: { type: string; value: string; icon?: string; label?: string }) => {
-                const url = contact.value.startsWith('http') ? contact.value :
-                  contact.type === 'telegram' ? `https://t.me/${contact.value.replace('@', '')}` :
-                  contact.type === 'email' ? `mailto:${contact.value}` :
-                  contact.type === 'whatsapp' ? `https://wa.me/${contact.value.replace(/\D/g, '')}` :
-                  contact.value;
+                const url = buildContactUrl(contact.type, contact.value);
                 return (
                   <a
                     key={contact.type}

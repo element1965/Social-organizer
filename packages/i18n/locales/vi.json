@@ -238,7 +238,8 @@
     "connectionPath": "Đường kết nối",
     "contacts": "Liên hệ",
     "currentCapability": "Khả năng hiện tại",
-    "memberSince": "Thành viên từ {{date}}"
+    "memberSince": "Thành viên từ {{date}}",
+    "nicknamePlaceholder": "Tên của bạn cho họ..."
   },
   "settings": {
     "title": "Cài đặt",

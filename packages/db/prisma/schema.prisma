@@ -121,10 +121,12 @@ model PlatformAccount {
 }
 
 model Connection {
-  id        String   @id @default(cuid())
-  userAId   String
-  userBId   String
-  createdAt DateTime @default(now())
+  id          String   @id @default(cuid())
+  userAId     String
+  userBId     String
+  nicknameByA String?
+  nicknameByB String?
+  createdAt   DateTime @default(now())
 
   userA User @relation("connectionFromUser", fields: [userAId], references: [id], onDelete: Cascade)
   userB User @relation("connectionToUser", fields: [userBId], references: [id], onDelete: Cascade)

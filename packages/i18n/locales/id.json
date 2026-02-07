@@ -238,7 +238,8 @@
     "connectionPath": "Jalur koneksi",
     "contacts": "Kontak",
     "currentCapability": "Kemampuan saat ini",
-    "memberSince": "Anggota sejak {{date}}"
+    "memberSince": "Anggota sejak {{date}}",
+    "nicknamePlaceholder": "Nama Anda untuk mereka..."
   },
   "settings": {
     "title": "Pengaturan",

@@ -238,7 +238,8 @@
     "connectionPath": "Cesta spojení",
     "contacts": "Kontakty",
     "currentCapability": "Aktuální kapacita",
-    "memberSince": "Členem od {{date}}"
+    "memberSince": "Členem od {{date}}",
+    "nicknamePlaceholder": "Vaše jméno pro ně..."
   },
   "settings": {
     "title": "Nastavení",

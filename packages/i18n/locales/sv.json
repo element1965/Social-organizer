@@ -238,7 +238,8 @@
     "connectionPath": "Anslutningsvag",
     "contacts": "Kontaktuppgifter",
     "currentCapability": "Nuvarande mojlighet",
-    "memberSince": "Medlem sedan {{date}}"
+    "memberSince": "Medlem sedan {{date}}",
+    "nicknamePlaceholder": "Ditt namn för dem..."
   },
   "settings": {
     "title": "Installningar",

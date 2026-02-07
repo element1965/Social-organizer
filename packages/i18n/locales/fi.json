@@ -238,7 +238,8 @@
     "connectionPath": "Yhteyspolku",
     "contacts": "Yhteystiedot",
     "currentCapability": "Nykyinen kapasiteetti",
-    "memberSince": "Jäsen {{date}} alkaen"
+    "memberSince": "Jäsen {{date}} alkaen",
+    "nicknamePlaceholder": "Sinun nimesi heille..."
   },
   "settings": {
     "title": "Asetukset",

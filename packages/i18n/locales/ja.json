@@ -238,7 +238,8 @@
     "connectionPath": "つながりの経路",
     "contacts": "連絡先",
     "currentCapability": "現在の能力",
-    "memberSince": "{{date}} から参加"
+    "memberSince": "{{date}} から参加",
+    "nicknamePlaceholder": "相手への表示名..."
   },
   "settings": {
     "title": "設定",

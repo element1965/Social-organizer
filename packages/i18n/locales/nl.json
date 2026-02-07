@@ -238,7 +238,8 @@
     "connectionPath": "Verbindingspad",
     "contacts": "Contactgegevens",
     "currentCapability": "Huidige mogelijkheid",
-    "memberSince": "Lid sinds {{date}}"
+    "memberSince": "Lid sinds {{date}}",
+    "nicknamePlaceholder": "Jouw naam voor hen..."
   },
   "settings": {
     "title": "Instellingen",

@@ -238,7 +238,8 @@
     "connectionPath": "Connection path",
     "contacts": "Contacts",
     "currentCapability": "Current capability",
-    "memberSince": "Member since {{date}}"
+    "memberSince": "Member since {{date}}",
+    "nicknamePlaceholder": "Your name for them..."
   },
   "settings": {
     "title": "Settings",

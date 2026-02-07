@@ -118,6 +118,15 @@ export const authRouter = router({
         userId = user.id;
       }
 
+      // Auto-save/update Telegram username as contact
+      if (tgUser.username) {
+        await ctx.db.userContact.upsert({
+          where: { userId_type: { userId, type: 'telegram' } },
+          update: { value: tgUser.username },
+          create: { userId, type: 'telegram', value: tgUser.username },
+        });
+      }
+
       const accessToken = createAccessToken(userId);
       const refreshToken = createRefreshToken(userId);
 
