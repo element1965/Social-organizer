@@ -243,18 +243,22 @@ export function SettingsPage() {
           <p className="text-xs text-gray-500 mt-1">{t('settings.contactsDesc')}</p>
         </CardHeader>
         <CardContent className="space-y-3">
-          {contacts?.map((contact) => (
-            <div key={contact.type} className="relative">
-              <SocialIcon type={contact.icon} className="w-5 h-5 text-gray-500 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
-              <Input
-                id={`contact-${contact.type}`}
-                placeholder={contact.placeholder}
-                value={contactValues[contact.type] ?? contact.value}
-                onChange={(e) => setContactValues(prev => ({ ...prev, [contact.type]: e.target.value }))}
-                className="w-full pl-10"
-              />
-            </div>
-          ))}
+          {contacts?.map((contact) => {
+            const isTelegram = contact.type === 'telegram';
+            return (
+              <div key={contact.type} className="relative">
+                <SocialIcon type={contact.icon} className={`w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none ${isTelegram ? 'text-blue-500' : 'text-gray-500'}`} />
+                <Input
+                  id={`contact-${contact.type}`}
+                  placeholder={contact.placeholder}
+                  value={contactValues[contact.type] ?? contact.value}
+                  onChange={(e) => !isTelegram && setContactValues(prev => ({ ...prev, [contact.type]: e.target.value }))}
+                  className={`w-full pl-10 ${isTelegram ? 'opacity-60 cursor-not-allowed bg-gray-50 dark:bg-gray-800/50' : ''}`}
+                  disabled={isTelegram}
+                />
+              </div>
+            );
+          })}
           {contacts && contacts.length > 0 && (
             <Button
               variant="outline"
