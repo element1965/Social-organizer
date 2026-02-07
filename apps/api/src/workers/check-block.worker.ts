@@ -1,5 +1,6 @@
 import type { Job } from 'bullmq';
 import { getDb } from '@so/db';
+import { sendCollectionBlockedTg } from '../services/notification.service.js';
 
 /**
  * On event: check if obligation total reached collection goal -> BLOCKED.
@@ -10,7 +11,7 @@ export async function processCheckBlock(job: Job<{ collectionId: string }>): Pro
 
   const collection = await db.collection.findUnique({
     where: { id: collectionId },
-    select: { id: true, amount: true, status: true },
+    select: { id: true, amount: true, status: true, creatorId: true },
   });
 
   if (!collection || collection.status !== 'ACTIVE') return;
@@ -28,5 +29,8 @@ export async function processCheckBlock(job: Job<{ collectionId: string }>): Pro
       where: { id: collectionId },
       data: { status: 'BLOCKED', blockedAt: new Date() },
     });
+    sendCollectionBlockedTg(db, collectionId, collection.creatorId).catch((err) =>
+      console.error('[TG Blocked] Failed to dispatch:', err),
+    );
   }
 }

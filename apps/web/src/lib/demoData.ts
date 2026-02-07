@@ -947,6 +947,14 @@ export function handleDemoRequest(path: string, input: unknown): unknown {
       };
     }
 
+    // ---- Push ----
+    case 'push.vapidPublicKey':
+      return { key: '' };
+    case 'push.subscribe':
+      return { success: true };
+    case 'push.unsubscribe':
+      return { success: true };
+
     default:
       console.warn(`[Demo] Unhandled procedure: ${path}`);
       return null;

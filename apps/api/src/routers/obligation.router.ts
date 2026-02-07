@@ -3,6 +3,7 @@ import { router, protectedProcedure } from '../trpc.js';
 import { TRPCError } from '@trpc/server';
 import { MIN_OBLIGATION_AMOUNT, CURRENCY_CODES } from '@so/shared';
 import { convertToUSD } from '../services/currency.service.js';
+import { sendCollectionBlockedTg } from '../services/notification.service.js';
 
 export const obligationRouter = router({
   create: protectedProcedure
@@ -60,6 +61,9 @@ export const obligationRouter = router({
             where: { id: input.collectionId },
             data: { status: 'BLOCKED', blockedAt: new Date() },
           });
+          sendCollectionBlockedTg(ctx.db, input.collectionId, collection.creatorId).catch((err) =>
+            console.error('[TG Blocked] Failed to dispatch:', err),
+          );
         }
       }
 

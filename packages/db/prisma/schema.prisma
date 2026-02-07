@@ -99,6 +99,7 @@ model User {
   contacts         UserContact[]
   chatMessages     ChatMessage[]
   faqItems         FaqItem[]
+  pushSubscriptions PushSubscription[]
 
   @@map("users")
 }
@@ -274,6 +275,20 @@ model ChatMessage {
   @@index([isFeedback])
   @@index([createdAt])
   @@map("chat_messages")
+}
+
+model PushSubscription {
+  id        String   @id @default(cuid())
+  userId    String
+  endpoint  String   @unique
+  p256dh    String
+  auth      String
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("push_subscriptions")
 }
 
 model FaqItem {

@@ -274,7 +274,8 @@
     "budgetDesc": "How much you can contribute to mutual support each month",
     "currentBudget": "Remaining",
     "newBudgetPlaceholder": "New amount",
-    "updateBudget": "Update Budget"
+    "updateBudget": "Update Budget",
+    "pushNotifications": "Push Notifications"
   },
   "faq": {
     "title": "FAQ",
@@ -367,7 +368,9 @@
     "closed": "Collection Closed",
     "closedBody": "The collection has been closed by its creator.",
     "open": "Open",
-    "view": "View"
+    "view": "View",
+    "blocked": "Collection Goal Reached",
+    "blockedBody": "The collection has reached its target amount and is now blocked."
   },
   "hints": {
     "collectionAmount": "Enter the amount you need. Minimum 10 units. The system will notify the right number of people.",

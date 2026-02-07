@@ -9,11 +9,12 @@ import { Button } from '../components/ui/button';
 import { Select } from '../components/ui/select';
 import { Avatar } from '../components/ui/avatar';
 import { Spinner } from '../components/ui/spinner';
-import { Settings, Globe, Palette, Volume2, Mic, Link, Trash2, LogOut, Type, Users, Wallet, Camera, Pencil, Check } from 'lucide-react';
+import { Settings, Globe, Palette, Volume2, Bell, Mic, Link, Trash2, LogOut, Type, Users, Wallet, Camera, Pencil, Check } from 'lucide-react';
 import { cn } from '../lib/utils';
 import { languageNames } from '@so/i18n';
 import { Input } from '../components/ui/input';
 import { SocialIcon } from '../components/ui/social-icons';
+import { usePushNotifications } from '../hooks/usePushNotifications';
 
 export function SettingsPage() {
   const { t, i18n } = useTranslation();
@@ -41,6 +42,7 @@ export function SettingsPage() {
   const updateUser = trpc.user.update.useMutation({ onSuccess: () => { utils.user.me.invalidate(); setEditingName(false); } });
   const [editingName, setEditingName] = useState(false);
   const [editName, setEditName] = useState('');
+  const push = usePushNotifications();
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [newBudget, setNewBudget] = useState('');
   const [newBudgetCurrency, setNewBudgetCurrency] = useState(me?.preferredCurrency || 'USD');
@@ -202,6 +204,14 @@ export function SettingsPage() {
         </button>
       </div></CardContent></Card>
 
+      {push.isSupported && (
+        <Card><CardContent className="py-3"><div className="flex items-center justify-between">
+          <div className="flex items-center gap-3"><Bell className="w-5 h-5 text-gray-500" /><span className="text-sm font-medium text-gray-700 dark:text-gray-300">{t('settings.pushNotifications')}</span></div>
+          <button onClick={() => push.isSubscribed ? push.unsubscribe() : push.subscribe()} disabled={push.loading} className={cn('w-12 h-6 rounded-full transition-colors relative', push.isSubscribed ? 'bg-blue-600' : 'bg-gray-300 dark:bg-gray-600')}>
+            <div className={cn('w-5 h-5 rounded-full bg-white shadow absolute top-0.5 transition-all', push.isSubscribed ? 'left-6' : 'left-0.5')} />
+          </button>
+        </div></CardContent></Card>
+      )}
 
       <Card><CardContent className="py-3">
         <div className="flex items-center gap-3 mb-2"><Type className="w-5 h-5 text-gray-500" /><span className="text-sm font-medium text-gray-700 dark:text-gray-300">{t('settings.fontSize')}</span></div>
