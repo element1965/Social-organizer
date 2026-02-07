@@ -345,6 +345,7 @@
     "downloadTitle": "下载应用",
     "downloadSubtitle": "所有平台可用",
     "comingSoon": "即将推出",
+    "demoBanner": "演示模式已不再可用。要使用应用程序，请通过下方的 Telegram 打开。如果您有邀请链接，请让发送者重新分享。",
     "footer": "Social Organizer — 一个开放的互助工具",
     "githubLink": "在 GitHub 上查看代码"
   },

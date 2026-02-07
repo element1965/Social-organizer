@@ -345,6 +345,7 @@
     "downloadTitle": "앱 다운로드",
     "downloadSubtitle": "모든 플랫폼에서 사용 가능",
     "comingSoon": "출시 예정",
+    "demoBanner": "데모 모드는 더 이상 사용할 수 없습니다. 앱을 사용하려면 아래 Telegram으로 열어주세요. 초대 링크가 있었다면 보낸 사람에게 다시 보내달라고 요청하세요.",
     "footer": "Social Organizer — 개방형 상호 지원 도구",
     "githubLink": "GitHub에서 코드 보기"
   },
