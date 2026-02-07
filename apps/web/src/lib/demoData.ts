@@ -638,6 +638,18 @@ export function handleDemoRequest(path: string, input: unknown): unknown {
         contributors: 87,
       };
 
+    case 'stats.platformGrowth': {
+      const days = 30;
+      const result: Array<{ date: string; count: number }> = [];
+      let cumulative = 0;
+      for (let i = 0; i <= days; i++) {
+        const d = new Date(Date.now() - (days - i) * 86_400_000);
+        cumulative += i === 0 ? 5 : Math.floor(Math.random() * 8) + 1;
+        result.push({ date: d.toISOString().slice(0, 10), count: cumulative });
+      }
+      return result;
+    }
+
     case 'chat.send': {
       const { message, language } = input as { message: string; language: string };
       // Demo mode: return a helpful response based on keywords

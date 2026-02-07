@@ -55,7 +55,7 @@ export function DashboardPage() {
   const { data: helpStats } = trpc.stats.help.useQuery(undefined, { refetchInterval: 60000 });
   const { data: helpByPeriod } = trpc.stats.helpGivenByPeriod.useQuery(undefined, { refetchInterval: 60000 });
   const { data: networkCapabilities } = trpc.stats.networkCapabilities.useQuery(undefined, { refetchInterval: 60000 });
-  const { data: growthHistory } = trpc.connection.growthHistory.useQuery(undefined, { refetchInterval: 60000 });
+  const { data: platformGrowth } = trpc.stats.platformGrowth.useQuery(undefined, { refetchInterval: 15000 });
   const permanentInviteUrl = userId ? buildInviteUrl(userId) : '';
 
   const totalReachable = networkStats?.totalReachable ?? 0;
@@ -227,8 +227,8 @@ export function DashboardPage() {
                   <p className="text-4xl font-bold text-gray-900 dark:text-white">{totalReachable}</p>
                 </div>
                 {/* Sparkline chart */}
-                {growthHistory && growthHistory.length > 1 && (() => {
-                  const values = growthHistory.map(p => p.count);
+                {platformGrowth && platformGrowth.length > 1 && (() => {
+                  const values = platformGrowth.map(p => p.count);
                   const min = Math.min(...values);
                   const max = Math.max(...values);
                   const range = max - min || 1;

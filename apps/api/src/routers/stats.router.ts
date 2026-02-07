@@ -136,6 +136,42 @@ export const statsRouter = router({
     };
   }),
 
+  // Platform-wide user growth (all users, from launch day)
+  platformGrowth: protectedProcedure.query(async ({ ctx }) => {
+    const firstUser = await ctx.db.user.findFirst({
+      orderBy: { createdAt: 'asc' },
+      select: { createdAt: true },
+    });
+    const since = firstUser?.createdAt ?? new Date();
+    const now = new Date();
+    const totalDays = Math.max(1, Math.ceil((now.getTime() - since.getTime()) / (24 * 60 * 60 * 1000)));
+
+    const rows = await ctx.db.$queryRaw<Array<{ day: Date; count: bigint }>>`
+      SELECT DATE_TRUNC('day', "createdAt") AS day, COUNT(*)::bigint AS count
+      FROM users
+      WHERE "deletedAt" IS NULL
+      GROUP BY DATE_TRUNC('day', "createdAt")
+      ORDER BY day
+    `;
+
+    const countByDay = new Map(rows.map(r => [
+      new Date(r.day).toISOString().slice(0, 10),
+      Number(r.count),
+    ]));
+
+    const result: Array<{ date: string; count: number }> = [];
+    let cumulative = 0;
+
+    for (let i = 0; i <= totalDays; i++) {
+      const d = new Date(since.getTime() + i * 24 * 60 * 60 * 1000);
+      const key = d.toISOString().slice(0, 10);
+      cumulative += countByDay.get(key) ?? 0;
+      result.push({ date: key, count: cumulative });
+    }
+
+    return result;
+  }),
+
   // Current network capabilities (sum of all remainingBudget in network)
   networkCapabilities: protectedProcedure.query(async ({ ctx }) => {
     const userId = ctx.userId;
