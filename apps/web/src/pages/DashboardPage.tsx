@@ -11,7 +11,7 @@ import { Badge } from '../components/ui/badge';
 import { Progress } from '../components/ui/progress';
 import { Spinner } from '../components/ui/spinner';
 import { Avatar } from '../components/ui/avatar';
-import { SemiDonutChart, StatCard, Tabs } from '../components/ui/charts';
+import { SemiDonutChart, Tabs } from '../components/ui/charts';
 import {
   PlusCircle,
   Users,

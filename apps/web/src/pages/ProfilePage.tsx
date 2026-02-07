@@ -6,7 +6,7 @@ import { useAuth } from '../hooks/useAuth';
 import { Card, CardContent, CardHeader } from '../components/ui/card';
 import { Avatar } from '../components/ui/avatar';
 import { Spinner } from '../components/ui/spinner';
-import { Users, Wallet, Calendar, Pencil, Check, X } from 'lucide-react';
+import { Wallet, Calendar, Pencil, Check, X } from 'lucide-react';
 import { HandshakePath } from '../components/HandshakePath';
 import { SocialIcon } from '../components/ui/social-icons';
 import { buildContactUrl } from '@so/shared';
