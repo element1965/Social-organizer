@@ -70,7 +70,7 @@ export function MyNetworkPage() {
             </div>
             <div className="flex justify-center mb-4">
               <div className="p-3 bg-white rounded-xl">
-                <QRCodeSVG value={webInviteUrl} size={200} level="H" imageSettings={{ src: '/logo.png', width: 48, height: 34, excavate: true }} />
+                <QRCodeSVG value={webInviteUrl} size={200} level="H" imageSettings={{ src: '/logo-dark.png', width: 48, height: 34, excavate: true }} />
               </div>
             </div>
             <div className="space-y-2">
