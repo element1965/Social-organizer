@@ -204,7 +204,7 @@ export function NetworkGraph({
             dotCenter: 0x2563eb,
           };
 
-      const avatarSize = node.isCenter ? 8 : 5;
+      const avatarSize = node.isCenter ? 12 : 5;
       const textOffset = avatarSize / 2 + 2;
       const dotColor = node.isCenter ? colors.dotCenter : colors.dot;
 
@@ -239,17 +239,27 @@ export function NetworkGraph({
         }
       }
 
-      // Ring for center node
+      // Rings for center node (double ring for emphasis)
       if (node.isCenter) {
-        const ringGeometry = new THREE.RingGeometry(avatarSize / 2 + 0.3, avatarSize / 2 + 0.8, 32);
-        const ringMaterial = new THREE.MeshBasicMaterial({
-          color: colors.center,
+        // Inner ring
+        const innerRingGeom = new THREE.RingGeometry(avatarSize / 2 + 0.3, avatarSize / 2 + 1, 48);
+        const innerRingMat = new THREE.MeshBasicMaterial({
+          color: 0x3b82f6,
           side: THREE.DoubleSide,
           transparent: true,
-          opacity: 0.8,
+          opacity: 0.9,
         });
-        const ring = new THREE.Mesh(ringGeometry, ringMaterial);
-        closeGroup.add(ring);
+        closeGroup.add(new THREE.Mesh(innerRingGeom, innerRingMat));
+
+        // Outer glow ring
+        const outerRingGeom = new THREE.RingGeometry(avatarSize / 2 + 1.2, avatarSize / 2 + 2.2, 48);
+        const outerRingMat = new THREE.MeshBasicMaterial({
+          color: 0x60a5fa,
+          side: THREE.DoubleSide,
+          transparent: true,
+          opacity: 0.35,
+        });
+        closeGroup.add(new THREE.Mesh(outerRingGeom, outerRingMat));
       }
 
       // Label with name
@@ -280,7 +290,7 @@ export function NetworkGraph({
       const mediumGroup = new THREE.Group();
       mediumGroup.name = 'lod-medium';
 
-      const mediumDotGeom = new THREE.SphereGeometry(node.isCenter ? 3 : 2, 16, 16);
+      const mediumDotGeom = new THREE.SphereGeometry(node.isCenter ? 5 : 2, 16, 16);
       const mediumDotMat = new THREE.MeshBasicMaterial({
         color: dotColor,
         transparent: true,
@@ -305,7 +315,7 @@ export function NetworkGraph({
       const farGroup = new THREE.Group();
       farGroup.name = 'lod-far';
 
-      const farDotGeom = new THREE.SphereGeometry(node.isCenter ? 1.5 : 1, 8, 8);
+      const farDotGeom = new THREE.SphereGeometry(node.isCenter ? 3 : 1, 8, 8);
       const farDotMat = new THREE.MeshBasicMaterial({
         color: dotColor,
         transparent: true,
