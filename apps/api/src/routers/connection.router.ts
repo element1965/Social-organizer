@@ -195,7 +195,7 @@ export const connectionRouter = router({
       const [userAId, userBId] = [ctx.userId, input.targetUserId].sort();
       const field = ctx.userId === userAId ? 'nicknameByA' : 'nicknameByB';
       const value = input.nickname.trim() || null;
-      const conn = await ctx.db.connection.update({
+      await ctx.db.connection.update({
         where: { userAId_userBId: { userAId: userAId!, userBId: userBId! } },
         data: { [field]: value },
       });
