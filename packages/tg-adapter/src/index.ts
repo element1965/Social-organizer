@@ -25,7 +25,6 @@ export function initTelegramWebApp(): void {
   const wa = window.Telegram?.WebApp;
   if (!wa) return;
   wa.ready();
-  wa.expand();
   try { wa.disableVerticalSwipes(); } catch { /* old SDK versions */ }
 }
 
