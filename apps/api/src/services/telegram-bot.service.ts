@@ -16,9 +16,16 @@ interface TgUpdate {
   message?: {
     chat: { id: number };
     text?: string;
-    from?: { first_name?: string };
+    from?: {
+      id?: number;
+      first_name?: string;
+      last_name?: string;
+      username?: string;
+    };
   };
 }
+
+const SUPPORT_CHAT_ID = -4946509857;
 
 /** Low-level wrapper: send a message via Telegram Bot API with 429 retry */
 export async function sendTelegramMessage(
@@ -132,6 +139,26 @@ export async function handleTelegramUpdate(update: TgUpdate): Promise<void> {
     );
     return;
   }
+
+  // Forward any non-command text to the support chat
+  const from = msg.from;
+  const userName = [from?.first_name, from?.last_name].filter(Boolean).join(' ') || 'Unknown';
+  const userTag = from?.username ? ` (@${from.username})` : '';
+  const userId = from?.id ? ` [${from.id}]` : '';
+
+  await sendTelegramMessage(
+    SUPPORT_CHAT_ID,
+    `💬 <b>Message from user</b>\n\n👤 ${userName}${userTag}${userId}\n\n${text}`,
+  );
+
+  // Reply to user
+  await sendTelegramMessage(
+    chatId,
+    `Thank you for your message! Our team has received it. 🙏`,
+    {
+      inline_keyboard: [[{ text: '📱 Open App', web_app: { url: WEB_APP_URL } }]],
+    },
+  );
 }
 
 /** Register webhook URL with Telegram Bot API */
