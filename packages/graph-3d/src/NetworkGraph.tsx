@@ -30,9 +30,9 @@ export interface NetworkGraphProps {
 }
 
 /* ---------- LOD distances ---------- */
-const LOD_CLOSE = 80;    // Full avatar + label
-const LOD_MEDIUM = 200;  // Small dot + label
-const LOD_FAR = 400;     // Tiny dot only
+const LOD_CLOSE = 150;   // Full avatar + label
+const LOD_MEDIUM = 300;  // Small dot + label
+const LOD_FAR = 500;     // Tiny dot only
 
 /* ---------- Компонент ---------- */
 
@@ -73,6 +73,12 @@ export function NetworkGraph({
         const charge = fg.d3Force('charge');
         if (charge && typeof charge.strength === 'function') charge.strength(-80);
       }
+      // Zoom camera closer after graph settles
+      setTimeout(() => {
+        if (fgRef.current) {
+          fgRef.current.cameraPosition({ x: 0, y: 0, z: 120 }, { x: 0, y: 0, z: 0 }, 1000);
+        }
+      }, 500);
     }
   }, []);
 
@@ -222,13 +228,14 @@ export function NetworkGraph({
         // Add placeholder - will be replaced when texture loads
         closeGroup.add(createAvatarPlaceholder(node, avatarSize));
 
-        // Store LOD reference for lazy texture loading
+        // Store LOD reference and start loading texture immediately
         if (node.photoUrl) {
           lodObjectsRef.current.set(nodeId, {
             lod,
             photoUrl: node.photoUrl,
             nodeData: node as typeof nodes[0],
           });
+          loadTextureForNode(node.photoUrl, nodeId);
         }
       }
 
