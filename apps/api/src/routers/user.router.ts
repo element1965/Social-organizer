@@ -94,8 +94,9 @@ export const userRouter = router({
   updateContacts: protectedProcedure
     .input(z.array(z.object({ type: z.string(), value: z.string() })))
     .mutation(async ({ ctx, input }) => {
-      // Upsert each contact
+      // Upsert each contact (telegram is auto-managed from TG login, skip it)
       for (const { type, value } of input) {
+        if (type === 'telegram') continue;
         if (value.trim()) {
           await ctx.db.userContact.upsert({
             where: { userId_type: { userId: ctx.userId, type } },
