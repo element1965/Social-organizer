@@ -55,7 +55,9 @@ export function LandingPage() {
   const { t } = useTranslation();
   const [searchParams] = useSearchParams();
   const inviteParam = searchParams.get('invite');
+  const fromDemo = searchParams.get('from') === 'demo';
   const pendingInvite = inviteParam || localStorage.getItem('pendingInviteToken');
+  const [showDemoBanner, setShowDemoBanner] = useState(fromDemo);
 
   // Persist invite token so Telegram bot link can use it
   useEffect(() => {
@@ -114,6 +116,19 @@ export function LandingPage() {
 
       {/* Scrolling content overlay */}
       <div className="relative z-10">
+
+        {/* Demo mode banner */}
+        {showDemoBanner && (
+          <div className="fixed top-0 left-0 right-0 z-30 bg-amber-500/95 backdrop-blur-sm text-gray-900 px-4 py-3 text-center shadow-lg">
+            <button
+              onClick={() => setShowDemoBanner(false)}
+              className="absolute top-2 right-3 text-gray-900/60 hover:text-gray-900 text-xl leading-none"
+            >&times;</button>
+            <p className="text-sm font-medium max-w-lg mx-auto">
+              {t('landing.demoBanner')}
+            </p>
+          </div>
+        )}
 
         {/* === Section 1: Hero (100vh) === */}
         <section className="min-h-screen flex flex-col items-center justify-center px-6 text-center">
