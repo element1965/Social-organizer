@@ -6,6 +6,7 @@ import { findRecipientsViaBfs } from './bfs.service.js';
 import { sendTelegramMessage, type TgReplyMarkup } from './telegram-bot.service.js';
 import { enqueueTgBroadcast } from '../workers/index.js';
 import type { TgBroadcastMessage } from '../workers/tg-broadcast.worker.js';
+import { sendWebPush } from './web-push.service.js';
 
 const DIRECT_SEND_THRESHOLD = 25;
 const WEB_APP_URL = process.env.WEB_APP_URL || 'https://www.orginizer.com';
@@ -87,9 +88,15 @@ export async function sendCollectionNotifications(
   }
 
   if (type === 'NEW_COLLECTION' && created > 0) {
-    dispatchNewCollectionTg(db, collectionId, creatorId, recipients.map((r) => r.userId)).catch((err) =>
+    const recipientIds = recipients.map((r) => r.userId);
+    dispatchNewCollectionTg(db, collectionId, creatorId, recipientIds).catch((err) =>
       console.error('[TG Notify] Failed to dispatch:', err),
     );
+    sendWebPush(db, recipientIds, {
+      title: 'New Collection',
+      body: 'Someone in your network needs support.',
+      url: `${WEB_APP_URL}/collection/${collectionId}`,
+    }).catch((err) => console.error('[WebPush] Failed:', err));
   }
 
   return created;
@@ -110,6 +117,13 @@ export async function sendCollectionClosedTg(
   });
   const recipientUserIds = notifiedUsers.map((n) => n.userId).filter((id) => id !== creatorId);
   if (recipientUserIds.length === 0) return;
+
+  // Web Push in parallel
+  sendWebPush(db, recipientUserIds, {
+    title: 'Collection Closed',
+    body: 'A collection has been closed by its creator.',
+    url: `${WEB_APP_URL}/collection/${collectionId}`,
+  }).catch((err) => console.error('[WebPush] Failed:', err));
 
   // Get TG accounts + user language
   const tgAccounts = await db.platformAccount.findMany({
@@ -133,6 +147,64 @@ export async function sendCollectionClosedTg(
     const lang = acc.user?.language || 'en';
     const amountStr = amount != null ? `${amount} ${currency}` : '';
     const text = `✅ <b>${tg(lang, 'closed')}</b>\n\n${tg(lang, 'from')}: <b>${creator.name}</b>${amountStr ? `\n${tg(lang, 'amount')}: ${amountStr}` : ''}\n\n${tg(lang, 'closedBody')}`;
+    return {
+      telegramId: acc.platformId,
+      text,
+      replyMarkup: {
+        inline_keyboard: [[{ text: `📱 ${tg(lang, 'view')}`, web_app: { url: webAppLink } }]],
+      } as TgReplyMarkup,
+    };
+  });
+
+  await sendTgMessages(messages);
+}
+
+/**
+ * Send Telegram notifications when a collection is blocked (goal reached).
+ */
+export async function sendCollectionBlockedTg(
+  db: PrismaClient,
+  collectionId: string,
+  creatorId: string,
+): Promise<void> {
+  const notifiedUsers = await db.notification.findMany({
+    where: { collectionId },
+    select: { userId: true },
+    distinct: ['userId'],
+  });
+  const recipientUserIds = notifiedUsers.map((n) => n.userId).filter((id) => id !== creatorId);
+  // Also notify the creator
+  recipientUserIds.push(creatorId);
+  if (recipientUserIds.length === 0) return;
+
+  // Web Push in parallel
+  sendWebPush(db, recipientUserIds, {
+    title: 'Collection Goal Reached',
+    body: 'A collection has reached its target amount.',
+    url: `${WEB_APP_URL}/collection/${collectionId}`,
+  }).catch((err) => console.error('[WebPush] Failed:', err));
+
+  const tgAccounts = await db.platformAccount.findMany({
+    where: { userId: { in: recipientUserIds }, platform: 'TELEGRAM' },
+    select: { platformId: true, user: { select: { language: true } } },
+  });
+  if (tgAccounts.length === 0) return;
+
+  const creator = await db.user.findUnique({ where: { id: creatorId }, select: { name: true } });
+  const collection = await db.collection.findUnique({
+    where: { id: collectionId },
+    select: { amount: true, currency: true, originalAmount: true, originalCurrency: true },
+  });
+  if (!creator || !collection) return;
+
+  const amount = collection.originalAmount ?? collection.amount;
+  const currency = collection.originalCurrency ?? collection.currency;
+  const webAppLink = `${WEB_APP_URL}/collection/${collectionId}`;
+
+  const messages: TgBroadcastMessage[] = tgAccounts.map((acc) => {
+    const lang = acc.user?.language || 'en';
+    const amountStr = amount != null ? `${amount} ${currency}` : '';
+    const text = `🎯 <b>${tg(lang, 'blocked')}</b>\n\n${tg(lang, 'from')}: <b>${creator.name}</b>${amountStr ? `\n${tg(lang, 'amount')}: ${amountStr}` : ''}\n\n${tg(lang, 'blockedBody')}`;
     return {
       telegramId: acc.platformId,
       text,

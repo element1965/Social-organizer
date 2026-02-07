@@ -83,6 +83,7 @@ pnpm dev
 | LinkingCode | 6-digit linking code (5 min TTL) |
 | InviteLink | Invitation link |
 | ChatMessage | Chat conversation log (user message, assistant response, feedback flag, language) |
+| PushSubscription | Web Push subscription (endpoint, keys, user FK) |
 | FaqItem | FAQ entry with question, answer, language, sort order (admin-managed) |
 
 ## Scripts
@@ -111,6 +112,9 @@ REDIS_URL=redis://localhost:6379
 JWT_SECRET=your-secret-key
 TELEGRAM_BOT_TOKEN=your-bot-token    # Required for Telegram Mini App auth
 FEEDBACK_CHAT_ID=-100xxxxxxxxxx      # Telegram group chat ID for user feedback
+VAPID_PUBLIC_KEY=your-vapid-public-key    # Web Push VAPID public key
+VAPID_PRIVATE_KEY=your-vapid-private-key  # Web Push VAPID private key
+VAPID_SUBJECT=mailto:admin@example.com    # Web Push VAPID subject
 ```
 
 ## API (tRPC Endpoints)
@@ -127,14 +131,16 @@ FEEDBACK_CHAT_ID=-100xxxxxxxxxx      # Telegram group chat ID for user feedback
 | `invite` | generate, accept, getByToken |
 | `stats` | profile, help, networkCapabilities |
 | `currency` | list, detectCurrency, rates, convert, toUSD |
+| `push` | vapidPublicKey, subscribe, unsubscribe |
 | `faq` | list, isAdmin, create, update, delete (admin-gated CRUD) |
 
 ## Services
 
 - **Auth** — JWT (HS256), 30 min access / 30 days refresh, 6-digit linking codes, Telegram initData HMAC-SHA256 validation
 - **BFS** — Recursive CTE in PostgreSQL for graph traversal, path finding, and notification distribution
-- **Notifications** — BFS distribution with 1:1 ratio (amount = notification count), ignore list, handshake path, and Telegram bot notifications
-- **Telegram Bot** — Collection notifications via Bot API with rate-limited broadcast (25 msg/sec batches via BullMQ)
+- **Notifications** — BFS distribution with 1:1 ratio (amount = notification count), ignore list, handshake path, Telegram bot and Web Push notifications
+- **Telegram Bot** — Collection notifications (new, blocked, closed) via Bot API with rate-limited broadcast (25 msg/sec batches via BullMQ)
+- **Web Push** — Browser push notifications via web-push library with VAPID, auto-cleanup of expired subscriptions
 - **Currency** — Real-time exchange rates with Redis cache (1h TTL), automatic USD conversion for all amounts
 - **Geo** — IP-based country detection for currency auto-selection (ip-api.com)
 
@@ -142,9 +148,7 @@ FEEDBACK_CHAT_ID=-100xxxxxxxxxx      # Telegram group chat ID for user feedback
 
 | Worker | Description | Schedule |
 |--------|-------------|----------|
-| `re-notify` | Re-notifications for active collections | Every 12h |
 | `cycle-close` | Auto-close 28-day cycle for regular collections | Every hour |
-| `special-notify` | Notifications for Author/Developer collections (after first intention) | Every hour |
 | `expire-notifications` | Expired notifications (24h) → EXPIRED | Every hour |
 | `check-block` | Check intention sum → BLOCKED | On event |
 | `tg-broadcast` | Send Telegram bot messages in rate-limited batches (25/sec) | On event |
@@ -245,7 +249,8 @@ Mock data (`apps/web/src/lib/demoData.ts`):
 - **AI Chat Assistant** — floating help button (?) with expandable menu: Chat (AI assistant with glossary/screens/FAQ knowledge) and FAQ page; supports text and voice input with auto-speak for voice queries
 - **FAQ Page** — admin-managed FAQ with accordion UI; admins can create/edit/delete questions from the interface
 - **Feedback to Telegram** — user feedback/suggestions from chat assistant are auto-forwarded to a Telegram group
-- **Telegram Bot Notifications** — new collection notifications sent to users' Telegram via bot with rate-limited broadcast (BullMQ worker, 25 msg/sec)
+- **Telegram Bot Notifications** — collection notifications (new, blocked, closed) sent to users' Telegram via bot with rate-limited broadcast (BullMQ worker, 25 msg/sec)
+- **Web Push Notifications** — browser push notifications for collection events (new, blocked, closed) via Web Push API with VAPID authentication
 
 ## Terminology (Glossary)
 

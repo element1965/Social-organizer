@@ -11,6 +11,7 @@ import { statsRouter } from './stats.router.js';
 import { currencyRouter } from './currency.router.js';
 import { chatRouter } from './chat.router.js';
 import { faqRouter } from './faq.router.js';
+import { pushRouter } from './push.router.js';
 
 export const appRouter = router({
   auth: authRouter,
@@ -25,6 +26,7 @@ export const appRouter = router({
   currency: currencyRouter,
   chat: chatRouter,
   faq: faqRouter,
+  push: pushRouter,
 });
 
 export type AppRouter = typeof appRouter;

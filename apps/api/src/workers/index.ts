@@ -1,8 +1,6 @@
 import { Queue, Worker } from 'bullmq';
 import IORedis from 'ioredis';
-import { processReNotify } from './re-notify.worker.js';
 import { processCycleClose } from './cycle-close.worker.js';
-import { processSpecialNotify } from './special-notify.worker.js';
 import { processExpireNotifications } from './expire-notifications.worker.js';
 import { processCheckBlock } from './check-block.worker.js';
 import { processTgBroadcast, type TgBroadcastMessage } from './tg-broadcast.worker.js';
@@ -19,26 +17,12 @@ function getRedisConnection(): IORedis {
 export function setupQueues(): void {
   const redis = getRedisConnection();
 
-  // --- Re-notify: каждые 12 часов ---
-  const reNotifyQueue = new Queue('collection:re-notify', { connection: redis });
-  new Worker('collection:re-notify', processReNotify, { connection: redis });
-  reNotifyQueue.upsertJobScheduler('re-notify-scheduler', {
-    every: 12 * 60 * 60 * 1000, // 12 часов
-  }, { name: 're-notify' });
-
   // --- Cycle close: каждый час ---
   const cycleCloseQueue = new Queue('collection:cycle-close', { connection: redis });
   new Worker('collection:cycle-close', processCycleClose, { connection: redis });
   cycleCloseQueue.upsertJobScheduler('cycle-close-scheduler', {
     every: 60 * 60 * 1000, // 1 час
   }, { name: 'cycle-close' });
-
-  // --- Special notify: каждый час ---
-  const specialNotifyQueue = new Queue('user:special-notify', { connection: redis });
-  new Worker('user:special-notify', processSpecialNotify, { connection: redis });
-  specialNotifyQueue.upsertJobScheduler('special-notify-scheduler', {
-    every: 60 * 60 * 1000,
-  }, { name: 'special-notify' });
 
   // --- Expire notifications: каждый час ---
   const expireQueue = new Queue('notification:expire', { connection: redis });
