@@ -328,20 +328,7 @@ export function LandingPage() {
           </div>
         </section>
 
-        {/* === Section 5: CTA === */}
-        <section className="min-h-[40vh] flex flex-col items-center justify-center px-6 py-20">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-6 text-center max-w-xl">
-            {t('landing.ctaTitle')}
-          </h2>
-          <button
-            onClick={() => navigate(ctaPath)}
-            className="px-10 py-4 bg-teal-500 hover:bg-teal-400 text-white font-semibold rounded-xl transition-colors text-lg"
-          >
-            {t('landing.ctaButton')}
-          </button>
-        </section>
-
-        {/* === Section 6: Download Apps === */}
+        {/* === Section 5: Download Apps === */}
         <section id="download" className="min-h-[50vh] flex flex-col items-center justify-center px-6 py-20">
           <h2 className="text-2xl md:text-3xl font-bold text-white mb-3 text-center">
             {t('landing.downloadTitle')}
