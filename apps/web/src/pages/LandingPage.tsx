@@ -1,5 +1,5 @@
 import { lazy, Suspense, useState, useRef, useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Handshake, Heart, Eye, Users, Cog, Code, Globe, ChevronDown, ChevronUp, ArrowRight, Languages, Github, ExternalLink } from 'lucide-react';
 import { languageNames } from '@so/i18n';
@@ -433,14 +433,20 @@ export function LandingPage() {
         {/* === Footer === */}
         <footer className="px-6 pt-12 pb-24 text-center border-t border-white/5">
           <p className="text-gray-500 text-sm mb-3">{t('landing.footer')}</p>
-          <a
-            href="https://github.com/element1965/Social-organizer"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 text-gray-400 hover:text-white transition-colors mb-8"
-          >
-            <Github size={16} /> GitHub
-          </a>
+          <div className="flex items-center justify-center gap-4 mb-8">
+            <a
+              href="https://github.com/element1965/Social-organizer"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 text-gray-400 hover:text-white transition-colors"
+            >
+              <Github size={16} /> GitHub
+            </a>
+            <span className="text-gray-700">|</span>
+            <Link to="/privacy" className="text-gray-400 hover:text-white transition-colors text-sm">Privacy Policy</Link>
+            <span className="text-gray-700">|</span>
+            <Link to="/terms" className="text-gray-400 hover:text-white transition-colors text-sm">Terms of Service</Link>
+          </div>
           <div className="mt-8">
             <button
               onClick={scrollToTop}

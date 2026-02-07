@@ -16,6 +16,8 @@ import { MyNetworkPage } from './pages/MyNetworkPage';
 import { ProfilePage } from './pages/ProfilePage';
 import { SettingsPage } from './pages/SettingsPage';
 import { InvitePage } from './pages/InvitePage';
+import { PrivacyPage } from './pages/PrivacyPage';
+import { TermsPage } from './pages/TermsPage';
 
 export function App() {
   const [queryClient] = useState(() => new QueryClient({
@@ -33,6 +35,8 @@ export function App() {
             <Route path="/welcome" element={<LandingPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/onboarding" element={<OnboardingPage />} />
+            <Route path="/privacy" element={<PrivacyPage />} />
+            <Route path="/terms" element={<TermsPage />} />
             <Route path="/invite/:token" element={<InvitePage />} />
             <Route element={<ProtectedRoute><Layout /></ProtectedRoute>}>
               <Route path="/dashboard" element={<DashboardPage />} />
