@@ -9,6 +9,15 @@ export function ProtectedRoute({ children }: { children: React.ReactNode }) {
     enabled: isAuthenticated,
   });
 
+  // Clear stale demo tokens — demo mode is disabled
+  if (localStorage.getItem('accessToken') === 'demo-token') {
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
+    localStorage.removeItem('userId');
+    window.location.href = '/';
+    return null;
+  }
+
   if (!isAuthenticated) {
     // Preserve current path as redirect so user returns after login
     const redirectPath = location.pathname + location.search;

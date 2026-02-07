@@ -249,17 +249,6 @@ export function LoginPage() {
             Google
           </Button>
 
-          <Button
-            className="w-full bg-emerald-600 hover:bg-emerald-500 text-white"
-            size="lg"
-            onClick={() => {
-              login('demo-token', 'demo-refresh', 'demo-user');
-              window.location.href = '/dashboard';
-            }}
-            disabled={loading}
-          >
-            {t('login.demo')}
-          </Button>
         </div>
       </div>
     </div>
