@@ -79,7 +79,7 @@ export function LoginPage() {
         return;
       }
       login(data.accessToken, data.refreshToken, data.userId);
-      afterLogin('/');
+      afterLogin('/dashboard');
     },
     onError: () => {
       setError(t('auth.invalidCredentials'));
@@ -89,7 +89,7 @@ export function LoginPage() {
   const telegramLoginMutation = trpc.auth.loginWithTelegram.useMutation({
     onSuccess: (data) => {
       login(data.accessToken, data.refreshToken, data.userId);
-      afterLogin('/');
+      afterLogin('/dashboard');
     },
     onError: () => {
       setError(t('auth.telegramError'));
@@ -254,7 +254,7 @@ export function LoginPage() {
             size="lg"
             onClick={() => {
               login('demo-token', 'demo-refresh', 'demo-user');
-              window.location.href = '/';
+              window.location.href = '/dashboard';
             }}
             disabled={loading}
           >

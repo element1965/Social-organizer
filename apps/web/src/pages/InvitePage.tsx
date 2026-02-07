@@ -75,7 +75,7 @@ export function InvitePage() {
         <Card>
           <CardContent className="py-8 text-center">
             <p className="text-gray-500">{t('invite.alreadyUsed')}</p>
-            <Button className="mt-4" onClick={() => navigate('/')}>{t('common.back')}</Button>
+            <Button className="mt-4" onClick={() => navigate('/dashboard')}>{t('common.back')}</Button>
           </CardContent>
         </Card>
       </div>
@@ -112,7 +112,7 @@ export function InvitePage() {
                   localStorage.removeItem('refreshToken');
                   localStorage.removeItem('userId');
                 }
-                window.location.href = `/welcome?redirect=/invite/${token}`;
+                window.location.href = `/?redirect=/invite/${token}`;
               }}
             >
               <LogIn className="w-4 h-4 mr-2" /> {t('invite.loginToAccept')}

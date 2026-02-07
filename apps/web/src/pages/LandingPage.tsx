@@ -413,7 +413,7 @@ export function LandingPage() {
               localStorage.setItem('accessToken', 'demo-token');
               localStorage.setItem('refreshToken', 'demo-refresh');
               localStorage.setItem('userId', 'demo-user');
-              window.location.href = '/';
+              window.location.href = '/dashboard';
             }}
             className="mt-8 px-8 py-3 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold rounded-xl transition-colors text-lg"
           >

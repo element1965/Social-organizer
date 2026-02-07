@@ -95,7 +95,7 @@ export function OnboardingPage() {
     }
     await completeOnboarding.mutateAsync();
     await utils.user.me.refetch();
-    navigate('/');
+    navigate('/dashboard');
   };
 
   const isStep4 = step === 3;
