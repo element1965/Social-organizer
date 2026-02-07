@@ -29,12 +29,13 @@ export function App() {
         <BrowserRouter>
           <TelegramBootstrap>
           <Routes>
+            <Route path="/" element={<LandingPage />} />
             <Route path="/welcome" element={<LandingPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/onboarding" element={<OnboardingPage />} />
             <Route path="/invite/:token" element={<InvitePage />} />
             <Route element={<ProtectedRoute><Layout /></ProtectedRoute>}>
-              <Route path="/" element={<DashboardPage />} />
+              <Route path="/dashboard" element={<DashboardPage />} />
               <Route path="/notifications" element={<NotificationsPage />} />
               <Route path="/create" element={<CreateCollectionPage />} />
               <Route path="/collection/:id" element={<CollectionPage />} />

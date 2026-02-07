@@ -113,7 +113,7 @@ export async function handleTelegramUpdate(update: TgUpdate): Promise<void> {
 
       await sendTelegramMessage(
         chatId,
-        `👋 ${name ? name + ', w' : 'W'}elcome to <b>Social Organizer</b>!\n\nYou've been invited to join a trusted support network.\nTap the button below to accept the invitation.`,
+        `👋 ${name ? name + ', w' : 'W'}elcome to <b>Social Organizer</b>!\n\nYou've been invited to join a trusted support network.\nTap the button below to accept the invitation.\n\n🌐 <a href="https://www.orginizer.com/">Learn more</a>`,
         {
           inline_keyboard: [[{ text: '🤝 Accept Invitation', web_app: { url: webAppUrl } }]],
         },
@@ -125,7 +125,7 @@ export async function handleTelegramUpdate(update: TgUpdate): Promise<void> {
     const name = msg.from?.first_name || '';
     await sendTelegramMessage(
       chatId,
-      `👋 ${name ? name + ', w' : 'W'}elcome to <b>Social Organizer</b>!\n\nA platform for mutual support through trusted networks.\n\n🌐 <a href="${WEB_APP_URL}/welcome">Learn more about the project</a>`,
+      `👋 ${name ? name + ', w' : 'W'}elcome to <b>Social Organizer</b>!\n\nA platform for mutual support through trusted networks.\n\n🌐 <a href="https://www.orginizer.com/">Learn more about the project</a>`,
       {
         inline_keyboard: [[{ text: '📱 Open App', web_app: { url: WEB_APP_URL } }]],
       },

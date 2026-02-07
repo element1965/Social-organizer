@@ -47,16 +47,16 @@ export function TelegramBootstrap({ children }: { children: React.ReactNode }) {
 
       if (inviteToken) {
         localStorage.setItem('pendingInviteToken', inviteToken);
-        navigate(`/welcome?invite=${inviteToken}`, { replace: true });
+        navigate(`/?invite=${inviteToken}`, { replace: true });
         return;
       }
     }
 
     // Default: redirect away from public pages (but NOT if there's a pending invite)
-    if (location.pathname === '/welcome' || location.pathname === '/login') {
+    if (location.pathname === '/' || location.pathname === '/welcome' || location.pathname === '/login') {
       const hasPendingInvite = localStorage.getItem('pendingInviteToken');
       if (!hasPendingInvite) {
-        navigate('/', { replace: true });
+        navigate('/dashboard', { replace: true });
       }
     }
   }, [isTelegram, isReady, isAuthenticated, location.pathname, navigate]);

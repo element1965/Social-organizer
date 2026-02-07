@@ -12,7 +12,7 @@ export function ProtectedRoute({ children }: { children: React.ReactNode }) {
   if (!isAuthenticated) {
     // Preserve current path as redirect so user returns after login
     const redirectPath = location.pathname + location.search;
-    const target = redirectPath !== '/' ? `/welcome?redirect=${encodeURIComponent(redirectPath)}` : '/welcome';
+    const target = redirectPath !== '/dashboard' ? `/?redirect=${encodeURIComponent(redirectPath)}` : '/';
     return <Navigate to={target} replace />;
   }
 
