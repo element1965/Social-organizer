@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { QRCodeSVG } from 'qrcode.react';
 import { trpc } from '../lib/trpc';
-import { buildInviteUrl } from '../lib/inviteUrl';
+import { buildInviteUrl, buildWebInviteUrl, buildBotInviteUrl } from '../lib/inviteUrl';
 import { useAuth } from '../hooks/useAuth';
 import { useTheme } from '../hooks/useTheme';
 import { Button } from '../components/ui/button';
@@ -25,6 +25,9 @@ export function MyNetworkPage() {
   const isDark = mode === 'dark' || (mode === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
 
   const permanentInviteUrl = myId ? buildInviteUrl(myId) : '';
+  const webInviteUrl = myId ? buildWebInviteUrl(myId) : '';
+  const botInviteUrl = myId ? buildBotInviteUrl(myId) : '';
+  const [copiedWeb, setCopiedWeb] = useState(false);
 
   const { data: connections, isLoading } = trpc.connection.list.useQuery(undefined, { refetchInterval: 30000 });
   const { data: connectionCount } = trpc.connection.getCount.useQuery();
@@ -67,26 +70,39 @@ export function MyNetworkPage() {
             </div>
             <div className="flex justify-center mb-4">
               <div className="p-3 bg-white rounded-xl">
-                <QRCodeSVG value={permanentInviteUrl} size={200} />
+                <QRCodeSVG value={webInviteUrl} size={200} />
               </div>
             </div>
-            <button
-              onClick={() => {
-                navigator.clipboard.writeText(permanentInviteUrl);
-                setCopied(true);
-                setTimeout(() => setCopied(false), 2000);
-              }}
-              className="w-full flex items-center gap-2 p-3 bg-gray-100 dark:bg-gray-800 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
-            >
-              <p className="flex-1 text-xs text-gray-600 dark:text-gray-400 break-all text-left">{permanentInviteUrl}</p>
-              <div className="shrink-0">
-                {copied ? (
-                  <Check className="w-5 h-5 text-green-500" />
-                ) : (
-                  <Copy className="w-5 h-5 text-gray-500" />
-                )}
-              </div>
-            </button>
+            <div className="space-y-2">
+              <button
+                onClick={() => {
+                  navigator.clipboard.writeText(webInviteUrl);
+                  setCopiedWeb(true);
+                  setTimeout(() => setCopiedWeb(false), 2000);
+                }}
+                className="w-full flex items-center gap-2 p-3 bg-gray-100 dark:bg-gray-800 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+              >
+                <span className="text-base shrink-0">🌐</span>
+                <p className="flex-1 text-xs text-gray-600 dark:text-gray-400 break-all text-left">{webInviteUrl}</p>
+                <div className="shrink-0">
+                  {copiedWeb ? <Check className="w-5 h-5 text-green-500" /> : <Copy className="w-5 h-5 text-gray-500" />}
+                </div>
+              </button>
+              <button
+                onClick={() => {
+                  navigator.clipboard.writeText(botInviteUrl);
+                  setCopied(true);
+                  setTimeout(() => setCopied(false), 2000);
+                }}
+                className="w-full flex items-center gap-2 p-3 bg-gray-100 dark:bg-gray-800 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+              >
+                <span className="text-base shrink-0">🤖</span>
+                <p className="flex-1 text-xs text-gray-600 dark:text-gray-400 break-all text-left">{botInviteUrl}</p>
+                <div className="shrink-0">
+                  {copied ? <Check className="w-5 h-5 text-green-500" /> : <Copy className="w-5 h-5 text-gray-500" />}
+                </div>
+              </button>
+            </div>
           </div>
         </div>
       )}
