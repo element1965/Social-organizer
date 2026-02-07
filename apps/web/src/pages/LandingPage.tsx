@@ -1,5 +1,5 @@
 import { lazy, Suspense, useState, useRef, useEffect } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Handshake, Heart, Eye, Users, Cog, Code, Globe, ChevronDown, ChevronUp, ArrowRight, Languages, Github, ExternalLink } from 'lucide-react';
 import { languageNames } from '@so/i18n';
@@ -53,16 +53,20 @@ function LanguageSwitcher() {
 
 export function LandingPage() {
   const { t } = useTranslation();
-  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const redirect = searchParams.get('redirect');
   const inviteParam = searchParams.get('invite');
   const pendingInvite = inviteParam || localStorage.getItem('pendingInviteToken');
-  // If user is already authenticated (e.g. Telegram auto-login) and has pending invite, go directly to invite page
-  const isAuthenticated = !!localStorage.getItem('accessToken') && localStorage.getItem('accessToken') !== 'demo-token';
-  const ctaPath = pendingInvite && isAuthenticated
-    ? `/invite/${pendingInvite}`
-    : redirect ? `/login?redirect=${encodeURIComponent(redirect)}` : '/login';
+
+  // Persist invite token so Telegram bot link can use it
+  useEffect(() => {
+    if (inviteParam) localStorage.setItem('pendingInviteToken', inviteParam);
+  }, [inviteParam]);
+
+  // Build Telegram bot link with invite param if available
+  const tgBotLink = pendingInvite
+    ? `https://t.me/socialorganizer_bot?start=invite_${pendingInvite}`
+    : 'https://t.me/socialorganizer_bot';
+
   const scrollProgress = useScrollProgress();
   const [scrollY, setScrollY] = useState(0);
 
@@ -368,7 +372,7 @@ export function LandingPage() {
 
             {/* Telegram */}
             <a
-              href="https://t.me/socialorganizer_bot"
+              href={tgBotLink}
               target="_blank"
               rel="noopener noreferrer"
               className="group relative bg-white/5 hover:bg-white/10 backdrop-blur-sm border border-teal-500/50 rounded-xl p-4 flex flex-col items-center justify-center transition-all"
