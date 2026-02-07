@@ -105,6 +105,31 @@ export function ProfilePage() {
         )}
       </div>
 
+      {contacts && contacts.filter((c: { value?: string }) => c.value).length > 0 && (
+        <Card>
+          <CardHeader><h2 className="font-semibold text-gray-900 dark:text-white">{t('profile.contacts')}</h2></CardHeader>
+          <CardContent>
+            <div className="flex flex-wrap gap-2">
+              {contacts.filter((c: { value?: string }) => c.value).map((contact: { type: string; value: string; icon?: string; label?: string }) => {
+                const url = buildContactUrl(contact.type, contact.value);
+                return (
+                  <a
+                    key={contact.type}
+                    href={url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-sm transition-colors"
+                  >
+                    <SocialIcon type={contact.icon || contact.type} className="w-4 h-4" />
+                    <span className="text-gray-700 dark:text-gray-300">{contact.label || contact.type}</span>
+                  </a>
+                );
+              })}
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
       {pathData?.path && pathData.path.length > 1 && (
         <Card>
           <CardContent className="py-3">
@@ -152,30 +177,6 @@ export function ProfilePage() {
         </Card>
       )}
 
-      {contacts && contacts.filter((c: { value?: string }) => c.value).length > 0 && (
-        <Card>
-          <CardHeader><h2 className="font-semibold text-gray-900 dark:text-white">{t('profile.contacts')}</h2></CardHeader>
-          <CardContent>
-            <div className="flex flex-wrap gap-2">
-              {contacts.filter((c: { value?: string }) => c.value).map((contact: { type: string; value: string; icon?: string; label?: string }) => {
-                const url = buildContactUrl(contact.type, contact.value);
-                return (
-                  <a
-                    key={contact.type}
-                    href={url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-sm transition-colors"
-                  >
-                    <SocialIcon type={contact.icon || contact.type} className="w-4 h-4" />
-                    <span className="text-gray-700 dark:text-gray-300">{contact.label || contact.type}</span>
-                  </a>
-                );
-              })}
-            </div>
-          </CardContent>
-        </Card>
-      )}
     </div>
   );
 }

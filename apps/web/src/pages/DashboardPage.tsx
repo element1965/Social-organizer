@@ -16,7 +16,6 @@ import {
   PlusCircle,
   Users,
   ArrowRight,
-  Heart,
   UserPlus,
   ChevronDown,
   ChevronUp,
@@ -38,7 +37,7 @@ const LazyCloudBackground = lazy(() =>
 type TabId = 'network' | 'stats' | 'activity';
 
 export function DashboardPage() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const userId = useAuth((s) => s.userId);
 
@@ -451,24 +450,6 @@ export function DashboardPage() {
               </CardContent>
             </Card>
 
-            {/* Summary stats */}
-            <div className="grid grid-cols-2 gap-3">
-              <StatCard
-                label={t('dashboard.activeIntentions')}
-                value={helpStats?.activeIntentions ?? 0}
-                icon={<Heart className="w-5 h-5" />}
-              />
-              <StatCard
-                label={t('dashboard.completedCollections')}
-                value={helpStats?.completedCollections ?? 0}
-                icon={<Users className="w-5 h-5" />}
-              />
-              <StatCard
-                label={t('dashboard.totalGiven')}
-                value={`${helpStats?.given?.totalAmount ?? 0}`}
-                sublabel="USD"
-              />
-            </div>
           </div>
 
           {/* Section 2: Network Statistics */}
@@ -478,29 +459,6 @@ export function DashboardPage() {
               <h3 className="text-lg font-bold text-gray-900 dark:text-white">
                 {t('dashboard.networkStats')}
               </h3>
-            </div>
-
-            <StatCard
-              label={t('dashboard.networkReach')}
-              value={helpStats?.networkReach ?? 0}
-              sublabel={t('dashboard.people')}
-              trend={undefined}
-            />
-
-            {/* Current Capabilities */}
-            <div className="p-4 bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-950/30 dark:to-emerald-950/30 rounded-xl">
-              <div className="flex items-center justify-between mb-2">
-                <div className="flex items-center gap-2">
-                  <Wallet className="w-5 h-5 text-green-600" />
-                  <span className="text-sm text-gray-500">{t('dashboard.currentCapabilities')}</span>
-                </div>
-              </div>
-              <p className="text-3xl font-bold text-green-700 dark:text-green-400">
-                ${networkCapabilities?.total ?? 0}
-              </p>
-              <p className="text-xs text-gray-500 mt-1">
-                {t('dashboard.capabilitiesContributors', { count: networkCapabilities?.contributors ?? 0 })}
-              </p>
             </div>
 
             {/* Help given by period */}
@@ -513,23 +471,31 @@ export function DashboardPage() {
               </CardHeader>
               <CardContent>
                 <div className="space-y-3">
-                  {[
-                    { key: 'allTime', label: t('dashboard.periodAllTime') },
-                    { key: 'year', label: t('dashboard.periodYear') },
-                    { key: 'month', label: t('dashboard.periodMonth') },
-                    { key: 'week', label: t('dashboard.periodWeek') },
-                    { key: 'day', label: t('dashboard.periodDay') },
-                  ].map(({ key, label }) => {
-                    const data = helpByPeriod?.[key as keyof typeof helpByPeriod];
+                  {/* All time */}
+                  <div className="flex items-center justify-between py-2 border-b border-gray-100 dark:border-gray-800">
+                    <span className="text-sm font-medium text-gray-900 dark:text-white">{t('dashboard.periodAllTime')}</span>
+                    <div className="flex items-center gap-3">
+                      <span className="text-sm text-gray-500">
+                        {helpByPeriod?.allTime?.count ?? 0} {t('dashboard.times')}
+                      </span>
+                      <span className="text-sm font-semibold text-green-600 dark:text-green-400">
+                        ${helpByPeriod?.allTime?.amount ?? 0}
+                      </span>
+                    </div>
+                  </div>
+                  {/* Monthly breakdown */}
+                  {(helpByPeriod as any)?.months?.map((m: { month: string; count: number; amount: number }) => {
+                    const [year, mo] = m.month.split('-');
+                    const monthName = new Date(Number(year), Number(mo) - 1).toLocaleDateString(i18n.language, { year: 'numeric', month: 'long' });
                     return (
-                      <div key={key} className="flex items-center justify-between py-2 border-b border-gray-100 dark:border-gray-800 last:border-0">
-                        <span className="text-sm text-gray-600 dark:text-gray-400">{label}</span>
+                      <div key={m.month} className="flex items-center justify-between py-2 border-b border-gray-100 dark:border-gray-800 last:border-0">
+                        <span className="text-sm text-gray-600 dark:text-gray-400 capitalize">{monthName}</span>
                         <div className="flex items-center gap-3">
                           <span className="text-sm text-gray-500">
-                            {data?.count ?? 0} {t('dashboard.times')}
+                            {m.count} {t('dashboard.times')}
                           </span>
                           <span className="text-sm font-semibold text-green-600 dark:text-green-400">
-                            ${data?.amount ?? 0}
+                            ${m.amount}
                           </span>
                         </div>
                       </div>

@@ -102,38 +102,36 @@ export const statsRouter = router({
     };
   }),
 
-  // Help given statistics by time period
+  // Help given statistics: allTime + per-month breakdown
   helpGivenByPeriod: protectedProcedure.query(async ({ ctx }) => {
     const userId = ctx.userId;
-    const now = new Date();
-    const dayAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000);
-    const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
-    const monthAgo = new Date(now.getTime() - 28 * 24 * 60 * 60 * 1000);
-    const yearAgo = new Date(now.getTime() - 13 * 28 * 24 * 60 * 60 * 1000);
 
-    // Get all obligations given by user
     const allObligations = await ctx.db.obligation.findMany({
       where: { userId },
       select: { amount: true, createdAt: true },
     });
 
-    const calcStats = (since?: Date) => {
-      const filtered = since
-        ? allObligations.filter(o => o.createdAt >= since)
-        : allObligations;
-      return {
-        count: filtered.length,
-        amount: Math.round(filtered.reduce((sum, o) => sum + o.amount, 0)),
-      };
+    const allTime = {
+      count: allObligations.length,
+      amount: Math.round(allObligations.reduce((sum, o) => sum + o.amount, 0)),
     };
 
-    return {
-      allTime: calcStats(),
-      year: calcStats(yearAgo),
-      month: calcStats(monthAgo),
-      week: calcStats(weekAgo),
-      day: calcStats(dayAgo),
-    };
+    // Group by month (YYYY-MM)
+    const byMonth: Record<string, { count: number; amount: number }> = {};
+    for (const o of allObligations) {
+      const d = new Date(o.createdAt);
+      const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+      if (!byMonth[key]) byMonth[key] = { count: 0, amount: 0 };
+      byMonth[key].count++;
+      byMonth[key].amount += o.amount;
+    }
+
+    // Sort months chronologically and round amounts
+    const months = Object.entries(byMonth)
+      .sort(([a], [b]) => a.localeCompare(b))
+      .map(([month, data]) => ({ month, count: data.count, amount: Math.round(data.amount) }));
+
+    return { allTime, months };
   }),
 
   // Platform-wide user growth (all users, from launch day)
