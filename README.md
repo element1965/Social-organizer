@@ -83,6 +83,7 @@ pnpm dev
 | LinkingCode | 6-digit linking code (5 min TTL) |
 | InviteLink | Invitation link |
 | ChatMessage | Chat conversation log (user message, assistant response, feedback flag, language) |
+| FaqItem | FAQ entry with question, answer, language, sort order (admin-managed) |
 
 ## Scripts
 
@@ -126,6 +127,7 @@ FEEDBACK_CHAT_ID=-100xxxxxxxxxx      # Telegram group chat ID for user feedback
 | `invite` | generate, accept, getByToken |
 | `stats` | profile, help, networkCapabilities |
 | `currency` | list, detectCurrency, rates, convert, toUSD |
+| `faq` | list, isAdmin, create, update, delete (admin-gated CRUD) |
 
 ## Services
 
@@ -173,6 +175,7 @@ React 19 SPA with tRPC client.
 | MyNetworkPage | `/network` | Connection list with connection counts + invitations |
 | ProfilePage | `/profile/:userId` | Profile with editing, contacts, connections, handshake path |
 | SettingsPage | `/settings` | Language, theme, sounds, font scale, contacts, ignore list |
+| FaqPage | `/faq` | FAQ accordion with admin CRUD (create/edit/delete), language-aware |
 | InvitePage | `/invite/:token` | Accept invitation link |
 
 ### 3D Visualization (graph-3d)
@@ -239,7 +242,8 @@ Mock data (`apps/web/src/lib/demoData.ts`):
 - **Onboarding** — auto-shown for new users, completable flag in database
 - **Currency preference** — users can set preferred currency in settings; auto-detected by IP on first visit
 - **Monthly support budget** — users can set how much they're willing to contribute monthly; displayed as "Current Capabilities" network-wide sum on dashboard
-- **AI Chat Assistant** — floating button with knowledge-base-powered assistant (glossary, screens guide, FAQ); supports text and voice input with auto-speak for voice queries
+- **AI Chat Assistant** — floating help button (?) with expandable menu: Chat (AI assistant with glossary/screens/FAQ knowledge) and FAQ page; supports text and voice input with auto-speak for voice queries
+- **FAQ Page** — admin-managed FAQ with accordion UI; admins can create/edit/delete questions from the interface
 - **Feedback to Telegram** — user feedback/suggestions from chat assistant are auto-forwarded to a Telegram group
 - **Telegram Bot Notifications** — new collection notifications sent to users' Telegram via bot with rate-limited broadcast (BullMQ worker, 25 msg/sec)
 
