@@ -316,7 +316,8 @@
     "decline": "拒绝",
     "alreadyUsed": "此邀请已被使用",
     "success": "已连接！",
-    "loginToAccept": "登录后接受"
+    "loginToAccept": "登录后接受",
+    "accepting": "正在接受邀请..."
   },
   "landing": {
     "painQuote": "当困难来临时——你独自面对。朋友不知道。朋友的朋友——更不知道。但他们中的某个人本可以帮忙。",

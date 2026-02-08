@@ -316,7 +316,8 @@
     "decline": "Recusar",
     "alreadyUsed": "Este convite já foi utilizado",
     "success": "Conectado!",
-    "loginToAccept": "Entre para aceitar"
+    "loginToAccept": "Entre para aceitar",
+    "accepting": "Aceitando convite..."
   },
   "landing": {
     "painQuote": "Quando surge um problema — você fica sozinho. Amigos não sabem. Amigos de amigos — menos ainda. Mas alguém deles poderia ajudar.",

@@ -316,7 +316,8 @@
     "decline": "Refuser",
     "alreadyUsed": "Cette invitation a déjà été utilisée",
     "success": "Connecté !",
-    "loginToAccept": "Connectez-vous pour accepter"
+    "loginToAccept": "Connectez-vous pour accepter",
+    "accepting": "Acceptation de l'invitation..."
   },
   "landing": {
     "painQuote": "Quand les problèmes arrivent — tu restes seul. Les amis ne savent pas. Les amis d'amis — encore moins. Pourtant, quelqu'un parmi eux pourrait aider.",

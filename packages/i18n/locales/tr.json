@@ -334,7 +334,8 @@
     "decline": "Reddet",
     "alreadyUsed": "Bu davet zaten kullanılmış",
     "success": "Bağlandı!",
-    "loginToAccept": "Kabul etmek için giriş yapın"
+    "loginToAccept": "Kabul etmek için giriş yapın",
+    "accepting": "Davet kabul ediliyor..."
   },
   "landing": {
     "painQuote": "Sorun çıktığında — yalnız kalırsın. Arkadaşlar bilmez. Arkadaşların arkadaşları — daha da az. Ama onlardan biri yardım edebilirdi.",

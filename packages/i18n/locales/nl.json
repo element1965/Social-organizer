@@ -334,7 +334,8 @@
     "decline": "Weigeren",
     "alreadyUsed": "Deze uitnodiging is al gebruikt",
     "success": "Verbonden!",
-    "loginToAccept": "Log in om te accepteren"
+    "loginToAccept": "Log in om te accepteren",
+    "accepting": "Uitnodiging wordt geaccepteerd..."
   },
   "landing": {
     "painQuote": "Als er problemen zijn — sta je alleen. Vrienden weten het niet. Vrienden van vrienden — nog minder. Maar iemand van hen had kunnen helpen.",

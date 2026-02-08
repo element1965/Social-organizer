@@ -334,7 +334,8 @@
     "decline": "Tolak",
     "alreadyUsed": "Undangan ini sudah digunakan",
     "success": "Terhubung!",
-    "loginToAccept": "Masuk untuk menerima"
+    "loginToAccept": "Masuk untuk menerima",
+    "accepting": "Menerima undangan..."
   },
   "landing": {
     "painQuote": "Ketika masalah datang — kamu sendirian. Teman tidak tahu. Teman dari teman — lebih tidak tahu lagi. Padahal seseorang dari mereka bisa membantu.",
