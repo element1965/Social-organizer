@@ -307,6 +307,44 @@ export async function sendTgMessages(messages: Array<{ telegramId: string; text:
   }
 }
 
+/** Upload a media file to Telegram via support chat, returns file_id for reuse */
+export async function uploadMediaToTelegram(
+  fileBuffer: Buffer,
+  filename: string,
+  mediaType: 'photo' | 'video',
+): Promise<string | null> {
+  if (!TELEGRAM_BOT_TOKEN) return null;
+
+  const method = mediaType === 'photo' ? 'sendPhoto' : 'sendVideo';
+  const field = mediaType === 'photo' ? 'photo' : 'video';
+
+  const formData = new FormData();
+  formData.append('chat_id', String(SUPPORT_CHAT_ID));
+  formData.append(field, new Blob([fileBuffer]), filename);
+  formData.append('caption', `[Broadcast upload] ${filename}`);
+
+  const res = await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/${method}`, {
+    method: 'POST',
+    body: formData,
+  });
+  const json = (await res.json()) as {
+    ok: boolean;
+    result?: { photo?: Array<{ file_id: string }>; video?: { file_id: string } };
+    description?: string;
+  };
+
+  if (!json.ok) {
+    console.error(`[TG Bot] upload ${mediaType} failed: ${json.description}`);
+    return null;
+  }
+
+  if (mediaType === 'photo') {
+    const photos = json.result?.photo;
+    return photos?.[photos.length - 1]?.file_id ?? null;
+  }
+  return json.result?.video?.file_id ?? null;
+}
+
 /** Register webhook URL with Telegram Bot API */
 export async function setTelegramWebhook(webhookUrl: string): Promise<boolean> {
   if (!TELEGRAM_BOT_TOKEN) {
