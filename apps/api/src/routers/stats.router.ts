@@ -134,7 +134,8 @@ export const statsRouter = router({
     return { allTime, months };
   }),
 
-  // Platform-wide user growth (all users, from launch day)
+  // Platform-wide user growth with adaptive grouping:
+  // ≤14 days → daily, ≤14 weeks → weekly, otherwise → monthly
   platformGrowth: protectedProcedure.query(async ({ ctx }) => {
     const firstUser = await ctx.db.user.findFirst({
       orderBy: { createdAt: 'asc' },
@@ -144,6 +145,10 @@ export const statsRouter = router({
     const now = new Date();
     const totalDays = Math.max(1, Math.ceil((now.getTime() - since.getTime()) / (24 * 60 * 60 * 1000)));
 
+    // Determine grouping period
+    const period: 'day' | 'week' | 'month' =
+      totalDays <= 14 ? 'day' : totalDays <= 98 ? 'week' : 'month';
+
     const rows = await ctx.db.$queryRaw<Array<{ day: Date; count: bigint }>>`
       SELECT DATE_TRUNC('day', "createdAt") AS day, COUNT(*)::bigint AS count
       FROM users
@@ -152,22 +157,47 @@ export const statsRouter = router({
       ORDER BY day
     `;
 
+    // Build cumulative daily map
     const countByDay = new Map(rows.map(r => [
       new Date(r.day).toISOString().slice(0, 10),
       Number(r.count),
     ]));
 
-    const result: Array<{ date: string; count: number }> = [];
+    const dailyCumulative: Array<{ date: string; count: number }> = [];
     let cumulative = 0;
-
     for (let i = 0; i <= totalDays; i++) {
       const d = new Date(since.getTime() + i * 24 * 60 * 60 * 1000);
       const key = d.toISOString().slice(0, 10);
       cumulative += countByDay.get(key) ?? 0;
-      result.push({ date: key, count: cumulative });
+      dailyCumulative.push({ date: key, count: cumulative });
     }
 
-    return result;
+    if (period === 'day') {
+      return { period, points: dailyCumulative };
+    }
+
+    // Group by week or month — take the last day's cumulative value per bucket
+    const bucketKey = (dateStr: string): string => {
+      const d = new Date(dateStr);
+      if (period === 'week') {
+        // ISO week start (Monday)
+        const day = d.getDay();
+        const diff = d.getDate() - day + (day === 0 ? -6 : 1);
+        const monday = new Date(d.getFullYear(), d.getMonth(), diff);
+        return monday.toISOString().slice(0, 10);
+      }
+      // month
+      return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+    };
+
+    const buckets = new Map<string, { date: string; count: number }>();
+    for (const point of dailyCumulative) {
+      const key = bucketKey(point.date);
+      buckets.set(key, point); // last day in bucket wins (highest cumulative)
+    }
+
+    const points = Array.from(buckets.values());
+    return { period, points };
   }),
 
   // Current network capabilities (sum of all remainingBudget in network)
