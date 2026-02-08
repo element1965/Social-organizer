@@ -117,7 +117,7 @@ function Earth({ scrollProgress }: { scrollProgress: number }) {
   ]);
 
   useFrame(() => {
-    const target = scrollProgress * Math.PI * 3;
+    const target = scrollProgress * Math.PI * 1.5;
     currentRotation.current += (target - currentRotation.current) * 0.08;
 
     if (earthRef.current) {
@@ -170,7 +170,7 @@ function Moon({ scrollProgress }: { scrollProgress: number }) {
 
   useFrame(() => {
     if (orbitRef.current) {
-      const targetAngle = scrollProgress * Math.PI * 4;
+      const targetAngle = scrollProgress * Math.PI * 2;
       currentOrbitAngle.current += (targetAngle - currentOrbitAngle.current) * 0.05;
       orbitRef.current.rotation.y = currentOrbitAngle.current;
     }
@@ -466,8 +466,9 @@ function LoadingFallback() {
 
 /* ---------- Внутренняя сцена ---------- */
 
-function Scene({ scrollProgress }: { scrollProgress: number }) {
+function Scene({ scrollProgress, heroProgress }: { scrollProgress: number; heroProgress: number }) {
   const [texturesLoaded, setTexturesLoaded] = useState(false);
+  const groupRef = useRef<THREE.Group>(null);
 
   useEffect(() => {
     // Предзагрузка текстур Земли и Луны
@@ -480,23 +481,42 @@ function Scene({ scrollProgress }: { scrollProgress: number }) {
     ]).then(() => setTexturesLoaded(true)).catch(() => setTexturesLoaded(true));
   }, []);
 
+  useFrame(() => {
+    if (groupRef.current) {
+      const targetY = heroProgress * 1.3;
+      const targetScale = 1 - heroProgress * 0.35;
+      groupRef.current.position.y += (targetY - groupRef.current.position.y) * 0.08;
+      const s = groupRef.current.scale.x + (targetScale - groupRef.current.scale.x) * 0.08;
+      groupRef.current.scale.setScalar(s);
+    }
+  });
+
+  const showNetwork = heroProgress < 0.3;
+
   return (
     <>
       <AdaptiveCamera />
       <ambientLight intensity={0.3} />
       <directionalLight position={[5, 3, 5]} intensity={1.5} />
 
-      {texturesLoaded ? (
-        <>
-          <Earth scrollProgress={scrollProgress} />
-          <Moon scrollProgress={scrollProgress} />
-        </>
-      ) : (
-        <LoadingFallback />
-      )}
+      <group ref={groupRef}>
+        {texturesLoaded ? (
+          <>
+            <Earth scrollProgress={scrollProgress} />
+            <Moon scrollProgress={scrollProgress} />
+          </>
+        ) : (
+          <LoadingFallback />
+        )}
 
-      <NetworkNodes scrollProgress={scrollProgress} />
-      <NetworkEdges scrollProgress={scrollProgress} />
+        {showNetwork && (
+          <>
+            <NetworkNodes scrollProgress={scrollProgress} />
+            <NetworkEdges scrollProgress={scrollProgress} />
+          </>
+        )}
+      </group>
+
       <Stars count={6000} />
     </>
   );
@@ -507,9 +527,10 @@ function Scene({ scrollProgress }: { scrollProgress: number }) {
 export interface GlobeNetworkProps {
   className?: string;
   scrollProgress: number;
+  heroProgress?: number;
 }
 
-export function GlobeNetwork({ className, scrollProgress }: GlobeNetworkProps) {
+export function GlobeNetwork({ className, scrollProgress, heroProgress = 0 }: GlobeNetworkProps) {
   return (
     <div className={className} style={{ width: '100%', height: '100%' }}>
       <Canvas
@@ -518,7 +539,7 @@ export function GlobeNetwork({ className, scrollProgress }: GlobeNetworkProps) {
         style={{ background: 'linear-gradient(to bottom, #000510 0%, #020817 50%, #030b1a 100%)' }}
       >
         <color attach="background" args={['#020817']} />
-        <Scene scrollProgress={scrollProgress} />
+        <Scene scrollProgress={scrollProgress} heroProgress={heroProgress} />
       </Canvas>
     </div>
   );
