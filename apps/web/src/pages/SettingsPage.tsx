@@ -152,33 +152,35 @@ export function SettingsPage() {
             </p>
           )}
           <div className="flex items-center gap-2">
-            <Input
-              type="number"
-              value={newBudget}
-              onChange={(e) => setNewBudget(e.target.value)}
-              placeholder={me?.monthlyBudget != null ? String(Math.round(me.monthlyBudget)) : t('settings.newBudgetPlaceholder')}
-              className="flex-1"
-              min={0}
-            />
+            <div className="relative flex-1">
+              <Input
+                type="number"
+                value={newBudget}
+                onChange={(e) => setNewBudget(e.target.value)}
+                placeholder={me?.monthlyBudget != null ? String(Math.round(me.monthlyBudget)) : t('settings.newBudgetPlaceholder')}
+                className={`w-full ${newBudget && Number(newBudget) >= 0 ? 'pr-8' : ''}`}
+                min={0}
+              />
+              {newBudget && Number(newBudget) >= 0 && (
+                <button
+                  onClick={() => {
+                    setBudgetMutation.mutate({ amount: Number(newBudget), inputCurrency: newBudgetCurrency });
+                    setNewBudget('');
+                  }}
+                  disabled={setBudgetMutation.isPending}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 text-green-500 hover:text-green-400"
+                >
+                  <Check className="w-5 h-5" />
+                </button>
+              )}
+            </div>
             <Select
               id="budget-currency"
               value={newBudgetCurrency}
               onChange={(e) => setNewBudgetCurrency(e.target.value)}
               options={currencies?.map(c => ({ value: c.code, label: `${c.symbol} ${c.code}` })) ?? [{ value: 'USD', label: '$ USD' }]}
-              className="w-28"
+              className="w-28 shrink-0"
             />
-            {newBudget && Number(newBudget) >= 0 && (
-              <button
-                onClick={() => {
-                  setBudgetMutation.mutate({ amount: Number(newBudget), inputCurrency: newBudgetCurrency });
-                  setNewBudget('');
-                }}
-                disabled={setBudgetMutation.isPending}
-                className="text-green-500 hover:text-green-400 shrink-0"
-              >
-                <Check className="w-5 h-5" />
-              </button>
-            )}
           </div>
           {newBudgetCurrency !== 'USD' && budgetPreview && Number(newBudget) > 0 && (
             <p className="text-sm text-gray-500">≈ ${budgetPreview.result} USD</p>
