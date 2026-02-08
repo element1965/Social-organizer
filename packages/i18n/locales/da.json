@@ -276,6 +276,11 @@
     "newBudgetPlaceholder": "Nyt beløb",
     "updateBudget": "Opdater budget"
   },
+  "faq": {
+    "localized": "Oversat",
+    "localizeAll": "Oversæt til alle sprog",
+    "localizing": "Oversætter..."
+  },
   "chat": {
     "title": "Assistent",
     "welcomeMessage": "Hej! Jeg kan hjælpe dig med at forstå, hvordan appen fungerer. Spørg om håndtryk, intentioner eller andre begreber.",
@@ -284,6 +289,21 @@
     "openChat": "Åbn chatassistent",
     "startListening": "Start stemmeinput",
     "stopListening": "Stop stemmeinput"
+  },
+  "broadcast": {
+    "title": "Udsendelse",
+    "allUsers": "Alle brugere",
+    "directUser": "Via TG-ID",
+    "telegramIdPlaceholder": "Telegram ID",
+    "messagePlaceholder": "Beskedtekst...",
+    "photo": "Foto",
+    "video": "Video",
+    "mediaUrlPlaceholder": "Medie-URL",
+    "send": "Send",
+    "sending": "Sender...",
+    "sentSuccess": "Sendt til {{count}} brugere",
+    "directSuccess": "Besked sendt",
+    "error": "Kunne ikke sende"
   },
   "contacts": {
     "telegram": "Telegram",
@@ -347,7 +367,9 @@
     "comingSoon": "Kommer snart",
     "demoBanner": "Demotilstanden er ikke længere tilgængelig. Åbn appen via Telegram nedenfor. Hvis du havde et invitationslink, bed afsenderen om at sende det igen.",
     "footer": "Social Organizer — et åbent værktøj til gensidig hjælp",
-    "githubLink": "Se koden på GitHub"
+    "githubLink": "Se koden på GitHub",
+    "faqTitle": "Ofte stillede spørgsmål",
+    "faqShowAll": "Vis alle"
   },
   "tgBot": {
     "newEmergency": "Ny nødindsamling",
