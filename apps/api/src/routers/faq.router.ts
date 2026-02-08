@@ -145,24 +145,31 @@ export const faqRouter = router({
         const targetLangs = SUPPORTED_LANGUAGES.filter(l => l !== item.language);
         let created = 0;
 
-        for (const toLang of targetLangs) {
-          try {
-            const result = await translateFaqItem(item.question, item.answer, item.language, toLang);
-            await ctx.db.faqItem.create({
-              data: {
-                question: result.question,
-                answer: result.answer,
-                language: toLang,
-                sortOrder: item.sortOrder,
-                viewCount: 0,
-                groupId,
-                isLocalized: true,
-                createdById: ctx.userId!,
-              },
-            });
-            created++;
-          } catch (err) {
-            console.error(`[FAQ LocalizeAll] Failed ${item.id} -> ${toLang}:`, err);
+        // Translate 5 languages in parallel for speed
+        const BATCH = 5;
+        for (let i = 0; i < targetLangs.length; i += BATCH) {
+          const batch = targetLangs.slice(i, i + BATCH);
+          const results = await Promise.allSettled(
+            batch.map(async (toLang) => {
+              const result = await translateFaqItem(item.question, item.answer, item.language, toLang);
+              await ctx.db.faqItem.create({
+                data: {
+                  question: result.question,
+                  answer: result.answer,
+                  language: toLang,
+                  sortOrder: item.sortOrder,
+                  viewCount: 0,
+                  groupId,
+                  isLocalized: true,
+                  createdById: ctx.userId!,
+                },
+              });
+              return toLang;
+            }),
+          );
+          for (const r of results) {
+            if (r.status === 'fulfilled') created++;
+            else console.error(`[FAQ LocalizeAll] Failed ${item.id}:`, r.reason);
           }
         }
 
@@ -201,24 +208,31 @@ export const faqRouter = router({
       const targetLangs = SUPPORTED_LANGUAGES.filter(l => l !== item.language);
       const created: string[] = [];
 
-      for (const toLang of targetLangs) {
-        try {
-          const translated = await translateFaqItem(item.question, item.answer, item.language, toLang);
-          await ctx.db.faqItem.create({
-            data: {
-              question: translated.question,
-              answer: translated.answer,
-              language: toLang,
-              sortOrder: item.sortOrder,
-              viewCount: 0,
-              groupId,
-              isLocalized: true,
-              createdById: ctx.userId!,
-            },
-          });
-          created.push(toLang);
-        } catch (err) {
-          console.error(`[FAQ Localize] Failed to translate to ${toLang}:`, err);
+      // Translate 5 languages in parallel for speed
+      const BATCH = 5;
+      for (let i = 0; i < targetLangs.length; i += BATCH) {
+        const batch = targetLangs.slice(i, i + BATCH);
+        const results = await Promise.allSettled(
+          batch.map(async (toLang) => {
+            const translated = await translateFaqItem(item.question, item.answer, item.language, toLang);
+            await ctx.db.faqItem.create({
+              data: {
+                question: translated.question,
+                answer: translated.answer,
+                language: toLang,
+                sortOrder: item.sortOrder,
+                viewCount: 0,
+                groupId,
+                isLocalized: true,
+                createdById: ctx.userId!,
+              },
+            });
+            return toLang;
+          }),
+        );
+        for (const r of results) {
+          if (r.status === 'fulfilled') created.push(r.value);
+          else console.error(`[FAQ Localize] Failed:`, r.reason);
         }
       }
 
