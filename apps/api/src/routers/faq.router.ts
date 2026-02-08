@@ -125,6 +125,64 @@ export const faqRouter = router({
       return ctx.db.faqItem.delete({ where: { id: input.id } });
     }),
 
+  localizeAll: protectedProcedure
+    .mutation(async ({ ctx }) => {
+      assertAdmin(ctx.userId!);
+
+      // Find all original (non-auto-translated) items that haven't been localized
+      const originals = await ctx.db.faqItem.findMany({
+        where: { isLocalized: false },
+      });
+
+      let translated = 0;
+      for (const item of originals) {
+        const groupId = item.groupId || item.id;
+
+        if (!item.groupId) {
+          await ctx.db.faqItem.update({ where: { id: item.id }, data: { groupId } });
+        }
+
+        // Delete old auto-translations for this group (but keep the original)
+        await ctx.db.faqItem.deleteMany({
+          where: { groupId, isLocalized: true, id: { not: item.id } },
+        });
+
+        const targetLangs = SUPPORTED_LANGUAGES.filter(l => l !== item.language);
+        let created = 0;
+
+        for (const toLang of targetLangs) {
+          try {
+            const result = await translateFaqItem(item.question, item.answer, item.language, toLang);
+            await ctx.db.faqItem.create({
+              data: {
+                question: result.question,
+                answer: result.answer,
+                language: toLang,
+                sortOrder: item.sortOrder,
+                viewCount: 0,
+                groupId,
+                isLocalized: true,
+                createdById: ctx.userId!,
+              },
+            });
+            created++;
+          } catch (err) {
+            console.error(`[FAQ LocalizeAll] Failed ${item.id} -> ${toLang}:`, err);
+          }
+        }
+
+        if (created > 0) {
+          await ctx.db.faqItem.update({
+            where: { id: item.id },
+            data: { isLocalized: true },
+          });
+          translated++;
+        }
+      }
+
+      return { success: true, translatedItems: translated, totalOriginals: originals.length };
+    }),
+
   localize: protectedProcedure
     .input(z.object({ id: z.string() }))
     .mutation(async ({ ctx, input }) => {
