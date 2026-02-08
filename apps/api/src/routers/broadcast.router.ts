@@ -72,8 +72,9 @@ export const broadcastRouter = router({
         await sendTgMessages(messages);
         sent = messages.length;
       } else {
-        // Photo/video: send individually (no batch for media)
-        for (const acc of tgAccounts) {
+        // Photo/video: send individually with delay to avoid rate-limiting
+        for (let i = 0; i < tgAccounts.length; i++) {
+          const acc = tgAccounts[i]!;
           try {
             const lang = acc.user?.language || 'en';
             const translatedText = translatedTexts.get(lang) || input.text;
@@ -85,6 +86,8 @@ export const broadcastRouter = router({
             }
             if (ok) sent++;
           } catch { /* continue */ }
+          // Delay every 25 messages to respect Telegram rate limits
+          if ((i + 1) % 25 === 0) await new Promise((r) => setTimeout(r, 1100));
         }
       }
 

@@ -97,11 +97,43 @@ export async function sendTelegramPhoto(
     body: JSON.stringify(body),
   });
   const json = (await res.json()) as TgApiResponse;
-  if (!json.ok) console.error(`[TG Bot] sendPhoto failed: ${json.description}`);
-  return json.ok;
+
+  if (json.ok) return true;
+
+  // Handle rate-limit
+  if (res.status === 429 && json.parameters?.retry_after) {
+    const waitMs = json.parameters.retry_after * 1000;
+    console.warn(`[TG Bot] 429 rate limited, waiting ${json.parameters.retry_after}s`);
+    await new Promise((r) => setTimeout(r, waitMs));
+    const retryRes = await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendPhoto`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    });
+    const retryJson = (await retryRes.json()) as TgApiResponse;
+    return retryJson.ok;
+  }
+
+  console.error(`[TG Bot] sendPhoto failed: ${json.description}`);
+  return false;
 }
 
-/** Send a video via Telegram Bot API */
+/** Check if URL is a video hosting page (YouTube, Vimeo, etc.) rather than a direct video file */
+function isVideoHostingUrl(url: string): boolean {
+  try {
+    const u = new URL(url);
+    const host = u.hostname.toLowerCase();
+    return host.includes('youtube.com') || host.includes('youtu.be')
+      || host.includes('vimeo.com') || host.includes('dailymotion.com')
+      || host.includes('tiktok.com') || host.includes('rutube.ru');
+  } catch {
+    return false;
+  }
+}
+
+/** Send a video via Telegram Bot API.
+ *  For video hosting URLs (YouTube, Vimeo, etc.) falls back to sendMessage
+ *  which renders a rich link preview with embedded player. */
 export async function sendTelegramVideo(
   chatId: string | number,
   videoUrl: string,
@@ -109,6 +141,13 @@ export async function sendTelegramVideo(
   replyMarkup?: TgReplyMarkup,
 ): Promise<boolean> {
   if (!TELEGRAM_BOT_TOKEN) return false;
+
+  // Video hosting URLs don't work with sendVideo (it expects a direct file).
+  // Use sendMessage instead — Telegram auto-generates a rich video preview.
+  if (isVideoHostingUrl(videoUrl)) {
+    const text = caption ? `${caption}\n\n${videoUrl}` : videoUrl;
+    return sendTelegramMessage(chatId, text, replyMarkup);
+  }
 
   const body: Record<string, unknown> = {
     chat_id: chatId,
@@ -124,8 +163,25 @@ export async function sendTelegramVideo(
     body: JSON.stringify(body),
   });
   const json = (await res.json()) as TgApiResponse;
-  if (!json.ok) console.error(`[TG Bot] sendVideo failed: ${json.description}`);
-  return json.ok;
+
+  if (json.ok) return true;
+
+  // Handle rate-limit
+  if (res.status === 429 && json.parameters?.retry_after) {
+    const waitMs = json.parameters.retry_after * 1000;
+    console.warn(`[TG Bot] 429 rate limited, waiting ${json.parameters.retry_after}s`);
+    await new Promise((r) => setTimeout(r, waitMs));
+    const retryRes = await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendVideo`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    });
+    const retryJson = (await retryRes.json()) as TgApiResponse;
+    return retryJson.ok;
+  }
+
+  console.error(`[TG Bot] sendVideo failed: ${json.description}`);
+  return false;
 }
 
 /** Send a collection notification to a Telegram user with an inline "Open" button */
