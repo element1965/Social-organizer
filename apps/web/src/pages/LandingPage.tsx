@@ -164,19 +164,8 @@ export function LandingPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-950 via-gray-950 to-blue-950">
-      {/* Fixed 3D background — z-15, above content (z-10), below UI (z-20+) */}
-      <div
-        className="fixed inset-0 pointer-events-none"
-        style={{
-          zIndex: 15,
-          WebkitMaskImage: heroProgress > 0
-            ? `linear-gradient(to bottom, black 0%, black ${38 - heroProgress * 3}%, transparent ${52 - heroProgress * 2}%)`
-            : 'none',
-          maskImage: heroProgress > 0
-            ? `linear-gradient(to bottom, black 0%, black ${38 - heroProgress * 3}%, transparent ${52 - heroProgress * 2}%)`
-            : 'none',
-        }}
-      >
+      {/* Fixed 3D background — behind content */}
+      <div className="fixed inset-0 pointer-events-none">
         <Suspense fallback={null}>
           <LazyGlobeNetwork scrollProgress={scrollProgress} heroProgress={heroProgress} />
         </Suspense>
@@ -279,7 +268,7 @@ export function LandingPage() {
         </section>
 
         {/* === Section: Pain Point Quotes === */}
-        <section className="min-h-[70vh] flex flex-col items-center justify-center px-6 py-16 gap-16 bg-gray-950/90 backdrop-blur-sm">
+        <section className="min-h-[70vh] flex flex-col items-center justify-center px-6 py-16 gap-16">
           {/* Pain 1: Person in need */}
           <div className="max-w-3xl w-full">
             <blockquote className="relative">
@@ -310,7 +299,7 @@ export function LandingPage() {
         </section>
 
         {/* === Section 2: What is it === */}
-        <section className="min-h-[80vh] flex flex-col items-center justify-center px-6 py-20 bg-gray-950/90 backdrop-blur-sm">
+        <section className="min-h-[80vh] flex flex-col items-center justify-center px-6 py-20">
           <h2 className="text-3xl md:text-5xl font-bold text-white mb-4 text-center">
             {t('landing.whatTitle')}
           </h2>
@@ -349,7 +338,7 @@ export function LandingPage() {
         </section>
 
         {/* === Section 3: How it works (3 steps) === */}
-        <section className="min-h-screen flex flex-col items-center justify-center px-6 py-20 bg-gray-950/90 backdrop-blur-sm">
+        <section className="min-h-screen flex flex-col items-center justify-center px-6 py-20">
           <h2 className="text-3xl md:text-5xl font-bold text-white mb-16 text-center">
             {t('landing.howTitle')}
           </h2>
@@ -402,7 +391,7 @@ export function LandingPage() {
         </section>
 
         {/* === Section 4: Principles === */}
-        <section className="min-h-[80vh] flex flex-col items-center justify-center px-6 py-20 bg-gray-950/90 backdrop-blur-sm">
+        <section className="min-h-[80vh] flex flex-col items-center justify-center px-6 py-20">
           <h2 className="text-3xl md:text-5xl font-bold text-white mb-12 text-center">
             {t('landing.principlesTitle')}
           </h2>
@@ -458,7 +447,7 @@ export function LandingPage() {
         <LandingFaq />
 
         {/* === Section 5: Download Apps === */}
-        <section id="download" className="min-h-[50vh] flex flex-col items-center justify-center px-6 py-20 bg-gray-950/90 backdrop-blur-sm">
+        <section id="download" className="min-h-[50vh] flex flex-col items-center justify-center px-6 py-20">
           <h2 className="text-2xl md:text-3xl font-bold text-white mb-8 text-center">
             {t('landing.downloadTitle')}
           </h2>
@@ -534,7 +523,7 @@ export function LandingPage() {
         </section>
 
         {/* === Footer === */}
-        <footer className="px-6 pt-12 pb-24 text-center border-t border-white/5 bg-gray-950/90 backdrop-blur-sm">
+        <footer className="px-6 pt-12 pb-24 text-center border-t border-white/5">
           <p className="text-gray-500 text-sm mb-3">{t('landing.footer')}</p>
           <div className="flex items-center justify-center gap-4 mb-8">
             <a

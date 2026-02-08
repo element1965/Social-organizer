@@ -491,8 +491,6 @@ function Scene({ scrollProgress, heroProgress }: { scrollProgress: number; heroP
     }
   });
 
-  const showNetwork = heroProgress < 0.3;
-
   return (
     <>
       <AdaptiveCamera />
@@ -509,12 +507,8 @@ function Scene({ scrollProgress, heroProgress }: { scrollProgress: number; heroP
           <LoadingFallback />
         )}
 
-        {showNetwork && (
-          <>
-            <NetworkNodes scrollProgress={scrollProgress} />
-            <NetworkEdges scrollProgress={scrollProgress} />
-          </>
-        )}
+        <NetworkNodes scrollProgress={scrollProgress} />
+        <NetworkEdges scrollProgress={scrollProgress} />
       </group>
 
       <Stars count={6000} />
