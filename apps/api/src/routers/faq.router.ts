@@ -140,9 +140,9 @@ export const faqRouter = router({
         await ctx.db.faqItem.update({ where: { id: item.id }, data: { groupId } });
       }
 
-      // Delete old auto-translations for this group
+      // Delete old auto-translations for this group (but keep the original)
       await ctx.db.faqItem.deleteMany({
-        where: { groupId, isLocalized: true },
+        where: { groupId, isLocalized: true, id: { not: item.id } },
       });
 
       const targetLangs = SUPPORTED_LANGUAGES.filter(l => l !== item.language);
@@ -167,6 +167,14 @@ export const faqRouter = router({
         } catch (err) {
           console.error(`[FAQ Localize] Failed to translate to ${toLang}:`, err);
         }
+      }
+
+      // Mark original item as localized so the Globe icon turns green
+      if (created.length > 0) {
+        await ctx.db.faqItem.update({
+          where: { id: item.id },
+          data: { isLocalized: true },
+        });
       }
 
       return { success: true, groupId, translatedLanguages: created };
