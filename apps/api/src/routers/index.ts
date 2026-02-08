@@ -12,6 +12,7 @@ import { currencyRouter } from './currency.router.js';
 import { chatRouter } from './chat.router.js';
 import { faqRouter } from './faq.router.js';
 import { pushRouter } from './push.router.js';
+import { broadcastRouter } from './broadcast.router.js';
 
 export const appRouter = router({
   auth: authRouter,
@@ -27,6 +28,7 @@ export const appRouter = router({
   chat: chatRouter,
   faq: faqRouter,
   push: pushRouter,
+  broadcast: broadcastRouter,
 });
 
 export type AppRouter = typeof appRouter;

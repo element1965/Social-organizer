@@ -25,7 +25,7 @@ interface TgUpdate {
   };
 }
 
-const SUPPORT_CHAT_ID = -4946509857;
+export const SUPPORT_CHAT_ID = -4946509857;
 
 /** Low-level wrapper: send a message via Telegram Bot API with 429 retry */
 export async function sendTelegramMessage(
@@ -72,6 +72,60 @@ export async function sendTelegramMessage(
   };
 
   return doSend();
+}
+
+/** Send a photo via Telegram Bot API */
+export async function sendTelegramPhoto(
+  chatId: string | number,
+  photoUrl: string,
+  caption?: string,
+  replyMarkup?: TgReplyMarkup,
+): Promise<boolean> {
+  if (!TELEGRAM_BOT_TOKEN) return false;
+
+  const body: Record<string, unknown> = {
+    chat_id: chatId,
+    photo: photoUrl,
+    parse_mode: 'HTML',
+  };
+  if (caption) body.caption = caption;
+  if (replyMarkup) body.reply_markup = replyMarkup;
+
+  const res = await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendPhoto`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+  });
+  const json = (await res.json()) as TgApiResponse;
+  if (!json.ok) console.error(`[TG Bot] sendPhoto failed: ${json.description}`);
+  return json.ok;
+}
+
+/** Send a video via Telegram Bot API */
+export async function sendTelegramVideo(
+  chatId: string | number,
+  videoUrl: string,
+  caption?: string,
+  replyMarkup?: TgReplyMarkup,
+): Promise<boolean> {
+  if (!TELEGRAM_BOT_TOKEN) return false;
+
+  const body: Record<string, unknown> = {
+    chat_id: chatId,
+    video: videoUrl,
+    parse_mode: 'HTML',
+  };
+  if (caption) body.caption = caption;
+  if (replyMarkup) body.reply_markup = replyMarkup;
+
+  const res = await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendVideo`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+  });
+  const json = (await res.json()) as TgApiResponse;
+  if (!json.ok) console.error(`[TG Bot] sendVideo failed: ${json.description}`);
+  return json.ok;
 }
 
 /** Send a collection notification to a Telegram user with an inline "Open" button */
@@ -159,6 +213,42 @@ export async function handleTelegramUpdate(update: TgUpdate): Promise<void> {
       inline_keyboard: [[{ text: '📱 Open App', web_app: { url: WEB_APP_URL } }]],
     },
   );
+}
+
+/** Send an array of TG messages via direct send or BullMQ */
+export async function sendTgMessages(messages: Array<{ telegramId: string; text: string; replyMarkup?: TgReplyMarkup }>): Promise<void> {
+  if (messages.length === 0) return;
+  const DIRECT_SEND_THRESHOLD = 25;
+
+  if (messages.length <= DIRECT_SEND_THRESHOLD) {
+    let sent = 0;
+    let failed = 0;
+    for (const msg of messages) {
+      try {
+        const ok = await sendTelegramMessage(msg.telegramId, msg.text, msg.replyMarkup);
+        if (ok) sent++; else failed++;
+      } catch { failed++; }
+    }
+    console.log(`[TG] Direct send: sent=${sent}, failed=${failed}`);
+    return;
+  }
+
+  try {
+    const { enqueueTgBroadcast } = await import('../workers/index.js');
+    await enqueueTgBroadcast(messages);
+    console.log(`[TG] Enqueued ${messages.length} messages via BullMQ`);
+  } catch (err) {
+    console.error('[TG] BullMQ failed, fallback to direct:', err);
+    let sent = 0;
+    for (const msg of messages) {
+      try {
+        const ok = await sendTelegramMessage(msg.telegramId, msg.text, msg.replyMarkup);
+        if (ok) sent++;
+        if (sent % 25 === 0) await new Promise((r) => setTimeout(r, 1100));
+      } catch { /* continue */ }
+    }
+    console.log(`[TG] Fallback: ${sent}/${messages.length}`);
+  }
 }
 
 /** Register webhook URL with Telegram Bot API */

@@ -1,10 +1,11 @@
 import { lazy, Suspense, useState, useRef, useEffect } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Handshake, Heart, Eye, Users, Cog, Code, Globe, ChevronDown, ChevronUp, ArrowRight, Languages, Github, ExternalLink } from 'lucide-react';
+import { Handshake, Heart, Eye, Users, Cog, Code, Globe, ChevronDown, ChevronUp, ArrowRight, Languages, Github, ExternalLink, HelpCircle } from 'lucide-react';
 import { languageNames } from '@so/i18n';
 import { useScrollProgress } from '../hooks/useScrollProgress';
 import { Logo } from '../components/Logo';
+import { trpc } from '../lib/trpc';
 
 const LazyGlobeNetwork = lazy(() =>
   import('@so/graph-3d').then((m) => ({ default: m.GlobeNetwork })),
@@ -48,6 +49,71 @@ function LanguageSwitcher() {
         </div>
       )}
     </div>
+  );
+}
+
+function LandingFaq() {
+  const { t, i18n } = useTranslation();
+  const lang = i18n.language?.slice(0, 2) || 'en';
+  const [showAll, setShowAll] = useState(false);
+  const [openId, setOpenId] = useState<string | null>(null);
+
+  const { data: topItems = [] } = trpc.faq.top.useQuery({ language: lang, limit: 5 });
+  const { data: allItems = [] } = trpc.faq.all.useQuery(
+    { language: lang },
+    { enabled: showAll },
+  );
+
+  const displayItems = showAll && allItems.length > 0 ? allItems : topItems;
+
+  if (topItems.length === 0) return null;
+
+  return (
+    <section className="min-h-[50vh] flex flex-col items-center justify-center px-6 py-20">
+      <h2 className="text-3xl md:text-5xl font-bold text-white mb-12 text-center flex items-center gap-3 justify-center">
+        <HelpCircle className="text-amber-400" size={36} />
+        {t('landing.faqTitle')}
+      </h2>
+
+      <div className="max-w-3xl w-full space-y-3">
+        {displayItems.map((item) => {
+          const isExpanded = openId === item.id;
+          return (
+            <div key={item.id} className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl overflow-hidden">
+              <button
+                onClick={() => setOpenId(isExpanded ? null : item.id)}
+                className="w-full flex items-center justify-between p-5 text-left"
+              >
+                <span className="text-sm md:text-base font-medium text-white pr-3">
+                  {item.question}
+                </span>
+                {isExpanded ? (
+                  <ChevronUp className="w-5 h-5 text-gray-400 shrink-0" />
+                ) : (
+                  <ChevronDown className="w-5 h-5 text-gray-400 shrink-0" />
+                )}
+              </button>
+              {isExpanded && (
+                <div className="px-5 pb-5">
+                  <p className="text-sm text-gray-300 whitespace-pre-wrap leading-relaxed">
+                    {item.answer}
+                  </p>
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+
+      {!showAll && topItems.length >= 5 && (
+        <button
+          onClick={() => setShowAll(true)}
+          className="mt-8 px-6 py-2.5 bg-white/10 hover:bg-white/20 text-white rounded-xl transition-colors text-sm font-medium backdrop-blur-sm border border-white/10"
+        >
+          {t('landing.faqShowAll')}
+        </button>
+      )}
+    </section>
   );
 }
 
@@ -346,6 +412,9 @@ export function LandingPage() {
             </div>
           </div>
         </section>
+
+        {/* === Section: FAQ === */}
+        <LandingFaq />
 
         {/* === Section 5: Download Apps === */}
         <section id="download" className="min-h-[50vh] flex flex-col items-center justify-center px-6 py-20">

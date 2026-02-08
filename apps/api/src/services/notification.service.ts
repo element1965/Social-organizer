@@ -3,12 +3,10 @@ import { dirname, resolve } from 'node:path';
 import type { PrismaClient } from '@so/db';
 import { NOTIFICATION_TTL_HOURS } from '@so/shared';
 import { findRecipientsViaBfs } from './bfs.service.js';
-import { sendTelegramMessage, type TgReplyMarkup } from './telegram-bot.service.js';
-import { enqueueTgBroadcast } from '../workers/index.js';
+import { sendTgMessages, type TgReplyMarkup } from './telegram-bot.service.js';
 import type { TgBroadcastMessage } from '../workers/tg-broadcast.worker.js';
 import { sendWebPush } from './web-push.service.js';
 
-const DIRECT_SEND_THRESHOLD = 25;
 const WEB_APP_URL = process.env.WEB_APP_URL || 'https://www.orginizer.com';
 
 /* Load locale JSON files via createRequire (avoids Node 18 ESM JSON import assertion issue) */
@@ -265,36 +263,3 @@ async function dispatchNewCollectionTg(
   await sendTgMessages(messages);
 }
 
-/** Send an array of TG messages via direct send or BullMQ */
-async function sendTgMessages(messages: TgBroadcastMessage[]): Promise<void> {
-  if (messages.length === 0) return;
-
-  if (messages.length <= DIRECT_SEND_THRESHOLD) {
-    let sent = 0;
-    let failed = 0;
-    for (const msg of messages) {
-      try {
-        const ok = await sendTelegramMessage(msg.telegramId, msg.text, msg.replyMarkup);
-        if (ok) sent++; else failed++;
-      } catch { failed++; }
-    }
-    console.log(`[TG] Direct send: sent=${sent}, failed=${failed}`);
-    return;
-  }
-
-  try {
-    await enqueueTgBroadcast(messages);
-    console.log(`[TG] Enqueued ${messages.length} messages via BullMQ`);
-  } catch (err) {
-    console.error('[TG] BullMQ failed, fallback to direct:', err);
-    let sent = 0;
-    for (const msg of messages) {
-      try {
-        const ok = await sendTelegramMessage(msg.telegramId, msg.text, msg.replyMarkup);
-        if (ok) sent++;
-        if (sent % 25 === 0) await new Promise((r) => setTimeout(r, 1100));
-      } catch { /* continue */ }
-    }
-    console.log(`[TG] Fallback: ${sent}/${messages.length}`);
-  }
-}

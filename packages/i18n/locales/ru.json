@@ -283,7 +283,10 @@
     "empty": "Вопросов пока нет",
     "questionPlaceholder": "Вопрос",
     "answerPlaceholder": "Ответ",
-    "deleteConfirm": "Удалить этот вопрос?"
+    "deleteConfirm": "Удалить этот вопрос?",
+    "localized": "Переведено",
+    "localizeAll": "Перевести на все языки",
+    "localizing": "Перевод..."
   },
   "chat": {
     "title": "Помощник",
@@ -294,6 +297,21 @@
     "openHelp": "Помощь",
     "startListening": "Начать голосовой ввод",
     "stopListening": "Остановить голосовой ввод"
+  },
+  "broadcast": {
+    "title": "Рассылка",
+    "allUsers": "Все пользователи",
+    "directUser": "По TG ID",
+    "telegramIdPlaceholder": "Telegram ID",
+    "messagePlaceholder": "Текст сообщения...",
+    "photo": "Фото",
+    "video": "Видео",
+    "mediaUrlPlaceholder": "URL медиа",
+    "send": "Отправить",
+    "sending": "Отправка...",
+    "sentSuccess": "Отправлено {{count}} пользователям",
+    "directSuccess": "Сообщение отправлено",
+    "error": "Ошибка отправки"
   },
   "contacts": {
     "telegram": "Telegram",
@@ -357,7 +375,9 @@
     "comingSoon": "Скоро",
     "demoBanner": "Демо-режим больше не доступен. Чтобы пользоваться приложением, откройте его через Telegram ниже. Если вы пришли по приглашению — попросите пригласившего отправить ссылку ещё раз.",
     "footer": "Social Organizer — открытый инструмент взаимопомощи",
-    "githubLink": "Посмотреть код на GitHub"
+    "githubLink": "Посмотреть код на GitHub",
+    "faqTitle": "Частые вопросы",
+    "faqShowAll": "Показать все"
   },
   "tgBot": {
     "newEmergency": "Новый экстренный сбор",
