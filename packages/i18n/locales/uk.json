@@ -276,6 +276,11 @@
     "newBudgetPlaceholder": "Нова сума",
     "updateBudget": "Оновити бюджет"
   },
+  "faq": {
+    "localized": "Перекладено",
+    "localizeAll": "Перекласти на всі мови",
+    "localizing": "Переклад..."
+  },
   "chat": {
     "title": "Асистент",
     "welcomeMessage": "Привіт! Я можу допомогти розібратися, як працює додаток. Запитуйте про рукостискання, наміри або будь-які інші терміни.",
@@ -284,6 +289,21 @@
     "openChat": "Відкрити чат-асистент",
     "startListening": "Почати голосовий ввід",
     "stopListening": "Зупинити голосовий ввід"
+  },
+  "broadcast": {
+    "title": "Розсилка",
+    "allUsers": "Всі користувачі",
+    "directUser": "За TG ID",
+    "telegramIdPlaceholder": "Telegram ID",
+    "messagePlaceholder": "Текст повідомлення...",
+    "photo": "Фото",
+    "video": "Відео",
+    "mediaUrlPlaceholder": "URL медіа",
+    "send": "Надіслати",
+    "sending": "Надсилається...",
+    "sentSuccess": "Надіслано {{count}} користувачам",
+    "directSuccess": "Повідомлення надіслано",
+    "error": "Не вдалося надіслати"
   },
   "contacts": {
     "telegram": "Telegram",
@@ -347,7 +367,9 @@
     "comingSoon": "Незабаром",
     "demoBanner": "Демо-режим більше не доступний. Щоб користуватися додатком, відкрийте його через Telegram нижче. Якщо ви прийшли за запрошенням — попросіть відправника надіслати посилання ще раз.",
     "footer": "Social Organizer — відкритий інструмент взаємодопомоги",
-    "githubLink": "Переглянути код на GitHub"
+    "githubLink": "Переглянути код на GitHub",
+    "faqTitle": "Поширені запитання",
+    "faqShowAll": "Показати все"
   },
   "tgBot": {
     "newEmergency": "Новий екстрений збір",

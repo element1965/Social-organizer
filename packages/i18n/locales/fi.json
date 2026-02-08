@@ -276,6 +276,11 @@
     "newBudgetPlaceholder": "Uusi summa",
     "updateBudget": "Päivitä budjetti"
   },
+  "faq": {
+    "localized": "Käännetty",
+    "localizeAll": "Käännä kaikille kielille",
+    "localizing": "Käännetään..."
+  },
   "chat": {
     "title": "Avustaja",
     "welcomeMessage": "Hei! Voin auttaa sinua ymmärtämään, miten sovellus toimii. Kysy kättelyistä, aikomuksista tai muista termeistä.",
@@ -284,6 +289,21 @@
     "openChat": "Avaa chat-avustaja",
     "startListening": "Aloita äänikirjoitus",
     "stopListening": "Lopeta äänikirjoitus"
+  },
+  "broadcast": {
+    "title": "Lähetys",
+    "allUsers": "Kaikki käyttäjät",
+    "directUser": "TG-ID:llä",
+    "telegramIdPlaceholder": "Telegram ID",
+    "messagePlaceholder": "Viestin teksti...",
+    "photo": "Kuva",
+    "video": "Video",
+    "mediaUrlPlaceholder": "Median URL",
+    "send": "Lähetä",
+    "sending": "Lähetetään...",
+    "sentSuccess": "Lähetetty {{count}} käyttäjälle",
+    "directSuccess": "Viesti lähetetty",
+    "error": "Lähetys epäonnistui"
   },
   "contacts": {
     "telegram": "Telegram",
@@ -347,7 +367,9 @@
     "comingSoon": "Tulossa pian",
     "demoBanner": "Demotila ei ole enää käytettävissä. Käytä sovellusta avaamalla se Telegramin kautta alla. Jos sinulla oli kutsulinkkki, pyydä lähettäjää jakamaan se uudelleen.",
     "footer": "Social Organizer — avoin keskinäisen avun työkalu",
-    "githubLink": "Katso koodi GitHubissa"
+    "githubLink": "Katso koodi GitHubissa",
+    "faqTitle": "Usein kysytyt kysymykset",
+    "faqShowAll": "Näytä kaikki"
   },
   "tgBot": {
     "newEmergency": "Uusi hätäkeräys",

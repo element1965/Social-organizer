@@ -276,6 +276,11 @@
     "newBudgetPlaceholder": "Nytt belopp",
     "updateBudget": "Uppdatera budget"
   },
+  "faq": {
+    "localized": "Översatt",
+    "localizeAll": "Översätt till alla språk",
+    "localizing": "Översätter..."
+  },
   "chat": {
     "title": "Assistent",
     "welcomeMessage": "Hej! Jag kan hjalpa dig forsta hur appen fungerar. Fraga om handslag, avsikter eller andra termer.",
@@ -284,6 +289,21 @@
     "openChat": "Oppna chattassistent",
     "startListening": "Starta rostinmatning",
     "stopListening": "Stoppa rostinmatning"
+  },
+  "broadcast": {
+    "title": "Utskick",
+    "allUsers": "Alla användare",
+    "directUser": "Via TG-ID",
+    "telegramIdPlaceholder": "Telegram ID",
+    "messagePlaceholder": "Meddelandetext...",
+    "photo": "Foto",
+    "video": "Video",
+    "mediaUrlPlaceholder": "Medie-URL",
+    "send": "Skicka",
+    "sending": "Skickar...",
+    "sentSuccess": "Skickat till {{count}} användare",
+    "directSuccess": "Meddelande skickat",
+    "error": "Misslyckades att skicka"
   },
   "contacts": {
     "telegram": "Telegram",
@@ -347,7 +367,9 @@
     "comingSoon": "Kommer snart",
     "demoBanner": "Demoläget är inte längre tillgängligt. Öppna appen via Telegram nedan. Om du hade en inbjudningslänk, be avsändaren att skicka den igen.",
     "footer": "Social Organizer — ett oppet verktyg for omsesidig hjalp",
-    "githubLink": "Visa koden pa GitHub"
+    "githubLink": "Visa koden pa GitHub",
+    "faqTitle": "Vanliga frågor",
+    "faqShowAll": "Visa alla"
   },
   "tgBot": {
     "newEmergency": "Ny akut insamling",
