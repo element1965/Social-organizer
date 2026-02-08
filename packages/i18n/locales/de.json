@@ -277,6 +277,12 @@
     "updateBudget": "Budget aktualisieren"
   },
   "faq": {
+    "title": "Häufige Fragen",
+    "addItem": "Hinzufügen",
+    "empty": "Noch keine Fragen",
+    "questionPlaceholder": "Frage",
+    "answerPlaceholder": "Antwort",
+    "deleteConfirm": "Diese Frage löschen?",
     "localized": "Übersetzt",
     "localizeAll": "In alle Sprachen übersetzen",
     "localizing": "Übersetze..."

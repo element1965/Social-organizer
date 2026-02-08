@@ -277,6 +277,12 @@
     "updateBudget": "Budget bijwerken"
   },
   "faq": {
+    "title": "Veelgestelde vragen",
+    "addItem": "Toevoegen",
+    "empty": "Nog geen vragen",
+    "questionPlaceholder": "Vraag",
+    "answerPlaceholder": "Antwoord",
+    "deleteConfirm": "Deze vraag verwijderen?",
     "localized": "Vertaald",
     "localizeAll": "Vertaal naar alle talen",
     "localizing": "Vertalen..."

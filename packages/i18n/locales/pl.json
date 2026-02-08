@@ -277,6 +277,12 @@
     "updateBudget": "Zaktualizuj budżet"
   },
   "faq": {
+    "title": "Najczęściej zadawane pytania",
+    "addItem": "Dodaj",
+    "empty": "Brak pytań",
+    "questionPlaceholder": "Pytanie",
+    "answerPlaceholder": "Odpowiedź",
+    "deleteConfirm": "Usunąć to pytanie?",
     "localized": "Przetłumaczono",
     "localizeAll": "Przetłumacz na wszystkie języki",
     "localizing": "Tłumaczenie..."

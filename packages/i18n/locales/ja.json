@@ -277,6 +277,12 @@
     "updateBudget": "予算を更新"
   },
   "faq": {
+    "title": "よくある質問",
+    "addItem": "追加",
+    "empty": "まだ質問はありません",
+    "questionPlaceholder": "質問",
+    "answerPlaceholder": "回答",
+    "deleteConfirm": "この質問を削除しますか？",
     "localized": "翻訳済み",
     "localizeAll": "すべての言語に翻訳",
     "localizing": "翻訳中..."

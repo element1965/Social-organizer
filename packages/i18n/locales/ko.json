@@ -277,6 +277,12 @@
     "updateBudget": "예산 업데이트"
   },
   "faq": {
+    "title": "자주 묻는 질문",
+    "addItem": "추가",
+    "empty": "아직 질문이 없습니다",
+    "questionPlaceholder": "질문",
+    "answerPlaceholder": "답변",
+    "deleteConfirm": "이 질문을 삭제하시겠습니까?",
     "localized": "번역됨",
     "localizeAll": "모든 언어로 번역",
     "localizing": "번역 중..."

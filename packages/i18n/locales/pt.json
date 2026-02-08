@@ -277,6 +277,12 @@
     "updateBudget": "Atualizar orçamento"
   },
   "faq": {
+    "title": "Perguntas frequentes",
+    "addItem": "Adicionar",
+    "empty": "Nenhuma pergunta ainda",
+    "questionPlaceholder": "Pergunta",
+    "answerPlaceholder": "Resposta",
+    "deleteConfirm": "Excluir esta pergunta?",
     "localized": "Traduzido",
     "localizeAll": "Traduzir para todos os idiomas",
     "localizing": "Traduzindo..."

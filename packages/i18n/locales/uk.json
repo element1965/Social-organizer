@@ -277,6 +277,12 @@
     "updateBudget": "Оновити бюджет"
   },
   "faq": {
+    "title": "Часті запитання",
+    "addItem": "Додати",
+    "empty": "Запитань поки немає",
+    "questionPlaceholder": "Запитання",
+    "answerPlaceholder": "Відповідь",
+    "deleteConfirm": "Видалити це запитання?",
     "localized": "Перекладено",
     "localizeAll": "Перекласти на всі мови",
     "localizing": "Переклад..."
