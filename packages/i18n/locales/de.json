@@ -276,6 +276,11 @@
     "newBudgetPlaceholder": "Neuer Betrag",
     "updateBudget": "Budget aktualisieren"
   },
+  "faq": {
+    "localized": "Übersetzt",
+    "localizeAll": "In alle Sprachen übersetzen",
+    "localizing": "Übersetze..."
+  },
   "chat": {
     "title": "Assistent",
     "welcomeMessage": "Hallo! Ich kann dir helfen zu verstehen, wie die App funktioniert. Frage nach Handschlägen, Absichten oder anderen Begriffen.",
@@ -347,7 +352,9 @@
     "comingSoon": "Demnächst",
     "demoBanner": "Der Demomodus ist nicht mehr verfügbar. Um die App zu nutzen, öffnen Sie sie über Telegram unten. Falls Sie einen Einladungslink hatten, bitten Sie den Absender, ihn erneut zu senden.",
     "footer": "Social Organizer — ein offenes Werkzeug für gegenseitige Hilfe",
-    "githubLink": "Code auf GitHub ansehen"
+    "githubLink": "Code auf GitHub ansehen",
+    "faqTitle": "Häufig gestellte Fragen",
+    "faqShowAll": "Alle anzeigen"
   },
   "tgBot": {
     "newEmergency": "Neue Notfall-Sammlung",
@@ -366,5 +373,20 @@
     "intentionAmount": "Betrag, den du bereitstellen möchtest. Dies ist eine Absicht, keine Überweisung — die Koordination erfolgt im Chat.",
     "profileBio": "Erzähle etwas über dich. Das hilft anderen Teilnehmern, dich besser kennenzulernen.",
     "profilePhone": "Das Telefon ist nur für deine direkten Verbindungen sichtbar (erster Handschlag)."
+  },
+  "broadcast": {
+    "title": "Rundnachricht",
+    "allUsers": "Alle Benutzer",
+    "directUser": "Nach TG-ID",
+    "telegramIdPlaceholder": "Telegram-ID",
+    "messagePlaceholder": "Nachrichtentext...",
+    "photo": "Foto",
+    "video": "Video",
+    "mediaUrlPlaceholder": "Medien-URL",
+    "send": "Senden",
+    "sending": "Wird gesendet...",
+    "sentSuccess": "An {{count}} Benutzer gesendet",
+    "directSuccess": "Nachricht gesendet",
+    "error": "Fehler beim Senden"
   }
 }
