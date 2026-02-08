@@ -276,6 +276,11 @@
     "newBudgetPlaceholder": "Nuevo monto",
     "updateBudget": "Actualizar presupuesto"
   },
+  "faq": {
+    "localized": "Traducido",
+    "localizeAll": "Traducir a todos los idiomas",
+    "localizing": "Traduciendo..."
+  },
   "chat": {
     "title": "Asistente",
     "welcomeMessage": "¡Hola! Puedo ayudarte a entender cómo funciona la aplicación. Pregunta sobre apretones de manos, intenciones o cualquier otro término.",
@@ -347,7 +352,9 @@
     "comingSoon": "Próximamente",
     "demoBanner": "El modo demo ya no está disponible. Para usar la aplicación, ábrela a través de Telegram abajo. Si tenías un enlace de invitación, pide al remitente que lo reenvíe.",
     "footer": "Social Organizer — una herramienta abierta de ayuda mutua",
-    "githubLink": "Ver código en GitHub"
+    "githubLink": "Ver código en GitHub",
+    "faqTitle": "Preguntas frecuentes",
+    "faqShowAll": "Mostrar todo"
   },
   "tgBot": {
     "newEmergency": "Nueva colección de emergencia",
@@ -366,5 +373,20 @@
     "intentionAmount": "El monto que estás dispuesto a aportar. Es una intención, no una transferencia — la coordinación se hace en el chat.",
     "profileBio": "Cuéntanos un poco sobre ti. Esto ayuda a otros participantes a conocerte mejor.",
     "profilePhone": "El teléfono solo es visible para tus conexiones directas (primer apretón de manos)."
+  },
+  "broadcast": {
+    "title": "Difusión",
+    "allUsers": "Todos los usuarios",
+    "directUser": "Por TG ID",
+    "telegramIdPlaceholder": "Telegram ID",
+    "messagePlaceholder": "Texto del mensaje...",
+    "photo": "Foto",
+    "video": "Video",
+    "mediaUrlPlaceholder": "URL del medio",
+    "send": "Enviar",
+    "sending": "Enviando...",
+    "sentSuccess": "Enviado a {{count}} usuarios",
+    "directSuccess": "Mensaje enviado",
+    "error": "Error al enviar"
   }
 }

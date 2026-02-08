@@ -276,6 +276,11 @@
     "newBudgetPlaceholder": "新金额",
     "updateBudget": "更新预算"
   },
+  "faq": {
+    "localized": "已翻译",
+    "localizeAll": "翻译为所有语言",
+    "localizing": "翻译中..."
+  },
   "chat": {
     "title": "助手",
     "welcomeMessage": "你好！我可以帮你了解应用的使用方法。可以问关于握手、意愿或其他术语的问题。",
@@ -347,7 +352,9 @@
     "comingSoon": "即将推出",
     "demoBanner": "演示模式已不再可用。要使用应用程序，请通过下方的 Telegram 打开。如果您有邀请链接，请让发送者重新分享。",
     "footer": "Social Organizer — 一个开放的互助工具",
-    "githubLink": "在 GitHub 上查看代码"
+    "githubLink": "在 GitHub 上查看代码",
+    "faqTitle": "常见问题",
+    "faqShowAll": "显示全部"
   },
   "tgBot": {
     "newEmergency": "新紧急募集",
@@ -366,5 +373,20 @@
     "intentionAmount": "你愿意提供的金额。这是意愿，不是转账——协调在聊天中进行。",
     "profileBio": "介绍一下自己。这有助于其他参与者更好地了解你。",
     "profilePhone": "电话仅对你的直接连接（第一度握手）可见。"
+  },
+  "broadcast": {
+    "title": "广播",
+    "allUsers": "所有用户",
+    "directUser": "按 TG ID",
+    "telegramIdPlaceholder": "Telegram ID",
+    "messagePlaceholder": "消息内容...",
+    "photo": "照片",
+    "video": "视频",
+    "mediaUrlPlaceholder": "媒体链接",
+    "send": "发送",
+    "sending": "发送中...",
+    "sentSuccess": "已发送给 {{count}} 位用户",
+    "directSuccess": "消息已发送",
+    "error": "发送失败"
   }
 }

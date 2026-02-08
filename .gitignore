@@ -45,3 +45,6 @@ coverage/
 apps/mobile/.expo/
 apps/mobile/android/
 apps/mobile/ios/
+
+# Misc
+origin_logo.png
