@@ -244,8 +244,8 @@ export function DashboardPage() {
                   <p className="text-4xl font-bold text-gray-900 dark:text-white">{totalReachable}</p>
                 </div>
                 {/* Sparkline chart */}
-                {platformGrowth && platformGrowth.length > 1 && (() => {
-                  const values = platformGrowth.map(p => p.count);
+                {platformGrowth && platformGrowth.points?.length > 1 && (() => {
+                  const values = platformGrowth.points.map((p: { count: number }) => p.count);
                   const min = Math.min(...values);
                   const max = Math.max(...values);
                   const range = max - min || 1;
