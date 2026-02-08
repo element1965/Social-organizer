@@ -12,6 +12,14 @@
   --tg-button-text-color: #ffffff;
   --tg-secondary-bg-color: #efeff3;
   --tg-header-bg-color: #ffffff;
+  --tg-content-safe-area-inset-top: 0px;
+}
+
+/* App container: safe-area top padding + desktop max-width */
+#root {
+  padding-top: var(--tg-content-safe-area-inset-top);
+  max-width: 448px;
+  margin: 0 auto;
 }
 
 /* Dark scrollbar for dropdowns */

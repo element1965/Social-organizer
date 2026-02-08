@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { isTelegramWebApp, getStartParam } from '@so/tg-adapter';
+import { isTelegramWebApp, getStartParam, getContentSafeAreaInset, onContentSafeAreaChanged } from '@so/tg-adapter';
 import { useTelegramInit, useTelegramBackButton } from '../hooks/useTelegram';
 import { useAuth } from '../hooks/useAuth';
 
@@ -12,6 +12,17 @@ export function TelegramBootstrap({ children }: { children: React.ReactNode }) {
   const startParamHandled = useRef(false);
 
   useTelegramBackButton();
+
+  // Sync Telegram content safe area inset to CSS variable
+  useEffect(() => {
+    if (!isTelegramWebApp()) return;
+    function applySafeArea() {
+      const inset = getContentSafeAreaInset();
+      document.documentElement.style.setProperty('--tg-content-safe-area-inset-top', `${inset.top}px`);
+    }
+    applySafeArea();
+    return onContentSafeAreaChanged(applySafeArea);
+  }, []);
 
   // After Telegram auto-auth, navigate based on start_param or redirect from public pages
   useEffect(() => {
