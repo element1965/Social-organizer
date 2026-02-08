@@ -94,16 +94,16 @@ export function SettingsPage() {
             </div>
             <div className="flex-1 min-w-0">
               {editingName ? (
-                <div className="flex items-center gap-2">
+                <div className="relative">
                   <input
                     value={editName}
                     onChange={(e) => setEditName(e.target.value)}
-                    className="flex-1 px-2 py-1 text-lg font-bold rounded border border-gray-300 dark:border-gray-600 bg-transparent text-gray-900 dark:text-white focus:outline-none focus:border-blue-500"
+                    className="w-full px-2 py-1 pr-8 text-lg font-bold rounded border border-gray-300 dark:border-gray-600 bg-transparent text-gray-900 dark:text-white focus:outline-none focus:border-blue-500"
                     autoFocus
                   />
                   <button
                     onClick={() => { updateUser.mutate({ name: editName }); }}
-                    className="text-green-500 hover:text-green-400"
+                    className="absolute right-2 top-1/2 -translate-y-1/2 text-green-500 hover:text-green-400"
                   >
                     <Check className="w-5 h-5" />
                   </button>
