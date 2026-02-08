@@ -49,7 +49,7 @@ export function DashboardPage() {
   const { data: me } = trpc.user.me.useQuery(undefined, { refetchInterval: 30000 });
   const { data: myCollections } = trpc.collection.myActive.useQuery(undefined, { refetchInterval: 30000 });
   const { data: myObligations } = trpc.obligation.myList.useQuery(undefined, { refetchInterval: 30000 });
-  const { data: networkStats } = trpc.connection.getNetworkStats.useQuery(undefined, { refetchInterval: 60000 });
+  const { data: networkStats, isLoading: networkLoading } = trpc.connection.getNetworkStats.useQuery(undefined, { refetchInterval: 60000 });
   const { data: notifications } = trpc.notification.list.useQuery({ limit: 10 }, { refetchInterval: 30000 });
   const { data: helpStats } = trpc.stats.help.useQuery(undefined, { refetchInterval: 60000 });
   const { data: helpByPeriod } = trpc.stats.helpGivenByPeriod.useQuery(undefined, { refetchInterval: 60000 });
@@ -160,8 +160,8 @@ export function DashboardPage() {
         </Card>
       )}
 
-      {/* Gate: need at least 1 connection */}
-      {Object.values(byDepth).reduce((a, b) => a + (b as number), 0) === 0 && (
+      {/* Gate: need at least 1 connection (only show after data loaded) */}
+      {!networkLoading && networkStats && Object.values(byDepth).reduce((a, b) => a + (b as number), 0) === 0 && (
         <Card>
           <CardContent className="py-8 text-center">
             <UserPlus className="w-12 h-12 text-blue-600 mx-auto mb-4" />
