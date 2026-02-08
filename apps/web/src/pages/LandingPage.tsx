@@ -164,12 +164,23 @@ export function LandingPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-950 via-gray-950 to-blue-950">
-      {/* Fixed 3D background — behind content */}
-      <div className="fixed inset-0 pointer-events-none">
+      {/* Fixed 3D background — above content (planet is in foreground) */}
+      <div className="fixed inset-0 pointer-events-none" style={{ zIndex: 15 }}>
         <Suspense fallback={null}>
           <LazyGlobeNetwork scrollProgress={scrollProgress} heroProgress={heroProgress} />
         </Suspense>
       </div>
+
+      {/* Fade overlay — hides scrolling content behind planet area */}
+      {heroProgress > 0 && (
+        <div
+          className="fixed inset-0 pointer-events-none"
+          style={{
+            zIndex: 12,
+            background: `linear-gradient(to bottom, rgba(2,8,23,1) 0%, rgba(2,8,23,0.95) ${25 + heroProgress * 5}%, rgba(2,8,23,0) ${45 + heroProgress * 5}%, transparent 55%)`,
+          }}
+        />
+      )}
 
       {/* Fixed title overlay on top of planet (appears on scroll) */}
       {heroProgress > 0 && (
