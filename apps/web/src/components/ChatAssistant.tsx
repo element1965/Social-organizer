@@ -1,9 +1,10 @@
 import { useState, useRef, useEffect } from 'react';
-import { MessageCircle, X, Send, Mic, MicOff, Loader2, HelpCircle } from 'lucide-react';
+import { MessageCircle, X, Send, Mic, MicOff, Loader2, HelpCircle, Megaphone } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { cn } from '../lib/utils';
 import { trpc } from '../lib/trpc';
+import { BroadcastPanel } from './BroadcastPanel';
 
 interface Message {
   id: string;
@@ -12,7 +13,7 @@ interface Message {
   viaVoice?: boolean;
 }
 
-type ViewState = 'collapsed' | 'expanded' | 'chatOpen';
+type ViewState = 'collapsed' | 'expanded' | 'chatOpen' | 'broadcastOpen';
 
 export function ChatAssistant() {
   const { t, i18n } = useTranslation();
@@ -27,6 +28,8 @@ export function ChatAssistant() {
   const pendingVoiceRef = useRef(false);
 
   const { data: settings } = trpc.settings.get.useQuery();
+  const { data: adminData } = trpc.faq.isAdmin.useQuery();
+  const isAdmin = adminData?.isAdmin ?? false;
   const chatMutation = trpc.chat.send.useMutation();
   const speakMutation = trpc.chat.speak.useMutation();
 
@@ -195,9 +198,19 @@ export function ChatAssistant() {
         />
       )}
 
-      {/* Sub-buttons (Chat + FAQ) */}
+      {/* Sub-buttons (Broadcast + FAQ + Chat) */}
       {viewState === 'expanded' && (
         <div className="fixed bottom-36 right-4 z-40 flex flex-col items-end gap-2">
+          {/* Broadcast button (admin only) */}
+          {isAdmin && (
+            <button
+              onClick={() => setViewState('broadcastOpen')}
+              className="flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-gray-800 text-gray-900 dark:text-white rounded-full shadow-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-200 animate-in fade-in slide-in-from-bottom-4"
+            >
+              <Megaphone className="w-5 h-5 text-emerald-500" />
+              <span className="text-sm font-medium">{t('broadcast.title')}</span>
+            </button>
+          )}
           {/* FAQ button */}
           <button
             onClick={() => {
@@ -234,7 +247,7 @@ export function ChatAssistant() {
           viewState === 'expanded'
             ? "bg-gray-700 text-white hover:bg-gray-800"
             : "bg-blue-600 text-white hover:bg-blue-700",
-          isOpen && "hidden"
+          (isOpen || viewState === 'broadcastOpen') && "hidden"
         )}
         aria-label={t('chat.openHelp')}
       >
@@ -341,6 +354,11 @@ export function ChatAssistant() {
             </button>
           </div>
         </div>
+      )}
+
+      {/* Broadcast panel */}
+      {viewState === 'broadcastOpen' && (
+        <BroadcastPanel onClose={() => setViewState('collapsed')} />
       )}
     </>
   );

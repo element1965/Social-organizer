@@ -1,6 +1,13 @@
 import { z } from 'zod';
-import { router, protectedProcedure } from '../trpc.js';
+import { router, protectedProcedure, publicProcedure } from '../trpc.js';
 import { TRPCError } from '@trpc/server';
+import { translateFaqItem } from '../services/translate.service.js';
+
+const SUPPORTED_LANGUAGES = [
+  'en', 'ru', 'es', 'fr', 'de', 'pt', 'it', 'zh', 'ja', 'ko',
+  'ar', 'hi', 'tr', 'pl', 'uk', 'nl', 'sv', 'da', 'fi', 'no',
+  'cs', 'ro', 'th', 'vi', 'id', 'sr',
+];
 
 // Hardcoded admin user IDs
 const FAQ_ADMIN_IDS = [
@@ -20,7 +27,51 @@ export const faqRouter = router({
     .query(async ({ ctx, input }) => {
       return ctx.db.faqItem.findMany({
         where: { language: input.language },
-        orderBy: { sortOrder: 'asc' },
+        orderBy: { viewCount: 'desc' },
+      });
+    }),
+
+  top: publicProcedure
+    .input(z.object({ language: z.string().default('ru'), limit: z.number().min(1).max(20).default(5) }))
+    .query(async ({ ctx, input }) => {
+      let items = await ctx.db.faqItem.findMany({
+        where: { language: input.language },
+        orderBy: { viewCount: 'desc' },
+        take: input.limit,
+      });
+      // Fallback to Russian if no items
+      if (items.length === 0 && input.language !== 'ru') {
+        items = await ctx.db.faqItem.findMany({
+          where: { language: 'ru' },
+          orderBy: { viewCount: 'desc' },
+          take: input.limit,
+        });
+      }
+      return items;
+    }),
+
+  all: publicProcedure
+    .input(z.object({ language: z.string().default('ru') }))
+    .query(async ({ ctx, input }) => {
+      let items = await ctx.db.faqItem.findMany({
+        where: { language: input.language },
+        orderBy: { viewCount: 'desc' },
+      });
+      if (items.length === 0 && input.language !== 'ru') {
+        items = await ctx.db.faqItem.findMany({
+          where: { language: 'ru' },
+          orderBy: { viewCount: 'desc' },
+        });
+      }
+      return items;
+    }),
+
+  incrementView: protectedProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      return ctx.db.faqItem.update({
+        where: { id: input.id },
+        data: { viewCount: { increment: 1 } },
       });
     }),
 
@@ -56,9 +107,14 @@ export const faqRouter = router({
     .mutation(async ({ ctx, input }) => {
       assertAdmin(ctx.userId!);
       const { id, ...data } = input;
+      // If question or answer changes, reset isLocalized
+      const updateData: Record<string, unknown> = { ...data };
+      if (data.question !== undefined || data.answer !== undefined) {
+        updateData.isLocalized = false;
+      }
       return ctx.db.faqItem.update({
         where: { id },
-        data,
+        data: updateData,
       });
     }),
 
@@ -67,5 +123,52 @@ export const faqRouter = router({
     .mutation(async ({ ctx, input }) => {
       assertAdmin(ctx.userId!);
       return ctx.db.faqItem.delete({ where: { id: input.id } });
+    }),
+
+  localize: protectedProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      assertAdmin(ctx.userId!);
+
+      const item = await ctx.db.faqItem.findUnique({ where: { id: input.id } });
+      if (!item) throw new TRPCError({ code: 'NOT_FOUND', message: 'FAQ item not found' });
+
+      const groupId = item.groupId || item.id;
+
+      // Update source item groupId if needed
+      if (!item.groupId) {
+        await ctx.db.faqItem.update({ where: { id: item.id }, data: { groupId } });
+      }
+
+      // Delete old auto-translations for this group
+      await ctx.db.faqItem.deleteMany({
+        where: { groupId, isLocalized: true },
+      });
+
+      const targetLangs = SUPPORTED_LANGUAGES.filter(l => l !== item.language);
+      const created: string[] = [];
+
+      for (const toLang of targetLangs) {
+        try {
+          const translated = await translateFaqItem(item.question, item.answer, item.language, toLang);
+          await ctx.db.faqItem.create({
+            data: {
+              question: translated.question,
+              answer: translated.answer,
+              language: toLang,
+              sortOrder: item.sortOrder,
+              viewCount: 0,
+              groupId,
+              isLocalized: true,
+              createdById: ctx.userId!,
+            },
+          });
+          created.push(toLang);
+        } catch (err) {
+          console.error(`[FAQ Localize] Failed to translate to ${toLang}:`, err);
+        }
+      }
+
+      return { success: true, groupId, translatedLanguages: created };
     }),
 });

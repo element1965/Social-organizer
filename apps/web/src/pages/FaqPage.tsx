@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { HelpCircle, ChevronDown, ChevronUp, Plus, Pencil, Trash2, X, Check } from 'lucide-react';
+import { HelpCircle, ChevronDown, ChevronUp, Plus, Pencil, Trash2, X, Check, Globe, Loader2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { trpc } from '../lib/trpc';
 import { Card } from '../components/ui/card';
@@ -23,6 +23,8 @@ export function FaqPage() {
   const createMutation = trpc.faq.create.useMutation({ onSuccess: () => utils.faq.list.invalidate() });
   const updateMutation = trpc.faq.update.useMutation({ onSuccess: () => utils.faq.list.invalidate() });
   const deleteMutation = trpc.faq.delete.useMutation({ onSuccess: () => utils.faq.list.invalidate() });
+  const incrementViewMutation = trpc.faq.incrementView.useMutation();
+  const localizeMutation = trpc.faq.localize.useMutation({ onSuccess: () => utils.faq.list.invalidate() });
 
   const [openId, setOpenId] = useState<string | null>(null);
   const [showForm, setShowForm] = useState(false);
@@ -31,7 +33,11 @@ export function FaqPage() {
   const [formAnswer, setFormAnswer] = useState('');
 
   const handleToggle = (id: string) => {
+    const isOpening = openId !== id;
     setOpenId(prev => prev === id ? null : id);
+    if (isOpening) {
+      incrementViewMutation.mutate({ id });
+    }
   };
 
   const handleCreate = () => {
@@ -147,6 +153,7 @@ export function FaqPage() {
           {displayItems.map(item => {
             const isExpanded = openId === item.id;
             const isBeingEdited = editingId === item.id;
+            const faqItem = item as typeof item & { isLocalized?: boolean };
             return (
               <Card key={item.id} className="overflow-hidden">
                 <button
@@ -168,7 +175,7 @@ export function FaqPage() {
                       {item.answer}
                     </p>
                     {isAdmin && (
-                      <div className="flex gap-2 mt-3 pt-3 border-t border-gray-100 dark:border-gray-800">
+                      <div className="flex items-center gap-2 mt-3 pt-3 border-t border-gray-100 dark:border-gray-800">
                         <button
                           onClick={() => startEdit(item)}
                           className="flex items-center gap-1 text-xs text-gray-500 hover:text-blue-600 transition-colors"
@@ -181,6 +188,23 @@ export function FaqPage() {
                         >
                           <Trash2 className="w-3.5 h-3.5" />
                         </button>
+                        <button
+                          onClick={() => localizeMutation.mutate({ id: item.id })}
+                          disabled={localizeMutation.isPending}
+                          className="flex items-center gap-1 text-xs text-gray-500 hover:text-emerald-600 transition-colors ml-1"
+                          title={t('faq.localizeAll')}
+                        >
+                          {localizeMutation.isPending ? (
+                            <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                          ) : (
+                            <Globe className="w-3.5 h-3.5" />
+                          )}
+                        </button>
+                        {faqItem.isLocalized && (
+                          <span className="text-[10px] px-1.5 py-0.5 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 rounded-full">
+                            {t('faq.localized')}
+                          </span>
+                        )}
                       </div>
                     )}
                   </div>

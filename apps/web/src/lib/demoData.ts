@@ -655,17 +655,36 @@ export function handleDemoRequest(path: string, input: unknown): unknown {
 
     // ---- FAQ ----
     case 'faq.list':
+    case 'faq.all':
       return [
-        { id: 'faq-demo-1', question: 'Что такое Social Organizer?', answer: 'Social Organizer — это инструмент координации взаимопомощи через доверенные связи. Он не переводит деньги. Он помогает людям быстро найти поддержку через цепочку знакомых.', language: 'ru', sortOrder: 1, createdById: 'admin', createdAt: '2025-01-01T00:00:00Z', updatedAt: '2025-01-01T00:00:00Z' },
-        { id: 'faq-demo-2', question: 'Что такое рукопожатие?', answer: 'Рукопожатие — это взаимное подтверждение значимой связи между двумя людьми. Оба участника должны подтвердить знакомство. Максимум 150 связей (число Данбара).', language: 'ru', sortOrder: 2, createdById: 'admin', createdAt: '2025-01-01T00:00:00Z', updatedAt: '2025-01-01T00:00:00Z' },
-        { id: 'faq-demo-3', question: 'Что такое намерение?', answer: 'Намерение — ваше добровольное решение помочь. Это не обязательство и не перевод денег. Координация помощи происходит в чате между участниками.', language: 'ru', sortOrder: 3, createdById: 'admin', createdAt: '2025-01-01T00:00:00Z', updatedAt: '2025-01-01T00:00:00Z' },
-        { id: 'faq-demo-4', question: 'Приложение переводит деньги?', answer: 'Нет. Social Organizer не переводит деньги и не обрабатывает платежи. Приложение только координирует — помогает нужным людям узнать о ситуации и связаться.', language: 'ru', sortOrder: 4, createdById: 'admin', createdAt: '2025-01-01T00:00:00Z', updatedAt: '2025-01-01T00:00:00Z' },
+        { id: 'faq-demo-1', question: 'Что такое Social Organizer?', answer: 'Social Organizer — это инструмент координации взаимопомощи через доверенные связи. Он не переводит деньги. Он помогает людям быстро найти поддержку через цепочку знакомых.', language: 'ru', sortOrder: 1, viewCount: 42, groupId: null, isLocalized: false, createdById: 'admin', createdAt: '2025-01-01T00:00:00Z', updatedAt: '2025-01-01T00:00:00Z' },
+        { id: 'faq-demo-2', question: 'Что такое рукопожатие?', answer: 'Рукопожатие — это взаимное подтверждение значимой связи между двумя людьми. Оба участника должны подтвердить знакомство. Максимум 150 связей (число Данбара).', language: 'ru', sortOrder: 2, viewCount: 35, groupId: null, isLocalized: false, createdById: 'admin', createdAt: '2025-01-01T00:00:00Z', updatedAt: '2025-01-01T00:00:00Z' },
+        { id: 'faq-demo-3', question: 'Что такое намерение?', answer: 'Намерение — ваше добровольное решение помочь. Это не обязательство и не перевод денег. Координация помощи происходит в чате между участниками.', language: 'ru', sortOrder: 3, viewCount: 28, groupId: null, isLocalized: false, createdById: 'admin', createdAt: '2025-01-01T00:00:00Z', updatedAt: '2025-01-01T00:00:00Z' },
+        { id: 'faq-demo-4', question: 'Приложение переводит деньги?', answer: 'Нет. Social Organizer не переводит деньги и не обрабатывает платежи. Приложение только координирует — помогает нужным людям узнать о ситуации и связаться.', language: 'ru', sortOrder: 4, viewCount: 21, groupId: null, isLocalized: false, createdById: 'admin', createdAt: '2025-01-01T00:00:00Z', updatedAt: '2025-01-01T00:00:00Z' },
       ];
+    case 'faq.top':
+      return [
+        { id: 'faq-demo-1', question: 'Что такое Social Organizer?', answer: 'Social Organizer — это инструмент координации взаимопомощи через доверенные связи. Он не переводит деньги. Он помогает людям быстро найти поддержку через цепочку знакомых.', language: 'ru', sortOrder: 1, viewCount: 42, groupId: null, isLocalized: false, createdById: 'admin', createdAt: '2025-01-01T00:00:00Z', updatedAt: '2025-01-01T00:00:00Z' },
+        { id: 'faq-demo-2', question: 'Что такое рукопожатие?', answer: 'Рукопожатие — это взаимное подтверждение значимой связи между двумя людьми. Оба участника должны подтвердить знакомство. Максимум 150 связей (число Данбара).', language: 'ru', sortOrder: 2, viewCount: 35, groupId: null, isLocalized: false, createdById: 'admin', createdAt: '2025-01-01T00:00:00Z', updatedAt: '2025-01-01T00:00:00Z' },
+        { id: 'faq-demo-3', question: 'Что такое намерение?', answer: 'Намерение — ваше добровольное решение помочь. Это не обязательство и не перевод денег. Координация помощи происходит в чате между участниками.', language: 'ru', sortOrder: 3, viewCount: 28, groupId: null, isLocalized: false, createdById: 'admin', createdAt: '2025-01-01T00:00:00Z', updatedAt: '2025-01-01T00:00:00Z' },
+        { id: 'faq-demo-4', question: 'Приложение переводит деньги?', answer: 'Нет. Social Organizer не переводит деньги и не обрабатывает платежи. Приложение только координирует — помогает нужным людям узнать о ситуации и связаться.', language: 'ru', sortOrder: 4, viewCount: 21, groupId: null, isLocalized: false, createdById: 'admin', createdAt: '2025-01-01T00:00:00Z', updatedAt: '2025-01-01T00:00:00Z' },
+        { id: 'faq-demo-5', question: 'Как начать пользоваться?', answer: 'Начните с добавления рукопожатий с людьми, которых знаете лично. Затем установите месячный бюджет (необязательно). Когда кому-то нужна помощь — вы получите уведомление через цепочку связей.', language: 'ru', sortOrder: 5, viewCount: 15, groupId: null, isLocalized: false, createdById: 'admin', createdAt: '2025-01-01T00:00:00Z', updatedAt: '2025-01-01T00:00:00Z' },
+      ];
+    case 'faq.incrementView':
+      return { success: true };
+    case 'faq.localize':
+      return { success: true, groupId: 'demo', translatedLanguages: ['en', 'es', 'fr', 'de'] };
     case 'faq.isAdmin':
       return { isAdmin: false };
     case 'faq.create':
     case 'faq.update':
     case 'faq.delete':
+      return { success: true };
+
+    // ---- Broadcast ----
+    case 'broadcast.sendAll':
+      return { sent: 150 };
+    case 'broadcast.sendDirect':
       return { success: true };
 
     case 'chat.send': {

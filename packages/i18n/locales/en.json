@@ -283,7 +283,10 @@
     "empty": "No questions yet",
     "questionPlaceholder": "Question",
     "answerPlaceholder": "Answer",
-    "deleteConfirm": "Delete this question?"
+    "deleteConfirm": "Delete this question?",
+    "localized": "Translated",
+    "localizeAll": "Translate all",
+    "localizing": "Translating..."
   },
   "chat": {
     "title": "Assistant",
@@ -294,6 +297,21 @@
     "openHelp": "Help",
     "startListening": "Start voice input",
     "stopListening": "Stop voice input"
+  },
+  "broadcast": {
+    "title": "Broadcast",
+    "allUsers": "All users",
+    "directUser": "By TG ID",
+    "telegramIdPlaceholder": "Telegram ID",
+    "messagePlaceholder": "Message text...",
+    "photo": "Photo",
+    "video": "Video",
+    "mediaUrlPlaceholder": "Media URL",
+    "send": "Send",
+    "sending": "Sending...",
+    "sentSuccess": "Sent to {{count}} users",
+    "directSuccess": "Message sent",
+    "error": "Failed to send"
   },
   "contacts": {
     "telegram": "Telegram",
@@ -357,7 +375,9 @@
     "comingSoon": "Coming Soon",
     "demoBanner": "Demo mode is no longer available. To use the app, open it via Telegram below. If you had an invite link — please ask the sender to share it again.",
     "footer": "Social Organizer — an open mutual aid tool",
-    "githubLink": "View code on GitHub"
+    "githubLink": "View code on GitHub",
+    "faqTitle": "Frequently Asked Questions",
+    "faqShowAll": "Show all"
   },
   "tgBot": {
     "newEmergency": "New Emergency Collection",

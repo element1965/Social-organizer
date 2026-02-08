@@ -297,6 +297,9 @@ model FaqItem {
   answer      String
   language    String   @default("ru")
   sortOrder   Int      @default(0)
+  viewCount   Int      @default(0)
+  groupId     String?
+  isLocalized Boolean  @default(false)
   createdById String
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
@@ -304,5 +307,6 @@ model FaqItem {
   createdBy User @relation(fields: [createdById], references: [id], onDelete: Cascade)
 
   @@index([language, sortOrder])
+  @@index([groupId])
   @@map("faq_items")
 }

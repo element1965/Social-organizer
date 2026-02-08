@@ -84,7 +84,7 @@ pnpm dev
 | InviteLink | Invitation link |
 | ChatMessage | Chat conversation log (user message, assistant response, feedback flag, language) |
 | PushSubscription | Web Push subscription (endpoint, keys, user FK) |
-| FaqItem | FAQ entry with question, answer, language, sort order (admin-managed) |
+| FaqItem | FAQ entry with question, answer, language, sort order, view count, group ID for translations, localization flag (admin-managed with LLM auto-translation) |
 
 ## Scripts
 
@@ -132,7 +132,8 @@ VAPID_SUBJECT=mailto:admin@example.com    # Web Push VAPID subject
 | `stats` | profile, help, networkCapabilities |
 | `currency` | list, detectCurrency, rates, convert, toUSD |
 | `push` | vapidPublicKey, subscribe, unsubscribe |
-| `faq` | list, isAdmin, create, update, delete (admin-gated CRUD) |
+| `faq` | list, top, all, incrementView, localize, isAdmin, create, update, delete (admin-gated CRUD with view ranking and LLM auto-translation to 26 languages) |
+| `broadcast` | sendAll, sendDirect (admin-only Telegram broadcast with auto-translation per user language) |
 
 ## Services
 
@@ -179,7 +180,7 @@ React 19 SPA with tRPC client.
 | MyNetworkPage | `/network` | Connection list with connection counts + invitations |
 | ProfilePage | `/profile/:userId` | Profile with editing, contacts, connections, handshake path |
 | SettingsPage | `/settings` | Language, theme, sounds, font scale, contacts, ignore list |
-| FaqPage | `/faq` | FAQ accordion with admin CRUD (create/edit/delete), language-aware |
+| FaqPage | `/faq` | FAQ accordion with admin CRUD, view count ranking, LLM localization button, language-aware |
 | InvitePage | `/invite/:token` | Accept invitation link |
 
 ### 3D Visualization (graph-3d)
@@ -247,7 +248,8 @@ Mock data (`apps/web/src/lib/demoData.ts`):
 - **Currency preference** — users can set preferred currency in settings; auto-detected by IP on first visit
 - **Monthly support budget** — users can set how much they're willing to contribute monthly; displayed as "Current Capabilities" network-wide sum on dashboard
 - **AI Chat Assistant** — floating help button (?) with expandable menu: Chat (AI assistant with glossary/screens/FAQ knowledge) and FAQ page; supports text and voice input with auto-speak for voice queries
-- **FAQ Page** — admin-managed FAQ with accordion UI; admins can create/edit/delete questions from the interface
+- **FAQ Page** — admin-managed FAQ with accordion UI; admins can create/edit/delete questions; LLM auto-translation to all 26 languages; view count ranking; FAQ section on landing page (top 5 + show all)
+- **Admin Broadcast** — send messages to all Telegram users with auto-translation per user language; support for text/photo/video; direct reply to specific user by TG ID
 - **Feedback to Telegram** — user feedback/suggestions from chat assistant are auto-forwarded to a Telegram group
 - **Telegram Bot Notifications** — collection notifications (new, blocked, closed) sent to users' Telegram via bot with rate-limited broadcast (BullMQ worker, 25 msg/sec)
 - **Web Push Notifications** — browser push notifications for collection events (new, blocked, closed) via Web Push API with VAPID authentication
