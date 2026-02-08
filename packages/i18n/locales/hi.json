@@ -276,6 +276,11 @@
     "newBudgetPlaceholder": "नई राशि",
     "updateBudget": "बजट अपडेट करें"
   },
+  "faq": {
+    "localized": "अनुवादित",
+    "localizeAll": "सभी भाषाओं में अनुवाद करें",
+    "localizing": "अनुवाद हो रहा है..."
+  },
   "chat": {
     "title": "सहायक",
     "welcomeMessage": "नमस्ते! मैं ऐप के काम करने के तरीके को समझने में आपकी मदद कर सकता हूं। हैंडशेक, इरादों या किसी अन्य शब्द के बारे में पूछें।",
@@ -284,6 +289,21 @@
     "openChat": "चैट सहायक खोलें",
     "startListening": "वॉइस इनपुट शुरू करें",
     "stopListening": "वॉइस इनपुट रोकें"
+  },
+  "broadcast": {
+    "title": "प्रसारण",
+    "allUsers": "सभी उपयोगकर्ता",
+    "directUser": "TG ID द्वारा",
+    "telegramIdPlaceholder": "Telegram ID",
+    "messagePlaceholder": "संदेश का पाठ...",
+    "photo": "फोटो",
+    "video": "वीडियो",
+    "mediaUrlPlaceholder": "मीडिया URL",
+    "send": "भेजें",
+    "sending": "भेजा जा रहा है...",
+    "sentSuccess": "{{count}} उपयोगकर्ताओं को भेजा गया",
+    "directSuccess": "संदेश भेजा गया",
+    "error": "भेजने में विफल"
   },
   "contacts": {
     "telegram": "Telegram",
@@ -347,7 +367,9 @@
     "comingSoon": "जल्द आ रहा है",
     "demoBanner": "डेमो मोड अब उपलब्ध नहीं है। ऐप का उपयोग करने के लिए नीचे Telegram से खोलें। अगर आपके पास आमंत्रण लिंक था — भेजने वाले से दोबारा भेजने को कहें।",
     "footer": "Social Organizer — एक खुला पारस्परिक सहायता उपकरण",
-    "githubLink": "GitHub पर कोड देखें"
+    "githubLink": "GitHub पर कोड देखें",
+    "faqTitle": "अक्सर पूछे जाने वाले प्रश्न",
+    "faqShowAll": "सभी दिखाएँ"
   },
   "tgBot": {
     "newEmergency": "नया आपातकालीन संग्रह",

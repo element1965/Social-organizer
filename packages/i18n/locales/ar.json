@@ -276,6 +276,11 @@
     "newBudgetPlaceholder": "المبلغ الجديد",
     "updateBudget": "تحديث الميزانية"
   },
+  "faq": {
+    "localized": "مترجم",
+    "localizeAll": "ترجمة لجميع اللغات",
+    "localizing": "جاري الترجمة..."
+  },
   "chat": {
     "title": "المساعد",
     "welcomeMessage": "مرحباً! يمكنني مساعدتك في فهم كيفية عمل التطبيق. اسأل عن المصافحات أو النوايا أو أي مصطلحات أخرى.",
@@ -284,6 +289,21 @@
     "openChat": "فتح مساعد المحادثة",
     "startListening": "بدء الإدخال الصوتي",
     "stopListening": "إيقاف الإدخال الصوتي"
+  },
+  "broadcast": {
+    "title": "بث",
+    "allUsers": "جميع المستخدمين",
+    "directUser": "حسب TG ID",
+    "telegramIdPlaceholder": "Telegram ID",
+    "messagePlaceholder": "نص الرسالة...",
+    "photo": "صورة",
+    "video": "فيديو",
+    "mediaUrlPlaceholder": "رابط الوسائط",
+    "send": "إرسال",
+    "sending": "جاري الإرسال...",
+    "sentSuccess": "تم الإرسال إلى {{count}} مستخدم",
+    "directSuccess": "تم إرسال الرسالة",
+    "error": "فشل الإرسال"
   },
   "contacts": {
     "telegram": "Telegram",
@@ -347,7 +367,9 @@
     "comingSoon": "قريباً",
     "demoBanner": "وضع العرض التجريبي لم يعد متاحاً. لاستخدام التطبيق، افتحه عبر Telegram أدناه. إذا كان لديك رابط دعوة، اطلب من المرسل مشاركته مرة أخرى.",
     "footer": "Social Organizer — أداة مفتوحة للمساعدة المتبادلة",
-    "githubLink": "عرض الكود على GitHub"
+    "githubLink": "عرض الكود على GitHub",
+    "faqTitle": "الأسئلة الشائعة",
+    "faqShowAll": "عرض الكل"
   },
   "tgBot": {
     "newEmergency": "حملة طوارئ جديدة",

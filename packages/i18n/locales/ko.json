@@ -276,6 +276,11 @@
     "newBudgetPlaceholder": "새 금액",
     "updateBudget": "예산 업데이트"
   },
+  "faq": {
+    "localized": "번역됨",
+    "localizeAll": "모든 언어로 번역",
+    "localizing": "번역 중..."
+  },
   "chat": {
     "title": "어시스턴트",
     "welcomeMessage": "안녕하세요! 앱 사용법을 도와드릴 수 있습니다. 핸드셰이크, 의사 표시 또는 기타 용어에 대해 질문해 주세요.",
@@ -284,6 +289,21 @@
     "openChat": "채팅 어시스턴트 열기",
     "startListening": "음성 입력 시작",
     "stopListening": "음성 입력 중지"
+  },
+  "broadcast": {
+    "title": "방송",
+    "allUsers": "모든 사용자",
+    "directUser": "TG ID로",
+    "telegramIdPlaceholder": "Telegram ID",
+    "messagePlaceholder": "메시지 내용...",
+    "photo": "사진",
+    "video": "동영상",
+    "mediaUrlPlaceholder": "미디어 URL",
+    "send": "보내기",
+    "sending": "전송 중...",
+    "sentSuccess": "{{count}}명의 사용자에게 전송됨",
+    "directSuccess": "메시지 전송됨",
+    "error": "전송 실패"
   },
   "contacts": {
     "telegram": "Telegram",
@@ -347,7 +367,9 @@
     "comingSoon": "출시 예정",
     "demoBanner": "데모 모드는 더 이상 사용할 수 없습니다. 앱을 사용하려면 아래 Telegram으로 열어주세요. 초대 링크가 있었다면 보낸 사람에게 다시 보내달라고 요청하세요.",
     "footer": "Social Organizer — 개방형 상호 지원 도구",
-    "githubLink": "GitHub에서 코드 보기"
+    "githubLink": "GitHub에서 코드 보기",
+    "faqTitle": "자주 묻는 질문",
+    "faqShowAll": "모두 보기"
   },
   "tgBot": {
     "newEmergency": "새 긴급 모금",

@@ -276,6 +276,11 @@
     "newBudgetPlaceholder": "新しい金額",
     "updateBudget": "予算を更新"
   },
+  "faq": {
+    "localized": "翻訳済み",
+    "localizeAll": "すべての言語に翻訳",
+    "localizing": "翻訳中..."
+  },
   "chat": {
     "title": "アシスタント",
     "welcomeMessage": "こんにちは！アプリの使い方についてお手伝いします。ハンドシェイク、意思表示、その他の用語について質問できます。",
@@ -284,6 +289,21 @@
     "openChat": "チャットアシスタントを開く",
     "startListening": "音声入力を開始",
     "stopListening": "音声入力を停止"
+  },
+  "broadcast": {
+    "title": "ブロードキャスト",
+    "allUsers": "全ユーザー",
+    "directUser": "TG IDで",
+    "telegramIdPlaceholder": "Telegram ID",
+    "messagePlaceholder": "メッセージ本文...",
+    "photo": "写真",
+    "video": "動画",
+    "mediaUrlPlaceholder": "メディアURL",
+    "send": "送信",
+    "sending": "送信中...",
+    "sentSuccess": "{{count}}人のユーザーに送信しました",
+    "directSuccess": "メッセージを送信しました",
+    "error": "送信に失敗しました"
   },
   "contacts": {
     "telegram": "Telegram",
@@ -347,7 +367,9 @@
     "comingSoon": "近日公開",
     "demoBanner": "デモモードは利用できなくなりました。アプリを使用するには、下のTelegramから開いてください。招待リンクをお持ちの場合は、送信者に再送をお願いしてください。",
     "footer": "Social Organizer — オープンな相互支援ツール",
-    "githubLink": "GitHubでコードを見る"
+    "githubLink": "GitHubでコードを見る",
+    "faqTitle": "よくある質問",
+    "faqShowAll": "すべて表示"
   },
   "tgBot": {
     "newEmergency": "新しい緊急募集",
