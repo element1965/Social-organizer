@@ -26,6 +26,8 @@ export function FaqPage() {
   const incrementViewMutation = trpc.faq.incrementView.useMutation();
   const localizeMutation = trpc.faq.localize.useMutation({ onSuccess: () => utils.faq.list.invalidate() });
 
+  const localizeAllMutation = trpc.faq.localizeAll.useMutation({ onSuccess: () => utils.faq.list.invalidate() });
+
   const [openId, setOpenId] = useState<string | null>(null);
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -96,13 +98,29 @@ export function FaqPage() {
           {t('faq.title')}
         </h1>
         {isAdmin && !showForm && !editingId && (
-          <button
-            onClick={() => { setShowForm(true); setFormQuestion(''); setFormAnswer(''); }}
-            className="flex items-center gap-1.5 px-3 py-1.5 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-          >
-            <Plus className="w-4 h-4" />
-            {t('faq.addItem')}
-          </button>
+          <div className="flex items-center gap-2">
+            {displayItems.some(i => !(i as typeof i & { isLocalized?: boolean }).isLocalized) && (
+              <button
+                onClick={() => localizeAllMutation.mutate()}
+                disabled={localizeAllMutation.isPending}
+                className="flex items-center gap-1.5 px-3 py-1.5 text-sm bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 disabled:opacity-50 transition-colors"
+              >
+                {localizeAllMutation.isPending ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : (
+                  <Globe className="w-4 h-4" />
+                )}
+                {t('faq.localizeAll')}
+              </button>
+            )}
+            <button
+              onClick={() => { setShowForm(true); setFormQuestion(''); setFormAnswer(''); }}
+              className="flex items-center gap-1.5 px-3 py-1.5 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            >
+              <Plus className="w-4 h-4" />
+              {t('faq.addItem')}
+            </button>
+          </div>
         )}
       </div>
 
