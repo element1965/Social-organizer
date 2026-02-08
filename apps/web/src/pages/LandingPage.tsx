@@ -182,15 +182,17 @@ export function LandingPage() {
         />
       )}
 
-      {/* Fixed title overlay on top of planet (appears on scroll) */}
+      {/* Fixed title overlay — centered on planet (appears on scroll) */}
       {heroProgress > 0 && (
         <div
-          className="fixed top-0 left-0 right-0 pointer-events-none flex flex-col items-center justify-center px-6"
+          className="fixed inset-0 pointer-events-none flex flex-col items-center px-6"
           style={{
             zIndex: 18,
-            height: '45vh',
+            // Position title at center of planet: planet moves up by heroProgress*0.9 in Three.js
+            // In viewport terms, planet center shifts from 50% to ~35% of screen height
+            paddingTop: `${50 - heroProgress * 15}vh`,
+            transform: 'translateY(-2rem)',
             opacity: Math.min(heroProgress * 2, 1),
-            transform: `translateY(${(1 - heroProgress) * 30}px)`,
           }}
         >
           <h1 className="text-2xl md:text-4xl font-bold text-white tracking-tight drop-shadow-lg">
@@ -215,30 +217,28 @@ export function LandingPage() {
         <LanguageSwitcher />
       </div>
 
-      {/* Scrolling content overlay */}
-      <div className="relative" style={{ zIndex: 10 }}>
+      {/* Demo mode banner */}
+      {showDemoBanner && (
+        <div className="fixed top-0 left-0 right-0 z-30 bg-amber-500/95 backdrop-blur-sm text-gray-900 px-4 py-3 text-center shadow-lg">
+          <button
+            onClick={() => setShowDemoBanner(false)}
+            className="absolute top-2 right-3 text-gray-900/60 hover:text-gray-900 text-xl leading-none"
+          >&times;</button>
+          <p className="text-sm font-medium max-w-lg mx-auto">
+            {t('landing.demoBanner')}
+          </p>
+        </div>
+      )}
 
-        {/* Demo mode banner */}
-        {showDemoBanner && (
-          <div className="fixed top-0 left-0 right-0 z-30 bg-amber-500/95 backdrop-blur-sm text-gray-900 px-4 py-3 text-center shadow-lg">
-            <button
-              onClick={() => setShowDemoBanner(false)}
-              className="absolute top-2 right-3 text-gray-900/60 hover:text-gray-900 text-xl leading-none"
-            >&times;</button>
-            <p className="text-sm font-medium max-w-lg mx-auto">
-              {t('landing.demoBanner')}
-            </p>
-          </div>
-        )}
-
-        {/* === Section 1: Hero (100vh) — fades out on scroll === */}
-        <section
-          className="min-h-screen flex flex-col items-center justify-center px-6 text-center"
-          style={{
-            opacity: 1 - heroProgress,
-            pointerEvents: heroProgress > 0.5 ? 'none' : 'auto',
-          }}
-        >
+      {/* === Section 1: Hero (100vh) — above canvas, fades out on scroll === */}
+      <section
+        className="relative min-h-screen flex flex-col items-center justify-center px-6 text-center"
+        style={{
+          zIndex: 20,
+          opacity: 1 - heroProgress,
+          pointerEvents: heroProgress > 0.5 ? 'none' : 'auto',
+        }}
+      >
           {/* Logo with scroll animation - fades out and shrinks */}
           <div
             className="mb-4 transition-all duration-200"
@@ -276,7 +276,10 @@ export function LandingPage() {
           >
             <ChevronDown size={32} />
           </button>
-        </section>
+      </section>
+
+      {/* Scrolling content — below canvas (z-10), content disappears behind planet */}
+      <div className="relative" style={{ zIndex: 10 }}>
 
         {/* === Section: Pain Point Quotes === */}
         <section className="min-h-[70vh] flex flex-col items-center justify-center px-6 py-16 gap-16">
