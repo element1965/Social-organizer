@@ -276,6 +276,11 @@
     "newBudgetPlaceholder": "Yeni miktar",
     "updateBudget": "Bütçeyi Güncelle"
   },
+  "faq": {
+    "localized": "Çevrildi",
+    "localizeAll": "Tüm dillere çevir",
+    "localizing": "Çevriliyor..."
+  },
   "chat": {
     "title": "Asistan",
     "welcomeMessage": "Merhaba! Uygulamanın nasıl çalıştığını anlamanıza yardımcı olabilirim. El sıkışmalar, niyetler veya diğer terimler hakkında sorun.",
@@ -284,6 +289,21 @@
     "openChat": "Sohbet asistanını aç",
     "startListening": "Sesli girişi başlat",
     "stopListening": "Sesli girişi durdur"
+  },
+  "broadcast": {
+    "title": "Yayın",
+    "allUsers": "Tüm kullanıcılar",
+    "directUser": "TG ID ile",
+    "telegramIdPlaceholder": "Telegram ID",
+    "messagePlaceholder": "Mesaj metni...",
+    "photo": "Fotoğraf",
+    "video": "Video",
+    "mediaUrlPlaceholder": "Medya URL'si",
+    "send": "Gönder",
+    "sending": "Gönderiliyor...",
+    "sentSuccess": "{{count}} kullanıcıya gönderildi",
+    "directSuccess": "Mesaj gönderildi",
+    "error": "Gönderme başarısız"
   },
   "contacts": {
     "telegram": "Telegram",
@@ -347,7 +367,9 @@
     "comingSoon": "Yakında",
     "demoBanner": "Demo modu artık kullanılamıyor. Uygulamayı kullanmak için aşağıdan Telegram üzerinden açın. Davet bağlantınız varsa gönderenden tekrar paylaşmasını isteyin.",
     "footer": "Social Organizer — açık bir karşılıklı yardım aracı",
-    "githubLink": "Kodu GitHub'da görüntüle"
+    "githubLink": "Kodu GitHub'da görüntüle",
+    "faqTitle": "Sıkça Sorulan Sorular",
+    "faqShowAll": "Tümünü göster"
   },
   "tgBot": {
     "newEmergency": "Yeni acil yardım kampanyası",

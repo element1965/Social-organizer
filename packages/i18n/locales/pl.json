@@ -276,6 +276,11 @@
     "newBudgetPlaceholder": "Nowa kwota",
     "updateBudget": "Zaktualizuj budżet"
   },
+  "faq": {
+    "localized": "Przetłumaczono",
+    "localizeAll": "Przetłumacz na wszystkie języki",
+    "localizing": "Tłumaczenie..."
+  },
   "chat": {
     "title": "Asystent",
     "welcomeMessage": "Cześć! Mogę pomóc Ci zrozumieć, jak działa aplikacja. Pytaj o uściski dłoni, intencje lub inne terminy.",
@@ -284,6 +289,21 @@
     "openChat": "Otwórz czat z asystentem",
     "startListening": "Rozpocznij wprowadzanie głosowe",
     "stopListening": "Zatrzymaj wprowadzanie głosowe"
+  },
+  "broadcast": {
+    "title": "Transmisja",
+    "allUsers": "Wszyscy użytkownicy",
+    "directUser": "Wg TG ID",
+    "telegramIdPlaceholder": "Telegram ID",
+    "messagePlaceholder": "Treść wiadomości...",
+    "photo": "Zdjęcie",
+    "video": "Wideo",
+    "mediaUrlPlaceholder": "URL mediów",
+    "send": "Wyślij",
+    "sending": "Wysyłanie...",
+    "sentSuccess": "Wysłano do {{count}} użytkowników",
+    "directSuccess": "Wiadomość wysłana",
+    "error": "Nie udało się wysłać"
   },
   "contacts": {
     "telegram": "Telegram",
@@ -347,7 +367,9 @@
     "comingSoon": "Wkrótce",
     "demoBanner": "Tryb demo nie jest już dostępny. Aby korzystać z aplikacji, otwórz ją przez Telegram poniżej. Jeśli miałeś link z zaproszeniem — poproś nadawcę o ponowne wysłanie.",
     "footer": "Social Organizer — otwarte narzędzie wzajemnej pomocy",
-    "githubLink": "Zobacz kod na GitHubie"
+    "githubLink": "Zobacz kod na GitHubie",
+    "faqTitle": "Często zadawane pytania",
+    "faqShowAll": "Pokaż wszystko"
   },
   "tgBot": {
     "newEmergency": "Nowa zbiórka awaryjna",
