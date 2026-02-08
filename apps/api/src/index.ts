@@ -3,6 +3,7 @@ import { dirname, resolve } from 'node:path';
 import { existsSync } from 'node:fs';
 import Fastify from 'fastify';
 import cors from '@fastify/cors';
+import multipart from '@fastify/multipart';
 import fastifyStatic from '@fastify/static';
 import {
   fastifyTRPCPlugin,
@@ -11,7 +12,7 @@ import {
 import { appRouter, type AppRouter } from './routers/index.js';
 import { createContext } from './context.js';
 import { setupQueues } from './workers/index.js';
-import { handleTelegramUpdate, setTelegramWebhook } from './services/telegram-bot.service.js';
+import { handleTelegramUpdate, setTelegramWebhook, uploadMediaToTelegram } from './services/telegram-bot.service.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -32,6 +33,9 @@ async function start() {
   try {
     // CORS
     await app.register(cors, { origin: true });
+
+    // Multipart (file uploads, 50MB limit)
+    await app.register(multipart, { limits: { fileSize: 50 * 1024 * 1024 } });
 
     // tRPC
     await app.register(fastifyTRPCPlugin, {
@@ -58,6 +62,32 @@ async function start() {
         console.error('[TG Webhook] error:', err);
       }
       return reply.send({ ok: true });
+    });
+
+    // Broadcast file upload — admin only
+    const ADMIN_IDS = ['cml9ffhhh0000o801afqv67fz', 'cml9h2u8s000go801lcvi6ba9'];
+    app.post('/api/broadcast/upload', async (req, reply) => {
+      // Auth: extract userId from JWT
+      const auth = req.headers.authorization;
+      if (!auth?.startsWith('Bearer ')) return reply.status(401).send({ error: 'Unauthorized' });
+      let userId: string | null = null;
+      try {
+        const token = auth.slice(7);
+        const payload = JSON.parse(Buffer.from(token.split('.')[1]!, 'base64').toString());
+        userId = payload.sub ?? null;
+      } catch { /* invalid token */ }
+      if (!userId || !ADMIN_IDS.includes(userId)) return reply.status(403).send({ error: 'Forbidden' });
+
+      const data = await req.file();
+      if (!data) return reply.status(400).send({ error: 'No file' });
+
+      const buffer = await data.toBuffer();
+      const mediaType = data.mimetype.startsWith('video/') ? 'video' as const : 'photo' as const;
+
+      const fileId = await uploadMediaToTelegram(buffer, data.filename || 'media', mediaType);
+      if (!fileId) return reply.status(500).send({ error: 'Upload to Telegram failed' });
+
+      return { fileId, mediaType };
     });
 
     // Serve web frontend (if dist exists)
