@@ -276,6 +276,17 @@
     "newBudgetPlaceholder": "Jumlah baru",
     "updateBudget": "Perbarui anggaran"
   },
+  "faq": {
+    "title": "FAQ",
+    "addItem": "Tambah",
+    "empty": "Belum ada pertanyaan",
+    "questionPlaceholder": "Pertanyaan",
+    "answerPlaceholder": "Jawaban",
+    "deleteConfirm": "Hapus pertanyaan ini?",
+    "localized": "Diterjemahkan",
+    "localizeAll": "Terjemahkan ke semua bahasa",
+    "localizing": "Menerjemahkan..."
+  },
   "chat": {
     "title": "Asisten",
     "welcomeMessage": "Hai! Saya bisa membantu kamu memahami cara kerja aplikasi. Tanyakan tentang jabat tangan, niat, atau istilah lainnya.",
@@ -284,6 +295,21 @@
     "openChat": "Buka asisten chat",
     "startListening": "Mulai input suara",
     "stopListening": "Hentikan input suara"
+  },
+  "broadcast": {
+    "title": "Siaran",
+    "allUsers": "Semua pengguna",
+    "directUser": "Berdasarkan TG ID",
+    "telegramIdPlaceholder": "Telegram ID",
+    "messagePlaceholder": "Teks pesan...",
+    "photo": "Foto",
+    "video": "Video",
+    "mediaUrlPlaceholder": "URL media",
+    "send": "Kirim",
+    "sending": "Mengirim...",
+    "sentSuccess": "Terkirim ke {{count}} pengguna",
+    "directSuccess": "Pesan terkirim",
+    "error": "Gagal mengirim"
   },
   "contacts": {
     "telegram": "Telegram",
@@ -347,7 +373,9 @@
     "comingSoon": "Segera hadir",
     "demoBanner": "Mode demo tidak lagi tersedia. Untuk menggunakan aplikasi, buka melalui Telegram di bawah. Jika Anda memiliki tautan undangan, minta pengirim untuk membagikannya lagi.",
     "footer": "Social Organizer — alat saling bantu sumber terbuka",
-    "githubLink": "Lihat kode di GitHub"
+    "githubLink": "Lihat kode di GitHub",
+    "faqTitle": "Pertanyaan yang Sering Diajukan",
+    "faqShowAll": "Tampilkan semua"
   },
   "tgBot": {
     "newEmergency": "Penggalangan darurat baru",
