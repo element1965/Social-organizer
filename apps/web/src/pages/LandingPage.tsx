@@ -164,34 +164,23 @@ export function LandingPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-950 via-gray-950 to-blue-950">
-      {/* Fixed 3D background — above content (planet is in foreground) */}
-      <div className="fixed inset-0 pointer-events-none" style={{ zIndex: 15 }}>
+      {/* Fixed 3D background */}
+      <div className="fixed inset-0 pointer-events-none">
         <Suspense fallback={null}>
           <LazyGlobeNetwork scrollProgress={scrollProgress} heroProgress={heroProgress} />
         </Suspense>
       </div>
 
-      {/* Fade overlay — hides scrolling content behind planet area */}
-      {heroProgress > 0 && (
-        <div
-          className="fixed inset-0 pointer-events-none"
-          style={{
-            zIndex: 12,
-            background: `linear-gradient(to bottom, rgba(2,8,23,1) 0%, rgba(2,8,23,0.95) ${25 + heroProgress * 5}%, rgba(2,8,23,0) ${45 + heroProgress * 5}%, transparent 55%)`,
-          }}
-        />
-      )}
-
       {/* Fixed logo in top-left corner (appears on scroll) */}
       <div
-        className="fixed top-4 left-4 transition-opacity duration-300"
-        style={{ opacity: logoOpacityFixed, zIndex: 25 }}
+        className="fixed top-4 left-4 z-20 transition-opacity duration-300"
+        style={{ opacity: logoOpacityFixed }}
       >
         <Logo size={50} className="text-teal-400" />
       </div>
 
       {/* Language switcher — fixed top-right */}
-      <div className="fixed top-4 right-4" style={{ zIndex: 25 }}>
+      <div className="fixed top-4 right-4 z-20">
         <LanguageSwitcher />
       </div>
 
@@ -208,44 +197,28 @@ export function LandingPage() {
         </div>
       )}
 
-      {/* === Section 1: Hero (100vh) — zooms with planet on scroll === */}
-      <section
-        className="relative min-h-screen flex flex-col items-center justify-center px-6 text-center"
-        style={{
-          zIndex: 20,
-          pointerEvents: heroProgress > 0.8 ? 'none' : 'auto',
-        }}
-      >
-          {/* Title + subtitle — zoom and move up with planet */}
+      {/* Scrolling content */}
+      <div className="relative z-10">
+
+        {/* === Section 1: Hero (100vh) === */}
+        <section className="min-h-screen flex flex-col items-center justify-center px-6 text-center">
+          {/* Logo with scroll animation - fades out and shrinks */}
           <div
-            className="flex flex-col items-center"
+            className="mb-4 transition-all duration-200"
             style={{
-              transform: `translateY(${-heroProgress * 15}vh) scale(${1 - heroProgress * 0.3})`,
-              transformOrigin: 'center center',
+              opacity: logoOpacityInHero,
+              transform: `scale(${logoScale})`,
             }}
           >
-            {/* Logo */}
-            <div
-              className="mb-4 transition-all duration-200"
-              style={{
-                opacity: logoOpacityInHero,
-                transform: `scale(${logoScale})`,
-              }}
-            >
-              <Logo size={120} className="text-teal-400" />
-            </div>
-            <h1 className="text-5xl md:text-7xl font-bold text-white mb-4 tracking-tight drop-shadow-lg">
-              Social Organizer
-            </h1>
-            <p className="text-gray-300 text-lg md:text-xl max-w-2xl leading-relaxed drop-shadow-md">
-              {t('landing.heroSubtitle')}
-            </p>
+            <Logo size={120} className="text-teal-400" />
           </div>
-          {/* Buttons — fade out on scroll */}
-          <div
-            className="flex flex-col sm:flex-row gap-4 mt-10"
-            style={{ opacity: Math.max(1 - heroProgress * 3, 0) }}
-          >
+          <h1 className="text-5xl md:text-7xl font-bold text-white mb-4 tracking-tight">
+            Social Organizer
+          </h1>
+          <p className="text-gray-300 text-lg md:text-xl max-w-2xl mb-10 leading-relaxed">
+            {t('landing.heroSubtitle')}
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4">
             <button
               onClick={() => document.getElementById('download')?.scrollIntoView({ behavior: 'smooth' })}
               className="px-8 py-3 bg-teal-500 hover:bg-teal-400 text-white font-semibold rounded-xl transition-colors text-lg"
@@ -263,14 +236,10 @@ export function LandingPage() {
             onClick={scrollToContent}
             className="absolute bottom-10 animate-bounce text-white/50 hover:text-white/80 transition-colors"
             aria-label="Scroll down"
-            style={{ opacity: Math.max(1 - heroProgress * 3, 0) }}
           >
             <ChevronDown size={32} />
           </button>
-      </section>
-
-      {/* Scrolling content — below canvas (z-10), content disappears behind planet */}
-      <div className="relative" style={{ zIndex: 10 }}>
+        </section>
 
         {/* === Section: Pain Point Quotes === */}
         <section className="min-h-[70vh] flex flex-col items-center justify-center px-6 py-16 gap-16">
