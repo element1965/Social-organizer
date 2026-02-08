@@ -526,11 +526,11 @@ export interface GlobeNetworkProps {
 
 export function GlobeNetwork({ className, scrollProgress, heroProgress = 0 }: GlobeNetworkProps) {
   return (
-    <div className={className} style={{ width: '100%', height: '100%' }}>
+    <div className={className} style={{ width: '100%', height: '100%', pointerEvents: 'none' }}>
       <Canvas
         camera={{ position: [0, 0, 5], fov: 45 }}
         gl={{ antialias: true, alpha: true }}
-        style={{ background: 'transparent' }}
+        style={{ background: 'transparent', pointerEvents: 'none' }}
       >
         <Scene scrollProgress={scrollProgress} heroProgress={heroProgress} />
       </Canvas>

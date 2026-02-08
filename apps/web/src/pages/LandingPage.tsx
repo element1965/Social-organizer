@@ -182,28 +182,6 @@ export function LandingPage() {
         />
       )}
 
-      {/* Fixed title overlay — centered on planet (appears on scroll) */}
-      {heroProgress > 0 && (
-        <div
-          className="fixed inset-0 pointer-events-none flex flex-col items-center px-6"
-          style={{
-            zIndex: 18,
-            // Position title at center of planet: planet moves up by heroProgress*0.9 in Three.js
-            // In viewport terms, planet center shifts from 50% to ~35% of screen height
-            paddingTop: `${50 - heroProgress * 15}vh`,
-            transform: 'translateY(-2rem)',
-            opacity: Math.min(heroProgress * 2, 1),
-          }}
-        >
-          <h1 className="text-2xl md:text-4xl font-bold text-white tracking-tight drop-shadow-lg">
-            Social Organizer
-          </h1>
-          <p className="text-gray-300 text-xs md:text-sm max-w-lg text-center mt-2 leading-relaxed drop-shadow-md">
-            {t('landing.heroSubtitle')}
-          </p>
-        </div>
-      )}
-
       {/* Fixed logo in top-left corner (appears on scroll) */}
       <div
         className="fixed top-4 left-4 transition-opacity duration-300"
@@ -230,32 +208,44 @@ export function LandingPage() {
         </div>
       )}
 
-      {/* === Section 1: Hero (100vh) — above canvas, fades out on scroll === */}
+      {/* === Section 1: Hero (100vh) — zooms with planet on scroll === */}
       <section
         className="relative min-h-screen flex flex-col items-center justify-center px-6 text-center"
         style={{
           zIndex: 20,
-          opacity: 1 - heroProgress,
-          pointerEvents: heroProgress > 0.5 ? 'none' : 'auto',
+          pointerEvents: heroProgress > 0.8 ? 'none' : 'auto',
         }}
       >
-          {/* Logo with scroll animation - fades out and shrinks */}
+          {/* Title + subtitle — zoom and move up with planet */}
           <div
-            className="mb-4 transition-all duration-200"
+            className="flex flex-col items-center"
             style={{
-              opacity: logoOpacityInHero,
-              transform: `scale(${logoScale})`,
+              transform: `translateY(${-heroProgress * 15}vh) scale(${1 - heroProgress * 0.3})`,
+              transformOrigin: 'center center',
             }}
           >
-            <Logo size={120} className="text-teal-400" />
+            {/* Logo */}
+            <div
+              className="mb-4 transition-all duration-200"
+              style={{
+                opacity: logoOpacityInHero,
+                transform: `scale(${logoScale})`,
+              }}
+            >
+              <Logo size={120} className="text-teal-400" />
+            </div>
+            <h1 className="text-5xl md:text-7xl font-bold text-white mb-4 tracking-tight drop-shadow-lg">
+              Social Organizer
+            </h1>
+            <p className="text-gray-300 text-lg md:text-xl max-w-2xl leading-relaxed drop-shadow-md">
+              {t('landing.heroSubtitle')}
+            </p>
           </div>
-          <h1 className="text-5xl md:text-7xl font-bold text-white mb-4 tracking-tight">
-            Social Organizer
-          </h1>
-          <p className="text-gray-300 text-lg md:text-xl max-w-2xl mb-10 leading-relaxed">
-            {t('landing.heroSubtitle')}
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4">
+          {/* Buttons — fade out on scroll */}
+          <div
+            className="flex flex-col sm:flex-row gap-4 mt-10"
+            style={{ opacity: Math.max(1 - heroProgress * 3, 0) }}
+          >
             <button
               onClick={() => document.getElementById('download')?.scrollIntoView({ behavior: 'smooth' })}
               className="px-8 py-3 bg-teal-500 hover:bg-teal-400 text-white font-semibold rounded-xl transition-colors text-lg"
@@ -273,6 +263,7 @@ export function LandingPage() {
             onClick={scrollToContent}
             className="absolute bottom-10 animate-bounce text-white/50 hover:text-white/80 transition-colors"
             aria-label="Scroll down"
+            style={{ opacity: Math.max(1 - heroProgress * 3, 0) }}
           >
             <ChevronDown size={32} />
           </button>
