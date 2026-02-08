@@ -191,8 +191,12 @@ export function FaqPage() {
                         <button
                           onClick={() => localizeMutation.mutate({ id: item.id })}
                           disabled={localizeMutation.isPending}
-                          className="flex items-center gap-1 text-xs text-gray-500 hover:text-emerald-600 transition-colors ml-1"
-                          title={t('faq.localizeAll')}
+                          className={`flex items-center gap-1 text-xs transition-colors ml-1 ${
+                            faqItem.isLocalized
+                              ? 'text-emerald-500 hover:text-emerald-600'
+                              : 'text-gray-400 hover:text-emerald-600'
+                          }`}
+                          title={faqItem.isLocalized ? t('faq.localized') : t('faq.localizeAll')}
                         >
                           {localizeMutation.isPending ? (
                             <Loader2 className="w-3.5 h-3.5 animate-spin" />
@@ -200,11 +204,6 @@ export function FaqPage() {
                             <Globe className="w-3.5 h-3.5" />
                           )}
                         </button>
-                        {faqItem.isLocalized && (
-                          <span className="text-[10px] px-1.5 py-0.5 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 rounded-full">
-                            {t('faq.localized')}
-                          </span>
-                        )}
                       </div>
                     )}
                   </div>
