@@ -276,6 +276,17 @@
     "newBudgetPlaceholder": "Số tiền mới",
     "updateBudget": "Cập nhật ngân sách"
   },
+  "faq": {
+    "title": "FAQ",
+    "addItem": "Thêm",
+    "empty": "Chưa có câu hỏi nào",
+    "questionPlaceholder": "Câu hỏi",
+    "answerPlaceholder": "Câu trả lời",
+    "deleteConfirm": "Xóa câu hỏi này?",
+    "localized": "Đã dịch",
+    "localizeAll": "Dịch sang tất cả ngôn ngữ",
+    "localizing": "Đang dịch..."
+  },
   "chat": {
     "title": "Trợ lý",
     "welcomeMessage": "Xin chào! Tôi có thể giúp bạn hiểu cách ứng dụng hoạt động. Hỏi về bắt tay, ý định, hoặc bất kỳ thuật ngữ nào khác.",
@@ -284,6 +295,21 @@
     "openChat": "Mở trợ lý chat",
     "startListening": "Bắt đầu nhập giọng nói",
     "stopListening": "Dừng nhập giọng nói"
+  },
+  "broadcast": {
+    "title": "Phát sóng",
+    "allUsers": "Tất cả người dùng",
+    "directUser": "Theo TG ID",
+    "telegramIdPlaceholder": "Telegram ID",
+    "messagePlaceholder": "Nội dung tin nhắn...",
+    "photo": "Ảnh",
+    "video": "Video",
+    "mediaUrlPlaceholder": "URL phương tiện",
+    "send": "Gửi",
+    "sending": "Đang gửi...",
+    "sentSuccess": "Đã gửi tới {{count}} người dùng",
+    "directSuccess": "Đã gửi tin nhắn",
+    "error": "Gửi thất bại"
   },
   "contacts": {
     "telegram": "Telegram",
@@ -347,7 +373,9 @@
     "comingSoon": "Sắp ra mắt",
     "demoBanner": "Chế độ demo không còn khả dụng. Để sử dụng ứng dụng, hãy mở qua Telegram bên dưới. Nếu bạn có liên kết mời, hãy yêu cầu người gửi chia sẻ lại.",
     "footer": "Social Organizer — công cụ hỗ trợ lẫn nhau mã nguồn mở",
-    "githubLink": "Xem mã nguồn trên GitHub"
+    "githubLink": "Xem mã nguồn trên GitHub",
+    "faqTitle": "Câu hỏi thường gặp",
+    "faqShowAll": "Hiển thị tất cả"
   },
   "tgBot": {
     "newEmergency": "Chiến dịch khẩn cấp mới",

@@ -276,6 +276,17 @@
     "newBudgetPlaceholder": "จำนวนใหม่",
     "updateBudget": "อัปเดตงบประมาณ"
   },
+  "faq": {
+    "title": "FAQ",
+    "addItem": "เพิ่ม",
+    "empty": "ยังไม่มีคำถาม",
+    "questionPlaceholder": "คำถาม",
+    "answerPlaceholder": "คำตอบ",
+    "deleteConfirm": "ลบคำถามนี้?",
+    "localized": "แปลแล้ว",
+    "localizeAll": "แปลเป็นทุกภาษา",
+    "localizing": "กำลังแปล..."
+  },
   "chat": {
     "title": "ผู้ช่วย",
     "welcomeMessage": "สวัสดี! ฉันช่วยให้คุณเข้าใจการทำงานของแอปได้ ถามเกี่ยวกับการจับมือ ความตั้งใจ หรือคำศัพท์อื่นๆ ได้เลย",
@@ -284,6 +295,21 @@
     "openChat": "เปิดแชทผู้ช่วย",
     "startListening": "เริ่มการป้อนเสียง",
     "stopListening": "หยุดการป้อนเสียง"
+  },
+  "broadcast": {
+    "title": "ประกาศ",
+    "allUsers": "ผู้ใช้ทั้งหมด",
+    "directUser": "ตาม TG ID",
+    "telegramIdPlaceholder": "Telegram ID",
+    "messagePlaceholder": "ข้อความ...",
+    "photo": "รูปภาพ",
+    "video": "วิดีโอ",
+    "mediaUrlPlaceholder": "URL สื่อ",
+    "send": "ส่ง",
+    "sending": "กำลังส่ง...",
+    "sentSuccess": "ส่งถึง {{count}} ผู้ใช้แล้ว",
+    "directSuccess": "ส่งข้อความแล้ว",
+    "error": "ส่งไม่สำเร็จ"
   },
   "contacts": {
     "telegram": "Telegram",
@@ -347,7 +373,9 @@
     "comingSoon": "เร็วๆ นี้",
     "demoBanner": "โหมดสาธิตไม่สามารถใช้งานได้อีกต่อไป เปิดแอปผ่าน Telegram ด้านล่าง หากคุณมีลิงก์เชิญ กรุณาขอให้ผู้ส่งส่งอีกครั้ง",
     "footer": "Social Organizer — เครื่องมือช่วยเหลือซึ่งกันและกันแบบเปิด",
-    "githubLink": "ดูโค้ดบน GitHub"
+    "githubLink": "ดูโค้ดบน GitHub",
+    "faqTitle": "คำถามที่พบบ่อย",
+    "faqShowAll": "แสดงทั้งหมด"
   },
   "tgBot": {
     "newEmergency": "การระดมทุนฉุกเฉินใหม่",

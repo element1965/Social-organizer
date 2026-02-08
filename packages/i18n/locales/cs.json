@@ -276,6 +276,17 @@
     "newBudgetPlaceholder": "Nová částka",
     "updateBudget": "Aktualizovat rozpočet"
   },
+  "faq": {
+    "title": "FAQ",
+    "addItem": "Přidat",
+    "empty": "Zatím žádné otázky",
+    "questionPlaceholder": "Otázka",
+    "answerPlaceholder": "Odpověď",
+    "deleteConfirm": "Smazat tuto otázku?",
+    "localized": "Přeloženo",
+    "localizeAll": "Přeložit do všech jazyků",
+    "localizing": "Překládání..."
+  },
   "chat": {
     "title": "Asistent",
     "welcomeMessage": "Ahoj! Mohu vám pomoci pochopit, jak aplikace funguje. Ptejte se na podání rukou, záměry nebo jiné pojmy.",
@@ -284,6 +295,21 @@
     "openChat": "Otevřít chatového asistenta",
     "startListening": "Spustit hlasový vstup",
     "stopListening": "Zastavit hlasový vstup"
+  },
+  "broadcast": {
+    "title": "Vysílání",
+    "allUsers": "Všichni uživatelé",
+    "directUser": "Dle TG ID",
+    "telegramIdPlaceholder": "Telegram ID",
+    "messagePlaceholder": "Text zprávy...",
+    "photo": "Foto",
+    "video": "Video",
+    "mediaUrlPlaceholder": "URL médií",
+    "send": "Odeslat",
+    "sending": "Odesílání...",
+    "sentSuccess": "Odesláno {{count}} uživatelům",
+    "directSuccess": "Zpráva odeslána",
+    "error": "Odeslání se nezdařilo"
   },
   "contacts": {
     "telegram": "Telegram",
@@ -347,7 +373,9 @@
     "comingSoon": "Již brzy",
     "demoBanner": "Demo režim již není dostupný. Pro použití aplikace ji otevřete přes Telegram níže. Pokud jste měli odkaz s pozvánkou, požádejte odesílatele o opětovné zaslání.",
     "footer": "Social Organizer — otevřený nástroj pro vzájemnou pomoc",
-    "githubLink": "Zobrazit kód na GitHubu"
+    "githubLink": "Zobrazit kód na GitHubu",
+    "faqTitle": "Často kladené otázky",
+    "faqShowAll": "Zobrazit vše"
   },
   "tgBot": {
     "newEmergency": "Nová nouzová sbírka",

@@ -276,6 +276,17 @@
     "newBudgetPlaceholder": "Нови износ",
     "updateBudget": "Ажурирај буџет"
   },
+  "faq": {
+    "title": "FAQ",
+    "addItem": "Додај",
+    "empty": "Још нема питања",
+    "questionPlaceholder": "Питање",
+    "answerPlaceholder": "Одговор",
+    "deleteConfirm": "Обрисати ово питање?",
+    "localized": "Преведено",
+    "localizeAll": "Преведи на све језике",
+    "localizing": "Превођење..."
+  },
   "chat": {
     "title": "Асистент",
     "welcomeMessage": "Здраво! Могу да ти помогнем да разумеш како апликација ради. Питај о руковањима, намерама или било ком другом појму.",
@@ -284,6 +295,21 @@
     "openChat": "Отвори чат асистента",
     "startListening": "Почни гласовни унос",
     "stopListening": "Заустави гласовни унос"
+  },
+  "broadcast": {
+    "title": "Емитовање",
+    "allUsers": "Сви корисници",
+    "directUser": "По TG ID",
+    "telegramIdPlaceholder": "Telegram ID",
+    "messagePlaceholder": "Текст поруке...",
+    "photo": "Фото",
+    "video": "Видео",
+    "mediaUrlPlaceholder": "URL медија",
+    "send": "Пошаљи",
+    "sending": "Слање...",
+    "sentSuccess": "Послато {{count}} корисницима",
+    "directSuccess": "Порука послата",
+    "error": "Слање није успело"
   },
   "contacts": {
     "telegram": "Telegram",
@@ -347,7 +373,9 @@
     "comingSoon": "Ускоро",
     "demoBanner": "Демо режим више није доступан. Да бисте користили апликацију, отворите је преко Телеграма испод. Ако сте имали линк за позивницу, замолите пошиљаоца да га поново пошаље.",
     "footer": "Social Organizer — отворени алат за узајамну помоћ",
-    "githubLink": "Погледај код на GitHub-у"
+    "githubLink": "Погледај код на GitHub-у",
+    "faqTitle": "Често постављана питања",
+    "faqShowAll": "Прикажи све"
   },
   "tgBot": {
     "newEmergency": "Нова хитна акција",

@@ -276,6 +276,17 @@
     "newBudgetPlaceholder": "Suma noua",
     "updateBudget": "Actualizeaza bugetul"
   },
+  "faq": {
+    "title": "FAQ",
+    "addItem": "Adauga",
+    "empty": "Nicio intrebare inca",
+    "questionPlaceholder": "Intrebare",
+    "answerPlaceholder": "Raspuns",
+    "deleteConfirm": "Stergi aceasta intrebare?",
+    "localized": "Tradus",
+    "localizeAll": "Traduce în toate limbile",
+    "localizing": "Se traduce..."
+  },
   "chat": {
     "title": "Asistent",
     "welcomeMessage": "Salut! Te pot ajuta sa intelegi cum functioneaza aplicatia. Intreaba despre strangeri de mana, intentii sau orice alt termen.",
@@ -284,6 +295,21 @@
     "openChat": "Deschide asistentul chat",
     "startListening": "Porneste introducerea vocala",
     "stopListening": "Opreste introducerea vocala"
+  },
+  "broadcast": {
+    "title": "Transmisiune",
+    "allUsers": "Toți utilizatorii",
+    "directUser": "După TG ID",
+    "telegramIdPlaceholder": "Telegram ID",
+    "messagePlaceholder": "Textul mesajului...",
+    "photo": "Foto",
+    "video": "Video",
+    "mediaUrlPlaceholder": "URL media",
+    "send": "Trimite",
+    "sending": "Se trimite...",
+    "sentSuccess": "Trimis la {{count}} utilizatori",
+    "directSuccess": "Mesaj trimis",
+    "error": "Trimiterea a eșuat"
   },
   "contacts": {
     "telegram": "Telegram",
@@ -347,7 +373,9 @@
     "comingSoon": "In curand",
     "demoBanner": "Modul demo nu mai este disponibil. Pentru a utiliza aplicația, deschideți-o prin Telegram mai jos. Dacă ați avut un link de invitație, rugați expeditorul să-l retrimită.",
     "footer": "Social Organizer — un instrument deschis pentru ajutor reciproc",
-    "githubLink": "Vezi codul pe GitHub"
+    "githubLink": "Vezi codul pe GitHub",
+    "faqTitle": "Întrebări frecvente",
+    "faqShowAll": "Afișează tot"
   },
   "tgBot": {
     "newEmergency": "Nouă colectă de urgență",
