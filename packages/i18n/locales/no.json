@@ -277,6 +277,12 @@
     "updateBudget": "Oppdater budsjett"
   },
   "faq": {
+    "title": "Ofte stilte spørsmål",
+    "addItem": "Legg til",
+    "empty": "Ingen spørsmål ennå",
+    "questionPlaceholder": "Spørsmål",
+    "answerPlaceholder": "Svar",
+    "deleteConfirm": "Slette dette spørsmålet?",
     "localized": "Oversatt",
     "localizeAll": "Oversett til alle språk",
     "localizing": "Oversetter..."

@@ -277,6 +277,12 @@
     "updateBudget": "Uppdatera budget"
   },
   "faq": {
+    "title": "Vanliga frågor",
+    "addItem": "Lägg till",
+    "empty": "Inga frågor ännu",
+    "questionPlaceholder": "Fråga",
+    "answerPlaceholder": "Svar",
+    "deleteConfirm": "Ta bort denna fråga?",
     "localized": "Översatt",
     "localizeAll": "Översätt till alla språk",
     "localizing": "Översätter..."

@@ -277,6 +277,12 @@
     "updateBudget": "Bütçeyi Güncelle"
   },
   "faq": {
+    "title": "Sık sorulan sorular",
+    "addItem": "Ekle",
+    "empty": "Henüz soru yok",
+    "questionPlaceholder": "Soru",
+    "answerPlaceholder": "Cevap",
+    "deleteConfirm": "Bu soruyu silmek istiyor musunuz?",
     "localized": "Çevrildi",
     "localizeAll": "Tüm dillere çevir",
     "localizing": "Çevriliyor..."

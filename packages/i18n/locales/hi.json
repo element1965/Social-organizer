@@ -277,6 +277,12 @@
     "updateBudget": "बजट अपडेट करें"
   },
   "faq": {
+    "title": "अक्सर पूछे जाने वाले प्रश्न",
+    "addItem": "जोड़ें",
+    "empty": "अभी तक कोई प्रश्न नहीं",
+    "questionPlaceholder": "प्रश्न",
+    "answerPlaceholder": "उत्तर",
+    "deleteConfirm": "क्या आप यह प्रश्न हटाना चाहते हैं?",
     "localized": "अनुवादित",
     "localizeAll": "सभी भाषाओं में अनुवाद करें",
     "localizing": "अनुवाद हो रहा है..."

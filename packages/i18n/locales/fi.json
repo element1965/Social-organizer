@@ -277,6 +277,12 @@
     "updateBudget": "Päivitä budjetti"
   },
   "faq": {
+    "title": "Usein kysytyt kysymykset",
+    "addItem": "Lisää",
+    "empty": "Ei vielä kysymyksiä",
+    "questionPlaceholder": "Kysymys",
+    "answerPlaceholder": "Vastaus",
+    "deleteConfirm": "Poista tämä kysymys?",
     "localized": "Käännetty",
     "localizeAll": "Käännä kaikille kielille",
     "localizing": "Käännetään..."

@@ -277,6 +277,12 @@
     "updateBudget": "تحديث الميزانية"
   },
   "faq": {
+    "title": "الأسئلة الشائعة",
+    "addItem": "إضافة",
+    "empty": "لا توجد أسئلة بعد",
+    "questionPlaceholder": "السؤال",
+    "answerPlaceholder": "الإجابة",
+    "deleteConfirm": "هل تريد حذف هذا السؤال؟",
     "localized": "مترجم",
     "localizeAll": "ترجمة لجميع اللغات",
     "localizing": "جاري الترجمة..."
