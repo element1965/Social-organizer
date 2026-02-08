@@ -334,7 +334,8 @@
     "decline": "Odrzuć",
     "alreadyUsed": "To zaproszenie zostało już wykorzystane",
     "success": "Połączono!",
-    "loginToAccept": "Zaloguj się, aby zaakceptować"
+    "loginToAccept": "Zaloguj się, aby zaakceptować",
+    "accepting": "Przyjmowanie zaproszenia..."
   },
   "landing": {
     "painQuote": "Gdy przychodzą kłopoty — zostajesz sam. Przyjaciele nie wiedzą. Znajomi znajomych — tym bardziej. A przecież ktoś z nich mógł pomóc.",

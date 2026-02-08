@@ -334,7 +334,8 @@
     "decline": "Afvis",
     "alreadyUsed": "Denne invitation er allerede brugt",
     "success": "Forbundet!",
-    "loginToAccept": "Log ind for at acceptere"
+    "loginToAccept": "Log ind for at acceptere",
+    "accepting": "Accepterer invitation..."
   },
   "landing": {
     "painQuote": "Når problemer opstår — står du alene. Venner ved det ikke. Venners venner — endnu mindre. Men nogen af dem kunne hjælpe.",

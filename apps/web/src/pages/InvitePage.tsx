@@ -15,6 +15,7 @@ export function InvitePage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const isAuthenticated = useAuth((s) => s.isAuthenticated);
+  const logout = useAuth((s) => s.logout);
   const isDemo = localStorage.getItem('accessToken') === 'demo-token';
   const isRealUser = isAuthenticated && !isDemo;
   const autoAcceptTriggered = useRef(false);
@@ -33,6 +34,12 @@ export function InvitePage() {
   const accept = trpc.invite.accept.useMutation({
     onSuccess: () => {
       localStorage.removeItem('pendingInviteToken');
+    },
+    onError: (err) => {
+      // If token is invalid/expired, clear auth state so user sees login button
+      if (err.data?.code === 'UNAUTHORIZED') {
+        logout();
+      }
     },
   });
 
@@ -126,16 +133,29 @@ export function InvitePage() {
           {accept.error && (
             <div className="mt-4 p-3 bg-red-50 dark:bg-red-950 rounded-lg">
               <p className="text-sm text-red-600 dark:text-red-400 font-medium">{accept.error.message}</p>
-              <Button
-                className="w-full mt-3"
-                size="lg"
-                onClick={() => {
-                  autoAcceptTriggered.current = false;
-                  accept.reset();
-                }}
-              >
-                {t('common.retry') || 'Retry'}
-              </Button>
+              {accept.error.data?.code === 'UNAUTHORIZED' ? (
+                <Button
+                  className="w-full mt-3"
+                  size="lg"
+                  onClick={() => {
+                    if (token) localStorage.setItem('pendingInviteToken', token);
+                    window.location.href = `/?redirect=/invite/${token}`;
+                  }}
+                >
+                  <LogIn className="w-4 h-4 mr-2" /> {t('invite.loginToAccept')}
+                </Button>
+              ) : (
+                <Button
+                  className="w-full mt-3"
+                  size="lg"
+                  onClick={() => {
+                    autoAcceptTriggered.current = false;
+                    accept.reset();
+                  }}
+                >
+                  {t('common.retry') || 'Retry'}
+                </Button>
+              )}
             </div>
           )}
         </CardContent>

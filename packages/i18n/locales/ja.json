@@ -334,7 +334,8 @@
     "decline": "辞退",
     "alreadyUsed": "この招待は既に使用されています",
     "success": "つながりました！",
-    "loginToAccept": "ログインして承認"
+    "loginToAccept": "ログインして承認",
+    "accepting": "招待を受け入れています..."
   },
   "landing": {
     "painQuote": "困った時 — 一人になってしまう。友達は知らない。友達の友達 — なおさら。でも彼らの誰かが助けてくれたかもしれない。",

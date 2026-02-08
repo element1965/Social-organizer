@@ -334,7 +334,8 @@
     "decline": "Avslå",
     "alreadyUsed": "Denne invitasjonen er allerede brukt",
     "success": "Tilkoblet!",
-    "loginToAccept": "Logg inn for å godta"
+    "loginToAccept": "Logg inn for å godta",
+    "accepting": "Godtar invitasjon..."
   },
   "landing": {
     "painQuote": "Når problemer oppstår — står du alene. Venner vet ikke. Venners venner — enda mindre. Men noen av dem kunne hjulpet.",

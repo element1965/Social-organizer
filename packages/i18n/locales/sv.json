@@ -334,7 +334,8 @@
     "decline": "Avboj",
     "alreadyUsed": "Denna inbjudan har redan anvants",
     "success": "Ansluten!",
-    "loginToAccept": "Logga in for att acceptera"
+    "loginToAccept": "Logga in for att acceptera",
+    "accepting": "Accepterar inbjudan..."
   },
   "landing": {
     "painQuote": "Nar problem uppstar — star du ensam. Vanner vet inte. Vanners vanner — annu mindre. Men nagon av dem kunde ha hjlpt.",

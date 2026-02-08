@@ -316,7 +316,8 @@
     "decline": "Ablehnen",
     "alreadyUsed": "Diese Einladung wurde bereits verwendet",
     "success": "Verbunden!",
-    "loginToAccept": "Melde dich an, um anzunehmen"
+    "loginToAccept": "Melde dich an, um anzunehmen",
+    "accepting": "Einladung wird angenommen..."
   },
   "landing": {
     "painQuote": "Wenn Probleme auftreten — bist du allein. Freunde wissen es nicht. Freunde von Freunden — noch weniger. Dabei könnte jemand von ihnen helfen.",
