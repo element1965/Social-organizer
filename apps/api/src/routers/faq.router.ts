@@ -2,6 +2,7 @@ import { z } from 'zod';
 import { router, protectedProcedure, publicProcedure } from '../trpc.js';
 import { TRPCError } from '@trpc/server';
 import { translateFaqItem } from '../services/translate.service.js';
+import { ADMIN_IDS } from '../admin.js';
 
 const SUPPORTED_LANGUAGES = [
   'en', 'ru', 'es', 'fr', 'de', 'pt', 'it', 'zh', 'ja', 'ko',
@@ -9,14 +10,8 @@ const SUPPORTED_LANGUAGES = [
   'cs', 'ro', 'th', 'vi', 'id', 'sr',
 ];
 
-// Hardcoded admin user IDs
-const FAQ_ADMIN_IDS = [
-  'cml9ffhhh0000o801afqv67fz', // Никита Соловей
-  'cml9h2u8s000go801lcvi6ba9', // Andrei Lubalin
-];
-
 function assertAdmin(userId: string) {
-  if (!FAQ_ADMIN_IDS.includes(userId)) {
+  if (!ADMIN_IDS.includes(userId)) {
     throw new TRPCError({ code: 'FORBIDDEN', message: 'Only admins can manage FAQ' });
   }
 }
@@ -77,7 +72,7 @@ export const faqRouter = router({
 
   isAdmin: protectedProcedure
     .query(({ ctx }) => {
-      return { isAdmin: FAQ_ADMIN_IDS.includes(ctx.userId!) };
+      return { isAdmin: ADMIN_IDS.includes(ctx.userId!) };
     }),
 
   create: protectedProcedure

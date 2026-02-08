@@ -10,11 +10,7 @@ import {
   type TgReplyMarkup,
 } from '../services/telegram-bot.service.js';
 import { translateBroadcastMessage } from '../services/translate.service.js';
-
-const ADMIN_IDS = [
-  'cml9ffhhh0000o801afqv67fz', // Никита Соловей
-  'cml9h2u8s000go801lcvi6ba9', // Andrei Lubalin
-];
+import { ADMIN_IDS } from '../admin.js';
 
 function assertAdmin(userId: string) {
   if (!ADMIN_IDS.includes(userId)) {
