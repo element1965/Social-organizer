@@ -529,10 +529,9 @@ export function GlobeNetwork({ className, scrollProgress, heroProgress = 0 }: Gl
     <div className={className} style={{ width: '100%', height: '100%' }}>
       <Canvas
         camera={{ position: [0, 0, 5], fov: 45 }}
-        gl={{ antialias: true, alpha: false }}
-        style={{ background: 'linear-gradient(to bottom, #000510 0%, #020817 50%, #030b1a 100%)' }}
+        gl={{ antialias: true, alpha: true }}
+        style={{ background: 'transparent' }}
       >
-        <color attach="background" args={['#020817']} />
         <Scene scrollProgress={scrollProgress} heroProgress={heroProgress} />
       </Canvas>
     </div>
