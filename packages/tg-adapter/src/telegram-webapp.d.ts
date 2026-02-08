@@ -68,8 +68,17 @@ interface TelegramHapticFeedback {
   selectionChanged(): void;
 }
 
+interface TelegramSafeAreaInset {
+  top: number;
+  bottom: number;
+  left: number;
+  right: number;
+}
+
 interface TelegramWebApp {
   initData: string;
+  contentSafeAreaInset?: TelegramSafeAreaInset;
+  safeAreaInset?: TelegramSafeAreaInset;
   initDataUnsafe: TelegramWebAppInitData;
   version: string;
   platform: string;

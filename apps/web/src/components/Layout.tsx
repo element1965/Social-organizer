@@ -9,7 +9,7 @@ import { isTelegramWebApp, getTGThemeParams, onThemeChanged } from '@so/tg-adapt
 import { useTelegramHaptics } from '../hooks/useTelegram';
 
 const navItems = [
-  { path: '/', icon: Home, labelKey: 'nav.home' },
+  { path: '/dashboard', icon: Home, labelKey: 'nav.home' },
   { path: '/notifications', icon: Bell, labelKey: 'nav.notifications', badge: true },
   { path: '/create', icon: null, labelKey: 'nav.sos', sos: true },
   { path: '/network', icon: Users, labelKey: 'nav.network' },
@@ -54,7 +54,7 @@ export function Layout() {
       {/* AI Chat Assistant */}
       <ChatAssistant />
 
-      <nav className="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 flex justify-around items-center h-16 z-50">
+      <nav className="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 flex justify-around items-center h-16 z-50">
         {navItems.map((item) => {
           const active = location.pathname === item.path;
           if ((item as any).sos) {
