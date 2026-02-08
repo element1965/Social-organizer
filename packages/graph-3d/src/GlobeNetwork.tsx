@@ -483,8 +483,8 @@ function Scene({ scrollProgress, heroProgress }: { scrollProgress: number; heroP
 
   useFrame(() => {
     if (groupRef.current) {
-      const targetY = heroProgress * 1.3;
-      const targetScale = 1 - heroProgress * 0.35;
+      const targetY = heroProgress * 0.9;
+      const targetScale = 1 - heroProgress * 0.3;
       groupRef.current.position.y += (targetY - groupRef.current.position.y) * 0.08;
       const s = groupRef.current.scale.x + (targetScale - groupRef.current.scale.x) * 0.08;
       groupRef.current.scale.setScalar(s);
