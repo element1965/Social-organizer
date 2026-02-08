@@ -131,9 +131,19 @@ export function hapticSelection(): void {
 
 // ---- Safe Area ----
 
+export function getSafeAreaInset(): { top: number; bottom: number; left: number; right: number } {
+  const inset = window.Telegram?.WebApp?.safeAreaInset;
+  return inset ?? { top: 0, bottom: 0, left: 0, right: 0 };
+}
+
 export function getContentSafeAreaInset(): { top: number; bottom: number; left: number; right: number } {
   const inset = window.Telegram?.WebApp?.contentSafeAreaInset;
   return inset ?? { top: 0, bottom: 0, left: 0, right: 0 };
+}
+
+export function onSafeAreaChanged(callback: () => void): () => void {
+  window.Telegram?.WebApp?.onEvent('safeAreaChanged', callback);
+  return () => window.Telegram?.WebApp?.offEvent('safeAreaChanged', callback);
 }
 
 export function onContentSafeAreaChanged(callback: () => void): () => void {
