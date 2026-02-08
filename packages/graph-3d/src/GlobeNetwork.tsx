@@ -438,21 +438,6 @@ function NetworkEdges({ scrollProgress }: { scrollProgress: number }) {
   );
 }
 
-/* ---------- Адаптивная камера ---------- */
-
-function AdaptiveCamera() {
-  const { camera, size } = useThree();
-
-  useEffect(() => {
-    const isMobile = size.width < 768;
-    const targetZ = isMobile ? 8.5 : 5.5;
-    camera.position.z = targetZ;
-    camera.updateProjectionMatrix();
-  }, [camera, size.width]);
-
-  return null;
-}
-
 /* ---------- Suspense fallback ---------- */
 
 function LoadingFallback() {
@@ -468,10 +453,16 @@ function LoadingFallback() {
 
 function Scene({ scrollProgress, heroProgress }: { scrollProgress: number; heroProgress: number }) {
   const [texturesLoaded, setTexturesLoaded] = useState(false);
-  const groupRef = useRef<THREE.Group>(null);
+  const { camera, size } = useThree();
+  const baseZ = useRef(5.5);
 
   useEffect(() => {
-    // Предзагрузка текстур Земли и Луны
+    baseZ.current = size.width < 768 ? 8.5 : 5.5;
+    camera.position.set(0, 0, baseZ.current);
+    camera.updateProjectionMatrix();
+  }, [camera, size.width]);
+
+  useEffect(() => {
     const loader = new THREE.TextureLoader();
     Promise.all([
       loader.loadAsync(EARTH_TEXTURE_URL),
@@ -482,38 +473,46 @@ function Scene({ scrollProgress, heroProgress }: { scrollProgress: number; heroP
   }, []);
 
   useFrame(() => {
-    if (groupRef.current) {
-      // Move to top-left corner along diagonal, shrink 3x
-      const targetX = heroProgress * -3.0;
-      const targetY = heroProgress * 1.4;
-      const targetScale = 1 - heroProgress * (2 / 3); // 1.0 → 0.33
-      groupRef.current.position.x += (targetX - groupRef.current.position.x) * 0.08;
-      groupRef.current.position.y += (targetY - groupRef.current.position.y) * 0.08;
-      const s = groupRef.current.scale.x + (targetScale - groupRef.current.scale.x) * 0.08;
-      groupRef.current.scale.setScalar(s);
-    }
+    const bz = baseZ.current;
+    // Zoom out: 3x distance → planet appears 3x smaller
+    const targetZ = bz + heroProgress * bz * 2;
+
+    // Calculate visible area at target Z
+    const fovRad = (45 / 2) * Math.PI / 180;
+    const halfH = targetZ * Math.tan(fovRad);
+    const aspect = size.width / size.height;
+    const halfW = halfH * aspect;
+
+    // Equal pixel margin from edge: use fraction of smallest visible half-dimension
+    const margin = Math.min(halfW, halfH) * 0.25;
+
+    // Move camera so planet (at 0,0,0) appears in top-left corner
+    const targetX = heroProgress * (halfW - margin);
+    const targetY = heroProgress * -(halfH - margin);
+
+    camera.position.x += (targetX - camera.position.x) * 0.08;
+    camera.position.y += (targetY - camera.position.y) * 0.08;
+    camera.position.z += (targetZ - camera.position.z) * 0.08;
+    // Camera always looks at planet center → no perspective distortion
+    camera.lookAt(0, 0, 0);
   });
 
   return (
     <>
-      <AdaptiveCamera />
       <ambientLight intensity={0.3} />
       <directionalLight position={[5, 3, 5]} intensity={1.5} />
 
-      <group ref={groupRef}>
-        {texturesLoaded ? (
-          <>
-            <Earth scrollProgress={scrollProgress} />
-            <Moon scrollProgress={scrollProgress} />
-          </>
-        ) : (
-          <LoadingFallback />
-        )}
+      {texturesLoaded ? (
+        <>
+          <Earth scrollProgress={scrollProgress} />
+          <Moon scrollProgress={scrollProgress} />
+        </>
+      ) : (
+        <LoadingFallback />
+      )}
 
-        <NetworkNodes scrollProgress={scrollProgress} />
-        <NetworkEdges scrollProgress={scrollProgress} />
-      </group>
-
+      <NetworkNodes scrollProgress={scrollProgress} />
+      <NetworkEdges scrollProgress={scrollProgress} />
       <Stars count={6000} />
     </>
   );
