@@ -9,7 +9,8 @@ import { Button } from '../components/ui/button';
 import { Select } from '../components/ui/select';
 import { Avatar } from '../components/ui/avatar';
 import { Spinner } from '../components/ui/spinner';
-import { Settings, Globe, Palette, Volume2, Bell, Mic, Link, Trash2, LogOut, Type, Users, Camera, Pencil, Check } from 'lucide-react';
+import { Settings, Globe, Palette, Volume2, Bell, Mic, Link, Trash2, LogOut, Type, Users, Camera, Pencil, Check, HelpCircle } from 'lucide-react';
+import { Tooltip } from '../components/ui/tooltip';
 import { cn } from '../lib/utils';
 import { languageNames } from '@so/i18n';
 import { Input } from '../components/ui/input';
@@ -117,6 +118,50 @@ export function SettingsPage() {
         </CardContent>
       </Card>
 
+      <Card>
+        <CardHeader>
+          <div className="flex items-center gap-2">
+            <Users className="w-5 h-5 text-gray-500" />
+            <h2 className="font-semibold text-gray-900 dark:text-white">{t('settings.contacts')}</h2>
+          </div>
+          <p className="text-xs text-gray-500 mt-1">{t('settings.contactsDesc')}</p>
+        </CardHeader>
+        <CardContent className="space-y-3">
+          {contacts?.map((contact) => {
+            const isTelegram = contact.type === 'telegram';
+            const currentVal = contactValues[contact.type];
+            const hasChanged = currentVal !== undefined && currentVal !== contact.value;
+            return (
+              <div key={contact.type} className="relative">
+                <SocialIcon type={contact.icon} className={`w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none ${isTelegram ? 'text-blue-500' : 'text-gray-500'}`} />
+                <Input
+                  id={`contact-${contact.type}`}
+                  placeholder={contact.placeholder}
+                  value={currentVal ?? contact.value}
+                  onChange={(e) => !isTelegram && setContactValues(prev => ({ ...prev, [contact.type]: e.target.value }))}
+                  className={`w-full pl-10 ${hasChanged ? 'pr-10' : ''} ${isTelegram ? 'opacity-60 cursor-not-allowed bg-gray-50 dark:bg-gray-800/50' : ''}`}
+                  disabled={isTelegram}
+                />
+                {hasChanged && (
+                  <button
+                    onClick={() => {
+                      const updates = contacts.map(c => ({
+                        type: c.type,
+                        value: contactValues[c.type] ?? c.value,
+                      }));
+                      updateContacts.mutate(updates);
+                    }}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-green-500 hover:text-green-400"
+                  >
+                    <Check className="w-5 h-5" />
+                  </button>
+                )}
+              </div>
+            );
+          })}
+        </CardContent>
+      </Card>
+
       <Card><CardContent className="py-3">
         <div className="flex items-center gap-3">
           <Globe className="w-5 h-5 text-gray-500 shrink-0" />
@@ -167,52 +212,14 @@ export function SettingsPage() {
         </div>
       </CardContent></Card>
 
-      <Card>
-        <CardHeader>
-          <div className="flex items-center gap-2">
-            <Users className="w-5 h-5 text-gray-500" />
-            <h2 className="font-semibold text-gray-900 dark:text-white">{t('settings.contacts')}</h2>
-          </div>
-          <p className="text-xs text-gray-500 mt-1">{t('settings.contactsDesc')}</p>
-        </CardHeader>
-        <CardContent className="space-y-3">
-          {contacts?.map((contact) => {
-            const isTelegram = contact.type === 'telegram';
-            const currentVal = contactValues[contact.type];
-            const hasChanged = currentVal !== undefined && currentVal !== contact.value;
-            return (
-              <div key={contact.type} className="relative">
-                <SocialIcon type={contact.icon} className={`w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none ${isTelegram ? 'text-blue-500' : 'text-gray-500'}`} />
-                <Input
-                  id={`contact-${contact.type}`}
-                  placeholder={contact.placeholder}
-                  value={currentVal ?? contact.value}
-                  onChange={(e) => !isTelegram && setContactValues(prev => ({ ...prev, [contact.type]: e.target.value }))}
-                  className={`w-full pl-10 ${hasChanged ? 'pr-10' : ''} ${isTelegram ? 'opacity-60 cursor-not-allowed bg-gray-50 dark:bg-gray-800/50' : ''}`}
-                  disabled={isTelegram}
-                />
-                {hasChanged && (
-                  <button
-                    onClick={() => {
-                      const updates = contacts.map(c => ({
-                        type: c.type,
-                        value: contactValues[c.type] ?? c.value,
-                      }));
-                      updateContacts.mutate(updates);
-                    }}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-green-500 hover:text-green-400"
-                  >
-                    <Check className="w-5 h-5" />
-                  </button>
-                )}
-              </div>
-            );
-          })}
-        </CardContent>
-      </Card>
-
       <Card><CardContent className="py-3">
-        <div className="flex items-center gap-3 mb-2"><Link className="w-5 h-5 text-gray-500" /><span className="text-sm font-medium text-gray-700 dark:text-gray-300">{t('settings.linkAccount')}</span></div>
+        <div className="flex items-center gap-3 mb-2">
+          <Link className="w-5 h-5 text-gray-500" />
+          <span className="text-sm font-medium text-gray-700 dark:text-gray-300">{t('settings.linkAccount')}</span>
+          <Tooltip content={t('settings.linkAccountHint')} side="bottom">
+            <button type="button" className="text-gray-400 hover:text-gray-500"><HelpCircle className="w-3.5 h-3.5" /></button>
+          </Tooltip>
+        </div>
         {generateCode.data ? (
           <div className="text-center py-2"><p className="text-3xl font-mono font-bold text-blue-600 tracking-widest">{generateCode.data.code}</p><p className="text-xs text-gray-500 mt-1">{t('settings.codeExpires')}</p></div>
         ) : <Button variant="outline" size="sm" onClick={() => generateCode.mutate()} className="w-full">{t('settings.generateCode')}</Button>}

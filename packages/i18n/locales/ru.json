@@ -279,7 +279,8 @@
     "newBudgetPlaceholder": "Новая сумма",
     "updateBudget": "Обновить бюджет",
     "pushNotifications": "Push-уведомления",
-    "push": "Push"
+    "push": "Push",
+    "linkAccountHint": "Позволяет привязать другой аккаунт (например, Google или email) к вашему профилю, чтобы входить разными способами. Скоро."
   },
   "faq": {
     "title": "Частые вопросы",
