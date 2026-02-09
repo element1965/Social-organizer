@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { router, protectedProcedure } from '../trpc.js';
-import { findRecipientsViaBfs } from '../services/bfs.service.js';
+
 
 export const statsRouter = router({
   profile: protectedProcedure
@@ -197,27 +197,30 @@ export const statsRouter = router({
     return { period, points };
   }),
 
-  // Current network capabilities (sum of all remainingBudget in network)
+  // Current network capabilities (sum of all remainingBudget in the connected cluster)
   networkCapabilities: protectedProcedure.query(async ({ ctx }) => {
     const userId = ctx.userId;
 
-    // Get all users in network up to 3 levels
-    const recipients = await findRecipientsViaBfs(ctx.db, userId, 3, 10000, []);
-    const networkUserIds = [userId, ...recipients.map(r => r.userId)];
-
-    // Sum remainingBudget for all users with budget > 0
-    const result = await ctx.db.user.aggregate({
-      where: {
-        id: { in: networkUserIds },
-        remainingBudget: { gt: 0 },
-      },
-      _sum: { remainingBudget: true },
-      _count: { id: true },
-    });
+    // Find the entire connected cluster via recursive CTE (no depth limit)
+    const result = await ctx.db.$queryRaw<Array<{ total: number; contributors: bigint }>>`
+      WITH RECURSIVE cluster AS (
+        SELECT ${userId}::text AS user_id
+        UNION
+        SELECT CASE WHEN c."userAId" = cluster.user_id THEN c."userBId" ELSE c."userAId" END
+        FROM connections c
+        JOIN cluster ON c."userAId" = cluster.user_id OR c."userBId" = cluster.user_id
+      )
+      SELECT
+        COALESCE(SUM(u."remainingBudget"), 0)::float AS total,
+        COUNT(*)::bigint AS contributors
+      FROM users u
+      JOIN cluster ON u.id = cluster.user_id
+      WHERE u."remainingBudget" > 0 AND u."deletedAt" IS NULL
+    `;
 
     return {
-      total: Math.round(result._sum.remainingBudget || 0),
-      contributors: result._count.id,
+      total: Math.round(result[0]?.total || 0),
+      contributors: Number(result[0]?.contributors || 0),
     };
   }),
 });
