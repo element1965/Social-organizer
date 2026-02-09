@@ -275,7 +275,8 @@
     "budgetDesc": "Berapa yang bisa kamu kontribusikan untuk saling mendukung setiap bulan",
     "currentBudget": "Tersisa",
     "newBudgetPlaceholder": "Jumlah baru",
-    "updateBudget": "Perbarui anggaran"
+    "updateBudget": "Perbarui anggaran",
+    "push": "Push"
   },
   "faq": {
     "title": "FAQ",

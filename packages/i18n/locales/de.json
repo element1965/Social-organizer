@@ -275,7 +275,8 @@
     "budgetDesc": "Wie viel du monatlich zur gegenseitigen Unterstützung beitragen kannst",
     "currentBudget": "Verbleibend",
     "newBudgetPlaceholder": "Neuer Betrag",
-    "updateBudget": "Budget aktualisieren"
+    "updateBudget": "Budget aktualisieren",
+    "push": "Push"
   },
   "faq": {
     "title": "Häufige Fragen",

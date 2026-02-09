@@ -275,7 +275,8 @@
     "budgetDesc": "Kolik můžete přispět na vzájemnou podporu každý měsíc",
     "currentBudget": "Zbývá",
     "newBudgetPlaceholder": "Nová částka",
-    "updateBudget": "Aktualizovat rozpočet"
+    "updateBudget": "Aktualizovat rozpočet",
+    "push": "Push"
   },
   "faq": {
     "title": "FAQ",

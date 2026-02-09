@@ -275,7 +275,8 @@
     "budgetDesc": "Cuánto puedes aportar al apoyo mutuo cada mes",
     "currentBudget": "Restante",
     "newBudgetPlaceholder": "Nuevo monto",
-    "updateBudget": "Actualizar presupuesto"
+    "updateBudget": "Actualizar presupuesto",
+    "push": "Push"
   },
   "faq": {
     "title": "Preguntas frecuentes",

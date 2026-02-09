@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { QRCodeSVG } from 'qrcode.react';
 import { trpc } from '../lib/trpc';
-import { buildInviteUrl, buildWebInviteUrl, buildBotInviteUrl } from '../lib/inviteUrl';
+import { buildInviteUrl, buildWebInviteUrl } from '../lib/inviteUrl';
 import { useAuth } from '../hooks/useAuth';
 import { Card, CardContent } from '../components/ui/card';
 import { Button } from '../components/ui/button';
@@ -35,7 +35,6 @@ export function DashboardPage() {
   const userId = useAuth((s) => s.userId);
 
   const [showInvitePopup, setShowInvitePopup] = useState(false);
-  const [copied, setCopied] = useState(false);
 
   const utils = trpc.useUtils();
   const { data: me } = trpc.user.me.useQuery(undefined, { refetchInterval: 30000 });
@@ -47,7 +46,6 @@ export function DashboardPage() {
   const { data: platformGrowth } = trpc.stats.platformGrowth.useQuery(undefined, { refetchInterval: 15000 });
   const permanentInviteUrl = userId ? buildInviteUrl(userId) : '';
   const webInviteUrl = userId ? buildWebInviteUrl(userId) : '';
-  const botInviteUrl = userId ? buildBotInviteUrl(userId) : '';
   const [copiedWeb, setCopiedWeb] = useState(false);
   const [editingBudget, setEditingBudget] = useState(false);
   const [newBudgetValue, setNewBudgetValue] = useState('');
@@ -64,7 +62,7 @@ export function DashboardPage() {
 
 
   return (
-    <div className="p-4 space-y-4 relative">
+    <div className="px-4 pb-4 pt-6 space-y-4 relative">
       {/* 3D cloud background */}
       <div className="absolute inset-0 -z-10 opacity-30 pointer-events-none" style={{ height: 300 }}>
         <Suspense fallback={null}>
@@ -91,7 +89,7 @@ export function DashboardPage() {
           </div>
         </button>
         <button
-          onClick={() => { setCopied(false); setShowInvitePopup(true); }}
+          onClick={() => { setCopiedWeb(false); setShowInvitePopup(true); }}
           className="w-10 h-10 rounded-full bg-blue-600 hover:bg-blue-500 flex items-center justify-center transition-colors shadow-lg"
         >
           <UserPlus className="w-5 h-5 text-white" />
@@ -191,21 +189,6 @@ export function DashboardPage() {
                 <p className="flex-1 text-xs text-gray-600 dark:text-gray-400 break-all text-left">{webInviteUrl}</p>
                 <div className="shrink-0">
                   {copiedWeb ? <Check className="w-5 h-5 text-green-500" /> : <Copy className="w-5 h-5 text-gray-500" />}
-                </div>
-              </button>
-              {/* Bot link (Telegram) */}
-              <button
-                onClick={() => {
-                  navigator.clipboard.writeText(botInviteUrl);
-                  setCopied(true);
-                  setTimeout(() => setCopied(false), 2000);
-                }}
-                className="w-full flex items-center gap-2 p-3 bg-gray-100 dark:bg-gray-800 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
-              >
-                <span className="text-base shrink-0">🤖</span>
-                <p className="flex-1 text-xs text-gray-600 dark:text-gray-400 break-all text-left">{botInviteUrl}</p>
-                <div className="shrink-0">
-                  {copied ? <Check className="w-5 h-5 text-green-500" /> : <Copy className="w-5 h-5 text-gray-500" />}
                 </div>
               </button>
             </div>
@@ -454,7 +437,7 @@ export function DashboardPage() {
 
             {/* Invite trusted person */}
             <button
-              onClick={() => { setCopied(false); setShowInvitePopup(true); }}
+              onClick={() => { setCopiedWeb(false); setShowInvitePopup(true); }}
               className="w-full py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl font-medium text-sm flex items-center justify-center gap-2 hover:from-blue-500 hover:to-indigo-500 transition-all shadow-md"
             >
               <UserPlus className="w-4 h-4" />

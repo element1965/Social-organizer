@@ -275,7 +275,8 @@
     "budgetDesc": "Ile możesz przeznaczyć na wzajemne wsparcie każdego miesiąca",
     "currentBudget": "Pozostało",
     "newBudgetPlaceholder": "Nowa kwota",
-    "updateBudget": "Zaktualizuj budżet"
+    "updateBudget": "Zaktualizuj budżet",
+    "push": "Push"
   },
   "faq": {
     "title": "Najczęściej zadawane pytania",

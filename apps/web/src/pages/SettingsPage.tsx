@@ -137,21 +137,24 @@ export function SettingsPage() {
         </div>
       </CardContent></Card>
 
-      <Card><CardContent className="py-3"><div className="flex items-center justify-between">
-        <div className="flex items-center gap-3"><Volume2 className="w-5 h-5 text-gray-500" /><span className="text-sm font-medium text-gray-700 dark:text-gray-300">{t('settings.sound')}</span></div>
-        <button onClick={() => updateSound.mutate({ soundEnabled: !settings?.soundEnabled })} className={cn('w-12 h-6 rounded-full transition-colors relative', settings?.soundEnabled ? 'bg-blue-600' : 'bg-gray-300 dark:bg-gray-600')}>
-          <div className={cn('w-5 h-5 rounded-full bg-white shadow absolute top-0.5 transition-all', settings?.soundEnabled ? 'left-6' : 'left-0.5')} />
-        </button>
-      </div></CardContent></Card>
-
-      {push.isSupported && (
-        <Card><CardContent className="py-3"><div className="flex items-center justify-between">
-          <div className="flex items-center gap-3"><Bell className="w-5 h-5 text-gray-500" /><span className="text-sm font-medium text-gray-700 dark:text-gray-300">{t('settings.pushNotifications')}</span></div>
-          <button onClick={() => push.isSubscribed ? push.unsubscribe() : push.subscribe()} disabled={push.loading} className={cn('w-12 h-6 rounded-full transition-colors relative', push.isSubscribed ? 'bg-blue-600' : 'bg-gray-300 dark:bg-gray-600')}>
-            <div className={cn('w-5 h-5 rounded-full bg-white shadow absolute top-0.5 transition-all', push.isSubscribed ? 'left-6' : 'left-0.5')} />
+      <Card><CardContent className="py-3"><div className="flex items-center gap-4">
+        <div className="flex items-center gap-2 flex-1 min-w-0">
+          <Volume2 className="w-4 h-4 text-gray-500 shrink-0" />
+          <span className="text-sm font-medium text-gray-700 dark:text-gray-300 truncate">{t('settings.sound')}</span>
+          <button onClick={() => updateSound.mutate({ soundEnabled: !settings?.soundEnabled })} className={cn('w-11 h-6 rounded-full transition-colors relative shrink-0', settings?.soundEnabled ? 'bg-blue-600' : 'bg-gray-300 dark:bg-gray-600')}>
+            <div className={cn('w-5 h-5 rounded-full bg-white shadow absolute top-0.5 transition-all', settings?.soundEnabled ? 'left-5' : 'left-0.5')} />
           </button>
-        </div></CardContent></Card>
-      )}
+        </div>
+        {push.isSupported && (
+          <div className="flex items-center gap-2 flex-1 min-w-0">
+            <Bell className="w-4 h-4 text-gray-500 shrink-0" />
+            <span className="text-sm font-medium text-gray-700 dark:text-gray-300 truncate">{t('settings.push')}</span>
+            <button onClick={() => push.isSubscribed ? push.unsubscribe() : push.subscribe()} disabled={push.loading} className={cn('w-11 h-6 rounded-full transition-colors relative shrink-0', push.isSubscribed ? 'bg-blue-600' : 'bg-gray-300 dark:bg-gray-600')}>
+              <div className={cn('w-5 h-5 rounded-full bg-white shadow absolute top-0.5 transition-all', push.isSubscribed ? 'left-5' : 'left-0.5')} />
+            </button>
+          </div>
+        )}
+      </div></CardContent></Card>
 
       <Card><CardContent className="py-3">
         <div className="flex items-center gap-3 mb-2"><Type className="w-5 h-5 text-gray-500" /><span className="text-sm font-medium text-gray-700 dark:text-gray-300">{t('settings.fontSize')}</span></div>

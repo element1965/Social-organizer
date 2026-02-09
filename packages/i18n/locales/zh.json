@@ -275,7 +275,8 @@
     "budgetDesc": "你每月能为互助贡献多少",
     "currentBudget": "剩余",
     "newBudgetPlaceholder": "新金额",
-    "updateBudget": "更新预算"
+    "updateBudget": "更新预算",
+    "push": "Push"
   },
   "faq": {
     "title": "常见问题",

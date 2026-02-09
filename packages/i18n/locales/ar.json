@@ -275,7 +275,8 @@
     "budgetDesc": "كم يمكنك المساهمة في الدعم المتبادل كل شهر",
     "currentBudget": "المتبقي",
     "newBudgetPlaceholder": "المبلغ الجديد",
-    "updateBudget": "تحديث الميزانية"
+    "updateBudget": "تحديث الميزانية",
+    "push": "Push"
   },
   "faq": {
     "title": "الأسئلة الشائعة",

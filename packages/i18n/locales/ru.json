@@ -278,7 +278,8 @@
     "currentBudget": "Осталось",
     "newBudgetPlaceholder": "Новая сумма",
     "updateBudget": "Обновить бюджет",
-    "pushNotifications": "Push-уведомления"
+    "pushNotifications": "Push-уведомления",
+    "push": "Push"
   },
   "faq": {
     "title": "Частые вопросы",

@@ -275,7 +275,8 @@
     "budgetDesc": "Her ay karşılıklı desteğe ne kadar katkıda bulunabilirsiniz",
     "currentBudget": "Kalan",
     "newBudgetPlaceholder": "Yeni miktar",
-    "updateBudget": "Bütçeyi Güncelle"
+    "updateBudget": "Bütçeyi Güncelle",
+    "push": "Push"
   },
   "faq": {
     "title": "Sık sorulan sorular",

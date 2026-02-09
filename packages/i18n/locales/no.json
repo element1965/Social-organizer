@@ -275,7 +275,8 @@
     "budgetDesc": "Hvor mye du kan bidra til gjensidig støtte hver måned",
     "currentBudget": "Gjenstående",
     "newBudgetPlaceholder": "Nytt beløp",
-    "updateBudget": "Oppdater budsjett"
+    "updateBudget": "Oppdater budsjett",
+    "push": "Push"
   },
   "faq": {
     "title": "Ofte stilte spørsmål",

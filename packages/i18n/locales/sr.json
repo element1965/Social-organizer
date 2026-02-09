@@ -275,7 +275,8 @@
     "budgetDesc": "Колико можеш да допринесеш узајамној подршци сваког месеца",
     "currentBudget": "Преостало",
     "newBudgetPlaceholder": "Нови износ",
-    "updateBudget": "Ажурирај буџет"
+    "updateBudget": "Ажурирај буџет",
+    "push": "Push"
   },
   "faq": {
     "title": "FAQ",
