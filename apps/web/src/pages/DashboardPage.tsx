@@ -28,7 +28,9 @@ import {
   Copy,
   Check,
   X,
+  HelpCircle,
 } from 'lucide-react';
+import { Tooltip } from '../components/ui/tooltip';
 
 const LazyCloudBackground = lazy(() =>
   import('@so/graph-3d').then((m) => ({ default: m.CloudBackground })),
@@ -46,6 +48,7 @@ export function DashboardPage() {
   const [showInvitePopup, setShowInvitePopup] = useState(false);
   const [copied, setCopied] = useState(false);
 
+  const utils = trpc.useUtils();
   const { data: me } = trpc.user.me.useQuery(undefined, { refetchInterval: 30000 });
   const { data: myCollections } = trpc.collection.myActive.useQuery(undefined, { refetchInterval: 30000 });
   const { data: myObligations } = trpc.obligation.myList.useQuery(undefined, { refetchInterval: 30000 });
@@ -59,6 +62,11 @@ export function DashboardPage() {
   const webInviteUrl = userId ? buildWebInviteUrl(userId) : '';
   const botInviteUrl = userId ? buildBotInviteUrl(userId) : '';
   const [copiedWeb, setCopiedWeb] = useState(false);
+  const [editingBudget, setEditingBudget] = useState(false);
+  const [newBudgetValue, setNewBudgetValue] = useState('');
+  const setBudgetMutation = trpc.user.setMonthlyBudget.useMutation({
+    onSuccess: () => { utils.user.me.invalidate(); setEditingBudget(false); setNewBudgetValue(''); },
+  });
 
   const totalReachable = networkStats?.totalReachable ?? 0;
   const byDepth = networkStats?.byDepth ?? {};
@@ -303,6 +311,9 @@ export function DashboardPage() {
                 <div className="flex items-center gap-1.5 mb-2">
                   <Network className="w-4 h-4 text-green-600" />
                   <span className="text-xs text-gray-500">{t('dashboard.currentCapabilities')}</span>
+                  <Tooltip content={t('dashboard.networkCapabilitiesHint')} side="bottom">
+                    <button type="button" className="text-gray-400 hover:text-gray-500"><HelpCircle className="w-3.5 h-3.5" /></button>
+                  </Tooltip>
                 </div>
                 <p className="text-2xl font-bold text-green-700 dark:text-green-400">
                   ${networkCapabilities?.total ?? 0}
@@ -315,18 +326,53 @@ export function DashboardPage() {
                 <div className="flex items-center gap-1.5 mb-2">
                   <Wallet className="w-4 h-4 text-blue-600" />
                   <span className="text-xs text-gray-500">{t('dashboard.yourContribution')}</span>
+                  <Tooltip content={t('dashboard.myCapabilitiesHint')} side="bottom">
+                    <button type="button" className="text-gray-400 hover:text-gray-500"><HelpCircle className="w-3.5 h-3.5" /></button>
+                  </Tooltip>
                 </div>
-                <p className="text-xl font-bold text-blue-700 dark:text-blue-400">
-                  {me?.remainingBudget != null && me.monthlyBudget != null
-                    ? `$${Math.round(me.remainingBudget)} / $${Math.round(me.monthlyBudget)}`
-                    : '$0'}
-                </p>
-                <button
-                  onClick={() => navigate('/settings')}
-                  className="text-xs text-blue-600 hover:underline mt-1"
-                >
-                  {t('dashboard.editBudget')}
-                </button>
+                {editingBudget ? (
+                  <div className="relative mt-1">
+                    <span className="absolute left-2 top-1/2 -translate-y-1/2 text-xs text-gray-400">$</span>
+                    <input
+                      type="number"
+                      value={newBudgetValue}
+                      onChange={(e) => setNewBudgetValue(e.target.value)}
+                      placeholder={me?.monthlyBudget != null ? String(Math.round(me.monthlyBudget)) : '0'}
+                      className="w-full pl-5 pr-8 py-1.5 text-sm font-bold rounded border border-blue-300 dark:border-blue-600 bg-white dark:bg-gray-800 text-blue-700 dark:text-blue-400 focus:outline-none focus:border-blue-500"
+                      autoFocus
+                      min={0}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' && newBudgetValue && Number(newBudgetValue) >= 0) {
+                          setBudgetMutation.mutate({ amount: Number(newBudgetValue), inputCurrency: 'USD' });
+                        }
+                        if (e.key === 'Escape') setEditingBudget(false);
+                      }}
+                    />
+                    {newBudgetValue && Number(newBudgetValue) >= 0 && (
+                      <button
+                        onClick={() => setBudgetMutation.mutate({ amount: Number(newBudgetValue), inputCurrency: 'USD' })}
+                        disabled={setBudgetMutation.isPending}
+                        className="absolute right-2 top-1/2 -translate-y-1/2 text-green-500 hover:text-green-400"
+                      >
+                        <Check className="w-4 h-4" />
+                      </button>
+                    )}
+                  </div>
+                ) : (
+                  <>
+                    <p className="text-xl font-bold text-blue-700 dark:text-blue-400">
+                      {me?.remainingBudget != null && me.monthlyBudget != null
+                        ? `$${Math.round(me.remainingBudget)} / $${Math.round(me.monthlyBudget)}`
+                        : '$0'}
+                    </p>
+                    <button
+                      onClick={() => { setNewBudgetValue(''); setEditingBudget(true); }}
+                      className="text-xs text-blue-600 hover:underline mt-1"
+                    >
+                      {t('dashboard.editBudget')}
+                    </button>
+                  </>
+                )}
               </div>
             </div>
 
