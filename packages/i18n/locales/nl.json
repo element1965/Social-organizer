@@ -133,7 +133,9 @@
     "personalStats": "Mijn statistieken",
     "networkStats": "Netwerkstatistieken",
     "dayCount": "Dag {{count}}",
-    "inviteTrusted": "Nodig iemand uit die je vertrouwt"
+    "inviteTrusted": "Nodig iemand uit die je vertrouwt",
+    "myCapabilitiesHint": "Monthly support budget. How much you're willing to contribute to mutual aid each month",
+    "networkCapabilitiesHint": "Total available monthly budgets of all participants in your mutual aid network"
   },
   "collection": {
     "create": "Hulpsignaal verzenden",
@@ -277,7 +279,8 @@
     "newBudgetPlaceholder": "Nieuw bedrag",
     "updateBudget": "Budget bijwerken",
     "push": "Push",
-    "linkAccountHint": "Link another account (e.g. Google or email) to your profile so you can sign in different ways. Coming soon."
+    "linkAccountHint": "Links your profile to a Play Market, App Store, or FB Games account. Coming soon.",
+    "pushNotifications": "Push Notifications"
   },
   "faq": {
     "title": "Veelgestelde vragen",
@@ -297,7 +300,8 @@
     "speechNotSupported": "Spraakherkenning wordt niet ondersteund in je browser",
     "openChat": "Chat-assistent openen",
     "startListening": "Spraakinvoer starten",
-    "stopListening": "Spraakinvoer stoppen"
+    "stopListening": "Spraakinvoer stoppen",
+    "openHelp": "Help"
   },
   "broadcast": {
     "title": "Uitzending",
@@ -394,7 +398,9 @@
     "closed": "Inzameling gesloten",
     "closedBody": "De inzameling is gesloten door de maker.",
     "open": "Openen",
-    "view": "Bekijken"
+    "view": "Bekijken",
+    "blocked": "Collection Goal Reached",
+    "blockedBody": "The collection has reached its target amount and is now blocked."
   },
   "hints": {
     "collectionAmount": "Voer het bedrag in dat je nodig hebt. Minimaal 10 eenheden. Het systeem informeert het juiste aantal mensen.",

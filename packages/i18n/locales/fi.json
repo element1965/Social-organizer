@@ -133,7 +133,9 @@
     "personalStats": "Omat tilastot",
     "networkStats": "Verkoston tilastot",
     "dayCount": "Päivä {{count}}",
-    "inviteTrusted": "Kutsu joku johon luotat"
+    "inviteTrusted": "Kutsu joku johon luotat",
+    "myCapabilitiesHint": "Monthly support budget. How much you're willing to contribute to mutual aid each month",
+    "networkCapabilitiesHint": "Total available monthly budgets of all participants in your mutual aid network"
   },
   "collection": {
     "create": "Lähetä apusignaali",
@@ -277,7 +279,8 @@
     "newBudgetPlaceholder": "Uusi summa",
     "updateBudget": "Päivitä budjetti",
     "push": "Push",
-    "linkAccountHint": "Link another account (e.g. Google or email) to your profile so you can sign in different ways. Coming soon."
+    "linkAccountHint": "Links your profile to a Play Market, App Store, or FB Games account. Coming soon.",
+    "pushNotifications": "Push Notifications"
   },
   "faq": {
     "title": "Usein kysytyt kysymykset",
@@ -297,7 +300,8 @@
     "speechNotSupported": "Puheentunnistusta ei tueta selaimessasi",
     "openChat": "Avaa chat-avustaja",
     "startListening": "Aloita äänikirjoitus",
-    "stopListening": "Lopeta äänikirjoitus"
+    "stopListening": "Lopeta äänikirjoitus",
+    "openHelp": "Help"
   },
   "broadcast": {
     "title": "Lähetys",
@@ -337,7 +341,8 @@
     "decline": "Hylkää",
     "alreadyUsed": "Tämä kutsu on jo käytetty",
     "success": "Yhdistetty!",
-    "loginToAccept": "Kirjaudu sisään hyväksyäksesi"
+    "loginToAccept": "Kirjaudu sisään hyväksyäksesi",
+    "accepting": "Accepting invitation..."
   },
   "landing": {
     "painQuote": "Kun ongelmia ilmenee — jäät yksin. Ystävät eivät tiedä. Tuttujen tutut — vielä vähemmän. Mutta joku heistä voisi auttaa.",
@@ -393,7 +398,9 @@
     "closed": "Keräys suljettu",
     "closedBody": "Keräys on suljettu luojan toimesta.",
     "open": "Avaa",
-    "view": "Näytä"
+    "view": "Näytä",
+    "blocked": "Collection Goal Reached",
+    "blockedBody": "The collection has reached its target amount and is now blocked."
   },
   "hints": {
     "collectionAmount": "Syötä tarvitsemasi summa. Vähintään 10 yksikköä. Järjestelmä ilmoittaa oikealle määrälle ihmisiä.",

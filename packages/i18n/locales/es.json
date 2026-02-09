@@ -133,7 +133,9 @@
     "personalStats": "Mis estadísticas",
     "networkStats": "Estadísticas de la red",
     "dayCount": "Día {{count}}",
-    "inviteTrusted": "Invitar a alguien en quien confías"
+    "inviteTrusted": "Invitar a alguien en quien confías",
+    "myCapabilitiesHint": "Monthly support budget. How much you're willing to contribute to mutual aid each month",
+    "networkCapabilitiesHint": "Total available monthly budgets of all participants in your mutual aid network"
   },
   "collection": {
     "create": "Enviar señal de ayuda",
@@ -277,7 +279,8 @@
     "newBudgetPlaceholder": "Nuevo monto",
     "updateBudget": "Actualizar presupuesto",
     "push": "Push",
-    "linkAccountHint": "Link another account (e.g. Google or email) to your profile so you can sign in different ways. Coming soon."
+    "linkAccountHint": "Links your profile to a Play Market, App Store, or FB Games account. Coming soon.",
+    "pushNotifications": "Push Notifications"
   },
   "faq": {
     "title": "Preguntas frecuentes",
@@ -297,7 +300,8 @@
     "speechNotSupported": "El reconocimiento de voz no es compatible con tu navegador",
     "openChat": "Abrir asistente de chat",
     "startListening": "Iniciar entrada de voz",
-    "stopListening": "Detener entrada de voz"
+    "stopListening": "Detener entrada de voz",
+    "openHelp": "Help"
   },
   "contacts": {
     "telegram": "Telegram",
@@ -376,7 +380,9 @@
     "closed": "Colección cerrada",
     "closedBody": "La colección fue cerrada por su creador.",
     "open": "Abrir",
-    "view": "Ver"
+    "view": "Ver",
+    "blocked": "Collection Goal Reached",
+    "blockedBody": "The collection has reached its target amount and is now blocked."
   },
   "hints": {
     "collectionAmount": "Introduce el monto que necesitas. Mínimo 10 unidades. El sistema notificará al número adecuado de personas.",

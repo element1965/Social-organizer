@@ -133,7 +133,9 @@
     "personalStats": "Statistik Saya",
     "networkStats": "Statistik Jaringan",
     "dayCount": "Hari ke-{{count}}",
-    "inviteTrusted": "Undang orang yang kamu percaya"
+    "inviteTrusted": "Undang orang yang kamu percaya",
+    "myCapabilitiesHint": "Monthly support budget. How much you're willing to contribute to mutual aid each month",
+    "networkCapabilitiesHint": "Total available monthly budgets of all participants in your mutual aid network"
   },
   "collection": {
     "create": "Kirim sinyal bantuan",
@@ -277,7 +279,8 @@
     "newBudgetPlaceholder": "Jumlah baru",
     "updateBudget": "Perbarui anggaran",
     "push": "Push",
-    "linkAccountHint": "Link another account (e.g. Google or email) to your profile so you can sign in different ways. Coming soon."
+    "linkAccountHint": "Links your profile to a Play Market, App Store, or FB Games account. Coming soon.",
+    "pushNotifications": "Push Notifications"
   },
   "faq": {
     "title": "FAQ",
@@ -297,7 +300,8 @@
     "speechNotSupported": "Pengenalan suara tidak didukung di browsermu",
     "openChat": "Buka asisten chat",
     "startListening": "Mulai input suara",
-    "stopListening": "Hentikan input suara"
+    "stopListening": "Hentikan input suara",
+    "openHelp": "Help"
   },
   "broadcast": {
     "title": "Siaran",
@@ -394,7 +398,9 @@
     "closed": "Penggalangan ditutup",
     "closedBody": "Penggalangan telah ditutup oleh pembuatnya.",
     "open": "Buka",
-    "view": "Lihat"
+    "view": "Lihat",
+    "blocked": "Collection Goal Reached",
+    "blockedBody": "The collection has reached its target amount and is now blocked."
   },
   "hints": {
     "collectionAmount": "Masukkan jumlah yang kamu butuhkan. Minimum 10 unit. Sistem akan memberitahu jumlah orang yang tepat.",

@@ -133,7 +133,9 @@
     "personalStats": "สถิติของฉัน",
     "networkStats": "สถิติเครือข่าย",
     "dayCount": "วันที่ {{count}}",
-    "inviteTrusted": "เชิญคนที่คุณไว้วางใจ"
+    "inviteTrusted": "เชิญคนที่คุณไว้วางใจ",
+    "myCapabilitiesHint": "Monthly support budget. How much you're willing to contribute to mutual aid each month",
+    "networkCapabilitiesHint": "Total available monthly budgets of all participants in your mutual aid network"
   },
   "collection": {
     "create": "ส่งสัญญาณขอความช่วยเหลือ",
@@ -277,7 +279,8 @@
     "newBudgetPlaceholder": "จำนวนใหม่",
     "updateBudget": "อัปเดตงบประมาณ",
     "push": "Push",
-    "linkAccountHint": "Link another account (e.g. Google or email) to your profile so you can sign in different ways. Coming soon."
+    "linkAccountHint": "Links your profile to a Play Market, App Store, or FB Games account. Coming soon.",
+    "pushNotifications": "Push Notifications"
   },
   "faq": {
     "title": "FAQ",
@@ -297,7 +300,8 @@
     "speechNotSupported": "เบราว์เซอร์ของคุณไม่รองรับการรู้จำเสียงพูด",
     "openChat": "เปิดแชทผู้ช่วย",
     "startListening": "เริ่มการป้อนเสียง",
-    "stopListening": "หยุดการป้อนเสียง"
+    "stopListening": "หยุดการป้อนเสียง",
+    "openHelp": "Help"
   },
   "broadcast": {
     "title": "ประกาศ",
@@ -337,7 +341,8 @@
     "decline": "ปฏิเสธ",
     "alreadyUsed": "คำเชิญนี้ถูกใช้ไปแล้ว",
     "success": "เชื่อมต่อแล้ว!",
-    "loginToAccept": "เข้าสู่ระบบเพื่อยอมรับ"
+    "loginToAccept": "เข้าสู่ระบบเพื่อยอมรับ",
+    "accepting": "Accepting invitation..."
   },
   "landing": {
     "painQuote": "เมื่อเกิดปัญหา — คุณอยู่คนเดียว เพื่อนไม่รู้ เพื่อนของเพื่อน — ยิ่งไม่รู้ แต่ใครบางคนในนั้นอาจช่วยได้",
@@ -393,7 +398,9 @@
     "closed": "การระดมทุนปิดแล้ว",
     "closedBody": "การระดมทุนถูกปิดโดยผู้สร้าง",
     "open": "เปิด",
-    "view": "ดู"
+    "view": "ดู",
+    "blocked": "Collection Goal Reached",
+    "blockedBody": "The collection has reached its target amount and is now blocked."
   },
   "hints": {
     "collectionAmount": "กรอกจำนวนที่คุณต้องการ ขั้นต่ำ 10 หน่วย ระบบจะแจ้งเตือนคนจำนวนที่เหมาะสม",

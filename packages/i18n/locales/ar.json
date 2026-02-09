@@ -133,7 +133,9 @@
     "personalStats": "إحصائياتي",
     "networkStats": "إحصائيات الشبكة",
     "dayCount": "اليوم {{count}}",
-    "inviteTrusted": "ادعُ شخصاً تثق به"
+    "inviteTrusted": "ادعُ شخصاً تثق به",
+    "myCapabilitiesHint": "Monthly support budget. How much you're willing to contribute to mutual aid each month",
+    "networkCapabilitiesHint": "Total available monthly budgets of all participants in your mutual aid network"
   },
   "collection": {
     "create": "إرسال إشارة مساعدة",
@@ -277,7 +279,8 @@
     "newBudgetPlaceholder": "المبلغ الجديد",
     "updateBudget": "تحديث الميزانية",
     "push": "Push",
-    "linkAccountHint": "Link another account (e.g. Google or email) to your profile so you can sign in different ways. Coming soon."
+    "linkAccountHint": "Links your profile to a Play Market, App Store, or FB Games account. Coming soon.",
+    "pushNotifications": "Push Notifications"
   },
   "faq": {
     "title": "الأسئلة الشائعة",
@@ -297,7 +300,8 @@
     "speechNotSupported": "التعرف على الصوت غير مدعوم في متصفحك",
     "openChat": "فتح مساعد المحادثة",
     "startListening": "بدء الإدخال الصوتي",
-    "stopListening": "إيقاف الإدخال الصوتي"
+    "stopListening": "إيقاف الإدخال الصوتي",
+    "openHelp": "Help"
   },
   "broadcast": {
     "title": "بث",
@@ -337,7 +341,8 @@
     "decline": "رفض",
     "alreadyUsed": "تم استخدام هذه الدعوة بالفعل",
     "success": "تم الاتصال!",
-    "loginToAccept": "سجّل الدخول للقبول"
+    "loginToAccept": "سجّل الدخول للقبول",
+    "accepting": "Accepting invitation..."
   },
   "landing": {
     "painQuote": "عندما تحدث مشكلة — تبقى وحدك. الأصدقاء لا يعرفون. أصدقاء الأصدقاء — أقل من ذلك. لكن أحدهم كان بإمكانه المساعدة.",
@@ -393,7 +398,9 @@
     "closed": "تم إغلاق الحملة",
     "closedBody": "تم إغلاق الحملة من قبل منشئها.",
     "open": "فتح",
-    "view": "عرض"
+    "view": "عرض",
+    "blocked": "Collection Goal Reached",
+    "blockedBody": "The collection has reached its target amount and is now blocked."
   },
   "hints": {
     "collectionAmount": "أدخل المبلغ الذي تحتاجه. الحد الأدنى 10 وحدات. سيقوم النظام بإعلام العدد المناسب من الأشخاص.",

@@ -133,7 +133,9 @@
     "personalStats": "मेरे आंकड़े",
     "networkStats": "नेटवर्क आंकड़े",
     "dayCount": "दिन {{count}}",
-    "inviteTrusted": "किसी भरोसेमंद को आमंत्रित करें"
+    "inviteTrusted": "किसी भरोसेमंद को आमंत्रित करें",
+    "myCapabilitiesHint": "Monthly support budget. How much you're willing to contribute to mutual aid each month",
+    "networkCapabilitiesHint": "Total available monthly budgets of all participants in your mutual aid network"
   },
   "collection": {
     "create": "मदद का संकेत भेजें",
@@ -277,7 +279,8 @@
     "newBudgetPlaceholder": "नई राशि",
     "updateBudget": "बजट अपडेट करें",
     "push": "Push",
-    "linkAccountHint": "Link another account (e.g. Google or email) to your profile so you can sign in different ways. Coming soon."
+    "linkAccountHint": "Links your profile to a Play Market, App Store, or FB Games account. Coming soon.",
+    "pushNotifications": "Push Notifications"
   },
   "faq": {
     "title": "अक्सर पूछे जाने वाले प्रश्न",
@@ -297,7 +300,8 @@
     "speechNotSupported": "आपके ब्राउज़र में वाक् पहचान समर्थित नहीं है",
     "openChat": "चैट सहायक खोलें",
     "startListening": "वॉइस इनपुट शुरू करें",
-    "stopListening": "वॉइस इनपुट रोकें"
+    "stopListening": "वॉइस इनपुट रोकें",
+    "openHelp": "Help"
   },
   "broadcast": {
     "title": "प्रसारण",
@@ -337,7 +341,8 @@
     "decline": "अस्वीकार करें",
     "alreadyUsed": "यह निमंत्रण पहले ही उपयोग हो चुका है",
     "success": "जुड़ गए!",
-    "loginToAccept": "स्वीकार करने के लिए लॉग इन करें"
+    "loginToAccept": "स्वीकार करने के लिए लॉग इन करें",
+    "accepting": "Accepting invitation..."
   },
   "landing": {
     "painQuote": "जब मुसीबत आती है — आप अकेले रह जाते हैं। दोस्त नहीं जानते। दोस्तों के दोस्त — और भी कम। लेकिन उनमें से कोई मदद कर सकता था।",
@@ -393,7 +398,9 @@
     "closed": "संग्रह बंद",
     "closedBody": "संग्रह निर्माता द्वारा बंद कर दिया गया है।",
     "open": "खोलें",
-    "view": "देखें"
+    "view": "देखें",
+    "blocked": "Collection Goal Reached",
+    "blockedBody": "The collection has reached its target amount and is now blocked."
   },
   "hints": {
     "collectionAmount": "आपको जितनी राशि चाहिए वह दर्ज करें। न्यूनतम 10 इकाई। सिस्टम उचित संख्या में लोगों को सूचित करेगा।",

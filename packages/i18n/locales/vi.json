@@ -133,7 +133,9 @@
     "personalStats": "Thống kê cá nhân",
     "networkStats": "Thống kê mạng lưới",
     "dayCount": "Ngày {{count}}",
-    "inviteTrusted": "Mời người bạn tin tưởng"
+    "inviteTrusted": "Mời người bạn tin tưởng",
+    "myCapabilitiesHint": "Monthly support budget. How much you're willing to contribute to mutual aid each month",
+    "networkCapabilitiesHint": "Total available monthly budgets of all participants in your mutual aid network"
   },
   "collection": {
     "create": "Gửi tín hiệu cần giúp đỡ",
@@ -277,7 +279,8 @@
     "newBudgetPlaceholder": "Số tiền mới",
     "updateBudget": "Cập nhật ngân sách",
     "push": "Push",
-    "linkAccountHint": "Link another account (e.g. Google or email) to your profile so you can sign in different ways. Coming soon."
+    "linkAccountHint": "Links your profile to a Play Market, App Store, or FB Games account. Coming soon.",
+    "pushNotifications": "Push Notifications"
   },
   "faq": {
     "title": "FAQ",
@@ -297,7 +300,8 @@
     "speechNotSupported": "Trình duyệt của bạn không hỗ trợ nhận dạng giọng nói",
     "openChat": "Mở trợ lý chat",
     "startListening": "Bắt đầu nhập giọng nói",
-    "stopListening": "Dừng nhập giọng nói"
+    "stopListening": "Dừng nhập giọng nói",
+    "openHelp": "Help"
   },
   "broadcast": {
     "title": "Phát sóng",
@@ -337,7 +341,8 @@
     "decline": "Từ chối",
     "alreadyUsed": "Lời mời này đã được sử dụng",
     "success": "Đã kết nối!",
-    "loginToAccept": "Đăng nhập để chấp nhận"
+    "loginToAccept": "Đăng nhập để chấp nhận",
+    "accepting": "Accepting invitation..."
   },
   "landing": {
     "painQuote": "Khi gặp khó khăn — bạn ở một mình. Bạn bè không biết. Bạn của bạn bè — càng không. Nhưng ai đó trong số họ có thể giúp được.",
@@ -393,7 +398,9 @@
     "closed": "Chiến dịch đã đóng",
     "closedBody": "Chiến dịch đã được đóng bởi người tạo.",
     "open": "Mở",
-    "view": "Xem"
+    "view": "Xem",
+    "blocked": "Collection Goal Reached",
+    "blockedBody": "The collection has reached its target amount and is now blocked."
   },
   "hints": {
     "collectionAmount": "Nhập số tiền bạn cần. Tối thiểu 10 đơn vị. Hệ thống sẽ thông báo đến đúng số người cần thiết.",

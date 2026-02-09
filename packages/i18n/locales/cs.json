@@ -133,7 +133,9 @@
     "personalStats": "Moje statistiky",
     "networkStats": "Statistiky sítě",
     "dayCount": "Den {{count}}",
-    "inviteTrusted": "Pozvat někoho, komu důvěřuješ"
+    "inviteTrusted": "Pozvat někoho, komu důvěřuješ",
+    "myCapabilitiesHint": "Monthly support budget. How much you're willing to contribute to mutual aid each month",
+    "networkCapabilitiesHint": "Total available monthly budgets of all participants in your mutual aid network"
   },
   "collection": {
     "create": "Vyslat signál o pomoci",
@@ -277,7 +279,8 @@
     "newBudgetPlaceholder": "Nová částka",
     "updateBudget": "Aktualizovat rozpočet",
     "push": "Push",
-    "linkAccountHint": "Link another account (e.g. Google or email) to your profile so you can sign in different ways. Coming soon."
+    "linkAccountHint": "Links your profile to a Play Market, App Store, or FB Games account. Coming soon.",
+    "pushNotifications": "Push Notifications"
   },
   "faq": {
     "title": "FAQ",
@@ -297,7 +300,8 @@
     "speechNotSupported": "Rozpoznávání řeči není ve vašem prohlížeči podporováno",
     "openChat": "Otevřít chatového asistenta",
     "startListening": "Spustit hlasový vstup",
-    "stopListening": "Zastavit hlasový vstup"
+    "stopListening": "Zastavit hlasový vstup",
+    "openHelp": "Help"
   },
   "broadcast": {
     "title": "Vysílání",
@@ -337,7 +341,8 @@
     "decline": "Odmítnout",
     "alreadyUsed": "Tato pozvánka již byla použita",
     "success": "Propojeno!",
-    "loginToAccept": "Přihlaste se pro přijetí"
+    "loginToAccept": "Přihlaste se pro přijetí",
+    "accepting": "Accepting invitation..."
   },
   "landing": {
     "painQuote": "Když přijde problém — zůstáváš sám. Přátelé nevědí. Známí známých — ještě méně. Přitom někdo z nich mohl pomoct.",
@@ -393,7 +398,9 @@
     "closed": "Sbírka uzavřena",
     "closedBody": "Sbírka byla uzavřena tvůrcem.",
     "open": "Otevřít",
-    "view": "Zobrazit"
+    "view": "Zobrazit",
+    "blocked": "Collection Goal Reached",
+    "blockedBody": "The collection has reached its target amount and is now blocked."
   },
   "hints": {
     "collectionAmount": "Zadejte částku, kterou potřebujete. Minimálně 10 jednotek. Systém upozorní správný počet lidí.",

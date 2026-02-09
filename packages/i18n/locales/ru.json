@@ -280,7 +280,7 @@
     "updateBudget": "Обновить бюджет",
     "pushNotifications": "Push-уведомления",
     "push": "Push",
-    "linkAccountHint": "Позволяет привязать другой аккаунт (например, Google или email) к вашему профилю, чтобы входить разными способами. Скоро."
+    "linkAccountHint": "Связывает ваш профиль с аккаунтом в Play Market, App Store или FB Games. Скоро."
   },
   "faq": {
     "title": "Частые вопросы",

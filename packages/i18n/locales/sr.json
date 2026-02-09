@@ -133,7 +133,9 @@
     "personalStats": "Моја статистика",
     "networkStats": "Статистика мреже",
     "dayCount": "Дан {{count}}",
-    "inviteTrusted": "Позови некога коме верујеш"
+    "inviteTrusted": "Позови некога коме верујеш",
+    "myCapabilitiesHint": "Monthly support budget. How much you're willing to contribute to mutual aid each month",
+    "networkCapabilitiesHint": "Total available monthly budgets of all participants in your mutual aid network"
   },
   "collection": {
     "create": "Пошаљи сигнал за помоћ",
@@ -277,7 +279,8 @@
     "newBudgetPlaceholder": "Нови износ",
     "updateBudget": "Ажурирај буџет",
     "push": "Push",
-    "linkAccountHint": "Link another account (e.g. Google or email) to your profile so you can sign in different ways. Coming soon."
+    "linkAccountHint": "Links your profile to a Play Market, App Store, or FB Games account. Coming soon.",
+    "pushNotifications": "Push Notifications"
   },
   "faq": {
     "title": "FAQ",
@@ -297,7 +300,8 @@
     "speechNotSupported": "Препознавање говора није подржано у твом прегледачу",
     "openChat": "Отвори чат асистента",
     "startListening": "Почни гласовни унос",
-    "stopListening": "Заустави гласовни унос"
+    "stopListening": "Заустави гласовни унос",
+    "openHelp": "Help"
   },
   "broadcast": {
     "title": "Емитовање",
@@ -337,7 +341,8 @@
     "decline": "Одбиј",
     "alreadyUsed": "Ова позивница је већ искоришћена",
     "success": "Повезани!",
-    "loginToAccept": "Пријави се да прихватиш"
+    "loginToAccept": "Пријави се да прихватиш",
+    "accepting": "Accepting invitation..."
   },
   "landing": {
     "painQuote": "Кад дође невоља — сам си. Пријатељи не знају. Пријатељи пријатеља — још мање. А неко од њих би могао да помогне.",
@@ -393,7 +398,9 @@
     "closed": "Акција затворена",
     "closedBody": "Акција је затворена од стране креатора.",
     "open": "Отвори",
-    "view": "Погледај"
+    "view": "Погледај",
+    "blocked": "Collection Goal Reached",
+    "blockedBody": "The collection has reached its target amount and is now blocked."
   },
   "hints": {
     "collectionAmount": "Унеси износ који ти треба. Минимум 10 јединица. Систем ће обавестити одговарајући број људи.",

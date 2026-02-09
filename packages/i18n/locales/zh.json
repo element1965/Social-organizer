@@ -133,7 +133,9 @@
     "personalStats": "我的统计",
     "networkStats": "网络统计",
     "dayCount": "第 {{count}} 天",
-    "inviteTrusted": "邀请你信任的人"
+    "inviteTrusted": "邀请你信任的人",
+    "myCapabilitiesHint": "Monthly support budget. How much you're willing to contribute to mutual aid each month",
+    "networkCapabilitiesHint": "Total available monthly budgets of all participants in your mutual aid network"
   },
   "collection": {
     "create": "发送求助信号",
@@ -277,7 +279,8 @@
     "newBudgetPlaceholder": "新金额",
     "updateBudget": "更新预算",
     "push": "Push",
-    "linkAccountHint": "Link another account (e.g. Google or email) to your profile so you can sign in different ways. Coming soon."
+    "linkAccountHint": "Links your profile to a Play Market, App Store, or FB Games account. Coming soon.",
+    "pushNotifications": "Push Notifications"
   },
   "faq": {
     "title": "常见问题",
@@ -297,7 +300,8 @@
     "speechNotSupported": "你的浏览器不支持语音识别",
     "openChat": "打开聊天助手",
     "startListening": "开始语音输入",
-    "stopListening": "停止语音输入"
+    "stopListening": "停止语音输入",
+    "openHelp": "Help"
   },
   "contacts": {
     "telegram": "Telegram",
@@ -376,7 +380,9 @@
     "closed": "募集已关闭",
     "closedBody": "募集已被创建者关闭。",
     "open": "打开",
-    "view": "查看"
+    "view": "查看",
+    "blocked": "Collection Goal Reached",
+    "blockedBody": "The collection has reached its target amount and is now blocked."
   },
   "hints": {
     "collectionAmount": "输入你需要的金额。最少10个单位。系统会通知适当数量的人。",

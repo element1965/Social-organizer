@@ -133,7 +133,9 @@
     "personalStats": "Statisticile mele",
     "networkStats": "Statisticile retelei",
     "dayCount": "Ziua {{count}}",
-    "inviteTrusted": "Invită pe cineva în care ai încredere"
+    "inviteTrusted": "Invită pe cineva în care ai încredere",
+    "myCapabilitiesHint": "Monthly support budget. How much you're willing to contribute to mutual aid each month",
+    "networkCapabilitiesHint": "Total available monthly budgets of all participants in your mutual aid network"
   },
   "collection": {
     "create": "Trimite un semnal de ajutor",
@@ -277,7 +279,8 @@
     "newBudgetPlaceholder": "Suma noua",
     "updateBudget": "Actualizeaza bugetul",
     "push": "Push",
-    "linkAccountHint": "Link another account (e.g. Google or email) to your profile so you can sign in different ways. Coming soon."
+    "linkAccountHint": "Links your profile to a Play Market, App Store, or FB Games account. Coming soon.",
+    "pushNotifications": "Push Notifications"
   },
   "faq": {
     "title": "FAQ",
@@ -297,7 +300,8 @@
     "speechNotSupported": "Recunoasterea vocala nu este suportata in browserul tau",
     "openChat": "Deschide asistentul chat",
     "startListening": "Porneste introducerea vocala",
-    "stopListening": "Opreste introducerea vocala"
+    "stopListening": "Opreste introducerea vocala",
+    "openHelp": "Help"
   },
   "broadcast": {
     "title": "Transmisiune",
@@ -337,7 +341,8 @@
     "decline": "Refuza",
     "alreadyUsed": "Aceasta invitatie a fost deja folosita",
     "success": "Conectat!",
-    "loginToAccept": "Autentifica-te pentru a accepta"
+    "loginToAccept": "Autentifica-te pentru a accepta",
+    "accepting": "Accepting invitation..."
   },
   "landing": {
     "painQuote": "Cand apar probleme — ramai singur. Prietenii nu stiu. Prietenii prietenilor — si mai putin. Dar cineva dintre ei ar fi putut ajuta.",
@@ -393,7 +398,9 @@
     "closed": "Colectă închisă",
     "closedBody": "Colecta a fost închisă de creator.",
     "open": "Deschide",
-    "view": "Vezi"
+    "view": "Vezi",
+    "blocked": "Collection Goal Reached",
+    "blockedBody": "The collection has reached its target amount and is now blocked."
   },
   "hints": {
     "collectionAmount": "Introdu suma de care ai nevoie. Minimum 10 unitati. Sistemul va notifica numarul potrivit de persoane.",

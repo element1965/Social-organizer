@@ -133,7 +133,9 @@
     "personalStats": "マイ統計",
     "networkStats": "ネットワーク統計",
     "dayCount": "{{count}} 日目",
-    "inviteTrusted": "信頼できる人を招待する"
+    "inviteTrusted": "信頼できる人を招待する",
+    "myCapabilitiesHint": "Monthly support budget. How much you're willing to contribute to mutual aid each month",
+    "networkCapabilitiesHint": "Total available monthly budgets of all participants in your mutual aid network"
   },
   "collection": {
     "create": "助けの合図を送る",
@@ -277,7 +279,8 @@
     "newBudgetPlaceholder": "新しい金額",
     "updateBudget": "予算を更新",
     "push": "Push",
-    "linkAccountHint": "Link another account (e.g. Google or email) to your profile so you can sign in different ways. Coming soon."
+    "linkAccountHint": "Links your profile to a Play Market, App Store, or FB Games account. Coming soon.",
+    "pushNotifications": "Push Notifications"
   },
   "faq": {
     "title": "よくある質問",
@@ -297,7 +300,8 @@
     "speechNotSupported": "お使いのブラウザは音声認識に対応していません",
     "openChat": "チャットアシスタントを開く",
     "startListening": "音声入力を開始",
-    "stopListening": "音声入力を停止"
+    "stopListening": "音声入力を停止",
+    "openHelp": "Help"
   },
   "broadcast": {
     "title": "ブロードキャスト",
@@ -394,7 +398,9 @@
     "closed": "募集が終了しました",
     "closedBody": "募集は作成者によって終了されました。",
     "open": "開く",
-    "view": "表示"
+    "view": "表示",
+    "blocked": "Collection Goal Reached",
+    "blockedBody": "The collection has reached its target amount and is now blocked."
   },
   "hints": {
     "collectionAmount": "必要な金額を入力してください。最低10単位です。システムが適切な人数に通知します。",

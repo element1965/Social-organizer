@@ -133,7 +133,9 @@
     "personalStats": "Min statistikk",
     "networkStats": "Nettverksstatistikk",
     "dayCount": "Dag {{count}}",
-    "inviteTrusted": "Inviter noen du stoler på"
+    "inviteTrusted": "Inviter noen du stoler på",
+    "myCapabilitiesHint": "Monthly support budget. How much you're willing to contribute to mutual aid each month",
+    "networkCapabilitiesHint": "Total available monthly budgets of all participants in your mutual aid network"
   },
   "collection": {
     "create": "Send et hjelpesignal",
@@ -277,7 +279,8 @@
     "newBudgetPlaceholder": "Nytt beløp",
     "updateBudget": "Oppdater budsjett",
     "push": "Push",
-    "linkAccountHint": "Link another account (e.g. Google or email) to your profile so you can sign in different ways. Coming soon."
+    "linkAccountHint": "Links your profile to a Play Market, App Store, or FB Games account. Coming soon.",
+    "pushNotifications": "Push Notifications"
   },
   "faq": {
     "title": "Ofte stilte spørsmål",
@@ -297,7 +300,8 @@
     "speechNotSupported": "Talegjenkjenning støttes ikke i nettleseren din",
     "openChat": "Åpne chat-assistent",
     "startListening": "Start stemmeinndata",
-    "stopListening": "Stopp stemmeinndata"
+    "stopListening": "Stopp stemmeinndata",
+    "openHelp": "Help"
   },
   "broadcast": {
     "title": "Kringkasting",
@@ -394,7 +398,9 @@
     "closed": "Innsamling stengt",
     "closedBody": "Innsamlingen er stengt av oppretteren.",
     "open": "Åpne",
-    "view": "Se"
+    "view": "Se",
+    "blocked": "Collection Goal Reached",
+    "blockedBody": "The collection has reached its target amount and is now blocked."
   },
   "hints": {
     "collectionAmount": "Skriv inn beløpet du trenger. Minimum 10 enheter. Systemet vil varsle riktig antall personer.",

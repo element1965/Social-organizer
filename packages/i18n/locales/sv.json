@@ -133,7 +133,9 @@
     "personalStats": "Min statistik",
     "networkStats": "Natverksstatistik",
     "dayCount": "Dag {{count}}",
-    "inviteTrusted": "Bjud in någon du litar på"
+    "inviteTrusted": "Bjud in någon du litar på",
+    "myCapabilitiesHint": "Monthly support budget. How much you're willing to contribute to mutual aid each month",
+    "networkCapabilitiesHint": "Total available monthly budgets of all participants in your mutual aid network"
   },
   "collection": {
     "create": "Skicka hjalpsignal",
@@ -277,7 +279,8 @@
     "newBudgetPlaceholder": "Nytt belopp",
     "updateBudget": "Uppdatera budget",
     "push": "Push",
-    "linkAccountHint": "Link another account (e.g. Google or email) to your profile so you can sign in different ways. Coming soon."
+    "linkAccountHint": "Links your profile to a Play Market, App Store, or FB Games account. Coming soon.",
+    "pushNotifications": "Push Notifications"
   },
   "faq": {
     "title": "Vanliga frågor",
@@ -297,7 +300,8 @@
     "speechNotSupported": "Rostigenkanning stods inte i din webblasare",
     "openChat": "Oppna chattassistent",
     "startListening": "Starta rostinmatning",
-    "stopListening": "Stoppa rostinmatning"
+    "stopListening": "Stoppa rostinmatning",
+    "openHelp": "Help"
   },
   "broadcast": {
     "title": "Utskick",
@@ -394,7 +398,9 @@
     "closed": "Insamling stängd",
     "closedBody": "Insamlingen har stängts av skaparen.",
     "open": "Öppna",
-    "view": "Visa"
+    "view": "Visa",
+    "blocked": "Collection Goal Reached",
+    "blockedBody": "The collection has reached its target amount and is now blocked."
   },
   "hints": {
     "collectionAmount": "Ange beloppet du behover. Minimum 10 enheter. Systemet informerar ratt antal personer.",
