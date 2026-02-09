@@ -9,7 +9,7 @@ import { useTheme } from '../hooks/useTheme';
 import { Button } from '../components/ui/button';
 import { Avatar } from '../components/ui/avatar';
 import { Spinner } from '../components/ui/spinner';
-import { Users, UserPlus, Globe, List, Wallet, Copy, Check, X } from 'lucide-react';
+import { Users, UserPlus, Globe, List, Wallet, Copy, Check, X, ChevronDown, ChevronUp } from 'lucide-react';
 const LazyNetworkGraph = lazy(() =>
   import('@so/graph-3d').then((m) => ({ default: m.NetworkGraph })),
 );
@@ -19,7 +19,7 @@ export function MyNetworkPage() {
   const navigate = useNavigate();
   const myId = useAuth((s) => s.userId);
   const { mode } = useTheme();
-  const [view, setView] = useState<'list' | '3d'>('list');
+  const [view, setView] = useState<'list' | '3d'>('3d');
   const [showInvitePopup, setShowInvitePopup] = useState(false);
   const [copied, setCopied] = useState(false);
   const isDark = mode === 'dark' || (mode === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
@@ -29,12 +29,20 @@ export function MyNetworkPage() {
   const botInviteUrl = myId ? buildBotInviteUrl(myId) : '';
   const [copiedWeb, setCopiedWeb] = useState(false);
 
-  const { data: connections, isLoading } = trpc.connection.list.useQuery(undefined, { refetchInterval: 30000 });
+  const [expandedDepths, setExpandedDepths] = useState<Record<number, boolean>>({});
   const { data: connectionCount } = trpc.connection.getCount.useQuery();
+  const { data: networkStats, isLoading } = trpc.connection.getNetworkStats.useQuery(undefined, { refetchInterval: 60000 });
   const { data: graphData } = trpc.connection.graphSlice.useQuery(undefined, {
     enabled: view === '3d',
     refetchInterval: 60000,
   });
+
+  const byDepth = networkStats?.byDepth ?? {};
+  const usersByDepth = (networkStats as any)?.usersByDepth ?? {};
+
+  const toggleDepth = (depth: number) => {
+    setExpandedDepths((prev) => ({ ...prev, [depth]: !prev[depth] }));
+  };
 
   return (
     <div className="p-4 space-y-4">
@@ -130,35 +138,80 @@ export function MyNetworkPage() {
         </div>
       ) : (
         <>
-          {isLoading ? <div className="flex justify-center py-12"><Spinner /></div> : !connections || connections.length === 0 ? (
+          {isLoading ? <div className="flex justify-center py-12"><Spinner /></div> : Object.keys(byDepth).length === 0 ? (
             <div className="text-center py-12">
               <Users className="w-12 h-12 mx-auto text-gray-300 dark:text-gray-700 mb-3" />
               <p className="text-gray-500">{t('network.empty')}</p>
               <p className="text-sm text-gray-400 mt-1">{t('network.emptyHint')}</p>
             </div>
           ) : (
-            <div className="space-y-1">
-              {connections.map((conn) => (
-                <button key={conn.id} onClick={() => navigate(`/profile/${conn.userId}`)} className="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
-                  <Avatar src={conn.photoUrl} name={conn.name} size="md" />
-                  <div className="flex-1 text-left">
-                    <span className="text-sm font-medium text-gray-900 dark:text-white">{(conn as any).displayName || conn.name}</span>
-                    {(conn as any).nickname && (
-                      <span className="text-xs text-gray-400 ml-1.5">{conn.name}</span>
+            <div className="space-y-2">
+              {Object.entries(byDepth).map(([depth, count]) => {
+                const depthNum = Number(depth);
+                const isExpanded = expandedDepths[depthNum];
+                const depthUsers = usersByDepth[depthNum] || [];
+                const colors = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899'];
+                const color = colors[(depthNum - 1) % colors.length];
+
+                return (
+                  <div key={depth} className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
+                    <button
+                      onClick={() => toggleDepth(depthNum)}
+                      className="w-full p-3 hover:bg-gray-50 dark:hover:bg-gray-800/50"
+                    >
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <div
+                            className="w-6 h-6 rounded-full flex items-center justify-center text-white text-xs font-bold"
+                            style={{ backgroundColor: color }}
+                          >
+                            {depth}
+                          </div>
+                          <span className="text-sm text-gray-600 dark:text-gray-400">{t('dashboard.handshakeOrdinal', { depth })}</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <span className="text-xl font-bold text-gray-900 dark:text-white">{count as number}</span>
+                          {isExpanded ? (
+                            <ChevronUp className="w-4 h-4 text-gray-400" />
+                          ) : (
+                            <ChevronDown className="w-4 h-4 text-gray-400" />
+                          )}
+                        </div>
+                      </div>
+                    </button>
+
+                    {isExpanded && depthUsers.length > 0 && (
+                      <div className="border-t border-gray-200 dark:border-gray-700 max-h-48 overflow-y-auto">
+                        {depthUsers.slice(0, 20).map((user: any) => (
+                          <button
+                            key={user.id}
+                            onClick={() => navigate(`/profile/${user.id}`)}
+                            className="w-full flex items-center gap-2 p-2 hover:bg-gray-50 dark:hover:bg-gray-800/50"
+                          >
+                            <Avatar src={user.photoUrl} name={user.name} size="sm" />
+                            <span className="flex-1 text-sm text-gray-700 dark:text-gray-300 text-left">{user.name}</span>
+                            <div className="flex items-center gap-2">
+                              <span className="flex items-center gap-1 text-xs text-gray-400">
+                                <Users className="w-3 h-3" />
+                                {user.connectionCount ?? 0}
+                              </span>
+                              <span className="flex items-center gap-1 text-xs text-green-600 dark:text-green-400">
+                                <Wallet className="w-3 h-3" />
+                                ${Math.round(user.remainingBudget ?? 0)}
+                              </span>
+                            </div>
+                          </button>
+                        ))}
+                        {depthUsers.length > 20 && (
+                          <p className="text-xs text-gray-400 text-center py-2">
+                            +{depthUsers.length - 20} {t('dashboard.more')}
+                          </p>
+                        )}
+                      </div>
                     )}
                   </div>
-                  <div className="flex items-center gap-3 text-xs text-gray-400">
-                    <span className="flex items-center gap-1">
-                      <Users className="w-3 h-3" />
-                      {conn.connectionCount ?? 0}
-                    </span>
-                    <span className="flex items-center gap-1 text-green-600 dark:text-green-400">
-                      <Wallet className="w-3 h-3" />
-                      ${Math.round(conn.remainingBudget ?? 0)}
-                    </span>
-                  </div>
-                </button>
-              ))}
+                );
+              })}
             </div>
           )}
         </>
