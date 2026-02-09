@@ -9,7 +9,7 @@ import { Button } from '../components/ui/button';
 import { Select } from '../components/ui/select';
 import { Avatar } from '../components/ui/avatar';
 import { Spinner } from '../components/ui/spinner';
-import { Settings, Globe, Palette, Volume2, Bell, Mic, Link, Trash2, LogOut, Type, Users, Wallet, Camera, Pencil, Check } from 'lucide-react';
+import { Settings, Globe, Palette, Volume2, Bell, Mic, Link, Trash2, LogOut, Type, Users, Camera, Pencil, Check } from 'lucide-react';
 import { cn } from '../lib/utils';
 import { languageNames } from '@so/i18n';
 import { Input } from '../components/ui/input';
@@ -26,7 +26,6 @@ export function SettingsPage() {
   const { data: settings, isLoading } = trpc.settings.get.useQuery();
   const { data: contacts } = trpc.user.getContacts.useQuery({});
   const { data: me } = trpc.user.me.useQuery();
-  const { data: currencies } = trpc.currency.list.useQuery();
   const updateContacts = trpc.user.updateContacts.useMutation({
     onSuccess: () => utils.user.getContacts.invalidate(),
   });
@@ -36,7 +35,6 @@ export function SettingsPage() {
   const updateSound = trpc.settings.updateSound.useMutation({ onSuccess: () => utils.settings.get.invalidate() });
   const updateVoiceGender = trpc.settings.updateVoiceGender.useMutation({ onSuccess: () => utils.settings.get.invalidate() });
   const updateFontScale = trpc.settings.updateFontScale.useMutation({ onSuccess: () => utils.settings.get.invalidate() });
-  const setBudgetMutation = trpc.user.setMonthlyBudget.useMutation({ onSuccess: () => utils.user.me.invalidate() });
   const generateCode = trpc.auth.generateLinkCode.useMutation();
   const deleteAccount = trpc.user.delete.useMutation({ onSuccess: () => { logout(); navigate('/login'); } });
   const updateUser = trpc.user.update.useMutation({ onSuccess: () => { utils.user.me.invalidate(); setEditingName(false); } });
@@ -44,12 +42,6 @@ export function SettingsPage() {
   const [editName, setEditName] = useState('');
   const push = usePushNotifications();
   const [confirmDelete, setConfirmDelete] = useState(false);
-  const [newBudget, setNewBudget] = useState('');
-  const [newBudgetCurrency, setNewBudgetCurrency] = useState(me?.preferredCurrency || 'USD');
-  const { data: budgetPreview } = trpc.currency.toUSD.useQuery(
-    { amount: Number(newBudget), from: newBudgetCurrency },
-    { enabled: !!newBudget && Number(newBudget) > 0 && newBudgetCurrency !== 'USD' }
-  );
 
   const handleLanguageChange = (lang: string) => { i18n.changeLanguage(lang); localStorage.setItem('language', lang); updateLanguage.mutate({ language: lang }); };
   const handleThemeChange = (theme: 'LIGHT' | 'DARK' | 'SYSTEM') => { setMode(theme.toLowerCase() as 'light' | 'dark' | 'system'); updateTheme.mutate({ theme }); };
@@ -133,60 +125,6 @@ export function SettingsPage() {
           <Select id="voice-gender" label={t('settings.voiceGender')} value={settings?.voiceGender || 'FEMALE'} onChange={(e) => updateVoiceGender.mutate({ voiceGender: e.target.value as 'FEMALE' | 'MALE' })} options={[{ value: 'FEMALE', label: t('settings.voiceFemale') }, { value: 'MALE', label: t('settings.voiceMale') }]} />
         </div>
       </CardContent></Card>
-
-      <Card>
-        <CardHeader>
-          <div className="flex items-center gap-2">
-            <Wallet className="w-5 h-5 text-gray-500" />
-            <h2 className="font-semibold text-gray-900 dark:text-white">{t('settings.monthlyBudget')}</h2>
-          </div>
-          <p className="text-xs text-gray-500 mt-1">{t('settings.budgetDesc')}</p>
-        </CardHeader>
-        <CardContent className="space-y-3">
-          {me?.monthlyBudget != null && (
-            <p className="text-sm text-gray-600 dark:text-gray-400">
-              {t('settings.currentBudget')}:
-              <span className="font-medium text-gray-900 dark:text-white ml-1">
-                ${Math.round(me.remainingBudget || 0)} / ${Math.round(me.monthlyBudget)}
-              </span>
-            </p>
-          )}
-          <div className="flex items-center gap-2">
-            <div className="relative flex-1">
-              <Input
-                type="number"
-                value={newBudget}
-                onChange={(e) => setNewBudget(e.target.value)}
-                placeholder={me?.monthlyBudget != null ? String(Math.round(me.monthlyBudget)) : t('settings.newBudgetPlaceholder')}
-                className={`w-full ${newBudget && Number(newBudget) >= 0 ? 'pr-8' : ''}`}
-                min={0}
-              />
-              {newBudget && Number(newBudget) >= 0 && (
-                <button
-                  onClick={() => {
-                    setBudgetMutation.mutate({ amount: Number(newBudget), inputCurrency: newBudgetCurrency });
-                    setNewBudget('');
-                  }}
-                  disabled={setBudgetMutation.isPending}
-                  className="absolute right-2 top-1/2 -translate-y-1/2 text-green-500 hover:text-green-400"
-                >
-                  <Check className="w-5 h-5" />
-                </button>
-              )}
-            </div>
-            <Select
-              id="budget-currency"
-              value={newBudgetCurrency}
-              onChange={(e) => setNewBudgetCurrency(e.target.value)}
-              options={currencies?.map(c => ({ value: c.code, label: `${c.symbol} ${c.code}` })) ?? [{ value: 'USD', label: '$ USD' }]}
-              className="w-28 shrink-0"
-            />
-          </div>
-          {newBudgetCurrency !== 'USD' && budgetPreview && Number(newBudget) > 0 && (
-            <p className="text-sm text-gray-500">≈ ${budgetPreview.result} USD</p>
-          )}
-        </CardContent>
-      </Card>
 
       <Card><CardContent className="py-3">
         <div className="flex items-center gap-3 mb-2"><Palette className="w-5 h-5 text-gray-500" /><span className="text-sm font-medium text-gray-700 dark:text-gray-300">{t('settings.theme')}</span></div>

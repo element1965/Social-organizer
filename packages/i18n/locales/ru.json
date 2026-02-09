@@ -121,6 +121,8 @@
     "capabilitiesContributors": "от {{count}} участников",
     "editBudget": "Изменить",
     "yourContribution": "Мои возможности",
+    "myCapabilitiesHint": "Месячный бюджет поддержки. Сколько вы готовы выделять на взаимопомощь ежемесячно",
+    "networkCapabilitiesHint": "Общая сумма доступных месячных бюджетов всех участников вашей сети взаимопомощи",
     "budgetDepletedHint": "Ваш месячный бюджет поддержки исчерпан. Хотите добавить?",
     "updateBudget": "Обновить бюджет",
     "helpGivenByPeriod": "Оказано помощи",

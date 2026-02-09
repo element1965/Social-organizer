@@ -121,6 +121,8 @@
     "capabilitiesContributors": "from {{count}} contributors",
     "editBudget": "Edit",
     "yourContribution": "My capabilities",
+    "myCapabilitiesHint": "Monthly support budget. How much you're willing to contribute to mutual aid each month",
+    "networkCapabilitiesHint": "Total available monthly budgets of all participants in your mutual aid network",
     "budgetDepletedHint": "Your monthly support budget is depleted. Would you like to add more?",
     "updateBudget": "Update Budget",
     "helpGivenByPeriod": "Help provided",
