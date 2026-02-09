@@ -276,7 +276,8 @@
     "currentBudget": "Restant",
     "newBudgetPlaceholder": "Nouveau montant",
     "updateBudget": "Mettre à jour le budget",
-    "push": "Push"
+    "push": "Push",
+    "linkAccountHint": "Link another account (e.g. Google or email) to your profile so you can sign in different ways. Coming soon."
   },
   "faq": {
     "title": "Questions fréquentes",

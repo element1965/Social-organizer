@@ -276,7 +276,8 @@
     "currentBudget": "잔액",
     "newBudgetPlaceholder": "새 금액",
     "updateBudget": "예산 업데이트",
-    "push": "Push"
+    "push": "Push",
+    "linkAccountHint": "Link another account (e.g. Google or email) to your profile so you can sign in different ways. Coming soon."
   },
   "faq": {
     "title": "자주 묻는 질문",

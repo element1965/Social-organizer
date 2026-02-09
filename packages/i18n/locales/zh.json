@@ -276,7 +276,8 @@
     "currentBudget": "剩余",
     "newBudgetPlaceholder": "新金额",
     "updateBudget": "更新预算",
-    "push": "Push"
+    "push": "Push",
+    "linkAccountHint": "Link another account (e.g. Google or email) to your profile so you can sign in different ways. Coming soon."
   },
   "faq": {
     "title": "常见问题",

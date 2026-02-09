@@ -276,7 +276,8 @@
     "currentBudget": "Jäljellä",
     "newBudgetPlaceholder": "Uusi summa",
     "updateBudget": "Päivitä budjetti",
-    "push": "Push"
+    "push": "Push",
+    "linkAccountHint": "Link another account (e.g. Google or email) to your profile so you can sign in different ways. Coming soon."
   },
   "faq": {
     "title": "Usein kysytyt kysymykset",
