@@ -275,7 +275,8 @@
     "budgetDesc": "Hoeveel je maandelijks kunt bijdragen aan onderlinge ondersteuning",
     "currentBudget": "Resterend",
     "newBudgetPlaceholder": "Nieuw bedrag",
-    "updateBudget": "Budget bijwerken"
+    "updateBudget": "Budget bijwerken",
+    "push": "Push"
   },
   "faq": {
     "title": "Veelgestelde vragen",

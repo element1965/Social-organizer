@@ -275,7 +275,8 @@
     "budgetDesc": "Cat poti contribui la sprijinul reciproc in fiecare luna",
     "currentBudget": "Ramas",
     "newBudgetPlaceholder": "Suma noua",
-    "updateBudget": "Actualizeaza bugetul"
+    "updateBudget": "Actualizeaza bugetul",
+    "push": "Push"
   },
   "faq": {
     "title": "FAQ",

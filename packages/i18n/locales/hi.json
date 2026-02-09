@@ -275,7 +275,8 @@
     "budgetDesc": "आप हर महीने पारस्परिक सहायता में कितना योगदान दे सकते हैं",
     "currentBudget": "शेष",
     "newBudgetPlaceholder": "नई राशि",
-    "updateBudget": "बजट अपडेट करें"
+    "updateBudget": "बजट अपडेट करें",
+    "push": "Push"
   },
   "faq": {
     "title": "अक्सर पूछे जाने वाले प्रश्न",

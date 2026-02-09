@@ -275,7 +275,8 @@
     "budgetDesc": "Kuinka paljon voit osallistua keskinäiseen tukeen kuukausittain",
     "currentBudget": "Jäljellä",
     "newBudgetPlaceholder": "Uusi summa",
-    "updateBudget": "Päivitä budjetti"
+    "updateBudget": "Päivitä budjetti",
+    "push": "Push"
   },
   "faq": {
     "title": "Usein kysytyt kysymykset",

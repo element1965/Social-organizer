@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { QRCodeSVG } from 'qrcode.react';
 import { trpc } from '../lib/trpc';
-import { buildInviteUrl, buildWebInviteUrl, buildBotInviteUrl } from '../lib/inviteUrl';
+import { buildInviteUrl, buildWebInviteUrl } from '../lib/inviteUrl';
 import { useAuth } from '../hooks/useAuth';
 import { useTheme } from '../hooks/useTheme';
 import { Button } from '../components/ui/button';
@@ -21,12 +21,10 @@ export function MyNetworkPage() {
   const { mode } = useTheme();
   const [view, setView] = useState<'list' | '3d'>('3d');
   const [showInvitePopup, setShowInvitePopup] = useState(false);
-  const [copied, setCopied] = useState(false);
   const isDark = mode === 'dark' || (mode === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
 
   const permanentInviteUrl = myId ? buildInviteUrl(myId) : '';
   const webInviteUrl = myId ? buildWebInviteUrl(myId) : '';
-  const botInviteUrl = myId ? buildBotInviteUrl(myId) : '';
   const [copiedWeb, setCopiedWeb] = useState(false);
 
   const [expandedDepths, setExpandedDepths] = useState<Record<number, boolean>>({});
@@ -58,7 +56,7 @@ export function MyNetworkPage() {
             {view === 'list' ? <Globe className="w-4 h-4" /> : <List className="w-4 h-4" />}
           </Button>
           <button
-            onClick={() => { setCopied(false); setShowInvitePopup(true); }}
+            onClick={() => { setCopiedWeb(false); setShowInvitePopup(true); }}
             className="w-9 h-9 rounded-full bg-blue-600 hover:bg-blue-500 flex items-center justify-center transition-colors shadow-lg"
           >
             <UserPlus className="w-4 h-4 text-white" />
@@ -94,20 +92,6 @@ export function MyNetworkPage() {
                 <p className="flex-1 text-xs text-gray-600 dark:text-gray-400 break-all text-left">{webInviteUrl}</p>
                 <div className="shrink-0">
                   {copiedWeb ? <Check className="w-5 h-5 text-green-500" /> : <Copy className="w-5 h-5 text-gray-500" />}
-                </div>
-              </button>
-              <button
-                onClick={() => {
-                  navigator.clipboard.writeText(botInviteUrl);
-                  setCopied(true);
-                  setTimeout(() => setCopied(false), 2000);
-                }}
-                className="w-full flex items-center gap-2 p-3 bg-gray-100 dark:bg-gray-800 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
-              >
-                <span className="text-base shrink-0">🤖</span>
-                <p className="flex-1 text-xs text-gray-600 dark:text-gray-400 break-all text-left">{botInviteUrl}</p>
-                <div className="shrink-0">
-                  {copied ? <Check className="w-5 h-5 text-green-500" /> : <Copy className="w-5 h-5 text-gray-500" />}
                 </div>
               </button>
             </div>

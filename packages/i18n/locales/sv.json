@@ -275,7 +275,8 @@
     "budgetDesc": "Hur mycket du kan bidra till omsesidigt stod varje manad",
     "currentBudget": "Aterstaende",
     "newBudgetPlaceholder": "Nytt belopp",
-    "updateBudget": "Uppdatera budget"
+    "updateBudget": "Uppdatera budget",
+    "push": "Push"
   },
   "faq": {
     "title": "Vanliga frågor",

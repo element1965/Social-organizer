@@ -275,7 +275,8 @@
     "budgetDesc": "Quanto puoi contribuire al supporto reciproco ogni mese",
     "currentBudget": "Rimanente",
     "newBudgetPlaceholder": "Nuovo importo",
-    "updateBudget": "Aggiorna budget"
+    "updateBudget": "Aggiorna budget",
+    "push": "Push"
   },
   "faq": {
     "title": "Domande frequenti",

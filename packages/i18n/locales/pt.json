@@ -275,7 +275,8 @@
     "budgetDesc": "Quanto você pode contribuir para o apoio mútuo a cada mês",
     "currentBudget": "Restante",
     "newBudgetPlaceholder": "Novo valor",
-    "updateBudget": "Atualizar orçamento"
+    "updateBudget": "Atualizar orçamento",
+    "push": "Push"
   },
   "faq": {
     "title": "Perguntas frequentes",

@@ -278,7 +278,8 @@
     "currentBudget": "Remaining",
     "newBudgetPlaceholder": "New amount",
     "updateBudget": "Update Budget",
-    "pushNotifications": "Push Notifications"
+    "pushNotifications": "Push Notifications",
+    "push": "Push"
   },
   "faq": {
     "title": "FAQ",

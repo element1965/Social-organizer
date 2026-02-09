@@ -275,7 +275,8 @@
     "budgetDesc": "Combien vous pouvez contribuer à l'entraide chaque mois",
     "currentBudget": "Restant",
     "newBudgetPlaceholder": "Nouveau montant",
-    "updateBudget": "Mettre à jour le budget"
+    "updateBudget": "Mettre à jour le budget",
+    "push": "Push"
   },
   "faq": {
     "title": "Questions fréquentes",

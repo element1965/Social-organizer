@@ -275,7 +275,8 @@
     "budgetDesc": "毎月相互支援にどれくらい貢献できるか",
     "currentBudget": "残額",
     "newBudgetPlaceholder": "新しい金額",
-    "updateBudget": "予算を更新"
+    "updateBudget": "予算を更新",
+    "push": "Push"
   },
   "faq": {
     "title": "よくある質問",

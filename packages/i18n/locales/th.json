@@ -275,7 +275,8 @@
     "budgetDesc": "จำนวนที่คุณสามารถสนับสนุนการช่วยเหลือซึ่งกันและกันต่อเดือน",
     "currentBudget": "คงเหลือ",
     "newBudgetPlaceholder": "จำนวนใหม่",
-    "updateBudget": "อัปเดตงบประมาณ"
+    "updateBudget": "อัปเดตงบประมาณ",
+    "push": "Push"
   },
   "faq": {
     "title": "FAQ",

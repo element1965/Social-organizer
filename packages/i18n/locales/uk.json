@@ -275,7 +275,8 @@
     "budgetDesc": "Скільки ви можете виділяти на взаємну підтримку щомісяця",
     "currentBudget": "Залишок",
     "newBudgetPlaceholder": "Нова сума",
-    "updateBudget": "Оновити бюджет"
+    "updateBudget": "Оновити бюджет",
+    "push": "Push"
   },
   "faq": {
     "title": "Часті запитання",
