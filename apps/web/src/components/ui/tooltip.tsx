@@ -1,3 +1,4 @@
+import { useState, useRef, useEffect } from 'react';
 import * as TooltipPrimitive from '@radix-ui/react-tooltip';
 import { cn } from '../../lib/utils';
 
@@ -9,13 +10,34 @@ interface TooltipProps {
 }
 
 export function Tooltip({ children, content, side = 'top', delayDuration = 300 }: TooltipProps) {
+  const [open, setOpen] = useState(false);
+  const triggerRef = useRef<HTMLDivElement>(null);
+
+  // Close on outside tap
+  useEffect(() => {
+    if (!open) return;
+    function handleOutside(e: PointerEvent) {
+      if (triggerRef.current && !triggerRef.current.contains(e.target as Node)) {
+        setOpen(false);
+      }
+    }
+    document.addEventListener('pointerdown', handleOutside);
+    return () => document.removeEventListener('pointerdown', handleOutside);
+  }, [open]);
+
   if (!content) return <>{children}</>;
 
   return (
     <TooltipPrimitive.Provider delayDuration={delayDuration}>
-      <TooltipPrimitive.Root>
+      <TooltipPrimitive.Root open={open} onOpenChange={setOpen}>
         <TooltipPrimitive.Trigger asChild>
-          {children}
+          <div
+            ref={triggerRef}
+            onClick={(e) => { e.preventDefault(); e.stopPropagation(); setOpen((v) => !v); }}
+            className="inline-flex"
+          >
+            {children}
+          </div>
         </TooltipPrimitive.Trigger>
         <TooltipPrimitive.Portal>
           <TooltipPrimitive.Content
