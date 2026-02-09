@@ -2,11 +2,15 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { trpc } from '../lib/trpc';
-import { Card, CardContent } from '../components/ui/card';
+import { Card, CardContent, CardHeader } from '../components/ui/card';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { Select } from '../components/ui/select';
-import { AlertTriangle, Users, ArrowRight } from 'lucide-react';
+import { Badge } from '../components/ui/badge';
+import { Progress } from '../components/ui/progress';
+import { Spinner } from '../components/ui/spinner';
+import { Avatar } from '../components/ui/avatar';
+import { AlertTriangle, Users, ArrowRight, PlusCircle, Wallet } from 'lucide-react';
 
 export function CreateCollectionPage() {
   const { t } = useTranslation();
@@ -14,6 +18,8 @@ export function CreateCollectionPage() {
 
   const { data: me } = trpc.user.me.useQuery();
   const { data: networkStats } = trpc.connection.getNetworkStats.useQuery();
+  const { data: myCollections } = trpc.collection.myActive.useQuery(undefined, { refetchInterval: 30000 });
+  const { data: myObligations } = trpc.obligation.myList.useQuery(undefined, { refetchInterval: 30000 });
   const { data: currencies } = trpc.currency.list.useQuery();
   const { data: detectedCurrency } = trpc.currency.detectCurrency.useQuery();
 
@@ -148,6 +154,106 @@ export function CreateCollectionPage() {
             {create.isPending ? t('common.loading') : t('create.submit')}
           </Button>
           {create.error && <p className="text-sm text-red-500 text-center">{create.error.message}</p>}
+        </CardContent>
+      </Card>
+
+      {/* My collections */}
+      <Card className="mt-4">
+        <CardHeader>
+          <h2 className="font-semibold text-gray-900 dark:text-white">
+            {t('dashboard.myCollections')}
+          </h2>
+        </CardHeader>
+        <CardContent>
+          {!myCollections ? (
+            <div className="flex justify-center py-4"><Spinner /></div>
+          ) : myCollections.length === 0 ? (
+            <p className="text-sm text-gray-500 text-center py-4">
+              {t('dashboard.noCollections')}
+            </p>
+          ) : (
+            <div className="space-y-3">
+              {myCollections.map((col) => {
+                const hasGoal = col.amount != null && col.amount > 0;
+                const current = (col as any).currentAmount ?? 0;
+                return (
+                  <button
+                    key={col.id}
+                    onClick={() => navigate(`/collection/${col.id}`)}
+                    className="w-full text-left p-3 rounded-lg bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700"
+                  >
+                    <div className="flex items-center justify-between mb-1">
+                      <div className="flex items-center gap-2">
+                        <Badge variant={col.status === 'ACTIVE' ? 'success' : 'warning'}>{col.status}</Badge>
+                        <Badge variant={col.type === 'EMERGENCY' ? 'danger' : 'info'}>
+                          {col.type === 'EMERGENCY' ? t('collection.emergency') : t('collection.regular')}
+                        </Badge>
+                      </div>
+                      <span className="text-sm font-medium text-gray-900 dark:text-white">
+                        {hasGoal ? `${current} / ${col.amount} ${col.currency}` : `${current} ${col.currency}`}
+                      </span>
+                    </div>
+                    {hasGoal && <Progress value={current} max={col.amount!} className="mt-1" />}
+                    <div className="text-xs text-gray-500 mt-1">
+                      {col._count.obligations} {t('dashboard.intentions')}
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* My intentions */}
+      <Card className="mt-4">
+        <CardHeader>
+          <h2 className="font-semibold text-gray-900 dark:text-white">
+            {t('dashboard.myIntentions')}
+          </h2>
+        </CardHeader>
+        <CardContent>
+          {!myObligations ? (
+            <div className="flex justify-center py-4"><Spinner /></div>
+          ) : myObligations.length === 0 ? (
+            <p className="text-sm text-gray-500 text-center py-4">
+              {t('dashboard.noIntentions')}
+            </p>
+          ) : (
+            <div className="space-y-2">
+              {myObligations.map((obl) => (
+                <div key={obl.id} className="p-3 rounded-lg bg-gray-50 dark:bg-gray-800 flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <button onClick={() => navigate(`/profile/${obl.collection.creatorId}`)} className="hover:opacity-80">
+                      <Avatar src={obl.collection.creator.photoUrl} name={obl.collection.creator.name} size="sm" />
+                    </button>
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <button
+                          onClick={() => navigate(`/profile/${obl.collection.creatorId}`)}
+                          className="text-sm font-medium text-gray-900 dark:text-white hover:underline"
+                        >
+                          {obl.collection.creator.name}
+                        </button>
+                        <span className="flex items-center gap-0.5 text-xs text-gray-400">
+                          <Users className="w-3 h-3" />
+                          {(obl.collection.creator as any).connectionCount ?? 0}
+                        </span>
+                        <span className="flex items-center gap-0.5 text-xs text-green-600 dark:text-green-400">
+                          <Wallet className="w-3 h-3" />
+                          ${Math.round((obl.collection.creator as any).remainingBudget ?? 0)}
+                        </span>
+                      </div>
+                      <p className="text-xs text-gray-500">{obl.amount} {obl.collection.currency}</p>
+                    </div>
+                  </div>
+                  <Button variant="ghost" size="sm" onClick={() => navigate(`/collection/${obl.collectionId}`)}>
+                    <ArrowRight className="w-4 h-4" />
+                  </Button>
+                </div>
+              ))}
+            </div>
+          )}
         </CardContent>
       </Card>
     </div>
