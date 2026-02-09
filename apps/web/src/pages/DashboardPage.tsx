@@ -5,15 +5,10 @@ import { QRCodeSVG } from 'qrcode.react';
 import { trpc } from '../lib/trpc';
 import { buildInviteUrl, buildWebInviteUrl, buildBotInviteUrl } from '../lib/inviteUrl';
 import { useAuth } from '../hooks/useAuth';
-import { Card, CardContent, CardHeader } from '../components/ui/card';
+import { Card, CardContent } from '../components/ui/card';
 import { Button } from '../components/ui/button';
-import { Badge } from '../components/ui/badge';
-import { Progress } from '../components/ui/progress';
-import { Spinner } from '../components/ui/spinner';
 import { Avatar } from '../components/ui/avatar';
-import { Tabs } from '../components/ui/charts';
 import {
-  PlusCircle,
   Users,
   ArrowRight,
   UserPlus,
@@ -34,21 +29,16 @@ const LazyCloudBackground = lazy(() =>
   import('@so/graph-3d').then((m) => ({ default: m.CloudBackground })),
 );
 
-type TabId = 'network' | 'activity';
-
 export function DashboardPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const userId = useAuth((s) => s.userId);
 
-  const [activeTab, setActiveTab] = useState<TabId>('network');
   const [showInvitePopup, setShowInvitePopup] = useState(false);
   const [copied, setCopied] = useState(false);
 
   const utils = trpc.useUtils();
   const { data: me } = trpc.user.me.useQuery(undefined, { refetchInterval: 30000 });
-  const { data: myCollections } = trpc.collection.myActive.useQuery(undefined, { refetchInterval: 30000 });
-  const { data: myObligations } = trpc.obligation.myList.useQuery(undefined, { refetchInterval: 30000 });
   const { data: networkStats, isLoading: networkLoading } = trpc.connection.getNetworkStats.useQuery(undefined, { refetchInterval: 60000 });
   const { data: notifications } = trpc.notification.list.useQuery({ limit: 10 }, { refetchInterval: 30000 });
   const { data: helpStats } = trpc.stats.help.useQuery(undefined, { refetchInterval: 60000 });
@@ -72,10 +62,6 @@ export function DashboardPage() {
     (n) => n.type === 'NEW_COLLECTION' && n.status === 'UNREAD' && n.collection?.type === 'EMERGENCY' && n.collection?.status === 'ACTIVE'
   ) ?? [];
 
-  const tabs = [
-    { id: 'network' as const, label: t('dashboard.tabNetwork'), icon: <Network className="w-4 h-4" /> },
-    { id: 'activity' as const, label: t('dashboard.tabActivity'), icon: <HandHeart className="w-4 h-4" /> },
-  ];
 
   return (
     <div className="p-4 space-y-4 relative">
@@ -227,12 +213,7 @@ export function DashboardPage() {
         </div>
       )}
 
-      {/* Tabs */}
-      <Tabs tabs={tabs} activeTab={activeTab} onTabChange={(id) => setActiveTab(id as TabId)} />
-
-      {/* === TAB: NETWORK === */}
-      {activeTab === 'network' && (
-        <Card>
+      <Card>
           <CardContent className="py-4 space-y-4">
             {/* Total network summary with growth */}
             <div className="p-4 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-950/30 dark:to-purple-950/30 rounded-xl">
@@ -381,26 +362,24 @@ export function DashboardPage() {
             {/* Help statistics — compact */}
             <div className="grid grid-cols-2 gap-3">
               {/* Left: Help given by period */}
-              <div className="p-4 bg-gradient-to-b from-orange-50 to-amber-50 dark:from-orange-950/30 dark:to-amber-950/30 rounded-xl flex flex-col">
-                <div className="flex items-center gap-1.5 mb-2">
-                  <HandHeart className="w-4 h-4 text-orange-600" />
-                  <span className="text-xs text-gray-500">{t('dashboard.helpGivenByPeriod')}</span>
+              <div className="p-3 bg-gradient-to-b from-orange-50 to-amber-50 dark:from-orange-950/30 dark:to-amber-950/30 rounded-xl flex flex-col">
+                <div className="flex items-center gap-1.5 mb-1">
+                  <HandHeart className="w-3.5 h-3.5 text-orange-600" />
+                  <span className="text-[10px] text-gray-500">{t('dashboard.helpGivenByPeriod')}</span>
                 </div>
-                <div className="flex-1">
-                  <p className="text-2xl font-bold text-orange-700 dark:text-orange-400">
-                    {helpByPeriod?.allTime?.count ?? 0}
-                    <span className="text-xs font-normal text-gray-400 ml-1">{t('dashboard.times')}</span>
-                  </p>
-                  <p className="text-sm font-semibold text-orange-600/70 dark:text-orange-400/70">
-                    ${helpByPeriod?.allTime?.amount ?? 0}
-                  </p>
-                </div>
+                <p className="text-xl font-bold text-orange-700 dark:text-orange-400 leading-tight">
+                  {helpByPeriod?.allTime?.count ?? 0}
+                  <span className="text-[10px] font-normal text-gray-400 ml-1">{t('dashboard.times')}</span>
+                </p>
+                <p className="text-xs font-semibold text-orange-600/70 dark:text-orange-400/70">
+                  ${helpByPeriod?.allTime?.amount ?? 0}
+                </p>
                 {(() => {
                   const months = ((helpByPeriod as any)?.months ?? []).slice(-5);
                   if (months.length === 0) return null;
                   const maxAmt = Math.max(...months.map((m: any) => m.amount), 1);
                   return (
-                    <div className="flex items-end gap-1 mt-2 h-6">
+                    <div className="flex items-end gap-1 mt-1.5 h-5">
                       {months.map((m: any, i: number) => (
                         <div key={i} className="flex-1">
                           <div
@@ -415,10 +394,10 @@ export function DashboardPage() {
               </div>
 
               {/* Right: Support statistics — dual semi-donut */}
-              <div className="p-4 bg-gradient-to-b from-violet-50 to-purple-50 dark:from-violet-950/30 dark:to-purple-950/30 rounded-xl flex flex-col">
-                <div className="flex items-center gap-1.5 mb-2">
-                  <Users className="w-4 h-4 text-violet-600" />
-                  <span className="text-xs text-gray-500">{t('dashboard.helpStats')}</span>
+              <div className="p-3 bg-gradient-to-b from-violet-50 to-purple-50 dark:from-violet-950/30 dark:to-purple-950/30 rounded-xl flex flex-col">
+                <div className="flex items-center gap-1.5 mb-1">
+                  <Users className="w-3.5 h-3.5 text-violet-600" />
+                  <span className="text-[10px] text-gray-500">{t('dashboard.helpStats')}</span>
                 </div>
                 {(() => {
                   const given = helpStats?.given?.count ?? 0;
@@ -426,8 +405,8 @@ export function DashboardPage() {
                   const givenAmt = helpStats?.given?.totalAmount ?? 0;
                   const receivedAmt = helpStats?.received?.totalAmount ?? 0;
                   const total = given + received || 1;
-                  const sz = 84;
-                  const sw = 8;
+                  const sz = 72;
+                  const sw = 7;
                   const r = (sz - sw) / 2;
                   const circ = Math.PI * r;
                   const givenLen = (given / total) * circ;
@@ -449,15 +428,15 @@ export function DashboardPage() {
                       </svg>
                       <div className="flex justify-around w-full -mt-1">
                         <div className="text-center">
-                          <p className="text-lg font-bold text-emerald-600 dark:text-emerald-400">{given}</p>
+                          <p className="text-base font-bold text-emerald-600 dark:text-emerald-400">{given}</p>
                           <p className="text-[10px] text-gray-400">${givenAmt}</p>
                         </div>
                         <div className="text-center">
-                          <p className="text-lg font-bold text-blue-600 dark:text-blue-400">{received}</p>
+                          <p className="text-base font-bold text-blue-600 dark:text-blue-400">{received}</p>
                           <p className="text-[10px] text-gray-400">${receivedAmt}</p>
                         </div>
                       </div>
-                      <div className="flex justify-around w-full mt-0.5">
+                      <div className="flex justify-around w-full">
                         <div className="flex items-center gap-1">
                           <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
                           <span className="text-[10px] text-gray-400">{t('dashboard.helpGiven')}</span>
@@ -484,117 +463,6 @@ export function DashboardPage() {
 
           </CardContent>
         </Card>
-      )}
-
-      {/* === TAB: ACTIVITY === */}
-      {activeTab === 'activity' && (
-        <div className="space-y-4">
-          {/* My collections */}
-          <Card>
-            <CardHeader>
-              <div className="flex items-center justify-between">
-                <h2 className="font-semibold text-gray-900 dark:text-white">
-                  {t('dashboard.myCollections')}
-                </h2>
-                <Button variant="ghost" size="sm" onClick={() => navigate('/create')}>
-                  <PlusCircle className="w-4 h-4 mr-1" /> {t('dashboard.create')}
-                </Button>
-              </div>
-            </CardHeader>
-            <CardContent>
-              {!myCollections ? (
-                <div className="flex justify-center py-4"><Spinner /></div>
-              ) : myCollections.length === 0 ? (
-                <p className="text-sm text-gray-500 text-center py-4">
-                  {t('dashboard.noCollections')}
-                </p>
-              ) : (
-                <div className="space-y-3">
-                  {myCollections.map((col) => {
-                    const hasGoal = col.amount != null && col.amount > 0;
-                    const current = (col as any).currentAmount ?? 0;
-                    return (
-                      <button
-                        key={col.id}
-                        onClick={() => navigate(`/collection/${col.id}`)}
-                        className="w-full text-left p-3 rounded-lg bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700"
-                      >
-                        <div className="flex items-center justify-between mb-1">
-                          <div className="flex items-center gap-2">
-                            <Badge variant={col.status === 'ACTIVE' ? 'success' : 'warning'}>{col.status}</Badge>
-                            <Badge variant={col.type === 'EMERGENCY' ? 'danger' : 'info'}>
-                              {col.type === 'EMERGENCY' ? t('collection.emergency') : t('collection.regular')}
-                            </Badge>
-                          </div>
-                          <span className="text-sm font-medium text-gray-900 dark:text-white">
-                            {hasGoal ? `${current} / ${col.amount} ${col.currency}` : `${current} ${col.currency}`}
-                          </span>
-                        </div>
-                        {hasGoal && <Progress value={current} max={col.amount!} className="mt-1" />}
-                        <div className="text-xs text-gray-500 mt-1">
-                          {col._count.obligations} {t('dashboard.intentions')}
-                        </div>
-                      </button>
-                    );
-                  })}
-                </div>
-              )}
-            </CardContent>
-          </Card>
-
-          {/* My intentions */}
-          <Card>
-            <CardHeader>
-              <h2 className="font-semibold text-gray-900 dark:text-white">
-                {t('dashboard.myIntentions')}
-              </h2>
-            </CardHeader>
-            <CardContent>
-              {!myObligations ? (
-                <div className="flex justify-center py-4"><Spinner /></div>
-              ) : myObligations.length === 0 ? (
-                <p className="text-sm text-gray-500 text-center py-4">
-                  {t('dashboard.noIntentions')}
-                </p>
-              ) : (
-                <div className="space-y-2">
-                  {myObligations.map((obl) => (
-                    <div key={obl.id} className="p-3 rounded-lg bg-gray-50 dark:bg-gray-800 flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <button onClick={() => navigate(`/profile/${obl.collection.creatorId}`)} className="hover:opacity-80">
-                          <Avatar src={obl.collection.creator.photoUrl} name={obl.collection.creator.name} size="sm" />
-                        </button>
-                        <div>
-                          <div className="flex items-center gap-2">
-                            <button
-                              onClick={() => navigate(`/profile/${obl.collection.creatorId}`)}
-                              className="text-sm font-medium text-gray-900 dark:text-white hover:underline"
-                            >
-                              {obl.collection.creator.name}
-                            </button>
-                            <span className="flex items-center gap-0.5 text-xs text-gray-400">
-                              <Users className="w-3 h-3" />
-                              {(obl.collection.creator as any).connectionCount ?? 0}
-                            </span>
-                            <span className="flex items-center gap-0.5 text-xs text-green-600 dark:text-green-400">
-                              <Wallet className="w-3 h-3" />
-                              ${Math.round((obl.collection.creator as any).remainingBudget ?? 0)}
-                            </span>
-                          </div>
-                          <p className="text-xs text-gray-500">{obl.amount} {obl.collection.currency}</p>
-                        </div>
-                      </div>
-                      <Button variant="ghost" size="sm" onClick={() => navigate(`/collection/${obl.collectionId}`)}>
-                        <ArrowRight className="w-4 h-4" />
-                      </Button>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        </div>
-      )}
     </div>
   );
 }
