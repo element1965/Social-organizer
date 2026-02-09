@@ -17,8 +17,6 @@ import {
   Users,
   ArrowRight,
   UserPlus,
-  ChevronDown,
-  ChevronUp,
   AlertTriangle,
   TrendingUp,
   BarChart3,
@@ -45,7 +43,6 @@ export function DashboardPage() {
   const userId = useAuth((s) => s.userId);
 
   const [activeTab, setActiveTab] = useState<TabId>('network');
-  const [expandedDepths, setExpandedDepths] = useState<Record<number, boolean>>({});
   const [showInvitePopup, setShowInvitePopup] = useState(false);
   const [copied, setCopied] = useState(false);
 
@@ -71,16 +68,10 @@ export function DashboardPage() {
 
   const totalReachable = networkStats?.totalReachable ?? 0;
   const byDepth = networkStats?.byDepth ?? {};
-  const usersByDepth = (networkStats as any)?.usersByDepth ?? {};
-
   // Filter emergency notifications (unread, only for active collections)
   const emergencyNotifications = notifications?.items?.filter(
     (n) => n.type === 'NEW_COLLECTION' && n.status === 'UNREAD' && n.collection?.type === 'EMERGENCY' && n.collection?.status === 'ACTIVE'
   ) ?? [];
-
-  const toggleDepth = (depth: number) => {
-    setExpandedDepths((prev) => ({ ...prev, [depth]: !prev[depth] }));
-  };
 
   const tabs = [
     { id: 'network' as const, label: t('dashboard.tabNetwork'), icon: <Network className="w-4 h-4" /> },
@@ -388,77 +379,6 @@ export function DashboardPage() {
                 </Button>
               </div>
             )}
-
-            {/* Handshakes by depth - compact mobile layout */}
-            <div className="space-y-2">
-              {Object.entries(byDepth).map(([depth, count]) => {
-                const depthNum = Number(depth);
-                const isExpanded = expandedDepths[depthNum];
-                const depthUsers = usersByDepth[depthNum] || [];
-                const colors = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899'];
-                const color = colors[(depthNum - 1) % colors.length];
-
-                return (
-                  <div key={depth} className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
-                    <button
-                      onClick={() => toggleDepth(depthNum)}
-                      className="w-full p-3 hover:bg-gray-50 dark:hover:bg-gray-800/50"
-                    >
-                      {/* First line: depth badge + count + chevron */}
-                      <div className="flex items-center justify-between mb-2">
-                        <div className="flex items-center gap-2">
-                          <div
-                            className="w-6 h-6 rounded-full flex items-center justify-center text-white text-xs font-bold"
-                            style={{ backgroundColor: color }}
-                          >
-                            {depth}
-                          </div>
-                          <span className="text-sm text-gray-600 dark:text-gray-400">{t('dashboard.handshakeOrdinal', { depth })}</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <span className="text-xl font-bold text-gray-900 dark:text-white">{count as number}</span>
-                          {isExpanded ? (
-                            <ChevronUp className="w-4 h-4 text-gray-400" />
-                          ) : (
-                            <ChevronDown className="w-4 h-4 text-gray-400" />
-                          )}
-                        </div>
-                      </div>
-                    </button>
-
-                    {isExpanded && depthUsers.length > 0 && (
-                      <div className="border-t border-gray-200 dark:border-gray-700 max-h-48 overflow-y-auto">
-                        {depthUsers.slice(0, 20).map((user: any) => (
-                          <button
-                            key={user.id}
-                            onClick={() => navigate(`/profile/${user.id}`)}
-                            className="w-full flex items-center gap-2 p-2 hover:bg-gray-50 dark:hover:bg-gray-800/50"
-                          >
-                            <Avatar src={user.photoUrl} name={user.name} size="sm" />
-                            <span className="flex-1 text-sm text-gray-700 dark:text-gray-300 text-left">{user.name}</span>
-                            <div className="flex items-center gap-2">
-                              <span className="flex items-center gap-1 text-xs text-gray-400">
-                                <Users className="w-3 h-3" />
-                                {user.connectionCount ?? 0}
-                              </span>
-                              <span className="flex items-center gap-1 text-xs text-green-600 dark:text-green-400">
-                                <Wallet className="w-3 h-3" />
-                                ${Math.round(user.remainingBudget ?? 0)}
-                              </span>
-                            </div>
-                          </button>
-                        ))}
-                        {depthUsers.length > 20 && (
-                          <p className="text-xs text-gray-400 text-center py-2">
-                            +{depthUsers.length - 20} {t('dashboard.more')}
-                          </p>
-                        )}
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
 
           </CardContent>
         </Card>
