@@ -29,6 +29,7 @@ import {
   Check,
   X,
   HelpCircle,
+  Pencil,
 } from 'lucide-react';
 import { Tooltip } from '../components/ui/tooltip';
 
@@ -367,9 +368,9 @@ export function DashboardPage() {
                     </p>
                     <button
                       onClick={() => { setNewBudgetValue(''); setEditingBudget(true); }}
-                      className="text-xs text-blue-600 hover:underline mt-1"
+                      className="text-gray-400 hover:text-gray-300 mt-1"
                     >
-                      {t('dashboard.editBudget')}
+                      <Pencil className="w-3.5 h-3.5" />
                     </button>
                   </>
                 )}
