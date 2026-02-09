@@ -133,7 +133,9 @@
     "personalStats": "내 통계",
     "networkStats": "네트워크 통계",
     "dayCount": "{{count}}일차",
-    "inviteTrusted": "신뢰하는 사람을 초대하세요"
+    "inviteTrusted": "신뢰하는 사람을 초대하세요",
+    "myCapabilitiesHint": "Monthly support budget. How much you're willing to contribute to mutual aid each month",
+    "networkCapabilitiesHint": "Total available monthly budgets of all participants in your mutual aid network"
   },
   "collection": {
     "create": "도움 신호 보내기",
@@ -277,7 +279,8 @@
     "newBudgetPlaceholder": "새 금액",
     "updateBudget": "예산 업데이트",
     "push": "Push",
-    "linkAccountHint": "Link another account (e.g. Google or email) to your profile so you can sign in different ways. Coming soon."
+    "linkAccountHint": "Links your profile to a Play Market, App Store, or FB Games account. Coming soon.",
+    "pushNotifications": "Push Notifications"
   },
   "faq": {
     "title": "자주 묻는 질문",
@@ -297,7 +300,8 @@
     "speechNotSupported": "브라우저에서 음성 인식을 지원하지 않습니다",
     "openChat": "채팅 어시스턴트 열기",
     "startListening": "음성 입력 시작",
-    "stopListening": "음성 입력 중지"
+    "stopListening": "음성 입력 중지",
+    "openHelp": "Help"
   },
   "broadcast": {
     "title": "방송",
@@ -337,7 +341,8 @@
     "decline": "거절",
     "alreadyUsed": "이 초대는 이미 사용되었습니다",
     "success": "연결되었습니다!",
-    "loginToAccept": "로그인하여 수락"
+    "loginToAccept": "로그인하여 수락",
+    "accepting": "Accepting invitation..."
   },
   "landing": {
     "painQuote": "문제가 생기면 — 혼자가 됩니다. 친구들은 모릅니다. 친구의 친구들은 — 더더욱. 하지만 그들 중 누군가는 도와줄 수 있었을 텐데.",
@@ -393,7 +398,9 @@
     "closed": "모금 종료",
     "closedBody": "모금이 생성자에 의해 종료되었습니다.",
     "open": "열기",
-    "view": "보기"
+    "view": "보기",
+    "blocked": "Collection Goal Reached",
+    "blockedBody": "The collection has reached its target amount and is now blocked."
   },
   "hints": {
     "collectionAmount": "필요한 금액을 입력하세요. 최소 10 단위입니다. 시스템이 적절한 수의 사람들에게 알립니다.",

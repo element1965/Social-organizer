@@ -133,7 +133,9 @@
     "personalStats": "İstatistiklerim",
     "networkStats": "Ağ İstatistikleri",
     "dayCount": "{{count}}. gün",
-    "inviteTrusted": "Güvendiğin birini davet et"
+    "inviteTrusted": "Güvendiğin birini davet et",
+    "myCapabilitiesHint": "Monthly support budget. How much you're willing to contribute to mutual aid each month",
+    "networkCapabilitiesHint": "Total available monthly budgets of all participants in your mutual aid network"
   },
   "collection": {
     "create": "Yardım sinyali gönder",
@@ -277,7 +279,8 @@
     "newBudgetPlaceholder": "Yeni miktar",
     "updateBudget": "Bütçeyi Güncelle",
     "push": "Push",
-    "linkAccountHint": "Link another account (e.g. Google or email) to your profile so you can sign in different ways. Coming soon."
+    "linkAccountHint": "Links your profile to a Play Market, App Store, or FB Games account. Coming soon.",
+    "pushNotifications": "Push Notifications"
   },
   "faq": {
     "title": "Sık sorulan sorular",
@@ -297,7 +300,8 @@
     "speechNotSupported": "Tarayıcınızda konuşma tanıma desteklenmiyor",
     "openChat": "Sohbet asistanını aç",
     "startListening": "Sesli girişi başlat",
-    "stopListening": "Sesli girişi durdur"
+    "stopListening": "Sesli girişi durdur",
+    "openHelp": "Help"
   },
   "broadcast": {
     "title": "Yayın",
@@ -394,7 +398,9 @@
     "closed": "Kampanya kapatıldı",
     "closedBody": "Kampanya oluşturucu tarafından kapatıldı.",
     "open": "Aç",
-    "view": "Görüntüle"
+    "view": "Görüntüle",
+    "blocked": "Collection Goal Reached",
+    "blockedBody": "The collection has reached its target amount and is now blocked."
   },
   "hints": {
     "collectionAmount": "İhtiyacınız olan miktarı girin. Minimum 10 birim. Sistem doğru sayıda kişiyi bilgilendirecektir.",

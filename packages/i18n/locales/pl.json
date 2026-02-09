@@ -133,7 +133,9 @@
     "personalStats": "Moje statystyki",
     "networkStats": "Statystyki sieci",
     "dayCount": "Dzień {{count}}",
-    "inviteTrusted": "Zaproś kogoś, komu ufasz"
+    "inviteTrusted": "Zaproś kogoś, komu ufasz",
+    "myCapabilitiesHint": "Monthly support budget. How much you're willing to contribute to mutual aid each month",
+    "networkCapabilitiesHint": "Total available monthly budgets of all participants in your mutual aid network"
   },
   "collection": {
     "create": "Wyślij sygnał o pomocy",
@@ -277,7 +279,8 @@
     "newBudgetPlaceholder": "Nowa kwota",
     "updateBudget": "Zaktualizuj budżet",
     "push": "Push",
-    "linkAccountHint": "Link another account (e.g. Google or email) to your profile so you can sign in different ways. Coming soon."
+    "linkAccountHint": "Links your profile to a Play Market, App Store, or FB Games account. Coming soon.",
+    "pushNotifications": "Push Notifications"
   },
   "faq": {
     "title": "Najczęściej zadawane pytania",
@@ -297,7 +300,8 @@
     "speechNotSupported": "Rozpoznawanie mowy nie jest obsługiwane w Twojej przeglądarce",
     "openChat": "Otwórz czat z asystentem",
     "startListening": "Rozpocznij wprowadzanie głosowe",
-    "stopListening": "Zatrzymaj wprowadzanie głosowe"
+    "stopListening": "Zatrzymaj wprowadzanie głosowe",
+    "openHelp": "Help"
   },
   "broadcast": {
     "title": "Transmisja",
@@ -394,7 +398,9 @@
     "closed": "Zbiórka zamknięta",
     "closedBody": "Zbiórka została zamknięta przez twórcę.",
     "open": "Otwórz",
-    "view": "Zobacz"
+    "view": "Zobacz",
+    "blocked": "Collection Goal Reached",
+    "blockedBody": "The collection has reached its target amount and is now blocked."
   },
   "hints": {
     "collectionAmount": "Wprowadź potrzebną kwotę. Minimum 10 jednostek. System powiadomi odpowiednią liczbę osób.",

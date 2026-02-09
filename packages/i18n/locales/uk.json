@@ -133,7 +133,9 @@
     "personalStats": "Моя статистика",
     "networkStats": "Статистика мережі",
     "dayCount": "День {{count}}",
-    "inviteTrusted": "Запросити того, кому довіряєш"
+    "inviteTrusted": "Запросити того, кому довіряєш",
+    "myCapabilitiesHint": "Monthly support budget. How much you're willing to contribute to mutual aid each month",
+    "networkCapabilitiesHint": "Total available monthly budgets of all participants in your mutual aid network"
   },
   "collection": {
     "create": "Подати сигнал про допомогу",
@@ -277,7 +279,8 @@
     "newBudgetPlaceholder": "Нова сума",
     "updateBudget": "Оновити бюджет",
     "push": "Push",
-    "linkAccountHint": "Link another account (e.g. Google or email) to your profile so you can sign in different ways. Coming soon."
+    "linkAccountHint": "Links your profile to a Play Market, App Store, or FB Games account. Coming soon.",
+    "pushNotifications": "Push Notifications"
   },
   "faq": {
     "title": "Часті запитання",
@@ -297,7 +300,8 @@
     "speechNotSupported": "Розпізнавання мовлення не підтримується у вашому браузері",
     "openChat": "Відкрити чат-асистент",
     "startListening": "Почати голосовий ввід",
-    "stopListening": "Зупинити голосовий ввід"
+    "stopListening": "Зупинити голосовий ввід",
+    "openHelp": "Help"
   },
   "broadcast": {
     "title": "Розсилка",
@@ -337,7 +341,8 @@
     "decline": "Відхилити",
     "alreadyUsed": "Це запрошення вже використано",
     "success": "З'єднано!",
-    "loginToAccept": "Увійдіть, щоб прийняти"
+    "loginToAccept": "Увійдіть, щоб прийняти",
+    "accepting": "Accepting invitation..."
   },
   "landing": {
     "painQuote": "Коли трапляється біда — ти залишаєшся сам. Друзі не знають. Знайомі знайомих — тим більше. А хтось із них міг би допомогти.",
@@ -393,7 +398,9 @@
     "closed": "Збір закрито",
     "closedBody": "Збір було закрито створювачем.",
     "open": "Відкрити",
-    "view": "Переглянути"
+    "view": "Переглянути",
+    "blocked": "Collection Goal Reached",
+    "blockedBody": "The collection has reached its target amount and is now blocked."
   },
   "hints": {
     "collectionAmount": "Вкажіть суму, яка вам потрібна. Мінімум 10 одиниць. Система повідомить потрібну кількість людей.",

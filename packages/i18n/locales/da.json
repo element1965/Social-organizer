@@ -133,7 +133,9 @@
     "personalStats": "Min statistik",
     "networkStats": "Netværksstatistik",
     "dayCount": "Dag {{count}}",
-    "inviteTrusted": "Inviter en du stoler på"
+    "inviteTrusted": "Inviter en du stoler på",
+    "myCapabilitiesHint": "Monthly support budget. How much you're willing to contribute to mutual aid each month",
+    "networkCapabilitiesHint": "Total available monthly budgets of all participants in your mutual aid network"
   },
   "collection": {
     "create": "Send et hjælpesignal",
@@ -277,7 +279,8 @@
     "newBudgetPlaceholder": "Nyt beløb",
     "updateBudget": "Opdater budget",
     "push": "Push",
-    "linkAccountHint": "Link another account (e.g. Google or email) to your profile so you can sign in different ways. Coming soon."
+    "linkAccountHint": "Links your profile to a Play Market, App Store, or FB Games account. Coming soon.",
+    "pushNotifications": "Push Notifications"
   },
   "faq": {
     "title": "Ofte stillede spørgsmål",
@@ -297,7 +300,8 @@
     "speechNotSupported": "Talegenkendelse understøttes ikke i din browser",
     "openChat": "Åbn chatassistent",
     "startListening": "Start stemmeinput",
-    "stopListening": "Stop stemmeinput"
+    "stopListening": "Stop stemmeinput",
+    "openHelp": "Help"
   },
   "broadcast": {
     "title": "Udsendelse",
@@ -394,7 +398,9 @@
     "closed": "Indsamling lukket",
     "closedBody": "Indsamlingen er lukket af opretteren.",
     "open": "Åbn",
-    "view": "Se"
+    "view": "Se",
+    "blocked": "Collection Goal Reached",
+    "blockedBody": "The collection has reached its target amount and is now blocked."
   },
   "hints": {
     "collectionAmount": "Indtast det beløb, du har brug for. Minimum 10 enheder. Systemet vil underrette det rette antal personer.",
