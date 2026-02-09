@@ -132,7 +132,8 @@
     "times": "пута",
     "personalStats": "Моја статистика",
     "networkStats": "Статистика мреже",
-    "dayCount": "Дан {{count}}"
+    "dayCount": "Дан {{count}}",
+    "inviteTrusted": "Позови некога коме верујеш"
   },
   "collection": {
     "create": "Пошаљи сигнал за помоћ",

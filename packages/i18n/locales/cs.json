@@ -132,7 +132,8 @@
     "times": "krát",
     "personalStats": "Moje statistiky",
     "networkStats": "Statistiky sítě",
-    "dayCount": "Den {{count}}"
+    "dayCount": "Den {{count}}",
+    "inviteTrusted": "Pozvat někoho, komu důvěřuješ"
   },
   "collection": {
     "create": "Vyslat signál o pomoci",

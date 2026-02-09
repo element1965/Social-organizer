@@ -132,7 +132,8 @@
     "times": "разів",
     "personalStats": "Моя статистика",
     "networkStats": "Статистика мережі",
-    "dayCount": "День {{count}}"
+    "dayCount": "День {{count}}",
+    "inviteTrusted": "Запросити того, кому довіряєш"
   },
   "collection": {
     "create": "Подати сигнал про допомогу",

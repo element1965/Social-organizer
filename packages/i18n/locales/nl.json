@@ -132,7 +132,8 @@
     "times": "keer",
     "personalStats": "Mijn statistieken",
     "networkStats": "Netwerkstatistieken",
-    "dayCount": "Dag {{count}}"
+    "dayCount": "Dag {{count}}",
+    "inviteTrusted": "Nodig iemand uit die je vertrouwt"
   },
   "collection": {
     "create": "Hulpsignaal verzenden",

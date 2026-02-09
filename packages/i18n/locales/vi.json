@@ -132,7 +132,8 @@
     "times": "lần",
     "personalStats": "Thống kê cá nhân",
     "networkStats": "Thống kê mạng lưới",
-    "dayCount": "Ngày {{count}}"
+    "dayCount": "Ngày {{count}}",
+    "inviteTrusted": "Mời người bạn tin tưởng"
   },
   "collection": {
     "create": "Gửi tín hiệu cần giúp đỡ",

@@ -134,7 +134,8 @@
     "times": "раз",
     "personalStats": "Моя статистика",
     "networkStats": "Статистика сети",
-    "dayCount": "День {{count}}"
+    "dayCount": "День {{count}}",
+    "inviteTrusted": "Пригласить того, кому доверяешь"
   },
   "collection": {
     "create": "Подать сигнал о помощи",

@@ -132,7 +132,8 @@
     "times": "ori",
     "personalStats": "Statisticile mele",
     "networkStats": "Statisticile retelei",
-    "dayCount": "Ziua {{count}}"
+    "dayCount": "Ziua {{count}}",
+    "inviteTrusted": "Invită pe cineva în care ai încredere"
   },
   "collection": {
     "create": "Trimite un semnal de ajutor",

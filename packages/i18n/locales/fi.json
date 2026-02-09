@@ -132,7 +132,8 @@
     "times": "kertaa",
     "personalStats": "Omat tilastot",
     "networkStats": "Verkoston tilastot",
-    "dayCount": "Päivä {{count}}"
+    "dayCount": "Päivä {{count}}",
+    "inviteTrusted": "Kutsu joku johon luotat"
   },
   "collection": {
     "create": "Lähetä apusignaali",

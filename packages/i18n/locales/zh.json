@@ -132,7 +132,8 @@
     "times": "次",
     "personalStats": "我的统计",
     "networkStats": "网络统计",
-    "dayCount": "第 {{count}} 天"
+    "dayCount": "第 {{count}} 天",
+    "inviteTrusted": "邀请你信任的人"
   },
   "collection": {
     "create": "发送求助信号",

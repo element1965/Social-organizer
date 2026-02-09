@@ -132,7 +132,8 @@
     "times": "kali",
     "personalStats": "Statistik Saya",
     "networkStats": "Statistik Jaringan",
-    "dayCount": "Hari ke-{{count}}"
+    "dayCount": "Hari ke-{{count}}",
+    "inviteTrusted": "Undang orang yang kamu percaya"
   },
   "collection": {
     "create": "Kirim sinyal bantuan",

@@ -132,7 +132,8 @@
     "times": "बार",
     "personalStats": "मेरे आंकड़े",
     "networkStats": "नेटवर्क आंकड़े",
-    "dayCount": "दिन {{count}}"
+    "dayCount": "दिन {{count}}",
+    "inviteTrusted": "किसी भरोसेमंद को आमंत्रित करें"
   },
   "collection": {
     "create": "मदद का संकेत भेजें",

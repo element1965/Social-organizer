@@ -132,7 +132,8 @@
     "times": "kez",
     "personalStats": "İstatistiklerim",
     "networkStats": "Ağ İstatistikleri",
-    "dayCount": "{{count}}. gün"
+    "dayCount": "{{count}}. gün",
+    "inviteTrusted": "Güvendiğin birini davet et"
   },
   "collection": {
     "create": "Yardım sinyali gönder",
