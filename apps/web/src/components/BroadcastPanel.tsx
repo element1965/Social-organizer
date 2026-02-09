@@ -53,7 +53,8 @@ export function BroadcastPanel({ onClose }: BroadcastPanelProps) {
       });
 
       if (!res.ok) {
-        setResult(t('broadcast.error'));
+        const errData = await res.json().catch(() => ({})) as { error?: string };
+        setResult(errData.error || t('broadcast.error'));
         setMediaFileName('');
         return;
       }
@@ -61,8 +62,8 @@ export function BroadcastPanel({ onClose }: BroadcastPanelProps) {
       const data = (await res.json()) as { fileId: string; mediaType: 'photo' | 'video' };
       setMediaFileId(data.fileId);
       setMediaType(data.mediaType);
-    } catch {
-      setResult(t('broadcast.error'));
+    } catch (err) {
+      setResult(`${t('broadcast.error')}: ${(err as Error).message}`);
       setMediaFileName('');
     } finally {
       setUploading(false);

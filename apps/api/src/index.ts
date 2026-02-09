@@ -65,8 +65,12 @@ async function start() {
       return reply.send({ ok: true });
     });
 
-    // Broadcast file upload — admin only
-    app.post('/api/broadcast/upload', async (req, reply) => {
+    // Broadcast file upload — admin only (extended timeout for large videos)
+    app.post('/api/broadcast/upload', { config: { rawBody: false } }, async (req, reply) => {
+      // Extend timeout for large file uploads (3 minutes)
+      req.raw.setTimeout(180_000);
+      reply.raw.setTimeout(180_000);
+
       const auth = req.headers.authorization;
       if (!auth?.startsWith('Bearer ')) return reply.status(401).send({ error: 'Unauthorized' });
       let userId: string | null = null;
@@ -77,14 +81,33 @@ async function start() {
       } catch { /* invalid token */ }
       if (!userId || !isAdmin(userId)) return reply.status(403).send({ error: 'Forbidden' });
 
-      const data = await req.file();
+      let data;
+      try {
+        data = await req.file();
+      } catch (err) {
+        console.error('[Upload] file parse error:', err);
+        return reply.status(400).send({ error: `File parse error: ${(err as Error).message}` });
+      }
       if (!data) return reply.status(400).send({ error: 'No file' });
 
-      const buffer = await data.toBuffer();
+      let buffer: Buffer;
+      try {
+        buffer = await data.toBuffer();
+      } catch (err) {
+        console.error('[Upload] toBuffer error:', err);
+        return reply.status(413).send({ error: `File too large or read error: ${(err as Error).message}` });
+      }
+
+      const sizeMB = (buffer.length / (1024 * 1024)).toFixed(1);
       const mediaType = data.mimetype.startsWith('video/') ? 'video' as const : 'photo' as const;
+      console.log(`[Upload] ${mediaType} ${data.filename} (${sizeMB}MB)`);
+
+      if (buffer.length > 50 * 1024 * 1024) {
+        return reply.status(413).send({ error: `File too large (${sizeMB}MB). Telegram limit: 50MB` });
+      }
 
       const fileId = await uploadMediaToTelegram(buffer, data.filename || 'media', mediaType);
-      if (!fileId) return reply.status(500).send({ error: 'Upload to Telegram failed' });
+      if (!fileId) return reply.status(500).send({ error: 'Upload to Telegram failed — check server logs' });
 
       return { fileId, mediaType };
     });
