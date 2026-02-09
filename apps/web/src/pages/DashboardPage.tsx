@@ -62,7 +62,7 @@ export function DashboardPage() {
 
 
   return (
-    <div className="px-4 pb-4 pt-6 space-y-4 relative">
+    <div className="p-4 pt-2 space-y-4 relative">
       {/* 3D cloud background */}
       <div className="absolute inset-0 -z-10 opacity-30 pointer-events-none" style={{ height: 300 }}>
         <Suspense fallback={null}>
