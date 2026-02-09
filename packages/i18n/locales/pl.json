@@ -132,7 +132,8 @@
     "times": "razy",
     "personalStats": "Moje statystyki",
     "networkStats": "Statystyki sieci",
-    "dayCount": "Dzień {{count}}"
+    "dayCount": "Dzień {{count}}",
+    "inviteTrusted": "Zaproś kogoś, komu ufasz"
   },
   "collection": {
     "create": "Wyślij sygnał o pomocy",

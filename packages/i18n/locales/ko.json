@@ -132,7 +132,8 @@
     "times": "회",
     "personalStats": "내 통계",
     "networkStats": "네트워크 통계",
-    "dayCount": "{{count}}일차"
+    "dayCount": "{{count}}일차",
+    "inviteTrusted": "신뢰하는 사람을 초대하세요"
   },
   "collection": {
     "create": "도움 신호 보내기",

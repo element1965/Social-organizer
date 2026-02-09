@@ -132,7 +132,8 @@
     "times": "مرات",
     "personalStats": "إحصائياتي",
     "networkStats": "إحصائيات الشبكة",
-    "dayCount": "اليوم {{count}}"
+    "dayCount": "اليوم {{count}}",
+    "inviteTrusted": "ادعُ شخصاً تثق به"
   },
   "collection": {
     "create": "إرسال إشارة مساعدة",

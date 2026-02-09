@@ -132,7 +132,8 @@
     "times": "回",
     "personalStats": "マイ統計",
     "networkStats": "ネットワーク統計",
-    "dayCount": "{{count}} 日目"
+    "dayCount": "{{count}} 日目",
+    "inviteTrusted": "信頼できる人を招待する"
   },
   "collection": {
     "create": "助けの合図を送る",

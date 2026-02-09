@@ -132,7 +132,8 @@
     "times": "ครั้ง",
     "personalStats": "สถิติของฉัน",
     "networkStats": "สถิติเครือข่าย",
-    "dayCount": "วันที่ {{count}}"
+    "dayCount": "วันที่ {{count}}",
+    "inviteTrusted": "เชิญคนที่คุณไว้วางใจ"
   },
   "collection": {
     "create": "ส่งสัญญาณขอความช่วยเหลือ",

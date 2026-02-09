@@ -134,7 +134,8 @@
     "times": "times",
     "personalStats": "My Statistics",
     "networkStats": "Network Statistics",
-    "dayCount": "Day {{count}}"
+    "dayCount": "Day {{count}}",
+    "inviteTrusted": "Invite someone you trust"
   },
   "collection": {
     "create": "Send a help signal",

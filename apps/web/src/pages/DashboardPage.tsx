@@ -11,7 +11,7 @@ import { Badge } from '../components/ui/badge';
 import { Progress } from '../components/ui/progress';
 import { Spinner } from '../components/ui/spinner';
 import { Avatar } from '../components/ui/avatar';
-import { SemiDonutChart, Tabs } from '../components/ui/charts';
+import { Tabs } from '../components/ui/charts';
 import {
   PlusCircle,
   Users,
@@ -19,7 +19,6 @@ import {
   UserPlus,
   AlertTriangle,
   TrendingUp,
-  BarChart3,
   Network,
   HandHeart,
   Wallet,
@@ -35,10 +34,10 @@ const LazyCloudBackground = lazy(() =>
   import('@so/graph-3d').then((m) => ({ default: m.CloudBackground })),
 );
 
-type TabId = 'network' | 'stats' | 'activity';
+type TabId = 'network' | 'activity';
 
 export function DashboardPage() {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const userId = useAuth((s) => s.userId);
 
@@ -75,7 +74,6 @@ export function DashboardPage() {
 
   const tabs = [
     { id: 'network' as const, label: t('dashboard.tabNetwork'), icon: <Network className="w-4 h-4" /> },
-    { id: 'stats' as const, label: t('dashboard.tabStats'), icon: <BarChart3 className="w-4 h-4" /> },
     { id: 'activity' as const, label: t('dashboard.tabActivity'), icon: <HandHeart className="w-4 h-4" /> },
   ];
 
@@ -380,117 +378,112 @@ export function DashboardPage() {
               </div>
             )}
 
-          </CardContent>
-        </Card>
-      )}
-
-      {/* === TAB: STATS === */}
-      {activeTab === 'stats' && (
-        <div className="space-y-6">
-          {/* Section 1: Personal Statistics */}
-          <div className="space-y-4">
-            <div className="flex items-center gap-2">
-              <Users className="w-5 h-5 text-blue-600" />
-              <h3 className="text-lg font-bold text-gray-900 dark:text-white">
-                {t('dashboard.personalStats')}
-              </h3>
-            </div>
-
-            {/* Help given/received */}
-            <Card>
-              <CardHeader>
-                <h3 className="font-semibold text-gray-900 dark:text-white">
-                  {t('dashboard.helpStats')}
-                </h3>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="flex flex-col items-center">
-                    <SemiDonutChart
-                      value={helpStats?.given?.count ?? 0}
-                      max={20}
-                      size={120}
-                      color="#10b981"
-                      label={String(helpStats?.given?.count ?? 0)}
-                      sublabel={t('dashboard.helpGiven')}
-                    />
-                    <p className="text-sm font-medium text-gray-600 dark:text-gray-400 mt-2">
-                      {helpStats?.given?.totalAmount ?? 0} USD
-                    </p>
-                  </div>
-                  <div className="flex flex-col items-center">
-                    <SemiDonutChart
-                      value={helpStats?.received?.count ?? 0}
-                      max={20}
-                      size={120}
-                      color="#3b82f6"
-                      label={String(helpStats?.received?.count ?? 0)}
-                      sublabel={t('dashboard.helpReceived')}
-                    />
-                    <p className="text-sm font-medium text-gray-600 dark:text-gray-400 mt-2">
-                      {helpStats?.received?.totalAmount ?? 0} USD
-                    </p>
-                  </div>
+            {/* Help statistics — compact */}
+            <div className="grid grid-cols-2 gap-3">
+              {/* Left: Help given by period */}
+              <div className="p-4 bg-gradient-to-b from-orange-50 to-amber-50 dark:from-orange-950/30 dark:to-amber-950/30 rounded-xl flex flex-col">
+                <div className="flex items-center gap-1.5 mb-2">
+                  <HandHeart className="w-4 h-4 text-orange-600" />
+                  <span className="text-xs text-gray-500">{t('dashboard.helpGivenByPeriod')}</span>
                 </div>
-              </CardContent>
-            </Card>
-
-          </div>
-
-          {/* Section 2: Network Statistics */}
-          <div className="space-y-4">
-            <div className="flex items-center gap-2">
-              <Network className="w-5 h-5 text-purple-600" />
-              <h3 className="text-lg font-bold text-gray-900 dark:text-white">
-                {t('dashboard.networkStats')}
-              </h3>
-            </div>
-
-            {/* Help given by period */}
-            <Card>
-              <CardHeader>
-                <h3 className="font-semibold text-gray-900 dark:text-white flex items-center gap-2">
-                  <HandHeart className="w-5 h-5 text-green-600" />
-                  {t('dashboard.helpGivenByPeriod')}
-                </h3>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-3">
-                  {/* All time */}
-                  <div className="flex items-center justify-between py-2 border-b border-gray-100 dark:border-gray-800">
-                    <span className="text-sm font-medium text-gray-900 dark:text-white">{t('dashboard.periodAllTime')}</span>
-                    <div className="flex items-center gap-3">
-                      <span className="text-sm text-gray-500">
-                        {helpByPeriod?.allTime?.count ?? 0} {t('dashboard.times')}
-                      </span>
-                      <span className="text-sm font-semibold text-green-600 dark:text-green-400">
-                        ${helpByPeriod?.allTime?.amount ?? 0}
-                      </span>
+                <div className="flex-1">
+                  <p className="text-2xl font-bold text-orange-700 dark:text-orange-400">
+                    {helpByPeriod?.allTime?.count ?? 0}
+                    <span className="text-xs font-normal text-gray-400 ml-1">{t('dashboard.times')}</span>
+                  </p>
+                  <p className="text-sm font-semibold text-orange-600/70 dark:text-orange-400/70">
+                    ${helpByPeriod?.allTime?.amount ?? 0}
+                  </p>
+                </div>
+                {(() => {
+                  const months = ((helpByPeriod as any)?.months ?? []).slice(-5);
+                  if (months.length === 0) return null;
+                  const maxAmt = Math.max(...months.map((m: any) => m.amount), 1);
+                  return (
+                    <div className="flex items-end gap-1 mt-2 h-6">
+                      {months.map((m: any, i: number) => (
+                        <div key={i} className="flex-1">
+                          <div
+                            className="w-full rounded-sm bg-orange-300 dark:bg-orange-600/60"
+                            style={{ height: `${Math.max((m.amount / maxAmt) * 100, 12)}%` }}
+                          />
+                        </div>
+                      ))}
                     </div>
-                  </div>
-                  {/* Monthly breakdown */}
-                  {(helpByPeriod as any)?.months?.map((m: { month: string; count: number; amount: number }) => {
-                    const [year, mo] = m.month.split('-');
-                    const monthName = new Date(Number(year), Number(mo) - 1).toLocaleDateString(i18n.language, { year: 'numeric', month: 'long' });
-                    return (
-                      <div key={m.month} className="flex items-center justify-between py-2 border-b border-gray-100 dark:border-gray-800 last:border-0">
-                        <span className="text-sm text-gray-600 dark:text-gray-400 capitalize">{monthName}</span>
-                        <div className="flex items-center gap-3">
-                          <span className="text-sm text-gray-500">
-                            {m.count} {t('dashboard.times')}
-                          </span>
-                          <span className="text-sm font-semibold text-green-600 dark:text-green-400">
-                            ${m.amount}
-                          </span>
+                  );
+                })()}
+              </div>
+
+              {/* Right: Support statistics — dual semi-donut */}
+              <div className="p-4 bg-gradient-to-b from-violet-50 to-purple-50 dark:from-violet-950/30 dark:to-purple-950/30 rounded-xl flex flex-col">
+                <div className="flex items-center gap-1.5 mb-2">
+                  <Users className="w-4 h-4 text-violet-600" />
+                  <span className="text-xs text-gray-500">{t('dashboard.helpStats')}</span>
+                </div>
+                {(() => {
+                  const given = helpStats?.given?.count ?? 0;
+                  const received = helpStats?.received?.count ?? 0;
+                  const givenAmt = helpStats?.given?.totalAmount ?? 0;
+                  const receivedAmt = helpStats?.received?.totalAmount ?? 0;
+                  const total = given + received || 1;
+                  const sz = 84;
+                  const sw = 8;
+                  const r = (sz - sw) / 2;
+                  const circ = Math.PI * r;
+                  const givenLen = (given / total) * circ;
+                  const receivedLen = (received / total) * circ;
+                  const arcPath = `M ${sw / 2} ${sz / 2} A ${r} ${r} 0 0 1 ${sz - sw / 2} ${sz / 2}`;
+                  return (
+                    <div className="flex flex-col items-center flex-1 justify-center">
+                      <svg width={sz} height={sz / 2 + sw} className="overflow-visible">
+                        <path d={arcPath} fill="none" stroke="#e5e7eb" strokeWidth={sw} className="dark:stroke-gray-700" />
+                        {given > 0 && (
+                          <path d={arcPath} fill="none" stroke="#10b981" strokeWidth={sw}
+                            strokeDasharray={`${givenLen} ${circ}`} />
+                        )}
+                        {received > 0 && (
+                          <path d={arcPath} fill="none" stroke="#3b82f6" strokeWidth={sw}
+                            strokeDasharray={`${receivedLen} ${circ}`}
+                            strokeDashoffset={`${-givenLen}`} />
+                        )}
+                      </svg>
+                      <div className="flex justify-around w-full -mt-1">
+                        <div className="text-center">
+                          <p className="text-lg font-bold text-emerald-600 dark:text-emerald-400">{given}</p>
+                          <p className="text-[10px] text-gray-400">${givenAmt}</p>
+                        </div>
+                        <div className="text-center">
+                          <p className="text-lg font-bold text-blue-600 dark:text-blue-400">{received}</p>
+                          <p className="text-[10px] text-gray-400">${receivedAmt}</p>
                         </div>
                       </div>
-                    );
-                  })}
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
+                      <div className="flex justify-around w-full mt-0.5">
+                        <div className="flex items-center gap-1">
+                          <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                          <span className="text-[10px] text-gray-400">{t('dashboard.helpGiven')}</span>
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <div className="w-1.5 h-1.5 rounded-full bg-blue-500" />
+                          <span className="text-[10px] text-gray-400">{t('dashboard.helpReceived')}</span>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })()}
+              </div>
+            </div>
+
+            {/* Invite trusted person */}
+            <button
+              onClick={() => { setCopied(false); setShowInvitePopup(true); }}
+              className="w-full py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl font-medium text-sm flex items-center justify-center gap-2 hover:from-blue-500 hover:to-indigo-500 transition-all shadow-md"
+            >
+              <UserPlus className="w-4 h-4" />
+              {t('dashboard.inviteTrusted')}
+            </button>
+
+          </CardContent>
+        </Card>
       )}
 
       {/* === TAB: ACTIVITY === */}

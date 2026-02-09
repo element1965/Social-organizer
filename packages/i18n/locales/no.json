@@ -132,7 +132,8 @@
     "times": "ganger",
     "personalStats": "Min statistikk",
     "networkStats": "Nettverksstatistikk",
-    "dayCount": "Dag {{count}}"
+    "dayCount": "Dag {{count}}",
+    "inviteTrusted": "Inviter noen du stoler på"
   },
   "collection": {
     "create": "Send et hjelpesignal",
