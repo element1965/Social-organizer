@@ -1,6 +1,6 @@
 {
   "common": {
-    "appName": "Social Organizer",
+    "appName": "Organizzatore Sociale",
     "loading": "Caricamento...",
     "error": "Si è verificato un errore",
     "retry": "Riprova",
@@ -134,8 +134,8 @@
     "networkStats": "Statistiche della rete",
     "dayCount": "Giorno {{count}}",
     "inviteTrusted": "Invita qualcuno di cui ti fidi",
-    "myCapabilitiesHint": "Monthly support budget. How much you're willing to contribute to mutual aid each month",
-    "networkCapabilitiesHint": "Total available monthly budgets of all participants in your mutual aid network"
+    "myCapabilitiesHint": "Bilancio di supporto mensile. Quanto sei disposto a contribuire all'aiuto reciproco ogni mese",
+    "networkCapabilitiesHint": "Bilanci mensili totali disponibili di tutti i partecipanti nella tua rete di aiuto reciproco"
   },
   "collection": {
     "create": "Invia segnale di aiuto",
@@ -279,8 +279,8 @@
     "newBudgetPlaceholder": "Nuovo importo",
     "updateBudget": "Aggiorna budget",
     "push": "Push",
-    "linkAccountHint": "Links your profile to a Play Market, App Store, or FB Games account. Coming soon.",
-    "pushNotifications": "Push Notifications"
+    "linkAccountHint": "Collega il tuo profilo a un account Play Market, App Store o FB Games. Prossimamente.",
+    "pushNotifications": "Notifiche Push"
   },
   "faq": {
     "title": "Domande frequenti",
@@ -301,7 +301,7 @@
     "openChat": "Apri assistente chat",
     "startListening": "Avvia input vocale",
     "stopListening": "Ferma input vocale",
-    "openHelp": "Help"
+    "openHelp": "Aiuto"
   },
   "contacts": {
     "telegram": "Telegram",
@@ -381,8 +381,8 @@
     "closedBody": "La raccolta è stata chiusa dal creatore.",
     "open": "Apri",
     "view": "Vedi",
-    "blocked": "Collection Goal Reached",
-    "blockedBody": "The collection has reached its target amount and is now blocked."
+    "blocked": "Obiettivo di Raccolta Raggiunto",
+    "blockedBody": "La raccolta ha raggiunto l'importo obiettivo e ora è bloccata."
   },
   "hints": {
     "collectionAmount": "Inserisci l'importo di cui hai bisogno. Minimo 10 unità. Il sistema notificherà il giusto numero di persone.",
@@ -395,7 +395,7 @@
     "title": "Trasmissione",
     "allUsers": "Tutti gli utenti",
     "directUser": "Per TG ID",
-    "telegramIdPlaceholder": "Telegram ID",
+    "telegramIdPlaceholder": "ID Telegram",
     "messagePlaceholder": "Testo del messaggio...",
     "photo": "Foto",
     "video": "Video",

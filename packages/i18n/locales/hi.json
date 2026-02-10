@@ -1,6 +1,6 @@
 {
   "common": {
-    "appName": "Social Organizer",
+    "appName": "सामाजिक आयोजक",
     "loading": "लोड हो रहा है...",
     "error": "एक त्रुटि हुई",
     "retry": "पुनः प्रयास करें",
@@ -134,8 +134,8 @@
     "networkStats": "नेटवर्क आंकड़े",
     "dayCount": "दिन {{count}}",
     "inviteTrusted": "किसी भरोसेमंद को आमंत्रित करें",
-    "myCapabilitiesHint": "Monthly support budget. How much you're willing to contribute to mutual aid each month",
-    "networkCapabilitiesHint": "Total available monthly budgets of all participants in your mutual aid network"
+    "myCapabilitiesHint": "मासिक समर्थन बजट। आप प्रत्येक माह आपसी सहायता में कितना योगदान देना चाहते हैं",
+    "networkCapabilitiesHint": "आपके आपसी सहायता नेटवर्क में सभी प्रतिभागियों की कुल उपलब्ध मासिक बजट"
   },
   "collection": {
     "create": "मदद का संकेत भेजें",
@@ -278,9 +278,9 @@
     "currentBudget": "शेष",
     "newBudgetPlaceholder": "नई राशि",
     "updateBudget": "बजट अपडेट करें",
-    "push": "Push",
-    "linkAccountHint": "Links your profile to a Play Market, App Store, or FB Games account. Coming soon.",
-    "pushNotifications": "Push Notifications"
+    "push": "पुश",
+    "linkAccountHint": "आपके प्रोफ़ाइल को Play Market, App Store, या FB Games खाते से जोड़ता है। शीघ्र उपलब्ध।",
+    "pushNotifications": "पुश अधिसूचना"
   },
   "faq": {
     "title": "अक्सर पूछे जाने वाले प्रश्न",
@@ -301,13 +301,13 @@
     "openChat": "चैट सहायक खोलें",
     "startListening": "वॉइस इनपुट शुरू करें",
     "stopListening": "वॉइस इनपुट रोकें",
-    "openHelp": "Help"
+    "openHelp": "सहायता"
   },
   "broadcast": {
     "title": "प्रसारण",
     "allUsers": "सभी उपयोगकर्ता",
     "directUser": "TG ID द्वारा",
-    "telegramIdPlaceholder": "Telegram ID",
+    "telegramIdPlaceholder": "टेलीग्राम आईडी",
     "messagePlaceholder": "संदेश का पाठ...",
     "photo": "फोटो",
     "video": "वीडियो",
@@ -322,15 +322,15 @@
     "error": "भेजने में विफल"
   },
   "contacts": {
-    "telegram": "Telegram",
-    "whatsapp": "WhatsApp",
-    "facebook": "Facebook",
-    "instagram": "Instagram",
-    "twitter": "X (Twitter)",
-    "linkedin": "LinkedIn",
-    "vk": "VKontakte",
-    "viber": "Viber",
-    "signal": "Signal",
+    "telegram": "टेलीग्राम",
+    "whatsapp": "व्हाट्सएप",
+    "facebook": "फेसबुक",
+    "instagram": "इंस्टाग्राम",
+    "twitter": "X (ट्विटर)",
+    "linkedin": "लिंक्डइन",
+    "vk": "वीके",
+    "viber": "वाइबर",
+    "signal": "सिग्नल",
     "email": "ईमेल",
     "website": "वेबसाइट"
   },
@@ -342,7 +342,7 @@
     "alreadyUsed": "यह निमंत्रण पहले ही उपयोग हो चुका है",
     "success": "जुड़ गए!",
     "loginToAccept": "स्वीकार करने के लिए लॉग इन करें",
-    "accepting": "Accepting invitation..."
+    "accepting": "आमंत्रण स्वीकार कर रहे हैं..."
   },
   "landing": {
     "painQuote": "जब मुसीबत आती है — आप अकेले रह जाते हैं। दोस्त नहीं जानते। दोस्तों के दोस्त — और भी कम। लेकिन उनमें से कोई मदद कर सकता था।",
@@ -399,8 +399,8 @@
     "closedBody": "संग्रह निर्माता द्वारा बंद कर दिया गया है।",
     "open": "खोलें",
     "view": "देखें",
-    "blocked": "Collection Goal Reached",
-    "blockedBody": "The collection has reached its target amount and is now blocked."
+    "blocked": "संग्रह लक्ष्य प्राप्त",
+    "blockedBody": "संग्रह ने अपना लक्ष्य राशि प्राप्त कर ली है और अब अवरुद्ध है।"
   },
   "hints": {
     "collectionAmount": "आपको जितनी राशि चाहिए वह दर्ज करें। न्यूनतम 10 इकाई। सिस्टम उचित संख्या में लोगों को सूचित करेगा।",

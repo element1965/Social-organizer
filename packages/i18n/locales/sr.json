@@ -1,6 +1,6 @@
 {
   "common": {
-    "appName": "Social Organizer",
+    "appName": "Društveni organizator",
     "loading": "Учитавање...",
     "error": "Дошло је до грешке",
     "retry": "Покушај поново",
@@ -134,8 +134,8 @@
     "networkStats": "Статистика мреже",
     "dayCount": "Дан {{count}}",
     "inviteTrusted": "Позови некога коме верујеш",
-    "myCapabilitiesHint": "Monthly support budget. How much you're willing to contribute to mutual aid each month",
-    "networkCapabilitiesHint": "Total available monthly budgets of all participants in your mutual aid network"
+    "myCapabilitiesHint": "Mesečni budžet za podršku. Koliko ste voljni da doprinesete uzajamnoj pomoći svakog meseca",
+    "networkCapabilitiesHint": "Ukupni dostupni mesečni budžeti svih učesnika u vašoj mreži uzajamne pomoći"
   },
   "collection": {
     "create": "Пошаљи сигнал за помоћ",
@@ -279,8 +279,8 @@
     "newBudgetPlaceholder": "Нови износ",
     "updateBudget": "Ажурирај буџет",
     "push": "Push",
-    "linkAccountHint": "Links your profile to a Play Market, App Store, or FB Games account. Coming soon.",
-    "pushNotifications": "Push Notifications"
+    "linkAccountHint": "Veže vaš profil sa nalogom na Play Marketu, App Storeu ili FB Games. Dolazi uskoro.",
+    "pushNotifications": "Push obaveštenja"
   },
   "faq": {
     "title": "FAQ",
@@ -301,7 +301,7 @@
     "openChat": "Отвори чат асистента",
     "startListening": "Почни гласовни унос",
     "stopListening": "Заустави гласовни унос",
-    "openHelp": "Help"
+    "openHelp": "Pomoć"
   },
   "broadcast": {
     "title": "Емитовање",
@@ -342,7 +342,7 @@
     "alreadyUsed": "Ова позивница је већ искоришћена",
     "success": "Повезани!",
     "loginToAccept": "Пријави се да прихватиш",
-    "accepting": "Accepting invitation..."
+    "accepting": "Prihvatanje pozivnice..."
   },
   "landing": {
     "painQuote": "Кад дође невоља — сам си. Пријатељи не знају. Пријатељи пријатеља — још мање. А неко од њих би могао да помогне.",
@@ -399,8 +399,8 @@
     "closedBody": "Акција је затворена од стране креатора.",
     "open": "Отвори",
     "view": "Погледај",
-    "blocked": "Collection Goal Reached",
-    "blockedBody": "The collection has reached its target amount and is now blocked."
+    "blocked": "Postignut cilj kolekcije",
+    "blockedBody": "Kolekcija je dostigla ciljani iznos i sada je blokirana."
   },
   "hints": {
     "collectionAmount": "Унеси износ који ти треба. Минимум 10 јединица. Систем ће обавестити одговарајући број људи.",

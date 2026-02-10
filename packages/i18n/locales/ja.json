@@ -1,6 +1,6 @@
 {
   "common": {
-    "appName": "Social Organizer",
+    "appName": "ソーシャル オーガナイザー",
     "loading": "読み込み中...",
     "error": "エラーが発生しました",
     "retry": "再試行",
@@ -134,8 +134,8 @@
     "networkStats": "ネットワーク統計",
     "dayCount": "{{count}} 日目",
     "inviteTrusted": "信頼できる人を招待する",
-    "myCapabilitiesHint": "Monthly support budget. How much you're willing to contribute to mutual aid each month",
-    "networkCapabilitiesHint": "Total available monthly budgets of all participants in your mutual aid network"
+    "myCapabilitiesHint": "毎月の支援予算。毎月相互援助に寄与する金額",
+    "networkCapabilitiesHint": "あなたの相互援助ネットワーク内のすべての参加者の利用可能な月間予算の合計"
   },
   "collection": {
     "create": "助けの合図を送る",
@@ -278,9 +278,9 @@
     "currentBudget": "残額",
     "newBudgetPlaceholder": "新しい金額",
     "updateBudget": "予算を更新",
-    "push": "Push",
-    "linkAccountHint": "Links your profile to a Play Market, App Store, or FB Games account. Coming soon.",
-    "pushNotifications": "Push Notifications"
+    "push": "プッシュ",
+    "linkAccountHint": "プロファイルを Play Market、App Store、または FB Games アカウントにリンクします。近日公開。",
+    "pushNotifications": "プッシュ通知"
   },
   "faq": {
     "title": "よくある質問",
@@ -301,7 +301,7 @@
     "openChat": "チャットアシスタントを開く",
     "startListening": "音声入力を開始",
     "stopListening": "音声入力を停止",
-    "openHelp": "Help"
+    "openHelp": "ヘルプ"
   },
   "broadcast": {
     "title": "ブロードキャスト",
@@ -399,8 +399,8 @@
     "closedBody": "募集は作成者によって終了されました。",
     "open": "開く",
     "view": "表示",
-    "blocked": "Collection Goal Reached",
-    "blockedBody": "The collection has reached its target amount and is now blocked."
+    "blocked": "目標額に達しました",
+    "blockedBody": "収集が目標額に達し、現在ブロックされています。"
   },
   "hints": {
     "collectionAmount": "必要な金額を入力してください。最低10単位です。システムが適切な人数に通知します。",

@@ -1,6 +1,6 @@
 {
   "common": {
-    "appName": "Social Organizer",
+    "appName": "Соціальний Організатор",
     "loading": "Завантаження...",
     "error": "Сталася помилка",
     "retry": "Повторити",
@@ -134,8 +134,8 @@
     "networkStats": "Статистика мережі",
     "dayCount": "День {{count}}",
     "inviteTrusted": "Запросити того, кому довіряєш",
-    "myCapabilitiesHint": "Monthly support budget. How much you're willing to contribute to mutual aid each month",
-    "networkCapabilitiesHint": "Total available monthly budgets of all participants in your mutual aid network"
+    "myCapabilitiesHint": "Місячний бюджет підтримки. Скільки ви готові внести на взаємодопомогу щомісяця",
+    "networkCapabilitiesHint": "Загальний доступний місячний бюджет всіх учасників вашої мережі взаємодопомоги"
   },
   "collection": {
     "create": "Подати сигнал про допомогу",
@@ -279,8 +279,8 @@
     "newBudgetPlaceholder": "Нова сума",
     "updateBudget": "Оновити бюджет",
     "push": "Push",
-    "linkAccountHint": "Links your profile to a Play Market, App Store, or FB Games account. Coming soon.",
-    "pushNotifications": "Push Notifications"
+    "linkAccountHint": "Пов'язує ваш профіль з акаунтом Play Market, App Store або FB Games. Скоро.",
+    "pushNotifications": "Push-повідомлення"
   },
   "faq": {
     "title": "Часті запитання",
@@ -301,13 +301,13 @@
     "openChat": "Відкрити чат-асистент",
     "startListening": "Почати голосовий ввід",
     "stopListening": "Зупинити голосовий ввід",
-    "openHelp": "Help"
+    "openHelp": "Допомога"
   },
   "broadcast": {
     "title": "Розсилка",
     "allUsers": "Всі користувачі",
     "directUser": "За TG ID",
-    "telegramIdPlaceholder": "Telegram ID",
+    "telegramIdPlaceholder": "ID Telegram",
     "messagePlaceholder": "Текст повідомлення...",
     "photo": "Фото",
     "video": "Відео",
@@ -331,7 +331,7 @@
     "vk": "ВКонтакте",
     "viber": "Viber",
     "signal": "Signal",
-    "email": "Email",
+    "email": "Електронна пошта",
     "website": "Сайт"
   },
   "invite": {
@@ -342,7 +342,7 @@
     "alreadyUsed": "Це запрошення вже використано",
     "success": "З'єднано!",
     "loginToAccept": "Увійдіть, щоб прийняти",
-    "accepting": "Accepting invitation..."
+    "accepting": "Прийняття запрошення..."
   },
   "landing": {
     "painQuote": "Коли трапляється біда — ти залишаєшся сам. Друзі не знають. Знайомі знайомих — тим більше. А хтось із них міг би допомогти.",
@@ -399,8 +399,8 @@
     "closedBody": "Збір було закрито створювачем.",
     "open": "Відкрити",
     "view": "Переглянути",
-    "blocked": "Collection Goal Reached",
-    "blockedBody": "The collection has reached its target amount and is now blocked."
+    "blocked": "Ціль збору досягнута",
+    "blockedBody": "Збір досягнув цільової суми і тепер заблокований."
   },
   "hints": {
     "collectionAmount": "Вкажіть суму, яка вам потрібна. Мінімум 10 одиниць. Система повідомить потрібну кількість людей.",

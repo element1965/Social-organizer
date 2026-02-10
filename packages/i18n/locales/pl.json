@@ -1,6 +1,6 @@
 {
   "common": {
-    "appName": "Social Organizer",
+    "appName": "Organizator Społeczny",
     "loading": "Ładowanie...",
     "error": "Wystąpił błąd",
     "retry": "Ponów",
@@ -134,8 +134,8 @@
     "networkStats": "Statystyki sieci",
     "dayCount": "Dzień {{count}}",
     "inviteTrusted": "Zaproś kogoś, komu ufasz",
-    "myCapabilitiesHint": "Monthly support budget. How much you're willing to contribute to mutual aid each month",
-    "networkCapabilitiesHint": "Total available monthly budgets of all participants in your mutual aid network"
+    "myCapabilitiesHint": "Miesięczny budżet wsparcia. Ile jesteś gotów/a przeznaczyć na wzajemną pomoc każdego miesiąca",
+    "networkCapabilitiesHint": "Całkowity dostępny miesięczny budżet wszystkich uczestników twojej sieci wzajemnej pomocy"
   },
   "collection": {
     "create": "Wyślij sygnał o pomocy",
@@ -279,8 +279,8 @@
     "newBudgetPlaceholder": "Nowa kwota",
     "updateBudget": "Zaktualizuj budżet",
     "push": "Push",
-    "linkAccountHint": "Links your profile to a Play Market, App Store, or FB Games account. Coming soon.",
-    "pushNotifications": "Push Notifications"
+    "linkAccountHint": "Łączy twój profil z kontem w Play Market, App Store lub FB Games. Wkrótce dostępne.",
+    "pushNotifications": "Powiadomienia Push"
   },
   "faq": {
     "title": "Najczęściej zadawane pytania",
@@ -301,13 +301,13 @@
     "openChat": "Otwórz czat z asystentem",
     "startListening": "Rozpocznij wprowadzanie głosowe",
     "stopListening": "Zatrzymaj wprowadzanie głosowe",
-    "openHelp": "Help"
+    "openHelp": "Pomoc"
   },
   "broadcast": {
     "title": "Transmisja",
     "allUsers": "Wszyscy użytkownicy",
     "directUser": "Wg TG ID",
-    "telegramIdPlaceholder": "Telegram ID",
+    "telegramIdPlaceholder": "ID Telegramu",
     "messagePlaceholder": "Treść wiadomości...",
     "photo": "Zdjęcie",
     "video": "Wideo",
@@ -399,8 +399,8 @@
     "closedBody": "Zbiórka została zamknięta przez twórcę.",
     "open": "Otwórz",
     "view": "Zobacz",
-    "blocked": "Collection Goal Reached",
-    "blockedBody": "The collection has reached its target amount and is now blocked."
+    "blocked": "Cel Zbiórki Osiągnięty",
+    "blockedBody": "Zbiórka osiągnęła swój cel i jest teraz zablokowana."
   },
   "hints": {
     "collectionAmount": "Wprowadź potrzebną kwotę. Minimum 10 jednostek. System powiadomi odpowiednią liczbę osób.",

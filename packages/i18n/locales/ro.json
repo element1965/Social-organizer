@@ -1,6 +1,6 @@
 {
   "common": {
-    "appName": "Social Organizer",
+    "appName": "Organizator Social",
     "loading": "Se incarca...",
     "error": "A aparut o eroare",
     "retry": "Reincearca",
@@ -134,8 +134,8 @@
     "networkStats": "Statisticile retelei",
     "dayCount": "Ziua {{count}}",
     "inviteTrusted": "Invită pe cineva în care ai încredere",
-    "myCapabilitiesHint": "Monthly support budget. How much you're willing to contribute to mutual aid each month",
-    "networkCapabilitiesHint": "Total available monthly budgets of all participants in your mutual aid network"
+    "myCapabilitiesHint": "Buget lunar de sprijin. Cât ești dispus să contribui la ajutor mutual în fiecare lună",
+    "networkCapabilitiesHint": "Totalul bugetelor lunare disponibile ale tuturor participanților din rețeaua ta de ajutor mutual"
   },
   "collection": {
     "create": "Trimite un semnal de ajutor",
@@ -159,7 +159,7 @@
     "close": "Inchide colecta",
     "participants": "Participanti",
     "noParticipants": "Nimeni nu s-a alaturat inca",
-    "minAmount": "Minimum 1",
+    "minAmount": "Minim 1",
     "connectionToCreator": "Conexiune catre creator"
   },
   "create": {
@@ -172,7 +172,7 @@
     "currency": "Moneda",
     "chatLink": "Link chat",
     "submit": "Trimite semnalul",
-    "minAmount": "Minimum 10",
+    "minAmount": "Minim 10",
     "invalidUrl": "URL invalid",
     "networkReach": "Semnalul tau va ajunge la pana la {{count}} persoane prin lanturi de strangeri de mana"
   },
@@ -279,11 +279,11 @@
     "newBudgetPlaceholder": "Suma noua",
     "updateBudget": "Actualizeaza bugetul",
     "push": "Push",
-    "linkAccountHint": "Links your profile to a Play Market, App Store, or FB Games account. Coming soon.",
-    "pushNotifications": "Push Notifications"
+    "linkAccountHint": "Leagă profilul tău de un cont Play Market, App Store sau FB Games. În curând.",
+    "pushNotifications": "Notificări Push"
   },
   "faq": {
-    "title": "FAQ",
+    "title": "Întrebări frecvente",
     "addItem": "Adauga",
     "empty": "Nicio intrebare inca",
     "questionPlaceholder": "Intrebare",
@@ -301,13 +301,13 @@
     "openChat": "Deschide asistentul chat",
     "startListening": "Porneste introducerea vocala",
     "stopListening": "Opreste introducerea vocala",
-    "openHelp": "Help"
+    "openHelp": "Ajutor"
   },
   "broadcast": {
     "title": "Transmisiune",
     "allUsers": "Toți utilizatorii",
     "directUser": "După TG ID",
-    "telegramIdPlaceholder": "Telegram ID",
+    "telegramIdPlaceholder": "ID Telegram",
     "messagePlaceholder": "Textul mesajului...",
     "photo": "Foto",
     "video": "Video",
@@ -342,7 +342,7 @@
     "alreadyUsed": "Aceasta invitatie a fost deja folosita",
     "success": "Conectat!",
     "loginToAccept": "Autentifica-te pentru a accepta",
-    "accepting": "Accepting invitation..."
+    "accepting": "Acceptare invitație..."
   },
   "landing": {
     "painQuote": "Cand apar probleme — ramai singur. Prietenii nu stiu. Prietenii prietenilor — si mai putin. Dar cineva dintre ei ar fi putut ajuta.",
@@ -399,8 +399,8 @@
     "closedBody": "Colecta a fost închisă de creator.",
     "open": "Deschide",
     "view": "Vezi",
-    "blocked": "Collection Goal Reached",
-    "blockedBody": "The collection has reached its target amount and is now blocked."
+    "blocked": "Obiectiv de colectare atins",
+    "blockedBody": "Colectarea a atins suma țintă și este acum blocată."
   },
   "hints": {
     "collectionAmount": "Introdu suma de care ai nevoie. Minimum 10 unitati. Sistemul va notifica numarul potrivit de persoane.",

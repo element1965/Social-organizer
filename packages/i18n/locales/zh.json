@@ -1,6 +1,6 @@
 {
   "common": {
-    "appName": "Social Organizer",
+    "appName": "社交组织者",
     "loading": "加载中...",
     "error": "发生错误",
     "retry": "重试",
@@ -134,8 +134,8 @@
     "networkStats": "网络统计",
     "dayCount": "第 {{count}} 天",
     "inviteTrusted": "邀请你信任的人",
-    "myCapabilitiesHint": "Monthly support budget. How much you're willing to contribute to mutual aid each month",
-    "networkCapabilitiesHint": "Total available monthly budgets of all participants in your mutual aid network"
+    "myCapabilitiesHint": "每月支持预算。您愿意每月为互助贡献多少",
+    "networkCapabilitiesHint": "您互助网络中所有参与者的可用每月预算总额"
   },
   "collection": {
     "create": "发送求助信号",
@@ -278,9 +278,9 @@
     "currentBudget": "剩余",
     "newBudgetPlaceholder": "新金额",
     "updateBudget": "更新预算",
-    "push": "Push",
-    "linkAccountHint": "Links your profile to a Play Market, App Store, or FB Games account. Coming soon.",
-    "pushNotifications": "Push Notifications"
+    "push": "推送",
+    "linkAccountHint": "将您的个人资料链接到 Play Market、App Store 或 FB Games 账户。即将推出。",
+    "pushNotifications": "推送通知"
   },
   "faq": {
     "title": "常见问题",
@@ -301,7 +301,7 @@
     "openChat": "打开聊天助手",
     "startListening": "开始语音输入",
     "stopListening": "停止语音输入",
-    "openHelp": "Help"
+    "openHelp": "帮助"
   },
   "contacts": {
     "telegram": "Telegram",
@@ -381,8 +381,8 @@
     "closedBody": "募集已被创建者关闭。",
     "open": "打开",
     "view": "查看",
-    "blocked": "Collection Goal Reached",
-    "blockedBody": "The collection has reached its target amount and is now blocked."
+    "blocked": "收集目标已达到",
+    "blockedBody": "收集已达到目标金额，现在被阻塞。"
   },
   "hints": {
     "collectionAmount": "输入你需要的金额。最少10个单位。系统会通知适当数量的人。",

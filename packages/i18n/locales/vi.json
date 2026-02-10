@@ -1,6 +1,6 @@
 {
   "common": {
-    "appName": "Social Organizer",
+    "appName": "Trình tổ chức xã hội",
     "loading": "Đang tải...",
     "error": "Đã xảy ra lỗi",
     "retry": "Thử lại",
@@ -134,8 +134,8 @@
     "networkStats": "Thống kê mạng lưới",
     "dayCount": "Ngày {{count}}",
     "inviteTrusted": "Mời người bạn tin tưởng",
-    "myCapabilitiesHint": "Monthly support budget. How much you're willing to contribute to mutual aid each month",
-    "networkCapabilitiesHint": "Total available monthly budgets of all participants in your mutual aid network"
+    "myCapabilitiesHint": "Ngân sách hỗ trợ hàng tháng. Số tiền bạn sẵn lòng đóng góp cho hỗ trợ lẫn nhau mỗi tháng",
+    "networkCapabilitiesHint": "Tổng ngân sách hàng tháng có sẵn của tất cả thành viên trong mạng lưới hỗ trợ lẫn nhau của bạn"
   },
   "collection": {
     "create": "Gửi tín hiệu cần giúp đỡ",
@@ -279,11 +279,11 @@
     "newBudgetPlaceholder": "Số tiền mới",
     "updateBudget": "Cập nhật ngân sách",
     "push": "Push",
-    "linkAccountHint": "Links your profile to a Play Market, App Store, or FB Games account. Coming soon.",
-    "pushNotifications": "Push Notifications"
+    "linkAccountHint": "Liên kết hồ sơ của bạn với tài khoản Play Market, App Store hoặc FB Games. Sắp ra mắt.",
+    "pushNotifications": "Thông báo đẩy"
   },
   "faq": {
-    "title": "FAQ",
+    "title": "Câu hỏi thường gặp",
     "addItem": "Thêm",
     "empty": "Chưa có câu hỏi nào",
     "questionPlaceholder": "Câu hỏi",
@@ -301,13 +301,13 @@
     "openChat": "Mở trợ lý chat",
     "startListening": "Bắt đầu nhập giọng nói",
     "stopListening": "Dừng nhập giọng nói",
-    "openHelp": "Help"
+    "openHelp": "Trợ giúp"
   },
   "broadcast": {
     "title": "Phát sóng",
     "allUsers": "Tất cả người dùng",
     "directUser": "Theo TG ID",
-    "telegramIdPlaceholder": "Telegram ID",
+    "telegramIdPlaceholder": "ID Telegram",
     "messagePlaceholder": "Nội dung tin nhắn...",
     "photo": "Ảnh",
     "video": "Video",
@@ -342,7 +342,7 @@
     "alreadyUsed": "Lời mời này đã được sử dụng",
     "success": "Đã kết nối!",
     "loginToAccept": "Đăng nhập để chấp nhận",
-    "accepting": "Accepting invitation..."
+    "accepting": "Đang chấp nhận lời mời..."
   },
   "landing": {
     "painQuote": "Khi gặp khó khăn — bạn ở một mình. Bạn bè không biết. Bạn của bạn bè — càng không. Nhưng ai đó trong số họ có thể giúp được.",
@@ -399,8 +399,8 @@
     "closedBody": "Chiến dịch đã được đóng bởi người tạo.",
     "open": "Mở",
     "view": "Xem",
-    "blocked": "Collection Goal Reached",
-    "blockedBody": "The collection has reached its target amount and is now blocked."
+    "blocked": "Mục tiêu thu thập đã đạt",
+    "blockedBody": "Bộ sưu tập đã đạt số tiền mục tiêu và hiện đang bị chặn."
   },
   "hints": {
     "collectionAmount": "Nhập số tiền bạn cần. Tối thiểu 10 đơn vị. Hệ thống sẽ thông báo đến đúng số người cần thiết.",
