@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { QRCodeSVG } from 'qrcode.react';
 import { trpc } from '../lib/trpc';
-import { buildInviteUrl, buildWebInviteUrl } from '../lib/inviteUrl';
+import { buildInviteUrl, buildWebInviteUrl, buildBotInviteUrl } from '../lib/inviteUrl';
 import { useAuth } from '../hooks/useAuth';
 import { Card, CardContent } from '../components/ui/card';
 import { Button } from '../components/ui/button';
@@ -46,7 +46,9 @@ export function DashboardPage() {
   const { data: platformGrowth } = trpc.stats.platformGrowth.useQuery(undefined, { refetchInterval: 15000 });
   const permanentInviteUrl = userId ? buildInviteUrl(userId) : '';
   const webInviteUrl = userId ? buildWebInviteUrl(userId) : '';
+  const botInviteUrl = userId ? buildBotInviteUrl(userId) : '';
   const [copiedWeb, setCopiedWeb] = useState(false);
+  const [copiedBot, setCopiedBot] = useState(false);
   const [editingBudget, setEditingBudget] = useState(false);
   const [newBudgetValue, setNewBudgetValue] = useState('');
   const setBudgetMutation = trpc.user.setMonthlyBudget.useMutation({
@@ -189,6 +191,21 @@ export function DashboardPage() {
                 <p className="flex-1 text-xs text-gray-600 dark:text-gray-400 break-all text-left">{webInviteUrl}</p>
                 <div className="shrink-0">
                   {copiedWeb ? <Check className="w-5 h-5 text-green-500" /> : <Copy className="w-5 h-5 text-gray-500" />}
+                </div>
+              </button>
+              {/* Bot link (Telegram) */}
+              <button
+                onClick={() => {
+                  navigator.clipboard.writeText(botInviteUrl);
+                  setCopiedBot(true);
+                  setTimeout(() => setCopiedBot(false), 2000);
+                }}
+                className="w-full flex items-center gap-2 p-3 bg-gray-100 dark:bg-gray-800 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+              >
+                <span className="text-base shrink-0">🤖</span>
+                <p className="flex-1 text-xs text-gray-600 dark:text-gray-400 break-all text-left">{botInviteUrl}</p>
+                <div className="shrink-0">
+                  {copiedBot ? <Check className="w-5 h-5 text-green-500" /> : <Copy className="w-5 h-5 text-gray-500" />}
                 </div>
               </button>
             </div>
