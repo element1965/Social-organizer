@@ -1,75 +1,100 @@
 export const SCREEN_GUIDE = `
 APP SCREENS GUIDE:
 
-LANDING PAGE (/welcome)
-The public entry point. Features a 3D Earth globe with NASA textures, animated clouds, and network visualization. Introduces the project concept. Redirects to login.
+LANDING PAGE (/ or /welcome)
+Public entry point with 3D globe visualization. Sections: hero with CTA, pain-point quotes, "What is it" (3 cards: Handshake, Intention, Transparency), "How it works" (3 steps), Principles (Equality, Self-organization, Openness, 27 Languages), FAQ accordion, Download section with Telegram button. Language switcher in the top-right corner.
 
 LOGIN PAGE (/login)
-Sign in via Telegram Mini App (auto-login via initData), Google, or email. Also has a "Demo login without registration" button for exploring the app with mock data.
+Sign in via Telegram (auto-login in Mini App), Google, or email/password. Toggle between login and registration modes. Authenticated Telegram users are redirected automatically.
 
 ONBOARDING (/onboarding)
-5-step interactive tutorial shown automatically to new users:
-1. Welcome and concept explanation
-2. How handshakes work
-3. How support signals work
-4. Setting monthly budget (optional)
-5. Inviting first connection
-Can be skipped. Once completed, the flag is saved and onboarding won't show again.
+5-step tutorial for new users:
+1. "You have people who care" — concept introduction
+2. "One signal — and the right people know" — how signals work
+3. "Everything is transparent" — transparency principle
+4. "Add your first person" — invite a connection
+5. "Monthly Support Budget" — optional budget input with currency selection and USD conversion
+Can be skipped at step 5. Once completed, won't show again.
 
-DASHBOARD (/)
-The main screen with 3 tabs:
-- Network: your connections count, current capabilities, network reach
-- Statistics: help given/received, participation history
-- Activity: active collections (yours and participated), recent notifications
-Shows emergency alerts prominently at the top.
+DASHBOARD (/dashboard)
+Main screen after login. Sections:
+- Profile header: avatar + name (tap → settings), invite button (opens invite popup)
+- Emergency alerts banner (if any active emergency collections)
+- "Add first connection" prompt (if network is empty)
+- Total network card: big number + sparkline growth chart + day counter since registration
+- Capabilities grid: "Network Capabilities" (total budgets of network) + "My Capabilities" (personal budget, editable inline)
+- Budget depleted warning (if budget is zero)
+- Help statistics: help given by period (with bar chart) + dual semi-donut (given vs received)
+- "Invite someone you trust" CTA button
+- Invite popup: QR code, editable personal invite code (slug), two links — website link and Telegram bot link with descriptions
 
 NOTIFICATIONS (/notifications)
-List of all notifications with:
-- Handshake chain path (how the notification reached you)
-- 24-hour timer (notifications expire)
-- Type indicators (new collection, obligation received, cycle closed, etc.)
-- Quick actions (view collection, dismiss)
-Supports cursor-based pagination.
+Scrollable list of notifications with:
+- Creator avatar, name, connection count, remaining budget
+- Handshake chain path (who linked you to this person)
+- Time remaining badge (notifications expire)
+- Status badges: NEW, REMINDER, CLOSED, BLOCKED, HELP, CYCLE CLOSED, AUTHOR, DEVELOPER
+- "Dismiss all" button in header
+- Infinite scroll pagination
 
 CREATE COLLECTION (/create)
-Form to create a support signal:
-- Type selection (Emergency or Regular)
-- Amount input in local currency with real-time USD conversion
-- Network reach preview (how many people will be notified, based on 1:1 ratio)
-- Chat link (e.g. Telegram group for communication)
-Shows the user's current network size for context.
+Form to send a help signal:
+- Type toggle: Emergency / Regular
+- Amount input + currency dropdown + real-time USD conversion
+- Large amount warning (>$10,000) with confirmation checkbox
+- Chat link input (validated URL)
+- Network reach preview (1:1 ratio: amount = people notified)
+- Submit button
+Below the form: list of your active collections (with progress bars) and your intentions to others
 
 COLLECTION PAGE (/collection/:id)
 Detailed view of a collection:
-- Creator info with handshake path to you
-- Progress bar (collected vs target amount)
-- List of intentions/participants
-- Chat link to contact the creator
-- Actions: create intention, close (if owner), cancel (if owner)
+- Creator info: avatar, name, connection count, status/type badges
+- Connection path card (chain of handshakes to creator)
+- Progress card: current / goal amount with progress bar and percentage
+- Chat link button (if you're a participant or owner)
+- Obligation form: amount + currency + USD preview + submit (if not yet participating)
+- Close collection button (if owner)
+- Participants list with individual amounts
 
 NETWORK (/network)
-Connection management:
-- List of all direct connections with connection counts
-- 3D force-directed graph visualization
-- Invite link generation with QR code
-- Search/filter connections
+Two view modes toggled by button:
+- 3D view: interactive force-directed graph, click nodes → profile, dark/light mode
+- List view: depth-by-depth breakdown (1st handshake, 2nd, etc.), collapsible sections, user cards with avatar, name, connection count, remaining budget
+- Invite popup (same as Dashboard): QR code, editable slug, web + bot links
 
 PROFILE (/profile/:userId)
-User profile showing:
-- Name, photo, connection count
-- Handshake path to this user (if not direct connection)
-- Statistics: collections created, intentions fulfilled
-- Contact information (Telegram, social links)
-- Action: add/remove connection
+- Large avatar, name (with editable nickname for your connections)
+- Bio, phone, registration date
+- Contacts card: social links (Telegram, WhatsApp, Instagram, etc.)
+- Connection path card (how you're connected)
+- Current capability: remaining budget
+- Statistics: connections, collections created, times helped, total pledged (with currency breakdown)
 
 SETTINGS (/settings)
-User preferences:
-- Language selection (25 languages)
-- Theme toggle (dark/light/system)
-- Sound effects toggle
-- Font scale adjustment
-- Monthly budget setting
-- Contact information management
-- Ignore list management (block/unblock users)
-- Account deletion
+- Profile card: avatar upload, editable name, email display
+- Contacts: editable social links (Telegram auto-filled, not editable)
+- Language selector (27 languages) + assistant voice gender
+- Theme toggle: Light / Dark / System
+- Sound + Push notifications toggles (one row)
+- Font size: Standard / Enlarged
+- Link account: generate 6-digit code to link Telegram + other platforms
+- Logout button
+- Delete account with confirmation
+
+FAQ PAGE (/faq)
+- Accordion list of questions and answers
+- Admin-only: add/edit/delete items, localize to all languages via AI translation
+
+INVITE PAGE (/invite/:token)
+- Shows inviter's avatar and name
+- Auto-accepts for authenticated users
+- "Login to accept" for unauthenticated users
+- Success state with "Go to Network" button
+
+BOTTOM NAVIGATION (on all protected pages)
+Fixed bar with 5 items: Home (Dashboard), Notifications (with unread badge), SOS button (red, creates collection), Network, Settings.
+
+CHAT ASSISTANT (floating on all protected pages)
+AI-powered help chat. Answers questions about the app using FAQ from the database. Detects user feedback/suggestions and forwards them to the team via Telegram.
 `;
