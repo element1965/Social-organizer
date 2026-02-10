@@ -2,9 +2,7 @@ import { z } from 'zod';
 import OpenAI from 'openai';
 import { router, protectedProcedure } from '../trpc.js';
 import { getDb } from '@so/db';
-import { GLOSSARY } from '../knowledge/glossary.js';
 import { SCREEN_GUIDE } from '../knowledge/screens.js';
-import { FAQ } from '../knowledge/faq.js';
 
 // Grok API is compatible with OpenAI SDK — lazy init to avoid crash if key is missing at startup
 let grok: OpenAI | null = null;
@@ -80,7 +78,24 @@ async function sendFeedbackToTelegram(userMessage: string, userId: string): Prom
   });
 }
 
-function getSystemPrompt(language: string) {
+async function getSystemPrompt(language: string): Promise<string> {
+  const db = getDb();
+  // Load FAQ from DB in user's language, fallback to Russian
+  let faqItems = await db.faqItem.findMany({
+    where: { language },
+    orderBy: { viewCount: 'desc' },
+  });
+  if (faqItems.length === 0 && language !== 'ru') {
+    faqItems = await db.faqItem.findMany({
+      where: { language: 'ru' },
+      orderBy: { viewCount: 'desc' },
+    });
+  }
+
+  const faqBlock = faqItems.length > 0
+    ? 'FREQUENTLY ASKED QUESTIONS:\n\n' + faqItems.map(f => `Q: ${f.question}\nA: ${f.answer}`).join('\n\n')
+    : '';
+
   return `You are a helpful assistant for the Social Organizer.
 
 STRICT RULES:
@@ -92,15 +107,11 @@ STRICT RULES:
 
 ---
 
-${GLOSSARY}
-
----
-
 ${SCREEN_GUIDE}
 
 ---
 
-${FAQ}
+${faqBlock}
 
 ---
 
@@ -127,8 +138,9 @@ export const chatRouter = router({
     .mutation(async ({ ctx, input }) => {
       const { message, language } = input;
 
+      const systemPrompt = await getSystemPrompt(language);
       const chatMessages: { role: 'system' | 'user'; content: string }[] = [
-        { role: 'system', content: getSystemPrompt(language) },
+        { role: 'system', content: systemPrompt },
         { role: 'user', content: message },
       ];
 
