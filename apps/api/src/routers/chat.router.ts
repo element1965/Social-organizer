@@ -3,6 +3,7 @@ import OpenAI from 'openai';
 import { router, protectedProcedure } from '../trpc.js';
 import { getDb } from '@so/db';
 import { SCREEN_GUIDE } from '../knowledge/screens.js';
+import { translateText } from '../services/translate.service.js';
 
 // Grok API is compatible with OpenAI SDK — lazy init to avoid crash if key is missing at startup
 let grok: OpenAI | null = null;
@@ -80,21 +81,36 @@ async function sendFeedbackToTelegram(userMessage: string, userId: string): Prom
 
 async function getSystemPrompt(language: string): Promise<string> {
   const db = getDb();
-  // Load FAQ from DB in user's language, fallback to Russian
+  // Load FAQ from DB in user's language
   let faqItems = await db.faqItem.findMany({
     where: { language },
     orderBy: { viewCount: 'desc' },
   });
+  // If no FAQ in user's language, load Russian and translate
   if (faqItems.length === 0 && language !== 'ru') {
-    faqItems = await db.faqItem.findMany({
+    const ruItems = await db.faqItem.findMany({
       where: { language: 'ru' },
       orderBy: { viewCount: 'desc' },
     });
+    if (ruItems.length > 0) {
+      const ruBlock = ruItems.map(f => `Q: ${f.question}\nA: ${f.answer}`).join('\n\n');
+      try {
+        const translated = await translateText(ruBlock, 'ru', language);
+        return buildPrompt(language, 'FREQUENTLY ASKED QUESTIONS:\n\n' + translated);
+      } catch {
+        // If translation fails, use Russian as-is
+        faqItems = ruItems;
+      }
+    }
   }
 
   const faqBlock = faqItems.length > 0
     ? 'FREQUENTLY ASKED QUESTIONS:\n\n' + faqItems.map(f => `Q: ${f.question}\nA: ${f.answer}`).join('\n\n')
     : '';
+  return buildPrompt(language, faqBlock);
+}
+
+function buildPrompt(language: string, faqBlock: string): string {
 
   return `You are a helpful assistant for the Social Organizer.
 
