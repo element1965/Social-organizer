@@ -24,11 +24,12 @@ import th from '../locales/th.json';
 import vi from '../locales/vi.json';
 import id from '../locales/id.json';
 import sr from '../locales/sr.json';
+import he from '../locales/he.json';
 
 export const resources = {
   en, ru, es, fr, de, pt, it, zh, ja, ko,
   ar, hi, tr, pl, uk, nl, sv, da, fi, no,
-  cs, ro, th, vi, id, sr,
+  cs, ro, th, vi, id, sr, he,
 } as const;
 
 export type SupportedLanguage = keyof typeof resources;
@@ -60,10 +61,11 @@ export const languageNames: Record<SupportedLanguage, string> = {
   vi: 'Tiếng Việt',
   id: 'Bahasa Indonesia',
   sr: 'Српски',
+  he: 'עברית',
 };
 
 export {
   en, ru, es, fr, de, pt, it, zh, ja, ko,
   ar, hi, tr, pl, uk, nl, sv, da, fi, no,
-  cs, ro, th, vi, id, sr,
+  cs, ro, th, vi, id, sr, he,
 };
