@@ -11,7 +11,7 @@ import { Badge } from '../components/ui/badge';
 import { Progress } from '../components/ui/progress';
 import { Avatar } from '../components/ui/avatar';
 import { Spinner } from '../components/ui/spinner';
-import { ExternalLink, Users, ArrowRight } from 'lucide-react';
+import { ExternalLink, Users, ArrowRight, Pencil, Check, X } from 'lucide-react';
 import { HandshakePath } from '../components/HandshakePath';
 
 export function CollectionPage() {
@@ -30,10 +30,17 @@ export function CollectionPage() {
   );
   const createObligation = trpc.obligation.create.useMutation({ onSuccess: () => utils.collection.getById.invalidate({ id: id! }) });
   const closeCollection = trpc.collection.close.useMutation({ onSuccess: () => utils.collection.getById.invalidate({ id: id! }) });
+  const updateAmount = trpc.obligation.updateAmount.useMutation({ onSuccess: () => utils.collection.getById.invalidate({ id: id! }) });
 
   const [amount, setAmount] = useState('1');
   const [inputCurrency, setInputCurrency] = useState('USD');
   const [error, setError] = useState('');
+
+  // Edit amount state
+  const [editingOblId, setEditingOblId] = useState<string | null>(null);
+  const [editAmount, setEditAmount] = useState('');
+  const [editCurrency, setEditCurrency] = useState('USD');
+  const [editError, setEditError] = useState('');
 
   // Set initial currency from user preference
   useEffect(() => {
@@ -46,6 +53,12 @@ export function CollectionPage() {
   const { data: preview } = trpc.currency.toUSD.useQuery(
     { amount: Number(amount), from: inputCurrency },
     { enabled: !!amount && Number(amount) > 0 && inputCurrency !== 'USD' }
+  );
+
+  // Preview conversion for edit form
+  const { data: editPreview } = trpc.currency.toUSD.useQuery(
+    { amount: Number(editAmount), from: editCurrency },
+    { enabled: !!editingOblId && !!editAmount && Number(editAmount) > 0 && editCurrency !== 'USD' }
   );
 
   if (isLoading) return <div className="flex justify-center py-12"><Spinner /></div>;
@@ -186,24 +199,91 @@ export function CollectionPage() {
               {collection.obligations.map((obl) => {
                 const oblData = obl as typeof obl & { originalAmount?: number; originalCurrency?: string };
                 const showOblOriginal = isOwner && oblData.originalCurrency && oblData.originalCurrency !== 'USD';
+                const isMyObl = obl.userId === userId;
+                const canEdit = isMyObl && (collection.status === 'ACTIVE' || collection.status === 'BLOCKED');
+                const isEditing = editingOblId === obl.id;
+
+                const startEdit = () => {
+                  setEditingOblId(obl.id);
+                  setEditAmount(String(oblData.originalAmount ?? obl.amount));
+                  setEditCurrency(oblData.originalCurrency ?? 'USD');
+                  setEditError('');
+                };
+
+                const cancelEdit = () => {
+                  setEditingOblId(null);
+                  setEditError('');
+                };
+
+                const saveEdit = () => {
+                  const num = Number(editAmount);
+                  if (!num || num < 1) { setEditError(t('collection.minAmount')); return; }
+                  setEditError('');
+                  updateAmount.mutate(
+                    { obligationId: obl.id, amount: num, inputCurrency: editCurrency },
+                    { onSuccess: () => setEditingOblId(null) }
+                  );
+                };
+
                 return (
-                  <div key={obl.id} className="flex items-center justify-between py-1">
-                    <button onClick={() => navigate(`/profile/${obl.userId}`)} className="flex items-center gap-2 hover:underline">
-                      <Avatar src={obl.user.photoUrl} name={obl.user.name} size="sm" />
-                      <span className="text-sm text-gray-900 dark:text-white">{obl.user.name}</span>
-                      <span className="flex items-center gap-0.5 text-xs text-gray-400">
-                        <Users className="w-3 h-3" />
-                        {(obl.user as any).connectionCount ?? 0}
-                      </span>
-                    </button>
-                    <div className="text-right">
-                      <span className="text-sm font-medium text-gray-900 dark:text-white">${Math.round(obl.amount)} USD</span>
-                      {showOblOriginal && (
-                        <p className="text-xs text-gray-400">
-                          ({oblData.originalAmount} {oblData.originalCurrency})
-                        </p>
+                  <div key={obl.id} className="py-1">
+                    <div className="flex items-center justify-between">
+                      <button onClick={() => navigate(`/profile/${obl.userId}`)} className="flex items-center gap-2 hover:underline">
+                        <Avatar src={obl.user.photoUrl} name={obl.user.name} size="sm" />
+                        <span className="text-sm text-gray-900 dark:text-white">{obl.user.name}</span>
+                        <span className="flex items-center gap-0.5 text-xs text-gray-400">
+                          <Users className="w-3 h-3" />
+                          {(obl.user as any).connectionCount ?? 0}
+                        </span>
+                      </button>
+                      {!isEditing && (
+                        <div className="flex items-center gap-2">
+                          <div className="text-right">
+                            <span className="text-sm font-medium text-gray-900 dark:text-white">${Math.round(obl.amount)} USD</span>
+                            {showOblOriginal && (
+                              <p className="text-xs text-gray-400">
+                                ({oblData.originalAmount} {oblData.originalCurrency})
+                              </p>
+                            )}
+                          </div>
+                          {canEdit && (
+                            <button onClick={startEdit} className="p-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300" title={t('collection.editAmount')}>
+                              <Pencil className="w-3.5 h-3.5" />
+                            </button>
+                          )}
+                        </div>
                       )}
                     </div>
+                    {isEditing && (
+                      <div className="mt-2 space-y-2 pl-8">
+                        <div className="flex gap-2">
+                          <div className="flex-1">
+                            <Input type="number" min={1} value={editAmount} onChange={(e) => setEditAmount(e.target.value)} error={editError} />
+                          </div>
+                          <div className="w-28">
+                            <Select
+                              id="edit-currency"
+                              className="h-[38px]"
+                              value={editCurrency}
+                              onChange={(e) => setEditCurrency(e.target.value)}
+                              options={currencyOptions}
+                            />
+                          </div>
+                          <button onClick={saveEdit} disabled={updateAmount.isPending} className="p-2 text-green-600 hover:text-green-700 disabled:opacity-50" title={t('collection.saveAmount')}>
+                            <Check className="w-4 h-4" />
+                          </button>
+                          <button onClick={cancelEdit} className="p-2 text-gray-400 hover:text-gray-600" title={t('collection.cancelEdit')}>
+                            <X className="w-4 h-4" />
+                          </button>
+                        </div>
+                        {editCurrency !== 'USD' && Number(editAmount) > 0 && editPreview?.result != null && (
+                          <div className="flex items-center gap-2 text-sm text-gray-500">
+                            <ArrowRight className="w-4 h-4" />
+                            <span>≈ ${editPreview.result} USD</span>
+                          </div>
+                        )}
+                      </div>
+                    )}
                   </div>
                 );
               })}
