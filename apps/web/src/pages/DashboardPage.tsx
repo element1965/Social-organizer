@@ -596,9 +596,14 @@ export function DashboardPage() {
       {isAdmin && clusters && clusters.length > 0 && (
         <Card>
           <CardContent className="py-4">
-            <div className="flex items-center gap-2 mb-3">
-              <Layers className="w-5 h-5 text-purple-600" />
-              <h2 className="font-semibold text-gray-900 dark:text-white">{t('cluster.title')}</h2>
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center gap-2">
+                <Layers className="w-5 h-5 text-purple-600" />
+                <h2 className="font-semibold text-gray-900 dark:text-white">{t('cluster.title')}</h2>
+              </div>
+              <span className="text-sm text-gray-500">
+                {clusters.reduce((sum, cl) => sum + cl.memberCount, 0)} {t('dashboard.people')}
+              </span>
             </div>
             <div className="space-y-2">
               {clusters.map((cl, i) => (
