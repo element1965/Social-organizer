@@ -133,7 +133,7 @@
     "personalStats": "Meine Statistiken",
     "networkStats": "Netzwerkstatistiken",
     "dayCount": "Tag {{count}}",
-    "inviteTrusted": "Jemanden einladen, dem du vertraust",
+    "inviteTrusted": "Einladen",
     "myCapabilitiesHint": "Monatliches Unterstützungsbudget. Wie viel Sie monatlich zu gegenseitiger Hilfe beitragen möchten",
     "networkCapabilitiesHint": "Gesamtes verfügbares monatliches Budget aller Teilnehmer in Ihrem gegenseitigen Hilfenetzwerk"
   },
@@ -388,7 +388,12 @@
     "open": "Öffnen",
     "view": "Ansehen",
     "blocked": "Sammlungsziel erreicht",
-    "blockedBody": "Die Sammlung hat ihren Zielbetrag erreicht und ist nun gesperrt."
+    "blockedBody": "Die Sammlung hat ihren Zielbetrag erreicht und ist nun gesperrt.",
+    "pendingNew": "Neue Verbindungsanfrage",
+    "pendingNewBody": "{{name}} möchte sich verbinden",
+    "pendingAccepted": "Anfrage angenommen",
+    "pendingRejected": "Anfrage abgelehnt",
+    "pendingView": "Ansehen"
   },
   "hints": {
     "collectionAmount": "Gib den Betrag ein, den du benötigst. Mindestens 10 Einheiten. Das System benachrichtigt die richtige Anzahl von Personen.",
@@ -414,5 +419,26 @@
     "sentSuccess": "An {{count}} Benutzer gesendet",
     "directSuccess": "Nachricht gesendet",
     "error": "Fehler beim Senden"
+  },
+  "pending": {
+    "title": "Ausstehende Verbindungen",
+    "incoming": "Eingehende Anfragen",
+    "incomingCount": "{{count}} Anfragen",
+    "waitingApproval": "Wartet auf Bestätigung",
+    "requestSent": "Anfrage gesendet",
+    "requestSentDesc": "Warte auf Bestätigung",
+    "meetInPerson": "Persönliches Treffen empfohlen",
+    "accept": "Annehmen",
+    "reject": "Ablehnen",
+    "accepted": "Angenommen",
+    "rejected": "Abgelehnt",
+    "alreadyConnected": "Bereits verbunden"
+  },
+  "cluster": {
+    "title": "Cluster",
+    "members": "Mitglieder",
+    "budget": "Budget",
+    "root": "Wurzel",
+    "contactRoot": "Wurzel kontaktieren"
   }
 }

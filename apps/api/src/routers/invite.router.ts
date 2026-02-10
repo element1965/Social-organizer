@@ -2,6 +2,7 @@ import { z } from 'zod';
 import { randomBytes } from 'crypto';
 import { router, publicProcedure, protectedProcedure } from '../trpc.js';
 import { TRPCError } from '@trpc/server';
+import { sendPendingNotification } from '../services/notification.service.js';
 
 export const inviteRouter = router({
   generate: protectedProcedure.mutation(async ({ ctx }) => {
@@ -48,16 +49,38 @@ export const inviteRouter = router({
         inviterId = user.id;
       }
 
-      // Create bidirectional connection (sorted for dedup)
+      // Check if already connected
       const [userAId, userBId] = [ctx.userId, inviterId].sort();
-      await ctx.db.connection.upsert({
+      const existingConnection = await ctx.db.connection.findUnique({
         where: { userAId_userBId: { userAId: userAId!, userBId: userBId! } },
-        create: { userAId: userAId!, userBId: userBId! },
-        update: {},
+      });
+      if (existingConnection) {
+        console.log('[invite.accept] already connected:', ctx.userId, '<->', inviterId);
+        return { success: true, alreadyConnected: true, connectedWith: inviterId };
+      }
+
+      // Check if pending connection already exists
+      const existingPending = await ctx.db.pendingConnection.findUnique({
+        where: { fromUserId_toUserId: { fromUserId: ctx.userId, toUserId: inviterId } },
+      });
+      if (existingPending && existingPending.status === 'PENDING') {
+        return { success: true, pending: true, connectedWith: inviterId };
+      }
+
+      // Create pending connection (fromUser = person clicking link, toUser = link owner)
+      await ctx.db.pendingConnection.upsert({
+        where: { fromUserId_toUserId: { fromUserId: ctx.userId, toUserId: inviterId } },
+        create: { fromUserId: ctx.userId, toUserId: inviterId },
+        update: { status: 'PENDING', resolvedAt: null },
       });
 
-      console.log('[invite.accept] connection created:', ctx.userId, '<->', inviterId);
-      return { success: true, connectedWith: inviterId };
+      console.log('[invite.accept] pending connection created:', ctx.userId, '->', inviterId);
+
+      // TG notification to link owner (fire-and-forget)
+      const applicant = await ctx.db.user.findUnique({ where: { id: ctx.userId }, select: { name: true } });
+      sendPendingNotification(ctx.db, inviterId, 'new', applicant?.name || '').catch(() => {});
+
+      return { success: true, pending: true, connectedWith: inviterId };
     }),
 
   getByToken: publicProcedure

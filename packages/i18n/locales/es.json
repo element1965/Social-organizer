@@ -133,7 +133,7 @@
     "personalStats": "Mis estadísticas",
     "networkStats": "Estadísticas de la red",
     "dayCount": "Día {{count}}",
-    "inviteTrusted": "Invitar a alguien en quien confías",
+    "inviteTrusted": "Invitar",
     "myCapabilitiesHint": "Presupuesto de apoyo mensual. Cuánto estás dispuesto a contribuir a la ayuda mutua cada mes",
     "networkCapabilitiesHint": "Presupuestos mensuales disponibles totales de todos los participantes en tu red de ayuda mutua"
   },
@@ -388,7 +388,12 @@
     "open": "Abrir",
     "view": "Ver",
     "blocked": "Objetivo de Recaudación Alcanzado",
-    "blockedBody": "La recaudación ha alcanzado su monto objetivo y ahora está bloqueada."
+    "blockedBody": "La recaudación ha alcanzado su monto objetivo y ahora está bloqueada.",
+    "pendingNew": "Nueva solicitud de conexión",
+    "pendingNewBody": "{{name}} quiere conectarse",
+    "pendingAccepted": "Solicitud aceptada",
+    "pendingRejected": "Solicitud rechazada",
+    "pendingView": "Ver"
   },
   "hints": {
     "collectionAmount": "Introduce el monto que necesitas. Mínimo 10 unidades. El sistema notificará al número adecuado de personas.",
@@ -414,5 +419,26 @@
     "sentSuccess": "Enviado a {{count}} usuarios",
     "directSuccess": "Mensaje enviado",
     "error": "Error al enviar"
+  },
+  "pending": {
+    "title": "Conexiones pendientes",
+    "incoming": "Solicitudes entrantes",
+    "incomingCount": "{{count}} solicitudes",
+    "waitingApproval": "Esperando confirmación",
+    "requestSent": "Solicitud enviada",
+    "requestSentDesc": "Esperando confirmación",
+    "meetInPerson": "Se recomienda conocerse en persona",
+    "accept": "Aceptar",
+    "reject": "Rechazar",
+    "accepted": "Aceptada",
+    "rejected": "Rechazada",
+    "alreadyConnected": "Ya conectado"
+  },
+  "cluster": {
+    "title": "Clusters",
+    "members": "Miembros",
+    "budget": "Presupuesto",
+    "root": "Raíz",
+    "contactRoot": "Contactar raíz"
   }
 }

@@ -133,7 +133,7 @@
     "personalStats": "Moje statistiky",
     "networkStats": "Statistiky sítě",
     "dayCount": "Den {{count}}",
-    "inviteTrusted": "Pozvat někoho, komu důvěřuješ",
+    "inviteTrusted": "Pozvat",
     "myCapabilitiesHint": "Měsíční rozpočet podpory. Kolik jste ochotni přispět na vzájemnou pomoc každý měsíc",
     "networkCapabilitiesHint": "Celkové dostupné měsíční rozpočty všech účastníků ve vaší síti vzájemné pomoci"
   },
@@ -406,7 +406,12 @@
     "open": "Otevřít",
     "view": "Zobrazit",
     "blocked": "Cíl sbírky dosažen",
-    "blockedBody": "Sbírka dosáhla svého cílového částky a nyní je blokována."
+    "blockedBody": "Sbírka dosáhla svého cílového částky a nyní je blokována.",
+    "pendingNew": "Nová žádost o připojení",
+    "pendingNewBody": "{{name}} se chce připojit",
+    "pendingAccepted": "Žádost přijata",
+    "pendingRejected": "Žádost odmítnuta",
+    "pendingView": "Zobrazit"
   },
   "hints": {
     "collectionAmount": "Zadejte částku, kterou potřebujete. Minimálně 10 jednotek. Systém upozorní správný počet lidí.",
@@ -414,5 +419,26 @@
     "intentionAmount": "Částka, kterou jste ochotni poskytnout. Jedná se o záměr, nikoli o převod — koordinace probíhá v chatu.",
     "profileBio": "Řekněte něco o sobě. Pomůže to ostatním účastníkům lépe vás poznat.",
     "profilePhone": "Telefon je viditelný pouze pro vaše přímé spojení (první podání rukou)."
+  },
+  "pending": {
+    "title": "Čekající připojení",
+    "incoming": "Příchozí žádosti",
+    "incomingCount": "{{count}} žádostí",
+    "waitingApproval": "Čeká na schválení",
+    "requestSent": "Žádost odeslána",
+    "requestSentDesc": "Čeká na potvrzení",
+    "meetInPerson": "Doporučujeme osobní setkání",
+    "accept": "Přijmout",
+    "reject": "Odmítnout",
+    "accepted": "Přijato",
+    "rejected": "Odmítnuto",
+    "alreadyConnected": "Již připojeno"
+  },
+  "cluster": {
+    "title": "Clustery",
+    "members": "Členové",
+    "budget": "Rozpočet",
+    "root": "Kořen",
+    "contactRoot": "Kontaktovat kořen"
   }
 }

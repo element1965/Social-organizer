@@ -133,7 +133,7 @@
     "personalStats": "Thống kê cá nhân",
     "networkStats": "Thống kê mạng lưới",
     "dayCount": "Ngày {{count}}",
-    "inviteTrusted": "Mời người bạn tin tưởng",
+    "inviteTrusted": "Mời",
     "myCapabilitiesHint": "Ngân sách hỗ trợ hàng tháng. Số tiền bạn sẵn lòng đóng góp cho hỗ trợ lẫn nhau mỗi tháng",
     "networkCapabilitiesHint": "Tổng ngân sách hàng tháng có sẵn của tất cả thành viên trong mạng lưới hỗ trợ lẫn nhau của bạn"
   },
@@ -406,7 +406,12 @@
     "open": "Mở",
     "view": "Xem",
     "blocked": "Mục tiêu thu thập đã đạt",
-    "blockedBody": "Bộ sưu tập đã đạt số tiền mục tiêu và hiện đang bị chặn."
+    "blockedBody": "Bộ sưu tập đã đạt số tiền mục tiêu và hiện đang bị chặn.",
+    "pendingNew": "Yêu cầu kết nối mới",
+    "pendingNewBody": "{{name}} muốn kết nối",
+    "pendingAccepted": "Yêu cầu được chấp nhận",
+    "pendingRejected": "Yêu cầu bị từ chối",
+    "pendingView": "Xem"
   },
   "hints": {
     "collectionAmount": "Nhập số tiền bạn cần. Tối thiểu 10 đơn vị. Hệ thống sẽ thông báo đến đúng số người cần thiết.",
@@ -414,5 +419,26 @@
     "intentionAmount": "Số tiền bạn sẵn sàng cung cấp. Đây là ý định, không phải chuyển khoản — phối hợp diễn ra trong chat.",
     "profileBio": "Kể một chút về bản thân. Điều này giúp người tham gia khác hiểu bạn hơn.",
     "profilePhone": "Số điện thoại chỉ hiển thị với kết nối trực tiếp (bắt tay cấp một)."
+  },
+  "pending": {
+    "title": "Kết nối đang chờ",
+    "incoming": "Yêu cầu đến",
+    "incomingCount": "{{count}} yêu cầu",
+    "waitingApproval": "Đang chờ phê duyệt",
+    "requestSent": "Đã gửi yêu cầu",
+    "requestSentDesc": "Đang chờ xác nhận",
+    "meetInPerson": "Nên gặp trực tiếp trước khi chấp nhận",
+    "accept": "Chấp nhận",
+    "reject": "Từ chối",
+    "accepted": "Đã chấp nhận",
+    "rejected": "Đã từ chối",
+    "alreadyConnected": "Đã kết nối"
+  },
+  "cluster": {
+    "title": "Cụm",
+    "members": "Thành viên",
+    "budget": "Ngân sách",
+    "root": "Gốc",
+    "contactRoot": "Liên hệ gốc"
   }
 }

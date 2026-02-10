@@ -215,6 +215,47 @@ export async function sendCollectionBlockedTg(
   await sendTgMessages(messages);
 }
 
+/**
+ * Send Telegram notification for pending connections (new request, accepted, rejected).
+ */
+export async function sendPendingNotification(
+  db: PrismaClient,
+  recipientUserId: string,
+  type: 'new' | 'accepted' | 'rejected',
+  actorName: string,
+): Promise<void> {
+  const tgAccount = await db.platformAccount.findFirst({
+    where: { userId: recipientUserId, platform: 'TELEGRAM' },
+    select: { platformId: true, user: { select: { language: true } } },
+  });
+  if (!tgAccount) return;
+
+  const lang = tgAccount.user?.language || 'en';
+  let text: string;
+  let replyMarkup: TgReplyMarkup | undefined;
+  const dashboardUrl = `${WEB_APP_URL}/dashboard`;
+
+  if (type === 'new') {
+    const title = tg(lang, 'pendingNew') || 'New connection request';
+    const body = (tg(lang, 'pendingNewBody') || '{{name}} wants to connect').replace('{{name}}', actorName);
+    text = `🔔 <b>${title}</b>\n\n${body}`;
+    replyMarkup = {
+      inline_keyboard: [[{ text: `📱 ${tg(lang, 'pendingView') || 'View'}`, web_app: { url: dashboardUrl } }]],
+    };
+  } else if (type === 'accepted') {
+    const title = tg(lang, 'pendingAccepted') || 'Request accepted';
+    text = `✅ <b>${title}</b>\n\n${actorName}`;
+    replyMarkup = {
+      inline_keyboard: [[{ text: `📱 ${tg(lang, 'open') || 'Open'}`, web_app: { url: `${WEB_APP_URL}/network` } }]],
+    };
+  } else {
+    const title = tg(lang, 'pendingRejected') || 'Request declined';
+    text = `❌ <b>${title}</b>\n\n${actorName}`;
+  }
+
+  await sendTgMessages([{ telegramId: tgAccount.platformId, text, replyMarkup }]);
+}
+
 /** Send new collection Telegram notifications with per-user language */
 async function dispatchNewCollectionTg(
   db: PrismaClient,

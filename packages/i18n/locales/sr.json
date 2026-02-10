@@ -133,7 +133,7 @@
     "personalStats": "Моја статистика",
     "networkStats": "Статистика мреже",
     "dayCount": "Дан {{count}}",
-    "inviteTrusted": "Позови некога коме верујеш",
+    "inviteTrusted": "Позови",
     "myCapabilitiesHint": "Mesečni budžet za podršku. Koliko ste voljni da doprinesete uzajamnoj pomoći svakog meseca",
     "networkCapabilitiesHint": "Ukupni dostupni mesečni budžeti svih učesnika u vašoj mreži uzajamne pomoći"
   },
@@ -406,7 +406,12 @@
     "open": "Отвори",
     "view": "Погледај",
     "blocked": "Postignut cilj kolekcije",
-    "blockedBody": "Kolekcija je dostigla ciljani iznos i sada je blokirana."
+    "blockedBody": "Kolekcija je dostigla ciljani iznos i sada je blokirana.",
+    "pendingNew": "Нови захтев за везу",
+    "pendingNewBody": "{{name}} жели да се повеже",
+    "pendingAccepted": "Захтев прихваћен",
+    "pendingRejected": "Захтев одбијен",
+    "pendingView": "Погледај"
   },
   "hints": {
     "collectionAmount": "Унеси износ који ти треба. Минимум 10 јединица. Систем ће обавестити одговарајући број људи.",
@@ -414,5 +419,26 @@
     "intentionAmount": "Износ који си спреман да пружиш. Ово је намера, не трансфер — координација се одвија у чату.",
     "profileBio": "Реци нешто о себи. Ово помаже другим учесницима да те боље упознају.",
     "profilePhone": "Телефон виде само директне везе (прво руковање)."
+  },
+  "pending": {
+    "title": "Везе на чекању",
+    "incoming": "Долазни захтеви",
+    "incomingCount": "{{count}} захтева",
+    "waitingApproval": "Чека потврду",
+    "requestSent": "Захтев послат",
+    "requestSentDesc": "Чека потврду друге стране",
+    "meetInPerson": "Препоручујемо лично упознавање",
+    "accept": "Прихвати",
+    "reject": "Одбиј",
+    "accepted": "Прихваћено",
+    "rejected": "Одбијено",
+    "alreadyConnected": "Већ повезано"
+  },
+  "cluster": {
+    "title": "Кластери",
+    "members": "Чланови",
+    "budget": "Буџет",
+    "root": "Корен",
+    "contactRoot": "Контактирај корен"
   }
 }

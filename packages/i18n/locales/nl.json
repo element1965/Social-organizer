@@ -133,7 +133,7 @@
     "personalStats": "Mijn statistieken",
     "networkStats": "Netwerkstatistieken",
     "dayCount": "Dag {{count}}",
-    "inviteTrusted": "Nodig iemand uit die je vertrouwt",
+    "inviteTrusted": "Uitnodigen",
     "myCapabilitiesHint": "Maandelijks ondersteuningsbudget. Hoeveel je wilt bijdragen aan wederzijdse hulp elke maand",
     "networkCapabilitiesHint": "Totaal beschikbare maandelijkse budgetten van alle deelnemers in uw wederzijdse hulpnetwerk"
   },
@@ -406,7 +406,12 @@
     "open": "Openen",
     "view": "Bekijken",
     "blocked": "Inzameldoel Bereikt",
-    "blockedBody": "De inzameling heeft het doelbedrag bereikt en is nu geblokkeerd."
+    "blockedBody": "De inzameling heeft het doelbedrag bereikt en is nu geblokkeerd.",
+    "pendingNew": "Nieuw verbindingsverzoek",
+    "pendingNewBody": "{{name}} wil verbinden",
+    "pendingAccepted": "Verzoek geaccepteerd",
+    "pendingRejected": "Verzoek afgewezen",
+    "pendingView": "Bekijken"
   },
   "hints": {
     "collectionAmount": "Voer het bedrag in dat je nodig hebt. Minimaal 10 eenheden. Het systeem informeert het juiste aantal mensen.",
@@ -414,5 +419,26 @@
     "intentionAmount": "Het bedrag dat je wilt bijdragen. Dit is een intentie, geen overboeking — coordinatie vindt plaats in de chat.",
     "profileBio": "Vertel iets over jezelf. Dit helpt andere deelnemers je beter te leren kennen.",
     "profilePhone": "Telefoon is alleen zichtbaar voor je directe connecties (eerste handdruk)."
+  },
+  "pending": {
+    "title": "Wachtende verbindingen",
+    "incoming": "Inkomende verzoeken",
+    "incomingCount": "{{count}} verzoeken",
+    "waitingApproval": "Wacht op bevestiging",
+    "requestSent": "Verzoek verzonden",
+    "requestSentDesc": "Wacht op bevestiging",
+    "meetInPerson": "Persoonlijke ontmoeting aanbevolen",
+    "accept": "Accepteren",
+    "reject": "Afwijzen",
+    "accepted": "Geaccepteerd",
+    "rejected": "Afgewezen",
+    "alreadyConnected": "Al verbonden"
+  },
+  "cluster": {
+    "title": "Clusters",
+    "members": "Leden",
+    "budget": "Budget",
+    "root": "Wortel",
+    "contactRoot": "Contact wortel"
   }
 }

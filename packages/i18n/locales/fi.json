@@ -133,7 +133,7 @@
     "personalStats": "Omat tilastot",
     "networkStats": "Verkoston tilastot",
     "dayCount": "Päivä {{count}}",
-    "inviteTrusted": "Kutsu joku johon luotat",
+    "inviteTrusted": "Kutsu",
     "myCapabilitiesHint": "Kuukausittainen tuki budjetti. Kuinka paljon olet valmis lahjoittamaan keskinäiseen apuun kuukausittain",
     "networkCapabilitiesHint": "Kaikkien osallistujien käytettävissä olevat kuukausibudjetit verkostossasi"
   },
@@ -406,7 +406,12 @@
     "open": "Avaa",
     "view": "Näytä",
     "blocked": "Keräystavoite saavutettu",
-    "blockedBody": "Keräys on saavuttanut tavoitesumman ja on nyt estetty."
+    "blockedBody": "Keräys on saavuttanut tavoitesumman ja on nyt estetty.",
+    "pendingNew": "Uusi yhteyspyyntö",
+    "pendingNewBody": "{{name}} haluaa yhdistää",
+    "pendingAccepted": "Pyyntö hyväksytty",
+    "pendingRejected": "Pyyntö hylätty",
+    "pendingView": "Näytä"
   },
   "hints": {
     "collectionAmount": "Syötä tarvitsemasi summa. Vähintään 10 yksikköä. Järjestelmä ilmoittaa oikealle määrälle ihmisiä.",
@@ -414,5 +419,26 @@
     "intentionAmount": "Summa, jonka olet valmis tarjoamaan. Tämä on aikomus, ei siirto — koordinointi tapahtuu chatissa.",
     "profileBio": "Kerro hieman itsestäsi. Se auttaa muita osallistujia tutustumaan sinuun paremmin.",
     "profilePhone": "Puhelin näkyy vain suorille yhteyksillesi (ensimmäinen kättely)."
+  },
+  "pending": {
+    "title": "Odottavat yhteydet",
+    "incoming": "Saapuvat pyynnöt",
+    "incomingCount": "{{count}} pyyntöä",
+    "waitingApproval": "Odottaa hyväksyntää",
+    "requestSent": "Pyyntö lähetetty",
+    "requestSentDesc": "Odottaa vahvistusta",
+    "meetInPerson": "Suosittelemme tapaamista henkilökohtaisesti",
+    "accept": "Hyväksy",
+    "reject": "Hylkää",
+    "accepted": "Hyväksytty",
+    "rejected": "Hylätty",
+    "alreadyConnected": "Jo yhdistetty"
+  },
+  "cluster": {
+    "title": "Klusterit",
+    "members": "Jäsenet",
+    "budget": "Budjetti",
+    "root": "Juuri",
+    "contactRoot": "Ota yhteyttä juureen"
   }
 }

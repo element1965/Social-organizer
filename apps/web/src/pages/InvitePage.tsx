@@ -7,7 +7,7 @@ import { Card, CardContent } from '../components/ui/card';
 import { Button } from '../components/ui/button';
 import { Avatar } from '../components/ui/avatar';
 import { Spinner } from '../components/ui/spinner';
-import { UserPlus, CheckCircle, LogIn } from 'lucide-react';
+import { UserPlus, CheckCircle, LogIn, Clock } from 'lucide-react';
 import { Logo } from '../components/Logo';
 
 export function InvitePage() {
@@ -100,7 +100,24 @@ export function InvitePage() {
           </h2>
           <p className="text-sm text-gray-500 mb-6">{t('invite.title')}</p>
 
-          {accept.isSuccess ? (
+          {accept.isSuccess && (accept.data as any)?.alreadyConnected ? (
+            <div className="flex flex-col items-center gap-3">
+              <CheckCircle className="w-12 h-12 text-green-500" />
+              <p className="text-lg font-semibold text-green-600">{t('pending.alreadyConnected')}</p>
+              <Button className="w-full mt-2" size="lg" onClick={() => navigate('/network')}>
+                {t('network.title')}
+              </Button>
+            </div>
+          ) : accept.isSuccess && (accept.data as any)?.pending ? (
+            <div className="flex flex-col items-center gap-3">
+              <Clock className="w-12 h-12 text-amber-500" />
+              <p className="text-lg font-semibold text-amber-600">{t('pending.requestSent')}</p>
+              <p className="text-sm text-gray-500">{t('pending.requestSentDesc')}</p>
+              <Button className="w-full mt-2" size="lg" onClick={() => navigate('/dashboard')}>
+                {t('dashboard.title')}
+              </Button>
+            </div>
+          ) : accept.isSuccess ? (
             <div className="flex flex-col items-center gap-3">
               <CheckCircle className="w-12 h-12 text-green-500" />
               <p className="text-lg font-semibold text-green-600">{t('invite.success')}</p>
