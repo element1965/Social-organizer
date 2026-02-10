@@ -607,7 +607,11 @@ export function DashboardPage() {
             </div>
             <div className="space-y-2">
               {clusters.map((cl, i) => (
-                <div key={i} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800/50 rounded-lg">
+                <div
+                  key={i}
+                  className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800/50 rounded-lg cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                  onClick={() => navigate(`/profile/${cl.rootUserId}`)}
+                >
                   <div>
                     <p className="text-sm font-medium text-gray-900 dark:text-white">{cl.rootUserName}</p>
                     <p className="text-xs text-gray-500">{t('cluster.members')}: {cl.memberCount}</p>
