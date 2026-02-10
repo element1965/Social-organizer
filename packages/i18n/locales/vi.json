@@ -342,7 +342,13 @@
     "alreadyUsed": "Lời mời này đã được sử dụng",
     "success": "Đã kết nối!",
     "loginToAccept": "Đăng nhập để chấp nhận",
-    "accepting": "Đang chấp nhận lời mời..."
+    "accepting": "Đang chấp nhận lời mời...",
+    "yourCode": "Mã mời của bạn",
+    "slugPlaceholder": "biet-danh-cua-ban",
+    "slugHint": "3–30 ký tự: chữ cái, số, _ và -",
+    "slugMin": "Tối thiểu 3 ký tự",
+    "webLinkDesc": "Liên kết website — nếu người đó chưa quen thuộc với dự án, nó có tất cả thông tin giới thiệu",
+    "botLinkDesc": "Trực tiếp đến Telegram — nếu bạn đã giải thích mọi thứ và họ có thể đi thẳng đến ứng dụng"
   },
   "landing": {
     "painQuote": "Khi gặp khó khăn — bạn ở một mình. Bạn bè không biết. Bạn của bạn bè — càng không. Nhưng ai đó trong số họ có thể giúp được.",

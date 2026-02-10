@@ -324,7 +324,13 @@
     "alreadyUsed": "Este convite já foi utilizado",
     "success": "Conectado!",
     "loginToAccept": "Entre para aceitar",
-    "accepting": "Aceitando convite..."
+    "accepting": "Aceitando convite...",
+    "yourCode": "Seu código de convite",
+    "slugPlaceholder": "seu-apelido",
+    "slugHint": "3–30 caracteres: letras, números, _ e -",
+    "slugMin": "Mínimo 3 caracteres",
+    "webLinkDesc": "Link do site — se a pessoa ainda não conhece o projeto, ele contém todas as informações introdutórias",
+    "botLinkDesc": "Direto para o Telegram — se você já explicou tudo e eles podem ir diretamente para o app"
   },
   "landing": {
     "painQuote": "Quando surge um problema — você fica sozinho. Amigos não sabem. Amigos de amigos — menos ainda. Mas alguém deles poderia ajudar.",

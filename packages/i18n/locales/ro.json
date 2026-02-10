@@ -342,7 +342,13 @@
     "alreadyUsed": "Aceasta invitatie a fost deja folosita",
     "success": "Conectat!",
     "loginToAccept": "Autentifica-te pentru a accepta",
-    "accepting": "Acceptare invitație..."
+    "accepting": "Acceptare invitație...",
+    "yourCode": "Codul tău de invitație",
+    "slugPlaceholder": "your-nickname",
+    "slugHint": "3–30 caractere: litere, numere, _ și -",
+    "slugMin": "Minim 3 caractere",
+    "webLinkDesc": "Link către site — dacă persoana nu este familiarizată cu proiectul încă, conține toate informațiile introductive",
+    "botLinkDesc": "Direct la Telegram — dacă ai explicat deja totul și pot merge direct la aplicație"
   },
   "landing": {
     "painQuote": "Cand apar probleme — ramai singur. Prietenii nu stiu. Prietenii prietenilor — si mai putin. Dar cineva dintre ei ar fi putut ajuta.",

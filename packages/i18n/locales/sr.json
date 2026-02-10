@@ -342,7 +342,13 @@
     "alreadyUsed": "Ова позивница је већ искоришћена",
     "success": "Повезани!",
     "loginToAccept": "Пријави се да прихватиш",
-    "accepting": "Prihvatanje pozivnice..."
+    "accepting": "Prihvatanje pozivnice...",
+    "yourCode": "Vaš pozivni kod",
+    "slugPlaceholder": "vaš-nadimak",
+    "slugHint": "3–30 znakova: slova, brojevi, _ i -",
+    "slugMin": "Minimum 3 znaka",
+    "webLinkDesc": "Link ka veb sajtu — ako osoba još nije upoznata sa projektom, sadrži sve uvodne informacije",
+    "botLinkDesc": "Direktno na Telegram — ako ste već sve objasnili i oni mogu direktno ući u aplikaciju"
   },
   "landing": {
     "painQuote": "Кад дође невоља — сам си. Пријатељи не знају. Пријатељи пријатеља — још мање. А неко од њих би могао да помогне.",

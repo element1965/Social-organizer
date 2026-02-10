@@ -342,7 +342,13 @@
     "alreadyUsed": "Denna inbjudan har redan anvants",
     "success": "Ansluten!",
     "loginToAccept": "Logga in for att acceptera",
-    "accepting": "Accepterar inbjudan..."
+    "accepting": "Accepterar inbjudan...",
+    "yourCode": "Din inbjudningskod",
+    "slugPlaceholder": "ditt-smeknamn",
+    "slugHint": "3–30 tecken: bokstäver, siffror, _ och -",
+    "slugMin": "Minst 3 tecken",
+    "webLinkDesc": "Webbplatslänk — om personen inte är bekant med projektet än, har den all introduktionsinformation",
+    "botLinkDesc": "Rakt till Telegram — om du redan har förklarat allt och de kan gå direkt till appen"
   },
   "landing": {
     "painQuote": "Nar problem uppstar — star du ensam. Vanner vet inte. Vanners vanner — annu mindre. Men nagon av dem kunde ha hjlpt.",

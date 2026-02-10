@@ -342,7 +342,13 @@
     "alreadyUsed": "Denne invitasjonen er allerede brukt",
     "success": "Tilkoblet!",
     "loginToAccept": "Logg inn for å godta",
-    "accepting": "Godtar invitasjon..."
+    "accepting": "Godtar invitasjon...",
+    "yourCode": "Din invitasjonskode",
+    "slugPlaceholder": "din-kallenavn",
+    "slugHint": "3–30 tegn: bokstaver, tall, _ og -",
+    "slugMin": "Minimum 3 tegn",
+    "webLinkDesc": "Nettsidelink ��� hvis personen ikke kjenner prosjektet ennå, har den all introduksjonsinformasjonen",
+    "botLinkDesc": "Rett til Telegram — hvis du allerede har forklart alt og de kan gå rett til appen"
   },
   "landing": {
     "painQuote": "Når problemer oppstår — står du alene. Venner vet ikke. Venners venner — enda mindre. Men noen av dem kunne hjulpet.",

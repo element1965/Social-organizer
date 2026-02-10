@@ -342,7 +342,13 @@
     "alreadyUsed": "Tato pozvánka již byla použita",
     "success": "Propojeno!",
     "loginToAccept": "Přihlaste se pro přijetí",
-    "accepting": "Přijímání pozvání..."
+    "accepting": "Přijímání pozvání...",
+    "yourCode": "Váš pozývací kód",
+    "slugPlaceholder": "vaš-přezdívka",
+    "slugHint": "3–30 znaků: písmena, číslice, _ a -",
+    "slugMin": "Minimálně 3 znaky",
+    "webLinkDesc": "Odkaz na web — pokud osoba ještě nezná projekt, obsahuje všechny úvodní informace",
+    "botLinkDesc": "Přímo do Telegramu — pokud jste vše vysvětlili a mohou jít přímo do aplikace"
   },
   "landing": {
     "painQuote": "Když přijde problém — zůstáváš sám. Přátelé nevědí. Známí známých — ještě méně. Přitom někdo z nich mohl pomoct.",

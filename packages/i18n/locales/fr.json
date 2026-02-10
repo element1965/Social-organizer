@@ -324,7 +324,13 @@
     "alreadyUsed": "Cette invitation a déjà été utilisée",
     "success": "Connecté !",
     "loginToAccept": "Connectez-vous pour accepter",
-    "accepting": "Acceptation de l'invitation..."
+    "accepting": "Acceptation de l'invitation...",
+    "yourCode": "Votre code d'invitation",
+    "slugPlaceholder": "votre-pseudo",
+    "slugHint": "3 à 30 caractères : lettres, nombres, _ et -",
+    "slugMin": "Minimum 3 caractères",
+    "webLinkDesc": "Lien du site web — si la personne n'est pas familière avec le projet, il contient toutes les informations introductives",
+    "botLinkDesc": "Directement vers Telegram — si vous avez déjà tout expliqué et qu'ils peuvent aller directement à l'app"
   },
   "landing": {
     "painQuote": "Quand les problèmes arrivent — tu restes seul. Les amis ne savent pas. Les amis d'amis — encore moins. Pourtant, quelqu'un parmi eux pourrait aider.",

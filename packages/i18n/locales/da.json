@@ -342,7 +342,13 @@
     "alreadyUsed": "Denne invitation er allerede brugt",
     "success": "Forbundet!",
     "loginToAccept": "Log ind for at acceptere",
-    "accepting": "Accepterer invitation..."
+    "accepting": "Accepterer invitation...",
+    "yourCode": "Din invitationskode",
+    "slugPlaceholder": "your-nickname",
+    "slugHint": "3–30 karakterer: bogstaver, tal, _ og -",
+    "slugMin": "Mindst 3 karakterer",
+    "webLinkDesc": "Link til hjemmeside — hvis personen ikke kender projektet endnu, har det al den introducerende information",
+    "botLinkDesc": "Direkte til Telegram — hvis du allerede har forklaret alt og de kan gå direkte til appen"
   },
   "landing": {
     "painQuote": "Når problemer opstår — står du alene. Venner ved det ikke. Venners venner — endnu mindre. Men nogen af dem kunne hjælpe.",
