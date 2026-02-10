@@ -151,6 +151,26 @@ export const userRouter = router({
       });
     }),
 
+  updateReferralSlug: protectedProcedure
+    .input(z.object({
+      slug: z.string()
+        .min(3, 'Minimum 3 characters')
+        .max(30, 'Maximum 30 characters')
+        .regex(/^[a-zA-Z0-9_-]+$/, 'Only letters, numbers, _ and -'),
+    }))
+    .mutation(async ({ ctx, input }) => {
+      const lower = input.slug.toLowerCase();
+      const existing = await ctx.db.user.findUnique({ where: { referralSlug: lower } });
+      if (existing && existing.id !== ctx.userId) {
+        throw new TRPCError({ code: 'CONFLICT', message: 'This slug is already taken' });
+      }
+      return ctx.db.user.update({
+        where: { id: ctx.userId },
+        data: { referralSlug: lower },
+        select: { referralSlug: true },
+      });
+    }),
+
   delete: protectedProcedure.mutation(async ({ ctx }) => {
     await ctx.db.$transaction(async (tx) => {
       // 1. Clear profile (gray profile per SPEC)

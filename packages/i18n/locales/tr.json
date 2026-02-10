@@ -342,7 +342,13 @@
     "alreadyUsed": "Bu davet zaten kullanılmış",
     "success": "Bağlandı!",
     "loginToAccept": "Kabul etmek için giriş yapın",
-    "accepting": "Davet kabul ediliyor..."
+    "accepting": "Davet kabul ediliyor...",
+    "yourCode": "Davet kodunuz",
+    "slugPlaceholder": "your-nickname",
+    "slugHint": "3–30 karakter: letters, numbers, _ ve -",
+    "slugMin": "Minimum 3 karakter",
+    "webLinkDesc": "Web sitesi bağlantısı — eğer kişi proje ile henüz tanışmadıysa, tüm giriş bilgilerini barındırır",
+    "botLinkDesc": "Doğrudan Telegram'a — eğer her şeyi zaten açıklamışsanız ve doğrudan uygulamaya gidebilirler"
   },
   "landing": {
     "painQuote": "Sorun çıktığında — yalnız kalırsın. Arkadaşlar bilmez. Arkadaşların arkadaşları — daha da az. Ama onlardan biri yardım edebilirdi.",

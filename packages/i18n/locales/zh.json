@@ -324,7 +324,13 @@
     "alreadyUsed": "此邀请已被使用",
     "success": "已连接！",
     "loginToAccept": "登录后接受",
-    "accepting": "正在接受邀请..."
+    "accepting": "正在接受邀请...",
+    "yourCode": "您的邀请码",
+    "slugPlaceholder": "your-nickname",
+    "slugHint": "3–30 个字符：letters, numbers, _ and -",
+    "slugMin": "最小 3 个字符",
+    "webLinkDesc": "网站链接 — 如果此人还不熟悉项目，它包含所有入门信息",
+    "botLinkDesc": "直接到 Telegram — 如果您已经解释了一切，他们可以直接进入应用"
   },
   "landing": {
     "painQuote": "当困难来临时——你独自面对。朋友不知道。朋友的朋友——更不知道。但他们中的某个人本可以帮忙。",

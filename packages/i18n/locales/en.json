@@ -342,7 +342,13 @@
     "alreadyUsed": "This invite has already been used",
     "success": "Connected!",
     "loginToAccept": "Log in to accept",
-    "accepting": "Accepting invitation..."
+    "accepting": "Accepting invitation...",
+    "yourCode": "Your invite code",
+    "slugPlaceholder": "your-nickname",
+    "slugHint": "3–30 characters: letters, numbers, _ and -",
+    "slugMin": "Minimum 3 characters",
+    "webLinkDesc": "Website link — if the person isn't familiar with the project yet, it has all the introductory info",
+    "botLinkDesc": "Straight to Telegram — if you've already explained everything and they can go right to the app"
   },
   "landing": {
     "painQuote": "When trouble strikes — you're alone. Friends don't know. Friends of friends — even less so. Yet someone among them could help.",

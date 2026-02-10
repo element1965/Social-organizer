@@ -342,7 +342,13 @@
     "alreadyUsed": "Tämä kutsu on jo käytetty",
     "success": "Yhdistetty!",
     "loginToAccept": "Kirjaudu sisään hyväksyäksesi",
-    "accepting": "Hyväksytään kutsua..."
+    "accepting": "Hyväksytään kutsua...",
+    "yourCode": "Kutsukoodisi",
+    "slugPlaceholder": "omat-nimimerkki",
+    "slugHint": "3–30 merkkiä: kirjaimet, numerot, _ ja -",
+    "slugMin": "Vähintään 3 merkkiä",
+    "webLinkDesc": "Verkkosivun linkki — jos henkilö ei ole vielä tutustunut projektiin, se sisältää kaiken esittelyinfon",
+    "botLinkDesc": "Suoraan Telegramiin — jos olet jo selittänyt kaiken ja he voivat mennä suoraan sovellukseen"
   },
   "landing": {
     "painQuote": "Kun ongelmia ilmenee — jäät yksin. Ystävät eivät tiedä. Tuttujen tutut — vielä vähemmän. Mutta joku heistä voisi auttaa.",

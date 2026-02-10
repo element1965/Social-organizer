@@ -342,7 +342,13 @@
     "alreadyUsed": "이 초대는 이미 사용되었습니다",
     "success": "연결되었습니다!",
     "loginToAccept": "로그인하여 수락",
-    "accepting": "초대 수락 중..."
+    "accepting": "초대 수락 중...",
+    "yourCode": "내 초대 코드",
+    "slugPlaceholder": "your-nickname",
+    "slugHint": "3~30자: 영문자, 숫자, _ 및 -",
+    "slugMin": "최소 3자",
+    "webLinkDesc": "웹사이트 링크 — 프로젝트를 모르는 사람에게 모든 소개 정보를 제공",
+    "botLinkDesc": "텔레그램으로 바로 — 모든 설명 후 앱으로 직행"
   },
   "landing": {
     "painQuote": "문제가 생기면 — 혼자가 됩니다. 친구들은 모릅니다. 친구의 친구들은 — 더더욱. 하지만 그들 중 누군가는 도와줄 수 있었을 텐데.",

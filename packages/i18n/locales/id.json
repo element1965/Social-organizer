@@ -342,7 +342,13 @@
     "alreadyUsed": "Undangan ini sudah digunakan",
     "success": "Terhubung!",
     "loginToAccept": "Masuk untuk menerima",
-    "accepting": "Menerima undangan..."
+    "accepting": "Menerima undangan...",
+    "yourCode": "Kode undangan Anda",
+    "slugPlaceholder": "your-nickname",
+    "slugHint": "3–30 karakter: huruf, angka, _ dan -",
+    "slugMin": "Minimal 3 karakter",
+    "webLinkDesc": "Tautan situs web — jika orang tersebut belum familiar dengan proyek, ia memiliki semua informasi pengantar",
+    "botLinkDesc": "Langsung ke Telegram — jika Anda sudah menjelaskan semuanya dan mereka bisa langsung ke aplikasi"
   },
   "landing": {
     "painQuote": "Ketika masalah datang — kamu sendirian. Teman tidak tahu. Teman dari teman — lebih tidak tahu lagi. Padahal seseorang dari mereka bisa membantu.",

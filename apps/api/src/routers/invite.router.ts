@@ -36,8 +36,11 @@ export const inviteRouter = router({
           data: { usedById: ctx.userId, usedAt: new Date() },
         });
       } else {
-        // Try as permanent link (token = userId)
-        const user = await ctx.db.user.findUnique({ where: { id: input.token } });
+        // Try as permanent link (token = userId), then by referralSlug
+        let user = await ctx.db.user.findUnique({ where: { id: input.token } });
+        if (!user) {
+          user = await ctx.db.user.findUnique({ where: { referralSlug: input.token.toLowerCase() } });
+        }
         if (!user) throw new TRPCError({ code: 'NOT_FOUND', message: 'Invite not found' });
         if (user.id === ctx.userId) {
           throw new TRPCError({ code: 'BAD_REQUEST', message: 'Cannot connect to yourself' });
@@ -67,11 +70,17 @@ export const inviteRouter = router({
       });
       if (invite) return invite;
 
-      // Try as permanent link (token = userId)
-      const user = await ctx.db.user.findUnique({
+      // Try as permanent link (token = userId), then by referralSlug
+      let user = await ctx.db.user.findUnique({
         where: { id: input.token },
         select: { id: true, name: true, photoUrl: true },
       });
+      if (!user) {
+        user = await ctx.db.user.findUnique({
+          where: { referralSlug: input.token.toLowerCase() },
+          select: { id: true, name: true, photoUrl: true },
+        });
+      }
       if (user) {
         return {
           id: `permanent-${user.id}`,

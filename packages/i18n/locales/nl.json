@@ -342,7 +342,13 @@
     "alreadyUsed": "Deze uitnodiging is al gebruikt",
     "success": "Verbonden!",
     "loginToAccept": "Log in om te accepteren",
-    "accepting": "Uitnodiging wordt geaccepteerd..."
+    "accepting": "Uitnodiging wordt geaccepteerd...",
+    "yourCode": "Jouw uitnodigingscode",
+    "slugPlaceholder": "your-nickname",
+    "slugHint": "3–30 tekens: letters, cijfers, _ en -",
+    "slugMin": "Minimaal 3 tekens",
+    "webLinkDesc": "Website link — als de persoon nog niet bekend is met het project, bevat het alle introductie-informatie",
+    "botLinkDesc": "Rechtstreeks naar Telegram — als je alles al hebt uitgelegd en ze direct naar de app kunnen gaan"
   },
   "landing": {
     "painQuote": "Als er problemen zijn — sta je alleen. Vrienden weten het niet. Vrienden van vrienden — nog minder. Maar iemand van hen had kunnen helpen.",

@@ -81,6 +81,7 @@ model User {
   monthlyBudget       Float?
   remainingBudget     Float?
   budgetUpdatedAt     DateTime?
+  referralSlug        String?   @unique
   createdAt           DateTime  @default(now())
   updatedAt           DateTime  @updatedAt
   deletedAt           DateTime?
