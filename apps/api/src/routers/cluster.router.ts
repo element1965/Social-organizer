@@ -66,6 +66,13 @@ export const clusterRouter = router({
     });
     const userMap = new Map(users.map(u => [u.id, u]));
 
+    // Count connections per user for picking cluster representative
+    const connCount = new Map<string, number>();
+    for (const c of connections) {
+      connCount.set(c.userAId, (connCount.get(c.userAId) ?? 0) + 1);
+      connCount.set(c.userBId, (connCount.get(c.userBId) ?? 0) + 1);
+    }
+
     // Build cluster info
     const result: Array<{
       rootUserId: string;
@@ -81,19 +88,23 @@ export const clusterRouter = router({
       if (!admin && memberCount <= 3) continue;
 
       let totalBudget = 0;
-      let rootUser = userMap.get(root);
-      let earliest = rootUser;
+      let best: typeof users[number] | undefined;
+      let bestConns = -1;
       for (const uid of members) {
         const u = userMap.get(uid);
         if (u) {
           totalBudget += u.remainingBudget ?? 0;
-          if (!earliest || u.createdAt < earliest.createdAt) earliest = u;
+          const c = connCount.get(uid) ?? 0;
+          if (c > bestConns || (c === bestConns && best && u.createdAt < best.createdAt)) {
+            best = u;
+            bestConns = c;
+          }
         }
       }
 
       result.push({
-        rootUserId: earliest?.id || root,
-        rootUserName: earliest?.name || 'Unknown',
+        rootUserId: best?.id || root,
+        rootUserName: best?.name || 'Unknown',
         memberCount,
         totalBudget: Math.round(totalBudget),
       });
