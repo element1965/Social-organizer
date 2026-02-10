@@ -46,6 +46,8 @@ export function DashboardPage() {
   const { data: notifications } = trpc.notification.list.useQuery({ limit: 10 }, { refetchInterval: 30000 });
   const { data: helpStats } = trpc.stats.help.useQuery(undefined, { refetchInterval: 60000 });
   const { data: helpByPeriod } = trpc.stats.helpGivenByPeriod.useQuery(undefined, { refetchInterval: 60000 });
+  const { data: adminData } = trpc.faq.isAdmin.useQuery();
+  const isAdmin = adminData?.isAdmin ?? false;
   const { data: networkCapabilities } = trpc.stats.networkCapabilities.useQuery(undefined, { refetchInterval: 60000 });
   const { data: platformGrowth } = trpc.stats.platformGrowth.useQuery(undefined, { refetchInterval: 15000 });
   const inviteToken = me?.referralSlug || userId || '';
@@ -70,7 +72,7 @@ export function DashboardPage() {
   // Pending connections
   const { data: pendingIncoming } = trpc.pending.incoming.useQuery(undefined, { refetchInterval: 15000 });
   const { data: myPending } = trpc.pending.myPending.useQuery(undefined, { refetchInterval: 30000 });
-  const { data: clusters } = trpc.cluster.list.useQuery(undefined, { refetchInterval: 60000 });
+  const { data: clusters } = trpc.cluster.list.useQuery(undefined, { enabled: isAdmin, refetchInterval: 60000 });
   const acceptPending = trpc.pending.accept.useMutation({
     onSuccess: () => { utils.pending.incoming.invalidate(); utils.pending.incomingCount.invalidate(); utils.connection.getNetworkStats.invalidate(); },
   });
@@ -590,8 +592,8 @@ export function DashboardPage() {
           </CardContent>
         </Card>
 
-      {/* Clusters */}
-      {clusters && clusters.length > 0 && (
+      {/* Clusters (admin only) */}
+      {isAdmin && clusters && clusters.length > 0 && (
         <Card>
           <CardContent className="py-4">
             <div className="flex items-center gap-2 mb-3">
