@@ -51,19 +51,27 @@ export const broadcastRouter = router({
       }
 
       const translatedTexts = new Map<string, string>();
+      const translatedButtons = new Map<string, string>();
       for (const lang of byLang.keys()) {
         try {
           translatedTexts.set(lang, await translateBroadcastMessage(input.text, lang));
         } catch {
           translatedTexts.set(lang, input.text);
         }
+        if (input.buttonText) {
+          try {
+            translatedButtons.set(lang, await translateBroadcastMessage(input.buttonText, lang));
+          } catch {
+            translatedButtons.set(lang, input.buttonText);
+          }
+        }
       }
 
-      // Build inline button if provided
-      const replyMarkup: TgReplyMarkup | undefined =
-        input.buttonUrl && input.buttonText
-          ? { inline_keyboard: [[{ text: input.buttonText, url: input.buttonUrl }]] }
-          : undefined;
+      function buildMarkup(lang: string): TgReplyMarkup | undefined {
+        if (!input.buttonUrl || !input.buttonText) return undefined;
+        const btnText = translatedButtons.get(lang) || input.buttonText;
+        return { inline_keyboard: [[{ text: btnText, url: input.buttonUrl }]] };
+      }
 
       // Media source: uploaded file_id takes priority over URL
       const mediaSource = input.mediaFileId || input.mediaUrl;
@@ -76,7 +84,7 @@ export const broadcastRouter = router({
           return {
             telegramId: acc.platformId,
             text: translatedTexts.get(lang) || input.text,
-            replyMarkup,
+            replyMarkup: buildMarkup(lang),
           };
         });
         await sendTgMessages(messages);
@@ -88,11 +96,12 @@ export const broadcastRouter = router({
           try {
             const lang = acc.user?.language || 'en';
             const translatedText = translatedTexts.get(lang) || input.text;
+            const markup = buildMarkup(lang);
             let ok = false;
             if (input.mediaType === 'photo' && mediaSource) {
-              ok = await sendTelegramPhoto(acc.platformId, mediaSource, translatedText, replyMarkup);
+              ok = await sendTelegramPhoto(acc.platformId, mediaSource, translatedText, markup);
             } else if (input.mediaType === 'video' && mediaSource) {
-              ok = await sendTelegramVideo(acc.platformId, mediaSource, translatedText, replyMarkup);
+              ok = await sendTelegramVideo(acc.platformId, mediaSource, translatedText, markup);
             }
             if (ok) sent++;
           } catch { /* continue */ }
