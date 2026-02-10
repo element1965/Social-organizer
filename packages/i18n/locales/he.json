@@ -145,7 +145,7 @@
     "personalStats": "סטטיסטיקות שלי",
     "networkStats": "סטטיסטיקות הרשת",
     "dayCount": "יום {{count}}",
-    "inviteTrusted": "הזמן מישהו שאתה סומך עליו"
+    "inviteTrusted": "הזמן"
   },
   "collection": {
     "create": "שלח אות סיוע",
@@ -416,7 +416,12 @@
     "open": "פתח",
     "view": "צפה",
     "blocked": "יעד האוסף הושג",
-    "blockedBody": "האוסף הגיע לסכום היעד והוא כעת חסום."
+    "blockedBody": "האוסף הגיע לסכום היעד והוא כעת חסום.",
+    "pendingNew": "בקשת חיבור חדשה",
+    "pendingNewBody": "{{name}} רוצה להתחבר",
+    "pendingAccepted": "בקשה אושרה",
+    "pendingRejected": "בקשה נדחתה",
+    "pendingView": "צפה"
   },
   "hints": {
     "collectionAmount": "הזן את הסכום שצריך. מינימום 10 יחידות. המערכת תודיע למספר הנכון של אנשים.",
@@ -424,5 +429,26 @@
     "intentionAmount": "סכום שאתה מוכן לספק. זה כוונה, לא העברה – התיאום קורה בצ'אט.",
     "profileBio": "ספר קצת על עצמך. זה עוזר למשתתפים האחרים להכיר אותך טוב יותר.",
     "profilePhone": "הטלפון נראה רק לחיבורים ישירים שלך (לחיצת יד ראשונה)."
+  },
+  "pending": {
+    "title": "חיבורים ממתינים",
+    "incoming": "בקשות נכנסות",
+    "incomingCount": "{{count}} בקשות",
+    "waitingApproval": "ממתין לאישור",
+    "requestSent": "בקשה נשלחה",
+    "requestSentDesc": "ממתין לאישור הצד השני",
+    "meetInPerson": "מומלץ להיפגש אישית",
+    "accept": "אשר",
+    "reject": "דחה",
+    "accepted": "אושר",
+    "rejected": "נדחה",
+    "alreadyConnected": "כבר מחובר"
+  },
+  "cluster": {
+    "title": "אשכולות",
+    "members": "חברים",
+    "budget": "תקציב",
+    "root": "שורש",
+    "contactRoot": "צור קשר עם שורש"
   }
 }

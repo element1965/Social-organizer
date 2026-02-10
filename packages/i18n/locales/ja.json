@@ -133,7 +133,7 @@
     "personalStats": "マイ統計",
     "networkStats": "ネットワーク統計",
     "dayCount": "{{count}} 日目",
-    "inviteTrusted": "信頼できる人を招待する",
+    "inviteTrusted": "招待する",
     "myCapabilitiesHint": "毎月の支援予算。毎月相互援助に寄与する金額",
     "networkCapabilitiesHint": "あなたの相互援助ネットワーク内のすべての参加者の利用可能な月間予算の合計"
   },
@@ -406,7 +406,12 @@
     "open": "開く",
     "view": "表示",
     "blocked": "目標額に達しました",
-    "blockedBody": "収集が目標額に達し、現在ブロックされています。"
+    "blockedBody": "収集が目標額に達し、現在ブロックされています。",
+    "pendingNew": "新しい接続リクエスト",
+    "pendingNewBody": "{{name}}が接続を希望",
+    "pendingAccepted": "リクエスト承認",
+    "pendingRejected": "リクエスト拒否",
+    "pendingView": "表示"
   },
   "hints": {
     "collectionAmount": "必要な金額を入力してください。最低10単位です。システムが適切な人数に通知します。",
@@ -414,5 +419,26 @@
     "intentionAmount": "提供する意思のある金額。これは意思表示であり送金ではありません — 調整はチャットで行います。",
     "profileBio": "自己紹介を書いてください。他の参加者があなたをよりよく知る手助けになります。",
     "profilePhone": "電話番号は直接のつながり（第一度ハンドシェイク）にのみ表示されます。"
+  },
+  "pending": {
+    "title": "保留中の接続",
+    "incoming": "受信リクエスト",
+    "incomingCount": "{{count}}件のリクエスト",
+    "waitingApproval": "承認待ち",
+    "requestSent": "リクエスト送信済み",
+    "requestSentDesc": "相手の確認を待っています",
+    "meetInPerson": "承認前に直接会うことをお勧めします",
+    "accept": "承認",
+    "reject": "拒否",
+    "accepted": "承認済み",
+    "rejected": "拒否済み",
+    "alreadyConnected": "既に接続済み"
+  },
+  "cluster": {
+    "title": "クラスター",
+    "members": "メンバー",
+    "budget": "予算",
+    "root": "ルート",
+    "contactRoot": "ルートに連絡"
   }
 }

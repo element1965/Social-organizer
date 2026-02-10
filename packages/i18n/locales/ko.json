@@ -133,7 +133,7 @@
     "personalStats": "내 통계",
     "networkStats": "네트워크 통계",
     "dayCount": "{{count}}일차",
-    "inviteTrusted": "신뢰하는 사람을 초대하세요",
+    "inviteTrusted": "초대",
     "myCapabilitiesHint": "월간 지원 예산. 매월 상호 원조에 기부할 금액",
     "networkCapabilitiesHint": "귀하의 상호 원조 네트워크에 있는 모든 참가자의 총 가용 월간 예산"
   },
@@ -406,7 +406,12 @@
     "open": "열기",
     "view": "보기",
     "blocked": "수집 목표 달성",
-    "blockedBody": "수집이 목표 금액에 도달하여 이제 차단되었습니다."
+    "blockedBody": "수집이 목표 금액에 도달하여 이제 차단되었습니다.",
+    "pendingNew": "새 연결 요청",
+    "pendingNewBody": "{{name}}님이 연결을 원합니다",
+    "pendingAccepted": "요청 수락됨",
+    "pendingRejected": "요청 거절됨",
+    "pendingView": "보기"
   },
   "hints": {
     "collectionAmount": "필요한 금액을 입력하세요. 최소 10 단위입니다. 시스템이 적절한 수의 사람들에게 알립니다.",
@@ -414,5 +419,26 @@
     "intentionAmount": "제공할 의사가 있는 금액입니다. 이것은 의사 표시이며 송금이 아닙니다 — 조율은 채팅에서 이루어집니다.",
     "profileBio": "자기소개를 작성해 주세요. 다른 참여자들이 당신을 더 잘 알 수 있습니다.",
     "profilePhone": "전화번호는 직접 연결(1도 핸드셰이크)에게만 보입니다."
+  },
+  "pending": {
+    "title": "대기 중인 연결",
+    "incoming": "수신 요청",
+    "incomingCount": "{{count}}개의 요청",
+    "waitingApproval": "승인 대기 중",
+    "requestSent": "요청 전송됨",
+    "requestSentDesc": "상대방의 확인을 기다리는 중",
+    "meetInPerson": "수락 전 직접 만나보시길 권장합니다",
+    "accept": "수락",
+    "reject": "거절",
+    "accepted": "수락됨",
+    "rejected": "거절됨",
+    "alreadyConnected": "이미 연결됨"
+  },
+  "cluster": {
+    "title": "클러스터",
+    "members": "회원",
+    "budget": "예산",
+    "root": "루트",
+    "contactRoot": "루트에 연락"
   }
 }

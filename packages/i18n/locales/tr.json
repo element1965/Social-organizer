@@ -133,7 +133,7 @@
     "personalStats": "İstatistiklerim",
     "networkStats": "Ağ İstatistikleri",
     "dayCount": "{{count}}. gün",
-    "inviteTrusted": "Güvendiğin birini davet et",
+    "inviteTrusted": "Davet et",
     "myCapabilitiesHint": "Aylık destek bütçesi. Her ay karşılıklı yardıma ne kadar katkıda bulunmak istediğiniz",
     "networkCapabilitiesHint": "Karşılıklı yardıma katılan tüm üyelerin toplam mevcut aylık bütçesi"
   },
@@ -406,7 +406,12 @@
     "open": "Aç",
     "view": "Görüntüle",
     "blocked": "Koleksiyon Hedefi Ulaşıldı",
-    "blockedBody": "Koleksiyon hedef tutarına ulaştı ve şimdi engellendi."
+    "blockedBody": "Koleksiyon hedef tutarına ulaştı ve şimdi engellendi.",
+    "pendingNew": "Yeni bağlantı isteği",
+    "pendingNewBody": "{{name}} bağlanmak istiyor",
+    "pendingAccepted": "İstek kabul edildi",
+    "pendingRejected": "İstek reddedildi",
+    "pendingView": "Görüntüle"
   },
   "hints": {
     "collectionAmount": "İhtiyacınız olan miktarı girin. Minimum 10 birim. Sistem doğru sayıda kişiyi bilgilendirecektir.",
@@ -414,5 +419,26 @@
     "intentionAmount": "Sağlamaya hazır olduğunuz miktar. Bu bir niyet beyanıdır, transfer değil — koordinasyon sohbette yapılır.",
     "profileBio": "Kendiniz hakkında biraz bilgi verin. Bu, diğer katılımcıların sizi daha iyi tanımasına yardımcı olur.",
     "profilePhone": "Telefon yalnızca doğrudan bağlantılarınıza görünür (ilk el sıkışma)."
+  },
+  "pending": {
+    "title": "Bekleyen bağlantılar",
+    "incoming": "Gelen istekler",
+    "incomingCount": "{{count}} istek",
+    "waitingApproval": "Onay bekleniyor",
+    "requestSent": "İstek gönderildi",
+    "requestSentDesc": "Karşı tarafın onayı bekleniyor",
+    "meetInPerson": "Kabul etmeden önce yüz yüze görüşmeniz önerilir",
+    "accept": "Kabul et",
+    "reject": "Reddet",
+    "accepted": "Kabul edildi",
+    "rejected": "Reddedildi",
+    "alreadyConnected": "Zaten bağlı"
+  },
+  "cluster": {
+    "title": "Kümeler",
+    "members": "Üyeler",
+    "budget": "Bütçe",
+    "root": "Kök",
+    "contactRoot": "Kök ile iletişim"
   }
 }

@@ -47,7 +47,7 @@ export function TelegramBootstrap({ children }: { children: React.ReactNode }) {
 
       if (inviteToken) {
         localStorage.setItem('pendingInviteToken', inviteToken);
-        navigate(`/?invite=${inviteToken}`, { replace: true });
+        navigate(`/invite/${inviteToken}`, { replace: true });
         return;
       }
     }

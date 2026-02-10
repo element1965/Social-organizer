@@ -133,7 +133,7 @@
     "personalStats": "Min statistik",
     "networkStats": "Netværksstatistik",
     "dayCount": "Dag {{count}}",
-    "inviteTrusted": "Inviter en du stoler på",
+    "inviteTrusted": "Inviter",
     "myCapabilitiesHint": "Månedlig støttebudget. Hvor meget du er villig til at bidrage til gensidig hjælp hver måned",
     "networkCapabilitiesHint": "Samlet tilgængelige månedlige budgetter for alle deltagere i dit gensidige hjælpenetværk"
   },
@@ -406,7 +406,12 @@
     "open": "Åbn",
     "view": "Se",
     "blocked": "Indsamlingens mål opnået",
-    "blockedBody": "Indsamlingen har nået sit målbeløb og er nu blokeret."
+    "blockedBody": "Indsamlingen har nået sit målbeløb og er nu blokeret.",
+    "pendingNew": "Ny forbindelsesanmodning",
+    "pendingNewBody": "{{name}} vil forbindes",
+    "pendingAccepted": "Anmodning accepteret",
+    "pendingRejected": "Anmodning afvist",
+    "pendingView": "Vis"
   },
   "hints": {
     "collectionAmount": "Indtast det beløb, du har brug for. Minimum 10 enheder. Systemet vil underrette det rette antal personer.",
@@ -414,5 +419,26 @@
     "intentionAmount": "Beløb, du er villig til at bidrage med. Dette er en intention, ikke en overførsel — koordinering sker i chatten.",
     "profileBio": "Fortæl lidt om dig selv. Det hjælper andre deltagere med at lære dig bedre at kende.",
     "profilePhone": "Telefon er kun synlig for dine direkte forbindelser (første håndtryk)."
+  },
+  "pending": {
+    "title": "Ventende forbindelser",
+    "incoming": "Indgående anmodninger",
+    "incomingCount": "{{count}} anmodninger",
+    "waitingApproval": "Venter på godkendelse",
+    "requestSent": "Anmodning sendt",
+    "requestSentDesc": "Venter på bekræftelse",
+    "meetInPerson": "Anbefalet at mødes personligt",
+    "accept": "Accepter",
+    "reject": "Afvis",
+    "accepted": "Accepteret",
+    "rejected": "Afvist",
+    "alreadyConnected": "Allerede forbundet"
+  },
+  "cluster": {
+    "title": "Klynger",
+    "members": "Medlemmer",
+    "budget": "Budget",
+    "root": "Rod",
+    "contactRoot": "Kontakt rod"
   }
 }

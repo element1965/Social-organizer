@@ -133,7 +133,7 @@
     "personalStats": "我的统计",
     "networkStats": "网络统计",
     "dayCount": "第 {{count}} 天",
-    "inviteTrusted": "邀请你信任的人",
+    "inviteTrusted": "邀请",
     "myCapabilitiesHint": "每月支持预算。您愿意每月为互助贡献多少",
     "networkCapabilitiesHint": "您互助网络中所有参与者的可用每月预算总额"
   },
@@ -388,7 +388,12 @@
     "open": "打开",
     "view": "查看",
     "blocked": "收集目标已达到",
-    "blockedBody": "收集已达到目标金额，现在被阻塞。"
+    "blockedBody": "收集已达到目标金额，现在被阻塞。",
+    "pendingNew": "新连接请求",
+    "pendingNewBody": "{{name}}想要连接",
+    "pendingAccepted": "请求已接受",
+    "pendingRejected": "请求已拒绝",
+    "pendingView": "查看"
   },
   "hints": {
     "collectionAmount": "输入你需要的金额。最少10个单位。系统会通知适当数量的人。",
@@ -414,5 +419,26 @@
     "sentSuccess": "已发送给 {{count}} 位用户",
     "directSuccess": "消息已发送",
     "error": "发送失败"
+  },
+  "pending": {
+    "title": "待处理连接",
+    "incoming": "收到的请求",
+    "incomingCount": "{{count}}个请求",
+    "waitingApproval": "等待确认",
+    "requestSent": "请求已发送",
+    "requestSentDesc": "等待对方确认",
+    "meetInPerson": "建议先见面再接受",
+    "accept": "接受",
+    "reject": "拒绝",
+    "accepted": "已接受",
+    "rejected": "已拒绝",
+    "alreadyConnected": "已连接"
+  },
+  "cluster": {
+    "title": "集群",
+    "members": "成员",
+    "budget": "预算",
+    "root": "根节点",
+    "contactRoot": "联系根节点"
   }
 }

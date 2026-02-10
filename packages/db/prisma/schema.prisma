@@ -43,6 +43,12 @@ enum CollectionStatus {
   CANCELLED
 }
 
+enum PendingConnectionStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+}
+
 enum NotificationType {
   NEW_COLLECTION
   COLLECTION_BLOCKED
@@ -101,6 +107,8 @@ model User {
   chatMessages     ChatMessage[]
   faqItems         FaqItem[]
   pushSubscriptions PushSubscription[]
+  pendingFrom      PendingConnection[] @relation("pendingFrom")
+  pendingTo        PendingConnection[] @relation("pendingTo")
 
   @@map("users")
 }
@@ -290,6 +298,23 @@ model PushSubscription {
 
   @@index([userId])
   @@map("push_subscriptions")
+}
+
+model PendingConnection {
+  id          String                  @id @default(cuid())
+  fromUserId  String
+  toUserId    String
+  status      PendingConnectionStatus @default(PENDING)
+  resolvedAt  DateTime?
+  createdAt   DateTime                @default(now())
+
+  fromUser User @relation("pendingFrom", fields: [fromUserId], references: [id], onDelete: Cascade)
+  toUser   User @relation("pendingTo", fields: [toUserId], references: [id], onDelete: Cascade)
+
+  @@unique([fromUserId, toUserId])
+  @@index([toUserId, status])
+  @@index([fromUserId, status])
+  @@map("pending_connections")
 }
 
 model FaqItem {

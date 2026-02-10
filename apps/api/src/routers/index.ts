@@ -13,6 +13,8 @@ import { chatRouter } from './chat.router.js';
 import { faqRouter } from './faq.router.js';
 import { pushRouter } from './push.router.js';
 import { broadcastRouter } from './broadcast.router.js';
+import { pendingRouter } from './pending.router.js';
+import { clusterRouter } from './cluster.router.js';
 
 export const appRouter = router({
   auth: authRouter,
@@ -29,6 +31,8 @@ export const appRouter = router({
   faq: faqRouter,
   push: pushRouter,
   broadcast: broadcastRouter,
+  pending: pendingRouter,
+  cluster: clusterRouter,
 });
 
 export type AppRouter = typeof appRouter;

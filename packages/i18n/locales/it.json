@@ -133,7 +133,7 @@
     "personalStats": "Le mie statistiche",
     "networkStats": "Statistiche della rete",
     "dayCount": "Giorno {{count}}",
-    "inviteTrusted": "Invita qualcuno di cui ti fidi",
+    "inviteTrusted": "Invita",
     "myCapabilitiesHint": "Bilancio di supporto mensile. Quanto sei disposto a contribuire all'aiuto reciproco ogni mese",
     "networkCapabilitiesHint": "Bilanci mensili totali disponibili di tutti i partecipanti nella tua rete di aiuto reciproco"
   },
@@ -388,7 +388,12 @@
     "open": "Apri",
     "view": "Vedi",
     "blocked": "Obiettivo di Raccolta Raggiunto",
-    "blockedBody": "La raccolta ha raggiunto l'importo obiettivo e ora è bloccata."
+    "blockedBody": "La raccolta ha raggiunto l'importo obiettivo e ora è bloccata.",
+    "pendingNew": "Nuova richiesta di connessione",
+    "pendingNewBody": "{{name}} vuole connettersi",
+    "pendingAccepted": "Richiesta accettata",
+    "pendingRejected": "Richiesta rifiutata",
+    "pendingView": "Vedi"
   },
   "hints": {
     "collectionAmount": "Inserisci l'importo di cui hai bisogno. Minimo 10 unità. Il sistema notificherà il giusto numero di persone.",
@@ -414,5 +419,26 @@
     "sentSuccess": "Inviato a {{count}} utenti",
     "directSuccess": "Messaggio inviato",
     "error": "Invio fallito"
+  },
+  "pending": {
+    "title": "Connessioni in attesa",
+    "incoming": "Richieste in arrivo",
+    "incomingCount": "{{count}} richieste",
+    "waitingApproval": "In attesa di conferma",
+    "requestSent": "Richiesta inviata",
+    "requestSentDesc": "In attesa di conferma",
+    "meetInPerson": "Incontro di persona consigliato",
+    "accept": "Accetta",
+    "reject": "Rifiuta",
+    "accepted": "Accettata",
+    "rejected": "Rifiutata",
+    "alreadyConnected": "Già connesso"
+  },
+  "cluster": {
+    "title": "Cluster",
+    "members": "Membri",
+    "budget": "Budget",
+    "root": "Radice",
+    "contactRoot": "Contatta radice"
   }
 }

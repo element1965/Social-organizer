@@ -135,7 +135,7 @@
     "personalStats": "My Statistics",
     "networkStats": "Network Statistics",
     "dayCount": "Day {{count}}",
-    "inviteTrusted": "Invite someone you trust"
+    "inviteTrusted": "Invite"
   },
   "collection": {
     "create": "Send a help signal",
@@ -406,7 +406,12 @@
     "open": "Open",
     "view": "View",
     "blocked": "Collection Goal Reached",
-    "blockedBody": "The collection has reached its target amount and is now blocked."
+    "blockedBody": "The collection has reached its target amount and is now blocked.",
+    "pendingNew": "New connection request",
+    "pendingNewBody": "{{name}} wants to connect",
+    "pendingAccepted": "Request accepted",
+    "pendingRejected": "Request declined",
+    "pendingView": "View"
   },
   "hints": {
     "collectionAmount": "Enter the amount you need. Minimum 10 units. The system will notify the right number of people.",
@@ -414,5 +419,26 @@
     "intentionAmount": "Amount you're willing to provide. This is an intention, not a transfer — coordination happens in the chat.",
     "profileBio": "Tell a bit about yourself. This helps other participants get to know you better.",
     "profilePhone": "Phone is only visible to your direct connections (first handshake)."
+  },
+  "pending": {
+    "title": "Pending Connections",
+    "incoming": "Incoming requests",
+    "incomingCount": "{{count}} requests",
+    "waitingApproval": "Waiting for approval",
+    "requestSent": "Request sent",
+    "requestSentDesc": "Waiting for confirmation from the other person",
+    "meetInPerson": "We recommend meeting in person before accepting",
+    "accept": "Accept",
+    "reject": "Reject",
+    "accepted": "Accepted",
+    "rejected": "Rejected",
+    "alreadyConnected": "Already connected"
+  },
+  "cluster": {
+    "title": "Clusters",
+    "members": "Members",
+    "budget": "Budget",
+    "root": "Root",
+    "contactRoot": "Contact root"
   }
 }

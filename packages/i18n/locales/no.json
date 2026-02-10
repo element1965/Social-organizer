@@ -133,7 +133,7 @@
     "personalStats": "Min statistikk",
     "networkStats": "Nettverksstatistikk",
     "dayCount": "Dag {{count}}",
-    "inviteTrusted": "Inviter noen du stoler på",
+    "inviteTrusted": "Inviter",
     "myCapabilitiesHint": "Månedlig støttebudsjett. Hvor mye du er villig til å bidra med til gjensidig hjelp hver måned",
     "networkCapabilitiesHint": "Total tilgjengelig månedlig budsjett for alle deltakere i ditt gjensidige hjelp-nettverk"
   },
@@ -406,7 +406,12 @@
     "open": "Åpne",
     "view": "Se",
     "blocked": "Innsamlingsmål oppnådd",
-    "blockedBody": "Innsamlingen har nådd sitt målbeløp og er nå blokkert."
+    "blockedBody": "Innsamlingen har nådd sitt målbeløp og er nå blokkert.",
+    "pendingNew": "Ny tilkoblingsforespørsel",
+    "pendingNewBody": "{{name}} vil koble seg til",
+    "pendingAccepted": "Forespørsel godtatt",
+    "pendingRejected": "Forespørsel avslått",
+    "pendingView": "Vis"
   },
   "hints": {
     "collectionAmount": "Skriv inn beløpet du trenger. Minimum 10 enheter. Systemet vil varsle riktig antall personer.",
@@ -414,5 +419,26 @@
     "intentionAmount": "Beløp du er villig til å bidra med. Dette er en intensjon, ikke en overføring — koordinering skjer i chatten.",
     "profileBio": "Fortell litt om deg selv. Det hjelper andre deltakere å bli bedre kjent med deg.",
     "profilePhone": "Telefon er kun synlig for dine direkte forbindelser (første håndtrykk)."
+  },
+  "pending": {
+    "title": "Ventende tilkoblinger",
+    "incoming": "Innkommende forespørsler",
+    "incomingCount": "{{count}} forespørsler",
+    "waitingApproval": "Venter på godkjenning",
+    "requestSent": "Forespørsel sendt",
+    "requestSentDesc": "Venter på bekreftelse",
+    "meetInPerson": "Anbefalt å møtes personlig",
+    "accept": "Godta",
+    "reject": "Avslå",
+    "accepted": "Godtatt",
+    "rejected": "Avslått",
+    "alreadyConnected": "Allerede tilkoblet"
+  },
+  "cluster": {
+    "title": "Klynger",
+    "members": "Medlemmer",
+    "budget": "Budsjett",
+    "root": "Rot",
+    "contactRoot": "Kontakt rot"
   }
 }

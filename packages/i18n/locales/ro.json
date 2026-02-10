@@ -133,7 +133,7 @@
     "personalStats": "Statisticile mele",
     "networkStats": "Statisticile retelei",
     "dayCount": "Ziua {{count}}",
-    "inviteTrusted": "Invită pe cineva în care ai încredere",
+    "inviteTrusted": "Invită",
     "myCapabilitiesHint": "Buget lunar de sprijin. Cât ești dispus să contribui la ajutor mutual în fiecare lună",
     "networkCapabilitiesHint": "Totalul bugetelor lunare disponibile ale tuturor participanților din rețeaua ta de ajutor mutual"
   },
@@ -406,7 +406,12 @@
     "open": "Deschide",
     "view": "Vezi",
     "blocked": "Obiectiv de colectare atins",
-    "blockedBody": "Colectarea a atins suma țintă și este acum blocată."
+    "blockedBody": "Colectarea a atins suma țintă și este acum blocată.",
+    "pendingNew": "Cerere nouă de conexiune",
+    "pendingNewBody": "{{name}} vrea să se conecteze",
+    "pendingAccepted": "Cerere acceptată",
+    "pendingRejected": "Cerere respinsă",
+    "pendingView": "Vezi"
   },
   "hints": {
     "collectionAmount": "Introdu suma de care ai nevoie. Minimum 10 unitati. Sistemul va notifica numarul potrivit de persoane.",
@@ -414,5 +419,26 @@
     "intentionAmount": "Suma pe care esti dispus sa o oferi. Aceasta este o intentie, nu un transfer — coordonarea are loc in chat.",
     "profileBio": "Spune cateva cuvinte despre tine. Acest lucru ii ajuta pe ceilalti participanti sa te cunoasca mai bine.",
     "profilePhone": "Telefonul este vizibil doar pentru conexiunile tale directe (prima strangere de mana)."
+  },
+  "pending": {
+    "title": "Conexiuni în așteptare",
+    "incoming": "Cereri primite",
+    "incomingCount": "{{count}} cereri",
+    "waitingApproval": "Așteaptă confirmare",
+    "requestSent": "Cerere trimisă",
+    "requestSentDesc": "Așteaptă confirmarea",
+    "meetInPerson": "Recomandat întâlnirea personală",
+    "accept": "Acceptă",
+    "reject": "Respinge",
+    "accepted": "Acceptată",
+    "rejected": "Respinsă",
+    "alreadyConnected": "Deja conectat"
+  },
+  "cluster": {
+    "title": "Clustere",
+    "members": "Membri",
+    "budget": "Buget",
+    "root": "Rădăcină",
+    "contactRoot": "Contactează rădăcina"
   }
 }

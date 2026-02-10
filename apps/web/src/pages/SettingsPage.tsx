@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { trpc } from '../lib/trpc';
@@ -27,10 +27,32 @@ export function SettingsPage() {
   const { data: settings, isLoading } = trpc.settings.get.useQuery();
   const { data: contacts } = trpc.user.getContacts.useQuery({});
   const { data: me } = trpc.user.me.useQuery();
+  const [savedTypes, setSavedTypes] = useState<Record<string, boolean>>({});
+  const [contactValues, setContactValues] = useState<Record<string, string>>({});
+  const debounceTimers = useRef<Record<string, ReturnType<typeof setTimeout>>>({});
   const updateContacts = trpc.user.updateContacts.useMutation({
     onSuccess: () => utils.user.getContacts.invalidate(),
   });
-  const [contactValues, setContactValues] = useState<Record<string, string>>({});
+
+  const autosaveContact = useCallback((type: string, value: string) => {
+    if (debounceTimers.current[type]) clearTimeout(debounceTimers.current[type]);
+    debounceTimers.current[type] = setTimeout(() => {
+      if (!contacts) return;
+      const updates = contacts.map(c => ({
+        type: c.type,
+        value: type === c.type ? value : (contactValues[c.type] ?? c.value),
+      }));
+      updateContacts.mutate(updates, {
+        onSuccess: () => {
+          setSavedTypes(prev => ({ ...prev, [type]: true }));
+          setTimeout(() => setSavedTypes(prev => ({ ...prev, [type]: false })), 1500);
+        },
+      });
+    }, 500);
+  }, [contacts, contactValues, updateContacts]);
+
+  const [nameSaved, setNameSaved] = useState(false);
+  const nameDebounce = useRef<ReturnType<typeof setTimeout>>();
   const updateLanguage = trpc.settings.updateLanguage.useMutation({ onSuccess: () => utils.settings.get.invalidate() });
   const updateTheme = trpc.settings.updateTheme.useMutation({ onSuccess: () => utils.settings.get.invalidate() });
   const updateSound = trpc.settings.updateSound.useMutation({ onSuccess: () => utils.settings.get.invalidate() });
@@ -38,7 +60,12 @@ export function SettingsPage() {
   const updateFontScale = trpc.settings.updateFontScale.useMutation({ onSuccess: () => utils.settings.get.invalidate() });
   const generateCode = trpc.auth.generateLinkCode.useMutation();
   const deleteAccount = trpc.user.delete.useMutation({ onSuccess: () => { logout(); navigate('/login'); } });
-  const updateUser = trpc.user.update.useMutation({ onSuccess: () => { utils.user.me.invalidate(); setEditingName(false); } });
+  const updateUser = trpc.user.update.useMutation({ onSuccess: () => {
+    utils.user.me.invalidate();
+    setNameSaved(true);
+    setTimeout(() => setNameSaved(false), 1500);
+    setEditingName(false);
+  } });
   const [editingName, setEditingName] = useState(false);
   const [editName, setEditName] = useState('');
   const push = usePushNotifications();
@@ -91,19 +118,16 @@ export function SettingsPage() {
                   <input
                     value={editName}
                     onChange={(e) => setEditName(e.target.value)}
-                    className="w-full px-2 py-1 pr-8 text-lg font-bold rounded border border-gray-300 dark:border-gray-600 bg-transparent text-gray-900 dark:text-white focus:outline-none focus:border-blue-500"
+                    onBlur={() => { if (editName.trim() && editName !== me?.name) updateUser.mutate({ name: editName }); else setEditingName(false); }}
+                    onKeyDown={(e) => { if (e.key === 'Enter' && editName.trim()) updateUser.mutate({ name: editName }); if (e.key === 'Escape') setEditingName(false); }}
+                    className="w-full px-2 py-1 text-lg font-bold rounded border border-gray-300 dark:border-gray-600 bg-transparent text-gray-900 dark:text-white focus:outline-none focus:border-blue-500"
                     autoFocus
                   />
-                  <button
-                    onClick={() => { updateUser.mutate({ name: editName }); }}
-                    className="absolute right-2 top-1/2 -translate-y-1/2 text-green-500 hover:text-green-400"
-                  >
-                    <Check className="w-5 h-5" />
-                  </button>
                 </div>
               ) : (
                 <div className="flex items-center gap-2">
                   <h2 className="text-lg font-bold text-gray-900 dark:text-white truncate">{me?.name}</h2>
+                  {nameSaved && <Check className="w-4 h-4 text-green-500 animate-in fade-in" />}
                   <button
                     onClick={() => { setEditName(me?.name || ''); setEditingName(true); }}
                     className="text-gray-400 hover:text-gray-300"
@@ -130,7 +154,6 @@ export function SettingsPage() {
           {contacts?.map((contact) => {
             const isTelegram = contact.type === 'telegram';
             const currentVal = contactValues[contact.type];
-            const hasChanged = currentVal !== undefined && currentVal !== contact.value;
             return (
               <div key={contact.type} className="relative">
                 <SocialIcon type={contact.icon} className={`w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none ${isTelegram ? 'text-blue-500' : 'text-gray-500'}`} />
@@ -138,23 +161,19 @@ export function SettingsPage() {
                   id={`contact-${contact.type}`}
                   placeholder={contact.placeholder}
                   value={currentVal ?? contact.value}
-                  onChange={(e) => !isTelegram && setContactValues(prev => ({ ...prev, [contact.type]: e.target.value }))}
-                  className={`w-full pl-10 ${hasChanged ? 'pr-10' : ''} ${isTelegram ? 'opacity-60 cursor-not-allowed bg-gray-50 dark:bg-gray-800/50' : ''}`}
+                  onChange={(e) => {
+                    if (isTelegram) return;
+                    const val = e.target.value;
+                    setContactValues(prev => ({ ...prev, [contact.type]: val }));
+                    autosaveContact(contact.type, val);
+                  }}
+                  className={`w-full pl-10 ${savedTypes[contact.type] ? 'pr-10' : ''} ${isTelegram ? 'opacity-60 cursor-not-allowed bg-gray-50 dark:bg-gray-800/50' : ''}`}
                   disabled={isTelegram}
                 />
-                {hasChanged && (
-                  <button
-                    onClick={() => {
-                      const updates = contacts.map(c => ({
-                        type: c.type,
-                        value: contactValues[c.type] ?? c.value,
-                      }));
-                      updateContacts.mutate(updates);
-                    }}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-green-500 hover:text-green-400"
-                  >
+                {savedTypes[contact.type] && (
+                  <div className="absolute right-3 top-1/2 -translate-y-1/2 text-green-500">
                     <Check className="w-5 h-5" />
-                  </button>
+                  </div>
                 )}
               </div>
             );

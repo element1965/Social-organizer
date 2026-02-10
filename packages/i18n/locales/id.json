@@ -133,7 +133,7 @@
     "personalStats": "Statistik Saya",
     "networkStats": "Statistik Jaringan",
     "dayCount": "Hari ke-{{count}}",
-    "inviteTrusted": "Undang orang yang kamu percaya",
+    "inviteTrusted": "Undang",
     "myCapabilitiesHint": "Anggaran dukungan bulanan. Berapa banyak yang Anda ingin sumbangkan untuk bantuan bersama setiap bulan",
     "networkCapabilitiesHint": "Total anggaran bulanan tersedia dari semua peserta di jaringan bantuan bersama Anda"
   },
@@ -406,7 +406,12 @@
     "open": "Buka",
     "view": "Lihat",
     "blocked": "Target Koleksi Tercapai",
-    "blockedBody": "Koleksi telah mencapai jumlah target dan sekarang diblokir."
+    "blockedBody": "Koleksi telah mencapai jumlah target dan sekarang diblokir.",
+    "pendingNew": "Permintaan koneksi baru",
+    "pendingNewBody": "{{name}} ingin terhubung",
+    "pendingAccepted": "Permintaan diterima",
+    "pendingRejected": "Permintaan ditolak",
+    "pendingView": "Lihat"
   },
   "hints": {
     "collectionAmount": "Masukkan jumlah yang kamu butuhkan. Minimum 10 unit. Sistem akan memberitahu jumlah orang yang tepat.",
@@ -414,5 +419,26 @@
     "intentionAmount": "Jumlah yang bersedia kamu berikan. Ini adalah niat, bukan transfer — koordinasi dilakukan di chat.",
     "profileBio": "Ceritakan sedikit tentang dirimu. Ini membantu peserta lain mengenalmu lebih baik.",
     "profilePhone": "Telepon hanya terlihat oleh koneksi langsung (jabat tangan pertama)."
+  },
+  "pending": {
+    "title": "Koneksi tertunda",
+    "incoming": "Permintaan masuk",
+    "incomingCount": "{{count}} permintaan",
+    "waitingApproval": "Menunggu persetujuan",
+    "requestSent": "Permintaan terkirim",
+    "requestSentDesc": "Menunggu konfirmasi",
+    "meetInPerson": "Disarankan bertemu langsung",
+    "accept": "Terima",
+    "reject": "Tolak",
+    "accepted": "Diterima",
+    "rejected": "Ditolak",
+    "alreadyConnected": "Sudah terhubung"
+  },
+  "cluster": {
+    "title": "Kluster",
+    "members": "Anggota",
+    "budget": "Anggaran",
+    "root": "Akar",
+    "contactRoot": "Hubungi akar"
   }
 }

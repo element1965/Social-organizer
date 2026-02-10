@@ -22,6 +22,10 @@ import {
   X,
   HelpCircle,
   Pencil,
+  Clock,
+  CheckCircle,
+  XCircle,
+  Layers,
 } from 'lucide-react';
 import { Tooltip } from '../components/ui/tooltip';
 
@@ -61,6 +65,17 @@ export function DashboardPage() {
   const [newBudgetValue, setNewBudgetValue] = useState('');
   const setBudgetMutation = trpc.user.setMonthlyBudget.useMutation({
     onSuccess: () => { utils.user.me.invalidate(); setEditingBudget(false); setNewBudgetValue(''); },
+  });
+
+  // Pending connections
+  const { data: pendingIncoming } = trpc.pending.incoming.useQuery(undefined, { refetchInterval: 15000 });
+  const { data: myPending } = trpc.pending.myPending.useQuery(undefined, { refetchInterval: 30000 });
+  const { data: clusters } = trpc.cluster.list.useQuery(undefined, { refetchInterval: 60000 });
+  const acceptPending = trpc.pending.accept.useMutation({
+    onSuccess: () => { utils.pending.incoming.invalidate(); utils.pending.incomingCount.invalidate(); utils.connection.getNetworkStats.invalidate(); },
+  });
+  const rejectPending = trpc.pending.reject.useMutation({
+    onSuccess: () => { utils.pending.incoming.invalidate(); utils.pending.incomingCount.invalidate(); },
   });
 
   const totalReachable = networkStats?.totalReachable ?? 0;
@@ -146,6 +161,63 @@ export function DashboardPage() {
                     <ArrowRight className="w-4 h-4 text-gray-400" />
                   </div>
                 </button>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Incoming pending connections */}
+      {pendingIncoming && pendingIncoming.length > 0 && (
+        <Card className="border-amber-400 dark:border-amber-700 bg-amber-50 dark:bg-amber-950/30">
+          <CardContent className="py-3">
+            <div className="flex items-center gap-2 mb-2">
+              <Clock className="w-5 h-5 text-amber-600" />
+              <span className="font-semibold text-amber-700 dark:text-amber-400">
+                {t('pending.incoming')} ({pendingIncoming.length})
+              </span>
+            </div>
+            <p className="text-xs text-gray-500 mb-2">{t('pending.meetInPerson')}</p>
+            <div className="space-y-2">
+              {pendingIncoming.map((p) => (
+                <div key={p.id} className="flex items-center gap-2 p-2 rounded bg-white/50 dark:bg-gray-900/50">
+                  <Avatar src={p.fromUser.photoUrl} name={p.fromUser.name} size="sm" />
+                  <span className="flex-1 text-sm font-medium text-gray-900 dark:text-white truncate">{p.fromUser.name}</span>
+                  <button
+                    onClick={() => acceptPending.mutate({ pendingId: p.id })}
+                    disabled={acceptPending.isPending}
+                    className="p-1.5 rounded-full bg-green-100 dark:bg-green-900/50 text-green-600 hover:bg-green-200 dark:hover:bg-green-800"
+                  >
+                    <CheckCircle className="w-5 h-5" />
+                  </button>
+                  <button
+                    onClick={() => rejectPending.mutate({ pendingId: p.id })}
+                    disabled={rejectPending.isPending}
+                    className="p-1.5 rounded-full bg-red-100 dark:bg-red-900/50 text-red-500 hover:bg-red-200 dark:hover:bg-red-800"
+                  >
+                    <XCircle className="w-5 h-5" />
+                  </button>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* My outgoing pending */}
+      {myPending && myPending.length > 0 && (
+        <Card className="border-gray-200 dark:border-gray-700">
+          <CardContent className="py-3">
+            <div className="flex items-center gap-2 mb-2">
+              <Clock className="w-4 h-4 text-gray-400" />
+              <span className="text-sm text-gray-500">{t('pending.waitingApproval')}</span>
+            </div>
+            <div className="space-y-1">
+              {myPending.map((p) => (
+                <div key={p.id} className="flex items-center gap-2">
+                  <Avatar src={p.toUser.photoUrl} name={p.toUser.name} size="xs" />
+                  <span className="text-sm text-gray-600 dark:text-gray-400">{p.toUser.name}</span>
+                </div>
               ))}
             </div>
           </CardContent>
@@ -517,6 +589,32 @@ export function DashboardPage() {
 
           </CardContent>
         </Card>
+
+      {/* Clusters */}
+      {clusters && clusters.length > 0 && (
+        <Card>
+          <CardContent className="py-4">
+            <div className="flex items-center gap-2 mb-3">
+              <Layers className="w-5 h-5 text-purple-600" />
+              <h2 className="font-semibold text-gray-900 dark:text-white">{t('cluster.title')}</h2>
+            </div>
+            <div className="space-y-2">
+              {clusters.map((cl, i) => (
+                <div key={i} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800/50 rounded-lg">
+                  <div>
+                    <p className="text-sm font-medium text-gray-900 dark:text-white">{cl.rootUserName}</p>
+                    <p className="text-xs text-gray-500">{t('cluster.members')}: {cl.memberCount}</p>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-sm font-bold text-green-600 dark:text-green-400">${cl.totalBudget}</p>
+                    <p className="text-[10px] text-gray-400">{t('cluster.budget')}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 }

@@ -133,7 +133,7 @@
     "personalStats": "Moje statystyki",
     "networkStats": "Statystyki sieci",
     "dayCount": "Dzień {{count}}",
-    "inviteTrusted": "Zaproś kogoś, komu ufasz",
+    "inviteTrusted": "Zaproś",
     "myCapabilitiesHint": "Miesięczny budżet wsparcia. Ile jesteś gotów/a przeznaczyć na wzajemną pomoc każdego miesiąca",
     "networkCapabilitiesHint": "Całkowity dostępny miesięczny budżet wszystkich uczestników twojej sieci wzajemnej pomocy"
   },
@@ -406,7 +406,12 @@
     "open": "Otwórz",
     "view": "Zobacz",
     "blocked": "Cel Zbiórki Osiągnięty",
-    "blockedBody": "Zbiórka osiągnęła swój cel i jest teraz zablokowana."
+    "blockedBody": "Zbiórka osiągnęła swój cel i jest teraz zablokowana.",
+    "pendingNew": "Nowa prośba o połączenie",
+    "pendingNewBody": "{{name}} chce się połączyć",
+    "pendingAccepted": "Prośba zaakceptowana",
+    "pendingRejected": "Prośba odrzucona",
+    "pendingView": "Zobacz"
   },
   "hints": {
     "collectionAmount": "Wprowadź potrzebną kwotę. Minimum 10 jednostek. System powiadomi odpowiednią liczbę osób.",
@@ -414,5 +419,26 @@
     "intentionAmount": "Kwota, którą chcesz przeznaczyć. To intencja, nie przelew — koordynacja odbywa się w czacie.",
     "profileBio": "Opowiedz trochę o sobie. To pomoże innym uczestnikom lepiej Cię poznać.",
     "profilePhone": "Telefon jest widoczny tylko dla Twoich bezpośrednich połączeń (pierwszy uścisk dłoni)."
+  },
+  "pending": {
+    "title": "Oczekujące połączenia",
+    "incoming": "Przychodzące prośby",
+    "incomingCount": "{{count}} próśb",
+    "waitingApproval": "Oczekuje na potwierdzenie",
+    "requestSent": "Prośba wysłana",
+    "requestSentDesc": "Oczekiwanie na potwierdzenie",
+    "meetInPerson": "Zalecamy spotkanie osobiste",
+    "accept": "Akceptuj",
+    "reject": "Odrzuć",
+    "accepted": "Zaakceptowano",
+    "rejected": "Odrzucono",
+    "alreadyConnected": "Już połączono"
+  },
+  "cluster": {
+    "title": "Klastry",
+    "members": "Członkowie",
+    "budget": "Budżet",
+    "root": "Korzeń",
+    "contactRoot": "Kontakt z korzeniem"
   }
 }

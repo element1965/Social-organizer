@@ -9,7 +9,7 @@ import { useTheme } from '../hooks/useTheme';
 import { Button } from '../components/ui/button';
 import { Avatar } from '../components/ui/avatar';
 import { Spinner } from '../components/ui/spinner';
-import { Users, UserPlus, Globe, List, Wallet, Copy, Check, X, ChevronDown, ChevronUp, Pencil } from 'lucide-react';
+import { Users, UserPlus, Globe, List, Wallet, Copy, Check, X, ChevronDown, ChevronUp, Pencil, Clock, CheckCircle, XCircle } from 'lucide-react';
 const LazyNetworkGraph = lazy(() =>
   import('@so/graph-3d').then((m) => ({ default: m.NetworkGraph })),
 );
@@ -40,6 +40,14 @@ export function MyNetworkPage() {
   });
 
   const [expandedDepths, setExpandedDepths] = useState<Record<number, boolean>>({});
+  // Pending connections
+  const { data: pendingIncoming } = trpc.pending.incoming.useQuery(undefined, { refetchInterval: 15000 });
+  const acceptPending = trpc.pending.accept.useMutation({
+    onSuccess: () => { utils.pending.incoming.invalidate(); utils.pending.incomingCount.invalidate(); utils.connection.getNetworkStats.invalidate(); utils.connection.getCount.invalidate(); },
+  });
+  const rejectPending = trpc.pending.reject.useMutation({
+    onSuccess: () => { utils.pending.incoming.invalidate(); utils.pending.incomingCount.invalidate(); },
+  });
   const { data: connectionCount } = trpc.connection.getCount.useQuery();
   const { data: networkStats, isLoading } = trpc.connection.getNetworkStats.useQuery(undefined, { refetchInterval: 60000 });
   const { data: graphData } = trpc.connection.graphSlice.useQuery(undefined, {
@@ -195,6 +203,39 @@ export function MyNetworkPage() {
         </div>
       ) : (
         <>
+          {/* Incoming pending requests */}
+          {pendingIncoming && pendingIncoming.length > 0 && (
+            <div className="border border-amber-300 dark:border-amber-700 rounded-lg overflow-hidden mb-2">
+              <div className="p-3 bg-amber-50 dark:bg-amber-950/30">
+                <div className="flex items-center gap-2 mb-2">
+                  <Clock className="w-4 h-4 text-amber-600" />
+                  <span className="text-sm font-semibold text-amber-700 dark:text-amber-400">{t('pending.incoming')} ({pendingIncoming.length})</span>
+                </div>
+                <div className="space-y-2">
+                  {pendingIncoming.map((p) => (
+                    <div key={p.id} className="flex items-center gap-2 p-2 rounded bg-white/50 dark:bg-gray-900/50">
+                      <Avatar src={p.fromUser.photoUrl} name={p.fromUser.name} size="sm" />
+                      <span className="flex-1 text-sm font-medium text-gray-900 dark:text-white truncate">{p.fromUser.name}</span>
+                      <button
+                        onClick={() => acceptPending.mutate({ pendingId: p.id })}
+                        disabled={acceptPending.isPending}
+                        className="p-1.5 rounded-full bg-green-100 dark:bg-green-900/50 text-green-600 hover:bg-green-200"
+                      >
+                        <CheckCircle className="w-5 h-5" />
+                      </button>
+                      <button
+                        onClick={() => rejectPending.mutate({ pendingId: p.id })}
+                        disabled={rejectPending.isPending}
+                        className="p-1.5 rounded-full bg-red-100 dark:bg-red-900/50 text-red-500 hover:bg-red-200"
+                      >
+                        <XCircle className="w-5 h-5" />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
           {isLoading ? <div className="flex justify-center py-12"><Spinner /></div> : Object.keys(byDepth).length === 0 ? (
             <div className="text-center py-12">
               <Users className="w-12 h-12 mx-auto text-gray-300 dark:text-gray-700 mb-3" />
@@ -239,7 +280,7 @@ export function MyNetworkPage() {
 
                     {isExpanded && depthUsers.length > 0 && (
                       <div className="border-t border-gray-200 dark:border-gray-700 max-h-48 overflow-y-auto">
-                        {depthUsers.slice(0, 20).map((user: any) => (
+                        {depthUsers.map((user: any) => (
                           <button
                             key={user.id}
                             onClick={() => navigate(`/profile/${user.id}`)}
@@ -259,11 +300,6 @@ export function MyNetworkPage() {
                             </div>
                           </button>
                         ))}
-                        {depthUsers.length > 20 && (
-                          <p className="text-xs text-gray-400 text-center py-2">
-                            +{depthUsers.length - 20} {t('dashboard.more')}
-                          </p>
-                        )}
                       </div>
                     )}
                   </div>
