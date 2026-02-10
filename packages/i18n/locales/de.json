@@ -1,6 +1,6 @@
 {
   "common": {
-    "appName": "Social Organizer",
+    "appName": "Sozialer Organisierer",
     "loading": "Laden...",
     "error": "Ein Fehler ist aufgetreten",
     "retry": "Erneut versuchen",
@@ -134,8 +134,8 @@
     "networkStats": "Netzwerkstatistiken",
     "dayCount": "Tag {{count}}",
     "inviteTrusted": "Jemanden einladen, dem du vertraust",
-    "myCapabilitiesHint": "Monthly support budget. How much you're willing to contribute to mutual aid each month",
-    "networkCapabilitiesHint": "Total available monthly budgets of all participants in your mutual aid network"
+    "myCapabilitiesHint": "Monatliches Unterstützungsbudget. Wie viel Sie monatlich zu gegenseitiger Hilfe beitragen möchten",
+    "networkCapabilitiesHint": "Gesamtes verfügbares monatliches Budget aller Teilnehmer in Ihrem gegenseitigen Hilfenetzwerk"
   },
   "collection": {
     "create": "Hilfesignal senden",
@@ -279,8 +279,8 @@
     "newBudgetPlaceholder": "Neuer Betrag",
     "updateBudget": "Budget aktualisieren",
     "push": "Push",
-    "linkAccountHint": "Links your profile to a Play Market, App Store, or FB Games account. Coming soon.",
-    "pushNotifications": "Push Notifications"
+    "linkAccountHint": "Verknüpft Ihr Profil mit einem Play Market, App Store oder FB Games Account. Kommt bald.",
+    "pushNotifications": "Push-Benachrichtigungen"
   },
   "faq": {
     "title": "Häufige Fragen",
@@ -301,7 +301,7 @@
     "openChat": "Chat-Assistent öffnen",
     "startListening": "Spracheingabe starten",
     "stopListening": "Spracheingabe stoppen",
-    "openHelp": "Help"
+    "openHelp": "Hilfe"
   },
   "contacts": {
     "telegram": "Telegram",
@@ -381,8 +381,8 @@
     "closedBody": "Die Sammlung wurde vom Ersteller geschlossen.",
     "open": "Öffnen",
     "view": "Ansehen",
-    "blocked": "Collection Goal Reached",
-    "blockedBody": "The collection has reached its target amount and is now blocked."
+    "blocked": "Sammlungsziel erreicht",
+    "blockedBody": "Die Sammlung hat ihren Zielbetrag erreicht und ist nun gesperrt."
   },
   "hints": {
     "collectionAmount": "Gib den Betrag ein, den du benötigst. Mindestens 10 Einheiten. Das System benachrichtigt die richtige Anzahl von Personen.",

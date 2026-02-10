@@ -1,6 +1,6 @@
 {
   "common": {
-    "appName": "Social Organizer",
+    "appName": "منظم اجتماعي",
     "loading": "جارٍ التحميل...",
     "error": "حدث خطأ",
     "retry": "إعادة المحاولة",
@@ -134,8 +134,8 @@
     "networkStats": "إحصائيات الشبكة",
     "dayCount": "اليوم {{count}}",
     "inviteTrusted": "ادعُ شخصاً تثق به",
-    "myCapabilitiesHint": "Monthly support budget. How much you're willing to contribute to mutual aid each month",
-    "networkCapabilitiesHint": "Total available monthly budgets of all participants in your mutual aid network"
+    "myCapabilitiesHint": "ميزانية الدعم الشهرية. كم أنت مستعد للمساهمة في المساعدة المتبادلة كل شهر",
+    "networkCapabilitiesHint": "إجمالي الميزانيات الشهرية المتاحة لجميع المشاركين في شبكتك للمساعدة المتبادلة"
   },
   "collection": {
     "create": "إرسال إشارة مساعدة",
@@ -278,9 +278,9 @@
     "currentBudget": "المتبقي",
     "newBudgetPlaceholder": "المبلغ الجديد",
     "updateBudget": "تحديث الميزانية",
-    "push": "Push",
-    "linkAccountHint": "Links your profile to a Play Market, App Store, or FB Games account. Coming soon.",
-    "pushNotifications": "Push Notifications"
+    "push": "دفع",
+    "linkAccountHint": "يربط ملف تعريفك بحساب في متجر Play، App Store، أو FB Games. قريباً.",
+    "pushNotifications": "إشعارات دفع"
   },
   "faq": {
     "title": "الأسئلة الشائعة",
@@ -301,13 +301,13 @@
     "openChat": "فتح مساعد المحادثة",
     "startListening": "بدء الإدخال الصوتي",
     "stopListening": "إيقاف الإدخال الصوتي",
-    "openHelp": "Help"
+    "openHelp": "مساعدة"
   },
   "broadcast": {
     "title": "بث",
     "allUsers": "جميع المستخدمين",
     "directUser": "حسب TG ID",
-    "telegramIdPlaceholder": "Telegram ID",
+    "telegramIdPlaceholder": "معرف تلغرام",
     "messagePlaceholder": "نص الرسالة...",
     "photo": "صورة",
     "video": "فيديو",
@@ -322,15 +322,15 @@
     "error": "فشل الإرسال"
   },
   "contacts": {
-    "telegram": "Telegram",
-    "whatsapp": "WhatsApp",
-    "facebook": "Facebook",
-    "instagram": "Instagram",
-    "twitter": "X (Twitter)",
-    "linkedin": "LinkedIn",
+    "telegram": "تلغرام",
+    "whatsapp": "واتس آب",
+    "facebook": "فيسبوك",
+    "instagram": "إنستغرام",
+    "twitter": "X (تويتر)",
+    "linkedin": "لينكد إن",
     "vk": "VKontakte",
-    "viber": "Viber",
-    "signal": "Signal",
+    "viber": "فايبر",
+    "signal": "سيغنال",
     "email": "البريد الإلكتروني",
     "website": "الموقع الإلكتروني"
   },
@@ -342,7 +342,7 @@
     "alreadyUsed": "تم استخدام هذه الدعوة بالفعل",
     "success": "تم الاتصال!",
     "loginToAccept": "سجّل الدخول للقبول",
-    "accepting": "Accepting invitation..."
+    "accepting": "قبول الدعوة..."
   },
   "landing": {
     "painQuote": "عندما تحدث مشكلة — تبقى وحدك. الأصدقاء لا يعرفون. أصدقاء الأصدقاء — أقل من ذلك. لكن أحدهم كان بإمكانه المساعدة.",
@@ -399,8 +399,8 @@
     "closedBody": "تم إغلاق الحملة من قبل منشئها.",
     "open": "فتح",
     "view": "عرض",
-    "blocked": "Collection Goal Reached",
-    "blockedBody": "The collection has reached its target amount and is now blocked."
+    "blocked": "تم الوصول إلى هدف الجمع",
+    "blockedBody": "لقد وصل الجمع إلى المبلغ المستهدف وتم حظره الآن."
   },
   "hints": {
     "collectionAmount": "أدخل المبلغ الذي تحتاجه. الحد الأدنى 10 وحدات. سيقوم النظام بإعلام العدد المناسب من الأشخاص.",

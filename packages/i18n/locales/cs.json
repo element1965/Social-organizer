@@ -1,6 +1,6 @@
 {
   "common": {
-    "appName": "Social Organizer",
+    "appName": "Sociální Organizátor",
     "loading": "Načítání...",
     "error": "Došlo k chybě",
     "retry": "Zkusit znovu",
@@ -134,8 +134,8 @@
     "networkStats": "Statistiky sítě",
     "dayCount": "Den {{count}}",
     "inviteTrusted": "Pozvat někoho, komu důvěřuješ",
-    "myCapabilitiesHint": "Monthly support budget. How much you're willing to contribute to mutual aid each month",
-    "networkCapabilitiesHint": "Total available monthly budgets of all participants in your mutual aid network"
+    "myCapabilitiesHint": "Měsíční rozpočet podpory. Kolik jste ochotni přispět na vzájemnou pomoc každý měsíc",
+    "networkCapabilitiesHint": "Celkové dostupné měsíční rozpočty všech účastníků ve vaší síti vzájemné pomoci"
   },
   "collection": {
     "create": "Vyslat signál o pomoci",
@@ -279,8 +279,8 @@
     "newBudgetPlaceholder": "Nová částka",
     "updateBudget": "Aktualizovat rozpočet",
     "push": "Push",
-    "linkAccountHint": "Links your profile to a Play Market, App Store, or FB Games account. Coming soon.",
-    "pushNotifications": "Push Notifications"
+    "linkAccountHint": "Propojí váš profil s účtem v Play Market, App Store nebo FB Games. Brzy dostupné.",
+    "pushNotifications": "Push notifikace"
   },
   "faq": {
     "title": "FAQ",
@@ -301,13 +301,13 @@
     "openChat": "Otevřít chatového asistenta",
     "startListening": "Spustit hlasový vstup",
     "stopListening": "Zastavit hlasový vstup",
-    "openHelp": "Help"
+    "openHelp": "Nápověda"
   },
   "broadcast": {
     "title": "Vysílání",
     "allUsers": "Všichni uživatelé",
     "directUser": "Dle TG ID",
-    "telegramIdPlaceholder": "Telegram ID",
+    "telegramIdPlaceholder": "ID Telegramu",
     "messagePlaceholder": "Text zprávy...",
     "photo": "Foto",
     "video": "Video",
@@ -342,7 +342,7 @@
     "alreadyUsed": "Tato pozvánka již byla použita",
     "success": "Propojeno!",
     "loginToAccept": "Přihlaste se pro přijetí",
-    "accepting": "Accepting invitation..."
+    "accepting": "Přijímání pozvání..."
   },
   "landing": {
     "painQuote": "Když přijde problém — zůstáváš sám. Přátelé nevědí. Známí známých — ještě méně. Přitom někdo z nich mohl pomoct.",
@@ -399,8 +399,8 @@
     "closedBody": "Sbírka byla uzavřena tvůrcem.",
     "open": "Otevřít",
     "view": "Zobrazit",
-    "blocked": "Collection Goal Reached",
-    "blockedBody": "The collection has reached its target amount and is now blocked."
+    "blocked": "Cíl sbírky dosažen",
+    "blockedBody": "Sbírka dosáhla svého cílového částky a nyní je blokována."
   },
   "hints": {
     "collectionAmount": "Zadejte částku, kterou potřebujete. Minimálně 10 jednotek. Systém upozorní správný počet lidí.",

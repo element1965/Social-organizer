@@ -1,6 +1,6 @@
 {
   "common": {
-    "appName": "Social Organizer",
+    "appName": "Sosiaalinen Järjestäjä",
     "loading": "Ladataan...",
     "error": "Tapahtui virhe",
     "retry": "Yritä uudelleen",
@@ -134,8 +134,8 @@
     "networkStats": "Verkoston tilastot",
     "dayCount": "Päivä {{count}}",
     "inviteTrusted": "Kutsu joku johon luotat",
-    "myCapabilitiesHint": "Monthly support budget. How much you're willing to contribute to mutual aid each month",
-    "networkCapabilitiesHint": "Total available monthly budgets of all participants in your mutual aid network"
+    "myCapabilitiesHint": "Kuukausittainen tuki budjetti. Kuinka paljon olet valmis lahjoittamaan keskinäiseen apuun kuukausittain",
+    "networkCapabilitiesHint": "Kaikkien osallistujien käytettävissä olevat kuukausibudjetit verkostossasi"
   },
   "collection": {
     "create": "Lähetä apusignaali",
@@ -279,8 +279,8 @@
     "newBudgetPlaceholder": "Uusi summa",
     "updateBudget": "Päivitä budjetti",
     "push": "Push",
-    "linkAccountHint": "Links your profile to a Play Market, App Store, or FB Games account. Coming soon.",
-    "pushNotifications": "Push Notifications"
+    "linkAccountHint": "Linkittää profiilisi Play Marketiin, App Storeen tai FB Games -tiliin. Tulossa pian.",
+    "pushNotifications": "Push-ilmoitukset"
   },
   "faq": {
     "title": "Usein kysytyt kysymykset",
@@ -301,13 +301,13 @@
     "openChat": "Avaa chat-avustaja",
     "startListening": "Aloita äänikirjoitus",
     "stopListening": "Lopeta äänikirjoitus",
-    "openHelp": "Help"
+    "openHelp": "Apua"
   },
   "broadcast": {
     "title": "Lähetys",
     "allUsers": "Kaikki käyttäjät",
     "directUser": "TG-ID:llä",
-    "telegramIdPlaceholder": "Telegram ID",
+    "telegramIdPlaceholder": "Telegram-tunnus",
     "messagePlaceholder": "Viestin teksti...",
     "photo": "Kuva",
     "video": "Video",
@@ -342,7 +342,7 @@
     "alreadyUsed": "Tämä kutsu on jo käytetty",
     "success": "Yhdistetty!",
     "loginToAccept": "Kirjaudu sisään hyväksyäksesi",
-    "accepting": "Accepting invitation..."
+    "accepting": "Hyväksytään kutsua..."
   },
   "landing": {
     "painQuote": "Kun ongelmia ilmenee — jäät yksin. Ystävät eivät tiedä. Tuttujen tutut — vielä vähemmän. Mutta joku heistä voisi auttaa.",
@@ -399,8 +399,8 @@
     "closedBody": "Keräys on suljettu luojan toimesta.",
     "open": "Avaa",
     "view": "Näytä",
-    "blocked": "Collection Goal Reached",
-    "blockedBody": "The collection has reached its target amount and is now blocked."
+    "blocked": "Keräystavoite saavutettu",
+    "blockedBody": "Keräys on saavuttanut tavoitesumman ja on nyt estetty."
   },
   "hints": {
     "collectionAmount": "Syötä tarvitsemasi summa. Vähintään 10 yksikköä. Järjestelmä ilmoittaa oikealle määrälle ihmisiä.",

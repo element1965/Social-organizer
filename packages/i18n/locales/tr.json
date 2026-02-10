@@ -1,6 +1,6 @@
 {
   "common": {
-    "appName": "Social Organizer",
+    "appName": "Sosyal Organizasyon",
     "loading": "Yükleniyor...",
     "error": "Bir hata oluştu",
     "retry": "Tekrar dene",
@@ -134,8 +134,8 @@
     "networkStats": "Ağ İstatistikleri",
     "dayCount": "{{count}}. gün",
     "inviteTrusted": "Güvendiğin birini davet et",
-    "myCapabilitiesHint": "Monthly support budget. How much you're willing to contribute to mutual aid each month",
-    "networkCapabilitiesHint": "Total available monthly budgets of all participants in your mutual aid network"
+    "myCapabilitiesHint": "Aylık destek bütçesi. Her ay karşılıklı yardıma ne kadar katkıda bulunmak istediğiniz",
+    "networkCapabilitiesHint": "Karşılıklı yardıma katılan tüm üyelerin toplam mevcut aylık bütçesi"
   },
   "collection": {
     "create": "Yardım sinyali gönder",
@@ -159,7 +159,7 @@
     "close": "Koleksiyonu kapat",
     "participants": "Katılımcılar",
     "noParticipants": "Henüz kimse katılmadı",
-    "minAmount": "Minimum 1",
+    "minAmount": "En az 1",
     "connectionToCreator": "Oluşturucuya bağlantı"
   },
   "create": {
@@ -172,7 +172,7 @@
     "currency": "Para Birimi",
     "chatLink": "Sohbet linki",
     "submit": "Sinyal gönder",
-    "minAmount": "Minimum 10",
+    "minAmount": "En az 10",
     "invalidUrl": "Geçersiz URL",
     "networkReach": "Sinyaliniz el sıkışma zincirleri aracılığıyla {{count}} kişiye kadar ulaşacak"
   },
@@ -186,7 +186,7 @@
     "title": "Ağım",
     "connections": "Bağlantılar",
     "addConnection": "Bağlantı Ekle",
-    "connectionLimit": "Limit: {{current}}/{{max}}",
+    "connectionLimit": "Sınır: {{current}}/{{max}}",
     "invite": "Davet Et",
     "inviteHint": "Bu bağlantı tek kullanımlıktır. Başka birini davet etmek için tekrar + düğmesine dokunun.",
     "inviteCopied": "Kopyalandı! Bir sonraki davet için bağlantı güncellendi.",
@@ -279,8 +279,8 @@
     "newBudgetPlaceholder": "Yeni miktar",
     "updateBudget": "Bütçeyi Güncelle",
     "push": "Push",
-    "linkAccountHint": "Links your profile to a Play Market, App Store, or FB Games account. Coming soon.",
-    "pushNotifications": "Push Notifications"
+    "linkAccountHint": "Profilinizi Play Market, App Store veya FB Games hesabına bağlar. Yakında gelecek.",
+    "pushNotifications": "Push Bildirimleri"
   },
   "faq": {
     "title": "Sık sorulan sorular",
@@ -301,7 +301,7 @@
     "openChat": "Sohbet asistanını aç",
     "startListening": "Sesli girişi başlat",
     "stopListening": "Sesli girişi durdur",
-    "openHelp": "Help"
+    "openHelp": "Yardım"
   },
   "broadcast": {
     "title": "Yayın",
@@ -399,8 +399,8 @@
     "closedBody": "Kampanya oluşturucu tarafından kapatıldı.",
     "open": "Aç",
     "view": "Görüntüle",
-    "blocked": "Collection Goal Reached",
-    "blockedBody": "The collection has reached its target amount and is now blocked."
+    "blocked": "Koleksiyon Hedefi Ulaşıldı",
+    "blockedBody": "Koleksiyon hedef tutarına ulaştı ve şimdi engellendi."
   },
   "hints": {
     "collectionAmount": "İhtiyacınız olan miktarı girin. Minimum 10 birim. Sistem doğru sayıda kişiyi bilgilendirecektir.",

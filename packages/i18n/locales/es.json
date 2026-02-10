@@ -1,6 +1,6 @@
 {
   "common": {
-    "appName": "Social Organizer",
+    "appName": "Organizador Social",
     "loading": "Cargando...",
     "error": "Ocurrió un error",
     "retry": "Reintentar",
@@ -134,8 +134,8 @@
     "networkStats": "Estadísticas de la red",
     "dayCount": "Día {{count}}",
     "inviteTrusted": "Invitar a alguien en quien confías",
-    "myCapabilitiesHint": "Monthly support budget. How much you're willing to contribute to mutual aid each month",
-    "networkCapabilitiesHint": "Total available monthly budgets of all participants in your mutual aid network"
+    "myCapabilitiesHint": "Presupuesto de apoyo mensual. Cuánto estás dispuesto a contribuir a la ayuda mutua cada mes",
+    "networkCapabilitiesHint": "Presupuestos mensuales disponibles totales de todos los participantes en tu red de ayuda mutua"
   },
   "collection": {
     "create": "Enviar señal de ayuda",
@@ -279,8 +279,8 @@
     "newBudgetPlaceholder": "Nuevo monto",
     "updateBudget": "Actualizar presupuesto",
     "push": "Push",
-    "linkAccountHint": "Links your profile to a Play Market, App Store, or FB Games account. Coming soon.",
-    "pushNotifications": "Push Notifications"
+    "linkAccountHint": "Enlaza tu perfil a una cuenta de Play Market, App Store o FB Games. Proximamente.",
+    "pushNotifications": "Notificaciones Push"
   },
   "faq": {
     "title": "Preguntas frecuentes",
@@ -301,7 +301,7 @@
     "openChat": "Abrir asistente de chat",
     "startListening": "Iniciar entrada de voz",
     "stopListening": "Detener entrada de voz",
-    "openHelp": "Help"
+    "openHelp": "Ayuda"
   },
   "contacts": {
     "telegram": "Telegram",
@@ -313,7 +313,7 @@
     "vk": "VKontakte",
     "viber": "Viber",
     "signal": "Signal",
-    "email": "Email",
+    "email": "Correo electrónico",
     "website": "Sitio web"
   },
   "invite": {
@@ -381,8 +381,8 @@
     "closedBody": "La colección fue cerrada por su creador.",
     "open": "Abrir",
     "view": "Ver",
-    "blocked": "Collection Goal Reached",
-    "blockedBody": "The collection has reached its target amount and is now blocked."
+    "blocked": "Objetivo de Recaudación Alcanzado",
+    "blockedBody": "La recaudación ha alcanzado su monto objetivo y ahora está bloqueada."
   },
   "hints": {
     "collectionAmount": "Introduce el monto que necesitas. Mínimo 10 unidades. El sistema notificará al número adecuado de personas.",
@@ -395,10 +395,10 @@
     "title": "Difusión",
     "allUsers": "Todos los usuarios",
     "directUser": "Por TG ID",
-    "telegramIdPlaceholder": "Telegram ID",
+    "telegramIdPlaceholder": "ID de Telegram",
     "messagePlaceholder": "Texto del mensaje...",
     "photo": "Foto",
-    "video": "Video",
+    "video": "Vídeo",
     "mediaUrlPlaceholder": "URL del medio",
     "uploadFile": "Subir archivo",
     "buttonLink": "Botón (opcional)",

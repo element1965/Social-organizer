@@ -1,6 +1,6 @@
 {
   "common": {
-    "appName": "Social Organizer",
+    "appName": "Sosial Organisator",
     "loading": "Laster...",
     "error": "En feil oppsto",
     "retry": "Prøv igjen",
@@ -134,8 +134,8 @@
     "networkStats": "Nettverksstatistikk",
     "dayCount": "Dag {{count}}",
     "inviteTrusted": "Inviter noen du stoler på",
-    "myCapabilitiesHint": "Monthly support budget. How much you're willing to contribute to mutual aid each month",
-    "networkCapabilitiesHint": "Total available monthly budgets of all participants in your mutual aid network"
+    "myCapabilitiesHint": "Månedlig støttebudsjett. Hvor mye du er villig til å bidra med til gjensidig hjelp hver måned",
+    "networkCapabilitiesHint": "Total tilgjengelig månedlig budsjett for alle deltakere i ditt gjensidige hjelp-nettverk"
   },
   "collection": {
     "create": "Send et hjelpesignal",
@@ -279,8 +279,8 @@
     "newBudgetPlaceholder": "Nytt beløp",
     "updateBudget": "Oppdater budsjett",
     "push": "Push",
-    "linkAccountHint": "Links your profile to a Play Market, App Store, or FB Games account. Coming soon.",
-    "pushNotifications": "Push Notifications"
+    "linkAccountHint": "Kobler profilen din til en Play Market, App Store eller FB Games-konto. Kommer snart.",
+    "pushNotifications": "Push-meldinger"
   },
   "faq": {
     "title": "Ofte stilte spørsmål",
@@ -301,13 +301,13 @@
     "openChat": "Åpne chat-assistent",
     "startListening": "Start stemmeinndata",
     "stopListening": "Stopp stemmeinndata",
-    "openHelp": "Help"
+    "openHelp": "Hjelp"
   },
   "broadcast": {
     "title": "Kringkasting",
     "allUsers": "Alle brukere",
     "directUser": "Via TG-ID",
-    "telegramIdPlaceholder": "Telegram ID",
+    "telegramIdPlaceholder": "Telegram-ID",
     "messagePlaceholder": "Meldingstekst...",
     "photo": "Bilde",
     "video": "Video",
@@ -399,8 +399,8 @@
     "closedBody": "Innsamlingen er stengt av oppretteren.",
     "open": "Åpne",
     "view": "Se",
-    "blocked": "Collection Goal Reached",
-    "blockedBody": "The collection has reached its target amount and is now blocked."
+    "blocked": "Innsamlingsmål oppnådd",
+    "blockedBody": "Innsamlingen har nådd sitt målbeløp og er nå blokkert."
   },
   "hints": {
     "collectionAmount": "Skriv inn beløpet du trenger. Minimum 10 enheter. Systemet vil varsle riktig antall personer.",

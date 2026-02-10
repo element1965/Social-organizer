@@ -1,6 +1,6 @@
 {
   "common": {
-    "appName": "Social Organizer",
+    "appName": "ผู้จัดระเบียบสังคม",
     "loading": "กำลังโหลด...",
     "error": "เกิดข้อผิดพลาด",
     "retry": "ลองอีกครั้ง",
@@ -134,8 +134,8 @@
     "networkStats": "สถิติเครือข่าย",
     "dayCount": "วันที่ {{count}}",
     "inviteTrusted": "เชิญคนที่คุณไว้วางใจ",
-    "myCapabilitiesHint": "Monthly support budget. How much you're willing to contribute to mutual aid each month",
-    "networkCapabilitiesHint": "Total available monthly budgets of all participants in your mutual aid network"
+    "myCapabilitiesHint": "งบประมาณสนับสนุนรายเดือน จำนวนที่คุณยินดีบริจาคเพื่อความช่วยเหลือร่วมกันแต่ละเดือน",
+    "networkCapabilitiesHint": "งบประมาณรายเดือนทั้งหมดที่ใช้ได้ของผู้เข้าร่วมในเครือข่ายความช่วยเหลือร่วมกันของคุณ"
   },
   "collection": {
     "create": "ส่งสัญญาณขอความช่วยเหลือ",
@@ -278,12 +278,12 @@
     "currentBudget": "คงเหลือ",
     "newBudgetPlaceholder": "จำนวนใหม่",
     "updateBudget": "อัปเดตงบประมาณ",
-    "push": "Push",
-    "linkAccountHint": "Links your profile to a Play Market, App Store, or FB Games account. Coming soon.",
-    "pushNotifications": "Push Notifications"
+    "push": "พุช",
+    "linkAccountHint": "เชื่อมโยงโปรไฟล์ของคุณกับบัญชี Play Market, App Store, หรือ FB Games กำลังจะมาเร็วๆ นี้",
+    "pushNotifications": "การแจ้งเตือนแบบพุช"
   },
   "faq": {
-    "title": "FAQ",
+    "title": "คำถามที่พบบ่อย",
     "addItem": "เพิ่ม",
     "empty": "ยังไม่มีคำถาม",
     "questionPlaceholder": "คำถาม",
@@ -301,13 +301,13 @@
     "openChat": "เปิดแชทผู้ช่วย",
     "startListening": "เริ่มการป้อนเสียง",
     "stopListening": "หยุดการป้อนเสียง",
-    "openHelp": "Help"
+    "openHelp": "ช่วยเหลือ"
   },
   "broadcast": {
     "title": "ประกาศ",
     "allUsers": "ผู้ใช้ทั้งหมด",
     "directUser": "ตาม TG ID",
-    "telegramIdPlaceholder": "Telegram ID",
+    "telegramIdPlaceholder": "ID Telegram",
     "messagePlaceholder": "ข้อความ...",
     "photo": "รูปภาพ",
     "video": "วิดีโอ",
@@ -342,7 +342,7 @@
     "alreadyUsed": "คำเชิญนี้ถูกใช้ไปแล้ว",
     "success": "เชื่อมต่อแล้ว!",
     "loginToAccept": "เข้าสู่ระบบเพื่อยอมรับ",
-    "accepting": "Accepting invitation..."
+    "accepting": "กำลังยอมรับคำเชิญ..."
   },
   "landing": {
     "painQuote": "เมื่อเกิดปัญหา — คุณอยู่คนเดียว เพื่อนไม่รู้ เพื่อนของเพื่อน — ยิ่งไม่รู้ แต่ใครบางคนในนั้นอาจช่วยได้",
@@ -399,8 +399,8 @@
     "closedBody": "การระดมทุนถูกปิดโดยผู้สร้าง",
     "open": "เปิด",
     "view": "ดู",
-    "blocked": "Collection Goal Reached",
-    "blockedBody": "The collection has reached its target amount and is now blocked."
+    "blocked": "ถึงเป้าหมายการเก็บรวบรวมแล้ว",
+    "blockedBody": "การเก็บรวบรวมได้ถึงจำนวนเป้าหมายแล้ว และตอนนี้ถูกปิดกั้น"
   },
   "hints": {
     "collectionAmount": "กรอกจำนวนที่คุณต้องการ ขั้นต่ำ 10 หน่วย ระบบจะแจ้งเตือนคนจำนวนที่เหมาะสม",

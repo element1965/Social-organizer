@@ -1,6 +1,6 @@
 {
   "common": {
-    "appName": "Social Organizer",
+    "appName": "Sociale Organisator",
     "loading": "Laden...",
     "error": "Er is een fout opgetreden",
     "retry": "Opnieuw proberen",
@@ -71,7 +71,7 @@
     "skip": "Overslaan"
   },
   "nav": {
-    "home": "Home",
+    "home": "Startpagina",
     "notifications": "Meldingen",
     "create": "Aanmaken",
     "network": "Netwerk",
@@ -134,8 +134,8 @@
     "networkStats": "Netwerkstatistieken",
     "dayCount": "Dag {{count}}",
     "inviteTrusted": "Nodig iemand uit die je vertrouwt",
-    "myCapabilitiesHint": "Monthly support budget. How much you're willing to contribute to mutual aid each month",
-    "networkCapabilitiesHint": "Total available monthly budgets of all participants in your mutual aid network"
+    "myCapabilitiesHint": "Maandelijks ondersteuningsbudget. Hoeveel je wilt bijdragen aan wederzijdse hulp elke maand",
+    "networkCapabilitiesHint": "Totaal beschikbare maandelijkse budgetten van alle deelnemers in uw wederzijdse hulpnetwerk"
   },
   "collection": {
     "create": "Hulpsignaal verzenden",
@@ -279,8 +279,8 @@
     "newBudgetPlaceholder": "Nieuw bedrag",
     "updateBudget": "Budget bijwerken",
     "push": "Push",
-    "linkAccountHint": "Links your profile to a Play Market, App Store, or FB Games account. Coming soon.",
-    "pushNotifications": "Push Notifications"
+    "linkAccountHint": "Verbindt uw profiel met een Play Market-, App Store- of FB Games-account. Binnenkort beschikbaar.",
+    "pushNotifications": "Push-meldingen"
   },
   "faq": {
     "title": "Veelgestelde vragen",
@@ -399,8 +399,8 @@
     "closedBody": "De inzameling is gesloten door de maker.",
     "open": "Openen",
     "view": "Bekijken",
-    "blocked": "Collection Goal Reached",
-    "blockedBody": "The collection has reached its target amount and is now blocked."
+    "blocked": "Inzameldoel Bereikt",
+    "blockedBody": "De inzameling heeft het doelbedrag bereikt en is nu geblokkeerd."
   },
   "hints": {
     "collectionAmount": "Voer het bedrag in dat je nodig hebt. Minimaal 10 eenheden. Het systeem informeert het juiste aantal mensen.",

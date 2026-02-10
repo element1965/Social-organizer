@@ -1,6 +1,6 @@
 {
   "common": {
-    "appName": "Social Organizer",
+    "appName": "Social Organisator",
     "loading": "Indlæser...",
     "error": "Der opstod en fejl",
     "retry": "Prøv igen",
@@ -134,8 +134,8 @@
     "networkStats": "Netværksstatistik",
     "dayCount": "Dag {{count}}",
     "inviteTrusted": "Inviter en du stoler på",
-    "myCapabilitiesHint": "Monthly support budget. How much you're willing to contribute to mutual aid each month",
-    "networkCapabilitiesHint": "Total available monthly budgets of all participants in your mutual aid network"
+    "myCapabilitiesHint": "Månedlig støttebudget. Hvor meget du er villig til at bidrage til gensidig hjælp hver måned",
+    "networkCapabilitiesHint": "Samlet tilgængelige månedlige budgetter for alle deltagere i dit gensidige hjælpenetværk"
   },
   "collection": {
     "create": "Send et hjælpesignal",
@@ -279,8 +279,8 @@
     "newBudgetPlaceholder": "Nyt beløb",
     "updateBudget": "Opdater budget",
     "push": "Push",
-    "linkAccountHint": "Links your profile to a Play Market, App Store, or FB Games account. Coming soon.",
-    "pushNotifications": "Push Notifications"
+    "linkAccountHint": "Linker din profil til en Play Market, App Store eller FB Games-konto. Kommer snart.",
+    "pushNotifications": "Push-meddelelser"
   },
   "faq": {
     "title": "Ofte stillede spørgsmål",
@@ -301,7 +301,7 @@
     "openChat": "Åbn chatassistent",
     "startListening": "Start stemmeinput",
     "stopListening": "Stop stemmeinput",
-    "openHelp": "Help"
+    "openHelp": "Hjælp"
   },
   "broadcast": {
     "title": "Udsendelse",
@@ -335,7 +335,7 @@
     "website": "Hjemmeside"
   },
   "invite": {
-    "title": "Invitation",
+    "title": "Invitering",
     "from": "{{name}} inviterer dig",
     "accept": "Accepter og forbind",
     "decline": "Afvis",
@@ -356,7 +356,7 @@
     "whatDescription": "En smart adressebog. Den hjælper dig med hurtigt at finde hjælp gennem en kæde af bekendtskaber — venner, venners venner, op til seks håndtryk.",
     "cardHandshakeTitle": "Håndtryk",
     "cardHandshakeDesc": "Gensidig bekræftelse af en eksisterende meningsfuld forbindelse mellem to mennesker. Op til 150 forbindelser (Dunbars tal).",
-    "cardIntentionTitle": "Intention",
+    "cardIntentionTitle": "Formål",
     "cardIntentionDesc": "En frivillig beslutning om at hjælpe. Intet pres — alle beslutter selv, om de vil deltage.",
     "cardTransparencyTitle": "Gennemsigtighed",
     "cardTransparencyDesc": "Al aktivitet er åben. Omdømme bygges på virkelige handlinger, synlige for alle.",
@@ -399,8 +399,8 @@
     "closedBody": "Indsamlingen er lukket af opretteren.",
     "open": "Åbn",
     "view": "Se",
-    "blocked": "Collection Goal Reached",
-    "blockedBody": "The collection has reached its target amount and is now blocked."
+    "blocked": "Indsamlingens mål opnået",
+    "blockedBody": "Indsamlingen har nået sit målbeløb og er nu blokeret."
   },
   "hints": {
     "collectionAmount": "Indtast det beløb, du har brug for. Minimum 10 enheder. Systemet vil underrette det rette antal personer.",

@@ -1,6 +1,6 @@
 {
   "common": {
-    "appName": "Social Organizer",
+    "appName": "Social Organisatör",
     "loading": "Laddar...",
     "error": "Ett fel uppstod",
     "retry": "Forsok igen",
@@ -134,8 +134,8 @@
     "networkStats": "Natverksstatistik",
     "dayCount": "Dag {{count}}",
     "inviteTrusted": "Bjud in någon du litar på",
-    "myCapabilitiesHint": "Monthly support budget. How much you're willing to contribute to mutual aid each month",
-    "networkCapabilitiesHint": "Total available monthly budgets of all participants in your mutual aid network"
+    "myCapabilitiesHint": "Månadsbudget för stöd. Hur mycket du är villig att bidra till ömsesidigt stöd varje månad",
+    "networkCapabilitiesHint": "Totala tillgängliga månadsbudgetar för alla deltagare i ditt ömsesidiga stöd nätverk"
   },
   "collection": {
     "create": "Skicka hjalpsignal",
@@ -159,7 +159,7 @@
     "close": "Stang insamling",
     "participants": "Deltagare",
     "noParticipants": "Ingen har gatt med annu",
-    "minAmount": "Minimum 1",
+    "minAmount": "Minsta 1",
     "connectionToCreator": "Anslutning till skapare"
   },
   "create": {
@@ -172,7 +172,7 @@
     "currency": "Valuta",
     "chatLink": "Chattlank",
     "submit": "Skicka signal",
-    "minAmount": "Minimum 10",
+    "minAmount": "Minsta 10",
     "invalidUrl": "Ogiltig URL",
     "networkReach": "Din signal nar upp till {{count}} personer genom kedjor av handslag"
   },
@@ -279,8 +279,8 @@
     "newBudgetPlaceholder": "Nytt belopp",
     "updateBudget": "Uppdatera budget",
     "push": "Push",
-    "linkAccountHint": "Links your profile to a Play Market, App Store, or FB Games account. Coming soon.",
-    "pushNotifications": "Push Notifications"
+    "linkAccountHint": "Länkar din profil till ett Play Market, App Store eller FB Games-konto. Kommer snart.",
+    "pushNotifications": "Push-meddelanden"
   },
   "faq": {
     "title": "Vanliga frågor",
@@ -301,13 +301,13 @@
     "openChat": "Oppna chattassistent",
     "startListening": "Starta rostinmatning",
     "stopListening": "Stoppa rostinmatning",
-    "openHelp": "Help"
+    "openHelp": "Hjälp"
   },
   "broadcast": {
     "title": "Utskick",
     "allUsers": "Alla användare",
     "directUser": "Via TG-ID",
-    "telegramIdPlaceholder": "Telegram ID",
+    "telegramIdPlaceholder": "Telegram-ID",
     "messagePlaceholder": "Meddelandetext...",
     "photo": "Foto",
     "video": "Video",
@@ -399,8 +399,8 @@
     "closedBody": "Insamlingen har stängts av skaparen.",
     "open": "Öppna",
     "view": "Visa",
-    "blocked": "Collection Goal Reached",
-    "blockedBody": "The collection has reached its target amount and is now blocked."
+    "blocked": "Insamlingsmål Uppnått",
+    "blockedBody": "Insamlingen har nått sitt målbelopp och är nu blockerad."
   },
   "hints": {
     "collectionAmount": "Ange beloppet du behover. Minimum 10 enheter. Systemet informerar ratt antal personer.",

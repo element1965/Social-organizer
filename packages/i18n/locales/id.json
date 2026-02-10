@@ -1,6 +1,6 @@
 {
   "common": {
-    "appName": "Social Organizer",
+    "appName": "Penyelenggara Sosial",
     "loading": "Memuat...",
     "error": "Terjadi kesalahan",
     "retry": "Coba lagi",
@@ -119,7 +119,7 @@
     "totalGiven": "Total diberikan",
     "currentCapabilities": "Kapasitas jaringan",
     "capabilitiesContributors": "dari {{count}} kontributor",
-    "editBudget": "Edit",
+    "editBudget": "Sunting",
     "yourContribution": "Kapasitas saya",
     "budgetDepletedHint": "Anggaran dukungan bulananmu habis. Ingin menambahkan lagi?",
     "updateBudget": "Perbarui anggaran",
@@ -134,8 +134,8 @@
     "networkStats": "Statistik Jaringan",
     "dayCount": "Hari ke-{{count}}",
     "inviteTrusted": "Undang orang yang kamu percaya",
-    "myCapabilitiesHint": "Monthly support budget. How much you're willing to contribute to mutual aid each month",
-    "networkCapabilitiesHint": "Total available monthly budgets of all participants in your mutual aid network"
+    "myCapabilitiesHint": "Anggaran dukungan bulanan. Berapa banyak yang Anda ingin sumbangkan untuk bantuan bersama setiap bulan",
+    "networkCapabilitiesHint": "Total anggaran bulanan tersedia dari semua peserta di jaringan bantuan bersama Anda"
   },
   "collection": {
     "create": "Kirim sinyal bantuan",
@@ -148,7 +148,7 @@
     "blocked": "Diblokir",
     "closed": "Ditutup",
     "cancelled": "Dibatalkan",
-    "progress": "{{current}} / {{target}} {{currency}}",
+    "progress": "{{current}} dari {{target}} {{currency}}",
     "intentionsCount": "{{count}} niat",
     "collected": "Terkumpul",
     "goal": "Target",
@@ -159,7 +159,7 @@
     "close": "Tutup penggalangan",
     "participants": "Peserta",
     "noParticipants": "Belum ada yang bergabung",
-    "minAmount": "Minimum 1",
+    "minAmount": "Minimal 1",
     "connectionToCreator": "Koneksi ke pembuat"
   },
   "create": {
@@ -172,7 +172,7 @@
     "currency": "Mata Uang",
     "chatLink": "Tautan chat",
     "submit": "Kirim sinyal",
-    "minAmount": "Minimum 10",
+    "minAmount": "Minimal 10",
     "invalidUrl": "URL tidak valid",
     "networkReach": "Sinyalmu akan menjangkau hingga {{count}} orang melalui rantai jabat tangan"
   },
@@ -279,8 +279,8 @@
     "newBudgetPlaceholder": "Jumlah baru",
     "updateBudget": "Perbarui anggaran",
     "push": "Push",
-    "linkAccountHint": "Links your profile to a Play Market, App Store, or FB Games account. Coming soon.",
-    "pushNotifications": "Push Notifications"
+    "linkAccountHint": "Menghubungkan profil Anda ke akun Play Market, App Store, atau FB Games. Segera hadir.",
+    "pushNotifications": "Notifikasi Push"
   },
   "faq": {
     "title": "FAQ",
@@ -301,13 +301,13 @@
     "openChat": "Buka asisten chat",
     "startListening": "Mulai input suara",
     "stopListening": "Hentikan input suara",
-    "openHelp": "Help"
+    "openHelp": "Bantuan"
   },
   "broadcast": {
     "title": "Siaran",
     "allUsers": "Semua pengguna",
     "directUser": "Berdasarkan TG ID",
-    "telegramIdPlaceholder": "Telegram ID",
+    "telegramIdPlaceholder": "ID Telegram",
     "messagePlaceholder": "Teks pesan...",
     "photo": "Foto",
     "video": "Video",
@@ -399,8 +399,8 @@
     "closedBody": "Penggalangan telah ditutup oleh pembuatnya.",
     "open": "Buka",
     "view": "Lihat",
-    "blocked": "Collection Goal Reached",
-    "blockedBody": "The collection has reached its target amount and is now blocked."
+    "blocked": "Target Koleksi Tercapai",
+    "blockedBody": "Koleksi telah mencapai jumlah target dan sekarang diblokir."
   },
   "hints": {
     "collectionAmount": "Masukkan jumlah yang kamu butuhkan. Minimum 10 unit. Sistem akan memberitahu jumlah orang yang tepat.",
