@@ -14,11 +14,8 @@
   --tg-header-bg-color: #ffffff;
 }
 
-/* App container: desktop max-width */
-#root {
-  max-width: 448px;
-  margin: 0 auto;
-}
+/* App container: no max-width on #root so landing page is full-width.
+   Internal pages are constrained via Layout component. */
 
 /* Dark scrollbar for dropdowns */
 .scrollbar-dark::-webkit-scrollbar {

@@ -43,8 +43,17 @@ export const clusterRouter = router({
       clusters.get(root)!.add(uid);
     }
 
-    // Also add users with no connections (they are their own cluster)
-    // But we skip isolated users for cluster display
+    // Collect IDs of users already in clusters
+    const usersInClusters = new Set(uf.parent.keys());
+
+    // For admin: load ALL users to find isolated ones (no connections)
+    let isolatedUsers: Array<{ id: string; name: string; remainingBudget: number | null; createdAt: Date }> = [];
+    if (admin) {
+      isolatedUsers = await ctx.db.user.findMany({
+        where: { id: { notIn: [...usersInClusters] }, deletedAt: null },
+        select: { id: true, name: true, remainingBudget: true, createdAt: true },
+      });
+    }
 
     // Find which cluster current user belongs to
     const myRoot = uf.parent.has(ctx.userId) ? uf.find(ctx.userId) : null;
@@ -67,13 +76,12 @@ export const clusterRouter = router({
 
     for (const [root, members] of clusters) {
       const memberCount = members.size;
-      // Visibility: admin sees all, root of own cluster sees >3 clusters, regular sees nothing
+      // Visibility: admin sees all, non-admin sees only own cluster >3
       if (!admin && !(myRoot === root)) continue;
       if (!admin && memberCount <= 3) continue;
 
       let totalBudget = 0;
       let rootUser = userMap.get(root);
-      // Find earliest user as root representative
       let earliest = rootUser;
       for (const uid of members) {
         const u = userMap.get(uid);
@@ -91,13 +99,24 @@ export const clusterRouter = router({
       });
     }
 
+    // For admin: add isolated users as individual "clusters" of size 1
+    if (admin) {
+      for (const u of isolatedUsers) {
+        result.push({
+          rootUserId: u.id,
+          rootUserName: u.name,
+          memberCount: 1,
+          totalBudget: Math.round(u.remainingBudget ?? 0),
+        });
+      }
+    }
+
     // Sort by memberCount desc
     result.sort((a, b) => b.memberCount - a.memberCount);
     return result;
   }),
 
   myCluster: protectedProcedure.query(async ({ ctx }) => {
-    // Load all connections
     const connections = await ctx.db.connection.findMany({
       select: { userAId: true, userBId: true },
     });

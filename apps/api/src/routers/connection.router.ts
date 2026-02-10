@@ -165,7 +165,7 @@ export const connectionRouter = router({
     ]);
 
     return {
-      totalReachable: recipients.length,
+      totalReachable: recipients.length + 1,
       byDepth,
       usersByDepth,
       growth: {

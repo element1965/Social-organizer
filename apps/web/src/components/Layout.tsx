@@ -46,7 +46,7 @@ export function Layout() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-950 flex flex-col">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-950 flex flex-col max-w-md mx-auto">
       <main className="flex-1 pb-16 overflow-y-auto">
         <Outlet />
       </main>
