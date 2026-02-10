@@ -160,7 +160,10 @@
     "participants": "Участники",
     "noParticipants": "Пока никто не вписался",
     "minAmount": "Минимум 1",
-    "connectionToCreator": "Связь с создателем"
+    "connectionToCreator": "Связь с создателем",
+    "editAmount": "Изменить",
+    "saveAmount": "Сохранить",
+    "cancelEdit": "Отмена"
   },
   "create": {
     "title": "Подать сигнал о помощи",

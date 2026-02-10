@@ -106,6 +106,77 @@ export const obligationRouter = router({
     }));
   }),
 
+  updateAmount: protectedProcedure
+    .input(z.object({
+      obligationId: z.string(),
+      amount: z.number().min(MIN_OBLIGATION_AMOUNT),
+      inputCurrency: z.string().refine((c) => CURRENCY_CODES.includes(c), 'Unsupported currency').default('USD'),
+    }))
+    .mutation(async ({ ctx, input }) => {
+      const obligation = await ctx.db.obligation.findUnique({
+        where: { id: input.obligationId },
+        include: { collection: true },
+      });
+      if (!obligation) throw new TRPCError({ code: 'NOT_FOUND' });
+      if (obligation.userId !== ctx.userId) throw new TRPCError({ code: 'FORBIDDEN' });
+      if (obligation.collection.status !== 'ACTIVE' && obligation.collection.status !== 'BLOCKED') {
+        throw new TRPCError({ code: 'BAD_REQUEST', message: 'Collection is not active' });
+      }
+
+      // Convert to USD if needed
+      let newAmountUSD = input.amount;
+      if (input.inputCurrency !== 'USD') {
+        newAmountUSD = await convertToUSD(input.amount, input.inputCurrency);
+      }
+
+      const oldAmountUSD = obligation.amount;
+
+      // Update obligation
+      const updated = await ctx.db.obligation.update({
+        where: { id: input.obligationId },
+        data: {
+          amount: newAmountUSD,
+          originalAmount: input.amount,
+          originalCurrency: input.inputCurrency,
+        },
+      });
+
+      // Adjust user's remaining budget
+      const user = await ctx.db.user.findUnique({ where: { id: ctx.userId } });
+      if (user?.remainingBudget != null) {
+        const budgetDelta = oldAmountUSD - newAmountUSD;
+        await ctx.db.user.update({
+          where: { id: ctx.userId },
+          data: {
+            remainingBudget: Math.max(0, user.remainingBudget + budgetDelta),
+          },
+        });
+      }
+
+      // Recalculate collection block status
+      const collection = obligation.collection;
+      if (collection.amount != null) {
+        const totalAmount = await ctx.db.obligation.aggregate({
+          where: { collectionId: collection.id },
+          _sum: { amount: true },
+        });
+        const sum = totalAmount._sum.amount ?? 0;
+        if (sum >= collection.amount && collection.status === 'ACTIVE') {
+          await ctx.db.collection.update({
+            where: { id: collection.id },
+            data: { status: 'BLOCKED', blockedAt: new Date() },
+          });
+        } else if (sum < collection.amount && collection.status === 'BLOCKED') {
+          await ctx.db.collection.update({
+            where: { id: collection.id },
+            data: { status: 'ACTIVE', blockedAt: null },
+          });
+        }
+      }
+
+      return updated;
+    }),
+
   unsubscribe: protectedProcedure
     .input(z.object({ obligationId: z.string() }))
     .mutation(async ({ ctx, input }) => {

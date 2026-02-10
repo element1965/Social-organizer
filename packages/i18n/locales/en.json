@@ -160,7 +160,10 @@
     "participants": "Participants",
     "noParticipants": "No one has joined yet",
     "minAmount": "Minimum 1",
-    "connectionToCreator": "Connection to creator"
+    "connectionToCreator": "Connection to creator",
+    "editAmount": "Edit",
+    "saveAmount": "Save",
+    "cancelEdit": "Cancel"
   },
   "create": {
     "title": "Send a help signal",
