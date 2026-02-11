@@ -225,9 +225,9 @@
   "notifications": {
     "title": "Уведомления",
     "empty": "Нет уведомлений",
-    "new": "Новый",
+    "new": "Новый сбор",
     "reNotify": "Напоминание",
-    "closed": "Закрыт",
+    "closed": "Сбор закрыт",
     "blocked": "Заблокирован",
     "obligationReceived": "Помощь",
     "cycleClosed": "Цикл закрыт",

@@ -71,7 +71,7 @@ export function Layout() {
               <button
                 key={item.path}
                 onClick={() => { selection(); navigate(item.path); }}
-                className="flex flex-col items-center justify-center w-full h-full relative -mt-4"
+                className="flex flex-col items-center justify-center w-full h-full relative"
               >
                 <div className={cn(
                   'w-12 h-12 rounded-full flex items-center justify-center shadow-lg',
