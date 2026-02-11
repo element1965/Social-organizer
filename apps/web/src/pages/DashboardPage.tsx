@@ -513,7 +513,7 @@ export function DashboardPage() {
 
             {/* Invite trusted person */}
             <button
-              onClick={() => { setCopiedWeb(false); setShowInvitePopup(true); }}
+              onClick={() => setShowInvitePopup(true)}
               className="w-full py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl font-medium text-sm flex items-center justify-center gap-2 hover:from-blue-500 hover:to-indigo-500 transition-all shadow-md"
             >
               <UserPlus className="w-4 h-4" />

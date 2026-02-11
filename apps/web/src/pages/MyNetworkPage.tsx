@@ -61,7 +61,7 @@ export function MyNetworkPage() {
             {view === 'list' ? <Globe className="w-4 h-4" /> : <List className="w-4 h-4" />}
           </Button>
           <button
-            onClick={() => { setCopiedWeb(false); setShowInvitePopup(true); }}
+            onClick={() => setShowInvitePopup(true)}
             className="w-9 h-9 rounded-full bg-blue-600 hover:bg-blue-500 flex items-center justify-center transition-colors shadow-lg"
           >
             <UserPlus className="w-4 h-4 text-white" />
