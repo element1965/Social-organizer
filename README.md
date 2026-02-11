@@ -72,7 +72,7 @@ pnpm dev
 
 | Model | Description |
 |-------|-------------|
-| User | User with settings, role, onboarding flag, preferredCurrency, monthlyBudget, remainingBudget |
+| User | User with settings, role, onboarding flag, preferredCurrency, monthlyBudget, remainingBudget, lastSeen |
 | UserContact | User contacts (social networks, messengers) |
 | PlatformAccount | Platform bindings (FB/TG/Apple/Google) |
 | Connection | Connection between users (userAId < userBId) with optional nicknames (nicknameByA, nicknameByB) |
@@ -242,6 +242,7 @@ Mock data (`apps/web/src/lib/demoData.ts`):
 - **Dark/Light theme** — system preference detection + manual toggle (auto-synced with Telegram theme in Mini App mode)
 - **Contact links** — all social network contact types (Telegram, Instagram, Twitter, LinkedIn, VK, Facebook, WhatsApp, Email, Website) open correct URLs via `buildContactUrl`
 - **TG username auto-save** — Telegram username automatically saved/updated as contact on each login
+- **Online status indicator** — green dot + "Online" when last seen within 5 minutes, gray dot + relative time otherwise; auto-updated on every authenticated API call
 - **Connection nicknames** — custom names for connections (like a phone book), editable from profile page, shown in network list
 - **Telegram Mini App** — auto-login via initData, BackButton navigation, haptic feedback on tab switches, theme sync, CSS variable injection from Telegram themeParams
 - **Onboarding** — auto-shown for new users, completable flag in database

@@ -269,7 +269,9 @@
     "contacts": "Контакты",
     "currentCapability": "Текущая возможность",
     "memberSince": "Участник с {{date}}",
-    "nicknamePlaceholder": "Своё имя для них..."
+    "nicknamePlaceholder": "Своё имя для них...",
+    "online": "В сети",
+    "lastSeen": "Был(а) в сети {{time}}"
   },
   "settings": {
     "title": "Настройки",

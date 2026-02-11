@@ -35,13 +35,13 @@ export const userRouter = router({
         select: {
           id: true, name: true, bio: true, phone: true,
           photoUrl: true, role: true, createdAt: true, deletedAt: true,
-          remainingBudget: true,
+          remainingBudget: true, lastSeen: true,
         },
       });
       if (!user) throw new TRPCError({ code: 'NOT_FOUND' });
       // Deleted profile - "gray": name replaced, data hidden
       if (user.deletedAt) {
-        return { ...user, name: 'Deleted user', bio: null, phone: null, photoUrl: null };
+        return { ...user, name: 'Deleted user', bio: null, phone: null, photoUrl: null, lastSeen: null };
       }
       return user;
     }),
