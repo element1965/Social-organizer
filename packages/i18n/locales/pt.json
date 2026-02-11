@@ -195,7 +195,8 @@
     "notEnoughConnectionsTitle": "Conexões insuficientes",
     "notEnoughConnectionsText": "Para criar um sinal de ajuda, você precisa de pelo menos {{min}} conexões na sua rede. Convide mais pessoas para desbloquear esta função.",
     "connectionsRemaining": "Faltam {{count}} mais",
-    "goToNetwork": "Convidar pessoas"
+    "goToNetwork": "Convidar pessoas",
+    "goToInvite": "Convidar"
   },
   "intention": {
     "create": "Expressar intenção",

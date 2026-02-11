@@ -195,7 +195,8 @@
     "notEnoughConnectionsTitle": "Za mało połączeń",
     "notEnoughConnectionsText": "Aby utworzyć sygnał pomocy, potrzebujesz co najmniej {{min}} połączeń w swojej sieci. Zaproś więcej osób, aby odblokować tę funkcję.",
     "connectionsRemaining": "Potrzeba jeszcze {{count}}",
-    "goToNetwork": "Zaproś osoby"
+    "goToNetwork": "Zaproś osoby",
+    "goToInvite": "Zaproś"
   },
   "intention": {
     "create": "Wyraź intencję",

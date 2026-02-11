@@ -195,7 +195,8 @@
     "notEnoughConnectionsTitle": "Niet genoeg verbindingen",
     "notEnoughConnectionsText": "Om een hulpsignaal te maken, heb je minstens {{min}} verbindingen in je netwerk nodig. Nodig meer mensen uit om deze functie te ontgrendelen.",
     "connectionsRemaining": "Nog {{count}} nodig",
-    "goToNetwork": "Mensen uitnodigen"
+    "goToNetwork": "Mensen uitnodigen",
+    "goToInvite": "Uitnodigen"
   },
   "intention": {
     "create": "Intentie uitspreken",

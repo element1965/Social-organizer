@@ -195,7 +195,8 @@
     "notEnoughConnectionsTitle": "Ikke nok forbindelser",
     "notEnoughConnectionsText": "For å opprette et hjelpesignal trenger du minst {{min}} forbindelser i nettverket ditt. Inviter flere mennesker for å låse opp denne funksjonen.",
     "connectionsRemaining": "{{count}} til trengs",
-    "goToNetwork": "Inviter mennesker"
+    "goToNetwork": "Inviter mennesker",
+    "goToInvite": "Inviter"
   },
   "intention": {
     "create": "Uttrykk intensjon",

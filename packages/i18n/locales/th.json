@@ -195,7 +195,8 @@
     "notEnoughConnectionsTitle": "การเชื่อมต่อไม่เพียงพอ",
     "notEnoughConnectionsText": "ในการสร้างสัญญาณขอความช่วยเหลือ คุณต้องมีอย่างน้อย {{min}} การเชื่อมต่อในเครือข่ายของคุณ เชิญคนเพิ่มเพื่อปลดล็อคฟีเจอร์นี้",
     "connectionsRemaining": "ต้องการอีก {{count}}",
-    "goToNetwork": "เชิญผู้คน"
+    "goToNetwork": "เชิญผู้คน",
+    "goToInvite": "เชิญ"
   },
   "intention": {
     "create": "แสดงความตั้งใจ",

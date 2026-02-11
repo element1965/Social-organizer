@@ -195,7 +195,8 @@
     "notEnoughConnectionsTitle": "Ei tarpeeksi yhteyksiä",
     "notEnoughConnectionsText": "Avunpyynnön luomiseen tarvitset vähintään {{min}} yhteyttä verkostossasi. Kutsu lisää ihmisiä avataksesi tämän toiminnon.",
     "connectionsRemaining": "Tarvitaan vielä {{count}}",
-    "goToNetwork": "Kutsu ihmisiä"
+    "goToNetwork": "Kutsu ihmisiä",
+    "goToInvite": "Kutsu"
   },
   "intention": {
     "create": "Ilmaise aikomus",

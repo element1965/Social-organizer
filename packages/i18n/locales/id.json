@@ -195,7 +195,8 @@
     "notEnoughConnectionsTitle": "Koneksi tidak cukup",
     "notEnoughConnectionsText": "Untuk membuat sinyal bantuan, Anda membutuhkan minimal {{min}} koneksi di jaringan Anda. Undang lebih banyak orang untuk membuka fitur ini.",
     "connectionsRemaining": "Butuh {{count}} lagi",
-    "goToNetwork": "Undang orang"
+    "goToNetwork": "Undang orang",
+    "goToInvite": "Undang"
   },
   "intention": {
     "create": "Nyatakan Niat",

@@ -200,7 +200,8 @@
     "notEnoughConnectionsTitle": "Not enough connections",
     "notEnoughConnectionsText": "To create a help signal, you need at least {{min}} connections in your network. Invite more people to unlock this feature.",
     "connectionsRemaining": "{{count}} more needed",
-    "goToNetwork": "Invite people"
+    "goToNetwork": "Invite people",
+    "goToInvite": "Invite"
   },
   "intention": {
     "create": "Express Intention",

@@ -195,7 +195,8 @@
     "notEnoughConnectionsTitle": "연결이 부족합니다",
     "notEnoughConnectionsText": "도움 신호를 만들려면 네트워크에 최소 {{min}}개의 연결이 필요합니다. 이 기능을 잠금 해제하려면 더 많은 사람을 초대하세요.",
     "connectionsRemaining": "{{count}}명 더 필요",
-    "goToNetwork": "사람 초대하기"
+    "goToNetwork": "사람 초대하기",
+    "goToInvite": "초대"
   },
   "intention": {
     "create": "의사 표시하기",

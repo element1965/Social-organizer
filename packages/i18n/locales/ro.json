@@ -195,7 +195,8 @@
     "notEnoughConnectionsTitle": "Nu sunt suficiente conexiuni",
     "notEnoughConnectionsText": "Pentru a crea un semnal de ajutor, ai nevoie de cel puțin {{min}} conexiuni în rețeaua ta. Invită mai multe persoane pentru a debloca această funcție.",
     "connectionsRemaining": "Mai sunt necesare {{count}}",
-    "goToNetwork": "Invită persoane"
+    "goToNetwork": "Invită persoane",
+    "goToInvite": "Invită"
   },
   "intention": {
     "create": "Exprima intentia",

@@ -200,7 +200,8 @@
     "notEnoughConnectionsTitle": "Недостаточно связей",
     "notEnoughConnectionsText": "Для создания сигнала о помощи нужно минимум {{min}} связей в вашей сети. Пригласите больше людей, чтобы разблокировать эту функцию.",
     "connectionsRemaining": "Нужно ещё {{count}}",
-    "goToNetwork": "Пригласить людей"
+    "goToNetwork": "Пригласить людей",
+    "goToInvite": "Пригласить"
   },
   "intention": {
     "create": "Выразить намерение",

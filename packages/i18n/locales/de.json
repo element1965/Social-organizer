@@ -195,7 +195,8 @@
     "notEnoughConnectionsTitle": "Nicht genügend Verbindungen",
     "notEnoughConnectionsText": "Um ein Hilfesignal zu erstellen, benötigen Sie mindestens {{min}} Verbindungen in Ihrem Netzwerk. Laden Sie mehr Personen ein, um diese Funktion freizuschalten.",
     "connectionsRemaining": "Noch {{count}} benötigt",
-    "goToNetwork": "Personen einladen"
+    "goToNetwork": "Personen einladen",
+    "goToInvite": "Einladen"
   },
   "intention": {
     "create": "Absicht bekunden",

@@ -195,7 +195,8 @@
     "notEnoughConnectionsTitle": "पर्याप्त कनेक्शन नहीं",
     "notEnoughConnectionsText": "सहायता सिग्नल बनाने के लिए आपके नेटवर्क में कम से कम {{min}} कनेक्शन होने चाहिए। इस सुविधा को अनलॉक करने के लिए और लोगों को आमंत्रित करें।",
     "connectionsRemaining": "और {{count}} की जरूरत",
-    "goToNetwork": "लोगों को आमंत्रित करें"
+    "goToNetwork": "लोगों को आमंत्रित करें",
+    "goToInvite": "आमंत्रित करें"
   },
   "intention": {
     "create": "इरादा व्यक्त करें",
