@@ -91,7 +91,7 @@ export function DashboardPage() {
 
 
   return (
-    <div className="p-4 pt-2 space-y-4 relative">
+    <div className="p-4 pt-3 space-y-4 relative">
       {/* 3D cloud background */}
       <div className="absolute inset-0 -z-10 opacity-30 pointer-events-none" style={{ height: 300 }}>
         <Suspense fallback={null}>
@@ -117,13 +117,21 @@ export function DashboardPage() {
             <p className="text-xs text-gray-500">{t('settings.title')}</p>
           </div>
         </button>
-        <button
-          onClick={() => setShowTgChatPopup(true)}
-          className="w-10 h-10 rounded-full bg-[#26A5E4] hover:bg-[#1d8cc4] flex items-center justify-center transition-colors shadow-lg"
-          title={t('dashboard.communityChat')}
-        >
-          <SocialIcon type="telegram" className="w-5 h-5 text-white" />
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => setShowTgChatPopup(true)}
+            className="w-10 h-10 rounded-full bg-[#26A5E4] hover:bg-[#1d8cc4] flex items-center justify-center transition-colors shadow-lg"
+            title={t('dashboard.communityChat')}
+          >
+            <SocialIcon type="telegram" className="w-5 h-5 text-white" />
+          </button>
+          <button
+            onClick={() => window.dispatchEvent(new CustomEvent('toggle-help-menu'))}
+            className="w-10 h-10 rounded-full bg-blue-600 hover:bg-blue-700 flex items-center justify-center transition-colors shadow-lg"
+          >
+            <HelpCircle className="w-5 h-5 text-white" />
+          </button>
+        </div>
       </div>
 
       {/* Emergency notifications */}
