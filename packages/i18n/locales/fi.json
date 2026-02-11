@@ -55,8 +55,8 @@
       "text": "Organisaattori toimii ihmisten välisten yhteyksien kautta. Aloita yhdestä henkilöstä — jostakusta, johon luotat."
     },
     "step5": {
-      "title": "Kuukausittainen tukibudjetti",
-      "text": "Tämä summa on tarkoituksesi, ei sitoumus. Korttia ei ole liitetty, eikä rahaa veloiteta. Ilmaiset vain, kuinka paljon olet valmis auttamaan kuukaudessa. Tämä luku on näkyvissä verkostollesi ja osoittaa yleiset kyvyt. Kun joku pyytää apua – p��ätät itse, osallistutko vai et."
+      "title": "Miten sinuun saa yhteyden",
+      "text": "Lisää vähintään 2 yhteystapaa, jotta osallistujat voivat koordinoida kanssasi avun tarjoamisessa."
     },
     "start": "Aloita",
     "next": "Seuraava",
@@ -68,7 +68,13 @@
     "waitingForAccept": "Odottaa hyväksyntää...",
     "connectionEstablished": "Yhteys muodostettu!",
     "sendAnother": "Lähetä toinen kutsu",
-    "skip": "Ohita"
+    "skip": "Ohita",
+    "step6": {
+      "title": "Kuukausittainen tukibudjetti",
+      "text": "Tämä summa on tarkoituksesi, ei sitoumus. Korttia ei ole liitetty, eikä rahaa veloiteta. Ilmaiset vain, kuinka paljon olet valmis auttamaan kuukaudessa. Tämä luku on näkyvissä verkostollesi ja osoittaa yleiset kyvyt. Kun joku pyytää apua – p��ätät itse, osallistutko vai et."
+    },
+    "contactsRequired": "Lisää vähintään 2 yhteystietoa",
+    "contactsFilled": "Täytetty: {{count}}/2"
   },
   "nav": {
     "home": "Koti",
@@ -135,7 +141,8 @@
     "dayCount": "Päivä {{count}}",
     "inviteTrusted": "Kutsu",
     "myCapabilitiesHint": "Kuukausittainen tuki budjetti. Kuinka paljon olet valmis lahjoittamaan keskinäiseen apuun kuukausittain",
-    "networkCapabilitiesHint": "Kaikkien osallistujien käytettävissä olevat kuukausibudjetit verkostossasi"
+    "networkCapabilitiesHint": "Kaikkien osallistujien käytettävissä olevat kuukausibudjetit verkostossasi",
+    "communityChat": "Yhteisön keskustelu"
   },
   "collection": {
     "create": "Lähetä apusignaali",
@@ -174,7 +181,13 @@
     "submit": "Lähetä signaali",
     "minAmount": "Vähintään 10",
     "invalidUrl": "Virheellinen URL",
-    "networkReach": "Signaalisi tavoittaa jopa {{count}} henkilöä kättelyketjujen kautta"
+    "networkReach": "Signaalisi tavoittaa jopa {{count}} henkilöä kättelyketjujen kautta",
+    "confirmTitle": "Vahvista keräyksen luominen",
+    "confirmText": "Varmista, että todella tarvitset tämän summan. Apusignaali näkyy kymmenille ihmisille — käytä sitä vastuullisesti.",
+    "confirmPayment": "Voitko vastaanottaa kansainvälisiä siirtoja? Osallistujat voivat olla eri maista. Varmista, että sinulla on kryptolompakko, PayPal, Wise, Revolut tai muu tapa vastaanottaa varoja ulkomailta.",
+    "confirmCheckbox": "Olen harkinnut asiaa ja vahvistan",
+    "confirmButton": "Vahvista",
+    "cancelButton": "Peruuta"
   },
   "intention": {
     "create": "Ilmaise aikomus",
@@ -332,7 +345,8 @@
     "viber": "Viber",
     "signal": "Signal",
     "email": "Sähköposti",
-    "website": "Verkkosivusto"
+    "website": "Verkkosivusto",
+    "tiktok": "TikTok"
   },
   "invite": {
     "title": "Kutsu",
@@ -348,7 +362,8 @@
     "slugHint": "3–30 merkkiä: kirjaimet, numerot, _ ja -",
     "slugMin": "Vähintään 3 merkkiä",
     "webLinkDesc": "Verkkosivun linkki — jos henkilö ei ole vielä tutustunut projektiin, se sisältää kaiken esittelyinfon",
-    "botLinkDesc": "Suoraan Telegramiin — jos olet jo selittänyt kaiken ja he voivat mennä suoraan sovellukseen"
+    "botLinkDesc": "Suoraan Telegramiin — jos olet jo selittänyt kaiken ja he voivat mennä suoraan sovellukseen",
+    "slugDesc": "Tämä on henkilökohtainen linkkitunnuksesi kutsu-URL-osoitteisiin. Se EI ole kutsu itsessään — älä lähetä sitä ihmisille. Käytä yllä olevia linkkejä kutsuaksesi jonkun."
   },
   "landing": {
     "painQuote": "Kun ongelmia ilmenee — jäät yksin. Ystävät eivät tiedä. Tuttujen tutut — vielä vähemmän. Mutta joku heistä voisi auttaa.",
@@ -440,5 +455,14 @@
     "budget": "Budjetti",
     "root": "Juuri",
     "contactRoot": "Ota yhteyttä juureen"
+  },
+  "requiredInfo": {
+    "contactsTitle": "Lisää yhteystietosi",
+    "contactsText": "Avun koordinointiin tarvitaan vähintään 2 yhteystapaa",
+    "budgetTitle": "Kuukausittainen tukibudjetti",
+    "budgetText": "Tämä summa on aikomuksesi, ei sitoumus. Korttia ei liitetä eikä rahaa veloiteta. Ilmoitat vain, kuinka paljon olet valmis auttamaan kuukaudessa.",
+    "next": "Seuraava",
+    "save": "Tallenna ja jatka",
+    "contactsFilled": "Täytetty: {{count}}/2"
   }
 }

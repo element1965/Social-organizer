@@ -55,8 +55,8 @@
       "text": "오거나이저는 사람 간의 연결로 작동합니다. 신뢰할 수 있는 한 사람부터 시작하세요."
     },
     "step5": {
-      "title": "월간 지원 예산",
-      "text": "이 금액은 의도일 뿐, 약속이 아닙니다. 카드가 연결되지 않았고, 돈이 청구되지 않습니다. 당신은 매월 도울 의향이 있는 금액을 단순히 표시합니다. 이 수치는 네트워크에 공개되어 전체적�� 능력을 보여줍니다. 누군가가 도움을 요청할 때, 참여 여부를 직접 결정하세요."
+      "title": "연락 방법",
+      "text": "참가자들이 도움을 제공할 때 당신과 조율할 수 있도록 최소 2개의 연락 방법을 추가하세요."
     },
     "start": "시작하기",
     "next": "다음",
@@ -68,7 +68,13 @@
     "waitingForAccept": "수락 대기 중...",
     "connectionEstablished": "연결이 완료되었습니다!",
     "sendAnother": "다른 초대 보내기",
-    "skip": "건너뛰기"
+    "skip": "건너뛰기",
+    "step6": {
+      "title": "월간 지원 예산",
+      "text": "이 금액은 의도일 뿐, 약속이 아닙니다. 카드가 연결되지 않았고, 돈이 청구되지 않습니다. 당신은 매월 도울 의향이 있는 금액을 단순히 표시합니다. 이 수치는 네트워크에 공개되어 전체적�� 능력을 보여줍니다. 누군가가 도움을 요청할 때, 참여 여부를 직접 결정하세요."
+    },
+    "contactsRequired": "최소 2개의 연락처를 추가하세요",
+    "contactsFilled": "입력됨: {{count}}/2"
   },
   "nav": {
     "home": "홈",
@@ -135,7 +141,8 @@
     "dayCount": "{{count}}일차",
     "inviteTrusted": "초대",
     "myCapabilitiesHint": "월간 지원 예산. 매월 상호 원조에 기부할 금액",
-    "networkCapabilitiesHint": "귀하의 상호 원조 네트워크에 있는 모든 참가자의 총 가용 월간 예산"
+    "networkCapabilitiesHint": "귀하의 상호 원조 네트워크에 있는 모든 참가자의 총 가용 월간 예산",
+    "communityChat": "커뮤니티 채팅"
   },
   "collection": {
     "create": "도움 신호 보내기",
@@ -174,7 +181,13 @@
     "submit": "신호 보내기",
     "minAmount": "최소 10",
     "invalidUrl": "잘못된 URL",
-    "networkReach": "핸드셰이크 체인을 통해 최대 {{count}}명에게 신호가 전달됩니다"
+    "networkReach": "핸드셰이크 체인을 통해 최대 {{count}}명에게 신호가 전달됩니다",
+    "confirmTitle": "모금 생성 확인",
+    "confirmText": "이 금액이 정말 필요한지 확인하세요. 도움 신호는 수십 명에게 보여집니다 — 책임감 있게 사용하세요.",
+    "confirmPayment": "국제 송금을 받을 수 있나요? 참가자들은 다른 나라에서 올 수 있습니다. 암호화폐 지갑, PayPal, Wise, Revolut 또는 해외에서 자금을 받을 수 있는 다른 방법이 있는지 확인하세요.",
+    "confirmCheckbox": "충분히 생각했으며 확인합니다",
+    "confirmButton": "확인",
+    "cancelButton": "취소"
   },
   "intention": {
     "create": "의사 표시하기",
@@ -332,7 +345,8 @@
     "viber": "Viber",
     "signal": "Signal",
     "email": "이메일",
-    "website": "웹사이트"
+    "website": "웹사이트",
+    "tiktok": "TikTok"
   },
   "invite": {
     "title": "초대",
@@ -348,7 +362,8 @@
     "slugHint": "3~30자: 영문자, 숫자, _ 및 -",
     "slugMin": "최소 3자",
     "webLinkDesc": "웹사이트 링크 — 프로젝트를 모르는 사람에게 모든 소개 정보를 제공",
-    "botLinkDesc": "텔레그램으로 바로 — 모든 설명 후 앱으로 직행"
+    "botLinkDesc": "텔레그램으로 바로 — 모든 설명 후 앱으로 직행",
+    "slugDesc": "이것은 초대 URL에 사용되는 개인 링크 ID입니다. 이것 자체가 초대가 아닙니다 — 사람들에게 보내지 마세요. 누군가를 초대하려면 위의 링크를 사용하세요."
   },
   "landing": {
     "painQuote": "문제가 생기면 — 혼자가 됩니다. 친구들은 모릅니다. 친구의 친구들은 — 더더욱. 하지만 그들 중 누군가는 도와줄 수 있었을 텐데.",
@@ -440,5 +455,14 @@
     "budget": "예산",
     "root": "루트",
     "contactRoot": "루트에 연락"
+  },
+  "requiredInfo": {
+    "contactsTitle": "연락처 추가",
+    "contactsText": "도움 조율을 위해 최소 2개의 연락 방법이 필요합니다",
+    "budgetTitle": "월간 지원 예산",
+    "budgetText": "이 금액은 당신의 의향이며 약속이 아닙니다. 카드가 연결되지 않으며 돈이 청구되지 않습니다. 매달 얼마나 도울 의향이 있는지 표시하는 것입니다.",
+    "next": "다음",
+    "save": "저장하고 계속",
+    "contactsFilled": "입력됨: {{count}}/2"
   }
 }

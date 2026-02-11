@@ -55,8 +55,8 @@
       "text": "De organisator werkt via verbindingen tussen mensen. Begin met een persoon — iemand die je vertrouwt."
     },
     "step5": {
-      "title": "Maandelijks ondersteuningsbudget",
-      "text": "Dit bedrag is je intentie, geen verplichting. Er is geen kaart gekoppeld, er wordt geen geld afgeschreven. Je geeft eenvoudig aan hoeveel je per maand wilt helpen. Dit bedrag is zichtbaar voor je netwerk en toont je algemene capaciteiten. Wanneer iemand hulp vraagt, beslis je of je meedoet of niet."
+      "title": "Hoe u te bereiken",
+      "text": "Voeg minimaal 2 contactmethoden toe zodat deelnemers met u kunnen coördineren bij het verlenen van hulp."
     },
     "start": "Aan de slag",
     "next": "Volgende",
@@ -68,7 +68,13 @@
     "waitingForAccept": "Wachten op acceptatie...",
     "connectionEstablished": "Verbinding tot stand gebracht!",
     "sendAnother": "Nog een uitnodiging versturen",
-    "skip": "Overslaan"
+    "skip": "Overslaan",
+    "step6": {
+      "title": "Maandelijks ondersteuningsbudget",
+      "text": "Dit bedrag is je intentie, geen verplichting. Er is geen kaart gekoppeld, er wordt geen geld afgeschreven. Je geeft eenvoudig aan hoeveel je per maand wilt helpen. Dit bedrag is zichtbaar voor je netwerk en toont je algemene capaciteiten. Wanneer iemand hulp vraagt, beslis je of je meedoet of niet."
+    },
+    "contactsRequired": "Voeg minimaal 2 contacten toe",
+    "contactsFilled": "Ingevuld: {{count}}/2"
   },
   "nav": {
     "home": "Startpagina",
@@ -135,7 +141,8 @@
     "dayCount": "Dag {{count}}",
     "inviteTrusted": "Uitnodigen",
     "myCapabilitiesHint": "Maandelijks ondersteuningsbudget. Hoeveel je wilt bijdragen aan wederzijdse hulp elke maand",
-    "networkCapabilitiesHint": "Totaal beschikbare maandelijkse budgetten van alle deelnemers in uw wederzijdse hulpnetwerk"
+    "networkCapabilitiesHint": "Totaal beschikbare maandelijkse budgetten van alle deelnemers in uw wederzijdse hulpnetwerk",
+    "communityChat": "Community-chat"
   },
   "collection": {
     "create": "Hulpsignaal verzenden",
@@ -174,7 +181,13 @@
     "submit": "Signaal verzenden",
     "minAmount": "Minimaal 10",
     "invalidUrl": "Ongeldige URL",
-    "networkReach": "Je signaal bereikt tot {{count}} mensen via ketens van handdrukken"
+    "networkReach": "Je signaal bereikt tot {{count}} mensen via ketens van handdrukken",
+    "confirmTitle": "Bevestig het aanmaken van de inzameling",
+    "confirmText": "Zorg ervoor dat u dit bedrag echt nodig heeft. Het hulpsignaal wordt door tientallen mensen gezien — gebruik het verantwoord.",
+    "confirmPayment": "Kunt u internationale overboekingen ontvangen? Deelnemers kunnen uit verschillende landen komen. Zorg ervoor dat u een crypto-wallet, PayPal, Wise, Revolut of een andere manier heeft om geld uit het buitenland te ontvangen.",
+    "confirmCheckbox": "Ik heb erover nagedacht en bevestig",
+    "confirmButton": "Bevestigen",
+    "cancelButton": "Annuleren"
   },
   "intention": {
     "create": "Intentie uitspreken",
@@ -332,7 +345,8 @@
     "viber": "Viber",
     "signal": "Signal",
     "email": "E-mail",
-    "website": "Website"
+    "website": "Website",
+    "tiktok": "TikTok"
   },
   "invite": {
     "title": "Uitnodiging",
@@ -348,7 +362,8 @@
     "slugHint": "3–30 tekens: letters, cijfers, _ en -",
     "slugMin": "Minimaal 3 tekens",
     "webLinkDesc": "Website link — als de persoon nog niet bekend is met het project, bevat het alle introductie-informatie",
-    "botLinkDesc": "Rechtstreeks naar Telegram — als je alles al hebt uitgelegd en ze direct naar de app kunnen gaan"
+    "botLinkDesc": "Rechtstreeks naar Telegram — als je alles al hebt uitgelegd en ze direct naar de app kunnen gaan",
+    "slugDesc": "Dit is uw persoonlijke link-ID voor uitnodigings-URL's. Het is GEEN uitnodiging op zich — stuur het niet naar mensen. Gebruik de bovenstaande links om iemand uit te nodigen."
   },
   "landing": {
     "painQuote": "Als er problemen zijn — sta je alleen. Vrienden weten het niet. Vrienden van vrienden — nog minder. Maar iemand van hen had kunnen helpen.",
@@ -440,5 +455,14 @@
     "budget": "Budget",
     "root": "Wortel",
     "contactRoot": "Contact wortel"
+  },
+  "requiredInfo": {
+    "contactsTitle": "Voeg uw contacten toe",
+    "contactsText": "Er zijn minimaal 2 contactmethoden nodig voor hulpcoördinatie",
+    "budgetTitle": "Maandelijks ondersteuningsbudget",
+    "budgetText": "Dit bedrag is uw intentie, geen verplichting. Er wordt geen kaart gekoppeld en er wordt geen geld afgeschreven. U geeft simpelweg aan hoeveel u bereid bent per maand te helpen.",
+    "next": "Volgende",
+    "save": "Opslaan en doorgaan",
+    "contactsFilled": "Ingevuld: {{count}}/2"
   }
 }

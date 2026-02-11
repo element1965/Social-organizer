@@ -5,7 +5,8 @@ import { trpc } from '../lib/trpc';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { Select } from '../components/ui/select';
-import { Users, Zap, Eye, UserPlus, Wallet } from 'lucide-react';
+import { SocialIcon } from '../components/ui/social-icons';
+import { Users, Zap, Eye, UserPlus, MessageCircle, Wallet } from 'lucide-react';
 import { cn } from '../lib/utils';
 
 interface Step {
@@ -19,8 +20,17 @@ const steps: Step[] = [
   { icon: Zap, titleKey: 'onboarding.step2.title', textKey: 'onboarding.step2.text' },
   { icon: Eye, titleKey: 'onboarding.step3.title', textKey: 'onboarding.step3.text' },
   { icon: UserPlus, titleKey: 'onboarding.step4.title', textKey: 'onboarding.step4.text' },
-  { icon: Wallet, titleKey: 'onboarding.step5.title', textKey: 'onboarding.step5.text' },
+  { icon: MessageCircle, titleKey: 'onboarding.step5.title', textKey: 'onboarding.step5.text' },
+  { icon: Wallet, titleKey: 'onboarding.step6.title', textKey: 'onboarding.step6.text' },
 ];
+
+const CONTACT_FIELDS = [
+  { type: 'whatsapp', placeholder: '+380...' },
+  { type: 'facebook', placeholder: 'facebook.com/...' },
+  { type: 'instagram', placeholder: '@username' },
+  { type: 'twitter', placeholder: '@username' },
+  { type: 'tiktok', placeholder: '@username' },
+] as const;
 
 export function OnboardingPage() {
   const { t } = useTranslation();
@@ -29,7 +39,16 @@ export function OnboardingPage() {
   const current = steps[step]!;
   const Icon = current.icon;
 
-  // Budget state (step 5)
+  // Contacts state (step 5)
+  const [contacts, setContacts] = useState<Record<string, string>>({
+    whatsapp: '',
+    facebook: '',
+    instagram: '',
+    twitter: '',
+    tiktok: '',
+  });
+
+  // Budget state (step 6)
   const [budgetAmount, setBudgetAmount] = useState('');
   const [budgetCurrency, setBudgetCurrency] = useState('USD');
 
@@ -41,7 +60,24 @@ export function OnboardingPage() {
 
   const completeOnboarding = trpc.user.completeOnboarding.useMutation();
   const setBudget = trpc.user.setMonthlyBudget.useMutation();
+  const updateContacts = trpc.user.updateContacts.useMutation();
   const utils = trpc.useUtils();
+
+  const filledContactsCount = Object.values(contacts).filter(v => v.trim()).length;
+  const contactsValid = filledContactsCount >= 2;
+
+  const budgetInUSD = budgetCurrency === 'USD' ? Number(budgetAmount) : (preview?.result ?? 0);
+  const budgetValid = Number(budgetAmount) > 0 && (budgetCurrency === 'USD' ? Number(budgetAmount) >= 1 : budgetInUSD >= 1);
+
+  const isContactsStep = step === 4;
+  const isBudgetStep = step === 5;
+
+  const handleContactsNext = async () => {
+    const contactsArray = Object.entries(contacts)
+      .map(([type, value]) => ({ type, value }));
+    await updateContacts.mutateAsync(contactsArray);
+    setStep(step + 1);
+  };
 
   const handleFinish = async () => {
     if (budgetAmount && Number(budgetAmount) > 0) {
@@ -54,8 +90,6 @@ export function OnboardingPage() {
     await utils.user.me.refetch();
     navigate('/dashboard');
   };
-
-  const isStep5 = step === 4;
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-950 flex flex-col items-center justify-center px-6">
@@ -70,8 +104,31 @@ export function OnboardingPage() {
           {t(current.textKey)}
         </p>
 
-        {/* Step 5: Budget input */}
-        {isStep5 && (
+        {/* Step 5: Contacts */}
+        {isContactsStep && (
+          <div className="w-full max-w-xs space-y-3 mt-6">
+            {CONTACT_FIELDS.map((field) => (
+              <div key={field.type} className="flex items-center gap-2">
+                <SocialIcon type={field.type} className="w-5 h-5 text-gray-500 shrink-0" />
+                <Input
+                  value={contacts[field.type] || ''}
+                  onChange={(e) => setContacts(prev => ({ ...prev, [field.type]: e.target.value }))}
+                  placeholder={field.placeholder}
+                  className="flex-1"
+                />
+              </div>
+            ))}
+            <p className={cn(
+              'text-sm font-medium',
+              contactsValid ? 'text-green-600 dark:text-green-400' : 'text-gray-500'
+            )}>
+              {t('onboarding.contactsFilled', { count: filledContactsCount })}
+            </p>
+          </div>
+        )}
+
+        {/* Step 6: Budget input */}
+        {isBudgetStep && (
           <div className="w-full max-w-xs space-y-3 mt-6">
             <div className="flex gap-2">
               <Input
@@ -80,7 +137,7 @@ export function OnboardingPage() {
                 onChange={(e) => setBudgetAmount(e.target.value)}
                 placeholder="0"
                 className="flex-1"
-                min={0}
+                min={1}
               />
               <Select
                 id="budget-currency"
@@ -105,27 +162,31 @@ export function OnboardingPage() {
           ))}
         </div>
 
-        {isStep5 ? (
-          /* Step 5: final buttons */
+        {isContactsStep ? (
+          /* Step 5: Contacts next */
           <div className="space-y-3">
-            {budgetAmount && Number(budgetAmount) > 0 ? (
-              <Button
-                className="w-full"
-                size="lg"
-                onClick={handleFinish}
-                disabled={setBudget.isPending || completeOnboarding.isPending}
-              >
-                <Wallet className="w-4 h-4 mr-2" /> {t('onboarding.saveBudget')}
-              </Button>
-            ) : null}
             <Button
-              variant="outline"
-              size="lg"
               className="w-full"
-              onClick={handleFinish}
-              disabled={completeOnboarding.isPending}
+              size="lg"
+              onClick={handleContactsNext}
+              disabled={!contactsValid || updateContacts.isPending}
             >
-              {t('onboarding.skipAndStart')}
+              {t('onboarding.next')}
+            </Button>
+            {!contactsValid && (
+              <p className="text-sm text-gray-500 text-center">{t('onboarding.contactsRequired')}</p>
+            )}
+          </div>
+        ) : isBudgetStep ? (
+          /* Step 6: Budget save */
+          <div className="space-y-3">
+            <Button
+              className="w-full"
+              size="lg"
+              onClick={handleFinish}
+              disabled={!budgetValid || setBudget.isPending || completeOnboarding.isPending}
+            >
+              <Wallet className="w-4 h-4 mr-2" /> {t('onboarding.saveBudget')}
             </Button>
           </div>
         ) : (

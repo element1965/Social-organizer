@@ -55,8 +55,8 @@
       "text": "Организатор ради кроз везе између људи. Почни са једном особом — неким коме верујеш."
     },
     "step5": {
-      "title": "Месечни буџет за подршку",
-      "text": "Ovaj iznos je vaša namjera, a ne obaveza. Nema povezane kartice, ne naplaćuje se novac. Jednostavno označavate koliko ste spremni da pomognete mesečno. Ovaj broj je vidljiv vašoj mreži i pokazuje ukupne mogućnosti. Kada neko zatraži pomoć — vi odlučujete da li da učestvujete ili ne."
+      "title": "Како да вас контактирамо",
+      "text": "Додајте најмање 2 начина контакта како би учесници могли да се координишу са вама приликом пружања помоћи."
     },
     "start": "Почни",
     "next": "Даље",
@@ -68,7 +68,13 @@
     "waitingForAccept": "Чека се прихватање...",
     "connectionEstablished": "Веза успостављена!",
     "sendAnother": "Пошаљи још један позив",
-    "skip": "Прескочи"
+    "skip": "Прескочи",
+    "step6": {
+      "title": "Месечни буџет за подршку",
+      "text": "Ovaj iznos je vaša namjera, a ne obaveza. Nema povezane kartice, ne naplaćuje se novac. Jednostavno označavate koliko ste spremni da pomognete mesečno. Ovaj broj je vidljiv vašoj mreži i pokazuje ukupne mogućnosti. Kada neko zatraži pomoć — vi odlučujete da li da učestvujete ili ne."
+    },
+    "contactsRequired": "Додајте најмање 2 контакта",
+    "contactsFilled": "Попуњено: {{count}}/2"
   },
   "nav": {
     "home": "Почетна",
@@ -135,7 +141,8 @@
     "dayCount": "Дан {{count}}",
     "inviteTrusted": "Позови",
     "myCapabilitiesHint": "Mesečni budžet za podršku. Koliko ste voljni da doprinesete uzajamnoj pomoći svakog meseca",
-    "networkCapabilitiesHint": "Ukupni dostupni mesečni budžeti svih učesnika u vašoj mreži uzajamne pomoći"
+    "networkCapabilitiesHint": "Ukupni dostupni mesečni budžeti svih učesnika u vašoj mreži uzajamne pomoći",
+    "communityChat": "Чат заједнице"
   },
   "collection": {
     "create": "Пошаљи сигнал за помоћ",
@@ -174,7 +181,13 @@
     "submit": "Пошаљи сигнал",
     "minAmount": "Минимум 10",
     "invalidUrl": "Неисправан URL",
-    "networkReach": "Твој сигнал ће досегнути до {{count}} људи кроз ланце руковања"
+    "networkReach": "Твој сигнал ће досегнути до {{count}} људи кроз ланце руковања",
+    "confirmTitle": "Потврдите креирање прикупљања",
+    "confirmText": "Уверите се да вам заиста треба овај износ. Сигнал за помоћ ће видети десетине људи — користите га одговорно.",
+    "confirmPayment": "Можете ли примити међународне трансфере? Учесници могу бити из различитих земаља. Уверите се да имате крипто новчаник, PayPal, Wise, Revolut или други начин за пријем средстава из иностранства.",
+    "confirmCheckbox": "Размислио/ла сам и потврђујем",
+    "confirmButton": "Потврди",
+    "cancelButton": "Откажи"
   },
   "intention": {
     "create": "Изрази намеру",
@@ -332,7 +345,8 @@
     "viber": "Viber",
     "signal": "Signal",
     "email": "Имејл",
-    "website": "Вебсајт"
+    "website": "Вебсајт",
+    "tiktok": "TikTok"
   },
   "invite": {
     "title": "Позивница",
@@ -348,7 +362,8 @@
     "slugHint": "3–30 znakova: slova, brojevi, _ i -",
     "slugMin": "Minimum 3 znaka",
     "webLinkDesc": "Link ka veb sajtu — ako osoba još nije upoznata sa projektom, sadrži sve uvodne informacije",
-    "botLinkDesc": "Direktno na Telegram — ako ste već sve objasnili i oni mogu direktno ući u aplikaciju"
+    "botLinkDesc": "Direktno na Telegram — ako ste već sve objasnili i oni mogu direktno ući u aplikaciju",
+    "slugDesc": "Ово је ваш лични ИД линка за URL-ове позивница. То НИЈЕ позивница сама по себи — не шаљите је људима. Користите горње линкове да позовете некога."
   },
   "landing": {
     "painQuote": "Кад дође невоља — сам си. Пријатељи не знају. Пријатељи пријатеља — још мање. А неко од њих би могао да помогне.",
@@ -440,5 +455,14 @@
     "budget": "Буџет",
     "root": "Корен",
     "contactRoot": "Контактирај корен"
+  },
+  "requiredInfo": {
+    "contactsTitle": "Додајте своје контакте",
+    "contactsText": "Потребна су најмање 2 начина контакта за координацију помоћи",
+    "budgetTitle": "Месечни буџет подршке",
+    "budgetText": "Овај износ је ваша намера, а не обавеза. Ниједна картица није повезана, новац се не наплаћује. Једноставно наводите колико сте спремни да помогнете месечно.",
+    "next": "Следеће",
+    "save": "Сачувај и настави",
+    "contactsFilled": "Попуњено: {{count}}/2"
   }
 }

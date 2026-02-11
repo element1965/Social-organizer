@@ -22,6 +22,7 @@ export const CONTACT_TYPES = [
   { type: 'facebook', label: 'Facebook', icon: 'facebook', placeholder: 'facebook.com/...' },
   { type: 'instagram', label: 'Instagram', icon: 'instagram', placeholder: '@username' },
   { type: 'twitter', label: 'X (Twitter)', icon: 'twitter', placeholder: '@username' },
+  { type: 'tiktok', label: 'TikTok', icon: 'tiktok', placeholder: '@username' },
   { type: 'linkedin', label: 'LinkedIn', icon: 'linkedin', placeholder: 'linkedin.com/in/...' },
   { type: 'vk', label: 'VKontakte', icon: 'vk', placeholder: 'vk.com/...' },
   { type: 'email', label: 'Email', icon: 'mail', placeholder: 'email@example.com' },
@@ -41,6 +42,7 @@ export function buildContactUrl(type: string, value: string): string {
     case 'linkedin': return `https://linkedin.com/in/${clean}`;
     case 'vk': return `https://vk.com/${clean}`;
     case 'email': return `mailto:${value}`;
+    case 'tiktok': return `https://tiktok.com/@${clean}`;
     case 'whatsapp': return `https://wa.me/${value.replace(/\D/g, '')}`;
     case 'website': return value.startsWith('http') ? value : `https://${value}`;
     default: return value;

@@ -55,8 +55,8 @@
       "text": "Organizatör insanlar arasındaki bağlantılar üzerinden çalışır. Bir kişiyle başlayın — güvendiğiniz biri."
     },
     "step5": {
-      "title": "Aylık Destek Bütçesi",
-      "text": "Bu miktar, yalnızca niyetinizdir, bir taahhüt değildir. Hiçbir kart bağlı değil, hiçbir ücret alınmıyor. Sadece her ay ne kadar yardım etmeye istekli olduğunuzu belirtirsiniz. Bu rakam ağınıza görünür ve genel yeteneklerinizi gösterir. Birisi yardım istediğinde, katılarak veya katılmayarak karar verirsiniz."
+      "title": "Size nasıl ulaşılır",
+      "text": "Katılımcıların yardım sağlarken sizinle koordine olabilmesi için en az 2 iletişim yöntemi ekleyin."
     },
     "start": "Başla",
     "next": "İleri",
@@ -68,7 +68,13 @@
     "waitingForAccept": "Kabul bekleniyor...",
     "connectionEstablished": "Bağlantı kuruldu!",
     "sendAnother": "Başka bir davet gönder",
-    "skip": "Atla"
+    "skip": "Atla",
+    "step6": {
+      "title": "Aylık Destek Bütçesi",
+      "text": "Bu miktar, yalnızca niyetinizdir, bir taahhüt değildir. Hiçbir kart bağlı değil, hiçbir ücret alınmıyor. Sadece her ay ne kadar yardım etmeye istekli olduğunuzu belirtirsiniz. Bu rakam ağınıza görünür ve genel yeteneklerinizi gösterir. Birisi yardım istediğinde, katılarak veya katılmayarak karar verirsiniz."
+    },
+    "contactsRequired": "En az 2 iletişim bilgisi ekleyin",
+    "contactsFilled": "Doldurulmuş: {{count}}/2"
   },
   "nav": {
     "home": "Ana Sayfa",
@@ -135,7 +141,8 @@
     "dayCount": "{{count}}. gün",
     "inviteTrusted": "Davet et",
     "myCapabilitiesHint": "Aylık destek bütçesi. Her ay karşılıklı yardıma ne kadar katkıda bulunmak istediğiniz",
-    "networkCapabilitiesHint": "Karşılıklı yardıma katılan tüm üyelerin toplam mevcut aylık bütçesi"
+    "networkCapabilitiesHint": "Karşılıklı yardıma katılan tüm üyelerin toplam mevcut aylık bütçesi",
+    "communityChat": "Topluluk sohbeti"
   },
   "collection": {
     "create": "Yardım sinyali gönder",
@@ -174,7 +181,13 @@
     "submit": "Sinyal gönder",
     "minAmount": "En az 10",
     "invalidUrl": "Geçersiz URL",
-    "networkReach": "Sinyaliniz el sıkışma zincirleri aracılığıyla {{count}} kişiye kadar ulaşacak"
+    "networkReach": "Sinyaliniz el sıkışma zincirleri aracılığıyla {{count}} kişiye kadar ulaşacak",
+    "confirmTitle": "Toplama oluşturmayı onayla",
+    "confirmText": "Bu tutara gerçekten ihtiyacınız olduğundan emin olun. Yardım sinyali onlarca kişi tarafından görülecektir — sorumlu bir şekilde kullanın.",
+    "confirmPayment": "Uluslararası transferler alabilir misiniz? Katılımcılar farklı ülkelerden olabilir. Kripto cüzdanınız, PayPal, Wise, Revolut veya yurt dışından para almanın başka bir yolunuz olduğundan emin olun.",
+    "confirmCheckbox": "Düşündüm ve onaylıyorum",
+    "confirmButton": "Onayla",
+    "cancelButton": "İptal"
   },
   "intention": {
     "create": "Niyet Belirt",
@@ -332,7 +345,8 @@
     "viber": "Viber",
     "signal": "Signal",
     "email": "E-posta",
-    "website": "Web sitesi"
+    "website": "Web sitesi",
+    "tiktok": "TikTok"
   },
   "invite": {
     "title": "Davet",
@@ -348,7 +362,8 @@
     "slugHint": "3–30 karakter: letters, numbers, _ ve -",
     "slugMin": "Minimum 3 karakter",
     "webLinkDesc": "Web sitesi bağlantısı — eğer kişi proje ile henüz tanışmadıysa, tüm giriş bilgilerini barındırır",
-    "botLinkDesc": "Doğrudan Telegram'a — eğer her şeyi zaten açıklamışsanız ve doğrudan uygulamaya gidebilirler"
+    "botLinkDesc": "Doğrudan Telegram'a — eğer her şeyi zaten açıklamışsanız ve doğrudan uygulamaya gidebilirler",
+    "slugDesc": "Bu, davet URL'leri için kişisel bağlantı kimliğinizdir. Bu bir davet DEĞİLDİR — insanlara göndermeyin. Birini davet etmek için yukarıdaki bağlantıları kullanın."
   },
   "landing": {
     "painQuote": "Sorun çıktığında — yalnız kalırsın. Arkadaşlar bilmez. Arkadaşların arkadaşları — daha da az. Ama onlardan biri yardım edebilirdi.",
@@ -440,5 +455,14 @@
     "budget": "Bütçe",
     "root": "Kök",
     "contactRoot": "Kök ile iletişim"
+  },
+  "requiredInfo": {
+    "contactsTitle": "İletişim bilgilerinizi ekleyin",
+    "contactsText": "Yardım koordinasyonu için en az 2 iletişim yöntemi gereklidir",
+    "budgetTitle": "Aylık destek bütçesi",
+    "budgetText": "Bu tutar niyetinizdir, taahhüt değil. Kart bağlanmaz, para çekilmez. Ayda ne kadar yardım etmeye hazır olduğunuzu belirtirsiniz.",
+    "next": "İleri",
+    "save": "Kaydet ve devam et",
+    "contactsFilled": "Doldurulmuş: {{count}}/2"
   }
 }

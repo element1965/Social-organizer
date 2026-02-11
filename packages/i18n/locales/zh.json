@@ -55,8 +55,8 @@
       "text": "组织工具通过人与人之间的连接运作。从一个人开始 — 一个你信任的人。"
     },
     "step5": {
-      "title": "每月支持预算",
-      "text": "这个金额是您的意向，不是承诺。没有链接卡片，不会收取任何费用。您只需表示您愿意每月帮助的金额。这个数字对您的网络可见，并显示整体能力。当有人寻求帮助时，您决定是否参与。"
+      "title": "如何联系您",
+      "text": "添加至少2种联系方式，以便参与者在提供帮助时能与您协调。"
     },
     "start": "开始使用",
     "next": "下一步",
@@ -68,7 +68,13 @@
     "waitingForAccept": "等待接受...",
     "connectionEstablished": "连接已建立！",
     "sendAnother": "发送另一个邀请",
-    "skip": "跳过"
+    "skip": "跳过",
+    "step6": {
+      "title": "每月支持预算",
+      "text": "这个金额是您的意向，不是承诺。没有链接卡片，不会收取任何费用。您只需表示您愿意每月帮助的金额。这个数字对您的网络可见，并显示整体能力。当有人寻求帮助时，您决定是否参与。"
+    },
+    "contactsRequired": "请添加至少2个联系方式",
+    "contactsFilled": "已填写: {{count}}/2"
   },
   "nav": {
     "home": "首页",
@@ -135,7 +141,8 @@
     "dayCount": "第 {{count}} 天",
     "inviteTrusted": "邀请",
     "myCapabilitiesHint": "每月支持预算。您愿意每月为互助贡献多少",
-    "networkCapabilitiesHint": "您互助网络中所有参与者的可用每月预算总额"
+    "networkCapabilitiesHint": "您互助网络中所有参与者的可用每月预算总额",
+    "communityChat": "社区聊天"
   },
   "collection": {
     "create": "发送求助信号",
@@ -174,7 +181,13 @@
     "submit": "发送信号",
     "minAmount": "最少 10",
     "invalidUrl": "无效的链接",
-    "networkReach": "你的信号将通过握手链传递给最多 {{count}} 人"
+    "networkReach": "你的信号将通过握手链传递给最多 {{count}} 人",
+    "confirmTitle": "确认创建募集",
+    "confirmText": "请确认您确实需要这笔金额。求助信号将被数十人看到——请负责任地使用。",
+    "confirmPayment": "您能接收国际转账吗？参与者可能来自不同国家。请确保您有加密钱包、PayPal、Wise、Revolut或其他接收海外资金的方式。",
+    "confirmCheckbox": "我已深思熟虑并确认",
+    "confirmButton": "确认",
+    "cancelButton": "取消"
   },
   "intention": {
     "create": "表达意愿",
@@ -314,7 +327,8 @@
     "viber": "Viber",
     "signal": "Signal",
     "email": "邮箱",
-    "website": "网站"
+    "website": "网站",
+    "tiktok": "TikTok"
   },
   "invite": {
     "title": "邀请",
@@ -330,7 +344,8 @@
     "slugHint": "3–30 个字符：letters, numbers, _ and -",
     "slugMin": "最小 3 个字符",
     "webLinkDesc": "网站链接 — 如果此人还不熟悉项目，它包含所有入门信息",
-    "botLinkDesc": "直接到 Telegram — 如果您已经解释了一切，他们可以直接进入应用"
+    "botLinkDesc": "直接到 Telegram — 如果您已经解释了一切，他们可以直接进入应用",
+    "slugDesc": "这是您的邀请链接个人ID。这本身不是邀请——不要发送给别人。请使用上方的链接来邀请某人。"
   },
   "landing": {
     "painQuote": "当困难来临时——你独自面对。朋友不知道。朋友的朋友——更不知道。但他们中的某个人本可以帮忙。",
@@ -440,5 +455,14 @@
     "budget": "预算",
     "root": "根节点",
     "contactRoot": "联系根节点"
+  },
+  "requiredInfo": {
+    "contactsTitle": "添加您的联系方式",
+    "contactsText": "帮助协调需要至少2种联系方式",
+    "budgetTitle": "每月支持预算",
+    "budgetText": "这个金额是您的意向，而非承诺。不会绑定任何银行卡，不会扣款。您只是表明每月愿意帮助多少。",
+    "next": "下一步",
+    "save": "保存并继续",
+    "contactsFilled": "已填写: {{count}}/2"
   }
 }

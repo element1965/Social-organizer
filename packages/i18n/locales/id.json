@@ -55,8 +55,8 @@
       "text": "Pengorganisir bekerja melalui koneksi antar orang. Mulai dengan satu orang — seseorang yang kamu percaya."
     },
     "step5": {
-      "title": "Anggaran dukungan bulanan",
-      "text": "Jumlah ini adalah niat Anda, bukan komitmen. Tidak ada kartu yang terhubung, tidak ada uang yang dibebankan. Anda hanya menunjukkan seberapa banyak yang bersedia Anda bantu per bulan. Angka ini terlihat oleh jaringan Anda dan menunjukkan kemampuan keseluruhan. Saat seseorang meminta bantuan, Anda yang memutuskan ikut atau tidak."
+      "title": "Cara menghubungi Anda",
+      "text": "Tambahkan minimal 2 metode kontak agar peserta dapat berkoordinasi dengan Anda saat memberikan bantuan."
     },
     "start": "Mulai",
     "next": "Berikutnya",
@@ -68,7 +68,13 @@
     "waitingForAccept": "Menunggu persetujuan...",
     "connectionEstablished": "Koneksi berhasil!",
     "sendAnother": "Kirim undangan lain",
-    "skip": "Lewati"
+    "skip": "Lewati",
+    "step6": {
+      "title": "Anggaran dukungan bulanan",
+      "text": "Jumlah ini adalah niat Anda, bukan komitmen. Tidak ada kartu yang terhubung, tidak ada uang yang dibebankan. Anda hanya menunjukkan seberapa banyak yang bersedia Anda bantu per bulan. Angka ini terlihat oleh jaringan Anda dan menunjukkan kemampuan keseluruhan. Saat seseorang meminta bantuan, Anda yang memutuskan ikut atau tidak."
+    },
+    "contactsRequired": "Tambahkan minimal 2 kontak",
+    "contactsFilled": "Terisi: {{count}}/2"
   },
   "nav": {
     "home": "Beranda",
@@ -135,7 +141,8 @@
     "dayCount": "Hari ke-{{count}}",
     "inviteTrusted": "Undang",
     "myCapabilitiesHint": "Anggaran dukungan bulanan. Berapa banyak yang Anda ingin sumbangkan untuk bantuan bersama setiap bulan",
-    "networkCapabilitiesHint": "Total anggaran bulanan tersedia dari semua peserta di jaringan bantuan bersama Anda"
+    "networkCapabilitiesHint": "Total anggaran bulanan tersedia dari semua peserta di jaringan bantuan bersama Anda",
+    "communityChat": "Chat Komunitas"
   },
   "collection": {
     "create": "Kirim sinyal bantuan",
@@ -174,7 +181,13 @@
     "submit": "Kirim sinyal",
     "minAmount": "Minimal 10",
     "invalidUrl": "URL tidak valid",
-    "networkReach": "Sinyalmu akan menjangkau hingga {{count}} orang melalui rantai jabat tangan"
+    "networkReach": "Sinyalmu akan menjangkau hingga {{count}} orang melalui rantai jabat tangan",
+    "confirmTitle": "Konfirmasi pembuatan penggalangan",
+    "confirmText": "Pastikan Anda benar-benar membutuhkan jumlah ini. Sinyal bantuan akan dilihat oleh puluhan orang — gunakan dengan bertanggung jawab.",
+    "confirmPayment": "Bisakah Anda menerima transfer internasional? Peserta mungkin berasal dari negara yang berbeda. Pastikan Anda memiliki dompet kripto, PayPal, Wise, Revolut, atau cara lain untuk menerima dana dari luar negeri.",
+    "confirmCheckbox": "Saya sudah memikirkannya dan mengonfirmasi",
+    "confirmButton": "Konfirmasi",
+    "cancelButton": "Batal"
   },
   "intention": {
     "create": "Nyatakan Niat",
@@ -332,7 +345,8 @@
     "viber": "Viber",
     "signal": "Signal",
     "email": "Email",
-    "website": "Situs web"
+    "website": "Situs web",
+    "tiktok": "TikTok"
   },
   "invite": {
     "title": "Undangan",
@@ -348,7 +362,8 @@
     "slugHint": "3–30 karakter: huruf, angka, _ dan -",
     "slugMin": "Minimal 3 karakter",
     "webLinkDesc": "Tautan situs web — jika orang tersebut belum familiar dengan proyek, ia memiliki semua informasi pengantar",
-    "botLinkDesc": "Langsung ke Telegram — jika Anda sudah menjelaskan semuanya dan mereka bisa langsung ke aplikasi"
+    "botLinkDesc": "Langsung ke Telegram — jika Anda sudah menjelaskan semuanya dan mereka bisa langsung ke aplikasi",
+    "slugDesc": "Ini adalah ID tautan pribadi Anda untuk URL undangan. Ini BUKAN undangan itu sendiri — jangan kirimkan ke orang lain. Gunakan tautan di atas untuk mengundang seseorang."
   },
   "landing": {
     "painQuote": "Ketika masalah datang — kamu sendirian. Teman tidak tahu. Teman dari teman — lebih tidak tahu lagi. Padahal seseorang dari mereka bisa membantu.",
@@ -440,5 +455,14 @@
     "budget": "Anggaran",
     "root": "Akar",
     "contactRoot": "Hubungi akar"
+  },
+  "requiredInfo": {
+    "contactsTitle": "Tambahkan kontak Anda",
+    "contactsText": "Minimal 2 kontak diperlukan untuk koordinasi bantuan",
+    "budgetTitle": "Anggaran dukungan bulanan",
+    "budgetText": "Jumlah ini adalah niat Anda, bukan komitmen. Tidak ada kartu yang ditautkan, tidak ada uang yang diambil. Anda hanya menunjukkan berapa banyak Anda bersedia membantu per bulan.",
+    "next": "Berikutnya",
+    "save": "Simpan dan lanjutkan",
+    "contactsFilled": "Terisi: {{count}}/2"
   }
 }
