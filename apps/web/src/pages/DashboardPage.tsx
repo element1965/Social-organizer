@@ -126,10 +126,10 @@ export function DashboardPage() {
             <SocialIcon type="telegram" className="w-5 h-5 text-white" />
           </button>
           <button
-            onClick={() => { setCopiedWeb(false); setShowInvitePopup(true); }}
-            className="w-10 h-10 rounded-full bg-blue-600 hover:bg-blue-500 flex items-center justify-center transition-colors shadow-lg"
+            onClick={() => navigate('/create')}
+            className="w-10 h-10 rounded-full bg-red-600 hover:bg-red-700 flex items-center justify-center transition-colors shadow-lg"
           >
-            <UserPlus className="w-5 h-5 text-white" />
+            <span className="text-white font-bold text-xs">SOS</span>
           </button>
         </div>
       </div>
