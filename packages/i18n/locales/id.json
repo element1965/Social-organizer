@@ -357,7 +357,7 @@
     "success": "Terhubung!",
     "loginToAccept": "Masuk untuk menerima",
     "accepting": "Menerima undangan...",
-    "yourCode": "Kode undangan Anda",
+    "yourCode": "ID tautan Anda (bukan untuk dibagikan)",
     "slugPlaceholder": "your-nickname",
     "slugHint": "3–30 karakter: huruf, angka, _ dan -",
     "slugMin": "Minimal 3 karakter",

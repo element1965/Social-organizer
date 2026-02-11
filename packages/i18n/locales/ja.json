@@ -357,7 +357,7 @@
     "success": "つながりました！",
     "loginToAccept": "ログインして承認",
     "accepting": "招待を受け入れています...",
-    "yourCode": "あなたの招待コード",
+    "yourCode": "あなたのリンクID（共有用ではありません）",
     "slugPlaceholder": "your-ニックネーム",
     "slugHint": "3–30文字: アルファベット、数字、_ と -",
     "slugMin": "最小3文字",

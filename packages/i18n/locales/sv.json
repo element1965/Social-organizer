@@ -357,7 +357,7 @@
     "success": "Ansluten!",
     "loginToAccept": "Logga in for att acceptera",
     "accepting": "Accepterar inbjudan...",
-    "yourCode": "Din inbjudningskod",
+    "yourCode": "Ditt länk-ID (inte för delning)",
     "slugPlaceholder": "ditt-smeknamn",
     "slugHint": "3–30 tecken: bokstäver, siffror, _ och -",
     "slugMin": "Minst 3 tecken",

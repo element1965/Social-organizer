@@ -357,7 +357,7 @@
     "success": "Forbundet!",
     "loginToAccept": "Log ind for at acceptere",
     "accepting": "Accepterer invitation...",
-    "yourCode": "Din invitationskode",
+    "yourCode": "Dit link-ID (ikke til deling)",
     "slugPlaceholder": "your-nickname",
     "slugHint": "3–30 karakterer: bogstaver, tal, _ og -",
     "slugMin": "Mindst 3 karakterer",

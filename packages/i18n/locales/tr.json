@@ -357,7 +357,7 @@
     "success": "Bağlandı!",
     "loginToAccept": "Kabul etmek için giriş yapın",
     "accepting": "Davet kabul ediliyor...",
-    "yourCode": "Davet kodunuz",
+    "yourCode": "Bağlantı kimliğiniz (paylaşmak için değil)",
     "slugPlaceholder": "your-nickname",
     "slugHint": "3–30 karakter: letters, numbers, _ ve -",
     "slugMin": "Minimum 3 karakter",

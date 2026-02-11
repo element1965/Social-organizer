@@ -339,7 +339,7 @@
     "success": "Verbunden!",
     "loginToAccept": "Melde dich an, um anzunehmen",
     "accepting": "Einladung wird angenommen...",
-    "yourCode": "Dein Einladecode",
+    "yourCode": "Deine Link-ID (nicht zum Teilen)",
     "slugPlaceholder": "dein-spitzname",
     "slugHint": "3–30 Zeichen: Buchstaben, Zahlen, _ und -",
     "slugMin": "Mindestens 3 Zeichen",

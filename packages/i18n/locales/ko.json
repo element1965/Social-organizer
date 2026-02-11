@@ -357,7 +357,7 @@
     "success": "연결되었습니다!",
     "loginToAccept": "로그인하여 수락",
     "accepting": "초대 수락 중...",
-    "yourCode": "내 초대 코드",
+    "yourCode": "내 링크 ID (공유용 아님)",
     "slugPlaceholder": "your-nickname",
     "slugHint": "3~30자: 영문자, 숫자, _ 및 -",
     "slugMin": "최소 3자",

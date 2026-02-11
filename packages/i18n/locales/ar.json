@@ -357,7 +357,7 @@
     "success": "تم الاتصال!",
     "loginToAccept": "سجّل الدخول للقبول",
     "accepting": "قبول الدعوة...",
-    "yourCode": "رمز دعوتك",
+    "yourCode": "معرّف رابطك (ليس للمشاركة)",
     "slugPlaceholder": "your-nickname",
     "slugHint": "3–30 حرفًا: أحرف، أرقام، _ و -",
     "slugMin": "حد أدنى 3 أحرف",

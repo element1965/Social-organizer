@@ -357,7 +357,7 @@
     "success": "Propojeno!",
     "loginToAccept": "Přihlaste se pro přijetí",
     "accepting": "Přijímání pozvání...",
-    "yourCode": "Váš pozývací kód",
+    "yourCode": "ID vašeho odkazu (ne pro sdílení)",
     "slugPlaceholder": "vaš-přezdívka",
     "slugHint": "3–30 znaků: písmena, číslice, _ a -",
     "slugMin": "Minimálně 3 znaky",

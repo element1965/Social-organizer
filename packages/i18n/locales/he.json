@@ -367,7 +367,7 @@
     "success": "מחובר!",
     "loginToAccept": "התחבר כדי לקבל",
     "accepting": "מקבל הזמנה...",
-    "yourCode": "קוד ההזמנה שלך",
+    "yourCode": "מזהה הקישור שלך (לא לשיתוף)",
     "slugPlaceholder": "כינוי-שלך",
     "slugHint": "3–30 תווים: letters, numbers, _ and -",
     "slugMin": "מינימום 3 תווים",
