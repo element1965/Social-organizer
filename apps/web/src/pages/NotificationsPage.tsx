@@ -94,21 +94,30 @@ export function NotificationsPage() {
                   >
                     <X className="w-3.5 h-3.5" />
                   </button>
-                  <div className="flex items-start gap-3 pr-6">
+                  <div className="flex items-center gap-2 mb-1.5 pr-6">
+                    <Badge variant={badge.variant}>{badge.label}</Badge>
+                    {remaining && (
+                      <span className="text-xs text-orange-500 flex items-center gap-0.5">
+                        <Clock className="w-3 h-3" /> {remaining}
+                      </span>
+                    )}
+                  </div>
+                  <div className="flex items-center gap-2.5 pr-6">
                     <Avatar src={n.collection?.creator?.photoUrl} name={n.collection?.creator?.name} size="sm" />
                     <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 min-w-0">
-                        <p className="text-sm font-medium text-gray-900 dark:text-white truncate">{n.collection?.creator?.name}</p>
-                        <span className="flex items-center gap-0.5 text-xs text-gray-400 shrink-0">
+                      <div className="flex items-center gap-1.5 flex-wrap">
+                        <span className="text-sm font-medium text-gray-900 dark:text-white">{n.collection?.creator?.name}</span>
+                        <span className="flex items-center gap-0.5 text-xs text-gray-400">
                           <Users className="w-3 h-3" />
                           {(n.collection?.creator as any)?.connectionCount ?? 0}
                         </span>
+                        <span className="text-xs text-gray-400">·</span>
+                        <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+                          {n.collection?.amount != null ? `${n.collection.amount} ${n.collection.currency}` : n.collection?.currency}
+                        </span>
                       </div>
-                      <p className="text-sm text-gray-600 dark:text-gray-400">
-                        {n.collection?.amount != null ? `${n.collection.amount} ${n.collection.currency}` : n.collection?.currency}
-                      </p>
                       {resolvedPath && resolvedPath.length > 0 && (
-                        <p className="text-xs text-gray-400 mt-1 flex items-center gap-0.5 flex-wrap">
+                        <p className="text-xs text-gray-400 mt-0.5 flex items-center gap-0.5 flex-wrap">
                           {t('notifications.via')}{' '}
                           {resolvedPath.map((user, i) => (
                             <span key={user.id} className="flex items-center gap-0.5">
@@ -121,17 +130,9 @@ export function NotificationsPage() {
                               </button>
                             </span>
                           ))}
-                          <span className="ml-1 text-gray-400">({resolvedPath.length} {t('notifications.handshakes')})</span>
+                          <span className="ml-1">({resolvedPath.length})</span>
                         </p>
                       )}
-                      {remaining && (
-                        <p className="text-xs text-orange-500 mt-1 flex items-center gap-1">
-                          <Clock className="w-3 h-3" /> {remaining}
-                        </p>
-                      )}
-                      <div className="flex justify-end mt-1">
-                        <Badge variant={badge.variant}>{badge.label}</Badge>
-                      </div>
                     </div>
                   </div>
                 </CardContent>

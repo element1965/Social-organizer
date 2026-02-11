@@ -225,9 +225,9 @@
   "notifications": {
     "title": "Notifications",
     "empty": "No notifications",
-    "new": "New",
+    "new": "New collection",
     "reNotify": "Reminder",
-    "closed": "Closed",
+    "closed": "Collection closed",
     "blocked": "Blocked",
     "obligationReceived": "Help",
     "cycleClosed": "Cycle closed",
