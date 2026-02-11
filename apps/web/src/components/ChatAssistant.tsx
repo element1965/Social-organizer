@@ -207,26 +207,16 @@ export function ChatAssistant() {
         />
       )}
 
-      {/* Sub-buttons (Broadcast + FAQ + Chat) */}
+      {/* Sub-buttons (Broadcast + FAQ + Chat) — positioned near the top-right help button */}
       {viewState === 'expanded' && (
-        <div className="fixed bottom-36 right-4 z-40 flex flex-col items-end gap-2">
-          {/* Broadcast button (admin only) */}
-          {isAdmin && (
-            <button
-              onClick={() => setViewState('broadcastOpen')}
-              className="flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-gray-800 text-gray-900 dark:text-white rounded-full shadow-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-200 animate-in fade-in slide-in-from-bottom-4"
-            >
-              <Megaphone className="w-5 h-5 text-emerald-500" />
-              <span className="text-sm font-medium">{t('broadcast.title')}</span>
-            </button>
-          )}
+        <div className="fixed top-14 right-4 z-40 flex flex-col items-end gap-2">
           {/* FAQ button */}
           <button
             onClick={() => {
               setViewState('collapsed');
               navigate('/faq');
             }}
-            className="flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-gray-800 text-gray-900 dark:text-white rounded-full shadow-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-200 animate-in fade-in slide-in-from-bottom-4"
+            className="flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-gray-800 text-gray-900 dark:text-white rounded-full shadow-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-200 animate-in fade-in slide-in-from-top-4"
           >
             <HelpCircle className="w-5 h-5 text-amber-500" />
             <span className="text-sm font-medium">FAQ</span>
@@ -234,12 +224,23 @@ export function ChatAssistant() {
           {/* Chat button */}
           <button
             onClick={() => setViewState('chatOpen')}
-            className="flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-gray-800 text-gray-900 dark:text-white rounded-full shadow-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-200 animate-in fade-in slide-in-from-bottom-4"
+            className="flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-gray-800 text-gray-900 dark:text-white rounded-full shadow-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-200 animate-in fade-in slide-in-from-top-4"
             style={{ animationDelay: '50ms' }}
           >
             <MessageCircle className="w-5 h-5 text-blue-500" />
             <span className="text-sm font-medium">{t('chat.title')}</span>
           </button>
+          {/* Broadcast button (admin only) */}
+          {isAdmin && (
+            <button
+              onClick={() => setViewState('broadcastOpen')}
+              className="flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-gray-800 text-gray-900 dark:text-white rounded-full shadow-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-200 animate-in fade-in slide-in-from-top-4"
+              style={{ animationDelay: '100ms' }}
+            >
+              <Megaphone className="w-5 h-5 text-emerald-500" />
+              <span className="text-sm font-medium">{t('broadcast.title')}</span>
+            </button>
+          )}
         </div>
       )}
 
@@ -266,7 +267,7 @@ export function ChatAssistant() {
 
       {/* Chat panel */}
       {isOpen && (
-        <div className="fixed inset-x-4 bottom-20 max-h-[60vh] bg-white dark:bg-gray-900 rounded-2xl shadow-2xl z-50 flex flex-col border border-gray-200 dark:border-gray-700">
+        <div className="fixed inset-x-4 top-14 max-h-[60vh] bg-white dark:bg-gray-900 rounded-2xl shadow-2xl z-50 flex flex-col border border-gray-200 dark:border-gray-700">
           {/* Header */}
           <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
             <h3 className="font-semibold text-gray-900 dark:text-white flex items-center gap-2">
