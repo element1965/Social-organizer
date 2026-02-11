@@ -112,6 +112,25 @@ async function start() {
       return { fileId, mediaType };
     });
 
+    // Image proxy — fetch external avatar images to bypass CORS (t.me doesn't send CORS headers)
+    app.get('/api/image-proxy', async (req, reply) => {
+      const url = (req.query as Record<string, string>).url;
+      if (!url || (!url.startsWith('https://t.me/') && !url.startsWith('https://cdn'))) {
+        return reply.status(400).send({ error: 'Invalid URL' });
+      }
+      try {
+        const response = await fetch(url);
+        if (!response.ok) return reply.status(response.status).send({ error: 'Upstream error' });
+        const contentType = response.headers.get('content-type') || 'image/svg+xml';
+        const buffer = Buffer.from(await response.arrayBuffer());
+        reply.header('Content-Type', contentType);
+        reply.header('Cache-Control', 'public, max-age=86400');
+        return reply.send(buffer);
+      } catch {
+        return reply.status(502).send({ error: 'Fetch failed' });
+      }
+    });
+
     // Serve web frontend (if dist exists)
     if (existsSync(WEB_DIST)) {
       await app.register(fastifyStatic, {

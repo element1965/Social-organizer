@@ -106,16 +106,19 @@ export function NetworkGraph({
     closeLevel.add(avatar);
   }, []);
 
-  // Load image via Image element, draw circular on canvas, return CanvasTexture
+  // Load image via server proxy (to bypass CORS), draw circular on canvas
   const loadTextureForNode = useCallback((photoUrl: string, nodeId: string) => {
     if (textureCache.current.has(photoUrl) || pendingLoads.current.has(photoUrl)) {
       return;
     }
     pendingLoads.current.add(photoUrl);
+    // Proxy external URLs through our API to avoid CORS issues
+    const src = photoUrl.startsWith('/') || photoUrl.startsWith(window.location.origin)
+      ? photoUrl
+      : `/api/image-proxy?url=${encodeURIComponent(photoUrl)}`;
     const img = new Image();
     img.crossOrigin = 'anonymous';
     img.onload = () => {
-      // Draw circular avatar on canvas
       const size = 256;
       const canvas = document.createElement('canvas');
       canvas.width = size;
@@ -129,7 +132,6 @@ export function NetworkGraph({
       const texture = new THREE.CanvasTexture(canvas);
       textureCache.current.set(photoUrl, texture);
       pendingLoads.current.delete(photoUrl);
-      // Update the LOD object with the loaded texture
       const lodInfo = lodObjectsRef.current.get(nodeId);
       if (lodInfo) {
         updateLodWithTexture(lodInfo.lod, texture, lodInfo.nodeData);
@@ -138,7 +140,7 @@ export function NetworkGraph({
     img.onerror = () => {
       pendingLoads.current.delete(photoUrl);
     };
-    img.src = photoUrl;
+    img.src = src;
   }, [updateLodWithTexture]);
 
   const handleNodeClick = useCallback(
