@@ -72,7 +72,8 @@ export function MyNetworkPage() {
       <InvitePopup open={showInvitePopup} onClose={() => setShowInvitePopup(false)} />
 
       {view === '3d' ? (
-        <div className={`rounded-xl overflow-hidden ${isDark ? 'bg-gray-950' : 'bg-gray-100'}`} style={{ height: 'calc(100vh - 200px)' }}>
+        <div className={`rounded-xl overflow-hidden relative ${isDark ? 'bg-gray-950' : 'bg-gray-100'}`} style={{ height: 'calc(100vh - 200px)' }}>
+          <p className="absolute top-3 left-0 right-0 text-center text-sm font-semibold text-gray-400 dark:text-gray-500 z-10 pointer-events-none">GoodwillNet</p>
           <Suspense fallback={<div className="flex justify-center py-12"><Spinner /></div>}>
             {graphData ? (
               <LazyNetworkGraph
