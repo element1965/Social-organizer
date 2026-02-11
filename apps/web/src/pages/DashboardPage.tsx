@@ -126,10 +126,10 @@ export function DashboardPage() {
             <SocialIcon type="telegram" className="w-5 h-5 text-white" />
           </button>
           <button
-            onClick={() => navigate('/create')}
-            className="w-10 h-10 rounded-full bg-red-600 hover:bg-red-700 flex items-center justify-center transition-colors shadow-lg"
+            onClick={() => window.dispatchEvent(new CustomEvent('toggle-help-menu'))}
+            className="w-10 h-10 rounded-full bg-blue-600 hover:bg-blue-700 flex items-center justify-center transition-colors shadow-lg"
           >
-            <span className="text-white font-bold text-xs">SOS</span>
+            <HelpCircle className="w-5 h-5 text-white" />
           </button>
         </div>
       </div>
