@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { MessageCircle, X, Send, Mic, MicOff, Loader2, HelpCircle, Megaphone } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { cn } from '../lib/utils';
 import { trpc } from '../lib/trpc';
 import { BroadcastPanel } from './BroadcastPanel';
@@ -18,7 +18,18 @@ type ViewState = 'collapsed' | 'expanded' | 'chatOpen' | 'broadcastOpen';
 export function ChatAssistant() {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
+  const location = useLocation();
   const [viewState, setViewState] = useState<ViewState>('collapsed');
+  const isDashboard = location.pathname === '/dashboard';
+
+  // Listen for external toggle event (from dashboard header button)
+  useEffect(() => {
+    const handler = () => {
+      setViewState((prev) => (prev === 'collapsed' ? 'expanded' : 'collapsed'));
+    };
+    window.addEventListener('toggle-help-menu', handler);
+    return () => window.removeEventListener('toggle-help-menu', handler);
+  }, []);
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [isListening, setIsListening] = useState(false);
@@ -247,7 +258,7 @@ export function ChatAssistant() {
           viewState === 'expanded'
             ? "bg-gray-700 text-white hover:bg-gray-800"
             : "bg-blue-600 text-white hover:bg-blue-700",
-          (isOpen || viewState === 'broadcastOpen') && "hidden"
+          (isOpen || viewState === 'broadcastOpen' || isDashboard) && "hidden"
         )}
         aria-label={t('chat.openHelp')}
       >
