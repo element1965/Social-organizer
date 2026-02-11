@@ -357,7 +357,7 @@
     "success": "Połączono!",
     "loginToAccept": "Zaloguj się, aby zaakceptować",
     "accepting": "Przyjmowanie zaproszenia...",
-    "yourCode": "Twój kod zaproszenia",
+    "yourCode": "ID twojego linku (nie do udostępniania)",
     "slugPlaceholder": "your-nickname",
     "slugHint": "3–30 znaków: litery, cyfry, _ i -",
     "slugMin": "Minimum 3 znaki",

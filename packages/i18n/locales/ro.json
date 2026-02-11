@@ -357,7 +357,7 @@
     "success": "Conectat!",
     "loginToAccept": "Autentifica-te pentru a accepta",
     "accepting": "Acceptare invitație...",
-    "yourCode": "Codul tău de invitație",
+    "yourCode": "ID-ul linkului tău (nu pentru partajare)",
     "slugPlaceholder": "your-nickname",
     "slugHint": "3–30 caractere: litere, numere, _ și -",
     "slugMin": "Minim 3 caractere",

@@ -339,7 +339,7 @@
     "success": "已连接！",
     "loginToAccept": "登录后接受",
     "accepting": "正在接受邀请...",
-    "yourCode": "您的邀请码",
+    "yourCode": "您的链接ID（非用于分享）",
     "slugPlaceholder": "your-nickname",
     "slugHint": "3–30 个字符：letters, numbers, _ and -",
     "slugMin": "最小 3 个字符",

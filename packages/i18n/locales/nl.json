@@ -357,7 +357,7 @@
     "success": "Verbonden!",
     "loginToAccept": "Log in om te accepteren",
     "accepting": "Uitnodiging wordt geaccepteerd...",
-    "yourCode": "Jouw uitnodigingscode",
+    "yourCode": "Jouw link-ID (niet om te delen)",
     "slugPlaceholder": "your-nickname",
     "slugHint": "3–30 tekens: letters, cijfers, _ en -",
     "slugMin": "Minimaal 3 tekens",

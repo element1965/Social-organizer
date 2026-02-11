@@ -339,7 +339,7 @@
     "success": "Connesso!",
     "loginToAccept": "Accedi per accettare",
     "accepting": "Accettazione dell'invito...",
-    "yourCode": "Il tuo codice invito",
+    "yourCode": "ID del tuo link (non da condividere)",
     "slugPlaceholder": "il-tuo-nickname",
     "slugHint": "3–30 caratteri: lettere, numeri, _ e -",
     "slugMin": "Minimo 3 caratteri",

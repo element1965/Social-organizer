@@ -357,7 +357,7 @@
     "success": "Повезани!",
     "loginToAccept": "Пријави се да прихватиш",
     "accepting": "Prihvatanje pozivnice...",
-    "yourCode": "Vaš pozivni kod",
+    "yourCode": "ID вашег линка (није за дељење)",
     "slugPlaceholder": "vaš-nadimak",
     "slugHint": "3–30 znakova: slova, brojevi, _ i -",
     "slugMin": "Minimum 3 znaka",

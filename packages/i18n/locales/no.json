@@ -357,7 +357,7 @@
     "success": "Tilkoblet!",
     "loginToAccept": "Logg inn for å godta",
     "accepting": "Godtar invitasjon...",
-    "yourCode": "Din invitasjonskode",
+    "yourCode": "Din lenke-ID (ikke for deling)",
     "slugPlaceholder": "din-kallenavn",
     "slugHint": "3–30 tegn: bokstaver, tall, _ og -",
     "slugMin": "Minimum 3 tegn",

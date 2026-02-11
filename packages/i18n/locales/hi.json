@@ -357,7 +357,7 @@
     "success": "जुड़ गए!",
     "loginToAccept": "स्वीकार करने के लिए लॉग इन करें",
     "accepting": "आमंत्रण स्वीकार कर रहे हैं...",
-    "yourCode": "आपका आमंत्रण कोड",
+    "yourCode": "आपकी लिंक ID (शेयर करने के लिए नहीं)",
     "slugPlaceholder": "your-nickname",
     "slugHint": "3–30 अक्षर: letters, numbers, _ और -",
     "slugMin": "न्यूनत�� 3 characters",

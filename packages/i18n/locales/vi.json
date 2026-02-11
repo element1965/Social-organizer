@@ -357,7 +357,7 @@
     "success": "Đã kết nối!",
     "loginToAccept": "Đăng nhập để chấp nhận",
     "accepting": "Đang chấp nhận lời mời...",
-    "yourCode": "Mã mời của bạn",
+    "yourCode": "ID liên kết của bạn (không để chia sẻ)",
     "slugPlaceholder": "biet-danh-cua-ban",
     "slugHint": "3–30 ký tự: chữ cái, số, _ và -",
     "slugMin": "Tối thiểu 3 ký tự",

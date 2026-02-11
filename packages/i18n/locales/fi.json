@@ -357,7 +357,7 @@
     "success": "Yhdistetty!",
     "loginToAccept": "Kirjaudu sisään hyväksyäksesi",
     "accepting": "Hyväksytään kutsua...",
-    "yourCode": "Kutsukoodisi",
+    "yourCode": "Linkkitunnuksesi (ei jaettavaksi)",
     "slugPlaceholder": "omat-nimimerkki",
     "slugHint": "3–30 merkkiä: kirjaimet, numerot, _ ja -",
     "slugMin": "Vähintään 3 merkkiä",
