@@ -36,7 +36,6 @@ export type SupportedLanguage = keyof typeof resources;
 
 export const languageNames: Record<SupportedLanguage, string> = {
   en: 'English',
-  ru: 'Русский',
   es: 'Español',
   fr: 'Français',
   de: 'Deutsch',
@@ -62,6 +61,7 @@ export const languageNames: Record<SupportedLanguage, string> = {
   id: 'Bahasa Indonesia',
   sr: 'Српски',
   he: 'עברית',
+  ru: 'Русский',
 };
 
 export {
