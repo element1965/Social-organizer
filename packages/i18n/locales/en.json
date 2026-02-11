@@ -269,7 +269,9 @@
     "contacts": "Contacts",
     "currentCapability": "Current capability",
     "memberSince": "Member since {{date}}",
-    "nicknamePlaceholder": "Your name for them..."
+    "nicknamePlaceholder": "Your name for them...",
+    "online": "Online",
+    "lastSeen": "Last seen {{time}}"
   },
   "settings": {
     "title": "Settings",

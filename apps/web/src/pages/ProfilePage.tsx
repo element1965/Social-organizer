@@ -103,6 +103,32 @@ export function ProfilePage() {
             <span>{t('profile.memberSince', { date: registrationDate })}</span>
           </div>
         )}
+        {(() => {
+          if (!user.lastSeen) return null;
+          const lastSeenDate = new Date(user.lastSeen);
+          const diffMs = Date.now() - lastSeenDate.getTime();
+          const isOnline = diffMs < 5 * 60 * 1000;
+          if (isOnline) {
+            return (
+              <div className="flex items-center gap-1.5 mt-1 text-xs">
+                <span className="w-2 h-2 rounded-full bg-green-500" />
+                <span className="text-green-600 dark:text-green-400">{t('profile.online')}</span>
+              </div>
+            );
+          }
+          const diffSec = Math.floor(diffMs / 1000);
+          const rtf = new Intl.RelativeTimeFormat(i18n.language, { numeric: 'auto' });
+          let relativeTime: string;
+          if (diffSec < 3600) relativeTime = rtf.format(-Math.floor(diffSec / 60), 'minute');
+          else if (diffSec < 86400) relativeTime = rtf.format(-Math.floor(diffSec / 3600), 'hour');
+          else relativeTime = rtf.format(-Math.floor(diffSec / 86400), 'day');
+          return (
+            <div className="flex items-center gap-1.5 mt-1 text-xs">
+              <span className="w-2 h-2 rounded-full bg-gray-400" />
+              <span className="text-gray-400">{t('profile.lastSeen', { time: relativeTime })}</span>
+            </div>
+          );
+        })()}
       </div>
 
       {contacts && contacts.filter((c: { value?: string }) => c.value).length > 0 && (

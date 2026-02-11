@@ -21,6 +21,11 @@ const isAuthed = middleware(async ({ ctx, next }) => {
   if (user?.deletedAt) {
     throw new TRPCError({ code: 'FORBIDDEN', message: 'Account has been deleted' });
   }
+  // fire-and-forget — don't slow down every request
+  ctx.db.user.update({
+    where: { id: ctx.userId },
+    data: { lastSeen: new Date() },
+  }).catch(() => {});
   return next({ ctx: { ...ctx, userId: ctx.userId } });
 });
 

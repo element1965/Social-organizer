@@ -91,6 +91,7 @@ model User {
   createdAt           DateTime  @default(now())
   updatedAt           DateTime  @updatedAt
   deletedAt           DateTime?
+  lastSeen            DateTime?
 
   platformAccounts PlatformAccount[]
   connectionsFrom  Connection[]      @relation("connectionFromUser")

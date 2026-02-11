@@ -32,6 +32,7 @@ interface DemoUser {
   theme: string;
   soundEnabled: boolean;
   fontScale: number;
+  lastSeen: string;
 }
 
 const baseDate = new Date('2025-06-01T10:00:00Z');
@@ -52,6 +53,7 @@ function makeUser(id: string, name: string, idx: number): DemoUser {
     theme: 'DARK',
     soundEnabled: true,
     fontScale: 1.0,
+    lastSeen: new Date(Date.now() - Math.floor(Math.random() * 24 * 3600_000)).toISOString(),
   };
 }
 
@@ -75,6 +77,7 @@ let demoUser: DemoUser & {
   theme: 'DARK',
   soundEnabled: true,
   fontScale: 1.0,
+  lastSeen: new Date(Date.now() - 2 * 60_000).toISOString(),
   onboardingCompleted: false,
   monthlyBudget: 200,
   remainingBudget: 150,
@@ -482,8 +485,8 @@ export function handleDemoRequest(path: string, input: unknown): unknown {
     case 'user.getById': {
       const userId = inp?.userId as string;
       const u = usersMap.get(userId);
-      if (!u) return { id: userId, name: 'Unknown', photoUrl: null, role: 'USER', createdAt: baseDate.toISOString(), deletedAt: null, bio: null, phone: null };
-      return { id: u.id, name: u.name, bio: u.bio, phone: u.phone, photoUrl: u.photoUrl, role: u.role, createdAt: u.createdAt, deletedAt: u.deletedAt };
+      if (!u) return { id: userId, name: 'Unknown', photoUrl: null, role: 'USER', createdAt: baseDate.toISOString(), deletedAt: null, bio: null, phone: null, lastSeen: null };
+      return { id: u.id, name: u.name, bio: u.bio, phone: u.phone, photoUrl: u.photoUrl, role: u.role, createdAt: u.createdAt, deletedAt: u.deletedAt, lastSeen: u.lastSeen };
     }
     case 'user.getStats': {
       const uid = (inp?.userId as string) ?? DEMO_USER_ID;
