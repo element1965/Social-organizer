@@ -117,21 +117,13 @@ export function DashboardPage() {
             <p className="text-xs text-gray-500">{t('settings.title')}</p>
           </div>
         </button>
-        <div className="flex items-center gap-2">
-          <button
-            onClick={() => setShowTgChatPopup(true)}
-            className="w-10 h-10 rounded-full bg-[#26A5E4] hover:bg-[#1d8cc4] flex items-center justify-center transition-colors shadow-lg"
-            title={t('dashboard.communityChat')}
-          >
-            <SocialIcon type="telegram" className="w-5 h-5 text-white" />
-          </button>
-          <button
-            onClick={() => window.dispatchEvent(new CustomEvent('toggle-help-menu'))}
-            className="w-10 h-10 rounded-full bg-blue-600 hover:bg-blue-700 flex items-center justify-center transition-colors shadow-lg"
-          >
-            <HelpCircle className="w-5 h-5 text-white" />
-          </button>
-        </div>
+        <button
+          onClick={() => setShowTgChatPopup(true)}
+          className="w-10 h-10 rounded-full bg-[#26A5E4] hover:bg-[#1d8cc4] flex items-center justify-center transition-colors shadow-lg"
+          title={t('dashboard.communityChat')}
+        >
+          <SocialIcon type="telegram" className="w-5 h-5 text-white" />
+        </button>
       </div>
 
       {/* Emergency notifications */}

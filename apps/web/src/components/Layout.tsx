@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Home, Bell, Users, Settings } from 'lucide-react';
+import { Home, Bell, Users, Settings, HelpCircle } from 'lucide-react';
 import { trpc } from '../lib/trpc';
 import { cn } from '../lib/utils';
 import { ChatAssistant } from './ChatAssistant';
@@ -50,6 +50,14 @@ export function Layout() {
       <main className="flex-1 pb-16 overflow-y-auto">
         <Outlet />
       </main>
+
+      {/* Help button — fixed top-right on all screens */}
+      <button
+        onClick={() => window.dispatchEvent(new CustomEvent('toggle-help-menu'))}
+        className="fixed top-3 right-3 z-40 w-10 h-10 rounded-full bg-blue-600 hover:bg-blue-700 flex items-center justify-center transition-colors shadow-lg"
+      >
+        <HelpCircle className="w-5 h-5 text-white" />
+      </button>
 
       {/* AI Chat Assistant */}
       <ChatAssistant />
