@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useMemo } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import ForceGraph3D from 'react-force-graph-3d';
 import SpriteText from 'three-spritetext';
 import * as THREE from 'three';
@@ -51,7 +51,6 @@ export function NetworkGraph({
 }: NetworkGraphProps) {
   const fgRef = useRef<FGRef>(null);
   const highlightSet = new Set(highlightPath ?? []);
-  const textureLoader = useMemo(() => new THREE.TextureLoader(), []);
   const textureCache = useRef<Map<string, THREE.Texture>>(new Map());
   // Track pending texture loads to avoid duplicate requests
   const pendingLoads = useRef<Set<string>>(new Set());
@@ -107,29 +106,40 @@ export function NetworkGraph({
     closeLevel.add(avatar);
   }, []);
 
-  // Lazy texture loading - load textures only when camera is close
+  // Load image via Image element, draw circular on canvas, return CanvasTexture
   const loadTextureForNode = useCallback((photoUrl: string, nodeId: string) => {
     if (textureCache.current.has(photoUrl) || pendingLoads.current.has(photoUrl)) {
       return;
     }
     pendingLoads.current.add(photoUrl);
-    textureLoader.load(
-      photoUrl,
-      (texture) => {
-        textureCache.current.set(photoUrl, texture);
-        pendingLoads.current.delete(photoUrl);
-        // Update the LOD object with the loaded texture
-        const lodInfo = lodObjectsRef.current.get(nodeId);
-        if (lodInfo) {
-          updateLodWithTexture(lodInfo.lod, texture, lodInfo.nodeData);
-        }
-      },
-      undefined,
-      () => {
-        pendingLoads.current.delete(photoUrl);
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.onload = () => {
+      // Draw circular avatar on canvas
+      const size = 256;
+      const canvas = document.createElement('canvas');
+      canvas.width = size;
+      canvas.height = size;
+      const ctx = canvas.getContext('2d')!;
+      ctx.beginPath();
+      ctx.arc(size / 2, size / 2, size / 2, 0, Math.PI * 2);
+      ctx.closePath();
+      ctx.clip();
+      ctx.drawImage(img, 0, 0, size, size);
+      const texture = new THREE.CanvasTexture(canvas);
+      textureCache.current.set(photoUrl, texture);
+      pendingLoads.current.delete(photoUrl);
+      // Update the LOD object with the loaded texture
+      const lodInfo = lodObjectsRef.current.get(nodeId);
+      if (lodInfo) {
+        updateLodWithTexture(lodInfo.lod, texture, lodInfo.nodeData);
       }
-    );
-  }, [textureLoader, updateLodWithTexture]);
+    };
+    img.onerror = () => {
+      pendingLoads.current.delete(photoUrl);
+    };
+    img.src = photoUrl;
+  }, [updateLodWithTexture]);
 
   const handleNodeClick = useCallback(
     (node: { id?: string | number }) => {
