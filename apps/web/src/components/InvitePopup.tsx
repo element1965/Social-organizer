@@ -90,41 +90,29 @@ export function InvitePopup({ open, onClose }: InvitePopupProps) {
 
         {/* Editable slug */}
         <div className="mt-4 pt-3 border-t border-gray-200 dark:border-gray-700">
-          <div className="flex items-center gap-2 mb-1">
-            <span className="text-xs font-medium text-gray-500">{t('invite.yourCode')}</span>
-            {!editingSlug && (
-              <button onClick={() => { setSlugValue(me?.referralSlug || ''); setSlugError(''); setEditingSlug(true); }} className="text-gray-400 hover:text-gray-500">
-                <Pencil className="w-3 h-3" />
-              </button>
-            )}
-          </div>
+          <p className="text-xs font-medium text-gray-500 mb-1">{t('invite.yourCode')}</p>
           {editingSlug ? (
             <div>
-              <div className="flex gap-2">
-                <input
-                  value={slugValue}
-                  onChange={(e) => { setSlugValue(e.target.value.toLowerCase().replace(/[^a-z0-9_-]/g, '')); setSlugError(''); }}
-                  placeholder={t('invite.slugPlaceholder')}
-                  className="flex-1 px-3 py-1.5 text-sm rounded-lg border border-gray-300 dark:border-gray-600 bg-transparent text-gray-900 dark:text-white focus:outline-none focus:border-blue-500"
-                  maxLength={30}
-                  autoFocus
-                />
-                <button
-                  onClick={() => { if (slugValue.length >= 3) updateSlug.mutate({ slug: slugValue }); else setSlugError(t('invite.slugMin')); }}
-                  disabled={updateSlug.isPending}
-                  className="px-3 py-1.5 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-500 disabled:opacity-50"
-                >
-                  <Check className="w-4 h-4" />
-                </button>
-                <button onClick={() => setEditingSlug(false)} className="px-2 py-1.5 text-sm text-gray-500 hover:text-gray-700">
-                  <X className="w-4 h-4" />
-                </button>
-              </div>
+              <input
+                value={slugValue}
+                onChange={(e) => { setSlugValue(e.target.value.toLowerCase().replace(/[^a-z0-9_-]/g, '')); setSlugError(''); }}
+                onBlur={() => { if (slugValue.length >= 3 && slugValue !== (me?.referralSlug || '')) updateSlug.mutate({ slug: slugValue }); else setEditingSlug(false); }}
+                onKeyDown={(e) => { if (e.key === 'Enter' && slugValue.length >= 3) updateSlug.mutate({ slug: slugValue }); if (e.key === 'Escape') setEditingSlug(false); }}
+                placeholder={t('invite.slugPlaceholder')}
+                className="w-full px-2 py-1 text-sm font-mono rounded border border-gray-300 dark:border-gray-600 bg-transparent text-blue-600 dark:text-blue-400 focus:outline-none focus:border-blue-500"
+                maxLength={30}
+                autoFocus
+              />
               <p className="text-[10px] text-gray-400 mt-1">{t('invite.slugHint')}</p>
               {slugError && <p className="text-[10px] text-red-500 mt-1">{slugError}</p>}
             </div>
           ) : (
-            <p className="text-sm font-mono text-blue-600 dark:text-blue-400">{me?.referralSlug || userId}</p>
+            <div className="flex items-center gap-2">
+              <p className="text-sm font-mono text-blue-600 dark:text-blue-400">{me?.referralSlug || userId}</p>
+              <button onClick={() => { setSlugValue(me?.referralSlug || ''); setSlugError(''); setEditingSlug(true); }} className="text-gray-400 hover:text-gray-500">
+                <Pencil className="w-3 h-3" />
+              </button>
+            </div>
           )}
           <p className="text-[10px] text-gray-400 mt-1">{t('invite.slugDesc')}</p>
         </div>
