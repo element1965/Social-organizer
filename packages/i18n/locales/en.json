@@ -187,12 +187,20 @@
     "minAmount": "Minimum 10",
     "invalidUrl": "Invalid URL",
     "networkReach": "Your signal will reach up to {{count}} people through handshake chains",
+    "entryWarningTitle": "This is a real help signal",
+    "entryWarningText": "Creating a collection sends a notification to your entire network. This is not a test — real people will see it and may respond. Only proceed if you genuinely need help.",
+    "entryWarningProceed": "I understand, continue",
+    "entryWarningBack": "Go back",
     "confirmTitle": "Confirm collection creation",
     "confirmText": "Make sure you truly need this amount. The help signal will be seen by dozens of people — use it responsibly.",
     "confirmPayment": "Can you receive international transfers? Participants may be from different countries. Make sure you have a crypto wallet, PayPal, Wise, Revolut, or another way to receive funds from abroad.",
     "confirmCheckbox": "I've thought it through and confirm",
     "confirmButton": "Confirm",
-    "cancelButton": "Cancel"
+    "cancelButton": "Cancel",
+    "notEnoughConnectionsTitle": "Not enough connections",
+    "notEnoughConnectionsText": "To create a help signal, you need at least {{min}} connections in your network. Invite more people to unlock this feature.",
+    "connectionsRemaining": "{{count}} more needed",
+    "goToNetwork": "Invite people"
   },
   "intention": {
     "create": "Express Intention",

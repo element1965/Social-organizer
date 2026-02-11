@@ -187,7 +187,15 @@
     "confirmPayment": "Poți primi transferuri internaționale? Participanții pot fi din diferite țări. Asigură-te că ai un portofel crypto, PayPal, Wise, Revolut sau alt mod de a primi fonduri din străinătate.",
     "confirmCheckbox": "M-am gândit bine și confirm",
     "confirmButton": "Confirmă",
-    "cancelButton": "Anulează"
+    "cancelButton": "Anulează",
+    "entryWarningTitle": "Un moment",
+    "entryWarningText": "Crearea unei cereri de ajutor va trimite o notificare la zeci de persoane din rețeaua ta. Dacă doar explorezi aplicația — nu crea o cerere reală. Acest instrument este pentru cei care au cu adevărat nevoie de ajutor.",
+    "entryWarningProceed": "Înțeleg, continuă",
+    "entryWarningBack": "Înapoi",
+    "notEnoughConnectionsTitle": "Nu sunt suficiente conexiuni",
+    "notEnoughConnectionsText": "Pentru a crea un semnal de ajutor, ai nevoie de cel puțin {{min}} conexiuni în rețeaua ta. Invită mai multe persoane pentru a debloca această funcție.",
+    "connectionsRemaining": "Mai sunt necesare {{count}}",
+    "goToNetwork": "Invită persoane"
   },
   "intention": {
     "create": "Exprima intentia",

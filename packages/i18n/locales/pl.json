@@ -187,7 +187,15 @@
     "confirmPayment": "Czy możesz otrzymywać przelewy międzynarodowe? Uczestnicy mogą być z różnych krajów. Upewnij się, że masz portfel krypto, PayPal, Wise, Revolut lub inny sposób na otrzymanie środków z zagranicy.",
     "confirmCheckbox": "Przemyślałem/am to i potwierdzam",
     "confirmButton": "Potwierdź",
-    "cancelButton": "Anuluj"
+    "cancelButton": "Anuluj",
+    "entryWarningTitle": "Chwileczkę",
+    "entryWarningText": "Utworzenie prośby o pomoc wyśle powiadomienie do kilkudziesięciu osób w Twojej sieci. Jeśli tylko przeglądasz aplikację — nie twórz prawdziwej prośby. To narzędzie jest dla tych, którzy naprawdę potrzebują pomocy.",
+    "entryWarningProceed": "Rozumiem, kontynuuj",
+    "entryWarningBack": "Wróć",
+    "notEnoughConnectionsTitle": "Za mało połączeń",
+    "notEnoughConnectionsText": "Aby utworzyć sygnał pomocy, potrzebujesz co najmniej {{min}} połączeń w swojej sieci. Zaproś więcej osób, aby odblokować tę funkcję.",
+    "connectionsRemaining": "Potrzeba jeszcze {{count}}",
+    "goToNetwork": "Zaproś osoby"
   },
   "intention": {
     "create": "Wyraź intencję",

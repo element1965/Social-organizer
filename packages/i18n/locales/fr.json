@@ -187,7 +187,15 @@
     "confirmPayment": "Pouvez-vous recevoir des virements internationaux ? Les participants peuvent venir de différents pays. Assurez-vous d'avoir un portefeuille crypto, PayPal, Wise, Revolut ou un autre moyen de recevoir des fonds de l'étranger.",
     "confirmCheckbox": "J'ai bien réfléchi et je confirme",
     "confirmButton": "Confirmer",
-    "cancelButton": "Annuler"
+    "cancelButton": "Annuler",
+    "entryWarningTitle": "Un instant",
+    "entryWarningText": "Créer une demande d'aide enverra une notification à des dizaines de personnes de votre réseau. Si vous explorez simplement l'application, ne créez pas de vraie demande. Cet outil est destiné à ceux qui ont vraiment besoin d'aide.",
+    "entryWarningProceed": "Je comprends, continuer",
+    "entryWarningBack": "Retour",
+    "notEnoughConnectionsTitle": "Pas assez de connexions",
+    "notEnoughConnectionsText": "Pour créer un signal d'aide, vous avez besoin d'au moins {{min}} connexions dans votre réseau. Invitez plus de personnes pour débloquer cette fonctionnalité.",
+    "connectionsRemaining": "Encore {{count}} nécessaires",
+    "goToNetwork": "Inviter des personnes"
   },
   "intention": {
     "create": "Exprimer une intention",

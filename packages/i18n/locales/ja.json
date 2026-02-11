@@ -187,7 +187,15 @@
     "confirmPayment": "海外送金を受け取ることはできますか？参加者はさまざまな国から来る可能性があります。暗号通貨ウォレット、PayPal、Wise、Revolut、または海外からの送金を受け取る他の方法があることを確認してください。",
     "confirmCheckbox": "よく考えた上で確認します",
     "confirmButton": "確認",
-    "cancelButton": "キャンセル"
+    "cancelButton": "キャンセル",
+    "entryWarningTitle": "ちょっと待ってください",
+    "entryWarningText": "援助リクエストを作成すると、ネットワーク内の数十人に通知が送信されます。アプリを探索しているだけなら、実際のリクエストを作成しないでください。このツールは本当に助けが必要な人のためのものです。",
+    "entryWarningProceed": "理解しました、続ける",
+    "entryWarningBack": "戻る",
+    "notEnoughConnectionsTitle": "接続が不足しています",
+    "notEnoughConnectionsText": "ヘルプシグナルを作成するには、ネットワークに最低{{min}}の接続が必要です。この機能をアンロックするには、もっと多くの人を招待してください。",
+    "connectionsRemaining": "あと{{count}}人必要",
+    "goToNetwork": "人を招待する"
   },
   "intention": {
     "create": "意思を表明する",

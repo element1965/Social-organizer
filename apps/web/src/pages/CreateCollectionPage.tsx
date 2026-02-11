@@ -10,13 +10,16 @@ import { Badge } from '../components/ui/badge';
 import { Progress } from '../components/ui/progress';
 import { Spinner } from '../components/ui/spinner';
 import { Avatar } from '../components/ui/avatar';
-import { AlertTriangle, Users, ArrowRight, PlusCircle, Wallet } from 'lucide-react';
+import { MIN_CONNECTIONS_TO_CREATE } from '@so/shared';
+import { AlertTriangle, Users, ArrowRight, PlusCircle, Wallet, ShieldAlert, UserPlus } from 'lucide-react';
 
 export function CreateCollectionPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const [entryWarningDismissed, setEntryWarningDismissed] = useState(false);
 
   const { data: me } = trpc.user.me.useQuery();
+  const { data: connectionCount } = trpc.connection.getCount.useQuery();
   const { data: networkStats } = trpc.connection.getNetworkStats.useQuery();
   const { data: myCollections } = trpc.collection.myActive.useQuery(undefined, { refetchInterval: 30000 });
   const { data: myObligations } = trpc.obligation.myList.useQuery(undefined, { refetchInterval: 30000 });
@@ -77,6 +80,77 @@ export function CreateCollectionPage() {
     value: c.code,
     label: `${c.symbol} ${c.code}`,
   })) ?? [{ value: 'USD', label: '$ USD' }];
+
+  const isSpecial = me?.role === 'AUTHOR' || me?.role === 'DEVELOPER';
+  const hasEnoughConnections = isSpecial || (connectionCount?.count ?? 0) >= MIN_CONNECTIONS_TO_CREATE;
+  const connectionsNeeded = MIN_CONNECTIONS_TO_CREATE - (connectionCount?.count ?? 0);
+
+  // Not enough connections — block access
+  if (connectionCount && !hasEnoughConnections) {
+    return (
+      <div className="min-h-screen flex items-center justify-center p-4 bg-gray-50 dark:bg-gray-950">
+        <div className="bg-white dark:bg-gray-900 rounded-xl p-6 max-w-sm w-full space-y-4 shadow-xl">
+          <div className="flex justify-center">
+            <div className="w-16 h-16 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center">
+              <UserPlus className="w-8 h-8 text-red-600" />
+            </div>
+          </div>
+          <h2 className="text-xl font-bold text-gray-900 dark:text-white text-center">
+            {t('create.notEnoughConnectionsTitle')}
+          </h2>
+          <p className="text-sm text-gray-600 dark:text-gray-400 text-center leading-relaxed">
+            {t('create.notEnoughConnectionsText', { min: MIN_CONNECTIONS_TO_CREATE })}
+          </p>
+          <div className="flex items-center justify-center gap-2 py-2">
+            <div className="text-3xl font-bold text-red-600">{connectionCount.count}</div>
+            <div className="text-gray-400">/</div>
+            <div className="text-3xl font-bold text-gray-400">{MIN_CONNECTIONS_TO_CREATE}</div>
+          </div>
+          <p className="text-sm text-center text-gray-500">
+            {t('create.connectionsRemaining', { count: connectionsNeeded })}
+          </p>
+          <div className="space-y-2 pt-2">
+            <Button className="w-full" size="lg" onClick={() => navigate('/network')}>
+              <UserPlus className="w-4 h-4 mr-2" />
+              {t('create.goToNetwork')}
+            </Button>
+            <Button variant="outline" className="w-full" size="lg" onClick={() => navigate('/dashboard')}>
+              {t('create.entryWarningBack')}
+            </Button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Entry warning popup — shown before the form
+  if (!entryWarningDismissed) {
+    return (
+      <div className="min-h-screen flex items-center justify-center p-4 bg-gray-50 dark:bg-gray-950">
+        <div className="bg-white dark:bg-gray-900 rounded-xl p-6 max-w-sm w-full space-y-4 shadow-xl">
+          <div className="flex justify-center">
+            <div className="w-16 h-16 rounded-full bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center">
+              <ShieldAlert className="w-8 h-8 text-amber-600" />
+            </div>
+          </div>
+          <h2 className="text-xl font-bold text-gray-900 dark:text-white text-center">
+            {t('create.entryWarningTitle')}
+          </h2>
+          <p className="text-sm text-gray-600 dark:text-gray-400 text-center leading-relaxed">
+            {t('create.entryWarningText')}
+          </p>
+          <div className="space-y-2 pt-2">
+            <Button className="w-full" size="lg" onClick={() => setEntryWarningDismissed(true)}>
+              {t('create.entryWarningProceed')}
+            </Button>
+            <Button variant="outline" className="w-full" size="lg" onClick={() => navigate('/dashboard')}>
+              {t('create.entryWarningBack')}
+            </Button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="p-4">

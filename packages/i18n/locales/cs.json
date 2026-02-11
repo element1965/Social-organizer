@@ -187,7 +187,15 @@
     "confirmPayment": "Můžete přijímat mezinárodní převody? Účastníci mohou být z různých zemí. Ujistěte se, že máte kryptopeněženku, PayPal, Wise, Revolut nebo jiný způsob příjmu plateb ze zahraničí.",
     "confirmCheckbox": "Promyslel/a jsem si to a potvrzuji",
     "confirmButton": "Potvrdit",
-    "cancelButton": "Zrušit"
+    "cancelButton": "Zrušit",
+    "entryWarningTitle": "Moment",
+    "entryWarningText": "Vytvoření žádosti o pomoc odešle oznámení desítkám lidí ve vaší síti. Pokud jen zkoumáte aplikaci — nevytvářejte skutečnou žádost. Tento nástroj je pro ty, kteří skutečně potřebují pomoc.",
+    "entryWarningProceed": "Rozumím, pokračovat",
+    "entryWarningBack": "Zpět",
+    "notEnoughConnectionsTitle": "Nedostatek spojení",
+    "notEnoughConnectionsText": "Pro vytvoření signálu o pomoci potřebujete alespoň {{min}} spojení ve vaší síti. Pozvěte více lidí pro odemknutí této funkce.",
+    "connectionsRemaining": "Potřeba ještě {{count}}",
+    "goToNetwork": "Pozvat lidi"
   },
   "intention": {
     "create": "Vyjádřit záměr",

@@ -187,7 +187,15 @@
     "confirmPayment": "Bạn có thể nhận chuyển khoản quốc tế không? Người tham gia có thể đến từ các quốc gia khác nhau. Hãy đảm bảo bạn có ví tiền điện tử, PayPal, Wise, Revolut hoặc cách khác để nhận tiền từ nước ngoài.",
     "confirmCheckbox": "Tôi đã suy nghĩ kỹ và xác nhận",
     "confirmButton": "Xác nhận",
-    "cancelButton": "Hủy"
+    "cancelButton": "Hủy",
+    "entryWarningTitle": "Chờ một chút",
+    "entryWarningText": "Tạo yêu cầu trợ giúp sẽ gửi thông báo đến hàng chục người trong mạng lưới của bạn. Nếu bạn chỉ đang khám phá ứng dụng — đừng tạo yêu cầu thật. Công cụ này dành cho những người thực sự cần giúp đỡ.",
+    "entryWarningProceed": "Tôi hiểu, tiếp tục",
+    "entryWarningBack": "Quay lại",
+    "notEnoughConnectionsTitle": "Không đủ kết nối",
+    "notEnoughConnectionsText": "Để tạo tín hiệu trợ giúp, bạn cần ít nhất {{min}} kết nối trong mạng lưới của mình. Mời thêm người để mở khóa tính năng này.",
+    "connectionsRemaining": "Cần thêm {{count}}",
+    "goToNetwork": "Mời mọi người"
   },
   "intention": {
     "create": "Bày tỏ ý định",

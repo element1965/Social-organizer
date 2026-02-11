@@ -187,7 +187,15 @@
     "confirmPayment": "您能接收国际转账吗？参与者可能来自不同国家。请确保您有加密钱包、PayPal、Wise、Revolut或其他接收海外资金的方式。",
     "confirmCheckbox": "我已深思熟虑并确认",
     "confirmButton": "确认",
-    "cancelButton": "取消"
+    "cancelButton": "取消",
+    "entryWarningTitle": "请稍等",
+    "entryWarningText": "创建求助请求将向您网络中的数十人发送通知。如果您只是在探索应用 — 请不要创建真实请求。此工具专为真正需要帮助的人设计。",
+    "entryWarningProceed": "我理解，继续",
+    "entryWarningBack": "返回",
+    "notEnoughConnectionsTitle": "连接不足",
+    "notEnoughConnectionsText": "要创建求助信号，您的网络中至少需要 {{min}} 个连接。邀请更多人来解锁此功能。",
+    "connectionsRemaining": "还需要 {{count}} 个",
+    "goToNetwork": "邀请他人"
   },
   "intention": {
     "create": "表达意愿",
