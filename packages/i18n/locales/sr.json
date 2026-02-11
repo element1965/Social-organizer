@@ -195,7 +195,8 @@
     "notEnoughConnectionsTitle": "Недовољно веза",
     "notEnoughConnectionsText": "За креирање сигнала за помоћ потребно вам је најмање {{min}} веза у вашој мрежи. Позовите више људи да откључате ову функцију.",
     "connectionsRemaining": "Потребно је још {{count}}",
-    "goToNetwork": "Позовите људе"
+    "goToNetwork": "Позовите људе",
+    "goToInvite": "Позовите"
   },
   "intention": {
     "create": "Изрази намеру",

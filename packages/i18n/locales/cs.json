@@ -195,7 +195,8 @@
     "notEnoughConnectionsTitle": "Nedostatek spojení",
     "notEnoughConnectionsText": "Pro vytvoření signálu o pomoci potřebujete alespoň {{min}} spojení ve vaší síti. Pozvěte více lidí pro odemknutí této funkce.",
     "connectionsRemaining": "Potřeba ještě {{count}}",
-    "goToNetwork": "Pozvat lidi"
+    "goToNetwork": "Pozvat lidi",
+    "goToInvite": "Pozvat"
   },
   "intention": {
     "create": "Vyjádřit záměr",

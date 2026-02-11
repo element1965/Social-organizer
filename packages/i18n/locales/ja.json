@@ -195,7 +195,8 @@
     "notEnoughConnectionsTitle": "接続が不足しています",
     "notEnoughConnectionsText": "ヘルプシグナルを作成するには、ネットワークに最低{{min}}の接続が必要です。この機能をアンロックするには、もっと多くの人を招待してください。",
     "connectionsRemaining": "あと{{count}}人必要",
-    "goToNetwork": "人を招待する"
+    "goToNetwork": "人を招待する",
+    "goToInvite": "招待する"
   },
   "intention": {
     "create": "意思を表明する",

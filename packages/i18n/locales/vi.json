@@ -195,7 +195,8 @@
     "notEnoughConnectionsTitle": "Không đủ kết nối",
     "notEnoughConnectionsText": "Để tạo tín hiệu trợ giúp, bạn cần ít nhất {{min}} kết nối trong mạng lưới của mình. Mời thêm người để mở khóa tính năng này.",
     "connectionsRemaining": "Cần thêm {{count}}",
-    "goToNetwork": "Mời mọi người"
+    "goToNetwork": "Mời mọi người",
+    "goToInvite": "Mời"
   },
   "intention": {
     "create": "Bày tỏ ý định",

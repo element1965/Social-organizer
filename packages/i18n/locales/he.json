@@ -205,7 +205,8 @@
     "notEnoughConnectionsTitle": "אין מספיק חיבורים",
     "notEnoughConnectionsText": "כדי ליצור אות עזרה, אתה צריך לפחות {{min}} חיבורים ברשת שלך. הזמן עוד אנשים כדי לפתוח תכונה זו.",
     "connectionsRemaining": "צריך עוד {{count}}",
-    "goToNetwork": "הזמן אנשים"
+    "goToNetwork": "הזמן אנשים",
+    "goToInvite": "הזמן"
   },
   "intention": {
     "create": "בטא כוונה",

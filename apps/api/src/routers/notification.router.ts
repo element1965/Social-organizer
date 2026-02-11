@@ -9,7 +9,7 @@ export const notificationRouter = router({
         where: { userId: ctx.userId, status: { in: ['UNREAD', 'READ'] } },
         include: {
           collection: {
-            include: { creator: { select: { id: true, name: true, photoUrl: true } } },
+            include: { creator: { select: { id: true, name: true, photoUrl: true, remainingBudget: true } } },
           },
         },
         orderBy: { createdAt: 'desc' },

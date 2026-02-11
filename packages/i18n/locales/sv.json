@@ -195,7 +195,8 @@
     "notEnoughConnectionsTitle": "Inte tillräckligt med kontakter",
     "notEnoughConnectionsText": "För att skapa en hjälpsignal behöver du minst {{min}} kontakter i ditt nätverk. Bjud in fler personer för att låsa upp denna funktion.",
     "connectionsRemaining": "{{count}} till behövs",
-    "goToNetwork": "Bjud in personer"
+    "goToNetwork": "Bjud in personer",
+    "goToInvite": "Bjud in"
   },
   "intention": {
     "create": "Uttryck avsikt",

@@ -195,7 +195,8 @@
     "notEnoughConnectionsTitle": "Недостатньо зв'язків",
     "notEnoughConnectionsText": "Для створення сигналу допомоги потрібно мінімум {{min}} зв'язків у вашій мережі. Запросіть більше людей, щоб розблокувати цю функцію.",
     "connectionsRemaining": "Потрібно ще {{count}}",
-    "goToNetwork": "Запросити людей"
+    "goToNetwork": "Запросити людей",
+    "goToInvite": "Запросити"
   },
   "intention": {
     "create": "Виразити намір",

@@ -195,7 +195,8 @@
     "notEnoughConnectionsTitle": "لا توجد اتصالات كافية",
     "notEnoughConnectionsText": "لإنشاء إشارة مساعدة، تحتاج إلى {{min}} اتصال على الأقل في شبكتك. ادعُ المزيد من الأشخاص لفتح هذه الميزة.",
     "connectionsRemaining": "تحتاج {{count}} إضافية",
-    "goToNetwork": "دعوة أشخاص"
+    "goToNetwork": "دعوة أشخاص",
+    "goToInvite": "دعوة"
   },
   "intention": {
     "create": "التعبير عن النية",
