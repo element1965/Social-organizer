@@ -55,8 +55,8 @@
       "text": "Hệ thống hoạt động thông qua các kết nối giữa mọi người. Hãy bắt đầu với một người — ai đó bạn tin tưởng."
     },
     "step5": {
-      "title": "Ngân sách hỗ trợ hàng tháng",
-      "text": "Số tiền này chỉ là ý định của bạn, không phải cam kết. Không liên kết thẻ nào, không tính phí tiền. Bạn chỉ cần chỉ ra số tiền bạn sẵn lòng giúp đỡ mỗi tháng. Con số này sẽ hiển thị cho mạng lưới của bạn và thể hiện khả năng tổng thể. Khi ai đó yêu cầu giúp đỡ, bạn quyết định có tham gia hay không."
+      "title": "Cách liên hệ với bạn",
+      "text": "Thêm ít nhất 2 phương thức liên hệ để người tham gia có thể phối hợp với bạn khi hỗ trợ."
     },
     "start": "Bắt đầu",
     "next": "Tiếp",
@@ -68,7 +68,13 @@
     "waitingForAccept": "Đang chờ chấp nhận...",
     "connectionEstablished": "Đã kết nối thành công!",
     "sendAnother": "Gửi lời mời khác",
-    "skip": "Bỏ qua"
+    "skip": "Bỏ qua",
+    "step6": {
+      "title": "Ngân sách hỗ trợ hàng tháng",
+      "text": "Số tiền này chỉ là ý định của bạn, không phải cam kết. Không liên kết thẻ nào, không tính phí tiền. Bạn chỉ cần chỉ ra số tiền bạn sẵn lòng giúp đỡ mỗi tháng. Con số này sẽ hiển thị cho mạng lưới của bạn và thể hiện khả năng tổng thể. Khi ai đó yêu cầu giúp đỡ, bạn quyết định có tham gia hay không."
+    },
+    "contactsRequired": "Thêm ít nhất 2 liên hệ",
+    "contactsFilled": "Đã điền: {{count}}/2"
   },
   "nav": {
     "home": "Trang chủ",
@@ -135,7 +141,8 @@
     "dayCount": "Ngày {{count}}",
     "inviteTrusted": "Mời",
     "myCapabilitiesHint": "Ngân sách hỗ trợ hàng tháng. Số tiền bạn sẵn lòng đóng góp cho hỗ trợ lẫn nhau mỗi tháng",
-    "networkCapabilitiesHint": "Tổng ngân sách hàng tháng có sẵn của tất cả thành viên trong mạng lưới hỗ trợ lẫn nhau của bạn"
+    "networkCapabilitiesHint": "Tổng ngân sách hàng tháng có sẵn của tất cả thành viên trong mạng lưới hỗ trợ lẫn nhau của bạn",
+    "communityChat": "Chat cộng đồng"
   },
   "collection": {
     "create": "Gửi tín hiệu cần giúp đỡ",
@@ -174,7 +181,13 @@
     "submit": "Gửi tín hiệu",
     "minAmount": "Tối thiểu 10",
     "invalidUrl": "URL không hợp lệ",
-    "networkReach": "Tín hiệu của bạn sẽ đến tối đa {{count}} người qua chuỗi bắt tay"
+    "networkReach": "Tín hiệu của bạn sẽ đến tối đa {{count}} người qua chuỗi bắt tay",
+    "confirmTitle": "Xác nhận tạo quyên góp",
+    "confirmText": "Hãy chắc chắn rằng bạn thực sự cần số tiền này. Tín hiệu trợ giúp sẽ được hàng chục người nhìn thấy — hãy sử dụng nó có trách nhiệm.",
+    "confirmPayment": "Bạn có thể nhận chuyển khoản quốc tế không? Người tham gia có thể đến từ các quốc gia khác nhau. Hãy đảm bảo bạn có ví tiền điện tử, PayPal, Wise, Revolut hoặc cách khác để nhận tiền từ nước ngoài.",
+    "confirmCheckbox": "Tôi đã suy nghĩ kỹ và xác nhận",
+    "confirmButton": "Xác nhận",
+    "cancelButton": "Hủy"
   },
   "intention": {
     "create": "Bày tỏ ý định",
@@ -332,7 +345,8 @@
     "viber": "Viber",
     "signal": "Signal",
     "email": "Email",
-    "website": "Trang web"
+    "website": "Trang web",
+    "tiktok": "TikTok"
   },
   "invite": {
     "title": "Lời mời",
@@ -348,7 +362,8 @@
     "slugHint": "3–30 ký tự: chữ cái, số, _ và -",
     "slugMin": "Tối thiểu 3 ký tự",
     "webLinkDesc": "Liên kết website — nếu người đó chưa quen thuộc với dự án, nó có tất cả thông tin giới thiệu",
-    "botLinkDesc": "Trực tiếp đến Telegram — nếu bạn đã giải thích mọi thứ và họ có thể đi thẳng đến ứng dụng"
+    "botLinkDesc": "Trực tiếp đến Telegram — nếu bạn đã giải thích mọi thứ và họ có thể đi thẳng đến ứng dụng",
+    "slugDesc": "Đây là ID liên kết cá nhân của bạn cho URL lời mời. Đây KHÔNG phải là lời mời — đừng gửi nó cho người khác. Sử dụng các liên kết ở trên để mời ai đó."
   },
   "landing": {
     "painQuote": "Khi gặp khó khăn — bạn ở một mình. Bạn bè không biết. Bạn của bạn bè — càng không. Nhưng ai đó trong số họ có thể giúp được.",
@@ -440,5 +455,14 @@
     "budget": "Ngân sách",
     "root": "Gốc",
     "contactRoot": "Liên hệ gốc"
+  },
+  "requiredInfo": {
+    "contactsTitle": "Thêm liên hệ của bạn",
+    "contactsText": "Cần ít nhất 2 phương thức liên hệ để phối hợp hỗ trợ",
+    "budgetTitle": "Ngân sách hỗ trợ hàng tháng",
+    "budgetText": "Số tiền này là ý định của bạn, không phải cam kết. Không có thẻ nào được liên kết, không có tiền nào bị trừ. Bạn chỉ đơn giản cho biết bạn sẵn sàng giúp bao nhiêu mỗi tháng.",
+    "next": "Tiếp theo",
+    "save": "Lưu và tiếp tục",
+    "contactsFilled": "Đã điền: {{count}}/2"
   }
 }

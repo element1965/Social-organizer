@@ -28,6 +28,7 @@ import {
   Layers,
 } from 'lucide-react';
 import { Tooltip } from '../components/ui/tooltip';
+import { SocialIcon } from '../components/ui/social-icons';
 
 const LazyCloudBackground = lazy(() =>
   import('@so/graph-3d').then((m) => ({ default: m.CloudBackground })),
@@ -39,6 +40,7 @@ export function DashboardPage() {
   const userId = useAuth((s) => s.userId);
 
   const [showInvitePopup, setShowInvitePopup] = useState(false);
+  const [showTgChatPopup, setShowTgChatPopup] = useState(false);
 
   const utils = trpc.useUtils();
   const { data: me } = trpc.user.me.useQuery(undefined, { refetchInterval: 30000 });
@@ -115,12 +117,21 @@ export function DashboardPage() {
             <p className="text-xs text-gray-500">{t('settings.title')}</p>
           </div>
         </button>
-        <button
-          onClick={() => { setCopiedWeb(false); setShowInvitePopup(true); }}
-          className="w-10 h-10 rounded-full bg-blue-600 hover:bg-blue-500 flex items-center justify-center transition-colors shadow-lg"
-        >
-          <UserPlus className="w-5 h-5 text-white" />
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => setShowTgChatPopup(true)}
+            className="w-10 h-10 rounded-full bg-[#26A5E4] hover:bg-[#1d8cc4] flex items-center justify-center transition-colors shadow-lg"
+            title={t('dashboard.communityChat')}
+          >
+            <SocialIcon type="telegram" className="w-5 h-5 text-white" />
+          </button>
+          <button
+            onClick={() => { setCopiedWeb(false); setShowInvitePopup(true); }}
+            className="w-10 h-10 rounded-full bg-blue-600 hover:bg-blue-500 flex items-center justify-center transition-colors shadow-lg"
+          >
+            <UserPlus className="w-5 h-5 text-white" />
+          </button>
+        </div>
       </div>
 
       {/* Emergency notifications */}
@@ -244,6 +255,35 @@ export function DashboardPage() {
         </Card>
       )}
 
+      {/* TG community chat popup */}
+      {showTgChatPopup && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50" onClick={() => setShowTgChatPopup(false)}>
+          <div className="bg-white dark:bg-gray-900 rounded-2xl p-6 mx-4 max-w-sm w-full shadow-xl" onClick={(e) => e.stopPropagation()}>
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-[#26A5E4] flex items-center justify-center">
+                  <SocialIcon type="telegram" className="w-5 h-5 text-white" />
+                </div>
+                <h3 className="text-lg font-bold text-gray-900 dark:text-white">{t('dashboard.communityChat')}</h3>
+              </div>
+              <button onClick={() => setShowTgChatPopup(false)} className="p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800">
+                <X className="w-5 h-5 text-gray-500" />
+              </button>
+            </div>
+            <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">{t('dashboard.communityChatDesc')}</p>
+            <a
+              href="https://t.me/+729vJwVZ5ltlMWRk"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block w-full py-3 bg-[#26A5E4] hover:bg-[#1d8cc4] text-white rounded-xl font-medium text-sm text-center transition-colors"
+              onClick={() => setShowTgChatPopup(false)}
+            >
+              {t('dashboard.communityChatOpen')}
+            </a>
+          </div>
+        </div>
+      )}
+
       {/* Invite popup */}
       {showInvitePopup && permanentInviteUrl && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50" onClick={() => setShowInvitePopup(false)}>
@@ -259,46 +299,6 @@ export function DashboardPage() {
                 <QRCodeSVG value={webInviteUrl} size={200} level="H" imageSettings={{ src: '/logo-dark.png', width: 48, height: 34, excavate: true }} />
               </div>
             </div>
-            {/* Editable slug */}
-            <div className="mb-3">
-              <div className="flex items-center gap-2 mb-1">
-                <span className="text-xs font-medium text-gray-500">{t('invite.yourCode')}</span>
-                {!editingSlug && (
-                  <button onClick={() => { setSlugValue(me?.referralSlug || ''); setSlugError(''); setEditingSlug(true); }} className="text-gray-400 hover:text-gray-500">
-                    <Pencil className="w-3 h-3" />
-                  </button>
-                )}
-              </div>
-              {editingSlug ? (
-                <div>
-                  <div className="flex gap-2">
-                    <input
-                      value={slugValue}
-                      onChange={(e) => { setSlugValue(e.target.value.toLowerCase().replace(/[^a-z0-9_-]/g, '')); setSlugError(''); }}
-                      placeholder={t('invite.slugPlaceholder')}
-                      className="flex-1 px-3 py-1.5 text-sm rounded-lg border border-gray-300 dark:border-gray-600 bg-transparent text-gray-900 dark:text-white focus:outline-none focus:border-blue-500"
-                      maxLength={30}
-                      autoFocus
-                    />
-                    <button
-                      onClick={() => { if (slugValue.length >= 3) updateSlug.mutate({ slug: slugValue }); else setSlugError(t('invite.slugMin')); }}
-                      disabled={updateSlug.isPending}
-                      className="px-3 py-1.5 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-500 disabled:opacity-50"
-                    >
-                      <Check className="w-4 h-4" />
-                    </button>
-                    <button onClick={() => setEditingSlug(false)} className="px-2 py-1.5 text-sm text-gray-500 hover:text-gray-700">
-                      <X className="w-4 h-4" />
-                    </button>
-                  </div>
-                  <p className="text-[10px] text-gray-400 mt-1">{t('invite.slugHint')}</p>
-                  {slugError && <p className="text-[10px] text-red-500 mt-1">{slugError}</p>}
-                </div>
-              ) : (
-                <p className="text-sm font-mono text-blue-600 dark:text-blue-400">{me?.referralSlug || userId}</p>
-              )}
-            </div>
-
             <div className="space-y-2">
               {/* Web link */}
               <div>
@@ -336,6 +336,47 @@ export function DashboardPage() {
                   </div>
                 </button>
               </div>
+            </div>
+
+            {/* Editable slug — moved to bottom */}
+            <div className="mt-4 pt-3 border-t border-gray-200 dark:border-gray-700">
+              <div className="flex items-center gap-2 mb-1">
+                <span className="text-xs font-medium text-gray-500">{t('invite.yourCode')}</span>
+                {!editingSlug && (
+                  <button onClick={() => { setSlugValue(me?.referralSlug || ''); setSlugError(''); setEditingSlug(true); }} className="text-gray-400 hover:text-gray-500">
+                    <Pencil className="w-3 h-3" />
+                  </button>
+                )}
+              </div>
+              {editingSlug ? (
+                <div>
+                  <div className="flex gap-2">
+                    <input
+                      value={slugValue}
+                      onChange={(e) => { setSlugValue(e.target.value.toLowerCase().replace(/[^a-z0-9_-]/g, '')); setSlugError(''); }}
+                      placeholder={t('invite.slugPlaceholder')}
+                      className="flex-1 px-3 py-1.5 text-sm rounded-lg border border-gray-300 dark:border-gray-600 bg-transparent text-gray-900 dark:text-white focus:outline-none focus:border-blue-500"
+                      maxLength={30}
+                      autoFocus
+                    />
+                    <button
+                      onClick={() => { if (slugValue.length >= 3) updateSlug.mutate({ slug: slugValue }); else setSlugError(t('invite.slugMin')); }}
+                      disabled={updateSlug.isPending}
+                      className="px-3 py-1.5 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-500 disabled:opacity-50"
+                    >
+                      <Check className="w-4 h-4" />
+                    </button>
+                    <button onClick={() => setEditingSlug(false)} className="px-2 py-1.5 text-sm text-gray-500 hover:text-gray-700">
+                      <X className="w-4 h-4" />
+                    </button>
+                  </div>
+                  <p className="text-[10px] text-gray-400 mt-1">{t('invite.slugHint')}</p>
+                  {slugError && <p className="text-[10px] text-red-500 mt-1">{slugError}</p>}
+                </div>
+              ) : (
+                <p className="text-sm font-mono text-blue-600 dark:text-blue-400">{me?.referralSlug || userId}</p>
+              )}
+              <p className="text-[10px] text-gray-400 mt-1">{t('invite.slugDesc')}</p>
             </div>
           </div>
         </div>

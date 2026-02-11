@@ -55,8 +55,8 @@
       "text": "Organisatorn fungerar genom kopplingar mellan manniskor. Borja med en person — nagon du litar pa."
     },
     "step5": {
-      "title": "Manatlig stodbudget",
-      "text": "Detta belopp är din avsikt, inte ett åtagande. Inget kort är kopplat, ingen avgift tas. Du anger enkelt hur mycket du är villig att hjälpa till med per månad. Siffran är synlig för ditt nätverk och visar dina övergripande förmågor. När någon begär hjälp – du bestämmer om du vill delta eller inte."
+      "title": "Hur man kontaktar dig",
+      "text": "Lägg till minst 2 kontaktmetoder så att deltagarna kan samordna med dig när de ger hjälp."
     },
     "start": "Kom igang",
     "next": "Nasta",
@@ -68,7 +68,13 @@
     "waitingForAccept": "Vantar pa godkannande...",
     "connectionEstablished": "Anslutning upprattad!",
     "sendAnother": "Skicka en till inbjudan",
-    "skip": "Hoppa over"
+    "skip": "Hoppa over",
+    "step6": {
+      "title": "Manatlig stodbudget",
+      "text": "Detta belopp är din avsikt, inte ett åtagande. Inget kort är kopplat, ingen avgift tas. Du anger enkelt hur mycket du är villig att hjälpa till med per månad. Siffran är synlig för ditt nätverk och visar dina övergripande förmågor. När någon begär hjälp – du bestämmer om du vill delta eller inte."
+    },
+    "contactsRequired": "Lägg till minst 2 kontakter",
+    "contactsFilled": "Ifyllt: {{count}}/2"
   },
   "nav": {
     "home": "Hem",
@@ -135,7 +141,8 @@
     "dayCount": "Dag {{count}}",
     "inviteTrusted": "Bjud in",
     "myCapabilitiesHint": "Månadsbudget för stöd. Hur mycket du är villig att bidra till ömsesidigt stöd varje månad",
-    "networkCapabilitiesHint": "Totala tillgängliga månadsbudgetar för alla deltagare i ditt ömsesidiga stöd nätverk"
+    "networkCapabilitiesHint": "Totala tillgängliga månadsbudgetar för alla deltagare i ditt ömsesidiga stöd nätverk",
+    "communityChat": "Gemenskapschat"
   },
   "collection": {
     "create": "Skicka hjalpsignal",
@@ -174,7 +181,13 @@
     "submit": "Skicka signal",
     "minAmount": "Minsta 10",
     "invalidUrl": "Ogiltig URL",
-    "networkReach": "Din signal nar upp till {{count}} personer genom kedjor av handslag"
+    "networkReach": "Din signal nar upp till {{count}} personer genom kedjor av handslag",
+    "confirmTitle": "Bekräfta skapande av insamling",
+    "confirmText": "Se till att du verkligen behöver detta belopp. Hjälpsignalen kommer att ses av tiotal personer — använd den ansvarsfullt.",
+    "confirmPayment": "Kan du ta emot internationella överföringar? Deltagare kan vara från olika länder. Se till att du har en kryptoplånbok, PayPal, Wise, Revolut eller ett annat sätt att ta emot pengar från utlandet.",
+    "confirmCheckbox": "Jag har tänkt igenom det och bekräftar",
+    "confirmButton": "Bekräfta",
+    "cancelButton": "Avbryt"
   },
   "intention": {
     "create": "Uttryck avsikt",
@@ -332,7 +345,8 @@
     "viber": "Viber",
     "signal": "Signal",
     "email": "E-post",
-    "website": "Webbplats"
+    "website": "Webbplats",
+    "tiktok": "TikTok"
   },
   "invite": {
     "title": "Inbjudan",
@@ -348,7 +362,8 @@
     "slugHint": "3–30 tecken: bokstäver, siffror, _ och -",
     "slugMin": "Minst 3 tecken",
     "webLinkDesc": "Webbplatslänk — om personen inte är bekant med projektet än, har den all introduktionsinformation",
-    "botLinkDesc": "Rakt till Telegram — om du redan har förklarat allt och de kan gå direkt till appen"
+    "botLinkDesc": "Rakt till Telegram — om du redan har förklarat allt och de kan gå direkt till appen",
+    "slugDesc": "Detta är ditt personliga länk-ID för inbjudnings-URL:er. Det är INTE en inbjudan i sig — skicka det inte till folk. Använd länkarna ovan för att bjuda in någon."
   },
   "landing": {
     "painQuote": "Nar problem uppstar — star du ensam. Vanner vet inte. Vanners vanner — annu mindre. Men nagon av dem kunde ha hjlpt.",
@@ -440,5 +455,14 @@
     "budget": "Budget",
     "root": "Rot",
     "contactRoot": "Kontakta rot"
+  },
+  "requiredInfo": {
+    "contactsTitle": "Lägg till dina kontakter",
+    "contactsText": "Minst 2 kontaktmetoder behövs för hjälpkoordinering",
+    "budgetTitle": "Månatlig stödbudget",
+    "budgetText": "Detta belopp är din avsikt, inte ett åtagande. Inget kort kopplas och inga pengar dras. Du anger helt enkelt hur mycket du är villig att hjälpa per månad.",
+    "next": "Nästa",
+    "save": "Spara och fortsätt",
+    "contactsFilled": "Ifyllt: {{count}}/2"
   }
 }

@@ -171,6 +171,23 @@ export const userRouter = router({
       });
     }),
 
+  checkRequiredInfo: protectedProcedure.query(async ({ ctx }) => {
+    const user = await ctx.db.user.findUnique({
+      where: { id: ctx.userId },
+      select: { monthlyBudget: true },
+    });
+    const needsBudget = !user?.monthlyBudget || user.monthlyBudget <= 0;
+
+    const relevantTypes = ['whatsapp', 'facebook', 'instagram', 'twitter', 'tiktok'];
+    const contacts = await ctx.db.userContact.findMany({
+      where: { userId: ctx.userId, type: { in: relevantTypes } },
+    });
+    const contactCount = contacts.filter(c => c.value.trim()).length;
+    const needsContacts = contactCount < 2;
+
+    return { needsBudget, needsContacts, contactCount };
+  }),
+
   delete: protectedProcedure.mutation(async ({ ctx }) => {
     await ctx.db.$transaction(async (tx) => {
       // 1. Clear profile (gray profile per SPEC)

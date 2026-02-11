@@ -55,9 +55,15 @@
       "text": "The organizer works through connections between people. Start with one person — someone you trust."
     },
     "step5": {
+      "title": "How to reach you",
+      "text": "Add at least 2 contact methods so that participants can coordinate with you when providing help."
+    },
+    "step6": {
       "title": "Monthly Support Budget",
       "text": "This amount is your intention, not a commitment. No card is linked, no money is charged. You simply indicate how much you're willing to help per month. This figure is visible to your network and shows overall capabilities. When someone asks for help — you decide whether to participate or not."
     },
+    "contactsRequired": "Add at least 2 contacts",
+    "contactsFilled": "Filled: {{count}}/2",
     "start": "Get Started",
     "next": "Next",
     "invite": "Send Invite",
@@ -135,7 +141,10 @@
     "personalStats": "My Statistics",
     "networkStats": "Network Statistics",
     "dayCount": "Day {{count}}",
-    "inviteTrusted": "Invite"
+    "inviteTrusted": "Invite",
+    "communityChat": "Community Chat",
+    "communityChatDesc": "This is the general community chat for questions, suggestions, and feedback about the app. It is not a help chat.",
+    "communityChatOpen": "Open Chat"
   },
   "collection": {
     "create": "Send a help signal",
@@ -177,7 +186,13 @@
     "submit": "Send signal",
     "minAmount": "Minimum 10",
     "invalidUrl": "Invalid URL",
-    "networkReach": "Your signal will reach up to {{count}} people through handshake chains"
+    "networkReach": "Your signal will reach up to {{count}} people through handshake chains",
+    "confirmTitle": "Confirm collection creation",
+    "confirmText": "Make sure you truly need this amount. The help signal will be seen by dozens of people — use it responsibly.",
+    "confirmPayment": "Can you receive international transfers? Participants may be from different countries. Make sure you have a crypto wallet, PayPal, Wise, Revolut, or another way to receive funds from abroad.",
+    "confirmCheckbox": "I've thought it through and confirm",
+    "confirmButton": "Confirm",
+    "cancelButton": "Cancel"
   },
   "intention": {
     "create": "Express Intention",
@@ -330,6 +345,7 @@
     "facebook": "Facebook",
     "instagram": "Instagram",
     "twitter": "X (Twitter)",
+    "tiktok": "TikTok",
     "linkedin": "LinkedIn",
     "vk": "VKontakte",
     "viber": "Viber",
@@ -351,7 +367,8 @@
     "slugHint": "3–30 characters: letters, numbers, _ and -",
     "slugMin": "Minimum 3 characters",
     "webLinkDesc": "Website link — if the person isn't familiar with the project yet, it has all the introductory info",
-    "botLinkDesc": "Straight to Telegram — if you've already explained everything and they can go right to the app"
+    "botLinkDesc": "Straight to Telegram — if you've already explained everything and they can go right to the app",
+    "slugDesc": "This is your personal link ID for invite URLs. It is NOT an invitation itself — don't send it to people. Use the links above to invite someone."
   },
   "landing": {
     "painQuote": "When trouble strikes — you're alone. Friends don't know. Friends of friends — even less so. Yet someone among them could help.",
@@ -436,6 +453,15 @@
     "accepted": "Accepted",
     "rejected": "Rejected",
     "alreadyConnected": "Already connected"
+  },
+  "requiredInfo": {
+    "contactsTitle": "Add your contacts",
+    "contactsText": "At least 2 contacts are needed for help coordination",
+    "budgetTitle": "Monthly Support Budget",
+    "budgetText": "This amount is your intention, not a commitment. No card is linked, no money is charged. You simply indicate how much you're willing to help per month.",
+    "next": "Next",
+    "save": "Save and continue",
+    "contactsFilled": "Filled: {{count}}/2"
   },
   "cluster": {
     "title": "Clusters",

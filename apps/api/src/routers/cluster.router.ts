@@ -62,9 +62,10 @@ export const clusterRouter = router({
     const allUserIds = [...uf.parent.keys()];
     const users = await ctx.db.user.findMany({
       where: { id: { in: allUserIds } },
-      select: { id: true, name: true, remainingBudget: true, createdAt: true },
+      select: { id: true, name: true, remainingBudget: true, createdAt: true, deletedAt: true },
     });
     const userMap = new Map(users.map(u => [u.id, u]));
+    const activeUserIds = new Set(users.filter(u => !u.deletedAt).map(u => u.id));
 
     // Count connections per user for picking cluster representative
     const connCount = new Map<string, number>();
@@ -82,7 +83,7 @@ export const clusterRouter = router({
     }> = [];
 
     for (const [root, members] of clusters) {
-      const memberCount = members.size;
+      const memberCount = [...members].filter(id => activeUserIds.has(id)).length;
       // Visibility: admin sees all, non-admin sees only own cluster >3
       if (!admin && !(myRoot === root)) continue;
       if (!admin && memberCount <= 3) continue;
@@ -91,6 +92,7 @@ export const clusterRouter = router({
       let best: typeof users[number] | undefined;
       let bestConns = -1;
       for (const uid of members) {
+        if (!activeUserIds.has(uid)) continue;
         const u = userMap.get(uid);
         if (u) {
           totalBudget += u.remainingBudget ?? 0;
@@ -146,7 +148,7 @@ export const clusterRouter = router({
     }
 
     const members = await ctx.db.user.findMany({
-      where: { id: { in: memberIds } },
+      where: { id: { in: memberIds }, deletedAt: null },
       select: { id: true, name: true, photoUrl: true, remainingBudget: true },
     });
 

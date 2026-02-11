@@ -55,8 +55,8 @@
       "text": "Organizátor funguje prostřednictvím spojení mezi lidmi. Začněte jednou osobou — někým, komu důvěřujete."
     },
     "step5": {
-      "title": "Měsíční rozpočet na podporu",
-      "text": "Tato částka je vaším záměrem, ne závazkem. Není propojena žádná karta, nejsou strženy žádné peníze. Jednoduše označíte, kolik jste ochotni pomoci měsíčně. Tato částka je viditelná vaší síti a ukazuje vaše celkové možnosti. Když někdo požádá o pomoc, vy rozhodnete, zda se zapojíte nebo ne."
+      "title": "Jak vás kontaktovat",
+      "text": "Přidejte alespoň 2 způsoby kontaktu, aby se s vámi účastníci mohli koordinovat při poskytování pomoci."
     },
     "start": "Začít",
     "next": "Další",
@@ -68,7 +68,13 @@
     "waitingForAccept": "Čekání na přijetí...",
     "connectionEstablished": "Spojení navázáno!",
     "sendAnother": "Odeslat další pozvánku",
-    "skip": "Přeskočit"
+    "skip": "Přeskočit",
+    "step6": {
+      "title": "Měsíční rozpočet na podporu",
+      "text": "Tato částka je vaším záměrem, ne závazkem. Není propojena žádná karta, nejsou strženy žádné peníze. Jednoduše označíte, kolik jste ochotni pomoci měsíčně. Tato částka je viditelná vaší síti a ukazuje vaše celkové možnosti. Když někdo požádá o pomoc, vy rozhodnete, zda se zapojíte nebo ne."
+    },
+    "contactsRequired": "Přidejte alespoň 2 kontakty",
+    "contactsFilled": "Vyplněno: {{count}}/2"
   },
   "nav": {
     "home": "Domů",
@@ -135,7 +141,8 @@
     "dayCount": "Den {{count}}",
     "inviteTrusted": "Pozvat",
     "myCapabilitiesHint": "Měsíční rozpočet podpory. Kolik jste ochotni přispět na vzájemnou pomoc každý měsíc",
-    "networkCapabilitiesHint": "Celkové dostupné měsíční rozpočty všech účastníků ve vaší síti vzájemné pomoci"
+    "networkCapabilitiesHint": "Celkové dostupné měsíční rozpočty všech účastníků ve vaší síti vzájemné pomoci",
+    "communityChat": "Chat komunity"
   },
   "collection": {
     "create": "Vyslat signál o pomoci",
@@ -174,7 +181,13 @@
     "submit": "Vyslat signál",
     "minAmount": "Minimálně 10",
     "invalidUrl": "Neplatná URL",
-    "networkReach": "Váš signál dosáhne až {{count}} lidí prostřednictvím řetězců podání rukou"
+    "networkReach": "Váš signál dosáhne až {{count}} lidí prostřednictvím řetězců podání rukou",
+    "confirmTitle": "Potvrdit vytvoření sbírky",
+    "confirmText": "Ujistěte se, že tuto částku opravdu potřebujete. Signál o pomoci uvidí desítky lidí — používejte ho zodpovědně.",
+    "confirmPayment": "Můžete přijímat mezinárodní převody? Účastníci mohou být z různých zemí. Ujistěte se, že máte kryptopeněženku, PayPal, Wise, Revolut nebo jiný způsob příjmu plateb ze zahraničí.",
+    "confirmCheckbox": "Promyslel/a jsem si to a potvrzuji",
+    "confirmButton": "Potvrdit",
+    "cancelButton": "Zrušit"
   },
   "intention": {
     "create": "Vyjádřit záměr",
@@ -332,7 +345,8 @@
     "viber": "Viber",
     "signal": "Signal",
     "email": "E-mail",
-    "website": "Webové stránky"
+    "website": "Webové stránky",
+    "tiktok": "TikTok"
   },
   "invite": {
     "title": "Pozvánka",
@@ -348,7 +362,8 @@
     "slugHint": "3–30 znaků: písmena, číslice, _ a -",
     "slugMin": "Minimálně 3 znaky",
     "webLinkDesc": "Odkaz na web — pokud osoba ještě nezná projekt, obsahuje všechny úvodní informace",
-    "botLinkDesc": "Přímo do Telegramu — pokud jste vše vysvětlili a mohou jít přímo do aplikace"
+    "botLinkDesc": "Přímo do Telegramu — pokud jste vše vysvětlili a mohou jít přímo do aplikace",
+    "slugDesc": "Toto je vaše osobní ID odkazu pro pozvánky. NENÍ to samotná pozvánka — neposílejte ho lidem. K pozvání použijte odkazy výše."
   },
   "landing": {
     "painQuote": "Když přijde problém — zůstáváš sám. Přátelé nevědí. Známí známých — ještě méně. Přitom někdo z nich mohl pomoct.",
@@ -440,5 +455,14 @@
     "budget": "Rozpočet",
     "root": "Kořen",
     "contactRoot": "Kontaktovat kořen"
+  },
+  "requiredInfo": {
+    "contactsTitle": "Přidejte své kontakty",
+    "contactsText": "Pro koordinaci pomoci jsou potřeba alespoň 2 způsoby kontaktu",
+    "budgetTitle": "Měsíční rozpočet podpory",
+    "budgetText": "Tato částka je váš záměr, nikoli závazek. Žádná karta není propojena, žádné peníze nejsou strženy. Jednoduše uvedete, kolik jste ochotni pomoci měsíčně.",
+    "next": "Další",
+    "save": "Uložit a pokračovat",
+    "contactsFilled": "Vyplněno: {{count}}/2"
   }
 }

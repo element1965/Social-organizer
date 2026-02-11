@@ -55,8 +55,8 @@
       "text": "Organizatorul functioneaza prin conexiuni intre oameni. Incepe cu o persoana — cineva in care ai incredere."
     },
     "step5": {
-      "title": "Buget lunar de sprijin",
-      "text": "Această sumă reprezintă intenția ta, nu un angajament. Niciun card nu este legat, nu se percepe niciun ban. Indici pur și simplu cât ești dispus să ajuți lunar. Această valoare este vizibilă rețelei tale și arată capacitățile tale generale. Când cineva solicită ajutor, tu decizi dacă să participi sau nu."
+      "title": "Cum să te contactăm",
+      "text": "Adaugă cel puțin 2 metode de contact pentru ca participanții să se poată coordona cu tine atunci când oferă ajutor."
     },
     "start": "Incepe",
     "next": "Urmator",
@@ -68,7 +68,13 @@
     "waitingForAccept": "Se asteapta acceptarea...",
     "connectionEstablished": "Conexiune stabilita!",
     "sendAnother": "Trimite alta invitatie",
-    "skip": "Sari peste"
+    "skip": "Sari peste",
+    "step6": {
+      "title": "Buget lunar de sprijin",
+      "text": "Această sumă reprezintă intenția ta, nu un angajament. Niciun card nu este legat, nu se percepe niciun ban. Indici pur și simplu cât ești dispus să ajuți lunar. Această valoare este vizibilă rețelei tale și arată capacitățile tale generale. Când cineva solicită ajutor, tu decizi dacă să participi sau nu."
+    },
+    "contactsRequired": "Adaugă cel puțin 2 contacte",
+    "contactsFilled": "Completate: {{count}}/2"
   },
   "nav": {
     "home": "Acasa",
@@ -135,7 +141,8 @@
     "dayCount": "Ziua {{count}}",
     "inviteTrusted": "Invită",
     "myCapabilitiesHint": "Buget lunar de sprijin. Cât ești dispus să contribui la ajutor mutual în fiecare lună",
-    "networkCapabilitiesHint": "Totalul bugetelor lunare disponibile ale tuturor participanților din rețeaua ta de ajutor mutual"
+    "networkCapabilitiesHint": "Totalul bugetelor lunare disponibile ale tuturor participanților din rețeaua ta de ajutor mutual",
+    "communityChat": "Chat comunitate"
   },
   "collection": {
     "create": "Trimite un semnal de ajutor",
@@ -174,7 +181,13 @@
     "submit": "Trimite semnalul",
     "minAmount": "Minim 10",
     "invalidUrl": "URL invalid",
-    "networkReach": "Semnalul tau va ajunge la pana la {{count}} persoane prin lanturi de strangeri de mana"
+    "networkReach": "Semnalul tau va ajunge la pana la {{count}} persoane prin lanturi de strangeri de mana",
+    "confirmTitle": "Confirmă crearea colectei",
+    "confirmText": "Asigură-te că ai cu adevărat nevoie de această sumă. Semnalul de ajutor va fi văzut de zeci de persoane — folosește-l responsabil.",
+    "confirmPayment": "Poți primi transferuri internaționale? Participanții pot fi din diferite țări. Asigură-te că ai un portofel crypto, PayPal, Wise, Revolut sau alt mod de a primi fonduri din străinătate.",
+    "confirmCheckbox": "M-am gândit bine și confirm",
+    "confirmButton": "Confirmă",
+    "cancelButton": "Anulează"
   },
   "intention": {
     "create": "Exprima intentia",
@@ -332,7 +345,8 @@
     "viber": "Viber",
     "signal": "Signal",
     "email": "E-mail",
-    "website": "Site web"
+    "website": "Site web",
+    "tiktok": "TikTok"
   },
   "invite": {
     "title": "Invitatie",
@@ -348,7 +362,8 @@
     "slugHint": "3–30 caractere: litere, numere, _ și -",
     "slugMin": "Minim 3 caractere",
     "webLinkDesc": "Link către site — dacă persoana nu este familiarizată cu proiectul încă, conține toate informațiile introductive",
-    "botLinkDesc": "Direct la Telegram — dacă ai explicat deja totul și pot merge direct la aplicație"
+    "botLinkDesc": "Direct la Telegram — dacă ai explicat deja totul și pot merge direct la aplicație",
+    "slugDesc": "Acesta este ID-ul tău personal de link pentru URL-urile de invitație. NU este o invitație în sine — nu-l trimite oamenilor. Folosește linkurile de mai sus pentru a invita pe cineva."
   },
   "landing": {
     "painQuote": "Cand apar probleme — ramai singur. Prietenii nu stiu. Prietenii prietenilor — si mai putin. Dar cineva dintre ei ar fi putut ajuta.",
@@ -440,5 +455,14 @@
     "budget": "Buget",
     "root": "Rădăcină",
     "contactRoot": "Contactează rădăcina"
+  },
+  "requiredInfo": {
+    "contactsTitle": "Adaugă contactele tale",
+    "contactsText": "Sunt necesare cel puțin 2 metode de contact pentru coordonarea ajutorului",
+    "budgetTitle": "Buget lunar de sprijin",
+    "budgetText": "Această sumă este intenția ta, nu un angajament. Nu se leagă niciun card, nu se reține nicio sumă. Pur și simplu indici cât ești dispus să ajuți pe lună.",
+    "next": "Următorul",
+    "save": "Salvează și continuă",
+    "contactsFilled": "Completate: {{count}}/2"
   }
 }

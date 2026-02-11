@@ -29,6 +29,8 @@ export function CreateCollectionPage() {
   const [chatLink, setChatLink] = useState('');
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [largeAmountConfirmed, setLargeAmountConfirmed] = useState(false);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [confirmChecked, setConfirmChecked] = useState(false);
 
   // Set initial currency from user preference or detected
   useEffect(() => {
@@ -61,6 +63,12 @@ export function CreateCollectionPage() {
 
   const handleSubmit = () => {
     if (!validate()) return;
+    setConfirmChecked(false);
+    setShowConfirmModal(true);
+  };
+
+  const handleConfirmedSubmit = () => {
+    setShowConfirmModal(false);
     create.mutate({ type, amount: Number(amount), inputCurrency, chatLink });
   };
 
@@ -256,6 +264,45 @@ export function CreateCollectionPage() {
           )}
         </CardContent>
       </Card>
+
+      {/* Confirmation modal */}
+      {showConfirmModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4">
+          <div className="bg-white dark:bg-gray-900 rounded-xl p-6 max-w-sm w-full space-y-4 shadow-xl">
+            <div className="flex items-center gap-3">
+              <AlertTriangle className="w-6 h-6 text-yellow-500 shrink-0" />
+              <h3 className="text-lg font-bold text-gray-900 dark:text-white">{t('create.confirmTitle')}</h3>
+            </div>
+            <p className="text-sm text-gray-600 dark:text-gray-400">{t('create.confirmText')}</p>
+            <p className="text-sm text-gray-600 dark:text-gray-400">{t('create.confirmPayment')}</p>
+            <label className="flex items-center gap-2 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={confirmChecked}
+                onChange={(e) => setConfirmChecked(e.target.checked)}
+                className="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+              />
+              <span className="text-sm font-medium text-gray-700 dark:text-gray-300">{t('create.confirmCheckbox')}</span>
+            </label>
+            <div className="flex gap-2">
+              <Button
+                className="flex-1"
+                onClick={handleConfirmedSubmit}
+                disabled={!confirmChecked}
+              >
+                {t('create.confirmButton')}
+              </Button>
+              <Button
+                variant="outline"
+                className="flex-1"
+                onClick={() => setShowConfirmModal(false)}
+              >
+                {t('create.cancelButton')}
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

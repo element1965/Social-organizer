@@ -55,8 +55,8 @@
       "text": "L'organisateur fonctionne grâce aux liens entre les personnes. Commencez par une personne — quelqu'un en qui vous avez confiance."
     },
     "step5": {
-      "title": "Budget mensuel de soutien",
-      "text": "Ce montant est votre intention, pas un engagement. Aucune carte n'est liée, aucun argent n'est prélevé. Vous indiquez simplement combien vous êtes prêt à aider par mois. Ce chiffre est visible par votre réseau et montre vos capacités globales. Lorsque quelqu'un demande de l'aide, vous décidez si vous participez ou non."
+      "title": "Comment vous joindre",
+      "text": "Ajoutez au moins 2 moyens de contact afin que les participants puissent se coordonner avec vous pour apporter de l'aide."
     },
     "start": "Commencer",
     "next": "Suivant",
@@ -68,7 +68,13 @@
     "waitingForAccept": "En attente d'acceptation...",
     "connectionEstablished": "Connexion établie !",
     "sendAnother": "Envoyer une autre invitation",
-    "skip": "Passer"
+    "skip": "Passer",
+    "step6": {
+      "title": "Budget mensuel de soutien",
+      "text": "Ce montant est votre intention, pas un engagement. Aucune carte n'est liée, aucun argent n'est prélevé. Vous indiquez simplement combien vous êtes prêt à aider par mois. Ce chiffre est visible par votre réseau et montre vos capacités globales. Lorsque quelqu'un demande de l'aide, vous décidez si vous participez ou non."
+    },
+    "contactsRequired": "Ajoutez au moins 2 contacts",
+    "contactsFilled": "Remplis : {{count}}/2"
   },
   "nav": {
     "home": "Accueil",
@@ -135,7 +141,8 @@
     "dayCount": "Jour {{count}}",
     "inviteTrusted": "Inviter",
     "myCapabilitiesHint": "Budget de soutien mensuel. Combien vous êtes prêt à contribuer à l'aide mutuelle chaque mois",
-    "networkCapabilitiesHint": "Budgets mensuels totaux disponibles de tous les participants dans votre réseau d'aide mutuelle"
+    "networkCapabilitiesHint": "Budgets mensuels totaux disponibles de tous les participants dans votre réseau d'aide mutuelle",
+    "communityChat": "Chat communautaire"
   },
   "collection": {
     "create": "Envoyer un signal d'aide",
@@ -174,7 +181,13 @@
     "submit": "Envoyer le signal",
     "minAmount": "Minimum 10",
     "invalidUrl": "URL invalide",
-    "networkReach": "Votre signal atteindra jusqu'à {{count}} personnes à travers les chaînes de poignées de main"
+    "networkReach": "Votre signal atteindra jusqu'à {{count}} personnes à travers les chaînes de poignées de main",
+    "confirmTitle": "Confirmer la création de la collecte",
+    "confirmText": "Assurez-vous que vous avez vraiment besoin de ce montant. Le signal d'aide sera vu par des dizaines de personnes — utilisez-le de manière responsable.",
+    "confirmPayment": "Pouvez-vous recevoir des virements internationaux ? Les participants peuvent venir de différents pays. Assurez-vous d'avoir un portefeuille crypto, PayPal, Wise, Revolut ou un autre moyen de recevoir des fonds de l'étranger.",
+    "confirmCheckbox": "J'ai bien réfléchi et je confirme",
+    "confirmButton": "Confirmer",
+    "cancelButton": "Annuler"
   },
   "intention": {
     "create": "Exprimer une intention",
@@ -314,7 +327,8 @@
     "viber": "Viber",
     "signal": "Signal",
     "email": "Email",
-    "website": "Site web"
+    "website": "Site web",
+    "tiktok": "TikTok"
   },
   "invite": {
     "title": "Invitation",
@@ -330,7 +344,8 @@
     "slugHint": "3 à 30 caractères : lettres, nombres, _ et -",
     "slugMin": "Minimum 3 caractères",
     "webLinkDesc": "Lien du site web — si la personne n'est pas familière avec le projet, il contient toutes les informations introductives",
-    "botLinkDesc": "Directement vers Telegram — si vous avez déjà tout expliqué et qu'ils peuvent aller directement à l'app"
+    "botLinkDesc": "Directement vers Telegram — si vous avez déjà tout expliqué et qu'ils peuvent aller directement à l'app",
+    "slugDesc": "Ceci est votre identifiant de lien personnel pour les URL d'invitation. Ce N'EST PAS une invitation en soi — ne l'envoyez pas aux gens. Utilisez les liens ci-dessus pour inviter quelqu'un."
   },
   "landing": {
     "painQuote": "Quand les problèmes arrivent — tu restes seul. Les amis ne savent pas. Les amis d'amis — encore moins. Pourtant, quelqu'un parmi eux pourrait aider.",
@@ -440,5 +455,14 @@
     "budget": "Budget",
     "root": "Racine",
     "contactRoot": "Contacter la racine"
+  },
+  "requiredInfo": {
+    "contactsTitle": "Ajoutez vos contacts",
+    "contactsText": "Au moins 2 moyens de contact sont nécessaires pour coordonner l'aide",
+    "budgetTitle": "Budget mensuel de soutien",
+    "budgetText": "Ce montant est votre intention, pas un engagement. Aucune carte n'est liée, aucun argent n'est débité. Vous indiquez simplement combien vous êtes prêt à aider par mois.",
+    "next": "Suivant",
+    "save": "Enregistrer et continuer",
+    "contactsFilled": "Remplis : {{count}}/2"
   }
 }

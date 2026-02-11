@@ -5,6 +5,7 @@ import { trpc, getTrpcClient } from './lib/trpc';
 import { Layout } from './components/Layout';
 import { TelegramBootstrap } from './components/TelegramBootstrap';
 import { ProtectedRoute } from './components/ProtectedRoute';
+import { RequiredInfoGate } from './components/RequiredInfoGate';
 import { useAuth } from './hooks/useAuth';
 import { LoginPage } from './pages/LoginPage';
 import { LandingPage } from './pages/LandingPage';
@@ -51,7 +52,7 @@ export function App() {
             <Route path="/privacy" element={<PrivacyPage />} />
             <Route path="/terms" element={<TermsPage />} />
             <Route path="/invite/:token" element={<InvitePage />} />
-            <Route element={<ProtectedRoute><Layout /></ProtectedRoute>}>
+            <Route element={<ProtectedRoute><RequiredInfoGate><Layout /></RequiredInfoGate></ProtectedRoute>}>
               <Route path="/dashboard" element={<DashboardPage />} />
               <Route path="/notifications" element={<NotificationsPage />} />
               <Route path="/create" element={<CreateCollectionPage />} />

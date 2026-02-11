@@ -55,8 +55,8 @@
       "text": "Organisatoren fungerer gjennom forbindelser mellom mennesker. Start med en person — noen du stoler på."
     },
     "step5": {
-      "title": "Månedlig støttebudsjett",
-      "text": "Dette beløpet er din intensjon, ikke en forpliktelse. Ingen kort er koblet, ingen penger blir belastet. Du angir bare hvor mye du er villig til å hjelpe med per måned. Dette beløpet er synlig for ditt nettverk og viser generelle kapasiteter. Når noen spør om hjelp – du bestemmer om du vil delta eller ikke."
+      "title": "Hvordan kontakte deg",
+      "text": "Legg til minst 2 kontaktmetoder slik at deltakerne kan koordinere med deg når de gir hjelp."
     },
     "start": "Kom i gang",
     "next": "Neste",
@@ -68,7 +68,13 @@
     "waitingForAccept": "Venter på aksept...",
     "connectionEstablished": "Forbindelse opprettet!",
     "sendAnother": "Send en ny invitasjon",
-    "skip": "Hopp over"
+    "skip": "Hopp over",
+    "step6": {
+      "title": "Månedlig støttebudsjett",
+      "text": "Dette beløpet er din intensjon, ikke en forpliktelse. Ingen kort er koblet, ingen penger blir belastet. Du angir bare hvor mye du er villig til å hjelpe med per måned. Dette beløpet er synlig for ditt nettverk og viser generelle kapasiteter. Når noen spør om hjelp – du bestemmer om du vil delta eller ikke."
+    },
+    "contactsRequired": "Legg til minst 2 kontakter",
+    "contactsFilled": "Fylt ut: {{count}}/2"
   },
   "nav": {
     "home": "Hjem",
@@ -135,7 +141,8 @@
     "dayCount": "Dag {{count}}",
     "inviteTrusted": "Inviter",
     "myCapabilitiesHint": "Månedlig støttebudsjett. Hvor mye du er villig til å bidra med til gjensidig hjelp hver måned",
-    "networkCapabilitiesHint": "Total tilgjengelig månedlig budsjett for alle deltakere i ditt gjensidige hjelp-nettverk"
+    "networkCapabilitiesHint": "Total tilgjengelig månedlig budsjett for alle deltakere i ditt gjensidige hjelp-nettverk",
+    "communityChat": "Fellesskapschat"
   },
   "collection": {
     "create": "Send et hjelpesignal",
@@ -174,7 +181,13 @@
     "submit": "Send signal",
     "minAmount": "Minimum 10",
     "invalidUrl": "Ugyldig URL",
-    "networkReach": "Signalet ditt vil nå opptil {{count}} personer gjennom håndtrykkskjeder"
+    "networkReach": "Signalet ditt vil nå opptil {{count}} personer gjennom håndtrykkskjeder",
+    "confirmTitle": "Bekreft opprettelse av innsamling",
+    "confirmText": "Sørg for at du virkelig trenger dette beløpet. Hjelpesignalet vil bli sett av titalls mennesker — bruk det ansvarlig.",
+    "confirmPayment": "Kan du motta internasjonale overføringer? Deltakere kan komme fra forskjellige land. Sørg for at du har en kryptolommebok, PayPal, Wise, Revolut eller en annen måte å motta penger fra utlandet.",
+    "confirmCheckbox": "Jeg har tenkt det gjennom og bekrefter",
+    "confirmButton": "Bekreft",
+    "cancelButton": "Avbryt"
   },
   "intention": {
     "create": "Uttrykk intensjon",
@@ -332,7 +345,8 @@
     "viber": "Viber",
     "signal": "Signal",
     "email": "E-post",
-    "website": "Nettsted"
+    "website": "Nettsted",
+    "tiktok": "TikTok"
   },
   "invite": {
     "title": "Invitasjon",
@@ -348,7 +362,8 @@
     "slugHint": "3–30 tegn: bokstaver, tall, _ og -",
     "slugMin": "Minimum 3 tegn",
     "webLinkDesc": "Nettsidelink ��� hvis personen ikke kjenner prosjektet ennå, har den all introduksjonsinformasjonen",
-    "botLinkDesc": "Rett til Telegram — hvis du allerede har forklart alt og de kan gå rett til appen"
+    "botLinkDesc": "Rett til Telegram — hvis du allerede har forklart alt og de kan gå rett til appen",
+    "slugDesc": "Dette er din personlige lenke-ID for invitasjons-URLer. Det er IKKE en invitasjon i seg selv — ikke send det til folk. Bruk lenkene ovenfor for å invitere noen."
   },
   "landing": {
     "painQuote": "Når problemer oppstår — står du alene. Venner vet ikke. Venners venner — enda mindre. Men noen av dem kunne hjulpet.",
@@ -440,5 +455,14 @@
     "budget": "Budsjett",
     "root": "Rot",
     "contactRoot": "Kontakt rot"
+  },
+  "requiredInfo": {
+    "contactsTitle": "Legg til kontaktene dine",
+    "contactsText": "Minst 2 kontaktmetoder er nødvendige for hjelpekoordinering",
+    "budgetTitle": "Månedlig støttebudsjett",
+    "budgetText": "Dette beløpet er din intensjon, ikke en forpliktelse. Ingen kort er knyttet, ingen penger trekkes. Du angir bare hvor mye du er villig til å hjelpe per måned.",
+    "next": "Neste",
+    "save": "Lagre og fortsett",
+    "contactsFilled": "Fylt ut: {{count}}/2"
   }
 }

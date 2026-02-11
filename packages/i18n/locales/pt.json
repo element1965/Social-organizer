@@ -55,8 +55,8 @@
       "text": "O organizador funciona através de conexões entre pessoas. Comece com uma pessoa — alguém em quem você confia."
     },
     "step5": {
-      "title": "Orçamento mensal de apoio",
-      "text": "Este valor é a sua intenção, não um compromisso. Nenhum cartão é vinculado, nenhum dinheiro é cobrado. Você simplesmente indica quanto está disposto a ajudar por mês. Esse valor é visível para a sua rede e mostra as capacidades gerais. Quando alguém pede ajuda, você decide se participa ou não."
+      "title": "Como entrar em contacto",
+      "text": "Adicione pelo menos 2 métodos de contacto para que os participantes possam coordenar consigo ao prestar ajuda."
     },
     "start": "Começar",
     "next": "Próximo",
@@ -68,7 +68,13 @@
     "waitingForAccept": "Aguardando aceitação...",
     "connectionEstablished": "Conexão estabelecida!",
     "sendAnother": "Enviar outro convite",
-    "skip": "Pular"
+    "skip": "Pular",
+    "step6": {
+      "title": "Orçamento mensal de apoio",
+      "text": "Este valor é a sua intenção, não um compromisso. Nenhum cartão é vinculado, nenhum dinheiro é cobrado. Você simplesmente indica quanto está disposto a ajudar por mês. Esse valor é visível para a sua rede e mostra as capacidades gerais. Quando alguém pede ajuda, você decide se participa ou não."
+    },
+    "contactsRequired": "Adicione pelo menos 2 contactos",
+    "contactsFilled": "Preenchidos: {{count}}/2"
   },
   "nav": {
     "home": "Início",
@@ -135,7 +141,8 @@
     "dayCount": "Dia {{count}}",
     "inviteTrusted": "Convidar",
     "myCapabilitiesHint": "Orçamento de suporte mensal. Quanto você está disposto a contribuir para ajuda mútua a cada mês",
-    "networkCapabilitiesHint": "Total de orçamentos mensais disponíveis de todos os participantes na sua rede de ajuda mútua"
+    "networkCapabilitiesHint": "Total de orçamentos mensais disponíveis de todos os participantes na sua rede de ajuda mútua",
+    "communityChat": "Chat da comunidade"
   },
   "collection": {
     "create": "Enviar sinal de ajuda",
@@ -174,7 +181,13 @@
     "submit": "Enviar sinal",
     "minAmount": "Mínimo 10",
     "invalidUrl": "URL inválida",
-    "networkReach": "Seu sinal alcançará até {{count}} pessoas através de cadeias de apertos de mão"
+    "networkReach": "Seu sinal alcançará até {{count}} pessoas através de cadeias de apertos de mão",
+    "confirmTitle": "Confirmar criação da coleta",
+    "confirmText": "Certifique-se de que realmente precisa deste valor. O sinal de ajuda será visto por dezenas de pessoas — use-o com responsabilidade.",
+    "confirmPayment": "Pode receber transferências internacionais? Os participantes podem ser de diferentes países. Certifique-se de que tem uma carteira crypto, PayPal, Wise, Revolut ou outra forma de receber fundos do exterior.",
+    "confirmCheckbox": "Pensei bem e confirmo",
+    "confirmButton": "Confirmar",
+    "cancelButton": "Cancelar"
   },
   "intention": {
     "create": "Expressar intenção",
@@ -314,7 +327,8 @@
     "viber": "Viber",
     "signal": "Signal",
     "email": "E-mail",
-    "website": "Site"
+    "website": "Site",
+    "tiktok": "TikTok"
   },
   "invite": {
     "title": "Convite",
@@ -330,7 +344,8 @@
     "slugHint": "3–30 caracteres: letras, números, _ e -",
     "slugMin": "Mínimo 3 caracteres",
     "webLinkDesc": "Link do site — se a pessoa ainda não conhece o projeto, ele contém todas as informações introdutórias",
-    "botLinkDesc": "Direto para o Telegram — se você já explicou tudo e eles podem ir diretamente para o app"
+    "botLinkDesc": "Direto para o Telegram — se você já explicou tudo e eles podem ir diretamente para o app",
+    "slugDesc": "Este é o seu ID de link pessoal para URLs de convite. NÃO é um convite em si — não o envie a pessoas. Use os links acima para convidar alguém."
   },
   "landing": {
     "painQuote": "Quando surge um problema — você fica sozinho. Amigos não sabem. Amigos de amigos — menos ainda. Mas alguém deles poderia ajudar.",
@@ -440,5 +455,14 @@
     "budget": "Orçamento",
     "root": "Raiz",
     "contactRoot": "Contatar raiz"
+  },
+  "requiredInfo": {
+    "contactsTitle": "Adicione os seus contactos",
+    "contactsText": "São necessários pelo menos 2 contactos para coordenação de ajuda",
+    "budgetTitle": "Orçamento mensal de apoio",
+    "budgetText": "Este valor é a sua intenção, não um compromisso. Nenhum cartão é vinculado, nenhum dinheiro é cobrado. Simplesmente indica quanto está disposto a ajudar por mês.",
+    "next": "Seguinte",
+    "save": "Guardar e continuar",
+    "contactsFilled": "Preenchidos: {{count}}/2"
   }
 }

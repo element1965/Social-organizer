@@ -55,8 +55,8 @@
       "text": "Der Organisator funktioniert über Verbindungen zwischen Menschen. Beginne mit einer Person — jemandem, dem du vertraust."
     },
     "step5": {
-      "title": "Monatliches Unterstützungsbudget",
-      "text": "Dieser Betrag ist Ihre Absicht, keine Verpflichtung. Keine Karte ist verknüpft, kein Geld wird abgebucht. Sie geben einfach an, wie viel Sie pro Monat helfen möchten. Diese Angabe ist für Ihr Netzwerk sichtbar und zeigt Ihre allgemeinen Möglichkeiten. Wenn jemand Hilfe anfordert – entscheiden Sie, ob Sie teilnehmen oder nicht."
+      "title": "Wie man Sie erreicht",
+      "text": "Fügen Sie mindestens 2 Kontaktmethoden hinzu, damit Teilnehmer sich mit Ihnen koordinieren können, wenn sie Hilfe leisten."
     },
     "start": "Loslegen",
     "next": "Weiter",
@@ -68,7 +68,13 @@
     "waitingForAccept": "Warte auf Annahme...",
     "connectionEstablished": "Verbindung hergestellt!",
     "sendAnother": "Weitere Einladung senden",
-    "skip": "Überspringen"
+    "skip": "Überspringen",
+    "step6": {
+      "title": "Monatliches Unterstützungsbudget",
+      "text": "Dieser Betrag ist Ihre Absicht, keine Verpflichtung. Keine Karte ist verknüpft, kein Geld wird abgebucht. Sie geben einfach an, wie viel Sie pro Monat helfen möchten. Diese Angabe ist für Ihr Netzwerk sichtbar und zeigt Ihre allgemeinen Möglichkeiten. Wenn jemand Hilfe anfordert – entscheiden Sie, ob Sie teilnehmen oder nicht."
+    },
+    "contactsRequired": "Fügen Sie mindestens 2 Kontakte hinzu",
+    "contactsFilled": "Ausgefüllt: {{count}}/2"
   },
   "nav": {
     "home": "Startseite",
@@ -135,7 +141,8 @@
     "dayCount": "Tag {{count}}",
     "inviteTrusted": "Einladen",
     "myCapabilitiesHint": "Monatliches Unterstützungsbudget. Wie viel Sie monatlich zu gegenseitiger Hilfe beitragen möchten",
-    "networkCapabilitiesHint": "Gesamtes verfügbares monatliches Budget aller Teilnehmer in Ihrem gegenseitigen Hilfenetzwerk"
+    "networkCapabilitiesHint": "Gesamtes verfügbares monatliches Budget aller Teilnehmer in Ihrem gegenseitigen Hilfenetzwerk",
+    "communityChat": "Community-Chat"
   },
   "collection": {
     "create": "Hilfesignal senden",
@@ -174,7 +181,13 @@
     "submit": "Signal senden",
     "minAmount": "Mindestens 10",
     "invalidUrl": "Ungültige URL",
-    "networkReach": "Dein Signal erreicht bis zu {{count}} Personen über Handschlagketten"
+    "networkReach": "Dein Signal erreicht bis zu {{count}} Personen über Handschlagketten",
+    "confirmTitle": "Sammlung bestätigen",
+    "confirmText": "Stellen Sie sicher, dass Sie diesen Betrag wirklich benötigen. Das Hilfesignal wird von Dutzenden Menschen gesehen — nutzen Sie es verantwortungsvoll.",
+    "confirmPayment": "Können Sie internationale Überweisungen empfangen? Teilnehmer können aus verschiedenen Ländern sein. Stellen Sie sicher, dass Sie eine Krypto-Wallet, PayPal, Wise, Revolut oder eine andere Möglichkeit haben, Geld aus dem Ausland zu empfangen.",
+    "confirmCheckbox": "Ich habe es durchdacht und bestätige",
+    "confirmButton": "Bestätigen",
+    "cancelButton": "Abbrechen"
   },
   "intention": {
     "create": "Absicht bekunden",
@@ -314,7 +327,8 @@
     "viber": "Viber",
     "signal": "Signal",
     "email": "E-Mail",
-    "website": "Webseite"
+    "website": "Webseite",
+    "tiktok": "TikTok"
   },
   "invite": {
     "title": "Einladung",
@@ -330,7 +344,8 @@
     "slugHint": "3–30 Zeichen: Buchstaben, Zahlen, _ und -",
     "slugMin": "Mindestens 3 Zeichen",
     "webLinkDesc": "Website-Link — wenn die Person das Projekt noch nicht kennt, enthält er alle einleitenden Informationen",
-    "botLinkDesc": "Direkt zu Telegram — wenn du alles bereits erklärt hast und sie direkt zur App gehen können"
+    "botLinkDesc": "Direkt zu Telegram — wenn du alles bereits erklärt hast und sie direkt zur App gehen können",
+    "slugDesc": "Dies ist Ihre persönliche Link-ID für Einladungs-URLs. Es ist KEINE Einladung an sich — senden Sie es nicht an Leute. Verwenden Sie die obigen Links, um jemanden einzuladen."
   },
   "landing": {
     "painQuote": "Wenn Probleme auftreten — bist du allein. Freunde wissen es nicht. Freunde von Freunden — noch weniger. Dabei könnte jemand von ihnen helfen.",
@@ -440,5 +455,14 @@
     "budget": "Budget",
     "root": "Wurzel",
     "contactRoot": "Wurzel kontaktieren"
+  },
+  "requiredInfo": {
+    "contactsTitle": "Kontakte hinzufügen",
+    "contactsText": "Mindestens 2 Kontaktmethoden werden für die Koordination der Hilfe benötigt",
+    "budgetTitle": "Monatliches Unterstützungsbudget",
+    "budgetText": "Dieser Betrag ist Ihre Absicht, keine Verpflichtung. Es wird keine Karte verknüpft und kein Geld abgebucht. Sie geben einfach an, wie viel Sie bereit sind, monatlich zu helfen.",
+    "next": "Weiter",
+    "save": "Speichern und fortfahren",
+    "contactsFilled": "Ausgefüllt: {{count}}/2"
   }
 }
