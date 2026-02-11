@@ -187,7 +187,15 @@
     "confirmPayment": "Voitko vastaanottaa kansainvälisiä siirtoja? Osallistujat voivat olla eri maista. Varmista, että sinulla on kryptolompakko, PayPal, Wise, Revolut tai muu tapa vastaanottaa varoja ulkomailta.",
     "confirmCheckbox": "Olen harkinnut asiaa ja vahvistan",
     "confirmButton": "Vahvista",
-    "cancelButton": "Peruuta"
+    "cancelButton": "Peruuta",
+    "entryWarningTitle": "Hetkinen",
+    "entryWarningText": "Avunpyynnön luominen lähettää ilmoituksen kymmenille ihmisille verkostossasi. Jos vain tutkit sovellusta — älä luo oikeaa pyyntöä. Tämä työkalu on tarkoitettu niille, jotka todella tarvitsevat apua.",
+    "entryWarningProceed": "Ymmärrän, jatka",
+    "entryWarningBack": "Takaisin",
+    "notEnoughConnectionsTitle": "Ei tarpeeksi yhteyksiä",
+    "notEnoughConnectionsText": "Avunpyynnön luomiseen tarvitset vähintään {{min}} yhteyttä verkostossasi. Kutsu lisää ihmisiä avataksesi tämän toiminnon.",
+    "connectionsRemaining": "Tarvitaan vielä {{count}}",
+    "goToNetwork": "Kutsu ihmisiä"
   },
   "intention": {
     "create": "Ilmaise aikomus",

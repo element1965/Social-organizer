@@ -187,7 +187,15 @@
     "confirmPayment": "Können Sie internationale Überweisungen empfangen? Teilnehmer können aus verschiedenen Ländern sein. Stellen Sie sicher, dass Sie eine Krypto-Wallet, PayPal, Wise, Revolut oder eine andere Möglichkeit haben, Geld aus dem Ausland zu empfangen.",
     "confirmCheckbox": "Ich habe es durchdacht und bestätige",
     "confirmButton": "Bestätigen",
-    "cancelButton": "Abbrechen"
+    "cancelButton": "Abbrechen",
+    "entryWarningTitle": "Einen Moment",
+    "entryWarningText": "Eine Hilfeanfrage zu erstellen sendet eine Benachrichtigung an Dutzende von Menschen in Ihrem Netzwerk. Wenn Sie nur die App erkunden — erstellen Sie keine echte Anfrage. Dieses Tool ist für diejenigen gedacht, die wirklich Hilfe brauchen.",
+    "entryWarningProceed": "Verstanden, weiter",
+    "entryWarningBack": "Zurück",
+    "notEnoughConnectionsTitle": "Nicht genügend Verbindungen",
+    "notEnoughConnectionsText": "Um ein Hilfesignal zu erstellen, benötigen Sie mindestens {{min}} Verbindungen in Ihrem Netzwerk. Laden Sie mehr Personen ein, um diese Funktion freizuschalten.",
+    "connectionsRemaining": "Noch {{count}} benötigt",
+    "goToNetwork": "Personen einladen"
   },
   "intention": {
     "create": "Absicht bekunden",

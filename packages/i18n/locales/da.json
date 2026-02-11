@@ -187,7 +187,15 @@
     "confirmPayment": "Kan du modtage internationale overførsler? Deltagere kan være fra forskellige lande. Sørg for, at du har en krypto-wallet, PayPal, Wise, Revolut eller en anden måde at modtage penge fra udlandet.",
     "confirmCheckbox": "Jeg har tænkt det igennem og bekræfter",
     "confirmButton": "Bekræft",
-    "cancelButton": "Annuller"
+    "cancelButton": "Annuller",
+    "entryWarningTitle": "Vent et øjeblik",
+    "entryWarningText": "At oprette en hjælpeanmodning sender en notifikation til snesevis af mennesker i dit netværk. Hvis du bare udforsker appen — opret ikke en rigtig anmodning. Dette værktøj er til dem, der virkelig har brug for hjælp.",
+    "entryWarningProceed": "Jeg forstår, fortsæt",
+    "entryWarningBack": "Gå tilbage",
+    "notEnoughConnectionsTitle": "Ikke nok forbindelser",
+    "notEnoughConnectionsText": "For at oprette et hjælpesignal skal du have mindst {{min}} forbindelser i dit netværk. Inviter flere mennesker for at låse denne funktion op.",
+    "connectionsRemaining": "{{count}} mere nødvendigt",
+    "goToNetwork": "Inviter mennesker"
   },
   "intention": {
     "create": "Udtryk intention",

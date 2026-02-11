@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { router, protectedProcedure } from '../trpc.js';
 import { TRPCError } from '@trpc/server';
-import { MIN_COLLECTION_AMOUNT, CURRENCY_CODES, NOTIFICATION_RATIO } from '@so/shared';
+import { MIN_COLLECTION_AMOUNT, CURRENCY_CODES, NOTIFICATION_RATIO, MIN_CONNECTIONS_TO_CREATE } from '@so/shared';
 import { sendCollectionNotifications, sendCollectionClosedTg } from '../services/notification.service.js';
 import { convertToUSD } from '../services/currency.service.js';
 
@@ -26,6 +26,19 @@ export const collectionRouter = router({
       // Regular users must specify amount
       if (!isSpecial && (input.amount == null || input.amount < MIN_COLLECTION_AMOUNT)) {
         throw new TRPCError({ code: 'BAD_REQUEST', message: `Amount must be at least ${MIN_COLLECTION_AMOUNT}` });
+      }
+
+      // Check minimum connections requirement
+      if (!isSpecial) {
+        const connectionCount = await ctx.db.connection.count({
+          where: { OR: [{ userAId: ctx.userId }, { userBId: ctx.userId }] },
+        });
+        if (connectionCount < MIN_CONNECTIONS_TO_CREATE) {
+          throw new TRPCError({
+            code: 'FORBIDDEN',
+            message: `You need at least ${MIN_CONNECTIONS_TO_CREATE} connections. You have ${connectionCount}.`,
+          });
+        }
       }
 
       // Limit: max 1 emergency + 1 regular at the same time

@@ -187,7 +187,15 @@
     "confirmPayment": "هل يمكنك استقبال تحويلات دولية؟ قد يكون المشاركون من بلدان مختلفة. تأكد من أن لديك محفظة عملات رقمية أو PayPal أو Wise أو Revolut أو طريقة أخرى لاستقبال الأموال من الخارج.",
     "confirmCheckbox": "لقد فكرت في الأمر وأؤكد",
     "confirmButton": "تأكيد",
-    "cancelButton": "إلغاء"
+    "cancelButton": "إلغاء",
+    "entryWarningTitle": "انتظر قليلاً",
+    "entryWarningText": "إنشاء طلب المساعدة سيُرسل إشعاراً لعشرات الأشخاص في شبكتك. إذا كنت تستكشف التطبيق فقط — لا تُنشئ طلباً حقيقياً. هذه الأداة مخصصة لمن يحتاجون المساعدة فعلاً.",
+    "entryWarningProceed": "أفهم، متابعة",
+    "entryWarningBack": "العودة",
+    "notEnoughConnectionsTitle": "لا توجد اتصالات كافية",
+    "notEnoughConnectionsText": "لإنشاء إشارة مساعدة، تحتاج إلى {{min}} اتصال على الأقل في شبكتك. ادعُ المزيد من الأشخاص لفتح هذه الميزة.",
+    "connectionsRemaining": "تحتاج {{count}} إضافية",
+    "goToNetwork": "دعوة أشخاص"
   },
   "intention": {
     "create": "التعبير عن النية",

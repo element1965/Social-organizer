@@ -187,7 +187,15 @@
     "confirmPayment": "Pode receber transferências internacionais? Os participantes podem ser de diferentes países. Certifique-se de que tem uma carteira crypto, PayPal, Wise, Revolut ou outra forma de receber fundos do exterior.",
     "confirmCheckbox": "Pensei bem e confirmo",
     "confirmButton": "Confirmar",
-    "cancelButton": "Cancelar"
+    "cancelButton": "Cancelar",
+    "entryWarningTitle": "Um momento",
+    "entryWarningText": "Criar um pedido de ajuda enviará uma notificação para dezenas de pessoas na sua rede. Se você está apenas explorando o aplicativo — não crie um pedido real. Esta ferramenta é para quem realmente precisa de ajuda.",
+    "entryWarningProceed": "Entendi, continuar",
+    "entryWarningBack": "Voltar",
+    "notEnoughConnectionsTitle": "Conexões insuficientes",
+    "notEnoughConnectionsText": "Para criar um sinal de ajuda, você precisa de pelo menos {{min}} conexões na sua rede. Convide mais pessoas para desbloquear esta função.",
+    "connectionsRemaining": "Faltam {{count}} mais",
+    "goToNetwork": "Convidar pessoas"
   },
   "intention": {
     "create": "Expressar intenção",

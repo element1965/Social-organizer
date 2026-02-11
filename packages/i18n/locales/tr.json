@@ -187,7 +187,15 @@
     "confirmPayment": "Uluslararası transferler alabilir misiniz? Katılımcılar farklı ülkelerden olabilir. Kripto cüzdanınız, PayPal, Wise, Revolut veya yurt dışından para almanın başka bir yolunuz olduğundan emin olun.",
     "confirmCheckbox": "Düşündüm ve onaylıyorum",
     "confirmButton": "Onayla",
-    "cancelButton": "İptal"
+    "cancelButton": "İptal",
+    "entryWarningTitle": "Bir dakika",
+    "entryWarningText": "Yardım talebi oluşturmak ağınızdaki onlarca kişiye bildirim gönderecektir. Sadece uygulamayı keşfediyorsanız — gerçek bir talep oluşturmayın. Bu araç gerçekten yardıma ihtiyacı olanlar içindir.",
+    "entryWarningProceed": "Anlıyorum, devam et",
+    "entryWarningBack": "Geri dön",
+    "notEnoughConnectionsTitle": "Yeterli bağlantı yok",
+    "notEnoughConnectionsText": "Yardım sinyali oluşturmak için ağınızda en az {{min}} bağlantıya ihtiyacınız var. Bu özelliği açmak için daha fazla kişi davet edin.",
+    "connectionsRemaining": "{{count}} daha gerekli",
+    "goToNetwork": "Kişileri davet et"
   },
   "intention": {
     "create": "Niyet Belirt",

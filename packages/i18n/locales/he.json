@@ -197,7 +197,15 @@
     "confirmPayment": "האם אתה יכול לקבל העברות בינלאומיות? משתתפים עשויים להיות ממדינות שונות. ודא שיש לך ארנק קריפטו, PayPal, Wise, Revolut או דרך אחרת לקבל כספים מחו\"ל.",
     "confirmCheckbox": "חשבתי על כך ומאשר",
     "confirmButton": "אישור",
-    "cancelButton": "ביטול"
+    "cancelButton": "ביטול",
+    "entryWarningTitle": "רגע אחד",
+    "entryWarningText": "יצירת בקשת עזרה תשלח התראה לעשרות אנשים ברשת שלך. אם אתה רק בוחן את האפליקציה — אל תיצור בקשה אמיתית. כלי זה מיועד למי שבאמת צריך עזרה.",
+    "entryWarningProceed": "הבנתי, המשך",
+    "entryWarningBack": "חזרה",
+    "notEnoughConnectionsTitle": "אין מספיק חיבורים",
+    "notEnoughConnectionsText": "כדי ליצור אות עזרה, אתה צריך לפחות {{min}} חיבורים ברשת שלך. הזמן עוד אנשים כדי לפתוח תכונה זו.",
+    "connectionsRemaining": "צריך עוד {{count}}",
+    "goToNetwork": "הזמן אנשים"
   },
   "intention": {
     "create": "בטא כוונה",

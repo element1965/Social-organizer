@@ -187,7 +187,15 @@
     "confirmPayment": "Bisakah Anda menerima transfer internasional? Peserta mungkin berasal dari negara yang berbeda. Pastikan Anda memiliki dompet kripto, PayPal, Wise, Revolut, atau cara lain untuk menerima dana dari luar negeri.",
     "confirmCheckbox": "Saya sudah memikirkannya dan mengonfirmasi",
     "confirmButton": "Konfirmasi",
-    "cancelButton": "Batal"
+    "cancelButton": "Batal",
+    "entryWarningTitle": "Tunggu sebentar",
+    "entryWarningText": "Membuat permintaan bantuan akan mengirim notifikasi ke puluhan orang di jaringan Anda. Jika Anda hanya menjelajahi aplikasi — jangan buat permintaan nyata. Alat ini untuk mereka yang benar-benar membutuhkan bantuan.",
+    "entryWarningProceed": "Saya mengerti, lanjutkan",
+    "entryWarningBack": "Kembali",
+    "notEnoughConnectionsTitle": "Koneksi tidak cukup",
+    "notEnoughConnectionsText": "Untuk membuat sinyal bantuan, Anda membutuhkan minimal {{min}} koneksi di jaringan Anda. Undang lebih banyak orang untuk membuka fitur ini.",
+    "connectionsRemaining": "Butuh {{count}} lagi",
+    "goToNetwork": "Undang orang"
   },
   "intention": {
     "create": "Nyatakan Niat",

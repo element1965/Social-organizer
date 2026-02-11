@@ -187,7 +187,15 @@
     "confirmPayment": "Kunt u internationale overboekingen ontvangen? Deelnemers kunnen uit verschillende landen komen. Zorg ervoor dat u een crypto-wallet, PayPal, Wise, Revolut of een andere manier heeft om geld uit het buitenland te ontvangen.",
     "confirmCheckbox": "Ik heb erover nagedacht en bevestig",
     "confirmButton": "Bevestigen",
-    "cancelButton": "Annuleren"
+    "cancelButton": "Annuleren",
+    "entryWarningTitle": "Even wachten",
+    "entryWarningText": "Het aanmaken van een hulpverzoek stuurt een melding naar tientallen mensen in uw netwerk. Als u alleen de app verkent — maak geen echt verzoek aan. Deze tool is voor mensen die echt hulp nodig hebben.",
+    "entryWarningProceed": "Ik begrijp het, doorgaan",
+    "entryWarningBack": "Terug",
+    "notEnoughConnectionsTitle": "Niet genoeg verbindingen",
+    "notEnoughConnectionsText": "Om een hulpsignaal te maken, heb je minstens {{min}} verbindingen in je netwerk nodig. Nodig meer mensen uit om deze functie te ontgrendelen.",
+    "connectionsRemaining": "Nog {{count}} nodig",
+    "goToNetwork": "Mensen uitnodigen"
   },
   "intention": {
     "create": "Intentie uitspreken",
