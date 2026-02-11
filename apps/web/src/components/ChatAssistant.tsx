@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { MessageCircle, X, Send, Mic, MicOff, Loader2, HelpCircle, Megaphone } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { cn } from '../lib/utils';
 import { trpc } from '../lib/trpc';
 import { BroadcastPanel } from './BroadcastPanel';
@@ -18,11 +18,9 @@ type ViewState = 'collapsed' | 'expanded' | 'chatOpen' | 'broadcastOpen';
 export function ChatAssistant() {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
-  const location = useLocation();
   const [viewState, setViewState] = useState<ViewState>('collapsed');
-  const isDashboard = location.pathname === '/dashboard';
 
-  // Listen for external toggle event (from dashboard header button)
+  // Listen for external toggle event (from Layout header button)
   useEffect(() => {
     const handler = () => {
       setViewState((prev) => (prev === 'collapsed' ? 'expanded' : 'collapsed'));
@@ -245,7 +243,7 @@ export function ChatAssistant() {
         </div>
       )}
 
-      {/* Main floating button */}
+      {/* Main floating button — hidden, replaced by Layout header button */}
       <button
         onClick={() => {
           if (viewState === 'collapsed') setViewState('expanded');
@@ -255,10 +253,7 @@ export function ChatAssistant() {
           "fixed bottom-20 right-4 w-14 h-14 rounded-full shadow-lg",
           "flex items-center justify-center transition-all z-40",
           "hover:scale-105 active:scale-95",
-          viewState === 'expanded'
-            ? "bg-gray-700 text-white hover:bg-gray-800"
-            : "bg-blue-600 text-white hover:bg-blue-700",
-          (isOpen || viewState === 'broadcastOpen' || isDashboard) && "hidden"
+          "hidden"
         )}
         aria-label={t('chat.openHelp')}
       >
