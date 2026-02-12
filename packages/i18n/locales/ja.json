@@ -477,5 +477,8 @@
     "next": "次へ",
     "save": "保存して続行",
     "contactsFilled": "入力済み: {{count}}/2"
+  },
+  "validation": {
+    "invalidContact": "無効な形式"
   }
 }

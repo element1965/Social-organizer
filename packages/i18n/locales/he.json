@@ -487,5 +487,8 @@
     "next": "הבא",
     "save": "שמור והמשך",
     "contactsFilled": "מלא: {{count}}/2"
+  },
+  "validation": {
+    "invalidContact": "פורמט לא תקין"
   }
 }

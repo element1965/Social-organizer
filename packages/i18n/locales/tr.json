@@ -477,5 +477,8 @@
     "next": "İleri",
     "save": "Kaydet ve devam et",
     "contactsFilled": "Doldurulmuş: {{count}}/2"
+  },
+  "validation": {
+    "invalidContact": "Geçersiz format"
   }
 }

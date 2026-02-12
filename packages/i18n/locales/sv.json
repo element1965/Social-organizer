@@ -477,5 +477,8 @@
     "next": "Nästa",
     "save": "Spara och fortsätt",
     "contactsFilled": "Ifyllt: {{count}}/2"
+  },
+  "validation": {
+    "invalidContact": "Ogiltigt format"
   }
 }

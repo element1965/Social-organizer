@@ -477,5 +477,8 @@
     "next": "ถัดไป",
     "save": "บันทึกและดำเนินการต่อ",
     "contactsFilled": "กรอกแล้ว: {{count}}/2"
+  },
+  "validation": {
+    "invalidContact": "รูปแบบไม่ถูกต้อง"
   }
 }

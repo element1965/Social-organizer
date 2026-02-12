@@ -477,5 +477,8 @@
     "next": "Neste",
     "save": "Lagre og fortsett",
     "contactsFilled": "Fylt ut: {{count}}/2"
+  },
+  "validation": {
+    "invalidContact": "Ugyldig format"
   }
 }

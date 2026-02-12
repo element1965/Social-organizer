@@ -477,5 +477,8 @@
     "next": "Seuraava",
     "save": "Tallenna ja jatka",
     "contactsFilled": "Täytetty: {{count}}/2"
+  },
+  "validation": {
+    "invalidContact": "Virheellinen muoto"
   }
 }
