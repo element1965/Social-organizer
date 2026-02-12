@@ -59,11 +59,34 @@ export const inviteRouter = router({
         return { success: true, alreadyConnected: true, connectedWith: inviterId };
       }
 
-      // Check if pending connection already exists
-      const existingPending = await ctx.db.pendingConnection.findUnique({
-        where: { fromUserId_toUserId: { fromUserId: ctx.userId, toUserId: inviterId } },
+      // Check if pending connection already exists in either direction
+      const existingPending = await ctx.db.pendingConnection.findFirst({
+        where: {
+          OR: [
+            { fromUserId: ctx.userId, toUserId: inviterId, status: 'PENDING' },
+            { fromUserId: inviterId, toUserId: ctx.userId, status: 'PENDING' },
+          ],
+        },
       });
-      if (existingPending && existingPending.status === 'PENDING') {
+
+      // If reverse pending exists (inviter already sent request to me) — auto-connect
+      if (existingPending && existingPending.fromUserId === inviterId) {
+        await ctx.db.pendingConnection.update({
+          where: { id: existingPending.id },
+          data: { status: 'ACCEPTED', resolvedAt: new Date() },
+        });
+        await ctx.db.connection.upsert({
+          where: { userAId_userBId: { userAId: [ctx.userId, inviterId].sort()[0]!, userBId: [ctx.userId, inviterId].sort()[1]! } },
+          create: { userAId: [ctx.userId, inviterId].sort()[0]!, userBId: [ctx.userId, inviterId].sort()[1]! },
+          update: {},
+        });
+        console.log('[invite.accept] auto-connected (reverse pending):', ctx.userId, '<->', inviterId);
+        const applicant = await ctx.db.user.findUnique({ where: { id: ctx.userId }, select: { name: true } });
+        sendPendingNotification(ctx.db, inviterId, 'accepted', applicant?.name || '').catch(() => {});
+        return { success: true, alreadyConnected: true, connectedWith: inviterId };
+      }
+
+      if (existingPending) {
         return { success: true, pending: true, connectedWith: inviterId };
       }
 

@@ -82,6 +82,24 @@ export const pendingRouter = router({
           ],
         },
       });
+
+      // If reverse pending exists (target already sent request to me) — auto-connect
+      if (existingPending && existingPending.fromUserId === input.targetUserId) {
+        await ctx.db.pendingConnection.update({
+          where: { id: existingPending.id },
+          data: { status: 'ACCEPTED', resolvedAt: new Date() },
+        });
+        const [userAId, userBId] = [ctx.userId, input.targetUserId].sort();
+        await ctx.db.connection.upsert({
+          where: { userAId_userBId: { userAId: userAId!, userBId: userBId! } },
+          create: { userAId: userAId!, userBId: userBId! },
+          update: {},
+        });
+        const sender = await ctx.db.user.findUnique({ where: { id: ctx.userId }, select: { name: true } });
+        sendPendingNotification(ctx.db, input.targetUserId, 'accepted', sender?.name || '').catch(() => {});
+        return { success: true, autoConnected: true };
+      }
+
       if (existingPending) {
         throw new TRPCError({ code: 'CONFLICT', message: 'Request already pending' });
       }

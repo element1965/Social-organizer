@@ -213,10 +213,11 @@ export function DashboardPage() {
             </div>
             <div className="space-y-1">
               {myPending.map((p) => (
-                <div key={p.id} className="flex items-center gap-2">
+                <button key={p.id} className="flex items-center gap-2 w-full text-left hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg p-1 -m-1 transition-colors" onClick={() => navigate(`/profile/${p.toUser.id}`)}>
                   <Avatar src={p.toUser.photoUrl} name={p.toUser.name} size="xs" />
                   <span className="text-sm text-gray-600 dark:text-gray-400">{p.toUser.name}</span>
-                </div>
+                  <ArrowRight className="w-3.5 h-3.5 text-gray-400 ml-auto" />
+                </button>
               ))}
             </div>
           </CardContent>
