@@ -37,7 +37,7 @@ export function buildContactUrl(type: string, value: string): string {
   const clean = value.replace(/^@/, '');
   switch (type) {
     case 'telegram': return `https://t.me/${clean}`;
-    case 'instagram': return `https://www.instagram.com/${clean}/`;
+    case 'instagram': return `https://instagram.com/${clean}`;
     case 'twitter': return `https://x.com/${clean}`;
     case 'facebook': return `https://facebook.com/${clean}`;
     case 'linkedin': return `https://linkedin.com/in/${clean}`;
