@@ -12,7 +12,8 @@
     "next": "Berikutnya",
     "done": "Selesai",
     "search": "Cari",
-    "notFound": "Tidak ditemukan"
+    "notFound": "Tidak ditemukan",
+    "copied": "Disalin"
   },
   "auth": {
     "loginWith": "Masuk dengan {{platform}}",

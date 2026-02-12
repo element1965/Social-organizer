@@ -12,7 +12,8 @@
     "next": "ถัดไป",
     "done": "เสร็จ",
     "search": "ค้นหา",
-    "notFound": "ไม่พบ"
+    "notFound": "ไม่พบ",
+    "copied": "คัดลอกแล้ว"
   },
   "auth": {
     "loginWith": "เข้าสู่ระบบด้วย {{platform}}",

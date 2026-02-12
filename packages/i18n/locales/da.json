@@ -12,7 +12,8 @@
     "next": "Næste",
     "done": "Færdig",
     "search": "Søg",
-    "notFound": "Ikke fundet"
+    "notFound": "Ikke fundet",
+    "copied": "Kopieret"
   },
   "auth": {
     "loginWith": "Log ind med {{platform}}",

@@ -12,7 +12,8 @@
     "next": "अगला",
     "done": "हो गया",
     "search": "खोजें",
-    "notFound": "नहीं मिला"
+    "notFound": "नहीं मिला",
+    "copied": "कॉपी किया"
   },
   "auth": {
     "loginWith": "{{platform}} से लॉग इन करें",

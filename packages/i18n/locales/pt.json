@@ -12,7 +12,8 @@
     "next": "Próximo",
     "done": "Pronto",
     "search": "Buscar",
-    "notFound": "Não encontrado"
+    "notFound": "Não encontrado",
+    "copied": "Copiado"
   },
   "auth": {
     "loginWith": "Entrar com {{platform}}",

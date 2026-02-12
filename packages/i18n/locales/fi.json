@@ -12,7 +12,8 @@
     "next": "Seuraava",
     "done": "Valmis",
     "search": "Haku",
-    "notFound": "Ei löytynyt"
+    "notFound": "Ei löytynyt",
+    "copied": "Kopioitu"
   },
   "auth": {
     "loginWith": "Kirjaudu palvelulla {{platform}}",

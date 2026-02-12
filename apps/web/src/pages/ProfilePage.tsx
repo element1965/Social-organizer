@@ -6,7 +6,7 @@ import { useAuth } from '../hooks/useAuth';
 import { Card, CardContent, CardHeader } from '../components/ui/card';
 import { Avatar } from '../components/ui/avatar';
 import { Spinner } from '../components/ui/spinner';
-import { Wallet, Calendar, Pencil, Check, X, UserPlus, UserMinus } from 'lucide-react';
+import { Wallet, Calendar, Pencil, Check, X, UserPlus, UserMinus, Copy } from 'lucide-react';
 import { HandshakePath } from '../components/HandshakePath';
 import { SocialIcon } from '../components/ui/social-icons';
 import { buildContactUrl } from '@so/shared';
@@ -66,6 +66,7 @@ export function ProfilePage() {
 
   const [editingNickname, setEditingNickname] = useState(false);
   const [nicknameInput, setNicknameInput] = useState('');
+  const [copiedContact, setCopiedContact] = useState<string | null>(null);
 
   if (isOwn) return null;
   if (isLoading) return <div className="flex justify-center py-12"><Spinner /></div>;
@@ -157,15 +158,19 @@ export function ProfilePage() {
             <div className="flex flex-wrap gap-2">
               {contacts.filter((c: { value?: string }) => c.value).map((contact: { type: string; value: string; icon?: string; label?: string }) => {
                 const url = buildContactUrl(contact.type, contact.value);
+                const isMobile = /Android|iPhone|iPad/i.test(navigator.userAgent);
+                const isInstagramMobile = contact.type === 'instagram' && isMobile;
+                const username = contact.type === 'instagram' ? contact.value.replace(/^@/, '').replace(/^(?:https?:\/\/)?(?:www\.)?instagram\.com\//, '').replace(/\/$/, '') : '';
                 const handleClick = (e: React.MouseEvent) => {
-                  if (isTelegramWebApp() && !url.startsWith('mailto:')) {
+                  if (isInstagramMobile) {
                     e.preventDefault();
-                    if (contact.type === 'instagram') {
-                      const username = contact.value.replace(/^@/, '').replace(/^(?:https?:\/\/)?(?:www\.)?instagram\.com\//, '').replace(/\/$/, '');
-                      window.Telegram.WebApp.openLink(`${window.location.origin}/api/open/instagram/${username}`, { try_instant_view: false });
-                    } else {
-                      window.Telegram.WebApp.openLink(url, { try_instant_view: false });
-                    }
+                    navigator.clipboard.writeText(username).then(() => {
+                      setCopiedContact(contact.type);
+                      setTimeout(() => setCopiedContact(null), 2000);
+                    });
+                  } else if (isTelegramWebApp() && !url.startsWith('mailto:')) {
+                    e.preventDefault();
+                    window.Telegram.WebApp.openLink(url, { try_instant_view: false });
                   }
                 };
                 return (
@@ -178,7 +183,15 @@ export function ProfilePage() {
                     className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-sm transition-colors"
                   >
                     <SocialIcon type={contact.icon || contact.type} className="w-4 h-4" />
-                    <span className="text-gray-700 dark:text-gray-300">{contact.label || contact.type}</span>
+                    {isInstagramMobile ? (
+                      copiedContact === 'instagram' ? (
+                        <span className="text-green-500 flex items-center gap-1"><Check className="w-3 h-3" /> {t('common.copied') || 'Copied'}</span>
+                      ) : (
+                        <span className="text-gray-700 dark:text-gray-300 flex items-center gap-1">@{username} <Copy className="w-3 h-3 text-gray-400" /></span>
+                      )
+                    ) : (
+                      <span className="text-gray-700 dark:text-gray-300">{contact.label || contact.type}</span>
+                    )}
                   </a>
                 );
               })}

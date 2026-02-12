@@ -12,7 +12,8 @@
     "next": "Tiếp",
     "done": "Xong",
     "search": "Tìm kiếm",
-    "notFound": "Không tìm thấy"
+    "notFound": "Không tìm thấy",
+    "copied": "Đã sao chép"
   },
   "auth": {
     "loginWith": "Đăng nhập bằng {{platform}}",

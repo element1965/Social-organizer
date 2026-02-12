@@ -12,7 +12,8 @@
     "next": "İleri",
     "done": "Tamam",
     "search": "Ara",
-    "notFound": "Bulunamadı"
+    "notFound": "Bulunamadı",
+    "copied": "Kopyalandı"
   },
   "auth": {
     "loginWith": "{{platform}} ile giriş yap",

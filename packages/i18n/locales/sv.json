@@ -12,7 +12,8 @@
     "next": "Nasta",
     "done": "Klar",
     "search": "Sok",
-    "notFound": "Hittades inte"
+    "notFound": "Hittades inte",
+    "copied": "Kopierat"
   },
   "auth": {
     "loginWith": "Logga in med {{platform}}",

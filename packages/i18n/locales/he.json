@@ -12,7 +12,8 @@
     "next": "הבא",
     "done": "הסתיים",
     "search": "חפש",
-    "notFound": "לא נמצא"
+    "notFound": "לא נמצא",
+    "copied": "הועתק"
   },
   "auth": {
     "loginWith": "התחבר עם {{platform}}",

@@ -12,7 +12,8 @@
     "next": "次へ",
     "done": "完了",
     "search": "検索",
-    "notFound": "見つかりません"
+    "notFound": "見つかりません",
+    "copied": "コピー済み"
   },
   "auth": {
     "loginWith": "{{platform}} でログイン",

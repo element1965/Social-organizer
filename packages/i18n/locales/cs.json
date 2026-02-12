@@ -12,7 +12,8 @@
     "next": "Další",
     "done": "Hotovo",
     "search": "Hledat",
-    "notFound": "Nenalezeno"
+    "notFound": "Nenalezeno",
+    "copied": "Zkopírováno"
   },
   "auth": {
     "loginWith": "Přihlásit se přes {{platform}}",
