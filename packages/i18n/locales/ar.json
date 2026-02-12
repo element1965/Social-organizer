@@ -12,7 +12,8 @@
     "next": "التالي",
     "done": "تم",
     "search": "بحث",
-    "notFound": "غير موجود"
+    "notFound": "غير موجود",
+    "copied": "تم النسخ"
   },
   "auth": {
     "loginWith": "تسجيل الدخول عبر {{platform}}",

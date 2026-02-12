@@ -12,7 +12,8 @@
     "next": "Avanti",
     "done": "Fatto",
     "search": "Cerca",
-    "notFound": "Non trovato"
+    "notFound": "Non trovato",
+    "copied": "Copiato"
   },
   "auth": {
     "loginWith": "Accedi con {{platform}}",

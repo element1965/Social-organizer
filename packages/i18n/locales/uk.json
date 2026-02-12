@@ -12,7 +12,8 @@
     "next": "Далі",
     "done": "Готово",
     "search": "Пошук",
-    "notFound": "Не знайдено"
+    "notFound": "Не знайдено",
+    "copied": "Скопійовано"
   },
   "auth": {
     "loginWith": "Увійти через {{platform}}",

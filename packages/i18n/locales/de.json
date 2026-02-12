@@ -12,7 +12,8 @@
     "next": "Weiter",
     "done": "Fertig",
     "search": "Suchen",
-    "notFound": "Nicht gefunden"
+    "notFound": "Nicht gefunden",
+    "copied": "Kopiert"
   },
   "auth": {
     "loginWith": "Anmelden mit {{platform}}",

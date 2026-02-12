@@ -12,7 +12,8 @@
     "next": "Urmator",
     "done": "Gata",
     "search": "Cauta",
-    "notFound": "Nu a fost gasit"
+    "notFound": "Nu a fost gasit",
+    "copied": "Copiat"
   },
   "auth": {
     "loginWith": "Autentifica-te cu {{platform}}",

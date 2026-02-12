@@ -12,7 +12,8 @@
     "next": "Volgende",
     "done": "Klaar",
     "search": "Zoeken",
-    "notFound": "Niet gevonden"
+    "notFound": "Niet gevonden",
+    "copied": "Gekopieerd"
   },
   "auth": {
     "loginWith": "Inloggen met {{platform}}",
