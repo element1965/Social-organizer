@@ -83,7 +83,8 @@ export function CreateCollectionPage() {
     label: `${c.symbol} ${c.code}`,
   })) ?? [{ value: 'USD', label: '$ USD' }];
 
-  const isSpecial = me?.role === 'AUTHOR' || me?.role === 'DEVELOPER';
+  const { data: adminData } = trpc.faq.isAdmin.useQuery();
+  const isSpecial = me?.role === 'AUTHOR' || me?.role === 'DEVELOPER' || adminData?.isAdmin;
   const hasEnoughConnections = isSpecial || (connectionCount?.count ?? 0) >= MIN_CONNECTIONS_TO_CREATE;
   const connectionsNeeded = MIN_CONNECTIONS_TO_CREATE - (connectionCount?.count ?? 0);
 

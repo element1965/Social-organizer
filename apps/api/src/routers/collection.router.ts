@@ -4,6 +4,7 @@ import { TRPCError } from '@trpc/server';
 import { MIN_COLLECTION_AMOUNT, CURRENCY_CODES, NOTIFICATION_RATIO, MIN_CONNECTIONS_TO_CREATE } from '@so/shared';
 import { sendCollectionNotifications, sendCollectionClosedTg } from '../services/notification.service.js';
 import { convertToUSD } from '../services/currency.service.js';
+import { isAdmin } from '../admin.js';
 
 export const collectionRouter = router({
   create: protectedProcedure
@@ -21,7 +22,7 @@ export const collectionRouter = router({
       });
       if (!creator) throw new TRPCError({ code: 'NOT_FOUND', message: 'User not found' });
 
-      const isSpecial = creator.role === 'AUTHOR' || creator.role === 'DEVELOPER';
+      const isSpecial = creator.role === 'AUTHOR' || creator.role === 'DEVELOPER' || isAdmin(ctx.userId);
 
       // Regular users must specify amount
       if (!isSpecial && (input.amount == null || input.amount < MIN_COLLECTION_AMOUNT)) {
