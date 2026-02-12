@@ -10,6 +10,7 @@ import { Wallet, Calendar, Pencil, Check, X, UserPlus, UserMinus } from 'lucide-
 import { HandshakePath } from '../components/HandshakePath';
 import { SocialIcon } from '../components/ui/social-icons';
 import { buildContactUrl } from '@so/shared';
+import { isTelegramWebApp } from '@so/tg-adapter';
 
 export function ProfilePage() {
   const { userId: paramId } = useParams<{ userId: string }>();
@@ -156,13 +157,10 @@ export function ProfilePage() {
             <div className="flex flex-wrap gap-2">
               {contacts.filter((c: { value?: string }) => c.value).map((contact: { type: string; value: string; icon?: string; label?: string }) => {
                 const url = buildContactUrl(contact.type, contact.value);
-                const isMobile = /Android|iPhone|iPad/i.test(navigator.userAgent);
                 const handleClick = (e: React.MouseEvent) => {
-                  if (contact.type === 'instagram' && isMobile) {
+                  if (isTelegramWebApp() && !url.startsWith('mailto:')) {
                     e.preventDefault();
-                    const username = contact.value.replace(/^@/, '').replace(/^(?:https?:\/\/)?(?:www\.)?instagram\.com\//, '').replace(/\/$/, '');
-                    window.location.href = `instagram://user?username=${username}`;
-                    setTimeout(() => { window.open(`https://instagram.com/${username}`, '_blank'); }, 1500);
+                    window.Telegram.WebApp.openLink(url, { try_instant_view: false });
                   }
                 };
                 return (
