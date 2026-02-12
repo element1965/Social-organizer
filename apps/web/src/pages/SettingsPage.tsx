@@ -184,7 +184,7 @@ export function SettingsPage() {
       <Card><CardContent className="py-3">
         <div className="flex items-center gap-3">
           <Globe className="w-5 h-5 text-gray-500 shrink-0" />
-          <Select id="language" label={t('settings.language')} value={settings?.language || 'en'} onChange={(e) => handleLanguageChange(e.target.value)} options={Object.entries(languageNames).map(([code, name]) => ({ value: code, label: name }))} />
+          <Select id="language" label={t('settings.language')} value={i18n.language?.slice(0, 2) || 'en'} onChange={(e) => handleLanguageChange(e.target.value)} options={Object.entries(languageNames).map(([code, name]) => ({ value: code, label: name }))} />
           <Mic className="w-5 h-5 text-gray-500 shrink-0 ml-2" />
           <Select id="voice-gender" label={t('settings.voiceGender')} value={settings?.voiceGender || 'FEMALE'} onChange={(e) => updateVoiceGender.mutate({ voiceGender: e.target.value as 'FEMALE' | 'MALE' })} options={[{ value: 'FEMALE', label: t('settings.voiceFemale') }, { value: 'MALE', label: t('settings.voiceMale') }]} />
         </div>
