@@ -266,7 +266,9 @@
     "memberSince": "Membru din {{date}}",
     "nicknamePlaceholder": "Numele tău pentru ei...",
     "addDirect": "Adaugă la contacte directe",
-    "directRequestSent": "Cerere trimisă. Se așteaptă confirmarea"
+    "directRequestSent": "Cerere trimisă. Se așteaptă confirmarea",
+    "revokeHandshake": "Revocă strângerea de mână",
+    "revokeConfirm": "Conexiunea va fi resetată. Utilizatorul va trebui reconfirmat. Continuați?"
   },
   "settings": {
     "title": "Setari",

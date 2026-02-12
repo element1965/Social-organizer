@@ -266,7 +266,9 @@
     "memberSince": "{{date}}부터 회원",
     "nicknamePlaceholder": "상대방에게 보이는 이름...",
     "addDirect": "직접 연락처에 추가",
-    "directRequestSent": "요청이 전송되었습니다. 확인 대기 중"
+    "directRequestSent": "요청이 전송되었습니다. 확인 대기 중",
+    "revokeHandshake": "핸드셰이크 철회",
+    "revokeConfirm": "연결이 초기화됩니다. 사용자를 다시 확인해야 합니다. 계속하시겠습니까?"
   },
   "settings": {
     "title": "설정",

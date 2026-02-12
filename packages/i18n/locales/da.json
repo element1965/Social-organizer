@@ -266,7 +266,9 @@
     "memberSince": "Medlem siden {{date}}",
     "nicknamePlaceholder": "Dit navn for dem...",
     "addDirect": "Tilføj til direkte kontakter",
-    "directRequestSent": "Anmodning sendt. Afventer bekræftelse"
+    "directRequestSent": "Anmodning sendt. Afventer bekræftelse",
+    "revokeHandshake": "Tilbagekald håndtryk",
+    "revokeConfirm": "Forbindelsen nulstilles. Brugeren skal genbekræftes. Fortsæt?"
   },
   "settings": {
     "title": "Indstillinger",

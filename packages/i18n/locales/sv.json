@@ -266,7 +266,9 @@
     "memberSince": "Medlem sedan {{date}}",
     "nicknamePlaceholder": "Ditt namn för dem...",
     "addDirect": "Lägg till i direkta kontakter",
-    "directRequestSent": "Förfrågan skickad. Väntar på bekräftelse"
+    "directRequestSent": "Förfrågan skickad. Väntar på bekräftelse",
+    "revokeHandshake": "Återkalla handslag",
+    "revokeConfirm": "Anslutningen återställs. Användaren måste bekräftas på nytt. Fortsätta?"
   },
   "settings": {
     "title": "Installningar",

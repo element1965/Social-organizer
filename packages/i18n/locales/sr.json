@@ -266,7 +266,9 @@
     "memberSince": "Члан од {{date}}",
     "nicknamePlaceholder": "Твоје име за њих...",
     "addDirect": "Додај у директне контакте",
-    "directRequestSent": "Захтев послат. Чека се потврда"
+    "directRequestSent": "Захтев послат. Чека се потврда",
+    "revokeHandshake": "Опозови руковање",
+    "revokeConfirm": "Веза ће бити ресетована. Корисник ће морати бити поново потврђен. Наставити?"
   },
   "settings": {
     "title": "Подешавања",

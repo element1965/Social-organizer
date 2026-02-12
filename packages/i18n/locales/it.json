@@ -266,7 +266,9 @@
     "memberSince": "Membro dal {{date}}",
     "nicknamePlaceholder": "Il tuo nome per loro...",
     "addDirect": "Aggiungi ai contatti diretti",
-    "directRequestSent": "Richiesta inviata. In attesa di conferma"
+    "directRequestSent": "Richiesta inviata. In attesa di conferma",
+    "revokeHandshake": "Revoca stretta di mano",
+    "revokeConfirm": "La connessione verrà ripristinata. L'utente dovrà essere riconfermato. Continuare?"
   },
   "settings": {
     "title": "Impostazioni",

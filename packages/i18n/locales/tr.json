@@ -266,7 +266,9 @@
     "memberSince": "{{date}} tarihinden beri üye",
     "nicknamePlaceholder": "Onlar için adınız...",
     "addDirect": "Doğrudan kişilere ekle",
-    "directRequestSent": "İstek gönderildi. Onay bekleniyor"
+    "directRequestSent": "İstek gönderildi. Onay bekleniyor",
+    "revokeHandshake": "El sıkışmayı geri al",
+    "revokeConfirm": "Bağlantı sıfırlanacak. Kullanıcının yeniden onaylanması gerekecek. Devam edilsin mi?"
   },
   "settings": {
     "title": "Ayarlar",

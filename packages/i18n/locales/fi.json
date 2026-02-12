@@ -266,7 +266,9 @@
     "memberSince": "Jäsen {{date}} alkaen",
     "nicknamePlaceholder": "Sinun nimesi heille...",
     "addDirect": "Lisää suoriin kontakteihin",
-    "directRequestSent": "Pyyntö lähetetty. Odottaa vahvistusta"
+    "directRequestSent": "Pyyntö lähetetty. Odottaa vahvistusta",
+    "revokeHandshake": "Peruuta kädenpuristus",
+    "revokeConfirm": "Yhteys nollataan. Käyttäjä on vahvistettava uudelleen. Jatka?"
   },
   "settings": {
     "title": "Asetukset",
