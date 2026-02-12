@@ -156,12 +156,22 @@ export function ProfilePage() {
             <div className="flex flex-wrap gap-2">
               {contacts.filter((c: { value?: string }) => c.value).map((contact: { type: string; value: string; icon?: string; label?: string }) => {
                 const url = buildContactUrl(contact.type, contact.value);
+                const isMobile = /Android|iPhone|iPad/i.test(navigator.userAgent);
+                const handleClick = (e: React.MouseEvent) => {
+                  if (contact.type === 'instagram' && isMobile) {
+                    e.preventDefault();
+                    const username = contact.value.replace(/^@/, '').replace(/^(?:https?:\/\/)?(?:www\.)?instagram\.com\//, '').replace(/\/$/, '');
+                    window.location.href = `instagram://user?username=${username}`;
+                    setTimeout(() => { window.open(`https://instagram.com/${username}`, '_blank'); }, 1500);
+                  }
+                };
                 return (
                   <a
                     key={contact.type}
                     href={url}
                     target="_blank"
                     rel="noopener noreferrer"
+                    onClick={handleClick}
                     className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-sm transition-colors"
                   >
                     <SocialIcon type={contact.icon || contact.type} className="w-4 h-4" />
