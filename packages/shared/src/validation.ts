@@ -37,3 +37,58 @@ export function validateConnectionLimit(currentCount: number): string | null {
   }
   return null;
 }
+
+/**
+ * Validate a contact value by type.
+ * Returns null if valid, or an i18n error key if invalid.
+ * Empty values are considered valid (not required per-field).
+ */
+export function validateContact(type: string, value: string): string | null {
+  const v = value.trim();
+  if (!v) return null; // empty is ok
+
+  const ERR = 'validation.invalidContact';
+
+  switch (type) {
+    case 'whatsapp': {
+      // +prefix, 10-15 digits total
+      const digits = v.replace(/[^0-9]/g, '');
+      if (!v.startsWith('+') || digits.length < 10 || digits.length > 15) return ERR;
+      return null;
+    }
+    case 'instagram': {
+      const handle = v.replace(/^(?:https?:\/\/)?(?:www\.)?instagram\.com\//, '').replace(/^@/, '').replace(/\/$/, '');
+      return /^[a-zA-Z0-9._]{1,30}$/.test(handle) ? null : ERR;
+    }
+    case 'twitter': {
+      const handle = v.replace(/^(?:https?:\/\/)?(?:www\.)?(?:twitter|x)\.com\//, '').replace(/^@/, '').replace(/\/$/, '');
+      return /^[a-zA-Z0-9_]{1,15}$/.test(handle) ? null : ERR;
+    }
+    case 'tiktok': {
+      const handle = v.replace(/^(?:https?:\/\/)?(?:www\.)?tiktok\.com\/@?/, '').replace(/^@/, '').replace(/\/$/, '');
+      return /^[a-zA-Z0-9._]{2,24}$/.test(handle) ? null : ERR;
+    }
+    case 'telegram': {
+      const handle = v.replace(/^(?:https?:\/\/)?(?:t\.me|telegram\.me)\//, '').replace(/^@/, '').replace(/\/$/, '');
+      return /^[a-zA-Z0-9_]{5,32}$/.test(handle) ? null : ERR;
+    }
+    case 'facebook': {
+      const cleaned = v.replace(/^(?:https?:\/\/)?(?:www\.)?(?:facebook\.com|fb\.com)\//, '').replace(/\/$/, '');
+      return cleaned.length >= 5 ? null : ERR;
+    }
+    case 'linkedin': {
+      const cleaned = v.replace(/^(?:https?:\/\/)?(?:www\.)?linkedin\.com\/in\//, '').replace(/\/$/, '');
+      return cleaned.length >= 3 ? null : ERR;
+    }
+    case 'vk': {
+      const cleaned = v.replace(/^(?:https?:\/\/)?(?:www\.)?vk\.com\//, '').replace(/\/$/, '');
+      return cleaned.length >= 1 ? null : ERR;
+    }
+    case 'email':
+      return /^.+@.+\..+$/.test(v) ? null : ERR;
+    case 'website':
+      return /^https?:\/\/.+\..+/.test(v) || /^.+\..+/.test(v) ? null : ERR;
+    default:
+      return null;
+  }
+}

@@ -16,6 +16,7 @@ import { languageNames } from '@so/i18n';
 import { Input } from '../components/ui/input';
 import { SocialIcon } from '../components/ui/social-icons';
 import { usePushNotifications } from '../hooks/usePushNotifications';
+import { validateContact } from '@so/shared';
 
 export function SettingsPage() {
   const { t, i18n } = useTranslation();
@@ -38,6 +39,7 @@ export function SettingsPage() {
     if (debounceTimers.current[type]) clearTimeout(debounceTimers.current[type]);
     debounceTimers.current[type] = setTimeout(() => {
       if (!contacts) return;
+      if (validateContact(type, value)) return; // skip save if invalid
       const updates = contacts.map(c => ({
         type: c.type,
         value: type === c.type ? value : (contactValues[c.type] ?? c.value),
@@ -154,13 +156,15 @@ export function SettingsPage() {
           {contacts?.map((contact) => {
             const isTelegram = contact.type === 'telegram';
             const currentVal = contactValues[contact.type];
+            const displayVal = currentVal ?? contact.value;
+            const validationError = displayVal.trim() ? validateContact(contact.type, displayVal) : null;
             return (
               <div key={contact.type} className="relative">
                 <SocialIcon type={contact.icon} className={`w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none ${isTelegram ? 'text-blue-500' : 'text-gray-500'}`} />
                 <Input
                   id={`contact-${contact.type}`}
                   placeholder={contact.placeholder}
-                  value={currentVal ?? contact.value}
+                  value={displayVal}
                   onChange={(e) => {
                     if (isTelegram) return;
                     const val = e.target.value;
@@ -169,6 +173,7 @@ export function SettingsPage() {
                   }}
                   className={`w-full pl-10 ${savedTypes[contact.type] ? 'pr-10' : ''} ${isTelegram ? 'opacity-60 cursor-not-allowed bg-gray-50 dark:bg-gray-800/50' : ''}`}
                   disabled={isTelegram}
+                  error={validationError ? ' ' : undefined}
                 />
                 {savedTypes[contact.type] && (
                   <div className="absolute right-3 top-1/2 -translate-y-1/2 text-green-500">

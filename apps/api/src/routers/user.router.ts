@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { router, protectedProcedure } from '../trpc.js';
 import { TRPCError } from '@trpc/server';
-import { CONTACT_TYPES, CURRENCY_CODES } from '@so/shared';
+import { CONTACT_TYPES, CURRENCY_CODES, validateContact } from '@so/shared';
 import { convertToUSD } from '../services/currency.service.js';
 
 export const userRouter = router({
@@ -97,6 +97,7 @@ export const userRouter = router({
       // Upsert each contact (telegram is auto-managed from TG login, skip it)
       for (const { type, value } of input) {
         if (type === 'telegram') continue;
+        if (value.trim() && validateContact(type, value)) continue; // skip invalid
         if (value.trim()) {
           await ctx.db.userContact.upsert({
             where: { userId_type: { userId: ctx.userId, type } },

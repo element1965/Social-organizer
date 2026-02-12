@@ -8,6 +8,7 @@ import { Select } from '../components/ui/select';
 import { SocialIcon } from '../components/ui/social-icons';
 import { Users, Zap, Eye, UserPlus, MessageCircle, Wallet } from 'lucide-react';
 import { cn } from '../lib/utils';
+import { validateContact } from '@so/shared';
 
 interface Step {
   icon: typeof Users;
@@ -63,7 +64,10 @@ export function OnboardingPage() {
   const updateContacts = trpc.user.updateContacts.useMutation();
   const utils = trpc.useUtils();
 
-  const filledContactsCount = Object.values(contacts).filter(v => v.trim()).length;
+  const contactErrors = Object.fromEntries(
+    Object.entries(contacts).map(([type, value]) => [type, validateContact(type, value)])
+  );
+  const filledContactsCount = Object.entries(contacts).filter(([type, v]) => v.trim() && !contactErrors[type]).length;
   const contactsValid = filledContactsCount >= 2;
 
   const budgetInUSD = budgetCurrency === 'USD' ? Number(budgetAmount) : (preview?.result ?? 0);
@@ -115,6 +119,7 @@ export function OnboardingPage() {
                   onChange={(e) => setContacts(prev => ({ ...prev, [field.type]: e.target.value }))}
                   placeholder={field.placeholder}
                   className="flex-1"
+                  error={contacts[field.type]?.trim() && contactErrors[field.type] ? t(contactErrors[field.type]!) : undefined}
                 />
               </div>
             ))}
