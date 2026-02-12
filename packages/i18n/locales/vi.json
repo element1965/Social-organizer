@@ -477,5 +477,8 @@
     "next": "Tiếp theo",
     "save": "Lưu và tiếp tục",
     "contactsFilled": "Đã điền: {{count}}/2"
+  },
+  "validation": {
+    "invalidContact": "Định dạng không hợp lệ"
   }
 }

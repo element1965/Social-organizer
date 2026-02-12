@@ -477,5 +477,8 @@
     "next": "التالي",
     "save": "حفظ ومتابعة",
     "contactsFilled": "مملوء: {{count}}/2"
+  },
+  "validation": {
+    "invalidContact": "تنسيق غير صالح"
   }
 }

@@ -477,5 +477,8 @@
     "next": "Следеће",
     "save": "Сачувај и настави",
     "contactsFilled": "Попуњено: {{count}}/2"
+  },
+  "validation": {
+    "invalidContact": "Неважећи формат"
   }
 }

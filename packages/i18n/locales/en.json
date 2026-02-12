@@ -484,5 +484,8 @@
     "budget": "Budget",
     "root": "Root",
     "contactRoot": "Contact root"
+  },
+  "validation": {
+    "invalidContact": "Invalid format"
   }
 }

@@ -484,5 +484,8 @@
     "budget": "Бюджет",
     "root": "Корень",
     "contactRoot": "Связаться с корнем"
+  },
+  "validation": {
+    "invalidContact": "Неверный формат"
   }
 }

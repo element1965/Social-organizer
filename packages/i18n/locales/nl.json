@@ -477,5 +477,8 @@
     "next": "Volgende",
     "save": "Opslaan en doorgaan",
     "contactsFilled": "Ingevuld: {{count}}/2"
+  },
+  "validation": {
+    "invalidContact": "Ongeldig formaat"
   }
 }

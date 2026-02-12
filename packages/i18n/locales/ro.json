@@ -477,5 +477,8 @@
     "next": "Următorul",
     "save": "Salvează și continuă",
     "contactsFilled": "Completate: {{count}}/2"
+  },
+  "validation": {
+    "invalidContact": "Format invalid"
   }
 }

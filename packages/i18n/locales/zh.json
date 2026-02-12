@@ -477,5 +477,8 @@
     "next": "下一步",
     "save": "保存并继续",
     "contactsFilled": "已填写: {{count}}/2"
+  },
+  "validation": {
+    "invalidContact": "格式无效"
   }
 }

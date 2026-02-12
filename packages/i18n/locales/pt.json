@@ -477,5 +477,8 @@
     "next": "Seguinte",
     "save": "Guardar e continuar",
     "contactsFilled": "Preenchidos: {{count}}/2"
+  },
+  "validation": {
+    "invalidContact": "Formato inválido"
   }
 }

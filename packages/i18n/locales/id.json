@@ -477,5 +477,8 @@
     "next": "Berikutnya",
     "save": "Simpan dan lanjutkan",
     "contactsFilled": "Terisi: {{count}}/2"
+  },
+  "validation": {
+    "invalidContact": "Format tidak valid"
   }
 }

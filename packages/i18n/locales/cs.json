@@ -477,5 +477,8 @@
     "next": "Další",
     "save": "Uložit a pokračovat",
     "contactsFilled": "Vyplněno: {{count}}/2"
+  },
+  "validation": {
+    "invalidContact": "Neplatný formát"
   }
 }

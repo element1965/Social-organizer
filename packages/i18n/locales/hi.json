@@ -477,5 +477,8 @@
     "next": "अगला",
     "save": "सहेजें और जारी रखें",
     "contactsFilled": "भरा गया: {{count}}/2"
+  },
+  "validation": {
+    "invalidContact": "अमान्य प्रारूप"
   }
 }

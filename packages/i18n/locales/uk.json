@@ -477,5 +477,8 @@
     "next": "Далі",
     "save": "Зберегти і продовжити",
     "contactsFilled": "Заповнено: {{count}}/2"
+  },
+  "validation": {
+    "invalidContact": "Невірний формат"
   }
 }

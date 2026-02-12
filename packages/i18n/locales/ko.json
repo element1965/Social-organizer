@@ -477,5 +477,8 @@
     "next": "다음",
     "save": "저장하고 계속",
     "contactsFilled": "입력됨: {{count}}/2"
+  },
+  "validation": {
+    "invalidContact": "잘못된 형식"
   }
 }
