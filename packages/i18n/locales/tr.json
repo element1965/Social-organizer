@@ -264,7 +264,9 @@
     "contacts": "İletişim",
     "currentCapability": "Mevcut olanak",
     "memberSince": "{{date}} tarihinden beri üye",
-    "nicknamePlaceholder": "Onlar için adınız..."
+    "nicknamePlaceholder": "Onlar için adınız...",
+    "addDirect": "Doğrudan kişilere ekle",
+    "directRequestSent": "İstek gönderildi. Onay bekleniyor"
   },
   "settings": {
     "title": "Ayarlar",

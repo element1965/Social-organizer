@@ -264,7 +264,9 @@
     "contacts": "संपर्क",
     "currentCapability": "वर्तमान क्षमता",
     "memberSince": "{{date}} से सदस्य",
-    "nicknamePlaceholder": "उनके लिए आपका नाम..."
+    "nicknamePlaceholder": "उनके लिए आपका नाम...",
+    "addDirect": "सीधे संपर्कों में जोड़ें",
+    "directRequestSent": "अनुरोध भेजा गया। पुष्टि की प्रतीक्षा"
   },
   "settings": {
     "title": "सेटिंग्स",

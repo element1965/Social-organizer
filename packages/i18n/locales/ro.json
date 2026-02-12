@@ -264,7 +264,9 @@
     "contacts": "Contacte",
     "currentCapability": "Capacitate curenta",
     "memberSince": "Membru din {{date}}",
-    "nicknamePlaceholder": "Numele tău pentru ei..."
+    "nicknamePlaceholder": "Numele tău pentru ei...",
+    "addDirect": "Adaugă la contacte directe",
+    "directRequestSent": "Cerere trimisă. Se așteaptă confirmarea"
   },
   "settings": {
     "title": "Setari",

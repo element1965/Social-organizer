@@ -264,7 +264,9 @@
     "contacts": "Kontaktuppgifter",
     "currentCapability": "Nuvarande mojlighet",
     "memberSince": "Medlem sedan {{date}}",
-    "nicknamePlaceholder": "Ditt namn för dem..."
+    "nicknamePlaceholder": "Ditt namn för dem...",
+    "addDirect": "Lägg till i direkta kontakter",
+    "directRequestSent": "Förfrågan skickad. Väntar på bekräftelse"
   },
   "settings": {
     "title": "Installningar",

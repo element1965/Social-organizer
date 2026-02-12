@@ -274,7 +274,9 @@
     "contacts": "אנשי קשר",
     "currentCapability": "יכולת נוכחית",
     "memberSince": "חבר מאז {{date}}",
-    "nicknamePlaceholder": "השם שלך עבורם..."
+    "nicknamePlaceholder": "השם שלך עבורם...",
+    "addDirect": "הוסף לאנשי קשר ישירים",
+    "directRequestSent": "הבקשה נשלחה. ממתין לאישור"
   },
   "settings": {
     "title": "הגדרות",

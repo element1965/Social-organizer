@@ -264,7 +264,9 @@
     "contacts": "Contactgegevens",
     "currentCapability": "Huidige mogelijkheid",
     "memberSince": "Lid sinds {{date}}",
-    "nicknamePlaceholder": "Jouw naam voor hen..."
+    "nicknamePlaceholder": "Jouw naam voor hen...",
+    "addDirect": "Toevoegen aan directe contacten",
+    "directRequestSent": "Verzoek verzonden. Wacht op bevestiging"
   },
   "settings": {
     "title": "Instellingen",

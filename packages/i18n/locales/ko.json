@@ -264,7 +264,9 @@
     "contacts": "연락처",
     "currentCapability": "현재 역량",
     "memberSince": "{{date}}부터 회원",
-    "nicknamePlaceholder": "상대방에게 보이는 이름..."
+    "nicknamePlaceholder": "상대방에게 보이는 이름...",
+    "addDirect": "직접 연락처에 추가",
+    "directRequestSent": "요청이 전송되었습니다. 확인 대기 중"
   },
   "settings": {
     "title": "설정",

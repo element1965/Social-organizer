@@ -264,7 +264,9 @@
     "contacts": "Kontakter",
     "currentCapability": "Nuværende kapacitet",
     "memberSince": "Medlem siden {{date}}",
-    "nicknamePlaceholder": "Dit navn for dem..."
+    "nicknamePlaceholder": "Dit navn for dem...",
+    "addDirect": "Tilføj til direkte kontakter",
+    "directRequestSent": "Anmodning sendt. Afventer bekræftelse"
   },
   "settings": {
     "title": "Indstillinger",
