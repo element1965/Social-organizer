@@ -131,6 +131,16 @@ async function start() {
       }
     });
 
+    // Deep link trampoline — opens Instagram app to the correct profile
+    // on Android (bypasses App Links interception that loses the path)
+    app.get('/api/open/instagram/:username', async (req, reply) => {
+      const username = (req.params as Record<string, string>).username?.replace(/[^a-zA-Z0-9._]/g, '');
+      if (!username) return reply.status(400).send('Bad username');
+      reply.header('Content-Type', 'text/html; charset=utf-8');
+      reply.header('Cache-Control', 'no-store');
+      return reply.send(`<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>Opening Instagram...</title></head><body style="background:#000;color:#fff;display:flex;align-items:center;justify-content:center;height:100vh;margin:0;font-family:system-ui"><p>Opening Instagram...</p><script>window.location.href='instagram://user?username=${username}';setTimeout(function(){window.location.href='https://instagram.com/${username}'},2000);</script></body></html>`);
+    });
+
     // Serve web frontend (if dist exists)
     if (existsSync(WEB_DIST)) {
       await app.register(fastifyStatic, {
