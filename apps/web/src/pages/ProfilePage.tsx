@@ -160,7 +160,12 @@ export function ProfilePage() {
                 const handleClick = (e: React.MouseEvent) => {
                   if (isTelegramWebApp() && !url.startsWith('mailto:')) {
                     e.preventDefault();
-                    window.Telegram.WebApp.openLink(url, { try_instant_view: false });
+                    if (contact.type === 'instagram') {
+                      const username = contact.value.replace(/^@/, '').replace(/^(?:https?:\/\/)?(?:www\.)?instagram\.com\//, '').replace(/\/$/, '');
+                      window.Telegram.WebApp.openLink(`${window.location.origin}/api/open/instagram/${username}`, { try_instant_view: false });
+                    } else {
+                      window.Telegram.WebApp.openLink(url, { try_instant_view: false });
+                    }
                   }
                 };
                 return (
