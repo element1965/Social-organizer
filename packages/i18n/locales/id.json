@@ -264,7 +264,9 @@
     "contacts": "Kontak",
     "currentCapability": "Kemampuan saat ini",
     "memberSince": "Anggota sejak {{date}}",
-    "nicknamePlaceholder": "Nama Anda untuk mereka..."
+    "nicknamePlaceholder": "Nama Anda untuk mereka...",
+    "addDirect": "Tambahkan ke kontak langsung",
+    "directRequestSent": "Permintaan terkirim. Menunggu konfirmasi"
   },
   "settings": {
     "title": "Pengaturan",

@@ -264,7 +264,9 @@
     "contacts": "Контакти",
     "currentCapability": "Тренутна могућност",
     "memberSince": "Члан од {{date}}",
-    "nicknamePlaceholder": "Твоје име за њих..."
+    "nicknamePlaceholder": "Твоје име за њих...",
+    "addDirect": "Додај у директне контакте",
+    "directRequestSent": "Захтев послат. Чека се потврда"
   },
   "settings": {
     "title": "Подешавања",

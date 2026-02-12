@@ -264,7 +264,9 @@
     "contacts": "Contacts",
     "currentCapability": "Capacité actuelle",
     "memberSince": "Membre depuis {{date}}",
-    "nicknamePlaceholder": "Votre nom pour eux..."
+    "nicknamePlaceholder": "Votre nom pour eux...",
+    "addDirect": "Ajouter aux contacts directs",
+    "directRequestSent": "Demande envoyée. En attente de confirmation"
   },
   "settings": {
     "title": "Paramètres",

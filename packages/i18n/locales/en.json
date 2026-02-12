@@ -271,7 +271,9 @@
     "memberSince": "Member since {{date}}",
     "nicknamePlaceholder": "Your name for them...",
     "online": "Online",
-    "lastSeen": "Last seen {{time}}"
+    "lastSeen": "Last seen {{time}}",
+    "addDirect": "Add to direct contacts",
+    "directRequestSent": "Request sent. Awaiting confirmation"
   },
   "settings": {
     "title": "Settings",

@@ -264,7 +264,9 @@
     "contacts": "ช่องทางติดต่อ",
     "currentCapability": "ศักยภาพปัจจุบัน",
     "memberSince": "สมาชิกตั้งแต่ {{date}}",
-    "nicknamePlaceholder": "ชื่อของคุณสำหรับพวกเขา..."
+    "nicknamePlaceholder": "ชื่อของคุณสำหรับพวกเขา...",
+    "addDirect": "เพิ่มในรายชื่อติดต่อโดยตรง",
+    "directRequestSent": "ส่งคำขอแล้ว รอการยืนยัน"
   },
   "settings": {
     "title": "ตั้งค่า",

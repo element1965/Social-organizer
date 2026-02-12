@@ -264,7 +264,9 @@
     "contacts": "Yhteystiedot",
     "currentCapability": "Nykyinen kapasiteetti",
     "memberSince": "Jäsen {{date}} alkaen",
-    "nicknamePlaceholder": "Sinun nimesi heille..."
+    "nicknamePlaceholder": "Sinun nimesi heille...",
+    "addDirect": "Lisää suoriin kontakteihin",
+    "directRequestSent": "Pyyntö lähetetty. Odottaa vahvistusta"
   },
   "settings": {
     "title": "Asetukset",

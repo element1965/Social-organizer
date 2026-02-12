@@ -264,7 +264,9 @@
     "contacts": "Kontakty",
     "currentCapability": "Aktuální kapacita",
     "memberSince": "Členem od {{date}}",
-    "nicknamePlaceholder": "Vaše jméno pro ně..."
+    "nicknamePlaceholder": "Vaše jméno pro ně...",
+    "addDirect": "Přidat do přímých kontaktů",
+    "directRequestSent": "Žádost odeslána. Čeká na potvrzení"
   },
   "settings": {
     "title": "Nastavení",

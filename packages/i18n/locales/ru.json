@@ -271,7 +271,9 @@
     "memberSince": "Участник с {{date}}",
     "nicknamePlaceholder": "Своё имя для них...",
     "online": "В сети",
-    "lastSeen": "Был(а) в сети {{time}}"
+    "lastSeen": "Был(а) в сети {{time}}",
+    "addDirect": "Добавить в прямые контакты",
+    "directRequestSent": "Запрос отправлен. Ожидайте подтверждения"
   },
   "settings": {
     "title": "Настройки",

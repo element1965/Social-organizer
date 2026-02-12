@@ -264,7 +264,9 @@
     "contacts": "Liên hệ",
     "currentCapability": "Khả năng hiện tại",
     "memberSince": "Thành viên từ {{date}}",
-    "nicknamePlaceholder": "Tên của bạn cho họ..."
+    "nicknamePlaceholder": "Tên của bạn cho họ...",
+    "addDirect": "Thêm vào liên hệ trực tiếp",
+    "directRequestSent": "Yêu cầu đã gửi. Đang chờ xác nhận"
   },
   "settings": {
     "title": "Cài đặt",

@@ -6,7 +6,7 @@ import { useAuth } from '../hooks/useAuth';
 import { Card, CardContent, CardHeader } from '../components/ui/card';
 import { Avatar } from '../components/ui/avatar';
 import { Spinner } from '../components/ui/spinner';
-import { Wallet, Calendar, Pencil, Check, X } from 'lucide-react';
+import { Wallet, Calendar, Pencil, Check, X, UserPlus } from 'lucide-react';
 import { HandshakePath } from '../components/HandshakePath';
 import { SocialIcon } from '../components/ui/social-icons';
 import { buildContactUrl } from '@so/shared';
@@ -43,6 +43,15 @@ export function ProfilePage() {
       utils.connection.getNickname.invalidate({ targetUserId: paramId! });
       utils.connection.list.invalidate();
     },
+  });
+
+  const isIndirect = !isOwn && !!paramId && pathData?.path && pathData.path.length >= 3 && nicknameData?.isConnected === false;
+  const { data: directStatus } = trpc.pending.directStatus.useQuery(
+    { targetUserId: paramId! },
+    { enabled: !!isIndirect }
+  );
+  const sendDirectMut = trpc.pending.sendDirectRequest.useMutation({
+    onSuccess: () => utils.pending.directStatus.invalidate({ targetUserId: paramId! }),
   });
 
   const [editingNickname, setEditingNickname] = useState(false);
@@ -161,6 +170,25 @@ export function ProfilePage() {
           <CardContent className="py-3">
             <p className="text-xs text-gray-500 mb-2">{t('profile.connectionPath')}</p>
             <HandshakePath path={pathData.path} onUserClick={(id) => navigate(`/profile/${id}`)} />
+          </CardContent>
+        </Card>
+      )}
+
+      {isIndirect && directStatus && (
+        <Card>
+          <CardContent className="py-3">
+            {directStatus.status === 'none' ? (
+              <button
+                onClick={() => sendDirectMut.mutate({ targetUserId: paramId! })}
+                disabled={sendDirectMut.isPending}
+                className="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white font-medium transition-colors"
+              >
+                <UserPlus className="w-4.5 h-4.5" />
+                {t('profile.addDirect')}
+              </button>
+            ) : directStatus.status === 'pending' ? (
+              <p className="text-center text-sm text-gray-500">{t('profile.directRequestSent')}</p>
+            ) : null}
           </CardContent>
         </Card>
       )}

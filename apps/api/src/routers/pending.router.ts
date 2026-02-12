@@ -59,6 +59,59 @@ export const pendingRouter = router({
       return { success: true };
     }),
 
+  sendDirectRequest: protectedProcedure
+    .input(z.object({ targetUserId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      if (input.targetUserId === ctx.userId) {
+        throw new TRPCError({ code: 'BAD_REQUEST', message: 'Cannot send request to yourself' });
+      }
+
+      const [userAId, userBId] = [ctx.userId, input.targetUserId].sort();
+      const existingConnection = await ctx.db.connection.findUnique({
+        where: { userAId_userBId: { userAId: userAId!, userBId: userBId! } },
+      });
+      if (existingConnection) {
+        throw new TRPCError({ code: 'CONFLICT', message: 'Already connected' });
+      }
+
+      const existingPending = await ctx.db.pendingConnection.findFirst({
+        where: {
+          OR: [
+            { fromUserId: ctx.userId, toUserId: input.targetUserId, status: 'PENDING' },
+            { fromUserId: input.targetUserId, toUserId: ctx.userId, status: 'PENDING' },
+          ],
+        },
+      });
+      if (existingPending) {
+        throw new TRPCError({ code: 'CONFLICT', message: 'Request already pending' });
+      }
+
+      await ctx.db.pendingConnection.create({
+        data: { fromUserId: ctx.userId, toUserId: input.targetUserId, createdAt: new Date() },
+      });
+
+      const sender = await ctx.db.user.findUnique({ where: { id: ctx.userId }, select: { name: true } });
+      sendPendingNotification(ctx.db, input.targetUserId, 'new', sender?.name || '').catch(() => {});
+
+      return { success: true };
+    }),
+
+  directStatus: protectedProcedure
+    .input(z.object({ targetUserId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const pending = await ctx.db.pendingConnection.findFirst({
+        where: {
+          OR: [
+            { fromUserId: ctx.userId, toUserId: input.targetUserId },
+            { fromUserId: input.targetUserId, toUserId: ctx.userId },
+          ],
+        },
+        orderBy: { createdAt: 'desc' },
+      });
+      if (!pending) return { status: 'none' as const };
+      return { status: pending.status.toLowerCase() as 'pending' | 'accepted' | 'rejected' };
+    }),
+
   reject: protectedProcedure
     .input(z.object({ pendingId: z.string() }))
     .mutation(async ({ ctx, input }) => {

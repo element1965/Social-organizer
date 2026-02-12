@@ -264,7 +264,9 @@
     "contacts": "联系方式",
     "currentCapability": "当前能力",
     "memberSince": "加入于 {{date}}",
-    "nicknamePlaceholder": "你给他们的备注名..."
+    "nicknamePlaceholder": "你给他们的备注名...",
+    "addDirect": "添加为直接联系人",
+    "directRequestSent": "请求已发送，等待确认"
   },
   "settings": {
     "title": "设置",

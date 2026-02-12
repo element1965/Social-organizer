@@ -264,7 +264,9 @@
     "contacts": "Контакти",
     "currentCapability": "Поточна можливість",
     "memberSince": "Учасник з {{date}}",
-    "nicknamePlaceholder": "Ваше ім'я для них..."
+    "nicknamePlaceholder": "Ваше ім'я для них...",
+    "addDirect": "Додати до прямих контактів",
+    "directRequestSent": "Запит надіслано. Очікуйте підтвердження"
   },
   "settings": {
     "title": "Налаштування",

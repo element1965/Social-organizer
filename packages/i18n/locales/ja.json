@@ -264,7 +264,9 @@
     "contacts": "連絡先",
     "currentCapability": "現在の能力",
     "memberSince": "{{date}} から参加",
-    "nicknamePlaceholder": "相手への表示名..."
+    "nicknamePlaceholder": "相手への表示名...",
+    "addDirect": "直接連絡先に追加",
+    "directRequestSent": "リクエスト送信済み。確認待ち"
   },
   "settings": {
     "title": "設定",
