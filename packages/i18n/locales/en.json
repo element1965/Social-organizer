@@ -273,7 +273,9 @@
     "online": "Online",
     "lastSeen": "Last seen {{time}}",
     "addDirect": "Add to direct contacts",
-    "directRequestSent": "Request sent. Awaiting confirmation"
+    "directRequestSent": "Request sent. Awaiting confirmation",
+    "revokeHandshake": "Revoke handshake",
+    "revokeConfirm": "The connection will be reset. The user will need to be re-confirmed. Continue?"
   },
   "settings": {
     "title": "Settings",

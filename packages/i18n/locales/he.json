@@ -276,7 +276,9 @@
     "memberSince": "חבר מאז {{date}}",
     "nicknamePlaceholder": "השם שלך עבורם...",
     "addDirect": "הוסף לאנשי קשר ישירים",
-    "directRequestSent": "הבקשה נשלחה. ממתין לאישור"
+    "directRequestSent": "הבקשה נשלחה. ממתין לאישור",
+    "revokeHandshake": "בטל לחיצת יד",
+    "revokeConfirm": "החיבור יאופס. המשתמש יצטרך אישור מחדש. להמשיך?"
   },
   "settings": {
     "title": "הגדרות",

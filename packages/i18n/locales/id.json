@@ -266,7 +266,9 @@
     "memberSince": "Anggota sejak {{date}}",
     "nicknamePlaceholder": "Nama Anda untuk mereka...",
     "addDirect": "Tambahkan ke kontak langsung",
-    "directRequestSent": "Permintaan terkirim. Menunggu konfirmasi"
+    "directRequestSent": "Permintaan terkirim. Menunggu konfirmasi",
+    "revokeHandshake": "Cabut jabat tangan",
+    "revokeConfirm": "Koneksi akan direset. Pengguna perlu dikonfirmasi ulang. Lanjutkan?"
   },
   "settings": {
     "title": "Pengaturan",

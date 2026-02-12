@@ -266,7 +266,9 @@
     "memberSince": "Medlem siden {{date}}",
     "nicknamePlaceholder": "Ditt navn for dem...",
     "addDirect": "Legg til i direkte kontakter",
-    "directRequestSent": "Forespørsel sendt. Venter på bekreftelse"
+    "directRequestSent": "Forespørsel sendt. Venter på bekreftelse",
+    "revokeHandshake": "Tilbakekall håndtrykk",
+    "revokeConfirm": "Forbindelsen tilbakestilles. Brukeren må bekreftes på nytt. Fortsette?"
   },
   "settings": {
     "title": "Innstillinger",

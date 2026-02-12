@@ -202,6 +202,29 @@ export const connectionRouter = router({
       return { success: true, nickname: value };
     }),
 
+  revoke: protectedProcedure
+    .input(z.object({ targetUserId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const [userAId, userBId] = [ctx.userId, input.targetUserId].sort();
+      const conn = await ctx.db.connection.findUnique({
+        where: { userAId_userBId: { userAId: userAId!, userBId: userBId! } },
+      });
+      if (!conn) throw new TRPCError({ code: 'NOT_FOUND', message: 'Connection not found' });
+
+      await ctx.db.connection.delete({
+        where: { userAId_userBId: { userAId: userAId!, userBId: userBId! } },
+      });
+
+      // Create pending as if target requested connection (awaiting my confirmation)
+      await ctx.db.pendingConnection.upsert({
+        where: { fromUserId_toUserId: { fromUserId: input.targetUserId, toUserId: ctx.userId } },
+        create: { fromUserId: input.targetUserId, toUserId: ctx.userId, createdAt: new Date() },
+        update: { status: 'PENDING', resolvedAt: null },
+      });
+
+      return { success: true };
+    }),
+
   growthHistory: protectedProcedure.query(async ({ ctx }) => {
     // Get user's registration date to show full history from day 1
     const user = await ctx.db.user.findUnique({

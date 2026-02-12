@@ -266,7 +266,9 @@
     "memberSince": "Członek od {{date}}",
     "nicknamePlaceholder": "Twoja nazwa dla nich...",
     "addDirect": "Dodaj do bezpośrednich kontaktów",
-    "directRequestSent": "Prośba wysłana. Oczekiwanie na potwierdzenie"
+    "directRequestSent": "Prośba wysłana. Oczekiwanie na potwierdzenie",
+    "revokeHandshake": "Cofnij uścisk dłoni",
+    "revokeConfirm": "Połączenie zostanie zresetowane. Użytkownik będzie wymagał ponownego potwierdzenia. Kontynuować?"
   },
   "settings": {
     "title": "Ustawienia",

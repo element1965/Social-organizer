@@ -266,7 +266,9 @@
     "memberSince": "Miembro desde {{date}}",
     "nicknamePlaceholder": "Tu nombre para ellos...",
     "addDirect": "Añadir a contactos directos",
-    "directRequestSent": "Solicitud enviada. Esperando confirmación"
+    "directRequestSent": "Solicitud enviada. Esperando confirmación",
+    "revokeHandshake": "Revocar apretón de manos",
+    "revokeConfirm": "La conexión se restablecerá. El usuario deberá ser reconfirmado. ¿Continuar?"
   },
   "settings": {
     "title": "Ajustes",

@@ -6,7 +6,7 @@ import { useAuth } from '../hooks/useAuth';
 import { Card, CardContent, CardHeader } from '../components/ui/card';
 import { Avatar } from '../components/ui/avatar';
 import { Spinner } from '../components/ui/spinner';
-import { Wallet, Calendar, Pencil, Check, X, UserPlus } from 'lucide-react';
+import { Wallet, Calendar, Pencil, Check, X, UserPlus, UserMinus } from 'lucide-react';
 import { HandshakePath } from '../components/HandshakePath';
 import { SocialIcon } from '../components/ui/social-icons';
 import { buildContactUrl } from '@so/shared';
@@ -52,6 +52,15 @@ export function ProfilePage() {
   );
   const sendDirectMut = trpc.pending.sendDirectRequest.useMutation({
     onSuccess: () => utils.pending.directStatus.invalidate({ targetUserId: paramId! }),
+  });
+  const revokeMut = trpc.connection.revoke.useMutation({
+    onSuccess: () => {
+      utils.connection.getNickname.invalidate({ targetUserId: paramId! });
+      utils.connection.findPath.invalidate({ targetUserId: paramId! });
+      utils.connection.getNetworkStats.invalidate();
+      utils.connection.getCount.invalidate();
+      utils.pending.incoming.invalidate();
+    },
   });
 
   const [editingNickname, setEditingNickname] = useState(false);
@@ -231,6 +240,20 @@ export function ProfilePage() {
         </Card>
       )}
 
+      {nicknameData?.isConnected && (
+        <button
+          onClick={() => {
+            if (window.confirm(t('profile.revokeConfirm'))) {
+              revokeMut.mutate({ targetUserId: paramId! });
+            }
+          }}
+          disabled={revokeMut.isPending}
+          className="w-full flex items-center justify-center gap-2 py-2 text-xs text-gray-400 hover:text-red-500 transition-colors"
+        >
+          <UserMinus className="w-3.5 h-3.5" />
+          {t('profile.revokeHandshake')}
+        </button>
+      )}
     </div>
   );
 }

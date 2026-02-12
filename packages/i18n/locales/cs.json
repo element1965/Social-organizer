@@ -266,7 +266,9 @@
     "memberSince": "Členem od {{date}}",
     "nicknamePlaceholder": "Vaše jméno pro ně...",
     "addDirect": "Přidat do přímých kontaktů",
-    "directRequestSent": "Žádost odeslána. Čeká na potvrzení"
+    "directRequestSent": "Žádost odeslána. Čeká na potvrzení",
+    "revokeHandshake": "Odvolat podání ruky",
+    "revokeConfirm": "Spojení bude resetováno. Uživatel bude muset být znovu potvrzen. Pokračovat?"
   },
   "settings": {
     "title": "Nastavení",
