@@ -138,7 +138,8 @@ async function start() {
       if (!username) return reply.status(400).send('Bad username');
       reply.header('Content-Type', 'text/html; charset=utf-8');
       reply.header('Cache-Control', 'no-store');
-      return reply.send(`<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>Opening Instagram...</title></head><body style="background:#000;color:#fff;display:flex;align-items:center;justify-content:center;height:100vh;margin:0;font-family:system-ui"><p>Opening Instagram...</p><script>window.location.href='instagram://user?username=${username}';setTimeout(function(){window.location.href='https://instagram.com/${username}'},2000);</script></body></html>`);
+      const intentUri = `intent://user?username=${username}#Intent;scheme=instagram;package=com.instagram.android;S.browser_fallback_url=https%3A%2F%2Finstagram.com%2F${username};end`;
+      return reply.send(`<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>Opening Instagram...</title></head><body style="background:#000;color:#fff;display:flex;align-items:center;justify-content:center;height:100vh;margin:0;font-family:system-ui"><p>Opening @${username}...</p><script>var u=navigator.userAgent;if(/android/i.test(u)){window.location.href='${intentUri}'}else if(/iPhone|iPad/i.test(u)){window.location.href='instagram://user?username=${username}';setTimeout(function(){window.location.href='https://instagram.com/${username}'},1500)}else{window.location.href='https://instagram.com/${username}'}</script><noscript><a href="https://instagram.com/${username}">Open profile</a></noscript></body></html>`);
     });
 
     // Serve web frontend (if dist exists)
