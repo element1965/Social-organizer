@@ -12,7 +12,7 @@ import { Progress } from '../components/ui/progress';
 import { Spinner } from '../components/ui/spinner';
 import { Avatar } from '../components/ui/avatar';
 import { MIN_CONNECTIONS_TO_CREATE } from '@so/shared';
-import { AlertTriangle, Users, ArrowRight, PlusCircle, Wallet, ShieldAlert, UserPlus, X } from 'lucide-react';
+import { AlertTriangle, Users, ArrowRight, PlusCircle, Wallet, ShieldAlert, UserPlus, X, HandHeart } from 'lucide-react';
 
 export function CreateCollectionPage() {
   const { t } = useTranslation();
@@ -21,6 +21,7 @@ export function CreateCollectionPage() {
   const [showInvitePopup, setShowInvitePopup] = useState(false);
 
   const { data: me } = trpc.user.me.useQuery();
+  const { data: helpStats } = trpc.stats.help.useQuery(undefined, { refetchInterval: 60000 });
   const { data: connectionCount } = trpc.connection.getCount.useQuery();
   const { data: networkStats } = trpc.connection.getNetworkStats.useQuery();
   const { data: myCollections } = trpc.collection.myActive.useQuery(undefined, { refetchInterval: 30000 });
@@ -243,6 +244,50 @@ export function CreateCollectionPage() {
           {create.error && <p className="text-sm text-red-500 text-center">{create.error.message}</p>}
         </CardContent>
       </Card>
+
+      {/* Help stats semi-donut */}
+      {helpStats && (() => {
+        const givenAmt = helpStats.given?.totalAmount ?? 0;
+        const receivedAmt = helpStats.received?.totalAmount ?? 0;
+        const total = givenAmt + receivedAmt;
+        const circumference = Math.PI * 80;
+        const givenLen = total > 0 ? (givenAmt / total) * circumference : 0;
+        const receivedLen = total > 0 ? (receivedAmt / total) * circumference : 0;
+        return (
+          <Card className="mt-4">
+            <CardContent className="py-4">
+              <div className="flex items-center justify-center gap-2 mb-3">
+                <HandHeart className="w-4 h-4 text-orange-500" />
+                <h2 className="text-sm font-semibold text-gray-900 dark:text-white">{t('dashboard.helpStats')}</h2>
+              </div>
+              <div className="flex items-center justify-center gap-6">
+                <div className="text-center min-w-[70px]">
+                  <p className="text-xl font-bold text-green-600 dark:text-green-400">${givenAmt}</p>
+                  <p className="text-[11px] text-gray-500">{t('dashboard.helpGiven')}</p>
+                </div>
+                <div className="relative">
+                  <svg viewBox="0 0 200 110" className="w-28 h-auto">
+                    <path d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke="#e5e7eb" strokeWidth="16" strokeLinecap="round" />
+                    {givenLen > 0 && (
+                      <path d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke="#22c55e" strokeWidth="16" strokeLinecap="round"
+                        strokeDasharray={`${givenLen} ${circumference}`} />
+                    )}
+                    {receivedLen > 0 && (
+                      <path d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke="#3b82f6" strokeWidth="16"
+                        strokeDasharray={`0 ${givenLen} ${receivedLen} ${circumference}`} />
+                    )}
+                    <text x="100" y="90" textAnchor="middle" fontSize="22" fontWeight="bold" fill="currentColor">${total}</text>
+                  </svg>
+                </div>
+                <div className="text-center min-w-[70px]">
+                  <p className="text-xl font-bold text-blue-600 dark:text-blue-400">${receivedAmt}</p>
+                  <p className="text-[11px] text-gray-500">{t('dashboard.helpReceived')}</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        );
+      })()}
 
       {/* My collections */}
       <Card className="mt-4">
