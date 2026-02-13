@@ -6,7 +6,18 @@ import { Button } from '../components/ui/button';
 import { Badge } from '../components/ui/badge';
 import { Spinner } from '../components/ui/spinner';
 import { Avatar } from '../components/ui/avatar';
-import { Bell, X, ChevronRight, Clock, Users } from 'lucide-react';
+import {
+  Bell,
+  X,
+  ChevronRight,
+  Clock,
+  Users,
+  AlertTriangle,
+  ArrowRight,
+  CheckCircle,
+  XCircle,
+  Wallet,
+} from 'lucide-react';
 import { cn } from '../lib/utils';
 
 function getNotificationBadge(type: string, t: (key: string) => string): { label: string; variant: 'info' | 'warning' | 'default' | 'danger' | 'success' } {
@@ -45,7 +56,22 @@ export function NotificationsPage() {
   const dismiss = trpc.notification.dismiss.useMutation({ onSuccess: () => { utils.notification.list.invalidate(); utils.notification.unreadCount.invalidate(); } });
   const dismissAll = trpc.notification.dismissAll.useMutation({ onSuccess: () => { utils.notification.list.invalidate(); utils.notification.unreadCount.invalidate(); } });
 
+  // Pending connections
+  const { data: pendingIncoming } = trpc.pending.incoming.useQuery(undefined, { refetchInterval: 15000 });
+  const { data: myPending } = trpc.pending.myPending.useQuery(undefined, { refetchInterval: 30000 });
+  const acceptPending = trpc.pending.accept.useMutation({
+    onSuccess: () => { utils.pending.incoming.invalidate(); utils.pending.incomingCount.invalidate(); utils.connection.getNetworkStats.invalidate(); },
+  });
+  const rejectPending = trpc.pending.reject.useMutation({
+    onSuccess: () => { utils.pending.incoming.invalidate(); utils.pending.incomingCount.invalidate(); },
+  });
+
   const notifications = data?.pages.flatMap((p) => p.items) ?? [];
+
+  // Filter emergency notifications
+  const emergencyNotifications = notifications.filter(
+    (n) => n.type === 'NEW_COLLECTION' && n.status === 'UNREAD' && n.collection?.type === 'EMERGENCY' && n.collection?.status === 'ACTIVE'
+  );
 
   const handleCardClick = (n: typeof notifications[0]) => {
     markRead.mutate({ id: n.id });
@@ -53,8 +79,8 @@ export function NotificationsPage() {
   };
 
   return (
-    <div className="p-4">
-      <div className="flex items-center justify-between mb-4 pr-12">
+    <div className="p-4 space-y-4">
+      <div className="flex items-center justify-between pr-12">
         <h1 className="text-xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
           <Bell className="w-5 h-5" /> {t('notifications.title')}
         </h1>
@@ -70,7 +96,113 @@ export function NotificationsPage() {
           </Button>
         )}
       </div>
-      {isLoading ? <div className="flex justify-center py-12"><Spinner /></div> : notifications.length === 0 ? (
+
+      {/* Emergency notifications */}
+      {emergencyNotifications.length > 0 && (
+        <Card className="border-red-500 dark:border-red-700 bg-red-50 dark:bg-red-950/30">
+          <CardContent className="py-3">
+            <div className="flex items-center gap-2 mb-2">
+              <AlertTriangle className="w-5 h-5 text-red-600" />
+              <span className="font-semibold text-red-700 dark:text-red-400">
+                {t('dashboard.emergencyAlerts')} ({emergencyNotifications.length})
+              </span>
+            </div>
+            <div className="space-y-2">
+              {emergencyNotifications.slice(0, 3).map((notif) => (
+                <button
+                  key={notif.id}
+                  onClick={() => navigate(`/collection/${notif.collectionId}`)}
+                  className="w-full text-left p-2 rounded bg-white/50 dark:bg-gray-900/50 hover:bg-white dark:hover:bg-gray-900"
+                >
+                  <div className="flex items-center gap-2">
+                    <Avatar src={notif.collection?.creator?.photoUrl} name={notif.collection?.creator?.name || '?'} size="sm" />
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2">
+                        <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
+                          {notif.collection?.creator?.name}
+                        </p>
+                        <span className="flex items-center gap-0.5 text-xs text-gray-400 shrink-0">
+                          <Users className="w-3 h-3" />
+                          {(notif.collection?.creator as any)?.connectionCount ?? 0}
+                        </span>
+                        <span className="flex items-center gap-0.5 text-xs text-green-600 dark:text-green-400 shrink-0">
+                          <Wallet className="w-3 h-3" />
+                          ${Math.round((notif.collection?.creator as any)?.remainingBudget ?? 0)}
+                        </span>
+                      </div>
+                      <p className="text-xs text-gray-500">
+                        {notif.collection?.amount} {notif.collection?.currency}
+                      </p>
+                    </div>
+                    <ArrowRight className="w-4 h-4 text-gray-400" />
+                  </div>
+                </button>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Incoming pending connections */}
+      {pendingIncoming && pendingIncoming.length > 0 && (
+        <Card className="border-amber-400 dark:border-amber-700 bg-amber-50 dark:bg-amber-950/30">
+          <CardContent className="py-3">
+            <div className="flex items-center gap-2 mb-2">
+              <Clock className="w-5 h-5 text-amber-600" />
+              <span className="font-semibold text-amber-700 dark:text-amber-400">
+                {t('pending.incoming')} ({pendingIncoming.length})
+              </span>
+            </div>
+            <p className="text-xs text-gray-500 mb-2">{t('pending.meetInPerson')}</p>
+            <div className="space-y-2">
+              {pendingIncoming.map((p) => (
+                <div key={p.id} className="flex items-center gap-2 p-2 rounded bg-white/50 dark:bg-gray-900/50">
+                  <Avatar src={p.fromUser.photoUrl} name={p.fromUser.name} size="sm" />
+                  <span className="flex-1 text-sm font-medium text-gray-900 dark:text-white truncate">{p.fromUser.name}</span>
+                  <button
+                    onClick={() => acceptPending.mutate({ pendingId: p.id })}
+                    disabled={acceptPending.isPending}
+                    className="p-1.5 rounded-full bg-green-100 dark:bg-green-900/50 text-green-600 hover:bg-green-200 dark:hover:bg-green-800"
+                  >
+                    <CheckCircle className="w-5 h-5" />
+                  </button>
+                  <button
+                    onClick={() => rejectPending.mutate({ pendingId: p.id })}
+                    disabled={rejectPending.isPending}
+                    className="p-1.5 rounded-full bg-red-100 dark:bg-red-900/50 text-red-500 hover:bg-red-200 dark:hover:bg-red-800"
+                  >
+                    <XCircle className="w-5 h-5" />
+                  </button>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* My outgoing pending */}
+      {myPending && myPending.length > 0 && (
+        <Card className="border-gray-200 dark:border-gray-700">
+          <CardContent className="py-3">
+            <div className="flex items-center gap-2 mb-2">
+              <Clock className="w-4 h-4 text-gray-400" />
+              <span className="text-sm text-gray-500">{t('pending.waitingApproval')}</span>
+            </div>
+            <div className="space-y-1">
+              {myPending.map((p) => (
+                <button key={p.id} className="flex items-center gap-2 w-full text-left hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg p-1 -m-1 transition-colors" onClick={() => navigate(`/profile/${p.toUser.id}`)}>
+                  <Avatar src={p.toUser.photoUrl} name={p.toUser.name} size="xs" />
+                  <span className="text-sm text-gray-600 dark:text-gray-400">{p.toUser.name}</span>
+                  <ArrowRight className="w-3.5 h-3.5 text-gray-400 ml-auto" />
+                </button>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Collection notifications */}
+      {isLoading ? <div className="flex justify-center py-12"><Spinner /></div> : notifications.length === 0 && (!pendingIncoming || pendingIncoming.length === 0) && (!myPending || myPending.length === 0) ? (
         <div className="text-center py-12 text-gray-500">{t('notifications.empty')}</div>
       ) : (
         <div className="space-y-2">
