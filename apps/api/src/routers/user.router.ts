@@ -3,6 +3,7 @@ import { router, protectedProcedure } from '../trpc.js';
 import { TRPCError } from '@trpc/server';
 import { CONTACT_TYPES, CURRENCY_CODES, validateContact } from '@so/shared';
 import { convertToUSD } from '../services/currency.service.js';
+import { canViewContacts } from '../services/visibility.service.js';
 
 export const userRouter = router({
   me: protectedProcedure.query(async ({ ctx }) => {
@@ -64,6 +65,12 @@ export const userRouter = router({
     .query(async ({ ctx, input }) => {
       const targetId = input.userId || ctx.userId;
       const isOwn = targetId === ctx.userId;
+
+      // Check visibility for other user's contacts
+      if (!isOwn) {
+        const canView = await canViewContacts(ctx.db, ctx.userId, targetId);
+        if (!canView) return [];
+      }
 
       const contacts = await ctx.db.userContact.findMany({
         where: { userId: targetId },

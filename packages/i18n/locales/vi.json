@@ -269,7 +269,8 @@
     "addDirect": "Thêm vào liên hệ trực tiếp",
     "directRequestSent": "Yêu cầu đã gửi. Đang chờ xác nhận",
     "revokeHandshake": "Thu hồi bắt tay",
-    "revokeConfirm": "Kết nối sẽ được đặt lại. Người dùng cần được xác nhận lại. Tiếp tục?"
+    "revokeConfirm": "Kết nối sẽ được đặt lại. Người dùng cần được xác nhận lại. Tiếp tục?",
+    "intentionsReceived": "Lần được giúp"
   },
   "settings": {
     "title": "Cài đặt",
@@ -307,7 +308,9 @@
     "updateBudget": "Cập nhật ngân sách",
     "push": "Push",
     "linkAccountHint": "Liên kết hồ sơ của bạn với tài khoản Play Market, App Store hoặc FB Games. Sắp ra mắt.",
-    "pushNotifications": "Thông báo đẩy"
+    "pushNotifications": "Thông báo đẩy",
+    "hideContacts": "Ẩn liên hệ",
+    "hideContactsHint": "Khi bật, chỉ kết nối trực tiếp và người bạn đã thông báo mới có thể xem liên hệ của bạn"
   },
   "faq": {
     "title": "Câu hỏi thường gặp",

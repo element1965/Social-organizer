@@ -3,6 +3,7 @@ import { router, protectedProcedure } from '../trpc.js';
 import { TRPCError } from '@trpc/server';
 import { GRAPH_SLICE_DEPTH, MAX_BFS_DEPTH, MAX_BFS_RECIPIENTS } from '@so/shared';
 import { getGraphSlice, findPathBetweenUsers, findRecipientsViaBfs } from '../services/bfs.service.js';
+import { canViewContacts } from '../services/visibility.service.js';
 
 export const connectionRouter = router({
   list: protectedProcedure.query(async ({ ctx }) => {
@@ -44,6 +45,49 @@ export const connectionRouter = router({
       };
     });
   }),
+
+  listForUser: protectedProcedure
+    .input(z.object({ userId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const canView = await canViewContacts(ctx.db, ctx.userId, input.userId);
+      if (!canView) return [];
+
+      const connections = await ctx.db.connection.findMany({
+        where: { OR: [{ userAId: input.userId }, { userBId: input.userId }] },
+        include: {
+          userA: { select: { id: true, name: true, photoUrl: true, remainingBudget: true } },
+          userB: { select: { id: true, name: true, photoUrl: true, remainingBudget: true } },
+        },
+        orderBy: { createdAt: 'desc' },
+      });
+
+      const otherUserIds = connections.map((c) =>
+        c.userAId === input.userId ? c.userBId : c.userAId
+      );
+
+      const connectionCounts = otherUserIds.length > 0
+        ? await ctx.db.$queryRaw<Array<{ user_id: string; count: bigint }>>`
+            SELECT u.id as user_id, COUNT(c.id)::bigint as count
+            FROM users u
+            LEFT JOIN connections c ON (c."userAId" = u.id OR c."userBId" = u.id)
+            WHERE u.id = ANY(${otherUserIds})
+            GROUP BY u.id
+          `
+        : [];
+      const countMap = new Map(connectionCounts.map((c) => [c.user_id, Number(c.count)]));
+
+      return connections.map((c) => {
+        const isA = c.userAId === input.userId;
+        const other = isA ? c.userB : c.userA;
+        return {
+          userId: other.id,
+          name: other.name,
+          photoUrl: other.photoUrl,
+          connectionCount: countMap.get(other.id) || 0,
+          remainingBudget: other.remainingBudget,
+        };
+      });
+    }),
 
   add: protectedProcedure
     .input(z.object({ userId: z.string() }))

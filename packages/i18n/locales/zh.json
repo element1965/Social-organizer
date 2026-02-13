@@ -269,7 +269,8 @@
     "addDirect": "添加为直接联系人",
     "directRequestSent": "请求已发送，等待确认",
     "revokeHandshake": "撤销握手",
-    "revokeConfirm": "连接将被重置。用户需要重新确认。继续？"
+    "revokeConfirm": "连接将被重置。用户需要重新确认。继续？",
+    "intentionsReceived": "被帮助次数"
   },
   "settings": {
     "title": "设置",
@@ -307,7 +308,9 @@
     "updateBudget": "更新预算",
     "push": "推送",
     "linkAccountHint": "将您的个人资料链接到 Play Market、App Store 或 FB Games 账户。即将推出。",
-    "pushNotifications": "推送通知"
+    "pushNotifications": "推送通知",
+    "hideContacts": "隐藏联系方式",
+    "hideContactsHint": "启用后，只有您的直接联系人和您通知过的人才能看到您的联系方式"
   },
   "faq": {
     "title": "常见问题",

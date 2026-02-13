@@ -269,7 +269,8 @@
     "addDirect": "Adaugă la contacte directe",
     "directRequestSent": "Cerere trimisă. Se așteaptă confirmarea",
     "revokeHandshake": "Revocă strângerea de mână",
-    "revokeConfirm": "Conexiunea va fi resetată. Utilizatorul va trebui reconfirmat. Continuați?"
+    "revokeConfirm": "Conexiunea va fi resetată. Utilizatorul va trebui reconfirmat. Continuați?",
+    "intentionsReceived": "Ori ajutat"
   },
   "settings": {
     "title": "Setari",
@@ -307,7 +308,9 @@
     "updateBudget": "Actualizeaza bugetul",
     "push": "Push",
     "linkAccountHint": "Leagă profilul tău de un cont Play Market, App Store sau FB Games. În curând.",
-    "pushNotifications": "Notificări Push"
+    "pushNotifications": "Notificări Push",
+    "hideContacts": "Ascunde contactele",
+    "hideContactsHint": "Când este activat, doar conexiunile directe și persoanele notificate pot vedea contactele tale"
   },
   "faq": {
     "title": "Întrebări frecvente",

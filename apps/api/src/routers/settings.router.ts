@@ -6,7 +6,7 @@ export const settingsRouter = router({
   get: protectedProcedure.query(async ({ ctx }) => {
     const user = await ctx.db.user.findUnique({
       where: { id: ctx.userId },
-      select: { language: true, theme: true, soundEnabled: true, voiceGender: true, fontScale: true },
+      select: { language: true, theme: true, soundEnabled: true, voiceGender: true, fontScale: true, hideContacts: true },
     });
     if (!user) throw new TRPCError({ code: 'NOT_FOUND' });
     return user;
@@ -40,6 +40,12 @@ export const settingsRouter = router({
     .input(z.object({ fontScale: z.number().min(0.5).max(2.0) }))
     .mutation(async ({ ctx, input }) => {
       return ctx.db.user.update({ where: { id: ctx.userId }, data: { fontScale: input.fontScale } });
+    }),
+
+  updateHideContacts: protectedProcedure
+    .input(z.object({ hideContacts: z.boolean() }))
+    .mutation(async ({ ctx, input }) => {
+      return ctx.db.user.update({ where: { id: ctx.userId }, data: { hideContacts: input.hideContacts } });
     }),
 
   ignoreList: protectedProcedure.query(async ({ ctx }) => {

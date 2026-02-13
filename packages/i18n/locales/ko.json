@@ -269,7 +269,8 @@
     "addDirect": "직접 연락처에 추가",
     "directRequestSent": "요청이 전송되었습니다. 확인 대기 중",
     "revokeHandshake": "핸드셰이크 철회",
-    "revokeConfirm": "연결이 초기화됩니다. 사용자를 다시 확인해야 합니다. 계속하시겠습니까?"
+    "revokeConfirm": "연결이 초기화됩니다. 사용자를 다시 확인해야 합니다. 계속하시겠습니까?",
+    "intentionsReceived": "도움 받은 횟수"
   },
   "settings": {
     "title": "설정",
@@ -307,7 +308,9 @@
     "updateBudget": "예산 업데이트",
     "push": "푸시",
     "linkAccountHint": "프로필을 Play Market, App Store, 또는 FB Games 계정에 연결합니다. 곧 출시됩니다.",
-    "pushNotifications": "푸시 알림"
+    "pushNotifications": "푸시 알림",
+    "hideContacts": "연락처 숨기기",
+    "hideContactsHint": "활성화하면 직접 연결된 사람과 알림을 보낸 사람만 연락처를 볼 수 있습니다"
   },
   "faq": {
     "title": "자주 묻는 질문",

@@ -269,7 +269,8 @@
     "addDirect": "Ajouter aux contacts directs",
     "directRequestSent": "Demande envoyée. En attente de confirmation",
     "revokeHandshake": "Révoquer la poignée de main",
-    "revokeConfirm": "La connexion sera réinitialisée. L'utilisateur devra être reconfirmé. Continuer ?"
+    "revokeConfirm": "La connexion sera réinitialisée. L'utilisateur devra être reconfirmé. Continuer ?",
+    "intentionsReceived": "Fois aidé"
   },
   "settings": {
     "title": "Paramètres",
@@ -307,7 +308,9 @@
     "updateBudget": "Mettre à jour le budget",
     "push": "Push",
     "linkAccountHint": "Lie votre profil à un compte Play Market, App Store ou FB Games. Bientôt disponible.",
-    "pushNotifications": "Notifications Push"
+    "pushNotifications": "Notifications Push",
+    "hideContacts": "Masquer les contacts",
+    "hideContactsHint": "Lorsqu'activé, seuls vos contacts directs et les personnes notifiées peuvent voir vos contacts"
   },
   "faq": {
     "title": "Questions fréquentes",

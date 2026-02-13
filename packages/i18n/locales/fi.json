@@ -269,7 +269,8 @@
     "addDirect": "Lisää suoriin kontakteihin",
     "directRequestSent": "Pyyntö lähetetty. Odottaa vahvistusta",
     "revokeHandshake": "Peruuta kädenpuristus",
-    "revokeConfirm": "Yhteys nollataan. Käyttäjä on vahvistettava uudelleen. Jatka?"
+    "revokeConfirm": "Yhteys nollataan. Käyttäjä on vahvistettava uudelleen. Jatka?",
+    "intentionsReceived": "Kertaa autettu"
   },
   "settings": {
     "title": "Asetukset",
@@ -307,7 +308,9 @@
     "updateBudget": "Päivitä budjetti",
     "push": "Push",
     "linkAccountHint": "Linkittää profiilisi Play Marketiin, App Storeen tai FB Games -tiliin. Tulossa pian.",
-    "pushNotifications": "Push-ilmoitukset"
+    "pushNotifications": "Push-ilmoitukset",
+    "hideContacts": "Piilota yhteystiedot",
+    "hideContactsHint": "Kun käytössä, vain suorat yhteytesi ja ilmoittamasi henkilöt näkevät yhteystietosi"
   },
   "faq": {
     "title": "Usein kysytyt kysymykset",
