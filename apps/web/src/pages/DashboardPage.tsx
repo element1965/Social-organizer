@@ -178,7 +178,7 @@ export function DashboardPage() {
             </div>
 
             {/* My capabilities + Invite button */}
-            <div className="flex gap-3 items-stretch">
+            <div className="flex gap-3 items-center">
               <div className="flex-1 p-4 bg-gradient-to-b from-blue-50 to-indigo-50 dark:from-blue-950/30 dark:to-indigo-950/30 rounded-xl">
                 <div className="flex items-center gap-1.5 mb-2">
                   <Wallet className="w-4 h-4 text-blue-600" />
@@ -233,10 +233,9 @@ export function DashboardPage() {
               </div>
               <button
                 onClick={() => setShowInvitePopup(true)}
-                className="aspect-square rounded-full bg-gradient-to-br from-blue-600 to-indigo-600 text-white flex flex-col items-center justify-center gap-1 hover:from-blue-500 hover:to-indigo-500 transition-all shadow-md px-3"
+                className="w-16 h-16 shrink-0 rounded-full bg-gradient-to-br from-blue-600 to-indigo-600 text-white flex items-center justify-center hover:from-blue-500 hover:to-indigo-500 transition-all shadow-md ring-2 ring-blue-400"
               >
-                <UserPlus className="w-5 h-5" />
-                <span className="text-[10px] font-medium leading-tight">{t('dashboard.inviteTrusted')}</span>
+                <span className="text-[10px] font-medium leading-tight text-center">{t('dashboard.inviteTrusted')}</span>
               </button>
             </div>
 
