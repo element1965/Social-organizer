@@ -266,7 +266,7 @@
     "currentCapability": "Kemampuan saat ini",
     "memberSince": "Anggota sejak {{date}}",
     "nicknamePlaceholder": "Nama Anda untuk mereka...",
-    "addDirect": "Tambahkan ke kontak langsung",
+    "addDirect": "Tambahkan ke koneksi langsung",
     "directRequestSent": "Permintaan terkirim. Menunggu konfirmasi",
     "revokeHandshake": "Cabut jabat tangan",
     "revokeConfirm": "Koneksi akan direset. Pengguna perlu dikonfirmasi ulang. Lanjutkan?",

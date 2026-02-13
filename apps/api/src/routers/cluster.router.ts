@@ -80,12 +80,12 @@ export const clusterRouter = router({
       rootUserName: string;
       memberCount: number;
       totalBudget: number;
+      isMine: boolean;
     }> = [];
 
     for (const [root, members] of clusters) {
       const memberCount = [...members].filter(id => activeUserIds.has(id)).length;
-      // Visibility: admin sees all, non-admin sees only own cluster >3
-      if (!admin && !(myRoot === root)) continue;
+      // Visibility: admin sees all, non-admin sees clusters with >3 members
       if (!admin && memberCount <= 3) continue;
 
       let totalBudget = 0;
@@ -109,6 +109,7 @@ export const clusterRouter = router({
         rootUserName: best?.name || 'Unknown',
         memberCount,
         totalBudget: Math.round(totalBudget),
+        isMine: myRoot === root,
       });
     }
 
@@ -120,6 +121,7 @@ export const clusterRouter = router({
           rootUserName: u.name,
           memberCount: 1,
           totalBudget: Math.round(u.remainingBudget ?? 0),
+          isMine: u.id === ctx.userId,
         });
       }
     }

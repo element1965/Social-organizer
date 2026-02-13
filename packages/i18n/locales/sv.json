@@ -266,7 +266,7 @@
     "currentCapability": "Nuvarande mojlighet",
     "memberSince": "Medlem sedan {{date}}",
     "nicknamePlaceholder": "Ditt namn för dem...",
-    "addDirect": "Lägg till i direkta kontakter",
+    "addDirect": "Lägg till i direkta kopplingar",
     "directRequestSent": "Förfrågan skickad. Väntar på bekräftelse",
     "revokeHandshake": "Återkalla handslag",
     "revokeConfirm": "Anslutningen återställs. Användaren måste bekräftas på nytt. Fortsätta?",

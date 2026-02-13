@@ -266,7 +266,7 @@
     "currentCapability": "Nuværende kapacitet",
     "memberSince": "Medlem siden {{date}}",
     "nicknamePlaceholder": "Dit navn for dem...",
-    "addDirect": "Tilføj til direkte kontakter",
+    "addDirect": "Tilføj til direkte forbindelser",
     "directRequestSent": "Anmodning sendt. Afventer bekræftelse",
     "revokeHandshake": "Tilbagekald håndtryk",
     "revokeConfirm": "Forbindelsen nulstilles. Brugeren skal genbekræftes. Fortsæt?",

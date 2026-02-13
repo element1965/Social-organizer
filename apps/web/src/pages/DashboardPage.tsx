@@ -46,7 +46,10 @@ export function DashboardPage() {
     onSuccess: () => { utils.user.me.invalidate(); setEditingBudget(false); setNewBudgetValue(''); },
   });
 
-  const { data: clusters } = trpc.cluster.list.useQuery(undefined, { enabled: isAdmin, refetchInterval: 60000 });
+  const { data: clusters } = trpc.cluster.list.useQuery(undefined, { refetchInterval: 60000 });
+  const sendDirectMut = trpc.pending.sendDirectRequest.useMutation({
+    onSuccess: () => utils.invalidate(),
+  });
 
   const totalReachable = networkStats?.totalReachable ?? 0;
   const byDepth = networkStats?.byDepth ?? {};
@@ -396,8 +399,8 @@ export function DashboardPage() {
           </CardContent>
         </Card>
 
-      {/* Clusters (admin only) */}
-      {isAdmin && clusters && clusters.length > 0 && (
+      {/* Clusters */}
+      {clusters && clusters.length > 0 && (
         <Card>
           <CardContent className="py-4">
             <div className="flex items-center justify-between mb-3">
@@ -410,22 +413,35 @@ export function DashboardPage() {
               </span>
             </div>
             <div className="space-y-2">
-              {clusters.map((cl, i) => (
-                <div
-                  key={i}
-                  className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800/50 rounded-lg cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-                  onClick={() => navigate(`/profile/${cl.rootUserId}`)}
-                >
-                  <div>
-                    <p className="text-sm font-medium text-gray-900 dark:text-white">{cl.rootUserName}</p>
-                    <p className="text-xs text-gray-500">{t('cluster.members')}: {cl.memberCount}</p>
+              {clusters.map((cl, i) => {
+                return (
+                  <div
+                    key={i}
+                    className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800/50 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                  >
+                    <div className="cursor-pointer flex-1 min-w-0" onClick={() => navigate(`/profile/${cl.rootUserId}`)}>
+                      <p className="text-sm font-medium text-gray-900 dark:text-white">{cl.rootUserName}</p>
+                      <p className="text-xs text-gray-500">{t('cluster.members')}: {cl.memberCount}</p>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="text-right">
+                        <p className="text-sm font-bold text-green-600 dark:text-green-400">${cl.totalBudget}</p>
+                        <p className="text-[10px] text-gray-400">{t('cluster.budget')}</p>
+                      </div>
+                      {!cl.isMine && (
+                        <button
+                          onClick={(e) => { e.stopPropagation(); sendDirectMut.mutate({ targetUserId: cl.rootUserId }); }}
+                          disabled={sendDirectMut.isPending}
+                          className="ml-2 p-1.5 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-600 hover:bg-blue-200 dark:hover:bg-blue-900/60 transition-colors shrink-0"
+                          title={t('profile.addDirect')}
+                        >
+                          <UserPlus className="w-4 h-4" />
+                        </button>
+                      )}
+                    </div>
                   </div>
-                  <div className="text-right">
-                    <p className="text-sm font-bold text-green-600 dark:text-green-400">${cl.totalBudget}</p>
-                    <p className="text-[10px] text-gray-400">{t('cluster.budget')}</p>
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </CardContent>
         </Card>
