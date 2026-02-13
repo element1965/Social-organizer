@@ -72,7 +72,7 @@ pnpm dev
 
 | Model | Description |
 |-------|-------------|
-| User | User with settings, role, onboarding flag, preferredCurrency, monthlyBudget, remainingBudget, lastSeen |
+| User | User with settings, role, onboarding flag, preferredCurrency, monthlyBudget, remainingBudget, lastSeen, hideContacts |
 | UserContact | User contacts (social networks, messengers) |
 | PlatformAccount | Platform bindings (FB/TG/Apple/Google) |
 | Connection | Connection between users (userAId < userBId) with optional nicknames (nicknameByA, nicknameByB) |
@@ -123,13 +123,13 @@ VAPID_SUBJECT=mailto:admin@example.com    # Web Push VAPID subject
 |--------|------------|
 | `auth` | loginWithPlatform, loginWithTelegram, refresh, generateLinkCode, linkAccount |
 | `user` | me, update, getById, getStats, getContacts, updateContacts, completeOnboarding, delete, setMonthlyBudget |
-| `connection` | list, add (limit 150), getCount, graphSlice (2-3 levels), findPath, getNetworkStats, getNickname, setNickname |
+| `connection` | list, listForUser, add (limit 150), getCount, graphSlice (2-3 levels), findPath, getNetworkStats, getNickname, setNickname |
 | `collection` | create, getById, close, cancel, myActive, myParticipating |
 | `obligation` | create, myList, unsubscribe |
 | `notification` | list (cursor pagination), markRead, dismiss, unreadCount |
-| `settings` | get, updateLanguage/Theme/Sound/FontScale, ignoreList/addIgnore/removeIgnore |
+| `settings` | get, updateLanguage/Theme/Sound/FontScale/HideContacts, ignoreList/addIgnore/removeIgnore |
 | `invite` | generate, accept, getByToken |
-| `stats` | profile, help, networkCapabilities |
+| `stats` | profile (obligationsGiven + obligationsReceived), help, networkCapabilities |
 | `currency` | list, detectCurrency, rates, convert, toUSD |
 | `push` | vapidPublicKey, subscribe, unsubscribe |
 | `faq` | list, top, all, incrementView, localize, isAdmin, create, update, delete (admin-gated CRUD with view ranking and LLM auto-translation to 26 languages) |
@@ -178,8 +178,8 @@ React 19 SPA with tRPC client.
 | CreateCollectionPage | `/create` | Create collection with network reach display (1:1 ratio) |
 | CollectionPage | `/collection/:id` | Collection details + intentions + handshake path to creator |
 | MyNetworkPage | `/network` | Connection list with connection counts + invitations |
-| ProfilePage | `/profile/:userId` | Profile with editing, contacts, connections, handshake path |
-| SettingsPage | `/settings` | Language, theme, sounds, font scale, contacts, ignore list |
+| ProfilePage | `/profile/:userId` | Profile with editing, contacts, connections list (collapsible), stats (given/received), handshake path |
+| SettingsPage | `/settings` | Language, theme, sounds, font scale, contacts, hide contacts toggle, ignore list |
 | FaqPage | `/faq` | FAQ accordion with admin CRUD, view count ranking, LLM localization button, language-aware |
 | InvitePage | `/invite/:token` | Accept invitation link |
 
@@ -243,6 +243,7 @@ Mock data (`apps/web/src/lib/demoData.ts`):
 - **Contact links** — all social network contact types (Telegram, Instagram, Twitter, LinkedIn, VK, Facebook, WhatsApp, Email, Website) open correct URLs via `buildContactUrl`
 - **TG username auto-save** — Telegram username automatically saved/updated as contact on each login
 - **Online status indicator** — green dot + "Online" when last seen within 5 minutes, gray dot + relative time otherwise; auto-updated on every authenticated API call
+- **Hide contacts** — users can hide their contacts from non-connected users; direct connections and notified users still see them
 - **Connection nicknames** — custom names for connections (like a phone book), editable from profile page, shown in network list
 - **Telegram Mini App** — auto-login via initData, BackButton navigation, haptic feedback on tab switches, theme sync, CSS variable injection from Telegram themeParams
 - **Onboarding** — auto-shown for new users, completable flag in database

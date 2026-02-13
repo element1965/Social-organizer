@@ -269,7 +269,8 @@
     "addDirect": "Legg til i direkte kontakter",
     "directRequestSent": "Forespørsel sendt. Venter på bekreftelse",
     "revokeHandshake": "Tilbakekall håndtrykk",
-    "revokeConfirm": "Forbindelsen tilbakestilles. Brukeren må bekreftes på nytt. Fortsette?"
+    "revokeConfirm": "Forbindelsen tilbakestilles. Brukeren må bekreftes på nytt. Fortsette?",
+    "intentionsReceived": "Ganger hjulpet"
   },
   "settings": {
     "title": "Innstillinger",
@@ -307,7 +308,9 @@
     "updateBudget": "Oppdater budsjett",
     "push": "Push",
     "linkAccountHint": "Kobler profilen din til en Play Market, App Store eller FB Games-konto. Kommer snart.",
-    "pushNotifications": "Push-meldinger"
+    "pushNotifications": "Push-meldinger",
+    "hideContacts": "Skjul kontakter",
+    "hideContactsHint": "Når aktivert, kan bare dine direkte forbindelser og varslete personer se kontaktene dine"
   },
   "faq": {
     "title": "Ofte stilte spørsmål",

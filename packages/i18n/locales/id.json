@@ -269,7 +269,8 @@
     "addDirect": "Tambahkan ke kontak langsung",
     "directRequestSent": "Permintaan terkirim. Menunggu konfirmasi",
     "revokeHandshake": "Cabut jabat tangan",
-    "revokeConfirm": "Koneksi akan direset. Pengguna perlu dikonfirmasi ulang. Lanjutkan?"
+    "revokeConfirm": "Koneksi akan direset. Pengguna perlu dikonfirmasi ulang. Lanjutkan?",
+    "intentionsReceived": "Kali dibantu"
   },
   "settings": {
     "title": "Pengaturan",
@@ -307,7 +308,9 @@
     "updateBudget": "Perbarui anggaran",
     "push": "Push",
     "linkAccountHint": "Menghubungkan profil Anda ke akun Play Market, App Store, atau FB Games. Segera hadir.",
-    "pushNotifications": "Notifikasi Push"
+    "pushNotifications": "Notifikasi Push",
+    "hideContacts": "Sembunyikan kontak",
+    "hideContactsHint": "Saat diaktifkan, hanya koneksi langsung dan orang yang Anda notifikasi yang dapat melihat kontak Anda"
   },
   "faq": {
     "title": "FAQ",

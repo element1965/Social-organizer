@@ -276,7 +276,8 @@
     "addDirect": "Add to direct contacts",
     "directRequestSent": "Request sent. Awaiting confirmation",
     "revokeHandshake": "Revoke handshake",
-    "revokeConfirm": "The connection will be reset. The user will need to be re-confirmed. Continue?"
+    "revokeConfirm": "The connection will be reset. The user will need to be re-confirmed. Continue?",
+    "intentionsReceived": "Times helped"
   },
   "settings": {
     "title": "Settings",
@@ -314,7 +315,9 @@
     "updateBudget": "Update Budget",
     "pushNotifications": "Push Notifications",
     "push": "Push",
-    "linkAccountHint": "Links your profile to a Play Market, App Store, or FB Games account. Coming soon."
+    "linkAccountHint": "Links your profile to a Play Market, App Store, or FB Games account. Coming soon.",
+    "hideContacts": "Hide contacts",
+    "hideContactsHint": "When enabled, only your direct connections and people you've notified can see your contacts"
   },
   "faq": {
     "title": "FAQ",

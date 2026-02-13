@@ -8,7 +8,7 @@ export const statsRouter = router({
     .query(async ({ ctx, input }) => {
       const targetUserId = input?.userId ?? ctx.userId;
 
-      const [connectionsCount, collectionsCreated, collectionsActive, obligationsGiven, obligations] =
+      const [connectionsCount, collectionsCreated, collectionsActive, obligationsGiven, obligationsReceived] =
         await Promise.all([
           ctx.db.connection.count({
             where: { OR: [{ userAId: targetUserId }, { userBId: targetUserId }] },
@@ -16,21 +16,15 @@ export const statsRouter = router({
           ctx.db.collection.count({ where: { creatorId: targetUserId } }),
           ctx.db.collection.count({ where: { creatorId: targetUserId, status: 'ACTIVE' } }),
           ctx.db.obligation.count({ where: { userId: targetUserId } }),
-          ctx.db.obligation.findMany({
-            where: { userId: targetUserId },
-            select: { amount: true },
-          }),
+          ctx.db.obligation.count({ where: { collection: { creatorId: targetUserId } } }),
         ]);
-
-      // All amounts are now in USD, no need for currency grouping
-      const totalAmountPledged = obligations.reduce((sum, o) => sum + o.amount, 0);
 
       return {
         connectionsCount,
         collectionsCreated,
         collectionsActive,
         obligationsGiven,
-        totalAmountPledged,
+        obligationsReceived,
       };
     }),
 

@@ -269,7 +269,8 @@
     "addDirect": "Toevoegen aan directe contacten",
     "directRequestSent": "Verzoek verzonden. Wacht op bevestiging",
     "revokeHandshake": "Handdruk intrekken",
-    "revokeConfirm": "De verbinding wordt gereset. De gebruiker moet opnieuw bevestigd worden. Doorgaan?"
+    "revokeConfirm": "De verbinding wordt gereset. De gebruiker moet opnieuw bevestigd worden. Doorgaan?",
+    "intentionsReceived": "Keer geholpen"
   },
   "settings": {
     "title": "Instellingen",
@@ -307,7 +308,9 @@
     "updateBudget": "Budget bijwerken",
     "push": "Push",
     "linkAccountHint": "Verbindt uw profiel met een Play Market-, App Store- of FB Games-account. Binnenkort beschikbaar.",
-    "pushNotifications": "Push-meldingen"
+    "pushNotifications": "Push-meldingen",
+    "hideContacts": "Contacten verbergen",
+    "hideContactsHint": "Wanneer ingeschakeld, kunnen alleen uw directe verbindingen en genotificeerde personen uw contacten zien"
   },
   "faq": {
     "title": "Veelgestelde vragen",

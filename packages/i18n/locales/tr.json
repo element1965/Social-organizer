@@ -269,7 +269,8 @@
     "addDirect": "Doğrudan kişilere ekle",
     "directRequestSent": "İstek gönderildi. Onay bekleniyor",
     "revokeHandshake": "El sıkışmayı geri al",
-    "revokeConfirm": "Bağlantı sıfırlanacak. Kullanıcının yeniden onaylanması gerekecek. Devam edilsin mi?"
+    "revokeConfirm": "Bağlantı sıfırlanacak. Kullanıcının yeniden onaylanması gerekecek. Devam edilsin mi?",
+    "intentionsReceived": "Kez yardım aldı"
   },
   "settings": {
     "title": "Ayarlar",
@@ -307,7 +308,9 @@
     "updateBudget": "Bütçeyi Güncelle",
     "push": "Push",
     "linkAccountHint": "Profilinizi Play Market, App Store veya FB Games hesabına bağlar. Yakında gelecek.",
-    "pushNotifications": "Push Bildirimleri"
+    "pushNotifications": "Push Bildirimleri",
+    "hideContacts": "Kişileri gizle",
+    "hideContactsHint": "Etkinleştirildiğinde, yalnızca doğrudan bağlantılarınız ve bildirim gönderdiğiniz kişiler kişilerinizi görebilir"
   },
   "faq": {
     "title": "Sık sorulan sorular",

@@ -6,7 +6,7 @@ import { useAuth } from '../hooks/useAuth';
 import { Card, CardContent, CardHeader } from '../components/ui/card';
 import { Avatar } from '../components/ui/avatar';
 import { Spinner } from '../components/ui/spinner';
-import { Wallet, Calendar, Pencil, Check, X, UserPlus, UserMinus, Copy } from 'lucide-react';
+import { Wallet, Calendar, Pencil, Check, X, UserPlus, UserMinus, Copy, ChevronDown, ChevronUp, Users } from 'lucide-react';
 import { HandshakePath } from '../components/HandshakePath';
 import { SocialIcon } from '../components/ui/social-icons';
 import { buildContactUrl } from '@so/shared';
@@ -64,6 +64,11 @@ export function ProfilePage() {
     },
   });
 
+  const { data: userConnections } = trpc.connection.listForUser.useQuery(
+    { userId: paramId! },
+    { enabled: !!paramId && !isOwn }
+  );
+  const [connectionsOpen, setConnectionsOpen] = useState(false);
   const [editingNickname, setEditingNickname] = useState(false);
   const [nicknameInput, setNicknameInput] = useState('');
   const [copiedContact, setCopiedContact] = useState<string | null>(null);
@@ -242,6 +247,46 @@ export function ProfilePage() {
         </CardContent>
       </Card>
 
+      {userConnections && userConnections.length > 0 && (
+        <Card>
+          <CardContent className="py-3">
+            <button
+              onClick={() => setConnectionsOpen(!connectionsOpen)}
+              className="w-full flex items-center gap-2"
+            >
+              <span className="w-6 h-6 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-600 text-xs font-bold flex items-center justify-center">1</span>
+              <span className="text-sm font-medium text-gray-700 dark:text-gray-300 flex-1 text-left">
+                {t('dashboard.handshakeOrdinal', { depth: 1 })}
+              </span>
+              <span className="text-xs text-gray-500">{userConnections.length}</span>
+              {connectionsOpen ? <ChevronUp className="w-4 h-4 text-gray-400" /> : <ChevronDown className="w-4 h-4 text-gray-400" />}
+            </button>
+            {connectionsOpen && (
+              <div className="mt-2 space-y-2 max-h-48 overflow-y-auto">
+                {userConnections.map((conn: { userId: string; name: string; photoUrl: string | null; connectionCount: number; remainingBudget: number | null }) => (
+                  <button
+                    key={conn.userId}
+                    onClick={() => navigate(`/profile/${conn.userId}`)}
+                    className="w-full flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors text-left"
+                  >
+                    <Avatar src={conn.photoUrl} name={conn.name} size="sm" />
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium text-gray-900 dark:text-white truncate">{conn.name}</p>
+                      <p className="text-xs text-gray-500">
+                        <Users className="w-3 h-3 inline mr-1" />{conn.connectionCount}
+                        {conn.remainingBudget != null && (
+                          <span className="ml-2"><Wallet className="w-3 h-3 inline mr-1" />${Math.round(conn.remainingBudget)}</span>
+                        )}
+                      </p>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      )}
+
       {stats && (
         <Card>
           <CardHeader><h2 className="font-semibold text-gray-900 dark:text-white">{t('profile.stats')}</h2></CardHeader>
@@ -250,18 +295,8 @@ export function ProfilePage() {
               <div className="text-center"><p className="text-2xl font-bold text-blue-600">{stats.connectionsCount}</p><p className="text-xs text-gray-500">{t('profile.connections')}</p></div>
               <div className="text-center"><p className="text-2xl font-bold text-blue-600">{stats.collectionsCreated}</p><p className="text-xs text-gray-500">{t('profile.collectionsCreated')}</p></div>
               <div className="text-center"><p className="text-2xl font-bold text-green-600">{stats.obligationsGiven}</p><p className="text-xs text-gray-500">{t('profile.intentionsGiven')}</p></div>
-              <div className="text-center"><p className="text-2xl font-bold text-green-600">{stats.totalAmountPledged}</p><p className="text-xs text-gray-500">{t('profile.totalPledged')}</p></div>
+              <div className="text-center"><p className="text-2xl font-bold text-green-600">{stats.obligationsReceived}</p><p className="text-xs text-gray-500">{t('profile.intentionsReceived')}</p></div>
             </div>
-            {stats.amountByCurrency && Object.keys(stats.amountByCurrency).length > 0 && (
-              <div className="mt-3 pt-3 border-t border-gray-200 dark:border-gray-700">
-                <p className="text-xs text-gray-500 mb-1">{t('profile.pledgedByCurrency')}</p>
-                <div className="flex gap-3">
-                  {Object.entries(stats.amountByCurrency as Record<string, number>).map(([cur, amt]) => (
-                    <span key={cur} className="text-sm font-medium text-gray-900 dark:text-white">{amt} {cur}</span>
-                  ))}
-                </div>
-              </div>
-            )}
           </CardContent>
         </Card>
       )}
@@ -274,7 +309,7 @@ export function ProfilePage() {
             }
           }}
           disabled={revokeMut.isPending}
-          className="w-full flex items-center justify-center gap-2 py-2 text-xs text-gray-400 hover:text-red-500 transition-colors"
+          className="w-full flex items-center justify-center gap-2 py-2 text-xs text-red-500 hover:text-red-600 transition-colors"
         >
           <UserMinus className="w-3.5 h-3.5" />
           {t('profile.revokeHandshake')}

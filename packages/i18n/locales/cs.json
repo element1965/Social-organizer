@@ -269,7 +269,8 @@
     "addDirect": "Přidat do přímých kontaktů",
     "directRequestSent": "Žádost odeslána. Čeká na potvrzení",
     "revokeHandshake": "Odvolat podání ruky",
-    "revokeConfirm": "Spojení bude resetováno. Uživatel bude muset být znovu potvrzen. Pokračovat?"
+    "revokeConfirm": "Spojení bude resetováno. Uživatel bude muset být znovu potvrzen. Pokračovat?",
+    "intentionsReceived": "Kolikrát mu pomohli"
   },
   "settings": {
     "title": "Nastavení",
@@ -307,7 +308,9 @@
     "updateBudget": "Aktualizovat rozpočet",
     "push": "Push",
     "linkAccountHint": "Propojí váš profil s účtem v Play Market, App Store nebo FB Games. Brzy dostupné.",
-    "pushNotifications": "Push notifikace"
+    "pushNotifications": "Push notifikace",
+    "hideContacts": "Skrýt kontakty",
+    "hideContactsHint": "Pokud je zapnuto, vaše kontakty vidí pouze přímé spojení a lidé, které jste upozornili"
   },
   "faq": {
     "title": "FAQ",

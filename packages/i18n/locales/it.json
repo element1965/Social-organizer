@@ -269,7 +269,8 @@
     "addDirect": "Aggiungi ai contatti diretti",
     "directRequestSent": "Richiesta inviata. In attesa di conferma",
     "revokeHandshake": "Revoca stretta di mano",
-    "revokeConfirm": "La connessione verrà ripristinata. L'utente dovrà essere riconfermato. Continuare?"
+    "revokeConfirm": "La connessione verrà ripristinata. L'utente dovrà essere riconfermato. Continuare?",
+    "intentionsReceived": "Volte aiutato"
   },
   "settings": {
     "title": "Impostazioni",
@@ -307,7 +308,9 @@
     "updateBudget": "Aggiorna budget",
     "push": "Push",
     "linkAccountHint": "Collega il tuo profilo a un account Play Market, App Store o FB Games. Prossimamente.",
-    "pushNotifications": "Notifiche Push"
+    "pushNotifications": "Notifiche Push",
+    "hideContacts": "Nascondi contatti",
+    "hideContactsHint": "Quando attivato, solo i tuoi contatti diretti e le persone notificate possono vedere i tuoi contatti"
   },
   "faq": {
     "title": "Domande frequenti",

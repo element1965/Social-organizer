@@ -9,7 +9,7 @@ import { Button } from '../components/ui/button';
 import { Select } from '../components/ui/select';
 import { Avatar } from '../components/ui/avatar';
 import { Spinner } from '../components/ui/spinner';
-import { Settings, Globe, Palette, Volume2, Bell, Mic, Link, Trash2, LogOut, Type, Users, Camera, Pencil, Check, HelpCircle } from 'lucide-react';
+import { Settings, Globe, Palette, Volume2, Bell, Mic, Link, Trash2, LogOut, Type, Users, Camera, Pencil, Check, HelpCircle, EyeOff } from 'lucide-react';
 import { Tooltip } from '../components/ui/tooltip';
 import { cn } from '../lib/utils';
 import { languageNames } from '@so/i18n';
@@ -60,6 +60,7 @@ export function SettingsPage() {
   const updateSound = trpc.settings.updateSound.useMutation({ onSuccess: () => utils.settings.get.invalidate() });
   const updateVoiceGender = trpc.settings.updateVoiceGender.useMutation({ onSuccess: () => utils.settings.get.invalidate() });
   const updateFontScale = trpc.settings.updateFontScale.useMutation({ onSuccess: () => utils.settings.get.invalidate() });
+  const updateHideContacts = trpc.settings.updateHideContacts.useMutation({ onSuccess: () => utils.settings.get.invalidate() });
   const generateCode = trpc.auth.generateLinkCode.useMutation();
   const deleteAccount = trpc.user.delete.useMutation({ onSuccess: () => { logout(); navigate('/login'); } });
   const updateUser = trpc.user.update.useMutation({ onSuccess: () => {
@@ -223,6 +224,19 @@ export function SettingsPage() {
             </button>
           </div>
         )}
+      </div></CardContent></Card>
+
+      <Card><CardContent className="py-3"><div className="flex items-center gap-4">
+        <div className="flex items-center gap-2 flex-1 min-w-0">
+          <EyeOff className="w-4 h-4 text-gray-500 shrink-0" />
+          <span className="text-sm font-medium text-gray-700 dark:text-gray-300 truncate">{t('settings.hideContacts')}</span>
+          <Tooltip content={t('settings.hideContactsHint')} side="bottom">
+            <button type="button" className="text-gray-400 hover:text-gray-500"><HelpCircle className="w-3.5 h-3.5" /></button>
+          </Tooltip>
+          <button onClick={() => updateHideContacts.mutate({ hideContacts: !settings?.hideContacts })} className={cn('w-11 h-6 rounded-full transition-colors relative shrink-0 ml-auto', settings?.hideContacts ? 'bg-blue-600' : 'bg-gray-300 dark:bg-gray-600')}>
+            <div className={cn('w-5 h-5 rounded-full bg-white shadow absolute top-0.5 transition-all', settings?.hideContacts ? 'left-5' : 'left-0.5')} />
+          </button>
+        </div>
       </div></CardContent></Card>
 
       <Card><CardContent className="py-3">
