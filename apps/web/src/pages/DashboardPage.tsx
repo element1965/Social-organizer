@@ -235,7 +235,7 @@ export function DashboardPage() {
                 onClick={() => setShowInvitePopup(true)}
                 className="w-16 h-16 shrink-0 rounded-full bg-gradient-to-br from-blue-600 to-indigo-600 text-white flex items-center justify-center hover:from-blue-500 hover:to-indigo-500 transition-all shadow-md ring-2 ring-blue-400"
               >
-                <span className="text-[10px] font-medium leading-tight text-center">{t('dashboard.inviteTrusted')}</span>
+                <span className="text-3xl font-light leading-none">+</span>
               </button>
             </div>
 
