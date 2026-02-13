@@ -1,5 +1,4 @@
 import { router, protectedProcedure } from '../trpc.js';
-import { isAdmin } from '../admin.js';
 
 // Union-Find for connected components
 class UnionFind {
@@ -24,8 +23,6 @@ class UnionFind {
 
 export const clusterRouter = router({
   list: protectedProcedure.query(async ({ ctx }) => {
-    const admin = isAdmin(ctx.userId);
-
     // Load all connections
     const connections = await ctx.db.connection.findMany({
       select: { userAId: true, userBId: true },
