@@ -151,8 +151,8 @@ export function DashboardPage() {
                   </p>
                 </div>
                 <div className="text-right">
-                  <p className="text-xs text-gray-500">{t('dashboard.currentCapabilities')}</p>
-                  <p className="text-2xl font-bold text-green-600 dark:text-green-400">${networkCapabilities?.total ?? 0}</p>
+                  <p className="text-sm text-gray-500">{t('dashboard.currentCapabilities')}</p>
+                  <p className="text-4xl font-bold text-green-600 dark:text-green-400">${networkCapabilities?.total ?? 0}</p>
                 </div>
               </div>
               {me?.createdAt && (() => {
@@ -170,8 +170,7 @@ export function DashboardPage() {
                     </div>
                     <div className="flex items-center gap-1">
                       <HandHeart className="w-3 h-3 text-orange-600" />
-                      <span className="text-xs text-gray-500">{t('dashboard.helpGivenByPeriod')}</span>
-                      <span className="text-xs font-bold text-orange-600">${totalHelp}</span>
+                      <span className="text-xs font-medium text-orange-600">{t('dashboard.helpGivenByPeriod')} ${totalHelp}</span>
                     </div>
                   </div>
                 );
