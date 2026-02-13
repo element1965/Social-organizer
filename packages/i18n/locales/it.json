@@ -310,7 +310,7 @@
     "linkAccountHint": "Collega il tuo profilo a un account Play Market, App Store o FB Games. Prossimamente.",
     "pushNotifications": "Notifiche Push",
     "hideContacts": "Nascondi contatti",
-    "hideContactsHint": "Quando attivato, solo i tuoi contatti diretti e le persone notificate possono vedere i tuoi contatti"
+    "hideContactsHint": "Quando attivato, solo i tuoi contatti diretti e chi riceve una notifica quando apri una raccolta possono vedere i tuoi contatti"
   },
   "faq": {
     "title": "Domande frequenti",

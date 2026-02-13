@@ -310,7 +310,7 @@
     "linkAccountHint": "Veže vaš profil sa nalogom na Play Marketu, App Storeu ili FB Games. Dolazi uskoro.",
     "pushNotifications": "Push obaveštenja",
     "hideContacts": "Сакриј контакте",
-    "hideContactsHint": "Када је укључено, само ваше директне везе и обавештени корисници могу видети ваше контакте"
+    "hideContactsHint": "Када је укључено, само ваше директне везе и они који добију обавештење када отворите прикупљање могу видети ваше контакте"
   },
   "faq": {
     "title": "FAQ",

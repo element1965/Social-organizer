@@ -310,7 +310,7 @@
     "linkAccountHint": "プロファイルを Play Market、App Store、または FB Games アカウントにリンクします。近日公開。",
     "pushNotifications": "プッシュ通知",
     "hideContacts": "連絡先を非表示",
-    "hideContactsHint": "有効にすると、直接の接続と通知した人だけがあなたの連絡先を見ることができます"
+    "hideContactsHint": "有効にすると、直接の接続とコレクション開設時に通知を受ける人だけがあなたの連絡先を見ることができます"
   },
   "faq": {
     "title": "よくある質問",

@@ -310,7 +310,7 @@
     "linkAccountHint": "Leagă profilul tău de un cont Play Market, App Store sau FB Games. În curând.",
     "pushNotifications": "Notificări Push",
     "hideContacts": "Ascunde contactele",
-    "hideContactsHint": "Când este activat, doar conexiunile directe și persoanele notificate pot vedea contactele tale"
+    "hideContactsHint": "Când este activat, doar conexiunile directe și cei care primesc notificare când deschizi o colectă pot vedea contactele tale"
   },
   "faq": {
     "title": "Întrebări frecvente",

@@ -310,7 +310,7 @@
     "linkAccountHint": "Länkar din profil till ett Play Market, App Store eller FB Games-konto. Kommer snart.",
     "pushNotifications": "Push-meddelanden",
     "hideContacts": "Dölj kontakter",
-    "hideContactsHint": "När aktiverat kan bara dina direkta kontakter och aviserade personer se dina kontaktuppgifter"
+    "hideContactsHint": "När aktiverat kan bara dina direkta kontakter och de som får avisering när du öppnar en insamling se dina kontaktuppgifter"
   },
   "faq": {
     "title": "Vanliga frågor",

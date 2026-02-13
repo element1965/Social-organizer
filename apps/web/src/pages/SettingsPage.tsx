@@ -152,6 +152,16 @@ export function SettingsPage() {
             <h2 className="font-semibold text-gray-900 dark:text-white">{t('settings.contacts')}</h2>
           </div>
           <p className="text-xs text-gray-500 mt-1">{t('settings.contactsDesc')}</p>
+          <div className="flex items-center gap-2 mt-2">
+            <EyeOff className="w-4 h-4 text-gray-500 shrink-0" />
+            <span className="text-sm font-medium text-gray-700 dark:text-gray-300">{t('settings.hideContacts')}</span>
+            <Tooltip content={t('settings.hideContactsHint')} side="bottom">
+              <button type="button" className="text-gray-400 hover:text-gray-500"><HelpCircle className="w-3.5 h-3.5" /></button>
+            </Tooltip>
+            <button onClick={() => updateHideContacts.mutate({ hideContacts: !settings?.hideContacts })} className={cn('w-11 h-6 rounded-full transition-colors relative shrink-0 ml-auto', settings?.hideContacts ? 'bg-blue-600' : 'bg-gray-300 dark:bg-gray-600')}>
+              <div className={cn('w-5 h-5 rounded-full bg-white shadow absolute top-0.5 transition-all', settings?.hideContacts ? 'left-5' : 'left-0.5')} />
+            </button>
+          </div>
         </CardHeader>
         <CardContent className="space-y-3">
           {contacts?.map((contact) => {
@@ -224,19 +234,6 @@ export function SettingsPage() {
             </button>
           </div>
         )}
-      </div></CardContent></Card>
-
-      <Card><CardContent className="py-3"><div className="flex items-center gap-4">
-        <div className="flex items-center gap-2 flex-1 min-w-0">
-          <EyeOff className="w-4 h-4 text-gray-500 shrink-0" />
-          <span className="text-sm font-medium text-gray-700 dark:text-gray-300 truncate">{t('settings.hideContacts')}</span>
-          <Tooltip content={t('settings.hideContactsHint')} side="bottom">
-            <button type="button" className="text-gray-400 hover:text-gray-500"><HelpCircle className="w-3.5 h-3.5" /></button>
-          </Tooltip>
-          <button onClick={() => updateHideContacts.mutate({ hideContacts: !settings?.hideContacts })} className={cn('w-11 h-6 rounded-full transition-colors relative shrink-0 ml-auto', settings?.hideContacts ? 'bg-blue-600' : 'bg-gray-300 dark:bg-gray-600')}>
-            <div className={cn('w-5 h-5 rounded-full bg-white shadow absolute top-0.5 transition-all', settings?.hideContacts ? 'left-5' : 'left-0.5')} />
-          </button>
-        </div>
       </div></CardContent></Card>
 
       <Card><CardContent className="py-3">

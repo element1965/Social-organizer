@@ -310,7 +310,7 @@
     "linkAccountHint": "Propojí váš profil s účtem v Play Market, App Store nebo FB Games. Brzy dostupné.",
     "pushNotifications": "Push notifikace",
     "hideContacts": "Skrýt kontakty",
-    "hideContactsHint": "Pokud je zapnuto, vaše kontakty vidí pouze přímé spojení a lidé, které jste upozornili"
+    "hideContactsHint": "Pokud je zapnuto, vaše kontakty vidí pouze přímé spojení a ti, kdo dostanou oznámení, když otevřete sbírku"
   },
   "faq": {
     "title": "FAQ",

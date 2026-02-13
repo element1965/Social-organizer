@@ -310,7 +310,7 @@
     "linkAccountHint": "Menghubungkan profil Anda ke akun Play Market, App Store, atau FB Games. Segera hadir.",
     "pushNotifications": "Notifikasi Push",
     "hideContacts": "Sembunyikan kontak",
-    "hideContactsHint": "Saat diaktifkan, hanya koneksi langsung dan orang yang Anda notifikasi yang dapat melihat kontak Anda"
+    "hideContactsHint": "Saat diaktifkan, hanya koneksi langsung dan orang yang mendapat notifikasi saat Anda membuka penggalangan yang dapat melihat kontak Anda"
   },
   "faq": {
     "title": "FAQ",

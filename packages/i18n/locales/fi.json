@@ -310,7 +310,7 @@
     "linkAccountHint": "Linkittää profiilisi Play Marketiin, App Storeen tai FB Games -tiliin. Tulossa pian.",
     "pushNotifications": "Push-ilmoitukset",
     "hideContacts": "Piilota yhteystiedot",
-    "hideContactsHint": "Kun käytössä, vain suorat yhteytesi ja ilmoittamasi henkilöt näkevät yhteystietosi"
+    "hideContactsHint": "Kun käytössä, vain suorat yhteytesi ja ne jotka saavat ilmoituksen kun avaat keräyksen näkevät yhteystietosi"
   },
   "faq": {
     "title": "Usein kysytyt kysymykset",
