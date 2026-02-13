@@ -317,7 +317,7 @@
     "push": "Push",
     "linkAccountHint": "Links your profile to a Play Market, App Store, or FB Games account. Coming soon.",
     "hideContacts": "Hide contacts",
-    "hideContactsHint": "When enabled, only your direct connections and people you've notified can see your contacts"
+    "hideContactsHint": "When enabled, only your direct connections and people who get notified when you open a collection can see your contacts"
   },
   "faq": {
     "title": "FAQ",

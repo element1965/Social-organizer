@@ -310,7 +310,7 @@
     "linkAccountHint": "Verbindt uw profiel met een Play Market-, App Store- of FB Games-account. Binnenkort beschikbaar.",
     "pushNotifications": "Push-meldingen",
     "hideContacts": "Contacten verbergen",
-    "hideContactsHint": "Wanneer ingeschakeld, kunnen alleen uw directe verbindingen en genotificeerde personen uw contacten zien"
+    "hideContactsHint": "Wanneer ingeschakeld, kunnen alleen uw directe verbindingen en mensen die een melding krijgen wanneer u een inzameling opent uw contacten zien"
   },
   "faq": {
     "title": "Veelgestelde vragen",

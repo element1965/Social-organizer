@@ -310,7 +310,7 @@
     "linkAccountHint": "将您的个人资料链接到 Play Market、App Store 或 FB Games 账户。即将推出。",
     "pushNotifications": "推送通知",
     "hideContacts": "隐藏联系方式",
-    "hideContactsHint": "启用后，只有您的直接联系人和您通知过的人才能看到您的联系方式"
+    "hideContactsHint": "启用后，只有您的直接联系人和您发起募集时收到通知的人才能看到您的联系方式"
   },
   "faq": {
     "title": "常见问题",

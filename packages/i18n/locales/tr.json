@@ -310,7 +310,7 @@
     "linkAccountHint": "Profilinizi Play Market, App Store veya FB Games hesabına bağlar. Yakında gelecek.",
     "pushNotifications": "Push Bildirimleri",
     "hideContacts": "Kişileri gizle",
-    "hideContactsHint": "Etkinleştirildiğinde, yalnızca doğrudan bağlantılarınız ve bildirim gönderdiğiniz kişiler kişilerinizi görebilir"
+    "hideContactsHint": "Etkinleştirildiğinde, yalnızca doğrudan bağlantılarınız ve bir toplama açtığınızda bildirim alan kişiler kişilerinizi görebilir"
   },
   "faq": {
     "title": "Sık sorulan sorular",
