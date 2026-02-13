@@ -46,14 +46,11 @@ export const clusterRouter = router({
     // Collect IDs of users already in clusters
     const usersInClusters = new Set(uf.parent.keys());
 
-    // For admin: load ALL users to find isolated ones (no connections)
-    let isolatedUsers: Array<{ id: string; name: string; remainingBudget: number | null; createdAt: Date }> = [];
-    if (admin) {
-      isolatedUsers = await ctx.db.user.findMany({
-        where: { id: { notIn: [...usersInClusters] }, deletedAt: null },
-        select: { id: true, name: true, remainingBudget: true, createdAt: true },
-      });
-    }
+    // Load isolated users (no connections) — visible to everyone
+    const isolatedUsers = await ctx.db.user.findMany({
+      where: { id: { notIn: [...usersInClusters] }, deletedAt: null },
+      select: { id: true, name: true, remainingBudget: true, createdAt: true },
+    });
 
     // Find which cluster current user belongs to
     const myRoot = uf.parent.has(ctx.userId) ? uf.find(ctx.userId) : null;
@@ -85,8 +82,8 @@ export const clusterRouter = router({
 
     for (const [root, members] of clusters) {
       const memberCount = [...members].filter(id => activeUserIds.has(id)).length;
-      // Visibility: admin sees all, non-admin sees clusters with >3 members
-      if (!admin && memberCount <= 3) continue;
+      // Skip empty clusters (all members deleted)
+      if (memberCount === 0) continue;
 
       let totalBudget = 0;
       let best: typeof users[number] | undefined;
@@ -113,17 +110,15 @@ export const clusterRouter = router({
       });
     }
 
-    // For admin: add isolated users as individual "clusters" of size 1
-    if (admin) {
-      for (const u of isolatedUsers) {
-        result.push({
-          rootUserId: u.id,
-          rootUserName: u.name,
-          memberCount: 1,
-          totalBudget: Math.round(u.remainingBudget ?? 0),
-          isMine: u.id === ctx.userId,
-        });
-      }
+    // Add isolated users as individual "clusters" of size 1
+    for (const u of isolatedUsers) {
+      result.push({
+        rootUserId: u.id,
+        rootUserName: u.name,
+        memberCount: 1,
+        totalBudget: Math.round(u.remainingBudget ?? 0),
+        isMine: u.id === ctx.userId,
+      });
     }
 
     // Sort by memberCount desc
