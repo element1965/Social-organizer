@@ -1,5 +1,5 @@
 import { useState, lazy, Suspense } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { trpc } from '../lib/trpc';
 import { useAuth } from '../hooks/useAuth';
@@ -18,7 +18,9 @@ export function MyNetworkPage() {
   const navigate = useNavigate();
   const myId = useAuth((s) => s.userId);
   const { mode } = useTheme();
-  const [view, setView] = useState<'list' | '3d'>('3d');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const view = (searchParams.get('view') === 'list' ? 'list' : '3d') as 'list' | '3d';
+  const setView = (v: 'list' | '3d') => setSearchParams(v === '3d' ? {} : { view: v }, { replace: true });
   const [showInvitePopup, setShowInvitePopup] = useState(false);
   const isDark = mode === 'dark' || (mode === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
 
