@@ -235,7 +235,7 @@ export function DashboardPage() {
                 onClick={() => setShowInvitePopup(true)}
                 className="w-16 h-16 shrink-0 rounded-full bg-gradient-to-br from-blue-600 to-indigo-600 text-white flex items-center justify-center hover:from-blue-500 hover:to-indigo-500 transition-all shadow-md ring-2 ring-blue-400"
               >
-                <span className="text-3xl font-light leading-none">+</span>
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round"><path d="M12 5v14M5 12h14" /></svg>
               </button>
             </div>
 
