@@ -1,4 +1,4 @@
-import type { PrismaClient } from '@prisma/client';
+import type { PrismaClient } from '@so/db';
 
 export async function canViewContacts(
   db: PrismaClient,
