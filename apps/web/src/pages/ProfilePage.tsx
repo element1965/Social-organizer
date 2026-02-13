@@ -47,9 +47,10 @@ export function ProfilePage() {
   });
 
   const isIndirect = !isOwn && !!paramId && pathData?.path && pathData.path.length >= 3 && nicknameData?.isConnected === false;
+  const isNotConnected = !isOwn && !!paramId && nicknameData?.isConnected === false;
   const { data: directStatus } = trpc.pending.directStatus.useQuery(
     { targetUserId: paramId! },
-    { enabled: !!isIndirect }
+    { enabled: !!isNotConnected }
   );
   const sendDirectMut = trpc.pending.sendDirectRequest.useMutation({
     onSuccess: () => utils.pending.directStatus.invalidate({ targetUserId: paramId! }),
@@ -214,7 +215,7 @@ export function ProfilePage() {
         </Card>
       )}
 
-      {isIndirect && directStatus && (
+      {isNotConnected && directStatus && (
         <Card>
           <CardContent className="py-3">
             {directStatus.status === 'none' ? (
