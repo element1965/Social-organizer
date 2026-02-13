@@ -266,7 +266,7 @@
     "currentCapability": "当前能力",
     "memberSince": "加入于 {{date}}",
     "nicknamePlaceholder": "你给他们的备注名...",
-    "addDirect": "添加为直接联系人",
+    "addDirect": "添加为直接联系",
     "directRequestSent": "请求已发送，等待确认",
     "revokeHandshake": "撤销握手",
     "revokeConfirm": "连接将被重置。用户需要重新确认。继续？",

@@ -266,7 +266,7 @@
     "currentCapability": "القدرة الحالية",
     "memberSince": "عضو منذ {{date}}",
     "nicknamePlaceholder": "اسمك لهم...",
-    "addDirect": "إضافة إلى جهات الاتصال المباشرة",
+    "addDirect": "إضافة إلى الاتصالات المباشرة",
     "directRequestSent": "تم إرسال الطلب. في انتظار التأكيد",
     "revokeHandshake": "إلغاء المصافحة",
     "revokeConfirm": "سيتم إعادة تعيين الاتصال. سيحتاج المستخدم إلى إعادة التأكيد. متابعة؟",

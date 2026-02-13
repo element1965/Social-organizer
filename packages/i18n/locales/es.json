@@ -266,7 +266,7 @@
     "currentCapability": "Capacidad actual",
     "memberSince": "Miembro desde {{date}}",
     "nicknamePlaceholder": "Tu nombre para ellos...",
-    "addDirect": "Añadir a contactos directos",
+    "addDirect": "Añadir a conexiones directas",
     "directRequestSent": "Solicitud enviada. Esperando confirmación",
     "revokeHandshake": "Revocar apretón de manos",
     "revokeConfirm": "La conexión se restablecerá. El usuario deberá ser reconfirmado. ¿Continuar?",
