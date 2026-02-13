@@ -37,6 +37,9 @@ export function Layout() {
   const { data: unread } = trpc.notification.unreadCount.useQuery(undefined, {
     refetchInterval: 30000,
   });
+  const { data: pendingIncoming } = trpc.pending.incomingCount.useQuery(undefined, {
+    refetchInterval: 15000,
+  });
   const { selection } = useTelegramHaptics();
 
   useEffect(() => {
@@ -96,11 +99,14 @@ export function Layout() {
               )}
             >
               {item.icon && <item.icon className="w-5 h-5" />}
-              {item.badge && unread && unread.count > 0 && (
-                <span className="absolute top-1 right-1/4 w-4 h-4 bg-red-500 text-white text-[10px] rounded-full flex items-center justify-center">
-                  {unread.count > 9 ? '9+' : unread.count}
-                </span>
-              )}
+              {item.badge && (() => {
+                const total = (unread?.count ?? 0) + (pendingIncoming?.count ?? 0);
+                return total > 0 ? (
+                  <span className="absolute top-1 right-1/4 w-4 h-4 bg-red-500 text-white text-[10px] rounded-full flex items-center justify-center">
+                    {total > 9 ? '9+' : total}
+                  </span>
+                ) : null;
+              })()}
               <span className="text-[10px] mt-0.5">{t(item.labelKey)}</span>
             </button>
           );

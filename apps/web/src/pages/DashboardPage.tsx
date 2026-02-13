@@ -2,28 +2,20 @@ import { lazy, Suspense, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { trpc } from '../lib/trpc';
-import { useAuth } from '../hooks/useAuth';
 import { InvitePopup } from '../components/InvitePopup';
 import { Card, CardContent } from '../components/ui/card';
 import { Button } from '../components/ui/button';
-import { Avatar } from '../components/ui/avatar';
 import {
   Users,
-  ArrowRight,
   UserPlus,
-  AlertTriangle,
   TrendingUp,
   Network,
   HandHeart,
   Wallet,
-  Copy,
   Check,
   X,
   HelpCircle,
   Pencil,
-  Clock,
-  CheckCircle,
-  XCircle,
   Layers,
 } from 'lucide-react';
 import { Tooltip } from '../components/ui/tooltip';
@@ -36,15 +28,12 @@ const LazyCloudBackground = lazy(() =>
 export function DashboardPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const userId = useAuth((s) => s.userId);
-
   const [showInvitePopup, setShowInvitePopup] = useState(false);
   const [showTgChatPopup, setShowTgChatPopup] = useState(false);
 
   const utils = trpc.useUtils();
   const { data: me } = trpc.user.me.useQuery(undefined, { refetchInterval: 30000 });
   const { data: networkStats, isLoading: networkLoading } = trpc.connection.getNetworkStats.useQuery(undefined, { refetchInterval: 60000 });
-  const { data: notifications } = trpc.notification.list.useQuery({ limit: 10 }, { refetchInterval: 30000 });
   const { data: helpStats } = trpc.stats.help.useQuery(undefined, { refetchInterval: 60000 });
   const { data: helpByPeriod } = trpc.stats.helpGivenByPeriod.useQuery(undefined, { refetchInterval: 60000 });
   const { data: adminData } = trpc.faq.isAdmin.useQuery();
@@ -57,23 +46,10 @@ export function DashboardPage() {
     onSuccess: () => { utils.user.me.invalidate(); setEditingBudget(false); setNewBudgetValue(''); },
   });
 
-  // Pending connections
-  const { data: pendingIncoming } = trpc.pending.incoming.useQuery(undefined, { refetchInterval: 15000 });
-  const { data: myPending } = trpc.pending.myPending.useQuery(undefined, { refetchInterval: 30000 });
   const { data: clusters } = trpc.cluster.list.useQuery(undefined, { enabled: isAdmin, refetchInterval: 60000 });
-  const acceptPending = trpc.pending.accept.useMutation({
-    onSuccess: () => { utils.pending.incoming.invalidate(); utils.pending.incomingCount.invalidate(); utils.connection.getNetworkStats.invalidate(); },
-  });
-  const rejectPending = trpc.pending.reject.useMutation({
-    onSuccess: () => { utils.pending.incoming.invalidate(); utils.pending.incomingCount.invalidate(); },
-  });
 
   const totalReachable = networkStats?.totalReachable ?? 0;
   const byDepth = networkStats?.byDepth ?? {};
-  // Filter emergency notifications (unread, only for active collections)
-  const emergencyNotifications = notifications?.items?.filter(
-    (n) => n.type === 'NEW_COLLECTION' && n.status === 'UNREAD' && n.collection?.type === 'EMERGENCY' && n.collection?.status === 'ACTIVE'
-  ) ?? [];
 
 
   return (
@@ -119,110 +95,6 @@ export function DashboardPage() {
           </button>
         </div>
       </div>
-
-      {/* Emergency notifications */}
-      {emergencyNotifications.length > 0 && (
-        <Card className="border-red-500 dark:border-red-700 bg-red-50 dark:bg-red-950/30">
-          <CardContent className="py-3">
-            <div className="flex items-center gap-2 mb-2">
-              <AlertTriangle className="w-5 h-5 text-red-600" />
-              <span className="font-semibold text-red-700 dark:text-red-400">
-                {t('dashboard.emergencyAlerts')} ({emergencyNotifications.length})
-              </span>
-            </div>
-            <div className="space-y-2">
-              {emergencyNotifications.slice(0, 3).map((notif) => (
-                <button
-                  key={notif.id}
-                  onClick={() => navigate(`/collection/${notif.collectionId}`)}
-                  className="w-full text-left p-2 rounded bg-white/50 dark:bg-gray-900/50 hover:bg-white dark:hover:bg-gray-900"
-                >
-                  <div className="flex items-center gap-2">
-                    <Avatar src={notif.collection?.creator?.photoUrl} name={notif.collection?.creator?.name || '?'} size="sm" />
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2">
-                        <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
-                          {notif.collection?.creator?.name}
-                        </p>
-                        <span className="flex items-center gap-0.5 text-xs text-gray-400 shrink-0">
-                          <Users className="w-3 h-3" />
-                          {(notif.collection?.creator as any)?.connectionCount ?? 0}
-                        </span>
-                        <span className="flex items-center gap-0.5 text-xs text-green-600 dark:text-green-400 shrink-0">
-                          <Wallet className="w-3 h-3" />
-                          ${Math.round((notif.collection?.creator as any)?.remainingBudget ?? 0)}
-                        </span>
-                      </div>
-                      <p className="text-xs text-gray-500">
-                        {notif.collection?.amount} {notif.collection?.currency}
-                      </p>
-                    </div>
-                    <ArrowRight className="w-4 h-4 text-gray-400" />
-                  </div>
-                </button>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-      )}
-
-      {/* Incoming pending connections */}
-      {pendingIncoming && pendingIncoming.length > 0 && (
-        <Card className="border-amber-400 dark:border-amber-700 bg-amber-50 dark:bg-amber-950/30">
-          <CardContent className="py-3">
-            <div className="flex items-center gap-2 mb-2">
-              <Clock className="w-5 h-5 text-amber-600" />
-              <span className="font-semibold text-amber-700 dark:text-amber-400">
-                {t('pending.incoming')} ({pendingIncoming.length})
-              </span>
-            </div>
-            <p className="text-xs text-gray-500 mb-2">{t('pending.meetInPerson')}</p>
-            <div className="space-y-2">
-              {pendingIncoming.map((p) => (
-                <div key={p.id} className="flex items-center gap-2 p-2 rounded bg-white/50 dark:bg-gray-900/50">
-                  <Avatar src={p.fromUser.photoUrl} name={p.fromUser.name} size="sm" />
-                  <span className="flex-1 text-sm font-medium text-gray-900 dark:text-white truncate">{p.fromUser.name}</span>
-                  <button
-                    onClick={() => acceptPending.mutate({ pendingId: p.id })}
-                    disabled={acceptPending.isPending}
-                    className="p-1.5 rounded-full bg-green-100 dark:bg-green-900/50 text-green-600 hover:bg-green-200 dark:hover:bg-green-800"
-                  >
-                    <CheckCircle className="w-5 h-5" />
-                  </button>
-                  <button
-                    onClick={() => rejectPending.mutate({ pendingId: p.id })}
-                    disabled={rejectPending.isPending}
-                    className="p-1.5 rounded-full bg-red-100 dark:bg-red-900/50 text-red-500 hover:bg-red-200 dark:hover:bg-red-800"
-                  >
-                    <XCircle className="w-5 h-5" />
-                  </button>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-      )}
-
-      {/* My outgoing pending */}
-      {myPending && myPending.length > 0 && (
-        <Card className="border-gray-200 dark:border-gray-700">
-          <CardContent className="py-3">
-            <div className="flex items-center gap-2 mb-2">
-              <Clock className="w-4 h-4 text-gray-400" />
-              <span className="text-sm text-gray-500">{t('pending.waitingApproval')}</span>
-            </div>
-            <div className="space-y-1">
-              {myPending.map((p) => (
-                <button key={p.id} className="flex items-center gap-2 w-full text-left hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg p-1 -m-1 transition-colors" onClick={() => navigate(`/profile/${p.toUser.id}`)}>
-                  <Avatar src={p.toUser.photoUrl} name={p.toUser.name} size="xs" />
-                  <span className="text-sm text-gray-600 dark:text-gray-400">{p.toUser.name}</span>
-                  <ArrowRight className="w-3.5 h-3.5 text-gray-400 ml-auto" />
-                </button>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-      )}
 
       {/* Gate: need at least 1 connection (only show after data loaded) */}
       {!networkLoading && networkStats && Object.values(byDepth).reduce((a, b) => a + (b as number), 0) === 0 && (
