@@ -131,14 +131,14 @@ export function FaqPage() {
             value={formQuestion}
             onChange={e => setFormQuestion(e.target.value)}
             placeholder={t('faq.questionPlaceholder')}
-            className="w-full mb-2 p-2 text-sm rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+            className="w-full mb-2 p-2 text-sm rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-y"
             rows={2}
           />
           <textarea
             value={formAnswer}
             onChange={e => setFormAnswer(e.target.value)}
             placeholder={t('faq.answerPlaceholder')}
-            className="w-full mb-3 p-2 text-sm rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+            className="w-full mb-3 p-2 text-sm rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-y"
             rows={4}
           />
           <div className="flex gap-2">

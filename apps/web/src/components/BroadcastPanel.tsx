@@ -212,7 +212,7 @@ export function BroadcastPanel({ onClose }: BroadcastPanelProps) {
                 value={msg.text}
                 onChange={(e) => setMsg({ ...msg, text: e.target.value })}
                 placeholder={t('broadcast.messagePlaceholder')}
-                className={`${inputCls} resize-none`}
+                className={`${inputCls} resize-y`}
                 rows={3}
               />
             )}
