@@ -42,6 +42,13 @@ export async function processAutoChain(_job: Job): Promise<void> {
   });
   if (tgAccounts.length === 0) return;
 
+  // Load invited user IDs for variant filtering
+  const invitedLinks = await db.inviteLink.findMany({
+    where: { usedById: { not: null } },
+    select: { usedById: true },
+  });
+  const invitedUserIds = new Set(invitedLinks.map((l) => l.usedById!));
+
   // Load existing deliveries into Set for O(1) lookup
   const existingDeliveries = await db.autoChainDelivery.findMany({
     select: { messageId: true, userId: true },
@@ -104,10 +111,14 @@ export async function processAutoChain(_job: Job): Promise<void> {
       const key = `${msg.id}:${acc.userId}`;
       if (deliveredSet.has(key)) continue;
 
+      // Variant filter
+      if (msg.variant === 'invited' && !invitedUserIds.has(acc.userId)) continue;
+      if (msg.variant === 'organic' && invitedUserIds.has(acc.userId)) continue;
+
       // Calculate send time
       const sendTime = new Date(userDayStart.getTime());
       sendTime.setDate(sendTime.getDate() + msg.dayOffset);
-      sendTime.setHours(9, 0, 0, 0); // 9:00 Kyiv
+      sendTime.setHours(7, 0, 0, 0); // 7:00 Kyiv
       sendTime.setMinutes(sendTime.getMinutes() + msg.sortOrder * msg.intervalMin);
 
       if (sendTime > now) continue;
