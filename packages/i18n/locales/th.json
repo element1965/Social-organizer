@@ -349,7 +349,11 @@
     "sending": "กำลังส่ง...",
     "sentSuccess": "ส่งถึง {{count}} ผู้ใช้แล้ว",
     "directSuccess": "ส่งข้อความแล้ว",
-    "error": "ส่งไม่สำเร็จ"
+    "error": "ส่งไม่สำเร็จ",
+    "variantAll": "ทั้งหมด",
+    "variantInvited": "ได้รับเชิญ",
+    "variantOrganic": "โดยตรง",
+    "editChain": "แก้ไข"
   },
   "contacts": {
     "telegram": "Telegram",

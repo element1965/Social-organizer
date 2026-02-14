@@ -349,7 +349,11 @@
     "sending": "Gönderiliyor...",
     "sentSuccess": "{{count}} kullanıcıya gönderildi",
     "directSuccess": "Mesaj gönderildi",
-    "error": "Gönderme başarısız"
+    "error": "Gönderme başarısız",
+    "variantAll": "Tümü",
+    "variantInvited": "Davetliler",
+    "variantOrganic": "Doğrudan",
+    "editChain": "Düzenle"
   },
   "contacts": {
     "telegram": "Telegram",

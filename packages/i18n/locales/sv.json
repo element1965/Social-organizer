@@ -349,7 +349,11 @@
     "sending": "Skickar...",
     "sentSuccess": "Skickat till {{count}} användare",
     "directSuccess": "Meddelande skickat",
-    "error": "Misslyckades att skicka"
+    "error": "Misslyckades att skicka",
+    "variantAll": "Alla",
+    "variantInvited": "Inbjudna",
+    "variantOrganic": "Direkta",
+    "editChain": "Redigera"
   },
   "contacts": {
     "telegram": "Telegram",

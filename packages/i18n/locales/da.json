@@ -349,7 +349,11 @@
     "sending": "Sender...",
     "sentSuccess": "Sendt til {{count}} brugere",
     "directSuccess": "Besked sendt",
-    "error": "Kunne ikke sende"
+    "error": "Kunne ikke sende",
+    "variantAll": "Alle",
+    "variantInvited": "Inviterede",
+    "variantOrganic": "Direkte",
+    "editChain": "Rediger"
   },
   "contacts": {
     "telegram": "Telegram",

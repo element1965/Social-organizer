@@ -450,7 +450,11 @@
     "sending": "Envoi en cours...",
     "sentSuccess": "Envoyé à {{count}} utilisateurs",
     "directSuccess": "Message envoyé",
-    "error": "Échec de l'envoi"
+    "error": "Échec de l'envoi",
+    "variantAll": "Tous",
+    "variantInvited": "Invités",
+    "variantOrganic": "Directs",
+    "editChain": "Modifier"
   },
   "pending": {
     "title": "Connexions en attente",

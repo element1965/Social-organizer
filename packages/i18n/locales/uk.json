@@ -349,7 +349,11 @@
     "sending": "Надсилається...",
     "sentSuccess": "Надіслано {{count}} користувачам",
     "directSuccess": "Повідомлення надіслано",
-    "error": "Не вдалося надіслати"
+    "error": "Не вдалося надіслати",
+    "variantAll": "Всі",
+    "variantInvited": "Запрошені",
+    "variantOrganic": "Прямі",
+    "editChain": "Редагувати"
   },
   "contacts": {
     "telegram": "Telegram",

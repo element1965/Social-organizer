@@ -349,7 +349,11 @@
     "sending": "भेजा जा रहा है...",
     "sentSuccess": "{{count}} उपयोगकर्ताओं को भेजा गया",
     "directSuccess": "संदेश भेजा गया",
-    "error": "भेजने में विफल"
+    "error": "भेजने में विफल",
+    "variantAll": "सभी",
+    "variantInvited": "आमंत्रित",
+    "variantOrganic": "प्रत्यक्ष",
+    "editChain": "संपादित करें"
   },
   "contacts": {
     "telegram": "टेलीग्राम",

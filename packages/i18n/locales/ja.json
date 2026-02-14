@@ -349,7 +349,11 @@
     "sending": "送信中...",
     "sentSuccess": "{{count}}人のユーザーに送信しました",
     "directSuccess": "メッセージを送信しました",
-    "error": "送信に失敗しました"
+    "error": "送信に失敗しました",
+    "variantAll": "全員",
+    "variantInvited": "招待済み",
+    "variantOrganic": "直接",
+    "editChain": "編集"
   },
   "contacts": {
     "telegram": "Telegram",

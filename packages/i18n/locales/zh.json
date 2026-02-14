@@ -450,7 +450,11 @@
     "sending": "发送中...",
     "sentSuccess": "已发送给 {{count}} 位用户",
     "directSuccess": "消息已发送",
-    "error": "发送失败"
+    "error": "发送失败",
+    "variantAll": "全部",
+    "variantInvited": "受邀",
+    "variantOrganic": "直接",
+    "editChain": "编辑"
   },
   "pending": {
     "title": "待处理连接",

@@ -349,7 +349,11 @@
     "sending": "Verzenden...",
     "sentSuccess": "Verzonden naar {{count}} gebruikers",
     "directSuccess": "Bericht verzonden",
-    "error": "Verzenden mislukt"
+    "error": "Verzenden mislukt",
+    "variantAll": "Allemaal",
+    "variantInvited": "Uitgenodigd",
+    "variantOrganic": "Direct",
+    "editChain": "Bewerken"
   },
   "contacts": {
     "telegram": "Telegram",

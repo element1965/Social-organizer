@@ -450,7 +450,11 @@
     "sending": "Wird gesendet...",
     "sentSuccess": "An {{count}} Benutzer gesendet",
     "directSuccess": "Nachricht gesendet",
-    "error": "Fehler beim Senden"
+    "error": "Fehler beim Senden",
+    "variantAll": "Alle",
+    "variantInvited": "Eingeladene",
+    "variantOrganic": "Direkte",
+    "editChain": "Bearbeiten"
   },
   "pending": {
     "title": "Ausstehende Verbindungen",
