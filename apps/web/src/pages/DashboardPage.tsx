@@ -15,6 +15,8 @@ import {
   HelpCircle,
   Pencil,
   Layers,
+  ChevronDown,
+  ChevronUp,
 } from 'lucide-react';
 import { Tooltip } from '../components/ui/tooltip';
 import { SocialIcon } from '../components/ui/social-icons';
@@ -41,6 +43,7 @@ export function DashboardPage() {
   });
 
   const { data: clusters } = trpc.cluster.list.useQuery(undefined, { refetchInterval: 60000 });
+  const [clustersOpen, setClustersOpen] = useState(false);
 
   const totalReachable = networkStats?.totalReachable ?? 0;
   const byDepth = networkStats?.byDepth ?? {};
@@ -264,40 +267,56 @@ export function DashboardPage() {
           </CardContent>
         </Card>
 
-      {/* Clusters */}
-      {clusters && clusters.length > 0 && (
-        <Card>
-          <CardContent className="py-4">
-            <div className="flex items-center justify-between mb-3">
-              <div className="flex items-center gap-2">
-                <Layers className="w-5 h-5 text-purple-600" />
-                <h2 className="font-semibold text-gray-900 dark:text-white">{t('cluster.title')}</h2>
-              </div>
-              <span className="text-sm text-gray-500">
-                {clusters.reduce((sum, cl) => sum + cl.memberCount, 0)} {t('dashboard.people')}
-              </span>
-            </div>
-            <div className="space-y-2">
-              {clusters.map((cl, i) => (
-                <div
-                  key={i}
-                  className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800/50 rounded-lg cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-                  onClick={() => navigate(`/profile/${cl.rootUserId}`)}
-                >
-                  <div>
-                    <p className="text-sm font-medium text-gray-900 dark:text-white">{cl.rootUserName}</p>
-                    <p className="text-xs text-gray-500">{t('cluster.members')}: {cl.memberCount}</p>
-                  </div>
-                  <div className="text-right">
-                    <p className="text-sm font-bold text-green-600 dark:text-green-400">${cl.totalBudget}</p>
-                    <p className="text-[10px] text-gray-400">{t('cluster.budget')}</p>
-                  </div>
+      {/* Clusters (exclude user's own cluster) */}
+      {(() => {
+        const otherClusters = clusters?.filter((cl) => !cl.isMine) ?? [];
+        if (otherClusters.length === 0) return null;
+        return (
+          <Card>
+            <CardContent className="py-4">
+              <button
+                onClick={() => setClustersOpen((v) => !v)}
+                className="w-full flex items-center justify-between"
+              >
+                <div className="flex items-center gap-2">
+                  <Layers className="w-5 h-5 text-purple-600" />
+                  <h2 className="font-semibold text-gray-900 dark:text-white">{t('cluster.title')}</h2>
                 </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-      )}
+                <div className="flex items-center gap-2">
+                  <span className="text-sm text-gray-500">
+                    {otherClusters.reduce((sum, cl) => sum + cl.memberCount, 0)} {t('dashboard.people')}
+                  </span>
+                  {clustersOpen ? (
+                    <ChevronUp className="w-4 h-4 text-gray-400" />
+                  ) : (
+                    <ChevronDown className="w-4 h-4 text-gray-400" />
+                  )}
+                </div>
+              </button>
+              {clustersOpen && (
+                <div className="space-y-2 mt-3">
+                  {otherClusters.map((cl, i) => (
+                    <div
+                      key={i}
+                      className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800/50 rounded-lg cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                      onClick={() => navigate(`/profile/${cl.rootUserId}`)}
+                    >
+                      <div>
+                        <p className="text-sm font-medium text-gray-900 dark:text-white">{cl.rootUserName}</p>
+                        <p className="text-xs text-gray-500">{t('cluster.members')}: {cl.memberCount}</p>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-sm font-bold text-green-600 dark:text-green-400">${cl.totalBudget}</p>
+                        <p className="text-[10px] text-gray-400">{t('cluster.budget')}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        );
+      })()}
     </div>
   );
 }
