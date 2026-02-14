@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { X, Send, Loader2, Clock, Link2, Trash2, ToggleLeft, ToggleRight, BarChart3 } from 'lucide-react';
+import { X, Send, Loader2, Clock, Link2, Trash2, ToggleLeft, ToggleRight, BarChart3, Pencil, Check } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { trpc } from '../lib/trpc';
 import { MessageComposer, type MessageData } from './MessageComposer';
@@ -9,6 +9,7 @@ interface BroadcastPanelProps {
 }
 
 type Tab = 'send' | 'scheduled' | 'autochain';
+type Variant = 'all' | 'invited' | 'organic';
 
 const emptyMessage: MessageData = { text: '', mediaType: 'text' };
 
@@ -27,6 +28,51 @@ function StatusBadge({ status }: { status: string }) {
     <span className={`px-2 py-0.5 text-xs rounded-full font-medium ${colors[status] || 'bg-gray-100'}`}>
       {t(key)}
     </span>
+  );
+}
+
+function VariantBadge({ variant }: { variant: string }) {
+  const { t } = useTranslation();
+  if (variant === 'all') return null;
+  const colors: Record<string, string> = {
+    invited: 'bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400',
+    organic: 'bg-cyan-100 dark:bg-cyan-900/30 text-cyan-700 dark:text-cyan-400',
+  };
+  const labels: Record<string, string> = {
+    invited: t('broadcast.variantInvited'),
+    organic: t('broadcast.variantOrganic'),
+  };
+  return (
+    <span className={`text-xs px-1.5 py-0.5 rounded font-medium ${colors[variant] || ''}`}>
+      {labels[variant] || variant}
+    </span>
+  );
+}
+
+function VariantSelector({ value, onChange, disabled }: { value: Variant; onChange: (v: Variant) => void; disabled?: boolean }) {
+  const { t } = useTranslation();
+  const opts: { key: Variant; label: string }[] = [
+    { key: 'all', label: t('broadcast.variantAll') },
+    { key: 'invited', label: t('broadcast.variantInvited') },
+    { key: 'organic', label: t('broadcast.variantOrganic') },
+  ];
+  return (
+    <div className="flex gap-1">
+      {opts.map((o) => (
+        <button
+          key={o.key}
+          onClick={() => onChange(o.key)}
+          disabled={disabled}
+          className={`flex-1 py-1.5 text-xs font-medium rounded-lg transition-colors ${
+            value === o.key
+              ? 'bg-emerald-600 text-white'
+              : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300'
+          }`}
+        >
+          {o.label}
+        </button>
+      ))}
+    </div>
   );
 }
 
@@ -106,6 +152,14 @@ export function BroadcastPanel({ onClose }: BroadcastPanelProps) {
   const [chainDay, setChainDay] = useState(0);
   const [chainOrder, setChainOrder] = useState(0);
   const [chainInterval, setChainInterval] = useState(120);
+  const [chainVariant, setChainVariant] = useState<Variant>('all');
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editText, setEditText] = useState('');
+  const [editDay, setEditDay] = useState(0);
+  const [editOrder, setEditOrder] = useState(0);
+  const [editInterval, setEditInterval] = useState(120);
+  const [editVariant, setEditVariant] = useState<Variant>('all');
+
   const chainList = trpc.broadcast.listChainMessages.useQuery(undefined, { enabled: tab === 'autochain' });
   const chainStatsQuery = trpc.broadcast.chainStats.useQuery(undefined, { enabled: tab === 'autochain' });
   const createChainMutation = trpc.broadcast.createChainMessage.useMutation({
@@ -114,13 +168,18 @@ export function BroadcastPanel({ onClose }: BroadcastPanelProps) {
       setChainMsg({ ...emptyMessage });
       setChainDay(0);
       setChainOrder(0);
+      setChainVariant('all');
       chainList.refetch();
       chainStatsQuery.refetch();
     },
     onError: () => setResult(t('broadcast.error')),
   });
   const updateChainMutation = trpc.broadcast.updateChainMessage.useMutation({
-    onSuccess: () => { chainList.refetch(); chainStatsQuery.refetch(); },
+    onSuccess: () => {
+      setEditingId(null);
+      chainList.refetch();
+      chainStatsQuery.refetch();
+    },
   });
   const deleteChainMutation = trpc.broadcast.deleteChainMessage.useMutation({
     onSuccess: () => { chainList.refetch(); chainStatsQuery.refetch(); },
@@ -139,6 +198,28 @@ export function BroadcastPanel({ onClose }: BroadcastPanelProps) {
       dayOffset: chainDay,
       sortOrder: chainOrder,
       intervalMin: chainInterval,
+      variant: chainVariant,
+    });
+  };
+
+  const startEdit = (cm: { id: string; text: string; dayOffset: number; sortOrder: number; intervalMin: number; variant: string }) => {
+    setEditingId(cm.id);
+    setEditText(cm.text);
+    setEditDay(cm.dayOffset);
+    setEditOrder(cm.sortOrder);
+    setEditInterval(cm.intervalMin);
+    setEditVariant((cm.variant || 'all') as Variant);
+  };
+
+  const saveEdit = () => {
+    if (!editingId || !editText.trim()) return;
+    updateChainMutation.mutate({
+      id: editingId,
+      text: editText.trim(),
+      dayOffset: editDay,
+      sortOrder: editOrder,
+      intervalMin: editInterval,
+      variant: editVariant,
     });
   };
 
@@ -312,6 +393,9 @@ export function BroadcastPanel({ onClose }: BroadcastPanelProps) {
             {/* Add form */}
             <MessageComposer value={chainMsg} onChange={setChainMsg} disabled={isPending} />
 
+            {/* Variant selector */}
+            <VariantSelector value={chainVariant} onChange={setChainVariant} disabled={isPending} />
+
             <div className="grid grid-cols-3 gap-2">
               <div>
                 <label className="text-xs text-gray-500 dark:text-gray-400">{t('broadcast.chainDayOffset')}</label>
@@ -367,52 +451,105 @@ export function BroadcastPanel({ onClose }: BroadcastPanelProps) {
               )}
               {chainList.data?.map((cm) => (
                 <div key={cm.id} className="p-3 rounded-lg bg-gray-50 dark:bg-gray-800 space-y-1.5">
-                  <div className="flex items-start justify-between gap-2">
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 mb-1">
-                        <span className="text-xs font-medium text-emerald-600 dark:text-emerald-400">
-                          {t('broadcast.chainDay', { day: cm.dayOffset })}
-                        </span>
-                        <span className="text-xs text-gray-400">#{cm.sortOrder}</span>
-                        {cm.mediaType !== 'text' && (
-                          <span className="text-xs px-1.5 py-0.5 rounded bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400">
-                            {cm.mediaType}
-                          </span>
-                        )}
+                  {editingId === cm.id ? (
+                    /* --- Edit mode --- */
+                    <div className="space-y-2">
+                      <textarea
+                        value={editText}
+                        onChange={(e) => setEditText(e.target.value)}
+                        className={`${inputCls} resize-y`}
+                        rows={3}
+                      />
+                      <VariantSelector value={editVariant} onChange={setEditVariant} />
+                      <div className="grid grid-cols-3 gap-2">
+                        <div>
+                          <label className="text-xs text-gray-500 dark:text-gray-400">{t('broadcast.chainDayOffset')}</label>
+                          <input type="number" min={0} value={editDay} onChange={(e) => setEditDay(Number(e.target.value))} className={inputCls} />
+                        </div>
+                        <div>
+                          <label className="text-xs text-gray-500 dark:text-gray-400">{t('broadcast.chainSortOrder')}</label>
+                          <input type="number" min={0} value={editOrder} onChange={(e) => setEditOrder(Number(e.target.value))} className={inputCls} />
+                        </div>
+                        <div>
+                          <label className="text-xs text-gray-500 dark:text-gray-400">{t('broadcast.chainInterval')}</label>
+                          <input type="number" min={1} value={editInterval} onChange={(e) => setEditInterval(Number(e.target.value))} className={inputCls} />
+                        </div>
                       </div>
-                      <p className="text-sm text-gray-900 dark:text-gray-100 line-clamp-2">{cm.text}</p>
+                      <div className="flex gap-2">
+                        <button
+                          onClick={saveEdit}
+                          disabled={updateChainMutation.isPending || !editText.trim()}
+                          className="flex-1 py-1.5 bg-emerald-600 text-white rounded-lg text-xs font-medium flex items-center justify-center gap-1 disabled:opacity-50"
+                        >
+                          <Check className="w-3.5 h-3.5" />{t('common.save')}
+                        </button>
+                        <button
+                          onClick={() => setEditingId(null)}
+                          className="flex-1 py-1.5 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg text-xs font-medium"
+                        >
+                          {t('common.cancel')}
+                        </button>
+                      </div>
                     </div>
-                  </div>
-                  <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400">
-                    <div className="flex items-center gap-3">
-                      <span>{t('broadcast.deliveries')}: {cm._count.deliveries}</span>
-                      <span>{t('broadcast.reads')}: {(cm.deliveries as unknown[]).length}</span>
-                      {cm._count.deliveries > 0 && (
-                        <span className="text-purple-500">
-                          {Math.round(((cm.deliveries as unknown[]).length / cm._count.deliveries) * 100)}% {t('broadcast.openRate')}
-                        </span>
-                      )}
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <button
-                        onClick={() => updateChainMutation.mutate({ id: cm.id, isActive: !cm.isActive })}
-                        className="flex items-center gap-0.5"
-                        title={cm.isActive ? t('broadcast.active') : t('broadcast.inactive')}
-                      >
-                        {cm.isActive ? (
-                          <ToggleRight className="w-5 h-5 text-emerald-500" />
-                        ) : (
-                          <ToggleLeft className="w-5 h-5 text-gray-400" />
-                        )}
-                      </button>
-                      <button
-                        onClick={() => { if (confirm(t('common.confirm') + '?')) deleteChainMutation.mutate({ id: cm.id }); }}
-                        className="text-red-400 hover:text-red-600"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </button>
-                    </div>
-                  </div>
+                  ) : (
+                    /* --- View mode --- */
+                    <>
+                      <div className="flex items-start justify-between gap-2">
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2 mb-1 flex-wrap">
+                            <span className="text-xs font-medium text-emerald-600 dark:text-emerald-400">
+                              {t('broadcast.chainDay', { day: cm.dayOffset })}
+                            </span>
+                            <span className="text-xs text-gray-400">#{cm.sortOrder}</span>
+                            {cm.mediaType !== 'text' && (
+                              <span className="text-xs px-1.5 py-0.5 rounded bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400">
+                                {cm.mediaType}
+                              </span>
+                            )}
+                            <VariantBadge variant={cm.variant} />
+                          </div>
+                          <p className="text-sm text-gray-900 dark:text-gray-100 line-clamp-2">{cm.text}</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400">
+                        <div className="flex items-center gap-3">
+                          <span>{t('broadcast.deliveries')}: {cm._count.deliveries}</span>
+                          <span>{t('broadcast.reads')}: {(cm.deliveries as unknown[]).length}</span>
+                          {cm._count.deliveries > 0 && (
+                            <span className="text-purple-500">
+                              {Math.round(((cm.deliveries as unknown[]).length / cm._count.deliveries) * 100)}% {t('broadcast.openRate')}
+                            </span>
+                          )}
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <button
+                            onClick={() => startEdit(cm)}
+                            className="text-blue-400 hover:text-blue-600"
+                            title={t('broadcast.editChain')}
+                          >
+                            <Pencil className="w-4 h-4" />
+                          </button>
+                          <button
+                            onClick={() => updateChainMutation.mutate({ id: cm.id, isActive: !cm.isActive })}
+                            className="flex items-center gap-0.5"
+                            title={cm.isActive ? t('broadcast.active') : t('broadcast.inactive')}
+                          >
+                            {cm.isActive ? (
+                              <ToggleRight className="w-5 h-5 text-emerald-500" />
+                            ) : (
+                              <ToggleLeft className="w-5 h-5 text-gray-400" />
+                            )}
+                          </button>
+                          <button
+                            onClick={() => { if (confirm(t('common.confirm') + '?')) deleteChainMutation.mutate({ id: cm.id }); }}
+                            className="text-red-400 hover:text-red-600"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </div>
+                      </div>
+                    </>
+                  )}
                 </div>
               ))}
             </div>

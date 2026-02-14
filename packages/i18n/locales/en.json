@@ -388,7 +388,11 @@
     "stats": "Statistics",
     "totalDeliveries": "Total deliveries",
     "totalRead": "Total read",
-    "activeMessages": "Active messages"
+    "activeMessages": "Active messages",
+    "variantAll": "All",
+    "variantInvited": "Invited",
+    "variantOrganic": "Direct",
+    "editChain": "Edit"
   },
   "contacts": {
     "telegram": "Telegram",

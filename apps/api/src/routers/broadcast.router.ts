@@ -269,6 +269,7 @@ export const broadcastRouter = router({
       dayOffset: z.number().int().min(0),
       sortOrder: z.number().int().min(0).default(0),
       intervalMin: z.number().int().min(1).default(120),
+      variant: z.enum(['all', 'invited', 'organic']).default('all'),
     }))
     .mutation(async ({ ctx, input }) => {
       assertAdmin(ctx.userId!);
@@ -303,6 +304,7 @@ export const broadcastRouter = router({
       dayOffset: z.number().int().min(0).optional(),
       sortOrder: z.number().int().min(0).optional(),
       intervalMin: z.number().int().min(1).optional(),
+      variant: z.enum(['all', 'invited', 'organic']).optional(),
       isActive: z.boolean().optional(),
     }))
     .mutation(async ({ ctx, input }) => {

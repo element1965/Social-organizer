@@ -370,6 +370,7 @@ model AutoChainMessage {
   dayOffset   Int
   sortOrder   Int      @default(0)
   intervalMin Int      @default(120)
+  variant     String   @default("all")
   isActive    Boolean  @default(true)
   sentCount   Int      @default(0)
   createdAt   DateTime @default(now())
