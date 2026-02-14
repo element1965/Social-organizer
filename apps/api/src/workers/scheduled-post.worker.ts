@@ -6,6 +6,7 @@ import {
   sendTelegramVideo,
   sendTgMessages,
   SUPPORT_CHAT_ID,
+  blockedCounter,
   type TgReplyMarkup,
 } from '../services/telegram-bot.service.js';
 import { translateBroadcastMessage } from '../services/translate.service.js';
@@ -86,6 +87,7 @@ export async function processScheduledPost(_job: Job): Promise<void> {
 
       const mediaSource = post.mediaFileId || post.mediaUrl;
       let sent = 0;
+      blockedCounter.reset();
 
       if (post.mediaType === 'text') {
         const messages = tgAccounts.map((acc) => {
@@ -134,9 +136,10 @@ export async function processScheduledPost(_job: Job): Promise<void> {
         data: { sentCount: sent },
       });
 
+      const blocked = blockedCounter.count;
       await sendTelegramMessage(
         SUPPORT_CHAT_ID,
-        `📢 <b>Scheduled broadcast sent</b>\n\nTo: ${tgAccounts.length} users\nDelivered: ${sent}\nMedia: ${post.mediaType}\n\n${post.text.slice(0, 200)}`,
+        `📢 <b>Scheduled broadcast sent</b>\n\nTo: ${tgAccounts.length} users\nDelivered: ${sent}\nMedia: ${post.mediaType}${blocked > 0 ? `\n🚫 Removed: ${blocked} (blocked bot)` : ''}\n\n${post.text.slice(0, 200)}`,
       );
 
       console.log(`[Scheduled Post] ${post.id}: sent=${sent}/${tgAccounts.length}`);

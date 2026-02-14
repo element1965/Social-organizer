@@ -7,6 +7,7 @@ import {
   sendTelegramVideo,
   sendTgMessages,
   SUPPORT_CHAT_ID,
+  blockedCounter,
   type TgReplyMarkup,
 } from '../services/telegram-bot.service.js';
 import { translateBroadcastMessage } from '../services/translate.service.js';
@@ -77,6 +78,7 @@ export const broadcastRouter = router({
       const mediaSource = input.mediaFileId || input.mediaUrl;
 
       let sent = 0;
+      blockedCounter.reset();
 
       if (input.mediaType === 'text') {
         const messages = tgAccounts.map((acc) => {
@@ -111,9 +113,10 @@ export const broadcastRouter = router({
       }
 
       // Confirm in support chat
+      const blocked = blockedCounter.count;
       await sendTelegramMessage(
         SUPPORT_CHAT_ID,
-        `📢 <b>Broadcast sent</b>\n\nTo: ${tgAccounts.length} users\nDelivered: ${sent}\nMedia: ${input.mediaType}\n\n${input.text.slice(0, 200)}`,
+        `📢 <b>Broadcast sent</b>\n\nTo: ${tgAccounts.length} users\nDelivered: ${sent}\nMedia: ${input.mediaType}${blocked > 0 ? `\n🚫 Removed: ${blocked} (blocked bot)` : ''}\n\n${input.text.slice(0, 200)}`,
       );
 
       return { sent };
