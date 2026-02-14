@@ -349,7 +349,11 @@
     "sending": "Wysyłanie...",
     "sentSuccess": "Wysłano do {{count}} użytkowników",
     "directSuccess": "Wiadomość wysłana",
-    "error": "Nie udało się wysłać"
+    "error": "Nie udało się wysłać",
+    "variantAll": "Wszyscy",
+    "variantInvited": "Zaproszeni",
+    "variantOrganic": "Bezpośredni",
+    "editChain": "Edytuj"
   },
   "contacts": {
     "telegram": "Telegram",

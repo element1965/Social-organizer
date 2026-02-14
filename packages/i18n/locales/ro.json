@@ -349,7 +349,11 @@
     "sending": "Se trimite...",
     "sentSuccess": "Trimis la {{count}} utilizatori",
     "directSuccess": "Mesaj trimis",
-    "error": "Trimiterea a eșuat"
+    "error": "Trimiterea a eșuat",
+    "variantAll": "Toți",
+    "variantInvited": "Invitați",
+    "variantOrganic": "Direcți",
+    "editChain": "Editează"
   },
   "contacts": {
     "telegram": "Telegram",

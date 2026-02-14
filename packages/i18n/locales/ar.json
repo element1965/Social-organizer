@@ -349,7 +349,11 @@
     "sending": "جاري الإرسال...",
     "sentSuccess": "تم الإرسال إلى {{count}} مستخدم",
     "directSuccess": "تم إرسال الرسالة",
-    "error": "فشل الإرسال"
+    "error": "فشل الإرسال",
+    "variantAll": "الكل",
+    "variantInvited": "المدعوون",
+    "variantOrganic": "المباشرون",
+    "editChain": "تعديل"
   },
   "contacts": {
     "telegram": "تلغرام",

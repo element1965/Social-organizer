@@ -349,7 +349,11 @@
     "sending": "Odesílání...",
     "sentSuccess": "Odesláno {{count}} uživatelům",
     "directSuccess": "Zpráva odeslána",
-    "error": "Odeslání se nezdařilo"
+    "error": "Odeslání se nezdařilo",
+    "variantAll": "Všichni",
+    "variantInvited": "Pozvaní",
+    "variantOrganic": "Přímí",
+    "editChain": "Upravit"
   },
   "contacts": {
     "telegram": "Telegram",

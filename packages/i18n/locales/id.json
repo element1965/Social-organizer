@@ -349,7 +349,11 @@
     "sending": "Mengirim...",
     "sentSuccess": "Terkirim ke {{count}} pengguna",
     "directSuccess": "Pesan terkirim",
-    "error": "Gagal mengirim"
+    "error": "Gagal mengirim",
+    "variantAll": "Semua",
+    "variantInvited": "Diundang",
+    "variantOrganic": "Langsung",
+    "editChain": "Edit"
   },
   "contacts": {
     "telegram": "Telegram",

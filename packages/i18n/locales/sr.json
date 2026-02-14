@@ -349,7 +349,11 @@
     "sending": "Слање...",
     "sentSuccess": "Послато {{count}} корисницима",
     "directSuccess": "Порука послата",
-    "error": "Слање није успело"
+    "error": "Слање није успело",
+    "variantAll": "Сви",
+    "variantInvited": "Позвани",
+    "variantOrganic": "Директни",
+    "editChain": "Измени"
   },
   "contacts": {
     "telegram": "Telegram",

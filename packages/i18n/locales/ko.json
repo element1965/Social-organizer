@@ -349,7 +349,11 @@
     "sending": "전송 중...",
     "sentSuccess": "{{count}}명의 사용자에게 전송됨",
     "directSuccess": "메시지 전송됨",
-    "error": "전송 실패"
+    "error": "전송 실패",
+    "variantAll": "전체",
+    "variantInvited": "초대됨",
+    "variantOrganic": "직접",
+    "editChain": "편집"
   },
   "contacts": {
     "telegram": "텔레그램",

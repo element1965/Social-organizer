@@ -349,7 +349,11 @@
     "sending": "Đang gửi...",
     "sentSuccess": "Đã gửi tới {{count}} người dùng",
     "directSuccess": "Đã gửi tin nhắn",
-    "error": "Gửi thất bại"
+    "error": "Gửi thất bại",
+    "variantAll": "Tất cả",
+    "variantInvited": "Được mời",
+    "variantOrganic": "Trực tiếp",
+    "editChain": "Chỉnh sửa"
   },
   "contacts": {
     "telegram": "Telegram",

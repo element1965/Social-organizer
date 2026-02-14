@@ -359,7 +359,11 @@
     "sending": "שולח...",
     "sentSuccess": "נשלח ל־{{count}} משתמשים",
     "directSuccess": "הודעה נשלחה",
-    "error": "נכשל בשליחה"
+    "error": "נכשל בשליחה",
+    "variantAll": "הכל",
+    "variantInvited": "מוזמנים",
+    "variantOrganic": "ישירים",
+    "editChain": "עריכה"
   },
   "contacts": {
     "telegram": "טלגרם",

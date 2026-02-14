@@ -349,7 +349,11 @@
     "sending": "Lähetetään...",
     "sentSuccess": "Lähetetty {{count}} käyttäjälle",
     "directSuccess": "Viesti lähetetty",
-    "error": "Lähetys epäonnistui"
+    "error": "Lähetys epäonnistui",
+    "variantAll": "Kaikki",
+    "variantInvited": "Kutsutut",
+    "variantOrganic": "Suorat",
+    "editChain": "Muokkaa"
   },
   "contacts": {
     "telegram": "Telegram",
