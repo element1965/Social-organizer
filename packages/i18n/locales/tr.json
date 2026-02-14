@@ -471,7 +471,8 @@
     "members": "Üyeler",
     "budget": "Bütçe",
     "root": "Kök",
-    "contactRoot": "Kök ile iletişim"
+    "contactRoot": "Kök ile iletişim",
+    "notInNetwork": "ağınızda değil"
   },
   "requiredInfo": {
     "contactsTitle": "İletişim bilgilerinizi ekleyin",

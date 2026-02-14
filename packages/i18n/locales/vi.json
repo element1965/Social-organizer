@@ -471,7 +471,8 @@
     "members": "Thành viên",
     "budget": "Ngân sách",
     "root": "Gốc",
-    "contactRoot": "Liên hệ gốc"
+    "contactRoot": "Liên hệ gốc",
+    "notInNetwork": "không trong mạng lưới của bạn"
   },
   "requiredInfo": {
     "contactsTitle": "Thêm liên hệ của bạn",

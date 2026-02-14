@@ -481,7 +481,8 @@
     "members": "חברים",
     "budget": "תקציב",
     "root": "שורש",
-    "contactRoot": "צור קשר עם שורש"
+    "contactRoot": "צור קשר עם שורש",
+    "notInNetwork": "לא ברשת שלך"
   },
   "requiredInfo": {
     "contactsTitle": "הוסף את אנשי הקשר שלך",

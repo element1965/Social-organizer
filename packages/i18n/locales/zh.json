@@ -471,7 +471,8 @@
     "members": "成员",
     "budget": "预算",
     "root": "根节点",
-    "contactRoot": "联系根节点"
+    "contactRoot": "联系根节点",
+    "notInNetwork": "不在您的网络中"
   },
   "requiredInfo": {
     "contactsTitle": "添加您的联系方式",

@@ -471,7 +471,8 @@
     "members": "Leden",
     "budget": "Budget",
     "root": "Wortel",
-    "contactRoot": "Contact wortel"
+    "contactRoot": "Contact wortel",
+    "notInNetwork": "niet in uw netwerk"
   },
   "requiredInfo": {
     "contactsTitle": "Voeg uw contacten toe",

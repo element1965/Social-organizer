@@ -471,7 +471,8 @@
     "members": "Medlemmer",
     "budget": "Budget",
     "root": "Rod",
-    "contactRoot": "Kontakt rod"
+    "contactRoot": "Kontakt rod",
+    "notInNetwork": "ikke i dit netværk"
   },
   "requiredInfo": {
     "contactsTitle": "Tilføj dine kontakter",

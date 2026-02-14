@@ -471,7 +471,8 @@
     "members": "Medlemmer",
     "budget": "Budsjett",
     "root": "Rot",
-    "contactRoot": "Kontakt rot"
+    "contactRoot": "Kontakt rot",
+    "notInNetwork": "ikke i nettverket ditt"
   },
   "requiredInfo": {
     "contactsTitle": "Legg til kontaktene dine",

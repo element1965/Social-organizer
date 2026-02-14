@@ -471,7 +471,8 @@
     "members": "Jäsenet",
     "budget": "Budjetti",
     "root": "Juuri",
-    "contactRoot": "Ota yhteyttä juureen"
+    "contactRoot": "Ota yhteyttä juureen",
+    "notInNetwork": "eivät ole verkostossasi"
   },
   "requiredInfo": {
     "contactsTitle": "Lisää yhteystietosi",

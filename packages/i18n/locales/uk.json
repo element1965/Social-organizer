@@ -471,7 +471,8 @@
     "members": "Учасників",
     "budget": "Бюджет",
     "root": "Корінь",
-    "contactRoot": "Зв'язатися з коренем"
+    "contactRoot": "Зв'язатися з коренем",
+    "notInNetwork": "не входять до вашої мережі"
   },
   "requiredInfo": {
     "contactsTitle": "Додайте свої контакти",

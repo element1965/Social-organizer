@@ -519,7 +519,8 @@
     "members": "Members",
     "budget": "Budget",
     "root": "Root",
-    "contactRoot": "Contact root"
+    "contactRoot": "Contact root",
+    "notInNetwork": "not in your network"
   },
   "validation": {
     "invalidContact": "Invalid format"

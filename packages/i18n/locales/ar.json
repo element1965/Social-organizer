@@ -471,7 +471,8 @@
     "members": "أعضاء",
     "budget": "ميزانية",
     "root": "جذر",
-    "contactRoot": "اتصل بالجذر"
+    "contactRoot": "اتصل بالجذر",
+    "notInNetwork": "ليسوا في شبكتك"
   },
   "requiredInfo": {
     "contactsTitle": "أضف جهات الاتصال الخاصة بك",

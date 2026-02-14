@@ -471,7 +471,8 @@
     "members": "メンバー",
     "budget": "予算",
     "root": "ルート",
-    "contactRoot": "ルートに連絡"
+    "contactRoot": "ルートに連絡",
+    "notInNetwork": "あなたのネットワーク外"
   },
   "requiredInfo": {
     "contactsTitle": "連絡先を追加",

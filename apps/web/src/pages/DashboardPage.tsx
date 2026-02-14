@@ -281,6 +281,7 @@ export function DashboardPage() {
                 <div className="flex items-center gap-2">
                   <Layers className="w-5 h-5 text-purple-600" />
                   <h2 className="font-semibold text-gray-900 dark:text-white">{t('cluster.title')}</h2>
+                  <span className="text-xs text-gray-400 font-normal">({t('cluster.notInNetwork')})</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="text-sm text-gray-500">

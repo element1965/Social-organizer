@@ -471,7 +471,8 @@
     "members": "सदस्य",
     "budget": "बजट",
     "root": "मूल",
-    "contactRoot": "मूल से संपर्क"
+    "contactRoot": "मूल से संपर्क",
+    "notInNetwork": "आपके नेटवर्क में नहीं"
   },
   "requiredInfo": {
     "contactsTitle": "अपने संपर्क जोड़ें",

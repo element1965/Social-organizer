@@ -471,7 +471,8 @@
     "members": "Medlemmar",
     "budget": "Budget",
     "root": "Rot",
-    "contactRoot": "Kontakta rot"
+    "contactRoot": "Kontakta rot",
+    "notInNetwork": "inte i ditt nätverk"
   },
   "requiredInfo": {
     "contactsTitle": "Lägg till dina kontakter",
