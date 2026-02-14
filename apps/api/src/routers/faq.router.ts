@@ -7,7 +7,7 @@ import { ADMIN_IDS } from '../admin.js';
 const SUPPORTED_LANGUAGES = [
   'en', 'ru', 'es', 'fr', 'de', 'pt', 'it', 'zh', 'ja', 'ko',
   'ar', 'hi', 'tr', 'pl', 'uk', 'nl', 'sv', 'da', 'fi', 'no',
-  'cs', 'ro', 'th', 'vi', 'id', 'sr',
+  'cs', 'ro', 'th', 'vi', 'id', 'sr', 'he',
 ];
 
 function assertAdmin(userId: string) {
@@ -18,7 +18,7 @@ function assertAdmin(userId: string) {
 
 export const faqRouter = router({
   list: protectedProcedure
-    .input(z.object({ language: z.string().default('ru') }))
+    .input(z.object({ language: z.string().default('en') }))
     .query(async ({ ctx, input }) => {
       return ctx.db.faqItem.findMany({
         where: { language: input.language },
@@ -27,17 +27,17 @@ export const faqRouter = router({
     }),
 
   top: publicProcedure
-    .input(z.object({ language: z.string().default('ru'), limit: z.number().min(1).max(20).default(5) }))
+    .input(z.object({ language: z.string().default('en'), limit: z.number().min(1).max(20).default(5) }))
     .query(async ({ ctx, input }) => {
       let items = await ctx.db.faqItem.findMany({
         where: { language: input.language },
         orderBy: { viewCount: 'desc' },
         take: input.limit,
       });
-      // Fallback to Russian if no items
-      if (items.length === 0 && input.language !== 'ru') {
+      // Fallback to English if no items for requested language
+      if (items.length === 0 && input.language !== 'en') {
         items = await ctx.db.faqItem.findMany({
-          where: { language: 'ru' },
+          where: { language: 'en' },
           orderBy: { viewCount: 'desc' },
           take: input.limit,
         });
@@ -46,15 +46,15 @@ export const faqRouter = router({
     }),
 
   all: publicProcedure
-    .input(z.object({ language: z.string().default('ru') }))
+    .input(z.object({ language: z.string().default('en') }))
     .query(async ({ ctx, input }) => {
       let items = await ctx.db.faqItem.findMany({
         where: { language: input.language },
         orderBy: { viewCount: 'desc' },
       });
-      if (items.length === 0 && input.language !== 'ru') {
+      if (items.length === 0 && input.language !== 'en') {
         items = await ctx.db.faqItem.findMany({
-          where: { language: 'ru' },
+          where: { language: 'en' },
           orderBy: { viewCount: 'desc' },
         });
       }
