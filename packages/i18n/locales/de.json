@@ -471,7 +471,8 @@
     "members": "Mitglieder",
     "budget": "Budget",
     "root": "Wurzel",
-    "contactRoot": "Wurzel kontaktieren"
+    "contactRoot": "Wurzel kontaktieren",
+    "notInNetwork": "nicht in Ihrem Netzwerk"
   },
   "requiredInfo": {
     "contactsTitle": "Kontakte hinzufügen",

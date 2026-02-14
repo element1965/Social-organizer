@@ -471,7 +471,8 @@
     "members": "Členové",
     "budget": "Rozpočet",
     "root": "Kořen",
-    "contactRoot": "Kontaktovat kořen"
+    "contactRoot": "Kontaktovat kořen",
+    "notInNetwork": "nejsou ve vaší síti"
   },
   "requiredInfo": {
     "contactsTitle": "Přidejte své kontakty",

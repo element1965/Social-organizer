@@ -471,7 +471,8 @@
     "members": "회원",
     "budget": "예산",
     "root": "루트",
-    "contactRoot": "루트에 연락"
+    "contactRoot": "루트에 연락",
+    "notInNetwork": "내 네트워크에 없음"
   },
   "requiredInfo": {
     "contactsTitle": "연락처 추가",

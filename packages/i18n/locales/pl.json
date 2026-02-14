@@ -471,7 +471,8 @@
     "members": "Członkowie",
     "budget": "Budżet",
     "root": "Korzeń",
-    "contactRoot": "Kontakt z korzeniem"
+    "contactRoot": "Kontakt z korzeniem",
+    "notInNetwork": "nie są w twojej sieci"
   },
   "requiredInfo": {
     "contactsTitle": "Dodaj swoje kontakty",

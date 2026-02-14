@@ -471,7 +471,8 @@
     "members": "Чланови",
     "budget": "Буџет",
     "root": "Корен",
-    "contactRoot": "Контактирај корен"
+    "contactRoot": "Контактирај корен",
+    "notInNetwork": "нису у вашој мрежи"
   },
   "requiredInfo": {
     "contactsTitle": "Додајте своје контакте",

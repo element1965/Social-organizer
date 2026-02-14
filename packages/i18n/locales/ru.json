@@ -519,7 +519,8 @@
     "members": "Участников",
     "budget": "Бюджет",
     "root": "Корень",
-    "contactRoot": "Связаться с корнем"
+    "contactRoot": "Связаться с корнем",
+    "notInNetwork": "не входят в вашу сеть"
   },
   "validation": {
     "invalidContact": "Неверный формат"

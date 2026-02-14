@@ -471,7 +471,8 @@
     "members": "Anggota",
     "budget": "Anggaran",
     "root": "Akar",
-    "contactRoot": "Hubungi akar"
+    "contactRoot": "Hubungi akar",
+    "notInNetwork": "tidak dalam jaringan Anda"
   },
   "requiredInfo": {
     "contactsTitle": "Tambahkan kontak Anda",

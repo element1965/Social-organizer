@@ -471,7 +471,8 @@
     "members": "Membri",
     "budget": "Buget",
     "root": "Rădăcină",
-    "contactRoot": "Contactează rădăcina"
+    "contactRoot": "Contactează rădăcina",
+    "notInNetwork": "nu fac parte din rețeaua ta"
   },
   "requiredInfo": {
     "contactsTitle": "Adaugă contactele tale",

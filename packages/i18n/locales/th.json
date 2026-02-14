@@ -471,7 +471,8 @@
     "members": "สมาชิก",
     "budget": "งบประมาณ",
     "root": "รูท",
-    "contactRoot": "ติดต่อรูท"
+    "contactRoot": "ติดต่อรูท",
+    "notInNetwork": "ไม่อยู่ในเครือข่ายของคุณ"
   },
   "requiredInfo": {
     "contactsTitle": "เพิ่มช่องทางติดต่อของคุณ",
