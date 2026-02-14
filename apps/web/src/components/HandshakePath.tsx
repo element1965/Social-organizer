@@ -46,6 +46,11 @@ export function HandshakePath({ path, onUserClick, compact = false }: HandshakeP
                     {part}
                   </span>
                 ))}
+                {user.connectionCount != null && (
+                  <span className="text-[10px] text-gray-400 leading-tight">
+                    👥 {user.connectionCount}
+                  </span>
+                )}
                 {user.remainingBudget != null && (
                   <span className="text-[10px] text-green-600 dark:text-green-400 leading-tight">
                     ${Math.round(user.remainingBudget)}
