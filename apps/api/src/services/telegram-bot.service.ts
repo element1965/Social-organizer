@@ -3,6 +3,9 @@ import { getDb } from '@so/db';
 const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN || '';
 const WEB_APP_URL = process.env.WEB_APP_URL || 'https://www.orginizer.com';
 
+/** Counter for users removed during a broadcast (blocked bot / deactivated) */
+export const blockedCounter = { count: 0, reset() { this.count = 0; } };
+
 /** Delete PlatformAccount for a user who blocked the bot */
 async function removeBlockedUser(chatId: string | number): Promise<void> {
   const platformId = String(chatId);
@@ -12,6 +15,7 @@ async function removeBlockedUser(chatId: string | number): Promise<void> {
       where: { platform: 'TELEGRAM', platformId },
     });
     if (deleted.count > 0) {
+      blockedCounter.count += deleted.count;
       console.log(`[TG Bot] Removed blocked user ${platformId} from platform_accounts`);
     }
   } catch (err) {

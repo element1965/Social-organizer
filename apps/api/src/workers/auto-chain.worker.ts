@@ -5,6 +5,7 @@ import {
   sendTelegramPhoto,
   sendTelegramVideo,
   SUPPORT_CHAT_ID,
+  blockedCounter,
   type TgReplyMarkup,
 } from '../services/telegram-bot.service.js';
 import { translateBroadcastMessage } from '../services/translate.service.js';
@@ -90,6 +91,7 @@ export async function processAutoChain(_job: Job): Promise<void> {
   }
 
   let totalSent = 0;
+  blockedCounter.reset();
 
   for (const acc of tgAccounts) {
     const userCreatedAt = acc.user?.createdAt;
@@ -167,10 +169,11 @@ export async function processAutoChain(_job: Job): Promise<void> {
   }
 
   if (totalSent > 0) {
-    console.log(`[Auto Chain] Sent ${totalSent} messages`);
+    const blocked = blockedCounter.count;
+    console.log(`[Auto Chain] Sent ${totalSent} messages, blocked: ${blocked}`);
     await sendTelegramMessage(
       SUPPORT_CHAT_ID,
-      `🔗 <b>Auto-chain</b>: sent ${totalSent} messages`,
+      `🔗 <b>Auto-chain</b>: sent ${totalSent} messages${blocked > 0 ? `\n🚫 Removed: ${blocked} (blocked bot)` : ''}`,
     );
   }
 }
