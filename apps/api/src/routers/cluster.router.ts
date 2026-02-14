@@ -75,16 +75,31 @@ export const clusterRouter = router({
       // Skip empty clusters (all members deleted)
       if (memberCount === 0) continue;
 
+      // Exception: in the cluster containing Никита Соловей, use Андрей Любалин as root
+      const NIKITA_ID = 'cml9ffhhh0000o801afqv67fz';
+      const ANDREI_ID = 'cml9h2u8s000go801lcvi6ba9';
+
       let totalBudget = 0;
       let best: typeof users[number] | undefined;
+      const hasNikita = members.has(NIKITA_ID);
       for (const uid of members) {
         if (!activeUserIds.has(uid)) continue;
         const u = userMap.get(uid);
         if (u) {
           totalBudget += u.remainingBudget ?? 0;
-          if (!best || u.createdAt < best.createdAt) {
+          if (hasNikita && u.id === ANDREI_ID) {
+            best = u; // Force Andrei as root for this cluster
+          } else if (!hasNikita && (!best || u.createdAt < best.createdAt)) {
             best = u;
           }
+        }
+      }
+      // Fallback: if Andrei not found in Nikita's cluster, use earliest
+      if (hasNikita && !best) {
+        for (const uid of members) {
+          if (!activeUserIds.has(uid)) continue;
+          const u = userMap.get(uid);
+          if (u && (!best || u.createdAt < best.createdAt)) best = u;
         }
       }
 
