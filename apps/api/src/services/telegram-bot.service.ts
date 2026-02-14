@@ -1,5 +1,33 @@
+import { getDb } from '@so/db';
+
 const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN || '';
 const WEB_APP_URL = process.env.WEB_APP_URL || 'https://www.orginizer.com';
+
+/** Delete PlatformAccount for a user who blocked the bot */
+async function removeBlockedUser(chatId: string | number): Promise<void> {
+  const platformId = String(chatId);
+  try {
+    const db = getDb();
+    const deleted = await db.platformAccount.deleteMany({
+      where: { platform: 'TELEGRAM', platformId },
+    });
+    if (deleted.count > 0) {
+      console.log(`[TG Bot] Removed blocked user ${platformId} from platform_accounts`);
+    }
+  } catch (err) {
+    console.error(`[TG Bot] Failed to remove blocked user ${platformId}:`, err);
+  }
+}
+
+function isBlockedError(status: number, description?: string): boolean {
+  if (status === 403) return true;
+  if (description && (
+    description.includes('bot was blocked') ||
+    description.includes('user is deactivated') ||
+    description.includes('chat not found')
+  )) return true;
+  return false;
+}
 
 export interface TgReplyMarkup {
   inline_keyboard: Array<Array<{ text: string; url?: string; web_app?: { url: string } }>>;
@@ -53,6 +81,12 @@ export async function sendTelegramMessage(
 
     if (json.ok) return true;
 
+    // User blocked the bot or account deactivated — remove from DB
+    if (isBlockedError(res.status, json.description)) {
+      await removeBlockedUser(chatId);
+      return false;
+    }
+
     // Handle rate-limit: wait retry_after seconds and retry once
     if (res.status === 429 && json.parameters?.retry_after) {
       const waitMs = json.parameters.retry_after * 1000;
@@ -99,6 +133,11 @@ export async function sendTelegramPhoto(
   const json = (await res.json()) as TgApiResponse;
 
   if (json.ok) return true;
+
+  if (isBlockedError(res.status, json.description)) {
+    await removeBlockedUser(chatId);
+    return false;
+  }
 
   // Handle rate-limit
   if (res.status === 429 && json.parameters?.retry_after) {
@@ -165,6 +204,11 @@ export async function sendTelegramVideo(
   const json = (await res.json()) as TgApiResponse;
 
   if (json.ok) return true;
+
+  if (isBlockedError(res.status, json.description)) {
+    await removeBlockedUser(chatId);
+    return false;
+  }
 
   // Handle rate-limit
   if (res.status === 429 && json.parameters?.retry_after) {
