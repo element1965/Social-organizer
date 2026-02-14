@@ -55,7 +55,7 @@ export function BroadcastPanel({ onClose }: BroadcastPanelProps) {
       sendAllMutation.mutate({
         text: msg.text.trim(),
         mediaType: msg.mediaType,
-        mediaUrl: msg.mediaType !== 'text' && !msg.mediaFileId ? msg.mediaUrl?.trim() || undefined : undefined,
+        mediaUrl: !msg.mediaFileId ? msg.mediaUrl?.trim() || undefined : undefined,
         mediaFileId: msg.mediaFileId || undefined,
         buttonUrl: msg.buttonUrl?.trim() || undefined,
         buttonText: msg.buttonText?.trim() || undefined,
@@ -93,7 +93,7 @@ export function BroadcastPanel({ onClose }: BroadcastPanelProps) {
     scheduleMutation.mutate({
       text: scheduledMsg.text.trim(),
       mediaType: scheduledMsg.mediaType,
-      mediaUrl: scheduledMsg.mediaType !== 'text' && !scheduledMsg.mediaFileId ? scheduledMsg.mediaUrl?.trim() || undefined : undefined,
+      mediaUrl: !scheduledMsg.mediaFileId ? scheduledMsg.mediaUrl?.trim() || undefined : undefined,
       mediaFileId: scheduledMsg.mediaFileId || undefined,
       buttonUrl: scheduledMsg.buttonUrl?.trim() || undefined,
       buttonText: scheduledMsg.buttonText?.trim() || undefined,
@@ -132,7 +132,7 @@ export function BroadcastPanel({ onClose }: BroadcastPanelProps) {
     createChainMutation.mutate({
       text: chainMsg.text.trim(),
       mediaType: chainMsg.mediaType,
-      mediaUrl: chainMsg.mediaType !== 'text' && !chainMsg.mediaFileId ? chainMsg.mediaUrl?.trim() || undefined : undefined,
+      mediaUrl: !chainMsg.mediaFileId ? chainMsg.mediaUrl?.trim() || undefined : undefined,
       mediaFileId: chainMsg.mediaFileId || undefined,
       buttonUrl: chainMsg.buttonUrl?.trim() || undefined,
       buttonText: chainMsg.buttonText?.trim() || undefined,

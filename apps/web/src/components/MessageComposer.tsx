@@ -19,6 +19,25 @@ interface MessageComposerProps {
 
 const inputCls = 'w-full p-2 text-sm rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500';
 
+/** Detect media type from URL string */
+function detectMediaTypeFromUrl(url: string): 'photo' | 'video' | 'text' {
+  if (!url) return 'text';
+  try {
+    const u = new URL(url);
+    const host = u.hostname.toLowerCase();
+    // Video hosting sites
+    if (host.includes('youtube.com') || host.includes('youtu.be')
+      || host.includes('vimeo.com') || host.includes('dailymotion.com')
+      || host.includes('tiktok.com') || host.includes('rutube.ru')) {
+      return 'video';
+    }
+    const ext = u.pathname.split('.').pop()?.toLowerCase() || '';
+    if (['jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp', 'svg'].includes(ext)) return 'photo';
+    if (['mp4', 'mov', 'avi', 'webm', 'mkv', 'wmv', 'flv'].includes(ext)) return 'video';
+  } catch { /* not a valid URL yet */ }
+  return 'text';
+}
+
 export function MessageComposer({ value, onChange, disabled }: MessageComposerProps) {
   const { t } = useTranslation();
   const [mediaFileName, setMediaFileName] = useState('');
@@ -49,7 +68,7 @@ export function MessageComposer({ value, onChange, disabled }: MessageComposerPr
       }
 
       const data = (await res.json()) as { fileId: string; mediaType: 'photo' | 'video' };
-      onChange({ ...value, mediaFileId: data.fileId, mediaType: data.mediaType });
+      onChange({ ...value, mediaFileId: data.fileId, mediaType: data.mediaType, mediaUrl: undefined });
     } catch {
       setMediaFileName('');
     } finally {
@@ -58,9 +77,14 @@ export function MessageComposer({ value, onChange, disabled }: MessageComposerPr
     }
   };
 
-  const clearFile = () => {
+  const clearMedia = () => {
     setMediaFileName('');
-    onChange({ ...value, mediaFileId: undefined });
+    onChange({ ...value, mediaFileId: undefined, mediaUrl: undefined, mediaType: 'text' });
+  };
+
+  const handleUrlChange = (url: string) => {
+    const detected = detectMediaTypeFromUrl(url);
+    onChange({ ...value, mediaUrl: url, mediaType: detected === 'text' && url.trim() ? 'photo' : detected, mediaFileId: undefined });
   };
 
   return (
@@ -75,69 +99,49 @@ export function MessageComposer({ value, onChange, disabled }: MessageComposerPr
         disabled={disabled}
       />
 
-      {/* Media type buttons */}
-      <div className="flex gap-2">
-        {(['text', 'photo', 'video'] as const).map((type) => (
+      {/* Media: file upload + URL */}
+      <div className="space-y-2">
+        <div className="flex items-center gap-2">
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/*,video/*"
+            onChange={handleFileSelect}
+            className="hidden"
+          />
           <button
-            key={type}
-            onClick={() => { onChange({ ...value, mediaType: type, mediaFileId: undefined, mediaUrl: undefined }); clearFile(); }}
-            disabled={disabled}
-            className={`px-3 py-1.5 text-xs rounded-lg transition-colors ${
-              value.mediaType === type
-                ? 'bg-emerald-600 text-white'
-                : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300'
-            }`}
+            onClick={() => fileInputRef.current?.click()}
+            disabled={uploading || disabled}
+            className="flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
           >
-            {type === 'text' ? 'Text' : type === 'photo' ? t('broadcast.photo') : t('broadcast.video')}
-          </button>
-        ))}
-      </div>
-
-      {/* Media input: file upload OR URL */}
-      {value.mediaType !== 'text' && (
-        <div className="space-y-2">
-          <div className="flex items-center gap-2">
-            <input
-              ref={fileInputRef}
-              type="file"
-              accept={value.mediaType === 'photo' ? 'image/*' : 'video/*'}
-              onChange={handleFileSelect}
-              className="hidden"
-            />
-            <button
-              onClick={() => fileInputRef.current?.click()}
-              disabled={uploading || disabled}
-              className="flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
-            >
-              {uploading ? (
-                <Loader2 className="w-3.5 h-3.5 animate-spin" />
-              ) : (
-                <Upload className="w-3.5 h-3.5" />
-              )}
-              {t('broadcast.uploadFile')}
-            </button>
-            {mediaFileName && (
-              <span className="flex items-center gap-1 text-xs text-emerald-600 dark:text-emerald-400">
-                <Paperclip className="w-3 h-3" />
-                {mediaFileName}
-                <button onClick={clearFile} className="ml-1 text-gray-400 hover:text-red-400">
-                  <X className="w-3 h-3" />
-                </button>
-              </span>
+            {uploading ? (
+              <Loader2 className="w-3.5 h-3.5 animate-spin" />
+            ) : (
+              <Upload className="w-3.5 h-3.5" />
             )}
-          </div>
-
-          {!value.mediaFileId && (
-            <input
-              value={value.mediaUrl || ''}
-              onChange={(e) => onChange({ ...value, mediaUrl: e.target.value })}
-              placeholder={t('broadcast.mediaUrlPlaceholder')}
-              className={inputCls}
-              disabled={disabled}
-            />
+            {t('broadcast.uploadFile')}
+          </button>
+          {mediaFileName && (
+            <span className="flex items-center gap-1 text-xs text-emerald-600 dark:text-emerald-400">
+              <Paperclip className="w-3 h-3" />
+              {mediaFileName}
+              <button onClick={clearMedia} className="ml-1 text-gray-400 hover:text-red-400">
+                <X className="w-3 h-3" />
+              </button>
+            </span>
           )}
         </div>
-      )}
+
+        {!value.mediaFileId && (
+          <input
+            value={value.mediaUrl || ''}
+            onChange={(e) => handleUrlChange(e.target.value)}
+            placeholder={t('broadcast.mediaUrlPlaceholder')}
+            className={inputCls}
+            disabled={disabled}
+          />
+        )}
+      </div>
 
       {/* Button link */}
       <div className="space-y-2">
