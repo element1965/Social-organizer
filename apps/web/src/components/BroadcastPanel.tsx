@@ -1,27 +1,44 @@
-import { useState, useRef } from 'react';
-import { X, Send, Loader2, Upload, Link, Paperclip } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { X, Send, Loader2, Clock, Link2, Trash2, ToggleLeft, ToggleRight, BarChart3 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { trpc } from '../lib/trpc';
+import { MessageComposer, type MessageData } from './MessageComposer';
 
 interface BroadcastPanelProps {
   onClose: () => void;
 }
 
+type Tab = 'send' | 'scheduled' | 'autochain';
+
+const emptyMessage: MessageData = { text: '', mediaType: 'text' };
+
+const inputCls = 'w-full p-2 text-sm rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500';
+
+function StatusBadge({ status }: { status: string }) {
+  const { t } = useTranslation();
+  const colors: Record<string, string> = {
+    PENDING: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400',
+    SENT: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-400',
+    CANCELLED: 'bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400',
+    FAILED: 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400',
+  };
+  const key = `broadcast.status${status.charAt(0) + status.slice(1).toLowerCase()}`;
+  return (
+    <span className={`px-2 py-0.5 text-xs rounded-full font-medium ${colors[status] || 'bg-gray-100'}`}>
+      {t(key)}
+    </span>
+  );
+}
+
 export function BroadcastPanel({ onClose }: BroadcastPanelProps) {
   const { t } = useTranslation();
+  const [tab, setTab] = useState<Tab>('send');
   const [mode, setMode] = useState<'all' | 'direct'>('all');
   const [telegramId, setTelegramId] = useState('');
-  const [message, setMessage] = useState('');
-  const [mediaType, setMediaType] = useState<'text' | 'photo' | 'video'>('text');
-  const [mediaUrl, setMediaUrl] = useState('');
-  const [mediaFileId, setMediaFileId] = useState('');
-  const [mediaFileName, setMediaFileName] = useState('');
-  const [uploading, setUploading] = useState(false);
-  const [buttonUrl, setButtonUrl] = useState('');
-  const [buttonText, setButtonText] = useState('');
+  const [msg, setMsg] = useState<MessageData>({ ...emptyMessage });
   const [result, setResult] = useState<string | null>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
 
+  // --- Send tab ---
   const sendAllMutation = trpc.broadcast.sendAll.useMutation({
     onSuccess: (data) => setResult(t('broadcast.sentSuccess', { count: data.sent })),
     onError: () => setResult(t('broadcast.error')),
@@ -31,77 +48,113 @@ export function BroadcastPanel({ onClose }: BroadcastPanelProps) {
     onError: () => setResult(t('broadcast.error')),
   });
 
-  const isPending = sendAllMutation.isPending || sendDirectMutation.isPending || uploading;
-
-  const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    setUploading(true);
-    setResult(null);
-    setMediaFileName(file.name);
-
-    try {
-      const token = localStorage.getItem('accessToken');
-      const formData = new FormData();
-      formData.append('file', file);
-
-      const res = await fetch('/api/broadcast/upload', {
-        method: 'POST',
-        headers: { Authorization: `Bearer ${token}` },
-        body: formData,
-      });
-
-      if (!res.ok) {
-        const errData = await res.json().catch(() => ({})) as { error?: string };
-        setResult(errData.error || t('broadcast.error'));
-        setMediaFileName('');
-        return;
-      }
-
-      const data = (await res.json()) as { fileId: string; mediaType: 'photo' | 'video' };
-      setMediaFileId(data.fileId);
-      setMediaType(data.mediaType);
-    } catch (err) {
-      setResult(`${t('broadcast.error')}: ${(err as Error).message}`);
-      setMediaFileName('');
-    } finally {
-      setUploading(false);
-      if (fileInputRef.current) fileInputRef.current.value = '';
-    }
-  };
-
-  const clearFile = () => {
-    setMediaFileId('');
-    setMediaFileName('');
-  };
-
   const handleSend = () => {
-    if (!message.trim()) return;
+    if (!msg.text.trim()) return;
     setResult(null);
-
     if (mode === 'all') {
       sendAllMutation.mutate({
-        text: message.trim(),
-        mediaType,
-        mediaUrl: mediaType !== 'text' && !mediaFileId ? mediaUrl.trim() || undefined : undefined,
-        mediaFileId: mediaFileId || undefined,
-        buttonUrl: buttonUrl.trim() || undefined,
-        buttonText: buttonText.trim() || undefined,
+        text: msg.text.trim(),
+        mediaType: msg.mediaType,
+        mediaUrl: msg.mediaType !== 'text' && !msg.mediaFileId ? msg.mediaUrl?.trim() || undefined : undefined,
+        mediaFileId: msg.mediaFileId || undefined,
+        buttonUrl: msg.buttonUrl?.trim() || undefined,
+        buttonText: msg.buttonText?.trim() || undefined,
       });
     } else {
       if (!telegramId.trim()) return;
-      sendDirectMutation.mutate({
-        telegramId: telegramId.trim(),
-        text: message.trim(),
-      });
+      sendDirectMutation.mutate({ telegramId: telegramId.trim(), text: msg.text.trim() });
     }
   };
 
-  const inputCls = 'w-full p-2 text-sm rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500';
+  // --- Scheduled tab ---
+  const [scheduledMsg, setScheduledMsg] = useState<MessageData>({ ...emptyMessage });
+  const [scheduledAt, setScheduledAt] = useState('');
+  const scheduledList = trpc.broadcast.listScheduled.useQuery(undefined, { enabled: tab === 'scheduled' });
+  const scheduleMutation = trpc.broadcast.schedulePost.useMutation({
+    onSuccess: () => {
+      setResult(t('broadcast.scheduledSuccess'));
+      setScheduledMsg({ ...emptyMessage });
+      setScheduledAt('');
+      scheduledList.refetch();
+    },
+    onError: () => setResult(t('broadcast.error')),
+  });
+  const cancelMutation = trpc.broadcast.cancelScheduled.useMutation({
+    onSuccess: () => {
+      setResult(t('broadcast.cancelledSuccess'));
+      scheduledList.refetch();
+    },
+    onError: () => setResult(t('broadcast.error')),
+  });
+
+  const handleSchedule = () => {
+    if (!scheduledMsg.text.trim() || !scheduledAt) return;
+    setResult(null);
+    scheduleMutation.mutate({
+      text: scheduledMsg.text.trim(),
+      mediaType: scheduledMsg.mediaType,
+      mediaUrl: scheduledMsg.mediaType !== 'text' && !scheduledMsg.mediaFileId ? scheduledMsg.mediaUrl?.trim() || undefined : undefined,
+      mediaFileId: scheduledMsg.mediaFileId || undefined,
+      buttonUrl: scheduledMsg.buttonUrl?.trim() || undefined,
+      buttonText: scheduledMsg.buttonText?.trim() || undefined,
+      scheduledAt,
+    });
+  };
+
+  // --- Auto-chain tab ---
+  const [chainMsg, setChainMsg] = useState<MessageData>({ ...emptyMessage });
+  const [chainDay, setChainDay] = useState(0);
+  const [chainOrder, setChainOrder] = useState(0);
+  const [chainInterval, setChainInterval] = useState(120);
+  const chainList = trpc.broadcast.listChainMessages.useQuery(undefined, { enabled: tab === 'autochain' });
+  const chainStatsQuery = trpc.broadcast.chainStats.useQuery(undefined, { enabled: tab === 'autochain' });
+  const createChainMutation = trpc.broadcast.createChainMessage.useMutation({
+    onSuccess: () => {
+      setResult(t('broadcast.chainAdded'));
+      setChainMsg({ ...emptyMessage });
+      setChainDay(0);
+      setChainOrder(0);
+      chainList.refetch();
+      chainStatsQuery.refetch();
+    },
+    onError: () => setResult(t('broadcast.error')),
+  });
+  const updateChainMutation = trpc.broadcast.updateChainMessage.useMutation({
+    onSuccess: () => { chainList.refetch(); chainStatsQuery.refetch(); },
+  });
+  const deleteChainMutation = trpc.broadcast.deleteChainMessage.useMutation({
+    onSuccess: () => { chainList.refetch(); chainStatsQuery.refetch(); },
+  });
+
+  const handleAddChain = () => {
+    if (!chainMsg.text.trim()) return;
+    setResult(null);
+    createChainMutation.mutate({
+      text: chainMsg.text.trim(),
+      mediaType: chainMsg.mediaType,
+      mediaUrl: chainMsg.mediaType !== 'text' && !chainMsg.mediaFileId ? chainMsg.mediaUrl?.trim() || undefined : undefined,
+      mediaFileId: chainMsg.mediaFileId || undefined,
+      buttonUrl: chainMsg.buttonUrl?.trim() || undefined,
+      buttonText: chainMsg.buttonText?.trim() || undefined,
+      dayOffset: chainDay,
+      sortOrder: chainOrder,
+      intervalMin: chainInterval,
+    });
+  };
+
+  // Mark read on mount
+  const markRead = trpc.broadcast.markRead.useMutation();
+  useEffect(() => { markRead.mutate(); }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const isPending = sendAllMutation.isPending || sendDirectMutation.isPending
+    || scheduleMutation.isPending || createChainMutation.isPending;
+
+  const tabCls = (t: Tab) => `flex-1 py-2 text-xs font-medium rounded-lg transition-colors ${
+    tab === t ? 'bg-emerald-600 text-white' : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300'
+  }`;
 
   return (
-    <div className="fixed inset-x-4 bottom-20 max-h-[70vh] bg-white dark:bg-gray-900 rounded-2xl shadow-2xl z-50 flex flex-col border border-gray-200 dark:border-gray-700">
+    <div className="fixed inset-x-4 bottom-20 max-h-[75vh] bg-white dark:bg-gray-900 rounded-2xl shadow-2xl z-50 flex flex-col border border-gray-200 dark:border-gray-700">
       {/* Header */}
       <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
         <h3 className="font-semibold text-gray-900 dark:text-white flex items-center gap-2">
@@ -113,169 +166,283 @@ export function BroadcastPanel({ onClose }: BroadcastPanelProps) {
         </button>
       </div>
 
+      {/* Tabs */}
+      <div className="flex gap-1 p-2 px-4">
+        <button onClick={() => { setTab('send'); setResult(null); }} className={tabCls('send')}>{t('broadcast.tabSend')}</button>
+        <button onClick={() => { setTab('scheduled'); setResult(null); }} className={tabCls('scheduled')}>{t('broadcast.tabScheduled')}</button>
+        <button onClick={() => { setTab('autochain'); setResult(null); }} className={tabCls('autochain')}>{t('broadcast.tabAutoChain')}</button>
+      </div>
+
       <div className="flex-1 overflow-y-auto p-4 space-y-3">
-        {/* Mode toggle */}
-        <div className="flex gap-2">
-          <button
-            onClick={() => setMode('all')}
-            className={`flex-1 py-2 text-sm rounded-lg transition-colors ${
-              mode === 'all'
-                ? 'bg-emerald-600 text-white'
-                : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300'
-            }`}
-          >
-            {t('broadcast.allUsers')}
-          </button>
-          <button
-            onClick={() => setMode('direct')}
-            className={`flex-1 py-2 text-sm rounded-lg transition-colors ${
-              mode === 'direct'
-                ? 'bg-emerald-600 text-white'
-                : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300'
-            }`}
-          >
-            {t('broadcast.directUser')}
-          </button>
-        </div>
-
-        {/* TG ID input (direct mode) */}
-        {mode === 'direct' && (
-          <input
-            value={telegramId}
-            onChange={(e) => setTelegramId(e.target.value)}
-            placeholder={t('broadcast.telegramIdPlaceholder')}
-            className={inputCls}
-          />
-        )}
-
-        {/* Message textarea */}
-        <textarea
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
-          placeholder={t('broadcast.messagePlaceholder')}
-          className={`${inputCls} resize-none`}
-          rows={3}
-        />
-
-        {/* Media section (all mode only) */}
-        {mode === 'all' && (
+        {/* === SEND TAB === */}
+        {tab === 'send' && (
           <>
-            {/* Media type buttons */}
             <div className="flex gap-2">
-              {(['text', 'photo', 'video'] as const).map((type) => (
-                <button
-                  key={type}
-                  onClick={() => { setMediaType(type); clearFile(); }}
-                  className={`px-3 py-1.5 text-xs rounded-lg transition-colors ${
-                    mediaType === type
-                      ? 'bg-emerald-600 text-white'
-                      : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300'
-                  }`}
-                >
-                  {type === 'text' ? 'Text' : type === 'photo' ? t('broadcast.photo') : t('broadcast.video')}
-                </button>
-              ))}
+              <button
+                onClick={() => setMode('all')}
+                className={`flex-1 py-2 text-sm rounded-lg transition-colors ${
+                  mode === 'all' ? 'bg-emerald-600 text-white' : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300'
+                }`}
+              >
+                {t('broadcast.allUsers')}
+              </button>
+              <button
+                onClick={() => setMode('direct')}
+                className={`flex-1 py-2 text-sm rounded-lg transition-colors ${
+                  mode === 'direct' ? 'bg-emerald-600 text-white' : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300'
+                }`}
+              >
+                {t('broadcast.directUser')}
+              </button>
             </div>
 
-            {/* Media input: file upload OR URL */}
-            {mediaType !== 'text' && (
-              <div className="space-y-2">
-                {/* File upload */}
-                <div className="flex items-center gap-2">
-                  <input
-                    ref={fileInputRef}
-                    type="file"
-                    accept={mediaType === 'photo' ? 'image/*' : 'video/*'}
-                    onChange={handleFileSelect}
-                    className="hidden"
-                  />
-                  <button
-                    onClick={() => fileInputRef.current?.click()}
-                    disabled={uploading}
-                    className="flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
-                  >
-                    {uploading ? (
-                      <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                    ) : (
-                      <Upload className="w-3.5 h-3.5" />
-                    )}
-                    {t('broadcast.uploadFile')}
-                  </button>
-                  {mediaFileName && (
-                    <span className="flex items-center gap-1 text-xs text-emerald-600 dark:text-emerald-400">
-                      <Paperclip className="w-3 h-3" />
-                      {mediaFileName}
-                      <button onClick={clearFile} className="ml-1 text-gray-400 hover:text-red-400">
-                        <X className="w-3 h-3" />
-                      </button>
-                    </span>
-                  )}
-                </div>
-
-                {/* URL input (if no file uploaded) */}
-                {!mediaFileId && (
-                  <input
-                    value={mediaUrl}
-                    onChange={(e) => setMediaUrl(e.target.value)}
-                    placeholder={t('broadcast.mediaUrlPlaceholder')}
-                    className={inputCls}
-                  />
-                )}
-              </div>
+            {mode === 'direct' && (
+              <input
+                value={telegramId}
+                onChange={(e) => setTelegramId(e.target.value)}
+                placeholder={t('broadcast.telegramIdPlaceholder')}
+                className={inputCls}
+              />
             )}
 
-            {/* Button link */}
-            <div className="space-y-2">
-              <div className="flex items-center gap-1.5 text-xs text-gray-500 dark:text-gray-400">
-                <Link className="w-3.5 h-3.5" />
-                {t('broadcast.buttonLink')}
-              </div>
-              <div className="flex gap-2">
-                <input
-                  value={buttonText}
-                  onChange={(e) => setButtonText(e.target.value)}
-                  placeholder={t('broadcast.buttonTextPlaceholder')}
-                  className={`${inputCls} flex-1`}
-                />
-                <input
-                  value={buttonUrl}
-                  onChange={(e) => setButtonUrl(e.target.value)}
-                  placeholder="https://..."
-                  className={`${inputCls} flex-[2]`}
-                />
-              </div>
+            {mode === 'all' ? (
+              <MessageComposer value={msg} onChange={setMsg} disabled={isPending} />
+            ) : (
+              <textarea
+                value={msg.text}
+                onChange={(e) => setMsg({ ...msg, text: e.target.value })}
+                placeholder={t('broadcast.messagePlaceholder')}
+                className={`${inputCls} resize-none`}
+                rows={3}
+              />
+            )}
+          </>
+        )}
+
+        {/* === SCHEDULED TAB === */}
+        {tab === 'scheduled' && (
+          <>
+            <MessageComposer value={scheduledMsg} onChange={setScheduledMsg} disabled={isPending} />
+
+            <div className="space-y-1">
+              <label className="flex items-center gap-1.5 text-xs text-gray-500 dark:text-gray-400">
+                <Clock className="w-3.5 h-3.5" />
+                {t('broadcast.scheduledAt')}
+              </label>
+              <input
+                type="datetime-local"
+                value={scheduledAt}
+                onChange={(e) => setScheduledAt(e.target.value)}
+                className={inputCls}
+                disabled={isPending}
+              />
+            </div>
+
+            {/* Schedule button */}
+            <button
+              onClick={handleSchedule}
+              disabled={!scheduledMsg.text.trim() || !scheduledAt || isPending}
+              className="w-full py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 disabled:opacity-50 transition-colors flex items-center justify-center gap-2 text-sm font-medium"
+            >
+              {scheduleMutation.isPending ? (
+                <><Loader2 className="w-4 h-4 animate-spin" />{t('broadcast.scheduling')}</>
+              ) : (
+                <><Clock className="w-4 h-4" />{t('broadcast.schedule')}</>
+              )}
+            </button>
+
+            {/* Scheduled posts list */}
+            <div className="border-t border-gray-200 dark:border-gray-700 pt-3 space-y-2">
+              {scheduledList.data?.length === 0 && (
+                <p className="text-xs text-gray-400 text-center py-2">{t('broadcast.noScheduled')}</p>
+              )}
+              {scheduledList.data?.map((post) => (
+                <div key={post.id} className="p-3 rounded-lg bg-gray-50 dark:bg-gray-800 space-y-1.5">
+                  <div className="flex items-start justify-between gap-2">
+                    <p className="text-sm text-gray-900 dark:text-gray-100 line-clamp-2">{post.text}</p>
+                    <StatusBadge status={post.status} />
+                  </div>
+                  <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400">
+                    <span>{new Date(post.scheduledAt).toLocaleString()}</span>
+                    <div className="flex items-center gap-2">
+                      {post.sentCount != null && (
+                        <span className="flex items-center gap-1">
+                          <BarChart3 className="w-3 h-3" />
+                          {post._count.deliveries} / {(post.deliveries as unknown[]).length} {t('broadcast.reads')}
+                        </span>
+                      )}
+                      {post.status === 'PENDING' && (
+                        <button
+                          onClick={() => cancelMutation.mutate({ id: post.id })}
+                          disabled={cancelMutation.isPending}
+                          className="text-red-400 hover:text-red-600 text-xs"
+                        >
+                          {t('broadcast.cancelPost')}
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
           </>
         )}
 
-        {/* Result */}
+        {/* === AUTO-CHAIN TAB === */}
+        {tab === 'autochain' && (
+          <>
+            {/* Stats */}
+            {chainStatsQuery.data && (
+              <div className="grid grid-cols-3 gap-2 text-center">
+                <div className="p-2 rounded-lg bg-gray-50 dark:bg-gray-800">
+                  <div className="text-lg font-bold text-emerald-600">{chainStatsQuery.data.activeMessages}</div>
+                  <div className="text-xs text-gray-500">{t('broadcast.activeMessages')}</div>
+                </div>
+                <div className="p-2 rounded-lg bg-gray-50 dark:bg-gray-800">
+                  <div className="text-lg font-bold text-blue-600">{chainStatsQuery.data.totalDeliveries}</div>
+                  <div className="text-xs text-gray-500">{t('broadcast.totalDeliveries')}</div>
+                </div>
+                <div className="p-2 rounded-lg bg-gray-50 dark:bg-gray-800">
+                  <div className="text-lg font-bold text-purple-600">{chainStatsQuery.data.openRate}%</div>
+                  <div className="text-xs text-gray-500">{t('broadcast.openRate')}</div>
+                </div>
+              </div>
+            )}
+
+            {/* Add form */}
+            <MessageComposer value={chainMsg} onChange={setChainMsg} disabled={isPending} />
+
+            <div className="grid grid-cols-3 gap-2">
+              <div>
+                <label className="text-xs text-gray-500 dark:text-gray-400">{t('broadcast.chainDayOffset')}</label>
+                <input
+                  type="number"
+                  min={0}
+                  value={chainDay}
+                  onChange={(e) => setChainDay(Number(e.target.value))}
+                  className={inputCls}
+                  disabled={isPending}
+                />
+              </div>
+              <div>
+                <label className="text-xs text-gray-500 dark:text-gray-400">{t('broadcast.chainSortOrder')}</label>
+                <input
+                  type="number"
+                  min={0}
+                  value={chainOrder}
+                  onChange={(e) => setChainOrder(Number(e.target.value))}
+                  className={inputCls}
+                  disabled={isPending}
+                />
+              </div>
+              <div>
+                <label className="text-xs text-gray-500 dark:text-gray-400">{t('broadcast.chainInterval')}</label>
+                <input
+                  type="number"
+                  min={1}
+                  value={chainInterval}
+                  onChange={(e) => setChainInterval(Number(e.target.value))}
+                  className={inputCls}
+                  disabled={isPending}
+                />
+              </div>
+            </div>
+
+            <button
+              onClick={handleAddChain}
+              disabled={!chainMsg.text.trim() || isPending}
+              className="w-full py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 disabled:opacity-50 transition-colors flex items-center justify-center gap-2 text-sm font-medium"
+            >
+              {createChainMutation.isPending ? (
+                <><Loader2 className="w-4 h-4 animate-spin" />{t('broadcast.adding')}</>
+              ) : (
+                <><Link2 className="w-4 h-4" />{t('broadcast.addChainMessage')}</>
+              )}
+            </button>
+
+            {/* Chain messages list */}
+            <div className="border-t border-gray-200 dark:border-gray-700 pt-3 space-y-2">
+              {chainList.data?.length === 0 && (
+                <p className="text-xs text-gray-400 text-center py-2">{t('broadcast.noChainMessages')}</p>
+              )}
+              {chainList.data?.map((cm) => (
+                <div key={cm.id} className="p-3 rounded-lg bg-gray-50 dark:bg-gray-800 space-y-1.5">
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="text-xs font-medium text-emerald-600 dark:text-emerald-400">
+                          {t('broadcast.chainDay', { day: cm.dayOffset })}
+                        </span>
+                        <span className="text-xs text-gray-400">#{cm.sortOrder}</span>
+                        {cm.mediaType !== 'text' && (
+                          <span className="text-xs px-1.5 py-0.5 rounded bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400">
+                            {cm.mediaType}
+                          </span>
+                        )}
+                      </div>
+                      <p className="text-sm text-gray-900 dark:text-gray-100 line-clamp-2">{cm.text}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400">
+                    <div className="flex items-center gap-3">
+                      <span>{t('broadcast.deliveries')}: {cm._count.deliveries}</span>
+                      <span>{t('broadcast.reads')}: {(cm.deliveries as unknown[]).length}</span>
+                      {cm._count.deliveries > 0 && (
+                        <span className="text-purple-500">
+                          {Math.round(((cm.deliveries as unknown[]).length / cm._count.deliveries) * 100)}% {t('broadcast.openRate')}
+                        </span>
+                      )}
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={() => updateChainMutation.mutate({ id: cm.id, isActive: !cm.isActive })}
+                        className="flex items-center gap-0.5"
+                        title={cm.isActive ? t('broadcast.active') : t('broadcast.inactive')}
+                      >
+                        {cm.isActive ? (
+                          <ToggleRight className="w-5 h-5 text-emerald-500" />
+                        ) : (
+                          <ToggleLeft className="w-5 h-5 text-gray-400" />
+                        )}
+                      </button>
+                      <button
+                        onClick={() => { if (confirm(t('common.confirm') + '?')) deleteChainMutation.mutate({ id: cm.id }); }}
+                        className="text-red-400 hover:text-red-600"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </>
+        )}
+
+        {/* Result message */}
         {result && (
-          <p className={`text-sm text-center py-1 ${result.includes('Failed') || result.includes('ошибка') ? 'text-red-500' : 'text-emerald-500'}`}>
+          <p className={`text-sm text-center py-1 ${result.includes('Failed') || result.includes('ошибка') || result.includes('Ошибка') ? 'text-red-500' : 'text-emerald-500'}`}>
             {result}
           </p>
         )}
       </div>
 
-      {/* Send button */}
-      <div className="p-4 border-t border-gray-200 dark:border-gray-700">
-        <button
-          onClick={handleSend}
-          disabled={!message.trim() || isPending || (mode === 'direct' && !telegramId.trim())}
-          className="w-full py-2.5 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 disabled:opacity-50 transition-colors flex items-center justify-center gap-2 text-sm font-medium"
-        >
-          {isPending ? (
-            <>
-              <Loader2 className="w-4 h-4 animate-spin" />
-              {t('broadcast.sending')}
-            </>
-          ) : (
-            <>
-              <Send className="w-4 h-4" />
-              {t('broadcast.send')}
-            </>
-          )}
-        </button>
-      </div>
+      {/* Send button (only for send tab) */}
+      {tab === 'send' && (
+        <div className="p-4 border-t border-gray-200 dark:border-gray-700">
+          <button
+            onClick={handleSend}
+            disabled={!msg.text.trim() || isPending || (mode === 'direct' && !telegramId.trim())}
+            className="w-full py-2.5 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 disabled:opacity-50 transition-colors flex items-center justify-center gap-2 text-sm font-medium"
+          >
+            {(sendAllMutation.isPending || sendDirectMutation.isPending) ? (
+              <><Loader2 className="w-4 h-4 animate-spin" />{t('broadcast.sending')}</>
+            ) : (
+              <><Send className="w-4 h-4" />{t('broadcast.send')}</>
+            )}
+          </button>
+        </div>
+      )}
     </div>
   );
 }

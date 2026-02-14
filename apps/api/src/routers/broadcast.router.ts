@@ -153,4 +153,214 @@ export const broadcastRouter = router({
 
       return { success: ok };
     }),
+
+  // --- Scheduled Posts ---
+
+  schedulePost: protectedProcedure
+    .input(z.object({
+      text: z.string().min(1).max(4000),
+      mediaType: z.enum(['text', 'photo', 'video']).default('text'),
+      mediaUrl: z.string().optional(),
+      mediaFileId: z.string().optional(),
+      buttonUrl: z.string().optional(),
+      buttonText: z.string().optional(),
+      scheduledAt: z.string().transform((s) => new Date(s)),
+    }))
+    .mutation(async ({ ctx, input }) => {
+      assertAdmin(ctx.userId!);
+
+      const minTime = new Date(Date.now() + 60 * 1000); // at least 1 min from now
+      if (input.scheduledAt < minTime) {
+        throw new TRPCError({ code: 'BAD_REQUEST', message: 'scheduledAt must be at least 1 minute from now' });
+      }
+
+      const post = await ctx.db.scheduledPost.create({
+        data: {
+          text: input.text,
+          mediaType: input.mediaType,
+          mediaUrl: input.mediaUrl,
+          mediaFileId: input.mediaFileId,
+          buttonUrl: input.buttonUrl,
+          buttonText: input.buttonText,
+          scheduledAt: input.scheduledAt,
+          createdById: ctx.userId!,
+        },
+      });
+      return post;
+    }),
+
+  listScheduled: protectedProcedure
+    .input(z.object({
+      status: z.enum(['PENDING', 'SENT', 'CANCELLED', 'FAILED']).optional(),
+    }).optional())
+    .query(async ({ ctx, input }) => {
+      assertAdmin(ctx.userId!);
+
+      return ctx.db.scheduledPost.findMany({
+        where: input?.status ? { status: input.status } : undefined,
+        orderBy: { scheduledAt: 'desc' },
+        include: {
+          _count: { select: { deliveries: true } },
+          deliveries: {
+            where: { readAt: { not: null } },
+            select: { id: true },
+          },
+        },
+      });
+    }),
+
+  cancelScheduled: protectedProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      assertAdmin(ctx.userId!);
+
+      const post = await ctx.db.scheduledPost.findUnique({ where: { id: input.id } });
+      if (!post) throw new TRPCError({ code: 'NOT_FOUND' });
+      if (post.status !== 'PENDING') {
+        throw new TRPCError({ code: 'BAD_REQUEST', message: 'Can only cancel PENDING posts' });
+      }
+
+      return ctx.db.scheduledPost.update({
+        where: { id: input.id },
+        data: { status: 'CANCELLED' },
+      });
+    }),
+
+  scheduledStats: protectedProcedure
+    .input(z.object({ id: z.string() }))
+    .query(async ({ ctx, input }) => {
+      assertAdmin(ctx.userId!);
+
+      const post = await ctx.db.scheduledPost.findUnique({
+        where: { id: input.id },
+        include: {
+          _count: { select: { deliveries: true } },
+        },
+      });
+      if (!post) throw new TRPCError({ code: 'NOT_FOUND' });
+
+      const readCount = await ctx.db.scheduledPostDelivery.count({
+        where: { postId: input.id, readAt: { not: null } },
+      });
+
+      return {
+        sentCount: post.sentCount ?? 0,
+        deliveredCount: post._count.deliveries,
+        readCount,
+        openRate: post._count.deliveries > 0
+          ? Math.round((readCount / post._count.deliveries) * 100)
+          : 0,
+      };
+    }),
+
+  // --- Auto-Chain Messages ---
+
+  createChainMessage: protectedProcedure
+    .input(z.object({
+      text: z.string().min(1).max(4000),
+      mediaType: z.enum(['text', 'photo', 'video']).default('text'),
+      mediaUrl: z.string().optional(),
+      mediaFileId: z.string().optional(),
+      buttonUrl: z.string().optional(),
+      buttonText: z.string().optional(),
+      dayOffset: z.number().int().min(0),
+      sortOrder: z.number().int().min(0).default(0),
+      intervalMin: z.number().int().min(1).default(120),
+    }))
+    .mutation(async ({ ctx, input }) => {
+      assertAdmin(ctx.userId!);
+      return ctx.db.autoChainMessage.create({ data: input });
+    }),
+
+  listChainMessages: protectedProcedure
+    .query(async ({ ctx }) => {
+      assertAdmin(ctx.userId!);
+
+      return ctx.db.autoChainMessage.findMany({
+        orderBy: [{ dayOffset: 'asc' }, { sortOrder: 'asc' }],
+        include: {
+          _count: { select: { deliveries: true } },
+          deliveries: {
+            where: { readAt: { not: null } },
+            select: { id: true },
+          },
+        },
+      });
+    }),
+
+  updateChainMessage: protectedProcedure
+    .input(z.object({
+      id: z.string(),
+      text: z.string().min(1).max(4000).optional(),
+      mediaType: z.enum(['text', 'photo', 'video']).optional(),
+      mediaUrl: z.string().nullable().optional(),
+      mediaFileId: z.string().nullable().optional(),
+      buttonUrl: z.string().nullable().optional(),
+      buttonText: z.string().nullable().optional(),
+      dayOffset: z.number().int().min(0).optional(),
+      sortOrder: z.number().int().min(0).optional(),
+      intervalMin: z.number().int().min(1).optional(),
+      isActive: z.boolean().optional(),
+    }))
+    .mutation(async ({ ctx, input }) => {
+      assertAdmin(ctx.userId!);
+      const { id, ...data } = input;
+      return ctx.db.autoChainMessage.update({ where: { id }, data });
+    }),
+
+  deleteChainMessage: protectedProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      assertAdmin(ctx.userId!);
+      return ctx.db.autoChainMessage.delete({ where: { id: input.id } });
+    }),
+
+  chainStats: protectedProcedure
+    .query(async ({ ctx }) => {
+      assertAdmin(ctx.userId!);
+
+      const messages = await ctx.db.autoChainMessage.findMany({
+        select: {
+          id: true,
+          isActive: true,
+          sentCount: true,
+          _count: { select: { deliveries: true } },
+        },
+      });
+
+      const totalDeliveries = await ctx.db.autoChainDelivery.count();
+      const totalRead = await ctx.db.autoChainDelivery.count({
+        where: { readAt: { not: null } },
+      });
+
+      return {
+        totalMessages: messages.length,
+        activeMessages: messages.filter((m) => m.isActive).length,
+        totalDeliveries,
+        totalRead,
+        openRate: totalDeliveries > 0 ? Math.round((totalRead / totalDeliveries) * 100) : 0,
+      };
+    }),
+
+  // --- Mark deliveries as read (called when user opens app) ---
+  markRead: protectedProcedure
+    .mutation(async ({ ctx }) => {
+      const userId = ctx.userId;
+      if (!userId) return { marked: 0 };
+
+      const now = new Date();
+
+      const [sp, ac] = await Promise.all([
+        ctx.db.scheduledPostDelivery.updateMany({
+          where: { userId, readAt: null },
+          data: { readAt: now },
+        }),
+        ctx.db.autoChainDelivery.updateMany({
+          where: { userId, readAt: null },
+          data: { readAt: now },
+        }),
+      ]);
+
+      return { marked: sp.count + ac.count };
+    }),
 });
