@@ -144,16 +144,26 @@ export function DashboardPage() {
             {/* Total network summary */}
             <div className="p-4 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-950/30 dark:to-purple-950/30 rounded-xl">
               <div className="flex items-center justify-between mb-3">
-                <div>
-                  <p className="text-sm text-gray-500">{t('dashboard.totalNetwork')}</p>
-                  <p className="text-4xl font-bold text-gray-900 dark:text-white">
-                    {totalReachable} <span className="text-sm font-normal text-gray-500">{t('dashboard.people')}</span>
-                  </p>
-                </div>
-                <div className="text-right">
-                  <p className="text-sm text-gray-500">{t('dashboard.currentCapabilities')}</p>
-                  <p className="text-4xl font-bold text-green-600 dark:text-green-400">${networkCapabilities?.total ?? 0}</p>
-                </div>
+                {(() => {
+                  const leftStr = String(totalReachable);
+                  const rightStr = '$' + (networkCapabilities?.total ?? 0);
+                  const totalLen = leftStr.length + rightStr.length;
+                  const sz = totalLen > 12 ? 'text-xl' : totalLen > 9 ? 'text-2xl' : totalLen > 6 ? 'text-3xl' : 'text-4xl';
+                  return (
+                    <>
+                      <div className="min-w-0">
+                        <p className="text-sm text-gray-500">{t('dashboard.totalNetwork')}</p>
+                        <p className={`${sz} font-bold text-gray-900 dark:text-white`}>
+                          {totalReachable} <span className="text-sm font-normal text-gray-500">{t('dashboard.people')}</span>
+                        </p>
+                      </div>
+                      <div className="text-right min-w-0">
+                        <p className="text-sm text-gray-500">{t('dashboard.currentCapabilities')}</p>
+                        <p className={`${sz} font-bold text-green-600 dark:text-green-400`}>{rightStr}</p>
+                      </div>
+                    </>
+                  );
+                })()}
               </div>
               {me?.createdAt && (() => {
                 const kyivNow = new Date(new Date().toLocaleString('en-US', { timeZone: 'Europe/Kyiv' }));
