@@ -6,17 +6,29 @@ const WEB_APP_URL = process.env.WEB_APP_URL || 'https://www.orginizer.com';
 /** Counter for users removed during a broadcast (blocked bot / deactivated) */
 export const blockedCounter = { count: 0, reset() { this.count = 0; } };
 
-/** Delete PlatformAccount for a user who blocked the bot */
+/** Remove a user who blocked the bot: delete PlatformAccount + soft-delete User */
 async function removeBlockedUser(chatId: string | number): Promise<void> {
   const platformId = String(chatId);
   try {
     const db = getDb();
+    // Find the user before deleting the platform account
+    const account = await db.platformAccount.findFirst({
+      where: { platform: 'TELEGRAM', platformId },
+      select: { userId: true },
+    });
     const deleted = await db.platformAccount.deleteMany({
       where: { platform: 'TELEGRAM', platformId },
     });
     if (deleted.count > 0) {
       blockedCounter.count += deleted.count;
-      console.log(`[TG Bot] Removed blocked user ${platformId} from platform_accounts`);
+      // Soft-delete the user so they disappear from clusters/stats
+      if (account?.userId) {
+        await db.user.update({
+          where: { id: account.userId },
+          data: { deletedAt: new Date() },
+        });
+      }
+      console.log(`[TG Bot] Removed blocked user ${platformId} (userId: ${account?.userId})`);
     }
   } catch (err) {
     console.error(`[TG Bot] Failed to remove blocked user ${platformId}:`, err);
