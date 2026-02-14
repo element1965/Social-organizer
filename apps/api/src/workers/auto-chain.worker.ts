@@ -16,9 +16,9 @@ import { translateBroadcastMessage } from '../services/translate.service.js';
  * and send messages that haven't been delivered yet.
  *
  * Send time calculation (Kyiv timezone):
- *   startOfDay(user.createdAt, Europe/Kyiv) + dayOffset days + 9:00 Kyiv + sortOrder * intervalMin minutes
+ *   startOfDay(user.createdAt, Europe/Kyiv) + dayOffset days + 7:00 Kyiv + sortOrder * intervalMin minutes
  *
- * Existing users get messages retroactively if their dayOffset has passed.
+ * Limit: max 1 chain message per user per day (old users catch up gradually).
  */
 export async function processAutoChain(_job: Job): Promise<void> {
   const db = getDb();
@@ -54,6 +54,19 @@ export async function processAutoChain(_job: Job): Promise<void> {
     select: { messageId: true, userId: true },
   });
   const deliveredSet = new Set(existingDeliveries.map((d) => `${d.messageId}:${d.userId}`));
+
+  // Load today's successful deliveries to enforce 1 message per user per day
+  const nowKyivStr = now.toLocaleString('en-US', { timeZone: 'Europe/Kyiv' });
+  const todayKyiv = new Date(nowKyivStr);
+  todayKyiv.setHours(0, 0, 0, 0);
+  // Convert back to UTC for DB query
+  const todayUtcOffset = now.getTime() - new Date(nowKyivStr).getTime();
+  const todayStartUtc = new Date(todayKyiv.getTime() + todayUtcOffset);
+  const todayDeliveries = await db.autoChainDelivery.findMany({
+    where: { sentAt: { gte: todayStartUtc }, success: true },
+    select: { userId: true },
+  });
+  const sentTodaySet = new Set(todayDeliveries.map((d) => d.userId));
 
   // Kyiv timezone offset helper
   function toKyivDate(date: Date): Date {
@@ -106,6 +119,9 @@ export async function processAutoChain(_job: Job): Promise<void> {
 
     const userLang = acc.user?.language || 'en';
     const userDayStart = startOfDayKyiv(userCreatedAt);
+
+    // Max 1 chain message per user per day
+    if (sentTodaySet.has(acc.userId)) continue;
 
     for (const msg of messages) {
       const key = `${msg.id}:${acc.userId}`;
@@ -168,6 +184,7 @@ export async function processAutoChain(_job: Job): Promise<void> {
           data: { sentCount: { increment: 1 } },
         });
         totalSent++;
+        sentTodaySet.add(acc.userId);
       }
 
       deliveredSet.add(key);
@@ -176,6 +193,9 @@ export async function processAutoChain(_job: Job): Promise<void> {
       if (totalSent % 25 === 0) {
         await new Promise((r) => setTimeout(r, 1100));
       }
+
+      // 1 message per user per day — move to next user
+      if (ok) break;
     }
   }
 
