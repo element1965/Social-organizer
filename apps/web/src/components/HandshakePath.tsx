@@ -1,4 +1,4 @@
-import { Users, Wallet } from 'lucide-react';
+import { ChevronRight } from 'lucide-react';
 import { Avatar } from './ui/avatar';
 
 interface PathUser {
@@ -28,57 +28,37 @@ export function HandshakePath({ path, onUserClick, compact = false }: HandshakeP
   }
 
   return (
-    <div className="space-y-0">
-      {path.map((user, idx) => {
-        const isEven = idx % 2 === 0;
-        const isLast = idx === path.length - 1;
+    <div className="overflow-x-auto -mx-1 px-1">
+      <div className="flex items-start gap-1 w-max">
+        {path.map((user, idx) => {
+          const isLast = idx === path.length - 1;
+          const nameParts = user.name.split(' ');
 
-        return (
-          <div key={user.id}>
-            {/* User row */}
-            <div className={`flex ${isEven ? 'justify-start' : 'justify-end'}`}>
+          return (
+            <div key={user.id} className="flex items-center">
               <button
                 onClick={() => onUserClick?.(user.id)}
-                className="flex items-center gap-2 p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
-                style={{ width: '70%' }}
+                className="flex flex-col items-center text-center p-1.5 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors w-16"
               >
-                <Avatar name={user.name} src={user.photoUrl} size="md" />
-                <div className="flex flex-col min-w-0">
-                  <span className="text-sm font-medium text-gray-900 dark:text-white text-left truncate">
-                    {user.name}
+                <Avatar name={user.name} src={user.photoUrl} size="sm" />
+                {nameParts.map((part, i) => (
+                  <span key={i} className="text-[11px] font-medium text-gray-900 dark:text-white leading-tight mt-0.5 truncate max-w-full">
+                    {part}
                   </span>
-                  <div className="flex items-center gap-2">
-                    {user.connectionCount !== undefined && (
-                      <span className="flex items-center gap-1 text-xs text-gray-400">
-                        <Users className="w-3 h-3" />
-                        {user.connectionCount}
-                      </span>
-                    )}
-                    <span className="flex items-center gap-1 text-xs text-green-600 dark:text-green-400">
-                      <Wallet className="w-3 h-3" />
-                      ${Math.round(user.remainingBudget ?? 0)}
-                    </span>
-                  </div>
-                </div>
+                ))}
+                {user.remainingBudget != null && (
+                  <span className="text-[10px] text-green-600 dark:text-green-400 leading-tight">
+                    ${Math.round(user.remainingBudget)}
+                  </span>
+                )}
               </button>
+              {!isLast && (
+                <ChevronRight className="w-4 h-4 text-gray-300 dark:text-gray-600 shrink-0 -mx-0.5" />
+              )}
             </div>
-
-            {/* Straight diagonal arrow between avatars */}
-            {!isLast && (
-              <svg width="100%" height="16" className="block">
-                <line
-                  x1={isEven ? '7%' : '37%'}
-                  y1="0"
-                  x2={isEven ? '37%' : '7%'}
-                  y2="16"
-                  stroke="#22c55e"
-                  strokeWidth="2"
-                />
-              </svg>
-            )}
-          </div>
-        );
-      })}
+          );
+        })}
+      </div>
     </div>
   );
 }
