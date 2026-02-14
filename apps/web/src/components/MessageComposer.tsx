@@ -94,7 +94,7 @@ export function MessageComposer({ value, onChange, disabled }: MessageComposerPr
         value={value.text}
         onChange={(e) => onChange({ ...value, text: e.target.value })}
         placeholder={t('broadcast.messagePlaceholder')}
-        className={`${inputCls} resize-none`}
+        className={`${inputCls} resize-y`}
         rows={3}
         disabled={disabled}
       />
