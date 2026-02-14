@@ -159,6 +159,15 @@ export function BroadcastPanel({ onClose }: BroadcastPanelProps) {
   const [editOrder, setEditOrder] = useState(0);
   const [editInterval, setEditInterval] = useState(120);
   const [editVariant, setEditVariant] = useState<Variant>('all');
+  const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set());
+
+  const toggleExpand = (id: string) => {
+    setExpandedIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id); else next.add(id);
+      return next;
+    });
+  };
 
   const chainList = trpc.broadcast.listChainMessages.useQuery(undefined, { enabled: tab === 'autochain' });
   const chainStatsQuery = trpc.broadcast.chainStats.useQuery(undefined, { enabled: tab === 'autochain' });
@@ -340,7 +349,10 @@ export function BroadcastPanel({ onClose }: BroadcastPanelProps) {
               {scheduledList.data?.map((post) => (
                 <div key={post.id} className="p-3 rounded-lg bg-gray-50 dark:bg-gray-800 space-y-1.5">
                   <div className="flex items-start justify-between gap-2">
-                    <p className="text-sm text-gray-900 dark:text-gray-100 line-clamp-2">{post.text}</p>
+                    <p
+                      onClick={() => toggleExpand(post.id)}
+                      className={`text-sm text-gray-900 dark:text-gray-100 cursor-pointer whitespace-pre-wrap ${expandedIds.has(post.id) ? '' : 'line-clamp-2'}`}
+                    >{post.text}</p>
                     <StatusBadge status={post.status} />
                   </div>
                   <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400">
@@ -508,7 +520,10 @@ export function BroadcastPanel({ onClose }: BroadcastPanelProps) {
                             )}
                             <VariantBadge variant={cm.variant} />
                           </div>
-                          <p className="text-sm text-gray-900 dark:text-gray-100 line-clamp-2">{cm.text}</p>
+                          <p
+                            onClick={() => toggleExpand(cm.id)}
+                            className={`text-sm text-gray-900 dark:text-gray-100 cursor-pointer whitespace-pre-wrap ${expandedIds.has(cm.id) ? '' : 'line-clamp-2'}`}
+                          >{cm.text}</p>
                         </div>
                       </div>
                       <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400">
