@@ -319,6 +319,79 @@ model PendingConnection {
   @@map("pending_connections")
 }
 
+enum ScheduledPostStatus {
+  PENDING
+  SENT
+  CANCELLED
+  FAILED
+}
+
+model ScheduledPost {
+  id           String              @id @default(cuid())
+  text         String
+  mediaType    String              @default("text")
+  mediaUrl     String?
+  mediaFileId  String?
+  buttonUrl    String?
+  buttonText   String?
+  scheduledAt  DateTime
+  status       ScheduledPostStatus @default(PENDING)
+  sentAt       DateTime?
+  sentCount    Int?
+  errorMessage String?
+  createdById  String
+  createdAt    DateTime            @default(now())
+  updatedAt    DateTime            @updatedAt
+  deliveries   ScheduledPostDelivery[]
+  @@index([status, scheduledAt])
+  @@map("scheduled_posts")
+}
+
+model ScheduledPostDelivery {
+  id     String    @id @default(cuid())
+  postId String
+  userId String
+  sentAt DateTime  @default(now())
+  readAt DateTime?
+  post   ScheduledPost @relation(fields: [postId], references: [id], onDelete: Cascade)
+  @@unique([postId, userId])
+  @@index([userId, readAt])
+  @@map("scheduled_post_deliveries")
+}
+
+model AutoChainMessage {
+  id          String   @id @default(cuid())
+  text        String
+  mediaType   String   @default("text")
+  mediaUrl    String?
+  mediaFileId String?
+  buttonUrl   String?
+  buttonText  String?
+  dayOffset   Int
+  sortOrder   Int      @default(0)
+  intervalMin Int      @default(120)
+  isActive    Boolean  @default(true)
+  sentCount   Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  deliveries  AutoChainDelivery[]
+  @@index([isActive, dayOffset, sortOrder])
+  @@map("auto_chain_messages")
+}
+
+model AutoChainDelivery {
+  id        String    @id @default(cuid())
+  messageId String
+  userId    String
+  sentAt    DateTime  @default(now())
+  readAt    DateTime?
+  success   Boolean   @default(true)
+  message   AutoChainMessage @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  @@unique([messageId, userId])
+  @@index([userId, readAt])
+  @@map("auto_chain_deliveries")
+}
+
 model FaqItem {
   id          String   @id @default(cuid())
   question    String

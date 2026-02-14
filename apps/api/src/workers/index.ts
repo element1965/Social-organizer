@@ -4,6 +4,8 @@ import { processCycleClose } from './cycle-close.worker.js';
 import { processExpireNotifications } from './expire-notifications.worker.js';
 import { processCheckBlock } from './check-block.worker.js';
 import { processTgBroadcast, type TgBroadcastMessage } from './tg-broadcast.worker.js';
+import { processScheduledPost } from './scheduled-post.worker.js';
+import { processAutoChain } from './auto-chain.worker.js';
 
 let connection: IORedis | null = null;
 
@@ -38,6 +40,20 @@ export function setupQueues(): void {
   // --- Telegram broadcast: вызывается по событию, без расписания ---
   new Queue('telegram:broadcast', { connection: redis });
   new Worker('telegram:broadcast', processTgBroadcast, { connection: redis });
+
+  // --- Scheduled posts: каждую минуту ---
+  const scheduledPostQueue = new Queue('broadcast:scheduled-post', { connection: redis });
+  new Worker('broadcast:scheduled-post', processScheduledPost, { connection: redis });
+  scheduledPostQueue.upsertJobScheduler('scheduled-post-scheduler', {
+    every: 60 * 1000, // 1 минута
+  }, { name: 'scheduled-post' });
+
+  // --- Auto-chain: каждые 30 минут ---
+  const autoChainQueue = new Queue('broadcast:auto-chain', { connection: redis });
+  new Worker('broadcast:auto-chain', processAutoChain, { connection: redis });
+  autoChainQueue.upsertJobScheduler('auto-chain-scheduler', {
+    every: 30 * 60 * 1000, // 30 минут
+  }, { name: 'auto-chain' });
 
   console.log('BullMQ: all queues and workers initialized');
 }
