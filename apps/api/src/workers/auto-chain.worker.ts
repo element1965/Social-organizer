@@ -59,6 +59,36 @@ export async function processAutoChain(_job: Job): Promise<void> {
     return kyiv;
   }
 
+  // Translation cache: messageId:lang → translated text (avoid duplicate LLM calls)
+  const textCache = new Map<string, string>();
+  const btnCache = new Map<string, string>();
+
+  async function getTranslatedText(msgId: string, text: string, lang: string): Promise<string> {
+    const cacheKey = `${msgId}:${lang}`;
+    if (textCache.has(cacheKey)) return textCache.get(cacheKey)!;
+    let translated: string;
+    try {
+      translated = await translateBroadcastMessage(text, lang);
+    } catch {
+      translated = text;
+    }
+    textCache.set(cacheKey, translated);
+    return translated;
+  }
+
+  async function getTranslatedBtn(msgId: string, text: string, lang: string): Promise<string> {
+    const cacheKey = `${msgId}:${lang}`;
+    if (btnCache.has(cacheKey)) return btnCache.get(cacheKey)!;
+    let translated: string;
+    try {
+      translated = await translateBroadcastMessage(text, lang);
+    } catch {
+      translated = text;
+    }
+    btnCache.set(cacheKey, translated);
+    return translated;
+  }
+
   let totalSent = 0;
 
   for (const acc of tgAccounts) {
@@ -80,23 +110,13 @@ export async function processAutoChain(_job: Job): Promise<void> {
 
       if (sendTime > now) continue;
 
-      // Translate message
-      let translatedText: string;
-      try {
-        translatedText = await translateBroadcastMessage(msg.text, userLang);
-      } catch {
-        translatedText = msg.text;
-      }
+      // Translate message (cached per messageId + lang)
+      const translatedText = await getTranslatedText(msg.id, msg.text, userLang);
 
       // Build inline button if configured
       let markup: TgReplyMarkup | undefined;
       if (msg.buttonUrl && msg.buttonText) {
-        let btnText: string;
-        try {
-          btnText = await translateBroadcastMessage(msg.buttonText, userLang);
-        } catch {
-          btnText = msg.buttonText;
-        }
+        const btnText = await getTranslatedBtn(msg.id, msg.buttonText, userLang);
         markup = { inline_keyboard: [[{ text: btnText, url: msg.buttonUrl }]] };
       }
 
