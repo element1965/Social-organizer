@@ -46,12 +46,17 @@ export async function processAutoChain(_job: Job): Promise<void> {
   });
   if (tgAccounts.length === 0) return;
 
-  // Load invited user IDs for variant filtering
-  const invitedLinks = await db.inviteLink.findMany({
-    where: { usedById: { not: null } },
-    select: { usedById: true },
+  // Load connected user IDs for variant filtering
+  // "invited" = users with at least one confirmed connection (in someone's network)
+  // "organic" = solo users with no connections (loners in clusters)
+  const connections = await db.connection.findMany({
+    select: { userAId: true, userBId: true },
   });
-  const invitedUserIds = new Set(invitedLinks.map((l) => l.usedById!));
+  const invitedUserIds = new Set<string>();
+  for (const c of connections) {
+    invitedUserIds.add(c.userAId);
+    invitedUserIds.add(c.userBId);
+  }
 
   // Load existing deliveries into Set for O(1) lookup
   const existingDeliveries = await db.autoChainDelivery.findMany({
