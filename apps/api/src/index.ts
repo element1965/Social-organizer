@@ -171,6 +171,15 @@ async function start() {
     await app.listen({ port: PORT, host: HOST });
     console.log(`API server running on http://${HOST}:${PORT}`);
 
+    // Gun.js relay — attach to the HTTP server for P2P graph backup sync between clients
+    try {
+      const Gun = (await import('gun')).default;
+      Gun({ web: app.server, file: 'gun-data' });
+      console.log('Gun.js relay started');
+    } catch (err) {
+      console.warn('Gun.js relay init failed:', err);
+    }
+
     // Startup diagnostics
     const hasBotToken = !!process.env.TELEGRAM_BOT_TOKEN;
     const hasFeedbackChat = !!process.env.FEEDBACK_CHAT_ID;
