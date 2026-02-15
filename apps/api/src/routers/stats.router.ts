@@ -193,7 +193,20 @@ export const statsRouter = router({
 
   // Current network capabilities (sum of all remainingBudget in the connected cluster)
   networkCapabilities: protectedProcedure.query(async ({ ctx }) => {
-    const userId = ctx.userId;
+    // If user has no connections, fallback to inviter's network (pending connection)
+    let userId = ctx.userId;
+    const hasConn = await ctx.db.connection.findFirst({
+      where: { OR: [{ userAId: ctx.userId }, { userBId: ctx.userId }] },
+      select: { id: true },
+    });
+    if (!hasConn) {
+      const pending = await ctx.db.pendingConnection.findFirst({
+        where: { fromUserId: ctx.userId, status: 'PENDING' },
+        select: { toUserId: true },
+        orderBy: { createdAt: 'desc' },
+      });
+      if (pending) userId = pending.toUserId;
+    }
 
     // Find the entire connected cluster via recursive CTE (no depth limit)
     const result = await ctx.db.$queryRaw<Array<{ total: number; contributors: bigint }>>`
