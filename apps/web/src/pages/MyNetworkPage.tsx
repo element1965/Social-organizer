@@ -3,7 +3,6 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { trpc } from '../lib/trpc';
 import { useAuth } from '../hooks/useAuth';
-import { InvitePopup } from '../components/InvitePopup';
 import { useTheme } from '../hooks/useTheme';
 import { Button } from '../components/ui/button';
 import { Avatar } from '../components/ui/avatar';
@@ -21,7 +20,6 @@ export function MyNetworkPage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const view = (searchParams.get('view') === 'list' ? 'list' : '3d') as 'list' | '3d';
   const setView = (v: 'list' | '3d') => setSearchParams(v === '3d' ? {} : { view: v }, { replace: true });
-  const [showInvitePopup, setShowInvitePopup] = useState(false);
   const [showClusters, setShowClusters] = useState(false);
   const isDark = mode === 'dark' || (mode === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
 
@@ -74,15 +72,13 @@ export function MyNetworkPage() {
             {view === 'list' ? <Globe className="w-4 h-4 text-white" /> : <List className="w-4 h-4 text-white" />}
           </button>
           <button
-            onClick={() => setShowInvitePopup(true)}
+            onClick={() => navigate('/#invite')}
             className="w-10 h-10 rounded-full bg-blue-600 hover:bg-blue-500 flex items-center justify-center transition-colors shadow-lg"
           >
             <UserPlus className="w-4 h-4 text-white" />
           </button>
         </div>
       </div>
-
-      <InvitePopup open={showInvitePopup} onClose={() => setShowInvitePopup(false)} />
 
       {showClusters ? (
         (() => {
