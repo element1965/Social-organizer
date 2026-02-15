@@ -392,7 +392,11 @@
     "variantAll": "All",
     "variantInvited": "Invited",
     "variantOrganic": "Direct",
-    "editChain": "Edit"
+    "editChain": "Edit",
+    "triggerNow": "Run now",
+    "triggering": "Running...",
+    "triggerSuccess": "Auto-chain triggered successfully",
+    "triggerError": "Trigger failed"
   },
   "contacts": {
     "telegram": "Telegram",
