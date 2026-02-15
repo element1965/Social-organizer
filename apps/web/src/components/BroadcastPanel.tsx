@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { X, Send, Loader2, Clock, Link2, Trash2, ToggleLeft, ToggleRight, BarChart3, Pencil, Check } from 'lucide-react';
+import { X, Send, Loader2, Clock, Link2, Trash2, ToggleLeft, ToggleRight, BarChart3, Pencil, Check, Play } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { trpc } from '../lib/trpc';
 import { MessageComposer, type MessageData } from './MessageComposer';
@@ -160,6 +160,7 @@ export function BroadcastPanel({ onClose }: BroadcastPanelProps) {
   const [editInterval, setEditInterval] = useState(120);
   const [editVariant, setEditVariant] = useState<Variant>('all');
   const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set());
+  const [triggerLoading, setTriggerLoading] = useState(false);
 
   const toggleExpand = (id: string) => {
     setExpandedIds((prev) => {
@@ -401,6 +402,40 @@ export function BroadcastPanel({ onClose }: BroadcastPanelProps) {
                 </div>
               </div>
             )}
+
+            {/* Trigger button */}
+            <button
+              onClick={async () => {
+                setTriggerLoading(true);
+                setResult(null);
+                try {
+                  const token = localStorage.getItem('accessToken');
+                  const res = await fetch('/api/trigger-autochain', {
+                    method: 'POST',
+                    headers: { Authorization: `Bearer ${token}` },
+                  });
+                  if (res.ok) {
+                    setResult(t('broadcast.triggerSuccess'));
+                    chainStatsQuery.refetch();
+                  } else {
+                    const body = await res.json().catch(() => ({}));
+                    setResult(`${t('broadcast.triggerError')}: ${body.error || res.status}`);
+                  }
+                } catch {
+                  setResult(t('broadcast.triggerError'));
+                } finally {
+                  setTriggerLoading(false);
+                }
+              }}
+              disabled={triggerLoading}
+              className="w-full py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 disabled:opacity-50 transition-colors flex items-center justify-center gap-2 text-sm font-medium"
+            >
+              {triggerLoading ? (
+                <><Loader2 className="w-4 h-4 animate-spin" />{t('broadcast.triggering')}</>
+              ) : (
+                <><Play className="w-4 h-4" />{t('broadcast.triggerNow')}</>
+              )}
+            </button>
 
             {/* Add form */}
             <MessageComposer value={chainMsg} onChange={setChainMsg} disabled={isPending} />

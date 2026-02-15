@@ -392,7 +392,11 @@
     "variantAll": "Все",
     "variantInvited": "Приглашённые",
     "variantOrganic": "Прямые",
-    "editChain": "Редактировать"
+    "editChain": "Редактировать",
+    "triggerNow": "Запустить сейчас",
+    "triggering": "Запуск...",
+    "triggerSuccess": "Авторассылка запущена",
+    "triggerError": "Ошибка запуска"
   },
   "contacts": {
     "telegram": "Telegram",
