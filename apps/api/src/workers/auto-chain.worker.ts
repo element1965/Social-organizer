@@ -21,14 +21,18 @@ import { translateBroadcastMessage } from '../services/translate.service.js';
  * Limit: max 1 chain message per user per day (old users catch up gradually).
  */
 export async function processAutoChain(_job: Job): Promise<void> {
+  console.log('[Auto Chain] Worker started');
   const db = getDb();
   const now = new Date();
+
+  try {
 
   // Load all active chain messages
   const messages = await db.autoChainMessage.findMany({
     where: { isActive: true },
     orderBy: [{ dayOffset: 'asc' }, { sortOrder: 'asc' }],
   });
+  console.log(`[Auto Chain] Messages: ${messages.length}, TZ now: ${now.toISOString()}`);
   if (messages.length === 0) return;
 
   // Load all users with TG accounts
@@ -199,12 +203,20 @@ export async function processAutoChain(_job: Job): Promise<void> {
     }
   }
 
-  if (totalSent > 0) {
-    const blocked = blockedCounter.count;
-    console.log(`[Auto Chain] Sent ${totalSent} messages, blocked: ${blocked}`);
+  const blocked = blockedCounter.count;
+  console.log(`[Auto Chain] Done: sent ${totalSent}, blocked: ${blocked}, users: ${tgAccounts.length}`);
+  // Always report status (for diagnostics)
+  await sendTelegramMessage(
+    SUPPORT_CHAT_ID,
+    `🔗 <b>Auto-chain</b>: sent ${totalSent} / ${tgAccounts.length} users${blocked > 0 ? `\n🚫 Removed: ${blocked}` : ''}`,
+  ).catch(() => {});
+
+  } catch (err) {
+    console.error('[Auto Chain] CRASH:', err);
     await sendTelegramMessage(
       SUPPORT_CHAT_ID,
-      `🔗 <b>Auto-chain</b>: sent ${totalSent} messages${blocked > 0 ? `\n🚫 Removed: ${blocked} (blocked bot)` : ''}`,
-    );
+      `❌ <b>Auto-chain CRASH</b>: ${String(err).substring(0, 200)}`,
+    ).catch(() => {});
+    throw err;
   }
 }

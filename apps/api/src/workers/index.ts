@@ -18,6 +18,8 @@ function getRedisConnection(): IORedis {
 
 export function setupQueues(): void {
   const redis = getRedisConnection();
+  redis.on('connect', () => console.log('[Redis] Connected'));
+  redis.on('error', (err) => console.error('[Redis] Error:', err.message));
 
   // --- Cycle close: каждый час ---
   const cycleCloseQueue = new Queue('collection:cycle-close', { connection: redis });
