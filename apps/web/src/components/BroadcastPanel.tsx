@@ -108,7 +108,15 @@ export function BroadcastPanel({ onClose }: BroadcastPanelProps) {
       });
     } else {
       if (!telegramId.trim()) return;
-      sendDirectMutation.mutate({ telegramId: telegramId.trim(), text: msg.text.trim() });
+      sendDirectMutation.mutate({
+        telegramId: telegramId.trim(),
+        text: msg.text.trim(),
+        mediaType: msg.mediaType,
+        mediaUrl: !msg.mediaFileId ? msg.mediaUrl?.trim() || undefined : undefined,
+        mediaFileId: msg.mediaFileId || undefined,
+        buttonUrl: msg.buttonUrl?.trim() || undefined,
+        buttonText: msg.buttonText?.trim() || undefined,
+      });
     }
   };
 
@@ -296,17 +304,7 @@ export function BroadcastPanel({ onClose }: BroadcastPanelProps) {
               />
             )}
 
-            {mode === 'all' ? (
-              <MessageComposer value={msg} onChange={setMsg} disabled={isPending} />
-            ) : (
-              <textarea
-                value={msg.text}
-                onChange={(e) => setMsg({ ...msg, text: e.target.value })}
-                placeholder={t('broadcast.messagePlaceholder')}
-                className={`${inputCls} resize-y`}
-                rows={3}
-              />
-            )}
+            <MessageComposer value={msg} onChange={setMsg} disabled={isPending} />
           </>
         )}
 
