@@ -282,8 +282,24 @@ export async function handleTelegramUpdate(update: TgUpdate): Promise<void> {
     const parts = text.split(/\s+/);
     const param = parts[1]; // e.g. "invite_abc123..."
     const lang = msg.from?.language_code?.slice(0, 2) || 'en';
-    const isRu = lang === 'ru' || lang === 'uk' || lang === 'be';
+    const isUk = lang === 'uk';
+    const isRu = lang === 'ru' || lang === 'be';
     const name = msg.from?.first_name || '';
+
+    const t = {
+      invite: isUk
+        ? `👋 ${name ? name + ', л' : 'Л'}аскаво просимо до <b>Social Organizer</b>!\n\nТебе запросили приєднатися до мережі взаємної підтримки.\nНатисни кнопку нижче, щоб прийняти запрошення.\n\n🌐 <a href="https://www.orginizer.com/">Дізнатися більше</a>`
+        : isRu
+        ? `👋 ${name ? name + ', д' : 'Д'}обро пожаловать в <b>Social Organizer</b>!\n\nТебя пригласили в сеть взаимной поддержки.\nНажми кнопку ниже, чтобы принять приглашение.\n\n🌐 <a href="https://www.orginizer.com/">Узнать больше</a>`
+        : `👋 ${name ? name + ', w' : 'W'}elcome to <b>Social Organizer</b>!\n\nYou've been invited to join a trusted support network.\nTap the button below to accept the invitation.\n\n🌐 <a href="https://www.orginizer.com/">Learn more</a>`,
+      acceptBtn: isUk ? '🤝 Прийняти запрошення' : isRu ? '🤝 Принять приглашение' : '🤝 Accept Invitation',
+      welcome: isUk
+        ? `👋 ${name ? name + ', л' : 'Л'}аскаво просимо до <b>Social Organizer</b>!\n\nПлатформа взаємної підтримки через довірені мережі.\n\n🌐 <a href="https://www.orginizer.com/">Дізнатися більше про проєкт</a>`
+        : isRu
+        ? `👋 ${name ? name + ', д' : 'Д'}обро пожаловать в <b>Social Organizer</b>!\n\nПлатформа взаимной поддержки через доверенные сети.\n\n🌐 <a href="https://www.orginizer.com/">Узнать больше о проекте</a>`
+        : `👋 ${name ? name + ', w' : 'W'}elcome to <b>Social Organizer</b>!\n\nA platform for mutual support through trusted networks.\n\n🌐 <a href="https://www.orginizer.com/">Learn more about the project</a>`,
+      openBtn: isUk ? '📱 Відкрити застосунок' : isRu ? '📱 Открыть приложение' : '📱 Open App',
+    };
 
     if (param?.startsWith('invite_')) {
       const inviteToken = param.slice('invite_'.length);
@@ -291,34 +307,16 @@ export async function handleTelegramUpdate(update: TgUpdate): Promise<void> {
 
       console.log(`[TG Bot] /start invite from chat ${chatId}, token: ${inviteToken.slice(0, 8)}...`);
 
-      await sendTelegramMessage(
-        chatId,
-        isRu
-          ? `👋 ${name ? name + ', д' : 'Д'}обро пожаловать в <b>Social Organizer</b>!\n\nТебя пригласили в сеть взаимной поддержки.\nНажми кнопку ниже, чтобы принять приглашение.\n\n🌐 <a href="https://www.orginizer.com/">Узнать больше</a>`
-          : `👋 ${name ? name + ', w' : 'W'}elcome to <b>Social Organizer</b>!\n\nYou've been invited to join a trusted support network.\nTap the button below to accept the invitation.\n\n🌐 <a href="https://www.orginizer.com/">Learn more</a>`,
-        {
-          inline_keyboard: [[{
-            text: isRu ? '🤝 Принять приглашение' : '🤝 Accept Invitation',
-            web_app: { url: webAppUrl },
-          }]],
-        },
-      );
+      await sendTelegramMessage(chatId, t.invite, {
+        inline_keyboard: [[{ text: t.acceptBtn, web_app: { url: webAppUrl } }]],
+      });
       return;
     }
 
     // Plain /start — open the app + link to landing
-    await sendTelegramMessage(
-      chatId,
-      isRu
-        ? `👋 ${name ? name + ', д' : 'Д'}обро пожаловать в <b>Social Organizer</b>!\n\nПлатформа взаимной поддержки через доверенные сети.\n\n🌐 <a href="https://www.orginizer.com/">Узнать больше о проекте</a>`
-        : `👋 ${name ? name + ', w' : 'W'}elcome to <b>Social Organizer</b>!\n\nA platform for mutual support through trusted networks.\n\n🌐 <a href="https://www.orginizer.com/">Learn more about the project</a>`,
-      {
-        inline_keyboard: [[{
-          text: isRu ? '📱 Открыть приложение' : '📱 Open App',
-          web_app: { url: WEB_APP_URL },
-        }]],
-      },
-    );
+    await sendTelegramMessage(chatId, t.welcome, {
+      inline_keyboard: [[{ text: t.openBtn, web_app: { url: WEB_APP_URL } }]],
+    });
     return;
   }
 
