@@ -65,6 +65,7 @@ interface TgUpdate {
       first_name?: string;
       last_name?: string;
       username?: string;
+      language_code?: string;
     };
   };
 }
@@ -280,31 +281,42 @@ export async function handleTelegramUpdate(update: TgUpdate): Promise<void> {
   if (text.startsWith('/start')) {
     const parts = text.split(/\s+/);
     const param = parts[1]; // e.g. "invite_abc123..."
+    const lang = msg.from?.language_code?.slice(0, 2) || 'en';
+    const isRu = lang === 'ru' || lang === 'uk' || lang === 'be';
+    const name = msg.from?.first_name || '';
 
     if (param?.startsWith('invite_')) {
       const inviteToken = param.slice('invite_'.length);
       const webAppUrl = `${WEB_APP_URL}/invite/${inviteToken}`;
-      const name = msg.from?.first_name || '';
 
       console.log(`[TG Bot] /start invite from chat ${chatId}, token: ${inviteToken.slice(0, 8)}...`);
 
       await sendTelegramMessage(
         chatId,
-        `👋 ${name ? name + ', w' : 'W'}elcome to <b>Social Organizer</b>!\n\nYou've been invited to join a trusted support network.\nTap the button below to accept the invitation.\n\n🌐 <a href="https://www.orginizer.com/">Learn more</a>`,
+        isRu
+          ? `👋 ${name ? name + ', д' : 'Д'}обро пожаловать в <b>Social Organizer</b>!\n\nТебя пригласили в сеть взаимной поддержки.\nНажми кнопку ниже, чтобы принять приглашение.\n\n🌐 <a href="https://www.orginizer.com/">Узнать больше</a>`
+          : `👋 ${name ? name + ', w' : 'W'}elcome to <b>Social Organizer</b>!\n\nYou've been invited to join a trusted support network.\nTap the button below to accept the invitation.\n\n🌐 <a href="https://www.orginizer.com/">Learn more</a>`,
         {
-          inline_keyboard: [[{ text: '🤝 Accept Invitation', web_app: { url: webAppUrl } }]],
+          inline_keyboard: [[{
+            text: isRu ? '🤝 Принять приглашение' : '🤝 Accept Invitation',
+            web_app: { url: webAppUrl },
+          }]],
         },
       );
       return;
     }
 
     // Plain /start — open the app + link to landing
-    const name = msg.from?.first_name || '';
     await sendTelegramMessage(
       chatId,
-      `👋 ${name ? name + ', w' : 'W'}elcome to <b>Social Organizer</b>!\n\nA platform for mutual support through trusted networks.\n\n🌐 <a href="https://www.orginizer.com/">Learn more about the project</a>`,
+      isRu
+        ? `👋 ${name ? name + ', д' : 'Д'}обро пожаловать в <b>Social Organizer</b>!\n\nПлатформа взаимной поддержки через доверенные сети.\n\n🌐 <a href="https://www.orginizer.com/">Узнать больше о проекте</a>`
+        : `👋 ${name ? name + ', w' : 'W'}elcome to <b>Social Organizer</b>!\n\nA platform for mutual support through trusted networks.\n\n🌐 <a href="https://www.orginizer.com/">Learn more about the project</a>`,
       {
-        inline_keyboard: [[{ text: '📱 Open App', web_app: { url: WEB_APP_URL } }]],
+        inline_keyboard: [[{
+          text: isRu ? '📱 Открыть приложение' : '📱 Open App',
+          web_app: { url: WEB_APP_URL },
+        }]],
       },
     );
     return;

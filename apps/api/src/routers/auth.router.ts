@@ -102,10 +102,12 @@ export const authRouter = router({
         }
       } else {
         const name = [tgUser.first_name, tgUser.last_name].filter(Boolean).join(' ') || `User_${platformId}`;
+        const lang = tgUser.language_code?.slice(0, 2) || 'en';
         const user = await ctx.db.user.create({
           data: {
             name,
             photoUrl: tgUser.photo_url || null,
+            language: lang,
             platformAccounts: {
               create: {
                 platform: 'TELEGRAM',
