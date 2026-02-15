@@ -50,6 +50,9 @@ importers:
       fastify:
         specifier: ^5.2.0
         version: 5.7.2
+      gun:
+        specifier: ^0.2020.1241
+        version: 0.2020.1241
       ioredis:
         specifier: ^5.4.0
         version: 5.9.2

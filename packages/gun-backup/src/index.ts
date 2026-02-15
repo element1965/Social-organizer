@@ -1,11 +1,12 @@
 /**
- * @so/gun-backup — локальный бэкап графа связей через Gun.js (IndexedDB).
+ * @so/gun-backup — decentralized backup of the trust network graph via Gun.js (IndexedDB).
  *
- * Хранит 2 уровня глубины: мои связи + связи моих связей.
- * Цель: если сервер недоступен, данные можно восстановить с клиентов.
+ * Stores up to 3 levels of depth as a flat nodes+edges list.
+ * Purpose: if the server is blocked, the network can be restored from client-side backups.
+ * Gun.js relay syncs data between clients — each user's device stores their neighborhood,
+ * creating cross-redundancy (my graph is also stored by my contacts as their level 2-3).
  */
 
-// Gun.js не имеет ESM-экспорта, используем динамический импорт
 let gunInstance: GunInstance | null = null;
 
 interface GunNode {
@@ -20,29 +21,32 @@ interface GunInstance extends GunNode {
   get: (key: string) => GunNode;
 }
 
-interface ConnectionData {
-  userId: string;
+interface NodeData {
+  id: string;
   name: string;
   photoUrl: string | null;
-  connectedAt: string;
+}
+
+interface EdgeData {
+  from: string;
+  to: string;
 }
 
 interface GraphBackup {
   userId: string;
-  connections: ConnectionData[];
-  level2: Record<string, ConnectionData[]>;
+  nodes: NodeData[];
+  edges: EdgeData[];
   syncedAt: string;
 }
 
 /**
- * Инициализирует Gun.js с IndexedDB для локального хранения.
- * Вызывать один раз при старте приложения.
+ * Initialize Gun.js with IndexedDB for local storage.
+ * Call once at app startup. Pass relay server URLs as peers for cross-device sync.
  */
 export async function initGunBackup(peers: string[] = []): Promise<void> {
   if (gunInstance) return;
   try {
     const Gun = (await import('gun')).default;
-    // IndexedDB адаптер встроен в Gun по умолчанию в браузере
     gunInstance = Gun({ peers, localStorage: false }) as unknown as GunInstance;
   } catch {
     console.warn('[gun-backup] Failed to initialize Gun.js');
@@ -50,11 +54,10 @@ export async function initGunBackup(peers: string[] = []): Promise<void> {
 }
 
 /**
- * Сохраняет граф связей (2 уровня) в локальное хранилище через Gun.js.
+ * Save the network graph (nodes + edges, up to 3 levels) to local storage via Gun.js.
  */
 export async function syncToLocal(data: GraphBackup): Promise<void> {
   if (!gunInstance) {
-    // Fallback: IndexedDB напрямую
     await saveToIndexedDB(data);
     return;
   }
@@ -63,13 +66,13 @@ export async function syncToLocal(data: GraphBackup): Promise<void> {
   userNode.put({
     userId: data.userId,
     syncedAt: data.syncedAt,
-    connectionsJson: JSON.stringify(data.connections),
-    level2Json: JSON.stringify(data.level2),
+    nodesJson: JSON.stringify(data.nodes),
+    edgesJson: JSON.stringify(data.edges),
   });
 }
 
 /**
- * Читает кэшированный граф из локального хранилища.
+ * Read cached graph from local storage.
  */
 export async function readFromLocal(userId: string): Promise<GraphBackup | null> {
   if (!gunInstance) {
@@ -88,8 +91,8 @@ export async function readFromLocal(userId: string): Promise<GraphBackup | null>
       try {
         resolve({
           userId: String(d['userId'] ?? userId),
-          connections: JSON.parse(String(d['connectionsJson'] ?? '[]')),
-          level2: JSON.parse(String(d['level2Json'] ?? '{}')),
+          nodes: JSON.parse(String(d['nodesJson'] ?? '[]')),
+          edges: JSON.parse(String(d['edgesJson'] ?? '[]')),
           syncedAt: String(d['syncedAt'] ?? ''),
         });
       } catch {
@@ -99,20 +102,21 @@ export async function readFromLocal(userId: string): Promise<GraphBackup | null>
   });
 }
 
-/* ---------- Fallback: IndexedDB напрямую (без Gun.js) ---------- */
+/* ---------- Fallback: raw IndexedDB (without Gun.js) ---------- */
 
 const DB_NAME = 'so-graph-backup';
 const STORE_NAME = 'graph';
-const DB_VERSION = 1;
+const DB_VERSION = 2;
 
 function openDB(): Promise<IDBDatabase> {
   return new Promise((resolve, reject) => {
     const request = indexedDB.open(DB_NAME, DB_VERSION);
     request.onupgradeneeded = () => {
       const db = request.result;
-      if (!db.objectStoreNames.contains(STORE_NAME)) {
-        db.createObjectStore(STORE_NAME, { keyPath: 'userId' });
+      if (db.objectStoreNames.contains(STORE_NAME)) {
+        db.deleteObjectStore(STORE_NAME);
       }
+      db.createObjectStore(STORE_NAME, { keyPath: 'userId' });
     };
     request.onsuccess = () => resolve(request.result);
     request.onerror = () => reject(request.error);
@@ -150,4 +154,4 @@ async function readFromIndexedDB(userId: string): Promise<GraphBackup | null> {
   }
 }
 
-export type { GraphBackup, ConnectionData };
+export type { GraphBackup, NodeData, EdgeData };
