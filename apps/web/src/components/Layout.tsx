@@ -5,6 +5,7 @@ import { Home, Bell, Users, Settings, HelpCircle } from 'lucide-react';
 import { trpc } from '../lib/trpc';
 import { cn } from '../lib/utils';
 import { ChatAssistant } from './ChatAssistant';
+import { useGraphSync } from '../hooks/useGraphSync';
 import { isTelegramWebApp, getTGThemeParams, onThemeChanged } from '@so/tg-adapter';
 import { useTelegramHaptics } from '../hooks/useTelegram';
 
@@ -41,6 +42,9 @@ export function Layout() {
     refetchInterval: 15000,
   });
   const { selection } = useTelegramHaptics();
+
+  // Sync network graph to local Gun.js / IndexedDB backup
+  useGraphSync();
 
   useEffect(() => {
     if (!isTelegramWebApp()) return;
