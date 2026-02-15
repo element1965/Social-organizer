@@ -269,6 +269,119 @@ export async function sendCollectionNotificationTg(
   return sendTelegramMessage(telegramId, text, replyMarkup);
 }
 
+// Bot /start message translations for all 27 supported languages
+const SITE = 'https://www.orginizer.com/';
+interface BotLocale {
+  invite: (name: string) => string;
+  acceptBtn: string;
+  welcome: (name: string) => string;
+  openBtn: string;
+}
+function makeBotLocale(
+  welcomeWord: string, // "Welcome" / "Добро пожаловать" — with lowercase first letter
+  inviteBody: string,
+  acceptBtn: string,
+  welcomeBody: string,
+  openBtn: string,
+  learnMore: string,
+): BotLocale {
+  return {
+    invite: (name) =>
+      `👋 ${name ? name + ', ' + welcomeWord : welcomeWord.charAt(0).toUpperCase() + welcomeWord.slice(1)} <b>Social Organizer</b>!\n\n${inviteBody}\n\n🌐 <a href="${SITE}">${learnMore}</a>`,
+    acceptBtn: `🤝 ${acceptBtn}`,
+    welcome: (name) =>
+      `👋 ${name ? name + ', ' + welcomeWord : welcomeWord.charAt(0).toUpperCase() + welcomeWord.slice(1)} <b>Social Organizer</b>!\n\n${welcomeBody}\n\n🌐 <a href="${SITE}">${learnMore}</a>`,
+    openBtn: `📱 ${openBtn}`,
+  };
+}
+
+const BOT_STRINGS: Record<string, BotLocale> = {
+  en: makeBotLocale(
+    'welcome to', 'You\'ve been invited to join a trusted support network.\nTap the button below to accept the invitation.',
+    'Accept Invitation', 'A platform for mutual support through trusted networks.', 'Open App', 'Learn more'),
+  ru: makeBotLocale(
+    'добро пожаловать в', 'Тебя пригласили в сеть взаимной поддержки.\nНажми кнопку ниже, чтобы принять приглашение.',
+    'Принять приглашение', 'Платформа взаимной поддержки через доверенные сети.', 'Открыть приложение', 'Узнать больше'),
+  uk: makeBotLocale(
+    'ласкаво просимо до', 'Тебе запросили приєднатися до мережі взаємної підтримки.\nНатисни кнопку нижче, щоб прийняти запрошення.',
+    'Прийняти запрошення', 'Платформа взаємної підтримки через довірені мережі.', 'Відкрити застосунок', 'Дізнатися більше'),
+  be: makeBotLocale(
+    'вітаем у', 'Цябе запрасілі далучыцца да сеткі ўзаемнай падтрымкі.\nНацісні кнопку ніжэй, каб прыняць запрашэнне.',
+    'Прыняць запрашэнне', 'Платформа ўзаемнай падтрымкі праз давераныя сеткі.', 'Адкрыць дадатак', 'Даведацца больш'),
+  es: makeBotLocale(
+    'bienvenido a', 'Te han invitado a unirte a una red de apoyo de confianza.\nToca el botón de abajo para aceptar la invitación.',
+    'Aceptar invitación', 'Una plataforma de apoyo mutuo a través de redes de confianza.', 'Abrir app', 'Saber más'),
+  fr: makeBotLocale(
+    'bienvenue sur', 'Tu as été invité(e) à rejoindre un réseau de soutien de confiance.\nAppuie sur le bouton ci-dessous pour accepter l\'invitation.',
+    'Accepter l\'invitation', 'Une plateforme d\'entraide à travers des réseaux de confiance.', 'Ouvrir l\'appli', 'En savoir plus'),
+  de: makeBotLocale(
+    'willkommen bei', 'Du wurdest eingeladen, einem vertrauenswürdigen Unterstützungsnetzwerk beizutreten.\nTippe auf den Button unten, um die Einladung anzunehmen.',
+    'Einladung annehmen', 'Eine Plattform für gegenseitige Unterstützung durch vertrauenswürdige Netzwerke.', 'App öffnen', 'Mehr erfahren'),
+  pt: makeBotLocale(
+    'bem-vindo ao', 'Você foi convidado a participar de uma rede de apoio confiável.\nToque no botão abaixo para aceitar o convite.',
+    'Aceitar convite', 'Uma plataforma de apoio mútuo através de redes de confiança.', 'Abrir app', 'Saiba mais'),
+  it: makeBotLocale(
+    'benvenuto in', 'Sei stato invitato a unirti a una rete di supporto affidabile.\nTocca il pulsante qui sotto per accettare l\'invito.',
+    'Accetta invito', 'Una piattaforma di supporto reciproco attraverso reti fidate.', 'Apri app', 'Scopri di più'),
+  pl: makeBotLocale(
+    'witaj w', 'Zaproszono Cię do sieci wzajemnego wsparcia.\nKliknij przycisk poniżej, aby przyjąć zaproszenie.',
+    'Przyjmij zaproszenie', 'Platforma wzajemnego wsparcia przez zaufane sieci.', 'Otwórz aplikację', 'Dowiedz się więcej'),
+  nl: makeBotLocale(
+    'welkom bij', 'Je bent uitgenodigd om lid te worden van een vertrouwd ondersteuningsnetwerk.\nTik op de knop hieronder om de uitnodiging te accepteren.',
+    'Uitnodiging accepteren', 'Een platform voor wederzijdse ondersteuning via vertrouwde netwerken.', 'App openen', 'Meer info'),
+  cs: makeBotLocale(
+    'vítej v', 'Byl/a jsi pozván/a do důvěryhodné podpůrné sítě.\nKlikni na tlačítko níže pro přijetí pozvánky.',
+    'Přijmout pozvánku', 'Platforma vzájemné podpory prostřednictvím důvěryhodných sítí.', 'Otevřít aplikaci', 'Zjistit více'),
+  ro: makeBotLocale(
+    'bun venit la', 'Ai fost invitat să te alături unei rețele de sprijin de încredere.\nApasă butonul de mai jos pentru a accepta invitația.',
+    'Acceptă invitația', 'O platformă de sprijin reciproc prin rețele de încredere.', 'Deschide aplicația', 'Află mai multe'),
+  tr: makeBotLocale(
+    'hoş geldin,', 'Güvenilir bir destek ağına katılmaya davet edildin.\nDaveti kabul etmek için aşağıdaki düğmeye dokun.',
+    'Daveti kabul et', 'Güvenilir ağlar aracılığıyla karşılıklı destek platformu.', 'Uygulamayı aç', 'Daha fazla bilgi'),
+  ar: makeBotLocale(
+    'مرحباً بك في', 'لقد تمت دعوتك للانضمام إلى شبكة دعم موثوقة.\nاضغط على الزر أدناه لقبول الدعوة.',
+    'قبول الدعوة', 'منصة للدعم المتبادل من خلال شبكات موثوقة.', 'فتح التطبيق', 'اعرف المزيد'),
+  he: makeBotLocale(
+    'ברוך הבא ל', 'הוזמנת להצטרף לרשת תמיכה מהימנה.\nלחץ על הכפתור למטה כדי לקבל את ההזמנה.',
+    'קבל הזמנה', 'פלטפורמה לתמיכה הדדית דרך רשתות מהימנות.', 'פתח אפליקציה', 'למידע נוסף'),
+  hi: makeBotLocale(
+    'में आपका स्वागत है,', 'आपको एक विश्वसनीय सहायता नेटवर्क से जुड़ने के लिए आमंत्रित किया गया है।\nनिमंत्रण स्वीकार करने के लिए नीचे बटन दबाएं।',
+    'निमंत्रण स्वीकार करें', 'विश्वसनीय नेटवर्क के माध्यम से पारस्परिक सहायता का मंच।', 'ऐप खोलें', 'और जानें'),
+  zh: makeBotLocale(
+    '欢迎来到', '你被邀请加入一个可信赖的互助网络。\n点击下面的按钮接受邀请。',
+    '接受邀请', '通过可信赖网络实现互助的平台。', '打开应用', '了解更多'),
+  ja: makeBotLocale(
+    'へようこそ、', '信頼できるサポートネットワークへの招待を受けました。\n下のボタンをタップして招待を受け入れてください。',
+    '招待を受ける', '信頼できるネットワークを通じた相互支援プラットフォーム。', 'アプリを開く', '詳細を見る'),
+  ko: makeBotLocale(
+    '에 오신 것을 환영합니다,', '신뢰할 수 있는 지원 네트워크에 초대되었습니다.\n아래 버튼을 눌러 초대를 수락하세요.',
+    '초대 수락', '신뢰할 수 있는 네트워크를 통한 상호 지원 플랫폼.', '앱 열기', '자세히 알아보기'),
+  th: makeBotLocale(
+    'ยินดีต้อนรับสู่', 'คุณได้รับเชิญให้เข้าร่วมเครือข่ายสนับสนุนที่เชื่อถือได้\nแตะปุ่มด้านล่างเพื่อรับคำเชิญ',
+    'รับคำเชิญ', 'แพลตฟอร์มสนับสนุนซึ่งกันและกันผ่านเครือข่ายที่เชื่อถือได้', 'เปิดแอป', 'เรียนรู้เพิ่มเติม'),
+  vi: makeBotLocale(
+    'chào mừng đến với', 'Bạn đã được mời tham gia mạng lưới hỗ trợ đáng tin cậy.\nNhấn nút bên dưới để chấp nhận lời mời.',
+    'Chấp nhận lời mời', 'Nền tảng hỗ trợ lẫn nhau thông qua mạng lưới đáng tin cậy.', 'Mở ứng dụng', 'Tìm hiểu thêm'),
+  id: makeBotLocale(
+    'selamat datang di', 'Kamu diundang untuk bergabung dengan jaringan dukungan terpercaya.\nKetuk tombol di bawah untuk menerima undangan.',
+    'Terima undangan', 'Platform dukungan bersama melalui jaringan terpercaya.', 'Buka aplikasi', 'Pelajari lebih lanjut'),
+  sv: makeBotLocale(
+    'välkommen till', 'Du har blivit inbjuden att gå med i ett pålitligt stödnätverk.\nTryck på knappen nedan för att acceptera inbjudan.',
+    'Acceptera inbjudan', 'En plattform för ömsesidigt stöd genom pålitliga nätverk.', 'Öppna appen', 'Läs mer'),
+  da: makeBotLocale(
+    'velkommen til', 'Du er blevet inviteret til at deltage i et pålideligt støttenetværk.\nTryk på knappen nedenfor for at acceptere invitationen.',
+    'Accepter invitation', 'En platform for gensidig støtte gennem pålidelige netværk.', 'Åbn appen', 'Læs mere'),
+  fi: makeBotLocale(
+    'tervetuloa palveluun', 'Sinut on kutsuttu liittymään luotettavaan tukiverkostoon.\nNapauta alla olevaa painiketta hyväksyäksesi kutsun.',
+    'Hyväksy kutsu', 'Keskinäisen tuen alusta luotettavien verkostojen kautta.', 'Avaa sovellus', 'Lue lisää'),
+  no: makeBotLocale(
+    'velkommen til', 'Du har blitt invitert til å bli med i et pålitelig støttenettverk.\nTrykk på knappen nedenfor for å akseptere invitasjonen.',
+    'Aksepter invitasjon', 'En plattform for gjensidig støtte gjennom pålitelige nettverk.', 'Åpne appen', 'Les mer'),
+  sr: makeBotLocale(
+    'добродошли у', 'Позвани сте да се придружите мрежи узајамне подршке.\nДодирните дугме испод да прихватите позив.',
+    'Прихвати позив', 'Платформа за узајамну подршку кроз мреже поверења.', 'Отвори апликацију', 'Сазнајте више'),
+};
+
 /** Handle incoming Telegram bot update (webhook) */
 export async function handleTelegramUpdate(update: TgUpdate): Promise<void> {
   const msg = update.message;
@@ -282,24 +395,8 @@ export async function handleTelegramUpdate(update: TgUpdate): Promise<void> {
     const parts = text.split(/\s+/);
     const param = parts[1]; // e.g. "invite_abc123..."
     const lang = msg.from?.language_code?.slice(0, 2) || 'en';
-    const isUk = lang === 'uk';
-    const isRu = lang === 'ru' || lang === 'be';
     const name = msg.from?.first_name || '';
-
-    const t = {
-      invite: isUk
-        ? `👋 ${name ? name + ', л' : 'Л'}аскаво просимо до <b>Social Organizer</b>!\n\nТебе запросили приєднатися до мережі взаємної підтримки.\nНатисни кнопку нижче, щоб прийняти запрошення.\n\n🌐 <a href="https://www.orginizer.com/">Дізнатися більше</a>`
-        : isRu
-        ? `👋 ${name ? name + ', д' : 'Д'}обро пожаловать в <b>Social Organizer</b>!\n\nТебя пригласили в сеть взаимной поддержки.\nНажми кнопку ниже, чтобы принять приглашение.\n\n🌐 <a href="https://www.orginizer.com/">Узнать больше</a>`
-        : `👋 ${name ? name + ', w' : 'W'}elcome to <b>Social Organizer</b>!\n\nYou've been invited to join a trusted support network.\nTap the button below to accept the invitation.\n\n🌐 <a href="https://www.orginizer.com/">Learn more</a>`,
-      acceptBtn: isUk ? '🤝 Прийняти запрошення' : isRu ? '🤝 Принять приглашение' : '🤝 Accept Invitation',
-      welcome: isUk
-        ? `👋 ${name ? name + ', л' : 'Л'}аскаво просимо до <b>Social Organizer</b>!\n\nПлатформа взаємної підтримки через довірені мережі.\n\n🌐 <a href="https://www.orginizer.com/">Дізнатися більше про проєкт</a>`
-        : isRu
-        ? `👋 ${name ? name + ', д' : 'Д'}обро пожаловать в <b>Social Organizer</b>!\n\nПлатформа взаимной поддержки через доверенные сети.\n\n🌐 <a href="https://www.orginizer.com/">Узнать больше о проекте</a>`
-        : `👋 ${name ? name + ', w' : 'W'}elcome to <b>Social Organizer</b>!\n\nA platform for mutual support through trusted networks.\n\n🌐 <a href="https://www.orginizer.com/">Learn more about the project</a>`,
-      openBtn: isUk ? '📱 Відкрити застосунок' : isRu ? '📱 Открыть приложение' : '📱 Open App',
-    };
+    const loc = BOT_STRINGS[lang] ?? BOT_STRINGS.en!;
 
     if (param?.startsWith('invite_')) {
       const inviteToken = param.slice('invite_'.length);
@@ -307,15 +404,15 @@ export async function handleTelegramUpdate(update: TgUpdate): Promise<void> {
 
       console.log(`[TG Bot] /start invite from chat ${chatId}, token: ${inviteToken.slice(0, 8)}...`);
 
-      await sendTelegramMessage(chatId, t.invite, {
-        inline_keyboard: [[{ text: t.acceptBtn, web_app: { url: webAppUrl } }]],
+      await sendTelegramMessage(chatId, loc.invite(name), {
+        inline_keyboard: [[{ text: loc.acceptBtn, web_app: { url: webAppUrl } }]],
       });
       return;
     }
 
     // Plain /start — open the app + link to landing
-    await sendTelegramMessage(chatId, t.welcome, {
-      inline_keyboard: [[{ text: t.openBtn, web_app: { url: WEB_APP_URL } }]],
+    await sendTelegramMessage(chatId, loc.welcome(name), {
+      inline_keyboard: [[{ text: loc.openBtn, web_app: { url: WEB_APP_URL } }]],
     });
     return;
   }
