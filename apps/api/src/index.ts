@@ -55,6 +55,28 @@ async function start() {
       return { status: 'ok', timestamp: new Date().toISOString() };
     });
 
+    // Manual auto-chain trigger — admin only, bypasses BullMQ
+    app.post('/api/trigger-autochain', async (req, reply) => {
+      const auth = req.headers.authorization;
+      if (!auth?.startsWith('Bearer ')) return reply.status(401).send({ error: 'Unauthorized' });
+      let userId: string | null = null;
+      try {
+        const token = auth.slice(7);
+        const payload = JSON.parse(Buffer.from(token.split('.')[1]!, 'base64').toString());
+        userId = payload.sub ?? null;
+      } catch { /* invalid token */ }
+      if (!userId || !isAdmin(userId)) return reply.status(403).send({ error: 'Forbidden' });
+
+      try {
+        const { processAutoChain } = await import('./workers/auto-chain.worker.js');
+        await processAutoChain({ id: 'manual' } as never);
+        return { ok: true, message: 'Auto-chain processed' };
+      } catch (err) {
+        console.error('[trigger-autochain] error:', err);
+        return reply.status(500).send({ error: String(err) });
+      }
+    });
+
     // Telegram Bot webhook — receives /start commands
     app.post('/api/telegram-webhook', async (req, reply) => {
       try {
