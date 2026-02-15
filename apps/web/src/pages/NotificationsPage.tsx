@@ -157,8 +157,13 @@ export function NotificationsPage() {
             <div className="space-y-2">
               {pendingIncoming.map((p) => (
                 <div key={p.id} className="flex items-center gap-2 p-2 rounded bg-white/50 dark:bg-gray-900/50">
-                  <Avatar src={p.fromUser.photoUrl} name={p.fromUser.name} size="sm" />
-                  <span className="flex-1 text-sm font-medium text-gray-900 dark:text-white truncate">{p.fromUser.name}</span>
+                  <button
+                    onClick={() => navigate(`/profile/${p.fromUser.id}`)}
+                    className="flex items-center gap-2 flex-1 min-w-0"
+                  >
+                    <Avatar src={p.fromUser.photoUrl} name={p.fromUser.name} size="sm" />
+                    <span className="flex-1 text-sm font-medium text-gray-900 dark:text-white truncate text-left">{p.fromUser.name}</span>
+                  </button>
                   <button
                     onClick={() => acceptPending.mutate({ pendingId: p.id })}
                     disabled={acceptPending.isPending}
