@@ -126,7 +126,22 @@ export const connectionRouter = router({
     }),
 
   getNetworkStats: protectedProcedure.query(async ({ ctx }) => {
-    const recipients = await findRecipientsViaBfs(ctx.db, ctx.userId, MAX_BFS_DEPTH, MAX_BFS_RECIPIENTS, []);
+    // If user has no connections, fallback to inviter's network (pending connection)
+    let bfsUserId = ctx.userId;
+    const hasConn = await ctx.db.connection.findFirst({
+      where: { OR: [{ userAId: ctx.userId }, { userBId: ctx.userId }] },
+      select: { id: true },
+    });
+    if (!hasConn) {
+      const pending = await ctx.db.pendingConnection.findFirst({
+        where: { fromUserId: ctx.userId, status: 'PENDING' },
+        select: { toUserId: true },
+        orderBy: { createdAt: 'desc' },
+      });
+      if (pending) bfsUserId = pending.toUserId;
+    }
+
+    const recipients = await findRecipientsViaBfs(ctx.db, bfsUserId, MAX_BFS_DEPTH, MAX_BFS_RECIPIENTS, []);
     const byDepth: Record<number, number> = {};
     const userIdsByDepth: Record<number, string[]> = {};
 

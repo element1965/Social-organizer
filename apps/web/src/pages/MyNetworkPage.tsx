@@ -8,7 +8,7 @@ import { useTheme } from '../hooks/useTheme';
 import { Button } from '../components/ui/button';
 import { Avatar } from '../components/ui/avatar';
 import { Spinner } from '../components/ui/spinner';
-import { Users, UserPlus, Globe, List, Wallet, Check, X, ChevronDown, ChevronUp, Clock, CheckCircle, XCircle } from 'lucide-react';
+import { Users, UserPlus, Globe, List, Wallet, Check, X, ChevronDown, ChevronUp, Clock, CheckCircle, XCircle, Layers } from 'lucide-react';
 const LazyNetworkGraph = lazy(() =>
   import('@so/graph-3d').then((m) => ({ default: m.NetworkGraph })),
 );
@@ -22,6 +22,7 @@ export function MyNetworkPage() {
   const view = (searchParams.get('view') === 'list' ? 'list' : '3d') as 'list' | '3d';
   const setView = (v: 'list' | '3d') => setSearchParams(v === '3d' ? {} : { view: v }, { replace: true });
   const [showInvitePopup, setShowInvitePopup] = useState(false);
+  const [showClusters, setShowClusters] = useState(false);
   const isDark = mode === 'dark' || (mode === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
 
   const utils = trpc.useUtils();
@@ -41,6 +42,7 @@ export function MyNetworkPage() {
     enabled: view === '3d',
     refetchInterval: 60000,
   });
+  const { data: clusters } = trpc.cluster.list.useQuery(undefined, { refetchInterval: 60000 });
 
   const byDepth = networkStats?.byDepth ?? {};
   const usersByDepth = (networkStats as any)?.usersByDepth ?? {};
@@ -59,12 +61,21 @@ export function MyNetworkPage() {
           )}
         </h1>
         <div className="flex gap-2">
-          <Button variant="outline" size="sm" onClick={() => setView(view === 'list' ? '3d' : 'list')}>
-            {view === 'list' ? <Globe className="w-4 h-4" /> : <List className="w-4 h-4" />}
-          </Button>
+          <button
+            onClick={() => setShowClusters((v) => !v)}
+            className={`w-10 h-10 rounded-full flex items-center justify-center transition-colors shadow-lg ${showClusters ? 'bg-purple-500 ring-2 ring-purple-300' : 'bg-purple-600 hover:bg-purple-500'}`}
+          >
+            <Layers className="w-4 h-4 text-white" />
+          </button>
+          <button
+            onClick={() => { setShowClusters(false); setView(view === 'list' ? '3d' : 'list'); }}
+            className="w-10 h-10 rounded-full bg-gray-600 hover:bg-gray-500 flex items-center justify-center transition-colors shadow-lg"
+          >
+            {view === 'list' ? <Globe className="w-4 h-4 text-white" /> : <List className="w-4 h-4 text-white" />}
+          </button>
           <button
             onClick={() => setShowInvitePopup(true)}
-            className="w-9 h-9 rounded-full bg-blue-600 hover:bg-blue-500 flex items-center justify-center transition-colors shadow-lg"
+            className="w-10 h-10 rounded-full bg-blue-600 hover:bg-blue-500 flex items-center justify-center transition-colors shadow-lg"
           >
             <UserPlus className="w-4 h-4 text-white" />
           </button>
@@ -73,7 +84,36 @@ export function MyNetworkPage() {
 
       <InvitePopup open={showInvitePopup} onClose={() => setShowInvitePopup(false)} />
 
-      {view === '3d' ? (
+      {showClusters ? (
+        (() => {
+          const otherClusters = clusters?.filter((cl) => !cl.isMine) ?? [];
+          return otherClusters.length === 0 ? (
+            <div className="text-center py-12">
+              <Layers className="w-12 h-12 mx-auto text-gray-300 dark:text-gray-700 mb-3" />
+              <p className="text-gray-500">{t('cluster.notInNetwork')}</p>
+            </div>
+          ) : (
+            <div className="space-y-2">
+              {otherClusters.map((cl, i) => (
+                <div
+                  key={i}
+                  className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800/50 rounded-lg cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors border border-gray-200 dark:border-gray-700"
+                  onClick={() => navigate(`/profile/${cl.rootUserId}`)}
+                >
+                  <div>
+                    <p className="text-sm font-medium text-gray-900 dark:text-white">{cl.rootUserName}</p>
+                    <p className="text-xs text-gray-500">{t('cluster.members')}: {cl.memberCount}</p>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-sm font-bold text-green-600 dark:text-green-400">${cl.totalBudget}</p>
+                    <p className="text-[10px] text-gray-400">{t('cluster.budget')}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          );
+        })()
+      ) : view === '3d' ? (
         <div className={`rounded-xl overflow-hidden relative ${isDark ? 'bg-gray-950' : 'bg-gray-100'}`} style={{ height: 'calc(100vh - 200px)' }}>
           <p className="absolute top-3 left-0 right-0 text-center text-sm font-semibold text-gray-400 dark:text-gray-500 z-10 pointer-events-none">GoodwillNet</p>
           <Suspense fallback={<div className="flex justify-center py-12"><Spinner /></div>}>
