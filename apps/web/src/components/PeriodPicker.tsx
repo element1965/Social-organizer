@@ -87,8 +87,8 @@ export function PeriodPicker({ open, onClose, value, onChange }: PeriodPickerPro
           ))}
         </div>
 
-        {/* Bottom button */}
-        <div className="shrink-0 px-4 py-4 pb-8 border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900">
+        {/* Bottom button — pb-24 to clear bottom nav bar */}
+        <div className="shrink-0 px-4 py-4 pb-24 border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900">
           <Button
             size="lg"
             className="w-full"

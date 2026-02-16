@@ -9,7 +9,6 @@ import { Button } from '../components/ui/button';
 import {
   UserPlus,
   TrendingUp,
-  HandHeart,
   Wallet,
   Check,
   X,
@@ -34,7 +33,6 @@ export function DashboardPage() {
   const utils = trpc.useUtils();
   const { data: me } = trpc.user.me.useQuery(undefined, { refetchInterval: 30000 });
   const { data: networkStats, isLoading: networkLoading } = trpc.connection.getNetworkStats.useQuery(undefined, { refetchInterval: 60000 });
-  const { data: helpStats } = trpc.stats.help.useQuery(undefined, { refetchInterval: 60000 });
   const { data: networkCapabilities } = trpc.stats.networkCapabilities.useQuery(undefined, { refetchInterval: 60000 });
 
   // Period pickers state (default: today)
@@ -73,12 +71,11 @@ export function DashboardPage() {
     ? null
     : networkByPeriod?.newConnections ?? null;
 
-  const capHelpGiven = capDays === 0
-    ? helpStats?.given
-    : capByPeriod?.helpGiven;
-  const capHelpReceived = capDays === 0
-    ? helpStats?.received
-    : capByPeriod?.helpReceived;
+  const capPeriodTotal = capDays === 0
+    ? null
+    : capByPeriod
+      ? (capByPeriod.helpGiven.totalAmount + capByPeriod.helpReceived.totalAmount)
+      : null;
 
   return (
     <div className="px-4 pt-2 pb-4 flex flex-col gap-4 relative">
@@ -232,17 +229,11 @@ export function DashboardPage() {
                   </p>
                 )}
               </div>
-              <div className="text-right">
-                <div className="flex items-center gap-1 justify-end">
-                  <HandHeart className="w-3 h-3 text-orange-600" />
-                  <span className="text-xs font-medium text-orange-600">
-                    {t('dashboard.helpGiven')} ${capHelpGiven?.totalAmount ?? 0}
-                  </span>
-                </div>
-                <span className="text-xs font-medium text-purple-600 dark:text-purple-400">
-                  {t('dashboard.helpReceived')} ${capHelpReceived?.totalAmount ?? 0}
+              {capPeriodTotal != null && (
+                <span className="text-sm font-medium text-green-600 dark:text-green-400">
+                  +${capPeriodTotal}
                 </span>
-              </div>
+              )}
             </div>
           </div>
         </CardContent>
