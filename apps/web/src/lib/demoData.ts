@@ -639,13 +639,11 @@ export function handleDemoRequest(path: string, input: unknown): unknown {
       };
 
     case 'stats.byPeriod': {
-      const days = (inp?.days as number) ?? 7;
-      const newConn = days <= 7 ? 2 : days <= 14 ? 5 : days <= 28 ? 9 : days <= 90 ? 18 : 47;
-      return {
-        newConnections: newConn,
-        helpGiven: { count: Math.ceil(days / 5), totalAmount: Math.ceil(days * 8) },
-        helpReceived: { count: Math.ceil(days / 10), totalAmount: Math.ceil(days * 12) },
-      };
+      const days = (inp?.days as number) ?? 1;
+      // Demo: total reachable is 156 people, project ~30 days old
+      const newPeople = days <= 1 ? 1 : days <= 7 ? 8 : days <= 14 ? 25 : days <= 28 ? 60 : days <= 90 ? 120 : 156;
+      const newBudget = days <= 1 ? 50 : days <= 7 ? 400 : days <= 14 ? 1200 : days <= 28 ? 3000 : days <= 90 ? 8000 : 12500;
+      return { newPeople, newBudget };
     }
 
     case 'stats.networkCapabilities':
