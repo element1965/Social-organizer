@@ -49,6 +49,7 @@ export function App() {
           <Routes>
             <Route path="/" element={<HomeRoute />} />
             <Route path="/welcome" element={<LandingPage variant={isArvut ? 'arvut' : undefined} />} />
+            <Route path="/arvut" element={<LandingPage variant="arvut" />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/onboarding" element={<OnboardingPage />} />
             <Route path="/privacy" element={<PrivacyPage />} />
