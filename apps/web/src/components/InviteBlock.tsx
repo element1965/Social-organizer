@@ -46,7 +46,7 @@ export function InviteBlock({ id }: InviteBlockProps) {
         <div className="flip-container">
           <div className={`flip-inner relative ${flipped ? 'flipped' : ''}`}>
             {/* Front: QR code */}
-            <div className="flip-front">
+            <div className={`flip-front ${flipped ? 'absolute top-0 left-0 w-full' : ''}`}>
               <button
                 onClick={() => setFlipped(true)}
                 className="w-full flex flex-col items-center gap-2 cursor-pointer"
@@ -62,7 +62,7 @@ export function InviteBlock({ id }: InviteBlockProps) {
 
             {/* Back: links + slug */}
             <div
-              className="flip-back"
+              className={`flip-back ${flipped ? '' : 'absolute top-0 left-0 w-full'}`}
               onClick={() => setFlipped(false)}
             >
               <div className="space-y-2">
