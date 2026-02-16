@@ -69,8 +69,10 @@ export async function processAutoChain(_job: Job): Promise<void> {
   const nowKyivStr = now.toLocaleString('en-US', { timeZone: 'Europe/Kyiv' });
   const todayKyiv = new Date(nowKyivStr);
   todayKyiv.setHours(0, 0, 0, 0);
+  // "Fake Kyiv" now — for comparing with sendTime (which is also fake Kyiv)
+  const nowKyiv = new Date(nowKyivStr);
   // Convert back to UTC for DB query
-  const todayUtcOffset = now.getTime() - new Date(nowKyivStr).getTime();
+  const todayUtcOffset = now.getTime() - nowKyiv.getTime();
   const todayStartUtc = new Date(todayKyiv.getTime() + todayUtcOffset);
   const todayDeliveries = await db.autoChainDelivery.findMany({
     where: { sentAt: { gte: todayStartUtc }, success: true },
@@ -147,7 +149,7 @@ export async function processAutoChain(_job: Job): Promise<void> {
       sendTime.setHours(7, 0, 0, 0); // 7:00 Kyiv
       sendTime.setMinutes(sendTime.getMinutes() + msg.sortOrder * msg.intervalMin);
 
-      if (sendTime > now) continue;
+      if (sendTime > nowKyiv) continue;
 
       // Translate message (cached per messageId + lang)
       const translatedText = await getTranslatedText(msg.id, msg.text, userLang);
