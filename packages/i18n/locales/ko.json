@@ -153,7 +153,8 @@
     "periodPast28": "최근 28일",
     "periodPast90": "최근 90일",
     "periodPast365": "최근 365일",
-    "newConnections": "+{{count}} 신규"
+    "newConnections": "+{{count}} 신규",
+    "periodPast1": "오늘"
   },
   "collection": {
     "create": "도움 신호 보내기",
@@ -395,7 +396,8 @@
     "webLinkDesc": "웹사이트 링크 — 프로젝트를 모르는 사람에게 모든 소개 정보를 제공",
     "botLinkDesc": "텔레그램으로 바로 — 모든 설명 후 앱으로 직행",
     "slugDesc": "이것은 초대 URL에 사용되는 개인 링크 ID입니다. 이것 자체가 초대가 아닙니다 — 사람들에게 보내지 마세요. 누군가를 초대하려면 위의 링크를 사용하세요.",
-    "expand": "펼치기"
+    "expand": "펼치기",
+    "showQr": "QR 보기"
   },
   "landing": {
     "painQuote": "문제가 생기면 — 혼자가 됩니다. 친구들은 모릅니다. 친구의 친구들은 — 더더욱. 하지만 그들 중 누군가는 도와줄 수 있었을 텐데.",

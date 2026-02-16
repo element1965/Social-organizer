@@ -153,7 +153,8 @@
     "periodPast28": "Últimos 28 días",
     "periodPast90": "Últimos 90 días",
     "periodPast365": "Últimos 365 días",
-    "newConnections": "+{{count}} nuevos"
+    "newConnections": "+{{count}} nuevos",
+    "periodPast1": "Hoy"
   },
   "collection": {
     "create": "Enviar señal de ayuda",
@@ -373,7 +374,8 @@
     "webLinkDesc": "Enlace al sitio web — si la persona no está familiarizada con el proyecto aún, tiene toda la información introductoria",
     "botLinkDesc": "Directo a Telegram — si ya has explicado todo y pueden ir directamente a la app",
     "slugDesc": "Este es tu ID de enlace personal para URLs de invitación. NO es una invitación en sí — no lo envíes a nadie. Usa los enlaces de arriba para invitar a alguien.",
-    "expand": "expandir"
+    "expand": "expandir",
+    "showQr": "mostrar QR"
   },
   "landing": {
     "painQuote": "Cuando surge un problema — te quedas solo. Los amigos no lo saben. Los amigos de amigos — menos aún. Pero alguien de ellos podría ayudar.",

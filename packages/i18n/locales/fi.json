@@ -153,7 +153,8 @@
     "periodPast28": "Viimeiset 28 päivää",
     "periodPast90": "Viimeiset 90 päivää",
     "periodPast365": "Viimeiset 365 päivää",
-    "newConnections": "+{{count}} uutta"
+    "newConnections": "+{{count}} uutta",
+    "periodPast1": "Tänään"
   },
   "collection": {
     "create": "Lähetä apusignaali",
@@ -395,7 +396,8 @@
     "webLinkDesc": "Verkkosivun linkki — jos henkilö ei ole vielä tutustunut projektiin, se sisältää kaiken esittelyinfon",
     "botLinkDesc": "Suoraan Telegramiin — jos olet jo selittänyt kaiken ja he voivat mennä suoraan sovellukseen",
     "slugDesc": "Tämä on henkilökohtainen linkkitunnuksesi kutsu-URL-osoitteisiin. Se EI ole kutsu itsessään — älä lähetä sitä ihmisille. Käytä yllä olevia linkkejä kutsuaksesi jonkun.",
-    "expand": "laajenna"
+    "expand": "laajenna",
+    "showQr": "näytä QR"
   },
   "landing": {
     "painQuote": "Kun ongelmia ilmenee — jäät yksin. Ystävät eivät tiedä. Tuttujen tutut — vielä vähemmän. Mutta joku heistä voisi auttaa.",

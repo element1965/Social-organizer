@@ -153,7 +153,8 @@
     "periodPast28": "Ostatnie 28 dni",
     "periodPast90": "Ostatnie 90 dni",
     "periodPast365": "Ostatnie 365 dni",
-    "newConnections": "+{{count}} nowych"
+    "newConnections": "+{{count}} nowych",
+    "periodPast1": "Dzisiaj"
   },
   "collection": {
     "create": "Wyślij sygnał o pomocy",
@@ -395,7 +396,8 @@
     "webLinkDesc": "Link do strony internetowej — jeśli osoba nie zna jeszcze projektu, zawiera wszystkie informacje wprowadzające",
     "botLinkDesc": "Prosto do Telegram — jeśli już wszystko wyjaśniłeś i mogą przejść bezpośrednio do aplikacji",
     "slugDesc": "To jest twój osobisty identyfikator linku do URL-i zaproszeń. To NIE jest samo zaproszenie — nie wysyłaj go ludziom. Użyj powyższych linków, aby kogoś zaprosić.",
-    "expand": "rozwiń"
+    "expand": "rozwiń",
+    "showQr": "pokaż QR"
   },
   "landing": {
     "painQuote": "Gdy przychodzą kłopoty — zostajesz sam. Przyjaciele nie wiedzą. Znajomi znajomych — tym bardziej. A przecież ktoś z nich mógł pomóc.",

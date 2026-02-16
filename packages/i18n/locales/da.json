@@ -153,7 +153,8 @@
     "periodPast28": "Sidste 28 dage",
     "periodPast90": "Sidste 90 dage",
     "periodPast365": "Sidste 365 dage",
-    "newConnections": "+{{count}} nye"
+    "newConnections": "+{{count}} nye",
+    "periodPast1": "I dag"
   },
   "collection": {
     "create": "Send et hjælpesignal",
@@ -395,7 +396,8 @@
     "webLinkDesc": "Link til hjemmeside — hvis personen ikke kender projektet endnu, har det al den introducerende information",
     "botLinkDesc": "Direkte til Telegram — hvis du allerede har forklaret alt og de kan gå direkte til appen",
     "slugDesc": "Dette er dit personlige link-ID til invitations-URL'er. Det er IKKE en invitation i sig selv — send det ikke til folk. Brug linkene ovenfor til at invitere nogen.",
-    "expand": "udvid"
+    "expand": "udvid",
+    "showQr": "vis QR"
   },
   "landing": {
     "painQuote": "Når problemer opstår — står du alene. Venner ved det ikke. Venners venner — endnu mindre. Men nogen af dem kunne hjælpe.",
