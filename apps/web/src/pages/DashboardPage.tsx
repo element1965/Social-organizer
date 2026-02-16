@@ -177,16 +177,16 @@ export function DashboardPage() {
             const regDay = new Date(kyivReg.getFullYear(), kyivReg.getMonth(), kyivReg.getDate());
             const dayCount = Math.floor((today.getTime() - regDay.getTime()) / (24 * 60 * 60 * 1000)) + 1;
             return (
-              <div className="flex items-center justify-center gap-1 mb-2">
-                <TrendingUp className="w-3 h-3 text-green-600" />
-                <span className="text-xs font-medium text-green-600">{t('dashboard.dayCount', { count: dayCount })}</span>
+              <div className="flex items-center justify-center gap-1.5 mb-2">
+                <TrendingUp className="w-4 h-4 text-green-600" />
+                <span className="text-base font-semibold text-green-600">{t('dashboard.dayCount', { count: dayCount })}</span>
               </div>
             );
           })()}
           <div className="p-4 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-950/30 dark:to-purple-950/30 rounded-xl">
             <div className="flex items-center gap-1.5 mb-2">
-              <Globe className="w-4 h-4 text-blue-600" />
-              <span className="text-xs text-gray-500 dark:text-gray-300">{t('dashboard.wholeNetwork')}</span>
+              <Globe className="w-5 h-5 text-blue-600" />
+              <span className="text-lg font-bold text-gray-900 dark:text-white">{t('dashboard.wholeNetwork')}</span>
               <div className="ml-auto">
                 <PeriodChip days={networkDays} onClick={() => setShowNetworkPicker(true)} />
               </div>
@@ -196,7 +196,7 @@ export function DashboardPage() {
                 {totalReachable} <span className="text-sm font-normal text-gray-500 dark:text-gray-300">{t('dashboard.people')}</span>
               </p>
               {networkNewConn != null && (
-                <span className="text-sm font-medium text-blue-600 dark:text-blue-400">
+                <span className="text-3xl font-bold text-blue-600 dark:text-blue-400">
                   {t('dashboard.newConnections', { count: networkNewConn })}
                 </span>
               )}
@@ -210,8 +210,8 @@ export function DashboardPage() {
         <CardContent className="py-4">
           <div className="p-4 bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-950/30 dark:to-emerald-950/30 rounded-xl">
             <div className="flex items-center gap-1.5 mb-2">
-              <Sparkles className="w-4 h-4 text-green-600" />
-              <span className="text-xs text-gray-500 dark:text-gray-300">{t('dashboard.networkCapabilitiesTitle')}</span>
+              <Sparkles className="w-5 h-5 text-green-600" />
+              <span className="text-lg font-bold text-gray-900 dark:text-white">{t('dashboard.networkCapabilitiesTitle')}</span>
               <div className="ml-auto">
                 <PeriodChip days={capDays} onClick={() => setShowCapPicker(true)} />
               </div>
@@ -224,7 +224,7 @@ export function DashboardPage() {
                 )}
               </p>
               {capPeriodTotal != null && (
-                <span className="text-sm font-medium text-green-600 dark:text-green-400">
+                <span className="text-3xl font-bold text-green-600 dark:text-green-400">
                   +${capPeriodTotal}
                 </span>
               )}
