@@ -9,43 +9,36 @@ export const statsRouter = router({
       const userId = ctx.userId;
       const since = new Date(Date.now() - input.days * 86400000);
 
-      // New direct connections in period
-      const newConnections = await ctx.db.connection.count({
-        where: {
-          OR: [{ userAId: userId }, { userBId: userId }],
-          createdAt: { gte: since },
-        },
-      });
-
-      // Obligations given in period
-      const obligationsGiven = await ctx.db.obligation.findMany({
-        where: { userId, createdAt: { gte: since } },
-        select: { amount: true },
-      });
-
-      // Obligations received in period (others helped user's collections)
-      const collectionsWithObligations = await ctx.db.collection.findMany({
-        where: { creatorId: userId },
-        include: {
-          obligations: {
-            where: { createdAt: { gte: since } },
-            select: { amount: true },
-          },
-        },
-      });
-
-      const givenCount = obligationsGiven.length;
-      const givenTotal = obligationsGiven.reduce((sum, o) => sum + o.amount, 0);
-      const receivedCount = collectionsWithObligations.reduce((sum, c) => sum + c.obligations.length, 0);
-      const receivedTotal = collectionsWithObligations.reduce(
-        (sum, c) => sum + c.obligations.reduce((s, o) => s + o.amount, 0),
-        0,
-      );
+      // Find the connected cluster, then count people whose first connection
+      // in the cluster was created within the period (= new people in network).
+      // Also sum their remainingBudget (= new budget added to network).
+      const result = await ctx.db.$queryRaw<Array<{ new_people: number; new_budget: number }>>`
+        WITH RECURSIVE cluster AS (
+          SELECT ${userId}::text AS user_id
+          UNION
+          SELECT CASE WHEN c."userAId" = cluster.user_id THEN c."userBId" ELSE c."userAId" END
+          FROM connections c
+          JOIN cluster ON c."userAId" = cluster.user_id OR c."userBId" = cluster.user_id
+        ),
+        user_first_conn AS (
+          SELECT
+            cluster.user_id,
+            MIN(c."createdAt") AS first_connected
+          FROM cluster
+          JOIN connections c ON c."userAId" = cluster.user_id OR c."userBId" = cluster.user_id
+          GROUP BY cluster.user_id
+        )
+        SELECT
+          COUNT(*) FILTER (WHERE ufc.first_connected >= ${since})::int AS new_people,
+          COALESCE(SUM(u."remainingBudget") FILTER (WHERE ufc.first_connected >= ${since}), 0)::float AS new_budget
+        FROM user_first_conn ufc
+        JOIN users u ON u.id = ufc.user_id
+        WHERE u."deletedAt" IS NULL
+      `;
 
       return {
-        newConnections,
-        helpGiven: { count: givenCount, totalAmount: Math.round(givenTotal) },
-        helpReceived: { count: receivedCount, totalAmount: Math.round(receivedTotal) },
+        newPeople: result[0]?.new_people || 0,
+        newBudget: Math.round(result[0]?.new_budget || 0),
       };
     }),
 

@@ -69,13 +69,11 @@ export function DashboardPage() {
   // Period data helpers
   const networkNewConn = networkDays === 0
     ? null
-    : networkByPeriod?.newConnections ?? null;
+    : networkByPeriod?.newPeople ?? null;
 
   const capPeriodTotal = capDays === 0
     ? null
-    : capByPeriod
-      ? (capByPeriod.helpGiven.totalAmount + capByPeriod.helpReceived.totalAmount)
-      : null;
+    : capByPeriod?.newBudget ?? null;
 
   return (
     <div className="px-4 pt-2 pb-4 flex flex-col gap-4 relative">
