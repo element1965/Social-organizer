@@ -6,6 +6,7 @@ import {
   sendTelegramVideo,
   SUPPORT_CHAT_ID,
   blockedCounter,
+  MORE_BUTTON,
   type TgReplyMarkup,
 } from '../services/telegram-bot.service.js';
 import { translateBroadcastMessage } from '../services/translate.service.js';
@@ -151,12 +152,15 @@ export async function processAutoChain(_job: Job): Promise<void> {
       // Translate message (cached per messageId + lang)
       const translatedText = await getTranslatedText(msg.id, msg.text, userLang);
 
-      // Build inline button if configured
-      let markup: TgReplyMarkup | undefined;
+      // Build inline buttons
+      const buttons: TgReplyMarkup['inline_keyboard'] = [];
       if (msg.buttonUrl && msg.buttonText) {
         const btnText = await getTranslatedBtn(msg.id, msg.buttonText, userLang);
-        markup = { inline_keyboard: [[{ text: btnText, url: msg.buttonUrl }]] };
+        buttons.push([{ text: btnText, url: msg.buttonUrl }]);
       }
+      const moreText = MORE_BUTTON[userLang] || MORE_BUTTON.en!;
+      buttons.push([{ text: `📖 ${moreText}`, callback_data: 'next_chain' }]);
+      const markup: TgReplyMarkup = { inline_keyboard: buttons };
 
       // Send
       const mediaSource = msg.mediaFileId || msg.mediaUrl;

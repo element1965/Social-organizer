@@ -1,4 +1,5 @@
 import { getDb } from '@so/db';
+import { translateBroadcastMessage } from './translate.service.js';
 
 const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN || '';
 const WEB_APP_URL = process.env.WEB_APP_URL || 'https://www.orginizer.com';
@@ -46,7 +47,7 @@ function isBlockedError(status: number, description?: string): boolean {
 }
 
 export interface TgReplyMarkup {
-  inline_keyboard: Array<Array<{ text: string; url?: string; web_app?: { url: string } }>>;
+  inline_keyboard: Array<Array<{ text: string; url?: string; web_app?: { url: string }; callback_data?: string }>>;
 }
 
 interface TgApiResponse {
@@ -67,6 +68,11 @@ interface TgUpdate {
       username?: string;
       language_code?: string;
     };
+  };
+  callback_query?: {
+    id: string;
+    from: { id: number; language_code?: string };
+    data?: string;
   };
 }
 
@@ -382,8 +388,134 @@ const BOT_STRINGS: Record<string, BotLocale> = {
     'Прихвати позив', 'Платформа за узајамну подршку кроз мреже поверења.', 'Отвори апликацију', 'Сазнајте више'),
 };
 
+/** "More..." button text for all supported languages */
+export const MORE_BUTTON: Record<string, string> = {
+  en: 'More...', ru: 'Ещё...', uk: 'Ще...', be: 'Яшчэ...',
+  es: 'Más...', fr: 'Suite...', de: 'Mehr...', pt: 'Mais...',
+  it: 'Altro...', pl: 'Więcej...', nl: 'Meer...', cs: 'Více...',
+  ro: 'Mai mult...', tr: 'Devamı...', ar: 'المزيد...', he: 'עוד...',
+  hi: 'और...', zh: '更多...', ja: '続き...', ko: '더보기...',
+  th: 'เพิ่มเติม...', vi: 'Thêm...', id: 'Lainnya...', sv: 'Mer...',
+  da: 'Mere...', fi: 'Lisää...', no: 'Mer...', sr: 'Још...',
+};
+
+/** Answer a Telegram callback query (dismiss loading spinner on inline button) */
+async function answerCallbackQuery(callbackQueryId: string, text?: string): Promise<void> {
+  if (!TELEGRAM_BOT_TOKEN) return;
+  await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/answerCallbackQuery`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ callback_query_id: callbackQueryId, text }),
+  }).catch(() => {});
+}
+
+/** Send the next auto-chain message to a user on demand (triggered by "More..." button) */
+export async function sendNextChainMessage(chatId: number): Promise<boolean> {
+  const db = getDb();
+
+  const acc = await db.platformAccount.findFirst({
+    where: { platform: 'TELEGRAM', platformId: String(chatId) },
+    select: { userId: true, user: { select: { language: true, createdAt: true } } },
+  });
+  if (!acc) return false;
+
+  const userLang = acc.user?.language || 'en';
+
+  // Already delivered messages
+  const delivered = await db.autoChainDelivery.findMany({
+    where: { userId: acc.userId },
+    select: { messageId: true },
+  });
+  const deliveredIds = new Set(delivered.map((d) => d.messageId));
+
+  // All active chain messages in order
+  const messages = await db.autoChainMessage.findMany({
+    where: { isActive: true },
+    orderBy: [{ dayOffset: 'asc' }, { sortOrder: 'asc' }],
+  });
+
+  // Variant filter: check if user has connections
+  const connectionCount = await db.connection.count({
+    where: { OR: [{ userAId: acc.userId }, { userBId: acc.userId }] },
+  });
+  const hasConnections = connectionCount > 0;
+
+  const nextMsg = messages.find((msg) => {
+    if (deliveredIds.has(msg.id)) return false;
+    if (msg.variant === 'invited' && !hasConnections) return false;
+    if (msg.variant === 'organic' && hasConnections) return false;
+    return true;
+  });
+
+  if (!nextMsg) return false;
+
+  // Translate
+  const translatedText = await translateBroadcastMessage(nextMsg.text, userLang).catch(() => nextMsg.text);
+
+  // Build inline keyboard
+  const buttons: TgReplyMarkup['inline_keyboard'] = [];
+  if (nextMsg.buttonUrl && nextMsg.buttonText) {
+    const rawBtn = nextMsg.buttonText;
+    const rawUrl = nextMsg.buttonUrl;
+    const btnText = await translateBroadcastMessage(rawBtn, userLang).catch(() => rawBtn);
+    buttons.push([{ text: btnText, url: rawUrl }]);
+  }
+  const moreText = MORE_BUTTON[userLang] || MORE_BUTTON.en!;
+  buttons.push([{ text: `📖 ${moreText}`, callback_data: 'next_chain' }]);
+  const markup: TgReplyMarkup = { inline_keyboard: buttons };
+
+  // Send
+  const mediaSource = nextMsg.mediaFileId || nextMsg.mediaUrl;
+  let ok = false;
+  try {
+    if (nextMsg.mediaType === 'photo' && mediaSource) {
+      ok = await sendTelegramPhoto(String(chatId), mediaSource, translatedText, markup);
+    } else if (nextMsg.mediaType === 'video' && mediaSource) {
+      ok = await sendTelegramVideo(String(chatId), mediaSource, translatedText, markup);
+    } else {
+      ok = await sendTelegramMessage(String(chatId), translatedText, markup);
+    }
+  } catch {
+    ok = false;
+  }
+
+  // Record delivery
+  try {
+    await db.autoChainDelivery.create({
+      data: { messageId: nextMsg.id, userId: acc.userId, success: ok },
+    });
+  } catch { /* unique constraint */ }
+
+  if (ok) {
+    await db.autoChainMessage.update({
+      where: { id: nextMsg.id },
+      data: { sentCount: { increment: 1 } },
+    });
+  }
+
+  return ok;
+}
+
 /** Handle incoming Telegram bot update (webhook) */
 export async function handleTelegramUpdate(update: TgUpdate): Promise<void> {
+  // Handle callback query (inline button press)
+  const cbq = update.callback_query;
+  if (cbq?.data === 'next_chain') {
+    const sent = await sendNextChainMessage(cbq.from.id);
+    if (sent) {
+      await answerCallbackQuery(cbq.id);
+    } else {
+      const lang = cbq.from.language_code?.slice(0, 2) || 'en';
+      const noMore: Record<string, string> = {
+        en: 'No more messages for now', ru: 'Пока больше нет сообщений',
+        uk: 'Поки більше немає повідомлень', es: 'No hay más mensajes por ahora',
+        fr: 'Pas de nouveaux messages', de: 'Keine weiteren Nachrichten',
+      };
+      await answerCallbackQuery(cbq.id, noMore[lang] || noMore.en);
+    }
+    return;
+  }
+
   const msg = update.message;
   if (!msg?.text) return;
 
@@ -522,7 +654,7 @@ export async function setTelegramWebhook(webhookUrl: string): Promise<boolean> {
   const res = await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/setWebhook`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ url: webhookUrl, allowed_updates: ['message'] }),
+    body: JSON.stringify({ url: webhookUrl, allowed_updates: ['message', 'callback_query'] }),
   });
 
   const json = (await res.json()) as TgApiResponse;
