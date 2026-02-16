@@ -136,11 +136,21 @@ export function LandingPage({ variant }: { variant?: 'arvut' } = {}) {
     if (inviteParam) localStorage.setItem('pendingInviteToken', inviteParam);
   }, [inviteParam]);
 
-  // Force Hebrew for Arvut variant
+  // Force Hebrew for Arvut variant, restore previous language on unmount
   useEffect(() => {
-    if (variant === 'arvut' && i18n.language?.slice(0, 2) !== 'he') {
+    if (variant !== 'arvut') return;
+    const prev = i18n.language;
+    if (prev?.slice(0, 2) !== 'he') {
       i18n.changeLanguage('he');
     }
+    return () => {
+      const saved = localStorage.getItem('language');
+      if (saved && saved !== 'he') {
+        i18n.changeLanguage(saved);
+      } else if (prev && prev.slice(0, 2) !== 'he') {
+        i18n.changeLanguage(prev);
+      }
+    };
   }, [variant, i18n]);
 
   // Build Telegram bot link with invite param if available
