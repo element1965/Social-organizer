@@ -252,7 +252,7 @@ export function LandingPage() {
               </p>
               <div className="text-6xl text-teal-500/30 absolute -bottom-12 right-0 font-serif">"</div>
             </blockquote>
-            <p className="text-gray-500 text-center mt-8 text-sm">
+            <p className="text-gray-500 dark:text-gray-300 text-center mt-8 text-sm">
               {t('landing.painSolution')}
             </p>
           </div>
@@ -266,7 +266,7 @@ export function LandingPage() {
               </p>
               <div className="text-6xl text-rose-500/30 absolute -bottom-12 right-0 font-serif">"</div>
             </blockquote>
-            <p className="text-gray-500 text-center mt-8 text-sm">
+            <p className="text-gray-500 dark:text-gray-300 text-center mt-8 text-sm">
               {t('landing.painSolution2')}
             </p>
           </div>
@@ -358,7 +358,7 @@ export function LandingPage() {
               </div>
             </div>
 
-            <p className="text-gray-500 text-sm text-center mt-10 italic">
+            <p className="text-gray-500 dark:text-gray-300 text-sm text-center mt-10 italic">
               {t('landing.howFootnote')}
             </p>
           </div>
@@ -498,7 +498,7 @@ export function LandingPage() {
 
         {/* === Footer === */}
         <footer className="px-6 pt-12 pb-24 text-center border-t border-white/5">
-          <p className="text-gray-500 text-sm mb-3">{t('landing.footer')}</p>
+          <p className="text-gray-500 dark:text-gray-300 text-sm mb-3">{t('landing.footer')}</p>
           <div className="flex items-center justify-center gap-4 mb-8">
             <a
               href="https://github.com/element1965/Social-organizer"

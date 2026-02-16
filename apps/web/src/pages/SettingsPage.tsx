@@ -139,7 +139,7 @@ export function SettingsPage() {
                   </button>
                 </div>
               )}
-              {me?.email && <p className="text-sm text-gray-500 truncate">{me.email}</p>}
+              {me?.email && <p className="text-sm text-gray-500 dark:text-gray-300 truncate">{me.email}</p>}
             </div>
           </div>
         </CardContent>
@@ -148,15 +148,15 @@ export function SettingsPage() {
       <Card>
         <CardHeader>
           <div className="flex items-center gap-2">
-            <Users className="w-5 h-5 text-gray-500" />
+            <Users className="w-5 h-5 text-gray-500 dark:text-gray-300" />
             <h2 className="font-semibold text-gray-900 dark:text-white">{t('settings.contacts')}</h2>
           </div>
-          <p className="text-xs text-gray-500 mt-1">{t('settings.contactsDesc')}</p>
+          <p className="text-xs text-gray-500 dark:text-gray-300 mt-1">{t('settings.contactsDesc')}</p>
           <div className="flex items-center gap-2 mt-2">
-            <EyeOff className="w-4 h-4 text-gray-500 shrink-0" />
+            <EyeOff className="w-4 h-4 text-gray-500 dark:text-gray-300 shrink-0" />
             <span className="text-sm font-medium text-gray-700 dark:text-gray-300">{t('settings.hideContacts')}</span>
             <Tooltip content={t('settings.hideContactsHint')} side="bottom">
-              <button type="button" className="text-gray-400 hover:text-gray-500"><HelpCircle className="w-3.5 h-3.5" /></button>
+              <button type="button" className="text-gray-400 hover:text-gray-500 dark:text-gray-300"><HelpCircle className="w-3.5 h-3.5" /></button>
             </Tooltip>
             <button onClick={() => updateHideContacts.mutate({ hideContacts: !settings?.hideContacts })} className={cn('w-11 h-6 rounded-full transition-colors relative shrink-0 ml-auto', settings?.hideContacts ? 'bg-blue-600' : 'bg-gray-300 dark:bg-gray-600')}>
               <div className={cn('w-5 h-5 rounded-full bg-white shadow absolute top-0.5 transition-all', settings?.hideContacts ? 'left-5' : 'left-0.5')} />
@@ -171,7 +171,7 @@ export function SettingsPage() {
             const validationError = displayVal.trim() ? validateContact(contact.type, displayVal) : null;
             return (
               <div key={contact.type} className="relative">
-                <SocialIcon type={contact.icon} className={`w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none ${isTelegram ? 'text-blue-500' : 'text-gray-500'}`} />
+                <SocialIcon type={contact.icon} className={`w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none ${isTelegram ? 'text-blue-500' : 'text-gray-500 dark:text-gray-300'}`} />
                 <Input
                   id={`contact-${contact.type}`}
                   placeholder={contact.placeholder}
@@ -199,18 +199,18 @@ export function SettingsPage() {
 
       <Card><CardContent className="py-3">
         <div className="flex items-center gap-3">
-          <Globe className="w-5 h-5 text-gray-500 shrink-0" />
+          <Globe className="w-5 h-5 text-gray-500 dark:text-gray-300 shrink-0" />
           <Select id="language" label={t('settings.language')} value={i18n.language?.slice(0, 2) || 'en'} onChange={(e) => handleLanguageChange(e.target.value)} options={Object.entries(languageNames).map(([code, name]) => ({ value: code, label: name }))} />
-          <Mic className="w-5 h-5 text-gray-500 shrink-0 ml-2" />
+          <Mic className="w-5 h-5 text-gray-500 dark:text-gray-300 shrink-0 ml-2" />
           <Select id="voice-gender" label={t('settings.voiceGender')} value={settings?.voiceGender || 'FEMALE'} onChange={(e) => updateVoiceGender.mutate({ voiceGender: e.target.value as 'FEMALE' | 'MALE' })} options={[{ value: 'FEMALE', label: t('settings.voiceFemale') }, { value: 'MALE', label: t('settings.voiceMale') }]} />
         </div>
       </CardContent></Card>
 
       <Card><CardContent className="py-3">
-        <div className="flex items-center gap-3 mb-2"><Palette className="w-5 h-5 text-gray-500" /><span className="text-sm font-medium text-gray-700 dark:text-gray-300">{t('settings.theme')}</span></div>
+        <div className="flex items-center gap-3 mb-2"><Palette className="w-5 h-5 text-gray-500 dark:text-gray-300" /><span className="text-sm font-medium text-gray-700 dark:text-gray-300">{t('settings.theme')}</span></div>
         <div className="grid grid-cols-3 gap-2">
           {(['LIGHT', 'DARK', 'SYSTEM'] as const).map((th) => (
-            <button key={th} onClick={() => handleThemeChange(th)} className={cn('py-2 rounded-lg text-sm font-medium border transition-colors', mode === th.toLowerCase() ? 'border-blue-600 bg-blue-50 dark:bg-blue-950/30 text-blue-600' : 'border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400')}>
+            <button key={th} onClick={() => handleThemeChange(th)} className={cn('py-2 rounded-lg text-sm font-medium border transition-colors', mode === th.toLowerCase() ? 'border-blue-600 bg-blue-50 dark:bg-blue-950/30 text-blue-600' : 'border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300')}>
               {th === 'LIGHT' ? t('settings.light') : th === 'DARK' ? t('settings.dark') : t('settings.system')}
             </button>
           ))}
@@ -219,7 +219,7 @@ export function SettingsPage() {
 
       <Card><CardContent className="py-3"><div className="flex items-center gap-4">
         <div className="flex items-center gap-2 flex-1 min-w-0">
-          <Volume2 className="w-4 h-4 text-gray-500 shrink-0" />
+          <Volume2 className="w-4 h-4 text-gray-500 dark:text-gray-300 shrink-0" />
           <span className="text-sm font-medium text-gray-700 dark:text-gray-300 truncate">{t('settings.sound')}</span>
           <button onClick={() => updateSound.mutate({ soundEnabled: !settings?.soundEnabled })} className={cn('w-11 h-6 rounded-full transition-colors relative shrink-0', settings?.soundEnabled ? 'bg-blue-600' : 'bg-gray-300 dark:bg-gray-600')}>
             <div className={cn('w-5 h-5 rounded-full bg-white shadow absolute top-0.5 transition-all', settings?.soundEnabled ? 'left-5' : 'left-0.5')} />
@@ -227,7 +227,7 @@ export function SettingsPage() {
         </div>
         {push.isSupported && (
           <div className="flex items-center gap-2 flex-1 min-w-0">
-            <Bell className="w-4 h-4 text-gray-500 shrink-0" />
+            <Bell className="w-4 h-4 text-gray-500 dark:text-gray-300 shrink-0" />
             <span className="text-sm font-medium text-gray-700 dark:text-gray-300 truncate">{t('settings.push')}</span>
             <button onClick={() => push.isSubscribed ? push.unsubscribe() : push.subscribe()} disabled={push.loading} className={cn('w-11 h-6 rounded-full transition-colors relative shrink-0', push.isSubscribed ? 'bg-blue-600' : 'bg-gray-300 dark:bg-gray-600')}>
               <div className={cn('w-5 h-5 rounded-full bg-white shadow absolute top-0.5 transition-all', push.isSubscribed ? 'left-5' : 'left-0.5')} />
@@ -237,10 +237,10 @@ export function SettingsPage() {
       </div></CardContent></Card>
 
       <Card><CardContent className="py-3">
-        <div className="flex items-center gap-3 mb-2"><Type className="w-5 h-5 text-gray-500" /><span className="text-sm font-medium text-gray-700 dark:text-gray-300">{t('settings.fontSize')}</span></div>
+        <div className="flex items-center gap-3 mb-2"><Type className="w-5 h-5 text-gray-500 dark:text-gray-300" /><span className="text-sm font-medium text-gray-700 dark:text-gray-300">{t('settings.fontSize')}</span></div>
         <div className="grid grid-cols-2 gap-2">
           {([{ value: 1.0, label: 'settings.fontStandard' }, { value: 1.25, label: 'settings.fontLarge' }] as const).map((opt) => (
-            <button key={opt.value} onClick={() => { updateFontScale.mutate({ fontScale: opt.value }); document.documentElement.style.fontSize = `${opt.value * 100}%`; }} className={cn('py-2 rounded-lg text-sm font-medium border transition-colors', (settings?.fontScale ?? 1.0) === opt.value ? 'border-blue-600 bg-blue-50 dark:bg-blue-950/30 text-blue-600' : 'border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400')}>
+            <button key={opt.value} onClick={() => { updateFontScale.mutate({ fontScale: opt.value }); document.documentElement.style.fontSize = `${opt.value * 100}%`; }} className={cn('py-2 rounded-lg text-sm font-medium border transition-colors', (settings?.fontScale ?? 1.0) === opt.value ? 'border-blue-600 bg-blue-50 dark:bg-blue-950/30 text-blue-600' : 'border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300')}>
               {t(opt.label)}
             </button>
           ))}
@@ -249,14 +249,14 @@ export function SettingsPage() {
 
       <Card><CardContent className="py-3">
         <div className="flex items-center gap-3 mb-2">
-          <Link className="w-5 h-5 text-gray-500" />
+          <Link className="w-5 h-5 text-gray-500 dark:text-gray-300" />
           <span className="text-sm font-medium text-gray-700 dark:text-gray-300">{t('settings.linkAccount')}</span>
           <Tooltip content={t('settings.linkAccountHint')} side="bottom">
-            <button type="button" className="text-gray-400 hover:text-gray-500"><HelpCircle className="w-3.5 h-3.5" /></button>
+            <button type="button" className="text-gray-400 hover:text-gray-500 dark:text-gray-300"><HelpCircle className="w-3.5 h-3.5" /></button>
           </Tooltip>
         </div>
         {generateCode.data ? (
-          <div className="text-center py-2"><p className="text-3xl font-mono font-bold text-blue-600 tracking-widest">{generateCode.data.code}</p><p className="text-xs text-gray-500 mt-1">{t('settings.codeExpires')}</p></div>
+          <div className="text-center py-2"><p className="text-3xl font-mono font-bold text-blue-600 tracking-widest">{generateCode.data.code}</p><p className="text-xs text-gray-500 dark:text-gray-300 mt-1">{t('settings.codeExpires')}</p></div>
         ) : <Button variant="outline" size="sm" onClick={() => generateCode.mutate()} className="w-full">{t('settings.generateCode')}</Button>}
       </CardContent></Card>
 

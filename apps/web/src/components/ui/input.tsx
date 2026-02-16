@@ -18,7 +18,7 @@ export function Input({ className, label, error, hint, id, ...props }: InputProp
           </label>
           {hint && (
             <Tooltip content={hint}>
-              <button type="button" className="text-gray-400 hover:text-gray-500 focus:outline-none">
+              <button type="button" className="text-gray-400 hover:text-gray-500 dark:text-gray-300 focus:outline-none">
                 <HelpCircle className="w-4 h-4" />
               </button>
             </Tooltip>

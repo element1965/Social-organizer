@@ -72,7 +72,7 @@ export function DashboardPage() {
           </div>
           <div className="text-left">
             <p className="text-lg font-bold text-gray-900 dark:text-white">{me?.name}</p>
-            <p className="text-xs text-gray-500">{t('settings.title')}</p>
+            <p className="text-xs text-gray-500 dark:text-gray-300">{t('settings.title')}</p>
           </div>
         </button>
         <div className="flex items-center gap-2">
@@ -100,7 +100,7 @@ export function DashboardPage() {
             <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-2">
               {t('dashboard.addFirstConnection')}
             </h2>
-            <p className="text-sm text-gray-500 mb-4">
+            <p className="text-sm text-gray-500 dark:text-gray-300 mb-4">
               {t('dashboard.addFirstConnectionDesc')}
             </p>
             <Button className="w-full" size="lg" onClick={() => navigate('/network')}>
@@ -122,10 +122,10 @@ export function DashboardPage() {
                 <h3 className="text-lg font-bold text-gray-900 dark:text-white">{t('dashboard.communityChat')}</h3>
               </div>
               <button onClick={() => setShowTgChatPopup(false)} className="p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800">
-                <X className="w-5 h-5 text-gray-500" />
+                <X className="w-5 h-5 text-gray-500 dark:text-gray-300" />
               </button>
             </div>
-            <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">{t('dashboard.communityChatDesc')}</p>
+            <p className="text-sm text-gray-600 dark:text-gray-300 mb-4">{t('dashboard.communityChatDesc')}</p>
             <a
               href="https://t.me/+729vJwVZ5ltlMWRk"
               target="_blank"
@@ -152,13 +152,13 @@ export function DashboardPage() {
                   return (
                     <>
                       <div className="min-w-0">
-                        <p className="text-sm text-gray-500">{t('dashboard.totalNetwork')}</p>
+                        <p className="text-sm text-gray-500 dark:text-gray-300">{t('dashboard.totalNetwork')}</p>
                         <p className={`${sz} font-bold text-gray-900 dark:text-white`}>
-                          {totalReachable} <span className="text-sm font-normal text-gray-500">{t('dashboard.people')}</span>
+                          {totalReachable} <span className="text-sm font-normal text-gray-500 dark:text-gray-300">{t('dashboard.people')}</span>
                         </p>
                       </div>
                       <div className="text-right min-w-0">
-                        <p className="text-sm text-gray-500">{t('dashboard.currentCapabilities')}</p>
+                        <p className="text-sm text-gray-500 dark:text-gray-300">{t('dashboard.currentCapabilities')}</p>
                         <p className={`${sz} font-bold text-green-600 dark:text-green-400`}>{rightStr}</p>
                       </div>
                     </>
@@ -191,9 +191,9 @@ export function DashboardPage() {
             <div className="p-4 bg-gradient-to-b from-blue-50 to-indigo-50 dark:from-blue-950/30 dark:to-indigo-950/30 rounded-xl">
               <div className="flex items-center gap-1.5 mb-2">
                 <Wallet className="w-4 h-4 text-blue-600" />
-                <span className="text-xs text-gray-500">{t('dashboard.yourContribution')}</span>
+                <span className="text-xs text-gray-500 dark:text-gray-300">{t('dashboard.yourContribution')}</span>
                 <Tooltip content={t('dashboard.myCapabilitiesHint')} side="bottom">
-                  <button type="button" className="text-gray-400 hover:text-gray-500"><HelpCircle className="w-3.5 h-3.5" /></button>
+                  <button type="button" className="text-gray-400 hover:text-gray-500 dark:text-gray-300"><HelpCircle className="w-3.5 h-3.5" /></button>
                 </Tooltip>
               </div>
               {editingBudget ? (

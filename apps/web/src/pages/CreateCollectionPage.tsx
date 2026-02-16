@@ -102,7 +102,7 @@ export function CreateCollectionPage() {
           <h2 className="text-xl font-bold text-gray-900 dark:text-white text-center">
             {t('create.notEnoughConnectionsTitle')}
           </h2>
-          <p className="text-sm text-gray-600 dark:text-gray-400 text-center leading-relaxed">
+          <p className="text-sm text-gray-600 dark:text-gray-300 text-center leading-relaxed">
             {t('create.notEnoughConnectionsText', { min: MIN_CONNECTIONS_TO_CREATE })}
           </p>
           <div className="flex items-center justify-center gap-2 py-2">
@@ -110,7 +110,7 @@ export function CreateCollectionPage() {
             <div className="text-gray-400">/</div>
             <div className="text-3xl font-bold text-gray-400">{MIN_CONNECTIONS_TO_CREATE}</div>
           </div>
-          <p className="text-sm text-center text-gray-500">
+          <p className="text-sm text-center text-gray-500 dark:text-gray-300">
             {t('create.connectionsRemaining', { count: connectionsNeeded })}
           </p>
           <div className="space-y-2 pt-2">
@@ -142,7 +142,7 @@ export function CreateCollectionPage() {
           <h2 className="text-xl font-bold text-gray-900 dark:text-white text-center">
             {t('create.entryWarningTitle')}
           </h2>
-          <p className="text-sm text-gray-600 dark:text-gray-400 text-center leading-relaxed">
+          <p className="text-sm text-gray-600 dark:text-gray-300 text-center leading-relaxed">
             {t('create.entryWarningText')}
           </p>
           <div className="space-y-2 pt-2">
@@ -164,10 +164,10 @@ export function CreateCollectionPage() {
       <Card>
         <CardContent className="space-y-4 py-4">
           <div className="grid grid-cols-2 gap-2">
-            <button onClick={() => setType('EMERGENCY')} className={`p-3 rounded-lg border text-center text-sm font-medium transition-colors ${type === 'EMERGENCY' ? 'border-blue-600 bg-blue-50 dark:bg-blue-950/30 text-blue-600' : 'border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400'}`}>
+            <button onClick={() => setType('EMERGENCY')} className={`p-3 rounded-lg border text-center text-sm font-medium transition-colors ${type === 'EMERGENCY' ? 'border-blue-600 bg-blue-50 dark:bg-blue-950/30 text-blue-600' : 'border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300'}`}>
               {t('create.emergency')}
             </button>
-            <button onClick={() => setType('REGULAR')} className={`p-3 rounded-lg border text-center text-sm font-medium transition-colors ${type === 'REGULAR' ? 'border-blue-600 bg-blue-50 dark:bg-blue-950/30 text-blue-600' : 'border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400'}`}>
+            <button onClick={() => setType('REGULAR')} className={`p-3 rounded-lg border text-center text-sm font-medium transition-colors ${type === 'REGULAR' ? 'border-blue-600 bg-blue-50 dark:bg-blue-950/30 text-blue-600' : 'border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300'}`}>
               {t('create.regular')}
             </button>
           </div>
@@ -200,7 +200,7 @@ export function CreateCollectionPage() {
 
             {/* USD conversion preview */}
             {inputCurrency !== 'USD' && Number(amount) > 0 && preview?.result != null && (
-              <div className="flex items-center gap-2 text-sm text-gray-500">
+              <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-300">
                 <ArrowRight className="w-4 h-4" />
                 <span>≈ ${preview.result} USD</span>
               </div>
@@ -263,7 +263,7 @@ export function CreateCollectionPage() {
               <div className="flex items-center justify-center gap-6">
                 <div className="text-center min-w-[70px]">
                   <p className="text-xl font-bold text-green-600 dark:text-green-400">${givenAmt}</p>
-                  <p className="text-[11px] text-gray-500">{t('dashboard.helpGiven')}</p>
+                  <p className="text-[11px] text-gray-500 dark:text-gray-300">{t('dashboard.helpGiven')}</p>
                 </div>
                 <div className="relative">
                   <svg viewBox="0 0 200 110" className="w-28 h-auto">
@@ -281,7 +281,7 @@ export function CreateCollectionPage() {
                 </div>
                 <div className="text-center min-w-[70px]">
                   <p className="text-xl font-bold text-blue-600 dark:text-blue-400">${receivedAmt}</p>
-                  <p className="text-[11px] text-gray-500">{t('dashboard.helpReceived')}</p>
+                  <p className="text-[11px] text-gray-500 dark:text-gray-300">{t('dashboard.helpReceived')}</p>
                 </div>
               </div>
             </CardContent>
@@ -300,7 +300,7 @@ export function CreateCollectionPage() {
           {!myCollections ? (
             <div className="flex justify-center py-4"><Spinner /></div>
           ) : myCollections.length === 0 ? (
-            <p className="text-sm text-gray-500 text-center py-4">
+            <p className="text-sm text-gray-500 dark:text-gray-300 text-center py-4">
               {t('dashboard.noCollections')}
             </p>
           ) : (
@@ -326,7 +326,7 @@ export function CreateCollectionPage() {
                       </span>
                     </div>
                     {hasGoal && <Progress value={current} max={col.amount!} className="mt-1" />}
-                    <div className="text-xs text-gray-500 mt-1">
+                    <div className="text-xs text-gray-500 dark:text-gray-300 mt-1">
                       {col._count.obligations} {t('dashboard.intentions')}
                     </div>
                   </button>
@@ -348,7 +348,7 @@ export function CreateCollectionPage() {
           {!myObligations ? (
             <div className="flex justify-center py-4"><Spinner /></div>
           ) : myObligations.length === 0 ? (
-            <p className="text-sm text-gray-500 text-center py-4">
+            <p className="text-sm text-gray-500 dark:text-gray-300 text-center py-4">
               {t('dashboard.noIntentions')}
             </p>
           ) : (
@@ -376,7 +376,7 @@ export function CreateCollectionPage() {
                           ${Math.round((obl.collection.creator as any).remainingBudget ?? 0)}
                         </span>
                       </div>
-                      <p className="text-xs text-gray-500">{obl.amount} {obl.collection.currency}</p>
+                      <p className="text-xs text-gray-500 dark:text-gray-300">{obl.amount} {obl.collection.currency}</p>
                     </div>
                   </div>
                   <Button variant="ghost" size="sm" onClick={() => navigate(`/collection/${obl.collectionId}`)}>
@@ -397,8 +397,8 @@ export function CreateCollectionPage() {
               <AlertTriangle className="w-6 h-6 text-yellow-500 shrink-0" />
               <h3 className="text-lg font-bold text-gray-900 dark:text-white">{t('create.confirmTitle')}</h3>
             </div>
-            <p className="text-sm text-gray-600 dark:text-gray-400">{t('create.confirmText')}</p>
-            <p className="text-sm text-gray-600 dark:text-gray-400">{t('create.confirmPayment')}</p>
+            <p className="text-sm text-gray-600 dark:text-gray-300">{t('create.confirmText')}</p>
+            <p className="text-sm text-gray-600 dark:text-gray-300">{t('create.confirmPayment')}</p>
             <label className="flex items-center gap-2 cursor-pointer">
               <input
                 type="checkbox"

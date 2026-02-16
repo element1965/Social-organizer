@@ -278,7 +278,7 @@ export function ChatAssistant() {
               onClick={() => setViewState('collapsed')}
               className="p-1 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full"
             >
-              <X className="w-5 h-5 text-gray-500" />
+              <X className="w-5 h-5 text-gray-500 dark:text-gray-300" />
             </button>
           </div>
 
@@ -286,7 +286,7 @@ export function ChatAssistant() {
           <div className="flex-1 overflow-y-auto p-4 space-y-3 min-h-[200px]">
             {messages.length === 0 && (
               <div className="text-center py-4">
-                <p className="text-sm text-gray-500 mb-3">
+                <p className="text-sm text-gray-500 dark:text-gray-300 mb-3">
                   {t('chat.welcomeMessage')}
                 </p>
                 <div className="flex flex-wrap gap-2 justify-center">
@@ -317,7 +317,7 @@ export function ChatAssistant() {
               </div>
             ))}
             {isLoading && (
-              <div className="flex items-center gap-2 text-gray-500">
+              <div className="flex items-center gap-2 text-gray-500 dark:text-gray-300">
                 <Loader2 className="w-4 h-4 animate-spin" />
                 <span className="text-sm">{t('common.loading')}</span>
               </div>
@@ -334,7 +334,7 @@ export function ChatAssistant() {
                 "p-2 rounded-full shrink-0 transition-colors mr-1",
                 isListening
                   ? "bg-red-100 dark:bg-red-900/30 text-red-600 animate-pulse"
-                  : "bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700",
+                  : "bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700",
                 isLoading && "opacity-50 cursor-not-allowed"
               )}
               aria-label={isListening ? t('chat.stopListening') : t('chat.startListening')}

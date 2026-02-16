@@ -98,11 +98,11 @@ export function RequiredInfoGate({ children }: { children: React.ReactNode }) {
                 <MessageCircle className="w-6 h-6 text-blue-500" />
                 <h3 className="text-lg font-bold text-gray-900 dark:text-white">{t('requiredInfo.contactsTitle')}</h3>
               </div>
-              <p className="text-sm text-gray-600 dark:text-gray-400">{t('requiredInfo.contactsText')}</p>
+              <p className="text-sm text-gray-600 dark:text-gray-300">{t('requiredInfo.contactsText')}</p>
               <div className="space-y-3">
                 {CONTACT_FIELDS.map((field) => (
                   <div key={field.type} className="flex items-center gap-2">
-                    <SocialIcon type={field.type} className="w-5 h-5 text-gray-500 shrink-0" />
+                    <SocialIcon type={field.type} className="w-5 h-5 text-gray-500 dark:text-gray-300 shrink-0" />
                     <Input
                       value={contacts[field.type] || ''}
                       onChange={(e) => setContacts(prev => ({ ...prev, [field.type]: e.target.value }))}
@@ -115,7 +115,7 @@ export function RequiredInfoGate({ children }: { children: React.ReactNode }) {
               </div>
               <p className={cn(
                 'text-sm font-medium',
-                contactsValid ? 'text-green-600 dark:text-green-400' : 'text-gray-500'
+                contactsValid ? 'text-green-600 dark:text-green-400' : 'text-gray-500 dark:text-gray-300'
               )}>
                 {t('requiredInfo.contactsFilled', { count: filledContactsCount })}
               </p>
@@ -136,7 +136,7 @@ export function RequiredInfoGate({ children }: { children: React.ReactNode }) {
                 <Wallet className="w-6 h-6 text-blue-500" />
                 <h3 className="text-lg font-bold text-gray-900 dark:text-white">{t('requiredInfo.budgetTitle')}</h3>
               </div>
-              <p className="text-sm text-gray-600 dark:text-gray-400">{t('requiredInfo.budgetText')}</p>
+              <p className="text-sm text-gray-600 dark:text-gray-300">{t('requiredInfo.budgetText')}</p>
               <div className="flex gap-2">
                 <Input
                   type="number"
@@ -155,7 +155,7 @@ export function RequiredInfoGate({ children }: { children: React.ReactNode }) {
                 />
               </div>
               {budgetCurrency !== 'USD' && preview && Number(budgetAmount) > 0 && (
-                <p className="text-sm text-gray-500">≈ ${preview.result} USD</p>
+                <p className="text-sm text-gray-500 dark:text-gray-300">≈ ${preview.result} USD</p>
               )}
               <Button
                 className="w-full"

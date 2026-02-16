@@ -104,7 +104,7 @@ export function OnboardingPage() {
         <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
           {t(current.titleKey)}
         </h2>
-        <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">
+        <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed">
           {t(current.textKey)}
         </p>
 
@@ -113,7 +113,7 @@ export function OnboardingPage() {
           <div className="w-full max-w-xs space-y-3 mt-6">
             {CONTACT_FIELDS.map((field) => (
               <div key={field.type} className="flex items-center gap-2">
-                <SocialIcon type={field.type} className="w-5 h-5 text-gray-500 shrink-0" />
+                <SocialIcon type={field.type} className="w-5 h-5 text-gray-500 dark:text-gray-300 shrink-0" />
                 <Input
                   value={contacts[field.type] || ''}
                   onChange={(e) => setContacts(prev => ({ ...prev, [field.type]: e.target.value }))}
@@ -125,7 +125,7 @@ export function OnboardingPage() {
             ))}
             <p className={cn(
               'text-sm font-medium',
-              contactsValid ? 'text-green-600 dark:text-green-400' : 'text-gray-500'
+              contactsValid ? 'text-green-600 dark:text-green-400' : 'text-gray-500 dark:text-gray-300'
             )}>
               {t('onboarding.contactsFilled', { count: filledContactsCount })}
             </p>
@@ -153,7 +153,7 @@ export function OnboardingPage() {
               />
             </div>
             {budgetCurrency !== 'USD' && preview && Number(budgetAmount) > 0 && (
-              <p className="text-sm text-gray-500">≈ ${preview.result} USD</p>
+              <p className="text-sm text-gray-500 dark:text-gray-300">≈ ${preview.result} USD</p>
             )}
             <p className="text-xs text-gray-400">{t('onboarding.budgetNote')}</p>
           </div>
@@ -179,7 +179,7 @@ export function OnboardingPage() {
               {t('onboarding.next')}
             </Button>
             {!contactsValid && (
-              <p className="text-sm text-gray-500 text-center">{t('onboarding.contactsRequired')}</p>
+              <p className="text-sm text-gray-500 dark:text-gray-300 text-center">{t('onboarding.contactsRequired')}</p>
             )}
           </div>
         ) : isBudgetStep ? (

@@ -20,7 +20,7 @@ export function HandshakePath({ path, onUserClick, compact = false }: HandshakeP
 
   if (compact) {
     return (
-      <div className="flex items-center gap-1 text-xs text-gray-500 dark:text-gray-400">
+      <div className="flex items-center gap-1 text-xs text-gray-500 dark:text-gray-300">
         <span>{path.length - 1}</span>
         <span>🤝</span>
       </div>
@@ -58,7 +58,7 @@ export function HandshakePath({ path, onUserClick, compact = false }: HandshakeP
                 )}
               </button>
               {!isLast && (
-                <ChevronRight className="w-4 h-4 text-gray-300 dark:text-gray-600 shrink-0 -mx-0.5" />
+                <ChevronRight className="w-4 h-4 text-gray-300 dark:text-gray-300 shrink-0 -mx-0.5" />
               )}
             </div>
           );

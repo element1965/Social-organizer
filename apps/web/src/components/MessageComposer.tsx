@@ -145,7 +145,7 @@ export function MessageComposer({ value, onChange, disabled }: MessageComposerPr
 
       {/* Button link */}
       <div className="space-y-2">
-        <div className="flex items-center gap-1.5 text-xs text-gray-500 dark:text-gray-400">
+        <div className="flex items-center gap-1.5 text-xs text-gray-500 dark:text-gray-300">
           <Link className="w-3.5 h-3.5" />
           {t('broadcast.buttonLink')}
         </div>

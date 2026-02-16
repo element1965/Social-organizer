@@ -76,7 +76,7 @@ export function ProfilePage() {
 
   if (isOwn) return null;
   if (isLoading) return <div className="flex justify-center py-12"><Spinner /></div>;
-  if (!user) return <div className="p-4 text-center text-gray-500">{t('common.notFound')}</div>;
+  if (!user) return <div className="p-4 text-center text-gray-500 dark:text-gray-300">{t('common.notFound')}</div>;
 
   const registrationDate = user.createdAt
     ? new Date(user.createdAt).toLocaleDateString(i18n.language, { year: 'numeric', month: 'long', day: 'numeric' })
@@ -121,8 +121,8 @@ export function ProfilePage() {
         {!editingNickname && nicknameData?.nickname && (
           <p className="text-xs text-gray-400 mt-0.5">{nicknameData.nickname}</p>
         )}
-        {user.bio && <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">{user.bio}</p>}
-        {user.phone && <p className="text-sm text-gray-500 mt-1">{user.phone}</p>}
+        {user.bio && <p className="text-sm text-gray-600 dark:text-gray-300 mt-1">{user.bio}</p>}
+        {user.phone && <p className="text-sm text-gray-500 dark:text-gray-300 mt-1">{user.phone}</p>}
         {registrationDate && (
           <div className="flex items-center gap-1.5 mt-2 text-xs text-gray-400">
             <Calendar className="w-3.5 h-3.5" />
@@ -209,7 +209,7 @@ export function ProfilePage() {
       {pathData?.path && pathData.path.length > 1 && (
         <Card>
           <CardContent className="py-3">
-            <p className="text-xs text-gray-500 mb-2">{t('profile.connectionPath')}</p>
+            <p className="text-xs text-gray-500 dark:text-gray-300 mb-2">{t('profile.connectionPath')}</p>
             <HandshakePath path={pathData.path} onUserClick={(id) => navigate(`/profile/${id}`)} />
           </CardContent>
         </Card>
@@ -228,7 +228,7 @@ export function ProfilePage() {
                 {t('profile.addDirect')}
               </button>
             ) : directStatus.status === 'pending' ? (
-              <p className="text-center text-sm text-gray-500">{t('profile.directRequestSent')}</p>
+              <p className="text-center text-sm text-gray-500 dark:text-gray-300">{t('profile.directRequestSent')}</p>
             ) : null}
           </CardContent>
         </Card>
@@ -239,7 +239,7 @@ export function ProfilePage() {
           <div className="flex items-center gap-3">
             <Wallet className="w-5 h-5 text-green-500" />
             <div>
-              <p className="text-xs text-gray-500">{t('profile.currentCapability')}</p>
+              <p className="text-xs text-gray-500 dark:text-gray-300">{t('profile.currentCapability')}</p>
               <p className="text-lg font-bold text-green-600 dark:text-green-400">
                 ${Math.round(user.remainingBudget ?? 0)}
               </p>
@@ -259,7 +259,7 @@ export function ProfilePage() {
               <span className="text-sm font-medium text-gray-700 dark:text-gray-300 flex-1 text-left">
                 {t('dashboard.handshakeOrdinal', { depth: 1 })}
               </span>
-              <span className="text-xs text-gray-500">{userConnections.length}</span>
+              <span className="text-xs text-gray-500 dark:text-gray-300">{userConnections.length}</span>
               {connectionsOpen ? <ChevronUp className="w-4 h-4 text-gray-400" /> : <ChevronDown className="w-4 h-4 text-gray-400" />}
             </button>
             {connectionsOpen && (
@@ -273,7 +273,7 @@ export function ProfilePage() {
                     <Avatar src={conn.photoUrl} name={conn.name} size="sm" />
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-medium text-gray-900 dark:text-white truncate">{conn.name}</p>
-                      <p className="text-xs text-gray-500">
+                      <p className="text-xs text-gray-500 dark:text-gray-300">
                         <Users className="w-3 h-3 inline mr-1" />{conn.connectionCount}
                         {conn.remainingBudget != null && (
                           <span className="ml-2"><Wallet className="w-3 h-3 inline mr-1" />${Math.round(conn.remainingBudget)}</span>
@@ -293,9 +293,9 @@ export function ProfilePage() {
           <CardHeader><h2 className="font-semibold text-gray-900 dark:text-white">{t('profile.stats')}</h2></CardHeader>
           <CardContent>
             <div className="grid grid-cols-3 gap-4">
-              <div className="text-center"><p className="text-2xl font-bold text-blue-600">{stats.connectionsCount}</p><p className="text-xs text-gray-500">{t('profile.connections')}</p></div>
-              <div className="text-center"><p className="text-2xl font-bold text-blue-600">{stats.collectionsCreated}</p><p className="text-xs text-gray-500">{t('profile.collectionsCreated')}</p></div>
-              <div className="text-center"><p className="text-2xl font-bold text-green-600">{stats.obligationsGiven}</p><p className="text-xs text-gray-500">{t('profile.intentionsGiven')}</p></div>
+              <div className="text-center"><p className="text-2xl font-bold text-blue-600">{stats.connectionsCount}</p><p className="text-xs text-gray-500 dark:text-gray-300">{t('profile.connections')}</p></div>
+              <div className="text-center"><p className="text-2xl font-bold text-blue-600">{stats.collectionsCreated}</p><p className="text-xs text-gray-500 dark:text-gray-300">{t('profile.collectionsCreated')}</p></div>
+              <div className="text-center"><p className="text-2xl font-bold text-green-600">{stats.obligationsGiven}</p><p className="text-xs text-gray-500 dark:text-gray-300">{t('profile.intentionsGiven')}</p></div>
             </div>
           </CardContent>
         </Card>

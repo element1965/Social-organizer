@@ -62,7 +62,7 @@ export function CollectionPage() {
   );
 
   if (isLoading) return <div className="flex justify-center py-12"><Spinner /></div>;
-  if (!collection) return <div className="p-4 text-center text-gray-500">{t('common.notFound')}</div>;
+  if (!collection) return <div className="p-4 text-center text-gray-500 dark:text-gray-300">{t('common.notFound')}</div>;
 
   const isOwner = collection.creatorId === userId;
   const hasObligation = collection.obligations.some((o) => o.userId === userId);
@@ -119,7 +119,7 @@ export function CollectionPage() {
 
       {pathToCreator?.path && pathToCreator.path.length > 1 && (
         <div className="p-3 bg-gray-50 dark:bg-gray-800/50 rounded-lg">
-          <p className="text-xs text-gray-500 mb-2">{t('collection.connectionToCreator')}</p>
+          <p className="text-xs text-gray-500 dark:text-gray-300 mb-2">{t('collection.connectionToCreator')}</p>
           <HandshakePath path={pathToCreator.path} onUserClick={(uid) => navigate(`/profile/${uid}`)} />
         </div>
       )}
@@ -128,12 +128,12 @@ export function CollectionPage() {
         <CardContent className="py-4">
           <div className="flex justify-between items-end mb-2">
             <div>
-              <p className="text-sm text-gray-500">{t('collection.collected')}</p>
+              <p className="text-sm text-gray-500 dark:text-gray-300">{t('collection.collected')}</p>
               <p className="text-2xl font-bold text-gray-900 dark:text-white">${Math.round(collection.currentAmount)} USD</p>
             </div>
             {hasGoal && (
               <div className="text-right">
-                <p className="text-sm text-gray-500">{t('collection.goal')}</p>
+                <p className="text-sm text-gray-500 dark:text-gray-300">{t('collection.goal')}</p>
                 <p className="text-2xl font-bold text-gray-900 dark:text-white">${collection.amount} USD</p>
                 {showOriginal && (
                   <p className="text-xs text-gray-400">
@@ -143,7 +143,7 @@ export function CollectionPage() {
               </div>
             )}
           </div>
-          {hasGoal && <><Progress value={collection.currentAmount} max={collection.amount!} /><p className="text-xs text-gray-500 mt-1 text-right">{percentage.toFixed(0)}%</p></>}
+          {hasGoal && <><Progress value={collection.currentAmount} max={collection.amount!} /><p className="text-xs text-gray-500 dark:text-gray-300 mt-1 text-right">{percentage.toFixed(0)}%</p></>}
         </CardContent>
       </Card>
 
@@ -175,7 +175,7 @@ export function CollectionPage() {
               </div>
               {/* USD conversion preview */}
               {inputCurrency !== 'USD' && Number(amount) > 0 && preview?.result != null && (
-                <div className="flex items-center gap-2 text-sm text-gray-500">
+                <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-300">
                   <ArrowRight className="w-4 h-4" />
                   <span>≈ ${preview.result} USD</span>
                 </div>
@@ -193,7 +193,7 @@ export function CollectionPage() {
         <CardHeader><h3 className="font-semibold text-gray-900 dark:text-white">{t('collection.participants')} ({collection.obligations.length})</h3></CardHeader>
         <CardContent>
           {collection.obligations.length === 0 ? (
-            <p className="text-sm text-gray-500 text-center py-2">{t('collection.noParticipants')}</p>
+            <p className="text-sm text-gray-500 dark:text-gray-300 text-center py-2">{t('collection.noParticipants')}</p>
           ) : (
             <div className="space-y-2">
               {collection.obligations.map((obl) => {
@@ -247,7 +247,7 @@ export function CollectionPage() {
                             )}
                           </div>
                           {canEdit && (
-                            <button onClick={startEdit} className="p-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300" title={t('collection.editAmount')}>
+                            <button onClick={startEdit} className="p-1 text-gray-400 hover:text-gray-600 dark:text-gray-300 dark:hover:text-gray-300" title={t('collection.editAmount')}>
                               <Pencil className="w-3.5 h-3.5" />
                             </button>
                           )}
@@ -272,12 +272,12 @@ export function CollectionPage() {
                           <button onClick={saveEdit} disabled={updateAmount.isPending} className="p-2 text-green-600 hover:text-green-700 disabled:opacity-50" title={t('collection.saveAmount')}>
                             <Check className="w-4 h-4" />
                           </button>
-                          <button onClick={cancelEdit} className="p-2 text-gray-400 hover:text-gray-600" title={t('collection.cancelEdit')}>
+                          <button onClick={cancelEdit} className="p-2 text-gray-400 hover:text-gray-600 dark:text-gray-300" title={t('collection.cancelEdit')}>
                             <X className="w-4 h-4" />
                           </button>
                         </div>
                         {editCurrency !== 'USD' && Number(editAmount) > 0 && editPreview?.result != null && (
-                          <div className="flex items-center gap-2 text-sm text-gray-500">
+                          <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-300">
                             <ArrowRight className="w-4 h-4" />
                             <span>≈ ${editPreview.result} USD</span>
                           </div>
