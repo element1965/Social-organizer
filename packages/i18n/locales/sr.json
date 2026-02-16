@@ -396,7 +396,7 @@
     "webLinkDesc": "Link ka veb sajtu — ako osoba još nije upoznata sa projektom, sadrži sve uvodne informacije",
     "botLinkDesc": "Direktno na Telegram — ako ste već sve objasnili i oni mogu direktno ući u aplikaciju",
     "slugDesc": "Ово је ваш лични ИД линка за URL-ове позивница. То НИЈЕ позивница сама по себи — не шаљите је људима. Користите горње линкове да позовете некога.",
-    "expand": "proširi",
+    "expand": "прикажи URL",
     "showQr": "prikaži QR"
   },
   "landing": {

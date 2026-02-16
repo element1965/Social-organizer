@@ -396,7 +396,7 @@
     "webLinkDesc": "Liên kết website — nếu người đó chưa quen thuộc với dự án, nó có tất cả thông tin giới thiệu",
     "botLinkDesc": "Trực tiếp đến Telegram — nếu bạn đã giải thích mọi thứ và họ có thể đi thẳng đến ứng dụng",
     "slugDesc": "Đây là ID liên kết cá nhân của bạn cho URL lời mời. Đây KHÔNG phải là lời mời — đừng gửi nó cho người khác. Sử dụng các liên kết ở trên để mời ai đó.",
-    "expand": "mở rộng",
+    "expand": "hiện URL",
     "showQr": "hiển thị QR"
   },
   "landing": {

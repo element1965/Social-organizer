@@ -396,7 +396,7 @@
     "webLinkDesc": "Link til hjemmeside — hvis personen ikke kender projektet endnu, har det al den introducerende information",
     "botLinkDesc": "Direkte til Telegram — hvis du allerede har forklaret alt og de kan gå direkte til appen",
     "slugDesc": "Dette er dit personlige link-ID til invitations-URL'er. Det er IKKE en invitation i sig selv — send det ikke til folk. Brug linkene ovenfor til at invitere nogen.",
-    "expand": "udvid",
+    "expand": "show URL",
     "showQr": "vis QR"
   },
   "landing": {
