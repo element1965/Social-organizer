@@ -143,7 +143,17 @@
     "inviteTrusted": "Позови",
     "myCapabilitiesHint": "Mesečni budžet za podršku. Koliko ste voljni da doprinesete uzajamnoj pomoći svakog meseca",
     "networkCapabilitiesHint": "Ukupni dostupni mesečni budžeti svih učesnika u vašoj mreži uzajamne pomoći",
-    "communityChat": "Чат заједнице"
+    "communityChat": "Чат заједнице",
+    "wholeNetwork": "Cela mreža",
+    "networkCapabilitiesTitle": "Mogućnosti mreže",
+    "dateRange": "Period",
+    "showResults": "Prikaži",
+    "periodPast7": "Poslednjih 7 dana",
+    "periodPast14": "Poslednjih 14 dana",
+    "periodPast28": "Poslednjih 28 dana",
+    "periodPast90": "Poslednjih 90 dana",
+    "periodPast365": "Poslednjih 365 dana",
+    "newConnections": "+{{count}} novih"
   },
   "collection": {
     "create": "Пошаљи сигнал за помоћ",
@@ -384,7 +394,8 @@
     "slugMin": "Minimum 3 znaka",
     "webLinkDesc": "Link ka veb sajtu — ako osoba još nije upoznata sa projektom, sadrži sve uvodne informacije",
     "botLinkDesc": "Direktno na Telegram — ako ste već sve objasnili i oni mogu direktno ući u aplikaciju",
-    "slugDesc": "Ово је ваш лични ИД линка за URL-ове позивница. То НИЈЕ позивница сама по себи — не шаљите је људима. Користите горње линкове да позовете некога."
+    "slugDesc": "Ово је ваш лични ИД линка за URL-ове позивница. То НИЈЕ позивница сама по себи — не шаљите је људима. Користите горње линкове да позовете некога.",
+    "expand": "proširi"
   },
   "landing": {
     "painQuote": "Кад дође невоља — сам си. Пријатељи не знају. Пријатељи пријатеља — још мање. А неко од њих би могао да помогне.",

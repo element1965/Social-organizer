@@ -143,7 +143,17 @@
     "inviteTrusted": "Uitnodigen",
     "myCapabilitiesHint": "Maandelijks ondersteuningsbudget. Hoeveel je wilt bijdragen aan wederzijdse hulp elke maand",
     "networkCapabilitiesHint": "Totaal beschikbare maandelijkse budgetten van alle deelnemers in uw wederzijdse hulpnetwerk",
-    "communityChat": "Community-chat"
+    "communityChat": "Community-chat",
+    "wholeNetwork": "Hele netwerk",
+    "networkCapabilitiesTitle": "Netwerkmogelijkheden",
+    "dateRange": "Periode",
+    "showResults": "Toon resultaten",
+    "periodPast7": "Afgelopen 7 dagen",
+    "periodPast14": "Afgelopen 14 dagen",
+    "periodPast28": "Afgelopen 28 dagen",
+    "periodPast90": "Afgelopen 90 dagen",
+    "periodPast365": "Afgelopen 365 dagen",
+    "newConnections": "+{{count}} nieuw"
   },
   "collection": {
     "create": "Hulpsignaal verzenden",
@@ -384,7 +394,8 @@
     "slugMin": "Minimaal 3 tekens",
     "webLinkDesc": "Website link — als de persoon nog niet bekend is met het project, bevat het alle introductie-informatie",
     "botLinkDesc": "Rechtstreeks naar Telegram — als je alles al hebt uitgelegd en ze direct naar de app kunnen gaan",
-    "slugDesc": "Dit is uw persoonlijke link-ID voor uitnodigings-URL's. Het is GEEN uitnodiging op zich — stuur het niet naar mensen. Gebruik de bovenstaande links om iemand uit te nodigen."
+    "slugDesc": "Dit is uw persoonlijke link-ID voor uitnodigings-URL's. Het is GEEN uitnodiging op zich — stuur het niet naar mensen. Gebruik de bovenstaande links om iemand uit te nodigen.",
+    "expand": "uitklappen"
   },
   "landing": {
     "painQuote": "Als er problemen zijn — sta je alleen. Vrienden weten het niet. Vrienden van vrienden — nog minder. Maar iemand van hen had kunnen helpen.",

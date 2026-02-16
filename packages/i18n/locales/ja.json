@@ -143,7 +143,17 @@
     "inviteTrusted": "招待する",
     "myCapabilitiesHint": "毎月の支援予算。毎月相互援助に寄与する金額",
     "networkCapabilitiesHint": "あなたの相互援助ネットワーク内のすべての参加者の利用可能な月間予算の合計",
-    "communityChat": "コミュニティチャット"
+    "communityChat": "コミュニティチャット",
+    "wholeNetwork": "ネットワーク全体",
+    "networkCapabilitiesTitle": "ネットワークの能力",
+    "dateRange": "期間",
+    "showResults": "表示",
+    "periodPast7": "過去7日間",
+    "periodPast14": "過去14日間",
+    "periodPast28": "過去28日間",
+    "periodPast90": "過去90日間",
+    "periodPast365": "過去365日間",
+    "newConnections": "+{{count}}件の新規"
   },
   "collection": {
     "create": "助けの合図を送る",
@@ -384,7 +394,8 @@
     "slugMin": "最小3文字",
     "webLinkDesc": "ウェブサイトリンク — 相手がプロジェクトに詳しくない場合、導入情報がすべて揃っています",
     "botLinkDesc": "Telegram直行 — すべて説明済みで、アプリに直接アクセス可能",
-    "slugDesc": "これは招待URLに使用するあなたの個人リンクIDです。これ自体は招待ではありません — 人に送らないでください。誰かを招待するには上のリンクを使用してください。"
+    "slugDesc": "これは招待URLに使用するあなたの個人リンクIDです。これ自体は招待ではありません — 人に送らないでください。誰かを招待するには上のリンクを使用してください。",
+    "expand": "展開"
   },
   "landing": {
     "painQuote": "困った時 — 一人になってしまう。友達は知らない。友達の友達 — なおさら。でも彼らの誰かが助けてくれたかもしれない。",

@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { trpc } from '../lib/trpc';
 import { InviteBlock } from '../components/InviteBlock';
+import { PeriodPicker, PeriodChip } from '../components/PeriodPicker';
 import { Card, CardContent } from '../components/ui/card';
 import { Button } from '../components/ui/button';
 import {
@@ -14,6 +15,8 @@ import {
   X,
   HelpCircle,
   Pencil,
+  Globe,
+  Sparkles,
 } from 'lucide-react';
 import { Tooltip } from '../components/ui/tooltip';
 import { SocialIcon } from '../components/ui/social-icons';
@@ -33,6 +36,23 @@ export function DashboardPage() {
   const { data: networkStats, isLoading: networkLoading } = trpc.connection.getNetworkStats.useQuery(undefined, { refetchInterval: 60000 });
   const { data: helpStats } = trpc.stats.help.useQuery(undefined, { refetchInterval: 60000 });
   const { data: networkCapabilities } = trpc.stats.networkCapabilities.useQuery(undefined, { refetchInterval: 60000 });
+
+  // Period pickers state
+  const [networkDays, setNetworkDays] = useState(7);
+  const [showNetworkPicker, setShowNetworkPicker] = useState(false);
+  const [capDays, setCapDays] = useState(7);
+  const [showCapPicker, setShowCapPicker] = useState(false);
+
+  const { data: networkByPeriod } = trpc.stats.byPeriod.useQuery(
+    { days: networkDays },
+    { enabled: networkDays > 0, refetchInterval: 60000 },
+  );
+  const { data: capByPeriod } = trpc.stats.byPeriod.useQuery(
+    { days: capDays },
+    { enabled: capDays > 0, refetchInterval: 60000 },
+  );
+
+  // Budget editing
   const [editingBudget, setEditingBudget] = useState(false);
   const [newBudgetValue, setNewBudgetValue] = useState('');
   const setBudgetMutation = trpc.user.setMonthlyBudget.useMutation({
@@ -47,6 +67,18 @@ export function DashboardPage() {
       setTimeout(() => document.getElementById('invite')?.scrollIntoView({ behavior: 'smooth' }), 100);
     }
   }, []);
+
+  // Period data helpers
+  const networkNewConn = networkDays === 0
+    ? null
+    : networkByPeriod?.newConnections ?? null;
+
+  const capHelpGiven = capDays === 0
+    ? helpStats?.given
+    : capByPeriod?.helpGiven;
+  const capHelpReceived = capDays === 0
+    ? helpStats?.received
+    : capByPeriod?.helpReceived;
 
   return (
     <div className="px-4 pt-2 pb-4 flex flex-col gap-4 relative">
@@ -139,125 +171,168 @@ export function DashboardPage() {
         </div>
       )}
 
+      {/* Card 1: "Вся сеть" — Whole network */}
       <Card>
-          <CardContent className="py-4 space-y-4">
-            {/* Total network summary */}
-            <div className="p-4 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-950/30 dark:to-purple-950/30 rounded-xl">
-              <div className="flex items-center justify-between mb-3">
-                {(() => {
-                  const leftStr = String(totalReachable);
-                  const rightStr = '$' + (networkCapabilities?.total ?? 0);
-                  const totalLen = leftStr.length + rightStr.length;
-                  const sz = totalLen > 12 ? 'text-xl' : totalLen > 9 ? 'text-2xl' : totalLen > 6 ? 'text-3xl' : 'text-4xl';
-                  return (
-                    <>
-                      <div className="min-w-0">
-                        <p className="text-sm text-gray-500 dark:text-gray-300">{t('dashboard.totalNetwork')}</p>
-                        <p className={`${sz} font-bold text-gray-900 dark:text-white`}>
-                          {totalReachable} <span className="text-sm font-normal text-gray-500 dark:text-gray-300">{t('dashboard.people')}</span>
-                        </p>
-                      </div>
-                      <div className="text-right min-w-0">
-                        <p className="text-sm text-gray-500 dark:text-gray-300">{t('dashboard.currentCapabilities')}</p>
-                        <p className={`${sz} font-bold text-green-600 dark:text-green-400`}>{rightStr}</p>
-                      </div>
-                    </>
-                  );
-                })()}
+        <CardContent className="py-4">
+          <div className="p-4 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-950/30 dark:to-purple-950/30 rounded-xl">
+            <div className="flex items-start justify-between mb-2">
+              <div className="min-w-0">
+                <div className="flex items-center gap-1.5 mb-1">
+                  <Globe className="w-4 h-4 text-blue-600" />
+                  <span className="text-xs text-gray-500 dark:text-gray-300">{t('dashboard.wholeNetwork')}</span>
+                </div>
+                <p className="text-3xl font-bold text-gray-900 dark:text-white">
+                  {totalReachable} <span className="text-sm font-normal text-gray-500 dark:text-gray-300">{t('dashboard.people')}</span>
+                </p>
               </div>
+              <PeriodChip days={networkDays} onClick={() => setShowNetworkPicker(true)} />
+            </div>
+            <div className="flex items-center justify-between pt-2 border-t border-gray-200/50 dark:border-gray-700/50">
               {me?.createdAt && (() => {
                 const kyivNow = new Date(new Date().toLocaleString('en-US', { timeZone: 'Europe/Kyiv' }));
                 const kyivReg = new Date(new Date(me.createdAt).toLocaleString('en-US', { timeZone: 'Europe/Kyiv' }));
                 const today = new Date(kyivNow.getFullYear(), kyivNow.getMonth(), kyivNow.getDate());
                 const regDay = new Date(kyivReg.getFullYear(), kyivReg.getMonth(), kyivReg.getDate());
                 const dayCount = Math.floor((today.getTime() - regDay.getTime()) / (24 * 60 * 60 * 1000)) + 1;
-                const totalHelp = (helpStats?.given?.totalAmount ?? 0) + (helpStats?.received?.totalAmount ?? 0);
                 return (
-                  <div className="flex items-center justify-between pt-3 border-t border-gray-200/50 dark:border-gray-700/50">
-                    <div className="flex items-center gap-1">
-                      <TrendingUp className="w-3 h-3 text-green-600" />
-                      <span className="text-xs font-medium text-green-600">{t('dashboard.dayCount', { count: dayCount })}</span>
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <HandHeart className="w-3 h-3 text-orange-600" />
-                      <span className="text-xs font-medium text-orange-600">{t('dashboard.helpGivenByPeriod')} ${totalHelp}</span>
-                    </div>
+                  <div className="flex items-center gap-1">
+                    <TrendingUp className="w-3 h-3 text-green-600" />
+                    <span className="text-xs font-medium text-green-600">{t('dashboard.dayCount', { count: dayCount })}</span>
                   </div>
                 );
               })()}
-            </div>
-
-            {/* My capabilities */}
-            <div className="p-4 bg-gradient-to-b from-blue-50 to-indigo-50 dark:from-blue-950/30 dark:to-indigo-950/30 rounded-xl">
-              <div className="flex items-center gap-1.5 mb-2">
-                <Wallet className="w-4 h-4 text-blue-600" />
-                <span className="text-xs text-gray-500 dark:text-gray-300">{t('dashboard.yourContribution')}</span>
-                <Tooltip content={t('dashboard.myCapabilitiesHint')} side="bottom">
-                  <button type="button" className="text-gray-400 hover:text-gray-500 dark:text-gray-300"><HelpCircle className="w-3.5 h-3.5" /></button>
-                </Tooltip>
-              </div>
-              {editingBudget ? (
-                <div className="relative mt-1">
-                  <span className="absolute left-2 top-1/2 -translate-y-1/2 text-xs text-gray-400">$</span>
-                  <input
-                    type="number"
-                    value={newBudgetValue}
-                    onChange={(e) => setNewBudgetValue(e.target.value)}
-                    placeholder={me?.monthlyBudget != null ? String(Math.round(me.monthlyBudget)) : '0'}
-                    className="w-full pl-5 pr-8 py-1.5 text-sm font-bold rounded border border-blue-300 dark:border-blue-600 bg-white dark:bg-gray-800 text-blue-700 dark:text-blue-400 focus:outline-none focus:border-blue-500"
-                    autoFocus
-                    min={0}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter' && newBudgetValue && Number(newBudgetValue) >= 0) {
-                        setBudgetMutation.mutate({ amount: Number(newBudgetValue), inputCurrency: 'USD' });
-                      }
-                      if (e.key === 'Escape') setEditingBudget(false);
-                    }}
-                  />
-                  {newBudgetValue && Number(newBudgetValue) >= 0 && (
-                    <button
-                      onClick={() => setBudgetMutation.mutate({ amount: Number(newBudgetValue), inputCurrency: 'USD' })}
-                      disabled={setBudgetMutation.isPending}
-                      className="absolute right-2 top-1/2 -translate-y-1/2 text-green-500 hover:text-green-400"
-                    >
-                      <Check className="w-4 h-4" />
-                    </button>
-                  )}
-                </div>
-              ) : (
-                <div className="flex items-center gap-2">
-                  <p className="text-xl font-bold text-blue-700 dark:text-blue-400">
-                    {me?.remainingBudget != null && me.monthlyBudget != null
-                      ? `$${Math.round(me.remainingBudget)} / $${Math.round(me.monthlyBudget)}`
-                      : '$0'}
-                  </p>
-                  <button
-                    onClick={() => { setNewBudgetValue(''); setEditingBudget(true); }}
-                    className="text-gray-400 hover:text-gray-300"
-                  >
-                    <Pencil className="w-3.5 h-3.5" />
-                  </button>
-                </div>
+              {networkNewConn != null && (
+                <span className="text-xs font-medium text-blue-600 dark:text-blue-400">
+                  {t('dashboard.newConnections', { count: networkNewConn })}
+                </span>
               )}
             </div>
+          </div>
+        </CardContent>
+      </Card>
 
-            {/* Budget depleted hint */}
-            {me?.monthlyBudget != null && me.remainingBudget != null && me.remainingBudget <= 0 && (
-              <div className="p-3 bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 rounded-lg">
-                <p className="text-sm text-amber-700 dark:text-amber-400 mb-2">
-                  {t('dashboard.budgetDepletedHint')}
+      {/* Card 2: "Возможности сети" — Network capabilities */}
+      <Card>
+        <CardContent className="py-4">
+          <div className="p-4 bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-950/30 dark:to-emerald-950/30 rounded-xl">
+            <div className="flex items-start justify-between mb-2">
+              <div className="min-w-0">
+                <div className="flex items-center gap-1.5 mb-1">
+                  <Sparkles className="w-4 h-4 text-green-600" />
+                  <span className="text-xs text-gray-500 dark:text-gray-300">{t('dashboard.networkCapabilitiesTitle')}</span>
+                </div>
+                <p className="text-3xl font-bold text-green-600 dark:text-green-400">
+                  ${networkCapabilities?.total ?? 0}
                 </p>
-                <Button variant="outline" size="sm" onClick={() => navigate('/settings')}>
-                  {t('dashboard.updateBudget')}
-                </Button>
+                {networkCapabilities?.contributors != null && networkCapabilities.contributors > 0 && (
+                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+                    {t('dashboard.capabilitiesContributors', { count: networkCapabilities.contributors })}
+                  </p>
+                )}
               </div>
-            )}
+              <PeriodChip days={capDays} onClick={() => setShowCapPicker(true)} />
+            </div>
+            <div className="flex items-center justify-between pt-2 border-t border-gray-200/50 dark:border-gray-700/50">
+              <div className="flex items-center gap-1">
+                <HandHeart className="w-3 h-3 text-orange-600" />
+                <span className="text-xs font-medium text-orange-600">
+                  {t('dashboard.helpGiven')} ${capHelpGiven?.totalAmount ?? 0}
+                </span>
+              </div>
+              <span className="text-xs font-medium text-purple-600 dark:text-purple-400">
+                {t('dashboard.helpReceived')} ${capHelpReceived?.totalAmount ?? 0}
+              </span>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
 
-          </CardContent>
-        </Card>
-
+      {/* Card 3: Invite (flip card) */}
       <InviteBlock id="invite" />
 
+      {/* Card 4: "Мои возможности" — My capabilities / budget */}
+      <Card>
+        <CardContent className="py-4">
+          <div className="p-4 bg-gradient-to-b from-blue-50 to-indigo-50 dark:from-blue-950/30 dark:to-indigo-950/30 rounded-xl">
+            <div className="flex items-center gap-1.5 mb-2">
+              <Wallet className="w-4 h-4 text-blue-600" />
+              <span className="text-xs text-gray-500 dark:text-gray-300">{t('dashboard.yourContribution')}</span>
+              <Tooltip content={t('dashboard.myCapabilitiesHint')} side="bottom">
+                <button type="button" className="text-gray-400 hover:text-gray-500 dark:text-gray-300"><HelpCircle className="w-3.5 h-3.5" /></button>
+              </Tooltip>
+            </div>
+            {editingBudget ? (
+              <div className="relative mt-1">
+                <span className="absolute left-2 top-1/2 -translate-y-1/2 text-xs text-gray-400">$</span>
+                <input
+                  type="number"
+                  value={newBudgetValue}
+                  onChange={(e) => setNewBudgetValue(e.target.value)}
+                  placeholder={me?.monthlyBudget != null ? String(Math.round(me.monthlyBudget)) : '0'}
+                  className="w-full pl-5 pr-8 py-1.5 text-sm font-bold rounded border border-blue-300 dark:border-blue-600 bg-white dark:bg-gray-800 text-blue-700 dark:text-blue-400 focus:outline-none focus:border-blue-500"
+                  autoFocus
+                  min={0}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' && newBudgetValue && Number(newBudgetValue) >= 0) {
+                      setBudgetMutation.mutate({ amount: Number(newBudgetValue), inputCurrency: 'USD' });
+                    }
+                    if (e.key === 'Escape') setEditingBudget(false);
+                  }}
+                />
+                {newBudgetValue && Number(newBudgetValue) >= 0 && (
+                  <button
+                    onClick={() => setBudgetMutation.mutate({ amount: Number(newBudgetValue), inputCurrency: 'USD' })}
+                    disabled={setBudgetMutation.isPending}
+                    className="absolute right-2 top-1/2 -translate-y-1/2 text-green-500 hover:text-green-400"
+                  >
+                    <Check className="w-4 h-4" />
+                  </button>
+                )}
+              </div>
+            ) : (
+              <div className="flex items-center gap-2">
+                <p className="text-xl font-bold text-blue-700 dark:text-blue-400">
+                  {me?.remainingBudget != null && me.monthlyBudget != null
+                    ? `$${Math.round(me.remainingBudget)} / $${Math.round(me.monthlyBudget)}`
+                    : '$0'}
+                </p>
+                <button
+                  onClick={() => { setNewBudgetValue(''); setEditingBudget(true); }}
+                  className="text-gray-400 hover:text-gray-300"
+                >
+                  <Pencil className="w-3.5 h-3.5" />
+                </button>
+              </div>
+            )}
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Budget depleted hint */}
+      {me?.monthlyBudget != null && me.remainingBudget != null && me.remainingBudget <= 0 && (
+        <div className="p-3 bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 rounded-lg">
+          <p className="text-sm text-amber-700 dark:text-amber-400 mb-2">
+            {t('dashboard.budgetDepletedHint')}
+          </p>
+          <Button variant="outline" size="sm" onClick={() => navigate('/settings')}>
+            {t('dashboard.updateBudget')}
+          </Button>
+        </div>
+      )}
+
+      {/* Period pickers (full-screen overlays) */}
+      <PeriodPicker
+        open={showNetworkPicker}
+        onClose={() => setShowNetworkPicker(false)}
+        value={networkDays}
+        onChange={setNetworkDays}
+      />
+      <PeriodPicker
+        open={showCapPicker}
+        onClose={() => setShowCapPicker(false)}
+        value={capDays}
+        onChange={setCapDays}
+      />
     </div>
   );
 }

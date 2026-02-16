@@ -143,7 +143,17 @@
     "inviteTrusted": "Convidar",
     "myCapabilitiesHint": "Orçamento de suporte mensal. Quanto você está disposto a contribuir para ajuda mútua a cada mês",
     "networkCapabilitiesHint": "Total de orçamentos mensais disponíveis de todos os participantes na sua rede de ajuda mútua",
-    "communityChat": "Chat da comunidade"
+    "communityChat": "Chat da comunidade",
+    "wholeNetwork": "Toda a rede",
+    "networkCapabilitiesTitle": "Capacidades da rede",
+    "dateRange": "Período",
+    "showResults": "Mostrar",
+    "periodPast7": "Últimos 7 dias",
+    "periodPast14": "Últimos 14 dias",
+    "periodPast28": "Últimos 28 dias",
+    "periodPast90": "Últimos 90 dias",
+    "periodPast365": "Últimos 365 dias",
+    "newConnections": "+{{count}} novos"
   },
   "collection": {
     "create": "Enviar sinal de ajuda",
@@ -362,7 +372,8 @@
     "slugMin": "Mínimo 3 caracteres",
     "webLinkDesc": "Link do site — se a pessoa ainda não conhece o projeto, ele contém todas as informações introdutórias",
     "botLinkDesc": "Direto para o Telegram — se você já explicou tudo e eles podem ir diretamente para o app",
-    "slugDesc": "Este é o seu ID de link pessoal para URLs de convite. NÃO é um convite em si — não o envie a pessoas. Use os links acima para convidar alguém."
+    "slugDesc": "Este é o seu ID de link pessoal para URLs de convite. NÃO é um convite em si — não o envie a pessoas. Use os links acima para convidar alguém.",
+    "expand": "expandir"
   },
   "landing": {
     "painQuote": "Quando surge um problema — você fica sozinho. Amigos não sabem. Amigos de amigos — menos ainda. Mas alguém deles poderia ajudar.",

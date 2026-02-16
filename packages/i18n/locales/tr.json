@@ -143,7 +143,17 @@
     "inviteTrusted": "Davet et",
     "myCapabilitiesHint": "Aylık destek bütçesi. Her ay karşılıklı yardıma ne kadar katkıda bulunmak istediğiniz",
     "networkCapabilitiesHint": "Karşılıklı yardıma katılan tüm üyelerin toplam mevcut aylık bütçesi",
-    "communityChat": "Topluluk sohbeti"
+    "communityChat": "Topluluk sohbeti",
+    "wholeNetwork": "Tüm ağ",
+    "networkCapabilitiesTitle": "Ağ imkanları",
+    "dateRange": "Dönem",
+    "showResults": "Göster",
+    "periodPast7": "Son 7 gün",
+    "periodPast14": "Son 14 gün",
+    "periodPast28": "Son 28 gün",
+    "periodPast90": "Son 90 gün",
+    "periodPast365": "Son 365 gün",
+    "newConnections": "+{{count}} yeni"
   },
   "collection": {
     "create": "Yardım sinyali gönder",
@@ -384,7 +394,8 @@
     "slugMin": "Minimum 3 karakter",
     "webLinkDesc": "Web sitesi bağlantısı — eğer kişi proje ile henüz tanışmadıysa, tüm giriş bilgilerini barındırır",
     "botLinkDesc": "Doğrudan Telegram'a — eğer her şeyi zaten açıklamışsanız ve doğrudan uygulamaya gidebilirler",
-    "slugDesc": "Bu, davet URL'leri için kişisel bağlantı kimliğinizdir. Bu bir davet DEĞİLDİR — insanlara göndermeyin. Birini davet etmek için yukarıdaki bağlantıları kullanın."
+    "slugDesc": "Bu, davet URL'leri için kişisel bağlantı kimliğinizdir. Bu bir davet DEĞİLDİR — insanlara göndermeyin. Birini davet etmek için yukarıdaki bağlantıları kullanın.",
+    "expand": "genişlet"
   },
   "landing": {
     "painQuote": "Sorun çıktığında — yalnız kalırsın. Arkadaşlar bilmez. Arkadaşların arkadaşları — daha da az. Ama onlardan biri yardım edebilirdi.",

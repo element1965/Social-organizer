@@ -143,7 +143,17 @@
     "inviteTrusted": "Kutsu",
     "myCapabilitiesHint": "Kuukausittainen tuki budjetti. Kuinka paljon olet valmis lahjoittamaan keskinäiseen apuun kuukausittain",
     "networkCapabilitiesHint": "Kaikkien osallistujien käytettävissä olevat kuukausibudjetit verkostossasi",
-    "communityChat": "Yhteisön keskustelu"
+    "communityChat": "Yhteisön keskustelu",
+    "wholeNetwork": "Koko verkosto",
+    "networkCapabilitiesTitle": "Verkoston mahdollisuudet",
+    "dateRange": "Aikajakso",
+    "showResults": "Näytä tulokset",
+    "periodPast7": "Viimeiset 7 päivää",
+    "periodPast14": "Viimeiset 14 päivää",
+    "periodPast28": "Viimeiset 28 päivää",
+    "periodPast90": "Viimeiset 90 päivää",
+    "periodPast365": "Viimeiset 365 päivää",
+    "newConnections": "+{{count}} uutta"
   },
   "collection": {
     "create": "Lähetä apusignaali",
@@ -384,7 +394,8 @@
     "slugMin": "Vähintään 3 merkkiä",
     "webLinkDesc": "Verkkosivun linkki — jos henkilö ei ole vielä tutustunut projektiin, se sisältää kaiken esittelyinfon",
     "botLinkDesc": "Suoraan Telegramiin — jos olet jo selittänyt kaiken ja he voivat mennä suoraan sovellukseen",
-    "slugDesc": "Tämä on henkilökohtainen linkkitunnuksesi kutsu-URL-osoitteisiin. Se EI ole kutsu itsessään — älä lähetä sitä ihmisille. Käytä yllä olevia linkkejä kutsuaksesi jonkun."
+    "slugDesc": "Tämä on henkilökohtainen linkkitunnuksesi kutsu-URL-osoitteisiin. Se EI ole kutsu itsessään — älä lähetä sitä ihmisille. Käytä yllä olevia linkkejä kutsuaksesi jonkun.",
+    "expand": "laajenna"
   },
   "landing": {
     "painQuote": "Kun ongelmia ilmenee — jäät yksin. Ystävät eivät tiedä. Tuttujen tutut — vielä vähemmän. Mutta joku heistä voisi auttaa.",

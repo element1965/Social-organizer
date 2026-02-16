@@ -143,7 +143,17 @@
     "inviteTrusted": "Einladen",
     "myCapabilitiesHint": "Monatliches Unterstützungsbudget. Wie viel Sie monatlich zu gegenseitiger Hilfe beitragen möchten",
     "networkCapabilitiesHint": "Gesamtes verfügbares monatliches Budget aller Teilnehmer in Ihrem gegenseitigen Hilfenetzwerk",
-    "communityChat": "Community-Chat"
+    "communityChat": "Community-Chat",
+    "wholeNetwork": "Gesamtes Netzwerk",
+    "networkCapabilitiesTitle": "Netzwerk-Möglichkeiten",
+    "dateRange": "Zeitraum",
+    "showResults": "Ergebnisse anzeigen",
+    "periodPast7": "Letzte 7 Tage",
+    "periodPast14": "Letzte 14 Tage",
+    "periodPast28": "Letzte 28 Tage",
+    "periodPast90": "Letzte 90 Tage",
+    "periodPast365": "Letzte 365 Tage",
+    "newConnections": "+{{count}} neue"
   },
   "collection": {
     "create": "Hilfesignal senden",
@@ -362,7 +372,8 @@
     "slugMin": "Mindestens 3 Zeichen",
     "webLinkDesc": "Website-Link — wenn die Person das Projekt noch nicht kennt, enthält er alle einleitenden Informationen",
     "botLinkDesc": "Direkt zu Telegram — wenn du alles bereits erklärt hast und sie direkt zur App gehen können",
-    "slugDesc": "Dies ist Ihre persönliche Link-ID für Einladungs-URLs. Es ist KEINE Einladung an sich — senden Sie es nicht an Leute. Verwenden Sie die obigen Links, um jemanden einzuladen."
+    "slugDesc": "Dies ist Ihre persönliche Link-ID für Einladungs-URLs. Es ist KEINE Einladung an sich — senden Sie es nicht an Leute. Verwenden Sie die obigen Links, um jemanden einzuladen.",
+    "expand": "erweitern"
   },
   "landing": {
     "painQuote": "Wenn Probleme auftreten — bist du allein. Freunde wissen es nicht. Freunde von Freunden — noch weniger. Dabei könnte jemand von ihnen helfen.",
