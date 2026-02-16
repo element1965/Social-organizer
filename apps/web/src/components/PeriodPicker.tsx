@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { X, ChevronDown } from 'lucide-react';
 import { Button } from './ui/button';
 
-const PERIOD_OPTIONS = [7, 14, 28, 90, 365, 0] as const;
+const PERIOD_OPTIONS = [1, 7, 14, 28, 90, 365, 0] as const;
 
 interface PeriodPickerProps {
   open: boolean;
@@ -14,6 +14,7 @@ interface PeriodPickerProps {
 
 function periodLabel(t: (key: string) => string, days: number): string {
   if (days === 0) return t('dashboard.periodAllTime');
+  if (days === 1) return t('dashboard.periodPast1');
   if (days === 7) return t('dashboard.periodPast7');
   if (days === 14) return t('dashboard.periodPast14');
   if (days === 28) return t('dashboard.periodPast28');
@@ -87,7 +88,7 @@ export function PeriodPicker({ open, onClose, value, onChange }: PeriodPickerPro
         </div>
 
         {/* Bottom button */}
-        <div className="px-4 py-3 border-t border-gray-200 dark:border-gray-700">
+        <div className="shrink-0 px-4 py-4 pb-8 border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900">
           <Button
             size="lg"
             className="w-full"

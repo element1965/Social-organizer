@@ -66,6 +66,13 @@ export function InviteBlock({ id }: InviteBlockProps) {
               onClick={() => setFlipped(false)}
             >
               <div className="space-y-2">
+                {/* Back to QR link */}
+                <button
+                  onClick={(e) => { e.stopPropagation(); setFlipped(false); }}
+                  className="w-full text-center text-xs text-blue-600 dark:text-blue-400 mb-1"
+                >
+                  {t('invite.showQr')}
+                </button>
                 {/* Web link */}
                 <div>
                   <p className="text-[11px] text-gray-500 dark:text-gray-400 mb-1">{t('invite.webLinkDesc')}</p>
