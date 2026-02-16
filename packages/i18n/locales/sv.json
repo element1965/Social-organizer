@@ -396,7 +396,7 @@
     "webLinkDesc": "Webbplatslänk — om personen inte är bekant med projektet än, har den all introduktionsinformation",
     "botLinkDesc": "Rakt till Telegram — om du redan har förklarat allt och de kan gå direkt till appen",
     "slugDesc": "Detta är ditt personliga länk-ID för inbjudnings-URL:er. Det är INTE en inbjudan i sig — skicka det inte till folk. Använd länkarna ovan för att bjuda in någon.",
-    "expand": "expandera",
+    "expand": "visa URL",
     "showQr": "visa QR"
   },
   "landing": {

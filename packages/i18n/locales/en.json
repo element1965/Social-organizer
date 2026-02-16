@@ -439,7 +439,7 @@
     "webLinkDesc": "Website link — if the person isn't familiar with the project yet, it has all the introductory info",
     "botLinkDesc": "Straight to Telegram — if you've already explained everything and they can go right to the app",
     "slugDesc": "This is your personal link ID for invite URLs. It is NOT an invitation itself — don't send it to people. Use the links above to invite someone.",
-    "expand": "expand",
+    "expand": "show URL",
     "showQr": "show QR"
   },
   "landing": {

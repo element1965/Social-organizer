@@ -396,7 +396,7 @@
     "webLinkDesc": "Nettsidelink ��� hvis personen ikke kjenner prosjektet ennå, har den all introduksjonsinformasjonen",
     "botLinkDesc": "Rett til Telegram — hvis du allerede har forklart alt og de kan gå rett til appen",
     "slugDesc": "Dette er din personlige lenke-ID for invitasjons-URLer. Det er IKKE en invitasjon i seg selv — ikke send det til folk. Bruk lenkene ovenfor for å invitere noen.",
-    "expand": "utvid",
+    "expand": "show URL",
     "showQr": "vis QR"
   },
   "landing": {

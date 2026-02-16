@@ -396,7 +396,7 @@
     "webLinkDesc": "Website link — als de persoon nog niet bekend is met het project, bevat het alle introductie-informatie",
     "botLinkDesc": "Rechtstreeks naar Telegram — als je alles al hebt uitgelegd en ze direct naar de app kunnen gaan",
     "slugDesc": "Dit is uw persoonlijke link-ID voor uitnodigings-URL's. Het is GEEN uitnodiging op zich — stuur het niet naar mensen. Gebruik de bovenstaande links om iemand uit te nodigen.",
-    "expand": "uitklappen",
+    "expand": "URL tonen",
     "showQr": "QR tonen"
   },
   "landing": {

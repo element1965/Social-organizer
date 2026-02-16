@@ -374,7 +374,7 @@
     "webLinkDesc": "Link do site — se a pessoa ainda não conhece o projeto, ele contém todas as informações introdutórias",
     "botLinkDesc": "Direto para o Telegram — se você já explicou tudo e eles podem ir diretamente para o app",
     "slugDesc": "Este é o seu ID de link pessoal para URLs de convite. NÃO é um convite em si — não o envie a pessoas. Use os links acima para convidar alguém.",
-    "expand": "expandir",
+    "expand": "mostrar URL",
     "showQr": "mostrar QR"
   },
   "landing": {
