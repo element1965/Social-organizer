@@ -37,10 +37,10 @@ export function DashboardPage() {
   const { data: helpStats } = trpc.stats.help.useQuery(undefined, { refetchInterval: 60000 });
   const { data: networkCapabilities } = trpc.stats.networkCapabilities.useQuery(undefined, { refetchInterval: 60000 });
 
-  // Period pickers state
-  const [networkDays, setNetworkDays] = useState(7);
+  // Period pickers state (default: today)
+  const [networkDays, setNetworkDays] = useState(1);
   const [showNetworkPicker, setShowNetworkPicker] = useState(false);
-  const [capDays, setCapDays] = useState(7);
+  const [capDays, setCapDays] = useState(1);
   const [showCapPicker, setShowCapPicker] = useState(false);
 
   const { data: networkByPeriod } = trpc.stats.byPeriod.useQuery(
@@ -174,35 +174,34 @@ export function DashboardPage() {
       {/* Card 1: "Вся сеть" — Whole network */}
       <Card>
         <CardContent className="py-4">
-          <div className="p-4 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-950/30 dark:to-purple-950/30 rounded-xl">
-            <div className="flex items-start justify-between mb-2">
-              <div className="min-w-0">
-                <div className="flex items-center gap-1.5 mb-1">
-                  <Globe className="w-4 h-4 text-blue-600" />
-                  <span className="text-xs text-gray-500 dark:text-gray-300">{t('dashboard.wholeNetwork')}</span>
-                </div>
-                <p className="text-3xl font-bold text-gray-900 dark:text-white">
-                  {totalReachable} <span className="text-sm font-normal text-gray-500 dark:text-gray-300">{t('dashboard.people')}</span>
-                </p>
+          {/* Day count centered above */}
+          {me?.createdAt && (() => {
+            const kyivNow = new Date(new Date().toLocaleString('en-US', { timeZone: 'Europe/Kyiv' }));
+            const kyivReg = new Date(new Date(me.createdAt).toLocaleString('en-US', { timeZone: 'Europe/Kyiv' }));
+            const today = new Date(kyivNow.getFullYear(), kyivNow.getMonth(), kyivNow.getDate());
+            const regDay = new Date(kyivReg.getFullYear(), kyivReg.getMonth(), kyivReg.getDate());
+            const dayCount = Math.floor((today.getTime() - regDay.getTime()) / (24 * 60 * 60 * 1000)) + 1;
+            return (
+              <div className="flex items-center justify-center gap-1 mb-2">
+                <TrendingUp className="w-3 h-3 text-green-600" />
+                <span className="text-xs font-medium text-green-600">{t('dashboard.dayCount', { count: dayCount })}</span>
               </div>
-              <PeriodChip days={networkDays} onClick={() => setShowNetworkPicker(true)} />
+            );
+          })()}
+          <div className="p-4 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-950/30 dark:to-purple-950/30 rounded-xl">
+            <div className="flex items-center gap-1.5 mb-2">
+              <Globe className="w-4 h-4 text-blue-600" />
+              <span className="text-xs text-gray-500 dark:text-gray-300">{t('dashboard.wholeNetwork')}</span>
+              <div className="ml-auto">
+                <PeriodChip days={networkDays} onClick={() => setShowNetworkPicker(true)} />
+              </div>
             </div>
-            <div className="flex items-center justify-between pt-2 border-t border-gray-200/50 dark:border-gray-700/50">
-              {me?.createdAt && (() => {
-                const kyivNow = new Date(new Date().toLocaleString('en-US', { timeZone: 'Europe/Kyiv' }));
-                const kyivReg = new Date(new Date(me.createdAt).toLocaleString('en-US', { timeZone: 'Europe/Kyiv' }));
-                const today = new Date(kyivNow.getFullYear(), kyivNow.getMonth(), kyivNow.getDate());
-                const regDay = new Date(kyivReg.getFullYear(), kyivReg.getMonth(), kyivReg.getDate());
-                const dayCount = Math.floor((today.getTime() - regDay.getTime()) / (24 * 60 * 60 * 1000)) + 1;
-                return (
-                  <div className="flex items-center gap-1">
-                    <TrendingUp className="w-3 h-3 text-green-600" />
-                    <span className="text-xs font-medium text-green-600">{t('dashboard.dayCount', { count: dayCount })}</span>
-                  </div>
-                );
-              })()}
+            <div className="flex items-baseline justify-between">
+              <p className="text-3xl font-bold text-gray-900 dark:text-white">
+                {totalReachable} <span className="text-sm font-normal text-gray-500 dark:text-gray-300">{t('dashboard.people')}</span>
+              </p>
               {networkNewConn != null && (
-                <span className="text-xs font-medium text-blue-600 dark:text-blue-400">
+                <span className="text-sm font-medium text-blue-600 dark:text-blue-400">
                   {t('dashboard.newConnections', { count: networkNewConn })}
                 </span>
               )}
@@ -215,12 +214,15 @@ export function DashboardPage() {
       <Card>
         <CardContent className="py-4">
           <div className="p-4 bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-950/30 dark:to-emerald-950/30 rounded-xl">
-            <div className="flex items-start justify-between mb-2">
-              <div className="min-w-0">
-                <div className="flex items-center gap-1.5 mb-1">
-                  <Sparkles className="w-4 h-4 text-green-600" />
-                  <span className="text-xs text-gray-500 dark:text-gray-300">{t('dashboard.networkCapabilitiesTitle')}</span>
-                </div>
+            <div className="flex items-center gap-1.5 mb-2">
+              <Sparkles className="w-4 h-4 text-green-600" />
+              <span className="text-xs text-gray-500 dark:text-gray-300">{t('dashboard.networkCapabilitiesTitle')}</span>
+              <div className="ml-auto">
+                <PeriodChip days={capDays} onClick={() => setShowCapPicker(true)} />
+              </div>
+            </div>
+            <div className="flex items-baseline justify-between">
+              <div>
                 <p className="text-3xl font-bold text-green-600 dark:text-green-400">
                   ${networkCapabilities?.total ?? 0}
                 </p>
@@ -230,18 +232,17 @@ export function DashboardPage() {
                   </p>
                 )}
               </div>
-              <PeriodChip days={capDays} onClick={() => setShowCapPicker(true)} />
-            </div>
-            <div className="flex items-center justify-between pt-2 border-t border-gray-200/50 dark:border-gray-700/50">
-              <div className="flex items-center gap-1">
-                <HandHeart className="w-3 h-3 text-orange-600" />
-                <span className="text-xs font-medium text-orange-600">
-                  {t('dashboard.helpGiven')} ${capHelpGiven?.totalAmount ?? 0}
+              <div className="text-right">
+                <div className="flex items-center gap-1 justify-end">
+                  <HandHeart className="w-3 h-3 text-orange-600" />
+                  <span className="text-xs font-medium text-orange-600">
+                    {t('dashboard.helpGiven')} ${capHelpGiven?.totalAmount ?? 0}
+                  </span>
+                </div>
+                <span className="text-xs font-medium text-purple-600 dark:text-purple-400">
+                  {t('dashboard.helpReceived')} ${capHelpReceived?.totalAmount ?? 0}
                 </span>
               </div>
-              <span className="text-xs font-medium text-purple-600 dark:text-purple-400">
-                {t('dashboard.helpReceived')} ${capHelpReceived?.totalAmount ?? 0}
-              </span>
             </div>
           </div>
         </CardContent>
@@ -254,7 +255,7 @@ export function DashboardPage() {
       <Card>
         <CardContent className="py-4">
           <div className="p-4 bg-gradient-to-b from-blue-50 to-indigo-50 dark:from-blue-950/30 dark:to-indigo-950/30 rounded-xl">
-            <div className="flex items-center gap-1.5 mb-2">
+            <div className="flex items-center justify-center gap-1.5 mb-2">
               <Wallet className="w-4 h-4 text-blue-600" />
               <span className="text-xs text-gray-500 dark:text-gray-300">{t('dashboard.yourContribution')}</span>
               <Tooltip content={t('dashboard.myCapabilitiesHint')} side="bottom">
@@ -262,7 +263,7 @@ export function DashboardPage() {
               </Tooltip>
             </div>
             {editingBudget ? (
-              <div className="relative mt-1">
+              <div className="relative mt-1 max-w-xs mx-auto">
                 <span className="absolute left-2 top-1/2 -translate-y-1/2 text-xs text-gray-400">$</span>
                 <input
                   type="number"
@@ -290,7 +291,7 @@ export function DashboardPage() {
                 )}
               </div>
             ) : (
-              <div className="flex items-center gap-2">
+              <div className="flex items-center justify-center gap-2">
                 <p className="text-xl font-bold text-blue-700 dark:text-blue-400">
                   {me?.remainingBudget != null && me.monthlyBudget != null
                     ? `$${Math.round(me.remainingBudget)} / $${Math.round(me.monthlyBudget)}`
