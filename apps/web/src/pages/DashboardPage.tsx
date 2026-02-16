@@ -219,16 +219,12 @@ export function DashboardPage() {
               </div>
             </div>
             <div className="flex items-baseline justify-between">
-              <div>
-                <p className="text-3xl font-bold text-green-600 dark:text-green-400">
-                  ${networkCapabilities?.total ?? 0}
-                </p>
+              <p className="text-3xl font-bold text-green-600 dark:text-green-400">
+                ${networkCapabilities?.total ?? 0}
                 {networkCapabilities?.contributors != null && networkCapabilities.contributors > 0 && (
-                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
-                    {t('dashboard.capabilitiesContributors', { count: networkCapabilities.contributors })}
-                  </p>
+                  <span className="text-sm font-normal text-gray-500 dark:text-gray-300"> {t('dashboard.capabilitiesContributors', { count: networkCapabilities.contributors })}</span>
                 )}
-              </div>
+              </p>
               {capPeriodTotal != null && (
                 <span className="text-sm font-medium text-green-600 dark:text-green-400">
                   +${capPeriodTotal}
