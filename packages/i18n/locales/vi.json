@@ -143,7 +143,17 @@
     "inviteTrusted": "Mời",
     "myCapabilitiesHint": "Ngân sách hỗ trợ hàng tháng. Số tiền bạn sẵn lòng đóng góp cho hỗ trợ lẫn nhau mỗi tháng",
     "networkCapabilitiesHint": "Tổng ngân sách hàng tháng có sẵn của tất cả thành viên trong mạng lưới hỗ trợ lẫn nhau của bạn",
-    "communityChat": "Chat cộng đồng"
+    "communityChat": "Chat cộng đồng",
+    "wholeNetwork": "Toàn mạng",
+    "networkCapabilitiesTitle": "Năng lực mạng lưới",
+    "dateRange": "Khoảng thời gian",
+    "showResults": "Hiển thị",
+    "periodPast7": "7 ngày qua",
+    "periodPast14": "14 ngày qua",
+    "periodPast28": "28 ngày qua",
+    "periodPast90": "90 ngày qua",
+    "periodPast365": "365 ngày qua",
+    "newConnections": "+{{count}} mới"
   },
   "collection": {
     "create": "Gửi tín hiệu cần giúp đỡ",
@@ -384,7 +394,8 @@
     "slugMin": "Tối thiểu 3 ký tự",
     "webLinkDesc": "Liên kết website — nếu người đó chưa quen thuộc với dự án, nó có tất cả thông tin giới thiệu",
     "botLinkDesc": "Trực tiếp đến Telegram — nếu bạn đã giải thích mọi thứ và họ có thể đi thẳng đến ứng dụng",
-    "slugDesc": "Đây là ID liên kết cá nhân của bạn cho URL lời mời. Đây KHÔNG phải là lời mời — đừng gửi nó cho người khác. Sử dụng các liên kết ở trên để mời ai đó."
+    "slugDesc": "Đây là ID liên kết cá nhân của bạn cho URL lời mời. Đây KHÔNG phải là lời mời — đừng gửi nó cho người khác. Sử dụng các liên kết ở trên để mời ai đó.",
+    "expand": "mở rộng"
   },
   "landing": {
     "painQuote": "Khi gặp khó khăn — bạn ở một mình. Bạn bè không biết. Bạn của bạn bè — càng không. Nhưng ai đó trong số họ có thể giúp được.",

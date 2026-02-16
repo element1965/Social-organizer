@@ -143,7 +143,17 @@
     "inviteTrusted": "Invita",
     "myCapabilitiesHint": "Bilancio di supporto mensile. Quanto sei disposto a contribuire all'aiuto reciproco ogni mese",
     "networkCapabilitiesHint": "Bilanci mensili totali disponibili di tutti i partecipanti nella tua rete di aiuto reciproco",
-    "communityChat": "Chat della comunità"
+    "communityChat": "Chat della comunità",
+    "wholeNetwork": "Tutta la rete",
+    "networkCapabilitiesTitle": "Capacità della rete",
+    "dateRange": "Periodo",
+    "showResults": "Mostra",
+    "periodPast7": "Ultimi 7 giorni",
+    "periodPast14": "Ultimi 14 giorni",
+    "periodPast28": "Ultimi 28 giorni",
+    "periodPast90": "Ultimi 90 giorni",
+    "periodPast365": "Ultimi 365 giorni",
+    "newConnections": "+{{count}} nuovi"
   },
   "collection": {
     "create": "Invia segnale di aiuto",
@@ -362,7 +372,8 @@
     "slugMin": "Minimo 3 caratteri",
     "webLinkDesc": "Link al sito web — se la persona non è ancora familiare con il progetto, contiene tutte le informazioni introduttive",
     "botLinkDesc": "Direttamente a Telegram — se hai già spiegato tutto e possono andare direttamente all'app",
-    "slugDesc": "Questo è il tuo ID link personale per gli URL di invito. NON è un invito di per sé — non inviarlo alle persone. Usa i link sopra per invitare qualcuno."
+    "slugDesc": "Questo è il tuo ID link personale per gli URL di invito. NON è un invito di per sé — non inviarlo alle persone. Usa i link sopra per invitare qualcuno.",
+    "expand": "espandi"
   },
   "landing": {
     "painQuote": "Quando i problemi arrivano — resti solo. Gli amici non lo sanno. Gli amici degli amici — ancora meno. Eppure qualcuno di loro potrebbe aiutare.",

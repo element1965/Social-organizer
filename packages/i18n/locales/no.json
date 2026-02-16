@@ -143,7 +143,17 @@
     "inviteTrusted": "Inviter",
     "myCapabilitiesHint": "Månedlig støttebudsjett. Hvor mye du er villig til å bidra med til gjensidig hjelp hver måned",
     "networkCapabilitiesHint": "Total tilgjengelig månedlig budsjett for alle deltakere i ditt gjensidige hjelp-nettverk",
-    "communityChat": "Fellesskapschat"
+    "communityChat": "Fellesskapschat",
+    "wholeNetwork": "Hele nettverket",
+    "networkCapabilitiesTitle": "Nettverkets muligheter",
+    "dateRange": "Tidsperiode",
+    "showResults": "Vis resultater",
+    "periodPast7": "Siste 7 dager",
+    "periodPast14": "Siste 14 dager",
+    "periodPast28": "Siste 28 dager",
+    "periodPast90": "Siste 90 dager",
+    "periodPast365": "Siste 365 dager",
+    "newConnections": "+{{count}} nye"
   },
   "collection": {
     "create": "Send et hjelpesignal",
@@ -384,7 +394,8 @@
     "slugMin": "Minimum 3 tegn",
     "webLinkDesc": "Nettsidelink ��� hvis personen ikke kjenner prosjektet ennå, har den all introduksjonsinformasjonen",
     "botLinkDesc": "Rett til Telegram — hvis du allerede har forklart alt og de kan gå rett til appen",
-    "slugDesc": "Dette er din personlige lenke-ID for invitasjons-URLer. Det er IKKE en invitasjon i seg selv — ikke send det til folk. Bruk lenkene ovenfor for å invitere noen."
+    "slugDesc": "Dette er din personlige lenke-ID for invitasjons-URLer. Det er IKKE en invitasjon i seg selv — ikke send det til folk. Bruk lenkene ovenfor for å invitere noen.",
+    "expand": "utvid"
   },
   "landing": {
     "painQuote": "Når problemer oppstår — står du alene. Venner vet ikke. Venners venner — enda mindre. Men noen av dem kunne hjulpet.",

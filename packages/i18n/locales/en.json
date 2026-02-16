@@ -145,7 +145,17 @@
     "inviteTrusted": "Invite",
     "communityChat": "Community Chat",
     "communityChatDesc": "This is the general community chat for questions, suggestions, and feedback about the app. It is not a help chat.",
-    "communityChatOpen": "Open Chat"
+    "communityChatOpen": "Open Chat",
+    "wholeNetwork": "Whole network",
+    "networkCapabilitiesTitle": "Network capabilities",
+    "dateRange": "Date range",
+    "showResults": "Show results",
+    "periodPast7": "Past 7 days",
+    "periodPast14": "Past 14 days",
+    "periodPast28": "Past 28 days",
+    "periodPast90": "Past 90 days",
+    "periodPast365": "Past 365 days",
+    "newConnections": "+{{count}} new"
   },
   "collection": {
     "create": "Send a help signal",
@@ -427,7 +437,8 @@
     "slugMin": "Minimum 3 characters",
     "webLinkDesc": "Website link — if the person isn't familiar with the project yet, it has all the introductory info",
     "botLinkDesc": "Straight to Telegram — if you've already explained everything and they can go right to the app",
-    "slugDesc": "This is your personal link ID for invite URLs. It is NOT an invitation itself — don't send it to people. Use the links above to invite someone."
+    "slugDesc": "This is your personal link ID for invite URLs. It is NOT an invitation itself — don't send it to people. Use the links above to invite someone.",
+    "expand": "expand"
   },
   "landing": {
     "painQuote": "When trouble strikes — you're alone. Friends don't know. Friends of friends — even less so. Yet someone among them could help.",

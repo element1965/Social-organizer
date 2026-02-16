@@ -143,7 +143,17 @@
     "inviteTrusted": "초대",
     "myCapabilitiesHint": "월간 지원 예산. 매월 상호 원조에 기부할 금액",
     "networkCapabilitiesHint": "귀하의 상호 원조 네트워크에 있는 모든 참가자의 총 가용 월간 예산",
-    "communityChat": "커뮤니티 채팅"
+    "communityChat": "커뮤니티 채팅",
+    "wholeNetwork": "전체 네트워크",
+    "networkCapabilitiesTitle": "네트워크 역량",
+    "dateRange": "기간",
+    "showResults": "결과 보기",
+    "periodPast7": "최근 7일",
+    "periodPast14": "최근 14일",
+    "periodPast28": "최근 28일",
+    "periodPast90": "최근 90일",
+    "periodPast365": "최근 365일",
+    "newConnections": "+{{count}} 신규"
   },
   "collection": {
     "create": "도움 신호 보내기",
@@ -384,7 +394,8 @@
     "slugMin": "최소 3자",
     "webLinkDesc": "웹사이트 링크 — 프로젝트를 모르는 사람에게 모든 소개 정보를 제공",
     "botLinkDesc": "텔레그램으로 바로 — 모든 설명 후 앱으로 직행",
-    "slugDesc": "이것은 초대 URL에 사용되는 개인 링크 ID입니다. 이것 자체가 초대가 아닙니다 — 사람들에게 보내지 마세요. 누군가를 초대하려면 위의 링크를 사용하세요."
+    "slugDesc": "이것은 초대 URL에 사용되는 개인 링크 ID입니다. 이것 자체가 초대가 아닙니다 — 사람들에게 보내지 마세요. 누군가를 초대하려면 위의 링크를 사용하세요.",
+    "expand": "펼치기"
   },
   "landing": {
     "painQuote": "문제가 생기면 — 혼자가 됩니다. 친구들은 모릅니다. 친구의 친구들은 — 더더욱. 하지만 그들 중 누군가는 도와줄 수 있었을 텐데.",

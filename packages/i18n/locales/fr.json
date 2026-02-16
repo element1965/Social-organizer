@@ -143,7 +143,17 @@
     "inviteTrusted": "Inviter",
     "myCapabilitiesHint": "Budget de soutien mensuel. Combien vous êtes prêt à contribuer à l'aide mutuelle chaque mois",
     "networkCapabilitiesHint": "Budgets mensuels totaux disponibles de tous les participants dans votre réseau d'aide mutuelle",
-    "communityChat": "Chat communautaire"
+    "communityChat": "Chat communautaire",
+    "wholeNetwork": "Tout le réseau",
+    "networkCapabilitiesTitle": "Capacités du réseau",
+    "dateRange": "Période",
+    "showResults": "Afficher",
+    "periodPast7": "7 derniers jours",
+    "periodPast14": "14 derniers jours",
+    "periodPast28": "28 derniers jours",
+    "periodPast90": "90 derniers jours",
+    "periodPast365": "365 derniers jours",
+    "newConnections": "+{{count}} nouveaux"
   },
   "collection": {
     "create": "Envoyer un signal d'aide",
@@ -362,7 +372,8 @@
     "slugMin": "Minimum 3 caractères",
     "webLinkDesc": "Lien du site web — si la personne n'est pas familière avec le projet, il contient toutes les informations introductives",
     "botLinkDesc": "Directement vers Telegram — si vous avez déjà tout expliqué et qu'ils peuvent aller directement à l'app",
-    "slugDesc": "Ceci est votre identifiant de lien personnel pour les URL d'invitation. Ce N'EST PAS une invitation en soi — ne l'envoyez pas aux gens. Utilisez les liens ci-dessus pour inviter quelqu'un."
+    "slugDesc": "Ceci est votre identifiant de lien personnel pour les URL d'invitation. Ce N'EST PAS une invitation en soi — ne l'envoyez pas aux gens. Utilisez les liens ci-dessus pour inviter quelqu'un.",
+    "expand": "développer"
   },
   "landing": {
     "painQuote": "Quand les problèmes arrivent — tu restes seul. Les amis ne savent pas. Les amis d'amis — encore moins. Pourtant, quelqu'un parmi eux pourrait aider.",

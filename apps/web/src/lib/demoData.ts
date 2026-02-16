@@ -638,6 +638,16 @@ export function handleDemoRequest(path: string, input: unknown): unknown {
         ],
       };
 
+    case 'stats.byPeriod': {
+      const days = (inp?.days as number) ?? 7;
+      const newConn = days <= 7 ? 2 : days <= 14 ? 5 : days <= 28 ? 9 : days <= 90 ? 18 : 47;
+      return {
+        newConnections: newConn,
+        helpGiven: { count: Math.ceil(days / 5), totalAmount: Math.ceil(days * 8) },
+        helpReceived: { count: Math.ceil(days / 10), totalAmount: Math.ceil(days * 12) },
+      };
+    }
+
     case 'stats.networkCapabilities':
       return {
         total: 12500,

@@ -143,7 +143,17 @@
     "inviteTrusted": "Pozvat",
     "myCapabilitiesHint": "Měsíční rozpočet podpory. Kolik jste ochotni přispět na vzájemnou pomoc každý měsíc",
     "networkCapabilitiesHint": "Celkové dostupné měsíční rozpočty všech účastníků ve vaší síti vzájemné pomoci",
-    "communityChat": "Chat komunity"
+    "communityChat": "Chat komunity",
+    "wholeNetwork": "Celá síť",
+    "networkCapabilitiesTitle": "Možnosti sítě",
+    "dateRange": "Časové období",
+    "showResults": "Zobrazit",
+    "periodPast7": "Za 7 dní",
+    "periodPast14": "Za 14 dní",
+    "periodPast28": "Za 28 dní",
+    "periodPast90": "Za 90 dní",
+    "periodPast365": "Za 365 dní",
+    "newConnections": "+{{count}} nových"
   },
   "collection": {
     "create": "Vyslat signál o pomoci",
@@ -384,7 +394,8 @@
     "slugMin": "Minimálně 3 znaky",
     "webLinkDesc": "Odkaz na web — pokud osoba ještě nezná projekt, obsahuje všechny úvodní informace",
     "botLinkDesc": "Přímo do Telegramu — pokud jste vše vysvětlili a mohou jít přímo do aplikace",
-    "slugDesc": "Toto je vaše osobní ID odkazu pro pozvánky. NENÍ to samotná pozvánka — neposílejte ho lidem. K pozvání použijte odkazy výše."
+    "slugDesc": "Toto je vaše osobní ID odkazu pro pozvánky. NENÍ to samotná pozvánka — neposílejte ho lidem. K pozvání použijte odkazy výše.",
+    "expand": "rozbalit"
   },
   "landing": {
     "painQuote": "Když přijde problém — zůstáváš sám. Přátelé nevědí. Známí známých — ještě méně. Přitom někdo z nich mohl pomoct.",

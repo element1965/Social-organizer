@@ -143,7 +143,17 @@
     "inviteTrusted": "Invitar",
     "myCapabilitiesHint": "Presupuesto de apoyo mensual. Cuánto estás dispuesto a contribuir a la ayuda mutua cada mes",
     "networkCapabilitiesHint": "Presupuestos mensuales disponibles totales de todos los participantes en tu red de ayuda mutua",
-    "communityChat": "Chat de la comunidad"
+    "communityChat": "Chat de la comunidad",
+    "wholeNetwork": "Toda la red",
+    "networkCapabilitiesTitle": "Capacidades de la red",
+    "dateRange": "Periodo",
+    "showResults": "Mostrar",
+    "periodPast7": "Últimos 7 días",
+    "periodPast14": "Últimos 14 días",
+    "periodPast28": "Últimos 28 días",
+    "periodPast90": "Últimos 90 días",
+    "periodPast365": "Últimos 365 días",
+    "newConnections": "+{{count}} nuevos"
   },
   "collection": {
     "create": "Enviar señal de ayuda",
@@ -362,7 +372,8 @@
     "slugMin": "Mínimo 3 caracteres",
     "webLinkDesc": "Enlace al sitio web — si la persona no está familiarizada con el proyecto aún, tiene toda la información introductoria",
     "botLinkDesc": "Directo a Telegram — si ya has explicado todo y pueden ir directamente a la app",
-    "slugDesc": "Este es tu ID de enlace personal para URLs de invitación. NO es una invitación en sí — no lo envíes a nadie. Usa los enlaces de arriba para invitar a alguien."
+    "slugDesc": "Este es tu ID de enlace personal para URLs de invitación. NO es una invitación en sí — no lo envíes a nadie. Usa los enlaces de arriba para invitar a alguien.",
+    "expand": "expandir"
   },
   "landing": {
     "painQuote": "Cuando surge un problema — te quedas solo. Los amigos no lo saben. Los amigos de amigos — menos aún. Pero alguien de ellos podría ayudar.",

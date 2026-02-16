@@ -41,3 +41,31 @@
   scrollbar-width: thin;
   scrollbar-color: #4b5563 #1f2937;
 }
+
+/* Flip card */
+.flip-container {
+  perspective: 1000px;
+}
+
+.flip-inner {
+  transition: transform 0.6s ease;
+  transform-style: preserve-3d;
+}
+
+.flip-inner.flipped {
+  transform: rotateY(180deg);
+}
+
+.flip-front,
+.flip-back {
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.flip-back {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  transform: rotateY(180deg);
+}

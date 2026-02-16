@@ -143,7 +143,17 @@
     "inviteTrusted": "Undang",
     "myCapabilitiesHint": "Anggaran dukungan bulanan. Berapa banyak yang Anda ingin sumbangkan untuk bantuan bersama setiap bulan",
     "networkCapabilitiesHint": "Total anggaran bulanan tersedia dari semua peserta di jaringan bantuan bersama Anda",
-    "communityChat": "Chat Komunitas"
+    "communityChat": "Chat Komunitas",
+    "wholeNetwork": "Seluruh jaringan",
+    "networkCapabilitiesTitle": "Kemampuan jaringan",
+    "dateRange": "Rentang waktu",
+    "showResults": "Tampilkan",
+    "periodPast7": "7 hari terakhir",
+    "periodPast14": "14 hari terakhir",
+    "periodPast28": "28 hari terakhir",
+    "periodPast90": "90 hari terakhir",
+    "periodPast365": "365 hari terakhir",
+    "newConnections": "+{{count}} baru"
   },
   "collection": {
     "create": "Kirim sinyal bantuan",
@@ -384,7 +394,8 @@
     "slugMin": "Minimal 3 karakter",
     "webLinkDesc": "Tautan situs web — jika orang tersebut belum familiar dengan proyek, ia memiliki semua informasi pengantar",
     "botLinkDesc": "Langsung ke Telegram — jika Anda sudah menjelaskan semuanya dan mereka bisa langsung ke aplikasi",
-    "slugDesc": "Ini adalah ID tautan pribadi Anda untuk URL undangan. Ini BUKAN undangan itu sendiri — jangan kirimkan ke orang lain. Gunakan tautan di atas untuk mengundang seseorang."
+    "slugDesc": "Ini adalah ID tautan pribadi Anda untuk URL undangan. Ini BUKAN undangan itu sendiri — jangan kirimkan ke orang lain. Gunakan tautan di atas untuk mengundang seseorang.",
+    "expand": "perluas"
   },
   "landing": {
     "painQuote": "Ketika masalah datang — kamu sendirian. Teman tidak tahu. Teman dari teman — lebih tidak tahu lagi. Padahal seseorang dari mereka bisa membantu.",

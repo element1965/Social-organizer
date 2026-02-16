@@ -3,6 +3,52 @@ import { router, protectedProcedure } from '../trpc.js';
 
 
 export const statsRouter = router({
+  byPeriod: protectedProcedure
+    .input(z.object({ days: z.number().min(1).max(365) }))
+    .query(async ({ ctx, input }) => {
+      const userId = ctx.userId;
+      const since = new Date(Date.now() - input.days * 86400000);
+
+      // New direct connections in period
+      const newConnections = await ctx.db.connection.count({
+        where: {
+          OR: [{ userAId: userId }, { userBId: userId }],
+          createdAt: { gte: since },
+        },
+      });
+
+      // Obligations given in period
+      const obligationsGiven = await ctx.db.obligation.findMany({
+        where: { userId, createdAt: { gte: since } },
+        select: { amount: true },
+      });
+
+      // Obligations received in period (others helped user's collections)
+      const collectionsWithObligations = await ctx.db.collection.findMany({
+        where: { creatorId: userId },
+        include: {
+          obligations: {
+            where: { createdAt: { gte: since } },
+            select: { amount: true },
+          },
+        },
+      });
+
+      const givenCount = obligationsGiven.length;
+      const givenTotal = obligationsGiven.reduce((sum, o) => sum + o.amount, 0);
+      const receivedCount = collectionsWithObligations.reduce((sum, c) => sum + c.obligations.length, 0);
+      const receivedTotal = collectionsWithObligations.reduce(
+        (sum, c) => sum + c.obligations.reduce((s, o) => s + o.amount, 0),
+        0,
+      );
+
+      return {
+        newConnections,
+        helpGiven: { count: givenCount, totalAmount: Math.round(givenTotal) },
+        helpReceived: { count: receivedCount, totalAmount: Math.round(receivedTotal) },
+      };
+    }),
+
   profile: protectedProcedure
     .input(z.object({ userId: z.string().optional() }).optional())
     .query(async ({ ctx, input }) => {
