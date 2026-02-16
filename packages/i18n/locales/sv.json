@@ -153,7 +153,8 @@
     "periodPast28": "Senaste 28 dagarna",
     "periodPast90": "Senaste 90 dagarna",
     "periodPast365": "Senaste 365 dagarna",
-    "newConnections": "+{{count}} nya"
+    "newConnections": "+{{count}} nya",
+    "periodPast1": "Idag"
   },
   "collection": {
     "create": "Skicka hjalpsignal",
@@ -395,7 +396,8 @@
     "webLinkDesc": "Webbplatslänk — om personen inte är bekant med projektet än, har den all introduktionsinformation",
     "botLinkDesc": "Rakt till Telegram — om du redan har förklarat allt och de kan gå direkt till appen",
     "slugDesc": "Detta är ditt personliga länk-ID för inbjudnings-URL:er. Det är INTE en inbjudan i sig — skicka det inte till folk. Använd länkarna ovan för att bjuda in någon.",
-    "expand": "expandera"
+    "expand": "expandera",
+    "showQr": "visa QR"
   },
   "landing": {
     "painQuote": "Nar problem uppstar — star du ensam. Vanner vet inte. Vanners vanner — annu mindre. Men nagon av dem kunde ha hjlpt.",

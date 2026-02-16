@@ -153,7 +153,8 @@
     "periodPast28": "Za 28 dní",
     "periodPast90": "Za 90 dní",
     "periodPast365": "Za 365 dní",
-    "newConnections": "+{{count}} nových"
+    "newConnections": "+{{count}} nových",
+    "periodPast1": "Za dnes"
   },
   "collection": {
     "create": "Vyslat signál o pomoci",
@@ -395,7 +396,8 @@
     "webLinkDesc": "Odkaz na web — pokud osoba ještě nezná projekt, obsahuje všechny úvodní informace",
     "botLinkDesc": "Přímo do Telegramu — pokud jste vše vysvětlili a mohou jít přímo do aplikace",
     "slugDesc": "Toto je vaše osobní ID odkazu pro pozvánky. NENÍ to samotná pozvánka — neposílejte ho lidem. K pozvání použijte odkazy výše.",
-    "expand": "rozbalit"
+    "expand": "rozbalit",
+    "showQr": "zobrazit QR"
   },
   "landing": {
     "painQuote": "Když přijde problém — zůstáváš sám. Přátelé nevědí. Známí známých — ještě méně. Přitom někdo z nich mohl pomoct.",

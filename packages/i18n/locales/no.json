@@ -153,7 +153,8 @@
     "periodPast28": "Siste 28 dager",
     "periodPast90": "Siste 90 dager",
     "periodPast365": "Siste 365 dager",
-    "newConnections": "+{{count}} nye"
+    "newConnections": "+{{count}} nye",
+    "periodPast1": "I dag"
   },
   "collection": {
     "create": "Send et hjelpesignal",
@@ -395,7 +396,8 @@
     "webLinkDesc": "Nettsidelink ��� hvis personen ikke kjenner prosjektet ennå, har den all introduksjonsinformasjonen",
     "botLinkDesc": "Rett til Telegram — hvis du allerede har forklart alt og de kan gå rett til appen",
     "slugDesc": "Dette er din personlige lenke-ID for invitasjons-URLer. Det er IKKE en invitasjon i seg selv — ikke send det til folk. Bruk lenkene ovenfor for å invitere noen.",
-    "expand": "utvid"
+    "expand": "utvid",
+    "showQr": "vis QR"
   },
   "landing": {
     "painQuote": "Når problemer oppstår — står du alene. Venner vet ikke. Venners venner — enda mindre. Men noen av dem kunne hjulpet.",

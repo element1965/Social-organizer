@@ -153,7 +153,8 @@
     "periodPast28": "最近28天",
     "periodPast90": "最近90天",
     "periodPast365": "最近365天",
-    "newConnections": "+{{count}} 新增"
+    "newConnections": "+{{count}} 新增",
+    "periodPast1": "今天"
   },
   "collection": {
     "create": "发送求助信号",
@@ -373,7 +374,8 @@
     "webLinkDesc": "网站链接 — 如果此人还不熟悉项目，它包含所有入门信息",
     "botLinkDesc": "直接到 Telegram — 如果您已经解释了一切，他们可以直接进入应用",
     "slugDesc": "这是您的邀请链接个人ID。这本身不是邀请——不要发送给别人。请使用上方的链接来邀请某人。",
-    "expand": "展开"
+    "expand": "展开",
+    "showQr": "显示二维码"
   },
   "landing": {
     "painQuote": "当困难来临时——你独自面对。朋友不知道。朋友的朋友——更不知道。但他们中的某个人本可以帮忙。",

@@ -153,7 +153,8 @@
     "periodPast28": "28 hari terakhir",
     "periodPast90": "90 hari terakhir",
     "periodPast365": "365 hari terakhir",
-    "newConnections": "+{{count}} baru"
+    "newConnections": "+{{count}} baru",
+    "periodPast1": "Hari ini"
   },
   "collection": {
     "create": "Kirim sinyal bantuan",
@@ -395,7 +396,8 @@
     "webLinkDesc": "Tautan situs web — jika orang tersebut belum familiar dengan proyek, ia memiliki semua informasi pengantar",
     "botLinkDesc": "Langsung ke Telegram — jika Anda sudah menjelaskan semuanya dan mereka bisa langsung ke aplikasi",
     "slugDesc": "Ini adalah ID tautan pribadi Anda untuk URL undangan. Ini BUKAN undangan itu sendiri — jangan kirimkan ke orang lain. Gunakan tautan di atas untuk mengundang seseorang.",
-    "expand": "perluas"
+    "expand": "perluas",
+    "showQr": "tampilkan QR"
   },
   "landing": {
     "painQuote": "Ketika masalah datang — kamu sendirian. Teman tidak tahu. Teman dari teman — lebih tidak tahu lagi. Padahal seseorang dari mereka bisa membantu.",

@@ -153,7 +153,8 @@
     "periodPast28": "Son 28 gün",
     "periodPast90": "Son 90 gün",
     "periodPast365": "Son 365 gün",
-    "newConnections": "+{{count}} yeni"
+    "newConnections": "+{{count}} yeni",
+    "periodPast1": "Bugün"
   },
   "collection": {
     "create": "Yardım sinyali gönder",
@@ -395,7 +396,8 @@
     "webLinkDesc": "Web sitesi bağlantısı — eğer kişi proje ile henüz tanışmadıysa, tüm giriş bilgilerini barındırır",
     "botLinkDesc": "Doğrudan Telegram'a — eğer her şeyi zaten açıklamışsanız ve doğrudan uygulamaya gidebilirler",
     "slugDesc": "Bu, davet URL'leri için kişisel bağlantı kimliğinizdir. Bu bir davet DEĞİLDİR — insanlara göndermeyin. Birini davet etmek için yukarıdaki bağlantıları kullanın.",
-    "expand": "genişlet"
+    "expand": "genişlet",
+    "showQr": "QR göster"
   },
   "landing": {
     "painQuote": "Sorun çıktığında — yalnız kalırsın. Arkadaşlar bilmez. Arkadaşların arkadaşları — daha da az. Ama onlardan biri yardım edebilirdi.",
