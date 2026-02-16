@@ -52,8 +52,11 @@ function LanguageSwitcher() {
   );
 }
 
-function LandingFaq() {
-  const { t, i18n } = useTranslation();
+function LandingFaq({ variant }: { variant?: 'arvut' }) {
+  const { t: _t, i18n } = useTranslation();
+  const t = (variant === 'arvut'
+    ? (key: string) => _t(key.replace('landing.', 'landingArvut.') as any)
+    : _t) as typeof _t;
   const lang = i18n.language?.slice(0, 2) || 'en';
   const [showAll, setShowAll] = useState(false);
   const [openId, setOpenId] = useState<string | null>(null);
@@ -117,8 +120,11 @@ function LandingFaq() {
   );
 }
 
-export function LandingPage() {
-  const { t } = useTranslation();
+export function LandingPage({ variant }: { variant?: 'arvut' } = {}) {
+  const { t: _t, i18n } = useTranslation();
+  const t = (variant === 'arvut'
+    ? (key: string) => _t(key.replace('landing.', 'landingArvut.') as any)
+    : _t) as typeof _t;
   const [searchParams] = useSearchParams();
   const inviteParam = searchParams.get('invite');
   const fromDemo = searchParams.get('from') === 'demo';
@@ -129,6 +135,13 @@ export function LandingPage() {
   useEffect(() => {
     if (inviteParam) localStorage.setItem('pendingInviteToken', inviteParam);
   }, [inviteParam]);
+
+  // Force Hebrew for Arvut variant
+  useEffect(() => {
+    if (variant === 'arvut' && i18n.language?.slice(0, 2) !== 'he') {
+      i18n.changeLanguage('he');
+    }
+  }, [variant, i18n]);
 
   // Build Telegram bot link with invite param if available
   const tgBotLink = pendingInvite
@@ -163,7 +176,7 @@ export function LandingPage() {
   const heroProgress = Math.min(scrollY / HERO_TRANSITION_PX, 1);
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-blue-950 via-gray-950 to-blue-950">
+    <div dir={variant === 'arvut' ? 'rtl' : undefined} className="min-h-screen bg-gradient-to-b from-blue-950 via-gray-950 to-blue-950">
       {/* Fixed 3D background */}
       <div className="fixed inset-0 pointer-events-none">
         <Suspense fallback={null}>
@@ -179,10 +192,12 @@ export function LandingPage() {
         <Logo size={50} className="text-teal-400" />
       </div>
 
-      {/* Language switcher — fixed top-right */}
-      <div className="fixed top-4 right-4 z-20">
-        <LanguageSwitcher />
-      </div>
+      {/* Language switcher — fixed top-right (hidden for arvut) */}
+      {variant !== 'arvut' && (
+        <div className="fixed top-4 right-4 z-20">
+          <LanguageSwitcher />
+        </div>
+      )}
 
       {/* Demo mode banner */}
       {showDemoBanner && (
@@ -213,7 +228,7 @@ export function LandingPage() {
             <Logo size={120} className="text-teal-400" />
           </div>
           <h1 className="text-5xl md:text-7xl font-bold text-white mb-4 tracking-tight">
-            Social Organizer
+            {variant === 'arvut' ? 'ערבות הדדית' : 'Social Organizer'}
           </h1>
           <p className="text-gray-300 text-lg md:text-xl max-w-2xl mb-10 leading-relaxed">
             {t('landing.heroSubtitle')}
@@ -418,7 +433,7 @@ export function LandingPage() {
         </section>
 
         {/* === Section: FAQ === */}
-        <LandingFaq />
+        <LandingFaq variant={variant} />
 
         {/* === Section 5: Download Apps === */}
         <section id="download" className="min-h-[50vh] flex flex-col items-center justify-center px-6 py-20">
