@@ -1,4 +1,4 @@
-{
+﻿{
   "common": {
     "appName": "מארגן חברתי",
     "loading": "טוען...",
@@ -135,7 +135,7 @@
     "people": "אנשים",
     "totalGiven": "סה\"כ נתן",
     "currentCapabilities": "יכולות הרשת",
-    "capabilitiesContributors": "מ{{count}} תורמים",
+    "capabilitiesContributors": "מ-{{count}} אנשים",
     "editBudget": "ערוך",
     "yourContribution": "יכולותי",
     "myCapabilitiesHint": "תקציב תמיכה חודשי. כמה אתה מוכן לתרום לעזרה הדדית בכל חודש",

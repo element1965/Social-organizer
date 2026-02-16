@@ -1,4 +1,4 @@
-{
+﻿{
   "common": {
     "appName": "Sosyal Organizasyon",
     "loading": "Yükleniyor...",
@@ -125,7 +125,7 @@
     "people": "kişi",
     "totalGiven": "Toplam verilen",
     "currentCapabilities": "Ağ kapasitesi",
-    "capabilitiesContributors": "{{count}} katkıda bulunandan",
+    "capabilitiesContributors": "{{count}} kişiden",
     "editBudget": "Düzenle",
     "yourContribution": "Kapasitem",
     "budgetDepletedHint": "Aylık destek bütçeniz tükendi. Daha fazla eklemek ister misiniz?",

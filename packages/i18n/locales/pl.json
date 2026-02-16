@@ -1,4 +1,4 @@
-{
+﻿{
   "common": {
     "appName": "Organizator Społeczny",
     "loading": "Ładowanie...",
@@ -125,7 +125,7 @@
     "people": "osób",
     "totalGiven": "Łącznie przekazano",
     "currentCapabilities": "Możliwości sieci",
-    "capabilitiesContributors": "od {{count}} osób",
+    "capabilitiesContributors": "od {{count}} os.",
     "editBudget": "Edytuj",
     "yourContribution": "Moje możliwości",
     "budgetDepletedHint": "Twój miesięczny budżet wsparcia został wyczerpany. Chcesz dodać więcej?",

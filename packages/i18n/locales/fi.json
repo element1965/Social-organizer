@@ -1,4 +1,4 @@
-{
+﻿{
   "common": {
     "appName": "Sosiaalinen Järjestäjä",
     "loading": "Ladataan...",
@@ -125,7 +125,7 @@
     "people": "henkilöä",
     "totalGiven": "Annettu yhteensä",
     "currentCapabilities": "Verkoston kapasiteetti",
-    "capabilitiesContributors": "{{count}} osallistujalta",
+    "capabilitiesContributors": "{{count}} hlöltä",
     "editBudget": "Muokkaa",
     "yourContribution": "Omat kapasiteettini",
     "budgetDepletedHint": "Kuukausittainen tukibudjettisi on käytetty. Haluatko lisätä lisää?",

@@ -1,4 +1,4 @@
-{
+﻿{
   "common": {
     "appName": "Sosial Organisator",
     "loading": "Laster...",
@@ -125,7 +125,7 @@
     "people": "personer",
     "totalGiven": "Gitt totalt",
     "currentCapabilities": "Nettverkskapasitet",
-    "capabilitiesContributors": "fra {{count}} bidragsytere",
+    "capabilitiesContributors": "fra {{count}} pers.",
     "editBudget": "Rediger",
     "yourContribution": "Min kapasitet",
     "budgetDepletedHint": "Ditt månedlige støttebudsjett er brukt opp. Vil du legge til mer?",

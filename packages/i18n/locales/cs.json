@@ -1,4 +1,4 @@
-{
+﻿{
   "common": {
     "appName": "Sociální Organizátor",
     "loading": "Načítání...",
@@ -125,7 +125,7 @@
     "people": "lidí",
     "totalGiven": "Celkem darováno",
     "currentCapabilities": "Kapacity sítě",
-    "capabilitiesContributors": "od {{count}} přispěvatelů",
+    "capabilitiesContributors": "od {{count}} os.",
     "editBudget": "Upravit",
     "yourContribution": "Moje kapacity",
     "budgetDepletedHint": "Váš měsíční rozpočet na podporu je vyčerpán. Chcete přidat více?",

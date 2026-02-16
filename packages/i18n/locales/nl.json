@@ -1,4 +1,4 @@
-{
+﻿{
   "common": {
     "appName": "Sociale Organisator",
     "loading": "Laden...",
@@ -125,7 +125,7 @@
     "people": "personen",
     "totalGiven": "Totaal gegeven",
     "currentCapabilities": "Netwerkcapaciteiten",
-    "capabilitiesContributors": "van {{count}} bijdragers",
+    "capabilitiesContributors": "van {{count}} pers.",
     "editBudget": "Bewerken",
     "yourContribution": "Mijn capaciteiten",
     "budgetDepletedHint": "Je maandelijkse ondersteuningsbudget is uitgeput. Wil je meer toevoegen?",

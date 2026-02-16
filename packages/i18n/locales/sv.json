@@ -1,4 +1,4 @@
-{
+﻿{
   "common": {
     "appName": "Social Organisatör",
     "loading": "Laddar...",
@@ -125,7 +125,7 @@
     "people": "personer",
     "totalGiven": "Totalt givet",
     "currentCapabilities": "Nätverkskapacitet",
-    "capabilitiesContributors": "fran {{count}} bidragsgivare",
+    "capabilitiesContributors": "från {{count}} pers.",
     "editBudget": "Redigera",
     "yourContribution": "Min kapacitet",
     "budgetDepletedHint": "Din manatliga stodbudget ar forbrukad. Vill du lagga till mer?",

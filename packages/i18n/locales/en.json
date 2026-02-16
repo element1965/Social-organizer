@@ -1,4 +1,4 @@
-{
+﻿{
   "common": {
     "appName": "Social Organizer",
     "loading": "Loading...",
@@ -125,7 +125,7 @@
     "people": "people",
     "totalGiven": "Total given",
     "currentCapabilities": "Network Capabilities",
-    "capabilitiesContributors": "from {{count}} contributors",
+    "capabilitiesContributors": "from {{count}} ppl",
     "editBudget": "Edit",
     "yourContribution": "My capabilities",
     "myCapabilitiesHint": "Monthly support budget. How much you're willing to contribute to mutual aid each month",

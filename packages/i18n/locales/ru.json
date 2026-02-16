@@ -1,4 +1,4 @@
-{
+﻿{
   "common": {
     "appName": "Social Organizer",
     "loading": "Загрузка...",
@@ -125,7 +125,7 @@
     "people": "чел",
     "totalGiven": "Всего отдал",
     "currentCapabilities": "Возможности сети",
-    "capabilitiesContributors": "от {{count}} участников",
+    "capabilitiesContributors": "от {{count}} чел",
     "editBudget": "Изменить",
     "yourContribution": "Мои возможности",
     "myCapabilitiesHint": "Месячный бюджет поддержки. Сколько вы готовы выделять на взаимопомощь ежемесячно",

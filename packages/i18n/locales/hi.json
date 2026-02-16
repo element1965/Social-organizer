@@ -1,4 +1,4 @@
-{
+﻿{
   "common": {
     "appName": "सामाजिक आयोजक",
     "loading": "लोड हो रहा है...",
@@ -125,7 +125,7 @@
     "people": "लोग",
     "totalGiven": "कुल योगदान",
     "currentCapabilities": "नेटवर्क क्षमताएं",
-    "capabilitiesContributors": "{{count}} योगदानकर्ताओं से",
+    "capabilitiesContributors": "{{count}} लोगों से",
     "editBudget": "संपादित करें",
     "yourContribution": "मेरी क्षमताएं",
     "budgetDepletedHint": "आपका मासिक सहायता बजट समाप्त हो गया है। क्या आप और जोड़ना चाहेंगे?",
