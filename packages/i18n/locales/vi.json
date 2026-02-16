@@ -1,4 +1,4 @@
-{
+﻿{
   "common": {
     "appName": "Trình tổ chức xã hội",
     "loading": "Đang tải...",
@@ -125,7 +125,7 @@
     "people": "người",
     "totalGiven": "Tổng đã cho",
     "currentCapabilities": "Năng lực mạng lưới",
-    "capabilitiesContributors": "từ {{count}} người đóng góp",
+    "capabilitiesContributors": "từ {{count}} người",
     "editBudget": "Chỉnh sửa",
     "yourContribution": "Năng lực của tôi",
     "budgetDepletedHint": "Ngân sách hỗ trợ hàng tháng của bạn đã hết. Bạn muốn thêm không?",

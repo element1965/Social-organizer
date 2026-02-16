@@ -1,4 +1,4 @@
-{
+﻿{
   "common": {
     "appName": "Penyelenggara Sosial",
     "loading": "Memuat...",
@@ -125,7 +125,7 @@
     "people": "orang",
     "totalGiven": "Total diberikan",
     "currentCapabilities": "Kapasitas jaringan",
-    "capabilitiesContributors": "dari {{count}} kontributor",
+    "capabilitiesContributors": "dari {{count}} org",
     "editBudget": "Sunting",
     "yourContribution": "Kapasitas saya",
     "budgetDepletedHint": "Anggaran dukungan bulananmu habis. Ingin menambahkan lagi?",

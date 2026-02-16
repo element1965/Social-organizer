@@ -1,4 +1,4 @@
-{
+﻿{
   "common": {
     "appName": "ผู้จัดระเบียบสังคม",
     "loading": "กำลังโหลด...",
@@ -125,7 +125,7 @@
     "people": "คน",
     "totalGiven": "ให้ทั้งหมด",
     "currentCapabilities": "ความสามารถของเครือข่าย",
-    "capabilitiesContributors": "จากผู้สนับสนุน {{count}} คน",
+    "capabilitiesContributors": "จาก {{count}} คน",
     "editBudget": "แก้ไข",
     "yourContribution": "ความสามารถของฉัน",
     "budgetDepletedHint": "งบสนับสนุนรายเดือนของคุณหมดแล้ว ต้องการเพิ่มอีกไหม?",

@@ -1,4 +1,4 @@
-{
+﻿{
   "common": {
     "appName": "Organizzatore Sociale",
     "loading": "Caricamento...",
@@ -125,7 +125,7 @@
     "people": "persone",
     "totalGiven": "Totale dato",
     "currentCapabilities": "Capacità della rete",
-    "capabilitiesContributors": "da {{count}} contributori",
+    "capabilitiesContributors": "da {{count}} pers.",
     "editBudget": "Modifica",
     "yourContribution": "Le mie capacità",
     "budgetDepletedHint": "Il tuo budget mensile di supporto è esaurito. Vuoi aggiungerne altro?",

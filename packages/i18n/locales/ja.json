@@ -1,4 +1,4 @@
-{
+﻿{
   "common": {
     "appName": "ソーシャル オーガナイザー",
     "loading": "読み込み中...",
@@ -125,7 +125,7 @@
     "people": "人",
     "totalGiven": "合計貢献",
     "currentCapabilities": "ネットワーク能力",
-    "capabilitiesContributors": "{{count}} 人の貢献者から",
+    "capabilitiesContributors": "{{count}}人から",
     "editBudget": "編集",
     "yourContribution": "自分の能力",
     "budgetDepletedHint": "月間サポート予算を使い切りました。追加しますか？",

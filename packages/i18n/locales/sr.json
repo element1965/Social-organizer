@@ -1,4 +1,4 @@
-{
+﻿{
   "common": {
     "appName": "Društveni organizator",
     "loading": "Учитавање...",
@@ -125,7 +125,7 @@
     "people": "људи",
     "totalGiven": "Укупно дато",
     "currentCapabilities": "Капацитети мреже",
-    "capabilitiesContributors": "од {{count}} доприносилаца",
+    "capabilitiesContributors": "од {{count}} особа",
     "editBudget": "Измени",
     "yourContribution": "Моји капацитети",
     "budgetDepletedHint": "Твој месечни буџет за подршку је потрошен. Желиш ли да додаш још?",

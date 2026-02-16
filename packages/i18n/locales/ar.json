@@ -1,4 +1,4 @@
-{
+﻿{
   "common": {
     "appName": "منظم اجتماعي",
     "loading": "جارٍ التحميل...",
@@ -125,7 +125,7 @@
     "people": "أشخاص",
     "totalGiven": "إجمالي المساهمات",
     "currentCapabilities": "قدرات الشبكة",
-    "capabilitiesContributors": "من {{count}} مساهمين",
+    "capabilitiesContributors": "من {{count}} شخص",
     "editBudget": "تعديل",
     "yourContribution": "قدراتي",
     "budgetDepletedHint": "تم استنفاد ميزانية الدعم الشهرية. هل تريد إضافة المزيد؟",

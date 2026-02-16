@@ -1,4 +1,4 @@
-{
+﻿{
   "common": {
     "appName": "Соціальний Організатор",
     "loading": "Завантаження...",
@@ -125,7 +125,7 @@
     "people": "людей",
     "totalGiven": "Всього віддав",
     "currentCapabilities": "Можливості мережі",
-    "capabilitiesContributors": "від {{count}} учасників",
+    "capabilitiesContributors": "від {{count}} осіб",
     "editBudget": "Редагувати",
     "yourContribution": "Мої можливості",
     "budgetDepletedHint": "Ваш місячний бюджет підтримки вичерпано. Бажаєте додати ще?",

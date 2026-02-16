@@ -1,4 +1,4 @@
-{
+﻿{
   "common": {
     "appName": "Social Organisator",
     "loading": "Indlæser...",
@@ -125,7 +125,7 @@
     "people": "personer",
     "totalGiven": "Givet i alt",
     "currentCapabilities": "Netværkskapacitet",
-    "capabilitiesContributors": "fra {{count}} bidragydere",
+    "capabilitiesContributors": "fra {{count}} pers.",
     "editBudget": "Rediger",
     "yourContribution": "Min kapacitet",
     "budgetDepletedHint": "Dit månedlige støttebudget er opbrugt. Vil du tilføje mere?",

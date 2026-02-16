@@ -1,4 +1,4 @@
-{
+﻿{
   "common": {
     "appName": "소셜 오거나이저",
     "loading": "로딩 중...",
@@ -125,7 +125,7 @@
     "people": "명",
     "totalGiven": "총 기여",
     "currentCapabilities": "네트워크 역량",
-    "capabilitiesContributors": "{{count}}명의 기여자로부터",
+    "capabilitiesContributors": "{{count}}명",
     "editBudget": "편집",
     "yourContribution": "나의 역량",
     "budgetDepletedHint": "월간 지원 예산이 소진되었습니다. 추가하시겠습니까?",

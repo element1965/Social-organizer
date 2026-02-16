@@ -1,4 +1,4 @@
-{
+﻿{
   "common": {
     "appName": "社交组织者",
     "loading": "加载中...",
@@ -125,7 +125,7 @@
     "people": "人",
     "totalGiven": "总计贡献",
     "currentCapabilities": "网络能力",
-    "capabilitiesContributors": "来自 {{count}} 位贡献者",
+    "capabilitiesContributors": "来自{{count}}人",
     "editBudget": "编辑",
     "yourContribution": "我的能力",
     "budgetDepletedHint": "你的每月支持预算已用完。是否要增加？",

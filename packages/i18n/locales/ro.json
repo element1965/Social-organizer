@@ -1,4 +1,4 @@
-{
+﻿{
   "common": {
     "appName": "Organizator Social",
     "loading": "Se incarca...",
@@ -125,7 +125,7 @@
     "people": "persoane",
     "totalGiven": "Total donat",
     "currentCapabilities": "Capacitățile rețelei",
-    "capabilitiesContributors": "de la {{count}} contribuitori",
+    "capabilitiesContributors": "de la {{count}} pers.",
     "editBudget": "Editeaza",
     "yourContribution": "Capacitățile mele",
     "budgetDepletedHint": "Bugetul tau lunar de sprijin s-a epuizat. Vrei sa adaugi mai mult?",

@@ -1,4 +1,4 @@
-{
+﻿{
   "common": {
     "appName": "Sozialer Organisierer",
     "loading": "Laden...",
@@ -125,7 +125,7 @@
     "people": "Personen",
     "totalGiven": "Insgesamt gegeben",
     "currentCapabilities": "Netzwerk-Kapazitäten",
-    "capabilitiesContributors": "von {{count}} Beitragenden",
+    "capabilitiesContributors": "von {{count}} Pers.",
     "editBudget": "Bearbeiten",
     "yourContribution": "Meine Kapazitäten",
     "budgetDepletedHint": "Dein monatliches Unterstützungsbudget ist aufgebraucht. Möchtest du mehr hinzufügen?",
