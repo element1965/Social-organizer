@@ -176,7 +176,7 @@ React 19 SPA with tRPC client.
 
 | Page | Path | Description |
 |------|------|-------------|
-| LandingPage | `/welcome` | Public landing with 3D Earth globe (NASA textures) and project description |
+| LandingPage | `/welcome` | Public landing with 3D Earth globe (NASA textures) and project description; supports `variant="arvut"` for Hebrew-branded Arvut Hadadit subdomain |
 | LoginPage | `/login` | Login via platform (FB/TG/Apple/Google) + demo mode |
 | OnboardingPage | `/onboarding` | 5-screen onboarding with invitation and monthly budget (auto for new users) |
 | DashboardPage | `/` | Network stats, collections, intentions, emergency alerts (protected → /welcome) |
@@ -261,6 +261,7 @@ Mock data (`apps/web/src/lib/demoData.ts`):
 - **Feedback to Telegram** — user feedback/suggestions from chat assistant are auto-forwarded to a Telegram group
 - **Telegram Bot Notifications** — collection notifications (new, blocked, closed) sent to users' Telegram via bot with rate-limited broadcast (BullMQ worker, 25 msg/sec)
 - **Web Push Notifications** — browser push notifications for collection events (new, blocked, closed) via Web Push API with VAPID authentication
+- **Arvut Hadadit Subdomain** — Hebrew-branded landing page at `arvuthadadit.orginizer.com` with "ערבות הדדית" branding, forced Hebrew locale, RTL layout, and dedicated translations (`landingArvut.*` in `he.json`)
 
 ## Terminology (Glossary)
 

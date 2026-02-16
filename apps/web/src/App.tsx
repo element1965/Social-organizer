@@ -22,6 +22,8 @@ import { PrivacyPage } from './pages/PrivacyPage';
 import { TermsPage } from './pages/TermsPage';
 import { FaqPage } from './pages/FaqPage';
 
+const isArvut = window.location.hostname.startsWith('arvuthadadit');
+
 /** Redirect authenticated users away from landing page to dashboard (prevents flash). */
 function HomeRoute() {
   const isAuthenticated = useAuth((s) => s.isAuthenticated);
@@ -30,7 +32,7 @@ function HomeRoute() {
   if (isAuthenticated && !params.get('invite') && !params.get('from') && !localStorage.getItem('pendingInviteToken')) {
     return <Navigate to="/dashboard" replace />;
   }
-  return <LandingPage />;
+  return <LandingPage variant={isArvut ? 'arvut' : undefined} />;
 }
 
 export function App() {
@@ -46,7 +48,7 @@ export function App() {
           <TelegramBootstrap>
           <Routes>
             <Route path="/" element={<HomeRoute />} />
-            <Route path="/welcome" element={<LandingPage />} />
+            <Route path="/welcome" element={<LandingPage variant={isArvut ? 'arvut' : undefined} />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/onboarding" element={<OnboardingPage />} />
             <Route path="/privacy" element={<PrivacyPage />} />
