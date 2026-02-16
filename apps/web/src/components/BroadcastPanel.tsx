@@ -20,7 +20,7 @@ function StatusBadge({ status }: { status: string }) {
   const colors: Record<string, string> = {
     PENDING: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400',
     SENT: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-400',
-    CANCELLED: 'bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400',
+    CANCELLED: 'bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-300',
     FAILED: 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400',
   };
   const key = `broadcast.status${status.charAt(0) + status.slice(1).toLowerCase()}`;
@@ -261,7 +261,7 @@ export function BroadcastPanel({ onClose }: BroadcastPanelProps) {
           {t('broadcast.title')}
         </h3>
         <button onClick={onClose} className="p-1 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full">
-          <X className="w-5 h-5 text-gray-500" />
+          <X className="w-5 h-5 text-gray-500 dark:text-gray-300" />
         </button>
       </div>
 
@@ -314,7 +314,7 @@ export function BroadcastPanel({ onClose }: BroadcastPanelProps) {
             <MessageComposer value={scheduledMsg} onChange={setScheduledMsg} disabled={isPending} />
 
             <div className="space-y-1">
-              <label className="flex items-center gap-1.5 text-xs text-gray-500 dark:text-gray-400">
+              <label className="flex items-center gap-1.5 text-xs text-gray-500 dark:text-gray-300">
                 <Clock className="w-3.5 h-3.5" />
                 {t('broadcast.scheduledAt')}
               </label>
@@ -354,7 +354,7 @@ export function BroadcastPanel({ onClose }: BroadcastPanelProps) {
                     >{post.text}</p>
                     <StatusBadge status={post.status} />
                   </div>
-                  <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400">
+                  <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-300">
                     <span>{new Date(post.scheduledAt).toLocaleString()}</span>
                     <div className="flex items-center gap-2">
                       {post.sentCount != null && (
@@ -388,15 +388,15 @@ export function BroadcastPanel({ onClose }: BroadcastPanelProps) {
               <div className="grid grid-cols-3 gap-2 text-center">
                 <div className="p-2 rounded-lg bg-gray-50 dark:bg-gray-800">
                   <div className="text-lg font-bold text-emerald-600">{chainStatsQuery.data.activeMessages}</div>
-                  <div className="text-xs text-gray-500">{t('broadcast.activeMessages')}</div>
+                  <div className="text-xs text-gray-500 dark:text-gray-300">{t('broadcast.activeMessages')}</div>
                 </div>
                 <div className="p-2 rounded-lg bg-gray-50 dark:bg-gray-800">
                   <div className="text-lg font-bold text-blue-600">{chainStatsQuery.data.totalDeliveries}</div>
-                  <div className="text-xs text-gray-500">{t('broadcast.totalDeliveries')}</div>
+                  <div className="text-xs text-gray-500 dark:text-gray-300">{t('broadcast.totalDeliveries')}</div>
                 </div>
                 <div className="p-2 rounded-lg bg-gray-50 dark:bg-gray-800">
                   <div className="text-lg font-bold text-purple-600">{chainStatsQuery.data.openRate}%</div>
-                  <div className="text-xs text-gray-500">{t('broadcast.openRate')}</div>
+                  <div className="text-xs text-gray-500 dark:text-gray-300">{t('broadcast.openRate')}</div>
                 </div>
               </div>
             )}
@@ -443,7 +443,7 @@ export function BroadcastPanel({ onClose }: BroadcastPanelProps) {
 
             <div className="grid grid-cols-3 gap-2">
               <div>
-                <label className="text-xs text-gray-500 dark:text-gray-400">{t('broadcast.chainDayOffset')}</label>
+                <label className="text-xs text-gray-500 dark:text-gray-300">{t('broadcast.chainDayOffset')}</label>
                 <input
                   type="number"
                   min={0}
@@ -454,7 +454,7 @@ export function BroadcastPanel({ onClose }: BroadcastPanelProps) {
                 />
               </div>
               <div>
-                <label className="text-xs text-gray-500 dark:text-gray-400">{t('broadcast.chainSortOrder')}</label>
+                <label className="text-xs text-gray-500 dark:text-gray-300">{t('broadcast.chainSortOrder')}</label>
                 <input
                   type="number"
                   min={0}
@@ -465,7 +465,7 @@ export function BroadcastPanel({ onClose }: BroadcastPanelProps) {
                 />
               </div>
               <div>
-                <label className="text-xs text-gray-500 dark:text-gray-400">{t('broadcast.chainInterval')}</label>
+                <label className="text-xs text-gray-500 dark:text-gray-300">{t('broadcast.chainInterval')}</label>
                 <input
                   type="number"
                   min={1}
@@ -508,15 +508,15 @@ export function BroadcastPanel({ onClose }: BroadcastPanelProps) {
                       <VariantSelector value={editVariant} onChange={setEditVariant} />
                       <div className="grid grid-cols-3 gap-2">
                         <div>
-                          <label className="text-xs text-gray-500 dark:text-gray-400">{t('broadcast.chainDayOffset')}</label>
+                          <label className="text-xs text-gray-500 dark:text-gray-300">{t('broadcast.chainDayOffset')}</label>
                           <input type="number" min={0} value={editDay} onChange={(e) => setEditDay(Number(e.target.value))} className={inputCls} />
                         </div>
                         <div>
-                          <label className="text-xs text-gray-500 dark:text-gray-400">{t('broadcast.chainSortOrder')}</label>
+                          <label className="text-xs text-gray-500 dark:text-gray-300">{t('broadcast.chainSortOrder')}</label>
                           <input type="number" min={0} value={editOrder} onChange={(e) => setEditOrder(Number(e.target.value))} className={inputCls} />
                         </div>
                         <div>
-                          <label className="text-xs text-gray-500 dark:text-gray-400">{t('broadcast.chainInterval')}</label>
+                          <label className="text-xs text-gray-500 dark:text-gray-300">{t('broadcast.chainInterval')}</label>
                           <input type="number" min={1} value={editInterval} onChange={(e) => setEditInterval(Number(e.target.value))} className={inputCls} />
                         </div>
                       </div>
@@ -559,7 +559,7 @@ export function BroadcastPanel({ onClose }: BroadcastPanelProps) {
                           >{cm.text}</p>
                         </div>
                       </div>
-                      <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400">
+                      <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-300">
                         <div className="flex items-center gap-3">
                           <span>{t('broadcast.deliveries')}: {cm._count.deliveries}</span>
                           <span>{t('broadcast.reads')}: {(cm.deliveries as unknown[]).length}</span>

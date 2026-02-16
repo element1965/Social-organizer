@@ -14,7 +14,7 @@ export function Avatar({ src, name, size = 'md', className }: AvatarProps) {
     return <img src={src} alt={name || ''} className={cn('rounded-full object-cover', sizes[size], className)} />;
   }
   return (
-    <div className={cn('rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center text-gray-500 dark:text-gray-400', sizes[size], className)}>
+    <div className={cn('rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center text-gray-500 dark:text-gray-300', sizes[size], className)}>
       {name ? name[0]?.toUpperCase() : <User className="w-1/2 h-1/2" />}
     </div>
   );

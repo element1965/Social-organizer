@@ -99,7 +99,7 @@ export function Layout() {
               }}
               className={cn(
                 'flex flex-col items-center justify-center w-full h-full relative',
-                active ? 'text-blue-600 dark:text-blue-400' : 'text-gray-500 dark:text-gray-400'
+                active ? 'text-blue-600 dark:text-blue-400' : 'text-gray-500 dark:text-gray-300'
               )}
             >
               {item.icon && <item.icon className="w-5 h-5" />}

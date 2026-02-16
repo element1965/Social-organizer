@@ -75,7 +75,7 @@ export function DonutChart({
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center">
         {label && <span className="text-lg font-bold text-gray-900 dark:text-white">{label}</span>}
-        {sublabel && <span className="text-xs text-gray-500">{sublabel}</span>}
+        {sublabel && <span className="text-xs text-gray-500 dark:text-gray-300">{sublabel}</span>}
       </div>
     </div>
   );
@@ -133,7 +133,7 @@ export function SemiDonutChart({
       </svg>
       <div className="absolute bottom-0 left-0 right-0 flex flex-col items-center">
         {label && <span className="text-xl font-bold text-gray-900 dark:text-white">{label}</span>}
-        {sublabel && <span className="text-xs text-gray-500">{sublabel}</span>}
+        {sublabel && <span className="text-xs text-gray-500 dark:text-gray-300">{sublabel}</span>}
       </div>
     </div>
   );
@@ -163,7 +163,7 @@ export function BarChart({ data, maxValue, height = 100, className }: BarChartPr
                 backgroundColor: item.color || '#3b82f6',
               }}
             />
-            <span className="text-[10px] text-gray-500 truncate max-w-full">{item.label}</span>
+            <span className="text-[10px] text-gray-500 dark:text-gray-300 truncate max-w-full">{item.label}</span>
           </div>
         );
       })}
@@ -185,7 +185,7 @@ export function StatCard({ label, value, sublabel, icon, trend, className }: Sta
     <div className={cn('p-3 rounded-xl bg-gray-50 dark:bg-gray-800/50', className)}>
       <div className="flex items-start justify-between">
         <div>
-          <p className="text-xs text-gray-500 mb-1">{label}</p>
+          <p className="text-xs text-gray-500 dark:text-gray-300 mb-1">{label}</p>
           <p className="text-2xl font-bold text-gray-900 dark:text-white">{value}</p>
           {sublabel && <p className="text-xs text-gray-400 mt-0.5">{sublabel}</p>}
           {trend && (
@@ -254,7 +254,7 @@ export function Tabs({ tabs, activeTab, onTabChange, className }: TabsProps) {
             'flex-1 flex items-center justify-center gap-1.5 px-3 py-2 rounded-md text-sm font-medium transition-colors',
             activeTab === tab.id
               ? 'bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm'
-              : 'text-gray-500 hover:text-gray-700 dark:hover:text-gray-300'
+              : 'text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-gray-300'
           )}
         >
           {tab.icon}

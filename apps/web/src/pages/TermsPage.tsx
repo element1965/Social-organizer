@@ -10,7 +10,7 @@ export function TermsPage() {
         </Link>
 
         <h1 className="text-3xl font-bold text-white mb-2">Terms of Service</h1>
-        <p className="text-gray-500 text-sm mb-8">Last updated: February 7, 2025</p>
+        <p className="text-gray-500 dark:text-gray-300 text-sm mb-8">Last updated: February 7, 2025</p>
 
         <div className="space-y-6 text-sm leading-relaxed">
           <section>

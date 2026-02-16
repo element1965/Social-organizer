@@ -174,7 +174,7 @@ export function LoginPage() {
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-300 transition-colors"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-300 hover:text-gray-300 transition-colors"
             >
               {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
             </button>
@@ -208,7 +208,7 @@ export function LoginPage() {
             <div className="w-full border-t border-white/10" />
           </div>
           <div className="relative flex justify-center">
-            <span className="bg-gray-950 px-3 text-gray-500 text-xs">{t('login.or')}</span>
+            <span className="bg-gray-950 px-3 text-gray-500 dark:text-gray-300 text-xs">{t('login.or')}</span>
           </div>
         </div>
 

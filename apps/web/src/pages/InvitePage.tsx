@@ -68,7 +68,7 @@ export function InvitePage() {
       <div className="min-h-screen flex items-center justify-center px-6">
         <Card>
           <CardContent className="py-8 text-center">
-            <p className="text-gray-500">{t('common.notFound')}</p>
+            <p className="text-gray-500 dark:text-gray-300">{t('common.notFound')}</p>
             <Button className="mt-4" onClick={() => navigate('/login')}>{t('common.back')}</Button>
           </CardContent>
         </Card>
@@ -81,7 +81,7 @@ export function InvitePage() {
       <div className="min-h-screen flex items-center justify-center px-6">
         <Card>
           <CardContent className="py-8 text-center">
-            <p className="text-gray-500">{t('invite.alreadyUsed')}</p>
+            <p className="text-gray-500 dark:text-gray-300">{t('invite.alreadyUsed')}</p>
             <Button className="mt-4" onClick={() => navigate('/dashboard')}>{t('common.back')}</Button>
           </CardContent>
         </Card>
@@ -98,7 +98,7 @@ export function InvitePage() {
           <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-2">
             {t('invite.from', { name: invite.inviter.name })}
           </h2>
-          <p className="text-sm text-gray-500 mb-6">{t('invite.title')}</p>
+          <p className="text-sm text-gray-500 dark:text-gray-300 mb-6">{t('invite.title')}</p>
 
           {accept.isSuccess && (accept.data as any)?.alreadyConnected ? (
             <div className="flex flex-col items-center gap-3">
@@ -112,7 +112,7 @@ export function InvitePage() {
             <div className="flex flex-col items-center gap-3">
               <Clock className="w-12 h-12 text-amber-500" />
               <p className="text-lg font-semibold text-amber-600">{t('pending.requestSent')}</p>
-              <p className="text-sm text-gray-500">{t('pending.requestSentDesc')}</p>
+              <p className="text-sm text-gray-500 dark:text-gray-300">{t('pending.requestSentDesc')}</p>
               <Button className="w-full mt-2" size="lg" onClick={() => navigate('/dashboard')}>
                 {t('dashboard.title')}
               </Button>
@@ -144,7 +144,7 @@ export function InvitePage() {
           ) : (
             <div className="flex flex-col items-center gap-3">
               <Spinner />
-              <p className="text-sm text-gray-500">{t('invite.accepting') || 'Accepting...'}</p>
+              <p className="text-sm text-gray-500 dark:text-gray-300">{t('invite.accepting') || 'Accepting...'}</p>
             </div>
           )}
           {accept.error && (

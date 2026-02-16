@@ -85,8 +85,8 @@ export function MyNetworkPage() {
           const otherClusters = clusters?.filter((cl) => !cl.isMine) ?? [];
           return otherClusters.length === 0 ? (
             <div className="text-center py-12">
-              <Layers className="w-12 h-12 mx-auto text-gray-300 dark:text-gray-700 mb-3" />
-              <p className="text-gray-500">{t('cluster.notInNetwork')}</p>
+              <Layers className="w-12 h-12 mx-auto text-gray-300 dark:text-gray-400 mb-3" />
+              <p className="text-gray-500 dark:text-gray-300">{t('cluster.notInNetwork')}</p>
             </div>
           ) : (
             <div className="space-y-2">
@@ -98,7 +98,7 @@ export function MyNetworkPage() {
                 >
                   <div>
                     <p className="text-sm font-medium text-gray-900 dark:text-white">{cl.rootUserName}</p>
-                    <p className="text-xs text-gray-500">{t('cluster.members')}: {cl.memberCount}</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-300">{t('cluster.members')}: {cl.memberCount}</p>
                   </div>
                   <div className="text-right">
                     <p className="text-sm font-bold text-green-600 dark:text-green-400">${cl.totalBudget}</p>
@@ -111,7 +111,7 @@ export function MyNetworkPage() {
         })()
       ) : view === '3d' ? (
         <div className={`rounded-xl overflow-hidden relative ${isDark ? 'bg-gray-950' : 'bg-gray-100'}`} style={{ height: 'calc(100vh - 200px)' }}>
-          <p className="absolute top-3 left-0 right-0 text-center text-sm font-semibold text-gray-400 dark:text-gray-500 z-10 pointer-events-none">GoodwillNet</p>
+          <p className="absolute top-3 left-0 right-0 text-center text-sm font-semibold text-gray-400 dark:text-gray-300 z-10 pointer-events-none">GoodwillNet</p>
           <Suspense fallback={<div className="flex justify-center py-12"><Spinner /></div>}>
             {graphData ? (
               <LazyNetworkGraph
@@ -173,8 +173,8 @@ export function MyNetworkPage() {
           )}
           {isLoading ? <div className="flex justify-center py-12"><Spinner /></div> : Object.keys(byDepth).length === 0 ? (
             <div className="text-center py-12">
-              <Users className="w-12 h-12 mx-auto text-gray-300 dark:text-gray-700 mb-3" />
-              <p className="text-gray-500">{t('network.empty')}</p>
+              <Users className="w-12 h-12 mx-auto text-gray-300 dark:text-gray-400 mb-3" />
+              <p className="text-gray-500 dark:text-gray-300">{t('network.empty')}</p>
               <p className="text-sm text-gray-400 mt-1">{t('network.emptyHint')}</p>
             </div>
           ) : (
@@ -200,7 +200,7 @@ export function MyNetworkPage() {
                           >
                             {depth}
                           </div>
-                          <span className="text-sm text-gray-600 dark:text-gray-400">{t('dashboard.handshakeOrdinal', { depth })}</span>
+                          <span className="text-sm text-gray-600 dark:text-gray-300">{t('dashboard.handshakeOrdinal', { depth })}</span>
                         </div>
                         <div className="flex items-center gap-2">
                           <span className="text-xl font-bold text-gray-900 dark:text-white">{count as number}</span>

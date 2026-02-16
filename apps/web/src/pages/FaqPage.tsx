@@ -163,9 +163,9 @@ export function FaqPage() {
 
       {/* FAQ items accordion */}
       {isLoading ? (
-        <p className="text-center text-gray-500 py-8">{t('common.loading')}</p>
+        <p className="text-center text-gray-500 dark:text-gray-300 py-8">{t('common.loading')}</p>
       ) : displayItems.length === 0 ? (
-        <p className="text-center text-gray-500 py-8">{t('faq.empty')}</p>
+        <p className="text-center text-gray-500 dark:text-gray-300 py-8">{t('faq.empty')}</p>
       ) : (
         <div className="space-y-2">
           {displayItems.map(item => {
@@ -196,13 +196,13 @@ export function FaqPage() {
                       <div className="flex items-center gap-2 mt-3 pt-3 border-t border-gray-100 dark:border-gray-800">
                         <button
                           onClick={() => startEdit(item)}
-                          className="flex items-center gap-1 text-xs text-gray-500 hover:text-blue-600 transition-colors"
+                          className="flex items-center gap-1 text-xs text-gray-500 dark:text-gray-300 hover:text-blue-600 transition-colors"
                         >
                           <Pencil className="w-3.5 h-3.5" />
                         </button>
                         <button
                           onClick={() => handleDelete(item.id)}
-                          className="flex items-center gap-1 text-xs text-gray-500 hover:text-red-600 transition-colors"
+                          className="flex items-center gap-1 text-xs text-gray-500 dark:text-gray-300 hover:text-red-600 transition-colors"
                         >
                           <Trash2 className="w-3.5 h-3.5" />
                         </button>

@@ -130,7 +130,7 @@ export function NotificationsPage() {
                           ${Math.round((notif.collection?.creator as any)?.remainingBudget ?? 0)}
                         </span>
                       </div>
-                      <p className="text-xs text-gray-500">
+                      <p className="text-xs text-gray-500 dark:text-gray-300">
                         {notif.collection?.amount} {notif.collection?.currency}
                       </p>
                     </div>
@@ -153,7 +153,7 @@ export function NotificationsPage() {
                 {t('pending.incoming')} ({pendingIncoming.length})
               </span>
             </div>
-            <p className="text-xs text-gray-500 mb-2">{t('pending.meetInPerson')}</p>
+            <p className="text-xs text-gray-500 dark:text-gray-300 mb-2">{t('pending.meetInPerson')}</p>
             <div className="space-y-2">
               {pendingIncoming.map((p) => (
                 <div key={p.id} className="flex items-center gap-2 p-2 rounded bg-white/50 dark:bg-gray-900/50">
@@ -191,13 +191,13 @@ export function NotificationsPage() {
           <CardContent className="py-3">
             <div className="flex items-center gap-2 mb-2">
               <Clock className="w-4 h-4 text-gray-400" />
-              <span className="text-sm text-gray-500">{t('pending.waitingApproval')}</span>
+              <span className="text-sm text-gray-500 dark:text-gray-300">{t('pending.waitingApproval')}</span>
             </div>
             <div className="space-y-1">
               {myPending.map((p) => (
                 <button key={p.id} className="flex items-center gap-2 w-full text-left hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg p-1 -m-1 transition-colors" onClick={() => navigate(`/profile/${p.toUser.id}`)}>
                   <Avatar src={p.toUser.photoUrl} name={p.toUser.name} size="xs" />
-                  <span className="text-sm text-gray-600 dark:text-gray-400">{p.toUser.name}</span>
+                  <span className="text-sm text-gray-600 dark:text-gray-300">{p.toUser.name}</span>
                   <ArrowRight className="w-3.5 h-3.5 text-gray-400 ml-auto" />
                 </button>
               ))}
@@ -208,7 +208,7 @@ export function NotificationsPage() {
 
       {/* Collection notifications */}
       {isLoading ? <div className="flex justify-center py-12"><Spinner /></div> : notifications.length === 0 && (!pendingIncoming || pendingIncoming.length === 0) && (!myPending || myPending.length === 0) ? (
-        <div className="text-center py-12 text-gray-500">{t('notifications.empty')}</div>
+        <div className="text-center py-12 text-gray-500 dark:text-gray-300">{t('notifications.empty')}</div>
       ) : (
         <div className="space-y-2">
           {notifications.map((n) => {
@@ -226,7 +226,7 @@ export function NotificationsPage() {
               >
                 <CardContent className="p-3 relative">
                   <button
-                    className="absolute top-2 right-2 p-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+                    className="absolute top-2 right-2 p-1 text-gray-400 hover:text-gray-600 dark:text-gray-300 dark:hover:text-gray-300 transition-colors"
                     onClick={(e) => { e.stopPropagation(); dismiss.mutate({ id: n.id }); }}
                   >
                     <X className="w-3.5 h-3.5" />
