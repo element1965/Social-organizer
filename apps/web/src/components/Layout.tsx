@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Home, Bell, Users, Settings, HelpCircle } from 'lucide-react';
@@ -46,6 +46,14 @@ export function Layout() {
   // Sync network graph to local Gun.js / IndexedDB backup
   useGraphSync();
 
+  // Hide bottom nav when chat panel is open
+  const [chatPanelOpen, setChatPanelOpen] = useState(false);
+  useEffect(() => {
+    const handler = (e: Event) => setChatPanelOpen((e as CustomEvent).detail);
+    window.addEventListener('chat-panel-toggle', handler);
+    return () => window.removeEventListener('chat-panel-toggle', handler);
+  }, []);
+
   useEffect(() => {
     if (!isTelegramWebApp()) return;
     injectTelegramCSSVars();
@@ -70,7 +78,7 @@ export function Layout() {
       {/* AI Chat Assistant */}
       <ChatAssistant />
 
-      <nav className="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 flex justify-around items-center h-16 z-50">
+      <nav className={cn("fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 flex justify-around items-center h-16 z-50", chatPanelOpen && "hidden")}>
         {navItems.map((item) => {
           const active = location.pathname === item.path;
           if ((item as any).sos) {
