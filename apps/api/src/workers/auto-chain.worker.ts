@@ -48,15 +48,23 @@ export async function processAutoChain(_job: Job): Promise<void> {
   if (tgAccounts.length === 0) return;
 
   // Load connected user IDs for variant filtering
-  // "invited" = users with at least one confirmed connection (in someone's network)
-  // "organic" = solo users with no connections (loners in clusters)
+  // "invited" = users with at least one confirmed connection OR pending connection
+  // "organic" = solo users with no connections at all
   const connections = await db.connection.findMany({
     select: { userAId: true, userBId: true },
+  });
+  const pendingConns = await db.pendingConnection.findMany({
+    where: { status: 'PENDING' },
+    select: { fromUserId: true, toUserId: true },
   });
   const invitedUserIds = new Set<string>();
   for (const c of connections) {
     invitedUserIds.add(c.userAId);
     invitedUserIds.add(c.userBId);
+  }
+  for (const p of pendingConns) {
+    invitedUserIds.add(p.fromUserId);
+    invitedUserIds.add(p.toUserId);
   }
 
   // Load existing deliveries into Set for O(1) lookup

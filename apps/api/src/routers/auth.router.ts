@@ -101,6 +101,16 @@ export const authRouter = router({
           });
         }
       } else {
+        // Clean up any old soft-deleted users that had this telegram ID
+        // (from before hard-delete was implemented in removeBlockedUser)
+        const orphanedAccounts = await ctx.db.platformAccount.findMany({
+          where: { platform: 'TELEGRAM', platformId },
+          select: { userId: true },
+        });
+        for (const oa of orphanedAccounts) {
+          await ctx.db.user.delete({ where: { id: oa.userId } }).catch(() => {});
+        }
+
         const name = [tgUser.first_name, tgUser.last_name].filter(Boolean).join(' ') || `User_${platformId}`;
         const lang = tgUser.language_code?.slice(0, 2) || 'en';
         const user = await ctx.db.user.create({
