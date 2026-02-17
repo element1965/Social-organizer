@@ -197,6 +197,12 @@ export function ChatAssistant() {
 
   const isOpen = viewState === 'chatOpen';
 
+  // Notify Layout to hide bottom nav when chat/broadcast is open
+  useEffect(() => {
+    window.dispatchEvent(new CustomEvent('chat-panel-toggle', { detail: isOpen || viewState === 'broadcastOpen' }));
+    return () => { window.dispatchEvent(new CustomEvent('chat-panel-toggle', { detail: false })); };
+  }, [isOpen, viewState]);
+
   return (
     <>
       {/* Transparent overlay to close expanded menu */}
@@ -267,7 +273,7 @@ export function ChatAssistant() {
 
       {/* Chat panel */}
       {isOpen && (
-        <div className="fixed inset-x-4 top-[72px] max-h-[60vh] bg-white dark:bg-gray-900 rounded-2xl shadow-2xl z-50 flex flex-col border border-gray-200 dark:border-gray-700">
+        <div className="fixed inset-0 bg-white dark:bg-gray-900 z-50 flex flex-col">
           {/* Header */}
           <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
             <h3 className="font-semibold text-gray-900 dark:text-white flex items-center gap-2">
