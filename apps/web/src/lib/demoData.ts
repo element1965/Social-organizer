@@ -126,24 +126,34 @@ const connections = connectionUserIds.map((uid, i) => {
 // ---------- Graph slice (~60 nodes, ~80 edges, 3 levels) ----------
 
 function buildGraphSlice() {
-  const nodes: Array<{ id: string; name: string; photoUrl: string | null }> = [];
+  const nodes: Array<{ id: string; name: string; photoUrl: string | null; depth: number; connectionCount: number; lastSeen: string | null }> = [];
   const edges: Array<{ from: string; to: string }> = [];
   const added = new Set<string>();
 
-  const addNode = (id: string) => {
+  const addNode = (id: string, depth: number) => {
     if (added.has(id)) return;
     added.add(id);
     const u = usersMap.get(id);
-    nodes.push({ id, name: u?.name ?? id, photoUrl: null });
+    const connCount = 3 + Math.floor(Math.random() * 25);
+    // ~30% of users are "online"
+    const isOnline = Math.random() < 0.3;
+    nodes.push({
+      id,
+      name: u?.name ?? id,
+      photoUrl: null,
+      depth,
+      connectionCount: connCount,
+      lastSeen: isOnline ? new Date().toISOString() : new Date(Date.now() - 3600000).toISOString(),
+    });
   };
 
   // Level 0: demo-user
-  addNode(DEMO_USER_ID);
+  addNode(DEMO_USER_ID, 0);
 
   // Level 1: 12 direct connections
   const level1 = connectionUserIds; // 12
   for (const uid of level1) {
-    addNode(uid);
+    addNode(uid, 1);
     edges.push({ from: DEMO_USER_ID, to: uid });
   }
 
@@ -154,7 +164,7 @@ function buildGraphSlice() {
     const cnt = 3 + (l2idx % 2); // 3 or 4
     for (let j = 0; j < cnt && l2idx < 50; j++) {
       const uid = users[l2idx]!.id;
-      addNode(uid);
+      addNode(uid, 2);
       edges.push({ from: l1, to: uid });
       level2.push(uid);
       l2idx++;
@@ -168,7 +178,7 @@ function buildGraphSlice() {
     const cnt = 1 + (l3idx % 2);
     for (let j = 0; j < cnt && l3idx < 73; j++) {
       const uid = users[l3idx]!.id;
-      addNode(uid);
+      addNode(uid, 3);
       edges.push({ from: l2u, to: uid });
       l3idx++;
     }

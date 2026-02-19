@@ -165,7 +165,6 @@ export function RequiredInfoGate({ children }: { children: React.ReactNode }) {
               </Button>
             </>
           )}
-        </div>
       </div>
     </div>
   );

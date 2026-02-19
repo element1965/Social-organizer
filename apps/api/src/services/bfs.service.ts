@@ -159,24 +159,51 @@ export async function getGraphSlice(
   db: PrismaClient,
   userId: string,
   depth: number = 3,
-): Promise<{ nodes: Array<{ id: string; name: string; photoUrl: string | null }>; edges: Array<{ from: string; to: string }> }> {
+): Promise<{
+  nodes: Array<{ id: string; name: string; photoUrl: string | null; depth: number; connectionCount: number; lastSeen: Date | null }>;
+  edges: Array<{ from: string; to: string }>;
+}> {
   const recipients = await findRecipientsViaBfs(db, userId, depth, 500, []);
 
   const userIds = new Set<string>([userId]);
   const edges: Array<{ from: string; to: string }> = [];
+  const depthMap = new Map<string, number>();
+  depthMap.set(userId, 0);
 
   for (const r of recipients) {
     userIds.add(r.userId);
-    // Add edges from path
+    depthMap.set(r.userId, r.depth);
     for (let i = 0; i < r.path.length - 1; i++) {
       edges.push({ from: r.path[i]!, to: r.path[i + 1]! });
     }
   }
 
-  const users = await db.user.findMany({
-    where: { id: { in: [...userIds] } },
-    select: { id: true, name: true, photoUrl: true },
-  });
+  const userIdArr = [...userIds];
+
+  const [users, connectionCounts] = await Promise.all([
+    db.user.findMany({
+      where: { id: { in: userIdArr } },
+      select: { id: true, name: true, photoUrl: true, lastSeen: true },
+    }),
+    db.$queryRaw<Array<{ user_id: string; count: bigint }>>`
+      SELECT u.id as user_id, COUNT(c.id)::bigint as count
+      FROM users u
+      LEFT JOIN connections c ON (c."userAId" = u.id OR c."userBId" = u.id)
+      WHERE u.id = ANY(${userIdArr})
+      GROUP BY u.id
+    `,
+  ]);
+
+  const countMap = new Map(connectionCounts.map((c) => [c.user_id, Number(c.count)]));
+
+  const nodes = users.map((u) => ({
+    id: u.id,
+    name: u.name,
+    photoUrl: u.photoUrl,
+    depth: depthMap.get(u.id) ?? 0,
+    connectionCount: countMap.get(u.id) ?? 0,
+    lastSeen: u.lastSeen,
+  }));
 
   // Deduplicate edges
   const edgeSet = new Set<string>();
@@ -190,5 +217,5 @@ export async function getGraphSlice(
     }
   }
 
-  return { nodes: users, edges: uniqueEdges };
+  return { nodes, edges: uniqueEdges };
 }
