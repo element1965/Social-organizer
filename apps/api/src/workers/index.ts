@@ -6,6 +6,7 @@ import { processCheckBlock } from './check-block.worker.js';
 import { processTgBroadcast, type TgBroadcastMessage } from './tg-broadcast.worker.js';
 import { processScheduledPost } from './scheduled-post.worker.js';
 import { processAutoChain } from './auto-chain.worker.js';
+import { processCleanupBlockedPending } from './cleanup-blocked-pending.worker.js';
 
 let connection: IORedis | null = null;
 
@@ -56,6 +57,13 @@ export function setupQueues(): void {
   autoChainQueue.upsertJobScheduler('auto-chain-scheduler', {
     every: 30 * 60 * 1000, // 30 minutes
   }, { name: 'auto-chain' });
+
+  // --- Cleanup blocked pending: every hour ---
+  const cleanupBlockedQueue = new Queue('cleanup-blocked-pending', { connection: redis });
+  new Worker('cleanup-blocked-pending', processCleanupBlockedPending, { connection: redis });
+  cleanupBlockedQueue.upsertJobScheduler('cleanup-blocked-pending-scheduler', {
+    every: 60 * 60 * 1000, // 1 hour
+  }, { name: 'cleanup-blocked-pending' });
 
   console.log('BullMQ: all queues and workers initialized');
 }

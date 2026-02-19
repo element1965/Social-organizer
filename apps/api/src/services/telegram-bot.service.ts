@@ -8,7 +8,7 @@ const WEB_APP_URL = process.env.WEB_APP_URL || 'https://www.orginizer.com';
 export const blockedCounter = { count: 0, reset() { this.count = 0; } };
 
 /** Remove a user who blocked the bot: hard-delete User (cascades to all relations) */
-async function removeBlockedUser(chatId: string | number): Promise<void> {
+export async function removeBlockedUser(chatId: string | number): Promise<void> {
   const platformId = String(chatId);
   try {
     const db = getDb();
@@ -32,6 +32,26 @@ async function removeBlockedUser(chatId: string | number): Promise<void> {
     }
   } catch (err) {
     console.error(`[TG Bot] Failed to remove blocked user ${platformId}:`, err);
+  }
+}
+
+/** Check if the bot can reach a chat (user hasn't blocked the bot).
+ *  Returns true if chat is accessible, false if blocked/deactivated/not found. */
+export async function checkChatExists(chatId: string | number): Promise<boolean> {
+  if (!TELEGRAM_BOT_TOKEN) return false;
+  try {
+    const res = await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/getChat`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ chat_id: chatId }),
+    });
+    const json = (await res.json()) as TgApiResponse;
+    if (json.ok) return true;
+    // 400 "chat not found" or 403 "bot was blocked" → user is unreachable
+    return false;
+  } catch {
+    // Network error — assume chat exists (don't delete on transient failures)
+    return true;
   }
 }
 

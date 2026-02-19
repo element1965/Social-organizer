@@ -159,6 +159,7 @@ VAPID_SUBJECT=mailto:admin@example.com    # Web Push VAPID subject
 | `tg-broadcast` | Send Telegram bot messages in rate-limited batches (25/sec) | On event |
 | `scheduled-post` | Send scheduled broadcast posts at their planned time | Every minute |
 | `auto-chain` | Drip campaign: send chain messages based on user registration date + day offset | Every 30 min |
+| `cleanup-blocked-pending` | Remove users who blocked the bot from pending connections via TG getChat API | Every hour |
 
 ## Deployment
 
