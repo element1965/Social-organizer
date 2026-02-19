@@ -11,6 +11,9 @@ export interface GraphNode {
   photoUrl: string | null;
   isCenter?: boolean;
   isDeleted?: boolean;
+  depth?: number;
+  connectionCount?: number;
+  lastSeen?: string | Date | null;
 }
 
 export interface GraphEdge {
@@ -33,6 +36,34 @@ export interface NetworkGraphProps {
 const LOD_CLOSE = 150;   // Full avatar + label
 const LOD_MEDIUM = 300;  // Small dot + label
 const LOD_FAR = 500;     // Tiny dot only
+
+/* ---------- Depth colors ---------- */
+const DEPTH_COLORS_DARK = [
+  { main: '#3b82f6', bg: 'rgba(59,130,246,0.2)', dot: 0x3b82f6 },  // 0: center — blue
+  { main: '#6366f1', bg: 'rgba(99,102,241,0.2)', dot: 0x6366f1 },  // 1: indigo
+  { main: '#06b6d4', bg: 'rgba(6,182,212,0.2)', dot: 0x06b6d4 },   // 2: cyan
+  { main: '#64748b', bg: 'rgba(100,116,139,0.2)', dot: 0x64748b },  // 3: slate
+];
+const DEPTH_COLORS_LIGHT = [
+  { main: '#2563eb', bg: 'rgba(37,99,235,0.15)', dot: 0x2563eb },
+  { main: '#4f46e5', bg: 'rgba(79,70,229,0.15)', dot: 0x4f46e5 },
+  { main: '#0891b2', bg: 'rgba(8,145,178,0.15)', dot: 0x0891b2 },
+  { main: '#475569', bg: 'rgba(71,85,105,0.15)', dot: 0x475569 },
+];
+
+/** Map connectionCount → avatar scale factor (1.0 – 1.6) */
+function sizeFromConnections(count: number): number {
+  if (count <= 1) return 1.0;
+  if (count >= 30) return 1.6;
+  return 1.0 + (count - 1) * 0.6 / 29;
+}
+
+/** Check if user is online (lastSeen within 5 minutes) */
+function isOnline(lastSeen: string | Date | null | undefined): boolean {
+  if (!lastSeen) return false;
+  const ts = typeof lastSeen === 'string' ? new Date(lastSeen).getTime() : lastSeen.getTime();
+  return Date.now() - ts < 5 * 60 * 1000;
+}
 
 /* ---------- Компонент ---------- */
 
@@ -185,40 +216,37 @@ export function NetworkGraph({
   }, []);
 
   const nodeThreeObject = useCallback(
-    (node: { id?: string | number; name?: string; photoUrl?: string | null; isCenter?: boolean; isDeleted?: boolean }) => {
+    (node: { id?: string | number; name?: string; photoUrl?: string | null; isCenter?: boolean; isDeleted?: boolean; depth?: number; connectionCount?: number; lastSeen?: string | Date | null }) => {
       const lod = new THREE.LOD();
       const nodeId = String(node.id);
+
+      const depthIdx = Math.min(node.depth ?? (node.isCenter ? 0 : 1), 3);
+      const depthPalette = darkMode ? DEPTH_COLORS_DARK : DEPTH_COLORS_LIGHT;
+      const depthColor = depthPalette[depthIdx] ?? depthPalette[depthPalette.length - 1]!;
 
       // Цвета для тёмной и светлой темы
       const colors = darkMode
         ? {
             deleted: '#888888',
-            center: '#3b82f6',
             highlight: '#f59e0b',
-            normal: '#e2e8f0',
             deletedBg: 'rgba(80,80,80,0.6)',
-            centerBg: 'rgba(59,130,246,0.2)',
             highlightBg: 'rgba(245,158,11,0.2)',
             normalBg: 'rgba(0,0,0,0.4)',
-            dot: 0x6366f1,
-            dotCenter: 0x3b82f6,
           }
         : {
             deleted: '#9ca3af',
-            center: '#2563eb',
             highlight: '#d97706',
-            normal: '#1f2937',
             deletedBg: 'rgba(156,163,175,0.3)',
-            centerBg: 'rgba(37,99,235,0.15)',
             highlightBg: 'rgba(217,119,6,0.15)',
             normalBg: 'rgba(255,255,255,0.8)',
-            dot: 0x6366f1,
-            dotCenter: 0x2563eb,
           };
 
-      const avatarSize = node.isCenter ? 12 : 5;
+      const scaleFactor = node.isCenter ? 1 : sizeFromConnections(node.connectionCount ?? 0);
+      const baseAvatarSize = node.isCenter ? 12 : 5;
+      const avatarSize = baseAvatarSize * scaleFactor;
       const textOffset = avatarSize / 2 + 2;
-      const dotColor = node.isCenter ? colors.dotCenter : colors.dot;
+      const dotColor = depthColor.dot;
+      const online = isOnline(node.lastSeen);
 
       /* ========== LOD Level 0: Close - Full avatar + label ========== */
       const closeGroup = new THREE.Group();
@@ -274,23 +302,33 @@ export function NetworkGraph({
         closeGroup.add(new THREE.Mesh(outerRingGeom, outerRingMat));
       }
 
+      // Online pulse ring
+      if (online && !node.isDeleted) {
+        const pulseRingGeom = new THREE.RingGeometry(avatarSize / 2 + 0.5, avatarSize / 2 + 1.2, 32);
+        const pulseRingMat = new THREE.MeshBasicMaterial({
+          color: 0x22c55e,
+          side: THREE.DoubleSide,
+          transparent: true,
+          opacity: 0.6,
+        });
+        const pulseRing = new THREE.Mesh(pulseRingGeom, pulseRingMat);
+        pulseRing.name = 'pulse-ring';
+        closeGroup.add(pulseRing);
+      }
+
       // Label with name
       const label = new SpriteText(String(node.name ?? ''));
       label.color = node.isDeleted
         ? colors.deleted
-        : node.isCenter
-        ? colors.center
         : highlightSet.has(nodeId)
         ? colors.highlight
-        : colors.normal;
+        : depthColor.main;
       label.textHeight = node.isCenter ? 2.5 : 1.8;
       label.backgroundColor = node.isDeleted
         ? colors.deletedBg
-        : node.isCenter
-        ? colors.centerBg
         : highlightSet.has(nodeId)
         ? colors.highlightBg
-        : colors.normalBg;
+        : depthColor.bg;
       label.padding = 1.5;
       label.borderRadius = 3;
       label.position.y = -textOffset;
@@ -302,7 +340,8 @@ export function NetworkGraph({
       const mediumGroup = new THREE.Group();
       mediumGroup.name = 'lod-medium';
 
-      const mediumDotGeom = new THREE.SphereGeometry(node.isCenter ? 5 : 2, 16, 16);
+      const mediumDotSize = node.isCenter ? 5 : 2 * scaleFactor;
+      const mediumDotGeom = new THREE.SphereGeometry(mediumDotSize, 16, 16);
       const mediumDotMat = new THREE.MeshBasicMaterial({
         color: dotColor,
         transparent: true,
@@ -313,7 +352,7 @@ export function NetworkGraph({
 
       // Smaller label
       const mediumLabel = new SpriteText(String(node.name ?? ''));
-      mediumLabel.color = colors.normal;
+      mediumLabel.color = depthColor.main;
       mediumLabel.textHeight = 1.5;
       mediumLabel.backgroundColor = colors.normalBg;
       mediumLabel.padding = 1;
@@ -327,7 +366,7 @@ export function NetworkGraph({
       const farGroup = new THREE.Group();
       farGroup.name = 'lod-far';
 
-      const farDotGeom = new THREE.SphereGeometry(node.isCenter ? 3 : 1, 8, 8);
+      const farDotGeom = new THREE.SphereGeometry(node.isCenter ? 3 : 1 * scaleFactor, 8, 8);
       const farDotMat = new THREE.MeshBasicMaterial({
         color: dotColor,
         transparent: true,
@@ -353,20 +392,30 @@ export function NetworkGraph({
 
       lod.addLevel(veryFarGroup, LOD_FAR);
 
-      // Trigger lazy texture loading when camera is close
+      // Trigger lazy texture loading when camera is close + animate pulse ring
       lod.onBeforeRender = (_renderer, _scene, camera) => {
-        if (!node.photoUrl) return;
-        const lodInfo = lodObjectsRef.current.get(nodeId);
-        if (!lodInfo) return;
+        // Lazy texture loading
+        if (node.photoUrl) {
+          const lodInfo = lodObjectsRef.current.get(nodeId);
+          if (lodInfo) {
+            const nodePos = new THREE.Vector3();
+            lod.getWorldPosition(nodePos);
+            const dist = camera.position.distanceTo(nodePos);
+            if (dist < LOD_CLOSE && !textureCache.current.has(node.photoUrl)) {
+              loadTextureForNode(node.photoUrl, nodeId);
+            }
+          }
+        }
 
-        // Calculate distance to camera
-        const nodePos = new THREE.Vector3();
-        lod.getWorldPosition(nodePos);
-        const dist = camera.position.distanceTo(nodePos);
-
-        // Load texture when within close range and not already loaded
-        if (dist < LOD_CLOSE && !textureCache.current.has(node.photoUrl)) {
-          loadTextureForNode(node.photoUrl, nodeId);
+        // Animate online pulse ring
+        if (online) {
+          const pulseRing = closeGroup.getObjectByName('pulse-ring') as THREE.Mesh | undefined;
+          if (pulseRing) {
+            const t = performance.now() * 0.003;
+            const scale = 1.0 + 0.15 * Math.sin(t);
+            pulseRing.scale.set(scale, scale, 1);
+            (pulseRing.material as THREE.MeshBasicMaterial).opacity = 0.35 + 0.25 * Math.sin(t);
+          }
         }
       };
 
@@ -397,6 +446,23 @@ export function NetworkGraph({
     [highlightSet],
   );
 
+  const nodeLabel = useCallback(
+    (node: { name?: string; connectionCount?: number; lastSeen?: string | Date | null; isCenter?: boolean }) => {
+      const name = node.name ?? '';
+      const count = node.connectionCount ?? 0;
+      const online = isOnline(node.lastSeen);
+      const status = online
+        ? '<span style="color:#22c55e">● Online</span>'
+        : '';
+      return `<div style="padding:6px 10px;border-radius:8px;background:${darkMode ? 'rgba(15,23,42,0.9)' : 'rgba(255,255,255,0.95)'};color:${darkMode ? '#e2e8f0' : '#1e293b'};font-size:12px;line-height:1.5;box-shadow:0 2px 8px rgba(0,0,0,0.3);pointer-events:none">
+        <div style="font-weight:600;font-size:13px">${name}</div>
+        <div style="opacity:0.7">🤝 ${count} connections</div>
+        ${status ? `<div>${status}</div>` : ''}
+      </div>`;
+    },
+    [darkMode],
+  );
+
   const graphData = { nodes: processedNodes, links: edges };
 
   return (
@@ -409,6 +475,7 @@ export function NetworkGraph({
         backgroundColor="rgba(0,0,0,0)"
         nodeThreeObject={nodeThreeObject}
         nodeThreeObjectExtend={false}
+        nodeLabel={nodeLabel}
         linkColor={linkColor}
         linkWidth={linkWidth}
         linkOpacity={0.6}

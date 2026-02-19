@@ -118,6 +118,9 @@ export function MyNetworkPage() {
                 nodes={graphData.nodes.map((n) => ({
                   ...n,
                   isCenter: n.id === myId,
+                  depth: (n as any).depth ?? (n.id === myId ? 0 : 1),
+                  connectionCount: (n as any).connectionCount ?? 0,
+                  lastSeen: (n as any).lastSeen ?? null,
                 }))}
                 edges={graphData.edges.map((e) => ({ source: e.from, target: e.to }))}
                 width={window.innerWidth - 32}
