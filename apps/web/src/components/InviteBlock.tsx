@@ -1,11 +1,10 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { QRCodeSVG } from 'qrcode.react';
-import { Copy, Check, Pencil, HelpCircle, UserPlus } from 'lucide-react';
+import { Check, Pencil, RefreshCw, UserPlus } from 'lucide-react';
 import { trpc } from '../lib/trpc';
 import { useAuth } from '../hooks/useAuth';
 import { buildWebInviteUrl, buildBotInviteUrl } from '../lib/inviteUrl';
-import { Tooltip } from './ui/tooltip';
 import { Card, CardContent } from './ui/card';
 
 interface InviteBlockProps {
@@ -35,6 +34,28 @@ export function InviteBlock({ id }: InviteBlockProps) {
 
   if (!webInviteUrl) return null;
 
+  const handleCopyWeb = () => {
+    navigator.clipboard.writeText(webInviteUrl);
+    setCopiedWeb(true);
+    setTimeout(() => setCopiedWeb(false), 2500);
+  };
+
+  const handleCopyBot = () => {
+    navigator.clipboard.writeText(botInviteUrl);
+    setCopiedBot(true);
+    setTimeout(() => setCopiedBot(false), 2500);
+  };
+
+  const flipButton = (
+    <button
+      onClick={(e) => { e.stopPropagation(); setFlipped(!flipped); }}
+      className="absolute top-0 right-0 p-1.5 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors z-10"
+      title={flipped ? t('invite.showWebLink') : t('invite.showBotLink')}
+    >
+      <RefreshCw className="w-4 h-4 text-gray-400 dark:text-gray-500" />
+    </button>
+  );
+
   return (
     <Card id={id}>
       <CardContent className="py-4">
@@ -45,104 +66,109 @@ export function InviteBlock({ id }: InviteBlockProps) {
 
         <div className="flip-container">
           <div className={`flip-inner relative ${flipped ? 'flipped' : ''}`}>
-            {/* Front: QR code */}
+            {/* ===== FRONT: QR code + website link ===== */}
             <div className={`flip-front ${flipped ? 'absolute top-0 left-0 w-full' : ''}`}>
-              <button
-                onClick={() => setFlipped(true)}
-                className="w-full flex flex-col items-center gap-2 cursor-pointer"
-              >
-                <div className="p-3 bg-white rounded-xl">
-                  <QRCodeSVG value={webInviteUrl} size={200} level="H" imageSettings={{ src: '/logo-dark.png', width: 48, height: 34, excavate: true }} />
-                </div>
-                <span className="text-xs text-blue-600 dark:text-blue-400">
-                  {t('invite.expand')}
-                </span>
-              </button>
-            </div>
-
-            {/* Back: links + slug */}
-            <div
-              className={`flip-back ${flipped ? '' : 'absolute top-0 left-0 w-full'}`}
-              onClick={() => setFlipped(false)}
-            >
-              <div className="space-y-2">
-                {/* Back to QR link */}
-                <button
-                  onClick={(e) => { e.stopPropagation(); setFlipped(false); }}
-                  className="w-full text-center text-xs text-blue-600 dark:text-blue-400 mb-1"
-                >
-                  {t('invite.showQr')}
-                </button>
-                {/* Web link */}
-                <div>
-                  <p className="text-[11px] text-gray-500 dark:text-gray-400 mb-1">{t('invite.webLinkDesc')}</p>
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      navigator.clipboard.writeText(webInviteUrl);
-                      setCopiedWeb(true);
-                      setTimeout(() => setCopiedWeb(false), 2000);
-                    }}
-                    className="w-full flex items-center gap-2 p-3 bg-gray-100 dark:bg-gray-800 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
-                  >
-                    <span className="text-base shrink-0">🌐</span>
-                    <p className="flex-1 text-xs text-gray-600 dark:text-gray-300 break-all text-left">{webInviteUrl}</p>
-                    <div className="shrink-0">
-                      {copiedWeb ? <Check className="w-5 h-5 text-green-500" /> : <Copy className="w-5 h-5 text-gray-500 dark:text-gray-300" />}
-                    </div>
-                  </button>
-                </div>
-
-                {/* Bot link */}
-                <div>
-                  <p className="text-[11px] text-gray-500 dark:text-gray-400 mb-1">{t('invite.botLinkDesc')}</p>
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      navigator.clipboard.writeText(botInviteUrl);
-                      setCopiedBot(true);
-                      setTimeout(() => setCopiedBot(false), 2000);
-                    }}
-                    className="w-full flex items-center gap-2 p-3 bg-gray-100 dark:bg-gray-800 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
-                  >
-                    <span className="text-base shrink-0">🤖</span>
-                    <p className="flex-1 text-xs text-gray-600 dark:text-gray-300 break-all text-left">{botInviteUrl}</p>
-                    <div className="shrink-0">
-                      {copiedBot ? <Check className="w-5 h-5 text-green-500" /> : <Copy className="w-5 h-5 text-gray-500 dark:text-gray-300" />}
-                    </div>
-                  </button>
-                </div>
-
-                {/* Editable slug */}
-                <div className="pt-3 border-t border-gray-200 dark:border-gray-700" onClick={(e) => e.stopPropagation()}>
-                  <div className="flex items-center gap-1.5 mb-1">
-                    <span className="text-xs font-medium text-gray-500 dark:text-gray-300">{t('invite.yourCode')}</span>
-                    <Tooltip content={t('invite.slugDesc')} side="bottom">
-                      <button type="button" className="text-gray-400 hover:text-gray-500 dark:text-gray-300"><HelpCircle className="w-3.5 h-3.5" /></button>
-                    </Tooltip>
+              <div className="relative">
+                {flipButton}
+                <div className="flex flex-col items-center gap-3">
+                  {/* QR code */}
+                  <div className="p-3 bg-white rounded-xl">
+                    <QRCodeSVG value={webInviteUrl} size={200} level="H" imageSettings={{ src: '/logo-dark.png', width: 48, height: 34, excavate: true }} />
                   </div>
-                  {editingSlug ? (
-                    <div>
-                      <input
-                        value={slugValue}
-                        onChange={(e) => { setSlugValue(e.target.value.toLowerCase().replace(/[^a-z0-9_-]/g, '')); setSlugError(''); }}
-                        onBlur={() => { if (slugValue.length >= 3 && slugValue !== (me?.referralSlug || '')) updateSlug.mutate({ slug: slugValue }); else setEditingSlug(false); }}
-                        onKeyDown={(e) => { if (e.key === 'Enter' && slugValue.length >= 3) updateSlug.mutate({ slug: slugValue }); if (e.key === 'Escape') setEditingSlug(false); }}
-                        placeholder={t('invite.slugPlaceholder')}
-                        className="w-full px-2 py-1 text-sm font-mono rounded border border-gray-300 dark:border-gray-600 bg-transparent text-blue-600 dark:text-blue-400 focus:outline-none focus:border-blue-500"
-                        maxLength={30}
-                        autoFocus
-                      />
-                      {slugError && <p className="text-[10px] text-red-500 mt-1">{slugError}</p>}
-                    </div>
-                  ) : (
-                    <div className="flex items-center gap-2">
-                      <p className="text-sm font-mono text-blue-600 dark:text-blue-400">{me?.referralSlug || userId}</p>
-                      <button onClick={() => { setSlugValue(me?.referralSlug || ''); setSlugError(''); setEditingSlug(true); }} className="text-gray-400 hover:text-gray-500 dark:text-gray-300">
-                        <Pencil className="w-3 h-3" />
-                      </button>
+
+                  {/* Instruction text */}
+                  <p className="text-sm text-gray-600 dark:text-gray-300">
+                    {t('invite.sendThisLink')}
+                  </p>
+
+                  {/* Clickable link — copies on tap */}
+                  <button
+                    onClick={handleCopyWeb}
+                    className="w-full p-3 bg-gray-50 dark:bg-gray-800/70 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors border border-gray-200 dark:border-gray-700"
+                  >
+                    <p className="text-sm font-medium text-blue-600 dark:text-blue-400 break-all text-center">
+                      {webInviteUrl}
+                    </p>
+                  </button>
+
+                  {/* Copied banner */}
+                  {copiedWeb && (
+                    <div className="w-full flex items-center justify-center gap-2 py-3 bg-green-50 dark:bg-green-950/40 rounded-xl border border-green-200 dark:border-green-800 animate-fade-in">
+                      <Check className="w-6 h-6 text-green-500" />
+                      <span className="text-base font-semibold text-green-600 dark:text-green-400">
+                        {t('invite.copied')}
+                      </span>
                     </div>
                   )}
+                </div>
+              </div>
+            </div>
+
+            {/* ===== BACK: Bot link + slug editor ===== */}
+            <div className={`flip-back ${flipped ? '' : 'absolute top-0 left-0 w-full'}`}>
+              <div className="relative" onClick={(e) => e.stopPropagation()}>
+                {flipButton}
+                <div className="space-y-3">
+                  <p className="text-sm text-gray-600 dark:text-gray-300 pr-8">
+                    {t('invite.botLinkHint')}
+                  </p>
+
+                  {/* Bot link — copies on tap */}
+                  <button
+                    onClick={handleCopyBot}
+                    className="w-full p-4 bg-gray-50 dark:bg-gray-800/70 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors border border-gray-200 dark:border-gray-700"
+                  >
+                    <div className="flex items-center gap-2">
+                      <span className="text-lg shrink-0">🤖</span>
+                      <p className="flex-1 text-sm font-medium text-blue-600 dark:text-blue-400 break-all text-left">
+                        {botInviteUrl}
+                      </p>
+                    </div>
+                  </button>
+
+                  {/* Copied banner */}
+                  {copiedBot && (
+                    <div className="flex items-center justify-center gap-2 py-3 bg-green-50 dark:bg-green-950/40 rounded-xl border border-green-200 dark:border-green-800 animate-fade-in">
+                      <Check className="w-6 h-6 text-green-500" />
+                      <span className="text-base font-semibold text-green-600 dark:text-green-400">
+                        {t('invite.copied')}
+                      </span>
+                    </div>
+                  )}
+
+                  <p className="text-xs text-gray-400 dark:text-gray-500 text-center">
+                    {t('invite.botLinkDesc')}
+                  </p>
+
+                  {/* Editable slug */}
+                  <div className="pt-3 border-t border-gray-200 dark:border-gray-700">
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mb-2">
+                      {t('invite.slugExplain')}
+                    </p>
+                    {editingSlug ? (
+                      <div>
+                        <input
+                          value={slugValue}
+                          onChange={(e) => { setSlugValue(e.target.value.toLowerCase().replace(/[^a-z0-9_-]/g, '')); setSlugError(''); }}
+                          onBlur={() => { if (slugValue.length >= 3 && slugValue !== (me?.referralSlug || '')) updateSlug.mutate({ slug: slugValue }); else setEditingSlug(false); }}
+                          onKeyDown={(e) => { if (e.key === 'Enter' && slugValue.length >= 3) updateSlug.mutate({ slug: slugValue }); if (e.key === 'Escape') setEditingSlug(false); }}
+                          placeholder={t('invite.slugPlaceholder')}
+                          className="w-full px-2 py-1 text-sm font-mono rounded border border-gray-300 dark:border-gray-600 bg-transparent text-blue-600 dark:text-blue-400 focus:outline-none focus:border-blue-500"
+                          maxLength={30}
+                          autoFocus
+                        />
+                        {slugError && <p className="text-[10px] text-red-500 mt-1">{slugError}</p>}
+                      </div>
+                    ) : (
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs text-gray-400">{t('invite.yourId')}:</span>
+                        <p className="text-sm font-mono text-blue-600 dark:text-blue-400">{me?.referralSlug || userId}</p>
+                        <button onClick={() => { setSlugValue(me?.referralSlug || ''); setSlugError(''); setEditingSlug(true); }} className="text-gray-400 hover:text-gray-500 dark:text-gray-300">
+                          <Pencil className="w-3 h-3" />
+                        </button>
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
