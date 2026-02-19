@@ -223,11 +223,15 @@ export async function processAutoChain(_job: Job): Promise<void> {
   }
 
   const blocked = blockedCounter.count;
+  const removedDetails = blockedCounter.removed.map((u) => {
+    const contacts = u.contacts.map((c) => `${c.type}: ${c.value}`).join(', ');
+    return `• ${u.name} (TG: ${u.platformId}${contacts ? `, ${contacts}` : ''})`;
+  }).join('\n');
   console.log(`[Auto Chain] Done: sent ${totalSent}, blocked: ${blocked}, users: ${tgAccounts.length}`);
   // Always report status (for diagnostics)
   await sendTelegramMessage(
     SUPPORT_CHAT_ID,
-    `🔗 <b>Auto-chain</b>: sent ${totalSent} / ${tgAccounts.length} users${blocked > 0 ? `\n🚫 Removed: ${blocked}` : ''}`,
+    `🔗 <b>Auto-chain</b>: sent ${totalSent} / ${tgAccounts.length} users${blocked > 0 ? `\n🚫 Removed: ${blocked}\n${removedDetails}` : ''}`,
   ).catch(() => {});
 
   } catch (err) {

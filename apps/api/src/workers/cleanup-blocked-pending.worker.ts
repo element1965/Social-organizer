@@ -5,6 +5,7 @@ import {
   removeBlockedUser,
   SUPPORT_CHAT_ID,
   sendTelegramMessage,
+  type RemovedUserInfo,
 } from '../services/telegram-bot.service.js';
 
 /**
@@ -48,28 +49,32 @@ export async function processCleanupBlockedPending(_job: Job): Promise<void> {
       return;
     }
 
-    let removed = 0;
     let checked = 0;
+    const removedUsers: RemovedUserInfo[] = [];
 
     for (const acc of accounts) {
       const exists = await checkChatExists(acc.platformId);
       checked++;
 
       if (!exists) {
-        await removeBlockedUser(acc.platformId);
-        removed++;
+        const info = await removeBlockedUser(acc.platformId);
+        if (info) removedUsers.push(info);
       }
 
       // Rate limit: 50ms between TG API calls
       await new Promise((r) => setTimeout(r, 50));
     }
 
-    console.log(`[Cleanup Blocked Pending] Done: checked ${checked}, removed ${removed}`);
+    console.log(`[Cleanup Blocked Pending] Done: checked ${checked}, removed ${removedUsers.length}`);
 
-    if (removed > 0) {
+    if (removedUsers.length > 0) {
+      const details = removedUsers.map((u) => {
+        const contacts = u.contacts.map((c) => `${c.type}: ${c.value}`).join(', ');
+        return `• ${u.name} (TG: ${u.platformId}${contacts ? `, ${contacts}` : ''})`;
+      }).join('\n');
       await sendTelegramMessage(
         SUPPORT_CHAT_ID,
-        `🧹 <b>Cleanup blocked pending</b>: checked ${checked} users, removed ${removed}`,
+        `🧹 <b>Cleanup blocked pending</b>: checked ${checked}, removed ${removedUsers.length}\n${details}`,
       ).catch(() => {});
     }
   } catch (err) {

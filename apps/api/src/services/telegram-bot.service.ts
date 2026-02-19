@@ -4,11 +4,23 @@ import { translateBroadcastMessage } from './translate.service.js';
 const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN || '';
 const WEB_APP_URL = process.env.WEB_APP_URL || 'https://www.orginizer.com';
 
-/** Counter for users removed during a broadcast (blocked bot / deactivated) */
-export const blockedCounter = { count: 0, reset() { this.count = 0; } };
+/** Counter + info for users removed during a broadcast (blocked bot / deactivated) */
+export const blockedCounter = {
+  count: 0,
+  removed: [] as RemovedUserInfo[],
+  reset() { this.count = 0; this.removed = []; },
+};
 
-/** Remove a user who blocked the bot: hard-delete User (cascades to all relations) */
-export async function removeBlockedUser(chatId: string | number): Promise<void> {
+export interface RemovedUserInfo {
+  name: string;
+  platformId: string;
+  userId: string;
+  contacts: Array<{ type: string; value: string }>;
+}
+
+/** Remove a user who blocked the bot: hard-delete User (cascades to all relations).
+ *  Returns info about the removed user (for logging purposes). */
+export async function removeBlockedUser(chatId: string | number): Promise<RemovedUserInfo | null> {
   const platformId = String(chatId);
   try {
     const db = getDb();
@@ -17,11 +29,24 @@ export async function removeBlockedUser(chatId: string | number): Promise<void> 
       select: { userId: true },
     });
     if (account?.userId) {
+      // Fetch user info before deletion for logging
+      const [user, contacts] = await Promise.all([
+        db.user.findUnique({ where: { id: account.userId }, select: { name: true } }),
+        db.userContact.findMany({ where: { userId: account.userId }, select: { type: true, value: true } }),
+      ]);
       // Hard-delete User — cascades to PlatformAccount, Connection,
       // PendingConnection, InviteLink, Obligation, Notification, etc.
       await db.user.delete({ where: { id: account.userId } });
       blockedCounter.count += 1;
-      console.log(`[TG Bot] Hard-deleted blocked user ${platformId} (userId: ${account.userId})`);
+      const info: RemovedUserInfo = {
+        name: user?.name ?? 'Unknown',
+        platformId,
+        userId: account.userId,
+        contacts,
+      };
+      blockedCounter.removed.push(info);
+      console.log(`[TG Bot] Hard-deleted blocked user ${platformId} (${info.name}, userId: ${account.userId})`);
+      return info;
     } else {
       // No user found — just clean up orphaned platform account
       const deleted = await db.platformAccount.deleteMany({
@@ -29,9 +54,11 @@ export async function removeBlockedUser(chatId: string | number): Promise<void> 
       });
       if (deleted.count > 0) blockedCounter.count += deleted.count;
       console.log(`[TG Bot] Removed orphaned platform account ${platformId}`);
+      return null;
     }
   } catch (err) {
     console.error(`[TG Bot] Failed to remove blocked user ${platformId}:`, err);
+    return null;
   }
 }
 
