@@ -84,12 +84,10 @@ export function OnboardingPage() {
   };
 
   const handleFinish = async () => {
-    if (budgetAmount && Number(budgetAmount) > 0) {
-      await setBudget.mutateAsync({
-        amount: Number(budgetAmount),
-        inputCurrency: budgetCurrency,
-      });
-    }
+    await setBudget.mutateAsync({
+      amount: Number(budgetAmount),
+      inputCurrency: budgetCurrency,
+    });
     await completeOnboarding.mutateAsync();
     await utils.user.me.refetch();
     navigate('/dashboard');

@@ -121,6 +121,25 @@ export const userRouter = router({
     }),
 
   completeOnboarding: protectedProcedure.mutation(async ({ ctx }) => {
+    // Validate: at least 2 contacts
+    const relevantTypes = ['whatsapp', 'facebook', 'instagram', 'twitter', 'tiktok'];
+    const contacts = await ctx.db.userContact.findMany({
+      where: { userId: ctx.userId, type: { in: relevantTypes } },
+    });
+    const contactCount = contacts.filter(c => c.value.trim()).length;
+    if (contactCount < 2) {
+      throw new TRPCError({ code: 'BAD_REQUEST', message: 'At least 2 contacts required' });
+    }
+
+    // Validate: budget must be set
+    const user = await ctx.db.user.findUnique({
+      where: { id: ctx.userId },
+      select: { monthlyBudget: true },
+    });
+    if (!user?.monthlyBudget || user.monthlyBudget <= 0) {
+      throw new TRPCError({ code: 'BAD_REQUEST', message: 'Monthly budget is required' });
+    }
+
     await ctx.db.user.update({
       where: { id: ctx.userId },
       data: { onboardingCompleted: true },

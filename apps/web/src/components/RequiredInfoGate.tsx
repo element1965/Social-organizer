@@ -88,10 +88,8 @@ export function RequiredInfoGate({ children }: { children: React.ReactNode }) {
   if (!showGate) return <>{children}</>;
 
   return (
-    <>
-      {children}
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4">
-        <div className="bg-white dark:bg-gray-900 rounded-xl p-6 max-w-sm w-full space-y-4 shadow-xl">
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-950 px-4">
+      <div className="bg-white dark:bg-gray-900 rounded-xl p-6 max-w-sm w-full space-y-4 shadow-xl">
           {currentSlide === 'contacts' && (
             <>
               <div className="flex items-center gap-3 mb-2">
@@ -169,6 +167,6 @@ export function RequiredInfoGate({ children }: { children: React.ReactNode }) {
           )}
         </div>
       </div>
-    </>
+    </div>
   );
 }
