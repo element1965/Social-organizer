@@ -294,14 +294,28 @@ export function ProfilePage() {
         <Card>
           <CardHeader><h2 className="font-semibold text-gray-900 dark:text-white">{t('profile.stats')}</h2></CardHeader>
           <CardContent>
-            <div className="grid grid-cols-2 gap-0 mb-3">
-              <button onClick={() => setHelpTab('helpedBy')} className={`text-center py-2 rounded-l-lg transition-colors ${helpTab === 'helpedBy' ? 'bg-blue-50 dark:bg-blue-900/20' : ''}`}>
+            <div className="grid grid-cols-2 gap-4 mb-3">
+              <div className="text-center">
                 <p className="text-2xl font-bold text-blue-600">{stats.obligationsReceived}</p>
-                <p className="text-xs text-gray-500 dark:text-gray-300">{t('profile.helpedByTab')}</p>
-              </button>
-              <button onClick={() => setHelpTab('helped')} className={`text-center py-2 rounded-r-lg transition-colors ${helpTab === 'helped' ? 'bg-blue-50 dark:bg-blue-900/20' : ''}`}>
+                <p className="text-xs text-gray-500 dark:text-gray-300">{t('profile.intentionsReceived')}</p>
+              </div>
+              <div className="text-center">
                 <p className="text-2xl font-bold text-green-600">{stats.obligationsGiven}</p>
-                <p className="text-xs text-gray-500 dark:text-gray-300">{t('profile.helpedTab')}</p>
+                <p className="text-xs text-gray-500 dark:text-gray-300">{t('profile.intentionsGiven')}</p>
+              </div>
+            </div>
+            <div className="flex gap-2 mb-3">
+              <button
+                onClick={() => setHelpTab('helpedBy')}
+                className={`flex-1 py-1.5 text-sm font-medium rounded-lg transition-colors ${helpTab === 'helpedBy' ? 'bg-blue-600 text-white' : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300'}`}
+              >
+                {t('profile.helpedByTab')}
+              </button>
+              <button
+                onClick={() => setHelpTab('helped')}
+                className={`flex-1 py-1.5 text-sm font-medium rounded-lg transition-colors ${helpTab === 'helped' ? 'bg-blue-600 text-white' : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300'}`}
+              >
+                {t('profile.helpedTab')}
               </button>
             </div>
             {helpHistory && (
@@ -317,12 +331,14 @@ export function ProfilePage() {
                     >
                       <Avatar src={item.photoUrl} name={item.name} size="sm" />
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium text-gray-900 dark:text-white truncate">{item.name}</p>
-                        <p className="text-xs text-gray-500 dark:text-gray-300">
-                          {new Date(item.createdAt).toLocaleString(i18n.language, { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                        <p className="text-sm text-gray-900 dark:text-white truncate">
+                          <span className="font-medium">{item.name}</span>
+                          <span className="text-xs text-gray-400 ml-2">
+                            {new Date(item.createdAt).toLocaleString(i18n.language, { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                          </span>
                         </p>
                       </div>
-                      <span className="text-sm font-semibold text-green-600 dark:text-green-400">${Math.round(item.amount)}</span>
+                      <span className="text-sm font-semibold text-green-600 dark:text-green-400 shrink-0">${Math.round(item.amount)}</span>
                     </button>
                   ))
                 )}
