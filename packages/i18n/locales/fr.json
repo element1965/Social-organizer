@@ -333,7 +333,8 @@
     "deleteConfirm": "Supprimer cette question ?",
     "localized": "Traduit",
     "localizeAll": "Traduire dans toutes les langues",
-    "localizing": "Traduction en cours..."
+    "localizing": "Traduction en cours...",
+    "addPhoto": "Ajouter une photo"
   },
   "chat": {
     "title": "Assistant",

@@ -333,7 +333,8 @@
     "deleteConfirm": "ลบคำถามนี้?",
     "localized": "แปลแล้ว",
     "localizeAll": "แปลเป็นทุกภาษา",
-    "localizing": "กำลังแปล..."
+    "localizing": "กำลังแปล...",
+    "addPhoto": "เพิ่มรูปภาพ"
   },
   "chat": {
     "title": "ผู้ช่วย",

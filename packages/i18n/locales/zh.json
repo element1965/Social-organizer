@@ -333,7 +333,8 @@
     "deleteConfirm": "删除此问题？",
     "localized": "已翻译",
     "localizeAll": "翻译为所有语言",
-    "localizing": "翻译中..."
+    "localizing": "翻译中...",
+    "addPhoto": "添加照片"
   },
   "chat": {
     "title": "助手",

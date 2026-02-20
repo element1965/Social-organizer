@@ -333,7 +333,8 @@
     "deleteConfirm": "Обрисати ово питање?",
     "localized": "Преведено",
     "localizeAll": "Преведи на све језике",
-    "localizing": "Превођење..."
+    "localizing": "Превођење...",
+    "addPhoto": "Додај фотографију"
   },
   "chat": {
     "title": "Асистент",

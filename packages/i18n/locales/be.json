@@ -340,7 +340,8 @@
     "deleteConfirm": "Выдаліць гэтае пытанне?",
     "localized": "Перакладзена",
     "localizeAll": "Перакласці на ўсе мовы",
-    "localizing": "Пераклад..."
+    "localizing": "Пераклад...",
+    "addPhoto": "Дадаць фота"
   },
   "chat": {
     "title": "Памочнік",

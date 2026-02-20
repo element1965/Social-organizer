@@ -343,7 +343,8 @@
     "deleteConfirm": "למחוק את השאלה הזאת?",
     "localized": "מתורגם",
     "localizeAll": "תרגם הכל",
-    "localizing": "מתרגם..."
+    "localizing": "מתרגם...",
+    "addPhoto": "הוסף תמונה"
   },
   "chat": {
     "title": "עוזר",

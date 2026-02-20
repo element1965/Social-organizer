@@ -333,7 +333,8 @@
     "deleteConfirm": "Deze vraag verwijderen?",
     "localized": "Vertaald",
     "localizeAll": "Vertaal naar alle talen",
-    "localizing": "Vertalen..."
+    "localizing": "Vertalen...",
+    "addPhoto": "Foto toevoegen"
   },
   "chat": {
     "title": "Assistent",

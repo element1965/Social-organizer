@@ -333,7 +333,8 @@
     "deleteConfirm": "この質問を削除しますか？",
     "localized": "翻訳済み",
     "localizeAll": "すべての言語に翻訳",
-    "localizing": "翻訳中..."
+    "localizing": "翻訳中...",
+    "addPhoto": "写真を追加"
   },
   "chat": {
     "title": "アシスタント",

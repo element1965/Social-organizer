@@ -333,7 +333,8 @@
     "deleteConfirm": "Poista tämä kysymys?",
     "localized": "Käännetty",
     "localizeAll": "Käännä kaikille kielille",
-    "localizing": "Käännetään..."
+    "localizing": "Käännetään...",
+    "addPhoto": "Lisää kuva"
   },
   "chat": {
     "title": "Avustaja",
