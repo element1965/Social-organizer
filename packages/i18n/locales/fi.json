@@ -70,6 +70,7 @@
     "connectionEstablished": "Yhteys muodostettu!",
     "sendAnother": "Lähetä toinen kutsu",
     "skip": "Ohita",
+    "skipForNow": "Ohita toistaiseksi",
     "step6": {
       "title": "Kuukausittainen tukibudjetti",
       "text": "Tämä summa on tarkoituksesi, ei sitoumus. Korttia ei ole liitetty, eikä rahaa veloiteta. Ilmaiset vain, kuinka paljon olet valmis auttamaan kuukaudessa. Tämä luku on näkyvissä verkostollesi ja osoittaa yleiset kyvyt. Kun joku pyytää apua – p��ätät itse, osallistutko vai et."

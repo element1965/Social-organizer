@@ -70,6 +70,7 @@
     "connectionEstablished": "Anslutning upprattad!",
     "sendAnother": "Skicka en till inbjudan",
     "skip": "Hoppa over",
+    "skipForNow": "Hoppa över för nu",
     "step6": {
       "title": "Manatlig stodbudget",
       "text": "Detta belopp är din avsikt, inte ett åtagande. Inget kort är kopplat, ingen avgift tas. Du anger enkelt hur mycket du är villig att hjälpa till med per månad. Siffran är synlig för ditt nätverk och visar dina övergripande förmågor. När någon begär hjälp – du bestämmer om du vill delta eller inte."

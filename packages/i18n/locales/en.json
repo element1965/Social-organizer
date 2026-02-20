@@ -75,7 +75,8 @@
     "waitingForAccept": "Waiting for acceptance...",
     "connectionEstablished": "Connection established!",
     "sendAnother": "Send another invite",
-    "skip": "Skip"
+    "skip": "Skip",
+    "skipForNow": "Skip for now"
   },
   "nav": {
     "home": "Home",

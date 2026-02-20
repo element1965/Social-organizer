@@ -121,8 +121,8 @@ export const userRouter = router({
     }),
 
   completeOnboarding: protectedProcedure.mutation(async ({ ctx }) => {
-    // Validate: at least 2 contacts
-    const relevantTypes = ['whatsapp', 'facebook', 'instagram', 'twitter', 'tiktok'];
+    // Validate: at least 2 contacts (telegram counts)
+    const relevantTypes = ['telegram', 'whatsapp', 'facebook', 'instagram', 'twitter', 'tiktok'];
     const contacts = await ctx.db.userContact.findMany({
       where: { userId: ctx.userId, type: { in: relevantTypes } },
     });
@@ -131,14 +131,7 @@ export const userRouter = router({
       throw new TRPCError({ code: 'BAD_REQUEST', message: 'At least 2 contacts required' });
     }
 
-    // Validate: budget must be set
-    const user = await ctx.db.user.findUnique({
-      where: { id: ctx.userId },
-      select: { monthlyBudget: true },
-    });
-    if (!user?.monthlyBudget || user.monthlyBudget <= 0) {
-      throw new TRPCError({ code: 'BAD_REQUEST', message: 'Monthly budget is required' });
-    }
+    // Budget is optional — user can skip during onboarding
 
     await ctx.db.user.update({
       where: { id: ctx.userId },
@@ -199,20 +192,15 @@ export const userRouter = router({
     }),
 
   checkRequiredInfo: protectedProcedure.query(async ({ ctx }) => {
-    const user = await ctx.db.user.findUnique({
-      where: { id: ctx.userId },
-      select: { monthlyBudget: true },
-    });
-    const needsBudget = !user?.monthlyBudget || user.monthlyBudget <= 0;
-
-    const relevantTypes = ['whatsapp', 'facebook', 'instagram', 'twitter', 'tiktok'];
+    // Telegram counts as a contact
+    const relevantTypes = ['telegram', 'whatsapp', 'facebook', 'instagram', 'twitter', 'tiktok'];
     const contacts = await ctx.db.userContact.findMany({
       where: { userId: ctx.userId, type: { in: relevantTypes } },
     });
     const contactCount = contacts.filter(c => c.value.trim()).length;
     const needsContacts = contactCount < 2;
 
-    return { needsBudget, needsContacts, contactCount };
+    return { needsContacts, contactCount };
   }),
 
   delete: protectedProcedure.mutation(async ({ ctx }) => {
