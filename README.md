@@ -180,11 +180,11 @@ React 19 SPA with tRPC client.
 | LandingPage | `/welcome` | Public landing with 3D Earth globe (NASA textures) and project description; supports `variant="arvut"` for Hebrew-branded Arvut Hadadit subdomain |
 | LoginPage | `/login` | Login via platform (FB/TG/Apple/Google) + demo mode |
 | OnboardingPage | `/onboarding` | 5-screen onboarding with invitation and monthly budget (auto for new users) |
-| DashboardPage | `/` | Network stats, collections, intentions, emergency alerts (protected → /welcome) |
+| DashboardPage | `/` | Network stats (clickable "Whole network" → /network), collections, intentions, emergency alerts (protected → /welcome) |
 | NotificationsPage | `/notifications` | Notifications with handshake path and 24h timer |
 | CreateCollectionPage | `/create` | Create collection with network reach display (1:1 ratio) |
 | CollectionPage | `/collection/:id` | Collection details + intentions + handshake path to creator |
-| MyNetworkPage | `/network` | Connection list with connection counts + invitations |
+| MyNetworkPage | `/network` | Connection list sorted by date (newest first) with relative time, connection counts + invitations |
 | ProfilePage | `/profile/:userId` | Profile with editing, contacts, connections list (collapsible), stats (given/received), handshake path |
 | SettingsPage | `/settings` | Language, theme, sounds, font scale, contacts, hide contacts toggle, ignore list |
 | FaqPage | `/faq` | FAQ accordion with admin CRUD, view count ranking, LLM localization button, language-aware |
@@ -196,7 +196,7 @@ React 19 SPA with tRPC client.
 - **Moon:** Real lunar surface texture, orbiting Earth on scroll
 - **Stars:** 3000 realistic small stars with subtle twinkling, hover brightness effect
 - **Atmosphere:** Shader-based blue glow around Earth
-- **Network:** Animated nodes and edges on Earth's surface (Fibonacci sphere distribution)
+- **Network:** Animated nodes and edges on Earth's surface (Fibonacci sphere distribution), depth-colored edges, curved links, mini legend, auto-rotate camera
 
 ### Frontend Technologies
 
