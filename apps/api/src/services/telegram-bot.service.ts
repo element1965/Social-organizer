@@ -751,6 +751,19 @@ export async function uploadMediaToTelegram(
   return json.result?.video?.file_id ?? null;
 }
 
+/** Get download URL for a Telegram file by file_id */
+export async function getTelegramFileUrl(fileId: string): Promise<string | null> {
+  if (!TELEGRAM_BOT_TOKEN) return null;
+  const res = await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/getFile`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ file_id: fileId }),
+  });
+  const json = (await res.json()) as { ok: boolean; result?: { file_path?: string } };
+  if (!json.ok || !json.result?.file_path) return null;
+  return `https://api.telegram.org/file/bot${TELEGRAM_BOT_TOKEN}/${json.result.file_path}`;
+}
+
 /** Register webhook URL with Telegram Bot API */
 export async function setTelegramWebhook(webhookUrl: string): Promise<boolean> {
   if (!TELEGRAM_BOT_TOKEN) {

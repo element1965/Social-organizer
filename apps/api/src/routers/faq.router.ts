@@ -79,6 +79,7 @@ export const faqRouter = router({
     .input(z.object({
       question: z.string().min(1),
       answer: z.string().min(1),
+      imageUrl: z.string().nullable().optional(),
       language: z.string().default('ru'),
       sortOrder: z.number().int().default(0),
     }))
@@ -97,6 +98,7 @@ export const faqRouter = router({
       id: z.string(),
       question: z.string().min(1).optional(),
       answer: z.string().min(1).optional(),
+      imageUrl: z.string().nullable().optional(),
       sortOrder: z.number().int().optional(),
     }))
     .mutation(async ({ ctx, input }) => {
@@ -156,6 +158,7 @@ export const faqRouter = router({
                 data: {
                   question: result.question,
                   answer: result.answer,
+                  imageUrl: item.imageUrl,
                   language: toLang,
                   sortOrder: item.sortOrder,
                   viewCount: 0,
@@ -219,6 +222,7 @@ export const faqRouter = router({
               data: {
                 question: translated.question,
                 answer: translated.answer,
+                imageUrl: item.imageUrl,
                 language: toLang,
                 sortOrder: item.sortOrder,
                 viewCount: 0,

@@ -398,6 +398,7 @@ model FaqItem {
   id          String   @id @default(cuid())
   question    String
   answer      String
+  imageUrl    String?
   language    String   @default("ru")
   sortOrder   Int      @default(0)
   viewCount   Int      @default(0)
