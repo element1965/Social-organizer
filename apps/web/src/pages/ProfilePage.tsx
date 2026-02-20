@@ -296,26 +296,32 @@ export function ProfilePage() {
           <CardContent>
             <div className="grid grid-cols-2 gap-4 mb-3">
               <div className="text-center">
-                <p className="text-2xl font-bold text-blue-600">{stats.obligationsReceived}</p>
+                <p className="text-2xl font-bold text-blue-600">{stats.collectionsWithHelp}</p>
                 <p className="text-xs text-gray-500 dark:text-gray-300">{t('profile.intentionsReceived')}</p>
               </div>
               <div className="text-center">
-                <p className="text-2xl font-bold text-green-600">{stats.obligationsGiven}</p>
+                <p className="text-2xl font-bold text-green-600">{stats.collectionsHelped}</p>
                 <p className="text-xs text-gray-500 dark:text-gray-300">{t('profile.intentionsGiven')}</p>
               </div>
             </div>
-            <div className="flex gap-2 mb-3">
+            <div className="grid grid-cols-2 gap-2 mb-3">
               <button
                 onClick={() => setHelpTab('helpedBy')}
-                className={`flex-1 py-1.5 text-sm font-medium rounded-lg transition-colors ${helpTab === 'helpedBy' ? 'bg-blue-600 text-white' : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300'}`}
+                className={`py-2 rounded-lg transition-colors ${helpTab === 'helpedBy' ? 'bg-blue-50 dark:bg-blue-900/20 ring-1 ring-blue-300 dark:ring-blue-700' : 'bg-gray-50 dark:bg-gray-800'}`}
               >
-                {t('profile.helpedByTab')}
+                <p className={`text-lg font-bold ${helpTab === 'helpedBy' ? 'text-blue-600' : 'text-gray-700 dark:text-gray-300'}`}>
+                  {helpHistory ? new Set(helpHistory.helpedBy.map((h) => h.userId)).size : '—'}
+                </p>
+                <p className="text-xs text-gray-500 dark:text-gray-300">{t('profile.helpedByTab')}</p>
               </button>
               <button
                 onClick={() => setHelpTab('helped')}
-                className={`flex-1 py-1.5 text-sm font-medium rounded-lg transition-colors ${helpTab === 'helped' ? 'bg-blue-600 text-white' : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300'}`}
+                className={`py-2 rounded-lg transition-colors ${helpTab === 'helped' ? 'bg-blue-50 dark:bg-blue-900/20 ring-1 ring-blue-300 dark:ring-blue-700' : 'bg-gray-50 dark:bg-gray-800'}`}
               >
-                {t('profile.helpedTab')}
+                <p className={`text-lg font-bold ${helpTab === 'helped' ? 'text-green-600' : 'text-gray-700 dark:text-gray-300'}`}>
+                  {helpHistory ? new Set(helpHistory.helped.map((h) => h.userId)).size : '—'}
+                </p>
+                <p className="text-xs text-gray-500 dark:text-gray-300">{t('profile.helpedTab')}</p>
               </button>
             </div>
             {helpHistory && (
