@@ -230,6 +230,65 @@ export const statsRouter = router({
     return { period, points };
   }),
 
+  // Help history: who this user helped & who helped this user
+  helpHistory: protectedProcedure
+    .input(z.object({ userId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const targetUserId = input.userId;
+
+      // "Helped" = obligations where userId = target → collection.creator is who they helped
+      const helpedObligations = await ctx.db.obligation.findMany({
+        where: { userId: targetUserId },
+        select: {
+          id: true,
+          amount: true,
+          createdAt: true,
+          collection: {
+            select: {
+              creator: {
+                select: { id: true, name: true, photoUrl: true },
+              },
+            },
+          },
+        },
+        orderBy: { createdAt: 'desc' },
+      });
+
+      // "Helped by" = obligations in collections where creatorId = target → obligation.user is who helped them
+      const helpedByObligations = await ctx.db.obligation.findMany({
+        where: { collection: { creatorId: targetUserId } },
+        select: {
+          id: true,
+          amount: true,
+          createdAt: true,
+          user: {
+            select: { id: true, name: true, photoUrl: true },
+          },
+        },
+        orderBy: { createdAt: 'desc' },
+      });
+
+      const helped = helpedObligations.map((o) => ({
+        id: o.id,
+        userId: o.collection.creator.id,
+        name: o.collection.creator.name,
+        photoUrl: o.collection.creator.photoUrl,
+        amount: o.amount,
+        createdAt: o.createdAt,
+      }));
+
+      const helpedBy = helpedByObligations.map((o) => ({
+        id: o.id,
+        userId: o.user.id,
+        name: o.user.name,
+        photoUrl: o.user.photoUrl,
+        amount: o.amount,
+        createdAt: o.createdAt,
+      }));
+
+      return { helped, helpedBy };
+    }),
+
   // Current network capabilities (sum of all remainingBudget in the connected cluster)
   networkCapabilities: protectedProcedure.query(async ({ ctx }) => {
     // If user has no connections, fallback to inviter's network (pending connection)

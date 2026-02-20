@@ -282,7 +282,9 @@
     "directRequestSent": "Pedido enviado. Aguardando confirmação",
     "revokeHandshake": "Revogar aperto de mão",
     "revokeConfirm": "A conexão será redefinida. O usuário precisará ser reconfirmado. Continuar?",
-    "intentionsReceived": "Vezes ajudado"
+    "intentionsReceived": "Vezes ajudado",
+    "helpedTab": "Ajudou",
+    "helpedByTab": "Ajudado por"
   },
   "settings": {
     "title": "Configurações",

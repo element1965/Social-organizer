@@ -282,7 +282,9 @@
     "directRequestSent": "Cerere trimisă. Se așteaptă confirmarea",
     "revokeHandshake": "Revocă strângerea de mână",
     "revokeConfirm": "Conexiunea va fi resetată. Utilizatorul va trebui reconfirmat. Continuați?",
-    "intentionsReceived": "Ori ajutat"
+    "intentionsReceived": "Ori ajutat",
+    "helpedTab": "A ajutat",
+    "helpedByTab": "Ajutat de"
   },
   "settings": {
     "title": "Setari",

@@ -282,7 +282,9 @@
     "directRequestSent": "ส่งคำขอแล้ว รอการยืนยัน",
     "revokeHandshake": "เพิกถอนการจับมือ",
     "revokeConfirm": "การเชื่อมต่อจะถูกรีเซ็ต ผู้ใช้จะต้องได้รับการยืนยันอีกครั้ง ดำเนินการต่อ?",
-    "intentionsReceived": "ครั้งที่ได้รับความช่วย"
+    "intentionsReceived": "ครั้งที่ได้รับความช่วย",
+    "helpedTab": "ช่วยเหลือ",
+    "helpedByTab": "ได้รับความช่วยเหลือ"
   },
   "settings": {
     "title": "ตั้งค่า",

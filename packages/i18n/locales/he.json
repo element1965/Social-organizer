@@ -292,7 +292,9 @@
     "directRequestSent": "הבקשה נשלחה. ממתין לאישור",
     "revokeHandshake": "בטל לחיצת יד",
     "revokeConfirm": "החיבור יאופס. המשתמש יצטרך אישור מחדש. להמשיך?",
-    "intentionsReceived": "פעמים שעזרו לו"
+    "intentionsReceived": "פעמים שעזרו לו",
+    "helpedTab": "עזר ל",
+    "helpedByTab": "עזרו לו"
   },
   "settings": {
     "title": "הגדרות",

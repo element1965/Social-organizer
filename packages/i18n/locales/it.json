@@ -282,7 +282,9 @@
     "directRequestSent": "Richiesta inviata. In attesa di conferma",
     "revokeHandshake": "Revoca stretta di mano",
     "revokeConfirm": "La connessione verrà ripristinata. L'utente dovrà essere riconfermato. Continuare?",
-    "intentionsReceived": "Volte aiutato"
+    "intentionsReceived": "Volte aiutato",
+    "helpedTab": "Ha aiutato",
+    "helpedByTab": "Aiutato da"
   },
   "settings": {
     "title": "Impostazioni",

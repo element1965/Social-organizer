@@ -289,7 +289,9 @@
     "directRequestSent": "Запрос отправлен. Ожидайте подтверждения",
     "revokeHandshake": "Отозвать рукопожатие",
     "revokeConfirm": "Связь будет сброшена. Пользователю потребуется повторное подтверждение. Продолжить?",
-    "intentionsReceived": "Раз помогли ему"
+    "intentionsReceived": "Раз помогли ему",
+    "helpedTab": "Кому помог",
+    "helpedByTab": "Кто помог"
   },
   "settings": {
     "title": "Настройки",

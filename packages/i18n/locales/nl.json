@@ -282,7 +282,9 @@
     "directRequestSent": "Verzoek verzonden. Wacht op bevestiging",
     "revokeHandshake": "Handdruk intrekken",
     "revokeConfirm": "De verbinding wordt gereset. De gebruiker moet opnieuw bevestigd worden. Doorgaan?",
-    "intentionsReceived": "Keer geholpen"
+    "intentionsReceived": "Keer geholpen",
+    "helpedTab": "Heeft geholpen",
+    "helpedByTab": "Geholpen door"
   },
   "settings": {
     "title": "Instellingen",

@@ -282,7 +282,9 @@
     "directRequestSent": "Förfrågan skickad. Väntar på bekräftelse",
     "revokeHandshake": "Återkalla handslag",
     "revokeConfirm": "Anslutningen återställs. Användaren måste bekräftas på nytt. Fortsätta?",
-    "intentionsReceived": "Gånger hjälpt"
+    "intentionsReceived": "Gånger hjälpt",
+    "helpedTab": "Hjälpte",
+    "helpedByTab": "Hjälpt av"
   },
   "settings": {
     "title": "Installningar",

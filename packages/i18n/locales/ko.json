@@ -282,7 +282,9 @@
     "directRequestSent": "요청이 전송되었습니다. 확인 대기 중",
     "revokeHandshake": "핸드셰이크 철회",
     "revokeConfirm": "연결이 초기화됩니다. 사용자를 다시 확인해야 합니다. 계속하시겠습니까?",
-    "intentionsReceived": "도움 받은 횟수"
+    "intentionsReceived": "도움 받은 횟수",
+    "helpedTab": "도움을 줌",
+    "helpedByTab": "도움을 받음"
   },
   "settings": {
     "title": "설정",

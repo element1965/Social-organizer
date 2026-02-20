@@ -282,7 +282,9 @@
     "directRequestSent": "تم إرسال الطلب. في انتظار التأكيد",
     "revokeHandshake": "إلغاء المصافحة",
     "revokeConfirm": "سيتم إعادة تعيين الاتصال. سيحتاج المستخدم إلى إعادة التأكيد. متابعة؟",
-    "intentionsReceived": "مرات المساعدة"
+    "intentionsReceived": "مرات المساعدة",
+    "helpedTab": "ساعد",
+    "helpedByTab": "ساعده"
   },
   "settings": {
     "title": "الإعدادات",

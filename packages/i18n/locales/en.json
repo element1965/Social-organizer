@@ -289,7 +289,9 @@
     "directRequestSent": "Request sent. Awaiting confirmation",
     "revokeHandshake": "Revoke handshake",
     "revokeConfirm": "The connection will be reset. The user will need to be re-confirmed. Continue?",
-    "intentionsReceived": "Times helped"
+    "intentionsReceived": "Times helped",
+    "helpedTab": "Helped",
+    "helpedByTab": "Helped by"
   },
   "settings": {
     "title": "Settings",

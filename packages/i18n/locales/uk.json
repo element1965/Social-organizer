@@ -282,7 +282,9 @@
     "directRequestSent": "Запит надіслано. Очікуйте підтвердження",
     "revokeHandshake": "Відкликати рукостискання",
     "revokeConfirm": "Зв'язок буде скинуто. Користувачу потрібне повторне підтвердження. Продовжити?",
-    "intentionsReceived": "Разів допомогли"
+    "intentionsReceived": "Разів допомогли",
+    "helpedTab": "Кому допоміг",
+    "helpedByTab": "Хто допоміг"
   },
   "settings": {
     "title": "Налаштування",

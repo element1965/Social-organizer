@@ -282,7 +282,9 @@
     "directRequestSent": "Žádost odeslána. Čeká na potvrzení",
     "revokeHandshake": "Odvolat podání ruky",
     "revokeConfirm": "Spojení bude resetováno. Uživatel bude muset být znovu potvrzen. Pokračovat?",
-    "intentionsReceived": "Kolikrát mu pomohli"
+    "intentionsReceived": "Kolikrát mu pomohli",
+    "helpedTab": "Pomohl",
+    "helpedByTab": "Pomoženo"
   },
   "settings": {
     "title": "Nastavení",
