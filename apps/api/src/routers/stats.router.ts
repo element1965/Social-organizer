@@ -47,16 +47,29 @@ export const statsRouter = router({
     .query(async ({ ctx, input }) => {
       const targetUserId = input?.userId ?? ctx.userId;
 
-      const [connectionsCount, collectionsCreated, collectionsActive, obligationsGiven, obligationsReceived] =
-        await Promise.all([
-          ctx.db.connection.count({
-            where: { OR: [{ userAId: targetUserId }, { userBId: targetUserId }] },
-          }),
-          ctx.db.collection.count({ where: { creatorId: targetUserId } }),
-          ctx.db.collection.count({ where: { creatorId: targetUserId, status: 'ACTIVE' } }),
-          ctx.db.obligation.count({ where: { userId: targetUserId } }),
-          ctx.db.obligation.count({ where: { collection: { creatorId: targetUserId } } }),
-        ]);
+      const [
+        connectionsCount, collectionsCreated, collectionsActive,
+        obligationsGiven, obligationsReceived,
+        collectionsWithHelp, helpedCollections,
+      ] = await Promise.all([
+        ctx.db.connection.count({
+          where: { OR: [{ userAId: targetUserId }, { userBId: targetUserId }] },
+        }),
+        ctx.db.collection.count({ where: { creatorId: targetUserId } }),
+        ctx.db.collection.count({ where: { creatorId: targetUserId, status: 'ACTIVE' } }),
+        ctx.db.obligation.count({ where: { userId: targetUserId } }),
+        ctx.db.obligation.count({ where: { collection: { creatorId: targetUserId } } }),
+        // His collections that received at least one obligation
+        ctx.db.collection.count({
+          where: { creatorId: targetUserId, obligations: { some: {} } },
+        }),
+        // Distinct collections where he gave obligations
+        ctx.db.obligation.findMany({
+          where: { userId: targetUserId },
+          distinct: ['collectionId'],
+          select: { collectionId: true },
+        }),
+      ]);
 
       return {
         connectionsCount,
@@ -64,6 +77,8 @@ export const statsRouter = router({
         collectionsActive,
         obligationsGiven,
         obligationsReceived,
+        collectionsWithHelp,
+        collectionsHelped: helpedCollections.length,
       };
     }),
 
