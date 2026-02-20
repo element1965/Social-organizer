@@ -24,8 +24,10 @@ export function ProfilePage() {
     if (isOwn) navigate('/settings', { replace: true });
   }, [isOwn, navigate]);
 
+  const [helpTab, setHelpTab] = useState<'helped' | 'helpedBy'>('helped');
   const { data: user, isLoading } = trpc.user.getById.useQuery({ userId: paramId! }, { enabled: !!paramId && !isOwn });
   const { data: stats } = trpc.stats.profile.useQuery({ userId: paramId }, { enabled: !!paramId && !isOwn });
+  const { data: helpHistory } = trpc.stats.helpHistory.useQuery({ userId: paramId! }, { enabled: !!paramId && !isOwn });
   const { data: pathData } = trpc.connection.findPath.useQuery(
     { targetUserId: paramId! },
     { enabled: !isOwn && !!paramId }
@@ -292,11 +294,48 @@ export function ProfilePage() {
         <Card>
           <CardHeader><h2 className="font-semibold text-gray-900 dark:text-white">{t('profile.stats')}</h2></CardHeader>
           <CardContent>
-            <div className="grid grid-cols-3 gap-4">
-              <div className="text-center"><p className="text-2xl font-bold text-blue-600">{stats.connectionsCount}</p><p className="text-xs text-gray-500 dark:text-gray-300">{t('profile.connections')}</p></div>
+            <div className="grid grid-cols-2 gap-4 mb-4">
               <div className="text-center"><p className="text-2xl font-bold text-blue-600">{stats.collectionsCreated}</p><p className="text-xs text-gray-500 dark:text-gray-300">{t('profile.collectionsCreated')}</p></div>
               <div className="text-center"><p className="text-2xl font-bold text-green-600">{stats.obligationsGiven}</p><p className="text-xs text-gray-500 dark:text-gray-300">{t('profile.intentionsGiven')}</p></div>
             </div>
+            <div className="flex gap-2 mb-3">
+              <button
+                onClick={() => setHelpTab('helped')}
+                className={`flex-1 py-1.5 text-sm font-medium rounded-lg transition-colors ${helpTab === 'helped' ? 'bg-blue-600 text-white' : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300'}`}
+              >
+                {t('profile.helpedTab')}
+              </button>
+              <button
+                onClick={() => setHelpTab('helpedBy')}
+                className={`flex-1 py-1.5 text-sm font-medium rounded-lg transition-colors ${helpTab === 'helpedBy' ? 'bg-blue-600 text-white' : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300'}`}
+              >
+                {t('profile.helpedByTab')}
+              </button>
+            </div>
+            {helpHistory && (
+              <div className="space-y-2 max-h-60 overflow-y-auto">
+                {(helpTab === 'helped' ? helpHistory.helped : helpHistory.helpedBy).length === 0 ? (
+                  <p className="text-center text-sm text-gray-400 py-2">—</p>
+                ) : (
+                  (helpTab === 'helped' ? helpHistory.helped : helpHistory.helpedBy).map((item) => (
+                    <button
+                      key={item.id}
+                      onClick={() => navigate(`/profile/${item.userId}`)}
+                      className="w-full flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors text-left"
+                    >
+                      <Avatar src={item.photoUrl} name={item.name} size="sm" />
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-medium text-gray-900 dark:text-white truncate">{item.name}</p>
+                        <p className="text-xs text-gray-500 dark:text-gray-300">
+                          {new Date(item.createdAt).toLocaleString(i18n.language, { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                        </p>
+                      </div>
+                      <span className="text-sm font-semibold text-green-600 dark:text-green-400">${Math.round(item.amount)}</span>
+                    </button>
+                  ))
+                )}
+              </div>
+            )}
           </CardContent>
         </Card>
       )}

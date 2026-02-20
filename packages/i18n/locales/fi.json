@@ -282,7 +282,9 @@
     "directRequestSent": "Pyyntö lähetetty. Odottaa vahvistusta",
     "revokeHandshake": "Peruuta kädenpuristus",
     "revokeConfirm": "Yhteys nollataan. Käyttäjä on vahvistettava uudelleen. Jatka?",
-    "intentionsReceived": "Kertaa autettu"
+    "intentionsReceived": "Kertaa autettu",
+    "helpedTab": "Auttoi",
+    "helpedByTab": "Autettiin"
   },
   "settings": {
     "title": "Asetukset",

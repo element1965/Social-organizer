@@ -282,7 +282,9 @@
     "directRequestSent": "Anfrage gesendet. Warte auf Bestätigung",
     "revokeHandshake": "Handschlag widerrufen",
     "revokeConfirm": "Die Verbindung wird zurückgesetzt. Der Benutzer muss erneut bestätigt werden. Fortfahren?",
-    "intentionsReceived": "Male geholfen bekommen"
+    "intentionsReceived": "Male geholfen bekommen",
+    "helpedTab": "Hat geholfen",
+    "helpedByTab": "Geholfen von"
   },
   "settings": {
     "title": "Einstellungen",

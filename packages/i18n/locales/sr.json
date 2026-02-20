@@ -282,7 +282,9 @@
     "directRequestSent": "Захтев послат. Чека се потврда",
     "revokeHandshake": "Опозови руковање",
     "revokeConfirm": "Веза ће бити ресетована. Корисник ће морати бити поново потврђен. Наставити?",
-    "intentionsReceived": "Пута помогнут"
+    "intentionsReceived": "Пута помогнут",
+    "helpedTab": "Помогао",
+    "helpedByTab": "Помогли му"
   },
   "settings": {
     "title": "Подешавања",

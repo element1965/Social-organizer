@@ -282,7 +282,9 @@
     "directRequestSent": "Anmodning sendt. Afventer bekræftelse",
     "revokeHandshake": "Tilbagekald håndtryk",
     "revokeConfirm": "Forbindelsen nulstilles. Brugeren skal genbekræftes. Fortsæt?",
-    "intentionsReceived": "Gange hjulpet"
+    "intentionsReceived": "Gange hjulpet",
+    "helpedTab": "Hjalp",
+    "helpedByTab": "Hjulpet af"
   },
   "settings": {
     "title": "Indstillinger",

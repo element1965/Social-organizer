@@ -282,7 +282,9 @@
     "directRequestSent": "请求已发送，等待确认",
     "revokeHandshake": "撤销握手",
     "revokeConfirm": "连接将被重置。用户需要重新确认。继续？",
-    "intentionsReceived": "被帮助次数"
+    "intentionsReceived": "被帮助次数",
+    "helpedTab": "帮助了",
+    "helpedByTab": "被帮助"
   },
   "settings": {
     "title": "设置",

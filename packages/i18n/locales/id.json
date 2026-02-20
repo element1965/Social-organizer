@@ -282,7 +282,9 @@
     "directRequestSent": "Permintaan terkirim. Menunggu konfirmasi",
     "revokeHandshake": "Cabut jabat tangan",
     "revokeConfirm": "Koneksi akan direset. Pengguna perlu dikonfirmasi ulang. Lanjutkan?",
-    "intentionsReceived": "Kali dibantu"
+    "intentionsReceived": "Kali dibantu",
+    "helpedTab": "Membantu",
+    "helpedByTab": "Dibantu oleh"
   },
   "settings": {
     "title": "Pengaturan",
