@@ -183,11 +183,14 @@ export function DashboardPage() {
               </div>
             );
           })()}
-          <div className="p-4 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-950/30 dark:to-purple-950/30 rounded-xl">
+          <div
+            className="p-4 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-950/30 dark:to-purple-950/30 rounded-xl cursor-pointer hover:scale-[1.02] hover:shadow-md transition-all"
+            onClick={() => navigate('/network')}
+          >
             <div className="flex items-center gap-1.5 mb-2">
               <Globe className="w-5 h-5 text-blue-600" />
               <span className="text-lg font-bold text-gray-900 dark:text-white">{t('dashboard.wholeNetwork')}</span>
-              <div className="ml-auto">
+              <div className="ml-auto" onClick={(e) => e.stopPropagation()}>
                 <PeriodChip days={networkDays} onClick={() => setShowNetworkPicker(true)} />
               </div>
             </div>

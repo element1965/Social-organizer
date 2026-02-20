@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef } from 'react';
+import { useCallback, useEffect, useMemo, useRef } from 'react';
 import ForceGraph3D from 'react-force-graph-3d';
 import SpriteText from 'three-spritetext';
 import * as THREE from 'three';
@@ -96,12 +96,20 @@ export function NetworkGraph({
     fz: n.isCenter ? 0 : undefined,
   }));
 
+  const nodeDepthMap = useMemo(() => new Map(nodes.map(n => [n.id, n.depth ?? (n.isCenter ? 0 : 1)])), [nodes]);
+
   useEffect(() => {
     if (fgRef.current) {
       const fg = fgRef.current;
       if (typeof fg.d3Force === 'function') {
         const charge = fg.d3Force('charge');
         if (charge && typeof charge.strength === 'function') charge.strength(-80);
+      }
+      // Auto-rotate when user is not interacting
+      const controls = fg.controls();
+      if (controls) {
+        controls.autoRotate = true;
+        controls.autoRotateSpeed = 0.5;
       }
       // Zoom camera closer after graph settles
       setTimeout(() => {
@@ -431,9 +439,15 @@ export function NetworkGraph({
       if (src && tgt && highlightSet.has(src) && highlightSet.has(tgt)) {
         return 'rgba(245,158,11,0.8)';
       }
-      return darkMode ? 'rgba(100,140,200,0.3)' : 'rgba(59,130,246,0.4)';
+      // Color by max depth of endpoints
+      const srcDepth = src ? (nodeDepthMap.get(src) ?? 3) : 3;
+      const tgtDepth = tgt ? (nodeDepthMap.get(tgt) ?? 3) : 3;
+      const maxDepth = Math.min(Math.max(srcDepth, tgtDepth), 3);
+      const depthPalette = darkMode ? DEPTH_COLORS_DARK : DEPTH_COLORS_LIGHT;
+      const color = depthPalette[maxDepth] ?? depthPalette[depthPalette.length - 1]!;
+      return color.main + '55';
     },
-    [highlightSet, darkMode],
+    [highlightSet, darkMode, nodeDepthMap],
   );
 
   const linkWidth = useCallback(
@@ -478,6 +492,7 @@ export function NetworkGraph({
         nodeLabel={nodeLabel}
         linkColor={linkColor}
         linkWidth={linkWidth}
+        linkCurvature={0.2}
         linkOpacity={0.6}
         onNodeClick={handleNodeClick}
         enableNodeDrag={false}
@@ -485,6 +500,32 @@ export function NetworkGraph({
         cooldownTime={3000}
         showNavInfo={false}
       />
+      {/* Mini legend */}
+      <div
+        style={{
+          position: 'absolute',
+          bottom: 36,
+          right: 8,
+          padding: '8px 10px',
+          borderRadius: 8,
+          fontSize: 10,
+          lineHeight: '18px',
+          background: darkMode ? 'rgba(0,0,0,0.6)' : 'rgba(255,255,255,0.85)',
+          color: darkMode ? '#cbd5e1' : '#475569',
+          pointerEvents: 'none',
+        }}
+      >
+        {(darkMode ? DEPTH_COLORS_DARK : DEPTH_COLORS_LIGHT).map((c, i) => (
+          <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+            <span style={{ width: 8, height: 8, borderRadius: '50%', background: c.main, display: 'inline-block', flexShrink: 0 }} />
+            {i === 0 ? 'You' : `${i}° handshake`}
+          </div>
+        ))}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 4, borderTop: `1px solid ${darkMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)'}`, paddingTop: 4 }}>
+          <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#22c55e', display: 'inline-block', flexShrink: 0 }} />
+          Online
+        </div>
+      </div>
       {controlsHint && (
         <div
           style={{

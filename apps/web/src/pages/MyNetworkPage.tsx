@@ -12,6 +12,20 @@ const LazyNetworkGraph = lazy(() =>
   import('@so/graph-3d').then((m) => ({ default: m.NetworkGraph })),
 );
 
+function timeAgo(date: string | Date | null): string {
+  if (!date) return '';
+  const diff = Date.now() - new Date(date).getTime();
+  const minutes = Math.floor(diff / 60000);
+  if (minutes < 1) return 'now';
+  if (minutes < 60) return `${minutes}m`;
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) return `${hours}h`;
+  const days = Math.floor(hours / 24);
+  if (days < 30) return `${days}d`;
+  const months = Math.floor(days / 30);
+  return `${months}mo`;
+}
+
 export function MyNetworkPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -225,7 +239,10 @@ export function MyNetworkPage() {
                             className="w-full flex items-center gap-2 p-2 hover:bg-gray-50 dark:hover:bg-gray-800/50"
                           >
                             <Avatar src={user.photoUrl} name={user.name} size="sm" />
-                            <span className="flex-1 text-sm text-gray-700 dark:text-gray-300 text-left">{user.name}</span>
+                            <span className="flex-1 text-sm text-gray-700 dark:text-gray-300 text-left">
+                              {user.name}
+                              {user.createdAt && <span className="ml-1.5 text-[10px] text-gray-400">{timeAgo(user.createdAt)}</span>}
+                            </span>
                             <div className="flex items-center gap-2">
                               <span className="flex items-center gap-1 text-xs text-gray-400">
                                 <Users className="w-3 h-3" />
