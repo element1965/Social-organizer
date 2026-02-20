@@ -236,29 +236,32 @@ export function MyNetworkPage() {
 
                     {isExpanded && depthUsers.length > 0 && (
                       <div className="border-t border-gray-200 dark:border-gray-700 max-h-48 overflow-y-auto">
-                        {depthUsers.map((user: any) => (
-                          <button
-                            key={user.id}
-                            onClick={() => navigate(`/profile/${user.id}`)}
-                            className="w-full flex items-center gap-2 p-2 hover:bg-gray-50 dark:hover:bg-gray-800/50"
-                          >
-                            <Avatar src={user.photoUrl} name={user.name} size="sm" />
-                            <span className="flex-1 text-sm text-gray-700 dark:text-gray-300 text-left">
-                              {user.name}
-                              {user.createdAt && <span className="ml-1.5 text-[10px] text-gray-400">{timeAgo(user.createdAt)}</span>}
-                            </span>
-                            <div className="flex items-center gap-2">
-                              <span className="flex items-center gap-1 text-xs text-gray-400">
-                                <Users className="w-3 h-3" />
-                                {user.connectionCount ?? 0}
+                        {depthUsers.map((user: any) => {
+                          const isRecent = user.connectedAt && (Date.now() - new Date(user.connectedAt).getTime()) < 24 * 60 * 60 * 1000;
+                          return (
+                            <button
+                              key={user.id}
+                              onClick={() => navigate(`/profile/${user.id}`)}
+                              className={`w-full flex items-center gap-2 p-2 ${isRecent ? 'bg-green-50 dark:bg-green-900/20 hover:bg-green-100 dark:hover:bg-green-900/30' : 'hover:bg-gray-50 dark:hover:bg-gray-800/50'}`}
+                            >
+                              <Avatar src={user.photoUrl} name={user.name} size="sm" />
+                              <span className="flex-1 text-sm text-gray-700 dark:text-gray-300 text-left">
+                                {user.name}
+                                {user.createdAt && <span className="ml-1.5 text-[10px] text-gray-400">{timeAgo(user.createdAt)}</span>}
                               </span>
-                              <span className="flex items-center gap-1 text-xs text-green-600 dark:text-green-400">
-                                <Wallet className="w-3 h-3" />
-                                ${Math.round(user.remainingBudget ?? 0)}
-                              </span>
-                            </div>
-                          </button>
-                        ))}
+                              <div className="flex items-center gap-2">
+                                <span className="flex items-center gap-1 text-xs text-gray-400">
+                                  <Users className="w-3 h-3" />
+                                  {user.connectionCount ?? 0}
+                                </span>
+                                <span className="flex items-center gap-1 text-xs text-green-600 dark:text-green-400">
+                                  <Wallet className="w-3 h-3" />
+                                  ${Math.round(user.remainingBudget ?? 0)}
+                                </span>
+                              </div>
+                            </button>
+                          );
+                        })}
                       </div>
                     )}
                   </div>
