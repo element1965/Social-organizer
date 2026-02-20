@@ -185,7 +185,7 @@ export function DashboardPage() {
           })()}
           <div
             className="p-4 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-950/30 dark:to-purple-950/30 rounded-xl cursor-pointer hover:scale-[1.02] hover:shadow-md transition-all"
-            onClick={() => navigate('/network')}
+            onClick={() => navigate('/network?view=list')}
           >
             <div className="flex items-center gap-1.5 mb-2">
               <Globe className="w-5 h-5 text-blue-600" />
