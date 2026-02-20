@@ -78,7 +78,7 @@ export function NetworkGraph({
   height,
   onNodeClick,
   darkMode = true,
-  controlsHint,
+  controlsHint: _controlsHint,
 }: NetworkGraphProps) {
   const fgRef = useRef<FGRef>(null);
   const highlightSet = new Set(highlightPath ?? []);
@@ -526,25 +526,6 @@ export function NetworkGraph({
           Online
         </div>
       </div>
-      {controlsHint && (
-        <div
-          style={{
-            position: 'absolute',
-            bottom: 8,
-            left: '50%',
-            transform: 'translateX(-50%)',
-            padding: '4px 12px',
-            borderRadius: 6,
-            fontSize: 11,
-            color: darkMode ? 'rgba(255,255,255,0.6)' : 'rgba(0,0,0,0.5)',
-            backgroundColor: darkMode ? 'rgba(0,0,0,0.3)' : 'rgba(255,255,255,0.7)',
-            pointerEvents: 'none',
-            whiteSpace: 'nowrap',
-          }}
-        >
-          {controlsHint}
-        </div>
-      )}
     </div>
   );
 }

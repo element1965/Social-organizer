@@ -124,30 +124,34 @@ export function MyNetworkPage() {
           );
         })()
       ) : view === '3d' ? (
-        <div className={`rounded-xl overflow-hidden relative ${isDark ? 'bg-gray-950' : 'bg-gray-100'}`} style={{ height: 'calc(100vh - 200px)' }}>
-          <p className="absolute top-3 left-0 right-0 text-center text-sm font-semibold text-gray-400 dark:text-gray-300 z-10 pointer-events-none">GoodwillNet</p>
-          <Suspense fallback={<div className="flex justify-center py-12"><Spinner /></div>}>
-            {graphData ? (
-              <LazyNetworkGraph
-                nodes={graphData.nodes.map((n) => ({
-                  ...n,
-                  isCenter: n.id === myId,
-                  depth: (n as any).depth ?? (n.id === myId ? 0 : 1),
-                  connectionCount: (n as any).connectionCount ?? 0,
-                  lastSeen: (n as any).lastSeen ?? null,
-                }))}
-                edges={graphData.edges.map((e) => ({ source: e.from, target: e.to }))}
-                width={window.innerWidth - 32}
-                height={window.innerHeight - 200}
-                onNodeClick={(id) => navigate(`/profile/${id}`)}
-                darkMode={isDark}
-                controlsHint={t('network.controlsHint')}
-              />
-            ) : (
-              <div className="flex justify-center py-12"><Spinner /></div>
-            )}
-          </Suspense>
-        </div>
+        <>
+          <div className={`rounded-xl overflow-hidden relative ${isDark ? 'bg-gray-950' : 'bg-gray-100'}`} style={{ height: 'calc(100vh - 200px)' }}>
+            <p className="absolute top-3 left-0 right-0 text-center text-sm font-semibold text-gray-400 dark:text-gray-300 z-10 pointer-events-none">GoodwillNet</p>
+            <Suspense fallback={<div className="flex justify-center py-12"><Spinner /></div>}>
+              {graphData ? (
+                <LazyNetworkGraph
+                  nodes={graphData.nodes.map((n) => ({
+                    ...n,
+                    isCenter: n.id === myId,
+                    depth: (n as any).depth ?? (n.id === myId ? 0 : 1),
+                    connectionCount: (n as any).connectionCount ?? 0,
+                    lastSeen: (n as any).lastSeen ?? null,
+                  }))}
+                  edges={graphData.edges.map((e) => ({ source: e.from, target: e.to }))}
+                  width={window.innerWidth - 32}
+                  height={window.innerHeight - 200}
+                  onNodeClick={(id) => navigate(`/profile/${id}`)}
+                  darkMode={isDark}
+                />
+              ) : (
+                <div className="flex justify-center py-12"><Spinner /></div>
+              )}
+            </Suspense>
+          </div>
+          <p className="text-center text-xs text-gray-400 dark:text-gray-500 mt-1">
+            {t('network.controlsHint')}
+          </p>
+        </>
       ) : (
         <>
           {/* Incoming pending requests */}

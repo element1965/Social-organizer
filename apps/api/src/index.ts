@@ -12,7 +12,7 @@ import {
 import { appRouter, type AppRouter } from './routers/index.js';
 import { createContext } from './context.js';
 import { setupQueues } from './workers/index.js';
-import { handleTelegramUpdate, setTelegramWebhook, uploadMediaToTelegram } from './services/telegram-bot.service.js';
+import { handleTelegramUpdate, setTelegramWebhook, uploadMediaToTelegram, getTelegramFileUrl } from './services/telegram-bot.service.js';
 import { isAdmin } from './admin.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -132,6 +132,27 @@ async function start() {
       if (!fileId) return reply.status(500).send({ error: 'Upload to Telegram failed — check server logs' });
 
       return { fileId, mediaType };
+    });
+
+    // Media proxy — serve Telegram-hosted files (FAQ images, etc.)
+    app.get('/api/media/:fileId', async (req, reply) => {
+      const { fileId } = req.params as { fileId: string };
+      if (!fileId) return reply.status(400).send({ error: 'Missing fileId' });
+
+      const url = await getTelegramFileUrl(fileId);
+      if (!url) return reply.status(404).send({ error: 'File not found' });
+
+      try {
+        const response = await fetch(url);
+        if (!response.ok) return reply.status(response.status).send({ error: 'Upstream error' });
+        const contentType = response.headers.get('content-type') || 'application/octet-stream';
+        const buffer = Buffer.from(await response.arrayBuffer());
+        reply.header('Content-Type', contentType);
+        reply.header('Cache-Control', 'public, max-age=604800'); // 7 days
+        return reply.send(buffer);
+      } catch {
+        return reply.status(502).send({ error: 'Failed to fetch file' });
+      }
     });
 
     // Image proxy — fetch external avatar images to bypass CORS (t.me doesn't send CORS headers)
