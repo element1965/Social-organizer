@@ -1,5 +1,5 @@
 import { getDb } from '@so/db';
-import { translateBroadcastMessage } from './translate.service.js';
+import { translateWithCache } from './translate.service.js';
 
 const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN || '';
 const WEB_APP_URL = process.env.WEB_APP_URL || 'https://www.orginizer.com';
@@ -551,14 +551,14 @@ export async function sendNextChainMessage(chatId: number): Promise<boolean> {
   if (!nextMsg) return false;
 
   // Translate
-  const translatedText = await translateBroadcastMessage(nextMsg.text, userLang).catch(() => nextMsg.text);
+  const translatedText = await translateWithCache(nextMsg.text, userLang).catch(() => nextMsg.text);
 
   // Build inline keyboard
   const buttons: TgReplyMarkup['inline_keyboard'] = [];
   if (nextMsg.buttonUrl && nextMsg.buttonText) {
     const rawBtn = nextMsg.buttonText;
     const rawUrl = nextMsg.buttonUrl;
-    const btnText = await translateBroadcastMessage(rawBtn, userLang).catch(() => rawBtn);
+    const btnText = await translateWithCache(rawBtn, userLang).catch(() => rawBtn);
     buttons.push([{ text: btnText, url: rawUrl }]);
   }
   const moreText = MORE_BUTTON[userLang] || MORE_BUTTON.en!;

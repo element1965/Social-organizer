@@ -7,7 +7,7 @@ import {
   BOT_START_REMINDERS,
   type TgReplyMarkup,
 } from '../services/telegram-bot.service.js';
-import { translateBroadcastMessage } from '../services/translate.service.js';
+import { translateWithCache } from '../services/translate.service.js';
 
 const WEB_APP_URL = process.env.WEB_APP_URL || 'https://www.orginizer.com';
 
@@ -31,8 +31,6 @@ export async function processOnboardingReminder(_job: Job): Promise<void> {
   const now = new Date();
 
   try {
-    // Translation cache: key → { text, buttonText }
-    const translationCache = new Map<string, { text: string; buttonText: string }>();
     let totalSent = 0;
 
     // ─── Part 1: BotStart reminders (never opened the app) ───
@@ -77,29 +75,12 @@ export async function processOnboardingReminder(_job: Job): Promise<void> {
         }
       }
 
-      let text = reminder.text.replace('{inviterName}', inviterName || 'Social Organizer');
-      let buttonText: string = reminder.buttonText;
-
-      // Translate if not Russian
+      const baseText = reminder.text.replace('{inviterName}', inviterName || 'Social Organizer');
       const userLang = bs.language || 'en';
-      const cacheKey = `bs:${level}:${userLang}:${inviterName ? '1' : '0'}`;
-      if (userLang !== 'ru') {
-        const cached = translationCache.get(cacheKey);
-        if (cached) {
-          text = cached.text;
-          buttonText = cached.buttonText;
-        } else {
-          try {
-            const [tText, tBtn] = await Promise.all([
-              translateBroadcastMessage(text, userLang),
-              translateBroadcastMessage(buttonText, userLang),
-            ]);
-            text = tText;
-            buttonText = tBtn;
-            translationCache.set(cacheKey, { text, buttonText });
-          } catch { /* keep Russian */ }
-        }
-      }
+      const [text, buttonText] = await Promise.all([
+        translateWithCache(baseText, userLang).catch(() => baseText),
+        translateWithCache(reminder.buttonText, userLang).catch(() => reminder.buttonText as string),
+      ]);
 
       // Build web_app URL — include invite token if available
       const appUrl = bs.inviteToken
@@ -184,28 +165,12 @@ export async function processOnboardingReminder(_job: Job): Promise<void> {
         }
       }
 
-      let text = reminder.text.replace('{inviterName}', inviterName || 'Social Organizer');
-      let buttonText: string = reminder.buttonText;
-
+      const baseText = reminder.text.replace('{inviterName}', inviterName || 'Social Organizer');
       const userLang = user.language || 'en';
-      const cacheKey = `ob:${level}:${userLang}:${inviterName ? '1' : '0'}`;
-      if (userLang !== 'ru') {
-        const cached = translationCache.get(cacheKey);
-        if (cached) {
-          text = cached.text;
-          buttonText = cached.buttonText;
-        } else {
-          try {
-            const [tText, tBtn] = await Promise.all([
-              translateBroadcastMessage(text, userLang),
-              translateBroadcastMessage(buttonText, userLang),
-            ]);
-            text = tText;
-            buttonText = tBtn;
-            translationCache.set(cacheKey, { text, buttonText });
-          } catch { /* keep Russian */ }
-        }
-      }
+      const [text, buttonText] = await Promise.all([
+        translateWithCache(baseText, userLang).catch(() => baseText),
+        translateWithCache(reminder.buttonText, userLang).catch(() => reminder.buttonText as string),
+      ]);
 
       const markup: TgReplyMarkup = {
         inline_keyboard: [[{ text: `📱 ${buttonText}`, web_app: { url: WEB_APP_URL } }]],

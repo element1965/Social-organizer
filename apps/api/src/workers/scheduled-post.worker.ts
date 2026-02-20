@@ -9,7 +9,7 @@ import {
   blockedCounter,
   type TgReplyMarkup,
 } from '../services/telegram-bot.service.js';
-import { translateBroadcastMessage } from '../services/translate.service.js';
+import { translateWithCache } from '../services/translate.service.js';
 
 /**
  * Every minute: find PENDING ScheduledPosts where scheduledAt <= now,
@@ -66,13 +66,13 @@ export async function processScheduledPost(_job: Job): Promise<void> {
       const translatedButtons = new Map<string, string>();
       for (const lang of byLang.keys()) {
         try {
-          translatedTexts.set(lang, await translateBroadcastMessage(post.text, lang));
+          translatedTexts.set(lang, await translateWithCache(post.text, lang));
         } catch {
           translatedTexts.set(lang, post.text);
         }
         if (post.buttonText) {
           try {
-            translatedButtons.set(lang, await translateBroadcastMessage(post.buttonText, lang));
+            translatedButtons.set(lang, await translateWithCache(post.buttonText, lang));
           } catch {
             translatedButtons.set(lang, post.buttonText);
           }
