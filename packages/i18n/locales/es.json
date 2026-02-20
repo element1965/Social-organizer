@@ -70,6 +70,7 @@
     "connectionEstablished": "¡Conexión establecida!",
     "sendAnother": "Enviar otra invitación",
     "skip": "Omitir",
+    "skipForNow": "Saltar por ahora",
     "step6": {
       "title": "Presupuesto mensual de apoyo",
       "text": "Esta cantidad es tu intención, no un compromiso. No se vincula ninguna tarjeta ni se cobra dinero. Simplemente indicas cuánto estás dispuesto a ayudar al mes. Esta cifra es visible para tu red y muestra tus capacidades generales. Cuando alguien pide ayuda, decides si participar o no."

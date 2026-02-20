@@ -124,6 +124,25 @@ interface TgUpdate {
 
 export const SUPPORT_CHAT_ID = -4946509857;
 
+/** Onboarding reminder messages (Russian base text — translated per user language by worker) */
+export const ONBOARDING_REMINDERS = [
+  {
+    level: 1,
+    text: '👋 Почти готово! Добавь один контакт — и ты в сети.',
+    buttonText: 'Открыть приложение',
+  },
+  {
+    level: 2,
+    text: '🤝 {inviterName} ждёт тебя. Заверши профиль — это займёт 1 минуту.',
+    buttonText: 'Завершить профиль',
+  },
+  {
+    level: 3,
+    text: '🔗 Твоё место в сети {inviterName} всё ещё открыто. Не упусти!',
+    buttonText: 'Присоединиться',
+  },
+] as const;
+
 /** Low-level wrapper: send a message via Telegram Bot API with 429 retry */
 export async function sendTelegramMessage(
   chatId: string | number,

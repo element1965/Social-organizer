@@ -75,7 +75,8 @@
     "waitingForAccept": "Ожидание принятия...",
     "connectionEstablished": "Связь установлена!",
     "sendAnother": "Отправить ещё",
-    "skip": "Пропустить"
+    "skip": "Пропустить",
+    "skipForNow": "Пропустить пока"
   },
   "nav": {
     "home": "Главная",

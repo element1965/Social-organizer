@@ -70,6 +70,7 @@
     "connectionEstablished": "Bağlantı kuruldu!",
     "sendAnother": "Başka bir davet gönder",
     "skip": "Atla",
+    "skipForNow": "Şimdilik geç",
     "step6": {
       "title": "Aylık Destek Bütçesi",
       "text": "Bu miktar, yalnızca niyetinizdir, bir taahhüt değildir. Hiçbir kart bağlı değil, hiçbir ücret alınmıyor. Sadece her ay ne kadar yardım etmeye istekli olduğunuzu belirtirsiniz. Bu rakam ağınıza görünür ve genel yeteneklerinizi gösterir. Birisi yardım istediğinde, katılarak veya katılmayarak karar verirsiniz."

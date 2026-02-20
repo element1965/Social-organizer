@@ -3,6 +3,8 @@ import { randomBytes } from 'crypto';
 import { router, publicProcedure, protectedProcedure } from '../trpc.js';
 import { TRPCError } from '@trpc/server';
 import { sendPendingNotification } from '../services/notification.service.js';
+import { sendTelegramMessage, type TgReplyMarkup } from '../services/telegram-bot.service.js';
+import { translateBroadcastMessage } from '../services/translate.service.js';
 
 export const inviteRouter = router({
   generate: protectedProcedure.mutation(async ({ ctx }) => {
@@ -100,8 +102,39 @@ export const inviteRouter = router({
       console.log('[invite.accept] pending connection created:', ctx.userId, '->', inviterId);
 
       // TG notification to link owner (fire-and-forget)
-      const applicant = await ctx.db.user.findUnique({ where: { id: ctx.userId }, select: { name: true } });
+      const applicant = await ctx.db.user.findUnique({
+        where: { id: ctx.userId },
+        select: { name: true, onboardingCompleted: true, language: true, platformAccounts: { where: { platform: 'TELEGRAM' }, select: { platformId: true } } },
+      });
       sendPendingNotification(ctx.db, inviterId, 'new', applicant?.name || '').catch(() => {});
+
+      // Immediate CTA: if user hasn't completed onboarding, send TG message (fire-and-forget)
+      if (applicant && !applicant.onboardingCompleted) {
+        const tgAccount = applicant.platformAccounts[0];
+        if (tgAccount) {
+          const WEB_APP_URL = process.env.WEB_APP_URL || 'https://www.orginizer.com';
+          const ctaText = '✅ Ты принял приглашение! Добавь один контакт — и ты в сети.';
+          const ctaBtnText = 'Открыть приложение';
+          const userLang = applicant.language || 'en';
+
+          (async () => {
+            let text = ctaText;
+            let btnText = ctaBtnText;
+            if (userLang !== 'ru') {
+              try {
+                [text, btnText] = await Promise.all([
+                  translateBroadcastMessage(ctaText, userLang),
+                  translateBroadcastMessage(ctaBtnText, userLang),
+                ]);
+              } catch { /* keep Russian */ }
+            }
+            const markup: TgReplyMarkup = {
+              inline_keyboard: [[{ text: `📱 ${btnText}`, web_app: { url: WEB_APP_URL } }]],
+            };
+            await sendTelegramMessage(tgAccount.platformId, text, markup);
+          })().catch(() => {});
+        }
+      }
 
       return { success: true, pending: true, connectedWith: inviterId };
     }),

@@ -84,6 +84,7 @@ model User {
   hideContacts        Boolean     @default(false)
   role                UserRole  @default(REGULAR)
   onboardingCompleted Boolean   @default(false)
+  onboardingReminderSent Int    @default(0)
   preferredCurrency   String    @default("USD")
   monthlyBudget       Float?
   remainingBudget     Float?

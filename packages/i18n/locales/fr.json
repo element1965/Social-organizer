@@ -70,6 +70,7 @@
     "connectionEstablished": "Connexion établie !",
     "sendAnother": "Envoyer une autre invitation",
     "skip": "Passer",
+    "skipForNow": "Passer pour l'instant",
     "step6": {
       "title": "Budget mensuel de soutien",
       "text": "Ce montant est votre intention, pas un engagement. Aucune carte n'est liée, aucun argent n'est prélevé. Vous indiquez simplement combien vous êtes prêt à aider par mois. Ce chiffre est visible par votre réseau et montre vos capacités globales. Lorsque quelqu'un demande de l'aide, vous décidez si vous participez ou non."
