@@ -231,6 +231,18 @@ export function LandingPage({ variant }: { variant?: 'arvut' } = {}) {
           <h1 className="text-5xl md:text-7xl font-bold text-white mb-4 tracking-tight">
             {variant === 'arvut' ? 'ערבות הדדית' : 'Social Organizer'}
           </h1>
+          <div className="flex items-center gap-2 mb-4">
+            <span className="text-gray-400 text-sm">{t('landing.openSourceBadge')}</span>
+            <a
+              href="https://github.com/element1965/Social-organizer"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-gray-400 hover:text-white transition-colors"
+              aria-label="GitHub"
+            >
+              <Github size={18} />
+            </a>
+          </div>
           <p className="text-gray-300 text-lg md:text-xl max-w-2xl mb-10 leading-relaxed">
             {t('landing.heroSubtitle')}
           </p>
