@@ -294,22 +294,14 @@ export function ProfilePage() {
         <Card>
           <CardHeader><h2 className="font-semibold text-gray-900 dark:text-white">{t('profile.stats')}</h2></CardHeader>
           <CardContent>
-            <div className="grid grid-cols-2 gap-4 mb-4">
-              <div className="text-center"><p className="text-2xl font-bold text-blue-600">{stats.collectionsCreated}</p><p className="text-xs text-gray-500 dark:text-gray-300">{t('profile.collectionsCreated')}</p></div>
-              <div className="text-center"><p className="text-2xl font-bold text-green-600">{stats.obligationsGiven}</p><p className="text-xs text-gray-500 dark:text-gray-300">{t('profile.intentionsGiven')}</p></div>
-            </div>
-            <div className="flex gap-2 mb-3">
-              <button
-                onClick={() => setHelpTab('helped')}
-                className={`flex-1 py-1.5 text-sm font-medium rounded-lg transition-colors ${helpTab === 'helped' ? 'bg-blue-600 text-white' : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300'}`}
-              >
-                {t('profile.helpedTab')}
+            <div className="grid grid-cols-2 gap-0 mb-3">
+              <button onClick={() => setHelpTab('helpedBy')} className={`text-center py-2 rounded-l-lg transition-colors ${helpTab === 'helpedBy' ? 'bg-blue-50 dark:bg-blue-900/20' : ''}`}>
+                <p className="text-2xl font-bold text-blue-600">{stats.obligationsReceived}</p>
+                <p className="text-xs text-gray-500 dark:text-gray-300">{t('profile.helpedByTab')}</p>
               </button>
-              <button
-                onClick={() => setHelpTab('helpedBy')}
-                className={`flex-1 py-1.5 text-sm font-medium rounded-lg transition-colors ${helpTab === 'helpedBy' ? 'bg-blue-600 text-white' : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300'}`}
-              >
-                {t('profile.helpedByTab')}
+              <button onClick={() => setHelpTab('helped')} className={`text-center py-2 rounded-r-lg transition-colors ${helpTab === 'helped' ? 'bg-blue-50 dark:bg-blue-900/20' : ''}`}>
+                <p className="text-2xl font-bold text-green-600">{stats.obligationsGiven}</p>
+                <p className="text-xs text-gray-500 dark:text-gray-300">{t('profile.helpedTab')}</p>
               </button>
             </div>
             {helpHistory && (
