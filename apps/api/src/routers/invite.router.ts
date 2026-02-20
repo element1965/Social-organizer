@@ -4,7 +4,7 @@ import { router, publicProcedure, protectedProcedure } from '../trpc.js';
 import { TRPCError } from '@trpc/server';
 import { sendPendingNotification } from '../services/notification.service.js';
 import { sendTelegramMessage, type TgReplyMarkup } from '../services/telegram-bot.service.js';
-import { translateBroadcastMessage } from '../services/translate.service.js';
+import { translateWithCache } from '../services/translate.service.js';
 
 export const inviteRouter = router({
   generate: protectedProcedure.mutation(async ({ ctx }) => {
@@ -123,8 +123,8 @@ export const inviteRouter = router({
             if (userLang !== 'ru') {
               try {
                 [text, btnText] = await Promise.all([
-                  translateBroadcastMessage(ctaText, userLang),
-                  translateBroadcastMessage(ctaBtnText, userLang),
+                  translateWithCache(ctaText, userLang),
+                  translateWithCache(ctaBtnText, userLang),
                 ]);
               } catch { /* keep Russian */ }
             }

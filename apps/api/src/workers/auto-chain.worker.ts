@@ -9,7 +9,7 @@ import {
   MORE_BUTTON,
   type TgReplyMarkup,
 } from '../services/telegram-bot.service.js';
-import { translateBroadcastMessage } from '../services/translate.service.js';
+import { translateWithCache } from '../services/translate.service.js';
 
 /**
  * Every 30 minutes: process auto-chain messages.
@@ -100,36 +100,6 @@ export async function processAutoChain(_job: Job): Promise<void> {
     return kyiv;
   }
 
-  // Translation cache: messageId:lang → translated text (avoid duplicate LLM calls)
-  const textCache = new Map<string, string>();
-  const btnCache = new Map<string, string>();
-
-  async function getTranslatedText(msgId: string, text: string, lang: string): Promise<string> {
-    const cacheKey = `${msgId}:${lang}`;
-    if (textCache.has(cacheKey)) return textCache.get(cacheKey)!;
-    let translated: string;
-    try {
-      translated = await translateBroadcastMessage(text, lang);
-    } catch {
-      translated = text;
-    }
-    textCache.set(cacheKey, translated);
-    return translated;
-  }
-
-  async function getTranslatedBtn(msgId: string, text: string, lang: string): Promise<string> {
-    const cacheKey = `${msgId}:${lang}`;
-    if (btnCache.has(cacheKey)) return btnCache.get(cacheKey)!;
-    let translated: string;
-    try {
-      translated = await translateBroadcastMessage(text, lang);
-    } catch {
-      translated = text;
-    }
-    btnCache.set(cacheKey, translated);
-    return translated;
-  }
-
   let totalSent = 0;
   blockedCounter.reset();
 
@@ -159,13 +129,13 @@ export async function processAutoChain(_job: Job): Promise<void> {
 
       if (sendTime > nowKyiv) continue;
 
-      // Translate message (cached per messageId + lang)
-      const translatedText = await getTranslatedText(msg.id, msg.text, userLang);
+      // Translate message (DB-cached)
+      const translatedText = await translateWithCache(msg.text, userLang).catch(() => msg.text);
 
       // Build inline buttons
       const buttons: TgReplyMarkup['inline_keyboard'] = [];
       if (msg.buttonUrl && msg.buttonText) {
-        const btnText = await getTranslatedBtn(msg.id, msg.buttonText, userLang);
+        const btnText = await translateWithCache(msg.buttonText, userLang).catch(() => msg.buttonText!);
         buttons.push([{ text: btnText, url: msg.buttonUrl }]);
       }
       const moreText = MORE_BUTTON[userLang] || MORE_BUTTON.en!;

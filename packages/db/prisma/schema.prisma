@@ -425,3 +425,14 @@ model BotStart {
 
   @@map("bot_starts")
 }
+
+model TranslationCache {
+  id         String   @id @default(cuid())
+  sourceHash String
+  language   String
+  translated String
+  createdAt  DateTime @default(now())
+
+  @@unique([sourceHash, language])
+  @@map("translation_cache")
+}

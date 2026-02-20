@@ -1,4 +1,6 @@
 import OpenAI from 'openai';
+import { createHash } from 'crypto';
+import { getDb } from '@so/db';
 
 let grok: OpenAI | null = null;
 function getGrok(): OpenAI {
@@ -76,4 +78,36 @@ export async function translateFaqItem(
 export async function translateBroadcastMessage(text: string, toLang: string): Promise<string> {
   const systemPrompt = `You are a professional translator. Translate the following message to ${toLang}. Only return the translation, nothing else. Preserve any HTML tags.`;
   return callLLM(systemPrompt, text);
+}
+
+/**
+ * Translate with persistent DB cache.
+ * Checks translation_cache table first; only calls LLM on cache miss.
+ * Returns original text for Russian (base language).
+ */
+export async function translateWithCache(text: string, toLang: string): Promise<string> {
+  if (toLang === 'ru') return text;
+
+  const sourceHash = createHash('md5').update(text).digest('hex');
+  const db = getDb();
+
+  // Check DB cache
+  const cached = await db.translationCache.findUnique({
+    where: { sourceHash_language: { sourceHash, language: toLang } },
+  });
+  if (cached) return cached.translated;
+
+  // Cache miss — call LLM
+  const translated = await translateBroadcastMessage(text, toLang);
+
+  // Persist to DB (fire-and-forget upsert to avoid race conditions)
+  await db.translationCache.upsert({
+    where: { sourceHash_language: { sourceHash, language: toLang } },
+    create: { sourceHash, language: toLang, translated },
+    update: { translated },
+  }).catch((err) => {
+    console.error('[TranslationCache] Failed to save:', err);
+  });
+
+  return translated;
 }

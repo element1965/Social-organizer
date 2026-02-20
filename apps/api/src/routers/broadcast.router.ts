@@ -10,7 +10,7 @@ import {
   blockedCounter,
   type TgReplyMarkup,
 } from '../services/telegram-bot.service.js';
-import { translateBroadcastMessage } from '../services/translate.service.js';
+import { translateWithCache } from '../services/translate.service.js';
 import { ADMIN_IDS } from '../admin.js';
 
 function assertAdmin(userId: string) {
@@ -55,13 +55,13 @@ export const broadcastRouter = router({
       const translatedButtons = new Map<string, string>();
       for (const lang of byLang.keys()) {
         try {
-          translatedTexts.set(lang, await translateBroadcastMessage(input.text, lang));
+          translatedTexts.set(lang, await translateWithCache(input.text, lang));
         } catch {
           translatedTexts.set(lang, input.text);
         }
         if (input.buttonText) {
           try {
-            translatedButtons.set(lang, await translateBroadcastMessage(input.buttonText, lang));
+            translatedButtons.set(lang, await translateWithCache(input.buttonText, lang));
           } catch {
             translatedButtons.set(lang, input.buttonText);
           }
@@ -146,7 +146,7 @@ export const broadcastRouter = router({
 
       let translatedText: string;
       try {
-        translatedText = await translateBroadcastMessage(input.text, lang);
+        translatedText = await translateWithCache(input.text, lang);
       } catch {
         translatedText = input.text;
       }
@@ -155,7 +155,7 @@ export const broadcastRouter = router({
       if (input.buttonUrl && input.buttonText) {
         let btnText: string;
         try {
-          btnText = await translateBroadcastMessage(input.buttonText, lang);
+          btnText = await translateWithCache(input.buttonText, lang);
         } catch {
           btnText = input.buttonText;
         }
