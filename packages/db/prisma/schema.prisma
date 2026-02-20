@@ -413,3 +413,15 @@ model FaqItem {
   @@index([groupId])
   @@map("faq_items")
 }
+
+model BotStart {
+  id           String   @id @default(cuid())
+  chatId       String   @unique
+  name         String?
+  language     String   @default("en")
+  inviteToken  String?
+  reminderSent Int      @default(0)
+  createdAt    DateTime @default(now())
+
+  @@map("bot_starts")
+}
