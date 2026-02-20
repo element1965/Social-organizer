@@ -333,7 +333,8 @@
     "deleteConfirm": "Stergi aceasta intrebare?",
     "localized": "Tradus",
     "localizeAll": "Traduce în toate limbile",
-    "localizing": "Se traduce..."
+    "localizing": "Se traduce...",
+    "addPhoto": "Adaugă foto"
   },
   "chat": {
     "title": "Asistent",

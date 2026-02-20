@@ -333,7 +333,8 @@
     "deleteConfirm": "Smazat tuto otázku?",
     "localized": "Přeloženo",
     "localizeAll": "Přeložit do všech jazyků",
-    "localizing": "Překládání..."
+    "localizing": "Překládání...",
+    "addPhoto": "Přidat fotku"
   },
   "chat": {
     "title": "Asistent",

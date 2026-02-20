@@ -333,7 +333,8 @@
     "deleteConfirm": "Видалити це запитання?",
     "localized": "Перекладено",
     "localizeAll": "Перекласти на всі мови",
-    "localizing": "Переклад..."
+    "localizing": "Переклад...",
+    "addPhoto": "Додати фото"
   },
   "chat": {
     "title": "Асистент",

@@ -340,7 +340,8 @@
     "deleteConfirm": "Delete this question?",
     "localized": "Translated",
     "localizeAll": "Translate all",
-    "localizing": "Translating..."
+    "localizing": "Translating...",
+    "addPhoto": "Add photo"
   },
   "chat": {
     "title": "Assistant",

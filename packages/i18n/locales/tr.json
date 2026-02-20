@@ -333,7 +333,8 @@
     "deleteConfirm": "Bu soruyu silmek istiyor musunuz?",
     "localized": "Çevrildi",
     "localizeAll": "Tüm dillere çevir",
-    "localizing": "Çevriliyor..."
+    "localizing": "Çevriliyor...",
+    "addPhoto": "Fotoğraf ekle"
   },
   "chat": {
     "title": "Asistan",

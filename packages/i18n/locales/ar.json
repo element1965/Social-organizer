@@ -333,7 +333,8 @@
     "deleteConfirm": "هل تريد حذف هذا السؤال؟",
     "localized": "مترجم",
     "localizeAll": "ترجمة لجميع اللغات",
-    "localizing": "جاري الترجمة..."
+    "localizing": "جاري الترجمة...",
+    "addPhoto": "إضافة صورة"
   },
   "chat": {
     "title": "المساعد",

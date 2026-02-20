@@ -333,7 +333,8 @@
     "deleteConfirm": "Slette dette spørsmålet?",
     "localized": "Oversatt",
     "localizeAll": "Oversett til alle språk",
-    "localizing": "Oversetter..."
+    "localizing": "Oversetter...",
+    "addPhoto": "Legg til bilde"
   },
   "chat": {
     "title": "Assistent",

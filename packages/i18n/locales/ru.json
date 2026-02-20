@@ -340,7 +340,8 @@
     "deleteConfirm": "Удалить этот вопрос?",
     "localized": "Переведено",
     "localizeAll": "Перевести на все языки",
-    "localizing": "Перевод..."
+    "localizing": "Перевод...",
+    "addPhoto": "Добавить фото"
   },
   "chat": {
     "title": "Помощник",

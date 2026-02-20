@@ -333,7 +333,8 @@
     "deleteConfirm": "Ta bort denna fråga?",
     "localized": "Översatt",
     "localizeAll": "Översätt till alla språk",
-    "localizing": "Översätter..."
+    "localizing": "Översätter...",
+    "addPhoto": "Lägg till foto"
   },
   "chat": {
     "title": "Assistent",

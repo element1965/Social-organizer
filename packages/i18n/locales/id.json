@@ -333,7 +333,8 @@
     "deleteConfirm": "Hapus pertanyaan ini?",
     "localized": "Diterjemahkan",
     "localizeAll": "Terjemahkan ke semua bahasa",
-    "localizing": "Menerjemahkan..."
+    "localizing": "Menerjemahkan...",
+    "addPhoto": "Tambah foto"
   },
   "chat": {
     "title": "Asisten",
