@@ -139,7 +139,7 @@ export async function processScheduledPost(_job: Job): Promise<void> {
       const blocked = blockedCounter.count;
       await sendTelegramMessage(
         SUPPORT_CHAT_ID,
-        `📢 <b>Scheduled broadcast sent</b>\n\nTo: ${tgAccounts.length} users\nDelivered: ${sent}\nMedia: ${post.mediaType}${blocked > 0 ? `\n🚫 Removed: ${blocked} (blocked bot)` : ''}\n\n${post.text.slice(0, 200)}`,
+        `📢 <b>Отложенная рассылка</b>\n\nПолучатели: ${tgAccounts.length}\nДоставлено: ${sent}\nМедиа: ${post.mediaType}${blocked > 0 ? `\n🚫 Удалено: ${blocked} (заблокировали бота)` : ''}\n\n${post.text.slice(0, 200)}`,
       );
 
       console.log(`[Scheduled Post] ${post.id}: sent=${sent}/${tgAccounts.length}`);

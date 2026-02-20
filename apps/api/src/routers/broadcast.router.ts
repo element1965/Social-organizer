@@ -116,7 +116,7 @@ export const broadcastRouter = router({
       const blocked = blockedCounter.count;
       await sendTelegramMessage(
         SUPPORT_CHAT_ID,
-        `📢 <b>Broadcast sent</b>\n\nTo: ${tgAccounts.length} users\nDelivered: ${sent}\nMedia: ${input.mediaType}${blocked > 0 ? `\n🚫 Removed: ${blocked} (blocked bot)` : ''}\n\n${input.text.slice(0, 200)}`,
+        `📢 <b>Рассылка отправлена</b>\n\nПолучатели: ${tgAccounts.length}\nДоставлено: ${sent}\nМедиа: ${input.mediaType}${blocked > 0 ? `\n🚫 Удалено: ${blocked} (заблокировали бота)` : ''}\n\n${input.text.slice(0, 200)}`,
       );
 
       return { sent };
@@ -175,7 +175,7 @@ export const broadcastRouter = router({
       // Duplicate to support chat
       await sendTelegramMessage(
         SUPPORT_CHAT_ID,
-        `📨 <b>Reply to ${userName} [${input.telegramId}]</b>\n\n${translatedText}`,
+        `📨 <b>Ответ для ${userName} [${input.telegramId}]</b>\n\n${translatedText}`,
       );
 
       return { success: ok };

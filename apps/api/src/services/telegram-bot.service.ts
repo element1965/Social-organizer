@@ -664,7 +664,7 @@ export async function handleTelegramUpdate(update: TgUpdate): Promise<void> {
 
   await sendTelegramMessage(
     SUPPORT_CHAT_ID,
-    `💬 <b>Message from user</b>\n\n👤 ${userName}${userTag}${userId}\n\n${text}`,
+    `💬 <b>Сообщение от пользователя</b>\n\n👤 ${userName}${userTag}${userId}\n\n${text}`,
   );
 
   // Reply to user
@@ -727,7 +727,7 @@ export async function uploadMediaToTelegram(
   const formData = new FormData();
   formData.append('chat_id', String(SUPPORT_CHAT_ID));
   formData.append(field, new Blob([fileBuffer]), filename);
-  formData.append('caption', `[Broadcast upload] ${filename}`);
+  formData.append('caption', `[Загрузка для рассылки] ${filename}`);
 
   const res = await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/${method}`, {
     method: 'POST',

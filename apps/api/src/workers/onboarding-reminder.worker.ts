@@ -40,6 +40,7 @@ export async function processOnboardingReminder(_job: Job): Promise<void> {
 
     let botStartSent = 0;
     let botStartCleaned = 0;
+    const botStartByLevel: Record<number, string[]> = { 0: [], 1: [], 2: [] };
 
     for (const bs of botStarts) {
       // Check if user has since created an account — if so, clean up
@@ -98,6 +99,7 @@ export async function processOnboardingReminder(_job: Job): Promise<void> {
           where: { id: bs.id },
           data: { reminderSent: level + 1 },
         });
+        botStartByLevel[level]?.push(bs.chatId);
         botStartSent++;
         totalSent++;
       }
@@ -129,6 +131,7 @@ export async function processOnboardingReminder(_job: Job): Promise<void> {
     });
 
     let onboardingSent = 0;
+    const onboardingByLevel: Record<number, string[]> = { 0: [], 1: [], 2: [] };
 
     for (const user of users) {
       const tgAccount = user.platformAccounts[0];
@@ -183,6 +186,7 @@ export async function processOnboardingReminder(_job: Job): Promise<void> {
           where: { id: user.id },
           data: { onboardingReminderSent: level + 1 },
         });
+        onboardingByLevel[level]?.push(user.name);
         onboardingSent++;
         totalSent++;
       }
@@ -195,16 +199,30 @@ export async function processOnboardingReminder(_job: Job): Promise<void> {
     // ─── Report ───
     console.log(`[Onboarding Reminder] Done: botStart=${botStartSent}/${botStarts.length} (cleaned ${botStartCleaned}), onboarding=${onboardingSent}/${users.length}`);
     if (totalSent > 0) {
-      await sendTelegramMessage(
-        SUPPORT_CHAT_ID,
-        `🔔 <b>Onboarding reminders</b>\n• Bot /start: ${botStartSent}/${botStarts.length} (cleaned ${botStartCleaned})\n• Onboarding: ${onboardingSent}/${users.length}`,
-      ).catch(() => {});
+      const levelLabel = ['1ч', '24ч', '72ч'];
+      const bsDetails = [0, 1, 2]
+        .filter((l) => botStartByLevel[l]!.length > 0)
+        .map((l) => `  ${levelLabel[l]}: ${botStartByLevel[l]!.length} (${botStartByLevel[l]!.join(', ')})`)
+        .join('\n');
+      const obDetails = [0, 1, 2]
+        .filter((l) => onboardingByLevel[l]!.length > 0)
+        .map((l) => `  ${levelLabel[l]}: ${onboardingByLevel[l]!.length} (${onboardingByLevel[l]!.join(', ')})`)
+        .join('\n');
+
+      let report = `🔔 <b>Напоминания об онбординге</b>\n\n`;
+      report += `📩 <b>/start без регистрации</b>: ${botStartSent} из ${botStarts.length}`;
+      if (botStartCleaned > 0) report += ` (зарегались: ${botStartCleaned})`;
+      if (bsDetails) report += `\n${bsDetails}`;
+      report += `\n\n📩 <b>Не завершили онбординг</b>: ${onboardingSent} из ${users.length}`;
+      if (obDetails) report += `\n${obDetails}`;
+
+      await sendTelegramMessage(SUPPORT_CHAT_ID, report).catch(() => {});
     }
   } catch (err) {
     console.error('[Onboarding Reminder] CRASH:', err);
     await sendTelegramMessage(
       SUPPORT_CHAT_ID,
-      `❌ <b>Onboarding reminder CRASH</b>: ${String(err).substring(0, 200)}`,
+      `❌ <b>Ошибка напоминаний об онбординге</b>: ${String(err).substring(0, 200)}`,
     ).catch(() => {});
     throw err;
   }

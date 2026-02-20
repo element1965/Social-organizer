@@ -74,14 +74,14 @@ export async function processCleanupBlockedPending(_job: Job): Promise<void> {
       }).join('\n');
       await sendTelegramMessage(
         SUPPORT_CHAT_ID,
-        `🧹 <b>Cleanup blocked pending</b>: checked ${checked}, removed ${removedUsers.length}\n${details}`,
+        `🧹 <b>Очистка заблокированных</b>: проверено ${checked}, удалено ${removedUsers.length}\n${details}`,
       ).catch(() => {});
     }
   } catch (err) {
     console.error('[Cleanup Blocked Pending] CRASH:', err);
     await sendTelegramMessage(
       SUPPORT_CHAT_ID,
-      `❌ <b>Cleanup blocked pending CRASH</b>: ${String(err).substring(0, 200)}`,
+      `❌ <b>Ошибка очистки заблокированных</b>: ${String(err).substring(0, 200)}`,
     ).catch(() => {});
     throw err;
   }
