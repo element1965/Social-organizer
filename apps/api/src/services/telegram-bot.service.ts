@@ -124,6 +124,42 @@ interface TgUpdate {
 
 export const SUPPORT_CHAT_ID = -4946509857;
 
+/** Track a /start press — save chatId for follow-up if user never opens the app */
+async function trackBotStart(chatId: string, name: string, lang: string, inviteToken?: string): Promise<void> {
+  const db = getDb();
+  // Skip if user already has an account
+  const existing = await db.platformAccount.findFirst({
+    where: { platform: 'TELEGRAM', platformId: chatId },
+    select: { id: true },
+  });
+  if (existing) return;
+
+  await db.botStart.upsert({
+    where: { chatId },
+    create: { chatId, name: name || null, language: lang, inviteToken: inviteToken || null },
+    update: { name: name || undefined, language: lang, inviteToken: inviteToken || undefined },
+  });
+}
+
+/** Reminder messages for users who pressed /start but never opened the app */
+export const BOT_START_REMINDERS = [
+  {
+    level: 1,
+    text: '👋 Ты ещё не открыл приложение. Нажми кнопку — это займёт минуту!',
+    buttonText: 'Открыть приложение',
+  },
+  {
+    level: 2,
+    text: '🤝 {inviterName} пригласил тебя в сеть взаимной поддержки. Открой приложение — регистрация за 1 минуту.',
+    buttonText: 'Присоединиться',
+  },
+  {
+    level: 3,
+    text: '🔔 Последнее напоминание: твоё приглашение от {inviterName} ещё действует. Нажми кнопку, чтобы присоединиться.',
+    buttonText: 'Открыть',
+  },
+] as const;
+
 /** Onboarding reminder messages (Russian base text — translated per user language by worker) */
 export const ONBOARDING_REMINDERS = [
   {
@@ -604,6 +640,9 @@ export async function handleTelegramUpdate(update: TgUpdate): Promise<void> {
       await sendTelegramMessage(chatId, loc.invite(name), {
         inline_keyboard: [[{ text: loc.acceptBtn, web_app: { url: webAppUrl } }]],
       });
+
+      // Track /start for reminder if user never opens the app
+      trackBotStart(String(chatId), name, lang, inviteToken).catch(() => {});
       return;
     }
 
@@ -611,6 +650,9 @@ export async function handleTelegramUpdate(update: TgUpdate): Promise<void> {
     await sendTelegramMessage(chatId, loc.welcome(name), {
       inline_keyboard: [[{ text: loc.openBtn, web_app: { url: WEB_APP_URL } }]],
     });
+
+    // Track /start for reminder if user never opens the app
+    trackBotStart(String(chatId), name, lang).catch(() => {});
     return;
   }
 
