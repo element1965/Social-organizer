@@ -193,6 +193,21 @@ export function LandingPage({ variant }: { variant?: 'arvut' } = {}) {
         <Logo size={50} className="text-teal-400" />
       </div>
 
+      {/* Open-source badge + GitHub — fixed top center */}
+      <div className="fixed top-4 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/10 backdrop-blur-sm border border-white/10">
+        <span className="text-gray-300 text-xs hidden sm:inline">{t('landing.openSourceBadge')}</span>
+        <span className="text-gray-300 text-xs sm:hidden">Open Source</span>
+        <a
+          href="https://github.com/element1965/Social-organizer"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-gray-300 hover:text-white transition-colors"
+          aria-label="GitHub"
+        >
+          <Github size={16} />
+        </a>
+      </div>
+
       {/* Language switcher — fixed top-right (hidden for arvut) */}
       {variant !== 'arvut' && (
         <div className="fixed top-4 right-4 z-20">
@@ -231,18 +246,6 @@ export function LandingPage({ variant }: { variant?: 'arvut' } = {}) {
           <h1 className="text-5xl md:text-7xl font-bold text-white mb-4 tracking-tight">
             {variant === 'arvut' ? 'ערבות הדדית' : 'Social Organizer'}
           </h1>
-          <div className="flex items-center gap-2 mb-4">
-            <span className="text-gray-400 text-sm">{t('landing.openSourceBadge')}</span>
-            <a
-              href="https://github.com/element1965/Social-organizer"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-gray-400 hover:text-white transition-colors"
-              aria-label="GitHub"
-            >
-              <Github size={18} />
-            </a>
-          </div>
           <p className="text-gray-300 text-lg md:text-xl max-w-2xl mb-10 leading-relaxed">
             {t('landing.heroSubtitle')}
           </p>
