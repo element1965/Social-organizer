@@ -5,6 +5,7 @@ export interface BfsRecipient {
   userId: string;
   path: string[];
   depth: number;
+  maxConnAt: Date | null;
 }
 
 /**
@@ -26,13 +27,15 @@ export async function findRecipientsViaBfs(
     user_id: string;
     path: string[];
     depth: number;
+    max_conn_at: Date | null;
   }>>(`
     WITH RECURSIVE bfs AS (
       -- Level 1: creator's direct connections
       SELECT
         CASE WHEN c."userAId" = $1 THEN c."userBId" ELSE c."userAId" END AS user_id,
         ARRAY[$1] AS path,
-        1 AS depth
+        1 AS depth,
+        c."createdAt" AS max_conn_at
       FROM connections c
       WHERE c."userAId" = $1 OR c."userBId" = $1
 
@@ -42,19 +45,20 @@ export async function findRecipientsViaBfs(
       SELECT
         CASE WHEN c."userAId" = b.user_id THEN c."userBId" ELSE c."userAId" END AS user_id,
         b.path || b.user_id,
-        b.depth + 1
+        b.depth + 1,
+        GREATEST(b.max_conn_at, c."createdAt")
       FROM connections c
       JOIN bfs b ON (c."userAId" = b.user_id OR c."userBId" = b.user_id)
       WHERE b.depth < $2
         AND NOT (CASE WHEN c."userAId" = b.user_id THEN c."userBId" ELSE c."userAId" END = ANY(b.path))
     )
-    SELECT DISTINCT ON (b.user_id) b.user_id, b.path, b.depth
+    SELECT DISTINCT ON (b.user_id) b.user_id, b.path, b.depth, b.max_conn_at
     FROM bfs b
     JOIN users u ON u.id = b.user_id
     WHERE b.user_id != $1
       AND b.user_id NOT IN (${excludeList})
       AND u."deletedAt" IS NULL
-    ORDER BY b.user_id, b.depth
+    ORDER BY b.user_id, b.depth, b.max_conn_at
     LIMIT $3
   `, startUserId, maxDepth, maxRecipients);
 
@@ -62,6 +66,7 @@ export async function findRecipientsViaBfs(
     userId: r.user_id,
     path: [...r.path, r.user_id],
     depth: r.depth,
+    maxConnAt: r.max_conn_at,
   }));
 }
 

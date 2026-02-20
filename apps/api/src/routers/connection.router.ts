@@ -144,11 +144,13 @@ export const connectionRouter = router({
     const recipients = await findRecipientsViaBfs(ctx.db, bfsUserId, MAX_BFS_DEPTH, MAX_BFS_RECIPIENTS, []);
     const byDepth: Record<number, number> = {};
     const userIdsByDepth: Record<number, string[]> = {};
+    const connAtMap = new Map<string, Date | null>();
 
     for (const r of recipients) {
       byDepth[r.depth] = (byDepth[r.depth] || 0) + 1;
       if (!userIdsByDepth[r.depth]) userIdsByDepth[r.depth] = [];
       userIdsByDepth[r.depth]!.push(r.userId);
+      connAtMap.set(r.userId, r.maxConnAt);
     }
 
     // Get all unique user IDs
@@ -175,7 +177,8 @@ export const connectionRouter = router({
     const countMap = new Map(connectionCounts.map((c) => [c.user_id, Number(c.count)]));
 
     // Build usersByDepth with connection counts and budget
-    const usersByDepth: Record<number, Array<{ id: string; name: string; photoUrl: string | null; connectionCount: number; remainingBudget: number | null; createdAt: Date | null }>> = {};
+    const dayAgoMs = Date.now() - 24 * 60 * 60 * 1000;
+    const usersByDepth: Record<number, Array<{ id: string; name: string; photoUrl: string | null; connectionCount: number; remainingBudget: number | null; createdAt: Date | null; connectedAt: Date | null }>> = {};
     for (const [depth, userIds] of Object.entries(userIdsByDepth)) {
       usersByDepth[Number(depth)] = userIds.map((id) => {
         const user = userMap.get(id);
@@ -186,10 +189,14 @@ export const connectionRouter = router({
           connectionCount: countMap.get(id) || 0,
           remainingBudget: user?.remainingBudget ?? null,
           createdAt: user?.createdAt ?? null,
+          connectedAt: connAtMap.get(id) ?? null,
         };
       });
-      // Sort by createdAt DESC (newest first)
+      // Sort: new connections (last 24h) first, then by createdAt DESC
       usersByDepth[Number(depth)]!.sort((a, b) => {
+        const aNew = a.connectedAt && new Date(a.connectedAt).getTime() > dayAgoMs ? 1 : 0;
+        const bNew = b.connectedAt && new Date(b.connectedAt).getTime() > dayAgoMs ? 1 : 0;
+        if (aNew !== bNew) return bNew - aNew;
         if (!a.createdAt && !b.createdAt) return 0;
         if (!a.createdAt) return 1;
         if (!b.createdAt) return -1;
