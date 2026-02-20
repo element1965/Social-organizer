@@ -158,7 +158,7 @@ export const connectionRouter = router({
     const [users, connectionCounts] = await Promise.all([
       ctx.db.user.findMany({
         where: { id: { in: allUserIds } },
-        select: { id: true, name: true, photoUrl: true, remainingBudget: true },
+        select: { id: true, name: true, photoUrl: true, remainingBudget: true, createdAt: true },
       }),
       // Count connections for each user (first handshake count)
       ctx.db.$queryRaw<Array<{ user_id: string; count: bigint }>>`
@@ -175,7 +175,7 @@ export const connectionRouter = router({
     const countMap = new Map(connectionCounts.map((c) => [c.user_id, Number(c.count)]));
 
     // Build usersByDepth with connection counts and budget
-    const usersByDepth: Record<number, Array<{ id: string; name: string; photoUrl: string | null; connectionCount: number; remainingBudget: number | null }>> = {};
+    const usersByDepth: Record<number, Array<{ id: string; name: string; photoUrl: string | null; connectionCount: number; remainingBudget: number | null; createdAt: Date | null }>> = {};
     for (const [depth, userIds] of Object.entries(userIdsByDepth)) {
       usersByDepth[Number(depth)] = userIds.map((id) => {
         const user = userMap.get(id);
@@ -185,7 +185,15 @@ export const connectionRouter = router({
           photoUrl: user?.photoUrl || null,
           connectionCount: countMap.get(id) || 0,
           remainingBudget: user?.remainingBudget ?? null,
+          createdAt: user?.createdAt ?? null,
         };
+      });
+      // Sort by createdAt DESC (newest first)
+      usersByDepth[Number(depth)]!.sort((a, b) => {
+        if (!a.createdAt && !b.createdAt) return 0;
+        if (!a.createdAt) return 1;
+        if (!b.createdAt) return -1;
+        return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
       });
     }
 
