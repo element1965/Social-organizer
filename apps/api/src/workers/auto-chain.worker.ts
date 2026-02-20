@@ -201,14 +201,14 @@ export async function processAutoChain(_job: Job): Promise<void> {
   // Always report status (for diagnostics)
   await sendTelegramMessage(
     SUPPORT_CHAT_ID,
-    `🔗 <b>Auto-chain</b>: sent ${totalSent} / ${tgAccounts.length} users${blocked > 0 ? `\n🚫 Removed: ${blocked}\n${removedDetails}` : ''}`,
+    `🔗 <b>Авто-цепочка</b>: отправлено ${totalSent} из ${tgAccounts.length} пользователей${blocked > 0 ? `\n🚫 Удалено: ${blocked}\n${removedDetails}` : ''}`,
   ).catch(() => {});
 
   } catch (err) {
     console.error('[Auto Chain] CRASH:', err);
     await sendTelegramMessage(
       SUPPORT_CHAT_ID,
-      `❌ <b>Auto-chain CRASH</b>: ${String(err).substring(0, 200)}`,
+      `❌ <b>Ошибка авто-цепочки</b>: ${String(err).substring(0, 200)}`,
     ).catch(() => {});
     throw err;
   }
