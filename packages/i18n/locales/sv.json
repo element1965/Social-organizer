@@ -63,8 +63,8 @@
     "next": "Nasta",
     "invite": "Skicka inbjudan",
     "qrCode": "Visa QR-kod",
-    "budgetNote": "Detta belopp laggs till natverkets mojligheter",
-    "saveBudget": "Spara budget och fortsatt",
+    "budgetNote": "Detta belopp laggs till ditt natverks totala mojligheter",
+    "saveBudget": "Spara och fortsatt",
     "skipAndStart": "Hoppa over och borja anvanda",
     "waitingForAccept": "Vantar pa godkannande...",
     "connectionEstablished": "Anslutning upprattad!",
@@ -72,8 +72,8 @@
     "skip": "Hoppa over",
     "skipForNow": "Hoppa över för nu",
     "step6": {
-      "title": "Manatlig stodbudget",
-      "text": "Detta belopp är din avsikt, inte ett åtagande. Inget kort är kopplat, ingen avgift tas. Du anger enkelt hur mycket du är villig att hjälpa till med per månad. Siffran är synlig för ditt nätverk och visar dina övergripande förmågor. När någon begär hjälp – du bestämmer om du vill delta eller inte."
+      "title": "Stodbelopp",
+      "text": "Ange vilket belopp din nära vän kan räkna med i oförutsedda situationer. Detta är enbart din avsikt — ditt kort stannar hos dig, medel dras endast på ditt beslut. Ju högre beloppet, desto större din försäkringstäckning. Nätverksmedlemmar ser den totala kapaciteten, och när någon ber om hjälp — bestämmer du själv om du vill delta."
     },
     "contactsRequired": "Lägg till minst 2 kontakter",
     "contactsFilled": "Ifyllt: {{count}}/2"

@@ -63,8 +63,8 @@
     "next": "Даље",
     "invite": "Пошаљи позив",
     "qrCode": "Прикажи QR код",
-    "budgetNote": "Овај износ ће бити додат могућностима мреже",
-    "saveBudget": "Сачувај буџет и настави",
+    "budgetNote": "Овај износ ће бити додат укупним могућностима ваше мреже",
+    "saveBudget": "Сачувај и настави",
     "skipAndStart": "Прескочи и почни да користиш",
     "waitingForAccept": "Чека се прихватање...",
     "connectionEstablished": "Веза успостављена!",
@@ -72,8 +72,8 @@
     "skip": "Прескочи",
     "skipForNow": "Прескочи за сада",
     "step6": {
-      "title": "Месечни буџет за подршку",
-      "text": "Ovaj iznos je vaša namjera, a ne obaveza. Nema povezane kartice, ne naplaćuje se novac. Jednostavno označavate koliko ste spremni da pomognete mesečno. Ovaj broj je vidljiv vašoj mreži i pokazuje ukupne mogućnosti. Kada neko zatraži pomoć — vi odlučujete da li da učestvujete ili ne."
+      "title": "Износ подршке",
+      "text": "Наведите на који износ ваш блиски пријатељ може да рачуна у случају непредвиђених околности. Ово је само ваша намера — картица остаје код вас, средства се скидају само по вашој одлуци. Што је виши износ, то је веће ваше осигурање. Чланови мреже виде укупне могућности, а када неко затражи помоћ — сами одлучујете да ли ћете учествовати."
     },
     "contactsRequired": "Додајте најмање 2 контакта",
     "contactsFilled": "Попуњено: {{count}}/2"

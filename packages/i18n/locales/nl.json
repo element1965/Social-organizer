@@ -63,8 +63,8 @@
     "next": "Volgende",
     "invite": "Uitnodiging versturen",
     "qrCode": "QR-code tonen",
-    "budgetNote": "Dit bedrag wordt toegevoegd aan de netwerkmogelijkheden",
-    "saveBudget": "Budget opslaan en doorgaan",
+    "budgetNote": "Dit bedrag wordt toegevoegd aan de totale mogelijkheden van je netwerk",
+    "saveBudget": "Opslaan en doorgaan",
     "skipAndStart": "Overslaan en beginnen",
     "waitingForAccept": "Wachten op acceptatie...",
     "connectionEstablished": "Verbinding tot stand gebracht!",
@@ -72,8 +72,8 @@
     "skip": "Overslaan",
     "skipForNow": "Voorlopig overslaan",
     "step6": {
-      "title": "Maandelijks ondersteuningsbudget",
-      "text": "Dit bedrag is je intentie, geen verplichting. Er is geen kaart gekoppeld, er wordt geen geld afgeschreven. Je geeft eenvoudig aan hoeveel je per maand wilt helpen. Dit bedrag is zichtbaar voor je netwerk en toont je algemene capaciteiten. Wanneer iemand hulp vraagt, beslis je of je meedoet of niet."
+      "title": "Ondersteuningsbedrag",
+      "text": "Geef aan op welk bedrag je goede vriend kan rekenen bij onvoorziene omstandigheden. Dit is slechts je intentie — je kaart blijft bij jou, geld wordt alleen op jouw besluit afgeschreven. Hoe hoger het bedrag, hoe groter je verzekeringsdekking. Netwerkleden zien de totale capaciteiten, en wanneer iemand om hulp vraagt — beslis je zelf of je meedoet."
     },
     "contactsRequired": "Voeg minimaal 2 contacten toe",
     "contactsFilled": "Ingevuld: {{count}}/2"

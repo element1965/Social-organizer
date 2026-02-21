@@ -63,8 +63,8 @@
     "next": "Seuraava",
     "invite": "Lähetä kutsu",
     "qrCode": "Näytä QR-koodi",
-    "budgetNote": "Tämä summa lisätään verkoston kapasiteetteihin",
-    "saveBudget": "Tallenna budjetti ja jatka",
+    "budgetNote": "Tämä summa lisätään verkostosi kokonaiskapasiteetteihin",
+    "saveBudget": "Tallenna ja jatka",
     "skipAndStart": "Ohita ja aloita käyttö",
     "waitingForAccept": "Odottaa hyväksyntää...",
     "connectionEstablished": "Yhteys muodostettu!",
@@ -72,8 +72,8 @@
     "skip": "Ohita",
     "skipForNow": "Ohita toistaiseksi",
     "step6": {
-      "title": "Kuukausittainen tukibudjetti",
-      "text": "Tämä summa on tarkoituksesi, ei sitoumus. Korttia ei ole liitetty, eikä rahaa veloiteta. Ilmaiset vain, kuinka paljon olet valmis auttamaan kuukaudessa. Tämä luku on näkyvissä verkostollesi ja osoittaa yleiset kyvyt. Kun joku pyytää apua – p��ätät itse, osallistutko vai et."
+      "title": "Tukisumma",
+      "text": "Ilmoita, mihin summaan läheinen ystäväsi voi luottaa ennakoimattomissa tilanteissa. Tämä on vain aikomuksesi — korttisi pysyy sinulla, varat veloitetaan vain päätöksesi mukaan. Mitä suurempi summa, sitä laajempi vakuutusturvasi. Verkoston jäsenet näkevät kokonaiskapasiteetit, ja kun joku pyytää apua — päätät itse, osallistutko."
     },
     "contactsRequired": "Lisää vähintään 2 yhteystietoa",
     "contactsFilled": "Täytetty: {{count}}/2"

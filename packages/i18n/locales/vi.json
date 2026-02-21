@@ -63,8 +63,8 @@
     "next": "Tiếp",
     "invite": "Gửi lời mời",
     "qrCode": "Hiện mã QR",
-    "budgetNote": "Số tiền này sẽ được thêm vào khả năng của mạng lưới",
-    "saveBudget": "Lưu ngân sách và tiếp tục",
+    "budgetNote": "Số tiền này sẽ được thêm vào khả năng tổng thể của mạng lưới bạn",
+    "saveBudget": "Lưu và tiếp tục",
     "skipAndStart": "Bỏ qua và bắt đầu sử dụng",
     "waitingForAccept": "Đang chờ chấp nhận...",
     "connectionEstablished": "Đã kết nối thành công!",
@@ -72,8 +72,8 @@
     "skip": "Bỏ qua",
     "skipForNow": "Bỏ qua bây giờ",
     "step6": {
-      "title": "Ngân sách hỗ trợ hàng tháng",
-      "text": "Số tiền này chỉ là ý định của bạn, không phải cam kết. Không liên kết thẻ nào, không tính phí tiền. Bạn chỉ cần chỉ ra số tiền bạn sẵn lòng giúp đỡ mỗi tháng. Con số này sẽ hiển thị cho mạng lưới của bạn và thể hiện khả năng tổng thể. Khi ai đó yêu cầu giúp đỡ, bạn quyết định có tham gia hay không."
+      "title": "Số tiền hỗ trợ",
+      "text": "Cho biết bạn thân của bạn có thể trông cậy vào số tiền bao nhiêu trong trường hợp khẩn cấp. Đây chỉ là ý định của bạn — thẻ vẫn ở với bạn, tiền chỉ được trừ theo quyết định của bạn. Số tiền càng cao, phạm vi bảo hiểm của bạn càng lớn. Các thành viên mạng lưới thấy khả năng tổng thể, và khi ai đó cần giúp đỡ — bạn tự quyết định có tham gia hay không."
     },
     "contactsRequired": "Thêm ít nhất 2 liên hệ",
     "contactsFilled": "Đã điền: {{count}}/2"

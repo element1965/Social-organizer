@@ -60,8 +60,8 @@
       "text": "Add at least 2 contact methods so that participants can coordinate with you when providing help."
     },
     "step6": {
-      "title": "Monthly Support Budget",
-      "text": "This amount is your intention, not a commitment. No card is linked, no money is charged. You simply indicate how much you're willing to help per month. This figure is visible to your network and shows overall capabilities. When someone asks for help — you decide whether to participate or not."
+      "title": "Support Amount",
+      "text": "Indicate how much your close friend can count on in an emergency. This is simply your intention — your card stays with you, and funds are only used by your decision. The higher the amount, the greater your insurance coverage. Network members see the overall capacity, and when someone asks for help — you decide whether to step in."
     },
     "contactsRequired": "Add at least 2 contacts",
     "contactsFilled": "Filled: {{count}}/2",

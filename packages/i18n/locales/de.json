@@ -63,8 +63,8 @@
     "next": "Weiter",
     "invite": "Einladung senden",
     "qrCode": "QR-Code anzeigen",
-    "budgetNote": "Dieser Betrag wird den Netzwerkkapazitäten hinzugefügt",
-    "saveBudget": "Budget speichern und fortfahren",
+    "budgetNote": "Dieser Betrag wird den Gesamtkapazitäten Ihres Netzwerks hinzugefügt",
+    "saveBudget": "Speichern und fortfahren",
     "skipAndStart": "Überspringen und loslegen",
     "waitingForAccept": "Warte auf Annahme...",
     "connectionEstablished": "Verbindung hergestellt!",
@@ -72,8 +72,8 @@
     "skip": "Überspringen",
     "skipForNow": "Vorerst überspringen",
     "step6": {
-      "title": "Monatliches Unterstützungsbudget",
-      "text": "Dieser Betrag ist Ihre Absicht, keine Verpflichtung. Keine Karte ist verknüpft, kein Geld wird abgebucht. Sie geben einfach an, wie viel Sie pro Monat helfen möchten. Diese Angabe ist für Ihr Netzwerk sichtbar und zeigt Ihre allgemeinen Möglichkeiten. Wenn jemand Hilfe anfordert – entscheiden Sie, ob Sie teilnehmen oder nicht."
+      "title": "Unterstützungsbetrag",
+      "text": "Geben Sie an, auf welchen Betrag Ihr enger Freund in unvorhergesehenen Umständen zählen kann. Dies ist lediglich Ihre Absicht — Ihre Karte bleibt bei Ihnen, Geld wird nur auf Ihre Entscheidung hin abgebucht. Je höher der Betrag, desto größer Ihr Versicherungsschutz. Netzwerkteilnehmer sehen die Gesamtkapazitäten, und wenn jemand um Hilfe bittet — entscheiden Sie selbst, ob Sie mitmachen."
     },
     "contactsRequired": "Fügen Sie mindestens 2 Kontakte hinzu",
     "contactsFilled": "Ausgefüllt: {{count}}/2"

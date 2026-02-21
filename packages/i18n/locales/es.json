@@ -63,8 +63,8 @@
     "next": "Siguiente",
     "invite": "Enviar invitación",
     "qrCode": "Mostrar código QR",
-    "budgetNote": "Este monto se añadirá a las capacidades de la red",
-    "saveBudget": "Guardar presupuesto y continuar",
+    "budgetNote": "Este monto se añadirá a las capacidades globales de tu red",
+    "saveBudget": "Guardar y continuar",
     "skipAndStart": "Omitir y empezar a usar",
     "waitingForAccept": "Esperando aceptación...",
     "connectionEstablished": "¡Conexión establecida!",
@@ -72,8 +72,8 @@
     "skip": "Omitir",
     "skipForNow": "Saltar por ahora",
     "step6": {
-      "title": "Presupuesto mensual de apoyo",
-      "text": "Esta cantidad es tu intención, no un compromiso. No se vincula ninguna tarjeta ni se cobra dinero. Simplemente indicas cuánto estás dispuesto a ayudar al mes. Esta cifra es visible para tu red y muestra tus capacidades generales. Cuando alguien pide ayuda, decides si participar o no."
+      "title": "Monto de apoyo",
+      "text": "Indica con qué monto puede contar tu amigo cercano en caso de imprevistos. Es solo tu intención — tu tarjeta queda contigo, los fondos se debitan solo por tu decisión. Cuanto mayor sea el monto, mayor será tu cobertura de seguro. Los miembros de la red ven las capacidades globales, y cuando alguien pida ayuda — tú decides si participar."
     },
     "contactsRequired": "Agrega al menos 2 contactos",
     "contactsFilled": "Completados: {{count}}/2"

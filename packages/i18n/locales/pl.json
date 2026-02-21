@@ -63,8 +63,8 @@
     "next": "Dalej",
     "invite": "Wyślij zaproszenie",
     "qrCode": "Pokaż kod QR",
-    "budgetNote": "Ta kwota zostanie dodana do możliwości sieci",
-    "saveBudget": "Zapisz budżet i kontynuuj",
+    "budgetNote": "Ta kwota zostanie dodana do ogólnych możliwości Twojej sieci",
+    "saveBudget": "Zapisz i kontynuuj",
     "skipAndStart": "Pomiń i zacznij korzystać",
     "waitingForAccept": "Oczekiwanie na akceptację...",
     "connectionEstablished": "Połączenie nawiązane!",
@@ -72,8 +72,8 @@
     "skip": "Pomiń",
     "skipForNow": "Pomiń na razie",
     "step6": {
-      "title": "Miesięczny budżet wsparcia",
-      "text": "Ta kwota to twoja intencja, a nie zobowiązanie. Żadna karta nie jest powiązana, żadne pieniądze nie są pobierane. Po prostu podajesz, ile chcesz pomagać co miesiąc. Ta kwota jest widoczna dla twojej sieci i pokazuje ogólne możliwości. Gdy ktoś poprosi o pomoc, ty decydujesz, czy wziąć udział, czy nie."
+      "title": "Kwota wsparcia",
+      "text": "Wskaż, na jaką kwotę Twój bliski przyjaciel może liczyć w nieprzewidzianych okolicznościach. To jedynie Twoja intencja — karta zostaje przy Tobie, środki są pobierane tylko za Twoją decyzją. Im wyższa kwota, tym większe Twoje ubezpieczenie. Uczestnicy sieci widzą ogólne możliwości, a gdy ktoś poprosi o pomoc — sam decydujesz, czy się przyłączyć."
     },
     "contactsRequired": "Dodaj co najmniej 2 kontakty",
     "contactsFilled": "Wypełniono: {{count}}/2"

@@ -63,8 +63,8 @@
     "next": "İleri",
     "invite": "Davet Gönder",
     "qrCode": "QR Kodu Göster",
-    "budgetNote": "Bu miktar ağ olanaklarına eklenecektir",
-    "saveBudget": "Bütçeyi kaydet ve devam et",
+    "budgetNote": "Bu miktar ağınızın toplam olanaklarına eklenecektir",
+    "saveBudget": "Kaydet ve devam et",
     "skipAndStart": "Atla ve kullanmaya başla",
     "waitingForAccept": "Kabul bekleniyor...",
     "connectionEstablished": "Bağlantı kuruldu!",
@@ -72,8 +72,8 @@
     "skip": "Atla",
     "skipForNow": "Şimdilik geç",
     "step6": {
-      "title": "Aylık Destek Bütçesi",
-      "text": "Bu miktar, yalnızca niyetinizdir, bir taahhüt değildir. Hiçbir kart bağlı değil, hiçbir ücret alınmıyor. Sadece her ay ne kadar yardım etmeye istekli olduğunuzu belirtirsiniz. Bu rakam ağınıza görünür ve genel yeteneklerinizi gösterir. Birisi yardım istediğinde, katılarak veya katılmayarak karar verirsiniz."
+      "title": "Destek Tutarı",
+      "text": "Yakın arkadaşınızın öngörülemeyen durumlarda güvenebileceği tutarı belirtin. Bu yalnızca niyetinizdir — kartınız sizde kalır, para yalnızca sizin kararınızla çekilir. Tutar ne kadar yüksekse, sigorta kapsamınız o kadar büyük olur. Ağ üyeleri toplam kapasiteyi görür ve biri yardım istediğinde — katılıp katılmayacağınıza siz karar verirsiniz."
     },
     "contactsRequired": "En az 2 iletişim bilgisi ekleyin",
     "contactsFilled": "Doldurulmuş: {{count}}/2"
