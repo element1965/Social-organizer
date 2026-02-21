@@ -39,16 +39,16 @@ const LOD_FAR = 500;     // Tiny dot only
 
 /* ---------- Depth colors ---------- */
 const DEPTH_COLORS_DARK = [
-  { main: '#3b82f6', bg: 'rgba(59,130,246,0.2)', dot: 0x3b82f6 },  // 0: center — blue
-  { main: '#6366f1', bg: 'rgba(99,102,241,0.2)', dot: 0x6366f1 },  // 1: indigo
-  { main: '#06b6d4', bg: 'rgba(6,182,212,0.2)', dot: 0x06b6d4 },   // 2: cyan
+  { main: '#3b82f6', bg: 'rgba(59,130,246,0.2)', dot: 0x3b82f6 },  // 0: You — blue
+  { main: '#ef4444', bg: 'rgba(239,68,68,0.2)', dot: 0xef4444 },    // 1: red
+  { main: '#eab308', bg: 'rgba(234,179,8,0.2)', dot: 0xeab308 },    // 2: yellow
   { main: '#64748b', bg: 'rgba(100,116,139,0.2)', dot: 0x64748b },  // 3: slate
 ];
 const DEPTH_COLORS_LIGHT = [
-  { main: '#2563eb', bg: 'rgba(37,99,235,0.15)', dot: 0x2563eb },
-  { main: '#4f46e5', bg: 'rgba(79,70,229,0.15)', dot: 0x4f46e5 },
-  { main: '#0891b2', bg: 'rgba(8,145,178,0.15)', dot: 0x0891b2 },
-  { main: '#475569', bg: 'rgba(71,85,105,0.15)', dot: 0x475569 },
+  { main: '#2563eb', bg: 'rgba(37,99,235,0.15)', dot: 0x2563eb },   // 0: You — blue
+  { main: '#dc2626', bg: 'rgba(220,38,38,0.15)', dot: 0xdc2626 },   // 1: red
+  { main: '#ca8a04', bg: 'rgba(202,138,4,0.15)', dot: 0xca8a04 },   // 2: yellow
+  { main: '#475569', bg: 'rgba(71,85,105,0.15)', dot: 0x475569 },   // 3: slate
 ];
 
 /** Map connectionCount → avatar scale factor (1.0 – 1.6) */
@@ -479,52 +479,54 @@ export function NetworkGraph({
 
   const graphData = { nodes: processedNodes, links: edges };
 
+  const palette = darkMode ? DEPTH_COLORS_DARK : DEPTH_COLORS_LIGHT;
+
   return (
-    <div style={{ position: 'relative', width: width || '100%', height: height || '100%' }}>
-      <ForceGraph3D
-        ref={fgRef}
-        graphData={graphData}
-        width={width}
-        height={height}
-        backgroundColor="rgba(0,0,0,0)"
-        nodeThreeObject={nodeThreeObject}
-        nodeThreeObjectExtend={false}
-        nodeLabel={nodeLabel}
-        linkColor={linkColor}
-        linkWidth={linkWidth}
-        linkCurvature={0.2}
-        linkOpacity={0.6}
-        onNodeClick={handleNodeClick}
-        enableNodeDrag={false}
-        warmupTicks={50}
-        cooldownTime={3000}
-        showNavInfo={false}
-      />
-      {/* Mini legend */}
+    <div style={{ display: 'flex', flexDirection: 'column', width: width || '100%', height: height || '100%' }}>
+      <div style={{ position: 'relative', flex: 1, minHeight: 0 }}>
+        <ForceGraph3D
+          ref={fgRef}
+          graphData={graphData}
+          width={width}
+          height={height ? height - 28 : undefined}
+          backgroundColor="rgba(0,0,0,0)"
+          nodeThreeObject={nodeThreeObject}
+          nodeThreeObjectExtend={false}
+          nodeLabel={nodeLabel}
+          linkColor={linkColor}
+          linkWidth={linkWidth}
+          linkCurvature={0.2}
+          linkOpacity={0.6}
+          onNodeClick={handleNodeClick}
+          enableNodeDrag={false}
+          warmupTicks={50}
+          cooldownTime={3000}
+          showNavInfo={false}
+        />
+      </div>
+      {/* Legend — horizontal row below graph */}
       <div
         style={{
-          position: 'absolute',
-          bottom: 36,
-          right: 8,
-          padding: '8px 10px',
-          borderRadius: 8,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: 12,
+          padding: '4px 8px',
           fontSize: 10,
-          lineHeight: '18px',
-          background: darkMode ? 'rgba(0,0,0,0.6)' : 'rgba(255,255,255,0.85)',
-          color: darkMode ? '#cbd5e1' : '#475569',
-          pointerEvents: 'none',
+          color: darkMode ? '#94a3b8' : '#64748b',
+          flexShrink: 0,
         }}
       >
-        {(darkMode ? DEPTH_COLORS_DARK : DEPTH_COLORS_LIGHT).map((c, i) => (
-          <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-            <span style={{ width: 8, height: 8, borderRadius: '50%', background: c.main, display: 'inline-block', flexShrink: 0 }} />
-            {i === 0 ? 'You' : `${i}° handshake`}
-          </div>
+        {palette.map((c, i) => (
+          <span key={i} style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+            <span style={{ width: 7, height: 7, borderRadius: '50%', background: c.main, display: 'inline-block' }} />
+            {i === 0 ? 'You' : `${i}°`}
+          </span>
         ))}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 4, borderTop: `1px solid ${darkMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)'}`, paddingTop: 4 }}>
-          <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#22c55e', display: 'inline-block', flexShrink: 0 }} />
+        <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+          <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#22c55e', display: 'inline-block' }} />
           Online
-        </div>
+        </span>
       </div>
     </div>
   );
