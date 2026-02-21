@@ -12,8 +12,8 @@ const LazyNetworkGraph = lazy(() =>
   import('@so/graph-3d').then((m) => ({ default: m.NetworkGraph })),
 );
 
-const LEGEND_COLORS_DARK = ['#3b82f6', '#ef4444', '#eab308', '#64748b'];
-const LEGEND_COLORS_LIGHT = ['#2563eb', '#dc2626', '#ca8a04', '#475569'];
+const LEGEND_COLORS_DARK = ['#3b82f6', '#6366f1', '#06b6d4', '#64748b'];
+const LEGEND_COLORS_LIGHT = ['#2563eb', '#4f46e5', '#0891b2', '#475569'];
 const LEGEND_LABELS = ['You', '1°', '2°', '3°'];
 
 function timeAgo(date: string | Date | null): string {

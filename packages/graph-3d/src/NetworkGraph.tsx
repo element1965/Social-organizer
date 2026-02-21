@@ -39,15 +39,15 @@ const LOD_FAR = 500;     // Tiny dot only
 
 /* ---------- Depth colors ---------- */
 export const DEPTH_COLORS_DARK = [
-  { main: '#3b82f6', bg: 'rgba(59,130,246,0.2)', dot: 0x3b82f6 },  // 0: You — blue
-  { main: '#ef4444', bg: 'rgba(239,68,68,0.2)', dot: 0xef4444 },    // 1: red
-  { main: '#eab308', bg: 'rgba(234,179,8,0.2)', dot: 0xeab308 },    // 2: yellow
+  { main: '#3b82f6', bg: 'rgba(59,130,246,0.2)', dot: 0x3b82f6 },  // 0: center — blue
+  { main: '#6366f1', bg: 'rgba(99,102,241,0.2)', dot: 0x6366f1 },  // 1: indigo
+  { main: '#06b6d4', bg: 'rgba(6,182,212,0.2)', dot: 0x06b6d4 },   // 2: cyan
   { main: '#64748b', bg: 'rgba(100,116,139,0.2)', dot: 0x64748b },  // 3: slate
 ];
 export const DEPTH_COLORS_LIGHT = [
-  { main: '#2563eb', bg: 'rgba(37,99,235,0.15)', dot: 0x2563eb },   // 0: You — blue
-  { main: '#dc2626', bg: 'rgba(220,38,38,0.15)', dot: 0xdc2626 },   // 1: red
-  { main: '#ca8a04', bg: 'rgba(202,138,4,0.15)', dot: 0xca8a04 },   // 2: yellow
+  { main: '#2563eb', bg: 'rgba(37,99,235,0.15)', dot: 0x2563eb },   // 0: center — blue
+  { main: '#4f46e5', bg: 'rgba(79,70,229,0.15)', dot: 0x4f46e5 },   // 1: indigo
+  { main: '#0891b2', bg: 'rgba(8,145,178,0.15)', dot: 0x0891b2 },   // 2: cyan
   { main: '#475569', bg: 'rgba(71,85,105,0.15)', dot: 0x475569 },   // 3: slate
 ];
 
