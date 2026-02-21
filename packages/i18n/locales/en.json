@@ -343,7 +343,10 @@
     "localized": "Translated",
     "localizeAll": "Translate all",
     "localizing": "Translating...",
-    "addPhoto": "Add photo"
+    "addPhoto": "Add photo",
+    "insertLink": "Insert link",
+    "linkTextPlaceholder": "Link text",
+    "insert": "Insert"
   },
   "chat": {
     "title": "Assistant",
