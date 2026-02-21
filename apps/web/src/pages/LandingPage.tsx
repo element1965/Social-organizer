@@ -6,6 +6,7 @@ import { languageNames } from '@so/i18n';
 import { useScrollProgress } from '../hooks/useScrollProgress';
 import { Logo } from '../components/Logo';
 import { trpc } from '../lib/trpc';
+import { RichText } from '../components/ui/rich-text';
 
 const LazyGlobeNetwork = lazy(() =>
   import('@so/graph-3d').then((m) => ({ default: m.GlobeNetwork })),
@@ -98,9 +99,7 @@ function LandingFaq({ variant }: { variant?: 'arvut' }) {
               </button>
               {isExpanded && (
                 <div className="px-5 pb-5">
-                  <p className="text-sm text-gray-300 whitespace-pre-wrap leading-relaxed">
-                    {item.answer}
-                  </p>
+                  <RichText text={item.answer} className="text-sm text-gray-300 whitespace-pre-wrap leading-relaxed" />
                 </div>
               )}
             </div>
