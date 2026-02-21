@@ -179,6 +179,14 @@ export function NetworkGraph({
         // Quadratic growth: d=0→1x, d=1→1.5x, d=2→2.5x, d=3→4x
         return BASE_LINK_DIST * (1 + d * (d + 1) / 4);
       });
+      // Override default strength (1/degree ≈ 0.01 for hub nodes) so
+      // link distances actually take effect against charge repulsion
+      if (typeof linkForce.strength === 'function') {
+        linkForce.strength(0.3);
+      }
+      if (typeof linkForce.iterations === 'function') {
+        linkForce.iterations(3);
+      }
       fg.d3ReheatSimulation();
     }
   }, [subtreeDepthMap, nodeDepthMap]);
