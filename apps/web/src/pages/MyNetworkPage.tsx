@@ -12,6 +12,10 @@ const LazyNetworkGraph = lazy(() =>
   import('@so/graph-3d').then((m) => ({ default: m.NetworkGraph })),
 );
 
+const LEGEND_COLORS_DARK = ['#3b82f6', '#ef4444', '#eab308', '#64748b'];
+const LEGEND_COLORS_LIGHT = ['#2563eb', '#dc2626', '#ca8a04', '#475569'];
+const LEGEND_LABELS = ['You', '1°', '2°', '3°'];
+
 function timeAgo(date: string | Date | null): string {
   if (!date) return '';
   const diff = Date.now() - new Date(date).getTime();
@@ -148,9 +152,20 @@ export function MyNetworkPage() {
               )}
             </Suspense>
           </div>
-          <p className="text-center text-xs text-gray-400 dark:text-gray-500 mt-1">
-            {t('network.controlsHint')}
-          </p>
+          <div className="flex items-center justify-center gap-3 mt-1 text-[10px] text-gray-400 dark:text-gray-500 flex-wrap">
+            <span>{t('network.controlsHint')}</span>
+            <span className="text-gray-300 dark:text-gray-600">|</span>
+            {(isDark ? LEGEND_COLORS_DARK : LEGEND_COLORS_LIGHT).map((c, i) => (
+              <span key={i} className="inline-flex items-center gap-1">
+                <span className="w-[7px] h-[7px] rounded-full inline-block" style={{ background: c }} />
+                {LEGEND_LABELS[i]}
+              </span>
+            ))}
+            <span className="inline-flex items-center gap-1">
+              <span className="w-[7px] h-[7px] rounded-full inline-block" style={{ background: '#22c55e' }} />
+              Online
+            </span>
+          </div>
         </>
       ) : (
         <>
