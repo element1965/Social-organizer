@@ -73,7 +73,7 @@
     "skipForNow": "Saltar por ahora",
     "step6": {
       "title": "Monto de apoyo",
-      "text": "Indica con qué monto puede contar tu amigo cercano en caso de imprevistos. Es solo tu intención — tu tarjeta queda contigo, los fondos se debitan solo por tu decisión. Cuanto mayor sea el monto, mayor será tu cobertura de seguro. Los miembros de la red ven las capacidades globales, y cuando alguien pida ayuda — tú decides si participar."
+      "text": "Indica con qué monto puede contar tu amigo cercano en caso de imprevistos. Es solo tu intención — simplemente expresas tu disposición a ayudar. Cuanto mayor sea el monto, mayor será tu cobertura de seguro. Los miembros de la red ven las capacidades globales, y cuando alguien pida ayuda — tú decides si participar."
     },
     "contactsRequired": "Agrega al menos 2 contactos",
     "contactsFilled": "Completados: {{count}}/2"

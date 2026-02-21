@@ -73,7 +73,7 @@
     "skipForNow": "Vorerst überspringen",
     "step6": {
       "title": "Unterstützungsbetrag",
-      "text": "Geben Sie an, auf welchen Betrag Ihr enger Freund in unvorhergesehenen Umständen zählen kann. Dies ist lediglich Ihre Absicht — Ihre Karte bleibt bei Ihnen, Geld wird nur auf Ihre Entscheidung hin abgebucht. Je höher der Betrag, desto größer Ihr Versicherungsschutz. Netzwerkteilnehmer sehen die Gesamtkapazitäten, und wenn jemand um Hilfe bittet — entscheiden Sie selbst, ob Sie mitmachen."
+      "text": "Geben Sie an, auf welchen Betrag Ihr enger Freund in unvorhergesehenen Umständen zählen kann. Dies ist lediglich Ihre Absicht — Sie bekunden einfach Ihre Bereitschaft zu helfen. Je höher der Betrag, desto größer Ihr Versicherungsschutz. Netzwerkteilnehmer sehen die Gesamtkapazitäten, und wenn jemand um Hilfe bittet — entscheiden Sie selbst, ob Sie mitmachen."
     },
     "contactsRequired": "Fügen Sie mindestens 2 Kontakte hinzu",
     "contactsFilled": "Ausgefüllt: {{count}}/2"

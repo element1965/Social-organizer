@@ -61,7 +61,7 @@
     },
     "step6": {
       "title": "Support Amount",
-      "text": "Indicate how much your close friend can count on in an emergency. This is simply your intention — your card stays with you, and funds are only used by your decision. The higher the amount, the greater your insurance coverage. Network members see the overall capacity, and when someone asks for help — you decide whether to step in."
+      "text": "Indicate how much your close friend can count on in an emergency. This is simply your intention — the app does not process payments. The higher the amount, the greater your insurance coverage. Network members see the overall capacity, and when someone asks for help — you decide whether to step in."
     },
     "contactsRequired": "Add at least 2 contacts",
     "contactsFilled": "Filled: {{count}}/2",

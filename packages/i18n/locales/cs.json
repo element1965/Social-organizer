@@ -73,7 +73,7 @@
     "skipForNow": "Přeskočit prozatím",
     "step6": {
       "title": "Částka podpory",
-      "text": "Uveďte, s jakou částkou může váš blízký přítel počítat v nepředvídaných situacích. Je to pouze váš záměr — vaše karta zůstává u vás, prostředky se strhávají pouze na vaše rozhodnutí. Čím vyšší částka, tím větší vaše pojistné krytí. Účastníci sítě vidí celkové kapacity, a když někdo požádá o pomoc — sami rozhodnete, zda se zapojíte."
+      "text": "Uveďte, s jakou částkou může váš blízký přítel počítat v nepředvídaných situacích. Je to pouze váš záměr — jednoduše vyjadřujete ochotu pomoci. Čím vyšší částka, tím větší vaše pojistné krytí. Účastníci sítě vidí celkové kapacity, a když někdo požádá o pomoc — sami rozhodnete, zda se zapojíte."
     },
     "contactsRequired": "Přidejte alespoň 2 kontakty",
     "contactsFilled": "Vyplněno: {{count}}/2"

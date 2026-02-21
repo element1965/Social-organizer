@@ -73,7 +73,7 @@
     "skipForNow": "Şimdilik geç",
     "step6": {
       "title": "Destek Tutarı",
-      "text": "Yakın arkadaşınızın öngörülemeyen durumlarda güvenebileceği tutarı belirtin. Bu yalnızca niyetinizdir — kartınız sizde kalır, para yalnızca sizin kararınızla çekilir. Tutar ne kadar yüksekse, sigorta kapsamınız o kadar büyük olur. Ağ üyeleri toplam kapasiteyi görür ve biri yardım istediğinde — katılıp katılmayacağınıza siz karar verirsiniz."
+      "text": "Yakın arkadaşınızın öngörülemeyen durumlarda güvenebileceği tutarı belirtin. Bu yalnızca niyetinizdir — yalnızca yardım etme isteğinizi belirtirsiniz. Tutar ne kadar yüksekse, sigorta kapsamınız o kadar büyük olur. Ağ üyeleri toplam kapasiteyi görür ve biri yardım istediğinde — katılıp katılmayacağınıza siz karar verirsiniz."
     },
     "contactsRequired": "En az 2 iletişim bilgisi ekleyin",
     "contactsFilled": "Doldurulmuş: {{count}}/2"
