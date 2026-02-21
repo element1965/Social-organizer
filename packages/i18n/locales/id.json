@@ -73,7 +73,7 @@
     "skipForNow": "Lewati untuk sekarang",
     "step6": {
       "title": "Jumlah dukungan",
-      "text": "Tunjukkan jumlah yang bisa diandalkan teman dekat Anda dalam keadaan darurat. Ini hanya niat Anda — kartu Anda tetap di tangan Anda, dana hanya didebit atas keputusan Anda. Semakin tinggi jumlahnya, semakin besar cakupan asuransi Anda. Anggota jaringan melihat kapasitas keseluruhan, dan ketika seseorang meminta bantuan — Anda sendiri yang memutuskan untuk berpartisipasi."
+      "text": "Tunjukkan jumlah yang bisa diandalkan teman dekat Anda dalam keadaan darurat. Ini hanya niat Anda — Anda hanya menyatakan kesediaan untuk membantu. Semakin tinggi jumlahnya, semakin besar cakupan asuransi Anda. Anggota jaringan melihat kapasitas keseluruhan, dan ketika seseorang meminta bantuan — Anda sendiri yang memutuskan untuk berpartisipasi."
     },
     "contactsRequired": "Tambahkan minimal 2 kontak",
     "contactsFilled": "Terisi: {{count}}/2"

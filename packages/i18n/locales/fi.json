@@ -73,7 +73,7 @@
     "skipForNow": "Ohita toistaiseksi",
     "step6": {
       "title": "Tukisumma",
-      "text": "Ilmoita, mihin summaan läheinen ystäväsi voi luottaa ennakoimattomissa tilanteissa. Tämä on vain aikomuksesi — korttisi pysyy sinulla, varat veloitetaan vain päätöksesi mukaan. Mitä suurempi summa, sitä laajempi vakuutusturvasi. Verkoston jäsenet näkevät kokonaiskapasiteetit, ja kun joku pyytää apua — päätät itse, osallistutko."
+      "text": "Ilmoita, mihin summaan läheinen ystäväsi voi luottaa ennakoimattomissa tilanteissa. Tämä on vain aikomuksesi — ilmaiset yksinkertaisesti halukkuutesi auttaa. Mitä suurempi summa, sitä laajempi vakuutusturvasi. Verkoston jäsenet näkevät kokonaiskapasiteetit, ja kun joku pyytää apua — päätät itse, osallistutko."
     },
     "contactsRequired": "Lisää vähintään 2 yhteystietoa",
     "contactsFilled": "Täytetty: {{count}}/2"

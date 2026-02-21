@@ -73,7 +73,7 @@
     "skipForNow": "Hoppa över för nu",
     "step6": {
       "title": "Stodbelopp",
-      "text": "Ange vilket belopp din nära vän kan räkna med i oförutsedda situationer. Detta är enbart din avsikt — ditt kort stannar hos dig, medel dras endast på ditt beslut. Ju högre beloppet, desto större din försäkringstäckning. Nätverksmedlemmar ser den totala kapaciteten, och när någon ber om hjälp — bestämmer du själv om du vill delta."
+      "text": "Ange vilket belopp din nära vän kan räkna med i oförutsedda situationer. Detta är enbart din avsikt — du uttrycker helt enkelt din vilja att hjälpa. Ju högre beloppet, desto större din försäkringstäckning. Nätverksmedlemmar ser den totala kapaciteten, och när någon ber om hjälp — bestämmer du själv om du vill delta."
     },
     "contactsRequired": "Lägg till minst 2 kontakter",
     "contactsFilled": "Ifyllt: {{count}}/2"

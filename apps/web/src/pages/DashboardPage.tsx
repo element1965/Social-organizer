@@ -194,12 +194,12 @@ export function DashboardPage() {
                 <PeriodChip days={networkDays} onClick={() => setShowNetworkPicker(true)} />
               </div>
             </div>
-            <div className="flex items-baseline justify-between">
-              <p className="text-3xl font-bold text-gray-900 dark:text-white">
-                {totalReachable} <span className="text-sm font-normal text-gray-500 dark:text-gray-300">{t('dashboard.people')}</span>
+            <div className="flex items-baseline justify-between gap-2 overflow-hidden">
+              <p className="text-3xl font-bold text-gray-900 dark:text-white truncate shrink min-w-0">
+                {totalReachable?.toLocaleString()} <span className="text-sm font-normal text-gray-500 dark:text-gray-300">{t('dashboard.people')}</span>
               </p>
               {networkNewConn != null && (
-                <span className="text-3xl font-bold text-blue-600 dark:text-blue-400">
+                <span className="text-lg font-bold text-blue-600 dark:text-blue-400 whitespace-nowrap shrink-0">
                   {t('dashboard.newConnections', { count: networkNewConn })}
                 </span>
               )}
@@ -219,19 +219,19 @@ export function DashboardPage() {
                 <PeriodChip days={capDays} onClick={() => setShowCapPicker(true)} />
               </div>
             </div>
-            <div className="flex items-baseline justify-between">
-              <p className="text-3xl font-bold text-green-600 dark:text-green-400">
-                ${networkCapabilities?.total ?? 0}
-                {networkCapabilities?.contributors != null && networkCapabilities.contributors > 0 && (
-                  <span className="text-sm font-normal text-gray-500 dark:text-gray-300"> {t('dashboard.capabilitiesContributors', { count: networkCapabilities.contributors })}</span>
-                )}
+            <div className="flex items-baseline justify-between gap-2 overflow-hidden">
+              <p className="text-3xl font-bold text-green-600 dark:text-green-400 truncate shrink min-w-0">
+                ${(networkCapabilities?.total ?? 0).toLocaleString()}
               </p>
               {capPeriodTotal != null && (
-                <span className="text-3xl font-bold text-green-600 dark:text-green-400">
-                  +${capPeriodTotal}
+                <span className="text-lg font-bold text-green-600 dark:text-green-400 whitespace-nowrap shrink-0">
+                  +${capPeriodTotal.toLocaleString()}
                 </span>
               )}
             </div>
+            {networkCapabilities?.contributors != null && networkCapabilities.contributors > 0 && (
+              <p className="text-sm text-gray-500 dark:text-gray-300">{t('dashboard.capabilitiesContributors', { count: networkCapabilities.contributors })}</p>
+            )}
           </div>
         </CardContent>
       </Card>

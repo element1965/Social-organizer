@@ -73,7 +73,7 @@
     "skipForNow": "Salta per ora",
     "step6": {
       "title": "Importo di supporto",
-      "text": "Indica su quale importo il tuo amico stretto può contare in caso di imprevisti. È solo la tua intenzione — la tua carta resta con te, i fondi vengono addebitati solo su tua decisione. Più alto è l'importo, maggiore è la tua copertura assicurativa. I membri della rete vedono le capacità complessive, e quando qualcuno chiede aiuto — decidi tu se partecipare."
+      "text": "Indica su quale importo il tuo amico stretto può contare in caso di imprevisti. È solo la tua intenzione — esprimi semplicemente la tua disponibilità ad aiutare. Più alto è l'importo, maggiore è la tua copertura assicurativa. I membri della rete vedono le capacità complessive, e quando qualcuno chiede aiuto — decidi tu se partecipare."
     },
     "contactsRequired": "Aggiungi almeno 2 contatti",
     "contactsFilled": "Compilati: {{count}}/2"

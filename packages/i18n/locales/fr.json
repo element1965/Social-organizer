@@ -73,7 +73,7 @@
     "skipForNow": "Passer pour l'instant",
     "step6": {
       "title": "Montant de soutien",
-      "text": "Indiquez le montant sur lequel votre ami proche peut compter en cas d'imprévu. C'est simplement votre intention — votre carte reste avec vous, les fonds sont débités uniquement sur votre décision. Plus le montant est élevé, plus votre couverture d'assurance est importante. Les membres du réseau voient les capacités globales, et quand quelqu'un demande de l'aide — vous décidez vous-même de participer."
+      "text": "Indiquez le montant sur lequel votre ami proche peut compter en cas d'imprévu. C'est simplement votre intention — vous exprimez simplement votre volonté d'aider. Plus le montant est élevé, plus votre couverture d'assurance est importante. Les membres du réseau voient les capacités globales, et quand quelqu'un demande de l'aide — vous décidez vous-même de participer."
     },
     "contactsRequired": "Ajoutez au moins 2 contacts",
     "contactsFilled": "Remplis : {{count}}/2"
