@@ -120,6 +120,32 @@ export function NetworkGraph({
     }
   }, []);
 
+  // 3° nodes at 2.5x distance from 1° compared to 2°:
+  // link(1°↔2°) = D, link(2°↔3°) = 1.5D → total 1°→3° = 2.5D
+  useEffect(() => {
+    if (!fgRef.current) return;
+    const fg = fgRef.current;
+    if (typeof fg.d3Force !== 'function') return;
+
+    const BASE_LINK_DIST = 30;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const linkForce = fg.d3Force('link') as any;
+    if (linkForce && typeof linkForce.distance === 'function') {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      linkForce.distance((link: any) => {
+        const srcId = typeof link.source === 'object' ? link.source?.id : link.source;
+        const tgtId = typeof link.target === 'object' ? link.target?.id : link.target;
+        const srcDepth = nodeDepthMap.get(String(srcId)) ?? 1;
+        const tgtDepth = nodeDepthMap.get(String(tgtId)) ?? 1;
+        const maxDepth = Math.max(srcDepth, tgtDepth);
+        // Edges touching 3° nodes get 1.5x distance so total path from 1° is 2.5x
+        if (maxDepth >= 3) return BASE_LINK_DIST * 1.5;
+        return BASE_LINK_DIST;
+      });
+      fg.d3ReheatSimulation();
+    }
+  }, [nodeDepthMap]);
+
   // Function to update LOD with loaded texture
   const updateLodWithTexture = useCallback((lod: THREE.LOD, texture: THREE.Texture, node: typeof nodes[0]) => {
     const closeLevel = lod.getObjectByName('lod-close');
