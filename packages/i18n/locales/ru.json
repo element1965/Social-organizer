@@ -343,7 +343,10 @@
     "localized": "Переведено",
     "localizeAll": "Перевести на все языки",
     "localizing": "Перевод...",
-    "addPhoto": "Добавить фото"
+    "addPhoto": "Добавить фото",
+    "insertLink": "Вставить ссылку",
+    "linkTextPlaceholder": "Текст ссылки",
+    "insert": "Вставить"
   },
   "chat": {
     "title": "Помощник",

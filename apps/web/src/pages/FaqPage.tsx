@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react';
-import { HelpCircle, ChevronDown, ChevronUp, Plus, Pencil, Trash2, X, Check, Globe, Loader2, ImagePlus } from 'lucide-react';
+import { HelpCircle, ChevronDown, ChevronUp, Plus, Pencil, Trash2, X, Check, Globe, Loader2, ImagePlus, Link2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { trpc } from '../lib/trpc';
 import { Card } from '../components/ui/card';
@@ -36,7 +36,11 @@ export function FaqPage() {
   const [formAnswer, setFormAnswer] = useState('');
   const [formImageUrl, setFormImageUrl] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
+  const [showLinkPopup, setShowLinkPopup] = useState(false);
+  const [linkText, setLinkText] = useState('');
+  const [linkUrl, setLinkUrl] = useState('');
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const answerRef = useRef<HTMLTextAreaElement>(null);
 
   const handleToggle = (id: string) => {
     const isOpening = openId !== id;
@@ -176,12 +180,73 @@ export function FaqPage() {
             rows={2}
           />
           <textarea
+            ref={answerRef}
             value={formAnswer}
             onChange={e => setFormAnswer(e.target.value)}
             placeholder={t('faq.answerPlaceholder')}
-            className="w-full mb-3 p-2 text-sm rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-y"
+            className="w-full mb-2 p-2 text-sm rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-y"
             rows={4}
           />
+          {/* Insert link button + popup */}
+          <div className="relative mb-3">
+            <button
+              type="button"
+              onClick={() => { setShowLinkPopup(!showLinkPopup); setLinkText(''); setLinkUrl(''); }}
+              className="flex items-center gap-1.5 px-3 py-1.5 text-sm text-gray-600 dark:text-gray-300 border border-dashed border-gray-300 dark:border-gray-600 rounded-lg hover:border-blue-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+            >
+              <Link2 className="w-4 h-4" />
+              {t('faq.insertLink')}
+            </button>
+            {showLinkPopup && (
+              <div className="absolute left-0 top-full mt-1 z-10 p-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-xl shadow-lg space-y-2 w-72">
+                <input
+                  type="text"
+                  value={linkText}
+                  onChange={e => setLinkText(e.target.value)}
+                  placeholder={t('faq.linkTextPlaceholder')}
+                  className="w-full p-2 text-sm rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+                <input
+                  type="url"
+                  value={linkUrl}
+                  onChange={e => setLinkUrl(e.target.value)}
+                  placeholder="https://..."
+                  className="w-full p-2 text-sm rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+                <div className="flex gap-2">
+                  <button
+                    type="button"
+                    disabled={!linkText.trim() || !linkUrl.trim()}
+                    onClick={() => {
+                      const md = `[${linkText.trim()}](${linkUrl.trim()})`;
+                      const ta = answerRef.current;
+                      if (ta) {
+                        const start = ta.selectionStart ?? formAnswer.length;
+                        const before = formAnswer.slice(0, start);
+                        const after = formAnswer.slice(ta.selectionEnd ?? start);
+                        setFormAnswer(before + md + after);
+                        setTimeout(() => { ta.focus(); ta.selectionStart = ta.selectionEnd = start + md.length; }, 0);
+                      } else {
+                        setFormAnswer(prev => prev + md);
+                      }
+                      setShowLinkPopup(false);
+                    }}
+                    className="flex items-center gap-1 px-3 py-1.5 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 transition-colors"
+                  >
+                    <Check className="w-3.5 h-3.5" />
+                    {t('faq.insert')}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setShowLinkPopup(false)}
+                    className="px-3 py-1.5 text-sm text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-gray-100 transition-colors"
+                  >
+                    {t('common.cancel')}
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
           {/* Image upload */}
           <div className="mb-3">
             <input
