@@ -63,8 +63,8 @@
     "next": "Næste",
     "invite": "Send invitation",
     "qrCode": "Vis QR-kode",
-    "budgetNote": "Dette beløb vil blive tilføjet til netværkets kapaciteter",
-    "saveBudget": "Gem budget og fortsæt",
+    "budgetNote": "Dette beløb vil blive tilføjet til dit netværks samlede kapaciteter",
+    "saveBudget": "Gem og fortsæt",
     "skipAndStart": "Spring over og begynd at bruge",
     "waitingForAccept": "Venter på accept...",
     "connectionEstablished": "Forbindelse oprettet!",
@@ -72,8 +72,8 @@
     "skip": "Spring over",
     "skipForNow": "Spring over for nu",
     "step6": {
-      "title": "Månedligt støttebudget",
-      "text": "Dette beløb er din hensigt, ikke en forpligtelse. Intet kort er linket, og ingen penge bliver opkrævet. Du angiver simpelthen, hvor meget du er villig til at hjælpe med pr. måned. Tallet er synligt for dit netværk og viser samlede kapaciteter. Når nogen beder om hjælp, beslutter du selv, om du vil deltage eller ej."
+      "title": "Støttebeløb",
+      "text": "Angiv, hvilket beløb din nære ven kan regne med i uforudsete situationer. Det er kun din hensigt — dit kort forbliver hos dig, midler trækkes kun efter din beslutning. Jo højere beløbet, desto større din forsikringsdækning. Netværkets medlemmer ser de samlede kapaciteter, og når nogen beder om hjælp — beslutter du selv, om du vil deltage."
     },
     "contactsRequired": "Tilføj mindst 2 kontakter",
     "contactsFilled": "Udfyldt: {{count}}/2"

@@ -63,8 +63,8 @@
     "next": "Berikutnya",
     "invite": "Kirim Undangan",
     "qrCode": "Tampilkan Kode QR",
-    "budgetNote": "Jumlah ini akan ditambahkan ke kemampuan jaringan",
-    "saveBudget": "Simpan anggaran & lanjutkan",
+    "budgetNote": "Jumlah ini akan ditambahkan ke kemampuan keseluruhan jaringan Anda",
+    "saveBudget": "Simpan & lanjutkan",
     "skipAndStart": "Lewati dan mulai gunakan",
     "waitingForAccept": "Menunggu persetujuan...",
     "connectionEstablished": "Koneksi berhasil!",
@@ -72,8 +72,8 @@
     "skip": "Lewati",
     "skipForNow": "Lewati untuk sekarang",
     "step6": {
-      "title": "Anggaran dukungan bulanan",
-      "text": "Jumlah ini adalah niat Anda, bukan komitmen. Tidak ada kartu yang terhubung, tidak ada uang yang dibebankan. Anda hanya menunjukkan seberapa banyak yang bersedia Anda bantu per bulan. Angka ini terlihat oleh jaringan Anda dan menunjukkan kemampuan keseluruhan. Saat seseorang meminta bantuan, Anda yang memutuskan ikut atau tidak."
+      "title": "Jumlah dukungan",
+      "text": "Tunjukkan jumlah yang bisa diandalkan teman dekat Anda dalam keadaan darurat. Ini hanya niat Anda — kartu Anda tetap di tangan Anda, dana hanya didebit atas keputusan Anda. Semakin tinggi jumlahnya, semakin besar cakupan asuransi Anda. Anggota jaringan melihat kapasitas keseluruhan, dan ketika seseorang meminta bantuan — Anda sendiri yang memutuskan untuk berpartisipasi."
     },
     "contactsRequired": "Tambahkan minimal 2 kontak",
     "contactsFilled": "Terisi: {{count}}/2"

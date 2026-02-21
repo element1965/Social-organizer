@@ -63,8 +63,8 @@
     "next": "Urmator",
     "invite": "Trimite invitatia",
     "qrCode": "Arata codul QR",
-    "budgetNote": "Aceasta suma va fi adaugata la capacitatile retelei",
-    "saveBudget": "Salveaza bugetul si continua",
+    "budgetNote": "Această sumă va fi adăugată la capacitățile globale ale rețelei tale",
+    "saveBudget": "Salvează și continuă",
     "skipAndStart": "Sari peste si incepe sa folosesti",
     "waitingForAccept": "Se asteapta acceptarea...",
     "connectionEstablished": "Conexiune stabilita!",
@@ -72,8 +72,8 @@
     "skip": "Sari peste",
     "skipForNow": "Sari deocamdată",
     "step6": {
-      "title": "Buget lunar de sprijin",
-      "text": "Această sumă reprezintă intenția ta, nu un angajament. Niciun card nu este legat, nu se percepe niciun ban. Indici pur și simplu cât ești dispus să ajuți lunar. Această valoare este vizibilă rețelei tale și arată capacitățile tale generale. Când cineva solicită ajutor, tu decizi dacă să participi sau nu."
+      "title": "Suma de sprijin",
+      "text": "Indică suma pe care prietenul tău apropiat poate conta în caz de situații neprevăzute. Este doar intenția ta — cardul rămâne la tine, fondurile sunt debitate doar la decizia ta. Cu cât suma este mai mare, cu atât acoperirea ta de asigurare este mai mare. Membrii rețelei văd capacitățile globale, iar când cineva cere ajutor — tu decizi dacă participi."
     },
     "contactsRequired": "Adaugă cel puțin 2 contacte",
     "contactsFilled": "Completate: {{count}}/2"

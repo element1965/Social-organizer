@@ -63,8 +63,8 @@
     "next": "Další",
     "invite": "Odeslat pozvánku",
     "qrCode": "Zobrazit QR kód",
-    "budgetNote": "Tato částka bude přidána ke kapacitám sítě",
-    "saveBudget": "Uložit rozpočet a pokračovat",
+    "budgetNote": "Tato částka bude přidána k celkovým kapacitám vaší sítě",
+    "saveBudget": "Uložit a pokračovat",
     "skipAndStart": "Přeskočit a začít používat",
     "waitingForAccept": "Čekání na přijetí...",
     "connectionEstablished": "Spojení navázáno!",
@@ -72,8 +72,8 @@
     "skip": "Přeskočit",
     "skipForNow": "Přeskočit prozatím",
     "step6": {
-      "title": "Měsíční rozpočet na podporu",
-      "text": "Tato částka je vaším záměrem, ne závazkem. Není propojena žádná karta, nejsou strženy žádné peníze. Jednoduše označíte, kolik jste ochotni pomoci měsíčně. Tato částka je viditelná vaší síti a ukazuje vaše celkové možnosti. Když někdo požádá o pomoc, vy rozhodnete, zda se zapojíte nebo ne."
+      "title": "Částka podpory",
+      "text": "Uveďte, s jakou částkou může váš blízký přítel počítat v nepředvídaných situacích. Je to pouze váš záměr — vaše karta zůstává u vás, prostředky se strhávají pouze na vaše rozhodnutí. Čím vyšší částka, tím větší vaše pojistné krytí. Účastníci sítě vidí celkové kapacity, a když někdo požádá o pomoc — sami rozhodnete, zda se zapojíte."
     },
     "contactsRequired": "Přidejte alespoň 2 kontakty",
     "contactsFilled": "Vyplněno: {{count}}/2"
