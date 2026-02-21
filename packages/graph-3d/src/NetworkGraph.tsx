@@ -38,13 +38,13 @@ const LOD_MEDIUM = 300;  // Small dot + label
 const LOD_FAR = 500;     // Tiny dot only
 
 /* ---------- Depth colors ---------- */
-const DEPTH_COLORS_DARK = [
+export const DEPTH_COLORS_DARK = [
   { main: '#3b82f6', bg: 'rgba(59,130,246,0.2)', dot: 0x3b82f6 },  // 0: You — blue
   { main: '#ef4444', bg: 'rgba(239,68,68,0.2)', dot: 0xef4444 },    // 1: red
   { main: '#eab308', bg: 'rgba(234,179,8,0.2)', dot: 0xeab308 },    // 2: yellow
   { main: '#64748b', bg: 'rgba(100,116,139,0.2)', dot: 0x64748b },  // 3: slate
 ];
-const DEPTH_COLORS_LIGHT = [
+export const DEPTH_COLORS_LIGHT = [
   { main: '#2563eb', bg: 'rgba(37,99,235,0.15)', dot: 0x2563eb },   // 0: You — blue
   { main: '#dc2626', bg: 'rgba(220,38,38,0.15)', dot: 0xdc2626 },   // 1: red
   { main: '#ca8a04', bg: 'rgba(202,138,4,0.15)', dot: 0xca8a04 },   // 2: yellow
@@ -571,12 +571,9 @@ export function NetworkGraph({
 
   const graphData = { nodes: processedNodes, links: edges };
 
-  const palette = darkMode ? DEPTH_COLORS_DARK : DEPTH_COLORS_LIGHT;
-
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', width: width || '100%', height: height || '100%' }}>
-      <div style={{ position: 'relative', flex: 1, minHeight: 0 }}>
-        {/* "Find me" button — like Google Maps geolocation */}
+    <div style={{ position: 'relative', width: width || '100%', height: height || '100%' }}>
+      {/* "Find me" button — like Google Maps geolocation */}
         <button
           onClick={focusOnMe}
           title="Focus on me"
@@ -615,7 +612,7 @@ export function NetworkGraph({
           ref={fgRef}
           graphData={graphData}
           width={width}
-          height={height ? height - 28 : undefined}
+          height={height}
           backgroundColor="rgba(0,0,0,0)"
           nodeThreeObject={nodeThreeObject}
           nodeThreeObjectExtend={false}
@@ -630,31 +627,6 @@ export function NetworkGraph({
           cooldownTime={3000}
           showNavInfo={false}
         />
-      </div>
-      {/* Legend — horizontal row below graph */}
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          gap: 12,
-          padding: '4px 8px',
-          fontSize: 10,
-          color: darkMode ? '#94a3b8' : '#64748b',
-          flexShrink: 0,
-        }}
-      >
-        {palette.map((c, i) => (
-          <span key={i} style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}>
-            <span style={{ width: 7, height: 7, borderRadius: '50%', background: c.main, display: 'inline-block' }} />
-            {i === 0 ? 'You' : `${i}°`}
-          </span>
-        ))}
-        <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}>
-          <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#22c55e', display: 'inline-block' }} />
-          Online
-        </span>
-      </div>
     </div>
   );
 }
