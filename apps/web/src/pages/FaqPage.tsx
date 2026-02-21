@@ -3,6 +3,7 @@ import { HelpCircle, ChevronDown, ChevronUp, Plus, Pencil, Trash2, X, Check, Glo
 import { useTranslation } from 'react-i18next';
 import { trpc } from '../lib/trpc';
 import { Card } from '../components/ui/card';
+import { RichText } from '../components/ui/rich-text';
 
 export function FaqPage() {
   const { t, i18n } = useTranslation();
@@ -270,9 +271,7 @@ export function FaqPage() {
                         className="max-w-full rounded-lg mb-3 border border-gray-200 dark:border-gray-700"
                       />
                     )}
-                    <p className="text-sm text-gray-600 dark:text-gray-300 whitespace-pre-wrap">
-                      {item.answer}
-                    </p>
+                    <RichText text={item.answer} className="text-sm text-gray-600 dark:text-gray-300 whitespace-pre-wrap" />
                     {isAdmin && (
                       <div className="flex items-center gap-2 mt-3 pt-3 border-t border-gray-100 dark:border-gray-800">
                         <button
