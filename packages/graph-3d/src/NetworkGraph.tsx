@@ -138,10 +138,6 @@ export function NetworkGraph({
   useEffect(() => {
     if (fgRef.current) {
       const fg = fgRef.current;
-      if (typeof fg.d3Force === 'function') {
-        const charge = fg.d3Force('charge');
-        if (charge && typeof charge.strength === 'function') charge.strength(-80);
-      }
       // Auto-rotate when user is not interacting
       const controls = fg.controls();
       if (controls) {
@@ -157,11 +153,26 @@ export function NetworkGraph({
     }
   }, []);
 
-  // Dynamic link distance based on child's subtree depth
+  // Dynamic forces based on subtree depth:
+  // 1) link distance — nodes with subtrees get longer links
+  // 2) per-node charge — nodes with subtrees repel stronger, claiming more space
   useEffect(() => {
     if (!fgRef.current) return;
     const fg = fgRef.current;
     if (typeof fg.d3Force !== 'function') return;
+
+    // Per-node charge: nodes with deeper subtrees repel more strongly
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const charge = fg.d3Force('charge') as any;
+    if (charge && typeof charge.strength === 'function') {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      charge.strength((node: any) => {
+        const nodeId = String(node.id ?? '');
+        const d = subtreeDepthMap.get(nodeId) ?? 0;
+        // Leaf: -80, subtree=1: -160, subtree=2: -280, subtree=3: -440
+        return -80 * (1 + d * (d + 1) / 4);
+      });
+    }
 
     const BASE_LINK_DIST = 30;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -179,16 +190,9 @@ export function NetworkGraph({
         // Quadratic growth: d=0→1x, d=1→1.5x, d=2→2.5x, d=3→4x
         return BASE_LINK_DIST * (1 + d * (d + 1) / 4);
       });
-      // Override default strength (1/degree ≈ 0.01 for hub nodes) so
-      // link distances actually take effect against charge repulsion
-      if (typeof linkForce.strength === 'function') {
-        linkForce.strength(0.3);
-      }
-      if (typeof linkForce.iterations === 'function') {
-        linkForce.iterations(3);
-      }
-      fg.d3ReheatSimulation();
     }
+
+    fg.d3ReheatSimulation();
   }, [subtreeDepthMap, nodeDepthMap]);
 
   // Function to update LOD with loaded texture
