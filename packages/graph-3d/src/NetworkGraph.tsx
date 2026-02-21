@@ -175,9 +175,9 @@ export function NetworkGraph({
         const tgtDepth = nodeDepthMap.get(String(tgtId)) ?? 1;
         // The "child" node is the one with greater depth
         const childId = tgtDepth > srcDepth ? String(tgtId) : String(srcId);
-        const childSubtreeDepth = subtreeDepthMap.get(childId) ?? 0;
-        // distance = BASE * (1 + 0.5 * subtreeDepth)
-        return BASE_LINK_DIST * (1 + 0.5 * childSubtreeDepth);
+        const d = subtreeDepthMap.get(childId) ?? 0;
+        // Quadratic growth: d=0→1x, d=1→1.5x, d=2→2.5x, d=3→4x
+        return BASE_LINK_DIST * (1 + d * (d + 1) / 4);
       });
       fg.d3ReheatSimulation();
     }
