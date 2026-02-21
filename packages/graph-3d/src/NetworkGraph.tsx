@@ -98,6 +98,43 @@ export function NetworkGraph({
 
   const nodeDepthMap = useMemo(() => new Map(nodes.map(n => [n.id, n.depth ?? (n.isCenter ? 0 : 1)])), [nodes]);
 
+  // Compute max subtree depth for each node (how deep its descendants go)
+  const subtreeDepthMap = useMemo(() => {
+    const adj = new Map<string, string[]>();
+    for (const e of edges) {
+      if (!adj.has(e.source)) adj.set(e.source, []);
+      if (!adj.has(e.target)) adj.set(e.target, []);
+      adj.get(e.source)!.push(e.target);
+      adj.get(e.target)!.push(e.source);
+    }
+
+    const cache = new Map<string, number>();
+    const computing = new Set<string>(); // cycle guard
+
+    function getMaxSubtreeDepth(nodeId: string): number {
+      if (cache.has(nodeId)) return cache.get(nodeId)!;
+      if (computing.has(nodeId)) return 0;
+      computing.add(nodeId);
+
+      const myDepth = nodeDepthMap.get(nodeId) ?? 0;
+      const neighbors = adj.get(nodeId) ?? [];
+      // Children = neighbors with depth = myDepth + 1
+      const children = neighbors.filter(nId => (nodeDepthMap.get(nId) ?? 0) === myDepth + 1);
+
+      let maxD = 0;
+      for (const child of children) {
+        maxD = Math.max(maxD, 1 + getMaxSubtreeDepth(child));
+      }
+
+      computing.delete(nodeId);
+      cache.set(nodeId, maxD);
+      return maxD;
+    }
+
+    for (const n of nodes) getMaxSubtreeDepth(n.id);
+    return cache;
+  }, [nodes, edges, nodeDepthMap]);
+
   useEffect(() => {
     if (fgRef.current) {
       const fg = fgRef.current;
@@ -120,8 +157,7 @@ export function NetworkGraph({
     }
   }, []);
 
-  // 3° nodes at 2.5x distance from 1° compared to 2°:
-  // link(1°↔2°) = D, link(2°↔3°) = 1.5D → total 1°→3° = 2.5D
+  // Dynamic link distance based on child's subtree depth
   useEffect(() => {
     if (!fgRef.current) return;
     const fg = fgRef.current;
@@ -137,14 +173,15 @@ export function NetworkGraph({
         const tgtId = typeof link.target === 'object' ? link.target?.id : link.target;
         const srcDepth = nodeDepthMap.get(String(srcId)) ?? 1;
         const tgtDepth = nodeDepthMap.get(String(tgtId)) ?? 1;
-        const maxDepth = Math.max(srcDepth, tgtDepth);
-        // Edges touching 3° nodes get 1.5x distance so total path from 1° is 2.5x
-        if (maxDepth >= 3) return BASE_LINK_DIST * 1.5;
-        return BASE_LINK_DIST;
+        // The "child" node is the one with greater depth
+        const childId = tgtDepth > srcDepth ? String(tgtId) : String(srcId);
+        const childSubtreeDepth = subtreeDepthMap.get(childId) ?? 0;
+        // distance = BASE * (1 + 0.5 * subtreeDepth)
+        return BASE_LINK_DIST * (1 + 0.5 * childSubtreeDepth);
       });
       fg.d3ReheatSimulation();
     }
-  }, [nodeDepthMap]);
+  }, [subtreeDepthMap, nodeDepthMap]);
 
   // Function to update LOD with loaded texture
   const updateLodWithTexture = useCallback((lod: THREE.LOD, texture: THREE.Texture, node: typeof nodes[0]) => {
@@ -503,6 +540,23 @@ export function NetworkGraph({
     [darkMode],
   );
 
+  // Focus camera on center node (the "me" node)
+  const focusOnMe = useCallback(() => {
+    if (!fgRef.current) return;
+    const centerNode = processedNodes.find(n => n.isCenter);
+    if (!centerNode) return;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const node = centerNode as any;
+    const x = node.x ?? 0;
+    const y = node.y ?? 0;
+    const z = node.z ?? 0;
+    fgRef.current.cameraPosition(
+      { x: x, y: y, z: z + 80 },
+      { x, y, z },
+      800,
+    );
+  }, [processedNodes]);
+
   const graphData = { nodes: processedNodes, links: edges };
 
   const palette = darkMode ? DEPTH_COLORS_DARK : DEPTH_COLORS_LIGHT;
@@ -510,6 +564,41 @@ export function NetworkGraph({
   return (
     <div style={{ display: 'flex', flexDirection: 'column', width: width || '100%', height: height || '100%' }}>
       <div style={{ position: 'relative', flex: 1, minHeight: 0 }}>
+        {/* "Find me" button — like Google Maps geolocation */}
+        <button
+          onClick={focusOnMe}
+          title="Focus on me"
+          style={{
+            position: 'absolute',
+            bottom: 16,
+            right: 16,
+            zIndex: 10,
+            width: 40,
+            height: 40,
+            borderRadius: '50%',
+            border: 'none',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            background: darkMode ? 'rgba(30,41,59,0.85)' : 'rgba(255,255,255,0.9)',
+            color: darkMode ? '#60a5fa' : '#2563eb',
+            boxShadow: '0 2px 8px rgba(0,0,0,0.3)',
+            fontSize: 20,
+            lineHeight: 1,
+            transition: 'background 0.2s, transform 0.15s',
+          }}
+          onMouseEnter={e => { (e.target as HTMLButtonElement).style.transform = 'scale(1.1)'; }}
+          onMouseLeave={e => { (e.target as HTMLButtonElement).style.transform = 'scale(1)'; }}
+        >
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <circle cx="12" cy="12" r="4" />
+            <line x1="12" y1="2" x2="12" y2="6" />
+            <line x1="12" y1="18" x2="12" y2="22" />
+            <line x1="2" y1="12" x2="6" y2="12" />
+            <line x1="18" y1="12" x2="22" y2="12" />
+          </svg>
+        </button>
         <ForceGraph3D
           ref={fgRef}
           graphData={graphData}
