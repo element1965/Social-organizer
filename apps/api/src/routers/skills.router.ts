@@ -167,7 +167,13 @@ export const skillsRouter = router({
   adminStats: protectedProcedure.query(async ({ ctx }) => {
     if (!isAdmin(ctx.userId)) return null;
 
-    const [totalUsers, skillUserRows, needUserRows, topSkills, topNeeds] = await Promise.all([
+    const [
+      totalUsers, skillUserRows, needUserRows,
+      topSkills, topNeeds,
+      totalSkillEntries, totalNeedEntries,
+      usersWithGeo, totalCategories,
+      chainCounts, notifCounts, pendingSuggestions,
+    ] = await Promise.all([
       ctx.db.user.count({ where: { deletedAt: null } }),
       ctx.db.userSkill.groupBy({ by: ['userId'] }),
       ctx.db.userNeed.groupBy({ by: ['userId'] }),
@@ -183,18 +189,51 @@ export const skillsRouter = router({
         orderBy: { _count: { categoryId: 'desc' } },
         take: 10,
       }),
+      ctx.db.userSkill.count(),
+      ctx.db.userNeed.count(),
+      ctx.db.user.count({ where: { deletedAt: null, countryCode: { not: null } } }),
+      ctx.db.skillCategory.count(),
+      // Chain stats
+      ctx.db.matchChain.groupBy({
+        by: ['status'],
+        _count: { id: true },
+      }),
+      // Notification stats
+      ctx.db.skillMatchNotification.groupBy({
+        by: ['status'],
+        _count: { id: true },
+      }),
+      ctx.db.suggestedCategory.count({ where: { status: 'PENDING' } }),
     ]);
 
     const usersWithSkills = skillUserRows.length;
     const usersWithNeeds = needUserRows.length;
+    const avgSkillsPerUser = usersWithSkills > 0 ? Math.round(totalSkillEntries / usersWithSkills * 10) / 10 : 0;
+    const avgNeedsPerUser = usersWithNeeds > 0 ? Math.round(totalNeedEntries / usersWithNeeds * 10) / 10 : 0;
 
     // Match density: count skill→need matches between connected users
-    const matchResult = await ctx.db.$queryRaw<Array<{ matches: number }>>`
-      SELECT COUNT(DISTINCT (s."userId", n."userId", s."categoryId"))::int AS matches
+    const matchResult = await ctx.db.$queryRaw<Array<{ matches: number; unique_pairs: number }>>`
+      SELECT
+        COUNT(DISTINCT (s."userId", n."userId", s."categoryId"))::int AS matches,
+        COUNT(DISTINCT LEAST(s."userId", n."userId") || '|' || GREATEST(s."userId", n."userId"))::int AS unique_pairs
       FROM user_skills s
       JOIN user_needs n ON s."categoryId" = n."categoryId" AND s."userId" <> n."userId"
       JOIN connections c ON (c."userAId" = s."userId" AND c."userBId" = n."userId")
                          OR (c."userBId" = s."userId" AND c."userAId" = n."userId")
+    `;
+
+    // Chains with TG chat links
+    const chainsWithChat = await ctx.db.matchChain.count({
+      where: { telegramChatUrl: { not: null } },
+    });
+
+    // Unique participants in chains
+    const chainParticipants = await ctx.db.$queryRaw<Array<{ cnt: number }>>`
+      SELECT COUNT(DISTINCT u)::int AS cnt FROM (
+        SELECT "giverId" AS u FROM match_chain_links
+        UNION
+        SELECT "receiverId" AS u FROM match_chain_links
+      ) sub
     `;
 
     // Resolve category keys for top lists
@@ -207,12 +246,46 @@ export const skillsRouter = router({
       : [];
     const catMap = new Map(cats.map((c) => [c.id, c.key]));
 
+    // Chain status breakdown
+    const chainStatusMap: Record<string, number> = {};
+    for (const c of chainCounts) {
+      chainStatusMap[c.status] = c._count.id;
+    }
+
+    // Notification status breakdown
+    const notifStatusMap: Record<string, number> = {};
+    for (const n of notifCounts) {
+      notifStatusMap[n.status] = n._count.id;
+    }
+
     return {
       totalUsers,
       usersWithSkills,
       usersWithNeeds,
       fillRate: totalUsers > 0 ? Math.round(((usersWithSkills + usersWithNeeds) / 2 / totalUsers) * 100) : 0,
       matchDensity: matchResult[0]?.matches ?? 0,
+      uniqueMatchPairs: matchResult[0]?.unique_pairs ?? 0,
+      totalSkillEntries,
+      totalNeedEntries,
+      avgSkillsPerUser,
+      avgNeedsPerUser,
+      usersWithGeo,
+      geoRate: totalUsers > 0 ? Math.round((usersWithGeo / totalUsers) * 100) : 0,
+      totalCategories,
+      pendingSuggestions,
+      // Chain metrics
+      chainsProposed: chainStatusMap['PROPOSED'] ?? 0,
+      chainsActive: chainStatusMap['ACTIVE'] ?? 0,
+      chainsCompleted: chainStatusMap['COMPLETED'] ?? 0,
+      chainsCancelled: chainStatusMap['CANCELLED'] ?? 0,
+      chainsTotal: Object.values(chainStatusMap).reduce((a, b) => a + b, 0),
+      chainsWithChat,
+      chainParticipants: chainParticipants[0]?.cnt ?? 0,
+      // Notification metrics
+      notifsUnread: notifStatusMap['UNREAD'] ?? 0,
+      notifsRead: notifStatusMap['READ'] ?? 0,
+      notifsDismissed: notifStatusMap['DISMISSED'] ?? 0,
+      notifsTotal: Object.values(notifStatusMap).reduce((a, b) => a + b, 0),
       topSkills: topSkills.map((s) => ({ key: catMap.get(s.categoryId) ?? s.categoryId, count: s._count.categoryId })),
       topNeeds: topNeeds.map((n) => ({ key: catMap.get(n.categoryId) ?? n.categoryId, count: n._count.categoryId })),
     };

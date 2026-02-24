@@ -362,6 +362,8 @@ export function DashboardPage() {
               <Wrench className="w-4 h-4 text-purple-600" />
               <span className="text-sm font-semibold text-gray-900 dark:text-white">{t('skills.adminTitle')}</span>
             </div>
+
+            {/* Row 1: Fill rate, Match density, Users */}
             <div className="grid grid-cols-3 gap-3 mb-3">
               <div className="text-center">
                 <p className="text-2xl font-bold text-blue-600">{skillsAdminStats.fillRate}%</p>
@@ -378,6 +380,58 @@ export function DashboardPage() {
                 <p className="text-xs text-gray-500 dark:text-gray-400">{t('skills.withSkills')}/{t('skills.withNeeds')}</p>
               </div>
             </div>
+
+            {/* Row 2: Averages, Geo, Pairs */}
+            <div className="grid grid-cols-4 gap-2 mb-3">
+              <div className="text-center p-1.5 rounded-lg bg-gray-50 dark:bg-gray-800/50">
+                <p className="text-sm font-bold text-gray-700 dark:text-gray-300">{skillsAdminStats.avgSkillsPerUser}</p>
+                <p className="text-[10px] text-gray-400">avg skills</p>
+              </div>
+              <div className="text-center p-1.5 rounded-lg bg-gray-50 dark:bg-gray-800/50">
+                <p className="text-sm font-bold text-gray-700 dark:text-gray-300">{skillsAdminStats.avgNeedsPerUser}</p>
+                <p className="text-[10px] text-gray-400">avg needs</p>
+              </div>
+              <div className="text-center p-1.5 rounded-lg bg-gray-50 dark:bg-gray-800/50">
+                <p className="text-sm font-bold text-gray-700 dark:text-gray-300">{skillsAdminStats.geoRate}%</p>
+                <p className="text-[10px] text-gray-400">geo filled</p>
+              </div>
+              <div className="text-center p-1.5 rounded-lg bg-gray-50 dark:bg-gray-800/50">
+                <p className="text-sm font-bold text-purple-600">{skillsAdminStats.uniqueMatchPairs}</p>
+                <p className="text-[10px] text-gray-400">match pairs</p>
+              </div>
+            </div>
+
+            {/* Row 3: Chains */}
+            {(skillsAdminStats.chainsTotal > 0 || skillsAdminStats.notifsTotal > 0) && (
+              <div className="grid grid-cols-4 gap-2 mb-3">
+                <div className="text-center p-1.5 rounded-lg bg-purple-50 dark:bg-purple-900/20">
+                  <p className="text-sm font-bold text-purple-600">{skillsAdminStats.chainsTotal}</p>
+                  <p className="text-[10px] text-gray-400">chains</p>
+                </div>
+                <div className="text-center p-1.5 rounded-lg bg-purple-50 dark:bg-purple-900/20">
+                  <p className="text-sm font-bold text-purple-600">{skillsAdminStats.chainsWithChat}</p>
+                  <p className="text-[10px] text-gray-400">w/ chat</p>
+                </div>
+                <div className="text-center p-1.5 rounded-lg bg-purple-50 dark:bg-purple-900/20">
+                  <p className="text-sm font-bold text-purple-600">{skillsAdminStats.chainParticipants}</p>
+                  <p className="text-[10px] text-gray-400">in chains</p>
+                </div>
+                <div className="text-center p-1.5 rounded-lg bg-amber-50 dark:bg-amber-900/20">
+                  <p className="text-sm font-bold text-amber-600">{skillsAdminStats.notifsTotal}</p>
+                  <p className="text-[10px] text-gray-400">notifs</p>
+                </div>
+              </div>
+            )}
+
+            {/* Row 4: Suggestions + Categories count */}
+            <div className="flex items-center gap-3 mb-3 text-xs text-gray-400">
+              <span>{skillsAdminStats.totalCategories} categories</span>
+              <span>{skillsAdminStats.totalSkillEntries} skills / {skillsAdminStats.totalNeedEntries} needs total</span>
+              {skillsAdminStats.pendingSuggestions > 0 && (
+                <span className="text-amber-500 font-medium">{skillsAdminStats.pendingSuggestions} pending</span>
+              )}
+            </div>
+
             {skillsAdminStats.topSkills.length > 0 && (
               <div className="mb-2">
                 <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 mb-1">{t('skills.topSkills')}</p>
