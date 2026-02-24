@@ -80,6 +80,7 @@ export function SettingsPage() {
   const { data: mySkills } = trpc.skills.mine.useQuery();
   const [selectedSkills, setSelectedSkills] = useState<Set<string>>(new Set());
   const [selectedNeeds, setSelectedNeeds] = useState<Set<string>>(new Set());
+  const [skillNotes, setSkillNotes] = useState<Map<string, string>>(new Map());
   const [skillsInitialized, setSkillsInitialized] = useState(false);
   const saveSkillsMut = trpc.skills.saveSkills.useMutation({ onSuccess: () => utils.skills.mine.invalidate() });
   const saveNeedsMut = trpc.skills.saveNeeds.useMutation({ onSuccess: () => utils.skills.mine.invalidate() });
@@ -89,16 +90,21 @@ export function SettingsPage() {
     if (mySkills && !skillsInitialized) {
       setSelectedSkills(new Set(mySkills.skills.map((s) => s.categoryId)));
       setSelectedNeeds(new Set(mySkills.needs.map((n) => n.categoryId)));
+      const notesMap = new Map<string, string>();
+      for (const s of mySkills.skills) { if (s.note) notesMap.set(s.categoryId, s.note); }
+      for (const n of mySkills.needs) { if (n.note) notesMap.set(n.categoryId, n.note); }
+      setSkillNotes(notesMap);
       setSkillsInitialized(true);
     }
   }, [mySkills, skillsInitialized]);
 
   const skillsDebounce = useRef<ReturnType<typeof setTimeout>>();
-  const autosaveSkills = (nextSkills: Set<string>, nextNeeds: Set<string>) => {
+  const autosaveSkills = (nextSkills: Set<string>, nextNeeds: Set<string>, notesMap?: Map<string, string>) => {
+    const n = notesMap ?? skillNotes;
     if (skillsDebounce.current) clearTimeout(skillsDebounce.current);
     skillsDebounce.current = setTimeout(() => {
-      saveSkillsMut.mutate({ skills: [...nextSkills].map((cId) => ({ categoryId: cId })) });
-      saveNeedsMut.mutate({ needs: [...nextNeeds].map((cId) => ({ categoryId: cId })) });
+      saveSkillsMut.mutate({ skills: [...nextSkills].map((cId) => ({ categoryId: cId, note: n.get(cId) || undefined })) });
+      saveNeedsMut.mutate({ needs: [...nextNeeds].map((cId) => ({ categoryId: cId, note: n.get(cId) || undefined })) });
       if (!mySkills?.skillsCompleted) markCompleted.mutate();
     }, 800);
   };
@@ -113,6 +119,11 @@ export function SettingsPage() {
     if (next.has(id)) next.delete(id); else next.add(id);
     setSelectedNeeds(next);
     autosaveSkills(selectedSkills, next);
+  };
+  const handleSkillNoteChange = (categoryId: string, note: string) => {
+    const next = new Map(skillNotes).set(categoryId, note);
+    setSkillNotes(next);
+    autosaveSkills(selectedSkills, selectedNeeds, next);
   };
 
   const handleLanguageChange = (lang: string) => { i18n.changeLanguage(lang); localStorage.setItem('language', lang); updateLanguage.mutate({ language: lang }); };
@@ -254,6 +265,8 @@ export function SettingsPage() {
               selectedNeeds={selectedNeeds}
               onToggleSkill={handleToggleSkill}
               onToggleNeed={handleToggleNeed}
+              notes={skillNotes}
+              onNoteChange={handleSkillNoteChange}
             />
           )}
         </CardContent>
