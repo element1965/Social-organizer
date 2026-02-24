@@ -205,19 +205,22 @@ export const userRouter = router({
 
   delete: protectedProcedure.mutation(async ({ ctx }) => {
     await ctx.db.$transaction(async (tx) => {
-      // 1. Clear profile (gray profile per SPEC)
-      await tx.user.update({
-        where: { id: ctx.userId },
-        data: {
-          deletedAt: new Date(),
-          name: 'Deleted user',
-          bio: null,
-          phone: null,
-          photoUrl: null,
+      // Check if user has any first-handshake connections
+      const connectionCount = await tx.connection.count({
+        where: { OR: [{ userAId: ctx.userId }, { userBId: ctx.userId }] },
+      });
+
+      // Clean up pending connections in both directions
+      await tx.pendingConnection.deleteMany({
+        where: {
+          OR: [
+            { fromUserId: ctx.userId },
+            { toUserId: ctx.userId },
+          ],
         },
       });
 
-      // 2. Cancel obligations in active collections
+      // Cancel obligations in active collections
       await tx.obligation.deleteMany({
         where: {
           userId: ctx.userId,
@@ -225,7 +228,7 @@ export const userRouter = router({
         },
       });
 
-      // 3. Cancel own active collections
+      // Cancel own active collections
       await tx.collection.updateMany({
         where: {
           creatorId: ctx.userId,
@@ -233,6 +236,23 @@ export const userRouter = router({
         },
         data: { status: 'CANCELLED' },
       });
+
+      if (connectionCount === 0) {
+        // No first handshake — full delete (cascade removes all related records)
+        await tx.user.delete({ where: { id: ctx.userId } });
+      } else {
+        // Has connections — soft delete (gray profile)
+        await tx.user.update({
+          where: { id: ctx.userId },
+          data: {
+            deletedAt: new Date(),
+            name: 'Deleted user',
+            bio: null,
+            phone: null,
+            photoUrl: null,
+          },
+        });
+      }
     });
 
     return { success: true };

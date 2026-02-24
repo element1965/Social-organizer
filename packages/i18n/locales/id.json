@@ -1,4 +1,4 @@
-﻿{
+{
   "common": {
     "appName": "Penyelenggara Sosial",
     "loading": "Memuat...",
@@ -400,6 +400,8 @@
     "webLinkDesc": "Tautan situs web — jika orang tersebut belum familiar dengan proyek, ia memiliki semua informasi pengantar",
     "botLinkDesc": "Langsung ke Telegram — jika Anda sudah menjelaskan semuanya dan mereka bisa langsung ke aplikasi",
     "slugDesc": "Ini adalah ID tautan pribadi Anda untuk URL undangan. Ini BUKAN undangan itu sendiri — jangan kirimkan ke orang lain. Gunakan tautan di atas untuk mengundang seseorang.",
+    "shareText": "Ini adalah undangan pribadi dari {{name}} ke lingkaran teman dekatnya",
+    "share": "Bagikan",
     "expand": "show URL",
     "showQr": "tampilkan QR"
   },

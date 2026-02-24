@@ -1,4 +1,4 @@
-﻿{
+{
   "common": {
     "appName": "Organizator Social",
     "loading": "Se incarca...",
@@ -400,6 +400,8 @@
     "webLinkDesc": "Link către site — dacă persoana nu este familiarizată cu proiectul încă, conține toate informațiile introductive",
     "botLinkDesc": "Direct la Telegram — dacă ai explicat deja totul și pot merge direct la aplicație",
     "slugDesc": "Acesta este ID-ul tău personal de link pentru URL-urile de invitație. NU este o invitație în sine — nu-l trimite oamenilor. Folosește linkurile de mai sus pentru a invita pe cineva.",
+    "shareText": "Aceasta este o invitație personală de la {{name}} în cercul prietenilor apropiați",
+    "share": "Distribuie",
     "expand": "show URL",
     "showQr": "arată QR"
   },

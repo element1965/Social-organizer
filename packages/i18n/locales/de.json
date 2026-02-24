@@ -1,4 +1,4 @@
-﻿{
+{
   "common": {
     "appName": "Sozialer Organisierer",
     "loading": "Laden...",
@@ -378,6 +378,8 @@
     "webLinkDesc": "Website-Link — wenn die Person das Projekt noch nicht kennt, enthält er alle einleitenden Informationen",
     "botLinkDesc": "Direkt zu Telegram — wenn du alles bereits erklärt hast und sie direkt zur App gehen können",
     "slugDesc": "Dies ist Ihre persönliche Link-ID für Einladungs-URLs. Es ist KEINE Einladung an sich — senden Sie es nicht an Leute. Verwenden Sie die obigen Links, um jemanden einzuladen.",
+    "shareText": "Dies ist eine persönliche Einladung von {{name}} in den Kreis seiner engen Freunde",
+    "share": "Teilen",
     "expand": "URL anzeigen",
     "showQr": "QR anzeigen"
   },

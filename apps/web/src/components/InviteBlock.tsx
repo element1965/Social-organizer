@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { QRCodeSVG } from 'qrcode.react';
-import { Check, Pencil, RefreshCw, UserPlus } from 'lucide-react';
+import { Check, Pencil, RefreshCw, UserPlus, Share2 } from 'lucide-react';
 import { trpc } from '../lib/trpc';
 import { useAuth } from '../hooks/useAuth';
 import { buildWebInviteUrl, buildBotInviteUrl } from '../lib/inviteUrl';
+import { shareInviteLink } from '../lib/shareInvite';
 import { Card, CardContent } from './ui/card';
 
 interface InviteBlockProps {
@@ -20,6 +21,8 @@ export function InviteBlock({ id }: InviteBlockProps) {
   const [flipped, setFlipped] = useState(false);
   const [copiedWeb, setCopiedWeb] = useState(false);
   const [copiedBot, setCopiedBot] = useState(false);
+  const [sharing, setSharing] = useState(false);
+  const [shared, setShared] = useState(false);
   const [editingSlug, setEditingSlug] = useState(false);
   const [slugValue, setSlugValue] = useState('');
   const [slugError, setSlugError] = useState('');
@@ -44,6 +47,26 @@ export function InviteBlock({ id }: InviteBlockProps) {
     navigator.clipboard.writeText(botInviteUrl);
     setCopiedBot(true);
     setTimeout(() => setCopiedBot(false), 2500);
+  };
+
+  const handleShare = async () => {
+    if (sharing) return;
+    setSharing(true);
+    try {
+      const result = await shareInviteLink({
+        url: webInviteUrl,
+        userName: me?.name || '',
+        t,
+      });
+      if (result === 'copied') {
+        setCopiedWeb(true);
+        setTimeout(() => setCopiedWeb(false), 2500);
+      } else {
+        setShared(true);
+        setTimeout(() => setShared(false), 2500);
+      }
+    } catch { /* ignore */ }
+    setSharing(false);
   };
 
   const flipButton = (
@@ -91,8 +114,18 @@ export function InviteBlock({ id }: InviteBlockProps) {
                     </p>
                   </button>
 
+                  {/* Share button */}
+                  <button
+                    onClick={handleShare}
+                    disabled={sharing}
+                    className="w-full flex items-center justify-center gap-2 py-3 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white rounded-xl transition-colors"
+                  >
+                    <Share2 className="w-5 h-5" />
+                    <span className="font-semibold">{t('invite.share')}</span>
+                  </button>
+
                   {/* Copied banner */}
-                  {copiedWeb && (
+                  {(copiedWeb || shared) && (
                     <div className="w-full flex items-center justify-center gap-2 py-3 bg-green-50 dark:bg-green-950/40 rounded-xl border border-green-200 dark:border-green-800 animate-fade-in">
                       <Check className="w-6 h-6 text-green-500" />
                       <span className="text-base font-semibold text-green-600 dark:text-green-400">

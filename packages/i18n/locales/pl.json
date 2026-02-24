@@ -1,4 +1,4 @@
-﻿{
+{
   "common": {
     "appName": "Organizator Społeczny",
     "loading": "Ładowanie...",
@@ -400,6 +400,8 @@
     "webLinkDesc": "Link do strony internetowej — jeśli osoba nie zna jeszcze projektu, zawiera wszystkie informacje wprowadzające",
     "botLinkDesc": "Prosto do Telegram — jeśli już wszystko wyjaśniłeś i mogą przejść bezpośrednio do aplikacji",
     "slugDesc": "To jest twój osobisty identyfikator linku do URL-i zaproszeń. To NIE jest samo zaproszenie — nie wysyłaj go ludziom. Użyj powyższych linków, aby kogoś zaprosić.",
+    "shareText": "To osobiste zaproszenie od {{name}} do kręgu bliskich przyjaciół",
+    "share": "Udostępnij",
     "expand": "pokaż URL",
     "showQr": "pokaż QR"
   },

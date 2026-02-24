@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { router, protectedProcedure } from '../trpc.js';
 import { TRPCError } from '@trpc/server';
-import { MIN_OBLIGATION_AMOUNT, CURRENCY_CODES } from '@so/shared';
+import { MIN_OBLIGATION_AMOUNT, CURRENCY_CODES, NOTIFICATION_TTL_HOURS } from '@so/shared';
 import { convertToUSD } from '../services/currency.service.js';
 import { sendCollectionBlockedTg } from '../services/notification.service.js';
 
@@ -61,6 +61,42 @@ export const obligationRouter = router({
             where: { id: input.collectionId },
             data: { status: 'BLOCKED', blockedAt: new Date() },
           });
+
+          // Mark existing NEW_COLLECTION/RE_NOTIFY notifications as EXPIRED
+          await ctx.db.notification.updateMany({
+            where: {
+              collectionId: input.collectionId,
+              type: { in: ['NEW_COLLECTION', 'RE_NOTIFY'] },
+              status: { in: ['UNREAD', 'READ'] },
+            },
+            data: { status: 'EXPIRED' },
+          });
+
+          // Create COLLECTION_BLOCKED notifications for all previously notified users
+          const notifiedUsers = await ctx.db.notification.findMany({
+            where: { collectionId: input.collectionId },
+            select: { userId: true },
+            distinct: ['userId'],
+          });
+          const expiresAt = new Date(Date.now() + NOTIFICATION_TTL_HOURS * 60 * 60 * 1000);
+          for (const { userId: notifUserId } of notifiedUsers) {
+            if (notifUserId === collection.creatorId) continue;
+            try {
+              await ctx.db.notification.upsert({
+                where: {
+                  userId_collectionId_type_wave: {
+                    userId: notifUserId, collectionId: input.collectionId, type: 'COLLECTION_BLOCKED', wave: 0,
+                  },
+                },
+                create: {
+                  userId: notifUserId, collectionId: input.collectionId,
+                  type: 'COLLECTION_BLOCKED', handshakePath: [], expiresAt, wave: 0,
+                },
+                update: { status: 'UNREAD', expiresAt },
+              });
+            } catch { /* skip */ }
+          }
+
           sendCollectionBlockedTg(ctx.db, input.collectionId, collection.creatorId).catch((err) =>
             console.error('[TG Blocked] Failed to dispatch:', err),
           );
@@ -166,10 +202,58 @@ export const obligationRouter = router({
             where: { id: collection.id },
             data: { status: 'BLOCKED', blockedAt: new Date() },
           });
+
+          // Mark existing notifications as EXPIRED and create COLLECTION_BLOCKED
+          await ctx.db.notification.updateMany({
+            where: {
+              collectionId: collection.id,
+              type: { in: ['NEW_COLLECTION', 'RE_NOTIFY'] },
+              status: { in: ['UNREAD', 'READ'] },
+            },
+            data: { status: 'EXPIRED' },
+          });
+
+          const notifiedUsers = await ctx.db.notification.findMany({
+            where: { collectionId: collection.id },
+            select: { userId: true },
+            distinct: ['userId'],
+          });
+          const expiresAt = new Date(Date.now() + NOTIFICATION_TTL_HOURS * 60 * 60 * 1000);
+          for (const { userId: notifUserId } of notifiedUsers) {
+            if (notifUserId === collection.creatorId) continue;
+            try {
+              await ctx.db.notification.upsert({
+                where: {
+                  userId_collectionId_type_wave: {
+                    userId: notifUserId, collectionId: collection.id, type: 'COLLECTION_BLOCKED', wave: 0,
+                  },
+                },
+                create: {
+                  userId: notifUserId, collectionId: collection.id,
+                  type: 'COLLECTION_BLOCKED', handshakePath: [], expiresAt, wave: 0,
+                },
+                update: { status: 'UNREAD', expiresAt },
+              });
+            } catch { /* skip */ }
+          }
+
+          sendCollectionBlockedTg(ctx.db, collection.id, collection.creatorId).catch((err) =>
+            console.error('[TG Blocked] Failed to dispatch:', err),
+          );
         } else if (sum < collection.amount && collection.status === 'BLOCKED') {
           await ctx.db.collection.update({
             where: { id: collection.id },
             data: { status: 'ACTIVE', blockedAt: null },
+          });
+
+          // Collection unblocked: mark COLLECTION_BLOCKED notifications as EXPIRED
+          await ctx.db.notification.updateMany({
+            where: {
+              collectionId: collection.id,
+              type: 'COLLECTION_BLOCKED',
+              status: { in: ['UNREAD', 'READ'] },
+            },
+            data: { status: 'EXPIRED' },
           });
         }
       }

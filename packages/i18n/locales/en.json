@@ -453,6 +453,8 @@
     "botLinkHint": "If your friend already knows about the project, send this Telegram link instead — it goes straight to the app",
     "slugExplain": "Your personal ID appears in all your invite links. You can change it to something memorable (e.g. your nickname). This ID itself is not a link — use the links above to invite people.",
     "slugDesc": "This is your personal link ID for invite URLs. It is NOT an invitation itself — don't send it to people. Use the links above to invite someone.",
+    "shareText": "This is a personal invitation from {{name}} to their close circle of friends",
+    "share": "Share",
     "expand": "show URL",
     "showQr": "show QR"
   },
