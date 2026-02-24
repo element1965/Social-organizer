@@ -824,5 +824,31 @@
     "withNeeds": "with needs",
     "tabSkills": "I can help",
     "tabNeeds": "I need help"
+  },
+  "geo": {
+    "title": "Location",
+    "country": "Country",
+    "city": "City",
+    "cityPlaceholder": "Enter your city",
+    "detect": "Detect location",
+    "detecting": "Detecting...",
+    "selectCountry": "Select country",
+    "noLocation": "Location not set",
+    "saved": "Location saved"
+  },
+  "matches": {
+    "title": "Skill Matches",
+    "whoCanHelpMe": "Who can help me",
+    "whoNeedsMyHelp": "Who needs my help",
+    "noMatches": "No matches yet. Add more skills or connect with more people.",
+    "noMatchesNeeds": "No one in your network needs your skills yet.",
+    "sameCity": "Same city",
+    "sameCountry": "Same country",
+    "remote": "Different location",
+    "online": "Available online",
+    "viewProfile": "View profile",
+    "newMatch": "{{name}} can help with \"{{skill}}\"",
+    "matchNotifications": "Skill match alerts",
+    "noNotifications": "No new match alerts"
   }
 }
