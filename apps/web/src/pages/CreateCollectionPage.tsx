@@ -17,7 +17,7 @@ import { AlertTriangle, Users, ArrowRight, PlusCircle, Wallet, ShieldAlert, User
 export function CreateCollectionPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const [entryWarningDismissed, setEntryWarningDismissed] = useState(false);
+  const [showEntryWarning, setShowEntryWarning] = useState(false);
   const [showInvitePopup, setShowInvitePopup] = useState(false);
 
   const { data: me } = trpc.user.me.useQuery();
@@ -69,6 +69,11 @@ export function CreateCollectionPage() {
 
   const handleSubmit = () => {
     if (!validate()) return;
+    setShowEntryWarning(true);
+  };
+
+  const handleEntryWarningProceed = () => {
+    setShowEntryWarning(false);
     setConfirmChecked(false);
     setShowConfirmModal(true);
   };
@@ -125,35 +130,6 @@ export function CreateCollectionPage() {
         </div>
 
         <InvitePopup open={showInvitePopup} onClose={() => setShowInvitePopup(false)} />
-      </div>
-    );
-  }
-
-  // Entry warning popup — shown before the form
-  if (!entryWarningDismissed) {
-    return (
-      <div className="min-h-screen flex items-center justify-center p-4 bg-gray-50 dark:bg-gray-950">
-        <div className="bg-white dark:bg-gray-900 rounded-xl p-6 max-w-sm w-full space-y-4 shadow-xl">
-          <div className="flex justify-center">
-            <div className="w-16 h-16 rounded-full bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center">
-              <ShieldAlert className="w-8 h-8 text-amber-600" />
-            </div>
-          </div>
-          <h2 className="text-xl font-bold text-gray-900 dark:text-white text-center">
-            {t('create.entryWarningTitle')}
-          </h2>
-          <p className="text-sm text-gray-600 dark:text-gray-300 text-center leading-relaxed">
-            {t('create.entryWarningText')}
-          </p>
-          <div className="space-y-2 pt-2">
-            <Button className="w-full" size="lg" onClick={() => setEntryWarningDismissed(true)}>
-              {t('create.entryWarningProceed')}
-            </Button>
-            <Button variant="outline" className="w-full" size="lg" onClick={() => navigate('/dashboard')}>
-              {t('create.entryWarningBack')}
-            </Button>
-          </div>
-        </div>
       </div>
     );
   }
@@ -388,6 +364,33 @@ export function CreateCollectionPage() {
           )}
         </CardContent>
       </Card>
+
+      {/* Entry warning modal — shown on submit before confirmation */}
+      {showEntryWarning && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4">
+          <div className="bg-white dark:bg-gray-900 rounded-xl p-6 max-w-sm w-full space-y-4 shadow-xl">
+            <div className="flex justify-center">
+              <div className="w-16 h-16 rounded-full bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center">
+                <ShieldAlert className="w-8 h-8 text-amber-600" />
+              </div>
+            </div>
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white text-center">
+              {t('create.entryWarningTitle')}
+            </h2>
+            <p className="text-sm text-gray-600 dark:text-gray-300 text-center leading-relaxed">
+              {t('create.entryWarningText')}
+            </p>
+            <div className="space-y-2 pt-2">
+              <Button className="w-full" size="lg" onClick={handleEntryWarningProceed}>
+                {t('create.entryWarningProceed')}
+              </Button>
+              <Button variant="outline" className="w-full" size="lg" onClick={() => setShowEntryWarning(false)}>
+                {t('create.entryWarningBack')}
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Confirmation modal */}
       {showConfirmModal && (

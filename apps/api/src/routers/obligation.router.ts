@@ -72,15 +72,22 @@ export const obligationRouter = router({
             data: { status: 'EXPIRED' },
           });
 
-          // Create COLLECTION_BLOCKED notifications for all previously notified users
+          // Create COLLECTION_BLOCKED notifications only for notified users who did NOT pledge
           const notifiedUsers = await ctx.db.notification.findMany({
             where: { collectionId: input.collectionId },
             select: { userId: true },
             distinct: ['userId'],
           });
+          const pledgedUserIds = new Set(
+            (await ctx.db.obligation.findMany({
+              where: { collectionId: input.collectionId },
+              select: { userId: true },
+            })).map((o) => o.userId),
+          );
           const expiresAt = new Date(Date.now() + NOTIFICATION_TTL_HOURS * 60 * 60 * 1000);
           for (const { userId: notifUserId } of notifiedUsers) {
             if (notifUserId === collection.creatorId) continue;
+            if (pledgedUserIds.has(notifUserId)) continue; // already participating
             try {
               await ctx.db.notification.upsert({
                 where: {
@@ -213,14 +220,22 @@ export const obligationRouter = router({
             data: { status: 'EXPIRED' },
           });
 
+          // Only notify users who did NOT pledge
           const notifiedUsers = await ctx.db.notification.findMany({
             where: { collectionId: collection.id },
             select: { userId: true },
             distinct: ['userId'],
           });
+          const pledgedUserIds = new Set(
+            (await ctx.db.obligation.findMany({
+              where: { collectionId: collection.id },
+              select: { userId: true },
+            })).map((o) => o.userId),
+          );
           const expiresAt = new Date(Date.now() + NOTIFICATION_TTL_HOURS * 60 * 60 * 1000);
           for (const { userId: notifUserId } of notifiedUsers) {
             if (notifUserId === collection.creatorId) continue;
+            if (pledgedUserIds.has(notifUserId)) continue;
             try {
               await ctx.db.notification.upsert({
                 where: {
