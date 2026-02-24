@@ -14,6 +14,7 @@ export function SkillsPopup() {
 
   const [selectedSkills, setSelectedSkills] = useState<Set<string>>(new Set());
   const [selectedNeeds, setSelectedNeeds] = useState<Set<string>>(new Set());
+  const [notes, setNotes] = useState<Map<string, string>>(new Map());
   const [dismissed, setDismissed] = useState(false);
 
   const saveSkills = trpc.skills.saveSkills.useMutation();
@@ -37,10 +38,14 @@ export function SkillsPopup() {
     setSelectedNeeds(next);
   };
 
+  const handleNoteChange = (categoryId: string, note: string) => {
+    setNotes((prev) => new Map(prev).set(categoryId, note));
+  };
+
   const handleSave = async () => {
     await Promise.all([
-      saveSkills.mutateAsync({ skills: [...selectedSkills].map((id) => ({ categoryId: id })) }),
-      saveNeeds.mutateAsync({ needs: [...selectedNeeds].map((id) => ({ categoryId: id })) }),
+      saveSkills.mutateAsync({ skills: [...selectedSkills].map((id) => ({ categoryId: id, note: notes.get(id) || undefined })) }),
+      saveNeeds.mutateAsync({ needs: [...selectedNeeds].map((id) => ({ categoryId: id, note: notes.get(id) || undefined })) }),
     ]);
     await markCompleted.mutateAsync();
     utils.skills.mine.invalidate();
@@ -76,6 +81,8 @@ export function SkillsPopup() {
               selectedNeeds={selectedNeeds}
               onToggleSkill={handleToggleSkill}
               onToggleNeed={handleToggleNeed}
+              notes={notes}
+              onNoteChange={handleNoteChange}
             />
           )}
         </div>

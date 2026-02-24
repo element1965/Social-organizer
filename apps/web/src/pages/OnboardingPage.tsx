@@ -63,6 +63,7 @@ export function OnboardingPage() {
   const markSkillsCompleted = trpc.skills.markCompleted.useMutation();
   const [selectedSkills, setSelectedSkills] = useState<Set<string>>(new Set());
   const [selectedNeeds, setSelectedNeeds] = useState<Set<string>>(new Set());
+  const [skillNotes, setSkillNotes] = useState<Map<string, string>>(new Map());
 
   const contactErrors = Object.fromEntries(
     Object.entries(contacts).map(([type, value]) => [type, validateContact(type, value)])
@@ -91,6 +92,10 @@ export function OnboardingPage() {
     setSelectedNeeds(next);
   };
 
+  const handleSkillNoteChange = (categoryId: string, note: string) => {
+    setSkillNotes((prev) => new Map(prev).set(categoryId, note));
+  };
+
   const skillsValid = selectedSkills.size >= MIN_SKILLS && selectedNeeds.size >= MIN_NEEDS;
 
   const handleContactsNext = async () => {
@@ -117,8 +122,8 @@ export function OnboardingPage() {
   const handleSkillsFinish = async () => {
     if (skillsValid) {
       await Promise.all([
-        saveSkills.mutateAsync({ skills: [...selectedSkills].map((id) => ({ categoryId: id })) }),
-        saveNeeds.mutateAsync({ needs: [...selectedNeeds].map((id) => ({ categoryId: id })) }),
+        saveSkills.mutateAsync({ skills: [...selectedSkills].map((id) => ({ categoryId: id, note: skillNotes.get(id) || undefined })) }),
+        saveNeeds.mutateAsync({ needs: [...selectedNeeds].map((id) => ({ categoryId: id, note: skillNotes.get(id) || undefined })) }),
       ]);
     }
     await markSkillsCompleted.mutateAsync();
@@ -223,6 +228,8 @@ export function OnboardingPage() {
                 selectedNeeds={selectedNeeds}
                 onToggleSkill={handleToggleSkill}
                 onToggleNeed={handleToggleNeed}
+                notes={skillNotes}
+                onNoteChange={handleSkillNoteChange}
               />
             )}
           </div>

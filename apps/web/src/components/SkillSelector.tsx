@@ -18,6 +18,8 @@ interface SkillSelectorProps {
   selectedNeeds: Set<string>;
   onToggleSkill: (categoryId: string) => void;
   onToggleNeed: (categoryId: string) => void;
+  notes?: Map<string, string>;
+  onNoteChange?: (categoryId: string, note: string) => void;
 }
 
 export function SkillSelector({
@@ -26,6 +28,8 @@ export function SkillSelector({
   selectedNeeds,
   onToggleSkill,
   onToggleNeed,
+  notes,
+  onNoteChange,
 }: SkillSelectorProps) {
   const { t } = useTranslation();
   const [search, setSearch] = useState('');
@@ -123,47 +127,60 @@ export function SkillSelector({
                 {items.map((cat) => {
                   const isSkill = selectedSkills.has(cat.id);
                   const isNeed = selectedNeeds.has(cat.id);
+                  const isOther = cat.key.startsWith('other');
+                  const showNote = isOther && (isSkill || isNeed);
                   return (
-                    <div
-                      key={cat.id}
-                      className="flex items-center justify-between px-3 py-2 hover:bg-gray-50 dark:hover:bg-gray-800/30"
-                    >
-                      <div className="flex items-center gap-2 min-w-0 flex-1">
-                        <span className="text-sm text-gray-800 dark:text-gray-200 truncate">
-                          {t(`skills.${cat.key}`)}
-                        </span>
-                        {cat.isOnline && (
-                          <Globe className="w-3 h-3 text-blue-400 shrink-0" title={t('skills.online')} />
-                        )}
-                      </div>
-                      <div className="flex items-center gap-1.5 shrink-0 ml-2">
-                        <button
-                          type="button"
-                          onClick={() => onToggleSkill(cat.id)}
-                          className={cn(
-                            'px-2.5 py-1 rounded-md text-xs font-medium transition-all border',
-                            isSkill
-                              ? 'bg-emerald-500 text-white border-emerald-500 shadow-sm'
-                              : 'bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400 border-gray-200 dark:border-gray-700 hover:border-emerald-300 dark:hover:border-emerald-600'
+                    <div key={cat.id}>
+                      <div className="flex items-center justify-between px-3 py-2 hover:bg-gray-50 dark:hover:bg-gray-800/30">
+                        <div className="flex items-center gap-2 min-w-0 flex-1">
+                          <span className="text-sm text-gray-800 dark:text-gray-200 truncate">
+                            {t(`skills.${cat.key}`)}
+                          </span>
+                          {cat.isOnline && (
+                            <Globe className="w-3 h-3 text-blue-400 shrink-0" title={t('skills.online')} />
                           )}
-                          title={t('skills.canHelp')}
-                        >
-                          {t('skills.iCan')}
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => onToggleNeed(cat.id)}
-                          className={cn(
-                            'px-2.5 py-1 rounded-md text-xs font-medium transition-all border',
-                            isNeed
-                              ? 'bg-orange-500 text-white border-orange-500 shadow-sm'
-                              : 'bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400 border-gray-200 dark:border-gray-700 hover:border-orange-300 dark:hover:border-orange-600'
-                          )}
-                          title={t('skills.needHelp')}
-                        >
-                          {t('skills.iNeed')}
-                        </button>
+                        </div>
+                        <div className="flex items-center gap-1.5 shrink-0 ml-2">
+                          <button
+                            type="button"
+                            onClick={() => onToggleSkill(cat.id)}
+                            className={cn(
+                              'px-2.5 py-1 rounded-md text-xs font-medium transition-all border',
+                              isSkill
+                                ? 'bg-emerald-500 text-white border-emerald-500 shadow-sm'
+                                : 'bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400 border-gray-200 dark:border-gray-700 hover:border-emerald-300 dark:hover:border-emerald-600'
+                            )}
+                            title={t('skills.canHelp')}
+                          >
+                            {t('skills.iCan')}
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => onToggleNeed(cat.id)}
+                            className={cn(
+                              'px-2.5 py-1 rounded-md text-xs font-medium transition-all border',
+                              isNeed
+                                ? 'bg-orange-500 text-white border-orange-500 shadow-sm'
+                                : 'bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400 border-gray-200 dark:border-gray-700 hover:border-orange-300 dark:hover:border-orange-600'
+                            )}
+                            title={t('skills.needHelp')}
+                          >
+                            {t('skills.iNeed')}
+                          </button>
+                        </div>
                       </div>
+                      {showNote && onNoteChange && (
+                        <div className="px-3 pb-2">
+                          <input
+                            type="text"
+                            value={notes?.get(cat.id) ?? ''}
+                            onChange={(e) => onNoteChange(cat.id, e.target.value)}
+                            placeholder={t('skills.otherPlaceholder')}
+                            maxLength={200}
+                            className="w-full px-3 py-1.5 text-sm rounded-md border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                          />
+                        </div>
+                      )}
                     </div>
                   );
                 })}

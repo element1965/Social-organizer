@@ -238,6 +238,23 @@ const CATEGORIES = [
   { key: 'soilAnalysis', group: 'agriculture', sortOrder: 8, isOnline: true },
   { key: 'pestControl', group: 'agriculture', sortOrder: 9, isOnline: false },
   { key: 'mushrooming', group: 'agriculture', sortOrder: 10, isOnline: false },
+
+  // ═══════════════ "Other" per group (15) ═══════════════
+  { key: 'otherHome', group: 'home', sortOrder: 99, isOnline: false },
+  { key: 'otherConstruction', group: 'construction', sortOrder: 99, isOnline: false },
+  { key: 'otherProfessional', group: 'professional', sortOrder: 99, isOnline: true },
+  { key: 'otherLegal', group: 'legal', sortOrder: 99, isOnline: true },
+  { key: 'otherCreative', group: 'creative', sortOrder: 99, isOnline: true },
+  { key: 'otherHealth', group: 'health', sortOrder: 99, isOnline: false },
+  { key: 'otherBeauty', group: 'beauty', sortOrder: 99, isOnline: false },
+  { key: 'otherTransport', group: 'transport', sortOrder: 99, isOnline: false },
+  { key: 'otherAuto', group: 'auto', sortOrder: 99, isOnline: false },
+  { key: 'otherDigital', group: 'digital', sortOrder: 99, isOnline: true },
+  { key: 'otherEducation', group: 'education', sortOrder: 99, isOnline: true },
+  { key: 'otherEvents', group: 'events', sortOrder: 99, isOnline: false },
+  { key: 'otherPets', group: 'pets', sortOrder: 99, isOnline: false },
+  { key: 'otherOutdoor', group: 'outdoor', sortOrder: 99, isOnline: false },
+  { key: 'otherAgriculture', group: 'agriculture', sortOrder: 99, isOnline: false },
 ];
 
 async function main() {
