@@ -184,25 +184,36 @@ export async function findAndStoreChains(
 
 // TG notification messages
 const CHAIN_MSG: Record<string, {
-  title: string;
   pair: (otherName: string, youGive: string, youGet: string) => string;
-  chain: (description: string) => string;
+  chain: (youGive: string, receiverName: string, youGet: string, giverName: string, chainDesc: string) => string;
+  youHelpBtn: string;
+  helpsYouBtn: string;
   openBtn: string;
 }> = {
   ru: {
-    title: '🔄 Взаимозачёт найден!',
     pair: (name, give, get) =>
       `🔄 <b>Взаимозачёт найден!</b>\n\nТы и <b>${name}</b> можете помочь друг другу:\n• Ты даёшь: <b>${give}</b>\n• Ты получаешь: <b>${get}</b>\n\nНапишите друг другу и договоритесь о деталях!`,
-    chain: (desc) =>
-      `🔄 <b>Цепочка взаимозачёта найдена!</b>\n\n${desc}\n\nКаждый участник помогает следующему. Напишите друг другу!`,
+    chain: (youGive, receiver, youGet, giver, desc) =>
+      `🔄 <b>Цепочка взаимозачёта найдена!</b>\n\n` +
+      `👉 Ты помогаешь <b>${receiver}</b> с: <b>${youGive}</b>\n` +
+      `👈 <b>${giver}</b> помогает тебе с: <b>${youGet}</b>\n\n` +
+      `Вся цепочка:\n${desc}\n\n` +
+      `Напиши этим двум людям — договоритесь о деталях!`,
+    youHelpBtn: 'Ты помогаешь',
+    helpsYouBtn: 'Помогает тебе',
     openBtn: 'Открыть совпадения',
   },
   en: {
-    title: '🔄 Clearing match found!',
     pair: (name, give, get) =>
       `🔄 <b>Clearing match found!</b>\n\nYou and <b>${name}</b> can help each other:\n• You give: <b>${give}</b>\n• You get: <b>${get}</b>\n\nReach out and discuss the details!`,
-    chain: (desc) =>
-      `🔄 <b>Clearing chain found!</b>\n\n${desc}\n\nEach participant helps the next. Reach out to each other!`,
+    chain: (youGive, receiver, youGet, giver, desc) =>
+      `🔄 <b>Clearing chain found!</b>\n\n` +
+      `👉 You help <b>${receiver}</b> with: <b>${youGive}</b>\n` +
+      `👈 <b>${giver}</b> helps you with: <b>${youGet}</b>\n\n` +
+      `Full chain:\n${desc}\n\n` +
+      `Write to these two people to discuss details!`,
+    youHelpBtn: 'You help',
+    helpsYouBtn: 'Helps you',
     openBtn: 'Open matches',
   },
 };
@@ -250,8 +261,6 @@ async function notifyChainParticipants(
   const catMap = new Map(cats.map((c) => [c.id, c.key]));
 
   for (const cycle of cycles) {
-    const participants = cycle.map((e) => e.from);
-
     if (cycle.length === 2) {
       // Direct pair: A↔B
       const a = userMap.get(cycle[0]!.from);
@@ -291,39 +300,55 @@ async function notifyChainParticipants(
         sendTelegramMessage(b.tgId, text, markup).catch(() => {});
       }
     } else {
-      // Chain of 3+: notify each participant
-      for (let i = 0; i < participants.length; i++) {
-        const participantId = participants[i]!;
+      // Chain of 3+: notify each participant with exactly 2 contacts
+      for (let i = 0; i < cycle.length; i++) {
+        const participantId = cycle[i]!.from; // this person is the giver in edge i
         const user = userMap.get(participantId);
         if (!user?.tgId) continue;
 
         const msg = (CHAIN_MSG[user.lang] || CHAIN_MSG.en!);
 
-        // Build chain description from this participant's perspective
+        // Who does this participant help? (receiver of edge i)
+        const receiverId = cycle[i]!.to;
+        const receiver = userMap.get(receiverId);
+        const youGiveCat = catMap.get(cycle[i]!.categoryId) || '?';
+
+        // Who helps this participant? Find edge where receiver = participantId
+        const incomingEdge = cycle.find((e) => e.to === participantId)!;
+        const giverId = incomingEdge.from;
+        const giverUser = userMap.get(giverId);
+        const youGetCat = catMap.get(incomingEdge.categoryId) || '?';
+
+        // Build full chain description
         const lines: string[] = [];
         for (let j = 0; j < cycle.length; j++) {
           const edge = cycle[j]!;
-          const giver = userMap.get(edge.from);
-          const receiver = userMap.get(edge.to);
+          const g = userMap.get(edge.from);
+          const r = userMap.get(edge.to);
           const cat = catMap.get(edge.categoryId) || '?';
-          const giverName = edge.from === participantId ? (user.lang === 'ru' ? 'Ты' : 'You') : (giver?.name || '?');
-          const receiverName = edge.to === participantId ? (user.lang === 'ru' ? 'тебе' : 'you') : (receiver?.name || '?');
-          lines.push(`${j + 1}. <b>${giverName}</b> → ${receiverName}: <b>${cat}</b>`);
+          const gName = edge.from === participantId ? (user.lang === 'ru' ? 'Ты' : 'You') : (g?.name || '?');
+          const rName = edge.to === participantId ? (user.lang === 'ru' ? 'тебе' : 'you') : (r?.name || '?');
+          lines.push(`${j + 1}. <b>${gName}</b> → ${rName}: <b>${cat}</b>`);
         }
 
-        const text = msg.chain(lines.join('\n'));
+        const text = msg.chain(
+          youGiveCat,
+          receiver?.name || '?',
+          youGetCat,
+          giverUser?.name || '?',
+          lines.join('\n'),
+        );
 
-        // Buttons: links to all other participants + open matches
+        // Exactly 2 buttons: who you help + who helps you
         const buttons: TgReplyMarkup['inline_keyboard'] = [];
-        const otherRow: TgReplyMarkup['inline_keyboard'][0] = [];
-        for (const pid of participants) {
-          if (pid === participantId) continue;
-          const other = userMap.get(pid);
-          if (other?.tgId) {
-            otherRow.push({ text: `💬 ${other.name}`, url: `tg://user?id=${other.tgId}` });
-          }
+        const contactRow: TgReplyMarkup['inline_keyboard'][0] = [];
+        if (receiver?.tgId) {
+          contactRow.push({ text: `👉 ${msg.youHelpBtn}: ${receiver.name}`, url: `tg://user?id=${receiver.tgId}` });
         }
-        if (otherRow.length > 0) buttons.push(otherRow);
+        if (giverUser?.tgId) {
+          contactRow.push({ text: `👈 ${msg.helpsYouBtn}: ${giverUser.name}`, url: `tg://user?id=${giverUser.tgId}` });
+        }
+        if (contactRow.length > 0) buttons.push(contactRow);
         buttons.push([{ text: `📱 ${msg.openBtn}`, web_app: { url: `${WEB_APP_URL}/matches` } }]);
 
         sendTelegramMessage(user.tgId, text, { inline_keyboard: buttons }).catch(() => {});
