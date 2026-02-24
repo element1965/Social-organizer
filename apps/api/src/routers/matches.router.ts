@@ -118,7 +118,7 @@ export const matchesRouter = router({
   myChains: protectedProcedure.query(async ({ ctx }) => {
     const chains = await ctx.db.matchChain.findMany({
       where: {
-        status: { in: ['PROPOSED', 'ACTIVE'] },
+        status: { in: ['PROPOSED', 'ACTIVE', 'COMPLETED'] },
         links: { some: { OR: [{ giverId: ctx.userId }, { receiverId: ctx.userId }] } },
       },
       include: {
@@ -143,13 +143,133 @@ export const matchesRouter = router({
       chatAddedBy: ch.chatAddedBy,
       createdAt: ch.createdAt,
       links: ch.links.map((l) => ({
+        id: l.id,
         position: l.position,
         giver: l.giver,
         receiver: l.receiver,
         categoryKey: l.category.key,
+        offerHours: l.offerHours,
+        offerDescription: l.offerDescription,
+        giverConfirmed: l.giverConfirmed,
+        receiverConfirmed: l.receiverConfirmed,
+        giverCompleted: l.giverCompleted,
+        receiverCompleted: l.receiverCompleted,
       })),
     }));
   }),
+
+  /** Giver sets their offer (hours + description) for a link */
+  setOffer: protectedProcedure
+    .input(z.object({
+      linkId: z.string(),
+      hours: z.number().min(0.5).max(100),
+      description: z.string().max(500).optional(),
+    }))
+    .mutation(async ({ ctx, input }) => {
+      const link = await ctx.db.matchChainLink.findFirst({
+        where: { id: input.linkId, giverId: ctx.userId },
+      });
+      if (!link) return null;
+
+      return ctx.db.matchChainLink.update({
+        where: { id: input.linkId },
+        data: {
+          offerHours: input.hours,
+          offerDescription: input.description || null,
+          giverConfirmed: true, // setting offer = confirming from giver side
+        },
+      });
+    }),
+
+  /** Receiver confirms they accept the offer */
+  confirmLink: protectedProcedure
+    .input(z.object({ linkId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const link = await ctx.db.matchChainLink.findFirst({
+        where: { id: input.linkId, receiverId: ctx.userId },
+      });
+      if (!link) return null;
+
+      await ctx.db.matchChainLink.update({
+        where: { id: input.linkId },
+        data: { receiverConfirmed: true },
+      });
+
+      // Check if ALL links in chain are confirmed → ACTIVE
+      const allLinks = await ctx.db.matchChainLink.findMany({
+        where: { chainId: link.chainId },
+      });
+      const allConfirmed = allLinks.every((l) => l.giverConfirmed && l.receiverConfirmed);
+      if (allConfirmed) {
+        await ctx.db.matchChain.update({
+          where: { id: link.chainId },
+          data: { status: 'ACTIVE' },
+        });
+      }
+
+      return { success: true };
+    }),
+
+  /** Mark a link as completed (giver or receiver) */
+  completeLink: protectedProcedure
+    .input(z.object({
+      linkId: z.string(),
+      role: z.enum(['giver', 'receiver']),
+    }))
+    .mutation(async ({ ctx, input }) => {
+      const whereClause = input.role === 'giver'
+        ? { id: input.linkId, giverId: ctx.userId }
+        : { id: input.linkId, receiverId: ctx.userId };
+
+      const link = await ctx.db.matchChainLink.findFirst({ where: whereClause });
+      if (!link) return null;
+
+      const updateData = input.role === 'giver'
+        ? { giverCompleted: true }
+        : { receiverCompleted: true };
+
+      await ctx.db.matchChainLink.update({
+        where: { id: input.linkId },
+        data: updateData,
+      });
+
+      // Check if ALL links in chain are completed → COMPLETED
+      const allLinks = await ctx.db.matchChainLink.findMany({
+        where: { chainId: link.chainId },
+      });
+      const allCompleted = allLinks.every((l) => {
+        const gc = l.id === input.linkId ? (input.role === 'giver' ? true : l.giverCompleted) : l.giverCompleted;
+        const rc = l.id === input.linkId ? (input.role === 'receiver' ? true : l.receiverCompleted) : l.receiverCompleted;
+        return gc && rc;
+      });
+      if (allCompleted) {
+        await ctx.db.matchChain.update({
+          where: { id: link.chainId },
+          data: { status: 'COMPLETED' },
+        });
+      }
+
+      return { success: true };
+    }),
+
+  /** Cancel a chain (any participant can cancel) */
+  cancelChain: protectedProcedure
+    .input(z.object({ chainId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const chain = await ctx.db.matchChain.findFirst({
+        where: {
+          id: input.chainId,
+          status: { in: ['PROPOSED', 'ACTIVE'] },
+          links: { some: { OR: [{ giverId: ctx.userId }, { receiverId: ctx.userId }] } },
+        },
+      });
+      if (!chain) return null;
+
+      return ctx.db.matchChain.update({
+        where: { id: input.chainId },
+        data: { status: 'CANCELLED' },
+      });
+    }),
 
   /** Save Telegram group chat link for a chain (any participant can do it) */
   setChatLink: protectedProcedure
@@ -158,7 +278,6 @@ export const matchesRouter = router({
       telegramChatUrl: z.string().url().regex(/t\.me\//),
     }))
     .mutation(async ({ ctx, input }) => {
-      // Verify user is a participant
       const chain = await ctx.db.matchChain.findFirst({
         where: {
           id: input.chainId,

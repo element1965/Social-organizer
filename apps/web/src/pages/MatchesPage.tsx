@@ -7,20 +7,53 @@ import { Avatar } from '../components/ui/avatar';
 import { Spinner } from '../components/ui/spinner';
 import { Button } from '../components/ui/button';
 import { cn } from '../lib/utils';
-import { Handshake, Globe, MapPin, ChevronRight, Link2, ArrowRight, MessageCircle, ExternalLink } from 'lucide-react';
+import { useAuth } from '../hooks/useAuth';
+import {
+  Handshake, Globe, MapPin, ChevronRight, Link2, ArrowRight,
+  MessageCircle, ExternalLink, Check, CheckCheck, Clock, RotateCcw,
+} from 'lucide-react';
+
+const STATUS_STYLES: Record<string, string> = {
+  PROPOSED: 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300',
+  ACTIVE: 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300',
+  COMPLETED: 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300',
+  CANCELLED: 'bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-400',
+};
 
 export function MatchesPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const userId = useAuth((s) => s.userId);
   const [tab, setTab] = useState<'helpMe' | 'helpThem' | 'chains'>('helpMe');
+  const [offerLinkId, setOfferLinkId] = useState<string | null>(null);
+  const [offerHours, setOfferHours] = useState('');
+  const [offerDesc, setOfferDesc] = useState('');
 
+  const utils = trpc.useUtils();
   const { data: helpMe, isLoading: loadingHelpMe } = trpc.matches.whoCanHelpMe.useQuery();
   const { data: helpThem, isLoading: loadingHelpThem } = trpc.matches.whoNeedsMyHelp.useQuery();
   const { data: chains, isLoading: loadingChains } = trpc.matches.myChains.useQuery();
-  const setChatLink = trpc.matches.setChatLink.useMutation({
+
+  const setChatLinkMut = trpc.matches.setChatLink.useMutation({
     onSuccess: () => utils.matches.myChains.invalidate(),
   });
-  const utils = trpc.useUtils();
+  const setOfferMut = trpc.matches.setOffer.useMutation({
+    onSuccess: () => {
+      utils.matches.myChains.invalidate();
+      setOfferLinkId(null);
+      setOfferHours('');
+      setOfferDesc('');
+    },
+  });
+  const confirmLinkMut = trpc.matches.confirmLink.useMutation({
+    onSuccess: () => utils.matches.myChains.invalidate(),
+  });
+  const completeLinkMut = trpc.matches.completeLink.useMutation({
+    onSuccess: () => utils.matches.myChains.invalidate(),
+  });
+  const cancelChainMut = trpc.matches.cancelChain.useMutation({
+    onSuccess: () => utils.matches.myChains.invalidate(),
+  });
 
   const items = tab === 'helpMe' ? helpMe : tab === 'helpThem' ? helpThem : null;
   const isLoading = tab === 'helpMe' ? loadingHelpMe : tab === 'helpThem' ? loadingHelpThem : loadingChains;
@@ -50,8 +83,30 @@ export function MatchesPage() {
   const handleAddChatLink = (chainId: string) => {
     const url = prompt(t('matches.chatLinkPrompt'));
     if (!url || !url.includes('t.me/')) return;
-    setChatLink.mutate({ chainId, telegramChatUrl: url });
+    setChatLinkMut.mutate({ chainId, telegramChatUrl: url });
   };
+
+  const handleSetOffer = (linkId: string) => {
+    const hours = parseFloat(offerHours);
+    if (isNaN(hours) || hours < 0.5) return;
+    setOfferMut.mutate({ linkId, hours, description: offerDesc || undefined });
+  };
+
+  const handleCancelChain = (chainId: string) => {
+    if (!confirm(t('matches.cancelConfirm'))) return;
+    cancelChainMut.mutate({ chainId });
+  };
+
+  const getLinkStatusIcon = (link: { giverConfirmed: boolean; receiverConfirmed: boolean; giverCompleted: boolean; receiverCompleted: boolean }) => {
+    if (link.giverCompleted && link.receiverCompleted) return <CheckCheck className="w-4 h-4 text-green-500" />;
+    if (link.giverCompleted || link.receiverCompleted) return <CheckCheck className="w-4 h-4 text-amber-500" />;
+    if (link.giverConfirmed && link.receiverConfirmed) return <Check className="w-4 h-4 text-blue-500" />;
+    if (link.giverConfirmed) return <Clock className="w-4 h-4 text-amber-500" />;
+    return <Clock className="w-4 h-4 text-gray-300 dark:text-gray-600" />;
+  };
+
+  const statusKey = (status: string) =>
+    `matches.status${status.charAt(0)}${status.slice(1).toLowerCase()}`;
 
   return (
     <div className="p-4 space-y-4">
@@ -109,7 +164,7 @@ export function MatchesPage() {
       {isLoading ? (
         <div className="flex justify-center py-8"><Spinner /></div>
       ) : tab === 'chains' ? (
-        // Chains tab
+        /* ===== Chains tab ===== */
         !chains || chains.length === 0 ? (
           <div className="text-center py-8">
             <Link2 className="w-10 h-10 mx-auto text-gray-300 dark:text-gray-600 mb-3" />
@@ -117,88 +172,286 @@ export function MatchesPage() {
             <p className="text-xs text-gray-400 mt-1">{t('matches.noChainsHint')}</p>
           </div>
         ) : (
-          <div className="space-y-3">
-            {chains.map((chain) => (
-              <Card key={chain.id}>
-                <CardContent className="p-4">
-                  {/* Chain visualization */}
-                  <div className="flex items-center gap-1 mb-3 text-xs font-medium text-purple-600 dark:text-purple-400">
-                    <Link2 className="w-3.5 h-3.5" />
-                    {t('matches.chainOf', { count: chain.length })}
-                  </div>
+          <div className="space-y-4">
+            {chains.map((chain) => {
+              const firstGiver = chain.links[0]?.giver;
+              const isDone = chain.status === 'COMPLETED';
+              const isCancelled = chain.status === 'CANCELLED';
+              const isActive = chain.status === 'ACTIVE';
 
-                  {/* Links */}
-                  <div className="space-y-2">
-                    {chain.links.map((link, idx) => (
-                      <div key={idx} className="flex items-center gap-2">
-                        <button
-                          onClick={() => navigate(`/profile/${link.giver.id}`)}
-                          className="flex items-center gap-1.5 min-w-0"
-                        >
-                          <Avatar src={link.giver.photoUrl} name={link.giver.name} size="sm" />
-                          <span className="text-sm font-medium text-gray-900 dark:text-white truncate max-w-[80px]">
-                            {link.giver.name}
-                          </span>
-                        </button>
-                        <ArrowRight className="w-3.5 h-3.5 text-gray-400 shrink-0" />
-                        <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-purple-50 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 shrink-0">
-                          {t(`skills.${link.categoryKey}`)}
+              return (
+                <Card key={chain.id} className={cn(isCancelled && 'opacity-60')}>
+                  <CardContent className="p-4">
+                    {/* Header */}
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="flex items-center gap-2">
+                        <RotateCcw className="w-4 h-4 text-purple-500" />
+                        <span className="text-sm font-medium text-gray-900 dark:text-white">
+                          {t('matches.chainOf', { count: chain.length })}
                         </span>
-                        <ArrowRight className="w-3.5 h-3.5 text-gray-400 shrink-0" />
-                        <button
-                          onClick={() => navigate(`/profile/${link.receiver.id}`)}
-                          className="flex items-center gap-1.5 min-w-0"
-                        >
-                          <span className="text-sm font-medium text-gray-900 dark:text-white truncate max-w-[80px]">
-                            {link.receiver.name}
-                          </span>
-                        </button>
                       </div>
-                    ))}
-                  </div>
+                      <span className={cn('px-2 py-0.5 rounded-full text-xs font-medium', STATUS_STYLES[chain.status])}>
+                        {t(statusKey(chain.status))}
+                      </span>
+                    </div>
 
-                  {/* Chat section */}
-                  <div className="mt-3 pt-3 border-t border-gray-100 dark:border-gray-800">
-                    {chain.length <= 2 ? (
-                      // Direct pair — TG deep link
-                      <p className="text-xs text-gray-400">{t('matches.pairHint')}</p>
-                    ) : chain.telegramChatUrl ? (
-                      // Chain 3+ with chat link
-                      <a
-                        href={chain.telegramChatUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center gap-2 py-2 px-3 rounded-lg bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-colors"
-                      >
-                        <MessageCircle className="w-4 h-4" />
-                        <span className="text-sm font-medium">{t('matches.openChat')}</span>
-                        <ExternalLink className="w-3.5 h-3.5 ml-auto" />
-                      </a>
-                    ) : (
-                      // Chain 3+ without chat link — instructions
-                      <div className="space-y-2">
-                        <p className="text-xs text-gray-500 dark:text-gray-400">
-                          {t('matches.chainInstruction')}
-                        </p>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          className="w-full text-xs"
-                          onClick={() => handleAddChatLink(chain.id)}
-                          disabled={setChatLink.isPending}
-                        >
-                          <Link2 className="w-3.5 h-3.5 mr-1.5" />
-                          {t('matches.addChatLink')}
-                        </Button>
+                    {/* Ring visualization */}
+                    <div className="relative border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
+                      {/* Left accent line */}
+                      <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-purple-400 via-purple-500 to-purple-400" />
+
+                      <div className="pl-4">
+                        {chain.links.map((link, idx) => {
+                          const isGiver = link.giver.id === userId;
+                          const isReceiver = link.receiver.id === userId;
+                          const isLast = idx === chain.links.length - 1;
+
+                          return (
+                            <div key={link.id} className={cn('py-3 px-3', !isLast && 'border-b border-gray-100 dark:border-gray-800')}>
+                              {/* Link row */}
+                              <div className="flex items-center gap-1.5 flex-wrap">
+                                <button
+                                  onClick={() => navigate(`/profile/${link.giver.id}`)}
+                                  className="flex items-center gap-1 shrink-0"
+                                >
+                                  <Avatar src={link.giver.photoUrl} name={link.giver.name} size="sm" />
+                                  <span className={cn(
+                                    'text-sm font-medium truncate max-w-[70px]',
+                                    isGiver ? 'text-purple-600 dark:text-purple-400' : 'text-gray-900 dark:text-white',
+                                  )}>
+                                    {isGiver ? t('matches.you') : link.giver.name}
+                                  </span>
+                                </button>
+
+                                <ArrowRight className="w-3 h-3 text-gray-400 shrink-0" />
+
+                                <span className="px-1.5 py-0.5 rounded-full text-[11px] font-medium bg-purple-50 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 shrink-0">
+                                  {t(`skills.${link.categoryKey}`)}
+                                </span>
+
+                                <ArrowRight className="w-3 h-3 text-gray-400 shrink-0" />
+
+                                <button
+                                  onClick={() => navigate(`/profile/${link.receiver.id}`)}
+                                  className="flex items-center gap-1 shrink-0"
+                                >
+                                  <Avatar src={link.receiver.photoUrl} name={link.receiver.name} size="sm" />
+                                  <span className={cn(
+                                    'text-sm font-medium truncate max-w-[70px]',
+                                    isReceiver ? 'text-purple-600 dark:text-purple-400' : 'text-gray-900 dark:text-white',
+                                  )}>
+                                    {isReceiver ? t('matches.you') : link.receiver.name}
+                                  </span>
+                                </button>
+
+                                <span className="ml-auto shrink-0">
+                                  {getLinkStatusIcon(link)}
+                                </span>
+                              </div>
+
+                              {/* Offer details */}
+                              {link.offerHours != null && (
+                                <p className="mt-1.5 ml-8 text-xs text-gray-500 dark:text-gray-400">
+                                  {t('matches.offerSet', { hours: link.offerHours })}
+                                  {link.offerDescription && ` — ${link.offerDescription}`}
+                                </p>
+                              )}
+
+                              {/* Completion partial status */}
+                              {isActive && (link.giverCompleted !== link.receiverCompleted) && (
+                                <p className="mt-1 ml-8 text-xs text-amber-500">
+                                  {link.giverCompleted ? t('matches.giverDone') : t('matches.receiverDone')}
+                                </p>
+                              )}
+
+                              {/* Actions (only for non-done, non-cancelled chains) */}
+                              {!isDone && !isCancelled && (
+                                <>
+                                  {/* Giver: set offer */}
+                                  {isGiver && !link.giverConfirmed && (
+                                    <div className="mt-2 ml-8">
+                                      {offerLinkId === link.id ? (
+                                        <div className="space-y-2 bg-gray-50 dark:bg-gray-800/50 rounded-lg p-2.5">
+                                          <input
+                                            type="number"
+                                            step="0.5"
+                                            min="0.5"
+                                            placeholder={t('matches.offerHoursPlaceholder')}
+                                            value={offerHours}
+                                            onChange={(e) => setOfferHours(e.target.value)}
+                                            className="w-full px-2.5 py-1.5 text-sm border border-gray-200 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                                          />
+                                          <input
+                                            type="text"
+                                            placeholder={t('matches.offerDescPlaceholder')}
+                                            value={offerDesc}
+                                            onChange={(e) => setOfferDesc(e.target.value)}
+                                            className="w-full px-2.5 py-1.5 text-sm border border-gray-200 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                                          />
+                                          <div className="flex gap-2">
+                                            <Button
+                                              size="sm"
+                                              className="text-xs flex-1"
+                                              onClick={() => handleSetOffer(link.id)}
+                                              disabled={setOfferMut.isPending}
+                                            >
+                                              {t('matches.sendOffer')}
+                                            </Button>
+                                            <Button
+                                              variant="outline"
+                                              size="sm"
+                                              className="text-xs"
+                                              onClick={() => setOfferLinkId(null)}
+                                            >
+                                              {t('common.cancel')}
+                                            </Button>
+                                          </div>
+                                        </div>
+                                      ) : (
+                                        <Button
+                                          variant="outline"
+                                          size="sm"
+                                          className="text-xs"
+                                          onClick={() => { setOfferLinkId(link.id); setOfferHours(''); setOfferDesc(''); }}
+                                        >
+                                          {t('matches.setOffer')}
+                                        </Button>
+                                      )}
+                                    </div>
+                                  )}
+
+                                  {/* Receiver: confirm offer */}
+                                  {isReceiver && link.giverConfirmed && !link.receiverConfirmed && (
+                                    <div className="mt-2 ml-8">
+                                      <Button
+                                        size="sm"
+                                        className="text-xs"
+                                        onClick={() => confirmLinkMut.mutate({ linkId: link.id })}
+                                        disabled={confirmLinkMut.isPending}
+                                      >
+                                        <Check className="w-3.5 h-3.5 mr-1" />
+                                        {t('matches.confirmOffer')}
+                                      </Button>
+                                    </div>
+                                  )}
+
+                                  {/* Receiver waiting for giver's offer */}
+                                  {isReceiver && !link.giverConfirmed && (
+                                    <p className="mt-1.5 ml-8 text-xs text-gray-400">{t('matches.awaitingOffer')}</p>
+                                  )}
+
+                                  {/* Giver waiting for receiver confirmation */}
+                                  {isGiver && link.giverConfirmed && !link.receiverConfirmed && (
+                                    <p className="mt-1.5 ml-8 text-xs text-gray-400">{t('matches.awaitingConfirm')}</p>
+                                  )}
+
+                                  {/* Complete buttons (ACTIVE chain) */}
+                                  {isActive && isGiver && !link.giverCompleted && (
+                                    <div className="mt-2 ml-8">
+                                      <Button
+                                        variant="outline"
+                                        size="sm"
+                                        className="text-xs text-green-600 border-green-300 hover:bg-green-50 dark:hover:bg-green-900/20"
+                                        onClick={() => completeLinkMut.mutate({ linkId: link.id, role: 'giver' })}
+                                        disabled={completeLinkMut.isPending}
+                                      >
+                                        <CheckCheck className="w-3.5 h-3.5 mr-1" />
+                                        {t('matches.markComplete')}
+                                      </Button>
+                                    </div>
+                                  )}
+                                  {isActive && isReceiver && !link.receiverCompleted && (
+                                    <div className="mt-2 ml-8">
+                                      <Button
+                                        variant="outline"
+                                        size="sm"
+                                        className="text-xs text-green-600 border-green-300 hover:bg-green-50 dark:hover:bg-green-900/20"
+                                        onClick={() => completeLinkMut.mutate({ linkId: link.id, role: 'receiver' })}
+                                        disabled={completeLinkMut.isPending}
+                                      >
+                                        <CheckCheck className="w-3.5 h-3.5 mr-1" />
+                                        {t('matches.markComplete')}
+                                      </Button>
+                                    </div>
+                                  )}
+                                </>
+                              )}
+
+                              {/* Fully completed link */}
+                              {link.giverCompleted && link.receiverCompleted && (
+                                <p className="mt-1 ml-8 text-xs text-green-600 dark:text-green-400 flex items-center gap-1">
+                                  <CheckCheck className="w-3 h-3" /> {t('matches.linkCompleted')}
+                                </p>
+                              )}
+                            </div>
+                          );
+                        })}
                       </div>
+
+                      {/* Ring closure indicator */}
+                      {firstGiver && (
+                        <div className="pl-4 py-2 px-3 bg-purple-50/50 dark:bg-purple-900/10 border-t border-gray-200 dark:border-gray-700 flex items-center gap-2 text-xs text-purple-600 dark:text-purple-400">
+                          <RotateCcw className="w-3.5 h-3.5 shrink-0" />
+                          <span>
+                            {t('matches.ringCloses')}{' '}
+                            <strong>{firstGiver.id === userId ? t('matches.you') : firstGiver.name}</strong>
+                          </span>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Chat section */}
+                    <div className="mt-3 pt-3 border-t border-gray-100 dark:border-gray-800">
+                      {chain.length <= 2 ? (
+                        <p className="text-xs text-gray-400">{t('matches.pairHint')}</p>
+                      ) : chain.telegramChatUrl ? (
+                        <a
+                          href={chain.telegramChatUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center gap-2 py-2 px-3 rounded-lg bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-colors"
+                        >
+                          <MessageCircle className="w-4 h-4" />
+                          <span className="text-sm font-medium">{t('matches.openChat')}</span>
+                          <ExternalLink className="w-3.5 h-3.5 ml-auto" />
+                        </a>
+                      ) : !isCancelled && !isDone ? (
+                        <div className="space-y-2">
+                          <p className="text-xs text-gray-500 dark:text-gray-400">
+                            {t('matches.chainInstruction')}
+                          </p>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="w-full text-xs"
+                            onClick={() => handleAddChatLink(chain.id)}
+                            disabled={setChatLinkMut.isPending}
+                          >
+                            <Link2 className="w-3.5 h-3.5 mr-1.5" />
+                            {t('matches.addChatLink')}
+                          </Button>
+                        </div>
+                      ) : null}
+                    </div>
+
+                    {/* Cancel button */}
+                    {(chain.status === 'PROPOSED' || chain.status === 'ACTIVE') && (
+                      <button
+                        onClick={() => handleCancelChain(chain.id)}
+                        className="mt-2 text-xs text-red-400 hover:text-red-500 transition-colors"
+                        disabled={cancelChainMut.isPending}
+                      >
+                        {t('matches.cancelChain')}
+                      </button>
                     )}
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+                  </CardContent>
+                </Card>
+              );
+            })}
           </div>
         )
-      ) : grouped.length === 0 ? (
+      ) : /* ===== helpMe / helpThem tabs ===== */
+      grouped.length === 0 ? (
         <p className="text-center text-sm text-gray-400 py-8">
           {tab === 'helpMe' ? t('matches.noMatches') : t('matches.noMatchesNeeds')}
         </p>

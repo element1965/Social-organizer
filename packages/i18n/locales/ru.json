@@ -860,6 +860,26 @@
     "openChat": "Открыть чат",
     "chainInstruction": "Создайте групповой чат в Telegram, добавьте всех участников и вставьте ссылку сюда. Любой участник может это сделать.",
     "addChatLink": "Добавить ссылку на чат",
-    "chatLinkPrompt": "Вставьте ссылку на Telegram-чат (t.me/...)"
+    "chatLinkPrompt": "Вставьте ссылку на Telegram-чат (t.me/...)",
+    "statusProposed": "Предложена",
+    "statusActive": "Активна",
+    "statusCompleted": "Завершена",
+    "statusCancelled": "Отменена",
+    "you": "Вы",
+    "setOffer": "Предложить условия",
+    "offerHoursPlaceholder": "Сколько часов (мин. 0.5)",
+    "offerDescPlaceholder": "Что вы готовы сделать",
+    "sendOffer": "Отправить",
+    "awaitingOffer": "Ожидание предложения от исполнителя",
+    "awaitingConfirm": "Ожидание подтверждения получателем",
+    "confirmOffer": "Принять предложение",
+    "markComplete": "Отметить выполненным",
+    "linkCompleted": "Завершено",
+    "cancelChain": "Отменить цепочку",
+    "cancelConfirm": "Отменить эту цепочку? Это действие необратимо.",
+    "ringCloses": "Замыкается на",
+    "offerSet": "{{hours}}ч",
+    "giverDone": "Исполнитель подтвердил выполнение",
+    "receiverDone": "Получатель подтвердил выполнение"
   }
 }

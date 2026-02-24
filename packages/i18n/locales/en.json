@@ -860,6 +860,26 @@
     "openChat": "Open chat",
     "chainInstruction": "Create a Telegram group chat, add all participants, and paste the link here. Any participant can do this.",
     "addChatLink": "Add chat link",
-    "chatLinkPrompt": "Paste a Telegram chat link (t.me/...)"
+    "chatLinkPrompt": "Paste a Telegram chat link (t.me/...)",
+    "statusProposed": "Proposed",
+    "statusActive": "Active",
+    "statusCompleted": "Completed",
+    "statusCancelled": "Cancelled",
+    "you": "You",
+    "setOffer": "Make an offer",
+    "offerHoursPlaceholder": "Hours (min. 0.5)",
+    "offerDescPlaceholder": "What you can do",
+    "sendOffer": "Send",
+    "awaitingOffer": "Waiting for the giver to make an offer",
+    "awaitingConfirm": "Waiting for receiver to confirm",
+    "confirmOffer": "Accept offer",
+    "markComplete": "Mark as complete",
+    "linkCompleted": "Completed",
+    "cancelChain": "Cancel chain",
+    "cancelConfirm": "Cancel this chain? This cannot be undone.",
+    "ringCloses": "Closes back to",
+    "offerSet": "{{hours}}h",
+    "giverDone": "Giver confirmed completion",
+    "receiverDone": "Receiver confirmed completion"
   }
 }
