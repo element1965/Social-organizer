@@ -465,6 +465,11 @@ let settingsState = {
   soundEnabled: true,
   voiceGender: 'FEMALE' as 'FEMALE' | 'MALE',
   fontScale: 1.0,
+  hideContacts: false,
+  city: null as string | null,
+  countryCode: null as string | null,
+  latitude: null as number | null,
+  longitude: null as number | null,
 };
 
 // ---------- Router ----------
@@ -945,6 +950,10 @@ export function handleDemoRequest(path: string, input: unknown): unknown {
     case 'settings.updateFontScale':
       settingsState = { ...settingsState, fontScale: (inp?.fontScale as number) ?? settingsState.fontScale };
       return { ...demoUser, ...settingsState };
+    case 'settings.updateGeo':
+      return { success: true };
+    case 'settings.updateHideContacts':
+      return { success: true };
     case 'settings.ignoreList':
       return [];
     case 'settings.addIgnore':
@@ -992,6 +1001,36 @@ export function handleDemoRequest(path: string, input: unknown): unknown {
       return { success: true };
     case 'push.unsubscribe':
       return { success: true };
+
+    // ---- Skills ----
+    case 'skills.categories':
+      return [];
+    case 'skills.mine':
+      return { skills: [], needs: [], skillsCompleted: true };
+    case 'skills.forUser':
+      return { skills: [], needs: [] };
+    case 'skills.saveSkills':
+    case 'skills.saveNeeds':
+    case 'skills.markCompleted':
+      return { success: true };
+    case 'skills.adminStats':
+      return null;
+    case 'skills.matchHints':
+      return [];
+
+    // ---- Matches ----
+    case 'matches.whoCanHelpMe':
+      return [];
+    case 'matches.whoNeedsMyHelp':
+      return [];
+    case 'matches.matchNotifications':
+      return [];
+    case 'matches.dismissMatchNotification':
+      return { success: true };
+    case 'matches.markMatchNotificationsRead':
+      return { success: true };
+    case 'matches.unreadMatchCount':
+      return { count: 0 };
 
     default:
       console.warn(`[Demo] Unhandled procedure: ${path}`);

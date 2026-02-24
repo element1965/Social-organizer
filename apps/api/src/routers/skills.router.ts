@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { router, protectedProcedure } from '../trpc.js';
 import { isAdmin } from '../admin.js';
+import { createSkillMatchNotifications, createNeedMatchNotifications } from '../services/match-notification.service.js';
 
 export const skillsRouter = router({
   categories: protectedProcedure.query(async ({ ctx }) => {
@@ -51,6 +52,12 @@ export const skillsRouter = router({
       })),
     }))
     .mutation(async ({ ctx, input }) => {
+      const oldSkills = await ctx.db.userSkill.findMany({
+        where: { userId: ctx.userId },
+        select: { categoryId: true },
+      });
+      const oldIds = new Set(oldSkills.map((s) => s.categoryId));
+
       await ctx.db.$transaction([
         ctx.db.userSkill.deleteMany({ where: { userId: ctx.userId } }),
         ...input.skills.map((s) =>
@@ -59,6 +66,14 @@ export const skillsRouter = router({
           }),
         ),
       ]);
+
+      const addedIds = input.skills.map((s) => s.categoryId).filter((id) => !oldIds.has(id));
+      if (addedIds.length > 0) {
+        createSkillMatchNotifications(ctx.db, ctx.userId, addedIds).catch((err) =>
+          console.error('[SkillMatch] Error:', err),
+        );
+      }
+
       return { success: true };
     }),
 
@@ -70,6 +85,12 @@ export const skillsRouter = router({
       })),
     }))
     .mutation(async ({ ctx, input }) => {
+      const oldNeeds = await ctx.db.userNeed.findMany({
+        where: { userId: ctx.userId },
+        select: { categoryId: true },
+      });
+      const oldIds = new Set(oldNeeds.map((n) => n.categoryId));
+
       await ctx.db.$transaction([
         ctx.db.userNeed.deleteMany({ where: { userId: ctx.userId } }),
         ...input.needs.map((n) =>
@@ -78,6 +99,14 @@ export const skillsRouter = router({
           }),
         ),
       ]);
+
+      const addedIds = input.needs.map((n) => n.categoryId).filter((id) => !oldIds.has(id));
+      if (addedIds.length > 0) {
+        createNeedMatchNotifications(ctx.db, ctx.userId, addedIds).catch((err) =>
+          console.error('[SkillMatch] Error:', err),
+        );
+      }
+
       return { success: true };
     }),
 

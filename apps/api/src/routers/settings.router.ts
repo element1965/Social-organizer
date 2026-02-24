@@ -6,7 +6,7 @@ export const settingsRouter = router({
   get: protectedProcedure.query(async ({ ctx }) => {
     const user = await ctx.db.user.findUnique({
       where: { id: ctx.userId },
-      select: { language: true, theme: true, soundEnabled: true, voiceGender: true, fontScale: true, hideContacts: true },
+      select: { language: true, theme: true, soundEnabled: true, voiceGender: true, fontScale: true, hideContacts: true, city: true, countryCode: true, latitude: true, longitude: true },
     });
     if (!user) throw new TRPCError({ code: 'NOT_FOUND' });
     return user;
@@ -46,6 +46,25 @@ export const settingsRouter = router({
     .input(z.object({ hideContacts: z.boolean() }))
     .mutation(async ({ ctx, input }) => {
       return ctx.db.user.update({ where: { id: ctx.userId }, data: { hideContacts: input.hideContacts } });
+    }),
+
+  updateGeo: protectedProcedure
+    .input(z.object({
+      city: z.string().max(100).optional().nullable(),
+      countryCode: z.string().length(2).optional().nullable(),
+      latitude: z.number().min(-90).max(90).optional().nullable(),
+      longitude: z.number().min(-180).max(180).optional().nullable(),
+    }))
+    .mutation(async ({ ctx, input }) => {
+      return ctx.db.user.update({
+        where: { id: ctx.userId },
+        data: {
+          city: input.city ?? undefined,
+          countryCode: input.countryCode ?? undefined,
+          latitude: input.latitude ?? undefined,
+          longitude: input.longitude ?? undefined,
+        },
+      });
     }),
 
   ignoreList: protectedProcedure.query(async ({ ctx }) => {

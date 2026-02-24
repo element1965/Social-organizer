@@ -17,6 +17,7 @@ import { CreateCollectionPage } from './pages/CreateCollectionPage';
 import { MyNetworkPage } from './pages/MyNetworkPage';
 import { ProfilePage } from './pages/ProfilePage';
 import { SettingsPage } from './pages/SettingsPage';
+import { MatchesPage } from './pages/MatchesPage';
 import { InvitePage } from './pages/InvitePage';
 import { PrivacyPage } from './pages/PrivacyPage';
 import { TermsPage } from './pages/TermsPage';
@@ -63,6 +64,7 @@ export function App() {
               <Route path="/network" element={<MyNetworkPage />} />
               <Route path="/profile/:userId" element={<ProfilePage />} />
               <Route path="/settings" element={<SettingsPage />} />
+              <Route path="/matches" element={<MatchesPage />} />
               <Route path="/faq" element={<FaqPage />} />
             </Route>
           </Routes>

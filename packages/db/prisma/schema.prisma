@@ -119,6 +119,8 @@ model User {
   countryCode      String?   @map("country_code")
   latitude         Float?
   longitude        Float?
+  skillMatchNotifsReceived SkillMatchNotification[] @relation("skillMatchRecipient")
+  skillMatchNotifsSent     SkillMatchNotification[] @relation("skillMatchActor")
 
   @@map("users")
 }
@@ -453,8 +455,9 @@ model SkillCategory {
   isOnline  Boolean  @default(false)
   createdAt DateTime @default(now())
 
-  skills UserSkill[]
-  needs  UserNeed[]
+  skills             UserSkill[]
+  needs              UserNeed[]
+  matchNotifications SkillMatchNotification[]
 
   @@index([group, sortOrder])
   @@map("skill_categories")
@@ -490,4 +493,21 @@ model UserNeed {
   @@index([userId])
   @@index([categoryId])
   @@map("user_needs")
+}
+
+model SkillMatchNotification {
+  id          String             @id @default(cuid())
+  userId      String
+  matchUserId String
+  categoryId  String
+  status      NotificationStatus @default(UNREAD)
+  createdAt   DateTime           @default(now())
+
+  user      User          @relation("skillMatchRecipient", fields: [userId], references: [id], onDelete: Cascade)
+  matchUser User          @relation("skillMatchActor", fields: [matchUserId], references: [id], onDelete: Cascade)
+  category  SkillCategory @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, matchUserId, categoryId])
+  @@index([userId, status])
+  @@map("skill_match_notifications")
 }
