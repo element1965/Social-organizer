@@ -89,7 +89,7 @@ pnpm dev
 | ScheduledPostDelivery | Individual delivery tracking per user per scheduled post with readAt for open stats |
 | AutoChainMessage | Drip campaign message: text/media/button, dayOffset from registration, sortOrder, intervalMin |
 | AutoChainDelivery | Delivery tracking per user per chain message with readAt for open stats |
-| SkillCategory | Skill/need category with key, group, sortOrder (35 categories in 6 groups) |
+| SkillCategory | Skill/need category with key, group, sortOrder, isOnline (206 categories in 15 groups) |
 | UserSkill | User's offered skill (link to SkillCategory) with optional note |
 | UserNeed | User's need (link to SkillCategory) with optional note |
 
@@ -271,7 +271,7 @@ Mock data (`apps/web/src/lib/demoData.ts`):
 - **Collection Hold (Blocked)** — when collection reaches target amount, existing notifications are expired, COLLECTION_BLOCKED notification is sent to all previously notified users; blocked notifications don't navigate to collection page
 - **Smart User Deletion** — users without first-handshake connections are fully deleted from DB (cascade); users with connections get soft-deleted ("Deleted user"); all pending connections cleaned up on deletion
 - **Grouped Notifications** — notifications about the same collection (new/blocked/closed) are visually stacked with partial card overlap; pending connection sections are collapsible and placed below collection notifications
-- **Skills & Needs Pilot** — users can specify skills they offer (35 categories in 6 groups) and needs they have; popup for existing users, step 3 in onboarding; skills displayed on profiles; "friends who can help" hint on collection creation page; admin dashboard shows fill rate, match density, top skills/needs
+- **Skills & Needs System** — 206 skill categories in 15 groups (home, construction, business, legal, creative, health, beauty, transport, auto, IT, education, events, pets, outdoor, agriculture); unified single-pass selector with dual "Can"/"Need" toggles, search, collapsible accordion groups; isOnline flag distinguishes remote vs local skills; geography fields (city, countryCode) for offline skill matching; auto-chain reminders (day 3, 7, 14, 30) nudge users who haven't filled skills; admin dashboard shows fill rate, match density, top skills/needs
 
 ## Terminology (Glossary)
 
