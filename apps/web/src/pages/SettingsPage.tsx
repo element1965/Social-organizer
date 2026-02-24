@@ -9,7 +9,7 @@ import { Button } from '../components/ui/button';
 import { Select } from '../components/ui/select';
 import { Avatar } from '../components/ui/avatar';
 import { Spinner } from '../components/ui/spinner';
-import { Settings, Globe, Palette, Volume2, Bell, Mic, Link, Trash2, LogOut, Type, Users, Camera, Pencil, Check, HelpCircle, EyeOff } from 'lucide-react';
+import { Settings, Globe, Palette, Volume2, Bell, Mic, Link, Trash2, LogOut, Type, Users, Camera, Pencil, Check, HelpCircle, EyeOff, Wrench } from 'lucide-react';
 import { Tooltip } from '../components/ui/tooltip';
 import { cn } from '../lib/utils';
 import { languageNames } from '@so/i18n';
@@ -17,6 +17,7 @@ import { Input } from '../components/ui/input';
 import { SocialIcon } from '../components/ui/social-icons';
 import { usePushNotifications } from '../hooks/usePushNotifications';
 import { validateContact } from '@so/shared';
+import { SkillSelector } from '../components/SkillSelector';
 
 export function SettingsPage() {
   const { t, i18n } = useTranslation();
@@ -73,6 +74,44 @@ export function SettingsPage() {
   const [editName, setEditName] = useState('');
   const push = usePushNotifications();
   const [confirmDelete, setConfirmDelete] = useState(false);
+
+  // Skills/Needs
+  const { data: categories } = trpc.skills.categories.useQuery();
+  const { data: mySkills } = trpc.skills.mine.useQuery();
+  const [skillTab, setSkillTab] = useState<'skills' | 'needs'>('skills');
+  const [selectedSkills, setSelectedSkills] = useState<Set<string>>(new Set());
+  const [selectedNeeds, setSelectedNeeds] = useState<Set<string>>(new Set());
+  const [skillsInitialized, setSkillsInitialized] = useState(false);
+  const saveSkillsMut = trpc.skills.saveSkills.useMutation({ onSuccess: () => utils.skills.mine.invalidate() });
+  const saveNeedsMut = trpc.skills.saveNeeds.useMutation({ onSuccess: () => utils.skills.mine.invalidate() });
+  const markCompleted = trpc.skills.markCompleted.useMutation({ onSuccess: () => utils.skills.mine.invalidate() });
+
+  useEffect(() => {
+    if (mySkills && !skillsInitialized) {
+      setSelectedSkills(new Set(mySkills.skills.map((s) => s.categoryId)));
+      setSelectedNeeds(new Set(mySkills.needs.map((n) => n.categoryId)));
+      setSkillsInitialized(true);
+    }
+  }, [mySkills, skillsInitialized]);
+
+  const skillsDebounce = useRef<ReturnType<typeof setTimeout>>();
+  const handleSkillToggle = (id: string) => {
+    const set = skillTab === 'skills' ? selectedSkills : selectedNeeds;
+    const setter = skillTab === 'skills' ? setSelectedSkills : setSelectedNeeds;
+    const next = new Set(set);
+    if (next.has(id)) next.delete(id); else next.add(id);
+    setter(next);
+    // Autosave
+    if (skillsDebounce.current) clearTimeout(skillsDebounce.current);
+    skillsDebounce.current = setTimeout(() => {
+      if (skillTab === 'skills') {
+        saveSkillsMut.mutate({ skills: [...next].map((cId) => ({ categoryId: cId })) });
+      } else {
+        saveNeedsMut.mutate({ needs: [...next].map((cId) => ({ categoryId: cId })) });
+      }
+      if (!mySkills?.skillsCompleted) markCompleted.mutate();
+    }, 800);
+  };
 
   const handleLanguageChange = (lang: string) => { i18n.changeLanguage(lang); localStorage.setItem('language', lang); updateLanguage.mutate({ language: lang }); };
   const handleThemeChange = (theme: 'LIGHT' | 'DARK' | 'SYSTEM') => { setMode(theme.toLowerCase() as 'light' | 'dark' | 'system'); updateTheme.mutate({ theme }); };
@@ -194,6 +233,39 @@ export function SettingsPage() {
               </div>
             );
           })}
+        </CardContent>
+      </Card>
+
+      {/* Skills & Needs */}
+      <Card>
+        <CardHeader>
+          <div className="flex items-center gap-2">
+            <Wrench className="w-5 h-5 text-gray-500 dark:text-gray-300" />
+            <h2 className="font-semibold text-gray-900 dark:text-white">{t('skills.title')}</h2>
+          </div>
+        </CardHeader>
+        <CardContent>
+          <div className="flex gap-2 mb-3">
+            <button
+              onClick={() => setSkillTab('skills')}
+              className={cn('flex-1 py-1.5 rounded-lg text-sm font-medium transition-colors', skillTab === 'skills' ? 'bg-blue-50 dark:bg-blue-950/30 text-blue-600 ring-1 ring-blue-300 dark:ring-blue-700' : 'bg-gray-50 dark:bg-gray-800 text-gray-600 dark:text-gray-300')}
+            >
+              {t('skills.tabSkills')} ({selectedSkills.size})
+            </button>
+            <button
+              onClick={() => setSkillTab('needs')}
+              className={cn('flex-1 py-1.5 rounded-lg text-sm font-medium transition-colors', skillTab === 'needs' ? 'bg-blue-50 dark:bg-blue-950/30 text-blue-600 ring-1 ring-blue-300 dark:ring-blue-700' : 'bg-gray-50 dark:bg-gray-800 text-gray-600 dark:text-gray-300')}
+            >
+              {t('skills.tabNeeds')} ({selectedNeeds.size})
+            </button>
+          </div>
+          {categories && (
+            <SkillSelector
+              categories={categories}
+              selected={skillTab === 'skills' ? selectedSkills : selectedNeeds}
+              onToggle={handleSkillToggle}
+            />
+          )}
         </CardContent>
       </Card>
 

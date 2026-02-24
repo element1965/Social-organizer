@@ -15,6 +15,7 @@ import { pushRouter } from './push.router.js';
 import { broadcastRouter } from './broadcast.router.js';
 import { pendingRouter } from './pending.router.js';
 import { clusterRouter } from './cluster.router.js';
+import { skillsRouter } from './skills.router.js';
 
 export const appRouter = router({
   auth: authRouter,
@@ -33,6 +34,7 @@ export const appRouter = router({
   broadcast: broadcastRouter,
   pending: pendingRouter,
   cluster: clusterRouter,
+  skills: skillsRouter,
 });
 
 export type AppRouter = typeof appRouter;
