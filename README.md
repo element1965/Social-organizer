@@ -92,6 +92,7 @@ pnpm dev
 | SkillCategory | Skill/need category with key, group, sortOrder, isOnline (221 categories in 15 groups) |
 | UserSkill | User's offered skill (link to SkillCategory) with optional note |
 | UserNeed | User's need (link to SkillCategory) with optional note |
+| SkillMatchNotification | Notification when a connected user's skill matches another's need (userId, matchUserId, categoryId) |
 
 ## Scripts
 
@@ -134,14 +135,15 @@ VAPID_SUBJECT=mailto:admin@example.com    # Web Push VAPID subject
 | `collection` | create, getById, close, cancel, myActive, myParticipating |
 | `obligation` | create, myList, unsubscribe |
 | `notification` | list (cursor pagination), markRead, dismiss, unreadCount |
-| `settings` | get, updateLanguage/Theme/Sound/FontScale/HideContacts, ignoreList/addIgnore/removeIgnore |
+| `settings` | get, updateLanguage/Theme/Sound/FontScale/HideContacts/Geo, ignoreList/addIgnore/removeIgnore |
 | `invite` | generate, accept, getByToken |
 | `stats` | profile (obligationsGiven + obligationsReceived), help, networkCapabilities |
 | `currency` | list, detectCurrency, rates, convert, toUSD |
 | `push` | vapidPublicKey, subscribe, unsubscribe |
 | `faq` | list, top, all, incrementView, localize, isAdmin, create, update, delete (admin-gated CRUD with view ranking and LLM auto-translation to 26 languages) |
 | `broadcast` | sendAll, sendDirect, schedulePost, listScheduled, cancelScheduled, scheduledStats, createChainMessage, listChainMessages, updateChainMessage, deleteChainMessage, chainStats, markRead (admin-only Telegram broadcast with scheduled posts, auto-chain drip campaigns, and open tracking) |
-| `skills` | categories, mine, forUser, saveSkills, saveNeeds, markCompleted, adminStats, matchHints (skills/needs pilot with admin metrics) |
+| `skills` | categories, mine, forUser, saveSkills, saveNeeds, markCompleted, adminStats, matchHints (skills/needs with admin metrics and match notifications) |
+| `matches` | whoCanHelpMe, whoNeedsMyHelp, matchNotifications, dismissMatchNotification, markMatchNotificationsRead, unreadMatchCount (skill matching with geography) |
 
 ## Services
 
@@ -190,7 +192,8 @@ React 19 SPA with tRPC client.
 | CollectionPage | `/collection/:id` | Collection details + intentions + handshake path to creator |
 | MyNetworkPage | `/network` | Connection list sorted by date (newest first) with relative time, connection counts + invitations |
 | ProfilePage | `/profile/:userId` | Profile with editing, contacts, connections list (collapsible), stats (given/received), handshake path |
-| SettingsPage | `/settings` | Language, theme, sounds, font scale, contacts, skills/needs, hide contacts toggle, ignore list |
+| SettingsPage | `/settings` | Language, theme, sounds, font scale, contacts, skills/needs, geography (country/city/geolocation), hide contacts toggle, ignore list |
+| MatchesPage | `/matches` | Skill matches: "Who can help me" / "Who needs my help" tabs, grouped by user with skill badges and geo hints |
 | FaqPage | `/faq` | FAQ accordion with admin CRUD, view count ranking, LLM localization button, language-aware |
 | InvitePage | `/invite/:token` | Accept invitation link |
 
@@ -271,7 +274,8 @@ Mock data (`apps/web/src/lib/demoData.ts`):
 - **Collection Hold (Blocked)** — when collection reaches target amount, existing notifications are expired, COLLECTION_BLOCKED notification is sent to all previously notified users; blocked notifications don't navigate to collection page
 - **Smart User Deletion** — users without first-handshake connections are fully deleted from DB (cascade); users with connections get soft-deleted ("Deleted user"); all pending connections cleaned up on deletion
 - **Grouped Notifications** — notifications about the same collection (new/blocked/closed) are visually stacked with partial card overlap; pending connection sections are collapsible and placed below collection notifications
-- **Skills & Needs System** — 221 skill categories in 15 groups (home, construction, business, legal, creative, health, beauty, transport, auto, IT, education, events, pets, outdoor, agriculture) + "Other" per group with free-text note; unified single-pass selector with dual "Can"/"Need" toggles, search, collapsible accordion groups; isOnline flag distinguishes remote vs local skills; geography fields (city, countryCode) for offline skill matching; auto-chain reminders (day 3, 7, 14, 30) nudge users who haven't filled skills; admin dashboard shows fill rate, match density, top skills/needs
+- **Skills & Needs System** — 221 skill categories in 15 groups (home, construction, business, legal, creative, health, beauty, transport, auto, IT, education, events, pets, outdoor, agriculture) + "Other" per group with free-text note; unified single-pass selector with dual "Can"/"Need" toggles, search, collapsible accordion groups; isOnline flag distinguishes remote vs local skills; geography (country dropdown + city input + browser geolocation via Nominatim) for offline skill matching; Haversine distance calculation; auto-chain reminders (day 3, 7, 14, 30) nudge users who haven't filled skills; admin dashboard shows fill rate, match density, top 10 skills/needs
+- **Skill Matching** — real-time matching of skills and needs between connected users; MatchesPage (/matches) shows "Who can help me" and "Who needs my help" tabs with grouped user cards; SkillMatchNotification model auto-creates alerts when friends add matching skills; dashboard card shows match counts with link to matches page; geography-aware filtering for offline skills (same city/country/distance hint)
 
 ## Terminology (Glossary)
 

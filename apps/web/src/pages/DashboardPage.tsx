@@ -17,6 +17,8 @@ import {
   Globe,
   Sparkles,
   Wrench,
+  Handshake,
+  ChevronRight,
 } from 'lucide-react';
 import { Tooltip } from '../components/ui/tooltip';
 import { SocialIcon } from '../components/ui/social-icons';
@@ -39,6 +41,8 @@ export function DashboardPage() {
   const { data: skillsAdminStats } = trpc.skills.adminStats.useQuery(undefined, {
     enabled: !!adminData?.isAdmin,
   });
+  const { data: matchHelpMe } = trpc.matches.whoCanHelpMe.useQuery();
+  const { data: matchHelpThem } = trpc.matches.whoNeedsMyHelp.useQuery();
 
   // Period pickers state (default: today)
   const [networkDays, setNetworkDays] = useState(1);
@@ -315,6 +319,36 @@ export function DashboardPage() {
       )}
 
       {/* Admin: Skills pilot metrics */}
+      {/* Skill Matches card */}
+      {((matchHelpMe && matchHelpMe.length > 0) || (matchHelpThem && matchHelpThem.length > 0)) && (
+        <Card>
+          <CardContent className="py-4">
+            <button
+              onClick={() => navigate('/matches')}
+              className="w-full flex items-center justify-between"
+            >
+              <div className="flex items-center gap-2">
+                <Handshake className="w-5 h-5 text-purple-600" />
+                <span className="text-sm font-semibold text-gray-900 dark:text-white">{t('matches.title')}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                {matchHelpMe && matchHelpMe.length > 0 && (
+                  <span className="px-2 py-0.5 text-xs rounded-full bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 font-medium">
+                    {matchHelpMe.length} {t('matches.whoCanHelpMe').toLowerCase()}
+                  </span>
+                )}
+                {matchHelpThem && matchHelpThem.length > 0 && (
+                  <span className="px-2 py-0.5 text-xs rounded-full bg-orange-50 dark:bg-orange-900/30 text-orange-600 font-medium">
+                    {matchHelpThem.length} {t('matches.whoNeedsMyHelp').toLowerCase()}
+                  </span>
+                )}
+                <ChevronRight className="w-4 h-4 text-gray-400" />
+              </div>
+            </button>
+          </CardContent>
+        </Card>
+      )}
+
       {adminData?.isAdmin && skillsAdminStats && (
         <Card>
           <CardContent className="py-4">

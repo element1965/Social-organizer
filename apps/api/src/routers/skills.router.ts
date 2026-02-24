@@ -129,13 +129,13 @@ export const skillsRouter = router({
         by: ['categoryId'],
         _count: { categoryId: true },
         orderBy: { _count: { categoryId: 'desc' } },
-        take: 5,
+        take: 10,
       }),
       ctx.db.userNeed.groupBy({
         by: ['categoryId'],
         _count: { categoryId: true },
         orderBy: { _count: { categoryId: 'desc' } },
-        take: 5,
+        take: 10,
       }),
     ]);
 
