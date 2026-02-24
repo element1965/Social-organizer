@@ -41,7 +41,7 @@ Social organizer/
 - **Mobile:** React Native (Expo) + NativeWind
 - **3D:** Three.js + @react-three/fiber + NASA textures
 - **Backup:** Gun.js (IndexedDB)
-- **i18n:** i18next (26 languages: en, ru, es, fr, de, pt, it, zh, ja, ko, ar, hi, tr, pl, uk, nl, sv, da, fi, no, cs, ro, th, vi, id, sr)
+- **i18n:** i18next (28 languages: en, ru, es, fr, de, pt, it, zh, ja, ko, ar, hi, tr, pl, uk, nl, sv, da, fi, no, cs, ro, th, vi, id, sr, be, he)
 
 ## Quick Start
 
@@ -263,6 +263,10 @@ Mock data (`apps/web/src/lib/demoData.ts`):
 - **Telegram Bot Notifications** — collection notifications (new, blocked, closed) sent to users' Telegram via bot with rate-limited broadcast (BullMQ worker, 25 msg/sec)
 - **Web Push Notifications** — browser push notifications for collection events (new, blocked, closed) via Web Push API with VAPID authentication
 - **Arvut Hadadit Subdomain** — Hebrew-branded landing page at `arvuthadadit.orginizer.com` with "ערבות הדדית" branding, forced Hebrew locale, RTL layout, and dedicated translations (`landingArvut.*` in `he.json`)
+- **Invite Sharing with OG Image** — share referral link with personalized localized text ("personal invitation from NAME to their circle of close friends") and auto-generated OG image (logo + "Social Organizer"); Web Share API with image, fallback to clipboard
+- **Collection Hold (Blocked)** — when collection reaches target amount, existing notifications are expired, COLLECTION_BLOCKED notification is sent to all previously notified users; blocked notifications don't navigate to collection page
+- **Smart User Deletion** — users without first-handshake connections are fully deleted from DB (cascade); users with connections get soft-deleted ("Deleted user"); all pending connections cleaned up on deletion
+- **Grouped Notifications** — notifications about the same collection (new/blocked/closed) are visually stacked with partial card overlap; pending connection sections are collapsible and placed below collection notifications
 
 ## Terminology (Glossary)
 
