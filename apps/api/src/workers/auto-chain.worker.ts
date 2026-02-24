@@ -42,7 +42,7 @@ export async function processAutoChain(_job: Job): Promise<void> {
     select: {
       platformId: true,
       userId: true,
-      user: { select: { language: true, createdAt: true } },
+      user: { select: { language: true, createdAt: true, skillsCompleted: true } },
     },
   });
   if (tgAccounts.length === 0) return;
@@ -120,6 +120,9 @@ export async function processAutoChain(_job: Job): Promise<void> {
       // Variant filter
       if (msg.variant === 'invited' && !invitedUserIds.has(acc.userId)) continue;
       if (msg.variant === 'organic' && invitedUserIds.has(acc.userId)) continue;
+
+      // Skip skills reminder messages (sortOrder >= 100) for users who already filled skills
+      if (msg.sortOrder >= 100 && acc.user?.skillsCompleted) continue;
 
       // Calculate send time
       const sendTime = new Date(userDayStart.getTime());
