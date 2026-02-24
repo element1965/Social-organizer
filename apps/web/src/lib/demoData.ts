@@ -1036,6 +1036,10 @@ export function handleDemoRequest(path: string, input: unknown): unknown {
       return { success: true };
     case 'matches.unreadMatchCount':
       return { count: 0 };
+    case 'matches.myChains':
+      return [];
+    case 'matches.setChatLink':
+      return { success: true };
 
     default:
       console.warn(`[Demo] Unhandled procedure: ${path}`);

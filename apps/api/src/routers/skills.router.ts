@@ -2,6 +2,7 @@ import { z } from 'zod';
 import { router, protectedProcedure } from '../trpc.js';
 import { isAdmin } from '../admin.js';
 import { createSkillMatchNotifications, createNeedMatchNotifications } from '../services/match-notification.service.js';
+import { findAndStoreChains } from '../services/chain-finder.service.js';
 import type { PrismaClient } from '@so/db';
 
 async function autoSuggestOther(
@@ -106,6 +107,11 @@ export const skillsRouter = router({
       // Auto-suggest "other" categories
       autoSuggestOther(ctx.db, ctx.userId, input.skills).catch(() => {});
 
+      // Find clearing chains
+      findAndStoreChains(ctx.db, ctx.userId).catch((err) =>
+        console.error('[ChainFinder] Error:', err),
+      );
+
       return { success: true };
     }),
 
@@ -141,6 +147,11 @@ export const skillsRouter = router({
 
       // Auto-suggest "other" categories
       autoSuggestOther(ctx.db, ctx.userId, input.needs).catch(() => {});
+
+      // Find clearing chains
+      findAndStoreChains(ctx.db, ctx.userId).catch((err) =>
+        console.error('[ChainFinder] Error:', err),
+      );
 
       return { success: true };
     }),

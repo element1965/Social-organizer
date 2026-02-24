@@ -128,6 +128,8 @@ model User {
   skillMatchNotifsReceived SkillMatchNotification[] @relation("skillMatchRecipient")
   skillMatchNotifsSent     SkillMatchNotification[] @relation("skillMatchActor")
   suggestedCategories      SuggestedCategory[]
+  chainLinksAsGiver        MatchChainLink[]         @relation("chainGiver")
+  chainLinksAsReceiver     MatchChainLink[]         @relation("chainReceiver")
 
   @@map("users")
 }
@@ -466,6 +468,7 @@ model SkillCategory {
   needs               UserNeed[]
   matchNotifications  SkillMatchNotification[]
   suggestedCategories SuggestedCategory[]
+  chainLinks          MatchChainLink[]
 
   @@index([group, sortOrder])
   @@map("skill_categories")
@@ -535,4 +538,45 @@ model SuggestedCategory {
 
   @@index([status])
   @@map("suggested_categories")
+}
+
+enum ChainStatus {
+  PROPOSED
+  ACTIVE
+  COMPLETED
+  CANCELLED
+}
+
+model MatchChain {
+  id              String      @id @default(cuid())
+  status          ChainStatus @default(PROPOSED)
+  length          Int
+  telegramChatUrl String?
+  chatAddedBy     String?
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+
+  links MatchChainLink[]
+
+  @@index([status])
+  @@map("match_chains")
+}
+
+model MatchChainLink {
+  id         String  @id @default(cuid())
+  chainId    String
+  position   Int
+  giverId    String
+  receiverId String
+  categoryId String
+
+  chain    MatchChain    @relation(fields: [chainId], references: [id], onDelete: Cascade)
+  giver    User          @relation("chainGiver", fields: [giverId], references: [id], onDelete: Cascade)
+  receiver User          @relation("chainReceiver", fields: [receiverId], references: [id], onDelete: Cascade)
+  category SkillCategory @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@unique([chainId, position])
+  @@index([giverId])
+  @@index([receiverId])
+  @@map("match_chain_links")
 }

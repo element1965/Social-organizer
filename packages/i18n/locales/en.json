@@ -851,6 +851,15 @@
     "viewProfile": "View profile",
     "newMatch": "{{name}} can help with \"{{skill}}\"",
     "matchNotifications": "Skill match alerts",
-    "noNotifications": "No new match alerts"
+    "noNotifications": "No new match alerts",
+    "chains": "Chains",
+    "noChains": "No clearing chains found yet",
+    "noChainsHint": "They appear when skills in your network form a closed loop",
+    "chainOf": "Chain of {{count}} participants",
+    "pairHint": "Write to each other on Telegram to discuss details",
+    "openChat": "Open chat",
+    "chainInstruction": "Create a Telegram group chat, add all participants, and paste the link here. Any participant can do this.",
+    "addChatLink": "Add chat link",
+    "chatLinkPrompt": "Paste a Telegram chat link (t.me/...)"
   }
 }
