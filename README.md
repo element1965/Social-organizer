@@ -72,7 +72,7 @@ pnpm dev
 
 | Model | Description |
 |-------|-------------|
-| User | User with settings, role, onboarding flag, preferredCurrency, monthlyBudget, remainingBudget, lastSeen, hideContacts |
+| User | User with settings, role, onboarding flag, preferredCurrency, monthlyBudget, remainingBudget, lastSeen, hideContacts, skillsCompleted |
 | UserContact | User contacts (social networks, messengers) |
 | PlatformAccount | Platform bindings (FB/TG/Apple/Google) |
 | Connection | Connection between users (userAId < userBId) with optional nicknames (nicknameByA, nicknameByB) |
@@ -89,6 +89,9 @@ pnpm dev
 | ScheduledPostDelivery | Individual delivery tracking per user per scheduled post with readAt for open stats |
 | AutoChainMessage | Drip campaign message: text/media/button, dayOffset from registration, sortOrder, intervalMin |
 | AutoChainDelivery | Delivery tracking per user per chain message with readAt for open stats |
+| SkillCategory | Skill/need category with key, group, sortOrder (35 categories in 6 groups) |
+| UserSkill | User's offered skill (link to SkillCategory) with optional note |
+| UserNeed | User's need (link to SkillCategory) with optional note |
 
 ## Scripts
 
@@ -138,6 +141,7 @@ VAPID_SUBJECT=mailto:admin@example.com    # Web Push VAPID subject
 | `push` | vapidPublicKey, subscribe, unsubscribe |
 | `faq` | list, top, all, incrementView, localize, isAdmin, create, update, delete (admin-gated CRUD with view ranking and LLM auto-translation to 26 languages) |
 | `broadcast` | sendAll, sendDirect, schedulePost, listScheduled, cancelScheduled, scheduledStats, createChainMessage, listChainMessages, updateChainMessage, deleteChainMessage, chainStats, markRead (admin-only Telegram broadcast with scheduled posts, auto-chain drip campaigns, and open tracking) |
+| `skills` | categories, mine, forUser, saveSkills, saveNeeds, markCompleted, adminStats, matchHints (skills/needs pilot with admin metrics) |
 
 ## Services
 
@@ -179,14 +183,14 @@ React 19 SPA with tRPC client.
 |------|------|-------------|
 | LandingPage | `/welcome` | Public landing with 3D Earth globe (NASA textures) and project description; supports `variant="arvut"` for Hebrew-branded Arvut Hadadit subdomain |
 | LoginPage | `/login` | Login via platform (FB/TG/Apple/Google) + demo mode |
-| OnboardingPage | `/onboarding` | 5-screen onboarding with invitation and monthly budget (auto for new users) |
+| OnboardingPage | `/onboarding` | 3-step onboarding: contacts, budget, skills/needs (auto for new users) |
 | DashboardPage | `/` | Network stats (clickable "Whole network" → /network), collections, intentions, emergency alerts (protected → /welcome) |
 | NotificationsPage | `/notifications` | Notifications with handshake path and 24h timer |
 | CreateCollectionPage | `/create` | Create collection with network reach display (1:1 ratio) |
 | CollectionPage | `/collection/:id` | Collection details + intentions + handshake path to creator |
 | MyNetworkPage | `/network` | Connection list sorted by date (newest first) with relative time, connection counts + invitations |
 | ProfilePage | `/profile/:userId` | Profile with editing, contacts, connections list (collapsible), stats (given/received), handshake path |
-| SettingsPage | `/settings` | Language, theme, sounds, font scale, contacts, hide contacts toggle, ignore list |
+| SettingsPage | `/settings` | Language, theme, sounds, font scale, contacts, skills/needs, hide contacts toggle, ignore list |
 | FaqPage | `/faq` | FAQ accordion with admin CRUD, view count ranking, LLM localization button, language-aware |
 | InvitePage | `/invite/:token` | Accept invitation link |
 
@@ -267,6 +271,7 @@ Mock data (`apps/web/src/lib/demoData.ts`):
 - **Collection Hold (Blocked)** — when collection reaches target amount, existing notifications are expired, COLLECTION_BLOCKED notification is sent to all previously notified users; blocked notifications don't navigate to collection page
 - **Smart User Deletion** — users without first-handshake connections are fully deleted from DB (cascade); users with connections get soft-deleted ("Deleted user"); all pending connections cleaned up on deletion
 - **Grouped Notifications** — notifications about the same collection (new/blocked/closed) are visually stacked with partial card overlap; pending connection sections are collapsible and placed below collection notifications
+- **Skills & Needs Pilot** — users can specify skills they offer (35 categories in 6 groups) and needs they have; popup for existing users, step 3 in onboarding; skills displayed on profiles; "friends who can help" hint on collection creation page; admin dashboard shows fill rate, match density, top skills/needs
 
 ## Terminology (Glossary)
 

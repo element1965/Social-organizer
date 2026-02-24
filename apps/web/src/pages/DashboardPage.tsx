@@ -16,6 +16,7 @@ import {
   Pencil,
   Globe,
   Sparkles,
+  Wrench,
 } from 'lucide-react';
 import { Tooltip } from '../components/ui/tooltip';
 import { SocialIcon } from '../components/ui/social-icons';
@@ -34,6 +35,10 @@ export function DashboardPage() {
   const { data: me } = trpc.user.me.useQuery(undefined, { refetchInterval: 30000 });
   const { data: networkStats, isLoading: networkLoading } = trpc.connection.getNetworkStats.useQuery(undefined, { refetchInterval: 60000 });
   const { data: networkCapabilities } = trpc.stats.networkCapabilities.useQuery(undefined, { refetchInterval: 60000 });
+  const { data: adminData } = trpc.faq.isAdmin.useQuery();
+  const { data: skillsAdminStats } = trpc.skills.adminStats.useQuery(undefined, {
+    enabled: !!adminData?.isAdmin,
+  });
 
   // Period pickers state (default: today)
   const [networkDays, setNetworkDays] = useState(1);
@@ -307,6 +312,58 @@ export function DashboardPage() {
             {t('dashboard.updateBudget')}
           </Button>
         </div>
+      )}
+
+      {/* Admin: Skills pilot metrics */}
+      {adminData?.isAdmin && skillsAdminStats && (
+        <Card>
+          <CardContent className="py-4">
+            <div className="flex items-center gap-1.5 mb-3">
+              <Wrench className="w-4 h-4 text-purple-600" />
+              <span className="text-sm font-semibold text-gray-900 dark:text-white">{t('skills.adminTitle')}</span>
+            </div>
+            <div className="grid grid-cols-3 gap-3 mb-3">
+              <div className="text-center">
+                <p className="text-2xl font-bold text-blue-600">{skillsAdminStats.fillRate}%</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400">{t('skills.fillRate')}</p>
+              </div>
+              <div className="text-center">
+                <p className="text-2xl font-bold text-green-600">{skillsAdminStats.matchDensity}</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400">{t('skills.matchDensity')}</p>
+              </div>
+              <div className="text-center">
+                <p className="text-lg font-bold text-gray-700 dark:text-gray-300">
+                  {skillsAdminStats.usersWithSkills}/{skillsAdminStats.usersWithNeeds}
+                </p>
+                <p className="text-xs text-gray-500 dark:text-gray-400">{t('skills.withSkills')}/{t('skills.withNeeds')}</p>
+              </div>
+            </div>
+            {skillsAdminStats.topSkills.length > 0 && (
+              <div className="mb-2">
+                <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 mb-1">{t('skills.topSkills')}</p>
+                <div className="flex flex-wrap gap-1">
+                  {skillsAdminStats.topSkills.map((s: { key: string; count: number }) => (
+                    <span key={s.key} className="px-2 py-0.5 text-xs rounded-full bg-blue-50 dark:bg-blue-950/30 text-blue-600">
+                      {t(`skills.${s.key}`)} ({s.count})
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+            {skillsAdminStats.topNeeds.length > 0 && (
+              <div>
+                <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 mb-1">{t('skills.topNeeds')}</p>
+                <div className="flex flex-wrap gap-1">
+                  {skillsAdminStats.topNeeds.map((n: { key: string; count: number }) => (
+                    <span key={n.key} className="px-2 py-0.5 text-xs rounded-full bg-orange-50 dark:bg-orange-950/30 text-orange-600">
+                      {t(`skills.${n.key}`)} ({n.count})
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+          </CardContent>
+        </Card>
       )}
 
       {/* Period pickers (full-screen overlays) */}
