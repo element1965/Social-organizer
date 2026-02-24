@@ -880,6 +880,9 @@
     "ringCloses": "Closes back to",
     "offerSet": "{{hours}}h",
     "giverDone": "Giver confirmed completion",
-    "receiverDone": "Receiver confirmed completion"
+    "receiverDone": "Receiver confirmed completion",
+    "declineLink": "Can't participate",
+    "declineConfirm": "Are you sure? The system will try to find a replacement, but if not found the chain will be cancelled.",
+    "statusBroken": "Searching replacement"
   }
 }
