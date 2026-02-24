@@ -818,6 +818,7 @@
     "matchDensity": "Matches",
     "topSkills": "Top skills",
     "topNeeds": "Top needs",
+    "suggestions": "New category suggestions",
     "friendsCanHelp": "{{count}} friends can help with {{skill}}",
     "adminTitle": "Skills & Needs — Pilot Metrics",
     "withSkills": "with skills",

@@ -19,6 +19,7 @@ import {
   Wrench,
   Handshake,
   ChevronRight,
+  MessageSquarePlus,
 } from 'lucide-react';
 import { Tooltip } from '../components/ui/tooltip';
 import { SocialIcon } from '../components/ui/social-icons';
@@ -43,6 +44,11 @@ export function DashboardPage() {
   });
   const { data: matchHelpMe } = trpc.matches.whoCanHelpMe.useQuery();
   const { data: matchHelpThem } = trpc.matches.whoNeedsMyHelp.useQuery();
+  const { data: suggestions } = trpc.skills.listSuggestions.useQuery(undefined, {
+    enabled: !!adminData?.isAdmin,
+  });
+  const approveMut = trpc.skills.approveSuggestion.useMutation({ onSuccess: () => utils.skills.listSuggestions.invalidate() });
+  const rejectMut = trpc.skills.rejectSuggestion.useMutation({ onSuccess: () => utils.skills.listSuggestions.invalidate() });
 
   // Period pickers state (default: today)
   const [networkDays, setNetworkDays] = useState(1);
@@ -396,6 +402,50 @@ export function DashboardPage() {
                 </div>
               </div>
             )}
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Suggested categories moderation */}
+      {adminData?.isAdmin && suggestions && suggestions.length > 0 && (
+        <Card>
+          <CardContent className="py-4">
+            <div className="flex items-center gap-1.5 mb-3">
+              <MessageSquarePlus className="w-4 h-4 text-amber-600" />
+              <span className="text-sm font-semibold text-gray-900 dark:text-white">
+                {t('skills.suggestions')} ({suggestions.length})
+              </span>
+            </div>
+            <div className="space-y-2">
+              {suggestions.map((s: { id: string; text: string; group: string; user: { name: string } }) => (
+                <div key={s.id} className="flex items-center gap-2 p-2 rounded-lg bg-gray-50 dark:bg-gray-800/50">
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
+                      &ldquo;{s.text}&rdquo;
+                    </p>
+                    <p className="text-xs text-gray-400">
+                      {t(`skills.group_${s.group}`)} &middot; {s.user.name}
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => {
+                      const key = prompt(`Key for "${s.text}" (camelCase, e.g. "windowRepair"):`);
+                      if (!key) return;
+                      approveMut.mutate({ id: s.id, key, isOnline: false });
+                    }}
+                    className="px-2 py-1 text-xs font-medium rounded bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 hover:bg-green-200"
+                  >
+                    {t('common.confirm')}
+                  </button>
+                  <button
+                    onClick={() => rejectMut.mutate({ id: s.id })}
+                    className="px-2 py-1 text-xs font-medium rounded bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300 hover:bg-red-200"
+                  >
+                    {t('common.delete')}
+                  </button>
+                </div>
+              ))}
+            </div>
           </CardContent>
         </Card>
       )}

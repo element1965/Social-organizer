@@ -1017,6 +1017,11 @@ export function handleDemoRequest(path: string, input: unknown): unknown {
       return null;
     case 'skills.matchHints':
       return [];
+    case 'skills.listSuggestions':
+      return [];
+    case 'skills.approveSuggestion':
+    case 'skills.rejectSuggestion':
+      return { success: true };
 
     // ---- Matches ----
     case 'matches.whoCanHelpMe':

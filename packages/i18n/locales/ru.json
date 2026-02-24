@@ -818,6 +818,7 @@
     "matchDensity": "Совпадения",
     "topSkills": "Топ навыки",
     "topNeeds": "Топ потребности",
+    "suggestions": "Предложения новых категорий",
     "friendsCanHelp": "{{count}} друзей могут помочь с «{{skill}}»",
     "adminTitle": "Навыки и потребности — метрики пилота",
     "withSkills": "с навыками",

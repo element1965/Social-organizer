@@ -60,6 +60,12 @@ enum NotificationType {
   INVITE_ACCEPTED
 }
 
+enum SuggestStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
 enum NotificationStatus {
   UNREAD
   READ
@@ -121,6 +127,7 @@ model User {
   longitude        Float?
   skillMatchNotifsReceived SkillMatchNotification[] @relation("skillMatchRecipient")
   skillMatchNotifsSent     SkillMatchNotification[] @relation("skillMatchActor")
+  suggestedCategories      SuggestedCategory[]
 
   @@map("users")
 }
@@ -455,9 +462,10 @@ model SkillCategory {
   isOnline  Boolean  @default(false)
   createdAt DateTime @default(now())
 
-  skills             UserSkill[]
-  needs              UserNeed[]
-  matchNotifications SkillMatchNotification[]
+  skills              UserSkill[]
+  needs               UserNeed[]
+  matchNotifications  SkillMatchNotification[]
+  suggestedCategories SuggestedCategory[]
 
   @@index([group, sortOrder])
   @@map("skill_categories")
@@ -510,4 +518,21 @@ model SkillMatchNotification {
   @@unique([userId, matchUserId, categoryId])
   @@index([userId, status])
   @@map("skill_match_notifications")
+}
+
+model SuggestedCategory {
+  id         String        @id @default(cuid())
+  userId     String
+  group      String
+  text       String
+  status     SuggestStatus @default(PENDING)
+  categoryId String?
+  createdAt  DateTime      @default(now())
+  reviewedAt DateTime?
+
+  user     User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  category SkillCategory? @relation(fields: [categoryId], references: [id])
+
+  @@index([status])
+  @@map("suggested_categories")
 }
