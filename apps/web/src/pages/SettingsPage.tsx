@@ -299,6 +299,58 @@ export function SettingsPage() {
         </CardContent>
       </Card>
 
+      {/* Geography (above skills — mandatory for offline categories) */}
+      <Card>
+        <CardHeader>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <MapPin className="w-5 h-5 text-gray-500 dark:text-gray-300" />
+              <h2 className="font-semibold text-gray-900 dark:text-white">{t('geo.title')}</h2>
+              {geoSaved && <Check className="w-4 h-4 text-green-500" />}
+            </div>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={detectLocation}
+              disabled={detecting}
+              className="text-xs"
+            >
+              <Locate className="w-3.5 h-3.5 mr-1" />
+              {detecting ? t('geo.detecting') : t('geo.detect')}
+            </Button>
+          </div>
+          {(() => {
+            if (!categories) return null;
+            const allSelected = new Set([...selectedSkills, ...selectedNeeds]);
+            const hasOffline = categories.some((c) => allSelected.has(c.id) && !c.isOnline);
+            if (hasOffline && !geoCountry) {
+              return (
+                <p className="text-xs text-red-500 mt-1">{t('geo.requiredForOffline')}</p>
+              );
+            }
+            return null;
+          })()}
+        </CardHeader>
+        <CardContent className="space-y-3">
+          <Select
+            id="country"
+            label={t('geo.country')}
+            value={geoCountry}
+            onChange={(e) => { setGeoCountry(e.target.value); autosaveGeo(geoCity, e.target.value); }}
+            options={[
+              { value: '', label: t('geo.selectCountry') },
+              ...COUNTRIES.map((c) => ({ value: c.code, label: c.name })),
+            ]}
+          />
+          <Input
+            id="city"
+            placeholder={t('geo.cityPlaceholder')}
+            value={geoCity}
+            onChange={(e) => { setGeoCity(e.target.value); autosaveGeo(e.target.value, geoCountry); }}
+          />
+        </CardContent>
+      </Card>
+
       {/* Skills & Needs */}
       <Card>
         <CardHeader>
@@ -319,47 +371,6 @@ export function SettingsPage() {
               onNoteChange={handleSkillNoteChange}
             />
           )}
-        </CardContent>
-      </Card>
-
-      {/* Geography */}
-      <Card>
-        <CardHeader>
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <MapPin className="w-5 h-5 text-gray-500 dark:text-gray-300" />
-              <h2 className="font-semibold text-gray-900 dark:text-white">{t('geo.title')}</h2>
-              {geoSaved && <Check className="w-4 h-4 text-green-500" />}
-            </div>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={detectLocation}
-              disabled={detecting}
-              className="text-xs"
-            >
-              <Locate className="w-3.5 h-3.5 mr-1" />
-              {detecting ? t('geo.detecting') : t('geo.detect')}
-            </Button>
-          </div>
-        </CardHeader>
-        <CardContent className="space-y-3">
-          <Select
-            id="country"
-            label={t('geo.country')}
-            value={geoCountry}
-            onChange={(e) => { setGeoCountry(e.target.value); autosaveGeo(geoCity, e.target.value); }}
-            options={[
-              { value: '', label: t('geo.selectCountry') },
-              ...COUNTRIES.map((c) => ({ value: c.code, label: c.name })),
-            ]}
-          />
-          <Input
-            id="city"
-            placeholder={t('geo.cityPlaceholder')}
-            value={geoCity}
-            onChange={(e) => { setGeoCity(e.target.value); autosaveGeo(e.target.value, geoCountry); }}
-          />
         </CardContent>
       </Card>
 

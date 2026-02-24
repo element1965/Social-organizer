@@ -33,7 +33,7 @@ export function SkillSelector({
 }: SkillSelectorProps) {
   const { t } = useTranslation();
   const [search, setSearch] = useState('');
-  const [expanded, setExpanded] = useState<Set<string>>(new Set());
+  const [expanded, setExpanded] = useState<string | null>(null);
 
   const grouped = useMemo(() => {
     const map: Record<string, Category[]> = {};
@@ -60,12 +60,10 @@ export function SkillSelector({
 
   const isSearching = search.trim().length > 0;
   const toggleGroup = (group: string) => {
-    const next = new Set(expanded);
-    if (next.has(group)) next.delete(group); else next.add(group);
-    setExpanded(next);
+    setExpanded((prev) => (prev === group ? null : group));
   };
 
-  const isExpanded = (group: string) => isSearching || expanded.has(group);
+  const isExpanded = (group: string) => isSearching || expanded === group;
 
   return (
     <div className="space-y-2">

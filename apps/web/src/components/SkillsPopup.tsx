@@ -23,7 +23,8 @@ export function SkillsPopup() {
   const utils = trpc.useUtils();
 
   if (!me || !me.onboardingCompleted) return null;
-  if (mine?.skillsCompleted) return null;
+  if (!mine) return null; // still loading — don't flash
+  if (mine.skillsCompleted) return null;
   if (dismissed) return null;
 
   const handleToggleSkill = (id: string) => {
