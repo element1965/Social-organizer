@@ -43,7 +43,7 @@ export function MyNetworkPage() {
 
   const utils = trpc.useUtils();
 
-  const [expandedDepths, setExpandedDepths] = useState<Record<number, boolean>>({});
+  const [expandedDepth, setExpandedDepth] = useState<number | null>(null);
   // Pending connections
   const { data: pendingIncoming } = trpc.pending.incoming.useQuery(undefined, { refetchInterval: 15000 });
   const acceptPending = trpc.pending.accept.useMutation({
@@ -64,7 +64,7 @@ export function MyNetworkPage() {
   const usersByDepth = (networkStats as any)?.usersByDepth ?? {};
 
   const toggleDepth = (depth: number) => {
-    setExpandedDepths((prev) => ({ ...prev, [depth]: !prev[depth] }));
+    setExpandedDepth((prev) => (prev === depth ? null : depth));
   };
 
   return (
@@ -217,7 +217,7 @@ export function MyNetworkPage() {
             <div className="space-y-2">
               {Object.entries(byDepth).map(([depth, count]) => {
                 const depthNum = Number(depth);
-                const isExpanded = expandedDepths[depthNum];
+                const isExpanded = expandedDepth === depthNum;
                 const depthUsers = usersByDepth[depthNum] || [];
                 const colors = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899'];
                 const color = colors[(depthNum - 1) % colors.length];
