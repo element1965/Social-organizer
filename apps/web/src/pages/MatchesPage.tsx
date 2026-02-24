@@ -18,6 +18,7 @@ const STATUS_STYLES: Record<string, string> = {
   ACTIVE: 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300',
   COMPLETED: 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300',
   CANCELLED: 'bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-400',
+  BROKEN: 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300',
 };
 
 export function MatchesPage() {
@@ -52,6 +53,9 @@ export function MatchesPage() {
     onSuccess: () => utils.matches.myChains.invalidate(),
   });
   const cancelChainMut = trpc.matches.cancelChain.useMutation({
+    onSuccess: () => utils.matches.myChains.invalidate(),
+  });
+  const declineLinkMut = trpc.matches.declineLink.useMutation({
     onSuccess: () => utils.matches.myChains.invalidate(),
   });
 
@@ -95,6 +99,11 @@ export function MatchesPage() {
   const handleCancelChain = (chainId: string) => {
     if (!confirm(t('matches.cancelConfirm'))) return;
     cancelChainMut.mutate({ chainId });
+  };
+
+  const handleDecline = (linkId: string) => {
+    if (!confirm(t('matches.declineConfirm'))) return;
+    declineLinkMut.mutate({ linkId });
   };
 
   const getLinkStatusIcon = (link: { giverConfirmed: boolean; receiverConfirmed: boolean; giverCompleted: boolean; receiverCompleted: boolean }) => {
@@ -264,8 +273,8 @@ export function MatchesPage() {
                                 </p>
                               )}
 
-                              {/* Actions (only for non-done, non-cancelled chains) */}
-                              {!isDone && !isCancelled && (
+                              {/* Actions (only for non-done, non-cancelled, non-broken chains) */}
+                              {!isDone && !isCancelled && chain.status !== 'BROKEN' && (
                                 <>
                                   {/* Giver: set offer */}
                                   {isGiver && !link.giverConfirmed && (
@@ -373,6 +382,17 @@ export function MatchesPage() {
                                         {t('matches.markComplete')}
                                       </Button>
                                     </div>
+                                  )}
+
+                                  {/* Decline button */}
+                                  {(isGiver || isReceiver) && (
+                                    <button
+                                      onClick={() => handleDecline(link.id)}
+                                      className="mt-1.5 ml-8 text-[11px] text-gray-400 hover:text-red-400 transition-colors"
+                                      disabled={declineLinkMut.isPending}
+                                    >
+                                      {t('matches.declineLink')}
+                                    </button>
                                   )}
                                 </>
                               )}

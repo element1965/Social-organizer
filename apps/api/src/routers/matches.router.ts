@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { router, protectedProcedure } from '../trpc.js';
 import { haversineKm, distanceHint } from '../services/geo.service.js';
+import { tryFindReplacement } from '../services/chain-finder.service.js';
 
 interface MatchRow {
   user_id: string;
@@ -269,6 +270,40 @@ export const matchesRouter = router({
         where: { id: input.chainId },
         data: { status: 'CANCELLED' },
       });
+    }),
+
+  /** Decline participation — try to find replacement, otherwise cancel */
+  declineLink: protectedProcedure
+    .input(z.object({ linkId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const link = await ctx.db.matchChainLink.findFirst({
+        where: {
+          id: input.linkId,
+          OR: [{ giverId: ctx.userId }, { receiverId: ctx.userId }],
+        },
+        include: { chain: true },
+      });
+      if (!link) return null;
+      if (link.chain.status === 'COMPLETED' || link.chain.status === 'CANCELLED') return null;
+
+      // Mark as BROKEN while we search for replacement
+      await ctx.db.matchChain.update({
+        where: { id: link.chainId },
+        data: { status: 'BROKEN' },
+      });
+
+      const replacementId = await tryFindReplacement(ctx.db, link.chainId, ctx.userId);
+
+      if (replacementId) {
+        return { replaced: true, replacementId, status: 'PROPOSED' as const };
+      }
+
+      // No replacement — cancel chain
+      await ctx.db.matchChain.update({
+        where: { id: link.chainId },
+        data: { status: 'CANCELLED' },
+      });
+      return { replaced: false, replacementId: null, status: 'CANCELLED' as const };
     }),
 
   /** Save Telegram group chat link for a chain (any participant can do it) */

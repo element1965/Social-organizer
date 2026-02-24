@@ -545,6 +545,7 @@ enum ChainStatus {
   ACTIVE
   COMPLETED
   CANCELLED
+  BROKEN
 }
 
 model MatchChain {

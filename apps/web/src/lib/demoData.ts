@@ -1048,6 +1048,8 @@ export function handleDemoRequest(path: string, input: unknown): unknown {
       return { success: true };
     case 'matches.cancelChain':
       return { status: 'CANCELLED' };
+    case 'matches.declineLink':
+      return { replaced: false, replacementId: null, status: 'CANCELLED' };
 
     default:
       console.warn(`[Demo] Unhandled procedure: ${path}`);

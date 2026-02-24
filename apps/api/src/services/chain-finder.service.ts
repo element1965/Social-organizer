@@ -1,4 +1,4 @@
-import type { PrismaClient } from '@so/db';
+import { Prisma, type PrismaClient } from '@so/db';
 import { sendTelegramMessage, type TgReplyMarkup } from './telegram-bot.service.js';
 
 const WEB_APP_URL = process.env.WEB_APP_URL || 'https://www.orginizer.com';
@@ -355,4 +355,108 @@ async function notifyChainParticipants(
       }
     }
   }
+}
+
+/**
+ * Try to find a replacement for a declined participant in a chain.
+ * The declined user appears as receiver in one link and giver in another.
+ * We look for someone who:
+ *  - needs the same skill (to replace as receiver)
+ *  - has the same skill (to replace as giver)
+ *  - is connected to both neighbors
+ *  - is not already in the chain
+ *
+ * If found: updates links, resets confirmations, sets chain back to PROPOSED.
+ * Returns the replacement userId or null.
+ */
+export async function tryFindReplacement(
+  db: PrismaClient,
+  chainId: string,
+  declinedUserId: string,
+): Promise<string | null> {
+  const chain = await db.matchChain.findUnique({
+    where: { id: chainId },
+    include: { links: { orderBy: { position: 'asc' } } },
+  });
+  if (!chain) return null;
+
+  // Find the two links involving the declined user
+  const asReceiverLink = chain.links.find((l) => l.receiverId === declinedUserId);
+  const asGiverLink = chain.links.find((l) => l.giverId === declinedUserId);
+  if (!asReceiverLink || !asGiverLink) return null;
+
+  const predecessorId = asReceiverLink.giverId; // gives to the declined person
+  const successorId = asGiverLink.receiverId; // receives from the declined person
+  const needsCategoryId = asReceiverLink.categoryId; // replacement must need this
+  const hasCategoryId = asGiverLink.categoryId; // replacement must have this
+
+  // All current participant IDs (to exclude)
+  const participantIds = [...new Set(chain.links.flatMap((l) => [l.giverId, l.receiverId]))];
+
+  // Search for a replacement user
+  let replacements: { id: string }[];
+
+  if (predecessorId === successorId) {
+    // Pair (length 2): replacement connected to the one remaining person
+    replacements = await db.$queryRaw<{ id: string }[]>`
+      SELECT u.id FROM users u
+      JOIN user_needs un ON un."userId" = u.id AND un."categoryId" = ${needsCategoryId}
+      JOIN user_skills us ON us."userId" = u.id AND us."categoryId" = ${hasCategoryId}
+      JOIN connections c
+        ON (c."userAId" = ${predecessorId} AND c."userBId" = u.id)
+        OR (c."userBId" = ${predecessorId} AND c."userAId" = u.id)
+      WHERE u."deletedAt" IS NULL
+        AND u.id NOT IN (${Prisma.join(participantIds)})
+      LIMIT 1
+    `;
+  } else {
+    // Chain 3+: replacement must be connected to both neighbors
+    replacements = await db.$queryRaw<{ id: string }[]>`
+      SELECT u.id FROM users u
+      JOIN user_needs un ON un."userId" = u.id AND un."categoryId" = ${needsCategoryId}
+      JOIN user_skills us ON us."userId" = u.id AND us."categoryId" = ${hasCategoryId}
+      JOIN connections c1
+        ON (c1."userAId" = ${predecessorId} AND c1."userBId" = u.id)
+        OR (c1."userBId" = ${predecessorId} AND c1."userAId" = u.id)
+      JOIN connections c2
+        ON (c2."userAId" = ${successorId} AND c2."userBId" = u.id)
+        OR (c2."userBId" = ${successorId} AND c2."userAId" = u.id)
+      WHERE u."deletedAt" IS NULL
+        AND u.id NOT IN (${Prisma.join(participantIds)})
+      LIMIT 1
+    `;
+  }
+
+  if (replacements.length === 0) return null;
+
+  const newUserId = replacements[0]!.id;
+
+  // Swap the declined user out, reset confirmations on affected links
+  await db.$transaction([
+    db.matchChainLink.update({
+      where: { id: asReceiverLink.id },
+      data: {
+        receiverId: newUserId,
+        receiverConfirmed: false,
+        receiverCompleted: false,
+      },
+    }),
+    db.matchChainLink.update({
+      where: { id: asGiverLink.id },
+      data: {
+        giverId: newUserId,
+        giverConfirmed: false,
+        giverCompleted: false,
+        offerHours: null,
+        offerDescription: null,
+      },
+    }),
+    db.matchChain.update({
+      where: { id: chainId },
+      data: { status: 'PROPOSED' },
+    }),
+  ]);
+
+  console.log(`[ChainFinder] Replaced ${declinedUserId} with ${newUserId} in chain ${chainId}`);
+  return newUserId;
 }
