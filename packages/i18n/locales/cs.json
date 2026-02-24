@@ -1,4 +1,4 @@
-﻿{
+{
   "common": {
     "appName": "Sociální Organizátor",
     "loading": "Načítání...",
@@ -400,6 +400,8 @@
     "webLinkDesc": "Odkaz na web — pokud osoba ještě nezná projekt, obsahuje všechny úvodní informace",
     "botLinkDesc": "Přímo do Telegramu — pokud jste vše vysvětlili a mohou jít přímo do aplikace",
     "slugDesc": "Toto je vaše osobní ID odkazu pro pozvánky. NENÍ to samotná pozvánka — neposílejte ho lidem. K pozvání použijte odkazy výše.",
+    "shareText": "Toto je osobní pozvánka od {{name}} do kruhu jeho blízkých přátel",
+    "share": "Sdílet",
     "expand": "show URL",
     "showQr": "zobrazit QR"
   },

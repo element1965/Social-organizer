@@ -1,4 +1,4 @@
-﻿{
+{
   "common": {
     "appName": "Sosyal Organizasyon",
     "loading": "Yükleniyor...",
@@ -400,6 +400,8 @@
     "webLinkDesc": "Web sitesi bağlantısı — eğer kişi proje ile henüz tanışmadıysa, tüm giriş bilgilerini barındırır",
     "botLinkDesc": "Doğrudan Telegram'a — eğer her şeyi zaten açıklamışsanız ve doğrudan uygulamaya gidebilirler",
     "slugDesc": "Bu, davet URL'leri için kişisel bağlantı kimliğinizdir. Bu bir davet DEĞİLDİR — insanlara göndermeyin. Birini davet etmek için yukarıdaki bağlantıları kullanın.",
+    "shareText": "Bu {{name}} tarafından yakın arkadaş çevresine kişisel bir davettir",
+    "share": "Paylaş",
     "expand": "URL göster",
     "showQr": "QR göster"
   },

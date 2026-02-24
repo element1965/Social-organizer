@@ -1,4 +1,4 @@
-﻿{
+{
   "common": {
     "appName": "Organizzatore Sociale",
     "loading": "Caricamento...",
@@ -378,6 +378,8 @@
     "webLinkDesc": "Link al sito web — se la persona non è ancora familiare con il progetto, contiene tutte le informazioni introduttive",
     "botLinkDesc": "Direttamente a Telegram — se hai già spiegato tutto e possono andare direttamente all'app",
     "slugDesc": "Questo è il tuo ID link personale per gli URL di invito. NON è un invito di per sé — non inviarlo alle persone. Usa i link sopra per invitare qualcuno.",
+    "shareText": "Questo è un invito personale da {{name}} nella cerchia dei suoi amici più stretti",
+    "share": "Condividi",
     "expand": "mostra URL",
     "showQr": "mostra QR"
   },

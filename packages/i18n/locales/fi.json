@@ -1,4 +1,4 @@
-﻿{
+{
   "common": {
     "appName": "Sosiaalinen Järjestäjä",
     "loading": "Ladataan...",
@@ -400,6 +400,8 @@
     "webLinkDesc": "Verkkosivun linkki — jos henkilö ei ole vielä tutustunut projektiin, se sisältää kaiken esittelyinfon",
     "botLinkDesc": "Suoraan Telegramiin — jos olet jo selittänyt kaiken ja he voivat mennä suoraan sovellukseen",
     "slugDesc": "Tämä on henkilökohtainen linkkitunnuksesi kutsu-URL-osoitteisiin. Se EI ole kutsu itsessään — älä lähetä sitä ihmisille. Käytä yllä olevia linkkejä kutsuaksesi jonkun.",
+    "shareText": "Tämä on henkilökohtainen kutsu käyttäjältä {{name}} hänen läheisten ystäviensä piiriin",
+    "share": "Jaa",
     "expand": "show URL",
     "showQr": "näytä QR"
   },
