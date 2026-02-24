@@ -114,6 +114,68 @@ export const matchesRouter = router({
     return processMatches(rows, me?.latitude ?? null, me?.longitude ?? null, me?.countryCode ?? null, me?.city ?? null);
   }),
 
+  /** Get clearing chains where the current user participates */
+  myChains: protectedProcedure.query(async ({ ctx }) => {
+    const chains = await ctx.db.matchChain.findMany({
+      where: {
+        status: { in: ['PROPOSED', 'ACTIVE'] },
+        links: { some: { OR: [{ giverId: ctx.userId }, { receiverId: ctx.userId }] } },
+      },
+      include: {
+        links: {
+          orderBy: { position: 'asc' },
+          include: {
+            giver: { select: { id: true, name: true, photoUrl: true } },
+            receiver: { select: { id: true, name: true, photoUrl: true } },
+            category: { select: { id: true, key: true } },
+          },
+        },
+      },
+      orderBy: { createdAt: 'desc' },
+      take: 20,
+    });
+
+    return chains.map((ch) => ({
+      id: ch.id,
+      status: ch.status,
+      length: ch.length,
+      telegramChatUrl: ch.telegramChatUrl,
+      chatAddedBy: ch.chatAddedBy,
+      createdAt: ch.createdAt,
+      links: ch.links.map((l) => ({
+        position: l.position,
+        giver: l.giver,
+        receiver: l.receiver,
+        categoryKey: l.category.key,
+      })),
+    }));
+  }),
+
+  /** Save Telegram group chat link for a chain (any participant can do it) */
+  setChatLink: protectedProcedure
+    .input(z.object({
+      chainId: z.string(),
+      telegramChatUrl: z.string().url().regex(/t\.me\//),
+    }))
+    .mutation(async ({ ctx, input }) => {
+      // Verify user is a participant
+      const chain = await ctx.db.matchChain.findFirst({
+        where: {
+          id: input.chainId,
+          links: { some: { OR: [{ giverId: ctx.userId }, { receiverId: ctx.userId }] } },
+        },
+      });
+      if (!chain) return null;
+
+      return ctx.db.matchChain.update({
+        where: { id: input.chainId },
+        data: {
+          telegramChatUrl: input.telegramChatUrl,
+          chatAddedBy: ctx.userId,
+        },
+      });
+    }),
+
   matchNotifications: protectedProcedure.query(async ({ ctx }) => {
     return ctx.db.skillMatchNotification.findMany({
       where: { userId: ctx.userId, status: { in: ['UNREAD', 'READ'] } },
