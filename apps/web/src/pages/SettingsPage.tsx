@@ -78,7 +78,6 @@ export function SettingsPage() {
   // Skills/Needs
   const { data: categories } = trpc.skills.categories.useQuery();
   const { data: mySkills } = trpc.skills.mine.useQuery();
-  const [skillTab, setSkillTab] = useState<'skills' | 'needs'>('skills');
   const [selectedSkills, setSelectedSkills] = useState<Set<string>>(new Set());
   const [selectedNeeds, setSelectedNeeds] = useState<Set<string>>(new Set());
   const [skillsInitialized, setSkillsInitialized] = useState(false);
@@ -95,22 +94,25 @@ export function SettingsPage() {
   }, [mySkills, skillsInitialized]);
 
   const skillsDebounce = useRef<ReturnType<typeof setTimeout>>();
-  const handleSkillToggle = (id: string) => {
-    const set = skillTab === 'skills' ? selectedSkills : selectedNeeds;
-    const setter = skillTab === 'skills' ? setSelectedSkills : setSelectedNeeds;
-    const next = new Set(set);
-    if (next.has(id)) next.delete(id); else next.add(id);
-    setter(next);
-    // Autosave
+  const autosaveSkills = (nextSkills: Set<string>, nextNeeds: Set<string>) => {
     if (skillsDebounce.current) clearTimeout(skillsDebounce.current);
     skillsDebounce.current = setTimeout(() => {
-      if (skillTab === 'skills') {
-        saveSkillsMut.mutate({ skills: [...next].map((cId) => ({ categoryId: cId })) });
-      } else {
-        saveNeedsMut.mutate({ needs: [...next].map((cId) => ({ categoryId: cId })) });
-      }
+      saveSkillsMut.mutate({ skills: [...nextSkills].map((cId) => ({ categoryId: cId })) });
+      saveNeedsMut.mutate({ needs: [...nextNeeds].map((cId) => ({ categoryId: cId })) });
       if (!mySkills?.skillsCompleted) markCompleted.mutate();
     }, 800);
+  };
+  const handleToggleSkill = (id: string) => {
+    const next = new Set(selectedSkills);
+    if (next.has(id)) next.delete(id); else next.add(id);
+    setSelectedSkills(next);
+    autosaveSkills(next, selectedNeeds);
+  };
+  const handleToggleNeed = (id: string) => {
+    const next = new Set(selectedNeeds);
+    if (next.has(id)) next.delete(id); else next.add(id);
+    setSelectedNeeds(next);
+    autosaveSkills(selectedSkills, next);
   };
 
   const handleLanguageChange = (lang: string) => { i18n.changeLanguage(lang); localStorage.setItem('language', lang); updateLanguage.mutate({ language: lang }); };
@@ -245,25 +247,13 @@ export function SettingsPage() {
           </div>
         </CardHeader>
         <CardContent>
-          <div className="flex gap-2 mb-3">
-            <button
-              onClick={() => setSkillTab('skills')}
-              className={cn('flex-1 py-1.5 rounded-lg text-sm font-medium transition-colors', skillTab === 'skills' ? 'bg-blue-50 dark:bg-blue-950/30 text-blue-600 ring-1 ring-blue-300 dark:ring-blue-700' : 'bg-gray-50 dark:bg-gray-800 text-gray-600 dark:text-gray-300')}
-            >
-              {t('skills.tabSkills')} ({selectedSkills.size})
-            </button>
-            <button
-              onClick={() => setSkillTab('needs')}
-              className={cn('flex-1 py-1.5 rounded-lg text-sm font-medium transition-colors', skillTab === 'needs' ? 'bg-blue-50 dark:bg-blue-950/30 text-blue-600 ring-1 ring-blue-300 dark:ring-blue-700' : 'bg-gray-50 dark:bg-gray-800 text-gray-600 dark:text-gray-300')}
-            >
-              {t('skills.tabNeeds')} ({selectedNeeds.size})
-            </button>
-          </div>
           {categories && (
             <SkillSelector
               categories={categories}
-              selected={skillTab === 'skills' ? selectedSkills : selectedNeeds}
-              onToggle={handleSkillToggle}
+              selectedSkills={selectedSkills}
+              selectedNeeds={selectedNeeds}
+              onToggleSkill={handleToggleSkill}
+              onToggleNeed={handleToggleNeed}
             />
           )}
         </CardContent>

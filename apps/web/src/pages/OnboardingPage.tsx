@@ -56,14 +56,13 @@ export function OnboardingPage() {
   const updateContacts = trpc.user.updateContacts.useMutation();
   const utils = trpc.useUtils();
 
-  // Skills step
+  // Skills step — unified (skills + needs in one pass)
   const { data: categories } = trpc.skills.categories.useQuery();
   const saveSkills = trpc.skills.saveSkills.useMutation();
   const saveNeeds = trpc.skills.saveNeeds.useMutation();
   const markSkillsCompleted = trpc.skills.markCompleted.useMutation();
   const [selectedSkills, setSelectedSkills] = useState<Set<string>>(new Set());
   const [selectedNeeds, setSelectedNeeds] = useState<Set<string>>(new Set());
-  const [skillTab, setSkillTab] = useState<'skills' | 'needs'>('skills');
 
   const contactErrors = Object.fromEntries(
     Object.entries(contacts).map(([type, value]) => [type, validateContact(type, value)])
@@ -80,12 +79,16 @@ export function OnboardingPage() {
   const isBudgetStep = step === 1;
   const isSkillsStep = step === 2;
 
-  const handleSkillToggle = (id: string) => {
-    const set = skillTab === 'skills' ? selectedSkills : selectedNeeds;
-    const setter = skillTab === 'skills' ? setSelectedSkills : setSelectedNeeds;
-    const next = new Set(set);
+  const handleToggleSkill = (id: string) => {
+    const next = new Set(selectedSkills);
     if (next.has(id)) next.delete(id); else next.add(id);
-    setter(next);
+    setSelectedSkills(next);
+  };
+
+  const handleToggleNeed = (id: string) => {
+    const next = new Set(selectedNeeds);
+    if (next.has(id)) next.delete(id); else next.add(id);
+    setSelectedNeeds(next);
   };
 
   const skillsValid = selectedSkills.size >= MIN_SKILLS && selectedNeeds.size >= MIN_NEEDS;
@@ -132,28 +135,27 @@ export function OnboardingPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-950 flex flex-col items-center justify-center px-6">
-      <div className="flex-1 flex flex-col items-center justify-center max-w-sm text-center">
-        <div className="w-20 h-20 rounded-2xl bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center mb-6">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-950 flex flex-col px-4">
+      <div className="flex-1 flex flex-col items-center pt-8 max-w-md mx-auto w-full">
+        <div className="w-16 h-16 rounded-2xl bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center mb-4">
           {isContactsStep ? (
-            <MessageCircle className="w-10 h-10 text-blue-600 dark:text-blue-400" />
+            <MessageCircle className="w-8 h-8 text-blue-600 dark:text-blue-400" />
           ) : isBudgetStep ? (
-            <Wallet className="w-10 h-10 text-blue-600 dark:text-blue-400" />
+            <Wallet className="w-8 h-8 text-blue-600 dark:text-blue-400" />
           ) : (
-            <Wrench className="w-10 h-10 text-blue-600 dark:text-blue-400" />
+            <Wrench className="w-8 h-8 text-blue-600 dark:text-blue-400" />
           )}
         </div>
-        <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+        <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-2 text-center">
           {isContactsStep ? t('onboarding.step5.title') : isBudgetStep ? t('onboarding.step6.title') : t('skills.popupTitle')}
         </h2>
-        <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed">
+        <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed text-center mb-4">
           {isContactsStep ? t('onboarding.step5.text') : isBudgetStep ? t('onboarding.step6.text') : t('skills.popupText')}
         </p>
 
         {/* Step 1: Contacts */}
         {isContactsStep && (
-          <div className="w-full max-w-xs space-y-3 mt-6">
-            {/* Telegram pre-filled (read-only) */}
+          <div className="w-full space-y-3">
             {hasTelegram && (
               <div className="flex items-center gap-2">
                 <SocialIcon type="telegram" className="w-5 h-5 text-gray-500 dark:text-gray-300 shrink-0" />
@@ -186,7 +188,7 @@ export function OnboardingPage() {
 
         {/* Step 2: Budget input */}
         {isBudgetStep && (
-          <div className="w-full max-w-xs space-y-3 mt-6">
+          <div className="w-full space-y-3">
             <div className="flex gap-2">
               <Input
                 type="number"
@@ -205,46 +207,30 @@ export function OnboardingPage() {
               />
             </div>
             {budgetCurrency !== 'USD' && preview && Number(budgetAmount) > 0 && (
-              <p className="text-sm text-gray-500 dark:text-gray-300">≈ ${preview.result} USD</p>
+              <p className="text-sm text-gray-500 dark:text-gray-300">{'\u2248'} ${preview.result} USD</p>
             )}
             <p className="text-xs text-gray-400">{t('onboarding.budgetNote')}</p>
           </div>
         )}
 
-        {/* Step 3: Skills & Needs */}
+        {/* Step 3: Skills & Needs — unified single-pass */}
         {isSkillsStep && (
-          <div className="w-full max-w-xs space-y-3 mt-6">
-            <div className="flex gap-2 mb-2">
-              <button
-                onClick={() => setSkillTab('skills')}
-                className={cn('flex-1 py-1.5 rounded-lg text-sm font-medium transition-colors',
-                  skillTab === 'skills' ? 'bg-blue-50 dark:bg-blue-950/30 text-blue-600 ring-1 ring-blue-300' : 'bg-gray-50 dark:bg-gray-800 text-gray-600 dark:text-gray-300')}
-              >
-                {t('skills.tabSkills')} ({selectedSkills.size})
-              </button>
-              <button
-                onClick={() => setSkillTab('needs')}
-                className={cn('flex-1 py-1.5 rounded-lg text-sm font-medium transition-colors',
-                  skillTab === 'needs' ? 'bg-blue-50 dark:bg-blue-950/30 text-blue-600 ring-1 ring-blue-300' : 'bg-gray-50 dark:bg-gray-800 text-gray-600 dark:text-gray-300')}
-              >
-                {t('skills.tabNeeds')} ({selectedNeeds.size})
-              </button>
-            </div>
-            <div className="max-h-60 overflow-y-auto">
-              {categories && (
-                <SkillSelector
-                  categories={categories}
-                  selected={skillTab === 'skills' ? selectedSkills : selectedNeeds}
-                  onToggle={handleSkillToggle}
-                />
-              )}
-            </div>
+          <div className="w-full flex-1 overflow-y-auto">
+            {categories && (
+              <SkillSelector
+                categories={categories}
+                selectedSkills={selectedSkills}
+                selectedNeeds={selectedNeeds}
+                onToggleSkill={handleToggleSkill}
+                onToggleNeed={handleToggleNeed}
+              />
+            )}
           </div>
         )}
       </div>
 
-      <div className="w-full max-w-sm pb-8">
-        <div className="flex justify-center gap-2 mb-6">
+      <div className="w-full max-w-md mx-auto pb-6 pt-3">
+        <div className="flex justify-center gap-2 mb-4">
           {[0, 1, 2].map((i) => (
             <div key={i} className={cn('w-2 h-2 rounded-full', i === step ? 'bg-blue-600' : 'bg-gray-300 dark:bg-gray-700')} />
           ))}
@@ -284,7 +270,10 @@ export function OnboardingPage() {
             </Button>
           </div>
         ) : (
-          <div className="space-y-3">
+          <div className="space-y-2">
+            <p className="text-xs text-center text-gray-400">
+              {t('skills.minHint', { skills: MIN_SKILLS, needs: MIN_NEEDS })}
+            </p>
             <Button
               className="w-full"
               size="lg"

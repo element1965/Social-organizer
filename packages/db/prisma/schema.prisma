@@ -115,6 +115,10 @@ model User {
   skills           UserSkill[]
   needs            UserNeed[]
   skillsCompleted  Boolean   @default(false)
+  city             String?
+  countryCode      String?   @map("country_code")
+  latitude         Float?
+  longitude        Float?
 
   @@map("users")
 }
@@ -446,6 +450,7 @@ model SkillCategory {
   key       String   @unique
   group     String
   sortOrder Int      @default(0)
+  isOnline  Boolean  @default(false)
   createdAt DateTime @default(now())
 
   skills UserSkill[]

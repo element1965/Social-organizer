@@ -1,13 +1,27 @@
-export const SKILL_GROUPS = ['home', 'professional', 'health', 'transport', 'digital', 'social'] as const;
+export const SKILL_GROUPS = [
+  'home', 'construction', 'professional', 'legal', 'creative',
+  'health', 'beauty', 'transport', 'auto', 'digital',
+  'education', 'events', 'pets', 'outdoor', 'agriculture',
+] as const;
+
 export type SkillGroup = typeof SKILL_GROUPS[number];
 
 export const SKILL_GROUP_ICONS: Record<SkillGroup, string> = {
-  home: '🔧',
+  home: '🏠',
+  construction: '🔨',
   professional: '💼',
+  legal: '⚖️',
+  creative: '🎨',
   health: '🏥',
+  beauty: '💅',
   transport: '🚗',
+  auto: '🔧',
   digital: '💻',
-  social: '🎓',
+  education: '🎓',
+  events: '🎉',
+  pets: '🐾',
+  outdoor: '⛰️',
+  agriculture: '🌱',
 };
 
 export const MIN_SKILLS = 3;
