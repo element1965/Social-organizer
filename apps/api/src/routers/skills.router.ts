@@ -2,6 +2,35 @@ import { z } from 'zod';
 import { router, protectedProcedure } from '../trpc.js';
 import { isAdmin } from '../admin.js';
 import { createSkillMatchNotifications, createNeedMatchNotifications } from '../services/match-notification.service.js';
+import type { PrismaClient } from '@so/db';
+
+async function autoSuggestOther(
+  db: PrismaClient,
+  userId: string,
+  items: Array<{ categoryId: string; note?: string }>,
+) {
+  // Load "other*" category IDs
+  const otherCats = await db.skillCategory.findMany({
+    where: { key: { startsWith: 'other' } },
+    select: { id: true, group: true },
+  });
+  const otherMap = new Map(otherCats.map((c) => [c.id, c.group]));
+
+  for (const item of items) {
+    const group = otherMap.get(item.categoryId);
+    if (!group || !item.note?.trim()) continue;
+    const text = item.note.trim();
+    // Skip if already suggested same text by same user
+    const existing = await db.suggestedCategory.findFirst({
+      where: { userId, group, text: { equals: text, mode: 'insensitive' } },
+    });
+    if (existing) continue;
+    await db.suggestedCategory.create({
+      data: { userId, group, text },
+    });
+    console.log(`[Skills] New suggestion: "${text}" in group "${group}" by ${userId}`);
+  }
+}
 
 export const skillsRouter = router({
   categories: protectedProcedure.query(async ({ ctx }) => {
@@ -74,6 +103,9 @@ export const skillsRouter = router({
         );
       }
 
+      // Auto-suggest "other" categories
+      autoSuggestOther(ctx.db, ctx.userId, input.skills).catch(() => {});
+
       return { success: true };
     }),
 
@@ -106,6 +138,9 @@ export const skillsRouter = router({
           console.error('[SkillMatch] Error:', err),
         );
       }
+
+      // Auto-suggest "other" categories
+      autoSuggestOther(ctx.db, ctx.userId, input.needs).catch(() => {});
 
       return { success: true };
     }),
@@ -197,4 +232,64 @@ export const skillsRouter = router({
 
     return results.map((r) => ({ categoryId: r.category_id, key: r.key, friendsCount: r.cnt }));
   }),
+
+  // ---- Suggested categories (admin moderation) ----
+
+  listSuggestions: protectedProcedure.query(async ({ ctx }) => {
+    if (!isAdmin(ctx.userId)) return [];
+    return ctx.db.suggestedCategory.findMany({
+      where: { status: 'PENDING' },
+      include: { user: { select: { id: true, name: true } } },
+      orderBy: { createdAt: 'asc' },
+    });
+  }),
+
+  approveSuggestion: protectedProcedure
+    .input(z.object({
+      id: z.string(),
+      key: z.string().min(2).max(50).regex(/^[a-zA-Z][a-zA-Z0-9]*$/),
+      isOnline: z.boolean().default(false),
+    }))
+    .mutation(async ({ ctx, input }) => {
+      if (!isAdmin(ctx.userId)) return null;
+
+      const suggestion = await ctx.db.suggestedCategory.findUnique({ where: { id: input.id } });
+      if (!suggestion || suggestion.status !== 'PENDING') return null;
+
+      // Find max sortOrder in the group (before the "other" entry at 99)
+      const maxSort = await ctx.db.skillCategory.findFirst({
+        where: { group: suggestion.group, sortOrder: { lt: 99 } },
+        orderBy: { sortOrder: 'desc' },
+        select: { sortOrder: true },
+      });
+      const sortOrder = (maxSort?.sortOrder ?? 0) + 1;
+
+      // Create the new category
+      const category = await ctx.db.skillCategory.create({
+        data: {
+          key: input.key,
+          group: suggestion.group,
+          sortOrder,
+          isOnline: input.isOnline,
+        },
+      });
+
+      // Mark suggestion as approved
+      await ctx.db.suggestedCategory.update({
+        where: { id: input.id },
+        data: { status: 'APPROVED', categoryId: category.id, reviewedAt: new Date() },
+      });
+
+      return category;
+    }),
+
+  rejectSuggestion: protectedProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      if (!isAdmin(ctx.userId)) return null;
+      return ctx.db.suggestedCategory.update({
+        where: { id: input.id },
+        data: { status: 'REJECTED', reviewedAt: new Date() },
+      });
+    }),
 });
