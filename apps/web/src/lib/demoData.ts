@@ -1040,6 +1040,14 @@ export function handleDemoRequest(path: string, input: unknown): unknown {
       return [];
     case 'matches.setChatLink':
       return { success: true };
+    case 'matches.setOffer':
+      return { id: inp?.linkId, offerHours: inp?.hours, offerDescription: inp?.description || null, giverConfirmed: true };
+    case 'matches.confirmLink':
+      return { success: true };
+    case 'matches.completeLink':
+      return { success: true };
+    case 'matches.cancelChain':
+      return { status: 'CANCELLED' };
 
     default:
       console.warn(`[Demo] Unhandled procedure: ${path}`);

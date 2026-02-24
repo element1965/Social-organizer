@@ -563,12 +563,18 @@ model MatchChain {
 }
 
 model MatchChainLink {
-  id         String  @id @default(cuid())
-  chainId    String
-  position   Int
-  giverId    String
-  receiverId String
-  categoryId String
+  id               String  @id @default(cuid())
+  chainId          String
+  position         Int
+  giverId          String
+  receiverId       String
+  categoryId       String
+  offerHours       Float?
+  offerDescription String?
+  giverConfirmed   Boolean @default(false)
+  receiverConfirmed Boolean @default(false)
+  giverCompleted   Boolean @default(false)
+  receiverCompleted Boolean @default(false)
 
   chain    MatchChain    @relation(fields: [chainId], references: [id], onDelete: Cascade)
   giver    User          @relation("chainGiver", fields: [giverId], references: [id], onDelete: Cascade)
