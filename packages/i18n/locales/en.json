@@ -824,7 +824,19 @@
     "withSkills": "with skills",
     "withNeeds": "with needs",
     "tabSkills": "I can help",
-    "tabNeeds": "I need help"
+    "tabNeeds": "I need help",
+    "avgSkills": "avg skills",
+    "avgNeeds": "avg needs",
+    "geoFilled": "geo filled",
+    "matchPairs": "match pairs",
+    "chainsCount": "chains",
+    "withChat": "w/ chat",
+    "inChains": "in chains",
+    "notifs": "notifs",
+    "categoriesCount": "categories",
+    "entriesTotal": "skills / needs total",
+    "pendingCount": "pending",
+    "editSuggestion": "Edit"
   },
   "geo": {
     "title": "Location",

@@ -770,6 +770,18 @@
     "withSkills": "with skills",
     "withNeeds": "with needs",
     "tabSkills": "I can help",
-    "tabNeeds": "I need help"
+    "tabNeeds": "I need help",
+    "avgSkills": "snitt färdigheter",
+    "avgNeeds": "snitt behov",
+    "geoFilled": "geo ifyllt",
+    "matchPairs": "matchpar",
+    "chainsCount": "kedjor",
+    "withChat": "med chatt",
+    "inChains": "i kedjor",
+    "notifs": "aviseringar",
+    "categoriesCount": "kategorier",
+    "entriesTotal": "färdigheter / behov totalt",
+    "pendingCount": "väntande",
+    "editSuggestion": "Redigera"
   }
 }

@@ -1021,6 +1021,7 @@ export function handleDemoRequest(path: string, input: unknown): unknown {
       return [];
     case 'skills.approveSuggestion':
     case 'skills.rejectSuggestion':
+    case 'skills.updateSuggestion':
       return { success: true };
 
     // ---- Matches ----

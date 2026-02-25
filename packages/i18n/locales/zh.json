@@ -770,6 +770,18 @@
     "withSkills": "with skills",
     "withNeeds": "with needs",
     "tabSkills": "I can help",
-    "tabNeeds": "I need help"
+    "tabNeeds": "I need help",
+    "avgSkills": "平均技能",
+    "avgNeeds": "平均需求",
+    "geoFilled": "位置已填",
+    "matchPairs": "匹配对",
+    "chainsCount": "链条",
+    "withChat": "有聊天",
+    "inChains": "在链中",
+    "notifs": "通知",
+    "categoriesCount": "分类",
+    "entriesTotal": "技能 / 需求 总计",
+    "pendingCount": "待处理",
+    "editSuggestion": "编辑"
   }
 }

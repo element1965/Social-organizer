@@ -770,6 +770,18 @@
     "withSkills": "with skills",
     "withNeeds": "with needs",
     "tabSkills": "I can help",
-    "tabNeeds": "I need help"
+    "tabNeeds": "I need help",
+    "avgSkills": "moy. compétences",
+    "avgNeeds": "moy. besoins",
+    "geoFilled": "géo rempli",
+    "matchPairs": "paires corresp.",
+    "chainsCount": "chaînes",
+    "withChat": "avec chat",
+    "inChains": "en chaînes",
+    "notifs": "notifs",
+    "categoriesCount": "catégories",
+    "entriesTotal": "compétences / besoins total",
+    "pendingCount": "en attente",
+    "editSuggestion": "Modifier"
   }
 }

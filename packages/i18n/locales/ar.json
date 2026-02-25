@@ -770,6 +770,18 @@
     "withSkills": "with skills",
     "withNeeds": "with needs",
     "tabSkills": "I can help",
-    "tabNeeds": "I need help"
+    "tabNeeds": "I need help",
+    "avgSkills": "متوسط المهارات",
+    "avgNeeds": "متوسط الاحتياجات",
+    "geoFilled": "الموقع محدد",
+    "matchPairs": "أزواج التطابق",
+    "chainsCount": "السلاسل",
+    "withChat": "مع دردشة",
+    "inChains": "في سلاسل",
+    "notifs": "إشعارات",
+    "categoriesCount": "فئات",
+    "entriesTotal": "مهارات / احتياجات إجمالي",
+    "pendingCount": "قيد الانتظار",
+    "editSuggestion": "تعديل"
   }
 }

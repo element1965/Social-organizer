@@ -770,6 +770,18 @@
     "withSkills": "with skills",
     "withNeeds": "with needs",
     "tabSkills": "I can help",
-    "tabNeeds": "I need help"
+    "tabNeeds": "I need help",
+    "avgSkills": "เฉลี่ยทักษะ",
+    "avgNeeds": "เฉลี่ยความต้องการ",
+    "geoFilled": "ตำแหน่งกรอกแล้ว",
+    "matchPairs": "คู่ที่ตรงกัน",
+    "chainsCount": "เชน",
+    "withChat": "มีแชท",
+    "inChains": "ในเชน",
+    "notifs": "แจ้งเตือน",
+    "categoriesCount": "หมวดหมู่",
+    "entriesTotal": "ทักษะ / ความต้องการ รวม",
+    "pendingCount": "รอดำเนินการ",
+    "editSuggestion": "แก้ไข"
   }
 }

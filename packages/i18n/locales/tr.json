@@ -770,6 +770,18 @@
     "withSkills": "with skills",
     "withNeeds": "with needs",
     "tabSkills": "I can help",
-    "tabNeeds": "I need help"
+    "tabNeeds": "I need help",
+    "avgSkills": "ort. beceri",
+    "avgNeeds": "ort. ihtiyaç",
+    "geoFilled": "konum dolu",
+    "matchPairs": "eşleşme çifti",
+    "chainsCount": "zincirler",
+    "withChat": "sohbet ile",
+    "inChains": "zincirlerde",
+    "notifs": "bildirimler",
+    "categoriesCount": "kategoriler",
+    "entriesTotal": "beceri / ihtiyaç toplam",
+    "pendingCount": "bekleyen",
+    "editSuggestion": "Düzenle"
   }
 }

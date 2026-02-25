@@ -770,6 +770,18 @@
     "withSkills": "with skills",
     "withNeeds": "with needs",
     "tabSkills": "I can help",
-    "tabNeeds": "I need help"
+    "tabNeeds": "I need help",
+    "avgSkills": "gem. vaardigheden",
+    "avgNeeds": "gem. behoeften",
+    "geoFilled": "geo ingevuld",
+    "matchPairs": "matchparen",
+    "chainsCount": "ketens",
+    "withChat": "met chat",
+    "inChains": "in ketens",
+    "notifs": "meldingen",
+    "categoriesCount": "categorieën",
+    "entriesTotal": "vaardigheden / behoeften totaal",
+    "pendingCount": "in afwachting",
+    "editSuggestion": "Bewerken"
   }
 }
