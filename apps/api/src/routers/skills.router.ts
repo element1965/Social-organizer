@@ -60,6 +60,22 @@ function writeSkillToLocale(lang: string, key: string, value: string): void {
   }
 }
 
+/** Transliterate text to a camelCase key suitable for i18n */
+function textToKey(text: string): string {
+  const CYR: Record<string, string> = {
+    а:'a',б:'b',в:'v',г:'g',д:'d',е:'e',ё:'yo',ж:'zh',з:'z',и:'i',й:'y',к:'k',
+    л:'l',м:'m',н:'n',о:'o',п:'p',р:'r',с:'s',т:'t',у:'u',ф:'f',х:'kh',ц:'ts',
+    ч:'ch',ш:'sh',щ:'shch',ъ:'',ы:'y',ь:'',э:'e',ю:'yu',я:'ya',
+    є:'ye',і:'i',ї:'yi',ґ:'g',
+  };
+  const latin = text.toLowerCase().split('').map((c) => CYR[c] ?? c).join('');
+  // Split into words on non-alpha chars, filter empty
+  const words = latin.replace(/[^a-z0-9]+/g, ' ').trim().split(/\s+/).filter(Boolean);
+  if (words.length === 0) return 'custom' + Date.now();
+  // camelCase
+  return words[0] + words.slice(1).map((w) => w[0].toUpperCase() + w.slice(1)).join('');
+}
+
 async function autoSuggestOther(
   db: PrismaClient,
   userId: string,
@@ -394,16 +410,18 @@ export const skillsRouter = router({
     }),
 
   approveSuggestion: protectedProcedure
-    .input(z.object({
-      id: z.string(),
-      key: z.string().min(2).max(50).regex(/^[a-zA-Z][a-zA-Z0-9]*$/),
-      isOnline: z.boolean().default(false),
-    }))
+    .input(z.object({ id: z.string() }))
     .mutation(async ({ ctx, input }) => {
       if (!isAdmin(ctx.userId)) return null;
 
       const suggestion = await ctx.db.suggestedCategory.findUnique({ where: { id: input.id } });
       if (!suggestion || suggestion.status !== 'PENDING') return null;
+
+      // Auto-generate camelCase key from suggestion text
+      let key = textToKey(suggestion.text);
+      // Ensure uniqueness
+      const existing = await ctx.db.skillCategory.findFirst({ where: { key } });
+      if (existing) key = key + Date.now();
 
       // Find max sortOrder in the group (before the "other" entry at 99)
       const maxSort = await ctx.db.skillCategory.findFirst({
@@ -416,10 +434,10 @@ export const skillsRouter = router({
       // Create the new category
       const category = await ctx.db.skillCategory.create({
         data: {
-          key: input.key,
+          key,
           group: suggestion.group,
           sortOrder,
-          isOnline: input.isOnline,
+          isOnline: false,
         },
       });
 
@@ -430,8 +448,8 @@ export const skillsRouter = router({
       });
 
       // Translate to all 28 locales and write to JSON files (async, don't block)
-      translateAndWriteSkillKey(input.key, suggestion.text, 'ru').then((count) => {
-        console.log(`[SkillTranslate] Wrote "${input.key}" to ${count} locale files`);
+      translateAndWriteSkillKey(key, suggestion.text, 'ru').then((count) => {
+        console.log(`[SkillTranslate] Wrote "${key}" to ${count} locale files`);
       }).catch((err) => {
         console.error('[SkillTranslate] Error:', err);
       });

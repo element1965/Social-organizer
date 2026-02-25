@@ -519,11 +519,7 @@ export function DashboardPage() {
                       </button>
                     )}
                     <button
-                      onClick={() => {
-                        const key = prompt(`Key for "${s.text}" (camelCase, e.g. "windowRepair"):`);
-                        if (!key) return;
-                        approveMut.mutate({ id: s.id, key, isOnline: false });
-                      }}
+                      onClick={() => approveMut.mutate({ id: s.id })}
                       disabled={approveMut.isPending}
                       className="px-2 py-0.5 text-xs font-medium rounded bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 hover:bg-green-200"
                     >
