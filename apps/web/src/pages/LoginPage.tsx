@@ -225,15 +225,17 @@ export function LoginPage() {
         </div>
 
         <div className="w-full space-y-3">
-          <Button
-            className="w-full bg-[#2AABEE] hover:bg-[#229ED9] text-white"
-            size="lg"
-            onClick={handleTelegramLogin}
-            disabled={loading}
-          >
-            <Send size={18} className="mr-2" />
-            Telegram
-          </Button>
+          {isTelegramWebApp() && (
+            <Button
+              className="w-full bg-[#2AABEE] hover:bg-[#229ED9] text-white"
+              size="lg"
+              onClick={handleTelegramLogin}
+              disabled={loading}
+            >
+              <Send size={18} className="mr-2" />
+              Telegram
+            </Button>
+          )}
 
           <Button
             className="w-full bg-white hover:bg-gray-100 text-gray-900 border border-gray-300"

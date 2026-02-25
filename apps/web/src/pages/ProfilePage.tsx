@@ -184,7 +184,7 @@ export function ProfilePage() {
                     });
                   } else if (isTelegramWebApp() && !url.startsWith('mailto:')) {
                     e.preventDefault();
-                    window.Telegram.WebApp.openLink(url, { try_instant_view: false });
+                    window.Telegram?.WebApp?.openLink?.(url, { try_instant_view: false });
                   }
                 };
                 return (

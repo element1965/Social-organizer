@@ -11,6 +11,7 @@ import {
   type TgReplyMarkup,
 } from '../services/telegram-bot.service.js';
 import { translateWithCache } from '../services/translate.service.js';
+import { sendWebPush } from '../services/web-push.service.js';
 import { ADMIN_IDS } from '../admin.js';
 
 function assertAdmin(userId: string) {
@@ -111,6 +112,17 @@ export const broadcastRouter = router({
           if ((i + 1) % 25 === 0) await new Promise((r) => setTimeout(r, 1100));
         }
       }
+
+      // Web Push to ALL users (not just TG users)
+      const allUsers = await ctx.db.user.findMany({
+        where: { deletedAt: null },
+        select: { id: true },
+      });
+      sendWebPush(ctx.db, allUsers.map((u) => u.id), {
+        title: 'Social Organizer',
+        body: input.text.replace(/<[^>]+>/g, '').slice(0, 100),
+        url: `${process.env.WEB_APP_URL || 'https://www.orginizer.com'}/dashboard`,
+      }).catch((err) => console.error('[WebPush Broadcast] Failed:', err));
 
       // Confirm in support chat
       const blocked = blockedCounter.count;

@@ -10,6 +10,9 @@ import {
   type TgReplyMarkup,
 } from '../services/telegram-bot.service.js';
 import { translateWithCache } from '../services/translate.service.js';
+import { sendWebPush } from '../services/web-push.service.js';
+
+const WEB_APP_URL = process.env.WEB_APP_URL || 'https://www.orginizer.com';
 
 /**
  * Every 30 minutes: process auto-chain messages.
@@ -45,7 +48,22 @@ export async function processAutoChain(_job: Job): Promise<void> {
       user: { select: { language: true, createdAt: true, skillsCompleted: true } },
     },
   });
-  if (tgAccounts.length === 0) return;
+
+  // Load non-TG users with push subscriptions (Android app users)
+  const tgUserIds = new Set(tgAccounts.map((a) => a.userId));
+  const pushUsers = await db.pushSubscription.findMany({
+    where: { userId: { notIn: [...tgUserIds] } },
+    select: { userId: true },
+    distinct: ['userId'],
+  });
+  const pushOnlyUsers = pushUsers.length > 0
+    ? await db.user.findMany({
+        where: { id: { in: pushUsers.map((p) => p.userId) }, deletedAt: null },
+        select: { id: true, language: true, createdAt: true, skillsCompleted: true },
+      })
+    : [];
+
+  if (tgAccounts.length === 0 && pushOnlyUsers.length === 0) return;
 
   // Load connected user IDs for variant filtering
   // "invited" = users with at least one confirmed connection OR pending connection
@@ -181,6 +199,13 @@ export async function processAutoChain(_job: Job): Promise<void> {
         });
         totalSent++;
         sentTodaySet.add(acc.userId);
+
+        // Also send Web Push as notification preview
+        sendWebPush(db, [acc.userId], {
+          title: 'Social Organizer',
+          body: translatedText.replace(/<[^>]+>/g, '').slice(0, 100),
+          url: `${WEB_APP_URL}/dashboard`,
+        }).catch(() => {});
       }
 
       deliveredSet.add(key);
@@ -195,16 +220,69 @@ export async function processAutoChain(_job: Job): Promise<void> {
     }
   }
 
+  // Process push-only users (Android app without TG)
+  let pushSent = 0;
+  for (const user of pushOnlyUsers) {
+    if (!user.createdAt) continue;
+    if (sentTodaySet.has(user.id)) continue;
+
+    const userLang = user.language || 'en';
+    const userDayStart = startOfDayKyiv(user.createdAt);
+
+    for (const msg of messages) {
+      const key = `${msg.id}:${user.id}`;
+      if (deliveredSet.has(key)) continue;
+
+      if (msg.variant === 'invited' && !invitedUserIds.has(user.id)) continue;
+      if (msg.variant === 'organic' && invitedUserIds.has(user.id)) continue;
+      if (msg.sortOrder >= 100 && user.skillsCompleted) continue;
+
+      const sendTime = new Date(userDayStart.getTime());
+      sendTime.setDate(sendTime.getDate() + msg.dayOffset);
+      sendTime.setHours(7, 0, 0, 0);
+      sendTime.setMinutes(sendTime.getMinutes() + msg.sortOrder * msg.intervalMin);
+      if (sendTime > nowKyiv) continue;
+
+      const translatedText = await translateWithCache(msg.text, userLang).catch(() => msg.text);
+
+      // Send via Web Push only
+      try {
+        await sendWebPush(db, [user.id], {
+          title: 'Social Organizer',
+          body: translatedText.replace(/<[^>]+>/g, '').slice(0, 100),
+          url: `${WEB_APP_URL}/dashboard`,
+        });
+      } catch { /* skip */ }
+
+      // Record delivery
+      try {
+        await db.autoChainDelivery.create({
+          data: { messageId: msg.id, userId: user.id, success: true },
+        });
+      } catch { continue; }
+
+      await db.autoChainMessage.update({
+        where: { id: msg.id },
+        data: { sentCount: { increment: 1 } },
+      });
+      pushSent++;
+      sentTodaySet.add(user.id);
+      deliveredSet.add(key);
+      break; // 1 per day
+    }
+  }
+
   const blocked = blockedCounter.count;
   const removedDetails = blockedCounter.removed.map((u) => {
     const contacts = u.contacts.map((c) => `${c.type}: ${c.value}`).join(', ');
     return `• ${u.name} (TG: ${u.platformId}${contacts ? `, ${contacts}` : ''})`;
   }).join('\n');
-  console.log(`[Auto Chain] Done: sent ${totalSent}, blocked: ${blocked}, users: ${tgAccounts.length}`);
+  const totalUsers = tgAccounts.length + pushOnlyUsers.length;
+  console.log(`[Auto Chain] Done: sent ${totalSent} TG + ${pushSent} Push, blocked: ${blocked}, users: ${totalUsers}`);
   // Always report status (for diagnostics)
   await sendTelegramMessage(
     SUPPORT_CHAT_ID,
-    `🔗 <b>Авто-цепочка</b>: отправлено ${totalSent} из ${tgAccounts.length} пользователей${blocked > 0 ? `\n🚫 Удалено: ${blocked}\n${removedDetails}` : ''}`,
+    `🔗 <b>Авто-цепочка</b>: TG ${totalSent}, Push ${pushSent} из ${totalUsers} пользователей${blocked > 0 ? `\n🚫 Удалено: ${blocked}\n${removedDetails}` : ''}`,
   ).catch(() => {});
 
   } catch (err) {

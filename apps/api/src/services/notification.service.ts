@@ -85,16 +85,28 @@ export async function sendCollectionNotifications(
     } catch { /* skip */ }
   }
 
-  if (type === 'NEW_COLLECTION' && created > 0) {
+  if (created > 0) {
     const recipientIds = recipients.map((r) => r.userId);
-    dispatchNewCollectionTg(db, collectionId, creatorId, recipientIds).catch((err) =>
-      console.error('[TG Notify] Failed to dispatch:', err),
-    );
-    sendWebPush(db, recipientIds, {
-      title: 'New Collection',
-      body: 'Someone in your network needs support.',
-      url: `${WEB_APP_URL}/collection/${collectionId}`,
-    }).catch((err) => console.error('[WebPush] Failed:', err));
+
+    if (type === 'NEW_COLLECTION') {
+      dispatchNewCollectionTg(db, collectionId, creatorId, recipientIds).catch((err) =>
+        console.error('[TG Notify] Failed to dispatch:', err),
+      );
+      sendWebPush(db, recipientIds, {
+        title: 'New Collection',
+        body: 'Someone in your network needs support.',
+        url: `${WEB_APP_URL}/collection/${collectionId}`,
+      }).catch((err) => console.error('[WebPush] Failed:', err));
+    } else if (type === 'RE_NOTIFY') {
+      dispatchNewCollectionTg(db, collectionId, creatorId, recipientIds).catch((err) =>
+        console.error('[TG ReNotify] Failed to dispatch:', err),
+      );
+      sendWebPush(db, recipientIds, {
+        title: 'Reminder',
+        body: 'A collection in your network still needs support.',
+        url: `${WEB_APP_URL}/collection/${collectionId}`,
+      }).catch((err) => console.error('[WebPush ReNotify] Failed:', err));
+    }
   }
 
   return created;
@@ -224,24 +236,32 @@ export async function sendGoalReachedToCreator(
   collectionId: string,
   creatorId: string,
 ): Promise<void> {
-  const tgAccount = await db.platformAccount.findFirst({
-    where: { userId: creatorId, platform: 'TELEGRAM' },
-    select: { platformId: true, user: { select: { language: true } } },
-  });
-  if (!tgAccount) return;
-
   const collection = await db.collection.findUnique({
     where: { id: collectionId },
     select: { amount: true, currency: true, originalAmount: true, originalCurrency: true, chatLink: true },
   });
   if (!collection) return;
 
-  const lang = tgAccount.user?.language || 'en';
   const amount = collection.originalAmount ?? collection.amount;
   const currency = collection.originalCurrency ?? collection.currency;
   const amountStr = amount != null ? `${amount} ${currency}` : '';
   const webAppLink = `${WEB_APP_URL}/collection/${collectionId}`;
 
+  // Web Push to creator
+  sendWebPush(db, [creatorId], {
+    title: 'Goal Reached',
+    body: amountStr ? `Collection reached ${amountStr}` : 'Your collection reached its goal!',
+    url: webAppLink,
+  }).catch((err) => console.error('[WebPush GoalReached] Failed:', err));
+
+  // TG notification
+  const tgAccount = await db.platformAccount.findFirst({
+    where: { userId: creatorId, platform: 'TELEGRAM' },
+    select: { platformId: true, user: { select: { language: true } } },
+  });
+  if (!tgAccount) return;
+
+  const lang = tgAccount.user?.language || 'en';
   const text = `🎯 <b>${tg(lang, 'blocked')}</b>${amountStr ? `\n${tg(lang, 'amount')}: ${amountStr}` : ''}\n\n${tg(lang, 'blockedBody')}`;
 
   const buttons: Array<Array<{ text: string; web_app?: { url: string }; url?: string }>> = [];
@@ -258,7 +278,8 @@ export async function sendGoalReachedToCreator(
 }
 
 /**
- * Send Telegram notification for pending connections (new request, accepted, rejected).
+ * Send notification for pending connections (new request, accepted, rejected).
+ * Sends both TG bot message and Web Push.
  */
 export async function sendPendingNotification(
   db: PrismaClient,
@@ -266,6 +287,19 @@ export async function sendPendingNotification(
   type: 'new' | 'accepted' | 'rejected',
   actorName: string,
 ): Promise<void> {
+  // Web Push
+  const pushTitle = type === 'new' ? 'New connection request'
+    : type === 'accepted' ? 'Request accepted'
+    : 'Request declined';
+  const pushBody = type === 'new' ? `${actorName} wants to connect`
+    : actorName;
+  const pushUrl = type === 'new' ? `${WEB_APP_URL}/dashboard`
+    : type === 'accepted' ? `${WEB_APP_URL}/network`
+    : undefined;
+  sendWebPush(db, [recipientUserId], { title: pushTitle, body: pushBody, url: pushUrl })
+    .catch((err) => console.error('[WebPush Pending] Failed:', err));
+
+  // TG notification
   const tgAccount = await db.platformAccount.findFirst({
     where: { userId: recipientUserId, platform: 'TELEGRAM' },
     select: { platformId: true, user: { select: { language: true } } },
@@ -299,13 +333,22 @@ export async function sendPendingNotification(
 }
 
 /**
- * Send Telegram notification to the inviter when a user from their first circle deletes their account.
+ * Send notification to the inviter when a user from their first circle deletes their account.
+ * Sends both TG bot message and Web Push.
  */
 export async function sendUserDeletedNotification(
   db: PrismaClient,
   inviterUserId: string,
   deletedUserName: string,
 ): Promise<void> {
+  // Web Push
+  sendWebPush(db, [inviterUserId], {
+    title: 'User left',
+    body: `${deletedUserName} has deleted their account.`,
+    url: `${WEB_APP_URL}/network`,
+  }).catch((err) => console.error('[WebPush UserDeleted] Failed:', err));
+
+  // TG notification
   const tgAccount = await db.platformAccount.findFirst({
     where: { userId: inviterUserId, platform: 'TELEGRAM' },
     select: { platformId: true, user: { select: { language: true } } },
