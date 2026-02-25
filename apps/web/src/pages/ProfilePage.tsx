@@ -6,7 +6,7 @@ import { useAuth } from '../hooks/useAuth';
 import { Card, CardContent, CardHeader } from '../components/ui/card';
 import { Avatar } from '../components/ui/avatar';
 import { Spinner } from '../components/ui/spinner';
-import { Wallet, Calendar, Pencil, Check, X, UserPlus, UserMinus, Copy, ChevronDown, ChevronUp, Users } from 'lucide-react';
+import { Wallet, Calendar, Pencil, Check, X, UserPlus, UserMinus, Copy, ChevronDown, ChevronUp, Users, Wrench, Heart } from 'lucide-react';
 import { HandshakePath } from '../components/HandshakePath';
 import { SocialIcon } from '../components/ui/social-icons';
 import { buildContactUrl } from '@so/shared';
@@ -35,6 +35,12 @@ export function ProfilePage() {
   const { data: contacts } = trpc.user.getContacts.useQuery(
     { userId: paramId },
     { enabled: !!paramId && !isOwn }
+  );
+  const { data: adminData } = trpc.faq.isAdmin.useQuery();
+  const isAdmin = adminData?.isAdmin ?? false;
+  const { data: userSkills } = trpc.skills.forUser.useQuery(
+    { userId: paramId! },
+    { enabled: !!paramId && !isOwn && isAdmin },
   );
   const { data: nicknameData } = trpc.connection.getNickname.useQuery(
     { targetUserId: paramId! },
@@ -204,6 +210,41 @@ export function ProfilePage() {
                 );
               })}
             </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {isAdmin && userSkills && (userSkills.skills.length > 0 || userSkills.needs.length > 0) && (
+        <Card>
+          <CardContent className="py-3">
+            {userSkills.skills.length > 0 && (
+              <div className="mb-2">
+                <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 mb-1.5 flex items-center gap-1">
+                  <Wrench className="w-3.5 h-3.5" /> {t('skills.tabSkills')}
+                </p>
+                <div className="flex flex-wrap gap-1.5">
+                  {userSkills.skills.map((s: { id: string; category: { key: string } }) => (
+                    <span key={s.id} className="px-2.5 py-1 text-xs rounded-full bg-blue-50 dark:bg-blue-950/30 text-blue-600 font-medium">
+                      {t(`skills.${s.category.key}`)}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+            {userSkills.needs.length > 0 && (
+              <div>
+                <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 mb-1.5 flex items-center gap-1">
+                  <Heart className="w-3.5 h-3.5" /> {t('skills.tabNeeds')}
+                </p>
+                <div className="flex flex-wrap gap-1.5">
+                  {userSkills.needs.map((n: { id: string; category: { key: string } }) => (
+                    <span key={n.id} className="px-2.5 py-1 text-xs rounded-full bg-orange-50 dark:bg-orange-950/30 text-orange-600 font-medium">
+                      {t(`skills.${n.category.key}`)}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
           </CardContent>
         </Card>
       )}
