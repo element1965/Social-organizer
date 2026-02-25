@@ -283,15 +283,15 @@ export const skillsRouter = router({
     const avgSkillsPerUser = usersWithSkills > 0 ? Math.round(totalSkillEntries / usersWithSkills * 10) / 10 : 0;
     const avgNeedsPerUser = usersWithNeeds > 0 ? Math.round(totalNeedEntries / usersWithNeeds * 10) / 10 : 0;
 
-    // Match density: count skill→need matches between connected users
+    // Match density: count skill→need matches across the entire network
     const matchResult = await ctx.db.$queryRaw<Array<{ matches: number; unique_pairs: number }>>`
       SELECT
         COUNT(DISTINCT (s."userId", n."userId", s."categoryId"))::int AS matches,
         COUNT(DISTINCT LEAST(s."userId", n."userId") || '|' || GREATEST(s."userId", n."userId"))::int AS unique_pairs
       FROM user_skills s
       JOIN user_needs n ON s."categoryId" = n."categoryId" AND s."userId" <> n."userId"
-      JOIN connections c ON (c."userAId" = s."userId" AND c."userBId" = n."userId")
-                         OR (c."userBId" = s."userId" AND c."userAId" = n."userId")
+      JOIN users us ON us.id = s."userId" AND us."deletedAt" IS NULL
+      JOIN users un ON un.id = n."userId" AND un."deletedAt" IS NULL
     `;
 
     // Chains with TG chat links

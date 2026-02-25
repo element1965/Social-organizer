@@ -13,22 +13,34 @@ interface Edge {
 interface CycleEdge extends Edge {}
 
 /**
- * Build a directed graph: edge A→B if A has a skill that B needs,
- * and A↔B are connected (1st degree).
+ * Build a directed graph: edge A→B if A has a skill that B needs.
+ * For offline skills, both users must be in the same city.
+ * Online skills can connect users from any location.
+ * Users must be in the same network (connected via any chain of connections).
  */
-async function buildGraph(db: PrismaClient): Promise<Edge[]> {
+async function buildGraph(db: PrismaClient, seedUserId: string): Promise<Edge[]> {
   const edges = await db.$queryRaw<Edge[]>`
+    WITH RECURSIVE network AS (
+      SELECT ${seedUserId}::text AS uid
+      UNION
+      SELECT CASE WHEN c."userAId" = n.uid THEN c."userBId" ELSE c."userAId" END
+      FROM connections c
+      JOIN network n ON c."userAId" = n.uid OR c."userBId" = n.uid
+    )
     SELECT
       us."userId" AS "from",
       un."userId" AS "to",
       us."categoryId" AS "categoryId"
     FROM user_skills us
     JOIN user_needs un ON un."categoryId" = us."categoryId" AND un."userId" != us."userId"
-    JOIN connections c
-      ON (c."userAId" = us."userId" AND c."userBId" = un."userId")
-      OR (c."userBId" = us."userId" AND c."userAId" = un."userId")
+    JOIN skill_categories sc ON sc.id = us."categoryId"
     JOIN users u1 ON u1.id = us."userId" AND u1."deletedAt" IS NULL
     JOIN users u2 ON u2.id = un."userId" AND u2."deletedAt" IS NULL
+    WHERE us."userId" IN (SELECT uid FROM network)
+      AND un."userId" IN (SELECT uid FROM network)
+      AND (sc."isOnline" = true
+           OR (LOWER(COALESCE(u1.city, '')) = LOWER(COALESCE(u2.city, ''))
+               AND COALESCE(u1.city, '') != ''))
   `;
   return edges;
 }
@@ -129,7 +141,7 @@ export async function findAndStoreChains(
   db: PrismaClient,
   userId: string,
 ): Promise<number> {
-  const edges = await buildGraph(db);
+  const edges = await buildGraph(db, userId);
   if (edges.length === 0) return 0;
 
   const cycles = findCycles(edges, userId);
@@ -386,7 +398,6 @@ export async function tryFindReplacement(
   if (!asReceiverLink || !asGiverLink) return null;
 
   const predecessorId = asReceiverLink.giverId; // gives to the declined person
-  const successorId = asGiverLink.receiverId; // receives from the declined person
   const needsCategoryId = asReceiverLink.categoryId; // replacement must need this
   const hasCategoryId = asGiverLink.categoryId; // replacement must have this
 
@@ -396,36 +407,23 @@ export async function tryFindReplacement(
   // Search for a replacement user
   let replacements: { id: string }[];
 
-  if (predecessorId === successorId) {
-    // Pair (length 2): replacement connected to the one remaining person
-    replacements = await db.$queryRaw<{ id: string }[]>`
-      SELECT u.id FROM users u
-      JOIN user_needs un ON un."userId" = u.id AND un."categoryId" = ${needsCategoryId}
-      JOIN user_skills us ON us."userId" = u.id AND us."categoryId" = ${hasCategoryId}
-      JOIN connections c
-        ON (c."userAId" = ${predecessorId} AND c."userBId" = u.id)
-        OR (c."userBId" = ${predecessorId} AND c."userAId" = u.id)
-      WHERE u."deletedAt" IS NULL
-        AND u.id NOT IN (${Prisma.join(participantIds)})
-      LIMIT 1
-    `;
-  } else {
-    // Chain 3+: replacement must be connected to both neighbors
-    replacements = await db.$queryRaw<{ id: string }[]>`
-      SELECT u.id FROM users u
-      JOIN user_needs un ON un."userId" = u.id AND un."categoryId" = ${needsCategoryId}
-      JOIN user_skills us ON us."userId" = u.id AND us."categoryId" = ${hasCategoryId}
-      JOIN connections c1
-        ON (c1."userAId" = ${predecessorId} AND c1."userBId" = u.id)
-        OR (c1."userBId" = ${predecessorId} AND c1."userAId" = u.id)
-      JOIN connections c2
-        ON (c2."userAId" = ${successorId} AND c2."userBId" = u.id)
-        OR (c2."userBId" = ${successorId} AND c2."userAId" = u.id)
-      WHERE u."deletedAt" IS NULL
-        AND u.id NOT IN (${Prisma.join(participantIds)})
-      LIMIT 1
-    `;
-  }
+  // Find replacement in the whole network — no need for direct connections
+  replacements = await db.$queryRaw<{ id: string }[]>`
+    WITH RECURSIVE network AS (
+      SELECT ${predecessorId}::text AS uid
+      UNION
+      SELECT CASE WHEN c."userAId" = n.uid THEN c."userBId" ELSE c."userAId" END
+      FROM connections c
+      JOIN network n ON c."userAId" = n.uid OR c."userBId" = n.uid
+    )
+    SELECT u.id FROM users u
+    JOIN user_needs un ON un."userId" = u.id AND un."categoryId" = ${needsCategoryId}
+    JOIN user_skills us ON us."userId" = u.id AND us."categoryId" = ${hasCategoryId}
+    WHERE u."deletedAt" IS NULL
+      AND u.id NOT IN (${Prisma.join(participantIds)})
+      AND u.id IN (SELECT uid FROM network)
+    LIMIT 1
+  `;
 
   if (replacements.length === 0) return null;
 
