@@ -2,6 +2,7 @@ import { z } from 'zod';
 import { router, protectedProcedure } from '../trpc.js';
 import { TRPCError } from '@trpc/server';
 import { sendPendingNotification } from '../services/notification.service.js';
+import { scanMatchesForUser } from '../services/match-notification.service.js';
 
 export const pendingRouter = router({
   incoming: protectedProcedure.query(async ({ ctx }) => {
@@ -56,6 +57,10 @@ export const pendingRouter = router({
       const acceptor = await ctx.db.user.findUnique({ where: { id: ctx.userId }, select: { name: true } });
       sendPendingNotification(ctx.db, pending.fromUserId, 'accepted', acceptor?.name || '').catch(() => {});
 
+      // Scan matches for both users (networks may have merged)
+      scanMatchesForUser(ctx.db, ctx.userId).catch(() => {});
+      scanMatchesForUser(ctx.db, pending.fromUserId).catch(() => {});
+
       return { success: true };
     }),
 
@@ -97,6 +102,8 @@ export const pendingRouter = router({
         });
         const sender = await ctx.db.user.findUnique({ where: { id: ctx.userId }, select: { name: true } });
         sendPendingNotification(ctx.db, input.targetUserId, 'accepted', sender?.name || '').catch(() => {});
+        scanMatchesForUser(ctx.db, ctx.userId).catch(() => {});
+        scanMatchesForUser(ctx.db, input.targetUserId).catch(() => {});
         return { success: true, autoConnected: true };
       }
 

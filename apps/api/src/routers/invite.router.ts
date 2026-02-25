@@ -3,6 +3,7 @@ import { randomBytes } from 'crypto';
 import { router, publicProcedure, protectedProcedure } from '../trpc.js';
 import { TRPCError } from '@trpc/server';
 import { sendPendingNotification } from '../services/notification.service.js';
+import { scanMatchesForUser } from '../services/match-notification.service.js';
 import { sendTelegramMessage, type TgReplyMarkup } from '../services/telegram-bot.service.js';
 import { translateWithCache } from '../services/translate.service.js';
 
@@ -85,6 +86,8 @@ export const inviteRouter = router({
         console.log('[invite.accept] auto-connected (reverse pending):', ctx.userId, '<->', inviterId);
         const applicant = await ctx.db.user.findUnique({ where: { id: ctx.userId }, select: { name: true } });
         sendPendingNotification(ctx.db, inviterId, 'accepted', applicant?.name || '').catch(() => {});
+        scanMatchesForUser(ctx.db, ctx.userId).catch(() => {});
+        scanMatchesForUser(ctx.db, inviterId).catch(() => {});
         return { success: true, alreadyConnected: true, connectedWith: inviterId };
       }
 

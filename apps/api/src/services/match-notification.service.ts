@@ -299,3 +299,19 @@ export async function createNeedMatchNotifications(
     console.error('[SkillMatch TG] Failed to send TG notifications:', err);
   }
 }
+
+/**
+ * Full rescan: find all skill matches for a user and create notifications.
+ * Called when a new connection is created (networks may merge).
+ */
+export async function scanMatchesForUser(db: PrismaClient, userId: string): Promise<void> {
+  const skills = await db.userSkill.findMany({ where: { userId }, select: { categoryId: true } });
+  const needs = await db.userNeed.findMany({ where: { userId }, select: { categoryId: true } });
+
+  if (skills.length > 0) {
+    await createSkillMatchNotifications(db, userId, skills.map((s) => s.categoryId));
+  }
+  if (needs.length > 0) {
+    await createNeedMatchNotifications(db, userId, needs.map((n) => n.categoryId));
+  }
+}
