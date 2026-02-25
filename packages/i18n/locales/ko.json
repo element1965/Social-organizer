@@ -467,7 +467,9 @@
     "pendingNewBody": "{{name}}님이 연결을 원합니다",
     "pendingAccepted": "요청 수락됨",
     "pendingRejected": "요청 거절됨",
-    "pendingView": "보기"
+    "pendingView": "보기",
+    "userDeleted": "사용자 탈퇴",
+    "userDeletedBody": "{{name}}님이 첫 번째 서클에서 계정을 삭제했습니다."
   },
   "hints": {
     "collectionAmount": "필요한 금액을 입력하세요. 최소 10 단위입니다. 시스템이 적절한 수의 사람들에게 알립니다.",

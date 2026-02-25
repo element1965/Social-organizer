@@ -467,7 +467,9 @@
     "pendingNewBody": "{{name}} ingin terhubung",
     "pendingAccepted": "Permintaan diterima",
     "pendingRejected": "Permintaan ditolak",
-    "pendingView": "Lihat"
+    "pendingView": "Lihat",
+    "userDeleted": "Pengguna keluar",
+    "userDeletedBody": "{{name}} dari lingkaran pertama Anda telah menghapus akunnya."
   },
   "hints": {
     "collectionAmount": "Masukkan jumlah yang kamu butuhkan. Minimum 10 unit. Sistem akan memberitahu jumlah orang yang tepat.",

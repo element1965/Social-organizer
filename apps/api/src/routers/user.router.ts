@@ -4,6 +4,7 @@ import { TRPCError } from '@trpc/server';
 import { CONTACT_TYPES, CURRENCY_CODES, validateContact } from '@so/shared';
 import { convertToUSD } from '../services/currency.service.js';
 import { canViewContacts } from '../services/visibility.service.js';
+import { sendUserDeletedNotification } from '../services/notification.service.js';
 
 export const userRouter = router({
   me: protectedProcedure.query(async ({ ctx }) => {
@@ -204,6 +205,16 @@ export const userRouter = router({
   }),
 
   delete: protectedProcedure.mutation(async ({ ctx }) => {
+    // Capture user name and inviter before deletion
+    const deletingUser = await ctx.db.user.findUnique({
+      where: { id: ctx.userId },
+      select: { name: true },
+    });
+    const inviteLink = await ctx.db.inviteLink.findFirst({
+      where: { usedById: ctx.userId },
+      select: { inviterId: true },
+    });
+
     await ctx.db.$transaction(async (tx) => {
       // Check if user has any first-handshake connections
       const connectionCount = await tx.connection.count({
@@ -254,6 +265,12 @@ export const userRouter = router({
         });
       }
     });
+
+    // Notify inviter that user from their first circle has been deleted
+    if (inviteLink?.inviterId && deletingUser?.name) {
+      sendUserDeletedNotification(ctx.db, inviteLink.inviterId, deletingUser.name)
+        .catch((err) => console.error('[UserDelete] Failed to notify inviter:', err));
+    }
 
     return { success: true };
   }),

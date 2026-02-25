@@ -520,7 +520,9 @@
     "pendingNewBody": "{{name}} wants to connect",
     "pendingAccepted": "Request accepted",
     "pendingRejected": "Request declined",
-    "pendingView": "View"
+    "pendingView": "View",
+    "userDeleted": "User left",
+    "userDeletedBody": "{{name}} from your first circle has deleted their account."
   },
   "hints": {
     "collectionAmount": "Enter the amount you need. Minimum 10 units. The system will notify the right number of people.",

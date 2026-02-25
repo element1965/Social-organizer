@@ -467,7 +467,9 @@
     "pendingNewBody": "{{name}} जुड़ना चाहता है",
     "pendingAccepted": "अनुरोध स्वीकृत",
     "pendingRejected": "अनुरोध अस्वीकृत",
-    "pendingView": "देखें"
+    "pendingView": "देखें",
+    "userDeleted": "उपयोगकर्ता चला गया",
+    "userDeletedBody": "{{name}} ने आपके पहले सर्कल से अपना खाता हटा दिया।"
   },
   "hints": {
     "collectionAmount": "आपको जितनी राशि चाहिए वह दर्ज करें। न्यूनतम 10 इकाई। सिस्टम उचित संख्या में लोगों को सूचित करेगा।",

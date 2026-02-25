@@ -445,7 +445,9 @@
     "pendingNewBody": "{{name}}想要连接",
     "pendingAccepted": "请求已接受",
     "pendingRejected": "请求已拒绝",
-    "pendingView": "查看"
+    "pendingView": "查看",
+    "userDeleted": "用户已离开",
+    "userDeletedBody": "{{name}}已从你的第一圈中删除了账户。"
   },
   "hints": {
     "collectionAmount": "输入你需要的金额。最少10个单位。系统会通知适当数量的人。",

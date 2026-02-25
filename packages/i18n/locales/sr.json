@@ -467,7 +467,9 @@
     "pendingNewBody": "{{name}} жели да се повеже",
     "pendingAccepted": "Захтев прихваћен",
     "pendingRejected": "Захтев одбијен",
-    "pendingView": "Погледај"
+    "pendingView": "Погледај",
+    "userDeleted": "Корисник је отишао",
+    "userDeletedBody": "{{name}} из вашег првог круга је обрисао свој налог."
   },
   "hints": {
     "collectionAmount": "Унеси износ који ти треба. Минимум 10 јединица. Систем ће обавестити одговарајући број људи.",

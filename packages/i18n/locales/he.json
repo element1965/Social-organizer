@@ -522,7 +522,9 @@
     "pendingNewBody": "{{name}} רוצה להתחבר",
     "pendingAccepted": "בקשה אושרה",
     "pendingRejected": "בקשה נדחתה",
-    "pendingView": "צפה"
+    "pendingView": "צפה",
+    "userDeleted": "המשתמש עזב",
+    "userDeletedBody": "{{name}} מהמעגל הראשון שלך מחק את החשבון שלו."
   },
   "hints": {
     "collectionAmount": "הזן את הסכום שצריך. מינימום 10 יחידות. המערכת תודיע למספר הנכון של אנשים.",

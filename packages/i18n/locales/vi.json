@@ -467,7 +467,9 @@
     "pendingNewBody": "{{name}} muốn kết nối",
     "pendingAccepted": "Yêu cầu được chấp nhận",
     "pendingRejected": "Yêu cầu bị từ chối",
-    "pendingView": "Xem"
+    "pendingView": "Xem",
+    "userDeleted": "Người dùng đã rời đi",
+    "userDeletedBody": "{{name}} từ vòng kết nối đầu tiên đã xóa tài khoản."
   },
   "hints": {
     "collectionAmount": "Nhập số tiền bạn cần. Tối thiểu 10 đơn vị. Hệ thống sẽ thông báo đến đúng số người cần thiết.",

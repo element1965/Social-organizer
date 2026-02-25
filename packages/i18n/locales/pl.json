@@ -467,7 +467,9 @@
     "pendingNewBody": "{{name}} chce się połączyć",
     "pendingAccepted": "Prośba zaakceptowana",
     "pendingRejected": "Prośba odrzucona",
-    "pendingView": "Zobacz"
+    "pendingView": "Zobacz",
+    "userDeleted": "Użytkownik odszedł",
+    "userDeletedBody": "{{name}} z twojego pierwszego kręgu usunął swoje konto."
   },
   "hints": {
     "collectionAmount": "Wprowadź potrzebną kwotę. Minimum 10 jednostek. System powiadomi odpowiednią liczbę osób.",

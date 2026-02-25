@@ -467,7 +467,9 @@
     "pendingNewBody": "{{name}}が接続を希望",
     "pendingAccepted": "リクエスト承認",
     "pendingRejected": "リクエスト拒否",
-    "pendingView": "表示"
+    "pendingView": "表示",
+    "userDeleted": "ユーザーが退会",
+    "userDeletedBody": "{{name}}さんがあなたの第一サークルからアカウントを削除しました。"
   },
   "hints": {
     "collectionAmount": "必要な金額を入力してください。最低10単位です。システムが適切な人数に通知します。",

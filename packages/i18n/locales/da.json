@@ -467,7 +467,9 @@
     "pendingNewBody": "{{name}} vil forbindes",
     "pendingAccepted": "Anmodning accepteret",
     "pendingRejected": "Anmodning afvist",
-    "pendingView": "Vis"
+    "pendingView": "Vis",
+    "userDeleted": "Bruger forlod",
+    "userDeletedBody": "{{name}} fra din første kreds har slettet sin konto."
   },
   "hints": {
     "collectionAmount": "Indtast det beløb, du har brug for. Minimum 10 enheder. Systemet vil underrette det rette antal personer.",
