@@ -31,7 +31,11 @@
     "invalidCredentials": "Неисправан имејл или лозинка",
     "telegramError": "Telegram ауторизација није успела",
     "telegramNotAvailable": "Отвори апликацију преко Telegram-а",
-    "googleNotInTelegram": "Google пријава није доступна у Telegram-у. Користи Telegram дугме"
+    "googleNotInTelegram": "Google пријава није доступна у Telegram-у. Користи Telegram дугме",
+    "haveAccountLink": "Already have an account? Enter link code",
+    "linkCodeHint": "Open Settings in Telegram app → generate a link code and enter it here",
+    "invalidLinkCode": "Invalid or expired code",
+    "loginBtn": "Go"
   },
   "login": {
     "subtitle": "Координација помоћи кроз мрежу поверења",

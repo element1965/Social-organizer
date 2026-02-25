@@ -5,7 +5,7 @@ import { useAuth } from '../hooks/useAuth';
 import { trpc } from '../lib/trpc';
 import { Button } from '../components/ui/button';
 import { Logo } from '../components/Logo';
-import { Mail, Eye, EyeOff, Send } from 'lucide-react';
+import { Mail, Eye, EyeOff, Send, KeyRound } from 'lucide-react';
 import { isTelegramWebApp, getTGInitData } from '@so/tg-adapter';
 
 export function LoginPage() {
@@ -41,6 +41,8 @@ export function LoginPage() {
 
   const [loading, setLoading] = useState(false);
   const [isRegister, setIsRegister] = useState(false);
+  const [showLinkCode, setShowLinkCode] = useState(false);
+  const [linkCode, setLinkCode] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
@@ -83,6 +85,16 @@ export function LoginPage() {
     },
     onError: () => {
       setError(t('auth.invalidCredentials'));
+    },
+  });
+
+  const linkCodeMutation = trpc.auth.loginWithLinkCode.useMutation({
+    onSuccess: (data) => {
+      login(data.accessToken, data.refreshToken, data.userId);
+      afterLogin('/dashboard');
+    },
+    onError: () => {
+      setError(t('auth.invalidLinkCode'));
     },
   });
 
@@ -249,6 +261,58 @@ export function LoginPage() {
             Google
           </Button>
 
+        </div>
+
+        {/* Link Code — "Already have an account in Telegram" */}
+        <div className="w-full mt-6">
+          {!showLinkCode ? (
+            <button
+              type="button"
+              onClick={() => { setShowLinkCode(true); setError(''); }}
+              className="w-full text-center text-teal-400 hover:text-teal-300 text-sm transition-colors"
+            >
+              <KeyRound size={14} className="inline mr-1.5" />
+              {t('auth.haveAccountLink')}
+            </button>
+          ) : (
+            <div className="space-y-3">
+              <p className="text-gray-400 text-xs text-center">{t('auth.linkCodeHint')}</p>
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  inputMode="numeric"
+                  maxLength={6}
+                  placeholder="000000"
+                  value={linkCode}
+                  onChange={(e) => setLinkCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
+                  className="flex-1 px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white text-center text-2xl tracking-[0.5em] font-mono placeholder-gray-600 focus:outline-none focus:border-teal-500 transition-colors"
+                />
+                <Button
+                  onClick={() => {
+                    if (linkCode.length !== 6) return;
+                    setError('');
+                    setLoading(true);
+                    linkCodeMutation.mutate(
+                      { code: linkCode },
+                      { onSettled: () => setLoading(false) },
+                    );
+                  }}
+                  disabled={loading || linkCode.length !== 6}
+                  className="bg-teal-600 hover:bg-teal-500 text-white px-6"
+                  size="lg"
+                >
+                  {t('auth.loginBtn')}
+                </Button>
+              </div>
+              <button
+                type="button"
+                onClick={() => { setShowLinkCode(false); setLinkCode(''); setError(''); }}
+                className="w-full text-center text-gray-500 hover:text-gray-300 text-xs transition-colors"
+              >
+                {t('common.cancel')}
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </div>

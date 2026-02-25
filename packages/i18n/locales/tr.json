@@ -31,7 +31,11 @@
     "invalidCredentials": "Geçersiz e-posta veya şifre",
     "telegramError": "Telegram yetkilendirmesi başarısız oldu",
     "telegramNotAvailable": "Uygulamayı Telegram üzerinden açın",
-    "googleNotInTelegram": "Telegram'da Google ile giriş yapılamaz. Telegram butonunu kullanın"
+    "googleNotInTelegram": "Telegram'da Google ile giriş yapılamaz. Telegram butonunu kullanın",
+    "haveAccountLink": "Already have an account? Enter link code",
+    "linkCodeHint": "Open Settings in Telegram app → generate a link code and enter it here",
+    "invalidLinkCode": "Invalid or expired code",
+    "loginBtn": "Go"
   },
   "login": {
     "subtitle": "Güvenilir bağlantılar aracılığıyla yardım koordinasyonu",

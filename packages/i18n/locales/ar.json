@@ -31,7 +31,11 @@
     "invalidCredentials": "البريد الإلكتروني أو كلمة المرور غير صحيحة",
     "telegramError": "فشل التحقق عبر Telegram",
     "telegramNotAvailable": "افتح التطبيق عبر Telegram",
-    "googleNotInTelegram": "تسجيل الدخول عبر Google غير متاح في Telegram. استخدم زر Telegram"
+    "googleNotInTelegram": "تسجيل الدخول عبر Google غير متاح في Telegram. استخدم زر Telegram",
+    "haveAccountLink": "Already have an account? Enter link code",
+    "linkCodeHint": "Open Settings in Telegram app → generate a link code and enter it here",
+    "invalidLinkCode": "Invalid or expired code",
+    "loginBtn": "Go"
   },
   "login": {
     "subtitle": "تنسيق المساعدة من خلال العلاقات الموثوقة",

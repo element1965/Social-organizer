@@ -31,7 +31,11 @@
     "invalidCredentials": "E-mail ou mot de passe incorrect",
     "telegramError": "Échec de l'autorisation Telegram",
     "telegramNotAvailable": "Ouvrez l'application via Telegram",
-    "googleNotInTelegram": "La connexion Google n'est pas disponible dans Telegram. Utilisez le bouton Telegram"
+    "googleNotInTelegram": "La connexion Google n'est pas disponible dans Telegram. Utilisez le bouton Telegram",
+    "haveAccountLink": "Déjà un compte ? Entrez le code de liaison",
+    "linkCodeHint": "Ouvrez les Paramètres dans Telegram → générez un code et saisissez-le ici",
+    "invalidLinkCode": "Code invalide ou expiré",
+    "loginBtn": "Go"
   },
   "login": {
     "subtitle": "Coordination d'entraide grâce à des liens de confiance",

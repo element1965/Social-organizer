@@ -31,7 +31,11 @@
     "invalidCredentials": "Ongeldig e-mailadres of wachtwoord",
     "telegramError": "Telegram-autorisatie mislukt",
     "telegramNotAvailable": "Open de app via Telegram",
-    "googleNotInTelegram": "Inloggen met Google is niet beschikbaar in Telegram. Gebruik de Telegram-knop"
+    "googleNotInTelegram": "Inloggen met Google is niet beschikbaar in Telegram. Gebruik de Telegram-knop",
+    "haveAccountLink": "Already have an account? Enter link code",
+    "linkCodeHint": "Open Settings in Telegram app → generate a link code and enter it here",
+    "invalidLinkCode": "Invalid or expired code",
+    "loginBtn": "Go"
   },
   "login": {
     "subtitle": "Hulpcoordinatie via vertrouwde connecties",

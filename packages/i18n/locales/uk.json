@@ -31,7 +31,11 @@
     "invalidCredentials": "Невірна пошта або пароль",
     "telegramError": "Авторизація через Telegram не вдалася",
     "telegramNotAvailable": "Відкрийте додаток через Telegram",
-    "googleNotInTelegram": "Вхід через Google недоступний у Telegram. Скористайтеся кнопкою Telegram"
+    "googleNotInTelegram": "Вхід через Google недоступний у Telegram. Скористайтеся кнопкою Telegram",
+    "haveAccountLink": "Вже є акаунт? Введіть код зв'язування",
+    "linkCodeHint": "Відкрийте Налаштування в Telegram → згенеруйте код і введіть його тут",
+    "invalidLinkCode": "Невірний або застарілий код",
+    "loginBtn": "Увійти"
   },
   "login": {
     "subtitle": "Координація допомоги через довірені зв'язки",

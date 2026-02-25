@@ -31,7 +31,11 @@
     "invalidCredentials": "Email hoặc mật khẩu không đúng",
     "telegramError": "Xác thực Telegram thất bại",
     "telegramNotAvailable": "Mở ứng dụng qua Telegram",
-    "googleNotInTelegram": "Đăng nhập Google không khả dụng trong Telegram. Sử dụng nút Telegram"
+    "googleNotInTelegram": "Đăng nhập Google không khả dụng trong Telegram. Sử dụng nút Telegram",
+    "haveAccountLink": "Already have an account? Enter link code",
+    "linkCodeHint": "Open Settings in Telegram app → generate a link code and enter it here",
+    "invalidLinkCode": "Invalid or expired code",
+    "loginBtn": "Go"
   },
   "login": {
     "subtitle": "Phối hợp hỗ trợ thông qua các mối quan hệ tin cậy",

@@ -31,7 +31,11 @@
     "invalidCredentials": "อีเมลหรือรหัสผ่านไม่ถูกต้อง",
     "telegramError": "การอนุญาตผ่าน Telegram ล้มเหลว",
     "telegramNotAvailable": "เปิดแอปผ่าน Telegram",
-    "googleNotInTelegram": "ไม่สามารถเข้าสู่ระบบด้วย Google ใน Telegram ได้ ใช้ปุ่ม Telegram"
+    "googleNotInTelegram": "ไม่สามารถเข้าสู่ระบบด้วย Google ใน Telegram ได้ ใช้ปุ่ม Telegram",
+    "haveAccountLink": "Already have an account? Enter link code",
+    "linkCodeHint": "Open Settings in Telegram app → generate a link code and enter it here",
+    "invalidLinkCode": "Invalid or expired code",
+    "loginBtn": "Go"
   },
   "login": {
     "subtitle": "ประสานงานช่วยเหลือผ่านความสัมพันธ์ที่ไว้วางใจ",

@@ -31,7 +31,11 @@
     "invalidCredentials": "Ungültige E-Mail oder Passwort",
     "telegramError": "Telegram-Autorisierung fehlgeschlagen",
     "telegramNotAvailable": "Öffne die App über Telegram",
-    "googleNotInTelegram": "Die Google-Anmeldung ist in Telegram nicht verfügbar. Verwende den Telegram-Button"
+    "googleNotInTelegram": "Die Google-Anmeldung ist in Telegram nicht verfügbar. Verwende den Telegram-Button",
+    "haveAccountLink": "Bereits ein Konto? Verknüpfungscode eingeben",
+    "linkCodeHint": "Öffnen Sie Einstellungen in der Telegram-App → Code generieren und hier eingeben",
+    "invalidLinkCode": "Ungültiger oder abgelaufener Code",
+    "loginBtn": "Los"
   },
   "login": {
     "subtitle": "Hilfskoordination durch vertrauensvolle Verbindungen",

@@ -31,7 +31,11 @@
     "invalidCredentials": "אימייל או סיסמה שגויים",
     "telegramError": "אימות טלגרם נכשל",
     "telegramNotAvailable": "פתח את האפליקציה דרך טלגרם",
-    "googleNotInTelegram": "התחברות דרך גוגל אינה זמינה בטלגרם. השתמש בכפתור טלגרם"
+    "googleNotInTelegram": "התחברות דרך גוגל אינה זמינה בטלגרם. השתמש בכפתור טלגרם",
+    "haveAccountLink": "Already have an account? Enter link code",
+    "linkCodeHint": "Open Settings in Telegram app → generate a link code and enter it here",
+    "invalidLinkCode": "Invalid or expired code",
+    "loginBtn": "Go"
   },
   "login": {
     "subtitle": "תיאום עזרה דרך קשרים אמינים",

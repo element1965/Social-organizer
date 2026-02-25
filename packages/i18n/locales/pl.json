@@ -31,7 +31,11 @@
     "invalidCredentials": "Nieprawidłowy e-mail lub hasło",
     "telegramError": "Autoryzacja Telegram nie powiodła się",
     "telegramNotAvailable": "Otwórz aplikację przez Telegram",
-    "googleNotInTelegram": "Logowanie przez Google nie jest dostępne w Telegramie. Użyj przycisku Telegram"
+    "googleNotInTelegram": "Logowanie przez Google nie jest dostępne w Telegramie. Użyj przycisku Telegram",
+    "haveAccountLink": "Already have an account? Enter link code",
+    "linkCodeHint": "Open Settings in Telegram app → generate a link code and enter it here",
+    "invalidLinkCode": "Invalid or expired code",
+    "loginBtn": "Go"
   },
   "login": {
     "subtitle": "Koordynacja pomocy poprzez zaufane kontakty",

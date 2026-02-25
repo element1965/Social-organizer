@@ -31,7 +31,11 @@
     "invalidCredentials": "邮箱或密码无效",
     "telegramError": "Telegram 授权失败",
     "telegramNotAvailable": "请通过 Telegram 打开应用",
-    "googleNotInTelegram": "Telegram 中无法使用 Google 登录。请使用 Telegram 按钮"
+    "googleNotInTelegram": "Telegram 中无法使用 Google 登录。请使用 Telegram 按钮",
+    "haveAccountLink": "Already have an account? Enter link code",
+    "linkCodeHint": "Open Settings in Telegram app → generate a link code and enter it here",
+    "invalidLinkCode": "Invalid or expired code",
+    "loginBtn": "Go"
   },
   "login": {
     "subtitle": "通过信任关系协调互助",

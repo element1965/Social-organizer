@@ -31,7 +31,11 @@
     "invalidCredentials": "Ugyldig e-post eller passord",
     "telegramError": "Telegram-autentisering mislyktes",
     "telegramNotAvailable": "Åpne appen via Telegram",
-    "googleNotInTelegram": "Google-innlogging er ikke tilgjengelig i Telegram. Bruk Telegram-knappen"
+    "googleNotInTelegram": "Google-innlogging er ikke tilgjengelig i Telegram. Bruk Telegram-knappen",
+    "haveAccountLink": "Already have an account? Enter link code",
+    "linkCodeHint": "Open Settings in Telegram app → generate a link code and enter it here",
+    "invalidLinkCode": "Invalid or expired code",
+    "loginBtn": "Go"
   },
   "login": {
     "subtitle": "Hjelpekoordinering gjennom pålitelige forbindelser",
