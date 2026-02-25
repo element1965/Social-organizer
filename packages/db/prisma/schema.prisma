@@ -528,6 +528,7 @@ model SuggestedCategory {
   userId     String
   group      String
   text       String
+  type       String        @default("SKILL") // SKILL or NEED
   status     SuggestStatus @default(PENDING)
   categoryId String?
   createdAt  DateTime      @default(now())

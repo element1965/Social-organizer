@@ -505,6 +505,10 @@ export function DashboardPage() {
                       &ldquo;{s.text}&rdquo;
                       <span className="ml-1.5 text-xs font-normal text-gray-400">
                         {t(`skills.group_${s.group}`)} &middot; {s.user.name}
+                        {' '}&middot;{' '}
+                        <span className={s.type === 'NEED' ? 'text-rose-400' : 'text-emerald-400'}>
+                          {s.type === 'NEED' ? t('skills.iNeed') : t('skills.iCan')}
+                        </span>
                       </span>
                     </p>
                   )}
