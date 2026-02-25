@@ -191,10 +191,18 @@ async function start() {
         root: WEB_DIST,
         prefix: '/',
         wildcard: false,
+        setHeaders(reply, filePath) {
+          if (filePath.endsWith('.html')) {
+            reply.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+          } else if (filePath.includes('/assets/')) {
+            reply.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
+          }
+        },
       });
 
       // SPA fallback: all non-API routes → index.html
       app.setNotFoundHandler((_req, reply) => {
+        reply.header('Cache-Control', 'no-cache, no-store, must-revalidate');
         reply.sendFile('index.html', WEB_DIST);
       });
 
