@@ -31,7 +31,11 @@
     "invalidCredentials": "Invalid email or password",
     "telegramError": "Telegram authorization failed",
     "telegramNotAvailable": "Open the app via Telegram",
-    "googleNotInTelegram": "Google sign-in is not available in Telegram. Use the Telegram button"
+    "googleNotInTelegram": "Google sign-in is not available in Telegram. Use the Telegram button",
+    "haveAccountLink": "Already have an account? Enter link code",
+    "linkCodeHint": "Open Settings in Telegram app → generate a link code and enter it here",
+    "invalidLinkCode": "Invalid or expired code",
+    "loginBtn": "Go"
   },
   "login": {
     "subtitle": "Help coordination through trusted connections",

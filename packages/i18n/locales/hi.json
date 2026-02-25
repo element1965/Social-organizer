@@ -31,7 +31,11 @@
     "invalidCredentials": "अमान्य ईमेल या पासवर्ड",
     "telegramError": "Telegram प्रमाणीकरण विफल हुआ",
     "telegramNotAvailable": "Telegram से ऐप खोलें",
-    "googleNotInTelegram": "Telegram में Google लॉग इन उपलब्ध नहीं है। Telegram बटन का उपयोग करें"
+    "googleNotInTelegram": "Telegram में Google लॉग इन उपलब्ध नहीं है। Telegram बटन का उपयोग करें",
+    "haveAccountLink": "Already have an account? Enter link code",
+    "linkCodeHint": "Open Settings in Telegram app → generate a link code and enter it here",
+    "invalidLinkCode": "Invalid or expired code",
+    "loginBtn": "Go"
   },
   "login": {
     "subtitle": "विश्वसनीय संबंधों के माध्यम से सहायता समन्वय",

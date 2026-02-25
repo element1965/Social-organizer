@@ -214,6 +214,31 @@ export const authRouter = router({
       return { code, expiresAt };
     }),
 
+  /** Login on a new device using a 6-digit link code generated in Settings */
+  loginWithLinkCode: publicProcedure
+    .input(z.object({ code: z.string().length(6) }))
+    .mutation(async ({ ctx, input }) => {
+      const linkingCode = await ctx.db.linkingCode.findFirst({
+        where: { code: input.code, expiresAt: { gt: new Date() } },
+      });
+      if (!linkingCode) {
+        throw new TRPCError({ code: 'NOT_FOUND', message: 'Invalid or expired code' });
+      }
+
+      // Check the user still exists
+      const user = await ctx.db.user.findUnique({ where: { id: linkingCode.userId } });
+      if (!user || user.deletedAt) {
+        throw new TRPCError({ code: 'NOT_FOUND', message: 'User not found' });
+      }
+
+      await ctx.db.linkingCode.delete({ where: { id: linkingCode.id } });
+
+      const accessToken = createAccessToken(user.id);
+      const refreshToken = createRefreshToken(user.id);
+
+      return { accessToken, refreshToken, userId: user.id };
+    }),
+
   linkAccount: protectedProcedure
     .input(z.object({
       code: z.string().length(6),

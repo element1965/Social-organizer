@@ -31,7 +31,11 @@
     "invalidCredentials": "Neplatný e-mail nebo heslo",
     "telegramError": "Ověření přes Telegram selhalo",
     "telegramNotAvailable": "Otevřete aplikaci přes Telegram",
-    "googleNotInTelegram": "Přihlášení přes Google není v Telegramu dostupné. Použijte tlačítko Telegram"
+    "googleNotInTelegram": "Přihlášení přes Google není v Telegramu dostupné. Použijte tlačítko Telegram",
+    "haveAccountLink": "Already have an account? Enter link code",
+    "linkCodeHint": "Open Settings in Telegram app → generate a link code and enter it here",
+    "invalidLinkCode": "Invalid or expired code",
+    "loginBtn": "Go"
   },
   "login": {
     "subtitle": "Koordinace pomoci prostřednictvím důvěryhodných spojení",

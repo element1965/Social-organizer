@@ -31,7 +31,11 @@
     "invalidCredentials": "Email atau kata sandi salah",
     "telegramError": "Otorisasi Telegram gagal",
     "telegramNotAvailable": "Buka aplikasi melalui Telegram",
-    "googleNotInTelegram": "Login Google tidak tersedia di Telegram. Gunakan tombol Telegram"
+    "googleNotInTelegram": "Login Google tidak tersedia di Telegram. Gunakan tombol Telegram",
+    "haveAccountLink": "Already have an account? Enter link code",
+    "linkCodeHint": "Open Settings in Telegram app → generate a link code and enter it here",
+    "invalidLinkCode": "Invalid or expired code",
+    "loginBtn": "Go"
   },
   "login": {
     "subtitle": "Koordinasi bantuan melalui koneksi terpercaya",

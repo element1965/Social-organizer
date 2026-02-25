@@ -31,7 +31,11 @@
     "invalidCredentials": "E-mail sau parola invalide",
     "telegramError": "Autorizarea prin Telegram a esuat",
     "telegramNotAvailable": "Deschide aplicatia prin Telegram",
-    "googleNotInTelegram": "Autentificarea prin Google nu este disponibila in Telegram. Foloseste butonul Telegram"
+    "googleNotInTelegram": "Autentificarea prin Google nu este disponibila in Telegram. Foloseste butonul Telegram",
+    "haveAccountLink": "Already have an account? Enter link code",
+    "linkCodeHint": "Open Settings in Telegram app → generate a link code and enter it here",
+    "invalidLinkCode": "Invalid or expired code",
+    "loginBtn": "Go"
   },
   "login": {
     "subtitle": "Coordonarea ajutorului prin conexiuni de incredere",

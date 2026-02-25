@@ -31,7 +31,11 @@
     "invalidCredentials": "Няправільны email або пароль",
     "telegramError": "Памылка аўтарызацыі праз Telegram",
     "telegramNotAvailable": "Адкрыйце праграму праз Telegram",
-    "googleNotInTelegram": "Google аўтарызацыя недаступная ў Telegram. Выкарыстоўвайце кнопку Telegram"
+    "googleNotInTelegram": "Google аўтарызацыя недаступная ў Telegram. Выкарыстоўвайце кнопку Telegram",
+    "haveAccountLink": "Already have an account? Enter link code",
+    "linkCodeHint": "Open Settings in Telegram app → generate a link code and enter it here",
+    "invalidLinkCode": "Invalid or expired code",
+    "loginBtn": "Go"
   },
   "login": {
     "subtitle": "Каардынацыя дапамогі праз давераныя сувязі",

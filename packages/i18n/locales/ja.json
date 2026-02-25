@@ -31,7 +31,11 @@
     "invalidCredentials": "メールアドレスまたはパスワードが無効です",
     "telegramError": "Telegram 認証に失敗しました",
     "telegramNotAvailable": "Telegram からアプリを開いてください",
-    "googleNotInTelegram": "Telegram では Google ログインを利用できません。Telegram ボタンをご使用ください"
+    "googleNotInTelegram": "Telegram では Google ログインを利用できません。Telegram ボタンをご使用ください",
+    "haveAccountLink": "Already have an account? Enter link code",
+    "linkCodeHint": "Open Settings in Telegram app → generate a link code and enter it here",
+    "invalidLinkCode": "Invalid or expired code",
+    "loginBtn": "Go"
   },
   "login": {
     "subtitle": "信頼できるつながりを通じた助け合いの調整",
