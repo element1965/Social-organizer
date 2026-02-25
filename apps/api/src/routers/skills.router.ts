@@ -73,13 +73,14 @@ function textToKey(text: string): string {
   const words = latin.replace(/[^a-z0-9]+/g, ' ').trim().split(/\s+/).filter(Boolean);
   if (words.length === 0) return 'custom' + Date.now();
   // camelCase
-  return words[0] + words.slice(1).map((w) => w[0].toUpperCase() + w.slice(1)).join('');
+  return words[0] + words.slice(1).map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join('');
 }
 
 async function autoSuggestOther(
   db: PrismaClient,
   userId: string,
   items: Array<{ categoryId: string; note?: string }>,
+  type: 'SKILL' | 'NEED',
 ) {
   // Load "other*" category IDs
   const otherCats = await db.skillCategory.findMany({
@@ -98,9 +99,9 @@ async function autoSuggestOther(
     });
     if (existing) continue;
     await db.suggestedCategory.create({
-      data: { userId, group, text },
+      data: { userId, group, text, type },
     });
-    console.log(`[Skills] New suggestion: "${text}" in group "${group}" by ${userId}`);
+    console.log(`[Skills] New suggestion (${type}): "${text}" in group "${group}" by ${userId}`);
   }
 }
 
@@ -176,7 +177,7 @@ export const skillsRouter = router({
       }
 
       // Auto-suggest "other" categories
-      autoSuggestOther(ctx.db, ctx.userId, input.skills).catch(() => {});
+      autoSuggestOther(ctx.db, ctx.userId, input.skills, 'SKILL').catch(() => {});
 
       // Find clearing chains
       findAndStoreChains(ctx.db, ctx.userId).catch((err) =>
@@ -217,7 +218,7 @@ export const skillsRouter = router({
       }
 
       // Auto-suggest "other" categories
-      autoSuggestOther(ctx.db, ctx.userId, input.needs).catch(() => {});
+      autoSuggestOther(ctx.db, ctx.userId, input.needs, 'NEED').catch(() => {});
 
       // Find clearing chains
       findAndStoreChains(ctx.db, ctx.userId).catch((err) =>
@@ -446,6 +447,51 @@ export const skillsRouter = router({
         where: { id: input.id },
         data: { status: 'APPROVED', categoryId: category.id, reviewedAt: new Date() },
       });
+
+      // Auto-assign the new category to the suggesting user as skill or need
+      if (suggestion.type === 'NEED') {
+        await ctx.db.userNeed.upsert({
+          where: { userId_categoryId: { userId: suggestion.userId, categoryId: category.id } },
+          create: { userId: suggestion.userId, categoryId: category.id },
+          update: {},
+        });
+      } else {
+        await ctx.db.userSkill.upsert({
+          where: { userId_categoryId: { userId: suggestion.userId, categoryId: category.id } },
+          create: { userId: suggestion.userId, categoryId: category.id },
+          update: {},
+        });
+      }
+
+      // Also assign for ALL other users who suggested the same text (same group, any type)
+      const sameSuggestions = await ctx.db.suggestedCategory.findMany({
+        where: {
+          id: { not: input.id },
+          group: suggestion.group,
+          text: { equals: suggestion.text, mode: 'insensitive' },
+          status: 'PENDING',
+        },
+      });
+      for (const dup of sameSuggestions) {
+        if (dup.type === 'NEED') {
+          await ctx.db.userNeed.upsert({
+            where: { userId_categoryId: { userId: dup.userId, categoryId: category.id } },
+            create: { userId: dup.userId, categoryId: category.id },
+            update: {},
+          });
+        } else {
+          await ctx.db.userSkill.upsert({
+            where: { userId_categoryId: { userId: dup.userId, categoryId: category.id } },
+            create: { userId: dup.userId, categoryId: category.id },
+            update: {},
+          });
+        }
+        // Mark duplicate as approved too
+        await ctx.db.suggestedCategory.update({
+          where: { id: dup.id },
+          data: { status: 'APPROVED', categoryId: category.id, reviewedAt: new Date() },
+        });
+      }
 
       // Translate to all 28 locales and write to JSON files (async, don't block)
       translateAndWriteSkillKey(key, suggestion.text, 'ru').then((count) => {
