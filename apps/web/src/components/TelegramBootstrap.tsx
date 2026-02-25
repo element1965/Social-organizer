@@ -13,9 +13,9 @@ export function TelegramBootstrap({ children }: { children: React.ReactNode }) {
 
   useTelegramBackButton();
 
-  // After Telegram auto-auth, navigate based on start_param or redirect from public pages
+  // After auth, navigate based on start_param or redirect from public pages
   useEffect(() => {
-    if (!isTelegram || !isReady || !isAuthenticated) return;
+    if (!isReady || !isAuthenticated) return;
 
     // Check start_param or pending invite for deep linking (only once per session)
     if (!startParamHandled.current) {
@@ -27,28 +27,37 @@ export function TelegramBootstrap({ children }: { children: React.ReactNode }) {
         return;
       }
 
-      // Priority 1: start_param from Telegram deep link (may work for Direct Link Mini Apps)
-      const startParam = getStartParam();
-      let inviteToken: string | null = null;
-      if (startParam?.startsWith('collection_')) {
-        const collectionId = startParam.slice('collection_'.length);
-        navigate(`/collection/${collectionId}`, { replace: true });
-        return;
-      }
+      // Telegram deep link start_param (only in TG)
+      if (isTelegram) {
+        const startParam = getStartParam();
+        let inviteToken: string | null = null;
+        if (startParam?.startsWith('collection_')) {
+          const collectionId = startParam.slice('collection_'.length);
+          navigate(`/collection/${collectionId}`, { replace: true });
+          return;
+        }
 
-      if (startParam?.startsWith('invite_')) {
-        inviteToken = startParam.slice('invite_'.length);
-      }
+        if (startParam?.startsWith('invite_')) {
+          inviteToken = startParam.slice('invite_'.length);
+        }
 
-      // Priority 2: pendingInviteToken saved in localStorage (from web invite flow → TG login)
-      if (!inviteToken) {
-        inviteToken = localStorage.getItem('pendingInviteToken');
-      }
+        if (!inviteToken) {
+          inviteToken = localStorage.getItem('pendingInviteToken');
+        }
 
-      if (inviteToken) {
-        localStorage.setItem('pendingInviteToken', inviteToken);
-        navigate(`/invite/${inviteToken}`, { replace: true });
-        return;
+        if (inviteToken) {
+          localStorage.setItem('pendingInviteToken', inviteToken);
+          navigate(`/invite/${inviteToken}`, { replace: true });
+          return;
+        }
+      } else {
+        // Non-TG: check pendingInviteToken from localStorage
+        const inviteToken = localStorage.getItem('pendingInviteToken');
+        if (inviteToken) {
+          localStorage.removeItem('pendingInviteToken');
+          navigate(`/invite/${inviteToken}`, { replace: true });
+          return;
+        }
       }
     }
 

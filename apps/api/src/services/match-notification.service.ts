@@ -1,5 +1,6 @@
 import type { PrismaClient } from '@so/db';
 import { sendTelegramMessage, type TgReplyMarkup } from './telegram-bot.service.js';
+import { sendWebPush } from './web-push.service.js';
 
 const WEB_APP_URL = process.env.WEB_APP_URL || 'https://www.orginizer.com';
 
@@ -294,9 +295,22 @@ export async function createSkillMatchNotifications(
 
   console.log(`[SkillMatch] Created ${matches.length} notifications for user ${skillOwnerId}`);
 
+  // Web Push to all matched users + skill owner
+  const matchedUserIds = matches.map((m) => m.userId);
+  sendWebPush(db, matchedUserIds, {
+    title: 'Skill Match',
+    body: 'Someone in your network can help you!',
+    url: `${WEB_APP_URL}/matches`,
+  }).catch((err) => console.error('[WebPush SkillMatch] Failed:', err));
+  sendWebPush(db, [skillOwnerId], {
+    title: 'Skill Match',
+    body: 'You can help someone in your network!',
+    url: `${WEB_APP_URL}/matches`,
+  }).catch((err) => console.error('[WebPush SkillMatch] Failed:', err));
+
   // Send TG notifications
   try {
-    const allUserIds = [skillOwnerId, ...matches.map((m) => m.userId)];
+    const allUserIds = [skillOwnerId, ...matchedUserIds];
     const [users, categories] = await Promise.all([
       resolveUsers(db, allUserIds),
       resolveCategories(db, matches.map((m) => m.categoryId)),
@@ -393,9 +407,22 @@ export async function createNeedMatchNotifications(
 
   console.log(`[SkillMatch] Created ${matches.length} need-match notifications for user ${needOwnerId}`);
 
+  // Web Push to need owner and matched skill owners
+  const matchedUserIds = matches.map((m) => m.userId);
+  sendWebPush(db, [needOwnerId], {
+    title: 'Skill Match',
+    body: 'Someone in your network can help you!',
+    url: `${WEB_APP_URL}/matches`,
+  }).catch((err) => console.error('[WebPush NeedMatch] Failed:', err));
+  sendWebPush(db, matchedUserIds, {
+    title: 'Skill Match',
+    body: 'You can help someone in your network!',
+    url: `${WEB_APP_URL}/matches`,
+  }).catch((err) => console.error('[WebPush NeedMatch] Failed:', err));
+
   // Send TG notifications
   try {
-    const allUserIds = [needOwnerId, ...matches.map((m) => m.userId)];
+    const allUserIds = [needOwnerId, ...matchedUserIds];
     const [users, categories] = await Promise.all([
       resolveUsers(db, allUserIds),
       resolveCategories(db, matches.map((m) => m.categoryId)),
