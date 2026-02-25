@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { router, protectedProcedure } from '../trpc.js';
 import { isAdmin } from '../admin.js';
-import { createSkillMatchNotifications, createNeedMatchNotifications } from '../services/match-notification.service.js';
+import { createSkillMatchNotifications, createNeedMatchNotifications, scanMatchesForUser } from '../services/match-notification.service.js';
 import { findAndStoreChains } from '../services/chain-finder.service.js';
 import { translateText } from '../services/translate.service.js';
 import type { PrismaClient } from '@so/db';
@@ -491,6 +491,13 @@ export const skillsRouter = router({
           where: { id: dup.id },
           data: { status: 'APPROVED', categoryId: category.id, reviewedAt: new Date() },
         });
+      }
+
+      // Scan matches for all affected users (fire-and-forget)
+      const affectedUserIds = new Set([suggestion.userId, ...sameSuggestions.map((s) => s.userId)]);
+      for (const uid of affectedUserIds) {
+        scanMatchesForUser(ctx.db, uid).catch(() => {});
+        findAndStoreChains(ctx.db, uid).catch(() => {});
       }
 
       // Translate to all 28 locales and write to JSON files (async, don't block)
