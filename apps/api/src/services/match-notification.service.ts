@@ -51,27 +51,166 @@ async function resolveCategories(db: PrismaClient, categoryIds: string[]) {
 }
 
 // Match notification messages per language
-const MATCH_MSG: Record<string, {
+interface MatchMsgSet {
   youCanHelp: (name: string, skill: string) => string;
   theyCanHelp: (name: string, skill: string) => string;
   writeBtn: string;
   profileBtn: string;
-}> = {
-  ru: {
-    youCanHelp: (name, skill) => `🎯 <b>Совпадение!</b>\n\nТы можешь помочь <b>${name}</b> с навыком: <b>${skill}</b>\n\nНапиши — обсудите как вы можете помочь друг другу.`,
-    theyCanHelp: (name, skill) => `🎯 <b>Совпадение!</b>\n\n<b>${name}</b> может помочь тебе с навыком: <b>${skill}</b>\n\nНапиши — обсудите как вы можете помочь друг другу.`,
-    writeBtn: 'Написать',
-    profileBtn: 'Открыть профиль',
-  },
-  en: {
-    youCanHelp: (name, skill) => `🎯 <b>Match found!</b>\n\nYou can help <b>${name}</b> with: <b>${skill}</b>\n\nReach out to discuss how you can help each other.`,
-    theyCanHelp: (name, skill) => `🎯 <b>Match found!</b>\n\n<b>${name}</b> can help you with: <b>${skill}</b>\n\nReach out to discuss how you can help each other.`,
-    writeBtn: 'Write',
-    profileBtn: 'Open profile',
-  },
+}
+
+function m(youHelp: string, theyHelp: string, write: string, profile: string): MatchMsgSet {
+  return {
+    youCanHelp: (name, skill) => `🎯 <b>${youHelp.split('|')[0]}</b>\n\n${youHelp.split('|')[1]?.replace('{n}', `<b>${name}</b>`).replace('{s}', `<b>${skill}</b>`)}\n\n${youHelp.split('|')[2]}`,
+    theyCanHelp: (name, skill) => `🎯 <b>${theyHelp.split('|')[0]}</b>\n\n${theyHelp.split('|')[1]?.replace('{n}', `<b>${name}</b>`).replace('{s}', `<b>${skill}</b>`)}\n\n${theyHelp.split('|')[2]}`,
+    writeBtn: write,
+    profileBtn: profile,
+  };
+}
+
+const MATCH_MSG: Record<string, MatchMsgSet> = {
+  ru: m(
+    'Совпадение!|Ты можешь помочь {n} с навыком: {s}|Напиши — обсудите как вы можете помочь друг другу.',
+    'Совпадение!|{n} может помочь тебе с навыком: {s}|Напиши — обсудите как вы можете помочь друг другу.',
+    'Написать', 'Открыть профиль',
+  ),
+  en: m(
+    'Match found!|You can help {n} with: {s}|Reach out to discuss how you can help each other.',
+    'Match found!|{n} can help you with: {s}|Reach out to discuss how you can help each other.',
+    'Write', 'Open profile',
+  ),
+  uk: m(
+    'Збіг!|Ти можеш допомогти {n} з навичкою: {s}|Напиши — обговоріть як ви можете допомогти одне одному.',
+    'Збіг!|{n} може допомогти тобі з навичкою: {s}|Напиши — обговоріть як ви можете допомогти одне одному.',
+    'Написати', 'Відкрити профіль',
+  ),
+  be: m(
+    'Супадзенне!|Ты можаш дапамагчы {n} з навыкам: {s}|Напішы — абмяркуйце як вы можаце дапамагчы адзін аднаму.',
+    'Супадзенне!|{n} можа дапамагчы табе з навыкам: {s}|Напішы — абмяркуйце як вы можаце дапамагчы адзін аднаму.',
+    'Напісаць', 'Адкрыць профіль',
+  ),
+  de: m(
+    'Übereinstimmung!|Du kannst {n} helfen mit: {s}|Schreib — besprecht, wie ihr einander helfen könnt.',
+    'Übereinstimmung!|{n} kann dir helfen mit: {s}|Schreib — besprecht, wie ihr einander helfen könnt.',
+    'Schreiben', 'Profil öffnen',
+  ),
+  fr: m(
+    'Correspondance !|Tu peux aider {n} avec : {s}|Écris pour discuter comment vous pouvez vous entraider.',
+    'Correspondance !|{n} peut t\'aider avec : {s}|Écris pour discuter comment vous pouvez vous entraider.',
+    'Écrire', 'Ouvrir le profil',
+  ),
+  es: m(
+    '¡Coincidencia!|Puedes ayudar a {n} con: {s}|Escribe para discutir cómo pueden ayudarse mutuamente.',
+    '¡Coincidencia!|{n} puede ayudarte con: {s}|Escribe para discutir cómo pueden ayudarse mutuamente.',
+    'Escribir', 'Abrir perfil',
+  ),
+  pt: m(
+    'Correspondência!|Você pode ajudar {n} com: {s}|Escreva para discutir como podem se ajudar.',
+    'Correspondência!|{n} pode te ajudar com: {s}|Escreva para discutir como podem se ajudar.',
+    'Escrever', 'Abrir perfil',
+  ),
+  it: m(
+    'Corrispondenza!|Puoi aiutare {n} con: {s}|Scrivi per discutere come potete aiutarvi.',
+    'Corrispondenza!|{n} può aiutarti con: {s}|Scrivi per discutere come potete aiutarvi.',
+    'Scrivi', 'Apri profilo',
+  ),
+  nl: m(
+    'Match gevonden!|Je kunt {n} helpen met: {s}|Schrijf om te bespreken hoe jullie elkaar kunnen helpen.',
+    'Match gevonden!|{n} kan je helpen met: {s}|Schrijf om te bespreken hoe jullie elkaar kunnen helpen.',
+    'Schrijven', 'Profiel openen',
+  ),
+  pl: m(
+    'Dopasowanie!|Możesz pomóc {n} w: {s}|Napisz — omówcie jak możecie sobie pomóc.',
+    'Dopasowanie!|{n} może ci pomóc w: {s}|Napisz — omówcie jak możecie sobie pomóc.',
+    'Napisz', 'Otwórz profil',
+  ),
+  cs: m(
+    'Shoda!|Můžeš pomoci {n} s: {s}|Napiš — domluvte se, jak si můžete pomoci.',
+    'Shoda!|{n} ti může pomoci s: {s}|Napiš — domluvte se, jak si můžete pomoci.',
+    'Napsat', 'Otevřít profil',
+  ),
+  ro: m(
+    'Potrivire!|Poți ajuta pe {n} cu: {s}|Scrie pentru a discuta cum vă puteți ajuta reciproc.',
+    'Potrivire!|{n} te poate ajuta cu: {s}|Scrie pentru a discuta cum vă puteți ajuta reciproc.',
+    'Scrie', 'Deschide profil',
+  ),
+  sr: m(
+    'Подударање!|Можеш помоћи {n} са: {s}|Напиши — договорите како можете помоћи једно другом.',
+    'Подударање!|{n} може да ти помогне са: {s}|Напиши — договорите како можете помоћи једно другом.',
+    'Напиши', 'Отвори профил',
+  ),
+  sv: m(
+    'Matchning!|Du kan hjälpa {n} med: {s}|Skriv för att diskutera hur ni kan hjälpa varandra.',
+    'Matchning!|{n} kan hjälpa dig med: {s}|Skriv för att diskutera hur ni kan hjälpa varandra.',
+    'Skriv', 'Öppna profil',
+  ),
+  da: m(
+    'Match fundet!|Du kan hjælpe {n} med: {s}|Skriv for at diskutere, hvordan I kan hjælpe hinanden.',
+    'Match fundet!|{n} kan hjælpe dig med: {s}|Skriv for at diskutere, hvordan I kan hjælpe hinanden.',
+    'Skriv', 'Åbn profil',
+  ),
+  no: m(
+    'Treff!|Du kan hjelpe {n} med: {s}|Skriv for å diskutere hvordan dere kan hjelpe hverandre.',
+    'Treff!|{n} kan hjelpe deg med: {s}|Skriv for å diskutere hvordan dere kan hjelpe hverandre.',
+    'Skriv', 'Åpne profil',
+  ),
+  fi: m(
+    'Osuma!|Voit auttaa käyttäjää {n} taidossa: {s}|Kirjoita — keskustelkaa miten voitte auttaa toisianne.',
+    'Osuma!|{n} voi auttaa sinua taidossa: {s}|Kirjoita — keskustelkaa miten voitte auttaa toisianne.',
+    'Kirjoita', 'Avaa profiili',
+  ),
+  tr: m(
+    'Eşleşme!|{n} kişisine yardım edebilirsin: {s}|Yaz — birbirinize nasıl yardım edebileceğinizi konuşun.',
+    'Eşleşme!|{n} sana yardım edebilir: {s}|Yaz — birbirinize nasıl yardım edebileceğinizi konuşun.',
+    'Yaz', 'Profili aç',
+  ),
+  ar: m(
+    'تطابق!|يمكنك مساعدة {n} في: {s}|اكتب لمناقشة كيف يمكنكم مساعدة بعضكم البعض.',
+    'تطابق!|{n} يمكنه مساعدتك في: {s}|اكتب لمناقشة كيف يمكنكم مساعدة بعضكم البعض.',
+    'اكتب', 'فتح الملف الشخصي',
+  ),
+  he: m(
+    'התאמה!|אתה יכול לעזור ל{n} עם: {s}|כתוב כדי לדון איך תוכלו לעזור אחד לשני.',
+    'התאמה!|{n} יכול לעזור לך עם: {s}|כתוב כדי לדון איך תוכלו לעזור אחד לשני.',
+    'כתוב', 'פתח פרופיל',
+  ),
+  hi: m(
+    'मिलान!|आप {n} की मदद कर सकते हैं: {s}|लिखें — चर्चा करें कि आप एक-दूसरे की कैसे मदद कर सकते हैं।',
+    'मिलान!|{n} आपकी मदद कर सकते हैं: {s}|लिखें — चर्चा करें कि आप एक-दूसरे की कैसे मदद कर सकते हैं।',
+    'लिखें', 'प्रोफ़ाइल खोलें',
+  ),
+  ja: m(
+    'マッチ!|{n}さんを手伝えます: {s}|書いて — お互いにどう助け合えるか話し合いましょう。',
+    'マッチ!|{n}さんがあなたを手伝えます: {s}|書いて — お互いにどう助け合えるか話し合いましょう。',
+    '書く', 'プロフィールを開く',
+  ),
+  ko: m(
+    '매칭!|{n}님을 도울 수 있습니다: {s}|서로 어떻게 도울 수 있는지 이야기해 보세요.',
+    '매칭!|{n}님이 도와줄 수 있습니다: {s}|서로 어떻게 도울 수 있는지 이야기해 보세요.',
+    '쓰기', '프로필 열기',
+  ),
+  zh: m(
+    '匹配!|你可以帮助{n}: {s}|写信讨论如何互相帮助。',
+    '匹配!|{n}可以帮助你: {s}|写信讨论如何互相帮助。',
+    '写信', '打开资料',
+  ),
+  th: m(
+    'จับคู่สำเร็จ!|คุณสามารถช่วย {n} เรื่อง: {s}|เขียนเพื่อหารือว่าจะช่วยเหลือกันได้อย่างไร',
+    'จับคู่สำเร็จ!|{n} สามารถช่วยคุณเรื่อง: {s}|เขียนเพื่อหารือว่าจะช่วยเหลือกันได้อย่างไร',
+    'เขียน', 'เปิดโปรไฟล์',
+  ),
+  vi: m(
+    'Kết hợp!|Bạn có thể giúp {n} về: {s}|Viết để thảo luận cách giúp đỡ lẫn nhau.',
+    'Kết hợp!|{n} có thể giúp bạn về: {s}|Viết để thảo luận cách giúp đỡ lẫn nhau.',
+    'Viết', 'Mở hồ sơ',
+  ),
+  id: m(
+    'Kecocokan!|Kamu bisa membantu {n} dengan: {s}|Tulis untuk mendiskusikan bagaimana bisa saling membantu.',
+    'Kecocokan!|{n} bisa membantumu dengan: {s}|Tulis untuk mendiskusikan bagaimana bisa saling membantu.',
+    'Tulis', 'Buka profil',
+  ),
 };
 
-function getMsg(lang: string) {
+function getMsg(lang: string): MatchMsgSet {
   return MATCH_MSG[lang] || MATCH_MSG.en!;
 }
 
