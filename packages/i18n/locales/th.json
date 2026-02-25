@@ -467,7 +467,9 @@
     "pendingNewBody": "{{name}} ต้องการเชื่อมต่อ",
     "pendingAccepted": "คำขอถูกยอมรับ",
     "pendingRejected": "คำขอถูกปฏิเสธ",
-    "pendingView": "ดู"
+    "pendingView": "ดู",
+    "userDeleted": "ผู้ใช้ออกแล้ว",
+    "userDeletedBody": "{{name}} จากวงแรกของคุณได้ลบบัญชีแล้ว"
   },
   "hints": {
     "collectionAmount": "กรอกจำนวนที่คุณต้องการ ขั้นต่ำ 10 หน่วย ระบบจะแจ้งเตือนคนจำนวนที่เหมาะสม",

@@ -467,7 +467,9 @@
     "pendingNewBody": "{{name}} vrea să se conecteze",
     "pendingAccepted": "Cerere acceptată",
     "pendingRejected": "Cerere respinsă",
-    "pendingView": "Vezi"
+    "pendingView": "Vezi",
+    "userDeleted": "Utilizatorul a plecat",
+    "userDeletedBody": "{{name}} din primul tău cerc și-a șters contul."
   },
   "hints": {
     "collectionAmount": "Introdu suma de care ai nevoie. Minimum 10 unitati. Sistemul va notifica numarul potrivit de persoane.",

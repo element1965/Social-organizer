@@ -467,7 +467,9 @@
     "pendingNewBody": "{{name}} vil koble seg til",
     "pendingAccepted": "Forespørsel godtatt",
     "pendingRejected": "Forespørsel avslått",
-    "pendingView": "Vis"
+    "pendingView": "Vis",
+    "userDeleted": "Bruker forlot",
+    "userDeletedBody": "{{name}} fra din første krets har slettet kontoen sin."
   },
   "hints": {
     "collectionAmount": "Skriv inn beløpet du trenger. Minimum 10 enheter. Systemet vil varsle riktig antall personer.",

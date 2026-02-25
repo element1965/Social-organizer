@@ -467,7 +467,9 @@
     "pendingNewBody": "{{name}} se chce připojit",
     "pendingAccepted": "Žádost přijata",
     "pendingRejected": "Žádost odmítnuta",
-    "pendingView": "Zobrazit"
+    "pendingView": "Zobrazit",
+    "userDeleted": "Uživatel odešel",
+    "userDeletedBody": "{{name}} z vašeho prvního kruhu smazal svůj účet."
   },
   "hints": {
     "collectionAmount": "Zadejte částku, kterou potřebujete. Minimálně 10 jednotek. Systém upozorní správný počet lidí.",

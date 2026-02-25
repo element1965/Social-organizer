@@ -445,7 +445,9 @@
     "pendingNewBody": "{{name}} vuole connettersi",
     "pendingAccepted": "Richiesta accettata",
     "pendingRejected": "Richiesta rifiutata",
-    "pendingView": "Vedi"
+    "pendingView": "Vedi",
+    "userDeleted": "Utente uscito",
+    "userDeletedBody": "{{name}} dal tuo primo cerchio ha eliminato il suo account."
   },
   "hints": {
     "collectionAmount": "Inserisci l'importo di cui hai bisogno. Minimo 10 unità. Il sistema notificherà il giusto numero di persone.",

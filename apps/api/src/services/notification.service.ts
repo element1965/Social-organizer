@@ -256,6 +256,29 @@ export async function sendPendingNotification(
   await sendTgMessages([{ telegramId: tgAccount.platformId, text, replyMarkup }]);
 }
 
+/**
+ * Send Telegram notification to the inviter when a user from their first circle deletes their account.
+ */
+export async function sendUserDeletedNotification(
+  db: PrismaClient,
+  inviterUserId: string,
+  deletedUserName: string,
+): Promise<void> {
+  const tgAccount = await db.platformAccount.findFirst({
+    where: { userId: inviterUserId, platform: 'TELEGRAM' },
+    select: { platformId: true, user: { select: { language: true } } },
+  });
+  if (!tgAccount) return;
+
+  const lang = tgAccount.user?.language || 'en';
+  const title = tg(lang, 'userDeleted') || 'User left';
+  const body = (tg(lang, 'userDeletedBody') || '{{name}} from your first circle has deleted their account.')
+    .replace('{{name}}', deletedUserName);
+  const text = `👋 <b>${title}</b>\n\n${body}`;
+
+  await sendTgMessages([{ telegramId: tgAccount.platformId, text }]);
+}
+
 /** Send new collection Telegram notifications with per-user language */
 async function dispatchNewCollectionTg(
   db: PrismaClient,

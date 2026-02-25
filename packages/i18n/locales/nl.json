@@ -467,7 +467,9 @@
     "pendingNewBody": "{{name}} wil verbinden",
     "pendingAccepted": "Verzoek geaccepteerd",
     "pendingRejected": "Verzoek afgewezen",
-    "pendingView": "Bekijken"
+    "pendingView": "Bekijken",
+    "userDeleted": "Gebruiker vertrokken",
+    "userDeletedBody": "{{name}} uit je eerste kring heeft zijn account verwijderd."
   },
   "hints": {
     "collectionAmount": "Voer het bedrag in dat je nodig hebt. Minimaal 10 eenheden. Het systeem informeert het juiste aantal mensen.",

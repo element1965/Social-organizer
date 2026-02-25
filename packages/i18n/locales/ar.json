@@ -467,7 +467,9 @@
     "pendingNewBody": "{{name}} يريد الاتصال",
     "pendingAccepted": "تم قبول الطلب",
     "pendingRejected": "تم رفض الطلب",
-    "pendingView": "عرض"
+    "pendingView": "عرض",
+    "userDeleted": "المستخدم غادر",
+    "userDeletedBody": "{{name}} من دائرتك الأولى حذف حسابه."
   },
   "hints": {
     "collectionAmount": "أدخل المبلغ الذي تحتاجه. الحد الأدنى 10 وحدات. سيقوم النظام بإعلام العدد المناسب من الأشخاص.",

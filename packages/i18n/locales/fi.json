@@ -467,7 +467,9 @@
     "pendingNewBody": "{{name}} haluaa yhdistää",
     "pendingAccepted": "Pyyntö hyväksytty",
     "pendingRejected": "Pyyntö hylätty",
-    "pendingView": "Näytä"
+    "pendingView": "Näytä",
+    "userDeleted": "Käyttäjä poistui",
+    "userDeletedBody": "{{name}} ensimmäisestä piiristäsi on poistanut tilinsä."
   },
   "hints": {
     "collectionAmount": "Syötä tarvitsemasi summa. Vähintään 10 yksikköä. Järjestelmä ilmoittaa oikealle määrälle ihmisiä.",

@@ -467,7 +467,9 @@
     "pendingNewBody": "{{name}} bağlanmak istiyor",
     "pendingAccepted": "İstek kabul edildi",
     "pendingRejected": "İstek reddedildi",
-    "pendingView": "Görüntüle"
+    "pendingView": "Görüntüle",
+    "userDeleted": "Kullanıcı ayrıldı",
+    "userDeletedBody": "{{name}} ilk çevrenizden hesabını sildi."
   },
   "hints": {
     "collectionAmount": "İhtiyacınız olan miktarı girin. Minimum 10 birim. Sistem doğru sayıda kişiyi bilgilendirecektir.",

@@ -467,7 +467,9 @@
     "pendingNewBody": "{{name}} vill ansluta",
     "pendingAccepted": "Förfrågan accepterad",
     "pendingRejected": "Förfrågan avvisad",
-    "pendingView": "Visa"
+    "pendingView": "Visa",
+    "userDeleted": "Användare lämnade",
+    "userDeletedBody": "{{name}} från din första krets har raderat sitt konto."
   },
   "hints": {
     "collectionAmount": "Ange beloppet du behover. Minimum 10 enheter. Systemet informerar ratt antal personer.",
