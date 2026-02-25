@@ -216,6 +216,48 @@ export async function sendCollectionBlockedTg(
 }
 
 /**
+ * Send TG notification only to the collection creator when goal is reached.
+ * Participants are NOT notified here — they will be notified when the creator manually closes.
+ */
+export async function sendGoalReachedToCreator(
+  db: PrismaClient,
+  collectionId: string,
+  creatorId: string,
+): Promise<void> {
+  const tgAccount = await db.platformAccount.findFirst({
+    where: { userId: creatorId, platform: 'TELEGRAM' },
+    select: { platformId: true, user: { select: { language: true } } },
+  });
+  if (!tgAccount) return;
+
+  const collection = await db.collection.findUnique({
+    where: { id: collectionId },
+    select: { amount: true, currency: true, originalAmount: true, originalCurrency: true, chatLink: true },
+  });
+  if (!collection) return;
+
+  const lang = tgAccount.user?.language || 'en';
+  const amount = collection.originalAmount ?? collection.amount;
+  const currency = collection.originalCurrency ?? collection.currency;
+  const amountStr = amount != null ? `${amount} ${currency}` : '';
+  const webAppLink = `${WEB_APP_URL}/collection/${collectionId}`;
+
+  const text = `🎯 <b>${tg(lang, 'blocked')}</b>${amountStr ? `\n${tg(lang, 'amount')}: ${amountStr}` : ''}\n\n${tg(lang, 'blockedBody')}`;
+
+  const buttons: Array<Array<{ text: string; web_app?: { url: string }; url?: string }>> = [];
+  if (collection.chatLink) {
+    buttons.push([{ text: `💬 ${tg(lang, 'open')}`, url: collection.chatLink }]);
+  }
+  buttons.push([{ text: `📱 ${tg(lang, 'view')}`, web_app: { url: webAppLink } }]);
+
+  await sendTgMessages([{
+    telegramId: tgAccount.platformId,
+    text,
+    replyMarkup: { inline_keyboard: buttons } as TgReplyMarkup,
+  }]);
+}
+
+/**
  * Send Telegram notification for pending connections (new request, accepted, rejected).
  */
 export async function sendPendingNotification(
