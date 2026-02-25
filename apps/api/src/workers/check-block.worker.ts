@@ -1,6 +1,6 @@
 import type { Job } from 'bullmq';
 import { getDb } from '@so/db';
-import { sendCollectionBlockedTg } from '../services/notification.service.js';
+import { sendGoalReachedToCreator } from '../services/notification.service.js';
 
 /**
  * On event: check if obligation total reached collection goal -> BLOCKED.
@@ -29,8 +29,8 @@ export async function processCheckBlock(job: Job<{ collectionId: string }>): Pro
       where: { id: collectionId },
       data: { status: 'BLOCKED', blockedAt: new Date() },
     });
-    sendCollectionBlockedTg(db, collectionId, collection.creatorId).catch((err) =>
-      console.error('[TG Blocked] Failed to dispatch:', err),
+    sendGoalReachedToCreator(db, collectionId, collection.creatorId).catch((err) =>
+      console.error('[TG GoalReached] Failed:', err),
     );
   }
 }

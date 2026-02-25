@@ -3,7 +3,7 @@ import { router, protectedProcedure } from '../trpc.js';
 import { TRPCError } from '@trpc/server';
 import { MIN_OBLIGATION_AMOUNT, CURRENCY_CODES, NOTIFICATION_TTL_HOURS } from '@so/shared';
 import { convertToUSD } from '../services/currency.service.js';
-import { sendCollectionBlockedTg } from '../services/notification.service.js';
+import { sendGoalReachedToCreator } from '../services/notification.service.js';
 
 export const obligationRouter = router({
   create: protectedProcedure
@@ -72,7 +72,7 @@ export const obligationRouter = router({
             data: { status: 'EXPIRED' },
           });
 
-          // Create COLLECTION_BLOCKED notifications only for notified users who did NOT pledge
+          // Create COLLECTION_BLOCKED in-app notifications for non-participants (so they know they can relax)
           const notifiedUsers = await ctx.db.notification.findMany({
             where: { collectionId: input.collectionId },
             select: { userId: true },
@@ -104,8 +104,9 @@ export const obligationRouter = router({
             } catch { /* skip */ }
           }
 
-          sendCollectionBlockedTg(ctx.db, input.collectionId, collection.creatorId).catch((err) =>
-            console.error('[TG Blocked] Failed to dispatch:', err),
+          // TG notification only to the creator — participants wait for manual close
+          sendGoalReachedToCreator(ctx.db, input.collectionId, collection.creatorId).catch((err) =>
+            console.error('[TG GoalReached] Failed:', err),
           );
         }
       }
@@ -220,7 +221,7 @@ export const obligationRouter = router({
             data: { status: 'EXPIRED' },
           });
 
-          // Only notify users who did NOT pledge
+          // In-app notifications for non-participants
           const notifiedUsers = await ctx.db.notification.findMany({
             where: { collectionId: collection.id },
             select: { userId: true },
@@ -252,8 +253,9 @@ export const obligationRouter = router({
             } catch { /* skip */ }
           }
 
-          sendCollectionBlockedTg(ctx.db, collection.id, collection.creatorId).catch((err) =>
-            console.error('[TG Blocked] Failed to dispatch:', err),
+          // TG only to creator
+          sendGoalReachedToCreator(ctx.db, collection.id, collection.creatorId).catch((err) =>
+            console.error('[TG GoalReached] Failed:', err),
           );
         } else if (sum < collection.amount && collection.status === 'BLOCKED') {
           await ctx.db.collection.update({
