@@ -2,6 +2,7 @@ import { z } from 'zod';
 import { router, protectedProcedure } from '../trpc.js';
 import { haversineKm, distanceHint } from '../services/geo.service.js';
 import { tryFindReplacement } from '../services/chain-finder.service.js';
+import { ADMIN_IDS } from '../admin.js';
 
 interface MatchRow {
   user_id: string;
@@ -56,6 +57,9 @@ function processMatches(
   });
 }
 
+// Admin IDs to exclude from match results (admins see matches but don't appear in them)
+const adminIdArray = ADMIN_IDS.length > 0 ? ADMIN_IDS : ['__none__'];
+
 export const matchesRouter = router({
   whoCanHelpMe: protectedProcedure.query(async ({ ctx }) => {
     const me = await ctx.db.user.findUnique({
@@ -84,6 +88,7 @@ export const matchesRouter = router({
       WHERE un."userId" = ${ctx.userId}
         AND us."userId" != ${ctx.userId}
         AND us."userId" IN (SELECT uid FROM network)
+        AND u.id != ALL(${adminIdArray})
         AND u."deletedAt" IS NULL
         AND (sc."isOnline" = true
              OR (LOWER(COALESCE(u.city, '')) = LOWER(COALESCE(${me?.city ?? ''}, ''))
@@ -121,6 +126,7 @@ export const matchesRouter = router({
       WHERE us."userId" = ${ctx.userId}
         AND un."userId" != ${ctx.userId}
         AND un."userId" IN (SELECT uid FROM network)
+        AND u.id != ALL(${adminIdArray})
         AND u."deletedAt" IS NULL
         AND (sc."isOnline" = true
              OR (LOWER(COALESCE(u.city, '')) = LOWER(COALESCE(${me?.city ?? ''}, ''))
