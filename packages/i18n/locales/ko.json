@@ -770,6 +770,18 @@
     "withSkills": "with skills",
     "withNeeds": "with needs",
     "tabSkills": "I can help",
-    "tabNeeds": "I need help"
+    "tabNeeds": "I need help",
+    "avgSkills": "평균 기술",
+    "avgNeeds": "평균 필요",
+    "geoFilled": "위치 입력됨",
+    "matchPairs": "매치 쌍",
+    "chainsCount": "체인",
+    "withChat": "채팅 있음",
+    "inChains": "체인 내",
+    "notifs": "알림",
+    "categoriesCount": "카테고리",
+    "entriesTotal": "기술 / 필요 합계",
+    "pendingCount": "대기 중",
+    "editSuggestion": "편집"
   }
 }

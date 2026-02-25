@@ -770,6 +770,18 @@
     "withSkills": "with skills",
     "withNeeds": "with needs",
     "tabSkills": "I can help",
-    "tabNeeds": "I need help"
+    "tabNeeds": "I need help",
+    "avgSkills": "平均スキル",
+    "avgNeeds": "平均ニーズ",
+    "geoFilled": "位置情報入力済",
+    "matchPairs": "マッチペア",
+    "chainsCount": "チェーン",
+    "withChat": "チャット付",
+    "inChains": "チェーン内",
+    "notifs": "通知",
+    "categoriesCount": "カテゴリ",
+    "entriesTotal": "スキル / ニーズ 合計",
+    "pendingCount": "保留中",
+    "editSuggestion": "編集"
   }
 }

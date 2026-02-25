@@ -825,6 +825,18 @@
     "withSkills": "with skills",
     "withNeeds": "with needs",
     "tabSkills": "I can help",
-    "tabNeeds": "I need help"
+    "tabNeeds": "I need help",
+    "avgSkills": "ממוצע כישורים",
+    "avgNeeds": "ממוצע צרכים",
+    "geoFilled": "גאו מלא",
+    "matchPairs": "זוגות התאמה",
+    "chainsCount": "שרשראות",
+    "withChat": "עם צ'אט",
+    "inChains": "בשרשראות",
+    "notifs": "התראות",
+    "categoriesCount": "קטגוריות",
+    "entriesTotal": "כישורים / צרכים סה\"כ",
+    "pendingCount": "ממתינים",
+    "editSuggestion": "עריכה"
   }
 }

@@ -770,6 +770,18 @@
     "withSkills": "with skills",
     "withNeeds": "with needs",
     "tabSkills": "I can help",
-    "tabNeeds": "I need help"
+    "tabNeeds": "I need help",
+    "avgSkills": "keskim. taidot",
+    "avgNeeds": "keskim. tarpeet",
+    "geoFilled": "sijainti täyt.",
+    "matchPairs": "vastaavuusparit",
+    "chainsCount": "ketjut",
+    "withChat": "chatilla",
+    "inChains": "ketjuissa",
+    "notifs": "ilmoitukset",
+    "categoriesCount": "kategorioita",
+    "entriesTotal": "taidot / tarpeet yhteensä",
+    "pendingCount": "odottaa",
+    "editSuggestion": "Muokkaa"
   }
 }

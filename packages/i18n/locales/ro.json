@@ -770,6 +770,18 @@
     "withSkills": "with skills",
     "withNeeds": "with needs",
     "tabSkills": "I can help",
-    "tabNeeds": "I need help"
+    "tabNeeds": "I need help",
+    "avgSkills": "medie abilități",
+    "avgNeeds": "medie nevoi",
+    "geoFilled": "geo completat",
+    "matchPairs": "perechi potriviri",
+    "chainsCount": "lanțuri",
+    "withChat": "cu chat",
+    "inChains": "în lanțuri",
+    "notifs": "notificări",
+    "categoriesCount": "categorii",
+    "entriesTotal": "abilități / nevoi total",
+    "pendingCount": "în așteptare",
+    "editSuggestion": "Editare"
   }
 }

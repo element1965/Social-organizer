@@ -49,6 +49,9 @@ export function DashboardPage() {
   });
   const approveMut = trpc.skills.approveSuggestion.useMutation({ onSuccess: () => utils.skills.listSuggestions.invalidate() });
   const rejectMut = trpc.skills.rejectSuggestion.useMutation({ onSuccess: () => utils.skills.listSuggestions.invalidate() });
+  const updateSuggMut = trpc.skills.updateSuggestion.useMutation({ onSuccess: () => utils.skills.listSuggestions.invalidate() });
+  const [editingSuggId, setEditingSuggId] = useState<string | null>(null);
+  const [editingSuggText, setEditingSuggText] = useState('');
 
   // Period pickers state (default: today)
   const [networkDays, setNetworkDays] = useState(1);
@@ -385,19 +388,19 @@ export function DashboardPage() {
             <div className="grid grid-cols-4 gap-2 mb-3">
               <div className="text-center p-1.5 rounded-lg bg-gray-50 dark:bg-gray-800/50">
                 <p className="text-sm font-bold text-gray-700 dark:text-gray-300">{skillsAdminStats.avgSkillsPerUser}</p>
-                <p className="text-[10px] text-gray-400">avg skills</p>
+                <p className="text-[10px] text-gray-400">{t('skills.avgSkills')}</p>
               </div>
               <div className="text-center p-1.5 rounded-lg bg-gray-50 dark:bg-gray-800/50">
                 <p className="text-sm font-bold text-gray-700 dark:text-gray-300">{skillsAdminStats.avgNeedsPerUser}</p>
-                <p className="text-[10px] text-gray-400">avg needs</p>
+                <p className="text-[10px] text-gray-400">{t('skills.avgNeeds')}</p>
               </div>
               <div className="text-center p-1.5 rounded-lg bg-gray-50 dark:bg-gray-800/50">
                 <p className="text-sm font-bold text-gray-700 dark:text-gray-300">{skillsAdminStats.geoRate}%</p>
-                <p className="text-[10px] text-gray-400">geo filled</p>
+                <p className="text-[10px] text-gray-400">{t('skills.geoFilled')}</p>
               </div>
               <div className="text-center p-1.5 rounded-lg bg-gray-50 dark:bg-gray-800/50">
                 <p className="text-sm font-bold text-purple-600">{skillsAdminStats.uniqueMatchPairs}</p>
-                <p className="text-[10px] text-gray-400">match pairs</p>
+                <p className="text-[10px] text-gray-400">{t('skills.matchPairs')}</p>
               </div>
             </div>
 
@@ -406,29 +409,29 @@ export function DashboardPage() {
               <div className="grid grid-cols-4 gap-2 mb-3">
                 <div className="text-center p-1.5 rounded-lg bg-purple-50 dark:bg-purple-900/20">
                   <p className="text-sm font-bold text-purple-600">{skillsAdminStats.chainsTotal}</p>
-                  <p className="text-[10px] text-gray-400">chains</p>
+                  <p className="text-[10px] text-gray-400">{t('skills.chainsCount')}</p>
                 </div>
                 <div className="text-center p-1.5 rounded-lg bg-purple-50 dark:bg-purple-900/20">
                   <p className="text-sm font-bold text-purple-600">{skillsAdminStats.chainsWithChat}</p>
-                  <p className="text-[10px] text-gray-400">w/ chat</p>
+                  <p className="text-[10px] text-gray-400">{t('skills.withChat')}</p>
                 </div>
                 <div className="text-center p-1.5 rounded-lg bg-purple-50 dark:bg-purple-900/20">
                   <p className="text-sm font-bold text-purple-600">{skillsAdminStats.chainParticipants}</p>
-                  <p className="text-[10px] text-gray-400">in chains</p>
+                  <p className="text-[10px] text-gray-400">{t('skills.inChains')}</p>
                 </div>
                 <div className="text-center p-1.5 rounded-lg bg-amber-50 dark:bg-amber-900/20">
                   <p className="text-sm font-bold text-amber-600">{skillsAdminStats.notifsTotal}</p>
-                  <p className="text-[10px] text-gray-400">notifs</p>
+                  <p className="text-[10px] text-gray-400">{t('skills.notifs')}</p>
                 </div>
               </div>
             )}
 
             {/* Row 4: Suggestions + Categories count */}
             <div className="flex items-center gap-3 mb-3 text-xs text-gray-400">
-              <span>{skillsAdminStats.totalCategories} categories</span>
-              <span>{skillsAdminStats.totalSkillEntries} skills / {skillsAdminStats.totalNeedEntries} needs total</span>
+              <span>{skillsAdminStats.totalCategories} {t('skills.categoriesCount')}</span>
+              <span>{skillsAdminStats.totalSkillEntries} / {skillsAdminStats.totalNeedEntries} {t('skills.entriesTotal')}</span>
               {skillsAdminStats.pendingSuggestions > 0 && (
-                <span className="text-amber-500 font-medium">{skillsAdminStats.pendingSuggestions} pending</span>
+                <span className="text-amber-500 font-medium">{skillsAdminStats.pendingSuggestions} {t('skills.pendingCount')}</span>
               )}
             </div>
 
@@ -472,31 +475,68 @@ export function DashboardPage() {
             </div>
             <div className="space-y-2">
               {suggestions.map((s: { id: string; text: string; group: string; user: { name: string } }) => (
-                <div key={s.id} className="flex items-center gap-2 p-2 rounded-lg bg-gray-50 dark:bg-gray-800/50">
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
+                <div key={s.id} className="p-2 rounded-lg bg-gray-50 dark:bg-gray-800/50">
+                  {/* Row 1: Full category name */}
+                  {editingSuggId === s.id ? (
+                    <div className="flex gap-1.5 mb-1.5">
+                      <input
+                        value={editingSuggText}
+                        onChange={(e) => setEditingSuggText(e.target.value)}
+                        className="flex-1 px-2 py-1 text-sm border border-gray-200 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                      />
+                      <button
+                        onClick={() => {
+                          if (editingSuggText.trim()) updateSuggMut.mutate({ id: s.id, text: editingSuggText.trim() });
+                          setEditingSuggId(null);
+                        }}
+                        className="px-2 py-1 text-xs font-medium rounded bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300"
+                      >
+                        {t('common.save')}
+                      </button>
+                      <button
+                        onClick={() => setEditingSuggId(null)}
+                        className="px-2 py-1 text-xs text-gray-400"
+                      >
+                        {t('common.cancel')}
+                      </button>
+                    </div>
+                  ) : (
+                    <p className="text-sm font-medium text-gray-900 dark:text-white mb-1">
                       &ldquo;{s.text}&rdquo;
+                      <span className="ml-1.5 text-xs font-normal text-gray-400">
+                        {t(`skills.group_${s.group}`)} &middot; {s.user.name}
+                      </span>
                     </p>
-                    <p className="text-xs text-gray-400">
-                      {t(`skills.group_${s.group}`)} &middot; {s.user.name}
-                    </p>
+                  )}
+                  {/* Row 2: Buttons */}
+                  <div className="flex gap-1.5">
+                    {editingSuggId !== s.id && (
+                      <button
+                        onClick={() => { setEditingSuggId(s.id); setEditingSuggText(s.text); }}
+                        className="px-2 py-0.5 text-xs font-medium rounded bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 hover:bg-blue-100"
+                      >
+                        {t('skills.editSuggestion')}
+                      </button>
+                    )}
+                    <button
+                      onClick={() => {
+                        const key = prompt(`Key for "${s.text}" (camelCase, e.g. "windowRepair"):`);
+                        if (!key) return;
+                        approveMut.mutate({ id: s.id, key, isOnline: false });
+                      }}
+                      disabled={approveMut.isPending}
+                      className="px-2 py-0.5 text-xs font-medium rounded bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 hover:bg-green-200"
+                    >
+                      {t('common.confirm')}
+                    </button>
+                    <button
+                      onClick={() => rejectMut.mutate({ id: s.id })}
+                      disabled={rejectMut.isPending}
+                      className="px-2 py-0.5 text-xs font-medium rounded bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300 hover:bg-red-200"
+                    >
+                      {t('common.delete')}
+                    </button>
                   </div>
-                  <button
-                    onClick={() => {
-                      const key = prompt(`Key for "${s.text}" (camelCase, e.g. "windowRepair"):`);
-                      if (!key) return;
-                      approveMut.mutate({ id: s.id, key, isOnline: false });
-                    }}
-                    className="px-2 py-1 text-xs font-medium rounded bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 hover:bg-green-200"
-                  >
-                    {t('common.confirm')}
-                  </button>
-                  <button
-                    onClick={() => rejectMut.mutate({ id: s.id })}
-                    className="px-2 py-1 text-xs font-medium rounded bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300 hover:bg-red-200"
-                  >
-                    {t('common.delete')}
-                  </button>
                 </div>
               ))}
             </div>

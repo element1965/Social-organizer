@@ -3,7 +3,62 @@ import { router, protectedProcedure } from '../trpc.js';
 import { isAdmin } from '../admin.js';
 import { createSkillMatchNotifications, createNeedMatchNotifications } from '../services/match-notification.service.js';
 import { findAndStoreChains } from '../services/chain-finder.service.js';
+import { translateText } from '../services/translate.service.js';
 import type { PrismaClient } from '@so/db';
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const LOCALES_DIR = path.resolve(__dirname, '../../../../packages/i18n/locales');
+
+const LOCALE_LANGS = [
+  'en', 'ru', 'es', 'fr', 'de', 'pt', 'it', 'zh', 'ja', 'ko',
+  'ar', 'hi', 'tr', 'pl', 'uk', 'nl', 'sv', 'da', 'fi', 'no',
+  'cs', 'ro', 'th', 'vi', 'id', 'sr', 'he', 'be',
+];
+
+/** Translate a skill name to all locales and write into JSON files */
+async function translateAndWriteSkillKey(key: string, originalText: string, sourceLang: string): Promise<number> {
+  const targetLangs = LOCALE_LANGS.filter((l) => l !== sourceLang);
+  let written = 0;
+
+  // First, write the source language
+  writeSkillToLocale(sourceLang, key, originalText);
+  written++;
+
+  // Translate in batches of 5
+  const BATCH = 5;
+  for (let i = 0; i < targetLangs.length; i += BATCH) {
+    const batch = targetLangs.slice(i, i + BATCH);
+    const results = await Promise.allSettled(
+      batch.map(async (toLang) => {
+        const translated = await translateText(originalText, sourceLang, toLang);
+        writeSkillToLocale(toLang, key, translated);
+        return toLang;
+      }),
+    );
+    for (const r of results) {
+      if (r.status === 'fulfilled') written++;
+      else console.error('[SkillTranslate] Failed:', r.reason);
+    }
+  }
+
+  return written;
+}
+
+function writeSkillToLocale(lang: string, key: string, value: string): void {
+  const filePath = path.join(LOCALES_DIR, `${lang}.json`);
+  try {
+    if (!fs.existsSync(filePath)) return;
+    const content = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+    if (!content.skills) content.skills = {};
+    content.skills[key] = value;
+    fs.writeFileSync(filePath, JSON.stringify(content, null, 2) + '\n', 'utf8');
+  } catch (err) {
+    console.error(`[SkillTranslate] Failed to write ${lang}.json:`, err);
+  }
+}
 
 async function autoSuggestOther(
   db: PrismaClient,
@@ -328,6 +383,16 @@ export const skillsRouter = router({
     });
   }),
 
+  updateSuggestion: protectedProcedure
+    .input(z.object({ id: z.string(), text: z.string().min(1).max(200) }))
+    .mutation(async ({ ctx, input }) => {
+      if (!isAdmin(ctx.userId)) return null;
+      return ctx.db.suggestedCategory.update({
+        where: { id: input.id },
+        data: { text: input.text },
+      });
+    }),
+
   approveSuggestion: protectedProcedure
     .input(z.object({
       id: z.string(),
@@ -362,6 +427,13 @@ export const skillsRouter = router({
       await ctx.db.suggestedCategory.update({
         where: { id: input.id },
         data: { status: 'APPROVED', categoryId: category.id, reviewedAt: new Date() },
+      });
+
+      // Translate to all 28 locales and write to JSON files (async, don't block)
+      translateAndWriteSkillKey(input.key, suggestion.text, 'ru').then((count) => {
+        console.log(`[SkillTranslate] Wrote "${input.key}" to ${count} locale files`);
+      }).catch((err) => {
+        console.error('[SkillTranslate] Error:', err);
       });
 
       return category;

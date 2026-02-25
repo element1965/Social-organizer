@@ -770,6 +770,18 @@
     "withSkills": "with skills",
     "withNeeds": "with needs",
     "tabSkills": "I can help",
-    "tabNeeds": "I need help"
+    "tabNeeds": "I need help",
+    "avgSkills": "Ø Fähigkeiten",
+    "avgNeeds": "Ø Bedürfnisse",
+    "geoFilled": "Geo ausgefüllt",
+    "matchPairs": "Matchpaare",
+    "chainsCount": "Ketten",
+    "withChat": "mit Chat",
+    "inChains": "in Ketten",
+    "notifs": "Benachr.",
+    "categoriesCount": "Kategorien",
+    "entriesTotal": "Fähigkeiten / Bedürfnisse gesamt",
+    "pendingCount": "ausstehend",
+    "editSuggestion": "Bearbeiten"
   }
 }

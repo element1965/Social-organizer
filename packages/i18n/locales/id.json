@@ -770,6 +770,18 @@
     "withSkills": "with skills",
     "withNeeds": "with needs",
     "tabSkills": "I can help",
-    "tabNeeds": "I need help"
+    "tabNeeds": "I need help",
+    "avgSkills": "rata-rata keahlian",
+    "avgNeeds": "rata-rata kebutuhan",
+    "geoFilled": "geo terisi",
+    "matchPairs": "pasangan cocok",
+    "chainsCount": "rantai",
+    "withChat": "dgn chat",
+    "inChains": "dlm rantai",
+    "notifs": "notifikasi",
+    "categoriesCount": "kategori",
+    "entriesTotal": "keahlian / kebutuhan total",
+    "pendingCount": "menunggu",
+    "editSuggestion": "Edit"
   }
 }

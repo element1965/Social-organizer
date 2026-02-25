@@ -770,6 +770,18 @@
     "withSkills": "with skills",
     "withNeeds": "with needs",
     "tabSkills": "I can help",
-    "tabNeeds": "I need help"
+    "tabNeeds": "I need help",
+    "avgSkills": "прос. вештина",
+    "avgNeeds": "прос. потреба",
+    "geoFilled": "гео попуњено",
+    "matchPairs": "парова подуд.",
+    "chainsCount": "ланци",
+    "withChat": "са чатом",
+    "inChains": "у ланцима",
+    "notifs": "обавештења",
+    "categoriesCount": "категорија",
+    "entriesTotal": "вештина / потреба укупно",
+    "pendingCount": "на чекању",
+    "editSuggestion": "Уреди"
   }
 }

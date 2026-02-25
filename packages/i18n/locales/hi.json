@@ -770,6 +770,18 @@
     "withSkills": "with skills",
     "withNeeds": "with needs",
     "tabSkills": "I can help",
-    "tabNeeds": "I need help"
+    "tabNeeds": "I need help",
+    "avgSkills": "औसत कौशल",
+    "avgNeeds": "औसत ज़रूरतें",
+    "geoFilled": "जियो भरा",
+    "matchPairs": "मैच जोड़े",
+    "chainsCount": "चेन",
+    "withChat": "चैट सहित",
+    "inChains": "चेन में",
+    "notifs": "सूचनाएँ",
+    "categoriesCount": "श्रेणियाँ",
+    "entriesTotal": "कौशल / ज़रूरतें कुल",
+    "pendingCount": "लंबित",
+    "editSuggestion": "संपादित करें"
   }
 }

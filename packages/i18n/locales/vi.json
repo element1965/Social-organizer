@@ -770,6 +770,18 @@
     "withSkills": "with skills",
     "withNeeds": "with needs",
     "tabSkills": "I can help",
-    "tabNeeds": "I need help"
+    "tabNeeds": "I need help",
+    "avgSkills": "TB kỹ năng",
+    "avgNeeds": "TB nhu cầu",
+    "geoFilled": "vị trí đã điền",
+    "matchPairs": "cặp phù hợp",
+    "chainsCount": "chuỗi",
+    "withChat": "có chat",
+    "inChains": "trong chuỗi",
+    "notifs": "thông báo",
+    "categoriesCount": "danh mục",
+    "entriesTotal": "kỹ năng / nhu cầu tổng",
+    "pendingCount": "đang chờ",
+    "editSuggestion": "Chỉnh sửa"
   }
 }

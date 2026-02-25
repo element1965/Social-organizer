@@ -824,7 +824,19 @@
     "withSkills": "с навыками",
     "withNeeds": "с потребностями",
     "tabSkills": "Могу помочь",
-    "tabNeeds": "Нужна помощь"
+    "tabNeeds": "Нужна помощь",
+    "avgSkills": "сред. навыков",
+    "avgNeeds": "сред. потребн.",
+    "geoFilled": "гео заполн.",
+    "matchPairs": "пар совпад.",
+    "chainsCount": "цепочки",
+    "withChat": "с чатом",
+    "inChains": "в цепочках",
+    "notifs": "уведомл.",
+    "categoriesCount": "категорий",
+    "entriesTotal": "навыков / потребн. всего",
+    "pendingCount": "ожидают",
+    "editSuggestion": "Редактировать"
   },
   "geo": {
     "title": "Местоположение",

@@ -770,6 +770,18 @@
     "withSkills": "with skills",
     "withNeeds": "with needs",
     "tabSkills": "I can help",
-    "tabNeeds": "I need help"
+    "tabNeeds": "I need help",
+    "avgSkills": "prům. dovedností",
+    "avgNeeds": "prům. potřeb",
+    "geoFilled": "geo vyplněno",
+    "matchPairs": "párů shod",
+    "chainsCount": "řetězce",
+    "withChat": "s chatem",
+    "inChains": "v řetězcích",
+    "notifs": "upozornění",
+    "categoriesCount": "kategorií",
+    "entriesTotal": "dovedností / potřeb celkem",
+    "pendingCount": "čekající",
+    "editSuggestion": "Upravit"
   }
 }

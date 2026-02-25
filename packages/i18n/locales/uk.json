@@ -770,6 +770,18 @@
     "withSkills": "with skills",
     "withNeeds": "with needs",
     "tabSkills": "I can help",
-    "tabNeeds": "I need help"
+    "tabNeeds": "I need help",
+    "avgSkills": "сер. навичок",
+    "avgNeeds": "сер. потреб",
+    "geoFilled": "гео заповн.",
+    "matchPairs": "пар збігів",
+    "chainsCount": "ланцюжки",
+    "withChat": "з чатом",
+    "inChains": "у ланцюжках",
+    "notifs": "сповіщень",
+    "categoriesCount": "категорій",
+    "entriesTotal": "навичок / потреб усього",
+    "pendingCount": "очікують",
+    "editSuggestion": "Редагувати"
   }
 }
