@@ -64,6 +64,13 @@ export const matchesRouter = router({
     });
 
     const rows = await ctx.db.$queryRaw<MatchRow[]>`
+      WITH RECURSIVE network AS (
+        SELECT ${ctx.userId}::text AS uid
+        UNION
+        SELECT CASE WHEN c."userAId" = n.uid THEN c."userBId" ELSE c."userAId" END
+        FROM connections c
+        JOIN network n ON c."userAId" = n.uid OR c."userBId" = n.uid
+      )
       SELECT
         u.id AS user_id, u.name AS user_name, u."photoUrl" AS photo_url,
         sc.id AS category_id, sc.key AS category_key, sc."isOnline" AS is_online,
@@ -74,12 +81,13 @@ export const matchesRouter = router({
       JOIN user_skills us ON us."categoryId" = un."categoryId"
       JOIN skill_categories sc ON sc.id = un."categoryId"
       JOIN users u ON u.id = us."userId"
-      JOIN connections c
-        ON (c."userAId" = ${ctx.userId} AND c."userBId" = us."userId")
-        OR (c."userBId" = ${ctx.userId} AND c."userAId" = us."userId")
       WHERE un."userId" = ${ctx.userId}
         AND us."userId" != ${ctx.userId}
+        AND us."userId" IN (SELECT uid FROM network)
         AND u."deletedAt" IS NULL
+        AND (sc."isOnline" = true
+             OR (LOWER(COALESCE(u.city, '')) = LOWER(COALESCE(${me?.city ?? ''}, ''))
+                 AND COALESCE(u.city, '') != ''))
       ORDER BY sc."group", sc."sortOrder"
     `;
 
@@ -93,6 +101,13 @@ export const matchesRouter = router({
     });
 
     const rows = await ctx.db.$queryRaw<MatchRow[]>`
+      WITH RECURSIVE network AS (
+        SELECT ${ctx.userId}::text AS uid
+        UNION
+        SELECT CASE WHEN c."userAId" = n.uid THEN c."userBId" ELSE c."userAId" END
+        FROM connections c
+        JOIN network n ON c."userAId" = n.uid OR c."userBId" = n.uid
+      )
       SELECT
         u.id AS user_id, u.name AS user_name, u."photoUrl" AS photo_url,
         sc.id AS category_id, sc.key AS category_key, sc."isOnline" AS is_online,
@@ -103,12 +118,13 @@ export const matchesRouter = router({
       JOIN user_needs un ON un."categoryId" = us."categoryId"
       JOIN skill_categories sc ON sc.id = us."categoryId"
       JOIN users u ON u.id = un."userId"
-      JOIN connections c
-        ON (c."userAId" = ${ctx.userId} AND c."userBId" = un."userId")
-        OR (c."userBId" = ${ctx.userId} AND c."userAId" = un."userId")
       WHERE us."userId" = ${ctx.userId}
         AND un."userId" != ${ctx.userId}
+        AND un."userId" IN (SELECT uid FROM network)
         AND u."deletedAt" IS NULL
+        AND (sc."isOnline" = true
+             OR (LOWER(COALESCE(u.city, '')) = LOWER(COALESCE(${me?.city ?? ''}, ''))
+                 AND COALESCE(u.city, '') != ''))
       ORDER BY sc."group", sc."sortOrder"
     `;
 

@@ -112,15 +112,20 @@ export async function createSkillMatchNotifications(
 ): Promise<void> {
   if (addedCategoryIds.length === 0) return;
 
-  // Find connected users who NEED these categories
+  // Find users in network who NEED these categories
   const matches = await db.$queryRaw<Array<MatchInfo>>`
+    WITH RECURSIVE network AS (
+      SELECT ${skillOwnerId}::text AS uid
+      UNION
+      SELECT CASE WHEN c."userAId" = n.uid THEN c."userBId" ELSE c."userAId" END
+      FROM connections c
+      JOIN network n ON c."userAId" = n.uid OR c."userBId" = n.uid
+    )
     SELECT un."userId", un."categoryId"
     FROM user_needs un
-    JOIN connections c
-      ON (c."userAId" = ${skillOwnerId} AND c."userBId" = un."userId")
-      OR (c."userBId" = ${skillOwnerId} AND c."userAId" = un."userId")
     WHERE un."categoryId" = ANY(${addedCategoryIds})
       AND un."userId" != ${skillOwnerId}
+      AND un."userId" IN (SELECT uid FROM network)
   `;
 
   if (matches.length === 0) return;
@@ -206,15 +211,20 @@ export async function createNeedMatchNotifications(
 ): Promise<void> {
   if (addedCategoryIds.length === 0) return;
 
-  // Find connected users who HAVE these skills
+  // Find users in network who HAVE these skills
   const matches = await db.$queryRaw<Array<MatchInfo>>`
+    WITH RECURSIVE network AS (
+      SELECT ${needOwnerId}::text AS uid
+      UNION
+      SELECT CASE WHEN c."userAId" = n.uid THEN c."userBId" ELSE c."userAId" END
+      FROM connections c
+      JOIN network n ON c."userAId" = n.uid OR c."userBId" = n.uid
+    )
     SELECT us."userId" AS "userId", us."categoryId"
     FROM user_skills us
-    JOIN connections c
-      ON (c."userAId" = ${needOwnerId} AND c."userBId" = us."userId")
-      OR (c."userBId" = ${needOwnerId} AND c."userAId" = us."userId")
     WHERE us."categoryId" = ANY(${addedCategoryIds})
       AND us."userId" != ${needOwnerId}
+      AND us."userId" IN (SELECT uid FROM network)
   `;
 
   if (matches.length === 0) return;
