@@ -141,6 +141,50 @@ async function trackBotStart(chatId: string, name: string, lang: string, inviteT
   });
 }
 
+/**
+ * Find the inviter's Telegram chatId and name from an invite token.
+ * Token can be: InviteLink hex token, userId, or referralSlug.
+ */
+export async function findInviterTg(token: string): Promise<{ chatId: string; name: string } | null> {
+  const db = getDb();
+  const select = { name: true, platformAccounts: { where: { platform: 'TELEGRAM' as const }, select: { platformId: true } } };
+
+  // 1. Try InviteLink
+  const invite = await db.inviteLink.findUnique({
+    where: { token },
+    select: { inviter: { select } },
+  });
+  if (invite?.inviter?.platformAccounts[0]) {
+    return { chatId: invite.inviter.platformAccounts[0].platformId, name: invite.inviter.name };
+  }
+
+  // 2. Try userId
+  let user = await db.user.findUnique({ where: { id: token }, select });
+  if (user?.platformAccounts[0]) {
+    return { chatId: user.platformAccounts[0].platformId, name: user.name };
+  }
+
+  // 3. Try referralSlug
+  user = await db.user.findUnique({ where: { referralSlug: token.toLowerCase() }, select });
+  if (user?.platformAccounts[0]) {
+    return { chatId: user.platformAccounts[0].platformId, name: user.name };
+  }
+
+  return null;
+}
+
+/** Inviter notification messages when their invitee started bot but never opened the app */
+export const INVITER_NOTIFY_MESSAGES = [
+  {
+    level: 0,
+    text: '👋 {inviteeName} запустил бот по вашему приглашению, но ещё не открыл приложение. Подскажите — нужно нажать кнопку «Open» внизу чата с ботом.',
+  },
+  {
+    level: 1,
+    text: '⏰ Прошли сутки, а {inviteeName} так и не открыл приложение. Возможно, нужна ваша помощь — напишите или позвоните, помогите разобраться с входом!',
+  },
+] as const;
+
 /** Reminder messages for users who pressed /start but never opened the app */
 export const BOT_START_REMINDERS = [
   {
