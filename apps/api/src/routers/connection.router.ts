@@ -163,7 +163,7 @@ export const connectionRouter = router({
           GREATEST(b.max_conn_at, c."createdAt")
         FROM connections c
         JOIN bfs b ON (c."userAId" = b.user_id OR c."userBId" = b.user_id)
-        WHERE b.depth < 3
+        WHERE b.depth < 6
       )
       SELECT DISTINCT ON (b.user_id) b.user_id, b.depth, b.max_conn_at
       FROM bfs b

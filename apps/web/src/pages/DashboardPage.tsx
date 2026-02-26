@@ -2,6 +2,7 @@ import { lazy, Suspense, useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { trpc } from '../lib/trpc';
+import { useCachedNetworkStats } from '../hooks/useCachedNetworkStats';
 import { InviteBlock } from '../components/InviteBlock';
 import { PeriodPicker, PeriodChip } from '../components/PeriodPicker';
 import { Card, CardContent } from '../components/ui/card';
@@ -36,7 +37,7 @@ export function DashboardPage() {
 
   const utils = trpc.useUtils();
   const { data: me } = trpc.user.me.useQuery(undefined, { refetchInterval: 30000 });
-  const { data: networkStats, isLoading: networkLoading } = trpc.connection.getNetworkStats.useQuery(undefined, { refetchInterval: 60000 });
+  const { data: networkStats, isLoading: networkLoading } = useCachedNetworkStats();
   const { data: networkCapabilities } = trpc.stats.networkCapabilities.useQuery(undefined, { refetchInterval: 60000 });
   const { data: adminData } = trpc.faq.isAdmin.useQuery();
   const { data: skillsAdminStats } = trpc.skills.adminStats.useQuery(undefined, {

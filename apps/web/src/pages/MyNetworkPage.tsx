@@ -2,6 +2,7 @@ import { useState, lazy, Suspense } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { trpc } from '../lib/trpc';
+import { useCachedNetworkStats } from '../hooks/useCachedNetworkStats';
 import { useAuth } from '../hooks/useAuth';
 import { useTheme } from '../hooks/useTheme';
 import { Button } from '../components/ui/button';
@@ -53,7 +54,7 @@ export function MyNetworkPage() {
     onSuccess: () => { utils.pending.incoming.invalidate(); utils.pending.incomingCount.invalidate(); },
   });
   const { data: connectionCount } = trpc.connection.getCount.useQuery();
-  const { data: networkStats, isLoading } = trpc.connection.getNetworkStats.useQuery(undefined, { refetchInterval: 60000 });
+  const { data: networkStats, isLoading } = useCachedNetworkStats();
   const { data: graphData } = trpc.connection.graphSlice.useQuery(undefined, {
     enabled: view === '3d',
     refetchInterval: 60000,
