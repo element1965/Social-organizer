@@ -1,4 +1,4 @@
-import { useState, useEffect, lazy, Suspense } from 'react';
+import { useState, useCallback, lazy, Suspense } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { trpc } from '../lib/trpc';
@@ -39,17 +39,10 @@ export function MyNetworkPage() {
   const view = (searchParams.get('view') === 'list' ? 'list' : '3d') as 'list' | '3d';
   const setView = (v: 'list' | '3d') => setSearchParams(v === '3d' ? {} : { view: v }, { replace: true });
   const [showClusters, setShowClusters] = useState(false);
-  // Delay graph mount so DOM container is fully laid out before Three.js initializes WebGL
-  const [graphReady, setGraphReady] = useState(false);
-  useEffect(() => {
-    if (view === '3d') {
-      setGraphReady(false);
-      const timer = setTimeout(() => setGraphReady(true), 80);
-      return () => clearTimeout(timer);
-    }
-    setGraphReady(false);
-    return undefined;
-  }, [view]);
+  // Navigate from graph node click — deferred so Three.js finishes its render frame first
+  const navigateToProfile = useCallback((id: string) => {
+    setTimeout(() => navigate(`/profile/${id}`), 0);
+  }, [navigate]);
   const isDark = mode === 'dark' || (mode === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
 
   const utils = trpc.useUtils();
@@ -133,7 +126,7 @@ export function MyNetworkPage() {
           <div className={`rounded-xl overflow-hidden relative ${isDark ? 'bg-gray-950' : 'bg-gray-100'}`} style={{ height: 'calc(100vh - 200px)' }}>
             <p className="absolute top-3 left-0 right-0 text-center text-sm font-semibold text-gray-400 dark:text-gray-300 z-10 pointer-events-none">GoodwillNet</p>
             <Suspense fallback={<div className="flex justify-center py-12"><Spinner /></div>}>
-              {graphReady && graphData ? (
+              {graphData ? (
                 <LazyNetworkGraph
                   nodes={graphData.nodes.map((n) => ({
                     ...n,
@@ -145,7 +138,7 @@ export function MyNetworkPage() {
                   edges={graphData.edges.map((e) => ({ source: e.from, target: e.to }))}
                   width={window.innerWidth - 32}
                   height={window.innerHeight - 200}
-                  onNodeClick={(id) => navigate(`/profile/${id}`)}
+                  onNodeClick={navigateToProfile}
                   darkMode={isDark}
                 />
               ) : (
