@@ -566,4 +566,44 @@ export const skillsRouter = router({
         data: { status: 'REJECTED', reviewedAt: new Date() },
       });
     }),
+
+  /** Admin: move a category to a different group and/or reorder within group */
+  moveCategory: protectedProcedure
+    .input(z.object({
+      id: z.string(),
+      group: z.string().optional(),
+      sortOrder: z.number().int().optional(),
+    }))
+    .mutation(async ({ ctx, input }) => {
+      if (!isAdmin(ctx.userId)) return null;
+      const data: { group?: string; sortOrder?: number } = {};
+      if (input.group !== undefined) data.group = input.group;
+      if (input.sortOrder !== undefined) data.sortOrder = input.sortOrder;
+      return ctx.db.skillCategory.update({
+        where: { id: input.id },
+        data,
+      });
+    }),
+
+  /** Admin: batch reorder categories (set sortOrder for multiple items at once) */
+  reorderCategories: protectedProcedure
+    .input(z.object({
+      updates: z.array(z.object({
+        id: z.string(),
+        group: z.string(),
+        sortOrder: z.number().int(),
+      })),
+    }))
+    .mutation(async ({ ctx, input }) => {
+      if (!isAdmin(ctx.userId)) return null;
+      await ctx.db.$transaction(
+        input.updates.map((u) =>
+          ctx.db.skillCategory.update({
+            where: { id: u.id },
+            data: { group: u.group, sortOrder: u.sortOrder },
+          }),
+        ),
+      );
+      return { success: true };
+    }),
 });
