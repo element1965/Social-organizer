@@ -51,19 +51,22 @@ export function Layout() {
   // Sync network graph to local Gun.js / IndexedDB backup
   useGraphSync();
 
-  // Load DB-stored skill translations into i18next (for dynamically added categories)
+  // Load skill translations from DB (single source of truth for all categories)
   const { data: skillCategories } = trpc.skills.categories.useQuery(undefined, { staleTime: 60000 });
   useEffect(() => {
     if (!skillCategories) return;
+    let added = false;
     for (const cat of skillCategories) {
       const tr = cat.translations as Record<string, string> | null;
       if (!tr) continue;
       for (const [lang, text] of Object.entries(tr)) {
-        if (text && !i18n.exists(`skills.${cat.key}`, { lng: lang })) {
+        if (text) {
           i18n.addResource(lang, 'translation', `skills.${cat.key}`, text);
+          added = true;
         }
       }
     }
+    if (added) i18n.emit('languageChanged', i18n.language);
   }, [skillCategories]);
 
   // Hide bottom nav when chat panel is open

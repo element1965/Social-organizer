@@ -24,6 +24,8 @@ import {
 } from 'lucide-react';
 import { Tooltip } from '../components/ui/tooltip';
 import { SocialIcon } from '../components/ui/social-icons';
+import { SKILL_GROUPS, SKILL_GROUP_ICONS } from '@so/shared';
+import type { SkillGroup } from '@so/shared';
 
 const LazyCloudBackground = lazy(() =>
   import('@so/graph-3d').then((m) => ({ default: m.CloudBackground })),
@@ -54,6 +56,7 @@ export function DashboardPage() {
   const updateSuggMut = trpc.skills.updateSuggestion.useMutation({ onSuccess: () => utils.skills.listSuggestions.invalidate() });
   const [editingSuggId, setEditingSuggId] = useState<string | null>(null);
   const [editingSuggText, setEditingSuggText] = useState('');
+  const [editingSuggGroup, setEditingSuggGroup] = useState('');
 
   // Period pickers state (default: today)
   const [networkDays, setNetworkDays] = useState(1);
@@ -483,37 +486,53 @@ export function DashboardPage() {
               </span>
             </div>
             <div className="space-y-2">
-              {suggestions.map((s: { id: string; text: string; group: string; user: { name: string } }) => (
+              {suggestions.map((s: { id: string; text: string; group: string; type: string; user: { name: string } }) => (
                 <div key={s.id} className="p-2 rounded-lg bg-gray-50 dark:bg-gray-800/50">
-                  {/* Row 1: Full category name */}
+                  {/* Row 1: Full category name + group editing */}
                   {editingSuggId === s.id ? (
-                    <div className="flex gap-1.5 mb-1.5">
+                    <div className="space-y-1.5 mb-1.5">
                       <input
                         value={editingSuggText}
                         onChange={(e) => setEditingSuggText(e.target.value)}
-                        className="flex-1 px-2 py-1 text-sm border border-gray-200 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                        className="w-full px-2 py-1 text-sm border border-gray-200 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                       />
-                      <button
-                        onClick={() => {
-                          if (editingSuggText.trim()) updateSuggMut.mutate({ id: s.id, text: editingSuggText.trim() });
-                          setEditingSuggId(null);
-                        }}
-                        className="px-2 py-1 text-xs font-medium rounded bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300"
-                      >
-                        {t('common.save')}
-                      </button>
-                      <button
-                        onClick={() => setEditingSuggId(null)}
-                        className="px-2 py-1 text-xs text-gray-400"
-                      >
-                        {t('common.cancel')}
-                      </button>
+                      <div className="flex gap-1.5 items-center">
+                        <select
+                          value={editingSuggGroup}
+                          onChange={(e) => setEditingSuggGroup(e.target.value)}
+                          className="flex-1 px-2 py-1 text-xs border border-gray-200 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                        >
+                          {SKILL_GROUPS.map((g) => (
+                            <option key={g} value={g}>
+                              {SKILL_GROUP_ICONS[g as SkillGroup]} {t(`skills.group_${g}`)}
+                            </option>
+                          ))}
+                        </select>
+                        <button
+                          onClick={() => {
+                            const updates: { id: string; text?: string; group?: string } = { id: s.id };
+                            if (editingSuggText.trim() && editingSuggText.trim() !== s.text) updates.text = editingSuggText.trim();
+                            if (editingSuggGroup !== s.group) updates.group = editingSuggGroup;
+                            if (updates.text || updates.group) updateSuggMut.mutate(updates);
+                            setEditingSuggId(null);
+                          }}
+                          className="px-2 py-1 text-xs font-medium rounded bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300"
+                        >
+                          {t('common.save')}
+                        </button>
+                        <button
+                          onClick={() => setEditingSuggId(null)}
+                          className="px-2 py-1 text-xs text-gray-400"
+                        >
+                          {t('common.cancel')}
+                        </button>
+                      </div>
                     </div>
                   ) : (
                     <p className="text-sm font-medium text-gray-900 dark:text-white mb-1">
                       &ldquo;{s.text}&rdquo;
                       <span className="ml-1.5 text-xs font-normal text-gray-400">
-                        {t(`skills.group_${s.group}`)} &middot; {s.user.name}
+                        {SKILL_GROUP_ICONS[s.group as SkillGroup]} {t(`skills.group_${s.group}`)} &middot; {s.user.name}
                         {' '}&middot;{' '}
                         <span className={s.type === 'NEED' ? 'text-rose-400' : 'text-emerald-400'}>
                           {s.type === 'NEED' ? t('skills.iNeed') : t('skills.iCan')}
@@ -525,7 +544,7 @@ export function DashboardPage() {
                   <div className="flex gap-1.5">
                     {editingSuggId !== s.id && (
                       <button
-                        onClick={() => { setEditingSuggId(s.id); setEditingSuggText(s.text); }}
+                        onClick={() => { setEditingSuggId(s.id); setEditingSuggText(s.text); setEditingSuggGroup(s.group); }}
                         className="px-2 py-0.5 text-xs font-medium rounded bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 hover:bg-blue-100"
                       >
                         {t('skills.editSuggestion')}
@@ -533,9 +552,14 @@ export function DashboardPage() {
                     )}
                     <button
                       onClick={async () => {
-                        // Auto-save edited text before approving
-                        if (editingSuggId === s.id && editingSuggText.trim() && editingSuggText.trim() !== s.text) {
-                          await updateSuggMut.mutateAsync({ id: s.id, text: editingSuggText.trim() });
+                        // Auto-save edited text/group before approving
+                        if (editingSuggId === s.id) {
+                          const updates: { id: string; text?: string; group?: string } = { id: s.id };
+                          if (editingSuggText.trim() && editingSuggText.trim() !== s.text) updates.text = editingSuggText.trim();
+                          if (editingSuggGroup !== s.group) updates.group = editingSuggGroup;
+                          if (updates.text || updates.group) {
+                            await updateSuggMut.mutateAsync(updates);
+                          }
                           setEditingSuggId(null);
                         }
                         approveMut.mutate({ id: s.id });
