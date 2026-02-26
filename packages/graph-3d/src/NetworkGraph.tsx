@@ -151,6 +151,25 @@ export function NetworkGraph({
         }
       }, 500);
     }
+
+    // Cleanup on unmount: dispose Three.js renderer to free WebGL context
+    return () => {
+      try {
+        if (fgRef.current) {
+          fgRef.current.pauseAnimation?.();
+          const renderer = fgRef.current.renderer?.();
+          if (renderer) {
+            renderer.dispose();
+            renderer.forceContextLoss();
+          }
+        }
+        // Dispose cached textures
+        textureCache.current.forEach((tex) => tex.dispose());
+        textureCache.current.clear();
+        lodObjectsRef.current.clear();
+        pendingLoads.current.clear();
+      } catch { /* ignore cleanup errors */ }
+    };
   }, []);
 
   // Dynamic forces based on subtree depth:
