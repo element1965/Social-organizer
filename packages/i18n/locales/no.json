@@ -796,6 +796,8 @@
     "categoriesCount": "kategorier",
     "entriesTotal": "ferdigheter / behov totalt",
     "pendingCount": "venter",
-    "editSuggestion": "Rediger"
+    "editSuggestion": "Rediger",
+    "vaybkoding": "Vibe-koding",
+    "tutoring": "Tutoring"
   }
 }

@@ -850,7 +850,9 @@
     "categoriesCount": "categories",
     "entriesTotal": "skills / needs total",
     "pendingCount": "pending",
-    "editSuggestion": "Edit"
+    "editSuggestion": "Edit",
+    "vaybkoding": "Vibe Coding",
+    "tutoring": "Tutoring"
   },
   "geo": {
     "title": "Location",

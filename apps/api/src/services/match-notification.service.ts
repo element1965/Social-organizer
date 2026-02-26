@@ -11,8 +11,17 @@ interface MatchInfo {
   categoryId: string;
 }
 
-/** Translate a skill key using locale data, fallback to en, fallback to raw key */
-function translateSkill(lang: string, key: string): string {
+/** Translate a skill key using locale data or DB translations, fallback to en, fallback to raw key */
+function translateSkill(lang: string, key: string, dbTranslations?: Record<string, string> | null): string {
+  // DB translations first (dynamically added categories)
+  if (dbTranslations?.[lang]) return dbTranslations[lang];
+  if (dbTranslations?.en) {
+    // Try locale file, then DB en fallback
+    const locale = (resources as Record<string, { skills?: Record<string, string> }>)[lang]?.skills?.[key];
+    if (locale) return locale;
+    return dbTranslations.en;
+  }
+  // Static locale files
   const locale = (resources as Record<string, { skills?: Record<string, string> }>)[lang]?.skills?.[key];
   if (locale) return locale;
   const enFallback = (resources as Record<string, { skills?: Record<string, string> }>).en?.skills?.[key];
@@ -52,13 +61,17 @@ async function resolveUsers(db: PrismaClient, userIds: string[]) {
 /** Resolve category keys + isOnline for a set of categoryIds */
 async function resolveCategories(db: PrismaClient, categoryIds: string[]) {
   const unique = [...new Set(categoryIds)];
-  if (unique.length === 0) return new Map<string, { key: string; isOnline: boolean }>();
+  if (unique.length === 0) return new Map<string, { key: string; isOnline: boolean; translations: Record<string, string> | null }>();
 
   const cats = await db.skillCategory.findMany({
     where: { id: { in: unique } },
-    select: { id: true, key: true, isOnline: true },
+    select: { id: true, key: true, isOnline: true, translations: true },
   });
-  return new Map(cats.map((c) => [c.id, { key: c.key, isOnline: c.isOnline }]));
+  return new Map(cats.map((c) => [c.id, {
+    key: c.key,
+    isOnline: c.isOnline,
+    translations: c.translations as Record<string, string> | null,
+  }]));
 }
 
 // Match notification messages per language
@@ -253,7 +266,7 @@ async function sendMatchTgNotification(
 /** Group matches by userId, translate skill keys, send one TG per person */
 async function sendGroupedTgNotifications(
   matches: MatchInfo[],
-  categories: Map<string, { key: string; isOnline: boolean }>,
+  categories: Map<string, { key: string; isOnline: boolean; translations: Record<string, string> | null }>,
   users: Map<string, { name: string; tgChatId: string | null; lang: string }>,
   ownerId: string,
   ownerDirection: 'youCanHelp' | 'theyCanHelp',
@@ -262,24 +275,24 @@ async function sendGroupedTgNotifications(
   const owner = users.get(ownerId);
   if (!owner) return;
 
-  // Group by matched userId
-  const byUser = new Map<string, string[]>();
+  // Group by matched userId, keep category info
+  const byUser = new Map<string, Array<{ key: string; translations: Record<string, string> | null }>>();
   for (const match of matches) {
     const cat = categories.get(match.categoryId);
     if (!cat) continue;
     const uid = match.userId;
     if (!byUser.has(uid)) byUser.set(uid, []);
-    byUser.get(uid)!.push(cat.key);
+    byUser.get(uid)!.push({ key: cat.key, translations: cat.translations });
   }
 
   // Owner gets one message per matched person
-  for (const [matchedUserId, catKeys] of byUser) {
+  for (const [matchedUserId, catInfos] of byUser) {
     const matched = users.get(matchedUserId);
     if (!matched) continue;
 
     // Translate skills for recipient's language
     if (owner.tgChatId) {
-      const skillsText = catKeys.map((k) => translateSkill(owner.lang, k)).join(', ');
+      const skillsText = catInfos.map((c) => translateSkill(owner.lang, c.key, c.translations)).join(', ');
       sendMatchTgNotification(
         owner.tgChatId, owner.lang, matched.name, matched.tgChatId,
         matchedUserId, skillsText, ownerDirection,
@@ -288,7 +301,7 @@ async function sendGroupedTgNotifications(
 
     // Each matched person gets one message about the owner
     if (matched.tgChatId) {
-      const skillsText = catKeys.map((k) => translateSkill(matched.lang, k)).join(', ');
+      const skillsText = catInfos.map((c) => translateSkill(matched.lang, c.key, c.translations)).join(', ');
       sendMatchTgNotification(
         matched.tgChatId, matched.lang, owner.name, owner.tgChatId,
         ownerId, skillsText, matchedDirection,
