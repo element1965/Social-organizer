@@ -1,5 +1,6 @@
 import { Prisma, type PrismaClient } from '@so/db';
 import { sendTelegramMessage, type TgReplyMarkup } from './telegram-bot.service.js';
+import { getNetworkUserIds } from './bfs.service.js';
 
 const WEB_APP_URL = process.env.WEB_APP_URL || 'https://www.orginizer.com';
 const MAX_CHAIN_LENGTH = 5;
@@ -14,19 +15,12 @@ interface CycleEdge extends Edge {}
 
 /**
  * Build a directed graph: edge A→B if A has a skill that B needs.
- * For offline skills, both users must be in the same city.
- * Online skills can connect users from any location.
- * Users must be in the same network (connected via any chain of connections).
+ * Uses in-memory BFS for network instead of PostgreSQL recursive CTE.
  */
 async function buildGraph(db: PrismaClient, seedUserId: string): Promise<Edge[]> {
+  const networkIds = await getNetworkUserIds(db, seedUserId);
+
   const edges = await db.$queryRaw<Edge[]>`
-    WITH RECURSIVE network AS (
-      SELECT ${seedUserId}::text AS uid
-      UNION
-      SELECT CASE WHEN c."userAId" = n.uid THEN c."userBId" ELSE c."userAId" END
-      FROM connections c
-      JOIN network n ON c."userAId" = n.uid OR c."userBId" = n.uid
-    )
     SELECT
       us."userId" AS "from",
       un."userId" AS "to",
@@ -36,8 +30,8 @@ async function buildGraph(db: PrismaClient, seedUserId: string): Promise<Edge[]>
     JOIN skill_categories sc ON sc.id = us."categoryId"
     JOIN users u1 ON u1.id = us."userId" AND u1."deletedAt" IS NULL
     JOIN users u2 ON u2.id = un."userId" AND u2."deletedAt" IS NULL
-    WHERE us."userId" IN (SELECT uid FROM network)
-      AND un."userId" IN (SELECT uid FROM network)
+    WHERE us."userId" = ANY(${networkIds})
+      AND un."userId" = ANY(${networkIds})
       AND (sc."isOnline" = true
            OR (LOWER(COALESCE(u1.city, '')) = LOWER(COALESCE(u2.city, ''))
                AND COALESCE(u1.city, '') != ''))
@@ -147,7 +141,17 @@ export async function findAndStoreChains(
   const cycles = findCycles(edges, userId);
   if (cycles.length === 0) return 0;
 
-  // Check existing chains to avoid duplicates
+  // Deduplicate cycles by participant set (keep only 1 per unique set of users)
+  const participantSeen = new Set<string>();
+  const uniqueCycles: CycleEdge[][] = [];
+  for (const cycle of cycles) {
+    const participantKey = [...new Set(cycle.map((e) => e.from))].sort().join(',');
+    if (participantSeen.has(participantKey)) continue;
+    participantSeen.add(participantKey);
+    uniqueCycles.push(cycle);
+  }
+
+  // Check existing chains to avoid duplicates (by participant set too)
   const existingChains = await db.matchChain.findMany({
     where: { status: { in: ['PROPOSED', 'ACTIVE'] } },
     include: { links: { orderBy: { position: 'asc' } } },
@@ -158,12 +162,24 @@ export async function findAndStoreChains(
       ch.links.map((l) => `${l.giverId}:${l.categoryId}`).join('|'),
     ),
   );
+  const existingParticipantKeys = new Set(
+    existingChains.map((ch) =>
+      [...new Set(ch.links.flatMap((l) => [l.giverId, l.receiverId]))].sort().join(','),
+    ),
+  );
 
   let created = 0;
+  const MAX_NEW_CHAINS = 3;
+  const newCycles: CycleEdge[][] = [];
 
-  for (const cycle of cycles) {
+  for (const cycle of uniqueCycles) {
+    if (created >= MAX_NEW_CHAINS) break;
+
     const key = normalizeCycleKey(cycle);
     if (existingKeys.has(key)) continue;
+
+    const participantKey = [...new Set(cycle.map((e) => e.from))].sort().join(',');
+    if (existingParticipantKeys.has(participantKey)) continue;
 
     // Create chain + links in a transaction
     await db.matchChain.create({
@@ -180,13 +196,15 @@ export async function findAndStoreChains(
       },
     });
     existingKeys.add(key);
+    existingParticipantKeys.add(participantKey);
+    newCycles.push(cycle);
     created++;
   }
 
   if (created > 0) {
     console.log(`[ChainFinder] Found ${created} new chains involving user ${userId}`);
     // Send TG notifications asynchronously
-    notifyChainParticipants(db, cycles.slice(0, created)).catch((err) =>
+    notifyChainParticipants(db, newCycles).catch((err) =>
       console.error('[ChainFinder TG] Error:', err),
     );
   }
@@ -408,20 +426,14 @@ export async function tryFindReplacement(
   let replacements: { id: string }[];
 
   // Find replacement in the whole network — no need for direct connections
+  const networkIds = await getNetworkUserIds(db, predecessorId);
   replacements = await db.$queryRaw<{ id: string }[]>`
-    WITH RECURSIVE network AS (
-      SELECT ${predecessorId}::text AS uid
-      UNION
-      SELECT CASE WHEN c."userAId" = n.uid THEN c."userBId" ELSE c."userAId" END
-      FROM connections c
-      JOIN network n ON c."userAId" = n.uid OR c."userBId" = n.uid
-    )
     SELECT u.id FROM users u
     JOIN user_needs un ON un."userId" = u.id AND un."categoryId" = ${needsCategoryId}
     JOIN user_skills us ON us."userId" = u.id AND us."categoryId" = ${hasCategoryId}
     WHERE u."deletedAt" IS NULL
       AND u.id NOT IN (${Prisma.join(participantIds)})
-      AND u.id IN (SELECT uid FROM network)
+      AND u.id = ANY(${networkIds})
     LIMIT 1
   `;
 

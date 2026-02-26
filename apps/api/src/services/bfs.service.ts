@@ -33,6 +33,33 @@ async function loadAllConnections(db: PrismaClient): Promise<Connection[]> {
 }
 
 /**
+ * Get all user IDs reachable from startUserId (the connected component).
+ * Lightweight BFS in memory — no PostgreSQL temp files.
+ */
+export async function getNetworkUserIds(db: PrismaClient, startUserId: string): Promise<string[]> {
+  const connections = await loadAllConnections(db);
+  const adj = new Map<string, string[]>();
+  for (const c of connections) {
+    if (!adj.has(c.userAId)) adj.set(c.userAId, []);
+    if (!adj.has(c.userBId)) adj.set(c.userBId, []);
+    adj.get(c.userAId)!.push(c.userBId);
+    adj.get(c.userBId)!.push(c.userAId);
+  }
+  const visited = new Set<string>([startUserId]);
+  const queue = [startUserId];
+  let qi = 0;
+  while (qi < queue.length) {
+    for (const neighbor of adj.get(queue[qi++]!) || []) {
+      if (!visited.has(neighbor)) {
+        visited.add(neighbor);
+        queue.push(neighbor);
+      }
+    }
+  }
+  return [...visited];
+}
+
+/**
  * In-memory BFS through connection graph.
  * No PostgreSQL recursive CTEs, no temp files.
  */

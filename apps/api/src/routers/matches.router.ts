@@ -2,6 +2,7 @@ import { z } from 'zod';
 import { router, protectedProcedure } from '../trpc.js';
 import { haversineKm, distanceHint } from '../services/geo.service.js';
 import { tryFindReplacement } from '../services/chain-finder.service.js';
+import { getNetworkUserIds } from '../services/bfs.service.js';
 import { ADMIN_IDS } from '../admin.js';
 
 interface MatchRow {
@@ -67,14 +68,9 @@ export const matchesRouter = router({
       select: { latitude: true, longitude: true, countryCode: true, city: true },
     });
 
+    const networkIds = await getNetworkUserIds(ctx.db, ctx.userId);
+
     const rows = await ctx.db.$queryRaw<MatchRow[]>`
-      WITH RECURSIVE network AS (
-        SELECT ${ctx.userId}::text AS uid
-        UNION
-        SELECT CASE WHEN c."userAId" = n.uid THEN c."userBId" ELSE c."userAId" END
-        FROM connections c
-        JOIN network n ON c."userAId" = n.uid OR c."userBId" = n.uid
-      )
       SELECT
         u.id AS user_id, u.name AS user_name, u."photoUrl" AS photo_url,
         sc.id AS category_id, sc.key AS category_key, sc."isOnline" AS is_online,
@@ -87,7 +83,7 @@ export const matchesRouter = router({
       JOIN users u ON u.id = us."userId"
       WHERE un."userId" = ${ctx.userId}
         AND us."userId" != ${ctx.userId}
-        AND us."userId" IN (SELECT uid FROM network)
+        AND us."userId" = ANY(${networkIds})
         AND u.id != ALL(${adminIdArray})
         AND u."deletedAt" IS NULL
         AND (sc."isOnline" = true
@@ -105,14 +101,9 @@ export const matchesRouter = router({
       select: { latitude: true, longitude: true, countryCode: true, city: true },
     });
 
+    const networkIds = await getNetworkUserIds(ctx.db, ctx.userId);
+
     const rows = await ctx.db.$queryRaw<MatchRow[]>`
-      WITH RECURSIVE network AS (
-        SELECT ${ctx.userId}::text AS uid
-        UNION
-        SELECT CASE WHEN c."userAId" = n.uid THEN c."userBId" ELSE c."userAId" END
-        FROM connections c
-        JOIN network n ON c."userAId" = n.uid OR c."userBId" = n.uid
-      )
       SELECT
         u.id AS user_id, u.name AS user_name, u."photoUrl" AS photo_url,
         sc.id AS category_id, sc.key AS category_key, sc."isOnline" AS is_online,
@@ -125,7 +116,7 @@ export const matchesRouter = router({
       JOIN users u ON u.id = un."userId"
       WHERE us."userId" = ${ctx.userId}
         AND un."userId" != ${ctx.userId}
-        AND un."userId" IN (SELECT uid FROM network)
+        AND un."userId" = ANY(${networkIds})
         AND u.id != ALL(${adminIdArray})
         AND u."deletedAt" IS NULL
         AND (sc."isOnline" = true

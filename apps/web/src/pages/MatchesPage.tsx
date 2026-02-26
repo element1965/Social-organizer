@@ -136,7 +136,7 @@ export function MatchesPage() {
         >
           {t('matches.whoCanHelpMe')}
           {helpMe && helpMe.length > 0 && (
-            <span className="ml-1 text-emerald-500">({helpMe.length})</span>
+            <span className="ml-1 text-emerald-500">({new Set(helpMe.map(h => h.userId)).size})</span>
           )}
         </button>
         <button
@@ -150,7 +150,7 @@ export function MatchesPage() {
         >
           {t('matches.whoNeedsMyHelp')}
           {helpThem && helpThem.length > 0 && (
-            <span className="ml-1 text-orange-500">({helpThem.length})</span>
+            <span className="ml-1 text-orange-500">({new Set(helpThem.map(h => h.userId)).size})</span>
           )}
         </button>
         <button
