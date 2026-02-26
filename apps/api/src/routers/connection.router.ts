@@ -1,8 +1,8 @@
 import { z } from 'zod';
 import { router, protectedProcedure } from '../trpc.js';
 import { TRPCError } from '@trpc/server';
-import { GRAPH_SLICE_DEPTH, MAX_BFS_DEPTH, MAX_BFS_RECIPIENTS } from '@so/shared';
-import { getGraphSlice, findPathBetweenUsers, findRecipientsViaBfs } from '../services/bfs.service.js';
+import { GRAPH_SLICE_DEPTH } from '@so/shared';
+import { getGraphSlice, findPathBetweenUsers } from '../services/bfs.service.js';
 import { canViewContacts } from '../services/visibility.service.js';
 
 export const connectionRouter = router({
@@ -141,7 +141,38 @@ export const connectionRouter = router({
       if (pending) bfsUserId = pending.toUserId;
     }
 
-    const recipients = await findRecipientsViaBfs(ctx.db, bfsUserId, MAX_BFS_DEPTH, MAX_BFS_RECIPIENTS, []);
+    // Lightweight BFS: depth 1-3, NO path tracking (saves huge temp file usage)
+    const recipients = await ctx.db.$queryRaw<Array<{
+      user_id: string;
+      depth: number;
+      max_conn_at: Date | null;
+    }>>`
+      WITH RECURSIVE bfs AS (
+        SELECT
+          CASE WHEN c."userAId" = ${bfsUserId} THEN c."userBId" ELSE c."userAId" END AS user_id,
+          1 AS depth,
+          c."createdAt" AS max_conn_at
+        FROM connections c
+        WHERE c."userAId" = ${bfsUserId} OR c."userBId" = ${bfsUserId}
+
+        UNION ALL
+
+        SELECT
+          CASE WHEN c."userAId" = b.user_id THEN c."userBId" ELSE c."userAId" END AS user_id,
+          b.depth + 1,
+          GREATEST(b.max_conn_at, c."createdAt")
+        FROM connections c
+        JOIN bfs b ON (c."userAId" = b.user_id OR c."userBId" = b.user_id)
+        WHERE b.depth < 3
+      )
+      SELECT DISTINCT ON (b.user_id) b.user_id, b.depth, b.max_conn_at
+      FROM bfs b
+      JOIN users u ON u.id = b.user_id
+      WHERE b.user_id != ${bfsUserId} AND u."deletedAt" IS NULL
+      ORDER BY b.user_id, b.depth, b.max_conn_at
+      LIMIT 500
+    `;
+
     const byDepth: Record<number, number> = {};
     const userIdsByDepth: Record<number, string[]> = {};
     const connAtMap = new Map<string, Date | null>();
@@ -149,12 +180,12 @@ export const connectionRouter = router({
     for (const r of recipients) {
       byDepth[r.depth] = (byDepth[r.depth] || 0) + 1;
       if (!userIdsByDepth[r.depth]) userIdsByDepth[r.depth] = [];
-      userIdsByDepth[r.depth]!.push(r.userId);
-      connAtMap.set(r.userId, r.maxConnAt);
+      userIdsByDepth[r.depth]!.push(r.user_id);
+      connAtMap.set(r.user_id, r.max_conn_at);
     }
 
     // Get all unique user IDs
-    const allUserIds = recipients.map((r) => r.userId);
+    const allUserIds = recipients.map((r) => r.user_id);
 
     // Fetch user details and their connection counts in parallel
     const [users, connectionCounts] = await Promise.all([
