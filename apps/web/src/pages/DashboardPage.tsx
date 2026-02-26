@@ -45,6 +45,7 @@ export function DashboardPage() {
   });
   const { data: matchHelpMe } = trpc.matches.whoCanHelpMe.useQuery();
   const { data: matchHelpThem } = trpc.matches.whoNeedsMyHelp.useQuery();
+  const { data: matchChains } = trpc.matches.myChains.useQuery();
   const { data: suggestions } = trpc.skills.listSuggestions.useQuery(undefined, {
     enabled: !!adminData?.isAdmin,
   });
@@ -335,24 +336,31 @@ export function DashboardPage() {
           <CardContent className="py-4">
             <button
               onClick={() => navigate('/matches')}
-              className="w-full flex items-center justify-between"
+              className="w-full text-left"
             >
-              <div className="flex items-center gap-2">
-                <Handshake className="w-5 h-5 text-purple-600" />
-                <span className="text-sm font-semibold text-gray-900 dark:text-white">{t('matches.title')}</span>
+              <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center gap-2">
+                  <Handshake className="w-5 h-5 text-purple-600" />
+                  <span className="text-sm font-semibold text-gray-900 dark:text-white">{t('matches.title')}</span>
+                </div>
+                <ChevronRight className="w-4 h-4 text-gray-400" />
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex flex-wrap gap-1.5">
                 {matchHelpMe && matchHelpMe.length > 0 && (
                   <span className="px-2 py-0.5 text-xs rounded-full bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 font-medium">
-                    {matchHelpMe.length} {t('matches.whoCanHelpMe').toLowerCase()}
+                    {new Set(matchHelpMe.map(h => h.userId)).size} {t('matches.whoCanHelpMe').toLowerCase()}
                   </span>
                 )}
                 {matchHelpThem && matchHelpThem.length > 0 && (
                   <span className="px-2 py-0.5 text-xs rounded-full bg-orange-50 dark:bg-orange-900/30 text-orange-600 font-medium">
-                    {matchHelpThem.length} {t('matches.whoNeedsMyHelp').toLowerCase()}
+                    {new Set(matchHelpThem.map(h => h.userId)).size} {t('matches.whoNeedsMyHelp').toLowerCase()}
                   </span>
                 )}
-                <ChevronRight className="w-4 h-4 text-gray-400" />
+                {matchChains && matchChains.length > 0 && (
+                  <span className="px-2 py-0.5 text-xs rounded-full bg-purple-50 dark:bg-purple-900/30 text-purple-600 font-medium">
+                    {matchChains.length} {t('matches.chains').toLowerCase()}
+                  </span>
+                )}
               </div>
             </button>
           </CardContent>
