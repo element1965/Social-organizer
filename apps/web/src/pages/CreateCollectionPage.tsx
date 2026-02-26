@@ -20,6 +20,7 @@ export function CreateCollectionPage() {
   const navigate = useNavigate();
   const [showEntryWarning, setShowEntryWarning] = useState(false);
   const [showInvitePopup, setShowInvitePopup] = useState(false);
+  const [showNotEnough, setShowNotEnough] = useState(false);
 
   const { data: me } = trpc.user.me.useQuery();
   const { data: helpStats } = trpc.stats.help.useQuery(undefined, { refetchInterval: 60000 });
@@ -70,6 +71,10 @@ export function CreateCollectionPage() {
 
   const handleSubmit = () => {
     if (!validate()) return;
+    if (connectionCount && !hasEnoughConnections) {
+      setShowNotEnough(true);
+      return;
+    }
     setShowEntryWarning(true);
   };
 
@@ -95,46 +100,6 @@ export function CreateCollectionPage() {
   const isSpecial = me?.role === 'AUTHOR' || me?.role === 'DEVELOPER' || adminData?.isAdmin;
   const hasEnoughConnections = isSpecial || (connectionCount?.count ?? 0) >= MIN_CONNECTIONS_TO_CREATE;
   const connectionsNeeded = MIN_CONNECTIONS_TO_CREATE - (connectionCount?.count ?? 0);
-
-  // Not enough connections — block access
-  if (connectionCount && !hasEnoughConnections) {
-    return (
-      <div className="min-h-screen flex items-center justify-center p-4 bg-gray-50 dark:bg-gray-950">
-        <div className="bg-white dark:bg-gray-900 rounded-xl p-6 max-w-sm w-full space-y-4 shadow-xl">
-          <div className="flex justify-center">
-            <div className="w-16 h-16 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center">
-              <UserPlus className="w-8 h-8 text-red-600" />
-            </div>
-          </div>
-          <h2 className="text-xl font-bold text-gray-900 dark:text-white text-center">
-            {t('create.notEnoughConnectionsTitle')}
-          </h2>
-          <p className="text-sm text-gray-600 dark:text-gray-300 text-center leading-relaxed">
-            {t('create.notEnoughConnectionsText', { min: MIN_CONNECTIONS_TO_CREATE })}
-          </p>
-          <div className="flex items-center justify-center gap-2 py-2">
-            <div className="text-3xl font-bold text-red-600">{connectionCount.count}</div>
-            <div className="text-gray-400">/</div>
-            <div className="text-3xl font-bold text-gray-400">{MIN_CONNECTIONS_TO_CREATE}</div>
-          </div>
-          <p className="text-sm text-center text-gray-500 dark:text-gray-300">
-            {t('create.connectionsRemaining', { count: connectionsNeeded })}
-          </p>
-          <div className="space-y-2 pt-2">
-            <Button className="w-full" size="lg" onClick={() => setShowInvitePopup(true)}>
-              <UserPlus className="w-4 h-4 mr-2" />
-              {t('create.goToInvite')}
-            </Button>
-            <Button variant="outline" className="w-full" size="lg" onClick={() => navigate('/dashboard')}>
-              {t('create.entryWarningBack')}
-            </Button>
-          </div>
-        </div>
-
-        <InvitePopup open={showInvitePopup} onClose={() => setShowInvitePopup(false)} />
-      </div>
-    );
-  }
 
   return (
     <div className="p-4">
@@ -377,6 +342,44 @@ export function CreateCollectionPage() {
           )}
         </CardContent>
       </Card>
+
+      {/* Not enough connections modal — shown on submit */}
+      {showNotEnough && connectionCount && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4">
+          <div className="bg-white dark:bg-gray-900 rounded-xl p-6 max-w-sm w-full space-y-4 shadow-xl">
+            <div className="flex justify-center">
+              <div className="w-16 h-16 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center">
+                <UserPlus className="w-8 h-8 text-red-600" />
+              </div>
+            </div>
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white text-center">
+              {t('create.notEnoughConnectionsTitle')}
+            </h2>
+            <p className="text-sm text-gray-600 dark:text-gray-300 text-center leading-relaxed">
+              {t('create.notEnoughConnectionsText', { min: MIN_CONNECTIONS_TO_CREATE })}
+            </p>
+            <div className="flex items-center justify-center gap-2 py-2">
+              <div className="text-3xl font-bold text-red-600">{connectionCount.count}</div>
+              <div className="text-gray-400">/</div>
+              <div className="text-3xl font-bold text-gray-400">{MIN_CONNECTIONS_TO_CREATE}</div>
+            </div>
+            <p className="text-sm text-center text-gray-500 dark:text-gray-300">
+              {t('create.connectionsRemaining', { count: connectionsNeeded })}
+            </p>
+            <div className="space-y-2 pt-2">
+              <Button className="w-full" size="lg" onClick={() => { setShowNotEnough(false); setShowInvitePopup(true); }}>
+                <UserPlus className="w-4 h-4 mr-2" />
+                {t('create.goToInvite')}
+              </Button>
+              <Button variant="outline" className="w-full" size="lg" onClick={() => setShowNotEnough(false)}>
+                {t('create.entryWarningBack')}
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <InvitePopup open={showInvitePopup} onClose={() => setShowInvitePopup(false)} />
 
       {/* Entry warning modal — shown on submit before confirmation */}
       {showEntryWarning && (
