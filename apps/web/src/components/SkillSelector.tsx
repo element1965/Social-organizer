@@ -44,14 +44,23 @@ export function SkillSelector({
   const [adminEditId, setAdminEditId] = useState<string | null>(null);
   const [dragCatId, setDragCatId] = useState<string | null>(null);
   const [dragOverGroup, setDragOverGroup] = useState<string | null>(null);
-  const touchStartY = useRef(0);
-  const touchStartTime = useRef(0);
+  const [dragOverItemId, setDragOverItemId] = useState<string | null>(null);
+  const [dragOverPos, setDragOverPos] = useState<'before' | 'after'>('before');
 
   const grouped = useMemo(() => {
     const map: Record<string, Category[]> = {};
     for (const g of SKILL_GROUPS) map[g] = [];
     for (const c of categories) {
       if (map[c.group]) map[c.group].push(c);
+    }
+    // "other*" always last in each group
+    for (const g of SKILL_GROUPS) {
+      map[g].sort((a, b) => {
+        const aOther = a.key.startsWith('other') ? 1 : 0;
+        const bOther = b.key.startsWith('other') ? 1 : 0;
+        if (aOther !== bOther) return aOther - bOther;
+        return (a.sortOrder ?? 0) - (b.sortOrder ?? 0);
+      });
     }
     return map;
   }, [categories]);
@@ -80,14 +89,11 @@ export function SkillSelector({
   const handleMoveUp = useCallback((group: string, catId: string) => {
     const items = grouped[group];
     if (!items || !onReorderCategories) return;
+    const cat = items.find((c) => c.id === catId);
+    if (!cat || cat.key.startsWith('other')) return; // "other" stays last
     const idx = items.findIndex((c) => c.id === catId);
     if (idx <= 0) return;
-    const updates = items.map((c, i) => ({
-      id: c.id,
-      group,
-      sortOrder: i === idx ? items[idx - 1].sortOrder ?? (idx - 1) : i === idx - 1 ? items[idx].sortOrder ?? idx : c.sortOrder ?? i,
-    }));
-    // Swap sortOrders
+    const updates = items.map((c, i) => ({ id: c.id, group, sortOrder: c.sortOrder ?? i }));
     const temp = updates[idx].sortOrder;
     updates[idx].sortOrder = updates[idx - 1].sortOrder;
     updates[idx - 1].sortOrder = temp;
@@ -97,26 +103,45 @@ export function SkillSelector({
   const handleMoveDown = useCallback((group: string, catId: string) => {
     const items = grouped[group];
     if (!items || !onReorderCategories) return;
+    const cat = items.find((c) => c.id === catId);
+    if (!cat || cat.key.startsWith('other')) return; // "other" stays last
     const idx = items.findIndex((c) => c.id === catId);
     if (idx < 0 || idx >= items.length - 1) return;
-    const updates = items.map((c, i) => ({
-      id: c.id,
-      group,
-      sortOrder: c.sortOrder ?? i,
-    }));
+    // Don't move below "other*"
+    if (items[idx + 1].key.startsWith('other')) return;
+    const updates = items.map((c, i) => ({ id: c.id, group, sortOrder: c.sortOrder ?? i }));
     const temp = updates[idx].sortOrder;
     updates[idx].sortOrder = updates[idx + 1].sortOrder;
     updates[idx + 1].sortOrder = temp;
     onReorderCategories(updates);
   }, [grouped, onReorderCategories]);
 
-  const handleMoveToGroup = useCallback((catId: string, newGroup: string) => {
-    if (!onMoveCategory) return;
-    const targetItems = grouped[newGroup] || [];
-    const maxSort = targetItems.reduce((max, c) => Math.max(max, c.sortOrder ?? 0), 0);
-    onMoveCategory(catId, newGroup, maxSort + 1);
+  const handleMoveToGroup = useCallback((catId: string, newGroup: string, insertBeforeId?: string) => {
+    if (!onMoveCategory || !onReorderCategories) return;
+    const targetItems = [...(grouped[newGroup] || [])];
+    // Find insert position: before the target item, but always before "other*"
+    let insertIdx = targetItems.length;
+    if (insertBeforeId) {
+      const targetIdx = targetItems.findIndex((c) => c.id === insertBeforeId);
+      if (targetIdx >= 0) insertIdx = targetIdx;
+    }
+    // Ensure we don't insert after "other*"
+    const otherIdx = targetItems.findIndex((c) => c.key.startsWith('other'));
+    if (otherIdx >= 0 && insertIdx > otherIdx) insertIdx = otherIdx;
+    // Assign new sortOrders: items before insert keep their order, inserted item gets slot, rest shift
+    const updates: Array<{ id: string; group: string; sortOrder: number }> = [];
+    let order = 0;
+    for (let i = 0; i < targetItems.length; i++) {
+      if (i === insertIdx) order++; // leave a slot for the inserted item
+      updates.push({ id: targetItems[i].id, group: newGroup, sortOrder: order });
+      order++;
+    }
+    // The dragged item gets the insert slot
+    const insertOrder = insertIdx;
+    onMoveCategory(catId, newGroup, insertOrder);
+    if (updates.length > 0) onReorderCategories(updates);
     setAdminEditId(null);
-  }, [grouped, onMoveCategory]);
+  }, [grouped, onMoveCategory, onReorderCategories]);
 
   return (
     <div className="space-y-2">
@@ -199,18 +224,57 @@ export function SkillSelector({
                   const isOther = cat.key.startsWith('other');
                   const showNote = isOther && (isSkill || isNeed);
                   const isEditing = isAdmin && adminEditId === cat.id;
+                  const showDropBefore = isAdmin && dragCatId && dragCatId !== cat.id && dragOverItemId === cat.id && dragOverPos === 'before';
+                  const showDropAfter = isAdmin && dragCatId && dragCatId !== cat.id && dragOverItemId === cat.id && dragOverPos === 'after' && !isOther;
                   return (
                     <div
                       key={cat.id}
-                      draggable={isAdmin && !isSearching}
+                      draggable={isAdmin && !isSearching && !isOther}
                       onDragStart={isAdmin ? (e) => {
                         setDragCatId(cat.id);
                         e.dataTransfer.effectAllowed = 'move';
                       } : undefined}
-                      onDragEnd={isAdmin ? () => { setDragCatId(null); setDragOverGroup(null); } : undefined}
+                      onDragEnd={isAdmin ? () => { setDragCatId(null); setDragOverGroup(null); setDragOverItemId(null); } : undefined}
+                      onDragOver={isAdmin ? (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        const rect = e.currentTarget.getBoundingClientRect();
+                        const mid = rect.top + rect.height / 2;
+                        setDragOverItemId(cat.id);
+                        setDragOverPos(e.clientY < mid ? 'before' : 'after');
+                        setDragOverGroup(group);
+                      } : undefined}
+                      onDrop={isAdmin ? (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        setDragOverItemId(null);
+                        setDragOverGroup(null);
+                        if (!dragCatId || dragCatId === cat.id) return;
+                        // Same group: reorder
+                        const srcInGroup = items.find((c) => c.id === dragCatId);
+                        if (srcInGroup) {
+                          const srcIdx = items.findIndex((c) => c.id === dragCatId);
+                          let tgtIdx = idx;
+                          if (dragOverPos === 'after') tgtIdx = Math.min(idx + 1, items.length);
+                          // Don't go past "other*"
+                          const otherIdx = items.findIndex((c) => c.key.startsWith('other'));
+                          if (otherIdx >= 0 && tgtIdx > otherIdx) tgtIdx = otherIdx;
+                          if (srcIdx === tgtIdx) return;
+                          const reordered = [...items];
+                          const [moved] = reordered.splice(srcIdx, 1);
+                          const insertAt = tgtIdx > srcIdx ? tgtIdx - 1 : tgtIdx;
+                          reordered.splice(insertAt, 0, moved);
+                          onReorderCategories?.(reordered.map((c, i) => ({ id: c.id, group, sortOrder: i })));
+                        } else {
+                          // Different group: move to this group at this position
+                          handleMoveToGroup(dragCatId, group, dragOverPos === 'before' ? cat.id : items[idx + 1]?.id);
+                        }
+                        setDragCatId(null);
+                      } : undefined}
                     >
+                      {showDropBefore && <div className="h-0.5 bg-blue-400 mx-3 rounded-full" />}
                       <div className={cn(
-                        'flex items-center justify-between px-3 py-2 hover:bg-gray-50 dark:hover:bg-gray-800/30',
+                        'flex items-center px-3 py-2 hover:bg-gray-50 dark:hover:bg-gray-800/30',
                         dragCatId === cat.id && 'opacity-40',
                       )}>
                         {/* Admin: grip handle */}
@@ -218,13 +282,16 @@ export function SkillSelector({
                           <button
                             type="button"
                             onClick={() => setAdminEditId(isEditing ? null : cat.id)}
-                            className="mr-1 p-0.5 text-gray-300 hover:text-gray-500 dark:text-gray-600 dark:hover:text-gray-400 cursor-grab active:cursor-grabbing touch-none"
+                            className={cn(
+                              'mr-1 p-0.5 text-gray-300 hover:text-gray-500 dark:text-gray-600 dark:hover:text-gray-400 touch-none',
+                              !isOther && 'cursor-grab active:cursor-grabbing',
+                            )}
                           >
                             <GripVertical className="w-3.5 h-3.5" />
                           </button>
                         )}
                         <div className="flex items-center gap-2 min-w-0 flex-1">
-                          <span className="text-sm text-gray-800 dark:text-gray-200 truncate">
+                          <span className="text-sm text-gray-800 dark:text-gray-200 break-words">
                             {t(`skills.${cat.key}`)}
                           </span>
                           {cat.isOnline && (
@@ -233,7 +300,7 @@ export function SkillSelector({
                         </div>
                         <div className="flex items-center gap-1.5 shrink-0 ml-2">
                           {/* Admin: reorder buttons */}
-                          {isEditing && (
+                          {isEditing && !isOther && (
                             <>
                               <button
                                 type="button"
@@ -246,7 +313,7 @@ export function SkillSelector({
                               <button
                                 type="button"
                                 onClick={() => handleMoveDown(group, cat.id)}
-                                disabled={idx === items.length - 1}
+                                disabled={idx >= items.length - 1 || items[idx + 1]?.key.startsWith('other')}
                                 className="p-0.5 text-gray-400 hover:text-blue-500 disabled:opacity-30"
                               >
                                 <ArrowDown className="w-3.5 h-3.5" />
@@ -257,7 +324,7 @@ export function SkillSelector({
                             type="button"
                             onClick={() => onToggleSkill(cat.id)}
                             className={cn(
-                              'px-2.5 py-1 rounded-md text-xs font-medium transition-all border',
+                              'px-2.5 py-1 rounded-md text-xs font-medium transition-all border whitespace-nowrap',
                               isSkill
                                 ? 'bg-emerald-500 text-white border-emerald-500 shadow-sm'
                                 : 'bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400 border-gray-200 dark:border-gray-700 hover:border-emerald-300 dark:hover:border-emerald-600'
@@ -270,7 +337,7 @@ export function SkillSelector({
                             type="button"
                             onClick={() => onToggleNeed(cat.id)}
                             className={cn(
-                              'px-2.5 py-1 rounded-md text-xs font-medium transition-all border',
+                              'px-2.5 py-1 rounded-md text-xs font-medium transition-all border whitespace-nowrap',
                               isNeed
                                 ? 'bg-orange-500 text-white border-orange-500 shadow-sm'
                                 : 'bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400 border-gray-200 dark:border-gray-700 hover:border-orange-300 dark:hover:border-orange-600'
@@ -281,6 +348,7 @@ export function SkillSelector({
                           </button>
                         </div>
                       </div>
+                      {showDropAfter && <div className="h-0.5 bg-blue-400 mx-3 rounded-full" />}
                       {/* Admin: move to group panel */}
                       {isEditing && (
                         <div className="px-3 pb-2">
