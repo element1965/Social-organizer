@@ -153,19 +153,20 @@ export function MyNetworkPage() {
               )}
             </Suspense>
           </div>
-          <div className="flex items-center justify-center gap-3 mt-1 text-[10px] text-gray-400 dark:text-gray-500 flex-wrap">
+          <div className="flex flex-col items-center gap-1 mt-1 text-[10px] text-gray-400 dark:text-gray-500">
             <span>{t('network.controlsHint')}</span>
-            <span className="text-gray-300 dark:text-gray-600">|</span>
-            {(isDark ? LEGEND_COLORS_DARK : LEGEND_COLORS_LIGHT).map((c, i) => (
-              <span key={i} className="inline-flex items-center gap-1">
-                <span className="w-[7px] h-[7px] rounded-full inline-block" style={{ background: c }} />
-                {LEGEND_LABELS[i]}
+            <div className="flex items-center gap-3 flex-wrap justify-center">
+              {(isDark ? LEGEND_COLORS_DARK : LEGEND_COLORS_LIGHT).map((c, i) => (
+                <span key={i} className="inline-flex items-center gap-1">
+                  <span className="w-[7px] h-[7px] rounded-full inline-block" style={{ background: c }} />
+                  {LEGEND_LABELS[i]}
+                </span>
+              ))}
+              <span className="inline-flex items-center gap-1">
+                <span className="w-[7px] h-[7px] rounded-full inline-block" style={{ background: '#22c55e' }} />
+                Online
               </span>
-            ))}
-            <span className="inline-flex items-center gap-1">
-              <span className="w-[7px] h-[7px] rounded-full inline-block" style={{ background: '#22c55e' }} />
-              Online
-            </span>
+            </div>
           </div>
         </>
       ) : (
