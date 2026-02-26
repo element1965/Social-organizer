@@ -184,48 +184,6 @@ export function NotificationsPage() {
         </Card>
       )}
 
-      {/* Skill match notifications — above collection notifications */}
-      {matchNotifs && matchNotifs.length > 0 && (
-        <Card className="border-purple-300 dark:border-purple-700 bg-purple-50 dark:bg-purple-950/30">
-          <CardContent className="py-3">
-            <div className="flex items-center gap-2 mb-2">
-              <Handshake className="w-5 h-5 text-purple-600" />
-              <span className="font-semibold text-purple-700 dark:text-purple-400 flex-1">
-                {t('matches.title')} ({matchNotifs.length})
-              </span>
-              <button
-                onClick={() => navigate('/matches')}
-                className="text-xs text-purple-500 hover:text-purple-700"
-              >
-                {t('common.done')} →
-              </button>
-            </div>
-            <div className="space-y-1.5">
-              {matchNotifs.map((mn) => (
-                <div key={mn.id} className="flex items-center gap-2 p-2 rounded bg-white/50 dark:bg-gray-900/50">
-                  <button
-                    onClick={() => navigate(`/profile/${mn.matchUser.id}`)}
-                    className="flex items-center gap-2 flex-1 min-w-0"
-                  >
-                    <Avatar src={mn.matchUser.photoUrl} name={mn.matchUser.name} size="sm" />
-                    <div className="flex-1 min-w-0 text-left">
-                      <p className="text-sm font-medium text-gray-900 dark:text-white truncate">{mn.matchUser.name}</p>
-                      <p className="text-xs text-gray-500 dark:text-gray-400">{t(`skills.${mn.category.key}`, mn.category.key)}</p>
-                    </div>
-                  </button>
-                  <button
-                    onClick={() => dismissMatch.mutate({ id: mn.id })}
-                    className="p-1 rounded text-gray-400 hover:text-gray-600"
-                  >
-                    <X className="w-4 h-4" />
-                  </button>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-      )}
-
       {/* Collection notifications — grouped by collectionId with stacked overlap */}
       {isLoading ? <div className="flex justify-center py-12"><Spinner /></div> : groupedNotifications.length === 0 && (!pendingIncoming || pendingIncoming.length === 0) && (!myPending || myPending.length === 0) && (!matchNotifs || matchNotifs.length === 0) ? (
         <div className="text-center py-8 text-gray-400 dark:text-gray-500 text-sm">{t('notifications.empty')}</div>
@@ -311,6 +269,48 @@ export function NotificationsPage() {
           {hasNextPage && <Button variant="outline" className="w-full" onClick={() => fetchNextPage()}>{t('notifications.loadMore')}</Button>}
         </div>
       ) : null}
+
+      {/* Skill match notifications */}
+      {matchNotifs && matchNotifs.length > 0 && (
+        <Card className="border-purple-300 dark:border-purple-700 bg-purple-50 dark:bg-purple-950/30">
+          <CardContent className="py-3">
+            <div className="flex items-center gap-2 mb-2">
+              <Handshake className="w-5 h-5 text-purple-600" />
+              <span className="font-semibold text-purple-700 dark:text-purple-400 flex-1">
+                {t('matches.title')} ({matchNotifs.length})
+              </span>
+              <button
+                onClick={() => navigate('/matches')}
+                className="text-xs text-purple-500 hover:text-purple-700"
+              >
+                {t('common.done')} →
+              </button>
+            </div>
+            <div className="space-y-1.5">
+              {matchNotifs.map((mn) => (
+                <div key={mn.id} className="flex items-center gap-2 p-2 rounded bg-white/50 dark:bg-gray-900/50">
+                  <button
+                    onClick={() => navigate(`/profile/${mn.matchUser.id}`)}
+                    className="flex items-center gap-2 flex-1 min-w-0"
+                  >
+                    <Avatar src={mn.matchUser.photoUrl} name={mn.matchUser.name} size="sm" />
+                    <div className="flex-1 min-w-0 text-left">
+                      <p className="text-sm font-medium text-gray-900 dark:text-white truncate">{mn.matchUser.name}</p>
+                      <p className="text-xs text-gray-500 dark:text-gray-400">{t(`skills.${mn.category.key}`, mn.category.key)}</p>
+                    </div>
+                  </button>
+                  <button
+                    onClick={() => dismissMatch.mutate({ id: mn.id })}
+                    className="p-1 rounded text-gray-400 hover:text-gray-600"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Incoming pending connections — collapsible, below collection notifications */}
       {pendingIncoming && pendingIncoming.length > 0 && (
