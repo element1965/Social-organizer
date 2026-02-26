@@ -141,37 +141,46 @@ export const connectionRouter = router({
       if (pending) bfsUserId = pending.toUserId;
     }
 
-    // Lightweight BFS: depth 1-3, NO path tracking (saves huge temp file usage)
-    const recipients = await ctx.db.$queryRaw<Array<{
-      user_id: string;
-      depth: number;
-      max_conn_at: Date | null;
-    }>>`
-      WITH RECURSIVE bfs AS (
-        SELECT
-          CASE WHEN c."userAId" = ${bfsUserId} THEN c."userBId" ELSE c."userAId" END AS user_id,
-          1 AS depth,
-          c."createdAt" AS max_conn_at
-        FROM connections c
-        WHERE c."userAId" = ${bfsUserId} OR c."userBId" = ${bfsUserId}
+    // In-memory BFS: load all connections, traverse in JS (no temp files)
+    const allConns = await ctx.db.connection.findMany({
+      select: { userAId: true, userBId: true, createdAt: true },
+    });
+    const adj = new Map<string, Array<{ neighbor: string; createdAt: Date }>>();
+    for (const c of allConns) {
+      if (!adj.has(c.userAId)) adj.set(c.userAId, []);
+      if (!adj.has(c.userBId)) adj.set(c.userBId, []);
+      adj.get(c.userAId)!.push({ neighbor: c.userBId, createdAt: c.createdAt });
+      adj.get(c.userBId)!.push({ neighbor: c.userAId, createdAt: c.createdAt });
+    }
 
-        UNION ALL
+    const deletedUsers = new Set(
+      (await ctx.db.user.findMany({ where: { deletedAt: { not: null } }, select: { id: true } })).map(u => u.id),
+    );
 
-        SELECT
-          CASE WHEN c."userAId" = b.user_id THEN c."userBId" ELSE c."userAId" END AS user_id,
-          b.depth + 1,
-          GREATEST(b.max_conn_at, c."createdAt")
-        FROM connections c
-        JOIN bfs b ON (c."userAId" = b.user_id OR c."userBId" = b.user_id)
-        WHERE b.depth < 6
-      )
-      SELECT DISTINCT ON (b.user_id) b.user_id, b.depth, b.max_conn_at
-      FROM bfs b
-      JOIN users u ON u.id = b.user_id
-      WHERE b.user_id != ${bfsUserId} AND u."deletedAt" IS NULL
-      ORDER BY b.user_id, b.depth, b.max_conn_at
-      LIMIT 500
-    `;
+    const visited = new Map<string, { depth: number; maxConnAt: Date }>();
+    const queue: Array<{ userId: string; depth: number; maxConnAt: Date }> = [];
+    for (const { neighbor, createdAt } of adj.get(bfsUserId) || []) {
+      if (neighbor === bfsUserId || deletedUsers.has(neighbor)) continue;
+      if (!visited.has(neighbor)) {
+        visited.set(neighbor, { depth: 1, maxConnAt: createdAt });
+        queue.push({ userId: neighbor, depth: 1, maxConnAt: createdAt });
+      }
+    }
+    let qi = 0;
+    while (qi < queue.length && visited.size < 500) {
+      const { userId, depth, maxConnAt } = queue[qi++]!;
+      if (depth >= 6) continue;
+      for (const { neighbor, createdAt } of adj.get(userId) || []) {
+        if (neighbor === bfsUserId || visited.has(neighbor) || deletedUsers.has(neighbor)) continue;
+        const newMax = createdAt > maxConnAt ? createdAt : maxConnAt;
+        visited.set(neighbor, { depth: depth + 1, maxConnAt: newMax });
+        queue.push({ userId: neighbor, depth: depth + 1, maxConnAt: newMax });
+      }
+    }
+
+    const recipients = Array.from(visited.entries()).map(([user_id, v]) => ({
+      user_id, depth: v.depth, max_conn_at: v.maxConnAt as Date | null,
+    }));
 
     const byDepth: Record<number, number> = {};
     const userIdsByDepth: Record<number, string[]> = {};
