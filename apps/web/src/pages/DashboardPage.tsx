@@ -189,71 +189,72 @@ export function DashboardPage() {
         </div>
       )}
 
+      {/* Day count badge */}
+      {me?.createdAt && (() => {
+        const kyivNow = new Date(new Date().toLocaleString('en-US', { timeZone: 'Europe/Kyiv' }));
+        const kyivReg = new Date(new Date(me.createdAt).toLocaleString('en-US', { timeZone: 'Europe/Kyiv' }));
+        const today = new Date(kyivNow.getFullYear(), kyivNow.getMonth(), kyivNow.getDate());
+        const regDay = new Date(kyivReg.getFullYear(), kyivReg.getMonth(), kyivReg.getDate());
+        const dayCount = Math.floor((today.getTime() - regDay.getTime()) / (24 * 60 * 60 * 1000)) + 1;
+        return (
+          <div className="flex justify-center">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-green-50 dark:bg-green-950/30 border border-green-200 dark:border-green-800">
+              <TrendingUp className="w-3.5 h-3.5 text-green-600" />
+              <span className="text-xs font-semibold text-green-600">{t('dashboard.dayCount', { count: dayCount })}</span>
+            </span>
+          </div>
+        );
+      })()}
+
       {/* Card 1: "Вся сеть" — Whole network */}
-      <Card>
+      <Card
+        className="bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-950/30 dark:to-purple-950/30 cursor-pointer hover:scale-[1.02] hover:shadow-md transition-all"
+        onClick={() => navigate('/network?view=list')}
+      >
         <CardContent className="py-4">
-          {/* Day count centered above */}
-          {me?.createdAt && (() => {
-            const kyivNow = new Date(new Date().toLocaleString('en-US', { timeZone: 'Europe/Kyiv' }));
-            const kyivReg = new Date(new Date(me.createdAt).toLocaleString('en-US', { timeZone: 'Europe/Kyiv' }));
-            const today = new Date(kyivNow.getFullYear(), kyivNow.getMonth(), kyivNow.getDate());
-            const regDay = new Date(kyivReg.getFullYear(), kyivReg.getMonth(), kyivReg.getDate());
-            const dayCount = Math.floor((today.getTime() - regDay.getTime()) / (24 * 60 * 60 * 1000)) + 1;
-            return (
-              <div className="flex items-center justify-center gap-1.5 mb-2">
-                <TrendingUp className="w-4 h-4 text-green-600" />
-                <span className="text-base font-semibold text-green-600">{t('dashboard.dayCount', { count: dayCount })}</span>
-              </div>
-            );
-          })()}
-          <div
-            className="p-4 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-950/30 dark:to-purple-950/30 rounded-xl cursor-pointer hover:scale-[1.02] hover:shadow-md transition-all"
-            onClick={() => navigate('/network?view=list')}
-          >
-            <div className="flex items-center gap-1.5 mb-2">
+          <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center gap-2">
               <Globe className="w-5 h-5 text-blue-600" />
-              <span className="text-lg font-bold text-gray-900 dark:text-white">{t('dashboard.wholeNetwork')}</span>
-              <div className="ml-auto" onClick={(e) => e.stopPropagation()}>
-                <PeriodChip days={networkDays} onClick={() => setShowNetworkPicker(true)} />
-              </div>
+              <span className="text-sm font-semibold text-gray-900 dark:text-white">{t('dashboard.wholeNetwork')}</span>
             </div>
-            <div className="flex items-baseline justify-between gap-2 overflow-hidden">
-              <p className="text-3xl font-bold text-gray-900 dark:text-white truncate shrink min-w-0">
-                {totalReachable?.toLocaleString()} <span className="text-sm font-normal text-gray-500 dark:text-gray-300">{t('dashboard.people')}</span>
-              </p>
-              {networkNewConn != null && (
-                <span className="text-lg font-bold text-blue-600 dark:text-blue-400 whitespace-nowrap shrink-0">
-                  {t('dashboard.newConnections', { count: networkNewConn })}
-                </span>
-              )}
+            <div onClick={(e) => e.stopPropagation()}>
+              <PeriodChip days={networkDays} onClick={() => setShowNetworkPicker(true)} />
             </div>
+          </div>
+          <div className="flex items-baseline justify-between gap-2 overflow-hidden">
+            <p className="text-3xl font-bold text-gray-900 dark:text-white truncate shrink min-w-0">
+              {totalReachable?.toLocaleString()} <span className="text-sm font-normal text-gray-500 dark:text-gray-300">{t('dashboard.people')}</span>
+            </p>
+            {networkNewConn != null && (
+              <span className="text-lg font-bold text-blue-600 dark:text-blue-400 whitespace-nowrap shrink-0">
+                {t('dashboard.newConnections', { count: networkNewConn })}
+              </span>
+            )}
           </div>
         </CardContent>
       </Card>
 
       {/* Card 2: "Возможности сети" — Network capabilities */}
-      <Card>
+      <Card className="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-950/30 dark:to-emerald-950/30">
         <CardContent className="py-4">
-          <div className="p-4 bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-950/30 dark:to-emerald-950/30 rounded-xl">
-            <div className="flex items-center gap-1.5 mb-2">
+          <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center gap-2">
               <Sparkles className="w-5 h-5 text-green-600" />
-              <span className="text-lg font-bold text-gray-900 dark:text-white">{t('dashboard.networkCapabilitiesTitle')}</span>
-              <div className="ml-auto">
-                <PeriodChip days={capDays} onClick={() => setShowCapPicker(true)} />
-              </div>
+              <span className="text-sm font-semibold text-gray-900 dark:text-white">{t('dashboard.networkCapabilitiesTitle')}</span>
             </div>
-            <div className="flex items-baseline justify-between gap-2 overflow-hidden">
-              <p className="text-3xl font-bold text-green-600 dark:text-green-400 truncate shrink min-w-0">
-                ${(networkCapabilities?.total ?? 0).toLocaleString()}
-              </p>
-              {capPeriodTotal != null && (
-                <span className="text-lg font-bold text-green-600 dark:text-green-400 whitespace-nowrap shrink-0">
-                  +${capPeriodTotal.toLocaleString()}
-                </span>
-              )}
-            </div>
+            <PeriodChip days={capDays} onClick={() => setShowCapPicker(true)} />
+          </div>
+          <div className="flex items-baseline gap-2 overflow-hidden">
+            <p className="text-3xl font-bold text-green-600 dark:text-green-400 truncate shrink min-w-0">
+              ${(networkCapabilities?.total ?? 0).toLocaleString()}
+            </p>
             {networkCapabilities?.contributors != null && networkCapabilities.contributors > 0 && (
-              <p className="text-sm text-gray-500 dark:text-gray-300">{t('dashboard.capabilitiesContributors', { count: networkCapabilities.contributors })}</p>
+              <span className="text-sm text-gray-500 dark:text-gray-300 whitespace-nowrap">{t('dashboard.capabilitiesContributors', { count: networkCapabilities.contributors })}</span>
+            )}
+            {capPeriodTotal != null && (
+              <span className="text-lg font-bold text-green-600 dark:text-green-400 whitespace-nowrap shrink-0 ml-auto">
+                +${capPeriodTotal.toLocaleString()}
+              </span>
             )}
           </div>
         </CardContent>
@@ -263,60 +264,58 @@ export function DashboardPage() {
       <InviteBlock id="invite" />
 
       {/* Card 4: "Мои возможности" — My capabilities / budget */}
-      <Card>
+      <Card className="bg-gradient-to-b from-blue-50 to-indigo-50 dark:from-blue-950/30 dark:to-indigo-950/30">
         <CardContent className="py-4">
-          <div className="p-4 bg-gradient-to-b from-blue-50 to-indigo-50 dark:from-blue-950/30 dark:to-indigo-950/30 rounded-xl">
-            <div className="flex items-center justify-center gap-1.5 mb-2">
-              <Wallet className="w-4 h-4 text-blue-600" />
-              <span className="text-xs text-gray-500 dark:text-gray-300">{t('dashboard.yourContribution')}</span>
-              <Tooltip content={t('dashboard.myCapabilitiesHint')} side="bottom">
-                <button type="button" className="text-gray-400 hover:text-gray-500 dark:text-gray-300"><HelpCircle className="w-3.5 h-3.5" /></button>
-              </Tooltip>
-            </div>
-            {editingBudget ? (
-              <div className="relative mt-1 max-w-xs mx-auto">
-                <span className="absolute left-2 top-1/2 -translate-y-1/2 text-xs text-gray-400">$</span>
-                <input
-                  type="number"
-                  value={newBudgetValue}
-                  onChange={(e) => setNewBudgetValue(e.target.value)}
-                  placeholder={me?.monthlyBudget != null ? String(Math.round(me.monthlyBudget)) : '0'}
-                  className="w-full pl-5 pr-8 py-1.5 text-sm font-bold rounded border border-blue-300 dark:border-blue-600 bg-white dark:bg-gray-800 text-blue-700 dark:text-blue-400 focus:outline-none focus:border-blue-500"
-                  autoFocus
-                  min={0}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter' && newBudgetValue && Number(newBudgetValue) >= 0) {
-                      setBudgetMutation.mutate({ amount: Number(newBudgetValue), inputCurrency: 'USD' });
-                    }
-                    if (e.key === 'Escape') setEditingBudget(false);
-                  }}
-                />
-                {newBudgetValue && Number(newBudgetValue) >= 0 && (
-                  <button
-                    onClick={() => setBudgetMutation.mutate({ amount: Number(newBudgetValue), inputCurrency: 'USD' })}
-                    disabled={setBudgetMutation.isPending}
-                    className="absolute right-2 top-1/2 -translate-y-1/2 text-green-500 hover:text-green-400"
-                  >
-                    <Check className="w-4 h-4" />
-                  </button>
-                )}
-              </div>
-            ) : (
-              <div className="flex items-center justify-center gap-2">
-                <p className="text-xl font-bold text-blue-700 dark:text-blue-400">
-                  {me?.remainingBudget != null && me.monthlyBudget != null
-                    ? `$${Math.round(me.remainingBudget)} / $${Math.round(me.monthlyBudget)}`
-                    : '$0'}
-                </p>
-                <button
-                  onClick={() => { setNewBudgetValue(''); setEditingBudget(true); }}
-                  className="text-gray-400 hover:text-gray-300"
-                >
-                  <Pencil className="w-3.5 h-3.5" />
-                </button>
-              </div>
-            )}
+          <div className="flex items-center gap-2 mb-2">
+            <Wallet className="w-5 h-5 text-blue-600" />
+            <span className="text-sm font-semibold text-gray-900 dark:text-white">{t('dashboard.yourContribution')}</span>
+            <Tooltip content={t('dashboard.myCapabilitiesHint')} side="bottom">
+              <button type="button" className="text-gray-400 hover:text-gray-500 dark:text-gray-300"><HelpCircle className="w-3.5 h-3.5" /></button>
+            </Tooltip>
           </div>
+          {editingBudget ? (
+            <div className="relative mt-1 max-w-xs">
+              <span className="absolute left-2 top-1/2 -translate-y-1/2 text-xs text-gray-400">$</span>
+              <input
+                type="number"
+                value={newBudgetValue}
+                onChange={(e) => setNewBudgetValue(e.target.value)}
+                placeholder={me?.monthlyBudget != null ? String(Math.round(me.monthlyBudget)) : '0'}
+                className="w-full pl-5 pr-8 py-1.5 text-sm font-bold rounded border border-blue-300 dark:border-blue-600 bg-white dark:bg-gray-800 text-blue-700 dark:text-blue-400 focus:outline-none focus:border-blue-500"
+                autoFocus
+                min={0}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && newBudgetValue && Number(newBudgetValue) >= 0) {
+                    setBudgetMutation.mutate({ amount: Number(newBudgetValue), inputCurrency: 'USD' });
+                  }
+                  if (e.key === 'Escape') setEditingBudget(false);
+                }}
+              />
+              {newBudgetValue && Number(newBudgetValue) >= 0 && (
+                <button
+                  onClick={() => setBudgetMutation.mutate({ amount: Number(newBudgetValue), inputCurrency: 'USD' })}
+                  disabled={setBudgetMutation.isPending}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 text-green-500 hover:text-green-400"
+                >
+                  <Check className="w-4 h-4" />
+                </button>
+              )}
+            </div>
+          ) : (
+            <div className="flex items-center gap-2">
+              <p className="text-xl font-bold text-blue-700 dark:text-blue-400">
+                {me?.remainingBudget != null && me.monthlyBudget != null
+                  ? `$${Math.round(me.remainingBudget)} / $${Math.round(me.monthlyBudget)}`
+                  : '$0'}
+              </p>
+              <button
+                onClick={() => { setNewBudgetValue(''); setEditingBudget(true); }}
+                className="text-gray-400 hover:text-gray-300"
+              >
+                <Pencil className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          )}
         </CardContent>
       </Card>
 
@@ -332,7 +331,6 @@ export function DashboardPage() {
         </div>
       )}
 
-      {/* Admin: Skills pilot metrics */}
       {/* Skill Matches card */}
       {((matchHelpMe && matchHelpMe.length > 0) || (matchHelpThem && matchHelpThem.length > 0)) && (
         <Card>
@@ -373,11 +371,6 @@ export function DashboardPage() {
       {adminData?.isAdmin && skillsAdminStats && (
         <Card>
           <CardContent className="py-4">
-            <div className="flex items-center gap-1.5 mb-3">
-              <Wrench className="w-4 h-4 text-purple-600" />
-              <span className="text-sm font-semibold text-gray-900 dark:text-white">{t('skills.adminTitle')}</span>
-            </div>
-
             {/* Row 1: Fill rate, Match density, Users */}
             <div className="grid grid-cols-3 gap-3 mb-3">
               <div className="text-center">
