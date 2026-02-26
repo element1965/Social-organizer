@@ -284,8 +284,8 @@
     "nicknamePlaceholder": "Nama Anda untuk mereka...",
     "addDirect": "Tambahkan ke koneksi langsung",
     "directRequestSent": "Permintaan terkirim. Menunggu konfirmasi",
-    "revokeHandshake": "Cabut jabat tangan",
-    "revokeConfirm": "Koneksi akan direset. Pengguna perlu dikonfirmasi ulang. Lanjutkan?",
+    "revokeHandshake": "Bisukan",
+    "revokeConfirm": "Koneksi akan dihapus. Untuk menyambung kembali diperlukan konfirmasi ulang. Lanjutkan?",
     "intentionsReceived": "Kali dibantu",
     "helpedTab": "Membantu",
     "helpedByTab": "Dibantu oleh"

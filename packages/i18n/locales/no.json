@@ -284,8 +284,8 @@
     "nicknamePlaceholder": "Ditt navn for dem...",
     "addDirect": "Legg til i direkte forbindelser",
     "directRequestSent": "Forespørsel sendt. Venter på bekreftelse",
-    "revokeHandshake": "Tilbakekall håndtrykk",
-    "revokeConfirm": "Forbindelsen tilbakestilles. Brukeren må bekreftes på nytt. Fortsette?",
+    "revokeHandshake": "Demp",
+    "revokeConfirm": "Forbindelsen fjernes. For å koble til igjen kreves ny bekreftelse. Fortsette?",
     "intentionsReceived": "Ganger hjulpet",
     "helpedTab": "Hjalp",
     "helpedByTab": "Hjulpet av"

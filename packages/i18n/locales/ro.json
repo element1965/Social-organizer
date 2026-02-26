@@ -284,8 +284,8 @@
     "nicknamePlaceholder": "Numele tău pentru ei...",
     "addDirect": "Adaugă la conexiuni directe",
     "directRequestSent": "Cerere trimisă. Se așteaptă confirmarea",
-    "revokeHandshake": "Revocă strângerea de mână",
-    "revokeConfirm": "Conexiunea va fi resetată. Utilizatorul va trebui reconfirmat. Continuați?",
+    "revokeHandshake": "Dezactivează",
+    "revokeConfirm": "Conexiunea va fi ștearsă. Reconectarea va necesita o nouă confirmare. Continuați?",
     "intentionsReceived": "Ori ajutat",
     "helpedTab": "A ajutat",
     "helpedByTab": "Ajutat de"

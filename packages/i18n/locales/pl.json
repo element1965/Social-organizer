@@ -284,8 +284,8 @@
     "nicknamePlaceholder": "Twoja nazwa dla nich...",
     "addDirect": "Dodaj do bezpośrednich połączeń",
     "directRequestSent": "Prośba wysłana. Oczekiwanie na potwierdzenie",
-    "revokeHandshake": "Cofnij uścisk dłoni",
-    "revokeConfirm": "Połączenie zostanie zresetowane. Użytkownik będzie wymagał ponownego potwierdzenia. Kontynuować?",
+    "revokeHandshake": "Wycisz",
+    "revokeConfirm": "Połączenie zostanie usunięte. Ponowne połączenie będzie wymagało potwierdzenia. Kontynuować?",
     "intentionsReceived": "Razy pomożono",
     "helpedTab": "Pomógł",
     "helpedByTab": "Pomożono mu"

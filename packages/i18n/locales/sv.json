@@ -284,8 +284,8 @@
     "nicknamePlaceholder": "Ditt namn för dem...",
     "addDirect": "Lägg till i direkta kopplingar",
     "directRequestSent": "Förfrågan skickad. Väntar på bekräftelse",
-    "revokeHandshake": "Återkalla handslag",
-    "revokeConfirm": "Anslutningen återställs. Användaren måste bekräftas på nytt. Fortsätta?",
+    "revokeHandshake": "Tysta",
+    "revokeConfirm": "Anslutningen tas bort. För att återansluta krävs ny bekräftelse. Fortsätta?",
     "intentionsReceived": "Gånger hjälpt",
     "helpedTab": "Hjälpte",
     "helpedByTab": "Hjälpt av"

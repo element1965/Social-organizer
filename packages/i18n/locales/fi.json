@@ -284,8 +284,8 @@
     "nicknamePlaceholder": "Sinun nimesi heille...",
     "addDirect": "Lisää suoriin yhteyksiin",
     "directRequestSent": "Pyyntö lähetetty. Odottaa vahvistusta",
-    "revokeHandshake": "Peruuta kädenpuristus",
-    "revokeConfirm": "Yhteys nollataan. Käyttäjä on vahvistettava uudelleen. Jatka?",
+    "revokeHandshake": "Mykistä",
+    "revokeConfirm": "Yhteys poistetaan. Palauttaminen vaatii uuden vahvistuksen. Jatka?",
     "intentionsReceived": "Kertaa autettu",
     "helpedTab": "Auttoi",
     "helpedByTab": "Autettiin"
