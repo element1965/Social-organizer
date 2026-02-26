@@ -18,9 +18,10 @@ const LOCALE_LANGS = [
   'cs', 'ro', 'th', 'vi', 'id', 'sr', 'he', 'be',
 ];
 
-/** Translate a skill name to all locales and write into JSON files */
-async function translateAndWriteSkillKey(key: string, originalText: string, sourceLang: string): Promise<number> {
+/** Translate a skill name to all locales, write to JSON files AND save to DB */
+async function translateAndWriteSkillKey(db: PrismaClient, categoryId: string, key: string, originalText: string, sourceLang: string): Promise<number> {
   const targetLangs = LOCALE_LANGS.filter((l) => l !== sourceLang);
+  const translations: Record<string, string> = { [sourceLang]: originalText };
   let written = 0;
 
   // First, write the source language
@@ -35,6 +36,7 @@ async function translateAndWriteSkillKey(key: string, originalText: string, sour
       batch.map(async (toLang) => {
         const translated = await translateText(originalText, sourceLang, toLang);
         writeSkillToLocale(toLang, key, translated);
+        translations[toLang] = translated;
         return toLang;
       }),
     );
@@ -42,6 +44,17 @@ async function translateAndWriteSkillKey(key: string, originalText: string, sour
       if (r.status === 'fulfilled') written++;
       else console.error('[SkillTranslate] Failed:', r.reason);
     }
+  }
+
+  // Save translations to DB (persistent, survives redeploy)
+  try {
+    await db.skillCategory.update({
+      where: { id: categoryId },
+      data: { translations },
+    });
+    console.log(`[SkillTranslate] Saved ${Object.keys(translations).length} translations to DB for "${key}"`);
+  } catch (err) {
+    console.error('[SkillTranslate] Failed to save translations to DB:', err);
   }
 
   return written;
@@ -527,9 +540,9 @@ export const skillsRouter = router({
         findAndStoreChains(ctx.db, uid).catch(() => {});
       }
 
-      // Translate to all 28 locales and write to JSON files (async, don't block)
-      translateAndWriteSkillKey(key, suggestion.text, 'ru').then((count) => {
-        console.log(`[SkillTranslate] Wrote "${key}" to ${count} locale files`);
+      // Translate to all 28 locales: write to JSON files + save to DB (async, don't block)
+      translateAndWriteSkillKey(ctx.db, category.id, key, suggestion.text, 'ru').then((count) => {
+        console.log(`[SkillTranslate] Wrote "${key}" to ${count} locale files + DB`);
       }).catch((err) => {
         console.error('[SkillTranslate] Error:', err);
       });

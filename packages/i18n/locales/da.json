@@ -796,6 +796,8 @@
     "categoriesCount": "kategorier",
     "entriesTotal": "færdigheder / behov i alt",
     "pendingCount": "afventer",
-    "editSuggestion": "Rediger"
+    "editSuggestion": "Rediger",
+    "vaybkoding": "Vibe-kodning",
+    "tutoring": "Tutoring"
   }
 }

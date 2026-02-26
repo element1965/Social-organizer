@@ -850,7 +850,9 @@
     "categoriesCount": "категорий",
     "entriesTotal": "навыков / потребн. всего",
     "pendingCount": "ожидают",
-    "editSuggestion": "Редактировать"
+    "editSuggestion": "Редактировать",
+    "vaybkoding": "Вайб-кодинг",
+    "tutoring": "Репетиторство"
   },
   "geo": {
     "title": "Местоположение",

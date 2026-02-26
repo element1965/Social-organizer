@@ -457,12 +457,13 @@ model TranslationCache {
 }
 
 model SkillCategory {
-  id        String   @id @default(cuid())
-  key       String   @unique
-  group     String
-  sortOrder Int      @default(0)
-  isOnline  Boolean  @default(false)
-  createdAt DateTime @default(now())
+  id           String   @id @default(cuid())
+  key          String   @unique
+  group        String
+  sortOrder    Int      @default(0)
+  isOnline     Boolean  @default(false)
+  translations Json?
+  createdAt    DateTime @default(now())
 
   skills              UserSkill[]
   needs               UserNeed[]

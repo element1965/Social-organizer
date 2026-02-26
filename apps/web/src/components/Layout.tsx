@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import i18n from 'i18next';
 import { Home, Bell, Users, Settings, HelpCircle } from 'lucide-react';
 import { trpc } from '../lib/trpc';
 import { cn } from '../lib/utils';
@@ -49,6 +50,21 @@ export function Layout() {
 
   // Sync network graph to local Gun.js / IndexedDB backup
   useGraphSync();
+
+  // Load DB-stored skill translations into i18next (for dynamically added categories)
+  const { data: skillCategories } = trpc.skills.categories.useQuery(undefined, { staleTime: 60000 });
+  useEffect(() => {
+    if (!skillCategories) return;
+    for (const cat of skillCategories) {
+      const tr = cat.translations as Record<string, string> | null;
+      if (!tr) continue;
+      for (const [lang, text] of Object.entries(tr)) {
+        if (text && !i18n.exists(`skills.${cat.key}`, { lng: lang })) {
+          i18n.addResource(lang, 'translation', `skills.${cat.key}`, text);
+        }
+      }
+    }
+  }, [skillCategories]);
 
   // Hide bottom nav when chat panel is open
   const [chatPanelOpen, setChatPanelOpen] = useState(false);
