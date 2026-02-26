@@ -284,8 +284,8 @@
     "nicknamePlaceholder": "Seu nome para eles...",
     "addDirect": "Adicionar às conexões diretas",
     "directRequestSent": "Pedido enviado. Aguardando confirmação",
-    "revokeHandshake": "Revogar aperto de mão",
-    "revokeConfirm": "A conexão será redefinida. O usuário precisará ser reconfirmado. Continuar?",
+    "revokeHandshake": "Silenciar",
+    "revokeConfirm": "A conexão será removida. Para reconectar será necessária nova confirmação. Continuar?",
     "intentionsReceived": "Vezes ajudado",
     "helpedTab": "Ajudou",
     "helpedByTab": "Ajudado por"

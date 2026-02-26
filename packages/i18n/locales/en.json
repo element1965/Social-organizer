@@ -291,8 +291,8 @@
     "lastSeen": "Last seen {{time}}",
     "addDirect": "Add to direct connections",
     "directRequestSent": "Request sent. Awaiting confirmation",
-    "revokeHandshake": "Revoke handshake",
-    "revokeConfirm": "The connection will be reset. The user will need to be re-confirmed. Continue?",
+    "revokeHandshake": "Mute",
+    "revokeConfirm": "The connection will be removed. Reconnecting will require re-confirmation. Continue?",
     "intentionsReceived": "Times helped",
     "helpedTab": "Helped",
     "helpedByTab": "Helped by"

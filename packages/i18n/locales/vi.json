@@ -284,8 +284,8 @@
     "nicknamePlaceholder": "Tên của bạn cho họ...",
     "addDirect": "Thêm vào kết nối trực tiếp",
     "directRequestSent": "Yêu cầu đã gửi. Đang chờ xác nhận",
-    "revokeHandshake": "Thu hồi bắt tay",
-    "revokeConfirm": "Kết nối sẽ được đặt lại. Người dùng cần được xác nhận lại. Tiếp tục?",
+    "revokeHandshake": "Tắt tiếng",
+    "revokeConfirm": "Kết nối sẽ bị xóa. Để kết nối lại cần xác nhận mới. Tiếp tục?",
     "intentionsReceived": "Lần được giúp",
     "helpedTab": "Đã giúp",
     "helpedByTab": "Được giúp"

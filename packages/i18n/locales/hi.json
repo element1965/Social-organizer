@@ -284,8 +284,8 @@
     "nicknamePlaceholder": "उनके लिए आपका नाम...",
     "addDirect": "सीधे कनेक्शन में जोड़ें",
     "directRequestSent": "अनुरोध भेजा गया। पुष्टि की प्रतीक्षा",
-    "revokeHandshake": "हैंडशेक रद्द करें",
-    "revokeConfirm": "कनेक्शन रीसेट हो जाएगा। उपयोगकर्ता को फिर से पुष्टि की आवश्यकता होगी। जारी रखें?",
+    "revokeHandshake": "म्यूट",
+    "revokeConfirm": "कनेक्शन हटा दिया जाएगा। पुनः कनेक्ट करने के लिए नई पुष्टि आवश्यक होगी। जारी रखें?",
     "intentionsReceived": "बार मदद मिली",
     "helpedTab": "मदद की",
     "helpedByTab": "मदद मिली"

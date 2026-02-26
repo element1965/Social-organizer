@@ -284,8 +284,8 @@
     "nicknamePlaceholder": "اسمك لهم...",
     "addDirect": "إضافة إلى الاتصالات المباشرة",
     "directRequestSent": "تم إرسال الطلب. في انتظار التأكيد",
-    "revokeHandshake": "إلغاء المصافحة",
-    "revokeConfirm": "سيتم إعادة تعيين الاتصال. سيحتاج المستخدم إلى إعادة التأكيد. متابعة؟",
+    "revokeHandshake": "كتم",
+    "revokeConfirm": "سيتم إزالة الاتصال. للاستعادة سيتطلب تأكيدًا جديدًا. متابعة؟",
     "intentionsReceived": "مرات المساعدة",
     "helpedTab": "ساعد",
     "helpedByTab": "ساعده"

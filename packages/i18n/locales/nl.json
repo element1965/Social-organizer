@@ -284,8 +284,8 @@
     "nicknamePlaceholder": "Jouw naam voor hen...",
     "addDirect": "Toevoegen aan directe verbindingen",
     "directRequestSent": "Verzoek verzonden. Wacht op bevestiging",
-    "revokeHandshake": "Handdruk intrekken",
-    "revokeConfirm": "De verbinding wordt gereset. De gebruiker moet opnieuw bevestigd worden. Doorgaan?",
+    "revokeHandshake": "Dempen",
+    "revokeConfirm": "De verbinding wordt verwijderd. Opnieuw verbinden vereist nieuwe bevestiging. Doorgaan?",
     "intentionsReceived": "Keer geholpen",
     "helpedTab": "Heeft geholpen",
     "helpedByTab": "Geholpen door"

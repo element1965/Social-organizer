@@ -294,8 +294,8 @@
     "nicknamePlaceholder": "השם שלך עבורם...",
     "addDirect": "הוסף לקשרים ישירים",
     "directRequestSent": "הבקשה נשלחה. ממתין לאישור",
-    "revokeHandshake": "בטל לחיצת יד",
-    "revokeConfirm": "החיבור יאופס. המשתמש יצטרך אישור מחדש. להמשיך?",
+    "revokeHandshake": "השתק",
+    "revokeConfirm": "החיבור יוסר. לחידוש החיבור ידרש אישור מחדש. להמשיך?",
     "intentionsReceived": "פעמים שעזרו לו",
     "helpedTab": "עזר ל",
     "helpedByTab": "עזרו לו"

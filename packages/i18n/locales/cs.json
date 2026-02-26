@@ -284,8 +284,8 @@
     "nicknamePlaceholder": "Vaše jméno pro ně...",
     "addDirect": "Přidat do přímých spojení",
     "directRequestSent": "Žádost odeslána. Čeká na potvrzení",
-    "revokeHandshake": "Odvolat podání ruky",
-    "revokeConfirm": "Spojení bude resetováno. Uživatel bude muset být znovu potvrzen. Pokračovat?",
+    "revokeHandshake": "Ztlumit",
+    "revokeConfirm": "Spojení bude zrušeno. Pro obnovení bude potřeba nové potvrzení. Pokračovat?",
     "intentionsReceived": "Kolikrát mu pomohli",
     "helpedTab": "Pomohl",
     "helpedByTab": "Pomoženo"

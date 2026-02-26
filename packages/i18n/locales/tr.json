@@ -284,8 +284,8 @@
     "nicknamePlaceholder": "Onlar için adınız...",
     "addDirect": "Doğrudan bağlantılara ekle",
     "directRequestSent": "İstek gönderildi. Onay bekleniyor",
-    "revokeHandshake": "El sıkışmayı geri al",
-    "revokeConfirm": "Bağlantı sıfırlanacak. Kullanıcının yeniden onaylanması gerekecek. Devam edilsin mi?",
+    "revokeHandshake": "Sustur",
+    "revokeConfirm": "Bağlantı kaldırılacak. Yeniden bağlanmak için tekrar onay gerekecek. Devam edilsin mi?",
     "intentionsReceived": "Kez yardım aldı",
     "helpedTab": "Yardım etti",
     "helpedByTab": "Yardım aldı"

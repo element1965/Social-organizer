@@ -284,8 +284,8 @@
     "nicknamePlaceholder": "相手への表示名...",
     "addDirect": "直接のつながりに追加",
     "directRequestSent": "リクエスト送信済み。確認待ち",
-    "revokeHandshake": "ハンドシェイクを取り消す",
-    "revokeConfirm": "接続がリセットされます。ユーザーの再確認が必要になります。続行しますか？",
+    "revokeHandshake": "ミュート",
+    "revokeConfirm": "接続が削除されます。再接続には再確認が必要です。続行しますか？",
     "intentionsReceived": "助けられた回数",
     "helpedTab": "助けた",
     "helpedByTab": "助けられた"

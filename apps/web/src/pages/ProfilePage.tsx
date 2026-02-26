@@ -6,7 +6,7 @@ import { useAuth } from '../hooks/useAuth';
 import { Card, CardContent, CardHeader } from '../components/ui/card';
 import { Avatar } from '../components/ui/avatar';
 import { Spinner } from '../components/ui/spinner';
-import { Wallet, Calendar, Pencil, Check, X, UserPlus, UserMinus, Copy, ChevronDown, ChevronUp, Users, Wrench, Heart } from 'lucide-react';
+import { Wallet, Calendar, Pencil, Check, X, UserPlus, VolumeX, Copy, ChevronDown, ChevronUp, Users, Wrench, Heart } from 'lucide-react';
 import { HandshakePath } from '../components/HandshakePath';
 import { SocialIcon } from '../components/ui/social-icons';
 import { buildContactUrl } from '@so/shared';
@@ -405,7 +405,7 @@ export function ProfilePage() {
           disabled={revokeMut.isPending}
           className="w-full flex items-center justify-center gap-2 py-2 text-xs text-red-500 hover:text-red-600 transition-colors"
         >
-          <UserMinus className="w-3.5 h-3.5" />
+          <VolumeX className="w-3.5 h-3.5" />
           {t('profile.revokeHandshake')}
         </button>
       )}
