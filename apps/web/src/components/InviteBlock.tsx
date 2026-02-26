@@ -84,7 +84,7 @@ export function InviteBlock({ id }: InviteBlockProps) {
       <CardContent className="py-4">
         <div className="flex items-center gap-2 mb-4">
           <UserPlus className="w-5 h-5 text-blue-600" />
-          <h3 className="text-lg font-bold text-gray-900 dark:text-white">{t('network.invite')}</h3>
+          <span className="text-sm font-semibold text-gray-900 dark:text-white">{t('network.invite')}</span>
         </div>
 
         <div className="flip-container">
