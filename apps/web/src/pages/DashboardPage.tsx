@@ -532,8 +532,15 @@ export function DashboardPage() {
                       </button>
                     )}
                     <button
-                      onClick={() => approveMut.mutate({ id: s.id })}
-                      disabled={approveMut.isPending}
+                      onClick={async () => {
+                        // Auto-save edited text before approving
+                        if (editingSuggId === s.id && editingSuggText.trim() && editingSuggText.trim() !== s.text) {
+                          await updateSuggMut.mutateAsync({ id: s.id, text: editingSuggText.trim() });
+                          setEditingSuggId(null);
+                        }
+                        approveMut.mutate({ id: s.id });
+                      }}
+                      disabled={approveMut.isPending || updateSuggMut.isPending}
                       className="px-2 py-0.5 text-xs font-medium rounded bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 hover:bg-green-200"
                     >
                       {t('common.confirm')}
