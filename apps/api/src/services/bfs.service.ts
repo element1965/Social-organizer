@@ -1,5 +1,4 @@
 import type { PrismaClient } from '@so/db';
-import { MAX_BFS_DEPTH, MAX_BFS_RECIPIENTS } from '@so/shared';
 
 export interface BfsRecipient {
   userId: string;
@@ -8,77 +7,87 @@ export interface BfsRecipient {
   maxConnAt: Date | null;
 }
 
+interface Connection {
+  userAId: string;
+  userBId: string;
+  createdAt: Date;
+}
+
+/** Build adjacency list from connections array. */
+function buildAdjList(connections: Connection[]) {
+  const adj = new Map<string, Array<{ neighbor: string; createdAt: Date }>>();
+  for (const c of connections) {
+    if (!adj.has(c.userAId)) adj.set(c.userAId, []);
+    if (!adj.has(c.userBId)) adj.set(c.userBId, []);
+    adj.get(c.userAId)!.push({ neighbor: c.userBId, createdAt: c.createdAt });
+    adj.get(c.userBId)!.push({ neighbor: c.userAId, createdAt: c.createdAt });
+  }
+  return adj;
+}
+
+/** Load all connections once (lightweight — only IDs + createdAt). */
+async function loadAllConnections(db: PrismaClient): Promise<Connection[]> {
+  return db.connection.findMany({
+    select: { userAId: true, userBId: true, createdAt: true },
+  });
+}
+
 /**
- * BFS through connection graph using recursive CTE in PostgreSQL.
- * Returns list of users with shortest handshake path from startUserId.
+ * In-memory BFS through connection graph.
+ * No PostgreSQL recursive CTEs, no temp files.
  */
 export async function findRecipientsViaBfs(
   db: PrismaClient,
   startUserId: string,
-  maxDepth: number = MAX_BFS_DEPTH,
-  maxRecipients: number = MAX_BFS_RECIPIENTS,
+  maxDepth: number = 6,
+  maxRecipients: number = 10000,
   excludeUserIds: string[] = [],
 ): Promise<BfsRecipient[]> {
-  const excludeList = excludeUserIds.length > 0
-    ? excludeUserIds.map((id) => `'${id}'`).join(',')
-    : `'__none__'`;
+  const connections = await loadAllConnections(db);
+  const adj = buildAdjList(connections);
+  const excludeSet = new Set(excludeUserIds);
 
-  const result = await db.$queryRawUnsafe<Array<{
-    user_id: string;
-    path: string[];
-    depth: number;
-    max_conn_at: Date | null;
-  }>>(`
-    WITH RECURSIVE bfs AS (
-      -- Level 1: creator's direct connections
-      SELECT
-        CASE WHEN c."userAId" = $1 THEN c."userBId" ELSE c."userAId" END AS user_id,
-        ARRAY[$1] AS path,
-        1 AS depth,
-        c."createdAt" AS max_conn_at
-      FROM connections c
-      WHERE c."userAId" = $1 OR c."userBId" = $1
+  const visited = new Map<string, { depth: number; path: string[]; maxConnAt: Date }>();
+  const queue: Array<{ userId: string; depth: number; path: string[]; maxConnAt: Date }> = [];
 
-      UNION ALL
+  for (const { neighbor, createdAt } of adj.get(startUserId) || []) {
+    if (neighbor === startUserId || excludeSet.has(neighbor)) continue;
+    if (!visited.has(neighbor)) {
+      const entry = { userId: neighbor, depth: 1, path: [startUserId], maxConnAt: createdAt };
+      visited.set(neighbor, { depth: 1, path: [startUserId], maxConnAt: createdAt });
+      queue.push(entry);
+    }
+  }
 
-      -- Next levels
-      SELECT
-        CASE WHEN c."userAId" = b.user_id THEN c."userBId" ELSE c."userAId" END AS user_id,
-        b.path || b.user_id,
-        b.depth + 1,
-        GREATEST(b.max_conn_at, c."createdAt")
-      FROM connections c
-      JOIN bfs b ON (c."userAId" = b.user_id OR c."userBId" = b.user_id)
-      WHERE b.depth < $2
-        AND NOT (CASE WHEN c."userAId" = b.user_id THEN c."userBId" ELSE c."userAId" END = ANY(b.path))
-    )
-    SELECT DISTINCT ON (b.user_id) b.user_id, b.path, b.depth, b.max_conn_at
-    FROM bfs b
-    JOIN users u ON u.id = b.user_id
-    WHERE b.user_id != $1
-      AND b.user_id NOT IN (${excludeList})
-      AND u."deletedAt" IS NULL
-    ORDER BY b.user_id, b.depth, b.max_conn_at
-    LIMIT $3
-  `, startUserId, maxDepth, maxRecipients);
+  let qi = 0;
+  while (qi < queue.length && visited.size < maxRecipients) {
+    const { userId, depth, path, maxConnAt } = queue[qi++]!;
+    if (depth >= maxDepth) continue;
+    const newPath = [...path, userId];
+    for (const { neighbor, createdAt } of adj.get(userId) || []) {
+      if (neighbor === startUserId || visited.has(neighbor) || excludeSet.has(neighbor)) continue;
+      const newMaxConnAt = createdAt > maxConnAt ? createdAt : maxConnAt;
+      visited.set(neighbor, { depth: depth + 1, path: newPath, maxConnAt: newMaxConnAt });
+      queue.push({ userId: neighbor, depth: depth + 1, path: newPath, maxConnAt: newMaxConnAt });
+    }
+  }
 
-  return result.map((r) => ({
-    userId: r.user_id,
-    path: [...r.path, r.user_id],
-    depth: r.depth,
-    maxConnAt: r.max_conn_at,
+  return Array.from(visited.entries()).map(([userId, v]) => ({
+    userId,
+    path: [...v.path, userId],
+    depth: v.depth,
+    maxConnAt: v.maxConnAt,
   }));
 }
 
 /**
  * BFS for finding shortest path between two users.
- * Returns array of users from fromUserId to toUserId inclusive with connectionCount.
  */
 export async function findPathBetweenUsers(
   db: PrismaClient,
   fromUserId: string,
   toUserId: string,
-  maxDepth: number = MAX_BFS_DEPTH,
+  maxDepth: number = 20,
 ): Promise<Array<{ id: string; name: string; photoUrl: string | null; connectionCount: number; remainingBudget: number | null }>> {
   if (fromUserId === toUserId) {
     const user = await db.user.findUnique({
@@ -94,45 +103,41 @@ export async function findPathBetweenUsers(
     return [{ ...user, connectionCount: Number(countResult[0]?.count || 0) }];
   }
 
-  const result = await db.$queryRawUnsafe<Array<{
-    user_id: string;
-    path: string[];
-    depth: number;
-  }>>(`
-    WITH RECURSIVE bfs AS (
-      SELECT
-        CASE WHEN c."userAId" = $1 THEN c."userBId" ELSE c."userAId" END AS user_id,
-        ARRAY[$1] AS path,
-        1 AS depth
-      FROM connections c
-      WHERE c."userAId" = $1 OR c."userBId" = $1
+  const connections = await loadAllConnections(db);
+  const adj = buildAdjList(connections);
 
-      UNION ALL
+  // BFS from fromUserId to toUserId
+  const visited = new Map<string, string | null>(); // userId -> parent
+  visited.set(fromUserId, null);
+  const queue: string[] = [fromUserId];
+  let qi = 0;
+  let found = false;
 
-      SELECT
-        CASE WHEN c."userAId" = b.user_id THEN c."userBId" ELSE c."userAId" END AS user_id,
-        b.path || b.user_id,
-        b.depth + 1
-      FROM connections c
-      JOIN bfs b ON (c."userAId" = b.user_id OR c."userBId" = b.user_id)
-      WHERE b.depth < $3
-        AND NOT (CASE WHEN c."userAId" = b.user_id THEN c."userBId" ELSE c."userAId" END = ANY(b.path))
-    )
-    SELECT b.user_id, b.path, b.depth
-    FROM bfs b
-    WHERE b.user_id = $2
-    ORDER BY b.depth
-    LIMIT 1
-  `, fromUserId, toUserId, maxDepth);
+  while (qi < queue.length) {
+    const current = queue[qi++]!;
+    const depth = getPathLength(visited, current, fromUserId);
+    if (depth >= maxDepth) continue;
 
-  if (result.length === 0) {
-    return [];
+    for (const { neighbor } of adj.get(current) || []) {
+      if (visited.has(neighbor)) continue;
+      visited.set(neighbor, current);
+      if (neighbor === toUserId) { found = true; break; }
+      queue.push(neighbor);
+    }
+    if (found) break;
   }
 
-  const { path } = result[0]!;
-  const fullPath = [...path, toUserId];
+  if (!found) return [];
 
-  // Get users and their connection counts in parallel
+  // Reconstruct path
+  const fullPath: string[] = [];
+  let cur: string | null = toUserId;
+  while (cur !== null) {
+    fullPath.unshift(cur);
+    cur = visited.get(cur) ?? null;
+  }
+
+  // Get users and their connection counts
   const [users, connectionCounts] = await Promise.all([
     db.user.findMany({
       where: { id: { in: fullPath } },
@@ -157,8 +162,18 @@ export async function findPathBetweenUsers(
   }).filter(Boolean) as Array<{ id: string; name: string; photoUrl: string | null; connectionCount: number; remainingBudget: number | null }>;
 }
 
+function getPathLength(visited: Map<string, string | null>, node: string, root: string): number {
+  let len = 0;
+  let cur: string | null = node;
+  while (cur !== null && cur !== root) {
+    len++;
+    cur = visited.get(cur) ?? null;
+  }
+  return len;
+}
+
 /**
- * Get graph slice for 3D visualization (2-3 levels).
+ * Get graph slice for 3D visualization.
  */
 export async function getGraphSlice(
   db: PrismaClient,
