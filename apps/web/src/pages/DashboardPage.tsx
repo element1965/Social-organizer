@@ -221,12 +221,12 @@ export function DashboardPage() {
               <PeriodChip days={networkDays} onClick={() => setShowNetworkPicker(true)} />
             </div>
           </div>
-          <div className="flex items-baseline justify-between gap-2 overflow-hidden">
-            <p className="text-3xl font-bold text-gray-900 dark:text-white truncate shrink min-w-0">
+          <div className="flex items-baseline justify-between gap-x-3 gap-y-0 flex-wrap">
+            <p className="text-3xl font-bold text-gray-900 dark:text-white">
               {totalReachable?.toLocaleString()} <span className="text-sm font-normal text-gray-500 dark:text-gray-300">{t('dashboard.people')}</span>
             </p>
             {networkNewConn != null && (
-              <span className="text-lg font-bold text-blue-600 dark:text-blue-400 whitespace-nowrap shrink-0">
+              <span className="text-lg font-bold text-blue-600 dark:text-blue-400 whitespace-nowrap">
                 {t('dashboard.newConnections', { count: networkNewConn })}
               </span>
             )}
@@ -244,15 +244,15 @@ export function DashboardPage() {
             </div>
             <PeriodChip days={capDays} onClick={() => setShowCapPicker(true)} />
           </div>
-          <div className="flex items-baseline gap-2 overflow-hidden">
-            <p className="text-3xl font-bold text-green-600 dark:text-green-400 truncate shrink min-w-0">
+          <div className="flex items-baseline gap-x-3 gap-y-0 flex-wrap">
+            <p className="text-3xl font-bold text-green-600 dark:text-green-400">
               ${(networkCapabilities?.total ?? 0).toLocaleString()}
             </p>
             {networkCapabilities?.contributors != null && networkCapabilities.contributors > 0 && (
               <span className="text-sm text-gray-500 dark:text-gray-300 whitespace-nowrap">{t('dashboard.capabilitiesContributors', { count: networkCapabilities.contributors })}</span>
             )}
             {capPeriodTotal != null && (
-              <span className="text-lg font-bold text-green-600 dark:text-green-400 whitespace-nowrap shrink-0 ml-auto">
+              <span className="text-lg font-bold text-green-600 dark:text-green-400 whitespace-nowrap ml-auto">
                 +${capPeriodTotal.toLocaleString()}
               </span>
             )}
