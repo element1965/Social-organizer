@@ -5,6 +5,8 @@ import {
   SUPPORT_CHAT_ID,
   ONBOARDING_REMINDERS,
   BOT_START_REMINDERS,
+  INVITER_NOTIFY_MESSAGES,
+  findInviterTg,
   type TgReplyMarkup,
 } from '../services/telegram-bot.service.js';
 import { translateWithCache } from '../services/translate.service.js';
@@ -16,6 +18,12 @@ const TIMING_MS = [
   1 * 60 * 60 * 1000,      // level 1: 1 hour
   24 * 60 * 60 * 1000,     // level 2: 24 hours
   72 * 60 * 60 * 1000,     // level 3: 72 hours
+];
+
+/** Timing for inviter notifications (when invitee started bot but never opened app) */
+const INVITER_TIMING_MS = [
+  1 * 60 * 60 * 1000,      // level 0→1: 1 hour after /start
+  24 * 60 * 60 * 1000,     // level 1→2: 24 hours after /start
 ];
 
 /**
@@ -196,8 +204,73 @@ export async function processOnboardingReminder(_job: Job): Promise<void> {
       }
     }
 
+    // ─── Part 3: Notify inviters when invitee started bot but never opened app ───
+    const inviterBotStarts = await db.botStart.findMany({
+      where: {
+        inviteToken: { not: null },
+        inviterNotified: { lt: 2 },
+      },
+    });
+
+    let inviterNotifySent = 0;
+
+    for (const bs of inviterBotStarts) {
+      if (!bs.inviteToken) continue;
+
+      // Check if invitee has since opened the app — skip notification
+      const hasAccount = await db.platformAccount.findFirst({
+        where: { platform: 'TELEGRAM', platformId: bs.chatId },
+        select: { id: true },
+      });
+      if (hasAccount) {
+        // Invitee opened app — mark as fully notified (no need to remind inviter)
+        await db.botStart.update({ where: { id: bs.id }, data: { inviterNotified: 2 } });
+        continue;
+      }
+
+      const level = bs.inviterNotified;
+      const threshold = INVITER_TIMING_MS[level];
+      if (threshold === undefined) continue;
+
+      const elapsed = now.getTime() - bs.createdAt.getTime();
+      if (elapsed < threshold) continue;
+
+      const message = INVITER_NOTIFY_MESSAGES[level];
+      if (!message) continue;
+
+      // Find the inviter's Telegram chatId
+      const inviter = await findInviterTg(bs.inviteToken);
+      if (!inviter) continue;
+
+      const inviteeName = bs.name || '???';
+      const baseText = message.text.replace('{inviteeName}', inviteeName);
+
+      // Translate to inviter's language
+      const inviterLang = await db.user.findFirst({
+        where: { platformAccounts: { some: { platform: 'TELEGRAM', platformId: inviter.chatId } } },
+        select: { language: true },
+      });
+      const lang = inviterLang?.language || 'ru';
+      const text = await translateWithCache(baseText, lang).catch(() => baseText);
+
+      const ok = await sendTelegramMessage(inviter.chatId, text);
+
+      if (ok) {
+        await db.botStart.update({
+          where: { id: bs.id },
+          data: { inviterNotified: level + 1 },
+        });
+        inviterNotifySent++;
+        totalSent++;
+      }
+
+      if (totalSent % 25 === 0 && totalSent > 0) {
+        await new Promise((r) => setTimeout(r, 1100));
+      }
+    }
+
     // ─── Report ───
-    console.log(`[Onboarding Reminder] Done: botStart=${botStartSent}/${botStarts.length} (cleaned ${botStartCleaned}), onboarding=${onboardingSent}/${users.length}`);
+    console.log(`[Onboarding Reminder] Done: botStart=${botStartSent}/${botStarts.length} (cleaned ${botStartCleaned}), onboarding=${onboardingSent}/${users.length}, inviterNotify=${inviterNotifySent}/${inviterBotStarts.length}`);
     if (totalSent > 0) {
       const levelLabel = ['1ч', '24ч', '72ч'];
       const bsDetails = [0, 1, 2]
@@ -215,6 +288,9 @@ export async function processOnboardingReminder(_job: Job): Promise<void> {
       if (bsDetails) report += `\n${bsDetails}`;
       report += `\n\n📩 <b>Не завершили онбординг</b>: ${onboardingSent} из ${users.length}`;
       if (obDetails) report += `\n${obDetails}`;
+      if (inviterNotifySent > 0) {
+        report += `\n\n📢 <b>Уведомления пригласившим</b>: ${inviterNotifySent} из ${inviterBotStarts.length}`;
+      }
 
       await sendTelegramMessage(SUPPORT_CHAT_ID, report).catch(() => {});
     }
