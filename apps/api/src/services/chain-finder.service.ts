@@ -32,6 +32,7 @@ async function buildGraph(db: PrismaClient, seedUserId: string): Promise<Edge[]>
     JOIN users u2 ON u2.id = un."userId" AND u2."deletedAt" IS NULL
     WHERE us."userId" = ANY(${networkIds})
       AND un."userId" = ANY(${networkIds})
+      AND sc.key NOT LIKE 'other%'
       AND (sc."isOnline" = true
            OR (LOWER(COALESCE(u1.city, '')) = LOWER(COALESCE(u2.city, ''))
                AND COALESCE(u1.city, '') != ''))

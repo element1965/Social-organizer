@@ -86,6 +86,7 @@ export const matchesRouter = router({
         AND us."userId" = ANY(${networkIds})
         AND u.id != ALL(${adminIdArray})
         AND u."deletedAt" IS NULL
+        AND sc.key NOT LIKE 'other%'
         AND (sc."isOnline" = true
              OR (LOWER(COALESCE(u.city, '')) = LOWER(COALESCE(${me?.city ?? ''}, ''))
                  AND COALESCE(u.city, '') != ''))
@@ -119,6 +120,7 @@ export const matchesRouter = router({
         AND un."userId" = ANY(${networkIds})
         AND u.id != ALL(${adminIdArray})
         AND u."deletedAt" IS NULL
+        AND sc.key NOT LIKE 'other%'
         AND (sc."isOnline" = true
              OR (LOWER(COALESCE(u.city, '')) = LOWER(COALESCE(${me?.city ?? ''}, ''))
                  AND COALESCE(u.city, '') != ''))

@@ -1,6 +1,7 @@
 import type { PrismaClient } from '@so/db';
 import { sendTelegramMessage, type TgReplyMarkup } from './telegram-bot.service.js';
 import { sendWebPush } from './web-push.service.js';
+import { getNetworkUserIds } from './bfs.service.js';
 
 const WEB_APP_URL = process.env.WEB_APP_URL || 'https://www.orginizer.com';
 
@@ -252,20 +253,23 @@ export async function createSkillMatchNotifications(
 ): Promise<void> {
   if (addedCategoryIds.length === 0) return;
 
+  // Filter out "other" placeholder categories
+  const validCatIds = addedCategoryIds.length > 0
+    ? (await db.skillCategory.findMany({
+        where: { id: { in: addedCategoryIds }, key: { not: { startsWith: 'other' } } },
+        select: { id: true },
+      })).map((c) => c.id)
+    : [];
+  if (validCatIds.length === 0) return;
+
   // Find users in network who NEED these categories
+  const networkIds = await getNetworkUserIds(db, skillOwnerId);
   const matches = await db.$queryRaw<Array<MatchInfo>>`
-    WITH RECURSIVE network AS (
-      SELECT ${skillOwnerId}::text AS uid
-      UNION
-      SELECT CASE WHEN c."userAId" = n.uid THEN c."userBId" ELSE c."userAId" END
-      FROM connections c
-      JOIN network n ON c."userAId" = n.uid OR c."userBId" = n.uid
-    )
     SELECT un."userId", un."categoryId"
     FROM user_needs un
-    WHERE un."categoryId" = ANY(${addedCategoryIds})
+    WHERE un."categoryId" = ANY(${validCatIds})
       AND un."userId" != ${skillOwnerId}
-      AND un."userId" IN (SELECT uid FROM network)
+      AND un."userId" = ANY(${networkIds})
   `;
 
   if (matches.length === 0) return;
@@ -364,20 +368,23 @@ export async function createNeedMatchNotifications(
 ): Promise<void> {
   if (addedCategoryIds.length === 0) return;
 
+  // Filter out "other" placeholder categories
+  const validCatIds = addedCategoryIds.length > 0
+    ? (await db.skillCategory.findMany({
+        where: { id: { in: addedCategoryIds }, key: { not: { startsWith: 'other' } } },
+        select: { id: true },
+      })).map((c) => c.id)
+    : [];
+  if (validCatIds.length === 0) return;
+
   // Find users in network who HAVE these skills
+  const networkIds = await getNetworkUserIds(db, needOwnerId);
   const matches = await db.$queryRaw<Array<MatchInfo>>`
-    WITH RECURSIVE network AS (
-      SELECT ${needOwnerId}::text AS uid
-      UNION
-      SELECT CASE WHEN c."userAId" = n.uid THEN c."userBId" ELSE c."userAId" END
-      FROM connections c
-      JOIN network n ON c."userAId" = n.uid OR c."userBId" = n.uid
-    )
     SELECT us."userId" AS "userId", us."categoryId"
     FROM user_skills us
-    WHERE us."categoryId" = ANY(${addedCategoryIds})
+    WHERE us."categoryId" = ANY(${validCatIds})
       AND us."userId" != ${needOwnerId}
-      AND us."userId" IN (SELECT uid FROM network)
+      AND us."userId" = ANY(${networkIds})
   `;
 
   if (matches.length === 0) return;
