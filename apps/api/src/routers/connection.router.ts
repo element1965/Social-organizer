@@ -169,7 +169,7 @@ export const connectionRouter = router({
     let qi = 0;
     while (qi < queue.length && visited.size < 500) {
       const { userId, depth, maxConnAt } = queue[qi++]!;
-      if (depth >= 6) continue;
+      if (depth >= 99) continue;
       for (const { neighbor, createdAt } of adj.get(userId) || []) {
         if (neighbor === bfsUserId || visited.has(neighbor) || deletedUsers.has(neighbor)) continue;
         const newMax = createdAt > maxConnAt ? createdAt : maxConnAt;
