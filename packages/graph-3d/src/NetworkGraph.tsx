@@ -136,8 +136,8 @@ export function NetworkGraph({
   }, [nodes, edges, nodeDepthMap]);
 
   useEffect(() => {
-    if (fgRef.current) {
-      const fg = fgRef.current;
+    const fg = fgRef.current;
+    if (fg) {
       // Auto-rotate when user is not interacting
       const controls = fg.controls();
       if (controls) {
@@ -152,13 +152,32 @@ export function NetworkGraph({
       }, 500);
     }
 
-    // Cleanup: dispose OrbitControls listeners and stop animation loop
+    // Cleanup: use `fg` from closure because fgRef.current is already null
+    // when parent cleanup runs (React unmounts children first, clearing the
+    // useImperativeHandle ref before our effect cleanup fires).
     return () => {
-      if (fgRef.current) {
-        try { fgRef.current.pauseAnimation(); } catch { /* noop */ }
+      if (fg) {
+        try { fg.pauseAnimation(); } catch { /* noop */ }
         try {
-          const c = fgRef.current.controls();
+          const c = fg.controls();
           if (c) c.dispose();
+        } catch { /* noop */ }
+        // Deferred: release WebGL context AFTER react-kapsule _destructor.
+        // three-render-objects has no _destructor, so renderer/context leak
+        // unless we explicitly clean up. We use setTimeout so that
+        // react-kapsule's synchronous _destructor (pauseAnimation + graphData
+        // clear) finishes before we kill the renderer.
+        try {
+          const r = fg.renderer();
+          if (r) {
+            setTimeout(() => {
+              try {
+                r.setAnimationLoop(null);
+                r.dispose();
+                r.forceContextLoss();
+              } catch { /* noop */ }
+            }, 0);
+          }
         } catch { /* noop */ }
       }
       // Release GPU textures
@@ -276,13 +295,21 @@ export function NetworkGraph({
   const handleNodeClick = useCallback(
     (node: { id?: string | number }) => {
       if (node.id && onNodeClick) {
-        // Stop graph and dispose controls BEFORE navigating
-        // This prevents OrbitControls event listeners from leaking
+        // Eagerly stop graph and dispose controls BEFORE navigate triggers unmount.
+        // fgRef.current is still valid here (component is still mounted).
         if (fgRef.current) {
           try { fgRef.current.pauseAnimation(); } catch { /* noop */ }
           try {
             const c = fgRef.current.controls();
             if (c) c.dispose();
+          } catch { /* noop */ }
+          try {
+            const r = fgRef.current.renderer();
+            if (r) {
+              r.setAnimationLoop(null);
+              r.dispose();
+              r.forceContextLoss();
+            }
           } catch { /* noop */ }
         }
         onNodeClick(String(node.id));
