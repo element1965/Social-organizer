@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { trpc } from '../lib/trpc';
+import { useCachedNetworkStats } from '../hooks/useCachedNetworkStats';
 import { InvitePopup } from '../components/InvitePopup';
 import { Card, CardContent, CardHeader } from '../components/ui/card';
 import { Button } from '../components/ui/button';
@@ -23,7 +24,7 @@ export function CreateCollectionPage() {
   const { data: me } = trpc.user.me.useQuery();
   const { data: helpStats } = trpc.stats.help.useQuery(undefined, { refetchInterval: 60000 });
   const { data: connectionCount } = trpc.connection.getCount.useQuery();
-  const { data: networkStats } = trpc.connection.getNetworkStats.useQuery();
+  const { data: networkStats } = useCachedNetworkStats();
   const { data: myCollections } = trpc.collection.myActive.useQuery(undefined, { refetchInterval: 30000 });
   const { data: myObligations } = trpc.obligation.myList.useQuery(undefined, { refetchInterval: 30000 });
   const { data: currencies } = trpc.currency.list.useQuery();
