@@ -414,12 +414,19 @@ export const skillsRouter = router({
   }),
 
   updateSuggestion: protectedProcedure
-    .input(z.object({ id: z.string(), text: z.string().min(1).max(200) }))
+    .input(z.object({
+      id: z.string(),
+      text: z.string().min(1).max(200).optional(),
+      group: z.string().optional(),
+    }))
     .mutation(async ({ ctx, input }) => {
       if (!isAdmin(ctx.userId)) return null;
+      const data: Record<string, string> = {};
+      if (input.text) data.text = input.text;
+      if (input.group) data.group = input.group;
       return ctx.db.suggestedCategory.update({
         where: { id: input.id },
-        data: { text: input.text },
+        data,
       });
     }),
 
