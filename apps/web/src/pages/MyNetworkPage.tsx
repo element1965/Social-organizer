@@ -73,9 +73,6 @@ export function MyNetworkPage() {
       <div className="flex items-center justify-between pr-12">
         <h1 className="text-xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
           <Users className="w-5 h-5" /> {t('network.title')}
-          {connectionCount && (
-            <span className="text-sm font-normal text-gray-400 ml-1">({connectionCount.count})</span>
-          )}
         </h1>
         <div className="flex gap-2">
           <button
