@@ -152,6 +152,21 @@ export function NetworkGraph({
       }, 500);
     }
 
+    // Cleanup: dispose OrbitControls listeners and stop animation loop
+    return () => {
+      if (fgRef.current) {
+        try { fgRef.current.pauseAnimation(); } catch { /* noop */ }
+        try {
+          const c = fgRef.current.controls();
+          if (c) c.dispose();
+        } catch { /* noop */ }
+      }
+      // Release GPU textures
+      textureCache.current.forEach((tex) => tex.dispose());
+      textureCache.current.clear();
+      lodObjectsRef.current.clear();
+      pendingLoads.current.clear();
+    };
   }, []);
 
   // Dynamic forces based on subtree depth:
@@ -260,7 +275,18 @@ export function NetworkGraph({
 
   const handleNodeClick = useCallback(
     (node: { id?: string | number }) => {
-      if (node.id && onNodeClick) onNodeClick(String(node.id));
+      if (node.id && onNodeClick) {
+        // Stop graph and dispose controls BEFORE navigating
+        // This prevents OrbitControls event listeners from leaking
+        if (fgRef.current) {
+          try { fgRef.current.pauseAnimation(); } catch { /* noop */ }
+          try {
+            const c = fgRef.current.controls();
+            if (c) c.dispose();
+          } catch { /* noop */ }
+        }
+        onNodeClick(String(node.id));
+      }
     },
     [onNodeClick],
   );
