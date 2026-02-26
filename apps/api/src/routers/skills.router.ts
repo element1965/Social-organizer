@@ -448,19 +448,36 @@ export const skillsRouter = router({
         data: { status: 'APPROVED', categoryId: category.id, reviewedAt: new Date() },
       });
 
+      // Find the "other" category for this group to remove old placeholder binding
+      const otherCat = await ctx.db.skillCategory.findFirst({
+        where: { group: suggestion.group, key: { startsWith: 'other' } },
+        select: { id: true },
+      });
+
       // Auto-assign the new category to the suggesting user as skill or need
+      // AND remove the "other" placeholder binding
       if (suggestion.type === 'NEED') {
         await ctx.db.userNeed.upsert({
           where: { userId_categoryId: { userId: suggestion.userId, categoryId: category.id } },
           create: { userId: suggestion.userId, categoryId: category.id },
           update: {},
         });
+        if (otherCat) {
+          await ctx.db.userNeed.deleteMany({
+            where: { userId: suggestion.userId, categoryId: otherCat.id },
+          });
+        }
       } else {
         await ctx.db.userSkill.upsert({
           where: { userId_categoryId: { userId: suggestion.userId, categoryId: category.id } },
           create: { userId: suggestion.userId, categoryId: category.id },
           update: {},
         });
+        if (otherCat) {
+          await ctx.db.userSkill.deleteMany({
+            where: { userId: suggestion.userId, categoryId: otherCat.id },
+          });
+        }
       }
 
       // Also assign for ALL other users who suggested the same text (same group, any type)
@@ -479,12 +496,22 @@ export const skillsRouter = router({
             create: { userId: dup.userId, categoryId: category.id },
             update: {},
           });
+          if (otherCat) {
+            await ctx.db.userNeed.deleteMany({
+              where: { userId: dup.userId, categoryId: otherCat.id },
+            });
+          }
         } else {
           await ctx.db.userSkill.upsert({
             where: { userId_categoryId: { userId: dup.userId, categoryId: category.id } },
             create: { userId: dup.userId, categoryId: category.id },
             update: {},
           });
+          if (otherCat) {
+            await ctx.db.userSkill.deleteMany({
+              where: { userId: dup.userId, categoryId: otherCat.id },
+            });
+          }
         }
         // Mark duplicate as approved too
         await ctx.db.suggestedCategory.update({
