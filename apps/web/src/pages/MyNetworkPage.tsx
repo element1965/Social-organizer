@@ -5,10 +5,9 @@ import { trpc } from '../lib/trpc';
 import { useCachedNetworkStats } from '../hooks/useCachedNetworkStats';
 import { useAuth } from '../hooks/useAuth';
 import { useTheme } from '../hooks/useTheme';
-import { Button } from '../components/ui/button';
 import { Avatar } from '../components/ui/avatar';
 import { Spinner } from '../components/ui/spinner';
-import { Users, UserPlus, Globe, List, Wallet, Check, X, ChevronDown, ChevronUp, Clock, CheckCircle, XCircle, Layers } from 'lucide-react';
+import { Users, Globe, List, Wallet, ChevronDown, ChevronUp, Clock, CheckCircle, XCircle, Layers } from 'lucide-react';
 const LazyNetworkGraph = lazy(() =>
   import('@so/graph-3d').then((m) => ({ default: m.NetworkGraph })),
 );
@@ -40,6 +39,8 @@ export function MyNetworkPage() {
   const view = (searchParams.get('view') === 'list' ? 'list' : '3d') as 'list' | '3d';
   const setView = (v: 'list' | '3d') => setSearchParams(v === '3d' ? {} : { view: v }, { replace: true });
   const [showClusters, setShowClusters] = useState(false);
+  // Unique key per mount — forces Three.js WebGL renderer to fully reinitialize on navigation back
+  const [graphKey] = useState(() => Date.now());
   const isDark = mode === 'dark' || (mode === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
 
   const utils = trpc.useUtils();
@@ -53,7 +54,6 @@ export function MyNetworkPage() {
   const rejectPending = trpc.pending.reject.useMutation({
     onSuccess: () => { utils.pending.incoming.invalidate(); utils.pending.incomingCount.invalidate(); },
   });
-  const { data: connectionCount } = trpc.connection.getCount.useQuery();
   const { data: networkStats, isLoading } = useCachedNetworkStats();
   const { data: graphData } = trpc.connection.graphSlice.useQuery(undefined, {
     enabled: view === '3d',
@@ -86,12 +86,6 @@ export function MyNetworkPage() {
             className="w-10 h-10 rounded-full bg-gray-600 hover:bg-gray-500 flex items-center justify-center transition-colors shadow-lg"
           >
             {view === 'list' ? <Globe className="w-4 h-4 text-white" /> : <List className="w-4 h-4 text-white" />}
-          </button>
-          <button
-            onClick={() => navigate('/#invite')}
-            className="w-10 h-10 rounded-full bg-blue-600 hover:bg-blue-500 flex items-center justify-center transition-colors shadow-lg"
-          >
-            <UserPlus className="w-4 h-4 text-white" />
           </button>
         </div>
       </div>
@@ -132,6 +126,7 @@ export function MyNetworkPage() {
             <Suspense fallback={<div className="flex justify-center py-12"><Spinner /></div>}>
               {graphData ? (
                 <LazyNetworkGraph
+                  key={graphKey}
                   nodes={graphData.nodes.map((n) => ({
                     ...n,
                     isCenter: n.id === myId,
