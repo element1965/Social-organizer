@@ -5,6 +5,7 @@ import { trpc } from '../lib/trpc';
 import { useCachedNetworkStats } from '../hooks/useCachedNetworkStats';
 import { useAuth } from '../hooks/useAuth';
 import { useTheme } from '../hooks/useTheme';
+import { useNicknames } from '../hooks/useNicknames';
 import { Avatar } from '../components/ui/avatar';
 import { Spinner } from '../components/ui/spinner';
 import { Users, Globe, List, Wallet, ChevronDown, ChevronUp, Clock, CheckCircle, XCircle, Layers } from 'lucide-react';
@@ -35,6 +36,7 @@ export function MyNetworkPage() {
   const navigate = useNavigate();
   const myId = useAuth((s) => s.userId);
   const { mode } = useTheme();
+  const resolve = useNicknames();
   const [searchParams, setSearchParams] = useSearchParams();
   const view = (searchParams.get('view') === 'list' ? 'list' : '3d') as 'list' | '3d';
   const setView = (v: 'list' | '3d') => setSearchParams(v === '3d' ? {} : { view: v }, { replace: true });
@@ -109,7 +111,7 @@ export function MyNetworkPage() {
                   onClick={() => navigate(`/profile/${cl.rootUserId}`)}
                 >
                   <div>
-                    <p className="text-sm font-medium text-gray-900 dark:text-white">{cl.rootUserName}</p>
+                    <p className="text-sm font-medium text-gray-900 dark:text-white">{resolve(cl.rootUserId, cl.rootUserName)}</p>
                     <p className="text-xs text-gray-500 dark:text-gray-300">{t('cluster.members')}: {cl.memberCount}</p>
                   </div>
                   <div className="text-right">
@@ -179,8 +181,8 @@ export function MyNetworkPage() {
                         onClick={() => navigate(`/profile/${p.fromUser.id}`)}
                         className="flex items-center gap-2 flex-1 min-w-0"
                       >
-                        <Avatar src={p.fromUser.photoUrl} name={p.fromUser.name} size="sm" />
-                        <span className="flex-1 text-sm font-medium text-gray-900 dark:text-white truncate text-left">{p.fromUser.name}</span>
+                        <Avatar src={p.fromUser.photoUrl} name={resolve(p.fromUser.id, p.fromUser.name)} size="sm" />
+                        <span className="flex-1 text-sm font-medium text-gray-900 dark:text-white truncate text-left">{resolve(p.fromUser.id, p.fromUser.name)}</span>
                       </button>
                       <button
                         onClick={() => acceptPending.mutate({ pendingId: p.id })}
@@ -254,9 +256,9 @@ export function MyNetworkPage() {
                               onClick={() => navigate(`/profile/${user.id}`)}
                               className={`w-full flex items-center gap-2 p-2 ${isRecent ? 'bg-green-50 dark:bg-green-900/20 hover:bg-green-100 dark:hover:bg-green-900/30' : 'hover:bg-gray-50 dark:hover:bg-gray-800/50'}`}
                             >
-                              <Avatar src={user.photoUrl} name={user.name} size="sm" />
+                              <Avatar src={user.photoUrl} name={resolve(user.id, user.name)} size="sm" />
                               <span className="flex-1 text-sm text-gray-700 dark:text-gray-300 text-left">
-                                {user.name}
+                                {resolve(user.id, user.name)}
                                 {user.createdAt && <span className="ml-1.5 text-[10px] text-gray-400">{timeAgo(user.createdAt)}</span>}
                               </span>
                               <div className="flex items-center gap-2">
