@@ -258,7 +258,7 @@ Mock data (`apps/web/src/lib/demoData.ts`):
 - **TG username auto-save** — Telegram username automatically saved/updated as contact on each login
 - **Online status indicator** — green dot + "Online" when last seen within 5 minutes, gray dot + relative time otherwise; auto-updated on every authenticated API call
 - **Hide contacts** — users can hide their contacts from non-connected users; direct connections and notified users still see them
-- **Connection nicknames** — custom names for connections (like a phone book), editable from profile page, shown in network list
+- **Connection nicknames** — custom names for connections (like a phone book), editable from profile page; nickname replaces real name as the primary display name across all pages (network, notifications, matches, collections, handshake paths, dashboard); real Telegram name shown as secondary gray text on profile
 - **Telegram Mini App** — auto-login via initData, BackButton navigation, haptic feedback on tab switches, theme sync, CSS variable injection from Telegram themeParams
 - **Onboarding** — auto-shown for new users, completable flag in database
 - **Currency preference** — users can set preferred currency in settings; auto-detected by IP on first visit
