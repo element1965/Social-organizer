@@ -239,7 +239,16 @@ const CATEGORIES = [
   { key: 'pestControl', group: 'agriculture', sortOrder: 9, isOnline: false },
   { key: 'mushrooming', group: 'agriculture', sortOrder: 10, isOnline: false },
 
-  // ═══════════════ "Other" per group (15) ═══════════════
+  // ═══════════════ Community Support (8) ═══════════════
+  { key: 'temporaryHousing', group: 'community', sortOrder: 1, isOnline: false },
+  { key: 'relocationHelp', group: 'community', sortOrder: 2, isOnline: false },
+  { key: 'accompaniment', group: 'community', sortOrder: 3, isOnline: false },
+  { key: 'localContacts', group: 'community', sortOrder: 4, isOnline: true },
+  { key: 'cityOrientation', group: 'community', sortOrder: 5, isOnline: false },
+  { key: 'bureaucracyHelp', group: 'community', sortOrder: 6, isOnline: false },
+  { key: 'storageSpace', group: 'community', sortOrder: 7, isOnline: false },
+
+  // ═══════════════ "Other" per group (16) ═══════════════
   { key: 'otherHome', group: 'home', sortOrder: 99, isOnline: false },
   { key: 'otherConstruction', group: 'construction', sortOrder: 99, isOnline: false },
   { key: 'otherProfessional', group: 'professional', sortOrder: 99, isOnline: true },
@@ -255,6 +264,7 @@ const CATEGORIES = [
   { key: 'otherPets', group: 'pets', sortOrder: 99, isOnline: false },
   { key: 'otherOutdoor', group: 'outdoor', sortOrder: 99, isOnline: false },
   { key: 'otherAgriculture', group: 'agriculture', sortOrder: 99, isOnline: false },
+  { key: 'otherCommunity', group: 'community', sortOrder: 99, isOnline: false },
 ];
 
 async function main() {
