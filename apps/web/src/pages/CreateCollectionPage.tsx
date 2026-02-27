@@ -14,10 +14,12 @@ import { Spinner } from '../components/ui/spinner';
 import { Avatar } from '../components/ui/avatar';
 import { MIN_CONNECTIONS_TO_CREATE } from '@so/shared';
 import { AlertTriangle, Users, ArrowRight, PlusCircle, Wallet, ShieldAlert, UserPlus, X, HandHeart } from 'lucide-react';
+import { useNicknames } from '../hooks/useNicknames';
 
 export function CreateCollectionPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const resolve = useNicknames();
   const [showEntryWarning, setShowEntryWarning] = useState(false);
   const [showInvitePopup, setShowInvitePopup] = useState(false);
   const [showNotEnough, setShowNotEnough] = useState(false);
@@ -311,7 +313,7 @@ export function CreateCollectionPage() {
                 <div key={obl.id} className="p-3 rounded-lg bg-gray-50 dark:bg-gray-800 flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <button onClick={() => navigate(`/profile/${obl.collection.creatorId}`)} className="hover:opacity-80">
-                      <Avatar src={obl.collection.creator.photoUrl} name={obl.collection.creator.name} size="sm" />
+                      <Avatar src={obl.collection.creator.photoUrl} name={resolve(obl.collection.creatorId, obl.collection.creator.name)} size="sm" />
                     </button>
                     <div>
                       <div className="flex items-center gap-2">
@@ -319,7 +321,7 @@ export function CreateCollectionPage() {
                           onClick={() => navigate(`/profile/${obl.collection.creatorId}`)}
                           className="text-sm font-medium text-gray-900 dark:text-white hover:underline"
                         >
-                          {obl.collection.creator.name}
+                          {resolve(obl.collection.creatorId, obl.collection.creator.name)}
                         </button>
                         <span className="flex items-center gap-0.5 text-xs text-gray-400">
                           <Users className="w-3 h-3" />

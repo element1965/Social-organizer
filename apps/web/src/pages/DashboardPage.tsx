@@ -26,6 +26,7 @@ import { Tooltip } from '../components/ui/tooltip';
 import { SocialIcon } from '../components/ui/social-icons';
 import { SKILL_GROUPS, SKILL_GROUP_ICONS } from '@so/shared';
 import type { SkillGroup } from '@so/shared';
+import { useNicknames } from '../hooks/useNicknames';
 
 const LazyCloudBackground = lazy(() =>
   import('@so/graph-3d').then((m) => ({ default: m.CloudBackground })),
@@ -35,6 +36,7 @@ export function DashboardPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const location = useLocation();
+  const resolve = useNicknames();
   const [showTgChatPopup, setShowTgChatPopup] = useState(false);
 
   const utils = trpc.useUtils();
@@ -485,7 +487,7 @@ export function DashboardPage() {
               </span>
             </div>
             <div className="space-y-2">
-              {suggestions.map((s: { id: string; text: string; group: string; type: string; user: { name: string } }) => (
+              {suggestions.map((s: { id: string; text: string; group: string; type: string; user: { id: string; name: string } }) => (
                 <div key={s.id} className="p-2 rounded-lg bg-gray-50 dark:bg-gray-800/50">
                   {/* Row 1: Full category name + group editing */}
                   {editingSuggId === s.id ? (
@@ -531,7 +533,7 @@ export function DashboardPage() {
                     <p className="text-sm font-medium text-gray-900 dark:text-white mb-1">
                       &ldquo;{s.text}&rdquo;
                       <span className="ml-1.5 text-xs font-normal text-gray-400">
-                        {SKILL_GROUP_ICONS[s.group as SkillGroup]} {t(`skills.group_${s.group}`)} &middot; {s.user.name}
+                        {SKILL_GROUP_ICONS[s.group as SkillGroup]} {t(`skills.group_${s.group}`)} &middot; {resolve(s.user.id, s.user.name)}
                         {' '}&middot;{' '}
                         <span className={s.type === 'NEED' ? 'text-rose-400' : 'text-emerald-400'}>
                           {s.type === 'NEED' ? t('skills.iNeed') : t('skills.iCan')}

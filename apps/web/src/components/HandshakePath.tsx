@@ -13,9 +13,10 @@ interface HandshakePathProps {
   path: PathUser[];
   onUserClick?: (userId: string) => void;
   compact?: boolean;
+  resolveName?: (userId: string, name: string) => string;
 }
 
-export function HandshakePath({ path, onUserClick, compact = false }: HandshakePathProps) {
+export function HandshakePath({ path, onUserClick, compact = false, resolveName }: HandshakePathProps) {
   if (!path || path.length === 0) return null;
 
   if (compact) {
@@ -32,7 +33,8 @@ export function HandshakePath({ path, onUserClick, compact = false }: HandshakeP
       <div className="flex items-start gap-1 w-max">
         {path.map((user, idx) => {
           const isLast = idx === path.length - 1;
-          const nameParts = user.name.split(' ');
+          const displayName = resolveName?.(user.id, user.name) ?? user.name;
+          const nameParts = displayName.split(' ');
 
           return (
             <div key={user.id} className="flex items-center">
@@ -40,7 +42,7 @@ export function HandshakePath({ path, onUserClick, compact = false }: HandshakeP
                 onClick={() => onUserClick?.(user.id)}
                 className="flex flex-col items-center text-center p-1.5 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors w-16"
               >
-                <Avatar name={user.name} src={user.photoUrl} size="sm" />
+                <Avatar name={displayName} src={user.photoUrl} size="sm" />
                 {nameParts.map((part, i) => (
                   <span key={i} className="text-[11px] font-medium text-gray-900 dark:text-white leading-tight mt-0.5 truncate max-w-full">
                     {part}

@@ -8,6 +8,7 @@ import { Spinner } from '../components/ui/spinner';
 import { Button } from '../components/ui/button';
 import { cn } from '../lib/utils';
 import { useAuth } from '../hooks/useAuth';
+import { useNicknames } from '../hooks/useNicknames';
 import {
   Handshake, Globe, MapPin, ChevronRight, Link2, ArrowRight,
   MessageCircle, ExternalLink, Check, CheckCheck, Clock, RotateCcw,
@@ -25,6 +26,7 @@ export function MatchesPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const userId = useAuth((s) => s.userId);
+  const resolve = useNicknames();
   const [tab, setTab] = useState<'helpMe' | 'helpThem' | 'chains'>('helpMe');
   const [offerLinkId, setOfferLinkId] = useState<string | null>(null);
   const [offerHours, setOfferHours] = useState('');
@@ -223,12 +225,12 @@ export function MatchesPage() {
                                   onClick={() => navigate(`/profile/${link.giver.id}`)}
                                   className="flex items-center gap-1 shrink-0"
                                 >
-                                  <Avatar src={link.giver.photoUrl} name={link.giver.name} size="sm" />
+                                  <Avatar src={link.giver.photoUrl} name={isGiver ? link.giver.name : resolve(link.giver.id, link.giver.name)} size="sm" />
                                   <span className={cn(
                                     'text-sm font-medium truncate max-w-[70px]',
                                     isGiver ? 'text-purple-600 dark:text-purple-400' : 'text-gray-900 dark:text-white',
                                   )}>
-                                    {isGiver ? t('matches.you') : link.giver.name}
+                                    {isGiver ? t('matches.you') : resolve(link.giver.id, link.giver.name)}
                                   </span>
                                 </button>
 
@@ -244,12 +246,12 @@ export function MatchesPage() {
                                   onClick={() => navigate(`/profile/${link.receiver.id}`)}
                                   className="flex items-center gap-1 shrink-0"
                                 >
-                                  <Avatar src={link.receiver.photoUrl} name={link.receiver.name} size="sm" />
+                                  <Avatar src={link.receiver.photoUrl} name={isReceiver ? link.receiver.name : resolve(link.receiver.id, link.receiver.name)} size="sm" />
                                   <span className={cn(
                                     'text-sm font-medium truncate max-w-[70px]',
                                     isReceiver ? 'text-purple-600 dark:text-purple-400' : 'text-gray-900 dark:text-white',
                                   )}>
-                                    {isReceiver ? t('matches.you') : link.receiver.name}
+                                    {isReceiver ? t('matches.you') : resolve(link.receiver.id, link.receiver.name)}
                                   </span>
                                 </button>
 
@@ -414,7 +416,7 @@ export function MatchesPage() {
                           <RotateCcw className="w-3.5 h-3.5 shrink-0" />
                           <span>
                             {t('matches.ringCloses')}{' '}
-                            <strong>{firstGiver.id === userId ? t('matches.you') : firstGiver.name}</strong>
+                            <strong>{firstGiver.id === userId ? t('matches.you') : resolve(firstGiver.id, firstGiver.name)}</strong>
                           </span>
                         </div>
                       )}
@@ -484,10 +486,10 @@ export function MatchesPage() {
                   onClick={() => navigate(`/profile/${match.userId}`)}
                   className="w-full flex items-center gap-3 text-left"
                 >
-                  <Avatar src={match.photoUrl} name={match.userName} size="md" />
+                  <Avatar src={match.photoUrl} name={resolve(match.userId, match.userName)} size="md" />
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-semibold text-gray-900 dark:text-white truncate">
-                      {match.userName}
+                      {resolve(match.userId, match.userName)}
                     </p>
                     <div className="flex flex-wrap gap-1 mt-1">
                       {match.skills.map((s) => (

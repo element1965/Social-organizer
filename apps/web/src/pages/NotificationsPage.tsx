@@ -22,6 +22,7 @@ import {
   Handshake,
 } from 'lucide-react';
 import { cn } from '../lib/utils';
+import { useNicknames } from '../hooks/useNicknames';
 
 function getNotificationBadge(type: string, t: (key: string) => string): { label: string; variant: 'info' | 'warning' | 'default' | 'danger' | 'success' } {
   switch (type) {
@@ -48,6 +49,7 @@ function timeRemaining(expiresAt: string | Date): string | null {
 export function NotificationsPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const resolve = useNicknames();
   const utils = trpc.useUtils();
   const [pendingIncomingCollapsed, setPendingIncomingCollapsed] = useState(false);
   const [pendingOutgoingCollapsed, setPendingOutgoingCollapsed] = useState(false);
@@ -156,11 +158,11 @@ export function NotificationsPage() {
                   className="w-full text-left p-2 rounded bg-white/50 dark:bg-gray-900/50 hover:bg-white dark:hover:bg-gray-900"
                 >
                   <div className="flex items-center gap-2">
-                    <Avatar src={notif.collection?.creator?.photoUrl} name={notif.collection?.creator?.name || '?'} size="sm" />
+                    <Avatar src={notif.collection?.creator?.photoUrl} name={notif.collection?.creator?.id ? resolve(notif.collection.creator.id, notif.collection.creator.name || '?') : (notif.collection?.creator?.name || '?')} size="sm" />
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2">
                         <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
-                          {notif.collection?.creator?.name}
+                          {notif.collection?.creator?.id ? resolve(notif.collection.creator.id, notif.collection.creator.name || '') : notif.collection?.creator?.name}
                         </p>
                         <span className="flex items-center gap-0.5 text-xs text-gray-400 shrink-0">
                           <Users className="w-3 h-3" />
@@ -221,10 +223,10 @@ export function NotificationsPage() {
                       )}
                     </div>
                     <div className="flex items-center gap-2.5 pr-6">
-                      <Avatar src={n.collection?.creator?.photoUrl} name={n.collection?.creator?.name} size="sm" />
+                      <Avatar src={n.collection?.creator?.photoUrl} name={n.collection?.creator?.id ? resolve(n.collection.creator.id, n.collection.creator.name || '') : (n.collection?.creator?.name || '')} size="sm" />
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-1.5 flex-wrap">
-                          <span className="text-sm font-medium text-gray-900 dark:text-white">{n.collection?.creator?.name}</span>
+                          <span className="text-sm font-medium text-gray-900 dark:text-white">{n.collection?.creator?.id ? resolve(n.collection.creator.id, n.collection.creator.name || '') : n.collection?.creator?.name}</span>
                           <span className="flex items-center gap-0.5 text-xs text-gray-400">
                             <Users className="w-3 h-3" />
                             {(n.collection?.creator as any)?.connectionCount ?? 0}
@@ -244,7 +246,7 @@ export function NotificationsPage() {
                                   onClick={(e) => { e.stopPropagation(); navigate(`/profile/${user.id}`); }}
                                   className="text-gray-600 dark:text-gray-300 hover:text-blue-500 dark:hover:text-blue-400 transition-colors"
                                 >
-                                  {user.name}
+                                  {resolve(user.id, user.name)}
                                 </button>
                               </span>
                             ))}
@@ -293,9 +295,9 @@ export function NotificationsPage() {
                     onClick={() => navigate(`/profile/${mn.matchUser.id}`)}
                     className="flex items-center gap-2 flex-1 min-w-0"
                   >
-                    <Avatar src={mn.matchUser.photoUrl} name={mn.matchUser.name} size="sm" />
+                    <Avatar src={mn.matchUser.photoUrl} name={resolve(mn.matchUser.id, mn.matchUser.name)} size="sm" />
                     <div className="flex-1 min-w-0 text-left">
-                      <p className="text-sm font-medium text-gray-900 dark:text-white truncate">{mn.matchUser.name}</p>
+                      <p className="text-sm font-medium text-gray-900 dark:text-white truncate">{resolve(mn.matchUser.id, mn.matchUser.name)}</p>
                       <p className="text-xs text-gray-500 dark:text-gray-400">{t(`skills.${mn.category.key}`, mn.category.key)}</p>
                     </div>
                   </button>
@@ -336,8 +338,8 @@ export function NotificationsPage() {
                         onClick={() => navigate(`/profile/${p.fromUser.id}`)}
                         className="flex items-center gap-2 flex-1 min-w-0"
                       >
-                        <Avatar src={p.fromUser.photoUrl} name={p.fromUser.name} size="sm" />
-                        <span className="flex-1 text-sm font-medium text-gray-900 dark:text-white truncate text-left">{p.fromUser.name}</span>
+                        <Avatar src={p.fromUser.photoUrl} name={resolve(p.fromUser.id, p.fromUser.name)} size="sm" />
+                        <span className="flex-1 text-sm font-medium text-gray-900 dark:text-white truncate text-left">{resolve(p.fromUser.id, p.fromUser.name)}</span>
                       </button>
                       <button
                         onClick={() => acceptPending.mutate({ pendingId: p.id })}
@@ -378,8 +380,8 @@ export function NotificationsPage() {
               <div className="space-y-1 mt-2">
                 {myPending.map((p) => (
                   <button key={p.id} className="flex items-center gap-2 w-full text-left hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg p-1 -m-1 transition-colors" onClick={() => navigate(`/profile/${p.toUser.id}`)}>
-                    <Avatar src={p.toUser.photoUrl} name={p.toUser.name} size="xs" />
-                    <span className="text-sm text-gray-600 dark:text-gray-300">{p.toUser.name}</span>
+                    <Avatar src={p.toUser.photoUrl} name={resolve(p.toUser.id, p.toUser.name)} size="xs" />
+                    <span className="text-sm text-gray-600 dark:text-gray-300">{resolve(p.toUser.id, p.toUser.name)}</span>
                     <ArrowRight className="w-3.5 h-3.5 text-gray-400 ml-auto" />
                   </button>
                 ))}

@@ -11,12 +11,14 @@ import { HandshakePath } from '../components/HandshakePath';
 import { SocialIcon } from '../components/ui/social-icons';
 import { buildContactUrl } from '@so/shared';
 import { isTelegramWebApp } from '@so/tg-adapter';
+import { useNicknames } from '../hooks/useNicknames';
 
 export function ProfilePage() {
   const { userId: paramId } = useParams<{ userId: string }>();
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const myId = useAuth((s) => s.userId);
+  const resolve = useNicknames();
   const isOwn = paramId === myId;
 
   // Redirect own profile to settings
@@ -95,7 +97,7 @@ export function ProfilePage() {
       <div className="flex flex-col items-center text-center">
         <Avatar src={user.photoUrl} name={user.name} size="lg" className="mb-3" />
         <div className="flex items-center gap-2">
-          <h1 className="text-xl font-bold text-gray-900 dark:text-white">{user.name}</h1>
+          <h1 className="text-xl font-bold text-gray-900 dark:text-white">{nicknameData?.nickname || user.name}</h1>
           {nicknameData?.isConnected && !editingNickname && (
             <button
               onClick={() => { setNicknameInput(nicknameData.nickname || ''); setEditingNickname(true); }}
@@ -127,7 +129,7 @@ export function ProfilePage() {
           </div>
         )}
         {!editingNickname && nicknameData?.nickname && (
-          <p className="text-xs text-gray-400 mt-0.5">{nicknameData.nickname}</p>
+          <p className="text-xs text-gray-400 mt-0.5">{user.name}</p>
         )}
         {user.bio && <p className="text-sm text-gray-600 dark:text-gray-300 mt-1">{user.bio}</p>}
         {user.phone && <p className="text-sm text-gray-500 dark:text-gray-300 mt-1">{user.phone}</p>}
@@ -253,7 +255,7 @@ export function ProfilePage() {
         <Card>
           <CardContent className="py-3">
             <p className="text-xs text-gray-500 dark:text-gray-300 mb-2">{t('profile.connectionPath')}</p>
-            <HandshakePath path={pathData.path} onUserClick={(id) => navigate(`/profile/${id}`)} />
+            <HandshakePath path={pathData.path} onUserClick={(id) => navigate(`/profile/${id}`)} resolveName={resolve} />
           </CardContent>
         </Card>
       )}
@@ -313,9 +315,9 @@ export function ProfilePage() {
                     onClick={() => navigate(`/profile/${conn.userId}`)}
                     className="w-full flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors text-left"
                   >
-                    <Avatar src={conn.photoUrl} name={conn.name} size="sm" />
+                    <Avatar src={conn.photoUrl} name={resolve(conn.userId, conn.name)} size="sm" />
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-gray-900 dark:text-white truncate">{conn.name}</p>
+                      <p className="text-sm font-medium text-gray-900 dark:text-white truncate">{resolve(conn.userId, conn.name)}</p>
                       <p className="text-xs text-gray-500 dark:text-gray-300">
                         <Users className="w-3 h-3 inline mr-1" />{conn.connectionCount}
                         {conn.remainingBudget != null && (
@@ -376,10 +378,10 @@ export function ProfilePage() {
                       onClick={() => navigate(`/profile/${item.userId}`)}
                       className="w-full flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors text-left"
                     >
-                      <Avatar src={item.photoUrl} name={item.name} size="sm" />
+                      <Avatar src={item.photoUrl} name={resolve(item.userId, item.name)} size="sm" />
                       <div className="flex-1 min-w-0">
                         <p className="text-sm text-gray-900 dark:text-white truncate">
-                          <span className="font-medium">{item.name}</span>
+                          <span className="font-medium">{resolve(item.userId, item.name)}</span>
                           <span className="text-xs text-gray-400 ml-2">
                             {new Date(item.createdAt).toLocaleString(i18n.language, { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
                           </span>

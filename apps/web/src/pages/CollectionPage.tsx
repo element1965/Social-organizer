@@ -13,12 +13,14 @@ import { Avatar } from '../components/ui/avatar';
 import { Spinner } from '../components/ui/spinner';
 import { ExternalLink, Users, ArrowRight, Pencil, Check, X } from 'lucide-react';
 import { HandshakePath } from '../components/HandshakePath';
+import { useNicknames } from '../hooks/useNicknames';
 
 export function CollectionPage() {
   const { id } = useParams<{ id: string }>();
   const { t } = useTranslation();
   const navigate = useNavigate();
   const userId = useAuth((s) => s.userId);
+  const resolve = useNicknames();
   const utils = trpc.useUtils();
 
   const { data: me } = trpc.user.me.useQuery();
@@ -101,10 +103,10 @@ export function CollectionPage() {
   return (
     <div className="p-4 space-y-4">
       <div className="flex items-center gap-3">
-        <Avatar src={collection.creator.photoUrl} name={collection.creator.name} size="lg" />
+        <Avatar src={collection.creator.photoUrl} name={resolve(collection.creatorId, collection.creator.name)} size="lg" />
         <div className="flex-1">
           <div className="flex items-center gap-2">
-            <button onClick={() => navigate(`/profile/${collection.creatorId}`)} className="text-lg font-bold text-gray-900 dark:text-white hover:underline">{collection.creator.name}</button>
+            <button onClick={() => navigate(`/profile/${collection.creatorId}`)} className="text-lg font-bold text-gray-900 dark:text-white hover:underline">{resolve(collection.creatorId, collection.creator.name)}</button>
             <span className="flex items-center gap-1 text-xs text-gray-400">
               <Users className="w-3 h-3" />
               {(collection.creator as any).connectionCount ?? 0}
@@ -120,7 +122,7 @@ export function CollectionPage() {
       {pathToCreator?.path && pathToCreator.path.length > 1 && (
         <div className="p-3 bg-gray-50 dark:bg-gray-800/50 rounded-lg">
           <p className="text-xs text-gray-500 dark:text-gray-300 mb-2">{t('collection.connectionToCreator')}</p>
-          <HandshakePath path={pathToCreator.path} onUserClick={(uid) => navigate(`/profile/${uid}`)} />
+          <HandshakePath path={pathToCreator.path} onUserClick={(uid) => navigate(`/profile/${uid}`)} resolveName={resolve} />
         </div>
       )}
 
@@ -229,8 +231,8 @@ export function CollectionPage() {
                   <div key={obl.id} className="py-1">
                     <div className="flex items-center justify-between">
                       <button onClick={() => navigate(`/profile/${obl.userId}`)} className="flex items-center gap-2 hover:underline">
-                        <Avatar src={obl.user.photoUrl} name={obl.user.name} size="sm" />
-                        <span className="text-sm text-gray-900 dark:text-white">{obl.user.name}</span>
+                        <Avatar src={obl.user.photoUrl} name={resolve(obl.userId, obl.user.name)} size="sm" />
+                        <span className="text-sm text-gray-900 dark:text-white">{resolve(obl.userId, obl.user.name)}</span>
                         <span className="flex items-center gap-0.5 text-xs text-gray-400">
                           <Users className="w-3 h-3" />
                           {(obl.user as any).connectionCount ?? 0}
