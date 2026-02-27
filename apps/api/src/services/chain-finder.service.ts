@@ -35,7 +35,9 @@ async function buildGraph(db: PrismaClient, seedUserId: string): Promise<Edge[]>
       AND sc.key NOT LIKE 'other%'
       AND (sc."isOnline" = true
            OR (LOWER(COALESCE(u1.city, '')) = LOWER(COALESCE(u2.city, ''))
-               AND COALESCE(u1.city, '') != ''))
+               AND COALESCE(u1.city, '') != ''
+               AND COALESCE(u1.country_code, '') = COALESCE(u2.country_code, '')
+               AND COALESCE(u1.country_code, '') != ''))
   `;
   return edges;
 }

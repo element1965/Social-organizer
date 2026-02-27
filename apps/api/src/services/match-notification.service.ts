@@ -330,13 +330,13 @@ export async function createSkillMatchNotifications(
     : [];
   if (validCatIds.length === 0) return;
 
-  // Get skill owner's city for offline skill filtering
+  // Get skill owner's city + country for offline skill filtering
   const owner = await db.user.findUnique({
     where: { id: skillOwnerId },
-    select: { city: true },
+    select: { city: true, countryCode: true },
   });
 
-  // Find users in network who NEED these categories (city-filtered for offline)
+  // Find users in network who NEED these categories (city+country filtered for offline)
   const networkIds = await getNetworkUserIds(db, skillOwnerId);
   const matches = await db.$queryRaw<Array<MatchInfo>>`
     SELECT un."userId", un."categoryId"
@@ -349,7 +349,9 @@ export async function createSkillMatchNotifications(
       AND u."deletedAt" IS NULL
       AND (sc."isOnline" = true
            OR (LOWER(COALESCE(u.city, '')) = LOWER(COALESCE(${owner?.city ?? ''}, ''))
-               AND COALESCE(u.city, '') != ''))
+               AND COALESCE(u.city, '') != ''
+               AND COALESCE(u.country_code, '') = COALESCE(${owner?.countryCode ?? ''}, '')
+               AND COALESCE(u.country_code, '') != ''))
   `;
 
   if (matches.length === 0) return;
@@ -428,13 +430,13 @@ export async function createNeedMatchNotifications(
     : [];
   if (validCatIds.length === 0) return;
 
-  // Get need owner's city for offline skill filtering
+  // Get need owner's city + country for offline skill filtering
   const owner = await db.user.findUnique({
     where: { id: needOwnerId },
-    select: { city: true },
+    select: { city: true, countryCode: true },
   });
 
-  // Find users in network who HAVE these skills (city-filtered for offline)
+  // Find users in network who HAVE these skills (city+country filtered for offline)
   const networkIds = await getNetworkUserIds(db, needOwnerId);
   const matches = await db.$queryRaw<Array<MatchInfo>>`
     SELECT us."userId" AS "userId", us."categoryId"
@@ -447,7 +449,9 @@ export async function createNeedMatchNotifications(
       AND u."deletedAt" IS NULL
       AND (sc."isOnline" = true
            OR (LOWER(COALESCE(u.city, '')) = LOWER(COALESCE(${owner?.city ?? ''}, ''))
-               AND COALESCE(u.city, '') != ''))
+               AND COALESCE(u.city, '') != ''
+               AND COALESCE(u.country_code, '') = COALESCE(${owner?.countryCode ?? ''}, '')
+               AND COALESCE(u.country_code, '') != ''))
   `;
 
   if (matches.length === 0) return;

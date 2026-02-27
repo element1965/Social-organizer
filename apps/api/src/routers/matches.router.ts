@@ -89,7 +89,9 @@ export const matchesRouter = router({
         AND sc.key NOT LIKE 'other%'
         AND (sc."isOnline" = true
              OR (LOWER(COALESCE(u.city, '')) = LOWER(COALESCE(${me?.city ?? ''}, ''))
-                 AND COALESCE(u.city, '') != ''))
+                 AND COALESCE(u.city, '') != ''
+                 AND COALESCE(u.country_code, '') = COALESCE(${me?.countryCode ?? ''}, '')
+                 AND COALESCE(u.country_code, '') != ''))
       ORDER BY sc."group", sc."sortOrder"
     `;
 
@@ -123,7 +125,9 @@ export const matchesRouter = router({
         AND sc.key NOT LIKE 'other%'
         AND (sc."isOnline" = true
              OR (LOWER(COALESCE(u.city, '')) = LOWER(COALESCE(${me?.city ?? ''}, ''))
-                 AND COALESCE(u.city, '') != ''))
+                 AND COALESCE(u.city, '') != ''
+                 AND COALESCE(u.country_code, '') = COALESCE(${me?.countryCode ?? ''}, '')
+                 AND COALESCE(u.country_code, '') != ''))
       ORDER BY sc."group", sc."sortOrder"
     `;
 
