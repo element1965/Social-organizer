@@ -86,8 +86,6 @@ export function SettingsPage() {
   const saveSkillsMut = trpc.skills.saveSkills.useMutation({ onSuccess: () => utils.skills.mine.invalidate() });
   const saveNeedsMut = trpc.skills.saveNeeds.useMutation({ onSuccess: () => utils.skills.mine.invalidate() });
   const markCompleted = trpc.skills.markCompleted.useMutation({ onSuccess: () => utils.skills.mine.invalidate() });
-  const moveCategoryMut = trpc.skills.moveCategory.useMutation({ onSuccess: () => utils.skills.categories.invalidate() });
-  const reorderCategoriesMut = trpc.skills.reorderCategories.useMutation({ onSuccess: () => utils.skills.categories.invalidate() });
 
   // Geography
   const [geoCity, setGeoCity] = useState('');
@@ -373,8 +371,6 @@ export function SettingsPage() {
               notes={skillNotes}
               onNoteChange={handleSkillNoteChange}
               isAdmin={!!adminData?.isAdmin}
-              onMoveCategory={(id, group, sortOrder) => moveCategoryMut.mutate({ id, group, sortOrder })}
-              onReorderCategories={(updates) => reorderCategoriesMut.mutate({ updates })}
             />
           )}
         </CardContent>
