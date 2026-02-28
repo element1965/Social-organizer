@@ -25,7 +25,7 @@
     "name": "名前",
     "login": "ログイン",
     "register": "新規登録",
-    "haveAccount": "アカウントをお持ちですか？ログイン",
+    "haveAccount": "アカウントをお持ちの方",
     "noAccount": "アカウントがありませんか？新規登録",
     "emailExists": "このメールアドレスは既に登録されています",
     "invalidCredentials": "メールアドレスまたはパスワードが無効です",
@@ -37,7 +37,9 @@
     "invalidLinkCode": "Invalid or expired code",
     "setEmailHint": "Set email and password for future logins",
     "linkAndLogin": "Link & Login",
-    "loginBtn": "Go"
+    "loginBtn": "Go",
+    "newUser": "新規ユーザー",
+    "noLinkCode": "リンクコードがありません"
   },
   "login": {
     "subtitle": "信頼できるつながりを通じた助け合いの調整",

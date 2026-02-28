@@ -25,7 +25,7 @@
     "name": "ชื่อ",
     "login": "เข้าสู่ระบบ",
     "register": "สมัครสมาชิก",
-    "haveAccount": "มีบัญชีอยู่แล้ว? เข้าสู่ระบบ",
+    "haveAccount": "มีบัญชีแล้ว",
     "noAccount": "ยังไม่มีบัญชี? สมัครสมาชิก",
     "emailExists": "อีเมลนี้ลงทะเบียนแล้ว",
     "invalidCredentials": "อีเมลหรือรหัสผ่านไม่ถูกต้อง",
@@ -37,7 +37,9 @@
     "invalidLinkCode": "Invalid or expired code",
     "setEmailHint": "Set email and password for future logins",
     "linkAndLogin": "Link & Login",
-    "loginBtn": "Go"
+    "loginBtn": "Go",
+    "newUser": "ผู้ใช้ใหม่",
+    "noLinkCode": "ฉันไม่มีรหัสเชื่อมต่อ"
   },
   "login": {
     "subtitle": "ประสานงานช่วยเหลือผ่านความสัมพันธ์ที่ไว้วางใจ",

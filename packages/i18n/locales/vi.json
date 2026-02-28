@@ -25,7 +25,7 @@
     "name": "Tên",
     "login": "Đăng nhập",
     "register": "Đăng ký",
-    "haveAccount": "Đã có tài khoản? Đăng nhập",
+    "haveAccount": "Đã có tài khoản",
     "noAccount": "Chưa có tài khoản? Đăng ký",
     "emailExists": "Email này đã được đăng ký",
     "invalidCredentials": "Email hoặc mật khẩu không đúng",
@@ -37,7 +37,9 @@
     "invalidLinkCode": "Invalid or expired code",
     "setEmailHint": "Set email and password for future logins",
     "linkAndLogin": "Link & Login",
-    "loginBtn": "Go"
+    "loginBtn": "Go",
+    "newUser": "Người dùng mới",
+    "noLinkCode": "Tôi không có mã liên kết"
   },
   "login": {
     "subtitle": "Phối hợp hỗ trợ thông qua các mối quan hệ tin cậy",

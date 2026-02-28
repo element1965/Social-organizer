@@ -25,7 +25,7 @@
     "name": "Jméno",
     "login": "Přihlásit se",
     "register": "Registrovat se",
-    "haveAccount": "Máte již účet? Přihlaste se",
+    "haveAccount": "Již mám účet",
     "noAccount": "Nemáte účet? Zaregistrujte se",
     "emailExists": "Tento e-mail je již zaregistrován",
     "invalidCredentials": "Neplatný e-mail nebo heslo",
@@ -37,7 +37,9 @@
     "invalidLinkCode": "Invalid or expired code",
     "setEmailHint": "Set email and password for future logins",
     "linkAndLogin": "Link & Login",
-    "loginBtn": "Go"
+    "loginBtn": "Go",
+    "newUser": "Nový uživatel",
+    "noLinkCode": "Nemám propojovací kód"
   },
   "login": {
     "subtitle": "Koordinace pomoci prostřednictvím důvěryhodných spojení",

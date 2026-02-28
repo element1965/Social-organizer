@@ -25,7 +25,7 @@
     "name": "Nama",
     "login": "Masuk",
     "register": "Daftar",
-    "haveAccount": "Sudah punya akun? Masuk",
+    "haveAccount": "Sudah punya akun",
     "noAccount": "Belum punya akun? Daftar",
     "emailExists": "Email ini sudah terdaftar",
     "invalidCredentials": "Email atau kata sandi salah",
@@ -37,7 +37,9 @@
     "invalidLinkCode": "Invalid or expired code",
     "setEmailHint": "Set email and password for future logins",
     "linkAndLogin": "Link & Login",
-    "loginBtn": "Go"
+    "loginBtn": "Go",
+    "newUser": "Pengguna baru",
+    "noLinkCode": "Saya tidak punya kode tautan"
   },
   "login": {
     "subtitle": "Koordinasi bantuan melalui koneksi terpercaya",

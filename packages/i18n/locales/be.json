@@ -25,7 +25,7 @@
     "name": "Імя",
     "login": "Увайсці",
     "register": "Зарэгістравацца",
-    "haveAccount": "Ужо ёсць акаўнт? Увайсці",
+    "haveAccount": "Ужо ёсць акаўнт",
     "noAccount": "Няма акаўнта? Зарэгістравацца",
     "emailExists": "Гэты email ужо зарэгістраваны",
     "invalidCredentials": "Няправільны email або пароль",
@@ -37,7 +37,9 @@
     "invalidLinkCode": "Invalid or expired code",
     "setEmailHint": "Задайце email і пароль для ўваходу ў дадатак",
     "linkAndLogin": "Звязаць і ўвайсці",
-    "loginBtn": "Go"
+    "loginBtn": "Go",
+    "newUser": "Новы карыстальнік",
+    "noLinkCode": "У мяне няма коду звязвання"
   },
   "login": {
     "subtitle": "Каардынацыя дапамогі праз давераныя сувязі",

@@ -25,7 +25,7 @@
     "name": "الاسم",
     "login": "تسجيل الدخول",
     "register": "إنشاء حساب",
-    "haveAccount": "لديك حساب بالفعل؟ سجّل الدخول",
+    "haveAccount": "لديك حساب بالفعل",
     "noAccount": "ليس لديك حساب؟ أنشئ حساباً",
     "emailExists": "هذا البريد الإلكتروني مسجّل بالفعل",
     "invalidCredentials": "البريد الإلكتروني أو كلمة المرور غير صحيحة",
@@ -37,7 +37,9 @@
     "invalidLinkCode": "Invalid or expired code",
     "setEmailHint": "Set email and password for future logins",
     "linkAndLogin": "Link & Login",
-    "loginBtn": "Go"
+    "loginBtn": "Go",
+    "newUser": "مستخدم جديد",
+    "noLinkCode": "ليس لدي رمز ربط"
   },
   "login": {
     "subtitle": "تنسيق المساعدة من خلال العلاقات الموثوقة",

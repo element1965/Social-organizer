@@ -25,7 +25,7 @@
     "name": "Nome",
     "login": "Entrar",
     "register": "Cadastrar-se",
-    "haveAccount": "Já tem uma conta? Entre",
+    "haveAccount": "Já tenho uma conta",
     "noAccount": "Não tem conta? Cadastre-se",
     "emailExists": "Este e-mail já está cadastrado",
     "invalidCredentials": "E-mail ou senha inválidos",
@@ -37,7 +37,9 @@
     "invalidLinkCode": "Código inválido ou expirado",
     "setEmailHint": "Defina email e senha para futuros logins",
     "linkAndLogin": "Vincular e entrar",
-    "loginBtn": "Ir"
+    "loginBtn": "Ir",
+    "newUser": "Novo usuário",
+    "noLinkCode": "Não tenho código de ligação"
   },
   "login": {
     "subtitle": "Coordenação de ajuda através de conexões de confiança",

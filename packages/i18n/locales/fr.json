@@ -25,7 +25,7 @@
     "name": "Nom",
     "login": "Se connecter",
     "register": "S'inscrire",
-    "haveAccount": "Vous avez déjà un compte ? Connectez-vous",
+    "haveAccount": "Déjà un compte",
     "noAccount": "Pas de compte ? Inscrivez-vous",
     "emailExists": "Cet e-mail est déjà enregistré",
     "invalidCredentials": "E-mail ou mot de passe incorrect",
@@ -37,7 +37,9 @@
     "invalidLinkCode": "Code invalide ou expiré",
     "setEmailHint": "Définissez un email et un mot de passe pour vos futures connexions",
     "linkAndLogin": "Lier et se connecter",
-    "loginBtn": "Go"
+    "loginBtn": "Go",
+    "newUser": "Nouvel utilisateur",
+    "noLinkCode": "Je n'ai pas de code de liaison"
   },
   "login": {
     "subtitle": "Coordination d'entraide grâce à des liens de confiance",

@@ -25,7 +25,7 @@
     "name": "Navn",
     "login": "Logg inn",
     "register": "Registrer deg",
-    "haveAccount": "Har du allerede en konto? Logg inn",
+    "haveAccount": "Har allerede en konto",
     "noAccount": "Har du ikke en konto? Registrer deg",
     "emailExists": "Denne e-posten er allerede registrert",
     "invalidCredentials": "Ugyldig e-post eller passord",
@@ -37,7 +37,9 @@
     "invalidLinkCode": "Invalid or expired code",
     "setEmailHint": "Set email and password for future logins",
     "linkAndLogin": "Link & Login",
-    "loginBtn": "Go"
+    "loginBtn": "Go",
+    "newUser": "Ny bruker",
+    "noLinkCode": "Jeg har ikke en koblingskode"
   },
   "login": {
     "subtitle": "Hjelpekoordinering gjennom pålitelige forbindelser",

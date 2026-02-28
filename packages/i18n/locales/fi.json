@@ -25,7 +25,7 @@
     "name": "Nimi",
     "login": "Kirjaudu sisään",
     "register": "Rekisteröidy",
-    "haveAccount": "Onko sinulla jo tili? Kirjaudu sisään",
+    "haveAccount": "Minulla on jo tili",
     "noAccount": "Eikö sinulla ole tiliä? Rekisteröidy",
     "emailExists": "Tämä sähköposti on jo rekisteröity",
     "invalidCredentials": "Virheellinen sähköposti tai salasana",
@@ -37,7 +37,9 @@
     "invalidLinkCode": "Invalid or expired code",
     "setEmailHint": "Set email and password for future logins",
     "linkAndLogin": "Link & Login",
-    "loginBtn": "Go"
+    "loginBtn": "Go",
+    "newUser": "Uusi käyttäjä",
+    "noLinkCode": "Minulla ei ole linkityskodia"
   },
   "login": {
     "subtitle": "Avun koordinointia luotettujen yhteyksien kautta",

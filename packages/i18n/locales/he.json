@@ -25,7 +25,7 @@
     "name": "שם",
     "login": "התחבר",
     "register": "הירשם",
-    "haveAccount": "כבר יש לך חשבון? התחבר",
+    "haveAccount": "כבר יש לי חשבון",
     "noAccount": "אין לך חשבון? הירשם",
     "emailExists": "כתובת האימייל כבר רשומה",
     "invalidCredentials": "אימייל או סיסמה שגויים",
@@ -37,7 +37,9 @@
     "invalidLinkCode": "Invalid or expired code",
     "setEmailHint": "Set email and password for future logins",
     "linkAndLogin": "Link & Login",
-    "loginBtn": "Go"
+    "loginBtn": "Go",
+    "newUser": "משתמש חדש",
+    "noLinkCode": "אין לי קוד קישור"
   },
   "login": {
     "subtitle": "תיאום עזרה דרך קשרים אמינים",

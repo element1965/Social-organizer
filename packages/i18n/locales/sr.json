@@ -25,7 +25,7 @@
     "name": "Име",
     "login": "Пријава",
     "register": "Регистрација",
-    "haveAccount": "Већ имаш налог? Пријави се",
+    "haveAccount": "Већ имам налог",
     "noAccount": "Немаш налог? Региструј се",
     "emailExists": "Овај имејл је већ регистрован",
     "invalidCredentials": "Неисправан имејл или лозинка",
@@ -37,7 +37,9 @@
     "invalidLinkCode": "Invalid or expired code",
     "setEmailHint": "Set email and password for future logins",
     "linkAndLogin": "Link & Login",
-    "loginBtn": "Go"
+    "loginBtn": "Go",
+    "newUser": "Нови корисник",
+    "noLinkCode": "Немам код за повезивање"
   },
   "login": {
     "subtitle": "Координација помоћи кроз мрежу поверења",

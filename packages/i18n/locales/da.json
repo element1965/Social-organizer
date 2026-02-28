@@ -25,7 +25,7 @@
     "name": "Navn",
     "login": "Log ind",
     "register": "Opret konto",
-    "haveAccount": "Har du allerede en konto? Log ind",
+    "haveAccount": "Har allerede en konto",
     "noAccount": "Har du ikke en konto? Opret en",
     "emailExists": "Denne e-mail er allerede registreret",
     "invalidCredentials": "Ugyldig e-mail eller adgangskode",
@@ -37,7 +37,9 @@
     "invalidLinkCode": "Invalid or expired code",
     "setEmailHint": "Set email and password for future logins",
     "linkAndLogin": "Link & Login",
-    "loginBtn": "Go"
+    "loginBtn": "Go",
+    "newUser": "Ny bruger",
+    "noLinkCode": "Jeg har ikke en koblingskode"
   },
   "login": {
     "subtitle": "Hjælpekoordinering gennem betroede forbindelser",
