@@ -838,6 +838,7 @@
     "postanovkiRezhesura": "Постановки и режиссура",
     "transgranichnyeFinansovyeOperatsiiObmenKriptovalyut": "Трансграничные финансовые операции",
     "otherPlaceholder": "Опишите ваш навык...",
+    "addOther": "Добавить и ввести ещё",
     "selected": "Навыки: {{count}}",
     "selectedNeeds": "Потребности: {{count}}",
     "skip": "Пропустить",
