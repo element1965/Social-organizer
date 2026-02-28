@@ -9,6 +9,7 @@ import {
   generateLinkingCode,
 } from '../services/auth.service.js';
 import { validateTelegramInitData } from '../services/telegram.service.js';
+import { verifyGoogleIdToken } from '../services/google.service.js';
 import { LINKING_CODE_TTL_MINUTES } from '@so/shared';
 
 export const authRouter = router({
@@ -137,6 +138,104 @@ export const authRouter = router({
           update: { value: tgUser.username },
           create: { userId, type: 'telegram', value: tgUser.username },
         });
+      }
+
+      const accessToken = createAccessToken(userId);
+      const refreshToken = createRefreshToken(userId);
+
+      return { accessToken, refreshToken, userId };
+    }),
+
+  loginWithGoogle: publicProcedure
+    .input(z.object({
+      idToken: z.string().min(1),
+    }))
+    .mutation(async ({ ctx, input }) => {
+      const googleUser = await verifyGoogleIdToken(input.idToken);
+      if (!googleUser) {
+        throw new TRPCError({ code: 'UNAUTHORIZED', message: 'Invalid Google token' });
+      }
+
+      // 1. Check if PlatformAccount(GOOGLE, sub) exists
+      let platformAccount = await ctx.db.platformAccount.findUnique({
+        where: {
+          platform_platformId: {
+            platform: 'GOOGLE',
+            platformId: googleUser.sub,
+          },
+        },
+        include: { user: true },
+      });
+
+      let userId: string;
+
+      if (platformAccount) {
+        userId = platformAccount.userId;
+        // Update photo if changed
+        if (googleUser.picture && platformAccount.user.photoUrl !== googleUser.picture) {
+          await ctx.db.user.update({
+            where: { id: userId },
+            data: { photoUrl: googleUser.picture },
+          });
+        }
+      } else if (googleUser.email_verified) {
+        // 2. Email verified — try to link to existing user with same email
+        const existingUser = await ctx.db.user.findUnique({
+          where: { email: googleUser.email.toLowerCase() },
+        });
+
+        if (existingUser) {
+          // Link Google account to existing user
+          await ctx.db.platformAccount.create({
+            data: {
+              userId: existingUser.id,
+              platform: 'GOOGLE',
+              platformId: googleUser.sub,
+              accessToken: input.idToken,
+            },
+          });
+          userId = existingUser.id;
+          // Update photo if missing
+          if (googleUser.picture && !existingUser.photoUrl) {
+            await ctx.db.user.update({
+              where: { id: userId },
+              data: { photoUrl: googleUser.picture },
+            });
+          }
+        } else {
+          // 3. Create new user
+          const user = await ctx.db.user.create({
+            data: {
+              name: googleUser.name,
+              email: googleUser.email.toLowerCase(),
+              photoUrl: googleUser.picture || null,
+              platformAccounts: {
+                create: {
+                  platform: 'GOOGLE',
+                  platformId: googleUser.sub,
+                  accessToken: input.idToken,
+                },
+              },
+            },
+          });
+          userId = user.id;
+        }
+      } else {
+        // Email not verified — create new user without email
+        const user = await ctx.db.user.create({
+          data: {
+            name: googleUser.name,
+            photoUrl: googleUser.picture || null,
+            platformAccounts: {
+              create: {
+                platform: 'GOOGLE',
+                platformId: googleUser.sub,
+                accessToken: input.idToken,
+              },
+            },
+          },
+        });
+        userId = user.id;
       }
 
       const accessToken = createAccessToken(userId);
