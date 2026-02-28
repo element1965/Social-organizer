@@ -182,11 +182,21 @@ export const skillsRouter = router({
         ),
       ]);
 
-      const addedIds = input.skills.map((s) => s.categoryId).filter((id) => !oldIds.has(id));
+      const newIds = new Set(input.skills.map((s) => s.categoryId));
+      const addedIds = [...newIds].filter((id) => !oldIds.has(id));
+      const removedIds = [...oldIds].filter((id) => !newIds.has(id));
+
       if (addedIds.length > 0) {
         createSkillMatchNotifications(ctx.db, ctx.userId, addedIds).catch((err) =>
           console.error('[SkillMatch] Error:', err),
         );
+      }
+
+      // Clean stale notifications for removed skills
+      if (removedIds.length > 0) {
+        ctx.db.skillMatchNotification.deleteMany({
+          where: { matchUserId: ctx.userId, categoryId: { in: removedIds } },
+        }).catch((err) => console.error('[SkillMatch] Cleanup error:', err));
       }
 
       // Auto-suggest "other" categories
@@ -223,11 +233,21 @@ export const skillsRouter = router({
         ),
       ]);
 
-      const addedIds = input.needs.map((n) => n.categoryId).filter((id) => !oldIds.has(id));
+      const newIds = new Set(input.needs.map((n) => n.categoryId));
+      const addedIds = [...newIds].filter((id) => !oldIds.has(id));
+      const removedIds = [...oldIds].filter((id) => !newIds.has(id));
+
       if (addedIds.length > 0) {
         createNeedMatchNotifications(ctx.db, ctx.userId, addedIds).catch((err) =>
           console.error('[SkillMatch] Error:', err),
         );
+      }
+
+      // Clean stale notifications for removed needs
+      if (removedIds.length > 0) {
+        ctx.db.skillMatchNotification.deleteMany({
+          where: { userId: ctx.userId, categoryId: { in: removedIds } },
+        }).catch((err) => console.error('[SkillMatch] Cleanup error:', err));
       }
 
       // Auto-suggest "other" categories
