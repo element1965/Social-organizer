@@ -176,6 +176,11 @@ export function SettingsPage() {
     setSkillNotes(next);
     autosaveSkills(selectedSkills, selectedNeeds, next);
   };
+  const handleSubmitOther = (_categoryId: string) => {
+    if (skillsDebounce.current) clearTimeout(skillsDebounce.current);
+    saveSkillsMut.mutate({ skills: [...selectedSkills].map((cId) => ({ categoryId: cId, note: skillNotes.get(cId) || undefined })) });
+    saveNeedsMut.mutate({ needs: [...selectedNeeds].map((cId) => ({ categoryId: cId, note: skillNotes.get(cId) || undefined })) });
+  };
 
   const handleLanguageChange = (lang: string) => { i18n.changeLanguage(lang); localStorage.setItem('language', lang); updateLanguage.mutate({ language: lang }); };
   const handleThemeChange = (theme: 'LIGHT' | 'DARK' | 'SYSTEM') => { setMode(theme.toLowerCase() as 'light' | 'dark' | 'system'); updateTheme.mutate({ theme }); };
@@ -370,6 +375,7 @@ export function SettingsPage() {
               onToggleNeed={handleToggleNeed}
               notes={skillNotes}
               onNoteChange={handleSkillNoteChange}
+              onSubmitOther={handleSubmitOther}
               isAdmin={!!adminData?.isAdmin}
             />
           )}

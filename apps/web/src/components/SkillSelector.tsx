@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { SKILL_GROUPS, SKILL_GROUP_ICONS } from '@so/shared';
 import type { SkillGroup } from '@so/shared';
 import { cn } from '../lib/utils';
-import { Search, ChevronDown, Wrench, Heart, Globe } from 'lucide-react';
+import { Search, ChevronDown, Wrench, Heart, Globe, Plus, Check } from 'lucide-react';
 
 interface Category {
   id: string;
@@ -21,6 +21,7 @@ interface SkillSelectorProps {
   onToggleNeed: (categoryId: string) => void;
   notes?: Map<string, string>;
   onNoteChange?: (categoryId: string, note: string) => void;
+  onSubmitOther?: (categoryId: string) => void;
   isAdmin?: boolean;
 }
 
@@ -32,10 +33,25 @@ export function SkillSelector({
   onToggleNeed,
   notes,
   onNoteChange,
+  onSubmitOther,
 }: SkillSelectorProps) {
   const { t } = useTranslation();
   const [search, setSearch] = useState('');
   const [expanded, setExpanded] = useState<string | null>(null);
+  const [submittedOthers, setSubmittedOthers] = useState<Map<string, string[]>>(new Map());
+
+  const handleAddOther = (catId: string) => {
+    const currentNote = notes?.get(catId);
+    if (!currentNote?.trim()) return;
+    setSubmittedOthers((prev) => {
+      const next = new Map(prev);
+      const existing = next.get(catId) || [];
+      next.set(catId, [...existing, currentNote.trim()]);
+      return next;
+    });
+    onSubmitOther?.(catId);
+    onNoteChange?.(catId, '');
+  };
 
   const grouped = useMemo(() => {
     const map: Record<string, Category[]> = {};
@@ -182,15 +198,40 @@ export function SkillSelector({
                         </div>
                       </div>
                       {showNote && onNoteChange && (
-                        <div className="px-3 pb-2">
-                          <input
-                            type="text"
-                            value={notes?.get(cat.id) ?? ''}
-                            onChange={(e) => onNoteChange(cat.id, e.target.value)}
-                            placeholder={t('skills.otherPlaceholder')}
-                            maxLength={200}
-                            className="w-full px-3 py-1.5 text-sm rounded-md border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-blue-500"
-                          />
+                        <div className="px-3 pb-2 space-y-1.5">
+                          <div className="flex gap-1.5">
+                            <input
+                              type="text"
+                              value={notes?.get(cat.id) ?? ''}
+                              onChange={(e) => onNoteChange(cat.id, e.target.value)}
+                              onKeyDown={(e) => { if (e.key === 'Enter') handleAddOther(cat.id); }}
+                              placeholder={t('skills.otherPlaceholder')}
+                              maxLength={200}
+                              className="flex-1 px-3 py-1.5 text-sm rounded-md border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                            />
+                            {(notes?.get(cat.id) ?? '').trim() && (
+                              <button
+                                type="button"
+                                onClick={() => handleAddOther(cat.id)}
+                                className="px-2.5 py-1.5 rounded-md bg-blue-500 text-white hover:bg-blue-600 transition-colors shrink-0"
+                                title={t('skills.addOther')}
+                              >
+                                <Plus className="w-4 h-4" />
+                              </button>
+                            )}
+                          </div>
+                          {(submittedOthers.get(cat.id)?.length ?? 0) > 0 && (
+                            <div className="flex flex-wrap gap-1">
+                              {submittedOthers.get(cat.id)!.map((text, i) => (
+                                <span
+                                  key={i}
+                                  className="inline-flex items-center gap-1 px-2 py-0.5 text-xs rounded-full bg-blue-50 dark:bg-blue-950/30 text-blue-600 dark:text-blue-400"
+                                >
+                                  <Check className="w-3 h-3" /> {text}
+                                </span>
+                              ))}
+                            </div>
+                          )}
                         </div>
                       )}
                     </div>

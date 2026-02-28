@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { router, protectedProcedure } from '../trpc.js';
 import { isAdmin } from '../admin.js';
-import { createSkillMatchNotifications, createNeedMatchNotifications, scanMatchesForUser } from '../services/match-notification.service.js';
+import { createSkillMatchNotifications, createNeedMatchNotifications } from '../services/match-notification.service.js';
 import { findAndStoreChains } from '../services/chain-finder.service.js';
 import { translateText } from '../services/translate.service.js';
 import type { PrismaClient } from '@so/db';
@@ -532,11 +532,25 @@ export const skillsRouter = router({
         });
       }
 
-      // Scan matches for all affected users (fire-and-forget)
-      const affectedUserIds = new Set([suggestion.userId, ...sameSuggestions.map((s) => s.userId)]);
-      for (const uid of affectedUserIds) {
-        scanMatchesForUser(ctx.db, uid).catch(() => {});
-        findAndStoreChains(ctx.db, uid).catch(() => {});
+      // Notify only about the newly approved category (not all existing skills)
+      const newCatIds = [category.id];
+
+      // Original suggester
+      if (suggestion.type === 'SKILL') {
+        createSkillMatchNotifications(ctx.db, suggestion.userId, newCatIds).catch(() => {});
+      } else {
+        createNeedMatchNotifications(ctx.db, suggestion.userId, newCatIds).catch(() => {});
+      }
+      findAndStoreChains(ctx.db, suggestion.userId).catch(() => {});
+
+      // Duplicate suggesters
+      for (const dup of sameSuggestions) {
+        if (dup.type === 'SKILL') {
+          createSkillMatchNotifications(ctx.db, dup.userId, newCatIds).catch(() => {});
+        } else {
+          createNeedMatchNotifications(ctx.db, dup.userId, newCatIds).catch(() => {});
+        }
+        findAndStoreChains(ctx.db, dup.userId).catch(() => {});
       }
 
       // Translate to all 28 locales: write to JSON files + save to DB (async, don't block)
