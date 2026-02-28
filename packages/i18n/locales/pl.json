@@ -25,7 +25,7 @@
     "name": "Imię",
     "login": "Zaloguj się",
     "register": "Zarejestruj się",
-    "haveAccount": "Masz już konto? Zaloguj się",
+    "haveAccount": "Mam już konto",
     "noAccount": "Nie masz konta? Zarejestruj się",
     "emailExists": "Ten e-mail jest już zarejestrowany",
     "invalidCredentials": "Nieprawidłowy e-mail lub hasło",
@@ -37,7 +37,9 @@
     "invalidLinkCode": "Invalid or expired code",
     "setEmailHint": "Set email and password for future logins",
     "linkAndLogin": "Link & Login",
-    "loginBtn": "Go"
+    "loginBtn": "Go",
+    "newUser": "Nowy użytkownik",
+    "noLinkCode": "Nie mam kodu powiązania"
   },
   "login": {
     "subtitle": "Koordynacja pomocy poprzez zaufane kontakty",

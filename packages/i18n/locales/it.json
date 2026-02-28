@@ -25,7 +25,7 @@
     "name": "Nome",
     "login": "Accedi",
     "register": "Registrati",
-    "haveAccount": "Hai già un account? Accedi",
+    "haveAccount": "Ho già un account",
     "noAccount": "Non hai un account? Registrati",
     "emailExists": "Questa e-mail è già registrata",
     "invalidCredentials": "E-mail o password non validi",
@@ -37,7 +37,9 @@
     "invalidLinkCode": "Codice non valido o scaduto",
     "setEmailHint": "Imposta email e password per i prossimi accessi",
     "linkAndLogin": "Collega e accedi",
-    "loginBtn": "Vai"
+    "loginBtn": "Vai",
+    "newUser": "Nuovo utente",
+    "noLinkCode": "Non ho un codice di collegamento"
   },
   "login": {
     "subtitle": "Coordinamento degli aiuti attraverso connessioni fidate",

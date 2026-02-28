@@ -25,7 +25,7 @@
     "name": "Nume",
     "login": "Autentificare",
     "register": "Inregistrare",
-    "haveAccount": "Ai deja un cont? Autentifica-te",
+    "haveAccount": "Am deja un cont",
     "noAccount": "Nu ai un cont? Inregistreaza-te",
     "emailExists": "Acest e-mail este deja inregistrat",
     "invalidCredentials": "E-mail sau parola invalide",
@@ -37,7 +37,9 @@
     "invalidLinkCode": "Invalid or expired code",
     "setEmailHint": "Set email and password for future logins",
     "linkAndLogin": "Link & Login",
-    "loginBtn": "Go"
+    "loginBtn": "Go",
+    "newUser": "Utilizator nou",
+    "noLinkCode": "Nu am cod de conectare"
   },
   "login": {
     "subtitle": "Coordonarea ajutorului prin conexiuni de incredere",

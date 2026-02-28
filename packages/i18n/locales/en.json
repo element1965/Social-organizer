@@ -25,7 +25,7 @@
     "name": "Name",
     "login": "Sign In",
     "register": "Sign Up",
-    "haveAccount": "Already have an account? Sign in",
+    "haveAccount": "Already have an account",
     "noAccount": "Don't have an account? Sign up",
     "emailExists": "This email is already registered",
     "invalidCredentials": "Invalid email or password",
@@ -37,7 +37,9 @@
     "invalidLinkCode": "Invalid or expired code",
     "setEmailHint": "Set email and password for future logins",
     "linkAndLogin": "Link & Login",
-    "loginBtn": "Go"
+    "loginBtn": "Go",
+    "newUser": "New user",
+    "noLinkCode": "I don't have a link code"
   },
   "login": {
     "subtitle": "Help coordination through trusted connections",

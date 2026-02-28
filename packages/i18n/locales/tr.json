@@ -25,7 +25,7 @@
     "name": "Ad",
     "login": "Giriş Yap",
     "register": "Kayıt Ol",
-    "haveAccount": "Zaten hesabınız var mı? Giriş yapın",
+    "haveAccount": "Zaten bir hesabım var",
     "noAccount": "Hesabınız yok mu? Kayıt olun",
     "emailExists": "Bu e-posta zaten kayıtlı",
     "invalidCredentials": "Geçersiz e-posta veya şifre",
@@ -37,7 +37,9 @@
     "invalidLinkCode": "Invalid or expired code",
     "setEmailHint": "Set email and password for future logins",
     "linkAndLogin": "Link & Login",
-    "loginBtn": "Go"
+    "loginBtn": "Go",
+    "newUser": "Yeni kullanıcı",
+    "noLinkCode": "Bağlantı kodum yok"
   },
   "login": {
     "subtitle": "Güvenilir bağlantılar aracılığıyla yardım koordinasyonu",

@@ -25,7 +25,7 @@
     "name": "Naam",
     "login": "Inloggen",
     "register": "Registreren",
-    "haveAccount": "Heb je al een account? Log in",
+    "haveAccount": "Ik heb al een account",
     "noAccount": "Heb je geen account? Registreer je",
     "emailExists": "Dit e-mailadres is al geregistreerd",
     "invalidCredentials": "Ongeldig e-mailadres of wachtwoord",
@@ -37,7 +37,9 @@
     "invalidLinkCode": "Invalid or expired code",
     "setEmailHint": "Set email and password for future logins",
     "linkAndLogin": "Link & Login",
-    "loginBtn": "Go"
+    "loginBtn": "Go",
+    "newUser": "Nieuwe gebruiker",
+    "noLinkCode": "Ik heb geen koppelcode"
   },
   "login": {
     "subtitle": "Hulpcoordinatie via vertrouwde connecties",

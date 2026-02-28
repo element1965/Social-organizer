@@ -25,7 +25,7 @@
     "name": "姓名",
     "login": "登录",
     "register": "注册",
-    "haveAccount": "已有账户？去登录",
+    "haveAccount": "已有账户",
     "noAccount": "没有账户？去注册",
     "emailExists": "该邮箱已被注册",
     "invalidCredentials": "邮箱或密码无效",
@@ -37,7 +37,9 @@
     "invalidLinkCode": "Invalid or expired code",
     "setEmailHint": "Set email and password for future logins",
     "linkAndLogin": "Link & Login",
-    "loginBtn": "Go"
+    "loginBtn": "Go",
+    "newUser": "新用户",
+    "noLinkCode": "我没有关联码"
   },
   "login": {
     "subtitle": "通过信任关系协调互助",

@@ -25,7 +25,7 @@
     "name": "नाम",
     "login": "लॉग इन",
     "register": "पंजीकरण करें",
-    "haveAccount": "पहले से खाता है? लॉग इन करें",
+    "haveAccount": "पहले से खाता है",
     "noAccount": "खाता नहीं है? पंजीकरण करें",
     "emailExists": "यह ईमेल पहले से पंजीकृत है",
     "invalidCredentials": "अमान्य ईमेल या पासवर्ड",
@@ -37,7 +37,9 @@
     "invalidLinkCode": "Invalid or expired code",
     "setEmailHint": "Set email and password for future logins",
     "linkAndLogin": "Link & Login",
-    "loginBtn": "Go"
+    "loginBtn": "Go",
+    "newUser": "नया उपयोगकर्ता",
+    "noLinkCode": "मेरे पास लिंक कोड नहीं है"
   },
   "login": {
     "subtitle": "विश्वसनीय संबंधों के माध्यम से सहायता समन्वय",

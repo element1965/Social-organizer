@@ -25,7 +25,7 @@
     "name": "Namn",
     "login": "Logga in",
     "register": "Registrera dig",
-    "haveAccount": "Har du redan ett konto? Logga in",
+    "haveAccount": "Har redan ett konto",
     "noAccount": "Har du inget konto? Registrera dig",
     "emailExists": "Denna e-postadress ar redan registrerad",
     "invalidCredentials": "Ogiltig e-postadress eller losenord",
@@ -37,7 +37,9 @@
     "invalidLinkCode": "Invalid or expired code",
     "setEmailHint": "Set email and password for future logins",
     "linkAndLogin": "Link & Login",
-    "loginBtn": "Go"
+    "loginBtn": "Go",
+    "newUser": "Ny användare",
+    "noLinkCode": "Jag har ingen länkkod"
   },
   "login": {
     "subtitle": "Hjalpkoordinering genom betrodda kontakter",

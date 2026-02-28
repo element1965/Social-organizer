@@ -25,7 +25,7 @@
     "name": "이름",
     "login": "로그인",
     "register": "회원가입",
-    "haveAccount": "이미 계정이 있으신가요? 로그인",
+    "haveAccount": "이미 계정이 있음",
     "noAccount": "계정이 없으신가요? 회원가입",
     "emailExists": "이 이메일은 이미 등록되어 있습니다",
     "invalidCredentials": "이메일 또는 비밀번호가 올바르지 않습니다",
@@ -37,7 +37,9 @@
     "invalidLinkCode": "Invalid or expired code",
     "setEmailHint": "Set email and password for future logins",
     "linkAndLogin": "Link & Login",
-    "loginBtn": "Go"
+    "loginBtn": "Go",
+    "newUser": "새 사용자",
+    "noLinkCode": "연결 코드가 없습니다"
   },
   "login": {
     "subtitle": "신뢰할 수 있는 관계를 통한 도움 조율",
