@@ -35,6 +35,8 @@
     "haveAccountLink": "Hai già un account? Inserisci il codice di collegamento",
     "linkCodeHint": "Apri Impostazioni in Telegram → genera un codice e inseriscilo qui",
     "invalidLinkCode": "Codice non valido o scaduto",
+    "setEmailHint": "Imposta email e password per i prossimi accessi",
+    "linkAndLogin": "Collega e accedi",
     "loginBtn": "Vai"
   },
   "login": {

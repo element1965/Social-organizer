@@ -239,6 +239,46 @@ export const authRouter = router({
       return { accessToken, refreshToken, userId: user.id };
     }),
 
+  /** Link code + set email/password for TG users migrating to mobile app */
+  claimWithLinkCode: publicProcedure
+    .input(z.object({
+      code: z.string().length(6),
+      email: z.string().email(),
+      password: z.string().min(6),
+    }))
+    .mutation(async ({ ctx, input }) => {
+      const linkingCode = await ctx.db.linkingCode.findFirst({
+        where: { code: input.code, expiresAt: { gt: new Date() } },
+      });
+      if (!linkingCode) {
+        throw new TRPCError({ code: 'NOT_FOUND', message: 'Invalid or expired code' });
+      }
+
+      const user = await ctx.db.user.findUnique({ where: { id: linkingCode.userId } });
+      if (!user || user.deletedAt) {
+        throw new TRPCError({ code: 'NOT_FOUND', message: 'User not found' });
+      }
+
+      const emailLower = input.email.toLowerCase();
+      const existingEmail = await ctx.db.user.findUnique({ where: { email: emailLower } });
+      if (existingEmail && existingEmail.id !== user.id) {
+        throw new TRPCError({ code: 'CONFLICT', message: 'Email already registered' });
+      }
+
+      const passwordHash = await bcrypt.hash(input.password, 10);
+      await ctx.db.user.update({
+        where: { id: user.id },
+        data: { email: emailLower, passwordHash },
+      });
+
+      await ctx.db.linkingCode.delete({ where: { id: linkingCode.id } });
+
+      const accessToken = createAccessToken(user.id);
+      const refreshToken = createRefreshToken(user.id);
+
+      return { accessToken, refreshToken, userId: user.id };
+    }),
+
   linkAccount: protectedProcedure
     .input(z.object({
       code: z.string().length(6),
