@@ -107,9 +107,6 @@ export function LoginPage() {
       setError(err.message === 'Email already registered' ? t('auth.emailExists') : t('auth.invalidLinkCode'));
     },
   });
-  const [linkEmail, setLinkEmail] = useState('');
-  const [linkPassword, setLinkPassword] = useState('');
-  const [showLinkPassword, setShowLinkPassword] = useState(false);
 
   const telegramLoginMutation = trpc.auth.loginWithTelegram.useMutation({
     onSuccess: (data) => {
@@ -145,7 +142,12 @@ export function LoginPage() {
     setError('');
     setLoading(true);
 
-    if (isRegister) {
+    if (showLinkCode && linkCode.length === 6) {
+      claimMutation.mutate(
+        { code: linkCode, email, password },
+        { onSettled: () => setLoading(false) },
+      );
+    } else if (isRegister) {
       registerMutation.mutate(
         { email, password, name: name || undefined },
         { onSettled: () => setLoading(false) },
@@ -193,7 +195,7 @@ export function LoginPage() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              minLength={isRegister ? 6 : 1}
+              minLength={isRegister || (showLinkCode && linkCode.length === 6) ? 6 : 1}
               className="w-full px-4 py-3 pr-12 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-teal-500 transition-colors"
             />
             <button
@@ -215,18 +217,23 @@ export function LoginPage() {
             size="lg"
             disabled={loading}
           >
-            <Mail size={18} className="mr-2" />
-            {isRegister ? t('auth.register') : t('auth.login')}
+            {showLinkCode && linkCode.length === 6 ? (
+              <><KeyRound size={18} className="mr-2" />{t('auth.linkAndLogin')}</>
+            ) : (
+              <><Mail size={18} className="mr-2" />{isRegister ? t('auth.register') : t('auth.login')}</>
+            )}
           </Button>
         </form>
 
-        <button
-          type="button"
-          onClick={() => { setIsRegister(!isRegister); setError(''); }}
-          className="text-gray-400 hover:text-white text-sm mb-6 transition-colors"
-        >
-          {isRegister ? t('auth.haveAccount') : t('auth.noAccount')}
-        </button>
+        {!(showLinkCode && linkCode.length === 6) && (
+          <button
+            type="button"
+            onClick={() => { setIsRegister(!isRegister); setError(''); }}
+            className="text-gray-400 hover:text-white text-sm mb-6 transition-colors"
+          >
+            {isRegister ? t('auth.haveAccount') : t('auth.noAccount')}
+          </button>
+        )}
 
         <div className="relative w-full my-4">
           <div className="absolute inset-0 flex items-center">
@@ -283,7 +290,7 @@ export function LoginPage() {
           {!showLinkCode ? (
             <button
               type="button"
-              onClick={() => { setShowLinkCode(true); setError(''); }}
+              onClick={() => { setShowLinkCode(true); setIsRegister(false); setError(''); }}
               className="w-full text-center text-teal-400 hover:text-teal-300 text-sm transition-colors"
             >
               <KeyRound size={14} className="inline mr-1.5" />
@@ -301,51 +308,12 @@ export function LoginPage() {
                 onChange={(e) => setLinkCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
                 className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white text-center text-2xl tracking-[0.5em] font-mono placeholder-gray-600 focus:outline-none focus:border-teal-500 transition-colors"
               />
-              <p className="text-gray-400 text-xs text-center">{t('auth.setEmailHint')}</p>
-              <input
-                type="email"
-                placeholder={t('auth.email')}
-                value={linkEmail}
-                onChange={(e) => setLinkEmail(e.target.value)}
-                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-teal-500 transition-colors"
-              />
-              <div className="relative">
-                <input
-                  type={showLinkPassword ? 'text' : 'password'}
-                  placeholder={t('auth.password')}
-                  value={linkPassword}
-                  onChange={(e) => setLinkPassword(e.target.value)}
-                  minLength={6}
-                  className="w-full px-4 py-3 pr-12 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-teal-500 transition-colors"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowLinkPassword(!showLinkPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-300 transition-colors"
-                >
-                  {showLinkPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-                </button>
-              </div>
-              <Button
-                onClick={() => {
-                  if (linkCode.length !== 6 || !linkEmail || linkPassword.length < 6) return;
-                  setError('');
-                  setLoading(true);
-                  claimMutation.mutate(
-                    { code: linkCode, email: linkEmail, password: linkPassword },
-                    { onSettled: () => setLoading(false) },
-                  );
-                }}
-                disabled={loading || linkCode.length !== 6 || !linkEmail || linkPassword.length < 6}
-                className="w-full bg-teal-600 hover:bg-teal-500 text-white"
-                size="lg"
-              >
-                <KeyRound size={18} className="mr-2" />
-                {t('auth.linkAndLogin')}
-              </Button>
+              {linkCode.length === 6 && (
+                <p className="text-teal-400 text-xs text-center">{t('auth.setEmailHint')}</p>
+              )}
               <button
                 type="button"
-                onClick={() => { setShowLinkCode(false); setLinkCode(''); setLinkEmail(''); setLinkPassword(''); setError(''); }}
+                onClick={() => { setShowLinkCode(false); setLinkCode(''); setError(''); }}
                 className="w-full text-center text-gray-500 hover:text-gray-300 text-xs transition-colors"
               >
                 {t('common.cancel')}
