@@ -33,6 +33,10 @@ function HomeRoute() {
   if (isAuthenticated && !params.get('invite') && !params.get('from') && !localStorage.getItem('pendingInviteToken')) {
     return <Navigate to="/dashboard" replace />;
   }
+  // In native app (Capacitor) skip landing — go straight to login
+  if ((window as Record<string, unknown>).Capacitor) {
+    return <Navigate to="/login" replace />;
+  }
   return <LandingPage variant={isArvut ? 'arvut' : undefined} />;
 }
 
