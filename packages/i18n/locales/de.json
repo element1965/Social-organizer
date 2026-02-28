@@ -35,6 +35,8 @@
     "haveAccountLink": "Bereits ein Konto? Verknüpfungscode eingeben",
     "linkCodeHint": "Öffnen Sie Einstellungen in der Telegram-App → Code generieren und hier eingeben",
     "invalidLinkCode": "Ungültiger oder abgelaufener Code",
+    "setEmailHint": "E-Mail und Passwort für zukünftige Anmeldungen festlegen",
+    "linkAndLogin": "Verknüpfen & Anmelden",
     "loginBtn": "Los"
   },
   "login": {

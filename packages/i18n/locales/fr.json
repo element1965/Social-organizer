@@ -35,6 +35,8 @@
     "haveAccountLink": "Déjà un compte ? Entrez le code de liaison",
     "linkCodeHint": "Ouvrez les Paramètres dans Telegram → générez un code et saisissez-le ici",
     "invalidLinkCode": "Code invalide ou expiré",
+    "setEmailHint": "Définissez un email et un mot de passe pour vos futures connexions",
+    "linkAndLogin": "Lier et se connecter",
     "loginBtn": "Go"
   },
   "login": {

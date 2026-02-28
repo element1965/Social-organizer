@@ -35,6 +35,8 @@
     "haveAccountLink": "Already have an account? Enter link code",
     "linkCodeHint": "Open Settings in Telegram app → generate a link code and enter it here",
     "invalidLinkCode": "Invalid or expired code",
+    "setEmailHint": "Задайце email і пароль для ўваходу ў дадатак",
+    "linkAndLogin": "Звязаць і ўвайсці",
     "loginBtn": "Go"
   },
   "login": {

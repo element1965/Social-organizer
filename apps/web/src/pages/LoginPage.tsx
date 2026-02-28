@@ -98,6 +98,19 @@ export function LoginPage() {
     },
   });
 
+  const claimMutation = trpc.auth.claimWithLinkCode.useMutation({
+    onSuccess: (data) => {
+      login(data.accessToken, data.refreshToken, data.userId);
+      afterLogin('/dashboard');
+    },
+    onError: (err) => {
+      setError(err.message === 'Email already registered' ? t('auth.emailExists') : t('auth.invalidLinkCode'));
+    },
+  });
+  const [linkEmail, setLinkEmail] = useState('');
+  const [linkPassword, setLinkPassword] = useState('');
+  const [showLinkPassword, setShowLinkPassword] = useState(false);
+
   const telegramLoginMutation = trpc.auth.loginWithTelegram.useMutation({
     onSuccess: (data) => {
       login(data.accessToken, data.refreshToken, data.userId);
@@ -279,36 +292,60 @@ export function LoginPage() {
           ) : (
             <div className="space-y-3">
               <p className="text-gray-400 text-xs text-center">{t('auth.linkCodeHint')}</p>
-              <div className="flex gap-2">
+              <input
+                type="text"
+                inputMode="numeric"
+                maxLength={6}
+                placeholder="000000"
+                value={linkCode}
+                onChange={(e) => setLinkCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
+                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white text-center text-2xl tracking-[0.5em] font-mono placeholder-gray-600 focus:outline-none focus:border-teal-500 transition-colors"
+              />
+              <p className="text-gray-400 text-xs text-center">{t('auth.setEmailHint')}</p>
+              <input
+                type="email"
+                placeholder={t('auth.email')}
+                value={linkEmail}
+                onChange={(e) => setLinkEmail(e.target.value)}
+                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-teal-500 transition-colors"
+              />
+              <div className="relative">
                 <input
-                  type="text"
-                  inputMode="numeric"
-                  maxLength={6}
-                  placeholder="000000"
-                  value={linkCode}
-                  onChange={(e) => setLinkCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
-                  className="flex-1 px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white text-center text-2xl tracking-[0.5em] font-mono placeholder-gray-600 focus:outline-none focus:border-teal-500 transition-colors"
+                  type={showLinkPassword ? 'text' : 'password'}
+                  placeholder={t('auth.password')}
+                  value={linkPassword}
+                  onChange={(e) => setLinkPassword(e.target.value)}
+                  minLength={6}
+                  className="w-full px-4 py-3 pr-12 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-teal-500 transition-colors"
                 />
-                <Button
-                  onClick={() => {
-                    if (linkCode.length !== 6) return;
-                    setError('');
-                    setLoading(true);
-                    linkCodeMutation.mutate(
-                      { code: linkCode },
-                      { onSettled: () => setLoading(false) },
-                    );
-                  }}
-                  disabled={loading || linkCode.length !== 6}
-                  className="bg-teal-600 hover:bg-teal-500 text-white px-6"
-                  size="lg"
+                <button
+                  type="button"
+                  onClick={() => setShowLinkPassword(!showLinkPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-300 transition-colors"
                 >
-                  {t('auth.loginBtn')}
-                </Button>
+                  {showLinkPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                </button>
               </div>
+              <Button
+                onClick={() => {
+                  if (linkCode.length !== 6 || !linkEmail || linkPassword.length < 6) return;
+                  setError('');
+                  setLoading(true);
+                  claimMutation.mutate(
+                    { code: linkCode, email: linkEmail, password: linkPassword },
+                    { onSettled: () => setLoading(false) },
+                  );
+                }}
+                disabled={loading || linkCode.length !== 6 || !linkEmail || linkPassword.length < 6}
+                className="w-full bg-teal-600 hover:bg-teal-500 text-white"
+                size="lg"
+              >
+                <KeyRound size={18} className="mr-2" />
+                {t('auth.linkAndLogin')}
+              </Button>
               <button
                 type="button"
-                onClick={() => { setShowLinkCode(false); setLinkCode(''); setError(''); }}
+                onClick={() => { setShowLinkCode(false); setLinkCode(''); setLinkEmail(''); setLinkPassword(''); setError(''); }}
                 className="w-full text-center text-gray-500 hover:text-gray-300 text-xs transition-colors"
               >
                 {t('common.cancel')}
