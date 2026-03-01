@@ -115,7 +115,8 @@ model User {
   contacts         UserContact[]
   chatMessages     ChatMessage[]
   faqItems         FaqItem[]
-  pushSubscriptions PushSubscription[]
+  pushSubscriptions  PushSubscription[]
+  nativePushTokens   NativePushToken[]
   pendingFrom      PendingConnection[] @relation("pendingFrom")
   pendingTo        PendingConnection[] @relation("pendingTo")
   skills           UserSkill[]
@@ -319,6 +320,20 @@ model PushSubscription {
 
   @@index([userId])
   @@map("push_subscriptions")
+}
+
+model NativePushToken {
+  id        String   @id @default(cuid())
+  userId    String
+  token     String   @unique
+  platform  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("native_push_tokens")
 }
 
 model PendingConnection {

@@ -16,9 +16,13 @@ const config: CapacitorConfig = {
     StatusBar: {
       style: 'DARK',
       backgroundColor: '#1e293b',
+      overlaysWebView: false,
     },
     App: {
       // Deep links for invite URLs
+    },
+    PushNotifications: {
+      presentationOptions: ['badge', 'sound', 'alert'],
     },
   },
 };
