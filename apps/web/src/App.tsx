@@ -36,6 +36,10 @@ function HomeRoute() {
   }
   // In native app (Capacitor) skip landing — go straight to login
   if ((window as Record<string, unknown>).Capacitor) {
+    const inviteParam = params.get('invite');
+    if (inviteParam) {
+      return <Navigate to={`/invite/${inviteParam}`} replace />;
+    }
     return <Navigate to="/login" replace />;
   }
   return <LandingPage variant={isArvut ? 'arvut' : undefined} />;

@@ -1,5 +1,5 @@
 import { lazy, Suspense, useState, useRef, useEffect } from 'react';
-import { useSearchParams, Link } from 'react-router-dom';
+import { useSearchParams, Link, Navigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Handshake, Heart, Eye, Users, Cog, Code, Globe, ChevronDown, ChevronUp, ArrowRight, ArrowDown, Languages, Github, ExternalLink, HelpCircle } from 'lucide-react';
 import { languageNames } from '@so/i18n';
@@ -134,6 +134,11 @@ export function LandingPage({ variant }: { variant?: 'arvut' } = {}) {
   useEffect(() => {
     if (inviteParam) localStorage.setItem('pendingInviteToken', inviteParam);
   }, [inviteParam]);
+
+  // Redirect /?invite=TOKEN to /invite/TOKEN for direct invite flow
+  if (inviteParam) {
+    return <Navigate to={`/invite/${inviteParam}`} replace />;
+  }
 
   // Force Hebrew for Arvut variant
   useEffect(() => {
