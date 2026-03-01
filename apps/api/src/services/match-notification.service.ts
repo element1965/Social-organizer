@@ -1,7 +1,7 @@
 import type { PrismaClient } from '@so/db';
 import { resources } from '@so/i18n';
 import { sendTelegramMessage, type TgReplyMarkup } from './telegram-bot.service.js';
-import { sendWebPush } from './web-push.service.js';
+import { sendPushNotification } from './push.service.js';
 import { getNetworkUserIds } from './bfs.service.js';
 
 const WEB_APP_URL = process.env.WEB_APP_URL || 'https://www.orginizer.com';
@@ -383,12 +383,12 @@ export async function createSkillMatchNotifications(
 
   // Web Push
   const matchedUserIds = [...new Set(matches.map((m) => m.userId))];
-  sendWebPush(db, matchedUserIds, {
+  sendPushNotification(db, matchedUserIds, {
     title: 'Skill Match',
     body: 'Someone in your network can help you!',
     url: `${WEB_APP_URL}/matches`,
   }).catch((err) => console.error('[WebPush SkillMatch] Failed:', err));
-  sendWebPush(db, [skillOwnerId], {
+  sendPushNotification(db, [skillOwnerId], {
     title: 'Skill Match',
     body: 'You can help someone in your network!',
     url: `${WEB_APP_URL}/matches`,
@@ -483,12 +483,12 @@ export async function createNeedMatchNotifications(
 
   // Web Push
   const matchedUserIds = [...new Set(matches.map((m) => m.userId))];
-  sendWebPush(db, [needOwnerId], {
+  sendPushNotification(db, [needOwnerId], {
     title: 'Skill Match',
     body: 'Someone in your network can help you!',
     url: `${WEB_APP_URL}/matches`,
   }).catch((err) => console.error('[WebPush NeedMatch] Failed:', err));
-  sendWebPush(db, matchedUserIds, {
+  sendPushNotification(db, matchedUserIds, {
     title: 'Skill Match',
     body: 'You can help someone in your network!',
     url: `${WEB_APP_URL}/matches`,

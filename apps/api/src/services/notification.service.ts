@@ -5,7 +5,7 @@ import { NOTIFICATION_TTL_HOURS } from '@so/shared';
 import { findRecipientsViaBfs } from './bfs.service.js';
 import { sendTgMessages, type TgReplyMarkup } from './telegram-bot.service.js';
 import type { TgBroadcastMessage } from '../workers/tg-broadcast.worker.js';
-import { sendWebPush } from './web-push.service.js';
+import { sendPushNotification } from './push.service.js';
 
 const WEB_APP_URL = process.env.WEB_APP_URL || 'https://www.orginizer.com';
 
@@ -92,7 +92,7 @@ export async function sendCollectionNotifications(
       dispatchNewCollectionTg(db, collectionId, creatorId, recipientIds).catch((err) =>
         console.error('[TG Notify] Failed to dispatch:', err),
       );
-      sendWebPush(db, recipientIds, {
+      sendPushNotification(db, recipientIds, {
         title: 'New Collection',
         body: 'Someone in your network needs support.',
         url: `${WEB_APP_URL}/collection/${collectionId}`,
@@ -101,7 +101,7 @@ export async function sendCollectionNotifications(
       dispatchNewCollectionTg(db, collectionId, creatorId, recipientIds).catch((err) =>
         console.error('[TG ReNotify] Failed to dispatch:', err),
       );
-      sendWebPush(db, recipientIds, {
+      sendPushNotification(db, recipientIds, {
         title: 'Reminder',
         body: 'A collection in your network still needs support.',
         url: `${WEB_APP_URL}/collection/${collectionId}`,
@@ -129,7 +129,7 @@ export async function sendCollectionClosedTg(
   if (recipientUserIds.length === 0) return;
 
   // Web Push in parallel
-  sendWebPush(db, recipientUserIds, {
+  sendPushNotification(db, recipientUserIds, {
     title: 'Collection Closed',
     body: 'A collection has been closed by its creator.',
     url: `${WEB_APP_URL}/collection/${collectionId}`,
@@ -188,7 +188,7 @@ export async function sendCollectionBlockedTg(
   if (recipientUserIds.length === 0) return;
 
   // Web Push in parallel
-  sendWebPush(db, recipientUserIds, {
+  sendPushNotification(db, recipientUserIds, {
     title: 'Collection Goal Reached',
     body: 'A collection has reached its target amount.',
     url: `${WEB_APP_URL}/collection/${collectionId}`,
@@ -248,7 +248,7 @@ export async function sendGoalReachedToCreator(
   const webAppLink = `${WEB_APP_URL}/collection/${collectionId}`;
 
   // Web Push to creator
-  sendWebPush(db, [creatorId], {
+  sendPushNotification(db, [creatorId], {
     title: 'Goal Reached',
     body: amountStr ? `Collection reached ${amountStr}` : 'Your collection reached its goal!',
     url: webAppLink,
@@ -296,7 +296,7 @@ export async function sendPendingNotification(
   const pushUrl = type === 'new' ? `${WEB_APP_URL}/dashboard`
     : type === 'accepted' ? `${WEB_APP_URL}/network`
     : undefined;
-  sendWebPush(db, [recipientUserId], { title: pushTitle, body: pushBody, url: pushUrl })
+  sendPushNotification(db, [recipientUserId], { title: pushTitle, body: pushBody, url: pushUrl })
     .catch((err) => console.error('[WebPush Pending] Failed:', err));
 
   // TG notification
@@ -342,7 +342,7 @@ export async function sendUserDeletedNotification(
   deletedUserName: string,
 ): Promise<void> {
   // Web Push
-  sendWebPush(db, [inviterUserId], {
+  sendPushNotification(db, [inviterUserId], {
     title: 'User left',
     body: `${deletedUserName} has deleted their account.`,
     url: `${WEB_APP_URL}/network`,

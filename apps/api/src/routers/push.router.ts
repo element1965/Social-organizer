@@ -41,4 +41,36 @@ export const pushRouter = router({
       });
       return { success: true };
     }),
+
+  registerNativeToken: protectedProcedure
+    .input(z.object({
+      token: z.string().min(1),
+      platform: z.string().default('android'),
+    }))
+    .mutation(async ({ ctx, input }) => {
+      await ctx.db.nativePushToken.upsert({
+        where: { token: input.token },
+        create: {
+          userId: ctx.userId,
+          token: input.token,
+          platform: input.platform,
+        },
+        update: {
+          userId: ctx.userId,
+          platform: input.platform,
+        },
+      });
+      return { success: true };
+    }),
+
+  unregisterNativeToken: protectedProcedure
+    .input(z.object({
+      token: z.string().min(1),
+    }))
+    .mutation(async ({ ctx, input }) => {
+      await ctx.db.nativePushToken.deleteMany({
+        where: { token: input.token, userId: ctx.userId },
+      });
+      return { success: true };
+    }),
 });

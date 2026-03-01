@@ -11,6 +11,7 @@
     "clean": "rm -rf dist *.tsbuildinfo"
   },
   "dependencies": {
+    "@capacitor/push-notifications": "^8.0.1",
     "@radix-ui/react-tooltip": "^1.2.8",
     "@so/graph-3d": "workspace:*",
     "@so/gun-backup": "workspace:*",
