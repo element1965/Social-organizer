@@ -84,6 +84,7 @@ pnpm dev
 | InviteLink | Invitation link |
 | ChatMessage | Chat conversation log (user message, assistant response, feedback flag, language) |
 | PushSubscription | Web Push subscription (endpoint, keys, user FK) |
+| NativePushToken | Native FCM push token for Android Capacitor app (token, platform, user FK) |
 | FaqItem | FAQ entry with question, answer, language, sort order, view count, group ID for translations, localization flag (admin-managed with LLM auto-translation) |
 | ScheduledPost | Scheduled broadcast post with status (PENDING/SENT/CANCELLED/FAILED), media, button |
 | ScheduledPostDelivery | Individual delivery tracking per user per scheduled post with readAt for open stats |
@@ -123,6 +124,7 @@ FEEDBACK_CHAT_ID=-100xxxxxxxxxx      # Telegram group chat ID for user feedback
 VAPID_PUBLIC_KEY=your-vapid-public-key    # Web Push VAPID public key
 VAPID_PRIVATE_KEY=your-vapid-private-key  # Web Push VAPID private key
 VAPID_SUBJECT=mailto:admin@example.com    # Web Push VAPID subject
+FIREBASE_SERVICE_ACCOUNT={"type":"service_account",...}  # FCM service account JSON (for native push)
 ```
 
 ## API (tRPC Endpoints)
@@ -139,7 +141,7 @@ VAPID_SUBJECT=mailto:admin@example.com    # Web Push VAPID subject
 | `invite` | generate, accept, getByToken |
 | `stats` | profile (obligationsGiven + obligationsReceived), help, networkCapabilities |
 | `currency` | list, detectCurrency, rates, convert, toUSD |
-| `push` | vapidPublicKey, subscribe, unsubscribe |
+| `push` | vapidPublicKey, subscribe, unsubscribe, registerNativeToken, unregisterNativeToken |
 | `faq` | list, top, all, incrementView, localize, isAdmin, create, update, delete (admin-gated CRUD with view ranking and LLM auto-translation to 26 languages) |
 | `broadcast` | sendAll, sendDirect, schedulePost, listScheduled, cancelScheduled, scheduledStats, createChainMessage, listChainMessages, updateChainMessage, deleteChainMessage, chainStats, markRead (admin-only Telegram broadcast with scheduled posts, auto-chain drip campaigns, and open tracking) |
 | `skills` | categories, mine, forUser, saveSkills, saveNeeds, markCompleted, adminStats, matchHints (skills/needs with admin metrics and match notifications) |
@@ -152,6 +154,7 @@ VAPID_SUBJECT=mailto:admin@example.com    # Web Push VAPID subject
 - **Notifications** — BFS distribution with 1:1 ratio (amount = notification count), ignore list, handshake path, Telegram bot and Web Push notifications
 - **Telegram Bot** — Collection notifications (new, blocked, closed) via Bot API with rate-limited broadcast (25 msg/sec batches via BullMQ)
 - **Web Push** — Browser push notifications via web-push library with VAPID, auto-cleanup of expired subscriptions
+- **FCM Push** — Native Android push notifications via Firebase Cloud Messaging (firebase-admin), auto-cleanup of expired tokens
 - **Currency** — Real-time exchange rates with Redis cache (1h TTL), automatic USD conversion for all amounts
 - **Geo** — IP-based country detection for currency auto-selection (ip-api.com)
 
@@ -269,6 +272,7 @@ Mock data (`apps/web/src/lib/demoData.ts`):
 - **Feedback to Telegram** — user feedback/suggestions from chat assistant are auto-forwarded to a Telegram group
 - **Telegram Bot Notifications** — collection notifications (new, blocked, closed) sent to users' Telegram via bot with rate-limited broadcast (BullMQ worker, 25 msg/sec)
 - **Web Push Notifications** — browser push notifications for collection events (new, blocked, closed) via Web Push API with VAPID authentication
+- **Native FCM Push Notifications** — Android Capacitor app receives native push notifications via Firebase Cloud Messaging; unified push service sends to both Web Push and FCM in parallel; auto-cleanup of expired tokens
 - **Arvut Hadadit Subdomain** — Hebrew-branded landing page at `arvuthadadit.orginizer.com` with "ערבות הדדית" branding, forced Hebrew locale, RTL layout, and dedicated translations (`landingArvut.*` in `he.json`)
 - **Invite Sharing with OG Image** — share referral link with personalized localized text ("personal invitation from NAME to their circle of close friends") and auto-generated OG image (logo + "Social Organizer"); Web Share API with image, fallback to clipboard
 - **Collection Hold (Blocked)** — when collection reaches target amount, existing notifications are expired, COLLECTION_BLOCKED notification is sent to all previously notified users; blocked notifications don't navigate to collection page
