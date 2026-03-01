@@ -46,5 +46,14 @@ apps/mobile/.expo/
 apps/mobile/android/
 apps/mobile/ios/
 
+# Keystore (app signing — never commit)
+keystore/
+*.jks
+*.keystore
+keystore.properties
+
+# Firebase service account keys (never commit)
+*-firebase-adminsdk-*.json
+
 # Misc
 origin_logo.png
