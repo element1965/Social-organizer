@@ -136,7 +136,7 @@ export function InvitePage() {
                   localStorage.removeItem('refreshToken');
                   localStorage.removeItem('userId');
                 }
-                window.location.href = `/?redirect=/invite/${token}`;
+                window.location.href = `/login?redirect=/invite/${token}`;
               }}
             >
               <LogIn className="w-4 h-4 mr-2" /> {t('invite.loginToAccept')}
@@ -156,7 +156,7 @@ export function InvitePage() {
                   size="lg"
                   onClick={() => {
                     if (token) localStorage.setItem('pendingInviteToken', token);
-                    window.location.href = `/?redirect=/invite/${token}`;
+                    window.location.href = `/login?redirect=/invite/${token}`;
                   }}
                 >
                   <LogIn className="w-4 h-4 mr-2" /> {t('invite.loginToAccept')}
