@@ -6,10 +6,9 @@ import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { Select } from '../components/ui/select';
 import { SocialIcon } from '../components/ui/social-icons';
-import { MessageCircle, Wallet, CheckCircle, Wrench } from 'lucide-react';
+import { MessageCircle, Wallet, CheckCircle } from 'lucide-react';
 import { cn } from '../lib/utils';
-import { validateContact, MIN_SKILLS, MIN_NEEDS } from '@so/shared';
-import { SkillSelector } from '../components/SkillSelector';
+import { validateContact } from '@so/shared';
 
 const CONTACT_FIELDS = [
   { type: 'whatsapp', placeholder: '+380...' },
@@ -22,7 +21,7 @@ const CONTACT_FIELDS = [
 export function OnboardingPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const [step, setStep] = useState(0); // 0 = contacts, 1 = budget, 2 = skills
+  const [step, setStep] = useState(0); // 0 = contacts, 1 = budget
 
   // Fetch user data to get TG username
   const { data: me } = trpc.user.me.useQuery();
@@ -56,15 +55,6 @@ export function OnboardingPage() {
   const updateContacts = trpc.user.updateContacts.useMutation();
   const utils = trpc.useUtils();
 
-  // Skills step — unified (skills + needs in one pass)
-  const { data: categories } = trpc.skills.categories.useQuery();
-  const saveSkills = trpc.skills.saveSkills.useMutation();
-  const saveNeeds = trpc.skills.saveNeeds.useMutation();
-  const markSkillsCompleted = trpc.skills.markCompleted.useMutation();
-  const [selectedSkills, setSelectedSkills] = useState<Set<string>>(new Set());
-  const [selectedNeeds, setSelectedNeeds] = useState<Set<string>>(new Set());
-  const [skillNotes, setSkillNotes] = useState<Map<string, string>>(new Map());
-
   const contactErrors = Object.fromEntries(
     Object.entries(contacts).map(([type, value]) => [type, validateContact(type, value)])
   );
@@ -78,25 +68,6 @@ export function OnboardingPage() {
 
   const isContactsStep = step === 0;
   const isBudgetStep = step === 1;
-  const isSkillsStep = step === 2;
-
-  const handleToggleSkill = (id: string) => {
-    const next = new Set(selectedSkills);
-    if (next.has(id)) next.delete(id); else next.add(id);
-    setSelectedSkills(next);
-  };
-
-  const handleToggleNeed = (id: string) => {
-    const next = new Set(selectedNeeds);
-    if (next.has(id)) next.delete(id); else next.add(id);
-    setSelectedNeeds(next);
-  };
-
-  const handleSkillNoteChange = (categoryId: string, note: string) => {
-    setSkillNotes((prev) => new Map(prev).set(categoryId, note));
-  };
-
-  const skillsValid = selectedSkills.size >= MIN_SKILLS && selectedNeeds.size >= MIN_NEEDS;
 
   const handleContactsNext = async () => {
     const contactsArray = Object.entries(contacts)
@@ -112,28 +83,12 @@ export function OnboardingPage() {
         inputCurrency: budgetCurrency,
       });
     }
-    setStep(2);
-  };
-
-  const handleSkipBudget = async () => {
-    setStep(2);
-  };
-
-  const handleSkillsFinish = async () => {
-    if (skillsValid) {
-      await Promise.all([
-        saveSkills.mutateAsync({ skills: [...selectedSkills].map((id) => ({ categoryId: id, note: skillNotes.get(id) || undefined })) }),
-        saveNeeds.mutateAsync({ needs: [...selectedNeeds].map((id) => ({ categoryId: id, note: skillNotes.get(id) || undefined })) }),
-      ]);
-    }
-    await markSkillsCompleted.mutateAsync();
     await completeOnboarding.mutateAsync();
     await utils.user.me.refetch();
     navigate('/dashboard');
   };
 
-  const handleSkipSkills = async () => {
-    await markSkillsCompleted.mutateAsync();
+  const handleSkipBudget = async () => {
     await completeOnboarding.mutateAsync();
     await utils.user.me.refetch();
     navigate('/dashboard');
@@ -145,17 +100,15 @@ export function OnboardingPage() {
         <div className="w-16 h-16 rounded-2xl bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center mb-4">
           {isContactsStep ? (
             <MessageCircle className="w-8 h-8 text-blue-600 dark:text-blue-400" />
-          ) : isBudgetStep ? (
-            <Wallet className="w-8 h-8 text-blue-600 dark:text-blue-400" />
           ) : (
-            <Wrench className="w-8 h-8 text-blue-600 dark:text-blue-400" />
+            <Wallet className="w-8 h-8 text-blue-600 dark:text-blue-400" />
           )}
         </div>
         <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-2 text-center">
-          {isContactsStep ? t('onboarding.step5.title') : isBudgetStep ? t('onboarding.step6.title') : t('skills.popupTitle')}
+          {isContactsStep ? t('onboarding.step5.title') : t('onboarding.step6.title')}
         </h2>
         <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed text-center mb-4">
-          {isContactsStep ? t('onboarding.step5.text') : isBudgetStep ? t('onboarding.step6.text') : t('skills.popupText')}
+          {isContactsStep ? t('onboarding.step5.text') : t('onboarding.step6.text')}
         </p>
 
         {/* Step 1: Contacts */}
@@ -218,27 +171,11 @@ export function OnboardingPage() {
           </div>
         )}
 
-        {/* Step 3: Skills & Needs — unified single-pass */}
-        {isSkillsStep && (
-          <div className="w-full flex-1 overflow-y-auto">
-            {categories && (
-              <SkillSelector
-                categories={categories}
-                selectedSkills={selectedSkills}
-                selectedNeeds={selectedNeeds}
-                onToggleSkill={handleToggleSkill}
-                onToggleNeed={handleToggleNeed}
-                notes={skillNotes}
-                onNoteChange={handleSkillNoteChange}
-              />
-            )}
-          </div>
-        )}
       </div>
 
       <div className="w-full max-w-md mx-auto pb-6 pt-3">
         <div className="flex justify-center gap-2 mb-4">
-          {[0, 1, 2].map((i) => (
+          {[0, 1].map((i) => (
             <div key={i} className={cn('w-2 h-2 rounded-full', i === step ? 'bg-blue-600' : 'bg-gray-300 dark:bg-gray-700')} />
           ))}
         </div>
@@ -263,7 +200,7 @@ export function OnboardingPage() {
               className="w-full"
               size="lg"
               onClick={handleFinish}
-              disabled={!budgetValid || setBudget.isPending}
+              disabled={!budgetValid || setBudget.isPending || completeOnboarding.isPending}
             >
               <Wallet className="w-4 h-4 mr-2" /> {t('onboarding.saveBudget')}
             </Button>
@@ -272,31 +209,9 @@ export function OnboardingPage() {
               size="lg"
               variant="ghost"
               onClick={handleSkipBudget}
-            >
-              {t('onboarding.skipForNow')}
-            </Button>
-          </div>
-        ) : (
-          <div className="space-y-2">
-            <p className="text-xs text-center text-gray-400">
-              {t('skills.minHint', { skills: MIN_SKILLS, needs: MIN_NEEDS })}
-            </p>
-            <Button
-              className="w-full"
-              size="lg"
-              onClick={handleSkillsFinish}
-              disabled={!skillsValid || saveSkills.isPending || completeOnboarding.isPending}
-            >
-              {t('common.save')}
-            </Button>
-            <Button
-              className="w-full"
-              size="lg"
-              variant="ghost"
-              onClick={handleSkipSkills}
               disabled={completeOnboarding.isPending}
             >
-              {t('skills.skip')}
+              {t('onboarding.skipForNow')}
             </Button>
           </div>
         )}
