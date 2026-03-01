@@ -22,6 +22,7 @@ import { InvitePage } from './pages/InvitePage';
 import { PrivacyPage } from './pages/PrivacyPage';
 import { TermsPage } from './pages/TermsPage';
 import { FaqPage } from './pages/FaqPage';
+import { DeleteAccountPage } from './pages/DeleteAccountPage';
 
 const isArvut = window.location.hostname.startsWith('arvuthadadit');
 
@@ -59,6 +60,7 @@ export function App() {
             <Route path="/onboarding" element={<OnboardingPage />} />
             <Route path="/privacy" element={<PrivacyPage />} />
             <Route path="/terms" element={<TermsPage />} />
+            <Route path="/delete-account" element={<DeleteAccountPage />} />
             <Route path="/invite/:token" element={<InvitePage />} />
             <Route element={<ProtectedRoute><RequiredInfoGate><Layout /></RequiredInfoGate></ProtectedRoute>}>
               <Route path="/dashboard" element={<DashboardPage />} />
