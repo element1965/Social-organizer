@@ -26,5 +26,8 @@
       "msgpackr-extract",
       "prisma"
     ]
+  },
+  "dependencies": {
+    "sharp": "^0.34.5"
   }
 }
