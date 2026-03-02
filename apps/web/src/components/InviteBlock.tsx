@@ -81,8 +81,8 @@ export function InviteBlock({ id }: InviteBlockProps) {
 
   return (
     <Card id={id}>
-      <CardContent className="py-4">
-        <div className="flex items-center gap-2 mb-4">
+      <CardContent className="py-3">
+        <div className="flex items-center gap-2 mb-2">
           <span className="text-sm font-semibold text-gray-900 dark:text-white">{t('network.invite')}</span>
         </div>
 
@@ -92,23 +92,18 @@ export function InviteBlock({ id }: InviteBlockProps) {
             <div className={`flip-front ${flipped ? 'absolute top-0 left-0 w-full' : ''}`}>
               <div className="relative">
                 {flipButton}
-                <div className="flex flex-col items-center gap-3">
+                <div className="flex flex-col items-center gap-2">
                   {/* QR code */}
-                  <div className="p-3 bg-white rounded-xl">
-                    <QRCodeSVG value={webInviteUrl} size={200} level="H" imageSettings={{ src: '/logo-dark.png', width: 48, height: 34, excavate: true }} />
+                  <div className="p-2 bg-white rounded-lg">
+                    <QRCodeSVG value={webInviteUrl} size={160} level="H" imageSettings={{ src: '/logo-dark.png', width: 38, height: 27, excavate: true }} />
                   </div>
-
-                  {/* Instruction text */}
-                  <p className="text-sm text-gray-600 dark:text-gray-300">
-                    {t('invite.sendThisLink')}
-                  </p>
 
                   {/* Clickable link — copies on tap */}
                   <button
                     onClick={handleCopyWeb}
-                    className="w-full p-3 bg-gray-50 dark:bg-gray-800/70 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors border border-gray-200 dark:border-gray-700"
+                    className="w-full p-2 bg-gray-50 dark:bg-gray-800/70 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors border border-gray-200 dark:border-gray-700"
                   >
-                    <p className="text-sm font-medium text-blue-600 dark:text-blue-400 break-all text-center">
+                    <p className="text-xs font-medium text-blue-600 dark:text-blue-400 break-all text-center">
                       {webInviteUrl}
                     </p>
                   </button>
@@ -117,17 +112,17 @@ export function InviteBlock({ id }: InviteBlockProps) {
                   <button
                     onClick={handleShare}
                     disabled={sharing}
-                    className="w-full flex items-center justify-center gap-2 py-3 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white rounded-xl transition-colors"
+                    className="w-full flex items-center justify-center gap-2 py-2 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white rounded-lg transition-colors"
                   >
-                    <Share2 className="w-5 h-5" />
-                    <span className="font-semibold">{t('invite.share')}</span>
+                    <Share2 className="w-4 h-4" />
+                    <span className="text-sm font-semibold">{t('invite.share')}</span>
                   </button>
 
                   {/* Copied banner */}
                   {(copiedWeb || shared) && (
-                    <div className="w-full flex items-center justify-center gap-2 py-3 bg-green-50 dark:bg-green-950/40 rounded-xl border border-green-200 dark:border-green-800 animate-fade-in">
-                      <Check className="w-6 h-6 text-green-500" />
-                      <span className="text-base font-semibold text-green-600 dark:text-green-400">
+                    <div className="w-full flex items-center justify-center gap-1.5 py-2 bg-green-50 dark:bg-green-950/40 rounded-lg border border-green-200 dark:border-green-800 animate-fade-in">
+                      <Check className="w-5 h-5 text-green-500" />
+                      <span className="text-sm font-semibold text-green-600 dark:text-green-400">
                         {t('invite.copied')}
                       </span>
                     </div>
@@ -140,19 +135,19 @@ export function InviteBlock({ id }: InviteBlockProps) {
             <div className={`flip-back ${flipped ? '' : 'absolute top-0 left-0 w-full'}`}>
               <div className="relative" onClick={(e) => e.stopPropagation()}>
                 {flipButton}
-                <div className="space-y-3">
-                  <p className="text-sm text-gray-600 dark:text-gray-300 pr-8">
+                <div className="space-y-2">
+                  <p className="text-xs text-gray-600 dark:text-gray-300 pr-8">
                     {t('invite.botLinkHint')}
                   </p>
 
                   {/* Bot link — copies on tap */}
                   <button
                     onClick={handleCopyBot}
-                    className="w-full p-4 bg-gray-50 dark:bg-gray-800/70 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors border border-gray-200 dark:border-gray-700"
+                    className="w-full p-2.5 bg-gray-50 dark:bg-gray-800/70 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors border border-gray-200 dark:border-gray-700"
                   >
                     <div className="flex items-center gap-2">
-                      <span className="text-lg shrink-0">🤖</span>
-                      <p className="flex-1 text-sm font-medium text-blue-600 dark:text-blue-400 break-all text-left">
+                      <span className="text-base shrink-0">🤖</span>
+                      <p className="flex-1 text-xs font-medium text-blue-600 dark:text-blue-400 break-all text-left">
                         {botInviteUrl}
                       </p>
                     </div>
@@ -160,21 +155,21 @@ export function InviteBlock({ id }: InviteBlockProps) {
 
                   {/* Copied banner */}
                   {copiedBot && (
-                    <div className="flex items-center justify-center gap-2 py-3 bg-green-50 dark:bg-green-950/40 rounded-xl border border-green-200 dark:border-green-800 animate-fade-in">
-                      <Check className="w-6 h-6 text-green-500" />
-                      <span className="text-base font-semibold text-green-600 dark:text-green-400">
+                    <div className="flex items-center justify-center gap-1.5 py-2 bg-green-50 dark:bg-green-950/40 rounded-lg border border-green-200 dark:border-green-800 animate-fade-in">
+                      <Check className="w-5 h-5 text-green-500" />
+                      <span className="text-sm font-semibold text-green-600 dark:text-green-400">
                         {t('invite.copied')}
                       </span>
                     </div>
                   )}
 
-                  <p className="text-xs text-gray-400 dark:text-gray-500 text-center">
+                  <p className="text-[11px] text-gray-400 dark:text-gray-500 text-center">
                     {t('invite.botLinkDesc')}
                   </p>
 
                   {/* Editable slug */}
-                  <div className="pt-3 border-t border-gray-200 dark:border-gray-700">
-                    <p className="text-xs text-gray-500 dark:text-gray-400 mb-2">
+                  <div className="pt-2 border-t border-gray-200 dark:border-gray-700">
+                    <p className="text-[11px] text-gray-500 dark:text-gray-400 mb-1.5">
                       {t('invite.slugExplain')}
                     </p>
                     {editingSlug ? (
