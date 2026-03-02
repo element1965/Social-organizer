@@ -516,7 +516,7 @@ export async function createNeedMatchNotifications(
  * Full rescan: find all skill matches for a user and create notifications.
  * Called when a new connection is created (networks may merge).
  */
-export async function scanMatchesForUser(db: PrismaClient, userId: string): Promise<void> {
+export async function scanMatchesForUser(_db: PrismaClient, _userId: string): Promise<void> {
   // Skills feature hidden — skip match scan
   return;
 }
