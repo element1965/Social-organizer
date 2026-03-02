@@ -319,7 +319,8 @@ export async function createSkillMatchNotifications(
   skillOwnerId: string,
   addedCategoryIds: string[],
 ): Promise<void> {
-  if (addedCategoryIds.length === 0) return;
+  // Skills feature hidden — skip match notifications
+  return;
 
   // Filter out "other" placeholder categories
   const validCatIds = addedCategoryIds.length > 0
@@ -419,7 +420,8 @@ export async function createNeedMatchNotifications(
   needOwnerId: string,
   addedCategoryIds: string[],
 ): Promise<void> {
-  if (addedCategoryIds.length === 0) return;
+  // Skills feature hidden — skip match notifications
+  return;
 
   // Filter out "other" placeholder categories
   const validCatIds = addedCategoryIds.length > 0
@@ -515,13 +517,6 @@ export async function createNeedMatchNotifications(
  * Called when a new connection is created (networks may merge).
  */
 export async function scanMatchesForUser(db: PrismaClient, userId: string): Promise<void> {
-  const skills = await db.userSkill.findMany({ where: { userId }, select: { categoryId: true } });
-  const needs = await db.userNeed.findMany({ where: { userId }, select: { categoryId: true } });
-
-  if (skills.length > 0) {
-    await createSkillMatchNotifications(db, userId, skills.map((s) => s.categoryId));
-  }
-  if (needs.length > 0) {
-    await createNeedMatchNotifications(db, userId, needs.map((n) => n.categoryId));
-  }
+  // Skills feature hidden — skip match scan
+  return;
 }

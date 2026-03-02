@@ -194,7 +194,7 @@ export function OnboardingPage() {
               <p className="text-sm text-gray-500 dark:text-gray-300 text-center">{t('onboarding.contactsRequired')}</p>
             )}
           </div>
-        ) : isBudgetStep ? (
+        ) : (
           <div className="space-y-3">
             <Button
               className="w-full"
