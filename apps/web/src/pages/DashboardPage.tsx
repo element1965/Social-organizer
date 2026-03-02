@@ -184,6 +184,7 @@ export function DashboardPage() {
             <p className="font-bold text-gray-900 dark:text-white mt-1" style={{ fontSize: 'clamp(1.5rem, 8vw, 2.25rem)' }}>
               {totalReachable?.toLocaleString()}
             </p>
+            <span className="text-[11px] text-gray-500 dark:text-gray-400">{t('dashboard.networkSubtitle')}</span>
           </CardContent>
         </Card>
         <Card className="bg-gradient-to-b from-green-50 to-emerald-50 dark:from-green-950/30 dark:to-emerald-950/30">
@@ -192,6 +193,7 @@ export function DashboardPage() {
             <p className="font-bold text-green-600 dark:text-green-400 mt-1" style={{ fontSize: 'clamp(1.5rem, 8vw, 2.25rem)' }}>
               ${(networkCapabilities?.total ?? 0).toLocaleString()}
             </p>
+            <span className="text-[11px] text-gray-500 dark:text-gray-400">{t('dashboard.potentialSubtitle')}</span>
           </CardContent>
         </Card>
       </div>
