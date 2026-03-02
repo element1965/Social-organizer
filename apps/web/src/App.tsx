@@ -35,7 +35,7 @@ function HomeRoute() {
     return <Navigate to="/dashboard" replace />;
   }
   // In native app (Capacitor) skip landing — go straight to login
-  if ((window as Record<string, unknown>).Capacitor) {
+  if (typeof (window as any).Capacitor?.isNativePlatform === 'function' && (window as any).Capacitor.isNativePlatform()) {
     const inviteParam = params.get('invite');
     if (inviteParam) {
       return <Navigate to={`/invite/${inviteParam}`} replace />;
