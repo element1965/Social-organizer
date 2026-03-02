@@ -1,7 +1,7 @@
 import { lazy, Suspense, useState, useRef, useEffect } from 'react';
 import { useSearchParams, Link, Navigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Handshake, Heart, Eye, Users, Cog, Code, Globe, ChevronDown, ChevronUp, ArrowRight, ArrowDown, Languages, Github, ExternalLink, HelpCircle } from 'lucide-react';
+import { ChevronDown, ChevronUp, ArrowDown, Languages, Github, ExternalLink, HelpCircle, Shield, Calculator, Globe } from 'lucide-react';
 import { languageNames } from '@so/i18n';
 import { useScrollProgress } from '../hooks/useScrollProgress';
 import { Logo } from '../components/Logo';
@@ -276,179 +276,74 @@ export function LandingPage({ variant }: { variant?: 'arvut' } = {}) {
           </button>
         </section>
 
-        {/* === Section: Pain Point Quotes === */}
-        <section className="min-h-[70vh] flex flex-col items-center justify-center px-6 py-16 gap-16">
-          {/* Pain 1: Person in need */}
+        {/* === Section: Principle === */}
+        <section className="flex flex-col items-center justify-center px-6 py-20">
+          <h2 className="text-3xl md:text-5xl font-bold text-white mb-8 text-center">
+            {t('landing.principleTitle')}
+          </h2>
+          <div className="max-w-3xl w-full space-y-6">
+            <p className="text-gray-300 text-base md:text-lg leading-relaxed text-center">
+              {t('landing.principleText')}
+            </p>
+          </div>
+        </section>
+
+        {/* === Section: Neutral Tool === */}
+        <section className="flex flex-col items-center justify-center px-6 py-16">
           <div className="max-w-3xl w-full">
-            <blockquote className="relative">
-              <div className="text-6xl text-teal-500/30 absolute -top-8 -left-4 font-serif">"</div>
-              <p className="text-xl md:text-2xl text-gray-300 leading-relaxed text-center italic pl-6 pr-6">
-                {t('landing.painQuote')}
+            <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-8">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-10 h-10 bg-teal-500/20 rounded-lg flex items-center justify-center">
+                  <Shield className="text-teal-400" size={20} />
+                </div>
+                <h3 className="text-white font-semibold text-xl">{t('landing.neutralTitle')}</h3>
+              </div>
+              <p className="text-gray-300 text-base leading-relaxed mb-6">
+                {t('landing.neutralText')}
               </p>
-              <div className="text-6xl text-teal-500/30 absolute -bottom-12 right-0 font-serif">"</div>
-            </blockquote>
-            <p className="text-gray-500 dark:text-gray-300 text-center mt-8 text-sm">
-              {t('landing.painSolution')}
-            </p>
+              <p className="text-teal-400 font-semibold text-sm tracking-wide">
+                {t('landing.neutralList')}
+              </p>
+            </div>
           </div>
+        </section>
 
-          {/* Pain 2: Person who wants to help */}
+        {/* === Section: Simple Example === */}
+        <section className="flex flex-col items-center justify-center px-6 py-16">
           <div className="max-w-3xl w-full">
-            <blockquote className="relative">
-              <div className="text-6xl text-rose-500/30 absolute -top-8 -left-4 font-serif">"</div>
-              <p className="text-xl md:text-2xl text-gray-300 leading-relaxed text-center italic pl-6 pr-6">
-                {t('landing.painQuote2')}
+            <div className="flex items-center gap-3 mb-6 justify-center">
+              <div className="w-10 h-10 bg-amber-500/20 rounded-lg flex items-center justify-center">
+                <Calculator className="text-amber-400" size={20} />
+              </div>
+              <h2 className="text-2xl md:text-4xl font-bold text-white">
+                {t('landing.exampleTitle')}
+              </h2>
+            </div>
+            <p className="text-gray-300 text-base md:text-lg leading-relaxed text-center mb-8">
+              {t('landing.exampleText')}
+            </p>
+            <blockquote className="border-l-4 border-teal-500/50 pl-6 py-2">
+              <p className="text-gray-400 text-base leading-relaxed italic">
+                {t('landing.notFundText')}
               </p>
-              <div className="text-6xl text-rose-500/30 absolute -bottom-12 right-0 font-serif">"</div>
             </blockquote>
-            <p className="text-gray-500 dark:text-gray-300 text-center mt-8 text-sm">
-              {t('landing.painSolution2')}
+          </div>
+        </section>
+
+        {/* === Section: Decentralized Analogue === */}
+        <section className="flex flex-col items-center justify-center px-6 py-16">
+          <div className="max-w-3xl w-full">
+            <div className="flex items-center gap-3 mb-6 justify-center">
+              <div className="w-10 h-10 bg-blue-500/20 rounded-lg flex items-center justify-center">
+                <Globe className="text-blue-400" size={20} />
+              </div>
+              <h2 className="text-2xl md:text-4xl font-bold text-white">
+                {t('landing.analogTitle')}
+              </h2>
+            </div>
+            <p className="text-gray-300 text-base md:text-lg leading-relaxed text-center">
+              {t('landing.analogText')}
             </p>
-          </div>
-        </section>
-
-        {/* === Section 2: What is it === */}
-        <section className="min-h-[80vh] flex flex-col items-center justify-center px-6 py-20">
-          <h2 className="text-3xl md:text-5xl font-bold text-white mb-4 text-center">
-            {t('landing.whatTitle')}
-          </h2>
-          <p className="text-gray-400 text-base md:text-lg max-w-2xl text-center mb-12 leading-relaxed">
-            {t('landing.whatDescription')}
-          </p>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl w-full">
-            {/* Card: Handshake */}
-            <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6">
-              <div className="w-12 h-12 bg-teal-500/20 rounded-xl flex items-center justify-center mb-4">
-                <Handshake className="text-teal-400" size={24} />
-              </div>
-              <h3 className="text-white font-semibold text-lg mb-2">{t('landing.cardHandshakeTitle')}</h3>
-              <p className="text-gray-400 text-sm leading-relaxed">{t('landing.cardHandshakeDesc')}</p>
-            </div>
-
-            {/* Card: Intention */}
-            <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6">
-              <div className="w-12 h-12 bg-rose-500/20 rounded-xl flex items-center justify-center mb-4">
-                <Heart className="text-rose-400" size={24} />
-              </div>
-              <h3 className="text-white font-semibold text-lg mb-2">{t('landing.cardIntentionTitle')}</h3>
-              <p className="text-gray-400 text-sm leading-relaxed">{t('landing.cardIntentionDesc')}</p>
-            </div>
-
-            {/* Card: Transparency */}
-            <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6">
-              <div className="w-12 h-12 bg-blue-500/20 rounded-xl flex items-center justify-center mb-4">
-                <Eye className="text-blue-400" size={24} />
-              </div>
-              <h3 className="text-white font-semibold text-lg mb-2">{t('landing.cardTransparencyTitle')}</h3>
-              <p className="text-gray-400 text-sm leading-relaxed">{t('landing.cardTransparencyDesc')}</p>
-            </div>
-          </div>
-        </section>
-
-        {/* === Section 3: How it works (3 steps) === */}
-        <section className="min-h-screen flex flex-col items-center justify-center px-6 py-20">
-          <h2 className="text-3xl md:text-5xl font-bold text-white mb-16 text-center">
-            {t('landing.howTitle')}
-          </h2>
-
-          <div className="max-w-4xl w-full">
-            {/* Timeline */}
-            <div className="flex flex-col md:flex-row gap-8 md:gap-4">
-              {/* Step 1 */}
-              <div className="flex-1 flex flex-col items-center text-center">
-                <div className="w-14 h-14 bg-teal-500/20 border-2 border-teal-500 rounded-full flex items-center justify-center mb-4">
-                  <span className="text-teal-400 font-bold text-xl">1</span>
-                </div>
-                <h3 className="text-white font-semibold text-lg mb-2">{t('landing.step1Title')}</h3>
-                <p className="text-gray-400 text-sm leading-relaxed">{t('landing.step1Desc')}</p>
-              </div>
-
-              {/* Connector */}
-              <div className="hidden md:flex items-center justify-center pt-7">
-                <ArrowRight className="text-white/20" size={24} />
-              </div>
-
-              {/* Step 2 */}
-              <div className="flex-1 flex flex-col items-center text-center">
-                <div className="w-14 h-14 bg-blue-500/20 border-2 border-blue-500 rounded-full flex items-center justify-center mb-4">
-                  <span className="text-blue-400 font-bold text-xl">2</span>
-                </div>
-                <h3 className="text-white font-semibold text-lg mb-2">{t('landing.step2Title')}</h3>
-                <p className="text-gray-400 text-sm leading-relaxed">{t('landing.step2Desc')}</p>
-              </div>
-
-              {/* Connector */}
-              <div className="hidden md:flex items-center justify-center pt-7">
-                <ArrowRight className="text-white/20" size={24} />
-              </div>
-
-              {/* Step 3 */}
-              <div className="flex-1 flex flex-col items-center text-center">
-                <div className="w-14 h-14 bg-amber-500/20 border-2 border-amber-500 rounded-full flex items-center justify-center mb-4">
-                  <span className="text-amber-400 font-bold text-xl">3</span>
-                </div>
-                <h3 className="text-white font-semibold text-lg mb-2">{t('landing.step3Title')}</h3>
-                <p className="text-gray-400 text-sm leading-relaxed">{t('landing.step3Desc')}</p>
-              </div>
-            </div>
-
-            <p className="text-gray-500 dark:text-gray-300 text-sm text-center mt-10 italic">
-              {t('landing.howFootnote')}
-            </p>
-          </div>
-        </section>
-
-        {/* === Section 4: Principles === */}
-        <section className="min-h-[80vh] flex flex-col items-center justify-center px-6 py-20">
-          <h2 className="text-3xl md:text-5xl font-bold text-white mb-12 text-center">
-            {t('landing.principlesTitle')}
-          </h2>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-3xl w-full">
-            {/* Equality */}
-            <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6">
-              <div className="w-10 h-10 bg-violet-500/20 rounded-lg flex items-center justify-center mb-3">
-                <Users className="text-violet-400" size={20} />
-              </div>
-              <h3 className="text-white font-semibold mb-1">{t('landing.principleEqualityTitle')}</h3>
-              <p className="text-gray-400 text-sm">{t('landing.principleEqualityDesc')}</p>
-            </div>
-
-            {/* Self-organization */}
-            <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6">
-              <div className="w-10 h-10 bg-orange-500/20 rounded-lg flex items-center justify-center mb-3">
-                <Cog className="text-orange-400" size={20} />
-              </div>
-              <h3 className="text-white font-semibold mb-1">{t('landing.principleSelfOrgTitle')}</h3>
-              <p className="text-gray-400 text-sm">{t('landing.principleSelfOrgDesc')}</p>
-            </div>
-
-            {/* Openness */}
-            <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6">
-              <div className="w-10 h-10 bg-green-500/20 rounded-lg flex items-center justify-center mb-3">
-                <Code className="text-green-400" size={20} />
-              </div>
-              <h3 className="text-white font-semibold mb-1">{t('landing.principleOpenTitle')}</h3>
-              <p className="text-gray-400 text-sm mb-3">{t('landing.principleOpenDesc')}</p>
-              <a
-                href="https://github.com/element1965/Social-organizer"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 text-sm text-green-400 hover:text-green-300 transition-colors"
-              >
-                <Github size={16} /> {t('landing.githubLink')} <ExternalLink size={12} />
-              </a>
-            </div>
-
-            {/* Global */}
-            <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6">
-              <div className="w-10 h-10 bg-cyan-500/20 rounded-lg flex items-center justify-center mb-3">
-                <Globe className="text-cyan-400" size={20} />
-              </div>
-              <h3 className="text-white font-semibold mb-1">{t('landing.principleGlobalTitle')}</h3>
-              <p className="text-gray-400 text-sm">{t('landing.principleGlobalDesc')}</p>
-            </div>
           </div>
         </section>
 
