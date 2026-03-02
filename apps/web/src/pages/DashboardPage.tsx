@@ -4,7 +4,6 @@ import { useTranslation } from 'react-i18next';
 import { trpc } from '../lib/trpc';
 import { useCachedNetworkStats } from '../hooks/useCachedNetworkStats';
 import { InviteBlock } from '../components/InviteBlock';
-import { PeriodPicker, PeriodChip } from '../components/PeriodPicker';
 import { Card, CardContent } from '../components/ui/card';
 import { Button } from '../components/ui/button';
 import {
@@ -15,8 +14,6 @@ import {
   X,
   HelpCircle,
   Pencil,
-  Globe,
-  Sparkles,
   MessageSquarePlus,
 } from 'lucide-react';
 import { Tooltip } from '../components/ui/tooltip';
@@ -52,20 +49,6 @@ export function DashboardPage() {
   const [editingSuggText, setEditingSuggText] = useState('');
   const [editingSuggGroup, setEditingSuggGroup] = useState('');
 
-  // Period pickers state (default: today)
-  const [networkDays, setNetworkDays] = useState(1);
-  const [showNetworkPicker, setShowNetworkPicker] = useState(false);
-  const [capDays, setCapDays] = useState(1);
-  const [showCapPicker, setShowCapPicker] = useState(false);
-
-  const { data: networkByPeriod } = trpc.stats.byPeriod.useQuery(
-    { days: networkDays },
-    { enabled: networkDays > 0, refetchInterval: 60000 },
-  );
-  const { data: capByPeriod } = trpc.stats.byPeriod.useQuery(
-    { days: capDays },
-    { enabled: capDays > 0, refetchInterval: 60000 },
-  );
 
   // Budget editing
   const [editingBudget, setEditingBudget] = useState(false);
@@ -82,15 +65,6 @@ export function DashboardPage() {
       setTimeout(() => document.getElementById('invite')?.scrollIntoView({ behavior: 'smooth' }), 100);
     }
   }, []);
-
-  // Period data helpers
-  const networkNewConn = networkDays === 0
-    ? null
-    : networkByPeriod?.newPeople ?? null;
-
-  const capPeriodTotal = capDays === 0
-    ? null
-    : capByPeriod?.newBudget ?? null;
 
   return (
     <div className="px-4 pt-2 pb-4 flex flex-col gap-4 relative">
@@ -200,61 +174,28 @@ export function DashboardPage() {
         );
       })()}
 
-      {/* Card 1: "Вся сеть" — Whole network */}
-      <Card
-        className="bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-950/30 dark:to-purple-950/30 cursor-pointer hover:scale-[1.02] hover:shadow-md transition-all"
-        onClick={() => navigate('/network?view=list')}
-      >
-        <CardContent className="py-4">
-          <div className="flex items-center justify-between mb-2">
-            <div className="flex items-center gap-2">
-              <Globe className="w-5 h-5 text-blue-600" />
-              <span className="text-sm font-semibold text-gray-900 dark:text-white">{t('dashboard.wholeNetwork')}</span>
-            </div>
-            <div onClick={(e) => e.stopPropagation()}>
-              <PeriodChip days={networkDays} onClick={() => setShowNetworkPicker(true)} />
-            </div>
-          </div>
-          <div className="flex items-baseline justify-between gap-2">
-            <p className="font-bold text-gray-900 dark:text-white whitespace-nowrap" style={{ fontSize: 'clamp(1.25rem, 7vw, 1.875rem)' }}>
-              {totalReachable?.toLocaleString()} <span className="text-sm font-normal text-gray-500 dark:text-gray-300">{t('dashboard.people')}</span>
+      {/* Cards row: Network + Potential side by side */}
+      <div className="grid grid-cols-2 gap-3">
+        <Card
+          className="bg-gradient-to-b from-blue-50 to-purple-50 dark:from-blue-950/30 dark:to-purple-950/30 cursor-pointer hover:scale-[1.02] hover:shadow-md transition-all"
+          onClick={() => navigate('/network?view=list')}
+        >
+          <CardContent className="py-4 text-center">
+            <span className="text-sm font-semibold text-gray-900 dark:text-white">{t('dashboard.wholeNetwork')}</span>
+            <p className="font-bold text-gray-900 dark:text-white mt-1" style={{ fontSize: 'clamp(1.5rem, 8vw, 2.25rem)' }}>
+              {totalReachable?.toLocaleString()}
             </p>
-            {networkNewConn != null && (
-              <span className="font-bold text-blue-600 dark:text-blue-400 whitespace-nowrap" style={{ fontSize: 'clamp(0.875rem, 4vw, 1.125rem)' }}>
-                {t('dashboard.newConnections', { count: networkNewConn })}
-              </span>
-            )}
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Card 2: "Возможности сети" — Network capabilities */}
-      <Card className="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-950/30 dark:to-emerald-950/30">
-        <CardContent className="py-4">
-          <div className="flex items-center justify-between mb-2">
-            <div className="flex items-center gap-2">
-              <Sparkles className="w-5 h-5 text-green-600" />
-              <span className="text-sm font-semibold text-gray-900 dark:text-white">{t('dashboard.networkCapabilitiesTitle')}</span>
-            </div>
-            <PeriodChip days={capDays} onClick={() => setShowCapPicker(true)} />
-          </div>
-          <div className="flex items-baseline justify-between gap-2">
-            <div className="flex items-baseline gap-2 min-w-0 flex-wrap">
-              <p className="font-bold text-green-600 dark:text-green-400 whitespace-nowrap" style={{ fontSize: 'clamp(1.25rem, 7vw, 1.875rem)' }}>
-                ${(networkCapabilities?.total ?? 0).toLocaleString()}
-              </p>
-              {networkCapabilities?.contributors != null && networkCapabilities.contributors > 0 && (
-                <span className="text-sm text-gray-500 dark:text-gray-300 whitespace-nowrap">{t('dashboard.capabilitiesContributors', { count: networkCapabilities.contributors })}</span>
-              )}
-            </div>
-            {capPeriodTotal != null && (
-              <span className="font-bold text-green-600 dark:text-green-400 whitespace-nowrap shrink-0" style={{ fontSize: 'clamp(0.875rem, 4vw, 1.125rem)' }}>
-                +${capPeriodTotal.toLocaleString()}
-              </span>
-            )}
-          </div>
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
+        <Card className="bg-gradient-to-b from-green-50 to-emerald-50 dark:from-green-950/30 dark:to-emerald-950/30">
+          <CardContent className="py-4 text-center">
+            <span className="text-sm font-semibold text-gray-900 dark:text-white">{t('dashboard.networkCapabilitiesTitle')}</span>
+            <p className="font-bold text-green-600 dark:text-green-400 mt-1" style={{ fontSize: 'clamp(1.5rem, 8vw, 2.25rem)' }}>
+              ${(networkCapabilities?.total ?? 0).toLocaleString()}
+            </p>
+          </CardContent>
+        </Card>
+      </div>
 
       {/* Card 3: Invite (flip card) */}
       <InviteBlock id="invite" />
@@ -300,9 +241,7 @@ export function DashboardPage() {
           ) : (
             <div className="flex items-center gap-2">
               <p className="text-xl font-bold text-blue-700 dark:text-blue-400">
-                {me?.remainingBudget != null && me.monthlyBudget != null
-                  ? `$${Math.round(me.remainingBudget)} / $${Math.round(me.monthlyBudget)}`
-                  : '$0'}
+                {me?.monthlyBudget != null ? `$${Math.round(me.monthlyBudget)}` : '$0'}
               </p>
               <button
                 onClick={() => { setNewBudgetValue(''); setEditingBudget(true); }}
@@ -437,19 +376,6 @@ export function DashboardPage() {
         </Card>
       )}
 
-      {/* Period pickers (full-screen overlays) */}
-      <PeriodPicker
-        open={showNetworkPicker}
-        onClose={() => setShowNetworkPicker(false)}
-        value={networkDays}
-        onChange={setNetworkDays}
-      />
-      <PeriodPicker
-        open={showCapPicker}
-        onClose={() => setShowCapPicker(false)}
-        value={capDays}
-        onChange={setCapDays}
-      />
     </div>
   );
 }
