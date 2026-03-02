@@ -9,7 +9,6 @@ import { Button } from '../components/ui/button';
 import {
   UserPlus,
   TrendingUp,
-  Wallet,
   Check,
   X,
   HelpCircle,
@@ -204,7 +203,6 @@ export function DashboardPage() {
       <Card className="bg-gradient-to-b from-blue-50 to-indigo-50 dark:from-blue-950/30 dark:to-indigo-950/30">
         <CardContent className="py-4">
           <div className="flex items-center gap-2 mb-2">
-            <Wallet className="w-5 h-5 text-blue-600" />
             <span className="text-sm font-semibold text-gray-900 dark:text-white">{t('dashboard.yourContribution')}</span>
             <Tooltip content={t('dashboard.myCapabilitiesHint')} side="bottom">
               <button type="button" className="text-gray-400 hover:text-gray-500 dark:text-gray-300"><HelpCircle className="w-3.5 h-3.5" /></button>

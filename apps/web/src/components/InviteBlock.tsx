@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { QRCodeSVG } from 'qrcode.react';
-import { Check, Pencil, RefreshCw, UserPlus, Share2 } from 'lucide-react';
+import { Check, Pencil, RefreshCw, Share2 } from 'lucide-react';
 import { trpc } from '../lib/trpc';
 import { useAuth } from '../hooks/useAuth';
 import { buildWebInviteUrl, buildBotInviteUrl } from '../lib/inviteUrl';
@@ -83,7 +83,6 @@ export function InviteBlock({ id }: InviteBlockProps) {
     <Card id={id}>
       <CardContent className="py-4">
         <div className="flex items-center gap-2 mb-4">
-          <UserPlus className="w-5 h-5 text-blue-600" />
           <span className="text-sm font-semibold text-gray-900 dark:text-white">{t('network.invite')}</span>
         </div>
 
