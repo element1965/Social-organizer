@@ -6,7 +6,7 @@ import { Button } from '../components/ui/button';
 import { Badge } from '../components/ui/badge';
 import { Spinner } from '../components/ui/spinner';
 import { Avatar } from '../components/ui/avatar';
-import { useState, useEffect, useRef } from 'react';
+import { useState } from 'react';
 import {
   Bell,
   X,
@@ -19,7 +19,6 @@ import {
   CheckCircle,
   XCircle,
   Wallet,
-  Handshake,
 } from 'lucide-react';
 import { cn } from '../lib/utils';
 import { useNicknames } from '../hooks/useNicknames';
@@ -63,24 +62,6 @@ export function NotificationsPage() {
   const dismiss = trpc.notification.dismiss.useMutation({ onSuccess: () => { utils.notification.list.invalidate(); utils.notification.unreadCount.invalidate(); } });
   const dismissAll = trpc.notification.dismissAll.useMutation({ onSuccess: () => { utils.notification.list.invalidate(); utils.notification.unreadCount.invalidate(); } });
 
-  // Skill match notifications
-  const { data: matchNotifs } = trpc.matches.matchNotifications.useQuery(undefined, { refetchInterval: 30000 });
-  const dismissMatch = trpc.matches.dismissMatchNotification.useMutation({
-    onSuccess: () => { utils.matches.matchNotifications.invalidate(); utils.matches.unreadMatchCount.invalidate(); },
-  });
-  const markMatchesRead = trpc.matches.markMatchNotificationsRead.useMutation({
-    onSuccess: () => { utils.matches.matchNotifications.invalidate(); utils.matches.unreadMatchCount.invalidate(); },
-  });
-
-  // Auto-mark match notifications as read when page opens
-  const matchReadFired = useRef(false);
-  useEffect(() => {
-    const unreadCount = matchNotifs?.filter((m) => m.status === 'UNREAD').length ?? 0;
-    if (unreadCount > 0 && !matchReadFired.current) {
-      matchReadFired.current = true;
-      markMatchesRead.mutate();
-    }
-  }, [matchNotifs]);
 
   // Pending connections
   const { data: pendingIncoming } = trpc.pending.incoming.useQuery(undefined, { refetchInterval: 15000 });
@@ -187,7 +168,7 @@ export function NotificationsPage() {
       )}
 
       {/* Collection notifications — grouped by collectionId with stacked overlap */}
-      {isLoading ? <div className="flex justify-center py-12"><Spinner /></div> : groupedNotifications.length === 0 && (!pendingIncoming || pendingIncoming.length === 0) && (!myPending || myPending.length === 0) && (!matchNotifs || matchNotifs.length === 0) ? (
+      {isLoading ? <div className="flex justify-center py-12"><Spinner /></div> : groupedNotifications.length === 0 && (!pendingIncoming || pendingIncoming.length === 0) && (!myPending || myPending.length === 0) ? (
         <div className="text-center py-8 text-gray-400 dark:text-gray-500 text-sm">{t('notifications.empty')}</div>
       ) : groupedNotifications.length > 0 ? (
         <div className="space-y-2">
@@ -271,48 +252,6 @@ export function NotificationsPage() {
           {hasNextPage && <Button variant="outline" className="w-full" onClick={() => fetchNextPage()}>{t('notifications.loadMore')}</Button>}
         </div>
       ) : null}
-
-      {/* Skill match notifications */}
-      {matchNotifs && matchNotifs.length > 0 && (
-        <Card className="border-purple-300 dark:border-purple-700 bg-purple-50 dark:bg-purple-950/30">
-          <CardContent className="py-3">
-            <div className="flex items-center gap-2 mb-2">
-              <Handshake className="w-5 h-5 text-purple-600" />
-              <span className="font-semibold text-purple-700 dark:text-purple-400 flex-1">
-                {t('matches.title')} ({matchNotifs.length})
-              </span>
-              <button
-                onClick={() => navigate('/matches')}
-                className="text-xs text-purple-500 hover:text-purple-700"
-              >
-                {t('common.done')} →
-              </button>
-            </div>
-            <div className="space-y-1.5">
-              {matchNotifs.map((mn) => (
-                <div key={mn.id} className="flex items-center gap-2 p-2 rounded bg-white/50 dark:bg-gray-900/50">
-                  <button
-                    onClick={() => navigate(`/profile/${mn.matchUser.id}`)}
-                    className="flex items-center gap-2 flex-1 min-w-0"
-                  >
-                    <Avatar src={mn.matchUser.photoUrl} name={resolve(mn.matchUser.id, mn.matchUser.name)} size="sm" />
-                    <div className="flex-1 min-w-0 text-left">
-                      <p className="text-sm font-medium text-gray-900 dark:text-white truncate">{resolve(mn.matchUser.id, mn.matchUser.name)}</p>
-                      <p className="text-xs text-gray-500 dark:text-gray-400">{t(`skills.${mn.category.key}`, mn.category.key)}</p>
-                    </div>
-                  </button>
-                  <button
-                    onClick={() => dismissMatch.mutate({ id: mn.id })}
-                    className="p-1 rounded text-gray-400 hover:text-gray-600"
-                  >
-                    <X className="w-4 h-4" />
-                  </button>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-      )}
 
       {/* Incoming pending connections — collapsible, below collection notifications */}
       {pendingIncoming && pendingIncoming.length > 0 && (

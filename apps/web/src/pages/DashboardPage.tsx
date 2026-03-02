@@ -17,15 +17,13 @@ import {
   Pencil,
   Globe,
   Sparkles,
-  Wrench,
-  Handshake,
-  ChevronRight,
   MessageSquarePlus,
 } from 'lucide-react';
 import { Tooltip } from '../components/ui/tooltip';
 import { SocialIcon } from '../components/ui/social-icons';
 import { SKILL_GROUPS, SKILL_GROUP_ICONS } from '@so/shared';
 import type { SkillGroup } from '@so/shared';
+// SKILL_GROUPS/SKILL_GROUP_ICONS used by suggestions moderation block below
 import { useNicknames } from '../hooks/useNicknames';
 
 const LazyCloudBackground = lazy(() =>
@@ -44,12 +42,6 @@ export function DashboardPage() {
   const { data: networkStats, isLoading: networkLoading } = useCachedNetworkStats();
   const { data: networkCapabilities } = trpc.stats.networkCapabilities.useQuery(undefined, { refetchInterval: 60000 });
   const { data: adminData } = trpc.faq.isAdmin.useQuery();
-  const { data: skillsAdminStats } = trpc.skills.adminStats.useQuery(undefined, {
-    enabled: !!adminData?.isAdmin,
-  });
-  const { data: matchHelpMe } = trpc.matches.whoCanHelpMe.useQuery();
-  const { data: matchHelpThem } = trpc.matches.whoNeedsMyHelp.useQuery();
-  const { data: matchChains } = trpc.matches.myChains.useQuery();
   const { data: suggestions } = trpc.skills.listSuggestions.useQuery(undefined, {
     enabled: !!adminData?.isAdmin,
   });
@@ -191,8 +183,8 @@ export function DashboardPage() {
         </div>
       )}
 
-      {/* Day count badge */}
-      {me?.createdAt && (() => {
+      {/* Day count badge — admin only */}
+      {adminData?.isAdmin && me?.createdAt && (() => {
         const kyivNow = new Date(new Date().toLocaleString('en-US', { timeZone: 'Europe/Kyiv' }));
         const kyivReg = new Date(new Date(me.createdAt).toLocaleString('en-US', { timeZone: 'Europe/Kyiv' }));
         const today = new Date(kyivNow.getFullYear(), kyivNow.getMonth(), kyivNow.getDate());
@@ -335,146 +327,6 @@ export function DashboardPage() {
         </div>
       )}
 
-      {/* Skill Matches card */}
-      {((matchHelpMe && matchHelpMe.length > 0) || (matchHelpThem && matchHelpThem.length > 0)) && (
-        <Card>
-          <CardContent className="py-4">
-            <button
-              onClick={() => navigate('/matches')}
-              className="w-full text-left"
-            >
-              <div className="flex items-center justify-between mb-2">
-                <div className="flex items-center gap-2">
-                  <Handshake className="w-5 h-5 text-purple-600" />
-                  <span className="text-sm font-semibold text-gray-900 dark:text-white">{t('matches.title')}</span>
-                </div>
-                <ChevronRight className="w-4 h-4 text-gray-400" />
-              </div>
-              <div className="flex flex-wrap gap-1.5">
-                {matchHelpMe && matchHelpMe.length > 0 && (
-                  <span className="px-2 py-0.5 text-xs rounded-full bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 font-medium">
-                    {new Set(matchHelpMe.map(h => h.userId)).size} {t('matches.whoCanHelpMe').toLowerCase()}
-                  </span>
-                )}
-                {matchHelpThem && matchHelpThem.length > 0 && (
-                  <span className="px-2 py-0.5 text-xs rounded-full bg-orange-50 dark:bg-orange-900/30 text-orange-600 font-medium">
-                    {new Set(matchHelpThem.map(h => h.userId)).size} {t('matches.whoNeedsMyHelp').toLowerCase()}
-                  </span>
-                )}
-                {matchChains && matchChains.length > 0 && (
-                  <span className="px-2 py-0.5 text-xs rounded-full bg-purple-50 dark:bg-purple-900/30 text-purple-600 font-medium">
-                    {matchChains.length} {t('matches.chains').toLowerCase()}
-                  </span>
-                )}
-              </div>
-            </button>
-          </CardContent>
-        </Card>
-      )}
-
-      {adminData?.isAdmin && skillsAdminStats && (
-        <Card>
-          <CardContent className="py-4">
-            <div className="flex items-center gap-2 mb-3">
-              <Wrench className="w-5 h-5 text-purple-600" />
-              <span className="text-sm font-semibold text-gray-900 dark:text-white">{t('skills.adminTitle')}</span>
-            </div>
-            {/* Row 1: Fill rate, Match density, Users */}
-            <div className="grid grid-cols-3 gap-3 mb-3">
-              <div className="text-center">
-                <p className="text-2xl font-bold text-blue-600">{skillsAdminStats.fillRate}%</p>
-                <p className="text-xs text-gray-500 dark:text-gray-400">{t('skills.fillRate')}</p>
-              </div>
-              <div className="text-center">
-                <p className="text-2xl font-bold text-green-600">{skillsAdminStats.matchDensity}</p>
-                <p className="text-xs text-gray-500 dark:text-gray-400">{t('skills.matchDensity')}</p>
-              </div>
-              <div className="text-center">
-                <p className="text-lg font-bold text-gray-700 dark:text-gray-300">
-                  {skillsAdminStats.usersWithSkills}/{skillsAdminStats.usersWithNeeds}
-                </p>
-                <p className="text-xs text-gray-500 dark:text-gray-400">{t('skills.withSkills')}/{t('skills.withNeeds')}</p>
-              </div>
-            </div>
-
-            {/* Row 2: Averages, Geo, Pairs */}
-            <div className="grid grid-cols-4 gap-2 mb-3">
-              <div className="text-center p-1.5 rounded-lg bg-gray-50 dark:bg-gray-800/50">
-                <p className="text-sm font-bold text-gray-700 dark:text-gray-300">{skillsAdminStats.avgSkillsPerUser}</p>
-                <p className="text-[10px] text-gray-400">{t('skills.avgSkills')}</p>
-              </div>
-              <div className="text-center p-1.5 rounded-lg bg-gray-50 dark:bg-gray-800/50">
-                <p className="text-sm font-bold text-gray-700 dark:text-gray-300">{skillsAdminStats.avgNeedsPerUser}</p>
-                <p className="text-[10px] text-gray-400">{t('skills.avgNeeds')}</p>
-              </div>
-              <div className="text-center p-1.5 rounded-lg bg-gray-50 dark:bg-gray-800/50">
-                <p className="text-sm font-bold text-gray-700 dark:text-gray-300">{skillsAdminStats.geoRate}%</p>
-                <p className="text-[10px] text-gray-400">{t('skills.geoFilled')}</p>
-              </div>
-              <div className="text-center p-1.5 rounded-lg bg-gray-50 dark:bg-gray-800/50">
-                <p className="text-sm font-bold text-purple-600">{skillsAdminStats.uniqueMatchPairs}</p>
-                <p className="text-[10px] text-gray-400">{t('skills.matchPairs')}</p>
-              </div>
-            </div>
-
-            {/* Row 3: Chains */}
-            {(skillsAdminStats.chainsTotal > 0 || skillsAdminStats.notifsTotal > 0) && (
-              <div className="grid grid-cols-4 gap-2 mb-3">
-                <div className="text-center p-1.5 rounded-lg bg-purple-50 dark:bg-purple-900/20">
-                  <p className="text-sm font-bold text-purple-600">{skillsAdminStats.chainsTotal}</p>
-                  <p className="text-[10px] text-gray-400">{t('skills.chainsCount')}</p>
-                </div>
-                <div className="text-center p-1.5 rounded-lg bg-purple-50 dark:bg-purple-900/20">
-                  <p className="text-sm font-bold text-purple-600">{skillsAdminStats.chainsWithChat}</p>
-                  <p className="text-[10px] text-gray-400">{t('skills.withChat')}</p>
-                </div>
-                <div className="text-center p-1.5 rounded-lg bg-purple-50 dark:bg-purple-900/20">
-                  <p className="text-sm font-bold text-purple-600">{skillsAdminStats.chainParticipants}</p>
-                  <p className="text-[10px] text-gray-400">{t('skills.inChains')}</p>
-                </div>
-                <div className="text-center p-1.5 rounded-lg bg-amber-50 dark:bg-amber-900/20">
-                  <p className="text-sm font-bold text-amber-600">{skillsAdminStats.notifsTotal}</p>
-                  <p className="text-[10px] text-gray-400">{t('skills.notifs')}</p>
-                </div>
-              </div>
-            )}
-
-            {/* Row 4: Suggestions + Categories count */}
-            <div className="flex items-center gap-3 mb-3 text-xs text-gray-400">
-              <span>{skillsAdminStats.totalCategories} {t('skills.categoriesCount')}</span>
-              <span>{skillsAdminStats.totalSkillEntries} / {skillsAdminStats.totalNeedEntries} {t('skills.entriesTotal')}</span>
-              {skillsAdminStats.pendingSuggestions > 0 && (
-                <span className="text-amber-500 font-medium">{skillsAdminStats.pendingSuggestions} {t('skills.pendingCount')}</span>
-              )}
-            </div>
-
-            {skillsAdminStats.topSkills.length > 0 && (
-              <div className="mb-2">
-                <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 mb-1">{t('skills.topSkills')}</p>
-                <div className="flex flex-wrap gap-1">
-                  {skillsAdminStats.topSkills.map((s: { key: string; count: number }) => (
-                    <span key={s.key} className="px-2 py-0.5 text-xs rounded-full bg-blue-50 dark:bg-blue-950/30 text-blue-600">
-                      {t(`skills.${s.key}`)} ({s.count})
-                    </span>
-                  ))}
-                </div>
-              </div>
-            )}
-            {skillsAdminStats.topNeeds.length > 0 && (
-              <div>
-                <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 mb-1">{t('skills.topNeeds')}</p>
-                <div className="flex flex-wrap gap-1">
-                  {skillsAdminStats.topNeeds.map((n: { key: string; count: number }) => (
-                    <span key={n.key} className="px-2 py-0.5 text-xs rounded-full bg-orange-50 dark:bg-orange-950/30 text-orange-600">
-                      {t(`skills.${n.key}`)} ({n.count})
-                    </span>
-                  ))}
-                </div>
-              </div>
-            )}
-          </CardContent>
-        </Card>
-      )}
 
       {/* Suggested categories moderation */}
       {adminData?.isAdmin && suggestions && suggestions.length > 0 && (

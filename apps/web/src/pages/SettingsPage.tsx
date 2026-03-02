@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { trpc } from '../lib/trpc';
@@ -9,15 +9,14 @@ import { Button } from '../components/ui/button';
 import { Select } from '../components/ui/select';
 import { Avatar } from '../components/ui/avatar';
 import { Spinner } from '../components/ui/spinner';
-import { Settings, Globe, Palette, Volume2, Bell, Mic, Link, Trash2, LogOut, Type, Users, Camera, Pencil, Check, HelpCircle, EyeOff, Wrench, MapPin, Locate } from 'lucide-react';
+import { Settings, Globe, Palette, Volume2, Bell, Mic, Link, Trash2, LogOut, Type, Users, Camera, Pencil, Check, HelpCircle, EyeOff } from 'lucide-react';
 import { Tooltip } from '../components/ui/tooltip';
 import { cn } from '../lib/utils';
 import { languageNames } from '@so/i18n';
 import { Input } from '../components/ui/input';
 import { SocialIcon } from '../components/ui/social-icons';
 import { usePushNotifications } from '../hooks/usePushNotifications';
-import { validateContact, COUNTRIES } from '@so/shared';
-import { SkillSelector } from '../components/SkillSelector';
+import { validateContact } from '@so/shared';
 
 export function SettingsPage() {
   const { t, i18n } = useTranslation();
@@ -29,7 +28,6 @@ export function SettingsPage() {
   const { data: settings, isLoading } = trpc.settings.get.useQuery();
   const { data: contacts } = trpc.user.getContacts.useQuery({});
   const { data: me } = trpc.user.me.useQuery();
-  const { data: adminData } = trpc.faq.isAdmin.useQuery();
   const [savedTypes, setSavedTypes] = useState<Record<string, boolean>>({});
   const [contactValues, setContactValues] = useState<Record<string, string>>({});
   const debounceTimers = useRef<Record<string, ReturnType<typeof setTimeout>>>({});
@@ -75,112 +73,6 @@ export function SettingsPage() {
   const [editName, setEditName] = useState('');
   const push = usePushNotifications();
   const [confirmDelete, setConfirmDelete] = useState(false);
-
-  // Skills/Needs
-  const { data: categories } = trpc.skills.categories.useQuery();
-  const { data: mySkills } = trpc.skills.mine.useQuery();
-  const [selectedSkills, setSelectedSkills] = useState<Set<string>>(new Set());
-  const [selectedNeeds, setSelectedNeeds] = useState<Set<string>>(new Set());
-  const [skillNotes, setSkillNotes] = useState<Map<string, string>>(new Map());
-  const [skillsInitialized, setSkillsInitialized] = useState(false);
-  const saveSkillsMut = trpc.skills.saveSkills.useMutation({ onSuccess: () => utils.skills.mine.invalidate() });
-  const saveNeedsMut = trpc.skills.saveNeeds.useMutation({ onSuccess: () => utils.skills.mine.invalidate() });
-  const markCompleted = trpc.skills.markCompleted.useMutation({ onSuccess: () => utils.skills.mine.invalidate() });
-
-  // Geography
-  const [geoCity, setGeoCity] = useState('');
-  const [geoCountry, setGeoCountry] = useState('');
-  const [geoInitialized, setGeoInitialized] = useState(false);
-  const [detecting, setDetecting] = useState(false);
-  const [geoSaved, setGeoSaved] = useState(false);
-  const updateGeo = trpc.settings.updateGeo.useMutation({
-    onSuccess: () => { utils.settings.get.invalidate(); setGeoSaved(true); setTimeout(() => setGeoSaved(false), 1500); },
-  });
-  const geoDebounce = useRef<ReturnType<typeof setTimeout>>();
-
-  useEffect(() => {
-    if (settings && !geoInitialized) {
-      setGeoCity(settings.city || '');
-      setGeoCountry(settings.countryCode || '');
-      setGeoInitialized(true);
-    }
-  }, [settings, geoInitialized]);
-
-  const autosaveGeo = useCallback((city: string, country: string) => {
-    if (geoDebounce.current) clearTimeout(geoDebounce.current);
-    geoDebounce.current = setTimeout(() => {
-      updateGeo.mutate({ city: city || null, countryCode: country || null });
-    }, 800);
-  }, [updateGeo]);
-
-  const detectLocation = async () => {
-    setDetecting(true);
-    try {
-      const pos = await new Promise<GeolocationPosition>((resolve, reject) =>
-        navigator.geolocation.getCurrentPosition(resolve, reject, { timeout: 10000 }),
-      );
-      const { latitude, longitude } = pos.coords;
-      const res = await fetch(
-        `https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json&accept-language=${i18n.language}`,
-        { headers: { 'User-Agent': 'SocialOrganizer/1.0' } },
-      );
-      const data = await res.json();
-      const city = data.address?.city || data.address?.town || data.address?.village || '';
-      const countryCode = (data.address?.country_code || '').toUpperCase();
-      setGeoCity(city);
-      setGeoCountry(countryCode);
-      updateGeo.mutate({ city, countryCode, latitude, longitude });
-    } catch (err) {
-      console.error('Geolocation failed:', err);
-    } finally {
-      setDetecting(false);
-    }
-  };
-
-  useEffect(() => {
-    if (mySkills && !skillsInitialized) {
-      setSelectedSkills(new Set(mySkills.skills.map((s) => s.categoryId)));
-      setSelectedNeeds(new Set(mySkills.needs.map((n) => n.categoryId)));
-      const notesMap = new Map<string, string>();
-      for (const s of mySkills.skills) { if (s.note) notesMap.set(s.categoryId, s.note); }
-      for (const n of mySkills.needs) { if (n.note) notesMap.set(n.categoryId, n.note); }
-      setSkillNotes(notesMap);
-      setSkillsInitialized(true);
-    }
-  }, [mySkills, skillsInitialized]);
-
-  const skillsDebounce = useRef<ReturnType<typeof setTimeout>>();
-  const autosaveSkills = (nextSkills: Set<string>, nextNeeds: Set<string>, notesMap?: Map<string, string>) => {
-    const n = notesMap ?? skillNotes;
-    if (skillsDebounce.current) clearTimeout(skillsDebounce.current);
-    skillsDebounce.current = setTimeout(() => {
-      saveSkillsMut.mutate({ skills: [...nextSkills].map((cId) => ({ categoryId: cId, note: n.get(cId) || undefined })) });
-      saveNeedsMut.mutate({ needs: [...nextNeeds].map((cId) => ({ categoryId: cId, note: n.get(cId) || undefined })) });
-      if (!mySkills?.skillsCompleted) markCompleted.mutate();
-    }, 800);
-  };
-  const handleToggleSkill = (id: string) => {
-    const next = new Set(selectedSkills);
-    if (next.has(id)) next.delete(id); else next.add(id);
-    setSelectedSkills(next);
-    autosaveSkills(next, selectedNeeds);
-  };
-  const handleToggleNeed = (id: string) => {
-    const next = new Set(selectedNeeds);
-    if (next.has(id)) next.delete(id); else next.add(id);
-    setSelectedNeeds(next);
-    autosaveSkills(selectedSkills, next);
-  };
-  const handleSkillNoteChange = (categoryId: string, note: string) => {
-    const next = new Map(skillNotes).set(categoryId, note);
-    setSkillNotes(next);
-    autosaveSkills(selectedSkills, selectedNeeds, next);
-  };
-  const handleSubmitOther = (_categoryId: string) => {
-    if (skillsDebounce.current) clearTimeout(skillsDebounce.current);
-    saveSkillsMut.mutate({ skills: [...selectedSkills].map((cId) => ({ categoryId: cId, note: skillNotes.get(cId) || undefined })) });
-    saveNeedsMut.mutate({ needs: [...selectedNeeds].map((cId) => ({ categoryId: cId, note: skillNotes.get(cId) || undefined })) });
-  };
 
   const handleLanguageChange = (lang: string) => { i18n.changeLanguage(lang); localStorage.setItem('language', lang); updateLanguage.mutate({ language: lang }); };
   const handleThemeChange = (theme: 'LIGHT' | 'DARK' | 'SYSTEM') => { setMode(theme.toLowerCase() as 'light' | 'dark' | 'system'); updateTheme.mutate({ theme }); };
@@ -305,82 +197,6 @@ export function SettingsPage() {
         </CardContent>
       </Card>
 
-      {/* Geography (above skills — mandatory for offline categories) */}
-      <Card>
-        <CardHeader>
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <MapPin className="w-5 h-5 text-gray-500 dark:text-gray-300" />
-              <h2 className="font-semibold text-gray-900 dark:text-white">{t('geo.title')}</h2>
-              {geoSaved && <Check className="w-4 h-4 text-green-500" />}
-            </div>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={detectLocation}
-              disabled={detecting}
-              className="text-xs"
-            >
-              <Locate className="w-3.5 h-3.5 mr-1" />
-              {detecting ? t('geo.detecting') : t('geo.detect')}
-            </Button>
-          </div>
-          {(() => {
-            if (!categories) return null;
-            const allSelected = new Set([...selectedSkills, ...selectedNeeds]);
-            const hasOffline = categories.some((c) => allSelected.has(c.id) && !c.isOnline);
-            if (hasOffline && !geoCountry) {
-              return (
-                <p className="text-xs text-red-500 mt-1">{t('geo.requiredForOffline')}</p>
-              );
-            }
-            return null;
-          })()}
-        </CardHeader>
-        <CardContent className="space-y-3">
-          <Select
-            id="country"
-            label={t('geo.country')}
-            value={geoCountry}
-            onChange={(e) => { setGeoCountry(e.target.value); autosaveGeo(geoCity, e.target.value); }}
-            options={[
-              { value: '', label: t('geo.selectCountry') },
-              ...COUNTRIES.map((c) => ({ value: c.code, label: c.name })),
-            ]}
-          />
-          <Input
-            id="city"
-            placeholder={t('geo.cityPlaceholder')}
-            value={geoCity}
-            onChange={(e) => { setGeoCity(e.target.value); autosaveGeo(e.target.value, geoCountry); }}
-          />
-        </CardContent>
-      </Card>
-
-      {/* Skills & Needs */}
-      <Card>
-        <CardHeader>
-          <div className="flex items-center gap-2">
-            <Wrench className="w-5 h-5 text-gray-500 dark:text-gray-300" />
-            <h2 className="font-semibold text-gray-900 dark:text-white">{t('skills.title')}</h2>
-          </div>
-        </CardHeader>
-        <CardContent>
-          {categories && (
-            <SkillSelector
-              categories={categories}
-              selectedSkills={selectedSkills}
-              selectedNeeds={selectedNeeds}
-              onToggleSkill={handleToggleSkill}
-              onToggleNeed={handleToggleNeed}
-              notes={skillNotes}
-              onNoteChange={handleSkillNoteChange}
-              onSubmitOther={handleSubmitOther}
-              isAdmin={!!adminData?.isAdmin}
-            />
-          )}
-        </CardContent>
-      </Card>
 
       <Card><CardContent className="py-3">
         <div className="flex items-center gap-3">
