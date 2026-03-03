@@ -7,8 +7,9 @@ import { Card, CardContent } from '../components/ui/card';
 import { Button } from '../components/ui/button';
 import { Avatar } from '../components/ui/avatar';
 import { Spinner } from '../components/ui/spinner';
-import { UserPlus, CheckCircle, LogIn, Clock } from 'lucide-react';
+import { CheckCircle, LogIn, Clock } from 'lucide-react';
 import { Logo } from '../components/Logo';
+import { LandingPage } from './LandingPage';
 
 export function InvitePage() {
   const { token } = useParams<{ token: string }>();
@@ -26,6 +27,11 @@ export function InvitePage() {
       localStorage.setItem('pendingInviteToken', token);
     }
   }, [isRealUser, token]);
+
+  // Not authenticated — show landing page (token already saved to localStorage)
+  if (!isRealUser) {
+    return <LandingPage />;
+  }
 
   const { data: invite, isLoading, error } = trpc.invite.getByToken.useQuery(
     { token: token! },
@@ -125,22 +131,6 @@ export function InvitePage() {
                 {t('network.title')}
               </Button>
             </div>
-          ) : !isRealUser ? (
-            <Button
-              className="w-full"
-              size="lg"
-              onClick={() => {
-                // Clear demo tokens so trpcClient reinitializes with httpBatchLink after login
-                if (isDemo) {
-                  localStorage.removeItem('accessToken');
-                  localStorage.removeItem('refreshToken');
-                  localStorage.removeItem('userId');
-                }
-                window.location.href = `/login?redirect=/invite/${token}`;
-              }}
-            >
-              <LogIn className="w-4 h-4 mr-2" /> {t('invite.loginToAccept')}
-            </Button>
           ) : (
             <div className="flex flex-col items-center gap-3">
               <Spinner />
