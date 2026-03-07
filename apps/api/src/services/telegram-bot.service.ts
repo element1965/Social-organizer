@@ -105,8 +105,15 @@ interface TgApiResponse {
 
 interface TgUpdate {
   message?: {
+    message_id?: number;
     chat: { id: number };
     text?: string;
+    caption?: string;
+    photo?: Array<{ file_id: string }>;
+    video?: { file_id: string };
+    document?: { file_id: string; file_name?: string };
+    voice?: { file_id: string };
+    sticker?: { file_id: string };
     from?: {
       id?: number;
       first_name?: string;
@@ -274,6 +281,35 @@ export async function sendTelegramMessage(
   };
 
   return doSend();
+}
+
+/** Forward a message from one chat to another */
+async function forwardTelegramMessage(
+  fromChatId: string | number,
+  toChatId: string | number,
+  messageId: number,
+): Promise<boolean> {
+  if (!TELEGRAM_BOT_TOKEN) return false;
+
+  try {
+    const res = await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/forwardMessage`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        chat_id: toChatId,
+        from_chat_id: fromChatId,
+        message_id: messageId,
+      }),
+    });
+    const json = (await res.json()) as TgApiResponse;
+    if (!json.ok) {
+      console.error(`[TG Bot] forwardMessage failed: ${json.description}`);
+    }
+    return json.ok;
+  } catch (err) {
+    console.error('[TG Bot] forwardMessage error:', err);
+    return false;
+  }
 }
 
 /** Send a photo via Telegram Bot API */
@@ -662,10 +698,14 @@ export async function handleTelegramUpdate(update: TgUpdate): Promise<void> {
   }
 
   const msg = update.message;
-  if (!msg?.text) return;
+  if (!msg) return;
 
   const chatId = msg.chat.id;
-  const text = msg.text.trim();
+  const text = (msg.text || msg.caption || '').trim();
+  const hasMedia = !!(msg.photo || msg.video || msg.document || msg.voice || msg.sticker);
+
+  // If no text and no media — ignore
+  if (!text && !hasMedia) return;
 
   // Handle /start with invite deep link: /start invite_TOKEN
   if (text.startsWith('/start')) {
@@ -700,16 +740,22 @@ export async function handleTelegramUpdate(update: TgUpdate): Promise<void> {
     return;
   }
 
-  // Forward any non-command text to the support chat
+  // Forward any non-command message to the support chat
   const from = msg.from;
   const userName = [from?.first_name, from?.last_name].filter(Boolean).join(' ') || 'Unknown';
   const userTag = from?.username ? ` (@${from.username})` : '';
   const userId = from?.id ? ` [${from.id}]` : '';
 
+  // Send user info header first
   await sendTelegramMessage(
     SUPPORT_CHAT_ID,
-    `💬 <b>Сообщение от пользователя</b>\n\n👤 ${userName}${userTag}${userId}\n\n${text}`,
+    `💬 <b>Сообщение от пользователя</b>\n\n👤 ${userName}${userTag}${userId}${!hasMedia && text ? `\n\n${text}` : ''}`,
   );
+
+  // Forward the original message (preserves photos, videos, documents, etc.)
+  if (hasMedia && msg.message_id) {
+    await forwardTelegramMessage(chatId, SUPPORT_CHAT_ID, msg.message_id);
+  }
 
   // Reply to user
   await sendTelegramMessage(
