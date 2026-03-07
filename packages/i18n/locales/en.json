@@ -551,7 +551,8 @@
     "budget": "Declared",
     "root": "Root",
     "contactRoot": "Contact root",
-    "notInNetwork": "not in your network"
+    "notInNetwork": "not in your network",
+    "total": "Total clusters"
   },
   "validation": {
     "invalidContact": "Invalid format"

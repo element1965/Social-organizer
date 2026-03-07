@@ -551,7 +551,8 @@
     "budget": "Заявлено",
     "root": "Корень",
     "contactRoot": "Связаться с корнем",
-    "notInNetwork": "не входят в вашу сеть"
+    "notInNetwork": "не входят в вашу сеть",
+    "total": "Всего кластеров"
   },
   "validation": {
     "invalidContact": "Неверный формат"

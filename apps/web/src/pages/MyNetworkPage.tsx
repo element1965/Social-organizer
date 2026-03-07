@@ -38,8 +38,8 @@ export function MyNetworkPage() {
   const { mode } = useTheme();
   const resolve = useNicknames();
   const [searchParams, setSearchParams] = useSearchParams();
-  const view = (searchParams.get('view') === 'list' ? 'list' : '3d') as 'list' | '3d';
-  const setView = (v: 'list' | '3d') => setSearchParams(v === '3d' ? {} : { view: v }, { replace: true });
+  const view = (searchParams.get('view') === '3d' ? '3d' : 'list') as 'list' | '3d';
+  const setView = (v: 'list' | '3d') => setSearchParams(v === 'list' ? {} : { view: v }, { replace: true });
   const [showClusters, setShowClusters] = useState(false);
   // Navigate from graph node click — deferred so Three.js finishes its render frame first
   const navigateToProfile = useCallback((id: string) => {
@@ -47,6 +47,8 @@ export function MyNetworkPage() {
   }, [navigate]);
   const isDark = mode === 'dark' || (mode === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
 
+  const { data: adminData } = trpc.faq.isAdmin.useQuery();
+  const isAdmin = adminData?.isAdmin ?? false;
   const utils = trpc.useUtils();
 
   const [expandedDepth, setExpandedDepth] = useState<number | null>(null);
@@ -79,12 +81,14 @@ export function MyNetworkPage() {
           <Users className="w-5 h-5" /> {t('network.title')}
         </h1>
         <div className="flex gap-2">
-          <button
-            onClick={() => setShowClusters((v) => !v)}
-            className={`w-10 h-10 rounded-full flex items-center justify-center transition-colors shadow-lg ${showClusters ? 'bg-purple-500 ring-2 ring-purple-300' : 'bg-purple-600 hover:bg-purple-500'}`}
-          >
-            <Layers className="w-4 h-4 text-white" />
-          </button>
+          {isAdmin && (
+            <button
+              onClick={() => setShowClusters((v) => !v)}
+              className={`w-10 h-10 rounded-full flex items-center justify-center transition-colors shadow-lg ${showClusters ? 'bg-purple-500 ring-2 ring-purple-300' : 'bg-purple-600 hover:bg-purple-500'}`}
+            >
+              <Layers className="w-4 h-4 text-white" />
+            </button>
+          )}
           <button
             onClick={() => { setShowClusters(false); setView(view === 'list' ? '3d' : 'list'); }}
             className="w-10 h-10 rounded-full bg-gray-600 hover:bg-gray-500 flex items-center justify-center transition-colors shadow-lg"
@@ -97,6 +101,7 @@ export function MyNetworkPage() {
       {showClusters ? (
         (() => {
           const otherClusters = clusters?.filter((cl) => !cl.isMine) ?? [];
+          const totalClusters = clusters?.length ?? 0;
           return otherClusters.length === 0 ? (
             <div className="text-center py-12">
               <Layers className="w-12 h-12 mx-auto text-gray-300 dark:text-gray-400 mb-3" />
@@ -104,6 +109,10 @@ export function MyNetworkPage() {
             </div>
           ) : (
             <div className="space-y-2">
+              <div className="flex items-center justify-between p-3 bg-purple-50 dark:bg-purple-900/20 rounded-lg border border-purple-200 dark:border-purple-800">
+                <span className="text-sm font-medium text-purple-700 dark:text-purple-300">{t('cluster.total')}</span>
+                <span className="text-xl font-bold text-purple-700 dark:text-purple-300">{totalClusters}</span>
+              </div>
               {otherClusters.map((cl, i) => (
                 <div
                   key={i}
