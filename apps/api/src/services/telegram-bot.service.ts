@@ -125,7 +125,7 @@ interface TgUpdate {
 export const SUPPORT_CHAT_ID = -4946509857;
 
 /** Track a /start press — save chatId for follow-up if user never opens the app */
-async function trackBotStart(chatId: string, name: string, lang: string, inviteToken?: string): Promise<void> {
+async function trackBotStart(chatId: string, name: string, lang: string, inviteToken?: string, username?: string): Promise<void> {
   const db = getDb();
   // Skip if user already has an account
   const existing = await db.platformAccount.findFirst({
@@ -136,8 +136,8 @@ async function trackBotStart(chatId: string, name: string, lang: string, inviteT
 
   await db.botStart.upsert({
     where: { chatId },
-    create: { chatId, name: name || null, language: lang, inviteToken: inviteToken || null },
-    update: { name: name || undefined, language: lang, inviteToken: inviteToken || undefined },
+    create: { chatId, name: name || null, username: username || null, language: lang, inviteToken: inviteToken || null },
+    update: { name: name || undefined, username: username || undefined, language: lang, inviteToken: inviteToken || undefined },
   });
 }
 
@@ -177,11 +177,11 @@ export async function findInviterTg(token: string): Promise<{ chatId: string; na
 export const INVITER_NOTIFY_MESSAGES = [
   {
     level: 0,
-    text: '👋 {inviteeName} запустил бот по вашему приглашению, но ещё не открыл приложение. Подскажите — нужно нажать кнопку «Open» внизу чата с ботом.',
+    text: '👋 {inviteeName}{inviteeContact} запустил бот по вашему приглашению, но ещё не открыл приложение. Подскажите — нужно нажать кнопку «Open» внизу чата с ботом.',
   },
   {
     level: 1,
-    text: '⏰ Прошли сутки, а {inviteeName} так и не открыл приложение. Возможно, нужна ваша помощь — напишите или позвоните, помогите разобраться с входом!',
+    text: '⏰ Прошли сутки, а {inviteeName}{inviteeContact} так и не открыл приложение. Возможно, нужна ваша помощь — напишите или позвоните, помогите разобраться с входом!',
   },
 ] as const;
 
@@ -686,7 +686,7 @@ export async function handleTelegramUpdate(update: TgUpdate): Promise<void> {
       });
 
       // Track /start for reminder if user never opens the app
-      trackBotStart(String(chatId), name, lang, inviteToken).catch(() => {});
+      trackBotStart(String(chatId), name, lang, inviteToken, msg.from?.username).catch(() => {});
       return;
     }
 
@@ -696,7 +696,7 @@ export async function handleTelegramUpdate(update: TgUpdate): Promise<void> {
     });
 
     // Track /start for reminder if user never opens the app
-    trackBotStart(String(chatId), name, lang).catch(() => {});
+    trackBotStart(String(chatId), name, lang, undefined, msg.from?.username).catch(() => {});
     return;
   }
 

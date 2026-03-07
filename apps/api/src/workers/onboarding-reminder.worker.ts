@@ -243,7 +243,8 @@ export async function processOnboardingReminder(_job: Job): Promise<void> {
       if (!inviter) continue;
 
       const inviteeName = bs.name || '???';
-      const baseText = message.text.replace('{inviteeName}', inviteeName);
+      const inviteeContact = bs.username ? ` (@${bs.username})` : '';
+      const baseText = message.text.replace('{inviteeName}', inviteeName).replace('{inviteeContact}', inviteeContact);
 
       // Translate to inviter's language
       const inviterLang = await db.user.findFirst({
