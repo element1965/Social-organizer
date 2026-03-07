@@ -153,8 +153,17 @@ export const broadcastRouter = router({
         select: { user: { select: { language: true, name: true } } },
       });
 
-      const lang = account?.user?.language || 'en';
-      const userName = account?.user?.name || 'Unknown';
+      // Fallback to botStart for users who only pressed /start but never opened the app
+      let lang = account?.user?.language || '';
+      let userName = account?.user?.name || '';
+      if (!lang || !userName) {
+        const botStart = await ctx.db.botStart.findUnique({
+          where: { chatId: input.telegramId },
+          select: { language: true, name: true },
+        });
+        if (!lang) lang = botStart?.language || 'en';
+        if (!userName) userName = botStart?.name || 'Unknown';
+      }
 
       let translatedText: string;
       try {

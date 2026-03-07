@@ -452,6 +452,7 @@ model BotStart {
   id              String   @id @default(cuid())
   chatId          String   @unique
   name            String?
+  username        String?
   language        String   @default("en")
   inviteToken     String?
   reminderSent    Int      @default(0)
