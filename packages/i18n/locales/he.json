@@ -13,7 +13,8 @@
     "done": "הסתיים",
     "search": "חפש",
     "notFound": "לא נמצא",
-    "copied": "הועתק"
+    "copied": "הועתק",
+    "ok": "OK"
   },
   "auth": {
     "loginWith": "התחבר עם {{platform}}",
@@ -94,7 +95,11 @@
       "text": "ציין על איזה סכום החבר הקרוב שלך יכול לסמוך במקרה בלתי צפוי. זו רק כוונתך — הכרטיס נשאר אצלך, כספים נגבים רק לפי החלטתך. ככל שהסכום גבוה יותר, כך הכיסוי הביטוחי שלך גדול יותר. חברי הרשת רואים את היכולות הכוללות, וכשמישהו מבקש עזרה — אתה מחליט בעצמך אם להשתתף."
     },
     "contactsRequired": "הוסף לפחות 2 אנשי קשר",
-    "contactsFilled": "מלא: {{count}}/2"
+    "contactsFilled": "מלא: {{count}}/2",
+    "hintBudget": "Set your monthly support amount here — this shows how much you're ready to help",
+    "hintSettings": "Tap «Settings» to add extra contacts",
+    "hintContactsNeeded": "Add {{count}} more contact(s) in Settings so friends can reach you",
+    "noTgUsername": "You don't have a Telegram username — add one in Telegram settings, it counts as a contact"
   },
   "nav": {
     "home": "בית",
@@ -175,7 +180,9 @@
     "periodPast90": "90 ימים אחרונים",
     "periodPast365": "365 ימים אחרונים",
     "newConnections": "+{{count}} חדשים",
-    "periodPast1": "היום"
+    "periodPast1": "היום",
+    "communityChatDesc": "This is the general community chat for questions, suggestions, and feedback about the app. It is not a help chat.",
+    "communityChatOpen": "Open Chat"
   },
   "collection": {
     "create": "שלח אות סיוע",
@@ -200,7 +207,10 @@
     "participants": "משתתפים",
     "noParticipants": "עדיין אף אחד לא הצטרף",
     "minAmount": "מינימום 1",
-    "connectionToCreator": "חיבור ליצרן"
+    "connectionToCreator": "חיבור ליצרן",
+    "editAmount": "Edit",
+    "saveAmount": "Save",
+    "cancelEdit": "Cancel"
   },
   "create": {
     "title": "שלח אות סיוע",
@@ -304,7 +314,9 @@
     "revokeConfirm": "החיבור יוסר. לחידוש החיבור ידרש אישור מחדש. להמשיך?",
     "intentionsReceived": "פעמים שעזרו לו",
     "helpedTab": "עזר ל",
-    "helpedByTab": "עזרו לו"
+    "helpedByTab": "עזרו לו",
+    "online": "Online",
+    "lastSeen": "Last seen {{time}}"
   },
   "settings": {
     "title": "הגדרות",
@@ -356,7 +368,10 @@
     "localized": "מתורגם",
     "localizeAll": "תרגם הכל",
     "localizing": "מתרגם...",
-    "addPhoto": "הוסף תמונה"
+    "addPhoto": "הוסף תמונה",
+    "insertLink": "Insert link",
+    "linkTextPlaceholder": "Link text",
+    "insert": "Insert"
   },
   "chat": {
     "title": "עוזר",
@@ -388,7 +403,43 @@
     "variantAll": "הכל",
     "variantInvited": "מוזמנים",
     "variantOrganic": "ישירים",
-    "editChain": "עריכה"
+    "editChain": "עריכה",
+    "tabSend": "Send",
+    "tabScheduled": "Scheduled",
+    "tabAutoChain": "Auto-Chain",
+    "scheduledAt": "Date & time",
+    "scheduledAtPlaceholder": "Select date and time",
+    "schedule": "Schedule",
+    "scheduling": "Scheduling...",
+    "scheduledSuccess": "Post scheduled",
+    "cancelPost": "Cancel",
+    "cancelledSuccess": "Post cancelled",
+    "statusPending": "Pending",
+    "statusSent": "Sent",
+    "statusCancelled": "Cancelled",
+    "statusFailed": "Failed",
+    "noScheduled": "No scheduled posts",
+    "chainDay": "Day {{day}}",
+    "chainDayOffset": "Day (since registration)",
+    "chainSortOrder": "Order",
+    "chainInterval": "Interval (min)",
+    "addChainMessage": "Add message",
+    "adding": "Adding...",
+    "chainAdded": "Message added to chain",
+    "noChainMessages": "No chain messages",
+    "active": "Active",
+    "inactive": "Inactive",
+    "deliveries": "Delivered",
+    "reads": "Read",
+    "openRate": "Open rate",
+    "stats": "Statistics",
+    "totalDeliveries": "Total deliveries",
+    "totalRead": "Total read",
+    "activeMessages": "Active messages",
+    "triggerNow": "Run now",
+    "triggering": "Running...",
+    "triggerSuccess": "Auto-chain triggered successfully",
+    "triggerError": "Trigger failed"
   },
   "contacts": {
     "telegram": "טלגרם",
@@ -424,7 +475,14 @@
     "share": "שתף",
     "copyLink": "העתק קישור",
     "expand": "show URL",
-    "showQr": "הצג QR"
+    "showQr": "הצג QR",
+    "yourId": "Your ID",
+    "sendThisLink": "Send this link to your friend",
+    "copied": "Link copied!",
+    "showWebLink": "Show website link",
+    "showBotLink": "Show Telegram bot link",
+    "botLinkHint": "If your friend already knows about the project, send this Telegram link instead — it goes straight to the app",
+    "slugExplain": "Your personal ID appears in all your invite links. You can change it to something memorable (e.g. your nickname). This ID itself is not a link — use the links above to invite people."
   },
   "landing": {
     "openSourceBadge": "יוזמה ללא מטרת רווח בקוד פתוח",
@@ -545,7 +603,8 @@
     "budget": "הוצהר",
     "root": "שורש",
     "contactRoot": "צור קשר עם שורש",
-    "notInNetwork": "לא ברשת שלך"
+    "notInNetwork": "לא ברשת שלך",
+    "total": "Total clusters"
   },
   "requiredInfo": {
     "contactsTitle": "הוסף את אנשי הקשר שלך",
@@ -850,6 +909,67 @@
     "pendingCount": "ממתינים",
     "editSuggestion": "עריכה",
     "vaybkoding": "קידוד וייב",
-    "tutoring": "שיעורים פרטיים"
+    "tutoring": "שיעורים פרטיים",
+    "addOther": "Add and enter another",
+    "suggestions": "New category suggestions"
+  },
+  "geo": {
+    "title": "Location",
+    "country": "Country",
+    "city": "City",
+    "cityPlaceholder": "Enter your city",
+    "detect": "Detect location",
+    "detecting": "Detecting...",
+    "selectCountry": "Select country",
+    "noLocation": "Location not set",
+    "saved": "Location saved",
+    "requiredForOffline": "Please select a country — you have offline skills selected"
+  },
+  "matches": {
+    "title": "Skill Matches",
+    "whoCanHelpMe": "Who can help me",
+    "whoNeedsMyHelp": "Who needs my help",
+    "noMatches": "No matches yet. Add more skills or connect with more people.",
+    "noMatchesNeeds": "No one in your network needs your skills yet.",
+    "sameCity": "Same city",
+    "sameCountry": "Same country",
+    "remote": "Different location",
+    "online": "Available online",
+    "viewProfile": "View profile",
+    "newMatch": "{{name}} can help with \"{{skill}}\"",
+    "matchNotifications": "Skill match alerts",
+    "noNotifications": "No new match alerts",
+    "chains": "Chains",
+    "noChains": "No clearing chains found yet",
+    "noChainsHint": "They appear when skills in your network form a closed loop",
+    "chainOf": "Chain of {{count}} participants",
+    "pairHint": "Write to each other on Telegram to discuss details",
+    "openChat": "Open chat",
+    "chainInstruction": "Create a Telegram group chat, add all participants, and paste the link here. Any participant can do this.",
+    "addChatLink": "Add chat link",
+    "chatLinkPrompt": "Paste a Telegram chat link (t.me/...)",
+    "statusProposed": "Proposed",
+    "statusActive": "Active",
+    "statusCompleted": "Completed",
+    "statusCancelled": "Cancelled",
+    "you": "You",
+    "setOffer": "Make an offer",
+    "offerHoursPlaceholder": "Hours (min. 0.5)",
+    "offerDescPlaceholder": "What you can do",
+    "sendOffer": "Send",
+    "awaitingOffer": "Waiting for the giver to make an offer",
+    "awaitingConfirm": "Waiting for receiver to confirm",
+    "confirmOffer": "Accept offer",
+    "markComplete": "Mark as complete",
+    "linkCompleted": "Completed",
+    "cancelChain": "Cancel chain",
+    "cancelConfirm": "Cancel this chain? This cannot be undone.",
+    "ringCloses": "Closes back to",
+    "offerSet": "{{hours}}h",
+    "giverDone": "Giver confirmed completion",
+    "receiverDone": "Receiver confirmed completion",
+    "declineLink": "Can't participate",
+    "declineConfirm": "Are you sure? The system will try to find a replacement, but if not found the chain will be cancelled.",
+    "statusBroken": "Searching replacement"
   }
 }
