@@ -220,11 +220,11 @@ export function DashboardPage() {
       </div>
 
       {/* Budget (35%) + Invite (65%) side by side */}
-      <div className="flex gap-3">
+      <div className="flex gap-3 items-start">
         {/* My potential — budget */}
-        <div className="w-[35%] shrink-0 relative">
-          <Card className="bg-gradient-to-b from-blue-50 to-indigo-50 dark:from-blue-950/30 dark:to-indigo-950/30 h-full">
-            <CardContent className="py-3 flex flex-col h-full">
+        <div className="w-[35%] shrink-0">
+          <Card className="bg-gradient-to-b from-blue-50 to-indigo-50 dark:from-blue-950/30 dark:to-indigo-950/30">
+            <CardContent className="py-3">
               <div className="flex items-center gap-1 mb-1">
                 <span className="text-xs font-semibold text-gray-900 dark:text-white leading-tight">{t('dashboard.yourContribution')}</span>
                 <Tooltip content={t('dashboard.myCapabilitiesHint')} side="bottom">
@@ -260,18 +260,16 @@ export function DashboardPage() {
                   )}
                 </div>
               ) : (
-                <div className="flex-1 flex flex-col justify-center">
-                  <div className="flex items-center gap-1.5">
-                    <p className="text-2xl font-bold text-blue-700 dark:text-blue-400">
-                      {me?.monthlyBudget != null ? `$${Math.round(me.monthlyBudget)}` : '$0'}
-                    </p>
-                    <button
-                      onClick={() => { setNewBudgetValue(''); setEditingBudget(true); }}
-                      className="text-gray-400 hover:text-gray-300"
-                    >
-                      <Pencil className="w-3.5 h-3.5" />
-                    </button>
-                  </div>
+                <div className="flex items-center gap-1.5 mt-1">
+                  <p className="text-2xl font-bold text-blue-700 dark:text-blue-400">
+                    {me?.monthlyBudget != null ? `$${Math.round(me.monthlyBudget)}` : '$0'}
+                  </p>
+                  <button
+                    onClick={() => { setNewBudgetValue(''); setEditingBudget(true); }}
+                    className="text-gray-400 hover:text-gray-300"
+                  >
+                    <Pencil className="w-3.5 h-3.5" />
+                  </button>
                 </div>
               )}
               {me?.monthlyBudget != null && me.remainingBudget != null && me.remainingBudget <= 0 && (
@@ -279,31 +277,36 @@ export function DashboardPage() {
               )}
             </CardContent>
           </Card>
-          {/* Onboarding hint for budget */}
-          {onboardingHint === 'budget' && (
-            <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 translate-y-full z-50 w-56">
-              <div className="bg-blue-600 text-white text-xs rounded-lg p-3 shadow-lg relative">
-                <div className="absolute -top-1.5 left-1/2 -translate-x-1/2 w-3 h-3 bg-blue-600 rotate-45" />
-                <p className="font-medium mb-1">{t('onboarding.hintBudget')}</p>
-                <button
-                  onClick={() => {
-                    setOnboardingHint('settings');
-                    setNewBudgetValue('');
-                    setEditingBudget(true);
-                  }}
-                  className="mt-1 px-3 py-1 bg-white/20 rounded text-[11px] font-medium hover:bg-white/30"
-                >
-                  {t('common.ok')}
-                </button>
-              </div>
-            </div>
-          )}
         </div>
         {/* Invite block */}
         <div className="w-[65%]">
           <InviteBlock id="invite" />
         </div>
       </div>
+
+      {/* Onboarding hint for budget — fixed overlay */}
+      {onboardingHint === 'budget' && (
+        <div className="fixed inset-0 z-50 bg-black/40" onClick={() => { setOnboardingHint('settings'); setNewBudgetValue(''); setEditingBudget(true); }}>
+          <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-64" onClick={(e) => e.stopPropagation()}>
+            <div className="bg-blue-600 text-white text-xs rounded-lg p-3 shadow-lg">
+              <div className="flex items-center gap-2 mb-1">
+                <Wallet className="w-3.5 h-3.5" />
+                <p className="font-medium">{t('onboarding.hintBudget')}</p>
+              </div>
+              <button
+                onClick={() => {
+                  setOnboardingHint('settings');
+                  setNewBudgetValue('');
+                  setEditingBudget(true);
+                }}
+                className="mt-1 px-3 py-1 bg-white/20 rounded text-[11px] font-medium hover:bg-white/30"
+              >
+                {t('common.ok')}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Onboarding hint for settings */}
       {onboardingHint === 'settings' && (
