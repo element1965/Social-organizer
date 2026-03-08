@@ -66,6 +66,8 @@ export function DashboardPage() {
       const seen = localStorage.getItem('onboarding-hints-seen');
       if (!seen) {
         setOnboardingHint('budget');
+        setEditingBudget(true);
+        setNewBudgetValue('');
       }
     }
   }, [me]);
@@ -222,8 +224,8 @@ export function DashboardPage() {
       {/* Budget (35%) + Invite (65%) side by side */}
       <div className="flex gap-3 items-start">
         {/* My potential — budget */}
-        <div className="w-[35%] shrink-0">
-          <Card className="bg-gradient-to-b from-blue-50 to-indigo-50 dark:from-blue-950/30 dark:to-indigo-950/30">
+        <div className="w-[35%] shrink-0 relative">
+          <Card className={`bg-gradient-to-b from-blue-50 to-indigo-50 dark:from-blue-950/30 dark:to-indigo-950/30 transition-all ${onboardingHint === 'budget' ? 'ring-2 ring-blue-500 ring-offset-2 ring-offset-gray-950 z-[51]' : ''}`}>
             <CardContent className="py-3">
               <div className="flex items-center gap-1 mb-1">
                 <span className="text-xs font-semibold text-gray-900 dark:text-white leading-tight">{t('dashboard.yourContribution')}</span>
@@ -277,6 +279,28 @@ export function DashboardPage() {
               )}
             </CardContent>
           </Card>
+          {/* Onboarding hint for budget — positioned above the card */}
+          {onboardingHint === 'budget' && (
+            <div className="absolute -top-2 left-0 -translate-y-full z-[52] w-56">
+              <div className="bg-blue-600 text-white text-xs rounded-lg p-3 shadow-lg relative">
+                <div className="flex items-center gap-2 mb-1">
+                  <Wallet className="w-3.5 h-3.5 shrink-0" />
+                  <p className="font-medium">{t('onboarding.hintBudget')}</p>
+                </div>
+                <button
+                  onClick={() => {
+                    setOnboardingHint('settings');
+                    setEditingBudget(false);
+                  }}
+                  className="mt-1 px-3 py-1 bg-white/20 rounded text-[11px] font-medium hover:bg-white/30"
+                >
+                  {t('common.ok')}
+                </button>
+                {/* Arrow pointing down to the card */}
+                <div className="absolute -bottom-1.5 left-6 w-3 h-3 bg-blue-600 rotate-45" />
+              </div>
+            </div>
+          )}
         </div>
         {/* Invite block */}
         <div className="w-[65%]">
@@ -284,28 +308,9 @@ export function DashboardPage() {
         </div>
       </div>
 
-      {/* Onboarding hint for budget — fixed overlay */}
+      {/* Backdrop for budget hint */}
       {onboardingHint === 'budget' && (
-        <div className="fixed inset-0 z-50 bg-black/40" onClick={() => { setOnboardingHint('settings'); setNewBudgetValue(''); setEditingBudget(true); }}>
-          <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-64" onClick={(e) => e.stopPropagation()}>
-            <div className="bg-blue-600 text-white text-xs rounded-lg p-3 shadow-lg">
-              <div className="flex items-center gap-2 mb-1">
-                <Wallet className="w-3.5 h-3.5" />
-                <p className="font-medium">{t('onboarding.hintBudget')}</p>
-              </div>
-              <button
-                onClick={() => {
-                  setOnboardingHint('settings');
-                  setNewBudgetValue('');
-                  setEditingBudget(true);
-                }}
-                className="mt-1 px-3 py-1 bg-white/20 rounded text-[11px] font-medium hover:bg-white/30"
-              >
-                {t('common.ok')}
-              </button>
-            </div>
-          </div>
-        </div>
+        <div className="fixed inset-0 z-50 bg-black/40" onClick={() => { setOnboardingHint('settings'); setEditingBudget(false); }} />
       )}
 
       {/* Onboarding hint for settings */}
