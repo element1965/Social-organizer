@@ -8,14 +8,19 @@ import { sendUserDeletedNotification } from '../services/notification.service.js
 
 export const userRouter = router({
   me: protectedProcedure.query(async ({ ctx }) => {
-    const user = await ctx.db.user.findUnique({
-      where: { id: ctx.userId },
-      include: {
-        platformAccounts: { select: { platform: true, platformId: true } },
-      },
-    });
+    const [user, contactCount] = await Promise.all([
+      ctx.db.user.findUnique({
+        where: { id: ctx.userId },
+        include: {
+          platformAccounts: { select: { platform: true, platformId: true } },
+        },
+      }),
+      ctx.db.userContact.count({
+        where: { userId: ctx.userId, value: { not: '' } },
+      }),
+    ]);
     if (!user) throw new TRPCError({ code: 'NOT_FOUND' });
-    return user;
+    return { ...user, contactCount };
   }),
 
   update: protectedProcedure

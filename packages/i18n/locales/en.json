@@ -87,7 +87,9 @@
     "skip": "Skip",
     "skipForNow": "Skip for now",
     "hintBudget": "Set your monthly support amount here — this shows how much you're ready to help",
-    "hintSettings": "Tap «Settings» to add extra contacts"
+    "hintSettings": "Tap «Settings» to add extra contacts",
+    "hintContactsNeeded": "Add {{count}} more contact(s) in Settings so friends can reach you",
+    "noTgUsername": "You don't have a Telegram username — add one in Telegram settings, it counts as a contact"
   },
   "nav": {
     "home": "Home",
