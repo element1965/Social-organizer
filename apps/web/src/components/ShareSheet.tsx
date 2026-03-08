@@ -1,9 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { X, Copy, Check, Link2 } from 'lucide-react';
-import { useCachedNetworkStats } from '../hooks/useCachedNetworkStats';
-import { useNicknames } from '../hooks/useNicknames';
-import { Avatar } from './ui/avatar';
+import { X, Check, Link2 } from 'lucide-react';
 import { SocialIcon } from './ui/social-icons';
 
 interface ShareSheetProps {
@@ -26,8 +23,6 @@ const SOCIAL_APPS = [
 
 export function ShareSheet({ open, onClose, url, shareText }: ShareSheetProps) {
   const { t } = useTranslation();
-  const resolve = useNicknames();
-  const { data: networkStats } = useCachedNetworkStats();
   const [copied, setCopied] = useState(false);
   const [visible, setVisible] = useState(false);
   const [animating, setAnimating] = useState(false);
@@ -48,12 +43,6 @@ export function ShareSheet({ open, onClose, url, shareText }: ShareSheetProps) {
 
   if (!visible) return null;
 
-  const contacts = ((networkStats as any)?.usersByDepth?.[1] ?? []).slice(0, 20) as Array<{
-    id: string;
-    name: string;
-    photoUrl: string | null;
-  }>;
-
   const handleCopy = () => {
     navigator.clipboard.writeText(url);
     setCopied(true);
@@ -63,24 +52,10 @@ export function ShareSheet({ open, onClose, url, shareText }: ShareSheetProps) {
   const handleShare = (app: typeof SOCIAL_APPS[number]) => {
     const shareUrl = app.buildUrl(url, shareText);
     if (!shareUrl) {
-      // Instagram — just copy
       handleCopy();
       return;
     }
     window.open(shareUrl, '_blank', 'noopener,noreferrer');
-  };
-
-  const handleContactShare = (contactName: string) => {
-    // Use Web Share API if available, otherwise copy
-    if (navigator.share) {
-      navigator.share({
-        title: 'Social Organizer',
-        text: shareText,
-        url,
-      }).catch(() => {});
-    } else {
-      handleCopy();
-    }
   };
 
   return (
@@ -94,7 +69,6 @@ export function ShareSheet({ open, onClose, url, shareText }: ShareSheetProps) {
       {/* Sheet */}
       <div
         className={`fixed inset-x-0 bottom-0 z-[61] bg-white dark:bg-gray-900 rounded-t-2xl transition-transform duration-300 ease-out ${animating ? 'translate-y-0' : 'translate-y-full'}`}
-        style={{ maxHeight: '70vh' }}
       >
         {/* Handle */}
         <div className="flex justify-center pt-2 pb-1">
@@ -110,33 +84,8 @@ export function ShareSheet({ open, onClose, url, shareText }: ShareSheetProps) {
           </button>
         </div>
 
-        <div className="px-4 pb-6 overflow-y-auto" style={{ maxHeight: 'calc(70vh - 60px)' }}>
-          {/* Row 1: Frequent contacts */}
-          {contacts.length > 0 && (
-            <div className="mb-4">
-              <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-hide">
-                {contacts.map((contact) => (
-                  <button
-                    key={contact.id}
-                    onClick={() => handleContactShare(contact.name)}
-                    className="flex flex-col items-center gap-1 shrink-0 w-16"
-                  >
-                    <div className="w-14 h-14 rounded-full overflow-hidden bg-gray-100 dark:bg-gray-800">
-                      <Avatar src={contact.photoUrl} name={resolve(contact.id, contact.name)} size="lg" />
-                    </div>
-                    <span className="text-[10px] text-gray-700 dark:text-gray-300 text-center leading-tight line-clamp-2 w-full">
-                      {resolve(contact.id, contact.name)}
-                    </span>
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Divider */}
-          {contacts.length > 0 && <div className="border-t border-gray-100 dark:border-gray-800 mb-4" />}
-
-          {/* Row 2: Social apps */}
+        <div className="px-4 pb-6">
+          {/* Social apps */}
           <div className="grid grid-cols-5 gap-3 mb-4">
             {SOCIAL_APPS.map((app) => (
               <button
