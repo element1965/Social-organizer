@@ -13,7 +13,8 @@
     "done": "Done",
     "search": "Search",
     "notFound": "Not found",
-    "copied": "Copied"
+    "copied": "Copied",
+    "ok": "OK"
   },
   "auth": {
     "loginWith": "Log in with {{platform}}",
@@ -84,7 +85,9 @@
     "connectionEstablished": "Connection established!",
     "sendAnother": "Send another invite",
     "skip": "Skip",
-    "skipForNow": "Skip for now"
+    "skipForNow": "Skip for now",
+    "hintBudget": "Set your monthly support amount here — this shows how much you're ready to help",
+    "hintSettings": "Tap your name to open Settings and add extra contacts"
   },
   "nav": {
     "home": "Home",

@@ -5,7 +5,7 @@ import { trpc } from '../lib/trpc';
 export function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const isAuthenticated = useAuth((s) => s.isAuthenticated);
   const location = useLocation();
-  const { data: me, isLoading } = trpc.user.me.useQuery(undefined, {
+  const { isLoading } = trpc.user.me.useQuery(undefined, {
     enabled: isAuthenticated,
   });
 
@@ -32,11 +32,6 @@ export function ProtectedRoute({ children }: { children: React.ReactNode }) {
         <div className="animate-spin w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full" />
       </div>
     );
-  }
-
-  // Redirect to onboarding if not completed (except if already on onboarding page)
-  if (me && !me.onboardingCompleted && location.pathname !== '/onboarding') {
-    return <Navigate to="/onboarding" replace />;
   }
 
   return <>{children}</>;

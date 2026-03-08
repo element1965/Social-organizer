@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { QRCodeSVG } from 'qrcode.react';
-import { Check, Pencil, RefreshCw, Share2 } from 'lucide-react';
+import { Check, Pencil, RefreshCw, Share2, X } from 'lucide-react';
 import { trpc } from '../lib/trpc';
 import { useAuth } from '../hooks/useAuth';
 import { buildWebInviteUrl, buildBotInviteUrl } from '../lib/inviteUrl';
@@ -23,6 +23,7 @@ export function InviteBlock({ id }: InviteBlockProps) {
   const [copiedBot, setCopiedBot] = useState(false);
   const [sharing, setSharing] = useState(false);
   const [shared, setShared] = useState(false);
+  const [qrModalOpen, setQrModalOpen] = useState(false);
   const [editingSlug, setEditingSlug] = useState(false);
   const [slugValue, setSlugValue] = useState('');
   const [slugError, setSlugError] = useState('');
@@ -80,6 +81,19 @@ export function InviteBlock({ id }: InviteBlockProps) {
   );
 
   return (
+    <>
+    {/* QR Code enlarged modal */}
+    {qrModalOpen && (
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60" onClick={() => setQrModalOpen(false)}>
+        <div className="bg-white rounded-2xl p-6 mx-4 relative" onClick={(e) => e.stopPropagation()}>
+          <button onClick={() => setQrModalOpen(false)} className="absolute top-2 right-2 p-1 rounded-full hover:bg-gray-100">
+            <X className="w-5 h-5 text-gray-500" />
+          </button>
+          <QRCodeSVG value={webInviteUrl} size={280} level="H" imageSettings={{ src: '/logo-dark.png', width: 60, height: 43, excavate: true }} />
+        </div>
+      </div>
+    )}
+
     <Card id={id}>
       <CardContent className="py-3">
         <div className="flex items-center gap-2 mb-2">
@@ -93,10 +107,10 @@ export function InviteBlock({ id }: InviteBlockProps) {
               <div className="relative">
                 {flipButton}
                 <div className="flex flex-col items-center gap-2">
-                  {/* QR code */}
-                  <div className="p-2 bg-white rounded-lg">
+                  {/* QR code — tap to enlarge */}
+                  <button onClick={() => setQrModalOpen(true)} className="p-2 bg-white rounded-lg hover:shadow-md transition-shadow cursor-pointer">
                     <QRCodeSVG value={webInviteUrl} size={160} level="H" imageSettings={{ src: '/logo-dark.png', width: 38, height: 27, excavate: true }} />
-                  </div>
+                  </button>
 
                   {/* Clickable link — copies on tap */}
                   <button
@@ -203,5 +217,6 @@ export function InviteBlock({ id }: InviteBlockProps) {
         </div>
       </CardContent>
     </Card>
+    </>
   );
 }
