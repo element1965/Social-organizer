@@ -8,7 +8,7 @@ import { useTheme } from '../hooks/useTheme';
 import { useNicknames } from '../hooks/useNicknames';
 import { Avatar } from '../components/ui/avatar';
 import { Spinner } from '../components/ui/spinner';
-import { Users, Globe, List, Wallet, ChevronDown, ChevronUp, Clock, CheckCircle, XCircle, Layers } from 'lucide-react';
+import { Users, Globe, List, Wallet, ChevronDown, ChevronUp, Layers } from 'lucide-react';
 const LazyNetworkGraph = lazy(() =>
   import('@so/graph-3d').then((m) => ({ default: m.NetworkGraph })),
 );
@@ -49,17 +49,8 @@ export function MyNetworkPage() {
 
   const { data: adminData } = trpc.faq.isAdmin.useQuery();
   const isAdmin = adminData?.isAdmin ?? false;
-  const utils = trpc.useUtils();
 
   const [expandedDepth, setExpandedDepth] = useState<number | null>(null);
-  // Pending connections
-  const { data: pendingIncoming } = trpc.pending.incoming.useQuery(undefined, { refetchInterval: 15000 });
-  const acceptPending = trpc.pending.accept.useMutation({
-    onSuccess: () => { utils.pending.incoming.invalidate(); utils.pending.incomingCount.invalidate(); utils.connection.getNetworkStats.invalidate(); utils.connection.getCount.invalidate(); },
-  });
-  const rejectPending = trpc.pending.reject.useMutation({
-    onSuccess: () => { utils.pending.incoming.invalidate(); utils.pending.incomingCount.invalidate(); },
-  });
   const { data: networkStats, isLoading } = useCachedNetworkStats();
   const { data: graphData } = trpc.connection.graphSlice.useQuery(undefined, {
     enabled: view === '3d',
@@ -175,44 +166,6 @@ export function MyNetworkPage() {
         </>
       ) : (
         <>
-          {/* Incoming pending requests */}
-          {pendingIncoming && pendingIncoming.length > 0 && (
-            <div className="border border-amber-300 dark:border-amber-700 rounded-lg overflow-hidden mb-2">
-              <div className="p-3 bg-amber-50 dark:bg-amber-950/30">
-                <div className="flex items-center gap-2 mb-2">
-                  <Clock className="w-4 h-4 text-amber-600" />
-                  <span className="text-sm font-semibold text-amber-700 dark:text-amber-400">{t('pending.incoming')} ({pendingIncoming.length})</span>
-                </div>
-                <div className="space-y-2">
-                  {pendingIncoming.map((p) => (
-                    <div key={p.id} className="flex items-center gap-2 p-2 rounded bg-white/50 dark:bg-gray-900/50">
-                      <button
-                        onClick={() => navigate(`/profile/${p.fromUser.id}`)}
-                        className="flex items-center gap-2 flex-1 min-w-0"
-                      >
-                        <Avatar src={p.fromUser.photoUrl} name={resolve(p.fromUser.id, p.fromUser.name)} size="sm" />
-                        <span className="flex-1 text-sm font-medium text-gray-900 dark:text-white truncate text-left">{resolve(p.fromUser.id, p.fromUser.name)}</span>
-                      </button>
-                      <button
-                        onClick={() => acceptPending.mutate({ pendingId: p.id })}
-                        disabled={acceptPending.isPending}
-                        className="p-1.5 rounded-full bg-green-100 dark:bg-green-900/50 text-green-600 hover:bg-green-200"
-                      >
-                        <CheckCircle className="w-5 h-5" />
-                      </button>
-                      <button
-                        onClick={() => rejectPending.mutate({ pendingId: p.id })}
-                        disabled={rejectPending.isPending}
-                        className="p-1.5 rounded-full bg-red-100 dark:bg-red-900/50 text-red-500 hover:bg-red-200"
-                      >
-                        <XCircle className="w-5 h-5" />
-                      </button>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          )}
           {isLoading ? <div className="flex justify-center py-12"><Spinner /></div> : Object.keys(byDepth).length === 0 ? (
             <div className="text-center py-12">
               <Users className="w-12 h-12 mx-auto text-gray-300 dark:text-gray-400 mb-3" />
@@ -224,7 +177,6 @@ export function MyNetworkPage() {
               {Object.entries(byDepth).map(([depth, count], idx, entries) => {
                 const depthNum = Number(depth);
                 const isExpanded = expandedDepth === depthNum;
-                const isAfterExpanded = expandedDepth !== null && depthNum > expandedDepth;
                 const depthUsers = usersByDepth[depthNum] || [];
                 const colors = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899'];
                 const color = colors[(depthNum - 1) % colors.length];
@@ -233,7 +185,17 @@ export function MyNetworkPage() {
                   <div
                     key={depth}
                     className={`border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden bg-white dark:bg-gray-900 ${idx > 0 ? 'mt-2' : ''}`}
-                    style={expandedDepth !== null && depthNum === expandedDepth + 1 ? { position: 'sticky', bottom: 0, zIndex: 10, boxShadow: '0 -4px 12px rgba(0,0,0,0.15)' } : expandedDepth !== null && depthNum > expandedDepth + 1 ? { display: 'none' } : undefined}
+                    style={
+                      expandedDepth !== null && depthNum < expandedDepth
+                        ? depthNum === expandedDepth - 1
+                          ? { position: 'sticky', top: 0, zIndex: 10, boxShadow: '0 4px 12px rgba(0,0,0,0.15)' }
+                          : { display: 'none' }
+                        : expandedDepth !== null && depthNum > expandedDepth
+                          ? depthNum === expandedDepth + 1
+                            ? { position: 'sticky', bottom: 0, zIndex: 10, boxShadow: '0 -4px 12px rgba(0,0,0,0.15)' }
+                            : { display: 'none' }
+                          : undefined
+                    }
                   >
                     <button
                       onClick={() => toggleDepth(depthNum)}
