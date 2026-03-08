@@ -115,8 +115,16 @@ export const pendingRouter = router({
         data: { fromUserId: ctx.userId, toUserId: input.targetUserId, createdAt: new Date() },
       });
 
-      const sender = await ctx.db.user.findUnique({ where: { id: ctx.userId }, select: { name: true } });
-      sendPendingNotification(ctx.db, input.targetUserId, 'new', sender?.name || '').catch(() => {});
+      const sender = await ctx.db.user.findUnique({
+        where: { id: ctx.userId },
+        select: { name: true, platformAccounts: { where: { platform: 'TELEGRAM' }, select: { platformId: true }, take: 1 } },
+      });
+      let senderTgUsername: string | undefined;
+      if (sender?.platformAccounts?.[0]?.platformId) {
+        const bs = await ctx.db.botStart.findUnique({ where: { chatId: sender.platformAccounts[0].platformId }, select: { username: true } });
+        senderTgUsername = bs?.username || undefined;
+      }
+      sendPendingNotification(ctx.db, input.targetUserId, 'new', sender?.name || '', senderTgUsername).catch(() => {});
 
       return { success: true };
     }),
