@@ -286,6 +286,7 @@ export async function sendPendingNotification(
   recipientUserId: string,
   type: 'new' | 'accepted' | 'rejected',
   actorName: string,
+  actorTgUsername?: string,
 ): Promise<void> {
   // Web Push
   const pushTitle = type === 'new' ? 'New connection request'
@@ -314,7 +315,8 @@ export async function sendPendingNotification(
   if (type === 'new') {
     const title = tg(lang, 'pendingNew') || 'New connection request';
     const body = (tg(lang, 'pendingNewBody') || '{{name}} wants to connect').replace('{{name}}', actorName);
-    text = `🔔 <b>${title}</b>\n\n${body}`;
+    const tgLine = actorTgUsername ? `\n@${actorTgUsername}` : '';
+    text = `🔔 <b>${title}</b>\n\n${body}${tgLine}`;
     replyMarkup = {
       inline_keyboard: [[{ text: `📱 ${tg(lang, 'pendingView') || 'View'}`, web_app: { url: dashboardUrl } }]],
     };
