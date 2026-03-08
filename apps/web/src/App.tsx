@@ -34,13 +34,12 @@ function HomeRoute() {
   if (isAuthenticated && !params.get('invite') && !params.get('from') && !localStorage.getItem('pendingInviteToken')) {
     return <Navigate to="/dashboard" replace />;
   }
-  // In native app (Capacitor) skip landing — go straight to login
+  // In native app (Capacitor) with invite param — route to invite page
   if (typeof (window as any).Capacitor?.isNativePlatform === 'function' && (window as any).Capacitor.isNativePlatform()) {
     const inviteParam = params.get('invite');
     if (inviteParam) {
       return <Navigate to={`/invite/${inviteParam}`} replace />;
     }
-    return <Navigate to="/login" replace />;
   }
   return <LandingPage variant={isArvut ? 'arvut' : undefined} />;
 }

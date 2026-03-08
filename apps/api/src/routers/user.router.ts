@@ -205,10 +205,13 @@ export const userRouter = router({
   }),
 
   delete: protectedProcedure.mutation(async ({ ctx }) => {
-    // Capture user name and inviter before deletion
+    // Capture user info before deletion
     const deletingUser = await ctx.db.user.findUnique({
       where: { id: ctx.userId },
-      select: { name: true },
+      select: {
+        name: true,
+        platformAccounts: { where: { platform: 'TELEGRAM' }, select: { platformId: true } },
+      },
     });
     const inviteLink = await ctx.db.inviteLink.findFirst({
       where: { usedById: ctx.userId },
@@ -216,9 +219,9 @@ export const userRouter = router({
     });
 
     await ctx.db.$transaction(async (tx) => {
-      // Check if user has any first-handshake connections
-      const connectionCount = await tx.connection.count({
-        where: { OR: [{ userAId: ctx.userId }, { userBId: ctx.userId }] },
+      // Check if user has invited anyone who registered (their invites were used)
+      const usedInviteCount = await tx.inviteLink.count({
+        where: { inviterId: ctx.userId, usedById: { not: null } },
       });
 
       // Clean up pending connections in both directions
@@ -248,11 +251,22 @@ export const userRouter = router({
         data: { status: 'CANCELLED' },
       });
 
-      if (connectionCount === 0) {
-        // No first handshake — full delete (cascade removes all related records)
+      if (usedInviteCount === 0) {
+        // No invitees — full delete with no traces
+        // Clear usedById references pointing to this user
+        await tx.inviteLink.updateMany({
+          where: { usedById: ctx.userId },
+          data: { usedById: null, usedAt: null },
+        });
+        // Remove botStart record
+        const tgId = deletingUser?.platformAccounts?.[0]?.platformId;
+        if (tgId) {
+          await tx.botStart.deleteMany({ where: { chatId: tgId } });
+        }
+        // Hard delete user (cascade removes all related records)
         await tx.user.delete({ where: { id: ctx.userId } });
       } else {
-        // Has connections — soft delete (gray profile)
+        // Has invitees — soft delete (mute) so their network stays intact
         await tx.user.update({
           where: { id: ctx.userId },
           data: {
