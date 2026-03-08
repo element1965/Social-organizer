@@ -14,10 +14,9 @@ const SOCIAL_APPS = [
   { id: 'telegram', label: 'Telegram', color: '#26A5E4', buildUrl: (url: string, text: string) => `https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}` },
   { id: 'whatsapp', label: 'WhatsApp', color: '#25D366', buildUrl: (url: string, text: string) => `https://wa.me/?text=${encodeURIComponent(text + '\n' + url)}` },
   { id: 'viber', label: 'Viber', color: '#7360F2', buildUrl: (url: string, text: string) => `viber://forward?text=${encodeURIComponent(text + '\n' + url)}` },
-  { id: 'facebook', label: 'Facebook', color: '#1877F2', buildUrl: (url: string) => `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}` },
-  { id: 'twitter', label: 'X', color: '#000000', buildUrl: (url: string, text: string) => `https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}` },
+  { id: 'messenger', label: 'Messenger', color: '#0084FF', buildUrl: (url: string) => `fb-messenger://share/?link=${encodeURIComponent(url)}` },
   { id: 'linkedin', label: 'LinkedIn', color: '#0A66C2', buildUrl: (url: string) => `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}` },
-  { id: 'instagram', label: 'Instagram', color: '#E4405F', buildUrl: () => null },
+  { id: 'sms', label: 'SMS', color: '#4CAF50', buildUrl: (url: string, text: string) => `sms:?body=${encodeURIComponent(text + '\n' + url)}` },
   { id: 'email', label: 'Email', color: '#6B7280', buildUrl: (url: string, text: string) => `mailto:?subject=${encodeURIComponent('Social Organizer')}&body=${encodeURIComponent(text + '\n' + url)}` },
 ] as const;
 
@@ -51,11 +50,7 @@ export function ShareSheet({ open, onClose, url, shareText }: ShareSheetProps) {
 
   const handleShare = (app: typeof SOCIAL_APPS[number]) => {
     const shareUrl = app.buildUrl(url, shareText);
-    if (!shareUrl) {
-      handleCopy();
-      return;
-    }
-    window.open(shareUrl, '_blank', 'noopener,noreferrer');
+    if (shareUrl) window.open(shareUrl, '_blank', 'noopener,noreferrer');
   };
 
   return (
@@ -86,7 +81,7 @@ export function ShareSheet({ open, onClose, url, shareText }: ShareSheetProps) {
 
         <div className="px-4 pb-6">
           {/* Social apps */}
-          <div className="grid grid-cols-5 gap-3 mb-4">
+          <div className="grid grid-cols-4 gap-3 mb-4">
             {SOCIAL_APPS.map((app) => (
               <button
                 key={app.id}
