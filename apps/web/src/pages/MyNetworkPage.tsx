@@ -232,7 +232,8 @@ export function MyNetworkPage() {
                 return (
                   <div
                     key={depth}
-                    className={`border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden bg-white dark:bg-gray-900 ${isAfterExpanded ? 'sticky bottom-0 z-10 shadow-[0_-4px_12px_rgba(0,0,0,0.15)]' : ''} ${idx > 0 ? 'mt-2' : ''}`}
+                    className={`border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden bg-white dark:bg-gray-900 ${idx > 0 ? 'mt-2' : ''}`}
+                    style={expandedDepth !== null && depthNum === expandedDepth + 1 ? { position: 'sticky', bottom: 0, zIndex: 10, boxShadow: '0 -4px 12px rgba(0,0,0,0.15)' } : expandedDepth !== null && depthNum > expandedDepth + 1 ? { display: 'none' } : undefined}
                   >
                     <button
                       onClick={() => toggleDepth(depthNum)}
