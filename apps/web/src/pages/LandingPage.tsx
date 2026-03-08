@@ -119,7 +119,7 @@ function LandingFaq({ variant }: { variant?: 'arvut' }) {
   );
 }
 
-export function LandingPage({ variant }: { variant?: 'arvut' } = {}) {
+export function LandingPage({ variant, inviteToken: inviteTokenProp }: { variant?: 'arvut'; inviteToken?: string } = {}) {
   const { t: _t, i18n } = useTranslation();
   const t = (variant === 'arvut'
     ? (key: string) => _t(key.replace('landing.', 'landingArvut.') as any)
@@ -127,13 +127,14 @@ export function LandingPage({ variant }: { variant?: 'arvut' } = {}) {
   const [searchParams] = useSearchParams();
   const inviteParam = searchParams.get('invite');
   const fromDemo = searchParams.get('from') === 'demo';
-  const pendingInvite = inviteParam || localStorage.getItem('pendingInviteToken');
+  const pendingInvite = inviteTokenProp || inviteParam || localStorage.getItem('pendingInviteToken');
   const [showDemoBanner, setShowDemoBanner] = useState(fromDemo);
 
   // Persist invite token so Telegram bot link can use it
   useEffect(() => {
-    if (inviteParam) localStorage.setItem('pendingInviteToken', inviteParam);
-  }, [inviteParam]);
+    const tokenToSave = inviteTokenProp || inviteParam;
+    if (tokenToSave) localStorage.setItem('pendingInviteToken', tokenToSave);
+  }, [inviteTokenProp, inviteParam]);
 
   // Force Hebrew for Arvut variant
   useEffect(() => {

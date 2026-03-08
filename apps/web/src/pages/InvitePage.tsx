@@ -39,9 +39,9 @@ export function InvitePage() {
     logout();
   }
 
-  // Not authenticated — show landing page (token already saved to localStorage)
+  // Not authenticated — show landing page with invite token preserved
   if (!isRealUser || meError) {
-    return <LandingPage />;
+    return <LandingPage inviteToken={token} />;
   }
 
   const { data: invite, isLoading, error } = trpc.invite.getByToken.useQuery(
