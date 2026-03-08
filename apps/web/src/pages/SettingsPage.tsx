@@ -17,6 +17,7 @@ import { Input } from '../components/ui/input';
 import { SocialIcon } from '../components/ui/social-icons';
 import { usePushNotifications } from '../hooks/usePushNotifications';
 import { validateContact } from '@so/shared';
+import { InviteBlock } from '../components/InviteBlock';
 
 export function SettingsPage() {
   const { t, i18n } = useTranslation();
@@ -197,6 +198,7 @@ export function SettingsPage() {
         </CardContent>
       </Card>
 
+      <InviteBlock variant="settings" />
 
       <Card><CardContent className="py-3">
         <div className="flex items-center gap-3">
