@@ -9,7 +9,7 @@ import { RequiredInfoGate } from './components/RequiredInfoGate';
 import { useAuth } from './hooks/useAuth';
 import { LoginPage } from './pages/LoginPage';
 import { LandingPage } from './pages/LandingPage';
-import { OnboardingPage } from './pages/OnboardingPage';
+// OnboardingPage removed — onboarding is now inline on dashboard
 import { DashboardPage } from './pages/DashboardPage';
 import { NotificationsPage } from './pages/NotificationsPage';
 import { CollectionPage } from './pages/CollectionPage';
@@ -61,7 +61,7 @@ export function App() {
             <Route path="/welcome" element={<LandingPage variant={isArvut ? 'arvut' : undefined} />} />
             <Route path="/arvut" element={<LandingPage variant="arvut" />} />
             <Route path="/login" element={<LoginPage />} />
-            <Route path="/onboarding" element={<OnboardingPage />} />
+            <Route path="/onboarding" element={<Navigate to="/dashboard" replace />} />
             <Route path="/privacy" element={<PrivacyPage />} />
             <Route path="/terms" element={<TermsPage />} />
             <Route path="/delete-account" element={<DeleteAccountPage />} />
