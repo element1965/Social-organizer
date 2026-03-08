@@ -18,10 +18,10 @@ export function buildInviteUrl(token: string): string {
 
 /**
  * Build web invite URL (always points to landing page).
- * Used for sharing outside Telegram.
+ * Used for sharing outside Telegram — recipient sees landing first.
  */
 export function buildWebInviteUrl(token: string): string {
-  return `${WEB_APP_URL}/invite/${token}`;
+  return `${WEB_APP_URL}/?invite=${token}`;
 }
 
 /**
