@@ -294,7 +294,7 @@ export async function sendPendingNotification(
     : 'Request declined';
   const pushBody = type === 'new' ? `${actorName} wants to connect`
     : actorName;
-  const pushUrl = type === 'new' ? `${WEB_APP_URL}/dashboard`
+  const pushUrl = type === 'new' ? `${WEB_APP_URL}/notifications`
     : type === 'accepted' ? `${WEB_APP_URL}/network`
     : undefined;
   sendPushNotification(db, [recipientUserId], { title: pushTitle, body: pushBody, url: pushUrl })
@@ -310,7 +310,7 @@ export async function sendPendingNotification(
   const lang = tgAccount.user?.language || 'en';
   let text: string;
   let replyMarkup: TgReplyMarkup | undefined;
-  const dashboardUrl = `${WEB_APP_URL}/dashboard`;
+  const notificationsUrl = `${WEB_APP_URL}/notifications`;
 
   if (type === 'new') {
     const title = tg(lang, 'pendingNew') || 'New connection request';
@@ -318,7 +318,7 @@ export async function sendPendingNotification(
     const tgLine = actorTgUsername ? `\n@${actorTgUsername}` : '';
     text = `🔔 <b>${title}</b>\n\n${body}${tgLine}`;
     replyMarkup = {
-      inline_keyboard: [[{ text: `📱 ${tg(lang, 'pendingView') || 'View'}`, web_app: { url: dashboardUrl } }]],
+      inline_keyboard: [[{ text: `📱 ${tg(lang, 'pendingView') || 'View'}`, web_app: { url: notificationsUrl } }]],
     };
   } else if (type === 'accepted') {
     const title = tg(lang, 'pendingAccepted') || 'Request accepted';
