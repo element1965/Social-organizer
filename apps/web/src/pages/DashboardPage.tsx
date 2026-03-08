@@ -61,7 +61,12 @@ export function DashboardPage() {
   useEffect(() => {
     if (me && !me.onboardingCompleted && !onboardingTriggered.current) {
       onboardingTriggered.current = true;
-      setOnboardingHint('budget');
+      // Skip budget hint if budget already set
+      if (me.monthlyBudget != null && me.monthlyBudget > 0) {
+        setOnboardingHint('settings');
+      } else {
+        setOnboardingHint('budget');
+      }
     }
   }, [me]);
 
@@ -94,7 +99,7 @@ export function DashboardPage() {
       <div className="flex items-center justify-between">
         <button
           onClick={() => navigate('/settings')}
-          className="flex items-center gap-3 hover:opacity-80 transition-opacity"
+          className={`flex items-center gap-3 hover:opacity-80 transition-opacity ${onboardingHint === 'settings' ? 'ring-2 ring-blue-500 ring-offset-2 ring-offset-gray-950 rounded-full z-[51]' : ''}`}
         >
           <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center overflow-hidden ring-2 ring-white dark:ring-gray-800 shadow-lg">
             {me?.photoUrl ? (
@@ -303,9 +308,9 @@ export function DashboardPage() {
         <div className="fixed inset-0 z-50 bg-black/40" />
       )}
 
-      {/* Onboarding hint for settings */}
+      {/* Onboarding hint for settings — positioned below the profile button */}
       {onboardingHint === 'settings' && (
-        <div className="fixed top-16 left-4 w-64 z-[52]">
+        <div className="fixed top-[88px] left-4 w-64 z-[52]">
           <div className="bg-blue-600 text-white text-xs rounded-lg p-3 shadow-lg relative">
             <div className="absolute -top-1.5 left-8 w-3 h-3 bg-blue-600 rotate-45" />
             <div className="flex items-center gap-2 mb-1">
