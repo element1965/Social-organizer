@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { QRCodeSVG } from 'qrcode.react';
-import { Check, Pencil, RefreshCw, Share2, X } from 'lucide-react';
+import { Check, Pencil, Share2, X } from 'lucide-react';
 import { trpc } from '../lib/trpc';
 import { useAuth } from '../hooks/useAuth';
 import { buildWebInviteUrl, buildBotInviteUrl } from '../lib/inviteUrl';
@@ -10,8 +10,8 @@ import { Card, CardContent } from './ui/card';
 
 interface InviteBlockProps {
   id?: string;
-  /** 'qr' = QR + flip only, 'actions' = link + share only, 'full' = everything (default) */
-  variant?: 'full' | 'qr' | 'actions';
+  /** 'qr' = QR only, 'actions' = link + share, 'settings' = bot link + slug, 'full' = QR + actions (default) */
+  variant?: 'full' | 'qr' | 'actions' | 'settings';
 }
 
 export function InviteBlock({ id, variant = 'full' }: InviteBlockProps) {
@@ -20,7 +20,6 @@ export function InviteBlock({ id, variant = 'full' }: InviteBlockProps) {
   const utils = trpc.useUtils();
   const { data: me } = trpc.user.me.useQuery();
 
-  const [flipped, setFlipped] = useState(false);
   const [copiedWeb, setCopiedWeb] = useState(false);
   const [copiedBot, setCopiedBot] = useState(false);
   const [sharing, setSharing] = useState(false);
@@ -106,7 +105,7 @@ export function InviteBlock({ id, variant = 'full' }: InviteBlockProps) {
     </div>
   );
 
-  // --- QR: QR code with flip to bot link ---
+  // --- QR: just the QR code (no flip) ---
   const qrContent = (
     <>
       {/* QR Code enlarged modal */}
@@ -121,102 +120,90 @@ export function InviteBlock({ id, variant = 'full' }: InviteBlockProps) {
         </div>
       )}
 
-      <Card id={id}>
-        <CardContent className="py-3">
-          <div className="flex justify-end mb-1">
-            <button
-              onClick={() => setFlipped(!flipped)}
-              className="p-1 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
-              title={flipped ? t('invite.showWebLink') : t('invite.showBotLink')}
-            >
-              <RefreshCw className="w-4 h-4 text-gray-400 dark:text-gray-500" />
-            </button>
-          </div>
-
-          <div className="flip-container">
-            <div className={`flip-inner relative ${flipped ? 'flipped' : ''}`}>
-              {/* ===== FRONT: QR code ===== */}
-              <div className={`flip-front ${flipped ? 'absolute top-0 left-0 w-full' : ''}`}>
-                <div className="flex justify-center">
-                  <button onClick={() => setQrModalOpen(true)} className="p-2 bg-white rounded-lg hover:shadow-md transition-shadow cursor-pointer">
-                    <QRCodeSVG value={webInviteUrl} size={160} level="H" imageSettings={{ src: '/logo-dark.png', width: 38, height: 27, excavate: true }} />
-                  </button>
-                </div>
-              </div>
-
-              {/* ===== BACK: Bot link + slug editor ===== */}
-              <div className={`flip-back ${flipped ? '' : 'absolute top-0 left-0 w-full'}`}>
-                <div onClick={(e) => e.stopPropagation()}>
-                  <div className="space-y-2">
-                    <p className="text-xs text-gray-600 dark:text-gray-300">
-                      {t('invite.botLinkHint')}
-                    </p>
-
-                    <button
-                      onClick={handleCopyBot}
-                      className="w-full p-2.5 bg-gray-50 dark:bg-gray-800/70 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors border border-gray-200 dark:border-gray-700"
-                    >
-                      <div className="flex items-center gap-2">
-                        <span className="text-base shrink-0">🤖</span>
-                        <p className="flex-1 text-xs font-medium text-blue-600 dark:text-blue-400 break-all text-left">
-                          {botInviteUrl}
-                        </p>
-                      </div>
-                    </button>
-
-                    {copiedBot && (
-                      <div className="flex items-center justify-center gap-1.5 py-2 bg-green-50 dark:bg-green-950/40 rounded-lg border border-green-200 dark:border-green-800 animate-fade-in">
-                        <Check className="w-5 h-5 text-green-500" />
-                        <span className="text-sm font-semibold text-green-600 dark:text-green-400">{t('invite.copied')}</span>
-                      </div>
-                    )}
-
-                    <p className="text-[11px] text-gray-400 dark:text-gray-500 text-center">
-                      {t('invite.botLinkDesc')}
-                    </p>
-
-                    <div className="pt-2 border-t border-gray-200 dark:border-gray-700">
-                      <p className="text-[11px] text-gray-500 dark:text-gray-400 mb-1.5">
-                        {t('invite.slugExplain')}
-                      </p>
-                      {editingSlug ? (
-                        <div>
-                          <input
-                            value={slugValue}
-                            onChange={(e) => { setSlugValue(e.target.value.toLowerCase().replace(/[^a-z0-9_-]/g, '')); setSlugError(''); }}
-                            onBlur={() => { if (slugValue.length >= 3 && slugValue !== (me?.referralSlug || '')) updateSlug.mutate({ slug: slugValue }); else setEditingSlug(false); }}
-                            onKeyDown={(e) => { if (e.key === 'Enter' && slugValue.length >= 3) updateSlug.mutate({ slug: slugValue }); if (e.key === 'Escape') setEditingSlug(false); }}
-                            placeholder={t('invite.slugPlaceholder')}
-                            className="w-full px-2 py-1 text-sm font-mono rounded border border-gray-300 dark:border-gray-600 bg-transparent text-blue-600 dark:text-blue-400 focus:outline-none focus:border-blue-500"
-                            maxLength={30}
-                            autoFocus
-                          />
-                          {slugError && <p className="text-[10px] text-red-500 mt-1">{slugError}</p>}
-                        </div>
-                      ) : (
-                        <div className="flex items-center gap-2">
-                          <span className="text-xs text-gray-400">{t('invite.yourId')}:</span>
-                          <p className="text-sm font-mono text-blue-600 dark:text-blue-400">{me?.referralSlug || userId}</p>
-                          <button onClick={() => { setSlugValue(me?.referralSlug || ''); setSlugError(''); setEditingSlug(true); }} className="text-gray-400 hover:text-gray-500 dark:text-gray-300">
-                            <Pencil className="w-3 h-3" />
-                          </button>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+      <Card id={id} className="h-full">
+        <CardContent className="py-3 h-full flex items-center justify-center">
+          <button onClick={() => setQrModalOpen(true)} className="p-2 bg-white rounded-lg hover:shadow-md transition-shadow cursor-pointer">
+            <QRCodeSVG value={webInviteUrl} size={160} level="H" imageSettings={{ src: '/logo-dark.png', width: 38, height: 27, excavate: true }} />
+          </button>
         </CardContent>
       </Card>
     </>
   );
 
+  // --- Settings: bot link + slug editor (for settings page) ---
+  const settingsContent = (
+    <Card id={id}>
+      <CardContent className="py-3">
+        <div className="flex items-center justify-between mb-2">
+          <span className="text-sm font-semibold text-gray-900 dark:text-white">{t('network.invite')}</span>
+        </div>
+        <div className="space-y-2">
+          <p className="text-xs text-gray-600 dark:text-gray-300">
+            {t('invite.botLinkHint')}
+          </p>
+
+          <button
+            onClick={handleCopyBot}
+            className="w-full p-2.5 bg-gray-50 dark:bg-gray-800/70 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors border border-gray-200 dark:border-gray-700"
+          >
+            <div className="flex items-center gap-2">
+              <span className="text-base shrink-0">🤖</span>
+              <p className="flex-1 text-xs font-medium text-blue-600 dark:text-blue-400 break-all text-left">
+                {botInviteUrl}
+              </p>
+            </div>
+          </button>
+
+          {copiedBot && (
+            <div className="flex items-center justify-center gap-1.5 py-2 bg-green-50 dark:bg-green-950/40 rounded-lg border border-green-200 dark:border-green-800 animate-fade-in">
+              <Check className="w-5 h-5 text-green-500" />
+              <span className="text-sm font-semibold text-green-600 dark:text-green-400">{t('invite.copied')}</span>
+            </div>
+          )}
+
+          <p className="text-[11px] text-gray-400 dark:text-gray-500 text-center">
+            {t('invite.botLinkDesc')}
+          </p>
+
+          {/* Editable slug */}
+          <div className="pt-2 border-t border-gray-200 dark:border-gray-700">
+            <p className="text-[11px] text-gray-500 dark:text-gray-400 mb-1.5">
+              {t('invite.slugExplain')}
+            </p>
+            {editingSlug ? (
+              <div>
+                <input
+                  value={slugValue}
+                  onChange={(e) => { setSlugValue(e.target.value.toLowerCase().replace(/[^a-z0-9_-]/g, '')); setSlugError(''); }}
+                  onBlur={() => { if (slugValue.length >= 3 && slugValue !== (me?.referralSlug || '')) updateSlug.mutate({ slug: slugValue }); else setEditingSlug(false); }}
+                  onKeyDown={(e) => { if (e.key === 'Enter' && slugValue.length >= 3) updateSlug.mutate({ slug: slugValue }); if (e.key === 'Escape') setEditingSlug(false); }}
+                  placeholder={t('invite.slugPlaceholder')}
+                  className="w-full px-2 py-1 text-sm font-mono rounded border border-gray-300 dark:border-gray-600 bg-transparent text-blue-600 dark:text-blue-400 focus:outline-none focus:border-blue-500"
+                  maxLength={30}
+                  autoFocus
+                />
+                {slugError && <p className="text-[10px] text-red-500 mt-1">{slugError}</p>}
+              </div>
+            ) : (
+              <div className="flex items-center gap-2">
+                <span className="text-xs text-gray-400">{t('invite.yourId')}:</span>
+                <p className="text-sm font-mono text-blue-600 dark:text-blue-400">{me?.referralSlug || userId}</p>
+                <button onClick={() => { setSlugValue(me?.referralSlug || ''); setSlugError(''); setEditingSlug(true); }} className="text-gray-400 hover:text-gray-500 dark:text-gray-300">
+                  <Pencil className="w-3 h-3" />
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  );
+
   if (variant === 'qr') return qrContent;
   if (variant === 'actions') return actionsContent;
+  if (variant === 'settings') return settingsContent;
 
-  // full = both together (legacy)
+  // full = QR + actions
   return (
     <>
       {qrContent}

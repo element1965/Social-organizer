@@ -214,10 +214,10 @@ export function DashboardPage() {
         </Card>
       </div>
 
-      {/* Budget + invite actions (left 35%) | QR code (right 65%) — aligned at bottom */}
-      <div className="flex gap-3 items-end">
+      {/* Budget + link/share (left 50%) | QR code (right 50%) — stretched to same height */}
+      <div className="grid grid-cols-2 gap-3">
         {/* Left column: budget + link + share */}
-        <div className="w-[35%] shrink-0 relative flex flex-col gap-2">
+        <div className="relative flex flex-col gap-2">
           <Card className={`bg-gradient-to-b from-blue-50 to-indigo-50 dark:from-blue-950/30 dark:to-indigo-950/30 transition-all ${onboardingHint === 'budget' ? 'ring-2 ring-blue-500 ring-offset-2 ring-offset-gray-950 z-[51]' : ''}`}>
             <CardContent className="py-3">
               <div className="flex items-center gap-1 mb-1">
@@ -293,7 +293,7 @@ export function DashboardPage() {
           )}
         </div>
         {/* Right column: QR code */}
-        <div className="w-[65%]">
+        <div>
           <InviteBlock id="invite" variant="qr" />
         </div>
       </div>
