@@ -62,7 +62,14 @@ export function MyNetworkPage() {
   const usersByDepth = (networkStats as any)?.usersByDepth ?? {};
 
   const toggleDepth = (depth: number) => {
-    setExpandedDepth((prev) => (prev === depth ? null : depth));
+    setExpandedDepth((prev) => {
+      if (prev === depth) return null;
+      // Scroll to the header after React re-renders
+      setTimeout(() => {
+        document.getElementById(`depth-header-${depth}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 50);
+      return depth;
+    });
   };
 
   return (
@@ -238,6 +245,7 @@ export function MyNetworkPage() {
                   const elements: React.ReactNode[] = [
                     <div
                       key={`${depth}-header`}
+                      id={`depth-header-${depth}`}
                       className={`border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden bg-white dark:bg-gray-900 ${idx > 0 ? 'mt-2' : ''}`}
                       style={{ position: 'sticky', top: stickyTop, zIndex: 12, boxShadow: '0 4px 12px rgba(0,0,0,0.15)' }}
                     >
