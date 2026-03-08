@@ -122,8 +122,8 @@ export function InviteBlock({ id, variant = 'full' }: InviteBlockProps) {
 
       <Card id={id} className="h-full">
         <CardContent className="py-3 h-full flex items-center justify-center">
-          <button onClick={() => setQrModalOpen(true)} className="p-2 bg-white rounded-lg hover:shadow-md transition-shadow cursor-pointer">
-            <QRCodeSVG value={webInviteUrl} size={160} level="H" imageSettings={{ src: '/logo-dark.png', width: 38, height: 27, excavate: true }} />
+          <button onClick={() => setQrModalOpen(true)} className="p-2 bg-white rounded-lg hover:shadow-md transition-shadow cursor-pointer w-full aspect-square flex items-center justify-center">
+            <QRCodeSVG value={webInviteUrl} className="w-full h-full" level="H" imageSettings={{ src: '/logo-dark.png', width: 30, height: 21, excavate: true }} />
           </button>
         </CardContent>
       </Card>
