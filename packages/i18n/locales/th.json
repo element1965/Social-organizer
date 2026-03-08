@@ -13,7 +13,8 @@
     "done": "เสร็จ",
     "search": "ค้นหา",
     "notFound": "ไม่พบ",
-    "copied": "คัดลอกแล้ว"
+    "copied": "คัดลอกแล้ว",
+    "ok": "OK"
   },
   "auth": {
     "loginWith": "เข้าสู่ระบบด้วย {{platform}}",
@@ -84,7 +85,11 @@
       "text": "ระบุจำนวนเงินที่เพื่อนสนิทของคุณสามารถพึ่งพาได้ในกรณีฉุกเฉิน นี่เป็นเพียงความตั้งใจของคุณ — คุณเพียงแสดงความพร้อมที่จะช่วยเหลือ ยิ่งจำนวนเงินสูง ความคุ้มครองประกันภัยของคุณก็ยิ่งมากขึ้น สมาชิกในเครือข่ายจะเห็นศักยภาพรวม และเมื่อมีคนขอความช่วยเหลือ — คุณเป็นคนตัดสินใจว่าจะเข้าร่วมหรือไม่"
     },
     "contactsRequired": "เพิ่มช่องทางติดต่ออย่างน้อย 2 ช่องทาง",
-    "contactsFilled": "กรอกแล้ว: {{count}}/2"
+    "contactsFilled": "กรอกแล้ว: {{count}}/2",
+    "hintBudget": "Set your monthly support amount here — this shows how much you're ready to help",
+    "hintSettings": "Tap «Settings» to add extra contacts",
+    "hintContactsNeeded": "Add {{count}} more contact(s) in Settings so friends can reach you",
+    "noTgUsername": "You don't have a Telegram username — add one in Telegram settings, it counts as a contact"
   },
   "nav": {
     "home": "หน้าแรก",
@@ -165,7 +170,9 @@
     "periodPast90": "90 วันที่ผ่านมา",
     "periodPast365": "365 วันที่ผ่านมา",
     "newConnections": "+{{count}} ใหม่",
-    "periodPast1": "วันนี้"
+    "periodPast1": "วันนี้",
+    "communityChatDesc": "This is the general community chat for questions, suggestions, and feedback about the app. It is not a help chat.",
+    "communityChatOpen": "Open Chat"
   },
   "collection": {
     "create": "ส่งสัญญาณขอความช่วยเหลือ",
@@ -190,7 +197,10 @@
     "participants": "ผู้เข้าร่วม",
     "noParticipants": "ยังไม่มีผู้เข้าร่วม",
     "minAmount": "ขั้นต่ำ 1",
-    "connectionToCreator": "ความเชื่อมโยงกับผู้สร้าง"
+    "connectionToCreator": "ความเชื่อมโยงกับผู้สร้าง",
+    "editAmount": "Edit",
+    "saveAmount": "Save",
+    "cancelEdit": "Cancel"
   },
   "create": {
     "title": "ส่งสัญญาณขอความช่วยเหลือ",
@@ -294,7 +304,9 @@
     "revokeConfirm": "การเชื่อมต่อจะถูกลบ การเชื่อมต่อใหม่ต้องยืนยันอีกครั้ง ดำเนินการต่อ?",
     "intentionsReceived": "ครั้งที่ได้รับความช่วย",
     "helpedTab": "ช่วยเหลือ",
-    "helpedByTab": "ได้รับความช่วยเหลือ"
+    "helpedByTab": "ได้รับความช่วยเหลือ",
+    "online": "Online",
+    "lastSeen": "Last seen {{time}}"
   },
   "settings": {
     "title": "ตั้งค่า",
@@ -346,7 +358,10 @@
     "localized": "แปลแล้ว",
     "localizeAll": "แปลเป็นทุกภาษา",
     "localizing": "กำลังแปล...",
-    "addPhoto": "เพิ่มรูปภาพ"
+    "addPhoto": "เพิ่มรูปภาพ",
+    "insertLink": "Insert link",
+    "linkTextPlaceholder": "Link text",
+    "insert": "Insert"
   },
   "chat": {
     "title": "ผู้ช่วย",
@@ -378,7 +393,43 @@
     "variantAll": "ทั้งหมด",
     "variantInvited": "ได้รับเชิญ",
     "variantOrganic": "โดยตรง",
-    "editChain": "แก้ไข"
+    "editChain": "แก้ไข",
+    "tabSend": "Send",
+    "tabScheduled": "Scheduled",
+    "tabAutoChain": "Auto-Chain",
+    "scheduledAt": "Date & time",
+    "scheduledAtPlaceholder": "Select date and time",
+    "schedule": "Schedule",
+    "scheduling": "Scheduling...",
+    "scheduledSuccess": "Post scheduled",
+    "cancelPost": "Cancel",
+    "cancelledSuccess": "Post cancelled",
+    "statusPending": "Pending",
+    "statusSent": "Sent",
+    "statusCancelled": "Cancelled",
+    "statusFailed": "Failed",
+    "noScheduled": "No scheduled posts",
+    "chainDay": "Day {{day}}",
+    "chainDayOffset": "Day (since registration)",
+    "chainSortOrder": "Order",
+    "chainInterval": "Interval (min)",
+    "addChainMessage": "Add message",
+    "adding": "Adding...",
+    "chainAdded": "Message added to chain",
+    "noChainMessages": "No chain messages",
+    "active": "Active",
+    "inactive": "Inactive",
+    "deliveries": "Delivered",
+    "reads": "Read",
+    "openRate": "Open rate",
+    "stats": "Statistics",
+    "totalDeliveries": "Total deliveries",
+    "totalRead": "Total read",
+    "activeMessages": "Active messages",
+    "triggerNow": "Run now",
+    "triggering": "Running...",
+    "triggerSuccess": "Auto-chain triggered successfully",
+    "triggerError": "Trigger failed"
   },
   "contacts": {
     "telegram": "Telegram",
@@ -414,7 +465,14 @@
     "share": "แชร์",
     "copyLink": "คัดลอกลิงก์",
     "expand": "แสดง URL",
-    "showQr": "แสดง QR"
+    "showQr": "แสดง QR",
+    "yourId": "Your ID",
+    "sendThisLink": "Send this link to your friend",
+    "copied": "Link copied!",
+    "showWebLink": "Show website link",
+    "showBotLink": "Show Telegram bot link",
+    "botLinkHint": "If your friend already knows about the project, send this Telegram link instead — it goes straight to the app",
+    "slugExplain": "Your personal ID appears in all your invite links. You can change it to something memorable (e.g. your nickname). This ID itself is not a link — use the links above to invite people."
   },
   "landing": {
     "openSourceBadge": "โครงการไม่แสวงหาผลกำไรแบบโอเพ่นซอร์ส",
@@ -490,7 +548,8 @@
     "budget": "ประกาศแล้ว",
     "root": "รูท",
     "contactRoot": "ติดต่อรูท",
-    "notInNetwork": "ไม่อยู่ในเครือข่ายของคุณ"
+    "notInNetwork": "ไม่อยู่ในเครือข่ายของคุณ",
+    "total": "Total clusters"
   },
   "requiredInfo": {
     "contactsTitle": "เพิ่มช่องทางติดต่อของคุณ",
@@ -795,6 +854,67 @@
     "pendingCount": "รอดำเนินการ",
     "editSuggestion": "แก้ไข",
     "vaybkoding": "ไวบ์โค้ดดิ้ง",
-    "tutoring": "สอนพิเศษ"
+    "tutoring": "สอนพิเศษ",
+    "addOther": "Add and enter another",
+    "suggestions": "New category suggestions"
+  },
+  "geo": {
+    "title": "Location",
+    "country": "Country",
+    "city": "City",
+    "cityPlaceholder": "Enter your city",
+    "detect": "Detect location",
+    "detecting": "Detecting...",
+    "selectCountry": "Select country",
+    "noLocation": "Location not set",
+    "saved": "Location saved",
+    "requiredForOffline": "Please select a country — you have offline skills selected"
+  },
+  "matches": {
+    "title": "Skill Matches",
+    "whoCanHelpMe": "Who can help me",
+    "whoNeedsMyHelp": "Who needs my help",
+    "noMatches": "No matches yet. Add more skills or connect with more people.",
+    "noMatchesNeeds": "No one in your network needs your skills yet.",
+    "sameCity": "Same city",
+    "sameCountry": "Same country",
+    "remote": "Different location",
+    "online": "Available online",
+    "viewProfile": "View profile",
+    "newMatch": "{{name}} can help with \"{{skill}}\"",
+    "matchNotifications": "Skill match alerts",
+    "noNotifications": "No new match alerts",
+    "chains": "Chains",
+    "noChains": "No clearing chains found yet",
+    "noChainsHint": "They appear when skills in your network form a closed loop",
+    "chainOf": "Chain of {{count}} participants",
+    "pairHint": "Write to each other on Telegram to discuss details",
+    "openChat": "Open chat",
+    "chainInstruction": "Create a Telegram group chat, add all participants, and paste the link here. Any participant can do this.",
+    "addChatLink": "Add chat link",
+    "chatLinkPrompt": "Paste a Telegram chat link (t.me/...)",
+    "statusProposed": "Proposed",
+    "statusActive": "Active",
+    "statusCompleted": "Completed",
+    "statusCancelled": "Cancelled",
+    "you": "You",
+    "setOffer": "Make an offer",
+    "offerHoursPlaceholder": "Hours (min. 0.5)",
+    "offerDescPlaceholder": "What you can do",
+    "sendOffer": "Send",
+    "awaitingOffer": "Waiting for the giver to make an offer",
+    "awaitingConfirm": "Waiting for receiver to confirm",
+    "confirmOffer": "Accept offer",
+    "markComplete": "Mark as complete",
+    "linkCompleted": "Completed",
+    "cancelChain": "Cancel chain",
+    "cancelConfirm": "Cancel this chain? This cannot be undone.",
+    "ringCloses": "Closes back to",
+    "offerSet": "{{hours}}h",
+    "giverDone": "Giver confirmed completion",
+    "receiverDone": "Receiver confirmed completion",
+    "declineLink": "Can't participate",
+    "declineConfirm": "Are you sure? The system will try to find a replacement, but if not found the chain will be cancelled.",
+    "statusBroken": "Searching replacement"
   }
 }

@@ -13,7 +13,8 @@
     "done": "Xong",
     "search": "Tìm kiếm",
     "notFound": "Không tìm thấy",
-    "copied": "Đã sao chép"
+    "copied": "Đã sao chép",
+    "ok": "OK"
   },
   "auth": {
     "loginWith": "Đăng nhập bằng {{platform}}",
@@ -84,7 +85,11 @@
       "text": "Cho biết bạn thân của bạn có thể trông cậy vào số tiền bao nhiêu trong trường hợp khẩn cấp. Đây chỉ là ý định của bạn — bạn chỉ đơn giản bày tỏ sự sẵn lòng giúp đỡ. Số tiền càng cao, phạm vi bảo hiểm của bạn càng lớn. Các thành viên mạng lưới thấy khả năng tổng thể, và khi ai đó cần giúp đỡ — bạn tự quyết định có tham gia hay không."
     },
     "contactsRequired": "Thêm ít nhất 2 liên hệ",
-    "contactsFilled": "Đã điền: {{count}}/2"
+    "contactsFilled": "Đã điền: {{count}}/2",
+    "hintContactsNeeded": "Thêm {{count}} liên hệ nữa trong Cài đặt",
+    "noTgUsername": "Bạn chưa có tên người dùng Telegram — thêm trong cài đặt Telegram",
+    "hintBudget": "Set your monthly support amount here — this shows how much you're ready to help",
+    "hintSettings": "Tap «Settings» to add extra contacts"
   },
   "nav": {
     "home": "Trang chủ",
@@ -165,7 +170,9 @@
     "periodPast90": "90 ngày qua",
     "periodPast365": "365 ngày qua",
     "newConnections": "+{{count}} mới",
-    "periodPast1": "Hôm nay"
+    "periodPast1": "Hôm nay",
+    "communityChatDesc": "This is the general community chat for questions, suggestions, and feedback about the app. It is not a help chat.",
+    "communityChatOpen": "Open Chat"
   },
   "collection": {
     "create": "Gửi tín hiệu cần giúp đỡ",
@@ -190,7 +197,10 @@
     "participants": "Người tham gia",
     "noParticipants": "Chưa có ai tham gia",
     "minAmount": "Tối thiểu 1",
-    "connectionToCreator": "Kết nối với người tạo"
+    "connectionToCreator": "Kết nối với người tạo",
+    "editAmount": "Edit",
+    "saveAmount": "Save",
+    "cancelEdit": "Cancel"
   },
   "create": {
     "title": "Gửi tín hiệu cần giúp đỡ",
@@ -294,7 +304,9 @@
     "revokeConfirm": "Kết nối sẽ bị xóa. Để kết nối lại cần xác nhận mới. Tiếp tục?",
     "intentionsReceived": "Lần được giúp",
     "helpedTab": "Đã giúp",
-    "helpedByTab": "Được giúp"
+    "helpedByTab": "Được giúp",
+    "online": "Online",
+    "lastSeen": "Last seen {{time}}"
   },
   "settings": {
     "title": "Cài đặt",
@@ -346,7 +358,10 @@
     "localized": "Đã dịch",
     "localizeAll": "Dịch sang tất cả ngôn ngữ",
     "localizing": "Đang dịch...",
-    "addPhoto": "Thêm ảnh"
+    "addPhoto": "Thêm ảnh",
+    "insertLink": "Insert link",
+    "linkTextPlaceholder": "Link text",
+    "insert": "Insert"
   },
   "chat": {
     "title": "Trợ lý",
@@ -378,7 +393,43 @@
     "variantAll": "Tất cả",
     "variantInvited": "Được mời",
     "variantOrganic": "Trực tiếp",
-    "editChain": "Chỉnh sửa"
+    "editChain": "Chỉnh sửa",
+    "tabSend": "Send",
+    "tabScheduled": "Scheduled",
+    "tabAutoChain": "Auto-Chain",
+    "scheduledAt": "Date & time",
+    "scheduledAtPlaceholder": "Select date and time",
+    "schedule": "Schedule",
+    "scheduling": "Scheduling...",
+    "scheduledSuccess": "Post scheduled",
+    "cancelPost": "Cancel",
+    "cancelledSuccess": "Post cancelled",
+    "statusPending": "Pending",
+    "statusSent": "Sent",
+    "statusCancelled": "Cancelled",
+    "statusFailed": "Failed",
+    "noScheduled": "No scheduled posts",
+    "chainDay": "Day {{day}}",
+    "chainDayOffset": "Day (since registration)",
+    "chainSortOrder": "Order",
+    "chainInterval": "Interval (min)",
+    "addChainMessage": "Add message",
+    "adding": "Adding...",
+    "chainAdded": "Message added to chain",
+    "noChainMessages": "No chain messages",
+    "active": "Active",
+    "inactive": "Inactive",
+    "deliveries": "Delivered",
+    "reads": "Read",
+    "openRate": "Open rate",
+    "stats": "Statistics",
+    "totalDeliveries": "Total deliveries",
+    "totalRead": "Total read",
+    "activeMessages": "Active messages",
+    "triggerNow": "Run now",
+    "triggering": "Running...",
+    "triggerSuccess": "Auto-chain triggered successfully",
+    "triggerError": "Trigger failed"
   },
   "contacts": {
     "telegram": "Telegram",
@@ -414,7 +465,14 @@
     "share": "Chia sẻ",
     "copyLink": "Sao chép liên kết",
     "expand": "hiện URL",
-    "showQr": "hiển thị QR"
+    "showQr": "hiển thị QR",
+    "yourId": "Your ID",
+    "sendThisLink": "Send this link to your friend",
+    "copied": "Link copied!",
+    "showWebLink": "Show website link",
+    "showBotLink": "Show Telegram bot link",
+    "botLinkHint": "If your friend already knows about the project, send this Telegram link instead — it goes straight to the app",
+    "slugExplain": "Your personal ID appears in all your invite links. You can change it to something memorable (e.g. your nickname). This ID itself is not a link — use the links above to invite people."
   },
   "landing": {
     "openSourceBadge": "Sáng kiến phi lợi nhuận mã nguồn mở",
@@ -490,7 +548,8 @@
     "budget": "Đã khai báo",
     "root": "Gốc",
     "contactRoot": "Liên hệ gốc",
-    "notInNetwork": "không trong mạng lưới của bạn"
+    "notInNetwork": "không trong mạng lưới của bạn",
+    "total": "Total clusters"
   },
   "requiredInfo": {
     "contactsTitle": "Thêm liên hệ của bạn",
@@ -795,6 +854,67 @@
     "pendingCount": "đang chờ",
     "editSuggestion": "Chỉnh sửa",
     "vaybkoding": "Lập trình cảm hứng",
-    "tutoring": "Gia sư"
+    "tutoring": "Gia sư",
+    "addOther": "Add and enter another",
+    "suggestions": "New category suggestions"
+  },
+  "geo": {
+    "title": "Location",
+    "country": "Country",
+    "city": "City",
+    "cityPlaceholder": "Enter your city",
+    "detect": "Detect location",
+    "detecting": "Detecting...",
+    "selectCountry": "Select country",
+    "noLocation": "Location not set",
+    "saved": "Location saved",
+    "requiredForOffline": "Please select a country — you have offline skills selected"
+  },
+  "matches": {
+    "title": "Skill Matches",
+    "whoCanHelpMe": "Who can help me",
+    "whoNeedsMyHelp": "Who needs my help",
+    "noMatches": "No matches yet. Add more skills or connect with more people.",
+    "noMatchesNeeds": "No one in your network needs your skills yet.",
+    "sameCity": "Same city",
+    "sameCountry": "Same country",
+    "remote": "Different location",
+    "online": "Available online",
+    "viewProfile": "View profile",
+    "newMatch": "{{name}} can help with \"{{skill}}\"",
+    "matchNotifications": "Skill match alerts",
+    "noNotifications": "No new match alerts",
+    "chains": "Chains",
+    "noChains": "No clearing chains found yet",
+    "noChainsHint": "They appear when skills in your network form a closed loop",
+    "chainOf": "Chain of {{count}} participants",
+    "pairHint": "Write to each other on Telegram to discuss details",
+    "openChat": "Open chat",
+    "chainInstruction": "Create a Telegram group chat, add all participants, and paste the link here. Any participant can do this.",
+    "addChatLink": "Add chat link",
+    "chatLinkPrompt": "Paste a Telegram chat link (t.me/...)",
+    "statusProposed": "Proposed",
+    "statusActive": "Active",
+    "statusCompleted": "Completed",
+    "statusCancelled": "Cancelled",
+    "you": "You",
+    "setOffer": "Make an offer",
+    "offerHoursPlaceholder": "Hours (min. 0.5)",
+    "offerDescPlaceholder": "What you can do",
+    "sendOffer": "Send",
+    "awaitingOffer": "Waiting for the giver to make an offer",
+    "awaitingConfirm": "Waiting for receiver to confirm",
+    "confirmOffer": "Accept offer",
+    "markComplete": "Mark as complete",
+    "linkCompleted": "Completed",
+    "cancelChain": "Cancel chain",
+    "cancelConfirm": "Cancel this chain? This cannot be undone.",
+    "ringCloses": "Closes back to",
+    "offerSet": "{{hours}}h",
+    "giverDone": "Giver confirmed completion",
+    "receiverDone": "Receiver confirmed completion",
+    "declineLink": "Can't participate",
+    "declineConfirm": "Are you sure? The system will try to find a replacement, but if not found the chain will be cancelled.",
+    "statusBroken": "Searching replacement"
   }
 }

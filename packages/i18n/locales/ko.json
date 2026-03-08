@@ -13,7 +13,8 @@
     "done": "완료",
     "search": "검색",
     "notFound": "찾을 수 없음",
-    "copied": "복사됨"
+    "copied": "복사됨",
+    "ok": "OK"
   },
   "auth": {
     "loginWith": "{{platform}}으로 로그인",
@@ -84,7 +85,11 @@
       "text": "예기치 못한 상황에서 가까운 친구가 기대할 수 있는 금액을 표시하세요. 이것은 단지 의향일 뿐입니다 — 단순히 도움을 줄 의향을 표시하는 것입니다. 금액이 높을수록 보험 보장 범위가 넓어집니다. 네트워크 구성원들은 전체 역량을 확인할 수 있으며, 누군가 도움을 요청할 때 — 참여 여부는 본인이 직접 결정합니다."
     },
     "contactsRequired": "최소 2개의 연락처를 추가하세요",
-    "contactsFilled": "입력됨: {{count}}/2"
+    "contactsFilled": "입력됨: {{count}}/2",
+    "hintBudget": "Set your monthly support amount here — this shows how much you're ready to help",
+    "hintSettings": "Tap «Settings» to add extra contacts",
+    "hintContactsNeeded": "Add {{count}} more contact(s) in Settings so friends can reach you",
+    "noTgUsername": "You don't have a Telegram username — add one in Telegram settings, it counts as a contact"
   },
   "nav": {
     "home": "홈",
@@ -165,7 +170,9 @@
     "periodPast90": "최근 90일",
     "periodPast365": "최근 365일",
     "newConnections": "+{{count}} 신규",
-    "periodPast1": "오늘"
+    "periodPast1": "오늘",
+    "communityChatDesc": "This is the general community chat for questions, suggestions, and feedback about the app. It is not a help chat.",
+    "communityChatOpen": "Open Chat"
   },
   "collection": {
     "create": "도움 신호 보내기",
@@ -190,7 +197,10 @@
     "participants": "참여자",
     "noParticipants": "아직 참여자가 없습니다",
     "minAmount": "최소 1",
-    "connectionToCreator": "생성자와의 연결"
+    "connectionToCreator": "생성자와의 연결",
+    "editAmount": "Edit",
+    "saveAmount": "Save",
+    "cancelEdit": "Cancel"
   },
   "create": {
     "title": "도움 신호 보내기",
@@ -294,7 +304,9 @@
     "revokeConfirm": "연결이 제거됩니다. 다시 연결하려면 재확인이 필요합니다. 계속하시겠습니까?",
     "intentionsReceived": "도움 받은 횟수",
     "helpedTab": "도움을 줌",
-    "helpedByTab": "도움을 받음"
+    "helpedByTab": "도움을 받음",
+    "online": "Online",
+    "lastSeen": "Last seen {{time}}"
   },
   "settings": {
     "title": "설정",
@@ -346,7 +358,10 @@
     "localized": "번역됨",
     "localizeAll": "모든 언어로 번역",
     "localizing": "번역 중...",
-    "addPhoto": "사진 추가"
+    "addPhoto": "사진 추가",
+    "insertLink": "Insert link",
+    "linkTextPlaceholder": "Link text",
+    "insert": "Insert"
   },
   "chat": {
     "title": "어시스턴트",
@@ -378,7 +393,43 @@
     "variantAll": "전체",
     "variantInvited": "초대됨",
     "variantOrganic": "직접",
-    "editChain": "편집"
+    "editChain": "편집",
+    "tabSend": "Send",
+    "tabScheduled": "Scheduled",
+    "tabAutoChain": "Auto-Chain",
+    "scheduledAt": "Date & time",
+    "scheduledAtPlaceholder": "Select date and time",
+    "schedule": "Schedule",
+    "scheduling": "Scheduling...",
+    "scheduledSuccess": "Post scheduled",
+    "cancelPost": "Cancel",
+    "cancelledSuccess": "Post cancelled",
+    "statusPending": "Pending",
+    "statusSent": "Sent",
+    "statusCancelled": "Cancelled",
+    "statusFailed": "Failed",
+    "noScheduled": "No scheduled posts",
+    "chainDay": "Day {{day}}",
+    "chainDayOffset": "Day (since registration)",
+    "chainSortOrder": "Order",
+    "chainInterval": "Interval (min)",
+    "addChainMessage": "Add message",
+    "adding": "Adding...",
+    "chainAdded": "Message added to chain",
+    "noChainMessages": "No chain messages",
+    "active": "Active",
+    "inactive": "Inactive",
+    "deliveries": "Delivered",
+    "reads": "Read",
+    "openRate": "Open rate",
+    "stats": "Statistics",
+    "totalDeliveries": "Total deliveries",
+    "totalRead": "Total read",
+    "activeMessages": "Active messages",
+    "triggerNow": "Run now",
+    "triggering": "Running...",
+    "triggerSuccess": "Auto-chain triggered successfully",
+    "triggerError": "Trigger failed"
   },
   "contacts": {
     "telegram": "텔레그램",
@@ -414,7 +465,14 @@
     "share": "공유",
     "copyLink": "링크 복사",
     "expand": "URL 보기",
-    "showQr": "QR 보기"
+    "showQr": "QR 보기",
+    "yourId": "Your ID",
+    "sendThisLink": "Send this link to your friend",
+    "copied": "Link copied!",
+    "showWebLink": "Show website link",
+    "showBotLink": "Show Telegram bot link",
+    "botLinkHint": "If your friend already knows about the project, send this Telegram link instead — it goes straight to the app",
+    "slugExplain": "Your personal ID appears in all your invite links. You can change it to something memorable (e.g. your nickname). This ID itself is not a link — use the links above to invite people."
   },
   "landing": {
     "openSourceBadge": "비영리 오픈소스 이니셔티브",
@@ -490,7 +548,8 @@
     "budget": "신고됨",
     "root": "루트",
     "contactRoot": "루트에 연락",
-    "notInNetwork": "내 네트워크에 없음"
+    "notInNetwork": "내 네트워크에 없음",
+    "total": "Total clusters"
   },
   "requiredInfo": {
     "contactsTitle": "연락처 추가",
@@ -795,6 +854,67 @@
     "pendingCount": "대기 중",
     "editSuggestion": "편집",
     "vaybkoding": "바이브 코딩",
-    "tutoring": "과외"
+    "tutoring": "과외",
+    "addOther": "Add and enter another",
+    "suggestions": "New category suggestions"
+  },
+  "geo": {
+    "title": "Location",
+    "country": "Country",
+    "city": "City",
+    "cityPlaceholder": "Enter your city",
+    "detect": "Detect location",
+    "detecting": "Detecting...",
+    "selectCountry": "Select country",
+    "noLocation": "Location not set",
+    "saved": "Location saved",
+    "requiredForOffline": "Please select a country — you have offline skills selected"
+  },
+  "matches": {
+    "title": "Skill Matches",
+    "whoCanHelpMe": "Who can help me",
+    "whoNeedsMyHelp": "Who needs my help",
+    "noMatches": "No matches yet. Add more skills or connect with more people.",
+    "noMatchesNeeds": "No one in your network needs your skills yet.",
+    "sameCity": "Same city",
+    "sameCountry": "Same country",
+    "remote": "Different location",
+    "online": "Available online",
+    "viewProfile": "View profile",
+    "newMatch": "{{name}} can help with \"{{skill}}\"",
+    "matchNotifications": "Skill match alerts",
+    "noNotifications": "No new match alerts",
+    "chains": "Chains",
+    "noChains": "No clearing chains found yet",
+    "noChainsHint": "They appear when skills in your network form a closed loop",
+    "chainOf": "Chain of {{count}} participants",
+    "pairHint": "Write to each other on Telegram to discuss details",
+    "openChat": "Open chat",
+    "chainInstruction": "Create a Telegram group chat, add all participants, and paste the link here. Any participant can do this.",
+    "addChatLink": "Add chat link",
+    "chatLinkPrompt": "Paste a Telegram chat link (t.me/...)",
+    "statusProposed": "Proposed",
+    "statusActive": "Active",
+    "statusCompleted": "Completed",
+    "statusCancelled": "Cancelled",
+    "you": "You",
+    "setOffer": "Make an offer",
+    "offerHoursPlaceholder": "Hours (min. 0.5)",
+    "offerDescPlaceholder": "What you can do",
+    "sendOffer": "Send",
+    "awaitingOffer": "Waiting for the giver to make an offer",
+    "awaitingConfirm": "Waiting for receiver to confirm",
+    "confirmOffer": "Accept offer",
+    "markComplete": "Mark as complete",
+    "linkCompleted": "Completed",
+    "cancelChain": "Cancel chain",
+    "cancelConfirm": "Cancel this chain? This cannot be undone.",
+    "ringCloses": "Closes back to",
+    "offerSet": "{{hours}}h",
+    "giverDone": "Giver confirmed completion",
+    "receiverDone": "Receiver confirmed completion",
+    "declineLink": "Can't participate",
+    "declineConfirm": "Are you sure? The system will try to find a replacement, but if not found the chain will be cancelled.",
+    "statusBroken": "Searching replacement"
   }
 }

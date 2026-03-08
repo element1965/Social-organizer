@@ -13,7 +13,8 @@
     "done": "Fertig",
     "search": "Suchen",
     "notFound": "Nicht gefunden",
-    "copied": "Kopiert"
+    "copied": "Kopiert",
+    "ok": "OK"
   },
   "auth": {
     "loginWith": "Anmelden mit {{platform}}",
@@ -84,7 +85,11 @@
       "text": "Geben Sie an, auf welchen Betrag Ihr enger Freund in unvorhergesehenen Umständen zählen kann. Dies ist lediglich Ihre Absicht — Sie bekunden einfach Ihre Bereitschaft zu helfen. Je höher der Betrag, desto größer Ihr Versicherungsschutz. Netzwerkteilnehmer sehen die Gesamtkapazitäten, und wenn jemand um Hilfe bittet — entscheiden Sie selbst, ob Sie mitmachen."
     },
     "contactsRequired": "Fügen Sie mindestens 2 Kontakte hinzu",
-    "contactsFilled": "Ausgefüllt: {{count}}/2"
+    "contactsFilled": "Ausgefüllt: {{count}}/2",
+    "hintContactsNeeded": "Fügen Sie noch {{count}} Kontakt(e) in den Einstellungen hinzu",
+    "noTgUsername": "Sie haben keinen Telegram-Benutzernamen — fügen Sie einen in den Telegram-Einstellungen hinzu",
+    "hintBudget": "Legen Sie Ihren monatlichen Unterstützungsbetrag fest — das zeigt, wie viel Sie bereit sind zu helfen",
+    "hintSettings": "Tippen Sie auf Ihren Namen, um die Einstellungen zu öffnen und weitere Kontakte hinzuzufügen"
   },
   "nav": {
     "home": "Startseite",
@@ -165,7 +170,9 @@
     "periodPast90": "Letzte 90 Tage",
     "periodPast365": "Letzte 365 Tage",
     "newConnections": "+{{count}} neue",
-    "periodPast1": "Heute"
+    "periodPast1": "Heute",
+    "communityChatDesc": "Dies ist der allgemeine Community-Chat für Fragen, Vorschläge und Feedback zur App. Es ist kein Hilfe-Chat.",
+    "communityChatOpen": "Chat öffnen"
   },
   "collection": {
     "create": "Hilfesignal senden",
@@ -190,7 +197,10 @@
     "participants": "Teilnehmer",
     "noParticipants": "Noch niemand beigetreten",
     "minAmount": "Mindestens 1",
-    "connectionToCreator": "Verbindung zum Ersteller"
+    "connectionToCreator": "Verbindung zum Ersteller",
+    "editAmount": "Bearbeiten",
+    "saveAmount": "Speichern",
+    "cancelEdit": "Abbrechen"
   },
   "create": {
     "title": "Hilfesignal senden",
@@ -294,7 +304,9 @@
     "revokeConfirm": "Die Verbindung wird entfernt. Zur Wiederherstellung ist eine erneute Bestätigung erforderlich. Fortfahren?",
     "intentionsReceived": "Male geholfen bekommen",
     "helpedTab": "Hat geholfen",
-    "helpedByTab": "Geholfen von"
+    "helpedByTab": "Geholfen von",
+    "online": "Online",
+    "lastSeen": "Zuletzt gesehen {{time}}"
   },
   "settings": {
     "title": "Einstellungen",
@@ -346,7 +358,10 @@
     "localized": "Übersetzt",
     "localizeAll": "In alle Sprachen übersetzen",
     "localizing": "Übersetze...",
-    "addPhoto": "Foto hinzufügen"
+    "addPhoto": "Foto hinzufügen",
+    "insertLink": "Link einfügen",
+    "linkTextPlaceholder": "Linktext",
+    "insert": "Einfügen"
   },
   "chat": {
     "title": "Assistent",
@@ -392,7 +407,14 @@
     "share": "Teilen",
     "copyLink": "Link kopieren",
     "expand": "URL anzeigen",
-    "showQr": "QR anzeigen"
+    "showQr": "QR anzeigen",
+    "yourId": "Ihre ID",
+    "sendThisLink": "Senden Sie diesen Link an Ihren Freund",
+    "copied": "Link kopiert!",
+    "showWebLink": "Website-Link anzeigen",
+    "showBotLink": "Telegram-Bot-Link anzeigen",
+    "botLinkHint": "Wenn Ihr Freund das Projekt bereits kennt, senden Sie diesen Telegram-Link — er führt direkt zur App",
+    "slugExplain": "Ihre persönliche ID erscheint in allen Einladungslinks. Sie können sie durch etwas Einprägsames ersetzen (z.B. Ihren Spitznamen). Die ID selbst ist kein Link — verwenden Sie die obigen Links zum Einladen."
   },
   "landing": {
     "openSourceBadge": "Eine gemeinnützige Open-Source-Initiative",
@@ -468,7 +490,43 @@
     "variantAll": "Alle",
     "variantInvited": "Eingeladene",
     "variantOrganic": "Direkte",
-    "editChain": "Bearbeiten"
+    "editChain": "Bearbeiten",
+    "tabSend": "Senden",
+    "tabScheduled": "Geplant",
+    "tabAutoChain": "Auto-Kette",
+    "scheduledAt": "Datum & Uhrzeit",
+    "scheduledAtPlaceholder": "Datum und Uhrzeit wählen",
+    "schedule": "Planen",
+    "scheduling": "Wird geplant...",
+    "scheduledSuccess": "Beitrag geplant",
+    "cancelPost": "Abbrechen",
+    "cancelledSuccess": "Beitrag abgesagt",
+    "statusPending": "Ausstehend",
+    "statusSent": "Gesendet",
+    "statusCancelled": "Abgesagt",
+    "statusFailed": "Fehlgeschlagen",
+    "noScheduled": "Keine geplanten Beiträge",
+    "chainDay": "Tag {{day}}",
+    "chainDayOffset": "Tag (seit Registrierung)",
+    "chainSortOrder": "Reihenfolge",
+    "chainInterval": "Intervall (Min.)",
+    "addChainMessage": "Nachricht hinzufügen",
+    "adding": "Wird hinzugefügt...",
+    "chainAdded": "Nachricht zur Kette hinzugefügt",
+    "noChainMessages": "Keine Kettennachrichten",
+    "active": "Aktiv",
+    "inactive": "Inaktiv",
+    "deliveries": "Zugestellt",
+    "reads": "Gelesen",
+    "openRate": "Öffnungsrate",
+    "stats": "Statistiken",
+    "totalDeliveries": "Gesamt zugestellt",
+    "totalRead": "Gesamt gelesen",
+    "activeMessages": "Aktive Nachrichten",
+    "triggerNow": "Jetzt ausführen",
+    "triggering": "Wird ausgeführt...",
+    "triggerSuccess": "Auto-Kette erfolgreich ausgelöst",
+    "triggerError": "Auslösung fehlgeschlagen"
   },
   "pending": {
     "title": "Ausstehende Verbindungen",
@@ -490,7 +548,8 @@
     "budget": "Zugesagt",
     "root": "Wurzel",
     "contactRoot": "Wurzel kontaktieren",
-    "notInNetwork": "nicht in Ihrem Netzwerk"
+    "notInNetwork": "nicht in Ihrem Netzwerk",
+    "total": "Cluster insgesamt"
   },
   "requiredInfo": {
     "contactsTitle": "Kontakte hinzufügen",
@@ -795,6 +854,67 @@
     "pendingCount": "ausstehend",
     "editSuggestion": "Bearbeiten",
     "vaybkoding": "Vibe-Coding",
-    "tutoring": "Nachhilfe"
+    "tutoring": "Nachhilfe",
+    "addOther": "Hinzufügen und weiteres eingeben",
+    "suggestions": "Vorschläge für neue Kategorien"
+  },
+  "geo": {
+    "title": "Standort",
+    "country": "Land",
+    "city": "Stadt",
+    "cityPlaceholder": "Geben Sie Ihre Stadt ein",
+    "detect": "Standort erkennen",
+    "detecting": "Wird erkannt...",
+    "selectCountry": "Land auswählen",
+    "noLocation": "Standort nicht festgelegt",
+    "saved": "Standort gespeichert",
+    "requiredForOffline": "Bitte wählen Sie ein Land — Sie haben Offline-Fähigkeiten ausgewählt"
+  },
+  "matches": {
+    "title": "Fähigkeiten-Matches",
+    "whoCanHelpMe": "Wer kann mir helfen",
+    "whoNeedsMyHelp": "Wer braucht meine Hilfe",
+    "noMatches": "Noch keine Matches. Fügen Sie mehr Fähigkeiten hinzu oder vernetzen Sie sich mit mehr Leuten.",
+    "noMatchesNeeds": "Noch niemand in Ihrem Netzwerk braucht Ihre Fähigkeiten.",
+    "sameCity": "Gleiche Stadt",
+    "sameCountry": "Gleiches Land",
+    "remote": "Anderer Standort",
+    "online": "Online verfügbar",
+    "viewProfile": "Profil ansehen",
+    "newMatch": "{{name}} kann bei \"{{skill}}\" helfen",
+    "matchNotifications": "Match-Benachrichtigungen",
+    "noNotifications": "Keine neuen Match-Benachrichtigungen",
+    "chains": "Ketten",
+    "noChains": "Noch keine Clearing-Ketten gefunden",
+    "noChainsHint": "Sie erscheinen, wenn Fähigkeiten in Ihrem Netzwerk einen geschlossenen Kreis bilden",
+    "chainOf": "Kette aus {{count}} Teilnehmern",
+    "pairHint": "Schreiben Sie sich gegenseitig auf Telegram, um Details zu besprechen",
+    "openChat": "Chat öffnen",
+    "chainInstruction": "Erstellen Sie einen Telegram-Gruppenchat, fügen Sie alle Teilnehmer hinzu und fügen Sie den Link hier ein. Jeder Teilnehmer kann dies tun.",
+    "addChatLink": "Chat-Link hinzufügen",
+    "chatLinkPrompt": "Fügen Sie einen Telegram-Chat-Link ein (t.me/...)",
+    "statusProposed": "Vorgeschlagen",
+    "statusActive": "Aktiv",
+    "statusCompleted": "Abgeschlossen",
+    "statusCancelled": "Abgesagt",
+    "you": "Sie",
+    "setOffer": "Angebot machen",
+    "offerHoursPlaceholder": "Stunden (mind. 0,5)",
+    "offerDescPlaceholder": "Was Sie tun können",
+    "sendOffer": "Senden",
+    "awaitingOffer": "Warten auf Angebot des Gebers",
+    "awaitingConfirm": "Warten auf Bestätigung des Empfängers",
+    "confirmOffer": "Angebot annehmen",
+    "markComplete": "Als erledigt markieren",
+    "linkCompleted": "Abgeschlossen",
+    "cancelChain": "Kette abbrechen",
+    "cancelConfirm": "Diese Kette abbrechen? Dies kann nicht rückgängig gemacht werden.",
+    "ringCloses": "Schließt zurück zu",
+    "offerSet": "{{hours}}h",
+    "giverDone": "Geber hat Abschluss bestätigt",
+    "receiverDone": "Empfänger hat Abschluss bestätigt",
+    "declineLink": "Kann nicht teilnehmen",
+    "declineConfirm": "Sind Sie sicher? Das System wird versuchen, einen Ersatz zu finden, aber wenn keiner gefunden wird, wird die Kette abgesagt.",
+    "statusBroken": "Suche Ersatz"
   }
 }

@@ -13,7 +13,8 @@
     "done": "Готово",
     "search": "Претрага",
     "notFound": "Није пронађено",
-    "copied": "Копирано"
+    "copied": "Копирано",
+    "ok": "OK"
   },
   "auth": {
     "loginWith": "Пријави се преко {{platform}}",
@@ -84,7 +85,11 @@
       "text": "Наведите на који износ ваш блиски пријатељ може да рачуна у случају непредвиђених околности. Ово је само ваша намера — једноставно изражавате спремност да помогнете. Што је виши износ, то је веће ваше осигурање. Чланови мреже виде укупне могућности, а када неко затражи помоћ — сами одлучујете да ли ћете учествовати."
     },
     "contactsRequired": "Додајте најмање 2 контакта",
-    "contactsFilled": "Попуњено: {{count}}/2"
+    "contactsFilled": "Попуњено: {{count}}/2",
+    "hintContactsNeeded": "Додајте још {{count}} контакт(а) у Подешавањима",
+    "noTgUsername": "Немате Telegram корисничко име — додајте га у подешавањима Телеграма",
+    "hintBudget": "Set your monthly support amount here — this shows how much you're ready to help",
+    "hintSettings": "Tap «Settings» to add extra contacts"
   },
   "nav": {
     "home": "Почетна",
@@ -165,7 +170,9 @@
     "periodPast90": "Poslednjih 90 dana",
     "periodPast365": "Poslednjih 365 dana",
     "newConnections": "+{{count}} novih",
-    "periodPast1": "Danas"
+    "periodPast1": "Danas",
+    "communityChatDesc": "This is the general community chat for questions, suggestions, and feedback about the app. It is not a help chat.",
+    "communityChatOpen": "Open Chat"
   },
   "collection": {
     "create": "Пошаљи сигнал за помоћ",
@@ -190,7 +197,10 @@
     "participants": "Учесници",
     "noParticipants": "Још нико се није придружио",
     "minAmount": "Минимум 1",
-    "connectionToCreator": "Веза са креатором"
+    "connectionToCreator": "Веза са креатором",
+    "editAmount": "Edit",
+    "saveAmount": "Save",
+    "cancelEdit": "Cancel"
   },
   "create": {
     "title": "Пошаљи сигнал за помоћ",
@@ -294,7 +304,9 @@
     "revokeConfirm": "Веза ће бити уклоњена. За поновно повезивање биће потребна нова потврда. Наставити?",
     "intentionsReceived": "Пута помогнут",
     "helpedTab": "Помогао",
-    "helpedByTab": "Помогли му"
+    "helpedByTab": "Помогли му",
+    "online": "Online",
+    "lastSeen": "Last seen {{time}}"
   },
   "settings": {
     "title": "Подешавања",
@@ -346,7 +358,10 @@
     "localized": "Преведено",
     "localizeAll": "Преведи на све језике",
     "localizing": "Превођење...",
-    "addPhoto": "Додај фотографију"
+    "addPhoto": "Додај фотографију",
+    "insertLink": "Insert link",
+    "linkTextPlaceholder": "Link text",
+    "insert": "Insert"
   },
   "chat": {
     "title": "Асистент",
@@ -378,7 +393,43 @@
     "variantAll": "Сви",
     "variantInvited": "Позвани",
     "variantOrganic": "Директни",
-    "editChain": "Измени"
+    "editChain": "Измени",
+    "tabSend": "Send",
+    "tabScheduled": "Scheduled",
+    "tabAutoChain": "Auto-Chain",
+    "scheduledAt": "Date & time",
+    "scheduledAtPlaceholder": "Select date and time",
+    "schedule": "Schedule",
+    "scheduling": "Scheduling...",
+    "scheduledSuccess": "Post scheduled",
+    "cancelPost": "Cancel",
+    "cancelledSuccess": "Post cancelled",
+    "statusPending": "Pending",
+    "statusSent": "Sent",
+    "statusCancelled": "Cancelled",
+    "statusFailed": "Failed",
+    "noScheduled": "No scheduled posts",
+    "chainDay": "Day {{day}}",
+    "chainDayOffset": "Day (since registration)",
+    "chainSortOrder": "Order",
+    "chainInterval": "Interval (min)",
+    "addChainMessage": "Add message",
+    "adding": "Adding...",
+    "chainAdded": "Message added to chain",
+    "noChainMessages": "No chain messages",
+    "active": "Active",
+    "inactive": "Inactive",
+    "deliveries": "Delivered",
+    "reads": "Read",
+    "openRate": "Open rate",
+    "stats": "Statistics",
+    "totalDeliveries": "Total deliveries",
+    "totalRead": "Total read",
+    "activeMessages": "Active messages",
+    "triggerNow": "Run now",
+    "triggering": "Running...",
+    "triggerSuccess": "Auto-chain triggered successfully",
+    "triggerError": "Trigger failed"
   },
   "contacts": {
     "telegram": "Telegram",
@@ -414,7 +465,14 @@
     "share": "Подели",
     "copyLink": "Копирај линк",
     "expand": "прикажи URL",
-    "showQr": "prikaži QR"
+    "showQr": "prikaži QR",
+    "yourId": "Your ID",
+    "sendThisLink": "Send this link to your friend",
+    "copied": "Link copied!",
+    "showWebLink": "Show website link",
+    "showBotLink": "Show Telegram bot link",
+    "botLinkHint": "If your friend already knows about the project, send this Telegram link instead — it goes straight to the app",
+    "slugExplain": "Your personal ID appears in all your invite links. You can change it to something memorable (e.g. your nickname). This ID itself is not a link — use the links above to invite people."
   },
   "landing": {
     "openSourceBadge": "Непрофитна иницијатива отвореног кода",
@@ -490,7 +548,8 @@
     "budget": "Пријављено",
     "root": "Корен",
     "contactRoot": "Контактирај корен",
-    "notInNetwork": "нису у вашој мрежи"
+    "notInNetwork": "нису у вашој мрежи",
+    "total": "Total clusters"
   },
   "requiredInfo": {
     "contactsTitle": "Додајте своје контакте",
@@ -795,6 +854,67 @@
     "pendingCount": "на чекању",
     "editSuggestion": "Уреди",
     "vaybkoding": "Вајб кодирање",
-    "tutoring": "Подучавање"
+    "tutoring": "Подучавање",
+    "addOther": "Add and enter another",
+    "suggestions": "New category suggestions"
+  },
+  "geo": {
+    "title": "Location",
+    "country": "Country",
+    "city": "City",
+    "cityPlaceholder": "Enter your city",
+    "detect": "Detect location",
+    "detecting": "Detecting...",
+    "selectCountry": "Select country",
+    "noLocation": "Location not set",
+    "saved": "Location saved",
+    "requiredForOffline": "Please select a country — you have offline skills selected"
+  },
+  "matches": {
+    "title": "Skill Matches",
+    "whoCanHelpMe": "Who can help me",
+    "whoNeedsMyHelp": "Who needs my help",
+    "noMatches": "No matches yet. Add more skills or connect with more people.",
+    "noMatchesNeeds": "No one in your network needs your skills yet.",
+    "sameCity": "Same city",
+    "sameCountry": "Same country",
+    "remote": "Different location",
+    "online": "Available online",
+    "viewProfile": "View profile",
+    "newMatch": "{{name}} can help with \"{{skill}}\"",
+    "matchNotifications": "Skill match alerts",
+    "noNotifications": "No new match alerts",
+    "chains": "Chains",
+    "noChains": "No clearing chains found yet",
+    "noChainsHint": "They appear when skills in your network form a closed loop",
+    "chainOf": "Chain of {{count}} participants",
+    "pairHint": "Write to each other on Telegram to discuss details",
+    "openChat": "Open chat",
+    "chainInstruction": "Create a Telegram group chat, add all participants, and paste the link here. Any participant can do this.",
+    "addChatLink": "Add chat link",
+    "chatLinkPrompt": "Paste a Telegram chat link (t.me/...)",
+    "statusProposed": "Proposed",
+    "statusActive": "Active",
+    "statusCompleted": "Completed",
+    "statusCancelled": "Cancelled",
+    "you": "You",
+    "setOffer": "Make an offer",
+    "offerHoursPlaceholder": "Hours (min. 0.5)",
+    "offerDescPlaceholder": "What you can do",
+    "sendOffer": "Send",
+    "awaitingOffer": "Waiting for the giver to make an offer",
+    "awaitingConfirm": "Waiting for receiver to confirm",
+    "confirmOffer": "Accept offer",
+    "markComplete": "Mark as complete",
+    "linkCompleted": "Completed",
+    "cancelChain": "Cancel chain",
+    "cancelConfirm": "Cancel this chain? This cannot be undone.",
+    "ringCloses": "Closes back to",
+    "offerSet": "{{hours}}h",
+    "giverDone": "Giver confirmed completion",
+    "receiverDone": "Receiver confirmed completion",
+    "declineLink": "Can't participate",
+    "declineConfirm": "Are you sure? The system will try to find a replacement, but if not found the chain will be cancelled.",
+    "statusBroken": "Searching replacement"
   }
 }

@@ -13,7 +13,8 @@
     "done": "Гатова",
     "search": "Пошук",
     "notFound": "Не знойдзена",
-    "copied": "Скапіявана"
+    "copied": "Скапіявана",
+    "ok": "OK"
   },
   "auth": {
     "loginWith": "Увайсці праз {{platform}}",
@@ -84,7 +85,11 @@
     "connectionEstablished": "Сувязь устаноўлена!",
     "sendAnother": "Адправіць яшчэ",
     "skip": "Прапусціць",
-    "skipForNow": "Прапусціць пакуль"
+    "skipForNow": "Прапусціць пакуль",
+    "hintContactsNeeded": "Дадайце яшчэ {{count}} кантакт(аў) у Наладах",
+    "noTgUsername": "У вас не ўказана імя карыстальніка Telegram — дадайце яго ў наладах Telegram",
+    "hintBudget": "Set your monthly support amount here — this shows how much you're ready to help",
+    "hintSettings": "Tap «Settings» to add extra contacts"
   },
   "nav": {
     "home": "Галоўная",
@@ -353,7 +358,10 @@
     "localized": "Перакладзена",
     "localizeAll": "Перакласці на ўсе мовы",
     "localizing": "Пераклад...",
-    "addPhoto": "Дадаць фота"
+    "addPhoto": "Дадаць фота",
+    "insertLink": "Insert link",
+    "linkTextPlaceholder": "Link text",
+    "insert": "Insert"
   },
   "chat": {
     "title": "Памочнік",
@@ -549,7 +557,8 @@
     "budget": "Заяўлена",
     "root": "Корань",
     "contactRoot": "Звязацца з коранем",
-    "notInNetwork": "не ўваходзяць у вашу сетку"
+    "notInNetwork": "не ўваходзяць у вашу сетку",
+    "total": "Total clusters"
   },
   "validation": {
     "invalidContact": "Няправільны фармат"
@@ -845,6 +854,67 @@
     "pendingCount": "чакаюць",
     "editSuggestion": "Рэдагаваць",
     "vaybkoding": "Вайб-кадынг",
-    "tutoring": "Рэпетытарства"
+    "tutoring": "Рэпетытарства",
+    "addOther": "Add and enter another",
+    "suggestions": "New category suggestions"
+  },
+  "geo": {
+    "title": "Location",
+    "country": "Country",
+    "city": "City",
+    "cityPlaceholder": "Enter your city",
+    "detect": "Detect location",
+    "detecting": "Detecting...",
+    "selectCountry": "Select country",
+    "noLocation": "Location not set",
+    "saved": "Location saved",
+    "requiredForOffline": "Please select a country — you have offline skills selected"
+  },
+  "matches": {
+    "title": "Skill Matches",
+    "whoCanHelpMe": "Who can help me",
+    "whoNeedsMyHelp": "Who needs my help",
+    "noMatches": "No matches yet. Add more skills or connect with more people.",
+    "noMatchesNeeds": "No one in your network needs your skills yet.",
+    "sameCity": "Same city",
+    "sameCountry": "Same country",
+    "remote": "Different location",
+    "online": "Available online",
+    "viewProfile": "View profile",
+    "newMatch": "{{name}} can help with \"{{skill}}\"",
+    "matchNotifications": "Skill match alerts",
+    "noNotifications": "No new match alerts",
+    "chains": "Chains",
+    "noChains": "No clearing chains found yet",
+    "noChainsHint": "They appear when skills in your network form a closed loop",
+    "chainOf": "Chain of {{count}} participants",
+    "pairHint": "Write to each other on Telegram to discuss details",
+    "openChat": "Open chat",
+    "chainInstruction": "Create a Telegram group chat, add all participants, and paste the link here. Any participant can do this.",
+    "addChatLink": "Add chat link",
+    "chatLinkPrompt": "Paste a Telegram chat link (t.me/...)",
+    "statusProposed": "Proposed",
+    "statusActive": "Active",
+    "statusCompleted": "Completed",
+    "statusCancelled": "Cancelled",
+    "you": "You",
+    "setOffer": "Make an offer",
+    "offerHoursPlaceholder": "Hours (min. 0.5)",
+    "offerDescPlaceholder": "What you can do",
+    "sendOffer": "Send",
+    "awaitingOffer": "Waiting for the giver to make an offer",
+    "awaitingConfirm": "Waiting for receiver to confirm",
+    "confirmOffer": "Accept offer",
+    "markComplete": "Mark as complete",
+    "linkCompleted": "Completed",
+    "cancelChain": "Cancel chain",
+    "cancelConfirm": "Cancel this chain? This cannot be undone.",
+    "ringCloses": "Closes back to",
+    "offerSet": "{{hours}}h",
+    "giverDone": "Giver confirmed completion",
+    "receiverDone": "Receiver confirmed completion",
+    "declineLink": "Can't participate",
+    "declineConfirm": "Are you sure? The system will try to find a replacement, but if not found the chain will be cancelled.",
+    "statusBroken": "Searching replacement"
   }
 }

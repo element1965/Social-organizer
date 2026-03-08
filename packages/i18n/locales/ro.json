@@ -13,7 +13,8 @@
     "done": "Gata",
     "search": "Cauta",
     "notFound": "Nu a fost gasit",
-    "copied": "Copiat"
+    "copied": "Copiat",
+    "ok": "OK"
   },
   "auth": {
     "loginWith": "Autentifica-te cu {{platform}}",
@@ -84,7 +85,11 @@
       "text": "Indică suma pe care prietenul tău apropiat poate conta în caz de situații neprevăzute. Este doar intenția ta — exprimi pur și simplu disponibilitatea de a ajuta. Cu cât suma este mai mare, cu atât acoperirea ta de asigurare este mai mare. Membrii rețelei văd capacitățile globale, iar când cineva cere ajutor — tu decizi dacă participi."
     },
     "contactsRequired": "Adaugă cel puțin 2 contacte",
-    "contactsFilled": "Completate: {{count}}/2"
+    "contactsFilled": "Completate: {{count}}/2",
+    "hintContactsNeeded": "Adăugați încă {{count}} contact(e) în Setări",
+    "noTgUsername": "Nu aveți un nume de utilizator Telegram — adăugați-l în setările Telegram",
+    "hintBudget": "Set your monthly support amount here — this shows how much you're ready to help",
+    "hintSettings": "Tap «Settings» to add extra contacts"
   },
   "nav": {
     "home": "Acasa",
@@ -165,7 +170,9 @@
     "periodPast90": "Ultimele 90 zile",
     "periodPast365": "Ultimele 365 zile",
     "newConnections": "+{{count}} noi",
-    "periodPast1": "Astăzi"
+    "periodPast1": "Astăzi",
+    "communityChatDesc": "This is the general community chat for questions, suggestions, and feedback about the app. It is not a help chat.",
+    "communityChatOpen": "Open Chat"
   },
   "collection": {
     "create": "Trimite un semnal de ajutor",
@@ -190,7 +197,10 @@
     "participants": "Participanti",
     "noParticipants": "Nimeni nu s-a alaturat inca",
     "minAmount": "Minim 1",
-    "connectionToCreator": "Conexiune catre creator"
+    "connectionToCreator": "Conexiune catre creator",
+    "editAmount": "Edit",
+    "saveAmount": "Save",
+    "cancelEdit": "Cancel"
   },
   "create": {
     "title": "Trimite un semnal de ajutor",
@@ -294,7 +304,9 @@
     "revokeConfirm": "Conexiunea va fi ștearsă. Reconectarea va necesita o nouă confirmare. Continuați?",
     "intentionsReceived": "Ori ajutat",
     "helpedTab": "A ajutat",
-    "helpedByTab": "Ajutat de"
+    "helpedByTab": "Ajutat de",
+    "online": "Online",
+    "lastSeen": "Last seen {{time}}"
   },
   "settings": {
     "title": "Setari",
@@ -346,7 +358,10 @@
     "localized": "Tradus",
     "localizeAll": "Traduce în toate limbile",
     "localizing": "Se traduce...",
-    "addPhoto": "Adaugă foto"
+    "addPhoto": "Adaugă foto",
+    "insertLink": "Insert link",
+    "linkTextPlaceholder": "Link text",
+    "insert": "Insert"
   },
   "chat": {
     "title": "Asistent",
@@ -378,7 +393,43 @@
     "variantAll": "Toți",
     "variantInvited": "Invitați",
     "variantOrganic": "Direcți",
-    "editChain": "Editează"
+    "editChain": "Editează",
+    "tabSend": "Send",
+    "tabScheduled": "Scheduled",
+    "tabAutoChain": "Auto-Chain",
+    "scheduledAt": "Date & time",
+    "scheduledAtPlaceholder": "Select date and time",
+    "schedule": "Schedule",
+    "scheduling": "Scheduling...",
+    "scheduledSuccess": "Post scheduled",
+    "cancelPost": "Cancel",
+    "cancelledSuccess": "Post cancelled",
+    "statusPending": "Pending",
+    "statusSent": "Sent",
+    "statusCancelled": "Cancelled",
+    "statusFailed": "Failed",
+    "noScheduled": "No scheduled posts",
+    "chainDay": "Day {{day}}",
+    "chainDayOffset": "Day (since registration)",
+    "chainSortOrder": "Order",
+    "chainInterval": "Interval (min)",
+    "addChainMessage": "Add message",
+    "adding": "Adding...",
+    "chainAdded": "Message added to chain",
+    "noChainMessages": "No chain messages",
+    "active": "Active",
+    "inactive": "Inactive",
+    "deliveries": "Delivered",
+    "reads": "Read",
+    "openRate": "Open rate",
+    "stats": "Statistics",
+    "totalDeliveries": "Total deliveries",
+    "totalRead": "Total read",
+    "activeMessages": "Active messages",
+    "triggerNow": "Run now",
+    "triggering": "Running...",
+    "triggerSuccess": "Auto-chain triggered successfully",
+    "triggerError": "Trigger failed"
   },
   "contacts": {
     "telegram": "Telegram",
@@ -414,7 +465,14 @@
     "share": "Distribuie",
     "copyLink": "Copiază linkul",
     "expand": "show URL",
-    "showQr": "arată QR"
+    "showQr": "arată QR",
+    "yourId": "Your ID",
+    "sendThisLink": "Send this link to your friend",
+    "copied": "Link copied!",
+    "showWebLink": "Show website link",
+    "showBotLink": "Show Telegram bot link",
+    "botLinkHint": "If your friend already knows about the project, send this Telegram link instead — it goes straight to the app",
+    "slugExplain": "Your personal ID appears in all your invite links. You can change it to something memorable (e.g. your nickname). This ID itself is not a link — use the links above to invite people."
   },
   "landing": {
     "openSourceBadge": "O inițiativă non-profit cu sursă deschisă",
@@ -490,7 +548,8 @@
     "budget": "Declarat",
     "root": "Rădăcină",
     "contactRoot": "Contactează rădăcina",
-    "notInNetwork": "nu fac parte din rețeaua ta"
+    "notInNetwork": "nu fac parte din rețeaua ta",
+    "total": "Total clusters"
   },
   "requiredInfo": {
     "contactsTitle": "Adaugă contactele tale",
@@ -795,6 +854,67 @@
     "pendingCount": "în așteptare",
     "editSuggestion": "Editare",
     "vaybkoding": "Programare de atmosferă",
-    "tutoring": "Meditații"
+    "tutoring": "Meditații",
+    "addOther": "Add and enter another",
+    "suggestions": "New category suggestions"
+  },
+  "geo": {
+    "title": "Location",
+    "country": "Country",
+    "city": "City",
+    "cityPlaceholder": "Enter your city",
+    "detect": "Detect location",
+    "detecting": "Detecting...",
+    "selectCountry": "Select country",
+    "noLocation": "Location not set",
+    "saved": "Location saved",
+    "requiredForOffline": "Please select a country — you have offline skills selected"
+  },
+  "matches": {
+    "title": "Skill Matches",
+    "whoCanHelpMe": "Who can help me",
+    "whoNeedsMyHelp": "Who needs my help",
+    "noMatches": "No matches yet. Add more skills or connect with more people.",
+    "noMatchesNeeds": "No one in your network needs your skills yet.",
+    "sameCity": "Same city",
+    "sameCountry": "Same country",
+    "remote": "Different location",
+    "online": "Available online",
+    "viewProfile": "View profile",
+    "newMatch": "{{name}} can help with \"{{skill}}\"",
+    "matchNotifications": "Skill match alerts",
+    "noNotifications": "No new match alerts",
+    "chains": "Chains",
+    "noChains": "No clearing chains found yet",
+    "noChainsHint": "They appear when skills in your network form a closed loop",
+    "chainOf": "Chain of {{count}} participants",
+    "pairHint": "Write to each other on Telegram to discuss details",
+    "openChat": "Open chat",
+    "chainInstruction": "Create a Telegram group chat, add all participants, and paste the link here. Any participant can do this.",
+    "addChatLink": "Add chat link",
+    "chatLinkPrompt": "Paste a Telegram chat link (t.me/...)",
+    "statusProposed": "Proposed",
+    "statusActive": "Active",
+    "statusCompleted": "Completed",
+    "statusCancelled": "Cancelled",
+    "you": "You",
+    "setOffer": "Make an offer",
+    "offerHoursPlaceholder": "Hours (min. 0.5)",
+    "offerDescPlaceholder": "What you can do",
+    "sendOffer": "Send",
+    "awaitingOffer": "Waiting for the giver to make an offer",
+    "awaitingConfirm": "Waiting for receiver to confirm",
+    "confirmOffer": "Accept offer",
+    "markComplete": "Mark as complete",
+    "linkCompleted": "Completed",
+    "cancelChain": "Cancel chain",
+    "cancelConfirm": "Cancel this chain? This cannot be undone.",
+    "ringCloses": "Closes back to",
+    "offerSet": "{{hours}}h",
+    "giverDone": "Giver confirmed completion",
+    "receiverDone": "Receiver confirmed completion",
+    "declineLink": "Can't participate",
+    "declineConfirm": "Are you sure? The system will try to find a replacement, but if not found the chain will be cancelled.",
+    "statusBroken": "Searching replacement"
   }
 }
