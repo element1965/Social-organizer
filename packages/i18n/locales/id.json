@@ -412,6 +412,7 @@
     "slugDesc": "Ini adalah ID tautan pribadi Anda untuk URL undangan. Ini BUKAN undangan itu sendiri — jangan kirimkan ke orang lain. Gunakan tautan di atas untuk mengundang seseorang.",
     "shareText": "Ini adalah undangan pribadi dari {{name}} ke lingkaran teman dekatnya",
     "share": "Bagikan",
+    "copyLink": "Salin tautan",
     "expand": "show URL",
     "showQr": "tampilkan QR"
   },

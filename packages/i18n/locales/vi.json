@@ -412,6 +412,7 @@
     "slugDesc": "Đây là ID liên kết cá nhân của bạn cho URL lời mời. Đây KHÔNG phải là lời mời — đừng gửi nó cho người khác. Sử dụng các liên kết ở trên để mời ai đó.",
     "shareText": "Đây là lời mời cá nhân từ {{name}} đến vòng bạn bè thân thiết",
     "share": "Chia sẻ",
+    "copyLink": "Sao chép liên kết",
     "expand": "hiện URL",
     "showQr": "hiển thị QR"
   },

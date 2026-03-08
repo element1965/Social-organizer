@@ -412,6 +412,7 @@
     "slugDesc": "To jest twój osobisty identyfikator linku do URL-i zaproszeń. To NIE jest samo zaproszenie — nie wysyłaj go ludziom. Użyj powyższych linków, aby kogoś zaprosić.",
     "shareText": "To osobiste zaproszenie od {{name}} do kręgu bliskich przyjaciół",
     "share": "Udostępnij",
+    "copyLink": "Kopiuj link",
     "expand": "pokaż URL",
     "showQr": "pokaż QR"
   },

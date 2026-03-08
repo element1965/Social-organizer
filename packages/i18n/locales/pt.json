@@ -390,6 +390,7 @@
     "slugDesc": "Este é o seu ID de link pessoal para URLs de convite. NÃO é um convite em si — não o envie a pessoas. Use os links acima para convidar alguém.",
     "shareText": "Este é um convite pessoal de {{name}} para o círculo de amigos próximos",
     "share": "Compartilhar",
+    "copyLink": "Copiar link",
     "expand": "mostrar URL",
     "showQr": "mostrar QR"
   },
