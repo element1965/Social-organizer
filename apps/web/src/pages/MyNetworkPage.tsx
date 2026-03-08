@@ -220,16 +220,20 @@ export function MyNetworkPage() {
               <p className="text-sm text-gray-400 mt-1">{t('network.emptyHint')}</p>
             </div>
           ) : (
-            <div className="space-y-2">
-              {Object.entries(byDepth).map(([depth, count]) => {
+            <div>
+              {Object.entries(byDepth).map(([depth, count], idx, entries) => {
                 const depthNum = Number(depth);
                 const isExpanded = expandedDepth === depthNum;
+                const isAfterExpanded = expandedDepth !== null && depthNum > expandedDepth;
                 const depthUsers = usersByDepth[depthNum] || [];
                 const colors = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899'];
                 const color = colors[(depthNum - 1) % colors.length];
 
                 return (
-                  <div key={depth} className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
+                  <div
+                    key={depth}
+                    className={`border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden bg-white dark:bg-gray-900 ${isAfterExpanded ? 'sticky bottom-0 z-10 shadow-[0_-4px_12px_rgba(0,0,0,0.15)]' : ''} ${idx > 0 ? 'mt-2' : ''}`}
+                  >
                     <button
                       onClick={() => toggleDepth(depthNum)}
                       className="w-full p-3 hover:bg-gray-50 dark:hover:bg-gray-800/50"
@@ -256,7 +260,7 @@ export function MyNetworkPage() {
                     </button>
 
                     {isExpanded && depthUsers.length > 0 && (
-                      <div className="border-t border-gray-200 dark:border-gray-700 max-h-48 overflow-y-auto">
+                      <div className="border-t border-gray-200 dark:border-gray-700">
                         {depthUsers.map((user: any) => {
                           const isRecent = user.connectedAt && (Date.now() - new Date(user.connectedAt).getTime()) < 24 * 60 * 60 * 1000;
                           return (
