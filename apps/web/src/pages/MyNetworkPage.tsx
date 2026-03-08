@@ -174,61 +174,90 @@ export function MyNetworkPage() {
             </div>
           ) : (
             <div>
-              {Object.entries(byDepth).map(([depth, count], idx, entries) => {
+              {Object.entries(byDepth).flatMap(([depth, count], idx) => {
                 const depthNum = Number(depth);
                 const isExpanded = expandedDepth === depthNum;
                 const depthUsers = usersByDepth[depthNum] || [];
                 const colors = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899'];
                 const color = colors[(depthNum - 1) % colors.length];
 
-                // Check if there's a visible previous item before expanded
-                const hasPrevSticky = expandedDepth !== null && depthNum === expandedDepth && idx > 0;
-                const prevStickyHeight = 50; // approx height of collapsed item
-
-                return (
-                  <div
-                    key={depth}
-                    className={`border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-900 ${idx > 0 ? 'mt-2' : ''} ${isExpanded ? '' : 'overflow-hidden'}`}
-                    style={
-                      expandedDepth !== null && depthNum < expandedDepth
-                        ? depthNum === expandedDepth - 1
-                          ? { position: 'sticky', top: 0, zIndex: 11, boxShadow: '0 4px 12px rgba(0,0,0,0.15)' }
-                          : { display: 'none' }
-                        : expandedDepth !== null && depthNum > expandedDepth
-                          ? depthNum === expandedDepth + 1
-                            ? { position: 'sticky', bottom: 0, zIndex: 10, boxShadow: '0 -4px 12px rgba(0,0,0,0.15)' }
-                            : { display: 'none' }
-                          : undefined
-                    }
-                  >
-                    <button
-                      onClick={() => toggleDepth(depthNum)}
-                      className={`w-full p-3 hover:bg-gray-50 dark:hover:bg-gray-800/50 bg-white dark:bg-gray-900 ${isExpanded ? 'border-b border-gray-200 dark:border-gray-700' : ''}`}
-                      style={isExpanded ? { position: 'sticky', top: hasPrevSticky ? prevStickyHeight : 0, zIndex: 12 } : undefined}
-                    >
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                          <div
-                            className="w-6 h-6 rounded-full flex items-center justify-center text-white text-xs font-bold"
-                            style={{ backgroundColor: color }}
-                          >
-                            {depth}
+                // Collapsed items before/after expanded
+                if (expandedDepth !== null && !isExpanded) {
+                  if (depthNum < expandedDepth) {
+                    if (depthNum !== expandedDepth - 1) return [];
+                    return [(
+                      <div
+                        key={depth}
+                        className={`border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden bg-white dark:bg-gray-900 ${idx > 0 ? 'mt-2' : ''}`}
+                        style={{ position: 'sticky', top: 0, zIndex: 11, boxShadow: '0 4px 12px rgba(0,0,0,0.15)' }}
+                      >
+                        <button onClick={() => toggleDepth(depthNum)} className="w-full p-3 hover:bg-gray-50 dark:hover:bg-gray-800/50">
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-2">
+                              <div className="w-6 h-6 rounded-full flex items-center justify-center text-white text-xs font-bold" style={{ backgroundColor: color }}>{depth}</div>
+                              <span className="text-sm text-gray-600 dark:text-gray-300">{t('dashboard.handshakeOrdinal', { depth })}</span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <span className="text-xl font-bold text-gray-900 dark:text-white">{count as number}</span>
+                              <ChevronDown className="w-4 h-4 text-gray-400" />
+                            </div>
                           </div>
-                          <span className="text-sm text-gray-600 dark:text-gray-300">{t('dashboard.handshakeOrdinal', { depth })}</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <span className="text-xl font-bold text-gray-900 dark:text-white">{count as number}</span>
-                          {isExpanded ? (
-                            <ChevronUp className="w-4 h-4 text-gray-400" />
-                          ) : (
-                            <ChevronDown className="w-4 h-4 text-gray-400" />
-                          )}
-                        </div>
+                        </button>
                       </div>
-                    </button>
+                    )];
+                  }
+                  if (depthNum > expandedDepth) {
+                    if (depthNum !== expandedDepth + 1) return [];
+                    return [(
+                      <div
+                        key={depth}
+                        className={`border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden bg-white dark:bg-gray-900 mt-2`}
+                        style={{ position: 'sticky', bottom: 0, zIndex: 10, boxShadow: '0 -4px 12px rgba(0,0,0,0.15)' }}
+                      >
+                        <button onClick={() => toggleDepth(depthNum)} className="w-full p-3 hover:bg-gray-50 dark:hover:bg-gray-800/50">
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-2">
+                              <div className="w-6 h-6 rounded-full flex items-center justify-center text-white text-xs font-bold" style={{ backgroundColor: color }}>{depth}</div>
+                              <span className="text-sm text-gray-600 dark:text-gray-300">{t('dashboard.handshakeOrdinal', { depth })}</span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <span className="text-xl font-bold text-gray-900 dark:text-white">{count as number}</span>
+                              <ChevronDown className="w-4 h-4 text-gray-400" />
+                            </div>
+                          </div>
+                        </button>
+                      </div>
+                    )];
+                  }
+                }
 
-                    {isExpanded && depthUsers.length > 0 && (
-                      <div>
+                // Expanded item — header and list as separate siblings for proper sticky
+                if (isExpanded) {
+                  const hasPrev = expandedDepth !== null && idx > 0;
+                  const stickyTop = hasPrev ? 50 : 0;
+                  const elements: React.ReactNode[] = [
+                    <div
+                      key={`${depth}-header`}
+                      className={`border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden bg-white dark:bg-gray-900 ${idx > 0 ? 'mt-2' : ''}`}
+                      style={{ position: 'sticky', top: stickyTop, zIndex: 12, boxShadow: '0 4px 12px rgba(0,0,0,0.15)' }}
+                    >
+                      <button onClick={() => toggleDepth(depthNum)} className="w-full p-3 hover:bg-gray-50 dark:hover:bg-gray-800/50">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-2">
+                            <div className="w-6 h-6 rounded-full flex items-center justify-center text-white text-xs font-bold" style={{ backgroundColor: color }}>{depth}</div>
+                            <span className="text-sm text-gray-600 dark:text-gray-300">{t('dashboard.handshakeOrdinal', { depth })}</span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <span className="text-xl font-bold text-gray-900 dark:text-white">{count as number}</span>
+                            <ChevronUp className="w-4 h-4 text-gray-400" />
+                          </div>
+                        </div>
+                      </button>
+                    </div>,
+                  ];
+                  if (depthUsers.length > 0) {
+                    elements.push(
+                      <div key={`${depth}-list`} className="border-x border-b border-gray-200 dark:border-gray-700 rounded-b-lg overflow-hidden bg-white dark:bg-gray-900">
                         {depthUsers.map((user: any) => {
                           const isRecent = user.connectedAt && (Date.now() - new Date(user.connectedAt).getTime()) < 24 * 60 * 60 * 1000;
                           return (
@@ -256,9 +285,31 @@ export function MyNetworkPage() {
                           );
                         })}
                       </div>
-                    )}
+                    );
+                  }
+                  return elements;
+                }
+
+                // No expanded — normal collapsed item
+                return [(
+                  <div
+                    key={depth}
+                    className={`border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden bg-white dark:bg-gray-900 ${idx > 0 ? 'mt-2' : ''}`}
+                  >
+                    <button onClick={() => toggleDepth(depthNum)} className="w-full p-3 hover:bg-gray-50 dark:hover:bg-gray-800/50">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <div className="w-6 h-6 rounded-full flex items-center justify-center text-white text-xs font-bold" style={{ backgroundColor: color }}>{depth}</div>
+                          <span className="text-sm text-gray-600 dark:text-gray-300">{t('dashboard.handshakeOrdinal', { depth })}</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <span className="text-xl font-bold text-gray-900 dark:text-white">{count as number}</span>
+                          <ChevronDown className="w-4 h-4 text-gray-400" />
+                        </div>
+                      </div>
+                    </button>
                   </div>
-                );
+                )];
               })}
             </div>
           )}
