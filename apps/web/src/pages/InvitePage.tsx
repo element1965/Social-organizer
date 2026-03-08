@@ -28,14 +28,25 @@ export function InvitePage() {
     }
   }, [isRealUser, token]);
 
+  // Verify token is still valid by making a lightweight query
+  const { isError: meError } = trpc.user.me.useQuery(undefined, {
+    enabled: isRealUser,
+    retry: 1,
+  });
+
+  // Stale token — clear auth and show landing
+  if (isRealUser && meError) {
+    logout();
+  }
+
   // Not authenticated — show landing page (token already saved to localStorage)
-  if (!isRealUser) {
+  if (!isRealUser || meError) {
     return <LandingPage />;
   }
 
   const { data: invite, isLoading, error } = trpc.invite.getByToken.useQuery(
     { token: token! },
-    { enabled: !!token },
+    { enabled: !!token && !meError },
   );
   const accept = trpc.invite.accept.useMutation({
     onSuccess: () => {

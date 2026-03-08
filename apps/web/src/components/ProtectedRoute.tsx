@@ -4,9 +4,11 @@ import { trpc } from '../lib/trpc';
 
 export function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const isAuthenticated = useAuth((s) => s.isAuthenticated);
+  const logout = useAuth((s) => s.logout);
   const location = useLocation();
-  const { isLoading } = trpc.user.me.useQuery(undefined, {
+  const { isLoading, isError } = trpc.user.me.useQuery(undefined, {
     enabled: isAuthenticated,
+    retry: 1,
   });
 
   // Clear stale demo tokens — demo mode is disabled
@@ -16,6 +18,14 @@ export function ProtectedRoute({ children }: { children: React.ReactNode }) {
     localStorage.removeItem('userId');
     window.location.href = '/?from=demo';
     return null;
+  }
+
+  // Stale/expired token — clear auth and redirect to landing
+  if (isAuthenticated && isError) {
+    logout();
+    const redirectPath = location.pathname + location.search;
+    const target = redirectPath !== '/dashboard' ? `/?redirect=${encodeURIComponent(redirectPath)}` : '/';
+    return <Navigate to={target} replace />;
   }
 
   if (!isAuthenticated) {
