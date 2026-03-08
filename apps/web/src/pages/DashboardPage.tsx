@@ -1,4 +1,4 @@
-import { lazy, Suspense, useState, useEffect } from 'react';
+import { lazy, Suspense, useState, useEffect, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { trpc } from '../lib/trpc';
@@ -14,6 +14,8 @@ import {
   HelpCircle,
   Pencil,
   MessageSquarePlus,
+  Settings,
+  Wallet,
 } from 'lucide-react';
 import { Tooltip } from '../components/ui/tooltip';
 import { SocialIcon } from '../components/ui/social-icons';
@@ -48,6 +50,25 @@ export function DashboardPage() {
   const [editingSuggText, setEditingSuggText] = useState('');
   const [editingSuggGroup, setEditingSuggGroup] = useState('');
 
+
+  // Auto-complete onboarding + show hints for new users
+  const completeOnboarding = trpc.user.completeOnboarding.useMutation({
+    onSuccess: () => utils.user.me.invalidate(),
+  });
+  const onboardingTriggered = useRef(false);
+  const [onboardingHint, setOnboardingHint] = useState<'budget' | 'settings' | null>(null);
+
+  useEffect(() => {
+    if (me && !me.onboardingCompleted && !onboardingTriggered.current) {
+      onboardingTriggered.current = true;
+      completeOnboarding.mutate();
+      // Show hints sequentially
+      const seen = localStorage.getItem('onboarding-hints-seen');
+      if (!seen) {
+        setOnboardingHint('budget');
+      }
+    }
+  }, [me]);
 
   // Budget editing
   const [editingBudget, setEditingBudget] = useState(false);
@@ -198,71 +219,110 @@ export function DashboardPage() {
         </Card>
       </div>
 
-      {/* Card 3: Invite (flip card) */}
-      <InviteBlock id="invite" />
-
-      {/* Card 4: "Мои возможности" — My capabilities / budget */}
-      <Card className="bg-gradient-to-b from-blue-50 to-indigo-50 dark:from-blue-950/30 dark:to-indigo-950/30">
-        <CardContent className="py-4">
-          <div className="flex items-center gap-2 mb-2">
-            <span className="text-sm font-semibold text-gray-900 dark:text-white">{t('dashboard.yourContribution')}</span>
-            <Tooltip content={t('dashboard.myCapabilitiesHint')} side="bottom">
-              <button type="button" className="text-gray-400 hover:text-gray-500 dark:text-gray-300"><HelpCircle className="w-3.5 h-3.5" /></button>
-            </Tooltip>
-          </div>
-          {editingBudget ? (
-            <div className="relative mt-1 max-w-xs">
-              <span className="absolute left-2 top-1/2 -translate-y-1/2 text-xs text-gray-400">$</span>
-              <input
-                type="number"
-                value={newBudgetValue}
-                onChange={(e) => setNewBudgetValue(e.target.value)}
-                placeholder={me?.monthlyBudget != null ? String(Math.round(me.monthlyBudget)) : '0'}
-                className="w-full pl-5 pr-8 py-1.5 text-sm font-bold rounded border border-blue-300 dark:border-blue-600 bg-white dark:bg-gray-800 text-blue-700 dark:text-blue-400 focus:outline-none focus:border-blue-500"
-                autoFocus
-                min={0}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' && newBudgetValue && Number(newBudgetValue) >= 0) {
-                    setBudgetMutation.mutate({ amount: Number(newBudgetValue), inputCurrency: 'USD' });
-                  }
-                  if (e.key === 'Escape') setEditingBudget(false);
-                }}
-              />
-              {newBudgetValue && Number(newBudgetValue) >= 0 && (
-                <button
-                  onClick={() => setBudgetMutation.mutate({ amount: Number(newBudgetValue), inputCurrency: 'USD' })}
-                  disabled={setBudgetMutation.isPending}
-                  className="absolute right-2 top-1/2 -translate-y-1/2 text-green-500 hover:text-green-400"
-                >
-                  <Check className="w-4 h-4" />
-                </button>
+      {/* Budget (35%) + Invite (65%) side by side */}
+      <div className="flex gap-3">
+        {/* My potential — budget */}
+        <div className="w-[35%] shrink-0 relative">
+          <Card className="bg-gradient-to-b from-blue-50 to-indigo-50 dark:from-blue-950/30 dark:to-indigo-950/30 h-full">
+            <CardContent className="py-3 flex flex-col h-full">
+              <div className="flex items-center gap-1 mb-1">
+                <span className="text-xs font-semibold text-gray-900 dark:text-white leading-tight">{t('dashboard.yourContribution')}</span>
+                <Tooltip content={t('dashboard.myCapabilitiesHint')} side="bottom">
+                  <button type="button" className="text-gray-400 hover:text-gray-500 dark:text-gray-300"><HelpCircle className="w-3 h-3" /></button>
+                </Tooltip>
+              </div>
+              {editingBudget ? (
+                <div className="relative mt-1">
+                  <span className="absolute left-2 top-1/2 -translate-y-1/2 text-xs text-gray-400">$</span>
+                  <input
+                    type="number"
+                    value={newBudgetValue}
+                    onChange={(e) => setNewBudgetValue(e.target.value)}
+                    placeholder={me?.monthlyBudget != null ? String(Math.round(me.monthlyBudget)) : '0'}
+                    className="w-full pl-5 pr-8 py-1.5 text-sm font-bold rounded border border-blue-300 dark:border-blue-600 bg-white dark:bg-gray-800 text-blue-700 dark:text-blue-400 focus:outline-none focus:border-blue-500"
+                    autoFocus
+                    min={0}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' && newBudgetValue && Number(newBudgetValue) >= 0) {
+                        setBudgetMutation.mutate({ amount: Number(newBudgetValue), inputCurrency: 'USD' });
+                      }
+                      if (e.key === 'Escape') setEditingBudget(false);
+                    }}
+                  />
+                  {newBudgetValue && Number(newBudgetValue) >= 0 && (
+                    <button
+                      onClick={() => setBudgetMutation.mutate({ amount: Number(newBudgetValue), inputCurrency: 'USD' })}
+                      disabled={setBudgetMutation.isPending}
+                      className="absolute right-2 top-1/2 -translate-y-1/2 text-green-500 hover:text-green-400"
+                    >
+                      <Check className="w-4 h-4" />
+                    </button>
+                  )}
+                </div>
+              ) : (
+                <div className="flex-1 flex flex-col justify-center">
+                  <div className="flex items-center gap-1.5">
+                    <p className="text-2xl font-bold text-blue-700 dark:text-blue-400">
+                      {me?.monthlyBudget != null ? `$${Math.round(me.monthlyBudget)}` : '$0'}
+                    </p>
+                    <button
+                      onClick={() => { setNewBudgetValue(''); setEditingBudget(true); }}
+                      className="text-gray-400 hover:text-gray-300"
+                    >
+                      <Pencil className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                </div>
               )}
-            </div>
-          ) : (
-            <div className="flex items-center gap-2">
-              <p className="text-xl font-bold text-blue-700 dark:text-blue-400">
-                {me?.monthlyBudget != null ? `$${Math.round(me.monthlyBudget)}` : '$0'}
-              </p>
-              <button
-                onClick={() => { setNewBudgetValue(''); setEditingBudget(true); }}
-                className="text-gray-400 hover:text-gray-300"
-              >
-                <Pencil className="w-3.5 h-3.5" />
-              </button>
+              {me?.monthlyBudget != null && me.remainingBudget != null && me.remainingBudget <= 0 && (
+                <p className="text-[10px] text-amber-600 dark:text-amber-400 mt-1">{t('dashboard.budgetDepletedHint')}</p>
+              )}
+            </CardContent>
+          </Card>
+          {/* Onboarding hint for budget */}
+          {onboardingHint === 'budget' && (
+            <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 translate-y-full z-50 w-56">
+              <div className="bg-blue-600 text-white text-xs rounded-lg p-3 shadow-lg relative">
+                <div className="absolute -top-1.5 left-1/2 -translate-x-1/2 w-3 h-3 bg-blue-600 rotate-45" />
+                <p className="font-medium mb-1">{t('onboarding.hintBudget')}</p>
+                <button
+                  onClick={() => {
+                    setOnboardingHint('settings');
+                    setNewBudgetValue('');
+                    setEditingBudget(true);
+                  }}
+                  className="mt-1 px-3 py-1 bg-white/20 rounded text-[11px] font-medium hover:bg-white/30"
+                >
+                  {t('common.ok')}
+                </button>
+              </div>
             </div>
           )}
-        </CardContent>
-      </Card>
+        </div>
+        {/* Invite block */}
+        <div className="w-[65%]">
+          <InviteBlock id="invite" />
+        </div>
+      </div>
 
-      {/* Budget depleted hint */}
-      {me?.monthlyBudget != null && me.remainingBudget != null && me.remainingBudget <= 0 && (
-        <div className="p-3 bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 rounded-lg">
-          <p className="text-sm text-amber-700 dark:text-amber-400 mb-2">
-            {t('dashboard.budgetDepletedHint')}
-          </p>
-          <Button variant="outline" size="sm" onClick={() => navigate('/settings')}>
-            {t('dashboard.updateBudget')}
-          </Button>
+      {/* Onboarding hint for settings */}
+      {onboardingHint === 'settings' && (
+        <div className="fixed inset-0 z-50 bg-black/40" onClick={() => { setOnboardingHint(null); localStorage.setItem('onboarding-hints-seen', '1'); }}>
+          <div className="absolute top-16 left-4 w-64" onClick={(e) => e.stopPropagation()}>
+            <div className="bg-blue-600 text-white text-xs rounded-lg p-3 shadow-lg relative">
+              <div className="absolute -top-1.5 left-8 w-3 h-3 bg-blue-600 rotate-45" />
+              <div className="flex items-center gap-2 mb-1">
+                <Settings className="w-3.5 h-3.5" />
+                <p className="font-medium">{t('onboarding.hintSettings')}</p>
+              </div>
+              <button
+                onClick={() => { setOnboardingHint(null); localStorage.setItem('onboarding-hints-seen', '1'); }}
+                className="mt-1 px-3 py-1 bg-white/20 rounded text-[11px] font-medium hover:bg-white/30"
+              >
+                {t('common.ok')}
+              </button>
+            </div>
+          </div>
         </div>
       )}
 

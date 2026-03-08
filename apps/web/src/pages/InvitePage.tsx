@@ -96,53 +96,53 @@ export function InvitePage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-6">
+    <div className="flex flex-col items-center justify-center px-4 py-6" style={{ minHeight: '100vh', minHeight: '100dvh', paddingBottom: 'max(1.5rem, env(safe-area-inset-bottom))' }}>
       <Card className="w-full max-w-sm">
-        <CardContent className="py-8 text-center">
-          <Logo size={60} className="text-gray-900 dark:text-teal-400 mx-auto mb-4" />
-          <Avatar src={invite.inviter.photoUrl} name={invite.inviter.name} size="lg" className="mx-auto mb-4" />
-          <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-2">
+        <CardContent className="py-5 text-center">
+          <Logo size={48} className="text-gray-900 dark:text-teal-400 mx-auto mb-3" />
+          <Avatar src={invite.inviter.photoUrl} name={invite.inviter.name} size="lg" className="mx-auto mb-3" />
+          <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-1">
             {t('invite.from', { name: invite.inviter.name })}
           </h2>
-          <p className="text-sm text-gray-500 dark:text-gray-300 mb-6">{t('invite.title')}</p>
+          <p className="text-sm text-gray-500 dark:text-gray-300 mb-4">{t('invite.title')}</p>
 
           {accept.isSuccess && (accept.data as any)?.alreadyConnected ? (
-            <div className="flex flex-col items-center gap-3">
-              <CheckCircle className="w-12 h-12 text-green-500" />
-              <p className="text-lg font-semibold text-green-600">{t('pending.alreadyConnected')}</p>
-              <Button className="w-full mt-2" size="lg" onClick={() => navigate('/network')}>
+            <div className="flex flex-col items-center gap-2">
+              <CheckCircle className="w-10 h-10 text-green-500" />
+              <p className="text-base font-semibold text-green-600">{t('pending.alreadyConnected')}</p>
+              <Button className="w-full mt-1" size="lg" onClick={() => navigate('/network')}>
                 {t('network.title')}
               </Button>
             </div>
           ) : accept.isSuccess && (accept.data as any)?.pending ? (
-            <div className="flex flex-col items-center gap-3">
-              <Clock className="w-12 h-12 text-amber-500" />
-              <p className="text-lg font-semibold text-amber-600">{t('pending.requestSent')}</p>
-              <p className="text-sm text-gray-500 dark:text-gray-300">{t('pending.requestSentDesc')}</p>
-              <Button className="w-full mt-2" size="lg" onClick={() => navigate('/dashboard')}>
+            <div className="flex flex-col items-center gap-2">
+              <Clock className="w-10 h-10 text-amber-500" />
+              <p className="text-base font-semibold text-amber-600">{t('pending.requestSent')}</p>
+              <p className="text-xs text-gray-500 dark:text-gray-300">{t('pending.requestSentDesc')}</p>
+              <Button className="w-full mt-1" size="lg" onClick={() => navigate('/dashboard')}>
                 {t('dashboard.title')}
               </Button>
             </div>
           ) : accept.isSuccess ? (
-            <div className="flex flex-col items-center gap-3">
-              <CheckCircle className="w-12 h-12 text-green-500" />
-              <p className="text-lg font-semibold text-green-600">{t('invite.success')}</p>
-              <Button className="w-full mt-2" size="lg" onClick={() => navigate('/network')}>
+            <div className="flex flex-col items-center gap-2">
+              <CheckCircle className="w-10 h-10 text-green-500" />
+              <p className="text-base font-semibold text-green-600">{t('invite.success')}</p>
+              <Button className="w-full mt-1" size="lg" onClick={() => navigate('/network')}>
                 {t('network.title')}
               </Button>
             </div>
           ) : (
-            <div className="flex flex-col items-center gap-3">
+            <div className="flex flex-col items-center gap-2">
               <Spinner />
               <p className="text-sm text-gray-500 dark:text-gray-300">{t('invite.accepting') || 'Accepting...'}</p>
             </div>
           )}
           {accept.error && (
-            <div className="mt-4 p-3 bg-red-50 dark:bg-red-950 rounded-lg">
+            <div className="mt-3 p-3 bg-red-50 dark:bg-red-950 rounded-lg">
               <p className="text-sm text-red-600 dark:text-red-400 font-medium">{accept.error.message}</p>
               {accept.error.data?.code === 'UNAUTHORIZED' ? (
                 <Button
-                  className="w-full mt-3"
+                  className="w-full mt-2"
                   size="lg"
                   onClick={() => {
                     if (token) localStorage.setItem('pendingInviteToken', token);
@@ -153,7 +153,7 @@ export function InvitePage() {
                 </Button>
               ) : (
                 <Button
-                  className="w-full mt-3"
+                  className="w-full mt-2"
                   size="lg"
                   onClick={() => {
                     autoAcceptTriggered.current = false;
