@@ -271,7 +271,7 @@ model InviteLink {
   usedAt    DateTime?
 
   inviter  User  @relation("inviter", fields: [inviterId], references: [id], onDelete: Cascade)
-  usedBy   User? @relation("inviteUsedBy", fields: [usedById], references: [id])
+  usedBy   User? @relation("inviteUsedBy", fields: [usedById], references: [id], onDelete: SetNull)
 
   @@index([token])
   @@map("invite_links")

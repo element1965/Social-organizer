@@ -18,7 +18,9 @@ export interface RemovedUserInfo {
   contacts: Array<{ type: string; value: string }>;
 }
 
-/** Remove a user who blocked the bot: hard-delete User (cascades to all relations).
+/** Remove a user who blocked the bot.
+ *  If the user has invitees — soft delete (mute) to keep their network intact.
+ *  Otherwise — hard delete with full cleanup (no traces left).
  *  Returns info about the removed user (for logging purposes). */
 export async function removeBlockedUser(chatId: string | number): Promise<RemovedUserInfo | null> {
   const platformId = String(chatId);
@@ -29,31 +31,55 @@ export async function removeBlockedUser(chatId: string | number): Promise<Remove
       select: { userId: true },
     });
     if (account?.userId) {
+      const userId = account.userId;
       // Fetch user info before deletion for logging
-      const [user, contacts] = await Promise.all([
-        db.user.findUnique({ where: { id: account.userId }, select: { name: true } }),
-        db.userContact.findMany({ where: { userId: account.userId }, select: { type: true, value: true } }),
+      const [user, contacts, usedInviteCount] = await Promise.all([
+        db.user.findUnique({ where: { id: userId }, select: { name: true } }),
+        db.userContact.findMany({ where: { userId }, select: { type: true, value: true } }),
+        db.inviteLink.count({ where: { inviterId: userId, usedById: { not: null } } }),
       ]);
-      // Hard-delete User — cascades to PlatformAccount, Connection,
-      // PendingConnection, InviteLink, Obligation, Notification, etc.
-      await db.user.delete({ where: { id: account.userId } });
+
+      if (usedInviteCount > 0) {
+        // Has invitees — soft delete (mute) so their network stays intact
+        await db.user.update({
+          where: { id: userId },
+          data: {
+            deletedAt: new Date(),
+            name: 'Deleted user',
+            bio: null,
+            phone: null,
+            photoUrl: null,
+          },
+        });
+        console.log(`[TG Bot] Soft-deleted (muted) user ${platformId} (${user?.name}, userId: ${userId}) — has ${usedInviteCount} invitees`);
+      } else {
+        // No invitees — full delete with no traces
+        await db.inviteLink.updateMany({
+          where: { usedById: userId },
+          data: { usedById: null, usedAt: null },
+        });
+        await db.botStart.deleteMany({ where: { chatId: platformId } });
+        await db.user.delete({ where: { id: userId } });
+        console.log(`[TG Bot] Hard-deleted blocked user ${platformId} (${user?.name}, userId: ${userId})`);
+      }
+
       blockedCounter.count += 1;
       const info: RemovedUserInfo = {
         name: user?.name ?? 'Unknown',
         platformId,
-        userId: account.userId,
+        userId,
         contacts,
       };
       blockedCounter.removed.push(info);
-      console.log(`[TG Bot] Hard-deleted blocked user ${platformId} (${info.name}, userId: ${account.userId})`);
       return info;
     } else {
-      // No user found — just clean up orphaned platform account
+      // No user found — just clean up orphaned records
       const deleted = await db.platformAccount.deleteMany({
         where: { platform: 'TELEGRAM', platformId },
       });
+      await db.botStart.deleteMany({ where: { chatId: platformId } });
       if (deleted.count > 0) blockedCounter.count += deleted.count;
-      console.log(`[TG Bot] Removed orphaned platform account ${platformId}`);
+      console.log(`[TG Bot] Removed orphaned platform account & botStart ${platformId}`);
       return null;
     }
   } catch (err) {
