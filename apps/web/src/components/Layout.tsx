@@ -6,7 +6,7 @@ import { Home, Bell, Users, Settings, HelpCircle } from 'lucide-react';
 import { trpc } from '../lib/trpc';
 import { cn } from '../lib/utils';
 import { ChatAssistant } from './ChatAssistant';
-import { SkillsPopup } from './SkillsPopup';
+// import { SkillsPopup } from './SkillsPopup'; // temporarily hidden
 import { useGraphSync } from '../hooks/useGraphSync';
 import { isTelegramWebApp, getTGThemeParams, onThemeChanged } from '@so/tg-adapter';
 import { useTelegramHaptics } from '../hooks/useTelegram';
@@ -97,7 +97,7 @@ export function Layout() {
 
       {/* AI Chat Assistant */}
       <ChatAssistant />
-      <SkillsPopup />
+      {/* <SkillsPopup /> temporarily hidden */}
 
       <nav className={cn("fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 flex justify-around items-center h-16 z-50", chatPanelOpen && "hidden")}>
         {navItems.map((item) => {
