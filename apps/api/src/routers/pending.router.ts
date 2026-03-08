@@ -115,16 +115,17 @@ export const pendingRouter = router({
         data: { fromUserId: ctx.userId, toUserId: input.targetUserId, createdAt: new Date() },
       });
 
-      const sender = await ctx.db.user.findUnique({
-        where: { id: ctx.userId },
-        select: { name: true, platformAccounts: { where: { platform: 'TELEGRAM' }, select: { platformId: true }, take: 1 } },
-      });
-      let senderTgUsername: string | undefined;
-      if (sender?.platformAccounts?.[0]?.platformId) {
-        const bs = await ctx.db.botStart.findUnique({ where: { chatId: sender.platformAccounts[0].platformId }, select: { username: true } });
-        senderTgUsername = bs?.username || undefined;
-      }
-      sendPendingNotification(ctx.db, input.targetUserId, 'new', sender?.name || '', senderTgUsername).catch(() => {});
+      const [sender, senderTgContact] = await Promise.all([
+        ctx.db.user.findUnique({
+          where: { id: ctx.userId },
+          select: { name: true },
+        }),
+        ctx.db.userContact.findUnique({
+          where: { userId_type: { userId: ctx.userId, type: 'telegram' } },
+          select: { value: true },
+        }),
+      ]);
+      sendPendingNotification(ctx.db, input.targetUserId, 'new', sender?.name || '', senderTgContact?.value || undefined).catch(() => {});
 
       return { success: true };
     }),
