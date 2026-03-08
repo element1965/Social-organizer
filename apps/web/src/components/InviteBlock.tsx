@@ -70,15 +70,6 @@ export function InviteBlock({ id }: InviteBlockProps) {
     setSharing(false);
   };
 
-  const flipButton = (
-    <button
-      onClick={(e) => { e.stopPropagation(); setFlipped(!flipped); }}
-      className="absolute top-0 right-0 p-1.5 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors z-10"
-      title={flipped ? t('invite.showWebLink') : t('invite.showBotLink')}
-    >
-      <RefreshCw className="w-4 h-4 text-gray-400 dark:text-gray-500" />
-    </button>
-  );
 
   return (
     <>
@@ -96,16 +87,22 @@ export function InviteBlock({ id }: InviteBlockProps) {
 
     <Card id={id}>
       <CardContent className="py-3">
-        <div className="flex items-center gap-2 mb-2">
+        <div className="flex items-center justify-between mb-2">
           <span className="text-sm font-semibold text-gray-900 dark:text-white">{t('network.invite')}</span>
+          <button
+            onClick={() => setFlipped(!flipped)}
+            className="p-1 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+            title={flipped ? t('invite.showWebLink') : t('invite.showBotLink')}
+          >
+            <RefreshCw className="w-4 h-4 text-gray-400 dark:text-gray-500" />
+          </button>
         </div>
 
         <div className="flip-container">
           <div className={`flip-inner relative ${flipped ? 'flipped' : ''}`}>
             {/* ===== FRONT: QR code + website link ===== */}
             <div className={`flip-front ${flipped ? 'absolute top-0 left-0 w-full' : ''}`}>
-              <div className="relative">
-                {flipButton}
+              <div>
                 <div className="flex flex-col items-center gap-2">
                   {/* QR code — tap to enlarge */}
                   <button onClick={() => setQrModalOpen(true)} className="p-2 bg-white rounded-lg hover:shadow-md transition-shadow cursor-pointer">
@@ -147,8 +144,7 @@ export function InviteBlock({ id }: InviteBlockProps) {
 
             {/* ===== BACK: Bot link + slug editor ===== */}
             <div className={`flip-back ${flipped ? '' : 'absolute top-0 left-0 w-full'}`}>
-              <div className="relative" onClick={(e) => e.stopPropagation()}>
-                {flipButton}
+              <div onClick={(e) => e.stopPropagation()}>
                 <div className="space-y-2">
                   <p className="text-xs text-gray-600 dark:text-gray-300 pr-8">
                     {t('invite.botLinkHint')}
