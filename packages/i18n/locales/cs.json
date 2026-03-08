@@ -412,6 +412,7 @@
     "slugDesc": "Toto je vaše osobní ID odkazu pro pozvánky. NENÍ to samotná pozvánka — neposílejte ho lidem. K pozvání použijte odkazy výše.",
     "shareText": "Toto je osobní pozvánka od {{name}} do kruhu jeho blízkých přátel",
     "share": "Sdílet",
+    "copyLink": "Kopírovat odkaz",
     "expand": "show URL",
     "showQr": "zobrazit QR"
   },

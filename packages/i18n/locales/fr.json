@@ -390,6 +390,7 @@
     "slugDesc": "Ceci est votre identifiant de lien personnel pour les URL d'invitation. Ce N'EST PAS une invitation en soi — ne l'envoyez pas aux gens. Utilisez les liens ci-dessus pour inviter quelqu'un.",
     "shareText": "Ceci est une invitation personnelle de {{name}} dans son cercle d'amis proches",
     "share": "Partager",
+    "copyLink": "Copier le lien",
     "expand": "afficher URL",
     "showQr": "afficher QR"
   },

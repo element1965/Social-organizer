@@ -412,6 +412,7 @@
     "slugDesc": "Bu, davet URL'leri için kişisel bağlantı kimliğinizdir. Bu bir davet DEĞİLDİR — insanlara göndermeyin. Birini davet etmek için yukarıdaki bağlantıları kullanın.",
     "shareText": "Bu {{name}} tarafından yakın arkadaş çevresine kişisel bir davettir",
     "share": "Paylaş",
+    "copyLink": "Bağlantıyı kopyala",
     "expand": "URL göster",
     "showQr": "QR göster"
   },

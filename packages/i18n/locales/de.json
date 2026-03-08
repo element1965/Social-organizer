@@ -390,6 +390,7 @@
     "slugDesc": "Dies ist Ihre persönliche Link-ID für Einladungs-URLs. Es ist KEINE Einladung an sich — senden Sie es nicht an Leute. Verwenden Sie die obigen Links, um jemanden einzuladen.",
     "shareText": "Dies ist eine persönliche Einladung von {{name}} in den Kreis seiner engen Freunde",
     "share": "Teilen",
+    "copyLink": "Link kopieren",
     "expand": "URL anzeigen",
     "showQr": "QR anzeigen"
   },
