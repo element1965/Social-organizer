@@ -5,8 +5,8 @@ import { Check, Pencil, Share2, X } from 'lucide-react';
 import { trpc } from '../lib/trpc';
 import { useAuth } from '../hooks/useAuth';
 import { buildWebInviteUrl, buildBotInviteUrl } from '../lib/inviteUrl';
-import { shareInviteLink } from '../lib/shareInvite';
 import { Card, CardContent } from './ui/card';
+import { ShareSheet } from './ShareSheet';
 
 interface InviteBlockProps {
   id?: string;
@@ -22,8 +22,7 @@ export function InviteBlock({ id, variant = 'full' }: InviteBlockProps) {
 
   const [copiedWeb, setCopiedWeb] = useState(false);
   const [copiedBot, setCopiedBot] = useState(false);
-  const [sharing, setSharing] = useState(false);
-  const [shared, setShared] = useState(false);
+  const [shareSheetOpen, setShareSheetOpen] = useState(false);
   const [qrModalOpen, setQrModalOpen] = useState(false);
   const [editingSlug, setEditingSlug] = useState(false);
   const [slugValue, setSlugValue] = useState('');
@@ -51,25 +50,7 @@ export function InviteBlock({ id, variant = 'full' }: InviteBlockProps) {
     setTimeout(() => setCopiedBot(false), 2500);
   };
 
-  const handleShare = async () => {
-    if (sharing) return;
-    setSharing(true);
-    try {
-      const result = await shareInviteLink({
-        url: webInviteUrl,
-        userName: me?.name || '',
-        t,
-      });
-      if (result === 'copied') {
-        setCopiedWeb(true);
-        setTimeout(() => setCopiedWeb(false), 2500);
-      } else {
-        setShared(true);
-        setTimeout(() => setShared(false), 2500);
-      }
-    } catch { /* ignore */ }
-    setSharing(false);
-  };
+  const shareText = t('invite.shareText', { name: me?.name || '' });
 
 
   // --- Actions: link + share button ---
@@ -87,21 +68,28 @@ export function InviteBlock({ id, variant = 'full' }: InviteBlockProps) {
 
       {/* Share button */}
       <button
-        onClick={handleShare}
-        disabled={sharing}
-        className="w-full flex items-center justify-center gap-2 py-2 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white rounded-lg transition-colors"
+        onClick={() => setShareSheetOpen(true)}
+        className="w-full flex items-center justify-center gap-2 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
       >
         <Share2 className="w-4 h-4" />
         <span className="text-sm font-semibold">{t('invite.share')}</span>
       </button>
 
       {/* Copied banner */}
-      {(copiedWeb || shared) && (
+      {copiedWeb && (
         <div className="w-full flex items-center justify-center gap-1.5 py-1.5 bg-green-50 dark:bg-green-950/40 rounded-lg border border-green-200 dark:border-green-800 animate-fade-in">
           <Check className="w-4 h-4 text-green-500" />
           <span className="text-xs font-semibold text-green-600 dark:text-green-400">{t('invite.copied')}</span>
         </div>
       )}
+
+      {/* Share sheet */}
+      <ShareSheet
+        open={shareSheetOpen}
+        onClose={() => setShareSheetOpen(false)}
+        url={webInviteUrl}
+        shareText={shareText}
+      />
     </div>
   );
 

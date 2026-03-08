@@ -181,14 +181,18 @@ export function MyNetworkPage() {
                 const colors = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899'];
                 const color = colors[(depthNum - 1) % colors.length];
 
+                // Check if there's a visible previous item before expanded
+                const hasPrevSticky = expandedDepth !== null && depthNum === expandedDepth && idx > 0;
+                const prevStickyHeight = 50; // approx height of collapsed item
+
                 return (
                   <div
                     key={depth}
-                    className={`border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden bg-white dark:bg-gray-900 ${idx > 0 ? 'mt-2' : ''}`}
+                    className={`border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-900 ${idx > 0 ? 'mt-2' : ''} ${isExpanded ? '' : 'overflow-hidden'}`}
                     style={
                       expandedDepth !== null && depthNum < expandedDepth
                         ? depthNum === expandedDepth - 1
-                          ? { position: 'sticky', top: 0, zIndex: 10, boxShadow: '0 4px 12px rgba(0,0,0,0.15)' }
+                          ? { position: 'sticky', top: 0, zIndex: 11, boxShadow: '0 4px 12px rgba(0,0,0,0.15)' }
                           : { display: 'none' }
                         : expandedDepth !== null && depthNum > expandedDepth
                           ? depthNum === expandedDepth + 1
@@ -199,7 +203,8 @@ export function MyNetworkPage() {
                   >
                     <button
                       onClick={() => toggleDepth(depthNum)}
-                      className="w-full p-3 hover:bg-gray-50 dark:hover:bg-gray-800/50"
+                      className={`w-full p-3 hover:bg-gray-50 dark:hover:bg-gray-800/50 bg-white dark:bg-gray-900 ${isExpanded ? 'border-b border-gray-200 dark:border-gray-700' : ''}`}
+                      style={isExpanded ? { position: 'sticky', top: hasPrevSticky ? prevStickyHeight : 0, zIndex: 12 } : undefined}
                     >
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
@@ -223,7 +228,7 @@ export function MyNetworkPage() {
                     </button>
 
                     {isExpanded && depthUsers.length > 0 && (
-                      <div className="border-t border-gray-200 dark:border-gray-700">
+                      <div>
                         {depthUsers.map((user: any) => {
                           const isRecent = user.connectedAt && (Date.now() - new Date(user.connectedAt).getTime()) < 24 * 60 * 60 * 1000;
                           return (
