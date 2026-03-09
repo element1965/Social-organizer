@@ -40,7 +40,6 @@ export function SettingsPage() {
     if (debounceTimers.current[type]) clearTimeout(debounceTimers.current[type]);
     debounceTimers.current[type] = setTimeout(() => {
       if (!contacts) return;
-      if (validateContact(type, value)) return; // skip save if invalid
       const updates = contacts.map(c => ({
         type: c.type,
         value: type === c.type ? value : (contactValues[c.type] ?? c.value),
