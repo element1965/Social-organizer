@@ -13,7 +13,7 @@ import { Progress } from '../components/ui/progress';
 import { Spinner } from '../components/ui/spinner';
 import { Avatar } from '../components/ui/avatar';
 import { MIN_CONNECTIONS_TO_CREATE } from '@so/shared';
-import { AlertTriangle, Users, ArrowRight, PlusCircle, Wallet, ShieldAlert, UserPlus, X, HandHeart } from 'lucide-react';
+import { AlertTriangle, Users, ArrowRight, PlusCircle, Wallet, ShieldAlert, UserPlus, X, HandHeart, ChevronDown, ChevronUp } from 'lucide-react';
 import { useNicknames } from '../hooks/useNicknames';
 
 export function CreateCollectionPage() {
@@ -23,6 +23,7 @@ export function CreateCollectionPage() {
   const [showEntryWarning, setShowEntryWarning] = useState(false);
   const [showInvitePopup, setShowInvitePopup] = useState(false);
   const [showNotEnough, setShowNotEnough] = useState(false);
+  const [showChatHelp, setShowChatHelp] = useState(false);
 
   const { data: me } = trpc.user.me.useQuery();
   const { data: helpStats } = trpc.stats.help.useQuery(undefined, { refetchInterval: 60000 });
@@ -62,11 +63,21 @@ export function CreateCollectionPage() {
   const amountInUSD = inputCurrency === 'USD' ? Number(amount) : (preview?.result ?? 0);
   const isLargeAmount = amountInUSD > 10000;
 
+  const normalizeChatLink = (link: string): string => {
+    const trimmed = link.trim();
+    if (/^[a-z0-9.-]+\.[a-z]{2,}/i.test(trimmed) && !trimmed.startsWith('http')) {
+      return `https://${trimmed}`;
+    }
+    return trimmed;
+  };
+
   const validate = () => {
     const e: Record<string, string> = {};
     const num = Number(amount);
     if (!num || num < 10) e.amount = t('create.minAmount');
-    try { new URL(chatLink); } catch { e.chatLink = t('create.invalidUrl'); }
+    const normalized = normalizeChatLink(chatLink);
+    try { new URL(normalized); } catch { e.chatLink = t('create.invalidUrl'); }
+    if (!e.chatLink && normalized !== chatLink) setChatLink(normalized);
     setErrors(e);
     return Object.keys(e).length === 0;
   };
@@ -172,7 +183,29 @@ export function CreateCollectionPage() {
             </div>
           )}
 
-          <Input id="chatLink" label={t('create.chatLink')} hint={t('hints.collectionChatLink')} type="url" placeholder="https://t.me/..." value={chatLink} onChange={(e) => setChatLink(e.target.value)} error={errors.chatLink} />
+          <div className="space-y-2">
+            <Input id="chatLink" label={t('create.chatLink')} hint={t('hints.collectionChatLink')} type="url" placeholder="https://t.me/..." value={chatLink} onChange={(e) => setChatLink(e.target.value)} error={errors.chatLink} />
+            <button
+              type="button"
+              onClick={() => setShowChatHelp(!showChatHelp)}
+              className="flex items-center gap-1 text-xs text-blue-600 dark:text-blue-400 hover:underline"
+            >
+              {showChatHelp ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
+              {t('create.chatHelpToggle')}
+            </button>
+            {showChatHelp && (
+              <div className="p-3 bg-blue-50 dark:bg-blue-950/30 rounded-lg text-xs text-gray-700 dark:text-gray-300 space-y-2">
+                <p className="font-semibold text-gray-900 dark:text-white">{t('create.chatHelpTitle')}</p>
+                <ol className="list-decimal list-inside space-y-1">
+                  <li>{t('create.chatHelpStep1')}</li>
+                  <li>{t('create.chatHelpStep2')}</li>
+                  <li>{t('create.chatHelpStep3')}</li>
+                  <li>{t('create.chatHelpStep4')}</li>
+                </ol>
+                <p className="text-gray-500 dark:text-gray-400">{t('create.chatHelpNote')}</p>
+              </div>
+            )}
+          </div>
 
           {networkStats && amountInUSD >= 10 && (
             <div className="p-3 bg-blue-50 dark:bg-blue-950/30 rounded-lg flex items-center gap-2">
