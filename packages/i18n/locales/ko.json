@@ -88,8 +88,8 @@
     "contactsFilled": "입력됨: {{count}}/2",
     "hintBudget": "Set your monthly support amount here — this shows how much you're ready to help",
     "hintSettings": "Tap «Settings» to add extra contacts",
-    "hintContactsNeeded": "Add {{count}} more contact(s) in Settings so friends can reach you",
-    "noTgUsername": "You don't have a Telegram username — add one in Telegram settings, it counts as a contact"
+    "hintContactsNeeded": "설정에서 연락처를 {{count}}개 더 추가하세요",
+    "noTgUsername": "Telegram 사용자 이름이 없습니다 — Telegram 설정에서 추가하세요"
   },
   "nav": {
     "home": "홈",
@@ -214,6 +214,13 @@
     "submit": "신호 보내기",
     "minAmount": "최소 10",
     "invalidUrl": "잘못된 URL",
+    "chatHelpToggle": "Telegram 채팅은 어떻게 만드나요?",
+    "chatHelpTitle": "채팅 링크를 얻는 방법:",
+    "chatHelpStep1": "Telegram 열기 → 연필 아이콘(새 메시지) 탭 → \"새 그룹\"",
+    "chatHelpStep2": "연락처를 최소 한 명 추가(나중에 삭제 가능) → 그룹 이름 지정",
+    "chatHelpStep3": "상단의 그룹 이름 탭 → \"링크로 초대\"",
+    "chatHelpStep4": "링크를 복사하여 여기에 붙여넣기",
+    "chatHelpNote": "개인 프로필 링크(t.me/username)나 다른 메신저의 채팅 링크도 붙여넣을 수 있습니다.",
     "networkReach": "핸드셰이크 체인을 통해 최대 {{count}}명에게 신호가 전달됩니다",
     "confirmTitle": "모금 생성 확인",
     "confirmText": "이 금액이 정말 필요한지 확인하세요. 도움 신호는 수십 명에게 보여집니다 — 책임감 있게 사용하세요.",

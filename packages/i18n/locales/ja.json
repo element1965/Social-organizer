@@ -88,8 +88,8 @@
     "contactsFilled": "入力済み: {{count}}/2",
     "hintBudget": "Set your monthly support amount here — this shows how much you're ready to help",
     "hintSettings": "Tap «Settings» to add extra contacts",
-    "hintContactsNeeded": "Add {{count}} more contact(s) in Settings so friends can reach you",
-    "noTgUsername": "You don't have a Telegram username — add one in Telegram settings, it counts as a contact"
+    "hintContactsNeeded": "設定であと{{count}}件の連絡先を追加してください",
+    "noTgUsername": "Telegramのユーザー名がありません — Telegramの設定で追加してください"
   },
   "nav": {
     "home": "ホーム",
@@ -214,6 +214,13 @@
     "submit": "シグナルを送る",
     "minAmount": "最低 10",
     "invalidUrl": "無効なURL",
+    "chatHelpToggle": "Telegramチャットの作成方法は？",
+    "chatHelpTitle": "チャットリンクの取得方法：",
+    "chatHelpStep1": "Telegramを開く → 鉛筆アイコン（新規メッセージ）をタップ → \"新しいグループ\"",
+    "chatHelpStep2": "連絡先を少なくとも1人追加（後で削除可能） → グループ名を付ける",
+    "chatHelpStep3": "上部のグループ名をタップ → \"リンクで招待\"",
+    "chatHelpStep4": "リンクをコピーしてここに貼り付け",
+    "chatHelpNote": "個人プロフィールへのリンク（t.me/username）や他のメッセンジャーのチャットリンクも貼り付けられます。",
     "networkReach": "あなたのシグナルはハンドシェイクチェーンを通じて最大 {{count}} 人に届きます",
     "confirmTitle": "募集の作成を確認",
     "confirmText": "本当にこの金額が必要か確認してください。援助シグナルは数十人に表示されます — 責任を持って使用してください。",

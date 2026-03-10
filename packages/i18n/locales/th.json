@@ -88,8 +88,8 @@
     "contactsFilled": "กรอกแล้ว: {{count}}/2",
     "hintBudget": "Set your monthly support amount here — this shows how much you're ready to help",
     "hintSettings": "Tap «Settings» to add extra contacts",
-    "hintContactsNeeded": "Add {{count}} more contact(s) in Settings so friends can reach you",
-    "noTgUsername": "You don't have a Telegram username — add one in Telegram settings, it counts as a contact"
+    "hintContactsNeeded": "เพิ่มผู้ติดต่ออีก {{count}} รายในการตั้งค่า",
+    "noTgUsername": "คุณไม่มีชื่อผู้ใช้ Telegram — เพิ่มในการตั้งค่า Telegram"
   },
   "nav": {
     "home": "หน้าแรก",
@@ -214,6 +214,13 @@
     "submit": "ส่งสัญญาณ",
     "minAmount": "ขั้นต่ำ 10",
     "invalidUrl": "URL ไม่ถูกต้อง",
+    "chatHelpToggle": "จะสร้างแชท Telegram ได้อย่างไร?",
+    "chatHelpTitle": "วิธีรับลิงก์แชท:",
+    "chatHelpStep1": "เปิด Telegram → แตะไอคอนดินสอ (ข้อความใหม่) → \"กลุ่มใหม่\"",
+    "chatHelpStep2": "เพิ่มผู้ติดต่ออย่างน้อยหนึ่งคน (สามารถลบได้ภายหลัง) → ตั้งชื่อกลุ่ม",
+    "chatHelpStep3": "แตะชื่อกลุ่มด้านบน → \"เชิญผ่านลิงก์\"",
+    "chatHelpStep4": "คัดลอกลิงก์แล้ววางที่นี่",
+    "chatHelpNote": "คุณยังสามารถวางลิงก์ไปยังโปรไฟล์ส่วนตัวของคุณ (t.me/username) หรือแชทของแอปส่งข้อความอื่นได้",
     "networkReach": "สัญญาณของคุณจะไปถึงคนสูงสุด {{count}} คนผ่านห่วงโซ่การจับมือ",
     "confirmTitle": "ยืนยันการสร้างการระดมทุน",
     "confirmText": "ตรวจสอบให้แน่ใจว่าคุณต้องการจำนวนเงินนี้จริงๆ สัญญาณขอความช่วยเหลือจะถูกเห็นโดยผู้คนหลายสิบคน — ใช้อย่างรับผิดชอบ",

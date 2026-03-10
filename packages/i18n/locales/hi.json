@@ -88,8 +88,8 @@
     "contactsFilled": "भरा गया: {{count}}/2",
     "hintBudget": "Set your monthly support amount here — this shows how much you're ready to help",
     "hintSettings": "Tap «Settings» to add extra contacts",
-    "hintContactsNeeded": "Add {{count}} more contact(s) in Settings so friends can reach you",
-    "noTgUsername": "You don't have a Telegram username — add one in Telegram settings, it counts as a contact"
+    "hintContactsNeeded": "सेटिंग्स में {{count}} और संपर्क जोड़ें",
+    "noTgUsername": "आपके पास Telegram उपयोगकर्ता नाम नहीं है — Telegram सेटिंग्स में जोड़ें"
   },
   "nav": {
     "home": "होम",
@@ -214,6 +214,13 @@
     "submit": "संकेत भेजें",
     "minAmount": "न्यूनतम 10",
     "invalidUrl": "अमान्य URL",
+    "chatHelpToggle": "Telegram चैट कैसे बनाएं?",
+    "chatHelpTitle": "चैट लिंक कैसे प्राप्त करें:",
+    "chatHelpStep1": "Telegram खोलें → पेंसिल आइकन (नया संदेश) पर टैप करें → \"नया ग्रुप\"",
+    "chatHelpStep2": "कम से कम एक संपर्क जोड़ें (बाद में हटा सकते हैं) → ग्रुप का नाम रखें",
+    "chatHelpStep3": "ऊपर ग्रुप के नाम पर टैप करें → \"लिंक से आमंत्रित करें\"",
+    "chatHelpStep4": "लिंक कॉपी करें और यहाँ पेस्ट करें",
+    "chatHelpNote": "आप अपनी व्यक्तिगत प्रोफ़ाइल (t.me/username) या किसी अन्य मैसेंजर के चैट का लिंक भी पेस्ट कर सकते हैं।",
     "networkReach": "आपका संकेत हैंडशेक श्रृंखलाओं के माध्यम से अधिकतम {{count}} लोगों तक पहुंचेगा",
     "confirmTitle": "संग्रह निर्माण की पुष्टि करें",
     "confirmText": "सुनिश्चित करें कि आपको वास्तव में इस राशि की आवश्यकता है। सहायता संकेत दर्जनों लोगों द्वारा देखा जाएगा — इसे जिम्मेदारी से उपयोग करें।",
