@@ -162,7 +162,9 @@ export function CollectionPage() {
             <div className="space-y-2">
               <div className="flex gap-2">
                 <div className="flex-1">
-                  <Input type="number" min={1} placeholder={t('collection.amountPlaceholder')} hint={t('hints.intentionAmount')} value={amount} onChange={(e) => setAmount(e.target.value)} error={error} />
+                  <Input type="number" min={1} placeholder={t('collection.amountPlaceholder')} hint={t('hints.intentionAmount')} value={amount} onChange={(e) => setAmount(e.target.value)} error={error}
+                    onFocus={(e) => { setTimeout(() => e.target.scrollIntoView({ behavior: 'smooth', block: 'center' }), 300); }}
+                  />
                 </div>
                 <div className="w-28">
                   <Select
@@ -249,8 +251,8 @@ export function CollectionPage() {
                             )}
                           </div>
                           {canEdit && (
-                            <button onClick={startEdit} className="p-1 text-gray-400 hover:text-gray-600 dark:text-gray-300 dark:hover:text-gray-300" title={t('collection.editAmount')}>
-                              <Pencil className="w-3.5 h-3.5" />
+                            <button onClick={(e) => { e.stopPropagation(); startEdit(); }} className="p-2.5 -m-1.5 text-gray-400 hover:text-gray-600 dark:text-gray-300 dark:hover:text-gray-100 active:text-blue-500" title={t('collection.editAmount')}>
+                              <Pencil className="w-4 h-4" />
                             </button>
                           )}
                         </div>
@@ -260,7 +262,9 @@ export function CollectionPage() {
                       <div className="mt-2 space-y-2 pl-8">
                         <div className="flex gap-2">
                           <div className="flex-1">
-                            <Input type="number" min={1} value={editAmount} onChange={(e) => setEditAmount(e.target.value)} error={editError} />
+                            <Input type="number" min={1} value={editAmount} onChange={(e) => setEditAmount(e.target.value)} error={editError}
+                              onFocus={(e) => { setTimeout(() => e.target.scrollIntoView({ behavior: 'smooth', block: 'center' }), 300); }}
+                            />
                           </div>
                           <div className="w-28">
                             <Select
