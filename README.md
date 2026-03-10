@@ -173,10 +173,27 @@ FIREBASE_SERVICE_ACCOUNT={"type":"service_account",...}  # FCM service account J
 ## Deployment
 
 - **Railway:** Auto-deploy on `git push` to main
-- **URL:** https://social-organizer-production.up.railway.app
+- **URL:** https://www.orginizer.com
 - **Healthcheck:** /health
 - **Services:** PostgreSQL 17, Redis 7, Fastify API
 - **GitHub:** https://github.com/element1965/Social-organizer
+
+### Google Play (Android)
+
+Capacitor-based Android wrapper (`apps/web/android/`). The app loads the production web URL (`https://www.orginizer.com`).
+
+```bash
+# Build release AAB (requires Android Studio installed)
+export JAVA_HOME="/c/Program Files/Android/Android Studio/jbr"
+cd apps/web/android && ./gradlew bundleRelease
+```
+
+Output: `apps/web/android/app/build/outputs/bundle/release/app-release.aab`
+
+- **Package:** `com.socialorganizer.app`
+- **Keystore:** `keystore/release.jks`
+- **Version:** bump `versionCode` and `versionName` in `apps/web/android/app/build.gradle`
+- **Upload:** manually via Google Play Console
 
 ## Web Frontend (apps/web)
 
