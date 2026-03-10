@@ -98,8 +98,8 @@
     "contactsFilled": "מלא: {{count}}/2",
     "hintBudget": "Set your monthly support amount here — this shows how much you're ready to help",
     "hintSettings": "Tap «Settings» to add extra contacts",
-    "hintContactsNeeded": "Add {{count}} more contact(s) in Settings so friends can reach you",
-    "noTgUsername": "You don't have a Telegram username — add one in Telegram settings, it counts as a contact"
+    "hintContactsNeeded": "הוסף עוד {{count}} איש(י) קשר בהגדרות",
+    "noTgUsername": "אין לך שם משתמש Telegram — הוסף אחד בהגדרות Telegram"
   },
   "nav": {
     "home": "בית",
@@ -224,6 +224,13 @@
     "submit": "שלח אות",
     "minAmount": "מינימום 10",
     "invalidUrl": "כתובת URL לא תקינה",
+    "chatHelpToggle": "איך ליצור צ'אט Telegram?",
+    "chatHelpTitle": "איך להשיג קישור לצ'אט:",
+    "chatHelpStep1": "פתחו את Telegram ← לחצו על סמל העיפרון (הודעה חדשה) ← \"קבוצה חדשה\"",
+    "chatHelpStep2": "הוסיפו לפחות איש קשר אחד (תוכלו להסיר אותו מאוחר יותר) ← תנו שם לקבוצה",
+    "chatHelpStep3": "לחצו על שם הקבוצה למעלה ← \"הזמנה באמצעות קישור\"",
+    "chatHelpStep4": "העתיקו את הקישור והדביקו אותו כאן",
+    "chatHelpNote": "אפשר גם להדביק קישור לפרופיל האישי שלכם (t.me/username) או לצ'אט של כל מסנג'ר אחר.",
     "networkReach": "הסיגנל שלך יגיע עד {{count}} אנשים דרך שרשראות לחיצות יד",
     "confirmTitle": "אישור יצירת גיוס",
     "confirmText": "ודא שאתה באמת צריך סכום זה. אות העזרה ייראה על ידי עשרות אנשים — השתמש בו באחריות.",

@@ -88,8 +88,8 @@
     "contactsFilled": "已填写: {{count}}/2",
     "hintBudget": "Set your monthly support amount here — this shows how much you're ready to help",
     "hintSettings": "Tap «Settings» to add extra contacts",
-    "hintContactsNeeded": "Add {{count}} more contact(s) in Settings so friends can reach you",
-    "noTgUsername": "You don't have a Telegram username — add one in Telegram settings, it counts as a contact"
+    "hintContactsNeeded": "请在设置中再添加{{count}}个联系方式",
+    "noTgUsername": "您没有Telegram用户名——请在Telegram设置中添加"
   },
   "nav": {
     "home": "首页",
@@ -214,6 +214,13 @@
     "submit": "发送信号",
     "minAmount": "最少 10",
     "invalidUrl": "无效的链接",
+    "chatHelpToggle": "如何创建 Telegram 群聊？",
+    "chatHelpTitle": "如何获取聊天链接：",
+    "chatHelpStep1": "打开 Telegram → 点击铅笔图标（新消息）→ \"新建群组\"",
+    "chatHelpStep2": "至少添加一个联系人（之后可以移除）→ 为群组命名",
+    "chatHelpStep3": "点击顶部的群组名称 → \"通过链接邀请\"",
+    "chatHelpStep4": "复制链接并粘贴到这里",
+    "chatHelpNote": "你也可以粘贴个人主页链接（t.me/username）或任何其他即时通讯工具的聊天链接。",
     "networkReach": "你的信号将通过握手链传递给最多 {{count}} 人",
     "confirmTitle": "确认创建募集",
     "confirmText": "请确认您确实需要这笔金额。求助信号将被数十人看到——请负责任地使用。",
