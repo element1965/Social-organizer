@@ -39,17 +39,6 @@ export const obligationRouter = router({
         },
       });
 
-      // Decrease user's remaining budget if they have one
-      const user = await ctx.db.user.findUnique({ where: { id: ctx.userId } });
-      if (user?.remainingBudget != null && user.remainingBudget > 0) {
-        await ctx.db.user.update({
-          where: { id: ctx.userId },
-          data: {
-            remainingBudget: Math.max(0, user.remainingBudget - amountUSD),
-          },
-        });
-      }
-
       // Check if collection should be blocked (only if target amount is set)
       if (collection.amount != null) {
         const totalAmount = await ctx.db.obligation.aggregate({
@@ -173,8 +162,6 @@ export const obligationRouter = router({
         newAmountUSD = await convertToUSD(input.amount, input.inputCurrency);
       }
 
-      const oldAmountUSD = obligation.amount;
-
       // Update obligation
       const updated = await ctx.db.obligation.update({
         where: { id: input.obligationId },
@@ -184,18 +171,6 @@ export const obligationRouter = router({
           originalCurrency: input.inputCurrency,
         },
       });
-
-      // Adjust user's remaining budget
-      const user = await ctx.db.user.findUnique({ where: { id: ctx.userId } });
-      if (user?.remainingBudget != null) {
-        const budgetDelta = oldAmountUSD - newAmountUSD;
-        await ctx.db.user.update({
-          where: { id: ctx.userId },
-          data: {
-            remainingBudget: Math.max(0, user.remainingBudget + budgetDelta),
-          },
-        });
-      }
 
       // Recalculate collection block status
       const collection = obligation.collection;
