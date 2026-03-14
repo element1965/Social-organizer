@@ -343,8 +343,8 @@ export function LandingPage({ variant, inviteToken: inviteTokenProp }: { variant
           </div>
         </section>
 
-        {/* === Section: FAQ === */}
-        <LandingFaq variant={variant} />
+        {/* === Section: FAQ (hidden) === */}
+        {/* <LandingFaq variant={variant} /> */}
 
         {/* === Section 5: Download Apps === */}
         <section id="download" className="min-h-[50vh] flex flex-col items-center justify-center px-6 py-20">
