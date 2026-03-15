@@ -293,14 +293,10 @@ export async function processOnboardingReminder(_job: Job): Promise<void> {
         report += `\n\n📢 <b>Уведомления пригласившим</b>: ${inviterNotifySent} из ${inviterBotStarts.length}`;
       }
 
-      await sendTelegramMessage(SUPPORT_CHAT_ID, report).catch(() => {});
+      // Report disabled — no longer sending to support chat
     }
   } catch (err) {
     console.error('[Onboarding Reminder] CRASH:', err);
-    await sendTelegramMessage(
-      SUPPORT_CHAT_ID,
-      `❌ <b>Ошибка напоминаний об онбординге</b>: ${String(err).substring(0, 200)}`,
-    ).catch(() => {});
     throw err;
   }
 }
