@@ -2,7 +2,6 @@ import type { Job } from 'bullmq';
 import { getDb } from '@so/db';
 import {
   sendTelegramMessage,
-  SUPPORT_CHAT_ID,
   ONBOARDING_REMINDERS,
   BOT_START_REMINDERS,
   INVITER_NOTIFY_MESSAGES,
@@ -272,29 +271,6 @@ export async function processOnboardingReminder(_job: Job): Promise<void> {
 
     // ─── Report ───
     console.log(`[Onboarding Reminder] Done: botStart=${botStartSent}/${botStarts.length} (cleaned ${botStartCleaned}), onboarding=${onboardingSent}/${users.length}, inviterNotify=${inviterNotifySent}/${inviterBotStarts.length}`);
-    if (totalSent > 0) {
-      const levelLabel = ['1ч', '24ч', '72ч'];
-      const bsDetails = [0, 1, 2]
-        .filter((l) => botStartByLevel[l]!.length > 0)
-        .map((l) => `  ${levelLabel[l]}: ${botStartByLevel[l]!.length} (${botStartByLevel[l]!.join(', ')})`)
-        .join('\n');
-      const obDetails = [0, 1, 2]
-        .filter((l) => onboardingByLevel[l]!.length > 0)
-        .map((l) => `  ${levelLabel[l]}: ${onboardingByLevel[l]!.length} (${onboardingByLevel[l]!.join(', ')})`)
-        .join('\n');
-
-      let report = `🔔 <b>Напоминания об онбординге</b>\n\n`;
-      report += `📩 <b>/start без регистрации</b>: ${botStartSent} из ${botStarts.length}`;
-      if (botStartCleaned > 0) report += ` (зарегались: ${botStartCleaned})`;
-      if (bsDetails) report += `\n${bsDetails}`;
-      report += `\n\n📩 <b>Не завершили онбординг</b>: ${onboardingSent} из ${users.length}`;
-      if (obDetails) report += `\n${obDetails}`;
-      if (inviterNotifySent > 0) {
-        report += `\n\n📢 <b>Уведомления пригласившим</b>: ${inviterNotifySent} из ${inviterBotStarts.length}`;
-      }
-
-      // Report disabled — no longer sending to support chat
-    }
   } catch (err) {
     console.error('[Onboarding Reminder] CRASH:', err);
     throw err;
