@@ -1,7 +1,7 @@
 import { lazy, Suspense, useState, useRef, useEffect } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { ChevronDown, ChevronUp, ArrowDown, Languages, Github, ExternalLink, HelpCircle, Shield, Calculator, Globe } from 'lucide-react';
+import { ChevronDown, ChevronUp, Languages, Github, HelpCircle, Shield, Calculator, Globe } from 'lucide-react';
 import { languageNames } from '@so/i18n';
 import { useScrollProgress } from '../hooks/useScrollProgress';
 import { Logo } from '../components/Logo';
@@ -246,16 +246,25 @@ export function LandingPage({ variant, inviteToken: inviteTokenProp }: { variant
           <h1 className="text-5xl md:text-7xl font-bold text-white mb-4 tracking-tight">
             {variant === 'arvut' ? 'ערבות הדדית' : 'Social Organizer'}
           </h1>
-          <p className="text-gray-300 text-lg md:text-xl max-w-2xl mb-10 leading-relaxed">
+          <p className="text-gray-300 text-lg md:text-xl max-w-2xl mb-4 leading-relaxed">
             {t('landing.heroSubtitle')}
           </p>
+          <p className="text-gray-400 text-base md:text-lg max-w-2xl mb-3 leading-relaxed">
+            {t('landing.heroSupportingLine')}
+          </p>
+          <p className="text-gray-500 text-sm mb-10">
+            {t('landing.heroSmallLine')}
+          </p>
           <div className="flex flex-col sm:flex-row gap-4">
-            <button
-              onClick={() => document.getElementById('download')?.scrollIntoView({ behavior: 'smooth' })}
-              className="px-8 py-3 bg-teal-500 hover:bg-teal-400 text-white font-semibold rounded-xl transition-colors text-lg"
-            >
-              {t('landing.heroStart')}
-            </button>
+            <div className="flex flex-col items-center">
+              <button
+                onClick={() => document.getElementById('download')?.scrollIntoView({ behavior: 'smooth' })}
+                className="px-8 py-3 bg-teal-500 hover:bg-teal-400 text-white font-semibold rounded-xl transition-colors text-lg"
+              >
+                {t('landing.heroStart')}
+              </button>
+              <span className="text-gray-500 text-xs mt-2">{t('landing.heroMicrocopy')}</span>
+            </div>
             <button
               onClick={scrollToContent}
               className="px-8 py-3 bg-white/10 hover:bg-white/20 text-white font-semibold rounded-xl transition-colors text-lg backdrop-blur-sm border border-white/10"
@@ -346,16 +355,26 @@ export function LandingPage({ variant, inviteToken: inviteTokenProp }: { variant
         {/* === Section: FAQ (hidden) === */}
         {/* <LandingFaq variant={variant} /> */}
 
-        {/* === Section 5: Download Apps === */}
-        <section id="download" className="min-h-[50vh] flex flex-col items-center justify-center px-6 py-20">
-          <h2 className="text-2xl md:text-3xl font-bold text-white mb-8 text-center">
-            {t('landing.downloadTitle')}
-          </h2>
-
-          {/* Bouncing arrow pointing to Telegram */}
-          <div className="animate-bounce mb-4">
-            <ArrowDown className="text-red-500" size={32} />
+        {/* === Section: Works locally. Scales globally. === */}
+        <section className="flex flex-col items-center justify-center px-6 py-16">
+          <div className="max-w-3xl w-full">
+            <h2 className="text-3xl md:text-5xl font-bold text-white mb-8 text-center">
+              {t('landing.scaleTitle')}
+            </h2>
+            <p className="text-gray-300 text-base md:text-lg leading-relaxed text-center whitespace-pre-line">
+              {t('landing.scaleText')}
+            </p>
           </div>
+        </section>
+
+        {/* === Section: CTA + Download === */}
+        <section id="download" className="min-h-[50vh] flex flex-col items-center justify-center px-6 py-20">
+          <h2 className="text-3xl md:text-5xl font-bold text-white mb-4 text-center">
+            {t('landing.ctaTitle')}
+          </h2>
+          <p className="text-gray-400 text-base mb-8 text-center">
+            {t('landing.ctaSmallLine')}
+          </p>
 
           {/* Telegram — main CTA button */}
           <a
@@ -367,7 +386,7 @@ export function LandingPage({ variant, inviteToken: inviteTokenProp }: { variant
             <svg className="w-8 h-8 text-teal-400" viewBox="0 0 24 24" fill="currentColor">
               <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
             </svg>
-            <span className="text-teal-400 text-lg font-semibold">Telegram</span>
+            <span className="text-teal-400 text-lg font-semibold">{t('landing.ctaButton')}</span>
           </a>
 
           {/* Coming soon on all platforms */}
