@@ -483,7 +483,7 @@
   },
   "landing": {
     "openSourceBadge": "Avoin lähdekoodi. Ei-kaupallinen. Jo toiminnassa.",
-    "heroSubtitle": "Globaali koordinointikerros, joka perustuu todellisiin ihmisten välisiin yhteyksiin",
+    "heroSubtitle": "Globaali koordinointikerros,\njoka perustuu todellisiin ihmisten välisiin yhteyksiin",
     "heroSupportingLine": "Koordinoi keskinäistä tukea suoraan — ilman alustoja, kontrollia tai välittäjiä.",
     "heroSmallLine": "Avoin lähdekoodi. Ei-kaupallinen. Jo toiminnassa.",
     "heroStart": "Aloita",

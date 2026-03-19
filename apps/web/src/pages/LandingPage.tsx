@@ -246,14 +246,14 @@ export function LandingPage({ variant, inviteToken: inviteTokenProp }: { variant
           <h1 className="text-5xl md:text-7xl font-bold text-white mb-4 tracking-tight">
             {variant === 'arvut' ? 'ערבות הדדית' : 'Social Organizer'}
           </h1>
-          <p className="text-gray-300 text-lg md:text-xl max-w-2xl mb-4 leading-relaxed">
+          <p className="text-gray-300 text-lg md:text-xl max-w-2xl mb-3 leading-relaxed whitespace-pre-line">
             {t('landing.heroSubtitle')}
           </p>
-          <p className="text-gray-400 text-base md:text-lg max-w-2xl mb-3 leading-relaxed">
-            {t('landing.heroSupportingLine')}
+          <p className="text-gray-400 text-sm mb-1">
+            {t('landing.heroSmallLine')}
           </p>
           <p className="text-gray-500 text-sm mb-10">
-            {t('landing.heroSmallLine')}
+            {t('landing.scaleTitle')}
           </p>
           <div className="flex flex-col sm:flex-row gap-4">
             <div className="flex flex-col items-center">
