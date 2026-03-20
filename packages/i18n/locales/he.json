@@ -602,7 +602,7 @@
     "incomingCount": "{{count}} בקשות",
     "waitingApproval": "ממתין לאישור",
     "requestSent": "בקשה נשלחה",
-    "requestSentDesc": "ממתין לאישור הצד השני",
+    "requestSentDesc": "ממתין לאישור מ-{{name}}",
     "meetInPerson": "מומלץ להיפגש אישית",
     "accept": "אשר",
     "reject": "דחה",

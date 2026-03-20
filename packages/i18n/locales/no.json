@@ -547,7 +547,7 @@
     "incomingCount": "{{count}} forespørsler",
     "waitingApproval": "Venter på godkjenning",
     "requestSent": "Forespørsel sendt",
-    "requestSentDesc": "Venter på bekreftelse",
+    "requestSentDesc": "Venter på bekreftelse fra {{name}}",
     "meetInPerson": "Anbefalt å møtes personlig",
     "accept": "Godta",
     "reject": "Avslå",

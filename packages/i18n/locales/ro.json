@@ -547,7 +547,7 @@
     "incomingCount": "{{count}} cereri",
     "waitingApproval": "Așteaptă confirmare",
     "requestSent": "Cerere trimisă",
-    "requestSentDesc": "Așteaptă confirmarea",
+    "requestSentDesc": "Se așteaptă confirmarea de la {{name}}",
     "meetInPerson": "Recomandat întâlnirea personală",
     "accept": "Acceptă",
     "reject": "Respinge",

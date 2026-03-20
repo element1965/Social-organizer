@@ -547,7 +547,7 @@
     "incomingCount": "{{count}} demandes",
     "waitingApproval": "En attente de confirmation",
     "requestSent": "Demande envoyée",
-    "requestSentDesc": "En attente de confirmation",
+    "requestSentDesc": "En attente de confirmation de {{name}}",
     "meetInPerson": "Rencontre en personne recommandée",
     "accept": "Accepter",
     "reject": "Refuser",

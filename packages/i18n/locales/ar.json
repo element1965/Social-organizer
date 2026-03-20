@@ -547,7 +547,7 @@
     "incomingCount": "{{count}} طلبات",
     "waitingApproval": "بانتظار التأكيد",
     "requestSent": "تم إرسال الطلب",
-    "requestSentDesc": "بانتظار تأكيد الشخص الآخر",
+    "requestSentDesc": "في انتظار التأكيد من {{name}}",
     "meetInPerson": "يُنصح بالتعارف شخصياً",
     "accept": "قبول",
     "reject": "رفض",

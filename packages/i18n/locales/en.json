@@ -547,7 +547,7 @@
     "incomingCount": "{{count}} requests",
     "waitingApproval": "Waiting for approval",
     "requestSent": "Request sent",
-    "requestSentDesc": "Waiting for confirmation from the other person",
+    "requestSentDesc": "Waiting for confirmation from {{name}}",
     "meetInPerson": "We recommend meeting in person before accepting",
     "accept": "Accept",
     "reject": "Reject",

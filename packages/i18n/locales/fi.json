@@ -547,7 +547,7 @@
     "incomingCount": "{{count}} pyyntöä",
     "waitingApproval": "Odottaa hyväksyntää",
     "requestSent": "Pyyntö lähetetty",
-    "requestSentDesc": "Odottaa vahvistusta",
+    "requestSentDesc": "Odotetaan vahvistusta käyttäjältä {{name}}",
     "meetInPerson": "Suosittelemme tapaamista henkilökohtaisesti",
     "accept": "Hyväksy",
     "reject": "Hylkää",

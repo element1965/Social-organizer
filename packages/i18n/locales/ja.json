@@ -547,7 +547,7 @@
     "incomingCount": "{{count}}件のリクエスト",
     "waitingApproval": "承認待ち",
     "requestSent": "リクエスト送信済み",
-    "requestSentDesc": "相手の確認を待っています",
+    "requestSentDesc": "{{name}}からの確認を待っています",
     "meetInPerson": "承認前に直接会うことをお勧めします",
     "accept": "承認",
     "reject": "拒否",

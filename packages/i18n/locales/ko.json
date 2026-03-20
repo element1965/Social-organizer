@@ -547,7 +547,7 @@
     "incomingCount": "{{count}}개의 요청",
     "waitingApproval": "승인 대기 중",
     "requestSent": "요청 전송됨",
-    "requestSentDesc": "상대방의 확인을 기다리는 중",
+    "requestSentDesc": "{{name}}의 확인을 기다리는 중",
     "meetInPerson": "수락 전 직접 만나보시길 권장합니다",
     "accept": "수락",
     "reject": "거절",

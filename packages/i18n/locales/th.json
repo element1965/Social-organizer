@@ -547,7 +547,7 @@
     "incomingCount": "{{count}} คำขอ",
     "waitingApproval": "รอการอนุมัติ",
     "requestSent": "ส่งคำขอแล้ว",
-    "requestSentDesc": "รอการยืนยันจากอีกฝ่าย",
+    "requestSentDesc": "รอการยืนยันจาก {{name}}",
     "meetInPerson": "แนะนำให้พบปะด้วยตนเอง",
     "accept": "ยอมรับ",
     "reject": "ปฏิเสธ",

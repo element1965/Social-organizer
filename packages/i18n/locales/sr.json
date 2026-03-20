@@ -547,7 +547,7 @@
     "incomingCount": "{{count}} захтева",
     "waitingApproval": "Чека потврду",
     "requestSent": "Захтев послат",
-    "requestSentDesc": "Чека потврду друге стране",
+    "requestSentDesc": "Чека се потврда од {{name}}",
     "meetInPerson": "Препоручујемо лично упознавање",
     "accept": "Прихвати",
     "reject": "Одбиј",
