@@ -116,11 +116,19 @@ export const inviteRouter = router({
         const tgAccount = applicant.platformAccounts[0];
         if (tgAccount) {
           const WEB_APP_URL = process.env.WEB_APP_URL || 'https://www.orginizer.com';
-          const ctaText = '✅ Ты принял приглашение! Добавь один контакт — и ты в сети.';
-          const ctaBtnText = 'Открыть приложение';
           const userLang = applicant.language || 'en';
 
           (async () => {
+            const contactCount = await ctx.db.userContact.count({ where: { userId: ctx.userId } });
+            const missing = Math.max(0, 2 - contactCount);
+            let ctaText: string;
+            if (missing > 0) {
+              ctaText = `✅ Приглашение принято! Добавьте ещё ${missing} контакт(ов), чтобы завершить профиль.`;
+            } else {
+              ctaText = '✅ Приглашение принято! Завершите профиль, чтобы начать.';
+            }
+            const ctaBtnText = 'Открыть приложение';
+
             let text = ctaText;
             let btnText = ctaBtnText;
             if (userLang !== 'ru') {
