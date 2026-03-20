@@ -547,7 +547,7 @@
     "incomingCount": "{{count}} yêu cầu",
     "waitingApproval": "Đang chờ phê duyệt",
     "requestSent": "Đã gửi yêu cầu",
-    "requestSentDesc": "Đang chờ xác nhận",
+    "requestSentDesc": "Đang chờ xác nhận từ {{name}}",
     "meetInPerson": "Nên gặp trực tiếp trước khi chấp nhận",
     "accept": "Chấp nhận",
     "reject": "Từ chối",

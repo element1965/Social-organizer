@@ -547,7 +547,7 @@
     "incomingCount": "{{count}} istek",
     "waitingApproval": "Onay bekleniyor",
     "requestSent": "İstek gönderildi",
-    "requestSentDesc": "Karşı tarafın onayı bekleniyor",
+    "requestSentDesc": "{{name}} kişisinden onay bekleniyor",
     "meetInPerson": "Kabul etmeden önce yüz yüze görüşmeniz önerilir",
     "accept": "Kabul et",
     "reject": "Reddet",

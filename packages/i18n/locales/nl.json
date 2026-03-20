@@ -547,7 +547,7 @@
     "incomingCount": "{{count}} verzoeken",
     "waitingApproval": "Wacht op bevestiging",
     "requestSent": "Verzoek verzonden",
-    "requestSentDesc": "Wacht op bevestiging",
+    "requestSentDesc": "Wachten op bevestiging van {{name}}",
     "meetInPerson": "Persoonlijke ontmoeting aanbevolen",
     "accept": "Accepteren",
     "reject": "Afwijzen",

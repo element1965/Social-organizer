@@ -547,7 +547,7 @@
     "incomingCount": "{{count}} заявок",
     "waitingApproval": "Ожидает подтверждения",
     "requestSent": "Заявка отправлена",
-    "requestSentDesc": "Ожидайте подтверждения от другого человека",
+    "requestSentDesc": "Ждите подтверждения от {{name}}",
     "meetInPerson": "Рекомендуем познакомиться лично перед принятием",
     "accept": "Принять",
     "reject": "Отклонить",

@@ -129,7 +129,7 @@ export function InvitePage() {
             <div className="flex flex-col items-center gap-2">
               <Clock className="w-10 h-10 text-amber-500" />
               <p className="text-base font-semibold text-amber-600">{t('pending.requestSent')}</p>
-              <p className="text-xs text-gray-500 dark:text-gray-300">{t('pending.requestSentDesc')}</p>
+              <p className="text-xs text-gray-500 dark:text-gray-300">{t('pending.requestSentDesc', { name: invite.inviter.name })}</p>
               <Button className="w-full mt-1" size="lg" onClick={() => navigate('/dashboard')}>
                 {t('dashboard.title')}
               </Button>

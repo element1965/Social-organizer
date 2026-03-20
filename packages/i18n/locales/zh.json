@@ -547,7 +547,7 @@
     "incomingCount": "{{count}}个请求",
     "waitingApproval": "等待确认",
     "requestSent": "请求已发送",
-    "requestSentDesc": "等待对方确认",
+    "requestSentDesc": "等待{{name}}确认",
     "meetInPerson": "建议先见面再接受",
     "accept": "接受",
     "reject": "拒绝",

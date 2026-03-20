@@ -547,7 +547,7 @@
     "incomingCount": "{{count}} žádostí",
     "waitingApproval": "Čeká na schválení",
     "requestSent": "Žádost odeslána",
-    "requestSentDesc": "Čeká na potvrzení",
+    "requestSentDesc": "Čekání na potvrzení od {{name}}",
     "meetInPerson": "Doporučujeme osobní setkání",
     "accept": "Přijmout",
     "reject": "Odmítnout",

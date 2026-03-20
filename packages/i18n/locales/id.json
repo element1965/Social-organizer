@@ -547,7 +547,7 @@
     "incomingCount": "{{count}} permintaan",
     "waitingApproval": "Menunggu persetujuan",
     "requestSent": "Permintaan terkirim",
-    "requestSentDesc": "Menunggu konfirmasi",
+    "requestSentDesc": "Menunggu konfirmasi dari {{name}}",
     "meetInPerson": "Disarankan bertemu langsung",
     "accept": "Terima",
     "reject": "Tolak",
