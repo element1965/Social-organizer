@@ -748,7 +748,7 @@ export async function handleTelegramUpdate(update: TgUpdate): Promise<void> {
     const parts = text.split(/\s+/);
     const param = parts[1]; // e.g. "invite_abc123..."
     const lang = msg.from?.language_code?.slice(0, 2) || 'en';
-    const name = msg.from?.first_name || '';
+    const name = [msg.from?.first_name, msg.from?.last_name].filter(Boolean).join(' ') || '';
     const loc = BOT_STRINGS[lang] ?? BOT_STRINGS.en!;
 
     if (param?.startsWith('invite_')) {
