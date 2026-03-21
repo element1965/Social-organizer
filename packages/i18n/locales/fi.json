@@ -155,7 +155,7 @@
     "networkStats": "Verkoston tilastot",
     "dayCount": "Päivä {{count}}",
     "inviteTrusted": "Kutsu",
-    "myCapabilitiesHint": "Kuukausittainen tuki budjetti. Kuinka paljon olet valmis lahjoittamaan keskinäiseen apuun kuukausittain",
+    "myCapabilitiesHint": "Aikomuksesi — kuinka paljon olet valmis antamaan keskinäiseen apuun kuukausittain",
     "networkCapabilitiesHint": "Kaikkien osallistujien käytettävissä olevat kuukausibudjetit verkostossasi",
     "communityChat": "Yhteisön keskustelu",
     "wholeNetwork": "Verkosto",
@@ -172,7 +172,9 @@
     "newConnections": "+{{count}} uutta",
     "periodPast1": "Tänään",
     "communityChatDesc": "This is the general community chat for questions, suggestions, and feedback about the app. It is not a help chat.",
-    "communityChatOpen": "Open Chat"
+    "communityChatOpen": "Open Chat",
+    "budgetPickerHint": "Aikomuksesi kasvattaa verkoston potentiaalia:",
+    "budgetCustomPlaceholder": "Oma summa"
   },
   "collection": {
     "create": "Lähetä apusignaali",

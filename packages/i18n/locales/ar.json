@@ -155,7 +155,7 @@
     "networkStats": "إحصائيات الشبكة",
     "dayCount": "اليوم {{count}}",
     "inviteTrusted": "دعوة",
-    "myCapabilitiesHint": "ميزانية الدعم الشهرية. كم أنت مستعد للمساهمة في المساعدة المتبادلة كل شهر",
+    "myCapabilitiesHint": "نيتك — كم أنت مستعد للمساهمة في المساعدة المتبادلة شهرياً",
     "networkCapabilitiesHint": "إجمالي الميزانيات الشهرية المتاحة لجميع المشاركين في شبكتك للمساعدة المتبادلة",
     "communityChat": "دردشة المجتمع",
     "wholeNetwork": "الشبكة",
@@ -172,7 +172,9 @@
     "newConnections": "+{{count}} جديد",
     "periodPast1": "اليوم",
     "communityChatDesc": "This is the general community chat for questions, suggestions, and feedback about the app. It is not a help chat.",
-    "communityChatOpen": "Open Chat"
+    "communityChatOpen": "Open Chat",
+    "budgetPickerHint": "نيتك ستزيد إمكانات الشبكة بمقدار:",
+    "budgetCustomPlaceholder": "مبلغك"
   },
   "collection": {
     "create": "إرسال إشارة مساعدة",

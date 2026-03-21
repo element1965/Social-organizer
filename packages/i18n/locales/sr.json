@@ -155,7 +155,7 @@
     "networkStats": "Статистика мреже",
     "dayCount": "Дан {{count}}",
     "inviteTrusted": "Позови",
-    "myCapabilitiesHint": "Mesečni budžet za podršku. Koliko ste voljni da doprinesete uzajamnoj pomoći svakog meseca",
+    "myCapabilitiesHint": "Ваша намера — колико сте спремни да месечно допринесете узајамној помоћи",
     "networkCapabilitiesHint": "Ukupni dostupni mesečni budžeti svih učesnika u vašoj mreži uzajamne pomoći",
     "communityChat": "Чат заједнице",
     "wholeNetwork": "Мрежа",
@@ -172,7 +172,9 @@
     "newConnections": "+{{count}} novih",
     "periodPast1": "Danas",
     "communityChatDesc": "This is the general community chat for questions, suggestions, and feedback about the app. It is not a help chat.",
-    "communityChatOpen": "Open Chat"
+    "communityChatOpen": "Open Chat",
+    "budgetPickerHint": "Ваша намера ће повећати потенцијал мреже за:",
+    "budgetCustomPlaceholder": "Ваш износ"
   },
   "collection": {
     "create": "Пошаљи сигнал за помоћ",

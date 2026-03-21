@@ -142,7 +142,7 @@
     "capabilitiesContributors": "from {{count}} ppl",
     "editBudget": "Edit",
     "yourContribution": "My potential",
-    "myCapabilitiesHint": "Declared monthly support. How much you're willing to contribute to mutual aid each month",
+    "myCapabilitiesHint": "Your intention — how much you're willing to contribute to mutual aid each month",
     "networkCapabilitiesHint": "Total declared amounts of all participants in your mutual aid network",
     "budgetDepletedHint": "Your declared support amount is depleted. Would you like to add more?",
     "updateBudget": "Update",
@@ -172,7 +172,9 @@
     "periodPast90": "Past 90 days",
     "periodPast365": "Past 365 days",
     "newConnections": "+{{count}} new",
-    "periodPast1": "Today"
+    "periodPast1": "Today",
+    "budgetPickerHint": "Your intention will increase the network potential by:",
+    "budgetCustomPlaceholder": "Your amount"
   },
   "collection": {
     "create": "Send a help signal",

@@ -155,7 +155,7 @@
     "networkStats": "Ağ İstatistikleri",
     "dayCount": "{{count}}. gün",
     "inviteTrusted": "Davet et",
-    "myCapabilitiesHint": "Aylık destek bütçesi. Her ay karşılıklı yardıma ne kadar katkıda bulunmak istediğiniz",
+    "myCapabilitiesHint": "Niyetiniz — karşılıklı yardıma aylık ne kadar katkıda bulunmaya hazırsınız",
     "networkCapabilitiesHint": "Karşılıklı yardıma katılan tüm üyelerin toplam mevcut aylık bütçesi",
     "communityChat": "Topluluk sohbeti",
     "wholeNetwork": "Ağ",
@@ -172,7 +172,9 @@
     "newConnections": "+{{count}} yeni",
     "periodPast1": "Bugün",
     "communityChatDesc": "This is the general community chat for questions, suggestions, and feedback about the app. It is not a help chat.",
-    "communityChatOpen": "Open Chat"
+    "communityChatOpen": "Open Chat",
+    "budgetPickerHint": "Niyetiniz ağ potansiyelini artıracak:",
+    "budgetCustomPlaceholder": "Tutarınız"
   },
   "collection": {
     "create": "Yardım sinyali gönder",

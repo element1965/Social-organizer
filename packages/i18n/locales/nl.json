@@ -155,7 +155,7 @@
     "networkStats": "Netwerkstatistieken",
     "dayCount": "Dag {{count}}",
     "inviteTrusted": "Uitnodigen",
-    "myCapabilitiesHint": "Maandelijks ondersteuningsbudget. Hoeveel je wilt bijdragen aan wederzijdse hulp elke maand",
+    "myCapabilitiesHint": "Uw intentie — hoeveel u maandelijks wilt bijdragen aan wederzijdse hulp",
     "networkCapabilitiesHint": "Totaal beschikbare maandelijkse budgetten van alle deelnemers in uw wederzijdse hulpnetwerk",
     "communityChat": "Community-chat",
     "wholeNetwork": "Netwerk",
@@ -172,7 +172,9 @@
     "newConnections": "+{{count}} nieuw",
     "periodPast1": "Vandaag",
     "communityChatDesc": "This is the general community chat for questions, suggestions, and feedback about the app. It is not a help chat.",
-    "communityChatOpen": "Open Chat"
+    "communityChatOpen": "Open Chat",
+    "budgetPickerHint": "Uw intentie verhoogt het netwerkpotentieel met:",
+    "budgetCustomPlaceholder": "Uw bedrag"
   },
   "collection": {
     "create": "Hulpsignaal verzenden",

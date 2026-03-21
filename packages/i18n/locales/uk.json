@@ -155,7 +155,7 @@
     "networkStats": "Статистика мережі",
     "dayCount": "День {{count}}",
     "inviteTrusted": "Запросити",
-    "myCapabilitiesHint": "Заявлена сума підтримки. Скільки ви готові внести на взаємодопомогу щомісяця",
+    "myCapabilitiesHint": "Ваш намір — скільки ви готові виділяти на взаємодопомогу щомісяця",
     "networkCapabilitiesHint": "Загальна заявлена сума всіх учасників вашої мережі взаємодопомоги",
     "communityChat": "Чат спільноти",
     "wholeNetwork": "Мережа",
@@ -172,7 +172,9 @@
     "newConnections": "+{{count}} нових",
     "periodPast1": "За сьогодні",
     "communityChatDesc": "Це загальний чат спільноти для запитань, пропозицій та зворотного зв'язку щодо додатку. Це не чат для допомоги.",
-    "communityChatOpen": "Відкрити чат"
+    "communityChatOpen": "Відкрити чат",
+    "budgetPickerHint": "Ваш намір збільшить потенціал мережі на:",
+    "budgetCustomPlaceholder": "Ваша сума"
   },
   "collection": {
     "create": "Подати сигнал про допомогу",

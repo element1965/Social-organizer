@@ -155,7 +155,7 @@
     "networkStats": "Netzwerkstatistiken",
     "dayCount": "Tag {{count}}",
     "inviteTrusted": "Einladen",
-    "myCapabilitiesHint": "Monatliches Unterstützungsbudget. Wie viel Sie monatlich zu gegenseitiger Hilfe beitragen möchten",
+    "myCapabilitiesHint": "Ihre Absicht — wie viel Sie monatlich für gegenseitige Hilfe bereitstellen möchten",
     "networkCapabilitiesHint": "Gesamtes verfügbares monatliches Budget aller Teilnehmer in Ihrem gegenseitigen Hilfenetzwerk",
     "communityChat": "Community-Chat",
     "wholeNetwork": "Netzwerk",
@@ -172,7 +172,9 @@
     "newConnections": "+{{count}} neue",
     "periodPast1": "Heute",
     "communityChatDesc": "Dies ist der allgemeine Community-Chat für Fragen, Vorschläge und Feedback zur App. Es ist kein Hilfe-Chat.",
-    "communityChatOpen": "Chat öffnen"
+    "communityChatOpen": "Chat öffnen",
+    "budgetPickerHint": "Ihre Absicht erhöht das Netzwerkpotenzial um:",
+    "budgetCustomPlaceholder": "Ihr Betrag"
   },
   "collection": {
     "create": "Hilfesignal senden",

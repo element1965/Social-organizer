@@ -155,7 +155,7 @@
     "networkStats": "Statistiky sítě",
     "dayCount": "Den {{count}}",
     "inviteTrusted": "Pozvat",
-    "myCapabilitiesHint": "Měsíční rozpočet podpory. Kolik jste ochotni přispět na vzájemnou pomoc každý měsíc",
+    "myCapabilitiesHint": "Váš záměr — kolik jste ochotni měsíčně přispět na vzájemnou pomoc",
     "networkCapabilitiesHint": "Celkové dostupné měsíční rozpočty všech účastníků ve vaší síti vzájemné pomoci",
     "communityChat": "Chat komunity",
     "wholeNetwork": "Síť",
@@ -172,7 +172,9 @@
     "newConnections": "+{{count}} nových",
     "periodPast1": "Za dnes",
     "communityChatDesc": "This is the general community chat for questions, suggestions, and feedback about the app. It is not a help chat.",
-    "communityChatOpen": "Open Chat"
+    "communityChatOpen": "Open Chat",
+    "budgetPickerHint": "Váš záměr zvýší potenciál sítě o:",
+    "budgetCustomPlaceholder": "Vaše částka"
   },
   "collection": {
     "create": "Vyslat signál o pomoci",

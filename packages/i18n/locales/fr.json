@@ -155,7 +155,7 @@
     "networkStats": "Statistiques du réseau",
     "dayCount": "Jour {{count}}",
     "inviteTrusted": "Inviter",
-    "myCapabilitiesHint": "Budget de soutien mensuel. Combien vous êtes prêt à contribuer à l'aide mutuelle chaque mois",
+    "myCapabilitiesHint": "Votre intention — combien vous êtes prêt à contribuer à l'entraide chaque mois",
     "networkCapabilitiesHint": "Budgets mensuels totaux disponibles de tous les participants dans votre réseau d'aide mutuelle",
     "communityChat": "Chat communautaire",
     "wholeNetwork": "Réseau",
@@ -172,7 +172,9 @@
     "newConnections": "+{{count}} nouveaux",
     "periodPast1": "Aujourd'hui",
     "communityChatDesc": "Ceci est le chat communautaire général pour les questions, suggestions et retours sur l'application. Ce n'est pas un chat d'aide.",
-    "communityChatOpen": "Ouvrir le chat"
+    "communityChatOpen": "Ouvrir le chat",
+    "budgetPickerHint": "Votre intention augmentera le potentiel du réseau de :",
+    "budgetCustomPlaceholder": "Votre montant"
   },
   "collection": {
     "create": "Envoyer un signal d'aide",

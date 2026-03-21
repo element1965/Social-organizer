@@ -142,7 +142,7 @@
     "capabilitiesContributors": "ад {{count}} чал",
     "editBudget": "Змяніць",
     "yourContribution": "Мой патэнцыял",
-    "myCapabilitiesHint": "Месячны бюджэт падтрымкі. Колькі вы гатовы вылучаць на ўзаемадапамогу штомесяц",
+    "myCapabilitiesHint": "Ваш намер — колькі вы гатовыя вылучаць на ўзаемадапамогу штомесяц",
     "networkCapabilitiesHint": "Агульная сума даступных месячных бюджэтаў усіх удзельнікаў вашай сеткі ўзаемадапамогі",
     "budgetDepletedHint": "Ваш месячны бюджэт падтрымкі вычарпаны. Жадаеце дадаць?",
     "updateBudget": "Абнавіць",
@@ -172,7 +172,9 @@
     "periodPast90": "За 90 дзён",
     "periodPast365": "За 365 дзён",
     "newConnections": "+{{count}} новых",
-    "periodPast1": "За сёння"
+    "periodPast1": "За сёння",
+    "budgetPickerHint": "Ваш намер павялічыць патэнцыял сеткі на:",
+    "budgetCustomPlaceholder": "Ваша сума"
   },
   "collection": {
     "create": "Падаць сігнал аб дапамозе",

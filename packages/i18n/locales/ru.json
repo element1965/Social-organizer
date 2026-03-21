@@ -142,7 +142,7 @@
     "capabilitiesContributors": "от {{count}} чел",
     "editBudget": "Изменить",
     "yourContribution": "Мой потенциал",
-    "myCapabilitiesHint": "Заявленная сумма поддержки. Сколько вы готовы выделять на взаимопомощь ежемесячно",
+    "myCapabilitiesHint": "Ваше намерение — сколько вы готовы выделять на взаимопомощь ежемесячно",
     "networkCapabilitiesHint": "Общая сумма заявленных взносов всех участников вашей сети взаимопомощи",
     "budgetDepletedHint": "Ваша заявленная сумма поддержки исчерпана. Хотите добавить?",
     "updateBudget": "Обновить",
@@ -172,7 +172,9 @@
     "periodPast90": "За 90 дней",
     "periodPast365": "За 365 дней",
     "newConnections": "+{{count}} новых",
-    "periodPast1": "За сегодня"
+    "periodPast1": "За сегодня",
+    "budgetPickerHint": "Ваше намерение увеличит потенциал сети на:",
+    "budgetCustomPlaceholder": "Ваша сумма"
   },
   "collection": {
     "create": "Подать сигнал о помощи",

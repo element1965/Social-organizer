@@ -155,7 +155,7 @@
     "networkStats": "Thống kê mạng lưới",
     "dayCount": "Ngày {{count}}",
     "inviteTrusted": "Mời",
-    "myCapabilitiesHint": "Ngân sách hỗ trợ hàng tháng. Số tiền bạn sẵn lòng đóng góp cho hỗ trợ lẫn nhau mỗi tháng",
+    "myCapabilitiesHint": "Ý định của bạn — bạn sẵn sàng đóng góp bao nhiêu cho hỗ trợ lẫn nhau mỗi tháng",
     "networkCapabilitiesHint": "Tổng ngân sách hàng tháng có sẵn của tất cả thành viên trong mạng lưới hỗ trợ lẫn nhau của bạn",
     "communityChat": "Chat cộng đồng",
     "wholeNetwork": "Mạng lưới",
@@ -172,7 +172,9 @@
     "newConnections": "+{{count}} mới",
     "periodPast1": "Hôm nay",
     "communityChatDesc": "This is the general community chat for questions, suggestions, and feedback about the app. It is not a help chat.",
-    "communityChatOpen": "Open Chat"
+    "communityChatOpen": "Open Chat",
+    "budgetPickerHint": "Ý định của bạn sẽ tăng tiềm năng mạng lưới thêm:",
+    "budgetCustomPlaceholder": "Số tiền của bạn"
   },
   "collection": {
     "create": "Gửi tín hiệu cần giúp đỡ",
