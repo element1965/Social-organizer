@@ -304,7 +304,7 @@
     "noConnections": "Nog geen connecties",
     "connectionPath": "Verbindingspad",
     "contacts": "Contactgegevens",
-    "currentCapability": "Huidige mogelijkheid",
+    "currentCapability": "Intentie",
     "memberSince": "Lid sinds {{date}}",
     "nicknamePlaceholder": "Jouw naam voor hen...",
     "addDirect": "Toevoegen aan directe verbindingen",

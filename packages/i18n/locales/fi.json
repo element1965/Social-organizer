@@ -304,7 +304,7 @@
     "noConnections": "Ei vielä yhteyksiä",
     "connectionPath": "Yhteyspolku",
     "contacts": "Yhteystiedot",
-    "currentCapability": "Nykyinen kapasiteetti",
+    "currentCapability": "Aikomus",
     "memberSince": "Jäsen {{date}} alkaen",
     "nicknamePlaceholder": "Sinun nimesi heille...",
     "addDirect": "Lisää suoriin yhteyksiin",

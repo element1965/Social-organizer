@@ -304,7 +304,7 @@
     "noConnections": "No connections yet",
     "connectionPath": "Connection path",
     "contacts": "Contacts",
-    "currentCapability": "Current capability",
+    "currentCapability": "Intention",
     "memberSince": "Member since {{date}}",
     "nicknamePlaceholder": "Your name for them...",
     "online": "Online",

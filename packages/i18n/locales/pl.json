@@ -304,7 +304,7 @@
     "noConnections": "Brak połączeń",
     "connectionPath": "Ścieżka połączenia",
     "contacts": "Kontakty",
-    "currentCapability": "Bieżąca możliwość",
+    "currentCapability": "Deklaracja",
     "memberSince": "Członek od {{date}}",
     "nicknamePlaceholder": "Twoja nazwa dla nich...",
     "addDirect": "Dodaj do bezpośrednich połączeń",

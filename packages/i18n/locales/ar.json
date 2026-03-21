@@ -304,7 +304,7 @@
     "noConnections": "لا توجد اتصالات بعد",
     "connectionPath": "مسار الاتصال",
     "contacts": "جهات الاتصال",
-    "currentCapability": "القدرة الحالية",
+    "currentCapability": "النية",
     "memberSince": "عضو منذ {{date}}",
     "nicknamePlaceholder": "اسمك لهم...",
     "addDirect": "إضافة إلى الاتصالات المباشرة",
