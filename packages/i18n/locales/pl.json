@@ -155,7 +155,7 @@
     "networkStats": "Statystyki sieci",
     "dayCount": "Dzień {{count}}",
     "inviteTrusted": "Zaproś",
-    "myCapabilitiesHint": "Miesięczny budżet wsparcia. Ile jesteś gotów/a przeznaczyć na wzajemną pomoc każdego miesiąca",
+    "myCapabilitiesHint": "Twoja deklaracja — ile jesteś gotów przeznaczyć na wzajemną pomoc miesięcznie",
     "networkCapabilitiesHint": "Całkowity dostępny miesięczny budżet wszystkich uczestników twojej sieci wzajemnej pomocy",
     "communityChat": "Czat społeczności",
     "wholeNetwork": "Sieć",
@@ -172,7 +172,9 @@
     "newConnections": "+{{count}} nowych",
     "periodPast1": "Dzisiaj",
     "communityChatDesc": "This is the general community chat for questions, suggestions, and feedback about the app. It is not a help chat.",
-    "communityChatOpen": "Open Chat"
+    "communityChatOpen": "Open Chat",
+    "budgetPickerHint": "Twoja deklaracja zwiększy potencjał sieci o:",
+    "budgetCustomPlaceholder": "Twoja kwota"
   },
   "collection": {
     "create": "Wyślij sygnał o pomocy",

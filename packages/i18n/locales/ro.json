@@ -155,7 +155,7 @@
     "networkStats": "Statisticile retelei",
     "dayCount": "Ziua {{count}}",
     "inviteTrusted": "Invită",
-    "myCapabilitiesHint": "Buget lunar de sprijin. Cât ești dispus să contribui la ajutor mutual în fiecare lună",
+    "myCapabilitiesHint": "Intenția dvs. — cât sunteți dispus să contribuiți lunar pentru ajutor reciproc",
     "networkCapabilitiesHint": "Totalul bugetelor lunare disponibile ale tuturor participanților din rețeaua ta de ajutor mutual",
     "communityChat": "Chat comunitate",
     "wholeNetwork": "Rețea",
@@ -172,7 +172,9 @@
     "newConnections": "+{{count}} noi",
     "periodPast1": "Astăzi",
     "communityChatDesc": "This is the general community chat for questions, suggestions, and feedback about the app. It is not a help chat.",
-    "communityChatOpen": "Open Chat"
+    "communityChatOpen": "Open Chat",
+    "budgetPickerHint": "Intenția dvs. va crește potențialul rețelei cu:",
+    "budgetCustomPlaceholder": "Suma dvs."
   },
   "collection": {
     "create": "Trimite un semnal de ajutor",

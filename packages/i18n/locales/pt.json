@@ -155,7 +155,7 @@
     "networkStats": "Estatísticas da rede",
     "dayCount": "Dia {{count}}",
     "inviteTrusted": "Convidar",
-    "myCapabilitiesHint": "Orçamento de suporte mensal. Quanto você está disposto a contribuir para ajuda mútua a cada mês",
+    "myCapabilitiesHint": "Sua intenção — quanto você está disposto a contribuir para ajuda mútua por mês",
     "networkCapabilitiesHint": "Total de orçamentos mensais disponíveis de todos os participantes na sua rede de ajuda mútua",
     "communityChat": "Chat da comunidade",
     "wholeNetwork": "Rede",
@@ -172,7 +172,9 @@
     "newConnections": "+{{count}} novos",
     "periodPast1": "Hoje",
     "communityChatDesc": "Este é o chat geral da comunidade para perguntas, sugestões e feedback sobre o app. Não é um chat de ajuda.",
-    "communityChatOpen": "Abrir chat"
+    "communityChatOpen": "Abrir chat",
+    "budgetPickerHint": "Sua intenção aumentará o potencial da rede em:",
+    "budgetCustomPlaceholder": "Seu valor"
   },
   "collection": {
     "create": "Enviar sinal de ajuda",

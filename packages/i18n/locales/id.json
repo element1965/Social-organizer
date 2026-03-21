@@ -155,7 +155,7 @@
     "networkStats": "Statistik Jaringan",
     "dayCount": "Hari ke-{{count}}",
     "inviteTrusted": "Undang",
-    "myCapabilitiesHint": "Anggaran dukungan bulanan. Berapa banyak yang Anda ingin sumbangkan untuk bantuan bersama setiap bulan",
+    "myCapabilitiesHint": "Niat Anda — berapa banyak yang Anda bersedia kontribusikan untuk bantuan bersama setiap bulan",
     "networkCapabilitiesHint": "Total anggaran bulanan tersedia dari semua peserta di jaringan bantuan bersama Anda",
     "communityChat": "Chat Komunitas",
     "wholeNetwork": "Jaringan",
@@ -172,7 +172,9 @@
     "newConnections": "+{{count}} baru",
     "periodPast1": "Hari ini",
     "communityChatDesc": "This is the general community chat for questions, suggestions, and feedback about the app. It is not a help chat.",
-    "communityChatOpen": "Open Chat"
+    "communityChatOpen": "Open Chat",
+    "budgetPickerHint": "Niat Anda akan meningkatkan potensi jaringan sebesar:",
+    "budgetCustomPlaceholder": "Jumlah Anda"
   },
   "collection": {
     "create": "Kirim sinyal bantuan",

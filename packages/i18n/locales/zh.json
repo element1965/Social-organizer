@@ -155,7 +155,7 @@
     "networkStats": "网络统计",
     "dayCount": "第 {{count}} 天",
     "inviteTrusted": "邀请",
-    "myCapabilitiesHint": "每月支持预算。您愿意每月为互助贡献多少",
+    "myCapabilitiesHint": "您的意愿 — 您每月愿意为互助贡献多少",
     "networkCapabilitiesHint": "您互助网络中所有参与者的可用每月预算总额",
     "communityChat": "社区聊天",
     "wholeNetwork": "网络",
@@ -172,7 +172,9 @@
     "newConnections": "+{{count}} 新增",
     "periodPast1": "今天",
     "communityChatDesc": "This is the general community chat for questions, suggestions, and feedback about the app. It is not a help chat.",
-    "communityChatOpen": "Open Chat"
+    "communityChatOpen": "Open Chat",
+    "budgetPickerHint": "您的意愿将增加网络潜力：",
+    "budgetCustomPlaceholder": "您的金额"
   },
   "collection": {
     "create": "发送求助信号",

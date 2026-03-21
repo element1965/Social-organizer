@@ -155,7 +155,7 @@
     "networkStats": "नेटवर्क आंकड़े",
     "dayCount": "दिन {{count}}",
     "inviteTrusted": "आमंत्रित करें",
-    "myCapabilitiesHint": "मासिक समर्थन बजट। आप प्रत्येक माह आपसी सहायता में कितना योगदान देना चाहते हैं",
+    "myCapabilitiesHint": "आपका इरादा — आप हर महीने पारस्परिक सहायता में कितना योगदान करने को तैयार हैं",
     "networkCapabilitiesHint": "आपके आपसी सहायता नेटवर्क में सभी प्रतिभागियों की कुल उपलब्ध मासिक बजट",
     "communityChat": "सामुदायिक चैट",
     "wholeNetwork": "नेटवर्क",
@@ -172,7 +172,9 @@
     "newConnections": "+{{count}} नए",
     "periodPast1": "आज",
     "communityChatDesc": "This is the general community chat for questions, suggestions, and feedback about the app. It is not a help chat.",
-    "communityChatOpen": "Open Chat"
+    "communityChatOpen": "Open Chat",
+    "budgetPickerHint": "आपका इरादा नेटवर्क की क्षमता बढ़ाएगा:",
+    "budgetCustomPlaceholder": "आपकी राशि"
   },
   "collection": {
     "create": "मदद का संकेत भेजें",

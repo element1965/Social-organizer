@@ -155,7 +155,7 @@
     "networkStats": "สถิติเครือข่าย",
     "dayCount": "วันที่ {{count}}",
     "inviteTrusted": "เชิญ",
-    "myCapabilitiesHint": "งบประมาณสนับสนุนรายเดือน จำนวนที่คุณยินดีบริจาคเพื่อความช่วยเหลือร่วมกันแต่ละเดือน",
+    "myCapabilitiesHint": "ความตั้งใจของคุณ — คุณยินดีจะมีส่วนร่วมในการช่วยเหลือซึ่งกันและกันเท่าไรต่อเดือน",
     "networkCapabilitiesHint": "งบประมาณรายเดือนทั้งหมดที่ใช้ได้ของผู้เข้าร่วมในเครือข่ายความช่วยเหลือร่วมกันของคุณ",
     "communityChat": "แชทชุมชน",
     "wholeNetwork": "เครือข่าย",
@@ -172,7 +172,9 @@
     "newConnections": "+{{count}} ใหม่",
     "periodPast1": "วันนี้",
     "communityChatDesc": "This is the general community chat for questions, suggestions, and feedback about the app. It is not a help chat.",
-    "communityChatOpen": "Open Chat"
+    "communityChatOpen": "Open Chat",
+    "budgetPickerHint": "ความตั้งใจของคุณจะเพิ่มศักยภาพของเครือข่าย:",
+    "budgetCustomPlaceholder": "จำนวนของคุณ"
   },
   "collection": {
     "create": "ส่งสัญญาณขอความช่วยเหลือ",

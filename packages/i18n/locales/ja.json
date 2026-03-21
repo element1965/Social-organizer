@@ -155,7 +155,7 @@
     "networkStats": "ネットワーク統計",
     "dayCount": "{{count}} 日目",
     "inviteTrusted": "招待する",
-    "myCapabilitiesHint": "毎月の支援予算。毎月相互援助に寄与する金額",
+    "myCapabilitiesHint": "あなたの意思 — 毎月の相互扶助にいくら貢献する用意がありますか",
     "networkCapabilitiesHint": "あなたの相互援助ネットワーク内のすべての参加者の利用可能な月間予算の合計",
     "communityChat": "コミュニティチャット",
     "wholeNetwork": "ネットワーク",
@@ -172,7 +172,9 @@
     "newConnections": "+{{count}}件の新規",
     "periodPast1": "今日",
     "communityChatDesc": "This is the general community chat for questions, suggestions, and feedback about the app. It is not a help chat.",
-    "communityChatOpen": "Open Chat"
+    "communityChatOpen": "Open Chat",
+    "budgetPickerHint": "あなたの意思がネットワークの可能性を高めます：",
+    "budgetCustomPlaceholder": "あなたの金額"
   },
   "collection": {
     "create": "助けの合図を送る",

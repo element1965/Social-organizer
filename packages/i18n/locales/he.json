@@ -152,7 +152,7 @@
     "capabilitiesContributors": "מ-{{count}} אנשים",
     "editBudget": "ערוך",
     "yourContribution": "הפוטנציאל שלי",
-    "myCapabilitiesHint": "תקציב תמיכה חודשי. כמה אתה מוכן לתרום לעזרה הדדית בכל חודש",
+    "myCapabilitiesHint": "הכוונה שלך — כמה אתה מוכן לתרום לעזרה הדדית כל חודש",
     "networkCapabilitiesHint": "ס�� התקציבים החודשיים הזמינים של כל המשתתפים ברשת העזרה ההדדית שלך",
     "budgetDepletedHint": "תקציב התמיכה החודשי שלך מוצה. האם תרצה להוסיף יותר?",
     "updateBudget": "עדכון",
@@ -182,7 +182,9 @@
     "newConnections": "+{{count}} חדשים",
     "periodPast1": "היום",
     "communityChatDesc": "This is the general community chat for questions, suggestions, and feedback about the app. It is not a help chat.",
-    "communityChatOpen": "Open Chat"
+    "communityChatOpen": "Open Chat",
+    "budgetPickerHint": "הכוונה שלך תגדיל את פוטנציאל הרשת ב:",
+    "budgetCustomPlaceholder": "הסכום שלך"
   },
   "collection": {
     "create": "שלח אות סיוע",

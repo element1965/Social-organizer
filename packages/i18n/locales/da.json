@@ -155,7 +155,7 @@
     "networkStats": "Netværksstatistik",
     "dayCount": "Dag {{count}}",
     "inviteTrusted": "Inviter",
-    "myCapabilitiesHint": "Månedlig støttebudget. Hvor meget du er villig til at bidrage til gensidig hjælp hver måned",
+    "myCapabilitiesHint": "Din intention — hvor meget du er villig til at bidrage til gensidig hjælp hver måned",
     "networkCapabilitiesHint": "Samlet tilgængelige månedlige budgetter for alle deltagere i dit gensidige hjælpenetværk",
     "communityChat": "Fællesskabs-chat",
     "wholeNetwork": "Netværk",
@@ -172,7 +172,9 @@
     "newConnections": "+{{count}} nye",
     "periodPast1": "I dag",
     "communityChatDesc": "This is the general community chat for questions, suggestions, and feedback about the app. It is not a help chat.",
-    "communityChatOpen": "Open Chat"
+    "communityChatOpen": "Open Chat",
+    "budgetPickerHint": "Din intention øger netværkets potentiale med:",
+    "budgetCustomPlaceholder": "Dit beløb"
   },
   "collection": {
     "create": "Send et hjælpesignal",
