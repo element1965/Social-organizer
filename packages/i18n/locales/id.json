@@ -471,7 +471,7 @@
     "botLinkDesc": "Langsung ke Telegram — jika Anda sudah menjelaskan semuanya dan mereka bisa langsung ke aplikasi",
     "slugDesc": "Ini adalah ID tautan pribadi Anda untuk URL undangan. Ini BUKAN undangan itu sendiri — jangan kirimkan ke orang lain. Gunakan tautan di atas untuk mengundang seseorang.",
     "shareText": "Ini adalah undangan pribadi dari {{name}} ke lingkaran teman dekatnya",
-    "share": "Bagikan",
+    "share": "Undang",
     "copyLink": "Salin tautan",
     "expand": "show URL",
     "showQr": "tampilkan QR",
