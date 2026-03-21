@@ -497,7 +497,7 @@
     "neutralText": "The Organizer does not control interactions.\n\nIt simply records real connections, notifies about needs, and shows who is ready to help.",
     "neutralList": "All actions happen directly between people in the real world.\n\nThe Organizer is a shared digital notebook open to all participants.",
     "exampleTitle": "Two signals are enough",
-    "exampleText": "The Organizer works through a minimal notification mechanism.\n\nParticipants send only two signals:\nNeed\nParticipation",
+    "exampleText": "The Organizer works through a minimal notification mechanism.\n\nParticipants send only two signals: Need and Participation.",
     "notFundText": "One person informs about a need. Others inform about their ability to help. Nothing else.",
     "analogTitle": "Open-source, non-commercial initiative",
     "analogText": "Social Organizer is a public open-source project.\n\nIts purpose is to enable coordination through real social connections.\n\nIt does not process payments, hold funds, or manage transactions.\n\nAvailable now on Telegram.",

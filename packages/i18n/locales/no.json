@@ -497,7 +497,7 @@
     "neutralText": "Organizeren kontrollerer ikke interaksjoner.\n\nDen registrerer rett og slett ekte forbindelser, varsler om behov og viser hvem som er klar til å hjelpe.",
     "neutralList": "Alle handlinger skjer direkte mellom mennesker i den virkelige verden.\n\nOrganizeren er en delt digital notatbok, åpen for alle deltakere.",
     "exampleTitle": "To signaler er nok",
-    "exampleText": "Organizeren fungerer gjennom en minimal varslingsmekanisme.\n\nDeltakere sender bare to signaler:\nBehov\nDeltakelse",
+    "exampleText": "Organizeren fungerer gjennom en minimal varslingsmekanisme.\n\nDeltakere sender bare to signaler: Behov og Deltakelse.",
     "notFundText": "Én person informerer om et behov. Andre informerer om evnen til å hjelpe. Ingenting annet.",
     "analogTitle": "Open-source, ikke-kommersielt initiativ",
     "analogText": "Social Organizer er et offentlig open-source-prosjekt.\n\nFormålet er å muliggjøre koordinering gjennom ekte sosiale forbindelser.\n\nDet behandler ikke betalinger, holder ikke midler og administrerer ikke transaksjoner.\n\nTilgjengelig nå på Telegram.",
