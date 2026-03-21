@@ -471,7 +471,7 @@
     "botLinkDesc": "Direktno na Telegram — ako ste već sve objasnili i oni mogu direktno ući u aplikaciju",
     "slugDesc": "Ово је ваш лични ИД линка за URL-ове позивница. То НИЈЕ позивница сама по себи — не шаљите је људима. Користите горње линкове да позовете некога.",
     "shareText": "Ово је лични позив од {{name}} у круг његових блиских пријатеља",
-    "share": "Подели",
+    "share": "Позови",
     "copyLink": "Копирај линк",
     "expand": "прикажи URL",
     "showQr": "prikaži QR",
