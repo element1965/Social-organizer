@@ -256,15 +256,12 @@ export function LandingPage({ variant, inviteToken: inviteTokenProp }: { variant
             {t('landing.scaleTitle')}
           </p>
           <div className="flex flex-col sm:flex-row gap-4">
-            <div className="flex flex-col items-center">
-              <button
-                onClick={() => document.getElementById('download')?.scrollIntoView({ behavior: 'smooth' })}
-                className="px-8 py-3 bg-teal-500 hover:bg-teal-400 text-white font-semibold rounded-xl transition-colors text-lg"
-              >
-                {t('landing.heroStart')}
-              </button>
-              <span className="text-gray-500 text-xs mt-2">{t('landing.heroMicrocopy')}</span>
-            </div>
+            <button
+              onClick={() => document.getElementById('download')?.scrollIntoView({ behavior: 'smooth' })}
+              className="px-8 py-3 bg-teal-500 hover:bg-teal-400 text-white font-semibold rounded-xl transition-colors text-lg"
+            >
+              {t('landing.heroStart')}
+            </button>
             <button
               onClick={scrollToContent}
               className="px-8 py-3 bg-white/10 hover:bg-white/20 text-white font-semibold rounded-xl transition-colors text-lg backdrop-blur-sm border border-white/10"
