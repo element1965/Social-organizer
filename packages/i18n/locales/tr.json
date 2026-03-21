@@ -497,7 +497,7 @@
     "neutralText": "Organizatör etkileşimleri kontrol etmez.\n\nSadece gerçek bağlantıları kaydeder, ihtiyaçları bildirir ve kimin yardıma hazır olduğunu gösterir.",
     "neutralList": "Tüm eylemler gerçek dünyada insanlar arasında doğrudan gerçekleşir.\n\nOrganizatör tüm katılımcılara açık, paylaşılan bir dijital defterdir.",
     "exampleTitle": "İki sinyal yeterli",
-    "exampleText": "Organizatör minimal bir bildirim mekanizmasıyla çalışır.\n\nKatılımcılar sadece iki sinyal gönderir:\nİhtiyaç\nKatılım",
+    "exampleText": "Organizatör minimal bir bildirim mekanizmasıyla çalışır.\n\nKatılımcılar sadece iki sinyal gönderir: İhtiyaç ve Katılım.",
     "notFundText": "Bir kişi ihtiyacı bildirir. Diğerleri yardım etme kapasitelerini bildirir. Başka bir şey yok.",
     "analogTitle": "Açık kaynak, ticari olmayan girişim",
     "analogText": "Social Organizer halka açık bir açık kaynak projesidir.\n\nAmacı, gerçek sosyal bağlantılar aracılığıyla koordinasyonu mümkün kılmaktır.\n\nÖdeme işlemez, fon tutmaz ve işlemleri yönetmez.\n\nŞimdi Telegram'da mevcut.",

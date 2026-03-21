@@ -497,7 +497,7 @@
     "neutralText": "Organizer ei kontrolloi vuorovaikutuksia.\n\nSe vain tallentaa todelliset yhteydet, ilmoittaa tarpeista ja näyttää, kuka on valmis auttamaan.",
     "neutralList": "Kaikki toimet tapahtuvat suoraan ihmisten välillä todellisessa maailmassa.\n\nOrganizer on jaettu digitaalinen muistikirja, avoin kaikille osallistujille.",
     "exampleTitle": "Kaksi signaalia riittää",
-    "exampleText": "Organizer toimii minimaalisen ilmoitusmekanismin kautta.\n\nOsallistujat lähettävät vain kaksi signaalia:\nTarve\nOsallistuminen",
+    "exampleText": "Organizer toimii minimaalisen ilmoitusmekanismin kautta.\n\nOsallistujat lähettävät vain kaksi signaalia: Tarve ja Osallistuminen.",
     "notFundText": "Yksi henkilö ilmoittaa tarpeesta. Muut ilmoittavat kyvystään auttaa. Ei mitään muuta.",
     "analogTitle": "Avoin lähdekoodi, ei-kaupallinen aloite",
     "analogText": "Social Organizer on julkinen avoimen lähdekoodin projekti.\n\nSen tarkoitus on mahdollistaa koordinointi todellisten sosiaalisten yhteyksien kautta.\n\nSe ei käsittele maksuja, pidä varoja eikä hallinnoi tapahtumia.\n\nSaatavilla nyt Telegramissa.",

@@ -439,7 +439,7 @@
     "neutralText": "L'Organisateur ne contrôle pas les interactions.\n\nIl enregistre simplement les connexions réelles, notifie les besoins et montre qui est prêt à aider.",
     "neutralList": "Toutes les actions se déroulent directement entre les personnes dans le monde réel.\n\nL'Organisateur est un carnet numérique partagé, ouvert à tous les participants.",
     "exampleTitle": "Deux signaux suffisent",
-    "exampleText": "L'Organisateur fonctionne via un mécanisme de notification minimal.\n\nLes participants n'envoient que deux signaux :\nBesoin\nParticipation",
+    "exampleText": "L'Organisateur fonctionne via un mécanisme de notification minimal.\n\nLes participants n'envoient que deux signaux : Besoin et Participation.",
     "notFundText": "Une personne signale un besoin. D'autres signalent leur capacité à aider. Rien d'autre.",
     "analogTitle": "Open-source, initiative non-commerciale",
     "analogText": "Social Organizer est un projet open-source public.\n\nSon objectif est de permettre la coordination via de vraies connexions sociales.\n\nIl ne traite pas de paiements, ne détient pas de fonds et ne gère pas de transactions.\n\nDisponible maintenant sur Telegram.",
