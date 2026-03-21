@@ -304,7 +304,7 @@
     "noConnections": "まだつながりはありません",
     "connectionPath": "つながりの経路",
     "contacts": "連絡先",
-    "currentCapability": "現在の能力",
+    "currentCapability": "意思",
     "memberSince": "{{date}} から参加",
     "nicknamePlaceholder": "相手への表示名...",
     "addDirect": "直接のつながりに追加",

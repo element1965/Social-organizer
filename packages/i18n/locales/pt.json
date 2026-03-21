@@ -304,7 +304,7 @@
     "noConnections": "Nenhuma conexão ainda",
     "connectionPath": "Caminho de conexão",
     "contacts": "Contatos",
-    "currentCapability": "Capacidade atual",
+    "currentCapability": "Intenção",
     "memberSince": "Membro desde {{date}}",
     "nicknamePlaceholder": "Seu nome para eles...",
     "addDirect": "Adicionar às conexões diretas",

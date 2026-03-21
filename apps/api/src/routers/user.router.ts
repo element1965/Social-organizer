@@ -255,6 +255,16 @@ export const userRouter = router({
         data: { status: 'CANCELLED' },
       });
 
+      // Remove user from the network (delete all connections)
+      await tx.connection.deleteMany({
+        where: {
+          OR: [
+            { userAId: ctx.userId },
+            { userBId: ctx.userId },
+          ],
+        },
+      });
+
       if (usedInviteCount === 0) {
         // No invitees — full delete with no traces
         // Clear usedById references pointing to this user
@@ -270,7 +280,8 @@ export const userRouter = router({
         // Hard delete user (cascade removes all related records)
         await tx.user.delete({ where: { id: ctx.userId } });
       } else {
-        // Has invitees — soft delete (mute) so their network stays intact
+        // Has invitees — soft delete (mute) so their invite chain stays intact
+        // but user is removed from the active network
         await tx.user.update({
           where: { id: ctx.userId },
           data: {
@@ -279,8 +290,14 @@ export const userRouter = router({
             bio: null,
             phone: null,
             photoUrl: null,
+            monthlyBudget: 0,
+            remainingBudget: 0,
           },
         });
+        // Remove contacts, skills, needs so profile is clean
+        await tx.userContact.deleteMany({ where: { userId: ctx.userId } });
+        await tx.userSkill.deleteMany({ where: { userId: ctx.userId } });
+        await tx.userNeed.deleteMany({ where: { userId: ctx.userId } });
       }
     });
 

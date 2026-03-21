@@ -304,7 +304,7 @@
     "noConnections": "Ingen forbindelser endnu",
     "connectionPath": "Forbindelsesvej",
     "contacts": "Kontakter",
-    "currentCapability": "Nuværende kapacitet",
+    "currentCapability": "Intention",
     "memberSince": "Medlem siden {{date}}",
     "nicknamePlaceholder": "Dit navn for dem...",
     "addDirect": "Tilføj til direkte forbindelser",
