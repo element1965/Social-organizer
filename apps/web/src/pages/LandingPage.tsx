@@ -249,7 +249,7 @@ export function LandingPage({ variant, inviteToken: inviteTokenProp }: { variant
           <p className="text-gray-300 text-lg md:text-xl max-w-2xl mb-3 leading-relaxed whitespace-pre-line">
             {t('landing.heroSubtitle')}
           </p>
-          <p className="text-gray-400 text-sm mb-1">
+          <p className="text-teal-300 text-base md:text-lg font-semibold italic mb-1 tracking-wide">
             {t('landing.heroSmallLine')}
           </p>
           <p className="text-gray-500 text-sm mb-10">
