@@ -934,5 +934,13 @@
     "declineLink": "Can't participate",
     "declineConfirm": "Are you sure? The system will try to find a replacement, but if not found the chain will be cancelled.",
     "statusBroken": "Searching replacement"
+  },
+  "sos": {
+    "needsEmergencyHelp": "acil yardıma ihtiyacı var",
+    "needsSupport": "desteğe ihtiyacı var",
+    "joinBtn": "Katıl ve yardım et",
+    "autoConnect": "{{name}} ile doğrudan bağlanacaksınız — onay gerekmiyor.",
+    "collectionClosed": "Bu koleksiyon {{status}}.",
+    "participantsCount": "{{count}} katılımcı"
   }
 }

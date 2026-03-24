@@ -934,5 +934,13 @@
     "declineLink": "Can't participate",
     "declineConfirm": "Are you sure? The system will try to find a replacement, but if not found the chain will be cancelled.",
     "statusBroken": "Searching replacement"
+  },
+  "sos": {
+    "needsEmergencyHelp": "are nevoie de ajutor urgent",
+    "needsSupport": "are nevoie de sprijin",
+    "joinBtn": "Alătură-te și ajută",
+    "autoConnect": "Vei fi conectat direct cu {{name}} — fără aprobare necesară.",
+    "collectionClosed": "Această colectă este {{status}}.",
+    "participantsCount": "{{count}} participanți"
   }
 }

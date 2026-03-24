@@ -934,5 +934,13 @@
     "declineLink": "Não posso participar",
     "declineConfirm": "Tem certeza? O sistema tentará encontrar um substituto, mas se não encontrar, a cadeia será cancelada.",
     "statusBroken": "Buscando substituto"
+  },
+  "sos": {
+    "needsEmergencyHelp": "precisa de ajuda urgente",
+    "needsSupport": "precisa de apoio",
+    "joinBtn": "Juntar-se e ajudar",
+    "autoConnect": "Você será conectado diretamente a {{name}} — sem necessidade de aprovação.",
+    "collectionClosed": "Esta coleta está {{status}}.",
+    "participantsCount": "{{count}} participantes"
   }
 }

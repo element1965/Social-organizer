@@ -934,5 +934,13 @@
     "declineLink": "Can't participate",
     "declineConfirm": "Are you sure? The system will try to find a replacement, but if not found the chain will be cancelled.",
     "statusBroken": "Searching replacement"
+  },
+  "sos": {
+    "needsEmergencyHelp": "ต้องการความช่วยเหลือเร่งด่วน",
+    "needsSupport": "ต้องการการสนับสนุน",
+    "joinBtn": "เข้าร่วมและช่วยเหลือ",
+    "autoConnect": "คุณจะเชื่อมต่อกับ {{name}} โดยตรง — ไม่ต้องรออนุมัติ",
+    "collectionClosed": "การรวบรวมนี้{{status}}แล้ว",
+    "participantsCount": "{{count}} ผู้เข้าร่วม"
   }
 }

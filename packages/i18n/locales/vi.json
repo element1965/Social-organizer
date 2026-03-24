@@ -934,5 +934,13 @@
     "declineLink": "Can't participate",
     "declineConfirm": "Are you sure? The system will try to find a replacement, but if not found the chain will be cancelled.",
     "statusBroken": "Searching replacement"
+  },
+  "sos": {
+    "needsEmergencyHelp": "cần giúp đỡ khẩn cấp",
+    "needsSupport": "cần hỗ trợ",
+    "joinBtn": "Tham gia và giúp đỡ",
+    "autoConnect": "Bạn sẽ được kết nối trực tiếp với {{name}} — không cần phê duyệt.",
+    "collectionClosed": "Chiến dịch này đã {{status}}.",
+    "participantsCount": "{{count}} người tham gia"
   }
 }

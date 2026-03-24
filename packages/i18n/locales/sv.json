@@ -934,5 +934,13 @@
     "declineLink": "Can't participate",
     "declineConfirm": "Are you sure? The system will try to find a replacement, but if not found the chain will be cancelled.",
     "statusBroken": "Searching replacement"
+  },
+  "sos": {
+    "needsEmergencyHelp": "behöver akut hjälp",
+    "needsSupport": "behöver stöd",
+    "joinBtn": "Gå med & hjälp",
+    "autoConnect": "Du kommer att anslutas direkt till {{name}} — inget godkännande krävs.",
+    "collectionClosed": "Den här insamlingen är {{status}}.",
+    "participantsCount": "{{count}} deltagare"
   }
 }

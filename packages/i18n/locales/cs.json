@@ -934,5 +934,13 @@
     "declineLink": "Can't participate",
     "declineConfirm": "Are you sure? The system will try to find a replacement, but if not found the chain will be cancelled.",
     "statusBroken": "Searching replacement"
+  },
+  "sos": {
+    "needsEmergencyHelp": "potřebuje urgentní pomoc",
+    "needsSupport": "potřebuje podporu",
+    "joinBtn": "Připojit se a pomoci",
+    "autoConnect": "Budete přímo propojeni s {{name}} — bez nutnosti schválení.",
+    "collectionClosed": "Tato sbírka je {{status}}.",
+    "participantsCount": "{{count}} účastníků"
   }
 }
