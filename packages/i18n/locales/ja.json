@@ -934,5 +934,13 @@
     "declineLink": "Can't participate",
     "declineConfirm": "Are you sure? The system will try to find a replacement, but if not found the chain will be cancelled.",
     "statusBroken": "Searching replacement"
+  },
+  "sos": {
+    "needsEmergencyHelp": "緊急の助けが必要です",
+    "needsSupport": "サポートが必要です",
+    "joinBtn": "参加して助ける",
+    "autoConnect": "{{name}} と直接つながります — 承認不要。",
+    "collectionClosed": "この募集は{{status}}です。",
+    "participantsCount": "{{count}} 人の参加者"
   }
 }

@@ -934,5 +934,13 @@
     "declineLink": "Can't participate",
     "declineConfirm": "Are you sure? The system will try to find a replacement, but if not found the chain will be cancelled.",
     "statusBroken": "Searching replacement"
+  },
+  "sos": {
+    "needsEmergencyHelp": "просіць тэрміновай дапамогі",
+    "needsSupport": "просіць падтрымкі",
+    "joinBtn": "Далучыцца і дапамагчы",
+    "autoConnect": "Вас падключаць да {{name}} напрамую — без чакання пацвярджэння.",
+    "collectionClosed": "Гэты збор {{status}}.",
+    "participantsCount": "{{count}} удзельнікаў"
   }
 }

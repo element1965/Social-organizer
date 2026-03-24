@@ -934,5 +934,13 @@
     "declineLink": "Can't participate",
     "declineConfirm": "Are you sure? The system will try to find a replacement, but if not found the chain will be cancelled.",
     "statusBroken": "Searching replacement"
+  },
+  "sos": {
+    "needsEmergencyHelp": "треба хитну помоћ",
+    "needsSupport": "треба подршку",
+    "joinBtn": "Придружи се и помози",
+    "autoConnect": "Бићете директно повезани са {{name}} — без потребе за одобрењем.",
+    "collectionClosed": "Ова збирка је {{status}}.",
+    "participantsCount": "{{count}} учесника"
   }
 }

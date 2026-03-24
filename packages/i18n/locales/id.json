@@ -934,5 +934,13 @@
     "declineLink": "Can't participate",
     "declineConfirm": "Are you sure? The system will try to find a replacement, but if not found the chain will be cancelled.",
     "statusBroken": "Searching replacement"
+  },
+  "sos": {
+    "needsEmergencyHelp": "membutuhkan bantuan darurat",
+    "needsSupport": "membutuhkan dukungan",
+    "joinBtn": "Bergabung & Bantu",
+    "autoConnect": "Anda akan terhubung langsung dengan {{name}} — tanpa perlu persetujuan.",
+    "collectionClosed": "Koleksi ini {{status}}.",
+    "participantsCount": "{{count}} peserta"
   }
 }

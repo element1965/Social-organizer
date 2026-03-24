@@ -934,5 +934,13 @@
     "declineLink": "Can't participate",
     "declineConfirm": "Are you sure? The system will try to find a replacement, but if not found the chain will be cancelled.",
     "statusBroken": "Searching replacement"
+  },
+  "sos": {
+    "needsEmergencyHelp": "potrzebuje pilnej pomocy",
+    "needsSupport": "potrzebuje wsparcia",
+    "joinBtn": "Dołącz i pomóż",
+    "autoConnect": "Zostaniesz połączony bezpośrednio z {{name}} — bez konieczności zatwierdzenia.",
+    "collectionClosed": "Ta zbiórka jest {{status}}.",
+    "participantsCount": "{{count}} uczestników"
   }
 }

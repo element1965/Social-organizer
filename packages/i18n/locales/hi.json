@@ -934,5 +934,13 @@
     "declineLink": "Can't participate",
     "declineConfirm": "Are you sure? The system will try to find a replacement, but if not found the chain will be cancelled.",
     "statusBroken": "Searching replacement"
+  },
+  "sos": {
+    "needsEmergencyHelp": "को तत्काल सहायता की आवश्यकता है",
+    "needsSupport": "को सहायता की आवश्यकता है",
+    "joinBtn": "जुड़ें और मदद करें",
+    "autoConnect": "आप सीधे {{name}} से जुड़ेंगे — कोई अनुमोदन आवश्यक नहीं।",
+    "collectionClosed": "यह संग्रह {{status}} है।",
+    "participantsCount": "{{count}} प्रतिभागी"
   }
 }

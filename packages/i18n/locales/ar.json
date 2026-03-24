@@ -934,5 +934,13 @@
     "declineLink": "Can't participate",
     "declineConfirm": "Are you sure? The system will try to find a replacement, but if not found the chain will be cancelled.",
     "statusBroken": "Searching replacement"
+  },
+  "sos": {
+    "needsEmergencyHelp": "يحتاج إلى مساعدة عاجلة",
+    "needsSupport": "يحتاج إلى دعم",
+    "joinBtn": "انضم وساعد",
+    "autoConnect": "ستتصل مباشرة بـ {{name}} — لا حاجة للموافقة.",
+    "collectionClosed": "هذه المجموعة {{status}}.",
+    "participantsCount": "{{count}} مشاركين"
   }
 }

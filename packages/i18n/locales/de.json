@@ -934,5 +934,13 @@
     "declineLink": "Kann nicht teilnehmen",
     "declineConfirm": "Sind Sie sicher? Das System wird versuchen, einen Ersatz zu finden, aber wenn keiner gefunden wird, wird die Kette abgesagt.",
     "statusBroken": "Suche Ersatz"
+  },
+  "sos": {
+    "needsEmergencyHelp": "braucht dringend Hilfe",
+    "needsSupport": "braucht Unterstützung",
+    "joinBtn": "Beitreten & Helfen",
+    "autoConnect": "Sie werden direkt mit {{name}} verbunden — keine Genehmigung erforderlich.",
+    "collectionClosed": "Diese Sammlung ist {{status}}.",
+    "participantsCount": "{{count}} Teilnehmer"
   }
 }

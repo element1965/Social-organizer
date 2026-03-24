@@ -934,5 +934,13 @@
     "declineLink": "Can't participate",
     "declineConfirm": "Are you sure? The system will try to find a replacement, but if not found the chain will be cancelled.",
     "statusBroken": "Searching replacement"
+  },
+  "sos": {
+    "needsEmergencyHelp": "需要紧急帮助",
+    "needsSupport": "需要支持",
+    "joinBtn": "加入并帮助",
+    "autoConnect": "您将直接与 {{name}} 建立联系 — 无需审批。",
+    "collectionClosed": "此募集已{{status}}。",
+    "participantsCount": "{{count}} 位参与者"
   }
 }
