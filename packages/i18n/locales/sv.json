@@ -202,7 +202,10 @@
     "connectionToCreator": "Anslutning till skapare",
     "editAmount": "Edit",
     "saveAmount": "Save",
-    "cancelEdit": "Cancel"
+    "cancelEdit": "Cancel",
+    "sosInviteButton": "Dela SOS-länk",
+    "sosLinkCopied": "SOS-länk kopierad!",
+    "sosJoined": "Du har lagts till som direkt deltagare"
   },
   "create": {
     "title": "Skicka hjalpsignal",

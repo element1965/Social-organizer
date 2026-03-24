@@ -202,7 +202,10 @@
     "connectionToCreator": "Зв'язок із творцем",
     "editAmount": "Редагувати",
     "saveAmount": "Зберегти",
-    "cancelEdit": "Скасувати"
+    "cancelEdit": "Скасувати",
+    "sosInviteButton": "Поділитися SOS-посиланням",
+    "sosLinkCopied": "SOS-посилання скопійовано!",
+    "sosJoined": "Вас додано як прямого учасника"
   },
   "create": {
     "title": "Подати сигнал про допомогу",

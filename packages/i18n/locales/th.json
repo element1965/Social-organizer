@@ -202,7 +202,10 @@
     "connectionToCreator": "ความเชื่อมโยงกับผู้สร้าง",
     "editAmount": "Edit",
     "saveAmount": "Save",
-    "cancelEdit": "Cancel"
+    "cancelEdit": "Cancel",
+    "sosInviteButton": "แชร์ลิงก์ SOS",
+    "sosLinkCopied": "คัดลอกลิงก์ SOS แล้ว!",
+    "sosJoined": "คุณถูกเพิ่มเป็นผู้เข้าร่วมโดยตรงแล้ว"
   },
   "create": {
     "title": "ส่งสัญญาณขอความช่วยเหลือ",

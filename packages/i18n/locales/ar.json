@@ -202,7 +202,10 @@
     "connectionToCreator": "الصلة بالمنشئ",
     "editAmount": "Edit",
     "saveAmount": "Save",
-    "cancelEdit": "Cancel"
+    "cancelEdit": "Cancel",
+    "sosInviteButton": "مشاركة رابط SOS",
+    "sosLinkCopied": "تم نسخ رابط SOS!",
+    "sosJoined": "لقد تمت إضافتك كمشارك مباشر"
   },
   "create": {
     "title": "إرسال إشارة مساعدة",

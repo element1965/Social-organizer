@@ -202,7 +202,10 @@
     "connectionToCreator": "Conexiune catre creator",
     "editAmount": "Edit",
     "saveAmount": "Save",
-    "cancelEdit": "Cancel"
+    "cancelEdit": "Cancel",
+    "sosInviteButton": "Distribuie link SOS",
+    "sosLinkCopied": "Link SOS copiat!",
+    "sosJoined": "Ai fost adăugat ca participant direct"
   },
   "create": {
     "title": "Trimite un semnal de ajutor",

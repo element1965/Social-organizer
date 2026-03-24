@@ -202,7 +202,10 @@
     "connectionToCreator": "Verbinding met maker",
     "editAmount": "Edit",
     "saveAmount": "Save",
-    "cancelEdit": "Cancel"
+    "cancelEdit": "Cancel",
+    "sosInviteButton": "SOS-link delen",
+    "sosLinkCopied": "SOS-link gekopieerd!",
+    "sosJoined": "Je bent toegevoegd als directe deelnemer"
   },
   "create": {
     "title": "Hulpsignaal verzenden",

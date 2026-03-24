@@ -202,7 +202,10 @@
     "connectionToCreator": "Связь с создателем",
     "editAmount": "Изменить",
     "saveAmount": "Сохранить",
-    "cancelEdit": "Отмена"
+    "cancelEdit": "Отмена",
+    "sosInviteButton": "Поделиться SOS-ссылкой",
+    "sosLinkCopied": "SOS-ссылка скопирована!",
+    "sosJoined": "Вы добавлены как прямой участник"
   },
   "create": {
     "title": "Подать сигнал о помощи",

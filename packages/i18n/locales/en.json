@@ -202,7 +202,10 @@
     "connectionToCreator": "Connection to creator",
     "editAmount": "Edit",
     "saveAmount": "Save",
-    "cancelEdit": "Cancel"
+    "cancelEdit": "Cancel",
+    "sosInviteButton": "Share SOS link",
+    "sosLinkCopied": "SOS link copied!",
+    "sosJoined": "You've been added as a direct participant"
   },
   "create": {
     "title": "Send a help signal",

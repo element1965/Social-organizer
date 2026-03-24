@@ -202,7 +202,10 @@
     "connectionToCreator": "Koneksi ke pembuat",
     "editAmount": "Edit",
     "saveAmount": "Save",
-    "cancelEdit": "Cancel"
+    "cancelEdit": "Cancel",
+    "sosInviteButton": "Bagikan tautan SOS",
+    "sosLinkCopied": "Tautan SOS disalin!",
+    "sosJoined": "Anda telah ditambahkan sebagai peserta langsung"
   },
   "create": {
     "title": "Kirim sinyal bantuan",

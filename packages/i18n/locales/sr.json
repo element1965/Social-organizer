@@ -202,7 +202,10 @@
     "connectionToCreator": "Веза са креатором",
     "editAmount": "Edit",
     "saveAmount": "Save",
-    "cancelEdit": "Cancel"
+    "cancelEdit": "Cancel",
+    "sosInviteButton": "Подели SOS везу",
+    "sosLinkCopied": "SOS веза копирана!",
+    "sosJoined": "Додати сте као директан учесник"
   },
   "create": {
     "title": "Пошаљи сигнал за помоћ",

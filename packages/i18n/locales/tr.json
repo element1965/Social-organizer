@@ -202,7 +202,10 @@
     "connectionToCreator": "Oluşturucuya bağlantı",
     "editAmount": "Edit",
     "saveAmount": "Save",
-    "cancelEdit": "Cancel"
+    "cancelEdit": "Cancel",
+    "sosInviteButton": "SOS bağlantısını paylaş",
+    "sosLinkCopied": "SOS bağlantısı kopyalandı!",
+    "sosJoined": "Doğrudan katılımcı olarak eklendiniz"
   },
   "create": {
     "title": "Yardım sinyali gönder",

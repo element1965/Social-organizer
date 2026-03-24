@@ -37,6 +37,12 @@ export function TelegramBootstrap({ children }: { children: React.ReactNode }) {
           return;
         }
 
+        if (startParam?.startsWith('sos_')) {
+          const collectionId = startParam.slice('sos_'.length);
+          navigate(`/collection/${collectionId}?sos=true`, { replace: true });
+          return;
+        }
+
         if (startParam?.startsWith('invite_')) {
           inviteToken = startParam.slice('invite_'.length);
         }

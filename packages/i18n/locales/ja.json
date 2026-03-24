@@ -202,7 +202,10 @@
     "connectionToCreator": "発起人とのつながり",
     "editAmount": "Edit",
     "saveAmount": "Save",
-    "cancelEdit": "Cancel"
+    "cancelEdit": "Cancel",
+    "sosInviteButton": "SOSリンクを共有",
+    "sosLinkCopied": "SOSリンクをコピーしました！",
+    "sosJoined": "直接参加者として追加されました"
   },
   "create": {
     "title": "助けの合図を送る",
