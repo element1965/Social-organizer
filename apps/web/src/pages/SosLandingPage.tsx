@@ -30,9 +30,11 @@ export function SosLandingPage() {
       style={{ paddingBottom: 'max(1.5rem, env(safe-area-inset-bottom))' }}
     >
       <div className="w-full max-w-sm flex flex-col gap-5">
-        {/* Logo */}
-        <div className="flex justify-center">
+        {/* Logo + app name + slogan */}
+        <div className="flex flex-col items-center gap-1">
           <Logo size={36} className="text-gray-900 dark:text-teal-400" />
+          <p className="text-base font-bold text-gray-900 dark:text-white tracking-tight">Social Organizer</p>
+          <p className="text-xs text-gray-400 dark:text-gray-500">Coordinating help through trusted connections</p>
         </div>
 
         {isLoading ? (
