@@ -34,7 +34,7 @@ export function SosLandingPage() {
         <div className="flex flex-col items-center gap-1">
           <Logo size={36} className="text-gray-900 dark:text-teal-400" />
           <p className="text-base font-bold text-gray-900 dark:text-white tracking-tight">Social Organizer</p>
-          <p className="text-xs text-gray-400 dark:text-gray-500">Coordinating help through trusted connections</p>
+          <p className="text-xs text-gray-400 dark:text-gray-500">A little from many, enough for one.</p>
         </div>
 
         {isLoading ? (
@@ -79,7 +79,7 @@ export function SosLandingPage() {
                 href={tgUrl}
                 className="block w-full py-3.5 rounded-xl bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white text-center font-semibold text-base transition-colors"
               >
-                🤝 Join & Help in Telegram
+                🤝 Join & Help
               </a>
             ) : (
               <div className="text-center text-sm text-gray-400 py-2">
