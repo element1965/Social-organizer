@@ -52,7 +52,7 @@ export function SosLandingPage() {
         <div className="flex flex-col items-center gap-1">
           <Logo size={36} className="text-gray-900 dark:text-teal-400" />
           <p className="text-base font-bold text-gray-900 dark:text-white tracking-tight">Social Organizer</p>
-          <p className="text-xs text-gray-400 dark:text-gray-500">A little from many, enough for one.</p>
+          <p className="text-xs text-gray-400 dark:text-gray-500">{t('landing.heroSmallLine')}</p>
         </div>
 
         {loading ? (
@@ -105,9 +105,6 @@ export function SosLandingPage() {
               </div>
             )}
 
-            <p className="text-center text-xs text-gray-400">
-              {t('sos.autoConnect', { name: collection.creator.name })}
-            </p>
           </>
         )}
       </div>
