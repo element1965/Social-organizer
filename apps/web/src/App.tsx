@@ -19,6 +19,7 @@ import { ProfilePage } from './pages/ProfilePage';
 import { SettingsPage } from './pages/SettingsPage';
 import { MatchesPage } from './pages/MatchesPage';
 import { InvitePage } from './pages/InvitePage';
+import { SosLandingPage } from './pages/SosLandingPage';
 import { PrivacyPage } from './pages/PrivacyPage';
 import { TermsPage } from './pages/TermsPage';
 import { FaqPage } from './pages/FaqPage';
@@ -65,6 +66,7 @@ export function App() {
             <Route path="/terms" element={<TermsPage />} />
             <Route path="/delete-account" element={<DeleteAccountPage />} />
             <Route path="/invite/:token" element={<InvitePage />} />
+            <Route path="/sos/:collectionId" element={<SosLandingPage />} />
             <Route element={<ProtectedRoute><Layout /></ProtectedRoute>}>
               <Route path="/dashboard" element={<DashboardPage />} />
               <Route path="/notifications" element={<NotificationsPage />} />

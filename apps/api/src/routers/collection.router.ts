@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { router, protectedProcedure } from '../trpc.js';
+import { router, protectedProcedure, publicProcedure } from '../trpc.js';
 import { TRPCError } from '@trpc/server';
 import { MIN_COLLECTION_AMOUNT, CURRENCY_CODES, NOTIFICATION_RATIO, MIN_CONNECTIONS_TO_CREATE } from '@so/shared';
 import { sendCollectionNotifications, sendCollectionClosedTg } from '../services/notification.service.js';
@@ -221,4 +221,25 @@ export const collectionRouter = router({
       orderBy: { createdAt: 'desc' },
     });
   }),
+
+  // Public endpoint — no auth required, used for SOS landing page
+  getPublic: publicProcedure
+    .input(z.object({ id: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const collection = await ctx.db.collection.findUnique({
+        where: { id: input.id },
+        select: {
+          id: true,
+          type: true,
+          status: true,
+          amount: true,
+          currentAmount: true,
+          currency: true,
+          creator: { select: { id: true, name: true, photoUrl: true } },
+          _count: { select: { obligations: true } },
+        },
+      });
+      if (!collection) throw new TRPCError({ code: 'NOT_FOUND' });
+      return collection;
+    }),
 });
