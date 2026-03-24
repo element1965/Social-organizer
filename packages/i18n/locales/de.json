@@ -202,7 +202,10 @@
     "connectionToCreator": "Verbindung zum Ersteller",
     "editAmount": "Bearbeiten",
     "saveAmount": "Speichern",
-    "cancelEdit": "Abbrechen"
+    "cancelEdit": "Abbrechen",
+    "sosInviteButton": "SOS-Link teilen",
+    "sosLinkCopied": "SOS-Link kopiert!",
+    "sosJoined": "Sie wurden als direkter Teilnehmer hinzugefügt"
   },
   "create": {
     "title": "Hilfesignal senden",

@@ -773,6 +773,67 @@ export async function handleTelegramUpdate(update: TgUpdate): Promise<void> {
       return;
     }
 
+    if (param?.startsWith('sos_')) {
+      const collectionId = param.slice('sos_'.length);
+      const webAppUrl = `${WEB_APP_URL}/collection/${collectionId}?sos=true`;
+
+      console.log(`[TG Bot] /start sos from chat ${chatId}, collectionId: ${collectionId}`);
+
+      const db = getDb();
+      const collection = await db.collection.findUnique({
+        where: { id: collectionId },
+        select: { creatorId: true, amount: true, creator: { select: { name: true } } },
+      }).catch(() => null);
+
+      const creatorName = collection?.creator?.name || 'Someone';
+      const amountStr = collection?.amount ? ` ($${collection.amount})` : '';
+
+      const SOS_BTN: Record<string, string> = {
+        en: '🤝 Join & Help',
+        ru: '🤝 Присоединиться и помочь',
+        uk: '🤝 Приєднатись та допомогти',
+        be: '🤝 Далучыцца і дапамагчы',
+        de: '🤝 Beitreten & Helfen',
+        fr: '🤝 Rejoindre et aider',
+        es: '🤝 Unirse y ayudar',
+        it: '🤝 Unisciti e aiuta',
+        pt: '🤝 Juntar-se e ajudar',
+        pl: '🤝 Dołącz i pomóż',
+        nl: '🤝 Deelnemen & helpen',
+        cs: '🤝 Připojit se a pomoci',
+        ro: '🤝 Alătură-te și ajută',
+        tr: '🤝 Katıl ve yardım et',
+        ar: '🤝 انضم وساعد',
+        he: '🤝 הצטרף ועזור',
+        hi: '🤝 जुड़ें और मदद करें',
+        zh: '🤝 加入并帮助',
+        ja: '🤝 参加して助ける',
+        ko: '🤝 참여하고 돕기',
+        th: '🤝 เข้าร่วมและช่วยเหลือ',
+        vi: '🤝 Tham gia và giúp đỡ',
+        id: '🤝 Bergabung & Bantu',
+        sv: '🤝 Gå med & hjälp',
+        da: '🤝 Tilmeld & hjælp',
+        fi: '🤝 Liity ja auta',
+        sr: '🤝 Придружи се и помози',
+      };
+      const btnText = SOS_BTN[lang] ?? SOS_BTN.en!;
+
+      const greeting = name ? `${name}, ` : '';
+      const SOS_MSG: Record<string, (g: string, c: string, a: string) => string> = {
+        en: (g, c, a) => `🆘 ${g}<b>${c}</b> needs help${a}.\n\nYou're invited as a <b>direct participant</b> — no approval needed. Click the button to join immediately.`,
+        ru: (g, c, a) => `🆘 ${g}<b>${c}</b> просит о помощи${a}.\n\nВы приглашены как <b>прямой участник</b> — без ожидания подтверждения. Нажмите кнопку, чтобы присоединиться сразу.`,
+        uk: (g, c, a) => `🆘 ${g}<b>${c}</b> просить про допомогу${a}.\n\nВас запрошено як <b>прямого учасника</b> — без очікування підтвердження.`,
+      };
+      const msgFn = SOS_MSG[lang] ?? SOS_MSG.en!;
+      const msgText = msgFn(greeting, creatorName, amountStr);
+
+      await sendTelegramMessage(chatId, msgText, {
+        inline_keyboard: [[{ text: btnText, web_app: { url: webAppUrl } }]],
+      });
+      return;
+    }
+
     // Plain /start — open the app + link to landing
     await sendTelegramMessage(chatId, loc.welcome(name), {
       inline_keyboard: [[{ text: loc.openBtn, web_app: { url: WEB_APP_URL } }]],

@@ -150,6 +150,64 @@ export const inviteRouter = router({
       return { success: true, pending: true, connectedWith: inviterId };
     }),
 
+  acceptSos: protectedProcedure
+    .input(z.object({ collectionId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      console.log('[invite.acceptSos] userId:', ctx.userId, 'collectionId:', input.collectionId);
+
+      const collection = await ctx.db.collection.findUnique({
+        where: { id: input.collectionId },
+        select: { id: true, creatorId: true, status: true },
+      });
+      if (!collection) throw new TRPCError({ code: 'NOT_FOUND', message: 'Collection not found' });
+
+      const creatorId = collection.creatorId;
+      if (creatorId === ctx.userId) {
+        return { success: true, alreadyConnected: true, connectedWith: creatorId };
+      }
+
+      const [userAId, userBId] = [ctx.userId, creatorId].sort();
+
+      // Check if already connected
+      const existing = await ctx.db.connection.findUnique({
+        where: { userAId_userBId: { userAId: userAId!, userBId: userBId! } },
+      });
+      if (existing) {
+        return { success: true, alreadyConnected: true, connectedWith: creatorId };
+      }
+
+      // Create direct connection (SOS bypasses pending approval)
+      await ctx.db.connection.upsert({
+        where: { userAId_userBId: { userAId: userAId!, userBId: userBId! } },
+        create: { userAId: userAId!, userBId: userBId! },
+        update: {},
+      });
+
+      // Resolve any existing pending connections between them
+      await ctx.db.pendingConnection.updateMany({
+        where: {
+          OR: [
+            { fromUserId: ctx.userId, toUserId: creatorId },
+            { fromUserId: creatorId, toUserId: ctx.userId },
+          ],
+          status: 'PENDING',
+        },
+        data: { status: 'ACCEPTED', resolvedAt: new Date() },
+      });
+
+      console.log('[invite.acceptSos] direct connection created:', ctx.userId, '<->', creatorId);
+
+      const applicant = await ctx.db.user.findUnique({
+        where: { id: ctx.userId },
+        select: { name: true },
+      });
+      sendPendingNotification(ctx.db, creatorId, 'accepted', applicant?.name || '').catch(() => {});
+      scanMatchesForUser(ctx.db, ctx.userId).catch(() => {});
+      scanMatchesForUser(ctx.db, creatorId).catch(() => {});
+
+      return { success: true, alreadyConnected: false, connectedWith: creatorId };
+    }),
+
   getByToken: publicProcedure
     .input(z.object({ token: z.string() }))
     .query(async ({ ctx, input }) => {

@@ -202,7 +202,10 @@
     "connectionToCreator": "Kết nối với người tạo",
     "editAmount": "Edit",
     "saveAmount": "Save",
-    "cancelEdit": "Cancel"
+    "cancelEdit": "Cancel",
+    "sosInviteButton": "Chia sẻ liên kết SOS",
+    "sosLinkCopied": "Đã sao chép liên kết SOS!",
+    "sosJoined": "Bạn đã được thêm làm người tham gia trực tiếp"
   },
   "create": {
     "title": "Gửi tín hiệu cần giúp đỡ",

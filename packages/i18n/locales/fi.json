@@ -202,7 +202,10 @@
     "connectionToCreator": "Yhteys luojaan",
     "editAmount": "Edit",
     "saveAmount": "Save",
-    "cancelEdit": "Cancel"
+    "cancelEdit": "Cancel",
+    "sosInviteButton": "Jaa SOS-linkki",
+    "sosLinkCopied": "SOS-linkki kopioitu!",
+    "sosJoined": "Sinut on lisätty suoraksi osallistujaksi"
   },
   "create": {
     "title": "Lähetä apusignaali",

@@ -33,3 +33,16 @@ export function buildBotInviteUrl(token: string): string {
   }
   return `${window.location.origin}/invite/${token}`;
 }
+
+/**
+ * Build SOS collection invite URL.
+ * Recipients who open it are auto-connected to the collection creator (no approval needed).
+ * In Telegram Mini App: uses startapp param → TelegramBootstrap handles it directly.
+ * In browser: opens collection page with sos=true query param.
+ */
+export function buildSosInviteUrl(collectionId: string): string {
+  if (isTelegramWebApp() && TG_BOT_USERNAME) {
+    return `https://t.me/${TG_BOT_USERNAME}?startapp=sos_${collectionId}`;
+  }
+  return `${WEB_APP_URL}/collection/${collectionId}?sos=true`;
+}

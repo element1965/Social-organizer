@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { trpc } from '../lib/trpc';
 import { useAuth } from '../hooks/useAuth';
@@ -11,12 +11,15 @@ import { Badge } from '../components/ui/badge';
 import { Progress } from '../components/ui/progress';
 import { Avatar } from '../components/ui/avatar';
 import { Spinner } from '../components/ui/spinner';
-import { ExternalLink, Users, ArrowRight, Pencil, Check, X } from 'lucide-react';
+import { ExternalLink, Users, ArrowRight, Pencil, Check, X, Copy, Share2 } from 'lucide-react';
 import { HandshakePath } from '../components/HandshakePath';
 import { useNicknames } from '../hooks/useNicknames';
+import { buildSosInviteUrl } from '../lib/inviteUrl';
 
 export function CollectionPage() {
   const { id } = useParams<{ id: string }>();
+  const [searchParams] = useSearchParams();
+  const isSos = searchParams.get('sos') === 'true';
   const { t } = useTranslation();
   const navigate = useNavigate();
   const userId = useAuth((s) => s.userId);
@@ -33,8 +36,12 @@ export function CollectionPage() {
   const createObligation = trpc.obligation.create.useMutation({ onSuccess: () => utils.collection.getById.invalidate({ id: id! }) });
   const closeCollection = trpc.collection.close.useMutation({ onSuccess: () => utils.collection.getById.invalidate({ id: id! }) });
   const updateAmount = trpc.obligation.updateAmount.useMutation({ onSuccess: () => utils.collection.getById.invalidate({ id: id! }) });
+  const acceptSos = trpc.invite.acceptSos.useMutation({
+    onSuccess: () => utils.collection.getById.invalidate({ id: id! }),
+  });
 
   const [amount, setAmount] = useState('1');
+  const [sosCopied, setSosCopied] = useState(false);
   const [inputCurrency, setInputCurrency] = useState('USD');
   const [error, setError] = useState('');
 
@@ -50,6 +57,14 @@ export function CollectionPage() {
       setInputCurrency(me.preferredCurrency);
     }
   }, [me?.preferredCurrency]);
+
+  // Auto-connect to creator when opened via SOS invite link
+  useEffect(() => {
+    if (isSos && collection && userId && collection.creatorId !== userId && !acceptSos.isSuccess && !acceptSos.isPending) {
+      acceptSos.mutate({ collectionId: collection.id });
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isSos, collection?.id, userId]);
 
   // Preview conversion to USD
   const { data: preview } = trpc.currency.toUSD.useQuery(
@@ -187,6 +202,21 @@ export function CollectionPage() {
             </div>
           </CardContent>
         </Card>
+      )}
+
+      {isOwner && (collection.status === 'ACTIVE' || collection.status === 'BLOCKED') && (
+        <button
+          onClick={() => {
+            const url = buildSosInviteUrl(collection.id);
+            navigator.clipboard.writeText(url);
+            setSosCopied(true);
+            setTimeout(() => setSosCopied(false), 2500);
+          }}
+          className="w-full flex items-center justify-center gap-2 p-3 rounded-lg bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800 text-red-600 dark:text-red-400 text-sm font-medium hover:bg-red-100 dark:hover:bg-red-900/40 transition-colors"
+        >
+          {sosCopied ? <Check className="w-4 h-4" /> : <Share2 className="w-4 h-4" />}
+          {sosCopied ? t('collection.sosLinkCopied') : t('collection.sosInviteButton')}
+        </button>
       )}
 
       {isOwner && (collection.status === 'ACTIVE' || collection.status === 'BLOCKED') && (

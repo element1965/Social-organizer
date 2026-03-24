@@ -212,7 +212,10 @@
     "connectionToCreator": "חיבור ליצרן",
     "editAmount": "Edit",
     "saveAmount": "Save",
-    "cancelEdit": "Cancel"
+    "cancelEdit": "Cancel",
+    "sosInviteButton": "שתף קישור SOS",
+    "sosLinkCopied": "קישור SOS הועתק!",
+    "sosJoined": "הוספת כמשתתף ישיר"
   },
   "create": {
     "title": "שלח אות סיוע",

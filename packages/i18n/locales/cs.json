@@ -202,7 +202,10 @@
     "connectionToCreator": "Spojení s autorem",
     "editAmount": "Edit",
     "saveAmount": "Save",
-    "cancelEdit": "Cancel"
+    "cancelEdit": "Cancel",
+    "sosInviteButton": "Sdílet SOS odkaz",
+    "sosLinkCopied": "SOS odkaz zkopírován!",
+    "sosJoined": "Byl jsi přidán jako přímý účastník"
   },
   "create": {
     "title": "Vyslat signál o pomoci",

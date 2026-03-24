@@ -202,7 +202,10 @@
     "connectionToCreator": "与发起人的连接",
     "editAmount": "Edit",
     "saveAmount": "Save",
-    "cancelEdit": "Cancel"
+    "cancelEdit": "Cancel",
+    "sosInviteButton": "分享 SOS 链接",
+    "sosLinkCopied": "SOS 链接已复制！",
+    "sosJoined": "您已被添加为直接参与者"
   },
   "create": {
     "title": "发送求助信号",
