@@ -228,18 +228,22 @@ export const collectionRouter = router({
     .query(async ({ ctx, input }) => {
       const collection = await ctx.db.collection.findUnique({
         where: { id: input.id },
-        select: {
-          id: true,
-          type: true,
-          status: true,
-          amount: true,
-          currentAmount: true,
-          currency: true,
+        include: {
           creator: { select: { id: true, name: true, photoUrl: true } },
-          _count: { select: { obligations: true } },
+          obligations: { select: { amount: true } },
         },
       });
       if (!collection) throw new TRPCError({ code: 'NOT_FOUND' });
-      return collection;
+      const currentAmount = collection.obligations.reduce((sum, o) => sum + o.amount, 0);
+      return {
+        id: collection.id,
+        type: collection.type,
+        status: collection.status,
+        amount: collection.amount,
+        currentAmount,
+        currency: collection.currency,
+        creator: collection.creator,
+        _count: { obligations: collection.obligations.length },
+      };
     }),
 });
