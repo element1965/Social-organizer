@@ -8,14 +8,29 @@ import { Logo } from '../components/Logo';
 
 const TG_BOT_USERNAME = import.meta.env.VITE_TELEGRAM_BOT_USERNAME || '';
 
+const DEMO_COLLECTION = {
+  id: 'preview',
+  type: 'EMERGENCY' as const,
+  status: 'ACTIVE' as const,
+  amount: 2000,
+  currentAmount: 650,
+  currency: 'USD',
+  creator: { id: 'demo', name: 'Андрей Луб', photoUrl: null },
+  _count: { obligations: 7 },
+};
+
 export function SosLandingPage() {
   const { collectionId } = useParams<{ collectionId: string }>();
   const { t } = useTranslation();
+  const isPreview = collectionId === 'preview';
 
-  const { data: collection, isLoading } = trpc.collection.getPublic.useQuery(
+  const { data: fetched, isLoading } = trpc.collection.getPublic.useQuery(
     { id: collectionId! },
-    { enabled: !!collectionId },
+    { enabled: !!collectionId && !isPreview },
   );
+
+  const collection = isPreview ? DEMO_COLLECTION : fetched;
+  const loading = !isPreview && isLoading;
 
   const tgUrl = TG_BOT_USERNAME
     ? `https://t.me/${TG_BOT_USERNAME}?startapp=sos_${collectionId}`
@@ -40,7 +55,7 @@ export function SosLandingPage() {
           <p className="text-xs text-gray-400 dark:text-gray-500">A little from many, enough for one.</p>
         </div>
 
-        {isLoading ? (
+        {loading ? (
           <div className="flex justify-center py-8"><Spinner /></div>
         ) : !collection ? (
           <p className="text-center text-gray-400">{t('common.notFound')}</p>
