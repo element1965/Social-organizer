@@ -36,12 +36,16 @@ export function CollectionPage() {
   const createObligation = trpc.obligation.create.useMutation({ onSuccess: () => utils.collection.getById.invalidate({ id: id! }) });
   const closeCollection = trpc.collection.close.useMutation({ onSuccess: () => utils.collection.getById.invalidate({ id: id! }) });
   const updateAmount = trpc.obligation.updateAmount.useMutation({ onSuccess: () => utils.collection.getById.invalidate({ id: id! }) });
+  const updateChatLink = trpc.collection.updateChatLink.useMutation({ onSuccess: () => utils.collection.getById.invalidate({ id: id! }) });
   const acceptSos = trpc.invite.acceptSos.useMutation({
     onSuccess: () => utils.collection.getById.invalidate({ id: id! }),
   });
 
   const [amount, setAmount] = useState('1');
   const [sosCopied, setSosCopied] = useState(false);
+  const [editingChatLink, setEditingChatLink] = useState(false);
+  const [chatLinkValue, setChatLinkValue] = useState('');
+  const [chatLinkError, setChatLinkError] = useState('');
   const [inputCurrency, setInputCurrency] = useState('USD');
   const [error, setError] = useState('');
 
@@ -164,10 +168,55 @@ export function CollectionPage() {
         </CardContent>
       </Card>
 
-      {(hasObligation || isOwner) && collection.chatLink && (
-        <a href={collection.chatLink} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 p-3 bg-blue-50 dark:bg-blue-950/30 rounded-lg text-blue-600 dark:text-blue-400 text-sm hover:underline">
-          <ExternalLink className="w-4 h-4" /> {t('collection.openChat')}
-        </a>
+      {(hasObligation || isOwner) && (
+        <div className="space-y-1">
+          {editingChatLink ? (
+            <div className="flex gap-2 items-start">
+              <div className="flex-1">
+                <Input
+                  type="url"
+                  placeholder="https://t.me/..."
+                  value={chatLinkValue}
+                  onChange={(e) => { setChatLinkValue(e.target.value); setChatLinkError(''); }}
+                  error={chatLinkError}
+                  onFocus={(e) => { setTimeout(() => e.target.scrollIntoView({ behavior: 'smooth', block: 'center' }), 300); }}
+                />
+              </div>
+              <button
+                onClick={() => {
+                  try { new URL(chatLinkValue); } catch { setChatLinkError(t('create.invalidUrl')); return; }
+                  updateChatLink.mutate({ id: collection.id, chatLink: chatLinkValue }, { onSuccess: () => setEditingChatLink(false) });
+                }}
+                disabled={updateChatLink.isPending}
+                className="p-2 text-green-600 hover:text-green-700 disabled:opacity-50"
+              >
+                <Check className="w-4 h-4" />
+              </button>
+              <button onClick={() => { setEditingChatLink(false); setChatLinkError(''); }} className="p-2 text-gray-400 hover:text-gray-600 dark:text-gray-300">
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+          ) : (
+            <div className="flex items-center gap-2">
+              {collection.chatLink ? (
+                <a href={collection.chatLink} target="_blank" rel="noopener noreferrer" className="flex-1 flex items-center gap-2 p-3 bg-blue-50 dark:bg-blue-950/30 rounded-lg text-blue-600 dark:text-blue-400 text-sm hover:underline">
+                  <ExternalLink className="w-4 h-4" /> {t('collection.openChat')}
+                </a>
+              ) : isOwner ? (
+                <span className="flex-1 p-3 text-sm text-gray-400 dark:text-gray-500">{t('collection.noChatLink')}</span>
+              ) : null}
+              {isOwner && (
+                <button
+                  onClick={() => { setChatLinkValue(collection.chatLink || ''); setChatLinkError(''); setEditingChatLink(true); }}
+                  className="p-2.5 text-gray-400 hover:text-gray-600 dark:text-gray-300 dark:hover:text-gray-100"
+                  title={t('collection.editChatLink')}
+                >
+                  <Pencil className="w-4 h-4" />
+                </button>
+              )}
+            </div>
+          )}
+        </div>
       )}
 
       {!isOwner && !hasObligation && collection.status === 'ACTIVE' && (

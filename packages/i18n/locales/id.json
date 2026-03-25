@@ -203,6 +203,8 @@
     "editAmount": "Edit",
     "saveAmount": "Save",
     "cancelEdit": "Cancel",
+    "editChatLink": "Edit tautan obrolan",
+    "noChatLink": "Tautan obrolan belum ditambahkan",
     "sosInviteButton": "Bagikan tautan SOS",
     "sosLinkCopied": "Tautan SOS disalin!",
     "sosJoined": "Anda telah ditambahkan sebagai peserta langsung"

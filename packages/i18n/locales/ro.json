@@ -203,6 +203,8 @@
     "editAmount": "Edit",
     "saveAmount": "Save",
     "cancelEdit": "Cancel",
+    "editChatLink": "Editați linkul de chat",
+    "noChatLink": "Niciun link de chat adăugat",
     "sosInviteButton": "Distribuie link SOS",
     "sosLinkCopied": "Link SOS copiat!",
     "sosJoined": "Ai fost adăugat ca participant direct"

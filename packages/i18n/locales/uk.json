@@ -203,6 +203,8 @@
     "editAmount": "Редагувати",
     "saveAmount": "Зберегти",
     "cancelEdit": "Скасувати",
+    "editChatLink": "Редагувати посилання на чат",
+    "noChatLink": "Посилання на чат не додано",
     "sosInviteButton": "Поділитися SOS-посиланням",
     "sosLinkCopied": "SOS-посилання скопійовано!",
     "sosJoined": "Вас додано як прямого учасника"

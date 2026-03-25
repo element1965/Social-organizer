@@ -203,6 +203,8 @@
     "editAmount": "Edit",
     "saveAmount": "Save",
     "cancelEdit": "Cancel",
+    "editChatLink": "チャットリンクを編集",
+    "noChatLink": "チャットリンクが追加されていません",
     "sosInviteButton": "SOSリンクを共有",
     "sosLinkCopied": "SOSリンクをコピーしました！",
     "sosJoined": "直接参加者として追加されました"

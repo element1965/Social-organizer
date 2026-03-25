@@ -203,6 +203,8 @@
     "editAmount": "Edit",
     "saveAmount": "Save",
     "cancelEdit": "Cancel",
+    "editChatLink": "채팅 링크 편집",
+    "noChatLink": "채팅 링크가 추가되지 않았습니다",
     "sosInviteButton": "SOS 링크 공유",
     "sosLinkCopied": "SOS 링크 복사됨!",
     "sosJoined": "직접 참가자로 추가되었습니다"

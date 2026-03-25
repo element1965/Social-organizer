@@ -203,6 +203,8 @@
     "editAmount": "Edit",
     "saveAmount": "Save",
     "cancelEdit": "Cancel",
+    "editChatLink": "แก้ไขลิงก์แชท",
+    "noChatLink": "ยังไม่ได้เพิ่มลิงก์แชท",
     "sosInviteButton": "แชร์ลิงก์ SOS",
     "sosLinkCopied": "คัดลอกลิงก์ SOS แล้ว!",
     "sosJoined": "คุณถูกเพิ่มเป็นผู้เข้าร่วมโดยตรงแล้ว"

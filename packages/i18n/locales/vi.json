@@ -203,6 +203,8 @@
     "editAmount": "Edit",
     "saveAmount": "Save",
     "cancelEdit": "Cancel",
+    "editChatLink": "Chỉnh sửa liên kết chat",
+    "noChatLink": "Chưa thêm liên kết chat",
     "sosInviteButton": "Chia sẻ liên kết SOS",
     "sosLinkCopied": "Đã sao chép liên kết SOS!",
     "sosJoined": "Bạn đã được thêm làm người tham gia trực tiếp"

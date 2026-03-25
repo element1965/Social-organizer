@@ -203,6 +203,8 @@
     "editAmount": "Edit",
     "saveAmount": "Save",
     "cancelEdit": "Cancel",
+    "editChatLink": "Rediger chat-lenke",
+    "noChatLink": "Ingen chat-lenke lagt til",
     "sosInviteButton": "Del SOS-lenke",
     "sosLinkCopied": "SOS-lenke kopiert!",
     "sosJoined": "Du er lagt til som direkte deltaker"
