@@ -130,6 +130,18 @@ export const collectionRouter = router({
       };
     }),
 
+  updateChatLink: protectedProcedure
+    .input(z.object({ id: z.string(), chatLink: z.string().url() }))
+    .mutation(async ({ ctx, input }) => {
+      const collection = await ctx.db.collection.findUnique({ where: { id: input.id } });
+      if (!collection) throw new TRPCError({ code: 'NOT_FOUND' });
+      if (collection.creatorId !== ctx.userId) throw new TRPCError({ code: 'FORBIDDEN' });
+      return ctx.db.collection.update({
+        where: { id: input.id },
+        data: { chatLink: input.chatLink },
+      });
+    }),
+
   close: protectedProcedure
     .input(z.object({ id: z.string() }))
     .mutation(async ({ ctx, input }) => {

@@ -203,6 +203,8 @@
     "editAmount": "Edit",
     "saveAmount": "Save",
     "cancelEdit": "Cancel",
+    "editChatLink": "Уреди везу за чет",
+    "noChatLink": "Веза за чет није додата",
     "sosInviteButton": "Подели SOS везу",
     "sosLinkCopied": "SOS веза копирана!",
     "sosJoined": "Додати сте као директан учесник"

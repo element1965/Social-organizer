@@ -203,6 +203,8 @@
     "editAmount": "Modifica",
     "saveAmount": "Salva",
     "cancelEdit": "Annulla",
+    "editChatLink": "Modifica link chat",
+    "noChatLink": "Nessun link chat aggiunto",
     "sosInviteButton": "Condividi link SOS",
     "sosLinkCopied": "Link SOS copiato!",
     "sosJoined": "Sei stato aggiunto come partecipante diretto"

@@ -203,6 +203,8 @@
     "editAmount": "Edit",
     "saveAmount": "Save",
     "cancelEdit": "Cancel",
+    "editChatLink": "Upravit odkaz na chat",
+    "noChatLink": "Odkaz na chat nebyl přidán",
     "sosInviteButton": "Sdílet SOS odkaz",
     "sosLinkCopied": "SOS odkaz zkopírován!",
     "sosJoined": "Byl jsi přidán jako přímý účastník"

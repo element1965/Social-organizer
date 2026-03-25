@@ -203,6 +203,8 @@
     "editAmount": "Edit",
     "saveAmount": "Save",
     "cancelEdit": "Cancel",
+    "editChatLink": "चैट लिंक संपादित करें",
+    "noChatLink": "कोई चैट लिंक नहीं जोड़ा गया",
     "sosInviteButton": "SOS लिंक शेयर करें",
     "sosLinkCopied": "SOS लिंक कॉपी हो गया!",
     "sosJoined": "आपको प्रत्यक्ष प्रतिभागी के रूप में जोड़ा गया"
