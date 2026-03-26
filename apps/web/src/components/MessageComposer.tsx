@@ -97,6 +97,7 @@ export function MessageComposer({ value, onChange, disabled }: MessageComposerPr
         className={`${inputCls} resize-y`}
         rows={3}
         disabled={disabled}
+        onFocus={(e) => setTimeout(() => e.target.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 300)}
       />
 
       {/* Media: file upload + URL */}
@@ -139,6 +140,7 @@ export function MessageComposer({ value, onChange, disabled }: MessageComposerPr
             placeholder={t('broadcast.mediaUrlPlaceholder')}
             className={inputCls}
             disabled={disabled}
+            onFocus={(e) => setTimeout(() => e.target.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 300)}
           />
         )}
       </div>
@@ -156,6 +158,7 @@ export function MessageComposer({ value, onChange, disabled }: MessageComposerPr
             placeholder={t('broadcast.buttonTextPlaceholder')}
             className={`${inputCls} flex-1`}
             disabled={disabled}
+            onFocus={(e) => setTimeout(() => e.target.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 300)}
           />
           <input
             value={value.buttonUrl || ''}
@@ -163,6 +166,7 @@ export function MessageComposer({ value, onChange, disabled }: MessageComposerPr
             placeholder="https://..."
             className={`${inputCls} flex-[2]`}
             disabled={disabled}
+            onFocus={(e) => setTimeout(() => e.target.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 300)}
           />
         </div>
       </div>
