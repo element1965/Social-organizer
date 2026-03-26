@@ -79,6 +79,20 @@ function VariantSelector({ value, onChange, disabled }: { value: Variant; onChan
 export function BroadcastPanel({ onClose }: BroadcastPanelProps) {
   const { t } = useTranslation();
   const [tab, setTab] = useState<Tab>('send');
+
+  // Track visual viewport to keep modal above iOS keyboard
+  const [kbOffset, setKbOffset] = useState(0);
+  useEffect(() => {
+    const vv = window.visualViewport;
+    if (!vv) return;
+    const update = () => {
+      const offset = Math.max(0, window.innerHeight - vv.offsetTop - vv.height);
+      setKbOffset(offset);
+    };
+    vv.addEventListener('resize', update);
+    vv.addEventListener('scroll', update);
+    return () => { vv.removeEventListener('resize', update); vv.removeEventListener('scroll', update); };
+  }, []);
   const [mode, setMode] = useState<'all' | 'direct'>('all');
   const [telegramId, setTelegramId] = useState('');
   const [msg, setMsg] = useState<MessageData>({ ...emptyMessage });
@@ -252,8 +266,14 @@ export function BroadcastPanel({ onClose }: BroadcastPanelProps) {
     tab === t ? 'bg-emerald-600 text-white' : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300'
   }`;
 
+  const bottomPx = kbOffset > 0 ? kbOffset + 8 : 80; // 80 = bottom-20 (5rem)
+  const maxHeightPx = `calc(100dvh - ${bottomPx + 16}px)`;
+
   return (
-    <div className="fixed inset-x-4 bottom-20 max-h-[75vh] bg-white dark:bg-gray-900 rounded-2xl shadow-2xl z-50 flex flex-col border border-gray-200 dark:border-gray-700">
+    <div
+      className="fixed inset-x-4 bg-white dark:bg-gray-900 rounded-2xl shadow-2xl z-50 flex flex-col border border-gray-200 dark:border-gray-700"
+      style={{ bottom: `${bottomPx}px`, maxHeight: maxHeightPx }}
+    >
       {/* Header */}
       <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
         <h3 className="font-semibold text-gray-900 dark:text-white flex items-center gap-2">
@@ -301,6 +321,7 @@ export function BroadcastPanel({ onClose }: BroadcastPanelProps) {
                 onChange={(e) => setTelegramId(e.target.value)}
                 placeholder={t('broadcast.telegramIdPlaceholder')}
                 className={inputCls}
+                onFocus={(e) => setTimeout(() => e.target.scrollIntoView({ behavior: 'smooth', block: 'center' }), 300)}
               />
             )}
 
