@@ -944,5 +944,13 @@
     "autoConnect": "您将直接与 {{name}} 建立联系 — 无需审批。",
     "collectionClosed": "此募集已{{status}}。",
     "participantsCount": "{{count}} 位参与者"
+  },
+  "support": {
+    "title": "支持聊天",
+    "noConversations": "暂无对话",
+    "noMessages": "暂无消息",
+    "replyPlaceholder": "回复...",
+    "unknownUser": "未知用户",
+    "chatButton": "聊天"
   }
 }

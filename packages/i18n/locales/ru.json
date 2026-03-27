@@ -944,5 +944,13 @@
     "autoConnect": "Вы будете подключены к {{name}} напрямую — без ожидания подтверждения.",
     "collectionClosed": "Этот сбор {{status}}.",
     "participantsCount": "{{count}} участников"
+  },
+  "support": {
+    "title": "Чат поддержки",
+    "noConversations": "Нет обращений",
+    "noMessages": "Нет сообщений",
+    "replyPlaceholder": "Ответить...",
+    "unknownUser": "Неизвестный пользователь",
+    "chatButton": "Чат"
   }
 }

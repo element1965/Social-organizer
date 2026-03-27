@@ -944,5 +944,13 @@
     "autoConnect": "Sie werden direkt mit {{name}} verbunden — keine Genehmigung erforderlich.",
     "collectionClosed": "Diese Sammlung ist {{status}}.",
     "participantsCount": "{{count}} Teilnehmer"
+  },
+  "support": {
+    "title": "Support-Chat",
+    "noConversations": "Keine Gespräche",
+    "noMessages": "Keine Nachrichten",
+    "replyPlaceholder": "Antworten...",
+    "unknownUser": "Unbekannter Benutzer",
+    "chatButton": "Chat"
   }
 }

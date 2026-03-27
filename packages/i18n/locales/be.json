@@ -944,5 +944,13 @@
     "autoConnect": "Вас падключаць да {{name}} напрамую — без чакання пацвярджэння.",
     "collectionClosed": "Гэты збор {{status}}.",
     "participantsCount": "{{count}} удзельнікаў"
+  },
+  "support": {
+    "title": "Чат падтрымкі",
+    "noConversations": "Няма звяртанняў",
+    "noMessages": "Няма паведамленняў",
+    "replyPlaceholder": "Адказаць...",
+    "unknownUser": "Невядомы карыстальнік",
+    "chatButton": "Чат"
   }
 }

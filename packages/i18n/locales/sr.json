@@ -944,5 +944,13 @@
     "autoConnect": "Бићете директно повезани са {{name}} — без потребе за одобрењем.",
     "collectionClosed": "Ова збирка је {{status}}.",
     "participantsCount": "{{count}} учесника"
+  },
+  "support": {
+    "title": "Čet podrške",
+    "noConversations": "Nema razgovora",
+    "noMessages": "Nema poruka",
+    "replyPlaceholder": "Odgovori...",
+    "unknownUser": "Nepoznat korisnik",
+    "chatButton": "Čet"
   }
 }

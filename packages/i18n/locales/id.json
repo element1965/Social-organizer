@@ -944,5 +944,13 @@
     "autoConnect": "Anda akan terhubung langsung dengan {{name}} — tanpa perlu persetujuan.",
     "collectionClosed": "Koleksi ini {{status}}.",
     "participantsCount": "{{count}} peserta"
+  },
+  "support": {
+    "title": "Obrolan Dukungan",
+    "noConversations": "Tidak ada percakapan",
+    "noMessages": "Tidak ada pesan",
+    "replyPlaceholder": "Balas...",
+    "unknownUser": "Pengguna tidak diketahui",
+    "chatButton": "Obrolan"
   }
 }

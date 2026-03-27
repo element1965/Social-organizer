@@ -999,5 +999,13 @@
     "autoConnect": "תחובר ישירות ל-{{name}} — ללא צורך באישור.",
     "collectionClosed": "האוסף הזה {{status}}.",
     "participantsCount": "{{count}} משתתפים"
+  },
+  "support": {
+    "title": "צ'אט תמיכה",
+    "noConversations": "אין שיחות",
+    "noMessages": "אין הודעות",
+    "replyPlaceholder": "השב...",
+    "unknownUser": "משתמש לא ידוע",
+    "chatButton": "צ'אט"
   }
 }

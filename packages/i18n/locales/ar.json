@@ -944,5 +944,13 @@
     "autoConnect": "ستتصل مباشرة بـ {{name}} — لا حاجة للموافقة.",
     "collectionClosed": "هذه المجموعة {{status}}.",
     "participantsCount": "{{count}} مشاركين"
+  },
+  "support": {
+    "title": "محادثة الدعم",
+    "noConversations": "لا توجد محادثات",
+    "noMessages": "لا توجد رسائل",
+    "replyPlaceholder": "الرد...",
+    "unknownUser": "مستخدم غير معروف",
+    "chatButton": "دردشة"
   }
 }

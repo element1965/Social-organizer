@@ -944,5 +944,13 @@
     "autoConnect": "{{name}} と直接つながります — 承認不要。",
     "collectionClosed": "この募集は{{status}}です。",
     "participantsCount": "{{count}} 人の参加者"
+  },
+  "support": {
+    "title": "サポートチャット",
+    "noConversations": "会話はありません",
+    "noMessages": "メッセージはありません",
+    "replyPlaceholder": "返信...",
+    "unknownUser": "不明なユーザー",
+    "chatButton": "チャット"
   }
 }

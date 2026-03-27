@@ -944,5 +944,13 @@
     "autoConnect": "आप सीधे {{name}} से जुड़ेंगे — कोई अनुमोदन आवश्यक नहीं।",
     "collectionClosed": "यह संग्रह {{status}} है।",
     "participantsCount": "{{count}} प्रतिभागी"
+  },
+  "support": {
+    "title": "सहायता चैट",
+    "noConversations": "कोई बातचीत नहीं",
+    "noMessages": "कोई संदेश नहीं",
+    "replyPlaceholder": "उत्तर दें...",
+    "unknownUser": "अज्ञात उपयोगकर्ता",
+    "chatButton": "चैट"
   }
 }

@@ -944,5 +944,13 @@
     "autoConnect": "Te conectarás directamente con {{name}} — sin necesidad de aprobación.",
     "collectionClosed": "Esta colecta está {{status}}.",
     "participantsCount": "{{count}} participantes"
+  },
+  "support": {
+    "title": "Chat de soporte",
+    "noConversations": "Sin conversaciones",
+    "noMessages": "Sin mensajes",
+    "replyPlaceholder": "Responder...",
+    "unknownUser": "Usuario desconocido",
+    "chatButton": "Chat"
   }
 }

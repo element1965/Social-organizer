@@ -944,5 +944,13 @@
     "autoConnect": "Budete přímo propojeni s {{name}} — bez nutnosti schválení.",
     "collectionClosed": "Tato sbírka je {{status}}.",
     "participantsCount": "{{count}} účastníků"
+  },
+  "support": {
+    "title": "Chat podpory",
+    "noConversations": "Žádné konverzace",
+    "noMessages": "Žádné zprávy",
+    "replyPlaceholder": "Odpovědět...",
+    "unknownUser": "Neznámý uživatel",
+    "chatButton": "Chat"
   }
 }

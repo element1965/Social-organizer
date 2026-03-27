@@ -944,5 +944,13 @@
     "autoConnect": "Du kommer att anslutas direkt till {{name}} — inget godkännande krävs.",
     "collectionClosed": "Den här insamlingen är {{status}}.",
     "participantsCount": "{{count}} deltagare"
+  },
+  "support": {
+    "title": "Supportchatt",
+    "noConversations": "Inga samtal",
+    "noMessages": "Inga meddelanden",
+    "replyPlaceholder": "Svara...",
+    "unknownUser": "Okänd användare",
+    "chatButton": "Chatt"
   }
 }

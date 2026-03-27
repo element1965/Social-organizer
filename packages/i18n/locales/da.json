@@ -944,5 +944,13 @@
     "autoConnect": "Du vil blive forbundet direkte med {{name}} — ingen godkendelse kræves.",
     "collectionClosed": "Denne indsamling er {{status}}.",
     "participantsCount": "{{count}} deltagere"
+  },
+  "support": {
+    "title": "Supportchat",
+    "noConversations": "Ingen samtaler",
+    "noMessages": "Ingen beskeder",
+    "replyPlaceholder": "Svar...",
+    "unknownUser": "Ukendt bruger",
+    "chatButton": "Chat"
   }
 }

@@ -944,5 +944,13 @@
     "autoConnect": "U wordt direct verbonden met {{name}} — geen goedkeuring vereist.",
     "collectionClosed": "Deze collectie is {{status}}.",
     "participantsCount": "{{count}} deelnemers"
+  },
+  "support": {
+    "title": "Ondersteuningschat",
+    "noConversations": "Geen gesprekken",
+    "noMessages": "Geen berichten",
+    "replyPlaceholder": "Reageer...",
+    "unknownUser": "Onbekende gebruiker",
+    "chatButton": "Chat"
   }
 }

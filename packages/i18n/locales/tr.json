@@ -944,5 +944,13 @@
     "autoConnect": "{{name}} ile doğrudan bağlanacaksınız — onay gerekmiyor.",
     "collectionClosed": "Bu koleksiyon {{status}}.",
     "participantsCount": "{{count}} katılımcı"
+  },
+  "support": {
+    "title": "Destek Sohbeti",
+    "noConversations": "Konuşma yok",
+    "noMessages": "Mesaj yok",
+    "replyPlaceholder": "Yanıtla...",
+    "unknownUser": "Bilinmeyen kullanıcı",
+    "chatButton": "Sohbet"
   }
 }

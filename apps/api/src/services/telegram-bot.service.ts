@@ -848,17 +848,37 @@ export async function handleTelegramUpdate(update: TgUpdate): Promise<void> {
   const from = msg.from;
   const userName = [from?.first_name, from?.last_name].filter(Boolean).join(' ') || 'Unknown';
   const userTag = from?.username ? ` (@${from.username})` : '';
-  const userId = from?.id ? ` [${from.id}]` : '';
+  const tgUserId = from?.id ? ` [${from.id}]` : '';
+  const platformId = String(chatId);
 
   // Send user info header first
   await sendTelegramMessage(
     SUPPORT_CHAT_ID,
-    `💬 <b>Сообщение от пользователя</b>\n\n👤 ${userName}${userTag}${userId}${!hasMedia && text ? `\n\n${text}` : ''}`,
+    `💬 <b>Сообщение от пользователя</b>\n\n👤 ${userName}${userTag}${tgUserId}${!hasMedia && text ? `\n\n${text}` : ''}`,
   );
 
   // Forward the original message (preserves photos, videos, documents, etc.)
   if (hasMedia && msg.message_id) {
     await forwardTelegramMessage(chatId, SUPPORT_CHAT_ID, msg.message_id);
+  }
+
+  // Save to in-app support DB — find linked app user if any
+  if (text) {
+    const db = getDb();
+    const appAccount = await db.platformAccount.findFirst({
+      where: { platform: 'TELEGRAM', platformId },
+      select: { userId: true },
+    }).catch(() => null);
+
+    db.supportMessage.create({
+      data: {
+        userId: appAccount?.userId ?? null,
+        platformId,
+        userName,
+        fromAdmin: false,
+        message: text,
+      },
+    }).catch((err) => console.error('[Support] Failed to save TG message:', err));
   }
 
   // Reply to user
