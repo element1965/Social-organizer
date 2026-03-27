@@ -346,7 +346,7 @@ export function LandingPage({ variant, inviteToken: inviteTokenProp }: { variant
             {t('landing.heroSmallLine')}
           </p>
           <p className="text-gray-500 text-sm mb-10">
-            {t('landing.scaleTitle')}
+            {t('landing.heroCopyline')}
           </p>
           <div className="flex flex-col sm:flex-row gap-4">
             <button
@@ -371,91 +371,77 @@ export function LandingPage({ variant, inviteToken: inviteTokenProp }: { variant
           </button>
         </section>
 
-        {/* === Section: Principle === */}
+        {/* === Block 1: Core Idea === */}
         <section className="flex flex-col items-center justify-center px-6 py-20">
-          <h2 className="text-3xl md:text-5xl font-bold text-white mb-8 text-center">
-            {t('landing.principleTitle')}
-          </h2>
-          <div className="max-w-3xl w-full space-y-6">
-            <p className="text-gray-300 text-base md:text-lg leading-relaxed text-center">
+          <div className="max-w-2xl w-full text-center">
+            <h2 className="text-3xl md:text-5xl font-bold text-white mb-8">
+              {t('landing.principleTitle')}
+            </h2>
+            <p className="text-gray-300 text-lg md:text-xl leading-relaxed whitespace-pre-line">
               {t('landing.principleText')}
             </p>
           </div>
         </section>
 
-        {/* === Section: Neutral Tool === */}
-        <section className="flex flex-col items-center justify-center px-6 py-16">
-          <div className="max-w-3xl w-full">
-            <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-8">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 bg-teal-500/20 rounded-lg flex items-center justify-center">
-                  <Shield className="text-teal-400" size={20} />
-                </div>
-                <h3 className="text-white font-semibold text-xl">{t('landing.neutralTitle')}</h3>
-              </div>
-              <p className="text-gray-300 text-base leading-relaxed mb-6">
-                {t('landing.neutralText')}
-              </p>
-              <p className="text-teal-400 font-semibold text-sm tracking-wide">
-                {t('landing.neutralList')}
-              </p>
-            </div>
-          </div>
-        </section>
-
-        {/* === Section: Simple Example === */}
-        <section className="flex flex-col items-center justify-center px-6 py-16">
-          <div className="max-w-3xl w-full">
-            <div className="flex items-center gap-3 mb-6 justify-center">
-              <div className="w-10 h-10 bg-amber-500/20 rounded-lg flex items-center justify-center">
-                <Calculator className="text-amber-400" size={20} />
-              </div>
-              <h2 className="text-2xl md:text-4xl font-bold text-white">
-                {t('landing.exampleTitle')}
-              </h2>
-            </div>
-            <p className="text-gray-300 text-base md:text-lg leading-relaxed text-center mb-8">
+        {/* === Block 2: How it works === */}
+        <section className="flex flex-col items-center justify-center px-6 py-20">
+          <div className="max-w-2xl w-full text-center">
+            <h2 className="text-3xl md:text-5xl font-bold text-white mb-8">
+              {t('landing.exampleTitle')}
+            </h2>
+            <p className="text-gray-300 text-lg md:text-xl leading-relaxed whitespace-pre-line">
               {t('landing.exampleText')}
             </p>
-            <blockquote className="border-l-4 border-teal-500/50 pl-6 py-2">
-              <p className="text-gray-400 text-base leading-relaxed italic">
-                {t('landing.notFundText')}
-              </p>
-            </blockquote>
           </div>
         </section>
 
-        {/* === Section: Network Growth Calculator === */}
+        {/* === Network Growth Calculator === */}
         <NetworkCalculator />
 
-        {/* === Section: Decentralized Analogue === */}
-        <section className="flex flex-col items-center justify-center px-6 py-16">
-          <div className="max-w-3xl w-full">
-            <div className="flex items-center gap-3 mb-6 justify-center">
-              <div className="w-10 h-10 bg-blue-500/20 rounded-lg flex items-center justify-center">
-                <Globe className="text-blue-400" size={20} />
-              </div>
-              <h2 className="text-2xl md:text-4xl font-bold text-white">
-                {t('landing.analogTitle')}
-              </h2>
-            </div>
-            <p className="text-gray-300 text-base md:text-lg leading-relaxed text-center">
+        {/* === Block 3: Each new person matters === */}
+        <section className="flex flex-col items-center justify-center px-6 py-20">
+          <div className="max-w-2xl w-full text-center">
+            <h2 className="text-3xl md:text-5xl font-bold text-white mb-8">
+              {t('landing.analogTitle')}
+            </h2>
+            <p className="text-gray-300 text-lg md:text-xl leading-relaxed whitespace-pre-line">
               {t('landing.analogText')}
             </p>
           </div>
         </section>
 
-        {/* === Section: FAQ (hidden) === */}
-        {/* <LandingFaq variant={variant} /> */}
+        {/* === Block 4: Only two signals === */}
+        <section className="flex flex-col items-center justify-center px-6 py-20">
+          <div className="max-w-2xl w-full text-center">
+            <h2 className="text-3xl md:text-5xl font-bold text-white mb-8">
+              {t('landing.neutralTitle')}
+            </h2>
+            <p className="text-gray-300 text-lg md:text-xl leading-relaxed whitespace-pre-line">
+              {t('landing.neutralText')}
+            </p>
+          </div>
+        </section>
 
-        {/* === Section: Works locally. Scales globally. === */}
-        <section className="flex flex-col items-center justify-center px-6 py-16">
-          <div className="max-w-3xl w-full">
-            <h2 className="text-3xl md:text-5xl font-bold text-white mb-8 text-center">
+        {/* === Block 5: No Platform === */}
+        <section className="flex flex-col items-center justify-center px-6 py-20">
+          <div className="max-w-2xl w-full text-center">
+            <h2 className="text-3xl md:text-5xl font-bold text-white mb-8">
               {t('landing.scaleTitle')}
             </h2>
-            <p className="text-gray-300 text-base md:text-lg leading-relaxed text-center whitespace-pre-line">
+            <p className="text-gray-300 text-lg md:text-xl leading-relaxed whitespace-pre-line">
               {t('landing.scaleText')}
+            </p>
+          </div>
+        </section>
+
+        {/* === Block 6: Open-source === */}
+        <section className="flex flex-col items-center justify-center px-6 py-20">
+          <div className="max-w-2xl w-full text-center">
+            <h2 className="text-3xl md:text-5xl font-bold text-white mb-8">
+              {t('landing.block6Title')}
+            </h2>
+            <p className="text-gray-300 text-lg md:text-xl leading-relaxed whitespace-pre-line">
+              {t('landing.block6Text')}
             </p>
           </div>
         </section>

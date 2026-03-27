@@ -2,218 +2,150 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { trpc } from '../lib/trpc';
-import { Button } from '../components/ui/button';
-import { Input } from '../components/ui/input';
-import { Select } from '../components/ui/select';
-import { SocialIcon } from '../components/ui/social-icons';
-import { MessageCircle, Wallet, CheckCircle } from 'lucide-react';
+import { Users, Wallet, Loader2 } from 'lucide-react';
 import { cn } from '../lib/utils';
-import { validateContact } from '@so/shared';
 
-const CONTACT_FIELDS = [
-  { type: 'whatsapp', placeholder: '+380...' },
-  { type: 'facebook', placeholder: 'facebook.com/...' },
-  { type: 'instagram', placeholder: '@username' },
-  { type: 'twitter', placeholder: '@username' },
-  { type: 'tiktok', placeholder: '@username' },
-] as const;
+const PRESET_AMOUNTS = [10, 30, 50, 100];
 
 export function OnboardingPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const [step, setStep] = useState(0); // 0 = contacts, 1 = budget
+  const [step, setStep] = useState(0);
+  const [selected, setSelected] = useState<number | null>(null);
+  const [custom, setCustom] = useState('');
+  const [showCustom, setShowCustom] = useState(false);
 
-  // Fetch user data to get TG username
-  const { data: me } = trpc.user.me.useQuery();
-  const { data: existingContacts } = trpc.user.getContacts.useQuery({});
-
-  // Find telegram contact from existing contacts
-  const tgContact = existingContacts?.find(c => c.type === 'telegram');
-  const hasTelegram = !!tgContact?.value;
-
-  // Contacts state
-  const [contacts, setContacts] = useState<Record<string, string>>({
-    whatsapp: '',
-    facebook: '',
-    instagram: '',
-    twitter: '',
-    tiktok: '',
-  });
-
-  // Budget state
-  const [budgetAmount, setBudgetAmount] = useState('');
-  const [budgetCurrency, setBudgetCurrency] = useState('USD');
-
-  const { data: currencies } = trpc.currency.list.useQuery();
-  const { data: preview } = trpc.currency.toUSD.useQuery(
-    { amount: Number(budgetAmount), from: budgetCurrency },
-    { enabled: !!budgetAmount && Number(budgetAmount) > 0 && budgetCurrency !== 'USD' }
-  );
-
-  const completeOnboarding = trpc.user.completeOnboarding.useMutation();
   const setBudget = trpc.user.setMonthlyBudget.useMutation();
-  const updateContacts = trpc.user.updateContacts.useMutation();
+  const completeOnboarding = trpc.user.completeOnboarding.useMutation();
   const utils = trpc.useUtils();
 
-  const contactErrors = Object.fromEntries(
-    Object.entries(contacts).map(([type, value]) => [type, validateContact(type, value)])
-  );
-  const filledContactsCount = Object.entries(contacts).filter(([type, v]) => v.trim() && !contactErrors[type]).length;
-  // TG counts as one contact, user needs 1 more (total 2 minimum)
-  const totalContacts = filledContactsCount + (hasTelegram ? 1 : 0);
-  const contactsValid = totalContacts >= 2;
-
-  const budgetInUSD = budgetCurrency === 'USD' ? Number(budgetAmount) : (preview?.result ?? 0);
-  const budgetValid = Number(budgetAmount) > 0 && (budgetCurrency === 'USD' ? Number(budgetAmount) >= 1 : budgetInUSD >= 1);
-
-  const isContactsStep = step === 0;
-  const isBudgetStep = step === 1;
-
-  const handleContactsNext = async () => {
-    const contactsArray = Object.entries(contacts)
-      .map(([type, value]) => ({ type, value }));
-    await updateContacts.mutateAsync(contactsArray);
-    setStep(1);
-  };
+  const amount = showCustom ? Number(custom) : selected;
+  const amountValid = amount !== null && amount > 0;
 
   const handleFinish = async () => {
-    if (budgetValid) {
-      await setBudget.mutateAsync({
-        amount: Number(budgetAmount),
-        inputCurrency: budgetCurrency,
-      });
+    if (amountValid) {
+      await setBudget.mutateAsync({ amount: amount!, inputCurrency: 'USD' });
     }
     await completeOnboarding.mutateAsync();
     await utils.user.me.refetch();
     navigate('/dashboard');
   };
 
-  const handleSkipBudget = async () => {
-    await completeOnboarding.mutateAsync();
-    await utils.user.me.refetch();
-    navigate('/dashboard');
-  };
+  const isPending = setBudget.isPending || completeOnboarding.isPending;
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-950 flex flex-col px-4">
-      <div className="flex-1 flex flex-col items-center pt-8 max-w-md mx-auto w-full">
-        <div className="w-16 h-16 rounded-2xl bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center mb-4">
-          {isContactsStep ? (
-            <MessageCircle className="w-8 h-8 text-blue-600 dark:text-blue-400" />
-          ) : (
-            <Wallet className="w-8 h-8 text-blue-600 dark:text-blue-400" />
-          )}
-        </div>
-        <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-2 text-center">
-          {isContactsStep ? t('onboarding.step5.title') : t('onboarding.step6.title')}
-        </h2>
-        <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed text-center mb-4">
-          {isContactsStep ? t('onboarding.step5.text') : t('onboarding.step6.text')}
-        </p>
+    <div className="min-h-screen bg-gray-950 flex flex-col items-center justify-between px-4 py-8">
+      <div className="flex-1 flex flex-col items-center justify-center w-full max-w-sm">
 
-        {/* Step 1: Contacts */}
-        {isContactsStep && (
-          <div className="w-full space-y-3">
-            {hasTelegram && (
-              <div className="flex items-center gap-2">
-                <SocialIcon type="telegram" className="w-5 h-5 text-gray-500 dark:text-gray-300 shrink-0" />
-                <div className="flex-1 flex items-center gap-2 px-3 py-2 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-md">
-                  <span className="text-sm text-green-700 dark:text-green-300 truncate">{tgContact.value}</span>
-                  <CheckCircle className="w-4 h-4 text-green-500 shrink-0" />
-                </div>
-              </div>
-            )}
-            {CONTACT_FIELDS.map((field) => (
-              <div key={field.type} className="flex items-center gap-2">
-                <SocialIcon type={field.type} className="w-5 h-5 text-gray-500 dark:text-gray-300 shrink-0" />
-                <Input
-                  value={contacts[field.type] || ''}
-                  onChange={(e) => setContacts(prev => ({ ...prev, [field.type]: e.target.value }))}
-                  placeholder={field.placeholder}
-                  className="flex-1"
-                  error={contacts[field.type]?.trim() && contactErrors[field.type] ? t(contactErrors[field.type]!) : undefined}
-                />
-              </div>
-            ))}
-            <p className={cn(
-              'text-sm font-medium',
-              contactsValid ? 'text-green-600 dark:text-green-400' : 'text-gray-500 dark:text-gray-300'
-            )}>
-              {t('onboarding.contactsFilled', { count: totalContacts })}
+        {/* Step 0 — Entry */}
+        {step === 0 && (
+          <div className="w-full flex flex-col items-center text-center">
+            <div className="w-20 h-20 rounded-3xl bg-teal-500/15 flex items-center justify-center mb-8">
+              <Users className="w-10 h-10 text-teal-400" />
+            </div>
+            <h1 className="text-3xl font-bold text-white mb-4">
+              {t('onboarding.entryTitle')}
+            </h1>
+            <p className="text-gray-400 text-lg leading-relaxed">
+              {t('onboarding.entryText')}
             </p>
           </div>
         )}
 
-        {/* Step 2: Budget input */}
-        {isBudgetStep && (
-          <div className="w-full space-y-3">
-            <div className="flex gap-2">
-              <Input
-                type="number"
-                value={budgetAmount}
-                onChange={(e) => setBudgetAmount(e.target.value)}
-                placeholder="0"
-                className="flex-1"
-                min={1}
-              />
-              <Select
-                id="budget-currency"
-                value={budgetCurrency}
-                onChange={(e) => setBudgetCurrency(e.target.value)}
-                options={currencies?.map(c => ({ value: c.code, label: `${c.symbol} ${c.code}` })) ?? [{ value: 'USD', label: '$ USD' }]}
-                className="w-28"
-              />
+        {/* Step 1 — Pledge */}
+        {step === 1 && (
+          <div className="w-full flex flex-col items-center text-center">
+            <div className="w-20 h-20 rounded-3xl bg-blue-500/15 flex items-center justify-center mb-8">
+              <Wallet className="w-10 h-10 text-blue-400" />
             </div>
-            {budgetCurrency !== 'USD' && preview && Number(budgetAmount) > 0 && (
-              <p className="text-sm text-gray-500 dark:text-gray-300">{'\u2248'} ${preview.result} USD</p>
+            <h1 className="text-3xl font-bold text-white mb-8">
+              {t('onboarding.pledgeTitle')}
+            </h1>
+
+            {/* Amount chips */}
+            <div className="flex flex-wrap gap-3 justify-center mb-4">
+              {PRESET_AMOUNTS.map((a) => (
+                <button
+                  key={a}
+                  onClick={() => { setSelected(a); setShowCustom(false); setCustom(''); }}
+                  className={cn(
+                    'px-6 py-3 rounded-xl text-lg font-semibold transition-all border-2',
+                    selected === a && !showCustom
+                      ? 'bg-teal-500 border-teal-500 text-white'
+                      : 'bg-white/5 border-white/10 text-gray-300 hover:border-teal-500/50 hover:text-white',
+                  )}
+                >
+                  ${a}
+                </button>
+              ))}
+              <button
+                onClick={() => { setShowCustom(true); setSelected(null); }}
+                className={cn(
+                  'px-6 py-3 rounded-xl text-lg font-semibold transition-all border-2',
+                  showCustom
+                    ? 'bg-teal-500 border-teal-500 text-white'
+                    : 'bg-white/5 border-white/10 text-gray-300 hover:border-teal-500/50 hover:text-white',
+                )}
+              >
+                {t('onboarding.customAmount')}
+              </button>
+            </div>
+
+            {showCustom && (
+              <div className="w-full mb-4">
+                <div className="relative">
+                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-lg">$</span>
+                  <input
+                    type="number"
+                    min={1}
+                    value={custom}
+                    onChange={(e) => setCustom(e.target.value)}
+                    placeholder="0"
+                    autoFocus
+                    className="w-full pl-8 pr-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white text-lg placeholder:text-gray-600 focus:outline-none focus:border-teal-500"
+                  />
+                </div>
+              </div>
             )}
-            <p className="text-xs text-gray-400">{t('onboarding.budgetNote')}</p>
+
+            <p className="text-gray-500 text-sm leading-relaxed mt-2">
+              {t('onboarding.pledgeNote')}
+            </p>
           </div>
         )}
-
       </div>
 
-      <div className="w-full max-w-md mx-auto pb-6 pt-3">
-        <div className="flex justify-center gap-2 mb-4">
+      {/* Footer */}
+      <div className="w-full max-w-sm pb-safe">
+        {/* Dots */}
+        <div className="flex justify-center gap-2 mb-6">
           {[0, 1].map((i) => (
-            <div key={i} className={cn('w-2 h-2 rounded-full', i === step ? 'bg-blue-600' : 'bg-gray-300 dark:bg-gray-700')} />
+            <div
+              key={i}
+              className={cn(
+                'h-1.5 rounded-full transition-all',
+                i === step ? 'w-6 bg-teal-400' : 'w-1.5 bg-gray-700',
+              )}
+            />
           ))}
         </div>
 
-        {isContactsStep ? (
-          <div className="space-y-3">
-            <Button
-              className="w-full"
-              size="lg"
-              onClick={handleContactsNext}
-              disabled={!contactsValid || updateContacts.isPending}
-            >
-              {t('onboarding.next')}
-            </Button>
-            {!contactsValid && (
-              <p className="text-sm text-gray-500 dark:text-gray-300 text-center">{t('onboarding.contactsRequired')}</p>
-            )}
-          </div>
+        {step === 0 ? (
+          <button
+            onClick={() => setStep(1)}
+            className="w-full py-4 bg-teal-500 hover:bg-teal-400 text-white font-semibold rounded-2xl text-lg transition-colors"
+          >
+            {t('onboarding.continue')}
+          </button>
         ) : (
-          <div className="space-y-3">
-            <Button
-              className="w-full"
-              size="lg"
-              onClick={handleFinish}
-              disabled={!budgetValid || setBudget.isPending || completeOnboarding.isPending}
-            >
-              <Wallet className="w-4 h-4 mr-2" /> {t('onboarding.saveBudget')}
-            </Button>
-            <Button
-              className="w-full"
-              size="lg"
-              variant="ghost"
-              onClick={handleSkipBudget}
-              disabled={completeOnboarding.isPending}
-            >
-              {t('onboarding.skipForNow')}
-            </Button>
-          </div>
+          <button
+            onClick={handleFinish}
+            disabled={isPending}
+            className="w-full py-4 bg-teal-500 hover:bg-teal-400 disabled:opacity-50 text-white font-semibold rounded-2xl text-lg transition-colors flex items-center justify-center gap-2"
+          >
+            {isPending && <Loader2 className="w-5 h-5 animate-spin" />}
+            {t('onboarding.continue')}
+          </button>
         )}
       </div>
     </div>
