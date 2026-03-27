@@ -81,13 +81,15 @@ async function sendFeedbackToTelegram(userMessage: string, userId: string): Prom
 
 async function getSystemPrompt(language: string): Promise<string> {
   const db = getDb();
+  // Normalize to 2-char language code so 'ru-RU' → 'ru', 'en-US' → 'en', etc.
+  const lang2 = language.slice(0, 2).toLowerCase();
   // Load FAQ from DB in user's language
   let faqItems = await db.faqItem.findMany({
-    where: { language },
+    where: { language: lang2 },
     orderBy: { viewCount: 'desc' },
   });
   // If no FAQ in user's language, load Russian and translate
-  if (faqItems.length === 0 && language !== 'ru') {
+  if (faqItems.length === 0 && lang2 !== 'ru') {
     const ruItems = await db.faqItem.findMany({
       where: { language: 'ru' },
       orderBy: { viewCount: 'desc' },
@@ -95,7 +97,7 @@ async function getSystemPrompt(language: string): Promise<string> {
     if (ruItems.length > 0) {
       const ruBlock = ruItems.map(f => `Q: ${f.question}\nA: ${f.answer}`).join('\n\n');
       try {
-        const translated = await translateText(ruBlock, 'ru', language);
+        const translated = await translateText(ruBlock, 'ru', lang2);
         return buildPrompt(language, 'FREQUENTLY ASKED QUESTIONS:\n\n' + translated);
       } catch {
         // If translation fails, use Russian as-is
@@ -119,7 +121,7 @@ CRITICAL CONTEXT: The user is ALREADY registered and logged in. They are using t
 STRICT RULES:
 1. ONLY answer questions about the Social Organizer and how it works
 2. If asked about ANYTHING else that is COMPLETELY unrelated to the app (weather, news, coding, math, jokes, etc.) — politely decline and redirect to organizer topics
-3. Keep responses concise (2-4 sentences)
+3. Be concise but complete. For simple questions: 1-3 sentences. For "how to use", "how to start", "what can I do" questions: provide a helpful step-by-step overview (up to 8-10 sentences). Never truncate useful information.
 4. Always respond in the user's language: ${language}
 5. IMPORTANT (takes priority over rule #2): If the user asks about a feature that does NOT exist in the app, asks "will there be X?", requests a new feature, or gives any suggestion/wish/feedback about the app — this is FEEDBACK. Start your response EXACTLY with [FEEDBACK] tag (this tag will be removed before showing to user). Then respond warmly, thank them, and say their suggestion has been forwarded to the team. Examples of feedback: "add dark theme by default", "will there be IP telephony?", "I want push notifications", "make the font bigger", "add crowdfunding".
 
@@ -168,7 +170,7 @@ export const chatRouter = router({
       try {
         const response = await getGrok().chat.completions.create({
           model: 'grok-3-mini',
-          max_tokens: 300,
+          max_tokens: 600,
           messages: chatMessages,
         });
         responseText = response.choices[0]?.message?.content || null;
@@ -180,7 +182,7 @@ export const chatRouter = router({
         try {
           const response = await getOpenAITts().chat.completions.create({
             model: 'gpt-4o-mini',
-            max_tokens: 300,
+            max_tokens: 600,
             messages: chatMessages,
           });
           responseText = response.choices[0]?.message?.content || null;
