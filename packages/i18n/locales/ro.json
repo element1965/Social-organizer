@@ -944,5 +944,13 @@
     "autoConnect": "Vei fi conectat direct cu {{name}} — fără aprobare necesară.",
     "collectionClosed": "Această colectă este {{status}}.",
     "participantsCount": "{{count}} participanți"
+  },
+  "support": {
+    "title": "Chat suport",
+    "noConversations": "Nicio conversație",
+    "noMessages": "Niciun mesaj",
+    "replyPlaceholder": "Răspunde...",
+    "unknownUser": "Utilizator necunoscut",
+    "chatButton": "Chat"
   }
 }

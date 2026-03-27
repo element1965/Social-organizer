@@ -944,5 +944,13 @@
     "autoConnect": "Вас буде підключено до {{name}} напряму — без очікування підтвердження.",
     "collectionClosed": "Цей збір {{status}}.",
     "participantsCount": "{{count}} учасників"
+  },
+  "support": {
+    "title": "Чат підтримки",
+    "noConversations": "Немає звернень",
+    "noMessages": "Немає повідомлень",
+    "replyPlaceholder": "Відповісти...",
+    "unknownUser": "Невідомий користувач",
+    "chatButton": "Чат"
   }
 }

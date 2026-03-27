@@ -17,6 +17,7 @@ import { pendingRouter } from './pending.router.js';
 import { clusterRouter } from './cluster.router.js';
 import { skillsRouter } from './skills.router.js';
 import { matchesRouter } from './matches.router.js';
+import { supportRouter } from './support.router.js';
 
 export const appRouter = router({
   auth: authRouter,
@@ -37,6 +38,7 @@ export const appRouter = router({
   cluster: clusterRouter,
   skills: skillsRouter,
   matches: matchesRouter,
+  support: supportRouter,
 });
 
 export type AppRouter = typeof appRouter;

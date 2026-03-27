@@ -131,6 +131,8 @@ model User {
   suggestedCategories      SuggestedCategory[]
   chainLinksAsGiver        MatchChainLink[]         @relation("chainGiver")
   chainLinksAsReceiver     MatchChainLink[]         @relation("chainReceiver")
+  supportMessagesAsUser    SupportMessage[]         @relation("supportMessageUser")
+  supportMessagesAsAdmin   SupportMessage[]         @relation("supportMessageAdmin")
 
   @@map("users")
 }
@@ -605,4 +607,23 @@ model MatchChainLink {
   @@index([giverId])
   @@index([receiverId])
   @@map("match_chain_links")
+}
+
+model SupportMessage {
+  id         String   @id @default(cuid())
+  userId     String?
+  platformId String?
+  userName   String?
+  fromAdmin  Boolean  @default(false)
+  adminId    String?
+  message    String
+  createdAt  DateTime @default(now())
+
+  user  User? @relation("supportMessageUser", fields: [userId], references: [id], onDelete: SetNull)
+  admin User? @relation("supportMessageAdmin", fields: [adminId], references: [id], onDelete: SetNull)
+
+  @@index([userId])
+  @@index([platformId])
+  @@index([createdAt])
+  @@map("support_messages")
 }

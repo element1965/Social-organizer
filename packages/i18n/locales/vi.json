@@ -944,5 +944,13 @@
     "autoConnect": "Bạn sẽ được kết nối trực tiếp với {{name}} — không cần phê duyệt.",
     "collectionClosed": "Chiến dịch này đã {{status}}.",
     "participantsCount": "{{count}} người tham gia"
+  },
+  "support": {
+    "title": "Trò chuyện hỗ trợ",
+    "noConversations": "Không có cuộc trò chuyện",
+    "noMessages": "Không có tin nhắn",
+    "replyPlaceholder": "Trả lời...",
+    "unknownUser": "Người dùng không xác định",
+    "chatButton": "Trò chuyện"
   }
 }

@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { MessageCircle, X, Send, Mic, MicOff, Loader2, HelpCircle, Megaphone } from 'lucide-react';
+import { MessageCircle, X, Send, Mic, MicOff, Loader2, HelpCircle, Megaphone, Users } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { cn } from '../lib/utils';
@@ -245,6 +245,20 @@ export function ChatAssistant() {
             >
               <Megaphone className="w-5 h-5 text-emerald-500" />
               <span className="text-sm font-medium">{t('broadcast.title')}</span>
+            </button>
+          )}
+          {/* Support chat button (admin only) */}
+          {isAdmin && (
+            <button
+              onClick={() => {
+                setViewState('collapsed');
+                navigate('/support');
+              }}
+              className="flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-gray-800 text-gray-900 dark:text-white rounded-full shadow-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-200 animate-in fade-in slide-in-from-top-4"
+              style={{ animationDelay: '150ms' }}
+            >
+              <Users className="w-5 h-5 text-purple-500" />
+              <span className="text-sm font-medium">{t('support.chatButton')}</span>
             </button>
           )}
         </div>

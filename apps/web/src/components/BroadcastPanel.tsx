@@ -93,8 +93,6 @@ export function BroadcastPanel({ onClose }: BroadcastPanelProps) {
     vv.addEventListener('scroll', update);
     return () => { vv.removeEventListener('resize', update); vv.removeEventListener('scroll', update); };
   }, []);
-  const [mode, setMode] = useState<'all' | 'direct'>('all');
-  const [telegramId, setTelegramId] = useState('');
   const [msg, setMsg] = useState<MessageData>({ ...emptyMessage });
   const [result, setResult] = useState<string | null>(null);
 
@@ -103,35 +101,18 @@ export function BroadcastPanel({ onClose }: BroadcastPanelProps) {
     onSuccess: (data) => setResult(t('broadcast.sentSuccess', { count: data.sent })),
     onError: () => setResult(t('broadcast.error')),
   });
-  const sendDirectMutation = trpc.broadcast.sendDirect.useMutation({
-    onSuccess: () => setResult(t('broadcast.directSuccess')),
-    onError: () => setResult(t('broadcast.error')),
-  });
 
   const handleSend = () => {
     if (!msg.text.trim()) return;
     setResult(null);
-    if (mode === 'all') {
-      sendAllMutation.mutate({
-        text: msg.text.trim(),
-        mediaType: msg.mediaType,
-        mediaUrl: !msg.mediaFileId ? msg.mediaUrl?.trim() || undefined : undefined,
-        mediaFileId: msg.mediaFileId || undefined,
-        buttonUrl: msg.buttonUrl?.trim() || undefined,
-        buttonText: msg.buttonText?.trim() || undefined,
-      });
-    } else {
-      if (!telegramId.trim()) return;
-      sendDirectMutation.mutate({
-        telegramId: telegramId.trim(),
-        text: msg.text.trim(),
-        mediaType: msg.mediaType,
-        mediaUrl: !msg.mediaFileId ? msg.mediaUrl?.trim() || undefined : undefined,
-        mediaFileId: msg.mediaFileId || undefined,
-        buttonUrl: msg.buttonUrl?.trim() || undefined,
-        buttonText: msg.buttonText?.trim() || undefined,
-      });
-    }
+    sendAllMutation.mutate({
+      text: msg.text.trim(),
+      mediaType: msg.mediaType,
+      mediaUrl: !msg.mediaFileId ? msg.mediaUrl?.trim() || undefined : undefined,
+      mediaFileId: msg.mediaFileId || undefined,
+      buttonUrl: msg.buttonUrl?.trim() || undefined,
+      buttonText: msg.buttonText?.trim() || undefined,
+    });
   };
 
   // --- Scheduled tab ---
@@ -259,7 +240,7 @@ export function BroadcastPanel({ onClose }: BroadcastPanelProps) {
   const markRead = trpc.broadcast.markRead.useMutation();
   useEffect(() => { markRead.mutate(); }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const isPending = sendAllMutation.isPending || sendDirectMutation.isPending
+  const isPending = sendAllMutation.isPending
     || scheduleMutation.isPending || createChainMutation.isPending;
 
   const tabCls = (t: Tab) => `flex-1 py-2 text-xs font-medium rounded-lg transition-colors ${
@@ -296,35 +277,6 @@ export function BroadcastPanel({ onClose }: BroadcastPanelProps) {
         {/* === SEND TAB === */}
         {tab === 'send' && (
           <>
-            <div className="flex gap-2">
-              <button
-                onClick={() => setMode('all')}
-                className={`flex-1 py-2 text-sm rounded-lg transition-colors ${
-                  mode === 'all' ? 'bg-emerald-600 text-white' : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300'
-                }`}
-              >
-                {t('broadcast.allUsers')}
-              </button>
-              <button
-                onClick={() => setMode('direct')}
-                className={`flex-1 py-2 text-sm rounded-lg transition-colors ${
-                  mode === 'direct' ? 'bg-emerald-600 text-white' : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300'
-                }`}
-              >
-                {t('broadcast.directUser')}
-              </button>
-            </div>
-
-            {mode === 'direct' && (
-              <input
-                value={telegramId}
-                onChange={(e) => setTelegramId(e.target.value)}
-                placeholder={t('broadcast.telegramIdPlaceholder')}
-                className={inputCls}
-                onFocus={(e) => setTimeout(() => e.target.scrollIntoView({ behavior: 'smooth', block: 'center' }), 300)}
-              />
-            )}
-
             <MessageComposer value={msg} onChange={setMsg} disabled={isPending} />
           </>
         )}
@@ -638,10 +590,10 @@ export function BroadcastPanel({ onClose }: BroadcastPanelProps) {
         <div className="p-4 border-t border-gray-200 dark:border-gray-700">
           <button
             onClick={handleSend}
-            disabled={!msg.text.trim() || isPending || (mode === 'direct' && !telegramId.trim())}
+            disabled={!msg.text.trim() || isPending}
             className="w-full py-2.5 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 disabled:opacity-50 transition-colors flex items-center justify-center gap-2 text-sm font-medium"
           >
-            {(sendAllMutation.isPending || sendDirectMutation.isPending) ? (
+            {sendAllMutation.isPending ? (
               <><Loader2 className="w-4 h-4 animate-spin" />{t('broadcast.sending')}</>
             ) : (
               <><Send className="w-4 h-4" />{t('broadcast.send')}</>

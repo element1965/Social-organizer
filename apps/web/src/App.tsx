@@ -20,6 +20,7 @@ import { SettingsPage } from './pages/SettingsPage';
 import { MatchesPage } from './pages/MatchesPage';
 import { InvitePage } from './pages/InvitePage';
 import { SosLandingPage } from './pages/SosLandingPage';
+import { SupportChatPage } from './pages/SupportChatPage';
 import { PrivacyPage } from './pages/PrivacyPage';
 import { TermsPage } from './pages/TermsPage';
 import { FaqPage } from './pages/FaqPage';
@@ -77,6 +78,7 @@ export function App() {
               <Route path="/settings" element={<SettingsPage />} />
               <Route path="/matches" element={<MatchesPage />} />
               <Route path="/faq" element={<FaqPage />} />
+              <Route path="/support" element={<SupportChatPage />} />
             </Route>
           </Routes>
           </TelegramBootstrap>

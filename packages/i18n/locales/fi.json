@@ -944,5 +944,13 @@
     "autoConnect": "Sinut yhdistetään suoraan {{name}}-käyttäjään — ei hyväksyntää tarvita.",
     "collectionClosed": "Tämä keräys on {{status}}.",
     "participantsCount": "{{count}} osallistujaa"
+  },
+  "support": {
+    "title": "Tukichat",
+    "noConversations": "Ei keskusteluja",
+    "noMessages": "Ei viestejä",
+    "replyPlaceholder": "Vastaa...",
+    "unknownUser": "Tuntematon käyttäjä",
+    "chatButton": "Chat"
   }
 }

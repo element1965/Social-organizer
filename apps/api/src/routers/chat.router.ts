@@ -211,6 +211,10 @@ export const chatRouter = router({
         sendFeedbackToTelegram(message, ctx.userId!).catch((err) =>
           console.error('Failed to send feedback to TG:', err),
         );
+        // Save to in-app support chat so admins can respond
+        ctx.db.supportMessage.create({
+          data: { userId: ctx.userId!, message, fromAdmin: false },
+        }).catch((err) => console.error('Failed to save feedback to support:', err));
       }
 
       // Save conversation to DB (fire-and-forget)
