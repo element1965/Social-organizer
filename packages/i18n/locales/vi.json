@@ -951,6 +951,7 @@
     "noMessages": "Không có tin nhắn",
     "replyPlaceholder": "Trả lời...",
     "unknownUser": "Người dùng không xác định",
-    "chatButton": "Trò chuyện"
+    "chatButton": "Trò chuyện",
+    "attachFile": "Đính kèm tệp"
   }
 }

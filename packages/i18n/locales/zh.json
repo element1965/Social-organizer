@@ -951,6 +951,7 @@
     "noMessages": "暂无消息",
     "replyPlaceholder": "回复...",
     "unknownUser": "未知用户",
-    "chatButton": "聊天"
+    "chatButton": "聊天",
+    "attachFile": "附加文件"
   }
 }

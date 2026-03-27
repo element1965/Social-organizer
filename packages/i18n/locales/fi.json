@@ -951,6 +951,7 @@
     "noMessages": "Ei viestejä",
     "replyPlaceholder": "Vastaa...",
     "unknownUser": "Tuntematon käyttäjä",
-    "chatButton": "Chat"
+    "chatButton": "Chat",
+    "attachFile": "Liitä tiedosto"
   }
 }

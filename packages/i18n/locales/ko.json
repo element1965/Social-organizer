@@ -951,6 +951,7 @@
     "noMessages": "메시지가 없습니다",
     "replyPlaceholder": "답장...",
     "unknownUser": "알 수 없는 사용자",
-    "chatButton": "채팅"
+    "chatButton": "채팅",
+    "attachFile": "파일 첨부"
   }
 }

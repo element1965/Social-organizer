@@ -951,6 +951,7 @@
     "noMessages": "Niciun mesaj",
     "replyPlaceholder": "Răspunde...",
     "unknownUser": "Utilizator necunoscut",
-    "chatButton": "Chat"
+    "chatButton": "Chat",
+    "attachFile": "Atașați fișier"
   }
 }

@@ -951,6 +951,7 @@
     "noMessages": "Sem mensagens",
     "replyPlaceholder": "Responder...",
     "unknownUser": "Usuário desconhecido",
-    "chatButton": "Chat"
+    "chatButton": "Chat",
+    "attachFile": "Anexar arquivo"
   }
 }

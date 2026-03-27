@@ -951,6 +951,7 @@
     "noMessages": "Geen berichten",
     "replyPlaceholder": "Reageer...",
     "unknownUser": "Onbekende gebruiker",
-    "chatButton": "Chat"
+    "chatButton": "Chat",
+    "attachFile": "Bestand bijvoegen"
   }
 }

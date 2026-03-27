@@ -951,6 +951,7 @@
     "noMessages": "メッセージはありません",
     "replyPlaceholder": "返信...",
     "unknownUser": "不明なユーザー",
-    "chatButton": "チャット"
+    "chatButton": "チャット",
+    "attachFile": "ファイルを添付"
   }
 }

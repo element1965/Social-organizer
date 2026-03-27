@@ -951,6 +951,7 @@
     "noMessages": "Inga meddelanden",
     "replyPlaceholder": "Svara...",
     "unknownUser": "Okänd användare",
-    "chatButton": "Chatt"
+    "chatButton": "Chatt",
+    "attachFile": "Bifoga fil"
   }
 }

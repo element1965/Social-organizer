@@ -951,6 +951,7 @@
     "noMessages": "कोई संदेश नहीं",
     "replyPlaceholder": "उत्तर दें...",
     "unknownUser": "अज्ञात उपयोगकर्ता",
-    "chatButton": "चैट"
+    "chatButton": "चैट",
+    "attachFile": "फ़ाइल संलग्न करें"
   }
 }

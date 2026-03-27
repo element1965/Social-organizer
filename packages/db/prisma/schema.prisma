@@ -610,14 +610,17 @@ model MatchChainLink {
 }
 
 model SupportMessage {
-  id         String   @id @default(cuid())
-  userId     String?
-  platformId String?
-  userName   String?
-  fromAdmin  Boolean  @default(false)
-  adminId    String?
-  message    String
-  createdAt  DateTime @default(now())
+  id          String   @id @default(cuid())
+  userId      String?
+  platformId  String?
+  userName    String?
+  fromAdmin   Boolean  @default(false)
+  adminId     String?
+  message     String   @default("")
+  mediaFileId String?
+  mediaType   String?  // photo | video | document | voice
+  mediaName   String?  // original filename for documents
+  createdAt   DateTime @default(now())
 
   user  User? @relation("supportMessageUser", fields: [userId], references: [id], onDelete: SetNull)
   admin User? @relation("supportMessageAdmin", fields: [adminId], references: [id], onDelete: SetNull)

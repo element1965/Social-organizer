@@ -951,6 +951,7 @@
     "noMessages": "Žádné zprávy",
     "replyPlaceholder": "Odpovědět...",
     "unknownUser": "Neznámý uživatel",
-    "chatButton": "Chat"
+    "chatButton": "Chat",
+    "attachFile": "Připojit soubor"
   }
 }

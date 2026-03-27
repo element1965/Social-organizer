@@ -951,6 +951,7 @@
     "noMessages": "Tidak ada pesan",
     "replyPlaceholder": "Balas...",
     "unknownUser": "Pengguna tidak diketahui",
-    "chatButton": "Obrolan"
+    "chatButton": "Obrolan",
+    "attachFile": "Lampirkan file"
   }
 }

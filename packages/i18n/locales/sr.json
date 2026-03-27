@@ -951,6 +951,7 @@
     "noMessages": "Nema poruka",
     "replyPlaceholder": "Odgovori...",
     "unknownUser": "Nepoznat korisnik",
-    "chatButton": "Čet"
+    "chatButton": "Čet",
+    "attachFile": "Priloži fajl"
   }
 }
