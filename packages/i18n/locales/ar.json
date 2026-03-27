@@ -519,7 +519,14 @@
     "footer": "Social Organizer — أداة تنسيق مفتوحة",
     "githubLink": "عرض الكود على GitHub",
     "faqTitle": "الأسئلة الشائعة",
-    "faqShowAll": "عرض الكل"
+    "faqShowAll": "عرض الكل",
+    "calcTitle": "إلى أين يمتد شبكتك؟",
+    "calcSlider1": "الاتصالات لكل شخص",
+    "calcSlider2": "درجات الفصل",
+    "calcReach": "يمكن لشبكتك الوصول إلى",
+    "calcPeople": "شخص",
+    "calcNote": "العدد الحقيقي أقل بسبب التداخلات.",
+    "calcWorldCap": "أكثر من سكان العالم"
   },
   "tgBot": {
     "newEmergency": "حملة طوارئ جديدة",

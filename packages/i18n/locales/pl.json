@@ -519,7 +519,14 @@
     "footer": "Social Organizer — otwarte narzędzie koordynacji",
     "githubLink": "Zobacz kod na GitHub",
     "faqTitle": "Najczęściej zadawane pytania",
-    "faqShowAll": "Pokaż wszystkie"
+    "faqShowAll": "Pokaż wszystkie",
+    "calcTitle": "Jak daleko sięga Twoja sieć?",
+    "calcSlider1": "Połączeń na osobę",
+    "calcSlider2": "Stopni oddalenia",
+    "calcReach": "Twoja sieć może dotrzeć do",
+    "calcPeople": "osób",
+    "calcNote": "Realna liczba jest mniejsza przez nakładanie się — ale zasada działa.",
+    "calcWorldCap": "więcej niż populacja świata"
   },
   "tgBot": {
     "newEmergency": "Nowa zbiórka awaryjna",

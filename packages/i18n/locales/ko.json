@@ -519,7 +519,14 @@
     "footer": "Social Organizer — 열린 조정 도구",
     "githubLink": "GitHub에서 코드 보기",
     "faqTitle": "자주 묻는 질문",
-    "faqShowAll": "모두 보기"
+    "faqShowAll": "모두 보기",
+    "calcTitle": "당신의 네트워크는 얼마나 멀리 닿나요?",
+    "calcSlider1": "사람당 연결 수",
+    "calcSlider2": "분리도 (악수 수)",
+    "calcReach": "당신의 네트워크가 닿을 수 있는 사람",
+    "calcPeople": "명",
+    "calcNote": "실제 숫자는 겹침으로 인해 더 작습니다.",
+    "calcWorldCap": "세계 인구 이상"
   },
   "tgBot": {
     "newEmergency": "새 긴급 모금",

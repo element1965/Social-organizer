@@ -519,7 +519,14 @@
     "footer": "Social Organizer — açık bir koordinasyon aracı",
     "githubLink": "GitHub'da kodu görüntüle",
     "faqTitle": "Sık Sorulan Sorular",
-    "faqShowAll": "Tümünü göster"
+    "faqShowAll": "Tümünü göster",
+    "calcTitle": "Ağınız ne kadar uzağa ulaşır?",
+    "calcSlider1": "Kişi başı bağlantı",
+    "calcSlider2": "Ayrılık derecesi",
+    "calcReach": "Ağınız ulaşabilir",
+    "calcPeople": "kişiye",
+    "calcNote": "Gerçek sayı örtüşmeler nedeniyle daha küçük — ama prensip gerçek.",
+    "calcWorldCap": "dünya nüfusundan fazla"
   },
   "tgBot": {
     "newEmergency": "Yeni acil yardım kampanyası",

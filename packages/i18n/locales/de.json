@@ -461,7 +461,14 @@
     "footer": "Social Organizer — ein offenes Koordinationswerkzeug",
     "githubLink": "Code auf GitHub ansehen",
     "faqTitle": "Häufig gestellte Fragen",
-    "faqShowAll": "Alle anzeigen"
+    "faqShowAll": "Alle anzeigen",
+    "calcTitle": "Wie weit reicht Ihr Netzwerk?",
+    "calcSlider1": "Verbindungen pro Person",
+    "calcSlider2": "Grad der Trennung (Handshakes)",
+    "calcReach": "Ihr Netzwerk kann erreichen",
+    "calcPeople": "Personen",
+    "calcNote": "Die reale Zahl ist aufgrund von Überschneidungen kleiner — aber das Prinzip ist real.",
+    "calcWorldCap": "mehr als die Weltbevölkerung"
   },
   "tgBot": {
     "newEmergency": "Neue Notfall-Sammlung",

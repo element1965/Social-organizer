@@ -519,7 +519,14 @@
     "footer": "Social Organizer — एक खुला समन्वय उपकरण",
     "githubLink": "GitHub पर कोड देखें",
     "faqTitle": "अक्सर पूछे जाने वाले प्रश्न",
-    "faqShowAll": "सभी दिखाएं"
+    "faqShowAll": "सभी दिखाएं",
+    "calcTitle": "आपका नेटवर्क कितनी दूर पहुँचता है?",
+    "calcSlider1": "प्रति व्यक्ति कनेक्शन",
+    "calcSlider2": "अलगाव की डिग्री",
+    "calcReach": "आपका नेटवर्क पहुँच सकता है",
+    "calcPeople": "लोगों तक",
+    "calcNote": "वास्तविक संख्या ओवरलैप के कारण कम है।",
+    "calcWorldCap": "विश्व जनसंख्या से अधिक"
   },
   "tgBot": {
     "newEmergency": "नया आपातकालीन संग्रह",

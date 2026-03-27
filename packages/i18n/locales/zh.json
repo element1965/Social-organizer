@@ -461,7 +461,14 @@
     "footer": "Social Organizer — 一个开放的协调工具",
     "githubLink": "在GitHub上查看代码",
     "faqTitle": "常见问题",
-    "faqShowAll": "显示全部"
+    "faqShowAll": "显示全部",
+    "calcTitle": "您的网络能延伸多远？",
+    "calcSlider1": "每人连接数",
+    "calcSlider2": "握手度数（分离度）",
+    "calcReach": "您的网络可以触达",
+    "calcPeople": "人",
+    "calcNote": "实际数字因重叠而较小，但原理是真实的。",
+    "calcWorldCap": "超过世界人口"
   },
   "tgBot": {
     "newEmergency": "新紧急募集",

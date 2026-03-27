@@ -519,7 +519,14 @@
     "footer": "Social Organizer — オープンな調整ツール",
     "githubLink": "GitHubでコードを見る",
     "faqTitle": "よくある質問",
-    "faqShowAll": "すべて表示"
+    "faqShowAll": "すべて表示",
+    "calcTitle": "あなたのネットワークはどこまで届くか?",
+    "calcSlider1": "一人当たりのつながり数",
+    "calcSlider2": "分離の度合い（握手）",
+    "calcReach": "あなたのネットワークは届く",
+    "calcPeople": "人",
+    "calcNote": "実際の数字は重複のため少なくなります。",
+    "calcWorldCap": "世界人口以上"
   },
   "tgBot": {
     "newEmergency": "新しい緊急募集",

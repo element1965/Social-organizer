@@ -519,7 +519,14 @@
     "footer": "Social Organizer — un instrument de coordonare deschis",
     "githubLink": "Vezi codul pe GitHub",
     "faqTitle": "Întrebări frecvente",
-    "faqShowAll": "Afișează tot"
+    "faqShowAll": "Afișează tot",
+    "calcTitle": "Cât de departe ajunge rețeaua ta?",
+    "calcSlider1": "Conexiuni per persoană",
+    "calcSlider2": "Grade de separare",
+    "calcReach": "Rețeaua ta poate ajunge la",
+    "calcPeople": "persoane",
+    "calcNote": "Numărul real este mai mic din cauza suprapunerilor.",
+    "calcWorldCap": "mai mult decât populația lumii"
   },
   "tgBot": {
     "newEmergency": "Nouă colectă de urgență",

@@ -519,7 +519,14 @@
     "footer": "Social Organizer — alat koordinasi terbuka",
     "githubLink": "Lihat kode di GitHub",
     "faqTitle": "Pertanyaan yang Sering Diajukan",
-    "faqShowAll": "Tampilkan semua"
+    "faqShowAll": "Tampilkan semua",
+    "calcTitle": "Seberapa jauh jaringan Anda menjangkau?",
+    "calcSlider1": "Koneksi per orang",
+    "calcSlider2": "Derajat pemisahan",
+    "calcReach": "Jaringan Anda dapat menjangkau",
+    "calcPeople": "orang",
+    "calcNote": "Angka sebenarnya lebih kecil karena tumpang tindih.",
+    "calcWorldCap": "lebih dari populasi dunia"
   },
   "tgBot": {
     "newEmergency": "Penggalangan darurat baru",

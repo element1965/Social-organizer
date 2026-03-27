@@ -519,7 +519,14 @@
     "footer": "Social Organizer — an open coordination tool",
     "githubLink": "View code on GitHub",
     "faqTitle": "Frequently Asked Questions",
-    "faqShowAll": "Show all"
+    "faqShowAll": "Show all",
+    "calcTitle": "How far does your network reach?",
+    "calcSlider1": "Connections per person",
+    "calcSlider2": "Degrees of separation (handshakes)",
+    "calcReach": "Your network can reach",
+    "calcPeople": "people",
+    "calcNote": "The real number is smaller due to overlaps — but the principle is real.",
+    "calcWorldCap": "more than the world population"
   },
   "tgBot": {
     "newEmergency": "New Emergency Collection",
