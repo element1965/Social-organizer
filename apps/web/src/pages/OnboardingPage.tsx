@@ -23,15 +23,21 @@ export function OnboardingPage() {
   const amountValid = amount !== null && amount > 0;
 
   const handleFinish = async () => {
+    // Save budget as best-effort (don't block on failure)
     if (amountValid) {
-      await setBudget.mutateAsync({ amount: amount!, inputCurrency: 'USD' });
+      setBudget.mutate({ amount: amount!, inputCurrency: 'USD' });
     }
-    await completeOnboarding.mutateAsync();
-    await utils.user.me.refetch();
+    try {
+      await completeOnboarding.mutateAsync();
+    } catch {
+      // proceed even on error
+    }
+    // Optimistically update cache so ProtectedRoute doesn't redirect back
+    utils.user.me.setData(undefined, (old) => (old ? { ...old, onboardingCompleted: true } : old));
     navigate('/dashboard');
   };
 
-  const isPending = setBudget.isPending || completeOnboarding.isPending;
+  const isPending = completeOnboarding.isPending;
 
   return (
     <div className="min-h-screen bg-gray-950 flex flex-col items-center justify-between px-4 py-8">
