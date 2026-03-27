@@ -519,7 +519,14 @@
     "footer": "Social Organizer — een open coördinatietool",
     "githubLink": "Bekijk code op GitHub",
     "faqTitle": "Veelgestelde vragen",
-    "faqShowAll": "Alles tonen"
+    "faqShowAll": "Alles tonen",
+    "calcTitle": "Hoe ver reikt uw netwerk?",
+    "calcSlider1": "Verbindingen per persoon",
+    "calcSlider2": "Graden van scheiding",
+    "calcReach": "Uw netwerk kan bereiken",
+    "calcPeople": "mensen",
+    "calcNote": "Het werkelijke getal is kleiner door overlapping — maar het principe is reëel.",
+    "calcWorldCap": "meer dan de wereldbevolking"
   },
   "tgBot": {
     "newEmergency": "Nieuwe noodinzameling",

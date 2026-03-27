@@ -519,7 +519,14 @@
     "footer": "Social Organizer — công cụ điều phối mở",
     "githubLink": "Xem mã trên GitHub",
     "faqTitle": "Câu hỏi thường gặp",
-    "faqShowAll": "Hiển thị tất cả"
+    "faqShowAll": "Hiển thị tất cả",
+    "calcTitle": "Mạng lưới của bạn vươn xa đến đâu?",
+    "calcSlider1": "Kết nối mỗi người",
+    "calcSlider2": "Bậc tách biệt",
+    "calcReach": "Mạng lưới của bạn có thể tiếp cận",
+    "calcPeople": "người",
+    "calcNote": "Con số thực tế nhỏ hơn do chồng chéo.",
+    "calcWorldCap": "hơn dân số thế giới"
   },
   "tgBot": {
     "newEmergency": "Chiến dịch khẩn cấp mới",

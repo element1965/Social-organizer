@@ -519,7 +519,14 @@
     "footer": "Social Organizer — otevřený koordinační nástroj",
     "githubLink": "Zobrazit kód na GitHubu",
     "faqTitle": "Často kladené otázky",
-    "faqShowAll": "Zobrazit vše"
+    "faqShowAll": "Zobrazit vše",
+    "calcTitle": "Jak daleko sahá vaše síť?",
+    "calcSlider1": "Spojení na osobu",
+    "calcSlider2": "Stupně oddělení",
+    "calcReach": "Vaše síť může dosáhnout",
+    "calcPeople": "lidí",
+    "calcNote": "Skutečné číslo je nižší kvůli překryvům — ale princip funguje.",
+    "calcWorldCap": "více než světová populace"
   },
   "tgBot": {
     "newEmergency": "Nová nouzová sbírka",

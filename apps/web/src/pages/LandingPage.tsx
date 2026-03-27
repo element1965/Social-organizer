@@ -1,4 +1,4 @@
-import { lazy, Suspense, useState, useRef, useEffect } from 'react';
+import { lazy, Suspense, useState, useRef, useEffect, useMemo } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { ChevronDown, ChevronUp, Languages, Github, HelpCircle, Shield, Calculator, Globe } from 'lucide-react';
@@ -115,6 +115,99 @@ function LandingFaq({ variant }: { variant?: 'arvut' }) {
           {t('landing.faqShowAll')}
         </button>
       )}
+    </section>
+  );
+}
+
+function NetworkCalculator() {
+  const { t } = useTranslation();
+  const [connections, setConnections] = useState(10);
+  const [degrees, setDegrees] = useState(3);
+
+  const reach = useMemo(() => {
+    // Sum of geometric series: c + c^2 + ... + c^h = c*(c^h - 1)/(c - 1)
+    if (connections <= 1) return connections * degrees;
+    return Math.round(connections * (Math.pow(connections, degrees) - 1) / (connections - 1));
+  }, [connections, degrees]);
+
+  const WORLD_POP = 8_200_000_000;
+
+  const formatReach = (n: number) => {
+    if (n >= 1_000_000_000_000) return (n / 1_000_000_000_000).toFixed(1) + 'T';
+    if (n >= 1_000_000_000) return (n / 1_000_000_000).toFixed(1) + 'B';
+    if (n >= 1_000_000) return (n / 1_000_000).toFixed(1) + 'M';
+    if (n >= 1_000) return (n / 1_000).toFixed(1) + 'K';
+    return n.toLocaleString();
+  };
+
+  const exceedsWorld = reach > WORLD_POP;
+  const displayReach = exceedsWorld ? WORLD_POP : reach;
+
+  return (
+    <section className="flex flex-col items-center justify-center px-6 py-16">
+      <div className="max-w-2xl w-full bg-gray-800/60 border border-gray-700 rounded-2xl p-8">
+        <h2 className="text-2xl md:text-3xl font-bold text-white text-center mb-8">
+          {t('landing.calcTitle')}
+        </h2>
+
+        {/* Slider 1 */}
+        <div className="mb-6">
+          <div className="flex justify-between items-center mb-2">
+            <label className="text-gray-300 text-sm">{t('landing.calcSlider1')}</label>
+            <span className="text-teal-400 font-bold text-lg">{connections}</span>
+          </div>
+          <input
+            type="range"
+            min={1}
+            max={150}
+            value={connections}
+            onChange={(e) => setConnections(Number(e.target.value))}
+            className="w-full h-2 bg-gray-600 rounded-full appearance-none cursor-pointer accent-teal-400"
+          />
+          <div className="flex justify-between text-xs text-gray-500 mt-1">
+            <span>1</span>
+            <span>150</span>
+          </div>
+        </div>
+
+        {/* Slider 2 */}
+        <div className="mb-8">
+          <div className="flex justify-between items-center mb-2">
+            <label className="text-gray-300 text-sm">{t('landing.calcSlider2')}</label>
+            <span className="text-teal-400 font-bold text-lg">{degrees}</span>
+          </div>
+          <input
+            type="range"
+            min={1}
+            max={6}
+            value={degrees}
+            onChange={(e) => setDegrees(Number(e.target.value))}
+            className="w-full h-2 bg-gray-600 rounded-full appearance-none cursor-pointer accent-teal-400"
+          />
+          <div className="flex justify-between text-xs text-gray-500 mt-1">
+            <span>1</span>
+            <span>6</span>
+          </div>
+        </div>
+
+        {/* Result */}
+        <div className="text-center bg-gray-900/60 rounded-xl py-6 px-4">
+          <p className="text-gray-400 text-sm mb-2">{t('landing.calcReach')}</p>
+          <p className="text-5xl md:text-6xl font-black text-teal-400 tracking-tight mb-1">
+            {formatReach(displayReach)}
+          </p>
+          <p className="text-gray-300 text-sm">{t('landing.calcPeople')}</p>
+          {exceedsWorld && (
+            <p className="text-amber-400 text-xs mt-3 font-medium">
+              🌍 {t('landing.calcWorldCap')}
+            </p>
+          )}
+        </div>
+
+        <p className="text-gray-500 text-xs text-center mt-4 leading-relaxed">
+          {t('landing.calcNote')}
+        </p>
+      </div>
     </section>
   );
 }
@@ -331,6 +424,9 @@ export function LandingPage({ variant, inviteToken: inviteTokenProp }: { variant
             </blockquote>
           </div>
         </section>
+
+        {/* === Section: Network Growth Calculator === */}
+        <NetworkCalculator />
 
         {/* === Section: Decentralized Analogue === */}
         <section className="flex flex-col items-center justify-center px-6 py-16">

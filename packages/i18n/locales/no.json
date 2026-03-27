@@ -519,7 +519,14 @@
     "footer": "Social Organizer — et åpent koordineringsverktøy",
     "githubLink": "Se kode på GitHub",
     "faqTitle": "Ofte stilte spørsmål",
-    "faqShowAll": "Vis alle"
+    "faqShowAll": "Vis alle",
+    "calcTitle": "Hvor langt rekker nettverket ditt?",
+    "calcSlider1": "Forbindelser per person",
+    "calcSlider2": "Separasjonsgrader",
+    "calcReach": "Nettverket ditt kan nå",
+    "calcPeople": "personer",
+    "calcNote": "Det reelle tallet er mindre på grunn av overlapping.",
+    "calcWorldCap": "mer enn verdens befolkning"
   },
   "tgBot": {
     "newEmergency": "Ny nødinnsamling",

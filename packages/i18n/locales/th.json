@@ -519,7 +519,14 @@
     "footer": "Social Organizer — เครื่องมือประสานงานแบบเปิด",
     "githubLink": "ดูโค้ดบน GitHub",
     "faqTitle": "คำถามที่พบบ่อย",
-    "faqShowAll": "แสดงทั้งหมด"
+    "faqShowAll": "แสดงทั้งหมด",
+    "calcTitle": "เครือข่ายของคุณไปถึงไหน?",
+    "calcSlider1": "การเชื่อมต่อต่อคน",
+    "calcSlider2": "ระดับการแยก",
+    "calcReach": "เครือข่ายของคุณสามารถเข้าถึง",
+    "calcPeople": "คน",
+    "calcNote": "ตัวเลขจริงน้อยกว่าเนื่องจากการทับซ้อน",
+    "calcWorldCap": "มากกว่าประชากรโลก"
   },
   "tgBot": {
     "newEmergency": "การระดมทุนฉุกเฉินใหม่",

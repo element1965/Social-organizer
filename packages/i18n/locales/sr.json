@@ -519,7 +519,14 @@
     "footer": "Social Organizer — отворени координациони алат",
     "githubLink": "Погледај код на GitHub-у",
     "faqTitle": "Најчешћа питања",
-    "faqShowAll": "Прикажи све"
+    "faqShowAll": "Прикажи све",
+    "calcTitle": "Koliko daleko seže vaša mreža?",
+    "calcSlider1": "Veze po osobi",
+    "calcSlider2": "Stepeni razdvojenosti",
+    "calcReach": "Vaša mreža može doseći",
+    "calcPeople": "osoba",
+    "calcNote": "Stvarni broj je manji zbog preklapanja.",
+    "calcWorldCap": "više od svetske populacije"
   },
   "tgBot": {
     "newEmergency": "Нова хитна акција",

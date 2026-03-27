@@ -529,7 +529,14 @@
     "footer": "Social Organizer — כלי תיאום פתוח",
     "githubLink": "צפה בקוד ב-GitHub",
     "faqTitle": "שאלות נפוצות",
-    "faqShowAll": "הצג הכל"
+    "faqShowAll": "הצג הכל",
+    "calcTitle": "עד כמה רחוק מגיע הרשת שלך?",
+    "calcSlider1": "חיבורים לאדם",
+    "calcSlider2": "דרגות הפרדה",
+    "calcReach": "הרשת שלך יכולה להגיע ל",
+    "calcPeople": "אנשים",
+    "calcNote": "המספר האמיתי קטן יותר בגלל חפיפות.",
+    "calcWorldCap": "יותר מאוכלוסיית העולם"
   },
   "landingArvut": {
     "painQuote": "כשמשהו קורה — אתה לבד מול המציאות. הקהילה לא יודעת. והאנשים שיכולים לעזור — לא שומעים.",

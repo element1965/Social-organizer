@@ -519,7 +519,14 @@
     "footer": "Social Organizer — avoin koordinointityökalu",
     "githubLink": "Näytä koodi GitHubissa",
     "faqTitle": "Usein kysytyt kysymykset",
-    "faqShowAll": "Näytä kaikki"
+    "faqShowAll": "Näytä kaikki",
+    "calcTitle": "Kuinka kauas verkostosi ulottuu?",
+    "calcSlider1": "Yhteyksiä henkilöä kohti",
+    "calcSlider2": "Erotusasteet",
+    "calcReach": "Verkostosi voi tavoittaa",
+    "calcPeople": "ihmistä",
+    "calcNote": "Todellinen luku on pienempi päällekkäisyyksien takia.",
+    "calcWorldCap": "enemmän kuin maailman väestö"
   },
   "tgBot": {
     "newEmergency": "Uusi hätäkeräys",
