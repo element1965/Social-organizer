@@ -2,7 +2,12 @@ import { z } from 'zod';
 import { router, protectedProcedure } from '../trpc.js';
 import { TRPCError } from '@trpc/server';
 import { isAdmin } from '../admin.js';
-import { sendTelegramMessage } from '../services/telegram-bot.service.js';
+import {
+  sendTelegramMessage,
+  sendTelegramPhoto,
+  sendTelegramVideo,
+  sendTelegramDocument,
+} from '../services/telegram-bot.service.js';
 
 function assertAdmin(userId: string) {
   if (!isAdmin(userId)) throw new TRPCError({ code: 'FORBIDDEN', message: 'Admin only' });
@@ -35,7 +40,7 @@ export const supportRouter = router({
           platformId: msg.platformId,
           userName: msg.userName ?? msg.user?.name ?? null,
           photoUrl: msg.user?.photoUrl ?? null,
-          lastMessage: msg.message,
+          lastMessage: msg.message || (msg.mediaType ? `[${msg.mediaType}]` : ''),
           lastAt: msg.createdAt,
           totalCount: 1,
         });
@@ -64,12 +69,18 @@ export const supportRouter = router({
       userId: z.string().optional(),
       platformId: z.string().optional(),
       userName: z.string().optional(),
-      message: z.string().min(1).max(4000),
+      message: z.string().max(4000).default(''),
+      mediaFileId: z.string().optional(),
+      mediaType: z.enum(['photo', 'video', 'document']).optional(),
+      mediaName: z.string().optional(),
     }))
     .mutation(async ({ ctx, input }) => {
       assertAdmin(ctx.userId!);
       if (!input.userId && !input.platformId) {
         throw new TRPCError({ code: 'BAD_REQUEST', message: 'userId or platformId required' });
+      }
+      if (!input.message && !input.mediaFileId) {
+        throw new TRPCError({ code: 'BAD_REQUEST', message: 'message or media required' });
       }
 
       // Resolve Telegram platformId so admin can reply directly via bot
@@ -90,14 +101,32 @@ export const supportRouter = router({
           fromAdmin: true,
           adminId: ctx.userId!,
           message: input.message,
+          mediaFileId: input.mediaFileId ?? null,
+          mediaType: input.mediaType ?? null,
+          mediaName: input.mediaName ?? null,
         },
       });
 
       // Send via Telegram bot (fire-and-forget)
       if (platformId) {
-        sendTelegramMessage(platformId, `📩 <b>Support:</b> ${input.message}`).catch((err) =>
-          console.error('[Support] TG reply failed:', err),
-        );
+        const caption = input.message || undefined;
+        if (input.mediaFileId && input.mediaType === 'photo') {
+          sendTelegramPhoto(platformId, input.mediaFileId, caption).catch((err) =>
+            console.error('[Support] TG photo reply failed:', err),
+          );
+        } else if (input.mediaFileId && input.mediaType === 'video') {
+          sendTelegramVideo(platformId, input.mediaFileId, caption).catch((err) =>
+            console.error('[Support] TG video reply failed:', err),
+          );
+        } else if (input.mediaFileId && input.mediaType === 'document') {
+          sendTelegramDocument(platformId, input.mediaFileId, caption).catch((err) =>
+            console.error('[Support] TG document reply failed:', err),
+          );
+        } else if (input.message) {
+          sendTelegramMessage(platformId, `📩 ${input.message}`).catch((err) =>
+            console.error('[Support] TG reply failed:', err),
+          );
+        }
       }
 
       return msg;

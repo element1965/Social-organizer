@@ -951,6 +951,7 @@
     "noMessages": "Нет сообщений",
     "replyPlaceholder": "Ответить...",
     "unknownUser": "Неизвестный пользователь",
-    "chatButton": "Чат"
+    "chatButton": "Чат",
+    "attachFile": "Прикрепить файл"
   }
 }

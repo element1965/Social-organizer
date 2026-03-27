@@ -951,6 +951,7 @@
     "noMessages": "Mesaj yok",
     "replyPlaceholder": "Yanıtla...",
     "unknownUser": "Bilinmeyen kullanıcı",
-    "chatButton": "Sohbet"
+    "chatButton": "Sohbet",
+    "attachFile": "Dosya ekle"
   }
 }

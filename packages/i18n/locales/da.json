@@ -951,6 +951,7 @@
     "noMessages": "Ingen beskeder",
     "replyPlaceholder": "Svar...",
     "unknownUser": "Ukendt bruger",
-    "chatButton": "Chat"
+    "chatButton": "Chat",
+    "attachFile": "Vedhæft fil"
   }
 }

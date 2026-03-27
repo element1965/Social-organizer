@@ -1006,6 +1006,7 @@
     "noMessages": "אין הודעות",
     "replyPlaceholder": "השב...",
     "unknownUser": "משתמש לא ידוע",
-    "chatButton": "צ'אט"
+    "chatButton": "צ'אט",
+    "attachFile": "צרף קובץ"
   }
 }

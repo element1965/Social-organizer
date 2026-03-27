@@ -951,6 +951,7 @@
     "noMessages": "لا توجد رسائل",
     "replyPlaceholder": "الرد...",
     "unknownUser": "مستخدم غير معروف",
-    "chatButton": "دردشة"
+    "chatButton": "دردشة",
+    "attachFile": "إرفاق ملف"
   }
 }

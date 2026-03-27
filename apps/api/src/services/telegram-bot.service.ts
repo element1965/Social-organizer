@@ -458,6 +458,38 @@ export async function sendTelegramVideo(
   return false;
 }
 
+/** Send a document/file via Telegram Bot API using file_id or URL */
+export async function sendTelegramDocument(
+  chatId: string | number,
+  document: string,
+  caption?: string,
+  replyMarkup?: TgReplyMarkup,
+): Promise<boolean> {
+  if (!TELEGRAM_BOT_TOKEN) return false;
+
+  const body: Record<string, unknown> = {
+    chat_id: chatId,
+    document,
+    parse_mode: 'HTML',
+  };
+  if (caption) body.caption = caption;
+  if (replyMarkup) body.reply_markup = replyMarkup;
+
+  const res = await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendDocument`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+  });
+  const json = (await res.json()) as TgApiResponse;
+  if (json.ok) return true;
+  if (isBlockedError(res.status, json.description)) {
+    await removeBlockedUser(chatId);
+    return false;
+  }
+  console.error(`[TG Bot] sendDocument failed: ${json.description}`);
+  return false;
+}
+
 /** Send a collection notification to a Telegram user with an inline "Open" button */
 export async function sendCollectionNotificationTg(
   telegramId: string,
@@ -863,20 +895,34 @@ export async function handleTelegramUpdate(update: TgUpdate): Promise<void> {
   }
 
   // Save to in-app support DB — find linked app user if any
-  if (text) {
-    const db = getDb();
-    const appAccount = await db.platformAccount.findFirst({
-      where: { platform: 'TELEGRAM', platformId },
-      select: { userId: true },
-    }).catch(() => null);
+  const db = getDb();
+  const appAccount = await db.platformAccount.findFirst({
+    where: { platform: 'TELEGRAM', platformId },
+    select: { userId: true },
+  }).catch(() => null);
 
+  // Extract media info for storage
+  const mediaFileId = msg.photo
+    ? msg.photo[msg.photo.length - 1]?.file_id ?? null
+    : msg.video?.file_id ?? msg.document?.file_id ?? msg.voice?.file_id ?? null;
+  const mediaType = msg.photo ? 'photo'
+    : msg.video ? 'video'
+    : msg.document ? 'document'
+    : msg.voice ? 'voice'
+    : null;
+  const mediaName = msg.document?.file_name ?? null;
+
+  if (text || mediaFileId) {
     db.supportMessage.create({
       data: {
         userId: appAccount?.userId ?? null,
         platformId,
         userName,
         fromAdmin: false,
-        message: text,
+        message: text || '',
+        mediaFileId,
+        mediaType,
+        mediaName,
       },
     }).catch((err) => console.error('[Support] Failed to save TG message:', err));
   }
