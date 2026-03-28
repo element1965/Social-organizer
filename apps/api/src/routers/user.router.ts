@@ -126,18 +126,6 @@ export const userRouter = router({
     }),
 
   completeOnboarding: protectedProcedure.mutation(async ({ ctx }) => {
-    // Validate: at least 2 contacts (telegram counts)
-    const relevantTypes = ['telegram', 'whatsapp', 'facebook', 'instagram', 'twitter', 'tiktok'];
-    const contacts = await ctx.db.userContact.findMany({
-      where: { userId: ctx.userId, type: { in: relevantTypes } },
-    });
-    const contactCount = contacts.filter(c => c.value.trim()).length;
-    if (contactCount < 2) {
-      throw new TRPCError({ code: 'BAD_REQUEST', message: 'At least 2 contacts required' });
-    }
-
-    // Budget is optional — user can skip during onboarding
-
     await ctx.db.user.update({
       where: { id: ctx.userId },
       data: { onboardingCompleted: true },
