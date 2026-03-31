@@ -16,6 +16,7 @@ import { QRCodeSVG } from 'qrcode.react';
 import { HandshakePath } from '../components/HandshakePath';
 import { useNicknames } from '../hooks/useNicknames';
 import { buildSosInviteUrl } from '../lib/inviteUrl';
+import { CollectionCoordPanel } from '../components/CollectionCoordPanel';
 
 export function CollectionPage() {
   const { id } = useParams<{ id: string }>();
@@ -35,7 +36,14 @@ export function CollectionPage() {
     { enabled: !!collection && collection.creatorId !== userId }
   );
   const createObligation = trpc.obligation.create.useMutation({ onSuccess: () => utils.collection.getById.invalidate({ id: id! }) });
-  const closeCollection = trpc.collection.close.useMutation({ onSuccess: () => utils.collection.getById.invalidate({ id: id! }) });
+  const closeCollection = trpc.collection.close.useMutation({
+    onSuccess: async () => {
+      utils.collection.getById.invalidate({ id: id! });
+      // Wipe p2p coordination data — collection is closed, no longer needed
+      const gun = await import('@so/gun-backup');
+      gun.clearCollectionData(id!).catch(() => {});
+    },
+  });
   const updateAmount = trpc.obligation.updateAmount.useMutation({ onSuccess: () => utils.collection.getById.invalidate({ id: id! }) });
   const updateChatLink = trpc.collection.updateChatLink.useMutation({ onSuccess: () => utils.collection.getById.invalidate({ id: id! }) });
   const acceptSos = trpc.invite.acceptSos.useMutation({
@@ -230,6 +238,23 @@ export function CollectionPage() {
             </div>
           )}
         </div>
+      )}
+
+      {/* P2P coordination panel — payment details + confirmations via Gun.js (not stored in DB) */}
+      {(isOwner || hasObligation) && (collection.status === 'ACTIVE' || collection.status === 'BLOCKED') && (
+        <CollectionCoordPanel
+          collectionId={collection.id}
+          isOwner={isOwner}
+          isParticipant={hasObligation}
+          myUserId={userId ?? ''}
+          myName={me?.name ?? ''}
+          myObligationAmount={
+            collection.obligations.find((o) => o.userId === userId)
+              ? Math.round(collection.obligations.find((o) => o.userId === userId)!.amount)
+              : undefined
+          }
+          active={collection.status === 'ACTIVE' || collection.status === 'BLOCKED'}
+        />
       )}
 
       {!isOwner && !hasObligation && collection.status === 'ACTIVE' && (

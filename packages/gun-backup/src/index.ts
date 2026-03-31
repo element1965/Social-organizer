@@ -155,3 +155,95 @@ async function readFromIndexedDB(userId: string): Promise<GraphBackup | null> {
 }
 
 export type { GraphBackup, NodeData, EdgeData };
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Collection Coordination — p2p via Gun.js, never stored in the app DB.
+// Namespace: so-col/<collectionId>/details | confirmations/<userId>
+// ─────────────────────────────────────────────────────────────────────────────
+
+export interface CollectionDetails {
+  text: string;       // payment details set by the creator (реквизиты)
+  updatedAt: string;
+}
+
+export interface PaymentConfirmation {
+  userId: string;
+  userName: string;
+  amount: number;
+  confirmedAt: string;
+}
+
+function colNode(collectionId: string): GunNode | null {
+  if (!gunInstance) return null;
+  return gunInstance.get('so-col').get(collectionId);
+}
+
+/** Creator saves payment details (реквизиты). Data goes to Gun relay, not DB. */
+export async function setCollectionDetails(collectionId: string, text: string): Promise<void> {
+  const node = colNode(collectionId);
+  if (!node) return;
+  node.get('details').put({ text, updatedAt: new Date().toISOString() });
+}
+
+/** Subscribe to payment details in real-time. Returns unsubscribe noop. */
+export function onCollectionDetails(
+  collectionId: string,
+  cb: (details: CollectionDetails | null) => void,
+): () => void {
+  const node = colNode(collectionId);
+  if (!node) { cb(null); return () => {}; }
+  node.get('details').on((data: unknown) => {
+    if (!data || typeof data !== 'object') { cb(null); return; }
+    const d = data as Record<string, unknown>;
+    if (!d['text']) { cb(null); return; }
+    cb({ text: String(d['text']), updatedAt: String(d['updatedAt'] ?? '') });
+  });
+  return () => {};
+}
+
+/** Participant confirms payment. Stored p2p only. */
+export async function confirmPayment(
+  collectionId: string,
+  userId: string,
+  userName: string,
+  amount: number,
+): Promise<void> {
+  const node = colNode(collectionId);
+  if (!node) return;
+  node.get('confirmations').get(userId).put({
+    userId,
+    userName,
+    amount,
+    confirmedAt: new Date().toISOString(),
+  });
+}
+
+/** Subscribe to all payment confirmations in real-time. */
+export function onConfirmations(
+  collectionId: string,
+  cb: (confirmations: PaymentConfirmation[]) => void,
+): () => void {
+  const node = colNode(collectionId);
+  if (!node) { cb([]); return () => {}; }
+  const map: Record<string, PaymentConfirmation> = {};
+  node.get('confirmations').map().on((data: unknown, key: string) => {
+    if (!data || typeof data !== 'object') return;
+    const d = data as Record<string, unknown>;
+    if (!d['userId']) return;
+    map[key] = {
+      userId: String(d['userId']),
+      userName: String(d['userName'] ?? ''),
+      amount: Number(d['amount'] ?? 0),
+      confirmedAt: String(d['confirmedAt'] ?? ''),
+    };
+    cb(Object.values(map).sort((a, b) => a.confirmedAt.localeCompare(b.confirmedAt)));
+  });
+  return () => {};
+}
+
+/** Wipe collection coordination data when collection closes. */
+export async function clearCollectionData(collectionId: string): Promise<void> {
+  const node = colNode(collectionId);
+  if (!node) return;
+  node.get('details').put({ text: '', updatedAt: '' });
+}
