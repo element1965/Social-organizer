@@ -268,7 +268,14 @@
     "qrCode": "QR-code",
     "empty": "Geen connecties",
     "emptyHint": "Nodig je eerste persoon uit",
-    "controlsHint": "Linksklik: draaien, Scrollen: zoomen, Rechtsklik: verschuiven"
+    "controlsHint": "Linksklik: draaien, Scrollen: zoomen, Rechtsklik: verschuiven",
+    "growth": "Netwerkgroei",
+    "growthTotal": "Totaal",
+    "growth7d": "Laatste 7 dagen",
+    "growth30d": "Laatste 30 dagen",
+    "growthChartLabel": "Leden in de afgelopen 30 dagen",
+    "growthStart": "30 dagen geleden",
+    "growthNow": "Nu"
   },
   "notifications": {
     "title": "Meldingen",

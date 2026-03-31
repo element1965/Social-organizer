@@ -356,7 +356,7 @@ export function MyNetworkPage() {
             <div className="mt-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 p-4 space-y-3">
               <div className="flex items-center gap-2">
                 <TrendingUp className="w-4 h-4 text-blue-500" />
-                <span className="text-sm font-semibold text-gray-900 dark:text-white">Рост сети</span>
+                <span className="text-sm font-semibold text-gray-900 dark:text-white">{t('network.growth')}</span>
               </div>
 
               {/* Stats row */}
@@ -365,19 +365,19 @@ export function MyNetworkPage() {
                   <p className="text-lg font-bold text-gray-900 dark:text-white">
                     {Object.values(byDepth).reduce((a, b) => a + (b as number), 0)}
                   </p>
-                  <p className="text-[10px] text-gray-500 dark:text-gray-400">Всего</p>
+                  <p className="text-[10px] text-gray-500 dark:text-gray-400">{t('network.growthTotal')}</p>
                 </div>
                 <div className="rounded-lg bg-gray-50 dark:bg-gray-800 py-2 px-1">
                   <p className="text-lg font-bold text-green-600 dark:text-green-400">
                     +{growthWeek?.newPeople ?? 0}
                   </p>
-                  <p className="text-[10px] text-gray-500 dark:text-gray-400">За 7 дней</p>
+                  <p className="text-[10px] text-gray-500 dark:text-gray-400">{t('network.growth7d')}</p>
                 </div>
                 <div className="rounded-lg bg-gray-50 dark:bg-gray-800 py-2 px-1">
                   <p className="text-lg font-bold text-blue-600 dark:text-blue-400">
                     +{growthMonth?.newPeople ?? 0}
                   </p>
-                  <p className="text-[10px] text-gray-500 dark:text-gray-400">За 30 дней</p>
+                  <p className="text-[10px] text-gray-500 dark:text-gray-400">{t('network.growth30d')}</p>
                 </div>
               </div>
 
@@ -394,7 +394,7 @@ export function MyNetworkPage() {
                 const area = `0,${H} ` + pts + ` ${W},${H}`;
                 return (
                   <div>
-                    <p className="text-[10px] text-gray-400 mb-1">Участники за последние 30 дней</p>
+                    <p className="text-[10px] text-gray-400 mb-1">{t('network.growthChartLabel')}</p>
                     <svg viewBox={`0 0 ${W} ${H}`} className="w-full" style={{ height: 80 }}>
                       <defs>
                         <linearGradient id="netGrad" x1="0" y1="0" x2="0" y2="1">
@@ -411,8 +411,8 @@ export function MyNetworkPage() {
                       })}
                     </svg>
                     <div className="flex justify-between text-[9px] text-gray-400 mt-0.5">
-                      <span>30 дн. назад</span>
-                      <span>Сейчас</span>
+                      <span>{t('network.growthStart')}</span>
+                      <span>{t('network.growthNow')}</span>
                     </div>
                   </div>
                 );

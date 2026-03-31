@@ -268,7 +268,14 @@
     "qrCode": "Mã QR",
     "empty": "Không có kết nối",
     "emptyHint": "Mời người đầu tiên của bạn",
-    "controlsHint": "Nhấp chuột trái: xoay, Cuộn: phóng to, Nhấp chuột phải: kéo"
+    "controlsHint": "Nhấp chuột trái: xoay, Cuộn: phóng to, Nhấp chuột phải: kéo",
+    "growth": "Tăng trưởng mạng",
+    "growthTotal": "Tổng",
+    "growth7d": "7 ngày qua",
+    "growth30d": "30 ngày qua",
+    "growthChartLabel": "Thành viên trong 30 ngày qua",
+    "growthStart": "30 ngày trước",
+    "growthNow": "Bây giờ"
   },
   "notifications": {
     "title": "Thông báo",

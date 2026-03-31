@@ -268,7 +268,14 @@
     "qrCode": "QRコード",
     "empty": "つながりはありません",
     "emptyHint": "最初の人を招待しましょう",
-    "controlsHint": "左クリック：回転、スクロール：ズーム、右クリック：パン"
+    "controlsHint": "左クリック：回転、スクロール：ズーム、右クリック：パン",
+    "growth": "ネットワーク成長",
+    "growthTotal": "合計",
+    "growth7d": "過去7日間",
+    "growth30d": "過去30日間",
+    "growthChartLabel": "過去30日間のメンバー",
+    "growthStart": "30日前",
+    "growthNow": "現在"
   },
   "notifications": {
     "title": "通知",

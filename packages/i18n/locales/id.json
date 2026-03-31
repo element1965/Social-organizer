@@ -268,7 +268,14 @@
     "qrCode": "Kode QR",
     "empty": "Tidak ada koneksi",
     "emptyHint": "Undang orang pertamamu",
-    "controlsHint": "Klik kiri: putar, Gulir: zoom, Klik kanan: geser"
+    "controlsHint": "Klik kiri: putar, Gulir: zoom, Klik kanan: geser",
+    "growth": "Pertumbuhan Jaringan",
+    "growthTotal": "Total",
+    "growth7d": "7 hari terakhir",
+    "growth30d": "30 hari terakhir",
+    "growthChartLabel": "Anggota selama 30 hari terakhir",
+    "growthStart": "30 hari lalu",
+    "growthNow": "Sekarang"
   },
   "notifications": {
     "title": "Notifikasi",

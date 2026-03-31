@@ -268,7 +268,14 @@
     "qrCode": "QR-kod",
     "empty": "Inga kontakter",
     "emptyHint": "Bjud in din forsta person",
-    "controlsHint": "Vansterklick: rotera, Skrolla: zooma, Hogerklick: panorera"
+    "controlsHint": "Vansterklick: rotera, Skrolla: zooma, Hogerklick: panorera",
+    "growth": "Nätverkstillväxt",
+    "growthTotal": "Totalt",
+    "growth7d": "Senaste 7 dagarna",
+    "growth30d": "Senaste 30 dagarna",
+    "growthChartLabel": "Medlemmar under de senaste 30 dagarna",
+    "growthStart": "För 30 dagar sedan",
+    "growthNow": "Nu"
   },
   "notifications": {
     "title": "Aviseringar",

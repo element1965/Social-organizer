@@ -268,7 +268,14 @@
     "qrCode": "Kod QR",
     "empty": "Brak połączeń",
     "emptyHint": "Zaproś swoją pierwszą osobę",
-    "controlsHint": "Lewy przycisk: obróć, Przewijanie: powiększ, Prawy przycisk: przesuń"
+    "controlsHint": "Lewy przycisk: obróć, Przewijanie: powiększ, Prawy przycisk: przesuń",
+    "growth": "Wzrost sieci",
+    "growthTotal": "Łącznie",
+    "growth7d": "Ostatnie 7 dni",
+    "growth30d": "Ostatnie 30 dni",
+    "growthChartLabel": "Członkowie w ciągu ostatnich 30 dni",
+    "growthStart": "30 dni temu",
+    "growthNow": "Teraz"
   },
   "notifications": {
     "title": "Powiadomienia",

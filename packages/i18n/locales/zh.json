@@ -268,7 +268,14 @@
     "qrCode": "二维码",
     "empty": "暂无连接",
     "emptyHint": "邀请你的第一个联系人",
-    "controlsHint": "左键：旋转，滚轮：缩放，右键：平移"
+    "controlsHint": "左键：旋转，滚轮：缩放，右键：平移",
+    "growth": "网络增长",
+    "growthTotal": "总计",
+    "growth7d": "近7天",
+    "growth30d": "近30天",
+    "growthChartLabel": "过去30天的成员",
+    "growthStart": "30天前",
+    "growthNow": "现在"
   },
   "notifications": {
     "title": "通知",

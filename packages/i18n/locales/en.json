@@ -268,7 +268,14 @@
     "qrCode": "QR Code",
     "empty": "No connections",
     "emptyHint": "Invite your first person",
-    "controlsHint": "Left-click: rotate, Scroll: zoom, Right-click: pan"
+    "controlsHint": "Left-click: rotate, Scroll: zoom, Right-click: pan",
+    "growth": "Network Growth",
+    "growthTotal": "Total",
+    "growth7d": "Last 7 days",
+    "growth30d": "Last 30 days",
+    "growthChartLabel": "Members over the last 30 days",
+    "growthStart": "30 days ago",
+    "growthNow": "Now"
   },
   "notifications": {
     "title": "Notifications",
