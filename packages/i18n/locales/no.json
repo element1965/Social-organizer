@@ -216,7 +216,7 @@
     "sosJoined": "Du er lagt til som direkte deltaker"
   },
   "create": {
-    "title": "Send et hjelpesignal",
+    "title": "Trenger",
     "emergency": "Nødstilfelle",
     "regular": "Vanlig",
     "amount": "Beløp",
@@ -224,7 +224,7 @@
     "largeAmountConfirm": "Jeg bekrefter at beløpet er riktig",
     "currency": "Valuta",
     "chatLink": "Chat-lenke",
-    "submit": "Send signal",
+    "submit": "Varsle",
     "minAmount": "Minimum 10",
     "invalidUrl": "Ugyldig URL",
     "chatHelpToggle": "Hvordan opprette en Telegram-chat?",

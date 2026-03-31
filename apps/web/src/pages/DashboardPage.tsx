@@ -155,7 +155,7 @@ export function DashboardPage() {
               {t('dashboard.addFirstConnectionDesc')}
             </p>
             <Button className="w-full" size="lg" onClick={() => navigate('/network')}>
-              <UserPlus className="w-4 h-4 mr-2" /> {t('dashboard.goToNetwork')}
+              <UserPlus className="w-4 h-4 mr-2" /> {t('create.goToInvite')}
             </Button>
           </CardContent>
         </Card>

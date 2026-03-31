@@ -216,7 +216,7 @@
     "sosJoined": "Ai fost adăugat ca participant direct"
   },
   "create": {
-    "title": "Trimite un semnal de ajutor",
+    "title": "Am nevoie",
     "emergency": "Urgenta",
     "regular": "Obisnuita",
     "amount": "Suma",
@@ -224,7 +224,7 @@
     "largeAmountConfirm": "Confirm ca suma este corecta",
     "currency": "Moneda",
     "chatLink": "Link chat",
-    "submit": "Trimite semnalul",
+    "submit": "Notifică",
     "minAmount": "Minim 10",
     "invalidUrl": "URL invalid",
     "chatHelpToggle": "Cum creezi un chat Telegram?",

@@ -216,7 +216,7 @@
     "sosJoined": "您已被添加为直接参与者"
   },
   "create": {
-    "title": "发送求助信号",
+    "title": "我需要",
     "emergency": "紧急",
     "regular": "常规",
     "amount": "金额",
@@ -224,7 +224,7 @@
     "largeAmountConfirm": "我确认金额无误",
     "currency": "货币",
     "chatLink": "聊天链接",
-    "submit": "发送信号",
+    "submit": "通知",
     "minAmount": "最少 10",
     "invalidUrl": "无效的链接",
     "chatHelpToggle": "如何创建 Telegram 群聊？",

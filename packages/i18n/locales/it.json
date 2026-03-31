@@ -216,7 +216,7 @@
     "sosJoined": "Sei stato aggiunto come partecipante diretto"
   },
   "create": {
-    "title": "Invia segnale di aiuto",
+    "title": "Ho bisogno",
     "emergency": "Urgente",
     "regular": "Regolare",
     "amount": "Importo",
@@ -224,7 +224,7 @@
     "largeAmountConfirm": "Confermo che l'importo è corretto",
     "currency": "Valuta",
     "chatLink": "Link della chat",
-    "submit": "Invia segnale",
+    "submit": "Notifica",
     "minAmount": "Minimo 10",
     "invalidUrl": "URL non valido",
     "chatHelpToggle": "Come creare una chat Telegram?",

@@ -11,7 +11,8 @@ import { Badge } from '../components/ui/badge';
 import { Progress } from '../components/ui/progress';
 import { Avatar } from '../components/ui/avatar';
 import { Spinner } from '../components/ui/spinner';
-import { ExternalLink, Users, ArrowRight, Pencil, Check, X, Copy, Share2 } from 'lucide-react';
+import { ExternalLink, Users, ArrowRight, Pencil, Check, X, Copy, Share2, QrCode } from 'lucide-react';
+import { QRCodeSVG } from 'qrcode.react';
 import { HandshakePath } from '../components/HandshakePath';
 import { useNicknames } from '../hooks/useNicknames';
 import { buildSosInviteUrl } from '../lib/inviteUrl';
@@ -43,6 +44,8 @@ export function CollectionPage() {
 
   const [amount, setAmount] = useState('1');
   const [sosCopied, setSosCopied] = useState(false);
+  const [showQr, setShowQr] = useState(false);
+  const setBudget = trpc.user.setMonthlyBudget.useMutation();
   const [editingChatLink, setEditingChatLink] = useState(false);
   const [chatLinkValue, setChatLinkValue] = useState('');
   const [chatLinkError, setChatLinkError] = useState('');
@@ -105,7 +108,17 @@ export function CollectionPage() {
     const num = Number(amount);
     if (!num || num < 1) { setError(t('collection.minAmount')); return; }
     setError('');
-    createObligation.mutate({ collectionId: collection.id, amount: num, inputCurrency });
+    createObligation.mutate(
+      { collectionId: collection.id, amount: num, inputCurrency },
+      {
+        onSuccess: () => {
+          // If user came via SOS link (bypassed onboarding) — also save as their potential
+          if (isSos && (!me?.monthlyBudget || me.monthlyBudget === 0)) {
+            setBudget.mutate({ amount: num, inputCurrency });
+          }
+        },
+      }
+    );
     setAmount('');
   };
 
@@ -253,20 +266,39 @@ export function CollectionPage() {
         </Card>
       )}
 
-      {isOwner && (collection.status === 'ACTIVE' || collection.status === 'BLOCKED') && (
-        <button
-          onClick={() => {
-            const url = buildSosInviteUrl(collection.id);
-            navigator.clipboard.writeText(url);
-            setSosCopied(true);
-            setTimeout(() => setSosCopied(false), 2500);
-          }}
-          className="w-full flex items-center justify-center gap-2 p-3 rounded-lg bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800 text-red-600 dark:text-red-400 text-sm font-medium hover:bg-red-100 dark:hover:bg-red-900/40 transition-colors"
-        >
-          {sosCopied ? <Check className="w-4 h-4" /> : <Share2 className="w-4 h-4" />}
-          {sosCopied ? t('collection.sosLinkCopied') : t('collection.sosInviteButton')}
-        </button>
-      )}
+      {isOwner && (collection.status === 'ACTIVE' || collection.status === 'BLOCKED') && (() => {
+        const sosUrl = buildSosInviteUrl(collection.id);
+        return (
+          <div className="space-y-2">
+            <div className="flex gap-2">
+              <button
+                onClick={() => {
+                  navigator.clipboard.writeText(sosUrl);
+                  setSosCopied(true);
+                  setTimeout(() => setSosCopied(false), 2500);
+                }}
+                className="flex-1 flex items-center justify-center gap-2 p-3 rounded-lg bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800 text-red-600 dark:text-red-400 text-sm font-medium hover:bg-red-100 dark:hover:bg-red-900/40 transition-colors"
+              >
+                {sosCopied ? <Check className="w-4 h-4" /> : <Share2 className="w-4 h-4" />}
+                {sosCopied ? t('collection.sosLinkCopied') : t('collection.sosInviteButton')}
+              </button>
+              <button
+                onClick={() => setShowQr((v) => !v)}
+                className={`p-3 rounded-lg border text-sm font-medium transition-colors ${showQr ? 'bg-red-100 dark:bg-red-900/50 border-red-300 dark:border-red-700 text-red-700 dark:text-red-300' : 'bg-red-50 dark:bg-red-950/30 border-red-200 dark:border-red-800 text-red-600 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-900/40'}`}
+                title="QR-код"
+              >
+                <QrCode className="w-4 h-4" />
+              </button>
+            </div>
+            {showQr && (
+              <div className="flex flex-col items-center gap-2 p-4 rounded-lg bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700">
+                <QRCodeSVG value={sosUrl} size={180} level="M" includeMargin />
+                <p className="text-xs text-gray-400 text-center">Отсканируйте, чтобы присоединиться</p>
+              </div>
+            )}
+          </div>
+        );
+      })()}
 
       {isOwner && (collection.status === 'ACTIVE' || collection.status === 'BLOCKED') && (
         <Button variant="outline" className="w-full" onClick={() => closeCollection.mutate({ id: collection.id })}>{t('collection.close')}</Button>

@@ -216,7 +216,7 @@
     "sosJoined": "Du har lagts till som direkt deltagare"
   },
   "create": {
-    "title": "Skicka hjalpsignal",
+    "title": "Jag behöver",
     "emergency": "Akut",
     "regular": "Vanlig",
     "amount": "Belopp",
@@ -224,7 +224,7 @@
     "largeAmountConfirm": "Jag bekraftar att beloppet ar korrekt",
     "currency": "Valuta",
     "chatLink": "Chattlank",
-    "submit": "Skicka signal",
+    "submit": "Meddela",
     "minAmount": "Minsta 10",
     "invalidUrl": "Ogiltig URL",
     "chatHelpToggle": "Hur skapar man en Telegram-chatt?",

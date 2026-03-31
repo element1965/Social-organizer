@@ -216,7 +216,7 @@
     "sosJoined": "คุณถูกเพิ่มเป็นผู้เข้าร่วมโดยตรงแล้ว"
   },
   "create": {
-    "title": "ส่งสัญญาณขอความช่วยเหลือ",
+    "title": "ต้องการ",
     "emergency": "ฉุกเฉิน",
     "regular": "ปกติ",
     "amount": "จำนวน",
@@ -224,7 +224,7 @@
     "largeAmountConfirm": "ฉันยืนยันว่าจำนวนเงินถูกต้อง",
     "currency": "สกุลเงิน",
     "chatLink": "ลิงก์แชท",
-    "submit": "ส่งสัญญาณ",
+    "submit": "แจ้ง",
     "minAmount": "ขั้นต่ำ 10",
     "invalidUrl": "URL ไม่ถูกต้อง",
     "chatHelpToggle": "จะสร้างแชท Telegram ได้อย่างไร?",
