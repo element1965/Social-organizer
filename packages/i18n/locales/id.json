@@ -216,7 +216,7 @@
     "sosJoined": "Anda telah ditambahkan sebagai peserta langsung"
   },
   "create": {
-    "title": "Kirim sinyal bantuan",
+    "title": "Butuh",
     "emergency": "Darurat",
     "regular": "Biasa",
     "amount": "Jumlah",
@@ -224,7 +224,7 @@
     "largeAmountConfirm": "Saya konfirmasi jumlahnya benar",
     "currency": "Mata Uang",
     "chatLink": "Tautan chat",
-    "submit": "Kirim sinyal",
+    "submit": "Beritahu",
     "minAmount": "Minimal 10",
     "invalidUrl": "URL tidak valid",
     "chatHelpToggle": "Bagaimana cara membuat chat Telegram?",

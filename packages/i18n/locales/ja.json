@@ -216,7 +216,7 @@
     "sosJoined": "直接参加者として追加されました"
   },
   "create": {
-    "title": "助けの合図を送る",
+    "title": "必要です",
     "emergency": "緊急",
     "regular": "通常",
     "amount": "金額",
@@ -224,7 +224,7 @@
     "largeAmountConfirm": "金額が正しいことを確認します",
     "currency": "通貨",
     "chatLink": "チャットリンク",
-    "submit": "シグナルを送る",
+    "submit": "通知する",
     "minAmount": "最低 10",
     "invalidUrl": "無効なURL",
     "chatHelpToggle": "Telegramチャットの作成方法は？",

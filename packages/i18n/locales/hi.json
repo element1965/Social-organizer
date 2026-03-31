@@ -216,7 +216,7 @@
     "sosJoined": "आपको प्रत्यक्ष प्रतिभागी के रूप में जोड़ा गया"
   },
   "create": {
-    "title": "मदद का संकेत भेजें",
+    "title": "मुझे चाहिए",
     "emergency": "आपातकालीन",
     "regular": "सामान्य",
     "amount": "राशि",
@@ -224,7 +224,7 @@
     "largeAmountConfirm": "मैं पुष्टि करता/करती हूं कि राशि सही है",
     "currency": "मुद्रा",
     "chatLink": "चैट लिंक",
-    "submit": "संकेत भेजें",
+    "submit": "सूचित करें",
     "minAmount": "न्यूनतम 10",
     "invalidUrl": "अमान्य URL",
     "chatHelpToggle": "Telegram चैट कैसे बनाएं?",

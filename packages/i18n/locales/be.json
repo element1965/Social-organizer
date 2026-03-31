@@ -216,7 +216,7 @@
     "sosJoined": "Вас дадалі як прамога ўдзельніка"
   },
   "create": {
-    "title": "Падаць сігнал аб дапамозе",
+    "title": "Патрэба",
     "emergency": "Экстрэнны",
     "regular": "Рэгулярны",
     "amount": "Сума",
@@ -224,7 +224,7 @@
     "largeAmountConfirm": "Пацвярджаю, сума правільная",
     "currency": "Валюта",
     "chatLink": "Спасылка на чат",
-    "submit": "Падаць сігнал",
+    "submit": "Паведаміць",
     "minAmount": "Мінімум 10",
     "invalidUrl": "Няправільны URL",
     "chatHelpToggle": "Як стварыць Telegram-чат?",

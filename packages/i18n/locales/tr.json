@@ -216,7 +216,7 @@
     "sosJoined": "Doğrudan katılımcı olarak eklendiniz"
   },
   "create": {
-    "title": "Yardım sinyali gönder",
+    "title": "İhtiyacım var",
     "emergency": "Acil",
     "regular": "Normal",
     "amount": "Miktar",
@@ -224,7 +224,7 @@
     "largeAmountConfirm": "Miktarın doğru olduğunu onaylıyorum",
     "currency": "Para Birimi",
     "chatLink": "Sohbet linki",
-    "submit": "Sinyal gönder",
+    "submit": "Bildir",
     "minAmount": "En az 10",
     "invalidUrl": "Geçersiz URL",
     "chatHelpToggle": "Telegram sohbeti nasıl oluşturulur?",

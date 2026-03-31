@@ -226,7 +226,7 @@
     "sosJoined": "הוספת כמשתתף ישיר"
   },
   "create": {
-    "title": "שלח אות סיוע",
+    "title": "אני צריך",
     "emergency": "חירום",
     "regular": "רגיל",
     "amount": "סכום",
@@ -234,7 +234,7 @@
     "largeAmountConfirm": "אני מאשר שהסכום נכון",
     "currency": "מטבע",
     "chatLink": "קישור לצ'אט",
-    "submit": "שלח אות",
+    "submit": "להודיע",
     "minAmount": "מינימום 10",
     "invalidUrl": "כתובת URL לא תקינה",
     "chatHelpToggle": "איך ליצור צ'אט Telegram?",

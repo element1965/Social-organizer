@@ -216,7 +216,7 @@
     "sosJoined": "Bạn đã được thêm làm người tham gia trực tiếp"
   },
   "create": {
-    "title": "Gửi tín hiệu cần giúp đỡ",
+    "title": "Tôi cần",
     "emergency": "Khẩn cấp",
     "regular": "Thường",
     "amount": "Số tiền",
@@ -224,7 +224,7 @@
     "largeAmountConfirm": "Tôi xác nhận số tiền là chính xác",
     "currency": "Tiền tệ",
     "chatLink": "Liên kết chat",
-    "submit": "Gửi tín hiệu",
+    "submit": "Thông báo",
     "minAmount": "Tối thiểu 10",
     "invalidUrl": "URL không hợp lệ",
     "chatHelpToggle": "Làm thế nào để tạo cuộc trò chuyện Telegram?",

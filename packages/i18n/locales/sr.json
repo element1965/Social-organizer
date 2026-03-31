@@ -216,7 +216,7 @@
     "sosJoined": "Додати сте као директан учесник"
   },
   "create": {
-    "title": "Пошаљи сигнал за помоћ",
+    "title": "Треба ми",
     "emergency": "Хитно",
     "regular": "Редовно",
     "amount": "Износ",
@@ -224,7 +224,7 @@
     "largeAmountConfirm": "Потврђујем да је износ тачан",
     "currency": "Валута",
     "chatLink": "Линк ка чату",
-    "submit": "Пошаљи сигнал",
+    "submit": "Обавести",
     "minAmount": "Минимум 10",
     "invalidUrl": "Неисправан URL",
     "chatHelpToggle": "Како направити Telegram ћаскање?",

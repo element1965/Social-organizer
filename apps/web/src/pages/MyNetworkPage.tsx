@@ -1,4 +1,4 @@
-import { useState, useCallback, lazy, Suspense } from 'react';
+import { useState, useCallback, lazy, Suspense, useMemo } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { trpc } from '../lib/trpc';
@@ -8,7 +8,7 @@ import { useTheme } from '../hooks/useTheme';
 import { useNicknames } from '../hooks/useNicknames';
 import { Avatar } from '../components/ui/avatar';
 import { Spinner } from '../components/ui/spinner';
-import { Users, Globe, List, Wallet, ChevronDown, ChevronUp, Layers } from 'lucide-react';
+import { Users, Globe, List, Wallet, ChevronDown, ChevronUp, Layers, TrendingUp } from 'lucide-react';
 const LazyNetworkGraph = lazy(() =>
   import('@so/graph-3d').then((m) => ({ default: m.NetworkGraph })),
 );
@@ -60,6 +60,35 @@ export function MyNetworkPage() {
 
   const byDepth = networkStats?.byDepth ?? {};
   const usersByDepth = (networkStats as any)?.usersByDepth ?? {};
+
+  const { data: growthWeek } = trpc.stats.byPeriod.useQuery({ days: 7 }, { refetchInterval: 120000 });
+  const { data: growthMonth } = trpc.stats.byPeriod.useQuery({ days: 30 }, { refetchInterval: 120000 });
+
+  // Build growth chart from connectedAt timestamps of all network users
+  const growthPoints = useMemo(() => {
+    const allUsers: Array<{ connectedAt?: string | null }> = Object.values(usersByDepth).flat() as any[];
+    if (allUsers.length === 0) return [];
+    const now = Date.now();
+    const dayMs = 86400000;
+    const POINTS = 8;
+    const RANGE = 30 * dayMs;
+    const step = RANGE / POINTS;
+    const counts: number[] = Array(POINTS).fill(0);
+    for (const u of allUsers) {
+      if (!u.connectedAt) continue;
+      const age = now - new Date(u.connectedAt).getTime();
+      if (age > RANGE) continue;
+      const idx = Math.min(POINTS - 1, Math.floor((RANGE - age) / step));
+      counts[idx]++;
+    }
+    // cumulative
+    const cum: number[] = [];
+    let acc = 0;
+    // base = users older than 30 days
+    const base = allUsers.filter((u) => !u.connectedAt || now - new Date(u.connectedAt).getTime() > RANGE).length;
+    for (const c of counts) { acc += c; cum.push(base + acc); }
+    return cum;
+  }, [usersByDepth]);
 
   const toggleDepth = (depth: number) => {
     setExpandedDepth((prev) => {
@@ -133,7 +162,7 @@ export function MyNetworkPage() {
       ) : view === '3d' ? (
         <>
           <div className={`rounded-xl overflow-hidden relative ${isDark ? 'bg-gray-950' : 'bg-gray-100'}`} style={{ height: 'calc(100vh - 200px)' }}>
-            <p className="absolute top-3 left-0 right-0 text-center text-sm font-semibold text-gray-400 dark:text-gray-300 z-10 pointer-events-none">GoodwillNet</p>
+            <p className="absolute top-3 left-0 right-0 text-center text-sm font-semibold text-gray-400 dark:text-gray-300 z-10 pointer-events-none">GoodWill Net</p>
             <Suspense fallback={<div className="flex justify-center py-12"><Spinner /></div>}>
               {graphData ? (
                 <LazyNetworkGraph
@@ -319,6 +348,75 @@ export function MyNetworkPage() {
                   </div>
                 )];
               })}
+            </div>
+          )}
+
+          {/* Network growth stats + chart */}
+          {Object.keys(byDepth).length > 0 && (
+            <div className="mt-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 p-4 space-y-3">
+              <div className="flex items-center gap-2">
+                <TrendingUp className="w-4 h-4 text-blue-500" />
+                <span className="text-sm font-semibold text-gray-900 dark:text-white">Рост сети</span>
+              </div>
+
+              {/* Stats row */}
+              <div className="grid grid-cols-3 gap-2 text-center">
+                <div className="rounded-lg bg-gray-50 dark:bg-gray-800 py-2 px-1">
+                  <p className="text-lg font-bold text-gray-900 dark:text-white">
+                    {Object.values(byDepth).reduce((a, b) => a + (b as number), 0)}
+                  </p>
+                  <p className="text-[10px] text-gray-500 dark:text-gray-400">Всего</p>
+                </div>
+                <div className="rounded-lg bg-gray-50 dark:bg-gray-800 py-2 px-1">
+                  <p className="text-lg font-bold text-green-600 dark:text-green-400">
+                    +{growthWeek?.newPeople ?? 0}
+                  </p>
+                  <p className="text-[10px] text-gray-500 dark:text-gray-400">За 7 дней</p>
+                </div>
+                <div className="rounded-lg bg-gray-50 dark:bg-gray-800 py-2 px-1">
+                  <p className="text-lg font-bold text-blue-600 dark:text-blue-400">
+                    +{growthMonth?.newPeople ?? 0}
+                  </p>
+                  <p className="text-[10px] text-gray-500 dark:text-gray-400">За 30 дней</p>
+                </div>
+              </div>
+
+              {/* Growth chart */}
+              {growthPoints.length > 1 && (() => {
+                const max = Math.max(...growthPoints, 1);
+                const W = 280;
+                const H = 80;
+                const pts = growthPoints.map((v, i) => {
+                  const x = (i / (growthPoints.length - 1)) * W;
+                  const y = H - (v / max) * (H - 8) - 4;
+                  return `${x},${y}`;
+                }).join(' ');
+                const area = `0,${H} ` + pts + ` ${W},${H}`;
+                return (
+                  <div>
+                    <p className="text-[10px] text-gray-400 mb-1">Участники за последние 30 дней</p>
+                    <svg viewBox={`0 0 ${W} ${H}`} className="w-full" style={{ height: 80 }}>
+                      <defs>
+                        <linearGradient id="netGrad" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="0%" stopColor="#3b82f6" stopOpacity="0.3" />
+                          <stop offset="100%" stopColor="#3b82f6" stopOpacity="0.02" />
+                        </linearGradient>
+                      </defs>
+                      <polygon points={area} fill="url(#netGrad)" />
+                      <polyline points={pts} fill="none" stroke="#3b82f6" strokeWidth="2" strokeLinejoin="round" strokeLinecap="round" />
+                      {growthPoints.map((v, i) => {
+                        const x = (i / (growthPoints.length - 1)) * W;
+                        const y = H - (v / max) * (H - 8) - 4;
+                        return <circle key={i} cx={x} cy={y} r="3" fill="#3b82f6" />;
+                      })}
+                    </svg>
+                    <div className="flex justify-between text-[9px] text-gray-400 mt-0.5">
+                      <span>30 дн. назад</span>
+                      <span>Сейчас</span>
+                    </div>
+                  </div>
+                );
+              })()}
             </div>
           )}
         </>

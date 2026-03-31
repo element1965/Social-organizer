@@ -216,7 +216,7 @@
     "sosJoined": "Byl jsi přidán jako přímý účastník"
   },
   "create": {
-    "title": "Vyslat signál o pomoci",
+    "title": "Potřebuji",
     "emergency": "Naléhavé",
     "regular": "Běžné",
     "amount": "Částka",
@@ -224,7 +224,7 @@
     "largeAmountConfirm": "Potvrzuji, že částka je správná",
     "currency": "Měna",
     "chatLink": "Odkaz na chat",
-    "submit": "Vyslat signál",
+    "submit": "Upozornit",
     "minAmount": "Minimálně 10",
     "invalidUrl": "Neplatná URL",
     "chatHelpToggle": "Jak vytvořit Telegram chat?",

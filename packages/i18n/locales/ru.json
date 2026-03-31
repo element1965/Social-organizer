@@ -216,7 +216,7 @@
     "sosJoined": "Вы добавлены как прямой участник"
   },
   "create": {
-    "title": "Подать сигнал о помощи",
+    "title": "Нужно",
     "emergency": "Экстренный",
     "regular": "Регулярный",
     "amount": "Сумма",
@@ -224,7 +224,7 @@
     "largeAmountConfirm": "Подтверждаю, сумма верная",
     "currency": "Валюта",
     "chatLink": "Ссылка на чат",
-    "submit": "Подать сигнал",
+    "submit": "Уведомить",
     "minAmount": "Минимум 10",
     "invalidUrl": "Невалидный URL",
     "chatHelpToggle": "Как создать Telegram-чат?",

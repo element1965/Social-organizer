@@ -216,7 +216,7 @@
     "sosJoined": "직접 참가자로 추가되었습니다"
   },
   "create": {
-    "title": "도움 신호 보내기",
+    "title": "필요해요",
     "emergency": "긴급",
     "regular": "일반",
     "amount": "금액",
@@ -224,7 +224,7 @@
     "largeAmountConfirm": "금액이 정확함을 확인합니다",
     "currency": "통화",
     "chatLink": "채팅 링크",
-    "submit": "신호 보내기",
+    "submit": "알리기",
     "minAmount": "최소 10",
     "invalidUrl": "잘못된 URL",
     "chatHelpToggle": "Telegram 채팅은 어떻게 만드나요?",

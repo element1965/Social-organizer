@@ -216,7 +216,7 @@
     "sosJoined": "Sinut on lisätty suoraksi osallistujaksi"
   },
   "create": {
-    "title": "Lähetä apusignaali",
+    "title": "Tarvitsen",
     "emergency": "Hätätapaus",
     "regular": "Tavallinen",
     "amount": "Summa",
@@ -224,7 +224,7 @@
     "largeAmountConfirm": "Vahvistan, että summa on oikein",
     "currency": "Valuutta",
     "chatLink": "Chat-linkki",
-    "submit": "Lähetä signaali",
+    "submit": "Ilmoita",
     "minAmount": "Vähintään 10",
     "invalidUrl": "Virheellinen URL",
     "chatHelpToggle": "Miten luodaan Telegram-keskustelu?",

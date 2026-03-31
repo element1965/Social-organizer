@@ -216,7 +216,7 @@
     "sosJoined": "Je bent toegevoegd als directe deelnemer"
   },
   "create": {
-    "title": "Hulpsignaal verzenden",
+    "title": "Ik heb nodig",
     "emergency": "Noodgeval",
     "regular": "Regulier",
     "amount": "Bedrag",
@@ -224,7 +224,7 @@
     "largeAmountConfirm": "Ik bevestig dat het bedrag correct is",
     "currency": "Valuta",
     "chatLink": "Chatlink",
-    "submit": "Signaal verzenden",
+    "submit": "Notificeren",
     "minAmount": "Minimaal 10",
     "invalidUrl": "Ongeldige URL",
     "chatHelpToggle": "Hoe maak je een Telegram-chat aan?",
