@@ -288,6 +288,9 @@ export function LandingPage({ variant, inviteToken: inviteTokenProp }: { variant
             <p className="text-gray-300 text-lg md:text-xl leading-relaxed whitespace-pre-line">
               {t('landing.principleText')}
             </p>
+            <p className="text-teal-400/70 text-sm md:text-base italic mt-6 leading-relaxed">
+              Like a traditional rotating savings group (Hui / 會 / 계) — but decentralized, digital, and without a central organizer.
+            </p>
           </div>
         </section>
 
