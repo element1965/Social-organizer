@@ -477,7 +477,8 @@
     "calcWorldCap": "超过世界人口",
     "heroCopyline": "在关键时刻的可预测性。",
     "block6Title": "不是平台。一个简单的社交工具",
-    "block6Text": "无控制\n无中介\n\n不处理付款\n不持有资金\n\n一切发生在人与人之间"
+    "block6Text": "无控制\n无中介\n\n不处理付款\n不持有资金\n\n一切发生在人与人之间",
+    "huiLine": "就像传统的互助储蓄会（會/Hui）——但去中心化、数字化，且无需中央组织者。"
   },
   "tgBot": {
     "newEmergency": "新紧急募集",

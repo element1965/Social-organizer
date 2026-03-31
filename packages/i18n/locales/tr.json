@@ -535,7 +535,8 @@
     "calcWorldCap": "dünya nüfusundan fazla",
     "heroCopyline": "Önemli olduğunda öngörülebilirlik.",
     "block6Title": "Bir platform değil. Basit bir sosyal araç",
-    "block6Text": "Kontrol yok\nAracı yok\n\nÖdemeleri işlemiyor\nFon tutmuyor\n\nHer şey insanlar arasında olur"
+    "block6Text": "Kontrol yok\nAracı yok\n\nÖdemeleri işlemiyor\nFon tutmuyor\n\nHer şey insanlar arasında olur",
+    "huiLine": "Geleneksel döner tasarruf grubu (Hui / 會 / 계) gibi — ama merkeziyetsiz, dijital ve merkezi organizatör olmadan."
   },
   "tgBot": {
     "newEmergency": "Yeni acil yardım kampanyası",
