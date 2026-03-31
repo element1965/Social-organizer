@@ -268,7 +268,14 @@
     "qrCode": "QR-koodi",
     "empty": "Ei yhteyksiä",
     "emptyHint": "Kutsu ensimmäinen henkilösi",
-    "controlsHint": "Vasen klikkaus: kierrä, Vieritys: zoomaa, Oikea klikkaus: panoroi"
+    "controlsHint": "Vasen klikkaus: kierrä, Vieritys: zoomaa, Oikea klikkaus: panoroi",
+    "growth": "Verkoston kasvu",
+    "growthTotal": "Yhteensä",
+    "growth7d": "Viimeiset 7 päivää",
+    "growth30d": "Viimeiset 30 päivää",
+    "growthChartLabel": "Jäsenet viimeisten 30 päivän aikana",
+    "growthStart": "30 päivää sitten",
+    "growthNow": "Nyt"
   },
   "notifications": {
     "title": "Ilmoitukset",

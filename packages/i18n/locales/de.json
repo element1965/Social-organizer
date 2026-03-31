@@ -268,7 +268,14 @@
     "qrCode": "QR-Code",
     "empty": "Keine Verbindungen",
     "emptyHint": "Lade deine erste Person ein",
-    "controlsHint": "Linksklick: Drehen, Scrollen: Zoom, Rechtsklick: Verschieben"
+    "controlsHint": "Linksklick: Drehen, Scrollen: Zoom, Rechtsklick: Verschieben",
+    "growth": "Netzwerkwachstum",
+    "growthTotal": "Gesamt",
+    "growth7d": "Letzte 7 Tage",
+    "growth30d": "Letzte 30 Tage",
+    "growthChartLabel": "Mitglieder in den letzten 30 Tagen",
+    "growthStart": "Vor 30 Tagen",
+    "growthNow": "Jetzt"
   },
   "notifications": {
     "title": "Benachrichtigungen",

@@ -268,7 +268,14 @@
     "qrCode": "Código QR",
     "empty": "Sem conexões",
     "emptyHint": "Convide sua primeira pessoa",
-    "controlsHint": "Clique esquerdo: girar, Scroll: zoom, Clique direito: mover"
+    "controlsHint": "Clique esquerdo: girar, Scroll: zoom, Clique direito: mover",
+    "growth": "Crescimento da rede",
+    "growthTotal": "Total",
+    "growth7d": "Últimos 7 dias",
+    "growth30d": "Últimos 30 dias",
+    "growthChartLabel": "Membros nos últimos 30 dias",
+    "growthStart": "Há 30 dias",
+    "growthNow": "Agora"
   },
   "notifications": {
     "title": "Notificações",

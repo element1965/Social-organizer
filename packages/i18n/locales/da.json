@@ -268,7 +268,14 @@
     "qrCode": "QR-kode",
     "empty": "Ingen forbindelser",
     "emptyHint": "Inviter din første person",
-    "controlsHint": "Venstreklik: roter, Scroll: zoom, Højreklik: panorer"
+    "controlsHint": "Venstreklik: roter, Scroll: zoom, Højreklik: panorer",
+    "growth": "Netværksvækst",
+    "growthTotal": "I alt",
+    "growth7d": "Sidste 7 dage",
+    "growth30d": "Sidste 30 dage",
+    "growthChartLabel": "Medlemmer de sidste 30 dage",
+    "growthStart": "For 30 dage siden",
+    "growthNow": "Nu"
   },
   "notifications": {
     "title": "Notifikationer",

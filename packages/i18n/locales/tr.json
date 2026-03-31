@@ -268,7 +268,14 @@
     "qrCode": "QR Kodu",
     "empty": "Bağlantı yok",
     "emptyHint": "İlk kişinizi davet edin",
-    "controlsHint": "Sol tık: döndür, Kaydırma: yakınlaştır, Sağ tık: kaydır"
+    "controlsHint": "Sol tık: döndür, Kaydırma: yakınlaştır, Sağ tık: kaydır",
+    "growth": "Ağ büyümesi",
+    "growthTotal": "Toplam",
+    "growth7d": "Son 7 gün",
+    "growth30d": "Son 30 gün",
+    "growthChartLabel": "Son 30 gündeki üyeler",
+    "growthStart": "30 gün önce",
+    "growthNow": "Şimdi"
   },
   "notifications": {
     "title": "Bildirimler",

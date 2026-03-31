@@ -268,7 +268,14 @@
     "qrCode": "QR kód",
     "empty": "Žádná spojení",
     "emptyHint": "Pozvěte svou první osobu",
-    "controlsHint": "Levé tlačítko: otočit, Kolečko: přiblížit, Pravé tlačítko: posunout"
+    "controlsHint": "Levé tlačítko: otočit, Kolečko: přiblížit, Pravé tlačítko: posunout",
+    "growth": "Růst sítě",
+    "growthTotal": "Celkem",
+    "growth7d": "Za 7 dní",
+    "growth30d": "Za 30 dní",
+    "growthChartLabel": "Členové za posledních 30 dní",
+    "growthStart": "Před 30 dny",
+    "growthNow": "Nyní"
   },
   "notifications": {
     "title": "Upozornění",

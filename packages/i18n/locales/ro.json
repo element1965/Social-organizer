@@ -268,7 +268,14 @@
     "qrCode": "Cod QR",
     "empty": "Nicio conexiune",
     "emptyHint": "Invita prima ta persoana",
-    "controlsHint": "Click stanga: roteste, Scroll: zoom, Click dreapta: deplaseaza"
+    "controlsHint": "Click stanga: roteste, Scroll: zoom, Click dreapta: deplaseaza",
+    "growth": "Creșterea rețelei",
+    "growthTotal": "Total",
+    "growth7d": "Ultimele 7 zile",
+    "growth30d": "Ultimele 30 de zile",
+    "growthChartLabel": "Membri în ultimele 30 de zile",
+    "growthStart": "Acum 30 de zile",
+    "growthNow": "Acum"
   },
   "notifications": {
     "title": "Notificari",
