@@ -535,7 +535,8 @@
     "calcWorldCap": "mere end verdens befolkning",
     "heroCopyline": "Forudsigelighed når det gælder.",
     "block6Title": "Ikke en platform. Et enkelt socialt værktøj",
-    "block6Text": "Ingen kontrol\nIngen mellemmænd\n\nBehandler ikke betalinger\nOpbevarer ikke midler\n\nAlt sker mellem folk"
+    "block6Text": "Ingen kontrol\nIngen mellemmænd\n\nBehandler ikke betalinger\nOpbevarer ikke midler\n\nAlt sker mellem folk",
+    "huiLine": "Som en traditionel roterende opsparing (Hui / 會 / 계) — men decentraliseret, digital og uden en central organisator."
   },
   "tgBot": {
     "newEmergency": "Ny nødindsamling",

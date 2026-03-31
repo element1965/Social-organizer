@@ -535,7 +535,8 @@
     "calcWorldCap": "more than the world population",
     "heroCopyline": "Predictability when it matters.",
     "block6Title": "Not a platform. A simple social utility",
-    "block6Text": "No control\nNo intermediaries\n\nIt doesn't process payments\nIt doesn't hold funds\n\nEverything happens between people"
+    "block6Text": "No control\nNo intermediaries\n\nIt doesn't process payments\nIt doesn't hold funds\n\nEverything happens between people",
+    "huiLine": "Like a traditional rotating savings group (Hui / 會 / 계) — but decentralized, digital, and without a central organizer."
   },
   "tgBot": {
     "newEmergency": "New Emergency Collection",
