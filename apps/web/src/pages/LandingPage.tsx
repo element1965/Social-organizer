@@ -196,8 +196,7 @@ export function LandingPage({ variant, inviteToken: inviteTokenProp }: { variant
 
       {/* Open-source badge + GitHub — fixed top center */}
       <div className="fixed top-4 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/10 backdrop-blur-sm border border-white/10">
-        <span className="text-gray-300 text-xs hidden sm:inline">{t('landing.openSourceBadge')}</span>
-        <span className="text-gray-300 text-xs sm:hidden">Open Source</span>
+        <span className="text-gray-300 text-xs">{t('landing.openSourceBadge')}</span>
         <a
           href="https://github.com/element1965/Social-organizer"
           target="_blank"
