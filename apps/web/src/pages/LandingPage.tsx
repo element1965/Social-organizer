@@ -287,9 +287,6 @@ export function LandingPage({ variant, inviteToken: inviteTokenProp }: { variant
             <p className="text-gray-300 text-lg md:text-xl leading-relaxed whitespace-pre-line">
               {t('landing.principleText')}
             </p>
-            <p className="text-teal-400/70 text-sm md:text-base italic mt-6 leading-relaxed">
-              {t('landing.huiLine')}
-            </p>
           </div>
         </section>
 
