@@ -252,7 +252,7 @@ export function LandingPage({ variant, inviteToken: inviteTokenProp }: { variant
           <p className="text-teal-300 text-base md:text-lg font-semibold italic mb-1 tracking-wide">
             {t('landing.heroSmallLine')}
           </p>
-          <p className="text-gray-500 text-sm mb-10">
+          <p className="text-gray-300 text-sm mb-10">
             {t('landing.heroCopyline')}
           </p>
           <div className="flex flex-col sm:flex-row gap-4">
