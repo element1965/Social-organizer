@@ -99,8 +99,50 @@ export function TermsPage() {
             </p>
           </section>
 
+          <section id="child-safety">
+            <h2 className="text-lg font-semibold text-white mb-2">9. Child Safety Standards</h2>
+            <p className="mb-2">
+              Social Organizer has a zero-tolerance policy toward child sexual abuse and exploitation (CSAE).
+              We strictly prohibit any content, behavior, or use of our platform that sexually exploits
+              or endangers minors in any way.
+            </p>
+            <p className="mb-2">Specifically, the following are strictly forbidden:</p>
+            <ul className="list-disc list-inside space-y-1 ml-2 mb-2">
+              <li>Sharing, distributing, or soliciting child sexual abuse material (CSAM) of any kind.</li>
+              <li>Grooming, trafficking, or exploitation of minors.</li>
+              <li>Any communication of a sexual nature with or about minors.</li>
+              <li>Using the platform to facilitate access to children for harmful purposes.</li>
+            </ul>
+            <p className="mb-2">
+              Users must be at least 16 years of age. We reserve the right to immediately terminate
+              accounts and report violators to the appropriate law enforcement authorities, including
+              the{' '}
+              <a
+                href="https://www.missingkids.org/gethelpnow/cybertipline"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-teal-400 hover:text-teal-300 underline"
+              >
+                National Center for Missing &amp; Exploited Children (NCMEC)
+              </a>{' '}
+              and local law enforcement.
+            </p>
+            <p>
+              If you encounter any content or behavior that violates these standards, please report it
+              immediately via{' '}
+              <a
+                href="https://t.me/socialorganizer_bot"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-teal-400 hover:text-teal-300 underline"
+              >
+                Telegram
+              </a>.
+            </p>
+          </section>
+
           <section>
-            <h2 className="text-lg font-semibold text-white mb-2">9. Changes to Terms</h2>
+            <h2 className="text-lg font-semibold text-white mb-2">10. Changes to Terms</h2>
             <p>
               We may update these terms from time to time. Continued use of the App after changes
               constitutes acceptance of the new terms.
@@ -108,7 +150,7 @@ export function TermsPage() {
           </section>
 
           <section>
-            <h2 className="text-lg font-semibold text-white mb-2">10. Contact</h2>
+            <h2 className="text-lg font-semibold text-white mb-2">11. Contact</h2>
             <p>
               For questions about these Terms, contact us via{' '}
               <a
