@@ -4,6 +4,8 @@ import { useTranslation } from 'react-i18next';
 import { trpc } from '../lib/trpc';
 import { useCachedNetworkStats } from '../hooks/useCachedNetworkStats';
 import { InviteBlock } from '../components/InviteBlock';
+import { ShareSheet } from '../components/ShareSheet';
+import { buildWebInviteUrl } from '../lib/inviteUrl';
 import { Card, CardContent } from '../components/ui/card';
 import { Button } from '../components/ui/button';
 import {
@@ -34,6 +36,7 @@ export function DashboardPage() {
   const location = useLocation();
   const resolve = useNicknames();
   const [showTgChatPopup, setShowTgChatPopup] = useState(false);
+  const [gateShareOpen, setGateShareOpen] = useState(false);
 
   const utils = trpc.useUtils();
   const { data: me } = trpc.user.me.useQuery(undefined, { refetchInterval: 30000 });
@@ -154,12 +157,26 @@ export function DashboardPage() {
             <p className="text-sm text-gray-500 dark:text-gray-300 mb-4">
               {t('dashboard.addFirstConnectionDesc')}
             </p>
-            <Button className="w-full" size="lg" onClick={() => navigate('/network')}>
+            <Button className="w-full" size="lg" onClick={() => setGateShareOpen(true)}>
               <UserPlus className="w-4 h-4 mr-2" /> {t('create.goToInvite')}
             </Button>
           </CardContent>
         </Card>
       )}
+
+      {/* ShareSheet for gate invite button */}
+      {(() => {
+        const token = me?.referralSlug || me?.id || '';
+        const url = token ? buildWebInviteUrl(token) : '';
+        return url ? (
+          <ShareSheet
+            open={gateShareOpen}
+            onClose={() => setGateShareOpen(false)}
+            url={url}
+            shareText={t('invite.shareText', { name: me?.name || '' })}
+          />
+        ) : null;
+      })()}
 
       {/* TG community chat popup */}
       {showTgChatPopup && (
