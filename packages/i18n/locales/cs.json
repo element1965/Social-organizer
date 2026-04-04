@@ -210,6 +210,8 @@
     "saveAmount": "Save",
     "cancelEdit": "Cancel",
     "editChatLink": "Upravit odkaz na chat",
+    "editGoal": "Upravit odkaz na chat",
+    "setGoal": "Set goal",
     "noChatLink": "Odkaz na chat nebyl přidán",
     "sosInviteButton": "Sdílet SOS odkaz",
     "sosLinkCopied": "SOS odkaz zkopírován!",

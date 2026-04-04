@@ -210,6 +210,8 @@
     "saveAmount": "Save",
     "cancelEdit": "Cancel",
     "editChatLink": "تعديل رابط المحادثة",
+    "editGoal": "تعديل رابط المحادثة",
+    "setGoal": "Set goal",
     "noChatLink": "لم يتم إضافة رابط المحادثة",
     "sosInviteButton": "مشاركة رابط SOS",
     "sosLinkCopied": "تم نسخ رابط SOS!",

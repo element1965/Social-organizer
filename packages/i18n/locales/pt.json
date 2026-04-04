@@ -210,6 +210,8 @@
     "saveAmount": "Salvar",
     "cancelEdit": "Cancelar",
     "editChatLink": "Editar link do chat",
+    "editGoal": "Editar link do chat",
+    "setGoal": "Set goal",
     "noChatLink": "Nenhum link de chat adicionado",
     "sosInviteButton": "Partilhar link SOS",
     "sosLinkCopied": "Link SOS copiado!",

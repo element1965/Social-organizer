@@ -210,6 +210,8 @@
     "saveAmount": "Save",
     "cancelEdit": "Cancel",
     "editChatLink": "编辑聊天链接",
+    "editGoal": "编辑聊天链接",
+    "setGoal": "Set goal",
     "noChatLink": "未添加聊天链接",
     "sosInviteButton": "分享 SOS 链接",
     "sosLinkCopied": "SOS 链接已复制！",

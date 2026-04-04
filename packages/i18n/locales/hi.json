@@ -210,6 +210,8 @@
     "saveAmount": "Save",
     "cancelEdit": "Cancel",
     "editChatLink": "चैट लिंक संपादित करें",
+    "editGoal": "चैट लिंक संपादित करें",
+    "setGoal": "Set goal",
     "noChatLink": "कोई चैट लिंक नहीं जोड़ा गया",
     "sosInviteButton": "SOS लिंक शेयर करें",
     "sosLinkCopied": "SOS लिंक कॉपी हो गया!",

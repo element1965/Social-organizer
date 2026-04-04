@@ -210,6 +210,8 @@
     "saveAmount": "Save",
     "cancelEdit": "Cancel",
     "editChatLink": "แก้ไขลิงก์แชท",
+    "editGoal": "แก้ไขลิงก์แชท",
+    "setGoal": "Set goal",
     "noChatLink": "ยังไม่ได้เพิ่มลิงก์แชท",
     "sosInviteButton": "แชร์ลิงก์ SOS",
     "sosLinkCopied": "คัดลอกลิงก์ SOS แล้ว!",
