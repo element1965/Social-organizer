@@ -1,6 +1,9 @@
 import { Navigate, useLocation } from 'react-router-dom';
+import { Capacitor } from '@capacitor/core';
 import { useAuth } from '../hooks/useAuth';
 import { trpc } from '../lib/trpc';
+
+const isNativeApp = Capacitor.isNativePlatform();
 
 export function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const isAuthenticated = useAuth((s) => s.isAuthenticated);
@@ -20,10 +23,14 @@ export function ProtectedRoute({ children }: { children: React.ReactNode }) {
     return null;
   }
 
-  // Stale/expired token — clear auth and redirect to landing
+  // Stale/expired token — clear auth and redirect
   if (isAuthenticated && isError) {
     logout();
     const redirectPath = location.pathname + location.search;
+    if (isNativeApp) {
+      const target = redirectPath !== '/dashboard' ? `/login?redirect=${encodeURIComponent(redirectPath)}` : '/login';
+      return <Navigate to={target} replace />;
+    }
     const target = redirectPath !== '/dashboard' ? `/?redirect=${encodeURIComponent(redirectPath)}` : '/';
     return <Navigate to={target} replace />;
   }
@@ -31,6 +38,10 @@ export function ProtectedRoute({ children }: { children: React.ReactNode }) {
   if (!isAuthenticated) {
     // Preserve current path as redirect so user returns after login
     const redirectPath = location.pathname + location.search;
+    if (isNativeApp) {
+      const target = redirectPath !== '/dashboard' ? `/login?redirect=${encodeURIComponent(redirectPath)}` : '/login';
+      return <Navigate to={target} replace />;
+    }
     const target = redirectPath !== '/dashboard' ? `/?redirect=${encodeURIComponent(redirectPath)}` : '/';
     return <Navigate to={target} replace />;
   }
