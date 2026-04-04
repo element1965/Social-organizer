@@ -28,6 +28,7 @@
     ]
   },
   "dependencies": {
+    "googleapis": "^171.4.0",
     "sharp": "^0.34.5"
   }
 }

@@ -53,12 +53,27 @@
 - Capacitor config: `apps/web/capacitor.config.ts` (url: https://www.orginizer.com)
 - Keystore: `keystore/release.jks` (пароль: socialorg2026, alias: social-organizer)
 - Keystore properties: `apps/web/android/keystore.properties`
-- Версия: build.gradle → `versionCode` / `versionName` (увеличивать при каждом релизе)
+- Версия: `apps/web/android/app/build.gradle` → `versionCode` / `versionName` (увеличивать при каждом релизе)
 - JAVA_HOME: `C:\Program Files\Android\Android Studio\jbr`
-- Сборка AAB:
-  ```
-  export JAVA_HOME="/c/Program Files/Android/Android Studio/jbr"
-  cd apps/web/android && ./gradlew bundleRelease
-  ```
-- Выходной файл: `apps/web/android/app/build/outputs/bundle/release/app-release.aab`
-- Загрузка: вручную через Google Play Console
+- Service account: `scripts/google-play-service-account.json` (НЕ коммитить — в .gitignore)
+  - Аккаунт: play-store-upload@ornate-fragment-465314-v2.iam.gserviceaccount.com
+  - Проект GCP: ornate-fragment-465314-v2
+
+## Деплой одной командой
+```
+node scripts/deploy-android.mjs [--track internal|alpha|beta|production]
+```
+Делает всё автоматически:
+1. Собирает web (`pnpm --filter @so/web build`)
+2. Синхронизирует Capacitor (`npx cap sync android`)
+3. Собирает AAB (`gradlew.bat bundleRelease`)
+4. Загружает в Google Play через API
+
+По умолчанию track = `internal`. Для публичного релиза: `--track production`
+
+## Ручная сборка (если нужен только AAB)
+```
+export JAVA_HOME="/c/Program Files/Android/Android Studio/jbr"
+cd apps/web/android && ./gradlew bundleRelease
+```
+Выходной файл: `apps/web/android/app/build/outputs/bundle/release/app-release.aab`

@@ -13,7 +13,7 @@
  */
 
 import { execSync } from 'child_process';
-import { existsSync, readFileSync } from 'fs';
+import { existsSync, readFileSync, createReadStream } from 'fs';
 import { resolve, dirname } from 'path';
 import { fileURLToPath } from 'url';
 import { google } from 'googleapis';
@@ -29,10 +29,17 @@ const trackArg = process.argv.indexOf('--track');
 const TRACK = trackArg !== -1 ? process.argv[trackArg + 1] : 'internal';
 
 const JAVA_HOME = process.env.JAVA_HOME || 'C:\\Program Files\\Android\\Android Studio\\jbr';
+const isWindows = process.platform === 'win32';
 
 function run(cmd, cwd = ROOT) {
-  console.log(`\n▶ ${cmd}`);
-  execSync(cmd, { cwd, stdio: 'inherit', env: { ...process.env, JAVA_HOME } });
+  const winCmd = isWindows ? cmd.replace(/^npx /, 'npx.cmd ') : cmd;
+  console.log(`\n▶ ${winCmd}`);
+  execSync(winCmd, {
+    cwd,
+    stdio: 'inherit',
+    env: { ...process.env, JAVA_HOME },
+    shell: isWindows ? 'cmd.exe' : undefined,
+  });
 }
 
 // ── 1. Build web ──────────────────────────────────────────────────────────────
@@ -45,7 +52,10 @@ run('npx cap sync android', WEB_DIR);
 
 // ── 3. Build AAB ──────────────────────────────────────────────────────────────
 console.log('\n━━━ 3/4  Building Android AAB ━━━');
-run('./gradlew bundleRelease', ANDROID_DIR);
+const gradleCmd = isWindows
+  ? `"${resolve(ANDROID_DIR, 'gradlew.bat')}" bundleRelease`
+  : './gradlew bundleRelease';
+run(gradleCmd, ANDROID_DIR);
 
 if (!existsSync(AAB_PATH)) {
   console.error(`\n✗ AAB not found at ${AAB_PATH}`);
@@ -84,14 +94,13 @@ const androidPublisher = google.androidpublisher({ version: 'v3', auth });
   console.log(`  Edit created: ${editId}`);
 
   // Upload AAB
-  const aabData = readFileSync(AAB_PATH);
   const uploadRes = await androidPublisher.edits.bundles.upload({
     packageName: PACKAGE_NAME,
     editId,
     requestBody: {},
     media: {
       mimeType: 'application/octet-stream',
-      body: aabData,
+      body: createReadStream(AAB_PATH),
     },
   });
   const versionCode = uploadRes.data.versionCode;
