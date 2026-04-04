@@ -55,5 +55,8 @@ keystore.properties
 # Firebase service account keys (never commit)
 *-firebase-adminsdk-*.json
 
+# Google Play service account (never commit)
+scripts/google-play-service-account.json
+
 # Misc
 origin_logo.png
