@@ -149,11 +149,39 @@ export const authRouter = router({
   loginWithGoogle: publicProcedure
     .input(z.object({
       idToken: z.string().min(1),
+      linkCode: z.string().length(6).optional(),
     }))
     .mutation(async ({ ctx, input }) => {
       const googleUser = await verifyGoogleIdToken(input.idToken);
       if (!googleUser) {
         throw new TRPCError({ code: 'UNAUTHORIZED', message: 'Invalid Google token' });
+      }
+
+      // 0. If linkCode provided — attach Google to the TG user from that code
+      if (input.linkCode) {
+        const linkingCode = await ctx.db.linkingCode.findFirst({
+          where: { code: input.linkCode, expiresAt: { gt: new Date() } },
+        });
+        if (!linkingCode) {
+          throw new TRPCError({ code: 'NOT_FOUND', message: 'Invalid or expired link code' });
+        }
+        const user = await ctx.db.user.findUnique({ where: { id: linkingCode.userId } });
+        if (!user || user.deletedAt) {
+          throw new TRPCError({ code: 'NOT_FOUND', message: 'User not found' });
+        }
+        // Attach Google platform account (upsert in case already linked)
+        await ctx.db.platformAccount.upsert({
+          where: { platform_platformId: { platform: 'GOOGLE', platformId: googleUser.sub } },
+          create: { userId: user.id, platform: 'GOOGLE', platformId: googleUser.sub, accessToken: input.idToken },
+          update: { userId: user.id, accessToken: input.idToken },
+        });
+        if (googleUser.picture && !user.photoUrl) {
+          await ctx.db.user.update({ where: { id: user.id }, data: { photoUrl: googleUser.picture } });
+        }
+        await ctx.db.linkingCode.delete({ where: { id: linkingCode.id } });
+        const accessToken = createAccessToken(user.id);
+        const refreshToken = createRefreshToken(user.id);
+        return { accessToken, refreshToken, userId: user.id };
       }
 
       // 1. Check if PlatformAccount(GOOGLE, sub) exists

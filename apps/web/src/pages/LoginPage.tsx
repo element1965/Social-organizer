@@ -177,10 +177,10 @@ export function LoginPage() {
     setLoading(true);
     setError('');
     googleLoginMutation.mutate(
-      { idToken: response.credential },
+      { idToken: response.credential, ...(linkCode.length === 6 ? { linkCode } : {}) },
       { onSettled: () => setLoading(false) },
     );
-  }, [googleLoginMutation]);
+  }, [googleLoginMutation, linkCode]);
 
   const handleGoogleClick = useCallback(() => {
     if (isTelegramWebApp()) {
