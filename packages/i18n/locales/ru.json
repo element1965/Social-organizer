@@ -210,6 +210,8 @@
     "saveAmount": "Сохранить",
     "cancelEdit": "Отмена",
     "editChatLink": "Редактировать ссылку на чат",
+    "editGoal": "Изменить цель сбора",
+    "setGoal": "Установить цель",
     "noChatLink": "Ссылка на чат не добавлена",
     "sosInviteButton": "Поделиться SOS-ссылкой",
     "sosLinkCopied": "SOS-ссылка скопирована!",

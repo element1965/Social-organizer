@@ -210,6 +210,8 @@
     "saveAmount": "Save",
     "cancelEdit": "Cancel",
     "editChatLink": "Redigera chattlänk",
+    "editGoal": "Redigera chattlänk",
+    "setGoal": "Set goal",
     "noChatLink": "Ingen chattlänk har lagts till",
     "sosInviteButton": "Dela SOS-länk",
     "sosLinkCopied": "SOS-länk kopierad!",

@@ -210,6 +210,8 @@
     "saveAmount": "Save",
     "cancelEdit": "Cancel",
     "editChatLink": "Sohbet bağlantısını düzenle",
+    "editGoal": "Sohbet bağlantısını düzenle",
+    "setGoal": "Set goal",
     "noChatLink": "Sohbet bağlantısı eklenmedi",
     "sosInviteButton": "SOS bağlantısını paylaş",
     "sosLinkCopied": "SOS bağlantısı kopyalandı!",

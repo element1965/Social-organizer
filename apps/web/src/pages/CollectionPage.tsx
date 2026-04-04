@@ -38,6 +38,7 @@ export function CollectionPage() {
   const closeCollection = trpc.collection.close.useMutation({ onSuccess: () => utils.collection.getById.invalidate({ id: id! }) });
   const updateAmount = trpc.obligation.updateAmount.useMutation({ onSuccess: () => utils.collection.getById.invalidate({ id: id! }) });
   const updateChatLink = trpc.collection.updateChatLink.useMutation({ onSuccess: () => utils.collection.getById.invalidate({ id: id! }) });
+  const updateCollectionAmount = trpc.collection.updateAmount.useMutation({ onSuccess: () => utils.collection.getById.invalidate({ id: id! }) });
   const acceptSos = trpc.invite.acceptSos.useMutation({
     onSuccess: () => utils.collection.getById.invalidate({ id: id! }),
   });
@@ -51,6 +52,18 @@ export function CollectionPage() {
   const [chatLinkError, setChatLinkError] = useState('');
   const [inputCurrency, setInputCurrency] = useState('USD');
   const [error, setError] = useState('');
+
+  // Edit collection goal amount state
+  const [editingGoal, setEditingGoal] = useState(false);
+  const [goalAmount, setGoalAmount] = useState('');
+  const [goalCurrency, setGoalCurrency] = useState('USD');
+  const [goalError, setGoalError] = useState('');
+
+  // Preview conversion for goal edit
+  const { data: goalPreview } = trpc.currency.toUSD.useQuery(
+    { amount: Number(goalAmount), from: goalCurrency },
+    { enabled: editingGoal && !!goalAmount && Number(goalAmount) > 0 && goalCurrency !== 'USD' }
+  );
 
   // Edit amount state
   const [editingOblId, setEditingOblId] = useState<string | null>(null);
@@ -165,19 +178,96 @@ export function CollectionPage() {
               <p className="text-sm text-gray-500 dark:text-gray-300">{t('collection.collected')}</p>
               <p className="text-2xl font-bold text-gray-900 dark:text-white">${Math.round(collection.currentAmount)} USD</p>
             </div>
-            {hasGoal && (
-              <div className="text-right">
-                <p className="text-sm text-gray-500 dark:text-gray-300">{t('collection.goal')}</p>
-                <p className="text-2xl font-bold text-gray-900 dark:text-white">${collection.amount} USD</p>
-                {showOriginal && (
-                  <p className="text-xs text-gray-400">
-                    ({collectionData.originalAmount} {collectionData.originalCurrency})
-                  </p>
-                )}
-              </div>
-            )}
+            <div className="text-right">
+              {isOwner && (collection.status === 'ACTIVE' || collection.status === 'BLOCKED') && editingGoal ? (
+                <div className="flex flex-col gap-1 items-end">
+                  <div className="flex gap-1 items-center">
+                    <div className="w-24">
+                      <Input
+                        type="number"
+                        min={1}
+                        value={goalAmount}
+                        onChange={(e) => { setGoalAmount(e.target.value); setGoalError(''); }}
+                        error={goalError}
+                        onFocus={(e) => { setTimeout(() => e.target.scrollIntoView({ behavior: 'smooth', block: 'center' }), 300); }}
+                      />
+                    </div>
+                    <div className="w-24">
+                      <Select
+                        id="goal-currency"
+                        className="h-[38px]"
+                        value={goalCurrency}
+                        onChange={(e) => setGoalCurrency(e.target.value)}
+                        options={currencyOptions}
+                      />
+                    </div>
+                    <button
+                      onClick={() => {
+                        const num = Number(goalAmount);
+                        if (!num || num < 1) { setGoalError(t('collection.minAmount')); return; }
+                        updateCollectionAmount.mutate(
+                          { id: collection.id, amount: num, inputCurrency: goalCurrency },
+                          { onSuccess: () => setEditingGoal(false) }
+                        );
+                      }}
+                      disabled={updateCollectionAmount.isPending}
+                      className="p-2 text-green-600 hover:text-green-700 disabled:opacity-50"
+                    >
+                      <Check className="w-4 h-4" />
+                    </button>
+                    <button
+                      onClick={() => { setEditingGoal(false); setGoalError(''); }}
+                      className="p-2 text-gray-400 hover:text-gray-600 dark:text-gray-300"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  </div>
+                  {goalCurrency !== 'USD' && Number(goalAmount) > 0 && goalPreview?.result != null && (
+                    <p className="text-xs text-gray-400">≈ ${goalPreview.result} USD</p>
+                  )}
+                </div>
+              ) : (
+                <>
+                  {hasGoal && (
+                    <div className="flex items-start gap-1 justify-end">
+                      <div>
+                        <p className="text-sm text-gray-500 dark:text-gray-300">{t('collection.goal')}</p>
+                        <p className="text-2xl font-bold text-gray-900 dark:text-white">${collection.amount} USD</p>
+                        {showOriginal && (
+                          <p className="text-xs text-gray-400">
+                            ({collectionData.originalAmount} {collectionData.originalCurrency})
+                          </p>
+                        )}
+                      </div>
+                      {isOwner && (collection.status === 'ACTIVE' || collection.status === 'BLOCKED') && (
+                        <button
+                          onClick={() => {
+                            setGoalAmount(String(collectionData.originalAmount ?? collection.amount ?? ''));
+                            setGoalCurrency(collectionData.originalCurrency ?? 'USD');
+                            setGoalError('');
+                            setEditingGoal(true);
+                          }}
+                          className="mt-5 p-1.5 text-gray-400 hover:text-gray-600 dark:text-gray-300 dark:hover:text-gray-100"
+                          title={t('collection.editGoal')}
+                        >
+                          <Pencil className="w-3.5 h-3.5" />
+                        </button>
+                      )}
+                    </div>
+                  )}
+                  {!hasGoal && isOwner && (collection.status === 'ACTIVE' || collection.status === 'BLOCKED') && (
+                    <button
+                      onClick={() => { setGoalAmount(''); setGoalCurrency('USD'); setGoalError(''); setEditingGoal(true); }}
+                      className="flex items-center gap-1 text-sm text-blue-600 dark:text-blue-400 hover:underline"
+                    >
+                      <Pencil className="w-3.5 h-3.5" /> {t('collection.setGoal')}
+                    </button>
+                  )}
+                </>
+              )}
+            </div>
           </div>
-          {hasGoal && <><Progress value={collection.currentAmount} max={collection.amount!} /><p className="text-xs text-gray-500 dark:text-gray-300 mt-1 text-right">{percentage.toFixed(0)}%</p></>}
+          {hasGoal && !editingGoal && <><Progress value={collection.currentAmount} max={collection.amount!} /><p className="text-xs text-gray-500 dark:text-gray-300 mt-1 text-right">{percentage.toFixed(0)}%</p></>}
         </CardContent>
       </Card>
 

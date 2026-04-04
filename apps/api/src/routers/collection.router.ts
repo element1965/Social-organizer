@@ -130,6 +130,49 @@ export const collectionRouter = router({
       };
     }),
 
+  updateAmount: protectedProcedure
+    .input(z.object({
+      id: z.string(),
+      amount: z.number().min(MIN_COLLECTION_AMOUNT).nullable(),
+      inputCurrency: z.string().refine((c) => CURRENCY_CODES.includes(c), 'Unsupported currency'),
+    }))
+    .mutation(async ({ ctx, input }) => {
+      const collection = await ctx.db.collection.findUnique({ where: { id: input.id } });
+      if (!collection) throw new TRPCError({ code: 'NOT_FOUND' });
+      if (collection.creatorId !== ctx.userId) throw new TRPCError({ code: 'FORBIDDEN' });
+      if (collection.status !== 'ACTIVE' && collection.status !== 'BLOCKED') {
+        throw new TRPCError({ code: 'BAD_REQUEST', message: 'Can only update active collections' });
+      }
+
+      let amountUSD = input.amount;
+      if (input.amount != null && input.inputCurrency !== 'USD') {
+        amountUSD = await convertToUSD(input.amount, input.inputCurrency);
+      }
+
+      const updated = await ctx.db.collection.update({
+        where: { id: input.id },
+        data: {
+          amount: amountUSD,
+          originalAmount: input.amount,
+          originalCurrency: input.inputCurrency,
+        },
+      });
+
+      // If new goal is larger — notify additional recipients for the difference
+      const oldAmount = collection.amount;
+      if (amountUSD != null && (oldAmount == null || amountUSD > oldAmount)) {
+        const oldMax = oldAmount != null ? Math.ceil(oldAmount / NOTIFICATION_RATIO) : 0;
+        const newMax = Math.ceil(amountUSD / NOTIFICATION_RATIO);
+        const extra = newMax - oldMax;
+        if (extra > 0) {
+          sendCollectionNotifications(ctx.db, collection.id, ctx.userId, 'RE_NOTIFY', 1, extra)
+            .catch((err) => console.error('[updateAmount] notification error:', err));
+        }
+      }
+
+      return updated;
+    }),
+
   updateChatLink: protectedProcedure
     .input(z.object({ id: z.string(), chatLink: z.string().url() }))
     .mutation(async ({ ctx, input }) => {

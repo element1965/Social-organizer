@@ -210,6 +210,8 @@
     "saveAmount": "Save",
     "cancelEdit": "Cancel",
     "editChatLink": "Muokkaa chat-linkkiä",
+    "editGoal": "Muokkaa chat-linkkiä",
+    "setGoal": "Set goal",
     "noChatLink": "Chat-linkkiä ei ole lisätty",
     "sosInviteButton": "Jaa SOS-linkki",
     "sosLinkCopied": "SOS-linkki kopioitu!",

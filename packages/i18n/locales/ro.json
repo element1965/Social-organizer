@@ -210,6 +210,8 @@
     "saveAmount": "Save",
     "cancelEdit": "Cancel",
     "editChatLink": "Editați linkul de chat",
+    "editGoal": "Editați linkul de chat",
+    "setGoal": "Set goal",
     "noChatLink": "Niciun link de chat adăugat",
     "sosInviteButton": "Distribuie link SOS",
     "sosLinkCopied": "Link SOS copiat!",

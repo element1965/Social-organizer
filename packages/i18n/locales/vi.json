@@ -210,6 +210,8 @@
     "saveAmount": "Save",
     "cancelEdit": "Cancel",
     "editChatLink": "Chỉnh sửa liên kết chat",
+    "editGoal": "Chỉnh sửa liên kết chat",
+    "setGoal": "Set goal",
     "noChatLink": "Chưa thêm liên kết chat",
     "sosInviteButton": "Chia sẻ liên kết SOS",
     "sosLinkCopied": "Đã sao chép liên kết SOS!",
