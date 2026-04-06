@@ -1,22 +1,30 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { trpc } from '../lib/trpc';
 import { useAuth } from '../hooks/useAuth';
 
 // Handles Google OAuth redirect callback.
-// When opened in Chrome Custom Tab (native), passes tokens back to Capacitor WebView
-// via deep link: socialorganizer://auth-success?at=...&rt=...&uid=...&isNew=1
-// When opened in web browser, saves tokens directly.
+// Opened in Chrome Custom Tab after Google auth.
+// On native: passes tokens to Capacitor WebView via socialorganizer://auth-success deep link.
+// On web: saves tokens directly and navigates.
 export function GoogleCallbackPage() {
   const navigate = useNavigate();
   const login = useAuth((s) => s.login);
+  const called = useRef(false);
+
+  const mutation = trpc.auth.loginWithGoogle.useMutation();
+  // Keep a stable ref so useEffect closure always has the latest mutate fn
+  const mutateRef = useRef(mutation.mutate);
+  mutateRef.current = mutation.mutate;
 
   useEffect(() => {
+    if (called.current) return;
+    called.current = true;
+
     const hash = window.location.hash;
     const hashParams = new URLSearchParams(hash.replace('#', '?'));
     const idToken = hashParams.get('id_token');
 
-    // Parse state param: { native: '1', lc: 'linkCode' } — set by native app
     let isNativeCallback = false;
     let linkCode: string | undefined;
     try {
@@ -25,39 +33,48 @@ export function GoogleCallbackPage() {
       isNativeCallback = stateObj.native === '1';
       linkCode = stateObj.lc || undefined;
     } catch {
-      // Web flow — state is not JSON
-      linkCode = new URLSearchParams(window.location.search).get('state') || undefined;
+      // Web flow
     }
 
-    if (!idToken) {
-      window.location.href = isNativeCallback ? 'socialorganizer://auth-error' : '/login';
-      return;
-    }
-
-    const handleSuccess = (data: { accessToken: string; refreshToken: string; userId: string; isNew: boolean }) => {
+    const goError = () => {
       if (isNativeCallback) {
-        // Chrome Custom Tab — pass tokens to Capacitor WebView via deep link
-        const p = new URLSearchParams({ at: data.accessToken, rt: data.refreshToken, uid: data.userId, isNew: data.isNew ? '1' : '0' });
-        window.location.href = `socialorganizer://auth-success?${p.toString()}`;
+        window.location.href = 'socialorganizer://auth-error';
       } else {
-        login(data.accessToken, data.refreshToken, data.userId);
-        const pendingInvite = localStorage.getItem('pendingInviteToken');
-        if (pendingInvite) {
-          localStorage.removeItem('pendingInviteToken');
-          window.location.href = `/invite/${pendingInvite}`;
-        } else {
-          navigate(data.isNew ? '/onboarding' : '/dashboard');
-        }
+        navigate('/login');
       }
     };
 
-    const handleError = () => {
-      window.location.href = isNativeCallback ? 'socialorganizer://auth-error' : '/login';
-    };
+    if (!idToken) {
+      goError();
+      return;
+    }
 
-    googleLoginMutation.mutate(
+    mutateRef.current(
       { idToken, ...(linkCode ? { linkCode } : {}) },
-      { onSuccess: handleSuccess, onError: handleError },
+      {
+        onSuccess(data) {
+          if (!data?.accessToken) { goError(); return; }
+          if (isNativeCallback) {
+            const p = new URLSearchParams({
+              at: data.accessToken,
+              rt: data.refreshToken,
+              uid: data.userId,
+              isNew: data.isNew ? '1' : '0',
+            });
+            window.location.href = `socialorganizer://auth-success?${p.toString()}`;
+          } else {
+            login(data.accessToken, data.refreshToken, data.userId);
+            const pendingInvite = localStorage.getItem('pendingInviteToken');
+            if (pendingInvite) {
+              localStorage.removeItem('pendingInviteToken');
+              window.location.href = `/invite/${pendingInvite}`;
+            } else {
+              navigate(data.isNew ? '/onboarding' : '/dashboard');
+            }
+          }
+        },
+        onError: goError,
+      },
     );
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
