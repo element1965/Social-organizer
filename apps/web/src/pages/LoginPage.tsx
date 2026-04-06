@@ -191,15 +191,16 @@ export function LoginPage() {
     }
     const redirectUri = 'https://www.orginizer.com/auth/google/callback';
     const nonce = Math.random().toString(36).slice(2);
-    // Pass linkCode in state param so the callback page can use it
-    const state = linkCode.length === 6 ? linkCode : '';
+    // Encode native=true + linkCode in state so callback page knows to use deep link
+    const stateObj: Record<string, string> = { native: '1' };
+    if (linkCode.length === 6) stateObj.lc = linkCode;
     const params = new URLSearchParams({
       response_type: 'id_token',
       client_id: GOOGLE_CLIENT_ID,
       redirect_uri: redirectUri,
       scope: 'openid email profile',
       nonce,
-      ...(state ? { state } : {}),
+      state: JSON.stringify(stateObj),
     });
     Browser.open({ url: `https://accounts.google.com/o/oauth2/v2/auth?${params.toString()}` });
   }, [linkCode]);
