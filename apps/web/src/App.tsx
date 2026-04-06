@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate, useSearchParams } from 'react-r
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useState, useEffect } from 'react';
 import { App as CapApp } from '@capacitor/app';
+import { Browser } from '@capacitor/browser';
 import { Capacitor } from '@capacitor/core';
 import { trpc, getTrpcClient } from './lib/trpc';
 import { Layout } from './components/Layout';
@@ -65,7 +66,15 @@ function GoogleAuthDeepLinkHandler() {
 
     const handleUrl = (event: { url: string }) => {
       const url = event.url;
-      if (!url.startsWith('socialorganizer://auth-success')) return;
+      if (!url.startsWith('socialorganizer://auth-')) return;
+
+      // Close Chrome Custom Tab — it stays open until explicitly closed from WebView side
+      Browser.close().catch(() => {});
+
+      if (!url.startsWith('socialorganizer://auth-success')) {
+        window.location.href = '/login';
+        return;
+      }
       try {
         const params = new URLSearchParams(url.split('?')[1] || '');
         const at = params.get('at');
