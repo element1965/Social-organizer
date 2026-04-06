@@ -2,7 +2,6 @@ import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { trpc } from '../lib/trpc';
 import { useAuth } from '../hooks/useAuth';
-import { Capacitor } from '@capacitor/core';
 
 // Handles Google OAuth redirect callback.
 // When opened in Chrome Custom Tab (native), passes tokens back to Capacitor WebView
@@ -12,21 +11,35 @@ export function GoogleCallbackPage() {
   const navigate = useNavigate();
   const login = useAuth((s) => s.login);
 
-  const googleLoginMutation = trpc.auth.loginWithGoogle.useMutation({
-    onSuccess: (data) => {
-      if (!data?.accessToken) return;
+  useEffect(() => {
+    const hash = window.location.hash;
+    const hashParams = new URLSearchParams(hash.replace('#', '?'));
+    const idToken = hashParams.get('id_token');
 
-      if (Capacitor.isNativePlatform()) {
-        // Running inside Chrome Custom Tab — pass tokens to the Capacitor WebView via deep link
-        const params = new URLSearchParams({
-          at: data.accessToken,
-          rt: data.refreshToken,
-          uid: data.userId,
-          isNew: data.isNew ? '1' : '0',
-        });
-        window.location.href = `socialorganizer://auth-success?${params.toString()}`;
+    // Parse state param: { native: '1', lc: 'linkCode' } — set by native app
+    let isNativeCallback = false;
+    let linkCode: string | undefined;
+    try {
+      const stateRaw = new URLSearchParams(window.location.search).get('state') || '';
+      const stateObj = JSON.parse(stateRaw);
+      isNativeCallback = stateObj.native === '1';
+      linkCode = stateObj.lc || undefined;
+    } catch {
+      // Web flow — state is not JSON
+      linkCode = new URLSearchParams(window.location.search).get('state') || undefined;
+    }
+
+    if (!idToken) {
+      window.location.href = isNativeCallback ? 'socialorganizer://auth-error' : '/login';
+      return;
+    }
+
+    const handleSuccess = (data: { accessToken: string; refreshToken: string; userId: string; isNew: boolean }) => {
+      if (isNativeCallback) {
+        // Chrome Custom Tab — pass tokens to Capacitor WebView via deep link
+        const p = new URLSearchParams({ at: data.accessToken, rt: data.refreshToken, uid: data.userId, isNew: data.isNew ? '1' : '0' });
+        window.location.href = `socialorganizer://auth-success?${p.toString()}`;
       } else {
-        // Web browser — save tokens directly
         login(data.accessToken, data.refreshToken, data.userId);
         const pendingInvite = localStorage.getItem('pendingInviteToken');
         if (pendingInvite) {
@@ -36,32 +49,16 @@ export function GoogleCallbackPage() {
           navigate(data.isNew ? '/onboarding' : '/dashboard');
         }
       }
-    },
-    onError: () => {
-      if (Capacitor.isNativePlatform()) {
-        window.location.href = 'socialorganizer://auth-error';
-      } else {
-        navigate('/login');
-      }
-    },
-  });
+    };
 
-  useEffect(() => {
-    const hash = window.location.hash;
-    const params = new URLSearchParams(hash.replace('#', '?'));
-    const idToken = params.get('id_token');
-    // linkCode was passed via OAuth state param
-    const linkCode = new URLSearchParams(window.location.search).get('state') || undefined;
+    const handleError = () => {
+      window.location.href = isNativeCallback ? 'socialorganizer://auth-error' : '/login';
+    };
 
-    if (idToken) {
-      googleLoginMutation.mutate({ idToken, ...(linkCode ? { linkCode } : {}) });
-    } else {
-      if (Capacitor.isNativePlatform()) {
-        window.location.href = 'socialorganizer://auth-error';
-      } else {
-        navigate('/login');
-      }
-    }
+    googleLoginMutation.mutate(
+      { idToken, ...(linkCode ? { linkCode } : {}) },
+      { onSuccess: handleSuccess, onError: handleError },
+    );
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
