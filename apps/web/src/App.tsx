@@ -27,6 +27,7 @@ import { PrivacyPage } from './pages/PrivacyPage';
 import { TermsPage } from './pages/TermsPage';
 import { FaqPage } from './pages/FaqPage';
 import { DeleteAccountPage } from './pages/DeleteAccountPage';
+import { GoogleCallbackPage } from './pages/GoogleCallbackPage';
 
 const isArvut = window.location.hostname.startsWith('arvuthadadit');
 const isNativeApp = Capacitor.isNativePlatform();
@@ -72,6 +73,7 @@ export function App() {
             <Route path="/welcome" element={<LandingPage variant={isArvut ? 'arvut' : undefined} />} />
             <Route path="/arvut" element={<LandingPage variant="arvut" />} />
             <Route path="/login" element={<LoginPage />} />
+            <Route path="/auth/google/callback" element={<GoogleCallbackPage />} />
             <Route path="/onboarding" element={<ProtectedRoute><OnboardingPage /></ProtectedRoute>} />
             <Route path="/privacy" element={<PrivacyPage />} />
             <Route path="/terms" element={<TermsPage />} />

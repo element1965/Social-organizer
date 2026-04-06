@@ -7,6 +7,8 @@ import { Button } from '../components/ui/button';
 import { Logo } from '../components/Logo';
 import { Mail, Eye, EyeOff, Send, KeyRound } from 'lucide-react';
 import { isTelegramWebApp, getTGInitData } from '@so/tg-adapter';
+import { Capacitor } from '@capacitor/core';
+import { Browser } from '@capacitor/browser';
 
 const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID as string | undefined;
 
@@ -182,6 +184,27 @@ export function LoginPage() {
     );
   }, [googleLoginMutation, linkCode]);
 
+  const handleGoogleClickNative = useCallback(() => {
+    if (!GOOGLE_CLIENT_ID) {
+      setError('Google Sign-In is not configured');
+      return;
+    }
+    // Save linkCode for the callback page to pick up
+    if (linkCode.length === 6) {
+      sessionStorage.setItem('googleLinkCode', linkCode);
+    }
+    const redirectUri = 'https://www.orginizer.com/auth/google/callback';
+    const nonce = Math.random().toString(36).slice(2);
+    const params = new URLSearchParams({
+      response_type: 'id_token',
+      client_id: GOOGLE_CLIENT_ID,
+      redirect_uri: redirectUri,
+      scope: 'openid email profile',
+      nonce,
+    });
+    Browser.open({ url: `https://accounts.google.com/o/oauth2/v2/auth?${params.toString()}` });
+  }, [linkCode]);
+
   const handleGoogleClick = useCallback(() => {
     if (isTelegramWebApp()) {
       setError(t('auth.googleNotInTelegram'));
@@ -191,6 +214,13 @@ export function LoginPage() {
       setError('Google Sign-In is not configured');
       return;
     }
+
+    // On native Android/iOS, use Chrome Custom Tab (bypasses WebView restriction)
+    if (Capacitor.isNativePlatform()) {
+      handleGoogleClickNative();
+      return;
+    }
+
     if (!window.google?.accounts?.id) {
       setError('Google SDK not loaded. Please refresh the page.');
       return;
@@ -226,7 +256,7 @@ export function LoginPage() {
         }
       }
     });
-  }, [t, handleGoogleCredential]);
+  }, [t, handleGoogleCredential, handleGoogleClickNative]);
 
   const googleButton = (
     <div className="w-full">
