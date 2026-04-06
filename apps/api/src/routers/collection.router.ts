@@ -29,15 +29,16 @@ export const collectionRouter = router({
         throw new TRPCError({ code: 'BAD_REQUEST', message: `Amount must be at least ${MIN_COLLECTION_AMOUNT}` });
       }
 
-      // Check minimum connections requirement
+      // Check minimum connections requirement — only invite-based connections count
+      // (direct connection requests cannot be used to farm the threshold)
       if (!isSpecial) {
-        const connectionCount = await ctx.db.connection.count({
-          where: { OR: [{ userAId: ctx.userId }, { userBId: ctx.userId }] },
+        const inviteCount = await ctx.db.inviteLink.count({
+          where: { inviterId: ctx.userId, usedById: { not: null } },
         });
-        if (connectionCount < MIN_CONNECTIONS_TO_CREATE) {
+        if (inviteCount < MIN_CONNECTIONS_TO_CREATE) {
           throw new TRPCError({
             code: 'FORBIDDEN',
-            message: `You need at least ${MIN_CONNECTIONS_TO_CREATE} connections. You have ${connectionCount}.`,
+            message: `You need at least ${MIN_CONNECTIONS_TO_CREATE} accepted invitations. You have ${inviteCount}.`,
           });
         }
       }

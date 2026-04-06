@@ -111,8 +111,9 @@ export function CreateCollectionPage() {
   const { data: matchHints } = trpc.skills.matchHints.useQuery();
   const { data: adminData } = trpc.faq.isAdmin.useQuery();
   const isSpecial = me?.role === 'AUTHOR' || me?.role === 'DEVELOPER' || adminData?.isAdmin;
-  const hasEnoughConnections = isSpecial || (connectionCount?.count ?? 0) >= MIN_CONNECTIONS_TO_CREATE;
-  const connectionsNeeded = MIN_CONNECTIONS_TO_CREATE - (connectionCount?.count ?? 0);
+  const inviteCount = connectionCount?.inviteCount ?? 0;
+  const hasEnoughConnections = isSpecial || inviteCount >= MIN_CONNECTIONS_TO_CREATE;
+  const connectionsNeeded = MIN_CONNECTIONS_TO_CREATE - inviteCount;
 
   return (
     <div className="p-4">
@@ -394,7 +395,7 @@ export function CreateCollectionPage() {
               {t('create.notEnoughConnectionsText', { min: MIN_CONNECTIONS_TO_CREATE })}
             </p>
             <div className="flex items-center justify-center gap-2 py-2">
-              <div className="text-3xl font-bold text-red-600">{connectionCount.count}</div>
+              <div className="text-3xl font-bold text-red-600">{inviteCount}</div>
               <div className="text-gray-400">/</div>
               <div className="text-3xl font-bold text-gray-400">{MIN_CONNECTIONS_TO_CREATE}</div>
             </div>

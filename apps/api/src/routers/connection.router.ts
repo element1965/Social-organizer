@@ -106,10 +106,15 @@ export const connectionRouter = router({
     }),
 
   getCount: protectedProcedure.query(async ({ ctx }) => {
-    const count = await ctx.db.connection.count({
-      where: { OR: [{ userAId: ctx.userId }, { userBId: ctx.userId }] },
-    });
-    return { count };
+    const [count, inviteCount] = await Promise.all([
+      ctx.db.connection.count({
+        where: { OR: [{ userAId: ctx.userId }, { userBId: ctx.userId }] },
+      }),
+      ctx.db.inviteLink.count({
+        where: { inviterId: ctx.userId, usedById: { not: null } },
+      }),
+    ]);
+    return { count, inviteCount };
   }),
 
   graphSlice: protectedProcedure
