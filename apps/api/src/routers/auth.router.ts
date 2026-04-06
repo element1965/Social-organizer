@@ -181,7 +181,7 @@ export const authRouter = router({
         await ctx.db.linkingCode.delete({ where: { id: linkingCode.id } });
         const accessToken = createAccessToken(user.id);
         const refreshToken = createRefreshToken(user.id);
-        return { accessToken, refreshToken, userId: user.id };
+        return { accessToken, refreshToken, userId: user.id, isNew: false };
       }
 
       // 1. Check if PlatformAccount(GOOGLE, sub) exists
@@ -196,6 +196,7 @@ export const authRouter = router({
       });
 
       let userId: string;
+      let isNew = false;
 
       if (platformAccount) {
         userId = platformAccount.userId;
@@ -247,6 +248,7 @@ export const authRouter = router({
             },
           });
           userId = user.id;
+          isNew = true;
         }
       } else {
         // Email not verified — create new user without email
@@ -264,12 +266,13 @@ export const authRouter = router({
           },
         });
         userId = user.id;
+        isNew = true;
       }
 
       const accessToken = createAccessToken(userId);
       const refreshToken = createRefreshToken(userId);
 
-      return { accessToken, refreshToken, userId };
+      return { accessToken, refreshToken, userId, isNew };
     }),
 
   loginWithPlatform: publicProcedure

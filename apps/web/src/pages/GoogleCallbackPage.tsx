@@ -2,29 +2,47 @@ import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { trpc } from '../lib/trpc';
 import { useAuth } from '../hooks/useAuth';
-import { Browser } from '@capacitor/browser';
+import { Capacitor } from '@capacitor/core';
 
-// This page handles Google OAuth redirect callback.
-// Google redirects here with #id_token=... in the URL hash after auth via Chrome Custom Tab.
+// Handles Google OAuth redirect callback.
+// When opened in Chrome Custom Tab (native), passes tokens back to Capacitor WebView
+// via deep link: socialorganizer://auth-success?at=...&rt=...&uid=...&isNew=1
+// When opened in web browser, saves tokens directly.
 export function GoogleCallbackPage() {
   const navigate = useNavigate();
   const login = useAuth((s) => s.login);
+
   const googleLoginMutation = trpc.auth.loginWithGoogle.useMutation({
     onSuccess: (data) => {
       if (!data?.accessToken) return;
-      login(data.accessToken, data.refreshToken, data.userId);
-      // Close Chrome Custom Tab if opened via Capacitor Browser
-      Browser.close().catch(() => {});
-      const pendingInvite = localStorage.getItem('pendingInviteToken');
-      if (pendingInvite) {
-        localStorage.removeItem('pendingInviteToken');
-        window.location.href = `/invite/${pendingInvite}`;
+
+      if (Capacitor.isNativePlatform()) {
+        // Running inside Chrome Custom Tab — pass tokens to the Capacitor WebView via deep link
+        const params = new URLSearchParams({
+          at: data.accessToken,
+          rt: data.refreshToken,
+          uid: data.userId,
+          isNew: data.isNew ? '1' : '0',
+        });
+        window.location.href = `socialorganizer://auth-success?${params.toString()}`;
       } else {
-        navigate('/onboarding');
+        // Web browser — save tokens directly
+        login(data.accessToken, data.refreshToken, data.userId);
+        const pendingInvite = localStorage.getItem('pendingInviteToken');
+        if (pendingInvite) {
+          localStorage.removeItem('pendingInviteToken');
+          window.location.href = `/invite/${pendingInvite}`;
+        } else {
+          navigate(data.isNew ? '/onboarding' : '/dashboard');
+        }
       }
     },
     onError: () => {
-      navigate('/login');
+      if (Capacitor.isNativePlatform()) {
+        window.location.href = 'socialorganizer://auth-error';
+      } else {
+        navigate('/login');
+      }
     },
   });
 
@@ -32,13 +50,17 @@ export function GoogleCallbackPage() {
     const hash = window.location.hash;
     const params = new URLSearchParams(hash.replace('#', '?'));
     const idToken = params.get('id_token');
-    const linkCode = sessionStorage.getItem('googleLinkCode') || undefined;
-    sessionStorage.removeItem('googleLinkCode');
+    // linkCode was passed via OAuth state param
+    const linkCode = new URLSearchParams(window.location.search).get('state') || undefined;
 
     if (idToken) {
       googleLoginMutation.mutate({ idToken, ...(linkCode ? { linkCode } : {}) });
     } else {
-      navigate('/login');
+      if (Capacitor.isNativePlatform()) {
+        window.location.href = 'socialorganizer://auth-error';
+      } else {
+        navigate('/login');
+      }
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
