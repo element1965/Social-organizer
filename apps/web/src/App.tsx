@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate, useSearchParams } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { App as CapApp } from '@capacitor/app';
 import { Capacitor } from '@capacitor/core';
 import { trpc, getTrpcClient } from './lib/trpc';
 import { Layout } from './components/Layout';
@@ -56,6 +57,43 @@ function HomeRoute() {
   return <LandingPage variant={isArvut ? 'arvut' : undefined} />;
 }
 
+function GoogleAuthDeepLinkHandler() {
+  const login = useAuth((s) => s.login);
+
+  useEffect(() => {
+    if (!isNativeApp) return;
+
+    const handleUrl = (event: { url: string }) => {
+      const url = event.url;
+      if (!url.startsWith('socialorganizer://auth-success')) return;
+      try {
+        const params = new URLSearchParams(url.split('?')[1] || '');
+        const at = params.get('at');
+        const rt = params.get('rt');
+        const uid = params.get('uid');
+        const isNew = params.get('isNew') === '1';
+        if (at && rt && uid) {
+          login(at, rt, uid);
+          const pendingInvite = localStorage.getItem('pendingInviteToken');
+          if (pendingInvite) {
+            localStorage.removeItem('pendingInviteToken');
+            window.location.href = `/invite/${pendingInvite}`;
+          } else {
+            window.location.href = isNew ? '/onboarding' : '/dashboard';
+          }
+        }
+      } catch {
+        window.location.href = '/login';
+      }
+    };
+
+    const listenerPromise = CapApp.addListener('appUrlOpen', handleUrl);
+    return () => { listenerPromise.then(h => h.remove()); };
+  }, [login]);
+
+  return null;
+}
+
 export function App() {
   const [queryClient] = useState(() => new QueryClient({
     defaultOptions: { queries: { retry: 1, refetchOnWindowFocus: false } },
@@ -68,6 +106,7 @@ export function App() {
         <BrowserRouter>
           <TelegramBootstrap>
           <NativePushBootstrap />
+          <GoogleAuthDeepLinkHandler />
           <Routes>
             <Route path="/" element={<HomeRoute />} />
             <Route path="/welcome" element={<LandingPage variant={isArvut ? 'arvut' : undefined} />} />

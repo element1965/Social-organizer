@@ -189,18 +189,17 @@ export function LoginPage() {
       setError('Google Sign-In is not configured');
       return;
     }
-    // Save linkCode for the callback page to pick up
-    if (linkCode.length === 6) {
-      sessionStorage.setItem('googleLinkCode', linkCode);
-    }
     const redirectUri = 'https://www.orginizer.com/auth/google/callback';
     const nonce = Math.random().toString(36).slice(2);
+    // Pass linkCode in state param so the callback page can use it
+    const state = linkCode.length === 6 ? linkCode : '';
     const params = new URLSearchParams({
       response_type: 'id_token',
       client_id: GOOGLE_CLIENT_ID,
       redirect_uri: redirectUri,
       scope: 'openid email profile',
       nonce,
+      ...(state ? { state } : {}),
     });
     Browser.open({ url: `https://accounts.google.com/o/oauth2/v2/auth?${params.toString()}` });
   }, [linkCode]);
