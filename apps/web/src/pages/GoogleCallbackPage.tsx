@@ -25,10 +25,12 @@ export function GoogleCallbackPage() {
     const hashParams = new URLSearchParams(hash.replace('#', '?'));
     const idToken = hashParams.get('id_token');
 
+    // With response_type=id_token (implicit flow), Google returns ALL params in the
+    // fragment (#), including state — NOT in the query string.
     let isNativeCallback = false;
     let linkCode: string | undefined;
     try {
-      const stateRaw = new URLSearchParams(window.location.search).get('state') || '';
+      const stateRaw = hashParams.get('state') || '';
       const stateObj = JSON.parse(stateRaw);
       isNativeCallback = stateObj.native === '1';
       linkCode = stateObj.lc || undefined;
