@@ -68,7 +68,6 @@ function GoogleAuthDeepLinkHandler() {
       const url = event.url;
       if (!url.startsWith('socialorganizer://auth-')) return;
 
-      // Close Chrome Custom Tab — it stays open until explicitly closed from WebView side
       Browser.close().catch(() => {});
 
       if (!url.startsWith('socialorganizer://auth-success')) {
@@ -95,6 +94,11 @@ function GoogleAuthDeepLinkHandler() {
         window.location.href = '/login';
       }
     };
+
+    // Handle cold start: app opened via deep link before listener was registered
+    CapApp.getLaunchUrl().then((result) => {
+      if (result?.url) handleUrl({ url: result.url });
+    }).catch(() => {});
 
     const listenerPromise = CapApp.addListener('appUrlOpen', handleUrl);
     return () => { listenerPromise.then(h => h.remove()); };
