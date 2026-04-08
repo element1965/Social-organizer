@@ -38,7 +38,8 @@ export function GoogleCallbackPage() {
 
     const goError = () => {
       if (isNativeCallback) {
-        window.location.href = 'socialorganizer://auth-error';
+        const fallback = encodeURIComponent('https://www.orginizer.com/login');
+        window.location.href = `intent://auth-error#Intent;scheme=socialorganizer;package=com.socialorganizer.app;S.browser_fallback_url=${fallback};end`;
       } else {
         navigate('/login');
       }
@@ -61,7 +62,11 @@ export function GoogleCallbackPage() {
               uid: data.userId,
               isNew: data.isNew ? '1' : '0',
             });
-            window.location.href = `socialorganizer://auth-success?${p.toString()}`;
+            const params = p.toString();
+            // Use Android intent:// scheme — this closes the Custom Tab automatically
+            // (unlike socialorganizer:// which leaves it open with a blank page)
+            const fallback = encodeURIComponent('https://www.orginizer.com');
+            window.location.href = `intent://auth-success?${params}#Intent;scheme=socialorganizer;package=com.socialorganizer.app;S.browser_fallback_url=${fallback};end`;
           } else {
             login(data.accessToken, data.refreshToken, data.userId);
             const pendingInvite = localStorage.getItem('pendingInviteToken');
