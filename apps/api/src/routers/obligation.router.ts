@@ -253,6 +253,23 @@ export const obligationRouter = router({
       return updated;
     }),
 
+  confirmPayment: protectedProcedure
+    .input(z.object({ obligationId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const obligation = await ctx.db.obligation.findUnique({
+        where: { id: input.obligationId },
+        include: { collection: true },
+      });
+      if (!obligation) throw new TRPCError({ code: 'NOT_FOUND' });
+      if (obligation.collection.creatorId !== ctx.userId) throw new TRPCError({ code: 'FORBIDDEN' });
+      // Toggle: confirm if not yet confirmed, unconfirm if already confirmed
+      const confirmedAt = obligation.confirmedAt ? null : new Date();
+      return ctx.db.obligation.update({
+        where: { id: input.obligationId },
+        data: { confirmedAt },
+      });
+    }),
+
   unsubscribe: protectedProcedure
     .input(z.object({ obligationId: z.string() }))
     .mutation(async ({ ctx, input }) => {

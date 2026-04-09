@@ -11,7 +11,7 @@ import { Badge } from '../components/ui/badge';
 import { Progress } from '../components/ui/progress';
 import { Avatar } from '../components/ui/avatar';
 import { Spinner } from '../components/ui/spinner';
-import { ExternalLink, Users, ArrowRight, Pencil, Check, X, Copy, Share2, QrCode } from 'lucide-react';
+import { ExternalLink, Users, ArrowRight, Pencil, Check, X, Copy, Share2, QrCode, CheckCircle2 } from 'lucide-react';
 import { QRCodeSVG } from 'qrcode.react';
 import { HandshakePath } from '../components/HandshakePath';
 import { useNicknames } from '../hooks/useNicknames';
@@ -36,6 +36,7 @@ export function CollectionPage() {
   );
   const createObligation = trpc.obligation.create.useMutation({ onSuccess: () => utils.collection.getById.invalidate({ id: id! }) });
   const closeCollection = trpc.collection.close.useMutation({ onSuccess: () => utils.collection.getById.invalidate({ id: id! }) });
+  const confirmPayment = trpc.obligation.confirmPayment.useMutation({ onSuccess: () => utils.collection.getById.invalidate({ id: id! }) });
   const updateAmount = trpc.obligation.updateAmount.useMutation({ onSuccess: () => utils.collection.getById.invalidate({ id: id! }) });
   const updateChatLink = trpc.collection.updateChatLink.useMutation({ onSuccess: () => utils.collection.getById.invalidate({ id: id! }) });
   const updateCollectionAmount = trpc.collection.updateAmount.useMutation({ onSuccess: () => utils.collection.getById.invalidate({ id: id! }) });
@@ -450,7 +451,27 @@ export function CollectionPage() {
                                 ({oblData.originalAmount} {oblData.originalCurrency})
                               </p>
                             )}
+                            {(oblData as any).confirmedAt && (
+                              <p className="text-xs text-green-600 dark:text-green-400 font-medium">{t('collection.paymentConfirmed')}</p>
+                            )}
                           </div>
+                          {isOwner && (collection.status === 'ACTIVE' || collection.status === 'BLOCKED') && (
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                confirmPayment.mutate({ obligationId: obl.id });
+                              }}
+                              disabled={confirmPayment.isPending}
+                              className={`p-2.5 -m-1.5 transition-colors disabled:opacity-50 ${
+                                (oblData as any).confirmedAt
+                                  ? 'text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300'
+                                  : 'text-gray-300 dark:text-gray-600 hover:text-green-500 dark:hover:text-green-400'
+                              }`}
+                              title={(oblData as any).confirmedAt ? t('collection.unconfirmPayment') : t('collection.confirmPayment')}
+                            >
+                              <CheckCircle2 className="w-5 h-5" />
+                            </button>
+                          )}
                           {canEdit && (
                             <button onClick={(e) => { e.stopPropagation(); startEdit(); }} className="p-2.5 -m-1.5 text-gray-400 hover:text-gray-600 dark:text-gray-300 dark:hover:text-gray-100 active:text-blue-500" title={t('collection.editAmount')}>
                               <Pencil className="w-4 h-4" />
