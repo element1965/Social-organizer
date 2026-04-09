@@ -215,7 +215,10 @@
     "noChatLink": "Ссылка на чат не добавлена",
     "sosInviteButton": "Поделиться SOS-ссылкой",
     "sosLinkCopied": "SOS-ссылка скопирована!",
-    "sosJoined": "Вы добавлены как прямой участник"
+    "sosJoined": "Вы добавлены как прямой участник",
+    "confirmPayment": "Подтвердить перевод",
+    "paymentConfirmed": "Переведено",
+    "unconfirmPayment": "Снять подтверждение"
   },
   "create": {
     "title": "Нужно",

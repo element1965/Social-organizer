@@ -215,7 +215,10 @@
     "noChatLink": "No chat link added",
     "sosInviteButton": "Share SOS link",
     "sosLinkCopied": "SOS link copied!",
-    "sosJoined": "You've been added as a direct participant"
+    "sosJoined": "You've been added as a direct participant",
+    "confirmPayment": "Confirm payment",
+    "paymentConfirmed": "Paid",
+    "unconfirmPayment": "Unmark as paid"
   },
   "create": {
     "title": "I Need",

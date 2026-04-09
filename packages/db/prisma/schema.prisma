@@ -207,6 +207,7 @@ model Obligation {
   originalCurrency String?
   isSubscription   Boolean   @default(false)
   unsubscribedAt   DateTime?
+  confirmedAt      DateTime?
   createdAt        DateTime  @default(now())
 
   collection Collection @relation(fields: [collectionId], references: [id], onDelete: Cascade)
