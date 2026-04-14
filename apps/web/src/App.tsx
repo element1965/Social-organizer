@@ -13,7 +13,6 @@ import { NativePushBootstrap } from './components/NativePushBootstrap';
 import { useAuth } from './hooks/useAuth';
 import { LoginPage } from './pages/LoginPage';
 import { LandingPage } from './pages/LandingPage';
-import { OnboardingPage } from './pages/OnboardingPage';
 import { DashboardPage } from './pages/DashboardPage';
 import { NotificationsPage } from './pages/NotificationsPage';
 import { CollectionPage } from './pages/CollectionPage';
@@ -87,7 +86,7 @@ function GoogleAuthDeepLinkHandler() {
             localStorage.removeItem('pendingInviteToken');
             window.location.href = `/invite/${pendingInvite}`;
           } else {
-            window.location.href = isNew ? '/onboarding' : '/dashboard';
+            window.location.href = '/dashboard';
           }
         }
       } catch {
@@ -126,8 +125,7 @@ export function App() {
             <Route path="/arvut" element={<LandingPage variant="arvut" />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/auth/google/callback" element={<GoogleCallbackPage />} />
-            <Route path="/onboarding" element={<ProtectedRoute><OnboardingPage /></ProtectedRoute>} />
-            <Route path="/privacy" element={<PrivacyPage />} />
+<Route path="/privacy" element={<PrivacyPage />} />
             <Route path="/terms" element={<TermsPage />} />
             <Route path="/delete-account" element={<DeleteAccountPage />} />
             <Route path="/invite/:token" element={<InvitePage />} />

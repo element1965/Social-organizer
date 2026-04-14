@@ -55,10 +55,5 @@ export function ProtectedRoute({ children }: { children: React.ReactNode }) {
     );
   }
 
-  // Redirect to onboarding if user hasn't completed it yet
-  if (me && !me.onboardingCompleted && location.pathname !== '/onboarding') {
-    return <Navigate to="/onboarding" replace />;
-  }
-
   return <>{children}</>;
 }
