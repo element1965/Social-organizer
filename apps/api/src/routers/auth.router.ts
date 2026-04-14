@@ -34,6 +34,9 @@ export const authRouter = router({
           email: input.email.toLowerCase(),
           passwordHash,
           name: input.name || input.email.split('@')[0] || 'User',
+          monthlyBudget: 1,
+          remainingBudget: 1,
+          onboardingCompleted: true,
         },
       });
 
@@ -119,6 +122,9 @@ export const authRouter = router({
             name,
             photoUrl: tgUser.photo_url || null,
             language: lang,
+            monthlyBudget: 1,
+            remainingBudget: 1,
+            onboardingCompleted: true,
             platformAccounts: {
               create: {
                 platform: 'TELEGRAM',
@@ -238,6 +244,9 @@ export const authRouter = router({
               name: googleUser.name,
               email: googleUser.email.toLowerCase(),
               photoUrl: googleUser.picture || null,
+              monthlyBudget: 1,
+              remainingBudget: 1,
+              onboardingCompleted: true,
               platformAccounts: {
                 create: {
                   platform: 'GOOGLE',
@@ -256,6 +265,9 @@ export const authRouter = router({
           data: {
             name: googleUser.name,
             photoUrl: googleUser.picture || null,
+            monthlyBudget: 1,
+            remainingBudget: 1,
+            onboardingCompleted: true,
             platformAccounts: {
               create: {
                 platform: 'GOOGLE',
@@ -304,6 +316,9 @@ export const authRouter = router({
           data: {
             name: input.name || `User_${platformId.slice(0, 8)}`,
             photoUrl: input.photoUrl,
+            monthlyBudget: 1,
+            remainingBudget: 1,
+            onboardingCompleted: true,
             platformAccounts: {
               create: {
                 platform: input.platform,

@@ -1,4 +1,4 @@
-import { lazy, Suspense, useState, useEffect, useRef } from 'react';
+import { lazy, Suspense, useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { trpc } from '../lib/trpc';
@@ -16,8 +16,6 @@ import {
   HelpCircle,
   Pencil,
   MessageSquarePlus,
-  Settings,
-  Wallet,
 } from 'lucide-react';
 import { Tooltip } from '../components/ui/tooltip';
 import { SocialIcon } from '../components/ui/social-icons';
@@ -54,38 +52,6 @@ export function DashboardPage() {
   const [editingSuggGroup, setEditingSuggGroup] = useState('');
 
 
-  // Onboarding hints for new users (driven by server flag, not localStorage)
-  const completeOnboarding = trpc.user.completeOnboarding.useMutation({
-    onSuccess: () => utils.user.me.invalidate(),
-  });
-  const onboardingTriggered = useRef(false);
-  const [onboardingHint, setOnboardingHint] = useState<'budget' | 'settings' | null>(null);
-
-  // Determine if contacts are sufficient (need at least 2 total)
-  const hasTgUsername = me?.platformAccounts?.some((a) => a.platform === 'TELEGRAM') ?? false;
-  const contactCount = (me as any)?.contactCount ?? 0;
-  const needsMoreContacts = contactCount < 2;
-
-  useEffect(() => {
-    if (!me || me.onboardingCompleted) return;
-
-    const budgetDone = me.monthlyBudget != null && me.monthlyBudget > 0;
-
-    // Auto-complete onboarding when both steps are done
-    if (budgetDone && !needsMoreContacts) {
-      completeOnboarding.mutate();
-      return;
-    }
-
-    if (!onboardingTriggered.current) {
-      onboardingTriggered.current = true;
-      setOnboardingHint(budgetDone ? 'settings' : 'budget');
-    } else if (onboardingHint === null && budgetDone && needsMoreContacts) {
-      // Re-show contacts hint after returning from settings
-      setOnboardingHint('settings');
-    }
-  }, [me, needsMoreContacts]);
-
   // Budget editing
   const [editingBudget, setEditingBudget] = useState(false);
   const [newBudgetValue, setNewBudgetValue] = useState('');
@@ -115,7 +81,7 @@ export function DashboardPage() {
       <div className="flex items-center justify-between">
         <button
           onClick={() => navigate('/settings')}
-          className={`flex items-center gap-3 hover:opacity-80 transition-opacity ${onboardingHint === 'settings' ? 'ring-2 ring-blue-500 ring-offset-2 ring-offset-gray-950 rounded-full z-[51]' : ''}`}
+          className="flex items-center gap-3 hover:opacity-80 transition-opacity"
         >
           <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center overflow-hidden ring-2 ring-white dark:ring-gray-800 shadow-lg">
             {me?.photoUrl ? (
@@ -253,7 +219,7 @@ export function DashboardPage() {
       <div className="grid grid-cols-2 gap-3">
         {/* Left column: budget + link + share */}
         <div className="relative flex flex-col gap-2">
-          <Card className={`bg-gradient-to-b from-blue-50 to-indigo-50 dark:from-blue-950/30 dark:to-indigo-950/30 transition-all ${onboardingHint === 'budget' ? 'ring-2 ring-blue-500 ring-offset-2 ring-offset-gray-950 z-[51]' : ''}`}>
+          <Card className="bg-gradient-to-b from-blue-50 to-indigo-50 dark:from-blue-950/30 dark:to-indigo-950/30 transition-all">
             <CardContent className="py-3">
               <div className="flex items-center gap-1 mb-1">
                 <span className="text-xs font-semibold text-gray-900 dark:text-white leading-tight">{t('dashboard.yourContribution')}</span>
@@ -323,62 +289,12 @@ export function DashboardPage() {
             </CardContent>
           </Card>
           <InviteBlock variant="actions" />
-          {/* Onboarding hint for budget — positioned above the card */}
-          {onboardingHint === 'budget' && (
-            <div className="absolute -top-2 left-0 -translate-y-full z-[52] w-56">
-              <div className="bg-blue-600 text-white text-xs rounded-lg p-3 shadow-lg relative">
-                <div className="flex items-center gap-2 mb-1">
-                  <Wallet className="w-3.5 h-3.5 shrink-0" />
-                  <p className="font-medium">{t('onboarding.hintBudget')}</p>
-                </div>
-                <button
-                  onClick={() => setOnboardingHint('settings')}
-                  className="mt-1 px-3 py-1 bg-white/20 rounded text-[11px] font-medium hover:bg-white/30"
-                >
-                  {t('common.next')} →
-                </button>
-                <div className="absolute -bottom-1.5 left-6 w-3 h-3 bg-blue-600 rotate-45" />
-              </div>
-            </div>
-          )}
         </div>
         {/* Right column: QR code */}
         <div>
           <InviteBlock id="invite" variant="qr" />
         </div>
       </div>
-
-      {/* Backdrop for onboarding hints — blocks all interaction */}
-      {onboardingHint && (
-        <div className="fixed inset-0 z-50 bg-black/40" />
-      )}
-
-      {/* Onboarding hint for settings — positioned below the profile button */}
-      {onboardingHint === 'settings' && (
-        <div className="fixed top-[88px] left-4 w-72 z-[52]">
-          <div className="bg-blue-600 text-white text-xs rounded-lg p-3 shadow-lg relative">
-            <div className="absolute -top-1.5 left-8 w-3 h-3 bg-blue-600 rotate-45" />
-            <div className="flex items-center gap-2 mb-1">
-              <Settings className="w-3.5 h-3.5" />
-              <p className="font-medium">
-                {needsMoreContacts
-                  ? t('onboarding.hintContactsNeeded', { count: 2 - contactCount })
-                  : t('onboarding.hintSettings')}
-              </p>
-            </div>
-            {!hasTgUsername && needsMoreContacts && (
-              <p className="text-[10px] text-blue-200 mt-0.5 mb-1">{t('onboarding.noTgUsername')}</p>
-            )}
-            <button
-              onClick={() => { setOnboardingHint(null); navigate('/settings'); }}
-              className="mt-1 px-3 py-1 bg-white/20 rounded text-[11px] font-medium hover:bg-white/30"
-            >
-              {t('common.ok')}
-            </button>
-          </div>
-        </div>
-      )}
-
 
       {/* Suggested categories moderation */}
       {adminData?.isAdmin && suggestions && suggestions.length > 0 && (
