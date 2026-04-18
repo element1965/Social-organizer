@@ -422,6 +422,7 @@ export async function sendTelegramVideo(
     chat_id: chatId,
     video: videoUrl,
     parse_mode: 'HTML',
+    supports_streaming: true,
   };
   if (caption) body.caption = caption;
   if (replyMarkup) body.reply_markup = replyMarkup;
@@ -988,6 +989,7 @@ export async function uploadMediaToTelegram(
   formData.append('chat_id', String(SUPPORT_CHAT_ID));
   formData.append(field, new Blob([fileBuffer]), filename);
   formData.append('caption', `[Загрузка для рассылки] ${filename}`);
+  if (mediaType === 'video') formData.append('supports_streaming', 'true');
 
   const res = await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/${method}`, {
     method: 'POST',
