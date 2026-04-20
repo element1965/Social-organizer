@@ -108,8 +108,8 @@
   "dashboard": {
     "title": "Übersicht",
     "needHelp": "Ich brauche Hilfe",
-    "addFirstConnection": "Füge deine erste Verbindung hinzu",
-    "addFirstConnectionDesc": "Der Organisator funktioniert über Verbindungen zwischen Menschen. Beginne mit einer Person — jemandem, dem du vertraust.",
+    "addFirstConnection": "Füge deine Freunde und Bekannte hinzu",
+    "addFirstConnectionDesc": "",
     "goToNetwork": "Zum Netzwerk",
     "myCollections": "Meine Sammlungen",
     "create": "Erstellen",

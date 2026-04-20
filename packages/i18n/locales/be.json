@@ -108,8 +108,8 @@
   "dashboard": {
     "title": "Дашборд",
     "needHelp": "Мне патрэбна дапамога",
-    "addFirstConnection": "Дадай першую сувязь",
-    "addFirstConnectionDesc": "Арганайзер працуе праз сувязі паміж людзьмі. Пачні з аднаго чалавека — таго, каму давяраеш.",
+    "addFirstConnection": "Дадай сваіх сяброў і знаёмых",
+    "addFirstConnectionDesc": "",
     "goToNetwork": "Перайсці да сеткі",
     "myCollections": "Мае зборы",
     "create": "Стварыць",

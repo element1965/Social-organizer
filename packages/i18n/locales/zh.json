@@ -108,8 +108,8 @@
   "dashboard": {
     "title": "仪表盘",
     "needHelp": "我需要帮助",
-    "addFirstConnection": "添加你的第一个连接",
-    "addFirstConnectionDesc": "组织工具通过人与人之间的连接运作。从一个人开始 — 一个你信任的人。",
+    "addFirstConnection": "添加你的朋友和熟人",
+    "addFirstConnectionDesc": "",
     "goToNetwork": "前往人脉",
     "myCollections": "我的募集",
     "create": "创建",

@@ -108,8 +108,8 @@
   "dashboard": {
     "title": "Panou",
     "needHelp": "Am nevoie de ajutor",
-    "addFirstConnection": "Adauga prima ta conexiune",
-    "addFirstConnectionDesc": "Organizatorul functioneaza prin conexiuni intre oameni. Incepe cu o persoana — cineva in care ai incredere.",
+    "addFirstConnection": "Adaugă-ți prietenii și cunoștințele",
+    "addFirstConnectionDesc": "",
     "goToNetwork": "Mergi la retea",
     "myCollections": "Colectele mele",
     "create": "Creeaza",

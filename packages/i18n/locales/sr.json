@@ -108,8 +108,8 @@
   "dashboard": {
     "title": "Контролна табла",
     "needHelp": "Треба ми помоћ",
-    "addFirstConnection": "Додај прву везу",
-    "addFirstConnectionDesc": "Организатор ради кроз везе између људи. Почни са једном особом — неким коме верујеш.",
+    "addFirstConnection": "Dodaj svoje prijatelje i poznanike",
+    "addFirstConnectionDesc": "",
     "goToNetwork": "Иди на мрежу",
     "myCollections": "Моје прикупљања",
     "create": "Креирај",

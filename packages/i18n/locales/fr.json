@@ -108,8 +108,8 @@
   "dashboard": {
     "title": "Tableau de bord",
     "needHelp": "J'ai besoin d'aide",
-    "addFirstConnection": "Ajoutez votre première connexion",
-    "addFirstConnectionDesc": "L'organisateur fonctionne grâce aux liens entre les personnes. Commencez par une personne — quelqu'un en qui vous avez confiance.",
+    "addFirstConnection": "Ajoutez vos amis et connaissances",
+    "addFirstConnectionDesc": "",
     "goToNetwork": "Aller au réseau",
     "myCollections": "Mes collectes",
     "create": "Créer",

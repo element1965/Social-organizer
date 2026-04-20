@@ -108,8 +108,8 @@
   "dashboard": {
     "title": "Painel",
     "needHelp": "Preciso de ajuda",
-    "addFirstConnection": "Adicione sua primeira conexão",
-    "addFirstConnectionDesc": "O organizador funciona através de conexões entre pessoas. Comece com uma pessoa — alguém em quem você confia.",
+    "addFirstConnection": "Adicione seus amigos e conhecidos",
+    "addFirstConnectionDesc": "",
     "goToNetwork": "Ir para a Rede",
     "myCollections": "Minhas vaquinhas",
     "create": "Criar",

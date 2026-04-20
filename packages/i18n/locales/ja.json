@@ -108,8 +108,8 @@
   "dashboard": {
     "title": "ダッシュボード",
     "needHelp": "助けが必要です",
-    "addFirstConnection": "最初のつながりを追加",
-    "addFirstConnectionDesc": "オーガナイザーは人と人とのつながりで機能します。信頼できる一人から始めましょう。",
+    "addFirstConnection": "友達や知人を追加しよう",
+    "addFirstConnectionDesc": "",
     "goToNetwork": "ネットワークへ",
     "myCollections": "マイ募集",
     "create": "作成",

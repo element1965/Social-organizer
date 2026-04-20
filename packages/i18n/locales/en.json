@@ -108,8 +108,8 @@
   "dashboard": {
     "title": "Dashboard",
     "needHelp": "I need help",
-    "addFirstConnection": "Add your first connection",
-    "addFirstConnectionDesc": "The organizer works through connections between people. Start with one person — someone you trust.",
+    "addFirstConnection": "Add your friends and acquaintances",
+    "addFirstConnectionDesc": "",
     "goToNetwork": "Go to Network",
     "myCollections": "My Collections",
     "create": "Create",

@@ -108,8 +108,8 @@
   "dashboard": {
     "title": "Панель",
     "needHelp": "Мені потрібна допомога",
-    "addFirstConnection": "Додайте перший контакт",
-    "addFirstConnectionDesc": "Організатор працює через зв'язки між людьми. Почніть з однієї людини — когось, кому ви довіряєте.",
+    "addFirstConnection": "Додай своїх друзів та знайомих",
+    "addFirstConnectionDesc": "",
     "goToNetwork": "Перейти до Мережі",
     "myCollections": "Мої збори",
     "create": "Створити",

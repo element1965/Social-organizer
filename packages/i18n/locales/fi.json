@@ -108,8 +108,8 @@
   "dashboard": {
     "title": "Hallintapaneeli",
     "needHelp": "Tarvitsen apua",
-    "addFirstConnection": "Lisää ensimmäinen yhteytesi",
-    "addFirstConnectionDesc": "Organisaattori toimii ihmisten välisten yhteyksien kautta. Aloita yhdestä henkilöstä — jostakusta, johon luotat.",
+    "addFirstConnection": "Lisää ystäväsi ja tuttavasi",
+    "addFirstConnectionDesc": "",
     "goToNetwork": "Siirry verkostoon",
     "myCollections": "Omat keräykset",
     "create": "Luo",

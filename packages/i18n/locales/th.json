@@ -108,8 +108,8 @@
   "dashboard": {
     "title": "แดชบอร์ด",
     "needHelp": "ฉันต้องการความช่วยเหลือ",
-    "addFirstConnection": "เพิ่มการเชื่อมต่อแรกของคุณ",
-    "addFirstConnectionDesc": "ระบบทำงานผ่านความเชื่อมโยงระหว่างผู้คน เริ่มจากหนึ่งคน — คนที่คุณไว้ใจ",
+    "addFirstConnection": "เพิ่มเพื่อนและคนรู้จักของคุณ",
+    "addFirstConnectionDesc": "",
     "goToNetwork": "ไปที่เครือข่าย",
     "myCollections": "การระดมของฉัน",
     "create": "สร้าง",

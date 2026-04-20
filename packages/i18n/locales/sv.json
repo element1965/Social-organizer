@@ -108,8 +108,8 @@
   "dashboard": {
     "title": "Oversikt",
     "needHelp": "Jag behover hjalp",
-    "addFirstConnection": "Lagg till din forsta kontakt",
-    "addFirstConnectionDesc": "Organisatorn fungerar genom kopplingar mellan manniskor. Borja med en person — nagon du litar pa.",
+    "addFirstConnection": "Lägg till dina vänner och bekanta",
+    "addFirstConnectionDesc": "",
     "goToNetwork": "Ga till Natverk",
     "myCollections": "Mina insamlingar",
     "create": "Skapa",

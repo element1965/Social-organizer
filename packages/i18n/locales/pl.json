@@ -108,8 +108,8 @@
   "dashboard": {
     "title": "Panel główny",
     "needHelp": "Potrzebuję pomocy",
-    "addFirstConnection": "Dodaj swoje pierwsze połączenie",
-    "addFirstConnectionDesc": "Organizator działa przez połączenia między ludźmi. Zacznij od jednej osoby — kogoś, komu ufasz.",
+    "addFirstConnection": "Dodaj swoich przyjaciół i znajomych",
+    "addFirstConnectionDesc": "",
     "goToNetwork": "Przejdź do Sieci",
     "myCollections": "Moje zbiórki",
     "create": "Utwórz",

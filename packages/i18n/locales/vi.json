@@ -108,8 +108,8 @@
   "dashboard": {
     "title": "Bảng điều khiển",
     "needHelp": "Tôi cần giúp đỡ",
-    "addFirstConnection": "Thêm kết nối đầu tiên",
-    "addFirstConnectionDesc": "Hệ thống hoạt động thông qua các kết nối giữa mọi người. Hãy bắt đầu với một người — ai đó bạn tin tưởng.",
+    "addFirstConnection": "Thêm bạn bè và người quen của bạn",
+    "addFirstConnectionDesc": "",
     "goToNetwork": "Đi tới mạng lưới",
     "myCollections": "Quyên góp của tôi",
     "create": "Tạo",

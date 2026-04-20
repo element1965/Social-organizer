@@ -108,8 +108,8 @@
   "dashboard": {
     "title": "Přehled",
     "needHelp": "Potřebuji pomoc",
-    "addFirstConnection": "Přidejte své první spojení",
-    "addFirstConnectionDesc": "Organizátor funguje prostřednictvím spojení mezi lidmi. Začněte jednou osobou — někým, komu důvěřujete.",
+    "addFirstConnection": "Přidej své přátele a známé",
+    "addFirstConnectionDesc": "",
     "goToNetwork": "Přejít na síť",
     "myCollections": "Moje sbírky",
     "create": "Vytvořit",
