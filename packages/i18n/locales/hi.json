@@ -108,8 +108,8 @@
   "dashboard": {
     "title": "डैशबोर्ड",
     "needHelp": "मुझे मदद चाहिए",
-    "addFirstConnection": "अपना पहला कनेक्शन जोड़ें",
-    "addFirstConnectionDesc": "ऑर्गनाइज़र लोगों के बीच संबंधों के ज़रिए काम करता है। एक व्यक्ति से शुरू करें — कोई जिस पर आपको भरोसा है।",
+    "addFirstConnection": "अपने दोस्तों और परिचितों को जोड़ें",
+    "addFirstConnectionDesc": "",
     "goToNetwork": "नेटवर्क पर जाएं",
     "myCollections": "मेरे संग्रह",
     "create": "बनाएं",

@@ -118,8 +118,8 @@
   "dashboard": {
     "title": "תצוגה",
     "needHelp": "אני זקוק לעזרה",
-    "addFirstConnection": "הוסף את החיבור הראשון שלך",
-    "addFirstConnectionDesc": "המארגן פועל דרך חיבורים בין אנשים. התחל עם אדם אחד — מישהו שאתה סומך עליו.",
+    "addFirstConnection": "הוסף את החברים והמכרים שלך",
+    "addFirstConnectionDesc": "",
     "goToNetwork": "עבור לרשת",
     "myCollections": "האוספים שלי",
     "create": "צור",

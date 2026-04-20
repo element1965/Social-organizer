@@ -108,8 +108,8 @@
   "dashboard": {
     "title": "Oversigt",
     "needHelp": "Jeg har brug for hjælp",
-    "addFirstConnection": "Tilføj din første forbindelse",
-    "addFirstConnectionDesc": "Organisatoren fungerer gennem forbindelser mellem mennesker. Start med én person — en du stoler på.",
+    "addFirstConnection": "Tilføj dine venner og bekendte",
+    "addFirstConnectionDesc": "",
     "goToNetwork": "Gå til Netværk",
     "myCollections": "Mine indsamlinger",
     "create": "Opret",

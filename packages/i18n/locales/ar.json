@@ -108,8 +108,8 @@
   "dashboard": {
     "title": "لوحة التحكم",
     "needHelp": "أحتاج مساعدة",
-    "addFirstConnection": "أضف أول اتصال لك",
-    "addFirstConnectionDesc": "يعمل المنظّم من خلال الروابط بين الناس. ابدأ بشخص واحد — شخص تثق به.",
+    "addFirstConnection": "أضف أصدقاءك ومعارفك",
+    "addFirstConnectionDesc": "",
     "goToNetwork": "الذهاب إلى الشبكة",
     "myCollections": "مجموعاتي",
     "create": "إنشاء",

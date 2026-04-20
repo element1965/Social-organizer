@@ -117,12 +117,9 @@ export function DashboardPage() {
         <Card>
           <CardContent className="py-8 text-center">
             <UserPlus className="w-12 h-12 text-blue-600 mx-auto mb-4" />
-            <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-2">
+            <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-4">
               {t('dashboard.addFirstConnection')}
             </h2>
-            <p className="text-sm text-gray-500 dark:text-gray-300 mb-4">
-              {t('dashboard.addFirstConnectionDesc')}
-            </p>
             <Button className="w-full" size="lg" onClick={() => setGateShareOpen(true)}>
               <UserPlus className="w-4 h-4 mr-2" /> {t('create.goToInvite')}
             </Button>

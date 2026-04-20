@@ -108,8 +108,8 @@
   "dashboard": {
     "title": "Dashboard",
     "needHelp": "Ik heb hulp nodig",
-    "addFirstConnection": "Voeg je eerste connectie toe",
-    "addFirstConnectionDesc": "De organisator werkt via verbindingen tussen mensen. Begin met een persoon — iemand die je vertrouwt.",
+    "addFirstConnection": "Voeg je vrienden en kennissen toe",
+    "addFirstConnectionDesc": "",
     "goToNetwork": "Ga naar Netwerk",
     "myCollections": "Mijn inzamelingen",
     "create": "Aanmaken",

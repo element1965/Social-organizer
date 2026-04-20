@@ -108,8 +108,8 @@
   "dashboard": {
     "title": "Gösterge Paneli",
     "needHelp": "Yardıma ihtiyacım var",
-    "addFirstConnection": "İlk bağlantınızı ekleyin",
-    "addFirstConnectionDesc": "Organizatör insanlar arasındaki bağlantılar üzerinden çalışır. Bir kişiyle başlayın — güvendiğiniz biri.",
+    "addFirstConnection": "Arkadaşlarını ve tanıdıklarını ekle",
+    "addFirstConnectionDesc": "",
     "goToNetwork": "Ağa Git",
     "myCollections": "Koleksiyonlarım",
     "create": "Oluştur",
