@@ -418,7 +418,7 @@
   },
   "invite": {
     "title": "Einladung",
-    "from": "{{name}} lädt dich ein",
+    "from": "{{name}} hat dich eingeladen — {{count}} Personen im Netzwerk, {{amount}} $ erklärte Absichten",
     "accept": "Annehmen und verbinden",
     "decline": "Ablehnen",
     "alreadyUsed": "Diese Einladung wurde bereits verwendet",

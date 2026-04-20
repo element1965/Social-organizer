@@ -418,7 +418,7 @@
   },
   "invite": {
     "title": "Invitación",
-    "from": "{{name}} te invita",
+    "from": "{{name}} te invitó — {{count}} personas en la red, {{amount}} $ en intenciones declaradas",
     "accept": "Aceptar y conectar",
     "decline": "Rechazar",
     "alreadyUsed": "Esta invitación ya fue utilizada",

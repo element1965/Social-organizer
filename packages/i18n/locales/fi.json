@@ -476,7 +476,7 @@
   },
   "invite": {
     "title": "Kutsu",
-    "from": "{{name}} kutsuu sinut",
+    "from": "{{name}} kutsui sinut — {{count}} henkilöä verkostossa, {{amount}} $ ilmoitettuja aikomuksia",
     "accept": "Hyväksy ja yhdistä",
     "decline": "Hylkää",
     "alreadyUsed": "Tämä kutsu on jo käytetty",

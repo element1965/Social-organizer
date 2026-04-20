@@ -479,7 +479,7 @@
   },
   "invite": {
     "title": "Invitation",
-    "from": "{{name}} invites you",
+    "from": "{{name}} invited you — {{count}} people in the network, ${{amount}} in declared intentions",
     "accept": "Accept & Connect",
     "decline": "Decline",
     "alreadyUsed": "This invite has already been used",

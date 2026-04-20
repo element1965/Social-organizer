@@ -476,7 +476,7 @@
   },
   "invite": {
     "title": "Undangan",
-    "from": "{{name}} mengundangmu",
+    "from": "{{name}} mengundang Anda — {{count}} orang di jaringan, {{amount}} $ niat yang dinyatakan",
     "accept": "Terima & Hubungkan",
     "decline": "Tolak",
     "alreadyUsed": "Undangan ini sudah digunakan",

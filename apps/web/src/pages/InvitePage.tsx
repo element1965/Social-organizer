@@ -112,10 +112,13 @@ export function InvitePage() {
         <CardContent className="py-5 text-center">
           <Logo size={48} className="text-gray-900 dark:text-teal-400 mx-auto mb-3" />
           <Avatar src={invite.inviter.photoUrl} name={invite.inviter.name} size="lg" className="mx-auto mb-3" />
-          <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-1">
-            {t('invite.from', { name: invite.inviter.name })}
+          <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-4">
+            {t('invite.from', {
+              name: invite.inviter.name,
+              count: (invite as any).networkCount ?? 0,
+              amount: (invite as any).totalIntentions ?? 0,
+            })}
           </h2>
-          <p className="text-sm text-gray-500 dark:text-gray-300 mb-4">{t('invite.title')}</p>
 
           {accept.isSuccess && (accept.data as any)?.alreadyConnected ? (
             <div className="flex flex-col items-center gap-2">

@@ -476,7 +476,7 @@
   },
   "invite": {
     "title": "Позивница",
-    "from": "{{name}} те позива",
+    "from": "{{name}} vas je pozvao — {{count}} osoba u mreži, {{amount}} $ prijavljenih namjera",
     "accept": "Прихвати и повежи се",
     "decline": "Одбиј",
     "alreadyUsed": "Ова позивница је већ искоришћена",

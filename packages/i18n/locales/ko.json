@@ -476,7 +476,7 @@
   },
   "invite": {
     "title": "초대",
-    "from": "{{name}}님이 초대합니다",
+    "from": "{{name}}이 초대했습니다 — 네트워크에 {{count}}명, {{amount}}$ 선언된 의향",
     "accept": "수락하고 연결",
     "decline": "거절",
     "alreadyUsed": "이 초대는 이미 사용되었습니다",
