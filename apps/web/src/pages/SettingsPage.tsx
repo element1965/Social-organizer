@@ -9,7 +9,7 @@ import { Button } from '../components/ui/button';
 import { Select } from '../components/ui/select';
 import { Avatar } from '../components/ui/avatar';
 import { Spinner } from '../components/ui/spinner';
-import { Settings, Globe, Palette, Volume2, Bell, Mic, Link, Trash2, LogOut, Type, Users, Camera, Pencil, Check, HelpCircle, EyeOff } from 'lucide-react';
+import { Settings, Globe, Palette, Volume2, Bell, Mic, Link, Trash2, LogOut, Type, Users, Camera, Pencil, Check, HelpCircle, EyeOff, Copy } from 'lucide-react';
 import { Tooltip } from '../components/ui/tooltip';
 import { cn } from '../lib/utils';
 import { languageNames } from '@so/i18n';
@@ -73,6 +73,14 @@ export function SettingsPage() {
   const [editName, setEditName] = useState('');
   const push = usePushNotifications();
   const [confirmDelete, setConfirmDelete] = useState(false);
+  const [codeCopied, setCodeCopied] = useState(false);
+
+  const handleCopyCode = (code: string) => {
+    navigator.clipboard.writeText(code).then(() => {
+      setCodeCopied(true);
+      setTimeout(() => setCodeCopied(false), 2000);
+    });
+  };
 
   const handleLanguageChange = (lang: string) => { i18n.changeLanguage(lang); localStorage.setItem('language', lang); updateLanguage.mutate({ language: lang }); };
   const handleThemeChange = (theme: 'LIGHT' | 'DARK' | 'SYSTEM') => { setMode(theme.toLowerCase() as 'light' | 'dark' | 'system'); updateTheme.mutate({ theme }); };
@@ -258,7 +266,22 @@ export function SettingsPage() {
           </Tooltip>
         </div>
         {generateCode.data ? (
-          <div className="text-center py-2"><p className="text-3xl font-mono font-bold text-blue-600 tracking-widest">{generateCode.data.code}</p><p className="text-xs text-gray-500 dark:text-gray-300 mt-1">{t('settings.codeExpires')}</p></div>
+          <button
+            type="button"
+            onClick={() => handleCopyCode(generateCode.data!.code)}
+            className="w-full text-center py-3 rounded-xl active:scale-95 transition-transform select-none"
+            style={{ WebkitTapHighlightColor: 'transparent' }}
+          >
+            <p className={cn('text-3xl font-mono font-bold tracking-widest transition-colors', codeCopied ? 'text-green-500' : 'text-blue-600')}>
+              {generateCode.data.code}
+            </p>
+            <p className="text-xs text-gray-500 dark:text-gray-300 mt-1 flex items-center justify-center gap-1">
+              {codeCopied
+                ? <><Check className="w-3 h-3 text-green-500" /><span className="text-green-500">{t('common.copied')}</span></>
+                : <><Copy className="w-3 h-3" />{t('settings.codeExpires')}</>
+              }
+            </p>
+          </button>
         ) : <Button variant="outline" size="sm" onClick={() => generateCode.mutate()} className="w-full">{t('settings.generateCode')}</Button>}
       </CardContent></Card>
 
