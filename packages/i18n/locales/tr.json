@@ -476,7 +476,7 @@
   },
   "invite": {
     "title": "Davet",
-    "from": "{{name}} sizi davet ediyor",
+    "from": "{{name}} sizi davet etti — ağda {{count}} kişi, {{amount}} $ beyan edilen niyet",
     "accept": "Kabul Et ve Bağlan",
     "decline": "Reddet",
     "alreadyUsed": "Bu davet zaten kullanılmış",

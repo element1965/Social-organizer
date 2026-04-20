@@ -476,7 +476,7 @@
   },
   "invite": {
     "title": "招待",
-    "from": "{{name}} からの招待",
+    "from": "{{name}}に招待されました — ネットワークに{{count}}人、宣言された意向{{amount}}$",
     "accept": "承認してつながる",
     "decline": "辞退",
     "alreadyUsed": "この招待は既に使用されています",

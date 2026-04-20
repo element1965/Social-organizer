@@ -476,7 +476,7 @@
   },
   "invite": {
     "title": "Invitatie",
-    "from": "{{name}} te invita",
+    "from": "{{name}} te-a invitat — {{count}} persoane în rețea, {{amount}} $ în intenții declarate",
     "accept": "Accepta si conecteaza",
     "decline": "Refuza",
     "alreadyUsed": "Aceasta invitatie a fost deja folosita",

@@ -211,12 +211,29 @@ export const inviteRouter = router({
   getByToken: publicProcedure
     .input(z.object({ token: z.string() }))
     .query(async ({ ctx, input }) => {
+      const getInviterStats = async (userId: string) => {
+        const [connectionsFrom, connectionsTo, collections] = await Promise.all([
+          ctx.db.connection.count({ where: { fromId: userId } }),
+          ctx.db.connection.count({ where: { toId: userId } }),
+          ctx.db.collection.findMany({
+            where: { creatorId: userId, status: 'ACTIVE' },
+            select: { amount: true },
+          }),
+        ]);
+        const networkCount = connectionsFrom + connectionsTo;
+        const totalIntentions = collections.reduce((sum, c) => sum + (c.amount ?? 0), 0);
+        return { networkCount, totalIntentions };
+      };
+
       // Try single-use invite first
       const invite = await ctx.db.inviteLink.findUnique({
         where: { token: input.token },
         include: { inviter: { select: { id: true, name: true, photoUrl: true } } },
       });
-      if (invite) return invite;
+      if (invite) {
+        const stats = await getInviterStats(invite.inviterId);
+        return { ...invite, ...stats };
+      }
 
       // Try as permanent link (token = userId), then by referralSlug
       let user = await ctx.db.user.findUnique({
@@ -230,6 +247,7 @@ export const inviteRouter = router({
         });
       }
       if (user) {
+        const stats = await getInviterStats(user.id);
         return {
           id: `permanent-${user.id}`,
           token: input.token,
@@ -238,6 +256,7 @@ export const inviteRouter = router({
           usedAt: null,
           createdAt: new Date(),
           inviter: user,
+          ...stats,
         };
       }
 

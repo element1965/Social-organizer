@@ -476,7 +476,7 @@
   },
   "invite": {
     "title": "Inbjudan",
-    "from": "{{name}} bjuder in dig",
+    "from": "{{name}} bjöd in dig — {{count}} personer i nätverket, {{amount}} $ i deklarerade avsikter",
     "accept": "Acceptera och anslut",
     "decline": "Avboj",
     "alreadyUsed": "Denna inbjudan har redan anvants",

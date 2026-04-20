@@ -476,7 +476,7 @@
   },
   "invite": {
     "title": "Uitnodiging",
-    "from": "{{name}} nodigt je uit",
+    "from": "{{name}} heeft je uitgenodigd — {{count}} mensen in het netwerk, {{amount}} $ aan verklaarde intenties",
     "accept": "Accepteren en verbinden",
     "decline": "Weigeren",
     "alreadyUsed": "Deze uitnodiging is al gebruikt",

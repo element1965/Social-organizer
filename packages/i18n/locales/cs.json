@@ -476,7 +476,7 @@
   },
   "invite": {
     "title": "Pozvánka",
-    "from": "{{name}} vás zve",
+    "from": "{{name}} vás pozval — {{count}} lidí v síti, {{amount}} $ deklarovaných záměrů",
     "accept": "Přijmout a propojit",
     "decline": "Odmítnout",
     "alreadyUsed": "Tato pozvánka již byla použita",

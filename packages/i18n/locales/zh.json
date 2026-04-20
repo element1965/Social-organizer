@@ -418,7 +418,7 @@
   },
   "invite": {
     "title": "邀请",
-    "from": "{{name}} 邀请你",
+    "from": "{{name}}邀请了您 — 网络中{{count}}人，已申报意向{{amount}}$",
     "accept": "接受并连接",
     "decline": "拒绝",
     "alreadyUsed": "此邀请已被使用",

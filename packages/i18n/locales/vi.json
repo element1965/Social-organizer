@@ -476,7 +476,7 @@
   },
   "invite": {
     "title": "Lời mời",
-    "from": "{{name}} mời bạn",
+    "from": "{{name}} đã mời bạn — {{count}} người trong mạng lưới, {{amount}} $ ý định được tuyên bố",
     "accept": "Chấp nhận và kết nối",
     "decline": "Từ chối",
     "alreadyUsed": "Lời mời này đã được sử dụng",

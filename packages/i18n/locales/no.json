@@ -476,7 +476,7 @@
   },
   "invite": {
     "title": "Invitasjon",
-    "from": "{{name}} inviterer deg",
+    "from": "{{name}} inviterte deg — {{count}} personer i nettverket, {{amount}} $ i erklærte intensjoner",
     "accept": "Godta og koble til",
     "decline": "Avslå",
     "alreadyUsed": "Denne invitasjonen er allerede brukt",

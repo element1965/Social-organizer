@@ -476,7 +476,7 @@
   },
   "invite": {
     "title": "Zaproszenie",
-    "from": "{{name}} zaprasza Cię",
+    "from": "{{name}} zaprosił Cię — {{count}} osób w sieci, {{amount}} $ zadeklarowanych intencji",
     "accept": "Zaakceptuj i połącz się",
     "decline": "Odrzuć",
     "alreadyUsed": "To zaproszenie zostało już wykorzystane",

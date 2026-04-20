@@ -476,7 +476,7 @@
   },
   "invite": {
     "title": "Invitering",
-    "from": "{{name}} inviterer dig",
+    "from": "{{name}} inviterede dig — {{count}} personer i netværket, {{amount}} $ i erklærede hensigter",
     "accept": "Accepter og forbind",
     "decline": "Afvis",
     "alreadyUsed": "Denne invitation er allerede brugt",
