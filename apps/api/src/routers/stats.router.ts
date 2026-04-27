@@ -343,28 +343,43 @@ export const statsRouter = router({
 
     const NIKITA_ID = 'cml9ffhhh0000o801afqv67fz';
     const ANDREI_ID = 'cml9h2u8s000go801lcvi6ba9';
-    const nikitaRoot = uf.parent.has(NIKITA_ID) ? uf.find(NIKITA_ID) : null;
 
-    const userToRoot = new Map<string, string>();
+    // Map each user to their UF root and group cluster members
+    const userToUfRoot = new Map<string, string>();
+    const clusterGroups = new Map<string, string[]>(); // ufRoot → member IDs
     for (const u of users) {
-      userToRoot.set(u.id, uf.parent.has(u.id) ? uf.find(u.id) : u.id);
+      const ufRoot = uf.parent.has(u.id) ? uf.find(u.id) : u.id;
+      userToUfRoot.set(u.id, ufRoot);
+      if (!clusterGroups.has(ufRoot)) clusterGroups.set(ufRoot, []);
+      clusterGroups.get(ufRoot)!.push(u.id);
     }
 
-    const rootIds = new Set([...userToRoot.values()]);
-    const rootUsers = await ctx.db.user.findMany({
-      where: { id: { in: [...rootIds] } },
-      select: { id: true, name: true },
-    });
-    const rootNameMap = new Map(rootUsers.map(u => [u.id, u.name]));
+    // Determine display root for each cluster (oldest member; Andrei for Nikita's cluster)
+    const userById = new Map(users.map(u => [u.id, u]));
+    const clusterDisplay = new Map<string, { id: string; name: string }>(); // ufRoot → display
+
+    for (const [ufRoot, memberIds] of clusterGroups) {
+      const hasNikita = memberIds.includes(NIKITA_ID);
+      let best: typeof users[0] | undefined;
+      for (const uid of memberIds) {
+        const u = userById.get(uid);
+        if (!u) continue;
+        if (hasNikita && u.id === ANDREI_ID) { best = u; break; }
+        if (!hasNikita && (!best || u.createdAt < best.createdAt)) best = u;
+      }
+      // Fallback: if Andrei not in Nikita's cluster, use oldest
+      if (hasNikita && (!best || best.id !== ANDREI_ID)) {
+        best = memberIds
+          .map(id => userById.get(id))
+          .filter((u): u is typeof users[0] => !!u)
+          .sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime())[0];
+      }
+      clusterDisplay.set(ufRoot, { id: best?.id ?? ufRoot, name: best?.name ?? 'Unknown' });
+    }
 
     const result = users.map(u => {
-      const rootId = userToRoot.get(u.id) ?? u.id;
-      let displayRootId = rootId;
-      let displayRootName = rootNameMap.get(rootId) ?? u.name;
-      if (nikitaRoot && rootId === nikitaRoot) {
-        displayRootId = ANDREI_ID;
-        displayRootName = rootNameMap.get(ANDREI_ID) ?? displayRootName;
-      }
+      const ufRoot = userToUfRoot.get(u.id) ?? u.id;
+      const display = clusterDisplay.get(ufRoot) ?? { id: u.id, name: u.name };
       return {
         id: u.id,
         name: u.name,
@@ -374,8 +389,8 @@ export const statsRouter = router({
         remainingBudget: Math.round(u.remainingBudget ?? 0),
         connectionCount: connMap.get(u.id) ?? 0,
         inviteCount: connMap.get(u.id) ?? 0,
-        clusterRootId: displayRootId,
-        clusterRootName: displayRootName,
+        clusterRootId: display.id,
+        clusterRootName: display.name,
       };
     });
 
