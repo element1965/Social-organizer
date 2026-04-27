@@ -979,5 +979,14 @@
     "unknownUser": "Невядомы карыстальнік",
     "chatButton": "Чат",
     "attachFile": "Прымацаваць файл"
+  },
+  "adminStats": {
+    "title": "Detailed Statistics",
+    "totalUsers": "Users",
+    "totalClusters": "Clusters",
+    "totalInvites": "Total invited",
+    "invitedCount": "invited",
+    "search": "Search by name...",
+    "noResults": "No results"
   }
 }

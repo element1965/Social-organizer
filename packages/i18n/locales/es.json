@@ -979,5 +979,14 @@
     "unknownUser": "Usuario desconocido",
     "chatButton": "Chat",
     "attachFile": "Adjuntar archivo"
+  },
+  "adminStats": {
+    "title": "Detailed Statistics",
+    "totalUsers": "Users",
+    "totalClusters": "Clusters",
+    "totalInvites": "Total invited",
+    "invitedCount": "invited",
+    "search": "Search by name...",
+    "noResults": "No results"
   }
 }

@@ -1,6 +1,20 @@
 import { z } from 'zod';
+import { TRPCError } from '@trpc/server';
 import { router, protectedProcedure } from '../trpc.js';
+import { ADMIN_IDS } from '../admin.js';
 
+class UnionFindStats {
+  parent = new Map<string, string>();
+  find(x: string): string {
+    if (!this.parent.has(x)) this.parent.set(x, x);
+    if (this.parent.get(x) !== x) this.parent.set(x, this.find(this.parent.get(x)!));
+    return this.parent.get(x)!;
+  }
+  union(a: string, b: string) {
+    const ra = this.find(a), rb = this.find(b);
+    if (ra !== rb) this.parent.set(rb, ra);
+  }
+}
 
 export const statsRouter = router({
   byPeriod: protectedProcedure
@@ -303,6 +317,81 @@ export const statsRouter = router({
 
       return { helped, helpedBy };
     }),
+
+  // Admin-only: detailed stats for all users across all clusters
+  adminAllUsersStats: protectedProcedure.query(async ({ ctx }) => {
+    if (!ADMIN_IDS.includes(ctx.userId!)) throw new TRPCError({ code: 'FORBIDDEN' });
+
+    const [users, allConnections, inviteLinksUsed] = await Promise.all([
+      ctx.db.user.findMany({
+        where: { deletedAt: null },
+        select: { id: true, name: true, photoUrl: true, createdAt: true, lastSeen: true, remainingBudget: true },
+      }),
+      ctx.db.connection.findMany({ select: { userAId: true, userBId: true } }),
+      ctx.db.inviteLink.findMany({
+        where: { usedById: { not: null } },
+        select: { inviterId: true },
+      }),
+    ]);
+
+    // Count connections per user
+    const connMap = new Map<string, number>();
+    for (const c of allConnections) {
+      connMap.set(c.userAId, (connMap.get(c.userAId) ?? 0) + 1);
+      connMap.set(c.userBId, (connMap.get(c.userBId) ?? 0) + 1);
+    }
+
+    // Count single-use invite links used per inviter
+    const inviteMap = new Map<string, number>();
+    for (const il of inviteLinksUsed) {
+      inviteMap.set(il.inviterId, (inviteMap.get(il.inviterId) ?? 0) + 1);
+    }
+
+    // Build clusters via Union-Find
+    const uf = new UnionFindStats();
+    for (const c of allConnections) uf.union(c.userAId, c.userBId);
+
+    const NIKITA_ID = 'cml9ffhhh0000o801afqv67fz';
+    const ANDREI_ID = 'cml9h2u8s000go801lcvi6ba9';
+    const nikitaRoot = uf.parent.has(NIKITA_ID) ? uf.find(NIKITA_ID) : null;
+
+    const userToRoot = new Map<string, string>();
+    for (const u of users) {
+      userToRoot.set(u.id, uf.parent.has(u.id) ? uf.find(u.id) : u.id);
+    }
+
+    const rootIds = new Set([...userToRoot.values()]);
+    const rootUsers = await ctx.db.user.findMany({
+      where: { id: { in: [...rootIds] } },
+      select: { id: true, name: true },
+    });
+    const rootNameMap = new Map(rootUsers.map(u => [u.id, u.name]));
+
+    const result = users.map(u => {
+      const rootId = userToRoot.get(u.id) ?? u.id;
+      let displayRootId = rootId;
+      let displayRootName = rootNameMap.get(rootId) ?? u.name;
+      if (nikitaRoot && rootId === nikitaRoot) {
+        displayRootId = ANDREI_ID;
+        displayRootName = rootNameMap.get(ANDREI_ID) ?? displayRootName;
+      }
+      return {
+        id: u.id,
+        name: u.name,
+        photoUrl: u.photoUrl,
+        createdAt: u.createdAt,
+        lastSeen: u.lastSeen,
+        remainingBudget: Math.round(u.remainingBudget ?? 0),
+        connectionCount: connMap.get(u.id) ?? 0,
+        inviteCount: inviteMap.get(u.id) ?? 0,
+        clusterRootId: displayRootId,
+        clusterRootName: displayRootName,
+      };
+    });
+
+    result.sort((a, b) => b.inviteCount - a.inviteCount || b.connectionCount - a.connectionCount);
+    return result;
+  }),
 
   // Current network capabilities (sum of all remainingBudget in the connected cluster)
   networkCapabilities: protectedProcedure.query(async ({ ctx }) => {

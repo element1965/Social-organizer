@@ -1034,5 +1034,14 @@
     "unknownUser": "משתמש לא ידוע",
     "chatButton": "צ'אט",
     "attachFile": "צרף קובץ"
+  },
+  "adminStats": {
+    "title": "Detailed Statistics",
+    "totalUsers": "Users",
+    "totalClusters": "Clusters",
+    "totalInvites": "Total invited",
+    "invitedCount": "invited",
+    "search": "Search by name...",
+    "noResults": "No results"
   }
 }
