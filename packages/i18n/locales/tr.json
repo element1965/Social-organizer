@@ -979,5 +979,14 @@
     "unknownUser": "Bilinmeyen kullanıcı",
     "chatButton": "Sohbet",
     "attachFile": "Dosya ekle"
+  },
+  "adminStats": {
+    "title": "Detailed Statistics",
+    "totalUsers": "Users",
+    "totalClusters": "Clusters",
+    "totalInvites": "Total invited",
+    "invitedCount": "invited",
+    "search": "Search by name...",
+    "noResults": "No results"
   }
 }

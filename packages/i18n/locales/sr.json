@@ -979,5 +979,14 @@
     "unknownUser": "Nepoznat korisnik",
     "chatButton": "Čet",
     "attachFile": "Priloži fajl"
+  },
+  "adminStats": {
+    "title": "Detailed Statistics",
+    "totalUsers": "Users",
+    "totalClusters": "Clusters",
+    "totalInvites": "Total invited",
+    "invitedCount": "invited",
+    "search": "Search by name...",
+    "noResults": "No results"
   }
 }

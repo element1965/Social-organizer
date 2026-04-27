@@ -979,5 +979,14 @@
     "unknownUser": "अज्ञात उपयोगकर्ता",
     "chatButton": "चैट",
     "attachFile": "फ़ाइल संलग्न करें"
+  },
+  "adminStats": {
+    "title": "Detailed Statistics",
+    "totalUsers": "Users",
+    "totalClusters": "Clusters",
+    "totalInvites": "Total invited",
+    "invitedCount": "invited",
+    "search": "Search by name...",
+    "noResults": "No results"
   }
 }

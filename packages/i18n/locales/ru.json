@@ -974,6 +974,15 @@
     "collectionClosed": "Этот сбор {{status}}.",
     "participantsCount": "{{count}} участников"
   },
+  "adminStats": {
+    "title": "Детальная статистика",
+    "totalUsers": "Пользователей",
+    "totalClusters": "Кластеров",
+    "totalInvites": "Приглашено всего",
+    "invitedCount": "приглашений",
+    "search": "Поиск по имени...",
+    "noResults": "Нет результатов"
+  },
   "support": {
     "title": "Чат поддержки",
     "noConversations": "Нет обращений",

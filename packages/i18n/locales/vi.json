@@ -979,5 +979,14 @@
     "unknownUser": "Người dùng không xác định",
     "chatButton": "Trò chuyện",
     "attachFile": "Đính kèm tệp"
+  },
+  "adminStats": {
+    "title": "Detailed Statistics",
+    "totalUsers": "Users",
+    "totalClusters": "Clusters",
+    "totalInvites": "Total invited",
+    "invitedCount": "invited",
+    "search": "Search by name...",
+    "noResults": "No results"
   }
 }

@@ -979,5 +979,14 @@
     "unknownUser": "未知用户",
     "chatButton": "聊天",
     "attachFile": "附加文件"
+  },
+  "adminStats": {
+    "title": "Detailed Statistics",
+    "totalUsers": "Users",
+    "totalClusters": "Clusters",
+    "totalInvites": "Total invited",
+    "invitedCount": "invited",
+    "search": "Search by name...",
+    "noResults": "No results"
   }
 }

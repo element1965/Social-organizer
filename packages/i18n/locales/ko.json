@@ -979,5 +979,14 @@
     "unknownUser": "알 수 없는 사용자",
     "chatButton": "채팅",
     "attachFile": "파일 첨부"
+  },
+  "adminStats": {
+    "title": "Detailed Statistics",
+    "totalUsers": "Users",
+    "totalClusters": "Clusters",
+    "totalInvites": "Total invited",
+    "invitedCount": "invited",
+    "search": "Search by name...",
+    "noResults": "No results"
   }
 }

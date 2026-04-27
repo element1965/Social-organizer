@@ -8,7 +8,7 @@ import { useTheme } from '../hooks/useTheme';
 import { useNicknames } from '../hooks/useNicknames';
 import { Avatar } from '../components/ui/avatar';
 import { Spinner } from '../components/ui/spinner';
-import { Users, Globe, List, Wallet, ChevronDown, ChevronUp, Layers, TrendingUp } from 'lucide-react';
+import { Users, Globe, List, Wallet, ChevronDown, ChevronUp, Layers, TrendingUp, BarChart2, UserPlus, Search } from 'lucide-react';
 const LazyNetworkGraph = lazy(() =>
   import('@so/graph-3d').then((m) => ({ default: m.NetworkGraph })),
 );
@@ -49,6 +49,12 @@ export function MyNetworkPage() {
 
   const { data: adminData } = trpc.faq.isAdmin.useQuery();
   const isAdmin = adminData?.isAdmin ?? false;
+
+  const [adminStatsSearch, setAdminStatsSearch] = useState('');
+  const { data: adminStats } = trpc.stats.adminAllUsersStats.useQuery(undefined, {
+    enabled: isAdmin,
+    refetchInterval: 120000,
+  });
 
   const [expandedDepth, setExpandedDepth] = useState<number | null>(null);
   const { data: networkStats, isLoading } = useCachedNetworkStats();
@@ -419,6 +425,93 @@ export function MyNetworkPage() {
               })()}
             </div>
           )}
+
+          {/* Admin-only: detailed stats for all users across all clusters */}
+          {isAdmin && (() => {
+            if (!adminStats) return null;
+            const filtered = adminStats.filter(u =>
+              !adminStatsSearch || u.name.toLowerCase().includes(adminStatsSearch.toLowerCase()),
+            );
+            const totalClusters = new Set(adminStats.map(u => u.clusterRootId)).size;
+            const totalInvites = adminStats.reduce((s, u) => s + u.inviteCount, 0);
+            return (
+              <div className="mt-4 rounded-xl border border-indigo-200 dark:border-indigo-800 bg-white dark:bg-gray-900 overflow-hidden">
+                <div className="flex items-center gap-2 px-4 pt-4 pb-2">
+                  <BarChart2 className="w-4 h-4 text-indigo-500" />
+                  <span className="text-sm font-semibold text-gray-900 dark:text-white flex-1">
+                    {t('adminStats.title')}
+                  </span>
+                  <span className="text-[10px] bg-indigo-100 dark:bg-indigo-900/40 text-indigo-600 dark:text-indigo-300 px-2 py-0.5 rounded-full font-medium">
+                    admin
+                  </span>
+                </div>
+
+                <div className="grid grid-cols-3 gap-2 px-4 pb-3">
+                  <div className="rounded-lg bg-gray-50 dark:bg-gray-800 py-2 px-1 text-center">
+                    <p className="text-lg font-bold text-gray-900 dark:text-white">{adminStats.length}</p>
+                    <p className="text-[10px] text-gray-500 dark:text-gray-400">{t('adminStats.totalUsers')}</p>
+                  </div>
+                  <div className="rounded-lg bg-gray-50 dark:bg-gray-800 py-2 px-1 text-center">
+                    <p className="text-lg font-bold text-purple-600 dark:text-purple-400">{totalClusters}</p>
+                    <p className="text-[10px] text-gray-500 dark:text-gray-400">{t('adminStats.totalClusters')}</p>
+                  </div>
+                  <div className="rounded-lg bg-gray-50 dark:bg-gray-800 py-2 px-1 text-center">
+                    <p className="text-lg font-bold text-orange-500">{totalInvites}</p>
+                    <p className="text-[10px] text-gray-500 dark:text-gray-400">{t('adminStats.totalInvites')}</p>
+                  </div>
+                </div>
+
+                <div className="px-4 pb-3">
+                  <div className="flex items-center gap-2 bg-gray-50 dark:bg-gray-800 rounded-lg px-3 py-2 border border-gray-200 dark:border-gray-700">
+                    <Search className="w-3.5 h-3.5 text-gray-400 flex-shrink-0" />
+                    <input
+                      value={adminStatsSearch}
+                      onChange={e => setAdminStatsSearch(e.target.value)}
+                      placeholder={t('adminStats.search')}
+                      className="flex-1 text-sm bg-transparent outline-none text-gray-900 dark:text-white placeholder-gray-400"
+                    />
+                  </div>
+                </div>
+
+                <div className="border-t border-gray-100 dark:border-gray-800">
+                  {filtered.length === 0 ? (
+                    <p className="text-center text-sm text-gray-400 py-6">{t('adminStats.noResults')}</p>
+                  ) : (
+                    filtered.map((u, i) => (
+                      <button
+                        key={u.id}
+                        onClick={() => navigate(`/profile/${u.id}`)}
+                        className="w-full flex items-center gap-2 px-4 py-2.5 hover:bg-gray-50 dark:hover:bg-gray-800/50 border-b border-gray-100 dark:border-gray-800 last:border-0"
+                      >
+                        <span className="w-5 text-xs font-bold text-gray-400 flex-shrink-0 text-right">{i + 1}</span>
+                        <Avatar src={u.photoUrl} name={u.name} size="sm" />
+                        <div className="flex-1 min-w-0 text-left">
+                          <p className="text-sm font-medium text-gray-900 dark:text-white truncate">{u.name}</p>
+                          <div className="flex items-center gap-1.5 text-xs text-gray-500 dark:text-gray-400">
+                            <Layers className="w-2.5 h-2.5 flex-shrink-0" />
+                            <span className="truncate">{u.clusterRootName}</span>
+                            <span>·</span>
+                            <Users className="w-2.5 h-2.5 flex-shrink-0" />
+                            <span>{u.connectionCount}</span>
+                            <span>·</span>
+                            <Wallet className="w-2.5 h-2.5 flex-shrink-0" />
+                            <span>${u.remainingBudget}</span>
+                          </div>
+                        </div>
+                        <div className="flex-shrink-0 text-right">
+                          <div className="flex items-center justify-end gap-1">
+                            <UserPlus className="w-3 h-3 text-orange-400" />
+                            <span className="text-base font-bold text-orange-500">{u.inviteCount}</span>
+                          </div>
+                          <p className="text-[9px] text-gray-400">{t('adminStats.invitedCount')}</p>
+                        </div>
+                      </button>
+                    ))
+                  )}
+                </div>
+              </div>
+            );
+          })()}
         </>
       )}
     </div>
