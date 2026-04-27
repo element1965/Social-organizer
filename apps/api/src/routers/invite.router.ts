@@ -213,8 +213,8 @@ export const inviteRouter = router({
     .query(async ({ ctx, input }) => {
       const getInviterStats = async (userId: string) => {
         const [connectionsFrom, connectionsTo, collections] = await Promise.all([
-          ctx.db.connection.count({ where: { fromId: userId } }),
-          ctx.db.connection.count({ where: { toId: userId } }),
+          ctx.db.connection.count({ where: { userAId: userId } }),
+          ctx.db.connection.count({ where: { userBId: userId } }),
           ctx.db.collection.findMany({
             where: { creatorId: userId, status: 'ACTIVE' },
             select: { amount: true },
