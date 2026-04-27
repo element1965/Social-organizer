@@ -322,29 +322,19 @@ export const statsRouter = router({
   adminAllUsersStats: protectedProcedure.query(async ({ ctx }) => {
     if (!ADMIN_IDS.includes(ctx.userId!)) throw new TRPCError({ code: 'FORBIDDEN' });
 
-    const [users, allConnections, inviteLinksUsed] = await Promise.all([
+    const [users, allConnections] = await Promise.all([
       ctx.db.user.findMany({
         where: { deletedAt: null },
         select: { id: true, name: true, photoUrl: true, createdAt: true, lastSeen: true, remainingBudget: true },
       }),
       ctx.db.connection.findMany({ select: { userAId: true, userBId: true } }),
-      ctx.db.inviteLink.findMany({
-        where: { usedById: { not: null } },
-        select: { inviterId: true },
-      }),
     ]);
 
-    // Count connections per user
+    // Count direct connections per user (= personally invited/connected)
     const connMap = new Map<string, number>();
     for (const c of allConnections) {
       connMap.set(c.userAId, (connMap.get(c.userAId) ?? 0) + 1);
       connMap.set(c.userBId, (connMap.get(c.userBId) ?? 0) + 1);
-    }
-
-    // Count single-use invite links used per inviter
-    const inviteMap = new Map<string, number>();
-    for (const il of inviteLinksUsed) {
-      inviteMap.set(il.inviterId, (inviteMap.get(il.inviterId) ?? 0) + 1);
     }
 
     // Build clusters via Union-Find
@@ -383,7 +373,7 @@ export const statsRouter = router({
         lastSeen: u.lastSeen,
         remainingBudget: Math.round(u.remainingBudget ?? 0),
         connectionCount: connMap.get(u.id) ?? 0,
-        inviteCount: inviteMap.get(u.id) ?? 0,
+        inviteCount: connMap.get(u.id) ?? 0,
         clusterRootId: displayRootId,
         clusterRootName: displayRootName,
       };
