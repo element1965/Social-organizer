@@ -263,16 +263,9 @@ export function SettingsPage() {
             </div>
           ) : (
             <div className="flex items-center justify-between">
-              <div>
-                <p className="text-2xl font-bold text-blue-700 dark:text-blue-400">
-                  {me?.monthlyBudget != null ? `$${Math.round(me.monthlyBudget)}` : '$0'}
-                </p>
-                {me?.remainingBudget != null && (
-                  <p className="text-xs text-gray-500 dark:text-gray-400">
-                    {t('settings.currentBudget')}: ${Math.round(me.remainingBudget)}
-                  </p>
-                )}
-              </div>
+              <p className="text-2xl font-bold text-blue-700 dark:text-blue-400">
+                ${Math.round(me?.monthlyBudget ?? 1)}
+              </p>
               <button
                 onClick={() => { setNewBudgetValue(''); setEditingBudget(true); }}
                 className="text-gray-400 hover:text-gray-300 p-1"
@@ -280,9 +273,6 @@ export function SettingsPage() {
                 <Pencil className="w-4 h-4" />
               </button>
             </div>
-          )}
-          {me?.monthlyBudget != null && me.remainingBudget != null && me.remainingBudget <= 0 && (
-            <p className="text-xs text-amber-600 dark:text-amber-400 mt-1">{t('dashboard.budgetDepletedHint')}</p>
           )}
         </CardContent>
       </Card>
