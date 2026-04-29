@@ -280,7 +280,9 @@
     "growth30d": "За 30 дней",
     "growthChartLabel": "Участники за последние 30 дней",
     "growthStart": "30 дн. назад",
-    "growthNow": "Сейчас"
+    "growthNow": "Сейчас",
+    "active": "активна",
+    "notActive": "не активна"
   },
   "notifications": {
     "title": "Уведомления",

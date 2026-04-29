@@ -280,7 +280,9 @@
     "growth30d": "Last 30 days",
     "growthChartLabel": "Members over the last 30 days",
     "growthStart": "30 days ago",
-    "growthNow": "Now"
+    "growthNow": "Now",
+    "active": "active",
+    "notActive": "not active"
   },
   "notifications": {
     "title": "Notifications",
