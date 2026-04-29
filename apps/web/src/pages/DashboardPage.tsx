@@ -217,7 +217,7 @@ export function DashboardPage() {
                 const isActive = count > 30;
                 return (
                   <>
-                    <span className={`text-xs font-semibold ${isActive ? 'text-green-500' : 'text-red-400'}`}>
+                    <span className={`text-xs font-semibold animate-pulse ${isActive ? 'text-green-500' : 'text-red-400'}`}>
                       {isActive ? t('network.active') : t('network.notActive')}
                     </span>
                     <div className="flex items-center gap-1 font-bold leading-none">
