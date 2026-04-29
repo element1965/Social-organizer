@@ -9,7 +9,7 @@ import { Button } from '../components/ui/button';
 import { Select } from '../components/ui/select';
 import { Avatar } from '../components/ui/avatar';
 import { Spinner } from '../components/ui/spinner';
-import { Settings, Globe, Palette, Volume2, Bell, Mic, Link, Trash2, LogOut, Type, Users, Camera, Pencil, Check, HelpCircle, EyeOff, Copy } from 'lucide-react';
+import { Settings, Globe, Palette, Volume2, Bell, Mic, Link, Trash2, LogOut, Type, Users, Camera, Pencil, Check, HelpCircle, EyeOff, Copy, Wallet } from 'lucide-react';
 import { Tooltip } from '../components/ui/tooltip';
 import { cn } from '../lib/utils';
 import { languageNames } from '@so/i18n';
@@ -74,6 +74,11 @@ export function SettingsPage() {
   const push = usePushNotifications();
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [codeCopied, setCodeCopied] = useState(false);
+  const [editingBudget, setEditingBudget] = useState(false);
+  const [newBudgetValue, setNewBudgetValue] = useState('');
+  const setBudgetMutation = trpc.user.setMonthlyBudget.useMutation({
+    onSuccess: () => { utils.user.me.invalidate(); setEditingBudget(false); setNewBudgetValue(''); },
+  });
 
   const handleCopyCode = (code: string) => {
     navigator.clipboard.writeText(code).then(() => {
@@ -202,6 +207,83 @@ export function SettingsPage() {
               </div>
             );
           })}
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardContent className="py-3">
+          <div className="flex items-center gap-2 mb-2">
+            <Wallet className="w-5 h-5 text-gray-500 dark:text-gray-300" />
+            <span className="text-sm font-medium text-gray-700 dark:text-gray-300">{t('settings.monthlyBudget')}</span>
+            <Tooltip content={t('dashboard.myCapabilitiesHint')} side="bottom">
+              <button type="button" className="text-gray-400 hover:text-gray-500 dark:text-gray-300"><HelpCircle className="w-3.5 h-3.5" /></button>
+            </Tooltip>
+          </div>
+          {editingBudget ? (
+            <div className="space-y-2">
+              <div className="flex gap-1.5">
+                {[30, 50, 100].map((v) => (
+                  <button
+                    key={v}
+                    onClick={() => setBudgetMutation.mutate({ amount: v, inputCurrency: 'USD' })}
+                    disabled={setBudgetMutation.isPending}
+                    className="flex-1 py-1.5 text-xs font-bold rounded border border-blue-300 dark:border-blue-600 bg-white dark:bg-gray-800 text-blue-700 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/30 transition-colors"
+                  >
+                    ${v}
+                  </button>
+                ))}
+              </div>
+              <div className="relative">
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-gray-400">$</span>
+                <input
+                  type="number"
+                  value={newBudgetValue}
+                  onChange={(e) => setNewBudgetValue(e.target.value)}
+                  placeholder={t('settings.newBudgetPlaceholder')}
+                  className="w-full pl-7 pr-10 py-2 text-sm rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:border-blue-500"
+                  autoFocus
+                  min={0}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' && newBudgetValue && Number(newBudgetValue) >= 0)
+                      setBudgetMutation.mutate({ amount: Number(newBudgetValue), inputCurrency: 'USD' });
+                    if (e.key === 'Escape') setEditingBudget(false);
+                  }}
+                />
+                {newBudgetValue && Number(newBudgetValue) >= 0 && (
+                  <button
+                    onClick={() => setBudgetMutation.mutate({ amount: Number(newBudgetValue), inputCurrency: 'USD' })}
+                    disabled={setBudgetMutation.isPending}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-green-500 hover:text-green-400"
+                  >
+                    <Check className="w-4 h-4" />
+                  </button>
+                )}
+              </div>
+              <button onClick={() => setEditingBudget(false)} className="text-xs text-gray-400 hover:text-gray-300">{t('common.cancel')}</button>
+            </div>
+          ) : (
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-2xl font-bold text-blue-700 dark:text-blue-400">
+                  {me?.monthlyBudget != null ? `$${Math.round(me.monthlyBudget)}` : '$0'}
+                </p>
+                {me?.remainingBudget != null && (
+                  <p className="text-xs text-gray-500 dark:text-gray-400">
+                    {t('settings.currentBudget')}: ${Math.round(me.remainingBudget)}
+                  </p>
+                )}
+              </div>
+              <button
+                onClick={() => { setNewBudgetValue(''); setEditingBudget(true); }}
+                className="text-gray-400 hover:text-gray-300 p-1"
+              >
+                <Pencil className="w-4 h-4" />
+              </button>
+            </div>
+          )}
+          {me?.monthlyBudget != null && me.remainingBudget != null && me.remainingBudget <= 0 && (
+            <p className="text-xs text-amber-600 dark:text-amber-400 mt-1">{t('dashboard.budgetDepletedHint')}</p>
+          )}
         </CardContent>
       </Card>
 

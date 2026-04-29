@@ -11,13 +11,9 @@ import { Button } from '../components/ui/button';
 import {
   UserPlus,
   TrendingUp,
-  Check,
   X,
-  HelpCircle,
-  Pencil,
   MessageSquarePlus,
 } from 'lucide-react';
-import { Tooltip } from '../components/ui/tooltip';
 import { SocialIcon } from '../components/ui/social-icons';
 import { SKILL_GROUPS, SKILL_GROUP_ICONS } from '@so/shared';
 import type { SkillGroup } from '@so/shared';
@@ -51,13 +47,6 @@ export function DashboardPage() {
   const [editingSuggText, setEditingSuggText] = useState('');
   const [editingSuggGroup, setEditingSuggGroup] = useState('');
 
-
-  // Budget editing
-  const [editingBudget, setEditingBudget] = useState(false);
-  const [newBudgetValue, setNewBudgetValue] = useState('');
-  const setBudgetMutation = trpc.user.setMonthlyBudget.useMutation({
-    onSuccess: () => { utils.user.me.invalidate(); setEditingBudget(false); setNewBudgetValue(''); },
-  });
 
   const totalReachable = networkStats?.totalReachable ?? 0;
   const byDepth = networkStats?.byDepth ?? {};
@@ -212,85 +201,10 @@ export function DashboardPage() {
         </Card>
       </div>
 
-      {/* Budget + link/share (left 50%) | QR code (right 50%) — stretched to same height */}
+      {/* Link/share (left 50%) | QR code (right 50%) */}
       <div className="grid grid-cols-2 gap-3">
-        {/* Left column: budget + link + share */}
-        <div className="relative flex flex-col gap-2">
-          <Card className="bg-gradient-to-b from-blue-50 to-indigo-50 dark:from-blue-950/30 dark:to-indigo-950/30 transition-all">
-            <CardContent className="py-3">
-              <div className="flex items-center gap-1 mb-1">
-                <span className="text-xs font-semibold text-gray-900 dark:text-white leading-tight">{t('dashboard.yourContribution')}</span>
-                <Tooltip content={t('dashboard.myCapabilitiesHint')} side="bottom">
-                  <button type="button" className="text-gray-400 hover:text-gray-500 dark:text-gray-300"><HelpCircle className="w-3 h-3" /></button>
-                </Tooltip>
-              </div>
-              {editingBudget ? (
-                <div className="mt-1">
-                  <p className="text-[10px] text-gray-500 dark:text-gray-400 mb-1.5">{t('dashboard.budgetPickerHint')}</p>
-                  <div className="flex gap-1.5 mb-1.5">
-                    {[30, 50, 100].map((v) => (
-                      <button
-                        key={v}
-                        onClick={() => setBudgetMutation.mutate({ amount: v, inputCurrency: 'USD' })}
-                        disabled={setBudgetMutation.isPending}
-                        className="flex-1 py-1.5 text-xs font-bold rounded border border-blue-300 dark:border-blue-600 bg-white dark:bg-gray-800 text-blue-700 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/30 transition-colors"
-                      >
-                        ${v}
-                      </button>
-                    ))}
-                  </div>
-                  <div className="relative">
-                    <span className="absolute left-2 top-1/2 -translate-y-1/2 text-xs text-gray-400">$</span>
-                    <input
-                      type="number"
-                      value={newBudgetValue}
-                      onChange={(e) => setNewBudgetValue(e.target.value)}
-                      placeholder={t('dashboard.budgetCustomPlaceholder')}
-                      className="w-full pl-5 pr-8 py-1.5 text-sm font-bold rounded border border-blue-300 dark:border-blue-600 bg-white dark:bg-gray-800 text-blue-700 dark:text-blue-400 focus:outline-none focus:border-blue-500"
-                      autoFocus
-                      min={0}
-                      onKeyDown={(e) => {
-                        if (e.key === 'Enter' && newBudgetValue && Number(newBudgetValue) >= 0) {
-                          setBudgetMutation.mutate({ amount: Number(newBudgetValue), inputCurrency: 'USD' });
-                        }
-                        if (e.key === 'Escape') setEditingBudget(false);
-                      }}
-                    />
-                    {newBudgetValue && Number(newBudgetValue) >= 0 && (
-                      <button
-                        onClick={() => setBudgetMutation.mutate({ amount: Number(newBudgetValue), inputCurrency: 'USD' })}
-                        disabled={setBudgetMutation.isPending}
-                        className="absolute right-2 top-1/2 -translate-y-1/2 text-green-500 hover:text-green-400"
-                      >
-                        <Check className="w-4 h-4" />
-                      </button>
-                    )}
-                  </div>
-                </div>
-              ) : (
-                <div className="flex items-center gap-1.5 mt-1">
-                  <p className="text-2xl font-bold text-blue-700 dark:text-blue-400">
-                    {me?.monthlyBudget != null ? `$${Math.round(me.monthlyBudget)}` : '$0'}
-                  </p>
-                  <button
-                    onClick={() => { setNewBudgetValue(''); setEditingBudget(true); }}
-                    className="text-gray-400 hover:text-gray-300"
-                  >
-                    <Pencil className="w-3.5 h-3.5" />
-                  </button>
-                </div>
-              )}
-              {me?.monthlyBudget != null && me.remainingBudget != null && me.remainingBudget <= 0 && (
-                <p className="text-[10px] text-amber-600 dark:text-amber-400 mt-1">{t('dashboard.budgetDepletedHint')}</p>
-              )}
-            </CardContent>
-          </Card>
-          <InviteBlock variant="actions" />
-        </div>
-        {/* Right column: QR code */}
-        <div>
-          <InviteBlock id="invite" variant="qr" />
-        </div>
+        <InviteBlock variant="actions" />
+        <InviteBlock id="invite" variant="qr" />
       </div>
 
       {/* Suggested categories moderation */}
