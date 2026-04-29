@@ -212,9 +212,18 @@ export function DashboardPage() {
               <span className="text-[10px] font-bold tracking-widest uppercase text-gray-500 dark:text-gray-400">
                 {t('dashboard.myNetwork')}
               </span>
-              <p className={`font-bold leading-none ${(byDepth[1] ?? 0) > 30 ? 'text-blue-600 dark:text-blue-400' : 'text-red-500 dark:text-red-400'}`} style={{ fontSize: 'clamp(2rem, 10vw, 3rem)' }}>
-                {byDepth[1] ?? 0}
-              </p>
+              {(() => {
+                const count = byDepth[1] ?? 0;
+                const isActive = count > 30;
+                const color = isActive ? 'text-blue-600 dark:text-blue-400' : 'text-red-500 dark:text-red-400';
+                return (
+                  <div className={`flex items-center gap-1 font-bold leading-none ${color}`}>
+                    <span style={{ fontSize: 'clamp(1.6rem, 8vw, 2.4rem)' }}>{count}</span>
+                    <span style={{ fontSize: 'clamp(1rem, 5vw, 1.4rem)' }}>{isActive ? '>' : '<'}</span>
+                    <span style={{ fontSize: 'clamp(1.6rem, 8vw, 2.4rem)' }}>30</span>
+                  </div>
+                );
+              })()}
               <span className={`text-xs font-semibold ${(byDepth[1] ?? 0) > 30 ? 'text-blue-500 dark:text-blue-400' : 'text-red-400'}`}>
                 {(byDepth[1] ?? 0) > 30 ? t('network.active') : t('network.notActive')}
               </span>
