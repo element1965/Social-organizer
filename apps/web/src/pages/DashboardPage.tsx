@@ -212,11 +212,11 @@ export function DashboardPage() {
               <span className="text-[10px] font-bold tracking-widest uppercase text-gray-500 dark:text-gray-400">
                 {t('dashboard.myNetwork')}
               </span>
-              <p className={`font-bold leading-none ${(byDepth[1] ?? 0) >= 30 ? 'text-blue-600 dark:text-blue-400' : 'text-red-500 dark:text-red-400'}`} style={{ fontSize: 'clamp(2rem, 10vw, 3rem)' }}>
+              <p className={`font-bold leading-none ${(byDepth[1] ?? 0) > 30 ? 'text-blue-600 dark:text-blue-400' : 'text-red-500 dark:text-red-400'}`} style={{ fontSize: 'clamp(2rem, 10vw, 3rem)' }}>
                 {byDepth[1] ?? 0}
               </p>
-              <span className={`text-xs font-semibold ${(byDepth[1] ?? 0) >= 30 ? 'text-blue-500 dark:text-blue-400' : 'text-red-400'}`}>
-                {(byDepth[1] ?? 0) >= 30 ? t('network.active') : t('network.notActive')}
+              <span className={`text-xs font-semibold ${(byDepth[1] ?? 0) > 30 ? 'text-blue-500 dark:text-blue-400' : 'text-red-400'}`}>
+                {(byDepth[1] ?? 0) > 30 ? t('network.active') : t('network.notActive')}
               </span>
             </CardContent>
           </Card>
