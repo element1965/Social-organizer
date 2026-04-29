@@ -12,6 +12,7 @@ import {
   UserPlus,
   TrendingUp,
   X,
+  HelpCircle,
   MessageSquarePlus,
 } from 'lucide-react';
 import { SocialIcon } from '../components/ui/social-icons';
