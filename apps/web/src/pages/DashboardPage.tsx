@@ -212,22 +212,12 @@ export function DashboardPage() {
               <span className="text-[10px] font-bold tracking-widest uppercase text-gray-500 dark:text-gray-400">
                 {t('dashboard.myNetwork')}
               </span>
-              {(() => {
-                const count = byDepth[1] ?? 0;
-                const isActive = count > 30;
-                return (
-                  <>
-                    <span className={`text-xs font-semibold animate-pulse ${isActive ? 'text-green-500' : 'text-red-400'}`}>
-                      {isActive ? t('network.active') : t('network.notActive')}
-                    </span>
-                    <div className="flex items-center gap-1 font-bold leading-none">
-                      <span className={isActive ? 'text-green-500' : 'text-red-500 dark:text-red-400'} style={{ fontSize: 'clamp(1.6rem, 8vw, 2.4rem)' }}>{count}</span>
-                      <span className="text-gray-400 dark:text-gray-500" style={{ fontSize: 'clamp(1rem, 5vw, 1.4rem)' }}>{isActive ? '>' : '<'}</span>
-                      <span className={isActive ? 'text-gray-800 dark:text-gray-300' : 'text-green-500'} style={{ fontSize: 'clamp(1.6rem, 8vw, 2.4rem)' }}>30</span>
-                    </div>
-                  </>
-                );
-              })()}
+              <p className={`font-bold leading-none ${(byDepth[1] ?? 0) >= 30 ? 'text-blue-600 dark:text-blue-400' : 'text-red-500 dark:text-red-400'}`} style={{ fontSize: 'clamp(2rem, 10vw, 3rem)' }}>
+                {byDepth[1] ?? 0}
+              </p>
+              <span className={`text-xs font-semibold ${(byDepth[1] ?? 0) >= 30 ? 'text-blue-500 dark:text-blue-400' : 'text-red-400'}`}>
+                {(byDepth[1] ?? 0) >= 30 ? t('network.active') : t('network.notActive')}
+              </span>
             </CardContent>
           </Card>
           <button
