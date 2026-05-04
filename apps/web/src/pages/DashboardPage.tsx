@@ -14,6 +14,7 @@ import {
   X,
   HelpCircle,
   MessageSquarePlus,
+  Share2,
 } from 'lucide-react';
 import { SocialIcon } from '../components/ui/social-icons';
 import { SKILL_GROUPS, SKILL_GROUP_ICONS } from '@so/shared';
@@ -32,6 +33,7 @@ export function DashboardPage() {
   const resolve = useNicknames();
   const [showTgChatPopup, setShowTgChatPopup] = useState(false);
   const [gateShareOpen, setGateShareOpen] = useState(false);
+  const [inviteShareOpen, setInviteShareOpen] = useState(false);
 
   const utils = trpc.useUtils();
   const { data: me } = trpc.user.me.useQuery(undefined, { refetchInterval: 30000 });
@@ -202,9 +204,33 @@ export function DashboardPage() {
         </Card>
       </div>
 
-      {/* Link/share (left 50%) | QR code (right 50%) */}
-      <div className="grid grid-cols-2 gap-3">
-        <InviteBlock variant="actions" />
+      {/* My Network (left) | QR code (right) — same height */}
+      <div className="grid grid-cols-2 gap-3 items-stretch">
+        <div className="flex flex-col gap-2">
+          <Card className="flex-1 bg-gradient-to-b from-blue-50 to-indigo-50 dark:from-blue-950/30 dark:to-indigo-950/30">
+            <CardContent className="h-full flex flex-col items-center justify-center py-3 gap-1">
+              <span className="text-[10px] font-bold tracking-widest uppercase text-gray-500 dark:text-gray-400">
+                {t('dashboard.myNetwork')}
+              </span>
+              <p className={`font-bold leading-none ${(byDepth[1] ?? 0) >= 30 ? 'text-blue-600 dark:text-blue-400' : 'text-red-500 dark:text-red-400'}`} style={{ fontSize: 'clamp(2rem, 10vw, 3rem)' }}>
+                {byDepth[1] ?? 0}
+              </p>
+            </CardContent>
+          </Card>
+          <button
+            onClick={() => setInviteShareOpen(true)}
+            className="w-full flex items-center justify-center gap-2 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors font-semibold text-sm"
+          >
+            <Share2 className="w-4 h-4" />
+            {t('dashboard.inviteTrusted')}
+          </button>
+          <ShareSheet
+            open={inviteShareOpen}
+            onClose={() => setInviteShareOpen(false)}
+            url={(() => { const tok = me?.referralSlug || me?.id || ''; return tok ? buildWebInviteUrl(tok) : ''; })()}
+            shareText={t('invite.shareText', { name: me?.name || '' })}
+          />
+        </div>
         <InviteBlock id="invite" variant="qr" />
       </div>
 
