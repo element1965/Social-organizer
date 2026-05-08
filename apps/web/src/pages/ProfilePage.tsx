@@ -306,7 +306,7 @@ export function ProfilePage() {
               <span className="text-sm font-medium text-gray-700 dark:text-gray-300 flex-1 text-left">
                 {t('dashboard.handshakeOrdinal', { depth: 1 })}
               </span>
-              <span className={`text-base font-bold ${userConnections.length >= 30 ? 'text-green-600 dark:text-green-400' : 'text-red-500 dark:text-red-400'}`}>{userConnections.length}</span>
+              <span className={`text-base font-bold ${userConnections.length > 30 ? 'text-green-600 dark:text-green-400' : 'text-red-500 dark:text-red-400'}`}>{userConnections.length}</span>
               {connectionsOpen ? <ChevronUp className="w-4 h-4 text-gray-400" /> : <ChevronDown className="w-4 h-4 text-gray-400" />}
             </button>
             {connectionsOpen && (
@@ -321,7 +321,7 @@ export function ProfilePage() {
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-medium text-gray-900 dark:text-white truncate">{resolve(conn.userId, conn.name)}</p>
                       <p className="text-xs">
-                        <span className={conn.connectionCount >= 30 ? 'text-green-600 dark:text-green-400' : 'text-red-500 dark:text-red-400'}>
+                        <span className={conn.connectionCount > 30 ? 'text-green-600 dark:text-green-400' : 'text-red-500 dark:text-red-400'}>
                           <Users className="w-3 h-3 inline mr-1" />{conn.connectionCount}
                         </span>
                         {isAdmin && conn.remainingBudget != null && (
