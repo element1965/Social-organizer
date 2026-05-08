@@ -315,13 +315,15 @@ export function MyNetworkPage() {
                                 {user.createdAt && <span className="ml-1.5 text-[10px] text-gray-400">{timeAgo(user.createdAt)}</span>}
                               </span>
                               <div className="flex items-center gap-2">
-                                <span className="flex items-center gap-1 text-xs text-gray-400">
+                                {isAdmin && (
+                                  <span className="flex items-center gap-1 text-xs text-green-600 dark:text-green-400">
+                                    <Wallet className="w-3 h-3" />
+                                    ${Math.round(user.remainingBudget ?? 0)}
+                                  </span>
+                                )}
+                                <span className={`flex items-center gap-1 text-xs font-semibold ${(user.connectionCount ?? 0) >= 30 ? 'text-green-600 dark:text-green-400' : 'text-red-500 dark:text-red-400'}`}>
                                   <Users className="w-3 h-3" />
                                   {user.connectionCount ?? 0}
-                                </span>
-                                <span className="flex items-center gap-1 text-xs text-green-600 dark:text-green-400">
-                                  <Wallet className="w-3 h-3" />
-                                  ${Math.round(user.remainingBudget ?? 0)}
                                 </span>
                               </div>
                             </button>

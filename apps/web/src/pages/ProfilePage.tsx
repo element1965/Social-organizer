@@ -279,19 +279,21 @@ export function ProfilePage() {
         </Card>
       )}
 
-      <Card>
-        <CardContent className="py-3">
-          <div className="flex items-center gap-3">
-            <Wallet className="w-5 h-5 text-green-500" />
-            <div>
-              <p className="text-xs text-gray-500 dark:text-gray-300">{t('profile.currentCapability')}</p>
-              <p className="text-lg font-bold text-green-600 dark:text-green-400">
-                ${Math.round(user.remainingBudget ?? 0)}
-              </p>
+      {isAdmin && (
+        <Card>
+          <CardContent className="py-3">
+            <div className="flex items-center gap-3">
+              <Wallet className="w-5 h-5 text-green-500" />
+              <div>
+                <p className="text-xs text-gray-500 dark:text-gray-300">{t('profile.currentCapability')}</p>
+                <p className="text-lg font-bold text-green-600 dark:text-green-400">
+                  ${Math.round(user.remainingBudget ?? 0)}
+                </p>
+              </div>
             </div>
-          </div>
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
+      )}
 
       {userConnections && userConnections.length > 0 && (
         <Card>
@@ -304,7 +306,7 @@ export function ProfilePage() {
               <span className="text-sm font-medium text-gray-700 dark:text-gray-300 flex-1 text-left">
                 {t('dashboard.handshakeOrdinal', { depth: 1 })}
               </span>
-              <span className="text-xs text-gray-500 dark:text-gray-300">{userConnections.length}</span>
+              <span className={`text-base font-bold ${userConnections.length >= 30 ? 'text-green-600 dark:text-green-400' : 'text-red-500 dark:text-red-400'}`}>{userConnections.length}</span>
               {connectionsOpen ? <ChevronUp className="w-4 h-4 text-gray-400" /> : <ChevronDown className="w-4 h-4 text-gray-400" />}
             </button>
             {connectionsOpen && (
@@ -318,10 +320,12 @@ export function ProfilePage() {
                     <Avatar src={conn.photoUrl} name={resolve(conn.userId, conn.name)} size="sm" />
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-medium text-gray-900 dark:text-white truncate">{resolve(conn.userId, conn.name)}</p>
-                      <p className="text-xs text-gray-500 dark:text-gray-300">
-                        <Users className="w-3 h-3 inline mr-1" />{conn.connectionCount}
-                        {conn.remainingBudget != null && (
-                          <span className="ml-2"><Wallet className="w-3 h-3 inline mr-1" />${Math.round(conn.remainingBudget)}</span>
+                      <p className="text-xs">
+                        <span className={conn.connectionCount >= 30 ? 'text-green-600 dark:text-green-400' : 'text-red-500 dark:text-red-400'}>
+                          <Users className="w-3 h-3 inline mr-1" />{conn.connectionCount}
+                        </span>
+                        {isAdmin && conn.remainingBudget != null && (
+                          <span className="ml-2 text-gray-500 dark:text-gray-300"><Wallet className="w-3 h-3 inline mr-1" />${Math.round(conn.remainingBudget)}</span>
                         )}
                       </p>
                     </div>
@@ -333,7 +337,7 @@ export function ProfilePage() {
         </Card>
       )}
 
-      {stats && (
+      {isAdmin && stats && (
         <Card>
           <CardHeader><h2 className="font-semibold text-gray-900 dark:text-white">{t('profile.stats')}</h2></CardHeader>
           <CardContent>
