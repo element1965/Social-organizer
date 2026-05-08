@@ -12,6 +12,11 @@ const config: CapacitorConfig = {
   android: {
     allowMixedContent: false,
   },
+  ios: {
+    scheme: 'socialorganizer',
+    preferredContentMode: 'mobile',
+    backgroundColor: '#1e293b',
+  },
   plugins: {
     StatusBar: {
       style: 'DARK',
