@@ -321,7 +321,7 @@ export function MyNetworkPage() {
                                     ${Math.round(user.remainingBudget ?? 0)}
                                   </span>
                                 )}
-                                <span className={`flex items-center gap-1 text-xs font-semibold ${(user.connectionCount ?? 0) >= 30 ? 'text-green-600 dark:text-green-400' : 'text-red-500 dark:text-red-400'}`}>
+                                <span className={`flex items-center gap-1 text-xs font-semibold ${(user.connectionCount ?? 0) > 30 ? 'text-green-600 dark:text-green-400' : 'text-red-500 dark:text-red-400'}`}>
                                   <Users className="w-3 h-3" />
                                   {user.connectionCount ?? 0}
                                 </span>
