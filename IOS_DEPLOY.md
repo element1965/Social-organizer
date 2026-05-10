@@ -1,103 +1,103 @@
-# iOS App Store Deployment Guide
+# Гайд по деплою в App Store (iOS)
 
-## Prerequisites (one-time setup on Mac)
+## Подготовка (один раз на Mac)
 
 ```bash
-# Xcode — install from Mac App Store (if not installed)
+# Xcode — поставь из Mac App Store (если ещё не стоит)
 
 # CocoaPods
 sudo gem install cocoapods
 
-# pnpm (if not installed)
+# pnpm (если не стоит)
 npm install -g pnpm
 ```
 
-## Step 1 — Prepare the app icon
+## Шаг 1 — Иконка приложения
 
-Place a **1024×1024 PNG** (no transparency, no rounded corners — Apple rounds them automatically) at:
+Положи **PNG 1024×1024** (без прозрачности и без скруглённых углов — Apple сама скругляет) сюда:
 
 ```
 apps/web/resources/icon.png
 ```
 
-Optionally add a splash screen (2732×2732 PNG):
+По желанию можно добавить splash-экран (PNG 2732×2732):
 ```
 apps/web/resources/splash.png
 apps/web/resources/splash-dark.png
 ```
 
-## Step 2 — Apple Developer Portal (browser, one-time)
+## Шаг 2 — Apple Developer Portal (в браузере, один раз)
 
-1. Go to [developer.apple.com](https://developer.apple.com) → **Account**
-2. **Certificates, IDs & Profiles → Identifiers** → `+`
+1. Заходи на [developer.apple.com](https://developer.apple.com) → **Account**
+2. **Certificates, IDs & Profiles → Identifiers** → жми `+`
    - Type: App ID → App
    - Bundle ID: `com.socialorganizer.app` (Explicit)
-   - Enable: Push Notifications
+   - Включи: Push Notifications
    - Register
 3. **Certificates** → `+`
-   - Apple Distribution → follow wizard (needs CSR from Keychain on Mac)
-   - Download and double-click to install in Keychain
+   - Apple Distribution → пройди мастер (понадобится CSR из Keychain на Mac)
+   - Скачай сертификат и дважды кликни — он установится в Keychain
 4. **Profiles** → `+`
-   - App Store Connect → select `com.socialorganizer.app`
-   - Select Distribution certificate
-   - Download the `.mobileprovision` file
+   - App Store Connect → выбери `com.socialorganizer.app`
+   - Выбери Distribution-сертификат
+   - Скачай файл `.mobileprovision`
 
-## Step 3 — App Store Connect (browser, one-time)
+## Шаг 3 — App Store Connect (в браузере, один раз)
 
-1. Go to [appstoreconnect.apple.com](https://appstoreconnect.apple.com)
+1. Заходи на [appstoreconnect.apple.com](https://appstoreconnect.apple.com)
 2. **My Apps** → `+` → New App
    - Platform: iOS
    - Name: Social Organizer
    - Bundle ID: `com.socialorganizer.app`
-   - SKU: `socialorganizer` (any unique string)
-3. Fill in **App Information**, **Pricing**, **App Privacy**
-4. Add **Screenshots** (required: 6.7" iPhone — e.g. iPhone 15 Pro Max)
-5. Write **Description**, **Keywords**, **Support URL**
+   - SKU: `socialorganizer` (любая уникальная строка)
+3. Заполни **App Information**, **Pricing**, **App Privacy**
+4. Добавь **скриншоты** (обязательно для 6.7" iPhone — например, iPhone 15 Pro Max)
+5. Напиши **Description**, **Keywords**, **Support URL**
 
-## Step 4 — Build & Upload (Mac terminal)
+## Шаг 4 — Сборка и загрузка (терминал на Mac)
 
 ```bash
-# Clone / pull latest
+# Подтяни свежий код
 git pull
 
-# Run the deploy script
+# Запусти скрипт деплоя
 bash scripts/deploy-ios.sh
 ```
 
-The script will:
-- Build the web app
-- Add iOS platform (first run only)
-- Generate all icon sizes from `resources/icon.png`
-- Sync and open Xcode
+Скрипт сделает:
+- Соберёт веб-приложение
+- Добавит iOS-платформу (только при первом запуске)
+- Сгенерирует все размеры иконок из `resources/icon.png`
+- Синхронизирует проект и откроет Xcode
 
-## Step 5 — Xcode
+## Шаг 5 — Xcode
 
-1. Select **`App` target** (left panel)
-2. **Signing & Capabilities** tab
-   - Team: select your Apple Developer account
+1. Выбери **таргет `App`** (слева)
+2. Вкладка **Signing & Capabilities**
+   - Team: выбери свой Apple Developer аккаунт
    - Bundle Identifier: `com.socialorganizer.app`
-   - Signing: Automatic (or import the `.mobileprovision` manually)
-3. Set **Version** (e.g. `1.0`) and **Build** (e.g. `1`)
-4. Select destination: **Any iOS Device (arm64)**
-5. **Product → Archive** (takes 2–5 min)
-6. In Organizer window: **Distribute App**
+   - Signing: Automatic (или импортируй `.mobileprovision` вручную)
+3. Поставь **Version** (например, `1.0`) и **Build** (например, `1`)
+4. Выбери цель сборки: **Any iOS Device (arm64)**
+5. **Product → Archive** (займёт 2–5 минут)
+6. В окне Organizer: **Distribute App**
    - App Store Connect → Upload → Next → Next → Upload
-7. Wait ~10 min for processing in App Store Connect
+7. Подожди ~10 минут, пока App Store Connect обработает билд
 
-## Step 6 — Submit for Review
+## Шаг 6 — Отправка на ревью
 
-1. In App Store Connect → Your app → iOS App → `+` next to Build
-2. Select the uploaded build
-3. Fill in **What's New**
+1. В App Store Connect → твоё приложение → iOS App → жми `+` рядом с Build
+2. Выбери загруженный билд
+3. Заполни **What's New** (что нового)
 4. **Add for Review** → **Submit to App Review**
 
-Review takes 1–3 days.
+Ревью занимает 1–3 дня.
 
 ---
 
-## Version bumping (subsequent releases)
+## Поднятие версии (для следующих релизов)
 
-Edit `apps/web/ios/App/App.xcodeproj` version in Xcode, or use `agvtool`:
+Можно отредактировать `apps/web/ios/App/App.xcodeproj` в Xcode, либо через `agvtool`:
 ```bash
 cd apps/web/ios/App
 agvtool new-marketing-version 1.1
