@@ -31,6 +31,8 @@ function getNotificationBadge(type: string, t: (key: string) => string): { label
     case 'COLLECTION_BLOCKED': return { label: t('notifications.blocked'), variant: 'danger' };
     case 'OBLIGATION_RECEIVED': return { label: t('notifications.obligationReceived'), variant: 'success' };
     case 'CYCLE_CLOSED': return { label: t('notifications.cycleClosed'), variant: 'default' };
+    case 'CYCLE_RENEWAL_REMINDER': return { label: t('notifications.renewalReminder'), variant: 'warning' };
+    case 'CYCLE_RENEWED': return { label: t('notifications.renewalStart'), variant: 'info' };
     case 'SPECIAL_AUTHOR': return { label: t('notifications.specialAuthor'), variant: 'success' };
     case 'SPECIAL_DEVELOPER': return { label: t('notifications.specialDeveloper'), variant: 'success' };
     default: return { label: type, variant: 'default' };
@@ -53,14 +55,21 @@ export function NotificationsPage() {
   const [pendingIncomingCollapsed, setPendingIncomingCollapsed] = useState(false);
   const [pendingOutgoingCollapsed, setPendingOutgoingCollapsed] = useState(false);
 
-  const { data, isLoading, fetchNextPage, hasNextPage } = trpc.notification.list.useInfiniteQuery(
+  const { data, isLoading, fetchNextPage, hasNextPage } = (trpc.notification.list as any).useInfiniteQuery(
     { limit: 20 },
-    { getNextPageParam: (last) => last.nextCursor, refetchInterval: 30000 },
+    { getNextPageParam: (last: { nextCursor?: string }) => last.nextCursor, refetchInterval: 30000 },
   );
 
   const markRead = trpc.notification.markRead.useMutation({ onSuccess: () => utils.notification.list.invalidate() });
   const dismiss = trpc.notification.dismiss.useMutation({ onSuccess: () => { utils.notification.list.invalidate(); utils.notification.unreadCount.invalidate(); } });
   const dismissAll = trpc.notification.dismissAll.useMutation({ onSuccess: () => { utils.notification.list.invalidate(); utils.notification.unreadCount.invalidate(); } });
+  const { data: me } = trpc.user.me.useQuery();
+  const unsubscribe = trpc.obligation.unsubscribeFromCollection.useMutation({
+    onSuccess: () => {
+      utils.notification.list.invalidate();
+      utils.obligation.myList.invalidate();
+    },
+  });
 
 
   // Pending connections
@@ -73,11 +82,11 @@ export function NotificationsPage() {
     onSuccess: () => { utils.pending.incoming.invalidate(); utils.pending.incomingCount.invalidate(); },
   });
 
-  const notifications = data?.pages.flatMap((p) => p.items) ?? [];
+  const notifications: any[] = data?.pages.flatMap((p: any) => p.items) ?? [];
 
   // Filter emergency notifications
   const emergencyNotifications = notifications.filter(
-    (n) => n.type === 'NEW_COLLECTION' && n.status === 'UNREAD' && n.collection?.type === 'EMERGENCY' && n.collection?.status === 'ACTIVE'
+    (n: any) => n.type === 'NEW_COLLECTION' && n.status === 'UNREAD' && n.collection?.type === 'EMERGENCY' && n.collection?.status === 'ACTIVE'
   );
 
   // Group notifications by collectionId for stacked display
@@ -88,7 +97,7 @@ export function NotificationsPage() {
   for (const n of notifications) {
     const cId = n.collectionId;
     if (seenCollections.has(cId)) {
-      groupedNotifications[seenCollections.get(cId)!].items.push(n);
+      groupedNotifications[seenCollections.get(cId)!]!.items.push(n);
     } else {
       seenCollections.set(cId, groupedNotifications.length);
       groupedNotifications.push({ collectionId: cId, items: [n] });
@@ -99,6 +108,8 @@ export function NotificationsPage() {
     markRead.mutate({ id: n.id });
     // Don't navigate to collection if it's blocked — the user can't participate anymore
     if (n.type === 'COLLECTION_BLOCKED') return;
+    // For the renewal reminder, navigation happens via the explicit "remind me" button instead
+    if (n.type === 'CYCLE_RENEWAL_REMINDER') return;
     navigate(`/collection/${n.collectionId}`);
   };
 
@@ -177,6 +188,63 @@ export function NotificationsPage() {
               const resolvedPath = (n as any).handshakePathResolved as Array<{ id: string; name: string }> | undefined;
               const badge = getNotificationBadge(n.type, t);
               const remaining = n.expiresAt ? timeRemaining(n.expiresAt) : null;
+              const creatorName = n.collection?.creator?.id
+                ? resolve(n.collection.creator.id, n.collection.creator.name || '')
+                : (n.collection?.creator?.name || '');
+
+              // Renewal reminder card: explicit text + two action buttons
+              if (n.type === 'CYCLE_RENEWAL_REMINDER') {
+                return (
+                  <Card
+                    key={n.id}
+                    className={cn(
+                      'transition-colors relative',
+                      n.status === 'UNREAD' && 'border-amber-400 bg-amber-50/50 dark:bg-amber-950/20',
+                    )}
+                  >
+                    <CardContent className="p-3 relative">
+                      <button
+                        className="absolute top-2 right-2 p-1 text-gray-400 hover:text-gray-600 dark:text-gray-300"
+                        onClick={() => dismiss.mutate({ id: n.id })}
+                      >
+                        <X className="w-3.5 h-3.5" />
+                      </button>
+                      <div className="flex items-center gap-2 mb-1.5 pr-6">
+                        <Badge variant={badge.variant}>{badge.label}</Badge>
+                      </div>
+                      <div className="flex items-start gap-2.5 pr-6">
+                        <Avatar src={n.collection?.creator?.photoUrl} name={creatorName} size="sm" />
+                        <p className="flex-1 text-sm text-gray-700 dark:text-gray-200 leading-snug">
+                          {t('notifications.renewalReminderBody', {
+                            name: me?.name || '',
+                            creator: creatorName,
+                          })}
+                        </p>
+                      </div>
+                      <div className="flex gap-2 mt-3">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="flex-1"
+                          onClick={() => { markRead.mutate({ id: n.id }); navigate(`/collection/${n.collectionId}`); }}
+                        >
+                          {t('notifications.renewalReminderAck')}
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          className="flex-1 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/30"
+                          disabled={unsubscribe.isPending}
+                          onClick={() => unsubscribe.mutate({ collectionId: n.collectionId })}
+                        >
+                          {t('notifications.renewalReminderUnsubscribe')}
+                        </Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                );
+              }
+
               return (
                 <Card
                   key={n.id}

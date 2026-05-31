@@ -296,7 +296,12 @@
     "dismiss": "ปิด",
     "dismissAll": "ปิดทั้งหมด",
     "loadMore": "โหลดเพิ่ม",
-    "expiresIn": "หมดอายุใน {{hours}} ชม. {{minutes}} นาที"
+    "expiresIn": "หมดอายุใน {{hours}} ชม. {{minutes}} นาที",
+    "renewalReminder": "Renewal reminder",
+    "renewalStart": "New cycle",
+    "renewalReminderBody": "{{name}}, this is a reminder that you participate in regular support for {{creator}}. A new collection cycle starts in 3 days. You can withdraw your intention at any time.",
+    "renewalReminderAck": "Got it",
+    "renewalReminderUnsubscribe": "Withdraw intention"
   },
   "notification": {
     "newCollection": "{{name}} ต้องการความช่วยเหลือ",
@@ -375,7 +380,9 @@
     "linkAccountHint": "เชื่อมโยงโปรไฟล์ของคุณกับบัญชี Play Market, App Store, หรือ FB Games กำลังจะมาเร็วๆ นี้",
     "pushNotifications": "การแจ้งเตือนแบบพุช",
     "hideContacts": "ซ่อนผู้ติดต่อ",
-    "hideContactsHint": "เมื่อเปิดใช้งาน เฉพาะผู้ติดต่อโดยตรงและผู้ที่ได้รับการแจ้งเตือนเมื่อคุณเปิดการระดมทุนเท่านั้นที่สามารถดูผู้ติดต่อของคุณ"
+    "hideContactsHint": "เมื่อเปิดใช้งาน เฉพาะผู้ติดต่อโดยตรงและผู้ที่ได้รับการแจ้งเตือนเมื่อคุณเปิดการระดมทุนเท่านั้นที่สามารถดูผู้ติดต่อของคุณ",
+    "notifyRenewalReminder": "Renewal reminders (3 days before)",
+    "notifyRenewalStart": "New cycle notifications"
   },
   "faq": {
     "title": "คำถามที่พบบ่อย",
@@ -566,7 +573,11 @@
     "pendingRejected": "คำขอถูกปฏิเสธ",
     "pendingView": "ดู",
     "userDeleted": "ผู้ใช้ออกแล้ว",
-    "userDeletedBody": "{{name}} จากวงแรกของคุณได้ลบบัญชีแล้ว"
+    "userDeletedBody": "{{name}} จากวงแรกของคุณได้ลบบัญชีแล้ว",
+    "renewalReminderTitle": "Renewal reminder",
+    "renewalReminderBody": "{{name}}, you participate in regular support for {{creator}}. A new collection cycle starts in 3 days. You can withdraw your intention at any time.",
+    "renewalStartTitle": "New cycle started",
+    "renewalStartBody": "{{name}}, a new support cycle for {{creator}} has just started."
   },
   "hints": {
     "collectionAmount": "กรอกจำนวนที่คุณต้องการ ขั้นต่ำ 10 หน่วย ระบบจะแจ้งเตือนคนจำนวนที่เหมาะสม",

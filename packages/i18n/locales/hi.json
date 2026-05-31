@@ -296,7 +296,12 @@
     "dismiss": "खारिज करें",
     "dismissAll": "सभी बंद करें",
     "loadMore": "और लोड करें",
-    "expiresIn": "{{hours}} घंटे {{minutes}} मिनट में समाप्त होगा"
+    "expiresIn": "{{hours}} घंटे {{minutes}} मिनट में समाप्त होगा",
+    "renewalReminder": "Renewal reminder",
+    "renewalStart": "New cycle",
+    "renewalReminderBody": "{{name}}, this is a reminder that you participate in regular support for {{creator}}. A new collection cycle starts in 3 days. You can withdraw your intention at any time.",
+    "renewalReminderAck": "Got it",
+    "renewalReminderUnsubscribe": "Withdraw intention"
   },
   "notification": {
     "newCollection": "{{name}} को मदद चाहिए",
@@ -375,7 +380,9 @@
     "linkAccountHint": "आपके प्रोफ़ाइल को Play Market, App Store, या FB Games खाते से जोड़ता है। शीघ्र उपलब्ध।",
     "pushNotifications": "पुश अधिसूचना",
     "hideContacts": "संपर्क छुपाएं",
-    "hideContactsHint": "सक्षम होने पर, केवल आपके प्रत्यक्ष कनेक्शन और जिन्हें संग्रह खोलने पर सूचना मिलेगी वे ही आपके संपर्क देख सकते हैं"
+    "hideContactsHint": "सक्षम होने पर, केवल आपके प्रत्यक्ष कनेक्शन और जिन्हें संग्रह खोलने पर सूचना मिलेगी वे ही आपके संपर्क देख सकते हैं",
+    "notifyRenewalReminder": "Renewal reminders (3 days before)",
+    "notifyRenewalStart": "New cycle notifications"
   },
   "faq": {
     "title": "अक्सर पूछे जाने वाले प्रश्न",
@@ -566,7 +573,11 @@
     "pendingRejected": "अनुरोध अस्वीकृत",
     "pendingView": "देखें",
     "userDeleted": "उपयोगकर्ता चला गया",
-    "userDeletedBody": "{{name}} ने आपके पहले सर्कल से अपना खाता हटा दिया।"
+    "userDeletedBody": "{{name}} ने आपके पहले सर्कल से अपना खाता हटा दिया।",
+    "renewalReminderTitle": "Renewal reminder",
+    "renewalReminderBody": "{{name}}, you participate in regular support for {{creator}}. A new collection cycle starts in 3 days. You can withdraw your intention at any time.",
+    "renewalStartTitle": "New cycle started",
+    "renewalStartBody": "{{name}}, a new support cycle for {{creator}} has just started."
   },
   "hints": {
     "collectionAmount": "आपको जितनी राशि चाहिए वह दर्ज करें। न्यूनतम 10 इकाई। सिस्टम उचित संख्या में लोगों को सूचित करेगा।",

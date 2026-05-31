@@ -296,7 +296,12 @@
     "dismiss": "Zavřít",
     "dismissAll": "Zavřít vše",
     "loadMore": "Načíst další",
-    "expiresIn": "Vyprší za {{hours}}h {{minutes}}m"
+    "expiresIn": "Vyprší za {{hours}}h {{minutes}}m",
+    "renewalReminder": "Renewal reminder",
+    "renewalStart": "New cycle",
+    "renewalReminderBody": "{{name}}, this is a reminder that you participate in regular support for {{creator}}. A new collection cycle starts in 3 days. You can withdraw your intention at any time.",
+    "renewalReminderAck": "Got it",
+    "renewalReminderUnsubscribe": "Withdraw intention"
   },
   "notification": {
     "newCollection": "{{name}} potřebuje pomoc",
@@ -375,7 +380,9 @@
     "linkAccountHint": "Propojí váš profil s účtem v Play Market, App Store nebo FB Games. Brzy dostupné.",
     "pushNotifications": "Push notifikace",
     "hideContacts": "Skrýt kontakty",
-    "hideContactsHint": "Pokud je zapnuto, vaše kontakty vidí pouze přímé spojení a ti, kdo dostanou oznámení, když otevřete sbírku"
+    "hideContactsHint": "Pokud je zapnuto, vaše kontakty vidí pouze přímé spojení a ti, kdo dostanou oznámení, když otevřete sbírku",
+    "notifyRenewalReminder": "Renewal reminders (3 days before)",
+    "notifyRenewalStart": "New cycle notifications"
   },
   "faq": {
     "title": "FAQ",
@@ -566,7 +573,11 @@
     "pendingRejected": "Žádost odmítnuta",
     "pendingView": "Zobrazit",
     "userDeleted": "Uživatel odešel",
-    "userDeletedBody": "{{name}} z vašeho prvního kruhu smazal svůj účet."
+    "userDeletedBody": "{{name}} z vašeho prvního kruhu smazal svůj účet.",
+    "renewalReminderTitle": "Renewal reminder",
+    "renewalReminderBody": "{{name}}, you participate in regular support for {{creator}}. A new collection cycle starts in 3 days. You can withdraw your intention at any time.",
+    "renewalStartTitle": "New cycle started",
+    "renewalStartBody": "{{name}}, a new support cycle for {{creator}} has just started."
   },
   "hints": {
     "collectionAmount": "Zadejte částku, kterou potřebujete. Minimálně 10 jednotek. Systém upozorní správný počet lidí.",

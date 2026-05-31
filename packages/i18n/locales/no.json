@@ -296,7 +296,12 @@
     "dismiss": "Avvis",
     "dismissAll": "Lukk alle",
     "loadMore": "Last flere",
-    "expiresIn": "Utløper om {{hours}}t {{minutes}}m"
+    "expiresIn": "Utløper om {{hours}}t {{minutes}}m",
+    "renewalReminder": "Renewal reminder",
+    "renewalStart": "New cycle",
+    "renewalReminderBody": "{{name}}, this is a reminder that you participate in regular support for {{creator}}. A new collection cycle starts in 3 days. You can withdraw your intention at any time.",
+    "renewalReminderAck": "Got it",
+    "renewalReminderUnsubscribe": "Withdraw intention"
   },
   "notification": {
     "newCollection": "{{name}} trenger hjelp",
@@ -375,7 +380,9 @@
     "linkAccountHint": "Kobler profilen din til en Play Market, App Store eller FB Games-konto. Kommer snart.",
     "pushNotifications": "Push-meldinger",
     "hideContacts": "Skjul kontakter",
-    "hideContactsHint": "Når aktivert, kan bare dine direkte forbindelser og de som får varsel når du åpner en innsamling se kontaktene dine"
+    "hideContactsHint": "Når aktivert, kan bare dine direkte forbindelser og de som får varsel når du åpner en innsamling se kontaktene dine",
+    "notifyRenewalReminder": "Renewal reminders (3 days before)",
+    "notifyRenewalStart": "New cycle notifications"
   },
   "faq": {
     "title": "Ofte stilte spørsmål",
@@ -566,7 +573,11 @@
     "pendingRejected": "Forespørsel avslått",
     "pendingView": "Vis",
     "userDeleted": "Bruker forlot",
-    "userDeletedBody": "{{name}} fra din første krets har slettet kontoen sin."
+    "userDeletedBody": "{{name}} fra din første krets har slettet kontoen sin.",
+    "renewalReminderTitle": "Renewal reminder",
+    "renewalReminderBody": "{{name}}, you participate in regular support for {{creator}}. A new collection cycle starts in 3 days. You can withdraw your intention at any time.",
+    "renewalStartTitle": "New cycle started",
+    "renewalStartBody": "{{name}}, a new support cycle for {{creator}} has just started."
   },
   "hints": {
     "collectionAmount": "Skriv inn beløpet du trenger. Minimum 10 enheter. Systemet vil varsle riktig antall personer.",

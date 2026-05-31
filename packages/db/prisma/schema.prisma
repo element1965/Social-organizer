@@ -58,6 +58,8 @@ enum NotificationType {
   SPECIAL_AUTHOR
   SPECIAL_DEVELOPER
   INVITE_ACCEPTED
+  CYCLE_RENEWAL_REMINDER
+  CYCLE_RENEWED
 }
 
 enum SuggestStatus {
@@ -95,6 +97,8 @@ model User {
   monthlyBudget       Float?
   remainingBudget     Float?
   budgetUpdatedAt     DateTime?
+  notifyRenewalReminder Boolean @default(true)
+  notifyRenewalStart    Boolean @default(true)
   referralSlug        String?   @unique
   createdAt           DateTime  @default(now())
   updatedAt           DateTime  @updatedAt

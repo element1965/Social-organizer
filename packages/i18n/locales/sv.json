@@ -296,7 +296,12 @@
     "dismiss": "Avfarda",
     "dismissAll": "Stäng alla",
     "loadMore": "Ladda fler",
-    "expiresIn": "Gar ut om {{hours}} tim {{minutes}} min"
+    "expiresIn": "Gar ut om {{hours}} tim {{minutes}} min",
+    "renewalReminder": "Renewal reminder",
+    "renewalStart": "New cycle",
+    "renewalReminderBody": "{{name}}, this is a reminder that you participate in regular support for {{creator}}. A new collection cycle starts in 3 days. You can withdraw your intention at any time.",
+    "renewalReminderAck": "Got it",
+    "renewalReminderUnsubscribe": "Withdraw intention"
   },
   "notification": {
     "newCollection": "{{name}} behover hjalp",
@@ -375,7 +380,9 @@
     "linkAccountHint": "Länkar din profil till ett Play Market, App Store eller FB Games-konto. Kommer snart.",
     "pushNotifications": "Push-meddelanden",
     "hideContacts": "Dölj kontakter",
-    "hideContactsHint": "När aktiverat kan bara dina direkta kontakter och de som får avisering när du öppnar en insamling se dina kontaktuppgifter"
+    "hideContactsHint": "När aktiverat kan bara dina direkta kontakter och de som får avisering när du öppnar en insamling se dina kontaktuppgifter",
+    "notifyRenewalReminder": "Renewal reminders (3 days before)",
+    "notifyRenewalStart": "New cycle notifications"
   },
   "faq": {
     "title": "Vanliga frågor",
@@ -566,7 +573,11 @@
     "pendingRejected": "Förfrågan avvisad",
     "pendingView": "Visa",
     "userDeleted": "Användare lämnade",
-    "userDeletedBody": "{{name}} från din första krets har raderat sitt konto."
+    "userDeletedBody": "{{name}} från din första krets har raderat sitt konto.",
+    "renewalReminderTitle": "Renewal reminder",
+    "renewalReminderBody": "{{name}}, you participate in regular support for {{creator}}. A new collection cycle starts in 3 days. You can withdraw your intention at any time.",
+    "renewalStartTitle": "New cycle started",
+    "renewalStartBody": "{{name}}, a new support cycle for {{creator}} has just started."
   },
   "hints": {
     "collectionAmount": "Ange beloppet du behover. Minimum 10 enheter. Systemet informerar ratt antal personer.",

@@ -296,7 +296,12 @@
     "dismiss": "Одбаци",
     "dismissAll": "Затвори све",
     "loadMore": "Учитај још",
-    "expiresIn": "Истиче за {{hours}}ч {{minutes}}мин"
+    "expiresIn": "Истиче за {{hours}}ч {{minutes}}мин",
+    "renewalReminder": "Renewal reminder",
+    "renewalStart": "New cycle",
+    "renewalReminderBody": "{{name}}, this is a reminder that you participate in regular support for {{creator}}. A new collection cycle starts in 3 days. You can withdraw your intention at any time.",
+    "renewalReminderAck": "Got it",
+    "renewalReminderUnsubscribe": "Withdraw intention"
   },
   "notification": {
     "newCollection": "{{name}} тражи помоћ",
@@ -375,7 +380,9 @@
     "linkAccountHint": "Veže vaš profil sa nalogom na Play Marketu, App Storeu ili FB Games. Dolazi uskoro.",
     "pushNotifications": "Push obaveštenja",
     "hideContacts": "Сакриј контакте",
-    "hideContactsHint": "Када је укључено, само ваше директне везе и они који добију обавештење када отворите прикупљање могу видети ваше контакте"
+    "hideContactsHint": "Када је укључено, само ваше директне везе и они који добију обавештење када отворите прикупљање могу видети ваше контакте",
+    "notifyRenewalReminder": "Renewal reminders (3 days before)",
+    "notifyRenewalStart": "New cycle notifications"
   },
   "faq": {
     "title": "FAQ",
@@ -566,7 +573,11 @@
     "pendingRejected": "Захтев одбијен",
     "pendingView": "Погледај",
     "userDeleted": "Корисник је отишао",
-    "userDeletedBody": "{{name}} из вашег првог круга је обрисао свој налог."
+    "userDeletedBody": "{{name}} из вашег првог круга је обрисао свој налог.",
+    "renewalReminderTitle": "Renewal reminder",
+    "renewalReminderBody": "{{name}}, you participate in regular support for {{creator}}. A new collection cycle starts in 3 days. You can withdraw your intention at any time.",
+    "renewalStartTitle": "New cycle started",
+    "renewalStartBody": "{{name}}, a new support cycle for {{creator}} has just started."
   },
   "hints": {
     "collectionAmount": "Унеси износ који ти треба. Минимум 10 јединица. Систем ће обавестити одговарајући број људи.",

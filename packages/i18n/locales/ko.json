@@ -296,7 +296,12 @@
     "dismiss": "무시",
     "dismissAll": "모두 닫기",
     "loadMore": "더 보기",
-    "expiresIn": "{{hours}}시간 {{minutes}}분 후 만료"
+    "expiresIn": "{{hours}}시간 {{minutes}}분 후 만료",
+    "renewalReminder": "Renewal reminder",
+    "renewalStart": "New cycle",
+    "renewalReminderBody": "{{name}}, this is a reminder that you participate in regular support for {{creator}}. A new collection cycle starts in 3 days. You can withdraw your intention at any time.",
+    "renewalReminderAck": "Got it",
+    "renewalReminderUnsubscribe": "Withdraw intention"
   },
   "notification": {
     "newCollection": "{{name}}님이 도움을 요청합니다",
@@ -375,7 +380,9 @@
     "linkAccountHint": "프로필을 Play Market, App Store, 또는 FB Games 계정에 연결합니다. 곧 출시됩니다.",
     "pushNotifications": "푸시 알림",
     "hideContacts": "연락처 숨기기",
-    "hideContactsHint": "활성화하면 직접 연결된 사람과 모금을 열 때 알림을 받는 사람만 연락처를 볼 수 있습니다"
+    "hideContactsHint": "활성화하면 직접 연결된 사람과 모금을 열 때 알림을 받는 사람만 연락처를 볼 수 있습니다",
+    "notifyRenewalReminder": "Renewal reminders (3 days before)",
+    "notifyRenewalStart": "New cycle notifications"
   },
   "faq": {
     "title": "자주 묻는 질문",
@@ -566,7 +573,11 @@
     "pendingRejected": "요청 거절됨",
     "pendingView": "보기",
     "userDeleted": "사용자 탈퇴",
-    "userDeletedBody": "{{name}}님이 첫 번째 서클에서 계정을 삭제했습니다."
+    "userDeletedBody": "{{name}}님이 첫 번째 서클에서 계정을 삭제했습니다.",
+    "renewalReminderTitle": "Renewal reminder",
+    "renewalReminderBody": "{{name}}, you participate in regular support for {{creator}}. A new collection cycle starts in 3 days. You can withdraw your intention at any time.",
+    "renewalStartTitle": "New cycle started",
+    "renewalStartBody": "{{name}}, a new support cycle for {{creator}} has just started."
   },
   "hints": {
     "collectionAmount": "필요한 금액을 입력하세요. 최소 10 단위입니다. 시스템이 적절한 수의 사람들에게 알립니다.",

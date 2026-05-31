@@ -296,7 +296,12 @@
     "dismiss": "Respinge",
     "dismissAll": "Închide toate",
     "loadMore": "Incarca mai multe",
-    "expiresIn": "Expira in {{hours}}h {{minutes}}m"
+    "expiresIn": "Expira in {{hours}}h {{minutes}}m",
+    "renewalReminder": "Renewal reminder",
+    "renewalStart": "New cycle",
+    "renewalReminderBody": "{{name}}, this is a reminder that you participate in regular support for {{creator}}. A new collection cycle starts in 3 days. You can withdraw your intention at any time.",
+    "renewalReminderAck": "Got it",
+    "renewalReminderUnsubscribe": "Withdraw intention"
   },
   "notification": {
     "newCollection": "{{name}} are nevoie de ajutor",
@@ -375,7 +380,9 @@
     "linkAccountHint": "Leagă profilul tău de un cont Play Market, App Store sau FB Games. În curând.",
     "pushNotifications": "Notificări Push",
     "hideContacts": "Ascunde contactele",
-    "hideContactsHint": "Când este activat, doar conexiunile directe și cei care primesc notificare când deschizi o colectă pot vedea contactele tale"
+    "hideContactsHint": "Când este activat, doar conexiunile directe și cei care primesc notificare când deschizi o colectă pot vedea contactele tale",
+    "notifyRenewalReminder": "Renewal reminders (3 days before)",
+    "notifyRenewalStart": "New cycle notifications"
   },
   "faq": {
     "title": "Întrebări frecvente",
@@ -566,7 +573,11 @@
     "pendingRejected": "Cerere respinsă",
     "pendingView": "Vezi",
     "userDeleted": "Utilizatorul a plecat",
-    "userDeletedBody": "{{name}} din primul tău cerc și-a șters contul."
+    "userDeletedBody": "{{name}} din primul tău cerc și-a șters contul.",
+    "renewalReminderTitle": "Renewal reminder",
+    "renewalReminderBody": "{{name}}, you participate in regular support for {{creator}}. A new collection cycle starts in 3 days. You can withdraw your intention at any time.",
+    "renewalStartTitle": "New cycle started",
+    "renewalStartBody": "{{name}}, a new support cycle for {{creator}} has just started."
   },
   "hints": {
     "collectionAmount": "Introdu suma de care ai nevoie. Minimum 10 unitati. Sistemul va notifica numarul potrivit de persoane.",

@@ -1,6 +1,7 @@
 import { Queue, Worker } from 'bullmq';
 import IORedis from 'ioredis';
 import { processCycleClose } from './cycle-close.worker.js';
+import { processCycleRenewalReminder } from './cycle-renewal-reminder.worker.js';
 import { processExpireNotifications } from './expire-notifications.worker.js';
 import { processCheckBlock } from './check-block.worker.js';
 import { processTgBroadcast, type TgBroadcastMessage } from './tg-broadcast.worker.js';
@@ -29,6 +30,13 @@ export function setupQueues(): void {
   cycleCloseQueue.upsertJobScheduler('cycle-close-scheduler', {
     every: 60 * 60 * 1000, // 1 hour
   }, { name: 'cycle-close' });
+
+  // --- Cycle renewal reminder (3 days before next cycle): every hour ---
+  const cycleRenewalQueue = new Queue('collection-cycle-renewal-reminder', { connection: redis });
+  new Worker('collection-cycle-renewal-reminder', processCycleRenewalReminder, { connection: redis });
+  cycleRenewalQueue.upsertJobScheduler('cycle-renewal-reminder-scheduler', {
+    every: 60 * 60 * 1000, // 1 hour
+  }, { name: 'cycle-renewal-reminder' });
 
   // --- Expire notifications: every hour ---
   const expireQueue = new Queue('notification-expire', { connection: redis });
