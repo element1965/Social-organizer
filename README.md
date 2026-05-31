@@ -149,7 +149,7 @@ FIREBASE_SERVICE_ACCOUNT={"type":"service_account",...}  # FCM service account J
 
 ## Services
 
-- **Auth** — JWT (HS256), 30 min access / 30 days refresh, 6-digit linking codes, Telegram initData HMAC-SHA256 validation
+- **Auth** — JWT (HS256), 30 min access / 30 days refresh, 6-digit linking codes, Telegram initData HMAC-SHA256 validation, Google & Sign in with Apple via system-browser OAuth (Apple id_token verified against Apple JWKS, no client secret) — see `APPLE_SIGNIN.md`
 - **BFS** — Recursive CTE in PostgreSQL for graph traversal, path finding, and notification distribution
 - **Notifications** — BFS distribution with 1:1 ratio (amount = notification count), ignore list, handshake path, Telegram bot and Web Push notifications
 - **Telegram Bot** — Collection notifications (new, blocked, closed) via Bot API with rate-limited broadcast (25 msg/sec batches via BullMQ)
