@@ -1,0 +1,44 @@
+default_platform(:ios)
+
+# App Store Connect API key (the .p8 lives in repo-root secrets/, gitignored)
+ASC_KEY_ID    = "656UN423NM"
+ASC_ISSUER_ID = "f2fd1337-1423-472e-a3bb-1baceae1e7b6"
+ASC_KEY_PATH  = File.expand_path("../../../../../secrets/asc/AuthKey_#{ASC_KEY_ID}.p8", __dir__)
+
+def asc_api_key
+  app_store_connect_api_key(
+    key_id: ASC_KEY_ID,
+    issuer_id: ASC_ISSUER_ID,
+    key_filepath: ASC_KEY_PATH,
+    in_house: false
+  )
+end
+
+platform :ios do
+  desc "Upload screenshots + text metadata (no binary, no submit)"
+  lane :metadata do
+    deliver(
+      api_key: asc_api_key,
+      skip_binary_upload: true,
+      skip_screenshots: false,
+      overwrite_screenshots: true,
+      run_precheck_before_submit: false,
+      submit_for_review: false,
+      force: true
+    )
+  end
+
+  desc "Upload screenshots only"
+  lane :screenshots do
+    deliver(
+      api_key: asc_api_key,
+      skip_binary_upload: true,
+      skip_metadata: true,
+      skip_screenshots: false,
+      overwrite_screenshots: true,
+      run_precheck_before_submit: false,
+      submit_for_review: false,
+      force: true
+    )
+  end
+end

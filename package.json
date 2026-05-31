@@ -24,7 +24,8 @@
       "@prisma/engines",
       "esbuild",
       "msgpackr-extract",
-      "prisma"
+      "prisma",
+      "sharp"
     ]
   },
   "dependencies": {
