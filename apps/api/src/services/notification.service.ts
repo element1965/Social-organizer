@@ -366,6 +366,127 @@ export async function sendUserDeletedNotification(
   await sendTgMessages([{ telegramId: tgAccount.platformId, text }]);
 }
 
+/**
+ * Send "renewal reminder" notification (3 days before next cycle) via TG and push.
+ * In-app Notification rows are created separately by the worker so we can apply
+ * the unique (userId, collectionId, type, wave) constraint for deduplication.
+ */
+export async function sendCycleRenewalReminderTg(
+  db: PrismaClient,
+  collectionId: string,
+  creatorId: string,
+  recipientUserIds: string[],
+): Promise<void> {
+  if (recipientUserIds.length === 0) return;
+
+  const collection = await db.collection.findUnique({
+    where: { id: collectionId },
+    select: { amount: true, currency: true, originalAmount: true, originalCurrency: true },
+  });
+  const creator = await db.user.findUnique({ where: { id: creatorId }, select: { name: true } });
+  if (!collection || !creator) return;
+
+  const amount = collection.originalAmount ?? collection.amount;
+  const currency = collection.originalCurrency ?? collection.currency;
+  const webAppLink = `${WEB_APP_URL}/collection/${collectionId}`;
+
+  // Push (web + native)
+  sendPushNotification(db, recipientUserIds, {
+    title: 'Cycle renewal reminder',
+    body: `In 3 days a new cycle starts for ${creator.name}'s regular support.`,
+    url: webAppLink,
+  }).catch((err) => console.error('[Push RenewalReminder] Failed:', err));
+
+  // Telegram
+  const tgAccounts = await db.platformAccount.findMany({
+    where: { userId: { in: recipientUserIds }, platform: 'TELEGRAM' },
+    select: { platformId: true, user: { select: { name: true, language: true } } },
+  });
+  if (tgAccounts.length === 0) return;
+
+  const messages: TgBroadcastMessage[] = tgAccounts.map((acc) => {
+    const lang = acc.user?.language || 'en';
+    const userName = acc.user?.name || '';
+    const amountStr = amount != null ? `${amount} ${currency}` : '';
+    const title = tg(lang, 'renewalReminderTitle');
+    const body = tg(lang, 'renewalReminderBody')
+      .replace('{{name}}', userName)
+      .replace('{{creator}}', creator.name);
+    const text = `🔔 <b>${title}</b>\n\n${body}${amountStr ? `\n\n${tg(lang, 'amount')}: ${amountStr}` : ''}`;
+    return {
+      telegramId: acc.platformId,
+      text,
+      replyMarkup: {
+        inline_keyboard: [[{ text: `📱 ${tg(lang, 'open')}`, web_app: { url: webAppLink } }]],
+      } as TgReplyMarkup,
+    };
+  });
+
+  await sendTgMessages(messages);
+}
+
+/**
+ * Send "cycle renewed" notification (cycle just started) via TG and push.
+ */
+export async function sendCycleRenewedTg(
+  db: PrismaClient,
+  collectionId: string,
+  creatorId: string,
+  recipientUserIds: string[],
+): Promise<void> {
+  if (recipientUserIds.length === 0) return;
+
+  const collection = await db.collection.findUnique({
+    where: { id: collectionId },
+    select: { amount: true, currency: true, originalAmount: true, originalCurrency: true, chatLink: true },
+  });
+  const creator = await db.user.findUnique({ where: { id: creatorId }, select: { name: true } });
+  if (!collection || !creator) return;
+
+  const amount = collection.originalAmount ?? collection.amount;
+  const currency = collection.originalCurrency ?? collection.currency;
+  const webAppLink = `${WEB_APP_URL}/collection/${collectionId}`;
+
+  // Push
+  sendPushNotification(db, recipientUserIds, {
+    title: 'New cycle started',
+    body: `A new support cycle for ${creator.name} has started.`,
+    url: webAppLink,
+  }).catch((err) => console.error('[Push CycleRenewed] Failed:', err));
+
+  // Telegram
+  const tgAccounts = await db.platformAccount.findMany({
+    where: { userId: { in: recipientUserIds }, platform: 'TELEGRAM' },
+    select: { platformId: true, user: { select: { name: true, language: true } } },
+  });
+  if (tgAccounts.length === 0) return;
+
+  const messages: TgBroadcastMessage[] = tgAccounts.map((acc) => {
+    const lang = acc.user?.language || 'en';
+    const userName = acc.user?.name || '';
+    const amountStr = amount != null ? `${amount} ${currency}` : '';
+    const title = tg(lang, 'renewalStartTitle');
+    const body = tg(lang, 'renewalStartBody')
+      .replace('{{name}}', userName)
+      .replace('{{creator}}', creator.name);
+    const text = `🔁 <b>${title}</b>\n\n${body}${amountStr ? `\n\n${tg(lang, 'amount')}: ${amountStr}` : ''}`;
+
+    const buttons: Array<Array<{ text: string; web_app?: { url: string }; url?: string }>> = [];
+    if (collection.chatLink) {
+      buttons.push([{ text: `💬 ${tg(lang, 'open')}`, url: collection.chatLink }]);
+    }
+    buttons.push([{ text: `📱 ${tg(lang, 'view')}`, web_app: { url: webAppLink } }]);
+
+    return {
+      telegramId: acc.platformId,
+      text,
+      replyMarkup: { inline_keyboard: buttons } as TgReplyMarkup,
+    };
+  });
+
+  await sendTgMessages(messages);
+}
+
 /** Send new collection Telegram notifications with per-user language */
 async function dispatchNewCollectionTg(
   db: PrismaClient,

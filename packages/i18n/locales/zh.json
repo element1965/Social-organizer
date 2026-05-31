@@ -296,7 +296,12 @@
     "dismiss": "忽略",
     "dismissAll": "全部关闭",
     "loadMore": "加载更多",
-    "expiresIn": "{{hours}}小时{{minutes}}分钟后过期"
+    "expiresIn": "{{hours}}小时{{minutes}}分钟后过期",
+    "renewalReminder": "续期提醒",
+    "renewalStart": "新周期",
+    "renewalReminderBody": "{{name}}，提醒您正在参与对 {{creator}} 的定期支持。新一轮募集将在 3 天后开始。您可以随时撤回意向。",
+    "renewalReminderAck": "知道了",
+    "renewalReminderUnsubscribe": "撤回意向"
   },
   "notification": {
     "newCollection": "{{name}} 需要帮助",
@@ -375,7 +380,9 @@
     "linkAccountHint": "将您的个人资料链接到 Play Market、App Store 或 FB Games 账户。即将推出。",
     "pushNotifications": "推送通知",
     "hideContacts": "隐藏联系方式",
-    "hideContactsHint": "启用后，只有您的直接联系人和您发起募集时收到通知的人才能看到您的联系方式"
+    "hideContactsHint": "启用后，只有您的直接联系人和您发起募集时收到通知的人才能看到您的联系方式",
+    "notifyRenewalReminder": "续期提醒（提前 3 天）",
+    "notifyRenewalStart": "新周期提醒"
   },
   "faq": {
     "title": "常见问题",
@@ -508,7 +515,11 @@
     "pendingRejected": "请求已拒绝",
     "pendingView": "查看",
     "userDeleted": "用户已离开",
-    "userDeletedBody": "{{name}}已从你的第一圈中删除了账户。"
+    "userDeletedBody": "{{name}}已从你的第一圈中删除了账户。",
+    "renewalReminderTitle": "续期提醒",
+    "renewalReminderBody": "{{name}}，您正在参与对 {{creator}} 的定期支持。新一轮募集将在 3 天后开始。您可以随时撤回意向。",
+    "renewalStartTitle": "新周期已开始",
+    "renewalStartBody": "{{name}}，对 {{creator}} 的新一轮定期支持已经开始。"
   },
   "hints": {
     "collectionAmount": "输入你需要的金额。最少10个单位。系统会通知适当数量的人。",

@@ -296,7 +296,12 @@
     "dismiss": "Dispensar",
     "dismissAll": "Fechar todas",
     "loadMore": "Carregar mais",
-    "expiresIn": "Expira em {{hours}}h {{minutes}}m"
+    "expiresIn": "Expira em {{hours}}h {{minutes}}m",
+    "renewalReminder": "Lembrete de renovação",
+    "renewalStart": "Novo ciclo",
+    "renewalReminderBody": "{{name}}, lembramos que você participa do apoio regular a {{creator}}. Em 3 dias começa um novo ciclo. Você pode retirar sua intenção a qualquer momento.",
+    "renewalReminderAck": "Entendi",
+    "renewalReminderUnsubscribe": "Retirar intenção"
   },
   "notification": {
     "newCollection": "{{name}} precisa de ajuda",
@@ -375,7 +380,9 @@
     "linkAccountHint": "Liga o seu perfil a uma conta do Play Market, App Store ou FB Games. Em breve.",
     "pushNotifications": "Notificações Push",
     "hideContacts": "Ocultar contatos",
-    "hideContactsHint": "Quando ativado, apenas suas conexões diretas e pessoas notificadas ao abrir uma arrecadação podem ver seus contatos"
+    "hideContactsHint": "Quando ativado, apenas suas conexões diretas e pessoas notificadas ao abrir uma arrecadação podem ver seus contatos",
+    "notifyRenewalReminder": "Lembretes de renovação (3 dias antes)",
+    "notifyRenewalStart": "Avisos de novo ciclo"
   },
   "faq": {
     "title": "Perguntas frequentes",
@@ -508,7 +515,11 @@
     "pendingRejected": "Solicitação rejeitada",
     "pendingView": "Ver",
     "userDeleted": "Usuário saiu",
-    "userDeletedBody": "{{name}} do seu primeiro círculo excluiu sua conta."
+    "userDeletedBody": "{{name}} do seu primeiro círculo excluiu sua conta.",
+    "renewalReminderTitle": "Lembrete de renovação",
+    "renewalReminderBody": "{{name}}, você participa do apoio regular a {{creator}}. Em 3 dias começa um novo ciclo. Você pode retirar sua intenção a qualquer momento.",
+    "renewalStartTitle": "Novo ciclo começou",
+    "renewalStartBody": "{{name}}, um novo ciclo de apoio regular a {{creator}} acabou de começar."
   },
   "hints": {
     "collectionAmount": "Insira o valor que você precisa. Mínimo 10 unidades. O sistema notificará o número adequado de pessoas.",

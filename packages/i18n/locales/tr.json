@@ -296,7 +296,12 @@
     "dismiss": "Kapat",
     "dismissAll": "Tümünü kapat",
     "loadMore": "Daha fazla yükle",
-    "expiresIn": "{{hours}} sa {{minutes}} dk içinde sona erer"
+    "expiresIn": "{{hours}} sa {{minutes}} dk içinde sona erer",
+    "renewalReminder": "Yenileme hatırlatması",
+    "renewalStart": "Yeni döngü",
+    "renewalReminderBody": "{{name}}, {{creator}} için düzenli desteğe katıldığınızı hatırlatırız. 3 gün içinde yeni bir döngü başlıyor. Niyetinizi istediğiniz zaman geri çekebilirsiniz.",
+    "renewalReminderAck": "Anladım",
+    "renewalReminderUnsubscribe": "Niyeti geri çek"
   },
   "notification": {
     "newCollection": "{{name}} yardıma ihtiyaç duyuyor",
@@ -375,7 +380,9 @@
     "linkAccountHint": "Profilinizi Play Market, App Store veya FB Games hesabına bağlar. Yakında gelecek.",
     "pushNotifications": "Push Bildirimleri",
     "hideContacts": "Kişileri gizle",
-    "hideContactsHint": "Etkinleştirildiğinde, yalnızca doğrudan bağlantılarınız ve bir toplama açtığınızda bildirim alan kişiler kişilerinizi görebilir"
+    "hideContactsHint": "Etkinleştirildiğinde, yalnızca doğrudan bağlantılarınız ve bir toplama açtığınızda bildirim alan kişiler kişilerinizi görebilir",
+    "notifyRenewalReminder": "Yenileme hatırlatmaları (3 gün önce)",
+    "notifyRenewalStart": "Yeni döngü bildirimleri"
   },
   "faq": {
     "title": "Sık sorulan sorular",
@@ -566,7 +573,11 @@
     "pendingRejected": "İstek reddedildi",
     "pendingView": "Görüntüle",
     "userDeleted": "Kullanıcı ayrıldı",
-    "userDeletedBody": "{{name}} ilk çevrenizden hesabını sildi."
+    "userDeletedBody": "{{name}} ilk çevrenizden hesabını sildi.",
+    "renewalReminderTitle": "Yenileme hatırlatması",
+    "renewalReminderBody": "{{name}}, {{creator}} için düzenli desteğe katılıyorsunuz. 3 gün içinde yeni bir döngü başlıyor. Niyetinizi istediğiniz zaman geri çekebilirsiniz.",
+    "renewalStartTitle": "Yeni döngü başladı",
+    "renewalStartBody": "{{name}}, {{creator}} için yeni bir düzenli destek döngüsü başladı."
   },
   "hints": {
     "collectionAmount": "İhtiyacınız olan miktarı girin. Minimum 10 birim. Sistem doğru sayıda kişiyi bilgilendirecektir.",

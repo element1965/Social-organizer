@@ -296,7 +296,12 @@
     "dismiss": "Ignorer",
     "dismissAll": "Tout fermer",
     "loadMore": "Charger plus",
-    "expiresIn": "Expire dans {{hours}}h {{minutes}}m"
+    "expiresIn": "Expire dans {{hours}}h {{minutes}}m",
+    "renewalReminder": "Rappel de renouvellement",
+    "renewalStart": "Nouveau cycle",
+    "renewalReminderBody": "{{name}}, nous vous rappelons que vous participez au soutien régulier de {{creator}}. Dans 3 jours, un nouveau cycle commence. Vous pouvez retirer votre intention à tout moment.",
+    "renewalReminderAck": "Compris",
+    "renewalReminderUnsubscribe": "Retirer mon intention"
   },
   "notification": {
     "newCollection": "{{name}} a besoin d'aide",
@@ -375,7 +380,9 @@
     "linkAccountHint": "Lie votre profil à un compte Play Market, App Store ou FB Games. Bientôt disponible.",
     "pushNotifications": "Notifications Push",
     "hideContacts": "Masquer les contacts",
-    "hideContactsHint": "Lorsqu'activé, seuls vos contacts directs et ceux qui reçoivent une notification quand vous ouvrez une collecte peuvent voir vos contacts"
+    "hideContactsHint": "Lorsqu'activé, seuls vos contacts directs et ceux qui reçoivent une notification quand vous ouvrez une collecte peuvent voir vos contacts",
+    "notifyRenewalReminder": "Rappels de renouvellement (3 jours avant)",
+    "notifyRenewalStart": "Notifications de nouveau cycle"
   },
   "faq": {
     "title": "Questions fréquentes",
@@ -508,7 +515,11 @@
     "pendingRejected": "Demande refusée",
     "pendingView": "Voir",
     "userDeleted": "Utilisateur parti",
-    "userDeletedBody": "{{name}} de votre premier cercle a supprimé son compte."
+    "userDeletedBody": "{{name}} de votre premier cercle a supprimé son compte.",
+    "renewalReminderTitle": "Rappel de renouvellement",
+    "renewalReminderBody": "{{name}}, vous participez au soutien régulier de {{creator}}. Dans 3 jours, un nouveau cycle commence. Vous pouvez retirer votre intention à tout moment.",
+    "renewalStartTitle": "Nouveau cycle commencé",
+    "renewalStartBody": "{{name}}, un nouveau cycle de soutien régulier pour {{creator}} vient de commencer."
   },
   "hints": {
     "collectionAmount": "Entrez le montant dont vous avez besoin. Minimum 10 unités. Le système notifiera le bon nombre de personnes.",

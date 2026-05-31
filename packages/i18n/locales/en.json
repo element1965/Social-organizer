@@ -301,7 +301,12 @@
     "dismiss": "Dismiss",
     "dismissAll": "Dismiss all",
     "loadMore": "Load more",
-    "expiresIn": "Expires in {{hours}}h {{minutes}}m"
+    "expiresIn": "Expires in {{hours}}h {{minutes}}m",
+    "renewalReminder": "Renewal reminder",
+    "renewalStart": "New cycle",
+    "renewalReminderBody": "{{name}}, this is a reminder that you participate in regular support for {{creator}}. A new collection cycle starts in 3 days. You can withdraw your intention at any time.",
+    "renewalReminderAck": "Got it",
+    "renewalReminderUnsubscribe": "Withdraw intention"
   },
   "notification": {
     "newCollection": "{{name}} needs help",
@@ -380,7 +385,9 @@
     "push": "Push",
     "linkAccountHint": "Links your profile to a Play Market, App Store, or FB Games account. Coming soon.",
     "hideContacts": "Hide contacts",
-    "hideContactsHint": "When enabled, only your direct connections and people who get notified when you open a collection can see your contacts"
+    "hideContactsHint": "When enabled, only your direct connections and people who get notified when you open a collection can see your contacts",
+    "notifyRenewalReminder": "Renewal reminders (3 days before)",
+    "notifyRenewalStart": "New cycle notifications"
   },
   "faq": {
     "title": "FAQ",
@@ -571,7 +578,11 @@
     "pendingRejected": "Request declined",
     "pendingView": "View",
     "userDeleted": "User left",
-    "userDeletedBody": "{{name}} from your first circle has deleted their account."
+    "userDeletedBody": "{{name}} from your first circle has deleted their account.",
+    "renewalReminderTitle": "Renewal reminder",
+    "renewalReminderBody": "{{name}}, you participate in regular support for {{creator}}. A new collection cycle starts in 3 days. You can withdraw your intention at any time.",
+    "renewalStartTitle": "New cycle started",
+    "renewalStartBody": "{{name}}, a new support cycle for {{creator}} has just started."
   },
   "hints": {
     "collectionAmount": "Enter the amount you need. Minimum 10 units. The system will notify the right number of people.",

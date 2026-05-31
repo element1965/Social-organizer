@@ -296,7 +296,12 @@
     "dismiss": "Odrzuć",
     "dismissAll": "Zamknij wszystkie",
     "loadMore": "Załaduj więcej",
-    "expiresIn": "Wygasa za {{hours}} godz. {{minutes}} min"
+    "expiresIn": "Wygasa za {{hours}} godz. {{minutes}} min",
+    "renewalReminder": "Przypomnienie o odnowieniu",
+    "renewalStart": "Nowy cykl",
+    "renewalReminderBody": "{{name}}, przypominamy, że uczestniczysz w regularnym wsparciu dla {{creator}}. Za 3 dni zaczyna się nowy cykl. Możesz wycofać swój zamiar w dowolnym momencie.",
+    "renewalReminderAck": "Rozumiem",
+    "renewalReminderUnsubscribe": "Wycofaj zamiar"
   },
   "notification": {
     "newCollection": "{{name}} potrzebuje pomocy",
@@ -375,7 +380,9 @@
     "linkAccountHint": "Łączy twój profil z kontem w Play Market, App Store lub FB Games. Wkrótce dostępne.",
     "pushNotifications": "Powiadomienia Push",
     "hideContacts": "Ukryj kontakty",
-    "hideContactsHint": "Po włączeniu, tylko Twoje bezpośrednie połączenia i osoby powiadomione przy otwarciu zbiórki mogą widzieć Twoje kontakty"
+    "hideContactsHint": "Po włączeniu, tylko Twoje bezpośrednie połączenia i osoby powiadomione przy otwarciu zbiórki mogą widzieć Twoje kontakty",
+    "notifyRenewalReminder": "Przypomnienia o odnowieniu (3 dni wcześniej)",
+    "notifyRenewalStart": "Powiadomienia o nowym cyklu"
   },
   "faq": {
     "title": "Najczęściej zadawane pytania",
@@ -566,7 +573,11 @@
     "pendingRejected": "Prośba odrzucona",
     "pendingView": "Zobacz",
     "userDeleted": "Użytkownik odszedł",
-    "userDeletedBody": "{{name}} z twojego pierwszego kręgu usunął swoje konto."
+    "userDeletedBody": "{{name}} z twojego pierwszego kręgu usunął swoje konto.",
+    "renewalReminderTitle": "Przypomnienie o odnowieniu",
+    "renewalReminderBody": "{{name}}, uczestniczysz w regularnym wsparciu dla {{creator}}. Za 3 dni zaczyna się nowy cykl. Możesz wycofać swój zamiar w dowolnym momencie.",
+    "renewalStartTitle": "Rozpoczął się nowy cykl",
+    "renewalStartBody": "{{name}}, właśnie rozpoczął się nowy cykl regularnego wsparcia dla {{creator}}."
   },
   "hints": {
     "collectionAmount": "Wprowadź potrzebną kwotę. Minimum 10 jednostek. System powiadomi odpowiednią liczbę osób.",

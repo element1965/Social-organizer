@@ -162,7 +162,8 @@ FIREBASE_SERVICE_ACCOUNT={"type":"service_account",...}  # FCM service account J
 
 | Worker | Description | Schedule |
 |--------|-------------|----------|
-| `cycle-close` | Auto-close 28-day cycle for regular collections | Every hour |
+| `cycle-close` | Auto-close 28-day cycle for regular collections + emit `CYCLE_RENEWED` to active subscribers | Every hour |
+| `cycle-renewal-reminder` | Send `CYCLE_RENEWAL_REMINDER` to subscribers 3 days before next cycle (in-app + TG + push) | Every hour |
 | `expire-notifications` | Expired notifications (24h) → EXPIRED | Every hour |
 | `check-block` | Check intention sum → BLOCKED | On event |
 | `tg-broadcast` | Send Telegram bot messages in rate-limited batches (25/sec) | On event |

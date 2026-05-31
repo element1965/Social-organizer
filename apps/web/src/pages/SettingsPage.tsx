@@ -54,13 +54,14 @@ export function SettingsPage() {
   }, [contacts, contactValues, updateContacts]);
 
   const [nameSaved, setNameSaved] = useState(false);
-  const nameDebounce = useRef<ReturnType<typeof setTimeout>>();
   const updateLanguage = trpc.settings.updateLanguage.useMutation({ onSuccess: () => utils.settings.get.invalidate() });
   const updateTheme = trpc.settings.updateTheme.useMutation({ onSuccess: () => utils.settings.get.invalidate() });
   const updateSound = trpc.settings.updateSound.useMutation({ onSuccess: () => utils.settings.get.invalidate() });
   const updateVoiceGender = trpc.settings.updateVoiceGender.useMutation({ onSuccess: () => utils.settings.get.invalidate() });
   const updateFontScale = trpc.settings.updateFontScale.useMutation({ onSuccess: () => utils.settings.get.invalidate() });
   const updateHideContacts = trpc.settings.updateHideContacts.useMutation({ onSuccess: () => utils.settings.get.invalidate() });
+  const updateRenewalReminder = trpc.settings.updateNotifyRenewalReminder.useMutation({ onSuccess: () => utils.settings.get.invalidate() });
+  const updateRenewalStart = trpc.settings.updateNotifyRenewalStart.useMutation({ onSuccess: () => utils.settings.get.invalidate() });
   const generateCode = trpc.auth.generateLinkCode.useMutation();
   const deleteAccount = trpc.user.delete.useMutation({ onSuccess: () => { logout(); navigate('/login'); } });
   const updateUser = trpc.user.update.useMutation({ onSuccess: () => {
@@ -187,7 +188,7 @@ export function SettingsPage() {
                 <SocialIcon type={contact.icon} className={`w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none ${isTelegram ? 'text-blue-500' : 'text-gray-500 dark:text-gray-300'}`} />
                 <Input
                   id={`contact-${contact.type}`}
-                  placeholder={contact.placeholder}
+                  placeholder={(contact as { placeholder?: string }).placeholder}
                   value={displayVal}
                   onChange={(e) => {
                     if (isTelegram) return;
@@ -317,6 +318,29 @@ export function SettingsPage() {
           </div>
         )}
       </div></CardContent></Card>
+
+      <Card><CardContent className="py-3 space-y-3">
+        <div className="flex items-center gap-3">
+          <Bell className="w-4 h-4 text-gray-500 dark:text-gray-300 shrink-0" />
+          <span className="text-sm font-medium text-gray-700 dark:text-gray-300 flex-1">{t('settings.notifyRenewalReminder')}</span>
+          <button
+            onClick={() => updateRenewalReminder.mutate({ enabled: !settings?.notifyRenewalReminder })}
+            className={cn('w-11 h-6 rounded-full transition-colors relative shrink-0', settings?.notifyRenewalReminder ? 'bg-blue-600' : 'bg-gray-300 dark:bg-gray-600')}
+          >
+            <div className={cn('w-5 h-5 rounded-full bg-white shadow absolute top-0.5 transition-all', settings?.notifyRenewalReminder ? 'left-5' : 'left-0.5')} />
+          </button>
+        </div>
+        <div className="flex items-center gap-3">
+          <Bell className="w-4 h-4 text-gray-500 dark:text-gray-300 shrink-0" />
+          <span className="text-sm font-medium text-gray-700 dark:text-gray-300 flex-1">{t('settings.notifyRenewalStart')}</span>
+          <button
+            onClick={() => updateRenewalStart.mutate({ enabled: !settings?.notifyRenewalStart })}
+            className={cn('w-11 h-6 rounded-full transition-colors relative shrink-0', settings?.notifyRenewalStart ? 'bg-blue-600' : 'bg-gray-300 dark:bg-gray-600')}
+          >
+            <div className={cn('w-5 h-5 rounded-full bg-white shadow absolute top-0.5 transition-all', settings?.notifyRenewalStart ? 'left-5' : 'left-0.5')} />
+          </button>
+        </div>
+      </CardContent></Card>
 
       <Card><CardContent className="py-3">
         <div className="flex items-center gap-3 mb-2"><Type className="w-5 h-5 text-gray-500 dark:text-gray-300" /><span className="text-sm font-medium text-gray-700 dark:text-gray-300">{t('settings.fontSize')}</span></div>

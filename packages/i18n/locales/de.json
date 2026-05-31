@@ -296,7 +296,12 @@
     "dismiss": "Verwerfen",
     "dismissAll": "Alle schließen",
     "loadMore": "Mehr laden",
-    "expiresIn": "Läuft ab in {{hours}}h {{minutes}}m"
+    "expiresIn": "Läuft ab in {{hours}}h {{minutes}}m",
+    "renewalReminder": "Erinnerung an Verlängerung",
+    "renewalStart": "Neuer Zyklus",
+    "renewalReminderBody": "{{name}}, wir erinnern dich daran, dass du an der regelmäßigen Unterstützung von {{creator}} teilnimmst. In 3 Tagen beginnt ein neuer Zyklus. Du kannst deine Absicht jederzeit zurücknehmen.",
+    "renewalReminderAck": "Verstanden",
+    "renewalReminderUnsubscribe": "Absicht zurückziehen"
   },
   "notification": {
     "newCollection": "{{name}} braucht Hilfe",
@@ -375,7 +380,9 @@
     "linkAccountHint": "Verknüpft Ihr Profil mit einem Play Market, App Store oder FB Games Account. Kommt bald.",
     "pushNotifications": "Push-Benachrichtigungen",
     "hideContacts": "Kontakte verbergen",
-    "hideContactsHint": "Wenn aktiviert, können nur Ihre direkten Verbindungen und Personen, die benachrichtigt werden wenn Sie eine Sammlung eröffnen, Ihre Kontakte sehen"
+    "hideContactsHint": "Wenn aktiviert, können nur Ihre direkten Verbindungen und Personen, die benachrichtigt werden wenn Sie eine Sammlung eröffnen, Ihre Kontakte sehen",
+    "notifyRenewalReminder": "Verlängerungserinnerungen (3 Tage vorher)",
+    "notifyRenewalStart": "Benachrichtigungen über neuen Zyklus"
   },
   "faq": {
     "title": "Häufige Fragen",
@@ -508,7 +515,11 @@
     "pendingRejected": "Anfrage abgelehnt",
     "pendingView": "Ansehen",
     "userDeleted": "Benutzer hat verlassen",
-    "userDeletedBody": "{{name}} aus Ihrem ersten Kreis hat sein Konto gelöscht."
+    "userDeletedBody": "{{name}} aus Ihrem ersten Kreis hat sein Konto gelöscht.",
+    "renewalReminderTitle": "Erinnerung an Verlängerung",
+    "renewalReminderBody": "{{name}}, du nimmst an der regelmäßigen Unterstützung von {{creator}} teil. In 3 Tagen beginnt ein neuer Zyklus. Du kannst deine Absicht jederzeit zurücknehmen.",
+    "renewalStartTitle": "Neuer Zyklus gestartet",
+    "renewalStartBody": "{{name}}, ein neuer Zyklus regelmäßiger Unterstützung für {{creator}} hat begonnen."
   },
   "hints": {
     "collectionAmount": "Gib den Betrag ein, den du benötigst. Mindestens 10 Einheiten. Das System benachrichtigt die richtige Anzahl von Personen.",

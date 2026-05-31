@@ -296,7 +296,12 @@
     "dismiss": "Descartar",
     "dismissAll": "Cerrar todas",
     "loadMore": "Cargar más",
-    "expiresIn": "Expira en {{hours}}h {{minutes}}m"
+    "expiresIn": "Expira en {{hours}}h {{minutes}}m",
+    "renewalReminder": "Recordatorio de renovación",
+    "renewalStart": "Nuevo ciclo",
+    "renewalReminderBody": "{{name}}, te recordamos que participas en el apoyo regular a {{creator}}. En 3 días comienza un nuevo ciclo de recaudación. Puedes retirar tu intención en cualquier momento.",
+    "renewalReminderAck": "Entendido",
+    "renewalReminderUnsubscribe": "Retirar intención"
   },
   "notification": {
     "newCollection": "{{name}} necesita ayuda",
@@ -375,7 +380,9 @@
     "linkAccountHint": "Enlaza tu perfil a una cuenta de Play Market, App Store o FB Games. Proximamente.",
     "pushNotifications": "Notificaciones Push",
     "hideContacts": "Ocultar contactos",
-    "hideContactsHint": "Cuando está activado, solo tus conexiones directas y quienes reciban notificación al abrir una colecta pueden ver tus contactos"
+    "hideContactsHint": "Cuando está activado, solo tus conexiones directas y quienes reciban notificación al abrir una colecta pueden ver tus contactos",
+    "notifyRenewalReminder": "Recordatorios de renovación (3 días antes)",
+    "notifyRenewalStart": "Avisos de nuevo ciclo"
   },
   "faq": {
     "title": "Preguntas frecuentes",
@@ -508,7 +515,11 @@
     "pendingRejected": "Solicitud rechazada",
     "pendingView": "Ver",
     "userDeleted": "Usuario se fue",
-    "userDeletedBody": "{{name}} de tu primer círculo ha eliminado su cuenta."
+    "userDeletedBody": "{{name}} de tu primer círculo ha eliminado su cuenta.",
+    "renewalReminderTitle": "Recordatorio de renovación",
+    "renewalReminderBody": "{{name}}, participas en el apoyo regular a {{creator}}. En 3 días comienza un nuevo ciclo. Puedes retirar tu intención en cualquier momento.",
+    "renewalStartTitle": "Comenzó un nuevo ciclo",
+    "renewalStartBody": "{{name}}, acaba de comenzar un nuevo ciclo de apoyo regular para {{creator}}."
   },
   "hints": {
     "collectionAmount": "Introduce el monto que necesitas. Mínimo 10 unidades. El sistema notificará al número adecuado de personas.",

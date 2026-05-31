@@ -286,4 +286,25 @@ export const obligationRouter = router({
         data: { unsubscribedAt: new Date() },
       });
     }),
+
+  // Used from the renewal reminder notification — finds the caller's active
+  // obligation in the given collection and marks it as unsubscribed.
+  unsubscribeFromCollection: protectedProcedure
+    .input(z.object({ collectionId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const obligation = await ctx.db.obligation.findFirst({
+        where: {
+          collectionId: input.collectionId,
+          userId: ctx.userId,
+          unsubscribedAt: null,
+        },
+      });
+      if (!obligation) {
+        throw new TRPCError({ code: 'NOT_FOUND', message: 'Active intention not found' });
+      }
+      return ctx.db.obligation.update({
+        where: { id: obligation.id },
+        data: { unsubscribedAt: new Date() },
+      });
+    }),
 });

@@ -296,7 +296,12 @@
     "dismiss": "تجاهل",
     "dismissAll": "إغلاق الكل",
     "loadMore": "تحميل المزيد",
-    "expiresIn": "ينتهي خلال {{hours}} س {{minutes}} د"
+    "expiresIn": "ينتهي خلال {{hours}} س {{minutes}} د",
+    "renewalReminder": "Renewal reminder",
+    "renewalStart": "New cycle",
+    "renewalReminderBody": "{{name}}, this is a reminder that you participate in regular support for {{creator}}. A new collection cycle starts in 3 days. You can withdraw your intention at any time.",
+    "renewalReminderAck": "Got it",
+    "renewalReminderUnsubscribe": "Withdraw intention"
   },
   "notification": {
     "newCollection": "{{name}} يحتاج مساعدة",
@@ -375,7 +380,9 @@
     "linkAccountHint": "يربط ملف تعريفك بحساب في متجر Play، App Store، أو FB Games. قريباً.",
     "pushNotifications": "إشعارات دفع",
     "hideContacts": "إخفاء جهات الاتصال",
-    "hideContactsHint": "عند التفعيل، يمكن فقط لجهات اتصالك المباشرة ومن سيتلقون إشعاراً عند فتح جمع التبرعات رؤية جهات اتصالك"
+    "hideContactsHint": "عند التفعيل، يمكن فقط لجهات اتصالك المباشرة ومن سيتلقون إشعاراً عند فتح جمع التبرعات رؤية جهات اتصالك",
+    "notifyRenewalReminder": "Renewal reminders (3 days before)",
+    "notifyRenewalStart": "New cycle notifications"
   },
   "faq": {
     "title": "الأسئلة الشائعة",
@@ -566,7 +573,11 @@
     "pendingRejected": "تم رفض الطلب",
     "pendingView": "عرض",
     "userDeleted": "المستخدم غادر",
-    "userDeletedBody": "{{name}} من دائرتك الأولى حذف حسابه."
+    "userDeletedBody": "{{name}} من دائرتك الأولى حذف حسابه.",
+    "renewalReminderTitle": "Renewal reminder",
+    "renewalReminderBody": "{{name}}, you participate in regular support for {{creator}}. A new collection cycle starts in 3 days. You can withdraw your intention at any time.",
+    "renewalStartTitle": "New cycle started",
+    "renewalStartBody": "{{name}}, a new support cycle for {{creator}} has just started."
   },
   "hints": {
     "collectionAmount": "أدخل المبلغ الذي تحتاجه. الحد الأدنى 10 وحدات. سيقوم النظام بإعلام العدد المناسب من الأشخاص.",

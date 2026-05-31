@@ -6,7 +6,12 @@ export const settingsRouter = router({
   get: protectedProcedure.query(async ({ ctx }) => {
     const user = await ctx.db.user.findUnique({
       where: { id: ctx.userId },
-      select: { language: true, theme: true, soundEnabled: true, voiceGender: true, fontScale: true, hideContacts: true, city: true, countryCode: true, latitude: true, longitude: true },
+      select: {
+        language: true, theme: true, soundEnabled: true, voiceGender: true,
+        fontScale: true, hideContacts: true,
+        city: true, countryCode: true, latitude: true, longitude: true,
+        notifyRenewalReminder: true, notifyRenewalStart: true,
+      },
     });
     if (!user) throw new TRPCError({ code: 'NOT_FOUND' });
     return user;
@@ -46,6 +51,24 @@ export const settingsRouter = router({
     .input(z.object({ hideContacts: z.boolean() }))
     .mutation(async ({ ctx, input }) => {
       return ctx.db.user.update({ where: { id: ctx.userId }, data: { hideContacts: input.hideContacts } });
+    }),
+
+  updateNotifyRenewalReminder: protectedProcedure
+    .input(z.object({ enabled: z.boolean() }))
+    .mutation(async ({ ctx, input }) => {
+      return ctx.db.user.update({
+        where: { id: ctx.userId },
+        data: { notifyRenewalReminder: input.enabled },
+      });
+    }),
+
+  updateNotifyRenewalStart: protectedProcedure
+    .input(z.object({ enabled: z.boolean() }))
+    .mutation(async ({ ctx, input }) => {
+      return ctx.db.user.update({
+        where: { id: ctx.userId },
+        data: { notifyRenewalStart: input.enabled },
+      });
     }),
 
   updateGeo: protectedProcedure

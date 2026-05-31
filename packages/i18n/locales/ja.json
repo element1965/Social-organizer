@@ -296,7 +296,12 @@
     "dismiss": "非表示",
     "dismissAll": "すべて閉じる",
     "loadMore": "もっと見る",
-    "expiresIn": "{{hours}}時間{{minutes}}分で期限切れ"
+    "expiresIn": "{{hours}}時間{{minutes}}分で期限切れ",
+    "renewalReminder": "更新リマインダー",
+    "renewalStart": "新しいサイクル",
+    "renewalReminderBody": "{{name}} さん、{{creator}} への定期的なサポートに参加しています。3日後に新しい募集サイクルが始まります。意思はいつでも撤回できます。",
+    "renewalReminderAck": "了解",
+    "renewalReminderUnsubscribe": "意思を撤回"
   },
   "notification": {
     "newCollection": "{{name}} が助けを求めています",
@@ -375,7 +380,9 @@
     "linkAccountHint": "プロファイルを Play Market、App Store、または FB Games アカウントにリンクします。近日公開。",
     "pushNotifications": "プッシュ通知",
     "hideContacts": "連絡先を非表示",
-    "hideContactsHint": "有効にすると、直接の接続とコレクション開設時に通知を受ける人だけがあなたの連絡先を見ることができます"
+    "hideContactsHint": "有効にすると、直接の接続とコレクション開設時に通知を受ける人だけがあなたの連絡先を見ることができます",
+    "notifyRenewalReminder": "更新リマインダー（3日前）",
+    "notifyRenewalStart": "新サイクル通知"
   },
   "faq": {
     "title": "よくある質問",
@@ -566,7 +573,11 @@
     "pendingRejected": "リクエスト拒否",
     "pendingView": "表示",
     "userDeleted": "ユーザーが退会",
-    "userDeletedBody": "{{name}}さんがあなたの第一サークルからアカウントを削除しました。"
+    "userDeletedBody": "{{name}}さんがあなたの第一サークルからアカウントを削除しました。",
+    "renewalReminderTitle": "更新リマインダー",
+    "renewalReminderBody": "{{name}} さん、{{creator}} への定期的なサポートに参加しています。3日後に新しい募集サイクルが始まります。意思はいつでも撤回できます。",
+    "renewalStartTitle": "新しいサイクルが始まりました",
+    "renewalStartBody": "{{name}} さん、{{creator}} への新しい定期サポートサイクルが始まりました。"
   },
   "hints": {
     "collectionAmount": "必要な金額を入力してください。最低10単位です。システムが適切な人数に通知します。",

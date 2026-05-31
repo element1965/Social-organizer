@@ -296,7 +296,12 @@
     "dismiss": "Закрыць",
     "dismissAll": "Закрыць усе",
     "loadMore": "Загрузіць яшчэ",
-    "expiresIn": "Сканчаецца праз {{hours}}г {{minutes}}хв"
+    "expiresIn": "Сканчаецца праз {{hours}}г {{minutes}}хв",
+    "renewalReminder": "Напамін аб працягу",
+    "renewalStart": "Новы цыкл",
+    "renewalReminderBody": "{{name}}, нагадваем, што вы ўдзельнічаеце ў рэгулярнай падтрымцы {{creator}}. Праз 3 дні новы цыкл збору. Вы можаце адклікаць свой намер у любы момант.",
+    "renewalReminderAck": "Памятаю",
+    "renewalReminderUnsubscribe": "Адклікаць намер"
   },
   "notification": {
     "newCollection": "{{name}} мае патрэбу ў дапамозе",
@@ -375,7 +380,9 @@
     "push": "Push",
     "linkAccountHint": "Звязвае ваш профіль з акаўнтам у Play Market, App Store або FB Games. Хутка.",
     "hideContacts": "Схаваць кантакты",
-    "hideContactsHint": "Калі ўключана, вашы кантакты бачаць толькі прамыя сувязі і тыя, хто атрымае апавяшчэнне, калі вы адкрыеце збор"
+    "hideContactsHint": "Калі ўключана, вашы кантакты бачаць толькі прамыя сувязі і тыя, хто атрымае апавяшчэнне, калі вы адкрыеце збор",
+    "notifyRenewalReminder": "Напаміны аб працягу (за 3 дні)",
+    "notifyRenewalStart": "Апавяшчэнні аб новым цыкле"
   },
   "faq": {
     "title": "Частыя пытанні",
@@ -566,7 +573,11 @@
     "pendingRejected": "Заяўка адхілена",
     "pendingView": "Паглядзець",
     "userDeleted": "Карыстальнік сышоў",
-    "userDeletedBody": "{{name}} з вашага першага кола выдаліў свой акаўнт."
+    "userDeletedBody": "{{name}} з вашага першага кола выдаліў свой акаўнт.",
+    "renewalReminderTitle": "Напамін аб працягу",
+    "renewalReminderBody": "{{name}}, вы ўдзельнічаеце ў рэгулярнай падтрымцы {{creator}}. Праз 3 дні новы цыкл збору. Вы можаце адклікаць свой намер у любы момант.",
+    "renewalStartTitle": "Пачаўся новы цыкл",
+    "renewalStartBody": "{{name}}, толькі што пачаўся новы цыкл рэгулярнай падтрымкі {{creator}}."
   },
   "hints": {
     "collectionAmount": "Укажыце суму, якая вам неабходна. Мінімум 10 адзінак. Сістэма апавясціць патрэбную колькасць людзей.",

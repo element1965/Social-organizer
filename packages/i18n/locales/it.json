@@ -296,7 +296,12 @@
     "dismiss": "Ignora",
     "dismissAll": "Chiudi tutte",
     "loadMore": "Carica altro",
-    "expiresIn": "Scade tra {{hours}}h {{minutes}}m"
+    "expiresIn": "Scade tra {{hours}}h {{minutes}}m",
+    "renewalReminder": "Promemoria rinnovo",
+    "renewalStart": "Nuovo ciclo",
+    "renewalReminderBody": "{{name}}, ti ricordiamo che partecipi al supporto regolare per {{creator}}. Tra 3 giorni inizia un nuovo ciclo. Puoi ritirare la tua intenzione in qualsiasi momento.",
+    "renewalReminderAck": "Capito",
+    "renewalReminderUnsubscribe": "Ritira intenzione"
   },
   "notification": {
     "newCollection": "{{name}} ha bisogno di aiuto",
@@ -375,7 +380,9 @@
     "linkAccountHint": "Collega il tuo profilo a un account Play Market, App Store o FB Games. Prossimamente.",
     "pushNotifications": "Notifiche Push",
     "hideContacts": "Nascondi contatti",
-    "hideContactsHint": "Quando attivato, solo i tuoi contatti diretti e chi riceve una notifica quando apri una raccolta possono vedere i tuoi contatti"
+    "hideContactsHint": "Quando attivato, solo i tuoi contatti diretti e chi riceve una notifica quando apri una raccolta possono vedere i tuoi contatti",
+    "notifyRenewalReminder": "Promemoria rinnovo (3 giorni prima)",
+    "notifyRenewalStart": "Notifiche nuovo ciclo"
   },
   "faq": {
     "title": "Domande frequenti",
@@ -508,7 +515,11 @@
     "pendingRejected": "Richiesta rifiutata",
     "pendingView": "Vedi",
     "userDeleted": "Utente uscito",
-    "userDeletedBody": "{{name}} dal tuo primo cerchio ha eliminato il suo account."
+    "userDeletedBody": "{{name}} dal tuo primo cerchio ha eliminato il suo account.",
+    "renewalReminderTitle": "Promemoria rinnovo",
+    "renewalReminderBody": "{{name}}, partecipi al supporto regolare per {{creator}}. Tra 3 giorni inizia un nuovo ciclo. Puoi ritirare la tua intenzione in qualsiasi momento.",
+    "renewalStartTitle": "Iniziato nuovo ciclo",
+    "renewalStartBody": "{{name}}, è appena iniziato un nuovo ciclo di supporto regolare per {{creator}}."
   },
   "hints": {
     "collectionAmount": "Inserisci l'importo di cui hai bisogno. Minimo 10 unità. Il sistema notificherà il giusto numero di persone.",
