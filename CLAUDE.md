@@ -38,6 +38,13 @@
 - Username: @socialorganizer_bot
 - Env: VITE_TELEGRAM_BOT_USERNAME=socialorganizer_bot (build-time, нужен в Railway)
 
+# Sign in with Apple (web OAuth, без .p8 ключа)
+- Флоу зеркалит Google: системный браузер (SFSafariViewController/Custom Tab) → Apple form_post на `POST /api/auth/apple/callback` → deep link `socialorganizer://auth-success` (native) или `/auth/apple/done#...` (web). Работает в WKWebView-обёртке без пересборки бинарника.
+- Бэкенд верифицирует id_token по Apple JWKS (`apps/api/src/services/apple.service.ts`) — обмен code НЕ делается, приватный ключ не нужен.
+- Env (Railway): `APPLE_SERVICE_ID` (Services ID), `APPLE_BUNDLE_ID=com.socialorganizer.app`, `APPLE_DOMAIN_ASSOCIATION` (содержимое файла верификации домена).
+- Env (build-time, web): `VITE_APPLE_SERVICE_ID` (= APPLE_SERVICE_ID). Кнопка Apple показывается только если задан.
+- Настройка в Apple Developer — см. APPLE_SIGNIN.md.
+
 # Админы и рассылка
 - ADMIN_IDS задаются через env переменную (apps/api/src/admin.ts)
 - Рассылка (BroadcastPanel) — только для админов:

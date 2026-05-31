@@ -11,6 +11,7 @@ import { Capacitor } from '@capacitor/core';
 import { Browser } from '@capacitor/browser';
 
 const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID as string | undefined;
+const APPLE_SERVICE_ID = import.meta.env.VITE_APPLE_SERVICE_ID as string | undefined;
 
 export function LoginPage() {
   const { t } = useTranslation();
@@ -258,6 +259,39 @@ export function LoginPage() {
     });
   }, [t, handleGoogleCredential, handleGoogleClickNative]);
 
+  const handleAppleClick = useCallback(() => {
+    if (isTelegramWebApp()) {
+      setError(t('auth.googleNotInTelegram'));
+      return;
+    }
+    if (!APPLE_SERVICE_ID) {
+      setError('Apple Sign-In is not configured');
+      return;
+    }
+    const redirectUri = 'https://www.orginizer.com/api/auth/apple/callback';
+    const nonce = Math.random().toString(36).slice(2);
+    // state.p tells the backend where to bounce the result (ios/android deep link or web fragment)
+    const stateObj: Record<string, string> = { p: Capacitor.getPlatform() };
+    if (linkCode.length === 6) stateObj.lc = linkCode;
+    const params = new URLSearchParams({
+      response_type: 'code id_token',
+      response_mode: 'form_post',
+      client_id: APPLE_SERVICE_ID,
+      redirect_uri: redirectUri,
+      scope: 'name email',
+      nonce,
+      state: JSON.stringify(stateObj),
+    });
+    const url = `https://appleid.apple.com/auth/authorize?${params.toString()}`;
+    // Apple Sign In is blocked inside embedded WebViews, so on native open the system
+    // browser (SFSafariViewController / Chrome Custom Tab); on web do a full redirect.
+    if (Capacitor.isNativePlatform()) {
+      Browser.open({ url });
+    } else {
+      window.location.href = url;
+    }
+  }, [t, linkCode]);
+
   const googleButton = (
     <div className="w-full">
       <Button
@@ -277,6 +311,20 @@ export function LoginPage() {
       <div ref={googleBtnRef} className="hidden" />
     </div>
   );
+
+  const appleButton = APPLE_SERVICE_ID ? (
+    <Button
+      className="w-full bg-black hover:bg-neutral-900 text-white border border-white/20"
+      size="lg"
+      onClick={handleAppleClick}
+      disabled={loading}
+    >
+      <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <path d="M16.365 1.43c0 1.14-.42 2.2-1.12 3.02-.84.99-2.2 1.75-3.32 1.66-.14-1.12.42-2.3 1.1-3.04.78-.86 2.16-1.5 3.34-1.64zM20.5 17.04c-.6 1.38-.88 1.99-1.65 3.21-1.08 1.7-2.6 3.82-4.49 3.84-1.68.02-2.11-1.1-4.39-1.08-2.28.01-2.75 1.1-4.43 1.08-1.89-.02-3.33-1.93-4.41-3.63C-1.1 16.5-1.42 10.9 1.45 8.05c.97-.99 2.36-1.62 3.7-1.62 1.7 0 2.77 1.1 4.18 1.1 1.36 0 2.19-1.1 4.16-1.1 1.2 0 2.47.65 3.38 1.78-2.97 1.63-2.49 5.87.63 7.05z"/>
+      </svg>
+      Apple
+    </Button>
+  ) : null;
 
   const divider = (
     <div className="relative w-full my-4">
@@ -383,6 +431,7 @@ export function LoginPage() {
 
             <div className="w-full space-y-3">
               {googleButton}
+              {appleButton}
             </div>
 
             <div className="mt-6">
@@ -494,6 +543,7 @@ export function LoginPage() {
                 </Button>
               )}
               {googleButton}
+              {appleButton}
             </div>
 
             <div className="mt-6">
