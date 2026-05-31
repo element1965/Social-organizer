@@ -1,5 +1,26 @@
 # Гайд по деплою в App Store (iOS)
 
+## Текущий статус релиза 1.0 (обновлено 2026-05-30)
+
+App: **Social Orginizer** · Apple ID `6768132198` · Bundle `com.socialorganizer.app` · версия 1.0 (build 1).
+
+Готово (через App Store Connect API, ключ в `secrets/asc/`):
+- ✅ Бинарник build 1 загружен и VALID, привязан к версии 1.0
+- ✅ Export compliance: `usesNonExemptEncryption = false`
+- ✅ Описание, ключевые слова, support URL, marketing URL, privacy policy URL (`/privacy`)
+- ✅ Скриншоты: iPhone 6.7" (1290×2796, 4 шт) + iPad 12.9" (2048×2732, 3 шт)
+- ✅ Категория: Social Networking · Возрастной рейтинг: 4+
+- ✅ Цена: Free · Доступность: все 175 стран
+
+Осталось вручную в веб-интерфейсе (API недоступен):
+- ⏳ **App Privacy** (этикетка данных). Объявить: Contact Info → Name; Identifiers → User ID (Telegram ID).
+  Оба: «Data Linked to You», цель «App Functionality», НЕ для трекинга.
+- ⏳ **App Review Information**: контакт + демо-аккаунт для входа (приложение требует логин Google/Telegram).
+  Рекомендуется демо-аккаунт Google (email+пароль) — ревьюер сможет войти.
+- ⏳ После заполнения — **Submit for Review** (по запросу владельца; автоматически НЕ отправляется).
+
+Скрипты автоматизации листинга — разовые, лежат в истории сессии; ASC API key: `secrets/asc/api_key.json` (gitignored).
+
 ## Подготовка (один раз на Mac)
 
 ```bash

@@ -59,6 +59,10 @@ keystore.properties
 # Google Play service account (never commit)
 scripts/google-play-service-account.json
 
+# App Store Connect API key (never commit)
+*.p8
+secrets/
+
 # Misc
 origin_logo.png
 hallowed-ridge-488908-k1-5dc525fb6e90.json
