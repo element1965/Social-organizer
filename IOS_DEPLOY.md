@@ -1,8 +1,18 @@
 # Гайд по деплою в App Store (iOS)
 
-## Текущий статус релиза 1.0 (обновлено 2026-05-30)
+## Текущий статус релиза 1.0 (обновлено 2026-06-10)
 
-App: **Social Orginizer** · Apple ID `6768132198` · Bundle `com.socialorganizer.app` · версия 1.0 (build 1).
+App: **Social Orginizer** · Apple ID `6768132198` · Bundle `com.socialorganizer.app` · версия 1.0 (**build 2**).
+
+### ⚠️ Reject 2026-06-10 (build 1) — исправлено в коде, нужен новый бинарник build 2
+
+Apple отклонила build 1 на iPad Air 11" (iPadOS 26.5) по трём пунктам. Все три исправлены (коммит a53058e):
+
+1. **2.1a — краш камеры.** Аватар грузится через `<input type="file" accept="image/*">` (SettingsPage). На iPad iOS крашит без usage-описаний. Фикс: в `Info.plist` добавлены `NSCameraUsageDescription`, `NSPhotoLibraryUsageDescription`, `NSPhotoLibraryAddUsageDescription`.
+2. **2.1a — зависает Sign in with Apple.** Deep link `socialorganizer://auth-success` не возвращался в приложение. Фикс: в `Info.plist` добавлен `CFBundleURLTypes` со схемой `socialorganizer`.
+3. **4.5.4 — push обязателен.** `NativePushBootstrap` блокировал приложение гейтом «Включи уведомления» на всех native (включая iOS). Фикс: гейт показывается только на Android, на iOS push опционален (через Настройки). Это веб-фикс — уезжает на Railway через git push.
+
+**Что осталось вручную:** пересобрать iOS (`bash scripts/deploy-ios.sh` → Xcode Archive build 2 → Upload), дождаться обработки, привязать build 2 к версии 1.0, заполнить What's New и Submit for Review.
 
 Готово (через App Store Connect API, ключ в `secrets/asc/`):
 - ✅ Бинарник build 1 загружен и VALID, привязан к версии 1.0
