@@ -10,15 +10,17 @@ const NATIVE_TOKEN_KEY = 'fcm_push_token';
 type PermStatus = 'checking' | 'granted' | 'prompt' | 'denied';
 
 /**
- * On native Android:
- * - Blocks the app with a full-screen gate until push notifications are enabled.
- * - If already granted — initializes FCM listeners silently.
- * - If denied — shows instructions to enable in system settings.
+ * Native push bootstrap.
+ * - iOS: push is OPTIONAL (App Store guideline 4.5.4). Never blocks the app —
+ *   listeners are set up silently and the gate is never shown. Users opt in via Settings.
+ * - Android: blocks the app with a full-screen gate until push notifications are enabled.
  *
  * Must be rendered inside BrowserRouter and trpc.Provider.
  */
 export function NativePushBootstrap() {
   const isNative = Capacitor.isNativePlatform();
+  // Apple requires push to be optional — never gate the app on iOS.
+  const gateAllowed = Capacitor.getPlatform() === 'android';
   const isAuthenticated = useAuth((s) => s.isAuthenticated);
   const navigate = useNavigate();
   const listenersSet = useRef(false);
@@ -74,10 +76,13 @@ export function NativePushBootstrap() {
           setPermStatus('granted');
           // Re-register to keep token fresh
           await PushNotifications.register();
+        } else if (!gateAllowed) {
+          // iOS: push is optional — don't block. Never show the gate.
+          setPermStatus('granted');
         } else if (perm.receive === 'denied') {
           setPermStatus('denied');
         } else {
-          // 'prompt' or 'prompt-with-rationale' — show the gate
+          // 'prompt' or 'prompt-with-rationale' — show the gate (Android only)
           setPermStatus('prompt');
         }
       } catch (err) {
@@ -133,7 +138,10 @@ export function NativePushBootstrap() {
   // Granted — render nothing, app works normally
   if (permStatus === 'granted') return null;
 
-  // Gate: prompt or denied
+  // iOS (or any non-Android platform): never block — push is optional
+  if (!gateAllowed) return null;
+
+  // Gate: prompt or denied (Android only)
   return (
     <div className="fixed inset-0 z-[200] bg-gradient-to-b from-blue-950 to-gray-950 flex flex-col items-center justify-center px-6">
       <div className="w-full max-w-sm flex flex-col items-center text-center">
