@@ -47,5 +47,24 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<true/>
+	<key>NSCameraUsageDescription</key>
+	<string>Social Organizer uses the camera so you can take a photo for your profile picture.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Social Organizer needs access to your photos so you can choose a profile picture.</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>Social Organizer needs permission to save images to your photo library.</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>com.socialorganizer.app</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>socialorganizer</string>
+			</array>
+		</dict>
+	</array>
 </dict>
 </plist>
