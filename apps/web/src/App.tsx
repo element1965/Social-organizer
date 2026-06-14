@@ -79,12 +79,15 @@ function GoogleAuthDeepLinkHandler() {
         const at = params.get('at');
         const rt = params.get('rt');
         const uid = params.get('uid');
-        const isNew = params.get('isNew') === '1';
         if (at && rt && uid) {
           login(at, rt, uid);
-          const pendingInvite = localStorage.getItem('pendingInviteToken');
+          // Prefer the invite token carried through the OAuth round-trip (inv),
+          // fall back to one saved before the browser was opened. This makes the
+          // "join the inviter's cluster on first handshake" flow work for Apple
+          // sign-in, the same way Telegram passes it via startapp.
+          const pendingInvite = params.get('inv') || localStorage.getItem('pendingInviteToken');
+          localStorage.removeItem('pendingInviteToken');
           if (pendingInvite) {
-            localStorage.removeItem('pendingInviteToken');
             window.location.href = `/invite/${pendingInvite}`;
           } else {
             window.location.href = '/dashboard';
@@ -144,6 +147,10 @@ export function App() {
               <Route path="/faq" element={<FaqPage />} />
               <Route path="/support" element={<SupportChatPage />} />
             </Route>
+            {/* Legacy/placeholder target — onboarding is folded into the dashboard */}
+            <Route path="/onboarding" element={<Navigate to="/dashboard" replace />} />
+            {/* Catch-all: never leave the user on a blank/unmatched route */}
+            <Route path="*" element={<HomeRoute />} />
           </Routes>
           </TelegramBootstrap>
         </BrowserRouter>
