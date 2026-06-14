@@ -18,8 +18,10 @@ type PermStatus = 'checking' | 'granted' | 'prompt' | 'denied';
  * Must be rendered inside BrowserRouter and trpc.Provider.
  */
 export function NativePushBootstrap() {
-  const isNative = Capacitor.isNativePlatform();
-  // Apple requires push to be optional — never gate the app on iOS.
+  // Push bootstrap runs on Android only. On iOS push is optional (App Store 4.5.4)
+  // and must never block the app — we don't init it here and never render a
+  // spinner/gate, which previously caused an infinite loading screen on iPad
+  // after a full-page reload (e.g. returning from Sign in with Apple).
   const gateAllowed = Capacitor.getPlatform() === 'android';
   const isAuthenticated = useAuth((s) => s.isAuthenticated);
   const navigate = useNavigate();
@@ -29,9 +31,9 @@ export function NativePushBootstrap() {
   const [permStatus, setPermStatus] = useState<PermStatus>('checking');
   const [requesting, setRequesting] = useState(false);
 
-  // Set up FCM listeners (once per session)
+  // Set up FCM listeners (once per session) — Android only
   useEffect(() => {
-    if (!isNative || !isAuthenticated || listenersSet.current) return;
+    if (!gateAllowed || !isAuthenticated || listenersSet.current) return;
     listenersSet.current = true;
 
     let cleanup: (() => void) | undefined;
@@ -94,7 +96,7 @@ export function NativePushBootstrap() {
 
     return () => cleanup?.();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isNative, isAuthenticated]);
+  }, [gateAllowed, isAuthenticated]);
 
   // Reset when user logs out
   useEffect(() => {
@@ -123,10 +125,12 @@ export function NativePushBootstrap() {
     }
   };
 
-  // Not native or not authenticated — nothing to render
-  if (!isNative || !isAuthenticated) return null;
+  // Non-Android (iOS/web) or not authenticated — never render anything.
+  // Critically, iOS must NOT show the checking spinner: a hung push init would
+  // otherwise leave an infinite full-screen loading overlay after login.
+  if (!gateAllowed || !isAuthenticated) return null;
 
-  // Still checking — show spinner to avoid flash
+  // Still checking — show spinner to avoid flash (Android only)
   if (permStatus === 'checking') {
     return (
       <div className="fixed inset-0 z-[200] bg-gray-950 flex items-center justify-center">
@@ -137,9 +141,6 @@ export function NativePushBootstrap() {
 
   // Granted — render nothing, app works normally
   if (permStatus === 'granted') return null;
-
-  // iOS (or any non-Android platform): never block — push is optional
-  if (!gateAllowed) return null;
 
   // Gate: prompt or denied (Android only)
   return (

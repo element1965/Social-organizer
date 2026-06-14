@@ -273,6 +273,9 @@ export function LoginPage() {
     // state.p tells the backend where to bounce the result (ios/android deep link or web fragment)
     const stateObj: Record<string, string> = { p: Capacitor.getPlatform() };
     if (linkCode.length === 6) stateObj.lc = linkCode;
+    // Carry the invite token through the round-trip so the new user joins the
+    // inviter's cluster on first handshake (mirrors Telegram's startapp invite_).
+    if (pendingInviteToken) stateObj.inv = pendingInviteToken;
     const params = new URLSearchParams({
       response_type: 'code id_token',
       response_mode: 'form_post',
@@ -290,7 +293,7 @@ export function LoginPage() {
     } else {
       window.location.href = url;
     }
-  }, [t, linkCode]);
+  }, [t, linkCode, pendingInviteToken]);
 
   const googleButton = (
     <div className="w-full">

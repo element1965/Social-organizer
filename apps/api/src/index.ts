@@ -42,6 +42,7 @@ function appleRedirect(
   reply: FastifyReply,
   platform: string,
   tokens: { accessToken: string; refreshToken: string; userId: string; isNew: boolean } | null,
+  invite?: string,
 ) {
   if (!tokens) {
     if (platform === 'ios') return appleHtmlRedirect(reply, 'socialorganizer://auth-error');
@@ -57,6 +58,7 @@ function appleRedirect(
     rt: tokens.refreshToken,
     uid: tokens.userId,
     isNew: tokens.isNew ? '1' : '0',
+    ...(invite ? { inv: invite } : {}),
   }).toString();
 
   if (platform === 'ios') {
@@ -270,10 +272,12 @@ async function start() {
 
       let platform = 'web';
       let linkCode: string | undefined;
+      let invite: string | undefined;
       try {
         const s = JSON.parse(body.state || '{}');
         platform = s.p || 'web';
         linkCode = s.lc || undefined;
+        invite = s.inv || undefined;
       } catch { /* no/invalid state → treat as web */ }
 
       // Apple sends the user's name only on the FIRST authorization, as a JSON string.
@@ -286,7 +290,7 @@ async function start() {
       } catch { /* ignore malformed user payload */ }
 
       const sendBack = (tokens: { accessToken: string; refreshToken: string; userId: string; isNew: boolean } | null) => {
-        return appleRedirect(reply, platform, tokens);
+        return appleRedirect(reply, platform, tokens, invite);
       };
 
       if (!idToken) return sendBack(null);

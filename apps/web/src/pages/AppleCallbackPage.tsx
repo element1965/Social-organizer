@@ -20,7 +20,6 @@ export function AppleCallbackPage() {
     const at = params.get('at');
     const rt = params.get('rt');
     const uid = params.get('uid');
-    const isNew = params.get('isNew') === '1';
 
     if (!at || !rt || !uid) {
       navigate('/login');
@@ -28,12 +27,15 @@ export function AppleCallbackPage() {
     }
 
     login(at, rt, uid);
-    const pendingInvite = localStorage.getItem('pendingInviteToken');
+    // Prefer the invite token carried through the OAuth round-trip (inv), fall back
+    // to one saved before redirecting. Enables join-the-inviter's-cluster on first
+    // handshake for Apple sign-in.
+    const pendingInvite = params.get('inv') || localStorage.getItem('pendingInviteToken');
+    localStorage.removeItem('pendingInviteToken');
     if (pendingInvite) {
-      localStorage.removeItem('pendingInviteToken');
       window.location.href = `/invite/${pendingInvite}`;
     } else {
-      navigate(isNew ? '/onboarding' : '/dashboard');
+      navigate('/dashboard');
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
