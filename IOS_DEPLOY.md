@@ -24,6 +24,13 @@ Build 2 собран в Xcode и загружен (2026-06-12), привязан
 
 **2026-06-14:** веб-фикс задеплоен на Railway, build 2 (без изменений) пере-отправлен на ревью → `WAITING_FOR_REVIEW`.
 
+### ⚠️ Reject 2026-06-15 (build 2) — петля перезагрузок, веб-фикс без бинарника
+
+- **2.1a — «flashed between blue and white screen repeatedly»** после Sign in with Apple. По скриншотам: синий = нативный фон Capacitor (`#1e293b`) во время перезагрузки webview, белый+спиннер = `ProtectedRoute`. Это петля перезагрузок. Причина: нативный deep-link хендлер завершал вход полной перезагрузкой `window.location.href`, а на iPad `CapApp.getLaunchUrl()` после каждой перезагрузки снова отдаёт тот же deep link → хендлер опять логинит → опять перезагрузка → бесконечно. Фикс (коммит 1c4eb2e): навигация через React Router `navigate()` без перезагрузки + дедуп каждого auth-URL (`processedRef`). tRPC берёт токен из localStorage на каждый запрос, перезагрузка не нужна.
+- **План Б, если не пройдёт:** нативный плагин Sign in with Apple (`@capacitor-community/apple-sign-in`) — без системного браузера и deep link. Нужен build 3 + capability в Xcode + App ID в Apple Developer.
+
+**2026-06-16:** веб-фикс задеплоен, build 2 пере-отправлен → `WAITING_FOR_REVIEW`.
+
 Готово (через App Store Connect API, ключ в `secrets/asc/`):
 - ✅ Бинарник build 1 загружен и VALID, привязан к версии 1.0
 - ✅ Export compliance: `usesNonExemptEncryption = false`
