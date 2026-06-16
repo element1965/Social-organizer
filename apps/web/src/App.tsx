@@ -1,6 +1,6 @@
-import { BrowserRouter, Routes, Route, Navigate, useSearchParams } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, useSearchParams, useNavigate } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { App as CapApp } from '@capacitor/app';
 import { Browser } from '@capacitor/browser';
 import { Capacitor } from '@capacitor/core';
@@ -60,18 +60,29 @@ function HomeRoute() {
 
 function GoogleAuthDeepLinkHandler() {
   const login = useAuth((s) => s.login);
+  const navigate = useNavigate();
+  // Deduplicate by exact URL: getLaunchUrl() and the appUrlOpen listener can both
+  // deliver the SAME deep link. On iPad getLaunchUrl() keeps returning the auth
+  // deep link after navigation, so the previous full-page reload
+  // (window.location.href) re-ran this handler on every load → an endless
+  // blue/white reload loop. We now (a) process each auth URL at most once and
+  // (b) navigate in-app instead of reloading. The tRPC client reads the token
+  // from localStorage per request, so no reload is needed for it to pick it up.
+  const processedRef = useRef<Set<string>>(new Set());
 
   useEffect(() => {
     if (!isNativeApp) return;
 
-    const handleUrl = (event: { url: string }) => {
-      const url = event.url;
-      if (!url.startsWith('socialorganizer://auth-')) return;
+    const handleUrl = (event: { url?: string }) => {
+      const url = event?.url;
+      if (!url || !url.startsWith('socialorganizer://auth-')) return;
+      if (processedRef.current.has(url)) return;
+      processedRef.current.add(url);
 
       Browser.close().catch(() => {});
 
       if (!url.startsWith('socialorganizer://auth-success')) {
-        window.location.href = '/login';
+        navigate('/login', { replace: true });
         return;
       }
       try {
@@ -87,14 +98,12 @@ function GoogleAuthDeepLinkHandler() {
           // sign-in, the same way Telegram passes it via startapp.
           const pendingInvite = params.get('inv') || localStorage.getItem('pendingInviteToken');
           localStorage.removeItem('pendingInviteToken');
-          if (pendingInvite) {
-            window.location.href = `/invite/${pendingInvite}`;
-          } else {
-            window.location.href = '/dashboard';
-          }
+          navigate(pendingInvite ? `/invite/${pendingInvite}` : '/dashboard', { replace: true });
+        } else {
+          navigate('/login', { replace: true });
         }
       } catch {
-        window.location.href = '/login';
+        navigate('/login', { replace: true });
       }
     };
 
@@ -105,7 +114,7 @@ function GoogleAuthDeepLinkHandler() {
 
     const listenerPromise = CapApp.addListener('appUrlOpen', handleUrl);
     return () => { listenerPromise.then(h => h.remove()); };
-  }, [login]);
+  }, [login, navigate]);
 
   return null;
 }
