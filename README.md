@@ -1,11 +1,13 @@
 # Social Organizer
 
-A coordination app for mutual support through trusted networks. Works as a regular website and as a Telegram Mini App (single build, runtime detection).
+A coordination app for mutual support through trusted networks. Single web build, runtime-detected across surfaces: a regular website, a Telegram Mini App, and native iOS / Android apps (Capacitor wrappers that load the production web URL).
 
-## Live Demo
+## Live
 
-- **Production:** https://social-organizer-production.up.railway.app
-- **Demo login:** Click "Demo login without registration" on the login page
+- **Web / Production:** https://www.orginizer.com
+- **iOS — App Store:** https://apps.apple.com/app/id6768132198
+- **Android — Google Play:** https://play.google.com/store/apps/details?id=com.socialorganizer.app
+- **Telegram Mini App:** https://t.me/socialorganizer_bot
 
 ## Architecture
 
@@ -196,6 +198,18 @@ Output: `apps/web/android/app/build/outputs/bundle/release/app-release.aab`
 - **Version:** bump `versionCode` and `versionName` in `apps/web/android/app/build.gradle`
 - **Upload:** manually via Google Play Console
 
+### iOS (App Store)
+
+Capacitor-based iOS wrapper (`apps/web/ios/`) that loads the production web URL. Build via Xcode (`bash scripts/deploy-ios.sh` → Archive → Upload). Bundle `com.socialorganizer.app`, Apple ID `6768132198`. Listing/metadata are managed through the App Store Connect API (key in `secrets/asc/`). Because the UI is served from the web, most fixes ship via a Railway deploy and a plain re-submit of the same binary — a new Xcode archive is only needed for native/Info.plist changes. Full flow in `IOS_DEPLOY.md`; Sign in with Apple setup in `APPLE_SIGNIN.md`.
+
+### Invite referral across surfaces
+
+The landing download buttons carry the inviter's token so new users join the inviter's cluster on first handshake:
+
+- **Telegram:** `?start=invite_TOKEN` → bot → `/invite/TOKEN` (delivered to the Mini App)
+- **Google Play:** `&referrer=invite_TOKEN` → Play Install Referrer → `MainActivity.java` loads `/invite/TOKEN` (delivered to the app)
+- **App Store:** `?ct=invite_TOKEN` Apple campaign token — App Store Connect analytics only; iOS has no Install Referrer, so the invite is not auto-applied in-app after install
+
 ## Web Frontend (apps/web)
 
 React 19 SPA with tRPC client.
@@ -321,6 +335,7 @@ Mock data (`apps/web/src/lib/demoData.ts`):
 - [x] **Phase 5:** UX improvements — onboarding, handshake chain, contacts, tooltips, terminology
 - [x] **Phase 6:** Visual polish — NASA textures, realistic stars, connection counts everywhere
 - [x] **Phase 7:** Telegram Mini App — auto-auth, BackButton, haptics, theme sync, CSS variables
+- [x] **Phase 8:** Native release — Capacitor iOS + Android wrappers; **live on the App Store and Google Play** (Sign in with Apple, native push on Android, invite referral on store links)
 
 ## License
 
