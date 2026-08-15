@@ -1,6 +1,13 @@
 # Social Organizer
 
-A coordination app for mutual support through trusted networks. Single web build, runtime-detected across surfaces: a regular website, a Telegram Mini App, and native iOS / Android apps (Capacitor wrappers that load the production web URL).
+The open-source utility of **EXODUS 2.0 — a digital societal innovation**: direct peer-to-peer coordination of already connected people, without a central authority.
+
+The Social Organizer records observable facts of participation among people who already know each other. **It records — it does not evaluate.** No communities are created, no governance is introduced, no scores are assigned. From recorded actions a reference graph emerges, and with it predictability based on behaviour rather than trust as a prerequisite. Mutual coverage of risk makes the benefit of participation calculable to each person from locally available information.
+
+It is a single web build, runtime-detected across surfaces: a regular website, a Telegram Mini App, and native iOS / Android apps (Capacitor wrappers loading the production web URL).
+
+**Theory:** [From Human Behaviour to Social Coordination](https://zenodo.org/records/21629935) (Zenodo) · [P2P Foundation wiki](https://wiki.p2pfoundation.net/From_Human_Behaviour_to_Social_Coordination)
+**Questions:** [DSI EXODUS 2.0 assistant](https://chatgpt.com/g/g-MXYLLg8W3-dsi-exodus-2-0)
 
 ## Live
 
