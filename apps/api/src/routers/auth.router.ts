@@ -9,6 +9,7 @@ import {
   generateLinkingCode,
 } from '../services/auth.service.js';
 import { validateTelegramInitData } from '../services/telegram.service.js';
+import { applyBotStartInvite } from '../services/invite-fallback.service.js';
 import { verifyGoogleIdToken } from '../services/google.service.js';
 import { LINKING_CODE_TTL_MINUTES } from '@so/shared';
 
@@ -145,6 +146,12 @@ export const authRouter = router({
           create: { userId, type: 'telegram', value: tgUser.username },
         });
       }
+
+      // Safety net: apply invite token tracked by the bot on /start, in case the
+      // mini app lost it (failed load, menu-button open without start_param)
+      applyBotStartInvite(ctx.db, userId, platformId).catch((err) => {
+        console.error('[loginWithTelegram] invite fallback failed:', err);
+      });
 
       const accessToken = createAccessToken(userId);
       const refreshToken = createRefreshToken(userId);
