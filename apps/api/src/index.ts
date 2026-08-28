@@ -14,6 +14,7 @@ import { createContext } from './context.js';
 import { setupQueues } from './workers/index.js';
 import { handleTelegramUpdate, setTelegramWebhook, uploadMediaToTelegram, getTelegramFileUrl } from './services/telegram-bot.service.js';
 import { verifyAppleIdToken, findOrCreateAppleUser } from './services/apple.service.js';
+import { backfillBotStartInvites } from './services/invite-fallback.service.js';
 import { getDb } from '@so/db';
 import { isAdmin } from './admin.js';
 
@@ -362,6 +363,11 @@ async function start() {
     if (process.env.TELEGRAM_BOT_TOKEN && process.env.WEB_APP_URL) {
       setTelegramWebhook(`${process.env.WEB_APP_URL}/api/telegram-webhook`).catch(() => {});
     }
+
+    // Backfill invites lost by the mini app (fire-and-forget, consumes tokens on apply)
+    backfillBotStartInvites(getDb()).catch((err) => {
+      console.error('[Startup] invite backfill failed:', err);
+    });
   } catch (err) {
     app.log.error(err);
     process.exit(1);
