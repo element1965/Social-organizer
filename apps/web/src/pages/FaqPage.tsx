@@ -8,8 +8,8 @@ import { RegularCollectionVideo } from '../components/RegularCollectionVideo';
 
 // FAQ content lives in the DB (one row per language, translations share groupId = source item id).
 // Items listed here get the regular-collection video button inside their answer, in every language.
-// TODO: fill in the source FAQ item id (groupId) of the "regular collection / QR" question.
-const FAQ_VIDEO_GROUP_IDS = new Set<string>([]);
+// faq-seed-04 — "How to send a help signal (SOS)?": the answer describes creating a collection, which is what the video shows.
+const FAQ_VIDEO_GROUP_IDS = new Set<string>(['faq-seed-04']);
 
 export function FaqPage() {
   const { t, i18n } = useTranslation();
