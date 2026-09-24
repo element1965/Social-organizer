@@ -131,7 +131,7 @@ export function usePushNotifications() {
 
         const sub = await reg.pushManager.subscribe({
           userVisibleOnly: true,
-          applicationServerKey: urlBase64ToUint8Array(vapid.key),
+          applicationServerKey: urlBase64ToUint8Array(vapid.key) as BufferSource,
         });
 
         const json = sub.toJSON();

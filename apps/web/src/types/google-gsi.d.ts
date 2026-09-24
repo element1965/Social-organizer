@@ -49,4 +49,9 @@ interface Window {
       id: GoogleAccountsId;
     };
   };
+  Telegram?: {
+    WebApp?: {
+      openLink?: (url: string, options?: { try_instant_view?: boolean }) => void;
+    };
+  };
 }

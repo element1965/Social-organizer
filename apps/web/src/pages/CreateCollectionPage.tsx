@@ -14,7 +14,7 @@ import { Progress } from '../components/ui/progress';
 import { Spinner } from '../components/ui/spinner';
 import { Avatar } from '../components/ui/avatar';
 import { MIN_CONNECTIONS_TO_CREATE } from '@so/shared';
-import { AlertTriangle, Users, ArrowRight, PlusCircle, Wallet, ShieldAlert, UserPlus, X, HandHeart, ChevronDown, ChevronUp } from 'lucide-react';
+import { AlertTriangle, Users, ArrowRight, Wallet, ShieldAlert, UserPlus, HandHeart, ChevronDown, ChevronUp } from 'lucide-react';
 import { useNicknames } from '../hooks/useNicknames';
 
 export function CreateCollectionPage() {

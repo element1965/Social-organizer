@@ -9,7 +9,7 @@ export function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const isAuthenticated = useAuth((s) => s.isAuthenticated);
   const logout = useAuth((s) => s.logout);
   const location = useLocation();
-  const { data: me, isLoading, isError } = trpc.user.me.useQuery(undefined, {
+  const { isLoading, isError } = trpc.user.me.useQuery(undefined, {
     enabled: isAuthenticated,
     retry: 1,
   });
