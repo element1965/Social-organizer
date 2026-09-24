@@ -215,7 +215,9 @@
     "noChatLink": "채팅 링크가 추가되지 않았습니다",
     "sosInviteButton": "SOS 링크 공유",
     "sosLinkCopied": "SOS 링크 복사됨!",
-    "sosJoined": "직접 참가자로 추가되었습니다"
+    "sosJoined": "직접 참가자로 추가되었습니다",
+    "qrTitle": "QR 코드",
+    "qrScanHint": "스캔하여 참여하기"
   },
   "create": {
     "title": "필요해요",
@@ -1000,5 +1002,11 @@
     "invitedCount": "invited",
     "search": "Search by name...",
     "noResults": "No results"
+  },
+  "videoGuide": {
+    "play": "영상 안내 보기",
+    "short": "영상 가이드",
+    "regularTitle": "정기 모금은 이렇게 진행됩니다",
+    "close": "닫기"
   }
 }

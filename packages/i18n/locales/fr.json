@@ -215,7 +215,9 @@
     "noChatLink": "Aucun lien de chat ajouté",
     "sosInviteButton": "Partager le lien SOS",
     "sosLinkCopied": "Lien SOS copié !",
-    "sosJoined": "Vous avez été ajouté comme participant direct"
+    "sosJoined": "Vous avez été ajouté comme participant direct",
+    "qrTitle": "Code QR",
+    "qrScanHint": "Scannez pour rejoindre"
   },
   "create": {
     "title": "J'ai besoin",
@@ -1000,5 +1002,11 @@
     "invitedCount": "invited",
     "search": "Search by name...",
     "noResults": "No results"
+  },
+  "videoGuide": {
+    "play": "Regarder la vidéo explicative",
+    "short": "Guide vidéo",
+    "regularTitle": "Comment fonctionne une collecte régulière",
+    "close": "Fermer"
   }
 }

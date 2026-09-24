@@ -230,8 +230,8 @@ React 19 SPA with tRPC client.
 | OnboardingPage | `/onboarding` | 3-step onboarding: contacts, budget, skills/needs (auto for new users) |
 | DashboardPage | `/` | Network stats (clickable "Whole network" → /network), collections, intentions, emergency alerts (protected → /welcome) |
 | NotificationsPage | `/notifications` | Notifications with handshake path and 24h timer |
-| CreateCollectionPage | `/create` | Create collection with network reach display (1:1 ratio) |
-| CollectionPage | `/collection/:id` | Collection details + intentions + handshake path to creator |
+| CreateCollectionPage | `/create` | Create collection with network reach display (1:1 ratio); choosing the "Regular" type shows a play button with the video instruction |
+| CollectionPage | `/collection/:id` | Collection details + intentions + handshake path to creator; owner sees SOS link + QR (and, for a regular collection, the video instruction button) |
 | MyNetworkPage | `/network` | Connection list sorted by date (newest first) with relative time, connection counts + invitations |
 | ProfilePage | `/profile/:userId` | Profile with editing, contacts, connections list (collapsible), stats (given/received), handshake path |
 | SettingsPage | `/settings` | Language, theme, sounds, font scale, contacts, skills/needs, geography (country/city/geolocation), hide contacts toggle, ignore list |
@@ -258,6 +258,15 @@ React 19 SPA with tRPC client.
 - **3D:** Three.js + @react-three/fiber (lazy loaded)
 - **3D Graph:** react-force-graph-3d (lazy loaded)
 - **Backup:** @so/gun-backup (Gun.js + IndexedDB)
+
+### Video instruction (regular collection)
+
+`RegularCollectionVideo` (`apps/web/src/components/RegularCollectionVideo.tsx`) is a play-icon button that opens an overlay with an HTML5 `<video>` (`controls`, `playsInline`, `preload="none"`; closes by X, backdrop or Escape). The file is picked by the current UI language, falling back to `en`.
+
+- **Files:** `apps/web/public/videos/regular-collection/<locale>.mp4` — one per app locale (28, ~2.5 MB each, 720×1280). Vite copies them to `dist/` as-is (not bundled into JS); the API serves them with `Cache-Control: public, max-age=2592000` and HTTP range support. After re-recording, bump `VIDEO_VERSION` in the component.
+- **Where it shows:** under the type switch on `/create` when "Regular" is selected (the moment the author decides), and in the owner's SOS link / QR block of a regular collection.
+- **Native wrappers:** `scripts/deploy-android.mjs` and `scripts/deploy-ios.sh` delete `dist/videos` before `cap sync` — the wrappers load the production URL, so the videos never ship inside the AAB / IPA.
+- **Re-recording:** `docs/regular-collection/shoot-video.mjs` (see `docs/regular-collection/mechanics.en.md`, section 7) writes straight into that folder.
 
 ### Bundle Size (code splitting)
 

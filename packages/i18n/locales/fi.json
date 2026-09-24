@@ -215,7 +215,9 @@
     "noChatLink": "Chat-linkkiä ei ole lisätty",
     "sosInviteButton": "Jaa SOS-linkki",
     "sosLinkCopied": "SOS-linkki kopioitu!",
-    "sosJoined": "Sinut on lisätty suoraksi osallistujaksi"
+    "sosJoined": "Sinut on lisätty suoraksi osallistujaksi",
+    "qrTitle": "QR-koodi",
+    "qrScanHint": "Skannaa liittyäksesi"
   },
   "create": {
     "title": "Tarvitsen",
@@ -1000,5 +1002,11 @@
     "invitedCount": "invited",
     "search": "Search by name...",
     "noResults": "No results"
+  },
+  "videoGuide": {
+    "play": "Katso video-ohje",
+    "short": "Video-ohje",
+    "regularTitle": "Näin säännöllinen keräys toimii",
+    "close": "Sulje"
   }
 }

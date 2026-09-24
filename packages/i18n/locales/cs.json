@@ -215,7 +215,9 @@
     "noChatLink": "Odkaz na chat nebyl přidán",
     "sosInviteButton": "Sdílet SOS odkaz",
     "sosLinkCopied": "SOS odkaz zkopírován!",
-    "sosJoined": "Byl jsi přidán jako přímý účastník"
+    "sosJoined": "Byl jsi přidán jako přímý účastník",
+    "qrTitle": "QR kód",
+    "qrScanHint": "Naskenujte a připojte se"
   },
   "create": {
     "title": "Potřebuji",
@@ -1000,5 +1002,11 @@
     "invitedCount": "invited",
     "search": "Search by name...",
     "noResults": "No results"
+  },
+  "videoGuide": {
+    "play": "Přehrát videonávod",
+    "short": "Videonávod",
+    "regularTitle": "Jak funguje pravidelná sbírka",
+    "close": "Zavřít"
   }
 }

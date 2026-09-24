@@ -8,7 +8,8 @@
  * Run: DATABASE_URL=<local so_video_demo> PLAYWRIGHT_PATH=<.../playwright/index.js> node shoot-video.mjs [locale ...|all]
  *   (default locale: ru). FFMPEG_THREADS=2 lowers encoder memory on a busy machine. The app language is switched the way the app does it: localStorage `language`
  *   (apps/web/src/lib/i18n.ts) plus the browser locale; demo users get `language` = locale.
- * Output: regular-collection-instruction.<locale>.mp4 next to this file (720x1280, captions on top).
+ * Output: apps/web/public/videos/regular-collection/<locale>.mp4 (720x1280, captions on top) — the web app serves
+ *   these files as static assets and plays them from the in-app play button (RegularCollectionVideo.tsx).
  * Captions come from captions.mjs; UI labels inside them and all selectors come from packages/i18n/locales.
  */
 import { createHmac } from 'node:crypto';
@@ -21,6 +22,7 @@ import { CAPTIONS } from './captions.mjs';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const LOCALES_DIR = path.join(HERE, '../../packages/i18n/locales');
+const VIDEO_DIR = path.join(HERE, '../../apps/web/public/videos/regular-collection');
 const WEB = process.env.WEB || 'http://localhost:3000';
 if (!/^http:\/\/localhost/.test(WEB)) throw new Error('local instance only');
 const JWT_SECRET = process.env.JWT_SECRET || 'local-video-demo';
@@ -306,7 +308,8 @@ async function shoot(browser, l) {
     `[v${take.caps.length}]fps=25,format=yuv420p[v]`,
   ].join(';');
   writeFileSync(path.join(TMP, 'filter.txt'), filter);
-  const out = path.join(HERE, `regular-collection-instruction.${l}.mp4`);
+  mkdirSync(VIDEO_DIR, { recursive: true });
+  const out = path.join(VIDEO_DIR, `${l}.mp4`);
   await new Promise((resolve, reject) => {
     const p = spawn(FFMPEG, ['-y', '-ss', trim.toFixed(2), '-i', path.join(TMP, webm), ...pngs.flatMap((f) => ['-i', f]),
       '-filter_complex_script', path.join(TMP, 'filter.txt'), '-map', '[v]',

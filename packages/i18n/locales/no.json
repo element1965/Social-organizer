@@ -215,7 +215,9 @@
     "noChatLink": "Ingen chat-lenke lagt til",
     "sosInviteButton": "Del SOS-lenke",
     "sosLinkCopied": "SOS-lenke kopiert!",
-    "sosJoined": "Du er lagt til som direkte deltaker"
+    "sosJoined": "Du er lagt til som direkte deltaker",
+    "qrTitle": "QR-kode",
+    "qrScanHint": "Skann for å bli med"
   },
   "create": {
     "title": "Trenger",
@@ -1000,5 +1002,11 @@
     "invitedCount": "invited",
     "search": "Search by name...",
     "noResults": "No results"
+  },
+  "videoGuide": {
+    "play": "Se videoveiledningen",
+    "short": "Videoveiledning",
+    "regularTitle": "Slik fungerer en fast innsamling",
+    "close": "Lukk"
   }
 }

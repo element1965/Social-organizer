@@ -215,7 +215,9 @@
     "noChatLink": "Спасылка на чат не дададзена",
     "sosInviteButton": "Падзяліцца SOS-спасылкай",
     "sosLinkCopied": "SOS-спасылка скапіявана!",
-    "sosJoined": "Вас дадалі як прамога ўдзельніка"
+    "sosJoined": "Вас дадалі як прамога ўдзельніка",
+    "qrTitle": "QR-код",
+    "qrScanHint": "Адсканіруйце, каб далучыцца"
   },
   "create": {
     "title": "Патрэба",
@@ -1000,5 +1002,11 @@
     "invitedCount": "invited",
     "search": "Search by name...",
     "noResults": "No results"
+  },
+  "videoGuide": {
+    "play": "Глядзець відэаінструкцыю",
+    "short": "Відэаінструкцыя",
+    "regularTitle": "Як працуе рэгулярны збор",
+    "close": "Закрыць"
   }
 }

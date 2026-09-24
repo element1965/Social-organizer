@@ -14,6 +14,7 @@ import { Spinner } from '../components/ui/spinner';
 import { ExternalLink, Users, ArrowRight, Pencil, Check, X, Copy, Share2, QrCode, CheckCircle2 } from 'lucide-react';
 import { QRCodeSVG } from 'qrcode.react';
 import { HandshakePath } from '../components/HandshakePath';
+import { RegularCollectionVideo } from '../components/RegularCollectionVideo';
 import { useNicknames } from '../hooks/useNicknames';
 import { buildSosInviteUrl } from '../lib/inviteUrl';
 
@@ -376,7 +377,8 @@ export function CollectionPage() {
               <button
                 onClick={() => setShowQr((v) => !v)}
                 className={`p-3 rounded-lg border text-sm font-medium transition-colors ${showQr ? 'bg-red-100 dark:bg-red-900/50 border-red-300 dark:border-red-700 text-red-700 dark:text-red-300' : 'bg-red-50 dark:bg-red-950/30 border-red-200 dark:border-red-800 text-red-600 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-900/40'}`}
-                title="QR-код"
+                title={t('collection.qrTitle')}
+                aria-label={t('collection.qrTitle')}
               >
                 <QrCode className="w-4 h-4" />
               </button>
@@ -384,7 +386,12 @@ export function CollectionPage() {
             {showQr && (
               <div className="flex flex-col items-center gap-2 p-4 rounded-lg bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700">
                 <QRCodeSVG value={sosUrl} size={180} level="M" includeMargin />
-                <p className="text-xs text-gray-400 text-center">Отсканируйте, чтобы присоединиться</p>
+                <p className="text-xs text-gray-400 text-center">{t('collection.qrScanHint')}</p>
+              </div>
+            )}
+            {collection.type === 'REGULAR' && (
+              <div className="flex justify-center">
+                <RegularCollectionVideo />
               </div>
             )}
           </div>

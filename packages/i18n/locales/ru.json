@@ -218,7 +218,9 @@
     "sosJoined": "Вы добавлены как прямой участник",
     "confirmPayment": "Подтвердить перевод",
     "paymentConfirmed": "Переведено",
-    "unconfirmPayment": "Снять подтверждение"
+    "unconfirmPayment": "Снять подтверждение",
+    "qrTitle": "QR-код",
+    "qrScanHint": "Отсканируйте, чтобы присоединиться"
   },
   "create": {
     "title": "Нужно",
@@ -1005,5 +1007,11 @@
     "unknownUser": "Неизвестный пользователь",
     "chatButton": "Чат",
     "attachFile": "Прикрепить файл"
+  },
+  "videoGuide": {
+    "play": "Смотреть видеоинструкцию",
+    "short": "Видеоинструкция",
+    "regularTitle": "Как работает регулярный сбор",
+    "close": "Закрыть"
   }
 }
