@@ -149,10 +149,18 @@ UI: `apps/web/src/pages/CreateCollectionPage.tsx`. API: `collection.create` в `
 тот же адрес, который открывает Mini App (`/collection/<id>?sos=true`), уже от имени нового пользователя.
 Сам Telegram в кадре не показан.
 
+Та же инструкция записана на всех языках приложения (`packages/i18n/locales`, 28 штук):
+`regular-collection-instruction.<locale>.mp4`. Интерфейс в каждом ролике на своём языке (переключается так же,
+как в приложении, — ключ `language` в localStorage, `apps/web/src/lib/i18n.ts`), подписи — из `captions.mjs`,
+названия кнопок в них подставляются из строк i18n самого приложения. Подпись под QR и подсказка «QR-код»
+остаются русскими во всех версиях — они зашиты в коде (см. раздел 6). В git лежит только русский ролик,
+остальные генерируются локально (`.gitignore` в этой папке).
+
 Повторить запись:
-1. `DATABASE_URL=…/so_video_demo` → `prisma db push` в `packages/db`, затем `node docs/regular-collection/seed-demo.mjs`
-   (скрипт откажется работать с любой базой, кроме локальной `so_video_demo`).
+1. `DATABASE_URL=…/so_video_demo` → `prisma db push` в `packages/db`
+   (`seed-demo.mjs` откажется работать с любой базой, кроме локальной `so_video_demo`; запись сама пересевает её под каждый язык).
 2. API: `JWT_SECRET=local-video-demo WEB_APP_URL=http://localhost:3000 PORT=3001 npx tsx src/index.ts`
    (без `REDIS_URL` и `TELEGRAM_BOT_TOKEN`).
 3. Web: `VITE_WEB_APP_URL=http://localhost:3000 VITE_TELEGRAM_BOT_USERNAME=socialorganizer_bot npx vite --port 3000`.
-4. `PLAYWRIGHT_PATH=<путь к playwright/index.js> node docs/regular-collection/shoot-video.mjs`.
+4. `DATABASE_URL=…/so_video_demo PLAYWRIGHT_PATH=<путь к playwright/index.js> node docs/regular-collection/shoot-video.mjs en de …`
+   (или `all`; без аргументов пишет `ru`).
