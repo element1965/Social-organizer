@@ -32,7 +32,7 @@ export function ChatAssistant() {
   const [input, setInput] = useState('');
   const [isListening, setIsListening] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const recognitionRef = useRef<SpeechRecognition | null>(null);
+  const recognitionRef = useRef<any | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const pendingVoiceRef = useRef(false);
 
@@ -74,7 +74,7 @@ export function ChatAssistant() {
         nl: 'nl-NL', sv: 'sv-SE', da: 'da-DK', fi: 'fi-FI', no: 'nb-NO',
         cs: 'cs-CZ', ro: 'ro-RO', th: 'th-TH', vi: 'vi-VN', id: 'id-ID',
       };
-      const baseLang = i18n.language.split('-')[0];
+      const baseLang = i18n.language.split('-')[0] || 'en';
       utterance.lang = langMap[baseLang] || 'en-US';
       utterance.rate = 0.9;
 
@@ -107,7 +107,7 @@ export function ChatAssistant() {
       setIsListening(false);
     } else {
       recognitionRef.current = new SpeechRecognitionAPI();
-      const baseLang = i18n.language.split('-')[0];
+      const baseLang = i18n.language.split('-')[0] || 'en';
       const langMap: Record<string, string> = {
         ru: 'ru-RU', en: 'en-US', es: 'es-ES', fr: 'fr-FR', de: 'de-DE',
         pt: 'pt-BR', it: 'it-IT', zh: 'zh-CN', ja: 'ja-JP', ko: 'ko-KR',
@@ -117,8 +117,8 @@ export function ChatAssistant() {
       recognitionRef.current.continuous = false;
       recognitionRef.current.interimResults = false;
 
-      recognitionRef.current.onresult = (event: SpeechRecognitionEvent) => {
-        const transcript = event.results[0][0].transcript;
+      recognitionRef.current.onresult = (event: { results: { [index: number]: { [index: number]: { transcript: string } } } }) => {
+        const transcript = event.results[0]![0]!.transcript;
         // Directly send the voice message
         handleSendMessage(transcript, true);
       };

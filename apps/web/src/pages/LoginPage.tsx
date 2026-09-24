@@ -95,16 +95,6 @@ export function LoginPage() {
     },
   });
 
-  const linkCodeMutation = trpc.auth.loginWithLinkCode.useMutation({
-    onSuccess: (data) => {
-      login(data.accessToken, data.refreshToken, data.userId);
-      afterLogin('/dashboard');
-    },
-    onError: () => {
-      setError(t('auth.invalidLinkCode'));
-    },
-  });
-
   const claimMutation = trpc.auth.claimWithLinkCode.useMutation({
     onSuccess: (data) => {
       login(data.accessToken, data.refreshToken, data.userId);

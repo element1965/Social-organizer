@@ -13,7 +13,7 @@ type Conversation = {
   userName: string | null;
   photoUrl: string | null;
   lastMessage: string;
-  lastAt: Date;
+  lastAt: Date | string;
   totalCount: number;
 };
 

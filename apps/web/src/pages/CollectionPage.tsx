@@ -11,7 +11,7 @@ import { Badge } from '../components/ui/badge';
 import { Progress } from '../components/ui/progress';
 import { Avatar } from '../components/ui/avatar';
 import { Spinner } from '../components/ui/spinner';
-import { ExternalLink, Users, ArrowRight, Pencil, Check, X, Copy, Share2, QrCode, CheckCircle2 } from 'lucide-react';
+import { ExternalLink, Users, ArrowRight, Pencil, Check, X, Share2, QrCode, CheckCircle2 } from 'lucide-react';
 import { QRCodeSVG } from 'qrcode.react';
 import { HandshakePath } from '../components/HandshakePath';
 import { RegularCollectionVideo } from '../components/RegularCollectionVideo';

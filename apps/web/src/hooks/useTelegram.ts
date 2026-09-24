@@ -4,7 +4,6 @@ import {
   isTelegramWebApp,
   initTelegramWebApp,
   getTGInitData,
-  getTGColorScheme,
   showBackButton,
   hideBackButton,
   hapticImpact,
@@ -25,7 +24,6 @@ function syncTelegramTheme() {
 export function useTelegramInit() {
   const [isReady, setIsReady] = useState(!isTelegramWebApp());
   const login = useAuth((s) => s.login);
-  const isAuthenticated = useAuth((s) => s.isAuthenticated);
   const loginMutation = trpc.auth.loginWithTelegram.useMutation();
   const didRun = useRef(false);
 

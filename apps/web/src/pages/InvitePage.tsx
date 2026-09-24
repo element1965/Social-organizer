@@ -107,7 +107,7 @@ export function InvitePage() {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center px-4 py-6" style={{ minHeight: '100vh', minHeight: '100dvh', paddingBottom: 'max(1.5rem, env(safe-area-inset-bottom))' }}>
+    <div className="flex flex-col items-center justify-center px-4 py-6" style={{ minHeight: '100dvh', paddingBottom: 'max(1.5rem, env(safe-area-inset-bottom))' }}>
       <Card className="w-full max-w-sm">
         <CardContent className="py-5 text-center">
           <Logo size={48} className="text-gray-900 dark:text-teal-400 mx-auto mb-3" />

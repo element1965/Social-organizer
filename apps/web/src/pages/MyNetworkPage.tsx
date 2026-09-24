@@ -85,7 +85,7 @@ export function MyNetworkPage() {
       const age = now - new Date(u.connectedAt).getTime();
       if (age > RANGE) continue;
       const idx = Math.min(POINTS - 1, Math.floor((RANGE - age) / step));
-      counts[idx]++;
+      counts[idx] = (counts[idx] ?? 0) + 1;
     }
     // cumulative
     const cum: number[] = [];
@@ -216,7 +216,7 @@ export function MyNetworkPage() {
             </div>
           ) : (
             <div>
-              {Object.entries(byDepth).flatMap(([depth, count], idx) => {
+              {Object.entries(byDepth).flatMap(([depth, count], idx): React.ReactNode[] => {
                 const depthNum = Number(depth);
                 const isExpanded = expandedDepth === depthNum;
                 const depthUsers = usersByDepth[depthNum] || [];

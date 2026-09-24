@@ -57,11 +57,11 @@ export function SkillSelector({
     const map: Record<string, Category[]> = {};
     for (const g of SKILL_GROUPS) map[g] = [];
     for (const c of categories) {
-      if (map[c.group]) map[c.group].push(c);
+      if (map[c.group]) map[c.group]!.push(c);
     }
     // Sort alphabetically by translated name; "other*" always last
     for (const g of SKILL_GROUPS) {
-      map[g].sort((a, b) => {
+      map[g]!.sort((a, b) => {
         const aOther = a.key.startsWith('other') ? 1 : 0;
         const bOther = b.key.startsWith('other') ? 1 : 0;
         if (aOther !== bOther) return aOther - bOther;
@@ -165,7 +165,9 @@ export function SkillSelector({
                             {t(`skills.${cat.key}`)}
                           </span>
                           {cat.isOnline && (
-                            <Globe className="w-3 h-3 text-blue-400 shrink-0" title={t('skills.online')} />
+                            <span title={t('skills.online')} className="inline-flex shrink-0">
+                              <Globe className="w-3 h-3 text-blue-400" />
+                            </span>
                           )}
                         </div>
                         <div className="flex items-center gap-1.5 shrink-0 ml-2">

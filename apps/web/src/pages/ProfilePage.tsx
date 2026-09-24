@@ -56,7 +56,6 @@ export function ProfilePage() {
     },
   });
 
-  const isIndirect = !isOwn && !!paramId && pathData?.path && pathData.path.length >= 3 && nicknameData?.isConnected === false;
   const isNotConnected = !isOwn && !!paramId && nicknameData?.isConnected === false;
   const { data: directStatus } = trpc.pending.directStatus.useQuery(
     { targetUserId: paramId! },

@@ -987,7 +987,7 @@ export async function uploadMediaToTelegram(
 
   const formData = new FormData();
   formData.append('chat_id', String(SUPPORT_CHAT_ID));
-  formData.append(field, new Blob([fileBuffer]), filename);
+  formData.append(field, new Blob([new Uint8Array(fileBuffer)]), filename);
   formData.append('caption', `[Загрузка для рассылки] ${filename}`);
   if (mediaType === 'video') formData.append('supports_streaming', 'true');
 

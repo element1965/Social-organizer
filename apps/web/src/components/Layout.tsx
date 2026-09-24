@@ -49,9 +49,10 @@ export function Layout() {
   useGraphSync();
 
   // Load skill translations from DB (single source of truth for all categories)
-  const { data: skillCategories } = trpc.skills.categories.useQuery(undefined, { staleTime: 60000 });
+  const { data: skillCategoriesRaw } = trpc.skills.categories.useQuery(undefined, { staleTime: 60000 });
   useEffect(() => {
-    if (!skillCategories) return;
+    if (!skillCategoriesRaw) return;
+    const skillCategories = skillCategoriesRaw as Array<{ key: string; translations: unknown }>;
     let added = false;
     for (const cat of skillCategories) {
       const tr = cat.translations as Record<string, string> | null;
@@ -64,7 +65,7 @@ export function Layout() {
       }
     }
     if (added) i18n.emit('languageChanged', i18n.language);
-  }, [skillCategories]);
+  }, [skillCategoriesRaw]);
 
   // Hide bottom nav when chat panel is open
   const [chatPanelOpen, setChatPanelOpen] = useState(false);
