@@ -215,7 +215,9 @@
     "noChatLink": "Niciun link de chat adăugat",
     "sosInviteButton": "Distribuie link SOS",
     "sosLinkCopied": "Link SOS copiat!",
-    "sosJoined": "Ai fost adăugat ca participant direct"
+    "sosJoined": "Ai fost adăugat ca participant direct",
+    "qrTitle": "Cod QR",
+    "qrScanHint": "Scanează pentru a te alătura"
   },
   "create": {
     "title": "Am nevoie",
@@ -1000,5 +1002,11 @@
     "invitedCount": "invited",
     "search": "Search by name...",
     "noResults": "No results"
+  },
+  "videoGuide": {
+    "play": "Urmărește instrucțiunile video",
+    "short": "Ghid video",
+    "regularTitle": "Cum funcționează o strângere regulată",
+    "close": "Închide"
   }
 }

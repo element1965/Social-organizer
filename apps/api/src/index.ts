@@ -318,6 +318,9 @@ async function start() {
             reply.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
           } else if (filePath.includes('/assets/')) {
             reply.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
+          } else if (/[\\/]videos[\\/]/.test(filePath)) {
+            // Instruction videos: not content-hashed, versioned by ?v= in the client
+            reply.setHeader('Cache-Control', 'public, max-age=2592000');
           }
         },
       });

@@ -225,7 +225,9 @@
     "noChatLink": "לא נוסף קישור לצ'אט",
     "sosInviteButton": "שתף קישור SOS",
     "sosLinkCopied": "קישור SOS הועתק!",
-    "sosJoined": "הוספת כמשתתף ישיר"
+    "sosJoined": "הוספת כמשתתף ישיר",
+    "qrTitle": "קוד QR",
+    "qrScanHint": "סרקו כדי להצטרף"
   },
   "create": {
     "title": "אני צריך",
@@ -1055,5 +1057,11 @@
     "invitedCount": "invited",
     "search": "Search by name...",
     "noResults": "No results"
+  },
+  "videoGuide": {
+    "play": "צפו בסרטון ההדרכה",
+    "short": "מדריך וידאו",
+    "regularTitle": "איך עובד גיוס קבוע",
+    "close": "סגירה"
   }
 }

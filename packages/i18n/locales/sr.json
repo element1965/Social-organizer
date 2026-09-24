@@ -215,7 +215,9 @@
     "noChatLink": "Веза за чет није додата",
     "sosInviteButton": "Подели SOS везу",
     "sosLinkCopied": "SOS веза копирана!",
-    "sosJoined": "Додати сте као директан учесник"
+    "sosJoined": "Додати сте као директан учесник",
+    "qrTitle": "QR код",
+    "qrScanHint": "Скенирајте да бисте се придружили"
   },
   "create": {
     "title": "Треба ми",
@@ -1000,5 +1002,11 @@
     "invitedCount": "invited",
     "search": "Search by name...",
     "noResults": "No results"
+  },
+  "videoGuide": {
+    "play": "Погледај видео упутство",
+    "short": "Видео упутство",
+    "regularTitle": "Како функционише редовно прикупљање",
+    "close": "Затвори"
   }
 }

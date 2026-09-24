@@ -33,6 +33,8 @@ pnpm install
 # 4. Build web app
 echo "[4/6] Building web app..."
 pnpm --filter @so/web build
+# The wrapper loads the production URL, so large static media (served by the web app) stays out of the bundle.
+rm -rf "$WEB_DIR/dist/videos"
 
 # 5. Add iOS platform if not exists
 cd "$WEB_DIR"

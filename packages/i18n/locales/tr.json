@@ -215,7 +215,9 @@
     "noChatLink": "Sohbet bağlantısı eklenmedi",
     "sosInviteButton": "SOS bağlantısını paylaş",
     "sosLinkCopied": "SOS bağlantısı kopyalandı!",
-    "sosJoined": "Doğrudan katılımcı olarak eklendiniz"
+    "sosJoined": "Doğrudan katılımcı olarak eklendiniz",
+    "qrTitle": "QR kodu",
+    "qrScanHint": "Katılmak için tarayın"
   },
   "create": {
     "title": "İhtiyacım var",
@@ -1000,5 +1002,11 @@
     "invitedCount": "invited",
     "search": "Search by name...",
     "noResults": "No results"
+  },
+  "videoGuide": {
+    "play": "Video talimatı izle",
+    "short": "Video rehberi",
+    "regularTitle": "Düzenli bağış toplama nasıl çalışır",
+    "close": "Kapat"
   }
 }

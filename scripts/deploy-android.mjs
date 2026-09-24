@@ -13,7 +13,7 @@
  */
 
 import { execSync } from 'child_process';
-import { existsSync, readFileSync, createReadStream } from 'fs';
+import { existsSync, readFileSync, createReadStream, rmSync } from 'fs';
 import { resolve, dirname } from 'path';
 import { fileURLToPath } from 'url';
 import { google } from 'googleapis';
@@ -45,6 +45,8 @@ function run(cmd, cwd = ROOT) {
 // ── 1. Build web ──────────────────────────────────────────────────────────────
 console.log('\n━━━ 1/4  Building web app ━━━');
 run('pnpm --filter @so/web build');
+// The wrapper loads the production URL, so large static media (served by the web app) stays out of the bundle.
+rmSync(resolve(WEB_DIR, 'dist/videos'), { recursive: true, force: true });
 
 // ── 2. Sync Capacitor ─────────────────────────────────────────────────────────
 console.log('\n━━━ 2/4  Syncing Capacitor ━━━');

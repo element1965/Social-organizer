@@ -215,7 +215,9 @@
     "noChatLink": "Geen chat-link toegevoegd",
     "sosInviteButton": "SOS-link delen",
     "sosLinkCopied": "SOS-link gekopieerd!",
-    "sosJoined": "Je bent toegevoegd als directe deelnemer"
+    "sosJoined": "Je bent toegevoegd als directe deelnemer",
+    "qrTitle": "QR-code",
+    "qrScanHint": "Scan om mee te doen"
   },
   "create": {
     "title": "Ik heb nodig",
@@ -1000,5 +1002,11 @@
     "invitedCount": "invited",
     "search": "Search by name...",
     "noResults": "No results"
+  },
+  "videoGuide": {
+    "play": "Bekijk de video-instructie",
+    "short": "Video-uitleg",
+    "regularTitle": "Hoe een terugkerende inzameling werkt",
+    "close": "Sluiten"
   }
 }

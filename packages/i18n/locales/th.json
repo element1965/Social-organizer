@@ -215,7 +215,9 @@
     "noChatLink": "ยังไม่ได้เพิ่มลิงก์แชท",
     "sosInviteButton": "แชร์ลิงก์ SOS",
     "sosLinkCopied": "คัดลอกลิงก์ SOS แล้ว!",
-    "sosJoined": "คุณถูกเพิ่มเป็นผู้เข้าร่วมโดยตรงแล้ว"
+    "sosJoined": "คุณถูกเพิ่มเป็นผู้เข้าร่วมโดยตรงแล้ว",
+    "qrTitle": "คิวอาร์โค้ด",
+    "qrScanHint": "สแกนเพื่อเข้าร่วม"
   },
   "create": {
     "title": "ต้องการ",
@@ -1000,5 +1002,11 @@
     "invitedCount": "invited",
     "search": "Search by name...",
     "noResults": "No results"
+  },
+  "videoGuide": {
+    "play": "ดูวิดีโอแนะนำ",
+    "short": "วิดีโอแนะนำ",
+    "regularTitle": "การระดมทุนแบบประจำทำงานอย่างไร",
+    "close": "ปิด"
   }
 }

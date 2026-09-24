@@ -215,7 +215,9 @@
     "noChatLink": "未添加聊天链接",
     "sosInviteButton": "分享 SOS 链接",
     "sosLinkCopied": "SOS 链接已复制！",
-    "sosJoined": "您已被添加为直接参与者"
+    "sosJoined": "您已被添加为直接参与者",
+    "qrTitle": "二维码",
+    "qrScanHint": "扫码加入"
   },
   "create": {
     "title": "我需要",
@@ -1000,5 +1002,11 @@
     "invitedCount": "invited",
     "search": "Search by name...",
     "noResults": "No results"
+  },
+  "videoGuide": {
+    "play": "观看视频说明",
+    "short": "视频指南",
+    "regularTitle": "定期募集如何运作",
+    "close": "关闭"
   }
 }

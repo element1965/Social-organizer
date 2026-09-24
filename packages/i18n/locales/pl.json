@@ -215,7 +215,9 @@
     "noChatLink": "Nie dodano linku do czatu",
     "sosInviteButton": "Udostępnij link SOS",
     "sosLinkCopied": "Link SOS skopiowany!",
-    "sosJoined": "Zostałeś dodany jako bezpośredni uczestnik"
+    "sosJoined": "Zostałeś dodany jako bezpośredni uczestnik",
+    "qrTitle": "Kod QR",
+    "qrScanHint": "Zeskanuj, aby dołączyć"
   },
   "create": {
     "title": "Potrzebuję",
@@ -1000,5 +1002,11 @@
     "invitedCount": "invited",
     "search": "Search by name...",
     "noResults": "No results"
+  },
+  "videoGuide": {
+    "play": "Obejrzyj instrukcję wideo",
+    "short": "Instrukcja wideo",
+    "regularTitle": "Jak działa zbiórka regularna",
+    "close": "Zamknij"
   }
 }

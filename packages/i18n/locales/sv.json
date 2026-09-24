@@ -215,7 +215,9 @@
     "noChatLink": "Ingen chattlänk har lagts till",
     "sosInviteButton": "Dela SOS-länk",
     "sosLinkCopied": "SOS-länk kopierad!",
-    "sosJoined": "Du har lagts till som direkt deltagare"
+    "sosJoined": "Du har lagts till som direkt deltagare",
+    "qrTitle": "QR-kod",
+    "qrScanHint": "Skanna för att gå med"
   },
   "create": {
     "title": "Jag behöver",
@@ -1000,5 +1002,11 @@
     "invitedCount": "invited",
     "search": "Search by name...",
     "noResults": "No results"
+  },
+  "videoGuide": {
+    "play": "Se videoinstruktionen",
+    "short": "Videoguide",
+    "regularTitle": "Så fungerar en regelbunden insamling",
+    "close": "Stäng"
   }
 }

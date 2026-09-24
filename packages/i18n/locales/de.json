@@ -215,7 +215,9 @@
     "noChatLink": "Kein Chat-Link hinzugefügt",
     "sosInviteButton": "SOS-Link teilen",
     "sosLinkCopied": "SOS-Link kopiert!",
-    "sosJoined": "Sie wurden als direkter Teilnehmer hinzugefügt"
+    "sosJoined": "Sie wurden als direkter Teilnehmer hinzugefügt",
+    "qrTitle": "QR-Code",
+    "qrScanHint": "Scannen, um beizutreten"
   },
   "create": {
     "title": "Ich brauche",
@@ -1000,5 +1002,11 @@
     "invitedCount": "invited",
     "search": "Search by name...",
     "noResults": "No results"
+  },
+  "videoGuide": {
+    "play": "Videoanleitung ansehen",
+    "short": "Videoanleitung",
+    "regularTitle": "So funktioniert eine regelmäßige Sammlung",
+    "close": "Schließen"
   }
 }

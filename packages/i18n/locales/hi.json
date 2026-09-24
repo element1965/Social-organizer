@@ -215,7 +215,9 @@
     "noChatLink": "कोई चैट लिंक नहीं जोड़ा गया",
     "sosInviteButton": "SOS लिंक शेयर करें",
     "sosLinkCopied": "SOS लिंक कॉपी हो गया!",
-    "sosJoined": "आपको प्रत्यक्ष प्रतिभागी के रूप में जोड़ा गया"
+    "sosJoined": "आपको प्रत्यक्ष प्रतिभागी के रूप में जोड़ा गया",
+    "qrTitle": "QR कोड",
+    "qrScanHint": "जुड़ने के लिए स्कैन करें"
   },
   "create": {
     "title": "मुझे चाहिए",
@@ -1000,5 +1002,11 @@
     "invitedCount": "invited",
     "search": "Search by name...",
     "noResults": "No results"
+  },
+  "videoGuide": {
+    "play": "वीडियो निर्देश देखें",
+    "short": "वीडियो गाइड",
+    "regularTitle": "नियमित संग्रह कैसे काम करता है",
+    "close": "बंद करें"
   }
 }

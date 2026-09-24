@@ -215,7 +215,9 @@
     "noChatLink": "Посилання на чат не додано",
     "sosInviteButton": "Поділитися SOS-посиланням",
     "sosLinkCopied": "SOS-посилання скопійовано!",
-    "sosJoined": "Вас додано як прямого учасника"
+    "sosJoined": "Вас додано як прямого учасника",
+    "qrTitle": "QR-код",
+    "qrScanHint": "Відскануйте, щоб приєднатися"
   },
   "create": {
     "title": "Потрібно",
@@ -1000,5 +1002,11 @@
     "invitedCount": "invited",
     "search": "Search by name...",
     "noResults": "No results"
+  },
+  "videoGuide": {
+    "play": "Дивитися відеоінструкцію",
+    "short": "Відеоінструкція",
+    "regularTitle": "Як працює регулярний збір",
+    "close": "Закрити"
   }
 }

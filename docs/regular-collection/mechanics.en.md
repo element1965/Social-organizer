@@ -2,7 +2,9 @@
 
 This document is based only on the repository code (branch `main`, commit `3924fe4`). File paths are given
 so that every statement can be checked. Next to it are the video instructions
-`regular-collection-instruction.<locale>.mp4` (one per app language), recorded on a local copy of the app.
+`apps/web/public/videos/regular-collection/<locale>.mp4` (one per app language), recorded on a local copy of the app.
+In the app they open from the play button next to the "Regular" type on the create screen and next to the QR block
+of a regular collection (`apps/web/src/components/RegularCollectionVideo.tsx`).
 
 ## In short: what to tell Michel
 
@@ -136,12 +138,12 @@ Checked on a local copy: an author network of 12 people in the 1st circle and 36
 | Michel does not have his own network yet | Creating a collection needs 10 accepted invitations. Granting the AUTHOR/DEVELOPER role lifts the restriction, but **the alert on creation will not be sent at all** | Needs a decision |
 | A collection description for website visitors | There is no "description / purpose" field. The public page shows the name, "needs support", the goal and progress | No |
 | Put the QR on the website | The QR exists only on screen; it cannot be downloaded with a button | No |
-| An English interface for Michel | The caption under the QR "Отсканируйте, чтобы присоединиться" ("Scan to join") and the "QR-код" tooltip are hardcoded in Russian and are not translated (visible in every language version of the video). The button is called "SOS link" for a regular collection too. The creation warnings are written for an emergency | Cosmetic |
+| An English interface for Michel | The caption under the QR ("Scan to join") and the "QR code" tooltip were hardcoded in Russian (visible in every language version of the video); now fixed — i18n keys `collection.qrScanHint` / `collection.qrTitle`. The button is called "SOS link" for a regular collection too. The creation warnings are written for an emergency | Cosmetic |
 | Monthly payment tracking | The "paid" mark (`confirmedAt`) is not reset on a new cycle. There is no per-cycle payment history | No |
 
 ## 7. How the videos were recorded
 
-`regular-collection-instruction.<locale>.mp4` are vertical 720×1280 videos, about 1.5 minutes each, one per app
+`apps/web/public/videos/regular-collection/<locale>.mp4` are vertical 720×1280 videos, about 1.5 minutes each, one per app
 language (`packages/i18n/locales`: ar, be, cs, da, de, en, es, fi, fr, he, hi, id, it, ja, ko, nl, no, pl, pt, ro,
 ru, sr, sv, th, tr, uk, vi, zh). The app UI is shown in that language (switched the way the app does it: the
 `language` key in localStorage, see `apps/web/src/lib/i18n.ts`), and the captions are in the same language
@@ -153,7 +155,8 @@ The step "the person tapped the button in Telegram" is shown like this: after th
 the same address the Mini App opens (`/collection/<id>?sos=true`), already as the new user.
 Telegram itself is not shown.
 
-Only the Russian video is committed to git; the other language versions are generated locally (see `.gitignore` here).
+All 28 language versions are committed under `apps/web/public/videos/regular-collection/` and served by the web app
+as static files (the app picks the file by the current UI language, falling back to `en`).
 
 To record again:
 1. `DATABASE_URL=…/so_video_demo` → `prisma db push` in `packages/db`

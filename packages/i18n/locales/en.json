@@ -218,7 +218,9 @@
     "sosJoined": "You've been added as a direct participant",
     "confirmPayment": "Confirm payment",
     "paymentConfirmed": "Paid",
-    "unconfirmPayment": "Unmark as paid"
+    "unconfirmPayment": "Unmark as paid",
+    "qrTitle": "QR code",
+    "qrScanHint": "Scan to join"
   },
   "create": {
     "title": "I Need",
@@ -1005,5 +1007,11 @@
     "unknownUser": "Unknown user",
     "chatButton": "Chat",
     "attachFile": "Attach file"
+  },
+  "videoGuide": {
+    "play": "Watch the video instruction",
+    "short": "Video guide",
+    "regularTitle": "How a regular collection works",
+    "close": "Close"
   }
 }
