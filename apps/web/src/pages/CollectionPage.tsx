@@ -389,11 +389,9 @@ export function CollectionPage() {
                 <p className="text-xs text-gray-400 text-center">{t('collection.qrScanHint')}</p>
               </div>
             )}
-            {collection.type === 'REGULAR' && (
-              <div className="flex justify-center">
-                <RegularCollectionVideo />
-              </div>
-            )}
+            <div className="flex justify-center">
+              <RegularCollectionVideo />
+            </div>
           </div>
         );
       })()}

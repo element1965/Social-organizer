@@ -129,11 +129,9 @@ export function CreateCollectionPage() {
               {t('create.regular')}
             </button>
           </div>
-          {type === 'REGULAR' && (
-            <div className="flex justify-center -mt-1">
-              <RegularCollectionVideo />
-            </div>
-          )}
+          <div className="flex justify-center -mt-1">
+            <RegularCollectionVideo />
+          </div>
 
           <div className="space-y-2">
             <div className="flex gap-2">
