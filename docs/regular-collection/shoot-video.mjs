@@ -6,7 +6,7 @@
  *   - apps/api on :3001 (JWT_SECRET=local-video-demo, no REDIS_URL, no TELEGRAM_BOT_TOKEN)
  *   - apps/web (vite) on :3000 with VITE_WEB_APP_URL=http://localhost:3000
  * Run: DATABASE_URL=<local so_video_demo> PLAYWRIGHT_PATH=<.../playwright/index.js> node shoot-video.mjs [locale ...|all]
- *   (default locale: ru). The app language is switched the way the app does it: localStorage `language`
+ *   (default locale: ru). FFMPEG_THREADS=2 lowers encoder memory on a busy machine. The app language is switched the way the app does it: localStorage `language`
  *   (apps/web/src/lib/i18n.ts) plus the browser locale; demo users get `language` = locale.
  * Output: regular-collection-instruction.<locale>.mp4 next to this file (720x1280, captions on top).
  * Captions come from captions.mjs; UI labels inside them and all selectors come from packages/i18n/locales.
@@ -310,6 +310,7 @@ async function shoot(browser, l) {
   await new Promise((resolve, reject) => {
     const p = spawn(FFMPEG, ['-y', '-ss', trim.toFixed(2), '-i', path.join(TMP, webm), ...pngs.flatMap((f) => ['-i', f]),
       '-filter_complex_script', path.join(TMP, 'filter.txt'), '-map', '[v]',
+      ...(process.env.FFMPEG_THREADS ? ['-threads', process.env.FFMPEG_THREADS] : []),
       '-c:v', 'libx264', '-preset', 'slow', '-crf', '25', '-pix_fmt', 'yuv420p', '-movflags', '+faststart', out], { stdio: ['ignore', 'ignore', 'pipe'] });
     let err = ''; p.stderr.on('data', (d) => { err += d; });
     p.on('close', (c) => (c === 0 ? resolve() : reject(new Error(err.slice(-800)))));
