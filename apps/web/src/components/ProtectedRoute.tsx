@@ -9,10 +9,13 @@ export function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const isAuthenticated = useAuth((s) => s.isAuthenticated);
   const logout = useAuth((s) => s.logout);
   const location = useLocation();
-  const { isLoading, isError } = trpc.user.me.useQuery(undefined, {
+  const { isLoading, error } = trpc.user.me.useQuery(undefined, {
     enabled: isAuthenticated,
     retry: 1,
   });
+  // Only a rejected token ends the session. Network/5xx (e.g. hosting down) must not log the
+  // user out: during the Railway outage 23–25.09.2026 every app open wiped the session.
+  const isError = error?.data?.code === 'UNAUTHORIZED';
 
   // Clear stale demo tokens — demo mode is disabled
   if (localStorage.getItem('accessToken') === 'demo-token') {
