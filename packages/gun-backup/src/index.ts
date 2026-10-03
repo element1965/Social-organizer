@@ -57,10 +57,10 @@ export async function initGunBackup(peers: string[] = []): Promise<void> {
  * Save the network graph (nodes + edges, up to 3 levels) to local storage via Gun.js.
  */
 export async function syncToLocal(data: GraphBackup): Promise<void> {
-  if (!gunInstance) {
-    await saveToIndexedDB(data);
-    return;
-  }
+  // IndexedDB is the real device copy: Gun runs with localStorage:false and no storage adapter,
+  // so it only keeps data in memory and on the relay — a closed tab used to lose the backup.
+  await saveToIndexedDB(data);
+  if (!gunInstance) return;
 
   const userNode = gunInstance.get('so-backup').get(data.userId);
   userNode.put({
@@ -75,9 +75,9 @@ export async function syncToLocal(data: GraphBackup): Promise<void> {
  * Read cached graph from local storage.
  */
 export async function readFromLocal(userId: string): Promise<GraphBackup | null> {
-  if (!gunInstance) {
-    return readFromIndexedDB(userId);
-  }
+  // IndexedDB first — it is the persistent copy; Gun (memory + relay) is the fallback.
+  const local = await readFromIndexedDB(userId);
+  if (local || !gunInstance) return local;
 
   return new Promise((resolve) => {
     const timeout = setTimeout(() => resolve(readFromIndexedDB(userId)), 2000);
