@@ -91,7 +91,8 @@ export async function removeBlockedUser(chatId: string | number): Promise<Remove
 /** Check if the bot can reach a chat (user hasn't blocked the bot).
  *  Returns true if chat is accessible, false if blocked/deactivated/not found. */
 export async function checkChatExists(chatId: string | number): Promise<boolean> {
-  if (!TELEGRAM_BOT_TOKEN) return false;
+  // No token = misconfiguration, not a blocked user: never treat it as "unreachable".
+  if (!TELEGRAM_BOT_TOKEN) return true;
   try {
     const res = await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/getChat`, {
       method: 'POST',
@@ -100,8 +101,12 @@ export async function checkChatExists(chatId: string | number): Promise<boolean>
     });
     const json = (await res.json()) as TgApiResponse;
     if (json.ok) return true;
-    // 400 "chat not found" or 403 "bot was blocked" → user is unreachable
-    return false;
+    // Only 403 (bot was blocked / user is deactivated) means the user is gone. "chat not found" (400)
+    // also comes for people who use the app but never pressed Start in the bot, and 429 / 5xx are
+    // transient: since 26.09.2026 the midnight run deleted ~30 active users this way.
+    if (res.status === 403) return false;
+    console.warn(`[TG Bot] getChat ${chatId} failed (${res.status}: ${json.description ?? 'no description'}) — treating as reachable`);
+    return true;
   } catch {
     // Network error — assume chat exists (don't delete on transient failures)
     return true;

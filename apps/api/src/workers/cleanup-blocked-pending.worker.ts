@@ -12,6 +12,9 @@ import {
  * Every hour: find all PENDING connections, check if any involved user
  * has blocked the bot via TG getChat API, and hard-delete blocked users.
  */
+/** Above this many removals in one run something is wrong (rate limit, outage) — stop. */
+const MAX_REMOVALS_PER_RUN = 3;
+
 export async function processCleanupBlockedPending(_job: Job): Promise<void> {
   console.log('[Cleanup Blocked Pending] Worker started');
   const db = getDb();
@@ -57,6 +60,13 @@ export async function processCleanupBlockedPending(_job: Job): Promise<void> {
       checked++;
 
       if (!exists) {
+        // Circuit breaker: a real wave of blocks is rare; many "unreachable" users in one run
+        // means Telegram/our side is failing — stop deleting and alert support instead.
+        if (removedUsers.length >= MAX_REMOVALS_PER_RUN) {
+          console.error(`[Cleanup Blocked Pending] Stopped: more than ${MAX_REMOVALS_PER_RUN} unreachable users in one run — suspected API failure`);
+          await sendTelegramMessage(SUPPORT_CHAT_ID, `⚠️ <b>Очистка заблокированных остановлена</b>: больше ${MAX_REMOVALS_PER_RUN} «недоступных» за один прогон — похоже на сбой Telegram API, никого больше не удаляю.`).catch(() => {});
+          break;
+        }
         const info = await removeBlockedUser(acc.platformId);
         if (info) removedUsers.push(info);
       }
