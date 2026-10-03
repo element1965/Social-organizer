@@ -31,7 +31,7 @@ Social organizer/
 │   ├── db/              # @so/db: Prisma schema + migrations (PostgreSQL 17)
 │   ├── api-client/      # @so/api-client: tRPC client
 │   ├── i18n/            # @so/i18n: i18next (en + ru + 23 more)
-│   ├── gun-backup/      # @so/gun-backup: Gun.js local backup (stub)
+│   ├── gun-backup/      # @so/gun-backup: graph copy on device (IndexedDB + Gun.js)
 │   ├── graph-3d/        # @so/graph-3d: Three.js visualization (Earth, Moon, Stars, Network)
 │   ├── fb-adapter/      # @so/fb-adapter: FB Instant Game SDK (stub)
 │   └── tg-adapter/      # @so/tg-adapter: Telegram WebApp SDK adapter
@@ -179,6 +179,25 @@ FIREBASE_SERVICE_ACCOUNT={"type":"service_account",...}  # FCM service account J
 | `scheduled-post` | Send scheduled broadcast posts at their planned time | Every minute |
 | `auto-chain` | Drip campaign: send chain messages based on user registration date + day offset | Every 30 min |
 | `cleanup-blocked-pending` | Remove users who blocked the bot from pending connections via TG getChat API | Every hour |
+
+## Backups & Disaster Recovery
+
+The network must survive losing the database or the hosting provider. Three independent copies:
+
+1. **Nightly database dump → Cloudflare R2** (off Railway). Railway cron service `db-backup` (`ops/backup/`, 01:17 UTC) runs `pg_dump --format=custom` and uploads it through the `so-backup-ingest` Worker into the private bucket `social-organizer-backups`. Retention: `daily/` 35 days, `monthly/` (1st of month) 400 days. The Worker holds the bucket binding; the service only knows its ingest key (`BACKUP_INGEST_KEY`), not a Cloudflare account token. List: `GET https://so-backup-ingest.lambertain.workers.dev/list` with `Authorization: Bearer <key>`.
+2. **Gun.js relay on a persistent volume.** The API attaches the Gun relay (`apps/api/src/index.ts`, file `gun-data`); `/app/gun-data` is a Railway volume, so the server-side graph copy survives deploys.
+3. **Graph copy on every device.** `useGraphSync` saves the user's network (3 levels: nodes + edges) every 5 minutes to IndexedDB (`@so/gun-backup`), plus Gun for cross-device sync. Before 03.10.2026 the copy lived only in memory — Gun ran with `localStorage:false` and no storage adapter.
+
+### Restore the database on a new host
+```
+curl -H "Authorization: Bearer $KEY" https://so-backup-ingest.lambertain.workers.dev/list          # pick the latest daily/*.dump
+curl -H "Authorization: Bearer $KEY" -o so.dump https://so-backup-ingest.lambertain.workers.dev/b/daily/<file>
+createdb social_organizer && pg_restore --no-owner --no-acl -d "$NEW_DATABASE_URL" so.dump
+```
+Then point `DATABASE_URL` of the API to the new database and deploy. Never restore over the production DB in place — restore into a new database and switch.
+
+### Incident 26.09–03.10.2026
+The hourly `cleanup-blocked-pending` worker treated any failed `getChat` as "user blocked the bot" and deleted 29 active users at midnight runs (hard delete for users without invitees, soft delete otherwise). Fixed in `768157c`: only HTTP 403 counts as blocked, and a run stops after 3 removals with an alert to the support chat. 28 wrongly removed users were restored (soft-deleted ones fully; hard-deleted ones re-created with the same ids, Telegram link and contacts from the support chat log — their connections were lost).
 
 ## Deployment
 
