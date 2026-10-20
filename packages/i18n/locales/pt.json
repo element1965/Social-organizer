@@ -217,7 +217,10 @@
     "sosLinkCopied": "Link SOS copiado!",
     "sosJoined": "Você foi adicionado como participante direto",
     "qrTitle": "Código QR",
-    "qrScanHint": "Escaneie para participar"
+    "qrScanHint": "Escaneie para participar",
+    "shareLinkButton": "Compartilhar link da coleta",
+    "linkCopied": "Link copiado!",
+    "qrDownload": "Baixar código QR"
   },
   "create": {
     "title": "Preciso",
@@ -303,7 +306,9 @@
     "renewalStart": "Novo ciclo",
     "renewalReminderBody": "{{name}}, lembramos que você participa do apoio regular a {{creator}}. Em 3 dias começa um novo ciclo. Você pode retirar sua intenção a qualquer momento.",
     "renewalReminderAck": "Entendi",
-    "renewalReminderUnsubscribe": "Retirar intenção"
+    "renewalReminderUnsubscribe": "Retirar intenção",
+    "yourContribution": "Sua contribuição",
+    "period": "Período"
   },
   "notification": {
     "newCollection": "{{name}} precisa de ajuda",
@@ -521,7 +526,9 @@
     "renewalReminderTitle": "Lembrete de renovação",
     "renewalReminderBody": "{{name}}, você participa do apoio regular a {{creator}}. Em 3 dias começa um novo ciclo. Você pode retirar sua intenção a qualquer momento.",
     "renewalStartTitle": "Novo ciclo começou",
-    "renewalStartBody": "{{name}}, um novo ciclo de apoio regular a {{creator}} acabou de começar."
+    "renewalStartBody": "{{name}}, um novo ciclo de apoio regular a {{creator}} acabou de começar.",
+    "yourContribution": "Sua contribuição",
+    "period": "Período"
   },
   "hints": {
     "collectionAmount": "Insira o valor que você precisa. Mínimo 10 unidades. O sistema notificará o número adequado de pessoas.",
@@ -983,7 +990,8 @@
     "joinBtn": "Juntar-se e ajudar",
     "autoConnect": "Você será conectado diretamente a {{name}} — sem necessidade de aprovação.",
     "collectionClosed": "Esta coleta está {{status}}.",
-    "participantsCount": "{{count}} participantes"
+    "participantsCount": "{{count}} participantes",
+    "joinInBrowser": "Continuar no navegador"
   },
   "support": {
     "title": "Chat de suporte",
@@ -1007,6 +1015,8 @@
     "play": "Ver o vídeo de instruções",
     "short": "Guia em vídeo",
     "regularTitle": "Como funciona uma coleta regular",
-    "close": "Fechar"
+    "close": "Fechar",
+    "inviteLinkTitle": "Recebeu um link? O que fazer",
+    "appStartTitle": "Primeiros passos no aplicativo"
   }
 }

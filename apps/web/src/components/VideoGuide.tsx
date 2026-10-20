@@ -4,14 +4,18 @@ import { useTranslation } from 'react-i18next';
 import { resources } from '@so/i18n';
 import { X } from 'lucide-react';
 
-// Static files in apps/web/public/videos/regular-collection/<locale>.mp4 (one per app locale).
-// Bump VIDEO_VERSION when the videos are re-recorded: the files are cached for 30 days by URL.
-const VIDEO_DIR = '/videos/regular-collection';
-const VIDEO_VERSION = '1';
+// Static files in apps/web/public/videos/<video>/<locale>.mp4 (one per app locale).
+// Bump a video's version when it is re-recorded: the files are cached for 30 days by URL.
+const VIDEOS = {
+  'regular-collection': { version: '1', titleKey: 'videoGuide.regularTitle' },
+  'invite-link': { version: '1', titleKey: 'videoGuide.inviteLinkTitle' },
+  'app-start': { version: '1', titleKey: 'videoGuide.appStartTitle' },
+} as const;
+export type VideoGuideId = keyof typeof VIDEOS;
 const FALLBACK_LANG = 'en';
 
-function videoUrl(lang: string) {
-  return `${VIDEO_DIR}/${lang}.mp4?v=${VIDEO_VERSION}`;
+function videoUrl(video: VideoGuideId, lang: string) {
+  return `/videos/${video}/${lang}.mp4?v=${VIDEOS[video].version}`;
 }
 
 /** Circle with a triangle inside. */
@@ -24,21 +28,38 @@ function PlayCircleIcon({ className }: { className?: string }) {
   );
 }
 
+const LINK_COLORS = 'text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300';
+
 /**
- * Play-icon button that opens the "how a regular collection works" video instruction
- * in the current UI language (falls back to English). The user starts playback,
- * so there are no autoplay-with-sound restrictions in Telegram / Capacitor webviews.
+ * Play-icon button that opens a video instruction in the current UI language
+ * (falls back to English). The user starts playback, so there are no
+ * autoplay-with-sound restrictions in Telegram / Capacitor webviews.
+ * `label`: 'short' shows "Video guide", 'title' shows the video's own title.
+ * `colorClassName` replaces the default blue link colors (e.g. on dark screens).
  */
-export function RegularCollectionVideo({ className = '', showLabel = true }: { className?: string; showLabel?: boolean }) {
+export function VideoGuide({
+  video = 'regular-collection',
+  className = '',
+  showLabel = true,
+  label = 'short',
+  colorClassName = LINK_COLORS,
+}: {
+  video?: VideoGuideId;
+  className?: string;
+  showLabel?: boolean;
+  label?: 'short' | 'title';
+  colorClassName?: string;
+}) {
   const { t, i18n } = useTranslation();
   const [open, setOpen] = useState(false);
   const base = (i18n.language || FALLBACK_LANG).slice(0, 2).toLowerCase();
   const lang = base in resources ? base : FALLBACK_LANG;
-  const [src, setSrc] = useState(() => videoUrl(lang));
+  const [src, setSrc] = useState(() => videoUrl(video, lang));
+  const title = t(VIDEOS[video].titleKey);
 
   useEffect(() => {
-    setSrc(videoUrl(lang));
-  }, [lang]);
+    setSrc(videoUrl(video, lang));
+  }, [video, lang]);
 
   useEffect(() => {
     if (!open) return;
@@ -54,12 +75,12 @@ export function RegularCollectionVideo({ className = '', showLabel = true }: { c
       <button
         type="button"
         onClick={() => setOpen(true)}
-        aria-label={t('videoGuide.play')}
+        aria-label={showLabel && label === 'title' ? title : t('videoGuide.play')}
         title={t('videoGuide.play')}
-        className={`inline-flex items-center gap-1.5 text-sm font-medium text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors ${className}`}
+        className={`inline-flex items-center gap-1.5 text-sm font-medium ${colorClassName} transition-colors ${className}`}
       >
         <PlayCircleIcon className="w-6 h-6 shrink-0" />
-        {showLabel && <span>{t('videoGuide.short')}</span>}
+        {showLabel && <span>{label === 'title' ? title : t('videoGuide.short')}</span>}
       </button>
 
       {open &&
@@ -69,11 +90,11 @@ export function RegularCollectionVideo({ className = '', showLabel = true }: { c
             onClick={() => setOpen(false)}
             role="dialog"
             aria-modal="true"
-            aria-label={t('videoGuide.regularTitle')}
+            aria-label={title}
           >
             <div className="relative flex flex-col items-center gap-2 max-w-full" onClick={(e) => e.stopPropagation()}>
               <div className="flex w-full items-center justify-between gap-3 text-white">
-                <h2 className="text-sm font-semibold">{t('videoGuide.regularTitle')}</h2>
+                <h2 className="text-sm font-semibold">{title}</h2>
                 <button
                   type="button"
                   onClick={() => setOpen(false)}
@@ -91,7 +112,7 @@ export function RegularCollectionVideo({ className = '', showLabel = true }: { c
                 preload="none"
                 className="block rounded-lg bg-black h-[80vh] max-h-[80vh] max-w-full aspect-[9/16]"
                 onError={() => {
-                  if (!src.startsWith(`${VIDEO_DIR}/${FALLBACK_LANG}.`)) setSrc(videoUrl(FALLBACK_LANG));
+                  if (!src.startsWith(`/videos/${video}/${FALLBACK_LANG}.`)) setSrc(videoUrl(video, FALLBACK_LANG));
                 }}
               />
             </div>

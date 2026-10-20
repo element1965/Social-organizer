@@ -217,7 +217,10 @@
     "sosLinkCopied": "SOS-посилання скопійовано!",
     "sosJoined": "Вас додано як прямого учасника",
     "qrTitle": "QR-код",
-    "qrScanHint": "Відскануйте, щоб приєднатися"
+    "qrScanHint": "Відскануйте, щоб приєднатися",
+    "shareLinkButton": "Поділитися посиланням на збір",
+    "linkCopied": "Посилання скопійовано!",
+    "qrDownload": "Завантажити QR-код"
   },
   "create": {
     "title": "Потрібно",
@@ -303,7 +306,9 @@
     "renewalStart": "Новий цикл",
     "renewalReminderBody": "{{name}}, нагадуємо, що ви берете участь у регулярній підтримці {{creator}}. Через 3 дні починається новий цикл збору. Ви можете відкликати свій намір у будь-який момент.",
     "renewalReminderAck": "Памʼятаю",
-    "renewalReminderUnsubscribe": "Відкликати намір"
+    "renewalReminderUnsubscribe": "Відкликати намір",
+    "yourContribution": "Ваш внесок",
+    "period": "Період"
   },
   "notification": {
     "newCollection": "{{name}} потребує допомоги",
@@ -579,7 +584,9 @@
     "renewalReminderTitle": "Нагадування про продовження",
     "renewalReminderBody": "{{name}}, ви берете участь у регулярній підтримці {{creator}}. Через 3 дні починається новий цикл збору. Ви можете відкликати свій намір у будь-який момент.",
     "renewalStartTitle": "Розпочався новий цикл",
-    "renewalStartBody": "{{name}}, щойно розпочався новий цикл регулярної підтримки {{creator}}."
+    "renewalStartBody": "{{name}}, щойно розпочався новий цикл регулярної підтримки {{creator}}.",
+    "yourContribution": "Ваш внесок",
+    "period": "Період"
   },
   "hints": {
     "collectionAmount": "Вкажіть суму, яка вам потрібна. Мінімум 10 одиниць. Система повідомить потрібну кількість людей.",
@@ -983,7 +990,8 @@
     "joinBtn": "Приєднатись та допомогти",
     "autoConnect": "Вас буде підключено до {{name}} напряму — без очікування підтвердження.",
     "collectionClosed": "Цей збір {{status}}.",
-    "participantsCount": "{{count}} учасників"
+    "participantsCount": "{{count}} учасників",
+    "joinInBrowser": "Продовжити в браузері"
   },
   "support": {
     "title": "Чат підтримки",
@@ -1007,6 +1015,8 @@
     "play": "Дивитися відеоінструкцію",
     "short": "Відеоінструкція",
     "regularTitle": "Як працює регулярний збір",
-    "close": "Закрити"
+    "close": "Закрити",
+    "inviteLinkTitle": "Отримали посилання — що далі",
+    "appStartTitle": "Перші кроки в застосунку"
   }
 }

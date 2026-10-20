@@ -217,7 +217,10 @@
     "sosLinkCopied": "SOS-link gekopieerd!",
     "sosJoined": "Je bent toegevoegd als directe deelnemer",
     "qrTitle": "QR-code",
-    "qrScanHint": "Scan om mee te doen"
+    "qrScanHint": "Scan om mee te doen",
+    "shareLinkButton": "Link naar inzameling delen",
+    "linkCopied": "Link gekopieerd!",
+    "qrDownload": "QR-code downloaden"
   },
   "create": {
     "title": "Ik heb nodig",
@@ -303,7 +306,9 @@
     "renewalStart": "New cycle",
     "renewalReminderBody": "{{name}}, this is a reminder that you participate in regular support for {{creator}}. A new collection cycle starts in 3 days. You can withdraw your intention at any time.",
     "renewalReminderAck": "Got it",
-    "renewalReminderUnsubscribe": "Withdraw intention"
+    "renewalReminderUnsubscribe": "Withdraw intention",
+    "yourContribution": "Jouw bijdrage",
+    "period": "Periode"
   },
   "notification": {
     "newCollection": "{{name}} heeft hulp nodig",
@@ -579,7 +584,9 @@
     "renewalReminderTitle": "Renewal reminder",
     "renewalReminderBody": "{{name}}, you participate in regular support for {{creator}}. A new collection cycle starts in 3 days. You can withdraw your intention at any time.",
     "renewalStartTitle": "New cycle started",
-    "renewalStartBody": "{{name}}, a new support cycle for {{creator}} has just started."
+    "renewalStartBody": "{{name}}, a new support cycle for {{creator}} has just started.",
+    "yourContribution": "Jouw bijdrage",
+    "period": "Periode"
   },
   "hints": {
     "collectionAmount": "Voer het bedrag in dat je nodig hebt. Minimaal 10 eenheden. Het systeem informeert het juiste aantal mensen.",
@@ -983,7 +990,8 @@
     "joinBtn": "Deelnemen & helpen",
     "autoConnect": "U wordt direct verbonden met {{name}} — geen goedkeuring vereist.",
     "collectionClosed": "Deze collectie is {{status}}.",
-    "participantsCount": "{{count}} deelnemers"
+    "participantsCount": "{{count}} deelnemers",
+    "joinInBrowser": "Doorgaan in de browser"
   },
   "support": {
     "title": "Ondersteuningschat",
@@ -1007,6 +1015,8 @@
     "play": "Bekijk de video-instructie",
     "short": "Video-uitleg",
     "regularTitle": "Hoe een terugkerende inzameling werkt",
-    "close": "Sluiten"
+    "close": "Sluiten",
+    "inviteLinkTitle": "Link gekregen? Zo ga je verder",
+    "appStartTitle": "Eerste stappen in de app"
   }
 }

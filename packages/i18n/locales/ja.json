@@ -217,7 +217,10 @@
     "sosLinkCopied": "SOSリンクをコピーしました！",
     "sosJoined": "直接参加者として追加されました",
     "qrTitle": "QRコード",
-    "qrScanHint": "スキャンして参加"
+    "qrScanHint": "スキャンして参加",
+    "shareLinkButton": "募集のリンクを共有",
+    "linkCopied": "リンクをコピーしました！",
+    "qrDownload": "QRコードをダウンロード"
   },
   "create": {
     "title": "必要です",
@@ -303,7 +306,9 @@
     "renewalStart": "新しいサイクル",
     "renewalReminderBody": "{{name}} さん、{{creator}} への定期的なサポートに参加しています。3日後に新しい募集サイクルが始まります。意思はいつでも撤回できます。",
     "renewalReminderAck": "了解",
-    "renewalReminderUnsubscribe": "意思を撤回"
+    "renewalReminderUnsubscribe": "意思を撤回",
+    "yourContribution": "あなたの拠出額",
+    "period": "期間"
   },
   "notification": {
     "newCollection": "{{name}} が助けを求めています",
@@ -579,7 +584,9 @@
     "renewalReminderTitle": "更新リマインダー",
     "renewalReminderBody": "{{name}} さん、{{creator}} への定期的なサポートに参加しています。3日後に新しい募集サイクルが始まります。意思はいつでも撤回できます。",
     "renewalStartTitle": "新しいサイクルが始まりました",
-    "renewalStartBody": "{{name}} さん、{{creator}} への新しい定期サポートサイクルが始まりました。"
+    "renewalStartBody": "{{name}} さん、{{creator}} への新しい定期サポートサイクルが始まりました。",
+    "yourContribution": "あなたの拠出額",
+    "period": "期間"
   },
   "hints": {
     "collectionAmount": "必要な金額を入力してください。最低10単位です。システムが適切な人数に通知します。",
@@ -983,7 +990,8 @@
     "joinBtn": "参加して助ける",
     "autoConnect": "{{name}} と直接つながります — 承認不要。",
     "collectionClosed": "この募集は{{status}}です。",
-    "participantsCount": "{{count}} 人の参加者"
+    "participantsCount": "{{count}} 人の参加者",
+    "joinInBrowser": "ブラウザで続ける"
   },
   "support": {
     "title": "サポートチャット",
@@ -1007,6 +1015,8 @@
     "play": "説明動画を見る",
     "short": "動画ガイド",
     "regularTitle": "定期募金の仕組み",
-    "close": "閉じる"
+    "close": "閉じる",
+    "inviteLinkTitle": "リンクが届いたら",
+    "appStartTitle": "アプリの最初のステップ"
   }
 }

@@ -217,7 +217,10 @@
     "sosLinkCopied": "SOS-lenke kopiert!",
     "sosJoined": "Du er lagt til som direkte deltaker",
     "qrTitle": "QR-kode",
-    "qrScanHint": "Skann for å bli med"
+    "qrScanHint": "Skann for å bli med",
+    "shareLinkButton": "Del lenke til innsamlingen",
+    "linkCopied": "Lenke kopiert!",
+    "qrDownload": "Last ned QR-kode"
   },
   "create": {
     "title": "Trenger",
@@ -303,7 +306,9 @@
     "renewalStart": "New cycle",
     "renewalReminderBody": "{{name}}, this is a reminder that you participate in regular support for {{creator}}. A new collection cycle starts in 3 days. You can withdraw your intention at any time.",
     "renewalReminderAck": "Got it",
-    "renewalReminderUnsubscribe": "Withdraw intention"
+    "renewalReminderUnsubscribe": "Withdraw intention",
+    "yourContribution": "Ditt bidrag",
+    "period": "Periode"
   },
   "notification": {
     "newCollection": "{{name}} trenger hjelp",
@@ -579,7 +584,9 @@
     "renewalReminderTitle": "Renewal reminder",
     "renewalReminderBody": "{{name}}, you participate in regular support for {{creator}}. A new collection cycle starts in 3 days. You can withdraw your intention at any time.",
     "renewalStartTitle": "New cycle started",
-    "renewalStartBody": "{{name}}, a new support cycle for {{creator}} has just started."
+    "renewalStartBody": "{{name}}, a new support cycle for {{creator}} has just started.",
+    "yourContribution": "Ditt bidrag",
+    "period": "Periode"
   },
   "hints": {
     "collectionAmount": "Skriv inn beløpet du trenger. Minimum 10 enheter. Systemet vil varsle riktig antall personer.",
@@ -983,7 +990,8 @@
     "joinBtn": "Del og hjelp",
     "autoConnect": "Du vil bli koblet direkte til {{name}} — ingen godkjenning nødvendig.",
     "collectionClosed": "Denne innsamlingen er {{status}}.",
-    "participantsCount": "{{count}} deltakere"
+    "participantsCount": "{{count}} deltakere",
+    "joinInBrowser": "Fortsett i nettleseren"
   },
   "support": {
     "title": "Støttechat",
@@ -1007,6 +1015,8 @@
     "play": "Se videoveiledningen",
     "short": "Videoveiledning",
     "regularTitle": "Slik fungerer en fast innsamling",
-    "close": "Lukk"
+    "close": "Lukk",
+    "inviteLinkTitle": "Fått en lenke? Slik gjør du",
+    "appStartTitle": "Første steg i appen"
   }
 }

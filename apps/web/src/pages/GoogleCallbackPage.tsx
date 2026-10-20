@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { trpc } from '../lib/trpc';
 import { useAuth } from '../hooks/useAuth';
+import { takePendingSosPath } from '../lib/inviteUrl';
 
 // Handles Google OAuth redirect callback.
 // Opened in Chrome Custom Tab after Google auth.
@@ -72,7 +73,11 @@ export function GoogleCallbackPage() {
           } else {
             login(data.accessToken, data.refreshToken, data.userId);
             const pendingInvite = localStorage.getItem('pendingInviteToken');
-            if (pendingInvite) {
+            // Came from a collection link (/sos/:id) → back to that collection
+            const pendingSos = takePendingSosPath();
+            if (pendingSos) {
+              window.location.href = pendingSos;
+            } else if (pendingInvite) {
               localStorage.removeItem('pendingInviteToken');
               window.location.href = `/invite/${pendingInvite}`;
             } else {

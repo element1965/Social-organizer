@@ -9,7 +9,14 @@ export const notificationRouter = router({
         where: { userId: ctx.userId, status: { in: ['UNREAD', 'READ'] } },
         include: {
           collection: {
-            include: { creator: { select: { id: true, name: true, photoUrl: true, remainingBudget: true } } },
+            include: {
+              creator: { select: { id: true, name: true, photoUrl: true, remainingBudget: true } },
+              // Viewer's own active subscriptions — shown on regular-cycle notifications
+              obligations: {
+                where: { userId: ctx.userId, unsubscribedAt: null },
+                select: { amount: true, originalAmount: true, originalCurrency: true },
+              },
+            },
           },
         },
         orderBy: { createdAt: 'desc' },

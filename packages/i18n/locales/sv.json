@@ -217,7 +217,10 @@
     "sosLinkCopied": "SOS-länk kopierad!",
     "sosJoined": "Du har lagts till som direkt deltagare",
     "qrTitle": "QR-kod",
-    "qrScanHint": "Skanna för att gå med"
+    "qrScanHint": "Skanna för att gå med",
+    "shareLinkButton": "Dela länk till insamlingen",
+    "linkCopied": "Länk kopierad!",
+    "qrDownload": "Ladda ner QR-kod"
   },
   "create": {
     "title": "Jag behöver",
@@ -303,7 +306,9 @@
     "renewalStart": "New cycle",
     "renewalReminderBody": "{{name}}, this is a reminder that you participate in regular support for {{creator}}. A new collection cycle starts in 3 days. You can withdraw your intention at any time.",
     "renewalReminderAck": "Got it",
-    "renewalReminderUnsubscribe": "Withdraw intention"
+    "renewalReminderUnsubscribe": "Withdraw intention",
+    "yourContribution": "Ditt bidrag",
+    "period": "Period"
   },
   "notification": {
     "newCollection": "{{name}} behover hjalp",
@@ -579,7 +584,9 @@
     "renewalReminderTitle": "Renewal reminder",
     "renewalReminderBody": "{{name}}, you participate in regular support for {{creator}}. A new collection cycle starts in 3 days. You can withdraw your intention at any time.",
     "renewalStartTitle": "New cycle started",
-    "renewalStartBody": "{{name}}, a new support cycle for {{creator}} has just started."
+    "renewalStartBody": "{{name}}, a new support cycle for {{creator}} has just started.",
+    "yourContribution": "Ditt bidrag",
+    "period": "Period"
   },
   "hints": {
     "collectionAmount": "Ange beloppet du behover. Minimum 10 enheter. Systemet informerar ratt antal personer.",
@@ -983,7 +990,8 @@
     "joinBtn": "Gå med & hjälp",
     "autoConnect": "Du kommer att anslutas direkt till {{name}} — inget godkännande krävs.",
     "collectionClosed": "Den här insamlingen är {{status}}.",
-    "participantsCount": "{{count}} deltagare"
+    "participantsCount": "{{count}} deltagare",
+    "joinInBrowser": "Fortsätt i webbläsaren"
   },
   "support": {
     "title": "Supportchatt",
@@ -1007,6 +1015,8 @@
     "play": "Se videoinstruktionen",
     "short": "Videoguide",
     "regularTitle": "Så fungerar en regelbunden insamling",
-    "close": "Stäng"
+    "close": "Stäng",
+    "inviteLinkTitle": "Fått en länk? Så gör du",
+    "appStartTitle": "Första stegen i appen"
   }
 }

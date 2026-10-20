@@ -217,7 +217,10 @@
     "sosLinkCopied": "SOS-link kopieret!",
     "sosJoined": "Du er blevet tilføjet som direkte deltager",
     "qrTitle": "QR-kode",
-    "qrScanHint": "Scan for at deltage"
+    "qrScanHint": "Scan for at deltage",
+    "shareLinkButton": "Del link til indsamlingen",
+    "linkCopied": "Link kopieret!",
+    "qrDownload": "Download QR-kode"
   },
   "create": {
     "title": "Jeg har brug for",
@@ -303,7 +306,9 @@
     "renewalStart": "New cycle",
     "renewalReminderBody": "{{name}}, this is a reminder that you participate in regular support for {{creator}}. A new collection cycle starts in 3 days. You can withdraw your intention at any time.",
     "renewalReminderAck": "Got it",
-    "renewalReminderUnsubscribe": "Withdraw intention"
+    "renewalReminderUnsubscribe": "Withdraw intention",
+    "yourContribution": "Dit bidrag",
+    "period": "Periode"
   },
   "notification": {
     "newCollection": "{{name}} har brug for hjælp",
@@ -579,7 +584,9 @@
     "renewalReminderTitle": "Renewal reminder",
     "renewalReminderBody": "{{name}}, you participate in regular support for {{creator}}. A new collection cycle starts in 3 days. You can withdraw your intention at any time.",
     "renewalStartTitle": "New cycle started",
-    "renewalStartBody": "{{name}}, a new support cycle for {{creator}} has just started."
+    "renewalStartBody": "{{name}}, a new support cycle for {{creator}} has just started.",
+    "yourContribution": "Dit bidrag",
+    "period": "Periode"
   },
   "hints": {
     "collectionAmount": "Indtast det beløb, du har brug for. Minimum 10 enheder. Systemet vil underrette det rette antal personer.",
@@ -983,7 +990,8 @@
     "joinBtn": "Tilmeld & hjælp",
     "autoConnect": "Du vil blive forbundet direkte med {{name}} — ingen godkendelse kræves.",
     "collectionClosed": "Denne indsamling er {{status}}.",
-    "participantsCount": "{{count}} deltagere"
+    "participantsCount": "{{count}} deltagere",
+    "joinInBrowser": "Fortsæt i browseren"
   },
   "support": {
     "title": "Supportchat",
@@ -1007,6 +1015,8 @@
     "play": "Se videovejledningen",
     "short": "Videovejledning",
     "regularTitle": "Sådan fungerer en fast indsamling",
-    "close": "Luk"
+    "close": "Luk",
+    "inviteLinkTitle": "Fået et link? Sådan gør du",
+    "appStartTitle": "Første skridt i appen"
   }
 }

@@ -217,7 +217,10 @@
     "sosLinkCopied": "SOS-linkki kopioitu!",
     "sosJoined": "Sinut on lisätty suoraksi osallistujaksi",
     "qrTitle": "QR-koodi",
-    "qrScanHint": "Skannaa liittyäksesi"
+    "qrScanHint": "Skannaa liittyäksesi",
+    "shareLinkButton": "Jaa keräyksen linkki",
+    "linkCopied": "Linkki kopioitu!",
+    "qrDownload": "Lataa QR-koodi"
   },
   "create": {
     "title": "Tarvitsen",
@@ -303,7 +306,9 @@
     "renewalStart": "New cycle",
     "renewalReminderBody": "{{name}}, this is a reminder that you participate in regular support for {{creator}}. A new collection cycle starts in 3 days. You can withdraw your intention at any time.",
     "renewalReminderAck": "Got it",
-    "renewalReminderUnsubscribe": "Withdraw intention"
+    "renewalReminderUnsubscribe": "Withdraw intention",
+    "yourContribution": "Osuutesi",
+    "period": "Jakso"
   },
   "notification": {
     "newCollection": "{{name}} tarvitsee apua",
@@ -579,7 +584,9 @@
     "renewalReminderTitle": "Renewal reminder",
     "renewalReminderBody": "{{name}}, you participate in regular support for {{creator}}. A new collection cycle starts in 3 days. You can withdraw your intention at any time.",
     "renewalStartTitle": "New cycle started",
-    "renewalStartBody": "{{name}}, a new support cycle for {{creator}} has just started."
+    "renewalStartBody": "{{name}}, a new support cycle for {{creator}} has just started.",
+    "yourContribution": "Osuutesi",
+    "period": "Jakso"
   },
   "hints": {
     "collectionAmount": "Syötä tarvitsemasi summa. Vähintään 10 yksikköä. Järjestelmä ilmoittaa oikealle määrälle ihmisiä.",
@@ -983,7 +990,8 @@
     "joinBtn": "Liity ja auta",
     "autoConnect": "Sinut yhdistetään suoraan {{name}}-käyttäjään — ei hyväksyntää tarvita.",
     "collectionClosed": "Tämä keräys on {{status}}.",
-    "participantsCount": "{{count}} osallistujaa"
+    "participantsCount": "{{count}} osallistujaa",
+    "joinInBrowser": "Jatka selaimessa"
   },
   "support": {
     "title": "Tukichat",
@@ -1007,6 +1015,8 @@
     "play": "Katso video-ohje",
     "short": "Video-ohje",
     "regularTitle": "Näin säännöllinen keräys toimii",
-    "close": "Sulje"
+    "close": "Sulje",
+    "inviteLinkTitle": "Saitko linkin? Näin jatkat",
+    "appStartTitle": "Ensiaskeleet sovelluksessa"
   }
 }

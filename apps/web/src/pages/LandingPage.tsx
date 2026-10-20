@@ -5,6 +5,7 @@ import { ChevronDown, ChevronUp, Languages, Github } from 'lucide-react';
 import { languageNames } from '@so/i18n';
 import { useScrollProgress } from '../hooks/useScrollProgress';
 import { Logo } from '../components/Logo';
+import { VideoGuide } from '../components/VideoGuide';
 
 const LazyGlobeNetwork = lazy(() =>
   import('@so/graph-3d').then((m) => ({ default: m.GlobeNetwork })),
@@ -301,9 +302,10 @@ export function LandingPage({ variant, inviteToken: inviteTokenProp }: { variant
           <h2 className="text-3xl md:text-5xl font-bold text-white mb-4 text-center">
             {t('landing.ctaTitle')}
           </h2>
-          <p className="text-gray-400 text-base mb-8 text-center">
+          <p className="text-gray-400 text-base mb-4 text-center">
             {t('landing.ctaSmallLine')}
           </p>
+          <VideoGuide video="invite-link" label="title" colorClassName="text-teal-400 hover:text-teal-300" className="mb-8" />
 
           {/* Main CTAs — Telegram + Google Play side by side */}
           <div className="flex flex-col sm:flex-row gap-4 mb-12">

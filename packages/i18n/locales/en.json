@@ -220,7 +220,10 @@
     "paymentConfirmed": "Paid",
     "unconfirmPayment": "Unmark as paid",
     "qrTitle": "QR code",
-    "qrScanHint": "Scan to join"
+    "qrScanHint": "Scan to join",
+    "shareLinkButton": "Share collection link",
+    "linkCopied": "Link copied!",
+    "qrDownload": "Download QR code"
   },
   "create": {
     "title": "I Need",
@@ -308,7 +311,9 @@
     "renewalStart": "New cycle",
     "renewalReminderBody": "{{name}}, this is a reminder that you participate in regular support for {{creator}}. A new collection cycle starts in 3 days. You can withdraw your intention at any time.",
     "renewalReminderAck": "Got it",
-    "renewalReminderUnsubscribe": "Withdraw intention"
+    "renewalReminderUnsubscribe": "Withdraw intention",
+    "yourContribution": "Your contribution",
+    "period": "Period"
   },
   "notification": {
     "newCollection": "{{name}} needs help",
@@ -584,7 +589,9 @@
     "renewalReminderTitle": "Renewal reminder",
     "renewalReminderBody": "{{name}}, you participate in regular support for {{creator}}. A new collection cycle starts in 3 days. You can withdraw your intention at any time.",
     "renewalStartTitle": "New cycle started",
-    "renewalStartBody": "{{name}}, a new support cycle for {{creator}} has just started."
+    "renewalStartBody": "{{name}}, a new support cycle for {{creator}} has just started.",
+    "yourContribution": "Your contribution",
+    "period": "Period"
   },
   "hints": {
     "collectionAmount": "Enter the amount you need. Minimum 10 units. The system will notify the right number of people.",
@@ -988,7 +995,8 @@
     "joinBtn": "Join & Help",
     "autoConnect": "You'll be connected to {{name}} directly — no approval needed.",
     "collectionClosed": "This collection is {{status}}.",
-    "participantsCount": "{{count}} participants"
+    "participantsCount": "{{count}} participants",
+    "joinInBrowser": "Continue in browser"
   },
   "adminStats": {
     "title": "Detailed Statistics",
@@ -1012,6 +1020,8 @@
     "play": "Watch the video instruction",
     "short": "Video guide",
     "regularTitle": "How a regular collection works",
-    "close": "Close"
+    "close": "Close",
+    "inviteLinkTitle": "Got a link? What to do next",
+    "appStartTitle": "First steps in the app"
   }
 }

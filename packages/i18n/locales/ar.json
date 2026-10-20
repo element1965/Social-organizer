@@ -217,7 +217,10 @@
     "sosLinkCopied": "تم نسخ رابط SOS!",
     "sosJoined": "لقد تمت إضافتك كمشارك مباشر",
     "qrTitle": "رمز QR",
-    "qrScanHint": "امسح للانضمام"
+    "qrScanHint": "امسح للانضمام",
+    "shareLinkButton": "مشاركة رابط الحملة",
+    "linkCopied": "تم نسخ الرابط!",
+    "qrDownload": "تنزيل رمز QR"
   },
   "create": {
     "title": "أحتاج مساعدة",
@@ -303,7 +306,9 @@
     "renewalStart": "New cycle",
     "renewalReminderBody": "{{name}}, this is a reminder that you participate in regular support for {{creator}}. A new collection cycle starts in 3 days. You can withdraw your intention at any time.",
     "renewalReminderAck": "Got it",
-    "renewalReminderUnsubscribe": "Withdraw intention"
+    "renewalReminderUnsubscribe": "Withdraw intention",
+    "yourContribution": "مساهمتك",
+    "period": "الفترة"
   },
   "notification": {
     "newCollection": "{{name}} يحتاج مساعدة",
@@ -579,7 +584,9 @@
     "renewalReminderTitle": "Renewal reminder",
     "renewalReminderBody": "{{name}}, you participate in regular support for {{creator}}. A new collection cycle starts in 3 days. You can withdraw your intention at any time.",
     "renewalStartTitle": "New cycle started",
-    "renewalStartBody": "{{name}}, a new support cycle for {{creator}} has just started."
+    "renewalStartBody": "{{name}}, a new support cycle for {{creator}} has just started.",
+    "yourContribution": "مساهمتك",
+    "period": "الفترة"
   },
   "hints": {
     "collectionAmount": "أدخل المبلغ الذي تحتاجه. الحد الأدنى 10 وحدات. سيقوم النظام بإعلام العدد المناسب من الأشخاص.",
@@ -983,7 +990,8 @@
     "joinBtn": "انضم وساعد",
     "autoConnect": "ستتصل مباشرة بـ {{name}} — لا حاجة للموافقة.",
     "collectionClosed": "هذه المجموعة {{status}}.",
-    "participantsCount": "{{count}} مشاركين"
+    "participantsCount": "{{count}} مشاركين",
+    "joinInBrowser": "المتابعة في المتصفح"
   },
   "support": {
     "title": "محادثة الدعم",
@@ -1007,6 +1015,8 @@
     "play": "شاهد الفيديو التعليمي",
     "short": "دليل الفيديو",
     "regularTitle": "كيف يعمل الجمع المنتظم",
-    "close": "إغلاق"
+    "close": "إغلاق",
+    "inviteLinkTitle": "وصلك رابط؟ ماذا بعد",
+    "appStartTitle": "الخطوات الأولى في التطبيق"
   }
 }

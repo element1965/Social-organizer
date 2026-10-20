@@ -217,7 +217,10 @@
     "sosLinkCopied": "Đã sao chép liên kết SOS!",
     "sosJoined": "Bạn đã được thêm làm người tham gia trực tiếp",
     "qrTitle": "Mã QR",
-    "qrScanHint": "Quét để tham gia"
+    "qrScanHint": "Quét để tham gia",
+    "shareLinkButton": "Chia sẻ liên kết quyên góp",
+    "linkCopied": "Đã sao chép liên kết!",
+    "qrDownload": "Tải mã QR"
   },
   "create": {
     "title": "Tôi cần",
@@ -303,7 +306,9 @@
     "renewalStart": "New cycle",
     "renewalReminderBody": "{{name}}, this is a reminder that you participate in regular support for {{creator}}. A new collection cycle starts in 3 days. You can withdraw your intention at any time.",
     "renewalReminderAck": "Got it",
-    "renewalReminderUnsubscribe": "Withdraw intention"
+    "renewalReminderUnsubscribe": "Withdraw intention",
+    "yourContribution": "Đóng góp của bạn",
+    "period": "Kỳ"
   },
   "notification": {
     "newCollection": "{{name}} cần giúp đỡ",
@@ -579,7 +584,9 @@
     "renewalReminderTitle": "Renewal reminder",
     "renewalReminderBody": "{{name}}, you participate in regular support for {{creator}}. A new collection cycle starts in 3 days. You can withdraw your intention at any time.",
     "renewalStartTitle": "New cycle started",
-    "renewalStartBody": "{{name}}, a new support cycle for {{creator}} has just started."
+    "renewalStartBody": "{{name}}, a new support cycle for {{creator}} has just started.",
+    "yourContribution": "Đóng góp của bạn",
+    "period": "Kỳ"
   },
   "hints": {
     "collectionAmount": "Nhập số tiền bạn cần. Tối thiểu 10 đơn vị. Hệ thống sẽ thông báo đến đúng số người cần thiết.",
@@ -983,7 +990,8 @@
     "joinBtn": "Tham gia và giúp đỡ",
     "autoConnect": "Bạn sẽ được kết nối trực tiếp với {{name}} — không cần phê duyệt.",
     "collectionClosed": "Chiến dịch này đã {{status}}.",
-    "participantsCount": "{{count}} người tham gia"
+    "participantsCount": "{{count}} người tham gia",
+    "joinInBrowser": "Tiếp tục trên trình duyệt"
   },
   "support": {
     "title": "Trò chuyện hỗ trợ",
@@ -1007,6 +1015,8 @@
     "play": "Xem video hướng dẫn",
     "short": "Video hướng dẫn",
     "regularTitle": "Quyên góp định kỳ hoạt động như thế nào",
-    "close": "Đóng"
+    "close": "Đóng",
+    "inviteLinkTitle": "Nhận được liên kết? Làm gì tiếp",
+    "appStartTitle": "Những bước đầu trong ứng dụng"
   }
 }

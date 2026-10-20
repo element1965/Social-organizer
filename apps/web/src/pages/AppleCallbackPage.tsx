@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
+import { takePendingSosPath } from '../lib/inviteUrl';
 
 // Web finish page for Sign in with Apple.
 // The backend (/api/auth/apple/callback) verifies the Apple id_token, creates the
@@ -32,7 +33,11 @@ export function AppleCallbackPage() {
     // handshake for Apple sign-in.
     const pendingInvite = params.get('inv') || localStorage.getItem('pendingInviteToken');
     localStorage.removeItem('pendingInviteToken');
-    if (pendingInvite) {
+    // Came from a collection link (/sos/:id) → back to that collection
+    const pendingSos = takePendingSosPath();
+    if (pendingSos) {
+      window.location.href = pendingSos;
+    } else if (pendingInvite) {
       window.location.href = `/invite/${pendingInvite}`;
     } else {
       navigate('/dashboard');

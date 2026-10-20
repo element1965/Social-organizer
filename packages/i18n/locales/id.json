@@ -217,7 +217,10 @@
     "sosLinkCopied": "Tautan SOS disalin!",
     "sosJoined": "Anda telah ditambahkan sebagai peserta langsung",
     "qrTitle": "Kode QR",
-    "qrScanHint": "Pindai untuk bergabung"
+    "qrScanHint": "Pindai untuk bergabung",
+    "shareLinkButton": "Bagikan tautan penggalangan",
+    "linkCopied": "Tautan disalin!",
+    "qrDownload": "Unduh kode QR"
   },
   "create": {
     "title": "Butuh",
@@ -303,7 +306,9 @@
     "renewalStart": "New cycle",
     "renewalReminderBody": "{{name}}, this is a reminder that you participate in regular support for {{creator}}. A new collection cycle starts in 3 days. You can withdraw your intention at any time.",
     "renewalReminderAck": "Got it",
-    "renewalReminderUnsubscribe": "Withdraw intention"
+    "renewalReminderUnsubscribe": "Withdraw intention",
+    "yourContribution": "Kontribusi Anda",
+    "period": "Periode"
   },
   "notification": {
     "newCollection": "{{name}} butuh bantuan",
@@ -579,7 +584,9 @@
     "renewalReminderTitle": "Renewal reminder",
     "renewalReminderBody": "{{name}}, you participate in regular support for {{creator}}. A new collection cycle starts in 3 days. You can withdraw your intention at any time.",
     "renewalStartTitle": "New cycle started",
-    "renewalStartBody": "{{name}}, a new support cycle for {{creator}} has just started."
+    "renewalStartBody": "{{name}}, a new support cycle for {{creator}} has just started.",
+    "yourContribution": "Kontribusi Anda",
+    "period": "Periode"
   },
   "hints": {
     "collectionAmount": "Masukkan jumlah yang kamu butuhkan. Minimum 10 unit. Sistem akan memberitahu jumlah orang yang tepat.",
@@ -983,7 +990,8 @@
     "joinBtn": "Bergabung & Bantu",
     "autoConnect": "Anda akan terhubung langsung dengan {{name}} — tanpa perlu persetujuan.",
     "collectionClosed": "Koleksi ini {{status}}.",
-    "participantsCount": "{{count}} peserta"
+    "participantsCount": "{{count}} peserta",
+    "joinInBrowser": "Lanjutkan di browser"
   },
   "support": {
     "title": "Obrolan Dukungan",
@@ -1007,6 +1015,8 @@
     "play": "Tonton video petunjuk",
     "short": "Panduan video",
     "regularTitle": "Cara kerja penggalangan rutin",
-    "close": "Tutup"
+    "close": "Tutup",
+    "inviteLinkTitle": "Menerima tautan? Apa selanjutnya",
+    "appStartTitle": "Langkah pertama di aplikasi"
   }
 }

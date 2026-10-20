@@ -11,10 +11,10 @@ import { Badge } from '../components/ui/badge';
 import { Progress } from '../components/ui/progress';
 import { Avatar } from '../components/ui/avatar';
 import { Spinner } from '../components/ui/spinner';
-import { ExternalLink, Users, ArrowRight, Pencil, Check, X, Share2, QrCode, CheckCircle2 } from 'lucide-react';
-import { QRCodeSVG } from 'qrcode.react';
+import { ExternalLink, Users, ArrowRight, Pencil, Check, X, Share2, QrCode, CheckCircle2, Download } from 'lucide-react';
+import { QRCodeSVG, QRCodeCanvas } from 'qrcode.react';
 import { HandshakePath } from '../components/HandshakePath';
-import { RegularCollectionVideo } from '../components/RegularCollectionVideo';
+import { VideoGuide } from '../components/VideoGuide';
 import { useNicknames } from '../hooks/useNicknames';
 import { buildSosInviteUrl } from '../lib/inviteUrl';
 
@@ -360,6 +360,16 @@ export function CollectionPage() {
 
       {isOwner && (collection.status === 'ACTIVE' || collection.status === 'BLOCKED') && (() => {
         const sosUrl = buildSosInviteUrl(collection.id);
+        const isRegular = collection.type === 'REGULAR';
+        // Print-quality PNG of the same QR, e.g. to put on a website or a poster
+        const downloadQr = () => {
+          const canvas = document.getElementById(`qr-download-${collection.id}`) as HTMLCanvasElement | null;
+          if (!canvas) return;
+          const a = document.createElement('a');
+          a.href = canvas.toDataURL('image/png');
+          a.download = `social-organizer-qr-${collection.id}.png`;
+          a.click();
+        };
         return (
           <div className="space-y-2">
             <div className="flex gap-2">
@@ -372,7 +382,9 @@ export function CollectionPage() {
                 className="flex-1 flex items-center justify-center gap-2 p-3 rounded-lg bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800 text-red-600 dark:text-red-400 text-sm font-medium hover:bg-red-100 dark:hover:bg-red-900/40 transition-colors"
               >
                 {sosCopied ? <Check className="w-4 h-4" /> : <Share2 className="w-4 h-4" />}
-                {sosCopied ? t('collection.sosLinkCopied') : t('collection.sosInviteButton')}
+                {isRegular
+                  ? (sosCopied ? t('collection.linkCopied') : t('collection.shareLinkButton'))
+                  : (sosCopied ? t('collection.sosLinkCopied') : t('collection.sosInviteButton'))}
               </button>
               <button
                 onClick={() => setShowQr((v) => !v)}
@@ -387,10 +399,19 @@ export function CollectionPage() {
               <div className="flex flex-col items-center gap-2 p-4 rounded-lg bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700">
                 <QRCodeSVG value={sosUrl} size={180} level="M" includeMargin />
                 <p className="text-xs text-gray-400 text-center">{t('collection.qrScanHint')}</p>
+                <QRCodeCanvas id={`qr-download-${collection.id}`} value={sosUrl} size={1024} level="M" includeMargin className="hidden" />
+                <button
+                  type="button"
+                  onClick={downloadQr}
+                  className="flex items-center gap-1.5 text-sm font-medium text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors"
+                >
+                  <Download className="w-4 h-4" />
+                  {t('collection.qrDownload')}
+                </button>
               </div>
             )}
             <div className="flex justify-center">
-              <RegularCollectionVideo />
+              <VideoGuide />
             </div>
           </div>
         );

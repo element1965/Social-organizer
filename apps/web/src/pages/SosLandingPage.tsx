@@ -5,6 +5,8 @@ import { Avatar } from '../components/ui/avatar';
 import { Progress } from '../components/ui/progress';
 import { Spinner } from '../components/ui/spinner';
 import { Logo } from '../components/Logo';
+import { useAuth } from '../hooks/useAuth';
+import { savePendingSos, sosCollectionPath } from '../lib/inviteUrl';
 
 const TG_BOT_USERNAME = import.meta.env.VITE_TELEGRAM_BOT_USERNAME || '';
 
@@ -22,6 +24,7 @@ const DEMO_COLLECTION = {
 export function SosLandingPage() {
   const { collectionId } = useParams<{ collectionId: string }>();
   const { t } = useTranslation();
+  const isAuthenticated = useAuth((s) => s.isAuthenticated);
   const isPreview = collectionId === 'preview';
 
   const { data: fetched, isLoading } = trpc.collection.getPublic.useQuery(
@@ -35,6 +38,19 @@ export function SosLandingPage() {
   const tgUrl = TG_BOT_USERNAME
     ? `https://t.me/${TG_BOT_USERNAME}?startapp=sos_${collectionId}`
     : '#';
+
+  // Without Telegram: sign in / register in the browser, then land on the collection
+  // (CollectionPage auto-connects to the creator via ?sos=true)
+  const joinInBrowser = () => {
+    if (!collectionId || isPreview) return;
+    const path = sosCollectionPath(collectionId);
+    if (isAuthenticated) {
+      window.location.href = path;
+      return;
+    }
+    savePendingSos(collectionId);
+    window.location.href = `/login?redirect=${encodeURIComponent(path)}`;
+  };
 
   const hasGoal = collection?.amount != null && collection.amount > 0;
   const percentage = hasGoal ? Math.min(100, (collection!.currentAmount / collection!.amount!) * 100) : 0;
@@ -93,12 +109,21 @@ export function SosLandingPage() {
 
             {/* CTA */}
             {isActive ? (
-              <a
-                href={tgUrl}
-                className="block w-full py-3.5 rounded-xl bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white text-center font-semibold text-base transition-colors"
-              >
-                🤝 {t('sos.joinBtn')}
-              </a>
+              <div className="flex flex-col gap-3">
+                <a
+                  href={tgUrl}
+                  className="block w-full py-3.5 rounded-xl bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white text-center font-semibold text-base transition-colors"
+                >
+                  🤝 {t('sos.joinBtn')}
+                </a>
+                <button
+                  type="button"
+                  onClick={joinInBrowser}
+                  className="block w-full py-3 rounded-xl border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-900 text-center font-medium text-sm transition-colors"
+                >
+                  {t('sos.joinInBrowser')}
+                </button>
+              </div>
             ) : (
               <div className="text-center text-sm text-gray-400 py-2">
                 {t('sos.collectionClosed', { status: statusLabel })}
