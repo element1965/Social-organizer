@@ -217,7 +217,10 @@
     "sosLinkCopied": "คัดลอกลิงก์ SOS แล้ว!",
     "sosJoined": "คุณถูกเพิ่มเป็นผู้เข้าร่วมโดยตรงแล้ว",
     "qrTitle": "คิวอาร์โค้ด",
-    "qrScanHint": "สแกนเพื่อเข้าร่วม"
+    "qrScanHint": "สแกนเพื่อเข้าร่วม",
+    "shareLinkButton": "แชร์ลิงก์การระดมทุน",
+    "linkCopied": "คัดลอกลิงก์แล้ว!",
+    "qrDownload": "ดาวน์โหลดคิวอาร์โค้ด"
   },
   "create": {
     "title": "ต้องการ",
@@ -303,7 +306,9 @@
     "renewalStart": "New cycle",
     "renewalReminderBody": "{{name}}, this is a reminder that you participate in regular support for {{creator}}. A new collection cycle starts in 3 days. You can withdraw your intention at any time.",
     "renewalReminderAck": "Got it",
-    "renewalReminderUnsubscribe": "Withdraw intention"
+    "renewalReminderUnsubscribe": "Withdraw intention",
+    "yourContribution": "ยอดสมทบของคุณ",
+    "period": "ช่วงเวลา"
   },
   "notification": {
     "newCollection": "{{name}} ต้องการความช่วยเหลือ",
@@ -579,7 +584,9 @@
     "renewalReminderTitle": "Renewal reminder",
     "renewalReminderBody": "{{name}}, you participate in regular support for {{creator}}. A new collection cycle starts in 3 days. You can withdraw your intention at any time.",
     "renewalStartTitle": "New cycle started",
-    "renewalStartBody": "{{name}}, a new support cycle for {{creator}} has just started."
+    "renewalStartBody": "{{name}}, a new support cycle for {{creator}} has just started.",
+    "yourContribution": "ยอดสมทบของคุณ",
+    "period": "ช่วงเวลา"
   },
   "hints": {
     "collectionAmount": "กรอกจำนวนที่คุณต้องการ ขั้นต่ำ 10 หน่วย ระบบจะแจ้งเตือนคนจำนวนที่เหมาะสม",
@@ -983,7 +990,8 @@
     "joinBtn": "เข้าร่วมและช่วยเหลือ",
     "autoConnect": "คุณจะเชื่อมต่อกับ {{name}} โดยตรง — ไม่ต้องรออนุมัติ",
     "collectionClosed": "การรวบรวมนี้{{status}}แล้ว",
-    "participantsCount": "{{count}} ผู้เข้าร่วม"
+    "participantsCount": "{{count}} ผู้เข้าร่วม",
+    "joinInBrowser": "ดำเนินการต่อในเบราว์เซอร์"
   },
   "support": {
     "title": "แชทสนับสนุน",
@@ -1007,6 +1015,8 @@
     "play": "ดูวิดีโอแนะนำ",
     "short": "วิดีโอแนะนำ",
     "regularTitle": "การระดมทุนแบบประจำทำงานอย่างไร",
-    "close": "ปิด"
+    "close": "ปิด",
+    "inviteLinkTitle": "ได้รับลิงก์? ทำอะไรต่อ",
+    "appStartTitle": "ก้าวแรกในแอป"
   }
 }

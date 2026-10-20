@@ -43,3 +43,26 @@ export function buildBotInviteUrl(token: string): string {
 export function buildSosInviteUrl(collectionId: string): string {
   return `${WEB_APP_URL}/sos/${collectionId}`;
 }
+
+const PENDING_SOS_KEY = 'pendingSosCollection';
+
+/** In-app path that opens a collection and auto-connects the viewer to its creator. */
+export function sosCollectionPath(collectionId: string): string {
+  return `/collection/${collectionId}?sos=true`;
+}
+
+/**
+ * Remember the SOS collection while a browser user signs in or registers, so OAuth
+ * round-trips (Google/Apple callback pages) can bring them back to it.
+ */
+export function savePendingSos(collectionId: string): void {
+  localStorage.setItem(PENDING_SOS_KEY, collectionId);
+}
+
+/** Path of the remembered SOS collection (and forget it), or null. */
+export function takePendingSosPath(): string | null {
+  const collectionId = localStorage.getItem(PENDING_SOS_KEY);
+  if (!collectionId) return null;
+  localStorage.removeItem(PENDING_SOS_KEY);
+  return sosCollectionPath(collectionId);
+}

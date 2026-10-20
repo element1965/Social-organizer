@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { trpc } from '../lib/trpc';
 import { useCachedNetworkStats } from '../hooks/useCachedNetworkStats';
 import { InvitePopup } from '../components/InvitePopup';
-import { RegularCollectionVideo } from '../components/RegularCollectionVideo';
+import { VideoGuide } from '../components/VideoGuide';
 import { Card, CardContent, CardHeader } from '../components/ui/card';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
@@ -130,7 +130,7 @@ export function CreateCollectionPage() {
             </button>
           </div>
           <div className="flex justify-center -mt-1">
-            <RegularCollectionVideo />
+            <VideoGuide />
           </div>
 
           <div className="space-y-2">

@@ -217,7 +217,10 @@
     "sosLinkCopied": "SOS 링크 복사됨!",
     "sosJoined": "직접 참가자로 추가되었습니다",
     "qrTitle": "QR 코드",
-    "qrScanHint": "스캔하여 참여하기"
+    "qrScanHint": "스캔하여 참여하기",
+    "shareLinkButton": "모금 링크 공유",
+    "linkCopied": "링크가 복사되었습니다!",
+    "qrDownload": "QR 코드 다운로드"
   },
   "create": {
     "title": "필요해요",
@@ -303,7 +306,9 @@
     "renewalStart": "New cycle",
     "renewalReminderBody": "{{name}}, this is a reminder that you participate in regular support for {{creator}}. A new collection cycle starts in 3 days. You can withdraw your intention at any time.",
     "renewalReminderAck": "Got it",
-    "renewalReminderUnsubscribe": "Withdraw intention"
+    "renewalReminderUnsubscribe": "Withdraw intention",
+    "yourContribution": "나의 기여금",
+    "period": "기간"
   },
   "notification": {
     "newCollection": "{{name}}님이 도움을 요청합니다",
@@ -579,7 +584,9 @@
     "renewalReminderTitle": "Renewal reminder",
     "renewalReminderBody": "{{name}}, you participate in regular support for {{creator}}. A new collection cycle starts in 3 days. You can withdraw your intention at any time.",
     "renewalStartTitle": "New cycle started",
-    "renewalStartBody": "{{name}}, a new support cycle for {{creator}} has just started."
+    "renewalStartBody": "{{name}}, a new support cycle for {{creator}} has just started.",
+    "yourContribution": "나의 기여금",
+    "period": "기간"
   },
   "hints": {
     "collectionAmount": "필요한 금액을 입력하세요. 최소 10 단위입니다. 시스템이 적절한 수의 사람들에게 알립니다.",
@@ -983,7 +990,8 @@
     "joinBtn": "참여하고 돕기",
     "autoConnect": "{{name}}와 직접 연결됩니다 — 승인 불필요.",
     "collectionClosed": "이 모금은 {{status}}입니다.",
-    "participantsCount": "{{count}}명 참가자"
+    "participantsCount": "{{count}}명 참가자",
+    "joinInBrowser": "브라우저에서 계속하기"
   },
   "support": {
     "title": "지원 채팅",
@@ -1007,6 +1015,8 @@
     "play": "영상 안내 보기",
     "short": "영상 가이드",
     "regularTitle": "정기 모금은 이렇게 진행됩니다",
-    "close": "닫기"
+    "close": "닫기",
+    "inviteLinkTitle": "링크를 받았다면",
+    "appStartTitle": "앱 첫걸음"
   }
 }

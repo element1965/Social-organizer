@@ -217,7 +217,10 @@
     "sosLinkCopied": "SOS लिंक कॉपी हो गया!",
     "sosJoined": "आपको प्रत्यक्ष प्रतिभागी के रूप में जोड़ा गया",
     "qrTitle": "QR कोड",
-    "qrScanHint": "जुड़ने के लिए स्कैन करें"
+    "qrScanHint": "जुड़ने के लिए स्कैन करें",
+    "shareLinkButton": "संग्रह का लिंक साझा करें",
+    "linkCopied": "लिंक कॉपी हो गया!",
+    "qrDownload": "QR कोड डाउनलोड करें"
   },
   "create": {
     "title": "मुझे चाहिए",
@@ -303,7 +306,9 @@
     "renewalStart": "New cycle",
     "renewalReminderBody": "{{name}}, this is a reminder that you participate in regular support for {{creator}}. A new collection cycle starts in 3 days. You can withdraw your intention at any time.",
     "renewalReminderAck": "Got it",
-    "renewalReminderUnsubscribe": "Withdraw intention"
+    "renewalReminderUnsubscribe": "Withdraw intention",
+    "yourContribution": "आपका योगदान",
+    "period": "अवधि"
   },
   "notification": {
     "newCollection": "{{name}} को मदद चाहिए",
@@ -579,7 +584,9 @@
     "renewalReminderTitle": "Renewal reminder",
     "renewalReminderBody": "{{name}}, you participate in regular support for {{creator}}. A new collection cycle starts in 3 days. You can withdraw your intention at any time.",
     "renewalStartTitle": "New cycle started",
-    "renewalStartBody": "{{name}}, a new support cycle for {{creator}} has just started."
+    "renewalStartBody": "{{name}}, a new support cycle for {{creator}} has just started.",
+    "yourContribution": "आपका योगदान",
+    "period": "अवधि"
   },
   "hints": {
     "collectionAmount": "आपको जितनी राशि चाहिए वह दर्ज करें। न्यूनतम 10 इकाई। सिस्टम उचित संख्या में लोगों को सूचित करेगा।",
@@ -983,7 +990,8 @@
     "joinBtn": "जुड़ें और मदद करें",
     "autoConnect": "आप सीधे {{name}} से जुड़ेंगे — कोई अनुमोदन आवश्यक नहीं।",
     "collectionClosed": "यह संग्रह {{status}} है।",
-    "participantsCount": "{{count}} प्रतिभागी"
+    "participantsCount": "{{count}} प्रतिभागी",
+    "joinInBrowser": "ब्राउज़र में जारी रखें"
   },
   "support": {
     "title": "सहायता चैट",
@@ -1007,6 +1015,8 @@
     "play": "वीडियो निर्देश देखें",
     "short": "वीडियो गाइड",
     "regularTitle": "नियमित संग्रह कैसे काम करता है",
-    "close": "बंद करें"
+    "close": "बंद करें",
+    "inviteLinkTitle": "लिंक मिला? आगे क्या करें",
+    "appStartTitle": "ऐप में पहले कदम"
   }
 }

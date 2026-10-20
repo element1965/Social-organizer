@@ -217,7 +217,10 @@
     "sosLinkCopied": "SOS веза копирана!",
     "sosJoined": "Додати сте као директан учесник",
     "qrTitle": "QR код",
-    "qrScanHint": "Скенирајте да бисте се придружили"
+    "qrScanHint": "Скенирајте да бисте се придружили",
+    "shareLinkButton": "Подели линк на прикупљање",
+    "linkCopied": "Линк је копиран!",
+    "qrDownload": "Преузми QR код"
   },
   "create": {
     "title": "Треба ми",
@@ -303,7 +306,9 @@
     "renewalStart": "New cycle",
     "renewalReminderBody": "{{name}}, this is a reminder that you participate in regular support for {{creator}}. A new collection cycle starts in 3 days. You can withdraw your intention at any time.",
     "renewalReminderAck": "Got it",
-    "renewalReminderUnsubscribe": "Withdraw intention"
+    "renewalReminderUnsubscribe": "Withdraw intention",
+    "yourContribution": "Ваш допринос",
+    "period": "Период"
   },
   "notification": {
     "newCollection": "{{name}} тражи помоћ",
@@ -579,7 +584,9 @@
     "renewalReminderTitle": "Renewal reminder",
     "renewalReminderBody": "{{name}}, you participate in regular support for {{creator}}. A new collection cycle starts in 3 days. You can withdraw your intention at any time.",
     "renewalStartTitle": "New cycle started",
-    "renewalStartBody": "{{name}}, a new support cycle for {{creator}} has just started."
+    "renewalStartBody": "{{name}}, a new support cycle for {{creator}} has just started.",
+    "yourContribution": "Ваш допринос",
+    "period": "Период"
   },
   "hints": {
     "collectionAmount": "Унеси износ који ти треба. Минимум 10 јединица. Систем ће обавестити одговарајући број људи.",
@@ -983,7 +990,8 @@
     "joinBtn": "Придружи се и помози",
     "autoConnect": "Бићете директно повезани са {{name}} — без потребе за одобрењем.",
     "collectionClosed": "Ова збирка је {{status}}.",
-    "participantsCount": "{{count}} учесника"
+    "participantsCount": "{{count}} учесника",
+    "joinInBrowser": "Настави у прегледачу"
   },
   "support": {
     "title": "Čet podrške",
@@ -1007,6 +1015,8 @@
     "play": "Погледај видео упутство",
     "short": "Видео упутство",
     "regularTitle": "Како функционише редовно прикупљање",
-    "close": "Затвори"
+    "close": "Затвори",
+    "inviteLinkTitle": "Добили сте линк — шта даље",
+    "appStartTitle": "Први кораци у апликацији"
   }
 }

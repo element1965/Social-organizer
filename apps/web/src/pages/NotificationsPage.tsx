@@ -22,6 +22,37 @@ import {
 } from 'lucide-react';
 import { cn } from '../lib/utils';
 import { useNicknames } from '../hooks/useNicknames';
+import { REGULAR_CYCLE_DAYS } from '@so/shared';
+
+const DAY_MS = 24 * 60 * 60 * 1000;
+
+/**
+ * Viewer's contribution and the period a regular-cycle notification refers to.
+ * wave = cycle number the notification was created for; we derive dates from the
+ * collection's current cycle so they stay correct even after later rollovers.
+ */
+function getCycleInfo(n: any, lang: string): { contribution: string | null; period: string } | null {
+  if (n.type !== 'CYCLE_RENEWAL_REMINDER' && n.type !== 'CYCLE_RENEWED') return null;
+  const c = n.collection;
+  if (!c?.currentCycleStart || c.cycleNumber == null) return null;
+  const current = new Date(c.currentCycleStart).getTime();
+  // Reminder (wave = cycle in progress) points to the next cycle; renewed (wave = new cycle) to itself.
+  const targetCycle = n.type === 'CYCLE_RENEWAL_REMINDER' ? (n.wave ?? c.cycleNumber) + 1 : (n.wave ?? c.cycleNumber);
+  const start = new Date(current + (targetCycle - c.cycleNumber) * REGULAR_CYCLE_DAYS * DAY_MS);
+  const end = new Date(start.getTime() + REGULAR_CYCLE_DAYS * DAY_MS);
+  const fmt = (d: Date) => d.toLocaleDateString(lang, { day: '2-digit', month: '2-digit', year: 'numeric' });
+
+  const obls = (c.obligations ?? []) as Array<{ amount: number; originalAmount: number | null; originalCurrency: string | null }>;
+  let contribution: string | null = null;
+  if (obls.length > 0) {
+    const currencies = new Set(obls.map((o) => o.originalCurrency ?? 'USD'));
+    const round = (x: number) => Math.round(x * 100) / 100;
+    contribution = currencies.size === 1
+      ? `${round(obls.reduce((s, o) => s + (o.originalAmount ?? o.amount), 0))} ${[...currencies][0]}`
+      : `${round(obls.reduce((s, o) => s + o.amount, 0))} USD`;
+  }
+  return { contribution, period: `${fmt(start)} — ${fmt(end)}` };
+}
 
 function getNotificationBadge(type: string, t: (key: string) => string): { label: string; variant: 'info' | 'warning' | 'default' | 'danger' | 'success' } {
   switch (type) {
@@ -48,7 +79,7 @@ function timeRemaining(expiresAt: string | Date): string | null {
 }
 
 export function NotificationsPage() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const resolve = useNicknames();
   const utils = trpc.useUtils();
@@ -191,6 +222,15 @@ export function NotificationsPage() {
               const creatorName = n.collection?.creator?.id
                 ? resolve(n.collection.creator.id, n.collection.creator.name || '')
                 : (n.collection?.creator?.name || '');
+              const cycleInfo = getCycleInfo(n, i18n.language);
+              const cycleInfoBlock = cycleInfo && (
+                <div className="mt-1.5 text-xs text-gray-500 dark:text-gray-400 space-y-0.5">
+                  {cycleInfo.contribution && (
+                    <p>{t('notifications.yourContribution')}: <span className="font-semibold text-gray-700 dark:text-gray-200">{cycleInfo.contribution}</span></p>
+                  )}
+                  <p>{t('notifications.period')}: {cycleInfo.period}</p>
+                </div>
+              );
 
               // Renewal reminder card: explicit text + two action buttons
               if (n.type === 'CYCLE_RENEWAL_REMINDER') {
@@ -214,12 +254,15 @@ export function NotificationsPage() {
                       </div>
                       <div className="flex items-start gap-2.5 pr-6">
                         <Avatar src={n.collection?.creator?.photoUrl} name={creatorName} size="sm" />
-                        <p className="flex-1 text-sm text-gray-700 dark:text-gray-200 leading-snug">
-                          {t('notifications.renewalReminderBody', {
-                            name: me?.name || '',
-                            creator: creatorName,
-                          })}
-                        </p>
+                        <div className="flex-1">
+                          <p className="text-sm text-gray-700 dark:text-gray-200 leading-snug">
+                            {t('notifications.renewalReminderBody', {
+                              name: me?.name || '',
+                              creator: creatorName,
+                            })}
+                          </p>
+                          {cycleInfoBlock}
+                        </div>
                       </div>
                       <div className="flex gap-2 mt-3">
                         <Button
@@ -302,6 +345,7 @@ export function NotificationsPage() {
                             <span className="ml-1">({resolvedPath.length})</span>
                           </p>
                         )}
+                        {cycleInfoBlock}
                       </div>
                     </div>
                   </CardContent>

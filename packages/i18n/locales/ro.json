@@ -217,7 +217,10 @@
     "sosLinkCopied": "Link SOS copiat!",
     "sosJoined": "Ai fost adăugat ca participant direct",
     "qrTitle": "Cod QR",
-    "qrScanHint": "Scanează pentru a te alătura"
+    "qrScanHint": "Scanează pentru a te alătura",
+    "shareLinkButton": "Distribuie linkul colectei",
+    "linkCopied": "Link copiat!",
+    "qrDownload": "Descarcă codul QR"
   },
   "create": {
     "title": "Am nevoie",
@@ -303,7 +306,9 @@
     "renewalStart": "New cycle",
     "renewalReminderBody": "{{name}}, this is a reminder that you participate in regular support for {{creator}}. A new collection cycle starts in 3 days. You can withdraw your intention at any time.",
     "renewalReminderAck": "Got it",
-    "renewalReminderUnsubscribe": "Withdraw intention"
+    "renewalReminderUnsubscribe": "Withdraw intention",
+    "yourContribution": "Contribuția ta",
+    "period": "Perioada"
   },
   "notification": {
     "newCollection": "{{name}} are nevoie de ajutor",
@@ -579,7 +584,9 @@
     "renewalReminderTitle": "Renewal reminder",
     "renewalReminderBody": "{{name}}, you participate in regular support for {{creator}}. A new collection cycle starts in 3 days. You can withdraw your intention at any time.",
     "renewalStartTitle": "New cycle started",
-    "renewalStartBody": "{{name}}, a new support cycle for {{creator}} has just started."
+    "renewalStartBody": "{{name}}, a new support cycle for {{creator}} has just started.",
+    "yourContribution": "Contribuția ta",
+    "period": "Perioada"
   },
   "hints": {
     "collectionAmount": "Introdu suma de care ai nevoie. Minimum 10 unitati. Sistemul va notifica numarul potrivit de persoane.",
@@ -983,7 +990,8 @@
     "joinBtn": "Alătură-te și ajută",
     "autoConnect": "Vei fi conectat direct cu {{name}} — fără aprobare necesară.",
     "collectionClosed": "Această colectă este {{status}}.",
-    "participantsCount": "{{count}} participanți"
+    "participantsCount": "{{count}} participanți",
+    "joinInBrowser": "Continuă în browser"
   },
   "support": {
     "title": "Chat suport",
@@ -1007,6 +1015,8 @@
     "play": "Urmărește instrucțiunile video",
     "short": "Ghid video",
     "regularTitle": "Cum funcționează o strângere regulată",
-    "close": "Închide"
+    "close": "Închide",
+    "inviteLinkTitle": "Ai primit un link? Ce urmează",
+    "appStartTitle": "Primii pași în aplicație"
   }
 }

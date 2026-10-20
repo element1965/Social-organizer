@@ -217,7 +217,10 @@
     "sosLinkCopied": "Lien SOS copié !",
     "sosJoined": "Vous avez été ajouté comme participant direct",
     "qrTitle": "Code QR",
-    "qrScanHint": "Scannez pour rejoindre"
+    "qrScanHint": "Scannez pour rejoindre",
+    "shareLinkButton": "Partager le lien de la collecte",
+    "linkCopied": "Lien copié !",
+    "qrDownload": "Télécharger le QR code"
   },
   "create": {
     "title": "J'ai besoin",
@@ -303,7 +306,9 @@
     "renewalStart": "Nouveau cycle",
     "renewalReminderBody": "{{name}}, nous vous rappelons que vous participez au soutien régulier de {{creator}}. Dans 3 jours, un nouveau cycle commence. Vous pouvez retirer votre intention à tout moment.",
     "renewalReminderAck": "Compris",
-    "renewalReminderUnsubscribe": "Retirer mon intention"
+    "renewalReminderUnsubscribe": "Retirer mon intention",
+    "yourContribution": "Votre contribution",
+    "period": "Période"
   },
   "notification": {
     "newCollection": "{{name}} a besoin d'aide",
@@ -521,7 +526,9 @@
     "renewalReminderTitle": "Rappel de renouvellement",
     "renewalReminderBody": "{{name}}, vous participez au soutien régulier de {{creator}}. Dans 3 jours, un nouveau cycle commence. Vous pouvez retirer votre intention à tout moment.",
     "renewalStartTitle": "Nouveau cycle commencé",
-    "renewalStartBody": "{{name}}, un nouveau cycle de soutien régulier pour {{creator}} vient de commencer."
+    "renewalStartBody": "{{name}}, un nouveau cycle de soutien régulier pour {{creator}} vient de commencer.",
+    "yourContribution": "Votre contribution",
+    "period": "Période"
   },
   "hints": {
     "collectionAmount": "Entrez le montant dont vous avez besoin. Minimum 10 unités. Le système notifiera le bon nombre de personnes.",
@@ -983,7 +990,8 @@
     "joinBtn": "Rejoindre et aider",
     "autoConnect": "Vous serez connecté directement à {{name}} — sans approbation nécessaire.",
     "collectionClosed": "Cette collecte est {{status}}.",
-    "participantsCount": "{{count}} participants"
+    "participantsCount": "{{count}} participants",
+    "joinInBrowser": "Continuer dans le navigateur"
   },
   "support": {
     "title": "Chat support",
@@ -1007,6 +1015,8 @@
     "play": "Regarder la vidéo explicative",
     "short": "Guide vidéo",
     "regularTitle": "Comment fonctionne une collecte régulière",
-    "close": "Fermer"
+    "close": "Fermer",
+    "inviteLinkTitle": "Vous avez reçu un lien ? La suite",
+    "appStartTitle": "Premiers pas dans l’application"
   }
 }

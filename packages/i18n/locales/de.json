@@ -217,7 +217,10 @@
     "sosLinkCopied": "SOS-Link kopiert!",
     "sosJoined": "Sie wurden als direkter Teilnehmer hinzugefügt",
     "qrTitle": "QR-Code",
-    "qrScanHint": "Scannen, um beizutreten"
+    "qrScanHint": "Scannen, um beizutreten",
+    "shareLinkButton": "Link zur Sammlung teilen",
+    "linkCopied": "Link kopiert!",
+    "qrDownload": "QR-Code herunterladen"
   },
   "create": {
     "title": "Ich brauche",
@@ -303,7 +306,9 @@
     "renewalStart": "Neuer Zyklus",
     "renewalReminderBody": "{{name}}, wir erinnern dich daran, dass du an der regelmäßigen Unterstützung von {{creator}} teilnimmst. In 3 Tagen beginnt ein neuer Zyklus. Du kannst deine Absicht jederzeit zurücknehmen.",
     "renewalReminderAck": "Verstanden",
-    "renewalReminderUnsubscribe": "Absicht zurückziehen"
+    "renewalReminderUnsubscribe": "Absicht zurückziehen",
+    "yourContribution": "Ihr Beitrag",
+    "period": "Zeitraum"
   },
   "notification": {
     "newCollection": "{{name}} braucht Hilfe",
@@ -521,7 +526,9 @@
     "renewalReminderTitle": "Erinnerung an Verlängerung",
     "renewalReminderBody": "{{name}}, du nimmst an der regelmäßigen Unterstützung von {{creator}} teil. In 3 Tagen beginnt ein neuer Zyklus. Du kannst deine Absicht jederzeit zurücknehmen.",
     "renewalStartTitle": "Neuer Zyklus gestartet",
-    "renewalStartBody": "{{name}}, ein neuer Zyklus regelmäßiger Unterstützung für {{creator}} hat begonnen."
+    "renewalStartBody": "{{name}}, ein neuer Zyklus regelmäßiger Unterstützung für {{creator}} hat begonnen.",
+    "yourContribution": "Ihr Beitrag",
+    "period": "Zeitraum"
   },
   "hints": {
     "collectionAmount": "Gib den Betrag ein, den du benötigst. Mindestens 10 Einheiten. Das System benachrichtigt die richtige Anzahl von Personen.",
@@ -983,7 +990,8 @@
     "joinBtn": "Beitreten & Helfen",
     "autoConnect": "Sie werden direkt mit {{name}} verbunden — keine Genehmigung erforderlich.",
     "collectionClosed": "Diese Sammlung ist {{status}}.",
-    "participantsCount": "{{count}} Teilnehmer"
+    "participantsCount": "{{count}} Teilnehmer",
+    "joinInBrowser": "Im Browser fortfahren"
   },
   "support": {
     "title": "Support-Chat",
@@ -1007,6 +1015,8 @@
     "play": "Videoanleitung ansehen",
     "short": "Videoanleitung",
     "regularTitle": "So funktioniert eine regelmäßige Sammlung",
-    "close": "Schließen"
+    "close": "Schließen",
+    "inviteLinkTitle": "Link bekommen? So geht es weiter",
+    "appStartTitle": "Erste Schritte in der App"
   }
 }

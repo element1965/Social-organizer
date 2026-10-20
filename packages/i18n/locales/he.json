@@ -227,7 +227,10 @@
     "sosLinkCopied": "קישור SOS הועתק!",
     "sosJoined": "הוספת כמשתתף ישיר",
     "qrTitle": "קוד QR",
-    "qrScanHint": "סרקו כדי להצטרף"
+    "qrScanHint": "סרקו כדי להצטרף",
+    "shareLinkButton": "שתף קישור לגיוס",
+    "linkCopied": "הקישור הועתק!",
+    "qrDownload": "הורד קוד QR"
   },
   "create": {
     "title": "אני צריך",
@@ -313,7 +316,9 @@
     "renewalStart": "New cycle",
     "renewalReminderBody": "{{name}}, this is a reminder that you participate in regular support for {{creator}}. A new collection cycle starts in 3 days. You can withdraw your intention at any time.",
     "renewalReminderAck": "Got it",
-    "renewalReminderUnsubscribe": "Withdraw intention"
+    "renewalReminderUnsubscribe": "Withdraw intention",
+    "yourContribution": "התרומה שלך",
+    "period": "תקופה"
   },
   "notification": {
     "newCollection": "{{name}} זקוק לעזרה",
@@ -634,7 +639,9 @@
     "renewalReminderTitle": "Renewal reminder",
     "renewalReminderBody": "{{name}}, you participate in regular support for {{creator}}. A new collection cycle starts in 3 days. You can withdraw your intention at any time.",
     "renewalStartTitle": "New cycle started",
-    "renewalStartBody": "{{name}}, a new support cycle for {{creator}} has just started."
+    "renewalStartBody": "{{name}}, a new support cycle for {{creator}} has just started.",
+    "yourContribution": "התרומה שלך",
+    "period": "תקופה"
   },
   "hints": {
     "collectionAmount": "הזן את הסכום שצריך. מינימום 10 יחידות. המערכת תודיע למספר הנכון של אנשים.",
@@ -1038,7 +1045,8 @@
     "joinBtn": "הצטרף ועזור",
     "autoConnect": "תחובר ישירות ל-{{name}} — ללא צורך באישור.",
     "collectionClosed": "האוסף הזה {{status}}.",
-    "participantsCount": "{{count}} משתתפים"
+    "participantsCount": "{{count}} משתתפים",
+    "joinInBrowser": "המשך בדפדפן"
   },
   "support": {
     "title": "צ'אט תמיכה",
@@ -1062,6 +1070,8 @@
     "play": "צפו בסרטון ההדרכה",
     "short": "מדריך וידאו",
     "regularTitle": "איך עובד גיוס קבוע",
-    "close": "סגירה"
+    "close": "סגירה",
+    "inviteLinkTitle": "קיבלתם קישור? מה הלאה",
+    "appStartTitle": "צעדים ראשונים באפליקציה"
   }
 }

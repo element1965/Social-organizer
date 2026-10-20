@@ -217,7 +217,10 @@
     "sosLinkCopied": "SOS 链接已复制！",
     "sosJoined": "您已被添加为直接参与者",
     "qrTitle": "二维码",
-    "qrScanHint": "扫码加入"
+    "qrScanHint": "扫码加入",
+    "shareLinkButton": "分享募集链接",
+    "linkCopied": "链接已复制！",
+    "qrDownload": "下载二维码"
   },
   "create": {
     "title": "我需要",
@@ -303,7 +306,9 @@
     "renewalStart": "新周期",
     "renewalReminderBody": "{{name}}，提醒您正在参与对 {{creator}} 的定期支持。新一轮募集将在 3 天后开始。您可以随时撤回意向。",
     "renewalReminderAck": "知道了",
-    "renewalReminderUnsubscribe": "撤回意向"
+    "renewalReminderUnsubscribe": "撤回意向",
+    "yourContribution": "您的出资",
+    "period": "周期"
   },
   "notification": {
     "newCollection": "{{name}} 需要帮助",
@@ -521,7 +526,9 @@
     "renewalReminderTitle": "续期提醒",
     "renewalReminderBody": "{{name}}，您正在参与对 {{creator}} 的定期支持。新一轮募集将在 3 天后开始。您可以随时撤回意向。",
     "renewalStartTitle": "新周期已开始",
-    "renewalStartBody": "{{name}}，对 {{creator}} 的新一轮定期支持已经开始。"
+    "renewalStartBody": "{{name}}，对 {{creator}} 的新一轮定期支持已经开始。",
+    "yourContribution": "您的出资",
+    "period": "周期"
   },
   "hints": {
     "collectionAmount": "输入你需要的金额。最少10个单位。系统会通知适当数量的人。",
@@ -983,7 +990,8 @@
     "joinBtn": "加入并帮助",
     "autoConnect": "您将直接与 {{name}} 建立联系 — 无需审批。",
     "collectionClosed": "此募集已{{status}}。",
-    "participantsCount": "{{count}} 位参与者"
+    "participantsCount": "{{count}} 位参与者",
+    "joinInBrowser": "在浏览器中继续"
   },
   "support": {
     "title": "支持聊天",
@@ -1007,6 +1015,8 @@
     "play": "观看视频说明",
     "short": "视频指南",
     "regularTitle": "定期募集如何运作",
-    "close": "关闭"
+    "close": "关闭",
+    "inviteLinkTitle": "收到链接？接下来怎么做",
+    "appStartTitle": "应用入门第一步"
   }
 }

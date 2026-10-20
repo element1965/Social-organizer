@@ -217,7 +217,10 @@
     "sosLinkCopied": "SOS odkaz zkopírován!",
     "sosJoined": "Byl jsi přidán jako přímý účastník",
     "qrTitle": "QR kód",
-    "qrScanHint": "Naskenujte a připojte se"
+    "qrScanHint": "Naskenujte a připojte se",
+    "shareLinkButton": "Sdílet odkaz na sbírku",
+    "linkCopied": "Odkaz zkopírován!",
+    "qrDownload": "Stáhnout QR kód"
   },
   "create": {
     "title": "Potřebuji",
@@ -303,7 +306,9 @@
     "renewalStart": "New cycle",
     "renewalReminderBody": "{{name}}, this is a reminder that you participate in regular support for {{creator}}. A new collection cycle starts in 3 days. You can withdraw your intention at any time.",
     "renewalReminderAck": "Got it",
-    "renewalReminderUnsubscribe": "Withdraw intention"
+    "renewalReminderUnsubscribe": "Withdraw intention",
+    "yourContribution": "Váš příspěvek",
+    "period": "Období"
   },
   "notification": {
     "newCollection": "{{name}} potřebuje pomoc",
@@ -579,7 +584,9 @@
     "renewalReminderTitle": "Renewal reminder",
     "renewalReminderBody": "{{name}}, you participate in regular support for {{creator}}. A new collection cycle starts in 3 days. You can withdraw your intention at any time.",
     "renewalStartTitle": "New cycle started",
-    "renewalStartBody": "{{name}}, a new support cycle for {{creator}} has just started."
+    "renewalStartBody": "{{name}}, a new support cycle for {{creator}} has just started.",
+    "yourContribution": "Váš příspěvek",
+    "period": "Období"
   },
   "hints": {
     "collectionAmount": "Zadejte částku, kterou potřebujete. Minimálně 10 jednotek. Systém upozorní správný počet lidí.",
@@ -983,7 +990,8 @@
     "joinBtn": "Připojit se a pomoci",
     "autoConnect": "Budete přímo propojeni s {{name}} — bez nutnosti schválení.",
     "collectionClosed": "Tato sbírka je {{status}}.",
-    "participantsCount": "{{count}} účastníků"
+    "participantsCount": "{{count}} účastníků",
+    "joinInBrowser": "Pokračovat v prohlížeči"
   },
   "support": {
     "title": "Chat podpory",
@@ -1007,6 +1015,8 @@
     "play": "Přehrát videonávod",
     "short": "Videonávod",
     "regularTitle": "Jak funguje pravidelná sbírka",
-    "close": "Zavřít"
+    "close": "Zavřít",
+    "inviteLinkTitle": "Dostali jste odkaz? Co dál",
+    "appStartTitle": "První kroky v aplikaci"
   }
 }

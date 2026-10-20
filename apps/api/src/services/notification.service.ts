@@ -1,7 +1,7 @@
 import { createRequire } from 'node:module';
 import { dirname, resolve } from 'node:path';
 import type { PrismaClient } from '@so/db';
-import { NOTIFICATION_TTL_HOURS } from '@so/shared';
+import { NOTIFICATION_TTL_HOURS, REGULAR_CYCLE_DAYS } from '@so/shared';
 import { findRecipientsViaBfs } from './bfs.service.js';
 import { sendTgMessages, type TgReplyMarkup } from './telegram-bot.service.js';
 import type { TgBroadcastMessage } from '../workers/tg-broadcast.worker.js';
@@ -366,6 +366,60 @@ export async function sendUserDeletedNotification(
   await sendTgMessages([{ telegramId: tgAccount.platformId, text }]);
 }
 
+const DAY_MS = 24 * 60 * 60 * 1000;
+
+/** Format a date for a given UI language, e.g. 12.11.2026 */
+function formatDate(d: Date, lang: string): string {
+  try {
+    return d.toLocaleDateString(lang, { day: '2-digit', month: '2-digit', year: 'numeric', timeZone: 'UTC' });
+  } catch {
+    return d.toISOString().slice(0, 10);
+  }
+}
+
+/**
+ * Per-user contribution to a regular collection (active subscriptions only).
+ * Shown in the participant's own currency when all their obligations share one,
+ * otherwise in USD (obligation.amount is stored in USD).
+ */
+async function getUserContributions(
+  db: PrismaClient,
+  collectionId: string,
+  userIds: string[],
+): Promise<Map<string, string>> {
+  const obligations = await db.obligation.findMany({
+    where: { collectionId, userId: { in: userIds }, unsubscribedAt: null },
+    select: { userId: true, amount: true, originalAmount: true, originalCurrency: true },
+  });
+  const byUser = new Map<string, typeof obligations>();
+  for (const o of obligations) {
+    const list = byUser.get(o.userId) ?? [];
+    list.push(o);
+    byUser.set(o.userId, list);
+  }
+  const result = new Map<string, string>();
+  for (const [userId, list] of byUser) {
+    const currencies = new Set(list.map((o) => o.originalCurrency ?? 'USD'));
+    const round = (n: number) => Math.round(n * 100) / 100;
+    if (currencies.size === 1) {
+      const cur = [...currencies][0]!;
+      const sum = list.reduce((s, o) => s + (o.originalAmount ?? o.amount), 0);
+      result.set(userId, `${round(sum)} ${cur}`);
+    } else {
+      result.set(userId, `${round(list.reduce((s, o) => s + o.amount, 0))} USD`);
+    }
+  }
+  return result;
+}
+
+/** "Your contribution: X\nPeriod: a — b" block for cycle notifications */
+function cycleDetails(lang: string, contribution: string | undefined, start: Date, end: Date): string {
+  const lines: string[] = [];
+  if (contribution) lines.push(`${tg(lang, 'yourContribution')}: <b>${contribution}</b>`);
+  lines.push(`${tg(lang, 'period')}: ${formatDate(start, lang)} — ${formatDate(end, lang)}`);
+  return `\n\n${lines.join('\n')}`;
+}
+
 /**
  * Send "renewal reminder" notification (3 days before next cycle) via TG and push.
  * In-app Notification rows are created separately by the worker so we can apply
@@ -381,38 +435,43 @@ export async function sendCycleRenewalReminderTg(
 
   const collection = await db.collection.findUnique({
     where: { id: collectionId },
-    select: { amount: true, currency: true, originalAmount: true, originalCurrency: true },
+    select: { currentCycleStart: true },
   });
   const creator = await db.user.findUnique({ where: { id: creatorId }, select: { name: true } });
   if (!collection || !creator) return;
 
-  const amount = collection.originalAmount ?? collection.amount;
-  const currency = collection.originalCurrency ?? collection.currency;
+  // The reminder is about the NEXT cycle: it starts when the current one ends.
+  const cycleStart = collection.currentCycleStart ?? new Date();
+  const periodStart = new Date(cycleStart.getTime() + REGULAR_CYCLE_DAYS * DAY_MS);
+  const periodEnd = new Date(periodStart.getTime() + REGULAR_CYCLE_DAYS * DAY_MS);
+  const contributions = await getUserContributions(db, collectionId, recipientUserIds);
   const webAppLink = `${WEB_APP_URL}/collection/${collectionId}`;
 
-  // Push (web + native)
-  sendPushNotification(db, recipientUserIds, {
-    title: 'Cycle renewal reminder',
-    body: `In 3 days a new cycle starts for ${creator.name}'s regular support.`,
-    url: webAppLink,
-  }).catch((err) => console.error('[Push RenewalReminder] Failed:', err));
+  // Push (web + native) — one per user so each sees their own contribution
+  for (const userId of recipientUserIds) {
+    const c = contributions.get(userId);
+    sendPushNotification(db, [userId], {
+      title: 'Cycle renewal reminder',
+      body: `In 3 days a new cycle starts for ${creator.name}'s regular support.${c ? ` Your contribution: ${c}.` : ''} Period: ${formatDate(periodStart, 'en')} — ${formatDate(periodEnd, 'en')}.`,
+      url: webAppLink,
+    }).catch((err) => console.error('[Push RenewalReminder] Failed:', err));
+  }
 
   // Telegram
   const tgAccounts = await db.platformAccount.findMany({
     where: { userId: { in: recipientUserIds }, platform: 'TELEGRAM' },
-    select: { platformId: true, user: { select: { name: true, language: true } } },
+    select: { platformId: true, userId: true, user: { select: { name: true, language: true } } },
   });
   if (tgAccounts.length === 0) return;
 
   const messages: TgBroadcastMessage[] = tgAccounts.map((acc) => {
     const lang = acc.user?.language || 'en';
     const userName = acc.user?.name || '';
-    const amountStr = amount != null ? `${amount} ${currency}` : '';
     const title = tg(lang, 'renewalReminderTitle');
     const body = tg(lang, 'renewalReminderBody')
       .replace('{{name}}', userName)
       .replace('{{creator}}', creator.name);
-    const text = `🔔 <b>${title}</b>\n\n${body}${amountStr ? `\n\n${tg(lang, 'amount')}: ${amountStr}` : ''}`;
+    const text = `🔔 <b>${title}</b>\n\n${body}${cycleDetails(lang, contributions.get(acc.userId), periodStart, periodEnd)}`;
     return {
       telegramId: acc.platformId,
       text,
@@ -438,38 +497,42 @@ export async function sendCycleRenewedTg(
 
   const collection = await db.collection.findUnique({
     where: { id: collectionId },
-    select: { amount: true, currency: true, originalAmount: true, originalCurrency: true, chatLink: true },
+    select: { chatLink: true, currentCycleStart: true },
   });
   const creator = await db.user.findUnique({ where: { id: creatorId }, select: { name: true } });
   if (!collection || !creator) return;
 
-  const amount = collection.originalAmount ?? collection.amount;
-  const currency = collection.originalCurrency ?? collection.currency;
+  // Called right after the cycle was rolled over, so currentCycleStart is the new cycle.
+  const periodStart = collection.currentCycleStart ?? new Date();
+  const periodEnd = new Date(periodStart.getTime() + REGULAR_CYCLE_DAYS * DAY_MS);
+  const contributions = await getUserContributions(db, collectionId, recipientUserIds);
   const webAppLink = `${WEB_APP_URL}/collection/${collectionId}`;
 
-  // Push
-  sendPushNotification(db, recipientUserIds, {
-    title: 'New cycle started',
-    body: `A new support cycle for ${creator.name} has started.`,
-    url: webAppLink,
-  }).catch((err) => console.error('[Push CycleRenewed] Failed:', err));
+  // Push — one per user so each sees their own contribution
+  for (const userId of recipientUserIds) {
+    const c = contributions.get(userId);
+    sendPushNotification(db, [userId], {
+      title: 'New cycle started',
+      body: `A new support cycle for ${creator.name} has started.${c ? ` Your contribution: ${c}.` : ''} Period: ${formatDate(periodStart, 'en')} — ${formatDate(periodEnd, 'en')}.`,
+      url: webAppLink,
+    }).catch((err) => console.error('[Push CycleRenewed] Failed:', err));
+  }
 
   // Telegram
   const tgAccounts = await db.platformAccount.findMany({
     where: { userId: { in: recipientUserIds }, platform: 'TELEGRAM' },
-    select: { platformId: true, user: { select: { name: true, language: true } } },
+    select: { platformId: true, userId: true, user: { select: { name: true, language: true } } },
   });
   if (tgAccounts.length === 0) return;
 
   const messages: TgBroadcastMessage[] = tgAccounts.map((acc) => {
     const lang = acc.user?.language || 'en';
     const userName = acc.user?.name || '';
-    const amountStr = amount != null ? `${amount} ${currency}` : '';
     const title = tg(lang, 'renewalStartTitle');
     const body = tg(lang, 'renewalStartBody')
       .replace('{{name}}', userName)
       .replace('{{creator}}', creator.name);
-    const text = `🔁 <b>${title}</b>\n\n${body}${amountStr ? `\n\n${tg(lang, 'amount')}: ${amountStr}` : ''}`;
+    const text = `🔁 <b>${title}</b>\n\n${body}${cycleDetails(lang, contributions.get(acc.userId), periodStart, periodEnd)}`;
 
     const buttons: Array<Array<{ text: string; web_app?: { url: string }; url?: string }>> = [];
     if (collection.chatLink) {

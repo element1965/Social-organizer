@@ -220,7 +220,10 @@
     "paymentConfirmed": "Переведено",
     "unconfirmPayment": "Снять подтверждение",
     "qrTitle": "QR-код",
-    "qrScanHint": "Отсканируйте, чтобы присоединиться"
+    "qrScanHint": "Отсканируйте, чтобы присоединиться",
+    "shareLinkButton": "Поделиться ссылкой на сбор",
+    "linkCopied": "Ссылка скопирована!",
+    "qrDownload": "Скачать QR-код"
   },
   "create": {
     "title": "Нужно",
@@ -308,7 +311,9 @@
     "renewalStart": "Новый цикл",
     "renewalReminderBody": "{{name}}, напоминаем вам, что вы участвуете в регулярной поддержке {{creator}}. Через 3 дня новый цикл сбора. Вы можете отозвать своё намерение в любой момент.",
     "renewalReminderAck": "Помню",
-    "renewalReminderUnsubscribe": "Отозвать намерение"
+    "renewalReminderUnsubscribe": "Отозвать намерение",
+    "yourContribution": "Ваш взнос",
+    "period": "Период"
   },
   "notification": {
     "newCollection": "{{name}} нуждается в помощи",
@@ -584,7 +589,9 @@
     "renewalReminderTitle": "Напоминание о продлении",
     "renewalReminderBody": "{{name}}, вы участвуете в регулярной поддержке {{creator}}. Через 3 дня новый цикл сбора. Вы можете отозвать своё намерение в любой момент.",
     "renewalStartTitle": "Начался новый цикл",
-    "renewalStartBody": "{{name}}, только что начался новый цикл регулярной поддержки {{creator}}."
+    "renewalStartBody": "{{name}}, только что начался новый цикл регулярной поддержки {{creator}}.",
+    "yourContribution": "Ваш взнос",
+    "period": "Период"
   },
   "hints": {
     "collectionAmount": "Укажите сумму, которая вам необходима. Минимум 10 единиц. Система уведомит нужное количество людей.",
@@ -988,7 +995,8 @@
     "joinBtn": "Присоединиться и помочь",
     "autoConnect": "Вы будете подключены к {{name}} напрямую — без ожидания подтверждения.",
     "collectionClosed": "Этот сбор {{status}}.",
-    "participantsCount": "{{count}} участников"
+    "participantsCount": "{{count}} участников",
+    "joinInBrowser": "Продолжить в браузере"
   },
   "adminStats": {
     "title": "Детальная статистика",
@@ -1012,6 +1020,8 @@
     "play": "Смотреть видеоинструкцию",
     "short": "Видеоинструкция",
     "regularTitle": "Как работает регулярный сбор",
-    "close": "Закрыть"
+    "close": "Закрыть",
+    "inviteLinkTitle": "Получили ссылку — что дальше",
+    "appStartTitle": "Первые шаги в приложении"
   }
 }

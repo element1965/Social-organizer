@@ -5,6 +5,8 @@ import { useAuth } from '../hooks/useAuth';
 import { trpc } from '../lib/trpc';
 import { Button } from '../components/ui/button';
 import { Logo } from '../components/Logo';
+import { VideoGuide } from '../components/VideoGuide';
+import { takePendingSosPath } from '../lib/inviteUrl';
 import { Mail, Eye, EyeOff, Send, KeyRound } from 'lucide-react';
 import { isTelegramWebApp, getTGInitData } from '@so/tg-adapter';
 import { Capacitor } from '@capacitor/core';
@@ -36,9 +38,11 @@ export function LoginPage() {
 
   const afterLogin = (defaultPath: string) => {
     localStorage.removeItem('pendingInviteToken');
-    if (effectiveRedirect) {
+    const pendingSos = takePendingSosPath();
+    const target = effectiveRedirect || pendingSos;
+    if (target) {
       // Full page reload to reinitialize trpcClient (important after demo mode)
-      window.location.href = effectiveRedirect;
+      window.location.href = target;
     } else {
       navigate(defaultPath);
     }
@@ -365,6 +369,9 @@ export function LoginPage() {
             >
               {t('auth.haveAccount')}
             </Button>
+            <div className="flex justify-center pt-2">
+              <VideoGuide video="app-start" label="title" colorClassName="text-teal-400 hover:text-teal-300" />
+            </div>
           </div>
         )}
 

@@ -5,6 +5,7 @@ import { trpc } from '../lib/trpc';
 import { useCachedNetworkStats } from '../hooks/useCachedNetworkStats';
 import { InviteBlock } from '../components/InviteBlock';
 import { ShareSheet } from '../components/ShareSheet';
+import { VideoGuide } from '../components/VideoGuide';
 import { buildWebInviteUrl } from '../lib/inviteUrl';
 import { Card, CardContent } from '../components/ui/card';
 import { Button } from '../components/ui/button';
@@ -115,6 +116,7 @@ export function DashboardPage() {
             <Button className="w-full" size="lg" onClick={() => setGateShareOpen(true)}>
               <UserPlus className="w-4 h-4 mr-2" /> {t('create.goToInvite')}
             </Button>
+            <VideoGuide video="app-start" label="title" className="mt-4" />
           </CardContent>
         </Card>
       )}

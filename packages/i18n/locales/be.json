@@ -217,7 +217,10 @@
     "sosLinkCopied": "SOS-спасылка скапіявана!",
     "sosJoined": "Вас дадалі як прамога ўдзельніка",
     "qrTitle": "QR-код",
-    "qrScanHint": "Адсканіруйце, каб далучыцца"
+    "qrScanHint": "Адсканіруйце, каб далучыцца",
+    "shareLinkButton": "Падзяліцца спасылкай на збор",
+    "linkCopied": "Спасылка скапіравана!",
+    "qrDownload": "Спампаваць QR-код"
   },
   "create": {
     "title": "Патрэба",
@@ -303,7 +306,9 @@
     "renewalStart": "Новы цыкл",
     "renewalReminderBody": "{{name}}, нагадваем, што вы ўдзельнічаеце ў рэгулярнай падтрымцы {{creator}}. Праз 3 дні новы цыкл збору. Вы можаце адклікаць свой намер у любы момант.",
     "renewalReminderAck": "Памятаю",
-    "renewalReminderUnsubscribe": "Адклікаць намер"
+    "renewalReminderUnsubscribe": "Адклікаць намер",
+    "yourContribution": "Ваш унёсак",
+    "period": "Перыяд"
   },
   "notification": {
     "newCollection": "{{name}} мае патрэбу ў дапамозе",
@@ -579,7 +584,9 @@
     "renewalReminderTitle": "Напамін аб працягу",
     "renewalReminderBody": "{{name}}, вы ўдзельнічаеце ў рэгулярнай падтрымцы {{creator}}. Праз 3 дні новы цыкл збору. Вы можаце адклікаць свой намер у любы момант.",
     "renewalStartTitle": "Пачаўся новы цыкл",
-    "renewalStartBody": "{{name}}, толькі што пачаўся новы цыкл рэгулярнай падтрымкі {{creator}}."
+    "renewalStartBody": "{{name}}, толькі што пачаўся новы цыкл рэгулярнай падтрымкі {{creator}}.",
+    "yourContribution": "Ваш унёсак",
+    "period": "Перыяд"
   },
   "hints": {
     "collectionAmount": "Укажыце суму, якая вам неабходна. Мінімум 10 адзінак. Сістэма апавясціць патрэбную колькасць людзей.",
@@ -983,7 +990,8 @@
     "joinBtn": "Далучыцца і дапамагчы",
     "autoConnect": "Вас падключаць да {{name}} напрамую — без чакання пацвярджэння.",
     "collectionClosed": "Гэты збор {{status}}.",
-    "participantsCount": "{{count}} удзельнікаў"
+    "participantsCount": "{{count}} удзельнікаў",
+    "joinInBrowser": "Працягнуць у браўзеры"
   },
   "support": {
     "title": "Чат падтрымкі",
@@ -1007,6 +1015,8 @@
     "play": "Глядзець відэаінструкцыю",
     "short": "Відэаінструкцыя",
     "regularTitle": "Як працуе рэгулярны збор",
-    "close": "Закрыць"
+    "close": "Закрыць",
+    "inviteLinkTitle": "Атрымалі спасылку — што далей",
+    "appStartTitle": "Першыя крокі ў праграме"
   }
 }

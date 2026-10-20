@@ -217,7 +217,10 @@
     "sosLinkCopied": "Link SOS skopiowany!",
     "sosJoined": "Zostałeś dodany jako bezpośredni uczestnik",
     "qrTitle": "Kod QR",
-    "qrScanHint": "Zeskanuj, aby dołączyć"
+    "qrScanHint": "Zeskanuj, aby dołączyć",
+    "shareLinkButton": "Udostępnij link do zbiórki",
+    "linkCopied": "Link skopiowany!",
+    "qrDownload": "Pobierz kod QR"
   },
   "create": {
     "title": "Potrzebuję",
@@ -303,7 +306,9 @@
     "renewalStart": "Nowy cykl",
     "renewalReminderBody": "{{name}}, przypominamy, że uczestniczysz w regularnym wsparciu dla {{creator}}. Za 3 dni zaczyna się nowy cykl. Możesz wycofać swój zamiar w dowolnym momencie.",
     "renewalReminderAck": "Rozumiem",
-    "renewalReminderUnsubscribe": "Wycofaj zamiar"
+    "renewalReminderUnsubscribe": "Wycofaj zamiar",
+    "yourContribution": "Twoja wpłata",
+    "period": "Okres"
   },
   "notification": {
     "newCollection": "{{name}} potrzebuje pomocy",
@@ -579,7 +584,9 @@
     "renewalReminderTitle": "Przypomnienie o odnowieniu",
     "renewalReminderBody": "{{name}}, uczestniczysz w regularnym wsparciu dla {{creator}}. Za 3 dni zaczyna się nowy cykl. Możesz wycofać swój zamiar w dowolnym momencie.",
     "renewalStartTitle": "Rozpoczął się nowy cykl",
-    "renewalStartBody": "{{name}}, właśnie rozpoczął się nowy cykl regularnego wsparcia dla {{creator}}."
+    "renewalStartBody": "{{name}}, właśnie rozpoczął się nowy cykl regularnego wsparcia dla {{creator}}.",
+    "yourContribution": "Twoja wpłata",
+    "period": "Okres"
   },
   "hints": {
     "collectionAmount": "Wprowadź potrzebną kwotę. Minimum 10 jednostek. System powiadomi odpowiednią liczbę osób.",
@@ -983,7 +990,8 @@
     "joinBtn": "Dołącz i pomóż",
     "autoConnect": "Zostaniesz połączony bezpośrednio z {{name}} — bez konieczności zatwierdzenia.",
     "collectionClosed": "Ta zbiórka jest {{status}}.",
-    "participantsCount": "{{count}} uczestników"
+    "participantsCount": "{{count}} uczestników",
+    "joinInBrowser": "Kontynuuj w przeglądarce"
   },
   "support": {
     "title": "Czat wsparcia",
@@ -1007,6 +1015,8 @@
     "play": "Obejrzyj instrukcję wideo",
     "short": "Instrukcja wideo",
     "regularTitle": "Jak działa zbiórka regularna",
-    "close": "Zamknij"
+    "close": "Zamknij",
+    "inviteLinkTitle": "Dostałeś link? Co dalej",
+    "appStartTitle": "Pierwsze kroki w aplikacji"
   }
 }

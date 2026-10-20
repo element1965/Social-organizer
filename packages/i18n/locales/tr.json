@@ -217,7 +217,10 @@
     "sosLinkCopied": "SOS bağlantısı kopyalandı!",
     "sosJoined": "Doğrudan katılımcı olarak eklendiniz",
     "qrTitle": "QR kodu",
-    "qrScanHint": "Katılmak için tarayın"
+    "qrScanHint": "Katılmak için tarayın",
+    "shareLinkButton": "Toplama bağlantısını paylaş",
+    "linkCopied": "Bağlantı kopyalandı!",
+    "qrDownload": "QR kodunu indir"
   },
   "create": {
     "title": "İhtiyacım var",
@@ -303,7 +306,9 @@
     "renewalStart": "Yeni döngü",
     "renewalReminderBody": "{{name}}, {{creator}} için düzenli desteğe katıldığınızı hatırlatırız. 3 gün içinde yeni bir döngü başlıyor. Niyetinizi istediğiniz zaman geri çekebilirsiniz.",
     "renewalReminderAck": "Anladım",
-    "renewalReminderUnsubscribe": "Niyeti geri çek"
+    "renewalReminderUnsubscribe": "Niyeti geri çek",
+    "yourContribution": "Katkınız",
+    "period": "Dönem"
   },
   "notification": {
     "newCollection": "{{name}} yardıma ihtiyaç duyuyor",
@@ -579,7 +584,9 @@
     "renewalReminderTitle": "Yenileme hatırlatması",
     "renewalReminderBody": "{{name}}, {{creator}} için düzenli desteğe katılıyorsunuz. 3 gün içinde yeni bir döngü başlıyor. Niyetinizi istediğiniz zaman geri çekebilirsiniz.",
     "renewalStartTitle": "Yeni döngü başladı",
-    "renewalStartBody": "{{name}}, {{creator}} için yeni bir düzenli destek döngüsü başladı."
+    "renewalStartBody": "{{name}}, {{creator}} için yeni bir düzenli destek döngüsü başladı.",
+    "yourContribution": "Katkınız",
+    "period": "Dönem"
   },
   "hints": {
     "collectionAmount": "İhtiyacınız olan miktarı girin. Minimum 10 birim. Sistem doğru sayıda kişiyi bilgilendirecektir.",
@@ -983,7 +990,8 @@
     "joinBtn": "Katıl ve yardım et",
     "autoConnect": "{{name}} ile doğrudan bağlanacaksınız — onay gerekmiyor.",
     "collectionClosed": "Bu koleksiyon {{status}}.",
-    "participantsCount": "{{count}} katılımcı"
+    "participantsCount": "{{count}} katılımcı",
+    "joinInBrowser": "Tarayıcıda devam et"
   },
   "support": {
     "title": "Destek Sohbeti",
@@ -1007,6 +1015,8 @@
     "play": "Video talimatı izle",
     "short": "Video rehberi",
     "regularTitle": "Düzenli bağış toplama nasıl çalışır",
-    "close": "Kapat"
+    "close": "Kapat",
+    "inviteLinkTitle": "Bağlantı mı aldınız? Sonra ne",
+    "appStartTitle": "Uygulamada ilk adımlar"
   }
 }

@@ -244,13 +244,14 @@ React 19 SPA with tRPC client.
 
 | Page | Path | Description |
 |------|------|-------------|
-| LandingPage | `/welcome` | Public landing with 3D Earth globe (NASA textures) and project description; supports `variant="arvut"` for Hebrew-branded Arvut Hadadit subdomain |
-| LoginPage | `/login` | Login via platform (FB/TG/Apple/Google) + demo mode |
+| LandingPage | `/welcome` | Public landing with 3D Earth globe (NASA textures) and project description; "Got a link? What to do next" video above the download buttons; supports `variant="arvut"` for Hebrew-branded Arvut Hadadit subdomain |
+| LoginPage | `/login` | Login via platform (FB/TG/Apple/Google) + demo mode; "First steps in the app" video under the new user / existing account choice |
 | OnboardingPage | `/onboarding` | 3-step onboarding: contacts, budget, skills/needs (auto for new users) |
 | DashboardPage | `/` | Network stats (clickable "Whole network" → /network), collections, intentions, emergency alerts (protected → /welcome) |
 | NotificationsPage | `/notifications` | Notifications with handshake path and 24h timer |
 | CreateCollectionPage | `/create` | Create collection with network reach display (1:1 ratio); play button with the collection video instruction under the type switch |
-| CollectionPage | `/collection/:id` | Collection details + intentions + handshake path to creator; owner sees SOS link + QR (plus the video instruction button) |
+| CollectionPage | `/collection/:id` | Collection details + intentions + handshake path to creator; owner sees the share link + QR with a PNG download ("SOS link" for emergency, "collection link" for regular; plus the video instruction button) |
+| SosLandingPage | `/sos/:id` | Public collection page from the share link / QR: "Join & Help" opens the Telegram Mini App; "Continue in browser" signs in / registers on the web and returns to `/collection/:id?sos=true`, which connects the person to the author (1st handshake) |
 | MyNetworkPage | `/network` | Connection list sorted by date (newest first) with relative time, connection counts + invitations |
 | ProfilePage | `/profile/:userId` | Profile with editing, contacts, connections list (collapsible), stats (given/received), handshake path |
 | SettingsPage | `/settings` | Language, theme, sounds, font scale, contacts, skills/needs, geography (country/city/geolocation), hide contacts toggle, ignore list |
@@ -278,14 +279,19 @@ React 19 SPA with tRPC client.
 - **3D Graph:** react-force-graph-3d (lazy loaded)
 - **Backup:** @so/gun-backup (Gun.js + IndexedDB)
 
-### Video instruction (regular collection)
+### Video instructions
 
-`RegularCollectionVideo` (`apps/web/src/components/RegularCollectionVideo.tsx`) is a play-icon button that opens an overlay with an HTML5 `<video>` (`controls`, `playsInline`, `preload="none"`; closes by X, backdrop or Escape). The file is picked by the current UI language, falling back to `en`.
+`VideoGuide` (`apps/web/src/components/VideoGuide.tsx`) is a play-icon button that opens an overlay with an HTML5 `<video>` (`controls`, `playsInline`, `preload="none"`; closes by X, backdrop or Escape). The `video` prop picks the instruction, the file is picked by the current UI language, falling back to `en`. `label="title"` shows the video's own title instead of "Video guide"; `colorClassName` replaces the blue link colors on dark screens.
 
-- **Files:** `apps/web/public/videos/regular-collection/<locale>.mp4` — one per app locale (28, ~2.5 MB each, 720×1280). Vite copies them to `dist/` as-is (not bundled into JS); the API serves them with `Cache-Control: public, max-age=2592000` and HTTP range support. After re-recording, bump `VIDEO_VERSION` in the component.
-- **Where it shows:** always under the type switch on `/create`, in the owner's SOS link / QR block of any collection, and inside the answer of FAQ items whose `groupId` (source item id) is listed in `FAQ_VIDEO_GROUP_IDS` in `FaqPage.tsx` (FAQ text lives in the DB; translations share the `groupId`, so one id covers all languages).
+| `video` | Title key | What it shows | Where it shows |
+|---------|-----------|---------------|----------------|
+| `regular-collection` | `videoGuide.regularTitle` | Creating a regular collection, QR / link, how a newcomer joins | under the type switch on `/create`, in the owner's SOS link / QR block of any collection, and inside the answer of FAQ items whose `groupId` (source item id) is listed in `FAQ_VIDEO_GROUP_IDS` in `FaqPage.tsx` (FAQ text lives in the DB; translations share the `groupId`, so one id covers all languages) |
+| `invite-link` | `videoGuide.inviteLinkTitle` | Got an invite link: "why" intro (build the largest trust graph: you invite your first handshake circle, they invite theirs) → landing → Telegram → request → inviter confirms → your network → invite your own people, SOS | landing page (`/welcome`, `/invite/:token` for guests) above the download buttons |
+| `app-start` | `videoGuide.appStartTitle` | Installed the app: "why" intro → register → empty network → invite / QR → accept a request → network, SOS, contacts | login screen (`/login`) and the dashboard "add your first connection" card |
+
+- **Files:** `apps/web/public/videos/<video>/<locale>.mp4` — one per app locale (28 each, ~1–2.5 MB, 720×1280). Vite copies them to `dist/` as-is (not bundled into JS); the API serves them with `Cache-Control: public, max-age=2592000` and HTTP range support. After re-recording, bump that video's `version` in `VIDEOS` in the component.
 - **Native wrappers:** `scripts/deploy-android.mjs` and `scripts/deploy-ios.sh` delete `dist/videos` before `cap sync` — the wrappers load the production URL, so the videos never ship inside the AAB / IPA.
-- **Re-recording:** `docs/regular-collection/shoot-video.mjs` (see `docs/regular-collection/mechanics.en.md`, section 7) writes straight into that folder.
+- **Re-recording:** `docs/regular-collection/shoot-video.mjs` (see `docs/regular-collection/mechanics.en.md`, section 7) and `docs/first-steps/shoot-video.mjs <link|app|all> [locale ...|all]` (same local stack; captions in `docs/first-steps/captions.mjs`, the "why" intro in `docs/first-steps/why.mjs`; `add-why.mjs` adds the intro to files recorded before it existed) write straight into those folders. Both run only against a local instance and the isolated `so_video_demo` database.
 
 ### Bundle Size (code splitting)
 

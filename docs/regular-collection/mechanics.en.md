@@ -82,15 +82,19 @@ Checked on a local copy: an author network of 12 people in the 1st circle and 36
   `https://www.orginizer.com/sos/<collection id>` (`buildSosInviteUrl`, `apps/web/src/lib/inviteUrl.ts`).
   It is a link **to a specific collection**, not the author's personal invite link.
 - `/sos/:id` is a public page without sign-in (`apps/web/src/pages/SosLandingPage.tsx`, data from `collection.getPublic`):
-  the author's name and photo, "needs support", collected / goal, the number of participants and a single button
-  **"Join & Help"**.
+  the author's name and photo, "needs support", collected / goal, the number of participants and two buttons:
+  **"Join & Help"** (Telegram) and **"Continue in browser"**.
 - The button leads to the Telegram Mini App: `https://t.me/socialorganizer_bot?startapp=sos_<id>`.
   The Mini App signs in by itself with Telegram data (`auth.loginWithTelegram`) and opens
   `/collection/<id>?sos=true` (`apps/web/src/components/TelegramBootstrap.tsx`).
   If the person came through the bot with the `/start sos_<id>` command, the bot replies with a button to the same address
   (`apps/api/src/services/telegram-bot.service.ts`).
-- The QR is shown only on screen; there is no separate "download PNG" button. To put the QR on a website,
-  you have to take a screenshot or generate a QR from the copied link.
+- **"Continue in browser"** works without Telegram (any browser, including a phone): a signed-in person goes straight to
+  `/collection/<id>?sos=true`; otherwise to `/login?redirect=…` (email, Google, Apple). The collection id is also kept in
+  `localStorage.pendingSosCollection`, so the Google/Apple callback pages return to the collection too
+  (`apps/web/src/lib/inviteUrl.ts`). After sign-in the collection page connects the person to the author (`acceptSos`).
+- Under the QR there is a **"Download QR code"** button: a 1024 px PNG of the same link for a website or a poster.
+- For a regular collection the share button is called **"Share collection link"** (an emergency one keeps "SOS link").
 
 ## 4. What happens to the person who scanned the QR
 
@@ -121,6 +125,9 @@ Checked on a local copy: an author network of 12 people in the 1st circle and 36
   Everyone else **carries over to the new cycle automatically**. "Collected" is the sum of the active monthly intentions.
 - 3 days before a new cycle participants receive a reminder (`cycle-renewal-reminder.worker.ts`); it can
   be turned off in the settings.
+- The reminder and the "cycle renewed" notification (Telegram, push, in-app) show the participant **their own
+  contribution** (sum of their active intentions, in their currency) and the **period dates**: the next cycle in the
+  reminder, the cycle that just started in "cycle renewed".
 - One can unsubscribe from the renewal notification (`obligation.unsubscribeFromCollection`, `NotificationsPage.tsx`).
 - The author can change the goal or the chat link at any time, and close the collection (participants receive a closure notification).
 
@@ -129,16 +136,16 @@ Checked on a local copy: an author network of 12 people in the 1st circle and 36
 | Andrey's expectation | How it is now | Status |
 |---|---|---|
 | The link from a regular collection leads straight to that collection | The QR and the link lead to `/sos/<id>`, then via Telegram to the collection page | Yes |
-| The person who scans automatically joins the author's 1st circle | Yes, a direct connection without confirmation (`acceptSos`) | Yes, but only via Telegram |
-| Works for anyone | From the public page you can go **only to Telegram**. Without Telegram (a regular browser, the iOS/Android apps) the "QR → connection with the author" path does not work. There is no path for iOS and Android that would lead to `sos` | No |
+| The person who scans automatically joins the author's 1st circle | Yes, a direct connection without confirmation (`acceptSos`) | Yes |
+| Works for anyone | From the public page: via Telegram or **"Continue in browser"** (registration by email / Google / Apple, then straight to the collection). The installed iOS/Android app is not opened by the link — the person continues in the phone browser | Yes, via Telegram or browser |
 | The person "subscribes" to the collection | Not automatic: they need to enter an amount and tap "Confirm" | Partly |
 | Then goes to the chat | The chat link is visible only after an intention | Yes, with this condition |
 | "A community forms" | Each new person connects only to the author; newcomers do not connect with each other. Communication happens in the external chat | By design |
 | "Alert everyone once" | Yes, once on creation. No repeat waves unless the goal is raised | Yes |
 | Michel does not have his own network yet | Creating a collection needs 10 accepted invitations. Granting the AUTHOR/DEVELOPER role lifts the restriction, but **the alert on creation will not be sent at all** | Needs a decision |
 | A collection description for website visitors | There is no "description / purpose" field. The public page shows the name, "needs support", the goal and progress | No |
-| Put the QR on the website | The QR exists only on screen; it cannot be downloaded with a button | No |
-| An English interface for Michel | The caption under the QR ("Scan to join") and the "QR code" tooltip were hardcoded in Russian (visible in every language version of the video); now fixed — i18n keys `collection.qrScanHint` / `collection.qrTitle`. The button is called "SOS link" for a regular collection too. The creation warnings are written for an emergency | Cosmetic |
+| Put the QR on the website | "Download QR code" under the QR saves a 1024 px PNG | Yes |
+| An English interface for Michel | The caption under the QR ("Scan to join") and the "QR code" tooltip were hardcoded in Russian (visible in every language version of the video); now fixed — i18n keys `collection.qrScanHint` / `collection.qrTitle`. The share button of a regular collection is now "Share collection link" (was "SOS link"). The creation warnings are written for an emergency | Cosmetic |
 | Monthly payment tracking | The "paid" mark (`confirmedAt`) is not reset on a new cycle. There is no per-cycle payment history | No |
 
 ## 7. How the videos were recorded
