@@ -39,7 +39,7 @@ function getCycleInfo(n: any, lang: string): { contribution: string | null; peri
   // Reminder (wave = cycle in progress) points to the next cycle; renewed (wave = new cycle) to itself.
   const targetCycle = n.type === 'CYCLE_RENEWAL_REMINDER' ? (n.wave ?? c.cycleNumber) + 1 : (n.wave ?? c.cycleNumber);
   const start = new Date(current + (targetCycle - c.cycleNumber) * REGULAR_CYCLE_DAYS * DAY_MS);
-  const end = new Date(start.getTime() + REGULAR_CYCLE_DAYS * DAY_MS);
+  const end = new Date(start.getTime() + (REGULAR_CYCLE_DAYS - 1) * DAY_MS); // last day of the cycle
   const fmt = (d: Date) => d.toLocaleDateString(lang, { day: '2-digit', month: '2-digit', year: 'numeric' });
 
   const obls = (c.obligations ?? []) as Array<{ amount: number; originalAmount: number | null; originalCurrency: string | null }>;

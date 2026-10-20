@@ -443,7 +443,7 @@ export async function sendCycleRenewalReminderTg(
   // The reminder is about the NEXT cycle: it starts when the current one ends.
   const cycleStart = collection.currentCycleStart ?? new Date();
   const periodStart = new Date(cycleStart.getTime() + REGULAR_CYCLE_DAYS * DAY_MS);
-  const periodEnd = new Date(periodStart.getTime() + REGULAR_CYCLE_DAYS * DAY_MS);
+  const periodEnd = new Date(periodStart.getTime() + (REGULAR_CYCLE_DAYS - 1) * DAY_MS); // last day of the cycle
   const contributions = await getUserContributions(db, collectionId, recipientUserIds);
   const webAppLink = `${WEB_APP_URL}/collection/${collectionId}`;
 
@@ -504,7 +504,7 @@ export async function sendCycleRenewedTg(
 
   // Called right after the cycle was rolled over, so currentCycleStart is the new cycle.
   const periodStart = collection.currentCycleStart ?? new Date();
-  const periodEnd = new Date(periodStart.getTime() + REGULAR_CYCLE_DAYS * DAY_MS);
+  const periodEnd = new Date(periodStart.getTime() + (REGULAR_CYCLE_DAYS - 1) * DAY_MS); // last day of the cycle
   const contributions = await getUserContributions(db, collectionId, recipientUserIds);
   const webAppLink = `${WEB_APP_URL}/collection/${collectionId}`;
 
