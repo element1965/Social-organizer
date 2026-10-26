@@ -389,7 +389,12 @@
     "hideContacts": "Сакриј контакте",
     "hideContactsHint": "Када је укључено, само ваше директне везе и они који добију обавештење када отворите прикупљање могу видети ваше контакте",
     "notifyRenewalReminder": "Renewal reminders (3 days before)",
-    "notifyRenewalStart": "New cycle notifications"
+    "notifyRenewalStart": "New cycle notifications",
+    "connectTelegram": "Повежи Telegram",
+    "connectTelegramHint": "Пријављујте се преко Telegram-а на исти налог — други налог се неће креирати.",
+    "telegramConnected": "Telegram је повезан са вашим налогом",
+    "telegramLinkConflict": "Овај Telegram већ има посебан налог са подацима, па није повезан. Пишите подршци — спојићемо их.",
+    "telegramLinkInvalid": "Линк је истекао. Поново притисните „Повежи Telegram“ у подешавањима апликације."
   },
   "faq": {
     "title": "FAQ",

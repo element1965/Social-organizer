@@ -389,7 +389,12 @@
     "hideContacts": "Sembunyikan kontak",
     "hideContactsHint": "Saat diaktifkan, hanya koneksi langsung dan orang yang mendapat notifikasi saat Anda membuka penggalangan yang dapat melihat kontak Anda",
     "notifyRenewalReminder": "Renewal reminders (3 days before)",
-    "notifyRenewalStart": "New cycle notifications"
+    "notifyRenewalStart": "New cycle notifications",
+    "connectTelegram": "Hubungkan Telegram",
+    "connectTelegramHint": "Masuk lewat Telegram ke akun yang sama — tidak akan dibuat akun kedua.",
+    "telegramConnected": "Telegram terhubung ke akun Anda",
+    "telegramLinkConflict": "Telegram ini sudah punya akun terpisah berisi data, jadi tidak dihubungkan. Tulis ke dukungan, kami akan menggabungkannya.",
+    "telegramLinkInvalid": "Tautan kedaluwarsa. Tekan «Hubungkan Telegram» di pengaturan aplikasi lagi."
   },
   "faq": {
     "title": "FAQ",

@@ -389,7 +389,12 @@
     "hideContacts": "Skrýt kontakty",
     "hideContactsHint": "Pokud je zapnuto, vaše kontakty vidí pouze přímé spojení a ti, kdo dostanou oznámení, když otevřete sbírku",
     "notifyRenewalReminder": "Renewal reminders (3 days before)",
-    "notifyRenewalStart": "New cycle notifications"
+    "notifyRenewalStart": "New cycle notifications",
+    "connectTelegram": "Propojit Telegram",
+    "connectTelegramHint": "Přihlašujte se přes Telegram do stejného účtu — druhý účet se nevytvoří.",
+    "telegramConnected": "Telegram je propojen s vaším účtem",
+    "telegramLinkConflict": "Tento Telegram už má samostatný účet s daty, proto nebyl propojen. Napište podpoře — sloučíme je.",
+    "telegramLinkInvalid": "Odkaz vypršel. V nastavení aplikace znovu klepněte na „Propojit Telegram“."
   },
   "faq": {
     "title": "FAQ",

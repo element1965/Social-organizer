@@ -389,7 +389,12 @@
     "hideContacts": "Nascondi contatti",
     "hideContactsHint": "Quando attivato, solo i tuoi contatti diretti e chi riceve una notifica quando apri una raccolta possono vedere i tuoi contatti",
     "notifyRenewalReminder": "Promemoria rinnovo (3 giorni prima)",
-    "notifyRenewalStart": "Notifiche nuovo ciclo"
+    "notifyRenewalStart": "Notifiche nuovo ciclo",
+    "connectTelegram": "Collega Telegram",
+    "connectTelegramHint": "Accedi con Telegram allo stesso account: non verrà creato un secondo account.",
+    "telegramConnected": "Telegram è collegato al tuo account",
+    "telegramLinkConflict": "Questo Telegram ha già un account separato con dati, quindi non è stato collegato. Scrivi al supporto e li uniremo.",
+    "telegramLinkInvalid": "Il link è scaduto. Premi di nuovo «Collega Telegram» nelle impostazioni dell'app."
   },
   "faq": {
     "title": "Domande frequenti",

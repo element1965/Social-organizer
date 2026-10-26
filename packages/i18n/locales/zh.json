@@ -389,7 +389,12 @@
     "hideContacts": "隐藏联系方式",
     "hideContactsHint": "启用后，只有您的直接联系人和您发起募集时收到通知的人才能看到您的联系方式",
     "notifyRenewalReminder": "续期提醒（提前 3 天）",
-    "notifyRenewalStart": "新周期提醒"
+    "notifyRenewalStart": "新周期提醒",
+    "connectTelegram": "连接 Telegram",
+    "connectTelegramHint": "通过 Telegram 登录同一个账户——不会创建第二个账户。",
+    "telegramConnected": "Telegram 已连接到你的账户",
+    "telegramLinkConflict": "该 Telegram 已有一个包含数据的独立账户，因此未连接。请联系客服，我们会为你合并。",
+    "telegramLinkInvalid": "链接已过期。请在应用设置中再次点击“连接 Telegram”。"
   },
   "faq": {
     "title": "常见问题",

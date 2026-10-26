@@ -389,7 +389,12 @@
     "hideContacts": "Piilota yhteystiedot",
     "hideContactsHint": "Kun käytössä, vain suorat yhteytesi ja ne jotka saavat ilmoituksen kun avaat keräyksen näkevät yhteystietosi",
     "notifyRenewalReminder": "Renewal reminders (3 days before)",
-    "notifyRenewalStart": "New cycle notifications"
+    "notifyRenewalStart": "New cycle notifications",
+    "connectTelegram": "Yhdistä Telegram",
+    "connectTelegramHint": "Kirjaudu Telegramin kautta samalle tilille — toista tiliä ei luoda.",
+    "telegramConnected": "Telegram on yhdistetty tiliisi",
+    "telegramLinkConflict": "Tällä Telegramilla on jo oma tili tietoineen, joten sitä ei yhdistetty. Kirjoita tukeen, niin yhdistämme ne.",
+    "telegramLinkInvalid": "Linkki on vanhentunut. Paina sovelluksen asetuksissa uudelleen ”Yhdistä Telegram”."
   },
   "faq": {
     "title": "Usein kysytyt kysymykset",

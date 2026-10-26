@@ -14,6 +14,7 @@ import {
 import { useAuth } from './useAuth';
 import { useTheme } from './useTheme';
 import { trpc } from '../lib/trpc';
+import i18n from 'i18next';
 
 function syncTelegramTheme() {
   // Re-apply current theme mode (only affects "system" mode which follows Telegram)
@@ -49,6 +50,16 @@ export function useTelegramInit() {
           }
           console.log('[TG Auth] login success, userId:', result.userId);
           login(result.accessToken, result.refreshToken, result.userId);
+          // Result of "Connect Telegram" from the app settings (start_param link_CODE)
+          const linkResult = (result as { linkResult?: string }).linkResult;
+          if (linkResult) {
+            const key = linkResult === 'conflict' ? 'settings.telegramLinkConflict'
+              : linkResult === 'invalid' ? 'settings.telegramLinkInvalid'
+              : 'settings.telegramConnected';
+            const wa = (window as unknown as { Telegram?: { WebApp?: { showAlert?: (m: string) => void } } }).Telegram?.WebApp;
+            const text = i18n.t(key);
+            if (wa?.showAlert) wa.showAlert(text); else console.log('[TG Link]', text);
+          }
           setIsReady(true);
         })
         .catch((err) => {

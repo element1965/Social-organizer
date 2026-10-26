@@ -389,7 +389,12 @@
     "hideContacts": "連絡先を非表示",
     "hideContactsHint": "有効にすると、直接の接続とコレクション開設時に通知を受ける人だけがあなたの連絡先を見ることができます",
     "notifyRenewalReminder": "更新リマインダー（3日前）",
-    "notifyRenewalStart": "新サイクル通知"
+    "notifyRenewalStart": "新サイクル通知",
+    "connectTelegram": "Telegramを連携",
+    "connectTelegramHint": "Telegramから同じアカウントにログインできます。2つ目のアカウントは作成されません。",
+    "telegramConnected": "Telegramがアカウントに連携されました",
+    "telegramLinkConflict": "このTelegramにはデータのある別のアカウントがあるため、連携されませんでした。サポートにご連絡いただければ統合します。",
+    "telegramLinkInvalid": "リンクの有効期限が切れました。アプリの設定で「Telegramを連携」をもう一度押してください。"
   },
   "faq": {
     "title": "よくある質問",

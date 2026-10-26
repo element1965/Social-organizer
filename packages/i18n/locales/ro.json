@@ -389,7 +389,12 @@
     "hideContacts": "Ascunde contactele",
     "hideContactsHint": "Când este activat, doar conexiunile directe și cei care primesc notificare când deschizi o colectă pot vedea contactele tale",
     "notifyRenewalReminder": "Renewal reminders (3 days before)",
-    "notifyRenewalStart": "New cycle notifications"
+    "notifyRenewalStart": "New cycle notifications",
+    "connectTelegram": "Conectează Telegram",
+    "connectTelegramHint": "Intră prin Telegram în același cont — nu se va crea un al doilea cont.",
+    "telegramConnected": "Telegram este conectat la contul tău",
+    "telegramLinkConflict": "Acest Telegram are deja un cont separat cu date, așa că nu a fost conectat. Scrie la suport și le unim.",
+    "telegramLinkInvalid": "Linkul a expirat. Apasă din nou „Conectează Telegram” în setările aplicației."
   },
   "faq": {
     "title": "Întrebări frecvente",

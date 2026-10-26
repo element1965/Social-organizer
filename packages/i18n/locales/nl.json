@@ -389,7 +389,12 @@
     "hideContacts": "Contacten verbergen",
     "hideContactsHint": "Wanneer ingeschakeld, kunnen alleen uw directe verbindingen en mensen die een melding krijgen wanneer u een inzameling opent uw contacten zien",
     "notifyRenewalReminder": "Renewal reminders (3 days before)",
-    "notifyRenewalStart": "New cycle notifications"
+    "notifyRenewalStart": "New cycle notifications",
+    "connectTelegram": "Telegram koppelen",
+    "connectTelegramHint": "Log via Telegram in op hetzelfde account — er wordt geen tweede account aangemaakt.",
+    "telegramConnected": "Telegram is gekoppeld aan je account",
+    "telegramLinkConflict": "Deze Telegram heeft al een apart account met gegevens en is daarom niet gekoppeld. Schrijf naar support, dan voegen we ze samen.",
+    "telegramLinkInvalid": "De link is verlopen. Tik opnieuw op ‘Telegram koppelen’ in de app-instellingen."
   },
   "faq": {
     "title": "Veelgestelde vragen",
