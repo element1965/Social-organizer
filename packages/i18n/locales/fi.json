@@ -515,7 +515,8 @@
     "showWebLink": "Show website link",
     "showBotLink": "Show Telegram bot link",
     "botLinkHint": "If your friend already knows about the project, send this Telegram link instead — it goes straight to the app",
-    "slugExplain": "Your personal ID appears in all your invite links. You can change it to something memorable (e.g. your nickname). This ID itself is not a link — use the links above to invite people."
+    "slugExplain": "Your personal ID appears in all your invite links. You can change it to something memorable (e.g. your nickname). This ID itself is not a link — use the links above to invite people.",
+    "singleLinkHint": "Ainoa kutsulinkkisi. Ystäväsi valitsee itse, miten liittyy: Telegram, sovellus tai selain — ja päätyy verkostoosi joka tapauksessa."
   },
   "landing": {
     "openSourceBadge": "Rajaton Hui (會). Ei järjestäjää.",
@@ -560,7 +561,8 @@
     "block6Title": "Ei alusta. Yksinkertainen sosiaalinen työkalu",
     "block6Text": "Ei valvontaa\nEi välittäjiä\n\nEi käsittele maksuja\nEi pidä varoja\n\nKaikki tapahtuu ihmisten välillä",
     "huiLine": "Kuten perinteinen kiertoyhteisö (Hui / 會 / 계) — mutta hajautettu, digitaalinen ja ilman keskitettyä järjestäjää.",
-    "ctaGooglePlay": "Asenna Google Playsta"
+    "ctaGooglePlay": "Asenna Google Playsta",
+    "ctaBrowser": "Tai jatka selaimessa — ilman asennusta"
   },
   "tgBot": {
     "newEmergency": "Uusi hätäkeräys",

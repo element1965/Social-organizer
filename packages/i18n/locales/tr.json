@@ -515,7 +515,8 @@
     "showWebLink": "Show website link",
     "showBotLink": "Show Telegram bot link",
     "botLinkHint": "If your friend already knows about the project, send this Telegram link instead — it goes straight to the app",
-    "slugExplain": "Your personal ID appears in all your invite links. You can change it to something memorable (e.g. your nickname). This ID itself is not a link — use the links above to invite people."
+    "slugExplain": "Your personal ID appears in all your invite links. You can change it to something memorable (e.g. your nickname). This ID itself is not a link — use the links above to invite people.",
+    "singleLinkHint": "Tek davet bağlantınız. Arkadaşınız nasıl katılacağını kendisi seçer: Telegram, uygulama veya tarayıcı — her durumda ağınıza katılır."
   },
   "landing": {
     "openSourceBadge": "Sınırsız Hui (會). Organizatör gerekmez.",
@@ -560,7 +561,8 @@
     "block6Title": "Bir platform değil. Basit bir sosyal araç",
     "block6Text": "Kontrol yok\nAracı yok\n\nÖdemeleri işlemiyor\nFon tutmuyor\n\nHer şey insanlar arasında olur",
     "huiLine": "Geleneksel döner tasarruf grubu (Hui / 會 / 계) gibi — ama merkeziyetsiz, dijital ve merkezi organizatör olmadan.",
-    "ctaGooglePlay": "Google Play’den yükle"
+    "ctaGooglePlay": "Google Play’den yükle",
+    "ctaBrowser": "Ya da tarayıcıda devam et — kurulum gerekmez"
   },
   "tgBot": {
     "newEmergency": "Yeni acil yardım kampanyası",

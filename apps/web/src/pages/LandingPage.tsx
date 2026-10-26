@@ -346,6 +346,14 @@ export function LandingPage({ variant, inviteToken: inviteTokenProp }: { variant
             </a>
           </div>
 
+          {/* No install needed: sign up right here; the invite token is kept in pendingInviteToken */}
+          <a
+            href="/login"
+            className="-mt-6 mb-12 text-teal-300 hover:text-teal-200 underline underline-offset-4 text-base font-medium"
+          >
+            {t('landing.ctaBrowser')}
+          </a>
+
         </section>
 
         {/* === Footer === */}

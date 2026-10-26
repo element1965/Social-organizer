@@ -515,7 +515,8 @@
     "showWebLink": "Show website link",
     "showBotLink": "Show Telegram bot link",
     "botLinkHint": "If your friend already knows about the project, send this Telegram link instead — it goes straight to the app",
-    "slugExplain": "Your personal ID appears in all your invite links. You can change it to something memorable (e.g. your nickname). This ID itself is not a link — use the links above to invite people."
+    "slugExplain": "Your personal ID appears in all your invite links. You can change it to something memorable (e.g. your nickname). This ID itself is not a link — use the links above to invite people.",
+    "singleLinkHint": "ลิงก์คำเชิญเดียวของคุณ เพื่อนเลือกได้เองว่าจะเข้าร่วมทาง Telegram แอป หรือเบราว์เซอร์ — และจะเข้าสู่เครือข่ายของคุณไม่ว่าทางใด"
   },
   "landing": {
     "openSourceBadge": "Hui (會) ไม่จำกัด ไม่ต้องมีผู้จัดการ",
@@ -560,7 +561,8 @@
     "block6Title": "ไม่ใช่แพลตฟอร์ม เครื่องมือทางสังคมง่ายๆ",
     "block6Text": "ไม่มีการควบคุม\nไม่มีตัวกลาง\n\nไม่ประมวลผลการชำระเงิน\nไม่ถือครองเงินทุน\n\nทุกอย่างเกิดขึ้นระหว่างผู้คน",
     "huiLine": "เหมือนกลุ่มออมทรัพย์หมุนเวียนแบบดั้งเดิม (Hui / 會 / 계) — แต่กระจายอำนาจ ดิจิทัล และไม่มีผู้จัดการกลาง",
-    "ctaGooglePlay": "ติดตั้งจาก Google Play"
+    "ctaGooglePlay": "ติดตั้งจาก Google Play",
+    "ctaBrowser": "หรือดำเนินการต่อในเบราว์เซอร์ — ไม่ต้องติดตั้ง"
   },
   "tgBot": {
     "newEmergency": "การระดมทุนฉุกเฉินใหม่",

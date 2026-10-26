@@ -515,7 +515,8 @@
     "showWebLink": "Show website link",
     "showBotLink": "Show Telegram bot link",
     "botLinkHint": "If your friend already knows about the project, send this Telegram link instead — it goes straight to the app",
-    "slugExplain": "Your personal ID appears in all your invite links. You can change it to something memorable (e.g. your nickname). This ID itself is not a link — use the links above to invite people."
+    "slugExplain": "Your personal ID appears in all your invite links. You can change it to something memorable (e.g. your nickname). This ID itself is not a link — use the links above to invite people.",
+    "singleLinkHint": "Linkul tău unic de invitație. Prietenul alege singur cum intră: Telegram, aplicația sau browserul — și ajunge în rețeaua ta în orice caz."
   },
   "landing": {
     "openSourceBadge": "Hui (會) nelimitat. Fără organizator.",
@@ -560,7 +561,8 @@
     "block6Title": "Nu o platformă. O simplă utilitate socială",
     "block6Text": "Fără control\nFără intermediari\n\nNu procesează plăți\nNu deține fonduri\n\nTotul se întâmplă între oameni",
     "huiLine": "Ca o grupă tradițională de economii rotative (Hui / 會 / 계) — dar descentralizată, digitală și fără un organizator central.",
-    "ctaGooglePlay": "Instalează din Google Play"
+    "ctaGooglePlay": "Instalează din Google Play",
+    "ctaBrowser": "Sau continuă în browser — fără instalare"
   },
   "tgBot": {
     "newEmergency": "Nouă colectă de urgență",

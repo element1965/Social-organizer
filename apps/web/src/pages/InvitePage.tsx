@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Navigate } from 'react-router-dom';
+import { Capacitor } from '@capacitor/core';
 import { useTranslation } from 'react-i18next';
 import { trpc } from '../lib/trpc';
 import { useAuth } from '../hooks/useAuth';
@@ -41,6 +42,13 @@ export function InvitePage() {
 
   // Not authenticated — show landing page with invite token preserved
   if (!isRealUser || meError) {
+    // Inside the installed app the landing only offers store/Telegram buttons, so a new
+    // user could not sign up and the invite was never accepted. Go straight to sign-up;
+    // LoginPage brings the user back here (pendingInviteToken) to accept the invite.
+    if (Capacitor.isNativePlatform() && token) {
+      localStorage.setItem('pendingInviteToken', token);
+      return <Navigate to={`/login?redirect=${encodeURIComponent(`/invite/${token}`)}`} replace />;
+    }
     return <LandingPage inviteToken={token} />;
   }
 

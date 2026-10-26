@@ -31,6 +31,19 @@ html.dark body {
   background-color: #030712; /* gray-950 */
 }
 
+/* Solid strip under the status bar so scrolled content does not run under the clock */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--sa-top);
+  background-color: inherit;
+  z-index: 1000;
+  pointer-events: none;
+}
+
 .pt-safe {
   padding-top: var(--sa-top);
 }

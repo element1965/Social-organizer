@@ -515,7 +515,8 @@
     "showWebLink": "Show website link",
     "showBotLink": "Show Telegram bot link",
     "botLinkHint": "If your friend already knows about the project, send this Telegram link instead — it goes straight to the app",
-    "slugExplain": "Your personal ID appears in all your invite links. You can change it to something memorable (e.g. your nickname). This ID itself is not a link — use the links above to invite people."
+    "slugExplain": "Your personal ID appears in all your invite links. You can change it to something memorable (e.g. your nickname). This ID itself is not a link — use the links above to invite people.",
+    "singleLinkHint": "رابط دعوتك الوحيد. يختار صديقك طريقة الانضمام: تيليجرام أو التطبيق أو المتصفح — وفي كل الأحوال ينضم إلى شبكتك."
   },
   "landing": {
     "openSourceBadge": "Hui (會) غير محدود. لا حاجة لمنظم.",
@@ -560,7 +561,8 @@
     "block6Title": "ليست منصة. أداة اجتماعية بسيطة",
     "block6Text": "لا تحكم\nلا وسطاء\n\nلا تعالج المدفوعات\nلا تحتجز الأموال\n\nكل شيء يحدث بين الناس",
     "huiLine": "مثل مجموعات الادخار التقليدية الدوارة (Hui / 會 / 계) — لكنها لامركزية ورقمية وبدون منظم مركزي.",
-    "ctaGooglePlay": "تثبيت من Google Play"
+    "ctaGooglePlay": "تثبيت من Google Play",
+    "ctaBrowser": "أو تابع في المتصفح — دون تثبيت"
   },
   "tgBot": {
     "newEmergency": "حملة طوارئ جديدة",

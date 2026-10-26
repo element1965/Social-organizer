@@ -4,7 +4,7 @@ import { QRCodeSVG } from 'qrcode.react';
 import { Check, Pencil, Share2, X } from 'lucide-react';
 import { trpc } from '../lib/trpc';
 import { useAuth } from '../hooks/useAuth';
-import { buildWebInviteUrl, buildBotInviteUrl } from '../lib/inviteUrl';
+import { buildWebInviteUrl } from '../lib/inviteUrl';
 import { Card, CardContent } from './ui/card';
 import { ShareSheet } from './ShareSheet';
 
@@ -34,7 +34,6 @@ export function InviteBlock({ id, variant = 'full' }: InviteBlockProps) {
 
   const inviteToken = me?.referralSlug || userId || '';
   const webInviteUrl = inviteToken ? buildWebInviteUrl(inviteToken) : '';
-  const botInviteUrl = inviteToken ? buildBotInviteUrl(inviteToken) : '';
 
   if (!webInviteUrl) return null;
 
@@ -45,7 +44,7 @@ export function InviteBlock({ id, variant = 'full' }: InviteBlockProps) {
   };
 
   const handleCopyBot = () => {
-    navigator.clipboard.writeText(botInviteUrl);
+    navigator.clipboard.writeText(webInviteUrl);
     setCopiedBot(true);
     setTimeout(() => setCopiedBot(false), 2500);
   };
@@ -127,7 +126,7 @@ export function InviteBlock({ id, variant = 'full' }: InviteBlockProps) {
         </div>
         <div className="space-y-2">
           <p className="text-xs text-gray-600 dark:text-gray-300">
-            {t('invite.botLinkHint')}
+            {t('invite.singleLinkHint')}
           </p>
 
           <button
@@ -135,9 +134,8 @@ export function InviteBlock({ id, variant = 'full' }: InviteBlockProps) {
             className="w-full p-2.5 bg-gray-50 dark:bg-gray-800/70 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors border border-gray-200 dark:border-gray-700"
           >
             <div className="flex items-center gap-2">
-              <span className="text-base shrink-0">🤖</span>
               <p className="flex-1 text-xs font-medium text-blue-600 dark:text-blue-400 break-all text-left">
-                {botInviteUrl}
+                {webInviteUrl}
               </p>
             </div>
           </button>
@@ -148,10 +146,6 @@ export function InviteBlock({ id, variant = 'full' }: InviteBlockProps) {
               <span className="text-sm font-semibold text-green-600 dark:text-green-400">{t('invite.copied')}</span>
             </div>
           )}
-
-          <p className="text-[11px] text-gray-400 dark:text-gray-500 text-center">
-            {t('invite.botLinkDesc')}
-          </p>
 
           {/* Editable slug */}
           <div className="pt-2 border-t border-gray-200 dark:border-gray-700">

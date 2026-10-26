@@ -515,7 +515,8 @@
     "showWebLink": "Show website link",
     "showBotLink": "Show Telegram bot link",
     "botLinkHint": "If your friend already knows about the project, send this Telegram link instead — it goes straight to the app",
-    "slugExplain": "Your personal ID appears in all your invite links. You can change it to something memorable (e.g. your nickname). This ID itself is not a link — use the links above to invite people."
+    "slugExplain": "Your personal ID appears in all your invite links. You can change it to something memorable (e.g. your nickname). This ID itself is not a link — use the links above to invite people.",
+    "singleLinkHint": "Din enda inbjudningslänk. Din vän väljer själv hur de går med: Telegram, appen eller webbläsaren — och hamnar i ditt nätverk oavsett."
   },
   "landing": {
     "openSourceBadge": "Obegränsat Hui (會). Ingen organisatör.",
@@ -560,7 +561,8 @@
     "block6Title": "Inte en plattform. Ett enkelt socialt verktyg",
     "block6Text": "Ingen kontroll\nInga mellanhänder\n\nBehandlar inte betalningar\nHåller inte medel\n\nAllt sker mellan människor",
     "huiLine": "Som en traditionell roterande spargrupp (Hui / 會 / 계) — men decentraliserad, digital och utan central organisatör.",
-    "ctaGooglePlay": "Installera från Google Play"
+    "ctaGooglePlay": "Installera från Google Play",
+    "ctaBrowser": "Eller fortsätt i webbläsaren — ingen installation"
   },
   "tgBot": {
     "newEmergency": "Ny akut insamling",

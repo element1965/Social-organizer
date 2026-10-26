@@ -457,7 +457,8 @@
     "showWebLink": "Afficher le lien du site",
     "showBotLink": "Afficher le lien bot Telegram",
     "botLinkHint": "Si votre ami connaît déjà le projet, envoyez ce lien Telegram — il mène directement à l'application",
-    "slugExplain": "Votre identifiant personnel apparaît dans tous vos liens d'invitation. Vous pouvez le remplacer par quelque chose de mémorable (par ex. votre pseudo). L'identifiant lui-même n'est pas un lien — utilisez les liens ci-dessus pour inviter."
+    "slugExplain": "Votre identifiant personnel apparaît dans tous vos liens d'invitation. Vous pouvez le remplacer par quelque chose de mémorable (par ex. votre pseudo). L'identifiant lui-même n'est pas un lien — utilisez les liens ci-dessus pour inviter.",
+    "singleLinkHint": "Votre lien d'invitation unique. Votre ami choisit comment rejoindre : Telegram, l'application ou le navigateur — et arrive dans votre réseau dans tous les cas."
   },
   "landing": {
     "openSourceBadge": "Hui (會) illimité. Sans organisateur.",
@@ -502,7 +503,8 @@
     "block6Title": "Pas une plateforme. Un simple outil social",
     "block6Text": "Pas de contrôle\nPas d'intermédiaires\n\nNe traite pas les paiements\nNe détient pas de fonds\n\nTout se passe entre les gens",
     "huiLine": "Comme une tontine traditionnelle (Hui / 會 / 계) — mais décentralisée, numérique et sans organisateur central.",
-    "ctaGooglePlay": "Installer depuis Google Play"
+    "ctaGooglePlay": "Installer depuis Google Play",
+    "ctaBrowser": "Ou continuer dans le navigateur — sans installation"
   },
   "tgBot": {
     "newEmergency": "Nouvelle collecte d'urgence",
