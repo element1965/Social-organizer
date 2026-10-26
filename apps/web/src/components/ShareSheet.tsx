@@ -63,7 +63,7 @@ export function ShareSheet({ open, onClose, url, shareText }: ShareSheetProps) {
 
       {/* Sheet */}
       <div
-        className={`fixed inset-x-0 bottom-0 z-[61] bg-white dark:bg-gray-900 rounded-t-2xl transition-transform duration-300 ease-out ${animating ? 'translate-y-0' : 'translate-y-full'}`}
+        className={`fixed inset-x-0 bottom-0 z-[61] bg-white dark:bg-gray-900 rounded-t-2xl pb-safe transition-transform duration-300 ease-out ${animating ? 'translate-y-0' : 'translate-y-full'}`}
       >
         {/* Handle */}
         <div className="flex justify-center pt-2 pb-1">

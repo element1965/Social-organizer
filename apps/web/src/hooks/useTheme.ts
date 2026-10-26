@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { Capacitor, SystemBars, SystemBarsStyle } from '@capacitor/core';
 import { isTelegramWebApp, getTGColorScheme } from '@so/tg-adapter';
 
 type ThemeMode = 'light' | 'dark' | 'system';
@@ -10,14 +11,17 @@ interface ThemeState {
 
 function applyTheme(mode: ThemeMode) {
   const root = document.documentElement;
-  if (mode === 'system') {
-    // In Telegram, "system" means follow Telegram's colorScheme
-    const isDark = isTelegramWebApp()
+  // In Telegram, "system" means follow Telegram's colorScheme
+  const isDark = mode === 'system'
+    ? (isTelegramWebApp()
       ? getTGColorScheme() === 'dark'
-      : window.matchMedia('(prefers-color-scheme: dark)').matches;
-    root.classList.toggle('dark', isDark);
-  } else {
-    root.classList.toggle('dark', mode === 'dark');
+      : window.matchMedia('(prefers-color-scheme: dark)').matches)
+    : mode === 'dark';
+  root.classList.toggle('dark', isDark);
+
+  // Native app: status bar icons must contrast with the app background, not the phone theme
+  if (Capacitor.isNativePlatform()) {
+    SystemBars.setStyle({ style: isDark ? SystemBarsStyle.Dark : SystemBarsStyle.Light }).catch(() => {});
   }
 }
 
