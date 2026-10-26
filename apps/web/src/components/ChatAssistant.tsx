@@ -215,7 +215,7 @@ export function ChatAssistant() {
 
       {/* Sub-buttons (Broadcast + FAQ + Chat) — positioned near the top-right help button */}
       {viewState === 'expanded' && (
-        <div className="fixed top-[72px] right-4 z-40 flex flex-col items-end gap-2">
+        <div className="fixed top-[calc(72px+var(--sa-top))] right-4 z-40 flex flex-col items-end gap-2">
           {/* FAQ button */}
           <button
             onClick={() => {
@@ -287,7 +287,7 @@ export function ChatAssistant() {
 
       {/* Chat panel */}
       {isOpen && (
-        <div className="fixed inset-0 bg-white dark:bg-gray-900 z-50 flex flex-col">
+        <div className="fixed inset-0 bg-white dark:bg-gray-900 z-50 flex flex-col pt-safe pb-safe">
           {/* Header */}
           <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
             <h3 className="font-semibold text-gray-900 dark:text-white flex items-center gap-2">

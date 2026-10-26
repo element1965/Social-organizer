@@ -14,6 +14,31 @@
   --tg-header-bg-color: #ffffff;
 }
 
+/* System bars (status bar / gesture bar).
+   On Android 15+ the app is drawn edge-to-edge; Capacitor writes the bar sizes
+   into --safe-area-inset-*, browsers and iOS give them via env(). */
+:root {
+  --sa-top: var(--safe-area-inset-top, env(safe-area-inset-top, 0px));
+  --sa-bottom: var(--safe-area-inset-bottom, env(safe-area-inset-bottom, 0px));
+}
+
+body {
+  padding-top: var(--sa-top);
+  background-color: #f9fafb; /* gray-50, same as Layout */
+}
+
+html.dark body {
+  background-color: #030712; /* gray-950 */
+}
+
+.pt-safe {
+  padding-top: var(--sa-top);
+}
+
+.pb-safe {
+  padding-bottom: var(--sa-bottom);
+}
+
 /* App container: no max-width on #root so landing page is full-width.
    Internal pages are constrained via Layout component. */
 

@@ -82,7 +82,7 @@ export function Layout() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-950 flex flex-col max-w-md mx-auto relative">
+    <div className="min-h-[calc(100vh-var(--sa-top))] bg-gray-50 dark:bg-gray-950 flex flex-col max-w-md mx-auto relative">
       {/* Help button — absolute top-right, doesn't push content down */}
       {location.pathname !== '/dashboard' && (
         <button
@@ -92,7 +92,7 @@ export function Layout() {
           <HelpCircle className="w-5 h-5 text-white" />
         </button>
       )}
-      <main className="flex-1 pb-16 overflow-y-auto">
+      <main className="flex-1 overflow-y-auto" style={{ paddingBottom: 'calc(4rem + var(--sa-bottom))' }}>
         <Outlet />
       </main>
 
@@ -100,7 +100,7 @@ export function Layout() {
       <ChatAssistant />
       {/* <SkillsPopup /> temporarily hidden */}
 
-      <nav className={cn("fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 flex justify-around items-center h-16 z-50", chatPanelOpen && "hidden")}>
+      <nav className={cn("fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 flex justify-around items-center z-50", chatPanelOpen && "hidden")} style={{ height: 'calc(4rem + var(--sa-bottom))', paddingBottom: 'var(--sa-bottom)' }}>
         {navItems.map((item) => {
           const active = location.pathname === item.path;
           if ((item as any).sos) {

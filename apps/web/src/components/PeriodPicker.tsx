@@ -44,7 +44,7 @@ export function PeriodPicker({ open, onClose, value, onChange }: PeriodPickerPro
 
   return (
     <div
-      className="fixed inset-0 z-50 flex flex-col bg-white dark:bg-gray-900"
+      className="fixed inset-0 z-50 flex flex-col bg-white dark:bg-gray-900 pt-safe pb-safe"
       onClick={onClose}
     >
       <div className="flex-1 flex flex-col" onClick={(e) => e.stopPropagation()}>
