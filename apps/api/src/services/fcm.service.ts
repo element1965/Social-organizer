@@ -5,9 +5,22 @@ import type { WebPushPayload } from './web-push.service.js';
 
 const FIREBASE_SERVICE_ACCOUNT = process.env.FIREBASE_SERVICE_ACCOUNT;
 
+/**
+ * Parse the service-account JSON from env. When the key is pasted into a hosting
+ * dashboard, the "\n" escapes inside private_key often turn into real line breaks,
+ * which makes the JSON invalid ("Bad control character"). Re-escape them and retry.
+ */
+function parseServiceAccount(raw: string): ServiceAccount {
+  try {
+    return JSON.parse(raw);
+  } catch {
+    return JSON.parse(raw.replace(/\r\n/g, '\n').replace(/\n/g, '\\n'));
+  }
+}
+
 if (FIREBASE_SERVICE_ACCOUNT && getApps().length === 0) {
   try {
-    const serviceAccount: ServiceAccount = JSON.parse(FIREBASE_SERVICE_ACCOUNT);
+    const serviceAccount = parseServiceAccount(FIREBASE_SERVICE_ACCOUNT);
     initializeApp({ credential: cert(serviceAccount) });
     console.log('[FCM] Firebase Admin initialized');
   } catch (err) {
