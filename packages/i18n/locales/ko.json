@@ -389,7 +389,12 @@
     "hideContacts": "연락처 숨기기",
     "hideContactsHint": "활성화하면 직접 연결된 사람과 모금을 열 때 알림을 받는 사람만 연락처를 볼 수 있습니다",
     "notifyRenewalReminder": "Renewal reminders (3 days before)",
-    "notifyRenewalStart": "New cycle notifications"
+    "notifyRenewalStart": "New cycle notifications",
+    "connectTelegram": "Telegram 연결",
+    "connectTelegramHint": "Telegram으로 같은 계정에 로그인하세요. 두 번째 계정은 만들어지지 않습니다.",
+    "telegramConnected": "Telegram이 계정에 연결되었습니다",
+    "telegramLinkConflict": "이 Telegram에는 이미 데이터가 있는 별도 계정이 있어 연결하지 않았습니다. 지원팀에 문의하시면 합쳐 드립니다.",
+    "telegramLinkInvalid": "링크가 만료되었습니다. 앱 설정에서 «Telegram 연결»을 다시 누르세요."
   },
   "faq": {
     "title": "자주 묻는 질문",

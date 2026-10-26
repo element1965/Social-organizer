@@ -389,7 +389,12 @@
     "hideContacts": "संपर्क छुपाएं",
     "hideContactsHint": "सक्षम होने पर, केवल आपके प्रत्यक्ष कनेक्शन और जिन्हें संग्रह खोलने पर सूचना मिलेगी वे ही आपके संपर्क देख सकते हैं",
     "notifyRenewalReminder": "Renewal reminders (3 days before)",
-    "notifyRenewalStart": "New cycle notifications"
+    "notifyRenewalStart": "New cycle notifications",
+    "connectTelegram": "Telegram जोड़ें",
+    "connectTelegramHint": "Telegram से इसी खाते में लॉग इन करें — दूसरा खाता नहीं बनेगा।",
+    "telegramConnected": "Telegram आपके खाते से जुड़ गया है",
+    "telegramLinkConflict": "इस Telegram का पहले से डेटा वाला अलग खाता है, इसलिए इसे नहीं जोड़ा गया। सपोर्ट को लिखें — हम उन्हें मिला देंगे।",
+    "telegramLinkInvalid": "लिंक की अवधि समाप्त हो गई। ऐप सेटिंग्स में फिर से «Telegram जोड़ें» दबाएँ।"
   },
   "faq": {
     "title": "अक्सर पूछे जाने वाले प्रश्न",

@@ -389,7 +389,12 @@
     "hideContacts": "Схаваць кантакты",
     "hideContactsHint": "Калі ўключана, вашы кантакты бачаць толькі прамыя сувязі і тыя, хто атрымае апавяшчэнне, калі вы адкрыеце збор",
     "notifyRenewalReminder": "Напаміны аб працягу (за 3 дні)",
-    "notifyRenewalStart": "Апавяшчэнні аб новым цыкле"
+    "notifyRenewalStart": "Апавяшчэнні аб новым цыкле",
+    "connectTelegram": "Падключыць Telegram",
+    "connectTelegramHint": "Уваходзьце праз Telegram у гэты ж акаўнт — другі акаўнт не створыцца.",
+    "telegramConnected": "Telegram падключаны да вашага акаўнта",
+    "telegramLinkConflict": "У гэтага Telegram ужо ёсць асобны акаўнт з данымі, таму ён не падключаны. Напішыце ў падтрымку — аб'яднаем.",
+    "telegramLinkInvalid": "Спасылка састарэла. Націсніце «Падключыць Telegram» у наладах праграмы яшчэ раз."
   },
   "faq": {
     "title": "Частыя пытанні",

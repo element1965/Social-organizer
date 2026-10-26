@@ -235,6 +235,13 @@ The landing download buttons carry the inviter's token so new users join the inv
 - **Telegram:** `?start=invite_TOKEN` → bot → `/invite/TOKEN` (delivered to the Mini App)
 - **Google Play:** `&referrer=invite_TOKEN` → Play Install Referrer → `MainActivity.java` loads `/invite/TOKEN` (delivered to the app)
 - **App Store:** `?ct=invite_TOKEN` Apple campaign token — App Store Connect analytics only; iOS has no Install Referrer, so the invite is not auto-applied in-app after install
+- **Browser:** "Or continue in the browser" under the buttons → `/login`; the token waits in `pendingInviteToken` and is accepted after sign-up
+
+There is one invite link per user — `https://www.orginizer.com/?invite=TOKEN` (dashboard, settings, invite popup, QR); the person who opens it picks Telegram, the app or the browser. Inside the installed app `/invite/TOKEN` goes straight to `/login` (no landing), and `pendingInviteToken` is kept until `InvitePage` accepts it — also across the Google/Apple deep-link return (`socialorganizer://auth-success`).
+
+### Connecting Telegram to an existing account
+
+Settings → "Connect Telegram" (shown to users who signed in with Google / e-mail / Apple) creates a 6-digit link code and opens `t.me/<bot>?startapp=link_CODE`. `loginWithTelegram` reads `start_param` from the signed initData and calls `linkTelegramByCode` (`apps/api/src/services/telegram-link.service.ts`): a Telegram that was never used is attached to the code owner; an empty duplicate account (no connections, collections or obligations) is merged — Telegram and pending invite requests move over, the duplicate is deleted; a duplicate with data is left alone (`linkResult: 'conflict'`, the mini app shows a message). The Telegram contact is editable by hand until Telegram is connected; the account e-mail fills the e-mail contact.
 
 ## Web Frontend (apps/web)
 

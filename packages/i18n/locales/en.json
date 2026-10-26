@@ -394,7 +394,12 @@
     "hideContacts": "Hide contacts",
     "hideContactsHint": "When enabled, only your direct connections and people who get notified when you open a collection can see your contacts",
     "notifyRenewalReminder": "Renewal reminders (3 days before)",
-    "notifyRenewalStart": "New cycle notifications"
+    "notifyRenewalStart": "New cycle notifications",
+    "connectTelegram": "Connect Telegram",
+    "connectTelegramHint": "Sign in through Telegram to the same account — no second account will be created.",
+    "telegramConnected": "Telegram is connected to your account",
+    "telegramLinkConflict": "This Telegram already has a separate account with data, so it was not connected. Write to support and we will merge them.",
+    "telegramLinkInvalid": "The link has expired. Press «Connect Telegram» in the app settings again."
   },
   "faq": {
     "title": "FAQ",

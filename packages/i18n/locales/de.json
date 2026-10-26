@@ -389,7 +389,12 @@
     "hideContacts": "Kontakte verbergen",
     "hideContactsHint": "Wenn aktiviert, können nur Ihre direkten Verbindungen und Personen, die benachrichtigt werden wenn Sie eine Sammlung eröffnen, Ihre Kontakte sehen",
     "notifyRenewalReminder": "Verlängerungserinnerungen (3 Tage vorher)",
-    "notifyRenewalStart": "Benachrichtigungen über neuen Zyklus"
+    "notifyRenewalStart": "Benachrichtigungen über neuen Zyklus",
+    "connectTelegram": "Telegram verbinden",
+    "connectTelegramHint": "Melden Sie sich über Telegram im selben Konto an – es wird kein zweites Konto erstellt.",
+    "telegramConnected": "Telegram ist mit Ihrem Konto verbunden",
+    "telegramLinkConflict": "Dieses Telegram hat bereits ein eigenes Konto mit Daten und wurde daher nicht verbunden. Schreiben Sie dem Support – wir führen sie zusammen.",
+    "telegramLinkInvalid": "Der Link ist abgelaufen. Tippen Sie in den App-Einstellungen erneut auf „Telegram verbinden“."
   },
   "faq": {
     "title": "Häufige Fragen",

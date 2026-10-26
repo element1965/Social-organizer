@@ -399,7 +399,12 @@
     "hideContacts": "הסתר אנשי קשר",
     "hideContactsHint": "כאשר מופעל, רק אנשי הקשר הישירים שלך ומי שיקבלו התראה כשתפתח איסוף יכולים לראות את אנשי הקשר שלך",
     "notifyRenewalReminder": "Renewal reminders (3 days before)",
-    "notifyRenewalStart": "New cycle notifications"
+    "notifyRenewalStart": "New cycle notifications",
+    "connectTelegram": "חיבור טלגרם",
+    "connectTelegramHint": "התחברו דרך טלגרם לאותו חשבון — לא ייווצר חשבון שני.",
+    "telegramConnected": "טלגרם מחובר לחשבון שלכם",
+    "telegramLinkConflict": "לטלגרם הזה כבר יש חשבון נפרד עם נתונים, ולכן הוא לא חובר. כתבו לתמיכה ונאחד אותם.",
+    "telegramLinkInvalid": "הקישור פג תוקף. לחצו שוב על «חיבור טלגרם» בהגדרות האפליקציה."
   },
   "faq": {
     "title": "שאלות נפוצות",

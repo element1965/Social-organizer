@@ -389,7 +389,12 @@
     "hideContacts": "إخفاء جهات الاتصال",
     "hideContactsHint": "عند التفعيل، يمكن فقط لجهات اتصالك المباشرة ومن سيتلقون إشعاراً عند فتح جمع التبرعات رؤية جهات اتصالك",
     "notifyRenewalReminder": "Renewal reminders (3 days before)",
-    "notifyRenewalStart": "New cycle notifications"
+    "notifyRenewalStart": "New cycle notifications",
+    "connectTelegram": "ربط تيليجرام",
+    "connectTelegramHint": "سجّل الدخول عبر تيليجرام إلى الحساب نفسه — لن يُنشأ حساب ثانٍ.",
+    "telegramConnected": "تم ربط تيليجرام بحسابك",
+    "telegramLinkConflict": "لدى حساب تيليجرام هذا حساب منفصل يحتوي على بيانات، لذلك لم يتم ربطه. راسل الدعم وسنقوم بدمجهما.",
+    "telegramLinkInvalid": "انتهت صلاحية الرابط. اضغط «ربط تيليجرام» في إعدادات التطبيق مرة أخرى."
   },
   "faq": {
     "title": "الأسئلة الشائعة",

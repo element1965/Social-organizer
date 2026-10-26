@@ -394,7 +394,12 @@
     "hideContacts": "Скрыть контакты",
     "hideContactsHint": "Когда включено, ваши контакты видят только прямые связи и те, кто получит уведомление, если вы откроете сбор",
     "notifyRenewalReminder": "Напоминать о продлении (за 3 дня)",
-    "notifyRenewalStart": "Уведомлять о новом цикле"
+    "notifyRenewalStart": "Уведомлять о новом цикле",
+    "connectTelegram": "Подключить Telegram",
+    "connectTelegramHint": "Входите через Telegram в этот же аккаунт — второй аккаунт не создастся.",
+    "telegramConnected": "Telegram подключён к вашему аккаунту",
+    "telegramLinkConflict": "У этого Telegram уже есть отдельный аккаунт с данными, поэтому он не подключён. Напишите в поддержку — объединим.",
+    "telegramLinkInvalid": "Ссылка устарела. Нажмите «Подключить Telegram» в настройках приложения ещё раз."
   },
   "faq": {
     "title": "Частые вопросы",

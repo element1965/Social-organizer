@@ -10,6 +10,7 @@ import {
 } from '../services/auth.service.js';
 import { validateTelegramInitData } from '../services/telegram.service.js';
 import { applyBotStartInvite } from '../services/invite-fallback.service.js';
+import { linkTelegramByCode, type TelegramLinkResult } from '../services/telegram-link.service.js';
 import { verifyGoogleIdToken } from '../services/google.service.js';
 import { LINKING_CODE_TTL_MINUTES } from '@so/shared';
 
@@ -84,6 +85,14 @@ export const authRouter = router({
 
       const platformId = String(tgUser.id);
 
+      // "Connect Telegram" from Settings: start_param link_CODE attaches this Telegram
+      // to the user who generated the code instead of creating a second account
+      let linkResult: TelegramLinkResult | undefined;
+      const startParam = new URLSearchParams(input.initData).get('start_param');
+      if (startParam?.startsWith('link_')) {
+        linkResult = await linkTelegramByCode(ctx.db, startParam.slice('link_'.length), platformId, input.initData);
+      }
+
       let platformAccount = await ctx.db.platformAccount.findUnique({
         where: {
           platform_platformId: {
@@ -156,7 +165,7 @@ export const authRouter = router({
       const accessToken = createAccessToken(userId);
       const refreshToken = createRefreshToken(userId);
 
-      return { accessToken, refreshToken, userId };
+      return { accessToken, refreshToken, userId, ...(linkResult ? { linkResult } : {}) };
     }),
 
   loginWithGoogle: publicProcedure

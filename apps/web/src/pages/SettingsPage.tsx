@@ -18,6 +18,10 @@ import { SocialIcon } from '../components/ui/social-icons';
 import { usePushNotifications } from '../hooks/usePushNotifications';
 import { validateContact } from '@so/shared';
 import { InviteBlock } from '../components/InviteBlock';
+import { isTelegramWebApp } from '@so/tg-adapter';
+import { Capacitor } from '@capacitor/core';
+
+const TG_BOT_USERNAME = import.meta.env.VITE_TELEGRAM_BOT_USERNAME || 'socialorganizer_bot';
 
 export function SettingsPage() {
   const { t, i18n } = useTranslation();
@@ -63,6 +67,21 @@ export function SettingsPage() {
   const updateRenewalReminder = trpc.settings.updateNotifyRenewalReminder.useMutation({ onSuccess: () => utils.settings.get.invalidate() });
   const updateRenewalStart = trpc.settings.updateNotifyRenewalStart.useMutation({ onSuccess: () => utils.settings.get.invalidate() });
   const generateCode = trpc.auth.generateLinkCode.useMutation();
+  // "Connect Telegram": open the bot with a link code so the mini app signs in to THIS
+  // account instead of creating a second one (see telegram-link.service on the API)
+  const connectTelegram = trpc.auth.generateLinkCode.useMutation();
+  const handleConnectTelegram = () => {
+    // Open the window inside the click, otherwise the browser blocks it as a popup
+    const win = Capacitor.isNativePlatform() ? null : window.open('', '_blank');
+    connectTelegram.mutate(undefined, {
+      onSuccess: ({ code }) => {
+        const url = `https://t.me/${TG_BOT_USERNAME}?startapp=link_${code}`;
+        if (win) win.location.href = url;
+        else window.open(url, '_blank');
+      },
+      onError: () => win?.close(),
+    });
+  };
   const deleteAccount = trpc.user.delete.useMutation({ onSuccess: () => { logout(); navigate('/login'); } });
   const updateUser = trpc.user.update.useMutation({ onSuccess: () => {
     utils.user.me.invalidate();
@@ -352,6 +371,27 @@ export function SettingsPage() {
           ))}
         </div>
       </CardContent></Card>
+
+      {!isTelegramWebApp() && contacts && (
+        <Card><CardContent className="py-3">
+          <div className="flex items-center gap-3 mb-2">
+            <SocialIcon type="telegram" className="w-5 h-5 text-blue-500" />
+            <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Telegram</span>
+          </div>
+          {contacts.some((c) => c.type === 'telegram' && (c as { locked?: boolean }).locked) ? (
+            <p className="text-sm text-green-600 dark:text-green-400 flex items-center gap-1.5">
+              <Check className="w-4 h-4" /> {t('settings.telegramConnected')}
+            </p>
+          ) : (
+            <>
+              <p className="text-xs text-gray-500 dark:text-gray-300 mb-2">{t('settings.connectTelegramHint')}</p>
+              <Button variant="outline" size="sm" className="w-full" disabled={connectTelegram.isPending} onClick={handleConnectTelegram}>
+                {t('settings.connectTelegram')}
+              </Button>
+            </>
+          )}
+        </CardContent></Card>
+      )}
 
       <Card><CardContent className="py-3">
         <div className="flex items-center gap-3 mb-2">

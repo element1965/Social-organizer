@@ -389,7 +389,12 @@
     "hideContacts": "Kişileri gizle",
     "hideContactsHint": "Etkinleştirildiğinde, yalnızca doğrudan bağlantılarınız ve bir toplama açtığınızda bildirim alan kişiler kişilerinizi görebilir",
     "notifyRenewalReminder": "Yenileme hatırlatmaları (3 gün önce)",
-    "notifyRenewalStart": "Yeni döngü bildirimleri"
+    "notifyRenewalStart": "Yeni döngü bildirimleri",
+    "connectTelegram": "Telegram'ı bağla",
+    "connectTelegramHint": "Telegram ile aynı hesaba girin — ikinci bir hesap oluşturulmaz.",
+    "telegramConnected": "Telegram hesabınıza bağlandı",
+    "telegramLinkConflict": "Bu Telegram'ın zaten verileri olan ayrı bir hesabı var, bu yüzden bağlanmadı. Desteğe yazın, birleştirelim.",
+    "telegramLinkInvalid": "Bağlantının süresi doldu. Uygulama ayarlarında «Telegram'ı bağla»ya tekrar dokunun."
   },
   "faq": {
     "title": "Sık sorulan sorular",

@@ -389,7 +389,12 @@
     "hideContacts": "Ukryj kontakty",
     "hideContactsHint": "Po włączeniu, tylko Twoje bezpośrednie połączenia i osoby powiadomione przy otwarciu zbiórki mogą widzieć Twoje kontakty",
     "notifyRenewalReminder": "Przypomnienia o odnowieniu (3 dni wcześniej)",
-    "notifyRenewalStart": "Powiadomienia o nowym cyklu"
+    "notifyRenewalStart": "Powiadomienia o nowym cyklu",
+    "connectTelegram": "Połącz Telegram",
+    "connectTelegramHint": "Loguj się przez Telegram do tego samego konta — drugie konto nie zostanie utworzone.",
+    "telegramConnected": "Telegram jest połączony z Twoim kontem",
+    "telegramLinkConflict": "Ten Telegram ma już osobne konto z danymi, więc nie został połączony. Napisz do wsparcia — połączymy je.",
+    "telegramLinkInvalid": "Link wygasł. Naciśnij ponownie „Połącz Telegram” w ustawieniach aplikacji."
   },
   "faq": {
     "title": "Najczęściej zadawane pytania",

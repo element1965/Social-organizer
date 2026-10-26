@@ -389,7 +389,12 @@
     "hideContacts": "Ẩn liên hệ",
     "hideContactsHint": "Khi bật, chỉ kết nối trực tiếp và người nhận thông báo khi bạn mở quyên góp mới có thể xem liên hệ của bạn",
     "notifyRenewalReminder": "Renewal reminders (3 days before)",
-    "notifyRenewalStart": "New cycle notifications"
+    "notifyRenewalStart": "New cycle notifications",
+    "connectTelegram": "Kết nối Telegram",
+    "connectTelegramHint": "Đăng nhập qua Telegram vào cùng tài khoản này — sẽ không tạo tài khoản thứ hai.",
+    "telegramConnected": "Telegram đã được kết nối với tài khoản của bạn",
+    "telegramLinkConflict": "Telegram này đã có tài khoản riêng chứa dữ liệu nên chưa được kết nối. Hãy nhắn hỗ trợ, chúng tôi sẽ gộp lại.",
+    "telegramLinkInvalid": "Liên kết đã hết hạn. Nhấn «Kết nối Telegram» trong cài đặt ứng dụng lần nữa."
   },
   "faq": {
     "title": "Câu hỏi thường gặp",

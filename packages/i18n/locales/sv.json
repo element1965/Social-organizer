@@ -389,7 +389,12 @@
     "hideContacts": "Dölj kontakter",
     "hideContactsHint": "När aktiverat kan bara dina direkta kontakter och de som får avisering när du öppnar en insamling se dina kontaktuppgifter",
     "notifyRenewalReminder": "Renewal reminders (3 days before)",
-    "notifyRenewalStart": "New cycle notifications"
+    "notifyRenewalStart": "New cycle notifications",
+    "connectTelegram": "Anslut Telegram",
+    "connectTelegramHint": "Logga in via Telegram på samma konto — inget nytt konto skapas.",
+    "telegramConnected": "Telegram är anslutet till ditt konto",
+    "telegramLinkConflict": "Detta Telegram har redan ett eget konto med data, så det anslöts inte. Skriv till support så slår vi ihop dem.",
+    "telegramLinkInvalid": "Länken har gått ut. Tryck på ”Anslut Telegram” i appens inställningar igen."
   },
   "faq": {
     "title": "Vanliga frågor",

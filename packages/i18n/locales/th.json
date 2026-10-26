@@ -389,7 +389,12 @@
     "hideContacts": "ซ่อนผู้ติดต่อ",
     "hideContactsHint": "เมื่อเปิดใช้งาน เฉพาะผู้ติดต่อโดยตรงและผู้ที่ได้รับการแจ้งเตือนเมื่อคุณเปิดการระดมทุนเท่านั้นที่สามารถดูผู้ติดต่อของคุณ",
     "notifyRenewalReminder": "Renewal reminders (3 days before)",
-    "notifyRenewalStart": "New cycle notifications"
+    "notifyRenewalStart": "New cycle notifications",
+    "connectTelegram": "เชื่อมต่อ Telegram",
+    "connectTelegramHint": "เข้าสู่ระบบผ่าน Telegram ในบัญชีเดียวกัน — จะไม่มีการสร้างบัญชีที่สอง",
+    "telegramConnected": "Telegram เชื่อมต่อกับบัญชีของคุณแล้ว",
+    "telegramLinkConflict": "Telegram นี้มีบัญชีแยกที่มีข้อมูลอยู่แล้ว จึงไม่ได้เชื่อมต่อ เขียนถึงฝ่ายสนับสนุนแล้วเราจะรวมให้",
+    "telegramLinkInvalid": "ลิงก์หมดอายุแล้ว กด «เชื่อมต่อ Telegram» ในการตั้งค่าแอปอีกครั้ง"
   },
   "faq": {
     "title": "คำถามที่พบบ่อย",
