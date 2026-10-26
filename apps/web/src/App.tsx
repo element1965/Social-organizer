@@ -97,7 +97,10 @@ function GoogleAuthDeepLinkHandler() {
           // "join the inviter's cluster on first handshake" flow work for Apple
           // sign-in, the same way Telegram passes it via startapp.
           const pendingInvite = params.get('inv') || localStorage.getItem('pendingInviteToken');
-          localStorage.removeItem('pendingInviteToken');
+          // Keep pendingInviteToken until InvitePage accepts it: clearing it here let
+          // TelegramBootstrap see "/login without invite" and send the user to the
+          // dashboard, so invites were lost after Google/Apple sign-in in the app.
+          if (pendingInvite) localStorage.setItem('pendingInviteToken', pendingInvite);
           navigate(pendingInvite ? `/invite/${pendingInvite}` : '/dashboard', { replace: true });
         } else {
           navigate('/login', { replace: true });
