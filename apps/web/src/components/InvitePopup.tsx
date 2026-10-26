@@ -4,7 +4,7 @@ import { QRCodeSVG } from 'qrcode.react';
 import { Copy, Check, X, Pencil, HelpCircle } from 'lucide-react';
 import { trpc } from '../lib/trpc';
 import { useAuth } from '../hooks/useAuth';
-import { buildWebInviteUrl, buildBotInviteUrl } from '../lib/inviteUrl';
+import { buildWebInviteUrl } from '../lib/inviteUrl';
 import { Tooltip } from './ui/tooltip';
 
 interface InvitePopupProps {
@@ -19,7 +19,6 @@ export function InvitePopup({ open, onClose }: InvitePopupProps) {
   const { data: me } = trpc.user.me.useQuery();
 
   const [copiedWeb, setCopiedWeb] = useState(false);
-  const [copiedBot, setCopiedBot] = useState(false);
   const [editingSlug, setEditingSlug] = useState(false);
   const [slugValue, setSlugValue] = useState('');
   const [slugError, setSlugError] = useState('');
@@ -32,7 +31,6 @@ export function InvitePopup({ open, onClose }: InvitePopupProps) {
 
   const inviteToken = me?.referralSlug || userId || '';
   const webInviteUrl = inviteToken ? buildWebInviteUrl(inviteToken) : '';
-  const botInviteUrl = inviteToken ? buildBotInviteUrl(inviteToken) : '';
 
   if (!webInviteUrl) return null;
 
@@ -61,30 +59,12 @@ export function InvitePopup({ open, onClose }: InvitePopupProps) {
             className="w-full flex items-center gap-2 p-3 bg-gray-100 dark:bg-gray-800 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
           >
             <span className="text-base shrink-0">🌐</span>
-            <Tooltip content={t('invite.webLinkDesc')} side="top">
+            <Tooltip content={t('invite.singleLinkHint')} side="top">
               <button type="button" className="shrink-0 text-gray-400 hover:text-gray-500 dark:text-gray-300"><HelpCircle className="w-3.5 h-3.5" /></button>
             </Tooltip>
             <p className="flex-1 text-xs text-gray-600 dark:text-gray-300 break-all text-left">{webInviteUrl}</p>
             <div className="shrink-0">
               {copiedWeb ? <Check className="w-5 h-5 text-green-500" /> : <Copy className="w-5 h-5 text-gray-500 dark:text-gray-300" />}
-            </div>
-          </button>
-          {/* Bot link */}
-          <button
-            onClick={() => {
-              navigator.clipboard.writeText(botInviteUrl);
-              setCopiedBot(true);
-              setTimeout(() => setCopiedBot(false), 2000);
-            }}
-            className="w-full flex items-center gap-2 p-3 bg-gray-100 dark:bg-gray-800 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
-          >
-            <span className="text-base shrink-0">🤖</span>
-            <Tooltip content={t('invite.botLinkDesc')} side="top">
-              <button type="button" className="shrink-0 text-gray-400 hover:text-gray-500 dark:text-gray-300"><HelpCircle className="w-3.5 h-3.5" /></button>
-            </Tooltip>
-            <p className="flex-1 text-xs text-gray-600 dark:text-gray-300 break-all text-left">{botInviteUrl}</p>
-            <div className="shrink-0">
-              {copiedBot ? <Check className="w-5 h-5 text-green-500" /> : <Copy className="w-5 h-5 text-gray-500 dark:text-gray-300" />}
             </div>
           </button>
         </div>

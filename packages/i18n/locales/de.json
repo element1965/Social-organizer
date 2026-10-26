@@ -457,7 +457,8 @@
     "showWebLink": "Website-Link anzeigen",
     "showBotLink": "Telegram-Bot-Link anzeigen",
     "botLinkHint": "Wenn Ihr Freund das Projekt bereits kennt, senden Sie diesen Telegram-Link — er führt direkt zur App",
-    "slugExplain": "Ihre persönliche ID erscheint in allen Einladungslinks. Sie können sie durch etwas Einprägsames ersetzen (z.B. Ihren Spitznamen). Die ID selbst ist kein Link — verwenden Sie die obigen Links zum Einladen."
+    "slugExplain": "Ihre persönliche ID erscheint in allen Einladungslinks. Sie können sie durch etwas Einprägsames ersetzen (z.B. Ihren Spitznamen). Die ID selbst ist kein Link — verwenden Sie die obigen Links zum Einladen.",
+    "singleLinkHint": "Ihr einziger Einladungslink. Ihr Freund wählt selbst, wie er beitritt: Telegram, App oder Browser – und landet in jedem Fall in Ihrem Netzwerk."
   },
   "landing": {
     "openSourceBadge": "Unbegrenztes Hui (會). Kein Organisator.",
@@ -502,7 +503,8 @@
     "block6Title": "Keine Plattform. Ein einfaches soziales Werkzeug",
     "block6Text": "Keine Kontrolle\nKeine Vermittler\n\nVerarbeitet keine Zahlungen\nHält keine Gelder\n\nAlles passiert zwischen Menschen",
     "huiLine": "Wie eine traditionelle rotierende Spargruppe (Hui / 會 / 계) — aber dezentralisiert, digital und ohne zentralen Organisator.",
-    "ctaGooglePlay": "Aus Google Play installieren"
+    "ctaGooglePlay": "Aus Google Play installieren",
+    "ctaBrowser": "Oder im Browser fortfahren – ohne Installation"
   },
   "tgBot": {
     "newEmergency": "Neue Notfall-Sammlung",

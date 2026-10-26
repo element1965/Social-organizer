@@ -457,7 +457,8 @@
     "showWebLink": "Show website link",
     "showBotLink": "Show Telegram bot link",
     "botLinkHint": "If your friend already knows about the project, send this Telegram link instead — it goes straight to the app",
-    "slugExplain": "Your personal ID appears in all your invite links. You can change it to something memorable (e.g. your nickname). This ID itself is not a link — use the links above to invite people."
+    "slugExplain": "Your personal ID appears in all your invite links. You can change it to something memorable (e.g. your nickname). This ID itself is not a link — use the links above to invite people.",
+    "singleLinkHint": "你唯一的邀请链接。朋友可自行选择加入方式：Telegram、应用或浏览器——无论哪种都会进入你的网络。"
   },
   "landing": {
     "openSourceBadge": "无限 Hui (會)。无需组织者。",
@@ -502,7 +503,8 @@
     "block6Title": "不是平台。一个简单的社交工具",
     "block6Text": "无控制\n无中介\n\n不处理付款\n不持有资金\n\n一切发生在人与人之间",
     "huiLine": "就像传统的互助储蓄会（會/Hui）——但去中心化、数字化，且无需中央组织者。",
-    "ctaGooglePlay": "从 Google Play 安装"
+    "ctaGooglePlay": "从 Google Play 安装",
+    "ctaBrowser": "或在浏览器中继续——无需安装"
   },
   "tgBot": {
     "newEmergency": "新紧急募集",

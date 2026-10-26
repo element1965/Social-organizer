@@ -515,7 +515,8 @@
     "showWebLink": "Show website link",
     "showBotLink": "Show Telegram bot link",
     "botLinkHint": "If your friend already knows about the project, send this Telegram link instead — it goes straight to the app",
-    "slugExplain": "Your personal ID appears in all your invite links. You can change it to something memorable (e.g. your nickname). This ID itself is not a link — use the links above to invite people."
+    "slugExplain": "Your personal ID appears in all your invite links. You can change it to something memorable (e.g. your nickname). This ID itself is not a link — use the links above to invite people.",
+    "singleLinkHint": "आपका एक ही आमंत्रण लिंक। आपका दोस्त खुद चुनेगा कि कैसे जुड़े: Telegram, ऐप या ब्राउज़र — और हर हाल में आपके नेटवर्क में आएगा।"
   },
   "landing": {
     "openSourceBadge": "असीमित Hui (會). कोई आयोजक नहीं।",
@@ -560,7 +561,8 @@
     "block6Title": "कोई प्लेटफ़ॉर्म नहीं। एक सरल सामाजिक उपकरण",
     "block6Text": "कोई नियंत्रण नहीं\nकोई बिचौलिया नहीं\n\nभुगतान संसाधित नहीं करता\nधन नहीं रखता\n\nसब कुछ लोगों के बीच होता है",
     "huiLine": "पारंपरिक रोटेटिंग बचत समूह (Hui / 會 / 계) की तरह — लेकिन विकेन्द्रीकृत, डिजिटल और बिना केंद्रीय आयोजक के।",
-    "ctaGooglePlay": "Google Play से इंस्टॉल करें"
+    "ctaGooglePlay": "Google Play से इंस्टॉल करें",
+    "ctaBrowser": "या ब्राउज़र में जारी रखें — इंस्टॉल की ज़रूरत नहीं"
   },
   "tgBot": {
     "newEmergency": "नया आपातकालीन संग्रह",

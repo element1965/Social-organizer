@@ -515,7 +515,8 @@
     "showWebLink": "Show website link",
     "showBotLink": "Show Telegram bot link",
     "botLinkHint": "If your friend already knows about the project, send this Telegram link instead — it goes straight to the app",
-    "slugExplain": "Your personal ID appears in all your invite links. You can change it to something memorable (e.g. your nickname). This ID itself is not a link — use the links above to invite people."
+    "slugExplain": "Your personal ID appears in all your invite links. You can change it to something memorable (e.g. your nickname). This ID itself is not a link — use the links above to invite people.",
+    "singleLinkHint": "Ваш једини линк за позивницу. Пријатељ сам бира како да се придружи: Telegram, апликација или прегледач — и у сваком случају улази у вашу мрежу."
   },
   "landing": {
     "openSourceBadge": "Неограничен Hui (會). Без организатора.",
@@ -560,7 +561,8 @@
     "block6Title": "Није платформа. Једноставан друштвени алат",
     "block6Text": "Без контроле\nБез посредника\n\nНе обрађује плаћања\nНе чува средства\n\nСве се дешава међу људима",
     "huiLine": "Као традиционална ротациона штедна група (Hui / 會 / 계) — али децентрализована, дигитална и без централног организатора.",
-    "ctaGooglePlay": "Инсталирај са Google Play"
+    "ctaGooglePlay": "Инсталирај са Google Play",
+    "ctaBrowser": "Или наставите у прегледачу — без инсталације"
   },
   "tgBot": {
     "newEmergency": "Нова хитна акција",

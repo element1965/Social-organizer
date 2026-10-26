@@ -179,13 +179,13 @@ export function SettingsPage() {
         </CardHeader>
         <CardContent className="space-y-3">
           {contacts?.map((contact) => {
-            const isTelegram = contact.type === 'telegram';
+            const isTelegram = contact.type === 'telegram' && !!(contact as { locked?: boolean }).locked;
             const currentVal = contactValues[contact.type];
             const displayVal = currentVal ?? contact.value;
             const validationError = displayVal.trim() ? validateContact(contact.type, displayVal) : null;
             return (
               <div key={contact.type} className="relative">
-                <SocialIcon type={contact.icon} className={`w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none ${isTelegram ? 'text-blue-500' : 'text-gray-500 dark:text-gray-300'}`} />
+                <SocialIcon type={contact.icon} className={`w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none ${contact.type === 'telegram' ? 'text-blue-500' : 'text-gray-500 dark:text-gray-300'}`} />
                 <Input
                   id={`contact-${contact.type}`}
                   placeholder={(contact as { placeholder?: string }).placeholder}

@@ -78,19 +78,35 @@ export const userRouter = router({
         if (!canView) return [];
       }
 
-      const contacts = await ctx.db.userContact.findMany({
+      let contacts = await ctx.db.userContact.findMany({
         where: { userId: targetId },
       });
 
       // For own profile, return all contact types (filled and empty)
       // For other profiles, return only filled contacts
       if (isOwn) {
+        const me = await ctx.db.user.findUnique({
+          where: { id: ctx.userId },
+          select: { email: true, platformAccounts: { where: { platform: 'TELEGRAM' }, select: { id: true } } },
+        });
+        // Account e-mail (Google / e-mail sign-up) becomes the e-mail contact once
+        if (me?.email && !contacts.some(c => c.type === 'email')) {
+          const created = await ctx.db.userContact.upsert({
+            where: { userId_type: { userId: ctx.userId, type: 'email' } },
+            create: { userId: ctx.userId, type: 'email', value: me.email },
+            update: {},
+          });
+          contacts = [...contacts, created];
+        }
+        // Telegram is filled automatically only for Telegram sign-in; others type it themselves
+        const telegramLocked = (me?.platformAccounts.length ?? 0) > 0;
         return CONTACT_TYPES.map(ct => ({
           type: ct.type,
           value: contacts.find(c => c.type === ct.type)?.value || '',
           label: ct.label,
           icon: ct.icon,
           placeholder: ct.placeholder,
+          locked: ct.type === 'telegram' && telegramLocked,
         }));
       }
       return contacts.map(c => {
@@ -107,9 +123,12 @@ export const userRouter = router({
   updateContacts: protectedProcedure
     .input(z.array(z.object({ type: z.string(), value: z.string() })))
     .mutation(async ({ ctx, input }) => {
-      // Upsert each contact (telegram is auto-managed from TG login, skip it)
+      // Telegram is auto-managed for Telegram sign-in; other users may set it themselves
+      const hasTelegramLogin = (await ctx.db.platformAccount.count({
+        where: { userId: ctx.userId, platform: 'TELEGRAM' },
+      })) > 0;
       for (const { type, value } of input) {
-        if (type === 'telegram') continue;
+        if (type === 'telegram' && hasTelegramLogin) continue;
         if (value.trim()) {
           await ctx.db.userContact.upsert({
             where: { userId_type: { userId: ctx.userId, type } },

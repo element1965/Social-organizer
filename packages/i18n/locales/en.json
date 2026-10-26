@@ -520,7 +520,8 @@
     "share": "Invite",
     "copyLink": "Copy link",
     "expand": "show URL",
-    "showQr": "show QR"
+    "showQr": "show QR",
+    "singleLinkHint": "Your one invite link. Your friend chooses how to join: Telegram, the app or the browser — and lands in your network either way."
   },
   "landing": {
     "openSourceBadge": "Unlimited Hui (會). No organizer needed.",
@@ -565,7 +566,8 @@
     "block6Title": "Not a platform. A simple social utility",
     "block6Text": "No control\nNo intermediaries\n\nIt doesn't process payments\nIt doesn't hold funds\n\nEverything happens between people",
     "huiLine": "Like a traditional rotating savings group (Hui / 會 / 계) — but decentralized, digital, and without a central organizer.",
-    "ctaGooglePlay": "Install from Google Play"
+    "ctaGooglePlay": "Install from Google Play",
+    "ctaBrowser": "Or continue in the browser — no install needed"
   },
   "tgBot": {
     "newEmergency": "New Emergency Collection",

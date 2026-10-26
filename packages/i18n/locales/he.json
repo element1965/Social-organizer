@@ -525,7 +525,8 @@
     "showWebLink": "Show website link",
     "showBotLink": "Show Telegram bot link",
     "botLinkHint": "If your friend already knows about the project, send this Telegram link instead — it goes straight to the app",
-    "slugExplain": "Your personal ID appears in all your invite links. You can change it to something memorable (e.g. your nickname). This ID itself is not a link — use the links above to invite people."
+    "slugExplain": "Your personal ID appears in all your invite links. You can change it to something memorable (e.g. your nickname). This ID itself is not a link — use the links above to invite people.",
+    "singleLinkHint": "קישור ההזמנה היחיד שלכם. החבר בוחר איך להצטרף: טלגרם, האפליקציה או הדפדפן — ובכל מקרה מגיע לרשת שלכם."
   },
   "landing": {
     "openSourceBadge": "ערבות הדדית. בלי מארגן מרכזי.",
@@ -570,7 +571,8 @@
     "block6Title": "לא פלטפורמה. כלי חברתי פשוט",
     "block6Text": "אין שליטה\nאין מתווכים\n\nלא מעבד תשלומים\nלא מחזיק כספים\n\nהכל קורה בין אנשים",
     "huiLine": "כמו קבוצת חיסכון מסתובבת מסורתית (Hui / 會 / 계) — אך מבוזרת, דיגיטלית וללא מארגן מרכזי.",
-    "ctaGooglePlay": "התקן מ-Google Play"
+    "ctaGooglePlay": "התקן מ-Google Play",
+    "ctaBrowser": "או המשיכו בדפדפן — בלי התקנה"
   },
   "landingArvut": {
     "painQuote": "כשמשהו קורה — אתה לבד מול המציאות. הקהילה לא יודעת. והאנשים שיכולים לעזור — לא שומעים.",
@@ -615,7 +617,8 @@
     "footer": "ערבות הדדית — כלי ערבות הדדית פתוח",
     "githubLink": "צפה בקוד ב-GitHub",
     "faqTitle": "שאלות נפוצות",
-    "faqShowAll": "הצג הכל"
+    "faqShowAll": "הצג הכל",
+    "ctaBrowser": "או המשיכו בדפדפן — בלי התקנה"
   },
   "tgBot": {
     "newEmergency": "אוסף חירום חדש",

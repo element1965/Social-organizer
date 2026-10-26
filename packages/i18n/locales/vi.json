@@ -515,7 +515,8 @@
     "showWebLink": "Show website link",
     "showBotLink": "Show Telegram bot link",
     "botLinkHint": "If your friend already knows about the project, send this Telegram link instead — it goes straight to the app",
-    "slugExplain": "Your personal ID appears in all your invite links. You can change it to something memorable (e.g. your nickname). This ID itself is not a link — use the links above to invite people."
+    "slugExplain": "Your personal ID appears in all your invite links. You can change it to something memorable (e.g. your nickname). This ID itself is not a link — use the links above to invite people.",
+    "singleLinkHint": "Liên kết mời duy nhất của bạn. Bạn bè tự chọn cách tham gia: Telegram, ứng dụng hoặc trình duyệt — và đều vào mạng lưới của bạn."
   },
   "landing": {
     "openSourceBadge": "Hui (會) không giới hạn. Không cần người tổ chức.",
@@ -560,7 +561,8 @@
     "block6Title": "Không phải nền tảng. Một tiện ích xã hội đơn giản",
     "block6Text": "Không kiểm soát\nKhông có trung gian\n\nKhông xử lý thanh toán\nKhông giữ quỹ\n\nMọi thứ xảy ra giữa mọi người",
     "huiLine": "Như một nhóm tiết kiệm luân phiên truyền thống (Hui / 會 / 계) — nhưng phi tập trung, kỹ thuật số và không có người tổ chức trung tâm.",
-    "ctaGooglePlay": "Cài đặt từ Google Play"
+    "ctaGooglePlay": "Cài đặt từ Google Play",
+    "ctaBrowser": "Hoặc tiếp tục trên trình duyệt — không cần cài đặt"
   },
   "tgBot": {
     "newEmergency": "Chiến dịch khẩn cấp mới",
