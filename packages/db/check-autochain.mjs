@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 
-const db = new PrismaClient({ datasourceUrl: '***REMOVED***' });
+const db = new PrismaClient({ datasourceUrl: process.env.DATABASE_URL });
 
 const invites = await db.inviteLink.findMany({
   where: { usedById: { not: null } },

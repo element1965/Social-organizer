@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 
-const db = new PrismaClient({ datasourceUrl: '***REMOVED***' });
+const db = new PrismaClient({ datasourceUrl: process.env.DATABASE_URL });
 
 // Count users with TG accounts
 const tgAccounts = await db.platformAccount.findMany({

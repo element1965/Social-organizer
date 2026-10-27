@@ -37,6 +37,21 @@ const AUTH_PROCEDURES = new Set([
   'auth.claimWithLinkCode',
 ]);
 
+
+/** Avatar hosts the image proxy may fetch from: Telegram and Google profile photos. */
+const AVATAR_HOSTS = [/^t\.me$/, /(^|\.)telegram\.org$/, /(^|\.)cdn-telegram\.org$/, /(^|\.)telegram-cdn\.org$/, /(^|\.)telesco\.pe$/, /(^|\.)googleusercontent\.com$/];
+const MAX_AVATAR_BYTES = 5 * 1024 * 1024;
+
+function parseAvatarUrl(raw: string | undefined): URL | null {
+  try {
+    const u = new URL(raw ?? '');
+    if (u.protocol !== 'https:' || u.port) return null;
+    return AVATAR_HOSTS.some((re) => re.test(u.hostname)) ? u : null;
+  } catch {
+    return null;
+  }
+}
+
 const app = Fastify({ logger: true, maxParamLength: 5000 });
 
 const PORT = Number(process.env.PORT) || 3001;
@@ -248,6 +263,7 @@ async function start() {
         const contentType = response.headers.get('content-type') || 'application/octet-stream';
         const buffer = Buffer.from(await response.arrayBuffer());
         reply.header('Content-Type', contentType);
+        reply.header('X-Content-Type-Options', 'nosniff');
         reply.header('Cache-Control', 'public, max-age=604800'); // 7 days
         return reply.send(buffer);
       } catch {
@@ -255,18 +271,23 @@ async function start() {
       }
     });
 
-    // Image proxy — fetch external avatar images to bypass CORS (t.me doesn't send CORS headers)
+    // Image proxy — fetch external avatar images to bypass CORS (t.me doesn't send CORS headers).
+    // Only known avatar hosts, only images, size-capped — not an open proxy (SO-14).
     app.get('/api/image-proxy', async (req, reply) => {
-      const url = (req.query as Record<string, string>).url;
-      if (!url || (!url.startsWith('https://t.me/') && !url.startsWith('https://cdn'))) {
-        return reply.status(400).send({ error: 'Invalid URL' });
-      }
+      const target = parseAvatarUrl((req.query as Record<string, string>).url);
+      if (!target) return reply.status(400).send({ error: 'Invalid URL' });
       try {
-        const response = await fetch(url);
+        const response = await fetch(target, { signal: AbortSignal.timeout(10_000) });
         if (!response.ok) return reply.status(response.status).send({ error: 'Upstream error' });
-        const contentType = response.headers.get('content-type') || 'image/svg+xml';
+        if (!parseAvatarUrl(response.url)) return reply.status(400).send({ error: 'Invalid redirect' });
+        const contentType = response.headers.get('content-type') || '';
+        if (!/^image\/(jpeg|png|webp|gif)/i.test(contentType)) {
+          return reply.status(415).send({ error: 'Not an image' });
+        }
         const buffer = Buffer.from(await response.arrayBuffer());
+        if (buffer.length > MAX_AVATAR_BYTES) return reply.status(413).send({ error: 'Image too large' });
         reply.header('Content-Type', contentType);
+        reply.header('X-Content-Type-Options', 'nosniff');
         reply.header('Cache-Control', 'public, max-age=86400');
         return reply.send(buffer);
       } catch {

@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 
-const db = new PrismaClient({ datasourceUrl: '***REMOVED***' });
+const db = new PrismaClient({ datasourceUrl: process.env.DATABASE_URL });
 
 // Get all TG accounts with initData stored in accessToken
 const accounts = await db.platformAccount.findMany({

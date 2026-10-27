@@ -1,5 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 
+if (!process.env.RAILWAY_DATABASE_URL) throw new Error('Set RAILWAY_DATABASE_URL (Railway Postgres public URL) — no credentials in code');
 const messages = [
   {
     dayOffset: 10, sortOrder: 0, variant: 'all', intervalMin: 120, mediaType: 'text', isActive: true,
@@ -219,6 +220,6 @@ async function run(url, label) {
 await run(undefined, 'Local');
 // Railway
 await run(
-  '***REMOVED***',
+  process.env.RAILWAY_DATABASE_URL,
   'Railway',
 );

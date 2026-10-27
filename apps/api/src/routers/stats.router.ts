@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { TRPCError } from '@trpc/server';
 import { router, protectedProcedure } from '../trpc.js';
-import { ADMIN_IDS } from '../admin.js';
+import { ADMIN_IDS, CLUSTER_ROOT_OVERRIDE } from '../admin.js';
 
 class UnionFindStats {
   parent = new Map<string, string>();
@@ -341,8 +341,7 @@ export const statsRouter = router({
     const uf = new UnionFindStats();
     for (const c of allConnections) uf.union(c.userAId, c.userBId);
 
-    const NIKITA_ID = 'cml9ffhhh0000o801afqv67fz';
-    const ANDREI_ID = 'cml9h2u8s000go801lcvi6ba9';
+    const { member: NIKITA_ID, root: ANDREI_ID } = CLUSTER_ROOT_OVERRIDE;
 
     // Map each user to their UF root and group cluster members
     const userToUfRoot = new Map<string, string>();
