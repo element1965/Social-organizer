@@ -1,6 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 
 // --- PATCHES for existing messages ---
+if (!process.env.RAILWAY_DATABASE_URL) throw new Error('Set RAILWAY_DATABASE_URL (Railway Postgres public URL) — no credentials in code');
 const patches = {
   local: {
     day10: 'cmln5675k0000orac101xpuex',
@@ -381,7 +382,7 @@ async function run(url, label, patchIds) {
 
 await run(undefined, 'Local', patches.local);
 await run(
-  'postgresql://postgres:VWu9BYoj6MO1KcEsoHuIO8WI@ballast.proxy.rlwy.net:27469/social_organizer?schema=public',
+  process.env.RAILWAY_DATABASE_URL,
   'Railway',
   patches.railway,
 );

@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 
-const db = new PrismaClient({ datasourceUrl: 'postgresql://postgres:VWu9BYoj6MO1KcEsoHuIO8WI@ballast.proxy.rlwy.net:27469/social_organizer?schema=public' });
+const db = new PrismaClient({ datasourceUrl: process.env.DATABASE_URL });
 
 // Check when auto-chain messages were created
 const firstMsg = await db.autoChainMessage.findFirst({

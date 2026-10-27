@@ -197,6 +197,8 @@ The network must survive losing the database or the hosting provider. Three inde
 - **Collection chat links** must be `http(s)://` (no `javascript:` links on the collection page or in bot buttons).
 - **Telegram webhook** is registered with a `secret_token` (derived from the bot token); calls without the matching `X-Telegram-Bot-Api-Secret-Token` header get 401.
 - **CORS** allows only our own origins (orginizer.com, the Capacitor app, local dev, `WEB_APP_URL`).
+- **Image proxy** (`/api/image-proxy`) fetches only https avatars from Telegram (`t.me`, `*.telesco.pe`, Telegram CDNs) and Google (`*.googleusercontent.com`), only jpeg/png/webp/gif up to 5 MB, with `nosniff`.
+- **No credentials in the repo.** Ops scripts read the database from `DATABASE_URL` (or `RAILWAY_DATABASE_URL` for scripts that write to both local and Railway); passwords and tokens live in Railway variables and the portal.
 
 ### Restore the database on a new host
 ```

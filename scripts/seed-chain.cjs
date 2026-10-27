@@ -1,6 +1,7 @@
 const { PrismaClient } = require(
   '../node_modules/.pnpm/@prisma+client@6.19.2_prism_6b2b1af085fe6797f5a5ea830937a8e3/node_modules/@prisma/client'
 );
+if (!process.env.RAILWAY_DATABASE_URL) throw new Error('Set RAILWAY_DATABASE_URL (Railway Postgres public URL) — no credentials in code');
 
 const invited = [
   { day: 0, text: `Добро пожаловать в Social Organizer!\n\nТы только что присоединился к сети взаимоподдержки. Не к пустому аккаунту — а к живой сети людей, которые уже готовы помогать друг другу.\n\nТот, кто тебя пригласил, уже связан с десятками людей. Через него ты связан с ними тоже — до 3 рукопожатий. Их возможности — теперь и твои.\n\nЗайди на дашборд и посмотри "Возможности сети" — это сумма, на которую люди вокруг тебя готовы помочь.` },
@@ -44,7 +45,7 @@ async function run() {
   await db.$disconnect();
 
   // Railway DB
-  const rdb = new PrismaClient({ datasources: { db: { url: 'postgresql://postgres:VWu9BYoj6MO1KcEsoHuIO8WI@ballast.proxy.rlwy.net:27469/social_organizer' } } });
+  const rdb = new PrismaClient({ datasources: { db: { url: process.env.RAILWAY_DATABASE_URL } } });
   count = 0;
   for (const m of invited) {
     await rdb.autoChainMessage.create({ data: { text: m.text, dayOffset: m.day, sortOrder: 0, intervalMin: 120, variant: 'invited' } });

@@ -1,5 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 
+if (!process.env.RAILWAY_DATABASE_URL) throw new Error('Set RAILWAY_DATABASE_URL (Railway Postgres public URL) — no credentials in code');
 const db = new PrismaClient();
 
 const invited = [
@@ -207,7 +208,7 @@ async function main() {
   // Seed both local and Railway
   const urls = [
     process.env.DATABASE_URL, // local
-    'postgresql://postgres:VWu9BYoj6MO1KcEsoHuIO8WI@ballast.proxy.rlwy.net:27469/social_organizer',
+    process.env.RAILWAY_DATABASE_URL,
   ];
 
   for (const url of urls) {

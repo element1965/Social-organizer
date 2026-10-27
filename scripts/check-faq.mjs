@@ -1,7 +1,7 @@
 import { PrismaClient } from '../node_modules/.pnpm/@prisma+client@6.19.2_prism_6b2b1af085fe6797f5a5ea830937a8e3/node_modules/@prisma/client/index.js';
 
 const db = new PrismaClient({
-  datasources: { db: { url: 'postgresql://postgres:VWu9BYoj6MO1KcEsoHuIO8WI@ballast.proxy.rlwy.net:27469/social_organizer?schema=public' } }
+  datasources: { db: { url: process.env.DATABASE_URL } }
 });
 
 const items = await db.faqItem.findMany({

@@ -1,3 +1,4 @@
+import { CLUSTER_ROOT_OVERRIDE } from '../admin.js';
 import { router, protectedProcedure } from '../trpc.js';
 
 // Union-Find for connected components
@@ -76,8 +77,7 @@ export const clusterRouter = router({
       if (memberCount === 0) continue;
 
       // Exception: in the cluster containing Никита Соловей, use Андрей Любалин as root
-      const NIKITA_ID = 'cml9ffhhh0000o801afqv67fz';
-      const ANDREI_ID = 'cml9h2u8s000go801lcvi6ba9';
+      const { member: NIKITA_ID, root: ANDREI_ID } = CLUSTER_ROOT_OVERRIDE;
 
       let totalBudget = 0;
       let best: typeof users[number] | undefined;

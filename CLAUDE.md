@@ -11,19 +11,19 @@
 # PostgreSQL 17 (Railway)
 - Host (internal): PostgreSQL.railway.internal
 - Порт: 5432
-- Пароль: VWu9BYoj6MO1KcEsoHuIO8WI
+- Пароль: в переменных Railway (сервис Postgres), в коде и документах не хранить
 - Пользователь: postgres
 - БД: social_organizer
 - TCP Proxy (публичный доступ): ballast.proxy.rlwy.net:27469
-- Public URL: postgresql://postgres:VWu9BYoj6MO1KcEsoHuIO8WI@ballast.proxy.rlwy.net:27469/social_organizer?schema=public
+- Public URL: `DATABASE_PUBLIC_URL` в переменных сервиса Postgres в Railway. Скрипты берут его из `DATABASE_URL` / `RAILWAY_DATABASE_URL` окружения
 - Миграции: только вручную (Railway не поддерживает автоматические)
 - Как применить миграции:
-  1. В packages/db/.env временно заменить DATABASE_URL на Public URL (см. выше)
+  1. В packages/db/.env временно заменить DATABASE_URL на Public URL (из Railway, см. выше)
   2. cd packages/db && npx prisma migrate deploy
   3. Вернуть DATABASE_URL обратно на localhost:5434
 
 # Railway
-- Token: d72c5e0a-db45-4e51-b6bd-d188ec9a588b
+- Token: в секретах проекта на портале Lambertain (`/api/dev/secrets`), в репо не хранить
 - Деплой только через git push (автодеплой при пуше в main)
 - URL: https://www.orginizer.com
 - Healthcheck: /health
@@ -58,7 +58,7 @@
 - Package: com.socialorganizer.app
 - Проект: `apps/web/android/` (Capacitor, НЕ Bubblewrap/TWA)
 - Capacitor config: `apps/web/capacitor.config.ts` (url: https://www.orginizer.com)
-- Keystore: `keystore/release.jks` (пароль: socialorg2026, alias: social-organizer)
+- Keystore: `keystore/release.jks` (alias: social-organizer; пароль — в `apps/web/android/keystore.properties`, файл не коммитится)
 - Keystore properties: `apps/web/android/keystore.properties`
 - Версия: `apps/web/android/app/build.gradle` → `versionCode` / `versionName` (увеличивать при каждом релизе)
 - JAVA_HOME: `C:\Program Files\Android\Android Studio\jbr`
