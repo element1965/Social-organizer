@@ -315,56 +315,6 @@ export const authRouter = router({
       return { accessToken, refreshToken, userId, isNew };
     }),
 
-  loginWithPlatform: publicProcedure
-    .input(z.object({
-      platform: z.enum(['FACEBOOK', 'TELEGRAM', 'APPLE', 'GOOGLE']),
-      platformToken: z.string().min(1),
-      name: z.string().optional(),
-      photoUrl: z.string().url().optional(),
-    }))
-    .mutation(async ({ ctx, input }) => {
-      const platformId = input.platformToken;
-
-      let platformAccount = await ctx.db.platformAccount.findUnique({
-        where: {
-          platform_platformId: {
-            platform: input.platform,
-            platformId,
-          },
-        },
-        include: { user: true },
-      });
-
-      let userId: string;
-
-      if (platformAccount) {
-        userId = platformAccount.userId;
-      } else {
-        const user = await ctx.db.user.create({
-          data: {
-            name: input.name || `User_${platformId.slice(0, 8)}`,
-            photoUrl: input.photoUrl,
-            monthlyBudget: 1,
-            remainingBudget: 1,
-            onboardingCompleted: true,
-            platformAccounts: {
-              create: {
-                platform: input.platform,
-                platformId,
-                accessToken: input.platformToken,
-              },
-            },
-          },
-        });
-        userId = user.id;
-      }
-
-      const accessToken = createAccessToken(userId);
-      const refreshToken = createRefreshToken(userId);
-
-      return { accessToken, refreshToken, userId };
-    }),
-
   refresh: publicProcedure
     .input(z.object({ refreshToken: z.string() }))
     .mutation(async ({ input }) => {
@@ -447,28 +397,5 @@ export const authRouter = router({
       const refreshToken = createRefreshToken(user.id);
 
       return { accessToken, refreshToken, userId: user.id };
-    }),
-
-  linkAccount: protectedProcedure
-    .input(z.object({
-      code: z.string().length(6),
-      platform: z.enum(['FACEBOOK', 'TELEGRAM', 'APPLE', 'GOOGLE']),
-      platformToken: z.string().min(1),
-    }))
-    .mutation(async ({ ctx, input }) => {
-      const linkingCode = await linkCodeOrThrow(ctx, input.code);
-      if (!linkingCode) {
-        throw new TRPCError({ code: 'NOT_FOUND', message: 'Invalid or expired code' });
-      }
-      await ctx.db.platformAccount.create({
-        data: {
-          userId: linkingCode.userId,
-          platform: input.platform,
-          platformId: input.platformToken,
-          accessToken: input.platformToken,
-        },
-      });
-      await ctx.db.linkingCode.delete({ where: { id: linkingCode.id } });
-      return { success: true, linkedUserId: linkingCode.userId };
     }),
 });

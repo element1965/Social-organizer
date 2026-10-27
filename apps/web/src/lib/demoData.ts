@@ -484,12 +484,9 @@ export function handleDemoRequest(path: string, input: unknown): unknown {
     case 'auth.registerWithEmail':
     case 'auth.loginWithEmail':
     case 'auth.loginWithTelegram':
-    case 'auth.loginWithPlatform':
       return { accessToken: 'demo-token', refreshToken: 'demo-refresh', userId: DEMO_USER_ID };
     case 'auth.refresh':
       return { accessToken: 'demo-token', refreshToken: 'demo-refresh' };
-    case 'auth.linkAccount':
-      return { success: true, linkedUserId: DEMO_USER_ID };
 
     // ---- User ----
     case 'user.me':

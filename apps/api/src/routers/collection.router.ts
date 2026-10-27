@@ -6,13 +6,16 @@ import { sendCollectionNotifications, sendCollectionClosedTg } from '../services
 import { convertToUSD } from '../services/currency.service.js';
 import { isAdmin } from '../admin.js';
 
+/** Chat links are shown as buttons to every participant: only plain web links, never javascript: etc. (SO-14) */
+const chatLinkSchema = z.string().max(500).url().refine((u) => /^https?:\/\//i.test(u), 'Link must start with https://');
+
 export const collectionRouter = router({
   create: protectedProcedure
     .input(z.object({
       type: z.enum(['EMERGENCY', 'REGULAR']),
       amount: z.number().min(MIN_COLLECTION_AMOUNT).nullable().optional(),
       inputCurrency: z.string().refine((c) => CURRENCY_CODES.includes(c), 'Unsupported currency'),
-      chatLink: z.string().url(),
+      chatLink: chatLinkSchema,
     }))
     .mutation(async ({ ctx, input }) => {
       // Check creator role
@@ -175,7 +178,7 @@ export const collectionRouter = router({
     }),
 
   updateChatLink: protectedProcedure
-    .input(z.object({ id: z.string(), chatLink: z.string().url() }))
+    .input(z.object({ id: z.string(), chatLink: chatLinkSchema }))
     .mutation(async ({ ctx, input }) => {
       const collection = await ctx.db.collection.findUnique({ where: { id: input.id } });
       if (!collection) throw new TRPCError({ code: 'NOT_FOUND' });

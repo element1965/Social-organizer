@@ -303,7 +303,7 @@ export function CollectionPage() {
             </div>
           ) : (
             <div className="flex items-center gap-2">
-              {collection.chatLink ? (
+              {collection.chatLink && /^https?:\/\//i.test(collection.chatLink) ? (
                 <a href={collection.chatLink} target="_blank" rel="noopener noreferrer" className="flex-1 flex items-center gap-2 p-3 bg-blue-50 dark:bg-blue-950/30 rounded-lg text-blue-600 dark:text-blue-400 text-sm hover:underline">
                   <ExternalLink className="w-4 h-4" /> {t('collection.openChat')}
                 </a>
