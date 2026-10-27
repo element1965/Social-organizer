@@ -191,7 +191,7 @@ The network must survive losing the database or the hosting provider. Three inde
 ### Security
 
 - **Tokens.** Every request is authorised only by an access token with a valid HMAC signature and expiry (`verifyToken` in `apps/api/src/services/auth.service.ts`); refresh tokens are accepted only by `auth.refresh`. `JWT_SECRET` has no default.
-- **Rate limits** (in memory, per client IP from `X-Real-IP`): 600 requests/min on everything; 30 per 15 min on guessable sign-in procedures (email login/register, link-code login/claim); 10 link-code attempts per hour per IP (and per Telegram/Apple account) across every flow that accepts a 6-digit code. Link-code issue and use are logged with `[link-code]`.
+- **Rate limits** (in memory, per client IP from `X-Real-IP`): 600 requests/min on everything; 30 per 15 min on guessable sign-in procedures (email login/register, link-code login/claim); 10 wrong link-code attempts per hour per IP (and per Telegram/Apple account) across every flow that accepts a 6-digit code. Link-code issue and use are logged with `[link-code]`.
 - **Data exposure.** `user.me` never returns the password hash or coordinates; `user.getById` returns a phone only under the same rule as contacts (`canViewContacts`).
 - **Push.** `push.subscribe` won't move an endpoint owned by another user unless the subscription keys match (same browser, another account) — otherwise 403.
 - **Collection chat links** must be `http(s)://` (no `javascript:` links on the collection page or in bot buttons).

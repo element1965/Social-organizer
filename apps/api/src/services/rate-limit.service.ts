@@ -20,6 +20,12 @@ export function hit(key: string, max: number, windowMs: number): boolean {
   return bucket.count <= max;
 }
 
+/** True when the key already used up its limit in the current window (does not count an attempt). */
+export function isLimited(key: string, max: number): boolean {
+  const bucket = buckets.get(key);
+  return !!bucket && bucket.resetAt > Date.now() && bucket.count >= max;
+}
+
 /** Client IP: Railway's edge puts it into X-Real-IP; fall back to the socket address. */
 export function clientIp(req: Pick<IncomingMessage, 'headers' | 'socket'>): string {
   const real = req.headers['x-real-ip'];
