@@ -39,15 +39,30 @@ interface GraphBackup {
   syncedAt: string;
 }
 
+function withToken(Native: typeof globalThis.WebSocket, getToken: () => string | null) {
+  return class extends Native {
+    constructor(url: string | URL, protocols?: string | string[]) {
+      const token = getToken();
+      const u = String(url);
+      super(token ? `${u}${u.includes('?') ? '&' : '?'}token=${encodeURIComponent(token)}` : u, protocols);
+    }
+  };
+}
+
 /**
  * Initialize Gun.js with IndexedDB for local storage.
  * Call once at app startup. Pass relay server URLs as peers for cross-device sync.
  */
-export async function initGunBackup(peers: string[] = []): Promise<void> {
+export async function initGunBackup(
+  peers: string[] = [],
+  getToken?: () => string | null,
+): Promise<void> {
   if (gunInstance) return;
   try {
     const Gun = (await import('gun')).default;
-    gunInstance = Gun({ peers, localStorage: false }) as unknown as GunInstance;
+    // The relay only accepts signed-in users: append the current access token on every (re)connect.
+    const WebSocket = getToken && globalThis.WebSocket ? withToken(globalThis.WebSocket, getToken) : undefined;
+    gunInstance = Gun({ peers, localStorage: false, ...(WebSocket ? { WebSocket } : {}) }) as unknown as GunInstance;
   } catch {
     console.warn('[gun-backup] Failed to initialize Gun.js');
   }

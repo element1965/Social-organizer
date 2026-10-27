@@ -10,9 +10,23 @@ import {
 } from '../services/auth.service.js';
 import { validateTelegramInitData } from '../services/telegram.service.js';
 import { applyBotStartInvite } from '../services/invite-fallback.service.js';
+import { findLinkingCode, LinkCodeRateLimitError } from '../services/link-code.service.js';
+import type { Context } from '../context.js';
 import { linkTelegramByCode, type TelegramLinkResult } from '../services/telegram-link.service.js';
 import { verifyGoogleIdToken } from '../services/google.service.js';
 import { LINKING_CODE_TTL_MINUTES } from '@so/shared';
+
+/** Link-code lookup for tRPC callers: limited per IP, 429 when over the limit (SO-14). */
+async function linkCodeOrThrow(ctx: { db: Context['db']; ip: string }, code: string) {
+  try {
+    return await findLinkingCode(ctx.db, code, [`ip:${ctx.ip}`]);
+  } catch (err) {
+    if (err instanceof LinkCodeRateLimitError) {
+      throw new TRPCError({ code: 'TOO_MANY_REQUESTS', message: err.message });
+    }
+    throw err;
+  }
+}
 
 export const authRouter = router({
   registerWithEmail: publicProcedure
@@ -90,7 +104,7 @@ export const authRouter = router({
       let linkResult: TelegramLinkResult | undefined;
       const startParam = new URLSearchParams(input.initData).get('start_param');
       if (startParam?.startsWith('link_')) {
-        linkResult = await linkTelegramByCode(ctx.db, startParam.slice('link_'.length), platformId, input.initData);
+        linkResult = await linkTelegramByCode(ctx.db, startParam.slice('link_'.length), platformId, input.initData, [`ip:${ctx.ip}`, `tg:${platformId}`]);
       }
 
       let platformAccount = await ctx.db.platformAccount.findUnique({
@@ -181,9 +195,7 @@ export const authRouter = router({
 
       // 0. If linkCode provided — attach Google to the TG user from that code
       if (input.linkCode) {
-        const linkingCode = await ctx.db.linkingCode.findFirst({
-          where: { code: input.linkCode, expiresAt: { gt: new Date() } },
-        });
+        const linkingCode = await linkCodeOrThrow(ctx, input.linkCode);
         if (!linkingCode) {
           throw new TRPCError({ code: 'NOT_FOUND', message: 'Invalid or expired link code' });
         }
@@ -356,7 +368,7 @@ export const authRouter = router({
   refresh: publicProcedure
     .input(z.object({ refreshToken: z.string() }))
     .mutation(async ({ input }) => {
-      const payload = verifyToken(input.refreshToken);
+      const payload = verifyToken(input.refreshToken, 'refresh');
       if (!payload) {
         throw new TRPCError({ code: 'UNAUTHORIZED', message: 'Invalid refresh token' });
       }
@@ -372,6 +384,7 @@ export const authRouter = router({
       await ctx.db.linkingCode.create({
         data: { userId: ctx.userId, code, expiresAt },
       });
+      console.log(`[link-code] issued for user ${ctx.userId} from ip:${ctx.ip}`);
       return { code, expiresAt };
     }),
 
@@ -379,9 +392,7 @@ export const authRouter = router({
   loginWithLinkCode: publicProcedure
     .input(z.object({ code: z.string().length(6) }))
     .mutation(async ({ ctx, input }) => {
-      const linkingCode = await ctx.db.linkingCode.findFirst({
-        where: { code: input.code, expiresAt: { gt: new Date() } },
-      });
+      const linkingCode = await linkCodeOrThrow(ctx, input.code);
       if (!linkingCode) {
         throw new TRPCError({ code: 'NOT_FOUND', message: 'Invalid or expired code' });
       }
@@ -408,9 +419,7 @@ export const authRouter = router({
       password: z.string().min(6),
     }))
     .mutation(async ({ ctx, input }) => {
-      const linkingCode = await ctx.db.linkingCode.findFirst({
-        where: { code: input.code, expiresAt: { gt: new Date() } },
-      });
+      const linkingCode = await linkCodeOrThrow(ctx, input.code);
       if (!linkingCode) {
         throw new TRPCError({ code: 'NOT_FOUND', message: 'Invalid or expired code' });
       }
@@ -447,9 +456,7 @@ export const authRouter = router({
       platformToken: z.string().min(1),
     }))
     .mutation(async ({ ctx, input }) => {
-      const linkingCode = await ctx.db.linkingCode.findFirst({
-        where: { code: input.code, expiresAt: { gt: new Date() } },
-      });
+      const linkingCode = await linkCodeOrThrow(ctx, input.code);
       if (!linkingCode) {
         throw new TRPCError({ code: 'NOT_FOUND', message: 'Invalid or expired code' });
       }

@@ -127,7 +127,7 @@ DATABASE_URL="postgresql://postgres:1111@localhost:5434/social_organizer?schema=
 PORT=3001
 DATABASE_URL=postgresql://postgres:1111@localhost:5434/social_organizer?schema=public
 REDIS_URL=redis://localhost:6379
-JWT_SECRET=your-secret-key
+JWT_SECRET=your-secret-key          # Required, 16+ chars — the API refuses to start without it
 TELEGRAM_BOT_TOKEN=your-bot-token    # Required for Telegram Mini App auth
 FEEDBACK_CHAT_ID=-100xxxxxxxxxx      # Telegram group chat ID for user feedback
 VAPID_PUBLIC_KEY=your-vapid-public-key    # Web Push VAPID public key
@@ -185,8 +185,13 @@ FIREBASE_SERVICE_ACCOUNT={"type":"service_account",...}  # FCM service account J
 The network must survive losing the database or the hosting provider. Three independent copies:
 
 1. **Nightly database dump → Cloudflare R2** (off Railway). Railway cron service `db-backup` (`ops/backup/`, 01:17 UTC) runs `pg_dump --format=custom` and uploads it through the `so-backup-ingest` Worker into the private bucket `social-organizer-backups`. Retention: `daily/` 35 days, `monthly/` (1st of month) 400 days. The Worker holds the bucket binding; the service only knows its ingest key (`BACKUP_INGEST_KEY`), not a Cloudflare account token. List: `GET https://so-backup-ingest.lambertain.workers.dev/list` with `Authorization: Bearer <key>`.
-2. **Gun.js relay on a persistent volume.** The API attaches the Gun relay (`apps/api/src/index.ts`, file `gun-data`); `/app/gun-data` is a Railway volume, so the server-side graph copy survives deploys.
+2. **Gun.js relay on a persistent volume.** The API attaches the Gun relay (`apps/api/src/gun-relay.ts`, file `gun-data`); `/app/gun-data` is a Railway volume, so the server-side graph copy survives deploys. The relay needs a valid access token (`/gun?token=<jwt>`, added by `@so/gun-backup` on every reconnect) and each connection only reads and writes its own node `so-backup/<userId>`.
 3. **Graph copy on every device.** `useGraphSync` saves the user's network (3 levels: nodes + edges) every 5 minutes to IndexedDB (`@so/gun-backup`), plus Gun for cross-device sync. Before 03.10.2026 the copy lived only in memory — Gun ran with `localStorage:false` and no storage adapter.
+
+### Security
+
+- **Tokens.** Every request is authorised only by an access token with a valid HMAC signature and expiry (`verifyToken` in `apps/api/src/services/auth.service.ts`); refresh tokens are accepted only by `auth.refresh`. `JWT_SECRET` has no default.
+- **Rate limits** (in memory, per client IP from `X-Real-IP`): 600 requests/min on everything; 30 per 15 min on guessable sign-in procedures (email login/register, platform login, link-code login/claim); 10 link-code attempts per hour per IP (and per Telegram/Apple account) across every flow that accepts a 6-digit code. Link-code issue and use are logged with `[link-code]`.
 
 ### Restore the database on a new host
 ```

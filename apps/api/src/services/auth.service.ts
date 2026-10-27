@@ -1,11 +1,15 @@
-import { randomBytes, createHmac } from 'crypto';
+import { randomBytes, createHmac, timingSafeEqual } from 'crypto';
 import {
   JWT_ACCESS_TTL_MINUTES,
   JWT_REFRESH_TTL_DAYS,
   LINKING_CODE_LENGTH,
 } from '@so/shared';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'dev-secret-change-me';
+// No fallback: a known default secret would let anyone sign tokens (SO-14).
+const JWT_SECRET = process.env.JWT_SECRET ?? '';
+if (JWT_SECRET.length < 16) {
+  throw new Error('JWT_SECRET is not set (or shorter than 16 chars) — refusing to start');
+}
 
 interface JwtPayload {
   sub: string;
@@ -47,26 +51,39 @@ export function createRefreshToken(userId: string): string {
   });
 }
 
-export function verifyToken(token: string): JwtPayload | null {
+export function verifyToken(
+  token: string,
+  expectedType: JwtPayload['type'] = 'access',
+): JwtPayload | null {
   try {
     const parts = token.split('.');
     if (parts.length !== 3) return null;
 
-    const [header, body, sig] = parts;
+    const [header, body, sig] = parts as [string, string, string];
     const expectedSig = createHmac('sha256', JWT_SECRET)
       .update(`${header}.${body}`)
-      .digest('base64url');
+      .digest();
+    const givenSig = Buffer.from(sig, 'base64url');
+    if (givenSig.length !== expectedSig.length || !timingSafeEqual(givenSig, expectedSig)) {
+      return null;
+    }
 
-    if (sig !== expectedSig) return null;
+    const payload = JSON.parse(Buffer.from(body, 'base64url').toString()) as JwtPayload;
 
-    const payload = JSON.parse(Buffer.from(body!, 'base64url').toString()) as JwtPayload;
-
-    if (payload.exp < Math.floor(Date.now() / 1000)) return null;
+    if (payload.type !== expectedType) return null;
+    if (typeof payload.sub !== 'string' || !payload.sub) return null;
+    if (!(payload.exp > Math.floor(Date.now() / 1000))) return null;
 
     return payload;
   } catch {
     return null;
   }
+}
+
+/** userId from an `Authorization: Bearer <access token>` header, or null if missing/invalid. */
+export function userIdFromAuthHeader(header: string | undefined): string | null {
+  if (!header?.startsWith('Bearer ')) return null;
+  return verifyToken(header.slice(7))?.sub ?? null;
 }
 
 export function generateLinkingCode(): string {

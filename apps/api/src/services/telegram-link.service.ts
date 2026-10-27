@@ -1,3 +1,4 @@
+import { findLinkingCode, LinkCodeRateLimitError } from './link-code.service.js';
 import type { PrismaClient } from '@so/db';
 
 export type TelegramLinkResult = 'linked' | 'already' | 'conflict' | 'invalid';
@@ -20,9 +21,11 @@ export async function linkTelegramByCode(
   code: string,
   platformId: string,
   initData: string,
+  callerKeys: string[],
 ): Promise<TelegramLinkResult> {
-  const linkingCode = await db.linkingCode.findFirst({
-    where: { code, expiresAt: { gt: new Date() } },
+  const linkingCode = await findLinkingCode(db, code, callerKeys).catch((err) => {
+    if (err instanceof LinkCodeRateLimitError) return null;
+    throw err;
   });
   if (!linkingCode) return 'invalid';
 
