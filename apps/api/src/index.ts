@@ -1,3 +1,6 @@
+import { userIdFromAuthHeader } from './services/auth.service.js';
+import { hit, clientIp, MINUTE } from './services/rate-limit.service.js';
+import { startGunRelay } from './gun-relay.js';
 import { fileURLToPath } from 'node:url';
 import { dirname, resolve } from 'node:path';
 import { existsSync } from 'node:fs';
@@ -20,6 +23,20 @@ import { isAdmin } from './admin.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
+
+
+/**
+ * Sign-in procedures open to guessing (passwords, codes, unverified platform ids) get a strict
+ * per-IP limit (30 per 15 min). Signed flows (refresh, Telegram initData, Google) are left out so
+ * many users behind one carrier IP are not locked out.
+ */
+const AUTH_PROCEDURES = new Set([
+  'auth.registerWithEmail',
+  'auth.loginWithEmail',
+  'auth.loginWithPlatform',
+  'auth.loginWithLinkCode',
+  'auth.claimWithLinkCode',
+]);
 
 const app = Fastify({ logger: true, maxParamLength: 5000 });
 
@@ -106,6 +123,20 @@ async function start() {
       },
     );
 
+    // Rate limits (SO-14): strict on sign-in procedures, a calm global cap on everything else
+    app.addHook('onRequest', async (req, reply) => {
+      const ip = clientIp(req.raw);
+      if (!hit(`all:${ip}`, 600, MINUTE)) {
+        return reply.status(429).send({ error: 'Too many requests' });
+      }
+      if (req.url.startsWith('/trpc/')) {
+        const procs = req.url.slice(6).split('?')[0]!.split(',');
+        if (procs.some((p) => AUTH_PROCEDURES.has(p)) && !hit(`auth:${ip}`, 30, 15 * MINUTE)) {
+          return reply.status(429).send({ error: 'Too many sign-in attempts, try again later' });
+        }
+      }
+    });
+
     // tRPC
     await app.register(fastifyTRPCPlugin, {
       prefix: '/trpc',
@@ -125,15 +156,9 @@ async function start() {
 
     // Manual auto-chain trigger — admin only, bypasses BullMQ
     app.post('/api/trigger-autochain', async (req, reply) => {
-      const auth = req.headers.authorization;
-      if (!auth?.startsWith('Bearer ')) return reply.status(401).send({ error: 'Unauthorized' });
-      let userId: string | null = null;
-      try {
-        const token = auth.slice(7);
-        const payload = JSON.parse(Buffer.from(token.split('.')[1]!, 'base64').toString());
-        userId = payload.sub ?? null;
-      } catch { /* invalid token */ }
-      if (!userId || !isAdmin(userId)) return reply.status(403).send({ error: 'Forbidden' });
+      const userId = userIdFromAuthHeader(req.headers.authorization);
+      if (!userId) return reply.status(401).send({ error: 'Unauthorized' });
+      if (!isAdmin(userId)) return reply.status(403).send({ error: 'Forbidden' });
 
       try {
         const { processAutoChain } = await import('./workers/auto-chain.worker.js');
@@ -161,15 +186,9 @@ async function start() {
       req.raw.setTimeout(180_000);
       reply.raw.setTimeout(180_000);
 
-      const auth = req.headers.authorization;
-      if (!auth?.startsWith('Bearer ')) return reply.status(401).send({ error: 'Unauthorized' });
-      let userId: string | null = null;
-      try {
-        const token = auth.slice(7);
-        const payload = JSON.parse(Buffer.from(token.split('.')[1]!, 'base64').toString());
-        userId = payload.sub ?? null;
-      } catch { /* invalid token */ }
-      if (!userId || !isAdmin(userId)) return reply.status(403).send({ error: 'Forbidden' });
+      const userId = userIdFromAuthHeader(req.headers.authorization);
+      if (!userId) return reply.status(401).send({ error: 'Unauthorized' });
+      if (!isAdmin(userId)) return reply.status(403).send({ error: 'Forbidden' });
 
       let data;
       try {
@@ -299,7 +318,7 @@ async function start() {
       if (!apple) return sendBack(null);
 
       try {
-        const result = await findOrCreateAppleUser(getDb(), apple, displayName, linkCode);
+        const result = await findOrCreateAppleUser(getDb(), apple, displayName, linkCode, [`ip:${clientIp(req.raw)}`]);
         return sendBack(result);
       } catch (err) {
         console.error('[Apple] login failed:', err);
@@ -349,9 +368,8 @@ async function start() {
 
     // Gun.js relay — attach to the HTTP server for P2P graph backup sync between clients
     try {
-      const Gun = (await import('gun')).default;
-      Gun({ web: app.server, file: 'gun-data' });
-      console.log('Gun.js relay started');
+      await startGunRelay(app.server);
+      console.log('Gun.js relay started (token required)');
     } catch (err) {
       console.warn('Gun.js relay init failed:', err);
     }

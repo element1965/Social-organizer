@@ -19,17 +19,17 @@ export function useGraphSync() {
     enabled: !!userId,
   });
 
-  // Initialize Gun.js once with relay server URL
+  // Initialize Gun.js once with relay server URL (after sign-in: the relay requires a token)
   useEffect(() => {
-    if (gunInitialized) return;
+    if (gunInitialized || !userId) return;
     gunInitialized = true;
 
     // Derive relay URL from current origin (same server hosts the relay)
     const proto = location.protocol === 'https:' ? 'https:' : 'http:';
     const relayUrl = `${proto}//${location.host}/gun`;
 
-    import('@so/gun-backup').then((m) => m.initGunBackup([relayUrl])).catch(() => {});
-  }, []);
+    import('@so/gun-backup').then((m) => m.initGunBackup([relayUrl], () => localStorage.getItem('accessToken'))).catch(() => {});
+  }, [userId]);
 
   // Sync graph to local backup when data changes
   useEffect(() => {

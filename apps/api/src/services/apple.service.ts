@@ -1,3 +1,4 @@
+import { findLinkingCode } from './link-code.service.js';
 import crypto from 'node:crypto';
 import type { PrismaClient } from '@so/db';
 import { createAccessToken, createRefreshToken } from './auth.service.js';
@@ -131,14 +132,13 @@ export async function findOrCreateAppleUser(
   apple: AppleUserData,
   displayName: string | null,
   linkCode?: string,
+  callerKeys: string[] = [],
 ): Promise<{ accessToken: string; refreshToken: string; userId: string; isNew: boolean }> {
   const name = displayName || (apple.email ? apple.email.split('@')[0] : '') || `User_${apple.sub.slice(0, 8)}`;
 
   // 0. Link to existing user via 6-digit code
   if (linkCode) {
-    const linkingCode = await db.linkingCode.findFirst({
-      where: { code: linkCode, expiresAt: { gt: new Date() } },
-    });
+    const linkingCode = await findLinkingCode(db, linkCode, [...callerKeys, `apple:${apple.sub}`]);
     if (!linkingCode) throw new Error('Invalid or expired link code');
     const user = await db.user.findUnique({ where: { id: linkingCode.userId } });
     if (!user || user.deletedAt) throw new Error('User not found');
