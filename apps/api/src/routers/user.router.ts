@@ -20,7 +20,9 @@ export const userRouter = router({
       }),
     ]);
     if (!user) throw new TRPCError({ code: 'NOT_FOUND' });
-    return { ...user, contactCount };
+    // Never send the password hash or exact coordinates to the client (SO-14)
+    const { passwordHash: _hash, latitude: _lat, longitude: _lon, ...safe } = user;
+    return { ...safe, contactCount };
   }),
 
   update: protectedProcedure
@@ -49,6 +51,10 @@ export const userRouter = router({
       // Deleted profile - "gray": name replaced, data hidden
       if (user.deletedAt) {
         return { ...user, name: 'Deleted user', bio: null, phone: null, photoUrl: null, lastSeen: null };
+      }
+      // Phone follows the same visibility rule as the contacts list (SO-14)
+      if (user.phone && !(await canViewContacts(ctx.db, ctx.userId, user.id))) {
+        return { ...user, phone: null };
       }
       return user;
     }),

@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { TRPCError } from '@trpc/server';
 import { router, protectedProcedure, publicProcedure } from '../trpc.js';
 import { VAPID_PUBLIC_KEY } from '../services/web-push.service.js';
 
@@ -14,6 +15,13 @@ export const pushRouter = router({
       auth: z.string(),
     }))
     .mutation(async ({ ctx, input }) => {
+      // An endpoint already owned by someone else may move only to the same browser subscription
+      // (same keys) — e.g. another account signed in on this device. Otherwise it's a takeover (SO-14).
+      const existing = await ctx.db.pushSubscription.findUnique({ where: { endpoint: input.endpoint } });
+      if (existing && existing.userId !== ctx.userId
+        && (existing.p256dh !== input.p256dh || existing.auth !== input.auth)) {
+        throw new TRPCError({ code: 'FORBIDDEN', message: 'Push endpoint belongs to another user' });
+      }
       await ctx.db.pushSubscription.upsert({
         where: { endpoint: input.endpoint },
         create: {

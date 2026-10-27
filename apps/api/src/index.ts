@@ -15,7 +15,7 @@ import {
 import { appRouter, type AppRouter } from './routers/index.js';
 import { createContext } from './context.js';
 import { setupQueues } from './workers/index.js';
-import { handleTelegramUpdate, setTelegramWebhook, uploadMediaToTelegram, getTelegramFileUrl } from './services/telegram-bot.service.js';
+import { handleTelegramUpdate, setTelegramWebhook, telegramWebhookSecret, uploadMediaToTelegram, getTelegramFileUrl } from './services/telegram-bot.service.js';
 import { verifyAppleIdToken, findOrCreateAppleUser } from './services/apple.service.js';
 import { backfillBotStartInvites } from './services/invite-fallback.service.js';
 import { getDb } from '@so/db';
@@ -26,14 +26,13 @@ const __dirname = dirname(__filename);
 
 
 /**
- * Sign-in procedures open to guessing (passwords, codes, unverified platform ids) get a strict
+ * Sign-in procedures open to guessing (passwords, codes) get a strict
  * per-IP limit (30 per 15 min). Signed flows (refresh, Telegram initData, Google) are left out so
  * many users behind one carrier IP are not locked out.
  */
 const AUTH_PROCEDURES = new Set([
   'auth.registerWithEmail',
   'auth.loginWithEmail',
-  'auth.loginWithPlatform',
   'auth.loginWithLinkCode',
   'auth.claimWithLinkCode',
 ]);
@@ -105,7 +104,18 @@ function appleHtmlRedirect(reply: FastifyReply, target: string) {
 async function start() {
   try {
     // CORS
-    await app.register(cors, { origin: true });
+    // CORS: only our own web/app origins (the app is served from the same domain) (SO-14)
+    const allowedOrigins = new Set([
+      'https://www.orginizer.com',
+      'https://orginizer.com',
+      'capacitor://localhost',
+      'https://localhost',
+      'http://localhost:3000',
+      ...(process.env.WEB_APP_URL ? [new URL(process.env.WEB_APP_URL).origin] : []),
+    ]);
+    await app.register(cors, {
+      origin: (origin, cb) => cb(null, !origin || allowedOrigins.has(origin)),
+    });
 
     // Multipart (file uploads, 50MB limit)
     await app.register(multipart, { limits: { fileSize: 50 * 1024 * 1024 } });
@@ -172,6 +182,9 @@ async function start() {
 
     // Telegram Bot webhook — receives /start commands
     app.post('/api/telegram-webhook', async (req, reply) => {
+      if (req.headers['x-telegram-bot-api-secret-token'] !== telegramWebhookSecret()) {
+        return reply.status(401).send({ ok: false });
+      }
       try {
         await handleTelegramUpdate(req.body as Parameters<typeof handleTelegramUpdate>[0]);
       } catch (err) {

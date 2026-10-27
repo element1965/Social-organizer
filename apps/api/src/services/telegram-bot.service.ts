@@ -1,3 +1,4 @@
+import { createHash } from 'node:crypto';
 import { getDb } from '@so/db';
 import { translateWithCache } from './translate.service.js';
 
@@ -1032,6 +1033,14 @@ export async function getTelegramFileUrl(fileId: string): Promise<string | null>
 }
 
 /** Register webhook URL with Telegram Bot API */
+/**
+ * Secret Telegram sends back in X-Telegram-Bot-Api-Secret-Token on every webhook call (SO-14).
+ * Derived from the bot token, so no extra env var; changes together with the token.
+ */
+export function telegramWebhookSecret(): string {
+  return createHash('sha256').update(`so-webhook:${TELEGRAM_BOT_TOKEN}`).digest('hex');
+}
+
 export async function setTelegramWebhook(webhookUrl: string): Promise<boolean> {
   if (!TELEGRAM_BOT_TOKEN) {
     console.warn('[TG Bot] No TELEGRAM_BOT_TOKEN, skipping webhook setup');
@@ -1041,7 +1050,11 @@ export async function setTelegramWebhook(webhookUrl: string): Promise<boolean> {
   const res = await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/setWebhook`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ url: webhookUrl, allowed_updates: ['message', 'callback_query'] }),
+    body: JSON.stringify({
+      url: webhookUrl,
+      allowed_updates: ['message', 'callback_query'],
+      secret_token: telegramWebhookSecret(),
+    }),
   });
 
   const json = (await res.json()) as TgApiResponse;
