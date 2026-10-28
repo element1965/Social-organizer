@@ -465,7 +465,7 @@ let settingsState = {
   soundEnabled: true,
   voiceGender: 'FEMALE' as 'FEMALE' | 'MALE',
   fontScale: 1.0,
-  hideContacts: false,
+  hideContacts: true,
   city: null as string | null,
   countryCode: null as string | null,
   latitude: null as number | null,
