@@ -26,8 +26,19 @@ export async function canViewContacts(
       userId: viewerUserId,
       collection: { creatorId: targetUserId, status: 'ACTIVE' },
     },
+    select: { id: true },
   });
   if (notified) return true;
+
+  // During a collection the creator needs to reach people who pledged help
+  const helped = await db.obligation.findFirst({
+    where: {
+      userId: targetUserId,
+      collection: { creatorId: viewerUserId, status: 'ACTIVE' },
+    },
+    select: { id: true },
+  });
+  if (helped) return true;
 
   return false;
 }
