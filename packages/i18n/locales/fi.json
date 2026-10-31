@@ -419,7 +419,11 @@
     "openChat": "Avaa chat-avustaja",
     "startListening": "Aloita äänikirjoitus",
     "stopListening": "Lopeta äänikirjoitus",
-    "openHelp": "Apua"
+    "openHelp": "Apua",
+    "send": "Lähetä",
+    "close": "Sulje",
+    "inputLabel": "Viesti avustajalle",
+    "sendError": "Lähetys epäonnistui. Tekstisi on tallessa."
   },
   "broadcast": {
     "title": "Lähetys",

@@ -419,7 +419,11 @@
     "openChat": "चैट सहायक खोलें",
     "startListening": "वॉइस इनपुट शुरू करें",
     "stopListening": "वॉइस इनपुट रोकें",
-    "openHelp": "सहायता"
+    "openHelp": "सहायता",
+    "send": "भेजें",
+    "close": "बंद करें",
+    "inputLabel": "सहायक के लिए संदेश",
+    "sendError": "भेजा नहीं जा सका। आपका टेक्स्ट सुरक्षित है।"
   },
   "broadcast": {
     "title": "प्रसारण",

@@ -419,7 +419,11 @@
     "openChat": "Åbn chatassistent",
     "startListening": "Start stemmeinput",
     "stopListening": "Stop stemmeinput",
-    "openHelp": "Hjælp"
+    "openHelp": "Hjælp",
+    "send": "Send",
+    "close": "Luk",
+    "inputLabel": "Besked til assistenten",
+    "sendError": "Kunne ikke sende. Din tekst er gemt."
   },
   "broadcast": {
     "title": "Udsendelse",

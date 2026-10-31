@@ -419,7 +419,11 @@
     "openChat": "Deschide asistentul chat",
     "startListening": "Porneste introducerea vocala",
     "stopListening": "Opreste introducerea vocala",
-    "openHelp": "Ajutor"
+    "openHelp": "Ajutor",
+    "send": "Trimite",
+    "close": "Închide",
+    "inputLabel": "Mesaj pentru asistent",
+    "sendError": "Trimiterea a eșuat. Textul tău este păstrat."
   },
   "broadcast": {
     "title": "Transmisiune",

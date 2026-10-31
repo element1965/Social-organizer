@@ -419,7 +419,11 @@
     "openChat": "Отвори чат асистента",
     "startListening": "Почни гласовни унос",
     "stopListening": "Заустави гласовни унос",
-    "openHelp": "Pomoć"
+    "openHelp": "Pomoć",
+    "send": "Пошаљи",
+    "close": "Затвори",
+    "inputLabel": "Порука помоћнику",
+    "sendError": "Слање није успело. Ваш текст је сачуван."
   },
   "broadcast": {
     "title": "Емитовање",

@@ -424,7 +424,11 @@
     "openChat": "Open chat assistant",
     "openHelp": "Help",
     "startListening": "Start voice input",
-    "stopListening": "Stop voice input"
+    "stopListening": "Stop voice input",
+    "send": "Send",
+    "close": "Close",
+    "inputLabel": "Message to the assistant",
+    "sendError": "Couldn't send. Your text is kept."
   },
   "broadcast": {
     "title": "Broadcast",

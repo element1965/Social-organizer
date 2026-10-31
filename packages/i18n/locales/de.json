@@ -419,7 +419,11 @@
     "openChat": "Chat-Assistent öffnen",
     "startListening": "Spracheingabe starten",
     "stopListening": "Spracheingabe stoppen",
-    "openHelp": "Hilfe"
+    "openHelp": "Hilfe",
+    "send": "Senden",
+    "close": "Schließen",
+    "inputLabel": "Nachricht an den Assistenten",
+    "sendError": "Senden fehlgeschlagen. Dein Text ist gespeichert."
   },
   "contacts": {
     "telegram": "Telegram",

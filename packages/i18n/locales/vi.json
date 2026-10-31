@@ -419,7 +419,11 @@
     "openChat": "Mở trợ lý chat",
     "startListening": "Bắt đầu nhập giọng nói",
     "stopListening": "Dừng nhập giọng nói",
-    "openHelp": "Trợ giúp"
+    "openHelp": "Trợ giúp",
+    "send": "Gửi",
+    "close": "Đóng",
+    "inputLabel": "Tin nhắn cho trợ lý",
+    "sendError": "Không gửi được. Văn bản của bạn vẫn được giữ."
   },
   "broadcast": {
     "title": "Phát sóng",

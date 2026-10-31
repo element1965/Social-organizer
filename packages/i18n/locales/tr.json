@@ -419,7 +419,11 @@
     "openChat": "Sohbet asistanını aç",
     "startListening": "Sesli girişi başlat",
     "stopListening": "Sesli girişi durdur",
-    "openHelp": "Yardım"
+    "openHelp": "Yardım",
+    "send": "Gönder",
+    "close": "Kapat",
+    "inputLabel": "Asistana mesaj",
+    "sendError": "Gönderilemedi. Metniniz saklandı."
   },
   "broadcast": {
     "title": "Yayın",

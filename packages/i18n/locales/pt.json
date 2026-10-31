@@ -419,7 +419,11 @@
     "openChat": "Abrir assistente de chat",
     "startListening": "Iniciar entrada de voz",
     "stopListening": "Parar entrada de voz",
-    "openHelp": "Ajuda"
+    "openHelp": "Ajuda",
+    "send": "Enviar",
+    "close": "Fechar",
+    "inputLabel": "Mensagem para o assistente",
+    "sendError": "Não foi possível enviar. Seu texto foi mantido."
   },
   "contacts": {
     "telegram": "Telegram",

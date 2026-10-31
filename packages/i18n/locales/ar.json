@@ -419,7 +419,11 @@
     "openChat": "فتح مساعد المحادثة",
     "startListening": "بدء الإدخال الصوتي",
     "stopListening": "إيقاف الإدخال الصوتي",
-    "openHelp": "مساعدة"
+    "openHelp": "مساعدة",
+    "send": "إرسال",
+    "close": "إغلاق",
+    "inputLabel": "رسالة للمساعد",
+    "sendError": "تعذّر الإرسال. نصك محفوظ."
   },
   "broadcast": {
     "title": "بث",

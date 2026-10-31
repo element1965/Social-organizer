@@ -419,7 +419,11 @@
     "openChat": "เปิดแชทผู้ช่วย",
     "startListening": "เริ่มการป้อนเสียง",
     "stopListening": "หยุดการป้อนเสียง",
-    "openHelp": "ช่วยเหลือ"
+    "openHelp": "ช่วยเหลือ",
+    "send": "ส่ง",
+    "close": "ปิด",
+    "inputLabel": "ข้อความถึงผู้ช่วย",
+    "sendError": "ส่งไม่สำเร็จ ข้อความของคุณยังอยู่"
   },
   "broadcast": {
     "title": "ประกาศ",
