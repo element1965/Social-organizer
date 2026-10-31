@@ -419,7 +419,11 @@
     "openChat": "Chat-assistent openen",
     "startListening": "Spraakinvoer starten",
     "stopListening": "Spraakinvoer stoppen",
-    "openHelp": "Help"
+    "openHelp": "Help",
+    "send": "Verzenden",
+    "close": "Sluiten",
+    "inputLabel": "Bericht aan de assistent",
+    "sendError": "Verzenden mislukt. Je tekst is bewaard."
   },
   "broadcast": {
     "title": "Uitzending",

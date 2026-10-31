@@ -419,7 +419,11 @@
     "openChat": "Åpne chat-assistent",
     "startListening": "Start stemmeinndata",
     "stopListening": "Stopp stemmeinndata",
-    "openHelp": "Hjelp"
+    "openHelp": "Hjelp",
+    "send": "Send",
+    "close": "Lukk",
+    "inputLabel": "Melding til assistenten",
+    "sendError": "Kunne ikke sende. Teksten din er lagret."
   },
   "broadcast": {
     "title": "Kringkasting",

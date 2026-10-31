@@ -419,7 +419,11 @@
     "openChat": "Otevřít chatového asistenta",
     "startListening": "Spustit hlasový vstup",
     "stopListening": "Zastavit hlasový vstup",
-    "openHelp": "Nápověda"
+    "openHelp": "Nápověda",
+    "send": "Odeslat",
+    "close": "Zavřít",
+    "inputLabel": "Zpráva pro asistenta",
+    "sendError": "Odeslání se nezdařilo. Váš text je uložen."
   },
   "broadcast": {
     "title": "Vysílání",

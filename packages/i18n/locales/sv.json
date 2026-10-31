@@ -419,7 +419,11 @@
     "openChat": "Oppna chattassistent",
     "startListening": "Starta rostinmatning",
     "stopListening": "Stoppa rostinmatning",
-    "openHelp": "Hjälp"
+    "openHelp": "Hjälp",
+    "send": "Skicka",
+    "close": "Stäng",
+    "inputLabel": "Meddelande till assistenten",
+    "sendError": "Det gick inte att skicka. Din text är sparad."
   },
   "broadcast": {
     "title": "Utskick",

@@ -429,7 +429,11 @@
     "openChat": "פתח צ'אט עוזר",
     "openHelp": "עזרה",
     "startListening": "התחל קלט קולי",
-    "stopListening": "עצור קלט קולי"
+    "stopListening": "עצור קלט קולי",
+    "send": "שליחה",
+    "close": "סגירה",
+    "inputLabel": "הודעה לעוזר",
+    "sendError": "השליחה נכשלה. הטקסט שלך נשמר."
   },
   "broadcast": {
     "title": "שידור",

@@ -419,7 +419,11 @@
     "openChat": "打开聊天助手",
     "startListening": "开始语音输入",
     "stopListening": "停止语音输入",
-    "openHelp": "帮助"
+    "openHelp": "帮助",
+    "send": "发送",
+    "close": "关闭",
+    "inputLabel": "给助手的消息",
+    "sendError": "发送失败，你的文字已保留。"
   },
   "contacts": {
     "telegram": "Telegram",

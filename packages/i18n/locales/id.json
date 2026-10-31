@@ -419,7 +419,11 @@
     "openChat": "Buka asisten chat",
     "startListening": "Mulai input suara",
     "stopListening": "Hentikan input suara",
-    "openHelp": "Bantuan"
+    "openHelp": "Bantuan",
+    "send": "Kirim",
+    "close": "Tutup",
+    "inputLabel": "Pesan untuk asisten",
+    "sendError": "Gagal mengirim. Teks Anda tetap tersimpan."
   },
   "broadcast": {
     "title": "Siaran",

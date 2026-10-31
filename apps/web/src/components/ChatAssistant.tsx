@@ -32,9 +32,15 @@ export function ChatAssistant() {
   const [input, setInput] = useState('');
   const [isListening, setIsListening] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [sendError, setSendError] = useState(false);
   const recognitionRef = useRef<any | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
   const pendingVoiceRef = useRef(false);
+  // Synchronous guard: React state updates are async, so a fast double tap could send twice
+  const sendingRef = useRef(false);
+  // Visible viewport (shrinks when the on-screen keyboard opens on iOS/Android)
+  const [viewport, setViewport] = useState<{ height: number; top: number } | null>(null);
 
   const { data: settings } = trpc.settings.get.useQuery();
   const { data: adminData } = trpc.faq.isAdmin.useQuery();
@@ -138,7 +144,8 @@ export function ChatAssistant() {
 
   // Send message (text or voice)
   const handleSendMessage = async (text: string, viaVoice: boolean = false) => {
-    if (!text.trim() || isLoading) return;
+    if (!text.trim() || sendingRef.current) return;
+    sendingRef.current = true;
 
     const userMessage: Message = {
       id: Date.now().toString(),
@@ -149,6 +156,7 @@ export function ChatAssistant() {
 
     setMessages(prev => [...prev, userMessage]);
     setInput('');
+    setSendError(false);
     setIsLoading(true);
     pendingVoiceRef.current = viaVoice;
 
@@ -171,17 +179,15 @@ export function ChatAssistant() {
       if (pendingVoiceRef.current) {
         setTimeout(() => speakMessage(result.response), 300);
       }
-    } catch (error) {
-      const errorMessage: Message = {
-        id: (Date.now() + 1).toString(),
-        role: 'assistant',
-        content: t('common.error'),
-        viaVoice,
-      };
-      setMessages(prev => [...prev, errorMessage]);
+    } catch {
+      // Drop the unsent message and put its text back, so a retry sends it exactly once
+      setMessages(prev => prev.filter(m => m.id !== userMessage.id));
+      setInput(text.trim());
+      setSendError(true);
     } finally {
       setIsLoading(false);
       pendingVoiceRef.current = false;
+      sendingRef.current = false;
     }
   };
 
@@ -190,12 +196,35 @@ export function ChatAssistant() {
     handleSendMessage(input, false);
   };
 
+  // Grow the textarea with its content (up to max-height, then it scrolls)
+  useEffect(() => {
+    const el = inputRef.current;
+    if (!el) return;
+    el.style.height = 'auto';
+    el.style.height = `${el.scrollHeight}px`;
+  }, [input]);
+
   // Quick topic buttons based on language
   const quickTopicsRu = ['рукопожатие', 'намерение', 'возможности', 'как начать'];
   const quickTopicsEn = ['handshake', 'intention', 'capabilities', 'how to start'];
   const quickTopics = i18n.language.startsWith('ru') ? quickTopicsRu : quickTopicsEn;
 
   const isOpen = viewState === 'chatOpen';
+
+  // Keep the chat panel inside the visible viewport so the keyboard never covers the input row
+  useEffect(() => {
+    const vv = window.visualViewport;
+    if (!isOpen || !vv) return;
+    const update = () => setViewport({ height: vv.height, top: vv.offsetTop });
+    update();
+    vv.addEventListener('resize', update);
+    vv.addEventListener('scroll', update);
+    return () => {
+      vv.removeEventListener('resize', update);
+      vv.removeEventListener('scroll', update);
+      setViewport(null);
+    };
+  }, [isOpen]);
 
   // Notify Layout to hide bottom nav when chat/broadcast is open
   useEffect(() => {
@@ -287,26 +316,33 @@ export function ChatAssistant() {
 
       {/* Chat panel */}
       {isOpen && (
-        <div className="fixed inset-0 bg-white dark:bg-gray-900 z-50 flex flex-col pt-safe pb-safe">
+        <div
+          className="fixed inset-x-0 top-0 h-[100dvh] bg-white dark:bg-gray-900 z-50 flex flex-col overflow-hidden pt-safe pb-safe"
+          style={viewport ? { height: viewport.height, top: viewport.top } : undefined}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="chat-assistant-title"
+        >
           {/* Header */}
-          <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
-            <h3 className="font-semibold text-gray-900 dark:text-white flex items-center gap-2">
-              <MessageCircle className="w-5 h-5 text-blue-600" />
+          <div className="flex items-center justify-between gap-2 pl-4 pr-2 py-2 border-b border-gray-200 dark:border-gray-700">
+            <h3 id="chat-assistant-title" className="min-w-0 font-semibold text-gray-900 dark:text-white flex items-center gap-2">
+              <MessageCircle className="w-5 h-5 shrink-0 text-blue-600 dark:text-blue-400" aria-hidden="true" />
               {t('chat.title')}
             </h3>
             <button
               onClick={() => setViewState('collapsed')}
-              className="p-1 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full"
+              aria-label={t('chat.close')}
+              className="w-11 h-11 shrink-0 flex items-center justify-center rounded-full text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 dark:focus-visible:ring-blue-400"
             >
-              <X className="w-5 h-5 text-gray-500 dark:text-gray-300" />
+              <X className="w-5 h-5" aria-hidden="true" />
             </button>
           </div>
 
           {/* Messages */}
-          <div className="flex-1 overflow-y-auto p-4 space-y-3 min-h-[200px]">
+          <div className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden p-4 space-y-3">
             {messages.length === 0 && (
               <div className="text-center py-4">
-                <p className="text-sm text-gray-500 dark:text-gray-300 mb-3">
+                <p className="text-sm text-gray-600 dark:text-gray-300 mb-3">
                   {t('chat.welcomeMessage')}
                 </p>
                 <div className="flex flex-wrap gap-2 justify-center">
@@ -314,7 +350,7 @@ export function ChatAssistant() {
                     <button
                       key={term}
                       onClick={() => handleSendMessage(term, false)}
-                      className="text-xs px-3 py-1.5 bg-gray-100 dark:bg-gray-800 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+                      className="min-h-[44px] px-4 py-2 text-sm rounded-full border transition-colors bg-gray-100 text-gray-800 border-gray-500 hover:bg-gray-200 active:bg-gray-300 dark:bg-gray-800 dark:text-gray-100 dark:border-gray-400 dark:hover:bg-gray-700 dark:active:bg-gray-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-600 focus-visible:ring-offset-white dark:focus-visible:ring-blue-400 dark:focus-visible:ring-offset-gray-900 disabled:cursor-not-allowed disabled:bg-gray-100 disabled:text-gray-600 disabled:border-gray-400 dark:disabled:bg-gray-800 dark:disabled:text-gray-300 dark:disabled:border-gray-500"
                       disabled={isLoading}
                     >
                       {term}
@@ -327,7 +363,7 @@ export function ChatAssistant() {
               <div
                 key={msg.id}
                 className={cn(
-                  "max-w-[85%] p-3 rounded-2xl text-sm",
+                  "max-w-[85%] p-3 rounded-2xl text-sm whitespace-pre-wrap break-words",
                   msg.role === 'user'
                     ? "ml-auto bg-blue-600 text-white rounded-br-md"
                     : "bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white rounded-bl-md"
@@ -337,47 +373,74 @@ export function ChatAssistant() {
               </div>
             ))}
             {isLoading && (
-              <div className="flex items-center gap-2 text-gray-500 dark:text-gray-300">
-                <Loader2 className="w-4 h-4 animate-spin" />
+              <div className="flex items-center gap-2 text-gray-600 dark:text-gray-300" role="status">
+                <Loader2 className="w-4 h-4 animate-spin" aria-hidden="true" />
                 <span className="text-sm">{t('common.loading')}</span>
               </div>
             )}
             <div ref={messagesEndRef} />
           </div>
 
+          {/* Send error: the text is back in the field, retry sends it once */}
+          {sendError && (
+            <div role="alert" className="flex items-center justify-between gap-2 px-4 py-2 text-sm bg-red-50 text-red-800 dark:bg-red-950 dark:text-red-200 border-t border-red-200 dark:border-red-800">
+              <span className="min-w-0">{t('chat.sendError')}</span>
+              <button
+                onClick={handleSubmit}
+                disabled={!input.trim() || isLoading}
+                className="min-h-[44px] shrink-0 px-3 font-medium underline rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-700 dark:focus-visible:ring-red-300"
+              >
+                {t('common.retry')}
+              </button>
+            </div>
+          )}
+
           {/* Input */}
-          <div className="pl-2 py-2 pr-0 border-t border-gray-200 dark:border-gray-700 flex items-center">
+          <div className="px-3 py-2 border-t border-gray-200 dark:border-gray-700 flex items-end gap-2">
             <button
               onClick={toggleListening}
               disabled={isLoading}
               className={cn(
-                "p-2 rounded-full shrink-0 transition-colors mr-1",
+                "w-11 h-11 rounded-full shrink-0 flex items-center justify-center transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 dark:focus-visible:ring-blue-400",
                 isListening
-                  ? "bg-red-100 dark:bg-red-900/30 text-red-600 animate-pulse"
-                  : "bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700",
+                  ? "bg-red-100 dark:bg-red-900/40 text-red-700 dark:text-red-300 animate-pulse"
+                  : "bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700",
                 isLoading && "opacity-50 cursor-not-allowed"
               )}
               aria-label={isListening ? t('chat.stopListening') : t('chat.startListening')}
+              aria-pressed={isListening}
             >
-              {isListening ? <MicOff className="w-5 h-5" /> : <Mic className="w-5 h-5" />}
+              {isListening ? <MicOff className="w-5 h-5" aria-hidden="true" /> : <Mic className="w-5 h-5" aria-hidden="true" />}
             </button>
-            <input
+            <textarea
+              ref={inputRef}
+              rows={1}
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              onKeyDown={(e) => e.key === 'Enter' && !e.shiftKey && handleSubmit()}
+              onKeyDown={(e) => {
+                // Enter sends, Shift+Enter adds a new line (IME composition is left alone)
+                if (e.key === 'Enter' && !e.shiftKey && !e.nativeEvent.isComposing) {
+                  e.preventDefault();
+                  handleSubmit();
+                }
+              }}
               placeholder={t('chat.placeholder')}
-              className="flex-1 min-w-0 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-3 py-2 text-sm text-gray-900 dark:text-gray-100 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              aria-label={t('chat.inputLabel')}
+              className="flex-1 min-w-0 min-h-[44px] max-h-32 resize-none overflow-y-auto break-words rounded-2xl border border-gray-500 dark:border-gray-400 bg-white dark:bg-gray-800 px-3 py-2.5 text-sm leading-5 text-gray-900 dark:text-gray-100 placeholder:text-gray-500 dark:placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-600 dark:focus:ring-blue-400 focus:border-transparent"
               disabled={isListening || isLoading}
             />
             <button
               onClick={handleSubmit}
               disabled={!input.trim() || isListening || isLoading}
+              aria-label={t('chat.send')}
               className={cn(
-                "w-12 h-10 shrink-0 bg-blue-600 text-white transition-colors flex items-center justify-center rounded-r-2xl rounded-l-full",
-                (!input.trim() || isListening || isLoading) ? "opacity-50 cursor-not-allowed" : "hover:bg-blue-700"
+                "w-11 h-11 shrink-0 rounded-full flex items-center justify-center transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-600 focus-visible:ring-offset-white dark:focus-visible:ring-blue-400 dark:focus-visible:ring-offset-gray-900",
+                (!input.trim() || isListening || isLoading)
+                  ? "bg-gray-200 text-gray-600 dark:bg-gray-700 dark:text-gray-300 cursor-not-allowed"
+                  : "bg-blue-700 text-white hover:bg-blue-800"
               )}
             >
-              <Send className="w-4 h-4" />
+              <Send className="w-5 h-5" aria-hidden="true" />
             </button>
           </div>
         </div>

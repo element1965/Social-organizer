@@ -419,7 +419,11 @@
     "openChat": "Otwórz czat z asystentem",
     "startListening": "Rozpocznij wprowadzanie głosowe",
     "stopListening": "Zatrzymaj wprowadzanie głosowe",
-    "openHelp": "Pomoc"
+    "openHelp": "Pomoc",
+    "send": "Wyślij",
+    "close": "Zamknij",
+    "inputLabel": "Wiadomość do asystenta",
+    "sendError": "Nie udało się wysłać. Twój tekst został zachowany."
   },
   "broadcast": {
     "title": "Transmisja",

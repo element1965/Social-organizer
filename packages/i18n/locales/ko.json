@@ -419,7 +419,11 @@
     "openChat": "채팅 어시스턴트 열기",
     "startListening": "음성 입력 시작",
     "stopListening": "음성 입력 중지",
-    "openHelp": "도움말"
+    "openHelp": "도움말",
+    "send": "보내기",
+    "close": "닫기",
+    "inputLabel": "도우미에게 보낼 메시지",
+    "sendError": "보내지 못했습니다. 입력한 내용은 저장되어 있습니다."
   },
   "broadcast": {
     "title": "방송",

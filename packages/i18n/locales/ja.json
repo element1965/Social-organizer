@@ -419,7 +419,11 @@
     "openChat": "チャットアシスタントを開く",
     "startListening": "音声入力を開始",
     "stopListening": "音声入力を停止",
-    "openHelp": "ヘルプ"
+    "openHelp": "ヘルプ",
+    "send": "送信",
+    "close": "閉じる",
+    "inputLabel": "アシスタントへのメッセージ",
+    "sendError": "送信できませんでした。入力内容は保存されています。"
   },
   "broadcast": {
     "title": "ブロードキャスト",

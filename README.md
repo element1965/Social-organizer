@@ -358,7 +358,7 @@ Mock data (`apps/web/src/lib/demoData.ts`):
 - **Onboarding** — auto-shown for new users, completable flag in database
 - **Currency preference** — users can set preferred currency in settings; auto-detected by IP on first visit
 - **Monthly support budget** — users can set how much they're willing to contribute monthly; displayed as "Current Capabilities" network-wide sum on dashboard
-- **AI Chat Assistant** — floating help button (?) with expandable menu: Chat (AI assistant with glossary/screens/FAQ knowledge) and FAQ page; supports text and voice input with auto-speak for voice queries
+- **AI Chat Assistant** — floating help button (?) with expandable menu: Chat (AI assistant with glossary/screens/FAQ knowledge) and FAQ page; supports text and voice input with auto-speak for voice queries. The chat panel follows the visible viewport (stays above the on-screen keyboard), quick-topic chips meet WCAG AA contrast in both themes, controls are ≥44 px, Enter sends / Shift+Enter adds a line, and a failed send keeps the text with a Retry that sends it once
 - **FAQ Page** — admin-managed FAQ with accordion UI; admins can create/edit/delete questions; LLM auto-translation to all 26 languages; view count ranking; FAQ section on landing page (top 5 + show all)
 - **Admin Broadcast** — send messages to all Telegram users with auto-translation per user language; support for text/photo/video; direct reply to specific user by TG ID; scheduled posts with datetime picker; auto-chain drip campaigns by registration day offset; open/read tracking with per-message statistics
 - **Feedback to Telegram** — user feedback/suggestions from chat assistant are auto-forwarded to a Telegram group
