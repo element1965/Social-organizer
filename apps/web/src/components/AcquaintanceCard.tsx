@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Check, Clock } from 'lucide-react';
@@ -27,7 +27,13 @@ export function AcquaintanceCard({ onInvite }: { onInvite: () => void }) {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { data: me } = trpc.user.me.useQuery();
+  const utils = trpc.useUtils();
   const { data } = trpc.pending.introStatus.useQuery(undefined, { refetchInterval: 15000 });
+  // When the acquaintance gets confirmed, refresh network numbers right away (they are cached)
+  const state = data?.state;
+  useEffect(() => {
+    if (state === 'connected') utils.connection.getNetworkStats.invalidate();
+  }, [state, utils]);
   const [hidden, setHidden] = useState(false);
 
   if (!data || !me || data.state === 'none' || !data.person || hidden) return null;
