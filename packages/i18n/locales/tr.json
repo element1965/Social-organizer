@@ -220,7 +220,10 @@
     "qrScanHint": "Katılmak için tarayın",
     "shareLinkButton": "Toplama bağlantısını paylaş",
     "linkCopied": "Bağlantı kopyalandı!",
-    "qrDownload": "QR kodunu indir"
+    "qrDownload": "QR kodunu indir",
+    "confirmPayment": "Ödemeyi onayla",
+    "paymentConfirmed": "Ödendi",
+    "unconfirmPayment": "Onayı geri al"
   },
   "create": {
     "title": "İhtiyacım var",
@@ -282,7 +285,9 @@
     "growth30d": "Son 30 gün",
     "growthChartLabel": "Son 30 gündeki üyeler",
     "growthStart": "30 gün önce",
-    "growthNow": "Şimdi"
+    "growthNow": "Şimdi",
+    "active": "aktif",
+    "notActive": "aktif değil"
   },
   "notifications": {
     "title": "Bildirimler",
@@ -597,7 +602,17 @@
     "renewalStartTitle": "Yeni döngü başladı",
     "renewalStartBody": "{{name}}, {{creator}} için yeni bir düzenli destek döngüsü başladı.",
     "yourContribution": "Katkınız",
-    "period": "Dönem"
+    "period": "Dönem",
+    "pendingAcceptBtn": "Kabul et",
+    "pendingRejectBtn": "Reddet",
+    "pendingRejectedNext": "Kişisel olarak tanıdığın birini davet et — uygulamayı aç.",
+    "pendingDoneAccepted": "Tamam: birbirinizi tanıyorsunuz",
+    "pendingDoneRejected": "İstek reddedildi",
+    "pendingErrLimitSelf": "Zaten 150 tanıdığın var",
+    "pendingErrLimitOther": "Bu kişinin zaten 150 tanıdığı var",
+    "pendingErrGone": "Bu kişi hesabını sildi",
+    "pendingErrResolved": "Bu isteğe zaten yanıt verildi",
+    "pendingErrNotYours": "Bu istek bu Telegram hesabı için değil"
   },
   "hints": {
     "collectionAmount": "İhtiyacınız olan miktarı girin. Minimum 10 birim. Sistem doğru sayıda kişiyi bilgilendirecektir.",
@@ -618,7 +633,11 @@
     "reject": "Reddet",
     "accepted": "Kabul edildi",
     "rejected": "Reddedildi",
-    "alreadyConnected": "Zaten bağlı"
+    "alreadyConnected": "Zaten bağlı",
+    "errLimitSelf": "Zaten 150 tanıdığın var — bu üst sınır.",
+    "errLimitOther": "Bu kişinin zaten 150 tanıdığı var — daha fazla eklenemez.",
+    "errRequesterGone": "Bu kişi hesabını sildi.",
+    "errResolved": "Bu isteğe zaten yanıt verildi."
   },
   "cluster": {
     "title": "Kümeler",
@@ -691,5 +710,22 @@
     "title": "This section is no longer available",
     "text": "The app now focuses on your acquaintances and their collections. Your earlier data is saved.",
     "back": "Go to home"
+  },
+  "acquaintance": {
+    "connectedTitle": "Sen ve {{name}} birbirinizi tanıyorsunuz",
+    "connectedText": "İkiniz de onayladınız.",
+    "firstHandshake": "{{name}} artık ilk el sıkışman",
+    "firstHandshakeText": "Ağındaki koleksiyonları ve tanıdıkları gör.",
+    "openNetwork": "Ağımı aç",
+    "addPeopleHint": "Kişisel olarak tanıdığın insanları ekle.",
+    "waitingBadge": "Onay bekleniyor",
+    "waitingTitle": "{{name}}",
+    "waitingText": "{{name}} isteğini alacak ve birbirinizi tanıdığınızı onaylayacak. Bu arada uygulamayı kullanabilirsin.",
+    "declinedTitle": "{{name}}: tanışıklık onaylanmadı",
+    "deletedTitle": "{{name}}: hesap silindi",
+    "nextStepText": "Kişisel olarak tanıdığın birini davet et: bağlantını gönder ya da buluştuğunuzda QR kodunu göster.",
+    "inviteSomeone": "Tanıdığını davet et",
+    "inviteGone": "Seni davet eden kişi hesabını sildi. Kişisel olarak tanıdığın birini davet et.",
+    "continue": "Devam"
   }
 }

@@ -230,7 +230,10 @@
     "qrScanHint": "סרקו כדי להצטרף",
     "shareLinkButton": "שתף קישור לגיוס",
     "linkCopied": "הקישור הועתק!",
-    "qrDownload": "הורד קוד QR"
+    "qrDownload": "הורד קוד QR",
+    "confirmPayment": "אשר תשלום",
+    "paymentConfirmed": "שולם",
+    "unconfirmPayment": "בטל אישור"
   },
   "create": {
     "title": "אני צריך",
@@ -292,7 +295,9 @@
     "growth30d": "30 ימים אחרונים",
     "growthChartLabel": "חברים ב-30 הימים האחרונים",
     "growthStart": "לפני 30 יום",
-    "growthNow": "עכשיו"
+    "growthNow": "עכשיו",
+    "active": "פעילה",
+    "notActive": "לא פעילה"
   },
   "notifications": {
     "title": "התראות",
@@ -653,7 +658,17 @@
     "renewalStartTitle": "New cycle started",
     "renewalStartBody": "{{name}}, a new support cycle for {{creator}} has just started.",
     "yourContribution": "התרומה שלך",
-    "period": "תקופה"
+    "period": "תקופה",
+    "pendingAcceptBtn": "אשר",
+    "pendingRejectBtn": "דחה",
+    "pendingRejectedNext": "הזמן מישהו שאתה מכיר אישית — פתח את האפליקציה.",
+    "pendingDoneAccepted": "בוצע: אתם מכירים",
+    "pendingDoneRejected": "הבקשה נדחתה",
+    "pendingErrLimitSelf": "כבר יש לך 150 מכרים",
+    "pendingErrLimitOther": "לאדם הזה כבר יש 150 מכרים",
+    "pendingErrGone": "האדם הזה מחק את החשבון",
+    "pendingErrResolved": "כבר ענו על הבקשה הזו",
+    "pendingErrNotYours": "הבקשה הזו אינה לחשבון Telegram הזה"
   },
   "hints": {
     "collectionAmount": "הזן את הסכום שצריך. מינימום 10 יחידות. המערכת תודיע למספר הנכון של אנשים.",
@@ -674,7 +689,11 @@
     "reject": "דחה",
     "accepted": "אושר",
     "rejected": "נדחה",
-    "alreadyConnected": "כבר מחובר"
+    "alreadyConnected": "כבר מחובר",
+    "errLimitSelf": "כבר יש לך 150 מכרים, זה המקסימום.",
+    "errLimitOther": "לאדם הזה כבר יש 150 מכרים, אי אפשר להוסיף עוד.",
+    "errRequesterGone": "האדם הזה מחק את החשבון.",
+    "errResolved": "כבר ענו על הבקשה הזו."
   },
   "cluster": {
     "title": "אשכולות",
@@ -747,5 +766,22 @@
     "title": "האזור הזה כבר לא זמין",
     "text": "האפליקציה מתמקדת עכשיו במכרים שלך ובאיסופים שלהם. הנתונים הקודמים שלך נשמרו.",
     "back": "לדף הבית"
+  },
+  "acquaintance": {
+    "connectedTitle": "אתה ו{{name}} מכירים",
+    "connectedText": "שניכם אישרתם זאת.",
+    "firstHandshake": "{{name}} הוא עכשיו לחיצת היד הראשונה שלך",
+    "firstHandshakeText": "צפה באיסופים ובמכרים ברשת שלך.",
+    "openNetwork": "פתח את הרשת שלי",
+    "addPeopleHint": "הוסף אנשים שאתה מכיר אישית.",
+    "waitingBadge": "ממתין לאישור",
+    "waitingTitle": "{{name}}",
+    "waitingText": "{{name}} יקבל את הבקשה שלך ויאשר שאתם מכירים. בינתיים אפשר להשתמש באפליקציה.",
+    "declinedTitle": "{{name}}: ההיכרות לא אושרה",
+    "deletedTitle": "{{name}}: החשבון נמחק",
+    "nextStepText": "הזמן מישהו שאתה מכיר אישית: שלח לו את הקישור שלך או הראה לו קוד QR כשאתם נפגשים.",
+    "inviteSomeone": "הזמן מכר",
+    "inviteGone": "מי שהזמין אותך מחק את החשבון. הזמן מישהו שאתה מכיר אישית.",
+    "continue": "המשך"
   }
 }

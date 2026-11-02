@@ -220,7 +220,10 @@
     "qrScanHint": "스캔하여 참여하기",
     "shareLinkButton": "모금 링크 공유",
     "linkCopied": "링크가 복사되었습니다!",
-    "qrDownload": "QR 코드 다운로드"
+    "qrDownload": "QR 코드 다운로드",
+    "confirmPayment": "송금 확인",
+    "paymentConfirmed": "송금 완료",
+    "unconfirmPayment": "송금 확인 취소"
   },
   "create": {
     "title": "필요해요",
@@ -282,7 +285,9 @@
     "growth30d": "최근 30일",
     "growthChartLabel": "최근 30일간 멤버",
     "growthStart": "30일 전",
-    "growthNow": "지금"
+    "growthNow": "지금",
+    "active": "활성",
+    "notActive": "비활성"
   },
   "notifications": {
     "title": "알림",
@@ -597,7 +602,17 @@
     "renewalStartTitle": "New cycle started",
     "renewalStartBody": "{{name}}, a new support cycle for {{creator}} has just started.",
     "yourContribution": "나의 기여금",
-    "period": "기간"
+    "period": "기간",
+    "pendingAcceptBtn": "수락",
+    "pendingRejectBtn": "거절",
+    "pendingRejectedNext": "직접 아는 사람을 초대하세요. 앱을 열어 주세요.",
+    "pendingDoneAccepted": "완료: 서로 아는 사이입니다",
+    "pendingDoneRejected": "요청을 거절했습니다",
+    "pendingErrLimitSelf": "지인이 이미 150명입니다",
+    "pendingErrLimitOther": "이 사람은 지인이 이미 150명입니다",
+    "pendingErrGone": "이 사람이 계정을 삭제했습니다",
+    "pendingErrResolved": "이미 응답한 요청입니다",
+    "pendingErrNotYours": "이 Telegram 계정에 온 요청이 아닙니다"
   },
   "hints": {
     "collectionAmount": "필요한 금액을 입력하세요. 최소 10 단위입니다. 시스템이 적절한 수의 사람들에게 알립니다.",
@@ -618,7 +633,11 @@
     "reject": "거절",
     "accepted": "수락됨",
     "rejected": "거절됨",
-    "alreadyConnected": "이미 연결됨"
+    "alreadyConnected": "이미 연결됨",
+    "errLimitSelf": "지인이 이미 150명입니다. 최대치입니다.",
+    "errLimitOther": "이 사람은 지인이 이미 150명입니다. 더 추가할 수 없습니다.",
+    "errRequesterGone": "이 사람이 계정을 삭제했습니다.",
+    "errResolved": "이미 응답한 요청입니다."
   },
   "cluster": {
     "title": "클러스터",
@@ -691,5 +710,22 @@
     "title": "This section is no longer available",
     "text": "The app now focuses on your acquaintances and their collections. Your earlier data is saved.",
     "back": "Go to home"
+  },
+  "acquaintance": {
+    "connectedTitle": "나와 {{name}}님은 서로 아는 사이입니다",
+    "connectedText": "두 분 모두 확인했습니다.",
+    "firstHandshake": "{{name}}님이 첫 번째 핸드셰이크가 되었습니다",
+    "firstHandshakeText": "네트워크에서 모금과 지인을 확인해 보세요.",
+    "openNetwork": "내 네트워크 열기",
+    "addPeopleHint": "직접 아는 사람을 추가하세요.",
+    "waitingBadge": "확인 대기 중",
+    "waitingTitle": "{{name}}",
+    "waitingText": "{{name}}님이 요청을 받고 서로 아는 사이임을 확인합니다. 그동안 앱을 사용하실 수 있습니다.",
+    "declinedTitle": "{{name}}님: 지인 확인되지 않음",
+    "deletedTitle": "{{name}}님: 계정 삭제됨",
+    "nextStepText": "직접 아는 사람을 초대하세요. 링크를 보내거나 만날 때 QR 코드를 보여 주세요.",
+    "inviteSomeone": "아는 사람 초대",
+    "inviteGone": "나를 초대한 사람이 계정을 삭제했습니다. 직접 아는 사람을 초대하세요.",
+    "continue": "계속"
   }
 }

@@ -220,7 +220,10 @@
     "qrScanHint": "Scan for at deltage",
     "shareLinkButton": "Del link til indsamlingen",
     "linkCopied": "Link kopieret!",
-    "qrDownload": "Download QR-kode"
+    "qrDownload": "Download QR-kode",
+    "confirmPayment": "Bekræft betaling",
+    "paymentConfirmed": "Betalt",
+    "unconfirmPayment": "Fjern bekræftelsen"
   },
   "create": {
     "title": "Jeg har brug for",
@@ -282,7 +285,9 @@
     "growth30d": "Sidste 30 dage",
     "growthChartLabel": "Medlemmer de sidste 30 dage",
     "growthStart": "For 30 dage siden",
-    "growthNow": "Nu"
+    "growthNow": "Nu",
+    "active": "aktivt",
+    "notActive": "ikke aktivt"
   },
   "notifications": {
     "title": "Notifikationer",
@@ -597,7 +602,17 @@
     "renewalStartTitle": "New cycle started",
     "renewalStartBody": "{{name}}, a new support cycle for {{creator}} has just started.",
     "yourContribution": "Dit bidrag",
-    "period": "Periode"
+    "period": "Periode",
+    "pendingAcceptBtn": "Acceptér",
+    "pendingRejectBtn": "Afvis",
+    "pendingRejectedNext": "Inviter en, du kender personligt. Åbn appen.",
+    "pendingDoneAccepted": "Færdig: I kender hinanden",
+    "pendingDoneRejected": "Anmodningen er afvist",
+    "pendingErrLimitSelf": "Du har allerede 150 bekendte",
+    "pendingErrLimitOther": "Denne person har allerede 150 bekendte",
+    "pendingErrGone": "Denne person har slettet kontoen",
+    "pendingErrResolved": "Anmodningen er allerede besvaret",
+    "pendingErrNotYours": "Anmodningen er ikke til denne Telegram-konto"
   },
   "hints": {
     "collectionAmount": "Indtast det beløb, du har brug for. Minimum 10 enheder. Systemet vil underrette det rette antal personer.",
@@ -618,7 +633,11 @@
     "reject": "Afvis",
     "accepted": "Accepteret",
     "rejected": "Afvist",
-    "alreadyConnected": "Allerede forbundet"
+    "alreadyConnected": "Allerede forbundet",
+    "errLimitSelf": "Du har allerede 150 bekendte. Det er maksimum.",
+    "errLimitOther": "Denne person har allerede 150 bekendte. Der kan ikke tilføjes flere.",
+    "errRequesterGone": "Denne person har slettet kontoen.",
+    "errResolved": "Anmodningen er allerede besvaret."
   },
   "cluster": {
     "title": "Klynger",
@@ -691,5 +710,22 @@
     "title": "This section is no longer available",
     "text": "The app now focuses on your acquaintances and their collections. Your earlier data is saved.",
     "back": "Go to home"
+  },
+  "acquaintance": {
+    "connectedTitle": "Du og {{name}} kender hinanden",
+    "connectedText": "I har begge bekræftet det.",
+    "firstHandshake": "{{name}} er nu dit første håndtryk",
+    "firstHandshakeText": "Se indsamlinger og bekendte i dit netværk.",
+    "openNetwork": "Åbn mit netværk",
+    "addPeopleHint": "Tilføj folk, du kender personligt.",
+    "waitingBadge": "Venter på bekræftelse",
+    "waitingTitle": "{{name}}",
+    "waitingText": "{{name}} får din anmodning og bekræfter, at I kender hinanden. Imens kan du bruge appen.",
+    "declinedTitle": "{{name}}: bekendtskabet er ikke bekræftet",
+    "deletedTitle": "{{name}}: kontoen er slettet",
+    "nextStepText": "Inviter en, du kender personligt: send dit link, eller vis QR-koden, når I mødes.",
+    "inviteSomeone": "Inviter en bekendt",
+    "inviteGone": "Personen, der inviterede dig, har slettet kontoen. Inviter en, du kender personligt.",
+    "continue": "Fortsæt"
   }
 }

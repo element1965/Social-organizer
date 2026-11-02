@@ -220,7 +220,10 @@
     "qrScanHint": "امسح للانضمام",
     "shareLinkButton": "مشاركة رابط الحملة",
     "linkCopied": "تم نسخ الرابط!",
-    "qrDownload": "تنزيل رمز QR"
+    "qrDownload": "تنزيل رمز QR",
+    "confirmPayment": "تأكيد الدفع",
+    "paymentConfirmed": "تم الدفع",
+    "unconfirmPayment": "إلغاء التأكيد"
   },
   "create": {
     "title": "أحتاج مساعدة",
@@ -282,7 +285,9 @@
     "growth30d": "آخر 30 يومًا",
     "growthChartLabel": "الأعضاء خلال آخر 30 يومًا",
     "growthStart": "منذ 30 يومًا",
-    "growthNow": "الآن"
+    "growthNow": "الآن",
+    "active": "نشطة",
+    "notActive": "غير نشطة"
   },
   "notifications": {
     "title": "الإشعارات",
@@ -597,7 +602,17 @@
     "renewalStartTitle": "New cycle started",
     "renewalStartBody": "{{name}}, a new support cycle for {{creator}} has just started.",
     "yourContribution": "مساهمتك",
-    "period": "الفترة"
+    "period": "الفترة",
+    "pendingAcceptBtn": "قبول",
+    "pendingRejectBtn": "رفض",
+    "pendingRejectedNext": "ادعُ شخصاً تعرفه شخصياً، وافتح التطبيق.",
+    "pendingDoneAccepted": "تم: أنتما تعرفان بعضكما",
+    "pendingDoneRejected": "تم رفض الطلب",
+    "pendingErrLimitSelf": "لديك بالفعل 150 معرفة",
+    "pendingErrLimitOther": "لدى هذا الشخص بالفعل 150 معرفة",
+    "pendingErrGone": "حذف هذا الشخص حسابه",
+    "pendingErrResolved": "تم الرد على هذا الطلب مسبقاً",
+    "pendingErrNotYours": "هذا الطلب ليس لحساب Telegram هذا"
   },
   "hints": {
     "collectionAmount": "أدخل المبلغ الذي تحتاجه. الحد الأدنى 10 وحدات. سيقوم النظام بإعلام العدد المناسب من الأشخاص.",
@@ -618,7 +633,11 @@
     "reject": "رفض",
     "accepted": "مقبول",
     "rejected": "مرفوض",
-    "alreadyConnected": "متصل بالفعل"
+    "alreadyConnected": "متصل بالفعل",
+    "errLimitSelf": "لديك بالفعل 150 معرفة، وهذا هو الحد الأقصى.",
+    "errLimitOther": "لدى هذا الشخص بالفعل 150 معرفة، ولا يمكن إضافة المزيد.",
+    "errRequesterGone": "حذف هذا الشخص حسابه.",
+    "errResolved": "تم الرد على هذا الطلب مسبقاً."
   },
   "cluster": {
     "title": "مجموعات",
@@ -691,5 +710,22 @@
     "title": "This section is no longer available",
     "text": "The app now focuses on your acquaintances and their collections. Your earlier data is saved.",
     "back": "Go to home"
+  },
+  "acquaintance": {
+    "connectedTitle": "أنت و{{name}} تعرفان بعضكما",
+    "connectedText": "أكّدتما ذلك معاً.",
+    "firstHandshake": "أصبح {{name}} الآن أول مصافحة لك",
+    "firstHandshakeText": "شاهد المجموعات والمعارف في شبكتك.",
+    "openNetwork": "افتح شبكتي",
+    "addPeopleHint": "أضف أشخاصاً تعرفهم شخصياً.",
+    "waitingBadge": "بانتظار التأكيد",
+    "waitingTitle": "{{name}}",
+    "waitingText": "سيصل {{name}} طلبك ويؤكد أنكما تعرفان بعضكما. في هذه الأثناء يمكنك استخدام التطبيق.",
+    "declinedTitle": "{{name}}: لم تتم الموافقة على المعرفة",
+    "deletedTitle": "{{name}}: تم حذف الحساب",
+    "nextStepText": "ادعُ شخصاً تعرفه شخصياً: أرسل له رابطك أو أره رمز QR عندما تلتقيان.",
+    "inviteSomeone": "ادعُ شخصاً تعرفه",
+    "inviteGone": "حذف الشخص الذي دعاك حسابه. ادعُ شخصاً تعرفه شخصياً.",
+    "continue": "متابعة"
   }
 }

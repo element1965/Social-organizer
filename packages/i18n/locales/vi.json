@@ -220,7 +220,10 @@
     "qrScanHint": "Quét để tham gia",
     "shareLinkButton": "Chia sẻ liên kết quyên góp",
     "linkCopied": "Đã sao chép liên kết!",
-    "qrDownload": "Tải mã QR"
+    "qrDownload": "Tải mã QR",
+    "confirmPayment": "Xác nhận đã chuyển",
+    "paymentConfirmed": "Đã chuyển",
+    "unconfirmPayment": "Bỏ xác nhận đã chuyển"
   },
   "create": {
     "title": "Tôi cần",
@@ -282,7 +285,9 @@
     "growth30d": "30 ngày qua",
     "growthChartLabel": "Thành viên trong 30 ngày qua",
     "growthStart": "30 ngày trước",
-    "growthNow": "Bây giờ"
+    "growthNow": "Bây giờ",
+    "active": "đang hoạt động",
+    "notActive": "không hoạt động"
   },
   "notifications": {
     "title": "Thông báo",
@@ -597,7 +602,17 @@
     "renewalStartTitle": "New cycle started",
     "renewalStartBody": "{{name}}, a new support cycle for {{creator}} has just started.",
     "yourContribution": "Đóng góp của bạn",
-    "period": "Kỳ"
+    "period": "Kỳ",
+    "pendingAcceptBtn": "Chấp nhận",
+    "pendingRejectBtn": "Từ chối",
+    "pendingRejectedNext": "Hãy mời người bạn quen biết trực tiếp — mở ứng dụng.",
+    "pendingDoneAccepted": "Xong: hai bạn đã quen nhau",
+    "pendingDoneRejected": "Đã từ chối yêu cầu",
+    "pendingErrLimitSelf": "Bạn đã có 150 người quen",
+    "pendingErrLimitOther": "Người này đã có 150 người quen",
+    "pendingErrGone": "Người này đã xóa tài khoản",
+    "pendingErrResolved": "Yêu cầu này đã được trả lời",
+    "pendingErrNotYours": "Yêu cầu này không dành cho tài khoản Telegram này"
   },
   "hints": {
     "collectionAmount": "Nhập số tiền bạn cần. Tối thiểu 10 đơn vị. Hệ thống sẽ thông báo đến đúng số người cần thiết.",
@@ -618,7 +633,11 @@
     "reject": "Từ chối",
     "accepted": "Đã chấp nhận",
     "rejected": "Đã từ chối",
-    "alreadyConnected": "Đã kết nối"
+    "alreadyConnected": "Đã kết nối",
+    "errLimitSelf": "Bạn đã có 150 người quen — đó là mức tối đa.",
+    "errLimitOther": "Người này đã có 150 người quen — không thể thêm nữa.",
+    "errRequesterGone": "Người này đã xóa tài khoản.",
+    "errResolved": "Yêu cầu này đã được trả lời."
   },
   "cluster": {
     "title": "Cụm",
@@ -691,5 +710,22 @@
     "title": "This section is no longer available",
     "text": "The app now focuses on your acquaintances and their collections. Your earlier data is saved.",
     "back": "Go to home"
+  },
+  "acquaintance": {
+    "connectedTitle": "Bạn và {{name}} quen nhau",
+    "connectedText": "Cả hai bạn đã xác nhận.",
+    "firstHandshake": "{{name}} giờ là bắt tay đầu tiên của bạn",
+    "firstHandshakeText": "Xem các quyên góp và người quen trong mạng lưới của bạn.",
+    "openNetwork": "Mở mạng lưới của tôi",
+    "addPeopleHint": "Hãy thêm những người bạn quen biết trực tiếp.",
+    "waitingBadge": "Đang chờ xác nhận",
+    "waitingTitle": "{{name}}",
+    "waitingText": "{{name}} sẽ nhận được yêu cầu và xác nhận hai bạn quen nhau. Trong lúc đó bạn vẫn có thể dùng ứng dụng.",
+    "declinedTitle": "{{name}}: chưa xác nhận quen biết",
+    "deletedTitle": "{{name}}: tài khoản đã xóa",
+    "nextStepText": "Hãy mời người bạn quen biết trực tiếp: gửi liên kết của bạn hoặc cho họ xem mã QR khi gặp nhau.",
+    "inviteSomeone": "Mời người quen",
+    "inviteGone": "Người đã mời bạn đã xóa tài khoản. Hãy mời người bạn quen biết trực tiếp.",
+    "continue": "Tiếp tục"
   }
 }

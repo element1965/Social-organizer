@@ -220,7 +220,10 @@
     "qrScanHint": "Skanna för att gå med",
     "shareLinkButton": "Dela länk till insamlingen",
     "linkCopied": "Länk kopierad!",
-    "qrDownload": "Ladda ner QR-kod"
+    "qrDownload": "Ladda ner QR-kod",
+    "confirmPayment": "Bekräfta betalning",
+    "paymentConfirmed": "Betald",
+    "unconfirmPayment": "Ta bort bekräftelsen"
   },
   "create": {
     "title": "Jag behöver",
@@ -282,7 +285,9 @@
     "growth30d": "Senaste 30 dagarna",
     "growthChartLabel": "Medlemmar under de senaste 30 dagarna",
     "growthStart": "För 30 dagar sedan",
-    "growthNow": "Nu"
+    "growthNow": "Nu",
+    "active": "aktivt",
+    "notActive": "inte aktivt"
   },
   "notifications": {
     "title": "Aviseringar",
@@ -597,7 +602,17 @@
     "renewalStartTitle": "New cycle started",
     "renewalStartBody": "{{name}}, a new support cycle for {{creator}} has just started.",
     "yourContribution": "Ditt bidrag",
-    "period": "Period"
+    "period": "Period",
+    "pendingAcceptBtn": "Godkänn",
+    "pendingRejectBtn": "Avvisa",
+    "pendingRejectedNext": "Bjud in någon du känner personligen. Öppna appen.",
+    "pendingDoneAccepted": "Klart: ni känner varandra",
+    "pendingDoneRejected": "Förfrågan avvisad",
+    "pendingErrLimitSelf": "Du har redan 150 bekanta",
+    "pendingErrLimitOther": "Den här personen har redan 150 bekanta",
+    "pendingErrGone": "Den här personen har raderat kontot",
+    "pendingErrResolved": "Förfrågan har redan besvarats",
+    "pendingErrNotYours": "Förfrågan är inte till det här Telegram-kontot"
   },
   "hints": {
     "collectionAmount": "Ange beloppet du behover. Minimum 10 enheter. Systemet informerar ratt antal personer.",
@@ -618,7 +633,11 @@
     "reject": "Avvisa",
     "accepted": "Accepterad",
     "rejected": "Avvisad",
-    "alreadyConnected": "Redan ansluten"
+    "alreadyConnected": "Redan ansluten",
+    "errLimitSelf": "Du har redan 150 bekanta. Det är maxgränsen.",
+    "errLimitOther": "Den här personen har redan 150 bekanta. Fler kan inte läggas till.",
+    "errRequesterGone": "Den här personen har raderat kontot.",
+    "errResolved": "Förfrågan har redan besvarats."
   },
   "cluster": {
     "title": "Kluster",
@@ -691,5 +710,22 @@
     "title": "This section is no longer available",
     "text": "The app now focuses on your acquaintances and their collections. Your earlier data is saved.",
     "back": "Go to home"
+  },
+  "acquaintance": {
+    "connectedTitle": "Du och {{name}} känner varandra",
+    "connectedText": "Ni har båda bekräftat det.",
+    "firstHandshake": "{{name}} är nu ditt första handslag",
+    "firstHandshakeText": "Se insamlingar och bekanta i ditt nätverk.",
+    "openNetwork": "Öppna mitt nätverk",
+    "addPeopleHint": "Lägg till personer du känner personligen.",
+    "waitingBadge": "Väntar på bekräftelse",
+    "waitingTitle": "{{name}}",
+    "waitingText": "{{name}} får din förfrågan och bekräftar att ni känner varandra. Under tiden kan du använda appen.",
+    "declinedTitle": "{{name}}: bekantskapen är inte bekräftad",
+    "deletedTitle": "{{name}}: kontot raderat",
+    "nextStepText": "Bjud in någon du känner personligen: skicka din länk eller visa QR-koden när ni ses.",
+    "inviteSomeone": "Bjud in en bekant",
+    "inviteGone": "Personen som bjöd in dig har raderat kontot. Bjud in någon du känner personligen.",
+    "continue": "Fortsätt"
   }
 }

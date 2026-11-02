@@ -220,7 +220,10 @@
     "qrScanHint": "Скенирајте да бисте се придружили",
     "shareLinkButton": "Подели линк на прикупљање",
     "linkCopied": "Линк је копиран!",
-    "qrDownload": "Преузми QR код"
+    "qrDownload": "Преузми QR код",
+    "confirmPayment": "Потврди уплату",
+    "paymentConfirmed": "Плаћено",
+    "unconfirmPayment": "Поништи потврду"
   },
   "create": {
     "title": "Треба ми",
@@ -282,7 +285,9 @@
     "growth30d": "последњих 30 дана",
     "growthChartLabel": "Чланови током последњих 30 дана",
     "growthStart": "Пре 30 дана",
-    "growthNow": "Сада"
+    "growthNow": "Сада",
+    "active": "активна",
+    "notActive": "није активна"
   },
   "notifications": {
     "title": "Обавештења",
@@ -597,7 +602,17 @@
     "renewalStartTitle": "New cycle started",
     "renewalStartBody": "{{name}}, a new support cycle for {{creator}} has just started.",
     "yourContribution": "Ваш допринос",
-    "period": "Период"
+    "period": "Период",
+    "pendingAcceptBtn": "Прихвати",
+    "pendingRejectBtn": "Одбиј",
+    "pendingRejectedNext": "Позовите неког кога лично познајете — отворите апликацију.",
+    "pendingDoneAccepted": "Готово: познајете се",
+    "pendingDoneRejected": "Захтев одбијен",
+    "pendingErrLimitSelf": "Већ имате 150 познаника",
+    "pendingErrLimitOther": "Ова особа већ има 150 познаника",
+    "pendingErrGone": "Ова особа је обрисала налог",
+    "pendingErrResolved": "На овај захтев је већ одговорено",
+    "pendingErrNotYours": "Овај захтев није за овај Telegram налог"
   },
   "hints": {
     "collectionAmount": "Унеси износ који ти треба. Минимум 10 јединица. Систем ће обавестити одговарајући број људи.",
@@ -618,7 +633,11 @@
     "reject": "Одбиј",
     "accepted": "Прихваћено",
     "rejected": "Одбијено",
-    "alreadyConnected": "Већ повезано"
+    "alreadyConnected": "Већ повезано",
+    "errLimitSelf": "Већ имате 150 познаника — то је максимум.",
+    "errLimitOther": "Ова особа већ има 150 познаника — више се не може додати.",
+    "errRequesterGone": "Ова особа је обрисала налог.",
+    "errResolved": "На овај захтев је већ одговорено."
   },
   "cluster": {
     "title": "Кластери",
@@ -691,5 +710,22 @@
     "title": "This section is no longer available",
     "text": "The app now focuses on your acquaintances and their collections. Your earlier data is saved.",
     "back": "Go to home"
+  },
+  "acquaintance": {
+    "connectedTitle": "Ви и {{name}} се познајете",
+    "connectedText": "Обоје сте то потврдили.",
+    "firstHandshake": "{{name}} је сада ваше прво руковање",
+    "firstHandshakeText": "Погледајте прикупљања и познанике у својој мрежи.",
+    "openNetwork": "Отвори моју мрежу",
+    "addPeopleHint": "Додајте људе које лично познајете.",
+    "waitingBadge": "Чека се потврда",
+    "waitingTitle": "{{name}}",
+    "waitingText": "{{name}} ће добити ваш захтев и потврдити да се познајете. У међувремену можете користити апликацију.",
+    "declinedTitle": "{{name}}: познанство није потврђено",
+    "deletedTitle": "{{name}}: налог је обрисан",
+    "nextStepText": "Позовите неког кога лично познајете: пошаљите му свој линк или покажите QR код када се сретнете.",
+    "inviteSomeone": "Позови познаника",
+    "inviteGone": "Особа која вас је позвала обрисала је налог. Позовите неког кога лично познајете.",
+    "continue": "Настави"
   }
 }

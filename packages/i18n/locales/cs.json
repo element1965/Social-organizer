@@ -220,7 +220,10 @@
     "qrScanHint": "Naskenujte a připojte se",
     "shareLinkButton": "Sdílet odkaz na sbírku",
     "linkCopied": "Odkaz zkopírován!",
-    "qrDownload": "Stáhnout QR kód"
+    "qrDownload": "Stáhnout QR kód",
+    "confirmPayment": "Potvrdit platbu",
+    "paymentConfirmed": "Zaplaceno",
+    "unconfirmPayment": "Zrušit potvrzení"
   },
   "create": {
     "title": "Potřebuji",
@@ -282,7 +285,9 @@
     "growth30d": "Za 30 dní",
     "growthChartLabel": "Členové za posledních 30 dní",
     "growthStart": "Před 30 dny",
-    "growthNow": "Nyní"
+    "growthNow": "Nyní",
+    "active": "aktivní",
+    "notActive": "neaktivní"
   },
   "notifications": {
     "title": "Upozornění",
@@ -597,7 +602,17 @@
     "renewalStartTitle": "New cycle started",
     "renewalStartBody": "{{name}}, a new support cycle for {{creator}} has just started.",
     "yourContribution": "Váš příspěvek",
-    "period": "Období"
+    "period": "Období",
+    "pendingAcceptBtn": "Přijmout",
+    "pendingRejectBtn": "Odmítnout",
+    "pendingRejectedNext": "Pozvi někoho, koho znáš osobně — otevři aplikaci.",
+    "pendingDoneAccepted": "Hotovo: znáte se",
+    "pendingDoneRejected": "Žádost odmítnuta",
+    "pendingErrLimitSelf": "Už máš 150 známých",
+    "pendingErrLimitOther": "Tento člověk už má 150 známých",
+    "pendingErrGone": "Tento člověk smazal účet",
+    "pendingErrResolved": "Na tuto žádost už bylo odpovězeno",
+    "pendingErrNotYours": "Tato žádost není pro tento účet Telegram"
   },
   "hints": {
     "collectionAmount": "Zadejte částku, kterou potřebujete. Minimálně 10 jednotek. Systém upozorní správný počet lidí.",
@@ -618,7 +633,11 @@
     "reject": "Odmítnout",
     "accepted": "Přijato",
     "rejected": "Odmítnuto",
-    "alreadyConnected": "Již připojeno"
+    "alreadyConnected": "Již připojeno",
+    "errLimitSelf": "Už máš 150 známých — to je maximum.",
+    "errLimitOther": "Tento člověk už má 150 známých — víc jich přidat nelze.",
+    "errRequesterGone": "Tento člověk smazal účet.",
+    "errResolved": "Na tuto žádost už bylo odpovězeno."
   },
   "cluster": {
     "title": "Clustery",
@@ -691,5 +710,22 @@
     "title": "This section is no longer available",
     "text": "The app now focuses on your acquaintances and their collections. Your earlier data is saved.",
     "back": "Go to home"
+  },
+  "acquaintance": {
+    "connectedTitle": "Ty a {{name}} se znáte",
+    "connectedText": "Potvrdili jste to oba.",
+    "firstHandshake": "{{name}} je teď tvé první podání rukou",
+    "firstHandshakeText": "Podívej se na sbírky a známé ve své síti.",
+    "openNetwork": "Otevřít mou síť",
+    "addPeopleHint": "Přidávej lidi, které znáš osobně.",
+    "waitingBadge": "Čekáme na potvrzení",
+    "waitingTitle": "{{name}}",
+    "waitingText": "{{name}} dostane tvou žádost a potvrdí, že se znáte. Zatím můžeš aplikaci používat.",
+    "declinedTitle": "{{name}}: známost nepotvrzena",
+    "deletedTitle": "{{name}}: účet smazán",
+    "nextStepText": "Pozvi někoho, koho znáš osobně: pošli mu svůj odkaz nebo ukaž QR kód při setkání.",
+    "inviteSomeone": "Pozvat známého",
+    "inviteGone": "Ten, kdo tě pozval, smazal účet. Pozvi někoho, koho znáš osobně.",
+    "continue": "Pokračovat"
   }
 }

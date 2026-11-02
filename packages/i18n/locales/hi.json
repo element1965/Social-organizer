@@ -220,7 +220,10 @@
     "qrScanHint": "जुड़ने के लिए स्कैन करें",
     "shareLinkButton": "संग्रह का लिंक साझा करें",
     "linkCopied": "लिंक कॉपी हो गया!",
-    "qrDownload": "QR कोड डाउनलोड करें"
+    "qrDownload": "QR कोड डाउनलोड करें",
+    "confirmPayment": "भुगतान की पुष्टि करें",
+    "paymentConfirmed": "भुगतान हो गया",
+    "unconfirmPayment": "पुष्टि हटाएं"
   },
   "create": {
     "title": "मुझे चाहिए",
@@ -282,7 +285,9 @@
     "growth30d": "पिछले 30 दिन",
     "growthChartLabel": "पिछले 30 दिनों में सदस्य",
     "growthStart": "30 दिन पहले",
-    "growthNow": "अभी"
+    "growthNow": "अभी",
+    "active": "सक्रिय",
+    "notActive": "सक्रिय नहीं"
   },
   "notifications": {
     "title": "सूचनाएं",
@@ -597,7 +602,17 @@
     "renewalStartTitle": "New cycle started",
     "renewalStartBody": "{{name}}, a new support cycle for {{creator}} has just started.",
     "yourContribution": "आपका योगदान",
-    "period": "अवधि"
+    "period": "अवधि",
+    "pendingAcceptBtn": "स्वीकार करें",
+    "pendingRejectBtn": "अस्वीकार करें",
+    "pendingRejectedNext": "किसी ऐसे व्यक्ति को आमंत्रित करें जिसे आप व्यक्तिगत रूप से जानते हैं — ऐप खोलें।",
+    "pendingDoneAccepted": "हो गया: आप एक-दूसरे को जानते हैं",
+    "pendingDoneRejected": "अनुरोध अस्वीकृत",
+    "pendingErrLimitSelf": "आपके पहले से 150 परिचित हैं",
+    "pendingErrLimitOther": "इस व्यक्ति के पहले से 150 परिचित हैं",
+    "pendingErrGone": "इस व्यक्ति ने अकाउंट हटा दिया है",
+    "pendingErrResolved": "इस अनुरोध का जवाब पहले ही दिया जा चुका है",
+    "pendingErrNotYours": "यह अनुरोध इस Telegram अकाउंट के लिए नहीं है"
   },
   "hints": {
     "collectionAmount": "आपको जितनी राशि चाहिए वह दर्ज करें। न्यूनतम 10 इकाई। सिस्टम उचित संख्या में लोगों को सूचित करेगा।",
@@ -618,7 +633,11 @@
     "reject": "अस्वीकार",
     "accepted": "स्वीकृत",
     "rejected": "अस्वीकृत",
-    "alreadyConnected": "पहले से जुड़े"
+    "alreadyConnected": "पहले से जुड़े",
+    "errLimitSelf": "आपके पहले से 150 परिचित हैं, यह अधिकतम सीमा है।",
+    "errLimitOther": "इस व्यक्ति के पहले से 150 परिचित हैं, और नहीं जोड़े जा सकते।",
+    "errRequesterGone": "इस व्यक्ति ने अकाउंट हटा दिया है।",
+    "errResolved": "इस अनुरोध का जवाब पहले ही दिया जा चुका है।"
   },
   "cluster": {
     "title": "क्लस्टर",
@@ -691,5 +710,22 @@
     "title": "This section is no longer available",
     "text": "The app now focuses on your acquaintances and their collections. Your earlier data is saved.",
     "back": "Go to home"
+  },
+  "acquaintance": {
+    "connectedTitle": "आप और {{name}} एक-दूसरे को जानते हैं",
+    "connectedText": "आप दोनों ने इसकी पुष्टि की।",
+    "firstHandshake": "{{name}} अब आपका पहला हैंडशेक है",
+    "firstHandshakeText": "अपने नेटवर्क में संग्रह और परिचित देखें।",
+    "openNetwork": "मेरा नेटवर्क खोलें",
+    "addPeopleHint": "उन लोगों को जोड़ें जिन्हें आप व्यक्तिगत रूप से जानते हैं।",
+    "waitingBadge": "पुष्टि की प्रतीक्षा",
+    "waitingTitle": "{{name}}",
+    "waitingText": "{{name}} को आपका अनुरोध मिलेगा और वे पुष्टि करेंगे कि आप एक-दूसरे को जानते हैं। तब तक आप ऐप इस्तेमाल कर सकते हैं।",
+    "declinedTitle": "{{name}}: परिचय की पुष्टि नहीं हुई",
+    "deletedTitle": "{{name}}: अकाउंट हटा दिया गया",
+    "nextStepText": "किसी ऐसे व्यक्ति को आमंत्रित करें जिसे आप व्यक्तिगत रूप से जानते हैं: उन्हें अपना लिंक भेजें या मिलने पर QR दिखाएं।",
+    "inviteSomeone": "परिचित को आमंत्रित करें",
+    "inviteGone": "जिसने आपको आमंत्रित किया था, उसने अकाउंट हटा दिया है। किसी ऐसे व्यक्ति को आमंत्रित करें जिसे आप व्यक्तिगत रूप से जानते हैं।",
+    "continue": "जारी रखें"
   }
 }
