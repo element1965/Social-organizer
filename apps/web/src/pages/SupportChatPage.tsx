@@ -2,7 +2,7 @@ import { useState, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ArrowLeft, Send, MessageSquare, Loader2, Paperclip, X, FileText, Volume2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { trpc } from '../lib/trpc';
+import { trpc, authFetch } from '../lib/trpc';
 import { Avatar } from '../components/ui/avatar';
 import { cn } from '../lib/utils';
 
@@ -117,7 +117,7 @@ export function SupportChatPage() {
       const token = localStorage.getItem('accessToken');
       const formData = new FormData();
       formData.append('file', file);
-      const res = await fetch('/api/broadcast/upload', {
+      const res = await authFetch('/api/broadcast/upload', {
         method: 'POST',
         headers: { Authorization: `Bearer ${token}` },
         body: formData,
