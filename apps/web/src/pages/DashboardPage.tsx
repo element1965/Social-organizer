@@ -96,7 +96,7 @@ export function DashboardPage() {
       <AcquaintanceCard onInvite={() => setGateShareOpen(true)} />
 
       {/* Gate: need at least 1 connection — personal link / QR when there is no invite in progress */}
-      {!networkLoading && networkStats && introState !== 'waiting' && introState !== 'declined' && introState !== 'personDeleted'
+      {!networkLoading && networkStats && (introState === 'none' || introState === undefined)
         && Object.values(byDepth).reduce((a, b) => a + (b as number), 0) === 0 && (
         <Card>
           <CardContent className="py-8 text-center">
