@@ -1,3 +1,4 @@
+import { authFetch } from '../lib/trpc';
 import { useState, useRef } from 'react';
 import { Loader2, Upload, Link, Paperclip, X } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
@@ -56,7 +57,7 @@ export function MessageComposer({ value, onChange, disabled }: MessageComposerPr
       const formData = new FormData();
       formData.append('file', file);
 
-      const res = await fetch('/api/broadcast/upload', {
+      const res = await authFetch('/api/broadcast/upload', {
         method: 'POST',
         headers: { Authorization: `Bearer ${token}` },
         body: formData,

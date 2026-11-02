@@ -1,7 +1,7 @@
 import { useState, useRef } from 'react';
 import { HelpCircle, ChevronDown, ChevronUp, Plus, Pencil, Trash2, X, Check, Globe, Loader2, ImagePlus, Link2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { trpc } from '../lib/trpc';
+import { trpc, authFetch } from '../lib/trpc';
 import { Card } from '../components/ui/card';
 import { RichText } from '../components/ui/rich-text';
 import { VideoGuide } from '../components/VideoGuide';
@@ -66,7 +66,7 @@ export function FaqPage() {
       const formData = new FormData();
       formData.append('file', file);
 
-      const res = await fetch('/api/broadcast/upload', {
+      const res = await authFetch('/api/broadcast/upload', {
         method: 'POST',
         headers: { Authorization: `Bearer ${token}` },
         body: formData,

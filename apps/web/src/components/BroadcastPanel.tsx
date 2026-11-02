@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { X, Send, Loader2, Clock, Link2, Trash2, ToggleLeft, ToggleRight, BarChart3, Pencil, Check, Play } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { trpc } from '../lib/trpc';
+import { trpc, authFetch } from '../lib/trpc';
 import { MessageComposer, type MessageData } from './MessageComposer';
 
 interface BroadcastPanelProps {
@@ -381,7 +381,7 @@ export function BroadcastPanel({ onClose }: BroadcastPanelProps) {
                 setResult(null);
                 try {
                   const token = localStorage.getItem('accessToken');
-                  const res = await fetch('/api/trigger-autochain', {
+                  const res = await authFetch('/api/trigger-autochain', {
                     method: 'POST',
                     headers: { Authorization: `Bearer ${token}` },
                   });
