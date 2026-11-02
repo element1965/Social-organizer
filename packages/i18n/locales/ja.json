@@ -220,7 +220,10 @@
     "qrScanHint": "スキャンして参加",
     "shareLinkButton": "募集のリンクを共有",
     "linkCopied": "リンクをコピーしました！",
-    "qrDownload": "QRコードをダウンロード"
+    "qrDownload": "QRコードをダウンロード",
+    "confirmPayment": "送金を確認",
+    "paymentConfirmed": "送金済み",
+    "unconfirmPayment": "送金済みを取り消す"
   },
   "create": {
     "title": "必要です",
@@ -282,7 +285,9 @@
     "growth30d": "過去30日間",
     "growthChartLabel": "過去30日間のメンバー",
     "growthStart": "30日前",
-    "growthNow": "現在"
+    "growthNow": "現在",
+    "active": "有効",
+    "notActive": "無効"
   },
   "notifications": {
     "title": "通知",
@@ -597,7 +602,17 @@
     "renewalStartTitle": "新しいサイクルが始まりました",
     "renewalStartBody": "{{name}} さん、{{creator}} への新しい定期サポートサイクルが始まりました。",
     "yourContribution": "あなたの拠出額",
-    "period": "期間"
+    "period": "期間",
+    "pendingAcceptBtn": "承認",
+    "pendingRejectBtn": "辞退",
+    "pendingRejectedNext": "直接知っている人を招待しましょう。アプリを開いてください。",
+    "pendingDoneAccepted": "完了：お知り合いになりました",
+    "pendingDoneRejected": "リクエストを辞退しました",
+    "pendingErrLimitSelf": "知り合いがすでに150人います",
+    "pendingErrLimitOther": "この人の知り合いはすでに150人です",
+    "pendingErrGone": "この人はアカウントを削除しました",
+    "pendingErrResolved": "このリクエストにはすでに返答されています",
+    "pendingErrNotYours": "このリクエストはこのTelegramアカウント宛てではありません"
   },
   "hints": {
     "collectionAmount": "必要な金額を入力してください。最低10単位です。システムが適切な人数に通知します。",
@@ -618,7 +633,11 @@
     "reject": "拒否",
     "accepted": "承認済み",
     "rejected": "拒否済み",
-    "alreadyConnected": "既に接続済み"
+    "alreadyConnected": "既に接続済み",
+    "errLimitSelf": "知り合いがすでに150人います。これが上限です。",
+    "errLimitOther": "この人の知り合いはすでに150人です。これ以上追加できません。",
+    "errRequesterGone": "この人はアカウントを削除しました。",
+    "errResolved": "このリクエストにはすでに返答されています。"
   },
   "cluster": {
     "title": "クラスター",
@@ -691,5 +710,22 @@
     "title": "This section is no longer available",
     "text": "The app now focuses on your acquaintances and their collections. Your earlier data is saved.",
     "back": "Go to home"
+  },
+  "acquaintance": {
+    "connectedTitle": "あなたと{{name}}さんは知り合いです",
+    "connectedText": "お二人とも確認しました。",
+    "firstHandshake": "{{name}}さんが最初のハンドシェイクになりました",
+    "firstHandshakeText": "ネットワークで募集と知り合いを見てみましょう。",
+    "openNetwork": "マイネットワークを開く",
+    "addPeopleHint": "直接知っている人を追加しましょう。",
+    "waitingBadge": "確認待ち",
+    "waitingTitle": "{{name}}",
+    "waitingText": "{{name}}さんがリクエストを受け取り、知り合いであることを確認します。それまでアプリをご利用いただけます。",
+    "declinedTitle": "{{name}}さん：知り合いとして未確認",
+    "deletedTitle": "{{name}}さん：アカウント削除済み",
+    "nextStepText": "直接知っている人を招待しましょう。リンクを送るか、会ったときにQRコードを見せてください。",
+    "inviteSomeone": "知り合いを招待",
+    "inviteGone": "あなたを招待した人はアカウントを削除しました。直接知っている人を招待しましょう。",
+    "continue": "続ける"
   }
 }

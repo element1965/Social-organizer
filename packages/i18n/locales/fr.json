@@ -220,7 +220,10 @@
     "qrScanHint": "Scannez pour rejoindre",
     "shareLinkButton": "Partager le lien de la collecte",
     "linkCopied": "Lien copié !",
-    "qrDownload": "Télécharger le QR code"
+    "qrDownload": "Télécharger le QR code",
+    "confirmPayment": "Confirmer le paiement",
+    "paymentConfirmed": "Payé",
+    "unconfirmPayment": "Annuler le paiement"
   },
   "create": {
     "title": "J'ai besoin",
@@ -282,7 +285,9 @@
     "growth30d": "30 derniers jours",
     "growthChartLabel": "Membres au cours des 30 derniers jours",
     "growthStart": "Il y a 30 jours",
-    "growthNow": "Maintenant"
+    "growthNow": "Maintenant",
+    "active": "active",
+    "notActive": "inactive"
   },
   "notifications": {
     "title": "Notifications",
@@ -539,7 +544,17 @@
     "renewalStartTitle": "Nouveau cycle commencé",
     "renewalStartBody": "{{name}}, un nouveau cycle de soutien régulier pour {{creator}} vient de commencer.",
     "yourContribution": "Votre contribution",
-    "period": "Période"
+    "period": "Période",
+    "pendingAcceptBtn": "Accepter",
+    "pendingRejectBtn": "Refuser",
+    "pendingRejectedNext": "Invitez une personne que vous connaissez personnellement. Ouvrez l'application.",
+    "pendingDoneAccepted": "Fait : vous vous connaissez",
+    "pendingDoneRejected": "Demande refusée",
+    "pendingErrLimitSelf": "Vous avez déjà 150 connaissances",
+    "pendingErrLimitOther": "Cette personne a déjà 150 connaissances",
+    "pendingErrGone": "Cette personne a supprimé son compte",
+    "pendingErrResolved": "Il a déjà été répondu à cette demande",
+    "pendingErrNotYours": "Cette demande n'est pas pour ce compte Telegram"
   },
   "hints": {
     "collectionAmount": "Entrez le montant dont vous avez besoin. Minimum 10 unités. Le système notifiera le bon nombre de personnes.",
@@ -618,7 +633,11 @@
     "reject": "Refuser",
     "accepted": "Acceptée",
     "rejected": "Refusée",
-    "alreadyConnected": "Déjà connecté"
+    "alreadyConnected": "Déjà connecté",
+    "errLimitSelf": "Vous avez déjà 150 connaissances, c'est le maximum.",
+    "errLimitOther": "Cette personne a déjà 150 connaissances, il n'est plus possible d'en ajouter.",
+    "errRequesterGone": "Cette personne a supprimé son compte.",
+    "errResolved": "Il a déjà été répondu à cette demande."
   },
   "cluster": {
     "title": "Clusters",
@@ -691,5 +710,22 @@
     "title": "Cette section n'est plus disponible",
     "text": "L'application se concentre désormais sur vos connaissances et leurs collectes. Vos données précédentes sont conservées.",
     "back": "Aller à l'accueil"
+  },
+  "acquaintance": {
+    "connectedTitle": "Vous et {{name}} vous connaissez",
+    "connectedText": "Vous l'avez tous les deux confirmé.",
+    "firstHandshake": "{{name}} est désormais votre première poignée de main",
+    "firstHandshakeText": "Consultez les collectes et les connaissances de votre réseau.",
+    "openNetwork": "Ouvrir mon réseau",
+    "addPeopleHint": "Ajoutez des personnes que vous connaissez personnellement.",
+    "waitingBadge": "En attente de confirmation",
+    "waitingTitle": "{{name}}",
+    "waitingText": "{{name}} recevra votre demande et confirmera que vous vous connaissez. En attendant, vous pouvez utiliser l'application.",
+    "declinedTitle": "{{name}} : connaissance non confirmée",
+    "deletedTitle": "{{name}} : compte supprimé",
+    "nextStepText": "Invitez une personne que vous connaissez personnellement : envoyez-lui votre lien ou montrez le QR code lors d'une rencontre.",
+    "inviteSomeone": "Inviter une connaissance",
+    "inviteGone": "La personne qui vous a invité a supprimé son compte. Invitez une personne que vous connaissez personnellement.",
+    "continue": "Continuer"
   }
 }

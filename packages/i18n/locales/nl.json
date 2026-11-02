@@ -220,7 +220,10 @@
     "qrScanHint": "Scan om mee te doen",
     "shareLinkButton": "Link naar inzameling delen",
     "linkCopied": "Link gekopieerd!",
-    "qrDownload": "QR-code downloaden"
+    "qrDownload": "QR-code downloaden",
+    "confirmPayment": "Betaling bevestigen",
+    "paymentConfirmed": "Betaald",
+    "unconfirmPayment": "Bevestiging intrekken"
   },
   "create": {
     "title": "Ik heb nodig",
@@ -282,7 +285,9 @@
     "growth30d": "Laatste 30 dagen",
     "growthChartLabel": "Leden in de afgelopen 30 dagen",
     "growthStart": "30 dagen geleden",
-    "growthNow": "Nu"
+    "growthNow": "Nu",
+    "active": "actief",
+    "notActive": "niet actief"
   },
   "notifications": {
     "title": "Meldingen",
@@ -597,7 +602,17 @@
     "renewalStartTitle": "New cycle started",
     "renewalStartBody": "{{name}}, a new support cycle for {{creator}} has just started.",
     "yourContribution": "Jouw bijdrage",
-    "period": "Periode"
+    "period": "Periode",
+    "pendingAcceptBtn": "Accepteren",
+    "pendingRejectBtn": "Afwijzen",
+    "pendingRejectedNext": "Nodig iemand uit die je persoonlijk kent. Open de app.",
+    "pendingDoneAccepted": "Klaar: jullie kennen elkaar",
+    "pendingDoneRejected": "Verzoek afgewezen",
+    "pendingErrLimitSelf": "Je hebt al 150 kennissen",
+    "pendingErrLimitOther": "Deze persoon heeft al 150 kennissen",
+    "pendingErrGone": "Deze persoon heeft het account verwijderd",
+    "pendingErrResolved": "Dit verzoek is al beantwoord",
+    "pendingErrNotYours": "Dit verzoek is niet voor dit Telegram-account"
   },
   "hints": {
     "collectionAmount": "Voer het bedrag in dat je nodig hebt. Minimaal 10 eenheden. Het systeem informeert het juiste aantal mensen.",
@@ -618,7 +633,11 @@
     "reject": "Afwijzen",
     "accepted": "Geaccepteerd",
     "rejected": "Afgewezen",
-    "alreadyConnected": "Al verbonden"
+    "alreadyConnected": "Al verbonden",
+    "errLimitSelf": "Je hebt al 150 kennissen. Dat is het maximum.",
+    "errLimitOther": "Deze persoon heeft al 150 kennissen. Er kunnen er geen meer bij.",
+    "errRequesterGone": "Deze persoon heeft het account verwijderd.",
+    "errResolved": "Dit verzoek is al beantwoord."
   },
   "cluster": {
     "title": "Clusters",
@@ -691,5 +710,22 @@
     "title": "This section is no longer available",
     "text": "The app now focuses on your acquaintances and their collections. Your earlier data is saved.",
     "back": "Go to home"
+  },
+  "acquaintance": {
+    "connectedTitle": "Jij en {{name}} kennen elkaar",
+    "connectedText": "Jullie hebben het allebei bevestigd.",
+    "firstHandshake": "{{name}} is nu je eerste handdruk",
+    "firstHandshakeText": "Bekijk inzamelingen en kennissen in je netwerk.",
+    "openNetwork": "Mijn netwerk openen",
+    "addPeopleHint": "Voeg mensen toe die je persoonlijk kent.",
+    "waitingBadge": "Wachten op bevestiging",
+    "waitingTitle": "{{name}}",
+    "waitingText": "{{name}} krijgt je verzoek en bevestigt dat jullie elkaar kennen. Ondertussen kun je de app gebruiken.",
+    "declinedTitle": "{{name}}: kennismaking niet bevestigd",
+    "deletedTitle": "{{name}}: account verwijderd",
+    "nextStepText": "Nodig iemand uit die je persoonlijk kent: stuur je link of toon de QR-code als jullie elkaar ontmoeten.",
+    "inviteSomeone": "Nodig een kennis uit",
+    "inviteGone": "Degene die je heeft uitgenodigd heeft het account verwijderd. Nodig iemand uit die je persoonlijk kent.",
+    "continue": "Doorgaan"
   }
 }

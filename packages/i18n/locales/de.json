@@ -220,7 +220,10 @@
     "qrScanHint": "Scannen, um beizutreten",
     "shareLinkButton": "Link zur Sammlung teilen",
     "linkCopied": "Link kopiert!",
-    "qrDownload": "QR-Code herunterladen"
+    "qrDownload": "QR-Code herunterladen",
+    "confirmPayment": "Zahlung bestätigen",
+    "paymentConfirmed": "Bezahlt",
+    "unconfirmPayment": "Als bezahlt zurücknehmen"
   },
   "create": {
     "title": "Ich brauche",
@@ -282,7 +285,9 @@
     "growth30d": "Letzte 30 Tage",
     "growthChartLabel": "Mitglieder in den letzten 30 Tagen",
     "growthStart": "Vor 30 Tagen",
-    "growthNow": "Jetzt"
+    "growthNow": "Jetzt",
+    "active": "aktiv",
+    "notActive": "nicht aktiv"
   },
   "notifications": {
     "title": "Benachrichtigungen",
@@ -539,7 +544,17 @@
     "renewalStartTitle": "Neuer Zyklus gestartet",
     "renewalStartBody": "{{name}}, ein neuer Zyklus regelmäßiger Unterstützung für {{creator}} hat begonnen.",
     "yourContribution": "Ihr Beitrag",
-    "period": "Zeitraum"
+    "period": "Zeitraum",
+    "pendingAcceptBtn": "Annehmen",
+    "pendingRejectBtn": "Ablehnen",
+    "pendingRejectedNext": "Laden Sie jemanden ein, den Sie persönlich kennen. Öffnen Sie die App.",
+    "pendingDoneAccepted": "Fertig: Sie kennen sich",
+    "pendingDoneRejected": "Anfrage abgelehnt",
+    "pendingErrLimitSelf": "Sie haben bereits 150 Bekannte",
+    "pendingErrLimitOther": "Diese Person hat bereits 150 Bekannte",
+    "pendingErrGone": "Diese Person hat das Konto gelöscht",
+    "pendingErrResolved": "Diese Anfrage wurde bereits beantwortet",
+    "pendingErrNotYours": "Diese Anfrage ist nicht für dieses Telegram-Konto"
   },
   "hints": {
     "collectionAmount": "Gib den Betrag ein, den du benötigst. Mindestens 10 Einheiten. Das System benachrichtigt die richtige Anzahl von Personen.",
@@ -618,7 +633,11 @@
     "reject": "Ablehnen",
     "accepted": "Angenommen",
     "rejected": "Abgelehnt",
-    "alreadyConnected": "Bereits verbunden"
+    "alreadyConnected": "Bereits verbunden",
+    "errLimitSelf": "Sie haben bereits 150 Bekannte, das ist das Maximum.",
+    "errLimitOther": "Diese Person hat bereits 150 Bekannte, es können keine weiteren hinzugefügt werden.",
+    "errRequesterGone": "Diese Person hat das Konto gelöscht.",
+    "errResolved": "Diese Anfrage wurde bereits beantwortet."
   },
   "cluster": {
     "title": "Cluster",
@@ -691,5 +710,22 @@
     "title": "Dieser Bereich ist nicht mehr verfügbar",
     "text": "Die App konzentriert sich jetzt auf Ihre Bekannten und deren Sammlungen. Ihre bisherigen Daten bleiben gespeichert.",
     "back": "Zur Startseite"
+  },
+  "acquaintance": {
+    "connectedTitle": "Sie und {{name}} kennen sich",
+    "connectedText": "Sie haben es beide bestätigt.",
+    "firstHandshake": "{{name}} ist jetzt Ihr erster Handschlag",
+    "firstHandshakeText": "Sehen Sie Sammlungen und Bekannte in Ihrem Netzwerk.",
+    "openNetwork": "Mein Netzwerk öffnen",
+    "addPeopleHint": "Fügen Sie Personen hinzu, die Sie persönlich kennen.",
+    "waitingBadge": "Warten auf Bestätigung",
+    "waitingTitle": "{{name}}",
+    "waitingText": "{{name}} erhält Ihre Anfrage und bestätigt, dass Sie sich kennen. Bis dahin können Sie die App nutzen.",
+    "declinedTitle": "{{name}}: Bekanntschaft nicht bestätigt",
+    "deletedTitle": "{{name}}: Konto gelöscht",
+    "nextStepText": "Laden Sie jemanden ein, den Sie persönlich kennen: Senden Sie Ihren Link oder zeigen Sie bei einem Treffen den QR-Code.",
+    "inviteSomeone": "Bekannten einladen",
+    "inviteGone": "Die Person, die Sie eingeladen hat, hat das Konto gelöscht. Laden Sie jemanden ein, den Sie persönlich kennen.",
+    "continue": "Weiter"
   }
 }

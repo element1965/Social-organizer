@@ -220,7 +220,10 @@
     "qrScanHint": "Адсканіруйце, каб далучыцца",
     "shareLinkButton": "Падзяліцца спасылкай на збор",
     "linkCopied": "Спасылка скапіравана!",
-    "qrDownload": "Спампаваць QR-код"
+    "qrDownload": "Спампаваць QR-код",
+    "confirmPayment": "Пацвердзіць пераказ",
+    "paymentConfirmed": "Пераказана",
+    "unconfirmPayment": "Зняць пацвярджэнне"
   },
   "create": {
     "title": "Патрэба",
@@ -282,7 +285,9 @@
     "growth30d": "За 30 дзён",
     "growthChartLabel": "Удзельнікі за апошнія 30 дзён",
     "growthStart": "30 дз. таму",
-    "growthNow": "Зараз"
+    "growthNow": "Зараз",
+    "active": "актыўная",
+    "notActive": "неактыўная"
   },
   "notifications": {
     "title": "Апавяшчэнні",
@@ -597,7 +602,17 @@
     "renewalStartTitle": "Пачаўся новы цыкл",
     "renewalStartBody": "{{name}}, толькі што пачаўся новы цыкл рэгулярнай падтрымкі {{creator}}.",
     "yourContribution": "Ваш унёсак",
-    "period": "Перыяд"
+    "period": "Перыяд",
+    "pendingAcceptBtn": "Прыняць",
+    "pendingRejectBtn": "Адхіліць",
+    "pendingRejectedNext": "Запрасі чалавека, якога ведаеш асабіста — адкрый праграму.",
+    "pendingDoneAccepted": "Гатова: вы знаёмыя",
+    "pendingDoneRejected": "Заяўку адхілена",
+    "pendingErrLimitSelf": "У цябе ўжо 150 знаёмых",
+    "pendingErrLimitOther": "У гэтага чалавека ўжо 150 знаёмых",
+    "pendingErrGone": "Гэты чалавек выдаліў акаўнт",
+    "pendingErrResolved": "На гэтую заяўку ўжо адказалі",
+    "pendingErrNotYours": "Гэтая заяўка не для гэтага акаўнта Telegram"
   },
   "hints": {
     "collectionAmount": "Укажыце суму, якая вам неабходна. Мінімум 10 адзінак. Сістэма апавясціць патрэбную колькасць людзей.",
@@ -618,7 +633,11 @@
     "reject": "Адхіліць",
     "accepted": "Прынята",
     "rejected": "Адхілена",
-    "alreadyConnected": "Вы ўжо падключаны"
+    "alreadyConnected": "Вы ўжо падключаны",
+    "errLimitSelf": "У цябе ўжо 150 знаёмых — гэта максімум.",
+    "errLimitOther": "У гэтага чалавека ўжо 150 знаёмых — больш дадаць нельга.",
+    "errRequesterGone": "Гэты чалавек выдаліў акаўнт.",
+    "errResolved": "На гэтую заяўку ўжо адказалі."
   },
   "requiredInfo": {
     "contactsTitle": "Укажыце кантакты",
@@ -691,5 +710,22 @@
     "title": "Гэты раздзел больш недаступны",
     "text": "Праграма цяпер пра вашых знаёмых і іх зборы. Вашы ранейшыя даныя захаваны.",
     "back": "На галоўную"
+  },
+  "acquaintance": {
+    "connectedTitle": "Ты і {{name}} знаёмыя",
+    "connectedText": "Сувязь пацвердзілі абодва.",
+    "firstHandshake": "Цяпер {{name}} — тваё першае рукапацісканне",
+    "firstHandshakeText": "Паглядзі зборы і знаёмых у сваёй сетцы.",
+    "openNetwork": "Адкрыць маю сетку",
+    "addPeopleHint": "Дадавай людзей, якіх ведаеш асабіста.",
+    "waitingBadge": "Чакаем пацвярджэння",
+    "waitingTitle": "{{name}}",
+    "waitingText": "{{name}} атрымае заяўку і пацвердзіць, што вы знаёмыя. Пакуль можна карыстацца праграмай.",
+    "declinedTitle": "{{name}}: знаёмства не пацверджана",
+    "deletedTitle": "{{name}}: акаўнт выдалены",
+    "nextStepText": "Запрасі чалавека, якога ведаеш асабіста: адправі яму сваю спасылку або пакажы QR пры сустрэчы.",
+    "inviteSomeone": "Запрасіць знаёмага",
+    "inviteGone": "Той, хто цябе запрасіў, выдаліў акаўнт. Запрасі чалавека, якога ведаеш асабіста.",
+    "continue": "Працягнуць"
   }
 }

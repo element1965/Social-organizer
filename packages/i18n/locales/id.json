@@ -220,7 +220,10 @@
     "qrScanHint": "Pindai untuk bergabung",
     "shareLinkButton": "Bagikan tautan penggalangan",
     "linkCopied": "Tautan disalin!",
-    "qrDownload": "Unduh kode QR"
+    "qrDownload": "Unduh kode QR",
+    "confirmPayment": "Konfirmasi pembayaran",
+    "paymentConfirmed": "Sudah dibayar",
+    "unconfirmPayment": "Batalkan tanda dibayar"
   },
   "create": {
     "title": "Butuh",
@@ -282,7 +285,9 @@
     "growth30d": "30 hari terakhir",
     "growthChartLabel": "Anggota selama 30 hari terakhir",
     "growthStart": "30 hari lalu",
-    "growthNow": "Sekarang"
+    "growthNow": "Sekarang",
+    "active": "aktif",
+    "notActive": "tidak aktif"
   },
   "notifications": {
     "title": "Notifikasi",
@@ -597,7 +602,17 @@
     "renewalStartTitle": "New cycle started",
     "renewalStartBody": "{{name}}, a new support cycle for {{creator}} has just started.",
     "yourContribution": "Kontribusi Anda",
-    "period": "Periode"
+    "period": "Periode",
+    "pendingAcceptBtn": "Terima",
+    "pendingRejectBtn": "Tolak",
+    "pendingRejectedNext": "Undang orang yang Anda kenal secara pribadi — buka aplikasi.",
+    "pendingDoneAccepted": "Selesai: kalian saling kenal",
+    "pendingDoneRejected": "Permintaan ditolak",
+    "pendingErrLimitSelf": "Anda sudah punya 150 kenalan",
+    "pendingErrLimitOther": "Orang ini sudah punya 150 kenalan",
+    "pendingErrGone": "Orang ini menghapus akunnya",
+    "pendingErrResolved": "Permintaan ini sudah dijawab",
+    "pendingErrNotYours": "Permintaan ini bukan untuk akun Telegram ini"
   },
   "hints": {
     "collectionAmount": "Masukkan jumlah yang kamu butuhkan. Minimum 10 unit. Sistem akan memberitahu jumlah orang yang tepat.",
@@ -618,7 +633,11 @@
     "reject": "Tolak",
     "accepted": "Diterima",
     "rejected": "Ditolak",
-    "alreadyConnected": "Sudah terhubung"
+    "alreadyConnected": "Sudah terhubung",
+    "errLimitSelf": "Anda sudah punya 150 kenalan, itu batas maksimum.",
+    "errLimitOther": "Orang ini sudah punya 150 kenalan, tidak bisa menambah lagi.",
+    "errRequesterGone": "Orang ini menghapus akunnya.",
+    "errResolved": "Permintaan ini sudah dijawab."
   },
   "cluster": {
     "title": "Kluster",
@@ -691,5 +710,22 @@
     "title": "This section is no longer available",
     "text": "The app now focuses on your acquaintances and their collections. Your earlier data is saved.",
     "back": "Go to home"
+  },
+  "acquaintance": {
+    "connectedTitle": "Anda dan {{name}} saling kenal",
+    "connectedText": "Kalian berdua sudah mengonfirmasinya.",
+    "firstHandshake": "{{name}} kini jabat tangan pertama Anda",
+    "firstHandshakeText": "Lihat penggalangan dan kenalan di jaringan Anda.",
+    "openNetwork": "Buka jaringan saya",
+    "addPeopleHint": "Tambahkan orang yang Anda kenal secara pribadi.",
+    "waitingBadge": "Menunggu konfirmasi",
+    "waitingTitle": "{{name}}",
+    "waitingText": "{{name}} akan menerima permintaan Anda dan mengonfirmasi bahwa kalian saling kenal. Sementara itu Anda bisa memakai aplikasi.",
+    "declinedTitle": "{{name}}: perkenalan belum dikonfirmasi",
+    "deletedTitle": "{{name}}: akun dihapus",
+    "nextStepText": "Undang orang yang Anda kenal secara pribadi: kirim tautan Anda atau tunjukkan kode QR saat bertemu.",
+    "inviteSomeone": "Undang kenalan",
+    "inviteGone": "Orang yang mengundang Anda menghapus akunnya. Undang orang yang Anda kenal secara pribadi.",
+    "continue": "Lanjutkan"
   }
 }

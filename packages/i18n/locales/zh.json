@@ -220,7 +220,10 @@
     "qrScanHint": "扫码加入",
     "shareLinkButton": "分享募集链接",
     "linkCopied": "链接已复制！",
-    "qrDownload": "下载二维码"
+    "qrDownload": "下载二维码",
+    "confirmPayment": "确认转账",
+    "paymentConfirmed": "已转账",
+    "unconfirmPayment": "取消已转账标记"
   },
   "create": {
     "title": "我需要",
@@ -282,7 +285,9 @@
     "growth30d": "近30天",
     "growthChartLabel": "过去30天的成员",
     "growthStart": "30天前",
-    "growthNow": "现在"
+    "growthNow": "现在",
+    "active": "进行中",
+    "notActive": "未进行"
   },
   "notifications": {
     "title": "通知",
@@ -539,7 +544,17 @@
     "renewalStartTitle": "新周期已开始",
     "renewalStartBody": "{{name}}，对 {{creator}} 的新一轮定期支持已经开始。",
     "yourContribution": "您的出资",
-    "period": "周期"
+    "period": "周期",
+    "pendingAcceptBtn": "接受",
+    "pendingRejectBtn": "拒绝",
+    "pendingRejectedNext": "邀请一位你亲自认识的人——打开应用。",
+    "pendingDoneAccepted": "完成：你们已互相认识",
+    "pendingDoneRejected": "请求已拒绝",
+    "pendingErrLimitSelf": "你已有150位熟人",
+    "pendingErrLimitOther": "对方已有150位熟人",
+    "pendingErrGone": "对方已删除账号",
+    "pendingErrResolved": "该请求已被回复",
+    "pendingErrNotYours": "该请求不是发给此 Telegram 账号的"
   },
   "hints": {
     "collectionAmount": "输入你需要的金额。最少10个单位。系统会通知适当数量的人。",
@@ -618,7 +633,11 @@
     "reject": "拒绝",
     "accepted": "已接受",
     "rejected": "已拒绝",
-    "alreadyConnected": "已连接"
+    "alreadyConnected": "已连接",
+    "errLimitSelf": "你已有150位熟人——这是上限。",
+    "errLimitOther": "对方已有150位熟人——无法再添加。",
+    "errRequesterGone": "对方已删除账号。",
+    "errResolved": "该请求已被回复。"
   },
   "cluster": {
     "title": "集群",
@@ -691,5 +710,22 @@
     "title": "This section is no longer available",
     "text": "The app now focuses on your acquaintances and their collections. Your earlier data is saved.",
     "back": "Go to home"
+  },
+  "acquaintance": {
+    "connectedTitle": "你和{{name}}互相认识",
+    "connectedText": "你们双方都已确认。",
+    "firstHandshake": "{{name}}成为你的第一个握手",
+    "firstHandshakeText": "在你的人脉中查看募集和熟人。",
+    "openNetwork": "打开我的人脉",
+    "addPeopleHint": "添加你亲自认识的人。",
+    "waitingBadge": "等待确认",
+    "waitingTitle": "{{name}}",
+    "waitingText": "{{name}}将收到你的请求并确认你们互相认识。在此期间你可以正常使用应用。",
+    "declinedTitle": "{{name}}：熟人关系未确认",
+    "deletedTitle": "{{name}}：账号已删除",
+    "nextStepText": "邀请一位你亲自认识的人：发送你的链接，或见面时出示二维码。",
+    "inviteSomeone": "邀请熟人",
+    "inviteGone": "邀请你的人已删除账号。请邀请一位你亲自认识的人。",
+    "continue": "继续"
   }
 }

@@ -220,7 +220,10 @@
     "qrScanHint": "Відскануйте, щоб приєднатися",
     "shareLinkButton": "Поділитися посиланням на збір",
     "linkCopied": "Посилання скопійовано!",
-    "qrDownload": "Завантажити QR-код"
+    "qrDownload": "Завантажити QR-код",
+    "confirmPayment": "Підтвердити переказ",
+    "paymentConfirmed": "Переказано",
+    "unconfirmPayment": "Зняти підтвердження"
   },
   "create": {
     "title": "Потрібно",
@@ -282,7 +285,9 @@
     "growth30d": "За 30 днів",
     "growthChartLabel": "Учасники за останні 30 днів",
     "growthStart": "30 дн. тому",
-    "growthNow": "Зараз"
+    "growthNow": "Зараз",
+    "active": "активна",
+    "notActive": "неактивна"
   },
   "notifications": {
     "title": "Сповіщення",

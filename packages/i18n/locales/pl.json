@@ -220,7 +220,10 @@
     "qrScanHint": "Zeskanuj, aby dołączyć",
     "shareLinkButton": "Udostępnij link do zbiórki",
     "linkCopied": "Link skopiowany!",
-    "qrDownload": "Pobierz kod QR"
+    "qrDownload": "Pobierz kod QR",
+    "confirmPayment": "Potwierdź wpłatę",
+    "paymentConfirmed": "Zapłacono",
+    "unconfirmPayment": "Cofnij potwierdzenie"
   },
   "create": {
     "title": "Potrzebuję",
@@ -282,7 +285,9 @@
     "growth30d": "Ostatnie 30 dni",
     "growthChartLabel": "Członkowie w ciągu ostatnich 30 dni",
     "growthStart": "30 dni temu",
-    "growthNow": "Teraz"
+    "growthNow": "Teraz",
+    "active": "aktywna",
+    "notActive": "nieaktywna"
   },
   "notifications": {
     "title": "Powiadomienia",
@@ -597,7 +602,17 @@
     "renewalStartTitle": "Rozpoczął się nowy cykl",
     "renewalStartBody": "{{name}}, właśnie rozpoczął się nowy cykl regularnego wsparcia dla {{creator}}.",
     "yourContribution": "Twoja wpłata",
-    "period": "Okres"
+    "period": "Okres",
+    "pendingAcceptBtn": "Przyjmij",
+    "pendingRejectBtn": "Odrzuć",
+    "pendingRejectedNext": "Zaproś kogoś, kogo znasz osobiście — otwórz aplikację.",
+    "pendingDoneAccepted": "Gotowe: znacie się",
+    "pendingDoneRejected": "Prośba odrzucona",
+    "pendingErrLimitSelf": "Masz już 150 znajomych",
+    "pendingErrLimitOther": "Ta osoba ma już 150 znajomych",
+    "pendingErrGone": "Ta osoba usunęła konto",
+    "pendingErrResolved": "Na tę prośbę już odpowiedziano",
+    "pendingErrNotYours": "Ta prośba nie jest dla tego konta Telegram"
   },
   "hints": {
     "collectionAmount": "Wprowadź potrzebną kwotę. Minimum 10 jednostek. System powiadomi odpowiednią liczbę osób.",
@@ -618,7 +633,11 @@
     "reject": "Odrzuć",
     "accepted": "Zaakceptowano",
     "rejected": "Odrzucono",
-    "alreadyConnected": "Już połączono"
+    "alreadyConnected": "Już połączono",
+    "errLimitSelf": "Masz już 150 znajomych — to maksimum.",
+    "errLimitOther": "Ta osoba ma już 150 znajomych — nie można dodać więcej.",
+    "errRequesterGone": "Ta osoba usunęła konto.",
+    "errResolved": "Na tę prośbę już odpowiedziano."
   },
   "cluster": {
     "title": "Klastry",
@@ -691,5 +710,22 @@
     "title": "Ta sekcja nie jest już dostępna",
     "text": "Aplikacja skupia się teraz na Twoich znajomych i ich zbiórkach. Twoje wcześniejsze dane są zachowane.",
     "back": "Na stronę główną"
+  },
+  "acquaintance": {
+    "connectedTitle": "Ty i {{name}} znacie się",
+    "connectedText": "Oboje to potwierdziliście.",
+    "firstHandshake": "{{name}} to teraz twój pierwszy uścisk dłoni",
+    "firstHandshakeText": "Zobacz zbiórki i znajomych w swojej sieci.",
+    "openNetwork": "Otwórz moją sieć",
+    "addPeopleHint": "Dodawaj osoby, które znasz osobiście.",
+    "waitingBadge": "Czekamy na potwierdzenie",
+    "waitingTitle": "{{name}}",
+    "waitingText": "{{name}} otrzyma twoją prośbę i potwierdzi, że się znacie. Na razie możesz korzystać z aplikacji.",
+    "declinedTitle": "{{name}}: znajomość niepotwierdzona",
+    "deletedTitle": "{{name}}: konto usunięte",
+    "nextStepText": "Zaproś kogoś, kogo znasz osobiście: wyślij mu swój link lub pokaż kod QR przy spotkaniu.",
+    "inviteSomeone": "Zaproś znajomego",
+    "inviteGone": "Osoba, która cię zaprosiła, usunęła konto. Zaproś kogoś, kogo znasz osobiście.",
+    "continue": "Dalej"
   }
 }

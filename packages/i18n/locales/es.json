@@ -220,7 +220,10 @@
     "qrScanHint": "Escanea para unirte",
     "shareLinkButton": "Compartir enlace de la colecta",
     "linkCopied": "¡Enlace copiado!",
-    "qrDownload": "Descargar código QR"
+    "qrDownload": "Descargar código QR",
+    "confirmPayment": "Confirmar pago",
+    "paymentConfirmed": "Pagado",
+    "unconfirmPayment": "Quitar como pagado"
   },
   "create": {
     "title": "Necesito",
@@ -282,7 +285,9 @@
     "growth30d": "Últimos 30 días",
     "growthChartLabel": "Miembros en los últimos 30 días",
     "growthStart": "Hace 30 días",
-    "growthNow": "Ahora"
+    "growthNow": "Ahora",
+    "active": "activa",
+    "notActive": "no activa"
   },
   "notifications": {
     "title": "Notificaciones",
@@ -539,7 +544,17 @@
     "renewalStartTitle": "Comenzó un nuevo ciclo",
     "renewalStartBody": "{{name}}, acaba de comenzar un nuevo ciclo de apoyo regular para {{creator}}.",
     "yourContribution": "Tu aportación",
-    "period": "Período"
+    "period": "Período",
+    "pendingAcceptBtn": "Aceptar",
+    "pendingRejectBtn": "Rechazar",
+    "pendingRejectedNext": "Invita a alguien que conozcas en persona. Abre la app.",
+    "pendingDoneAccepted": "Listo: ya se conocen",
+    "pendingDoneRejected": "Solicitud rechazada",
+    "pendingErrLimitSelf": "Ya tienes 150 conocidos",
+    "pendingErrLimitOther": "Esta persona ya tiene 150 conocidos",
+    "pendingErrGone": "Esta persona eliminó su cuenta",
+    "pendingErrResolved": "Esta solicitud ya fue respondida",
+    "pendingErrNotYours": "Esta solicitud no es para esta cuenta de Telegram"
   },
   "hints": {
     "collectionAmount": "Introduce el monto que necesitas. Mínimo 10 unidades. El sistema notificará al número adecuado de personas.",
@@ -618,7 +633,11 @@
     "reject": "Rechazar",
     "accepted": "Aceptada",
     "rejected": "Rechazada",
-    "alreadyConnected": "Ya conectado"
+    "alreadyConnected": "Ya conectado",
+    "errLimitSelf": "Ya tienes 150 conocidos, es el máximo.",
+    "errLimitOther": "Esta persona ya tiene 150 conocidos, no se pueden añadir más.",
+    "errRequesterGone": "Esta persona eliminó su cuenta.",
+    "errResolved": "Esta solicitud ya fue respondida."
   },
   "cluster": {
     "title": "Clusters",
@@ -691,5 +710,22 @@
     "title": "Esta sección ya no está disponible",
     "text": "La aplicación ahora se centra en tus conocidos y sus colectas. Tus datos anteriores se conservan.",
     "back": "Ir al inicio"
+  },
+  "acquaintance": {
+    "connectedTitle": "Tú y {{name}} se conocen",
+    "connectedText": "Ambos lo confirmaron.",
+    "firstHandshake": "{{name}} es ahora tu primer apretón de manos",
+    "firstHandshakeText": "Mira las colectas y los conocidos de tu red.",
+    "openNetwork": "Abrir mi red",
+    "addPeopleHint": "Añade personas que conozcas en persona.",
+    "waitingBadge": "Esperando confirmación",
+    "waitingTitle": "{{name}}",
+    "waitingText": "{{name}} recibirá tu solicitud y confirmará que se conocen. Mientras tanto, puedes usar la app.",
+    "declinedTitle": "{{name}}: conocido sin confirmar",
+    "deletedTitle": "{{name}}: cuenta eliminada",
+    "nextStepText": "Invita a alguien que conozcas en persona: envíale tu enlace o muestra el QR cuando se vean.",
+    "inviteSomeone": "Invitar a un conocido",
+    "inviteGone": "La persona que te invitó eliminó su cuenta. Invita a alguien que conozcas en persona.",
+    "continue": "Continuar"
   }
 }

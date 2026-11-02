@@ -220,7 +220,10 @@
     "qrScanHint": "Skannaa liittyäksesi",
     "shareLinkButton": "Jaa keräyksen linkki",
     "linkCopied": "Linkki kopioitu!",
-    "qrDownload": "Lataa QR-koodi"
+    "qrDownload": "Lataa QR-koodi",
+    "confirmPayment": "Vahvista maksu",
+    "paymentConfirmed": "Maksettu",
+    "unconfirmPayment": "Poista vahvistus"
   },
   "create": {
     "title": "Tarvitsen",
@@ -282,7 +285,9 @@
     "growth30d": "Viimeiset 30 päivää",
     "growthChartLabel": "Jäsenet viimeisten 30 päivän aikana",
     "growthStart": "30 päivää sitten",
-    "growthNow": "Nyt"
+    "growthNow": "Nyt",
+    "active": "aktiivinen",
+    "notActive": "ei aktiivinen"
   },
   "notifications": {
     "title": "Ilmoitukset",
@@ -597,7 +602,17 @@
     "renewalStartTitle": "New cycle started",
     "renewalStartBody": "{{name}}, a new support cycle for {{creator}} has just started.",
     "yourContribution": "Osuutesi",
-    "period": "Jakso"
+    "period": "Jakso",
+    "pendingAcceptBtn": "Hyväksy",
+    "pendingRejectBtn": "Hylkää",
+    "pendingRejectedNext": "Kutsu joku, jonka tunnet henkilökohtaisesti. Avaa sovellus.",
+    "pendingDoneAccepted": "Valmis: tunnette toisenne",
+    "pendingDoneRejected": "Pyyntö hylätty",
+    "pendingErrLimitSelf": "Sinulla on jo 150 tuttavaa",
+    "pendingErrLimitOther": "Tällä henkilöllä on jo 150 tuttavaa",
+    "pendingErrGone": "Tämä henkilö on poistanut tilinsä",
+    "pendingErrResolved": "Tähän pyyntöön on jo vastattu",
+    "pendingErrNotYours": "Tämä pyyntö ei ole tälle Telegram-tilille"
   },
   "hints": {
     "collectionAmount": "Syötä tarvitsemasi summa. Vähintään 10 yksikköä. Järjestelmä ilmoittaa oikealle määrälle ihmisiä.",
@@ -618,7 +633,11 @@
     "reject": "Hylkää",
     "accepted": "Hyväksytty",
     "rejected": "Hylätty",
-    "alreadyConnected": "Jo yhdistetty"
+    "alreadyConnected": "Jo yhdistetty",
+    "errLimitSelf": "Sinulla on jo 150 tuttavaa. Se on enimmäismäärä.",
+    "errLimitOther": "Tällä henkilöllä on jo 150 tuttavaa. Lisää ei voi enää lisätä.",
+    "errRequesterGone": "Tämä henkilö on poistanut tilinsä.",
+    "errResolved": "Tähän pyyntöön on jo vastattu."
   },
   "cluster": {
     "title": "Klusterit",
@@ -691,5 +710,22 @@
     "title": "This section is no longer available",
     "text": "The app now focuses on your acquaintances and their collections. Your earlier data is saved.",
     "back": "Go to home"
+  },
+  "acquaintance": {
+    "connectedTitle": "Sinä ja {{name}} tunnette toisenne",
+    "connectedText": "Molemmat vahvistitte sen.",
+    "firstHandshake": "{{name}} on nyt ensimmäinen kättelysi",
+    "firstHandshakeText": "Katso keräykset ja tuttavat verkostossasi.",
+    "openNetwork": "Avaa oma verkostoni",
+    "addPeopleHint": "Lisää ihmisiä, jotka tunnet henkilökohtaisesti.",
+    "waitingBadge": "Odottaa vahvistusta",
+    "waitingTitle": "{{name}}",
+    "waitingText": "{{name}} saa pyyntösi ja vahvistaa, että tunnette toisenne. Sillä välin voit käyttää sovellusta.",
+    "declinedTitle": "{{name}}: tuttavuutta ei vahvistettu",
+    "deletedTitle": "{{name}}: tili poistettu",
+    "nextStepText": "Kutsu joku, jonka tunnet henkilökohtaisesti: lähetä oma linkkisi tai näytä QR-koodi, kun tapaatte.",
+    "inviteSomeone": "Kutsu tuttava",
+    "inviteGone": "Sinut kutsunut henkilö on poistanut tilinsä. Kutsu joku, jonka tunnet henkilökohtaisesti.",
+    "continue": "Jatka"
   }
 }

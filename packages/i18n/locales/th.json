@@ -220,7 +220,10 @@
     "qrScanHint": "สแกนเพื่อเข้าร่วม",
     "shareLinkButton": "แชร์ลิงก์การระดมทุน",
     "linkCopied": "คัดลอกลิงก์แล้ว!",
-    "qrDownload": "ดาวน์โหลดคิวอาร์โค้ด"
+    "qrDownload": "ดาวน์โหลดคิวอาร์โค้ด",
+    "confirmPayment": "ยืนยันการโอน",
+    "paymentConfirmed": "โอนแล้ว",
+    "unconfirmPayment": "ยกเลิกการยืนยันโอน"
   },
   "create": {
     "title": "ต้องการ",
@@ -282,7 +285,9 @@
     "growth30d": "30 วันที่ผ่านมา",
     "growthChartLabel": "สมาชิกใน 30 วันที่ผ่านมา",
     "growthStart": "30 วันที่แล้ว",
-    "growthNow": "ตอนนี้"
+    "growthNow": "ตอนนี้",
+    "active": "ใช้งานอยู่",
+    "notActive": "ไม่ได้ใช้งาน"
   },
   "notifications": {
     "title": "การแจ้งเตือน",
@@ -597,7 +602,17 @@
     "renewalStartTitle": "New cycle started",
     "renewalStartBody": "{{name}}, a new support cycle for {{creator}} has just started.",
     "yourContribution": "ยอดสมทบของคุณ",
-    "period": "ช่วงเวลา"
+    "period": "ช่วงเวลา",
+    "pendingAcceptBtn": "ยอมรับ",
+    "pendingRejectBtn": "ปฏิเสธ",
+    "pendingRejectedNext": "เชิญคนที่คุณรู้จักด้วยตัวเอง — เปิดแอป",
+    "pendingDoneAccepted": "เรียบร้อย: คุณรู้จักกันแล้ว",
+    "pendingDoneRejected": "ปฏิเสธคำขอแล้ว",
+    "pendingErrLimitSelf": "คุณมีคนรู้จักครบ 150 คนแล้ว",
+    "pendingErrLimitOther": "คนนี้มีคนรู้จักครบ 150 คนแล้ว",
+    "pendingErrGone": "คนนี้ลบบัญชีแล้ว",
+    "pendingErrResolved": "คำขอนี้มีการตอบแล้ว",
+    "pendingErrNotYours": "คำขอนี้ไม่ใช่สำหรับบัญชี Telegram นี้"
   },
   "hints": {
     "collectionAmount": "กรอกจำนวนที่คุณต้องการ ขั้นต่ำ 10 หน่วย ระบบจะแจ้งเตือนคนจำนวนที่เหมาะสม",
@@ -618,7 +633,11 @@
     "reject": "ปฏิเสธ",
     "accepted": "ยอมรับแล้ว",
     "rejected": "ปฏิเสธแล้ว",
-    "alreadyConnected": "เชื่อมต่อแล้ว"
+    "alreadyConnected": "เชื่อมต่อแล้ว",
+    "errLimitSelf": "คุณมีคนรู้จักครบ 150 คนแล้ว — เป็นจำนวนสูงสุด",
+    "errLimitOther": "คนนี้มีคนรู้จักครบ 150 คนแล้ว — เพิ่มไม่ได้อีก",
+    "errRequesterGone": "คนนี้ลบบัญชีแล้ว",
+    "errResolved": "คำขอนี้มีการตอบแล้ว"
   },
   "cluster": {
     "title": "คลัสเตอร์",
@@ -691,5 +710,22 @@
     "title": "This section is no longer available",
     "text": "The app now focuses on your acquaintances and their collections. Your earlier data is saved.",
     "back": "Go to home"
+  },
+  "acquaintance": {
+    "connectedTitle": "คุณและ {{name}} รู้จักกัน",
+    "connectedText": "ทั้งสองฝ่ายยืนยันแล้ว",
+    "firstHandshake": "{{name}} เป็นการจับมือครั้งแรกของคุณแล้ว",
+    "firstHandshakeText": "ดูการระดมและคนรู้จักในเครือข่ายของคุณ",
+    "openNetwork": "เปิดเครือข่ายของฉัน",
+    "addPeopleHint": "เพิ่มคนที่คุณรู้จักด้วยตัวเอง",
+    "waitingBadge": "รอการยืนยัน",
+    "waitingTitle": "{{name}}",
+    "waitingText": "{{name}} จะได้รับคำขอและยืนยันว่าคุณรู้จักกัน ระหว่างนี้คุณใช้แอปได้ตามปกติ",
+    "declinedTitle": "{{name}}: ยังไม่ยืนยันว่ารู้จักกัน",
+    "deletedTitle": "{{name}}: ลบบัญชีแล้ว",
+    "nextStepText": "เชิญคนที่คุณรู้จักด้วยตัวเอง: ส่งลิงก์ของคุณหรือแสดง QR เมื่อพบกัน",
+    "inviteSomeone": "เชิญคนรู้จัก",
+    "inviteGone": "คนที่เชิญคุณลบบัญชีแล้ว เชิญคนที่คุณรู้จักด้วยตัวเอง",
+    "continue": "ต่อไป"
   }
 }

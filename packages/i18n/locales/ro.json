@@ -220,7 +220,10 @@
     "qrScanHint": "Scanează pentru a te alătura",
     "shareLinkButton": "Distribuie linkul colectei",
     "linkCopied": "Link copiat!",
-    "qrDownload": "Descarcă codul QR"
+    "qrDownload": "Descarcă codul QR",
+    "confirmPayment": "Confirmă plata",
+    "paymentConfirmed": "Plătit",
+    "unconfirmPayment": "Anulează confirmarea"
   },
   "create": {
     "title": "Am nevoie",
@@ -282,7 +285,9 @@
     "growth30d": "Ultimele 30 de zile",
     "growthChartLabel": "Membri în ultimele 30 de zile",
     "growthStart": "Acum 30 de zile",
-    "growthNow": "Acum"
+    "growthNow": "Acum",
+    "active": "activă",
+    "notActive": "inactivă"
   },
   "notifications": {
     "title": "Notificari",
@@ -597,7 +602,17 @@
     "renewalStartTitle": "New cycle started",
     "renewalStartBody": "{{name}}, a new support cycle for {{creator}} has just started.",
     "yourContribution": "Contribuția ta",
-    "period": "Perioada"
+    "period": "Perioada",
+    "pendingAcceptBtn": "Acceptă",
+    "pendingRejectBtn": "Respinge",
+    "pendingRejectedNext": "Invită pe cineva pe care îl cunoști personal — deschide aplicația.",
+    "pendingDoneAccepted": "Gata: vă cunoașteți",
+    "pendingDoneRejected": "Cererea a fost respinsă",
+    "pendingErrLimitSelf": "Ai deja 150 de cunoscuți",
+    "pendingErrLimitOther": "Această persoană are deja 150 de cunoscuți",
+    "pendingErrGone": "Această persoană și-a șters contul",
+    "pendingErrResolved": "La această cerere s-a răspuns deja",
+    "pendingErrNotYours": "Această cerere nu este pentru acest cont Telegram"
   },
   "hints": {
     "collectionAmount": "Introdu suma de care ai nevoie. Minimum 10 unitati. Sistemul va notifica numarul potrivit de persoane.",
@@ -618,7 +633,11 @@
     "reject": "Respinge",
     "accepted": "Acceptată",
     "rejected": "Respinsă",
-    "alreadyConnected": "Deja conectat"
+    "alreadyConnected": "Deja conectat",
+    "errLimitSelf": "Ai deja 150 de cunoscuți — este maximul.",
+    "errLimitOther": "Această persoană are deja 150 de cunoscuți — nu se mai pot adăuga.",
+    "errRequesterGone": "Această persoană și-a șters contul.",
+    "errResolved": "La această cerere s-a răspuns deja."
   },
   "cluster": {
     "title": "Clustere",
@@ -691,5 +710,22 @@
     "title": "This section is no longer available",
     "text": "The app now focuses on your acquaintances and their collections. Your earlier data is saved.",
     "back": "Go to home"
+  },
+  "acquaintance": {
+    "connectedTitle": "Tu și {{name}} vă cunoașteți",
+    "connectedText": "Ați confirmat amândoi.",
+    "firstHandshake": "{{name}} este acum prima ta strângere de mână",
+    "firstHandshakeText": "Vezi colectele și cunoscuții din rețeaua ta.",
+    "openNetwork": "Deschide rețeaua mea",
+    "addPeopleHint": "Adaugă oameni pe care îi cunoști personal.",
+    "waitingBadge": "Așteptăm confirmarea",
+    "waitingTitle": "{{name}}",
+    "waitingText": "{{name}} va primi cererea ta și va confirma că vă cunoașteți. Între timp poți folosi aplicația.",
+    "declinedTitle": "{{name}}: cunoștința nu a fost confirmată",
+    "deletedTitle": "{{name}}: cont șters",
+    "nextStepText": "Invită pe cineva pe care îl cunoști personal: trimite-i linkul tău sau arată-i codul QR când vă întâlniți.",
+    "inviteSomeone": "Invită un cunoscut",
+    "inviteGone": "Cel care te-a invitat și-a șters contul. Invită pe cineva pe care îl cunoști personal.",
+    "continue": "Continuă"
   }
 }
