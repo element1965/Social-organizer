@@ -4,6 +4,7 @@ import { router, publicProcedure, protectedProcedure } from '../trpc.js';
 import { TRPCError } from '@trpc/server';
 import { sendPendingNotification } from '../services/notification.service.js';
 import { scanMatchesForUser } from '../services/match-notification.service.js';
+import { respondToConnectionRequest } from '../services/connection-request.service.js';
 import { sendTelegramMessage, type TgReplyMarkup } from '../services/telegram-bot.service.js';
 import { translateWithCache } from '../services/translate.service.js';
 
@@ -29,16 +30,21 @@ export const inviteRouter = router({
       let inviterId: string;
 
       if (invite) {
-        if (invite.usedById) throw new TRPCError({ code: 'BAD_REQUEST', message: 'Invite already used' });
+        // The same person opening their link again (another device, a repeat after login) is not an error
+        if (invite.usedById && invite.usedById !== ctx.userId) {
+          throw new TRPCError({ code: 'BAD_REQUEST', message: 'Invite already used' });
+        }
         if (invite.inviterId === ctx.userId) {
           throw new TRPCError({ code: 'BAD_REQUEST', message: 'Cannot accept own invite' });
         }
         inviterId = invite.inviterId;
 
-        await ctx.db.inviteLink.update({
-          where: { id: invite.id },
-          data: { usedById: ctx.userId, usedAt: new Date() },
-        });
+        if (!invite.usedById) {
+          await ctx.db.inviteLink.updateMany({
+            where: { id: invite.id, usedById: null },
+            data: { usedById: ctx.userId, usedAt: new Date() },
+          });
+        }
       } else {
         // Try as permanent link (token = userId), then by referralSlug
         let user = await ctx.db.user.findUnique({ where: { id: input.token } });
@@ -50,6 +56,12 @@ export const inviteRouter = router({
           throw new TRPCError({ code: 'BAD_REQUEST', message: 'Cannot connect to yourself' });
         }
         inviterId = user.id;
+      }
+
+      // A deleted inviter can never answer — tell the newcomer instead of creating a dead request
+      const inviter = await ctx.db.user.findUnique({ where: { id: inviterId }, select: { deletedAt: true } });
+      if (!inviter || inviter.deletedAt) {
+        throw new TRPCError({ code: 'NOT_FOUND', message: 'INVITER_DELETED' });
       }
 
       // Check if already connected
@@ -74,20 +86,8 @@ export const inviteRouter = router({
 
       // If reverse pending exists (inviter already sent request to me) — auto-connect
       if (existingPending && existingPending.fromUserId === inviterId) {
-        await ctx.db.pendingConnection.update({
-          where: { id: existingPending.id },
-          data: { status: 'ACCEPTED', resolvedAt: new Date() },
-        });
-        await ctx.db.connection.upsert({
-          where: { userAId_userBId: { userAId: [ctx.userId, inviterId].sort()[0]!, userBId: [ctx.userId, inviterId].sort()[1]! } },
-          create: { userAId: [ctx.userId, inviterId].sort()[0]!, userBId: [ctx.userId, inviterId].sort()[1]! },
-          update: {},
-        });
+        await respondToConnectionRequest(ctx.db, existingPending.id, ctx.userId, 'accept');
         console.log('[invite.accept] auto-connected (reverse pending):', ctx.userId, '<->', inviterId);
-        const applicant = await ctx.db.user.findUnique({ where: { id: ctx.userId }, select: { name: true } });
-        sendPendingNotification(ctx.db, inviterId, 'accepted', applicant?.name || '').catch(() => {});
-        scanMatchesForUser(ctx.db, ctx.userId).catch(() => {});
-        scanMatchesForUser(ctx.db, inviterId).catch(() => {});
         return { success: true, alreadyConnected: true, connectedWith: inviterId };
       }
 
@@ -96,7 +96,7 @@ export const inviteRouter = router({
       }
 
       // Create pending connection (fromUser = person clicking link, toUser = link owner)
-      await ctx.db.pendingConnection.upsert({
+      const created = await ctx.db.pendingConnection.upsert({
         where: { fromUserId_toUserId: { fromUserId: ctx.userId, toUserId: inviterId } },
         create: { fromUserId: ctx.userId, toUserId: inviterId },
         update: { status: 'PENDING', resolvedAt: null },
@@ -109,7 +109,7 @@ export const inviteRouter = router({
         where: { id: ctx.userId },
         select: { name: true, onboardingCompleted: true, language: true, platformAccounts: { where: { platform: 'TELEGRAM' }, select: { platformId: true } } },
       });
-      sendPendingNotification(ctx.db, inviterId, 'new', applicant?.name || '').catch(() => {});
+      sendPendingNotification(ctx.db, inviterId, 'new', applicant?.name || '', undefined, created.id).catch(() => {});
 
       // Immediate CTA: if user hasn't completed onboarding, send TG message (fire-and-forget)
       if (applicant && !applicant.onboardingCompleted) {
@@ -228,9 +228,10 @@ export const inviteRouter = router({
       // Try single-use invite first
       const invite = await ctx.db.inviteLink.findUnique({
         where: { token: input.token },
-        include: { inviter: { select: { id: true, name: true, photoUrl: true } } },
+        include: { inviter: { select: { id: true, name: true, photoUrl: true, deletedAt: true } } },
       });
       if (invite) {
+        if (invite.inviter.deletedAt) throw new TRPCError({ code: 'NOT_FOUND', message: 'INVITER_DELETED' });
         const stats = await getInviterStats(invite.inviterId);
         return { ...invite, ...stats };
       }
@@ -238,14 +239,15 @@ export const inviteRouter = router({
       // Try as permanent link (token = userId), then by referralSlug
       let user = await ctx.db.user.findUnique({
         where: { id: input.token },
-        select: { id: true, name: true, photoUrl: true },
+        select: { id: true, name: true, photoUrl: true, deletedAt: true },
       });
       if (!user) {
         user = await ctx.db.user.findUnique({
           where: { referralSlug: input.token.toLowerCase() },
-          select: { id: true, name: true, photoUrl: true },
+          select: { id: true, name: true, photoUrl: true, deletedAt: true },
         });
       }
+      if (user?.deletedAt) throw new TRPCError({ code: 'NOT_FOUND', message: 'INVITER_DELETED' });
       if (user) {
         const stats = await getInviterStats(user.id);
         return {
@@ -255,7 +257,7 @@ export const inviteRouter = router({
           usedById: null,
           usedAt: null,
           createdAt: new Date(),
-          inviter: user,
+          inviter: { id: user.id, name: user.name, photoUrl: user.photoUrl },
           ...stats,
         };
       }

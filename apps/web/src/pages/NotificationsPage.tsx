@@ -106,11 +106,29 @@ export function NotificationsPage() {
   // Pending connections
   const { data: pendingIncoming } = trpc.pending.incoming.useQuery(undefined, { refetchInterval: 15000 });
   const { data: myPending } = trpc.pending.myPending.useQuery(undefined, { refetchInterval: 30000 });
+  const [pendingError, setPendingError] = useState<string | null>(null);
+  const refreshPending = () => {
+    utils.pending.incoming.invalidate();
+    utils.pending.incomingCount.invalidate();
+    utils.connection.getNetworkStats.invalidate();
+  };
+  // Server error codes from connection-request.service → a clear next step
+  const pendingErrorText = (code?: string) => {
+    if (code === 'CONNECTION_LIMIT_SELF') return t('pending.errLimitSelf');
+    if (code === 'CONNECTION_LIMIT_OTHER') return t('pending.errLimitOther');
+    if (code === 'REQUESTER_DELETED') return t('pending.errRequesterGone');
+    if (code === 'REQUEST_ALREADY_RESOLVED') return t('pending.errResolved');
+    return t('common.error');
+  };
   const acceptPending = trpc.pending.accept.useMutation({
-    onSuccess: () => { utils.pending.incoming.invalidate(); utils.pending.incomingCount.invalidate(); utils.connection.getNetworkStats.invalidate(); },
+    onMutate: () => setPendingError(null),
+    onSuccess: refreshPending,
+    onError: (err) => { setPendingError(pendingErrorText(err.message)); refreshPending(); },
   });
   const rejectPending = trpc.pending.reject.useMutation({
-    onSuccess: () => { utils.pending.incoming.invalidate(); utils.pending.incomingCount.invalidate(); },
+    onMutate: () => setPendingError(null),
+    onSuccess: refreshPending,
+    onError: (err) => { setPendingError(pendingErrorText(err.message)); refreshPending(); },
   });
 
   const notifications: any[] = data?.pages.flatMap((p: any) => p.items) ?? [];
@@ -382,6 +400,9 @@ export function NotificationsPage() {
             {!pendingIncomingCollapsed && (
               <>
                 <p className="text-xs text-gray-500 dark:text-gray-300 mt-2 mb-2">{t('pending.meetInPerson')}</p>
+                {pendingError && (
+                  <p role="alert" className="text-sm text-red-600 dark:text-red-400 mb-2">{pendingError}</p>
+                )}
                 <div className="space-y-2">
                   {pendingIncoming.map((p) => (
                     <div key={p.id} className="flex items-center gap-2 p-2 rounded bg-white/50 dark:bg-gray-900/50">

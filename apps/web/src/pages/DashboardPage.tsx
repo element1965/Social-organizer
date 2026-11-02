@@ -1,4 +1,5 @@
 import { lazy, Suspense, useState, useEffect } from 'react';
+import { AcquaintanceCard } from '../components/AcquaintanceCard';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { trpc } from '../lib/trpc';
@@ -34,6 +35,8 @@ export function DashboardPage() {
   const { data: networkStats, isLoading: networkLoading } = useCachedNetworkStats();
   const { data: networkCapabilities } = trpc.stats.networkCapabilities.useQuery(undefined, { refetchInterval: 60000 });
   const { data: adminData } = trpc.faq.isAdmin.useQuery();
+  const { data: intro } = trpc.pending.introStatus.useQuery(undefined, { refetchInterval: 15000 });
+  const introState = intro?.state;
 
 
   const totalReachable = networkStats?.totalReachable ?? 0;
@@ -89,8 +92,12 @@ export function DashboardPage() {
         </div>
       </div>
 
-      {/* Gate: need at least 1 connection (only show after data loaded) */}
-      {!networkLoading && networkStats && Object.values(byDepth).reduce((a, b) => a + (b as number), 0) === 0 && (
+      {/* First acquaintance: who invited me and the exact request state */}
+      <AcquaintanceCard onInvite={() => setGateShareOpen(true)} />
+
+      {/* Gate: need at least 1 connection — personal link / QR when there is no invite in progress */}
+      {!networkLoading && networkStats && introState !== 'waiting' && introState !== 'declined' && introState !== 'personDeleted'
+        && Object.values(byDepth).reduce((a, b) => a + (b as number), 0) === 0 && (
         <Card>
           <CardContent className="py-8 text-center">
             <UserPlus className="w-12 h-12 text-blue-600 mx-auto mb-4" />
