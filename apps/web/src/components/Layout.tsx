@@ -1,12 +1,10 @@
 import { useEffect, useState } from 'react';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import i18n from 'i18next';
 import { Home, Bell, Users, Settings, HelpCircle } from 'lucide-react';
 import { trpc } from '../lib/trpc';
 import { cn } from '../lib/utils';
 import { ChatAssistant } from './ChatAssistant';
-// import { SkillsPopup } from './SkillsPopup'; // temporarily hidden
 import { useGraphSync } from '../hooks/useGraphSync';
 import { isTelegramWebApp, getTGThemeParams, onThemeChanged } from '@so/tg-adapter';
 import { useTelegramHaptics } from '../hooks/useTelegram';
@@ -48,24 +46,6 @@ export function Layout() {
   // Sync network graph to local Gun.js / IndexedDB backup
   useGraphSync();
 
-  // Load skill translations from DB (single source of truth for all categories)
-  const { data: skillCategoriesRaw } = trpc.skills.categories.useQuery(undefined, { staleTime: 60000 });
-  useEffect(() => {
-    if (!skillCategoriesRaw) return;
-    const skillCategories = skillCategoriesRaw as Array<{ key: string; translations: unknown }>;
-    let added = false;
-    for (const cat of skillCategories) {
-      const tr = cat.translations as Record<string, string> | null;
-      if (!tr) continue;
-      for (const [lang, text] of Object.entries(tr)) {
-        if (text) {
-          i18n.addResource(lang, 'translation', `skills.${cat.key}`, text);
-          added = true;
-        }
-      }
-    }
-    if (added) i18n.emit('languageChanged', i18n.language);
-  }, [skillCategoriesRaw]);
 
   // Hide bottom nav when chat panel is open
   const [chatPanelOpen, setChatPanelOpen] = useState(false);
@@ -98,7 +78,6 @@ export function Layout() {
 
       {/* AI Chat Assistant */}
       <ChatAssistant />
-      {/* <SkillsPopup /> temporarily hidden */}
 
       <nav className={cn("fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 flex justify-around items-center z-50", chatPanelOpen && "hidden")} style={{ height: 'calc(4rem + var(--sa-bottom))', paddingBottom: 'var(--sa-bottom)' }}>
         {navItems.map((item) => {

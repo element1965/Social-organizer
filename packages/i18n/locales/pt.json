@@ -1029,5 +1029,10 @@
     "close": "Fechar",
     "inviteLinkTitle": "Recebeu um link? O que fazer",
     "appStartTitle": "Primeiros passos no aplicativo"
+  },
+  "retired": {
+    "title": "Esta seção não está mais disponível",
+    "text": "O app agora é focado nos seus conhecidos e nas suas arrecadações. Seus dados anteriores estão salvos.",
+    "back": "Ir para o início"
   }
 }

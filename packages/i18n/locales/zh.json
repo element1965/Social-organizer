@@ -1029,5 +1029,10 @@
     "close": "关闭",
     "inviteLinkTitle": "收到链接？接下来怎么做",
     "appStartTitle": "应用入门第一步"
+  },
+  "retired": {
+    "title": "This section is no longer available",
+    "text": "The app now focuses on your acquaintances and their collections. Your earlier data is saved.",
+    "back": "Go to home"
   }
 }

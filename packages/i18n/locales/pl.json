@@ -1029,5 +1029,10 @@
     "close": "Zamknij",
     "inviteLinkTitle": "Dostałeś link? Co dalej",
     "appStartTitle": "Pierwsze kroki w aplikacji"
+  },
+  "retired": {
+    "title": "Ta sekcja nie jest już dostępna",
+    "text": "Aplikacja skupia się teraz na Twoich znajomych i ich zbiórkach. Twoje wcześniejsze dane są zachowane.",
+    "back": "Na stronę główną"
   }
 }

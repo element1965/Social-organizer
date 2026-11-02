@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { router, protectedProcedure } from '../trpc.js';
+import { router, skillsProcedure } from '../trpc.js';
 import { isAdmin } from '../admin.js';
 import { createSkillMatchNotifications, createNeedMatchNotifications } from '../services/match-notification.service.js';
 import { findAndStoreChains } from '../services/chain-finder.service.js';
@@ -119,13 +119,13 @@ async function autoSuggestOther(
 }
 
 export const skillsRouter = router({
-  categories: protectedProcedure.query(async ({ ctx }) => {
+  categories: skillsProcedure.query(async ({ ctx }) => {
     return ctx.db.skillCategory.findMany({
       orderBy: [{ group: 'asc' }, { sortOrder: 'asc' }],
     });
   }),
 
-  mine: protectedProcedure.query(async ({ ctx }) => {
+  mine: skillsProcedure.query(async ({ ctx }) => {
     const [skills, needs, user] = await Promise.all([
       ctx.db.userSkill.findMany({
         where: { userId: ctx.userId },
@@ -143,7 +143,7 @@ export const skillsRouter = router({
     return { skills, needs, skillsCompleted: user?.skillsCompleted ?? false };
   }),
 
-  forUser: protectedProcedure
+  forUser: skillsProcedure
     .input(z.object({ userId: z.string() }))
     .query(async ({ ctx, input }) => {
       const [skills, needs] = await Promise.all([
@@ -159,7 +159,7 @@ export const skillsRouter = router({
       return { skills, needs };
     }),
 
-  saveSkills: protectedProcedure
+  saveSkills: skillsProcedure
     .input(z.object({
       skills: z.array(z.object({
         categoryId: z.string(),
@@ -210,7 +210,7 @@ export const skillsRouter = router({
       return { success: true };
     }),
 
-  saveNeeds: protectedProcedure
+  saveNeeds: skillsProcedure
     .input(z.object({
       needs: z.array(z.object({
         categoryId: z.string(),
@@ -261,7 +261,7 @@ export const skillsRouter = router({
       return { success: true };
     }),
 
-  markCompleted: protectedProcedure.mutation(async ({ ctx }) => {
+  markCompleted: skillsProcedure.mutation(async ({ ctx }) => {
     await ctx.db.user.update({
       where: { id: ctx.userId },
       data: { skillsCompleted: true },
@@ -269,7 +269,7 @@ export const skillsRouter = router({
     return { success: true };
   }),
 
-  adminStats: protectedProcedure.query(async ({ ctx }) => {
+  adminStats: skillsProcedure.query(async ({ ctx }) => {
     if (!isAdmin(ctx.userId)) return null;
 
     const [
@@ -396,7 +396,7 @@ export const skillsRouter = router({
     };
   }),
 
-  matchHints: protectedProcedure.query(async ({ ctx }) => {
+  matchHints: skillsProcedure.query(async ({ ctx }) => {
     const needs = await ctx.db.userNeed.findMany({
       where: { userId: ctx.userId },
     });
@@ -424,7 +424,7 @@ export const skillsRouter = router({
 
   // ---- Suggested categories (admin moderation) ----
 
-  listSuggestions: protectedProcedure.query(async ({ ctx }) => {
+  listSuggestions: skillsProcedure.query(async ({ ctx }) => {
     if (!isAdmin(ctx.userId)) return [];
     return ctx.db.suggestedCategory.findMany({
       where: { status: 'PENDING' },
@@ -433,7 +433,7 @@ export const skillsRouter = router({
     });
   }),
 
-  updateSuggestion: protectedProcedure
+  updateSuggestion: skillsProcedure
     .input(z.object({
       id: z.string(),
       text: z.string().min(1).max(200).optional(),
@@ -450,7 +450,7 @@ export const skillsRouter = router({
       });
     }),
 
-  approveSuggestion: protectedProcedure
+  approveSuggestion: skillsProcedure
     .input(z.object({ id: z.string() }))
     .mutation(async ({ ctx, input }) => {
       if (!isAdmin(ctx.userId)) return null;
@@ -583,7 +583,7 @@ export const skillsRouter = router({
       return category;
     }),
 
-  rejectSuggestion: protectedProcedure
+  rejectSuggestion: skillsProcedure
     .input(z.object({ id: z.string() }))
     .mutation(async ({ ctx, input }) => {
       if (!isAdmin(ctx.userId)) return null;

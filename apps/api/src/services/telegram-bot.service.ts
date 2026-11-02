@@ -1,6 +1,7 @@
 import { createHash } from 'node:crypto';
 import { getDb } from '@so/db';
 import { translateWithCache } from './translate.service.js';
+import { isRetiredChainMessage } from './mvp-scope.js';
 
 const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN || '';
 const WEB_APP_URL = process.env.WEB_APP_URL || 'https://www.orginizer.com';
@@ -698,6 +699,7 @@ export async function sendNextChainMessage(chatId: number): Promise<boolean> {
 
   const nextMsg = messages.find((msg) => {
     if (deliveredIds.has(msg.id)) return false;
+    if (isRetiredChainMessage(msg)) return false;
     if (msg.variant === 'invited' && !hasConnections) return false;
     if (msg.variant === 'organic' && hasConnections) return false;
     return true;

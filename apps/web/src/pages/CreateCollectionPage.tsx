@@ -109,7 +109,6 @@ export function CreateCollectionPage() {
     label: `${c.symbol} ${c.code}`,
   })) ?? [{ value: 'USD', label: '$ USD' }];
 
-  const { data: matchHints } = trpc.skills.matchHints.useQuery();
   const { data: adminData } = trpc.faq.isAdmin.useQuery();
   const isSpecial = me?.role === 'AUTHOR' || me?.role === 'DEVELOPER' || adminData?.isAdmin;
   const inviteCount = connectionCount?.inviteCount ?? 0;
@@ -221,16 +220,6 @@ export function CreateCollectionPage() {
             </div>
           )}
 
-          {matchHints && matchHints.length > 0 && (
-            <div className="p-3 bg-green-50 dark:bg-green-950/30 rounded-lg space-y-1">
-              {matchHints.map((hint: { categoryId: string; key: string; friendsCount: number }) => (
-                <div key={hint.categoryId} className="flex items-center gap-2 text-sm text-green-700 dark:text-green-300">
-                  <HandHeart className="w-4 h-4 shrink-0" />
-                  <span>{t('skills.friendsCanHelp', { count: hint.friendsCount, skill: t(`skills.${hint.key}`) })}</span>
-                </div>
-              ))}
-            </div>
-          )}
 
           <Button className="w-full" size="lg" onClick={handleSubmit} disabled={create.isPending || (isLargeAmount && !largeAmountConfirmed)}>
             {create.isPending ? t('common.loading') : t('create.submit')}

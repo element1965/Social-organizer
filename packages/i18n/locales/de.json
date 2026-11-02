@@ -1029,5 +1029,10 @@
     "close": "Schließen",
     "inviteLinkTitle": "Link bekommen? So geht es weiter",
     "appStartTitle": "Erste Schritte in der App"
+  },
+  "retired": {
+    "title": "Dieser Bereich ist nicht mehr verfügbar",
+    "text": "Die App konzentriert sich jetzt auf Ihre Bekannten und deren Sammlungen. Ihre bisherigen Daten bleiben gespeichert.",
+    "back": "Zur Startseite"
   }
 }

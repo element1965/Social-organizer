@@ -10,6 +10,7 @@ import {
   type TgReplyMarkup,
 } from '../services/telegram-bot.service.js';
 import { translateWithCache } from '../services/translate.service.js';
+import { isRetiredUrl } from '../services/mvp-scope.js';
 
 /**
  * Every minute: find PENDING ScheduledPosts where scheduledAt <= now,
@@ -28,6 +29,16 @@ export async function processScheduledPost(_job: Job): Promise<void> {
   });
 
   for (const post of pendingPosts) {
+    // Posts leading into retired (non-MVP) screens are cancelled, not sent
+    if (isRetiredUrl(post.buttonUrl)) {
+      await db.scheduledPost.updateMany({
+        where: { id: post.id, status: 'PENDING' },
+        data: { status: 'CANCELLED', errorMessage: 'Links to a screen outside the MVP' },
+      });
+      console.log(`[Scheduled Post] Cancelled ${post.id}: button leads outside the MVP`);
+      continue;
+    }
+
     // Atomically claim the post (prevent double-send)
     const updated = await db.scheduledPost.updateMany({
       where: { id: post.id, status: 'PENDING' },
