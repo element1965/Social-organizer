@@ -602,7 +602,17 @@
     "renewalStartTitle": "New cycle started",
     "renewalStartBody": "{{name}}, a new support cycle for {{creator}} has just started.",
     "yourContribution": "Your contribution",
-    "period": "Period"
+    "period": "Period",
+    "pendingAcceptBtn": "Accept",
+    "pendingRejectBtn": "Decline",
+    "pendingRejectedNext": "Invite someone you know personally — open the app.",
+    "pendingDoneAccepted": "Done: you know each other",
+    "pendingDoneRejected": "Request declined",
+    "pendingErrLimitSelf": "You already have 150 acquaintances",
+    "pendingErrLimitOther": "This person already has 150 acquaintances",
+    "pendingErrGone": "This person deleted the account",
+    "pendingErrResolved": "This request has already been answered",
+    "pendingErrNotYours": "This request is not for this Telegram account"
   },
   "hints": {
     "collectionAmount": "Enter the amount you need. Minimum 10 units. The system will notify the right number of people.",
@@ -623,7 +633,11 @@
     "reject": "Reject",
     "accepted": "Accepted",
     "rejected": "Rejected",
-    "alreadyConnected": "Already connected"
+    "alreadyConnected": "Already connected",
+    "errLimitSelf": "You already have 150 acquaintances — that is the maximum.",
+    "errLimitOther": "This person already has 150 acquaintances — no more can be added.",
+    "errRequesterGone": "This person deleted the account.",
+    "errResolved": "This request has already been answered."
   },
   "requiredInfo": {
     "contactsTitle": "Add your contacts",
@@ -696,5 +710,22 @@
     "title": "This section is no longer available",
     "text": "The app now focuses on your acquaintances and their collections. Your earlier data is saved.",
     "back": "Go to home"
+  },
+  "acquaintance": {
+    "connectedTitle": "You and {{name}} know each other",
+    "connectedText": "You both confirmed it.",
+    "firstHandshake": "{{name}} is now your first handshake",
+    "firstHandshakeText": "See collections and acquaintances in your network.",
+    "openNetwork": "Open my network",
+    "addPeopleHint": "Add people you know personally.",
+    "waitingBadge": "Waiting for confirmation",
+    "waitingTitle": "{{name}}",
+    "waitingText": "{{name}} will get your request and confirm that you know each other. Meanwhile you can use the app.",
+    "declinedTitle": "{{name}}: acquaintance not confirmed",
+    "deletedTitle": "{{name}}: account deleted",
+    "nextStepText": "Invite someone you know personally: send them your link or show the QR when you meet.",
+    "inviteSomeone": "Invite someone you know",
+    "inviteGone": "The person who invited you deleted the account. Invite someone you know personally.",
+    "continue": "Continue"
   }
 }

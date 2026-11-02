@@ -60,7 +60,7 @@ export async function applyBotStartInvite(
   });
   if (pending) return;
 
-  await db.pendingConnection.upsert({
+  const created = await db.pendingConnection.upsert({
     where: { fromUserId_toUserId: { fromUserId: userId, toUserId: inviterId } },
     create: { fromUserId: userId, toUserId: inviterId },
     update: { status: 'PENDING', resolvedAt: null },
@@ -69,7 +69,7 @@ export async function applyBotStartInvite(
   console.log('[invite-fallback] pending connection created from botStart:', userId, '->', inviterId);
 
   const applicant = await db.user.findUnique({ where: { id: userId }, select: { name: true } });
-  sendPendingNotification(db, inviterId, 'new', applicant?.name || '').catch((err) => {
+  sendPendingNotification(db, inviterId, 'new', applicant?.name || '', undefined, created.id).catch((err) => {
     console.error('[invite-fallback] pending notification failed:', err);
   });
 }

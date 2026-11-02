@@ -159,6 +159,7 @@ interface TgUpdate {
     id: string;
     from: { id: number; language_code?: string };
     data?: string;
+    message?: { message_id: number; chat: { id: number } };
   };
 }
 
@@ -656,6 +657,55 @@ export const MORE_BUTTON: Record<string, string> = {
   da: 'Mere...', fi: 'Lisää...', no: 'Mer...', sr: 'Још...',
 };
 
+/** Remove inline buttons from a message the user already answered */
+async function clearInlineKeyboard(chatId: number, messageId: number): Promise<void> {
+  if (!TELEGRAM_BOT_TOKEN) return;
+  await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/editMessageReplyMarkup`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ chat_id: chatId, message_id: messageId, reply_markup: { inline_keyboard: [] } }),
+  }).catch(() => {});
+}
+
+/**
+ * "Accept" / "Decline" under a connection request in the bot.
+ * The pressing Telegram account must belong to the addressee; the answer goes through
+ * the same service as the app, so a repeat or a second device changes nothing twice.
+ */
+async function handleConnectionRequestButton(cbq: NonNullable<TgUpdate['callback_query']>): Promise<void> {
+  const db = getDb();
+  const [kind, pendingId] = cbq.data!.split(':');
+  const action = kind === 'pc_a' ? 'accept' : 'reject';
+  const acc = await db.platformAccount.findFirst({
+    where: { platform: 'TELEGRAM', platformId: String(cbq.from.id) },
+    select: { userId: true, user: { select: { language: true, deletedAt: true } } },
+  });
+  const lang = acc?.user?.language || cbq.from.language_code?.slice(0, 2) || 'en';
+  const { tg } = await import('./notification.service.js');
+  if (!acc || acc.user?.deletedAt || !pendingId) {
+    await answerCallbackQuery(cbq.id, tg(lang, 'pendingErrNotYours'));
+    return;
+  }
+  const { respondToConnectionRequest, REQUEST_ERRORS } = await import('./connection-request.service.js');
+  try {
+    const res = await respondToConnectionRequest(db, pendingId, acc.userId, action);
+    const done = res.outcome === 'accepted' || res.outcome === 'alreadyAccepted' ? 'pendingDoneAccepted' : 'pendingDoneRejected';
+    await answerCallbackQuery(cbq.id, tg(lang, done));
+    if (cbq.message) await clearInlineKeyboard(cbq.message.chat.id, cbq.message.message_id);
+  } catch (err) {
+    const code = (err as { message?: string }).message;
+    const key = code === REQUEST_ERRORS.limitSelf ? 'pendingErrLimitSelf'
+      : code === REQUEST_ERRORS.limitOther ? 'pendingErrLimitOther'
+      : code === REQUEST_ERRORS.requesterGone ? 'pendingErrGone'
+      : code === REQUEST_ERRORS.resolved ? 'pendingErrResolved'
+      : 'pendingErrNotYours';
+    await answerCallbackQuery(cbq.id, tg(lang, key));
+    if (cbq.message && (key === 'pendingErrResolved' || key === 'pendingErrGone')) {
+      await clearInlineKeyboard(cbq.message.chat.id, cbq.message.message_id);
+    }
+  }
+}
+
 /** Answer a Telegram callback query (dismiss loading spinner on inline button) */
 async function answerCallbackQuery(callbackQueryId: string, text?: string): Promise<void> {
   if (!TELEGRAM_BOT_TOKEN) return;
@@ -758,6 +808,10 @@ export async function sendNextChainMessage(chatId: number): Promise<boolean> {
 export async function handleTelegramUpdate(update: TgUpdate): Promise<void> {
   // Handle callback query (inline button press)
   const cbq = update.callback_query;
+  if (cbq?.data && /^pc_[ar]:/.test(cbq.data)) {
+    await handleConnectionRequestButton(cbq);
+    return;
+  }
   if (cbq?.data === 'next_chain') {
     const sent = await sendNextChainMessage(cbq.from.id);
     if (sent) {

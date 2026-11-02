@@ -2,7 +2,7 @@ import { z } from 'zod';
 import { router, protectedProcedure } from '../trpc.js';
 import { TRPCError } from '@trpc/server';
 import { sendPendingNotification } from '../services/notification.service.js';
-import { scanMatchesForUser } from '../services/match-notification.service.js';
+import { respondToConnectionRequest } from '../services/connection-request.service.js';
 
 export const pendingRouter = router({
   incoming: protectedProcedure.query(async ({ ctx }) => {
@@ -21,6 +21,33 @@ export const pendingRouter = router({
     });
   }),
 
+  /**
+   * First acquaintance for the current user: the latest request they sent (normally to whoever invited them)
+   * and its exact state. Drives the "Acquaintance" card after sign-in.
+   */
+  introStatus: protectedProcedure.query(async ({ ctx }) => {
+    const pending = await ctx.db.pendingConnection.findFirst({
+      where: { fromUserId: ctx.userId },
+      orderBy: { createdAt: 'desc' },
+      include: { toUser: { select: { id: true, name: true, photoUrl: true, deletedAt: true } } },
+    });
+    const connectionCount = await ctx.db.connection.count({
+      where: { OR: [{ userAId: ctx.userId }, { userBId: ctx.userId }] },
+    });
+    if (!pending) return { state: 'none' as const, person: null, connectionCount };
+
+    const person = { id: pending.toUser.id, name: pending.toUser.name, photoUrl: pending.toUser.photoUrl };
+    const [userAId, userBId] = [ctx.userId, pending.toUserId].sort();
+    const connected = await ctx.db.connection.findUnique({
+      where: { userAId_userBId: { userAId: userAId!, userBId: userBId! } },
+    });
+    if (connected) return { state: 'connected' as const, person, connectionCount };
+    if (pending.toUser.deletedAt) return { state: 'personDeleted' as const, person, connectionCount };
+    if (pending.status === 'PENDING') return { state: 'waiting' as const, person, connectionCount };
+    if (pending.status === 'REJECTED') return { state: 'declined' as const, person, connectionCount };
+    return { state: 'none' as const, person: null, connectionCount };
+  }),
+
   incomingCount: protectedProcedure.query(async ({ ctx }) => {
     const count = await ctx.db.pendingConnection.count({
       where: { toUserId: ctx.userId, status: 'PENDING' },
@@ -31,37 +58,8 @@ export const pendingRouter = router({
   accept: protectedProcedure
     .input(z.object({ pendingId: z.string() }))
     .mutation(async ({ ctx, input }) => {
-      const pending = await ctx.db.pendingConnection.findUnique({
-        where: { id: input.pendingId },
-        include: { fromUser: { select: { id: true, name: true, language: true } } },
-      });
-      if (!pending) throw new TRPCError({ code: 'NOT_FOUND' });
-      if (pending.toUserId !== ctx.userId) throw new TRPCError({ code: 'FORBIDDEN' });
-      if (pending.status !== 'PENDING') throw new TRPCError({ code: 'BAD_REQUEST', message: 'Already resolved' });
-
-      // Update pending status
-      await ctx.db.pendingConnection.update({
-        where: { id: input.pendingId },
-        data: { status: 'ACCEPTED', resolvedAt: new Date() },
-      });
-
-      // Create bidirectional connection
-      const [userAId, userBId] = [pending.fromUserId, pending.toUserId].sort();
-      await ctx.db.connection.upsert({
-        where: { userAId_userBId: { userAId: userAId!, userBId: userBId! } },
-        create: { userAId: userAId!, userBId: userBId! },
-        update: {},
-      });
-
-      // TG notification to fromUser (fire-and-forget)
-      const acceptor = await ctx.db.user.findUnique({ where: { id: ctx.userId }, select: { name: true } });
-      sendPendingNotification(ctx.db, pending.fromUserId, 'accepted', acceptor?.name || '').catch(() => {});
-
-      // Scan matches for both users (networks may have merged)
-      scanMatchesForUser(ctx.db, ctx.userId).catch(() => {});
-      scanMatchesForUser(ctx.db, pending.fromUserId).catch(() => {});
-
-      return { success: true };
+      const res = await respondToConnectionRequest(ctx.db, input.pendingId, ctx.userId, 'accept');
+      return { success: true, outcome: res.outcome };
     }),
 
   sendDirectRequest: protectedProcedure
@@ -88,22 +86,9 @@ export const pendingRouter = router({
         },
       });
 
-      // If reverse pending exists (target already sent request to me) — auto-connect
+      // If reverse pending exists (target already sent request to me) — sending back counts as consent
       if (existingPending && existingPending.fromUserId === input.targetUserId) {
-        await ctx.db.pendingConnection.update({
-          where: { id: existingPending.id },
-          data: { status: 'ACCEPTED', resolvedAt: new Date() },
-        });
-        const [userAId, userBId] = [ctx.userId, input.targetUserId].sort();
-        await ctx.db.connection.upsert({
-          where: { userAId_userBId: { userAId: userAId!, userBId: userBId! } },
-          create: { userAId: userAId!, userBId: userBId! },
-          update: {},
-        });
-        const sender = await ctx.db.user.findUnique({ where: { id: ctx.userId }, select: { name: true } });
-        sendPendingNotification(ctx.db, input.targetUserId, 'accepted', sender?.name || '').catch(() => {});
-        scanMatchesForUser(ctx.db, ctx.userId).catch(() => {});
-        scanMatchesForUser(ctx.db, input.targetUserId).catch(() => {});
+        await respondToConnectionRequest(ctx.db, existingPending.id, ctx.userId, 'accept');
         return { success: true, autoConnected: true };
       }
 
@@ -111,7 +96,7 @@ export const pendingRouter = router({
         throw new TRPCError({ code: 'CONFLICT', message: 'Request already pending' });
       }
 
-      await ctx.db.pendingConnection.create({
+      const created = await ctx.db.pendingConnection.create({
         data: { fromUserId: ctx.userId, toUserId: input.targetUserId, createdAt: new Date() },
       });
 
@@ -125,7 +110,7 @@ export const pendingRouter = router({
           select: { value: true },
         }),
       ]);
-      sendPendingNotification(ctx.db, input.targetUserId, 'new', sender?.name || '', senderTgContact?.value || undefined).catch(() => {});
+      sendPendingNotification(ctx.db, input.targetUserId, 'new', sender?.name || '', senderTgContact?.value || undefined, created.id).catch(() => {});
 
       return { success: true };
     }),
@@ -149,22 +134,7 @@ export const pendingRouter = router({
   reject: protectedProcedure
     .input(z.object({ pendingId: z.string() }))
     .mutation(async ({ ctx, input }) => {
-      const pending = await ctx.db.pendingConnection.findUnique({
-        where: { id: input.pendingId },
-      });
-      if (!pending) throw new TRPCError({ code: 'NOT_FOUND' });
-      if (pending.toUserId !== ctx.userId) throw new TRPCError({ code: 'FORBIDDEN' });
-      if (pending.status !== 'PENDING') throw new TRPCError({ code: 'BAD_REQUEST', message: 'Already resolved' });
-
-      await ctx.db.pendingConnection.update({
-        where: { id: input.pendingId },
-        data: { status: 'REJECTED', resolvedAt: new Date() },
-      });
-
-      // TG notification to fromUser (fire-and-forget)
-      const rejector = await ctx.db.user.findUnique({ where: { id: ctx.userId }, select: { name: true } });
-      sendPendingNotification(ctx.db, pending.fromUserId, 'rejected', rejector?.name || '').catch(() => {});
-
-      return { success: true };
+      const res = await respondToConnectionRequest(ctx.db, input.pendingId, ctx.userId, 'reject');
+      return { success: true, outcome: res.outcome };
     }),
 });

@@ -14,13 +14,10 @@ import { LandingPage } from './LandingPage';
 
 export function InvitePage() {
   const { token } = useParams<{ token: string }>();
-  const { t } = useTranslation();
-  const navigate = useNavigate();
   const isAuthenticated = useAuth((s) => s.isAuthenticated);
   const logout = useAuth((s) => s.logout);
   const isDemo = localStorage.getItem('accessToken') === 'demo-token';
   const isRealUser = isAuthenticated && !isDemo;
-  const autoAcceptTriggered = useRef(false);
 
   // Save invite token to localStorage so it survives auth redirects and tab switches
   useEffect(() => {
@@ -52,9 +49,20 @@ export function InvitePage() {
     return <LandingPage inviteToken={token} />;
   }
 
+  return <InviteAcceptView token={token!} />;
+}
+
+/** Signed-in part: all hooks live here, so the auth gate above never changes the hook order. */
+function InviteAcceptView({ token }: { token: string }) {
+  const { t } = useTranslation();
+  const navigate = useNavigate();
+  const logout = useAuth((s) => s.logout);
+  const autoAcceptTriggered = useRef(false);
+  const { data: me } = trpc.user.me.useQuery();
+
   const { data: invite, isLoading, error } = trpc.invite.getByToken.useQuery(
     { token: token! },
-    { enabled: !!token && !meError },
+    { enabled: !!token },
   );
   const accept = trpc.invite.accept.useMutation({
     onSuccess: () => {
@@ -71,9 +79,9 @@ export function InvitePage() {
   // Auto-accept invite when authenticated user lands on this page
   useEffect(() => {
     if (
-      isRealUser &&
       invite &&
-      !invite.usedById &&
+      me &&
+      (!invite.usedById || invite.usedById === me.id) &&
       !accept.isPending &&
       !accept.isSuccess &&
       !accept.error &&
@@ -84,24 +92,27 @@ export function InvitePage() {
       localStorage.removeItem('pendingInviteToken');
       accept.mutate({ token });
     }
-  }, [isRealUser, invite, accept.isPending, accept.isSuccess, accept.error, token]);
+  }, [invite, me, accept.isPending, accept.isSuccess, accept.error, token]);
 
   if (isLoading) return <div className="flex justify-center py-12"><Spinner /></div>;
 
   if (error || !invite) {
+    const inviterGone = error?.message === 'INVITER_DELETED';
     return (
       <div className="min-h-screen flex items-center justify-center px-6">
         <Card>
           <CardContent className="py-8 text-center">
-            <p className="text-gray-500 dark:text-gray-300">{t('common.notFound')}</p>
-            <Button className="mt-4" onClick={() => navigate('/login')}>{t('common.back')}</Button>
+            <p className="text-gray-500 dark:text-gray-300">{inviterGone ? t('acquaintance.inviteGone') : t('common.notFound')}</p>
+            <Button className="mt-4" onClick={() => navigate(inviterGone ? '/dashboard' : '/login')}>
+              {inviterGone ? t('acquaintance.inviteSomeone') : t('common.back')}
+            </Button>
           </CardContent>
         </Card>
       </div>
     );
   }
 
-  if (invite.usedById && !accept.isSuccess) {
+  if (invite.usedById && me && invite.usedById !== me.id && !accept.isSuccess) {
     return (
       <div className="min-h-screen flex items-center justify-center px-6">
         <Card>
@@ -131,18 +142,19 @@ export function InvitePage() {
           {accept.isSuccess && (accept.data as any)?.alreadyConnected ? (
             <div className="flex flex-col items-center gap-2">
               <CheckCircle className="w-10 h-10 text-green-500" />
-              <p className="text-base font-semibold text-green-600">{t('pending.alreadyConnected')}</p>
+              <p className="text-base font-semibold text-green-600">{t('acquaintance.connectedTitle', { name: invite.inviter.name })}</p>
+              <p className="text-xs text-gray-500 dark:text-gray-300">{t('acquaintance.connectedText')}</p>
               <Button className="w-full mt-1" size="lg" onClick={() => navigate('/network')}>
-                {t('network.title')}
+                {t('acquaintance.openNetwork')}
               </Button>
             </div>
           ) : accept.isSuccess && (accept.data as any)?.pending ? (
             <div className="flex flex-col items-center gap-2">
               <Clock className="w-10 h-10 text-amber-500" />
-              <p className="text-base font-semibold text-amber-600">{t('pending.requestSent')}</p>
-              <p className="text-xs text-gray-500 dark:text-gray-300">{t('pending.requestSentDesc', { name: invite.inviter.name })}</p>
+              <p className="text-base font-semibold text-amber-600">{t('acquaintance.waitingBadge')}</p>
+              <p className="text-xs text-gray-500 dark:text-gray-300">{t('acquaintance.waitingText', { name: invite.inviter.name })}</p>
               <Button className="w-full mt-1" size="lg" onClick={() => navigate('/dashboard')}>
-                {t('dashboard.title')}
+                {t('acquaintance.continue')}
               </Button>
             </div>
           ) : accept.isSuccess ? (
@@ -161,7 +173,12 @@ export function InvitePage() {
           )}
           {accept.error && (
             <div className="mt-3 p-3 bg-red-50 dark:bg-red-950 rounded-lg">
-              <p className="text-sm text-red-600 dark:text-red-400 font-medium">{accept.error.message}</p>
+              <p className="text-sm text-red-600 dark:text-red-400 font-medium">
+                {accept.error.message === 'INVITER_DELETED' ? t('acquaintance.inviteGone')
+                  : accept.error.message === 'CONNECTION_LIMIT_SELF' ? t('pending.errLimitSelf')
+                  : accept.error.message === 'CONNECTION_LIMIT_OTHER' ? t('pending.errLimitOther')
+                  : accept.error.message}
+              </p>
               {accept.error.data?.code === 'UNAUTHORIZED' ? (
                 <Button
                   className="w-full mt-2"

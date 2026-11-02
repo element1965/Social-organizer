@@ -27,7 +27,7 @@ function loadTgBot(lang: string): Record<string, string> {
 }
 
 /** Get tgBot translation for a given language, fallback to English */
-function tg(lang: string, key: string): string {
+export function tg(lang: string, key: string): string {
   const loc = loadTgBot(lang);
   return loc[key] ?? loadTgBot('en')[key] ?? key;
 }
@@ -287,6 +287,7 @@ export async function sendPendingNotification(
   type: 'new' | 'accepted' | 'rejected',
   actorName: string,
   actorTgUsername?: string,
+  pendingId?: string,
 ): Promise<void> {
   // Web Push
   const pushTitle = type === 'new' ? 'New connection request'
@@ -294,9 +295,8 @@ export async function sendPendingNotification(
     : 'Request declined';
   const pushBody = type === 'new' ? `${actorName} wants to connect`
     : actorName;
-  const pushUrl = type === 'new' ? `${WEB_APP_URL}/notifications`
-    : type === 'accepted' ? `${WEB_APP_URL}/network`
-    : undefined;
+  // Accepted/declined go to the requester (usually the newcomer): home shows the acquaintance state
+  const pushUrl = type === 'new' ? `${WEB_APP_URL}/notifications` : `${WEB_APP_URL}/dashboard`;
   sendPushNotification(db, [recipientUserId], { title: pushTitle, body: pushBody, url: pushUrl })
     .catch((err) => console.error('[WebPush Pending] Failed:', err));
 
@@ -317,18 +317,28 @@ export async function sendPendingNotification(
     const body = (tg(lang, 'pendingNewBody') || '{{name}} wants to connect').replace('{{name}}', actorName);
     const tgLine = actorTgUsername ? `\n@${actorTgUsername}` : '';
     text = `🔔 <b>${title}</b>\n\n${body}${tgLine}`;
-    replyMarkup = {
-      inline_keyboard: [[{ text: `📱 ${tg(lang, 'pendingView') || 'View'}`, web_app: { url: notificationsUrl } }]],
-    };
+    // Answer right in the bot: same server record as in the app (connection-request.service)
+    const rows: TgReplyMarkup['inline_keyboard'] = [];
+    if (pendingId) {
+      rows.push([
+        { text: `✅ ${tg(lang, 'pendingAcceptBtn')}`, callback_data: `pc_a:${pendingId}` },
+        { text: `✖️ ${tg(lang, 'pendingRejectBtn')}`, callback_data: `pc_r:${pendingId}` },
+      ]);
+    }
+    rows.push([{ text: `📱 ${tg(lang, 'pendingView') || 'View'}`, web_app: { url: notificationsUrl } }]);
+    replyMarkup = { inline_keyboard: rows };
   } else if (type === 'accepted') {
     const title = tg(lang, 'pendingAccepted') || 'Request accepted';
     text = `✅ <b>${title}</b>\n\n${actorName}`;
     replyMarkup = {
-      inline_keyboard: [[{ text: `📱 ${tg(lang, 'open') || 'Open'}`, web_app: { url: `${WEB_APP_URL}/network` } }]],
+      inline_keyboard: [[{ text: `📱 ${tg(lang, 'open') || 'Open'}`, web_app: { url: `${WEB_APP_URL}/dashboard` } }]],
     };
   } else {
     const title = tg(lang, 'pendingRejected') || 'Request declined';
-    text = `❌ <b>${title}</b>\n\n${actorName}`;
+    text = `❌ <b>${title}</b>\n\n${actorName}\n\n${tg(lang, 'pendingRejectedNext')}`;
+    replyMarkup = {
+      inline_keyboard: [[{ text: `📱 ${tg(lang, 'open') || 'Open'}`, web_app: { url: `${WEB_APP_URL}/dashboard` } }]],
+    };
   }
 
   await sendTgMessages([{ telegramId: tgAccount.platformId, text, replyMarkup }]);
