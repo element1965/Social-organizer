@@ -706,8 +706,7 @@
     "detecting": "Detecting...",
     "selectCountry": "Select country",
     "noLocation": "Location not set",
-    "saved": "Location saved",
-    "requiredForOffline": "Please select a country — you have offline skills selected"
+    "saved": "Location saved"
   },
   "sos": {
     "needsEmergencyHelp": "זקוק לעזרה דחופה",
