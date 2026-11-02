@@ -650,8 +650,7 @@
     "detecting": "Detectando...",
     "selectCountry": "Seleccionar país",
     "noLocation": "Ubicación no establecida",
-    "saved": "Ubicación guardada",
-    "requiredForOffline": "Seleccione un país — tiene habilidades presenciales seleccionadas"
+    "saved": "Ubicación guardada"
   },
   "sos": {
     "needsEmergencyHelp": "necesita ayuda de emergencia",

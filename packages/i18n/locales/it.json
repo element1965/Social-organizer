@@ -650,8 +650,7 @@
     "detecting": "Rilevamento...",
     "selectCountry": "Seleziona paese",
     "noLocation": "Posizione non impostata",
-    "saved": "Posizione salvata",
-    "requiredForOffline": "Seleziona un paese — hai competenze offline selezionate"
+    "saved": "Posizione salvata"
   },
   "sos": {
     "needsEmergencyHelp": "ha bisogno di aiuto urgente",

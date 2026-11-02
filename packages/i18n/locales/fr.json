@@ -650,8 +650,7 @@
     "detecting": "Détection...",
     "selectCountry": "Sélectionner un pays",
     "noLocation": "Position non définie",
-    "saved": "Position enregistrée",
-    "requiredForOffline": "Veuillez sélectionner un pays — vous avez des compétences hors ligne sélectionnées"
+    "saved": "Position enregistrée"
   },
   "sos": {
     "needsEmergencyHelp": "a besoin d'aide urgente",

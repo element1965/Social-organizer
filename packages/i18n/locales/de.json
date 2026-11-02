@@ -650,8 +650,7 @@
     "detecting": "Wird erkannt...",
     "selectCountry": "Land auswählen",
     "noLocation": "Standort nicht festgelegt",
-    "saved": "Standort gespeichert",
-    "requiredForOffline": "Bitte wählen Sie ein Land — Sie haben Offline-Fähigkeiten ausgewählt"
+    "saved": "Standort gespeichert"
   },
   "sos": {
     "needsEmergencyHelp": "braucht dringend Hilfe",
