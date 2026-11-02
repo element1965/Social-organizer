@@ -94,6 +94,19 @@ function InviteAcceptView({ token }: { token: string }) {
     }
   }, [invite, me, accept.isPending, accept.isSuccess, accept.error, token]);
 
+  // While the request waits, check every few seconds so the screen switches to
+  // "You know each other" as soon as the inviter confirms (no need to leave this page)
+  const isWaiting = accept.isSuccess && !!(accept.data as any)?.pending;
+  const { data: intro } = trpc.pending.introStatus.useQuery(undefined, { enabled: isWaiting, refetchInterval: 5000 });
+  const confirmedNow = isWaiting && intro?.state === 'connected' && intro.person?.id === invite?.inviter.id;
+  const openNetwork = () => {
+    // The dashboard card would repeat the same "You know each other" message — mark it as seen
+    if (me && invite) {
+      try { localStorage.setItem(`acquaintanceSeen:${me.id}:${invite.inviter.id}`, '1'); } catch { /* storage blocked */ }
+    }
+    navigate('/network');
+  };
+
   if (isLoading) return <div className="flex justify-center py-12"><Spinner /></div>;
 
   if (error || !invite) {
@@ -139,12 +152,12 @@ function InviteAcceptView({ token }: { token: string }) {
             })}
           </h2>
 
-          {accept.isSuccess && (accept.data as any)?.alreadyConnected ? (
+          {(accept.isSuccess && (accept.data as any)?.alreadyConnected) || confirmedNow ? (
             <div className="flex flex-col items-center gap-2">
               <CheckCircle className="w-10 h-10 text-green-500" />
               <p className="text-base font-semibold text-green-600">{t('acquaintance.connectedTitle', { name: invite.inviter.name })}</p>
               <p className="text-xs text-gray-500 dark:text-gray-300">{t('acquaintance.connectedText')}</p>
-              <Button className="w-full mt-1" size="lg" onClick={() => navigate('/network')}>
+              <Button className="w-full mt-1" size="lg" onClick={openNetwork}>
                 {t('acquaintance.openNetwork')}
               </Button>
             </div>
