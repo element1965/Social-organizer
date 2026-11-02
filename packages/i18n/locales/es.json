@@ -1029,5 +1029,10 @@
     "close": "Cerrar",
     "inviteLinkTitle": "¿Recibiste un enlace? Qué sigue",
     "appStartTitle": "Primeros pasos en la aplicación"
+  },
+  "retired": {
+    "title": "Esta sección ya no está disponible",
+    "text": "La aplicación ahora se centra en tus conocidos y sus colectas. Tus datos anteriores se conservan.",
+    "back": "Ir al inicio"
   }
 }

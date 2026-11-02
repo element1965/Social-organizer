@@ -153,8 +153,8 @@ FIREBASE_SERVICE_ACCOUNT={"type":"service_account",...}  # FCM service account J
 | `push` | vapidPublicKey, subscribe, unsubscribe, registerNativeToken, unregisterNativeToken |
 | `faq` | list, top, all, incrementView, localize, isAdmin, create, update, delete (admin-gated CRUD with view ranking and LLM auto-translation to 26 languages) |
 | `broadcast` | sendAll, sendDirect, schedulePost, listScheduled, cancelScheduled, scheduledStats, createChainMessage, listChainMessages, updateChainMessage, deleteChainMessage, chainStats, markRead (admin-only Telegram broadcast with scheduled posts, auto-chain drip campaigns, and open tracking) |
-| `skills` | categories, mine, forUser, saveSkills, saveNeeds, markCompleted, adminStats, matchHints (skills/needs with admin metrics and match notifications) |
-| `matches` | whoCanHelpMe, whoNeedsMyHelp, matchNotifications, dismissMatchNotification, markMatchNotificationsRead, unreadMatchCount (skill matching with geography) |
+| `skills` | categories, mine, forUser, saveSkills, saveNeeds, markCompleted, adminStats, matchHints — **outside the money MVP: answers NOT_FOUND `FEATURE_DISABLED` unless `FEATURE_SKILLS=true`** |
+| `matches` | whoCanHelpMe, whoNeedsMyHelp, myChains, matchNotifications, … — **outside the money MVP: answers NOT_FOUND `FEATURE_DISABLED` unless `FEATURE_SKILLS=true`** |
 
 ## Services
 
@@ -177,7 +177,7 @@ FIREBASE_SERVICE_ACCOUNT={"type":"service_account",...}  # FCM service account J
 | `check-block` | Check intention sum → BLOCKED | On event |
 | `tg-broadcast` | Send Telegram bot messages in rate-limited batches (25/sec) | On event |
 | `scheduled-post` | Send scheduled broadcast posts at their planned time | Every minute |
-| `auto-chain` | Drip campaign: send chain messages based on user registration date + day offset | Every 30 min |
+| `auto-chain` | Drip campaign: send chain messages based on user registration date + day offset. Skills reminders (sortOrder ≥ 100) and messages whose button leads to `/matches`, `/skills`, `/needs` are skipped in the MVP; scheduled posts with such a button are cancelled | Every 30 min |
 | `cleanup-blocked-pending` | Remove users who blocked the bot from pending connections via TG getChat API | Every hour |
 
 ## Backups & Disaster Recovery
@@ -273,8 +273,8 @@ React 19 SPA with tRPC client.
 | SosLandingPage | `/sos/:id` | Public collection page from the share link / QR: "Join & Help" opens the Telegram Mini App; "Continue in browser" signs in / registers on the web and returns to `/collection/:id?sos=true`, which connects the person to the author (1st handshake) |
 | MyNetworkPage | `/network` | Connection list sorted by date (newest first) with relative time, connection counts + invitations |
 | ProfilePage | `/profile/:userId` | Profile with editing, contacts, connections list (collapsible), stats (given/received), handshake path |
-| SettingsPage | `/settings` | Language, theme, sounds, font scale, contacts, skills/needs, geography (country/city/geolocation), hide contacts toggle, ignore list |
-| MatchesPage | `/matches` | Skill matches: "Who can help me" / "Who needs my help" tabs, grouped by user with skill badges and geo hints |
+| SettingsPage | `/settings` | Language, theme, sounds, font scale, contacts, geography (country/city/geolocation), hide contacts toggle, ignore list |
+| RetiredFeaturePage | `/matches`, `/skills`, `/needs` | Old links to scenarios outside the money MVP: short notice and a button back home |
 | FaqPage | `/faq` | FAQ accordion with admin CRUD, view count ranking, LLM localization button, language-aware |
 | InvitePage | `/invite/:token` | Accept invitation link |
 
@@ -371,8 +371,9 @@ Mock data (`apps/web/src/lib/demoData.ts`):
 - **Collection Hold (Blocked)** — when collection reaches target amount, existing notifications are expired, COLLECTION_BLOCKED notification is sent to all previously notified users; blocked notifications don't navigate to collection page
 - **Smart User Deletion** — users without first-handshake connections are fully deleted from DB (cascade); users with connections get soft-deleted ("Deleted user"); all pending connections cleaned up on deletion
 - **Grouped Notifications** — notifications about the same collection (new/blocked/closed) are visually stacked with partial card overlap; pending connection sections are collapsible and placed below collection notifications
-- **Skills & Needs System** — 221 skill categories in 15 groups (home, construction, business, legal, creative, health, beauty, transport, auto, IT, education, events, pets, outdoor, agriculture) + "Other" per group with free-text note; unified single-pass selector with dual "Can"/"Need" toggles, search, collapsible accordion groups; isOnline flag distinguishes remote vs local skills; geography (country dropdown + city input + browser geolocation via Nominatim) for offline skill matching; Haversine distance calculation; auto-chain reminders (day 3, 7, 14, 30) nudge users who haven't filled skills; admin dashboard shows fill rate, match density, top 10 skills/needs
-- **Skill Matching** — real-time matching of skills and needs between connected users; MatchesPage (/matches) shows "Who can help me" and "Who needs my help" tabs with grouped user cards; SkillMatchNotification model auto-creates alerts when friends add matching skills; dashboard card shows match counts with link to matches page; geography-aware filtering for offline skills (same city/country/distance hint)
+- **Money MVP scope** — the app keeps connections, money collections with intentions, contacts and the notifications they need. Skills, needs, matching and exchange chains are switched off (`apps/api/src/services/mvp-scope.ts`): no menu/page entries, old URLs show a notice with a way home, the API answers NOT_FOUND, background reminders are not sent. Stored data (`user_skills`, `user_needs`, `skill_categories`, `match_chains`, `skill_match_notifications`) is kept. `FEATURE_SKILLS=true` turns the API and reminders back on (the UI entries were removed).
+- **Skills & Needs System (retired in the MVP)** — 221 skill categories in 15 groups (home, construction, business, legal, creative, health, beauty, transport, auto, IT, education, events, pets, outdoor, agriculture) + "Other" per group with free-text note; unified single-pass selector with dual "Can"/"Need" toggles, search, collapsible accordion groups; isOnline flag distinguishes remote vs local skills; geography (country dropdown + city input + browser geolocation via Nominatim) for offline skill matching; Haversine distance calculation; auto-chain reminders (day 3, 7, 14, 30) nudge users who haven't filled skills; admin dashboard shows fill rate, match density, top 10 skills/needs
+- **Skill Matching (retired in the MVP)** — real-time matching of skills and needs between connected users; MatchesPage (/matches) shows "Who can help me" and "Who needs my help" tabs with grouped user cards; SkillMatchNotification model auto-creates alerts when friends add matching skills; dashboard card shows match counts with link to matches page; geography-aware filtering for offline skills (same city/country/distance hint)
 
 ## Terminology (Glossary)
 

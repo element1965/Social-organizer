@@ -14,14 +14,9 @@ import {
   TrendingUp,
   X,
   HelpCircle,
-  MessageSquarePlus,
   Share2,
 } from 'lucide-react';
 import { SocialIcon } from '../components/ui/social-icons';
-import { SKILL_GROUPS, SKILL_GROUP_ICONS } from '@so/shared';
-import type { SkillGroup } from '@so/shared';
-// SKILL_GROUPS/SKILL_GROUP_ICONS used by suggestions moderation block below
-import { useNicknames } from '../hooks/useNicknames';
 
 const LazyCloudBackground = lazy(() =>
   import('@so/graph-3d').then((m) => ({ default: m.CloudBackground })),
@@ -31,25 +26,14 @@ export function DashboardPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const location = useLocation();
-  const resolve = useNicknames();
   const [showTgChatPopup, setShowTgChatPopup] = useState(false);
   const [gateShareOpen, setGateShareOpen] = useState(false);
   const [inviteShareOpen, setInviteShareOpen] = useState(false);
 
-  const utils = trpc.useUtils();
   const { data: me } = trpc.user.me.useQuery(undefined, { refetchInterval: 30000 });
   const { data: networkStats, isLoading: networkLoading } = useCachedNetworkStats();
   const { data: networkCapabilities } = trpc.stats.networkCapabilities.useQuery(undefined, { refetchInterval: 60000 });
   const { data: adminData } = trpc.faq.isAdmin.useQuery();
-  const { data: suggestions } = trpc.skills.listSuggestions.useQuery(undefined, {
-    enabled: !!adminData?.isAdmin,
-  });
-  const approveMut = trpc.skills.approveSuggestion.useMutation({ onSuccess: () => utils.skills.listSuggestions.invalidate() });
-  const rejectMut = trpc.skills.rejectSuggestion.useMutation({ onSuccess: () => utils.skills.listSuggestions.invalidate() });
-  const updateSuggMut = trpc.skills.updateSuggestion.useMutation({ onSuccess: () => utils.skills.listSuggestions.invalidate() });
-  const [editingSuggId, setEditingSuggId] = useState<string | null>(null);
-  const [editingSuggText, setEditingSuggText] = useState('');
-  const [editingSuggGroup, setEditingSuggGroup] = useState('');
 
 
   const totalReachable = networkStats?.totalReachable ?? 0;
@@ -236,114 +220,6 @@ export function DashboardPage() {
         <InviteBlock id="invite" variant="qr" />
       </div>
 
-      {/* Suggested categories moderation */}
-      {adminData?.isAdmin && suggestions && suggestions.length > 0 && (
-        <Card>
-          <CardContent className="py-4">
-            <div className="flex items-center gap-1.5 mb-3">
-              <MessageSquarePlus className="w-4 h-4 text-amber-600" />
-              <span className="text-sm font-semibold text-gray-900 dark:text-white">
-                {t('skills.suggestions')} ({suggestions.length})
-              </span>
-            </div>
-            <div className="space-y-2">
-              {suggestions.map((s: { id: string; text: string; group: string; type: string; user: { id: string; name: string } }) => (
-                <div key={s.id} className="p-2 rounded-lg bg-gray-50 dark:bg-gray-800/50">
-                  {/* Row 1: Full category name + group editing */}
-                  {editingSuggId === s.id ? (
-                    <div className="space-y-1.5 mb-1.5">
-                      <input
-                        value={editingSuggText}
-                        onChange={(e) => setEditingSuggText(e.target.value)}
-                        className="w-full px-2 py-1 text-sm border border-gray-200 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-                      />
-                      <div className="flex gap-1.5 items-center">
-                        <select
-                          value={editingSuggGroup}
-                          onChange={(e) => setEditingSuggGroup(e.target.value)}
-                          className="flex-1 px-2 py-1 text-xs border border-gray-200 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-                        >
-                          {SKILL_GROUPS.map((g) => (
-                            <option key={g} value={g}>
-                              {SKILL_GROUP_ICONS[g as SkillGroup]} {t(`skills.group_${g}`)}
-                            </option>
-                          ))}
-                        </select>
-                        <button
-                          onClick={() => {
-                            const updates: { id: string; text?: string; group?: string } = { id: s.id };
-                            if (editingSuggText.trim() && editingSuggText.trim() !== s.text) updates.text = editingSuggText.trim();
-                            if (editingSuggGroup !== s.group) updates.group = editingSuggGroup;
-                            if (updates.text || updates.group) updateSuggMut.mutate(updates);
-                            setEditingSuggId(null);
-                          }}
-                          className="px-2 py-1 text-xs font-medium rounded bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300"
-                        >
-                          {t('common.save')}
-                        </button>
-                        <button
-                          onClick={() => setEditingSuggId(null)}
-                          className="px-2 py-1 text-xs text-gray-400"
-                        >
-                          {t('common.cancel')}
-                        </button>
-                      </div>
-                    </div>
-                  ) : (
-                    <p className="text-sm font-medium text-gray-900 dark:text-white mb-1">
-                      &ldquo;{s.text}&rdquo;
-                      <span className="ml-1.5 text-xs font-normal text-gray-400">
-                        {SKILL_GROUP_ICONS[s.group as SkillGroup]} {t(`skills.group_${s.group}`)} &middot; {resolve(s.user.id, s.user.name)}
-                        {' '}&middot;{' '}
-                        <span className={s.type === 'NEED' ? 'text-rose-400' : 'text-emerald-400'}>
-                          {s.type === 'NEED' ? t('skills.iNeed') : t('skills.iCan')}
-                        </span>
-                      </span>
-                    </p>
-                  )}
-                  {/* Row 2: Buttons */}
-                  <div className="flex gap-1.5">
-                    {editingSuggId !== s.id && (
-                      <button
-                        onClick={() => { setEditingSuggId(s.id); setEditingSuggText(s.text); setEditingSuggGroup(s.group); }}
-                        className="px-2 py-0.5 text-xs font-medium rounded bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 hover:bg-blue-100"
-                      >
-                        {t('skills.editSuggestion')}
-                      </button>
-                    )}
-                    <button
-                      onClick={async () => {
-                        // Auto-save edited text/group before approving
-                        if (editingSuggId === s.id) {
-                          const updates: { id: string; text?: string; group?: string } = { id: s.id };
-                          if (editingSuggText.trim() && editingSuggText.trim() !== s.text) updates.text = editingSuggText.trim();
-                          if (editingSuggGroup !== s.group) updates.group = editingSuggGroup;
-                          if (updates.text || updates.group) {
-                            await updateSuggMut.mutateAsync(updates);
-                          }
-                          setEditingSuggId(null);
-                        }
-                        approveMut.mutate({ id: s.id });
-                      }}
-                      disabled={approveMut.isPending || updateSuggMut.isPending}
-                      className="px-2 py-0.5 text-xs font-medium rounded bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 hover:bg-green-200"
-                    >
-                      {t('common.confirm')}
-                    </button>
-                    <button
-                      onClick={() => rejectMut.mutate({ id: s.id })}
-                      disabled={rejectMut.isPending}
-                      className="px-2 py-0.5 text-xs font-medium rounded bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300 hover:bg-red-200"
-                    >
-                      {t('common.delete')}
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-      )}
 
     </div>
   );

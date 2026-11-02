@@ -1029,5 +1029,10 @@
     "close": "Fermer",
     "inviteLinkTitle": "Vous avez reçu un lien ? La suite",
     "appStartTitle": "Premiers pas dans l’application"
+  },
+  "retired": {
+    "title": "Cette section n'est plus disponible",
+    "text": "L'application se concentre désormais sur vos connaissances et leurs collectes. Vos données précédentes sont conservées.",
+    "back": "Aller à l'accueil"
   }
 }

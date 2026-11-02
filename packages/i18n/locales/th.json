@@ -1029,5 +1029,10 @@
     "close": "ปิด",
     "inviteLinkTitle": "ได้รับลิงก์? ทำอะไรต่อ",
     "appStartTitle": "ก้าวแรกในแอป"
+  },
+  "retired": {
+    "title": "This section is no longer available",
+    "text": "The app now focuses on your acquaintances and their collections. Your earlier data is saved.",
+    "back": "Go to home"
   }
 }

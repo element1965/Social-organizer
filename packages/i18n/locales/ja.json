@@ -1029,5 +1029,10 @@
     "close": "閉じる",
     "inviteLinkTitle": "リンクが届いたら",
     "appStartTitle": "アプリの最初のステップ"
+  },
+  "retired": {
+    "title": "This section is no longer available",
+    "text": "The app now focuses on your acquaintances and their collections. Your earlier data is saved.",
+    "back": "Go to home"
   }
 }

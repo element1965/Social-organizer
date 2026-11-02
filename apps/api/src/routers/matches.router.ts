@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { router, protectedProcedure } from '../trpc.js';
+import { router, skillsProcedure } from '../trpc.js';
 import { haversineKm, distanceHint } from '../services/geo.service.js';
 import { tryFindReplacement } from '../services/chain-finder.service.js';
 import { getNetworkUserIds } from '../services/bfs.service.js';
@@ -62,7 +62,7 @@ function processMatches(
 const adminIdArray = ADMIN_IDS.length > 0 ? ADMIN_IDS : ['__none__'];
 
 export const matchesRouter = router({
-  whoCanHelpMe: protectedProcedure.query(async ({ ctx }) => {
+  whoCanHelpMe: skillsProcedure.query(async ({ ctx }) => {
     const me = await ctx.db.user.findUnique({
       where: { id: ctx.userId },
       select: { latitude: true, longitude: true, countryCode: true, city: true },
@@ -98,7 +98,7 @@ export const matchesRouter = router({
     return processMatches(rows, me?.latitude ?? null, me?.longitude ?? null, me?.countryCode ?? null, me?.city ?? null);
   }),
 
-  whoNeedsMyHelp: protectedProcedure.query(async ({ ctx }) => {
+  whoNeedsMyHelp: skillsProcedure.query(async ({ ctx }) => {
     const me = await ctx.db.user.findUnique({
       where: { id: ctx.userId },
       select: { latitude: true, longitude: true, countryCode: true, city: true },
@@ -135,7 +135,7 @@ export const matchesRouter = router({
   }),
 
   /** Get clearing chains where the current user participates */
-  myChains: protectedProcedure.query(async ({ ctx }) => {
+  myChains: skillsProcedure.query(async ({ ctx }) => {
     const chains = await ctx.db.matchChain.findMany({
       where: {
         status: { in: ['PROPOSED', 'ACTIVE', 'COMPLETED'] },
@@ -179,7 +179,7 @@ export const matchesRouter = router({
   }),
 
   /** Giver sets their offer (hours + description) for a link */
-  setOffer: protectedProcedure
+  setOffer: skillsProcedure
     .input(z.object({
       linkId: z.string(),
       hours: z.number().min(0.5).max(100),
@@ -202,7 +202,7 @@ export const matchesRouter = router({
     }),
 
   /** Receiver confirms they accept the offer */
-  confirmLink: protectedProcedure
+  confirmLink: skillsProcedure
     .input(z.object({ linkId: z.string() }))
     .mutation(async ({ ctx, input }) => {
       const link = await ctx.db.matchChainLink.findFirst({
@@ -231,7 +231,7 @@ export const matchesRouter = router({
     }),
 
   /** Mark a link as completed (giver or receiver) */
-  completeLink: protectedProcedure
+  completeLink: skillsProcedure
     .input(z.object({
       linkId: z.string(),
       role: z.enum(['giver', 'receiver']),
@@ -273,7 +273,7 @@ export const matchesRouter = router({
     }),
 
   /** Cancel a chain (any participant can cancel) */
-  cancelChain: protectedProcedure
+  cancelChain: skillsProcedure
     .input(z.object({ chainId: z.string() }))
     .mutation(async ({ ctx, input }) => {
       const chain = await ctx.db.matchChain.findFirst({
@@ -292,7 +292,7 @@ export const matchesRouter = router({
     }),
 
   /** Decline participation — try to find replacement, otherwise cancel */
-  declineLink: protectedProcedure
+  declineLink: skillsProcedure
     .input(z.object({ linkId: z.string() }))
     .mutation(async ({ ctx, input }) => {
       const link = await ctx.db.matchChainLink.findFirst({
@@ -326,7 +326,7 @@ export const matchesRouter = router({
     }),
 
   /** Save Telegram group chat link for a chain (any participant can do it) */
-  setChatLink: protectedProcedure
+  setChatLink: skillsProcedure
     .input(z.object({
       chainId: z.string(),
       telegramChatUrl: z.string().url().regex(/t\.me\//),
@@ -349,7 +349,7 @@ export const matchesRouter = router({
       });
     }),
 
-  matchNotifications: protectedProcedure.query(async ({ ctx }) => {
+  matchNotifications: skillsProcedure.query(async ({ ctx }) => {
     return ctx.db.skillMatchNotification.findMany({
       where: { userId: ctx.userId, status: { in: ['UNREAD', 'READ'] } },
       include: {
@@ -361,7 +361,7 @@ export const matchesRouter = router({
     });
   }),
 
-  dismissMatchNotification: protectedProcedure
+  dismissMatchNotification: skillsProcedure
     .input(z.object({ id: z.string() }))
     .mutation(async ({ ctx, input }) => {
       return ctx.db.skillMatchNotification.update({
@@ -370,7 +370,7 @@ export const matchesRouter = router({
       });
     }),
 
-  markMatchNotificationsRead: protectedProcedure.mutation(async ({ ctx }) => {
+  markMatchNotificationsRead: skillsProcedure.mutation(async ({ ctx }) => {
     await ctx.db.skillMatchNotification.updateMany({
       where: { userId: ctx.userId, status: 'UNREAD' },
       data: { status: 'READ' },
@@ -378,7 +378,7 @@ export const matchesRouter = router({
     return { success: true };
   }),
 
-  unreadMatchCount: protectedProcedure.query(async ({ ctx }) => {
+  unreadMatchCount: skillsProcedure.query(async ({ ctx }) => {
     const count = await ctx.db.skillMatchNotification.count({
       where: { userId: ctx.userId, status: 'UNREAD' },
     });

@@ -11,6 +11,7 @@ import {
 } from '../services/telegram-bot.service.js';
 import { translateWithCache } from '../services/translate.service.js';
 import { sendWebPush } from '../services/web-push.service.js';
+import { isRetiredChainMessage } from '../services/mvp-scope.js';
 
 const WEB_APP_URL = process.env.WEB_APP_URL || 'https://www.orginizer.com';
 
@@ -32,10 +33,11 @@ export async function processAutoChain(_job: Job): Promise<void> {
   try {
 
   // Load all active chain messages
-  const messages = await db.autoChainMessage.findMany({
+  // Skills reminders and messages leading to retired screens are not sent in the MVP
+  const messages = (await db.autoChainMessage.findMany({
     where: { isActive: true },
     orderBy: [{ dayOffset: 'asc' }, { sortOrder: 'asc' }],
-  });
+  })).filter((m) => !isRetiredChainMessage(m));
   console.log(`[Auto Chain] Messages: ${messages.length}, TZ now: ${now.toISOString()}`);
   if (messages.length === 0) return;
 

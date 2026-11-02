@@ -1,6 +1,7 @@
 import { initTRPC, TRPCError } from '@trpc/server';
 import { z } from 'zod';
 import type { Context } from './context.js';
+import { SKILLS_FEATURE_ENABLED } from './services/mvp-scope.js';
 
 const t = initTRPC.context<Context>().create();
 
@@ -30,6 +31,17 @@ const isAuthed = middleware(async ({ ctx, next }) => {
 });
 
 export const protectedProcedure = t.procedure.use(isAuthed);
+
+// Skills, needs, matching and exchange chains are outside the money MVP.
+// Their API answers NOT_FOUND unless FEATURE_SKILLS=true. Data stays in the DB.
+const skillsFeatureGate = middleware(async ({ next }) => {
+  if (!SKILLS_FEATURE_ENABLED) {
+    throw new TRPCError({ code: 'NOT_FOUND', message: 'FEATURE_DISABLED' });
+  }
+  return next();
+});
+
+export const skillsProcedure = protectedProcedure.use(skillsFeatureGate);
 
 // Pagination input schema
 export const paginationInput = z.object({

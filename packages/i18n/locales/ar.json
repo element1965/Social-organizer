@@ -1029,5 +1029,10 @@
     "close": "إغلاق",
     "inviteLinkTitle": "وصلك رابط؟ ماذا بعد",
     "appStartTitle": "الخطوات الأولى في التطبيق"
+  },
+  "retired": {
+    "title": "This section is no longer available",
+    "text": "The app now focuses on your acquaintances and their collections. Your earlier data is saved.",
+    "back": "Go to home"
   }
 }

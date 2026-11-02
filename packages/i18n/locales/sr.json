@@ -1029,5 +1029,10 @@
     "close": "Затвори",
     "inviteLinkTitle": "Добили сте линк — шта даље",
     "appStartTitle": "Први кораци у апликацији"
+  },
+  "retired": {
+    "title": "This section is no longer available",
+    "text": "The app now focuses on your acquaintances and their collections. Your earlier data is saved.",
+    "back": "Go to home"
   }
 }

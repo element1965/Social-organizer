@@ -1034,5 +1034,10 @@
     "close": "Close",
     "inviteLinkTitle": "Got a link? What to do next",
     "appStartTitle": "First steps in the app"
+  },
+  "retired": {
+    "title": "This section is no longer available",
+    "text": "The app now focuses on your acquaintances and their collections. Your earlier data is saved.",
+    "back": "Go to home"
   }
 }

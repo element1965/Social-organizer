@@ -20,7 +20,7 @@ import { CreateCollectionPage } from './pages/CreateCollectionPage';
 import { MyNetworkPage } from './pages/MyNetworkPage';
 import { ProfilePage } from './pages/ProfilePage';
 import { SettingsPage } from './pages/SettingsPage';
-import { MatchesPage } from './pages/MatchesPage';
+import { RetiredFeaturePage } from './pages/RetiredFeaturePage';
 import { InvitePage } from './pages/InvitePage';
 import { SosLandingPage } from './pages/SosLandingPage';
 import { SupportChatPage } from './pages/SupportChatPage';
@@ -155,7 +155,9 @@ export function App() {
               <Route path="/network" element={<MyNetworkPage />} />
               <Route path="/profile/:userId" element={<ProfilePage />} />
               <Route path="/settings" element={<SettingsPage />} />
-              <Route path="/matches" element={<MatchesPage />} />
+              <Route path="/matches/*" element={<RetiredFeaturePage />} />
+              <Route path="/skills/*" element={<RetiredFeaturePage />} />
+              <Route path="/needs/*" element={<RetiredFeaturePage />} />
               <Route path="/faq" element={<FaqPage />} />
               <Route path="/support" element={<SupportChatPage />} />
             </Route>

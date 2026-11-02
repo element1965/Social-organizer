@@ -1029,5 +1029,10 @@
     "close": "닫기",
     "inviteLinkTitle": "링크를 받았다면",
     "appStartTitle": "앱 첫걸음"
+  },
+  "retired": {
+    "title": "This section is no longer available",
+    "text": "The app now focuses on your acquaintances and their collections. Your earlier data is saved.",
+    "back": "Go to home"
   }
 }
