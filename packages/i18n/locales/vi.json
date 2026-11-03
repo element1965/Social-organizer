@@ -204,7 +204,7 @@
     "close": "Đóng quyên góp",
     "participants": "Người tham gia",
     "noParticipants": "Chưa có ai tham gia",
-    "minAmount": "Tối thiểu 1 $",
+    "minAmount": "Số nguyên, từ 1 $",
     "connectionToCreator": "Kết nối với người tạo",
     "editAmount": "Edit",
     "saveAmount": "Save",
@@ -235,7 +235,7 @@
     "currency": "Tiền tệ",
     "chatLink": "Liên kết chat",
     "submit": "Thông báo",
-    "minAmount": "Tối thiểu 10",
+    "minAmount": "Số nguyên, từ 10 $",
     "invalidUrl": "URL không hợp lệ",
     "chatHelpToggle": "Làm thế nào để tạo cuộc trò chuyện Telegram?",
     "chatHelpTitle": "Cách lấy liên kết trò chuyện:",
@@ -728,5 +728,15 @@
     "inviteSomeone": "Mời người quen",
     "inviteGone": "Người đã mời bạn đã xóa tài khoản. Hãy mời người bạn quen biết trực tiếp.",
     "continue": "Tiếp tục"
+  },
+  "milestones": {
+    "title": "Cột mốc",
+    "first": "Cái bắt tay đầu tiên",
+    "ten": "10 kết nối trực tiếp",
+    "notYet": "Vẫn còn phía trước",
+    "progress": "{{count}}/{{total}}",
+    "nowCount": "hiện {{count}}",
+    "newBadge": "Cột mốc mới",
+    "dismiss": "Đóng"
   }
 }

@@ -204,7 +204,7 @@
     "close": "संग्रह बंद करें",
     "participants": "प्रतिभागी",
     "noParticipants": "अभी तक कोई शामिल नहीं हुआ",
-    "minAmount": "न्यूनतम 1 $",
+    "minAmount": "पूर्ण संख्या, कम से कम 1 $",
     "connectionToCreator": "निर्माता से संबंध",
     "editAmount": "Edit",
     "saveAmount": "Save",
@@ -235,7 +235,7 @@
     "currency": "मुद्रा",
     "chatLink": "चैट लिंक",
     "submit": "सूचित करें",
-    "minAmount": "न्यूनतम 10",
+    "minAmount": "पूर्ण संख्या, कम से कम 10 $",
     "invalidUrl": "अमान्य URL",
     "chatHelpToggle": "Telegram चैट कैसे बनाएं?",
     "chatHelpTitle": "चैट लिंक कैसे प्राप्त करें:",
@@ -728,5 +728,15 @@
     "inviteSomeone": "परिचित को आमंत्रित करें",
     "inviteGone": "जिसने आपको आमंत्रित किया था, उसने अकाउंट हटा दिया है। किसी ऐसे व्यक्ति को आमंत्रित करें जिसे आप व्यक्तिगत रूप से जानते हैं।",
     "continue": "जारी रखें"
+  },
+  "milestones": {
+    "title": "पड़ाव",
+    "first": "पहला हाथ मिलाना",
+    "ten": "10 सीधे संपर्क",
+    "notYet": "अभी बाकी है",
+    "progress": "{{total}} में से {{count}}",
+    "nowCount": "अभी {{count}}",
+    "newBadge": "नया पड़ाव",
+    "dismiss": "बंद करें"
   }
 }

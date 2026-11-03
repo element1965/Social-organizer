@@ -42,15 +42,11 @@ function getCycleInfo(n: any, lang: string): { contribution: string | null; peri
   const end = new Date(start.getTime() + (REGULAR_CYCLE_DAYS - 1) * DAY_MS); // last day of the cycle
   const fmt = (d: Date) => d.toLocaleDateString(lang, { day: '2-digit', month: '2-digit', year: 'numeric' });
 
-  const obls = (c.obligations ?? []) as Array<{ amount: number; originalAmount: number | null; originalCurrency: string | null }>;
-  let contribution: string | null = null;
-  if (obls.length > 0) {
-    const currencies = new Set(obls.map((o) => o.originalCurrency ?? 'USD'));
-    const round = (x: number) => Math.round(x * 100) / 100;
-    contribution = currencies.size === 1
-      ? `${round(obls.reduce((s, o) => s + (o.originalAmount ?? o.amount), 0))} ${[...currencies][0]}`
-      : `${round(obls.reduce((s, o) => s + o.amount, 0))} USD`;
-  }
+  const obls = (c.obligations ?? []) as Array<{ amount: number }>;
+  // Always in $: 1 $ = 1 unit of participation, no currency conversion (SO-40)
+  const contribution = obls.length > 0
+    ? `${Math.round(obls.reduce((s, o) => s + o.amount, 0) * 100) / 100} USD`
+    : null;
   return { contribution, period: `${fmt(start)} — ${fmt(end)}` };
 }
 

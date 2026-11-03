@@ -204,7 +204,7 @@
     "close": "Luk indsamling",
     "participants": "Deltagere",
     "noParticipants": "Ingen har deltaget endnu",
-    "minAmount": "Minimum 1 $",
+    "minAmount": "Helt tal, mindst 1 $",
     "connectionToCreator": "Forbindelse til opretter",
     "editAmount": "Edit",
     "saveAmount": "Save",
@@ -235,7 +235,7 @@
     "currency": "Valuta",
     "chatLink": "Chatlink",
     "submit": "Underrette",
-    "minAmount": "Minimum 10",
+    "minAmount": "Helt tal, mindst 10 $",
     "invalidUrl": "Ugyldig URL",
     "chatHelpToggle": "Hvordan opretter man en Telegram-chat?",
     "chatHelpTitle": "Sådan får du et chatlink:",
@@ -728,5 +728,15 @@
     "inviteSomeone": "Inviter en bekendt",
     "inviteGone": "Personen, der inviterede dig, har slettet kontoen. Inviter en, du kender personligt.",
     "continue": "Fortsæt"
+  },
+  "milestones": {
+    "title": "Milepæle",
+    "first": "Første håndtryk",
+    "ten": "10 direkte forbindelser",
+    "notYet": "Endnu forude",
+    "progress": "{{count}} af {{total}}",
+    "nowCount": "nu {{count}}",
+    "newBadge": "Ny milepæl",
+    "dismiss": "Luk"
   }
 }

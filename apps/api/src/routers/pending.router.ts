@@ -3,6 +3,7 @@ import { router, protectedProcedure } from '../trpc.js';
 import { TRPCError } from '@trpc/server';
 import { sendPendingNotification } from '../services/notification.service.js';
 import { respondToConnectionRequest } from '../services/connection-request.service.js';
+import { syncMilestones } from '../services/milestone.service.js';
 
 export const pendingRouter = router({
   incoming: protectedProcedure.query(async ({ ctx }) => {
@@ -41,7 +42,15 @@ export const pendingRouter = router({
     const connected = await ctx.db.connection.findUnique({
       where: { userAId_userBId: { userAId: userAId!, userBId: userBId! } },
     });
-    if (connected) return { state: 'connected' as const, person, connectionCount };
+    if (connected) {
+      // "First handshake" only for the connection that actually reached the first milestone
+      await syncMilestones(ctx.db, ctx.userId, { restored: true });
+      const first = await ctx.db.userMilestone.findUnique({
+        where: { userId_kind: { userId: ctx.userId, kind: 'FIRST_CONNECTION' } },
+        select: { relatedUserId: true },
+      });
+      return { state: 'connected' as const, person, connectionCount, isFirstHandshake: first?.relatedUserId === person.id };
+    }
     if (pending.toUser.deletedAt) return { state: 'personDeleted' as const, person, connectionCount };
     if (pending.status === 'PENDING') return { state: 'waiting' as const, person, connectionCount };
     if (pending.status === 'REJECTED') return { state: 'declined' as const, person, connectionCount };

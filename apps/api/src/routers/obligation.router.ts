@@ -1,16 +1,15 @@
 import { z } from 'zod';
 import { router, protectedProcedure } from '../trpc.js';
 import { TRPCError } from '@trpc/server';
-import { MIN_OBLIGATION_AMOUNT, CURRENCY_CODES, NOTIFICATION_TTL_HOURS } from '@so/shared';
-import { convertToUSD } from '../services/currency.service.js';
+import { MIN_OBLIGATION_AMOUNT, NOTIFICATION_TTL_HOURS } from '@so/shared';
 import { sendGoalReachedToCreator } from '../services/notification.service.js';
 
 export const obligationRouter = router({
   create: protectedProcedure
     .input(z.object({
       collectionId: z.string(),
-      amount: z.number().min(MIN_OBLIGATION_AMOUNT),
-      inputCurrency: z.string().refine((c) => CURRENCY_CODES.includes(c), 'Unsupported currency').default('USD'),
+      amount: z.number().int().min(MIN_OBLIGATION_AMOUNT), // whole $ only: 1 $ = 1 unit
+      inputCurrency: z.literal('USD').default('USD'), // amounts are in $ only: 1 $ = 1 unit, no conversion (SO-40)
       isSubscription: z.boolean().default(false),
     }))
     .mutation(async ({ ctx, input }) => {
@@ -22,23 +21,13 @@ export const obligationRouter = router({
         throw new TRPCError({ code: 'BAD_REQUEST', message: 'Collection is not active' });
       }
 
-      // Convert to USD if needed
-      let amountUSD = input.amount;
-      if (input.inputCurrency !== 'USD') {
-        amountUSD = await convertToUSD(input.amount, input.inputCurrency);
-      }
-      // The minimum applies to the stored USD amount, not only to the typed number.
-      if (amountUSD < MIN_OBLIGATION_AMOUNT) {
-        throw new TRPCError({ code: 'BAD_REQUEST', message: 'MIN_AMOUNT_USD' });
-      }
+      const amountUSD = input.amount;
 
       const obligation = await ctx.db.obligation.create({
         data: {
           collectionId: input.collectionId,
           userId: ctx.userId,
-          amount: amountUSD, // Store in USD
-          originalAmount: input.amount,
-          originalCurrency: input.inputCurrency,
+          amount: amountUSD,
           isSubscription: input.isSubscription,
         },
       });
@@ -146,8 +135,8 @@ export const obligationRouter = router({
   updateAmount: protectedProcedure
     .input(z.object({
       obligationId: z.string(),
-      amount: z.number().min(MIN_OBLIGATION_AMOUNT),
-      inputCurrency: z.string().refine((c) => CURRENCY_CODES.includes(c), 'Unsupported currency').default('USD'),
+      amount: z.number().int().min(MIN_OBLIGATION_AMOUNT), // whole $ only: 1 $ = 1 unit
+      inputCurrency: z.literal('USD').default('USD'), // amounts are in $ only: 1 $ = 1 unit, no conversion (SO-40)
     }))
     .mutation(async ({ ctx, input }) => {
       const obligation = await ctx.db.obligation.findUnique({
@@ -160,22 +149,15 @@ export const obligationRouter = router({
         throw new TRPCError({ code: 'BAD_REQUEST', message: 'Collection is not active' });
       }
 
-      // Convert to USD if needed
-      let newAmountUSD = input.amount;
-      if (input.inputCurrency !== 'USD') {
-        newAmountUSD = await convertToUSD(input.amount, input.inputCurrency);
-      }
-      if (newAmountUSD < MIN_OBLIGATION_AMOUNT) {
-        throw new TRPCError({ code: 'BAD_REQUEST', message: 'MIN_AMOUNT_USD' });
-      }
+      const newAmountUSD = input.amount;
 
       // Update obligation
       const updated = await ctx.db.obligation.update({
         where: { id: input.obligationId },
         data: {
           amount: newAmountUSD,
-          originalAmount: input.amount,
-          originalCurrency: input.inputCurrency,
+          originalAmount: null, // clear amounts typed in other currencies before SO-40
+          originalCurrency: null,
         },
       });
 

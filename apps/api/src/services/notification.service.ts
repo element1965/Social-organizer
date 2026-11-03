@@ -145,12 +145,12 @@ export async function sendCollectionClosedTg(
   const creator = await db.user.findUnique({ where: { id: creatorId }, select: { name: true } });
   const collection = await db.collection.findUnique({
     where: { id: collectionId },
-    select: { amount: true, currency: true, originalAmount: true, originalCurrency: true },
+    select: { amount: true },
   });
   if (!creator || !collection) return;
 
-  const amount = collection.originalAmount ?? collection.amount;
-  const currency = collection.originalCurrency ?? collection.currency;
+  const amount = collection.amount;
+  const currency = 'USD'; // one unit of participation = 1 $, no currency conversion (SO-40)
   const webAppLink = `${WEB_APP_URL}/collection/${collectionId}`;
 
   const messages: TgBroadcastMessage[] = tgAccounts.map((acc) => {
@@ -203,12 +203,12 @@ export async function sendCollectionBlockedTg(
   const creator = await db.user.findUnique({ where: { id: creatorId }, select: { name: true } });
   const collection = await db.collection.findUnique({
     where: { id: collectionId },
-    select: { amount: true, currency: true, originalAmount: true, originalCurrency: true },
+    select: { amount: true },
   });
   if (!creator || !collection) return;
 
-  const amount = collection.originalAmount ?? collection.amount;
-  const currency = collection.originalCurrency ?? collection.currency;
+  const amount = collection.amount;
+  const currency = 'USD';
   const webAppLink = `${WEB_APP_URL}/collection/${collectionId}`;
 
   const messages: TgBroadcastMessage[] = tgAccounts.map((acc) => {
@@ -238,12 +238,12 @@ export async function sendGoalReachedToCreator(
 ): Promise<void> {
   const collection = await db.collection.findUnique({
     where: { id: collectionId },
-    select: { amount: true, currency: true, originalAmount: true, originalCurrency: true, chatLink: true },
+    select: { amount: true, chatLink: true },
   });
   if (!collection) return;
 
-  const amount = collection.originalAmount ?? collection.amount;
-  const currency = collection.originalCurrency ?? collection.currency;
+  const amount = collection.amount;
+  const currency = 'USD';
   const amountStr = amount != null ? `${amount} ${currency}` : '';
   const webAppLink = `${WEB_APP_URL}/collection/${collectionId}`;
 
@@ -389,8 +389,7 @@ function formatDate(d: Date, lang: string): string {
 
 /**
  * Per-user contribution to a regular collection (active subscriptions only).
- * Shown in the participant's own currency when all their obligations share one,
- * otherwise in USD (obligation.amount is stored in USD).
+ * Always in $ (one unit of participation), obligation.amount is stored in $.
  */
 async function getUserContributions(
   db: PrismaClient,
@@ -399,26 +398,12 @@ async function getUserContributions(
 ): Promise<Map<string, string>> {
   const obligations = await db.obligation.findMany({
     where: { collectionId, userId: { in: userIds }, unsubscribedAt: null },
-    select: { userId: true, amount: true, originalAmount: true, originalCurrency: true },
+    select: { userId: true, amount: true },
   });
-  const byUser = new Map<string, typeof obligations>();
-  for (const o of obligations) {
-    const list = byUser.get(o.userId) ?? [];
-    list.push(o);
-    byUser.set(o.userId, list);
-  }
+  const sums = new Map<string, number>();
+  for (const o of obligations) sums.set(o.userId, (sums.get(o.userId) ?? 0) + o.amount);
   const result = new Map<string, string>();
-  for (const [userId, list] of byUser) {
-    const currencies = new Set(list.map((o) => o.originalCurrency ?? 'USD'));
-    const round = (n: number) => Math.round(n * 100) / 100;
-    if (currencies.size === 1) {
-      const cur = [...currencies][0]!;
-      const sum = list.reduce((s, o) => s + (o.originalAmount ?? o.amount), 0);
-      result.set(userId, `${round(sum)} ${cur}`);
-    } else {
-      result.set(userId, `${round(list.reduce((s, o) => s + o.amount, 0))} USD`);
-    }
-  }
+  for (const [userId, sum] of sums) result.set(userId, `${Math.round(sum * 100) / 100} USD`);
   return result;
 }
 
@@ -571,7 +556,7 @@ async function dispatchNewCollectionTg(
 
   const collection = await db.collection.findUnique({
     where: { id: collectionId },
-    select: { type: true, amount: true, currency: true, originalAmount: true, originalCurrency: true },
+    select: { type: true, amount: true },
   });
   if (!collection) return;
 
@@ -585,8 +570,8 @@ async function dispatchNewCollectionTg(
   });
   if (tgAccounts.length === 0) return;
 
-  const amount = collection.originalAmount ?? collection.amount;
-  const currency = collection.originalCurrency ?? collection.currency;
+  const amount = collection.amount;
+  const currency = 'USD';
   const isEmergency = collection.type === 'EMERGENCY';
   const webAppLink = `${WEB_APP_URL}/collection/${collectionId}`;
 

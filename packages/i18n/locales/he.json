@@ -214,7 +214,7 @@
     "close": "סגור איסוף",
     "participants": "משתתפים",
     "noParticipants": "עדיין אף אחד לא הצטרף",
-    "minAmount": "מינימום 1 $",
+    "minAmount": "מספר שלם, מ-1 $",
     "connectionToCreator": "חיבור ליצרן",
     "editAmount": "Edit",
     "saveAmount": "Save",
@@ -245,7 +245,7 @@
     "currency": "מטבע",
     "chatLink": "קישור לצ'אט",
     "submit": "להודיע",
-    "minAmount": "מינימום 10",
+    "minAmount": "מספר שלם, מ-10 $",
     "invalidUrl": "כתובת URL לא תקינה",
     "chatHelpToggle": "איך ליצור צ'אט Telegram?",
     "chatHelpTitle": "איך להשיג קישור לצ'אט:",
@@ -784,5 +784,15 @@
     "inviteSomeone": "הזמן מכר",
     "inviteGone": "מי שהזמין אותך מחק את החשבון. הזמן מישהו שאתה מכיר אישית.",
     "continue": "המשך"
+  },
+  "milestones": {
+    "title": "אבני דרך",
+    "first": "לחיצת היד הראשונה",
+    "ten": "10 קשרים ישירים",
+    "notYet": "עוד לפניך",
+    "progress": "{{count}} מתוך {{total}}",
+    "nowCount": "כעת {{count}}",
+    "newBadge": "אבן דרך חדשה",
+    "dismiss": "סגירה"
   }
 }

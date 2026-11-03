@@ -6,12 +6,11 @@ import { useAuth } from '../hooks/useAuth';
 import { Card, CardContent, CardHeader } from '../components/ui/card';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
-import { Select } from '../components/ui/select';
 import { Badge } from '../components/ui/badge';
 import { Progress } from '../components/ui/progress';
 import { Avatar } from '../components/ui/avatar';
 import { Spinner } from '../components/ui/spinner';
-import { ExternalLink, Users, ArrowRight, Pencil, Check, X, Share2, QrCode, CheckCircle2, Download } from 'lucide-react';
+import { ExternalLink, Users, Pencil, Check, X, Share2, QrCode, CheckCircle2, Download } from 'lucide-react';
 import { QRCodeSVG, QRCodeCanvas } from 'qrcode.react';
 import { HandshakePath } from '../components/HandshakePath';
 import { VideoGuide } from '../components/VideoGuide';
@@ -30,7 +29,6 @@ export function CollectionPage() {
 
   const { data: me } = trpc.user.me.useQuery();
   const { data: collection, isLoading } = trpc.collection.getById.useQuery({ id: id! }, { enabled: !!id, refetchInterval: 30000 });
-  const { data: currencies } = trpc.currency.list.useQuery();
   const { data: pathToCreator } = trpc.connection.findPath.useQuery(
     { targetUserId: collection?.creatorId! },
     { enabled: !!collection && collection.creatorId !== userId }
@@ -58,33 +56,19 @@ export function CollectionPage() {
   const [editingChatLink, setEditingChatLink] = useState(false);
   const [chatLinkValue, setChatLinkValue] = useState('');
   const [chatLinkError, setChatLinkError] = useState('');
-  const [inputCurrency, setInputCurrency] = useState('USD');
   const [error, setError] = useState('');
 
   // Edit collection goal amount state
   const [editingGoal, setEditingGoal] = useState(false);
   const [goalAmount, setGoalAmount] = useState('');
-  const [goalCurrency, setGoalCurrency] = useState('USD');
   const [goalError, setGoalError] = useState('');
 
-  // Preview conversion for goal edit
-  const { data: goalPreview } = trpc.currency.toUSD.useQuery(
-    { amount: Number(goalAmount), from: goalCurrency },
-    { enabled: editingGoal && !!goalAmount && Number(goalAmount) > 0 && goalCurrency !== 'USD' }
-  );
 
   // Edit amount state
   const [editingOblId, setEditingOblId] = useState<string | null>(null);
   const [editAmount, setEditAmount] = useState('');
-  const [editCurrency, setEditCurrency] = useState('USD');
   const [editError, setEditError] = useState('');
 
-  // Set initial currency from user preference
-  useEffect(() => {
-    if (me?.preferredCurrency) {
-      setInputCurrency(me.preferredCurrency);
-    }
-  }, [me?.preferredCurrency]);
 
   // Auto-connect to creator when opened via SOS invite link
   useEffect(() => {
@@ -94,17 +78,7 @@ export function CollectionPage() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isSos, collection?.id, userId]);
 
-  // Preview conversion to USD
-  const { data: preview } = trpc.currency.toUSD.useQuery(
-    { amount: Number(amount), from: inputCurrency },
-    { enabled: !!amount && Number(amount) > 0 && inputCurrency !== 'USD' }
-  );
 
-  // Preview conversion for edit form
-  const { data: editPreview } = trpc.currency.toUSD.useQuery(
-    { amount: Number(editAmount), from: editCurrency },
-    { enabled: !!editingOblId && !!editAmount && Number(editAmount) > 0 && editCurrency !== 'USD' }
-  );
 
   if (isLoading) return <div className="flex justify-center py-12"><Spinner /></div>;
   if (!collection) return <div className="p-4 text-center text-gray-500 dark:text-gray-300">{t('common.notFound')}</div>;
@@ -127,16 +101,16 @@ export function CollectionPage() {
 
   const handleSubmitObligation = () => {
     const num = Number(amount);
-    // At least 1 $ after conversion, not just 1 of any currency.
-    if (!num || num < 1 || (inputCurrency !== 'USD' && preview?.result != null && preview.result < 1)) { setError(t('collection.minAmount')); return; }
+    // Amounts are in $ only: 1 $ = 1 unit of participation, no currency conversion.
+    if (!Number.isInteger(num) || num < 1) { setError(t('collection.minAmount')); return; }
     setError('');
     createObligation.mutate(
-      { collectionId: collection.id, amount: num, inputCurrency },
+      { collectionId: collection.id, amount: num },
       {
         onSuccess: () => {
           // If user came via SOS link (bypassed onboarding) — also save as their potential
           if (isSos && (!me?.monthlyBudget || me.monthlyBudget === 0)) {
-            setBudget.mutate({ amount: num, inputCurrency });
+            setBudget.mutate({ amount: num });
           }
         },
       }
@@ -144,15 +118,7 @@ export function CollectionPage() {
     setAmount('');
   };
 
-  // Build currency options for select
-  const currencyOptions = currencies?.map((c) => ({
-    value: c.code,
-    label: `${c.symbol} ${c.code}`,
-  })) ?? [{ value: 'USD', label: '$ USD' }];
 
-  // Check if collection has original currency info (for owner display)
-  const collectionData = collection as typeof collection & { originalAmount?: number; originalCurrency?: string };
-  const showOriginal = isOwner && collectionData.originalCurrency && collectionData.originalCurrency !== 'USD';
 
   return (
     <div className="p-4 space-y-4">
@@ -194,28 +160,21 @@ export function CollectionPage() {
                     <div className="w-24">
                       <Input
                         type="number"
-                        min={1}
+                        min={10}
+                        step={1}
                         value={goalAmount}
                         onChange={(e) => { setGoalAmount(e.target.value); setGoalError(''); }}
                         error={goalError}
                         onFocus={(e) => { setTimeout(() => e.target.scrollIntoView({ behavior: 'smooth', block: 'center' }), 300); }}
                       />
                     </div>
-                    <div className="w-24">
-                      <Select
-                        id="goal-currency"
-                        className="h-[38px]"
-                        value={goalCurrency}
-                        onChange={(e) => setGoalCurrency(e.target.value)}
-                        options={currencyOptions}
-                      />
-                    </div>
+                    <span className="h-[38px] flex items-center text-sm font-medium text-gray-500 dark:text-gray-300" aria-hidden="true">$</span>
                     <button
                       onClick={() => {
                         const num = Number(goalAmount);
-                        if (!num || num < 1) { setGoalError(t('collection.minAmount')); return; }
+                        if (!Number.isInteger(num) || num < 10) { setGoalError(t('create.minAmount')); return; }
                         updateCollectionAmount.mutate(
-                          { id: collection.id, amount: num, inputCurrency: goalCurrency },
+                          { id: collection.id, amount: num },
                           { onSuccess: () => setEditingGoal(false) }
                         );
                       }}
@@ -231,9 +190,6 @@ export function CollectionPage() {
                       <X className="w-4 h-4" />
                     </button>
                   </div>
-                  {goalCurrency !== 'USD' && Number(goalAmount) > 0 && goalPreview?.result != null && (
-                    <p className="text-xs text-gray-400">≈ ${goalPreview.result} USD</p>
-                  )}
                 </div>
               ) : (
                 <>
@@ -242,17 +198,11 @@ export function CollectionPage() {
                       <div>
                         <p className="text-sm text-gray-500 dark:text-gray-300">{t('collection.goal')}</p>
                         <p className="text-2xl font-bold text-gray-900 dark:text-white">${collection.amount} USD</p>
-                        {showOriginal && (
-                          <p className="text-xs text-gray-400">
-                            ({collectionData.originalAmount} {collectionData.originalCurrency})
-                          </p>
-                        )}
                       </div>
                       {isOwner && (collection.status === 'ACTIVE' || collection.status === 'BLOCKED') && (
                         <button
                           onClick={() => {
-                            setGoalAmount(String(collectionData.originalAmount ?? collection.amount ?? ''));
-                            setGoalCurrency(collectionData.originalCurrency ?? 'USD');
+                            setGoalAmount(String(collection.amount ?? ''));
                             setGoalError('');
                             setEditingGoal(true);
                           }}
@@ -266,7 +216,7 @@ export function CollectionPage() {
                   )}
                   {!hasGoal && isOwner && (collection.status === 'ACTIVE' || collection.status === 'BLOCKED') && (
                     <button
-                      onClick={() => { setGoalAmount(''); setGoalCurrency('USD'); setGoalError(''); setEditingGoal(true); }}
+                      onClick={() => { setGoalAmount(''); setGoalError(''); setEditingGoal(true); }}
                       className="flex items-center gap-1 text-sm text-blue-600 dark:text-blue-400 hover:underline"
                     >
                       <Pencil className="w-3.5 h-3.5" /> {t('collection.setGoal')}
@@ -338,28 +288,13 @@ export function CollectionPage() {
             <div className="space-y-2">
               <div className="flex gap-2">
                 <div className="flex-1">
-                  <Input type="number" min={1} placeholder={t('collection.amountPlaceholder')} hint={t('hints.intentionAmount')} value={amount} onChange={(e) => setAmount(e.target.value)} error={error}
+                  <Input type="number" min={1} step={1} placeholder={t('collection.amountPlaceholder')} hint={t('hints.intentionAmount')} value={amount} onChange={(e) => setAmount(e.target.value)} error={error}
                     onFocus={(e) => { setTimeout(() => e.target.scrollIntoView({ behavior: 'smooth', block: 'center' }), 300); }}
                   />
                 </div>
-                <div className="w-28">
-                  <Select
-                    id="obligation-currency"
-                    className="h-[38px]"
-                    value={inputCurrency}
-                    onChange={(e) => setInputCurrency(e.target.value)}
-                    options={currencyOptions}
-                  />
-                </div>
+                <span className="h-[38px] flex items-center text-sm font-medium text-gray-500 dark:text-gray-300" aria-hidden="true">$</span>
                 <Button onClick={handleSubmitObligation} disabled={createObligation.isPending}>{t('collection.submit')}</Button>
               </div>
-              {/* USD conversion preview */}
-              {inputCurrency !== 'USD' && Number(amount) > 0 && preview?.result != null && (
-                <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-300">
-                  <ArrowRight className="w-4 h-4" />
-                  <span>≈ ${preview.result} USD</span>
-                </div>
-              )}
             </div>
           </CardContent>
         </Card>
@@ -436,16 +371,14 @@ export function CollectionPage() {
           ) : (
             <div className="space-y-2">
               {collection.obligations.map((obl) => {
-                const oblData = obl as typeof obl & { originalAmount?: number; originalCurrency?: string };
-                const showOblOriginal = isOwner && oblData.originalCurrency && oblData.originalCurrency !== 'USD';
+                const oblData = obl as typeof obl & { confirmedAt?: string | null };
                 const isMyObl = obl.userId === userId;
                 const canEdit = isMyObl && (collection.status === 'ACTIVE' || collection.status === 'BLOCKED');
                 const isEditing = editingOblId === obl.id;
 
                 const startEdit = () => {
                   setEditingOblId(obl.id);
-                  setEditAmount(String(oblData.originalAmount ?? obl.amount));
-                  setEditCurrency(oblData.originalCurrency ?? 'USD');
+                  setEditAmount(String(obl.amount));
                   setEditError('');
                 };
 
@@ -456,10 +389,10 @@ export function CollectionPage() {
 
                 const saveEdit = () => {
                   const num = Number(editAmount);
-                  if (!num || num < 1 || (editCurrency !== 'USD' && editPreview?.result != null && editPreview.result < 1)) { setEditError(t('collection.minAmount')); return; }
+                  if (!Number.isInteger(num) || num < 1) { setEditError(t('collection.minAmount')); return; }
                   setEditError('');
                   updateAmount.mutate(
-                    { obligationId: obl.id, amount: num, inputCurrency: editCurrency },
+                    { obligationId: obl.id, amount: num },
                     { onSuccess: () => setEditingOblId(null) }
                   );
                 };
@@ -479,11 +412,6 @@ export function CollectionPage() {
                         <div className="flex items-center gap-2">
                           <div className="text-right">
                             <span className="text-sm font-medium text-gray-900 dark:text-white">${Math.round(obl.amount)} USD</span>
-                            {showOblOriginal && (
-                              <p className="text-xs text-gray-400">
-                                ({oblData.originalAmount} {oblData.originalCurrency})
-                              </p>
-                            )}
                             {(oblData as any).confirmedAt && (
                               <p className="text-xs text-green-600 dark:text-green-400 font-medium">{t('collection.paymentConfirmed')}</p>
                             )}
@@ -517,19 +445,11 @@ export function CollectionPage() {
                       <div className="mt-2 space-y-2 pl-8">
                         <div className="flex gap-2">
                           <div className="flex-1">
-                            <Input type="number" min={1} value={editAmount} onChange={(e) => setEditAmount(e.target.value)} error={editError}
+                            <Input type="number" min={1} step={1} value={editAmount} onChange={(e) => setEditAmount(e.target.value)} error={editError}
                               onFocus={(e) => { setTimeout(() => e.target.scrollIntoView({ behavior: 'smooth', block: 'center' }), 300); }}
                             />
                           </div>
-                          <div className="w-28">
-                            <Select
-                              id="edit-currency"
-                              className="h-[38px]"
-                              value={editCurrency}
-                              onChange={(e) => setEditCurrency(e.target.value)}
-                              options={currencyOptions}
-                            />
-                          </div>
+                          <span className="h-[38px] flex items-center text-sm font-medium text-gray-500 dark:text-gray-300" aria-hidden="true">$</span>
                           <button onClick={saveEdit} disabled={updateAmount.isPending} className="p-2 text-green-600 hover:text-green-700 disabled:opacity-50" title={t('collection.saveAmount')}>
                             <Check className="w-4 h-4" />
                           </button>
@@ -537,12 +457,6 @@ export function CollectionPage() {
                             <X className="w-4 h-4" />
                           </button>
                         </div>
-                        {editCurrency !== 'USD' && Number(editAmount) > 0 && editPreview?.result != null && (
-                          <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-300">
-                            <ArrowRight className="w-4 h-4" />
-                            <span>≈ ${editPreview.result} USD</span>
-                          </div>
-                        )}
                       </div>
                     )}
                   </div>

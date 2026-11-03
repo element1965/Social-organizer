@@ -2,7 +2,6 @@ import { z } from 'zod';
 import { router, protectedProcedure } from '../trpc.js';
 import { TRPCError } from '@trpc/server';
 import { CONTACT_TYPES, CURRENCY_CODES, MIN_OBLIGATION_AMOUNT } from '@so/shared';
-import { convertToUSD } from '../services/currency.service.js';
 import { canViewContacts } from '../services/visibility.service.js';
 import { sendUserDeletedNotification } from '../services/notification.service.js';
 
@@ -171,15 +170,13 @@ export const userRouter = router({
 
   setMonthlyBudget: protectedProcedure
     .input(z.object({
-      amount: z.number().min(0),
-      inputCurrency: z.string().refine((c) => CURRENCY_CODES.includes(c), 'Unsupported currency'),
+      amount: z.number().int().min(0), // whole $ only: 1 $ = 1 unit
+      inputCurrency: z.literal('USD').default('USD'), // amounts are in $ only: 1 $ = 1 unit, no conversion (SO-40)
     }))
     .mutation(async ({ ctx, input }) => {
-      const amountUSD = input.inputCurrency === 'USD'
-        ? input.amount
-        : await convertToUSD(input.amount, input.inputCurrency);
+      const amountUSD = input.amount;
       // 0 means "no capacity right now"; any other value must be at least 1 $.
-      if (input.amount > 0 && amountUSD < MIN_OBLIGATION_AMOUNT) {
+      if (amountUSD > 0 && amountUSD < MIN_OBLIGATION_AMOUNT) {
         throw new TRPCError({ code: 'BAD_REQUEST', message: 'MIN_AMOUNT_USD' });
       }
 

@@ -204,7 +204,7 @@
     "close": "Encerrar vaquinha",
     "participants": "Participantes",
     "noParticipants": "Ninguém participou ainda",
-    "minAmount": "Mínimo 1 $",
+    "minAmount": "Número inteiro, a partir de 1 $",
     "connectionToCreator": "Conexão com o criador",
     "editAmount": "Editar",
     "saveAmount": "Salvar",
@@ -235,7 +235,7 @@
     "currency": "Moeda",
     "chatLink": "Link do chat",
     "submit": "Notificar",
-    "minAmount": "Mínimo 10",
+    "minAmount": "Número inteiro, a partir de 10 $",
     "invalidUrl": "URL inválida",
     "chatHelpToggle": "Como criar um chat no Telegram?",
     "chatHelpTitle": "Como obter o link do chat:",
@@ -728,5 +728,15 @@
     "inviteSomeone": "Convidar um conhecido",
     "inviteGone": "A pessoa que convidou você excluiu a conta. Convide alguém que você conhece pessoalmente.",
     "continue": "Continuar"
+  },
+  "milestones": {
+    "title": "Marcos",
+    "first": "Primeiro aperto de mão",
+    "ten": "10 conexões diretas",
+    "notYet": "Ainda por vir",
+    "progress": "{{count}} de {{total}}",
+    "nowCount": "agora {{count}}",
+    "newBadge": "Novo marco",
+    "dismiss": "Fechar"
   }
 }

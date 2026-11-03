@@ -204,7 +204,7 @@
     "close": "关闭募集",
     "participants": "参与者",
     "noParticipants": "暂无人参与",
-    "minAmount": "最少 1 $",
+    "minAmount": "整数，至少 1 $",
     "connectionToCreator": "与发起人的连接",
     "editAmount": "Edit",
     "saveAmount": "Save",
@@ -235,7 +235,7 @@
     "currency": "货币",
     "chatLink": "聊天链接",
     "submit": "通知",
-    "minAmount": "最少 10",
+    "minAmount": "整数，至少 10 $",
     "invalidUrl": "无效的链接",
     "chatHelpToggle": "如何创建 Telegram 群聊？",
     "chatHelpTitle": "如何获取聊天链接：",
@@ -728,5 +728,15 @@
     "inviteSomeone": "邀请熟人",
     "inviteGone": "邀请你的人已删除账号。请邀请一位你亲自认识的人。",
     "continue": "继续"
+  },
+  "milestones": {
+    "title": "里程碑",
+    "first": "第一次握手",
+    "ten": "10 个直接联系",
+    "notYet": "尚未达成",
+    "progress": "{{count}} / {{total}}",
+    "nowCount": "当前 {{count}}",
+    "newBadge": "新里程碑",
+    "dismiss": "关闭"
   }
 }

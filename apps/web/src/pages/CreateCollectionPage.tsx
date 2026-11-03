@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { trpc } from '../lib/trpc';
@@ -8,7 +8,6 @@ import { VideoGuide } from '../components/VideoGuide';
 import { Card, CardContent, CardHeader } from '../components/ui/card';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
-import { Select } from '../components/ui/select';
 import { Badge } from '../components/ui/badge';
 import { Progress } from '../components/ui/progress';
 import { Spinner } from '../components/ui/spinner';
@@ -32,36 +31,19 @@ export function CreateCollectionPage() {
   const { data: networkStats } = useCachedNetworkStats();
   const { data: myCollections } = trpc.collection.myActive.useQuery(undefined, { refetchInterval: 30000 });
   const { data: myObligations } = trpc.obligation.myList.useQuery(undefined, { refetchInterval: 30000 });
-  const { data: currencies } = trpc.currency.list.useQuery();
-  const { data: detectedCurrency } = trpc.currency.detectCurrency.useQuery();
 
   const [type, setType] = useState<'EMERGENCY' | 'REGULAR'>('EMERGENCY');
   const [amount, setAmount] = useState('');
-  const [inputCurrency, setInputCurrency] = useState('USD');
   const [chatLink, setChatLink] = useState('');
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [largeAmountConfirmed, setLargeAmountConfirmed] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [confirmChecked, setConfirmChecked] = useState(false);
 
-  // Set initial currency from user preference or detected
-  useEffect(() => {
-    if (me?.preferredCurrency) {
-      setInputCurrency(me.preferredCurrency);
-    } else if (detectedCurrency?.currency) {
-      setInputCurrency(detectedCurrency.currency);
-    }
-  }, [me?.preferredCurrency, detectedCurrency?.currency]);
-
   const create = trpc.collection.create.useMutation({ onSuccess: (data) => navigate(`/collection/${data.id}`) });
 
-  // Preview conversion to USD
-  const { data: preview } = trpc.currency.toUSD.useQuery(
-    { amount: Number(amount), from: inputCurrency },
-    { enabled: !!amount && Number(amount) > 0 && inputCurrency !== 'USD' }
-  );
-
-  const amountInUSD = inputCurrency === 'USD' ? Number(amount) : (preview?.result ?? 0);
+  // Amounts are in $ only: 1 $ = 1 unit of participation, no currency conversion (SO-40)
+  const amountInUSD = Number(amount);
   const isLargeAmount = amountInUSD > 10000;
 
   const normalizeChatLink = (link: string): string => {
@@ -75,7 +57,7 @@ export function CreateCollectionPage() {
   const validate = () => {
     const e: Record<string, string> = {};
     const num = Number(amount);
-    if (!num || num < 10) e.amount = t('create.minAmount');
+    if (!Number.isInteger(num) || num < 10) e.amount = t('create.minAmount');
     const normalized = normalizeChatLink(chatLink);
     try { new URL(normalized); } catch { e.chatLink = t('create.invalidUrl'); }
     if (!e.chatLink && normalized !== chatLink) setChatLink(normalized);
@@ -100,14 +82,8 @@ export function CreateCollectionPage() {
 
   const handleConfirmedSubmit = () => {
     setShowConfirmModal(false);
-    create.mutate({ type, amount: Number(amount), inputCurrency, chatLink });
+    create.mutate({ type, amount: Number(amount), chatLink });
   };
-
-  // Build currency options for select
-  const currencyOptions = currencies?.map((c) => ({
-    value: c.code,
-    label: `${c.symbol} ${c.code}`,
-  })) ?? [{ value: 'USD', label: '$ USD' }];
 
   const { data: adminData } = trpc.faq.isAdmin.useQuery();
   const isSpecial = me?.role === 'AUTHOR' || me?.role === 'DEVELOPER' || adminData?.isAdmin;
@@ -137,34 +113,18 @@ export function CreateCollectionPage() {
               <div className="flex-1">
                 <Input
                   id="amount"
-                  label={t('create.amount')}
+                  label={`${t('create.amount')}, $`}
                   hint={t('hints.collectionAmount')}
                   type="number"
                   min={10}
+                  step={1}
                   placeholder="1000"
                   value={amount}
                   onChange={(e) => { setAmount(e.target.value); setLargeAmountConfirmed(false); }}
                   error={errors.amount}
                 />
               </div>
-              <div className="w-32">
-                <Select
-                  id="currency"
-                  label={t('create.currency')}
-                  value={inputCurrency}
-                  onChange={(e) => setInputCurrency(e.target.value)}
-                  options={currencyOptions}
-                />
-              </div>
             </div>
-
-            {/* USD conversion preview */}
-            {inputCurrency !== 'USD' && Number(amount) > 0 && preview?.result != null && (
-              <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-300">
-                <ArrowRight className="w-4 h-4" />
-                <span>≈ ${preview.result} USD</span>
-              </div>
-            )}
           </div>
 
           {isLargeAmount && (

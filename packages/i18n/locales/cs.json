@@ -204,7 +204,7 @@
     "close": "Uzavřít sbírku",
     "participants": "Účastníci",
     "noParticipants": "Zatím se nikdo nepřipojil",
-    "minAmount": "Minimálně 1 $",
+    "minAmount": "Celé číslo, od 1 $",
     "connectionToCreator": "Spojení s autorem",
     "editAmount": "Edit",
     "saveAmount": "Save",
@@ -235,7 +235,7 @@
     "currency": "Měna",
     "chatLink": "Odkaz na chat",
     "submit": "Upozornit",
-    "minAmount": "Minimálně 10",
+    "minAmount": "Celé číslo, od 10 $",
     "invalidUrl": "Neplatná URL",
     "chatHelpToggle": "Jak vytvořit Telegram chat?",
     "chatHelpTitle": "Jak získat odkaz na chat:",
@@ -728,5 +728,15 @@
     "inviteSomeone": "Pozvat známého",
     "inviteGone": "Ten, kdo tě pozval, smazal účet. Pozvi někoho, koho znáš osobně.",
     "continue": "Pokračovat"
+  },
+  "milestones": {
+    "title": "Milníky",
+    "first": "První podání ruky",
+    "ten": "10 přímých spojení",
+    "notYet": "Teprve přijde",
+    "progress": "{{count}} z {{total}}",
+    "nowCount": "nyní {{count}}",
+    "newBadge": "Nový milník",
+    "dismiss": "Zavřít"
   }
 }

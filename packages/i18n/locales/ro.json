@@ -204,7 +204,7 @@
     "close": "Inchide colecta",
     "participants": "Participanti",
     "noParticipants": "Nimeni nu s-a alaturat inca",
-    "minAmount": "Minim 1 $",
+    "minAmount": "Număr întreg, de la 1 $",
     "connectionToCreator": "Conexiune catre creator",
     "editAmount": "Edit",
     "saveAmount": "Save",
@@ -235,7 +235,7 @@
     "currency": "Moneda",
     "chatLink": "Link chat",
     "submit": "Notifică",
-    "minAmount": "Minim 10",
+    "minAmount": "Număr întreg, de la 10 $",
     "invalidUrl": "URL invalid",
     "chatHelpToggle": "Cum creezi un chat Telegram?",
     "chatHelpTitle": "Cum obții un link de chat:",
@@ -728,5 +728,15 @@
     "inviteSomeone": "Invită un cunoscut",
     "inviteGone": "Cel care te-a invitat și-a șters contul. Invită pe cineva pe care îl cunoști personal.",
     "continue": "Continuă"
+  },
+  "milestones": {
+    "title": "Repere",
+    "first": "Prima strângere de mână",
+    "ten": "10 conexiuni directe",
+    "notYet": "Urmează",
+    "progress": "{{count}} din {{total}}",
+    "nowCount": "acum {{count}}",
+    "newBadge": "Reper nou",
+    "dismiss": "Închide"
   }
 }
