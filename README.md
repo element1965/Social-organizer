@@ -81,7 +81,7 @@ pnpm dev
 
 | Model | Description |
 |-------|-------------|
-| User | User with settings, role, onboarding flag, preferredCurrency, monthlyBudget, remainingBudget, lastSeen, hideContacts, skillsCompleted |
+| User | User with settings, role, onboarding flag, emailVerifiedAt (mailbox proven), preferredCurrency, monthlyBudget, remainingBudget, lastSeen, hideContacts, skillsCompleted |
 | UserContact | User contacts (social networks, messengers) |
 | PlatformAccount | Platform bindings (FB/TG/Apple/Google) |
 | Connection | Connection between users (userAId < userBId) with optional nicknames (nicknameByA, nicknameByB) |
@@ -90,6 +90,7 @@ pnpm dev
 | Notification | Notification with handshake path |
 | IgnoreEntry | Ignore record |
 | LinkingCode | 6-digit linking code (5 min TTL) |
+| EmailLoginCode | One-time e-mail sign-in code (HMAC only, 10 min TTL, attempts counter) |
 | InviteLink | Invitation link |
 | ChatMessage | Chat conversation log (user message, assistant response, feedback flag, language) |
 | PushSubscription | Web Push subscription (endpoint, keys, user FK) |
@@ -141,7 +142,7 @@ FIREBASE_SERVICE_ACCOUNT={"type":"service_account",...}  # FCM service account J
 
 | Router | Procedures |
 |--------|------------|
-| `auth` | registerWithEmail, loginWithEmail, loginWithTelegram, loginWithGoogle, refresh, generateLinkCode, loginWithLinkCode, claimWithLinkCode |
+| `auth` | methods, requestEmailCode, verifyEmailCode, loginWithTelegramWidget, registerWithEmail, loginWithEmail, loginWithTelegram, loginWithGoogle, refresh, generateLinkCode, loginWithLinkCode, claimWithLinkCode |
 | `user` | me, update, getById, getStats, getContacts, updateContacts, completeOnboarding, delete, setMonthlyBudget |
 | `connection` | list, listForUser, add (limit 150), getCount, graphSlice (2-3 levels), findPath, getNetworkStats, getNickname, setNickname |
 | `collection` | create, getById, close, cancel, myActive, myParticipating |
@@ -194,7 +195,10 @@ The network must survive losing the database or the hosting provider. Three inde
 ### Security
 
 - **Tokens.** Every request is authorised only by an access token with a valid HMAC signature and expiry (`verifyToken` in `apps/api/src/services/auth.service.ts`); refresh tokens are accepted only by `auth.refresh`. `JWT_SECRET` has no default.
-- **Rate limits** (in memory, per client IP from `X-Real-IP`): 600 requests/min on everything; 30 per 15 min on guessable sign-in procedures (email login/register, link-code login/claim); 10 wrong link-code attempts per hour per IP (and per Telegram/Apple account) across every flow that accepts a 6-digit code. Link-code issue and use are logged with `[link-code]`.
+- **Single sign-in screen (SO-21)** — `/login` shows one screen "Sign in or create an account" with Google, Apple, Telegram and "E-mail: we'll send a code"; the server decides whether the account is new, no password is needed. `auth.methods` tells which methods are available, a disabled one is hidden (no e-mail service in production → the e-mail button falls back to e-mail + password; Telegram Login Widget is off until `TELEGRAM_LOGIN_WIDGET=1`, then the button opens the bot's mini app). The last used method (method only, no account data) is kept on the device for a hint.
+- **E-mail codes** — `auth.requestEmailCode` / `auth.verifyEmailCode` (`services/email-code.service.ts`): 6 digits, 10 min, only the latest code works, a new code no sooner than 60 s and at most 5 per address per hour, 5 wrong entries burn the code, one use (a second request with the same code gets nothing). The answer to "send a code" does not reveal whether the address is registered. Only an HMAC of the code is stored; codes and tokens are never logged. Mail goes through Resend (`RESEND_API_KEY`, `MAIL_FROM`); without a key a non-production server writes messages to a local outbox file (`DEV_MAIL_OUTBOX`).
+- **Account matching** — `services/identity.service.ts`: Google/Apple sign-in finds the person by the provider account, then by an e-mail proven on both sides (`emailVerifiedAt`, or an account that never had a password). A password account whose e-mail was never proven is not taken over: the answer is `ACCOUNT_EXISTS_OTHER_METHOD`, the screen asks to sign in with an e-mail code first. A parallel first sign-in with one provider account creates one user. Telegram on the website uses the Login Widget, checked on the server (`validateTelegramWidget`); a bare Telegram id is never accepted.
+- **Rate limits** (in memory, per client IP from `X-Real-IP`): 600 requests/min on everything; 30 per 15 min on guessable sign-in procedures (e-mail code request/check, email login/register, link-code login/claim); 10 wrong link-code attempts per hour per IP (and per Telegram/Apple account) across every flow that accepts a 6-digit code. Link-code issue and use are logged with `[link-code]`.
 - **Data exposure.** `user.me` never returns the password hash or coordinates; `user.getById` returns a phone only under the same rule as contacts (`canViewContacts`).
 - **Push.** `push.subscribe` won't move an endpoint owned by another user unless the subscription keys match (same browser, another account) — otherwise 403.
 - **Collection chat links** must be `http(s)://` (no `javascript:` links on the collection page or in bot buttons).

@@ -39,12 +39,13 @@ export function GoogleCallbackPage() {
       // Web flow
     }
 
-    const goError = () => {
+    // reason lets the sign-in screen show the next step (SO-21)
+    const goError = (reason: 'failed' | 'account_exists' = 'failed') => {
       if (isNativeCallback) {
-        const fallback = encodeURIComponent('https://www.orginizer.com/login');
-        window.location.href = `intent://auth-error#Intent;scheme=socialorganizer;package=com.socialorganizer.app;S.browser_fallback_url=${fallback};end`;
+        const fallback = encodeURIComponent(`https://www.orginizer.com/login?error=${reason}`);
+        window.location.href = `intent://auth-error?reason=${reason}#Intent;scheme=socialorganizer;package=com.socialorganizer.app;S.browser_fallback_url=${fallback};end`;
       } else {
-        navigate('/login');
+        navigate(`/login?error=${reason}`);
       }
     };
 
@@ -85,7 +86,7 @@ export function GoogleCallbackPage() {
             }
           }
         },
-        onError: goError,
+        onError: (err) => goError(err.message === 'ACCOUNT_EXISTS_OTHER_METHOD' ? 'account_exists' : 'failed'),
       },
     );
   // eslint-disable-next-line react-hooks/exhaustive-deps

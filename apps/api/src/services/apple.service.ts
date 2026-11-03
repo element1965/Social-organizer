@@ -1,4 +1,5 @@
 import { findLinkingCode } from './link-code.service.js';
+import { resolveExternalIdentity } from './identity.service.js';
 import crypto from 'node:crypto';
 import type { PrismaClient } from '@so/db';
 import { createAccessToken, createRefreshToken } from './auth.service.js';
@@ -151,47 +152,15 @@ export async function findOrCreateAppleUser(
     return { ...issue(user.id), userId: user.id, isNew: false };
   }
 
-  // 1. Existing Apple account
-  const platformAccount = await db.platformAccount.findUnique({
-    where: { platform_platformId: { platform: 'APPLE', platformId: apple.sub } },
+  // 1–3. Known Apple account, same proven e-mail, or a new person (SO-21).
+  // AccountExistsError propagates: the caller tells the person to sign in the old way.
+  const { userId, isNew } = await resolveExternalIdentity(db, {
+    platform: 'APPLE',
+    platformId: apple.sub,
+    verifiedEmail: apple.email_verified && apple.email ? apple.email : null,
+    name,
   });
-  if (platformAccount) {
-    return { ...issue(platformAccount.userId), userId: platformAccount.userId, isNew: false };
-  }
-
-  // 2. Verified email — link to an existing user with the same email
-  if (apple.email_verified && apple.email) {
-    const existingUser = await db.user.findUnique({ where: { email: apple.email.toLowerCase() } });
-    if (existingUser) {
-      await db.platformAccount.create({
-        data: { userId: existingUser.id, platform: 'APPLE', platformId: apple.sub },
-      });
-      return { ...issue(existingUser.id), userId: existingUser.id, isNew: false };
-    }
-    const user = await db.user.create({
-      data: {
-        name,
-        email: apple.email.toLowerCase(),
-        monthlyBudget: 1,
-        remainingBudget: 1,
-        onboardingCompleted: true,
-        platformAccounts: { create: { platform: 'APPLE', platformId: apple.sub } },
-      },
-    });
-    return { ...issue(user.id), userId: user.id, isNew: true };
-  }
-
-  // 3. No verified email — create a user without an email
-  const user = await db.user.create({
-    data: {
-      name,
-      monthlyBudget: 1,
-      remainingBudget: 1,
-      onboardingCompleted: true,
-      platformAccounts: { create: { platform: 'APPLE', platformId: apple.sub } },
-    },
-  });
-  return { ...issue(user.id), userId: user.id, isNew: true };
+  return { ...issue(userId), userId, isNew };
 }
 
 function issue(userId: string): { accessToken: string; refreshToken: string } {
