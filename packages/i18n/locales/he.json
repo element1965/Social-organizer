@@ -214,7 +214,7 @@
     "close": "סגור איסוף",
     "participants": "משתתפים",
     "noParticipants": "עדיין אף אחד לא הצטרף",
-    "minAmount": "מינימום 1",
+    "minAmount": "מינימום 1 $",
     "connectionToCreator": "חיבור ליצרן",
     "editAmount": "Edit",
     "saveAmount": "Save",
@@ -515,6 +515,7 @@
   "invite": {
     "title": "הזמנה",
     "from": "{{name}} הזמין אותך — {{count}} אנשים ברשת, {{amount}} $ בכוונות מוצהרות",
+    "fromNoAmount": "{{name}} הזמין אותך — {{count}} אנשים ברשת",
     "accept": "קבל והתחבר",
     "decline": "דחה",
     "alreadyUsed": "ההזמנה הזאת כבר נוצלה",

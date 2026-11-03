@@ -204,7 +204,7 @@
     "close": "Закрыть сбор",
     "participants": "Участники",
     "noParticipants": "Пока никто не вписался",
-    "minAmount": "Минимум 1",
+    "minAmount": "Минимум 1 $",
     "connectionToCreator": "Связь с создателем",
     "editAmount": "Изменить",
     "saveAmount": "Сохранить",
@@ -505,6 +505,7 @@
   "invite": {
     "title": "Приглашение",
     "from": "Вас пригласил {{name}}, в сети {{count}} человек, заявлено намерений на {{amount}} $",
+    "fromNoAmount": "Вас пригласил {{name}}, в сети {{count}} человек",
     "accept": "Принять и связаться",
     "decline": "Отклонить",
     "alreadyUsed": "Это приглашение уже использовано",

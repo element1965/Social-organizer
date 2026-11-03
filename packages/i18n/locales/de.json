@@ -204,7 +204,7 @@
     "close": "Sammlung schließen",
     "participants": "Teilnehmer",
     "noParticipants": "Noch niemand beigetreten",
-    "minAmount": "Mindestens 1",
+    "minAmount": "Mindestens 1 $",
     "connectionToCreator": "Verbindung zum Ersteller",
     "editAmount": "Bearbeiten",
     "saveAmount": "Speichern",
@@ -447,6 +447,7 @@
   "invite": {
     "title": "Einladung",
     "from": "{{name}} hat dich eingeladen — {{count}} Personen im Netzwerk, {{amount}} $ erklärte Absichten",
+    "fromNoAmount": "{{name}} hat dich eingeladen — {{count}} Personen im Netzwerk",
     "accept": "Annehmen und verbinden",
     "decline": "Ablehnen",
     "alreadyUsed": "Diese Einladung wurde bereits verwendet",

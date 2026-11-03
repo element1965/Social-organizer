@@ -204,7 +204,7 @@
     "close": "संग्रह बंद करें",
     "participants": "प्रतिभागी",
     "noParticipants": "अभी तक कोई शामिल नहीं हुआ",
-    "minAmount": "न्यूनतम 1",
+    "minAmount": "न्यूनतम 1 $",
     "connectionToCreator": "निर्माता से संबंध",
     "editAmount": "Edit",
     "saveAmount": "Save",
@@ -505,6 +505,7 @@
   "invite": {
     "title": "निमंत्रण",
     "from": "{{name}} ने आपको आमंत्रित किया — नेटवर्क में {{count}} लोग, {{amount}} $ घोषित इरादे",
+    "fromNoAmount": "{{name}} ने आपको आमंत्रित किया — नेटवर्क में {{count}} लोग",
     "accept": "स्वीकार करें और जुड़ें",
     "decline": "अस्वीकार करें",
     "alreadyUsed": "यह निमंत्रण पहले ही उपयोग हो चुका है",

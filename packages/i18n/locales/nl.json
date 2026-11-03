@@ -204,7 +204,7 @@
     "close": "Inzameling sluiten",
     "participants": "Deelnemers",
     "noParticipants": "Nog niemand heeft meegedaan",
-    "minAmount": "Minimaal 1",
+    "minAmount": "Minimaal 1 $",
     "connectionToCreator": "Verbinding met maker",
     "editAmount": "Edit",
     "saveAmount": "Save",
@@ -505,6 +505,7 @@
   "invite": {
     "title": "Uitnodiging",
     "from": "{{name}} heeft je uitgenodigd — {{count}} mensen in het netwerk, {{amount}} $ aan verklaarde intenties",
+    "fromNoAmount": "{{name}} heeft je uitgenodigd — {{count}} mensen in het netwerk",
     "accept": "Accepteren en verbinden",
     "decline": "Weigeren",
     "alreadyUsed": "Deze uitnodiging is al gebruikt",

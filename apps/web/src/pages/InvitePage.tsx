@@ -145,11 +145,12 @@ function InviteAcceptView({ token }: { token: string }) {
           <Logo size={48} className="text-gray-900 dark:text-teal-400 mx-auto mb-3" />
           <Avatar src={invite.inviter.photoUrl} name={invite.inviter.name} size="lg" className="mx-auto mb-3" />
           <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-4">
-            {t('invite.from', {
-              name: invite.inviter.name,
-              count: (invite as any).networkCount ?? 0,
-              amount: (invite as any).totalIntentions ?? 0,
-            })}
+            {(() => {
+              // An intention is at least 1 $, so a smaller total is not shown at all.
+              const total = Math.round((invite as any).totalIntentions ?? 0);
+              const vars = { name: invite.inviter.name, count: (invite as any).networkCount ?? 0 };
+              return total >= 1 ? t('invite.from', { ...vars, amount: total }) : t('invite.fromNoAmount', vars);
+            })()}
           </h2>
 
           {(accept.isSuccess && (accept.data as any)?.alreadyConnected) || confirmedNow ? (

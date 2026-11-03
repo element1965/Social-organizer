@@ -204,7 +204,7 @@
     "close": "募集を終了",
     "participants": "参加者",
     "noParticipants": "まだ参加者はいません",
-    "minAmount": "最低 1",
+    "minAmount": "最低 1 $",
     "connectionToCreator": "発起人とのつながり",
     "editAmount": "Edit",
     "saveAmount": "Save",
@@ -505,6 +505,7 @@
   "invite": {
     "title": "招待",
     "from": "{{name}}に招待されました — ネットワークに{{count}}人、宣言された意向{{amount}}$",
+    "fromNoAmount": "{{name}}に招待されました — ネットワークに{{count}}人",
     "accept": "承認してつながる",
     "decline": "辞退",
     "alreadyUsed": "この招待は既に使用されています",

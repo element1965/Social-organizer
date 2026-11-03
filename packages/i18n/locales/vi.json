@@ -204,7 +204,7 @@
     "close": "Đóng quyên góp",
     "participants": "Người tham gia",
     "noParticipants": "Chưa có ai tham gia",
-    "minAmount": "Tối thiểu 1",
+    "minAmount": "Tối thiểu 1 $",
     "connectionToCreator": "Kết nối với người tạo",
     "editAmount": "Edit",
     "saveAmount": "Save",
@@ -505,6 +505,7 @@
   "invite": {
     "title": "Lời mời",
     "from": "{{name}} đã mời bạn — {{count}} người trong mạng lưới, {{amount}} $ ý định được tuyên bố",
+    "fromNoAmount": "{{name}} đã mời bạn — {{count}} người trong mạng lưới",
     "accept": "Chấp nhận và kết nối",
     "decline": "Từ chối",
     "alreadyUsed": "Lời mời này đã được sử dụng",

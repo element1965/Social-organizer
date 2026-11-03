@@ -35,10 +35,16 @@ export function CollectionPage() {
     { targetUserId: collection?.creatorId! },
     { enabled: !!collection && collection.creatorId !== userId }
   );
-  const createObligation = trpc.obligation.create.useMutation({ onSuccess: () => utils.collection.getById.invalidate({ id: id! }) });
+  const createObligation = trpc.obligation.create.useMutation({
+    onSuccess: () => utils.collection.getById.invalidate({ id: id! }),
+    onError: (e) => { if (e.message === 'MIN_AMOUNT_USD') setError(t('collection.minAmount')); },
+  });
   const closeCollection = trpc.collection.close.useMutation({ onSuccess: () => utils.collection.getById.invalidate({ id: id! }) });
   const confirmPayment = trpc.obligation.confirmPayment.useMutation({ onSuccess: () => utils.collection.getById.invalidate({ id: id! }) });
-  const updateAmount = trpc.obligation.updateAmount.useMutation({ onSuccess: () => utils.collection.getById.invalidate({ id: id! }) });
+  const updateAmount = trpc.obligation.updateAmount.useMutation({
+    onSuccess: () => utils.collection.getById.invalidate({ id: id! }),
+    onError: (e) => { if (e.message === 'MIN_AMOUNT_USD') setEditError(t('collection.minAmount')); },
+  });
   const updateChatLink = trpc.collection.updateChatLink.useMutation({ onSuccess: () => utils.collection.getById.invalidate({ id: id! }) });
   const updateCollectionAmount = trpc.collection.updateAmount.useMutation({ onSuccess: () => utils.collection.getById.invalidate({ id: id! }) });
   const acceptSos = trpc.invite.acceptSos.useMutation({
@@ -121,7 +127,8 @@ export function CollectionPage() {
 
   const handleSubmitObligation = () => {
     const num = Number(amount);
-    if (!num || num < 1) { setError(t('collection.minAmount')); return; }
+    // At least 1 $ after conversion, not just 1 of any currency.
+    if (!num || num < 1 || (inputCurrency !== 'USD' && preview?.result != null && preview.result < 1)) { setError(t('collection.minAmount')); return; }
     setError('');
     createObligation.mutate(
       { collectionId: collection.id, amount: num, inputCurrency },
@@ -449,7 +456,7 @@ export function CollectionPage() {
 
                 const saveEdit = () => {
                   const num = Number(editAmount);
-                  if (!num || num < 1) { setEditError(t('collection.minAmount')); return; }
+                  if (!num || num < 1 || (editCurrency !== 'USD' && editPreview?.result != null && editPreview.result < 1)) { setEditError(t('collection.minAmount')); return; }
                   setEditError('');
                   updateAmount.mutate(
                     { obligationId: obl.id, amount: num, inputCurrency: editCurrency },

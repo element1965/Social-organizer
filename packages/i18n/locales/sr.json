@@ -204,7 +204,7 @@
     "close": "Затвори прикупљање",
     "participants": "Учесници",
     "noParticipants": "Још нико се није придружио",
-    "minAmount": "Минимум 1",
+    "minAmount": "Минимум 1 $",
     "connectionToCreator": "Веза са креатором",
     "editAmount": "Edit",
     "saveAmount": "Save",
@@ -505,6 +505,7 @@
   "invite": {
     "title": "Позивница",
     "from": "{{name}} vas je pozvao — {{count}} osoba u mreži, {{amount}} $ prijavljenih namjera",
+    "fromNoAmount": "{{name}} vas je pozvao — {{count}} osoba u mreži",
     "accept": "Прихвати и повежи се",
     "decline": "Одбиј",
     "alreadyUsed": "Ова позивница је већ искоришћена",

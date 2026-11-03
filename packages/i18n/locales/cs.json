@@ -204,7 +204,7 @@
     "close": "Uzavřít sbírku",
     "participants": "Účastníci",
     "noParticipants": "Zatím se nikdo nepřipojil",
-    "minAmount": "Minimálně 1",
+    "minAmount": "Minimálně 1 $",
     "connectionToCreator": "Spojení s autorem",
     "editAmount": "Edit",
     "saveAmount": "Save",
@@ -505,6 +505,7 @@
   "invite": {
     "title": "Pozvánka",
     "from": "{{name}} vás pozval — {{count}} lidí v síti, {{amount}} $ deklarovaných záměrů",
+    "fromNoAmount": "{{name}} vás pozval — {{count}} lidí v síti",
     "accept": "Přijmout a propojit",
     "decline": "Odmítnout",
     "alreadyUsed": "Tato pozvánka již byla použita",

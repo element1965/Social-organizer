@@ -204,7 +204,7 @@
     "close": "Inchide colecta",
     "participants": "Participanti",
     "noParticipants": "Nimeni nu s-a alaturat inca",
-    "minAmount": "Minim 1",
+    "minAmount": "Minim 1 $",
     "connectionToCreator": "Conexiune catre creator",
     "editAmount": "Edit",
     "saveAmount": "Save",
@@ -505,6 +505,7 @@
   "invite": {
     "title": "Invitatie",
     "from": "{{name}} te-a invitat — {{count}} persoane în rețea, {{amount}} $ în intenții declarate",
+    "fromNoAmount": "{{name}} te-a invitat — {{count}} persoane în rețea",
     "accept": "Accepta si conecteaza",
     "decline": "Refuza",
     "alreadyUsed": "Aceasta invitatie a fost deja folosita",

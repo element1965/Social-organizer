@@ -204,7 +204,7 @@
     "close": "모금 종료",
     "participants": "참여자",
     "noParticipants": "아직 참여자가 없습니다",
-    "minAmount": "최소 1",
+    "minAmount": "최소 1 $",
     "connectionToCreator": "생성자와의 연결",
     "editAmount": "Edit",
     "saveAmount": "Save",
@@ -505,6 +505,7 @@
   "invite": {
     "title": "초대",
     "from": "{{name}}이 초대했습니다 — 네트워크에 {{count}}명, {{amount}}$ 선언된 의향",
+    "fromNoAmount": "{{name}}이 초대했습니다 — 네트워크에 {{count}}명",
     "accept": "수락하고 연결",
     "decline": "거절",
     "alreadyUsed": "이 초대는 이미 사용되었습니다",

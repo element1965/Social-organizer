@@ -204,7 +204,7 @@
     "close": "Koleksiyonu kapat",
     "participants": "Katılımcılar",
     "noParticipants": "Henüz kimse katılmadı",
-    "minAmount": "En az 1",
+    "minAmount": "En az 1 $",
     "connectionToCreator": "Oluşturucuya bağlantı",
     "editAmount": "Edit",
     "saveAmount": "Save",
@@ -505,6 +505,7 @@
   "invite": {
     "title": "Davet",
     "from": "{{name}} sizi davet etti — ağda {{count}} kişi, {{amount}} $ beyan edilen niyet",
+    "fromNoAmount": "{{name}} sizi davet etti — ağda {{count}} kişi",
     "accept": "Kabul Et ve Bağlan",
     "decline": "Reddet",
     "alreadyUsed": "Bu davet zaten kullanılmış",

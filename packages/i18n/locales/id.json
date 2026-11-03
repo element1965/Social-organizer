@@ -204,7 +204,7 @@
     "close": "Tutup penggalangan",
     "participants": "Peserta",
     "noParticipants": "Belum ada yang bergabung",
-    "minAmount": "Minimal 1",
+    "minAmount": "Minimal 1 $",
     "connectionToCreator": "Koneksi ke pembuat",
     "editAmount": "Edit",
     "saveAmount": "Save",
@@ -505,6 +505,7 @@
   "invite": {
     "title": "Undangan",
     "from": "{{name}} mengundang Anda — {{count}} orang di jaringan, {{amount}} $ niat yang dinyatakan",
+    "fromNoAmount": "{{name}} mengundang Anda — {{count}} orang di jaringan",
     "accept": "Terima & Hubungkan",
     "decline": "Tolak",
     "alreadyUsed": "Undangan ini sudah digunakan",

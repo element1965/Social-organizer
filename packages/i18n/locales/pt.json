@@ -204,7 +204,7 @@
     "close": "Encerrar vaquinha",
     "participants": "Participantes",
     "noParticipants": "Ninguém participou ainda",
-    "minAmount": "Mínimo 1",
+    "minAmount": "Mínimo 1 $",
     "connectionToCreator": "Conexão com o criador",
     "editAmount": "Editar",
     "saveAmount": "Salvar",
@@ -447,6 +447,7 @@
   "invite": {
     "title": "Convite",
     "from": "{{name}} convidou você — {{count}} pessoas na rede, {{amount}} $ em intenções declaradas",
+    "fromNoAmount": "{{name}} convidou você — {{count}} pessoas na rede",
     "accept": "Aceitar e conectar",
     "decline": "Recusar",
     "alreadyUsed": "Este convite já foi utilizado",

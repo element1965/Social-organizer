@@ -204,7 +204,7 @@
     "close": "Sulje keräys",
     "participants": "Osallistujat",
     "noParticipants": "Kukaan ei ole vielä liittynyt",
-    "minAmount": "Vähintään 1",
+    "minAmount": "Vähintään 1 $",
     "connectionToCreator": "Yhteys luojaan",
     "editAmount": "Edit",
     "saveAmount": "Save",
@@ -505,6 +505,7 @@
   "invite": {
     "title": "Kutsu",
     "from": "{{name}} kutsui sinut — {{count}} henkilöä verkostossa, {{amount}} $ ilmoitettuja aikomuksia",
+    "fromNoAmount": "{{name}} kutsui sinut — {{count}} henkilöä verkostossa",
     "accept": "Hyväksy ja yhdistä",
     "decline": "Hylkää",
     "alreadyUsed": "Tämä kutsu on jo käytetty",

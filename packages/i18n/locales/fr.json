@@ -204,7 +204,7 @@
     "close": "Fermer la collecte",
     "participants": "Participants",
     "noParticipants": "Personne ne s'est encore inscrit",
-    "minAmount": "Minimum 1",
+    "minAmount": "Minimum 1 $",
     "connectionToCreator": "Connexion au créateur",
     "editAmount": "Modifier",
     "saveAmount": "Enregistrer",
@@ -447,6 +447,7 @@
   "invite": {
     "title": "Invitation",
     "from": "{{name}} vous a invité — {{count}} personnes dans le réseau, {{amount}} $ d'intentions déclarées",
+    "fromNoAmount": "{{name}} vous a invité — {{count}} personnes dans le réseau",
     "accept": "Accepter et se connecter",
     "decline": "Refuser",
     "alreadyUsed": "Cette invitation a déjà été utilisée",
