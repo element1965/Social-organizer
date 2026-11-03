@@ -8,12 +8,15 @@ import {
   verifyToken,
   generateLinkingCode,
 } from '../services/auth.service.js';
-import { validateTelegramInitData } from '../services/telegram.service.js';
+import { validateTelegramInitData, validateTelegramWidget, isTelegramWidgetEnabled, type TelegramUserData } from '../services/telegram.service.js';
 import { applyBotStartInvite } from '../services/invite-fallback.service.js';
 import { findLinkingCode, LinkCodeRateLimitError } from '../services/link-code.service.js';
 import type { Context } from '../context.js';
 import { linkTelegramByCode, type TelegramLinkResult } from '../services/telegram-link.service.js';
 import { verifyGoogleIdToken } from '../services/google.service.js';
+import { resolveExternalIdentity, AccountExistsError } from '../services/identity.service.js';
+import { requestEmailCode, verifyEmailCode, EmailCodeError } from '../services/email-code.service.js';
+import { isMailConfigured, MailUnavailableError } from '../services/mail.service.js';
 import { LINKING_CODE_TTL_MINUTES } from '@so/shared';
 
 /** Link-code lookup for tRPC callers: limited per IP, 429 when over the limit (SO-14). */
@@ -26,6 +29,95 @@ async function linkCodeOrThrow(ctx: { db: Context['db']; ip: string }, code: str
     }
     throw err;
   }
+}
+
+/**
+ * Find or create the user behind a verified Telegram identity (Mini App initData or the
+ * web Login Widget) and refresh the profile photo and @username contact. Returns the userId.
+ */
+async function signInTelegramUser(db: Context['db'], tgUser: TelegramUserData, platformToken: string): Promise<string> {
+  const platformId = String(tgUser.id);
+  let platformAccount = await db.platformAccount.findUnique({
+    where: {
+      platform_platformId: {
+        platform: 'TELEGRAM',
+        platformId,
+      },
+    },
+    include: { user: true },
+  });
+
+  let userId: string;
+
+  if (platformAccount) {
+    userId = platformAccount.userId;
+    // Update user photo if changed
+    if (tgUser.photo_url && platformAccount.user.photoUrl !== tgUser.photo_url) {
+      await db.user.update({
+        where: { id: userId },
+        data: { photoUrl: tgUser.photo_url },
+      });
+    }
+  } else {
+    // Clean up any old soft-deleted users that had this telegram ID
+    // (from before hard-delete was implemented in removeBlockedUser)
+    const orphanedAccounts = await db.platformAccount.findMany({
+      where: { platform: 'TELEGRAM', platformId },
+      select: { userId: true },
+    });
+    for (const oa of orphanedAccounts) {
+      await db.user.delete({ where: { id: oa.userId } }).catch(() => {});
+    }
+
+    const name = [tgUser.first_name, tgUser.last_name].filter(Boolean).join(' ') || `User_${platformId}`;
+    const lang = tgUser.language_code?.slice(0, 2) || 'en';
+    const user = await db.user.create({
+      data: {
+        name,
+        photoUrl: tgUser.photo_url || null,
+        language: lang,
+        monthlyBudget: 1,
+        remainingBudget: 1,
+        onboardingCompleted: true,
+        platformAccounts: {
+          create: {
+            platform: 'TELEGRAM',
+            platformId,
+            accessToken: platformToken,
+          },
+        },
+      },
+    });
+    userId = user.id;
+  }
+
+  // Auto-save/update Telegram username as contact
+  if (tgUser.username) {
+    await db.userContact.upsert({
+      where: { userId_type: { userId, type: 'telegram' } },
+      update: { value: tgUser.username },
+      create: { userId, type: 'telegram', value: tgUser.username },
+    });
+  }
+
+  // Safety net: apply invite token tracked by the bot on /start, in case the
+  // mini app lost it (failed load, menu-button open without start_param)
+  applyBotStartInvite(db, userId, platformId).catch((err) => {
+    console.error('[loginWithTelegram] invite fallback failed:', err);
+  });
+  return userId;
+}
+
+function toEmailCodeTrpcError(err: unknown): unknown {
+  if (err instanceof EmailCodeError) {
+    const code = err.code === 'RESEND_TOO_SOON' || err.code === 'TOO_MANY_CODES' || err.code === 'TOO_MANY_ATTEMPTS'
+      ? 'TOO_MANY_REQUESTS' : 'BAD_REQUEST';
+    // "CODE:number" — seconds to wait or attempts left, for the hint on the screen
+    const n = err.retryInSec ?? err.attemptsLeft;
+    return new TRPCError({ code, message: n != null ? `${err.code}:${n}` : err.code });
+  }
+  if (err instanceof MailUnavailableError) return new TRPCError({ code: 'SERVICE_UNAVAILABLE', message: err.message });
+  return err;
 }
 
 export const authRouter = router({
@@ -107,74 +199,7 @@ export const authRouter = router({
         linkResult = await linkTelegramByCode(ctx.db, startParam.slice('link_'.length), platformId, input.initData, [`ip:${ctx.ip}`, `tg:${platformId}`]);
       }
 
-      let platformAccount = await ctx.db.platformAccount.findUnique({
-        where: {
-          platform_platformId: {
-            platform: 'TELEGRAM',
-            platformId,
-          },
-        },
-        include: { user: true },
-      });
-
-      let userId: string;
-
-      if (platformAccount) {
-        userId = platformAccount.userId;
-        // Update user photo if changed
-        if (tgUser.photo_url && platformAccount.user.photoUrl !== tgUser.photo_url) {
-          await ctx.db.user.update({
-            where: { id: userId },
-            data: { photoUrl: tgUser.photo_url },
-          });
-        }
-      } else {
-        // Clean up any old soft-deleted users that had this telegram ID
-        // (from before hard-delete was implemented in removeBlockedUser)
-        const orphanedAccounts = await ctx.db.platformAccount.findMany({
-          where: { platform: 'TELEGRAM', platformId },
-          select: { userId: true },
-        });
-        for (const oa of orphanedAccounts) {
-          await ctx.db.user.delete({ where: { id: oa.userId } }).catch(() => {});
-        }
-
-        const name = [tgUser.first_name, tgUser.last_name].filter(Boolean).join(' ') || `User_${platformId}`;
-        const lang = tgUser.language_code?.slice(0, 2) || 'en';
-        const user = await ctx.db.user.create({
-          data: {
-            name,
-            photoUrl: tgUser.photo_url || null,
-            language: lang,
-            monthlyBudget: 1,
-            remainingBudget: 1,
-            onboardingCompleted: true,
-            platformAccounts: {
-              create: {
-                platform: 'TELEGRAM',
-                platformId,
-                accessToken: input.initData,
-              },
-            },
-          },
-        });
-        userId = user.id;
-      }
-
-      // Auto-save/update Telegram username as contact
-      if (tgUser.username) {
-        await ctx.db.userContact.upsert({
-          where: { userId_type: { userId, type: 'telegram' } },
-          update: { value: tgUser.username },
-          create: { userId, type: 'telegram', value: tgUser.username },
-        });
-      }
-
-      // Safety net: apply invite token tracked by the bot on /start, in case the
-      // mini app lost it (failed load, menu-button open without start_param)
-      applyBotStartInvite(ctx.db, userId, platformId).catch((err) => {
-        console.error('[loginWithTelegram] invite fallback failed:', err);
-      });
+      const userId = await signInTelegramUser(ctx.db, tgUser, input.initData);
 
       const accessToken = createAccessToken(userId);
       const refreshToken = createRefreshToken(userId);
@@ -218,101 +243,78 @@ export const authRouter = router({
         return { accessToken, refreshToken, userId: user.id, isNew: false };
       }
 
-      // 1. Check if PlatformAccount(GOOGLE, sub) exists
-      let platformAccount = await ctx.db.platformAccount.findUnique({
-        where: {
-          platform_platformId: {
-            platform: 'GOOGLE',
-            platformId: googleUser.sub,
-          },
-        },
-        include: { user: true },
-      });
-
+      // 1–3. Known Google account, same proven e-mail, or a new person (SO-21)
       let userId: string;
-      let isNew = false;
-
-      if (platformAccount) {
-        userId = platformAccount.userId;
-        // Update photo if changed
-        if (googleUser.picture && platformAccount.user.photoUrl !== googleUser.picture) {
-          await ctx.db.user.update({
-            where: { id: userId },
-            data: { photoUrl: googleUser.picture },
-          });
-        }
-      } else if (googleUser.email_verified) {
-        // 2. Email verified — try to link to existing user with same email
-        const existingUser = await ctx.db.user.findUnique({
-          where: { email: googleUser.email.toLowerCase() },
-        });
-
-        if (existingUser) {
-          // Link Google account to existing user
-          await ctx.db.platformAccount.create({
-            data: {
-              userId: existingUser.id,
-              platform: 'GOOGLE',
-              platformId: googleUser.sub,
-              accessToken: input.idToken,
-            },
-          });
-          userId = existingUser.id;
-          // Update photo if missing
-          if (googleUser.picture && !existingUser.photoUrl) {
-            await ctx.db.user.update({
-              where: { id: userId },
-              data: { photoUrl: googleUser.picture },
-            });
-          }
-        } else {
-          // 3. Create new user
-          const user = await ctx.db.user.create({
-            data: {
-              name: googleUser.name,
-              email: googleUser.email.toLowerCase(),
-              photoUrl: googleUser.picture || null,
-              monthlyBudget: 1,
-              remainingBudget: 1,
-              onboardingCompleted: true,
-              platformAccounts: {
-                create: {
-                  platform: 'GOOGLE',
-                  platformId: googleUser.sub,
-                  accessToken: input.idToken,
-                },
-              },
-            },
-          });
-          userId = user.id;
-          isNew = true;
-        }
-      } else {
-        // Email not verified — create new user without email
-        const user = await ctx.db.user.create({
-          data: {
-            name: googleUser.name,
-            photoUrl: googleUser.picture || null,
-            monthlyBudget: 1,
-            remainingBudget: 1,
-            onboardingCompleted: true,
-            platformAccounts: {
-              create: {
-                platform: 'GOOGLE',
-                platformId: googleUser.sub,
-                accessToken: input.idToken,
-              },
-            },
-          },
-        });
-        userId = user.id;
-        isNew = true;
+      let isNew: boolean;
+      try {
+        ({ userId, isNew } = await resolveExternalIdentity(ctx.db, {
+          platform: 'GOOGLE',
+          platformId: googleUser.sub,
+          verifiedEmail: googleUser.email_verified ? googleUser.email : null,
+          name: googleUser.name,
+          photoUrl: googleUser.picture || null,
+          accessToken: input.idToken,
+        }));
+      } catch (err) {
+        if (err instanceof AccountExistsError) throw new TRPCError({ code: 'CONFLICT', message: err.message });
+        throw err;
       }
 
       const accessToken = createAccessToken(userId);
       const refreshToken = createRefreshToken(userId);
 
       return { accessToken, refreshToken, userId, isNew };
+    }),
+
+  /** Which sign-in methods this server can offer right now: a disabled one is hidden, not broken (SO-21). */
+  methods: publicProcedure.query(() => ({
+    google: !!process.env.GOOGLE_CLIENT_ID,
+    apple: !!process.env.APPLE_SERVICE_ID,
+    email: isMailConfigured(),
+    telegramWidget: isTelegramWidgetEnabled(),
+    telegramBot: process.env.VITE_TELEGRAM_BOT_USERNAME || 'socialorganizer_bot',
+  })),
+
+  /** Sends a one-time code. Same answer for registered and unknown addresses. */
+  requestEmailCode: publicProcedure
+    .input(z.object({ email: z.string().trim().email().max(254), lang: z.string().max(10).optional() }))
+    .mutation(async ({ ctx, input }) => {
+      try {
+        return await requestEmailCode(ctx.db, input.email, input.lang);
+      } catch (err) {
+        throw toEmailCodeTrpcError(err);
+      }
+    }),
+
+  /** Checks the code: the proven address signs in to its account or creates one. */
+  verifyEmailCode: publicProcedure
+    .input(z.object({ email: z.string().trim().email().max(254), code: z.string().regex(/^\d{6}$/) }))
+    .mutation(async ({ ctx, input }) => {
+      try {
+        const { userId, isNew } = await verifyEmailCode(ctx.db, input.email, input.code);
+        return { accessToken: createAccessToken(userId), refreshToken: createRefreshToken(userId), userId, isNew };
+      } catch (err) {
+        throw toEmailCodeTrpcError(err);
+      }
+    }),
+
+  /** Telegram sign-in on the website (Login Widget), checked on the server. */
+  loginWithTelegramWidget: publicProcedure
+    .input(z.object({
+      id: z.number().int().positive(),
+      first_name: z.string().max(256),
+      last_name: z.string().max(256).optional(),
+      username: z.string().max(64).optional(),
+      photo_url: z.string().url().max(1024).optional(),
+      auth_date: z.number().int(),
+      hash: z.string().regex(/^[a-f0-9]{64}$/),
+    }))
+    .mutation(async ({ ctx, input }) => {
+      if (!isTelegramWidgetEnabled()) throw new TRPCError({ code: 'PRECONDITION_FAILED', message: 'TELEGRAM_WIDGET_DISABLED' });
+      const tgUser = validateTelegramWidget(input);
+      if (!tgUser) throw new TRPCError({ code: 'UNAUTHORIZED', message: 'Invalid Telegram login data' });
+      const userId = await signInTelegramUser(ctx.db, tgUser, `widget:${input.auth_date}`);
+      return { accessToken: createAccessToken(userId), refreshToken: createRefreshToken(userId), userId };
     }),
 
   refresh: publicProcedure

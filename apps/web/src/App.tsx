@@ -82,7 +82,8 @@ function GoogleAuthDeepLinkHandler() {
       Browser.close().catch(() => {});
 
       if (!url.startsWith('socialorganizer://auth-success')) {
-        navigate('/login', { replace: true });
+        const reason = new URLSearchParams(url.split('?')[1] || '').get('reason');
+        navigate(reason === 'account_exists' ? '/login?error=account_exists' : '/login?error=failed', { replace: true });
         return;
       }
       try {

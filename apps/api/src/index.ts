@@ -17,6 +17,7 @@ import { createContext } from './context.js';
 import { setupQueues } from './workers/index.js';
 import { handleTelegramUpdate, setTelegramWebhook, telegramWebhookSecret, uploadMediaToTelegram, getTelegramFileUrl } from './services/telegram-bot.service.js';
 import { verifyAppleIdToken, findOrCreateAppleUser } from './services/apple.service.js';
+import { AccountExistsError } from './services/identity.service.js';
 import { backfillBotStartInvites } from './services/invite-fallback.service.js';
 import { getDb } from '@so/db';
 import { isAdmin } from './admin.js';
@@ -35,6 +36,8 @@ const AUTH_PROCEDURES = new Set([
   'auth.loginWithEmail',
   'auth.loginWithLinkCode',
   'auth.claimWithLinkCode',
+  'auth.requestEmailCode',
+  'auth.verifyEmailCode',
 ]);
 
 
@@ -75,14 +78,16 @@ function appleRedirect(
   platform: string,
   tokens: { accessToken: string; refreshToken: string; userId: string; isNew: boolean } | null,
   invite?: string,
+  reason: 'failed' | 'account_exists' = 'failed',
 ) {
   if (!tokens) {
-    if (platform === 'ios') return appleHtmlRedirect(reply, 'socialorganizer://auth-error');
+    // The reason lets the sign-in screen show the next step (SO-21)
+    if (platform === 'ios') return appleHtmlRedirect(reply, `socialorganizer://auth-error?reason=${reason}`);
     if (platform === 'android') {
-      const fb = encodeURIComponent(`${APP_BASE_URL}/login`);
-      return appleHtmlRedirect(reply, `intent://auth-error#Intent;scheme=socialorganizer;package=com.socialorganizer.app;S.browser_fallback_url=${fb};end`);
+      const fb = encodeURIComponent(`${APP_BASE_URL}/login?error=${reason}`);
+      return appleHtmlRedirect(reply, `intent://auth-error?reason=${reason}#Intent;scheme=socialorganizer;package=com.socialorganizer.app;S.browser_fallback_url=${fb};end`);
     }
-    return reply.redirect(`${APP_BASE_URL}/login`, 302);
+    return reply.redirect(`${APP_BASE_URL}/login?error=${reason}`, 302);
   }
 
   const params = new URLSearchParams({
@@ -343,8 +348,11 @@ async function start() {
         }
       } catch { /* ignore malformed user payload */ }
 
-      const sendBack = (tokens: { accessToken: string; refreshToken: string; userId: string; isNew: boolean } | null) => {
-        return appleRedirect(reply, platform, tokens, invite);
+      const sendBack = (
+        tokens: { accessToken: string; refreshToken: string; userId: string; isNew: boolean } | null,
+        reason?: 'failed' | 'account_exists',
+      ) => {
+        return appleRedirect(reply, platform, tokens, invite, reason);
       };
 
       if (!idToken) return sendBack(null);
@@ -355,6 +363,7 @@ async function start() {
         const result = await findOrCreateAppleUser(getDb(), apple, displayName, linkCode, [`ip:${clientIp(req.raw)}`]);
         return sendBack(result);
       } catch (err) {
+        if (err instanceof AccountExistsError) return sendBack(null, 'account_exists');
         console.error('[Apple] login failed:', err);
         return sendBack(null);
       }

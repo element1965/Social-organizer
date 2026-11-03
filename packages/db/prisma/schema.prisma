@@ -80,6 +80,7 @@ model User {
   id                  String    @id @default(cuid())
   name                String
   email               String?   @unique
+  emailVerifiedAt     DateTime? // mailbox ownership proven (e-mail code, Google/Apple verified e-mail)
   passwordHash        String?
   bio                 String?
   phone               String?
@@ -279,6 +280,20 @@ model IgnoreEntry {
 
   @@unique([fromUserId, toUserId])
   @@map("ignore_entries")
+}
+
+/// One-time sign-in code sent by e-mail (SO-21). Only a hash of the code is stored.
+model EmailLoginCode {
+  id         String    @id @default(cuid())
+  email      String
+  codeHash   String
+  expiresAt  DateTime
+  attempts   Int       @default(0)
+  consumedAt DateTime?
+  createdAt  DateTime  @default(now())
+
+  @@index([email, createdAt])
+  @@map("email_login_codes")
 }
 
 model LinkingCode {

@@ -5,7 +5,7 @@ LANDING PAGE (/ or /welcome)
 Public entry point with 3D globe visualization. Sections: hero with CTA, pain-point quotes, "What is it" (3 cards: Handshake, Intention, Transparency), "How it works" (3 steps), Principles (Equality, Self-organization, Openness, 27 Languages), FAQ accordion, Download section with Telegram button. Language switcher in the top-right corner.
 
 LOGIN PAGE (/login)
-Sign in via Telegram (auto-login in Mini App), Google, or email/password. Toggle between login and registration modes. Authenticated Telegram users are redirected automatically.
+One screen "Sign in or create an account" for new and existing people: Continue with Google, Continue with Apple, Continue with Telegram (auto-login in the Mini App; on the website the Telegram button or the bot), and "E-mail: we'll send a code" (enter the address, then the 6-digit code; resend after 60 s, change address). No password and no "new / existing user" choice. Hint "Last time you signed in with …". If the e-mail already belongs to an account, the screen asks to sign in with an e-mail code first.
 
 ONBOARDING (/onboarding)
 6-step tutorial for new users:
