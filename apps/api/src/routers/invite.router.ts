@@ -214,16 +214,18 @@ export const inviteRouter = router({
     .input(z.object({ token: z.string() }))
     .query(async ({ ctx, input }) => {
       const getInviterStats = async (userId: string) => {
-        const [connectionsFrom, connectionsTo, collections] = await Promise.all([
+        const [connectionsFrom, connectionsTo, intentions] = await Promise.all([
           ctx.db.connection.count({ where: { userAId: userId } }),
           ctx.db.connection.count({ where: { userBId: userId } }),
-          ctx.db.collection.findMany({
-            where: { creatorId: userId, status: 'ACTIVE' },
-            select: { amount: true },
+          // "Declared intentions" = the inviter's own recorded participation in collections
+          // (an intention is participation, SO-40), not the goals of the inviter's collections.
+          ctx.db.obligation.aggregate({
+            where: { userId, collection: { status: { not: 'CANCELLED' } } },
+            _sum: { amount: true },
           }),
         ]);
         const networkCount = connectionsFrom + connectionsTo;
-        const totalIntentions = collections.reduce((sum, c) => sum + (c.amount ?? 0), 0);
+        const totalIntentions = intentions._sum.amount ?? 0;
         return { networkCount, totalIntentions };
       };
 
