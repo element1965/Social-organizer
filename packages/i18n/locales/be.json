@@ -204,7 +204,7 @@
     "close": "Закрыць збор",
     "participants": "Удзельнікі",
     "noParticipants": "Пакуль ніхто не ўпісаўся",
-    "minAmount": "Мінімум 1",
+    "minAmount": "Мінімум 1 $",
     "connectionToCreator": "Сувязь са стваральнікам",
     "editAmount": "Змяніць",
     "saveAmount": "Захаваць",
@@ -505,6 +505,7 @@
   "invite": {
     "title": "Запрашэнне",
     "from": "{{name}} запрасіў вас — {{count}} чалавек у сетцы, {{amount}} $ задэкляраваных намераў",
+    "fromNoAmount": "{{name}} запрасіў вас — {{count}} чалавек у сетцы",
     "accept": "Прыняць і звязацца",
     "decline": "Адхіліць",
     "alreadyUsed": "Гэтае запрашэнне ўжо выкарыстана",

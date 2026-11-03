@@ -204,7 +204,7 @@
     "close": "Luk indsamling",
     "participants": "Deltagere",
     "noParticipants": "Ingen har deltaget endnu",
-    "minAmount": "Minimum 1",
+    "minAmount": "Minimum 1 $",
     "connectionToCreator": "Forbindelse til opretter",
     "editAmount": "Edit",
     "saveAmount": "Save",
@@ -505,6 +505,7 @@
   "invite": {
     "title": "Invitering",
     "from": "{{name}} inviterede dig — {{count}} personer i netværket, {{amount}} $ i erklærede hensigter",
+    "fromNoAmount": "{{name}} inviterede dig — {{count}} personer i netværket",
     "accept": "Accepter og forbind",
     "decline": "Afvis",
     "alreadyUsed": "Denne invitation er allerede brugt",

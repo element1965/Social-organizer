@@ -204,7 +204,7 @@
     "close": "إغلاق المجموعة",
     "participants": "المشاركون",
     "noParticipants": "لم ينضم أحد بعد",
-    "minAmount": "الحد الأدنى 1",
+    "minAmount": "الحد الأدنى 1 $",
     "connectionToCreator": "الصلة بالمنشئ",
     "editAmount": "Edit",
     "saveAmount": "Save",
@@ -505,6 +505,7 @@
   "invite": {
     "title": "دعوة",
     "from": "دعاك {{name}} — {{count}} شخص في الشبكة، {{amount}} $ من النوايا المعلنة",
+    "fromNoAmount": "دعاك {{name}} — {{count}} شخص في الشبكة",
     "accept": "قبول والاتصال",
     "decline": "رفض",
     "alreadyUsed": "تم استخدام هذه الدعوة بالفعل",

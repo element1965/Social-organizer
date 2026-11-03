@@ -27,6 +27,10 @@ export const obligationRouter = router({
       if (input.inputCurrency !== 'USD') {
         amountUSD = await convertToUSD(input.amount, input.inputCurrency);
       }
+      // The minimum applies to the stored USD amount, not only to the typed number.
+      if (amountUSD < MIN_OBLIGATION_AMOUNT) {
+        throw new TRPCError({ code: 'BAD_REQUEST', message: 'MIN_AMOUNT_USD' });
+      }
 
       const obligation = await ctx.db.obligation.create({
         data: {
@@ -160,6 +164,9 @@ export const obligationRouter = router({
       let newAmountUSD = input.amount;
       if (input.inputCurrency !== 'USD') {
         newAmountUSD = await convertToUSD(input.amount, input.inputCurrency);
+      }
+      if (newAmountUSD < MIN_OBLIGATION_AMOUNT) {
+        throw new TRPCError({ code: 'BAD_REQUEST', message: 'MIN_AMOUNT_USD' });
       }
 
       // Update obligation

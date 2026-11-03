@@ -100,6 +100,9 @@ export function SettingsPage() {
     onSuccess: () => { utils.user.me.invalidate(); setEditingBudget(false); setNewBudgetValue(''); },
   });
 
+  // Capacity is either 0 or at least 1 $.
+  const budgetValid = newBudgetValue !== '' && (Number(newBudgetValue) === 0 || Number(newBudgetValue) >= 1);
+
   const handleCopyCode = (code: string) => {
     navigator.clipboard.writeText(code).then(() => {
       setCodeCopied(true);
@@ -263,13 +266,14 @@ export function SettingsPage() {
                   className="w-full pl-7 pr-10 py-2 text-sm rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:border-blue-500"
                   autoFocus
                   min={0}
+                  step={1}
                   onKeyDown={(e) => {
-                    if (e.key === 'Enter' && newBudgetValue && Number(newBudgetValue) >= 0)
+                    if (e.key === 'Enter' && budgetValid)
                       setBudgetMutation.mutate({ amount: Number(newBudgetValue), inputCurrency: 'USD' });
                     if (e.key === 'Escape') setEditingBudget(false);
                   }}
                 />
-                {newBudgetValue && Number(newBudgetValue) >= 0 && (
+                {budgetValid && (
                   <button
                     onClick={() => setBudgetMutation.mutate({ amount: Number(newBudgetValue), inputCurrency: 'USD' })}
                     disabled={setBudgetMutation.isPending}

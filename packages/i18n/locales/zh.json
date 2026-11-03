@@ -204,7 +204,7 @@
     "close": "关闭募集",
     "participants": "参与者",
     "noParticipants": "暂无人参与",
-    "minAmount": "最少 1",
+    "minAmount": "最少 1 $",
     "connectionToCreator": "与发起人的连接",
     "editAmount": "Edit",
     "saveAmount": "Save",
@@ -447,6 +447,7 @@
   "invite": {
     "title": "邀请",
     "from": "{{name}}邀请了您 — 网络中{{count}}人，已申报意向{{amount}}$",
+    "fromNoAmount": "{{name}}邀请了您 — 网络中{{count}}人",
     "accept": "接受并连接",
     "decline": "拒绝",
     "alreadyUsed": "此邀请已被使用",

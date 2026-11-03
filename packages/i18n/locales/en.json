@@ -204,7 +204,7 @@
     "close": "Close collection",
     "participants": "Participants",
     "noParticipants": "No one has joined yet",
-    "minAmount": "Minimum 1",
+    "minAmount": "Minimum $1",
     "connectionToCreator": "Connection to creator",
     "editAmount": "Edit",
     "saveAmount": "Save",
@@ -505,6 +505,7 @@
   "invite": {
     "title": "Invitation",
     "from": "{{name}} invited you — {{count}} people in the network, ${{amount}} in declared intentions",
+    "fromNoAmount": "{{name}} invited you — {{count}} people in the network",
     "accept": "Accept & Connect",
     "decline": "Decline",
     "alreadyUsed": "This invite has already been used",
