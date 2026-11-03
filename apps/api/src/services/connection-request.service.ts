@@ -2,6 +2,7 @@ import type { PrismaClient } from '@so/db';
 import { TRPCError } from '@trpc/server';
 import { MAX_CONNECTIONS } from '@so/shared';
 import { sendPendingNotification } from './notification.service.js';
+import { syncMilestonesForPair } from './milestone.service.js';
 
 /**
  * One place that answers a connection request (PendingConnection).
@@ -106,6 +107,8 @@ export async function respondToConnectionRequest(
     const fresh = await db.pendingConnection.findUnique({ where: { id: pendingId }, select: { status: true } });
     return resolved(fresh?.status ?? 'PENDING');
   }
+
+  if (action === 'accept') await syncMilestonesForPair(db, pending.fromUserId, pending.toUserId);
 
   const actor = await db.user.findUnique({ where: { id: actorId }, select: { name: true } });
   sendPendingNotification(db, pending.fromUserId, action === 'accept' ? 'accepted' : 'rejected', actor?.name || '').catch(() => {});

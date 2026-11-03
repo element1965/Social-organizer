@@ -204,7 +204,7 @@
     "close": "Tutup penggalangan",
     "participants": "Peserta",
     "noParticipants": "Belum ada yang bergabung",
-    "minAmount": "Minimal 1 $",
+    "minAmount": "Bilangan bulat, minimal 1 $",
     "connectionToCreator": "Koneksi ke pembuat",
     "editAmount": "Edit",
     "saveAmount": "Save",
@@ -235,7 +235,7 @@
     "currency": "Mata Uang",
     "chatLink": "Tautan chat",
     "submit": "Beritahu",
-    "minAmount": "Minimal 10",
+    "minAmount": "Bilangan bulat, minimal 10 $",
     "invalidUrl": "URL tidak valid",
     "chatHelpToggle": "Bagaimana cara membuat chat Telegram?",
     "chatHelpTitle": "Cara mendapatkan tautan chat:",
@@ -728,5 +728,15 @@
     "inviteSomeone": "Undang kenalan",
     "inviteGone": "Orang yang mengundang Anda menghapus akunnya. Undang orang yang Anda kenal secara pribadi.",
     "continue": "Lanjutkan"
+  },
+  "milestones": {
+    "title": "Pencapaian",
+    "first": "Jabat tangan pertama",
+    "ten": "10 koneksi langsung",
+    "notYet": "Masih di depan",
+    "progress": "{{count}} dari {{total}}",
+    "nowCount": "sekarang {{count}}",
+    "newBadge": "Pencapaian baru",
+    "dismiss": "Tutup"
   }
 }

@@ -1,9 +1,8 @@
 import { z } from 'zod';
 import { router, protectedProcedure, publicProcedure } from '../trpc.js';
 import { TRPCError } from '@trpc/server';
-import { MIN_COLLECTION_AMOUNT, CURRENCY_CODES, NOTIFICATION_RATIO, MIN_CONNECTIONS_TO_CREATE } from '@so/shared';
+import { MIN_COLLECTION_AMOUNT, NOTIFICATION_RATIO, MIN_CONNECTIONS_TO_CREATE } from '@so/shared';
 import { sendCollectionNotifications, sendCollectionClosedTg } from '../services/notification.service.js';
-import { convertToUSD } from '../services/currency.service.js';
 import { isAdmin } from '../admin.js';
 
 /** Chat links are shown as buttons to every participant: only plain web links, never javascript: etc. (SO-14) */
@@ -13,8 +12,8 @@ export const collectionRouter = router({
   create: protectedProcedure
     .input(z.object({
       type: z.enum(['EMERGENCY', 'REGULAR']),
-      amount: z.number().min(MIN_COLLECTION_AMOUNT).nullable().optional(),
-      inputCurrency: z.string().refine((c) => CURRENCY_CODES.includes(c), 'Unsupported currency'),
+      amount: z.number().int().min(MIN_COLLECTION_AMOUNT).nullable().optional(), // whole $ only
+      inputCurrency: z.literal('USD').default('USD'), // amounts are in $ only: 1 $ = 1 unit, no conversion (SO-40)
       chatLink: chatLinkSchema,
     }))
     .mutation(async ({ ctx, input }) => {
@@ -61,20 +60,14 @@ export const collectionRouter = router({
         });
       }
 
-      // Convert to USD if needed
-      let amountUSD = input.amount;
-      if (input.amount != null && input.inputCurrency !== 'USD') {
-        amountUSD = await convertToUSD(input.amount, input.inputCurrency);
-      }
+      const amountUSD = input.amount;
 
       const collection = await ctx.db.collection.create({
         data: {
           creatorId: ctx.userId,
           type: input.type,
           amount: amountUSD,
-          currency: 'USD', // Always store in USD
-          originalAmount: input.amount,
-          originalCurrency: input.inputCurrency,
+          currency: 'USD',
           chatLink: input.chatLink,
           currentCycleStart: input.type === 'REGULAR' ? new Date() : null,
         },
@@ -137,8 +130,8 @@ export const collectionRouter = router({
   updateAmount: protectedProcedure
     .input(z.object({
       id: z.string(),
-      amount: z.number().min(MIN_COLLECTION_AMOUNT).nullable(),
-      inputCurrency: z.string().refine((c) => CURRENCY_CODES.includes(c), 'Unsupported currency'),
+      amount: z.number().int().min(MIN_COLLECTION_AMOUNT).nullable(), // whole $ only
+      inputCurrency: z.literal('USD').default('USD'), // amounts are in $ only: 1 $ = 1 unit, no conversion (SO-40)
     }))
     .mutation(async ({ ctx, input }) => {
       const collection = await ctx.db.collection.findUnique({ where: { id: input.id } });
@@ -148,17 +141,14 @@ export const collectionRouter = router({
         throw new TRPCError({ code: 'BAD_REQUEST', message: 'Can only update active collections' });
       }
 
-      let amountUSD = input.amount;
-      if (input.amount != null && input.inputCurrency !== 'USD') {
-        amountUSD = await convertToUSD(input.amount, input.inputCurrency);
-      }
+      const amountUSD = input.amount;
 
       const updated = await ctx.db.collection.update({
         where: { id: input.id },
         data: {
           amount: amountUSD,
-          originalAmount: input.amount,
-          originalCurrency: input.inputCurrency,
+          originalAmount: null, // clear goals typed in other currencies before SO-40
+          originalCurrency: null,
         },
       });
 

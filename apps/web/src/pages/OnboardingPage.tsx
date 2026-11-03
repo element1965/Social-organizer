@@ -20,7 +20,7 @@ export function OnboardingPage() {
   const utils = trpc.useUtils();
 
   const amount = showCustom ? Number(custom) : selected;
-  const amountValid = amount !== null && amount > 0;
+  const amountValid = amount !== null && Number.isInteger(amount) && amount >= 1; // whole $, minimum 1 (1 unit of participation)
 
   const handleFinish = async () => {
     // Save budget as best-effort (don't block on failure)
@@ -104,6 +104,7 @@ export function OnboardingPage() {
                   <input
                     type="number"
                     min={1}
+                    step={1}
                     value={custom}
                     onChange={(e) => setCustom(e.target.value)}
                     placeholder="0"

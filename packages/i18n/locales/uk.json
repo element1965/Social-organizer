@@ -204,7 +204,7 @@
     "close": "Закрити збір",
     "participants": "Учасники",
     "noParticipants": "Ще ніхто не приєднався",
-    "minAmount": "Мінімум 1 $",
+    "minAmount": "Ціле число, від 1 $",
     "connectionToCreator": "Зв'язок із творцем",
     "editAmount": "Редагувати",
     "saveAmount": "Зберегти",
@@ -235,7 +235,7 @@
     "currency": "Валюта",
     "chatLink": "Посилання на чат",
     "submit": "Сповістити",
-    "minAmount": "Мінімум 10",
+    "minAmount": "Ціле число, від 10 $",
     "invalidUrl": "Невірне посилання",
     "chatHelpToggle": "Як створити Telegram-чат?",
     "chatHelpTitle": "Як отримати посилання на чат:",
@@ -728,5 +728,15 @@
     "inviteSomeone": "Запросити знайомого",
     "inviteGone": "Людина, яка вас запросила, видалила акаунт. Запросіть того, кого знаєте особисто.",
     "continue": "Продовжити"
+  },
+  "milestones": {
+    "title": "Віхи",
+    "first": "Перше рукостискання",
+    "ten": "10 прямих звʼязків",
+    "notYet": "Ще попереду",
+    "progress": "{{count}} з {{total}}",
+    "nowCount": "зараз {{count}}",
+    "newBadge": "Нова віха",
+    "dismiss": "Закрити"
   }
 }

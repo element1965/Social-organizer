@@ -6,6 +6,7 @@ import { sendPendingNotification } from '../services/notification.service.js';
 import { scanMatchesForUser } from '../services/match-notification.service.js';
 import { respondToConnectionRequest } from '../services/connection-request.service.js';
 import { sendTelegramMessage, type TgReplyMarkup } from '../services/telegram-bot.service.js';
+import { syncMilestonesForPair } from '../services/milestone.service.js';
 import { translateWithCache } from '../services/translate.service.js';
 
 export const inviteRouter = router({
@@ -196,6 +197,7 @@ export const inviteRouter = router({
       });
 
       console.log('[invite.acceptSos] direct connection created:', ctx.userId, '<->', creatorId);
+      await syncMilestonesForPair(ctx.db, ctx.userId, creatorId);
 
       const applicant = await ctx.db.user.findUnique({
         where: { id: ctx.userId },

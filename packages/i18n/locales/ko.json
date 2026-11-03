@@ -204,7 +204,7 @@
     "close": "모금 종료",
     "participants": "참여자",
     "noParticipants": "아직 참여자가 없습니다",
-    "minAmount": "최소 1 $",
+    "minAmount": "정수, 최소 1 $",
     "connectionToCreator": "생성자와의 연결",
     "editAmount": "Edit",
     "saveAmount": "Save",
@@ -235,7 +235,7 @@
     "currency": "통화",
     "chatLink": "채팅 링크",
     "submit": "알리기",
-    "minAmount": "최소 10",
+    "minAmount": "정수, 최소 10 $",
     "invalidUrl": "잘못된 URL",
     "chatHelpToggle": "Telegram 채팅은 어떻게 만드나요?",
     "chatHelpTitle": "채팅 링크를 얻는 방법:",
@@ -728,5 +728,15 @@
     "inviteSomeone": "아는 사람 초대",
     "inviteGone": "나를 초대한 사람이 계정을 삭제했습니다. 직접 아는 사람을 초대하세요.",
     "continue": "계속"
+  },
+  "milestones": {
+    "title": "이정표",
+    "first": "첫 번째 악수",
+    "ten": "직접 연결 10명",
+    "notYet": "아직 남았어요",
+    "progress": "{{count}} / {{total}}",
+    "nowCount": "현재 {{count}}",
+    "newBadge": "새 이정표",
+    "dismiss": "닫기"
   }
 }

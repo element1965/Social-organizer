@@ -14,7 +14,7 @@ ONBOARDING (/onboarding)
 3. "Everything is transparent" — transparency principle
 4. "Add your first person" — invite a connection
 5. "Your contacts" — fill in at least 2 of 5 social contacts (WhatsApp, Facebook, Instagram, Twitter, TikTok) to proceed
-6. "Monthly Support Budget" — optional budget input with currency selection and USD conversion
+6. "Monthly Support Budget" — optional budget input in $ (1 $ = 1 unit, no currency conversion)
 Can be skipped at step 6. Progress dots at the bottom show current step (6 dots). Once completed, won't show again.
 
 DASHBOARD (/dashboard)
@@ -25,6 +25,7 @@ Main screen after login. Four separate cards plus conditional elements:
 - Card 2 — Network Capabilities: total network budgets in dollars, period chip (independent PeriodPicker), contributors count, "+$X" period delta in green. Green-emerald gradient.
 - Card 3 — Invite Block: flip card — front shows QR code with expand hint, back shows web invite link (copy), Telegram bot link (copy), and editable referral slug (3–30 chars). Smooth-scroll anchor #invite.
 - Card 4 — Your Contribution (My Budget): displays "$X remaining / $Y total monthly budget". Inline edit mode — tap pencil icon, enter new amount, confirm with checkmark or Enter, cancel with Escape. Blue-indigo gradient.
+- Milestones card: two milestones only — "First handshake" and "10 direct connections" — with the date and, while still connected, the person; a progress bar "N of 10" until the second one. A newly reached milestone shows a short "New milestone" note in the card once (no push). Only confirmed acquaintances count, not sent invites or pending requests.
 - Budget depleted warning: amber banner shown when remaining budget ≤ 0, links to settings.
 
 NOTIFICATIONS (/notifications)
@@ -39,7 +40,7 @@ Form to send a help signal, plus stats and lists below:
 - Access gate: blocks users with fewer than minimum connections (shows count + invite button)
 - Entry warning dialog shown before first use
 - Type toggle: Emergency / Regular
-- Amount input + currency dropdown + real-time USD conversion preview
+- Amount input in $ (minimum 10 $), no currency choice
 - Large amount warning (>$10,000 USD) with confirmation checkbox
 - Chat link input (validated URL)
 - Network reach preview: "up to N people" (min of amount and total reachable)
@@ -54,7 +55,7 @@ Detailed view of a collection:
 - Connection path card (chain of handshakes to creator)
 - Progress card: current / goal amount with progress bar and percentage
 - Chat link button (if participant or owner)
-- Obligation form: amount + currency + USD preview + submit (if not yet participating)
+- Obligation form: amount in $ (minimum 1 $) + submit (if not yet participating)
 - Close collection button (if owner)
 - Participants list with individual amounts
 

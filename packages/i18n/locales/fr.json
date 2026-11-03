@@ -204,7 +204,7 @@
     "close": "Fermer la collecte",
     "participants": "Participants",
     "noParticipants": "Personne ne s'est encore inscrit",
-    "minAmount": "Minimum 1 $",
+    "minAmount": "Nombre entier, à partir de 1 $",
     "connectionToCreator": "Connexion au créateur",
     "editAmount": "Modifier",
     "saveAmount": "Enregistrer",
@@ -235,7 +235,7 @@
     "currency": "Devise",
     "chatLink": "Lien du chat",
     "submit": "Notifier",
-    "minAmount": "Minimum 10",
+    "minAmount": "Nombre entier, à partir de 10 $",
     "invalidUrl": "URL invalide",
     "chatHelpToggle": "Comment créer un chat Telegram ?",
     "chatHelpTitle": "Comment obtenir un lien de chat :",
@@ -728,5 +728,15 @@
     "inviteSomeone": "Inviter une connaissance",
     "inviteGone": "La personne qui vous a invité a supprimé son compte. Invitez une personne que vous connaissez personnellement.",
     "continue": "Continuer"
+  },
+  "milestones": {
+    "title": "Étapes",
+    "first": "Première poignée de main",
+    "ten": "10 liens directs",
+    "notYet": "À venir",
+    "progress": "{{count}} sur {{total}}",
+    "nowCount": "actuellement {{count}}",
+    "newBadge": "Nouvelle étape",
+    "dismiss": "Fermer"
   }
 }

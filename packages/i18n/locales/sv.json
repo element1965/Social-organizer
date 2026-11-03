@@ -204,7 +204,7 @@
     "close": "Stang insamling",
     "participants": "Deltagare",
     "noParticipants": "Ingen har gatt med annu",
-    "minAmount": "Minsta 1 $",
+    "minAmount": "Heltal, minst 1 $",
     "connectionToCreator": "Anslutning till skapare",
     "editAmount": "Edit",
     "saveAmount": "Save",
@@ -235,7 +235,7 @@
     "currency": "Valuta",
     "chatLink": "Chattlank",
     "submit": "Meddela",
-    "minAmount": "Minsta 10",
+    "minAmount": "Heltal, minst 10 $",
     "invalidUrl": "Ogiltig URL",
     "chatHelpToggle": "Hur skapar man en Telegram-chatt?",
     "chatHelpTitle": "Så får du en chattlänk:",
@@ -728,5 +728,15 @@
     "inviteSomeone": "Bjud in en bekant",
     "inviteGone": "Personen som bjöd in dig har raderat kontot. Bjud in någon du känner personligen.",
     "continue": "Fortsätt"
+  },
+  "milestones": {
+    "title": "Milstolpar",
+    "first": "Första handslaget",
+    "ten": "10 direkta kontakter",
+    "notYet": "Ännu framför dig",
+    "progress": "{{count}} av {{total}}",
+    "nowCount": "nu {{count}}",
+    "newBadge": "Ny milstolpe",
+    "dismiss": "Stäng"
   }
 }

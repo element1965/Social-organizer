@@ -204,7 +204,7 @@
     "close": "募集を終了",
     "participants": "参加者",
     "noParticipants": "まだ参加者はいません",
-    "minAmount": "最低 1 $",
+    "minAmount": "整数、1 $ 以上",
     "connectionToCreator": "発起人とのつながり",
     "editAmount": "Edit",
     "saveAmount": "Save",
@@ -235,7 +235,7 @@
     "currency": "通貨",
     "chatLink": "チャットリンク",
     "submit": "通知する",
-    "minAmount": "最低 10",
+    "minAmount": "整数、10 $ 以上",
     "invalidUrl": "無効なURL",
     "chatHelpToggle": "Telegramチャットの作成方法は？",
     "chatHelpTitle": "チャットリンクの取得方法：",
@@ -728,5 +728,15 @@
     "inviteSomeone": "知り合いを招待",
     "inviteGone": "あなたを招待した人はアカウントを削除しました。直接知っている人を招待しましょう。",
     "continue": "続ける"
+  },
+  "milestones": {
+    "title": "マイルストーン",
+    "first": "最初の握手",
+    "ten": "直接のつながり10人",
+    "notYet": "まだこれから",
+    "progress": "{{count}} / {{total}}",
+    "nowCount": "現在 {{count}}",
+    "newBadge": "新しいマイルストーン",
+    "dismiss": "閉じる"
   }
 }

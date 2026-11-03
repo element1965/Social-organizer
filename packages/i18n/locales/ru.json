@@ -204,7 +204,7 @@
     "close": "Закрыть сбор",
     "participants": "Участники",
     "noParticipants": "Пока никто не вписался",
-    "minAmount": "Минимум 1 $",
+    "minAmount": "Целое число, от 1 $",
     "connectionToCreator": "Связь с создателем",
     "editAmount": "Изменить",
     "saveAmount": "Сохранить",
@@ -235,7 +235,7 @@
     "currency": "Валюта",
     "chatLink": "Ссылка на чат",
     "submit": "Уведомить",
-    "minAmount": "Минимум 10",
+    "minAmount": "Целое число, от 10 $",
     "invalidUrl": "Невалидный URL",
     "chatHelpToggle": "Как создать Telegram-чат?",
     "chatHelpTitle": "Как получить ссылку на чат:",
@@ -728,5 +728,15 @@
     "inviteSomeone": "Пригласить знакомого",
     "inviteGone": "Пригласивший удалил аккаунт. Пригласите человека, которого знаете лично.",
     "continue": "Продолжить"
+  },
+  "milestones": {
+    "title": "Вехи",
+    "first": "Первое рукопожатие",
+    "ten": "10 прямых связей",
+    "notYet": "Ещё впереди",
+    "progress": "{{count}} из {{total}}",
+    "nowCount": "сейчас {{count}}",
+    "newBadge": "Новая веха",
+    "dismiss": "Закрыть"
   }
 }

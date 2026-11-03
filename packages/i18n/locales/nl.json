@@ -204,7 +204,7 @@
     "close": "Inzameling sluiten",
     "participants": "Deelnemers",
     "noParticipants": "Nog niemand heeft meegedaan",
-    "minAmount": "Minimaal 1 $",
+    "minAmount": "Heel getal, minimaal 1 $",
     "connectionToCreator": "Verbinding met maker",
     "editAmount": "Edit",
     "saveAmount": "Save",
@@ -235,7 +235,7 @@
     "currency": "Valuta",
     "chatLink": "Chatlink",
     "submit": "Notificeren",
-    "minAmount": "Minimaal 10",
+    "minAmount": "Heel getal, minimaal 10 $",
     "invalidUrl": "Ongeldige URL",
     "chatHelpToggle": "Hoe maak je een Telegram-chat aan?",
     "chatHelpTitle": "Zo krijg je een chatlink:",
@@ -728,5 +728,15 @@
     "inviteSomeone": "Nodig een kennis uit",
     "inviteGone": "Degene die je heeft uitgenodigd heeft het account verwijderd. Nodig iemand uit die je persoonlijk kent.",
     "continue": "Doorgaan"
+  },
+  "milestones": {
+    "title": "Mijlpalen",
+    "first": "Eerste handdruk",
+    "ten": "10 directe connecties",
+    "notYet": "Nog te gaan",
+    "progress": "{{count}} van {{total}}",
+    "nowCount": "nu {{count}}",
+    "newBadge": "Nieuwe mijlpaal",
+    "dismiss": "Sluiten"
   }
 }

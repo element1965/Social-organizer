@@ -204,7 +204,7 @@
     "close": "Zamknij zbiórkę",
     "participants": "Uczestnicy",
     "noParticipants": "Nikt jeszcze nie dołączył",
-    "minAmount": "Minimum 1 $",
+    "minAmount": "Liczba całkowita, od 1 $",
     "connectionToCreator": "Połączenie z twórcą",
     "editAmount": "Edit",
     "saveAmount": "Save",
@@ -235,7 +235,7 @@
     "currency": "Waluta",
     "chatLink": "Link do czatu",
     "submit": "Powiadom",
-    "minAmount": "Minimum 10",
+    "minAmount": "Liczba całkowita, od 10 $",
     "invalidUrl": "Nieprawidłowy URL",
     "chatHelpToggle": "Jak utworzyć czat Telegram?",
     "chatHelpTitle": "Jak uzyskać link do czatu:",
@@ -728,5 +728,15 @@
     "inviteSomeone": "Zaproś znajomego",
     "inviteGone": "Osoba, która cię zaprosiła, usunęła konto. Zaproś kogoś, kogo znasz osobiście.",
     "continue": "Dalej"
+  },
+  "milestones": {
+    "title": "Kamienie milowe",
+    "first": "Pierwszy uścisk dłoni",
+    "ten": "10 bezpośrednich połączeń",
+    "notYet": "Jeszcze przed Tobą",
+    "progress": "{{count}} z {{total}}",
+    "nowCount": "teraz {{count}}",
+    "newBadge": "Nowy kamień milowy",
+    "dismiss": "Zamknij"
   }
 }

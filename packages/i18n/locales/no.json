@@ -204,7 +204,7 @@
     "close": "Lukk innsamling",
     "participants": "Deltakere",
     "noParticipants": "Ingen har blitt med ennå",
-    "minAmount": "Minimum 1 $",
+    "minAmount": "Helt tall, minst 1 $",
     "connectionToCreator": "Forbindelse til oppretter",
     "editAmount": "Edit",
     "saveAmount": "Save",
@@ -235,7 +235,7 @@
     "currency": "Valuta",
     "chatLink": "Chat-lenke",
     "submit": "Varsle",
-    "minAmount": "Minimum 10",
+    "minAmount": "Helt tall, minst 10 $",
     "invalidUrl": "Ugyldig URL",
     "chatHelpToggle": "Hvordan opprette en Telegram-chat?",
     "chatHelpTitle": "Slik får du en chatlenke:",
@@ -728,5 +728,15 @@
     "inviteSomeone": "Inviter en bekjent",
     "inviteGone": "Personen som inviterte deg har slettet kontoen. Inviter noen du kjenner personlig.",
     "continue": "Fortsett"
+  },
+  "milestones": {
+    "title": "Milepæler",
+    "first": "Første håndtrykk",
+    "ten": "10 direkte forbindelser",
+    "notYet": "Ennå foran deg",
+    "progress": "{{count}} av {{total}}",
+    "nowCount": "nå {{count}}",
+    "newBadge": "Ny milepæl",
+    "dismiss": "Lukk"
   }
 }

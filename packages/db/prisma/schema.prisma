@@ -137,6 +137,7 @@ model User {
   chainLinksAsReceiver     MatchChainLink[]         @relation("chainReceiver")
   supportMessagesAsUser    SupportMessage[]         @relation("supportMessageUser")
   supportMessagesAsAdmin   SupportMessage[]         @relation("supportMessageAdmin")
+  milestones               UserMilestone[]
 
   @@map("users")
 }
@@ -174,6 +175,30 @@ model Connection {
   @@index([userAId])
   @@index([userBId])
   @@map("connections")
+}
+
+// Money MVP keeps two milestones. Each is a historical fact recorded once per user;
+// removing a connection later does not take it back (the current count is shown separately).
+enum MilestoneKind {
+  FIRST_CONNECTION
+  TEN_CONNECTIONS
+}
+
+model UserMilestone {
+  id            String        @id @default(cuid())
+  userId        String
+  kind          MilestoneKind
+  achievedAt    DateTime
+  // The person whose confirmed connection reached the milestone (no FK: the account may be deleted later)
+  relatedUserId String?
+  // null = the short confirmation was not shown yet; restored milestones are created as seen
+  seenAt        DateTime?
+  createdAt     DateTime      @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, kind])
+  @@map("user_milestones")
 }
 
 model Collection {

@@ -204,7 +204,7 @@
     "close": "Close collection",
     "participants": "Participants",
     "noParticipants": "No one has joined yet",
-    "minAmount": "Minimum $1",
+    "minAmount": "Whole number, at least $1",
     "connectionToCreator": "Connection to creator",
     "editAmount": "Edit",
     "saveAmount": "Save",
@@ -235,7 +235,7 @@
     "currency": "Currency",
     "chatLink": "Chat link",
     "submit": "Notify",
-    "minAmount": "Minimum 10",
+    "minAmount": "Whole number, at least $10",
     "invalidUrl": "Invalid URL",
     "chatHelpToggle": "How to create a Telegram chat?",
     "chatHelpTitle": "How to get a chat link:",
@@ -728,5 +728,15 @@
     "inviteSomeone": "Invite someone you know",
     "inviteGone": "The person who invited you deleted the account. Invite someone you know personally.",
     "continue": "Continue"
+  },
+  "milestones": {
+    "title": "Milestones",
+    "first": "First handshake",
+    "ten": "10 direct connections",
+    "notYet": "Still ahead",
+    "progress": "{{count}} of {{total}}",
+    "nowCount": "now {{count}}",
+    "newBadge": "New milestone",
+    "dismiss": "Close"
   }
 }

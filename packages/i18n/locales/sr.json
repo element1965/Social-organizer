@@ -204,7 +204,7 @@
     "close": "Затвори прикупљање",
     "participants": "Учесници",
     "noParticipants": "Још нико се није придружио",
-    "minAmount": "Минимум 1 $",
+    "minAmount": "Цео број, од 1 $",
     "connectionToCreator": "Веза са креатором",
     "editAmount": "Edit",
     "saveAmount": "Save",
@@ -235,7 +235,7 @@
     "currency": "Валута",
     "chatLink": "Линк ка чату",
     "submit": "Обавести",
-    "minAmount": "Минимум 10",
+    "minAmount": "Цео број, од 10 $",
     "invalidUrl": "Неисправан URL",
     "chatHelpToggle": "Како направити Telegram ћаскање?",
     "chatHelpTitle": "Како добити линк за ћаскање:",
@@ -728,5 +728,15 @@
     "inviteSomeone": "Позови познаника",
     "inviteGone": "Особа која вас је позвала обрисала је налог. Позовите неког кога лично познајете.",
     "continue": "Настави"
+  },
+  "milestones": {
+    "title": "Prekretnice",
+    "first": "Prvo rukovanje",
+    "ten": "10 direktnih veza",
+    "notYet": "Tek predstoji",
+    "progress": "{{count}} od {{total}}",
+    "nowCount": "sada {{count}}",
+    "newBadge": "Nova prekretnica",
+    "dismiss": "Zatvori"
   }
 }

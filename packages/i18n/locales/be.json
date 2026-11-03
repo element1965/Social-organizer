@@ -204,7 +204,7 @@
     "close": "Закрыць збор",
     "participants": "Удзельнікі",
     "noParticipants": "Пакуль ніхто не ўпісаўся",
-    "minAmount": "Мінімум 1 $",
+    "minAmount": "Цэлы лік, ад 1 $",
     "connectionToCreator": "Сувязь са стваральнікам",
     "editAmount": "Змяніць",
     "saveAmount": "Захаваць",
@@ -235,7 +235,7 @@
     "currency": "Валюта",
     "chatLink": "Спасылка на чат",
     "submit": "Паведаміць",
-    "minAmount": "Мінімум 10",
+    "minAmount": "Цэлы лік, ад 10 $",
     "invalidUrl": "Няправільны URL",
     "chatHelpToggle": "Як стварыць Telegram-чат?",
     "chatHelpTitle": "Як атрымаць спасылку на чат:",
@@ -728,5 +728,15 @@
     "inviteSomeone": "Запрасіць знаёмага",
     "inviteGone": "Той, хто цябе запрасіў, выдаліў акаўнт. Запрасі чалавека, якога ведаеш асабіста.",
     "continue": "Працягнуць"
+  },
+  "milestones": {
+    "title": "Вехі",
+    "first": "Першае поціск рукі",
+    "ten": "10 прамых сувязяў",
+    "notYet": "Яшчэ наперадзе",
+    "progress": "{{count}} з {{total}}",
+    "nowCount": "цяпер {{count}}",
+    "newBadge": "Новая веха",
+    "dismiss": "Закрыць"
   }
 }

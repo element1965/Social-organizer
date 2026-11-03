@@ -204,7 +204,7 @@
     "close": "Koleksiyonu kapat",
     "participants": "Katılımcılar",
     "noParticipants": "Henüz kimse katılmadı",
-    "minAmount": "En az 1 $",
+    "minAmount": "Tam sayı, en az 1 $",
     "connectionToCreator": "Oluşturucuya bağlantı",
     "editAmount": "Edit",
     "saveAmount": "Save",
@@ -235,7 +235,7 @@
     "currency": "Para Birimi",
     "chatLink": "Sohbet linki",
     "submit": "Bildir",
-    "minAmount": "En az 10",
+    "minAmount": "Tam sayı, en az 10 $",
     "invalidUrl": "Geçersiz URL",
     "chatHelpToggle": "Telegram sohbeti nasıl oluşturulur?",
     "chatHelpTitle": "Sohbet bağlantısı nasıl alınır:",
@@ -728,5 +728,15 @@
     "inviteSomeone": "Tanıdığını davet et",
     "inviteGone": "Seni davet eden kişi hesabını sildi. Kişisel olarak tanıdığın birini davet et.",
     "continue": "Devam"
+  },
+  "milestones": {
+    "title": "Kilometre taşları",
+    "first": "İlk tokalaşma",
+    "ten": "10 doğrudan bağlantı",
+    "notYet": "Henüz önünüzde",
+    "progress": "{{count}}/{{total}}",
+    "nowCount": "şu an {{count}}",
+    "newBadge": "Yeni kilometre taşı",
+    "dismiss": "Kapat"
   }
 }

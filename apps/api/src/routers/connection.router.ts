@@ -4,6 +4,7 @@ import { TRPCError } from '@trpc/server';
 import { GRAPH_SLICE_DEPTH } from '@so/shared';
 import { getGraphSlice, findPathBetweenUsers } from '../services/bfs.service.js';
 import { canViewContacts } from '../services/visibility.service.js';
+import { syncMilestonesForPair } from '../services/milestone.service.js';
 
 export const connectionRouter = router({
   list: protectedProcedure.query(async ({ ctx }) => {
@@ -102,7 +103,9 @@ export const connectionRouter = router({
       if (existing) {
         throw new TRPCError({ code: 'CONFLICT', message: 'Already connected' });
       }
-      return ctx.db.connection.create({ data: { userAId: userAId!, userBId: userBId! } });
+      const created = await ctx.db.connection.create({ data: { userAId: userAId!, userBId: userBId! } });
+      await syncMilestonesForPair(ctx.db, ctx.userId, input.userId);
+      return created;
     }),
 
   getCount: protectedProcedure.query(async ({ ctx }) => {

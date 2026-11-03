@@ -85,8 +85,8 @@ pnpm dev
 | UserContact | User contacts (social networks, messengers) |
 | PlatformAccount | Platform bindings (FB/TG/Apple/Google) |
 | Connection | Connection between users (userAId < userBId) with optional nicknames (nicknameByA, nicknameByB) |
-| Collection | Fundraising (emergency/regular) with USD amount and original currency info |
-| Obligation | Intention for a collection with USD amount and original currency info |
+| Collection | Fundraising (emergency/regular) with amount in $ (originalAmount/originalCurrency are legacy, no longer written) |
+| Obligation | Intention for a collection with amount in $ (originalAmount/originalCurrency are legacy, no longer written) |
 | Notification | Notification with handshake path |
 | IgnoreEntry | Ignore record |
 | LinkingCode | 6-digit linking code (5 min TTL) |
@@ -102,6 +102,7 @@ pnpm dev
 | SkillCategory | Skill/need category with key, group, sortOrder, isOnline (221 categories in 15 groups) |
 | UserSkill | User's offered skill (link to SkillCategory) with optional note |
 | UserNeed | User's need (link to SkillCategory) with optional note |
+| UserMilestone | Money MVP milestone (FIRST_CONNECTION / TEN_CONNECTIONS): recorded once per user with achievedAt, the person whose connection reached it, and seenAt for the one-time in-app confirmation. A historical fact — removing a connection later does not take it back |
 | SkillMatchNotification | Notification when a connected user's skill matches another's need (userId, matchUserId, categoryId) |
 
 ## Scripts
@@ -149,6 +150,7 @@ FIREBASE_SERVICE_ACCOUNT={"type":"service_account",...}  # FCM service account J
 | `settings` | get, updateLanguage/Theme/Sound/FontScale/HideContacts/Geo, ignoreList/addIgnore/removeIgnore |
 | `invite` | generate, accept, getByToken |
 | `stats` | profile (obligationsGiven + obligationsReceived), help, networkCapabilities |
+| `milestone` | list (both milestones + current direct connections; restores missing ones from saved connections), markSeen |
 | `currency` | list, detectCurrency, rates, convert, toUSD |
 | `push` | vapidPublicKey, subscribe, unsubscribe, registerNativeToken, unregisterNativeToken |
 | `faq` | list, top, all, incrementView, localize, isAdmin, create, update, delete (admin-gated CRUD with view ranking and LLM auto-translation to 26 languages) |
@@ -164,7 +166,8 @@ FIREBASE_SERVICE_ACCOUNT={"type":"service_account",...}  # FCM service account J
 - **Telegram Bot** — Collection notifications (new, blocked, closed) via Bot API with rate-limited broadcast (25 msg/sec batches via BullMQ)
 - **Web Push** — Browser push notifications via web-push library with VAPID, auto-cleanup of expired subscriptions
 - **FCM Push** — Native Android push notifications via Firebase Cloud Messaging (firebase-admin), auto-cleanup of expired tokens
-- **Currency** — Real-time exchange rates with Redis cache (1h TTL), automatic USD conversion for all amounts
+- **Milestones** — `milestone.service.ts`: two money-MVP milestones counted from confirmed `Connection` rows only (invite links and pending requests never count); synced right after every new connection (request accept, SOS accept, direct add), unique per user, no push, no rating
+- **Currency** — Exchange rates service is kept but not used for amounts: intentions, capacity and goals are entered in $ only (1 $ = 1 unit of participation, SO-40)
 - **Geo** — IP-based country detection for currency auto-selection (ip-api.com)
 
 ## BullMQ Workers
@@ -341,8 +344,7 @@ Mock data (`apps/web/src/lib/demoData.ts`):
 
 ## Key Features
 
-- **Unified USD currency** — all amounts stored and displayed in USD; users enter in local currency with real-time conversion preview
-- **100+ currencies supported** — full ISO 4217 list with exchange rates from exchangerate-api.com (1h cache)
+- **One unit — $** — all amounts are entered, stored and displayed in $ (conditional dollars, 1 $ = 1 unit of participation); no currency choice and no conversion
 - **Connection count** — displayed next to every user throughout the app
 - **Handshake path** — shown when viewing profiles and collections of non-direct connections
 - **Network reach** — real-time calculation of how many people will receive notifications (min of amount or reachable users)
@@ -356,7 +358,6 @@ Mock data (`apps/web/src/lib/demoData.ts`):
 - **Connection nicknames** — custom names for connections (like a phone book), editable from profile page; nickname replaces real name as the primary display name across all pages (network, notifications, matches, collections, handshake paths, dashboard); real Telegram name shown as secondary gray text on profile
 - **Telegram Mini App** — auto-login via initData, BackButton navigation, haptic feedback on tab switches, theme sync, CSS variable injection from Telegram themeParams
 - **Onboarding** — auto-shown for new users, completable flag in database
-- **Currency preference** — users can set preferred currency in settings; auto-detected by IP on first visit
 - **Monthly support budget** — users can set how much they're willing to contribute monthly; displayed as "Current Capabilities" network-wide sum on dashboard
 - **AI Chat Assistant** — floating help button (?) with expandable menu: Chat (AI assistant with glossary/screens/FAQ knowledge) and FAQ page; supports text and voice input with auto-speak for voice queries. The chat panel follows the visible viewport (stays above the on-screen keyboard), quick-topic chips meet WCAG AA contrast in both themes, controls are ≥44 px, Enter sends / Shift+Enter adds a line, and a failed send keeps the text with a Retry that sends it once
 - **FAQ Page** — admin-managed FAQ with accordion UI; admins can create/edit/delete questions; LLM auto-translation to all 26 languages; view count ranking; FAQ section on landing page (top 5 + show all)

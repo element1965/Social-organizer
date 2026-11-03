@@ -101,7 +101,7 @@ export function SettingsPage() {
   });
 
   // Capacity is either 0 or at least 1 $.
-  const budgetValid = newBudgetValue !== '' && (Number(newBudgetValue) === 0 || Number(newBudgetValue) >= 1);
+  const budgetValid = newBudgetValue !== '' && Number.isInteger(Number(newBudgetValue)) && (Number(newBudgetValue) === 0 || Number(newBudgetValue) >= 1);
 
   const handleCopyCode = (code: string) => {
     navigator.clipboard.writeText(code).then(() => {

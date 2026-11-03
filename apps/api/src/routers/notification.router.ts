@@ -14,7 +14,7 @@ export const notificationRouter = router({
               // Viewer's own active subscriptions — shown on regular-cycle notifications
               obligations: {
                 where: { userId: ctx.userId, unsubscribedAt: null },
-                select: { amount: true, originalAmount: true, originalCurrency: true },
+                select: { amount: true },
               },
             },
           },

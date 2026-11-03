@@ -204,7 +204,7 @@
     "close": "Sulje keräys",
     "participants": "Osallistujat",
     "noParticipants": "Kukaan ei ole vielä liittynyt",
-    "minAmount": "Vähintään 1 $",
+    "minAmount": "Kokonaisluku, vähintään 1 $",
     "connectionToCreator": "Yhteys luojaan",
     "editAmount": "Edit",
     "saveAmount": "Save",
@@ -235,7 +235,7 @@
     "currency": "Valuutta",
     "chatLink": "Chat-linkki",
     "submit": "Ilmoita",
-    "minAmount": "Vähintään 10",
+    "minAmount": "Kokonaisluku, vähintään 10 $",
     "invalidUrl": "Virheellinen URL",
     "chatHelpToggle": "Miten luodaan Telegram-keskustelu?",
     "chatHelpTitle": "Näin saat keskustelulinkin:",
@@ -728,5 +728,15 @@
     "inviteSomeone": "Kutsu tuttava",
     "inviteGone": "Sinut kutsunut henkilö on poistanut tilinsä. Kutsu joku, jonka tunnet henkilökohtaisesti.",
     "continue": "Jatka"
+  },
+  "milestones": {
+    "title": "Virstanpylväät",
+    "first": "Ensimmäinen kädenpuristus",
+    "ten": "10 suoraa yhteyttä",
+    "notYet": "Vielä edessä",
+    "progress": "{{count}}/{{total}}",
+    "nowCount": "nyt {{count}}",
+    "newBadge": "Uusi virstanpylväs",
+    "dismiss": "Sulje"
   }
 }

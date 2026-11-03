@@ -9,7 +9,7 @@ import { Avatar } from './ui/avatar';
 
 const seenKey = (meId: string, personId: string) => `acquaintanceSeen:${meId}:${personId}`;
 
-function wasSeen(meId: string, personId: string): boolean {
+export function wasSeen(meId: string, personId: string): boolean {
   try { return localStorage.getItem(seenKey(meId, personId)) === '1'; } catch { return false; }
 }
 function markSeen(meId: string, personId: string) {
@@ -35,6 +35,10 @@ export function AcquaintanceCard({ onInvite }: { onInvite: () => void }) {
     if (state === 'connected') utils.connection.getNetworkStats.invalidate();
   }, [state, utils]);
   const [hidden, setHidden] = useState(false);
+  // This card is the confirmation of the first-handshake milestone — mark it so it is not shown twice
+  const markMilestoneSeen = trpc.milestone.markSeen.useMutation({
+    onSuccess: () => utils.milestone.list.invalidate(),
+  });
 
   if (!data || !me || data.state === 'none' || !data.person || hidden) return null;
   const person = data.person;
@@ -54,20 +58,28 @@ export function AcquaintanceCard({ onInvite }: { onInvite: () => void }) {
 
   if (data.state === 'connected') {
     if (wasSeen(me.id, person.id)) return null;
+    const isFirst = (data as { isFirstHandshake?: boolean }).isFirstHandshake === true;
     return (
       <Card>
         <CardContent className="py-5 text-center">
           {pair}
           <h2 className="text-lg font-bold text-gray-900 dark:text-white">{t('acquaintance.connectedTitle', { name })}</h2>
           <p className="text-sm text-gray-500 dark:text-gray-300 mb-3">{t('acquaintance.connectedText')}</p>
-          <div className="rounded-xl bg-gray-50 dark:bg-gray-800/60 p-3 text-left mb-3">
-            <p className="text-sm font-semibold text-gray-900 dark:text-white">{t('acquaintance.firstHandshake', { name })}</p>
-            <p className="text-sm text-gray-500 dark:text-gray-300">{t('acquaintance.firstHandshakeText')}</p>
-          </div>
+          {isFirst && (
+            <div className="rounded-xl bg-gray-50 dark:bg-gray-800/60 p-3 text-left mb-3">
+              <p className="text-sm font-semibold text-gray-900 dark:text-white">{t('acquaintance.firstHandshake', { name })}</p>
+              <p className="text-sm text-gray-500 dark:text-gray-300">{t('acquaintance.firstHandshakeText')}</p>
+            </div>
+          )}
           <Button
             className="w-full"
             size="lg"
-            onClick={() => { markSeen(me.id, person.id); setHidden(true); navigate('/network'); }}
+            onClick={() => {
+              markSeen(me.id, person.id);
+              if (isFirst) markMilestoneSeen.mutate({ kind: 'FIRST_CONNECTION' });
+              setHidden(true);
+              navigate('/network');
+            }}
           >
             {t('acquaintance.openNetwork')}
           </Button>
