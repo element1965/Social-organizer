@@ -52,6 +52,7 @@
     "emailCode": "E-post: vi sender en kode",
     "emailPassword": "E-post og passord",
     "footer": "Ny eller ikke, det finner vi ut selv. Ikke noe passord",
+    "footerShort": "Ny eller ikke, det finner vi ut selv.",
     "emailTitle": "Logg inn med e-post",
     "emailHint": "Vi sender en 6-sifret kode",
     "sendCode": "Få kode",

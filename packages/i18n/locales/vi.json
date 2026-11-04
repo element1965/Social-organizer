@@ -52,6 +52,7 @@
     "emailCode": "E-mail: chúng tôi gửi mã",
     "emailPassword": "E-mail và mật khẩu",
     "footer": "Mới hay không, chúng tôi tự xác định. Không cần mật khẩu",
+    "footerShort": "Mới hay không, chúng tôi tự xác định.",
     "emailTitle": "Đăng nhập bằng e-mail",
     "emailHint": "Chúng tôi sẽ gửi mã 6 chữ số",
     "sendCode": "Nhận mã",

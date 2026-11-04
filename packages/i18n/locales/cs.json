@@ -52,6 +52,7 @@
     "emailCode": "E-mail: pošleme kód",
     "emailPassword": "E-mail a heslo",
     "footer": "Nový nebo ne — poznáme sami. Heslo není potřeba",
+    "footerShort": "Nový nebo ne — poznáme sami.",
     "emailTitle": "Přihlášení e-mailem",
     "emailHint": "Pošleme vám 6místný kód",
     "sendCode": "Získat kód",

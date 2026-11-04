@@ -52,6 +52,7 @@
     "emailCode": "Sähköposti: lähetämme koodin",
     "emailPassword": "Sähköposti ja salasana",
     "footer": "Uusi vai ei, selvitämme itse. Salasanaa ei tarvita",
+    "footerShort": "Uusi vai ei, selvitämme itse.",
     "emailTitle": "Kirjaudu sähköpostilla",
     "emailHint": "Lähetämme 6-numeroisen koodin",
     "sendCode": "Hae koodi",

@@ -52,6 +52,7 @@
     "emailCode": "E-mail: kami kirim kode",
     "emailPassword": "E-mail dan kata sandi",
     "footer": "Baru atau tidak, kami yang menentukan. Tanpa kata sandi",
+    "footerShort": "Baru atau tidak, kami yang menentukan.",
     "emailTitle": "Masuk dengan e-mail",
     "emailHint": "Kami akan mengirim kode 6 digit",
     "sendCode": "Dapatkan kode",

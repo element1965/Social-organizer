@@ -52,6 +52,7 @@
     "emailCode": "E-Mail: Wir senden einen Code",
     "emailPassword": "E-Mail und Passwort",
     "footer": "Neu oder nicht — das erkennen wir selbst. Kein Passwort nötig",
+    "footerShort": "Neu oder nicht — das erkennen wir selbst.",
     "emailTitle": "Anmeldung per E-Mail",
     "emailHint": "Wir senden einen 6-stelligen Code an Ihr Postfach",
     "sendCode": "Code anfordern",
