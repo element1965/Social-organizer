@@ -52,6 +52,7 @@
     "emailCode": "E-mail: we'll send a code",
     "emailPassword": "E-mail and password",
     "footer": "New or not — we'll figure it out. No password needed",
+    "footerShort": "New or not — we'll figure it out.",
     "emailTitle": "Sign in with e-mail",
     "emailHint": "We'll send a 6-digit code to your inbox",
     "sendCode": "Get code",

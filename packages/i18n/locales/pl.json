@@ -52,6 +52,7 @@
     "emailCode": "E-mail: wyślemy kod",
     "emailPassword": "E-mail i hasło",
     "footer": "Nowy czy nie — rozpoznamy sami. Hasło nie jest potrzebne",
+    "footerShort": "Nowy czy nie — rozpoznamy sami.",
     "emailTitle": "Logowanie przez e-mail",
     "emailHint": "Wyślemy na skrzynkę 6-cyfrowy kod",
     "sendCode": "Otrzymaj kod",

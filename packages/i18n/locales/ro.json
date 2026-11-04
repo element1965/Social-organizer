@@ -52,6 +52,7 @@
     "emailCode": "E-mail: îți trimitem un cod",
     "emailPassword": "E-mail și parolă",
     "footer": "Nou sau nu, ne dăm seama singuri. Nu ai nevoie de parolă",
+    "footerShort": "Nou sau nu, ne dăm seama singuri.",
     "emailTitle": "Conectare cu e-mail",
     "emailHint": "Îți trimitem un cod din 6 cifre",
     "sendCode": "Primește codul",

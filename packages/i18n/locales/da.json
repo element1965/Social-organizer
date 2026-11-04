@@ -52,6 +52,7 @@
     "emailCode": "E-mail: vi sender en kode",
     "emailPassword": "E-mail og adgangskode",
     "footer": "Ny eller ej, det finder vi selv ud af. Ingen adgangskode",
+    "footerShort": "Ny eller ej, det finder vi selv ud af.",
     "emailTitle": "Log ind med e-mail",
     "emailHint": "Vi sender en 6-cifret kode",
     "sendCode": "Få kode",

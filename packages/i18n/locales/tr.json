@@ -52,6 +52,7 @@
     "emailCode": "E-posta: kod göndeririz",
     "emailPassword": "E-posta ve şifre",
     "footer": "Yeni misiniz değil misiniz, biz anlarız. Şifre gerekmez",
+    "footerShort": "Yeni misiniz değil misiniz, biz anlarız.",
     "emailTitle": "E-posta ile giriş",
     "emailHint": "6 haneli bir kod göndereceğiz",
     "sendCode": "Kodu al",

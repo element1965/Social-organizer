@@ -52,6 +52,7 @@
     "emailCode": "E-mail: we sturen een code",
     "emailPassword": "E-mail en wachtwoord",
     "footer": "Nieuw of niet, dat zien we zelf. Geen wachtwoord nodig",
+    "footerShort": "Nieuw of niet, dat zien we zelf.",
     "emailTitle": "Inloggen met e-mail",
     "emailHint": "We sturen een code van 6 cijfers",
     "sendCode": "Code ontvangen",

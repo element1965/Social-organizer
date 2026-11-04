@@ -52,6 +52,7 @@
     "emailCode": "E-mail : nous envoyons un code",
     "emailPassword": "E-mail et mot de passe",
     "footer": "Nouveau ou pas, nous le savons. Pas de mot de passe",
+    "footerShort": "Nouveau ou pas, nous le savons.",
     "emailTitle": "Connexion par e-mail",
     "emailHint": "Nous enverrons un code à 6 chiffres",
     "sendCode": "Recevoir le code",

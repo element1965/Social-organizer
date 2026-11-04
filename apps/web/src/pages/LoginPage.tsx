@@ -245,6 +245,22 @@ export function LoginPage() {
       Browser.open({ url: `https://accounts.google.com/o/oauth2/v2/auth?${params.toString()}` });
       return;
     }
+    // Mobile browsers (iOS Safari especially): the GIS popup hangs after the account is picked,
+    // so use a full-page redirect; GoogleCallbackPage finishes sign-in and restores the invite
+    if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)
+      || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)) {
+      markLoginMethod('google');
+      const params = new URLSearchParams({
+        response_type: 'id_token',
+        client_id: GOOGLE_CLIENT_ID,
+        redirect_uri: `${window.location.origin}/auth/google/callback`,
+        scope: 'openid email profile',
+        nonce: Math.random().toString(36).slice(2),
+        prompt: 'select_account',
+      });
+      window.location.href = `https://accounts.google.com/o/oauth2/v2/auth?${params.toString()}`;
+      return;
+    }
     if (!window.google?.accounts?.id) {
       setError(t('signin.errFailed'));
       return;
@@ -374,7 +390,7 @@ export function LoginPage() {
 
             {error && <div className="mt-3">{errorLine}</div>}
 
-            <p className="text-gray-500 text-xs text-center mt-5">{t('signin.footer')}</p>
+            <p className="text-gray-500 text-xs text-center mt-5">{emailCodes ? t('signin.footer') : t('signin.footerShort')}</p>
 
             {!useWidget && !inTelegram && (
               <button type="button" onClick={() => go('telegramCode')} className="mt-4 text-teal-400 hover:text-teal-300 text-xs">

@@ -52,6 +52,7 @@
     "emailCode": "이메일: 코드를 보내 드립니다",
     "emailPassword": "이메일과 비밀번호",
     "footer": "신규 여부는 저희가 판단합니다. 비밀번호가 필요 없습니다",
+    "footerShort": "신규 여부는 저희가 판단합니다.",
     "emailTitle": "이메일로 로그인",
     "emailHint": "6자리 코드를 메일로 보내 드립니다",
     "sendCode": "코드 받기",
