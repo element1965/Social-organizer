@@ -5,6 +5,7 @@ import { trpc } from '../lib/trpc';
 import { useAuth } from '../hooks/useAuth';
 import { useTheme } from '../hooks/useTheme';
 import { Card, CardContent, CardHeader } from '../components/ui/card';
+import { MilestonesCard } from '../components/MilestonesCard';
 import { Button } from '../components/ui/button';
 import { Select } from '../components/ui/select';
 import { Avatar } from '../components/ui/avatar';
@@ -302,6 +303,9 @@ export function SettingsPage() {
       </Card>
 
       <InviteBlock variant="settings" />
+
+      {/* History of reached milestones (hidden from the dashboard once done) */}
+      <MilestonesCard variant="history" />
 
       <Card><CardContent className="py-3">
         <div className="flex items-center gap-3">
