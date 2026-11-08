@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Дизайн-система — стайлгайд</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="shared.css">
+<style>
+  body { background:var(--canvas); color:var(--ink); padding:32px 24px 100px; max-width:1180px; margin:0 auto; }
+  .top { display:flex; align-items:center; justify-content:space-between; gap:16px; margin-bottom:8px; }
+  .top .btn { height:40px; padding:0 14px; font-size:14px; width:auto; }
+  h1 { font-size:32px; }
+  h2.sec { margin:40px 0 12px; font-size:22px; letter-spacing:-.03em; padding-top:16px; border-top:1px solid var(--line); }
+  h3.sub { margin:22px 0 10px; font-size:15px; color:var(--muted); font-weight:700; }
+  .grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(150px, 1fr)); gap:10px; }
+  .sw { border-radius:var(--r-lg); overflow:hidden; background:var(--paper); box-shadow:var(--shadow-card); }
+  .sw .c { height:64px; display:flex; align-items:flex-end; padding:8px 10px; font-size:12px; font-weight:800; font-variant-numeric:tabular-nums; }
+  .sw .t { padding:8px 10px 10px; font-size:12px; }
+  .sw .t b { display:block; font-size:13px; letter-spacing:-.01em; }
+  .sw .t span { color:var(--muted); font-weight:600; }
+  .sw .t em { font-style:normal; font-weight:800; color:var(--care); }
+  .sw .t em.bad { color:var(--sos); }
+  .type > div { display:flex; align-items:baseline; gap:18px; padding:8px 0; border-bottom:1px solid var(--line-soft); }
+  .type small { width:150px; flex:none; color:var(--muted); font-size:12px; font-weight:700; }
+  .scale { display:flex; gap:10px; flex-wrap:wrap; align-items:flex-end; }
+  .scale .r { background:var(--paper); box-shadow:var(--shadow-card); width:64px; height:64px; display:grid; place-items:center; font-size:12px; font-weight:700; color:var(--muted); }
+  .scale .sp { background:var(--care-soft); display:grid; place-items:end center; color:var(--care); font-size:11px; font-weight:800; }
+  .demo { display:grid; grid-template-columns:repeat(auto-fill, minmax(300px, 1fr)); gap:16px; }
+  .demo .box { background:var(--canvas); border:1px dashed var(--line-strong); border-radius:var(--r-xl); padding:16px; }
+  .demo .box > .lbl { margin-bottom:10px; }
+  .states { display:flex; flex-wrap:wrap; gap:10px; }
+  .states > * { flex:1 1 130px; }
+  .btn.pressed { transform:scale(.96); }
+  .btn.disabled { opacity:.45; }
+  .btn.loading { position:relative; color:transparent; }
+  .btn.loading::after { content:""; position:absolute; width:20px; height:20px; border-radius:50%; border:2.5px solid rgba(255,255,255,.4); border-top-color:#fff; animation:spin .8s linear infinite; }
+  @keyframes spin { to { transform:rotate(360deg); } }
+  .field.focus { border-color:var(--care); box-shadow:0 0 0 1px var(--care); }
+  .chipz { display:flex; gap:8px; flex-wrap:wrap; }
+  .chip { height:32px; padding:0 10px 0 9px; border-radius:var(--r-md); display:inline-flex; align-items:center; gap:5px; font-size:12px; font-weight:700; background:var(--paper); color:var(--muted); box-shadow:var(--shadow-float); white-space:nowrap; }
+  .chip b { color:var(--ink); font-size:14px; letter-spacing:-.03em; }
+  .chip i { width:8px; height:8px; border-radius:50%; background:var(--ink); }
+  .chip.on { color:var(--ink); }
+  .chip.preset { padding:0 14px; height:40px; }
+  .chip.preset.on { background:var(--ink); color:var(--on-care); box-shadow:none; }
+  .dark .chip.preset.on { color:var(--canvas); }
+  .sw-toggle { width:48px; height:30px; border-radius:15px; background:var(--line); position:relative; display:inline-block; }
+  .sw-toggle::after { content:""; position:absolute; top:3px; left:3px; width:24px; height:24px; border-radius:50%; background:#fff; box-shadow:0 2px 6px rgba(20,33,30,.2); }
+  .sw-toggle.on { background:var(--care); } .sw-toggle.on::after { left:21px; }
+  .ava { display:inline-grid; place-items:center; background:var(--care-soft); color:var(--care); font-weight:800; position:relative; }
+  .ava i { position:absolute; right:-3px; bottom:-3px; width:12px; height:12px; border-radius:50%; background:var(--care); box-shadow:0 0 0 3px var(--paper); }
+  .scenebox { background:radial-gradient(120% 90% at 50% 38%, var(--scene-2) 0%, var(--scene) 60%, #070e0d 100%); border-radius:var(--r-xl); padding:16px; color:var(--node-1); }
+  .onscene { height:34px; padding:0 10px; border-radius:var(--r-md); display:inline-flex; align-items:center; gap:6px; font-size:12px; font-weight:700; background:rgba(19,36,32,.78); color:var(--node-2); box-shadow:inset 0 0 0 1px rgba(231,238,235,.14); }
+  .onscene b { color:#fff; font-size:14px; }
+  .onscene.away { background:var(--care-bright); color:#fff; box-shadow:none; }
+  .ev2 { display:flex; align-items:center; gap:12px; min-height:64px; padding:10px 12px 10px 10px; border-radius:20px; background:var(--paper); box-shadow:var(--shadow-card); }
+  .ev2 .ico { width:38px; height:38px; border-radius:var(--r-md); background:var(--surface-2); display:grid; place-items:center; color:var(--ink); }
+  .ev2 .ico.hot { background:var(--care-soft); color:var(--care); }
+  .ev2 .ico svg { width:20px; height:20px; }
+  .ev2 .t { flex:1; } .ev2 .t b { display:block; font-size:16px; letter-spacing:-.02em; } .ev2 .t span { display:block; color:var(--muted); font-size:13px; font-weight:600; margin-top:2px; }
+  .ev2 .amt { font-weight:800; font-size:16px; }
+  .tabsdemo { position:relative; height:84px; border-radius:var(--r-lg); overflow:hidden; }
+  .tabsdemo .tabs { position:absolute; }
+  .sheetdemo { position:relative; height:300px; border-radius:var(--r-xl); overflow:hidden; background:var(--scene); }
+  .sheetdemo .scrim { position:absolute; }
+  .focus-demo { outline:2px solid var(--care); outline-offset:2px; }
+  code { font-family:ui-monospace, Consolas, monospace; font-size:12px; background:var(--surface-2); padding:1px 6px; border-radius:6px; }
+</style>
+</head>
+<body>
+<div class="top"><div><h1>Дизайн-система</h1><p class="lead" style="margin:0">Токены, шкалы и компоненты редизайна во всех состояниях. Значения — из <code>tokens.css</code>; контраст считается на лету.</p></div><span class="btn secondary" id="theme">Тёмная тема</span></div>
+
+<h2 class="sec">Цвет</h2>
+<h3 class="sub">Поверхности и текст</h3>
+<div class="grid" id="sw1"></div>
+<h3 class="sub">Акценты</h3>
+<div class="grid" id="sw2"></div>
+<h3 class="sub">Сцена графа (всегда тёмная)</h3>
+<div class="grid" id="sw3"></div>
+
+<h2 class="sec">Типографика</h2>
+<div class="type" id="type"></div>
+
+<h2 class="sec">Радиусы, отступы, высоты</h2>
+<h3 class="sub">Радиусы</h3>
+<div class="scale" id="radii"></div>
+<h3 class="sub">Шаг сетки 4 px</h3>
+<div class="scale" id="space"></div>
+<h3 class="sub">Высоты контролов</h3>
+<div class="scale" id="heights"></div>
+
+<h2 class="sec">Компоненты</h2>
+<div class="demo">
+  <div class="box"><span class="lbl">Button · primary</span><div class="states"><div class="btn primary">Default</div><div class="btn primary pressed">Pressed</div><div class="btn primary disabled">Disabled</div><div class="btn primary loading">Loading</div></div></div>
+  <div class="box"><span class="lbl">Button · secondary / ghost / danger / text</span><div class="states"><div class="btn secondary">Мы знакомы</div><div class="btn ghost">Готово</div><div class="btn danger">Убрать</div></div><span class="textbtn danger" style="margin-top:8px">Удалить аккаунт</span></div>
+  <div class="box"><span class="lbl">Input · text</span><div class="field">Плейсхолдер</div><div class="field focus filled" style="margin-top:8px">В фокусе</div><div class="field filled" style="margin-top:8px">Заполнено</div><div class="field bad filled" style="margin-top:8px">Ошибка</div><p class="hint err">Нужен чат: в нём собираются те, кто откликнулся.</p></div>
+  <div class="box"><span class="lbl">Input · money</span><div class="money">80<span class="caret"></span><small>$</small></div><p class="hint">До <b>3 720 $</b>: столько сейчас может собрать ваша сеть.</p><div class="money bad" style="margin-top:8px">5 000<small>$</small></div><p class="hint err">Сейчас сеть может собрать до 3 720 $.</p></div>
+  <div class="box"><span class="lbl">Segmented</span><div class="seg" style="margin-top:0"><span class="on">Разовая помощь</span><span>Каждые 28 дней</span></div><div class="seg" style="margin-top:10px;grid-template-columns:1fr 1fr 1fr"><span class="on">Авто</span><span>Светлая</span><span>Тёмная</span></div></div>
+  <div class="box"><span class="lbl">Switch · Chips</span><div style="display:flex;gap:16px;align-items:center;margin-bottom:12px"><span class="sw-toggle"></span><span class="sw-toggle on"></span></div><div class="chipz"><span class="chip on"><i></i><b>118</b>1-е</span><span class="chip"><i style="background:var(--node-2)"></i><b>640</b>2-е</span><span class="chip preset">5</span><span class="chip preset on">15</span><span class="chip preset">30</span></div></div>
+  <div class="box"><span class="lbl">Group · Row</span><div class="group"><div class="r"><span class="t"><b style="font-size:16px">Минимальное участие</b></span><span style="color:var(--muted);font-weight:600">15 $</span><svg class="fwd" style="color:var(--subtle)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m9 6 6 6-6 6"/></svg></div><div class="r"><span class="t"><b style="font-size:16px">Крупный шрифт</b></span><span class="sw-toggle"></span></div><div class="r"><span class="t"><b style="font-size:16px;color:var(--sos)">Выйти</b></span></div></div></div>
+  <div class="box"><span class="lbl">EventRow</span><div class="ev2"><span class="ico hot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15z"/><path d="M10 20.5a2 2 0 0 0 4 0"/></svg></span><span class="t"><b>Мария Коваль</b><span>Просьба · через <b style="font-size:13px;color:var(--ink)">Олег брат</b></span></span><span class="amt">80 $</span></div><div class="ev2" style="margin-top:8px"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="8" r="3"/><path d="M4 19c1-3 3.2-4.5 6-4.5s5 1.5 6 4.5M17 5.5v5M14.5 8h5"/></svg></span><span class="t"><b>Катя Белова</b><span>Вошла по вашей ссылке</span></span></div></div>
+  <div class="box"><span class="lbl">Meter · StageRail</span><div id="meter"></div><div id="stages"></div></div>
+  <div class="box"><span class="lbl">PathFigure</span><div id="path"></div></div>
+  <div class="box"><span class="lbl">Pill / Badge</span><div class="chipz"><span class="pill">Нет</span><span class="pill teal">Участвуете</span><span class="pill" style="background:var(--link-soft);color:var(--link)">Ваш сбор</span><span class="pill warm">Новый цикл</span><span class="pill red">Приостановлен</span></div></div>
+  <div class="box"><span class="lbl">Avatar</span><div style="display:flex;gap:12px;align-items:flex-end"><span class="ava" style="width:36px;height:36px;border-radius:var(--r-md);font-size:14px">А<i></i></span><span class="ava" style="width:40px;height:40px;border-radius:var(--r-md);font-size:15px">М</span><span class="ava" style="width:48px;height:48px;border-radius:var(--r-lg);font-size:18px">О</span><span class="ava" style="width:64px;height:64px;border-radius:var(--r-xl);font-size:26px">К</span><span class="ava" style="width:88px;height:88px;border-radius:var(--r-2xl);font-size:34px">А</span></div></div>
+  <div class="box"><span class="lbl">Scene overlays</span><div class="scenebox"><div style="display:flex;gap:8px;flex-wrap:wrap"><span class="onscene"><i style="width:8px;height:8px;border-radius:50%;background:var(--node-1)"></i><b>118</b>1-е</span><span class="onscene"><b>640</b>2-е</span><span class="onscene away">К себе</span></div><p style="margin:12px 0 0;color:var(--node-2);font-size:12px;font-weight:600">Один палец — вращать, два — приблизить</p><p style="margin:6px 0 0;color:var(--care-scene);font-size:13px;font-weight:700">+40 $ за неделю</p></div></div>
+  <div class="box"><span class="lbl">Tabs</span><div class="tabsdemo" id="tabs"></div></div>
+  <div class="box" style="grid-column:1 / -1"><span class="lbl">Sheet</span><div class="sheetdemo"><div class="scrim"><div class="sheet"><h3>Отказаться от участия?</h3><p class="sub">Ваши 15 $ выйдут из сбора. Вернуться можно, пока сбор открыт.</p><div class="btn danger">Отказаться</div><div class="btn ghost">Остаться</div></div></div></div></div>
+  <div class="box"><span class="lbl">Фокус (клавиатура)</span><div class="btn secondary focus-demo">Кнопка в фокусе</div></div>
+</div>
+
+<script src="shared.js"></script>
+<script>
+const css = (v) => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+function rgb(c) { const d = document.createElement("div"); d.style.color = c; document.body.appendChild(d); const m = getComputedStyle(d).color.match(/[\d.]+/g).map(Number); d.remove(); return m; }
+function lum([r, g, b]) { const f = (x) => { x /= 255; return x <= .03928 ? x / 12.92 : Math.pow((x + .055) / 1.055, 2.4); }; return .2126 * f(r) + .7152 * f(g) + .0722 * f(b); }
+function blend(fg, bg) { if (fg.length < 4 || fg[3] >= 1) return fg.slice(0, 3); const a = fg[3]; return fg.slice(0, 3).map((c, i) => Math.round(c * a + bg[i] * (1 - a))); }
+function contrast(fg, bg) { const B = rgb(bg); const F = blend(rgb(fg), B); const a = lum(F), b = lum(B); return ((Math.max(a, b) + .05) / (Math.min(a, b) + .05)).toFixed(2); }
+const sw = (id, items) => document.getElementById(id).innerHTML = items.map(([name, v, on, note]) => {
+  const c = on ? contrast(`var(${v})`, `var(${on})`) : null;
+  const ok = c == null ? "" : `<em class="${c >= 4.5 ? "" : "bad"}">${c}:1</em> ${note || ""}`;
+  return `<div class="sw"><div class="c" style="background:var(${v});color:${on ? `var(${on})` : "transparent"}">${on ? "Aa" : ""}</div><div class="t"><b>${name}</b><span>${css(v)}</span><br>${ok}</div></div>`;
+}).join("");
+
+document.getElementById("type").innerHTML = [["Display 52/800", 52, 800, -.05, "80 $"], ["H1 32/700", 32, 700, -.04, "Просьба"], ["H2 30/700", 30, 700, -.045, "Вы в центре своего круга"], ["H3 24/800", 24, 800, -.04, "Анна Петрова"], ["Title 22/700", 22, 700, -.03, "Отказаться от участия?"], ["Body L 17/700", 17, 700, -.01, "Отправить просьбу"], ["Body 16/650", 16, 650, -.02, "Мария Коваль · через Олег брат"], ["Body S 15/600", 15, 600, 0, "Один аккаунт для телефона и сайта."], ["Caption 14/600", 14, 600, 0, "Люди, которых вы знаете лично. Ссылка или QR при встрече."], ["Label 13/600", 13, 600, 0, "Ваша ссылка"], ["Micro 12/700", 12, 700, 0, "12 марта · ваша 20 $"], ["Tab 11/700", 11, 700, -.01, "Круг"]].map(([n, s, w, ls, t]) => `<div><small>${n}</small><span style="font-size:${s}px;font-weight:${w};letter-spacing:${ls}em;line-height:1.1;${s <= 14 ? "color:var(--muted)" : ""}">${t}</span></div>`).join("");
+document.getElementById("radii").innerHTML = [["xs", 4], ["sm", 8], ["md", 12], ["lg", 16], ["xl", 22], ["2xl", 30]].map(([n, r]) => `<div class="r" style="border-radius:${r}px">${n} ${r}</div>`).join("") + `<div class="r" style="border-radius:999px">pill</div>`;
+document.getElementById("space").innerHTML = [4, 8, 12, 16, 20, 24, 32].map(s => `<div class="sp" style="width:${s * 2}px;height:${s * 2}px;border-radius:6px">${s}</div>`).join("");
+document.getElementById("heights").innerHTML = [["чип", 32], ["иконка", 36], ["малая", 40], ["вторичная", 48], ["строка", 56], ["основная / поле", 56]].map(([n, h]) => `<div class="r" style="height:${h}px;width:110px;border-radius:12px">${n} ${h}</div>`).join("");
+document.getElementById("meter").innerHTML = meter(15, 100, 300);
+document.getElementById("stages").innerHTML = stages(2);
+document.getElementById("path").innerHTML = path(["Вы", "Олег брат", "Мария"]);
+document.getElementById("tabs").innerHTML = tabs("circle");
+function renderSwatches() {
+sw("sw1", [["canvas", "--canvas"], ["surface", "--paper"], ["surface-2", "--surface-2"], ["ink", "--ink", "--canvas", "текст"], ["ink-muted", "--muted", "--canvas", "вторичный текст"], ["ink-subtle", "--subtle", "--canvas", "только иконки"], ["line", "--line-strong"]]);
+sw("sw2", [["care", "--care", "--paper", "текст на surface"], ["on-care / care", "--on-care", "--care", "текст кнопки"], ["care-soft", "--care-soft"], ["link", "--link", "--paper"], ["link-soft", "--link-soft"], ["sos", "--sos", "--paper"], ["sos-soft", "--sos-soft"], ["warm", "--warm"], ["warm-ink / warm-soft", "--warm-ink", "--warm-soft", "текст на плашке"]]);
+sw("sw3", [["scene", "--scene"], ["scene-2", "--scene-2"], ["node-1", "--node-1", "--scene"], ["node-2", "--node-2", "--scene"], ["node-3", "--node-3", "--scene", "точки"], ["care-scene", "--care-scene", "--scene"], ["care-bright", "--care-bright", "--scene", "подсветка"]]);
+}
+function applyTheme(dark) { document.documentElement.classList.toggle("dark", dark); document.getElementById("theme").textContent = dark ? "Светлая тема" : "Тёмная тема"; renderSwatches(); }
+document.getElementById("theme").onclick = () => { const dark = !document.documentElement.classList.contains("dark"); try { localStorage.setItem("ds-dark", dark ? "1" : "0"); } catch {} applyTheme(dark); };
+let darkPref = false; try { darkPref = localStorage.getItem("ds-dark") === "1"; } catch {}
+applyTheme(darkPref);
+</script>
+</body>
+</html>

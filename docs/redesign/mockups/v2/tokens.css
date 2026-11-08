@@ -1,0 +1,82 @@
+/*
+ * Social Organizer design tokens — canonical values for the redesign.
+ * Two layers:
+ *   1. --so-* : "R G B" triplets, same names as apps/web/src/styles/tokens.css (Tailwind adds opacity: bg-surface/80).
+ *   2. plain aliases (--canvas, --ink, …) as hex/rgba for the static mockups and hand-written CSS.
+ * Light theme on :root, dark theme on html.dark (and on .dark containers for mockups).
+ */
+:root {
+  /* surfaces */
+  --so-canvas: 243 246 244;      --canvas: #f3f6f4;
+  --so-surface: 255 255 255;     --paper: #ffffff;
+  --so-surface-2: 233 238 236;   --surface-2: #e9eeec;
+  /* text */
+  --so-ink: 20 33 30;            --ink: #14211e;
+  --so-ink-muted: 92 109 104;    --muted: #5c6d68;        /* secondary text, ≥ 4.5:1 on canvas and surface */
+  --so-ink-subtle: 138 154 149;  --subtle: #8a9a95;       /* icons, placeholders, dividers — not for text */
+  --so-line: 20 33 30;           --line: rgba(20,33,30,.14); --line-soft: rgba(20,33,30,.08); --line-strong: rgba(20,33,30,.24);
+  /* care: participation, primary action (4.9:1 on white) */
+  --so-care: 8 127 113;          --care: #087f71;  --teal: #087f71;
+  --so-care-hover: 8 103 92;     --care-hover: #08675c;
+  --so-care-soft: 229 245 243;   --care-soft: #e5f5f3; --teal-soft: #e5f5f3;
+  --so-on-care: 255 255 255;     --on-care: #ffffff;
+  --care-bright: #0d9488;        /* graph highlights on the dark scene only */
+  /* link: connections, secondary accent */
+  --so-link: 84 104 212;         --link: #5468d4;
+  --so-link-soft: 238 241 252;   --link-soft: #eef1fc;
+  /* sos: refuse, delete, request tab mark */
+  --so-sos: 197 52 44;           --sos: #c5342c;  --danger: #c5342c;
+  --so-sos-hover: 163 44 37;     --sos-hover: #a32c25;
+  --so-sos-soft: 251 234 232;    --sos-soft: #fbeae8; --danger-soft: #fbeae8;
+  --so-on-sos: 255 255 255;      --on-sos: #ffffff;
+  /* warm: cycles, pending, "waiting for you" */
+  --so-warm: 242 190 104;        --warm: #f2be68;
+  --so-warm-soft: 253 241 227;   --warm-soft: #fdf1e3;
+  --so-warm-ink: 154 90 22;      --warm-ink: #9a5a16;    /* text on warm-soft, 4.9:1 */
+  /* scene: the 3D graph, always dark */
+  --scene: #0b1513; --scene-2: #132420; --scene-3: #1b332e;
+  --node-1: #e7eeeb; --node-2: #9fb0aa; --node-3: #5f7069;
+  --care-scene: #5fd3c6;         /* care text/lines on the scene */
+  --star: rgba(231,238,235,.9);
+  /* shadows */
+  --shadow-card: 0 10px 28px rgba(20,33,30,.06);
+  --shadow-float: 0 6px 16px rgba(20,33,30,.10), inset 0 0 0 1px rgba(20,33,30,.08);
+  --shadow-sheet: 0 20px 50px rgba(0,0,0,.40);
+  --shadow-banner: 0 16px 36px rgba(20,33,30,.16), 0 0 0 1px rgba(20,33,30,.06);
+  /* radii */
+  --r-xs: 4px; --r-sm: 8px; --r-md: 12px; --r-lg: 16px; --r-xl: 22px; --r-2xl: 30px; --r-pill: 999px;
+  /* control heights */
+  --h-primary: 56px; --h-secondary: 48px; --h-small: 40px; --h-chip: 32px; --h-icon: 36px; --h-row: 56px;
+  /* motion */
+  --ease-out: cubic-bezier(.22,.8,.24,1); --ease-in: cubic-bezier(.4,0,1,1);
+  --dur-fast: .15s; --dur-base: .26s; --dur-screen: .42s;
+  /* type */
+  --font: Manrope, "Segoe UI", system-ui, sans-serif;
+  color-scheme: light;
+}
+
+html.dark, .dark {
+  --so-canvas: 18 25 23;         --canvas: #121917;
+  --so-surface: 28 38 34;        --paper: #1c2622;
+  --so-surface-2: 36 48 43;      --surface-2: #24302b;
+  --so-ink: 231 238 235;         --ink: #e7eeeb;
+  --so-ink-muted: 147 165 159;   --muted: #93a59f;
+  --so-ink-subtle: 111 129 123;  --subtle: #6f817b;
+  --so-line: 231 238 235;        --line: rgba(231,238,235,.14); --line-soft: rgba(231,238,235,.08); --line-strong: rgba(231,238,235,.24);
+  --so-care: 43 179 164;         --care: #2bb3a4; --teal: #2bb3a4;
+  --so-care-hover: 91 191 174;   --care-hover: #5bbfae;
+  --so-care-soft: 21 52 47;      --care-soft: #15342f; --teal-soft: #15342f;
+  --so-on-care: 4 36 31;         --on-care: #04241f;
+  --so-link: 154 168 240;        --link: #9aa8f0;
+  --so-link-soft: 40 50 101;     --link-soft: #283265;
+  --so-sos: 224 138 130;         --sos: #e08a82; --danger: #e08a82;
+  --so-sos-hover: 232 164 158;   --sos-hover: #e8a49e;
+  --so-sos-soft: 74 33 30;       --sos-soft: #4a211e; --danger-soft: #4a211e;
+  --so-on-sos: 18 25 23;         --on-sos: #121917;
+  --so-warm-soft: 58 42 18;      --warm-soft: #3a2a12;
+  --so-warm-ink: 240 194 122;    --warm-ink: #f0c27a;
+  --shadow-card: 0 10px 28px rgba(0,0,0,.32);
+  --shadow-float: 0 6px 16px rgba(0,0,0,.36), inset 0 0 0 1px rgba(231,238,235,.12);
+  --shadow-banner: 0 16px 36px rgba(0,0,0,.5), 0 0 0 1px rgba(231,238,235,.08);
+  color-scheme: dark;
+}
