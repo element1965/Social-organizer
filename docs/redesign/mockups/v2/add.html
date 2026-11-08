@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Добавить — экраны</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared.css">
+<style>
+  .linkcard .lbl { margin-bottom:4px; }
+  .linkcard .url { font-size:22px; font-weight:800; letter-spacing:-.03em; word-break:break-all; line-height:1.15; }
+  .linkcard .url small { color:var(--muted); font-weight:700; }
+  .pair { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:10px; }
+  .pair .btn + .btn { margin-top:0; }
+  .pair .btn svg { width:20px; height:20px; color:var(--teal); }
+  .prog { display:flex; align-items:center; gap:10px; font-size:13px; font-weight:700; color:var(--muted); }
+  .prog i { flex:1; height:6px; border-radius:3px; background:var(--line); overflow:hidden; position:relative; }
+  .prog i::after { content:""; position:absolute; left:0; top:0; bottom:0; width:var(--w,40%); background:var(--teal); border-radius:3px; }
+  .prog + .prog { margin-top:10px; }
+  .prog b { color:var(--ink); min-width:56px; }
+  .nudge { display:flex; align-items:center; gap:10px; margin-top:12px; padding-top:12px; box-shadow:inset 0 1px 0 var(--line-soft); font-size:13px; color:var(--muted); line-height:1.35; }
+  .nudge .ava { width:32px; height:32px; border-radius:10px; background:var(--canvas); color:var(--ink); display:grid; place-items:center; font-weight:800; font-size:13px; flex:none; }
+  .nudge span { flex:1; }
+  .nudge span b { color:var(--ink); }
+  .nudge .act { height:32px; padding:0 12px; border-radius:10px; background:var(--teal-soft); color:var(--teal); font-weight:700; font-size:13px; display:grid; place-items:center; white-space:nowrap; }
+  .when { color:var(--subtle); font-size:12px; font-weight:600; white-space:nowrap; }
+  .pend { color:#9a5a16; }
+
+  /* QR screen */
+  .qrpage { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; padding:120px 20px 36px; text-align:center; }
+  .qrwrap { position:relative; width:260px; height:260px; display:grid; place-items:center; }
+  .qrwrap svg.ring { position:absolute; inset:0; transform:rotate(-90deg); }
+  .qrwrap svg.ring circle { fill:none; stroke-width:3; }
+  .qrwrap .qrbox { width:200px; height:200px; background:#fff; border-radius:22px; display:grid; place-items:center; box-shadow:0 14px 34px rgba(20,33,30,.12); }
+  .qrwrap .qrbox svg { width:164px; height:164px; }
+  .qrpage .timer { margin-top:14px; font-size:28px; font-weight:800; letter-spacing:-.04em; font-variant-numeric:tabular-nums; }
+  .qrpage .say { margin:6px 0 0; color:var(--muted); font-size:14px; line-height:1.4; max-width:30ch; }
+  .qrpage .foot { position:static; width:100%; margin-top:auto; }
+
+  /* scanner */
+  .cam { position:absolute; inset:0; background:radial-gradient(90% 70% at 50% 40%, #2a3a36 0%, #121c1a 70%, #0b1513 100%); }
+  .cam .top { position:absolute; left:0; right:0; top:62px; display:flex; align-items:center; justify-content:space-between; padding:0 16px; z-index:3; }
+  .cam .top .x, .cam .top .flash { width:40px; height:40px; border-radius:14px; background:rgba(255,255,255,.14); color:#fff; display:grid; place-items:center; }
+  .cam .top svg { width:20px; height:20px; }
+  .finder { position:absolute; left:50%; top:46%; width:252px; height:252px; transform:translate(-50%,-50%); }
+  .finder i { position:absolute; width:40px; height:40px; border:3px solid var(--teal); }
+  .finder i:nth-child(1) { top:0; left:0; border-right:0; border-bottom:0; border-radius:18px 0 0 0; }
+  .finder i:nth-child(2) { top:0; right:0; border-left:0; border-bottom:0; border-radius:0 18px 0 0; }
+  .finder i:nth-child(3) { bottom:0; left:0; border-right:0; border-top:0; border-radius:0 0 0 18px; }
+  .finder i:nth-child(4) { bottom:0; right:0; border-left:0; border-top:0; border-radius:0 0 18px 0; }
+  .finder .line { position:absolute; left:14px; right:14px; top:50%; height:2px; background:var(--teal); opacity:.7; box-shadow:0 0 12px var(--teal); }
+  .cam .say { position:absolute; left:20px; right:20px; top:70%; text-align:center; color:#fff; font-size:15px; font-weight:600; line-height:1.4; }
+  .cam .say small { display:block; margin-top:6px; color:var(--n2); font-size:13px; font-weight:600; }
+  .cam .foot { position:absolute; left:16px; right:16px; bottom:36px; }
+  .cam .foot .btn.secondary { background:rgba(255,255,255,.1); color:#fff; box-shadow:inset 0 0 0 1px rgba(255,255,255,.18); }
+  .cam .foot .btn svg { color:#fff; }
+
+  /* result sheet */
+  .res .who { display:flex; align-items:center; gap:12px; }
+  .res .ava { width:48px; height:48px; border-radius:16px; background:var(--teal-soft); color:var(--teal); display:grid; place-items:center; font-weight:800; font-size:18px; }
+  .res .who .t b { display:block; font-size:20px; letter-spacing:-.03em; }
+  .res .who .t span { display:block; margin-top:2px; color:var(--muted); font-size:13px; font-weight:600; }
+  .res .lbl { margin-top:16px; }
+  .res .field { background:var(--canvas); }
+  .ok { display:flex; align-items:center; gap:10px; margin-top:12px; padding:10px 12px; border-radius:14px; background:var(--teal-soft); color:var(--teal); font-size:13px; font-weight:700; }
+  .ok svg { width:18px; height:18px; }
+</style>
+</head>
+<body>
+<h1>Добавить</h1>
+<p class="lead">Единственное место, где растёт круг. Личная ссылка с системным «Поделиться», QR при встрече, сканер. Два правила: ссылка, отправленная куда-то, требует подтверждения знакомства; живой QR с экрана подтверждает знакомство сразу, потому что оба человека стоят рядом.</p>
+<div class="row" id="row"></div>
+<script src="shared.js"></script>
+<script>
+I.qr = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4.5 4.5h6v6h-6zM13.5 4.5h6v6h-6zM4.5 13.5h6v6h-6z"/><path d="M14.2 14.2h1.8v1.8h-1.8zM17.8 14.2H19.6v1.8h-1.8zM14.2 17.8h1.8V19.6h-1.8zM17.8 17.8H19.6V19.6h-1.8z" fill="currentColor" stroke="none"/></svg>`;
+I.scan = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8V6a2 2 0 0 1 2-2h2M16 4h2a2 2 0 0 1 2 2v2M20 16v2a2 2 0 0 1-2 2h-2M8 20H6a2 2 0 0 1-2-2v-2M4 12h16"/></svg>`;
+I.x = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>`;
+I.flash = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 3 5 14h6l-1 7 8-11h-6z"/></svg>`;
+function qrSvg() { let o = ""; for (let y = 0; y < 21; y++) for (let x = 0; x < 21; x++) { const f = (x < 7 && y < 7) || (x > 13 && y < 7) || (x < 7 && y > 13); const edge = f && (x % 7 === 0 || y % 7 === 0 || x === 14 || x === 20 || y === 14 || y === 20); const core = (x > 1 && x < 5 && y > 1 && y < 5) || (x > 15 && x < 19 && y > 1 && y < 5) || (x > 1 && x < 5 && y > 15 && y < 19); if (edge || core || (!f && ((x * 3 + y * 5) % 4 === 0))) o += `<rect x="${x}" y="${y}" width="1" height="1"/>`; } return `<svg viewBox="0 0 21 21" fill="var(--ink)">${o}</svg>`; }
+
+const linkCard = `<div class="card linkcard"><span class="lbl">Ваша ссылка</span><div class="url"><small>orginizer.com/</small>anna</div>
+<div class="actions"><div class="btn primary">${I.share}Поделиться</div></div>
+<div class="pair"><div class="btn secondary">${I.qr}Мой QR</div><div class="btn secondary">${I.scan}Считать</div></div>
+<p class="hint">Кто придёт по ссылке, появится в ленте: вы подтвердите, что знакомы. Живой QR при встрече подтверждает знакомство сразу.</p></div>`;
+
+const P1 = `<div class="phone">${status()}<div class="page noNav"><h2 class="h">Добавить</h2>${linkCard}
+<div class="label"><span>Пришли по вашей ссылке · 18</span><span class="pend">1 ждёт вас</span></div>
+<div class="group">
+${row("К", "Катя Белова", "Вошла вчера · <b style='color:#9a5a16'>подтвердите знакомство</b>", I.fwd)}
+${row("Д", "Денис Волков", "В круге с 2 марта", `<span class="when">2 мар</span>`)}
+${row("М", "Марина Пак", "В круге с 14 февраля", `<span class="when">14 фев</span>`)}
+${row("П", "Павел Юдин", "В круге с 3 февраля", `<span class="when">3 фев</span>`)}
+</div></div>${tabs("add")}${home()}</div>`;
+
+const P2 = `<div class="phone">${status()}<div class="page noNav"><h2 class="h">Добавить</h2>
+<div class="card"><div class="prog"><b>Ваш круг</b><i style="--w:60%"></i><span>3 из 5</span></div><div class="prog"><b>Сеть</b><i style="--w:50%"></i><span>5 из 10</span></div>
+<div class="nudge"><span class="ava">К</span><span><b>Катя</b> пока одна в сети. Когда ваши люди приводят своих, просьбу слышит больше людей.</span><span class="act">Напомнить</span></div></div>
+${linkCard}
+</div>${tabs("add")}${home()}</div>`;
+
+const P3 = `<div class="phone">${status()}${nav("Добавить", "Мой QR")}<div class="qrpage">
+<div class="qrwrap"><svg class="ring" viewBox="0 0 260 260"><circle cx="130" cy="130" r="126" stroke="var(--line)"/><circle cx="130" cy="130" r="126" stroke="var(--teal)" stroke-linecap="round" stroke-dasharray="792" stroke-dashoffset="130"/></svg><div class="qrbox">${qrSvg()}</div></div>
+<div class="timer">0:50</div>
+<p class="say">Код живёт минуту и подтверждает знакомство сразу: вы оба здесь. Потом обновится сам.</p>
+<div class="foot"><div class="btn secondary">${I.scan}Считать чужой</div><div class="btn ghost">Готово</div></div>
+</div>${home()}</div>`;
+
+const P4 = `<div class="phone"><div class="cam">
+<div class="status" style="color:#fff">${status().replace('<div class="status">', '').replace('</div>', '')}</div>
+<div class="top"><span class="x">${I.x}</span><span class="flash">${I.flash}</span></div>
+<div class="finder"><i></i><i></i><i></i><i></i><span class="line"></span></div>
+<p class="say">Наведите на QR человека<small>Живой код с экрана — знакомство сразу. Напечатанный — после подтверждения.</small></p>
+<div class="foot"><div class="btn secondary">${I.qr}Показать мой</div></div>
+</div><div class="home" style="background:#fff"></div></div>`;
+
+const P5 = `<div class="phone"><div class="cam" style="filter:brightness(.6)">
+<div class="finder"><i></i><i></i><i></i><i></i></div></div>
+<div class="scrim"><div class="sheet res">
+<div class="who"><span class="ava">К</span><span class="t"><b>Катя Белова</b><span>Теперь ваше 1-е рукопожатие</span></span></div>
+<div class="ok">${I.check}Знакомство подтверждено с обеих сторон</div>
+<span class="lbl">Подпись в круге</span><div class="field filled">Катя Белова</div>
+<p class="hint">Так вы будете видеть Катю на графе и в списках. Видно только вам.</p>
+<div class="btn primary" style="margin-top:16px">Готово</div></div></div>
+<div class="home" style="background:#fff"></div></div>`;
+
+document.getElementById("row").innerHTML = [
+  section("main", P1, "<small>1</small>Добавить", `<p>Заголовок и одна карточка: ссылка крупно, «Поделиться» через системный share, под ним «Мой QR» и «Считать». Подпись объясняет два правила: по ссылке — подтверждение, по живому QR — сразу. Ниже список тех, кто пришёл по ссылке: первым стоит человек, которого надо подтвердить, остальные с датой входа в круг.</p>
+<ul><li>Это единственный экран приглашения. Четыре входа «Пригласить» с главной, блок в настройках и попап из создания сбора уходят.</li><li>Статистика «Открыли ссылку» и «1-й круг добавил» не показывается: она не ведёт к действию. Действие одно — поделиться.</li><li>Ссылка короткая, с именем: orginizer.com/anna (текущий <code>referralSlug</code>). Менять её можно в Аккаунте.</li></ul>`),
+  section("start", P2, "<small>2</small>Начало пути", `<p>Пока Просьба не открыта, над ссылкой стоит тот же путь, что в листе на Круге: «Ваш круг 3 из 5», «Сеть 5 из 10», и кому напомнить. Экран один и тот же, карточка исчезает, когда оба числа набраны.</p>
+<ul><li>Человек видит прогресс там, где делает действие, а не только в объяснении, почему что-то закрыто.</li></ul>`),
+  section("qr", P3, "<small>3</small>Мой QR", `<p>Живой код на минуту: кольцо-таймер вокруг, под ним счётчик. Сканирование такого кода подтверждает знакомство сразу на обеих сторонах: раз код с экрана, люди стоят рядом. Через минуту код обновляется сам, старый перестаёт работать.</p>
+<ul><li>Бэкенд: одноразовый токен с TTL 60 с на базе существующей модели <code>InviteLink</code> (single-use); при приёме токена связь создаётся как подтверждённая, без <code>pending</code>.</li><li>Для печати и рассылки используется обычная ссылка с подтверждением, живой код для этого не годится, и это правильно.</li></ul>`),
+  section("scan", P4, "<small>4</small>Считать", `<p>Камера на весь экран, уголки видоискателя, одна подсказка с теми же двумя правилами. Внизу «Показать мой», чтобы поменяться ролями не выходя. Крестик вверху закрывает.</p>
+<ul><li>Веб: <code>getUserMedia</code> + <code>BarcodeDetector</code>, фолбэк на JS-декодер. Capacitor: плагин сканера. Состояние «Нет доступа к камере» с кнопкой в настройки системы.</li><li>Распознанная ссылка на сбор (/sos/…) открывает публичную страницу сбора, личная ссылка — экран приглашения, живой код — результат ниже.</li></ul>`),
+  section("done", P5, "<small>5</small>Результат", `<p>Лист поверх камеры: кто, что произошло, поле «Подпись в круге» с предзаполненным именем и «Готово». Подпись видна только мне и заменяет никнейм из текущего профиля человека.</p>
+<ul><li>Если считан не живой код, а напечатанный, лист говорит «Заявка отправлена. Катя подтвердит знакомство» без поля подписи.</li></ul>`)
+].join("");
+</script>
+</body>
+</html>

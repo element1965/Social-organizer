@@ -14,6 +14,8 @@ Redesign documents (Russian):
 - [ux-audit.md](ux-audit.md) — UI/UX audit of the current app vs the mockups, decisions taken (§7), 3D graph plan (§8).
 - [screens.md](screens.md) — screen-by-screen spec: elements, data sources (tRPC), states, done criteria.
 - [dev-plan.md](dev-plan.md) — work packages WP1–WP9 for parallel agents: file ownership, dependencies, done criteria.
+- [coverage.md](coverage.md) — every route, screen and feature of `main` mapped to its place in the redesign (kept, merged,
+  removed with a reason) plus the open product questions.
 - [mockups/](mockups/) — interactive prototype `app.html` (20 screens/states, the buttons under the phone switch them)
   and the landing concept `hui.html`. Open from any static server, e.g. `npx -y http-server docs/redesign/mockups -p 8787`,
   then `http://localhost:8787/app.html`. The flat graph in the prototype is a stand-in: the app keeps the 3D `NetworkGraph`.

@@ -135,8 +135,9 @@ AcquaintSheet), `hooks/useEvents.ts`, локали секции `circle`, `peopl
 `lib/scanner.ts`, Capacitor-конфиг и манифесты (`apps/web/android/app/src/main/AndroidManifest.xml`, iOS `Info.plist`
 через `capacitor.config.ts` / плагин), локали секции `add`.
 
-**Сделать** экран 6: ссылка и системный share (Web Share API, Capacitor Share, фолбэк копирование), статистика
-«Добавлены в сеть», QR-экран (таймер только если появится одноразовый токен — иначе постоянная ссылка),
+**Сделать** экран 6: ссылка и системный share (Web Share API, Capacitor Share, фолбэк копирование), список «Пришли
+по вашей ссылке» с подтверждением знакомства, карточка «путь к просьбе» на старте, живой QR на 60 с (одноразовый токен
+`InviteLink` с TTL — правка в `apps/api`: `invite.generate({ ttl })` и приём без `pending`),
 сканер (веб: `BarcodeDetector` + фолбэк `jsQR`/`zxing`; Capacitor: `@capacitor-mlkit/barcode-scanning` или
 `@capacitor-community/barcode-scanner`, запрос разрешения, состояние отказа), обработка считанной ссылки
 → `/invite/:token`. Удалить `InviteBlock`, `InvitePopup`, `ShareSheet` с семью брендовыми кнопками.
