@@ -62,14 +62,15 @@ export function Layout() {
   }, []);
 
   return (
-    <div className="min-h-[calc(100vh-var(--sa-top))] bg-gray-50 dark:bg-gray-950 flex flex-col max-w-md mx-auto relative">
+    <div className="min-h-[calc(100vh-var(--sa-top))] bg-canvas text-ink flex flex-col max-w-md mx-auto relative">
       {/* Help button — absolute top-right, doesn't push content down */}
       {location.pathname !== '/dashboard' && (
         <button
           onClick={() => window.dispatchEvent(new CustomEvent('toggle-help-menu'))}
-          className="absolute top-3 right-4 z-40 w-10 h-10 rounded-full bg-blue-600 hover:bg-blue-700 flex items-center justify-center transition-colors shadow-lg"
+          aria-label={t('nav.help', 'Help')}
+          className="absolute top-3 right-4 z-40 w-10 h-10 rounded-full bg-surface border border-line text-link hover:bg-surface-2 flex items-center justify-center transition-colors"
         >
-          <HelpCircle className="w-5 h-5 text-white" />
+          <HelpCircle className="w-5 h-5" />
         </button>
       )}
       <main className="flex-1 overflow-y-auto" style={{ paddingBottom: 'calc(4rem + var(--sa-bottom))' }}>
@@ -79,7 +80,7 @@ export function Layout() {
       {/* AI Chat Assistant */}
       <ChatAssistant />
 
-      <nav className={cn("fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 flex justify-around items-center z-50", chatPanelOpen && "hidden")} style={{ height: 'calc(4rem + var(--sa-bottom))', paddingBottom: 'var(--sa-bottom)' }}>
+      <nav className={cn("fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-surface border-t border-line flex justify-around items-center z-50", chatPanelOpen && "hidden")} style={{ height: 'calc(4rem + var(--sa-bottom))', paddingBottom: 'var(--sa-bottom)' }}>
         {navItems.map((item) => {
           const active = location.pathname === item.path;
           if ((item as any).sos) {
@@ -90,11 +91,11 @@ export function Layout() {
                 className="flex flex-col items-center justify-center w-full h-full relative"
               >
                 <div className={cn(
-                  'w-12 h-12 rounded-full flex items-center justify-center shadow-lg',
-                  'bg-red-600 hover:bg-red-700 active:bg-red-800 transition-colors',
-                  active && 'ring-2 ring-red-400 ring-offset-2 ring-offset-white dark:ring-offset-gray-900'
+                  'w-12 h-12 rounded-full flex items-center justify-center',
+                  'bg-sos hover:bg-sos-hover transition-colors',
+                  active && 'ring-2 ring-sos/40 ring-offset-2 ring-offset-surface'
                 )}>
-                  <span className="text-white font-bold text-sm">SOS</span>
+                  <span className="text-sos-on font-bold text-sm">SOS</span>
                 </div>
               </button>
             );
@@ -108,19 +109,19 @@ export function Layout() {
               }}
               className={cn(
                 'flex flex-col items-center justify-center w-full h-full relative',
-                active ? 'text-blue-600 dark:text-blue-400' : 'text-gray-500 dark:text-gray-300'
+                active ? 'text-ink' : 'text-ink-subtle hover:text-ink-muted'
               )}
             >
               {item.icon && <item.icon className="w-5 h-5" />}
               {item.badge && (() => {
                 const total = (unread?.count ?? 0) + (pendingIncoming?.count ?? 0);
                 return total > 0 ? (
-                  <span className="absolute top-1 right-1/4 w-4 h-4 bg-red-500 text-white text-[10px] rounded-full flex items-center justify-center">
+                  <span className="absolute top-1 right-1/4 w-4 h-4 bg-sos text-sos-on text-[10px] rounded-full flex items-center justify-center">
                     {total > 9 ? '9+' : total}
                   </span>
                 ) : null;
               })()}
-              <span className="text-[10px] mt-0.5">{t(item.labelKey)}</span>
+              <span className={cn('text-[10px] mt-0.5', active && 'font-semibold')}>{t(item.labelKey)}</span>
             </button>
           );
         })}

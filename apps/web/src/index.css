@@ -1,3 +1,5 @@
+@import './styles/tokens.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -24,11 +26,7 @@
 
 body {
   padding-top: var(--sa-top);
-  background-color: #f9fafb; /* gray-50, same as Layout */
-}
-
-html.dark body {
-  background-color: #030712; /* gray-950 */
+  background-color: rgb(var(--so-canvas)); /* same as Layout */
 }
 
 /* Solid strip under the status bar so scrolled content does not run under the clock */

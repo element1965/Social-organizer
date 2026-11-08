@@ -1,0 +1,57 @@
+/*
+ * Semantic color tokens (palette "Ink and teal"). Values are "R G B" so Tailwind can add opacity:
+ * bg-surface/80. Light theme on :root, dark theme on html.dark (set by hooks/useTheme.ts).
+ */
+:root {
+  --so-canvas: 244 247 252;      /* #F4F7FC page background */
+  --so-surface: 255 255 255;     /* cards */
+  --so-surface-2: 234 239 247;   /* #EAEFF7 nested blocks, inputs */
+  --so-ink: 25 47 84;            /* #192F54 text, people */
+  --so-ink-muted: 91 107 134;    /* #5B6B86 secondary text */
+  --so-ink-subtle: 138 153 179;  /* #8A99B3 hints, placeholders */
+  --so-line: 216 224 236;        /* #D8E0EC hairlines */
+  --so-line-strong: 184 195 214; /* #B8C3D6 */
+
+  --so-care: 8 127 113;          /* #087F71 participation, primary action */
+  --so-care-hover: 8 103 92;     /* #08675C */
+  --so-care-soft: 230 245 242;   /* #E6F5F2 */
+  --so-on-care: 255 255 255;
+
+  --so-link: 84 104 212;         /* #5468D4 connections, links */
+  --so-link-soft: 238 241 252;   /* #EEF1FC */
+
+  --so-sos: 196 62 66;           /* #C43E42 */
+  --so-sos-hover: 163 50 54;     /* #A33236 */
+  --so-sos-soft: 252 238 238;    /* #FCEEEE */
+  --so-on-sos: 255 255 255;
+
+  --so-warm: 242 190 104;        /* #F2BE68 rare accent */
+  --so-warm-soft: 253 246 233;   /* #FDF6E9 */
+}
+
+html.dark {
+  --so-canvas: 14 26 46;         /* #0E1A2E */
+  --so-surface: 22 37 63;        /* #16253F */
+  --so-surface-2: 28 42 67;      /* #1C2A43 */
+  --so-ink: 230 236 247;         /* #E6ECF7 */
+  --so-ink-muted: 147 163 191;   /* #93A3BF */
+  --so-ink-subtle: 104 120 148;  /* #687894 */
+  --so-line: 46 61 88;           /* #2E3D58 */
+  --so-line-strong: 67 83 111;   /* #43536F */
+
+  --so-care: 43 169 154;         /* #2BA99A */
+  --so-care-hover: 91 191 174;   /* #5BBFAE */
+  --so-care-soft: 10 82 74;      /* #0A524A */
+  --so-on-care: 4 36 31;         /* #04241F */
+
+  --so-link: 154 168 240;        /* #9AA8F0 */
+  --so-link-soft: 40 50 101;     /* #283265 */
+
+  --so-sos: 217 87 91;           /* #D9575B */
+  --so-sos-hover: 229 135 137;   /* #E58789 */
+  --so-sos-soft: 110 36 39;      /* #6E2427 */
+  --so-on-sos: 255 255 255;
+
+  --so-warm: 242 190 104;
+  --so-warm-soft: 98 59 27;      /* #623B1B */
+}
