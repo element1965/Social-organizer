@@ -9,9 +9,14 @@ Work on the app redesign (simpler interaction, simpler onboarding, a more modern
 Research, mockups and other working materials are kept outside git, in the local `local/` folder
 (excluded via `.git/info/exclude`). This repository is public: never commit them.
 
-The interactive mockups (`app.html`, `hui.html`) live in `local/mockups/`; open them from any static server,
-e.g. `npx -y http-server local/mockups -p 8787`. The UI/UX audit comparing the current app with those mockups is
-[ux-audit.md](ux-audit.md) (in Russian).
+Redesign documents (Russian):
+
+- [ux-audit.md](ux-audit.md) — UI/UX audit of the current app vs the mockups, decisions taken (§7), 3D graph plan (§8).
+- [screens.md](screens.md) — screen-by-screen spec: elements, data sources (tRPC), states, done criteria.
+- [dev-plan.md](dev-plan.md) — work packages WP1–WP9 for parallel agents: file ownership, dependencies, done criteria.
+- [mockups/](mockups/) — interactive prototype `app.html` (20 screens/states, the buttons under the phone switch them)
+  and the landing concept `hui.html`. Open from any static server, e.g. `npx -y http-server docs/redesign/mockups -p 8787`,
+  then `http://localhost:8787/app.html`. The flat graph in the prototype is a stand-in: the app keeps the 3D `NetworkGraph`.
 
 **Native apps load the production web URL** (`apps/web/capacitor.config.ts`), so every web deploy from `main`
 reaches iOS/Android users immediately, without a store release.
