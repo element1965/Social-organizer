@@ -49,6 +49,8 @@ const LABELS_PER_FRAME = 6;      // lazily created labels per frame
 const PHOTO_CONCURRENCY = 3;
 const BOB_AMPLITUDE = 0.7;       // gentle floating of close nodes
 const CHARGE_BASE = 38;          // node repulsion; lower = a more compact graph
+const BALL_STRENGTH = 0.5;       // pull of the spherical shells (0 = free-form layout)
+const BALL_SHELLS = [0, 0.38, 0.7, 1]; // shell radius by depth, as a fraction of the outer radius
 const MIN_DOT_PX = 0.0075;       // far dots never get smaller than ~5px on screen (size / distance)
 
 /* ---------- Depth colors ---------- */
@@ -187,6 +189,7 @@ export function NetworkGraph({
   const needsRefreshRef = useRef(false);
   const depthRef = useRef<Map<string, number>>(new Map());
   const subtreeRef = useRef<Map<string, number>>(new Map());
+  const sizeRef = useRef(0);
 
   // Structural signature — only a change in who is in the graph / how they look rebuilds it.
   // connectionCount / lastSeen change every refetch but are applied in place (see effect below).
@@ -290,6 +293,7 @@ export function NetworkGraph({
   const resRef = useRef<ReturnType<typeof createResources> | null>(null);
   if (!resRef.current) resRef.current = createResources();
   const res = resRef.current;
+  sizeRef.current = graphData.nodes.length;
 
   const lifeRef = useRef<{ disposeTimer: ReturnType<typeof setTimeout> | null; userTouched: boolean; hoverId: string | null }>({
     disposeTimer: null,
@@ -529,6 +533,28 @@ export function NetworkGraph({
         return BASE_LINK_DIST * (1 + d * (d + 1) / 4);
       });
     }
+
+    // --- Ball: gently hold each depth on its own spherical shell (you in the middle, then 1°, 2°, 3°),
+    // so the network forms a round cloud instead of sprawling like a tree. ---
+    let ballNodes: SimNode[] = [];
+    const ball = (alpha: number) => {
+      const outer = 14 * Math.cbrt(Math.max(1, sizeRef.current)) + 34;
+      for (const n of ballNodes) {
+        if (n.fx != null) continue; // pinned center
+        const x = n.x ?? 0, y = n.y ?? 0, z = n.z ?? 0;
+        const r = Math.hypot(x, y, z);
+        if (r < 1e-3) continue;
+        const d = Math.min(3, depthRef.current.get(n.id) ?? 1);
+        const k = ((outer * (BALL_SHELLS[d] ?? 1) - r) / r) * BALL_STRENGTH * alpha;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const m = n as any;
+        m.vx = (m.vx ?? 0) + x * k;
+        m.vy = (m.vy ?? 0) + y * k;
+        m.vz = (m.vz ?? 0) + z * k;
+      }
+    };
+    ball.initialize = (ns: SimNode[]) => { ballNodes = ns; };
+    fg.d3Force('ball', ball);
 
     // --- Renderer: balanced resolution, dynamic downscale when frames get slow ---
     const renderer = fg.renderer() as THREE.WebGLRenderer;
