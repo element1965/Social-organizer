@@ -9,6 +9,10 @@ Work on the app redesign (simpler interaction, simpler onboarding, a more modern
 Research, mockups and other working materials are kept outside git, in the local `local/` folder
 (excluded via `.git/info/exclude`). This repository is public: never commit them.
 
+The interactive mockups (`app.html`, `hui.html`) live in `local/mockups/`; open them from any static server,
+e.g. `npx -y http-server local/mockups -p 8787`. The UI/UX audit comparing the current app with those mockups is
+[ux-audit.md](ux-audit.md) (in Russian).
+
 **Native apps load the production web URL** (`apps/web/capacitor.config.ts`), so every web deploy from `main`
 reaches iOS/Android users immediately, without a store release.
 
