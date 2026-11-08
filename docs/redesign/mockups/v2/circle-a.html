@@ -154,8 +154,11 @@
   .quiet { margin:18px 4px 0; text-align:center; font-size:14px; color:var(--muted); line-height:1.45; }
   .quiet b { display:block; color:var(--ink); font-size:16px; margin-bottom:4px; }
   .tab.locked { color:var(--subtle); }
-  .tab.locked .askmark { background:var(--line); color:var(--subtle); position:relative; }
-  .tab.locked .askmark::after { content:""; position:absolute; right:-5px; top:-5px; width:14px; height:14px; border-radius:50%; background:var(--ink); background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'><rect x='5' y='11' width='14' height='10' rx='2'/><path d='M8 11V7a4 4 0 0 1 8 0v4'/></svg>"); background-size:8px; background-repeat:no-repeat; background-position:center; box-shadow:0 0 0 2px var(--paper); }
+  .tab.locked .askmark { background:transparent; color:var(--subtle); position:relative; border-radius:50%; width:26px; height:26px; }
+  .tab.locked .askmark svg.ring { position:absolute; inset:-3px; width:32px; height:32px; transform:rotate(-90deg); }
+  .tab.locked .askmark svg.ring circle { fill:none; stroke-width:2.2; }
+  .tab.locked .askmark svg.ring .trk { stroke:var(--line); }
+  .tab.locked .askmark svg.ring .val { stroke:var(--teal); stroke-linecap:round; stroke-dasharray:88; stroke-dashoffset:var(--off,66); }
   .scrim { position:absolute; inset:0; z-index:10; background:rgba(11,21,19,.55); display:flex; align-items:flex-end; padding:0 10px 10px; opacity:0; pointer-events:none; transition:opacity var(--dur) var(--ease); }
   .s-lock .scrim { opacity:1; pointer-events:auto; }
   .lock { width:100%; background:var(--paper); border-radius:30px; padding:20px 18px 16px; transform:translateY(60px); transition:transform var(--dur) var(--ease); box-shadow:0 20px 50px rgba(0,0,0,.45); }
@@ -163,16 +166,32 @@
   .lock h3 { margin:0; font-size:22px; letter-spacing:-.03em; line-height:1.2; text-wrap:balance; }
   .lock p { margin:8px 0 0; font-size:14px; line-height:1.45; color:var(--muted); }
   .lock p b { color:var(--ink); }
-  .lock .prog { margin:16px 0 0; }
-  .lock .or { display:flex; align-items:center; gap:10px; margin:14px 0 0; color:var(--subtle); font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; }
-  .lock .or::before, .lock .or::after { content:""; flex:1; height:1px; background:var(--line); }
-  .lock .alt { display:flex; gap:12px; align-items:flex-start; margin-top:12px; }
-  .lock .alt i { flex:none; width:36px; height:36px; border-radius:12px; background:var(--teal-soft); color:var(--teal); display:grid; place-items:center; }
-  .lock .alt i svg { width:20px; height:20px; }
-  .lock .alt span { font-size:14px; line-height:1.4; color:var(--muted); }
-  .lock .alt span b { color:var(--ink); }
+  .lock .goal { margin-top:16px; }
+  .lock .goal + .goal { margin-top:14px; padding-top:14px; box-shadow:inset 0 1px 0 var(--line); }
+  .lock .goal .ttl { display:flex; justify-content:space-between; align-items:baseline; font-size:15px; font-weight:700; }
+  .lock .goal .ttl span { color:var(--muted); font-variant-numeric:tabular-nums; }
+  .lock .goal .ttl span b { color:var(--ink); }
+  .lock .goal .ttl span.ok { color:var(--teal); }
+  .lock .goal .prog { margin:8px 0 0; }
+  .lock .goal .prog span { display:none; }
+  .lock .goal .note { margin:8px 0 0; font-size:13px; line-height:1.4; color:var(--muted); }
+  .lock .goal .note b { color:var(--ink); }
+  .lock .goal .who { display:flex; align-items:center; gap:8px; margin-top:8px; }
+  .lock .goal .who i { width:28px; height:28px; border-radius:9px; background:var(--canvas); color:var(--ink); font-style:normal; font-size:12px; font-weight:800; display:grid; place-items:center; }
+  .lock .goal .who .nudge { margin-left:auto; height:32px; padding:0 12px; border-radius:10px; background:var(--teal-soft); color:var(--teal); font-size:13px; font-weight:700; display:grid; place-items:center; cursor:pointer; }
+  .lock .preview { margin-top:14px; border-radius:16px; background:var(--canvas); padding:12px 14px; display:none; }
+  .lock.show .preview { display:block; }
+  .lock .preview small { display:block; color:var(--muted); font-size:12px; font-weight:600; }
+  .lock .preview .sum { font-size:28px; font-weight:800; letter-spacing:-.04em; margin:2px 0 6px; }
+  .lock .preview .seg { display:flex; gap:6px; }
+  .lock .preview .seg span { flex:1; height:32px; border-radius:10px; background:var(--paper); display:grid; place-items:center; font-size:12px; font-weight:700; color:var(--muted); }
+  .lock .preview .seg span.on { background:var(--ink); color:#fff; }
+  .lock .preview .field { height:36px; margin-top:8px; border-radius:10px; background:var(--paper); display:flex; align-items:center; padding:0 10px; font-size:12px; color:var(--subtle); }
+  .lock .preview .send { height:36px; margin-top:8px; border-radius:10px; background:var(--teal); opacity:.45; color:#fff; display:grid; place-items:center; font-size:13px; font-weight:700; }
+  .lock .links { display:flex; justify-content:space-between; margin-top:12px; }
+  .lock .links span { min-height:36px; line-height:36px; font-weight:700; font-size:15px; cursor:pointer; color:var(--muted); }
+  .lock .links span.pv { color:var(--teal); }
   .lock .cta { margin-top:18px; }
-  .lock .later { display:block; text-align:center; margin:10px 0 0; min-height:36px; line-height:36px; color:var(--muted); font-weight:700; font-size:15px; cursor:pointer; }
   @media (prefers-reduced-motion: reduce) { .phone * { transition:none !important; } }
 </style>
 </head>
@@ -220,13 +239,15 @@
     <li>3–5 человек: узлы крупные и все подписаны, сверху листа полоса «3 из 5», события — подтверждения знакомства. Одна строка объясняет, зачем расти: «Через 3 человек просьбу увидят 5, через 5 — обычно 20–40».</li>
     <li>Порог «пять человек» и подсказки исчезают сами, когда сеть переваливает за 5 и появляются события.</li>
   </ul>
-  <h2>Закрытая «Просьба»</h2>
-  <p>Пока условие не выполнено, таб «Просьба» серый с замком. Тап по нему не уводит на экран, а поднимает лист: заголовок с условием, полоса «3 из 5», и второе условие через «или» — подтверждённое знакомство с кем-то из 2-го рукопожатия. Одна кнопка «Добавить человека», ссылка «Позже». Лист закрывается тапом по затемнению.</p>
+  <h2>Путь к просьбе</h2>
+  <p>Пока условие не выполнено, таб «Просьба» приглушён, вокруг знака тонкое кольцо прогресса. Никакого замка: это не запрет, а путь. Тап по табу поднимает лист с двумя шагами и одной кнопкой.</p>
   <ul>
-    <li>Условие открытия: не меньше 5 человек в 1-м рукопожатии, <b>или</b> хотя бы одно подтверждённое знакомство с человеком, который уже был в вашем 2-м или 3-м рукопожатии. Второе условие считается на бэкенде в момент подтверждения знакомства: если до него путь к человеку уже существовал, флаг ставится навсегда.</li>
-    <li>Тот же лист показывается, если человек дошёл до Просьбы по прямой ссылке или из старой закладки.</li>
-    <li>Когда условие выполняется, замок снимается без перезагрузки, а в ленту приходит строка «Просьба открыта» с подсказкой, как она работает.</li>
-    <li class="risk">Трактовка второго условия записана по словам «пригласил кого-то из 2-го рукопожатия»; если имелось в виду другое (например, человек из 2-го кольца пригласил вас), правило надо уточнить до вёрстки.</li>
+    <li><b>Ваш круг: N из 5.</b> Прямые связи, которые человек делает сам. Кнопка «Добавить человека».</li>
+    <li><b>Сеть: N из 10.</b> Все, кого достигает просьба. Это число зависит от друзей, поэтому лист называет, кто из пятерых пока никого не привёл, и даёт «Напомнить» — системный share с коротким текстом.</li>
+    <li>«Как это выглядит» раскрывает предпросмотр карточки просьбы прямо в листе: человек видит, к чему идёт.</li>
+    <li>Правило одно для всех и проверяется на сервере в момент отправки просьбы, без постоянного флага: пороги 5 и 10 — константы конфигурации.</li>
+    <li>После открытия первая просьба ограничена двукратным «Сеть может помочь»: хочешь просить больше, расти дальше. Это стимул, который работает и после того, как пороги пройдены.</li>
+    <li>Когда оба числа набраны, кольцо на табе заполняется, таб становится обычным, в ленту приходит строка «Просьба открыта».</li>
   </ul>
   <h2>Что ещё решено</h2>
   <ul>
@@ -303,9 +324,9 @@ function pickHot() {
   return ["me", n.id, NET.find(k => k.parent === n.id)?.id].filter(Boolean);
 }
 const DATA = {
-  big:   { unlocked: true, n1: 118, people: "1 240", sum: "1 860 $", delta: "+40 $ за неделю", counts: [118, 640, 482] },
-  small: { unlocked: false, n1: 3, people: "5", sum: "6 $", delta: "+2 $ за неделю", counts: [3, 2, 0] },
-  empty: { unlocked: false, n1: 0, people: "0", sum: "0 $", delta: "", counts: [0, 0, 0] }
+  big:   { unlocked: true, n1: 118, reach: 1240, lonely: [], people: "1 240", sum: "1 860 $", delta: "+40 $ за неделю", counts: [118, 640, 482] },
+  small: { unlocked: false, n1: 3, reach: 5, lonely: ["Катя"], people: "5", sum: "6 $", delta: "+2 $ за неделю", counts: [3, 2, 0] },
+  empty: { unlocked: false, n1: 0, reach: 0, lonely: [], people: "0", sum: "0 $", delta: "", counts: [0, 0, 0] }
 };
 function setData(size) {
   SIZE = size;
@@ -402,15 +423,15 @@ function render() {
 <div class="sheet" id="sheet"><div class="handle" id="handle"></div>${sheetHTML()}</div>
 <span class="pill" id="pill"><i>${SIZE === "big" ? 3 : SIZE === "small" ? 2 : 0}</i>${SIZE === "empty" ? "Начало" : "События"}${I.up}</span>
 <div class="card" id="card"><div class="top"><span class="ava">М</span><span class="t"><b id="c-name">Мария Коваль</b><span id="c-sub">2-е рукопожатие · просьба 80 $</span></span><span class="x" id="c-x">${I.x}</span></div><div class="path" id="c-path"></div><div class="acts"><span class="go" id="c-go">Сбор 80 $</span><span class="sec">Открыть</span></div></div>
-<nav class="tabs"><span class="tab on">${I.circle}Круг</span><span class="tab ${d.unlocked ? "" : "locked"}" id="tab-ask"><span class="askmark">${I.hand}</span>Просьба</span><span class="tab">${I.add}Добавить</span><span class="tab">${I.person}Профиль</span></nav>
-<div class="scrim" id="scrim"><div class="lock">
-<h3>Просьба откроется, когда рядом будет пять человек</h3>
-<p>Просьба идёт по рукопожатиям. Пока рядом <b>${d.counts[0]}</b>, сигнал почти никого не достигнет.</p>
-<div class="prog"><span>${d.counts[0]} из 5</span><i style="--w:${d.counts[0] * 20}%"></i><span>Пять человек</span></div>
-<div class="or">или</div>
-<div class="alt"><i>${I.link}</i><span><b>Подтвердите знакомство с кем-то из 2-го рукопожатия.</b> Люди знают друг друга и без нас; такая связь замыкает круг и открывает просьбу сразу.</span></div>
+<nav class="tabs"><span class="tab on">${I.circle}Круг</span><span class="tab ${d.unlocked ? "" : "locked"}" id="tab-ask"><span class="askmark">${d.unlocked ? "" : `<svg class="ring" viewBox="0 0 32 32" style="--off:${(88 * (1 - Math.min(d.counts[0] / 5, d.reach / 10))).toFixed(0)}"><circle class="trk" cx="16" cy="16" r="14"/><circle class="val" cx="16" cy="16" r="14"/></svg>`}${I.hand}</span>Просьба</span><span class="tab">${I.add}Добавить</span><span class="tab">${I.person}Профиль</span></nav>
+<div class="scrim" id="scrim"><div class="lock" id="lock">
+<h3>${d.counts[0] === 0 ? "Просьба откроется, когда рядом появятся люди" : "Ещё немного, и просьбу услышат"}</h3>
+<p>Просьба идёт по рукопожатиям: сначала к вашим людям, потом к их людям. Два шага до первой просьбы.</p>
+<div class="goal"><div class="ttl">Ваш круг <span class="${d.counts[0] >= 5 ? "ok" : ""}"><b>${d.counts[0]}</b> из 5</span></div><div class="prog"><i style="--w:${Math.min(100, d.counts[0] * 20)}%"></i></div><p class="note">Люди, которых вы знаете лично. Ссылка или QR при встрече.</p></div>
+<div class="goal"><div class="ttl">Сеть <span class="${d.reach >= 10 ? "ok" : ""}"><b>${d.reach}</b> из 10</span></div><div class="prog"><i style="--w:${Math.min(100, d.reach * 10)}%"></i></div>${d.lonely.length ? `<p class="note"><b>${d.lonely.join(" и ")}</b> пока ${d.lonely.length > 1 ? "одни" : "одна"} в сети. Когда ваши люди приводят своих, просьбу слышит больше людей.</p><div class="who">${d.lonely.map(n => `<i>${n[0]}</i>`).join("")}<span class="nudge">Напомнить</span></div>` : `<p class="note">Растёт, когда ваши люди добавляют своих.</p>`}</div>
+<div class="preview"><small>Сколько нужно</small><div class="sum">80 $</div><div class="seg"><span class="on">Разовая помощь</span><span>Каждые 28 дней</span></div><div class="field">Ссылка на чат в любом мессенджере</div><div class="send">Отправить просьбу</div></div>
 <div class="cta">Добавить человека</div>
-<span class="later" id="lock-later">Позже</span>
+<div class="links"><span class="pv" id="lock-pv">Как это выглядит</span><span id="lock-later">Позже</span></div>
 </div></div>
 <div class="homebar"></div>`;
   bind();
@@ -453,6 +474,7 @@ function showPerson(id) {
 function bind() {
   document.getElementById("tab-ask").onclick = () => { if (!DATA[SIZE].unlocked) setLock(true); };
   document.getElementById("lock-later").onclick = () => setLock(false);
+  document.getElementById("lock-pv").onclick = (e) => { const l = document.getElementById("lock"); l.classList.toggle("show"); e.target.textContent = l.classList.contains("show") ? "Скрыть" : "Как это выглядит"; };
   document.getElementById("scrim").addEventListener("click", (e) => { if (e.target.id === "scrim") setLock(false); });
   document.getElementById("back").onclick = () => setState("s-feed");
   document.getElementById("pill").onclick = () => setState("s-feed");
