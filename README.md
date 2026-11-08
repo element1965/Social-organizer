@@ -291,7 +291,11 @@ React 19 SPA with tRPC client.
 - **Moon:** Real lunar surface texture, orbiting Earth on scroll
 - **Stars:** 3000 realistic small stars with subtle twinkling, hover brightness effect
 - **Atmosphere:** Shader-based blue glow around Earth
-- **Network graph (`NetworkGraph`, react-force-graph-3d):** force-directed 3D graph on `/network?view=3d`. The simulation is reheated after the layout forces are tuned only once the graph data has been digested — reheating earlier crashed the animation loop on remount (black screen when returning to the page, seen on Android)
+- **Network graph (`NetworkGraph`, react-force-graph-3d, `/network?view=3d`):** force-directed 3D graph of the user's network (up to 500 nodes), tuned for phones:
+  - *Stable data* — node objects are kept between renders and only a structural change (who is in the graph, names, photos) updates the graph; `connectionCount` / `lastSeen` are applied in place. A parent re-render no longer rebuilds all nodes and restarts the simulation (it was ~8 FPS on 500 nodes).
+  - *Cheap nodes* — shared textures/materials, sprites instead of spheres, one frame loop for LOD (avatar + label → dot → star-like dot with a minimum on-screen size), labels and photos created lazily within a per-frame budget (500 nodes mount in ~0.4 s instead of ~4.5 s); decorative sprites are excluded from hover raycasting; links are 1px lines (only the highlighted handshake path gets real geometry); the pixel ratio is capped and lowered automatically when frames get slow.
+  - *Motion* — "bloom": nodes start next to their parent and unfold with low friction (glide/overshoot) while popping in (staggered by depth); gentle floating and a synchronized online pulse; hover grows a node; orbit controls with damping (inertia after a fling), auto-rotate that eases back in after 2.5 s of inactivity; the camera frames the whole graph and flies along an arc (own tween, cancelled as soon as the user touches the view); buttons "Focus on me" and "Show whole network".
+  - *Safety* — names in the hover tooltip are HTML-escaped; WebGL teardown is deferred so a StrictMode double effect cannot kill the renderer; the simulation is never reheated before the library has digested the data (that crashed the render loop on remount — black screen on Android).
 - **Network:** Animated nodes and edges on Earth's surface (Fibonacci sphere distribution), depth-colored edges, curved links, mini legend, auto-rotate camera
 
 ### Frontend Technologies
