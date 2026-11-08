@@ -12,6 +12,26 @@ Research, mockups and other working materials are kept outside git, in the local
 **Native apps load the production web URL** (`apps/web/capacitor.config.ts`), so every web deploy from `main`
 reaches iOS/Android users immediately, without a store release.
 
+## Design tokens
+
+Palette "Ink and teal". Semantic tokens are CSS variables in `apps/web/src/styles/tokens.css`
+(light on `:root`, dark on `html.dark`) and Tailwind colors in `apps/web/tailwind.config.js`.
+
+| Token | Use |
+|-------|-----|
+| `bg-canvas` | Page background |
+| `bg-surface`, `bg-surface-2` | Cards; nested blocks and inputs |
+| `text-ink`, `text-ink-muted`, `text-ink-subtle` | Text, people; secondary text; hints |
+| `border-line`, `border-line-strong` | Hairlines; input borders |
+| `bg-care` / `text-care` / `bg-care-soft` | Participation and the primary action |
+| `text-link` / `bg-link-soft` | Connections and links |
+| `bg-sos` / `bg-sos-soft` | SOS only |
+| `bg-warm` / `bg-warm-soft` | Rare warm accent |
+
+Rules for redesigned code: use semantic tokens only, no raw `gray-*` / `blue-*` and no `dark:` variants
+(tokens switch themes by themselves). The old ramps (`gray`, `blue`, `teal`, `green`, `red`, `amber`, ...)
+are temporarily mapped to the same palette so screens that are not redesigned yet still match.
+
 ## Local development on Windows
 
 ### Toolchain
