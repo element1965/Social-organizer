@@ -23,6 +23,30 @@
   .linkrow .t small { display:block; color:var(--muted); font-size:12px; font-weight:600; }
   .linkrow .t b { display:block; font-size:15px; letter-spacing:-.02em; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
   .linkrow svg { width:20px; height:20px; color:var(--teal); flex:none; }
+  .two { display:grid; grid-template-columns:1fr 56px; gap:10px; margin-top:16px; }
+  .two .btn + .btn { margin-top:0; }
+  .two .btn.secondary svg { width:22px; height:22px; }
+  .pub { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; padding:70px 20px 28px; text-align:center; }
+  .pub .brand { display:flex; align-items:center; gap:8px; font-weight:800; font-size:15px; letter-spacing:-.02em; }
+  .pub .brand img { width:26px; height:26px; border-radius:8px; }
+  .pub .tag { margin-top:4px; color:var(--muted); font-size:12px; font-weight:600; }
+  .pub .ava { width:84px; height:84px; border-radius:28px; background:var(--teal-soft); color:var(--teal); display:grid; place-items:center; font-weight:800; font-size:32px; margin-top:42px; }
+  .pub h2 { margin:14px 0 0; font-size:28px; letter-spacing:-.04em; line-height:1.05; }
+  .pub .why { margin:8px 0 0; color:var(--muted); font-size:15px; line-height:1.4; max-width:30ch; }
+  .pub .card { width:100%; margin-top:22px; text-align:left; }
+  .pub .card .big { justify-content:space-between; }
+  .pub .card .big b { font-size:28px; }
+  .pub .bar { height:10px; border-radius:6px; background:var(--canvas); overflow:hidden; margin-top:10px; }
+  .pub .bar i { display:block; height:100%; width:33%; background:var(--teal); border-radius:6px; }
+  .pub .card .hint { margin-top:8px; }
+  .pub .foot { position:static; width:100%; margin-top:auto; }
+  .pub .foot .hint { text-align:center; margin-top:12px; }
+  .joinnote { display:flex; gap:12px; align-items:flex-start; margin-top:12px; padding:12px 14px; border-radius:16px; background:var(--teal-soft); font-size:14px; line-height:1.4; }
+  .joinnote i { flex:none; width:36px; height:36px; border-radius:12px; background:var(--paper); color:var(--teal); display:grid; place-items:center; }
+  .joinnote i svg { width:20px; height:20px; }
+  .joinnote b { font-weight:800; }
+  .qr { width:156px; height:156px; margin:14px auto 0; background:#fff; border-radius:16px; display:grid; place-items:center; box-shadow:inset 0 0 0 1px var(--line); }
+  .qr svg { width:128px; height:128px; }
   .done { display:flex; align-items:center; gap:12px; padding:14px; border-radius:16px; background:var(--canvas); margin-top:12px; }
   .done i { flex:none; width:36px; height:36px; border-radius:12px; background:var(--paper); color:var(--teal); display:grid; place-items:center; }
   .done i svg { width:20px; height:20px; }
@@ -36,6 +60,8 @@
 <div class="row" id="row"></div>
 <script src="shared.js"></script>
 <script>
+I.qr = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4.5 4.5h6v6h-6zM13.5 4.5h6v6h-6zM4.5 13.5h6v6h-6z"/><path d="M14.2 14.2h1.8v1.8h-1.8zM17.8 14.2H19.6v1.8h-1.8zM14.2 17.8h1.8V19.6h-1.8zM17.8 17.8H19.6V19.6h-1.8z" fill="currentColor" stroke="none"/></svg>`;
+function qrSvg() { let o = ""; for (let y = 0; y < 21; y++) for (let x = 0; x < 21; x++) { const f = (x < 7 && y < 7) || (x > 13 && y < 7) || (x < 7 && y > 13); const edge = f && (x % 7 === 0 || y % 7 === 0 || x === 14 || x === 20 || y === 14 || y === 20); const core = (x > 1 && x < 5 && y > 1 && y < 5) || (x > 15 && x < 19 && y > 1 && y < 5) || (x > 1 && x < 5 && y > 15 && y < 19); if (edge || core || (!f && ((x * 3 + y * 5) % 4 === 0))) o += `<rect x="${x}" y="${y}" width="1" height="1"/>`; } return `<svg viewBox="0 0 21 21" fill="var(--ink)">${o}</svg>`; }
 const head = (o) => `
 <div class="card">
   ${path(o.path || ["Вы", "Олег брат", "Мария"])}
@@ -71,7 +97,7 @@ ${participants([{ n: "Ирина Соколова", s: "подтвердила",
 const P4 = `<div class="phone">${status()}${nav("Профиль", "Ваш сбор")}<div class="page notabs">
 ${head({ name: "Анна", sub: "Разовая помощь · открыт 2 дня назад", stage: 2, mine: 0, others: 100, goal: 300, path: ["Вы"], closeNote: "Вы закрываете сбор сами, когда соберётся нужное. Участники увидят итог." }).replace('<span><i style="background:var(--ink)"></i>Вы 0 $</span>', "")}
 <div class="card"><div class="linkrow"><span class="t"><small>Чат сбора</small><b>t.me/+sbor-anna-2026</b></span>${I.pen}</div>
-<div class="actions"><div class="btn primary">${I.share}Поделиться сбором</div></div><p class="hint">Ссылка ведёт на этот экран. Её увидят только люди из вашей сети, остальным она покажет «Сбор доступен участникам сети».</p></div>
+<div class="two"><div class="btn primary">${I.share}Поделиться сбором</div><div class="btn secondary">${I.qr}</div></div><p class="hint">Ссылка и QR публичные: любой увидит ваше имя, сумму и прогресс. Кто присоединится по ней, станет вашим 1-м рукопожатием сразу, без подтверждения.</p></div>
 ${participants(PEOPLE, true)}
 <span class="textbtn danger">Закрыть сбор</span>
 </div>${home()}</div>`;
@@ -82,6 +108,21 @@ ${head({ name: "Мария Коваль", sub: "Разовая помощь · �
 ${participants([{ n: "Олег брат", s: "1-е рукопожатие", a: 14 }, { n: "Тимур Алиев", s: "через Олег", a: 10 }, { n: "Анна", s: "вы", a: 20, me: true }])}
 </div>${home()}</div>`;
 
+const P6 = `<div class="phone">${status()}<div class="pub">
+<div class="brand"><img src="${MARK}" alt="">Social Organizer</div><div class="tag">Помощь через людей, которых знаешь</div>
+<span class="ava">А</span><h2>Анне нужна помощь</h2><p class="why">Разовая помощь. Сбор открыт 2 дня назад, его ведёт сама Анна.</p>
+<div class="card"><div class="big"><b>100 $</b><span>из 300 $</span></div><div class="bar"><i></i></div><p class="hint">4 участника. Деньги передают лично, в чате сбора.</p></div>
+<div class="joinnote"><i>${I.add}</i><span><b>Вы станете частью круга Анны.</b> Присоединяясь, вы подтверждаете, что знаете её лично.</span></div>
+<div class="foot"><div class="btn primary">Присоединиться</div><p class="hint">Вход через Apple, Google, Telegram или почту. Уже есть аккаунт — откроется сразу.</p></div>
+</div>${home()}</div>`;
+
+const P7 = `<div class="phone">${status()}${nav("Профиль", "Ваш сбор")}<div class="page notabs">
+${head({ name: "Анна", sub: "Разовая помощь · открыт 2 дня назад", stage: 2, mine: 0, others: 100, goal: 300, path: ["Вы"], closeNote: "Вы закрываете сбор сами, когда соберётся нужное. Участники увидят итог." }).replace('<span><i style="background:var(--ink)"></i>Вы 0 $</span>', "")}
+</div>${home()}
+<div class="scrim"><div class="sheet"><h3>QR сбора</h3><p class="sub">Покажите с экрана или распечатайте. Ссылка та же, что в «Поделиться».</p>
+<div class="qr">${qrSvg()}</div><p class="hint" style="text-align:center;margin-top:10px">orginizer.com/sos/k9x…</p>
+<div class="btn secondary" style="margin-top:16px">Скачать для печати</div><div class="btn ghost">Готово</div></div></div></div>`;
+
 document.getElementById("row").innerHTML = [
   section("new", P1, "<small>1</small>Участник: новая просьба", `<p>Сверху путь «Вы → Олег брат → Мария»: это ответ на вопрос «почему я это вижу». Карточка автора: имя, тип, давность, через кого. Рельса стадий «Сумма · Обсуждение · Закрыт» и шкала «Вы / Другие / Цель» показывают, где сбор сейчас. Подсказка под шкалой снимает ожидание гарантии: автор закрывает сам, сумма может не дойти.</p>
 <ul><li>Поле суммы предзаполнено минимальным участием человека. Одно касание «Участвовать» уже даёт результат.</li><li>Таб-бара нет: это пуш-экран, назад — в Круг.</li><li>Участники видны сразу, чтобы было понятно, кто уже с Марией.</li></ul>`),
@@ -89,8 +130,11 @@ document.getElementById("row").innerHTML = [
 <ul><li>«Отказаться» в правом углу шапки красным текстом, тап поднимает лист «Отказаться от участия?» с кнопками «Отказаться» и «Остаться».</li><li>Собственная строка в списке участников подсвечена бирюзой.</li></ul>`),
   section("cycle", P3, "<small>3</small>Регулярный: новый цикл", `<p>Сбор «Каждые 28 дней» в начале нового цикла. Тёплая плашка с датой говорит, что нужно сделать и что будет, если не сделать. Две кнопки: «Подтвердить 15 $» и «Другая сумма». В списке участников видно, кто уже подтвердил, а кого ждут.</p>
 <ul><li>Это замена нынешней карточке в уведомлениях с кнопками «Помню / Отозвать намерение».</li><li>Напоминание за 3 дня приходит пушем и строкой в ленте Круга, оба ведут сюда.</li></ul>`),
-  section("author", P4, "<small>4</small>Автор", `<p>Тот же экран глазами автора, открывается из Просьбы или Профиля. Путь состоит из одной точки. Шкала без сегмента «Вы». Карточка действий: ссылка на чат с карандашом, «Поделиться сбором» через системный share. В списке участников колонка «Переведено» с отметками: автор ставит их сам, когда получил деньги.</p>
-<ul><li>«Закрыть сбор» текстом внизу, с листом подтверждения «Закрыть сбор? Собрано 100 из 300 $». Сейчас закрытие идёт без подтверждения, а создание — через три модалки; здесь наоборот.</li><li class="risk">Риск: ссылка на сбор, открытая человеком вне сети, не должна показывать суммы и имена. Экран-заглушка «Сбор доступен участникам сети» с кнопкой «Войти».</li></ul>`),
+  section("author", P4, "<small>4</small>Автор", `<p>Тот же экран глазами автора, открывается из Просьбы или Профиля. Путь состоит из одной точки. Шкала без сегмента «Вы». Карточка действий: ссылка на чат с карандашом, «Поделиться сбором» через системный share и кнопка QR. В списке участников колонка «Переведено» с отметками: автор ставит их сам, когда получил деньги.</p>
+<ul><li>Ссылка и QR ведут на публичную страницу сбора (сейчас это /sos/:id). Это канал роста: человек с улицы присоединяется и сразу становится 1-м рукопожатием автора. Подпись под кнопками говорит об этом прямо, чтобы автор понимал, что отдаёт.</li><li>«Закрыть сбор» текстом внизу, с листом подтверждения «Закрыть сбор? Собрано 100 из 300 $». Сейчас закрытие идёт без подтверждения, а создание — через три модалки; здесь наоборот.</li></ul>`),
+  section("public", P6, "<small>6</small>Публичная страница сбора", `<p>Открывается по ссылке или QR без входа (/sos/:id). Одна мысль: кому и зачем, сколько уже есть, что будет, если присоединиться. Имя и сумма видны всем, как и сейчас, но без эмодзи и двух кнопок входа: один «Присоединиться», способ входа выбирается на следующем шаге.</p>
+<ul><li>Плашка «Вы станете частью круга Анны» делает явным то, что сейчас происходит молча: <code>invite.acceptSos</code> создаёт прямую связь без подтверждения. Человек должен это прочитать до тапа.</li><li>После входа — экран Сбора в состоянии «новая просьба» с полем суммы, а в ленте автора строка «Катя вошла по ссылке сбора».</li><li class="risk">Риск: связь без подтверждения со стороны автора — удобный вход, но и способ попасть в чужой круг по найденному QR. Стоит дать автору право убрать такого человека одним действием прямо из списка участников.</li></ul>`),
+  section("qr", P7, "<small>7</small>QR сбора", `<p>Лист с QR той же публичной ссылки: показать с экрана при встрече или скачать для печати. Короткий адрес под кодом на случай, если камера не читает.</p>`),
   section("closed", P5, "<small>5</small>Закрыт", `<p>Открывается из «Прошлых сборов». Рельса стадий дошла до конца, шкала заморожена, под ней итог. Действий нет, только факт участия и список. Эта же карточка без действий показывается участнику, если автор закрыл сбор, пока тот был открыт у него на экране.</p>`)
 ].join("");
 </script>

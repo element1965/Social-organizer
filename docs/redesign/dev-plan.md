@@ -98,8 +98,9 @@ AcquaintSheet), `hooks/useEvents.ts`, локали секции `circle`, `peopl
 
 ### WP4 — Просьба и Сбор
 
-**Файлы:** `pages/AskPage.tsx`, `pages/CollectionPage.tsx` (переписать), `pages/OpenCollectionsPage.tsx`,
-`components/collection/*`, локали секции `ask`, `collection`.
+**Файлы:** `pages/AskPage.tsx`, `pages/CollectionPage.tsx` (переписать), `pages/SosLandingPage.tsx` (переписать на
+токенах по макету «Публичная страница сбора», логика `getPublic` / `acceptSos` / `startapp=sos_` остаётся),
+`pages/OpenCollectionsPage.tsx`, `components/collection/*`, локали секции `ask`, `collection`, `sos`.
 
 **Сделать** экраны 4 и 5: правило доступа к Просьбе (5 в 1-м кольце и 10 в сети; пороги и множитель потолка суммы —
 константы конфигурации `apps/api`, проверка в `collection.create`, без флага на пользователе), приглушённый таб с кольцом
