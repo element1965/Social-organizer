@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Профиль — экраны</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared.css">
+<style>
+  .me { display:flex; align-items:center; gap:14px; padding:4px 4px 14px; }
+  .me .ava { width:64px; height:64px; border-radius:22px; background:var(--teal-soft); color:var(--teal); display:grid; place-items:center; font-weight:800; font-size:26px; position:relative; }
+  .me .ava img { width:100%; height:100%; border-radius:22px; }
+  .me .t b { display:block; font-size:24px; letter-spacing:-.04em; line-height:1.05; }
+  .me .t span { display:block; margin-top:4px; color:var(--muted); font-size:13px; font-weight:600; }
+  .me .fwd { margin-left:auto; width:20px; height:20px; color:var(--subtle); }
+  .glabel { margin:16px 4px 6px; font-size:13px; font-weight:700; color:var(--muted); }
+  .glabel.admin { display:flex; align-items:center; gap:8px; }
+  .glabel.admin i { font-style:normal; height:18px; padding:0 6px; border-radius:6px; background:var(--canvas); color:var(--muted); font-size:10px; font-weight:800; letter-spacing:.06em; display:grid; place-items:center; }
+  .rw { display:flex; align-items:center; gap:12px; min-height:54px; padding:0 16px; font-weight:650; font-size:16px; }
+  .rw + .rw { box-shadow:inset 0 1px 0 var(--line-soft); }
+  .rw .tail { margin-left:auto; display:flex; align-items:center; gap:6px; color:var(--muted); font-weight:600; font-size:15px; font-variant-numeric:tabular-nums; }
+  .rw .tail b { color:var(--ink); font-weight:800; }
+  .rw .fwd { width:18px; height:18px; color:var(--subtle); }
+  .rw .ico { width:18px; height:18px; color:var(--subtle); margin-left:4px; }
+  .rw.danger { color:var(--danger); }
+  .sw { width:48px; height:30px; border-radius:15px; background:var(--line); position:relative; flex:none; }
+  .sw::after { content:""; position:absolute; top:3px; left:3px; width:24px; height:24px; border-radius:50%; background:#fff; box-shadow:0 2px 6px rgba(20,33,30,.2); }
+  .sw.on { background:var(--teal); } .sw.on::after { left:21px; }
+  .segin { display:flex; gap:3px; padding:3px; border-radius:11px; background:var(--canvas); margin-left:auto; }
+  .segin span { height:30px; padding:0 10px; border-radius:9px; display:grid; place-items:center; font-size:13px; font-weight:700; color:var(--muted); }
+  .segin span.on { background:var(--paper); color:var(--ink); box-shadow:0 1px 3px rgba(20,33,30,.12); }
+  .sub2 { display:flex; flex-direction:column; }
+  .sub2 small { color:var(--muted); font-size:12px; font-weight:600; margin-top:1px; }
+  /* account */
+  .avaBig { width:88px; height:88px; margin:0 auto; border-radius:28px; background:var(--teal-soft); color:var(--teal); display:grid; place-items:center; font-weight:800; font-size:34px; position:relative; }
+  .avaBig i { position:absolute; right:-6px; bottom:-6px; width:32px; height:32px; border-radius:12px; background:var(--ink); color:#fff; display:grid; place-items:center; box-shadow:0 0 0 3px var(--canvas); }
+  .avaBig i svg { width:16px; height:16px; }
+  .slug { display:flex; align-items:center; height:56px; border-radius:16px; border:1px solid var(--line); background:var(--canvas); padding:0 14px; font-size:17px; }
+  .slug small { color:var(--muted); font-weight:600; }
+  .slug b { font-weight:800; }
+  .slug svg { width:18px; height:18px; color:var(--teal); margin-left:auto; }
+  .field.lock { color:var(--ink); font-weight:600; }
+  .field.lock svg { width:16px; height:16px; color:var(--subtle); margin-left:auto; }
+  .chips { display:flex; gap:8px; margin-top:12px; }
+  .chips span { height:40px; padding:0 14px; border-radius:12px; background:var(--canvas); color:var(--ink); font-weight:700; display:grid; place-items:center; font-variant-numeric:tabular-nums; }
+  .chips span.on { background:var(--ink); color:#fff; }
+  .kv { display:flex; justify-content:space-between; align-items:baseline; }
+  .kv b { font-size:17px; letter-spacing:-.02em; }
+  .kv span { color:var(--muted); font-size:14px; font-weight:600; font-variant-numeric:tabular-nums; }
+  .role { display:inline-flex; height:22px; padding:0 8px; border-radius:7px; background:var(--teal-soft); color:var(--teal); font-size:11px; font-weight:800; align-items:center; margin-bottom:8px; }
+  .role.me { background:#e9eefc; color:#3b4f9e; }
+  .past { display:flex; align-items:center; gap:12px; }
+  .past .ring { width:34px; height:34px; flex:none; position:relative; }
+  .past .ring svg { position:absolute; inset:0; transform:rotate(-90deg); }
+  .past .ring circle { fill:none; stroke-width:3; }
+  .past .t { flex:1; min-width:0; }
+  .past .t b { display:block; font-size:16px; letter-spacing:-.02em; }
+  .past .t span { display:block; margin-top:1px; color:var(--muted); font-size:13px; font-weight:600; }
+  .past .res { text-align:right; line-height:1.05; }
+  .past .res b { display:block; font-size:20px; letter-spacing:-.04em; font-variant-numeric:tabular-nums; }
+  .past .res small { color:var(--muted); font-size:12px; font-weight:600; }
+  .about .ver { text-align:center; color:var(--muted); font-size:13px; font-weight:600; margin:4px 0 14px; }
+</style>
+</head>
+<body>
+<h1>Профиль и вложенные экраны</h1>
+<p class="lead">Профиль — четвёртый таб. Это список, а не форма: всё, что про меня, моё участие и сборы, и настройки, которые остались после чистки. Шесть экранов: Профиль, Аккаунт, Минимальное участие, Сборы, Помощь, лист «О приложении».</p>
+<div class="row" id="row"></div>
+<script src="shared.js"></script>
+<script>
+I.info = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 11v5M12 7.8h.01"/></svg>`;
+I.cam = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8.5A1.5 1.5 0 0 1 5.5 7H8l1.5-2h5L16 7h2.5A1.5 1.5 0 0 1 20 8.5v9a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 17.5z"/><circle cx="12" cy="13" r="3.2"/></svg>`;
+I.lock = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>`;
+I.github = `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-3.2 19.5c.5.1.7-.2.7-.5v-1.8c-2.8.6-3.4-1.2-3.4-1.2-.4-1.1-1.1-1.4-1.1-1.4-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.6 2.4 1.1 3 .9.1-.7.4-1.1.6-1.4-2.2-.3-4.6-1.1-4.6-5a3.9 3.9 0 0 1 1-2.7c-.1-.3-.4-1.3.1-2.7 0 0 .9-.3 2.8 1a9.6 9.6 0 0 1 5 0c1.9-1.3 2.8-1 2.8-1 .5 1.4.2 2.4.1 2.7a3.9 3.9 0 0 1 1 2.7c0 3.9-2.4 4.7-4.6 5 .4.3.7.9.7 1.9v2.8c0 .3.2.6.7.5A10 10 0 0 0 12 2z"/></svg>`;
+const rw = (label, tail, cls) => `<div class="rw ${cls || ""}"><span>${label}</span><span class="tail">${tail}</span></div>`;
+const ring = (pct, full) => `<span class="ring"><svg viewBox="0 0 34 34"><circle cx="17" cy="17" r="14" stroke="var(--line)"/><circle cx="17" cy="17" r="14" stroke="var(--teal)" stroke-linecap="round" stroke-dasharray="88" stroke-dashoffset="${(88 * (1 - pct)).toFixed(0)}"/></svg>${full ? `<svg viewBox="0 0 34 34" style="position:absolute;inset:0"><circle cx="17" cy="17" r="3" fill="var(--teal)"/></svg>` : ""}</span>`;
+
+const P1 = `<div class="phone">${status()}<div class="page noNav">
+<div class="me"><span class="ava"><img src="${MARK}" alt=""></span><span class="t"><b>Анна Петрова</b><span>orginizer.com/anna · в круге с марта 2026</span></span>${I.fwd}</div>
+<div class="glabel">Участие</div><div class="group">${rw("Сеть может помочь", `<b>1 860 $</b>${I.info.replace("<svg", '<svg class="ico"')}`)}${rw("Минимальное участие", `<b>15 $</b>${I.fwd}`)}</div>
+<div class="glabel">Сборы</div><div class="group">${rw("Сборы", `2 открытых${I.fwd}`)}</div>
+<div class="glabel">Настройки</div><div class="group">
+<div class="rw"><span>Тема</span><span class="segin"><span class="on">Авто</span><span>Светлая</span><span>Тёмная</span></span></div>
+${rw("Уведомления", `Все${I.fwd}`)}
+<div class="rw"><span>Крупный шрифт</span><span class="tail"><span class="sw"></span></span></div>
+${rw("Язык", `Русский${I.fwd}`)}
+</div>
+<div class="glabel">Ещё</div><div class="group">${rw("Помощь", I.fwd)}${rw("О приложении", I.fwd)}${rw("Выйти", "")}</div>
+<div class="glabel admin">Только админам <i>ADMIN</i></div><div class="group">${rw("Рассылка", I.fwd)}${rw("Статистика", I.fwd)}${rw("Чат поддержки", `3${I.fwd}`)}</div>
+</div>${tabs("me")}${home()}</div>`;
+
+const P2 = `<div class="phone">${status()}${nav("Профиль", "Аккаунт", "Готово")}<div class="page notabs">
+<div class="avaBig"><img src="${MARK}" alt="" style="width:100%;height:100%;border-radius:28px"><i>${I.cam}</i></div>
+<div class="card" style="margin-top:16px">
+<span class="lbl">Имя</span><div class="field filled">Анна</div>
+<span class="lbl" style="margin-top:14px">Фамилия</span><div class="field filled">Петрова</div>
+<span class="lbl" style="margin-top:14px">Ваша ссылка</span><div class="slug"><small>orginizer.com/</small><b>anna</b>${I.pen}</div>
+</div>
+<div class="card">
+<span class="lbl">Телефон</span><div class="field">+380…</div>
+<span class="lbl" style="margin-top:14px">Почта</span><div class="field lock">anna@test.local ${I.lock}</div>
+<span class="lbl" style="margin-top:14px">Telegram</span><div class="field lock">@anna_test ${I.lock}</div>
+<p class="hint">Почта и Telegram — ваши способы входа, меняются через вход заново.</p>
+<div class="btn secondary" style="margin-top:14px">Ещё контакт</div>
+<div class="rw" style="padding:0;margin-top:6px"><span class="sub2">Скрыть контакты<small>Люди в сети не увидят телефон и ссылки</small></span><span class="tail"><span class="sw on"></span></span></div>
+</div>
+<span class="textbtn danger">Удалить аккаунт</span>
+</div>${home()}</div>`;
+
+const P3 = `<div class="phone">${status()}${nav("Профиль", "Участие")}<div class="page notabs">
+<div class="card"><span class="lbl">Моё минимальное участие</span><div class="money">15<span class="caret"></span><small>$</small></div>
+<div class="chips"><span>5</span><span class="on">15</span><span>30</span><span>50</span></div>
+<p class="hint" style="margin-top:14px">Сумма, которую вы готовы дать в сбор. Из таких сумм складывается «Сеть может помочь» у людей вашей сети. Регулярные сборы продлеваются каждые 28 дней, мы напомним за 3 дня.</p>
+<div class="actions"><div class="btn primary">Готово</div></div></div>
+<div class="card"><div class="kv"><b>Сеть может помочь вам</b><span>1 860 $</span></div><p class="hint">Сумма минимального участия 1 240 человек в вашей сети. Растёт, когда люди приходят или поднимают участие.</p></div>
+</div>${home()}</div>`;
+
+const P4 = `<div class="phone">${status()}${nav("Профиль", "Сборы")}<div class="page notabs">
+<div class="seg" style="margin-top:0"><span class="on">Открытые · 2</span><span>Прошлые · 7</span></div>
+<div class="card" style="margin-top:12px"><span class="role me">Ваш сбор</span><div class="kv"><b>Разовая помощь</b><span>4 участника</span></div>${meter(0, 100, 300).replace('<span><i style="background:var(--ink)"></i>Вы 0 $</span>', "")}</div>
+<div class="card"><span class="role">Участвуете</span><div class="kv"><b>Денис Волков</b><span>Каждые 28 дней · новый цикл до 12 апреля</span></div>${meter(15, 40, 100)}</div>
+</div>${home()}</div>`;
+
+const P5 = `<div class="phone">${status()}${nav("Профиль", "Сборы")}<div class="page notabs">
+<div class="seg" style="margin-top:0"><span>Открытые · 2</span><span class="on">Прошлые · 7</span></div>
+<div class="group" style="margin-top:12px">
+<div class="r past">${ring(.55)}<span class="t"><b>Мария Коваль</b><span>12 марта · ваша 20 $ · через Олег брат</span></span><span class="res"><b>44</b><small>из 80 $</small></span></div>
+<div class="r past">${ring(1, true)}<span class="t"><b>Олег брат</b><span>4 января · ваша 15 $</span></span><span class="res"><b>30</b><small>из 30 $</small></span></div>
+<div class="r past">${ring(.9)}<span class="t"><b>Ваш сбор</b><span>18 декабря · разовая помощь · 6 участников</span></span><span class="res"><b>270</b><small>из 300 $</small></span></div>
+<div class="r past">${ring(1, true)}<span class="t"><b>Денис Волков</b><span>2 декабря · цикл 2 · ваша 15 $</span></span><span class="res"><b>100</b><small>из 100 $</small></span></div>
+</div>
+<p class="hint" style="margin:12px 4px 0">Записи остаются у вас и у авторов. Вы участвовали 7 раз на 115 $, вам помогли 2 раза на 370 $.</p>
+</div>${home()}</div>`;
+
+const P6 = `<div class="phone">${status()}${nav("Профиль", "Помощь")}<div class="page notabs">
+<div class="group">${rw("Вопросы и ответы", I.fwd)}${rw("Помощник", `<span class="sub2" style="text-align:right"><small>Отвечает голосом или текстом</small></span>${I.fwd}`)}${rw("Показать интро ещё раз", I.fwd)}</div>
+<div class="glabel">Сообщество</div><div class="group"><div class="rw"><span class="sub2">Чат сообщества<small>t.me/+729vJ…</small></span><span class="tail">${I.out.replace("<svg", '<svg class="ico"')}</span></div></div>
+</div>${home()}</div>`;
+
+const P7 = `<div class="phone">${status()}<div class="page noNav" style="filter:brightness(.85)">
+<div class="me"><span class="ava"><img src="${MARK}" alt=""></span><span class="t"><b>Анна Петрова</b><span>orginizer.com/anna · в круге с марта 2026</span></span>${I.fwd}</div>
+<div class="glabel">Участие</div><div class="group">${rw("Сеть может помочь", `<b>1 860 $</b>`)}${rw("Минимальное участие", `<b>15 $</b>${I.fwd}`)}</div>
+</div>${tabs("me")}${home()}
+<div class="scrim"><div class="sheet about"><h3>Social Organizer</h3><p class="ver">Версия 2.0 · сборка 1148</p>
+<div class="group">${rw(`<span style="display:flex;align-items:center;gap:10px">${I.github.replace("<svg", '<svg style="width:18px;height:18px"')}Открытый исходный код</span>`, I.out.replace("<svg", '<svg class="ico"'))}${rw("Условия использования", I.fwd)}${rw("Политика конфиденциальности", I.fwd)}</div>
+<div class="group" style="margin-top:10px"><div class="rw"><span class="sub2">Telegram<small>Подключён: @anna_test</small></span><span class="tail" style="color:var(--teal)">${I.check.replace("<svg", '<svg class="ico" style="color:var(--teal)"')}</span></div></div>
+<div class="btn ghost" style="margin-top:14px">Закрыть</div></div></div></div>`;
+
+document.getElementById("row").innerHTML = [
+  section("profile", P1, "<small>1</small>Профиль", `<p>Сверху я: аватар, имя, моя ссылка и дата появления в круге; тап ведёт в Аккаунт. Дальше группы: Участие, Сборы, Настройки, Ещё, и для админа — отдельная группа с меткой. Удаления аккаунта здесь нет.</p>
+<ul><li>Тринадцать карточек старых настроек свернулись в четыре группы и девять строк. Всё, что было решено убрать (связать аккаунт, голос, валюта, видео), отсутствует.</li><li>«Сеть может помочь» не кнопка, но с «i»: тап открывает объяснение, из чего складывается сумма.</li><li>Тема выбирается прямо в строке сегментом Авто / Светлая / Тёмная. «Уведомления ›» раскрываются на месте: Просьбы, Новые люди, Циклы сборов, Звуки, Push.</li></ul>`),
+  section("account", P2, "<small>2</small>Аккаунт", `<p>Аватар с кнопкой камеры, две карточки полей. В первой — имя, фамилия и ссылка со слагом (редактируется карандашом). Во второй — контакты: телефон, почта и Telegram; почта и Telegram заблокированы, потому что это способы входа. «Ещё контакт» добавляет любой из десяти типов. «Скрыть контакты» строкой с пояснением.</p>
+<ul><li>«Удалить аккаунт» внизу текстом, тап поднимает лист с объяснением, что остаётся.</li><li>«Готово» в шапке сохраняет всё; поля автосохраняются по уходу с экрана, кнопка нужна как явный выход.</li></ul>`),
+  section("stake", P3, "<small>3</small>Минимальное участие", `<p>Сумма крупно, четыре пресета чипами, пояснение одним абзацем, «Готово». Ниже карточка-зеркало: сколько сеть может помочь мне и почему. Человек видит обе стороны одной договорённости.</p>`),
+  section("open", P4, "<small>4</small>Сборы: открытые", `<p>Один экран с сегментом «Открытые / Прошлые» вместо двух строк в Профиле. Карточки открытых помечены ролью: «Ваш сбор» или «Участвуете», внутри шкала «Вы / Другие / Цель» и строка состояния. Тап открывает Сбор в нужной роли.</p>`),
+  section("past", P5, "<small>5</small>Сборы: прошлые", `<p>Строки с кольцом-итогом: полное кольцо с точкой, когда цель собрана. Справа результат «44 из 80 $», под именем дата, моя сумма и через кого. Внизу итог за всё время: это заменяет полукруг «Помог / Помогли мне» со старого экрана создания.</p>`),
+  section("help", P6, "<small>6</small>Помощь", `<p>Три строки и сообщество. Видеоинструкции убраны до новых записей, вместо них «Показать интро ещё раз». Помощник подписан: отвечает голосом или текстом; выбор голоса живёт в его настройках.</p>`),
+  section("about", P7, "<small>7</small>О приложении", `<p>Лист с версией, ссылкой на исходный код, условиями, политикой и состоянием подключения Telegram. То, что нужно сторам и юристам, но не нужно каждый день.</p>`)
+].join("");
+</script>
+</body>
+</html>
