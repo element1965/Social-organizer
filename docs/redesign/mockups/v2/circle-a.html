@@ -1,0 +1,431 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Круг A — живой переход</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --canvas:#f3f6f4; --paper:#fff; --ink:#14211e; --muted:#5c6d68; --subtle:#8a9a95; --line:rgba(20,33,30,.14);
+    --teal:#0d9488; --teal-soft:#e5f5f3; --danger:#c5342c;
+    --space:#0b1513; --space-2:#132420; --star:rgba(231,238,235,.9);
+    --n1:#e7eeeb; --n2:#9fb0aa; --n3:#5f7069;
+    --ease:cubic-bezier(.22,.8,.24,1); --dur:.42s;
+  }
+  * { box-sizing:border-box; }
+  body { margin:0; padding:40px 24px 80px; background:#e6ebe9; color:var(--ink); font-family:Manrope,"Segoe UI",sans-serif; -webkit-font-smoothing:antialiased; }
+  h1 { margin:0 0 6px; font-size:28px; letter-spacing:-.03em; }
+  .lead { margin:0 0 24px; color:var(--muted); max-width:70ch; font-size:15px; line-height:1.5; }
+  .wrap { display:flex; flex-wrap:wrap; gap:32px 40px; align-items:flex-start; }
+  .notes { max-width:440px; font-size:14px; line-height:1.55; }
+  .notes h2 { font-size:17px; margin:0 0 6px; letter-spacing:-.02em; }
+  .notes h2 + p { margin-top:0; }
+  .notes ol, .notes ul { padding-left:18px; margin:6px 0 14px; }
+  .notes li { margin:3px 0; }
+  .notes .risk { color:var(--muted); }
+  .states { display:flex; gap:8px; margin:0 0 14px; }
+  .states button { height:36px; padding:0 14px; border:0; border-radius:12px; background:var(--paper); color:var(--muted); font:inherit; font-weight:700; font-size:14px; cursor:pointer; box-shadow:0 1px 0 var(--line); }
+  .states button[aria-pressed="true"] { background:var(--ink); color:#fff; }
+
+  .phone { position:relative; width:390px; height:844px; border-radius:44px; overflow:hidden; background:var(--space); box-shadow:0 30px 60px rgba(20,33,30,.18), 0 0 0 1px rgba(20,33,30,.08); user-select:none; }
+  .status { position:absolute; left:0; right:0; top:0; height:54px; display:flex; align-items:flex-end; justify-content:space-between; padding:0 26px 10px; font-size:15px; font-weight:700; color:#fff; z-index:8; pointer-events:none; }
+  .sys { display:flex; gap:6px; align-items:center; }
+  .sys i { display:block; width:18px; height:10px; border-radius:2px; background:currentColor; opacity:.9; }
+  .sys i.s { width:12px; }
+  .homebar { position:absolute; left:50%; bottom:8px; width:134px; height:5px; margin-left:-67px; border-radius:3px; z-index:9; background:var(--ink); transition:background var(--dur) var(--ease); pointer-events:none; }
+  .s-graph .homebar, .s-person .homebar { background:#fff; }
+
+  /* scene + camera */
+  .scene { position:absolute; inset:0; background:radial-gradient(120% 90% at 50% 38%, var(--space-2) 0%, var(--space) 60%, #070e0d 100%); cursor:pointer; }
+  .cam { position:absolute; inset:0; transform-origin:195px 320px; transition:transform var(--dur) var(--ease); }
+  .s-graph .cam, .s-person .cam { transform:translateY(96px) scale(1.14); }
+  .s-person .cam { transform:translateY(40px) scale(1.14); }
+  .cam svg { position:absolute; inset:0; width:100%; height:100%; }
+  .scene .node { cursor:pointer; }
+  .scene .node .hit { fill:transparent; }
+  .dim { transition:opacity var(--dur) var(--ease); }
+  .s-person .dim { opacity:.35; }
+
+  /* header */
+  .head { position:absolute; left:0; right:0; top:54px; height:124px; padding:8px 20px 0; z-index:5; background:linear-gradient(180deg, rgba(11,21,19,.88) 0%, rgba(11,21,19,.55) 60%, rgba(11,21,19,0) 100%); transition:opacity var(--dur) var(--ease), transform var(--dur) var(--ease); pointer-events:none; }
+  .s-graph .head, .s-person .head { opacity:0; transform:translateY(-16px); }
+  .brand { display:flex; align-items:center; gap:8px; font-weight:800; font-size:15px; letter-spacing:-.02em; color:#fff; margin-bottom:10px; }
+  .brand img { width:26px; height:26px; border-radius:8px; }
+  .nums { display:flex; justify-content:space-between; align-items:flex-end; gap:12px; }
+  .nums .l b { display:block; font-size:17px; letter-spacing:-.03em; color:#fff; }
+  .nums .l span { display:block; margin-top:2px; font-size:13px; font-weight:600; color:var(--n2); }
+  .nums .r { text-align:right; }
+  .nums .r b { display:block; font-size:24px; letter-spacing:-.04em; color:#fff; font-variant-numeric:tabular-nums; }
+  .nums .r span { display:block; font-size:13px; font-weight:700; color:#5fd3c6; }
+
+  /* back pill (graph mode) */
+  .back { position:absolute; left:16px; top:62px; z-index:7; height:36px; padding:0 12px 0 8px; border-radius:12px; background:rgba(19,36,32,.78); color:#fff; display:inline-flex; align-items:center; gap:4px; font-size:14px; font-weight:700; box-shadow:inset 0 0 0 1px rgba(231,238,235,.14); backdrop-filter:blur(10px); cursor:pointer; opacity:0; transform:translateY(-10px); pointer-events:none; transition:opacity var(--dur) var(--ease), transform var(--dur) var(--ease); }
+  .back svg { width:18px; height:18px; }
+  .s-graph .back, .s-person .back { opacity:1; transform:none; pointer-events:auto; }
+  .hint { position:absolute; left:0; right:0; top:118px; text-align:center; color:var(--n2); font-size:12px; font-weight:600; z-index:6; opacity:0; transition:opacity var(--dur) var(--ease); pointer-events:none; }
+  .s-graph .hint { opacity:1; transition-delay:.25s; }
+
+  /* chips */
+  .chips { position:absolute; left:16px; right:16px; top:468px; z-index:6; display:flex; gap:8px; align-items:center; transition:top var(--dur) var(--ease), transform var(--dur) var(--ease); }
+  .s-graph .chips { top:744px; }
+  .s-person .chips { top:744px; transform:translateY(60px); }
+  .chip { height:34px; padding:0 10px 0 9px; border-radius:12px; display:inline-flex; align-items:center; gap:5px; white-space:nowrap; font-size:12px; font-weight:700; letter-spacing:-.02em; background:rgba(19,36,32,.78); color:var(--n2); box-shadow:inset 0 0 0 1px rgba(231,238,235,.14); backdrop-filter:blur(10px); cursor:pointer; }
+  .chip b { color:#fff; font-size:14px; letter-spacing:-.03em; font-variant-numeric:tabular-nums; }
+  .chip i { width:8px; height:8px; border-radius:50%; background:var(--n1); }
+  .chip.d2 i { background:var(--n2); } .chip.d3 i { background:var(--n3); }
+  .chip.me { margin-left:auto; color:#fff; }
+  .chip.me svg { width:16px; height:16px; }
+  .chip.me.away { background:var(--teal); box-shadow:none; }
+
+  /* sheet */
+  .sheet { position:absolute; left:0; right:0; top:520px; height:324px; background:var(--canvas); border-radius:30px 30px 0 0; padding:10px 16px 0; z-index:6; box-shadow:0 -18px 40px rgba(0,0,0,.35); transition:transform var(--dur) var(--ease); touch-action:none; }
+  .s-graph .sheet, .s-person .sheet { transform:translateY(340px); }
+  .handle { height:22px; margin:-6px -16px 6px; display:grid; place-items:center; cursor:grab; }
+  .handle::before { content:""; width:40px; height:5px; border-radius:3px; background:rgba(20,33,30,.18); }
+  .label { margin:4px 4px 8px; font-size:13px; font-weight:700; color:var(--muted); }
+  .ev { display:flex; align-items:center; gap:12px; min-height:64px; padding:10px 12px 10px 10px; border-radius:20px; background:var(--paper); box-shadow:0 8px 22px rgba(20,33,30,.06); }
+  .ev + .ev { margin-top:8px; }
+  .ev .ico { width:38px; height:38px; border-radius:12px; background:var(--canvas); display:grid; place-items:center; flex:none; color:var(--ink); }
+  .ev .ico.hot { background:var(--teal-soft); color:var(--teal); }
+  .ev .ico svg { width:20px; height:20px; }
+  .ev .t { flex:1; min-width:0; }
+  .ev .t b { display:block; font-size:16px; letter-spacing:-.02em; }
+  .ev .t span { display:block; margin-top:2px; font-size:13px; font-weight:600; color:var(--muted); }
+  .ev .t span em { font-style:normal; color:var(--ink); font-weight:700; }
+  .ev .amt { font-weight:800; font-size:16px; letter-spacing:-.03em; font-variant-numeric:tabular-nums; }
+  .ev .fwd { width:18px; height:18px; color:var(--subtle); flex:none; }
+
+  /* collapsed pill (graph mode) */
+  .pill { position:absolute; left:50%; bottom:22px; transform:translate(-50%, 80px); z-index:7; height:44px; padding:0 16px 0 14px; border-radius:16px; background:var(--paper); color:var(--ink); display:inline-flex; align-items:center; gap:8px; font-size:14px; font-weight:700; box-shadow:0 14px 30px rgba(0,0,0,.4); cursor:pointer; opacity:0; transition:transform var(--dur) var(--ease), opacity var(--dur) var(--ease); white-space:nowrap; }
+  .pill i { width:22px; height:22px; border-radius:7px; background:var(--teal); color:#fff; font-style:normal; font-size:12px; display:grid; place-items:center; }
+  .pill svg { width:16px; height:16px; color:var(--subtle); }
+  .s-graph .pill { transform:translate(-50%, 0); opacity:1; }
+
+  /* person card */
+  .card { position:absolute; left:16px; right:16px; bottom:24px; z-index:8; background:var(--paper); border-radius:24px; padding:16px; box-shadow:0 18px 40px rgba(0,0,0,.4); transform:translateY(240px); opacity:0; transition:transform var(--dur) var(--ease), opacity var(--dur) var(--ease); }
+  .s-person .card { transform:none; opacity:1; }
+  .card .top { display:flex; align-items:center; gap:12px; }
+  .card .ava { width:44px; height:44px; border-radius:14px; background:var(--teal-soft); color:var(--teal); display:grid; place-items:center; font-weight:800; font-size:18px; }
+  .card .t { flex:1; min-width:0; }
+  .card .t b { display:block; font-size:18px; letter-spacing:-.03em; }
+  .card .t span { display:block; margin-top:2px; font-size:13px; font-weight:600; color:var(--muted); }
+  .card .x { width:32px; height:32px; border-radius:10px; background:var(--canvas); color:var(--muted); display:grid; place-items:center; cursor:pointer; }
+  .card .x svg { width:16px; height:16px; }
+  .path { display:flex; align-items:center; gap:0; margin:14px 0 0; font-size:13px; font-weight:700; color:var(--muted); }
+  .path span { white-space:nowrap; }
+  .path span.me { color:var(--ink); }
+  .path span.end { color:var(--teal); }
+  .path i { flex:1; height:2px; background:var(--line); margin:0 8px; min-width:12px; position:relative; }
+  .path i::after { content:""; position:absolute; right:-2px; top:-3px; width:8px; height:8px; border-radius:50%; background:var(--line); }
+  .path i.hot { background:var(--teal); } .path i.hot::after { background:var(--teal); }
+  .card .acts { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:14px; }
+  .card .acts span { height:48px; border-radius:14px; display:grid; place-items:center; font-weight:700; font-size:15px; cursor:pointer; }
+  .card .acts .go { background:var(--teal); color:#fff; }
+  .card .acts .sec { background:var(--canvas); color:var(--ink); }
+
+  /* tabs */
+  .tabs { position:absolute; left:0; right:0; bottom:0; height:84px; background:rgba(255,255,255,.96); backdrop-filter:blur(14px); box-shadow:0 -1px 0 var(--line); display:grid; grid-template-columns:repeat(4,1fr); padding:8px 6px 0; z-index:7; transition:transform var(--dur) var(--ease); }
+  .s-graph .tabs, .s-person .tabs { transform:translateY(100px); }
+  .tab { display:flex; flex-direction:column; align-items:center; gap:3px; color:var(--muted); font-size:11px; font-weight:700; }
+  .tab.on { color:var(--teal); }
+  .tab svg { width:24px; height:24px; }
+  .askmark { width:26px; height:26px; border-radius:8px; background:var(--danger); color:#fff; display:grid; place-items:center; }
+  .askmark svg { width:16px; height:16px; }
+
+  .start { background:var(--paper); border-radius:22px; padding:14px 16px 6px; box-shadow:0 8px 22px rgba(20,33,30,.06); }
+  .start p { margin:0 0 4px; font-size:14px; line-height:1.4; color:var(--muted); }
+  .start p b { color:var(--ink); }
+  .step { display:grid; grid-template-columns:32px 1fr 18px; gap:12px; align-items:center; min-height:58px; }
+  .step + .step { box-shadow:inset 0 1px 0 var(--line); }
+  .step i { width:32px; height:32px; border-radius:50%; background:var(--ink); color:#fff; font-style:normal; font-size:14px; font-weight:800; display:grid; place-items:center; }
+  .step i.done { background:var(--teal); }
+  .step i.done svg { width:16px; height:16px; }
+  .step span { display:flex; flex-direction:column; gap:2px; }
+  .step b { font-size:16px; letter-spacing:-.02em; }
+  .step small { color:var(--muted); font-size:13px; font-weight:600; }
+  .step .fwd { width:18px; height:18px; color:var(--subtle); }
+  .cta { height:56px; margin-top:10px; border-radius:16px; background:var(--teal); color:#fff; font-weight:700; font-size:17px; display:grid; place-items:center; }
+  .prog { display:flex; align-items:center; gap:10px; margin:0 4px 10px; font-size:13px; font-weight:700; color:var(--muted); }
+  .prog i { flex:1; height:6px; border-radius:3px; background:var(--line); overflow:hidden; position:relative; }
+  .prog i::after { content:""; position:absolute; left:0; top:0; bottom:0; width:var(--w,40%); background:var(--teal); border-radius:3px; }
+  .s-empty .chips { opacity:0; pointer-events:none; }
+  .s-empty .nums .r span { display:none; }
+  .quiet { margin:18px 4px 0; text-align:center; font-size:14px; color:var(--muted); line-height:1.45; }
+  .quiet b { display:block; color:var(--ink); font-size:16px; margin-bottom:4px; }
+  @media (prefers-reduced-motion: reduce) { .phone * { transition:none !important; } }
+</style>
+</head>
+<body>
+<h1>Круг A: один экран, три состояния</h1>
+<p class="lead">Тапните по пустому месту сцены или потяните лист вниз — лента свернётся в пилюлю, камера отъедет, чипы переедут вниз. Тап по подписанному узлу открывает карточку человека. Назад: пилюля, кнопка «Круг» или свайп листа вверх. Сцена одна и та же, канвас не пересоздаётся.</p>
+
+<div class="wrap">
+<div>
+  <div class="states" id="states">
+    <button data-s="s-feed" aria-pressed="true">Лента</button>
+    <button data-s="s-graph">Граф</button>
+    <button data-s="s-person">Человек</button>
+  </div>
+  <div class="states" id="sizes">
+    <button data-size="big" aria-pressed="true">1 240 человек</button>
+    <button data-size="small">5 человек</button>
+    <button data-size="empty">Вы первый</button>
+  </div>
+  <div class="phone s-feed" id="phone"></div>
+</div>
+
+<div class="notes">
+  <h2>Что происходит при раскрытии</h2>
+  <ol>
+    <li>Лист уезжает вниз за 420 мс и превращается в пилюлю «3 события» над индикатором. Таб-бар уезжает вместе с ним.</li>
+    <li>Шапка с числами гаснет и уходит на 16 px вверх; слева появляется кнопка «‹ Круг».</li>
+    <li>Камера отъезжает: планета увеличивается на 14 % и опускается в центр освободившегося места. В приложении это анимация позиции камеры NetworkGraph, не CSS.</li>
+    <li>Чипы колец переезжают с границы листа к низу экрана и начинают работать как фильтры видимости колец. В свёрнутом состоянии тап по чипу открывает список людей.</li>
+    <li>Подсказка про жесты показывается один раз за сессию и гаснет через 3 с.</li>
+  </ol>
+  <h2>Карточка человека</h2>
+  <p>Тап по узлу: остальная сеть приглушается до 35 %, путь до человека остаётся ярким, снизу поднимается карточка: имя, кольцо, путь «Вы → Олег брат → Мария», действия «Открыть» и «Сбор 80 $», если у человека есть активная просьба. Тап мимо узла или крестик возвращает в режим графа.</p>
+  <h2>Жесты</h2>
+  <ul>
+    <li>Вертикальный драг за ручку листа принадлежит листу; порог 80 px.</li>
+    <li>Всё на сцене принадлежит графу: один палец вращает, два приближают. В свёрнутом состоянии граф тоже вращается, но зона над листом маленькая, поэтому раскрытие — основной сценарий.</li>
+    <li>Системный «назад» (Android, Telegram BackButton) из режима графа возвращает ленту, а не выходит из приложения.</li>
+  </ul>
+  <h2>Начало пути</h2>
+  <p>Переключатель «5 человек» и «Вы первый» показывает тот же экран на старте. Планета не исчезает: в пустой сети это один узел «Анна» с пунктирной орбитой, куда встанут первые люди. Вместо ленты — карточка с тремя шагами и одной кнопкой «Добавить человека». Чипы колец скрыты, пока нечего фильтровать.</p>
+  <ul>
+    <li>Вы первый, никто не приглашал: карточка говорит прямо, что сигналу пока идти некуда, и ведёт к единственному полезному действию.</li>
+    <li>3–5 человек: узлы крупные и все подписаны, сверху листа полоса «3 из 5», события — подтверждения знакомства. Одна строка объясняет, зачем расти: «Через 3 человек просьбу увидят 5, через 5 — обычно 20–40».</li>
+    <li>Порог «пять человек» и подсказки исчезают сами, когда сеть переваливает за 5 и появляются события.</li>
+  </ul>
+  <h2>Что ещё решено</h2>
+  <ul>
+    <li>Фон сцены тёмный всегда; в тёмной теме лист и таб-бар становятся тёмными, и стык со сценой пропадает.</li>
+    <li>Пустая лента: вместо событий одна строка «Пока тихо» и подсказка «Просьбы, новые люди и циклы сборов появятся здесь».</li>
+    <li class="risk">Риск: в Telegram Mini App нижняя панель Telegram съедает 50–60 px; пилюля и чипы должны считать safe-area снизу.</li>
+    <li class="risk">Риск: подсветка пути на реальном графе зависит от findPath; при 1 240 узлах его надо кэшировать вместе с графом.</li>
+  </ul>
+</div>
+</div>
+
+<script>
+const MARK = "../mark.png";
+const I = {
+  circle: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="12" cy="12.4" r="2.2" fill="currentColor" stroke="none"/><circle cx="5.6" cy="7.4" r="1.6" fill="currentColor" stroke="none"/><circle cx="18.4" cy="7.6" r="1.6" fill="currentColor" stroke="none"/><circle cx="16.6" cy="17.6" r="1.6" fill="currentColor" stroke="none"/><path d="M7 8.4 10.3 11.2M13.9 11.3 17 8.6M13.3 13.9l2.3 2.7"/></svg>`,
+  hand: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 12.5V6a1.5 1.5 0 0 1 3 0v5.5M11 11V4.5a1.5 1.5 0 0 1 3 0V11M14 11V6a1.5 1.5 0 0 1 3 0v8.2a6 6 0 0 1-6 6h-.5a6 6 0 0 1-5.1-2.9L3.2 13a1.5 1.5 0 0 1 2.5-1.6L8 14.5"/></svg>`,
+  add: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="2.7"/><path d="M3.6 18.4c.8-2.6 2.7-4 5.4-4s4.6 1.4 5.4 4M17.2 6.2v5.2M14.6 8.8h5.2"/></svg>`,
+  person: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><circle cx="12" cy="8" r="3"/><path d="M5.2 18.6c1.05-3 3.4-4.5 6.8-4.5s5.75 1.5 6.8 4.5"/></svg>`,
+  fwd: `<svg class="fwd" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg>`,
+  up: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 15 6-6 6 6"/></svg>`,
+  x: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>`,
+  bell: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15z"/><path d="M10 20.5a2 2 0 0 0 4 0"/></svg>`,
+  repeat: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 2.5 20.5 6 17 9.5M3.5 11V9.5A3.5 3.5 0 0 1 7 6h13.5M7 21.5l-3.5-3.5L7 14.5M20.5 13v1.5a3.5 3.5 0 0 1-3.5 3.5H3.5"/></svg>`,
+  arrive: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="8" r="3"/><path d="M4 19c1-3 3.2-4.5 6-4.5s5 1.5 6 4.5M17 5.5v5M14.5 8h5"/></svg>`,
+  done: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="m8.5 12.2 2.4 2.4 4.6-5"/></svg>`,
+  aim: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3"/></svg>`,
+  back: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 5.5 8 12l6.5 6.5"/></svg>`
+};
+
+/* ---------- synthetic network ---------- */
+function rnd(seed) { let t = seed; return () => { t = (t * 1664525 + 1013904223) % 4294967296; return t / 4294967296; }; }
+function fib(n, r, jitter, R) {
+  const out = []; const g = Math.PI * (3 - Math.sqrt(5));
+  for (let i = 0; i < n; i++) {
+    const y = 1 - (i / (n - 1)) * 2; const rad = Math.sqrt(1 - y * y); const th = g * i;
+    out.push([Math.cos(th) * rad * r + (R() - .5) * jitter, y * r + (R() - .5) * jitter, Math.sin(th) * rad * r + (R() - .5) * jitter]);
+  }
+  return out;
+}
+function build(n1) {
+  const R = rnd(7);
+  const nodes = [{ id: "me", d: 0, p: [0, 0, 0] }];
+  const small = n1 <= 6;
+  const ring1 = n1 === 0 ? [] : small
+    ? [[.55, .62, .55], [-.78, .25, .5], [.3, -.72, .62], [-.4, -.5, -.7], [.8, -.1, -.5], [-.2, .9, -.3]].slice(0, n1)
+    : fib(n1, 1, .08, R);
+  ring1.forEach((p, i) => nodes.push({ id: "a" + i, d: 1, p, parent: "me" }));
+  let k = 0;
+  ring1.forEach((p, i) => {
+    const kids = small ? (i < 2 ? 1 : 0) : (R() < .55 ? 1 + Math.floor(R() * 3) : 0);
+    for (let j = 0; j < kids; j++) {
+      const q = [p[0] * 1.55 + (R() - .5) * .5, p[1] * 1.55 + (R() - .5) * .5, p[2] * 1.55 + (R() - .5) * .5];
+      const id = "b" + k++;
+      nodes.push({ id, d: 2, p: q, parent: "a" + i });
+      if (!small && R() < .3) nodes.push({ id: "c" + k, d: 3, p: [q[0] * 1.35 + (R() - .5) * .4, q[1] * 1.35 + (R() - .5) * .4, q[2] * 1.35 + (R() - .5) * .4], parent: id });
+    }
+  });
+  return nodes;
+}
+let NET = [], BY = {}, HOT = [], NAMES = {}, SIZE = "big";
+function project(p, yaw, pitch, S, cx, cy) {
+  const cy1 = Math.cos(yaw), sy = Math.sin(yaw);
+  const x1 = p[0] * cy1 + p[2] * sy, z1 = -p[0] * sy + p[2] * cy1;
+  const cp = Math.cos(pitch), sp = Math.sin(pitch);
+  const y1 = p[1] * cp - z1 * sp, z2 = p[1] * sp + z1 * cp;
+  const persp = 4.6 / (4.6 - z2);
+  return { x: cx + x1 * S * persp, y: cy - y1 * S * persp, s: persp, z: z2 };
+}
+function pickHot() {
+  const cands = NET.filter(n => n.d === 1 && NET.some(k => k.parent === n.id)).map(n => ({ n, pr: project(n.p, .3, .22, 1, 0, 0) }))
+    .filter(o => o.pr.z > .25 && o.pr.x > .45 && o.pr.x < .8 && o.pr.y < -.25 && o.pr.y > -.7).sort((a, b) => b.pr.z - a.pr.z);
+  const n = (cands[0] || { n: NET.find(k => k.d === 1) }).n;
+  return ["me", n.id, NET.find(k => k.parent === n.id)?.id].filter(Boolean);
+}
+const DATA = {
+  big:   { n1: 118, people: "1 240", sum: "1 860 $", delta: "+40 $ за неделю", counts: [118, 640, 482] },
+  small: { n1: 3, people: "5", sum: "6 $", delta: "+2 $ за неделю", counts: [3, 2, 0] },
+  empty: { n1: 0, people: "0", sum: "0 $", delta: "", counts: [0, 0, 0] }
+};
+function setData(size) {
+  SIZE = size;
+  NET = build(DATA[size].n1);
+  BY = {}; NET.forEach(n => BY[n.id] = n);
+  if (size === "big") {
+    HOT = pickHot();
+    NAMES = { a3: "Ирина Соколова", a40: "Денис Волков", a66: "Лена Мороз", a90: "Кирилл Семёнов", a52: "Марина Пак" };
+    NAMES[HOT[1]] = "Олег брат"; NAMES[HOT[2]] = "Мария Коваль";
+  } else if (size === "small") {
+    HOT = [];
+    NAMES = { a0: "Олег брат", a1: "Ирина Соколова", a2: "Катя Белова", b0: "Мария Коваль", b1: "Тимур Алиев" };
+  } else { HOT = []; NAMES = {}; }
+}
+function chain(id) { const out = []; let c = BY[id]; while (c) { out.unshift(c); c = c.parent ? BY[c.parent] : null; } return out; }
+
+function scene(w, h, S, cy, yaw, pitch) {
+  const cx = w / 2;
+  NET.forEach(n => { n.pr = project(n.p, yaw, pitch, S, cx, cy); });
+  const R = rnd(3);
+  let stars = "";
+  for (let i = 0; i < 70; i++) stars += `<circle cx="${(R() * w).toFixed(1)}" cy="${(R() * h).toFixed(1)}" r="${(R() * .9 + .3).toFixed(2)}" fill="var(--star)" opacity="${(R() * .5 + .15).toFixed(2)}"/>`;
+  const sorted = NET.slice().sort((a, b) => a.pr.z - b.pr.z);
+  let edges = "", dots = "", labels = "", hotEdges = "", hotDots = "";
+  sorted.forEach(n => {
+    if (n.d === 0) return;
+    const par = BY[n.parent].pr;
+    const hot = HOT.includes(n.id) && HOT.includes(n.parent);
+    const depthFade = Math.max(.08, Math.min(1, .45 + n.pr.z * .5));
+    const op = hot ? 1 : SIZE !== "big" ? .55 : depthFade * (n.d === 1 ? .2 : n.d === 2 ? .16 : .1);
+    const mx = (par.x + n.pr.x) / 2 + (n.pr.y - par.y) * .08, my = (par.y + n.pr.y) / 2 - (n.pr.x - par.x) * .08;
+    const e = `<path d="M${par.x.toFixed(1)} ${par.y.toFixed(1)} Q${mx.toFixed(1)} ${my.toFixed(1)} ${n.pr.x.toFixed(1)} ${n.pr.y.toFixed(1)}" fill="none" stroke="${hot ? "var(--teal)" : "#e7eeeb"}" stroke-width="${hot ? 2.4 : n.d === 1 ? .8 : .6}" opacity="${op.toFixed(2)}" ${hot ? 'filter="url(#glow)"' : ""}/>`;
+    if (hot) hotEdges += e; else edges += e;
+  });
+  sorted.forEach(n => {
+    if (n.d === 0) return;
+    const few = SIZE !== "big";
+    const base = few ? (n.d === 1 ? 9 : 6) : (n.d === 1 ? 4.2 : n.d === 2 ? 2.6 : 1.8);
+    const r = base * Math.max(.55, Math.min(n.pr.s, 1.35));
+    const fade = few ? 1 : Math.max(.18, Math.min(1, .5 + n.pr.z * .5));
+    const hot = HOT.includes(n.id);
+    const fill = hot ? "var(--teal)" : n.d === 1 ? "var(--n1)" : n.d === 2 ? "var(--n2)" : "var(--n3)";
+    const name = NAMES[n.id];
+    const nearMe = Math.hypot(n.pr.x - cx, n.pr.y - cy) < 70;
+    const labelled = name && (hot || few || (n.pr.z > .15 && !nearMe));
+    let g = `<circle cx="${n.pr.x.toFixed(1)}" cy="${n.pr.y.toFixed(1)}" r="${(hot ? r + 1.5 : r).toFixed(1)}" fill="${fill}" opacity="${hot ? 1 : fade.toFixed(2)}" ${hot ? 'filter="url(#glow)"' : ""}/>`;
+    if (hot && n.id !== "me") g += `<circle cx="${n.pr.x.toFixed(1)}" cy="${n.pr.y.toFixed(1)}" r="${(r + 6).toFixed(1)}" fill="none" stroke="var(--teal)" stroke-width="1.4" opacity=".9"/>`;
+    if (labelled) {
+      const [a, b] = name.split(" ");
+      g += `<text x="${n.pr.x.toFixed(1)}" y="${(n.pr.y + r + 13).toFixed(1)}" fill="${hot ? "var(--teal)" : "var(--n1)"}" opacity="${hot ? 1 : .85}"><tspan x="${n.pr.x.toFixed(1)}">${a}</tspan>${b ? `<tspan x="${n.pr.x.toFixed(1)}" dy="12" fill="${hot ? "var(--teal)" : "var(--n2)"}">${b}</tspan>` : ""}</text>`;
+      g += `<circle class="hit" cx="${n.pr.x.toFixed(1)}" cy="${(n.pr.y + 6).toFixed(1)}" r="24"/>`;
+      g = `<g class="node" data-id="${n.id}">${g}</g>`;
+    }
+    if (hot) hotDots += g; else dots += g;
+  });
+  const me = BY.me.pr, ms = 48;
+  const meHtml = `<g><circle cx="${me.x}" cy="${me.y}" r="${ms * .78}" fill="var(--teal)" opacity=".18" filter="url(#glow)"/><clipPath id="mc"><rect x="${me.x - ms / 2}" y="${me.y - ms / 2}" width="${ms}" height="${ms}" rx="${ms * .3}"/></clipPath><image href="${MARK}" x="${me.x - ms / 2}" y="${me.y - ms / 2}" width="${ms}" height="${ms}" clip-path="url(#mc)"/><text x="${me.x}" y="${me.y + ms / 2 + 18}" fill="#fff" font-size="15" font-weight="800">Анна</text></g>`;
+  const horizon = `<ellipse cx="${cx}" cy="${cy + S * .1}" rx="${S * 1.05}" ry="${S * 1.02}" fill="url(#sph)"/>`;
+  const orbit = SIZE === "big" ? "" : `<circle cx="${cx}" cy="${cy}" r="${S * 1.02}" fill="none" stroke="var(--n2)" stroke-width="1" stroke-dasharray="3 7" opacity=".35"/>${SIZE === "small" ? `<circle cx="${cx}" cy="${cy}" r="${S * 1.6}" fill="none" stroke="var(--n3)" stroke-width="1" stroke-dasharray="3 9" opacity=".3"/>` : ""}`;
+  return `<svg viewBox="0 0 ${w} ${h}" style="font-family:Manrope;font-size:11px;font-weight:700;text-anchor:middle;paint-order:stroke;stroke:var(--space);stroke-width:4px;stroke-linejoin:round"><defs><filter id="glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="2.2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter><radialGradient id="sph" cx="50%" cy="45%" r="55%"><stop offset="0" stop-color="#1b332e" stop-opacity=".9"/><stop offset=".75" stop-color="#132420" stop-opacity=".35"/><stop offset="1" stop-color="#0b1513" stop-opacity="0"/></radialGradient></defs>${stars}${horizon}${orbit}<g class="dim" style="stroke:none">${edges}${dots}</g><g style="stroke:none">${hotEdges}${hotDots}</g>${meHtml}</svg>`;
+}
+
+const ev = (ico, hot, name, sub, amt) => `<div class="ev"><span class="ico ${hot ? "hot" : ""}">${I[ico]}</span><span class="t"><b>${name}</b><span>${sub}</span></span>${amt ? `<span class="amt">${amt}</span>` : ""}${I.fwd}</div>`;
+
+const phone = document.getElementById("phone");
+const check = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6 12.5 4 4 8-9"/></svg>`;
+const step = (n, title, sub, done) => `<div class="step"><i class="${done ? "done" : ""}">${done ? check : n}</i><span><b>${title}</b><small>${sub}</small></span>${I.fwd}</div>`;
+function sheetHTML() {
+  if (SIZE === "big") return `<p class="label">Сегодня</p>
+${ev("bell", true, "Мария Коваль", "Просьба · через <em>Олег брат</em>", "80 $")}
+${ev("repeat", false, "Денис Волков", "Новый цикл · ваши 15 $ · до 12 апреля")}
+${ev("arrive", false, "Катя Белова", "Вошла по вашей ссылке")}`;
+  if (SIZE === "small") return `<div class="prog"><span>3 из 5</span><i style="--w:60%"></i><span>Пять человек</span></div>
+${ev("arrive", true, "Катя Белова", "Вошла по вашей ссылке · подтвердите знакомство")}
+${ev("done", false, "Олег брат", "Подтвердил знакомство")}
+<p class="quiet">Через 3 человек вашу просьбу увидят 5. Через 5 — обычно 20–40.</p>`;
+  return `<div class="start"><p><b>Вы первый в своём круге.</b> Просьба идёт по подтверждённым рукопожатиям: пока рядом никого, сигналу идти некуда.</p>
+${step(1, "Профиль", "Имя и минимальное участие", true)}
+${step(2, "Первый человек", "Отправьте ссылку или покажите QR", false)}
+${step(3, "Пять человек", "0 из 5. Через них просьба идёт дальше", false)}
+</div><div class="cta">Добавить человека</div>`;
+}
+function render() {
+  const d = DATA[SIZE];
+  const S = SIZE === "big" ? 150 : SIZE === "small" ? 110 : 150;
+  phone.classList.toggle("s-empty", SIZE === "empty");
+  phone.innerHTML = `
+<div class="scene" id="scene"><div class="cam">${scene(390, 844, S, 320, .3, .22)}</div></div>
+<div class="status"><span>9:41</span><span class="sys"><i class="s"></i><i></i></span></div>
+<div class="head"><div class="brand"><img src="${MARK}" alt="">Social Organizer</div><div class="nums"><div class="l"><b>В сети ${d.people} человек</b><span>Сеть может помочь</span></div><div class="r"><b>${d.sum}</b><span>${d.delta}</span></div></div></div>
+<span class="back" id="back">${I.back}Круг</span>
+<p class="hint">Один палец — вращать, два — приблизить</p>
+<div class="chips"><span class="chip"><i></i><b>${d.counts[0]}</b>1-е</span><span class="chip d2"><i></i><b>${d.counts[1]}</b>2-е</span><span class="chip d3"><i></i><b>${d.counts[2]}</b>3-е</span><span class="chip me">${I.aim}К себе</span></div>
+<div class="sheet" id="sheet"><div class="handle" id="handle"></div>${sheetHTML()}</div>
+<span class="pill" id="pill"><i>${SIZE === "big" ? 3 : SIZE === "small" ? 2 : 0}</i>${SIZE === "empty" ? "Начало" : "События"}${I.up}</span>
+<div class="card" id="card"><div class="top"><span class="ava">М</span><span class="t"><b id="c-name">Мария Коваль</b><span id="c-sub">2-е рукопожатие · просьба 80 $</span></span><span class="x" id="c-x">${I.x}</span></div><div class="path" id="c-path"></div><div class="acts"><span class="go" id="c-go">Сбор 80 $</span><span class="sec">Открыть</span></div></div>
+<nav class="tabs"><span class="tab on">${I.circle}Круг</span><span class="tab"><span class="askmark">${I.hand}</span>Просьба</span><span class="tab">${I.add}Добавить</span><span class="tab">${I.person}Профиль</span></nav>
+<div class="homebar"></div>`;
+  bind();
+}
+
+const STATES = ["s-feed", "s-graph", "s-person"];
+function setState(st) {
+  STATES.forEach(k => phone.classList.toggle(k, k === st));
+  document.querySelectorAll("#states button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.s === st)));
+}
+document.querySelectorAll("#states button").forEach(b => b.onclick = () => {
+  if (b.dataset.s === "s-person") { const first = Object.keys(NAMES)[0]; if (first) showPerson(HOT[2] || first); return; }
+  setState(b.dataset.s);
+});
+document.querySelectorAll("#sizes button").forEach(b => b.onclick = () => {
+  document.querySelectorAll("#sizes button").forEach(x => x.setAttribute("aria-pressed", String(x === b)));
+  setData(b.dataset.size); render(); setState("s-feed");
+});
+
+function showPerson(id) {
+  const n = BY[id]; if (!n) return;
+  const name = NAMES[id] || "Человек";
+  const ch = chain(id);
+  document.getElementById("c-name").textContent = name;
+  document.querySelector("#card .ava").textContent = name[0];
+  const hasAsk = id === HOT[2];
+  document.getElementById("c-sub").textContent = `${n.d}-е рукопожатие${hasAsk ? " · просьба 80 $" : n.d === 1 ? " · знакомство подтверждено" : ""}`;
+  document.getElementById("c-go").textContent = hasAsk ? "Сбор 80 $" : "Написать";
+  document.getElementById("c-path").innerHTML = ch.map((c, i) => {
+    const label = c.id === "me" ? "Вы" : (NAMES[c.id] || `${c.d}-е`).split(" ")[0];
+    const last = i === ch.length - 1;
+    return `<span class="${c.id === "me" ? "me" : last ? "end" : ""}">${label}</span>${last ? "" : `<i class="${hasAsk ? "hot" : ""}"></i>`}`;
+  }).join("");
+  setState("s-person");
+}
+
+function bind() {
+  document.getElementById("back").onclick = () => setState("s-feed");
+  document.getElementById("pill").onclick = () => setState("s-feed");
+  document.getElementById("c-x").onclick = (e) => { e.stopPropagation(); setState("s-graph"); };
+  document.getElementById("scene").addEventListener("click", (e) => {
+    const node = e.target.closest(".node");
+    if (node) { showPerson(node.dataset.id); return; }
+    if (phone.classList.contains("s-feed")) setState("s-graph");
+    else if (phone.classList.contains("s-person")) setState("s-graph");
+  });
+  let drag = null;
+  const handle = document.getElementById("handle"), sheet = document.getElementById("sheet");
+  handle.addEventListener("pointerdown", (e) => { drag = { y: e.clientY }; handle.setPointerCapture(e.pointerId); sheet.style.transition = "none"; });
+  handle.addEventListener("pointermove", (e) => { if (!drag) return; const dy = Math.max(0, e.clientY - drag.y); sheet.style.transform = `translateY(${dy}px)`; });
+  const endDrag = (e) => { if (!drag) return; const dy = e.clientY - drag.y; drag = null; sheet.style.transition = ""; sheet.style.transform = ""; if (dy > 80) setState("s-graph"); };
+  handle.addEventListener("pointerup", endDrag); handle.addEventListener("pointercancel", endDrag);
+}
+setData("big"); render();
+</script>
+</body>
+</html>
