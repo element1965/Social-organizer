@@ -17,6 +17,8 @@ Redesign documents (Russian):
 - [mockups/](mockups/) — interactive prototype `app.html` (20 screens/states, the buttons under the phone switch them)
   and the landing concept `hui.html`. Open from any static server, e.g. `npx -y http-server docs/redesign/mockups -p 8787`,
   then `http://localhost:8787/app.html`. The flat graph in the prototype is a stand-in: the app keeps the 3D `NetworkGraph`.
+- [mockups/v2/](mockups/v2/index.html) — the new screen designs (source of truth for the redesign): Circle with its live
+  states, Request, Collection, and the rest as they are added. Same static server, `http://localhost:8787/v2/`.
 
 **Native apps load the production web URL** (`apps/web/capacitor.config.ts`), so every web deploy from `main`
 reaches iOS/Android users immediately, without a store release.

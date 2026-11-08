@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Сбор — экраны</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared.css">
+<style>
+  .who { display:flex; align-items:center; gap:12px; }
+  .who .ava { width:48px; height:48px; border-radius:16px; background:var(--teal-soft); color:var(--teal); display:grid; place-items:center; font-weight:800; font-size:18px; flex:none; }
+  .who .t b { display:block; font-size:22px; letter-spacing:-.03em; line-height:1.1; }
+  .who .t span { display:block; margin-top:3px; color:var(--muted); font-size:13px; font-weight:600; }
+  .joined { display:flex; align-items:center; gap:12px; }
+  .joined .big { flex:1; }
+  .joined .edit { height:40px; padding:0 14px; border-radius:12px; background:var(--canvas); color:var(--ink); font-weight:700; font-size:14px; display:grid; place-items:center; }
+  .cycle { display:flex; align-items:center; gap:12px; padding:12px 14px; border-radius:16px; background:#fdf1e3; color:#5b3a0e; font-size:14px; line-height:1.35; margin-top:12px; }
+  .cycle i { flex:none; width:36px; height:36px; border-radius:12px; background:var(--paper); color:#b7741f; display:grid; place-items:center; }
+  .cycle i svg { width:20px; height:20px; }
+  .cycle b { font-weight:800; }
+  .linkrow { display:flex; align-items:center; gap:12px; margin-top:12px; padding:12px 14px; border-radius:16px; background:var(--canvas); }
+  .linkrow .t { flex:1; min-width:0; }
+  .linkrow .t small { display:block; color:var(--muted); font-size:12px; font-weight:600; }
+  .linkrow .t b { display:block; font-size:15px; letter-spacing:-.02em; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .linkrow svg { width:20px; height:20px; color:var(--teal); flex:none; }
+  .done { display:flex; align-items:center; gap:12px; padding:14px; border-radius:16px; background:var(--canvas); margin-top:12px; }
+  .done i { flex:none; width:36px; height:36px; border-radius:12px; background:var(--paper); color:var(--teal); display:grid; place-items:center; }
+  .done i svg { width:20px; height:20px; }
+  .done span { font-size:14px; line-height:1.35; color:var(--muted); }
+  .done span b { color:var(--ink); }
+</style>
+</head>
+<body>
+<h1>Сбор</h1>
+<p class="lead">Один экран для участника и автора, меняется только нижняя часть. Сверху всегда: кто просит и через кого, сколько собрано, кто закрывает сбор. Пять состояний.</p>
+<div class="row" id="row"></div>
+<script src="shared.js"></script>
+<script>
+const head = (o) => `
+<div class="card">
+  ${path(o.path || ["Вы", "Олег брат", "Мария"])}
+  <div class="who"><span class="ava">${o.name[0]}</span><span class="t"><b>${o.name}</b><span>${o.sub}</span></span></div>
+  ${stages(o.stage)}
+  ${meter(o.mine, o.others, o.goal)}
+  <p class="hint">${o.closeNote || "Мария закрывает сбор сама, когда соберётся нужное. Сумма может не дойти до цели."}</p>
+</div>`;
+
+const participants = (rows, author) => `<div class="label"><span>Участники · ${rows.length}</span>${author ? "<span>Переведено</span>" : ""}</div><div class="group">${rows.map(r => row(r.n[0], r.n, r.s, author ? `<span class="amt ${r.me ? "me" : ""}">${r.a} $</span><span class="chk ${r.paid ? "on" : ""}">${I.check}</span>` : `<span class="amt ${r.me ? "me" : ""}">${r.a} $</span>`)).join("")}</div>`;
+const PEOPLE = [{ n: "Олег Соколов", s: "1-е рукопожатие", a: 10, paid: true }, { n: "Юки Танака", s: "через Олег", a: 30, paid: true }, { n: "Том Беккер", s: "через Ирина", a: 20 }, { n: "Чен Вэй", s: "через Олег", a: 40 }];
+
+const P1 = `<div class="phone">${status()}${nav("Круг")}<div class="page notabs">
+${head({ name: "Мария Коваль", sub: "Разовая помощь · 2 дня назад · через Олег брат", stage: 1, mine: 0, others: 100, goal: 300 })}
+<div class="card"><span class="lbl">Ваша сумма</span><div class="money">15<span class="caret"></span><small>$</small></div><p class="hint">Ваше минимальное участие — 15 $. Можно больше.</p><div class="actions"><div class="btn primary">Участвовать</div></div></div>
+${participants(PEOPLE)}
+</div>${home()}</div>`;
+
+const P2 = `<div class="phone">${status()}${nav("Круг", "", "Отказаться", "danger")}<div class="page notabs">
+${head({ name: "Мария Коваль", sub: "Разовая помощь · 2 дня назад · через Олег брат", stage: 2, mine: 15, others: 100, goal: 300 })}
+<div class="card"><div class="joined"><div class="big"><b>15 $</b><span>вы участвуете</span></div><span class="edit">Изменить</span></div>
+<div class="actions"><div class="btn primary">${I.chat}Открыть чат сбора</div></div><p class="hint">Дальше всё происходит в чате: там договариваются, как передать деньги. Приложение это не фиксирует.</p></div>
+${participants([...PEOPLE, { n: "Анна", s: "вы", a: 15, me: true }])}
+</div>${home()}</div>`;
+
+const P3 = `<div class="phone">${status()}${nav("Круг", "", "Отказаться", "danger")}<div class="page notabs">
+${head({ name: "Денис Волков", sub: "Каждые 28 дней · 3-й цикл", stage: 2, mine: 15, others: 40, goal: 100, path: ["Вы", "Денис"], closeNote: "Денис закрывает каждый цикл сам. Следующий начнётся через 28 дней." })}
+<div class="card"><div class="cycle"><i>${I.clock}</i><span><b>Новый цикл до 12 апреля.</b> Подтвердите участие, иначе ваши 15 $ не войдут в этот цикл.</span></div>
+<div class="actions"><div class="btn primary">Подтвердить 15 $</div><div class="btn secondary">Другая сумма</div></div></div>
+${participants([{ n: "Ирина Соколова", s: "подтвердила", a: 20 }, { n: "Лена Мороз", s: "подтвердила", a: 20 }, { n: "Анна", s: "ждём вас", a: 15, me: true }])}
+</div>${home()}</div>`;
+
+const P4 = `<div class="phone">${status()}${nav("Профиль", "Ваш сбор")}<div class="page notabs">
+${head({ name: "Анна", sub: "Разовая помощь · открыт 2 дня назад", stage: 2, mine: 0, others: 100, goal: 300, path: ["Вы"], closeNote: "Вы закрываете сбор сами, когда соберётся нужное. Участники увидят итог." }).replace('<span><i style="background:var(--ink)"></i>Вы 0 $</span>', "")}
+<div class="card"><div class="linkrow"><span class="t"><small>Чат сбора</small><b>t.me/+sbor-anna-2026</b></span>${I.pen}</div>
+<div class="actions"><div class="btn primary">${I.share}Поделиться сбором</div></div><p class="hint">Ссылка ведёт на этот экран. Её увидят только люди из вашей сети, остальным она покажет «Сбор доступен участникам сети».</p></div>
+${participants(PEOPLE, true)}
+<span class="textbtn danger">Закрыть сбор</span>
+</div>${home()}</div>`;
+
+const P5 = `<div class="phone">${status()}${nav("Сборы")}<div class="page notabs">
+${head({ name: "Мария Коваль", sub: "Разовая помощь · закрыт 12 марта", stage: 3, mine: 20, others: 24, goal: 80, closeNote: "Мария закрыла сбор. Собрано 44 из 80 $." })}
+<div class="done"><i>${I.check}</i><span><b>Вы участвовали: 20 $.</b> Запись останется в прошлых сборах у вас и у Марии.</span></div>
+${participants([{ n: "Олег брат", s: "1-е рукопожатие", a: 14 }, { n: "Тимур Алиев", s: "через Олег", a: 10 }, { n: "Анна", s: "вы", a: 20, me: true }])}
+</div>${home()}</div>`;
+
+document.getElementById("row").innerHTML = [
+  section("new", P1, "<small>1</small>Участник: новая просьба", `<p>Сверху путь «Вы → Олег брат → Мария»: это ответ на вопрос «почему я это вижу». Карточка автора: имя, тип, давность, через кого. Рельса стадий «Сумма · Обсуждение · Закрыт» и шкала «Вы / Другие / Цель» показывают, где сбор сейчас. Подсказка под шкалой снимает ожидание гарантии: автор закрывает сам, сумма может не дойти.</p>
+<ul><li>Поле суммы предзаполнено минимальным участием человека. Одно касание «Участвовать» уже даёт результат.</li><li>Таб-бара нет: это пуш-экран, назад — в Круг.</li><li>Участники видны сразу, чтобы было понятно, кто уже с Марией.</li></ul>`),
+  section("joined", P2, "<small>2</small>Участник: обсуждение", `<p>После «Участвовать» карточка меняется: сумма крупно, «Изменить» рядом, главная кнопка теперь «Открыть чат сбора». Подпись честно говорит, что передача денег происходит в чате и приложением не фиксируется.</p>
+<ul><li>«Отказаться» в правом углу шапки красным текстом, тап поднимает лист «Отказаться от участия?» с кнопками «Отказаться» и «Остаться».</li><li>Собственная строка в списке участников подсвечена бирюзой.</li></ul>`),
+  section("cycle", P3, "<small>3</small>Регулярный: новый цикл", `<p>Сбор «Каждые 28 дней» в начале нового цикла. Тёплая плашка с датой говорит, что нужно сделать и что будет, если не сделать. Две кнопки: «Подтвердить 15 $» и «Другая сумма». В списке участников видно, кто уже подтвердил, а кого ждут.</p>
+<ul><li>Это замена нынешней карточке в уведомлениях с кнопками «Помню / Отозвать намерение».</li><li>Напоминание за 3 дня приходит пушем и строкой в ленте Круга, оба ведут сюда.</li></ul>`),
+  section("author", P4, "<small>4</small>Автор", `<p>Тот же экран глазами автора, открывается из Просьбы или Профиля. Путь состоит из одной точки. Шкала без сегмента «Вы». Карточка действий: ссылка на чат с карандашом, «Поделиться сбором» через системный share. В списке участников колонка «Переведено» с отметками: автор ставит их сам, когда получил деньги.</p>
+<ul><li>«Закрыть сбор» текстом внизу, с листом подтверждения «Закрыть сбор? Собрано 100 из 300 $». Сейчас закрытие идёт без подтверждения, а создание — через три модалки; здесь наоборот.</li><li class="risk">Риск: ссылка на сбор, открытая человеком вне сети, не должна показывать суммы и имена. Экран-заглушка «Сбор доступен участникам сети» с кнопкой «Войти».</li></ul>`),
+  section("closed", P5, "<small>5</small>Закрыт", `<p>Открывается из «Прошлых сборов». Рельса стадий дошла до конца, шкала заморожена, под ней итог. Действий нет, только факт участия и список. Эта же карточка без действий показывается участнику, если автор закрыл сбор, пока тот был открыт у него на экране.</p>`)
+].join("");
+</script>
+</body>
+</html>

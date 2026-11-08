@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Просьба — экраны</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared.css">
+<style>
+  .reach { display:flex; align-items:center; gap:12px; margin-top:14px; padding:12px 14px; border-radius:16px; background:var(--teal-soft); color:var(--ink); font-size:14px; line-height:1.35; }
+  .reach i { flex:none; width:36px; height:36px; border-radius:12px; background:var(--paper); color:var(--teal); display:grid; place-items:center; }
+  .reach i svg { width:20px; height:20px; }
+  .reach b { font-weight:800; }
+  .mine { display:flex; align-items:center; gap:12px; padding:12px 14px 12px 12px; border-radius:18px; background:var(--paper); box-shadow:0 10px 28px rgba(20,33,30,.06); margin-bottom:12px; }
+  .mine .ring { width:44px; height:44px; flex:none; position:relative; display:grid; place-items:center; font-size:12px; font-weight:800; color:var(--ink); }
+  .mine .ring svg { position:absolute; inset:0; transform:rotate(-90deg); }
+  .mine .ring circle { fill:none; stroke-width:4; }
+  .mine .t { flex:1; min-width:0; }
+  .mine .t b { display:block; font-size:15px; letter-spacing:-.02em; }
+  .mine .t span { display:block; color:var(--muted); font-size:13px; font-weight:600; margin-top:1px; }
+  .mine svg.fwd { width:18px; height:18px; color:var(--subtle); flex:none; }
+  .steps { margin:0; padding:0; list-style:none; counter-reset:s; }
+  .steps li { display:grid; grid-template-columns:28px 1fr; gap:12px; align-items:start; padding:8px 0; font-size:15px; line-height:1.4; }
+  .steps li::before { counter-increment:s; content:counter(s); width:28px; height:28px; border-radius:50%; background:var(--ink); color:#fff; font-size:13px; font-weight:800; display:grid; place-items:center; }
+  .apps { display:flex; gap:8px; flex-wrap:wrap; margin-top:12px; }
+  .apps span { height:30px; padding:0 10px; border-radius:9px; background:var(--canvas); color:var(--muted); font-size:12px; font-weight:700; display:grid; place-items:center; }
+</style>
+</head>
+<body>
+<h1>Просьба</h1>
+<p class="lead">Экран открыт: у пользователя 118 прямых связей и 1 240 человек в сети, «Сеть может помочь» 1 860 $. Одна карточка, одно действие. Четыре состояния: чистая форма, ошибки, активный собственный сбор над формой, лист «Как создать чат?».</p>
+<div class="row" id="row"></div>
+<script src="shared.js"></script>
+<script>
+const form = (o = {}) => `
+<div class="card">
+  <span class="lbl">Сколько нужно</span>
+  <div class="money ${o.sumBad ? "bad" : ""}">${o.sum ?? "80"}<span class="caret"></span><small>$</small></div>
+  ${o.sumBad ? `<p class="hint err">Сейчас сеть может собрать до 3 720 $. Это удвоенное «Сеть может помочь».</p>` : `<p class="hint">До <b>3 720 $</b>: столько сейчас может собрать ваша сеть.</p>`}
+  <div class="seg"><span class="${o.monthly ? "" : "on"}">Разовая помощь</span><span class="${o.monthly ? "on" : ""}">Каждые 28 дней</span></div>
+  <p class="hint">${o.monthly ? "Каждые 28 дней участники подтверждают сумму. Мы напомним им за 3 дня." : "Если помощь понадобится снова, откроете новый сбор."}</p>
+  <span class="lbl" style="margin-top:16px">Чат сбора</span>
+  <div class="field ${o.linkBad ? "bad" : ""} ${o.link ? "filled" : ""}">${o.link || "Ссылка на чат в любом мессенджере"}</div>
+  ${o.linkBad ? `<p class="hint err">Нужен чат: в нём собираются те, кто откликнулся.</p>` : `<p class="hint"><span class="link">Как создать чат?</span></p>`}
+  <div class="reach">${`<i>${I.circle}</i>`}<span>Увидят <b>1 240 человек</b>: сначала ваши 118, потом их люди.</span></div>
+  <div class="actions"><div class="btn primary">Отправить просьбу</div></div>
+</div>`;
+
+const mine = `<div class="mine"><span class="ring"><svg viewBox="0 0 44 44"><circle cx="22" cy="22" r="18" stroke="var(--line)"/><circle cx="22" cy="22" r="18" stroke="var(--teal)" stroke-linecap="round" stroke-dasharray="113" stroke-dashoffset="75"/></svg>33%</span><span class="t"><b>Ваш сбор · 100 из 300 $</b><span>4 участника · обсуждение в чате</span></span>${I.fwd}</div>`;
+
+const P1 = `<div class="phone">${status()}<div class="page noNav"><h2 class="h">Просьба</h2>${form()}</div>${tabs("ask")}${home()}</div>`;
+const P2 = `<div class="phone">${status()}<div class="page noNav"><h2 class="h">Просьба</h2>${form({ sum: "5 000", sumBad: true, linkBad: true })}</div>${tabs("ask")}${home()}</div>`;
+const P3 = `<div class="phone">${status()}<div class="page noNav"><h2 class="h">Просьба</h2>${mine}${form({ monthly: true, link: "chat.whatsapp.com/K9xT…" })}</div>${tabs("ask")}${home()}</div>`;
+const P4 = `<div class="phone">${status()}<div class="page noNav"><h2 class="h">Просьба</h2>${form()}</div>${tabs("ask")}${home()}
+<div class="scrim"><div class="sheet"><h3>Чат сбора</h3><p class="sub">Любой мессенджер, где вам удобно. Нужна ссылка-приглашение в группу.</p>
+<ol class="steps"><li>Создайте группу и назовите её, например «Сбор для Анны».</li><li>Включите ссылку-приглашение в настройках группы.</li><li>Скопируйте ссылку и вставьте её в поле «Чат сбора».</li></ol>
+<div class="apps"><span>Telegram</span><span>WhatsApp</span><span>Signal</span><span>Viber</span><span>Discord</span><span>Другой</span></div>
+<div class="btn primary" style="margin-top:16px">Понятно</div></div></div></div>`;
+
+document.getElementById("row").innerHTML = [
+  section("form", P1, "<small>1</small>Форма", `<p>Заголовок, одна карточка, одно действие. Сумма крупно и без рамки, под ней потолок: удвоенное «Сеть может помочь». Период выбирается сегментом, подпись под ним объясняет, что произойдёт. Чат обязателен, подсказка про мессенджеры — ссылкой. Строка охвата говорит, кто и в каком порядке увидит просьбу.</p>
+<ul><li>Никаких модалок после «Отправить»: валидация инлайн, отправка сразу. Единственное исключение — сумма больше 10 000 $, тогда один лист «Сумма 12 000 $, всё верно?».</li><li>Статистика, «Мои сборы» и список «Помог» с этого экрана ушли: сборы живут в Профиле.</li><li class="risk">Риск: потолок суммы может показаться запретом. Поэтому он написан как факт о сети («столько сейчас может собрать»), а не как правило.</li></ul>`),
+  section("errors", P2, "<small>2</small>Ошибки", `<p>Два нарушения сразу: сумма выше потолка и пустой чат. Ошибки стоят под своими полями, красным, одной строкой каждая. Кнопка остаётся активной: тап по ней подсвечивает первую ошибку и прокручивает к ней, а не блокируется молча.</p>
+<ul><li>Текст ошибки объясняет причину, а не повторяет правило: «в нём собираются те, кто откликнулся».</li><li>Минимум суммы 10 $ показывается той же строкой: «Минимум 10 $».</li></ul>`),
+  section("active", P3, "<small>3</small>Есть открытый сбор", `<p>Если у человека уже идёт сбор, над формой стоит компактная строка с прогрессом «Ваш сбор · 100 из 300 $ · 4 участника», тап открывает экран Сбора в роли автора. Форма ниже даёт открыть ещё одну просьбу: регулярная и разовая могут идти параллельно.</p>
+<ul><li>Здесь выбран период «Каждые 28 дней», подпись под сегментом сменилась: участники подтверждают сумму, напоминание за 3 дня.</li><li>Поле чата заполнено ссылкой WhatsApp: мессенджер любой.</li></ul>`),
+  section("howto", P4, "<small>4</small>Как создать чат", `<p>Лист с тремя шагами, одинаковыми для любого мессенджера, и пилюлями с названиями как подсказкой, что подойдёт всё. Никаких инструкций по конкретному приложению: они устаревают и раздувают экран.</p>`)
+].join("");
+</script>
+</body>
+</html>
