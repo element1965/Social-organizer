@@ -167,7 +167,7 @@ FIREBASE_SERVICE_ACCOUNT={"type":"service_account",...}  # FCM service account J
 - **Telegram Bot** — Collection notifications (new, blocked, closed) via Bot API with rate-limited broadcast (25 msg/sec batches via BullMQ)
 - **Web Push** — Browser push notifications via web-push library with VAPID, auto-cleanup of expired subscriptions
 - **FCM Push** — Native Android push notifications via Firebase Cloud Messaging (firebase-admin), auto-cleanup of expired tokens
-- **Milestones** — `milestone.service.ts`: two money-MVP milestones counted from confirmed `Connection` rows only (invite links and pending requests never count); synced right after every new connection (request accept, SOS accept, direct add), unique per user, no push, no rating
+- **Milestones** — `milestone.service.ts`: two money-MVP milestones counted from confirmed `Connection` rows only (invite links and pending requests never count); synced right after every new connection (request accept, SOS accept, direct add), unique per user, no push, no rating. UI: the dashboard card shows only milestones still in progress; reached ones move to the history card in Settings
 - **Currency** — Exchange rates service is kept but not used for amounts: intentions, capacity and goals are entered in $ only (1 $ = 1 unit of participation, SO-40)
 - **Geo** — IP-based country detection for currency auto-selection (ip-api.com)
 

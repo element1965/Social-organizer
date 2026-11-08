@@ -12,9 +12,17 @@ type Kind = 'FIRST_CONNECTION' | 'TEN_CONNECTIONS';
  * A newly reached milestone gets one short confirmation inside the card (no push, no sound);
  * the animation is skipped for people who prefer reduced motion.
  *
+ * `variant="dashboard"` (default) shows only milestones still in progress (plus the one-time
+ * confirmation of a fresh one); reached milestones live in the history variant on the settings page.
  * `suppressFirst` — the acquaintance card is already celebrating the first handshake right now.
  */
-export function MilestonesCard({ suppressFirst = false }: { suppressFirst?: boolean }) {
+export function MilestonesCard({
+  suppressFirst = false,
+  variant = 'dashboard',
+}: {
+  suppressFirst?: boolean;
+  variant?: 'dashboard' | 'history';
+}) {
   const { t, i18n } = useTranslation();
   const utils = trpc.useUtils();
   const { data } = trpc.milestone.list.useQuery(undefined, { refetchInterval: 30000 });
@@ -26,14 +34,20 @@ export function MilestonesCard({ suppressFirst = false }: { suppressFirst?: bool
   const anyAchieved = data.items.some((m) => m.achievedAt);
   if (data.current === 0 && !anyAchieved) return null; // the dashboard shows the "add first connection" block instead
 
+  const isHistory = variant === 'history';
+  // Dashboard: only what is still in progress; history: only what is reached
+  const visibleItems = data.items.filter((m) => (isHistory ? !!m.achievedAt : !m.achievedAt));
+
   const title = (kind: Kind) => (kind === 'FIRST_CONNECTION' ? t('milestones.first') : t('milestones.ten'));
   const fmt = (d: string | Date) =>
     new Date(d).toLocaleDateString(i18n.language, { day: 'numeric', month: 'long', year: 'numeric' });
 
   // One confirmation at a time, the bigger milestone first
-  const fresh = [...data.items]
+  const fresh = isHistory ? undefined : [...data.items]
     .reverse()
     .find((m) => m.achievedAt && !m.seen && !(suppressFirst && m.kind === 'FIRST_CONNECTION'));
+
+  if (visibleItems.length === 0 && !fresh) return null;
 
   return (
     <Card>
@@ -64,7 +78,7 @@ export function MilestonesCard({ suppressFirst = false }: { suppressFirst?: bool
         )}
 
         <ul className="space-y-3">
-          {data.items.map((m) => {
+          {visibleItems.map((m) => {
             const done = !!m.achievedAt;
             const progress = Math.min(data.current, m.threshold);
             return (
