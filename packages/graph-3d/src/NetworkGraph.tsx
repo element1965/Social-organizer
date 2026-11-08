@@ -227,7 +227,20 @@ export function NetworkGraph({
       });
     }
 
-    fg.d3ReheatSimulation();
+    // Reheat only once the graph data has been digested (d3 gives nodes x/y/z
+    // then). 3d-force-graph digests graphData asynchronously after mount; if we
+    // reheat before that, `engineRunning` is switched on while `state.layout` is
+    // still undefined, the first frame throws inside the animation cycle before
+    // requestAnimationFrame is re-armed, and the render loop dies for good —
+    // a permanent black screen (seen on remount, e.g. returning from another
+    // page). Before the digest the new forces are simply used by the warmup.
+    try {
+      const digested = (fg.graphData()?.nodes ?? []).some(
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (n: any) => typeof n.x === 'number',
+      );
+      if (digested) fg.d3ReheatSimulation();
+    } catch { /* noop */ }
   }, [subtreeDepthMap, nodeDepthMap]);
 
   // Function to update LOD with loaded texture
