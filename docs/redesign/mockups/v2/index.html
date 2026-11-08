@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Макеты редизайна v2</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root { --canvas:#f3f6f4; --paper:#fff; --ink:#14211e; --muted:#5c6d68; --teal:#0d9488; --line:rgba(20,33,30,.14); }
+  body { margin:0; padding:40px 24px 80px; background:#e6ebe9; color:var(--ink); font-family:Manrope,"Segoe UI",sans-serif; }
+  h1 { margin:0 0 6px; font-size:28px; letter-spacing:-.03em; }
+  p { color:var(--muted); max-width:70ch; line-height:1.5; }
+  ol { padding:0; margin:24px 0 0; list-style:none; max-width:720px; }
+  li { background:var(--paper); border-radius:18px; padding:14px 18px; margin:0 0 10px; box-shadow:0 10px 28px rgba(20,33,30,.06); }
+  li a { color:var(--ink); text-decoration:none; font-weight:800; font-size:17px; letter-spacing:-.02em; }
+  li a:hover { color:var(--teal); }
+  li span { display:block; margin-top:4px; color:var(--muted); font-size:14px; line-height:1.45; }
+  li.todo { opacity:.55; }
+</style>
+</head>
+<body>
+<h1>Макеты редизайна, версия 2</h1>
+<p>Экраны спроектированы заново под принятые решения: 3D-граф остаётся центром, четыре таба, одно действие на экран. Каждая страница — несколько телефонов 390×844 с объяснением решений и рисками. Прежний прототип лежит уровнем выше (<a href="../app.html">app.html</a>) как референс.</p>
+<ol>
+  <li><a href="circle.html">Круг: три композиции</a><span>A сцена во весь экран, B иллюминатор, C лента первой, D полноэкранный граф. Выбран A.</span></li>
+  <li><a href="circle-a.html">Круг A: живой переход</a><span>Один экран, три состояния (лента, граф, человек), данные для 1 240 человек, 5 человек и первого организатора, путь к просьбе.</span></li>
+  <li><a href="ask.html">Просьба</a><span>Форма, ошибки, открытый собственный сбор над формой, лист «Как создать чат?».</span></li>
+  <li><a href="collection.html">Сбор</a><span>Участник: новая просьба, обсуждение, новый цикл. Автор. Закрытый сбор.</span></li>
+  <li class="todo"><a href="#">Добавить</a><span>Ссылка, системный share, QR, сканер. В работе.</span></li>
+  <li class="todo"><a href="#">Профиль, Аккаунт, Минимальное участие, Прошлые сборы, Помощь</a><span>В работе.</span></li>
+  <li class="todo"><a href="#">Человек и Люди</a><span>В работе.</span></li>
+  <li class="todo"><a href="#">Онбординг и вход</a><span>Приглашение, интро, узел, пустой Круг, вход. В работе.</span></li>
+</ol>
+</body>
+</html>
