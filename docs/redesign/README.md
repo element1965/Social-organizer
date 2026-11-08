@@ -6,8 +6,11 @@ Work on the app redesign (simpler interaction, simpler onboarding, a more modern
 
 ## Inputs
 
-- `research/` — research notes and draft mockups from earlier work. They are references to look at,
-  not a spec to copy. (To be added.)
+Research, mockups and other working materials are kept outside git, in the local `local/` folder
+(excluded via `.git/info/exclude`). This repository is public: never commit them.
+
+**Native apps load the production web URL** (`apps/web/capacitor.config.ts`), so every web deploy from `main`
+reaches iOS/Android users immediately, without a store release.
 
 ## Local development on Windows
 
@@ -49,7 +52,8 @@ current schema without that data. Use `migrate deploy` only against databases th
 
 - **E-mail code:** without `RESEND_API_KEY`, the dev API writes messages to `%TEMP%\so-dev-mail.log`
   (override with `DEV_MAIL_OUTBOX`) — read the code there.
-- **Demo mode:** the "Demo login" button on `/login` uses mock data with no backend.
+- **Demo mode is effectively off:** `ProtectedRoute.tsx` and `LoginPage.tsx` clear the `demo-token`, nothing sets it,
+  and `lib/demoData.ts` misses ~48 of 102 procedures (all `pending.*`, `milestone.*`, ...). Use the real local API.
 - Telegram / Google / Apple sign-in need the corresponding keys in the env files.
 
 ### Redis
