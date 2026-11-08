@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Хуэй</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root { --canvas:#f3f6f4; --ink:#14211e; --muted:#5c6d68; --line:rgba(20,33,30,.16); --paper:#fff; --teal:#0d9488; }
+  * { box-sizing:border-box; }
+  html, body { margin:0; background:transparent; color:var(--foreground); font-family:Manrope,"Avenir Next","Segoe UI",sans-serif; }
+  button { font:inherit; color:inherit; cursor:pointer; }
+  button:focus-visible { outline:2px solid var(--teal); outline-offset:3px; }
+  .page { max-width:720px; margin:0 auto; background:var(--canvas); color:var(--ink); border-radius:var(--radius,28px); padding:28px 22px 48px; }
+  .brand { display:flex; align-items:center; gap:10px; }
+  .brand img { width:36px; height:36px; border-radius:10px; display:block; }
+  .brand b { font-size:16px; letter-spacing:-.02em; }
+  h1 { margin:28px 0 0; font-size:clamp(36px,6vw,56px); line-height:.98; letter-spacing:-.045em; font-weight:700; max-width:14ch; }
+  .lead { margin:16px 0 0; font-size:18px; line-height:1.45; max-width:38ch; }
+  .table { position:relative; width:min(100%,520px); aspect-ratio:1; margin:28px auto 0; }
+  .table .ring { position:absolute; inset:12%; border-radius:50%; border:1px solid var(--line); }
+  .table .well { position:absolute; inset:24%; border-radius:50%; background:rgba(13,148,136,.07); }
+  .person, .token { position:absolute; transform:translate(-50%,-50%); }
+  .person { border:0; background:none; font-weight:700; font-size:16px; padding:10px; }
+  .person[aria-pressed="true"] { color:var(--teal); }
+  .token { width:16px; height:16px; border:0; border-radius:5px; background:var(--teal); padding:0; transition:left .48s cubic-bezier(.2,.8,.2,1), top .48s cubic-bezier(.2,.8,.2,1); }
+  .months { display:flex; gap:8px; flex-wrap:wrap; justify-content:center; margin-top:8px; }
+  .months button { min-height:40px; padding:0 12px; border-radius:12px; border:1px solid var(--line); background:var(--paper); font-weight:700; }
+  .months button[aria-pressed="true"] { background:var(--ink); color:#fff; border-color:transparent; }
+  .say { margin:18px auto 0; font-size:18px; line-height:1.4; max-width:36ch; min-height:2.8em; }
+  section { margin-top:36px; padding-top:28px; border-top:1px solid var(--line); }
+  h2 { margin:0; font-size:28px; letter-spacing:-.03em; }
+  .chain { display:grid; grid-template-columns:1fr 48px 1fr 48px 1fr; align-items:center; margin-top:22px; max-width:520px; }
+  .chain.two { grid-template-columns:1fr 72px 1fr; max-width:360px; }
+  .node { min-height:64px; border-radius:16px; border:1px solid var(--line); background:var(--paper); font-weight:700; font-size:16px; }
+  .node[aria-pressed="true"] { background:var(--teal); color:#fff; border-color:transparent; }
+  .bridge { position:relative; height:14px; }
+  .bridge::before { content:""; position:absolute; left:0; right:0; top:6px; height:1px; background:var(--line); }
+  .bridge i { position:absolute; top:0; width:14px; height:14px; border-radius:50%; background:var(--ink); transition:left .4s cubic-bezier(.2,.8,.2,1); }
+  @media (prefers-reduced-motion: reduce) {
+    .token, .bridge i { transition:none; }
+  }
+</style>
+</head>
+<body>
+<article class="page">
+  <div class="brand"><img src="mark.png" alt=""><b>Social Organizer</b></div>
+  <h1>Шесть знакомых, один круг</h1>
+  <p class="lead">На юге Китая люди называют такой круг хуэй. Шесть знакомых кладут по доле раз в месяц. Один забирает доли этого месяца. Месяц спустя доли забирает следующий.</p>
+  <div class="table" id="table">
+    <div class="well"></div>
+    <div class="ring"></div>
+  </div>
+  <div class="months" id="months"></div>
+  <p class="say" id="say"></p>
+  <section>
+    <h2>Поручительство</h2>
+    <div class="chain" id="chain"></div>
+    <p class="say" id="chainSay"></p>
+  </section>
+  <section>
+    <h2>Новый человек</h2>
+    <div class="chain two" id="join"></div>
+    <p class="say" id="joinSay"></p>
+  </section>
+</article>
+<script>
+const names = ["Линь","Чен","Мэй","Го","Сунь","Хуан"];
+const months = ["Январь","Февраль","Март","Апрель","Май","Июнь"];
+const says = [
+  "Линь забирает доли января.",
+  "Чен забирает доли февраля. Линь кладёт долю тоже.",
+  "Мэй забирает доли марта.",
+  "Го забирает доли апреля.",
+  "Сунь забирает доли мая.",
+  "Хуан забирает доли июня."
+];
+const chainCopy = [
+  "Мария Коваль просит помощи.",
+  "Олег брат видит просьбу. Вы знаете его.",
+  "Вы видите просьбу."
+];
+const joinCopy = [
+  "Человек открывает ссылку и делает аккаунт.",
+  "Вы получаете пуш и подтверждаете знакомство."
+];
+let month = 0;
+let gathered = false;
+let chain = 0;
+let join = 0;
+let timer = 0;
+const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+function seat(i, r) {
+  const a = (-90 + i * 60) * Math.PI / 180;
+  return [50 + Math.cos(a) * r, 50 + Math.sin(a) * r];
+}
+const table = document.getElementById("table");
+const people = names.map((name, i) => {
+  const b = document.createElement("button");
+  b.type = "button";
+  b.className = "person";
+  b.textContent = name;
+  const [x, y] = seat(i, 38);
+  b.style.left = x + "%";
+  b.style.top = y + "%";
+  b.onclick = () => go(i);
+  table.appendChild(b);
+  return b;
+});
+const tokens = names.map((_, i) => {
+  const b = document.createElement("button");
+  b.type = "button";
+  b.className = "token";
+  b.setAttribute("aria-label", "Доля");
+  b.onclick = () => go(i);
+  table.appendChild(b);
+  return b;
+});
+function place(gather) {
+  gathered = gather;
+  tokens.forEach((el, i) => {
+    if (gather) {
+      el.style.left = `calc(50% + ${(i - 2.5) * 18}px)`;
+      el.style.top = "50%";
+    } else {
+      const [x, y] = seat(i, 27);
+      el.style.left = x + "%";
+      el.style.top = y + "%";
+    }
+  });
+}
+function paint() {
+  document.getElementById("say").textContent = says[month];
+  people.forEach((el, i) => el.setAttribute("aria-pressed", String(i === month && gathered)));
+  document.querySelectorAll("#months button").forEach((el, i) => el.setAttribute("aria-pressed", String(i === month)));
+}
+function go(i) {
+  month = i;
+  paint();
+  clearTimeout(timer);
+  place(false);
+  if (reduce) place(true);
+  else timer = setTimeout(() => { place(true); paint(); }, 280);
+}
+const monthsEl = document.getElementById("months");
+months.forEach((label, i) => {
+  const b = document.createElement("button");
+  b.type = "button";
+  b.textContent = label;
+  b.onclick = () => go(i);
+  monthsEl.appendChild(b);
+});
+function buildChain(root, labels, get, set, sayId, copy) {
+  labels.forEach((label, i) => {
+    if (i) {
+      const bridge = document.createElement("div");
+      bridge.className = "bridge";
+      const dot = document.createElement("i");
+      bridge.appendChild(dot);
+      root.appendChild(bridge);
+    }
+    const b = document.createElement("button");
+    b.type = "button";
+    b.className = "node";
+    b.textContent = label;
+    b.onclick = () => { set(i); refresh(); };
+    root.appendChild(b);
+  });
+  function refresh() {
+    const step = get();
+    root.querySelectorAll(".node").forEach((el, i) => el.setAttribute("aria-pressed", String(i <= step)));
+    root.querySelectorAll(".bridge i").forEach((el, i) => { el.style.left = i < step ? "calc(100% - 14px)" : "0"; });
+    document.getElementById(sayId).textContent = copy[step];
+  }
+  return refresh;
+}
+const refreshChain = buildChain(
+  document.getElementById("chain"),
+  ["Мария Коваль","Олег брат","Вы"],
+  () => chain,
+  (v) => { chain = v; },
+  "chainSay",
+  chainCopy
+);
+const refreshJoin = buildChain(
+  document.getElementById("join"),
+  ["Ссылка","Пуш"],
+  () => join,
+  (v) => { join = v; },
+  "joinSay",
+  joinCopy
+);
+function refresh() { refreshChain(); refreshJoin(); }
+place(false);
+paint();
+refresh();
+setTimeout(() => { if (!reduce) { place(true); paint(); } else place(true); }, 420);
+</script>
+</body>
+</html>
