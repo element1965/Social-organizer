@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Человек и Люди — экраны</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared.css">
+<style>
+  .who { display:flex; align-items:center; gap:14px; }
+  .who .ava { width:64px; height:64px; border-radius:22px; background:var(--teal-soft); color:var(--teal); display:grid; place-items:center; font-weight:800; font-size:26px; flex:none; position:relative; }
+  .who .ava i { position:absolute; right:-3px; bottom:-3px; width:14px; height:14px; border-radius:50%; background:var(--teal); box-shadow:0 0 0 3px var(--paper); }
+  .who .t { min-width:0; flex:1; }
+  .who .name { display:flex; align-items:center; gap:8px; }
+  .who .name b { font-size:24px; letter-spacing:-.04em; line-height:1.05; }
+  .who .name svg { width:18px; height:18px; color:var(--teal); flex:none; }
+  .who .t span { display:block; margin-top:4px; color:var(--muted); font-size:13px; font-weight:600; }
+  .who .t span em { font-style:normal; color:var(--ink); }
+  .pills { display:flex; flex-wrap:wrap; gap:8px; margin-top:14px; }
+  .pills span { height:36px; padding:0 12px; border-radius:11px; background:var(--canvas); color:var(--ink); font-weight:700; font-size:13px; display:inline-flex; align-items:center; gap:6px; }
+  .pills span svg { width:16px; height:16px; color:var(--teal); }
+  .pills span.more { color:var(--muted); }
+  .ask { display:flex; align-items:center; gap:12px; margin-top:14px; padding:12px 14px; border-radius:16px; background:var(--teal-soft); }
+  .ask .t { flex:1; min-width:0; }
+  .ask .t b { display:block; font-size:15px; letter-spacing:-.02em; }
+  .ask .t span { display:block; color:var(--muted); font-size:13px; font-weight:600; margin-top:1px; }
+  .ask .go { height:40px; padding:0 14px; border-radius:12px; background:var(--teal); color:#fff; font-weight:700; font-size:14px; display:grid; place-items:center; white-space:nowrap; }
+  .sent { display:flex; align-items:center; gap:10px; margin-top:14px; padding:12px 14px; border-radius:16px; background:#fdf1e3; color:#5b3a0e; font-size:14px; font-weight:600; }
+  .sent svg { width:20px; height:20px; color:#b7741f; flex:none; }
+  .edit { display:flex; align-items:center; gap:10px; margin-top:14px; }
+  .edit .field { flex:1; }
+  .edit .btn { width:96px; height:56px; }
+  /* people */
+  .search { height:48px; border-radius:14px; background:var(--paper); display:flex; align-items:center; gap:10px; padding:0 14px; color:var(--subtle); font-size:16px; box-shadow:inset 0 0 0 1px var(--line); }
+  .search svg { width:20px; height:20px; }
+  .pr { display:flex; align-items:center; gap:12px; min-height:60px; padding:8px 14px; }
+  .pr + .pr { box-shadow:inset 0 1px 0 var(--line-soft); }
+  .pr .ava { width:40px; height:40px; border-radius:13px; background:var(--canvas); color:var(--ink); display:grid; place-items:center; font-weight:800; font-size:15px; flex:none; position:relative; }
+  .pr .ava i { position:absolute; right:-2px; bottom:-2px; width:10px; height:10px; border-radius:50%; background:var(--teal); box-shadow:0 0 0 2px var(--paper); }
+  .pr .t { flex:1; min-width:0; }
+  .pr .t b { display:block; font-size:16px; letter-spacing:-.02em; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .pr .t span { display:block; margin-top:1px; color:var(--muted); font-size:13px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .pr .n { color:var(--muted); font-size:13px; font-weight:700; font-variant-numeric:tabular-nums; }
+  .pr .fwd { width:18px; height:18px; color:var(--subtle); }
+  .sticky { margin:14px 4px 6px; font-size:12px; font-weight:800; color:var(--subtle); letter-spacing:.06em; }
+  .sw { width:48px; height:30px; border-radius:15px; background:var(--teal); position:relative; flex:none; }
+  .sw::after { content:""; position:absolute; top:3px; left:21px; width:24px; height:24px; border-radius:50%; background:#fff; box-shadow:0 2px 6px rgba(20,33,30,.2); }
+  .toggle { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-top:10px; padding:0 14px; min-height:52px; background:var(--paper); border-radius:16px; font-weight:650; font-size:15px; box-shadow:0 10px 28px rgba(20,33,30,.06); }
+  .toggle small { display:block; color:var(--muted); font-size:12px; font-weight:600; margin-top:1px; }
+</style>
+</head>
+<body>
+<h1>Человек и Люди</h1>
+<p class="lead">Человек — экран одного узла графа, одинаковый для всех колец, меняется только набор действий. Люди — список кольца, открывается с чипа на Круге и заменяет аккордеон «N-е рукопожатие».</p>
+<div class="row" id="row"></div>
+<script src="shared.js"></script>
+<script>
+I.search = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.2-4.2"/></svg>`;
+I.phone = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/></svg>`;
+I.tg = `<svg viewBox="0 0 24 24" fill="currentColor"><path d="m3.5 11.3 15.4-6c.7-.3 1.3.2 1.1 1.2l-2.6 12.3c-.2.9-.7 1.1-1.5.7l-4-3-1.9 1.9c-.2.2-.4.4-.8.4l.3-4 7.3-6.6c.3-.3-.1-.4-.5-.2l-9 5.7-3.9-1.2c-.8-.3-.8-.8.1-1.2z"/></svg>`;
+
+const headCard = (o) => `<div class="card">${path(o.path)}
+<div class="who"><span class="ava">${o.name[0]}${o.online ? "<i></i>" : ""}</span><span class="t"><span class="name"><b>${o.label}</b>${o.editable ? I.pen : ""}</span><span>${o.sub}</span></span></div>
+${o.body || ""}</div>`;
+
+const common = `<div class="label"><span>Общие сборы · 2</span></div><div class="group">
+${row("М", "Мария Коваль", "12 марта · через Олег брат", `<span class="amt">44 / 80 $</span>`)}
+${row("О", "Олег брат", "4 января · его сбор", `<span class="amt">30 / 30 $</span>`)}
+</div>`;
+
+const P1 = `<div class="phone">${status()}${nav("Круг")}<div class="page notabs">
+${headCard({ path: ["Вы", "Олег"], name: "Олег", label: "Олег брат", editable: true, online: true, sub: "Аккаунт: <em>Олег Ким</em> · 1-е рукопожатие · в сети", body: `<div class="pills"><span>${I.tg}@oleg_kim</span><span>${I.phone}+380 67 …</span><span class="more">Ещё 2</span></div>` })}
+${common}
+<span class="textbtn danger">Убрать из круга</span>
+</div>${home()}</div>`;
+
+const P2 = `<div class="phone">${status()}${nav("Круг")}<div class="page notabs">
+${headCard({ path: ["Вы", "Олег"], name: "Олег", label: "Олег брат", editable: true, sub: "Аккаунт: <em>Олег Ким</em> · 1-е рукопожатие", body: `<div class="edit"><div class="field filled">Олег брат<span class="caret" style="width:2px;height:24px;background:var(--teal);margin-left:1px"></span></div><div class="btn primary">Готово</div></div><p class="hint">Подпись видите только вы. Так Олег выглядит на вашем графе и в списках.</p>` })}
+${common}
+</div>${home()}</div>`;
+
+const P3 = `<div class="phone">${status()}${nav("Люди")}<div class="page notabs">
+${headCard({ path: ["Вы", "Олег брат", "Мария"], name: "Мария", label: "Мария Коваль", sub: "2-е рукопожатие · через <em>Олег брат</em> · была 2 ч назад", body: `<div class="ask"><span class="t"><b>Просит помощь · 80 $</b><span>Разовая · собрано 100 из 300 $</span></span><span class="go">Сбор</span></div><div class="actions"><div class="btn secondary">Мы знакомы</div></div><p class="hint">Мария подтвердит, и вы станете 1-м рукопожатием. Контакты Мария не открыла.</p>` })}
+<div class="label"><span>Общие сборы · 1</span></div><div class="group">${row("М", "Мария Коваль", "12 марта · через Олег брат", `<span class="amt">44 / 80 $</span>`)}</div>
+</div>${home()}</div>`;
+
+const P4 = `<div class="phone">${status()}${nav("Люди")}<div class="page notabs">
+${headCard({ path: ["Вы", "Олег брат", "Мария"], name: "Мария", label: "Мария Коваль", sub: "2-е рукопожатие · через <em>Олег брат</em>", body: `<div class="sent">${I.clock}Заявка отправлена. Мария подтвердит знакомство.</div>` })}
+<div class="label"><span>Общие сборы · 1</span></div><div class="group">${row("М", "Мария Коваль", "12 марта · через Олег брат", `<span class="amt">44 / 80 $</span>`)}</div>
+</div>${home()}</div>`;
+
+const P5 = `<div class="phone">${status()}${nav("Круг")}<div class="page notabs" style="filter:brightness(.85)">
+${headCard({ path: ["Вы", "Олег"], name: "Олег", label: "Олег брат", editable: true, sub: "Аккаунт: <em>Олег Ким</em> · 1-е рукопожатие" })}
+${common}
+</div>${home()}
+<div class="scrim"><div class="sheet"><h3>Убрать Олега из круга?</h3><p class="sub">Связь исчезнет у обоих. Люди, которых вы видели через Олега, пропадут с графа, если к ним нет другого пути. Прошлые сборы останутся.</p>
+<div class="btn danger">Убрать</div><div class="btn ghost">Оставить</div></div></div></div>`;
+
+const people = (ringN, rows) => `<div class="phone">${status()}${nav("Круг", `${ringN}-е рукопожатие · ${ringN === 1 ? 118 : 640}`)}<div class="page notabs">
+<div class="search">${I.search}Поиск по имени</div>
+<div class="toggle"><span>Показывать на графе<small>Кольцо можно скрыть, чтобы разгрузить сцену</small></span><span class="sw"></span></div>
+${rows}
+</div>${home()}</div>`;
+const pr = (ava, name, sub, n, online) => `<div class="pr"><span class="ava">${ava}${online ? "<i></i>" : ""}</span><span class="t"><b>${name}</b><span>${sub}</span></span>${n != null ? `<span class="n">${n}</span>` : ""}${I.fwd}</div>`;
+
+const P6 = people(1, `<div class="sticky">НЕДАВНО</div><div class="group">${pr("К", "Катя Белова", "вчера · подтвердите знакомство", null)}${pr("Д", "Денис Волков", "2 марта · привёл 4", 4)}</div>
+<div class="sticky">ВСЕ · 118</div><div class="group">${pr("И", "Ирина Соколова", "Привела 12", 12, true)}${pr("О", "Олег брат", "Олег Ким · привёл 9", 9, true)}${pr("Л", "Лена Мороз", "Пока никого не привела", 0)}${pr("М", "Марина Пак", "Привела 3", 3)}${pr("П", "Павел Юдин", "Привёл 7", 7)}${pr("Т", "Тимур Алиев", "Привёл 1", 1)}</div>`);
+
+const P7 = people(2, `<div class="group">${pr("М", "Мария Коваль", "через Олег брат · просит 80 $", null, true)}${pr("А", "Аня Ли", "через Ирина Соколова")}${pr("Т", "Тимур Алиев", "через Денис Волков")}${pr("О", "Ольга Ветрова", "через Лена Мороз")}${pr("Г", "Глеб Новак", "через Ирина Соколова")}${pr("И", "Илья Сафин", "через Олег брат")}${pr("М", "Мила Го", "через Павел Юдин")}</div>`);
+
+document.getElementById("row").innerHTML = [
+  section("p1", P1, "<small>1</small>Человек: 1-е рукопожатие", `<p>Сверху путь из двух точек, крупно моя подпись «Олег брат» с карандашом, под ней настоящее имя аккаунта, кольцо и статус. Контакты пилюлями, только если Олег их открыл; каждая ведёт во внешнее приложение. Ниже общие сборы. «Убрать из круга» внизу текстом.</p>
+<ul><li>Слова «Заглушить» нет: действие называется тем, что делает.</li><li>Никакого «Написать»: личных сообщений в приложении нет.</li></ul>`),
+  section("p2", P2, "<small>2</small>Подпись в круге", `<p>Тап по карандашу превращает подпись в поле прямо в карточке. Подпись видна только мне и заменяет никнейм из старого профиля. Сохраняется «Готово» или уходом с экрана.</p>`),
+  section("p3", P3, "<small>3</small>Человек: 2-е рукопожатие", `<p>Путь из трёх точек, «через кого» в подписи. Если у человека есть активная просьба, она стоит плашкой с кнопкой «Сбор». Главное действие для дальнего человека — «Мы знакомы»: это и есть рост круга. Подпись объясняет, что будет, и говорит, что контакты скрыты, без пустого блока.</p>`),
+  section("p4", P4, "<small>4</small>Заявка отправлена", `<p>Та же карточка с тёплой плашкой вместо кнопки. Повторно нажать нельзя, отменить — тоже: заявка живёт, пока Мария не ответит. Если она откажет, в ленте появится строка, а карточка вернётся к состоянию 3.</p>`),
+  section("p5", P5, "<small>5</small>Убрать из круга", `<p>Лист с честным последствием: исчезнут люди, которых я видел только через Олега, прошлые сборы останутся. Кнопка «Убрать» красная, «Оставить» нейтральная.</p>`),
+  section("l1", P6, "<small>6</small>Люди: 1-е рукопожатие", `<p>Открывается тапом на чип «118 1-е». Поиск, тумблер видимости кольца на графе, затем «Недавно» и «Все». У каждого — сколько людей он привёл: это главное число для роста на 2–3 кольце, и оно же подсказывает, кому напомнить. Строка с «подтвердите знакомство» ведёт в лист подтверждения.</p>
+<ul><li>Порог 30 связей и красно-зелёные цифры из старого списка убраны.</li><li>Сортировка: недавние сверху, дальше по имени. При 118 людях нужен быстрый скролл по буквам, в макете он опущен.</li></ul>`),
+  section("l2", P7, "<small>7</small>Люди: 2-е рукопожатие", `<p>Для дальних колец главное — через кого человек в моей сети; это и показано в подписи. Активная просьба отмечена прямо в строке. Тап ведёт в Человек с кнопкой «Мы знакомы».</p>`)
+].join("");
+</script>
+</body>
+</html>
