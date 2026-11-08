@@ -155,36 +155,36 @@ export function NetworkGraph({
     // Cleanup: use `fg` from closure because fgRef.current is already null
     // when parent cleanup runs (React unmounts children first, clearing the
     // useImperativeHandle ref before our effect cleanup fires).
+    //
+    // Everything is deferred and skipped if the graph is mounted again: React StrictMode (dev)
+    // runs mount -> cleanup -> mount on the SAME ForceGraph instance, and tearing it down right
+    // away left a lost WebGL context and dead controls (blank white canvas in local dev).
     return () => {
-      if (fg) {
-        try { fg.pauseAnimation(); } catch { /* noop */ }
-        try {
-          const c = fg.controls();
-          if (c) c.dispose();
-        } catch { /* noop */ }
-        // Deferred: release WebGL context AFTER react-kapsule _destructor.
-        // three-render-objects has no _destructor, so renderer/context leak
-        // unless we explicitly clean up. We use setTimeout so that
-        // react-kapsule's synchronous _destructor (pauseAnimation + graphData
-        // clear) finishes before we kill the renderer.
-        try {
-          const r = fg.renderer();
-          if (r) {
-            setTimeout(() => {
-              try {
-                r.setAnimationLoop(null);
-                r.dispose();
-                r.forceContextLoss();
-              } catch { /* noop */ }
-            }, 0);
-          }
-        } catch { /* noop */ }
-      }
-      // Release GPU textures
-      textureCache.current.forEach((tex) => tex.dispose());
-      textureCache.current.clear();
-      lodObjectsRef.current.clear();
-      pendingLoads.current.clear();
+      setTimeout(() => {
+        if (fgRef.current) return; // remounted (StrictMode) — keep the renderer alive
+        if (fg) {
+          try { fg.pauseAnimation(); } catch { /* noop */ }
+          try {
+            const c = fg.controls();
+            if (c) c.dispose();
+          } catch { /* noop */ }
+          // Release the WebGL context after react-kapsule's synchronous _destructor:
+          // three-render-objects has no _destructor, so the renderer/context leak otherwise.
+          try {
+            const r = fg.renderer();
+            if (r) {
+              r.setAnimationLoop(null);
+              r.dispose();
+              r.forceContextLoss();
+            }
+          } catch { /* noop */ }
+        }
+        // Release GPU textures
+        textureCache.current.forEach((tex) => tex.dispose());
+        textureCache.current.clear();
+        lodObjectsRef.current.clear();
+        pendingLoads.current.clear();
+      }, 0);
     };
   }, []);
 
