@@ -42,7 +42,11 @@ WP8 и WP9 — после мерджа всех остальных.
 (секция `nav`, `common`).
 
 **Сделать**
-- Шрифт Manrope (self-hosted в `public/fonts`, `font-display: swap`), базовая типографика из screens.md.
+- Дизайн-система — источник правды: `docs/redesign/design-system.md` и стайлгайд `docs/redesign/mockups/v2/design-system.html`.
+  Переписать `apps/web/src/styles/tokens.css` по `docs/redesign/mockups/v2/tokens.css` (слой `--so-*`: зелёно-чёрная
+  палитра макетов, `care` #087f71, добавлены `warm-ink`, `scene*`, `node-*`, `care-scene`, `care-bright`), в `tailwind.config.js`
+  добавить радиусы `r-xs…r-2xl` и высоты контролов. Запрет hex-цветов и `dark:` в `apps/web/src` линтером.
+- Шрифт Manrope (self-hosted в `public/fonts`, `font-display: swap`), типографическая шкала из design-system.md §2.
 - Тема: Авто / Светлая / Тёмная через класс `html.dark`; в Telegram Mini App от Telegram берётся только `colorScheme`,
   инъекция цветов Telegram (`injectTelegramCSSVars`) убирается.
 - `Layout`: четыре таба (Круг, Просьба, Добавить, Профиль) с иконками из прототипа (иконка «Просьба» — красный

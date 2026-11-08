@@ -14,6 +14,9 @@ Redesign documents (Russian):
 - [ux-audit.md](ux-audit.md) — UI/UX audit of the current app vs the mockups, decisions taken (§7), 3D graph plan (§8).
 - [screens.md](screens.md) — screen-by-screen spec: elements, data sources (tRPC), states, done criteria.
 - [dev-plan.md](dev-plan.md) — work packages WP1–WP9 for parallel agents: file ownership, dependencies, done criteria.
+- [design-system.md](design-system.md) — tokens, type scale, sizes, components and patterns with rules; the live style
+  guide is [mockups/v2/design-system.html](mockups/v2/design-system.html), canonical values in
+  [mockups/v2/tokens.css](mockups/v2/tokens.css).
 - [coverage.md](coverage.md) — every route, screen and feature of `main` mapped to its place in the redesign (kept, merged,
   removed with a reason) plus the open product questions.
 - [mockups/](mockups/) — interactive prototype `app.html` (20 screens/states, the buttons under the phone switch them)
