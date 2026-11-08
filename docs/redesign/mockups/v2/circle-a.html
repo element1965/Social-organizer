@@ -225,7 +225,7 @@
     <li>Подсказка про жесты показывается один раз за сессию и гаснет через 3 с.</li>
   </ol>
   <h2>Карточка человека</h2>
-  <p>Тап по узлу: остальная сеть приглушается до 35 %, путь до человека остаётся ярким, снизу поднимается карточка: имя, кольцо, путь «Вы → Олег брат → Мария», действия «Открыть» и «Сбор 80 $», если у человека есть активная просьба. Тап мимо узла или крестик возвращает в режим графа.</p>
+  <p>Тап по узлу: остальная сеть приглушается до 35 %, путь до человека остаётся ярким, снизу поднимается карточка: имя, кольцо, путь «Вы → Олег брат → Мария». Действия: «Сбор 80 $» и «Открыть», если у человека есть активная просьба; «Открыть» и «Контакты», если человек открыл свои контакты (это ссылки во внешние мессенджеры, личных сообщений в приложении нет); иначе только «Открыть». Тап мимо узла или крестик возвращают в режим графа.</p>
   <h2>Жесты</h2>
   <ul>
     <li>Вертикальный драг за ручку листа принадлежит листу; порог 80 px.</li>
@@ -422,7 +422,7 @@ function render() {
 <div class="chips"><span class="chip"><i></i><b>${d.counts[0]}</b>1-е</span><span class="chip d2"><i></i><b>${d.counts[1]}</b>2-е</span><span class="chip d3"><i></i><b>${d.counts[2]}</b>3-е</span><span class="chip me">${I.aim}К себе</span></div>
 <div class="sheet" id="sheet"><div class="handle" id="handle"></div>${sheetHTML()}</div>
 <span class="pill" id="pill"><i>${SIZE === "big" ? 3 : SIZE === "small" ? 2 : 0}</i>${SIZE === "empty" ? "Начало" : "События"}${I.up}</span>
-<div class="card" id="card"><div class="top"><span class="ava">М</span><span class="t"><b id="c-name">Мария Коваль</b><span id="c-sub">2-е рукопожатие · просьба 80 $</span></span><span class="x" id="c-x">${I.x}</span></div><div class="path" id="c-path"></div><div class="acts"><span class="go" id="c-go">Сбор 80 $</span><span class="sec">Открыть</span></div></div>
+<div class="card" id="card"><div class="top"><span class="ava">М</span><span class="t"><b id="c-name">Мария Коваль</b><span id="c-sub">2-е рукопожатие · просьба 80 $</span></span><span class="x" id="c-x">${I.x}</span></div><div class="path" id="c-path"></div><div class="acts" id="c-acts"><span class="go" id="c-go">Сбор 80 $</span><span class="sec" id="c-sec">Открыть</span></div></div>
 <nav class="tabs"><span class="tab on">${I.circle}Круг</span><span class="tab ${d.unlocked ? "" : "locked"}" id="tab-ask"><span class="askmark">${d.unlocked ? "" : `<svg class="ring" viewBox="0 0 32 32" style="--off:${(88 * (1 - Math.min(d.counts[0] / 5, d.reach / 10))).toFixed(0)}"><circle class="trk" cx="16" cy="16" r="14"/><circle class="val" cx="16" cy="16" r="14"/></svg>`}${I.hand}</span>Просьба</span><span class="tab">${I.add}Добавить</span><span class="tab">${I.person}Профиль</span></nav>
 <div class="scrim" id="scrim"><div class="lock" id="lock">
 <h3>${d.counts[0] === 0 ? "Просьба откроется, когда рядом появятся люди" : "Ещё немного, и просьбу услышат"}</h3>
@@ -462,7 +462,12 @@ function showPerson(id) {
   document.querySelector("#card .ava").textContent = name[0];
   const hasAsk = id === HOT[2];
   document.getElementById("c-sub").textContent = `${n.d}-е рукопожатие${hasAsk ? " · просьба 80 $" : n.d === 1 ? " · знакомство подтверждено" : ""}`;
-  document.getElementById("c-go").textContent = hasAsk ? "Сбор 80 $" : "Написать";
+  // No in-app messaging: the second action only opens the person's shared contact links (external messengers).
+  const hasContacts = n.d === 1 && id !== "a2";
+  const acts = document.getElementById("c-acts"), go = document.getElementById("c-go"), sec = document.getElementById("c-sec");
+  if (hasAsk) { go.textContent = "Сбор 80 $"; sec.textContent = "Открыть"; sec.style.display = ""; acts.style.gridTemplateColumns = "1fr 1fr"; }
+  else if (hasContacts) { go.textContent = "Открыть"; sec.textContent = "Контакты"; sec.style.display = ""; acts.style.gridTemplateColumns = "1fr 1fr"; }
+  else { go.textContent = "Открыть"; sec.style.display = "none"; acts.style.gridTemplateColumns = "1fr"; }
   document.getElementById("c-path").innerHTML = ch.map((c, i) => {
     const label = c.id === "me" ? "Вы" : (NAMES[c.id] || `${c.d}-е`).split(" ")[0];
     const last = i === ch.length - 1;
