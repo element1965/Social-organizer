@@ -153,6 +153,26 @@
   .s-empty .nums .r span { display:none; }
   .quiet { margin:18px 4px 0; text-align:center; font-size:14px; color:var(--muted); line-height:1.45; }
   .quiet b { display:block; color:var(--ink); font-size:16px; margin-bottom:4px; }
+  .tab.locked { color:var(--subtle); }
+  .tab.locked .askmark { background:var(--line); color:var(--subtle); position:relative; }
+  .tab.locked .askmark::after { content:""; position:absolute; right:-5px; top:-5px; width:14px; height:14px; border-radius:50%; background:var(--ink); background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'><rect x='5' y='11' width='14' height='10' rx='2'/><path d='M8 11V7a4 4 0 0 1 8 0v4'/></svg>"); background-size:8px; background-repeat:no-repeat; background-position:center; box-shadow:0 0 0 2px var(--paper); }
+  .scrim { position:absolute; inset:0; z-index:10; background:rgba(11,21,19,.55); display:flex; align-items:flex-end; padding:0 10px 10px; opacity:0; pointer-events:none; transition:opacity var(--dur) var(--ease); }
+  .s-lock .scrim { opacity:1; pointer-events:auto; }
+  .lock { width:100%; background:var(--paper); border-radius:30px; padding:20px 18px 16px; transform:translateY(60px); transition:transform var(--dur) var(--ease); box-shadow:0 20px 50px rgba(0,0,0,.45); }
+  .s-lock .lock { transform:none; }
+  .lock h3 { margin:0; font-size:22px; letter-spacing:-.03em; line-height:1.2; text-wrap:balance; }
+  .lock p { margin:8px 0 0; font-size:14px; line-height:1.45; color:var(--muted); }
+  .lock p b { color:var(--ink); }
+  .lock .prog { margin:16px 0 0; }
+  .lock .or { display:flex; align-items:center; gap:10px; margin:14px 0 0; color:var(--subtle); font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; }
+  .lock .or::before, .lock .or::after { content:""; flex:1; height:1px; background:var(--line); }
+  .lock .alt { display:flex; gap:12px; align-items:flex-start; margin-top:12px; }
+  .lock .alt i { flex:none; width:36px; height:36px; border-radius:12px; background:var(--teal-soft); color:var(--teal); display:grid; place-items:center; }
+  .lock .alt i svg { width:20px; height:20px; }
+  .lock .alt span { font-size:14px; line-height:1.4; color:var(--muted); }
+  .lock .alt span b { color:var(--ink); }
+  .lock .cta { margin-top:18px; }
+  .lock .later { display:block; text-align:center; margin:10px 0 0; min-height:36px; line-height:36px; color:var(--muted); font-weight:700; font-size:15px; cursor:pointer; }
   @media (prefers-reduced-motion: reduce) { .phone * { transition:none !important; } }
 </style>
 </head>
@@ -166,6 +186,7 @@
     <button data-s="s-feed" aria-pressed="true">Лента</button>
     <button data-s="s-graph">Граф</button>
     <button data-s="s-person">Человек</button>
+    <button data-s="s-lock">Просьба закрыта</button>
   </div>
   <div class="states" id="sizes">
     <button data-size="big" aria-pressed="true">1 240 человек</button>
@@ -199,6 +220,14 @@
     <li>3–5 человек: узлы крупные и все подписаны, сверху листа полоса «3 из 5», события — подтверждения знакомства. Одна строка объясняет, зачем расти: «Через 3 человек просьбу увидят 5, через 5 — обычно 20–40».</li>
     <li>Порог «пять человек» и подсказки исчезают сами, когда сеть переваливает за 5 и появляются события.</li>
   </ul>
+  <h2>Закрытая «Просьба»</h2>
+  <p>Пока условие не выполнено, таб «Просьба» серый с замком. Тап по нему не уводит на экран, а поднимает лист: заголовок с условием, полоса «3 из 5», и второе условие через «или» — подтверждённое знакомство с кем-то из 2-го рукопожатия. Одна кнопка «Добавить человека», ссылка «Позже». Лист закрывается тапом по затемнению.</p>
+  <ul>
+    <li>Условие открытия: не меньше 5 человек в 1-м рукопожатии, <b>или</b> хотя бы одно подтверждённое знакомство с человеком, который уже был в вашем 2-м или 3-м рукопожатии. Второе условие считается на бэкенде в момент подтверждения знакомства: если до него путь к человеку уже существовал, флаг ставится навсегда.</li>
+    <li>Тот же лист показывается, если человек дошёл до Просьбы по прямой ссылке или из старой закладки.</li>
+    <li>Когда условие выполняется, замок снимается без перезагрузки, а в ленту приходит строка «Просьба открыта» с подсказкой, как она работает.</li>
+    <li class="risk">Трактовка второго условия записана по словам «пригласил кого-то из 2-го рукопожатия»; если имелось в виду другое (например, человек из 2-го кольца пригласил вас), правило надо уточнить до вёрстки.</li>
+  </ul>
   <h2>Что ещё решено</h2>
   <ul>
     <li>Фон сцены тёмный всегда; в тёмной теме лист и таб-бар становятся тёмными, и стык со сценой пропадает.</li>
@@ -222,6 +251,7 @@ const I = {
   bell: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15z"/><path d="M10 20.5a2 2 0 0 0 4 0"/></svg>`,
   repeat: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 2.5 20.5 6 17 9.5M3.5 11V9.5A3.5 3.5 0 0 1 7 6h13.5M7 21.5l-3.5-3.5L7 14.5M20.5 13v1.5a3.5 3.5 0 0 1-3.5 3.5H3.5"/></svg>`,
   arrive: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="8" r="3"/><path d="M4 19c1-3 3.2-4.5 6-4.5s5 1.5 6 4.5M17 5.5v5M14.5 8h5"/></svg>`,
+  link: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="7" cy="8" r="2.6"/><circle cx="17" cy="8" r="2.6"/><path d="M2.5 18c.7-2.4 2.3-3.7 4.5-3.7s3.8 1.3 4.5 3.7M12.5 18c.7-2.4 2.3-3.7 4.5-3.7s3.8 1.3 4.5 3.7M9.6 8h4.8"/></svg>`,
   done: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="m8.5 12.2 2.4 2.4 4.6-5"/></svg>`,
   aim: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3"/></svg>`,
   back: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 5.5 8 12l6.5 6.5"/></svg>`
@@ -273,9 +303,9 @@ function pickHot() {
   return ["me", n.id, NET.find(k => k.parent === n.id)?.id].filter(Boolean);
 }
 const DATA = {
-  big:   { n1: 118, people: "1 240", sum: "1 860 $", delta: "+40 $ за неделю", counts: [118, 640, 482] },
-  small: { n1: 3, people: "5", sum: "6 $", delta: "+2 $ за неделю", counts: [3, 2, 0] },
-  empty: { n1: 0, people: "0", sum: "0 $", delta: "", counts: [0, 0, 0] }
+  big:   { unlocked: true, n1: 118, people: "1 240", sum: "1 860 $", delta: "+40 $ за неделю", counts: [118, 640, 482] },
+  small: { unlocked: false, n1: 3, people: "5", sum: "6 $", delta: "+2 $ за неделю", counts: [3, 2, 0] },
+  empty: { unlocked: false, n1: 0, people: "0", sum: "0 $", delta: "", counts: [0, 0, 0] }
 };
 function setData(size) {
   SIZE = size;
@@ -372,7 +402,16 @@ function render() {
 <div class="sheet" id="sheet"><div class="handle" id="handle"></div>${sheetHTML()}</div>
 <span class="pill" id="pill"><i>${SIZE === "big" ? 3 : SIZE === "small" ? 2 : 0}</i>${SIZE === "empty" ? "Начало" : "События"}${I.up}</span>
 <div class="card" id="card"><div class="top"><span class="ava">М</span><span class="t"><b id="c-name">Мария Коваль</b><span id="c-sub">2-е рукопожатие · просьба 80 $</span></span><span class="x" id="c-x">${I.x}</span></div><div class="path" id="c-path"></div><div class="acts"><span class="go" id="c-go">Сбор 80 $</span><span class="sec">Открыть</span></div></div>
-<nav class="tabs"><span class="tab on">${I.circle}Круг</span><span class="tab"><span class="askmark">${I.hand}</span>Просьба</span><span class="tab">${I.add}Добавить</span><span class="tab">${I.person}Профиль</span></nav>
+<nav class="tabs"><span class="tab on">${I.circle}Круг</span><span class="tab ${d.unlocked ? "" : "locked"}" id="tab-ask"><span class="askmark">${I.hand}</span>Просьба</span><span class="tab">${I.add}Добавить</span><span class="tab">${I.person}Профиль</span></nav>
+<div class="scrim" id="scrim"><div class="lock">
+<h3>Просьба откроется, когда рядом будет пять человек</h3>
+<p>Просьба идёт по рукопожатиям. Пока рядом <b>${d.counts[0]}</b>, сигнал почти никого не достигнет.</p>
+<div class="prog"><span>${d.counts[0]} из 5</span><i style="--w:${d.counts[0] * 20}%"></i><span>Пять человек</span></div>
+<div class="or">или</div>
+<div class="alt"><i>${I.link}</i><span><b>Подтвердите знакомство с кем-то из 2-го рукопожатия.</b> Люди знают друг друга и без нас; такая связь замыкает круг и открывает просьбу сразу.</span></div>
+<div class="cta">Добавить человека</div>
+<span class="later" id="lock-later">Позже</span>
+</div></div>
 <div class="homebar"></div>`;
   bind();
 }
@@ -382,13 +421,16 @@ function setState(st) {
   STATES.forEach(k => phone.classList.toggle(k, k === st));
   document.querySelectorAll("#states button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.s === st)));
 }
+function setLock(on) { phone.classList.toggle("s-lock", on); document.querySelector('#states [data-s="s-lock"]').setAttribute("aria-pressed", String(on)); }
 document.querySelectorAll("#states button").forEach(b => b.onclick = () => {
+  if (b.dataset.s === "s-lock") { if (DATA[SIZE].unlocked) { document.querySelector('#sizes [data-size="small"]').click(); } setLock(true); return; }
+  setLock(false);
   if (b.dataset.s === "s-person") { const first = Object.keys(NAMES)[0]; if (first) showPerson(HOT[2] || first); return; }
   setState(b.dataset.s);
 });
 document.querySelectorAll("#sizes button").forEach(b => b.onclick = () => {
   document.querySelectorAll("#sizes button").forEach(x => x.setAttribute("aria-pressed", String(x === b)));
-  setData(b.dataset.size); render(); setState("s-feed");
+  setData(b.dataset.size); render(); setState("s-feed"); setLock(false);
 });
 
 function showPerson(id) {
@@ -409,6 +451,9 @@ function showPerson(id) {
 }
 
 function bind() {
+  document.getElementById("tab-ask").onclick = () => { if (!DATA[SIZE].unlocked) setLock(true); };
+  document.getElementById("lock-later").onclick = () => setLock(false);
+  document.getElementById("scrim").addEventListener("click", (e) => { if (e.target.id === "scrim") setLock(false); });
   document.getElementById("back").onclick = () => setState("s-feed");
   document.getElementById("pill").onclick = () => setState("s-feed");
   document.getElementById("c-x").onclick = (e) => { e.stopPropagation(); setState("s-graph"); };
