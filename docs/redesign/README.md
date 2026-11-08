@@ -48,6 +48,22 @@ pnpm dev
 reference a production user id, so the migration chain fails on an empty database. `db push` creates the
 current schema without that data. Use `migrate deploy` only against databases that already have the history.
 
+### Test data
+
+`packages/db/prisma/seed-dev.ts` wipes the **local** database and fills it with fictional people
+(it refuses to run unless `DATABASE_URL` points to localhost):
+
+```bash
+cd packages/db
+../../apps/api/node_modules/.bin/tsx prisma/seed-dev.ts
+```
+
+| Account | State |
+|---------|-------|
+| `anna@test.local` | Active member: 6 direct connections, 3-level network (18 people), own regular collection, a friend's emergency collection, notifications, an incoming acquaintance request |
+| `new@test.local` | Brand-new member with an empty circle (onboarding) |
+| `maria@test.local` | Author of an active emergency collection |
+
 ### Signing in locally
 
 - **E-mail code:** without `RESEND_API_KEY`, the dev API writes messages to `%TEMP%\so-dev-mail.log`
