@@ -291,6 +291,7 @@ React 19 SPA with tRPC client.
 - **Moon:** Real lunar surface texture, orbiting Earth on scroll
 - **Stars:** 3000 realistic small stars with subtle twinkling, hover brightness effect
 - **Atmosphere:** Shader-based blue glow around Earth
+- **Network graph (`NetworkGraph`, react-force-graph-3d):** force-directed 3D graph on `/network?view=3d`. The simulation is reheated after the layout forces are tuned only once the graph data has been digested — reheating earlier crashed the animation loop on remount (black screen when returning to the page, seen on Android)
 - **Network:** Animated nodes and edges on Earth's surface (Fibonacci sphere distribution), depth-colored edges, curved links, mini legend, auto-rotate camera
 
 ### Frontend Technologies
