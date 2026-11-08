@@ -1,0 +1,298 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Круг — варианты</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --canvas:#f3f6f4; --paper:#fff; --ink:#14211e; --muted:#5c6d68; --subtle:#8a9a95; --line:rgba(20,33,30,.14);
+    --teal:#0d9488; --teal-soft:#e5f5f3; --danger:#c5342c;
+    --space:#0b1513; --space-2:#132420; --star:rgba(231,238,235,.9);
+    --n1:#e7eeeb; --n2:#9fb0aa; --n3:#5f7069;
+  }
+  * { box-sizing:border-box; }
+  html { scroll-padding-top:12px; }
+  body { margin:0; padding:40px 24px 80px; background:#e6ebe9; color:var(--ink); font-family:Manrope,"Segoe UI",sans-serif; -webkit-font-smoothing:antialiased; }
+  h1 { margin:0 0 6px; font-size:28px; letter-spacing:-.03em; }
+  .lead { margin:0 0 28px; color:var(--muted); max-width:70ch; font-size:15px; line-height:1.5; }
+  .row { display:flex; flex-wrap:wrap; gap:40px 32px; align-items:flex-start; }
+  .variant { width:390px; }
+  .variant h2 { margin:18px 0 6px; font-size:18px; letter-spacing:-.02em; }
+  .variant h2 small { color:var(--teal); font-weight:800; margin-right:8px; }
+  .variant p, .variant li { font-size:14px; line-height:1.5; color:var(--ink); }
+  .variant ul { padding-left:18px; margin:6px 0 0; }
+  .variant .risk { color:var(--muted); }
+  .phone { position:relative; width:390px; height:844px; border-radius:44px; overflow:hidden; background:var(--canvas); box-shadow:0 30px 60px rgba(20,33,30,.18), 0 0 0 1px rgba(20,33,30,.08); }
+  .status { position:absolute; left:0; right:0; top:0; height:54px; display:flex; align-items:flex-end; justify-content:space-between; padding:0 26px 10px; font-size:15px; font-weight:700; z-index:5; }
+  .status.light { color:#fff; }
+  .sys { display:flex; gap:6px; align-items:center; }
+  .sys i { display:block; width:18px; height:10px; border-radius:2px; background:currentColor; opacity:.9; }
+  .sys i.s { width:12px; }
+  .home { position:absolute; left:50%; bottom:8px; width:134px; height:5px; margin-left:-67px; border-radius:3px; background:var(--ink); z-index:6; }
+  .home.light { background:#fff; }
+
+  /* tab bar */
+  .tabs { position:absolute; left:0; right:0; bottom:0; height:84px; background:rgba(255,255,255,.94); backdrop-filter:blur(14px); box-shadow:0 -1px 0 var(--line); display:grid; grid-template-columns:repeat(4,1fr); padding:8px 6px 0; z-index:4; }
+  .tabs.dark { background:rgba(11,21,19,.86); box-shadow:0 -1px 0 rgba(231,238,235,.12); }
+  .tab { display:flex; flex-direction:column; align-items:center; gap:3px; color:var(--muted); font-size:11px; font-weight:700; letter-spacing:-.01em; }
+  .tabs.dark .tab { color:var(--n2); }
+  .tab.on { color:var(--teal); }
+  .tab svg { width:24px; height:24px; }
+  .askmark { width:26px; height:26px; border-radius:8px; background:var(--danger); color:#fff; display:grid; place-items:center; }
+  .askmark svg { width:16px; height:16px; }
+
+  /* shared pieces */
+  .brand { display:flex; align-items:center; gap:8px; font-weight:800; font-size:15px; letter-spacing:-.02em; }
+  .brand img { width:26px; height:26px; border-radius:8px; }
+  .nums { display:flex; justify-content:space-between; align-items:flex-end; gap:12px; }
+  .nums .l b { display:block; font-size:17px; letter-spacing:-.03em; }
+  .nums .l span { display:block; margin-top:2px; font-size:13px; font-weight:600; color:var(--muted); }
+  .nums .r { text-align:right; }
+  .nums .r b { display:block; font-size:24px; letter-spacing:-.04em; font-variant-numeric:tabular-nums; }
+  .nums .r span { display:block; font-size:13px; font-weight:700; color:var(--teal); }
+  .nums.light .l b, .nums.light .r b { color:#fff; }
+  .nums.light .l span { color:var(--n2); }
+  .chips { display:flex; gap:8px; align-items:center; }
+  .chip { height:34px; padding:0 10px 0 9px; border-radius:12px; display:inline-flex; align-items:center; gap:5px; white-space:nowrap; font-size:12px; font-weight:700; letter-spacing:-.02em; background:var(--paper); color:var(--muted); box-shadow:0 6px 16px rgba(20,33,30,.10), inset 0 0 0 1px rgba(20,33,30,.08); }
+  .chip b { color:var(--ink); font-size:14px; letter-spacing:-.03em; font-variant-numeric:tabular-nums; }
+  .chip i { width:8px; height:8px; border-radius:50%; background:var(--ink); }
+  .chip.d2 i { background:#7f918b; } .chip.d3 i { background:#b3c0bb; }
+  .chip.me { margin-left:auto; color:var(--ink); }
+  .chip.me svg { width:16px; height:16px; }
+  .chips.onspace .chip { background:rgba(19,36,32,.78); color:var(--n2); box-shadow:inset 0 0 0 1px rgba(231,238,235,.14); backdrop-filter:blur(10px); }
+  .chips.onspace .chip b { color:#fff; }
+  .chips.onspace .chip i { background:var(--n1); } .chips.onspace .chip.d2 i { background:var(--n2); } .chips.onspace .chip.d3 i { background:var(--n3); }
+  .chips.onspace .chip.me { color:#fff; }
+
+  .ev { display:flex; align-items:center; gap:12px; min-height:64px; padding:10px 12px 10px 10px; border-radius:20px; background:var(--paper); box-shadow:0 8px 22px rgba(20,33,30,.06); }
+  .ev + .ev { margin-top:8px; }
+  .ev .ico { width:38px; height:38px; border-radius:12px; background:var(--canvas); display:grid; place-items:center; flex:none; color:var(--ink); }
+  .ev .ico.hot { background:var(--teal-soft); color:var(--teal); }
+  .ev .ico svg { width:20px; height:20px; }
+  .ev .t { flex:1; min-width:0; }
+  .ev .t b { display:block; font-size:16px; letter-spacing:-.02em; }
+  .ev .t span { display:block; margin-top:2px; font-size:13px; font-weight:600; color:var(--muted); }
+  .ev .t span em { font-style:normal; color:var(--ink); font-weight:700; }
+  .ev .amt { font-weight:800; font-size:16px; letter-spacing:-.03em; font-variant-numeric:tabular-nums; }
+  .ev .fwd { width:18px; height:18px; color:var(--subtle); flex:none; }
+  .label { margin:18px 4px 8px; font-size:13px; font-weight:700; color:var(--muted); }
+
+  /* scene */
+  .scene { position:absolute; inset:0; background:radial-gradient(120% 90% at 50% 38%, var(--space-2) 0%, var(--space) 60%, #070e0d 100%); }
+  .scene svg { position:absolute; inset:0; width:100%; height:100%; }
+
+  /* A */
+  .a .head { position:absolute; left:0; right:0; top:54px; padding:8px 20px 0; z-index:3; background:linear-gradient(180deg, rgba(11,21,19,.85) 0%, rgba(11,21,19,.55) 60%, rgba(11,21,19,0) 100%); height:120px; }
+  .a .head .brand { color:#fff; margin-bottom:10px; }
+  .a .chips { position:absolute; left:16px; right:16px; top:468px; z-index:3; }
+  .a .sheet { position:absolute; left:0; right:0; top:520px; bottom:0; background:var(--canvas); border-radius:30px 30px 0 0; padding:10px 16px 0; z-index:3; box-shadow:0 -18px 40px rgba(0,0,0,.35); }
+  .a .sheet::before { content:""; display:block; width:40px; height:5px; border-radius:3px; background:rgba(20,33,30,.18); margin:0 auto 10px; }
+  .a .sheet .label { margin-top:4px; }
+
+  /* B */
+  .b .top { position:absolute; left:16px; right:16px; top:58px; }
+  .b .top .brand { margin-bottom:14px; }
+  .b .port { position:absolute; left:16px; right:16px; top:166px; height:380px; border-radius:32px; overflow:hidden; box-shadow:0 20px 44px rgba(20,33,30,.18), inset 0 0 0 1px rgba(255,255,255,.06); }
+  .b .port .chips { position:absolute; left:12px; right:12px; bottom:12px; z-index:3; }
+  .b .feed { position:absolute; left:16px; right:16px; top:556px; bottom:84px; overflow:hidden; }
+  .b .feed .label { margin-top:4px; }
+
+  /* C */
+  .c .top { position:absolute; left:16px; right:16px; top:58px; }
+  .c .top .brand { margin-bottom:14px; }
+  .c .strip { position:absolute; left:16px; right:16px; top:166px; height:236px; border-radius:24px; overflow:hidden; box-shadow:0 16px 36px rgba(20,33,30,.16); }
+  .c .strip .chips { position:absolute; left:10px; right:10px; bottom:10px; z-index:3; }
+  .c .strip .expand { position:absolute; right:10px; top:10px; z-index:3; width:34px; height:34px; border-radius:12px; background:rgba(19,36,32,.78); color:#fff; display:grid; place-items:center; box-shadow:inset 0 0 0 1px rgba(231,238,235,.14); }
+  .c .strip .expand svg { width:16px; height:16px; }
+  .c .feed { position:absolute; left:16px; right:16px; top:412px; bottom:84px; overflow:hidden; }
+  .c .feed .label:first-child { margin-top:4px; }
+
+  /* D: full-screen graph (expanded from C / tap on B port) */
+  .d .close { position:absolute; left:16px; top:62px; z-index:3; height:36px; padding:0 12px 0 8px; border-radius:12px; background:rgba(19,36,32,.78); color:#fff; display:inline-flex; align-items:center; gap:4px; font-size:14px; font-weight:700; box-shadow:inset 0 0 0 1px rgba(231,238,235,.14); }
+  .d .close svg { width:18px; height:18px; }
+  .d .nums { position:absolute; right:16px; top:62px; z-index:3; }
+  .d .chips { position:absolute; left:16px; right:16px; bottom:112px; z-index:3; }
+  .d .card { position:absolute; left:16px; right:16px; bottom:24px; z-index:3; background:var(--paper); border-radius:22px; padding:14px 14px 14px 16px; display:flex; align-items:center; gap:12px; box-shadow:0 18px 40px rgba(0,0,0,.4); }
+  .d .card .t { flex:1; }
+  .d .card .t b { display:block; font-size:17px; letter-spacing:-.02em; }
+  .d .card .t span { display:block; margin-top:2px; font-size:13px; font-weight:600; color:var(--muted); }
+  .d .card .go { height:40px; padding:0 14px; border-radius:12px; background:var(--teal); color:#fff; font-weight:700; font-size:14px; display:grid; place-items:center; }
+  .d .hint { position:absolute; left:0; right:0; top:120px; text-align:center; color:var(--n2); font-size:12px; font-weight:600; z-index:3; }
+</style>
+</head>
+<body>
+<h1>Круг: три композиции вокруг 3D-графа</h1>
+<p class="lead">Данные одного пользователя с большой сетью: 118 прямых связей, 1 240 человек в трёх рукопожатиях. Граф на макетах — имитация существующей 3D-сцены (точки на сфере, подсветка пути сбора), в приложении на его месте работает NetworkGraph. Четвёртый экран — полноэкранный режим графа, общий для B и C.</p>
+
+<div class="row" id="row"></div>
+
+<script>
+const MARK = "../mark.png";
+const I = {
+  circle: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="12" cy="12.4" r="2.2" fill="currentColor" stroke="none"/><circle cx="5.6" cy="7.4" r="1.6" fill="currentColor" stroke="none"/><circle cx="18.4" cy="7.6" r="1.6" fill="currentColor" stroke="none"/><circle cx="16.6" cy="17.6" r="1.6" fill="currentColor" stroke="none"/><path d="M7 8.4 10.3 11.2M13.9 11.3 17 8.6M13.3 13.9l2.3 2.7"/></svg>`,
+  hand: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 12.5V6a1.5 1.5 0 0 1 3 0v5.5M11 11V4.5a1.5 1.5 0 0 1 3 0V11M14 11V6a1.5 1.5 0 0 1 3 0v8.2a6 6 0 0 1-6 6h-.5a6 6 0 0 1-5.1-2.9L3.2 13a1.5 1.5 0 0 1 2.5-1.6L8 14.5"/></svg>`,
+  add: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="2.7"/><path d="M3.6 18.4c.8-2.6 2.7-4 5.4-4s4.6 1.4 5.4 4M17.2 6.2v5.2M14.6 8.8h5.2"/></svg>`,
+  person: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><circle cx="12" cy="8" r="3"/><path d="M5.2 18.6c1.05-3 3.4-4.5 6.8-4.5s5.75 1.5 6.8 4.5"/></svg>`,
+  fwd: `<svg class="fwd" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg>`,
+  bell: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15z"/><path d="M10 20.5a2 2 0 0 0 4 0"/></svg>`,
+  repeat: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 2.5 20.5 6 17 9.5M3.5 11V9.5A3.5 3.5 0 0 1 7 6h13.5M7 21.5l-3.5-3.5L7 14.5M20.5 13v1.5a3.5 3.5 0 0 1-3.5 3.5H3.5"/></svg>`,
+  arrive: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="8" r="3"/><path d="M4 19c1-3 3.2-4.5 6-4.5s5 1.5 6 4.5M17 5.5v5M14.5 8h5"/></svg>`,
+  done: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="m8.5 12.2 2.4 2.4 4.6-5"/></svg>`,
+  aim: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3"/></svg>`,
+  expand: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h6v6M10 20H4v-6M20 4l-7 7M4 20l7-7"/></svg>`,
+  back: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 5.5 8 12l6.5 6.5"/></svg>`
+};
+
+/* ---------- synthetic 3D network: 118 first-ring, 2nd/3rd ring clustered around parents ---------- */
+function rnd(seed) { let t = seed; return () => { t = (t * 1664525 + 1013904223) % 4294967296; return t / 4294967296; }; }
+function fib(n, r, jitter, R) {
+  const out = []; const g = Math.PI * (3 - Math.sqrt(5));
+  for (let i = 0; i < n; i++) {
+    const y = 1 - (i / (n - 1)) * 2; const rad = Math.sqrt(1 - y * y); const th = g * i;
+    out.push([Math.cos(th) * rad * r + (R() - .5) * jitter, y * r + (R() - .5) * jitter, Math.sin(th) * rad * r + (R() - .5) * jitter]);
+  }
+  return out;
+}
+function build() {
+  const R = rnd(7);
+  const nodes = [{ id: "me", d: 0, p: [0, 0, 0] }];
+  const ring1 = fib(118, 1, .08, R);
+  ring1.forEach((p, i) => nodes.push({ id: "a" + i, d: 1, p, parent: "me" }));
+  let k = 0;
+  ring1.forEach((p, i) => {
+    const kids = R() < .55 ? 1 + Math.floor(R() * 3) : 0;
+    for (let j = 0; j < kids; j++) {
+      const q = [p[0] * 1.55 + (R() - .5) * .5, p[1] * 1.55 + (R() - .5) * .5, p[2] * 1.55 + (R() - .5) * .5];
+      const id = "b" + k++;
+      nodes.push({ id, d: 2, p: q, parent: "a" + i });
+      if (R() < .3) nodes.push({ id: "c" + k, d: 3, p: [q[0] * 1.35 + (R() - .5) * .4, q[1] * 1.35 + (R() - .5) * .4, q[2] * 1.35 + (R() - .5) * .4], parent: id });
+    }
+  });
+  return nodes;
+}
+const NET = build();
+
+
+function project(p, yaw, pitch, S, cx, cy) {
+  const cy1 = Math.cos(yaw), sy = Math.sin(yaw);
+  const x1 = p[0] * cy1 + p[2] * sy, z1 = -p[0] * sy + p[2] * cy1;
+  const cp = Math.cos(pitch), sp = Math.sin(pitch);
+  const y1 = p[1] * cp - z1 * sp, z2 = p[1] * sp + z1 * cp;
+  const persp = 4.6 / (4.6 - z2);
+  return { x: cx + x1 * S * persp, y: cy - y1 * S * persp, s: persp, z: z2 };
+}
+function pickHot() {
+  // a first-ring node with a child that lands upper-right and in front at the default camera
+  const cands = NET.filter(n => n.d === 1 && NET.some(k => k.parent === n.id)).map(n => ({ n, pr: project(n.p, .3, .22, 1, 0, 0) }))
+    .filter(o => o.pr.z > .25 && o.pr.x > .45 && o.pr.x < .8 && o.pr.y < -.25 && o.pr.y > -.7)
+    .sort((a, b) => b.pr.z - a.pr.z);
+  const n = (cands[0] || { n: NET.find(k => k.d === 1) }).n;
+  return ["me", n.id, NET.find(k => k.parent === n.id)?.id].filter(Boolean);
+}
+const HOT = pickHot();
+const NAMES = { a3: "Ирина Соколова", a40: "Денис Волков", a66: "Лена Мороз", a90: "Кирилл Семёнов", a52: "Марина Пак" };
+NAMES[HOT[1]] = "Олег брат";
+NAMES[HOT[2]] = "Мария Коваль";
+function scene(w, h, S, opts = {}) {
+  const cx = w / 2, cy = opts.cy ?? h / 2;
+  const yaw = opts.yaw ?? .35, pitch = opts.pitch ?? .18;
+  const byId = {}; NET.forEach(n => { byId[n.id] = n; n.pr = project(n.p, yaw, pitch, S, cx, cy); });
+  const R = rnd(3);
+  let stars = "";
+  for (let i = 0; i < 70; i++) stars += `<circle cx="${(R() * w).toFixed(1)}" cy="${(R() * h).toFixed(1)}" r="${(R() * .9 + .3).toFixed(2)}" fill="var(--star)" opacity="${(R() * .5 + .15).toFixed(2)}"/>`;
+  const sorted = NET.slice().sort((a, b) => a.pr.z - b.pr.z);
+  let edges = "", dots = "", labels = "";
+  sorted.forEach(n => {
+    if (n.d === 0) return;
+    const par = byId[n.parent].pr;
+    const hot = HOT.includes(n.id) && HOT.includes(n.parent);
+    const depthFade = Math.max(.08, Math.min(1, .45 + n.pr.z * .5));
+    const op = hot ? 1 : depthFade * (n.d === 1 ? .2 : n.d === 2 ? .16 : .1);
+    const mx = (par.x + n.pr.x) / 2 + (n.pr.y - par.y) * .08, my = (par.y + n.pr.y) / 2 - (n.pr.x - par.x) * .08;
+    edges += `<path d="M${par.x.toFixed(1)} ${par.y.toFixed(1)} Q${mx.toFixed(1)} ${my.toFixed(1)} ${n.pr.x.toFixed(1)} ${n.pr.y.toFixed(1)}" fill="none" stroke="${hot ? "var(--teal)" : "#e7eeeb"}" stroke-width="${hot ? 2.4 : n.d === 1 ? .8 : .6}" opacity="${op.toFixed(2)}" ${hot ? 'filter="url(#glow)"' : ""}/>`;
+  });
+  sorted.forEach(n => {
+    if (n.d === 0) return;
+    const base = n.d === 1 ? 4.2 : n.d === 2 ? 2.6 : 1.8;
+    const r = base * Math.max(.55, Math.min(n.pr.s, 1.35));
+    const fade = Math.max(.18, Math.min(1, .5 + n.pr.z * .5));
+    const hot = HOT.includes(n.id);
+    const fill = hot ? "var(--teal)" : n.d === 1 ? "var(--n1)" : n.d === 2 ? "var(--n2)" : "var(--n3)";
+    dots += `<circle cx="${n.pr.x.toFixed(1)}" cy="${n.pr.y.toFixed(1)}" r="${(hot ? r + 1.5 : r).toFixed(1)}" fill="${fill}" opacity="${hot ? 1 : fade.toFixed(2)}" ${hot ? 'filter="url(#glow)"' : ""}/>`;
+    if (hot && n.id !== "me") dots += `<circle cx="${n.pr.x.toFixed(1)}" cy="${n.pr.y.toFixed(1)}" r="${(r + 6).toFixed(1)}" fill="none" stroke="var(--teal)" stroke-width="1.4" opacity=".9"/>`;
+    const name = NAMES[n.id];
+    const nearMe = Math.hypot(n.pr.x - cx, n.pr.y - cy) < (opts.meSize ?? 44) * 1.6;
+    if (name && (hot || (n.pr.z > .15 && !nearMe)) && !opts.noLabels) {
+      const [a, b] = name.split(" ");
+      labels += `<text x="${n.pr.x.toFixed(1)}" y="${(n.pr.y + r + 13).toFixed(1)}" fill="${hot ? "var(--teal)" : "var(--n1)"}" opacity="${hot ? 1 : .85}"><tspan x="${n.pr.x.toFixed(1)}">${a}</tspan>${b ? `<tspan x="${n.pr.x.toFixed(1)}" dy="12" fill="${hot ? "var(--teal)" : "var(--n2)"}">${b}</tspan>` : ""}</text>`;
+    }
+  });
+  const me = byId.me.pr; const ms = opts.meSize ?? 44;
+  const meHtml = `<g><circle cx="${me.x}" cy="${me.y}" r="${ms * .78}" fill="var(--teal)" opacity=".18" filter="url(#glow)"/><clipPath id="mc${S}"><rect x="${me.x - ms / 2}" y="${me.y - ms / 2}" width="${ms}" height="${ms}" rx="${ms * .3}"/></clipPath><image href="${MARK}" x="${me.x - ms / 2}" y="${me.y - ms / 2}" width="${ms}" height="${ms}" clip-path="url(#mc${S})"/>${opts.meName === false ? "" : `<text x="${me.x}" y="${me.y + ms / 2 + 18}" fill="#fff" font-size="15" font-weight="800">Анна</text>`}</g>`;
+  const horizon = `<ellipse cx="${cx}" cy="${cy + S * .1}" rx="${S * 1.05}" ry="${S * 1.02}" fill="url(#sph)"/>`;
+  return `<svg viewBox="0 0 ${w} ${h}" style="font-family:Manrope;font-size:11px;font-weight:700;text-anchor:middle;paint-order:stroke;stroke:var(--space);stroke-width:4px;stroke-linejoin:round"><defs><filter id="glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="2.2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter><radialGradient id="sph" cx="50%" cy="45%" r="55%"><stop offset="0" stop-color="#1b332e" stop-opacity=".9"/><stop offset=".75" stop-color="#132420" stop-opacity=".35"/><stop offset="1" stop-color="#0b1513" stop-opacity="0"/></radialGradient></defs>${stars}${horizon}<g style="stroke:none">${edges}</g><g style="stroke:none">${dots}</g>${labels}${meHtml}</svg>`;
+}
+
+/* ---------- shared blocks ---------- */
+const status = (light) => `<div class="status ${light ? "light" : ""}"><span>9:41</span><span class="sys"><i class="s"></i><i></i></span></div>`;
+const home = (light) => `<div class="home ${light ? "light" : ""}"></div>`;
+const tabs = (dark) => `<nav class="tabs ${dark ? "dark" : ""}"><span class="tab on">${I.circle}Круг</span><span class="tab"><span class="askmark">${I.hand}</span>Просьба</span><span class="tab">${I.add}Добавить</span><span class="tab">${I.person}Профиль</span></nav>`;
+const brand = () => `<div class="brand"><img src="${MARK}" alt="">Social Organizer</div>`;
+const nums = (light) => `<div class="nums ${light ? "light" : ""}"><div class="l"><b>В сети 1 240 человек</b><span>Сеть может помочь</span></div><div class="r"><b>1 860 $</b><span>+40 $ за неделю</span></div></div>`;
+const chips = (onspace) => `<div class="chips ${onspace ? "onspace" : ""}"><span class="chip"><i></i><b>118</b>1-е</span><span class="chip d2"><i></i><b>640</b>2-е</span><span class="chip d3"><i></i><b>482</b>3-е</span><span class="chip me">${I.aim}К себе</span></div>`;
+const ev = (ico, hot, name, sub, amt) => `<div class="ev"><span class="ico ${hot ? "hot" : ""}">${I[ico]}</span><span class="t"><b>${name}</b><span>${sub}</span></span>${amt ? `<span class="amt">${amt}</span>` : ""}${I.fwd}</div>`;
+const EVENTS = [
+  ev("bell", true, "Мария Коваль", "Просьба · через <em>Олег брат</em>", "80 $"),
+  ev("repeat", false, "Денис Волков", "Новый цикл · ваши 15 $ · до 12 апреля"),
+  ev("arrive", false, "Катя Белова", "Вошла по вашей ссылке"),
+  ev("done", false, "Илья Сафин", "Сбор закрыт · 44 из 80 $")
+];
+
+/* ---------- variants ---------- */
+const A = `<div class="phone a"><div class="scene">${scene(390, 844, 150, { cy: 320, yaw: .3, pitch: .22, meSize: 48 })}</div>${status(true)}
+<div class="head">${brand()}${nums(true)}</div>
+${chips(true)}
+<div class="sheet"><p class="label">Сегодня</p>${EVENTS.slice(0, 3).join("")}</div>
+${tabs(false)}${home(false)}</div>`;
+
+const B = `<div class="phone b">${status(false)}
+<div class="top">${brand()}${nums(false)}</div>
+<div class="port"><div class="scene">${scene(358, 380, 118, { cy: 176, yaw: .3, pitch: .22, meSize: 40 })}</div>${chips(true)}</div>
+<div class="feed"><p class="label">События</p>${EVENTS.slice(0, 3).join("")}</div>
+${tabs(false)}${home(false)}</div>`;
+
+const C = `<div class="phone c">${status(false)}
+<div class="top">${brand()}${nums(false)}</div>
+<div class="strip"><div class="scene">${scene(358, 236, 92, { cy: 118, yaw: .3, pitch: .22, meSize: 32, noLabels: false, meName: false })}</div><span class="expand">${I.expand}</span>${chips(true)}</div>
+<div class="feed"><p class="label">Сегодня</p>${EVENTS.slice(0, 3).join("")}<p class="label">Раньше</p>${EVENTS[3]}</div>
+${tabs(false)}${home(false)}</div>`;
+
+const D = `<div class="phone d"><div class="scene">${scene(390, 844, 175, { cy: 400, yaw: .62, pitch: .14, meSize: 48 })}</div>${status(true)}
+<span class="close">${I.back}Круг</span>
+<p class="hint">Один палец — вращать, два — приблизить</p>
+<div class="chips onspace">${chips(true).replace('<div class="chips onspace">', "").replace("</div>", "")}</div>
+<div class="card"><span class="t"><b>Мария Коваль</b><span>2-е рукопожатие · через Олег брат · просьба 80 $</span></span><span class="go">Открыть</span></div>
+${home(true)}</div>`;
+
+const row = document.getElementById("row");
+row.innerHTML = `
+<section class="variant" id="a">${A}<h2><small>A</small>Сцена во весь экран</h2>
+<p>Граф — это и есть экран. Числа лежат на нём сверху, лента событий выезжает снизу листом, который можно подтянуть выше. Фон графа всегда тёмный, независимо от темы приложения: космос не бывает светлым.</p>
+<ul><li>Самая сильная идентичность: приложение открывается на планете, как сейчас, только чище.</li><li>Лист с событиями растёт по мере их появления и не спорит с графом за место.</li><li class="risk">Риск: три слоя (сцена, чипы, лист) на маленьком экране. Нужен запрет на жесты графа под листом и чёткая граница листа.</li><li class="risk">Риск: светлая тема приложения даёт контрастный стык тёмной сцены и светлого листа. Лист в тёмной теме — тёмный, стык исчезает.</li></ul></section>
+
+<section class="variant" id="b">${B}<h2><small>B</small>Иллюминатор</h2>
+<p>Светлая страница в стиле остальных экранов. Граф живёт в круглой тёмной карточке, как иллюминатор: внутри космос, снаружи спокойная канва. Тап по карточке открывает полноэкранный режим (экран D).</p>
+<ul><li>Один визуальный язык со всеми остальными экранами: карточки, канва, токены.</li><li>Граф остаётся главным объектом, но не мешает читать числа и события.</li><li>Чипы колец внутри карточки: понятно, что они управляют именно графом.</li><li class="risk">Риск: карточка 380 px высотой оставляет место только на три события до скролла.</li></ul></section>
+
+<section class="variant" id="c">${C}<h2><small>C</small>Лента первой</h2>
+<p>Для человека с большой сетью главное на Круге — не любоваться графом, а не пропустить просьбу. Граф сжат до полосы с кнопкой «развернуть», лента занимает большую часть экрана, разбита на «Сегодня» и «Раньше».</p>
+<ul><li>При 5–10 событиях в день экран остаётся рабочим, а не декоративным.</li><li>Граф в полосе всё равно показывает активный путь и пульс сети.</li><li class="risk">Риск: полоса 236 px слишком мала, чтобы граф читался как планета. Это скорее превью, чем сцена.</li><li class="risk">Риск: теряется эффект «открыл приложение — увидел свою сеть», ради которого граф и существует.</li></ul></section>
+
+<section class="variant" id="d">${D}<h2><small>D</small>Полноэкранный граф</h2>
+<p>Общий для B и C режим, в A он не нужен. Сцена без шапки и табов, подсказка про жесты показывается один раз. Тап по узлу — карточка снизу с именем, кольцом, путём и кнопкой «Открыть»; тап мимо узла закрывает карточку.</p>
+<ul><li>Чипы колец здесь скрывают и показывают кольца; в B и C на главной они ведут в список людей.</li><li>«К себе» возвращает камеру; кнопка подсвечивается бирюзой, когда камера ушла.</li><li>Подсветка пути сбора тянется от меня к автору просьбы; остальная сеть приглушена до тех пор, пока не тапнешь в пустоту.</li></ul></section>`;
+</script>
+</body>
+</html>
