@@ -400,7 +400,8 @@
     "markedMany": "Transfers marked: {{n}}",
     "undo": "Undo",
     "markError": "Could not save the mark. Try again.",
-    "paidToggle": "Transfer from {{name}} received"
+    "paidToggle": "Transfer from {{name}} received",
+    "allReceived": "All transfers received · {{sum}}"
   },
   "profile": {
     "phone": "Phone",

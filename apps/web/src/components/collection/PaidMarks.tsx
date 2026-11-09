@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { cn } from '../../lib/utils';
 import { trpc } from '../../lib/trpc';
@@ -102,10 +102,45 @@ export function usePaidMarks(rows: ParticipantRow[], onSaved: () => void) {
   return { people, toggle, markMany, undo, undoLast, dismissUndo, failed };
 }
 
-/** "Marked · Undo" bar above the tab bar (or at the bottom of the window on desktop). */
+/** Fixed column of bars above the tab bar (or at the bottom of the window on desktop). */
+function FloatingBars({ children }: { children: ReactNode }) {
+  const tabs = useShellMode() === 'tabs';
+  return (
+    <div
+      className={cn(
+        'pointer-events-none fixed inset-x-4 z-40 mx-auto flex max-w-[480px] flex-col gap-2 [&>*]:pointer-events-auto',
+        tabs ? 'bottom-[calc(84px+var(--sa-bottom)+12px)]' : 'bottom-6',
+      )}
+    >
+      {children}
+    </div>
+  );
+}
+
+/** "Every transfer is in · Close the collection" offer, shown once all marks are set. */
+function CloseOffer({ sum, onClose, onDismiss }: { sum: number; onClose: () => void; onDismiss: () => void }) {
+  const { t } = useTranslation();
+  return (
+    <div role="status" className="so-event-in flex items-center gap-2 rounded-lg bg-surface-2 py-2 pl-4 pr-2 shadow-sheet ring-1 ring-line">
+      <span className="min-w-0 flex-1 text-body-s font-bold text-ink">{t('collection.allReceived', { sum: formatMoney(sum) })}</span>
+      <Button variant="danger" size="sm" className="h-10 shrink-0 px-4" onClick={onClose}>
+        {t('collection.close')}
+      </Button>
+      <button
+        type="button"
+        aria-label={t('common.close')}
+        onClick={onDismiss}
+        className="so-focus grid h-10 w-10 shrink-0 place-items-center rounded-md text-ink-muted"
+      >
+        <span aria-hidden className="text-body-l leading-none">×</span>
+      </button>
+    </div>
+  );
+}
+
+/** "Marked · Undo" bar. */
 export function UndoBar({ undo, onUndo, onDone }: { undo: Undo | null; onUndo: () => void; onDone: () => void }) {
   const { t } = useTranslation();
-  const tabs = useShellMode() === 'tabs';
   useEffect(() => {
     if (!undo) return;
     const timer = setTimeout(onDone, UNDO_MS);
@@ -116,10 +151,7 @@ export function UndoBar({ undo, onUndo, onDone }: { undo: Undo | null; onUndo: (
     <div
       role="status"
       key={undo.key}
-      className={cn(
-        'fixed inset-x-4 z-40 mx-auto flex max-w-[480px] items-center gap-3 rounded-lg bg-ink py-2 pl-4 pr-2 text-canvas shadow-sheet',
-        tabs ? 'bottom-[calc(84px+var(--sa-bottom)+12px)]' : 'bottom-6',
-      )}
+      className="flex items-center gap-3 rounded-lg bg-ink py-2 pl-4 pr-2 text-canvas shadow-sheet"
     >
       <span className="min-w-0 flex-1 truncate text-body-s font-semibold">{undo.text}</span>
       <button type="button" onClick={onUndo} className="so-focus h-10 shrink-0 rounded-md px-3 text-body-s font-extrabold text-care-bright">
@@ -227,16 +259,26 @@ export function MarkableParticipantList({
   onPerson,
   onRemove,
   onSaved,
+  onCloseCollection,
 }: {
   people: ParticipantRow[];
   onPerson: (userId: string) => void;
   onRemove: (row: ParticipantRow) => void;
   onSaved: () => void;
+  /** Opens the "close the collection" confirmation; offered once every transfer is marked. */
+  onCloseCollection: () => void;
 }) {
   const { t } = useTranslation();
   const marks = usePaidMarks(rows, onSaved);
   const [sheetOpen, setSheetOpen] = useState(false);
   const unpaid = marks.people.filter((row) => !row.paid);
+  const allPaid = marks.people.length > 0 && unpaid.length === 0;
+  const total = marks.people.reduce((acc, row) => acc + row.amount, 0);
+  // Hidden with × until a mark is taken off again
+  const [offerDismissed, setOfferDismissed] = useState(false);
+  useEffect(() => {
+    if (!allPaid) setOfferDismissed(false);
+  }, [allPaid]);
   return (
     <>
       <ParticipantList
@@ -257,7 +299,12 @@ export function MarkableParticipantList({
           marks.markMany(chosen);
         }}
       />
-      <UndoBar undo={marks.undo} onUndo={marks.undoLast} onDone={marks.dismissUndo} />
+      <FloatingBars>
+        {allPaid && !offerDismissed ? (
+          <CloseOffer sum={total} onClose={onCloseCollection} onDismiss={() => setOfferDismissed(true)} />
+        ) : null}
+        <UndoBar undo={marks.undo} onUndo={marks.undoLast} onDone={marks.dismissUndo} />
+      </FloatingBars>
     </>
   );
 }

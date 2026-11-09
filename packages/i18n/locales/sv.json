@@ -400,7 +400,8 @@
     "markedMany": "Överföringar markerade: {{n}}",
     "undo": "Ångra",
     "markError": "Markeringen sparades inte. Försök igen.",
-    "paidToggle": "Överföring från {{name}} mottagen"
+    "paidToggle": "Överföring från {{name}} mottagen",
+    "allReceived": "Alla överföringar mottagna · {{sum}}"
   },
   "profile": {
     "phone": "Telefon",

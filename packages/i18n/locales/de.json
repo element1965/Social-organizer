@@ -400,7 +400,8 @@
     "markedMany": "Überweisungen markiert: {{n}}",
     "undo": "Rückgängig",
     "markError": "Markierung nicht gespeichert. Versuch es noch einmal.",
-    "paidToggle": "Überweisung von {{name}} erhalten"
+    "paidToggle": "Überweisung von {{name}} erhalten",
+    "allReceived": "Alle Überweisungen erhalten · {{sum}}"
   },
   "profile": {
     "phone": "Telefon",

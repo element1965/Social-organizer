@@ -403,7 +403,8 @@
     "markedMany": "Bonifici segnati: {{n}}",
     "undo": "Annulla",
     "markError": "Impossibile salvare il segno. Riprova.",
-    "paidToggle": "Bonifico di {{name}} ricevuto"
+    "paidToggle": "Bonifico di {{name}} ricevuto",
+    "allReceived": "Tutti i bonifici ricevuti · {{sum}}"
   },
   "profile": {
     "phone": "Telefono",

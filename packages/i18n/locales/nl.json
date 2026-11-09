@@ -400,7 +400,8 @@
     "markedMany": "Overboekingen gemarkeerd: {{n}}",
     "undo": "Ongedaan maken",
     "markError": "Markering niet opgeslagen. Probeer het opnieuw.",
-    "paidToggle": "Overboeking van {{name}} ontvangen"
+    "paidToggle": "Overboeking van {{name}} ontvangen",
+    "allReceived": "Alle overboekingen ontvangen · {{sum}}"
   },
   "profile": {
     "phone": "Telefoon",

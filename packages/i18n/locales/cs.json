@@ -406,7 +406,8 @@
     "markedMany": "Označeno převodů: {{n}}",
     "undo": "Zpět",
     "markError": "Označení se nepodařilo uložit. Zkuste to znovu.",
-    "paidToggle": "Převod od {{name}} přijat"
+    "paidToggle": "Převod od {{name}} přijat",
+    "allReceived": "Všechny převody přijaty · {{sum}}"
   },
   "profile": {
     "phone": "Telefon",

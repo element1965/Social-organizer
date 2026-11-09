@@ -406,7 +406,8 @@
     "markedMany": "Zaznaczono przelewów: {{n}}",
     "undo": "Cofnij",
     "markError": "Nie udało się zapisać. Spróbuj ponownie.",
-    "paidToggle": "Przelew od {{name}} otrzymany"
+    "paidToggle": "Przelew od {{name}} otrzymany",
+    "allReceived": "Wszystkie przelewy otrzymane · {{sum}}"
   },
   "profile": {
     "phone": "Telefon",
