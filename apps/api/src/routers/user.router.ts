@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { router, protectedProcedure } from '../trpc.js';
 import { TRPCError } from '@trpc/server';
-import { CONTACT_TYPES, CURRENCY_CODES, MIN_OBLIGATION_AMOUNT } from '@so/shared';
+import { CONTACT_TYPES, CURRENCY_CODES, MIN_OBLIGATION_AMOUNT, contactValueAllowed, type ContactType } from '@so/shared';
 import { canViewContacts } from '../services/visibility.service.js';
 import { sendUserDeletedNotification } from '../services/notification.service.js';
 import { countConnections } from '../services/connection-request.service.js';
@@ -127,19 +127,27 @@ export const userRouter = router({
     }),
 
   updateContacts: protectedProcedure
-    .input(z.array(z.object({ type: z.string(), value: z.string() })))
+    .input(z.array(z.object({
+      type: z.enum(CONTACT_TYPES.map((item) => item.type) as [ContactType, ...ContactType[]]),
+      value: z.string().max(2000),
+    })))
     .mutation(async ({ ctx, input }) => {
       // Telegram is auto-managed for Telegram sign-in; other users may set it themselves
       const hasTelegramLogin = (await ctx.db.platformAccount.count({
         where: { userId: ctx.userId, platform: 'TELEGRAM' },
       })) > 0;
-      for (const { type, value } of input) {
+      for (const item of input) {
+        const type = item.type;
+        const value = item.value.trim();
         if (type === 'telegram' && hasTelegramLogin) continue;
-        if (value.trim()) {
+        if (value && !contactValueAllowed(type, value)) {
+          throw new TRPCError({ code: 'BAD_REQUEST', message: 'INVALID_CONTACT' });
+        }
+        if (value) {
           await ctx.db.userContact.upsert({
             where: { userId_type: { userId: ctx.userId, type } },
-            create: { userId: ctx.userId, type, value: value.trim() },
-            update: { value: value.trim() },
+            create: { userId: ctx.userId, type, value },
+            update: { value },
           });
         } else {
           await ctx.db.userContact.deleteMany({

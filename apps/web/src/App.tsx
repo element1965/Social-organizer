@@ -10,13 +10,7 @@ import { ProtectedRoute } from './components/ProtectedRoute';
 import { NativePushBootstrap } from './components/NativePushBootstrap';
 import { AppShell } from './components/ui2/AppShell';
 import {
-  AccountStub,
-  HelpStub,
-  HistoryStub,
-  PersonStub,
   ProfileRedirect,
-  ProfileStub,
-  StakeStub,
 } from './components/ui2/stubs';
 import { useAuth } from './hooks/useAuth';
 import { afterSignInPath, readPendingInvite, safeInviteToken, setPendingInvite } from './components/onboarding/flow';
@@ -27,9 +21,18 @@ import { CollectionPage } from './pages/CollectionPage';
 import { OpenCollectionsPage } from './pages/OpenCollectionsPage';
 import { RetiredFeaturePage } from './pages/RetiredFeaturePage';
 import { InvitePage } from './pages/InvitePage';
+import { ProfilePage } from './pages/ProfilePage';
+import { AccountPage } from './pages/AccountPage';
+import { StakePage } from './pages/StakePage';
+import { HistoryPage } from './pages/HistoryPage';
+import { HelpPage } from './pages/HelpPage';
+import { PersonPage } from './pages/PersonPage';
+import { AdminStatsPage } from './pages/AdminStatsPage';
+import { AssistantPage } from './pages/AssistantPage';
+import { BroadcastScreen } from './pages/BroadcastScreen';
+import { FaqScreen } from './pages/FaqScreen';
 import { IntroPage } from './pages/IntroPage';
 import { SeedPage } from './pages/SeedPage';
-import { SettingsPage } from './pages/SettingsPage';
 import { SosLandingPage } from './pages/SosLandingPage';
 import { SupportChatPage } from './pages/SupportChatPage';
 import { PrivacyPage } from './pages/PrivacyPage';
@@ -241,16 +244,20 @@ export function App() {
               <Route path="/add" element={<Suspense fallback={null}><AddPage /></Suspense>} />
               <Route path="/add/qr" element={<Suspense fallback={null}><QrPage /></Suspense>} />
               <Route path="/add/scan" element={<Suspense fallback={null}><ScanPage /></Suspense>} />
-              <Route path="/me" element={<ProfileStub />} />
-              <Route path="/me/account" element={<AccountStub />} />
-              <Route path="/me/stake" element={<StakeStub />} />
+              <Route path="/me" element={<ProfilePage />} />
+              <Route path="/me/account" element={<AccountPage />} />
+              <Route path="/me/stake" element={<StakePage />} />
               <Route path="/me/open" element={<OpenCollectionsPage />} />
-              <Route path="/me/history" element={<HistoryStub />} />
-              <Route path="/me/help" element={<HelpStub />} />
-              <Route path="/me/settings" element={<SettingsPage />} />
+              <Route path="/me/history" element={<HistoryPage />} />
+              <Route path="/me/help" element={<HelpPage />} />
+              <Route path="/me/help/faq" element={<FaqScreen />} />
+              <Route path="/me/help/assistant" element={<AssistantPage />} />
+              <Route path="/me/broadcast" element={<BroadcastScreen />} />
+              <Route path="/me/stats" element={<AdminStatsPage />} />
+              <Route path="/me/settings" element={<Navigate to="/me" replace />} />
               <Route path="/people" element={<PeoplePage />} />
               <Route path="/people/:ring" element={<PeoplePage />} />
-              <Route path="/person/:id" element={<PersonStub />} />
+              <Route path="/person/:id" element={<PersonPage />} />
               <Route path="/collection/:id" element={<CollectionPage />} />
               <Route path="/support" element={<SupportChatPage />} />
               <Route path="/matches/*" element={<RetiredFeaturePage />} />

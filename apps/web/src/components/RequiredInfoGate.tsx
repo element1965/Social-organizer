@@ -6,7 +6,7 @@ import { Input } from './ui/input';
 import { SocialIcon } from './ui/social-icons';
 import { MessageCircle } from 'lucide-react';
 import { cn } from '../lib/utils';
-import { validateContact } from '@so/shared';
+import { validateContact, type ContactType } from '@so/shared';
 
 const CONTACT_FIELDS = [
   { type: 'whatsapp', placeholder: '+380...' },
@@ -42,8 +42,10 @@ export function RequiredInfoGate({ children }: { children: React.ReactNode }) {
   const contactsValid = filledContactsCount >= 2;
 
   const handleContactsSave = async () => {
-    const contactsArray = Object.entries(contacts)
-      .map(([type, value]) => ({ type, value }));
+    const contactsArray: { type: ContactType; value: string }[] = CONTACT_FIELDS.map((field) => ({
+      type: field.type,
+      value: contacts[field.type] ?? '',
+    }));
     await updateContacts.mutateAsync(contactsArray);
     await utils.user.checkRequiredInfo.invalidate();
   };

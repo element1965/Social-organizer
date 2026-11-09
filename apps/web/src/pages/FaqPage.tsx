@@ -11,7 +11,7 @@ import { VideoGuide } from '../components/VideoGuide';
 // faq-seed-04 — "How to send a help signal (SOS)?": the answer describes creating a collection, which is what the video shows.
 const FAQ_VIDEO_GROUP_IDS = new Set<string>(['faq-seed-04']);
 
-export function FaqPage() {
+export function FaqPage({ embedded = false }: { embedded?: boolean }) {
   const { t, i18n } = useTranslation();
   const lang = i18n.language.split('-')[0] || 'ru';
   const utils = trpc.useUtils();
@@ -140,15 +140,19 @@ export function FaqPage() {
     setShowForm(false);
   };
 
+  const showAdminTools = isAdmin && !showForm && !editingId;
+
   return (
-    <div className="p-4 pb-24 max-w-2xl mx-auto">
-      {/* Header */}
-      <div className="flex items-center justify-between mb-4 pr-12">
+    <div className={embedded ? 'max-w-2xl' : 'p-4 pb-24 max-w-2xl mx-auto'}>
+      {(showAdminTools || !embedded) && (
+      <div className={embedded ? 'mb-4 flex items-center justify-end' : 'mb-4 flex items-center justify-between pr-12'}>
+        {embedded ? null : (
         <h1 className="text-xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
           <HelpCircle className="w-6 h-6 text-amber-500" />
           {t('faq.title')}
         </h1>
-        {isAdmin && !showForm && !editingId && (
+        )}
+        {showAdminTools && (
           <div className="flex items-center gap-2">
             {displayItems.some(i => !(i as typeof i & { isLocalized?: boolean }).isLocalized) && (
               <button
@@ -174,6 +178,7 @@ export function FaqPage() {
           </div>
         )}
       </div>
+      )}
 
       {/* Create / Edit form */}
       {(showForm || editingId) && (

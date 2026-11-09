@@ -1,0 +1,399 @@
+import { useEffect, useRef, useState } from 'react';
+import { Navigate, useNavigate, useParams } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+import { buildContactUrl, isSafeContactUrl } from '@so/shared';
+import { isTelegramWebApp } from '@so/tg-adapter';
+import { trpc } from '../lib/trpc';
+import { useNicknames } from '../hooks/useNicknames';
+import { Avatar } from '../components/ui2/Avatar';
+import { Button } from '../components/ui2/Button';
+import { Card } from '../components/ui2/Card';
+import { Group, Row } from '../components/ui2/Group';
+import { Input } from '../components/ui2/Input';
+import { Screen } from '../components/ui2/Screen';
+import { PathChain } from '../components/person/PathChain';
+import { Sheet } from '../components/ui2/Sheet';
+import { formatMoney } from '../components/ui2/format';
+import { SocialIcon } from '../components/ui/social-icons';
+import { isLive } from '../components/profile/collections';
+import { ONLINE_MS } from '../components/profile/constants';
+import { relativeTime } from '../components/profile/dates';
+import { trpcCode } from '../components/profile/errors';
+import { instagramHandle, isMobileUa } from '../components/profile/openExternal';
+import { QueryState } from '../components/profile/QueryState';
+import { useSmartBack } from '../components/profile/useSmartBack';
+
+type Ask = { id: string; type: string; amount: number | null; status: string };
+
+function contactHref(type: string, value: string): string {
+  const url = type === 'phone' ? `tel:${value.trim()}` : buildContactUrl(type, value);
+  return isSafeContactUrl(url) ? url : '';
+}
+
+export function PersonPage() {
+  const { id = '' } = useParams();
+  return <PersonScreen key={id} />;
+}
+
+function PersonScreen() {
+  const { id = '' } = useParams();
+  const { t, i18n } = useTranslation();
+  const navigate = useNavigate();
+  const back = useSmartBack(t('common.back'), '/');
+  const utils = trpc.useUtils();
+  const resolve = useNicknames();
+
+  const me = trpc.user.me.useQuery();
+  const isSelf = me.data?.id === id;
+  const other = !!id && me.isSuccess && !isSelf;
+  const user = trpc.user.getById.useQuery({ userId: id }, { enabled: other });
+  const pathQuery = trpc.connection.findPath.useQuery({ targetUserId: id }, { enabled: other });
+  const nick = trpc.connection.getNickname.useQuery({ targetUserId: id }, { enabled: other });
+  const contacts = trpc.user.getContacts.useQuery({ userId: id }, { enabled: other });
+  const participating = trpc.collection.myParticipating.useQuery(undefined, { enabled: other });
+  const notes = trpc.notification.list.useQuery({ limit: 100 }, { enabled: other });
+  const history = trpc.stats.helpHistory.useQuery(
+    { userId: me.data?.id ?? '' },
+    { enabled: other && !!me.data?.id },
+  );
+
+  const path = pathQuery.data?.path ?? [];
+  const depth = path.length > 0 ? path.length - 1 : 0;
+  const ring1 = path.length === 2;
+  const deeper = path.length >= 3;
+  const outside = pathQuery.isSuccess && path.length === 0;
+
+  const outgoing = trpc.pending.myPending.useQuery(undefined, { enabled: deeper });
+  const setNickname = trpc.connection.setNickname.useMutation({
+    onSuccess: () => {
+      void utils.connection.getNickname.invalidate({ targetUserId: id });
+      void utils.connection.list.invalidate();
+    },
+  });
+  const sendRequest = trpc.pending.sendDirectRequest.useMutation({
+    onSuccess: (result) => {
+      void utils.pending.myPending.invalidate();
+      void utils.pending.directStatus.invalidate({ targetUserId: id });
+      if ('autoConnected' in result && result.autoConnected) {
+        void utils.connection.findPath.invalidate({ targetUserId: id });
+        void utils.connection.getNickname.invalidate({ targetUserId: id });
+        void utils.connection.list.invalidate();
+      }
+    },
+  });
+  const revoke = trpc.connection.revoke.useMutation({
+    onSuccess: () => {
+      void utils.connection.list.invalidate();
+      void utils.connection.findPath.invalidate();
+      void utils.pending.incoming.invalidate();
+      void utils.pending.myPending.invalidate();
+      navigate('/');
+    },
+  });
+
+  const [draft, setDraft] = useState<string | null>(null);
+  const [contactsOpen, setContactsOpen] = useState(false);
+  const [copied, setCopied] = useState<string | null>(null);
+  const [removeOpen, setRemoveOpen] = useState(false);
+  const draftRef = useRef('');
+  const savedRef = useRef<string | null>(null);
+  const ringRef = useRef(false);
+  const mutateRef = useRef(setNickname.mutate);
+  mutateRef.current = setNickname.mutate;
+  ringRef.current = ring1;
+  const serverNick = (nick.data?.nickname ?? '').trim();
+  const shown = draft ?? nick.data?.nickname ?? '';
+  draftRef.current = shown;
+  if (savedRef.current === null && nick.data) savedRef.current = serverNick;
+
+  useEffect(() => {
+    const userId = id;
+    return () => {
+      if (!ringRef.current || !userId || savedRef.current === null) return;
+      const next = draftRef.current.trim();
+      if (next === savedRef.current) return;
+      savedRef.current = next;
+      mutateRef.current({ targetUserId: userId, nickname: next });
+    };
+  }, [id]);
+
+  const commitNick = () => {
+    if (!ring1) return;
+    const next = shown.trim();
+    if (next === (savedRef.current ?? serverNick)) return;
+    savedRef.current = next;
+    setNickname.mutate({ targetUserId: id, nickname: next });
+  };
+
+  if (!id) {
+    return (
+      <Screen back={back} width="column">
+        <p className="py-8 text-center text-body font-semibold text-ink">{t('common.notFound')}</p>
+      </Screen>
+    );
+  }
+  if (isSelf) return <Navigate to="/me" replace />;
+
+  const loading = me.isLoading || user.isLoading || pathQuery.isLoading;
+  const missing = trpcCode(user.error) === 'NOT_FOUND';
+  if (loading || user.isError || pathQuery.isError || !user.data) {
+    return (
+      <Screen back={back} width="column">
+        {missing ? (
+          <p className="py-8 text-center text-body font-semibold text-ink">{t('common.notFound')}</p>
+        ) : (
+          <QueryState
+            isLoading={loading && !user.isError && !pathQuery.isError}
+            isError={user.isError || pathQuery.isError}
+            onRetry={() => {
+              void user.refetch();
+              void pathQuery.refetch();
+            }}
+          />
+        )}
+      </Screen>
+    );
+  }
+
+  const person = user.data;
+  const deleted = person.name === 'Deleted user';
+  const accountName = deleted ? t('person.deleted') : person.name;
+  const nickname = ring1 ? shown.trim() : '';
+  const display = nickname || accountName;
+  const online = !!person.lastSeen && Date.now() - new Date(person.lastSeen).getTime() < ONLINE_MS;
+  const viaNode = path.length > 2 ? path[path.length - 2] : undefined;
+  const viaName = viaNode ? resolve(viaNode.id, viaNode.name) : '';
+  const ring = depth === 1
+    ? t('person.ring1')
+    : depth === 2
+      ? t('person.ring2')
+      : depth === 3
+        ? t('person.ring3')
+        : depth > 3
+          ? t('person.ringN', { n: depth })
+          : '';
+  const ringLine = [ring, viaName ? t('person.via', { name: viaName }) : ''].filter(Boolean).join(' · ');
+
+  const asks = new Map<string, Ask>();
+  for (const row of participating.data ?? []) {
+    if (row.collection.creator.id !== id || row.unsubscribedAt || !isLive(row.collection.status)) continue;
+    asks.set(row.collection.id, {
+      id: row.collection.id,
+      type: row.collection.type,
+      amount: row.collection.amount,
+      status: row.collection.status,
+    });
+  }
+  for (const note of notes.data?.items ?? []) {
+    const collection = note.collection;
+    if (!collection || collection.creator.id !== id || !isLive(collection.status) || asks.has(collection.id)) continue;
+    asks.set(collection.id, {
+      id: collection.id,
+      type: collection.type,
+      amount: collection.amount,
+      status: collection.status,
+    });
+  }
+  const activeAsks = [...asks.values()];
+
+  const joined = (participating.data ?? []).filter((row) => row.collection.creator.id === id);
+  const joinedIds = new Set(joined.map((row) => row.id));
+  const helpedYou = (history.data?.helpedBy ?? []).filter((row) => row.userId === id && !joinedIds.has(row.id));
+  const requestSent = (outgoing.data ?? []).some((row) => row.toUser.id === id) || (sendRequest.isSuccess && !('autoConnected' in sendRequest.data && sendRequest.data.autoConnected)) || trpcCode(sendRequest.error) === 'CONFLICT';
+
+  const contactItems = [
+    ...(person.phone ? [{ type: 'phone', value: person.phone, label: t('profile.phone') }] : []),
+    ...(contacts.data ?? [])
+      .filter((contact) => contact.value.trim())
+      .map((contact) => ({ type: contact.type, value: contact.value, label: contact.label || t(`contacts.${contact.type}`) })),
+  ];
+  const visibleContacts = contactsOpen ? contactItems : contactItems.slice(0, 2);
+  const hiddenCount = contactItems.length - visibleContacts.length;
+
+  const openContact = (event: React.MouseEvent<HTMLAnchorElement>, type: string, value: string) => {
+    const href = contactHref(type, value);
+    if (!href) {
+      event.preventDefault();
+      return;
+    }
+    if (type === 'instagram' && isMobileUa()) {
+      event.preventDefault();
+      const handle = instagramHandle(value);
+      void navigator.clipboard.writeText(handle).then(() => {
+        setCopied(type);
+        window.setTimeout(() => setCopied((current) => (current === type ? null : current)), 2000);
+      }).catch(() => {
+        setCopied(null);
+      });
+      return;
+    }
+    if (isTelegramWebApp() && !href.startsWith('mailto:') && !href.startsWith('tel:')) {
+      event.preventDefault();
+      window.Telegram?.WebApp?.openLink?.(href, { try_instant_view: false });
+    }
+  };
+
+  return (
+    <Screen back={back} width="column">
+      {path.length > 1 ? <PathChain nodes={path} targetLabel={display} /> : null}
+      <div className={path.length > 1 ? 'mt-4 flex items-center gap-4' : 'mt-2 flex items-center gap-4'}>
+        <Avatar name={display} src={person.photoUrl} size={88} online={online} />
+        <div className="min-w-0">
+          <h2 className="truncate text-title font-bold text-ink">{display}</h2>
+          {ringLine ? <p className="mt-0.5 text-label font-semibold text-ink-muted">{ringLine}</p> : null}
+          {outside ? <p className="mt-0.5 text-label font-semibold text-ink-muted">{t('person.notInCircle')}</p> : null}
+          {online ? (
+            <p className="mt-1 text-label font-bold text-care">{t('profile.online')}</p>
+          ) : person.lastSeen ? (
+            <p className="mt-1 text-label font-semibold text-ink-muted">
+              {t('profile.lastSeen', { time: relativeTime(person.lastSeen, i18n.language) })}
+            </p>
+          ) : null}
+          {nickname && nickname !== accountName ? (
+            <p className="mt-1 text-label font-semibold text-ink-muted">{t('person.accountName', { name: accountName })}</p>
+          ) : null}
+        </div>
+      </div>
+
+      {ring1 ? (
+        <div className="mt-5">
+          <Input
+            label={t('person.nickname')}
+            hint={t('person.nicknameHint')}
+            value={shown}
+            maxLength={100}
+            placeholder={t('profile.nicknamePlaceholder')}
+            onChange={(event) => setDraft(event.target.value)}
+            onBlur={commitNick}
+          />
+        </div>
+      ) : null}
+
+      {activeAsks.length > 0 || contactItems.length > 0 || (contacts.isSuccess && contactItems.length === 0) ? (
+        <div className="mt-4 flex flex-wrap gap-2">
+          {activeAsks[0] ? (
+            <Button variant="primary" size="md" onClick={() => navigate(`/collection/${activeAsks[0]!.id}`)}>
+              {t('person.openCollection')}
+            </Button>
+          ) : null}
+          <Button
+            variant="secondary"
+            size="md"
+            onClick={() => document.getElementById('person-contacts')?.scrollIntoView({ behavior: 'smooth' })}
+          >
+            {t('person.contacts')}
+          </Button>
+        </div>
+      ) : null}
+
+      {activeAsks.map((ask) => (
+        <Card
+          key={ask.id}
+          className="mt-4"
+          title={ask.type === 'REGULAR' ? t('profile.every28') : t('profile.once')}
+          subtitle={ask.amount ? formatMoney(ask.amount) : t('profile.goalMissing')}
+        >
+          <Button variant="secondary" size="md" onClick={() => navigate(`/collection/${ask.id}`)}>
+            {t('person.openCollection')}
+          </Button>
+          {ask.status === 'BLOCKED' ? <p className="mt-2 text-label font-semibold text-ink-muted">{t('profile.paused')}</p> : null}
+        </Card>
+      ))}
+
+      {deeper ? (
+        <div className="mt-5">
+          {requestSent ? (
+            <p className="rounded-lg bg-care-soft px-4 py-3 text-body-s font-bold text-care">{t('person.requestSent')}</p>
+          ) : (
+            <>
+              <Button className="w-full" loading={sendRequest.isPending} onClick={() => sendRequest.mutate({ targetUserId: id })}>
+                {t('person.acquainted')}
+              </Button>
+              <p className="mt-2 text-label font-semibold text-ink-muted">{t('person.acquaintedHint')}</p>
+            </>
+          )}
+        </div>
+      ) : null}
+
+      <section id="person-contacts" className="mt-6">
+        <h2 className="mb-2 px-1 text-label font-bold text-ink-muted">{t('person.contacts')}</h2>
+        {!contacts.isSuccess ? null : contactItems.length === 0 ? (
+          <p className="px-1 text-body-s font-semibold text-ink-muted">
+            {ring1 ? t('person.noContacts') : t('person.contactsHidden')}
+          </p>
+        ) : (
+          <div className="flex flex-wrap gap-2">
+            {visibleContacts.map((contact) => {
+              const href = contactHref(contact.type, contact.value);
+              if (!href) return null;
+              const label = copied === contact.type ? t('common.copied') : contact.label;
+              return (
+                <a
+                  key={contact.type}
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={(event) => openContact(event, contact.type, contact.value)}
+                  className="so-focus inline-flex h-[26px] items-center gap-1.5 rounded-sm bg-surface-2 px-2.5 text-micro font-bold text-ink"
+                >
+                  <SocialIcon type={contact.type === 'phone' ? 'phone' : contact.type} className="h-4 w-4" />
+                  {label}
+                </a>
+              );
+            })}
+            {hiddenCount > 0 ? (
+              <button
+                type="button"
+                className="so-focus inline-flex h-[26px] items-center rounded-sm bg-surface-2 px-2.5 text-micro font-bold text-ink-muted"
+                onClick={() => setContactsOpen(true)}
+              >
+                {t('person.moreContacts', { count: hiddenCount })}
+              </button>
+            ) : null}
+          </div>
+        )}
+      </section>
+
+      {joined.length > 0 || helpedYou.length > 0 ? (
+        <Group title={t('person.shared')}>
+          {joined.map((row) => (
+            <Row
+              key={row.id}
+              title={row.collection.type === 'REGULAR' ? t('profile.every28') : t('profile.once')}
+              subtitle={formatMoney(row.amount)}
+              to={`/collection/${row.collection.id}`}
+              variant="link"
+            />
+          ))}
+          {helpedYou.map((row) => (
+            <Row key={row.id} title={t('person.helpedYou')} subtitle={formatMoney(row.amount)} />
+          ))}
+        </Group>
+      ) : participating.isSuccess && activeAsks.length === 0 ? (
+        <p className="mt-6 px-1 text-body-s font-semibold text-ink-muted">{t('person.noShared')}</p>
+      ) : null}
+
+      {ring1 ? (
+        <Button variant="textDanger" className="mt-8" onClick={() => setRemoveOpen(true)}>
+          {t('person.remove')}
+        </Button>
+      ) : null}
+
+      <Sheet
+        open={removeOpen}
+        onClose={() => setRemoveOpen(false)}
+        title={t('person.removeTitle')}
+        description={t('person.removeBody')}
+        footer={
+          <>
+            <Button variant="secondary" onClick={() => setRemoveOpen(false)}>{t('person.keep')}</Button>
+            <Button variant="danger" loading={revoke.isPending} onClick={() => revoke.mutate({ targetUserId: id })}>
+              {t('person.removeConfirm')}
+            </Button>
+          </>
+        }
+      />
+      {revoke.isError ? <p className="mt-2 text-label font-semibold text-sos">{t('common.error')}</p> : null}
+    </Screen>
+  );
+}

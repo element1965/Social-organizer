@@ -92,3 +92,19 @@ export function validateContact(type: string, value: string): string | null {
       return null;
   }
 }
+
+const URL_CONTACT_TYPES = new Set(['website', 'facebook', 'linkedin', 'vk']);
+
+/**
+ * Empty is allowed (the field is cleared).
+ * URL-type contacts may be a handle, a bare domain, or an http(s) URL — nothing else.
+ */
+export function contactValueAllowed(type: string, value: string): boolean {
+  const trimmed = value.trim();
+  if (validateContact(type, trimmed)) return false;
+  if (!trimmed || !URL_CONTACT_TYPES.has(type)) return true;
+  const scheme = /^([a-z][a-z0-9+.-]*):/i.exec(trimmed);
+  if (!scheme) return true;
+  const name = scheme[1]?.toLowerCase();
+  return name === 'http' || name === 'https';
+}

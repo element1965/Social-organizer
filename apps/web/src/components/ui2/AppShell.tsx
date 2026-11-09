@@ -3,6 +3,7 @@ import { Link, Outlet, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { trpc } from '../../lib/trpc';
 import { cn } from '../../lib/utils';
+import { useStoredFontScale } from '../profile/fontScale';
 import { useGraphSync } from '../../hooks/useGraphSync';
 import { useTelegramHaptics } from '../../hooks/useTelegram';
 import { useTheme } from '../../hooks/useTheme';
@@ -307,6 +308,7 @@ function LiveShell() {
 
 /** Authenticated application frame. Replaces the old phone-column Layout. */
 export function AppShell() {
+  useStoredFontScale();
   useGraphSync();
   return (
     <BannerProvider>
