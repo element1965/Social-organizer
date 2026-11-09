@@ -1195,7 +1195,11 @@
     "waiting_few": "{{count}} чакаюць вас",
     "waiting_many": "{{count}} чакаюць вас",
     "waiting_one": "{{count}} чакае вас",
-    "waiting_other": "{{count}} чакаюць вас"
+    "waiting_other": "{{count}} чакаюць вас",
+    "sortLabel": "Сартаванне",
+    "sortNew": "Спачатку новыя",
+    "sortName": "А–Я",
+    "showMore": "Паказаць яшчэ · засталося {{total}}"
   },
   "account": {
     "firstName": "Імя",

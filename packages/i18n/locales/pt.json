@@ -1188,7 +1188,11 @@
     "confirmError": "Não deu certo. Tente de novo.",
     "waiting_many": "{{count}} de pessoas estão esperando você",
     "waiting_one": "{{count}} está esperando você",
-    "waiting_other": "{{count}} estão esperando você"
+    "waiting_other": "{{count}} estão esperando você",
+    "sortLabel": "Ordenar",
+    "sortNew": "Mais recentes",
+    "sortName": "A–Z",
+    "showMore": "Mostrar mais · faltam {{total}}"
   },
   "account": {
     "firstName": "Nome",

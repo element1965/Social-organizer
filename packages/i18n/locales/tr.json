@@ -1181,7 +1181,11 @@
     "confirmBody": "{{name}} bağlantınızla geldi. Birbirinizi tanıdığınızı onaylayın.",
     "confirmError": "Olmadı. Yeniden deneyin.",
     "waiting_one": "{{count}} kişi sizi bekliyor",
-    "waiting_other": "{{count}} kişi sizi bekliyor"
+    "waiting_other": "{{count}} kişi sizi bekliyor",
+    "sortLabel": "Sıralama",
+    "sortNew": "Önce en yeni",
+    "sortName": "A–Z",
+    "showMore": "Daha fazla göster · {{total}} kaldı"
   },
   "account": {
     "firstName": "Ad",

@@ -1188,7 +1188,11 @@
     "confirmError": "זה לא עבד. נסו שוב.",
     "waiting_one": "{{count}} ממתין לכם",
     "waiting_two": "{{count}} ממתינים לכם",
-    "waiting_other": "{{count}} ממתינים לכם"
+    "waiting_other": "{{count}} ממתינים לכם",
+    "sortLabel": "מיון",
+    "sortNew": "החדשים קודם",
+    "sortName": "א–ת",
+    "showMore": "להציג עוד · נשארו {{total}}"
   },
   "account": {
     "firstName": "שם פרטי",

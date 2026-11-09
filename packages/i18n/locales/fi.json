@@ -1181,7 +1181,11 @@
     "confirmBody": "{{name}} tuli linkilläsi. Vahvista, että tunnette toisenne.",
     "confirmError": "Se ei onnistunut. Yritä uudelleen.",
     "waiting_one": "{{count}} odottaa sinua",
-    "waiting_other": "{{count}} odottaa sinua"
+    "waiting_other": "{{count}} odottaa sinua",
+    "sortLabel": "Järjestys",
+    "sortNew": "Uusimmat ensin",
+    "sortName": "A–Ö",
+    "showMore": "Näytä lisää · jäljellä {{total}}"
   },
   "account": {
     "firstName": "Etunimi",

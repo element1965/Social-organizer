@@ -1181,7 +1181,11 @@
     "confirmBody": "{{name}} आपके लिंक से आए। पुष्टि करें कि आप एक-दूसरे को जानते हैं।",
     "confirmError": "यह नहीं हो सका। फिर कोशिश करें।",
     "waiting_one": "{{count}} आपका इंतज़ार कर रहा है",
-    "waiting_other": "{{count}} आपका इंतज़ार कर रहे हैं"
+    "waiting_other": "{{count}} आपका इंतज़ार कर रहे हैं",
+    "sortLabel": "क्रम",
+    "sortNew": "नए पहले",
+    "sortName": "A–Z",
+    "showMore": "और दिखाएँ · {{total}} बाकी"
   },
   "account": {
     "firstName": "नाम",

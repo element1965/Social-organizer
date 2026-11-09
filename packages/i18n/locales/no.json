@@ -1181,7 +1181,11 @@
     "confirmBody": "{{name}} kom via lenken din. Bekreft at dere kjenner hverandre.",
     "confirmError": "Det gikk ikke. Prøv igjen.",
     "waiting_one": "{{count}} venter på deg",
-    "waiting_other": "{{count}} venter på deg"
+    "waiting_other": "{{count}} venter på deg",
+    "sortLabel": "Sortering",
+    "sortNew": "Nyeste først",
+    "sortName": "A–Å",
+    "showMore": "Vis flere · {{total}} igjen"
   },
   "account": {
     "firstName": "Fornavn",

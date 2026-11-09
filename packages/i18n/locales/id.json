@@ -1174,7 +1174,11 @@
     "dontKnow": "Kami tidak",
     "confirmBody": "{{name}} datang lewat tautan Anda. Konfirmasi bahwa Anda saling mengenal.",
     "confirmError": "Tidak berhasil. Coba lagi.",
-    "waiting_other": "{{count}} orang menunggu Anda"
+    "waiting_other": "{{count}} orang menunggu Anda",
+    "sortLabel": "Urutkan",
+    "sortNew": "Terbaru dulu",
+    "sortName": "A–Z",
+    "showMore": "Tampilkan lagi · sisa {{total}}"
   },
   "account": {
     "firstName": "Nama depan",

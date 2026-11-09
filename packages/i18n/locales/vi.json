@@ -1174,7 +1174,11 @@
     "dontKnow": "Không quen nhau",
     "confirmBody": "{{name}} vào bằng liên kết của bạn. Hãy xác nhận là quen nhau.",
     "confirmError": "Không thực hiện được. Hãy thử lại.",
-    "waiting_other": "Có {{count}} người đang chờ bạn"
+    "waiting_other": "Có {{count}} người đang chờ bạn",
+    "sortLabel": "Sắp xếp",
+    "sortNew": "Mới nhất trước",
+    "sortName": "A–Z",
+    "showMore": "Xem thêm · còn {{total}}"
   },
   "account": {
     "firstName": "Tên",

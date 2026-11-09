@@ -1188,7 +1188,11 @@
     "confirmError": "Није успело. Покушајте поново.",
     "waiting_few": "{{count}} вас чекају",
     "waiting_one": "{{count}} вас чека",
-    "waiting_other": "{{count}} вас чека"
+    "waiting_other": "{{count}} вас чека",
+    "sortLabel": "Сортирање",
+    "sortNew": "Најновији прво",
+    "sortName": "А–Ш",
+    "showMore": "Прикажи још · преостало {{total}}"
   },
   "account": {
     "firstName": "Име",
