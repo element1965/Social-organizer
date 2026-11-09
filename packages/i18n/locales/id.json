@@ -106,7 +106,8 @@
       "blockScreen": "Screen",
       "blockScene": "Scene",
       "blockSite": "Site"
-    }
+    },
+    "reloadPage": "Muat ulang halaman"
   },
   "auth": {
     "password": "Kata sandi",

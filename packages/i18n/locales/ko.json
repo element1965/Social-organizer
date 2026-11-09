@@ -106,7 +106,8 @@
       "blockScreen": "Screen",
       "blockScene": "Scene",
       "blockSite": "Site"
-    }
+    },
+    "reloadPage": "페이지를 새로고침하세요"
   },
   "auth": {
     "password": "비밀번호",

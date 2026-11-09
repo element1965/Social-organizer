@@ -106,7 +106,8 @@
       "blockScreen": "Screen",
       "blockScene": "Scene",
       "blockSite": "Site"
-    }
+    },
+    "reloadPage": "Reîncarcă pagina"
   },
   "auth": {
     "password": "Parola",

@@ -106,7 +106,8 @@
       "blockScreen": "Screen",
       "blockScene": "Scene",
       "blockSite": "Site"
-    }
+    },
+    "reloadPage": "Seite neu laden"
   },
   "auth": {
     "password": "Passwort",

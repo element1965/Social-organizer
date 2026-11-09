@@ -48,7 +48,7 @@ export function InvitePage() {
   const { token = '' } = useParams<{ token: string }>();
   const isAuthenticated = useAuth((s) => s.isAuthenticated);
   const logout = useAuth((s) => s.logout);
-  const isRealUser = isAuthenticated && localStorage.getItem('accessToken') !== 'demo-token';
+  const isRealUser = isAuthenticated;
   // A newcomer decided by the sign-in path (flow.ts), read once before effects can clear anything
   const [firstRun] = useState(isFirstRunPending);
 

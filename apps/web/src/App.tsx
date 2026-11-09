@@ -1,5 +1,6 @@
-import { lazy, Suspense, useEffect, useRef, useState } from 'react';
+import { lazy, Suspense, useEffect, useRef, useState, type ComponentType } from 'react';
 import { BrowserRouter, Navigate, Outlet, Route, Routes, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { App as CapApp } from '@capacitor/app';
 import { Browser } from '@capacitor/browser';
@@ -9,44 +10,91 @@ import { TelegramBootstrap } from './components/TelegramBootstrap';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { NativePushBootstrap } from './components/NativePushBootstrap';
 import { AppShell } from './components/ui2/AppShell';
-import {
-  ProfileRedirect,
-} from './components/ui2/stubs';
+import { ProfileRedirect } from './components/ui2/stubs';
 import { useAuth } from './hooks/useAuth';
 import { afterSignInPath, readPendingInvite, safeInviteToken, safeMasked, safePath, setPendingInvite } from './components/onboarding/flow';
-import { LoginPage } from './pages/LoginPage';
 import { LandingPage } from './pages/LandingPage';
-import { AskPage } from './pages/AskPage';
-import { CollectionPage } from './pages/CollectionPage';
-import { OpenCollectionsPage } from './pages/OpenCollectionsPage';
-import { RetiredFeaturePage } from './pages/RetiredFeaturePage';
-import { InvitePage } from './pages/InvitePage';
-import { ProfilePage } from './pages/ProfilePage';
-import { AccountPage } from './pages/AccountPage';
-import { StakePage } from './pages/StakePage';
-import { HistoryPage } from './pages/HistoryPage';
-import { HelpPage } from './pages/HelpPage';
-import { PersonPage } from './pages/PersonPage';
-import { AdminStatsPage } from './pages/AdminStatsPage';
-import { AssistantPage } from './pages/AssistantPage';
-import { BroadcastScreen } from './pages/BroadcastScreen';
-import { FaqScreen } from './pages/FaqScreen';
-import { IntroPage } from './pages/IntroPage';
-import { SeedPage } from './pages/SeedPage';
-import { SosLandingPage } from './pages/SosLandingPage';
-import { SupportChatPage } from './pages/SupportChatPage';
-import { PrivacyPage } from './pages/PrivacyPage';
-import { TermsPage } from './pages/TermsPage';
-import { DeleteAccountPage } from './pages/DeleteAccountPage';
-import { HowPage } from './pages/HowPage';
 import { GetRedirect, RedirectHome } from './components/site/redirects';
-import { GoogleCallbackPage } from './pages/GoogleCallbackPage';
-import { AppleCallbackPage } from './pages/AppleCallbackPage';
-import { CirclePage } from './pages/CirclePage';
-import { PeoplePage } from './pages/PeoplePage';
-const AddPage = lazy(() => import('./pages/AddPage').then((module) => ({ default: module.AddPage })));
-const QrPage = lazy(() => import('./pages/QrPage').then((module) => ({ default: module.QrPage })));
-const ScanPage = lazy(() => import('./pages/ScanPage').then((module) => ({ default: module.ScanPage })));
+
+/** Named-export pages, each its own chunk. The guest landing stays in the entry chunk. */
+function lazyPage<M, K extends keyof M>(load: () => Promise<M>, name: K) {
+  return lazy(() =>
+    load()
+      .catch(() => load())
+      .then((module) => ({ default: module[name] as ComponentType })),
+  );
+}
+
+/** Light stand-in while a route chunk loads. The shell stays put; public pages cover the viewport. */
+function RouteFallback({ full = false }: { full?: boolean }) {
+  const { t } = useTranslation();
+  return (
+    <div
+      className={full ? 'grid min-h-dvh place-items-center bg-canvas' : 'grid min-h-[40vh] place-items-center'}
+      role="status"
+    >
+      <span className="sr-only">{t('common.loading')}</span>
+      <div className="h-8 w-8 animate-spin rounded-full border-4 border-line border-t-care" aria-hidden />
+    </div>
+  );
+}
+
+function PublicRoutes() {
+  return (
+    <Suspense fallback={<RouteFallback full />}>
+      <Outlet />
+    </Suspense>
+  );
+}
+
+function ShellRoutes() {
+  return (
+    <Suspense fallback={<RouteFallback />}>
+      <Outlet />
+    </Suspense>
+  );
+}
+
+/** Warm the Circle chunk as soon as a session exists, so the signed-in home is ready. */
+function PrefetchCircle() {
+  const isAuthenticated = useAuth((s) => s.isAuthenticated);
+  useEffect(() => {
+    if (isAuthenticated) void loadCircle();
+  }, [isAuthenticated]);
+  return null;
+}
+
+const loadCircle = () => import('./pages/CirclePage');
+const CirclePage = lazyPage(loadCircle, 'CirclePage');
+const LoginPage = lazyPage(() => import('./pages/LoginPage'), 'LoginPage');
+const AskPage = lazyPage(() => import('./pages/AskPage'), 'AskPage');
+const CollectionPage = lazyPage(() => import('./pages/CollectionPage'), 'CollectionPage');
+const OpenCollectionsPage = lazyPage(() => import('./pages/OpenCollectionsPage'), 'OpenCollectionsPage');
+const InvitePage = lazyPage(() => import('./pages/InvitePage'), 'InvitePage');
+const ProfilePage = lazyPage(() => import('./pages/ProfilePage'), 'ProfilePage');
+const AccountPage = lazyPage(() => import('./pages/AccountPage'), 'AccountPage');
+const StakePage = lazyPage(() => import('./pages/StakePage'), 'StakePage');
+const HistoryPage = lazyPage(() => import('./pages/HistoryPage'), 'HistoryPage');
+const HelpPage = lazyPage(() => import('./pages/HelpPage'), 'HelpPage');
+const PersonPage = lazyPage(() => import('./pages/PersonPage'), 'PersonPage');
+const AdminStatsPage = lazyPage(() => import('./pages/AdminStatsPage'), 'AdminStatsPage');
+const AssistantPage = lazyPage(() => import('./pages/AssistantPage'), 'AssistantPage');
+const BroadcastScreen = lazyPage(() => import('./pages/BroadcastScreen'), 'BroadcastScreen');
+const FaqScreen = lazyPage(() => import('./pages/FaqScreen'), 'FaqScreen');
+const IntroPage = lazyPage(() => import('./pages/IntroPage'), 'IntroPage');
+const SeedPage = lazyPage(() => import('./pages/SeedPage'), 'SeedPage');
+const SosLandingPage = lazyPage(() => import('./pages/SosLandingPage'), 'SosLandingPage');
+const SupportChatPage = lazyPage(() => import('./pages/SupportChatPage'), 'SupportChatPage');
+const PrivacyPage = lazyPage(() => import('./pages/PrivacyPage'), 'PrivacyPage');
+const TermsPage = lazyPage(() => import('./pages/TermsPage'), 'TermsPage');
+const DeleteAccountPage = lazyPage(() => import('./pages/DeleteAccountPage'), 'DeleteAccountPage');
+const HowPage = lazyPage(() => import('./pages/HowPage'), 'HowPage');
+const GoogleCallbackPage = lazyPage(() => import('./pages/GoogleCallbackPage'), 'GoogleCallbackPage');
+const AppleCallbackPage = lazyPage(() => import('./pages/AppleCallbackPage'), 'AppleCallbackPage');
+const PeoplePage = lazyPage(() => import('./pages/PeoplePage'), 'PeoplePage');
+const AddPage = lazyPage(() => import('./pages/AddPage'), 'AddPage');
+const QrPage = lazyPage(() => import('./pages/QrPage'), 'QrPage');
+const ScanPage = lazyPage(() => import('./pages/ScanPage'), 'ScanPage');
 
 const isNativeApp = Capacitor.isNativePlatform();
 
@@ -213,22 +261,11 @@ export function App() {
           <TelegramBootstrap>
           <NativePushBootstrap />
           <GoogleAuthDeepLinkHandler />
+          <PrefetchCircle />
           <Routes>
             <Route path="/welcome" element={<RedirectHome />} />
             <Route path="/arvut" element={<RedirectHome />} />
             <Route path="/get" element={<GetRedirect />} />
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/auth/google/callback" element={<GoogleCallbackPage />} />
-            <Route path="/auth/apple/done" element={<AppleCallbackPage />} />
-            <Route path="/privacy" element={<PrivacyPage />} />
-            <Route path="/terms" element={<TermsPage />} />
-            <Route path="/delete-account" element={<DeleteAccountPage />} />
-            <Route path="/invite/:token" element={<InvitePage />} />
-            <Route path="/sos/:collectionId" element={<SosLandingPage />} />
-            <Route path="/how" element={<HowPage />} />
-            <Route path="/intro" element={<ProtectedRoute><IntroPage /></ProtectedRoute>} />
-            <Route path="/seed" element={<ProtectedRoute><SeedPage /></ProtectedRoute>} />
-
             <Route path="/dashboard" element={<Navigate to="/" replace />} />
             <Route path="/network" element={<Navigate to="/" replace />} />
             <Route path="/notifications" element={<Navigate to="/" replace />} />
@@ -236,13 +273,30 @@ export function App() {
             <Route path="/settings" element={<Navigate to="/me" replace />} />
             <Route path="/faq" element={<Navigate to="/me/help" replace />} />
             <Route path="/onboarding" element={<Navigate to="/intro" replace />} />
+            <Route path="/matches/*" element={<Navigate to="/" replace />} />
+            <Route path="/skills/*" element={<Navigate to="/" replace />} />
+            <Route path="/needs/*" element={<Navigate to="/" replace />} />
             <Route path="/profile/:userId" element={<ProfileRedirect />} />
+
+            <Route element={<PublicRoutes />}>
+              <Route path="/login" element={<LoginPage />} />
+              <Route path="/auth/google/callback" element={<GoogleCallbackPage />} />
+              <Route path="/auth/apple/done" element={<AppleCallbackPage />} />
+              <Route path="/privacy" element={<PrivacyPage />} />
+              <Route path="/terms" element={<TermsPage />} />
+              <Route path="/delete-account" element={<DeleteAccountPage />} />
+              <Route path="/invite/:token" element={<InvitePage />} />
+              <Route path="/sos/:collectionId" element={<SosLandingPage />} />
+              <Route path="/how" element={<HowPage />} />
+              <Route path="/intro" element={<ProtectedRoute><IntroPage /></ProtectedRoute>} />
+              <Route path="/seed" element={<ProtectedRoute><SeedPage /></ProtectedRoute>} />
+            </Route>
 
             {DevUI ? (
               <Route
                 path="/dev/ui"
                 element={
-                  <Suspense fallback={null}>
+                  <Suspense fallback={<RouteFallback full />}>
                     <DevUI />
                   </Suspense>
                 }
@@ -252,7 +306,7 @@ export function App() {
               <Route
                 path="/dev/moderation"
                 element={
-                  <Suspense fallback={null}>
+                  <Suspense fallback={<RouteFallback full />}>
                     <ModerationPreview />
                   </Suspense>
                 }
@@ -260,31 +314,30 @@ export function App() {
             ) : null}
 
             <Route element={<ShellGate />}>
-              <Route path="/" element={<HomeIndex />} />
-              <Route path="/ask" element={<AskPage />} />
-              <Route path="/add" element={<Suspense fallback={null}><AddPage /></Suspense>} />
-              <Route path="/add/qr" element={<Suspense fallback={null}><QrPage /></Suspense>} />
-              <Route path="/add/scan" element={<Suspense fallback={null}><ScanPage /></Suspense>} />
-              <Route path="/me" element={<ProfilePage />} />
-              <Route path="/me/account" element={<AccountPage />} />
-              <Route path="/me/stake" element={<StakePage />} />
-              <Route path="/me/open" element={<OpenCollectionsPage />} />
-              <Route path="/me/history" element={<HistoryPage />} />
-              <Route path="/me/help" element={<HelpPage />} />
-              <Route path="/me/help/faq" element={<FaqScreen />} />
-              <Route path="/me/help/assistant" element={<AssistantPage />} />
-              <Route path="/me/broadcast" element={<BroadcastScreen />} />
-              <Route path="/me/stats" element={<AdminStatsPage />} />
-              <Route path="/me/settings" element={<Navigate to="/me" replace />} />
-              <Route path="/people" element={<PeoplePage />} />
-              <Route path="/people/:ring" element={<PeoplePage />} />
-              <Route path="/person/:id" element={<PersonPage />} />
-              <Route path="/collection/:id" element={<CollectionPage />} />
-              <Route path="/support" element={<SupportChatPage />} />
-              <Route path="/matches/*" element={<RetiredFeaturePage />} />
-              <Route path="/skills/*" element={<RetiredFeaturePage />} />
-              <Route path="/needs/*" element={<RetiredFeaturePage />} />
-              <Route path="*" element={<Navigate to="/" replace />} />
+              <Route element={<ShellRoutes />}>
+                <Route path="/" element={<HomeIndex />} />
+                <Route path="/ask" element={<AskPage />} />
+                <Route path="/add" element={<AddPage />} />
+                <Route path="/add/qr" element={<QrPage />} />
+                <Route path="/add/scan" element={<ScanPage />} />
+                <Route path="/me" element={<ProfilePage />} />
+                <Route path="/me/account" element={<AccountPage />} />
+                <Route path="/me/stake" element={<StakePage />} />
+                <Route path="/me/open" element={<OpenCollectionsPage />} />
+                <Route path="/me/history" element={<HistoryPage />} />
+                <Route path="/me/help" element={<HelpPage />} />
+                <Route path="/me/help/faq" element={<FaqScreen />} />
+                <Route path="/me/help/assistant" element={<AssistantPage />} />
+                <Route path="/me/broadcast" element={<BroadcastScreen />} />
+                <Route path="/me/stats" element={<AdminStatsPage />} />
+                <Route path="/me/settings" element={<Navigate to="/me" replace />} />
+                <Route path="/people" element={<PeoplePage />} />
+                <Route path="/people/:ring" element={<PeoplePage />} />
+                <Route path="/person/:id" element={<PersonPage />} />
+                <Route path="/collection/:id" element={<CollectionPage />} />
+                <Route path="/support" element={<SupportChatPage />} />
+                <Route path="*" element={<Navigate to="/" replace />} />
+              </Route>
             </Route>
           </Routes>
           </TelegramBootstrap>

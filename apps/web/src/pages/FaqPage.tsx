@@ -4,12 +4,8 @@ import { useTranslation } from 'react-i18next';
 import { trpc, authFetch } from '../lib/trpc';
 import { Card } from '../components/ui/card';
 import { RichText } from '../components/ui/rich-text';
-import { VideoGuide } from '../components/VideoGuide';
 
 // FAQ content lives in the DB (one row per language, translations share groupId = source item id).
-// Items listed here get the regular-collection video button inside their answer, in every language.
-// faq-seed-04 — "How to send a help signal (SOS)?": the answer describes creating a collection, which is what the video shows.
-const FAQ_VIDEO_GROUP_IDS = new Set<string>(['faq-seed-04']);
 
 export function FaqPage({ embedded = false }: { embedded?: boolean }) {
   const { t, i18n } = useTranslation();
@@ -348,7 +344,6 @@ export function FaqPage({ embedded = false }: { embedded?: boolean }) {
                       />
                     )}
                     <RichText text={item.answer} className="text-sm text-gray-600 dark:text-gray-300 whitespace-pre-wrap" />
-                    {FAQ_VIDEO_GROUP_IDS.has(item.groupId ?? item.id) && <VideoGuide className="mt-3" />}
                     {isAdmin && (
                       <div className="flex items-center gap-2 mt-3 pt-3 border-t border-gray-100 dark:border-gray-800">
                         <button

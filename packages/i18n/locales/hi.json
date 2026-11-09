@@ -106,7 +106,8 @@
       "blockScreen": "Screen",
       "blockScene": "Scene",
       "blockSite": "Site"
-    }
+    },
+    "reloadPage": "पेज फिर से लोड करें"
   },
   "auth": {
     "password": "पासवर्ड",
