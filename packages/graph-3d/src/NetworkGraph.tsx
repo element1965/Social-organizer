@@ -92,9 +92,17 @@ const AUTO_ROTATE_RESUME_MS = 2500;
 const LABELS_PER_FRAME = 6;      // lazily created labels per frame
 const BOB_AMPLITUDE = 0.7;       // gentle floating of close nodes
 const CHARGE_BASE = 38;          // node repulsion; lower = a more compact graph
-const BALL_STRENGTH = 0.5;       // pull of the spherical shells (0 = free-form layout)
+// Pull of the spherical shells (0 = free-form layout). Kept soft: a stiff pull overshoots and
+// makes nodes visibly bounce while the graph forms.
+const BALL_STRENGTH = 0.12;
 const BALL_SHELLS = [0, 0.38, 0.7, 1]; // shell radius by depth, as a fraction of the outer radius
+const MAX_NODE_SPEED = 4;        // world units per tick; caps the "explosion" of the first ticks
 const MIN_DOT_PX = 0.0042;       // far dots stay a few pixels; nearer rings stay larger
+const LOD_HYSTERESIS = 1.08;     // a node must move 8% past a LOD border to switch back (no flicker)
+// Nodes the camera flies through fade out instead of filling the screen and blocking the view
+const NEAR_HIDE = 6;
+const NEAR_FADE = 20;
+const NEAR_FADE2 = NEAR_FADE * NEAR_FADE;
 const MARK_SIZE = 10;            // centre tile, world units
 const NEAREST_LABELS = 8;        // labels on the nearest ring-1/2 nodes, plus the path
 const PATH_CURVE = 0.15;         // slight bend; 0 is a straight line
@@ -1087,6 +1095,31 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
     ball.initialize = (ns: SimNode[]) => { ballNodes = ns; };
     fg.d3Force('ball', ball);
 
+    // The default centering force translates every free node each tick while the pinned center
+    // snaps back to the origin — the whole cloud jitters around "me". The shells already keep
+    // the graph centered, so drop it.
+    fg.d3Force('center', null);
+
+    // Speed limit, registered last so it sees the sum of all forces: no node can jump across
+    // the screen in the first ticks, the graph unfolds instead of exploding.
+    let calmNodes: SimNode[] = [];
+    const calm = () => {
+      for (const n of calmNodes) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const m = n as any;
+        const vx = m.vx ?? 0, vy = m.vy ?? 0, vz = m.vz ?? 0;
+        const sp2 = vx * vx + vy * vy + vz * vz;
+        if (sp2 > MAX_NODE_SPEED * MAX_NODE_SPEED) {
+          const k = MAX_NODE_SPEED / Math.sqrt(sp2);
+          m.vx = vx * k;
+          m.vy = vy * k;
+          m.vz = vz * k;
+        }
+      }
+    };
+    calm.initialize = (ns: SimNode[]) => { calmNodes = ns; };
+    fg.d3Force('calm', calm);
+
     // --- Renderer: cap DPR at 2, and again if the screen scale changes ---
     const renderer = fg.renderer() as THREE.WebGLRenderer;
     const applyDpr = () => {
@@ -1260,7 +1293,13 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
         const p = v.outer.position;
         const dx = p.x - camPos.x, dy = p.y - camPos.y, dz = p.z - camPos.z;
         const d2 = dx * dx + dy * dy + dz * dz;
-        const level = d2 < LOD_CLOSE2 ? 0 : d2 < LOD_MEDIUM2 ? 1 : d2 < LOD_FAR2 ? 2 : 3;
+        let level = d2 < LOD_CLOSE2 ? 0 : d2 < LOD_MEDIUM2 ? 1 : d2 < LOD_FAR2 ? 2 : 3;
+        // Hysteresis: going back to a coarser level needs a margin, so a node sitting on a border
+        // (camera rotating / node floating) does not flip between avatar and dot every frame
+        if (v.level >= 0 && level > v.level) {
+          const border = v.level === 0 ? LOD_CLOSE2 : v.level === 1 ? LOD_MEDIUM2 : LOD_FAR2;
+          if (d2 < border * LOD_HYSTERESIS * LOD_HYSTERESIS) level = v.level;
+        }
         if (level !== v.level) applyLevel(v, level);
 
         const showLabel = wantsLabel(v);
@@ -1313,7 +1352,13 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
           else if (now < v.bornAt + INTRO_MS) s = Math.max(0.0001, easeOutBack((now - v.bornAt) / INTRO_MS));
         }
         v.hover += ((hoverId === v.node.id ? 1 : 0) - v.hover) * 0.22;
-        const finalScale = s * (1 + 0.3 * v.hover);
+        // Fade out nodes right in front of the lens: the camera passes through them instead of
+        // getting "stuck" behind a huge avatar (a near-zero scale also keeps them out of picking)
+        let near = 1;
+        if (d2 < NEAR_FADE2 && !v.node.isCenter) {
+          near = THREE.MathUtils.smoothstep(Math.sqrt(d2), NEAR_HIDE, NEAR_FADE);
+        }
+        const finalScale = Math.max(0.0001, s * near * (1 + 0.3 * v.hover));
         if (Math.abs(finalScale - v.lastScale) > 0.0005) {
           v.inner.scale.setScalar(finalScale);
           v.lastScale = finalScale;
@@ -1794,7 +1839,7 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
         cooldownTicks={holdLayout ? 0 : Infinity}
         cooldownTime={7000}
         d3AlphaDecay={0.014}
-        d3VelocityDecay={0.28}
+        d3VelocityDecay={0.4}
         showNavInfo={false}
       />
     </div>
