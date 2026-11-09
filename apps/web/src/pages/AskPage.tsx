@@ -15,7 +15,7 @@ import { useShellMode } from '../components/ui2/shell-mode';
 import { formatMoney } from '../components/ui2/format';
 import { Card } from '../components/ui2/Card';
 import { trpc } from '../lib/trpc';
-import { cn } from '../lib/utils';
+import { PathToRequestSheet } from '../components/circle/PathToRequest';
 
 const APPS = ['appTelegram', 'appWhatsApp', 'appSignal', 'appViber', 'appDiscord', 'appOther'] as const;
 
@@ -72,7 +72,11 @@ function AskBody() {
     );
   }
   if (!access.data.allowed) {
-    return <PathSheet access={access.data} onClose={() => navigate('/')} />;
+    return (
+      <PathToRequestSheet open onClose={() => navigate('/')}>
+        <AskPreview />
+      </PathToRequestSheet>
+    );
   }
 
   const whole = parseWhole(amount);
@@ -239,7 +243,7 @@ function OwnCollection({ col }: { col: { id: string; amount: number | null; curr
   const people = col.participantCount ?? col._count?.obligations ?? 0;
   const meta = col.blockReason
     ? t('collection.suspended')
-    : t('ask.ownMeta', { count: people });
+    : t('collection.participantsCount', { count: people });
 
   return (
     <Link to={`/collection/${col.id}`} className="so-focus flex items-center gap-3 rounded-xl bg-surface p-3 shadow-card">
@@ -280,100 +284,22 @@ function Ring({ ratio }: { ratio: number | null }) {
   );
 }
 
-type Access = {
-  directCount: number;
-  networkCount: number;
-  needDirect: number;
-  needNetwork: number;
-};
-
-function PathSheet({ access, onClose }: { access: Access; onClose: () => void }) {
+/** What a collection looks like in the circle: shown under the path while asking is locked. */
+function AskPreview() {
   const { t } = useTranslation();
-  const navigate = useNavigate();
-  const connections = trpc.connection.list.useQuery();
-  const [preview, setPreview] = useState(false);
-  const [copied, setCopied] = useState(false);
-  const empty = access.directCount === 0 && access.networkCount === 0;
-  const alone = (connections.data ?? []).filter((person) => person.connectionCount <= 1);
-  const aloneNames = alone.slice(0, 3).map((person) => person.displayName || person.name);
-
-  const remind = async () => {
-    const text = t('ask.remindText');
-    try {
-      if (navigator.share) {
-        await navigator.share({ text });
-        return;
-      }
-    } catch (error) {
-      if (error instanceof DOMException && error.name === 'AbortError') return;
-    }
-    try {
-      await navigator.clipboard.writeText(text);
-      setCopied(true);
-    } catch {
-      setCopied(false);
-    }
-  };
-
+  const [open, setOpen] = useState(false);
   return (
-    <Sheet
-      open
-      onClose={onClose}
-      title={empty ? t('ask.pathTitleEmpty') : t('ask.pathTitle')}
-      description={t('ask.pathLead')}
-    >
-      <div className="flex flex-col gap-4">
-        <Step
-          title={t('ask.circleStep')}
-          progress={t('ask.progress', { count: access.directCount, need: access.needDirect })}
-          ratio={access.needDirect > 0 ? access.directCount / access.needDirect : 0}
-          hint={t('ask.circleHint')}
-        />
-        <Step
-          title={t('ask.networkStep')}
-          progress={t('ask.progress', { count: access.networkCount, need: access.needNetwork })}
-          ratio={access.needNetwork > 0 ? access.networkCount / access.needNetwork : 0}
-          hint={aloneHint(t, aloneNames)}
-        />
-        <Button variant="secondary" className="w-full" onClick={remind}>
-          {copied ? t('ask.reminded') : t('ask.remind')}
-        </Button>
-        <button type="button" className="so-focus text-left text-label font-bold text-care" onClick={() => setPreview((value) => !value)}>
-          {preview ? t('ask.previewHide') : t('ask.preview')}
-        </button>
-        {preview ? (
-          <div className="rounded-lg bg-canvas p-3">
-            <p className="text-label font-semibold text-ink-muted">{t('ask.previewCaption')}</p>
-            <p className="mt-1 text-h3 font-extrabold tabular-nums">{formatMoney(80)}</p>
-            <Meter mine={0} others={40} goal={80} showMine={false} />
-          </div>
-        ) : null}
-      </div>
-      <Button className="mt-4 w-full" onClick={() => navigate('/add')}>{t('ask.addPerson')}</Button>
-      <Button variant="text" className="mt-1 w-full" onClick={onClose}>{t('ask.later')}</Button>
-    </Sheet>
-  );
-}
-
-function aloneHint(t: (key: string, options?: Record<string, string>) => string, names: string[]): string {
-  const only = names[0];
-  if (!only) return t('ask.networkHint');
-  if (names.length === 1) return t('ask.aloneOne', { name: only });
-  return t('ask.aloneMany', { names: names.join(', ') });
-}
-
-function Step({ title, progress, ratio, hint }: { title: string; progress: string; ratio: number; hint: string }) {
-  const width = `${Math.max(0, Math.min(100, ratio * 100))}%`;
-  return (
-    <section>
-      <div className="flex items-baseline justify-between gap-3">
-        <h3 className="text-body font-extrabold">{title}</h3>
-        <span className="text-label font-semibold tabular-nums text-ink-muted">{progress}</span>
-      </div>
-      <div className="mt-2 h-2 overflow-hidden rounded-sm bg-surface-2" aria-hidden>
-        <i className={cn('block h-full bg-care')} style={{ width }} />
-      </div>
-      <p className="mt-1.5 text-label font-semibold text-ink-muted">{hint}</p>
-    </section>
+    <div className="mt-4">
+      <button type="button" className="so-focus text-left text-label font-bold text-care" onClick={() => setOpen((value) => !value)}>
+        {open ? t('ask.previewHide') : t('ask.preview')}
+      </button>
+      {open ? (
+        <div className="mt-2 rounded-lg bg-canvas p-3">
+          <p className="text-label font-semibold text-ink-muted">{t('ask.previewCaption')}</p>
+          <p className="mt-1 text-h3 font-extrabold tabular-nums">{formatMoney(80)}</p>
+          <Meter mine={0} others={40} goal={80} showMine={false} />
+        </div>
+      ) : null}
+    </div>
   );
 }

@@ -3,7 +3,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { trpc } from '../lib/trpc';
 import { Button, Card, Chip } from '../components/ui2';
-import { BrandLine, OnboardingFrame, StepText } from '../components/onboarding/OnboardingFrame';
+import { BackLink, OnboardingFrame, StepText } from '../components/onboarding/OnboardingFrame';
 import { CheckMark } from '../components/onboarding/brand';
 import { clearFirstRun, safePath } from '../components/onboarding/flow';
 
@@ -12,8 +12,9 @@ const DEFAULT_AMOUNT = 1;
 
 /**
  * Minimum participation at the start (screens.md §15, onboarding.html №8): the only question before the
- * Circle, so it comes first. 1 $ by default, presets 1 / 5 / 15 / 30 or any whole number; a quiet plaque
- * about the request to the inviter; "To the circle" → the empty Circle.
+ * Circle, so it comes first. 1 $ is preselected, presets 1 / 5 / 15 / 30 or any whole number; a quiet plaque
+ * about the request to the inviter. "Back" returns to the intro; "Save and continue" is one tap to the
+ * empty Circle. There is no skip: the amount is never left empty.
  */
 export function SeedPage() {
   const { t } = useTranslation();
@@ -56,7 +57,7 @@ export function SeedPage() {
 
   return (
     <OnboardingFrame
-      top={<BrandLine />}
+      top={<BackLink label={t('common.back')} to={next ? `/intro?first=1&next=${encodeURIComponent(next)}` : '/intro?first=1'} />}
       foot={
         <Button className="w-full" loading={setBudget.isPending} disabled={!valid} onClick={() => void submit()}>
           {t('intro.seed.go')}
@@ -64,7 +65,7 @@ export function SeedPage() {
       }
     >
       <div className="mt-1">
-        <StepText title={t('intro.seed.title')}>{t('intro.seed.text')}</StepText>
+        <StepText title={t('intro.seed.title')}>{t('intro.seed.text', { canHelp: t('circle.stats.canHelp') })}</StepText>
       </div>
       <form
         onSubmit={(event) => {
