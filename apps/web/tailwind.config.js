@@ -1,93 +1,129 @@
 /**
- * Design tokens (redesign palette "Ink and teal").
+ * Design tokens (redesign palette, green-black, from styles/tokens.css).
  *
- * 1. Semantic tokens — use these in new and redesigned code:
- *    bg-canvas, bg-surface, bg-surface-2, text-ink, text-ink-muted, text-ink-subtle, border-line,
- *    bg-care / text-care (participation, primary action), text-link / bg-link (connections, links),
- *    bg-sos (SOS only), bg-warm (rare accent), bg-success / bg-warning.
- *    They read CSS variables from src/styles/tokens.css and flip with the dark theme by themselves,
- *    so no dark: variant is needed.
+ * Semantic colors read CSS variables and flip with html.dark, so new code
+ * does not use a dark: variant. Legacy gray/blue/teal/red/amber ramps stay
+ * mapped onto the same palette until WP9 removes them.
  *
- * 2. Legacy ramps — gray / blue / teal / green / emerald / red / amber / yellow are re-pointed to the
- *    same palette so the existing screens pick up the new look before they are rewritten. Do not use
- *    raw ramps in new code; replace them with semantic tokens as screens are redesigned.
+ * This file also fails the build when redesign files in apps/web/src contain
+ * a hex color or a Tailwind dark: variant. tokens.css is the only exception.
  */
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 const token = (name) => `rgb(var(--so-${name}) / <alpha-value>)`;
+const line = (alpha) => `rgb(var(--so-line) / ${alpha})`;
 
-// Cool neutral built on the "ink" navy
+const here = path.dirname(fileURLToPath(import.meta.url));
+const srcRoot = path.join(here, 'src');
+
+const lintTargets = [
+  path.join(srcRoot, 'components', 'ui2'),
+  path.join(srcRoot, 'components', 'Layout.tsx'),
+  path.join(srcRoot, 'App.tsx'),
+  path.join(srcRoot, 'index.css'),
+  path.join(srcRoot, 'styles', 'typography.css'),
+];
+
+function walk(entry, out) {
+  if (!fs.existsSync(entry)) return;
+  const stat = fs.statSync(entry);
+  if (stat.isDirectory()) {
+    for (const name of fs.readdirSync(entry)) walk(path.join(entry, name), out);
+    return;
+  }
+  if (/\.(tsx?|css)$/.test(entry)) out.push(entry);
+}
+
+function lintDesignTokens() {
+  const files = [];
+  for (const target of lintTargets) walk(target, files);
+  const problems = [];
+  const hexRe = /#[0-9A-Fa-f]{3,8}\b/;
+  const darkRe = /(^|[^A-Za-z0-9_-])dark:/;
+  for (const file of files) {
+    const lines = fs.readFileSync(file, 'utf8').split(/\r?\n/);
+    lines.forEach((lineText, index) => {
+      if (hexRe.test(lineText)) problems.push(`${path.relative(here, file)}:${index + 1}: hex color`);
+      if (darkRe.test(lineText)) problems.push(`${path.relative(here, file)}:${index + 1}: dark: variant`);
+    });
+  }
+  if (problems.length > 0) {
+    throw new Error(`Design-token lint failed (${problems.length}):\n${problems.join('\n')}`);
+  }
+}
+
+lintDesignTokens();
+
 const ink = {
-  50: '#F4F7FC',
-  100: '#EAEFF7',
-  200: '#D8E0EC',
-  300: '#B8C3D6',
-  400: '#8A99B3',
-  500: '#5B6B86',
-  600: '#43536F',
-  700: '#2E3D58',
-  800: '#1C2A43',
-  900: '#16253F',
-  950: '#0E1A2E',
+  50: '#f3f6f4',
+  100: '#e9eeec',
+  200: '#d5deda',
+  300: '#b7c4bf',
+  400: '#8a9a95',
+  500: '#5c6d68',
+  600: '#3d524c',
+  700: '#2c3d38',
+  800: '#1c2622',
+  900: '#14211e',
+  950: '#121917',
 };
 
-// Periwinkle: connections and links (replaces the old blue)
 const periwinkle = {
-  50: '#EEF1FC',
-  100: '#DDE3FA',
-  200: '#BCC6F4',
-  300: '#9AA8F0',
-  400: '#7486E2',
-  500: '#5468D4',
-  600: '#4557C4',
-  700: '#3946A3',
-  800: '#2F3A82',
+  50: '#eef1fc',
+  100: '#dde3fa',
+  200: '#bcc6f4',
+  300: '#9aa8f0',
+  400: '#7486e2',
+  500: '#5468d4',
+  600: '#4557c4',
+  700: '#3946a3',
+  800: '#2f3a82',
   900: '#283265',
-  950: '#1A2042',
+  950: '#1a2042',
 };
 
-// Teal: participation, saving, primary action
 const teal = {
-  50: '#E6F5F2',
-  100: '#C6EAE3',
-  200: '#93D6CA',
-  300: '#5BBFAE',
-  400: '#2BA99A',
-  500: '#12917F',
-  600: '#087F71',
-  700: '#08675C',
-  800: '#0A524A',
-  900: '#0B433D',
+  50: '#e5f5f3',
+  100: '#c6eae3',
+  200: '#93d6ca',
+  300: '#5bbfae',
+  400: '#2bb3a4',
+  500: '#12917f',
+  600: '#087f71',
+  700: '#08675c',
+  800: '#0a524a',
+  900: '#0b433d',
   950: '#042824',
 };
 
-// SOS red
 const sos = {
-  50: '#FCEEEE',
-  100: '#F8DADA',
-  200: '#F0B5B6',
-  300: '#E58789',
-  400: '#D9575B',
-  500: '#CC4549',
-  600: '#C43E42',
-  700: '#A33236',
-  800: '#85292D',
-  900: '#6E2427',
-  950: '#3C1012',
+  50: '#fbeae8',
+  100: '#f6d4d1',
+  200: '#eeada8',
+  300: '#e08a82',
+  400: '#d2655c',
+  500: '#cc4d44',
+  600: '#c5342c',
+  700: '#a32c25',
+  800: '#7d241f',
+  900: '#5c1d19',
+  950: '#3c1012',
 };
 
-// Warm accent, used sparingly
 const warm = {
-  50: '#FDF6E9',
-  100: '#FBEBCB',
-  200: '#F7D9A0',
-  300: '#F2BE68',
-  400: '#EAA845',
-  500: '#D98F2B',
-  600: '#B8731F',
-  700: '#93591C',
-  800: '#77471D',
-  900: '#623B1B',
-  950: '#381E0B',
+  50: '#fdf1e3',
+  100: '#fbebcb',
+  200: '#f7d9a0',
+  300: '#f2be68',
+  400: '#eaa845',
+  500: '#d98f2b',
+  600: '#b8731f',
+  700: '#9a5a16',
+  800: '#77471d',
+  900: '#623b1b',
+  950: '#3a2a12',
 };
 
 /** @type {import('tailwindcss').Config} */
@@ -97,18 +133,25 @@ export default {
   theme: {
     extend: {
       colors: {
-        // Semantic tokens
         canvas: token('canvas'),
         surface: { DEFAULT: token('surface'), 2: token('surface-2') },
         ink: { DEFAULT: token('ink'), muted: token('ink-muted'), subtle: token('ink-subtle') },
-        line: { DEFAULT: token('line'), strong: token('line-strong') },
-        care: { DEFAULT: token('care'), hover: token('care-hover'), soft: token('care-soft'), on: token('on-care') },
+        line: { DEFAULT: line('0.14'), soft: line('0.08'), strong: line('0.24') },
+        care: {
+          DEFAULT: token('care'),
+          hover: token('care-hover'),
+          soft: token('care-soft'),
+          on: token('on-care'),
+          bright: token('care-bright'),
+          scene: token('care-scene'),
+        },
         link: { DEFAULT: token('link'), soft: token('link-soft') },
         sos: { DEFAULT: token('sos'), hover: token('sos-hover'), soft: token('sos-soft'), on: token('on-sos') },
-        warm: { DEFAULT: token('warm'), soft: token('warm-soft') },
+        warm: { DEFAULT: token('warm'), soft: token('warm-soft'), ink: token('warm-ink') },
+        scene: { DEFAULT: token('scene'), 2: token('scene-2'), 3: token('scene-3') },
+        node: { 1: token('node-1'), 2: token('node-2'), 3: token('node-3') },
         success: token('care'),
         warning: token('warm'),
-        // Legacy ramps re-pointed to the palette
         gray: ink,
         slate: ink,
         blue: periwinkle,
@@ -121,9 +164,60 @@ export default {
         yellow: warm,
       },
       borderRadius: {
-        card: '1rem',
+        'r-xs': 'var(--r-xs)',
+        'r-sm': 'var(--r-sm)',
+        'r-md': 'var(--r-md)',
+        'r-lg': 'var(--r-lg)',
+        'r-xl': 'var(--r-xl)',
+        'r-2xl': 'var(--r-2xl)',
+        'r-pill': 'var(--r-pill)',
+        card: 'var(--r-xl)',
       },
-      // SO-44: short milestone confirmation; used with motion-safe: only
+      height: {
+        primary: 'var(--h-primary)',
+        secondary: 'var(--h-secondary)',
+        small: 'var(--h-small)',
+        chip: 'var(--h-chip)',
+        icon: 'var(--h-icon)',
+      },
+      minHeight: {
+        row: 'var(--h-row)',
+        primary: 'var(--h-primary)',
+      },
+      boxShadow: {
+        card: 'var(--shadow-card)',
+        float: 'var(--shadow-float)',
+        sheet: 'var(--shadow-sheet)',
+        banner: 'var(--shadow-banner)',
+      },
+      fontFamily: {
+        sans: ['Manrope', '"Segoe UI"', 'system-ui', 'sans-serif'],
+      },
+      fontSize: {
+        display: ['52px', { lineHeight: '1', letterSpacing: '-0.05em' }],
+        h1: ['32px', { lineHeight: '1.05', letterSpacing: '-0.04em' }],
+        h2: ['30px', { lineHeight: '1.02', letterSpacing: '-0.045em' }],
+        h3: ['24px', { lineHeight: '1.05', letterSpacing: '-0.04em' }],
+        title: ['22px', { lineHeight: '1.15', letterSpacing: '-0.03em' }],
+        'body-l': ['17px', { lineHeight: '1.35', letterSpacing: '-0.01em' }],
+        body: ['16px', { lineHeight: '1.4', letterSpacing: '-0.02em' }],
+        'body-s': ['15px', { lineHeight: '1.4' }],
+        caption: ['14px', { lineHeight: '1.4' }],
+        label: ['13px', { lineHeight: '1.35' }],
+        micro: ['12px', { lineHeight: '1.3' }],
+        tab: ['11px', { lineHeight: '1', letterSpacing: '-0.01em' }],
+      },
+      fontWeight: {
+        body: '650',
+      },
+      transitionTimingFunction: {
+        so: 'cubic-bezier(0.22, 0.8, 0.24, 1)',
+      },
+      transitionDuration: {
+        fast: '150ms',
+        base: '260ms',
+        screen: '420ms',
+      },
       keyframes: {
         'milestone-in': {
           '0%': { opacity: '0', transform: 'scale(0.96)' },
