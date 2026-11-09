@@ -107,9 +107,12 @@ function PathSteps({ data }: { data: PathData }) {
             <p className="mt-2 text-label text-ink-muted">
               {t('path.lonely', { names: lonelyNames.join(', '), count: data.lonely.length })}
             </p>
-            <div className="mt-2 flex items-center gap-2">
+            <div className="mt-2 flex flex-wrap items-center gap-2">
               {data.lonely.slice(0, 5).map((c) => (
-                <Avatar key={c.userId} name={c.displayName} src={c.photoUrl} size={36} className="h-7 w-7 rounded-sm text-micro" />
+                <span key={c.userId} className="inline-flex max-w-[140px] items-center gap-1.5 rounded-pill bg-care-soft py-0.5 pl-0.5 pr-2.5">
+                  <Avatar name={c.displayName} src={c.photoUrl} size={36} className="h-6 w-6 rounded-pill text-micro" />
+                  <span className="truncate text-label font-semibold text-ink">{c.displayName.split(/\s+/)[0]}</span>
+                </span>
               ))}
               <Button variant="ghost" size="sm" className="ml-auto bg-care-soft text-care" onClick={() => void remind()}>
                 {copied ? t('common.copied') : t('path.remind')}

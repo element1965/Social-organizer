@@ -1272,8 +1272,18 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
     const flyQ2 = new THREE.Quaternion();
     let liftCur = 0;
 
+    // Performance checks: a page that sets `window.__SO_GRAPH_DEBUG__ = {}` gets the force graph and
+    // the time our frame work takes. Nothing happens without it.
+    const debug = (globalThis as { __SO_GRAPH_DEBUG__?: { fg?: unknown; frameMs?: number } }).__SO_GRAPH_DEBUG__;
+    if (debug) debug.fg = fg;
+
     const frame = (now: number) => {
       raf = requestAnimationFrame(frame);
+      const t0 = debug ? performance.now() : 0;
+      frameBody(now);
+      if (debug) debug.frameMs = (debug.frameMs ?? 0) * 0.9 + (performance.now() - t0) * 0.1;
+    };
+    const frameBody = (now: number) => {
       const dt = Math.min(100, now - last);
       last = now;
       const cam = fg.camera() as THREE.Camera | undefined;

@@ -20,7 +20,51 @@ function mulberry32(seed: number) {
   };
 }
 
+/**
+ * A large network for performance work: `?n=500` gives ~500 people in three rings (15% / 40% / 45%),
+ * a tree plus some links inside rings, like a real big circle. The app's graph slice is capped at 500.
+ */
+function buildBig(total: number): Built {
+  const rnd = mulberry32(11);
+  const nodes: GraphNode[] = [{ id: 'me', name: 'Анна', photoUrl: null, isCenter: true, depth: 0, connectionCount: 0, lastSeen: new Date().toISOString() }];
+  const edges: Built['edges'] = [];
+  const rings: string[][] = [[], [], []];
+  const sizes = [Math.min(150, Math.round(total * 0.15)), Math.round(total * 0.4)];
+  sizes.push(total - sizes[0]! - sizes[1]!);
+  for (let r = 0; r < 3; r++) {
+    for (let i = 0; i < sizes[r]!; i++) {
+      const id = `r${r + 1}-${i}`;
+      const parent = r === 0 ? 'me' : rings[r - 1]![Math.floor(rnd() * rings[r - 1]!.length)]!;
+      rings[r]!.push(id);
+      nodes.push({
+        id,
+        name: `Человек ${r + 1}.${i + 1}`,
+        photoUrl: r === 0 && i % 3 === 0 ? `/avatars/${[0, 1, 2, 4][i % 4]}.png` : null,
+        depth: r + 1,
+        connectionCount: 1 + Math.floor(rnd() * 8),
+        lastSeen: rnd() < 0.1 ? new Date().toISOString() : null,
+      });
+      edges.push({ source: parent, target: id });
+    }
+  }
+  for (let r = 0; r < 2; r++) {
+    const ring = rings[r]!;
+    for (let k = 0; k < ring.length * 0.4; k++) {
+      const a = ring[Math.floor(rnd() * ring.length)]!;
+      const b = ring[Math.floor(rnd() * ring.length)]!;
+      if (a !== b) edges.push({ source: a, target: b });
+    }
+  }
+  const last = rings[2]![0] ?? rings[1]![0]!;
+  return { nodes, edges, path: ['me', rings[0]![0]!, rings[1]![0]!, last].filter(Boolean) };
+}
+
+const BIG = Number(new URLSearchParams(window.location.search).get('n') || 0);
+// Debug handle for performance checks (see NetworkGraph: __SO_GRAPH_DEBUG__)
+(window as unknown as { __SO_GRAPH_DEBUG__?: object }).__SO_GRAPH_DEBUG__ = {};
+
 function build(): Built {
+  if (BIG > 0) return buildBig(BIG);
   const rnd = mulberry32(7);
   const nodes: GraphNode[] = [{
     id: 'me',
