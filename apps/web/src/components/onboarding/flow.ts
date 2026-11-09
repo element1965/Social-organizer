@@ -106,17 +106,6 @@ export function afterSignInPath(isNew: boolean, target: string | null): string {
   return safe ?? '/';
 }
 
-/** Clear demo-mode tokens; returns true when a reload was started. */
-export function clearDemoSession(): boolean {
-  const s = storage();
-  if (s?.getItem('accessToken') !== 'demo-token') return false;
-  s.removeItem('accessToken');
-  s.removeItem('refreshToken');
-  s.removeItem('userId');
-  window.location.reload();
-  return true;
-}
-
 /**
  * The masked e-mail of an existing account ("an•••@gmail.com") from the URL or the API, or null.
  * Anything else is dropped and the linking screen is shown without the address.

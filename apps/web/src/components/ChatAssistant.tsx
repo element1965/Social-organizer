@@ -12,7 +12,7 @@ interface Message {
   viaVoice?: boolean;
 }
 
-export function ChatAssistant({ page = false }: { page?: boolean }) {
+export function ChatAssistant() {
   const { t, i18n } = useTranslation();
   const utils = trpc.useUtils();
   const [messages, setMessages] = useState<Message[]>([]);
@@ -29,7 +29,7 @@ export function ChatAssistant({ page = false }: { page?: boolean }) {
   // Visible viewport (shrinks when the on-screen keyboard opens on iOS/Android)
   const [viewport, setViewport] = useState<{ height: number; top: number } | null>(null);
 
-  const { data: settings } = trpc.settings.get.useQuery(undefined, { enabled: page });
+  const { data: settings } = trpc.settings.get.useQuery();
   const updateVoice = trpc.settings.updateVoiceGender.useMutation({
     onSuccess: () => { void utils.settings.get.invalidate(); },
   });
@@ -197,12 +197,10 @@ export function ChatAssistant({ page = false }: { page?: boolean }) {
   const quickTopicsEn = ['handshake', 'intention', 'capabilities', 'how to start'];
   const quickTopics = i18n.language.startsWith('ru') ? quickTopicsRu : quickTopicsEn;
 
-  const isOpen = page;
-
   // Keep the chat panel inside the visible viewport so the keyboard never covers the input row
   useEffect(() => {
     const vv = window.visualViewport;
-    if (!isOpen || !vv) return;
+    if (!vv) return;
     const update = () => setViewport({ height: vv.height, top: vv.offsetTop });
     update();
     vv.addEventListener('resize', update);
@@ -212,9 +210,7 @@ export function ChatAssistant({ page = false }: { page?: boolean }) {
       vv.removeEventListener('scroll', update);
       setViewport(null);
     };
-  }, [isOpen]);
-
-  if (!page) return null;
+  }, []);
 
   return (
     <div
