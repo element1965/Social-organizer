@@ -14,7 +14,6 @@ import {
   UserPlus,
   TrendingUp,
   X,
-  HelpCircle,
   Share2,
 } from 'lucide-react';
 import { SocialIcon } from '../components/ui/social-icons';
@@ -82,12 +81,6 @@ export function DashboardPage() {
             title={t('dashboard.communityChat')}
           >
             <SocialIcon type="telegram" className="w-5 h-5 text-white" />
-          </button>
-          <button
-            onClick={() => window.dispatchEvent(new CustomEvent('toggle-help-menu'))}
-            className="w-10 h-10 rounded-full bg-blue-600 hover:bg-blue-700 flex items-center justify-center transition-colors shadow-lg"
-          >
-            <HelpCircle className="w-5 h-5 text-white" />
           </button>
         </div>
       </div>

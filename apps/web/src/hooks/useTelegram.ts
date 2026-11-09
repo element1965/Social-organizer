@@ -112,7 +112,11 @@ export function useTelegramBackButton() {
     }
 
     if (!isRoot) {
-      const cb = () => navigate(-1);
+      const cb = () => {
+        const idx = (window.history.state as { idx?: number } | null)?.idx;
+        if (typeof idx === 'number' && idx > 0) navigate(-1);
+        else navigate('/');
+      };
       callbackRef.current = cb;
       showBackButton(cb);
     }
