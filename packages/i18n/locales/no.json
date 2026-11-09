@@ -106,7 +106,8 @@
       "blockScreen": "Screen",
       "blockScene": "Scene",
       "blockSite": "Site"
-    }
+    },
+    "reloadPage": "Last inn siden på nytt"
   },
   "auth": {
     "password": "Passord",

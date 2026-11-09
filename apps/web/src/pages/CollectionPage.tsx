@@ -9,7 +9,6 @@ import { QrSheet } from '../components/collection/QrSheet';
 import { CommunityHoldNote } from '../components/moderation/CommunityHoldNote';
 import { ComplainEntry } from '../components/moderation/ComplainEntry';
 import { amountIssue, asDate, firstName, formatDay, isHttpsUrl, parseWhole, relativePast, shortUrl } from '../components/collection/text';
-import { ChatAssistant } from '../components/ChatAssistant';
 import { Avatar } from '../components/ui2/Avatar';
 import { Button } from '../components/ui2/Button';
 import { Card } from '../components/ui2/Card';
@@ -127,8 +126,7 @@ export function CollectionPage() {
   const [removeTarget, setRemoveTarget] = useState<ParticipantRow | null>(null);
   const [adminOpen, setAdminOpen] = useState(false);
   const [reason, setReason] = useState<BlockReason | null>(null);
-  const [helpOpen, setHelpOpen] = useState(false);
-  const helpOnce = useRef(false);
+  const openAssistant = () => navigate('/me/help/assistant');
 
   useEffect(() => {
     if (seeded || !me.data) return;
@@ -136,12 +134,6 @@ export function CollectionPage() {
     setJoinAmount(String(stake));
     setSeeded(true);
   }, [me.data, seeded]);
-
-  useEffect(() => {
-    if (!helpOpen || helpOnce.current) return;
-    helpOnce.current = true;
-    window.dispatchEvent(new Event('toggle-help-menu'));
-  }, [helpOpen]);
 
   const direct = useMemo(() => new Set((connections.data ?? []).map((person) => person.userId)), [connections.data]);
 
@@ -375,7 +367,7 @@ export function CollectionPage() {
         ) : null}
       </Card>
 
-      {communityHold ? <CommunityHoldNote owner={owner} onSupport={() => setHelpOpen(true)} /> : null}
+      {communityHold ? <CommunityHoldNote owner={owner} onSupport={openAssistant} /> : null}
 
       {adminHold ? (
         <div className="mt-3 rounded-xl bg-sos-soft px-4 py-3 text-body-s font-semibold text-sos">
@@ -384,7 +376,7 @@ export function CollectionPage() {
             <p className="mt-1">{t('collection.suspendedReason', { reason: t(`collection.reason.${data.blockReason}`) })}</p>
           ) : null}
           {owner ? (
-            <Button variant="text" className="mt-1 px-0 text-sos" onClick={() => setHelpOpen(true)}>
+            <Button variant="text" className="mt-1 px-0 text-sos" onClick={openAssistant}>
               {t('collection.writeSupport')}
             </Button>
           ) : null}
@@ -699,7 +691,6 @@ export function CollectionPage() {
         )}
       </Sheet>
 
-      {helpOpen ? <ChatAssistant /> : null}
     </Screen>
   );
 }

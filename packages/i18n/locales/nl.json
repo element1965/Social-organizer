@@ -106,7 +106,8 @@
       "blockScreen": "Screen",
       "blockScene": "Scene",
       "blockSite": "Site"
-    }
+    },
+    "reloadPage": "Laad de pagina opnieuw"
   },
   "auth": {
     "password": "Wachtwoord",

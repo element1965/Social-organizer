@@ -15,7 +15,7 @@ import { useAuth, markLoginMethod, type LoginMethod } from '../../hooks/useAuth'
 import { trpc } from '../../lib/trpc';
 import { takePendingSosPath } from '../../lib/inviteUrl';
 import { AUTH_ORDER, detectDevice, type AuthProvider } from '../../lib/device';
-import { afterSignInPath, clearDemoSession, readPendingInvite, safeInviteToken, safeMasked, safePath } from './flow';
+import { afterSignInPath, readPendingInvite, safeInviteToken, safeMasked, safePath } from './flow';
 
 const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID as string | undefined;
 const APPLE_SERVICE_ID = import.meta.env.VITE_APPLE_SERVICE_ID as string | undefined;
@@ -69,11 +69,6 @@ export function useSignIn({ redirect, onCodeSent, onTelegramOpened }: UseSignInO
   const pendingInviteToken = readPendingInvite();
   // Only same-origin relative paths are followed (?redirect= is user-controlled)
   const effectiveRedirect = safePath(redirect) || (pendingInviteToken ? `/invite/${pendingInviteToken}` : null);
-
-  // Stale demo-mode tokens: clear them and reload so the tRPC client uses the real HTTP link
-  useEffect(() => {
-    clearDemoSession();
-  }, []);
 
   const [loading, setLoading] = useState(false);
   const [error, setErrorText] = useState('');

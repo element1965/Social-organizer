@@ -1,32 +1,9 @@
 import { createTRPCReact } from '@trpc/react-query';
 import { httpBatchLink } from '@trpc/client';
 import type { AppRouter } from '../../../api/src/routers/index';
-import { handleDemoRequest } from './demoData';
 import { useAuth } from '../hooks/useAuth';
 
 export const trpc = createTRPCReact<AppRouter>();
-
-/** Minimal observable compatible with tRPC link protocol. */
-function tinyObservable<T>(fn: (observer: { next: (v: T) => void; complete: () => void }) => void) {
-  return {
-    subscribe(observer: { next?: (v: T) => void; error?: (e: unknown) => void; complete?: () => void }) {
-      fn({
-        next: (v) => observer.next?.(v),
-        complete: () => observer.complete?.(),
-      });
-      return { unsubscribe() {} };
-    },
-  };
-}
-
-/** tRPC link that returns mock data for demo mode (no HTTP requests). */
-const demoLink = () =>
-  ({ op }: { op: { path: string; input: unknown } }) =>
-    tinyObservable((observer) => {
-      const data = handleDemoRequest(op.path, op.input);
-      observer.next({ result: { type: 'data' as const, data } });
-      observer.complete();
-    });
 
 // --- Session renewal -------------------------------------------------------
 // The server accepts an access token for 30 minutes (SO-14 checks expiry). Before this the app never
@@ -52,7 +29,7 @@ export function refreshSession(): Promise<boolean> {
   if (refreshing) return refreshing;
   refreshing = (async () => {
     const refreshToken = localStorage.getItem('refreshToken');
-    if (!refreshToken || refreshToken === 'demo-refresh') return false;
+    if (!refreshToken) return false;
     try {
       const res = await fetch('/trpc/auth.refresh', {
         method: 'POST',
@@ -99,20 +76,16 @@ export async function authFetch(input: RequestInfo | URL, init?: RequestInit): P
 }
 
 export function getTrpcClient() {
-  const isDemo = localStorage.getItem('accessToken') === 'demo-token';
-
   return trpc.createClient({
     links: [
-      isDemo
-        ? (demoLink as never)
-        : httpBatchLink({
-            url: '/trpc',
-            headers() {
-              const token = localStorage.getItem('accessToken');
-              return token ? { Authorization: `Bearer ${token}` } : {};
-            },
-            fetch: authFetch as typeof fetch,
-          }),
+      httpBatchLink({
+        url: '/trpc',
+        headers() {
+          const token = localStorage.getItem('accessToken');
+          return token ? { Authorization: `Bearer ${token}` } : {};
+        },
+        fetch: authFetch as typeof fetch,
+      }),
     ],
   });
 }

@@ -3,7 +3,8 @@
  *
  * Semantic colors read CSS variables and flip with html.dark, so new code
  * does not use a dark: variant. Legacy gray/blue/teal/red/amber ramps stay
- * mapped onto the same palette until WP9 removes them.
+ * mapped onto the same palette because a few screens that were not restyled
+ * still use those classes (support chat, FAQ, assistant, broadcast).
  *
  * This file also fails the build when redesign files in apps/web/src contain
  * a hex color or a Tailwind dark: variant. tokens.css is the only exception.
@@ -20,7 +21,6 @@ const srcRoot = path.join(here, 'src');
 
 const lintTargets = [
   path.join(srcRoot, 'components', 'ui2'),
-  path.join(srcRoot, 'components', 'Layout.tsx'),
   path.join(srcRoot, 'App.tsx'),
   path.join(srcRoot, 'index.css'),
   path.join(srcRoot, 'styles', 'typography.css'),
@@ -225,15 +225,6 @@ export default {
         fast: '150ms',
         base: '260ms',
         screen: '420ms',
-      },
-      keyframes: {
-        'milestone-in': {
-          '0%': { opacity: '0', transform: 'scale(0.96)' },
-          '100%': { opacity: '1', transform: 'scale(1)' },
-        },
-      },
-      animation: {
-        'milestone-in': 'milestone-in 0.35s ease-out',
       },
     },
   },

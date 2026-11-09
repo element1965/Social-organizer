@@ -24,7 +24,7 @@ Turborepo monorepo with pnpm workspaces.
 Social organizer/
 ├── apps/
 │   ├── api/             # @so/api: Fastify + tRPC + BullMQ
-│   ├── web/             # @so/web: React 19 + Vite + Tailwind + shadcn/ui
+│   ├── web/             # @so/web: React 19 + Vite + Tailwind + ui2
 │   └── mobile/          # @so/mobile: React Native Expo (stub)
 ├── packages/
 │   ├── shared/          # @so/shared: types, constants, currencies, validation
@@ -32,7 +32,7 @@ Social organizer/
 │   ├── api-client/      # @so/api-client: tRPC client
 │   ├── i18n/            # @so/i18n: i18next (en + ru + 23 more)
 │   ├── gun-backup/      # @so/gun-backup: graph copy on device (IndexedDB + Gun.js)
-│   ├── graph-3d/        # @so/graph-3d: Three.js visualization (Earth, Moon, Stars, Network)
+│   ├── graph-3d/        # @so/graph-3d: 3D circle (NetworkGraph only)
 │   ├── fb-adapter/      # @so/fb-adapter: FB Instant Game SDK (stub)
 │   └── tg-adapter/      # @so/tg-adapter: Telegram WebApp SDK adapter
 ├── turbo.json
@@ -46,9 +46,9 @@ Social organizer/
 
 - **Monorepo:** Turborepo + pnpm
 - **Backend:** Fastify + tRPC + Prisma + PostgreSQL 17 + BullMQ + Redis
-- **Frontend:** React 19 + Vite + Tailwind CSS + shadcn/ui
-- **Mobile:** React Native (Expo) + NativeWind
-- **3D:** Three.js + @react-three/fiber + NASA textures
+- **Frontend:** React 19 + Vite + Tailwind CSS + ui2
+- **Mobile:** React Native (Expo) + NativeWind (stub)
+- **3D:** Three.js + react-force-graph-3d, loaded only with the Circle
 - **Backup:** Gun.js (IndexedDB)
 - **i18n:** i18next (28 languages: en, ru, es, fr, de, pt, it, zh, ja, ko, ar, hi, tr, pl, uk, nl, sv, da, fi, no, cs, ro, th, vi, id, sr, be, he)
 
@@ -71,6 +71,10 @@ pnpm build
 # Start dev servers
 pnpm dev
 ```
+
+Windows local setup, the empty-database `db push` caveat, and the test accounts are in
+[docs/redesign/README.md](docs/redesign/README.md). Web dev server: http://localhost:3000
+(Vite proxies `/trpc`, `/api`, `/gun` to the API on port 3001).
 
 ## Database
 
@@ -167,7 +171,7 @@ FIREBASE_SERVICE_ACCOUNT={"type":"service_account",...}  # FCM service account J
 - **Telegram Bot** — Collection notifications (new, blocked, closed) via Bot API with rate-limited broadcast (25 msg/sec batches via BullMQ)
 - **Web Push** — Browser push notifications via web-push library with VAPID, auto-cleanup of expired subscriptions
 - **FCM Push** — Native Android push notifications via Firebase Cloud Messaging (firebase-admin), auto-cleanup of expired tokens
-- **Milestones** — `milestone.service.ts`: two money-MVP milestones counted from confirmed `Connection` rows only (invite links and pending requests never count); synced right after every new connection (request accept, SOS accept), unique per user, no push, no rating. UI: no milestones on the dashboard (SO-44); the Network page card shows only milestones still in progress; reached ones move to the history card in Settings
+- **Milestones** — `milestone.service.ts`: two money-MVP milestones counted from confirmed `Connection` rows only (invite links and pending requests never count); synced right after every new connection (request accept, SOS accept), unique per user, no push, no rating. UI: a reached milestone shows once in the circle feed; there is no milestones card
 - **Currency** — Exchange rates service is kept but not used for amounts: intentions, capacity and goals are entered in $ only (1 $ = 1 unit of participation, SO-40)
 - **Geo** — IP-based country detection for currency auto-selection (ip-api.com)
 
@@ -257,11 +261,11 @@ The landing download buttons carry the inviter's token so new users join the inv
 - **App Store:** `?ct=invite_TOKEN` Apple campaign token — App Store Connect analytics only; iOS has no Install Referrer, so the invite is not auto-applied in-app after install
 - **Browser:** "Or continue in the browser" under the buttons → `/login`; the token waits in `pendingInviteToken` and is accepted after sign-up
 
-There is one invite link per user — `https://www.orginizer.com/?invite=TOKEN` (dashboard, settings, invite popup, QR); the person who opens it picks Telegram, the app or the browser. Inside the installed app `/invite/TOKEN` goes straight to `/login` (no landing), and `pendingInviteToken` is kept until `InvitePage` accepts it — also across the Google/Apple deep-link return (`socialorganizer://auth-success`).
+There is one invite link per user — `https://www.orginizer.com/?invite=TOKEN`, shared from Add (link and QR). The person who opens it picks Telegram, the app or the browser. Inside the installed app `/invite/TOKEN` goes straight to `/login` (no landing), and `pendingInviteToken` is kept until `InvitePage` accepts it — also across the Google/Apple deep-link return (`socialorganizer://auth-success`).
 
 ### Connecting Telegram to an existing account
 
-Settings → "Connect Telegram" (shown to users who signed in with Google / e-mail / Apple) creates a 6-digit link code and opens `t.me/<bot>?startapp=link_CODE`. `loginWithTelegram` reads `start_param` from the signed initData and calls `linkTelegramByCode` (`apps/api/src/services/telegram-link.service.ts`): a Telegram that was never used is attached to the code owner; an empty duplicate account (no connections, collections or obligations) is merged — Telegram and pending invite requests move over, the duplicate is deleted; a duplicate with data is left alone (`linkResult: 'conflict'`, the mini app shows a message). The Telegram contact is editable by hand until Telegram is connected; the account e-mail fills the e-mail contact.
+Account (`/me/account`) → "Connect Telegram" (shown to users who signed in with Google / e-mail / Apple) creates a link code and opens `t.me/<bot>?startapp=link_CODE` without showing the digits. `loginWithTelegram` reads `start_param` from the signed initData and calls `linkTelegramByCode` (`apps/api/src/services/telegram-link.service.ts`): a Telegram that was never used is attached to the code owner; an empty duplicate account (no connections, collections or obligations) is merged — Telegram and pending invite requests move over, the duplicate is deleted; a duplicate with data is left alone (`linkResult: 'conflict'`, the mini app shows a message). The Telegram contact is editable by hand until Telegram is connected; the account e-mail fills the e-mail contact.
 
 ## Web Frontend (apps/web)
 
@@ -269,91 +273,64 @@ React 19 SPA with tRPC client.
 
 ### Pages
 
+Route pages other than the guest landing are `React.lazy`. The Circle chunk is prefetched after sign-in. A failed lazy chunk retries the import once; if the preload still fails, the page reloads once (a sessionStorage timestamp stops a loop) and then shows a reload screen. `telegram-web-app.js` is injected during HTML parse, before the app entry, only inside Telegram: `tgWebAppData` or `tgWebApp` in the URL or hash, a Telegram user agent, `window.TelegramWebviewProxy`, sessionStorage `__telegram__initParams`, or an iframe that has those stored params or a `tgWebApp` hash. That still matches after a full-page reload inside Telegram Desktop, iOS, Android, and Web A/K. A normal browser does not request the script.
+
 | Page | Path | Description |
 |------|------|-------------|
-| LandingPage | `/welcome` | Public landing with 3D Earth globe (NASA textures) and project description; "Got a link? What to do next" video above the download buttons; supports `variant="arvut"` for Hebrew-branded Arvut Hadadit subdomain |
-| LoginPage | `/login` | Login via platform (FB/TG/Apple/Google) + demo mode; "First steps in the app" video under the new user / existing account choice |
-| OnboardingPage | `/onboarding` | 3-step onboarding: contacts, budget, skills/needs (auto for new users) |
-| DashboardPage | `/` | Network stats (clickable "Whole network" → /network), collections, intentions, emergency alerts (protected → /welcome) |
-| NotificationsPage | `/notifications` | Notifications with handshake path and 24h timer |
-| CreateCollectionPage | `/create` | Create collection with network reach display (1:1 ratio); play button with the collection video instruction under the type switch |
-| CollectionPage | `/collection/:id` | Collection details + intentions + handshake path to creator; owner sees the share link + QR with a PNG download ("SOS link" for emergency, "collection link" for regular; plus the video instruction button) |
-| SosLandingPage | `/sos/:id` | Public collection page from the share link / QR: "Join & Help" opens the Telegram Mini App; "Continue in browser" signs in / registers on the web and returns to `/collection/:id?sos=true`, which connects the person to the author (1st handshake) |
-| MyNetworkPage | `/network` | Connection list sorted by date (newest first) with relative time, connection counts + invitations; coming back from a profile (Back) restores the open handshake level and the scroll position, and the 3D view restores its layout and camera |
-| ProfilePage | `/profile/:userId` | Profile with editing, contacts, connections list (collapsible), stats (given/received), handshake path (spread over the block width, first name and last name on two lines); Back button (returns to the graph or list it was opened from, `/network` when opened by a direct link) |
-| SettingsPage | `/settings` | Language, theme, sounds, font scale, contacts (only filled ones are shown as fields, the rest are compact "add" icons), geography (country/city/geolocation), hide contacts toggle, ignore list |
-| RetiredFeaturePage | `/matches`, `/skills`, `/needs` | Old links to scenarios outside the money MVP: short notice and a button back home |
-| FaqPage | `/faq` | FAQ accordion with admin CRUD, view count ranking, LLM localization button, language-aware |
-| InvitePage | `/invite/:token` | Accept invitation link |
+| LandingPage | `/` (guest) | Public site. Signed-in `/` is the Circle |
+| HowPage | `/how` | How it works |
+| LoginPage | `/login` | E-mail code, Telegram, Google, Apple |
+| IntroPage | `/intro` | First-run intro (`/onboarding` redirects here) |
+| CirclePage | `/` (signed in) | Circle: 3D graph, feed, tab bar |
+| AskPage | `/ask` | Ask for support (`/create` redirects here) |
+| AddPage | `/add`, `/add/qr`, `/add/scan` | Invite link, QR, scan |
+| ProfilePage | `/me` | Own profile (`/settings` redirects here) |
+| AccountPage | `/me/account` | Account, including Connect Telegram |
+| PersonPage | `/person/:id` | Another person (`/profile/:userId` redirects here) |
+| PeoplePage | `/people` | People in the circle |
+| CollectionPage | `/collection/:id` | One collection |
+| SosLandingPage | `/sos/:id` | Public collection page from a share link |
+| InvitePage | `/invite/:token` | Accept an invitation |
+| Help / FAQ / assistant | `/me/help`, `/me/help/faq`, `/me/help/assistant` | Help, FAQ, assistant (`/faq` redirects to `/me/help`) |
+
+Old paths `/dashboard`, `/network`, `/notifications`, `/matches`, `/skills`, `/needs`, `/welcome`, and `/arvut` redirect to `/`.
 
 ### 3D Visualization (graph-3d)
 
-- **Earth:** NASA Blue Marble texture with bump map, specular (water), and animated clouds
-- **Moon:** Real lunar surface texture, orbiting Earth on scroll
-- **Stars:** 3000 realistic small stars with subtle twinkling, hover brightness effect
-- **Atmosphere:** Shader-based blue glow around Earth
-- **Network graph (`NetworkGraph`, react-force-graph-3d, `/network?view=3d`):** force-directed 3D graph of the user's network (up to 500 nodes), tuned for phones:
-  - *Stable data* — node objects are kept between renders and only a structural change (who is in the graph, names, photos) updates the graph; `connectionCount` / `lastSeen` are applied in place. A parent re-render no longer rebuilds all nodes and restarts the simulation (it was ~8 FPS on 500 nodes).
-  - *Cheap nodes* — shared textures/materials, sprites instead of spheres, one frame loop for LOD (avatar + label → dot → star-like dot with a minimum on-screen size), labels and photos created lazily within a per-frame budget (500 nodes mount in ~0.4 s instead of ~4.5 s); decorative sprites are excluded from hover raycasting; links are 1px lines (only the highlighted handshake path gets real geometry); the pixel ratio is capped and lowered automatically when frames get slow.
-  - *Shape* — a gentle radial force keeps each handshake depth on its own spherical shell (you in the middle, then 1°, 2°, 3°), so the network forms a round cloud instead of sprawling like a tree (`BALL_STRENGTH`, `BALL_SHELLS`; set the strength to 0 for a free-form layout). The default centering force is removed (it shifted the cloud every tick against the pinned center) and a speed limit (`MAX_NODE_SPEED`) keeps the first ticks from exploding, so nodes settle without jerks.
-  - *Camera and LOD* — LOD switches with hysteresis (no avatar/dot flicker on a border); nodes right in front of the lens fade out, so the camera passes through the 1° shell instead of getting stuck behind a huge avatar.
-  - *Memory between visits* — avatar textures live in a shared LRU (`avatarCache.ts`) and the settled layout in `layoutCache.ts`; screens hand the saved camera back as `initialView`, which skips the intro flight.
-  - *Motion* — "bloom": nodes start next to their parent and unfold with low friction (glide/overshoot) while popping in (staggered by depth); gentle floating and a synchronized online pulse; hover grows a node; orbit controls with damping (inertia after a fling), auto-rotate that eases back in after 2.5 s of inactivity; the camera frames the whole graph and flies along an arc (own tween, cancelled as soon as the user touches the view); buttons "Focus on me" and "Show whole network".
-  - *Safety* — names in the hover tooltip are HTML-escaped; WebGL teardown is deferred so a StrictMode double effect cannot kill the renderer; the simulation is never reheated before the library has digested the data (that crashed the render loop on remount — black screen on Android).
-- **Network:** Animated nodes and edges on Earth's surface (Fibonacci sphere distribution), depth-colored edges, curved links, mini legend, auto-rotate camera
+`NetworkGraph` (react-force-graph-3d) draws the signed-in Circle. The planet, globe, cloud, and handshake-path scenes are gone. The graph chunk (Three.js plus the force-graph libraries, about 1.3 MB / 357 KB gzip) loads when the Circle opens, not on the guest landing.
+
+- *Stable data* — node objects are kept between renders and only a structural change (who is in the graph, names, photos) updates the graph; `connectionCount` / `lastSeen` are applied in place. A parent re-render no longer rebuilds all nodes and restarts the simulation (it was ~8 FPS on 500 nodes).
+- *Cheap nodes* — shared textures/materials, sprites instead of spheres, one frame loop for LOD (avatar + label → dot → star-like dot with a minimum on-screen size), labels and photos created lazily within a per-frame budget (500 nodes mount in ~0.4 s instead of ~4.5 s); decorative sprites are excluded from hover raycasting; links are 1px lines (only the highlighted handshake path gets real geometry); the pixel ratio is capped and lowered automatically when frames get slow.
+- *Shape* — a gentle radial force keeps each handshake depth on its own spherical shell (you in the middle, then 1°, 2°, 3°), so the network forms a round cloud instead of sprawling like a tree (`BALL_STRENGTH`, `BALL_SHELLS`; set the strength to 0 for a free-form layout). The default centering force is removed (it shifted the cloud every tick against the pinned center) and a speed limit (`MAX_NODE_SPEED`) keeps the first ticks from exploding, so nodes settle without jerks.
+- *Camera and LOD* — LOD switches with hysteresis (no avatar/dot flicker on a border); nodes right in front of the lens fade out, so the camera passes through the 1° shell instead of getting stuck behind a huge avatar.
+- *Memory between visits* — avatar textures live in a shared LRU (`avatarCache.ts`) and the settled layout in `layoutCache.ts`; screens hand the saved camera back as `initialView`, which skips the intro flight.
+- *Motion* — "bloom": nodes start next to their parent and unfold with low friction (glide/overshoot) while popping in (staggered by depth); gentle floating and a synchronized online pulse; hover grows a node; orbit controls with damping (inertia after a fling), auto-rotate that eases back in after 2.5 s of inactivity; the camera frames the whole graph and flies along an arc (own tween, cancelled as soon as the user touches the view); buttons "Focus on me" and "Show whole network".
+- *Safety* — names in the hover tooltip are HTML-escaped; WebGL teardown is deferred so a StrictMode double effect cannot kill the renderer; the simulation is never reheated before the library has digested the data (that crashed the render loop on remount — black screen on Android).
 
 ### Frontend Technologies
 
 - **State:** Zustand (auth, theme) + tRPC React Query (server data)
-- **Routing:** React Router v7 with ProtectedRoute (onboarding check)
-- **UI:** shadcn-style components + Tailwind CSS 3 + Radix UI Tooltip
-- **i18n:** i18next v25 + react-i18next (26 languages), auto-detect via navigator.language
+- **Routing:** React Router v7. Guest `/` stays eager; other pages are lazy behind a small spinner
+- **UI:** ui2 components + semantic tokens in `styles/tokens.css`. A few older screens still use the legacy Tailwind ramps
+- **i18n:** i18next v25 + react-i18next (28 languages), auto-detect via navigator.language
 - **Icons:** lucide-react + custom SVGs for social networks
-- **QR:** qrcode.react
-- **3D:** Three.js + @react-three/fiber (lazy loaded)
-- **3D Graph:** react-force-graph-3d (lazy loaded)
-- **Backup:** @so/gun-backup (Gun.js + IndexedDB)
+- **QR:** qrcode.react (the scanner chunk loads jsQR on `/add/scan`)
+- **Backup:** @so/gun-backup (Gun.js + IndexedDB), started from the signed-in shell
 
-### Video instructions
+### Bundle size (vite build, guest landing)
 
-`VideoGuide` (`apps/web/src/components/VideoGuide.tsx`) is a play-icon button that opens an overlay with an HTML5 `<video>` (`controls`, `playsInline`, `preload="none"`; closes by X, backdrop or Escape). The `video` prop picks the instruction, the file is picked by the current UI language, falling back to `en`. `label="title"` shows the video's own title instead of "Video guide"; `colorClassName` replaces the blue link colors on dark screens.
+Measured on this branch. The guest document does not preload Three.js, the force-graph, or Gun, and it does not request `telegram-web-app.js`.
 
-| `video` | Title key | What it shows | Where it shows |
-|---------|-----------|---------------|----------------|
-| `regular-collection` | `videoGuide.regularTitle` | Creating a regular collection, QR / link, how a newcomer joins | under the type switch on `/create`, in the owner's SOS link / QR block of any collection, and inside the answer of FAQ items whose `groupId` (source item id) is listed in `FAQ_VIDEO_GROUP_IDS` in `FaqPage.tsx` (FAQ text lives in the DB; translations share the `groupId`, so one id covers all languages) |
-| `invite-link` | `videoGuide.inviteLinkTitle` | Got an invite link: "why" intro (build the largest trust graph: you invite your first handshake circle, they invite theirs) → landing → Telegram → request → inviter confirms → your network → invite your own people, SOS | landing page (`/welcome`, `/invite/:token` for guests) above the download buttons |
-| `app-start` | `videoGuide.appStartTitle` | Installed the app: "why" intro → register → empty network → invite / QR → accept a request → network, SOS, contacts | login screen (`/login`) and the dashboard "add your first connection" card |
+| Chunk | Raw | Gzip | When |
+|-------|-----|------|------|
+| index (entry, includes locales) | 1560 KB | 474 KB | Always |
+| CSS | 76 KB | 15 KB | Always |
+| CirclePage | 42 KB | 13 KB | After sign-in (prefetched) |
+| graph3d (Three.js + force-graph) | 1317 KB | 357 KB | When the Circle graph loads |
+| gun | 43 KB | 17 KB | Signed-in shell |
+| jsQR | 131 KB | 47 KB | Scan screen |
 
-- **Files:** `apps/web/public/videos/<video>/<locale>.mp4` — one per app locale (28 each, ~1–2.5 MB, 720×1280). Vite copies them to `dist/` as-is (not bundled into JS); the API serves them with `Cache-Control: public, max-age=2592000` and HTTP range support. After re-recording, bump that video's `version` in `VIDEOS` in the component.
-- **Native wrappers:** `scripts/deploy-android.mjs` and `scripts/deploy-ios.sh` delete `dist/videos` before `cap sync` — the wrappers load the production URL, so the videos never ship inside the AAB / IPA.
-- **Re-recording:** `docs/regular-collection/shoot-video.mjs` (see `docs/regular-collection/mechanics.en.md`, section 7) and `docs/first-steps/shoot-video.mjs <link|app|all> [locale ...|all]` (same local stack; captions in `docs/first-steps/captions.mjs`, the "why" intro in `docs/first-steps/why.mjs`; `add-why.mjs` adds the intro to files recorded before it existed) write straight into those folders. Both run only against a local instance and the isolated `so_video_demo` database.
-
-### Bundle Size (code splitting)
-
-| Chunk | Size | Gzip | Load |
-|-------|------|------|------|
-| index (main app + demo data) | ~806 KB | ~228 KB | Always |
-| three (Three.js core) | ~1284 KB | ~342 KB | Lazy |
-| r3f (React Three Fiber) | ~171 KB | ~55 KB | Lazy |
-| force-graph (ForceGraph3D) | ~206 KB | ~63 KB | Lazy |
-| CSS | ~33 KB | ~6 KB | Always |
-| **Total gzip** | | **~694 KB** | **< 5 MB FB limit** |
-
-## Demo Mode
-
-On the `/login` page, there's a "Demo login without registration" button. When clicked, `accessToken: 'demo-token'` is saved to localStorage, and the tRPC client switches to a custom link returning mock data without HTTP requests to the backend.
-
-Mock data (`apps/web/src/lib/demoData.ts`):
-- **200 users** — programmatically generated from 20 first names × 10 last names
-- **12 direct connections** — displayed in Dashboard and MyNetwork with connection counts
-- **3D graph** — ~60 nodes + ~80 edges (3 depth levels)
-- **2 own collections** — EMERGENCY 500 USD (collected 280) and REGULAR 1000 EUR (collected 350)
-- **1 new collection** — without user participation (to demo the intention form)
-- **3 intentions** — to others' collections (50 USD, 100 EUR, 25 USD)
-- **6 notifications** — including urgent unread, various types (NEW_COLLECTION, OBLIGATION_RECEIVED, CYCLE_CLOSED, etc.)
-- **Network stats** — 156 reachable users across 4 handshake levels with growth data
-- **Help stats** — given/received help, by currency breakdown
-- **Stats, settings, contacts, invitations** — all procedures covered
+Before this split the entry was 1858 KB / 558 KB gzip and the landing also pulled Three.js (1284 KB / 342 KB gzip), React Three Fiber (171 KB / 55 KB gzip) and the force-graph chunk (206 KB / 63 KB gzip), plus a render-blocking Telegram script. Local Lighthouse mobile on `vite preview` of `/`: performance 97 → 96, accessibility 94 → 94. First contentful paint 1.8 s → 0.9 s, time to interactive 7.6 s → 4.9 s, unused JavaScript about 544 KiB → 156 KiB. The earlier production mobile score of 74 was a different run (throttled network, the old single bundle). The entry is still over 600 KB because the locale catalogs ship in it.
 
 ## Key Features
 
@@ -368,30 +345,28 @@ Mock data (`apps/web/src/lib/demoData.ts`):
 - **TG username auto-save** — Telegram username automatically saved/updated as contact on each login
 - **Online status indicator** — green dot + "Online" when last seen within 5 minutes, gray dot + relative time otherwise; auto-updated on every authenticated API call
 - **Hide contacts** — users can hide their contacts from non-connected users; direct connections and notified users still see them
-- **Connection nicknames** — custom names for connections (like a phone book), editable from profile page; nickname replaces real name as the primary display name across all pages (network, notifications, matches, collections, handshake paths, dashboard); real Telegram name shown as secondary gray text on profile
+- **Connection nicknames** — custom names for connections (like a phone book), editable from the person screen; the nickname replaces the real name across the circle, people, and collections
 - **Telegram Mini App** — auto-login via initData, BackButton navigation, haptic feedback on tab switches, theme sync, CSS variable injection from Telegram themeParams
 - **Onboarding** — auto-shown for new users, completable flag in database
-- **Monthly support budget** — users can set how much they're willing to contribute monthly; displayed as "Current Capabilities" network-wide sum on dashboard
-- **AI Chat Assistant** — floating help button (?) with expandable menu: Chat (AI assistant with glossary/screens/FAQ knowledge) and FAQ page; supports text and voice input with auto-speak for voice queries. The chat panel follows the visible viewport (stays above the on-screen keyboard), quick-topic chips meet WCAG AA contrast in both themes, controls are ≥44 px, Enter sends / Shift+Enter adds a line, and a failed send keeps the text with a Retry that sends it once
-- **FAQ Page** — admin-managed FAQ with accordion UI; admins can create/edit/delete questions; LLM auto-translation to all 26 languages; view count ranking; FAQ section on landing page (top 5 + show all)
+- **Monthly support budget** — users can set how much they're willing to contribute monthly, from `/me/stake`
+- **AI Chat Assistant** — a screen at `/me/help/assistant` (there is no floating button). It supports text and voice input. A failed send keeps the text with a Retry
+- **FAQ** — admin-managed FAQ at `/me/help/faq`; admins can create, edit, and delete questions, with LLM auto-translation
 - **Admin Broadcast** — send messages to all Telegram users with auto-translation per user language; support for text/photo/video; direct reply to specific user by TG ID; scheduled posts with datetime picker; auto-chain drip campaigns by registration day offset; open/read tracking with per-message statistics
 - **Feedback to Telegram** — user feedback/suggestions from chat assistant are auto-forwarded to a Telegram group
 - **Telegram Bot Notifications** — collection notifications (new, blocked, closed) sent to users' Telegram via bot with rate-limited broadcast (BullMQ worker, 25 msg/sec)
 - **Web Push Notifications** — browser push notifications for collection events (new, blocked, closed) via Web Push API with VAPID authentication
 - **Native FCM Push Notifications** — Android Capacitor app receives native push notifications via Firebase Cloud Messaging; unified push service sends to both Web Push and FCM in parallel; auto-cleanup of expired tokens
-- **Arvut Hadadit Subdomain** — Hebrew-branded landing page at `arvuthadadit.orginizer.com` with "ערבות הדדית" branding, forced Hebrew locale, RTL layout, and dedicated translations (`landingArvut.*` in `he.json`)
+- **Arvut Hadadit** — the separate Hebrew landing was removed. `/arvut` and `/welcome` redirect to `/`
 - **Invite Sharing with OG Image** — share referral link with personalized localized text ("personal invitation from NAME to their circle of close friends") and auto-generated OG image (logo + "Social Organizer"); Web Share API with image, fallback to clipboard
 - **Invite Fallback (server-side safety net)** — the bot tracks the invite token on `/start invite_TOKEN` (BotStart.inviteToken); if the mini app loses it (failed page load, menu-button open without start_param), `loginWithTelegram` applies the tracked token and creates the pending connection to the inviter anyway; a startup backfill (`backfillBotStartInvites`) retroactively links registered-but-disconnected users, consuming tokens on apply
 - **Collection Hold (Blocked)** — when collection reaches target amount, existing notifications are expired, COLLECTION_BLOCKED notification is sent to all previously notified users; blocked notifications don't navigate to collection page
 - **Smart User Deletion** — users without first-handshake connections are fully deleted from DB (cascade); users with connections get soft-deleted ("Deleted user"); all pending connections cleaned up on deletion
 - **Grouped Notifications** — notifications about the same collection (new/blocked/closed) are visually stacked with partial card overlap; pending connection sections are collapsible and placed below collection notifications
 - **Session renewal** — access tokens live 30 minutes (`JWT_ACCESS_TTL_MINUTES`); the web client (`apps/web/src/lib/trpc.ts`, `authFetch`) renews them with `auth.refresh` before they expire and once more after a 401, one renewal at a time. Without it every web/app user was signed out 30 minutes after sign-in once SO-14 started checking expiry. A broken refresh token still signs the user out as before.
-- **First acquaintance (SO-40)** — after sign-in the newcomer sees an "Acquaintance" card on the dashboard (`AcquaintanceCard`, data from `pending.introStatus`): "Waiting for confirmation" with the inviter's name while the request is open (the app stays usable), "You and X know each other" with one action "Open my network" after both agree (shown once per account), or a clear next step (invite someone you know) when the request was declined or the inviter deleted the account. Without an invite the dashboard shows the personal link / QR. Every answer to a request — app (`pending.accept/reject`), Telegram bot buttons (`pc_a:` / `pc_r:` callbacks under the "New connection request" message) — goes through `apps/api/src/services/connection-request.service.ts`: only the addressee can answer, a conditional PENDING→ACCEPTED/REJECTED update makes repeats and a second device a no-op, the 150-connection limit is checked for both people (`CONNECTION_LIMIT_SELF` / `CONNECTION_LIMIT_OTHER`). A deleted inviter returns `INVITER_DELETED` instead of creating a dead request; the same person opening a single-use link again is not an error. One person keeps one account across sign-in methods: Google/Apple with a verified email attach to the account with that email, email sign-up refuses an address that already exists, Telegram attaches via Settings → "Connect Telegram" (`link_` code; an empty duplicate Telegram account is folded in and its invite request moves over), and a Telegram user moves to the app with a 6-digit code.
+- **First acquaintance (SO-40)** — connection requests show in the circle feed. The old acquaintance card is gone. Every answer to a request — app (`pending.accept/reject`), Telegram bot buttons (`pc_a:` / `pc_r:` callbacks) — goes through `apps/api/src/services/connection-request.service.ts`: only the addressee can answer, a conditional PENDING→ACCEPTED/REJECTED update makes repeats a no-op, and the 150-connection limit is checked for both people. One person keeps one account across sign-in methods. Telegram attaches from Account → "Connect Telegram" (`link_` code; an empty duplicate Telegram account is folded in).
 - **One notification per event (SO-45)** — every external message goes through `services/delivery.service.ts`: the person's single channel (`User.notifyChannel`: app push OR Telegram; empty = app if the person has a push subscription/token, otherwise Telegram if linked) and a `NotificationDelivery` row with a unique `(userId, eventKey)` claimed before sending, so repeats, worker retries and races send nothing twice. `User.notifyNewCollections` switches off new collections only; requests, responses and collection updates always come. Responses to an author's collection are grouped (`response-digest` delayed job, 5-minute window, one job id per window; a timer without Redis) and skipped when the author already opened the collection (`Collection.creatorViewedAt`) or it is no longer active. Push texts are fixed (no names, amounts or contacts). The auto-chain and admin broadcasts no longer add a Web Push copy for people who got the message in Telegram. Settings → Notifications: channel and the new-collections switch. Migration `20261109120000_notification_channel` (apply manually before deploy). Local check: `scripts/check-notifications.ts`.
 - **Confirmed connections count (SO-15)** — one definition everywhere: `Connection` rows the user is part of (either side of the pair); invite links and pending requests are not connections. `countConnections` in `connection-request.service.ts` feeds the SOS threshold (10 for a regular user, the form shows the same number from `connection.getCount`), the 150 limit and the account deletion scenario (connections or invitees → muted, otherwise deleted without traces; the Telegram "bot blocked" cleanup follows the same rule). Every new connection goes through `createConnectionWithinLimit`: both user rows are locked in id order and counted inside the transaction, so parallel confirmations at 149/150 can't exceed the limit and a repeat creates nothing; SOS links don't bypass the limit. There is no one-sided `connection.add`. Local checks: `scripts/check-connection-counts.ts` (boundaries 0/9/10/149/150, parallel accepts, special roles, deletion, bot-blocked cleanup) and `scripts/check-connection-sources.ts` (e-mail code, Telegram and Google newcomers count the same).
-- **Money MVP scope** — the app keeps connections, money collections with intentions, contacts and the notifications they need. Skills, needs, matching and exchange chains are switched off (`apps/api/src/services/mvp-scope.ts`): no menu/page entries, old URLs show a notice with a way home, the API answers NOT_FOUND, background reminders are not sent. Stored data (`user_skills`, `user_needs`, `skill_categories`, `match_chains`, `skill_match_notifications`) is kept. `FEATURE_SKILLS=true` turns the API and reminders back on (the UI entries were removed).
-- **Skills & Needs System (retired in the MVP)** — 221 skill categories in 15 groups (home, construction, business, legal, creative, health, beauty, transport, auto, IT, education, events, pets, outdoor, agriculture) + "Other" per group with free-text note; unified single-pass selector with dual "Can"/"Need" toggles, search, collapsible accordion groups; isOnline flag distinguishes remote vs local skills; geography (country dropdown + city input + browser geolocation via Nominatim) for offline skill matching; Haversine distance calculation; auto-chain reminders (day 3, 7, 14, 30) nudge users who haven't filled skills; admin dashboard shows fill rate, match density, top 10 skills/needs
-- **Skill Matching (retired in the MVP)** — real-time matching of skills and needs between connected users; MatchesPage (/matches) shows "Who can help me" and "Who needs my help" tabs with grouped user cards; SkillMatchNotification model auto-creates alerts when friends add matching skills; dashboard card shows match counts with link to matches page; geography-aware filtering for offline skills (same city/country/distance hint)
+- **Money MVP scope** — the app keeps connections, collections with intentions, contacts, and the notifications they need. Skills, needs, and matching are off (`apps/api/src/services/mvp-scope.ts`): no pages, `/matches`, `/skills`, and `/needs` redirect to `/`, and the API answers NOT_FOUND unless `FEATURE_SKILLS=true`. Stored rows stay in the database.
 
 ## Terminology (Glossary)
 
@@ -405,6 +380,19 @@ Mock data (`apps/web/src/lib/demoData.ts`):
 | **Current Capabilities** | Sum of remaining monthly budgets across the user's network (up to 3 handshake levels) |
 | **Monthly budget** | Optional amount a user is willing to contribute to mutual support each month (stored in USD) |
 
+## Redesign
+
+The `redesign` branch replaces the old dashboard, network page, and planet landing with four tabs: Circle, Ask, Add, and Profile. Guests see the public site at `/` and the explainer at `/how`. Screen specs are in [docs/redesign/](docs/redesign/README.md).
+
+Demo mode, the video guides, and the retired-feature page are removed.
+
+Apply these migrations by hand on production (they are already in `packages/db/prisma/migrations`):
+
+- `20261109120000_ask_block_reason_invite_ttl`
+- `20261109140000_connection_via_collection`
+- `20261109160000_collection_moderation`
+- inactivity-cleanup migration — being added in parallel; the folder name is not in this branch yet
+
 ## Current Status
 
 - [x] **Phase 0:** Monorepo infrastructure
@@ -416,6 +404,7 @@ Mock data (`apps/web/src/lib/demoData.ts`):
 - [x] **Phase 6:** Visual polish — NASA textures, realistic stars, connection counts everywhere
 - [x] **Phase 7:** Telegram Mini App — auto-auth, BackButton, haptics, theme sync, CSS variables
 - [x] **Phase 8:** Native release — Capacitor iOS + Android wrappers; **live on the App Store and Google Play** (Sign in with Apple, native push on Android, invite referral on store links)
+- [x] **Redesign:** Circle, Ask, Add, Profile, and the public landing. Route pages are lazy; the 3D graph loads with the Circle
 
 ## License
 

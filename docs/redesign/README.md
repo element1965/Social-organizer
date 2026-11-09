@@ -61,7 +61,10 @@ Palette "Ink and teal". Semantic tokens are CSS variables in `apps/web/src/style
 
 Rules for redesigned code: use semantic tokens only, no raw `gray-*` / `blue-*` and no `dark:` variants
 (tokens switch themes by themselves). The old ramps (`gray`, `blue`, `teal`, `green`, `red`, `amber`, ...)
-are temporarily mapped to the same palette so screens that are not redesigned yet still match.
+stay in `apps/web/tailwind.config.js` because these screens still use them: support chat, FAQ, the
+assistant, broadcast, the message composer, the native push prompt, the protected-route spinner, and
+`components/ui/rich-text.tsx`. `docs/redesign/design-system.md` still says to delete the ramps in WP9;
+that note is out of date until those screens move to tokens.
 
 ## Local development on Windows
 
@@ -119,8 +122,7 @@ cd packages/db
 
 - **E-mail code:** without `RESEND_API_KEY`, the dev API writes messages to `%TEMP%\so-dev-mail.log`
   (override with `DEV_MAIL_OUTBOX`) — read the code there.
-- **Demo mode is effectively off:** `ProtectedRoute.tsx` and `LoginPage.tsx` clear the `demo-token`, nothing sets it,
-  and `lib/demoData.ts` misses ~48 of 102 procedures (all `pending.*`, `milestone.*`, ...). Use the real local API.
+- **Demo mode is removed.** There is no `demo-token` and no mock tRPC link. Sign in against the local API.
 - Telegram / Google / Apple sign-in need the corresponding keys in the env files.
 
 ### Testing on a phone
@@ -143,3 +145,32 @@ Without `REDIS_URL` the API starts normally and skips the BullMQ workers (remind
 scheduled cycle close, notification expiry); currency rates are fetched without cache.
 Memurai's MSI failed to install on this machine and Microsoft Garnet lacks commands BullMQ needs,
 so Redis is disabled for now. Set `REDIS_URL=redis://localhost:6379` once a Redis 6.2+ server runs locally.
+
+## What the redesign changed
+
+The signed-in app is four tabs: Circle (`/`), Ask (`/ask`), Add (`/add`), Profile (`/me`). Guests get the
+public site at `/` and the explainer at `/how`. A person is `/person/:id`, a collection is `/collection/:id`.
+Old URLs (`/dashboard`, `/network`, `/notifications`, `/create`, `/settings`, `/welcome`, `/arvut`,
+`/matches`, `/skills`, `/needs`) redirect. The planet, globe, clouds, video guides, demo mode, and the
+retired-feature page are gone. The 3D view that remains is `NetworkGraph` on the Circle, in its own chunk.
+
+`telegram-web-app.js` is injected during HTML parse, before the app entry, only inside Telegram:
+`tgWebAppData` or `tgWebApp` in the URL or hash, a Telegram user agent, `window.TelegramWebviewProxy`,
+sessionStorage `__telegram__initParams`, or an iframe that has those stored params or a `tgWebApp` hash.
+The extra checks cover a full-page reload inside Telegram Desktop, iOS, Android, and Web A/K, where the
+launch hash is already gone. A normal browser does not wait on the script, and `@so/tg-adapter` still
+sees `window.Telegram` before React boots inside a Mini App.
+
+## Production migrations to apply by hand
+
+These folders are in `packages/db/prisma/migrations` and need a manual apply on production:
+
+- `20261109120000_ask_block_reason_invite_ttl`
+- `20261109140000_connection_via_collection`
+- `20261109160000_collection_moderation`
+- inactivity-cleanup migration — being added in parallel; the folder name is not in this branch yet
+
+Locale files are owned by the translations work. Keys that this cleanup left unused (do not delete them here):
+`videoGuide.*`, `retired.title`, `retired.text`, `retired.back`, `requiredInfo.*`, `milestones.*`,
+and `network.controlsHint`. `circle.feed.milestoneFirst`, `circle.feed.milestoneTen`, `circle.feed.milestoneWith`,
+and `circle.feed.milestoneGrow` are still used.
