@@ -94,7 +94,7 @@ export function EventFeed({ events, loading, onOpen, onDismiss, dayLabels = fals
                       type="button"
                       onClick={remove}
                       aria-label={t('circle.feed.dismiss', { name: event.title })}
-                      className="so-focus absolute -right-1 -top-1 grid h-6 w-6 place-items-center rounded-full bg-surface-2 text-ink-muted opacity-0 shadow-float transition-opacity focus:opacity-100 group-hover:opacity-100 motion-reduce:transition-none"
+                      className="so-focus absolute right-1 top-1 grid h-6 w-6 place-items-center rounded-full bg-surface-2 text-ink-muted opacity-0 shadow-float transition-opacity focus:opacity-100 group-hover:opacity-100 motion-reduce:transition-none"
                     >
                       <IconClose className="h-3 w-3" />
                     </button>

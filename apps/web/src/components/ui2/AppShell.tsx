@@ -213,7 +213,8 @@ export function ShellChrome({
   return (
     <aside
       className={cn(
-        'flex shrink-0 flex-col border-r border-line-soft bg-surface',
+        // z-40: rail tooltips extend past the aside and must stay above page content (e.g. the Circle scene card)
+        'relative z-40 flex shrink-0 flex-col border-r border-line-soft bg-surface',
         rail ? 'w-[76px] items-center px-2.5 py-4' : 'w-[240px] px-3 pb-4 pt-5',
         contained ? 'h-full' : 'sticky top-[var(--sa-top)] h-[calc(100dvh-var(--sa-top))]',
       )}
