@@ -90,11 +90,16 @@ export function CirclePage() {
   const byDepth = (stats.data?.byDepth ?? {}) as Record<number, number>;
   const counts: Record<Ring, number> = { 1: byDepth[1] ?? 0, 2: byDepth[2] ?? 0, 3: byDepth[3] ?? 0 };
   // The whole reach of a request, as on the profile (rounded beyond the 3rd ring); older cached stats lack it
+  // The headline counts only people of the visible rings (1–3): who the person can see in the graph.
+  // The far part is told separately and rounded; older cached stats lack the field
   const networkPeople = (stats.data as { networkPeople?: number } | undefined)?.networkPeople;
+  const networkFar = (stats.data as { networkFar?: number } | undefined)?.networkFar ?? 0;
   const peopleCount = empty ? 0 : networkPeople ?? counts[1] + counts[2] + counts[3];
   // 4th and 5th rings: only rounded counts, drawn as anonymous dust
   const farRings = useFarRings().dots;
-  const canHelp = empty ? 0 : caps.data?.total ?? 0;
+  // Money: the checkable sum of the visible rings; the full reach is only a ceiling next to it
+  const canHelp = empty ? 0 : caps.data?.visibleTotal ?? caps.data?.total ?? 0;
+  const canHelpCeiling = empty ? undefined : caps.data?.total;
   const profileDone = Boolean(me.data?.name?.trim()) && (me.data?.monthlyBudget ?? 0) > 0;
 
   /* ----- layers and URL (system Back closes the graph and the card) ----- */
@@ -352,7 +357,7 @@ export function CirclePage() {
         empty={empty}
         counts={counts}
         hiddenRings={hiddenRings}
-        stats={<NetStats variant="card" people={peopleCount} canHelp={canHelp} />}
+        stats={<NetStats variant="card" people={peopleCount} far={empty ? 0 : networkFar} canHelp={canHelp} ceiling={canHelpCeiling} />}
         newCount={events.filter((e) => e.hot).length}
         feed={feedBody}
         person={cardPerson ? <PersonCard person={cardPerson} variant="column" onClose={closeCard} /> : null}
@@ -370,7 +375,7 @@ export function CirclePage() {
       counts={counts}
       hiddenRings={hiddenRings}
       onToggleRing={toggleRing}
-      stats={<NetStats variant="scene" people={peopleCount} canHelp={canHelp} />}
+      stats={<NetStats variant="scene" people={peopleCount} far={empty ? 0 : networkFar} canHelp={canHelp} ceiling={canHelpCeiling} />}
       feed={feedBody}
       eventsCount={events.length}
       hint={hint}

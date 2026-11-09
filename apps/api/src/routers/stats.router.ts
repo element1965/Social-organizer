@@ -430,6 +430,13 @@ export const statsRouter = router({
     // The same reach and the same sum as the profile and the ask screen (networkReach):
     // everyone a request travels to, up to the 6th handshake, without the person themselves
     const reach = await networkReach(ctx.db, userId);
-    return { total: reach.canHelp, people: reach.shown };
+    // total/people: everyone a request can reach (a ceiling); visible*: the rings 1–3, which the person can see
+    return {
+      total: reach.canHelp,
+      people: reach.shown,
+      visibleTotal: reach.canHelpVisible,
+      visiblePeople: reach.visible,
+      farPeople: reach.farShown,
+    };
   }),
 });

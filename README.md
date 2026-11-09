@@ -392,7 +392,7 @@ Before this split the entry was 1858 KB / 558 KB gzip and the landing also pulle
 | **Signal for support** | Creating a collection when support is needed. The network is notified through handshake chains |
 | **Handshake chain** | Path of connections between two users through mutual acquaintances |
 | **Connection count** | Number of first-level connections (handshakes) a user has |
-| **Your network can help** | Sum of minimum participation across the user's network (up to 3 handshake levels) |
+| **Your network can help** | Sum of minimum participation of the people in the **visible rings 1–3** (what the person can check by eye). The full reach (up to the 6th handshake) is shown next to it only as a ceiling: "up to X $ with the far rings". The headline counts the same visible people and tells the rounded far part separately ("and ~20 further out") |
 | **Minimum participation** | Amount a user is ready to give to one collection of someone they know (whole $, stored in `monthlyBudget`; not per month, never decremented). Prefilled when joining a collection |
 
 ## Redesign
