@@ -26,6 +26,7 @@ body { padding:40px 32px 80px; }
 .hero .cta .btn { padding:0 24px; width:auto; }
 .hero .facts { display:flex; gap:8px; margin-top:22px; }
 .planet { position:relative; height:480px; border-radius:30px; overflow:hidden; background:var(--scene); box-shadow:var(--shadow-banner); }
+.planet canvas { position:absolute; inset:0; width:100%; height:100%; display:block; }
 .planet .tag { position:absolute; left:20px; bottom:18px; display:flex; gap:8px; }
 .planet .tag span { height:30px; padding:0 12px; border-radius:var(--r-sm); background:rgba(231,238,235,.12); color:var(--node-1); font-size:13px; font-weight:700; display:grid; place-items:center; backdrop-filter:blur(8px); }
 .sec { padding:72px 48px; border-top:1px solid var(--line-soft); }
