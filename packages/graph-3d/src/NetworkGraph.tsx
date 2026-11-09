@@ -1721,7 +1721,8 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
         const target = new THREE.Vector3(node.x, node.y ?? 0, node.z ?? 0);
         const dir = cam.position.clone().sub(target);
         if (dir.lengthSq() < 1e-6) dir.set(0, 0, 1);
-        const dist = THREE.MathUtils.clamp(ballOuter(sizeRef.current) * 0.55, 38, 75);
+        // Close enough to read the name, far enough to see the person's own links around them
+        const dist = THREE.MathUtils.clamp(ballOuter(sizeRef.current) * 1.4, 90, 150);
         flyPose(target.clone().add(dir.normalize().multiplyScalar(dist)), target, FOCUS_FLY_MS);
         f.kick = true;
       };
