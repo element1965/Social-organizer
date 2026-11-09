@@ -128,6 +128,12 @@ const NEAREST_LABELS = 8;        // labels on the nearest ring-1/2 nodes, plus t
 const PATH_CURVE = 0.15;         // slight bend; 0 is a straight line
 const DIM_OPACITY = 0.35;
 const LABEL_IDLE_MS = 2000;
+// Names are sized on screen, not in the world: close up they stop growing, far away they stop
+// shrinking. Height of one text line in CSS pixels (the centre name is a bit larger).
+const LABEL_MIN_PX = 9;
+const LABEL_MAX_PX = 13;
+const LABEL_CENTER_MIN_PX = 11;
+const LABEL_CENTER_MAX_PX = 16;
 const LABEL_CAP = 30;
 
 /** Map connectionCount → avatar scale factor (1.0 – 1.6) */
@@ -187,6 +193,8 @@ interface NodeVis {
   dotRgba: [number, number, number, number];
   /** Squared distance to the camera this frame (dot sorting) */
   d2: number;
+  /** Label size factor that keeps its lines between LABEL_MIN_PX and LABEL_MAX_PX on screen */
+  labelFit: number;
   glow: THREE.Sprite | null;
   label: SpriteText | null;
   pulse: THREE.Sprite | null;
@@ -999,7 +1007,8 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
 
     if (v.label) {
       const base = v.label.userData.baseScale as THREE.Vector3;
-      const k = isC || v.avatar.visible ? 1 : 0.9;
+      // labelFit keeps the text within a readable on-screen size, whatever the distance (frame loop)
+      const k = (isC || v.avatar.visible ? 1 : 0.9) * v.labelFit;
       v.label.scale.set(base.x * k, base.y * k, 1);
       const body = isC ? MARK_SIZE : (v.avatar.visible ? avatarSize : v.dot.scale.x);
       v.label.position.y = -(body / 2 + (base.y * k) / 2 + (isC ? 0.85 : 0.4));
@@ -1037,6 +1046,7 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
     label.raycast = noRaycast;
     label.renderOrder = 4;
     label.userData.baseScale = label.scale.clone();
+    label.userData.lines = labelLines(String(n.name ?? ''), !!n.isCenter).split('\n').length;
     v.label = label;
     v.inner.add(label);
     applyLevel(v, v.level);
@@ -1122,6 +1132,7 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
       lastScale: -1,
       dotRgba: [1, 1, 1, 0],
       d2: 0,
+      labelFit: 1,
       unwantedAt: 0,
       wantedAt: 0,
     };
@@ -1584,6 +1595,9 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
       }
 
       dotList.length = 0;
+      // CSS pixels per world unit at distance 1 (label sizing)
+      const pxPerUnit = ((cam as THREE.PerspectiveCamera).projectionMatrix.elements[5] ?? 1)
+        * ((fg.renderer() as THREE.WebGLRenderer).domElement.clientHeight || 1) * 0.5;
       for (const v of visRef.current.values()) {
         if (!v.outer.parent) continue;
         const p = v.outer.position;
@@ -1613,6 +1627,20 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
         }
         if (v.label) {
           v.label.visible = showLabel && !crowded.has(v.node.id);
+          // On-screen size of one text line at fit 1; keep it between the limits
+          if (v.label.visible) {
+            const base = v.label.userData.baseScale as THREE.Vector3;
+            const lines = (v.label.userData.lines as number | undefined) ?? 1;
+            const k = v.node.isCenter || v.avatar.visible ? 1 : 0.9;
+            const linePx = ((base.y * k) / lines) * pxPerUnit / Math.max(1, Math.sqrt(d2));
+            const lo = v.node.isCenter ? LABEL_CENTER_MIN_PX : LABEL_MIN_PX;
+            const hi = v.node.isCenter ? LABEL_CENTER_MAX_PX : LABEL_MAX_PX;
+            const fit = linePx > hi ? hi / linePx : linePx < lo ? lo / linePx : 1;
+            if (Math.abs(fit - v.labelFit) > v.labelFit * 0.03) {
+              v.labelFit = fit;
+              applyLevel(v, v.level);
+            }
+          }
           const dimLabel = pathRef.current.dim && !pathRef.current.set.has(v.node.id);
           const mat = v.label.material as THREE.SpriteMaterial;
           const op = dimLabel ? DIM_OPACITY : 1;
