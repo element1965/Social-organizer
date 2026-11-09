@@ -49,6 +49,7 @@ body { padding:40px 32px 80px; }
 .hui-ring .seat { position:absolute; transform:translate(-50%,-50%); display:flex; flex-direction:column; align-items:center; gap:6px; border:0; background:none; padding:0; cursor:pointer; font:inherit; color:inherit; }
 .hui-ring .seat:focus-visible { outline:2px solid var(--care); outline-offset:4px; border-radius:12px; }
 .hui-ring .seat .ava { width:48px; height:48px; border-radius:50%; background:var(--paper); box-shadow:var(--shadow-card), inset 0 0 0 1px var(--line); display:grid; place-items:center; font-weight:800; font-size:18px; transition:background var(--dur-base), color var(--dur-base), transform var(--dur-base) var(--ease-out), box-shadow var(--dur-base); }
+.hui-ring .seat .ava svg { width:26px; height:26px; }
 .hui-ring .seat .nm { font-size:13px; font-weight:700; color:var(--muted); white-space:nowrap; }
 .hui-ring .seat.on .ava { background:var(--care); color:var(--on-care); box-shadow:0 0 0 4px var(--care-soft), var(--shadow-card); transform:scale(1.12); }
 .hui-ring .seat.on .nm { color:var(--ink); }
