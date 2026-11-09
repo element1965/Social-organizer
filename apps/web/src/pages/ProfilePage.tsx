@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { languageNames, type SupportedLanguage } from '@so/i18n';
+import { languageNames, type SupportedLanguage } from '@so/i18n/languages';
 import { trpc } from '../lib/trpc';
 import { useAuth } from '../hooks/useAuth';
 import { useTheme } from '../hooks/useTheme';

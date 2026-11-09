@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { languageNames, type SupportedLanguage } from '@so/i18n';
+import { languageNames, type SupportedLanguage } from '@so/i18n/languages';
 import { trpc } from '../../lib/trpc';
 import { cn } from '../../lib/utils';
 import { Sheet } from '../ui2/Sheet';

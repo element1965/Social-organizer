@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client';
 import { App } from './App';
 import { BrandMark } from './components/ui2/BrandMark';
 import { applyStoredFontScale } from './components/profile/fontScale';
-import i18n from './lib/i18n';
+import i18n, { i18nReady } from './lib/i18n';
 import './index.css';
 
 /** One automatic reload after a stale lazy chunk. The timestamp blocks a loop. */
@@ -65,10 +65,16 @@ class AppErrorBoundary extends React.Component<React.PropsWithChildren, { failed
 
 applyStoredFontScale();
 
-ReactDOM.createRoot(document.getElementById('root')!).render(
-  <React.StrictMode>
-    <AppErrorBoundary>
-      <App />
-    </AppErrorBoundary>
-  </React.StrictMode>,
-);
+function render() {
+  ReactDOM.createRoot(document.getElementById('root')!).render(
+    <React.StrictMode>
+      <AppErrorBoundary>
+        <App />
+      </AppErrorBoundary>
+    </React.StrictMode>,
+  );
+}
+
+// Render after the user's locale (and the English fallback) arrive; if loading fails, render anyway with keys
+// falling back to English or the key itself rather than a blank page.
+i18nReady.then(render, render);
