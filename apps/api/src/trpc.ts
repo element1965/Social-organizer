@@ -17,6 +17,8 @@ export const router = t.router;
 export const publicProcedure = t.procedure;
 export const middleware = t.middleware;
 
+const LAST_SEEN_THROTTLE_MS = 60 * 1000;
+
 // Auth middleware — ensures user is authenticated and not deleted
 const isAuthed = middleware(async ({ ctx, next }) => {
   if (!ctx.userId) {
@@ -25,16 +27,26 @@ const isAuthed = middleware(async ({ ctx, next }) => {
   // Check: deleted users cannot perform actions
   const user = await ctx.db.user.findUnique({
     where: { id: ctx.userId },
-    select: { deletedAt: true },
+    select: { deletedAt: true, lastSeen: true, inactivityStage: true },
   });
   if (user?.deletedAt) {
     throw new TRPCError({ code: 'FORBIDDEN', message: 'Account has been deleted' });
   }
-  // fire-and-forget — don't slow down every request
-  ctx.db.user.update({
-    where: { id: ctx.userId },
-    data: { lastSeen: new Date() },
-  }).catch(() => {});
+  // Activity heartbeat: lastSeen drives "online" display and the 2-year inactivity cleanup.
+  // Throttled to one write per minute; any activity also cancels pending inactivity warnings.
+  // Fire-and-forget — don't slow down every request.
+  if (user) {
+    const now = new Date();
+    const stale = !user.lastSeen || now.getTime() - user.lastSeen.getTime() > LAST_SEEN_THROTTLE_MS;
+    if (stale || user.inactivityStage > 0) {
+      ctx.db.user.update({
+        where: { id: ctx.userId },
+        data: user.inactivityStage > 0
+          ? { lastSeen: now, inactivityStage: 0, inactivityWarnedAt: null }
+          : { lastSeen: now },
+      }).catch(() => {});
+    }
+  }
   return next({ ctx: { ...ctx, userId: ctx.userId } });
 });
 

@@ -1,17 +1,17 @@
 import { useNavigate } from 'react-router-dom';
-import { Trans, useTranslation } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import { Prose, type ProseSection } from '../components/site/Prose';
 import { Button } from '../components/ui2/Button';
 import { useAuth } from '../hooks/useAuth';
 
-const BOT = 'https://t.me/socialorganizer_bot';
 const STEPS = ['legal.del.step1', 'legal.del.step2', 'legal.del.step3', 'legal.del.step4'] as const;
 const GONE = ['legal.del.gone1', 'legal.del.gone2', 'legal.del.gone3', 'legal.del.gone4', 'legal.del.gone5'] as const;
 
 /**
  * Public account-deletion page required by the stores (auth.html №25, №29): four numbered steps
  * (Profile → Account), a button that signs in and opens Account, what is deleted, what remains,
- * and manual deletion for people without access (within 30 days).
+ * and what happens without access: no deletion by request, automatic deletion after 2 years
+ * without sign-ins, with notices 30 and 7 days ahead.
  */
 export function DeleteAccountPage() {
   const { t } = useTranslation();
@@ -38,14 +38,7 @@ export function DeleteAccountPage() {
     {
       id: 'no-access',
       title: t('legal.del.noAccessTitle'),
-      body: (
-        <p>
-          <Trans
-            i18nKey="legal.del.noAccessText"
-            components={{ bot: <a href={BOT} target="_blank" rel="noopener noreferrer" /> }}
-          />
-        </p>
-      ),
+      body: <p>{t('legal.del.noAccessText')}</p>,
     },
   ];
 
