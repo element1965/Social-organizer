@@ -8,10 +8,25 @@ import { Prisma, type PrismaClient } from '@so/db';
  * Never by a similar name, photo or an unproven e-mail.
  */
 
+/**
+ * Hide most of an e-mail for screens that must say which account exists without disclosing it:
+ * "anna.petrova@gmail.com" → "an•••@gmail.com", "anna@gmail.com" → "a•••@gmail.com" (one character kept for local parts shorter than 6, two otherwise).
+ */
+export function maskEmail(email: string): string {
+  const at = email.lastIndexOf('@');
+  if (at <= 0) return '•••';
+  const local = email.slice(0, at);
+  const keep = local.length < 6 ? 1 : 2;
+  return `${local.slice(0, keep)}•••${email.slice(at)}`;
+}
+
 export class AccountExistsError extends Error {
+  /** Masked e-mail of the existing account; only the masked form ever leaves the server. */
+  readonly maskedEmail: string | null;
   /** The e-mail belongs to an account whose e-mail was never proven: sign in the old way first. */
-  constructor() {
+  constructor(email?: string | null) {
     super('ACCOUNT_EXISTS_OTHER_METHOD');
+    this.maskedEmail = email ? maskEmail(email) : null;
   }
 }
 
@@ -52,7 +67,7 @@ async function resolveOnce(db: PrismaClient, id: ExternalIdentity): Promise<{ us
       // (or it never had a password, i.e. it came from a verified provider).
       // An e-mail typed at password sign-up was never checked: the person signs in
       // the old way (e-mail code) and links the methods in Settings.
-      if (!existing.emailVerifiedAt && existing.passwordHash) throw new AccountExistsError();
+      if (!existing.emailVerifiedAt && existing.passwordHash) throw new AccountExistsError(email);
       await db.platformAccount.create({
         data: { userId: existing.id, platform: id.platform, platformId: id.platformId, accessToken: id.accessToken ?? null },
       });

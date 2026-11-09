@@ -6,8 +6,12 @@ import type { CSSProperties, ReactNode } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { cn } from '../../lib/utils';
+import type { LoginMethod } from '../../hooks/useAuth';
 import { AppleMark, GoogleMark, TELEGRAM_BG, TELEGRAM_FG, TelegramMark } from './brand';
 import type { SignIn } from './useSignIn';
+
+/** The method used last time: a care ring on its own button (the order never changes). */
+const LAST_RING = 'ring-2 ring-inset ring-care';
 
 function AuthButton({
   children,
@@ -19,7 +23,7 @@ function AuthButton({
 }: {
   children: ReactNode;
   icon: ReactNode;
-  className: string;
+  className?: string | false;
   style?: CSSProperties;
   onClick: () => void;
   disabled?: boolean;
@@ -42,17 +46,41 @@ function AuthButton({
   );
 }
 
-export function AuthButtons({ signIn, onEmail }: { signIn: SignIn; onEmail: () => void }) {
+export function AuthButtons({
+  signIn,
+  onEmail,
+  last,
+  notice,
+  email = true,
+  legal = true,
+}: {
+  signIn: SignIn;
+  onEmail?: () => void;
+  /** Ring the button of the method used last time. */
+  last?: LoginMethod | null;
+  /** A status plaque above the buttons (cancelled, failed). */
+  notice?: ReactNode;
+  /** The e-mail text link after the buttons (off where e-mail is what just failed). */
+  email?: boolean;
+  legal?: boolean;
+}) {
   const { t } = useTranslation();
-  const { providers, start, busy, useWidget, attachWidget, googleBtnRef, error } = signIn;
+  const { providers, start, busy, useWidget, attachWidget, googleBtnRef } = signIn;
 
   return (
     <div className="w-full text-left">
+      {notice ? <div className="mb-3">{notice}</div> : null}
       <div className="flex flex-col gap-2.5">
         {providers.map((p) => {
           if (p === 'apple') {
             return (
-              <AuthButton key={p} icon={<AppleMark />} className="bg-ink text-canvas" onClick={() => start('apple')} disabled={busy}>
+              <AuthButton
+                key={p}
+                icon={<AppleMark />}
+                className={cn('bg-ink text-canvas', last === 'apple' && LAST_RING)}
+                onClick={() => start('apple')}
+                disabled={busy}
+              >
                 {t('login.apple')}
               </AuthButton>
             );
@@ -62,7 +90,7 @@ export function AuthButtons({ signIn, onEmail }: { signIn: SignIn; onEmail: () =
               <div key={p}>
                 <AuthButton
                   icon={<GoogleMark />}
-                  className="border border-line bg-surface text-ink"
+                  className={cn('border border-line bg-surface text-ink', last === 'google' && LAST_RING)}
                   onClick={() => start('google')}
                   disabled={busy}
                 >
@@ -80,7 +108,7 @@ export function AuthButtons({ signIn, onEmail }: { signIn: SignIn; onEmail: () =
               <AuthButton
                 key={p}
                 icon={<TelegramMark />}
-                className=""
+                className={last === 'telegram' && LAST_RING}
                 style={{ background: TELEGRAM_BG, color: TELEGRAM_FG }}
                 onClick={() => start('telegram')}
                 disabled={busy}
@@ -93,23 +121,20 @@ export function AuthButtons({ signIn, onEmail }: { signIn: SignIn; onEmail: () =
         })}
       </div>
 
-      {error ? (
-        <p role="alert" className="mt-3 text-center text-caption font-semibold text-sos">
-          {error}
-        </p>
-      ) : null}
-
-      {providers.includes('email') ? (
+      {email && onEmail && providers.includes('email') ? (
         <button
           type="button"
           onClick={onEmail}
           disabled={busy}
-          className="so-focus mt-2 block min-h-11 w-full text-center text-body-s font-bold text-care"
+          className={cn(
+            'so-focus mt-2 block min-h-11 w-full rounded-lg text-center text-body-s font-bold text-care',
+            last === 'email' && 'ring-2 ring-inset ring-care',
+          )}
         >
           {t('login.email')}
         </button>
       ) : null}
-      <LegalLine />
+      {legal ? <LegalLine /> : null}
     </div>
   );
 }

@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { takePendingSosPath } from '../lib/inviteUrl';
+import { ProviderWait } from '../components/onboarding/ProviderWait';
 import { afterSignInPath, readPendingInvite, safeInviteToken, setPendingInvite } from '../components/onboarding/flow';
 
 // Web finish page for Sign in with Apple.
@@ -24,7 +25,7 @@ export function AppleCallbackPage() {
     const uid = params.get('uid');
 
     if (!at || !rt || !uid) {
-      navigate('/login');
+      navigate('/login?error=failed', { replace: true });
       return;
     }
 
@@ -43,12 +44,5 @@ export function AppleCallbackPage() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  return (
-    <div className="flex items-center justify-center min-h-screen bg-slate-900">
-      <div className="text-white text-center">
-        <div className="animate-spin w-8 h-8 border-2 border-white border-t-transparent rounded-full mx-auto mb-4" />
-        <p>Signing in with Apple...</p>
-      </div>
-    </div>
-  );
+  return <ProviderWait provider="apple" />;
 }

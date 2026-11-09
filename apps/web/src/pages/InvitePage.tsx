@@ -15,7 +15,17 @@ import {
   setPendingInvite as setPending,
 } from '../components/onboarding/flow';
 import { useNetLabels } from '../components/onboarding/figureLabels';
-import { CheckMark } from '../components/onboarding/brand';
+import {
+  CheckGlyph,
+  ClockGlyph,
+  Note,
+  OfflineGlyph,
+  ShareGlyph,
+  Spinner,
+  StateTile,
+  TextButton,
+} from '../components/onboarding/states';
+import { buildWebInviteUrl } from '../lib/inviteUrl';
 
 /** Thin-space thousands, as everywhere in the app ("1 240"). */
 const num = (n: number) => Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
@@ -194,10 +204,20 @@ function AcceptView({
         top={<BrandLine />}
         corner={<LanguageCorner />}
         centre
-        foot={<Button className="w-full" onClick={() => navigate('/add')}>{t('invite.shareOwn')}</Button>}
+        foot={
+          <>
+            <Button className="w-full" icon={<ShareGlyph />} onClick={() => navigate('/add')}>
+              {t('invite.shareOwn')}
+            </Button>
+            <TextButton onClick={() => navigate('/', { replace: true })}>{t('invite.toCircle')}</TextButton>
+          </>
+        }
       >
         <Avatar name={inviterName} size={88} className="mt-10" />
         <StepText centre title={t('invite.ownTitle')}>{t('invite.ownText')}</StepText>
+        <div className="mt-4 flex justify-center">
+          <Pill className="max-w-full truncate">{buildWebInviteUrl(token).replace(/^https?:\/\/(www\.)?/, '')}</Pill>
+        </div>
       </OnboardingFrame>
     );
   }
@@ -219,15 +239,16 @@ function AcceptView({
   if (accept.isSuccess && !firstRun) {
     foot = (
       <>
-        <StatusPlaque>
-          {connected ? (
-            <b className="font-bold">{t('invite.connected', { name: inviterName })}</b>
-          ) : (
-            <>
-              <b className="font-bold">{t('invite.sent')}</b> {t('invite.sentText', { name })}
-            </>
-          )}
-        </StatusPlaque>
+        {connected ? (
+          <Note tone="care" icon={<CheckGlyph />} role="status">
+            <b>{t('invite.connected', { name: inviterName })}</b>
+          </Note>
+        ) : (
+          // Waiting is warm; it turns care when the inviter confirms (polled every 5 s)
+          <Note tone="warm" icon={<ClockGlyph />} role="status">
+            <b>{t('invite.waiting')}</b> {t('invite.sentText', { name })}
+          </Note>
+        )}
         <Button className="mt-4 w-full" onClick={() => navigate('/', { replace: true })}>
           {t('invite.toCircle')}
         </Button>
@@ -272,17 +293,6 @@ function AcceptView({
   );
 }
 
-function StatusPlaque({ children }: { children: React.ReactNode }) {
-  return (
-    <div className="flex items-center gap-3 rounded-lg bg-care-soft px-3.5 py-3 text-left text-caption text-ink">
-      <i className="grid h-9 w-9 shrink-0 place-items-center rounded-md bg-surface text-care">
-        <CheckMark className="h-5 w-5" />
-      </i>
-      <span>{children}</span>
-    </div>
-  );
-}
-
 /** One screen for every dead link: used, the inviter deleted the account, expired or not found. */
 function DeadLink({ signedIn }: { signedIn: boolean }) {
   const { t } = useTranslation();
@@ -324,6 +334,10 @@ function RetryScreen({ onRetry, busy }: { onRetry: () => void; busy: boolean }) 
         </Button>
       }
     >
+      {/* An icon, not the circle picture, so it is not mistaken for a dead link */}
+      <StateTile slot>
+        <OfflineGlyph />
+      </StateTile>
       <StepText title={t('invite.loadFailedTitle')}>{t('invite.loadFailedText')}</StepText>
     </OnboardingFrame>
   );
@@ -332,7 +346,7 @@ function RetryScreen({ onRetry, busy }: { onRetry: () => void; busy: boolean }) 
 function Loading() {
   return (
     <main className="grid min-h-[100dvh] place-items-center bg-canvas">
-      <span className="so-spin h-8 w-8 rounded-full border-[3px] border-care/30 border-t-care" aria-label="…" />
+      <Spinner label="…" />
     </main>
   );
 }
