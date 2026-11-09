@@ -219,7 +219,7 @@
     "fit": "Netzwerk einpassen",
     "stats": {
       "canHelp": "Ihr Netzwerk kann helfen",
-      "explain": "Die Summe der Mindestbeteiligung der Menschen in Ihrem Netzwerk: 1., 2. und 3. Handschlag.",
+      "explain": "Was die Menschen, die Ihre Bitte erreicht, in diesem Zeitraum noch geben können. Die Bitte geht in Wellen hinaus, zuerst an die Nächsten, bis zum 6. Handschlag.",
       "weekDelta": "+{{amount}} diese Woche",
       "people_one": "{{count}} Person in Ihrem Netzwerk",
       "people_other": "{{count}} Personen in Ihrem Netzwerk",

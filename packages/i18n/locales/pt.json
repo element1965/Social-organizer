@@ -219,7 +219,7 @@
     "fit": "Ajustar a rede",
     "stats": {
       "canHelp": "A sua rede pode ajudar",
-      "explain": "A soma da participação mínima das pessoas da sua rede: 1.º, 2.º e 3.º aperto de mão.",
+      "explain": "O que as pessoas alcançadas pelo seu pedido ainda podem dar neste período. O pedido sai em ondas, dos mais próximos até o 6.º aperto de mão.",
       "weekDelta": "+{{amount}} esta semana",
       "people_many": "{{count}} de pessoas na sua rede",
       "people_one": "{{count}} pessoa na sua rede",

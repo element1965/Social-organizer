@@ -219,7 +219,7 @@
     "fit": "Vừa khít mạng lưới",
     "stats": {
       "canHelp": "Mạng lưới của bạn có thể giúp",
-      "explain": "Tổng mức tham gia tối thiểu của người trong mạng lưới của bạn: cái bắt tay thứ 1, cái bắt tay thứ 2 và cái bắt tay thứ 3.",
+      "explain": "Số tiền mà những người nhận được lời nhờ của bạn còn có thể góp trong kỳ này. Lời nhờ đi theo từng đợt, từ người gần nhất đến cái bắt tay thứ 6.",
       "weekDelta": "+{{amount}} tuần này",
       "people_other": "{{count}} người trong mạng lưới của bạn",
       "peopleShort_other": "{{count}} người"

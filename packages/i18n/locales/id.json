@@ -219,7 +219,7 @@
     "fit": "Paskan jaringan",
     "stats": {
       "canHelp": "Jaringan Anda bisa membantu",
-      "explain": "Jumlah partisipasi minimum orang di jaringan Anda: jabat tangan ke-1, jabat tangan ke-2, dan jabat tangan ke-3.",
+      "explain": "Yang masih bisa diberikan periode ini oleh orang-orang yang dijangkau permintaan Anda. Permintaan dikirim bergelombang, dari yang terdekat hingga jabat tangan ke-6.",
       "weekDelta": "+{{amount}} minggu ini",
       "people_other": "{{count}} orang di jaringan Anda",
       "peopleShort_other": "{{count}} orang"

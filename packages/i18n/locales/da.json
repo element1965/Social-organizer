@@ -219,7 +219,7 @@
     "fit": "Tilpas netværket",
     "stats": {
       "canHelp": "Dit netværk kan hjælpe",
-      "explain": "Summen af mindste deltagelse for personer i dit netværk: 1., 2. og 3. håndtryk.",
+      "explain": "Hvad de mennesker, din anmodning når, stadig kan give i denne periode. Den sendes i bølger, nærmeste først, op til 6. håndtryk.",
       "weekDelta": "+{{amount}} denne uge",
       "people_one": "{{count}} person i dit netværk",
       "people_other": "{{count}} personer i dit netværk",

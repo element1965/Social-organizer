@@ -219,7 +219,7 @@
     "fit": "适配网络",
     "stats": {
       "canHelp": "你的网络可以帮忙",
-      "explain": "你网络里的人的最低参与之和：第1次、第2次和第3次握手。",
+      "explain": "你的求助能触达的人在本周期还能拿出的金额。求助会分批发出，从最亲近的人开始，最远到第6度连接。",
       "weekDelta": "本周 +{{amount}}",
       "people_other": "你的网络里有 {{count}} 人",
       "peopleShort_other": "{{count}} 人"

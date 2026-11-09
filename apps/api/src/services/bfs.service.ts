@@ -1,5 +1,6 @@
 import type { PrismaClient } from '@so/db';
 import { getGraph } from './graph-cache.service.js';
+import { NETWORK_MAX_DEPTH } from './network.service.js';
 
 export interface BfsRecipient {
   userId: string;
@@ -29,50 +30,46 @@ export async function getNetworkUserIds(db: PrismaClient, startUserId: string): 
 }
 
 /**
- * In-memory BFS through connection graph.
- * No PostgreSQL recursive CTEs, no temp files.
+ * The people a request reaches, nearest first (breadth-first over the cached graph), at most
+ * `maxRecipients` of them and at most `maxDepth` handshakes away.
+ *
+ * Excluded people (already notified in an earlier wave, ignore list) are skipped as recipients but
+ * still passed through: the next wave must reach the people behind the first wave, not stop at it.
+ * Deleted accounts are neither recipients nor a way through.
  */
 export async function findRecipientsViaBfs(
   db: PrismaClient,
   startUserId: string,
-  maxDepth: number = 6,
+  maxDepth: number = NETWORK_MAX_DEPTH,
   maxRecipients: number = 10000,
   excludeUserIds: string[] = [],
 ): Promise<BfsRecipient[]> {
-  const { adj } = await getGraph(db);
+  const { adj, deleted } = await getGraph(db);
   const excludeSet = new Set(excludeUserIds);
 
-  const visited = new Map<string, { depth: number; path: string[]; maxConnAt: Date }>();
-  const queue: Array<{ userId: string; depth: number; path: string[]; maxConnAt: Date }> = [];
+  const seen = new Set<string>([startUserId]);
+  const recipients: BfsRecipient[] = [];
+  const queue: Array<{ userId: string; depth: number; path: string[]; maxConnAt: Date | null }> = [
+    { userId: startUserId, depth: 0, path: [], maxConnAt: null },
+  ];
 
-  for (const { neighbor, createdAt } of adj.get(startUserId) || []) {
-    if (neighbor === startUserId || excludeSet.has(neighbor)) continue;
-    if (!visited.has(neighbor)) {
-      const entry = { userId: neighbor, depth: 1, path: [startUserId], maxConnAt: createdAt };
-      visited.set(neighbor, { depth: 1, path: [startUserId], maxConnAt: createdAt });
-      queue.push(entry);
-    }
-  }
-
-  let qi = 0;
-  while (qi < queue.length && visited.size < maxRecipients) {
-    const { userId, depth, path, maxConnAt } = queue[qi++]!;
+  for (let qi = 0; qi < queue.length && recipients.length < maxRecipients; qi++) {
+    const { userId, depth, path, maxConnAt } = queue[qi]!;
     if (depth >= maxDepth) continue;
     const newPath = [...path, userId];
     for (const { neighbor, createdAt } of adj.get(userId) || []) {
-      if (neighbor === startUserId || visited.has(neighbor) || excludeSet.has(neighbor)) continue;
-      const newMaxConnAt = createdAt > maxConnAt ? createdAt : maxConnAt;
-      visited.set(neighbor, { depth: depth + 1, path: newPath, maxConnAt: newMaxConnAt });
+      if (seen.has(neighbor) || deleted.has(neighbor)) continue;
+      seen.add(neighbor);
+      const newMaxConnAt = maxConnAt && maxConnAt > createdAt ? maxConnAt : createdAt;
       queue.push({ userId: neighbor, depth: depth + 1, path: newPath, maxConnAt: newMaxConnAt });
+      if (excludeSet.has(neighbor)) continue;
+      recipients.push({ userId: neighbor, path: [...newPath, neighbor], depth: depth + 1, maxConnAt: newMaxConnAt });
+      // The cap is exact: one notification per unit of the amount, never more
+      if (recipients.length >= maxRecipients) break;
     }
   }
 
-  return Array.from(visited.entries()).map(([userId, v]) => ({
-    userId,
-    path: [...v.path, userId],
-    depth: v.depth,
-    maxConnAt: v.maxConnAt,
-  }));
+  return recipients;
 }
 
 /**

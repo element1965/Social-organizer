@@ -219,7 +219,7 @@
     "fit": "Adatta la rete",
     "stats": {
       "canHelp": "La tua rete può aiutare",
-      "explain": "La somma della partecipazione minima delle persone nella tua rete: 1ª, 2ª e 3ª stretta di mano.",
+      "explain": "Quanto possono ancora dare in questo periodo le persone raggiunte dalla tua richiesta. Parte a ondate, dai più vicini fino alla 6ª stretta di mano.",
       "weekDelta": "+{{amount}} questa settimana",
       "people_many": "{{count}} persone nella tua rete",
       "people_one": "{{count}} persona nella tua rete",

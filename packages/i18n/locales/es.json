@@ -219,7 +219,7 @@
     "fit": "Encajar la red",
     "stats": {
       "canHelp": "Su red puede ayudar",
-      "explain": "La suma de la participación mínima de las personas de su red: 1.er, 2.º y 3.er apretón.",
+      "explain": "Lo que aún pueden dar en este periodo las personas a las que llega tu petición. Se envía por oleadas, de los más cercanos hasta el 6.º apretón de manos.",
       "weekDelta": "+{{amount}} esta semana",
       "people_many": "{{count}} de personas en su red",
       "people_one": "{{count}} persona en su red",
