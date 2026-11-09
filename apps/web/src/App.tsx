@@ -18,21 +18,22 @@ import {
   CircleStub,
   HelpStub,
   HistoryStub,
-  IntroStub,
   OpenStub,
   PeopleStub,
   PersonStub,
   ProfileRedirect,
   ProfileStub,
-  SeedStub,
   StakeStub,
 } from './components/ui2/stubs';
 import { useAuth } from './hooks/useAuth';
+import { afterSignInPath, readPendingInvite, safeInviteToken, setPendingInvite } from './components/onboarding/flow';
 import { LoginPage } from './pages/LoginPage';
 import { LandingPage } from './pages/LandingPage';
 import { CollectionPage } from './pages/CollectionPage';
 import { RetiredFeaturePage } from './pages/RetiredFeaturePage';
 import { InvitePage } from './pages/InvitePage';
+import { IntroPage } from './pages/IntroPage';
+import { SeedPage } from './pages/SeedPage';
 import { SettingsPage } from './pages/SettingsPage';
 import { SosLandingPage } from './pages/SosLandingPage';
 import { SupportChatPage } from './pages/SupportChatPage';
@@ -84,10 +85,11 @@ function GoogleAuthDeepLinkHandler() {
           login(at, rt, uid);
           // Prefer the invite token carried through the OAuth round-trip (inv),
           // fall back to one saved before the browser was opened.
-          const pendingInvite = params.get('inv') || localStorage.getItem('pendingInviteToken');
+          const pendingInvite = safeInviteToken(params.get('inv')) || readPendingInvite();
           // Keep pendingInviteToken until InvitePage accepts it.
-          if (pendingInvite) localStorage.setItem('pendingInviteToken', pendingInvite);
-          navigate(pendingInvite ? `/invite/${pendingInvite}` : '/', { replace: true });
+          if (pendingInvite) setPendingInvite(pendingInvite);
+          // A new account goes through the intro first (components/onboarding/flow.ts)
+          navigate(afterSignInPath(params.get('isNew') === '1', pendingInvite ? `/invite/${pendingInvite}` : null), { replace: true });
         } else {
           navigate('/login', { replace: true });
         }
@@ -210,8 +212,8 @@ export function App() {
             <Route path="/invite/:token" element={<InvitePage />} />
             <Route path="/sos/:collectionId" element={<SosLandingPage />} />
             <Route path="/how" element={<HowPage />} />
-            <Route path="/intro" element={<ProtectedRoute><IntroStub /></ProtectedRoute>} />
-            <Route path="/seed" element={<ProtectedRoute><SeedStub /></ProtectedRoute>} />
+            <Route path="/intro" element={<ProtectedRoute><IntroPage /></ProtectedRoute>} />
+            <Route path="/seed" element={<ProtectedRoute><SeedPage /></ProtectedRoute>} />
 
             <Route path="/dashboard" element={<Navigate to="/" replace />} />
             <Route path="/network" element={<Navigate to="/" replace />} />
