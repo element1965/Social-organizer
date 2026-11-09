@@ -7,7 +7,7 @@ import { ArrivalList } from '../components/add/ArrivalList';
 import { ConfirmSheet } from '../components/add/ConfirmSheet';
 import { LinkCard } from '../components/add/LinkCard';
 import { inviteSlug } from '../components/add/links';
-import { PathCard } from '../components/add/PathCard';
+import { PathCard } from '../components/circle/PathToRequest';
 import { trpc } from '../lib/trpc';
 
 interface ConfirmPerson {
@@ -20,7 +20,6 @@ export function AddPage() {
   const me = trpc.user.me.useQuery();
   const incoming = trpc.pending.incoming.useQuery();
   const connections = trpc.connection.list.useQuery();
-  const access = trpc.collection.askAccess.useQuery();
   const [confirm, setConfirm] = useState<ConfirmPerson | null>(null);
 
   const pending = (incoming.data ?? []).map((item) => ({
@@ -36,7 +35,6 @@ export function AddPage() {
     photoUrl: item.photoUrl,
     at: new Date(item.createdAt),
   }));
-  const alone = (connections.data ?? []).find((item) => item.connectionCount <= 1);
   const listFailed = incoming.isError || connections.isError;
   const listLoading = incoming.isLoading || connections.isLoading;
   const total = pending.length + connected.length;
@@ -44,15 +42,6 @@ export function AddPage() {
   return (
     <Screen width="column">
       <h1 className="pt-6 text-h1 font-extrabold text-ink">{t('nav.add')}</h1>
-      {access.data && !access.data.allowed ? (
-        <PathCard
-          direct={access.data.directCount}
-          network={access.data.networkCount}
-          needDirect={access.data.needDirect}
-          needNetwork={access.data.needNetwork}
-          alone={alone ? { name: alone.displayName || alone.name, photoUrl: alone.photoUrl } : null}
-        />
-      ) : null}
       {me.data ? (
         <LinkCard slug={inviteSlug(me.data)} name={me.data.name} />
       ) : (
@@ -60,6 +49,8 @@ export function AddPage() {
           <div className="h-40 animate-pulse rounded-lg bg-surface-2" />
         </Card>
       )}
+      {/* While asking is locked, the explanation sits below the link: the link is what to do first. */}
+      <PathCard className="mt-4" />
       {listFailed ? (
         <div className="mt-4">
           <p className="text-label font-semibold text-sos">{t('add.loadError')}</p>

@@ -38,8 +38,8 @@ export function OpenCollectionsPage() {
     const stageOf = (status: string, blockReason: string | null, type: string) => {
       if (status === 'BLOCKED' && blockReason) return t('collection.suspended');
       if (status === 'BLOCKED') return t('collection.goalReached');
-      const kind = type === 'REGULAR' ? t('collection.monthly') : t('collection.oneTime');
-      return `${t('collection.stageTalk')} · ${kind}`;
+      // The role line above already says whose collection it is and that you are in it.
+      return type === 'REGULAR' ? t('collection.monthly') : t('collection.oneTime');
     };
 
     for (const col of mine.data ?? []) {

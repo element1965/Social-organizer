@@ -227,7 +227,7 @@ function Gallery() {
       </Block>
 
       <Block title={t(`${g}.blockStageRail`)}>
-        <StageRail steps={[t(`${g}.stageAmount`), t(`${g}.stageTalk`), t(`${g}.stageClosed`)]} done={2} />
+        <StageRail steps={[t('collection.stageAmount'), t('collection.stageChat'), t('collection.stageClosed')]} done={2} />
       </Block>
 
       <Block title={t(`${g}.blockPathFigure`)}>
