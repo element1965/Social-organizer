@@ -289,7 +289,9 @@
       "tenTitle": "10 orang di lingkaran Anda",
       "tenBody": "Jauh lebih banyak orang mendengar permintaan Anda sekarang. Terus tambahkan orang yang Anda kenal secara pribadi.",
       "ok": "Bagus"
-    }
+    },
+    "feedExpand": "Luaskan umpan",
+    "feedCollapse": "Ciutkan umpan"
   },
   "people": {
     "title": "{{ring}} · {{count}}",

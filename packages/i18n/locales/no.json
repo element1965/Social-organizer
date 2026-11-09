@@ -292,7 +292,9 @@
       "tenTitle": "10 personer i kretsen din",
       "tenBody": "Mange flere hører forespørselen din nå. Fortsett å legge til personer du kjenner personlig.",
       "ok": "Flott"
-    }
+    },
+    "feedExpand": "Utvid feeden",
+    "feedCollapse": "Skjul feeden"
   },
   "people": {
     "title": "{{ring}} · {{count}}",

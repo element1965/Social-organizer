@@ -298,7 +298,9 @@
       "tenTitle": "10 osób w Twoim kręgu",
       "tenBody": "Prośbę słyszy teraz wyraźnie więcej osób. Dodawaj dalej tych, których znasz osobiście.",
       "ok": "Super"
-    }
+    },
+    "feedExpand": "Rozwiń kanał",
+    "feedCollapse": "Zwiń kanał"
   },
   "people": {
     "title": "{{ring}} · {{count}}",

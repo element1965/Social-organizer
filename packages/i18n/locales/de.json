@@ -292,7 +292,9 @@
       "tenTitle": "10 Personen in Ihrem Kreis",
       "tenBody": "Deutlich mehr Menschen hören Ihre Bitte jetzt. Fügen Sie weiter Menschen hinzu, die Sie persönlich kennen.",
       "ok": "Gut"
-    }
+    },
+    "feedExpand": "Feed aufklappen",
+    "feedCollapse": "Feed zuklappen"
   },
   "people": {
     "title": "{{ring}} · {{count}}",

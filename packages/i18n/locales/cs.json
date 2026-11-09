@@ -298,7 +298,9 @@
       "tenTitle": "10 lidí ve vašem kruhu",
       "tenBody": "Prosbu teď slyší výrazně víc lidí. Přidávejte dál ty, které znáte osobně.",
       "ok": "Skvělé"
-    }
+    },
+    "feedExpand": "Rozbalit přehled",
+    "feedCollapse": "Sbalit přehled"
   },
   "people": {
     "title": "{{ring}} · {{count}}",

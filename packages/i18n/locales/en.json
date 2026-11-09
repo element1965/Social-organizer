@@ -292,7 +292,9 @@
       "tenTitle": "10 people in your circle",
       "tenBody": "Many more people hear your request now. Keep adding people you know personally.",
       "ok": "Great"
-    }
+    },
+    "feedExpand": "Expand the feed",
+    "feedCollapse": "Collapse the feed"
   },
   "people": {
     "title": "{{ring}} · {{count}}",

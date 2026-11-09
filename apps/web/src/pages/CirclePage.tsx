@@ -413,10 +413,17 @@ function PhoneCircle({
   const { t } = useTranslation();
   const [rootRef, height] = useBoxHeight<HTMLDivElement>();
   const sheetH = Math.max(280, Math.round(height * 0.42));
+  // Expanded feed: the sheet covers the scene, for reading a long feed. Not kept in the URL.
+  const fullH = Math.max(sheetH, height - 8);
   const feedLayer = layer === 'feed';
+  const [expanded, setExpanded] = useState(false);
   const [drag, setDrag] = useState<number | null>(null);
   const dragStart = useRef<number | null>(null);
   const down = useRef<{ x: number; y: number } | null>(null);
+
+  useEffect(() => {
+    if (!feedLayer) setExpanded(false);
+  }, [feedLayer]);
 
   const onHandleDown = (event: ReactPointerEvent<HTMLDivElement>) => {
     dragStart.current = event.clientY;
@@ -425,17 +432,32 @@ function PhoneCircle({
   };
   const onHandleMove = (event: ReactPointerEvent<HTMLDivElement>) => {
     if (dragStart.current == null) return;
-    setDrag(Math.max(0, event.clientY - dragStart.current));
+    setDrag(event.clientY - dragStart.current);
   };
   const onHandleUp = (event: ReactPointerEvent<HTMLDivElement>) => {
     if (dragStart.current == null) return;
     const dy = event.clientY - dragStart.current;
     dragStart.current = null;
     setDrag(null);
-    if (dy > 80) onOpenGraph();
+    if (Math.abs(dy) < 6) {
+      setExpanded((value) => !value); // a tap on the handle toggles
+    } else if (expanded) {
+      if (dy > 60) setExpanded(false);
+    } else if (dy < -60) {
+      setExpanded(true);
+    } else if (dy > 80) {
+      onOpenGraph();
+    }
   };
 
-  const ease = 'transition-[transform,opacity,bottom] duration-screen ease-so motion-reduce:transition-none';
+  // Sheet height and offset while dragging: up grows it (to full), down shrinks it when expanded,
+  // or slides the normal sheet away toward the graph
+  const d = drag ?? 0;
+  const baseH = expanded ? fullH : sheetH;
+  const liveH = drag == null ? baseH : Math.min(fullH, Math.max(sheetH, baseH - d));
+  const slide = drag != null && !expanded && d > 0 ? d : 0;
+
+  const ease = 'transition-[transform,opacity,bottom,height] duration-screen ease-so motion-reduce:transition-none';
 
   return (
     <div
@@ -508,7 +530,11 @@ function PhoneCircle({
           hiddenRings={hiddenRings}
           onToggle={onToggleRing}
           onSelf={() => graphRef.current?.focusOnMe()}
-          className={cn('absolute inset-x-4 z-20', ease, layer === 'person' && 'pointer-events-none translate-y-16 opacity-0')}
+          className={cn(
+            'absolute inset-x-4 z-20',
+            ease,
+            (layer === 'person' || (feedLayer && expanded)) && 'pointer-events-none translate-y-16 opacity-0',
+          )}
           style={{ bottom: feedLayer ? sheetH + 12 : 76 }}
         />
       )}
@@ -521,8 +547,8 @@ function PhoneCircle({
           drag == null && ease,
         )}
         style={{
-          height: sheetH,
-          transform: feedLayer ? (drag ? `translateY(${drag}px)` : undefined) : `translateY(${sheetH + 16}px)`,
+          height: liveH,
+          transform: feedLayer ? (slide ? `translateY(${slide}px)` : undefined) : `translateY(${sheetH + 16}px)`,
         }}
         inert={!feedLayer}
       >
@@ -537,9 +563,10 @@ function PhoneCircle({
           }}
           role="button"
           tabIndex={0}
-          aria-label={t('circle.openGraph')}
+          aria-expanded={expanded}
+          aria-label={t(expanded ? 'circle.feedCollapse' : 'circle.feedExpand')}
           onKeyDown={(event) => {
-            if (event.key === 'Enter' || event.key === ' ') onOpenGraph();
+            if (event.key === 'Enter' || event.key === ' ') setExpanded((value) => !value);
           }}
         >
           <span className="h-[5px] w-10 rounded-pill bg-line-strong" />

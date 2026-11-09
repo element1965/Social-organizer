@@ -292,7 +292,9 @@
       "tenTitle": "10 personer i din kreds",
       "tenBody": "Mange flere hører din anmodning nu. Bliv ved med at tilføje personer, du kender personligt.",
       "ok": "Godt"
-    }
+    },
+    "feedExpand": "Fold feedet ud",
+    "feedCollapse": "Fold feedet sammen"
   },
   "people": {
     "title": "{{ring}} · {{count}}",

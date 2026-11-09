@@ -292,7 +292,9 @@
       "tenTitle": "Çevrenizde 10 kişi",
       "tenBody": "Ricanızı artık belirgin biçimde daha çok kişi duyuyor. Kişisel olarak tanıdıklarınızı eklemeye devam edin.",
       "ok": "Harika"
-    }
+    },
+    "feedExpand": "Akışı genişlet",
+    "feedCollapse": "Akışı daralt"
   },
   "people": {
     "title": "{{ring}} · {{count}}",

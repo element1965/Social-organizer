@@ -295,7 +295,9 @@
       "tenTitle": "10 persoane în cercul tău",
       "tenBody": "Rugămintea ta ajunge acum la mult mai mulți oameni. Continuă să adaugi persoane pe care le cunoști personal.",
       "ok": "Grozav"
-    }
+    },
+    "feedExpand": "Extinde fluxul",
+    "feedCollapse": "Restrânge fluxul"
   },
   "people": {
     "title": "{{ring}} · {{count}}",
