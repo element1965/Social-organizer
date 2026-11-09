@@ -561,6 +561,7 @@
     "questionPlaceholder": "Question",
     "answerPlaceholder": "Answer",
     "deleteConfirm": "Delete this question?",
+    "edit": "Edit",
     "localized": "Translated",
     "localizeAll": "Translate all",
     "addPhoto": "Add photo",
@@ -631,7 +632,12 @@
     "triggering": "Running...",
     "triggerSuccess": "Auto-chain triggered successfully",
     "triggerError": "Trigger failed",
-    "urlPlaceholder": "https://..."
+    "urlPlaceholder": "https://...",
+    "deleteConfirm": "Delete this message?",
+    "statusPending": "Pending",
+    "statusSent": "Sent",
+    "statusCancelled": "Cancelled",
+    "statusFailed": "Failed"
   },
   "contacts": {
     "telegram": "Telegram",
@@ -1094,7 +1100,8 @@
     "replyPlaceholder": "Reply...",
     "unknownUser": "Unknown user",
     "attachFile": "Attach file",
-    "photoAlt": "photo"
+    "photoAlt": "photo",
+    "file": "File"
   },
   "videoGuide": {
     "play": "Watch the video instruction",
@@ -1430,6 +1437,7 @@
     "step3": "Turn on <b>Notifications</b>",
     "step4": "Come back to the app",
     "checkAgain": "Check again",
-    "checkHint": "After you turn notifications on, tap “Check again”"
+    "checkHint": "After you turn notifications on, tap “Check again”",
+    "notNow": "Not now"
   }
 }

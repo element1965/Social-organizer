@@ -2,7 +2,7 @@ import type { ReactNode } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { IconBack } from './icons';
 
-export type Crumb = { label: string; to?: string };
+export type Crumb = { label: string; to?: string; onClick?: () => void };
 
 export function MainBar({ back, title, action }: { back?: Crumb; title?: string; action?: ReactNode }) {
   return (
@@ -30,7 +30,7 @@ export function CrumbLink({ crumb, size }: { crumb: Crumb; size: 'md' | 'lg' }) 
     );
   }
   return (
-    <button type="button" className={className} onClick={() => navigate(-1)}>
+    <button type="button" className={className} onClick={crumb.onClick ?? (() => navigate(-1))}>
       {icon}
       {crumb.label}
     </button>

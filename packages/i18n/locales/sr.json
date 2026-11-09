@@ -566,6 +566,7 @@
     "questionPlaceholder": "Питање",
     "answerPlaceholder": "Одговор",
     "deleteConfirm": "Обрисати ово питање?",
+    "edit": "Измени",
     "localized": "Преведено",
     "localizeAll": "Преведите на све језике",
     "addPhoto": "Додајте фотографију",
@@ -636,7 +637,12 @@
     "triggering": "Покретање...",
     "triggerSuccess": "Ауто-ланац је успешно покренут",
     "triggerError": "Покретање није успело",
-    "urlPlaceholder": "https://..."
+    "urlPlaceholder": "https://...",
+    "deleteConfirm": "Обрисати ову поруку?",
+    "statusPending": "На чекању",
+    "statusSent": "Послато",
+    "statusCancelled": "Отказано",
+    "statusFailed": "Неуспешно"
   },
   "contacts": {
     "telegram": "Telegram",
@@ -1101,7 +1107,8 @@
     "replyPlaceholder": "Одговорите...",
     "unknownUser": "Непознат корисник",
     "attachFile": "Приложите фајл",
-    "photoAlt": "фотографија"
+    "photoAlt": "фотографија",
+    "file": "Датотека"
   },
   "videoGuide": {
     "play": "Погледајте видео упутство",
@@ -1442,6 +1449,7 @@
     "step3": "Укључите <b>Обавештења</b>",
     "step4": "Вратите се у апликацију",
     "checkAgain": "Проверите поново",
-    "checkHint": "Кад укључите обавештења, додирните „Проверите поново“"
+    "checkHint": "Кад укључите обавештења, додирните „Проверите поново“",
+    "notNow": "Не сада"
   }
 }

@@ -571,6 +571,7 @@
     "questionPlaceholder": "Otázka",
     "answerPlaceholder": "Odpověď",
     "deleteConfirm": "Smazat tuto otázku?",
+    "edit": "Upravit",
     "localized": "Přeloženo",
     "localizeAll": "Přeložit do všech jazyků",
     "addPhoto": "Přidat fotku",
@@ -641,7 +642,12 @@
     "triggering": "Spouštění...",
     "triggerSuccess": "Automatický řetězec byl spuštěn",
     "triggerError": "Spuštění se nezdařilo",
-    "urlPlaceholder": "https://..."
+    "urlPlaceholder": "https://...",
+    "deleteConfirm": "Smazat tuto zprávu?",
+    "statusPending": "Čeká",
+    "statusSent": "Odesláno",
+    "statusCancelled": "Zrušeno",
+    "statusFailed": "Selhalo"
   },
   "contacts": {
     "telegram": "Telegram",
@@ -1108,7 +1114,8 @@
     "replyPlaceholder": "Odpovědět...",
     "unknownUser": "Neznámý uživatel",
     "attachFile": "Připojit soubor",
-    "photoAlt": "fotka"
+    "photoAlt": "fotka",
+    "file": "Soubor"
   },
   "videoGuide": {
     "play": "Přehrát videonávod",
@@ -1454,6 +1461,7 @@
     "step3": "Zapněte <b>Oznámení</b>",
     "step4": "Vraťte se do aplikace",
     "checkAgain": "Zkontrolovat znovu",
-    "checkHint": "Až oznámení zapnete, klepněte na „Zkontrolovat znovu“"
+    "checkHint": "Až oznámení zapnete, klepněte na „Zkontrolovat znovu“",
+    "notNow": "Teď ne"
   }
 }

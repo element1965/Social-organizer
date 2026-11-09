@@ -566,6 +566,7 @@
     "questionPlaceholder": "Domanda",
     "answerPlaceholder": "Risposta",
     "deleteConfirm": "Eliminare questa domanda?",
+    "edit": "Modifica",
     "localized": "Tradotto",
     "localizeAll": "Traduci in tutte le lingue",
     "addPhoto": "Aggiungi foto",
@@ -636,7 +637,12 @@
     "triggering": "Esecuzione...",
     "triggerSuccess": "Catena auto eseguita con successo",
     "triggerError": "Esecuzione fallita",
-    "urlPlaceholder": "https://..."
+    "urlPlaceholder": "https://...",
+    "deleteConfirm": "Eliminare questo messaggio?",
+    "statusPending": "In attesa",
+    "statusSent": "Inviato",
+    "statusCancelled": "Annullato",
+    "statusFailed": "Non inviato"
   },
   "contacts": {
     "telegram": "Telegram",
@@ -1101,7 +1107,8 @@
     "replyPlaceholder": "Rispondi...",
     "unknownUser": "Utente sconosciuto",
     "attachFile": "Allega file",
-    "photoAlt": "foto"
+    "photoAlt": "foto",
+    "file": "File"
   },
   "videoGuide": {
     "play": "Guarda il video tutorial",
@@ -1442,6 +1449,7 @@
     "step3": "Attiva le <b>Notifiche</b>",
     "step4": "Torna all'app",
     "checkAgain": "Controlla di nuovo",
-    "checkHint": "Dopo aver attivato le notifiche, tocca «Controlla di nuovo»"
+    "checkHint": "Dopo aver attivato le notifiche, tocca «Controlla di nuovo»",
+    "notNow": "Non ora"
   }
 }

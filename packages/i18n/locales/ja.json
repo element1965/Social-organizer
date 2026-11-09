@@ -556,6 +556,7 @@
     "questionPlaceholder": "質問",
     "answerPlaceholder": "回答",
     "deleteConfirm": "この質問を削除しますか？",
+    "edit": "編集",
     "localized": "翻訳済み",
     "localizeAll": "すべての言語に翻訳",
     "addPhoto": "写真を追加",
@@ -626,7 +627,12 @@
     "triggering": "実行しています...",
     "triggerSuccess": "自動チェーンを実行しました",
     "triggerError": "実行できませんでした",
-    "urlPlaceholder": "https://..."
+    "urlPlaceholder": "https://...",
+    "deleteConfirm": "このメッセージを削除しますか？",
+    "statusPending": "保留中",
+    "statusSent": "送信済み",
+    "statusCancelled": "キャンセル済み",
+    "statusFailed": "失敗"
   },
   "contacts": {
     "telegram": "Telegram",
@@ -1087,7 +1093,8 @@
     "replyPlaceholder": "返信...",
     "unknownUser": "不明なユーザー",
     "attachFile": "ファイルを添付",
-    "photoAlt": "写真"
+    "photoAlt": "写真",
+    "file": "ファイル"
   },
   "videoGuide": {
     "play": "説明動画を見る",
@@ -1418,6 +1425,7 @@
     "step3": "<b>通知</b>をオンにする",
     "step4": "アプリに戻る",
     "checkAgain": "もう一度確認",
-    "checkHint": "通知をオンにしたら、「もう一度確認」をタップしてください"
+    "checkHint": "通知をオンにしたら、「もう一度確認」をタップしてください",
+    "notNow": "今はしない"
   }
 }
