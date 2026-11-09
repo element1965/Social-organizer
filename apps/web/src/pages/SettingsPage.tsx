@@ -18,7 +18,6 @@ import { Input } from '../components/ui/input';
 import { SocialIcon } from '../components/ui/social-icons';
 import { usePushNotifications } from '../hooks/usePushNotifications';
 import { validateContact } from '@so/shared';
-import { InviteBlock } from '../components/InviteBlock';
 import { isTelegramWebApp } from '@so/tg-adapter';
 import { Capacitor } from '@capacitor/core';
 
@@ -301,8 +300,6 @@ export function SettingsPage() {
           )}
         </CardContent>
       </Card>
-
-      <InviteBlock variant="settings" />
 
       {/* History of reached milestones (hidden from the dashboard once done) */}
       <MilestonesCard variant="history" />
