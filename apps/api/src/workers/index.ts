@@ -12,6 +12,17 @@ import { processOnboardingReminder } from './onboarding-reminder.worker.js';
 
 let connection: IORedis | null = null;
 
+// Keep only recent job history. Without this BullMQ stores every finished job
+// forever: the every-minute scheduler alone left ~380k completed jobs in Redis
+// and filled its volume (COND-24).
+const queueOpts = (redis: IORedis) => ({
+  connection: redis,
+  defaultJobOptions: {
+    removeOnComplete: { age: 24 * 60 * 60, count: 100 },
+    removeOnFail: { age: 7 * 24 * 60 * 60, count: 500 },
+  },
+});
+
 function getRedisConnection(): IORedis {
   if (!connection) {
     connection = new IORedis(process.env.REDIS_URL!, { maxRetriesPerRequest: null });
@@ -25,57 +36,57 @@ export function setupQueues(): void {
   redis.on('error', (err) => console.error('[Redis] Error:', err.message));
 
   // --- Cycle close: every hour ---
-  const cycleCloseQueue = new Queue('collection-cycle-close', { connection: redis });
+  const cycleCloseQueue = new Queue('collection-cycle-close', queueOpts(redis));
   new Worker('collection-cycle-close', processCycleClose, { connection: redis });
   cycleCloseQueue.upsertJobScheduler('cycle-close-scheduler', {
     every: 60 * 60 * 1000, // 1 hour
   }, { name: 'cycle-close' });
 
   // --- Cycle renewal reminder (3 days before next cycle): every hour ---
-  const cycleRenewalQueue = new Queue('collection-cycle-renewal-reminder', { connection: redis });
+  const cycleRenewalQueue = new Queue('collection-cycle-renewal-reminder', queueOpts(redis));
   new Worker('collection-cycle-renewal-reminder', processCycleRenewalReminder, { connection: redis });
   cycleRenewalQueue.upsertJobScheduler('cycle-renewal-reminder-scheduler', {
     every: 60 * 60 * 1000, // 1 hour
   }, { name: 'cycle-renewal-reminder' });
 
   // --- Expire notifications: every hour ---
-  const expireQueue = new Queue('notification-expire', { connection: redis });
+  const expireQueue = new Queue('notification-expire', queueOpts(redis));
   new Worker('notification-expire', processExpireNotifications, { connection: redis });
   expireQueue.upsertJobScheduler('expire-scheduler', {
     every: 60 * 60 * 1000,
   }, { name: 'expire-notifications' });
 
   // --- Check block: event-driven, no schedule ---
-  new Queue('collection-check-block', { connection: redis });
+  new Queue('collection-check-block', queueOpts(redis));
   new Worker('collection-check-block', processCheckBlock, { connection: redis });
 
   // --- Telegram broadcast: event-driven, no schedule ---
-  new Queue('telegram-broadcast', { connection: redis });
+  new Queue('telegram-broadcast', queueOpts(redis));
   new Worker('telegram-broadcast', processTgBroadcast, { connection: redis });
 
   // --- Scheduled posts: every minute ---
-  const scheduledPostQueue = new Queue('broadcast-scheduled-post', { connection: redis });
+  const scheduledPostQueue = new Queue('broadcast-scheduled-post', queueOpts(redis));
   new Worker('broadcast-scheduled-post', processScheduledPost, { connection: redis });
   scheduledPostQueue.upsertJobScheduler('scheduled-post-scheduler', {
     every: 60 * 1000, // 1 minute
   }, { name: 'scheduled-post' });
 
   // --- Auto-chain: every 30 minutes ---
-  const autoChainQueue = new Queue('broadcast-auto-chain', { connection: redis });
+  const autoChainQueue = new Queue('broadcast-auto-chain', queueOpts(redis));
   new Worker('broadcast-auto-chain', processAutoChain, { connection: redis });
   autoChainQueue.upsertJobScheduler('auto-chain-scheduler', {
     every: 30 * 60 * 1000, // 30 minutes
   }, { name: 'auto-chain' });
 
   // --- Cleanup blocked pending: every hour ---
-  const cleanupBlockedQueue = new Queue('cleanup-blocked-pending', { connection: redis });
+  const cleanupBlockedQueue = new Queue('cleanup-blocked-pending', queueOpts(redis));
   new Worker('cleanup-blocked-pending', processCleanupBlockedPending, { connection: redis });
   cleanupBlockedQueue.upsertJobScheduler('cleanup-blocked-pending-scheduler', {
     every: 60 * 60 * 1000, // 1 hour
   }, { name: 'cleanup-blocked-pending' });
 
   // --- Onboarding reminder: every hour ---
-  const onboardingReminderQueue = new Queue('onboarding-reminder', { connection: redis });
+  const onboardingReminderQueue = new Queue('onboarding-reminder', queueOpts(redis));
   new Worker('onboarding-reminder', processOnboardingReminder, { connection: redis });
   onboardingReminderQueue.upsertJobScheduler('onboarding-reminder-scheduler', {
     every: 60 * 60 * 1000, // 1 hour
@@ -87,7 +98,7 @@ export function setupQueues(): void {
 /** Enqueue collection block check */
 export async function enqueueCheckBlock(collectionId: string): Promise<void> {
   const redis = getRedisConnection();
-  const queue = new Queue('collection-check-block', { connection: redis });
+  const queue = new Queue('collection-check-block', queueOpts(redis));
   await queue.add('check-block', { collectionId });
 }
 
@@ -95,6 +106,6 @@ export async function enqueueCheckBlock(collectionId: string): Promise<void> {
 export async function enqueueTgBroadcast(messages: TgBroadcastMessage[]): Promise<void> {
   if (messages.length === 0) return;
   const redis = getRedisConnection();
-  const queue = new Queue('telegram-broadcast', { connection: redis });
+  const queue = new Queue('telegram-broadcast', queueOpts(redis));
   await queue.add('tg-broadcast', { messages });
 }
