@@ -61,6 +61,7 @@ const SECTIONS: ProseSection[] = [
       <p>
         Your data is stored in a secure PostgreSQL database. We use encrypted connections (HTTPS/TLS),
         JWT-based authentication, and follow industry-standard security practices to protect your information.
+        Accounts with no sign-ins for 2 years are deleted automatically, after notices 30 and 7 days in advance.
       </p>
     ),
   },
@@ -73,7 +74,7 @@ const SECTIONS: ProseSection[] = [
         <ul>
           <li>Access your personal data through your profile and settings.</li>
           <li>Correct or update your information at any time.</li>
-          <li>Request deletion of your account and associated data.</li>
+          <li>Delete your account and associated data yourself in Profile → Account.</li>
           <li>Export your data in a machine-readable format.</li>
         </ul>
       </>

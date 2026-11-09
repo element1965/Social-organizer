@@ -3,8 +3,7 @@ import { router, protectedProcedure } from '../trpc.js';
 import { TRPCError } from '@trpc/server';
 import { CONTACT_TYPES, CURRENCY_CODES, MIN_OBLIGATION_AMOUNT, contactValueAllowed, type ContactType } from '@so/shared';
 import { canViewContacts } from '../services/visibility.service.js';
-import { sendUserDeletedNotification } from '../services/notification.service.js';
-import { countConnections } from '../services/connection-request.service.js';
+import { deleteUserAccount } from '../services/account-deletion.service.js';
 
 export const userRouter = router({
   me: protectedProcedure.query(async ({ ctx }) => {
@@ -232,108 +231,7 @@ export const userRouter = router({
   }),
 
   delete: protectedProcedure.mutation(async ({ ctx }) => {
-    // Capture user info before deletion
-    const deletingUser = await ctx.db.user.findUnique({
-      where: { id: ctx.userId },
-      select: {
-        name: true,
-        platformAccounts: { where: { platform: 'TELEGRAM' }, select: { platformId: true } },
-      },
-    });
-    const inviteLink = await ctx.db.inviteLink.findFirst({
-      where: { usedById: ctx.userId },
-      select: { inviterId: true },
-    });
-
-    await ctx.db.$transaction(async (tx) => {
-      // Deletion scenario (SO-15): an account with confirmed connections (counted before they are
-      // removed below) or with invitees is muted (soft delete); otherwise it is deleted without traces.
-      // Pending requests and unused invite links don't count as connections.
-      const [connectionCount, usedInviteCount] = await Promise.all([
-        countConnections(tx, ctx.userId),
-        tx.inviteLink.count({ where: { inviterId: ctx.userId, usedById: { not: null } } }),
-      ]);
-      const hasNetworkTies = connectionCount > 0 || usedInviteCount > 0;
-
-      // Clean up pending connections in both directions
-      await tx.pendingConnection.deleteMany({
-        where: {
-          OR: [
-            { fromUserId: ctx.userId },
-            { toUserId: ctx.userId },
-          ],
-        },
-      });
-
-      // Cancel obligations in active collections
-      await tx.obligation.deleteMany({
-        where: {
-          userId: ctx.userId,
-          collection: { status: { in: ['ACTIVE', 'BLOCKED'] } },
-        },
-      });
-
-      // Cancel own active collections
-      await tx.collection.updateMany({
-        where: {
-          creatorId: ctx.userId,
-          status: { in: ['ACTIVE', 'BLOCKED'] },
-        },
-        data: { status: 'CANCELLED' },
-      });
-
-      // Remove user from the network (delete all connections)
-      await tx.connection.deleteMany({
-        where: {
-          OR: [
-            { userAId: ctx.userId },
-            { userBId: ctx.userId },
-          ],
-        },
-      });
-
-      if (!hasNetworkTies) {
-        // No connections and no invitees — full delete with no traces
-        // Clear usedById references pointing to this user
-        await tx.inviteLink.updateMany({
-          where: { usedById: ctx.userId },
-          data: { usedById: null, usedAt: null },
-        });
-        // Remove botStart record
-        const tgId = deletingUser?.platformAccounts?.[0]?.platformId;
-        if (tgId) {
-          await tx.botStart.deleteMany({ where: { chatId: tgId } });
-        }
-        // Hard delete user (cascade removes all related records)
-        await tx.user.delete({ where: { id: ctx.userId } });
-      } else {
-        // Had connections or invitees — soft delete (mute) so their invite chain stays intact
-        // but user is removed from the active network
-        await tx.user.update({
-          where: { id: ctx.userId },
-          data: {
-            deletedAt: new Date(),
-            name: 'Deleted user',
-            bio: null,
-            phone: null,
-            photoUrl: null,
-            monthlyBudget: 0,
-            remainingBudget: 0,
-          },
-        });
-        // Remove contacts, skills, needs so profile is clean
-        await tx.userContact.deleteMany({ where: { userId: ctx.userId } });
-        await tx.userSkill.deleteMany({ where: { userId: ctx.userId } });
-        await tx.userNeed.deleteMany({ where: { userId: ctx.userId } });
-      }
-    });
-
-    // Notify inviter that user from their first circle has been deleted
-    if (inviteLink?.inviterId && deletingUser?.name) {
-      sendUserDeletedNotification(ctx.db, inviteLink.inviterId, deletingUser.name)
-        .catch((err) => console.error('[UserDelete] Failed to notify inviter:', err));
-    }
-
+    await deleteUserAccount(ctx.db, ctx.userId);
     return { success: true };
   }),
 });
