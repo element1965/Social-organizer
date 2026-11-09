@@ -269,20 +269,23 @@ function PersonScreen() {
         </div>
       ) : null}
 
-      {activeAsks.length > 0 || contactItems.length > 0 || (contacts.isSuccess && contactItems.length === 0) ? (
+      {/* The Contacts button only scrolls to the list, so it is shown only when there is something to show */}
+      {activeAsks.length > 0 || contactItems.length > 0 ? (
         <div className="mt-4 flex flex-wrap gap-2">
           {activeAsks[0] ? (
             <Button variant="primary" size="md" onClick={() => navigate(`/collection/${activeAsks[0]!.id}`)}>
               {t('person.openCollection')}
             </Button>
           ) : null}
-          <Button
-            variant="secondary"
-            size="md"
-            onClick={() => document.getElementById('person-contacts')?.scrollIntoView({ behavior: 'smooth' })}
-          >
-            {t('person.contacts')}
-          </Button>
+          {contactItems.length > 0 ? (
+            <Button
+              variant="secondary"
+              size="md"
+              onClick={() => document.getElementById('person-contacts')?.scrollIntoView({ behavior: 'smooth' })}
+            >
+              {t('person.contacts')}
+            </Button>
+          ) : null}
         </div>
       ) : null}
 
