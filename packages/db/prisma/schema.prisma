@@ -215,6 +215,7 @@ model Collection {
   currentCycleStart DateTime?
   cycleNumber       Int              @default(1)
   blockedAt         DateTime?
+  blockReason       String? // set only when an admin blocked the collection (goal-reached BLOCKED has none)
   closedAt          DateTime?
   createdAt         DateTime         @default(now())
   updatedAt         DateTime         @updatedAt
@@ -316,6 +317,7 @@ model InviteLink {
   usedById  String?
   createdAt DateTime @default(now())
   usedAt    DateTime?
+  expiresAt DateTime? // set for short-lived in-person (QR) tokens; null = never expires
 
   inviter  User  @relation("inviter", fields: [inviterId], references: [id], onDelete: Cascade)
   usedBy   User? @relation("inviteUsedBy", fields: [usedById], references: [id], onDelete: SetNull)
