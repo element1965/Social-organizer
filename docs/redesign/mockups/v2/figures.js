@@ -95,7 +95,7 @@ ${NAMES.map((_, i) => `<span class="coin" data-i="${i}">${SHARE}</span>`).join("
   function go(m) { month = m; run(); }
   seats.forEach(el => el.onclick = () => go(+el.dataset.i));
   const api = { go, get month() { return month; }, onChange: (f) => listeners.push(f) };
-  go(o.month || 0);
+  if (o.autoplay === false) { month = o.month || 0; stage = 0; placeCoins(); paint(); } else go(o.month || 0);
   return api;
 }
 

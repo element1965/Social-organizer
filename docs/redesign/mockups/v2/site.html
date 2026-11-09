@@ -9,12 +9,13 @@
 </head>
 <body>
 <h1>Сайт</h1>
-<p class="lead">Публичная часть www.orginizer.com на 1280 px: главная для гостя, вход, страницы по ссылке (приглашение, сбор) и правовые тексты. Те же токены и компоненты, что в приложении; одна ширина контента 1184 px (48 px поля), колонка текста не шире 60 символов.</p>
+<p class="lead">Публичная часть www.orginizer.com на 1280 px: главная для гостя, вход, страницы по ссылке (приглашение, сбор) и правовые тексты. Те же токены и компоненты, что в приложении; одна ширина контента 1184 px (48 px поля), колонка текста не шире 60 символов. При прокрутке секции въезжают, а фигуры проигрывают свою последовательность, когда оказываются на экране.</p>
 <div id="row"></div>
 <script src="theme.js"></script>
 <script src="shared.js"></script>
 <script src="web.js"></script>
 <script src="figures.js"></script>
+<script src="scroll.js"></script>
 <script>
 const HOME = `<div class="frame">
 ${siteTop("")}
@@ -120,8 +121,12 @@ document.getElementById("row").innerHTML = [
   wide("sos", "", SOS, "<small>4</small>Публичная страница сбора", `<p>Панель с карточкой суммы, плашкой о круге и одной кнопкой «Присоединиться». Это та же страница, что на телефоне (<code>/sos/:id</code>); ширина панели 460 вместо полной ширины.</p>`),
   wide("legal", "", LEGAL, "<small>5</small>Правовые тексты", `<p>Один шаблон для конфиденциальности, условий и удаления аккаунта: заголовок 40 px, дата, колонка 720 px, строка 16 px с интерлиньяжем 1.6, оглавление слева. Текст на странице — черновик по текущим правилам приложения, финальную редакцию пишет владелец.</p>`),
 ].join("");
-document.getElementById("siteChain").innerHTML = chainFigure(2);
-mountHui(document.getElementById("siteRing"), { static: true, month: 2, stage: 1, names: ["Мария", "Олег", "Вы", "Ирина", "Денис", "Лена"] });
+const siteChain = document.getElementById("siteChain");
+siteChain.innerHTML = chainFigure(0);
+onEnter(siteChain, seq((k) => { siteChain.innerHTML = chainFigure(k); }, [0, 1, 2], 1000), { repeat: true });
+const siteRing = mountHui(document.getElementById("siteRing"), { month: 2, autoplay: false, names: ["Мария", "Олег", "Вы", "Ирина", "Денис", "Лена"] });
+onEnter(document.getElementById("siteRing"), () => siteRing.go(2), { repeat: true });
+reveal(document);
 </script>
 </body>
 </html>

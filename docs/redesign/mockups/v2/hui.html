@@ -59,11 +59,12 @@
 </head>
 <body>
 <h1>Хуэй: как это работает</h1>
-<p class="lead">Страница «Как это работает» (<code>/how</code>) — переделанный концепт <code>hui.html</code>: та же метафора круга из шести знакомых, но на токенах приложения, с тремя интерактивами и ответом на главный вопрос «почему без организатора». Одна разметка для 1280 и 390 px, раскладка переключается контейнерным запросом.</p>
+<p class="lead">Страница «Как это работает» (<code>/how</code>) — переделанный концепт <code>hui.html</code>: та же метафора круга из шести знакомых, но на токенах приложения, с тремя интерактивами и ответом на главный вопрос «почему без организатора». Одна разметка для 1280 и 390 px, раскладка переключается контейнерным запросом. Фигуры проигрывают свою последовательность, когда появляются на экране при прокрутке, и повторяют её при возврате; секции въезжают один раз.</p>
 <div id="row"></div>
 <script src="shared.js"></script>
 <script src="web.js"></script>
 <script src="figures.js"></script>
+<script src="scroll.js"></script>
 <script>
 const NAMES = ["Линь", "Чен", "Мэй", "Го", "Сунь", "Хуан"];
 const MONTHS = ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь"];
@@ -121,9 +122,16 @@ function mount(root) {
     const draw = () => { host.innerHTML = render(step); sayEl.innerHTML = copy[step]; };
     host.addEventListener("click", (e) => { const n = e.target.closest("[data-i]"); if (n) { step = +n.dataset.i; draw(); } });
     draw();
+    return { set: (k) => { step = k; draw(); } };
   }
-  figSteps(root.querySelector(".s-chain .fig"), chainFigure, CHAIN, root.querySelector(".s-chain .say"));
-  figSteps(root.querySelector(".s-join .fig"), joinFigure, JOIN, root.querySelector(".s-join .say"));
+  const chainApi = figSteps(root.querySelector(".s-chain .fig"), chainFigure, CHAIN, root.querySelector(".s-chain .say"));
+  const joinApi = figSteps(root.querySelector(".s-join .fig"), joinFigure, JOIN, root.querySelector(".s-join .say"));
+  /* play on scroll: every figure runs its sequence when half of it is on screen, again on each return */
+  onEnter(root.querySelector(".hui-ring"), () => ring.go(ring.month), { repeat: true });
+  onEnter(orbit, seq(setDepth, [0, 1, 2], 900), { repeat: true });
+  onEnter(root.querySelector(".s-chain .fig"), seq(chainApi.set, [0, 1, 2], 1000), { repeat: true });
+  onEnter(root.querySelector(".s-join .fig"), seq(joinApi.set, [0, 1], 1400), { repeat: true });
+  reveal(root);
 }
 
 document.getElementById("row").innerHTML = [
