@@ -138,11 +138,12 @@ export function CirclePage() {
   /* ----- selection, path, saved camera ----- */
 
   const firstRequest = events.find((e) => e.kind === 'request' && e.personId && net.people.has(e.personId));
+  const pathTo = net.pathTo;
   const highlightPath = useMemo(() => {
-    if (selectedId) return net.pathTo(selectedId);
-    if (firstRequest?.personId) return net.pathTo(firstRequest.personId);
+    if (selectedId) return pathTo(selectedId);
+    if (firstRequest?.personId) return pathTo(firstRequest.personId);
     return [];
-  }, [selectedId, firstRequest?.personId, net]);
+  }, [selectedId, firstRequest?.personId, pathTo]);
 
   useEffect(() => {
     setSelected(selectedId);

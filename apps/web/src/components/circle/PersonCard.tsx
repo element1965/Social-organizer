@@ -77,7 +77,8 @@ export function PersonCard({ person, variant, onClose }: Props) {
     primary: actions.length === 0,
     onClick: () => navigate(`/person/${person.id}`),
   });
-  if (direct && filled.length > 0) {
+  // The phone card keeps two actions (mockup): Collection + Open, or Open + Contacts.
+  if (direct && filled.length > 0 && (variant === 'column' || actions.length < 2)) {
     actions.push({ key: 'contacts', label: t('circle.person.contacts'), primary: false, onClick: () => setContactsOpen(true) });
   }
 
