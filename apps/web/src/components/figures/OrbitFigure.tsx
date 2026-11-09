@@ -32,12 +32,13 @@ const R = [78, 140, 200] as const;
 export function OrbitFigure({ depth, labels, className }: OrbitFigureProps) {
   const reduce = usePrefersReducedMotion();
   const L = { ...ORBIT_LABELS_RU, ...labels };
+  const names = L.names.length >= 6 ? L.names : ORBIT_LABELS_RU.names;
   const on = (k: number) => k <= depth;
-  const fade = reduce ? undefined : { transition: 'opacity var(--dur-base)' };
+  const fade = reduce ? undefined : { transition: 'opacity var(--dur-base, .26s)' };
 
   const ring3 = Array.from({ length: 72 }, (_, i) => polar(C0, C0, i * 5 - 90 + 2.5, R[2]));
   const ring2 = Array.from({ length: 36 }, (_, i) => polar(C0, C0, i * 10 - 90 + 5, R[1]));
-  const people = L.names.slice(0, 6).map((n, i) => ({ n, ...polar(C0, C0, -90 + i * 60, R[0]) }));
+  const people = names.slice(0, 6).map((n, i) => ({ n, ...polar(C0, C0, -90 + i * 60, R[0]) }));
 
   return (
     <svg viewBox="0 0 440 440" role="img" aria-label={L.aria} className={className}>

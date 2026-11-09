@@ -47,6 +47,13 @@ export function heroCta(dev: Device): HeroCta {
 
 export type AuthProvider = 'google' | 'apple' | 'telegram';
 
+/** Provider order per device: a single table, so a product decision on the order is a one-line change. */
+export const AUTH_ORDER: Record<Device, AuthProvider[]> = {
+  android: ['google', 'telegram'],
+  ios: ['apple', 'google', 'telegram'],
+  desktop: ['google', 'apple', 'telegram'],
+};
+
 export interface AuthButtons {
   /** Provider buttons in display order; Telegram is always second after the native one on phones. */
   order: AuthProvider[];
@@ -58,8 +65,7 @@ export interface AuthButtons {
 
 /** Sign-in: native first, Telegram next, the other native way as a small link (Android) or last button. */
 export function authButtons(dev: Device): AuthButtons {
-  const order: AuthProvider[] =
-    dev === 'android' ? ['google', 'telegram'] : dev === 'ios' ? ['apple', 'google', 'telegram'] : ['google', 'apple', 'telegram'];
+  const order = AUTH_ORDER[dev];
   return { order, mail: true, appleLink: dev === 'android' };
 }
 

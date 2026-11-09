@@ -42,7 +42,7 @@ export function JoinFigure({ step, labels, onSelect, className }: JoinFigureProp
   const s = step ? 1 : 0;
   const sel = (i: 0 | 1) => (onSelect ? () => onSelect(i) : undefined);
   return (
-    <svg viewBox="0 0 400 110" role="img" aria-label={L.aria} className={className}>
+    <svg viewBox="0 0 400 110" role={onSelect ? "group" : "img"} aria-label={L.aria} className={className}>
       <line
         x1={XA + R + 4}
         y1={Y}
@@ -55,7 +55,7 @@ export function JoinFigure({ step, labels, onSelect, className }: JoinFigureProp
       />
       <Pill x={(XA + XB) / 2} y={Y} text={L.link[s]} hot={!!s} />
       <Person x={XA} y={Y} r={R} hot={!!s} dashed={!s} name={L.newcomer} sub={L.newcomerSub[s]} onSelect={sel(0)} />
-      <You x={XB} y={Y} r={R} hot={false} label={L.you} name={L.you} sub={L.youSub[s]} onSelect={sel(1)} />
+      <You x={XB} y={Y} r={R} label={L.you} name={L.you} sub={L.youSub[s]} onSelect={sel(1)} />
     </svg>
   );
 }

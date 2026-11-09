@@ -67,26 +67,29 @@ export function HuiFigure({
   const reduce = usePrefersReducedMotion();
   const L = { ...HUI_LABELS_RU, ...labels };
   const [inner, setInner] = useState(defaultMonth);
+  const [replay, setReplay] = useState(0);
   const month = monthProp ?? inner;
   const still = reduce || !!isStatic;
-  const [stage, setStage] = useState<HuiStage>(still ? (isStatic ? staticStage : 2) : 0);
+  const finalStage: HuiStage = isStatic ? staticStage : 2;
+  // The stage belongs to one run (month + replay counters); a new run reads as stage 0 right away,
+  // so onChange never sees a new month with the previous month's stage.
+  const runKey = `${month}:${playKey}:${replay}`;
+  const [run, setRun] = useState<{ key: string; stage: HuiStage }>({ key: runKey, stage: still ? finalStage : 0 });
+  const stage: HuiStage = still ? finalStage : run.key === runKey ? run.stage : 0;
   const onChangeRef = useRef(onChange);
   onChangeRef.current = onChange;
 
-  // One cycle per month change / replay: shares go to the table, then to the one who takes the pot.
+  // One cycle per run: shares go to the table, then to the one who takes the pot.
   useEffect(() => {
-    if (still) {
-      setStage(isStatic ? staticStage : 2);
-      return;
-    }
-    setStage(0);
-    const t1 = setTimeout(() => setStage(1), 260);
-    const t2 = setTimeout(() => setStage(2), 1500);
+    if (still) return;
+    setRun({ key: runKey, stage: 0 });
+    const t1 = setTimeout(() => setRun({ key: runKey, stage: 1 }), 260);
+    const t2 = setTimeout(() => setRun({ key: runKey, stage: 2 }), 1500);
     return () => {
       clearTimeout(t1);
       clearTimeout(t2);
     };
-  }, [month, playKey, still, isStatic, staticStage]);
+  }, [runKey, still]);
 
   useEffect(() => {
     onChangeRef.current?.(month, stage);
@@ -104,14 +107,16 @@ export function HuiFigure({
     return { x: 50 + Math.cos(a) * 40 * k, y: 50 + Math.sin(a) * 40 * k }; // percent of the box
   };
   const arc = (m: number) => {
-    if (m === 0) return '';
+    if (m <= 0) return '';
     const p = (a: number) => `${(c + Math.cos((a * Math.PI) / 180) * R).toFixed(1)} ${(c + Math.sin((a * Math.PI) / 180) * R).toFixed(1)}`;
+    // A single arc cannot span 360 degrees: the full circle is two half arcs.
+    if (m >= SEATS) return `M${p(-90)} A${R} ${R} 0 1 1 ${p(90)} A${R} ${R} 0 1 1 ${p(-90)}`;
     return `M${p(-90)} A${R} ${R} 0 ${m * 60 > 180 ? 1 : 0} 1 ${p(-90 + m * 60)}`;
   };
 
   const move = still ? 'none' : undefined;
   const ease = 'var(--ease-out, cubic-bezier(.22,.8,.24,1))';
-  const shadowCard = 'var(--shadow-card, 0 0 #0000)';
+  const shadowCard = 'var(--shadow-card, 0 0 0 0 transparent)';
 
   const pot = (names.length - 1) * share;
   const potSum = stage === 0 ? `${names.length - 1} × ${L.money(share)}` : L.money(pot);
@@ -166,7 +171,8 @@ export function HuiFigure({
             type="button"
             aria-pressed={i === month}
             onClick={() => {
-              setInner(i);
+              if (i === month) setReplay((n) => n + 1);
+              else setInner(i);
               onMonthChange?.(i);
             }}
             className="rounded-xl focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[rgb(var(--so-care))]"
@@ -188,6 +194,7 @@ export function HuiFigure({
             }}
           >
             <span
+              aria-hidden={!got}
               style={{
                 position: 'absolute',
                 top: -30,
@@ -268,13 +275,13 @@ export function HuiFigure({
               width: 28,
               height: 28,
               borderRadius: '50%',
-              background: C.warm,
-              color: 'var(--scene, rgb(11 21 19))',
+              background: C.warmSoft,
+              color: C.warmInk,
               display: 'grid',
               placeItems: 'center',
               fontSize: 11,
               fontWeight: 800,
-              boxShadow: '0 2px 6px rgb(0 0 0 / .18)',
+              boxShadow: `inset 0 0 0 2px ${C.warm}, ${shadowCard}`,
               zIndex: 3,
               pointerEvents: 'none',
               transition: move ?? `left var(--dur-screen, .42s) ${ease}, top var(--dur-screen, .42s) ${ease}, opacity var(--dur-base, .26s)`,

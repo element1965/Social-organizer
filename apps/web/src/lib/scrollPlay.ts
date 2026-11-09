@@ -92,6 +92,8 @@ export const REVEAL_IN_CLASS = 'in';
  * Fade-in for sections and cards. Elements matching `sections` fade in once (threshold .15); children of
  * `groups` containers come in with an 80 ms stagger. Under reduced motion everything is shown at once.
  * Returns a cleanup function. The CSS for `.rv` / `.rv.in` lives with the site styles.
+ * Only for static markup: it mutates DOM classes and will not see React re-renders; in React components
+ * prefer `useScrollPlay` or `onEnter` in an effect.
  */
 export function reveal(root: ParentNode = document, sel: { sections?: string; groups?: string } = {}): () => void {
   const sections = sel.sections ?? '.hero, .sec, .cta, .hero1';
@@ -134,6 +136,7 @@ export function useScrollPlay<E extends Element = HTMLDivElement, T = number>(
   const stepsRef = useRef(steps);
   stepsRef.current = steps;
   const runnerRef = useRef<Seq | null>(null);
+  const stepsKey = steps.map(String).join('|');
   const { gap = 900, threshold = 0.5, rootMargin, repeat = true } = opts;
 
   useEffect(() => {
@@ -145,7 +148,7 @@ export function useScrollPlay<E extends Element = HTMLDivElement, T = number>(
       runner.cancel();
       runnerRef.current = null;
     };
-  }, [gap, threshold, rootMargin, repeat]);
+  }, [stepsKey, gap, threshold, rootMargin, repeat]);
 
   const replay = useCallback(() => runnerRef.current?.run(), []);
   return [ref, step, replay];
