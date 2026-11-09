@@ -11,10 +11,8 @@ import { NativePushBootstrap } from './components/NativePushBootstrap';
 import { AppShell } from './components/ui2/AppShell';
 import {
   AccountStub,
-  AskStub,
   HelpStub,
   HistoryStub,
-  OpenStub,
   PersonStub,
   ProfileRedirect,
   ProfileStub,
@@ -24,7 +22,9 @@ import { useAuth } from './hooks/useAuth';
 import { afterSignInPath, readPendingInvite, safeInviteToken, setPendingInvite } from './components/onboarding/flow';
 import { LoginPage } from './pages/LoginPage';
 import { LandingPage } from './pages/LandingPage';
+import { AskPage } from './pages/AskPage';
 import { CollectionPage } from './pages/CollectionPage';
+import { OpenCollectionsPage } from './pages/OpenCollectionsPage';
 import { RetiredFeaturePage } from './pages/RetiredFeaturePage';
 import { InvitePage } from './pages/InvitePage';
 import { IntroPage } from './pages/IntroPage';
@@ -237,14 +237,14 @@ export function App() {
 
             <Route element={<ShellGate />}>
               <Route path="/" element={<HomeIndex />} />
-              <Route path="/ask" element={<AskStub />} />
+              <Route path="/ask" element={<AskPage />} />
               <Route path="/add" element={<Suspense fallback={null}><AddPage /></Suspense>} />
               <Route path="/add/qr" element={<Suspense fallback={null}><QrPage /></Suspense>} />
               <Route path="/add/scan" element={<Suspense fallback={null}><ScanPage /></Suspense>} />
               <Route path="/me" element={<ProfileStub />} />
               <Route path="/me/account" element={<AccountStub />} />
               <Route path="/me/stake" element={<StakeStub />} />
-              <Route path="/me/open" element={<OpenStub />} />
+              <Route path="/me/open" element={<OpenCollectionsPage />} />
               <Route path="/me/history" element={<HistoryStub />} />
               <Route path="/me/help" element={<HelpStub />} />
               <Route path="/me/settings" element={<SettingsPage />} />

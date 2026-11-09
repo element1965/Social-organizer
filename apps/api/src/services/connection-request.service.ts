@@ -60,6 +60,7 @@ export async function createConnectionWithinLimit(
   tx: Prisma.TransactionClient,
   actorId: string,
   otherId: string,
+  options?: { viaCollectionId?: string },
 ): Promise<'created' | 'exists'> {
   if (actorId === otherId) throw new TRPCError({ code: 'BAD_REQUEST', message: 'Cannot connect to yourself' });
   const [userAId, userBId] = sortPair(actorId, otherId);
@@ -73,7 +74,13 @@ export async function createConnectionWithinLimit(
   if (theirs >= MAX_CONNECTIONS) {
     throw new TRPCError({ code: 'PRECONDITION_FAILED', message: REQUEST_ERRORS.limitOther });
   }
-  await tx.connection.create({ data: { userAId, userBId } });
+  await tx.connection.create({
+    data: {
+      userAId,
+      userBId,
+      viaCollectionId: options?.viaCollectionId ?? null,
+    },
+  });
   return 'created';
 }
 
