@@ -1719,8 +1719,13 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
           };
         }
         const target = new THREE.Vector3(node.x, node.y ?? 0, node.z ?? 0);
-        const dir = cam.position.clone().sub(target);
-        if (dir.lengthSq() < 1e-6) dir.set(0, 0, 1);
+        // Look from outside the ball: mostly along "centre → person", a little along the current view,
+        // so nobody sits between the camera and the person and the turn is not abrupt
+        const view = cam.position.clone().sub(target);
+        if (view.lengthSq() < 1e-6) view.set(0, 0, 1);
+        const out = target.lengthSq() > 1 ? target.clone().normalize() : view.clone().normalize();
+        const dir = out.multiplyScalar(0.7).add(view.normalize().multiplyScalar(0.3));
+        if (dir.lengthSq() < 1e-6) dir.copy(out);
         // Close enough to read the name, far enough to see the person's own links around them
         const dist = THREE.MathUtils.clamp(ballOuter(sizeRef.current) * 1.4, 90, 150);
         flyPose(target.clone().add(dir.normalize().multiplyScalar(dist)), target, FOCUS_FLY_MS);
