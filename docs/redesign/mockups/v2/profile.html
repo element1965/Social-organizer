@@ -24,7 +24,7 @@
   .rw .ico { width:18px; height:18px; color:var(--subtle); margin-left:4px; }
   .rw.danger { color:var(--danger); }
   .sw { width:48px; height:30px; border-radius:15px; background:var(--line); position:relative; flex:none; }
-  .sw::after { content:""; position:absolute; top:3px; left:3px; width:24px; height:24px; border-radius:50%; background:#fff; box-shadow:0 2px 6px rgba(20,33,30,.2); }
+  .sw::after { content:""; position:absolute; top:3px; left:3px; width:24px; height:24px; border-radius:50%; background:var(--paper); box-shadow:0 2px 6px rgba(20,33,30,.2); }
   .sw.on { background:var(--teal); } .sw.on::after { left:21px; }
   .segin { display:flex; gap:3px; padding:3px; border-radius:11px; background:var(--canvas); margin-left:auto; }
   .segin span { height:30px; padding:0 10px; border-radius:9px; display:grid; place-items:center; font-size:13px; font-weight:700; color:var(--muted); }
@@ -33,7 +33,7 @@
   .sub2 small { color:var(--muted); font-size:12px; font-weight:600; margin-top:1px; }
   /* account */
   .avaBig { width:88px; height:88px; margin:0 auto; border-radius:28px; background:var(--teal-soft); color:var(--teal); display:grid; place-items:center; font-weight:800; font-size:34px; position:relative; }
-  .avaBig i { position:absolute; right:-6px; bottom:-6px; width:32px; height:32px; border-radius:12px; background:var(--ink); color:#fff; display:grid; place-items:center; box-shadow:0 0 0 3px var(--canvas); }
+  .avaBig i { position:absolute; right:-6px; bottom:-6px; width:32px; height:32px; border-radius:12px; background:var(--ink); color:var(--canvas); display:grid; place-items:center; box-shadow:0 0 0 3px var(--canvas); }
   .avaBig i svg { width:16px; height:16px; }
   .slug { display:flex; align-items:center; height:56px; border-radius:16px; border:1px solid var(--line); background:var(--canvas); padding:0 14px; font-size:17px; }
   .slug small { color:var(--muted); font-weight:600; }
@@ -43,7 +43,7 @@
   .field.lock svg { width:16px; height:16px; color:var(--subtle); margin-left:auto; }
   .chips { display:flex; gap:8px; margin-top:12px; }
   .chips span { height:40px; padding:0 14px; border-radius:12px; background:var(--canvas); color:var(--ink); font-weight:700; display:grid; place-items:center; font-variant-numeric:tabular-nums; }
-  .chips span.on { background:var(--ink); color:#fff; }
+  .chips span.on { background:var(--ink); color:var(--canvas); }
   .kv { display:flex; justify-content:space-between; align-items:baseline; }
   .kv b { font-size:17px; letter-spacing:-.02em; }
   .kv span { color:var(--muted); font-size:14px; font-weight:600; font-variant-numeric:tabular-nums; }
@@ -66,6 +66,7 @@
 <h1>Профиль и вложенные экраны</h1>
 <p class="lead">Профиль — четвёртый таб. Это список, а не форма: всё, что про меня, моё участие и сборы, и настройки, которые остались после чистки. Шесть экранов: Профиль, Аккаунт, Минимальное участие, Сборы, Помощь, лист «О приложении».</p>
 <div class="row" id="row"></div>
+<script src="theme.js"></script>
 <script src="shared.js"></script>
 <script>
 I.info = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 11v5M12 7.8h.01"/></svg>`;

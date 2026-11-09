@@ -32,19 +32,19 @@ function planet(w, h, n, seed) {
   let dots = "";
   for (const p of [...pr].sort((a, b) => a.z - b.z)) { const r = (p.d === 1 ? 5 : p.d === 2 ? 3.4 : 2.4) * p.k; dots += `<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="${r.toFixed(1)}" fill="${col(p.d)}" opacity="${p.z > 0 ? 1 : .35}"/>`; }
   const me = `<circle cx="${cx}" cy="${cy}" r="11" fill="var(--care-bright)"/><circle cx="${cx}" cy="${cy}" r="19" fill="none" stroke="var(--care-scene)" stroke-width="1.5" opacity=".7"/>`;
-  return `<svg viewBox="0 0 ${w} ${h}" preserveAspectRatio="xMidYMid slice"><defs><radialGradient id="g${s}" cx="50%" cy="45%" r="55%"><stop offset="0" stop-color="#1b332e" stop-opacity=".95"/><stop offset=".7" stop-color="#132420" stop-opacity=".4"/><stop offset="1" stop-color="#0b1513" stop-opacity="0"/></radialGradient></defs><rect width="${w}" height="${h}" fill="var(--scene)"/>${stars}<circle cx="${cx}" cy="${cy}" r="${S * 1.15}" fill="url(#g${s})"/>${edges}${dots}${me}</svg>`;
+  return `<svg viewBox="0 0 ${w} ${h}" preserveAspectRatio="xMidYMid slice"><defs><radialGradient id="g${s}" cx="50%" cy="45%" r="55%"><stop offset="0" style="stop-color:var(--scene-3)" stop-opacity=".95"/><stop offset=".7" style="stop-color:var(--scene-2)" stop-opacity=".4"/><stop offset="1" style="stop-color:var(--scene)" stop-opacity="0"/></radialGradient></defs><rect width="${w}" height="${h}" fill="var(--scene)"/>${stars}<circle cx="${cx}" cy="${cy}" r="${S * 1.15}" fill="url(#g${s})"/>${edges}${dots}${me}</svg>`;
 }
 
 /* the three explainer frames, same as onboarding.html */
 function pic(step) {
-  const d1 = "var(--ink)", d2 = "#7f918b", d3 = "#b3c0bb", teal = "var(--teal)";
+  const d1 = "var(--ink)", d2 = "var(--muted)", d3 = "var(--subtle)", teal = "var(--teal)";
   const N = [[160,150,22,d1],[70,80,13,d1],[250,70,13,d1],[60,230,13,d1],[260,220,13,d1],[20,150,9,d2],[300,140,9,d2],[120,20,9,d2],[210,280,9,d2],[300,40,6,d3],[20,60,6,d3],[20,260,6,d3]];
   const E = [[0,1],[0,2],[0,3],[0,4],[1,5],[2,6],[1,7],[4,8],[6,9],[5,10],[3,11]];
   const hot = step === 1 ? new Set(["0-1","1-5","1-7"]) : new Set();
-  const lines = E.map(([a,b]) => `<path d="M${N[a][0]} ${N[a][1]} L${N[b][0]} ${N[b][1]}" fill="none" stroke="${hot.has(a+"-"+b) ? teal : "rgba(20,33,30,.18)"}" stroke-width="${hot.has(a+"-"+b) ? 3 : 1.6}" stroke-linecap="round"/>`).join("");
+  const lines = E.map(([a,b]) => `<path d="M${N[a][0]} ${N[a][1]} L${N[b][0]} ${N[b][1]}" fill="none" stroke="${hot.has(a+"-"+b) ? teal : "var(--line-strong)"}" stroke-width="${hot.has(a+"-"+b) ? 3 : 1.6}" stroke-linecap="round"/>`).join("");
   const dots = N.map(([x,y,r,c], i) => `<circle cx="${x}" cy="${y}" r="${r}" fill="${step === 1 && [0,1,5,7].includes(i) ? teal : c}"/>`).join("");
   const you = `<circle cx="160" cy="150" r="34" fill="none" stroke="${teal}" stroke-width="2" opacity="${step === 0 ? 1 : 0}"/><text x="160" y="200" text-anchor="middle" font-family="Manrope" font-size="15" font-weight="800" fill="var(--ink)">Вы</text>`;
-  const chat = step === 2 ? `<g><rect x="72" y="232" width="176" height="44" rx="22" fill="var(--paper)" stroke="rgba(20,33,30,.14)"/><circle cx="96" cy="254" r="6" fill="${teal}"/><circle cx="112" cy="254" r="6" fill="${d1}"/><circle cx="128" cy="254" r="6" fill="${d2}"/><text x="188" y="259" text-anchor="middle" font-family="Manrope" font-size="14" font-weight="800" fill="var(--ink)">чат сбора</text></g>` : "";
+  const chat = step === 2 ? `<g><rect x="72" y="232" width="176" height="44" rx="22" fill="var(--paper)" stroke="var(--line)"/><circle cx="96" cy="254" r="6" fill="${teal}"/><circle cx="112" cy="254" r="6" fill="${d1}"/><circle cx="128" cy="254" r="6" fill="${d2}"/><text x="188" y="259" text-anchor="middle" font-family="Manrope" font-size="14" font-weight="800" fill="var(--ink)">чат сбора</text></g>` : "";
   return `<svg viewBox="0 0 320 300">${lines}${dots}${you}${chat}</svg>`;
 }
 

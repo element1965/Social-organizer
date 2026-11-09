@@ -24,7 +24,7 @@
   .ask .t { flex:1; min-width:0; }
   .ask .t b { display:block; font-size:15px; letter-spacing:-.02em; }
   .ask .t span { display:block; color:var(--muted); font-size:13px; font-weight:600; margin-top:1px; }
-  .ask .go { height:40px; padding:0 14px; border-radius:12px; background:var(--teal); color:#fff; font-weight:700; font-size:14px; display:grid; place-items:center; white-space:nowrap; }
+  .ask .go { height:40px; padding:0 14px; border-radius:12px; background:var(--care); color:var(--on-care); font-weight:700; font-size:14px; display:grid; place-items:center; white-space:nowrap; }
   .sent { display:flex; align-items:center; gap:10px; margin-top:14px; padding:12px 14px; border-radius:16px; background:var(--warm-soft); color:var(--warm-ink); font-size:14px; font-weight:600; }
   .sent svg { width:20px; height:20px; color:var(--warm-ink); flex:none; }
   .edit { display:flex; align-items:center; gap:10px; margin-top:14px; }
@@ -44,7 +44,7 @@
   .pr .fwd { width:18px; height:18px; color:var(--subtle); }
   .sticky { margin:14px 4px 6px; font-size:12px; font-weight:800; color:var(--muted); letter-spacing:.06em; }
   .sw { width:48px; height:30px; border-radius:15px; background:var(--teal); position:relative; flex:none; }
-  .sw::after { content:""; position:absolute; top:3px; left:21px; width:24px; height:24px; border-radius:50%; background:#fff; box-shadow:0 2px 6px rgba(20,33,30,.2); }
+  .sw::after { content:""; position:absolute; top:3px; left:21px; width:24px; height:24px; border-radius:50%; background:var(--paper); box-shadow:0 2px 6px rgba(20,33,30,.2); }
   .toggle { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-top:10px; padding:0 14px; min-height:52px; background:var(--paper); border-radius:16px; font-weight:650; font-size:15px; box-shadow:0 10px 28px rgba(20,33,30,.06); }
   .toggle + .group { margin-top:12px; }
   .toggle + .sticky { margin-top:16px; }
@@ -55,6 +55,7 @@
 <h1>Человек и Люди</h1>
 <p class="lead">Человек — экран одного узла графа, одинаковый для всех колец, меняется только набор действий. Люди — список кольца, открывается с чипа на Круге и заменяет аккордеон «N-е рукопожатие».</p>
 <div class="row" id="row"></div>
+<script src="theme.js"></script>
 <script src="shared.js"></script>
 <script>
 I.search = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.2-4.2"/></svg>`;

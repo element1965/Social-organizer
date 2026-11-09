@@ -22,15 +22,6 @@
   .flow .say { margin:10px 0 0; color:var(--muted); font-size:15px; line-height:1.4; max-width:32ch; }
   .flow .say b { color:var(--ink); }
   .flow .foot { position:static; margin-top:auto; padding-top:32px; }
-  .auths { display:flex; flex-direction:column; gap:10px; }
-  .auth { height:56px; border-radius:16px; display:flex; align-items:center; justify-content:center; gap:10px; font-weight:700; font-size:17px; }
-  .auth svg { width:20px; height:20px; }
-  .auth.apple { background:#111; color:#fff; }
-  .auth.google { background:#fff; color:var(--ink); box-shadow:inset 0 0 0 1px var(--line); }
-  .auth.tg { background:#229ED9; color:#fff; }
-  .mail { text-align:center; margin-top:8px; color:var(--teal); font-weight:700; font-size:15px; min-height:44px; line-height:44px; }
-  .legal { text-align:center; color:var(--muted); font-size:12px; line-height:1.4; margin:4px 0 0; }
-  .legal u { text-decoration:none; color:var(--muted); font-weight:700; }
   /* invite: centred like the public collection page, so the two "outside" entrances look alike */
   .centre { text-align:center; display:flex; flex-direction:column; align-items:center; }
   .centre .ava { width:84px; height:84px; border-radius:28px; background:var(--teal-soft); color:var(--teal); display:grid; place-items:center; font-weight:800; font-size:32px; margin-top:44px; }
@@ -59,6 +50,7 @@
 <h1>Онбординг и вход</h1>
 <p class="lead">Путь нового человека: ссылка от знакомого → вход → три кадра о том, как это работает → минимальное участие → пустой Круг (он уже есть в макете Круга). Вход один для всех: три кнопки и почта текстом. Девять экранов на одной вертикальной сетке: верхняя строка, картинка фиксированной высоты, заголовок, текст, кнопки с запасом не меньше 32 px.</p>
 <div class="row" id="row"></div>
+<script src="theme.js"></script>
 <script src="shared.js"></script>
 <script>
 I.apple = `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M16.4 12.6c0-2.4 2-3.5 2.1-3.6-1.1-1.7-2.9-1.9-3.5-1.9-1.5-.2-2.9.9-3.7.9-.8 0-1.9-.9-3.2-.8-1.6 0-3.1 1-4 2.4-1.7 3-.4 7.3 1.2 9.7.8 1.2 1.8 2.5 3 2.4 1.2 0 1.7-.8 3.2-.8s1.9.8 3.2.8c1.3 0 2.2-1.2 3-2.4.9-1.3 1.3-2.6 1.3-2.7 0 0-2.5-1-2.6-4zM14 5.5c.7-.8 1.1-1.9 1-3-1 0-2.1.7-2.8 1.5-.6.7-1.2 1.8-1 2.9 1.1.1 2.2-.6 2.8-1.4z"/></svg>`;
@@ -68,14 +60,14 @@ I.mailI = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-wid
 
 /* explainer pictures: the same network in three frames, always at the same place */
 function pic(step) {
-  const d1 = "var(--ink)", d2 = "#7f918b", d3 = "#b3c0bb", teal = "var(--teal)";
+  const d1 = "var(--ink)", d2 = "var(--muted)", d3 = "var(--subtle)", teal = "var(--teal)";
   const N = [[160,150,22,d1],[70,80,13,d1],[250,70,13,d1],[60,230,13,d1],[260,220,13,d1],[20,150,9,d2],[300,140,9,d2],[120,20,9,d2],[210,280,9,d2],[300,40,6,d3],[20,60,6,d3],[20,260,6,d3]];
   const E = [[0,1],[0,2],[0,3],[0,4],[1,5],[2,6],[1,7],[4,8],[6,9],[5,10],[3,11]];
   const hot = step === 1 ? new Set(["0-1","1-5","1-7"]) : new Set();
-  const lines = E.map(([a,b]) => `<path d="M${N[a][0]} ${N[a][1]} L${N[b][0]} ${N[b][1]}" fill="none" stroke="${hot.has(a+"-"+b) ? teal : "rgba(20,33,30,.18)"}" stroke-width="${hot.has(a+"-"+b) ? 3 : 1.6}" stroke-linecap="round"/>`).join("");
+  const lines = E.map(([a,b]) => `<path d="M${N[a][0]} ${N[a][1]} L${N[b][0]} ${N[b][1]}" fill="none" stroke="${hot.has(a+"-"+b) ? teal : "var(--line-strong)"}" stroke-width="${hot.has(a+"-"+b) ? 3 : 1.6}" stroke-linecap="round"/>`).join("");
   const dots = N.map(([x,y,r,c], i) => `<circle cx="${x}" cy="${y}" r="${r}" fill="${step === 1 && [0,1,5,7].includes(i) ? teal : c}"/>`).join("");
   const you = `<circle cx="160" cy="150" r="34" fill="none" stroke="${teal}" stroke-width="2" opacity="${step === 0 ? 1 : 0}"/><text x="160" y="200" text-anchor="middle" font-family="Manrope" font-size="15" font-weight="800" fill="var(--ink)">Вы</text>`;
-  const chat = step === 2 ? `<g><rect x="72" y="232" width="176" height="44" rx="22" fill="var(--paper)" stroke="rgba(20,33,30,.14)"/><circle cx="96" cy="254" r="6" fill="${teal}"/><circle cx="112" cy="254" r="6" fill="${d1}"/><circle cx="128" cy="254" r="6" fill="${d2}"/><text x="188" y="259" text-anchor="middle" font-family="Manrope" font-size="14" font-weight="800" fill="var(--ink)">чат сбора</text></g>` : "";
+  const chat = step === 2 ? `<g><rect x="72" y="232" width="176" height="44" rx="22" fill="var(--paper)" stroke="var(--line)"/><circle cx="96" cy="254" r="6" fill="${teal}"/><circle cx="112" cy="254" r="6" fill="${d1}"/><circle cx="128" cy="254" r="6" fill="${d2}"/><text x="188" y="259" text-anchor="middle" font-family="Manrope" font-size="14" font-weight="800" fill="var(--ink)">чат сбора</text></g>` : "";
   const pulse = step === 1 ? `<circle r="6" fill="${teal}"><animateMotion dur="2.6s" repeatCount="indefinite" path="M160,150 L70,80 L20,150 L70,80 L160,150"/></circle>` : "";
   return `<svg viewBox="0 0 320 300">${lines}${dots}${you}${pulse}${chat}</svg>`;
 }
@@ -123,7 +115,7 @@ const P5 = introPhone(0), P6 = introPhone(1), P7 = introPhone(2);
 
 const P8 = `<div class="phone">${status()}<div class="flow">${brand}
 <h2 style="margin-top:28px">Сколько вы готовы давать?</h2><p class="say">Сумма на случай, когда попросит кто-то из вашей сети. Из таких сумм складывается «Сеть может помочь».</p>
-<div class="card seed" style="margin-top:20px"><span class="lbl">Моё минимальное участие</span><div class="money">15<span class="caret"></span><small>$</small></div><div class="chips"><span>5</span><span class="on">15</span><span>30</span><span>50</span></div><p class="hint">Изменить можно в любой момент в Профиле.</p></div>
+<div class="card seed" style="margin-top:20px"><span class="lbl">Моё минимальное участие</span><div class="money">1<span class="caret"></span><small>$</small></div><div class="chips"><span class="on">1</span><span>5</span><span>15</span><span>30</span></div><p class="hint">Выберите из готовых или введите свою сумму. Изменить можно в любой момент в Профиле.</p></div>
 <div class="sent"><i>${I.check}</i><span><b>Заявка Олегу отправлена.</b> Когда он подтвердит, станет вашим 1-м рукопожатием.</span></div>
 <div class="foot"><div class="btn primary">В круг</div></div>
 </div>${home()}</div>`;
@@ -144,7 +136,7 @@ document.getElementById("row").innerHTML = [
   section("i1", P5, "<small>5</small>Интро 1 из 3", `<p>Три кадра вместо четырёх. Без бренда: в приложении он уже не нужен, а место отдано картинке. Сеть стоит на одном и том же месте во всех трёх кадрах, чтобы при свайпе менялась подсветка, а не положение. «Пропустить» в правом верхнем углу, одна кнопка «Дальше» во всю ширину, точки над ней.</p>`),
   section("i2", P6, "<small>6</small>Интро 2 из 3", `<p>Путь просьбы подсвечен бирюзой, по нему бежит импульс. Одно жирное предложение на кадр: «Чем больше вокруг, тем дальше идёт сигнал» — это и есть причина добавлять людей.</p>`),
   section("i3", P7, "<small>7</small>Интро 3 из 3", `<p>Чат сбора и честная фраза, что деньги передают лично. Кнопка «Понятно», «Пропустить» уже не нужно. Интро показывается один раз и доступно из Помощи.</p>`),
-  section("seed", P8, "<small>8</small>Минимальное участие", `<p>Единственный вопрос перед Кругом, поэтому он идёт первым: заголовок, одна фраза, поле с пресетами. Что сумму можно изменить, сказано подсказкой внутри карточки, а не третьим предложением в тексте. Статус заявки Олегу стоит после поля, как спокойная плашка: это не вопрос и не действие. «В круг» ведёт на пустой Круг с тремя шагами.</p>
+  section("seed", P8, "<small>8</small>Минимальное участие", `<p>Единственный вопрос перед Кругом, поэтому он идёт первым: заголовок, одна фраза, поле с пресетами. По умолчанию 1 $, и «В круг» можно нажать сразу; другую сумму берут из пресетов или вводят цифрами в поле. Что сумму можно изменить, сказано подсказкой внутри карточки, а не третьим предложением в тексте. Статус заявки Олегу стоит после поля, как спокойная плашка: это не вопрос и не действие. «В круг» ведёт на пустой Круг с тремя шагами.</p>
 <ul><li>Это замена экрану «Узел» из старого прототипа и карточке «Заявлено на месяц» из настроек.</li></ul>`),
   section("bad", P9, "<small>9</small>Ссылка не работает", `<p>Один экран на все плохие случаи: приглашение использовано, пригласивший удалил аккаунт, токен не найден. Текст объясняет, что делать: попросить новую ссылку или встретиться и показать QR. Приложение всё равно можно открыть.</p>`)
 ].join("");
