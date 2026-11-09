@@ -8,7 +8,7 @@ export function AssistantPage() {
   const back = useSmartBack(t('common.back'), '/me/help');
   return (
     <Screen title={t('help.assistant')} back={back} width="column">
-      <ChatAssistant page />
+      <ChatAssistant />
     </Screen>
   );
 }

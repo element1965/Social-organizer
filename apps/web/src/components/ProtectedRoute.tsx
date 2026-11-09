@@ -36,15 +36,6 @@ export function ProtectedRoute({ children }: { children: React.ReactNode }) {
     window.location.replace(expired);
   }, [expired, logout]);
 
-  // Clear stale demo tokens — demo mode is disabled (after the hooks, so their order never changes)
-  if (localStorage.getItem('accessToken') === 'demo-token') {
-    localStorage.removeItem('accessToken');
-    localStorage.removeItem('refreshToken');
-    localStorage.removeItem('userId');
-    window.location.href = '/?from=demo';
-    return null;
-  }
-
   if (expired) return null;
 
   if (!isAuthenticated) {

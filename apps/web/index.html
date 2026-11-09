@@ -22,7 +22,25 @@
     <meta name="twitter:description" content="Social Organizer shows how you are connected to the people around you. When someone needs help, the request travels along these connections, and small amounts from many add up to what one person needs. Open source, non-profit, holds no money." />
     <meta name="twitter:image" content="https://www.orginizer.com/og-image.png" />
     <link rel="manifest" href="/manifest.webmanifest" />
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script>
+      // telegram-web-app.js blocks first paint. Load it only inside a Mini App,
+      // and do it during parse so @so/tg-adapter sees window.Telegram before React boots.
+      (function () {
+        function inTelegram() {
+          try {
+            var href = location.href || '';
+            if (href.indexOf('tgWebAppData') !== -1) return true;
+            if ((location.hash || '').indexOf('tgWebApp') !== -1) return true;
+            return /Telegram/i.test(navigator.userAgent || '');
+          } catch (e) {
+            return false;
+          }
+        }
+        if (inTelegram()) {
+          document.write('<script src="https://telegram.org/js/telegram-web-app.js"><\/script>');
+        }
+      })();
+    </script>
     <script>
       (function () {
         try {

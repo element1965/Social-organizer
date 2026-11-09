@@ -62,7 +62,6 @@ export interface NetworkGraphProps {
   theme?: 'light' | 'dark';
   /** @deprecated Prefer `theme`. Honoured when `theme` is omitted. */
   darkMode?: boolean;
-  controlsHint?: string;
   /** In-canvas focus / fit buttons. Default true so existing screens keep them. */
   showControls?: boolean;
 }
@@ -370,7 +369,6 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
   onNodeTap,
   theme: themeProp,
   darkMode = true,
-  controlsHint: _controlsHint,
   showControls = true,
   logoUrl = '/logo.png',
   initialView,
