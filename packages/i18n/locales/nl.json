@@ -1274,7 +1274,9 @@
     "open": "Openen",
     "contactsTitle": "Contacten: {{name}}",
     "contactsHint": "Ze openen in een andere app.",
-    "withdrawRequest": "Intrekken"
+    "withdrawRequest": "Intrekken",
+    "requestCooldown": "Verzoek ingetrokken. Een nieuw kan na {{when}}.",
+    "requestCooldownSoon": "Verzoek ingetrokken. Een nieuw kan een dag later."
   },
   "help": {
     "faq": "Vragen en antwoorden",

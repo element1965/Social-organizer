@@ -1274,7 +1274,9 @@
     "open": "Åbn",
     "contactsTitle": "Kontakter: {{name}}",
     "contactsHint": "Kontakterne åbner i en anden app.",
-    "withdrawRequest": "Træk tilbage"
+    "withdrawRequest": "Træk tilbage",
+    "requestCooldown": "Anmodning trukket tilbage. Du kan sende en ny efter {{when}}.",
+    "requestCooldownSoon": "Anmodning trukket tilbage. Du kan sende en ny efter et døgn."
   },
   "help": {
     "faq": "Spørgsmål og svar",

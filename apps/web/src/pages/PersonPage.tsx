@@ -64,6 +64,7 @@ function PersonScreen() {
   const outside = pathQuery.isSuccess && path.length === 0;
 
   const outgoing = trpc.pending.myPending.useQuery(undefined, { enabled: deeper });
+  const direct = trpc.pending.directStatus.useQuery({ targetUserId: id }, { enabled: deeper });
   const setNickname = trpc.connection.setNickname.useMutation({
     onSuccess: () => {
       void utils.connection.getNickname.invalidate({ targetUserId: id });
@@ -209,6 +210,14 @@ function PersonScreen() {
   const helpedYou = (history.data?.helpedBy ?? []).filter((row) => row.userId === id && !joinedIds.has(row.id));
   const requestSent = (outgoing.data ?? []).some((row) => row.toUser.id === id) || (sendRequest.isSuccess && !('autoConnected' in sendRequest.data && sendRequest.data.autoConnected)) || trpcCode(sendRequest.error) === 'CONFLICT';
 
+  // After a withdrawal a new request waits out a cooldown on the server (against send/withdraw loops)
+  const retryIso = direct.data?.retryAt ?? (cancelRequest.isSuccess ? cancelRequest.data.retryAt : null);
+  const retryAt = retryIso && new Date(retryIso).getTime() > Date.now() ? new Date(retryIso) : null;
+  const coolingDown = !requestSent && (!!retryAt || trpcCode(sendRequest.error) === 'TOO_MANY_REQUESTS');
+  const retryText = retryAt
+    ? new Intl.DateTimeFormat(i18n.language, { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }).format(retryAt)
+    : '';
+
   const contactItems = [
     ...(person.phone ? [{ type: 'phone', value: person.phone, label: t('profile.phone') }] : []),
     ...(contacts.data ?? [])
@@ -325,6 +334,10 @@ function PersonScreen() {
                 {t('person.withdrawRequest')}
               </Button>
             </div>
+          ) : coolingDown ? (
+            <p className="rounded-lg bg-surface px-4 py-3 text-body-s font-semibold text-ink-muted shadow-card">
+              {retryText ? t('person.requestCooldown', { when: retryText }) : t('person.requestCooldownSoon')}
+            </p>
           ) : (
             <>
               <Button className="w-full" loading={sendRequest.isPending} onClick={() => sendRequest.mutate({ targetUserId: id })}>

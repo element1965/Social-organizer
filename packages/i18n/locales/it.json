@@ -1285,7 +1285,9 @@
     "open": "Apri",
     "contactsTitle": "Contatti: {{name}}",
     "contactsHint": "Si aprono in un'altra app.",
-    "withdrawRequest": "Ritira"
+    "withdrawRequest": "Ritira",
+    "requestCooldown": "Richiesta ritirata. Potrai inviarne una nuova dopo {{when}}.",
+    "requestCooldownSoon": "Richiesta ritirata. Potrai inviarne una nuova dopo un giorno."
   },
   "help": {
     "faq": "Domande e risposte",

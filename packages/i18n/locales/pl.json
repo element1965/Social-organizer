@@ -1296,7 +1296,9 @@
     "open": "Otwórz",
     "contactsTitle": "Kontakty: {{name}}",
     "contactsHint": "Otworzą się w innej aplikacji.",
-    "withdrawRequest": "Wycofaj"
+    "withdrawRequest": "Wycofaj",
+    "requestCooldown": "Prośba wycofana. Nową można wysłać po {{when}}.",
+    "requestCooldownSoon": "Prośba wycofana. Nową można wysłać dobę później."
   },
   "help": {
     "faq": "Pytania i odpowiedzi",

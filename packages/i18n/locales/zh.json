@@ -1263,7 +1263,9 @@
     "open": "打开",
     "contactsTitle": "联系方式：{{name}}",
     "contactsHint": "会在其他应用中打开。",
-    "withdrawRequest": "撤回"
+    "withdrawRequest": "撤回",
+    "requestCooldown": "已撤回申请。{{when}} 之后可以重新发送。",
+    "requestCooldownSoon": "已撤回申请。一天后可以重新发送。"
   },
   "help": {
     "faq": "常见问题",

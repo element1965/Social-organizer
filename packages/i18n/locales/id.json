@@ -1263,7 +1263,9 @@
     "open": "Buka",
     "contactsTitle": "Kontak: {{name}}",
     "contactsHint": "Terbuka di aplikasi lain.",
-    "withdrawRequest": "Batalkan"
+    "withdrawRequest": "Batalkan",
+    "requestCooldown": "Permintaan dibatalkan. Anda bisa mengirim yang baru setelah {{when}}.",
+    "requestCooldownSoon": "Permintaan dibatalkan. Anda bisa mengirim yang baru sehari kemudian."
   },
   "help": {
     "faq": "Pertanyaan dan jawaban",

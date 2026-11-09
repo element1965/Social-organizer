@@ -1285,7 +1285,9 @@
     "open": "Deschide",
     "contactsTitle": "Contacte: {{name}}",
     "contactsHint": "Se deschid în altă aplicație.",
-    "withdrawRequest": "Retrage"
+    "withdrawRequest": "Retrage",
+    "requestCooldown": "Cerere retrasă. Poți trimite alta după {{when}}.",
+    "requestCooldownSoon": "Cerere retrasă. Poți trimite alta după o zi."
   },
   "help": {
     "faq": "Întrebări și răspunsuri",

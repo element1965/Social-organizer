@@ -1263,7 +1263,9 @@
     "open": "開く",
     "contactsTitle": "連絡先：{{name}}",
     "contactsHint": "別のアプリで開きます。",
-    "withdrawRequest": "取り消す"
+    "withdrawRequest": "取り消す",
+    "requestCooldown": "申請を取り消しました。{{when}} 以降に再送できます。",
+    "requestCooldownSoon": "申請を取り消しました。1日後に再送できます。"
   },
   "help": {
     "faq": "よくある質問",

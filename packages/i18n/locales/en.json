@@ -1274,7 +1274,9 @@
     "open": "Open",
     "contactsTitle": "Contacts: {{name}}",
     "contactsHint": "They open in another app.",
-    "withdrawRequest": "Withdraw"
+    "withdrawRequest": "Withdraw",
+    "requestCooldown": "Request withdrawn. You can send a new one after {{when}}.",
+    "requestCooldownSoon": "Request withdrawn. You can send a new one a day after withdrawing."
   },
   "help": {
     "faq": "Questions and answers",

@@ -1285,7 +1285,9 @@
     "open": "Отворите",
     "contactsTitle": "Контакти: {{name}}",
     "contactsHint": "Отварају се у другој апликацији.",
-    "withdrawRequest": "Повуци"
+    "withdrawRequest": "Повуци",
+    "requestCooldown": "Захтев повучен. Нови можете послати после {{when}}.",
+    "requestCooldownSoon": "Захтев повучен. Нови можете послати дан касније."
   },
   "help": {
     "faq": "Питања и одговори",

@@ -1318,7 +1318,9 @@
     "open": "فتح",
     "contactsTitle": "جهات الاتصال: {{name}}",
     "contactsHint": "تُفتح في تطبيق آخر.",
-    "withdrawRequest": "سحب الطلب"
+    "withdrawRequest": "سحب الطلب",
+    "requestCooldown": "تم سحب الطلب. يمكنك إرسال طلب جديد بعد {{when}}.",
+    "requestCooldownSoon": "تم سحب الطلب. يمكنك إرسال طلب جديد بعد يوم."
   },
   "help": {
     "faq": "أسئلة وأجوبة",

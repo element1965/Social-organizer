@@ -1296,7 +1296,9 @@
     "open": "Otevřít",
     "contactsTitle": "Kontakty: {{name}}",
     "contactsHint": "Otevřou se v jiné aplikaci.",
-    "withdrawRequest": "Zrušit"
+    "withdrawRequest": "Zrušit",
+    "requestCooldown": "Žádost zrušena. Novou lze poslat po {{when}}.",
+    "requestCooldownSoon": "Žádost zrušena. Novou lze poslat den poté."
   },
   "help": {
     "faq": "Otázky a odpovědi",

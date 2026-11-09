@@ -1274,7 +1274,9 @@
     "open": "Aç",
     "contactsTitle": "İletişim: {{name}}",
     "contactsHint": "Başka bir uygulamada açılır.",
-    "withdrawRequest": "Geri çek"
+    "withdrawRequest": "Geri çek",
+    "requestCooldown": "İstek geri çekildi. Yenisini {{when}} sonrasında gönderebilirsiniz.",
+    "requestCooldownSoon": "İstek geri çekildi. Yenisini bir gün sonra gönderebilirsiniz."
   },
   "help": {
     "faq": "Sorular ve yanıtlar",
