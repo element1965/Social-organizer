@@ -316,6 +316,24 @@ export const collectionRouter = router({
     });
   }),
 
+  /** Collections the viewer created that are already closed or cancelled. */
+  myHistory: protectedProcedure.query(async ({ ctx }) => {
+    const collections = await ctx.db.collection.findMany({
+      where: { creatorId: ctx.userId, status: { in: ['CLOSED', 'CANCELLED'] } },
+      include: {
+        _count: { select: { obligations: true } },
+        obligations: { select: { amount: true } },
+      },
+      orderBy: { closedAt: 'desc' },
+      take: 50,
+    });
+    return collections.map((col) => ({
+      ...col,
+      currentAmount: col.obligations.reduce((sum, o) => sum + o.amount, 0),
+      obligations: undefined,
+    }));
+  }),
+
   // Public endpoint — no auth required, used for SOS landing page
   getPublic: publicProcedure
     .input(z.object({ id: z.string() }))

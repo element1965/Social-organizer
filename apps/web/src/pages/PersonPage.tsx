@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Navigate, useNavigate, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { buildContactUrl } from '@so/shared';
+import { buildContactUrl, isSafeContactUrl } from '@so/shared';
 import { isTelegramWebApp } from '@so/tg-adapter';
 import { trpc } from '../lib/trpc';
 import { useNicknames } from '../hooks/useNicknames';
@@ -10,8 +10,8 @@ import { Button } from '../components/ui2/Button';
 import { Card } from '../components/ui2/Card';
 import { Group, Row } from '../components/ui2/Group';
 import { Input } from '../components/ui2/Input';
-import { PathFigure } from '../components/ui2/PathFigure';
 import { Screen } from '../components/ui2/Screen';
+import { PathChain } from '../components/person/PathChain';
 import { Sheet } from '../components/ui2/Sheet';
 import { formatMoney } from '../components/ui2/format';
 import { SocialIcon } from '../components/ui/social-icons';
@@ -25,7 +25,17 @@ import { useSmartBack } from '../components/profile/useSmartBack';
 
 type Ask = { id: string; type: string; amount: number | null; status: string };
 
+function contactHref(type: string, value: string): string {
+  const url = type === 'phone' ? `tel:${value.trim()}` : buildContactUrl(type, value);
+  return isSafeContactUrl(url) ? url : '';
+}
+
 export function PersonPage() {
+  const { id = '' } = useParams();
+  return <PersonScreen key={id} />;
+}
+
+function PersonScreen() {
   const { id = '' } = useParams();
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
@@ -75,6 +85,8 @@ export function PersonPage() {
     onSuccess: () => {
       void utils.connection.list.invalidate();
       void utils.connection.findPath.invalidate();
+      void utils.pending.incoming.invalidate();
+      void utils.pending.myPending.invalidate();
       navigate('/');
     },
   });
@@ -161,11 +173,6 @@ export function PersonPage() {
           ? t('person.ringN', { n: depth })
           : '';
   const ringLine = [ring, viaName ? t('person.via', { name: viaName }) : ''].filter(Boolean).join(' · ');
-  const figure = path.map((node, index) => {
-    if (index === 0) return t('common.you');
-    if (index === path.length - 1) return display;
-    return resolve(node.id, node.name);
-  });
 
   const asks = new Map<string, Ask>();
   for (const row of participating.data ?? []) {
@@ -204,25 +211,32 @@ export function PersonPage() {
   const hiddenCount = contactItems.length - visibleContacts.length;
 
   const openContact = (event: React.MouseEvent<HTMLAnchorElement>, type: string, value: string) => {
+    const href = contactHref(type, value);
+    if (!href) {
+      event.preventDefault();
+      return;
+    }
     if (type === 'instagram' && isMobileUa()) {
       event.preventDefault();
       const handle = instagramHandle(value);
       void navigator.clipboard.writeText(handle).then(() => {
         setCopied(type);
         window.setTimeout(() => setCopied((current) => (current === type ? null : current)), 2000);
+      }).catch(() => {
+        setCopied(null);
       });
       return;
     }
-    const url = type === 'phone' ? `tel:${value}` : buildContactUrl(type, value);
-    if (isTelegramWebApp() && !url.startsWith('mailto:') && !url.startsWith('tel:')) {
+    if (isTelegramWebApp() && !href.startsWith('mailto:') && !href.startsWith('tel:')) {
       event.preventDefault();
-      window.Telegram?.WebApp?.openLink?.(url, { try_instant_view: false });
+      window.Telegram?.WebApp?.openLink?.(href, { try_instant_view: false });
     }
   };
 
   return (
     <Screen back={back} width="column">
-      <div className="mt-2 flex items-center gap-4">
+      {path.length > 1 ? <PathChain nodes={path} targetLabel={display} /> : null}
+      <div className={path.length > 1 ? 'mt-4 flex items-center gap-4' : 'mt-2 flex items-center gap-4'}>
         <Avatar name={display} src={person.photoUrl} size={88} online={online} />
         <div className="min-w-0">
           <h2 className="truncate text-title font-bold text-ink">{display}</h2>
@@ -240,12 +254,6 @@ export function PersonPage() {
           ) : null}
         </div>
       </div>
-
-      {figure.length > 1 ? (
-        <div className="mt-4 overflow-x-auto">
-          <PathFigure names={figure} />
-        </div>
-      ) : null}
 
       {ring1 ? (
         <div className="mt-5">
@@ -316,7 +324,8 @@ export function PersonPage() {
         ) : (
           <div className="flex flex-wrap gap-2">
             {visibleContacts.map((contact) => {
-              const href = contact.type === 'phone' ? `tel:${contact.value}` : buildContactUrl(contact.type, contact.value);
+              const href = contactHref(contact.type, contact.value);
+              if (!href) return null;
               const label = copied === contact.type ? t('common.copied') : contact.label;
               return (
                 <a

@@ -1,3 +1,5 @@
+import { useEffect } from 'react';
+
 const STORAGE_KEY = 'so.fontScale';
 
 /** Apply a font scale (1 = default, 1.25 = large) on the document root and remember it. */
@@ -22,4 +24,9 @@ export function applyStoredFontScale() {
   }
 }
 
-applyStoredFontScale();
+/** Re-apply the saved scale after the shell mounts. The first paint is set from main.tsx. */
+export function useStoredFontScale() {
+  useEffect(() => {
+    applyStoredFontScale();
+  }, []);
+}

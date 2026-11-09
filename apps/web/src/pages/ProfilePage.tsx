@@ -18,7 +18,7 @@ import { AboutSheet } from '../components/profile/AboutSheet';
 import { LanguageSheet } from '../components/profile/LanguageSheet';
 import { QueryState } from '../components/profile/QueryState';
 import { countForm, isOpenParticipation, openCountKey } from '../components/profile/collections';
-import { publicHost } from '../components/profile/constants';
+import { ACCOUNT_NOTICE_KEY, publicHost } from '../components/profile/constants';
 import { formatLongDate } from '../components/profile/dates';
 import { applyFontScale } from '../components/profile/fontScale';
 
@@ -68,10 +68,22 @@ export function ProfilePage() {
   const [languageOpen, setLanguageOpen] = useState(false);
   const [aboutOpen, setAboutOpen] = useState(false);
   const [logoutOpen, setLogoutOpen] = useState(false);
+  const [autosaveNote, setAutosaveNote] = useState(false);
 
   useEffect(() => {
     if (settings.data) applyFontScale(settings.data.fontScale);
   }, [settings.data]);
+
+  useEffect(() => {
+    try {
+      if (sessionStorage.getItem(ACCOUNT_NOTICE_KEY) === '1') {
+        sessionStorage.removeItem(ACCOUNT_NOTICE_KEY);
+        setAutosaveNote(true);
+      }
+    } catch {
+      /* storage unavailable */
+    }
+  }, []);
 
   const loading = me.isLoading || settings.isLoading;
   const failed = me.isError || settings.isError || !me.data || !settings.data;
@@ -136,6 +148,7 @@ export function ProfilePage() {
         </span>
         <span className="text-body-s font-bold text-care">{t('profile.editCard')}</span>
       </Link>
+      {autosaveNote ? <p className="mt-2 px-1 text-label font-semibold text-ink-muted">{t('account.autosaveDropped')}</p> : null}
 
       <Group title={t('profile.participation')}>
         <Row
@@ -148,7 +161,7 @@ export function ProfilePage() {
         <Row
           title={t('profile.minimum')}
           variant="value"
-          value={profile.monthlyBudget && profile.monthlyBudget > 0 ? formatMoney(profile.monthlyBudget) : t('profile.stakeEmpty')}
+          value={profile.monthlyBudget == null ? t('profile.stakeEmpty') : formatMoney(profile.monthlyBudget)}
           to="/me/stake"
         />
         <Row

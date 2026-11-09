@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { trpc } from '../lib/trpc';
@@ -9,6 +9,7 @@ import { Pill } from '../components/ui2/Pill';
 import { Screen } from '../components/ui2/Screen';
 import { Segmented } from '../components/ui2/Segmented';
 import { formatMoney } from '../components/ui2/format';
+import { trpcCode } from '../components/profile/errors';
 import { QueryState } from '../components/profile/QueryState';
 import { countForm, cycleDeadline, isOpenParticipation, isPastParticipation } from '../components/profile/collections';
 import { formatDayMonth } from '../components/profile/dates';
@@ -42,8 +43,32 @@ type JoinRow = {
   };
 };
 
-function timeOf(value: Date | string): number {
-  return new Date(value).getTime();
+function timeOf(value: Date | string | null | undefined): number {
+  if (value == null) return 0;
+  const time = new Date(value).getTime();
+  return Number.isNaN(time) ? 0 : time;
+}
+
+/** True once `node` is near the viewport. Queries stay unmounted until then. */
+function useWhenVisible<T extends Element>(): [(node: T | null) => void, boolean] {
+  const [node, setNode] = useState<T | null>(null);
+  const [visible, setVisible] = useState(false);
+  useEffect(() => {
+    if (!node || visible) return;
+    if (typeof IntersectionObserver === 'undefined') {
+      setVisible(true);
+      return;
+    }
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((entry) => entry.isIntersecting)) setVisible(true);
+      },
+      { rootMargin: '120px' },
+    );
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, [node, visible]);
+  return [setNode, visible];
 }
 
 export function HistoryPage() {
@@ -52,19 +77,21 @@ export function HistoryPage() {
   const me = trpc.user.me.useQuery();
   const active = trpc.collection.myActive.useQuery();
   const participating = trpc.collection.myParticipating.useQuery();
+  const history = trpc.collection.myHistory.useQuery(undefined, { retry: false });
   const help = trpc.stats.help.useQuery();
   const [tab, setTab] = useState<'open' | 'past'>('open');
 
-  const loading = me.isLoading || active.isLoading || participating.isLoading;
-  const failed = me.isError || active.isError || participating.isError;
+  // An API that has not loaded this procedure yet must not blank Open and Past.
+  const historyMissing = history.isError && trpcCode(history.error) === 'NOT_FOUND';
+  const loading = me.isLoading || active.isLoading || participating.isLoading || (history.isLoading && !history.isError);
+  const failed = me.isError || active.isError || participating.isError || (history.isError && !historyMissing);
   const retry = () => {
     void me.refetch();
     void active.refetch();
     void participating.refetch();
+    void history.refetch();
   };
 
-  // Closed collections the viewer authored are absent: myActive is only ACTIVE/BLOCKED,
-  // and helpHistory rows have no collection id.
   const selfId = me.data?.id ?? '';
   const openRows = [
     ...(active.data ?? []).map((row) => ({ kind: 'own' as const, at: timeOf(row.createdAt), row })),
@@ -72,9 +99,16 @@ export function HistoryPage() {
       .filter((row) => isOpenParticipation(row, selfId))
       .map((row) => ({ kind: 'join' as const, at: timeOf(row.createdAt), row })),
   ].sort((a, b) => b.at - a.at);
-  const pastRows = (participating.data ?? [])
-    .filter((row) => isPastParticipation(row, selfId))
-    .sort((a, b) => timeOf(b.createdAt) - timeOf(a.createdAt));
+  const pastRows = [
+    ...(history.data ?? []).map((row) => ({
+      kind: 'own' as const,
+      at: timeOf(row.closedAt ?? row.createdAt),
+      row,
+    })),
+    ...(participating.data ?? [])
+      .filter((row) => isPastParticipation(row, selfId))
+      .map((row) => ({ kind: 'join' as const, at: timeOf(row.createdAt), row })),
+  ].sort((a, b) => b.at - a.at);
 
   const lifetime = help.data && (help.data.given.count > 0 || help.data.received.count > 0)
     ? t('profile.lifetime', {
@@ -118,9 +152,13 @@ export function HistoryPage() {
         <p className="py-8 text-center text-body font-semibold text-ink-muted">{t('profile.noPast')}</p>
       ) : (
         <div className="mt-3 space-y-3">
-          {pastRows.map((row) => (
-            <JoinCard key={row.id} row={row} lang={i18n.language} past />
-          ))}
+          {pastRows.map((entry) =>
+            entry.kind === 'own' ? (
+              <OwnCard key={`own-${entry.row.id}`} row={entry.row} meName={me.data.name} mePhoto={me.data.photoUrl} lang={i18n.language} />
+            ) : (
+              <JoinCard key={entry.row.id} row={entry.row} lang={i18n.language} past />
+            ),
+          )}
         </div>
       )}
       {lifetime ? <p className="mt-4 px-1 text-label font-semibold text-ink-muted">{lifetime}</p> : null}
@@ -188,21 +226,24 @@ function OwnCard({
 function JoinCard({ row, lang, past = false }: { row: JoinRow; lang: string; past?: boolean }) {
   const { t } = useTranslation();
   const resolve = useNicknames();
+  const [ref, visible] = useWhenVisible<HTMLDivElement>();
   const creator = row.collection.creator;
   const cycle = cycleText(row.collection.type, row.collection.cycleNumber, row.collection.currentCycleStart, lang, t);
   const role = past && row.unsubscribedAt ? t('profile.left') : t('profile.participating');
   return (
-    <Link to={`/collection/${row.collection.id}`} className="so-focus block rounded-lg bg-surface p-4 shadow-card">
-      <CardHead
-        name={creator.name}
-        photo={creator.photoUrl}
-        title={resolve(creator.id, creator.name)}
-        meta={[role, cycle].filter(Boolean).join(' · ')}
-        viaUserId={creator.id}
-        paused={row.collection.status === 'BLOCKED'}
-      />
-      <JoinMeter collectionId={row.collection.id} mine={row.amount} />
-    </Link>
+    <div ref={ref}>
+      <Link to={`/collection/${row.collection.id}`} className="so-focus block rounded-lg bg-surface p-4 shadow-card">
+        <CardHead
+          name={creator.name}
+          photo={creator.photoUrl}
+          title={resolve(creator.id, creator.name)}
+          meta={[role, cycle].filter(Boolean).join(' · ')}
+          viaUserId={visible ? creator.id : undefined}
+          paused={row.collection.status === 'BLOCKED'}
+        />
+        {visible ? <JoinMeter collectionId={row.collection.id} mine={row.amount} /> : null}
+      </Link>
+    </div>
   );
 }
 
