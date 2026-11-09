@@ -1,7 +1,17 @@
-import { useCallback, useEffect, useMemo, useRef } from 'react';
+import { forwardRef, useCallback, useEffect, useImperativeHandle, useMemo, useRef } from 'react';
 import ForceGraph3D from 'react-force-graph-3d';
 import SpriteText from 'three-spritetext';
 import * as THREE from 'three';
+import {
+  type GraphColors,
+  colorsKey,
+  depthColor,
+  lineColor,
+  overlayColors,
+  parseColor,
+  resolveColors,
+  withAlpha,
+} from './palette';
 
 /* ---------- Types ---------- */
 
@@ -24,12 +34,31 @@ export interface GraphEdge {
 export interface NetworkGraphProps {
   nodes: GraphNode[];
   edges: GraphEdge[];
+  /** Node ids from me to the target. Unknown ids are ignored. Fewer than two matches: no dimming. */
   highlightPath?: string[];
+  /** Ring depths to hide. The centre (depth 0) always stays. */
+  hiddenRings?: number[];
+  /** Scene palette. Defaults are the dark v2 tokens; the scene stays dark in both themes. */
+  colors?: Partial<GraphColors>;
   width?: number;
   height?: number;
   onNodeClick?: (nodeId: string) => void;
+  /** Fires with the node on tap/click. Does not replace `onNodeClick`. */
+  onNodeTap?: (node: GraphNode) => void;
+  /** Overlay and tooltip only. The WebGL scene does not follow this. */
+  theme?: 'light' | 'dark';
+  /** @deprecated Prefer `theme`. Honoured when `theme` is omitted. */
   darkMode?: boolean;
   controlsHint?: string;
+  /** In-canvas focus / fit buttons. Default true so existing screens keep them. */
+  showControls?: boolean;
+}
+
+export interface NetworkGraphHandle {
+  zoomIn: () => void;
+  zoomOut: () => void;
+  fit: () => void;
+  focusOnMe: () => void;
 }
 
 /* ---------- Tuning ---------- */
@@ -51,21 +80,11 @@ const BOB_AMPLITUDE = 0.7;       // gentle floating of close nodes
 const CHARGE_BASE = 38;          // node repulsion; lower = a more compact graph
 const BALL_STRENGTH = 0.5;       // pull of the spherical shells (0 = free-form layout)
 const BALL_SHELLS = [0, 0.38, 0.7, 1]; // shell radius by depth, as a fraction of the outer radius
-const MIN_DOT_PX = 0.0075;       // far dots never get smaller than ~5px on screen (size / distance)
-
-/* ---------- Depth colors ---------- */
-export const DEPTH_COLORS_DARK = [
-  { main: '#3b82f6', bg: 'rgba(59,130,246,0.2)', dot: 0x3b82f6 },  // 0: center — blue
-  { main: '#6366f1', bg: 'rgba(99,102,241,0.2)', dot: 0x6366f1 },  // 1: indigo
-  { main: '#06b6d4', bg: 'rgba(6,182,212,0.2)', dot: 0x06b6d4 },   // 2: cyan
-  { main: '#64748b', bg: 'rgba(100,116,139,0.2)', dot: 0x64748b },  // 3: slate
-];
-export const DEPTH_COLORS_LIGHT = [
-  { main: '#2563eb', bg: 'rgba(37,99,235,0.15)', dot: 0x2563eb },   // 0: center — blue
-  { main: '#4f46e5', bg: 'rgba(79,70,229,0.15)', dot: 0x4f46e5 },   // 1: indigo
-  { main: '#0891b2', bg: 'rgba(8,145,178,0.15)', dot: 0x0891b2 },   // 2: cyan
-  { main: '#475569', bg: 'rgba(71,85,105,0.15)', dot: 0x475569 },   // 3: slate
-];
+const MIN_DOT_PX = 0.0042;       // far dots stay a few pixels; nearer rings stay larger
+const MARK_SIZE = 10;            // centre tile, world units
+const NEAREST_LABELS = 8;        // labels on the nearest ring-1/2 nodes, plus the path
+const PATH_CURVE = 0.15;         // slight bend; 0 is a straight line
+const DIM_OPACITY = 0.35;
 
 /** Map connectionCount → avatar scale factor (1.0 – 1.6) */
 function sizeFromConnections(count: number): number {
@@ -119,6 +138,7 @@ interface NodeVis {
   inner: THREE.Group;      // scaled (intro/hover) and bobbing
   avatar: THREE.Sprite;
   dot: THREE.Sprite;
+  glow: THREE.Sprite | null;
   label: SpriteText | null;
   pulse: THREE.Sprite | null;
   level: number;           // -1 = not applied yet
@@ -131,25 +151,125 @@ interface NodeVis {
   lastScale: number;
 }
 
+interface SimLink {
+  source: string | SimNode;
+  target: string | SimNode;
+  __lineObj?: THREE.Object3D;
+}
+
+interface PathState {
+  /** Resolved ids, in order. Empty when fewer than two ids exist in the graph. */
+  set: Set<string>;
+  /** Both directions of each consecutive pair. */
+  links: Set<string>;
+  dim: boolean;
+}
+
+const EMPTY_PATH: PathState = { set: new Set(), links: new Set(), dim: false };
+
 const noRaycast = () => { /* decorative objects must not take part in hover raycasting */ };
 
 /**
- * three-spritetext regenerates its canvas + texture on every property setter (6x per label if set
- * one by one). Fill the private fields and generate once; also use a lighter 60px font.
+ * three-spritetext regenerates its canvas + texture on every property setter. Fill the private
+ * fields and generate once. Halo is a stroke in the scene colour (mockup paint-order: stroke).
  */
-function makeLabel(text: string, textHeight: number, color: string, background: string): SpriteText {
+function makeLabel(text: string, textHeight: number, color: string, stroke: string, weight: string): SpriteText {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const l = new SpriteText('') as any;
   l._text = text;
   l._textHeight = textHeight;
   l._color = color;
-  l._backgroundColor = background;
-  l._padding = 1.5;
-  l._borderRadius = 3;
-  l._fontSize = 60;
+  l._backgroundColor = false;
+  l._padding = 0;
+  l._borderWidth = 0;
+  l._borderRadius = 0;
+  l._strokeWidth = 1.25;
+  l._strokeColor = stroke;
+  l._fontFace = 'Manrope, sans-serif';
+  l._fontWeight = weight;
+  l._fontSize = 64;
   l._genCanvas();
   l.material.depthWrite = false;
   return l as SpriteText;
+}
+
+function labelLines(name: string, center: boolean): string {
+  const text = String(name ?? '').trim();
+  if (center) return text;
+  const parts = text.split(/\s+/);
+  const first = parts[0];
+  if (!first || parts.length < 2) return text;
+  return `${first}\n${parts.slice(1).join(' ')}`;
+}
+
+function endpointNode(end: string | SimNode | undefined, map: Map<string, SimNode>): SimNode | undefined {
+  if (!end) return undefined;
+  if (typeof end === 'object') return end;
+  return map.get(String(end));
+}
+
+/** Bend a library Line in place. Do not touch matrixAutoUpdate — the library repositions these. */
+function writeLinkLine(
+  line: THREE.Line,
+  ax: number, ay: number, az: number,
+  bx: number, by: number, bz: number,
+  curvature: number,
+) {
+  const geom = line.geometry;
+  const segments = curvature > 0 ? 20 : 1;
+  const count = segments + 1;
+  let attr = geom.getAttribute('position') as THREE.BufferAttribute | undefined;
+  if (!attr || attr.count !== count) {
+    attr = new THREE.BufferAttribute(new Float32Array(count * 3), 3);
+    geom.setAttribute('position', attr);
+  }
+  const arr = attr.array as Float32Array;
+  if (curvature <= 0) {
+    arr[0] = ax; arr[1] = ay; arr[2] = az;
+    arr[3] = bx; arr[4] = by; arr[5] = bz;
+  } else {
+    const dx = bx - ax;
+    const dy = by - ay;
+    const dz = bz - az;
+    let cx: number;
+    let cy: number;
+    let cz: number;
+    if (dx === 0 && dy === 0) {
+      cx = (ax + bx) / 2 + curvature * -dz;
+      cy = (ay + by) / 2;
+      cz = (az + bz) / 2 + curvature * dx;
+    } else {
+      cx = (ax + bx) / 2 + curvature * dy;
+      cy = (ay + by) / 2 - curvature * dx;
+      cz = (az + bz) / 2;
+    }
+    for (let i = 0; i < count; i++) {
+      const t = i / segments;
+      const u = 1 - t;
+      arr[i * 3] = u * u * ax + 2 * u * t * cx + t * t * bx;
+      arr[i * 3 + 1] = u * u * ay + 2 * u * t * cy + t * t * by;
+      arr[i * 3 + 2] = u * u * az + 2 * u * t * cz + t * t * bz;
+    }
+  }
+  attr.needsUpdate = true;
+  geom.computeBoundingSphere();
+}
+
+/**
+ * Per-link material. The library only re-colours lines when the linkColor accessor
+ * identity changes, and it disposes the previous material, so a shared material is unsafe.
+ */
+function paintLink(line: THREE.Line, color: number, opacity: number) {
+  let mat = line.userData.soLineMat as THREE.LineBasicMaterial | undefined;
+  if (!mat || mat.userData.dead) {
+    mat = new THREE.LineBasicMaterial({ transparent: true, depthWrite: false });
+    mat.addEventListener('dispose', () => { mat!.userData.dead = true; });
+    line.userData.soLineMat = mat;
+  }
+  if (mat.color.getHex() !== color) mat.color.set(color);
+  if (Math.abs(mat.opacity - opacity) > 0.01) mat.opacity = opacity;
+  mat.transparent = opacity < 1;
+  if (line.material !== mat) line.material = mat;
 }
 
 function disposeLabel(l: SpriteText | null) {
@@ -160,26 +280,35 @@ function disposeLabel(l: SpriteText | null) {
 
 /* ---------- Component ---------- */
 
-export function NetworkGraph({
+export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(function NetworkGraph({
   nodes,
   edges,
   highlightPath,
+  hiddenRings,
+  colors: colorsProp,
   width,
   height,
   onNodeClick,
+  onNodeTap,
+  theme: themeProp,
   darkMode = true,
   controlsHint: _controlsHint,
-}: NetworkGraphProps) {
+  showControls = true,
+}, ref) {
   const fgRef = useRef<FGRef>(null);
+  const theme: 'light' | 'dark' = themeProp ?? (darkMode ? 'dark' : 'light');
+  const themeRef = useRef(theme);
+  themeRef.current = theme;
+  const colorKey = colorsKey(colorsProp);
+  const colors = useMemo(() => resolveColors(colorsProp), [colorKey]); // eslint-disable-line react-hooks/exhaustive-deps
+  const colorsRef = useRef(colors);
+  colorsRef.current = colors;
 
   // Latest props for stable callbacks (the force graph must not see new function identities)
-  const darkRef = useRef(darkMode);
-  darkRef.current = darkMode;
-  const highlightKey = (highlightPath ?? []).join(',');
-  const highlightRef = useRef<Set<string>>(new Set());
-  highlightRef.current = useMemo(() => new Set(highlightPath ?? []), [highlightKey]); // eslint-disable-line react-hooks/exhaustive-deps
   const onNodeClickRef = useRef(onNodeClick);
   onNodeClickRef.current = onNodeClick;
+  const onNodeTapRef = useRef(onNodeTap);
+  onNodeTapRef.current = onNodeTap;
 
   /* ----- Stable graph data: node objects survive re-renders, layout is kept ----- */
 
@@ -294,6 +423,36 @@ export function NetworkGraph({
   if (!resRef.current) resRef.current = createResources();
   const res = resRef.current;
   sizeRef.current = graphData.nodes.length;
+  const highlightKey = (highlightPath ?? []).join('\u0001');
+  const pathState = useMemo(() => {
+    const ids: string[] = [];
+    const seen = new Set<string>();
+    for (const id of highlightPath ?? []) {
+      if (!id || seen.has(id) || !nodeMapRef.current.has(id)) continue;
+      seen.add(id);
+      ids.push(id);
+    }
+    if (ids.length < 2) return EMPTY_PATH;
+    const links = new Set<string>();
+    for (let i = 1; i < ids.length; i++) links.add(`${ids[i - 1]}\0${ids[i]}`).add(`${ids[i]}\0${ids[i - 1]}`);
+    return { set: new Set(ids), links, dim: true };
+    // highlightKey covers the array; signature covers membership in the graph.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [highlightKey, signature]);
+  const pathRef = useRef<PathState>(pathState);
+  pathRef.current = pathState;
+
+  const hiddenKey = (hiddenRings ?? []).join(',');
+  const hiddenRef = useRef<Set<number>>(new Set());
+  hiddenRef.current = useMemo(() => {
+    const next = new Set<number>();
+    for (const ring of hiddenRings ?? []) if (ring > 0) next.add(ring);
+    return next;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [hiddenKey]);
+  const nearestRef = useRef<Set<string>>(new Set());
+  const reducedRef = useRef(false);
+  const sceneFxRef = useRef<{ stars: THREE.Points | null; glow: THREE.Sprite | null }>({ stars: null, glow: null });
 
   const lifeRef = useRef<{ disposeTimer: ReturnType<typeof setTimeout> | null; userTouched: boolean; hoverId: string | null }>({
     disposeTimer: null,
@@ -327,109 +486,190 @@ export function NetworkGraph({
 
   /* ----- Node objects ----- */
 
+  const wantsLabel = useCallback((v: NodeVis) => {
+    const n = v.node;
+    const depth = n.depth ?? (n.isCenter ? 0 : 1);
+    if (n.isCenter || depth <= 0) return !!n.isCenter;
+    if (depth >= 3) return false;
+    if (hiddenRef.current.has(depth)) return false;
+    if (pathRef.current.set.has(n.id)) return true;
+    return nearestRef.current.has(n.id);
+  }, []);
+
+  const paintNode = useCallback((v: NodeVis) => {
+    const palette = colorsRef.current;
+    const path = pathRef.current;
+    const n = v.node;
+    const onPath = path.set.has(n.id) && !n.isDeleted;
+    const dim = path.dim && !onPath;
+    const depth = n.depth ?? (n.isCenter ? 0 : 1);
+    if (n.isCenter) {
+      v.avatar.material = res.markMaterial(dim);
+      if (v.glow) {
+        v.glow.material = res.glowMaterial();
+        (v.glow.material as THREE.SpriteMaterial).opacity = dim ? 0.05 : 0.14;
+      }
+      return;
+    }
+    const hex = onPath ? palette.careBright : depthColor(palette, Math.max(1, depth));
+    const base = n.isDeleted ? 0.3 : depth <= 1 ? 0.96 : depth === 2 ? 0.74 : 0.5;
+    const parsed = parseColor(hex);
+    v.dot.material = res.dotMaterial(parsed.color, dim ? base * DIM_OPACITY : base);
+    const want = dim ? DIM_OPACITY : n.isDeleted ? 0.45 : 1;
+    const baseMat = (v.avatar.userData.matBase as THREE.SpriteMaterial | undefined) ?? (v.avatar.material as THREE.SpriteMaterial);
+    v.avatar.userData.matBase = baseMat;
+    if (want < 0.99) {
+      let dimMat = v.avatar.userData.matDim as THREE.SpriteMaterial | undefined;
+      if (!dimMat || dimMat.userData.src !== baseMat) {
+        dimMat?.dispose();
+        dimMat = baseMat.clone();
+        dimMat.userData.src = baseMat;
+        dimMat.transparent = true;
+        dimMat.depthWrite = false;
+        v.avatar.userData.matDim = dimMat;
+      }
+      dimMat.opacity = want;
+      v.avatar.material = dimMat;
+    } else if (v.avatar.material !== baseMat) {
+      v.avatar.material = baseMat;
+    }
+  }, [res]);
+
   const applyLevel = useCallback((v: NodeVis, level: number) => {
     const n = v.node;
     const isC = !!n.isCenter;
     const sf = v.sf;
-    const avatarSize = (isC ? 12 : 5) * sf;
+    const onPath = pathRef.current.set.has(n.id) && !n.isDeleted;
+    const avatarSize = (isC ? MARK_SIZE : 5) * sf;
+    const boost = !isC && onPath ? 1.4 : 1;
     v.level = level;
 
-    v.avatar.visible = level === 0;
-    v.avatar.scale.set(avatarSize, avatarSize, 1);
-    if (v.pulse) {
-      v.pulse.visible = v.online && !n.isDeleted && level <= 1;
-      const ps = avatarSize + 2.4;
-      v.pulse.scale.set(ps, ps, 1);
+    if (isC) {
+      v.avatar.visible = true;
+      v.avatar.scale.set(MARK_SIZE, MARK_SIZE, 1);
+      v.dot.visible = false;
+      if (v.glow) {
+        v.glow.visible = true;
+        v.glow.scale.set(MARK_SIZE * 1.45, MARK_SIZE * 1.45, 1);
+      }
+    } else {
+      v.avatar.visible = level === 0;
+      v.avatar.scale.set(avatarSize, avatarSize, 1);
+      v.dot.visible = level >= 1;
+      const dotSize = (level === 1 ? 3.15 * sf : level === 2 ? 2.05 * sf : 1.25) * boost;
+      v.dot.scale.set(dotSize, dotSize, 1);
     }
 
-    v.dot.visible = level >= 1;
-    const dotSize = level === 1 ? (isC ? 10 : 4 * sf) : level === 2 ? (isC ? 6 : 2 * sf) : 1;
-    v.dot.scale.set(dotSize, dotSize, 1);
+    if (v.pulse) {
+      const show = !isC && !n.isDeleted && ((v.online && level <= 1) || onPath);
+      v.pulse.visible = show;
+      const body = isC ? MARK_SIZE : (v.dot.visible ? v.dot.scale.x : avatarSize);
+      v.pulse.scale.set(body * (isC ? 1.38 : 1.9), body * (isC ? 1.38 : 1.9), 1);
+      v.pulse.material = pathRef.current.dim && !onPath ? res.pulseDimMaterial : res.pulseMaterial;
+    }
 
     if (v.label) {
-      v.label.visible = level <= 1;
-      const base = (v.label.userData.baseScale as THREE.Vector3);
-      const k = level === 0 ? 1 : 0.83;
+      const base = v.label.userData.baseScale as THREE.Vector3;
+      const k = isC || level === 0 ? 1 : 0.9;
       v.label.scale.set(base.x * k, base.y * k, 1);
-      v.label.position.y = level === 0 ? -(avatarSize / 2 + 2) : -4;
+      const body = isC ? MARK_SIZE : (level === 0 ? avatarSize : v.dot.scale.x);
+      v.label.position.y = -(body / 2 + (base.y * k) / 2 + (isC ? 0.85 : 0.4));
     }
-  }, []);
+  }, [res]);
+
+  const restyleLabel = useCallback((v: NodeVis) => {
+    if (!v.label) return;
+    const palette = colorsRef.current;
+    const n = v.node;
+    const onPath = pathRef.current.set.has(n.id) && !n.isDeleted;
+    const color = n.isDeleted ? palette.node3 : onPath ? palette.care : palette.label;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const l = v.label as any;
+    l._color = color;
+    l._strokeColor = palette.scene;
+    l._genCanvas();
+    v.label.material.depthWrite = false;
+    v.label.userData.baseScale = v.label.scale.clone();
+    if (v.level >= 0) applyLevel(v, v.level);
+  }, [applyLevel]);
 
   const createLabel = useCallback((v: NodeVis) => {
     const n = v.node;
-    const dark = darkRef.current;
-    const palette = dark ? DEPTH_COLORS_DARK : DEPTH_COLORS_LIGHT;
-    const depthColor = palette[Math.min(n.depth ?? (n.isCenter ? 0 : 1), 3)] ?? palette[palette.length - 1]!;
-    const hl = highlightRef.current.has(n.id);
-    const colors = dark
-      ? { deleted: '#888888', highlight: '#f59e0b', deletedBg: 'rgba(80,80,80,0.6)', highlightBg: 'rgba(245,158,11,0.2)' }
-      : { deleted: '#9ca3af', highlight: '#d97706', deletedBg: 'rgba(156,163,175,0.3)', highlightBg: 'rgba(217,119,6,0.15)' };
-
+    const palette = colorsRef.current;
+    const onPath = pathRef.current.set.has(n.id) && !n.isDeleted;
+    const color = n.isDeleted ? palette.node3 : onPath ? palette.care : palette.label;
     const label = makeLabel(
-      String(n.name ?? ''),
-      n.isCenter ? 2.5 : 1.8,
-      n.isDeleted ? colors.deleted : hl ? colors.highlight : depthColor.main,
-      n.isDeleted ? colors.deletedBg : hl ? colors.highlightBg : depthColor.bg,
+      labelLines(String(n.name ?? ''), !!n.isCenter),
+      n.isCenter ? 4.4 : 3.5,
+      color,
+      palette.scene,
+      n.isCenter ? '800' : '700',
     );
     label.raycast = noRaycast;
+    label.renderOrder = 4;
     label.userData.baseScale = label.scale.clone();
     v.label = label;
     v.inner.add(label);
-    // Re-apply the level so the label gets its position/scale/visibility
     applyLevel(v, v.level);
   }, [applyLevel]);
 
   const nodeThreeObject = useCallback((node: SimNode) => {
-    const dark = darkRef.current;
-    const palette = dark ? DEPTH_COLORS_DARK : DEPTH_COLORS_LIGHT;
-    const depthIdx = Math.min(node.depth ?? (node.isCenter ? 0 : 1), 3);
-    const depthColor = palette[depthIdx] ?? palette[palette.length - 1]!;
     const isC = !!node.isCenter;
     const sf = isC ? 1 : sizeFromConnections(node.connectionCount ?? 0);
-    const avatarSize = (isC ? 12 : 5) * sf;
+    const depth = node.depth ?? (isC ? 0 : 1);
 
     const outer = new THREE.Group();
     const inner = new THREE.Group();
     outer.add(inner);
 
-    const avatar = new THREE.Sprite(res.placeholderMaterial(node, !!node.isDeleted));
+    const avatar = new THREE.Sprite(isC ? res.markMaterial(false) : res.placeholderMaterial(node, !!node.isDeleted));
     avatar.name = 'avatar';
+    avatar.visible = isC;
+    if (isC) avatar.scale.set(MARK_SIZE, MARK_SIZE, 1);
     inner.add(avatar);
 
-    const dot = new THREE.Sprite(res.dotMaterial(depthColor.dot, !!node.isDeleted));
-    dot.visible = false;
+    const dotHex = depthColor(colorsRef.current, Math.max(1, depth));
+    const dot = new THREE.Sprite(res.dotMaterial(parseColor(dotHex).color, 0.9));
+    dot.visible = !isC;
+    if (!isC) {
+      const dotSize = (depth <= 1 ? 3.15 : depth === 2 ? 2.05 : 1.25) * sf;
+      dot.scale.set(dotSize, dotSize, 1);
+    }
     inner.add(dot);
 
+    let glow: THREE.Sprite | null = null;
     if (isC) {
-      const ring = new THREE.Sprite(res.ringMaterial(0x3b82f6, 0.9));
-      ring.scale.set(avatarSize + 2.6, avatarSize + 2.6, 1);
-      ring.raycast = noRaycast;
-      const glow = new THREE.Sprite(res.ringMaterial(0x60a5fa, 0.35));
-      glow.scale.set(avatarSize + 5.2, avatarSize + 5.2, 1);
+      glow = new THREE.Sprite(res.glowMaterial());
+      glow.scale.set(MARK_SIZE * 1.45, MARK_SIZE * 1.45, 1);
       glow.raycast = noRaycast;
-      inner.add(ring, glow);
+      glow.renderOrder = 1;
+      inner.add(glow);
+      avatar.renderOrder = 2;
     }
 
     const pulse = new THREE.Sprite(res.pulseMaterial);
     pulse.raycast = noRaycast;
     pulse.visible = false;
+    pulse.renderOrder = 3;
     inner.add(pulse);
 
     const seen = introSeenRef.current.has(node.id);
-    const depth = node.depth ?? (isC ? 0 : 1);
+    const prev = visRef.current.get(node.id);
+    if (prev?.label) disposeLabel(prev.label);
     const v: NodeVis = {
       node,
       outer,
       inner,
       avatar,
       dot,
+      glow,
       label: null,
       pulse,
       level: -1,
       sf,
       online: isOnline(node.lastSeen),
       // Staggered pop-in: closer circles first; nodes seen before (theme refresh) appear instantly
-      bornAt: seen ? -Infinity : performance.now() + depth * 160 + hash01(node.id) * 260,
+      bornAt: seen || isC ? -Infinity : performance.now() + depth * 160 + hash01(node.id) * 260,
       hover: 0,
       phase: hash01(node.id + 'p') * Math.PI * 2,
       realAvatar: false,
@@ -437,9 +677,12 @@ export function NetworkGraph({
     };
     introSeenRef.current.add(node.id);
     visRef.current.set(node.id, v);
+    avatar.userData.matBase = avatar.material;
+    paintNode(v);
+    if (isC) createLabel(v);
     inner.scale.setScalar(0.0001);
     return outer;
-  }, [res]);
+  }, [res, paintNode, createLabel]);
 
   /* ----- Mount: controls, forces, frame loop, camera ----- */
 
@@ -454,7 +697,7 @@ export function NetworkGraph({
     const cam = fg.camera() as THREE.PerspectiveCamera;
     const vfov = (cam.fov * Math.PI) / 180;
     const hfov = 2 * Math.atan(Math.tan(vfov / 2) * (cam.aspect || 1));
-    const dist = THREE.MathUtils.clamp(r / Math.sin(Math.min(vfov, hfov) / 2), 90, 1600);
+    const dist = THREE.MathUtils.clamp((r / Math.sin(Math.min(vfov, hfov) / 2)) * 0.78, 90, 1600);
     const dir = cam.position.clone();
     if (dir.lengthSq() < 1) dir.set(0.35, 0.3, 1);
     dir.normalize();
@@ -479,7 +722,11 @@ export function NetworkGraph({
     // --- Camera controls: orbit with damping = inertia after a fling, smooth auto-rotate ---
     const controls = fg.controls();
     let resumeTimer: ReturnType<typeof setTimeout> | null = null;
-    let rotTarget = AUTO_ROTATE_SPEED;
+    const reduceMq = window.matchMedia('(prefers-reduced-motion: reduce)');
+    reducedRef.current = reduceMq.matches;
+    const onReduce = () => { reducedRef.current = reduceMq.matches; };
+    reduceMq.addEventListener('change', onReduce);
+    let rotTarget = reduceMq.matches ? 0 : AUTO_ROTATE_SPEED;
     let rotCur = 0;
     const onStart = () => {
       life.userTouched = true;
@@ -556,17 +803,80 @@ export function NetworkGraph({
     ball.initialize = (ns: SimNode[]) => { ballNodes = ns; };
     fg.d3Force('ball', ball);
 
-    // --- Renderer: balanced resolution, dynamic downscale when frames get slow ---
+    // --- Renderer: cap DPR at 2, and again if the screen scale changes ---
     const renderer = fg.renderer() as THREE.WebGLRenderer;
-    const heavy = graphData.nodes.length > 200;
-    let pixelRatio = Math.min(window.devicePixelRatio || 1, heavy ? 1.5 : 2);
-    renderer.setPixelRatio(pixelRatio);
+    const applyDpr = () => {
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+      const size = renderer.getSize(new THREE.Vector2());
+      renderer.setSize(size.x, size.y, false);
+      renderer.render(fg.scene(), fg.camera());
+    };
+    applyDpr();
+    let dprMq = window.matchMedia(`(resolution: ${window.devicePixelRatio}dppx)`);
+    const onDpr = () => {
+      applyDpr();
+      dprMq.removeEventListener('change', onDpr);
+      dprMq = window.matchMedia(`(resolution: ${window.devicePixelRatio}dppx)`);
+      dprMq.addEventListener('change', onDpr);
+    };
+    dprMq.addEventListener('change', onDpr);
+    const resizeObserver = new ResizeObserver(() => {
+      renderer.render(fg.scene(), fg.camera());
+    });
+    resizeObserver.observe(renderer.domElement);
+
+    // Soft centre wash + a few stars, behind the nodes. Added once per scene.
+    const scene = fg.scene() as THREE.Scene;
+    const existingStars = scene.getObjectByName('so-stars') as THREE.Points | undefined;
+    if (existingStars) {
+      sceneFxRef.current.stars = existingStars;
+      sceneFxRef.current.glow = scene.getObjectByName('so-glow') as THREE.Sprite | null;
+    } else {
+      const starCount = 80;
+      const positions = new Float32Array(starCount * 3);
+      for (let i = 0; i < starCount; i++) {
+        const z = Math.random() * 2 - 1;
+        const a = Math.random() * Math.PI * 2;
+        const r = 420 + Math.random() * 220;
+        const ring = Math.sqrt(1 - z * z);
+        positions[i * 3] = Math.cos(a) * ring * r;
+        positions[i * 3 + 1] = z * r * 0.72;
+        positions[i * 3 + 2] = Math.sin(a) * ring * r;
+      }
+      const starGeom = new THREE.BufferGeometry();
+      starGeom.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+      const starParsed = parseColor(colorsRef.current.star);
+      const starMat = new THREE.PointsMaterial({
+        color: starParsed.color,
+        opacity: starParsed.opacity,
+        transparent: true,
+        size: 1.7,
+        sizeAttenuation: true,
+        depthWrite: false,
+        map: res.discTexture,
+        alphaTest: 0.4,
+      });
+      const stars = new THREE.Points(starGeom, starMat);
+      stars.name = 'so-stars';
+      stars.raycast = noRaycast;
+      stars.frustumCulled = false;
+      scene.add(stars);
+      sceneFxRef.current.stars = stars;
+
+      const glow = new THREE.Sprite(res.sceneGlowMaterial(colorsRef.current.scene));
+      glow.name = 'so-glow';
+      glow.position.set(0, 0, -40);
+      glow.scale.set(340, 340, 1);
+      glow.raycast = noRaycast;
+      glow.renderOrder = -1;
+      scene.add(glow);
+      sceneFxRef.current.glow = glow;
+    }
 
     // --- Single frame loop: LOD, lazy labels, intro / hover / float animation ---
     let raf = 0;
     let last = performance.now();
-    const mountedAt = last;
-    const dtSamples: number[] = [];
+    let labelFrame = 0;
     const camPos = new THREE.Vector3();
     const flyV = new THREE.Vector3();
     const flyQ = new THREE.Quaternion();
@@ -592,31 +902,37 @@ export function NetworkGraph({
         if (k >= 1) fly.active = false;
       }
 
-      // Smooth auto-rotate ramp (no jerk after the user lets go)
+      // Smooth auto-rotate ramp. prefers-reduced-motion holds the speed at zero.
+      if (reducedRef.current) rotTarget = 0;
       if (controls) {
         rotCur += (rotTarget - rotCur) * Math.min(1, dt * 0.004);
         controls.autoRotateSpeed = rotCur;
       }
 
-      // Adaptive resolution: ~45 frames sample, never below 1x
-      if (now - mountedAt > 3500 && dt < 100) {
-        dtSamples.push(dt);
-        if (dtSamples.length >= 45) {
-          const avg = dtSamples.reduce((a, b) => a + b, 0) / dtSamples.length;
-          dtSamples.length = 0;
-          if (avg > 30 && pixelRatio > 1) {
-            pixelRatio = Math.max(1, pixelRatio - 0.25);
-            const size = renderer.getSize(new THREE.Vector2());
-            renderer.setPixelRatio(pixelRatio);
-            renderer.setSize(size.x, size.y);
-          }
-        }
-      }
-
-      const pulse = 0.5 + 0.5 * Math.sin(now * 0.003);
-      res.pulseMaterial.opacity = 0.3 + 0.3 * pulse;
+      const reduced = reducedRef.current;
+      const pulse = reduced ? 0 : 0.5 + 0.5 * Math.sin(now * 0.003);
+      res.pulseMaterial.opacity = reduced ? 0.5 : 0.28 + 0.28 * pulse;
+      res.pulseDimMaterial.opacity = res.pulseMaterial.opacity * DIM_OPACITY;
       let labelBudget = LABELS_PER_FRAME;
       const hoverId = life.hoverId;
+
+      if (labelFrame++ % 6 === 0) {
+        const ranked: { id: string; d2: number }[] = [];
+        for (const v of visRef.current.values()) {
+          const depth = v.node.depth ?? 1;
+          if (depth < 1 || depth > 2 || hiddenRef.current.has(depth)) continue;
+          const p = v.outer.position;
+          const dx = p.x - camPos.x, dy = p.y - camPos.y, dz = p.z - camPos.z;
+          ranked.push({ id: v.node.id, d2: dx * dx + dy * dy + dz * dz });
+        }
+        ranked.sort((a, b) => a.d2 - b.d2);
+        const next = new Set<string>();
+        for (let i = 0; i < ranked.length && next.size < NEAREST_LABELS; i++) {
+          const id = ranked[i]?.id;
+          if (id) next.add(id);
+        }
+        nearestRef.current = next;
+      }
 
       for (const v of visRef.current.values()) {
         const p = v.outer.position;
@@ -625,27 +941,40 @@ export function NetworkGraph({
         const level = d2 < LOD_CLOSE2 ? 0 : d2 < LOD_MEDIUM2 ? 1 : d2 < LOD_FAR2 ? 2 : 3;
         if (level !== v.level) applyLevel(v, level);
 
-        // Lazy, budgeted creation of labels and photos for nodes the user can actually see
-        if (level <= 1 && !v.label && labelBudget > 0) {
+        const showLabel = wantsLabel(v);
+        if (showLabel && !v.label && (v.node.isCenter || labelBudget > 0)) {
           createLabel(v);
-          labelBudget--;
+          if (!v.node.isCenter) labelBudget--;
         }
-        if (level === 0 && v.node.photoUrl && !v.realAvatar) {
+        if (v.label) {
+          v.label.visible = showLabel;
+          const dimLabel = pathRef.current.dim && !pathRef.current.set.has(v.node.id);
+          const mat = v.label.material as THREE.SpriteMaterial;
+          const op = dimLabel ? DIM_OPACITY : 1;
+          if (mat.opacity !== op) {
+            mat.opacity = op;
+            mat.transparent = true;
+          }
+        }
+        if (level === 0 && v.node.photoUrl && !v.node.isCenter && !v.realAvatar) {
           res.requestPhoto(v.node.photoUrl, v.node.id);
         }
 
         // Far nodes keep a minimum on-screen size, like stars
-        if (level >= 2) {
-          const want = Math.sqrt(d2) * MIN_DOT_PX * (v.node.isCenter ? 1.6 : 1);
-          const base = level === 2 ? (v.node.isCenter ? 6 : 2 * v.sf) : 1;
+        if (!v.node.isCenter && level >= 2) {
+          const onPath = pathRef.current.set.has(v.node.id) && !v.node.isDeleted;
+          const want = Math.sqrt(d2) * MIN_DOT_PX * (onPath ? 1.35 : 1);
+          const base = (level === 2 ? 2.05 * v.sf : 1.25) * (onPath ? 1.4 : 1);
           const size = Math.max(base, want);
           if (Math.abs(size - v.dot.scale.x) > size * 0.03) v.dot.scale.set(size, size, 1);
         }
 
-        // Pop-in + hover emphasis
+        // Pop-in + hover emphasis. Reduced motion skips the pop and the float.
         let s = 1;
-        if (now < v.bornAt) s = 0.0001;
-        else if (now < v.bornAt + INTRO_MS) s = Math.max(0.0001, easeOutBack((now - v.bornAt) / INTRO_MS));
+        if (!reduced) {
+          if (now < v.bornAt) s = 0.0001;
+          else if (now < v.bornAt + INTRO_MS) s = Math.max(0.0001, easeOutBack((now - v.bornAt) / INTRO_MS));
+        }
         v.hover += ((hoverId === v.node.id ? 1 : 0) - v.hover) * 0.22;
         const finalScale = s * (1 + 0.3 * v.hover);
         if (Math.abs(finalScale - v.lastScale) > 0.0005) {
@@ -653,20 +982,54 @@ export function NetworkGraph({
           v.lastScale = finalScale;
         }
 
-        // Gentle floating + pulsing — only where it can be seen
-        if (level <= 1) {
+        if (reduced) {
+          v.inner.position.y = 0;
+        } else if (level <= 1) {
           v.inner.position.y = Math.sin(now * 0.0011 + v.phase) * BOB_AMPLITUDE;
-          if (v.pulse && v.pulse.visible) {
-            const ps = ((v.node.isCenter ? 12 : 5) * v.sf + 2.4) * (1 + 0.15 * pulse);
-            v.pulse.scale.set(ps, ps, 1);
-          }
+        }
+        if (!reduced && v.pulse && v.pulse.visible && v.online) {
+          const body = v.node.isCenter ? MARK_SIZE : (v.dot.visible ? v.dot.scale.x : (v.node.isCenter ? MARK_SIZE : 5) * v.sf);
+          const ps = body * (v.node.isCenter ? 1.38 : 1.9) * (1 + 0.12 * pulse);
+          v.pulse.scale.set(ps, ps, 1);
         }
       }
+
+      // Path colour and bend. The library freezes link materials after the accessor is set,
+      // and it stops moving lines once the simulation cools down.
+      const path = pathRef.current;
+      const careInk = parseColor(colorsRef.current.care);
+      const careHex = careInk.color;
+      const careOp = 0.95 * (careInk.opacity || 1);
+      const plainInk = parseColor(lineColor(colorsRef.current.line, false));
+      const dimInk = parseColor(lineColor(colorsRef.current.line, true));
+      const scene = fg.scene() as THREE.Scene | undefined;
+      scene?.traverse((obj) => {
+        if ((obj as { __graphObjType?: string }).__graphObjType !== 'link') return;
+        const link = (obj as { __data?: SimLink }).__data;
+        if (!link) return;
+        const line = (obj as THREE.Line).isLine
+          ? (obj as THREE.Line)
+          : (obj.children.find((c) => (c as THREE.Line).isLine) as THREE.Line | undefined);
+        if (!line) return;
+        const a = endpointNode(link.source, nodeMapRef.current);
+        const b = endpointNode(link.target, nodeMapRef.current);
+        if (!a || !b || a.x == null || b.x == null) return;
+        const on = !!(path.dim && a.id && b.id && path.links.has(`${a.id}\0${b.id}`));
+        try {
+          writeLinkLine(line, a.x, a.y ?? 0, a.z ?? 0, b.x, b.y ?? 0, b.z ?? 0, on ? PATH_CURVE : 0);
+          const ink = on ? { color: careHex, opacity: careOp } : path.dim ? dimInk : plainInk;
+          paintLink(line, ink.color, ink.opacity);
+        } catch { /* link mesh was rebuilt by the library */ }
+      });
+
       res.pumpPhotos((nodeId, tex, url) => {
         const v = visRef.current.get(nodeId);
-        if (!v) return;
+        if (!v || v.node.isCenter) return;
         v.avatar.material = res.photoMaterial(url, !!v.node.isDeleted, tex);
+        v.avatar.userData.matBase = v.avatar.material;
+        v.avatar.userData.matDim = null;
         v.realAvatar = true;
+        paintNode(v);
       });
     };
     raf = requestAnimationFrame(frame);
@@ -680,6 +1043,11 @@ export function NetworkGraph({
       cancelAnimationFrame(raf);
       timers.forEach(clearTimeout);
       if (resumeTimer) clearTimeout(resumeTimer);
+      reduceMq.removeEventListener('change', onReduce);
+      dprMq.removeEventListener('change', onDpr);
+      resizeObserver.disconnect();
+      sceneFxRef.current.stars = null;
+      sceneFxRef.current.glow = null;
       if (controls) {
         controls.removeEventListener('start', onStart);
         controls.removeEventListener('end', onEnd);
@@ -727,105 +1095,105 @@ export function NetworkGraph({
     }
   }, [nodes, applyLevel]);
 
-  // Structural changes that need new objects (name/photo/deleted) or new theme colors
-  const firstThemeRender = useRef(true);
+  // Structural changes that need new objects (name / photo / deleted). Theme does not rebuild the scene.
   useEffect(() => {
     const fg = fgRef.current;
     if (!fg) return;
-    let refresh = needsRefreshRef.current;
+    const refresh = needsRefreshRef.current;
     needsRefreshRef.current = false;
-    if (firstThemeRender.current) {
-      firstThemeRender.current = false;
-    } else if (res.theme !== darkMode) {
-      refresh = true;
-    }
-    res.setTheme(darkMode);
     if (refresh) {
       for (const v of visRef.current.values()) disposeLabel(v.label);
       visRef.current.clear();
       res.resetMaterials();
       try { fg.refresh(); } catch { /* noop */ }
     }
-  }, [graphData, darkMode, res]);
+  }, [graphData, res]);
 
-  // Highlight path: re-color only the labels that changed + links
-  const prevHighlight = useRef<Set<string>>(new Set());
+  // Palette, then path: repaint dots and labels. Link accessors read pathRef.
   useEffect(() => {
+    res.setColors(colors);
+    const stars = sceneFxRef.current.stars;
+    if (stars) {
+      const parsed = parseColor(colors.star);
+      const mat = stars.material as THREE.PointsMaterial;
+      mat.color.set(parsed.color);
+      mat.opacity = parsed.opacity;
+      mat.transparent = true;
+    }
+    const wash = sceneFxRef.current.glow;
+    if (wash) wash.material = res.sceneGlowMaterial(colors.scene);
+    for (const v of visRef.current.values()) {
+      paintNode(v);
+      restyleLabel(v);
+      if (v.level >= 0) applyLevel(v, v.level);
+    }
     const fg = fgRef.current;
-    const now = highlightRef.current;
-    const dark = darkRef.current;
-    const palette = dark ? DEPTH_COLORS_DARK : DEPTH_COLORS_LIGHT;
-    const changed = new Set<string>([...prevHighlight.current, ...now].filter((id) => prevHighlight.current.has(id) !== now.has(id)));
-    for (const id of changed) {
-      const v = visRef.current.get(id);
-      if (!v || !v.label) continue;
-      const depthColor = palette[Math.min(v.node.depth ?? (v.node.isCenter ? 0 : 1), 3)] ?? palette[palette.length - 1]!;
-      const hl = now.has(id);
-      v.label.color = v.node.isDeleted ? (dark ? '#888888' : '#9ca3af') : hl ? (dark ? '#f59e0b' : '#d97706') : depthColor.main;
-      v.label.backgroundColor = v.node.isDeleted
-        ? (dark ? 'rgba(80,80,80,0.6)' : 'rgba(156,163,175,0.3)')
-        : hl ? (dark ? 'rgba(245,158,11,0.2)' : 'rgba(217,119,6,0.15)') : depthColor.bg;
-    }
-    prevHighlight.current = new Set(now);
-    if (fg && changed.size) {
-      // Re-evaluate link accessors
-      fg.linkColor(fg.linkColor());
-      fg.linkWidth(fg.linkWidth());
-    }
-  }, [highlightKey]);
+    if (!fg) return;
+    if (typeof fg.linkColor === 'function') fg.linkColor(fg.linkColor());
+    if (typeof fg.linkCurvature === 'function') fg.linkCurvature(fg.linkCurvature());
+    try { fg.renderer().render(fg.scene(), fg.camera()); } catch { /* noop */ }
+  }, [colors, pathState, paintNode, restyleLabel, applyLevel, res]);
 
   /* ----- Interaction ----- */
 
-  const handleNodeClick = useCallback((node: { id?: string | number }) => {
-    if (!node.id || !onNodeClickRef.current) return;
-    const id = String(node.id);
-    // Stop rendering right away; the actual WebGL teardown happens on unmount.
+  const handleNodeClick = useCallback((node: SimNode) => {
+    if (!node?.id) return;
+    onNodeTapRef.current?.(node);
+    if (!onNodeClickRef.current) return;
+    // Stop rendering right away when the page navigates away; teardown still happens on unmount.
     try { fgRef.current?.pauseAnimation(); } catch { /* noop */ }
-    onNodeClickRef.current(id);
+    onNodeClickRef.current(String(node.id));
   }, []);
 
   const handleNodeHover = useCallback((node: { id?: string | number } | null) => {
     lifeRef.current.hoverId = node?.id != null ? String(node.id) : null;
   }, []);
 
+  const nodeVisible = useCallback((node: SimNode) => {
+    if (node.isCenter) return true;
+    const depth = node.depth ?? depthRef.current.get(node.id) ?? 1;
+    if (depth <= 0) return true;
+    return !hiddenRef.current.has(depth);
+  }, [hiddenKey]);
+
+  const linkVisible = useCallback((link: { source?: string | SimNode; target?: string | SimNode }) => {
+    const src = typeof link.source === 'object' ? link.source : nodeMapRef.current.get(String(link.source ?? ''));
+    const tgt = typeof link.target === 'object' ? link.target : nodeMapRef.current.get(String(link.target ?? ''));
+    if (!src || !tgt) return true;
+    return nodeVisible(src) && nodeVisible(tgt);
+  }, [nodeVisible]);
+
   const linkColor = useCallback(
     (link: { source?: string | { id?: string }; target?: string | { id?: string } }) => {
       const src = typeof link.source === 'object' ? link.source?.id : link.source;
       const tgt = typeof link.target === 'object' ? link.target?.id : link.target;
-      const hl = highlightRef.current;
-      if (src && tgt && hl.has(src) && hl.has(tgt)) return 'rgba(245,158,11,0.8)';
-      // Color by max depth of endpoints
-      const srcDepth = src ? (depthRef.current.get(src) ?? 3) : 3;
-      const tgtDepth = tgt ? (depthRef.current.get(tgt) ?? 3) : 3;
-      const maxDepth = Math.min(Math.max(srcDepth, tgtDepth), 3);
-      const palette = darkRef.current ? DEPTH_COLORS_DARK : DEPTH_COLORS_LIGHT;
-      const color = palette[maxDepth] ?? palette[palette.length - 1]!;
-      return color.main + '55';
+      const path = pathRef.current;
+      const palette = colorsRef.current;
+      if (src && tgt && path.links.has(`${src}\0${tgt}`)) return withAlpha(palette.care, 0.95);
+      return lineColor(palette.line, path.dim);
     },
     [],
   );
 
-  // Width 0 = cheap 1px line; only the highlighted handshake path gets real geometry
-  const linkWidth = useCallback(
+  // Width 0 keeps the cheap 1px line. Curvature is applied in the frame loop for the path only.
+  const linkCurvature = useCallback(
     (link: { source?: string | { id?: string }; target?: string | { id?: string } }) => {
       const src = typeof link.source === 'object' ? link.source?.id : link.source;
       const tgt = typeof link.target === 'object' ? link.target?.id : link.target;
-      const hl = highlightRef.current;
-      return src && tgt && hl.has(src) && hl.has(tgt) ? 1.6 : 0;
+      return src && tgt && pathRef.current.links.has(`${src}\0${tgt}`) ? PATH_CURVE : 0;
     },
     [],
   );
 
   const nodeLabel = useCallback(
     (node: { name?: string; connectionCount?: number; lastSeen?: string | Date | null }) => {
-      const dark = darkRef.current;
+      const card = overlayColors(themeRef.current);
       const name = escapeHtml(String(node.name ?? ''));
       const count = Number(node.connectionCount ?? 0) || 0;
-      const status = isOnline(node.lastSeen) ? '<span style="color:#22c55e">● Online</span>' : '';
-      return `<div style="padding:6px 10px;border-radius:8px;background:${dark ? 'rgba(15,23,42,0.9)' : 'rgba(255,255,255,0.95)'};color:${dark ? '#e2e8f0' : '#1e293b'};font-size:12px;line-height:1.5;box-shadow:0 2px 8px rgba(0,0,0,0.3);pointer-events:none">
-        <div style="font-weight:600;font-size:13px">${name}</div>
-        <div style="opacity:0.7">🤝 ${count} connections</div>
-        ${status ? `<div>${status}</div>` : ''}
+      const online = isOnline(node.lastSeen);
+      return `<div style="padding:10px 12px;border-radius:16px;background:${card.surface};color:${card.ink};font-family:Manrope,sans-serif;font-size:13px;line-height:1.35;font-weight:700;box-shadow:0 10px 28px rgba(11,21,19,.28);border:1px solid ${card.line};pointer-events:none;min-width:112px">
+        <div style="font-weight:800;letter-spacing:-.02em">${name}</div>
+        <div style="margin-top:2px;font-weight:600;font-size:12px;color:${card.muted}">${count}${online ? ` · <span style="color:${card.care}">online</span>` : ''}</div>
       </div>`;
     },
     [],
@@ -846,23 +1214,52 @@ export function NetworkGraph({
     fitCameraRef.current(1000);
   }, []);
 
+  const zoomBy = useCallback((factor: number) => {
+    const fg = fgRef.current;
+    if (!fg) return;
+    lifeRef.current.userTouched = true;
+    const cam = fg.camera() as THREE.Camera;
+    const dist = Math.max(1, cam.position.length());
+    const controls = fg.controls() as { minDistance?: number; maxDistance?: number } | undefined;
+    const min = controls?.minDistance ?? 30;
+    const max = controls?.maxDistance && controls.maxDistance > min ? controls.maxDistance : 1600;
+    flyTo(cam.position, THREE.MathUtils.clamp(dist * factor, min, max), 280);
+  }, [flyTo]);
+
+  useImperativeHandle(ref, () => ({
+    zoomIn: () => zoomBy(0.8),
+    zoomOut: () => zoomBy(1.2),
+    fit: () => fitAll(),
+    focusOnMe: () => focusOnMe(),
+  }), [zoomBy, fitAll, focusOnMe]);
+
+  useEffect(() => {
+    const fonts = document.fonts;
+    if (!fonts?.load) return;
+    let cancel = false;
+    fonts.load('700 64px Manrope').then(() => {
+      if (cancel) return;
+      for (const v of visRef.current.values()) restyleLabel(v);
+    }).catch(() => { /* font stays on the fallback */ });
+    return () => { cancel = true; };
+  }, [restyleLabel]);
+
   const btnStyle = {
     position: 'absolute' as const,
     right: 16,
     zIndex: 10,
     width: 40,
     height: 40,
-    borderRadius: '50%',
-    border: 'none',
+    borderRadius: 12,
+    border: '1px solid rgba(231,238,235,0.14)',
     cursor: 'pointer',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    background: darkMode ? 'rgba(30,41,59,0.85)' : 'rgba(255,255,255,0.9)',
-    color: darkMode ? '#60a5fa' : '#2563eb',
-    boxShadow: '0 2px 8px rgba(0,0,0,0.3)',
+    background: 'rgba(19,36,32,0.78)',
+    color: colors.node1,
+    boxShadow: '0 8px 24px rgba(0,0,0,0.28)',
     padding: 0,
-    transition: 'background 0.2s, transform 0.15s',
   };
 
   const rendererConfig = useMemo(
@@ -874,34 +1271,38 @@ export function NetworkGraph({
   );
 
   return (
-    <div style={{ position: 'relative', width: width || '100%', height: height || '100%' }}>
-      <button
-        onClick={focusOnMe}
-        title="Focus on me"
-        aria-label="Focus on me"
-        style={{ ...btnStyle, bottom: 16 }}
-      >
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <circle cx="12" cy="12" r="4" />
-          <line x1="12" y1="2" x2="12" y2="6" />
-          <line x1="12" y1="18" x2="12" y2="22" />
-          <line x1="2" y1="12" x2="6" y2="12" />
-          <line x1="18" y1="12" x2="22" y2="12" />
-        </svg>
-      </button>
-      <button
-        onClick={fitAll}
-        title="Show whole network"
-        aria-label="Show whole network"
-        style={{ ...btnStyle, bottom: 64 }}
-      >
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M4 9V4h5" />
-          <path d="M20 9V4h-5" />
-          <path d="M4 15v5h5" />
-          <path d="M20 15v5h-5" />
-        </svg>
-      </button>
+    <div style={{ position: 'relative', width: width || '100%', height: height || '100%', background: colors.scene }}>
+      {showControls && (
+        <>
+          <button
+            onClick={focusOnMe}
+            title="Focus on me"
+            aria-label="Focus on me"
+            style={{ ...btnStyle, bottom: 16 }}
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="12" cy="12" r="4" />
+              <line x1="12" y1="2" x2="12" y2="6" />
+              <line x1="12" y1="18" x2="12" y2="22" />
+              <line x1="2" y1="12" x2="6" y2="12" />
+              <line x1="18" y1="12" x2="22" y2="12" />
+            </svg>
+          </button>
+          <button
+            onClick={fitAll}
+            title="Show whole network"
+            aria-label="Show whole network"
+            style={{ ...btnStyle, bottom: 64 }}
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M4 9V4h5" />
+              <path d="M20 9V4h-5" />
+              <path d="M4 15v5h5" />
+              <path d="M20 15v5h-5" />
+            </svg>
+          </button>
+        </>
+      )}
       <ForceGraph3D
         ref={fgRef}
         graphData={graphData}
@@ -909,13 +1310,16 @@ export function NetworkGraph({
         height={height}
         controlType="orbit"
         rendererConfig={rendererConfig}
-        backgroundColor="rgba(0,0,0,0)"
+        backgroundColor={colors.scene}
         nodeThreeObject={nodeThreeObject}
         nodeThreeObjectExtend={false}
+        nodeVisibility={nodeVisible}
         nodeLabel={nodeLabel}
         linkColor={linkColor}
-        linkWidth={linkWidth}
-        linkOpacity={0.6}
+        linkCurvature={linkCurvature}
+        linkWidth={0}
+        linkOpacity={1}
+        linkVisibility={linkVisible}
         onNodeClick={handleNodeClick}
         onNodeHover={handleNodeHover}
         onEngineStop={() => { if (!lifeRef.current.userTouched) fitCameraRef.current(1400); }}
@@ -928,9 +1332,61 @@ export function NetworkGraph({
       />
     </div>
   );
-}
+});
 
 /* ---------- Shared GPU resources ---------- */
+
+/** Care tile with the app mark: a fish facing left, eye punched, two legs, forked tail. */
+function paintMark(ctx: CanvasRenderingContext2D, size: number, fill: string, ink: string) {
+  const r = size * 0.28;
+  ctx.clearRect(0, 0, size, size);
+  ctx.beginPath();
+  ctx.moveTo(r, 0);
+  ctx.arcTo(size, 0, size, size, r);
+  ctx.arcTo(size, size, 0, size, r);
+  ctx.arcTo(0, size, 0, 0, r);
+  ctx.arcTo(0, 0, size, 0, r);
+  ctx.closePath();
+  ctx.fillStyle = fill;
+  ctx.fill();
+
+  const s = size / 100;
+  ctx.save();
+  ctx.translate(11 * s, 24 * s);
+  ctx.scale(s, s);
+  ctx.fillStyle = ink;
+  ctx.beginPath();
+  ctx.moveTo(2, 26);
+  ctx.bezierCurveTo(18, 4, 50, 2, 62, 18);
+  ctx.bezierCurveTo(68, 24, 68, 30, 62, 34);
+  ctx.bezierCurveTo(50, 50, 18, 48, 2, 26);
+  ctx.closePath();
+  ctx.moveTo(38, 24);
+  ctx.ellipse(28, 25, 11, 6.2, -0.35, 0, Math.PI * 2);
+  ctx.rect(20, 40, 11, 16);
+  ctx.rect(40, 40, 11, 16);
+  ctx.moveTo(58, 20);
+  ctx.lineTo(84, 0);
+  ctx.lineTo(78, 12);
+  ctx.lineTo(64, 26);
+  ctx.closePath();
+  ctx.moveTo(60, 32);
+  ctx.lineTo(86, 52);
+  ctx.lineTo(76, 56);
+  ctx.lineTo(58, 38);
+  ctx.closePath();
+  ctx.fill('evenodd');
+  ctx.restore();
+}
+
+function paintWash(ctx: CanvasRenderingContext2D, size: number, scene: string) {
+  const g = ctx.createRadialGradient(size * 0.5, size * 0.42, size * 0.04, size * 0.5, size * 0.46, size * 0.5);
+  g.addColorStop(0, 'rgba(27,51,46,0.85)');
+  g.addColorStop(0.62, 'rgba(19,36,32,0.28)');
+  g.addColorStop(1, withAlpha(scene, 0));
+  ctx.fillStyle = g;
+  ctx.fillRect(0, 0, size, size);
+}
 
 function createResources() {
   const textures: THREE.Texture[] = [];
@@ -969,9 +1425,12 @@ function createResources() {
   const waiting = new Map<string, Set<string>>();
   const photoQueue: Array<{ url: string; nodeId: string }> = [];
   const ready: Array<{ nodeId: string; tex: THREE.Texture; url: string }> = [];
+  const failedPhotos = new Set<string>();
   let active = 0;
   let disposed = false;
-  let theme = true;
+  let colors: GraphColors = { ...resolveColors(null) };
+  let markKey = '';
+  let markTex: THREE.Texture | null = null;
 
   const cached = (key: string, make: () => THREE.SpriteMaterial) => {
     let m = materials.get(key);
@@ -980,23 +1439,67 @@ function createResources() {
   };
 
   const pulseMaterial = new THREE.SpriteMaterial({
-    map: ringTexture, color: 0x22c55e, transparent: true, opacity: 0.5, depthWrite: false,
+    map: ringTexture, color: parseColor(colors.care).color, transparent: true, opacity: 0.5, depthWrite: false,
   });
+  const pulseDimMaterial = pulseMaterial.clone();
+
+  const washTextures = new Map<string, THREE.Texture>();
+  const sceneWash = (scene: string) => {
+    let tex = washTextures.get(scene);
+    if (!tex) {
+      tex = makeCanvasTexture(256, (ctx, s) => paintWash(ctx, s, scene));
+      washTextures.set(scene, tex);
+    }
+    return tex;
+  };
+
+  const markMap = () => {
+    const key = `${colors.careBright}|${colors.node1}`;
+    if (markTex && markKey === key) return markTex;
+    if (markTex) {
+      markTex.dispose();
+      const idx = textures.indexOf(markTex);
+      if (idx >= 0) textures.splice(idx, 1);
+    }
+    markKey = key;
+    markTex = makeCanvasTexture(256, (ctx, s) => paintMark(ctx, s, colors.careBright, colors.node1));
+    return markTex;
+  };
 
   const api = {
-    get theme() { return theme; },
-    setTheme(dark: boolean) { theme = dark; },
+    discTexture,
     pulseMaterial,
+    pulseDimMaterial,
     photoQueue,
 
-    dotMaterial(color: number, deleted: boolean) {
-      return cached(`dot:${color}:${deleted}`, () => new THREE.SpriteMaterial({
-        map: discTexture, color, transparent: true, opacity: deleted ? 0.5 : 0.9, depthWrite: false,
+    setColors(next: GraphColors) {
+      colors = next;
+      const care = parseColor(next.care).color;
+      pulseMaterial.color.set(care);
+      pulseDimMaterial.color.set(care);
+    },
+    dotMaterial(color: number, opacity: number) {
+      const op = opacity.toFixed(3);
+      return cached(`dot:${color}:${op}`, () => new THREE.SpriteMaterial({
+        map: discTexture, color, transparent: true, opacity, depthWrite: false,
       }));
     },
-    ringMaterial(color: number, opacity: number) {
-      return cached(`ring:${color}:${opacity}`, () => new THREE.SpriteMaterial({
-        map: ringTexture, color, transparent: true, opacity, depthWrite: false,
+    markMaterial(dim: boolean) {
+      const map = markMap();
+      return cached(`mark:${dim ? 1 : 0}:${colors.careBright}:${colors.node1}`, () => new THREE.SpriteMaterial({
+        map, transparent: true, opacity: dim ? 0.35 : 1, depthWrite: false,
+      }));
+    },
+    glowMaterial() {
+      const color = parseColor(colors.care).color;
+      return cached(`glow:${color}`, () => new THREE.SpriteMaterial({
+        map: discTexture, color, transparent: true, opacity: 0.22, depthWrite: false,
+      }));
+    },
+    sceneGlowMaterial(scene: string) {
+      const key = `wash:${scene}`;
+      return cached(key, () => new THREE.SpriteMaterial({
+        map: sceneWash(scene), transparent: true, depthWrite: false, opacity: 1,
       }));
     },
     placeholderMaterial(node: { name?: string; isCenter?: boolean }, deleted: boolean) {
@@ -1005,14 +1508,11 @@ function createResources() {
       let tex = placeholderTextures.get(key);
       if (!tex) {
         tex = makeCanvasTexture(128, (ctx) => {
-          const g = ctx.createLinearGradient(0, 0, 128, 128);
-          g.addColorStop(0, node.isCenter ? '#3b82f6' : '#6366f1');
-          g.addColorStop(1, node.isCenter ? '#1d4ed8' : '#4f46e5');
-          ctx.fillStyle = g;
+          ctx.fillStyle = '#1b332e';
           ctx.beginPath();
           ctx.arc(64, 64, 64, 0, Math.PI * 2);
           ctx.fill();
-          ctx.fillStyle = '#ffffff';
+          ctx.fillStyle = '#e7eeeb';
           ctx.font = 'bold 64px sans-serif';
           ctx.textAlign = 'center';
           ctx.textBaseline = 'middle';
@@ -1021,7 +1521,7 @@ function createResources() {
         placeholderTextures.set(key, tex);
       }
       return cached(`ph:${key}:${deleted}`, () => new THREE.SpriteMaterial({
-        map: tex!, transparent: true, opacity: deleted ? 0.5 : 1,
+        map: tex!, transparent: true, opacity: deleted ? 0.45 : 1, depthWrite: false,
       }));
     },
     photoMaterial(url: string, deleted: boolean, tex: THREE.Texture) {
@@ -1032,6 +1532,7 @@ function createResources() {
 
     /** Queue a photo download (via the API proxy to bypass CORS); drawn as a circle on a 128px canvas. */
     requestPhoto(url: string, nodeId: string) {
+      if (failedPhotos.has(url)) return;
       const tex = photoTextures.get(url);
       if (tex) { ready.push({ nodeId, tex, url }); return; }
       let set = waiting.get(url);
@@ -1069,6 +1570,7 @@ function createResources() {
         };
         img.onerror = () => {
           active--;
+          failedPhotos.add(job.url);
           pending.delete(job.url);
           waiting.delete(job.url);
         };
@@ -1090,6 +1592,7 @@ function createResources() {
       for (const m of materials.values()) m.dispose();
       materials.clear();
       pulseMaterial.dispose();
+      pulseDimMaterial.dispose();
       for (const t of textures) t.dispose();
       textures.length = 0;
       photoQueue.length = 0;
