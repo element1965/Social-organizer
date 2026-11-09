@@ -11,7 +11,7 @@ import { Panel, useShellMode } from '../ui2';
 import { BrandMark } from '../ui2/BrandMark';
 import { IconBack } from '../ui2/icons';
 import { cn } from '../../lib/utils';
-import { languageNames } from '@so/i18n';
+import { languageNames } from '@so/i18n/languages';
 import { trpc } from '../../lib/trpc';
 import { useAuth } from '../../hooks/useAuth';
 

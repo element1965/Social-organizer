@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { languageNames } from '@so/i18n';
+import { languageNames } from '@so/i18n/languages';
 import { useTheme } from '../../hooks/useTheme';
 import { BrandMark } from '../ui2/BrandMark';
 import { IconMoon, IconSun } from '../ui2/icons';

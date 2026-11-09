@@ -33,38 +33,7 @@ export const resources = {
   cs, ro, th, vi, id, sr, he, be,
 } as const;
 
-export type SupportedLanguage = keyof typeof resources;
-
-export const languageNames: Record<SupportedLanguage, string> = {
-  en: 'English',
-  es: 'Español',
-  fr: 'Français',
-  de: 'Deutsch',
-  pt: 'Português',
-  it: 'Italiano',
-  zh: '中文',
-  ja: '日本語',
-  ko: '한국어',
-  ar: 'العربية',
-  hi: 'हिन्दी',
-  tr: 'Türkçe',
-  pl: 'Polski',
-  uk: 'Українська',
-  nl: 'Nederlands',
-  sv: 'Svenska',
-  da: 'Dansk',
-  fi: 'Suomi',
-  no: 'Norsk',
-  cs: 'Čeština',
-  ro: 'Română',
-  th: 'ไทย',
-  vi: 'Tiếng Việt',
-  id: 'Bahasa Indonesia',
-  sr: 'Српски',
-  he: 'עברית',
-  be: 'Беларуская',
-  ru: 'Русский',
-};
+export { languageNames, SUPPORTED_LANGUAGES, RTL_LANGUAGES, type SupportedLanguage } from './languages.js';
 
 export {
   en, ru, es, fr, de, pt, it, zh, ja, ko,
