@@ -236,7 +236,9 @@
       "open": "{{ring}}: {{count}}. Åpne listen",
       "hide": "Skjul {{ring}} i grafen",
       "show": "Vis {{ring}} i grafen",
-      "caption": "Håndtrykk"
+      "caption": "Håndtrykk",
+      "farther": "4.–5.: ~{{value}}",
+      "fartherFew": "4.–5.: noen få"
     },
     "feed": {
       "title": "Strøm",

@@ -5,7 +5,29 @@ import { GRAPH_SLICE_DEPTH } from '@so/shared';
 import { getGraphSlice, findPathBetweenUsers } from '../services/bfs.service.js';
 import { canViewContacts } from '../services/visibility.service.js';
 import { countConnections } from '../services/connection-request.service.js';
-import { bfsNetwork } from '../services/network.service.js';
+import { bfsNetwork, countNetworkByDepth } from '../services/network.service.js';
+import { invalidateGraph } from '../services/graph-cache.service.js';
+
+/** Rings whose people are shown by name (graph, People lists). */
+const VISIBLE_RINGS = 3;
+/** Rings shown only as a rounded count. */
+const FAR_RINGS = [4, 5] as const;
+/** Cap on people sent with details; BFS order, so the nearer rings are always complete first. */
+const NETWORK_DETAIL_LIMIT = 1000;
+
+type FarCount = { count: number; approx: boolean; few: boolean };
+
+/**
+ * Rounds a count of people the viewer may not see, so it cannot be used to tell when one
+ * particular person joined or left: under 5 is only "a few", then steps of 10, 50, then 2 significant digits.
+ */
+export function roundFarCount(n: number): FarCount {
+  if (n <= 0) return { count: 0, approx: false, few: false };
+  if (n < 5) return { count: 0, approx: true, few: true };
+  const step = n < 100 ? 10 : n < 1000 ? 50 : 10 ** (Math.floor(Math.log10(n)) - 1);
+  const count = Math.max(step, Math.round(n / step) * step);
+  return { count, approx: true, few: false };
+}
 
 export const connectionRouter = router({
   list: protectedProcedure.query(async ({ ctx }) => {
@@ -129,14 +151,31 @@ export const connectionRouter = router({
       if (pending) bfsUserId = pending.toUserId;
     }
 
-    const recipients = await bfsNetwork(ctx.db, bfsUserId);
+    // Counts cover the whole network; names and details only the visible rings (1–3).
+    // Beyond them only rounded counts leave the server: who is there stays private.
+    const [counts, recipients] = await Promise.all([
+      countNetworkByDepth(ctx.db, bfsUserId),
+      bfsNetwork(ctx.db, bfsUserId, NETWORK_DETAIL_LIMIT, VISIBLE_RINGS),
+    ]);
 
     const byDepth: Record<number, number> = {};
+    for (let depth = 1; depth <= VISIBLE_RINGS; depth++) {
+      if (counts.byDepth[depth]) byDepth[depth] = counts.byDepth[depth]!;
+    }
+    const visibleCount = Object.values(byDepth).reduce((sum, n) => sum + n, 0);
+    const farTotal = counts.total - visibleCount;
+    const far = {
+      ...Object.fromEntries(FAR_RINGS.map((depth) => [depth, roundFarCount(counts.byDepth[depth] ?? 0)])),
+      /** Everyone further than the last far ring */
+      beyond: roundFarCount(
+        Object.entries(counts.byDepth).reduce((sum, [depth, n]) => (Number(depth) > FAR_RINGS[FAR_RINGS.length - 1]! ? sum + n : sum), 0),
+      ),
+    } as Record<4 | 5, FarCount> & { beyond: FarCount };
+
     const userIdsByDepth: Record<number, string[]> = {};
     const connAtMap = new Map<string, Date | null>();
 
     for (const r of recipients) {
-      byDepth[r.depth] = (byDepth[r.depth] || 0) + 1;
       if (!userIdsByDepth[r.depth]) userIdsByDepth[r.depth] = [];
       userIdsByDepth[r.depth]!.push(r.user_id);
       connAtMap.set(r.user_id, r.max_conn_at);
@@ -228,8 +267,10 @@ export const connectionRouter = router({
     ]);
 
     return {
-      totalReachable: recipients.length + 1,
+      // You + the visible rings exactly + the far part rounded once (an exact total would reveal the far count)
+      totalReachable: 1 + visibleCount + (farTotal > 0 ? Math.max(roundFarCount(farTotal).count, 1) : 0),
       byDepth,
+      far,
       usersByDepth,
       growth: {
         day: dayCount,
@@ -277,6 +318,7 @@ export const connectionRouter = router({
       await ctx.db.connection.delete({
         where: { userAId_userBId: { userAId: userAId!, userBId: userBId! } },
       });
+      invalidateGraph();
 
       // Create pending as if target requested connection (awaiting my confirmation)
       await ctx.db.pendingConnection.upsert({

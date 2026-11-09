@@ -240,7 +240,9 @@
       "open": "{{ring}}: {{count}}. Otwórz listę",
       "hide": "Ukryj {{ring}} na grafie",
       "show": "Pokaż {{ring}} na grafie",
-      "caption": "Uściski dłoni"
+      "caption": "Uściski dłoni",
+      "farther": "4.–5.: ~{{value}}",
+      "fartherFew": "4.–5.: kilka osób"
     },
     "feed": {
       "title": "Kanał",

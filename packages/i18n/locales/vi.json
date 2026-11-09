@@ -234,7 +234,9 @@
       "open": "{{ring}}: {{count}}. Mở danh sách",
       "hide": "Ẩn {{ring}} trên sơ đồ",
       "show": "Hiện {{ring}} trên sơ đồ",
-      "caption": "Bắt tay"
+      "caption": "Bắt tay",
+      "farther": "Thứ 4–5: ~{{value}}",
+      "fartherFew": "Thứ 4–5: vài người"
     },
     "feed": {
       "title": "Bảng tin",

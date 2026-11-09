@@ -148,7 +148,7 @@ FIREBASE_SERVICE_ACCOUNT={"type":"service_account",...}  # FCM service account J
 |--------|------------|
 | `auth` | methods, requestEmailCode, verifyEmailCode, loginWithTelegramWidget, registerWithEmail, loginWithEmail, loginWithTelegram, loginWithGoogle, refresh, generateLinkCode, loginWithLinkCode, claimWithLinkCode |
 | `user` | me, update, getById, getStats, getContacts, updateContacts, completeOnboarding, delete, setMonthlyBudget |
-| `connection` | list, listForUser, getCount (confirmed connections), graphSlice (2-3 levels), findPath, getNetworkStats, getNickname, setNickname |
+| `connection` | list, listForUser, getCount (confirmed connections), graphSlice (2-3 levels), findPath, getNetworkStats (exact counts and people for rings 1–3, rounded counts only for rings 4–5), getNickname, setNickname |
 | `collection` | create, getById, close, cancel, myActive, myParticipating |
 | `obligation` | create, myList, unsubscribe |
 | `notification` | list (cursor pagination), markRead, dismiss, unreadCount |
@@ -166,7 +166,8 @@ FIREBASE_SERVICE_ACCOUNT={"type":"service_account",...}  # FCM service account J
 ## Services
 
 - **Auth** — JWT (HS256), 30 min access / 30 days refresh, 6-digit linking codes, Telegram initData HMAC-SHA256 validation, Google & Sign in with Apple via system-browser OAuth (Apple id_token verified against Apple JWKS, no client secret) — see `APPLE_SIGNIN.md`
-- **BFS** — Recursive CTE in PostgreSQL for graph traversal, path finding, and notification distribution
+- **BFS** — In-memory walk over the handshake graph for network counts, path finding and notification distribution. The graph is cached in process memory (`graph-cache.service.ts`) and reloaded only when a cheap signature (connection count, newest connection, deleted users) changes, so a request no longer reads the whole connections table
+- **Far rings** — The 4th and 5th handshakes are shown only as a rounded count ("4–5th: ~400") and an anonymous dust of dots around the 3D graph. Names, links and exact numbers beyond the 3rd ring never leave the server
 - **Notifications** — BFS distribution with 1:1 ratio (amount = notification count), ignore list, handshake path, Telegram bot and Web Push notifications
 - **Telegram Bot** — Collection notifications (new, blocked, closed) via Bot API with rate-limited broadcast (25 msg/sec batches via BullMQ)
 - **Web Push** — Browser push notifications via web-push library with VAPID, auto-cleanup of expired subscriptions
@@ -236,7 +237,7 @@ The hourly `cleanup-blocked-pending` worker treated any failed `getChat` as "use
 A separate Railway environment `staging` in the same project runs the `redesign` branch with its own Postgres and Redis.
 
 - **URL:** https://social-organizer-staging.up.railway.app (auto-deploy on `git push` to `redesign`)
-- **Data:** fictional test people from `packages/db/prisma/seed-dev.ts` (no production data). Sign in by e-mail as `anna@test.local` (active), `big@test.local` (large network: 36 direct, 244 people over three levels), `new@test.local` (empty circle) or `maria@test.local`.
+- **Data:** fictional test people from `packages/db/prisma/seed-dev.ts` (no production data). Sign in by e-mail as `anna@test.local` (active), `big@test.local` (large network: 36 direct, 244 people over three levels, ~400 more in the 4th–5th), `new@test.local` (empty circle) or `maria@test.local`.
 - **Sign-in codes:** there is no Resend key; `MAIL_LOG_TO_STDOUT=1` prints each code to the service log (Railway → staging → Social-organizer → Logs, search `mail:test-outbox`).
 - **Never set** `TELEGRAM_BOT_TOKEN`, `FEEDBACK_CHAT_ID`, `FIREBASE_SERVICE_ACCOUNT` or `VAPID_*` in staging: on start the API re-points the bot webhook, and push keys would reach real devices. `JWT_SECRET` differs from production.
 - **Schema / reseed:** staging uses `prisma db push`, not migrations. With the staging public URL in `DATABASE_URL`: `cd packages/db && npx prisma db push`, then `SEED_DEV_ALLOW_HOST=<host:port> npx tsx prisma/seed-dev.ts` (the seed wipes the database and refuses any host not named there).

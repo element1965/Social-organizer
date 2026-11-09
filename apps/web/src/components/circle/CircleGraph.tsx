@@ -23,6 +23,8 @@ type CircleGraphProps = {
   focusId?: string | null;
   /** Fraction of the height to raise the focused person by (room for a card at the bottom). */
   focusLift?: number;
+  /** Rounded counts of the 4th and 5th rings, drawn as anonymous dust around the ball. */
+  farRings?: number[];
 };
 
 /**
@@ -36,7 +38,7 @@ type CircleGraphProps = {
  * People, or a phone/desktop layout switch) and handed back as `initialView`, which skips the intro fly.
  */
 export const CircleGraph = forwardRef<CircleGraphHandle, CircleGraphProps>(function CircleGraph(
-  { myId, people, edges, highlightPath, hiddenRings, onNodeTap, dimmed, focusId, focusLift },
+  { myId, people, edges, highlightPath, hiddenRings, onNodeTap, dimmed, focusId, focusLift, farRings },
   ref,
 ) {
   const boxRef = useRef<HTMLDivElement>(null);
@@ -121,6 +123,7 @@ export const CircleGraph = forwardRef<CircleGraphHandle, CircleGraphProps>(funct
             initialView={initialView}
             focusId={focusId ?? null}
             focusLift={focusLift}
+            farRings={farRings}
             showControls={false}
             theme="dark"
           />

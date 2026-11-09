@@ -4,6 +4,7 @@ import { TRPCError } from '@trpc/server';
 import { MIN_COLLECTION_AMOUNT, NOTIFICATION_RATIO } from '@so/shared';
 import { sendCollectionNotifications, sendCollectionClosedTg } from '../services/notification.service.js';
 import { isAdmin } from '../admin.js';
+import { invalidateGraph } from '../services/graph-cache.service.js';
 import { getAskAccess, assertAskAllowed, isSpecialAsker } from '../services/ask-access.service.js';
 import { ADMIN_BLOCK_REASONS } from '../config/ask.js';
 import { activeObligationTotals, syncCollectionGoal } from '../services/collection-amount.js';
@@ -88,6 +89,7 @@ export const collectionRouter = router({
         throw new TRPCError({ code: 'BAD_REQUEST', message: 'This person did not join from this collection link' });
       }
       await ctx.db.connection.delete({ where: { id: connection.id } });
+      invalidateGraph();
       return { ok: true as const };
     }),
 

@@ -9,7 +9,7 @@
  *                     an incoming acquaintance request
  *   new@test.local    brand-new member with an empty circle (onboarding)
  *   maria@test.local  author of an active emergency collection
- *   big@test.local    large network: 36 direct connections, ~250 people over three levels, its own collections
+ *   big@test.local    large network: 36 direct connections, ~250 people over three levels, more in the 4th–5th, its own collections
  */
 import { PrismaClient, type User } from '@prisma/client';
 
@@ -169,13 +169,14 @@ async function main() {
   const big = await seedBigNetwork();
 
   console.log(`seed-dev: ${PEOPLE.length} users, ${EDGES.length} connections, 3 collections.`);
-  console.log(`seed-dev: big@test.local — ${big.people} people in the network (${big.l1}/${big.l2}/${big.l3} by level), ${big.edges} connections.`);
+  console.log(`seed-dev: big@test.local — ${big.people} people in the network (${big.l1}/${big.l2}/${big.l3} by level, ${big.far} in the 4th–5th), ${big.edges} connections.`);
   console.log('Sign in as anna@test.local (active), big@test.local (large network) or new@test.local (empty circle).');
 }
 
 /**
- * A separate cluster (not linked to Anna's) around big@test.local, about 250 people deep in three levels,
- * for screens that only show their problems on a large network (3D graph, long lists, level grouping).
+ * A separate cluster (not linked to Anna's) around big@test.local, about 250 people in the three drawn levels
+ * plus several hundred in the 4th and 5th (shown only as a rounded count), for screens that only show their
+ * problems on a large network (3D graph, long lists, level grouping, far rings).
  * A fixed-seed generator keeps the same names and links on every run.
  */
 async function seedBigNetwork() {
@@ -194,7 +195,7 @@ async function seedBigNetwork() {
 
   // Shape: 36 direct connections, each with 3 of their own (108), most of those with one more (~100)
   const L1 = 36;
-  type Node = { key: string; level: 1 | 2 | 3; parent: string };
+  type Node = { key: string; level: 1 | 2 | 3 | 4 | 5; parent: string };
   const nodes: Node[] = [];
   for (let i = 0; i < L1; i++) nodes.push({ key: `bnet-1-${i}`, level: 1, parent: 'big' });
   for (const p of nodes.filter((n) => n.level === 1)) {
@@ -202,6 +203,16 @@ async function seedBigNetwork() {
   }
   for (const p of nodes.filter((n) => n.level === 2)) {
     if (rnd() < 0.93) nodes.push({ key: p.key.replace('bnet-2', 'bnet-3'), level: 3, parent: p.key });
+  }
+  // Beyond the drawn rings (4th and 5th handshake): the app shows them only as a rounded count.
+  // Own generator, so the names and links of the first three levels stay as they were before these rings
+  let farState = 20261110;
+  const farRnd = () => ((farState = (farState * 1103515245 + 12345) % 2147483648) / 2147483648);
+  for (const p of nodes.filter((n) => n.level === 3)) {
+    if (farRnd() < 0.8) for (let j = 0; j < 2; j++) nodes.push({ key: `${p.key}-${j}`.replace('bnet-3', 'bnet-4'), level: 4, parent: p.key });
+  }
+  for (const p of nodes.filter((n) => n.level === 4)) {
+    if (farRnd() < 0.9) for (let j = 0; j < 2; j++) nodes.push({ key: `${p.key}-${j}`.replace('bnet-4', 'bnet-5'), level: 5, parent: p.key });
   }
 
   const owner = await db.user.create({
@@ -214,13 +225,16 @@ async function seedBigNetwork() {
 
   const created = await db.user.createManyAndReturn({
     data: nodes.map((n, i) => {
-      const budget = pick(BUDGETS);
+      // Far people draw from their own generator, so everything after them stays as it was
+      const r = n.level >= 4 ? farRnd : rnd;
+      const take = <T,>(list: readonly T[]) => list[Math.floor(r() * list.length)]!;
+      const budget = take(BUDGETS);
       return {
-        name: `${pick(FIRST)} ${pick(LAST)}`,
+        name: `${take(FIRST)} ${take(LAST)}`,
         email: `${n.key}@test.local`,
         emailVerifiedAt: ago(190 - (i % 180)),
-        language: rnd() < 0.3 ? 'ru' : 'en',
-        city: pick(CITIES),
+        language: r() < 0.3 ? 'ru' : 'en',
+        city: take(CITIES),
         monthlyBudget: budget || null,
         remainingBudget: budget || null,
         budgetUpdatedAt: budget ? ago(1 + (i % 20)) : null,
@@ -287,6 +301,7 @@ async function seedBigNetwork() {
     l1: l1.length,
     l2: l2.length,
     l3: nodes.filter((n) => n.level === 3).length,
+    far: nodes.filter((n) => n.level >= 4).length,
     edges: edges.length,
   };
 }

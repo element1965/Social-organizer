@@ -234,7 +234,9 @@
       "open": "{{ring}}: {{count}} เปิดรายการ",
       "hide": "ซ่อน {{ring}} บนกราฟ",
       "show": "แสดง {{ring}} บนกราฟ",
-      "caption": "การจับมือ"
+      "caption": "การจับมือ",
+      "farther": "ที่ 4–5: ~{{value}}",
+      "fartherFew": "ที่ 4–5: ไม่กี่คน"
     },
     "feed": {
       "title": "ฟีด",

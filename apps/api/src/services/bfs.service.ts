@@ -1,4 +1,5 @@
 import type { PrismaClient } from '@so/db';
+import { getGraph } from './graph-cache.service.js';
 
 export interface BfsRecipient {
   userId: string;
@@ -7,49 +8,17 @@ export interface BfsRecipient {
   maxConnAt: Date | null;
 }
 
-interface Connection {
-  userAId: string;
-  userBId: string;
-  createdAt: Date;
-}
-
-/** Build adjacency list from connections array. */
-function buildAdjList(connections: Connection[]) {
-  const adj = new Map<string, Array<{ neighbor: string; createdAt: Date }>>();
-  for (const c of connections) {
-    if (!adj.has(c.userAId)) adj.set(c.userAId, []);
-    if (!adj.has(c.userBId)) adj.set(c.userBId, []);
-    adj.get(c.userAId)!.push({ neighbor: c.userBId, createdAt: c.createdAt });
-    adj.get(c.userBId)!.push({ neighbor: c.userAId, createdAt: c.createdAt });
-  }
-  return adj;
-}
-
-/** Load all connections once (lightweight — only IDs + createdAt). */
-async function loadAllConnections(db: PrismaClient): Promise<Connection[]> {
-  return db.connection.findMany({
-    select: { userAId: true, userBId: true, createdAt: true },
-  });
-}
-
 /**
  * Get all user IDs reachable from startUserId (the connected component).
- * Lightweight BFS in memory — no PostgreSQL temp files.
+ * Lightweight BFS over the cached graph (graph-cache.service).
  */
 export async function getNetworkUserIds(db: PrismaClient, startUserId: string): Promise<string[]> {
-  const connections = await loadAllConnections(db);
-  const adj = new Map<string, string[]>();
-  for (const c of connections) {
-    if (!adj.has(c.userAId)) adj.set(c.userAId, []);
-    if (!adj.has(c.userBId)) adj.set(c.userBId, []);
-    adj.get(c.userAId)!.push(c.userBId);
-    adj.get(c.userBId)!.push(c.userAId);
-  }
+  const { adj } = await getGraph(db);
   const visited = new Set<string>([startUserId]);
   const queue = [startUserId];
   let qi = 0;
   while (qi < queue.length) {
-    for (const neighbor of adj.get(queue[qi++]!) || []) {
+    for (const { neighbor } of adj.get(queue[qi++]!) || []) {
       if (!visited.has(neighbor)) {
         visited.add(neighbor);
         queue.push(neighbor);
@@ -70,8 +39,7 @@ export async function findRecipientsViaBfs(
   maxRecipients: number = 10000,
   excludeUserIds: string[] = [],
 ): Promise<BfsRecipient[]> {
-  const connections = await loadAllConnections(db);
-  const adj = buildAdjList(connections);
+  const { adj } = await getGraph(db);
   const excludeSet = new Set(excludeUserIds);
 
   const visited = new Map<string, { depth: number; path: string[]; maxConnAt: Date }>();
@@ -130,8 +98,7 @@ export async function findPathBetweenUsers(
     return [{ ...user, connectionCount: Number(countResult[0]?.count || 0) }];
   }
 
-  const connections = await loadAllConnections(db);
-  const adj = buildAdjList(connections);
+  const { adj } = await getGraph(db);
 
   // BFS from fromUserId to toUserId
   const visited = new Map<string, string | null>(); // userId -> parent

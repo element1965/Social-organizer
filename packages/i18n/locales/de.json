@@ -236,7 +236,9 @@
       "open": "{{ring}}: {{count}}. Liste öffnen",
       "hide": "{{ring}} im Graph ausblenden",
       "show": "{{ring}} im Graph anzeigen",
-      "caption": "Handschläge"
+      "caption": "Handschläge",
+      "farther": "4.–5.: ~{{value}}",
+      "fartherFew": "4.–5.: einige"
     },
     "feed": {
       "title": "Feed",

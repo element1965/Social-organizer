@@ -236,7 +236,9 @@
       "open": "{{ring}}: {{count}}. Öppna listan",
       "hide": "Dölj {{ring}} i grafen",
       "show": "Visa {{ring}} i grafen",
-      "caption": "Handslag"
+      "caption": "Handslag",
+      "farther": "4:e–5:e: ~{{value}}",
+      "fartherFew": "4:e–5:e: några få"
     },
     "feed": {
       "title": "Flöde",

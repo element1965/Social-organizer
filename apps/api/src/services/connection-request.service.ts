@@ -3,6 +3,7 @@ import { TRPCError } from '@trpc/server';
 import { MAX_CONNECTIONS } from '@so/shared';
 import { sendPendingNotification } from './notification.service.js';
 import { syncMilestonesForPair } from './milestone.service.js';
+import { invalidateGraph } from './graph-cache.service.js';
 
 /**
  * One place that answers a connection request (PendingConnection).
@@ -81,6 +82,8 @@ export async function createConnectionWithinLimit(
       viaCollectionId: options?.viaCollectionId ?? null,
     },
   });
+  // Still inside the transaction: a reload racing the commit is caught by the cache's signature check
+  invalidateGraph();
   return 'created';
 }
 

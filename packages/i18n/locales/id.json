@@ -234,7 +234,9 @@
       "open": "{{ring}}: {{count}}. Buka daftar",
       "hide": "Sembunyikan {{ring}} di graf",
       "show": "Tampilkan {{ring}} di graf",
-      "caption": "Jabat tangan"
+      "caption": "Jabat tangan",
+      "farther": "Ke-4–5: ~{{value}}",
+      "fartherFew": "Ke-4–5: beberapa"
     },
     "feed": {
       "title": "Umpan",

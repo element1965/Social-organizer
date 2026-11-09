@@ -234,7 +234,9 @@
       "open": "{{ring}}：{{count}}。一覧を開きます",
       "hide": "グラフの{{ring}}を隠す",
       "show": "グラフの{{ring}}を表示",
-      "caption": "握手"
+      "caption": "握手",
+      "farther": "4〜5番目: 約{{value}}",
+      "fartherFew": "4〜5番目: 数人"
     },
     "feed": {
       "title": "フィード",

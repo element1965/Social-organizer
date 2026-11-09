@@ -236,7 +236,9 @@
       "open": "{{ring}}: {{count}}. Listeyi aç",
       "hide": "Grafikte gizle: {{ring}}",
       "show": "Grafikte göster: {{ring}}",
-      "caption": "Tokalaşmalar"
+      "caption": "Tokalaşmalar",
+      "farther": "4.–5.: ~{{value}}",
+      "fartherFew": "4.–5.: birkaç kişi"
     },
     "feed": {
       "title": "Akış",

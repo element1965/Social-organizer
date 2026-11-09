@@ -22,6 +22,7 @@ import { NetStats } from '../components/circle/NetStats';
 import { GrowStrip, PathToRequestSheet } from '../components/circle/PathToRequest';
 import { PersonCard, type CardPerson } from '../components/circle/PersonCard';
 import { RingChips } from '../components/circle/RingChips';
+import { useFarRings } from '../components/circle/far-rings';
 import { StartCard } from '../components/circle/StartCard';
 import { useCircleNetwork } from '../components/circle/network';
 import { IconFit, IconMinus, IconPlus, IconUp } from '../components/circle/icons';
@@ -89,6 +90,8 @@ export function CirclePage() {
   const byDepth = (stats.data?.byDepth ?? {}) as Record<number, number>;
   const counts: Record<Ring, number> = { 1: byDepth[1] ?? 0, 2: byDepth[2] ?? 0, 3: byDepth[3] ?? 0 };
   const peopleCount = empty ? 0 : counts[1] + counts[2] + counts[3];
+  // 4th and 5th rings: only rounded counts, drawn as anonymous dust
+  const farRings = useFarRings().dots;
   const canHelp = empty ? 0 : caps.data?.total ?? 0;
   const profileDone = Boolean(me.data?.name?.trim()) && (me.data?.monthlyBudget ?? 0) > 0;
 
@@ -284,6 +287,7 @@ export function CirclePage() {
       dimmed={layer === 'person' && phone}
       focusId={selectedId}
       focusLift={phone ? 0.16 : 0}
+      farRings={farRings}
     />
   );
 
