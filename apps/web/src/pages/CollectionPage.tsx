@@ -1,471 +1,694 @@
-import { useState, useEffect } from 'react';
-import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
+import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { trpc } from '../lib/trpc';
+import { MIN_COLLECTION_AMOUNT, MIN_OBLIGATION_AMOUNT, REGULAR_CYCLE_DAYS } from '@so/shared';
+import { AskProgressSync } from '../components/collection/AskProgressSync';
+import { IconChat, IconClock, IconPen, IconQr, IconShare } from '../components/collection/icons';
+import { ParticipantList, type ParticipantRow } from '../components/collection/ParticipantList';
+import { QrSheet } from '../components/collection/QrSheet';
+import { amountIssue, asDate, firstName, formatDay, isHttpsUrl, parseWhole, relativePast, shortUrl } from '../components/collection/text';
+import { ChatAssistant } from '../components/ChatAssistant';
+import { Avatar } from '../components/ui2/Avatar';
+import { Button } from '../components/ui2/Button';
+import { Card } from '../components/ui2/Card';
+import { formatMoney } from '../components/ui2/format';
+import { Input } from '../components/ui2/Input';
+import { Meter } from '../components/ui2/Meter';
+import { PathFigure } from '../components/ui2/PathFigure';
+import { Screen } from '../components/ui2/Screen';
+import { Sheet } from '../components/ui2/Sheet';
+import { useShellMode } from '../components/ui2/shell-mode';
 import { useAuth } from '../hooks/useAuth';
-import { Card, CardContent, CardHeader } from '../components/ui/card';
-import { Button } from '../components/ui/button';
-import { Input } from '../components/ui/input';
-import { Badge } from '../components/ui/badge';
-import { Progress } from '../components/ui/progress';
-import { Avatar } from '../components/ui/avatar';
-import { Spinner } from '../components/ui/spinner';
-import { ExternalLink, Users, Pencil, Check, X, Share2, QrCode, CheckCircle2, Download } from 'lucide-react';
-import { QRCodeSVG, QRCodeCanvas } from 'qrcode.react';
-import { HandshakePath } from '../components/HandshakePath';
-import { VideoGuide } from '../components/VideoGuide';
 import { useNicknames } from '../hooks/useNicknames';
 import { buildSosInviteUrl } from '../lib/inviteUrl';
+import { trpc } from '../lib/trpc';
+
+const REASONS = ['COMPLAINTS', 'SUSPECTED_FRAUD', 'RULES_VIOLATION', 'AUTHOR_REQUEST'] as const;
+type BlockReason = (typeof REASONS)[number];
+
+function isReason(value: string | null | undefined): value is BlockReason {
+  return REASONS.some((reason) => reason === value);
+}
+
+/**
+ * Desktop dialog is a two-column grid, so the first child sits on the left (the destructive one).
+ * A phone sheet stacks, so the quiet action stays on top and the destructive one follows.
+ */
+function sheetPair(desktop: boolean, action: ReactNode, dismiss: ReactNode, destructive: boolean) {
+  if (!desktop && destructive) {
+    return (
+      <>
+        {dismiss}
+        {action}
+      </>
+    );
+  }
+  return (
+    <>
+      {action}
+      {dismiss}
+    </>
+  );
+}
 
 export function CollectionPage() {
   const { id } = useParams<{ id: string }>();
   const [searchParams] = useSearchParams();
   const isSos = searchParams.get('sos') === 'true';
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const navigate = useNavigate();
-  const userId = useAuth((s) => s.userId);
+  const desktop = useShellMode() === 'sidebar';
+  const userId = useAuth((state) => state.userId);
   const resolve = useNicknames();
   const utils = trpc.useUtils();
+  const startedSos = useRef(false);
 
-  const { data: me } = trpc.user.me.useQuery();
-  const { data: collection, isLoading } = trpc.collection.getById.useQuery({ id: id! }, { enabled: !!id, refetchInterval: 30000 });
-  const { data: pathToCreator } = trpc.connection.findPath.useQuery(
-    { targetUserId: collection?.creatorId! },
-    { enabled: !!collection && collection.creatorId !== userId }
+  const me = trpc.user.me.useQuery();
+  const admin = trpc.faq.isAdmin.useQuery();
+  const connections = trpc.connection.list.useQuery();
+  const collection = trpc.collection.getById.useQuery({ id: id ?? '' }, { enabled: !!id, refetchInterval: 30_000 });
+  const path = trpc.connection.findPath.useQuery(
+    { targetUserId: collection.data?.creatorId ?? '' },
+    { enabled: !!collection.data && collection.data.creatorId !== userId },
   );
-  const createObligation = trpc.obligation.create.useMutation({
-    onSuccess: () => utils.collection.getById.invalidate({ id: id! }),
-    onError: (e) => { if (e.message === 'MIN_AMOUNT_USD') setError(t('collection.minAmount')); },
-  });
-  const closeCollection = trpc.collection.close.useMutation({ onSuccess: () => utils.collection.getById.invalidate({ id: id! }) });
-  const confirmPayment = trpc.obligation.confirmPayment.useMutation({ onSuccess: () => utils.collection.getById.invalidate({ id: id! }) });
-  const updateAmount = trpc.obligation.updateAmount.useMutation({
-    onSuccess: () => utils.collection.getById.invalidate({ id: id! }),
-    onError: (e) => { if (e.message === 'MIN_AMOUNT_USD') setEditError(t('collection.minAmount')); },
-  });
-  const updateChatLink = trpc.collection.updateChatLink.useMutation({ onSuccess: () => utils.collection.getById.invalidate({ id: id! }) });
-  const updateCollectionAmount = trpc.collection.updateAmount.useMutation({ onSuccess: () => utils.collection.getById.invalidate({ id: id! }) });
-  const acceptSos = trpc.invite.acceptSos.useMutation({
-    onSuccess: () => utils.collection.getById.invalidate({ id: id! }),
-  });
 
-  const [amount, setAmount] = useState('1');
-  const [sosCopied, setSosCopied] = useState(false);
-  const [showQr, setShowQr] = useState(false);
+  const refresh = () => {
+    if (!id) return;
+    utils.collection.getById.invalidate({ id });
+    utils.collection.myActive.invalidate();
+    utils.collection.myParticipating.invalidate();
+  };
+
+  const createObligation = trpc.obligation.create.useMutation({ onSuccess: refresh });
+  const updateObligation = trpc.obligation.updateAmount.useMutation({ onSuccess: refresh });
+  const confirmCycle = trpc.obligation.confirmCycle.useMutation({ onSuccess: refresh });
+  const decline = trpc.obligation.unsubscribeFromCollection.useMutation({ onSuccess: refresh });
+  const confirmPayment = trpc.obligation.confirmPayment.useMutation({ onSuccess: refresh });
+  const closeCollection = trpc.collection.close.useMutation({ onSuccess: refresh });
+  const updateChat = trpc.collection.updateChatLink.useMutation({ onSuccess: refresh });
+  const updateGoal = trpc.collection.updateAmount.useMutation({ onSuccess: refresh });
+  const revoke = trpc.connection.revoke.useMutation({
+    onSuccess: () => {
+      refresh();
+      utils.connection.list.invalidate();
+    },
+  });
+  const block = trpc.collection.block.useMutation({ onSuccess: refresh });
+  const unblock = trpc.collection.unblock.useMutation({ onSuccess: refresh });
+  const acceptSos = trpc.invite.acceptSos.useMutation({ onSuccess: refresh });
   const setBudget = trpc.user.setMonthlyBudget.useMutation();
-  const [editingChatLink, setEditingChatLink] = useState(false);
-  const [chatLinkValue, setChatLinkValue] = useState('');
-  const [chatLinkError, setChatLinkError] = useState('');
-  const [error, setError] = useState('');
 
-  // Edit collection goal amount state
-  const [editingGoal, setEditingGoal] = useState(false);
-  const [goalAmount, setGoalAmount] = useState('');
-  const [goalError, setGoalError] = useState('');
+  useEffect(() => {
+    const data = collection.data;
+    if (startedSos.current || !isSos || !data || !userId || data.creatorId === userId) return;
+    startedSos.current = true;
+    acceptSos.mutate({ collectionId: data.id });
+  }, [isSos, collection.data, userId, acceptSos]);
 
-
-  // Edit amount state
-  const [editingOblId, setEditingOblId] = useState<string | null>(null);
+  const [joinAmount, setJoinAmount] = useState('');
+  const [seeded, setSeeded] = useState(false);
+  const [joinError, setJoinError] = useState('');
+  const [editing, setEditing] = useState(false);
   const [editAmount, setEditAmount] = useState('');
   const [editError, setEditError] = useState('');
+  const [otherOpen, setOtherOpen] = useState(false);
+  const [declineOpen, setDeclineOpen] = useState(false);
+  const [closeOpen, setCloseOpen] = useState(false);
+  const [qrOpen, setQrOpen] = useState(false);
+  const [copied, setCopied] = useState(false);
+  const [chatEditing, setChatEditing] = useState(false);
+  const [chatValue, setChatValue] = useState('');
+  const [chatError, setChatError] = useState('');
+  const [goalAmount, setGoalAmount] = useState('');
+  const [goalError, setGoalError] = useState('');
+  const [payTarget, setPayTarget] = useState<ParticipantRow | null>(null);
+  const [removeTarget, setRemoveTarget] = useState<ParticipantRow | null>(null);
+  const [adminOpen, setAdminOpen] = useState(false);
+  const [reason, setReason] = useState<BlockReason | null>(null);
+  const [helpOpen, setHelpOpen] = useState(false);
+  const helpOnce = useRef(false);
 
-
-  // Auto-connect to creator when opened via SOS invite link
   useEffect(() => {
-    if (isSos && collection && userId && collection.creatorId !== userId && !acceptSos.isSuccess && !acceptSos.isPending) {
-      acceptSos.mutate({ collectionId: collection.id });
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isSos, collection?.id, userId]);
+    if (seeded || !me.data) return;
+    const stake = Math.max(MIN_OBLIGATION_AMOUNT, Math.round(me.data.monthlyBudget || MIN_OBLIGATION_AMOUNT));
+    setJoinAmount(String(stake));
+    setSeeded(true);
+  }, [me.data, seeded]);
 
+  useEffect(() => {
+    if (!helpOpen || helpOnce.current) return;
+    helpOnce.current = true;
+    window.dispatchEvent(new Event('toggle-help-menu'));
+  }, [helpOpen]);
 
+  const direct = useMemo(() => new Set((connections.data ?? []).map((person) => person.userId)), [connections.data]);
 
-  if (isLoading) return <div className="flex justify-center py-12"><Spinner /></div>;
-  if (!collection) return <div className="p-4 text-center text-gray-500 dark:text-gray-300">{t('common.notFound')}</div>;
-
-  const isOwner = collection.creatorId === userId;
-  const hasObligation = collection.obligations.some((o) => o.userId === userId);
-  const hasGoal = collection.amount != null && collection.amount > 0;
-  const percentage = hasGoal ? (collection.currentAmount / collection.amount!) * 100 : 0;
-  const statusVariant = collection.status === 'ACTIVE' ? 'success' : collection.status === 'BLOCKED' ? 'warning' : collection.status === 'CLOSED' ? 'default' : 'danger';
-
-  const getStatusLabel = (status: string) => {
-    switch (status) {
-      case 'ACTIVE': return t('collection.active');
-      case 'BLOCKED': return t('collection.blocked');
-      case 'CLOSED': return t('collection.closed');
-      case 'CANCELLED': return t('collection.cancelled');
-      default: return status;
-    }
-  };
-
-  const handleSubmitObligation = () => {
-    const num = Number(amount);
-    // Amounts are in $ only: 1 $ = 1 unit of participation, no currency conversion.
-    if (!Number.isInteger(num) || num < 1) { setError(t('collection.minAmount')); return; }
-    setError('');
-    createObligation.mutate(
-      { collectionId: collection.id, amount: num },
-      {
-        onSuccess: () => {
-          // If user came via SOS link (bypassed onboarding) — also save as their potential
-          if (isSos && (!me?.monthlyBudget || me.monthlyBudget === 0)) {
-            setBudget.mutate({ amount: num });
-          }
-        },
-      }
+  if (!id || collection.isLoading) {
+    return (
+      <Screen width="column" back={{ label: t('nav.circle'), to: '/' }}>
+        <p className="pt-6 text-body-s font-semibold text-ink-muted">{t('common.loading')}</p>
+      </Screen>
     );
-    setAmount('');
+  }
+  if (collection.isError || !collection.data) {
+    return (
+      <Screen width="column" back={{ label: t('nav.circle'), to: '/' }}>
+        <Card className="mt-4">
+          <p>{t('common.notFound')}</p>
+          <Button className="mt-3 w-full" onClick={() => collection.refetch()}>{t('common.retry')}</Button>
+        </Card>
+      </Screen>
+    );
+  }
+
+  const data = collection.data;
+  const owner = data.creatorId === userId;
+  // The server list already drops unsubscribed rows. Filter here too so an older API does not put them back.
+  const activeObligations = data.obligations.filter((row) => row.unsubscribedAt == null);
+  const myObl = activeObligations.find((row) => row.userId === userId);
+  const adminHold = data.status === 'BLOCKED' && isReason(data.blockReason);
+  const goalMet = data.status === 'BLOCKED' && !data.blockReason;
+  const closed = data.status === 'CLOSED' || data.status === 'CANCELLED';
+  const hasGoal = data.amount != null && data.amount > 0;
+  const renewal = data.type === 'REGULAR' && data.cycleNumber > 1 && data.currentCycleStart != null;
+  const needsConfirm = !!myObl && renewal && myObl.cycleConfirmed === false && !adminHold && !closed && data.status === 'ACTIVE';
+  const showDecline = !owner && !!myObl && !closed && !adminHold;
+  const showAdmin = admin.data?.isAdmin === true && !closed && (data.status === 'ACTIVE' || adminHold);
+  const language = i18n.language;
+  const creatorName = resolve(data.creatorId, data.creator.name);
+  const stake = Math.max(MIN_OBLIGATION_AMOUNT, Math.round(me.data?.monthlyBudget || MIN_OBLIGATION_AMOUNT));
+
+  const counted = activeObligations.filter((row) => !renewal || row.cycleConfirmed !== false);
+  const mineTotal = counted.filter((row) => row.userId === userId).reduce((sum, row) => sum + row.amount, 0);
+  const othersTotal = counted.filter((row) => row.userId !== userId).reduce((sum, row) => sum + row.amount, 0);
+
+  const typeLabel = data.type === 'REGULAR' ? t('collection.monthly') : t('collection.oneTime');
+  let subtitle = typeLabel;
+  if (closed) {
+    const when = asDate(data.closedAt) ?? asDate(data.updatedAt);
+    if (when) subtitle = `${typeLabel} · ${t('collection.closedOn', { date: formatDay(when, language) })}`;
+  } else if (data.type === 'REGULAR' && data.cycleNumber > 1) {
+    subtitle = `${typeLabel} · ${t('collection.cycleOrdinal', { count: data.cycleNumber })}`;
+  } else {
+    const opened = asDate(data.createdAt);
+    if (opened) subtitle = `${typeLabel} · ${t('collection.opened', { when: relativePast(opened, language) })}`;
+  }
+
+  const pathNames = (path.data?.path ?? []).map((person, index) => (
+    index === 0 ? t('common.you') : resolve(person.id, person.name)
+  ));
+  const showPath = !owner && pathNames.length > 1;
+  const showCloseNote = !owner && !closed && !adminHold && !needsConfirm && !goalMet && hasGoal;
+
+  const back = closed
+    ? { label: t('collection.pastCrumb'), to: '/me/history' }
+    : owner
+      ? { label: t('nav.profile'), to: '/me' }
+      : { label: t('nav.circle'), to: '/' };
+
+  const people: ParticipantRow[] = activeObligations.map((row) => {
+    const mine = row.userId === userId;
+    let line = mine ? t('collection.youLower') : direct.has(row.userId) ? t('collection.firstHandshake') : t('collection.inNetwork');
+    if (renewal && row.cycleConfirmed === false) line = mine ? t('collection.waitingYou') : t('collection.waiting');
+    else if (renewal && row.cycleConfirmed === true && !mine) line = t('collection.confirmed');
+    return {
+      id: row.id,
+      userId: row.userId,
+      name: mine ? t('common.you') : resolve(row.userId, row.user.name),
+      photoUrl: row.user.photoUrl,
+      amount: row.amount,
+      paid: row.confirmedAt != null,
+      subtitle: line,
+      mine,
+      joinedViaLink: owner && row.joinedViaLink && row.userId !== userId,
+    };
+  });
+
+  const cycleEnd = asDate(data.currentCycleStart);
+  const cycleUntil = cycleEnd
+    ? formatDay(new Date(cycleEnd.getTime() + REGULAR_CYCLE_DAYS * 24 * 60 * 60 * 1000), language)
+    : '';
+
+  const share = async () => {
+    const url = buildSosInviteUrl(data.id);
+    try {
+      if (navigator.share) {
+        await navigator.share({ title: t('collection.share'), url });
+        return;
+      }
+    } catch (error) {
+      if (error instanceof DOMException && error.name === 'AbortError') return;
+    }
+    try {
+      await navigator.clipboard.writeText(url);
+      setCopied(true);
+      window.setTimeout(() => setCopied(false), 2000);
+    } catch {
+      setCopied(false);
+    }
   };
 
+  const pledgeMessage = (raw: string) => {
+    const issue = amountIssue(raw, MIN_OBLIGATION_AMOUNT);
+    if (!issue) return '';
+    return issue === 'whole' ? t('collection.whole') : t('collection.minOne');
+  };
 
+  const join = () => {
+    const message = pledgeMessage(joinAmount);
+    const amount = parseWhole(joinAmount);
+    if (message || amount == null) {
+      setJoinError(message || t('collection.minOne'));
+      return;
+    }
+    setJoinError('');
+    const place = () => {
+      createObligation.mutate({
+        collectionId: data.id,
+        amount,
+        inputCurrency: 'USD',
+        isSubscription: data.type === 'REGULAR',
+      });
+    };
+    // A public-link join with no stake yet records that stake, matching the previous collection screen.
+    if (isSos && (me.data?.monthlyBudget ?? 0) === 0) {
+      setBudget.mutate({ amount, inputCurrency: 'USD' }, { onSettled: place });
+      return;
+    }
+    place();
+  };
+
+  const saveEdit = () => {
+    if (!myObl) return;
+    const message = pledgeMessage(editAmount);
+    const amount = parseWhole(editAmount);
+    if (message || amount == null) {
+      setEditError(message || t('collection.minOne'));
+      return;
+    }
+    setEditError('');
+    updateObligation.mutate(
+      { obligationId: myObl.id, amount, inputCurrency: 'USD' },
+      { onSuccess: () => setEditing(false) },
+    );
+  };
+
+  const confirm = async (amount: number) => {
+    if (!myObl) return;
+    if (amount < MIN_OBLIGATION_AMOUNT) {
+      setEditError(t('collection.minOne'));
+      return;
+    }
+    setEditError('');
+    if (amount !== myObl.amount) {
+      await updateObligation.mutateAsync({ obligationId: myObl.id, amount, inputCurrency: 'USD' });
+    }
+    await confirmCycle.mutateAsync({ collectionId: data.id });
+    setOtherOpen(false);
+    setEditing(false);
+  };
+
+  const saveChat = () => {
+    if (!isHttpsUrl(chatValue)) {
+      setChatError(t('ask.chatInvalid'));
+      return;
+    }
+    setChatError('');
+    updateChat.mutate(
+      { id: data.id, chatLink: chatValue.trim() },
+      { onSuccess: () => setChatEditing(false) },
+    );
+  };
+
+  const saveGoal = () => {
+    const issue = amountIssue(goalAmount, MIN_COLLECTION_AMOUNT);
+    const amount = parseWhole(goalAmount);
+    if (issue || amount == null) {
+      setGoalError(issue === 'whole' ? t('ask.whole') : t('ask.minAmount'));
+      return;
+    }
+    setGoalError('');
+    updateGoal.mutate({ id: data.id, amount, inputCurrency: 'USD' });
+  };
+
+  const sosUrl = buildSosInviteUrl(data.id);
+  const headerAction = showAdmin ? (
+    <Button variant="text" onClick={() => { setReason(null); setAdminOpen(true); }}>
+      {adminHold ? t('collection.resume') : t('collection.suspend')}
+    </Button>
+  ) : showDecline ? (
+    <Button variant="textDanger" onClick={() => setDeclineOpen(true)}>{t('collection.decline')}</Button>
+  ) : null;
 
   return (
-    <div className="p-4 space-y-4">
-      <div className="flex items-center gap-3">
-        <Avatar src={collection.creator.photoUrl} name={resolve(collection.creatorId, collection.creator.name)} size="lg" />
-        <div className="flex-1">
-          <div className="flex items-center gap-2">
-            <button onClick={() => navigate(`/profile/${collection.creatorId}`)} className="text-lg font-bold text-gray-900 dark:text-white hover:underline">{resolve(collection.creatorId, collection.creator.name)}</button>
-            <span className="flex items-center gap-1 text-xs text-gray-400">
-              <Users className="w-3 h-3" />
-              {(collection.creator as any).connectionCount ?? 0}
-            </span>
-          </div>
-          <div className="flex items-center gap-2 mt-1">
-            <Badge variant={statusVariant}>{getStatusLabel(collection.status)}</Badge>
-            <Badge variant="info">{collection.type === 'EMERGENCY' ? t('collection.emergency') : t('collection.regular')}</Badge>
+    <Screen
+      width="column"
+      back={back}
+      title={desktop ? (owner ? t('collection.yours') : t('collection.title')) : undefined}
+      action={headerAction}
+    >
+      <AskProgressSync />
+      <Card className="mt-2">
+        {showPath ? <div className="mb-4"><PathFigure names={pathNames} /></div> : null}
+        <div className="flex items-center gap-3">
+          <Avatar name={creatorName} src={data.creator.photoUrl} size={48} />
+          <div className="min-w-0">
+            <button type="button" className="so-focus block truncate text-title font-extrabold" onClick={() => navigate(`/person/${data.creatorId}`)}>
+              {creatorName}
+            </button>
+            <p className="mt-0.5 text-label font-semibold text-ink-muted">{subtitle}</p>
           </div>
         </div>
-      </div>
-
-      {pathToCreator?.path && pathToCreator.path.length > 1 && (
-        <div className="p-3 bg-gray-50 dark:bg-gray-800/50 rounded-lg">
-          <p className="text-xs text-gray-500 dark:text-gray-300 mb-2">{t('collection.connectionToCreator')}</p>
-          <HandshakePath path={pathToCreator.path} onUserClick={(uid) => navigate(`/profile/${uid}`)} resolveName={resolve} />
-        </div>
-      )}
-
-      <Card>
-        <CardContent className="py-4">
-          <div className="flex justify-between items-end mb-2">
-            <div>
-              <p className="text-sm text-gray-500 dark:text-gray-300">{t('collection.collected')}</p>
-              <p className="text-2xl font-bold text-gray-900 dark:text-white">${Math.round(collection.currentAmount)} USD</p>
-            </div>
-            <div className="text-right">
-              {isOwner && (collection.status === 'ACTIVE' || collection.status === 'BLOCKED') && editingGoal ? (
-                <div className="flex flex-col gap-1 items-end">
-                  <div className="flex gap-1 items-center">
-                    <div className="w-24">
-                      <Input
-                        type="number"
-                        min={10}
-                        step={1}
-                        value={goalAmount}
-                        onChange={(e) => { setGoalAmount(e.target.value); setGoalError(''); }}
-                        error={goalError}
-                        onFocus={(e) => { setTimeout(() => e.target.scrollIntoView({ behavior: 'smooth', block: 'center' }), 300); }}
-                      />
-                    </div>
-                    <span className="h-[38px] flex items-center text-sm font-medium text-gray-500 dark:text-gray-300" aria-hidden="true">$</span>
-                    <button
-                      onClick={() => {
-                        const num = Number(goalAmount);
-                        if (!Number.isInteger(num) || num < 10) { setGoalError(t('create.minAmount')); return; }
-                        updateCollectionAmount.mutate(
-                          { id: collection.id, amount: num },
-                          { onSuccess: () => setEditingGoal(false) }
-                        );
-                      }}
-                      disabled={updateCollectionAmount.isPending}
-                      className="p-2 text-green-600 hover:text-green-700 disabled:opacity-50"
-                    >
-                      <Check className="w-4 h-4" />
-                    </button>
-                    <button
-                      onClick={() => { setEditingGoal(false); setGoalError(''); }}
-                      className="p-2 text-gray-400 hover:text-gray-600 dark:text-gray-300"
-                    >
-                      <X className="w-4 h-4" />
-                    </button>
-                  </div>
-                </div>
-              ) : (
-                <>
-                  {hasGoal && (
-                    <div className="flex items-start gap-1 justify-end">
-                      <div>
-                        <p className="text-sm text-gray-500 dark:text-gray-300">{t('collection.goal')}</p>
-                        <p className="text-2xl font-bold text-gray-900 dark:text-white">${collection.amount} USD</p>
-                      </div>
-                      {isOwner && (collection.status === 'ACTIVE' || collection.status === 'BLOCKED') && (
-                        <button
-                          onClick={() => {
-                            setGoalAmount(String(collection.amount ?? ''));
-                            setGoalError('');
-                            setEditingGoal(true);
-                          }}
-                          className="mt-5 p-1.5 text-gray-400 hover:text-gray-600 dark:text-gray-300 dark:hover:text-gray-100"
-                          title={t('collection.editGoal')}
-                        >
-                          <Pencil className="w-3.5 h-3.5" />
-                        </button>
-                      )}
-                    </div>
-                  )}
-                  {!hasGoal && isOwner && (collection.status === 'ACTIVE' || collection.status === 'BLOCKED') && (
-                    <button
-                      onClick={() => { setGoalAmount(''); setGoalError(''); setEditingGoal(true); }}
-                      className="flex items-center gap-1 text-sm text-blue-600 dark:text-blue-400 hover:underline"
-                    >
-                      <Pencil className="w-3.5 h-3.5" /> {t('collection.setGoal')}
-                    </button>
-                  )}
-                </>
-              )}
-            </div>
-          </div>
-          {hasGoal && !editingGoal && <><Progress value={collection.currentAmount} max={collection.amount!} /><p className="text-xs text-gray-500 dark:text-gray-300 mt-1 text-right">{percentage.toFixed(0)}%</p></>}
-        </CardContent>
+        {hasGoal ? (
+          <Meter mine={mineTotal} others={othersTotal} goal={data.amount ?? 0} showMine={!owner && mineTotal > 0} />
+        ) : (
+          <p className="mt-3 text-label font-semibold text-ink-muted">{t('collection.noGoal')}</p>
+        )}
+        {showCloseNote ? (
+          <p className="mt-3 text-label font-semibold text-ink-muted">
+            {t('collection.closesNote', { name: firstName(creatorName) })}
+          </p>
+        ) : null}
       </Card>
 
-      {(hasObligation || isOwner) && (
-        <div className="space-y-1">
-          {editingChatLink ? (
-            <div className="flex gap-2 items-start">
-              <div className="flex-1">
-                <Input
-                  type="url"
-                  placeholder="https://t.me/..."
-                  value={chatLinkValue}
-                  onChange={(e) => { setChatLinkValue(e.target.value); setChatLinkError(''); }}
-                  error={chatLinkError}
-                  onFocus={(e) => { setTimeout(() => e.target.scrollIntoView({ behavior: 'smooth', block: 'center' }), 300); }}
-                />
-              </div>
-              <button
-                onClick={() => {
-                  try { new URL(chatLinkValue); } catch { setChatLinkError(t('create.invalidUrl')); return; }
-                  updateChatLink.mutate({ id: collection.id, chatLink: chatLinkValue }, { onSuccess: () => setEditingChatLink(false) });
-                }}
-                disabled={updateChatLink.isPending}
-                className="p-2 text-green-600 hover:text-green-700 disabled:opacity-50"
-              >
-                <Check className="w-4 h-4" />
-              </button>
-              <button onClick={() => { setEditingChatLink(false); setChatLinkError(''); }} className="p-2 text-gray-400 hover:text-gray-600 dark:text-gray-300">
-                <X className="w-4 h-4" />
-              </button>
-            </div>
-          ) : (
-            <div className="flex items-center gap-2">
-              {collection.chatLink && /^https?:\/\//i.test(collection.chatLink) ? (
-                <a href={collection.chatLink} target="_blank" rel="noopener noreferrer" className="flex-1 flex items-center gap-2 p-3 bg-blue-50 dark:bg-blue-950/30 rounded-lg text-blue-600 dark:text-blue-400 text-sm hover:underline">
-                  <ExternalLink className="w-4 h-4" /> {t('collection.openChat')}
-                </a>
-              ) : isOwner ? (
-                <span className="flex-1 p-3 text-sm text-gray-400 dark:text-gray-500">{t('collection.noChatLink')}</span>
-              ) : null}
-              {isOwner && (
-                <button
-                  onClick={() => { setChatLinkValue(collection.chatLink || ''); setChatLinkError(''); setEditingChatLink(true); }}
-                  className="p-2.5 text-gray-400 hover:text-gray-600 dark:text-gray-300 dark:hover:text-gray-100"
-                  title={t('collection.editChatLink')}
-                >
-                  <Pencil className="w-4 h-4" />
-                </button>
-              )}
-            </div>
-          )}
+      {adminHold ? (
+        <div className="mt-3 rounded-xl bg-sos-soft px-4 py-3 text-body-s font-semibold text-sos">
+          <p className="font-extrabold">{t('collection.suspended')}</p>
+          {owner && isReason(data.blockReason) ? (
+            <p className="mt-1">{t('collection.suspendedReason', { reason: t(`collection.reason.${data.blockReason}`) })}</p>
+          ) : null}
+          {owner ? (
+            <Button variant="text" className="mt-1 px-0 text-sos" onClick={() => setHelpOpen(true)}>
+              {t('collection.writeSupport')}
+            </Button>
+          ) : null}
         </div>
-      )}
+      ) : null}
 
-      {!isOwner && !hasObligation && collection.status === 'ACTIVE' && (
-        <Card>
-          <CardHeader><h3 className="font-semibold text-gray-900 dark:text-white">{t('collection.expressIntention')}</h3></CardHeader>
-          <CardContent>
-            <div className="space-y-2">
-              <div className="flex gap-2">
-                <div className="flex-1">
-                  <Input type="number" min={1} step={1} placeholder={t('collection.amountPlaceholder')} hint={t('hints.intentionAmount')} value={amount} onChange={(e) => setAmount(e.target.value)} error={error}
-                    onFocus={(e) => { setTimeout(() => e.target.scrollIntoView({ behavior: 'smooth', block: 'center' }), 300); }}
-                  />
-                </div>
-                <span className="h-[38px] flex items-center text-sm font-medium text-gray-500 dark:text-gray-300" aria-hidden="true">$</span>
-                <Button onClick={handleSubmitObligation} disabled={createObligation.isPending}>{t('collection.submit')}</Button>
-              </div>
-            </div>
-          </CardContent>
+      {owner && !hasGoal && !closed ? (
+        <Card className="mt-3">
+          <Input
+            variant="money"
+            label={t('collection.noGoal')}
+            value={goalAmount}
+            onValueChange={(value) => { setGoalAmount(value); setGoalError(''); }}
+            error={goalError}
+          />
+          <Button className="mt-3 w-full" loading={updateGoal.isPending} onClick={saveGoal}>{t('collection.saveGoal')}</Button>
         </Card>
-      )}
+      ) : null}
 
-      {isOwner && (collection.status === 'ACTIVE' || collection.status === 'BLOCKED') && (() => {
-        const sosUrl = buildSosInviteUrl(collection.id);
-        const isRegular = collection.type === 'REGULAR';
-        // Print-quality PNG of the same QR, e.g. to put on a website or a poster
-        const downloadQr = () => {
-          const canvas = document.getElementById(`qr-download-${collection.id}`) as HTMLCanvasElement | null;
-          if (!canvas) return;
-          const a = document.createElement('a');
-          a.href = canvas.toDataURL('image/png');
-          a.download = `social-organizer-qr-${collection.id}.png`;
-          a.click();
-        };
-        return (
-          <div className="space-y-2">
-            <div className="flex gap-2">
-              <button
-                onClick={() => {
-                  navigator.clipboard.writeText(sosUrl);
-                  setSosCopied(true);
-                  setTimeout(() => setSosCopied(false), 2500);
-                }}
-                className="flex-1 flex items-center justify-center gap-2 p-3 rounded-lg bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800 text-red-600 dark:text-red-400 text-sm font-medium hover:bg-red-100 dark:hover:bg-red-900/40 transition-colors"
-              >
-                {sosCopied ? <Check className="w-4 h-4" /> : <Share2 className="w-4 h-4" />}
-                {isRegular
-                  ? (sosCopied ? t('collection.linkCopied') : t('collection.shareLinkButton'))
-                  : (sosCopied ? t('collection.sosLinkCopied') : t('collection.sosInviteButton'))}
-              </button>
-              <button
-                onClick={() => setShowQr((v) => !v)}
-                className={`p-3 rounded-lg border text-sm font-medium transition-colors ${showQr ? 'bg-red-100 dark:bg-red-900/50 border-red-300 dark:border-red-700 text-red-700 dark:text-red-300' : 'bg-red-50 dark:bg-red-950/30 border-red-200 dark:border-red-800 text-red-600 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-900/40'}`}
-                title={t('collection.qrTitle')}
-                aria-label={t('collection.qrTitle')}
-              >
-                <QrCode className="w-4 h-4" />
-              </button>
-            </div>
-            {showQr && (
-              <div className="flex flex-col items-center gap-2 p-4 rounded-lg bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700">
-                <QRCodeSVG value={sosUrl} size={180} level="M" includeMargin />
-                <p className="text-xs text-gray-400 text-center">{t('collection.qrScanHint')}</p>
-                <QRCodeCanvas id={`qr-download-${collection.id}`} value={sosUrl} size={1024} level="M" includeMargin className="hidden" />
-                <button
-                  type="button"
-                  onClick={downloadQr}
-                  className="flex items-center gap-1.5 text-sm font-medium text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors"
-                >
-                  <Download className="w-4 h-4" />
-                  {t('collection.qrDownload')}
-                </button>
-              </div>
-            )}
-            <div className="flex justify-center">
-              <VideoGuide />
-            </div>
+      {!owner && !myObl && data.status === 'ACTIVE' && !adminHold ? (
+        <Card className="mt-3">
+          <Input
+            variant="money"
+            label={t('collection.yourAmount')}
+            value={joinAmount}
+            onValueChange={(value) => { setJoinAmount(value); setJoinError(''); }}
+            error={joinError}
+            hint={joinError ? undefined : t('collection.minStake', { amount: formatMoney(stake) })}
+          />
+          <Button className="mt-4 w-full" loading={createObligation.isPending || setBudget.isPending} onClick={join}>{t('collection.participate')}</Button>
+        </Card>
+      ) : null}
+
+      {!owner && !myObl && goalMet ? (
+        <Card className="mt-3">
+          <p className="text-body-s font-semibold text-ink-muted">{t('collection.goalReached')}</p>
+        </Card>
+      ) : null}
+
+      {needsConfirm && myObl ? (
+        <Card className="mt-3">
+          <div className="flex items-start gap-3 rounded-lg bg-warm-soft p-3 text-caption font-semibold text-warm-ink">
+            <span className="grid h-9 w-9 shrink-0 place-items-center rounded-md bg-surface">
+              <IconClock className="h-5 w-5" />
+            </span>
+            <p>
+              <b className="font-extrabold">{t('collection.cycleUntil', { date: cycleUntil })}</b>{' '}
+              {t('collection.cycleElse', { amount: formatMoney(myObl.amount) })}
+            </p>
           </div>
-        );
-      })()}
-
-      {isOwner && (collection.status === 'ACTIVE' || collection.status === 'BLOCKED') && (
-        <Button variant="outline" className="w-full" onClick={() => closeCollection.mutate({ id: collection.id })}>{t('collection.close')}</Button>
-      )}
-
-      <Card>
-        <CardHeader><h3 className="font-semibold text-gray-900 dark:text-white">{t('collection.participants')} ({collection.obligations.length})</h3></CardHeader>
-        <CardContent>
-          {collection.obligations.length === 0 ? (
-            <p className="text-sm text-gray-500 dark:text-gray-300 text-center py-2">{t('collection.noParticipants')}</p>
+          {otherOpen ? (
+            <div className="mt-3">
+              <Input variant="money" label={t('collection.otherAmount')} value={editAmount} onValueChange={setEditAmount} error={editError} />
+              <Button
+                className="mt-3 w-full"
+                loading={confirmCycle.isPending || updateObligation.isPending}
+                onClick={() => {
+                  const message = pledgeMessage(editAmount);
+                  const amount = parseWhole(editAmount);
+                  if (message || amount == null) {
+                    setEditError(message || t('collection.minOne'));
+                    return;
+                  }
+                  confirm(amount).catch(() => setEditError(t('common.error')));
+                }}
+              >
+                {t('collection.confirmAmount', { amount: formatMoney(parseWhole(editAmount) ?? myObl.amount) })}
+              </Button>
+            </div>
           ) : (
-            <div className="space-y-2">
-              {collection.obligations.map((obl) => {
-                const oblData = obl as typeof obl & { confirmedAt?: string | null };
-                const isMyObl = obl.userId === userId;
-                const canEdit = isMyObl && (collection.status === 'ACTIVE' || collection.status === 'BLOCKED');
-                const isEditing = editingOblId === obl.id;
-
-                const startEdit = () => {
-                  setEditingOblId(obl.id);
-                  setEditAmount(String(obl.amount));
-                  setEditError('');
-                };
-
-                const cancelEdit = () => {
-                  setEditingOblId(null);
-                  setEditError('');
-                };
-
-                const saveEdit = () => {
-                  const num = Number(editAmount);
-                  if (!Number.isInteger(num) || num < 1) { setEditError(t('collection.minAmount')); return; }
-                  setEditError('');
-                  updateAmount.mutate(
-                    { obligationId: obl.id, amount: num },
-                    { onSuccess: () => setEditingOblId(null) }
-                  );
-                };
-
-                return (
-                  <div key={obl.id} className="py-1">
-                    <div className="flex items-center justify-between">
-                      <button onClick={() => navigate(`/profile/${obl.userId}`)} className="flex items-center gap-2 hover:underline">
-                        <Avatar src={obl.user.photoUrl} name={resolve(obl.userId, obl.user.name)} size="sm" />
-                        <span className="text-sm text-gray-900 dark:text-white">{resolve(obl.userId, obl.user.name)}</span>
-                        <span className="flex items-center gap-0.5 text-xs text-gray-400">
-                          <Users className="w-3 h-3" />
-                          {(obl.user as any).connectionCount ?? 0}
-                        </span>
-                      </button>
-                      {!isEditing && (
-                        <div className="flex items-center gap-2">
-                          <div className="text-right">
-                            <span className="text-sm font-medium text-gray-900 dark:text-white">${Math.round(obl.amount)} USD</span>
-                            {(oblData as any).confirmedAt && (
-                              <p className="text-xs text-green-600 dark:text-green-400 font-medium">{t('collection.paymentConfirmed')}</p>
-                            )}
-                          </div>
-                          {isOwner && (collection.status === 'ACTIVE' || collection.status === 'BLOCKED') && (
-                            <button
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                confirmPayment.mutate({ obligationId: obl.id });
-                              }}
-                              disabled={confirmPayment.isPending}
-                              className={`p-2.5 -m-1.5 transition-colors disabled:opacity-50 ${
-                                (oblData as any).confirmedAt
-                                  ? 'text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300'
-                                  : 'text-gray-300 dark:text-gray-600 hover:text-green-500 dark:hover:text-green-400'
-                              }`}
-                              title={(oblData as any).confirmedAt ? t('collection.unconfirmPayment') : t('collection.confirmPayment')}
-                            >
-                              <CheckCircle2 className="w-5 h-5" />
-                            </button>
-                          )}
-                          {canEdit && (
-                            <button onClick={(e) => { e.stopPropagation(); startEdit(); }} className="p-2.5 -m-1.5 text-gray-400 hover:text-gray-600 dark:text-gray-300 dark:hover:text-gray-100 active:text-blue-500" title={t('collection.editAmount')}>
-                              <Pencil className="w-4 h-4" />
-                            </button>
-                          )}
-                        </div>
-                      )}
-                    </div>
-                    {isEditing && (
-                      <div className="mt-2 space-y-2 pl-8">
-                        <div className="flex gap-2">
-                          <div className="flex-1">
-                            <Input type="number" min={1} step={1} value={editAmount} onChange={(e) => setEditAmount(e.target.value)} error={editError}
-                              onFocus={(e) => { setTimeout(() => e.target.scrollIntoView({ behavior: 'smooth', block: 'center' }), 300); }}
-                            />
-                          </div>
-                          <span className="h-[38px] flex items-center text-sm font-medium text-gray-500 dark:text-gray-300" aria-hidden="true">$</span>
-                          <button onClick={saveEdit} disabled={updateAmount.isPending} className="p-2 text-green-600 hover:text-green-700 disabled:opacity-50" title={t('collection.saveAmount')}>
-                            <Check className="w-4 h-4" />
-                          </button>
-                          <button onClick={cancelEdit} className="p-2 text-gray-400 hover:text-gray-600 dark:text-gray-300" title={t('collection.cancelEdit')}>
-                            <X className="w-4 h-4" />
-                          </button>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
+            <div className="mt-3 flex flex-col gap-2.5">
+              <Button
+                className="w-full"
+                loading={confirmCycle.isPending}
+                onClick={() => confirm(myObl.amount).catch(() => setEditError(t('common.error')))}
+              >
+                {t('collection.confirmAmount', { amount: formatMoney(myObl.amount) })}
+              </Button>
+              <Button
+                variant="secondary"
+                className="w-full"
+                onClick={() => { setEditAmount(String(myObl.amount)); setEditError(''); setOtherOpen(true); }}
+              >
+                {t('collection.otherAmount')}
+              </Button>
+              {editError ? <p className="text-label font-semibold text-sos">{editError}</p> : null}
             </div>
           )}
-        </CardContent>
-      </Card>
-    </div>
+        </Card>
+      ) : null}
+
+      {!owner && myObl && !needsConfirm && !closed && !adminHold ? (
+        <Card className="mt-3">
+          {editing ? (
+            <>
+              <Input variant="money" label={t('collection.yourAmount')} value={editAmount} onValueChange={setEditAmount} error={editError} />
+              <div className="mt-3 flex flex-col gap-2">
+                <Button className="w-full" loading={updateObligation.isPending} onClick={saveEdit}>{t('collection.saveAmount')}</Button>
+                <Button variant="text" className="w-full" onClick={() => setEditing(false)}>{t('common.cancel')}</Button>
+              </div>
+            </>
+          ) : (
+            <div className="flex items-center gap-3">
+              <div className="min-w-0 flex-1">
+                <b className="block text-h3 font-extrabold tabular-nums">{formatMoney(myObl.amount)}</b>
+                <span className="text-label font-semibold text-ink-muted">{t('collection.youParticipate')}</span>
+              </div>
+              <Button
+                variant="secondary"
+                size="md"
+                onClick={() => { setEditAmount(String(myObl.amount)); setEditError(''); setEditing(true); }}
+              >
+                {t('collection.change')}
+              </Button>
+            </div>
+          )}
+          {isHttpsUrl(data.chatLink) ? (
+            <Button className="mt-4 w-full" icon={<IconChat />} onClick={() => window.open(data.chatLink, '_blank', 'noopener,noreferrer')}>
+              {t('collection.openCollectionChat')}
+            </Button>
+          ) : null}
+          <p className="mt-3 text-label font-semibold text-ink-muted">{t('collection.moneyNote')}</p>
+          {showAdmin && showDecline ? (
+            <Button variant="textDanger" className="mt-2 w-full" onClick={() => setDeclineOpen(true)}>{t('collection.decline')}</Button>
+          ) : null}
+        </Card>
+      ) : null}
+
+      {owner && !closed ? (
+        <Card className="mt-3">
+          {chatEditing ? (
+            <>
+              <Input
+                label={t('collection.chatLabel')}
+                value={chatValue}
+                error={chatError}
+                inputMode="url"
+                autoCapitalize="none"
+                onChange={(event) => { setChatValue(event.target.value); setChatError(''); }}
+              />
+              <div className="mt-3 flex flex-col gap-2">
+                <Button className="w-full" loading={updateChat.isPending} onClick={saveChat}>{t('collection.saveAmount')}</Button>
+                <Button variant="text" className="w-full" onClick={() => setChatEditing(false)}>{t('common.cancel')}</Button>
+              </div>
+            </>
+          ) : (
+            <button
+              type="button"
+              className="so-focus flex w-full items-center gap-3 rounded-lg bg-canvas px-3.5 py-3 text-left"
+              onClick={() => { setChatValue(data.chatLink); setChatError(''); setChatEditing(true); }}
+            >
+              <span className="min-w-0 flex-1">
+                <span className="block text-micro font-semibold text-ink-muted">{t('collection.chatLabel')}</span>
+                <span className="block truncate text-body-s font-extrabold">{shortUrl(data.chatLink)}</span>
+              </span>
+              <IconPen className="h-5 w-5 shrink-0 text-care" />
+            </button>
+          )}
+          {!adminHold ? (
+            <>
+              <div className="mt-3 grid grid-cols-[1fr_56px] gap-2.5">
+                <Button className="w-full" icon={<IconShare />} onClick={share}>
+                  {copied ? t('collection.shareCopied') : t('collection.share')}
+                </Button>
+                <Button variant="secondary" className="w-full px-0" aria-label={t('collection.qrSheetTitle')} onClick={() => setQrOpen(true)}>
+                  <IconQr className="h-5 w-5" />
+                </Button>
+              </div>
+              <p className="mt-3 text-label font-semibold text-ink-muted">{t('collection.publicWarning')}</p>
+            </>
+          ) : null}
+        </Card>
+      ) : null}
+
+      <ParticipantList
+        people={people}
+        showPaid={owner && !closed}
+        onPerson={(userIdToOpen) => navigate(`/person/${userIdToOpen}`)}
+        onPaid={owner && !closed ? setPayTarget : undefined}
+        onRemove={owner && !closed ? setRemoveTarget : undefined}
+      />
+
+      {owner && !closed ? (
+        <Button variant="textDanger" className="mt-4 w-full" onClick={() => setCloseOpen(true)}>
+          {t('collection.close')}
+        </Button>
+      ) : null}
+
+      <QrSheet open={qrOpen} url={sosUrl} onClose={() => setQrOpen(false)} />
+
+      <Sheet
+        open={declineOpen}
+        onClose={() => setDeclineOpen(false)}
+        title={t('collection.declineTitle')}
+        footer={sheetPair(
+          desktop,
+          <Button variant="danger" className="w-full" loading={decline.isPending} onClick={() => decline.mutate({ collectionId: data.id }, { onSuccess: () => setDeclineOpen(false) })}>
+            {t('collection.decline')}
+          </Button>,
+          <Button variant="secondary" className="w-full" onClick={() => setDeclineOpen(false)}>{t('collection.stay')}</Button>,
+          true,
+        )}
+      />
+
+      <Sheet
+        open={closeOpen}
+        onClose={() => setCloseOpen(false)}
+        title={t('collection.closeTitle')}
+        description={hasGoal ? t('collection.closeBody', { current: formatMoney(data.currentAmount), goal: formatMoney(data.amount ?? 0) }) : t('collection.noGoal')}
+        footer={sheetPair(
+          desktop,
+          <Button variant="danger" className="w-full" loading={closeCollection.isPending} onClick={() => closeCollection.mutate({ id: data.id }, { onSuccess: () => setCloseOpen(false) })}>
+            {t('collection.close')}
+          </Button>,
+          <Button variant="secondary" className="w-full" onClick={() => setCloseOpen(false)}>{t('collection.stay')}</Button>,
+          true,
+        )}
+      />
+
+      <Sheet
+        open={payTarget != null}
+        onClose={() => setPayTarget(null)}
+        title={payTarget ? t(payTarget.paid ? 'collection.payUndoTitle' : 'collection.payTitle', { name: payTarget.name }) : ''}
+        footer={sheetPair(
+          desktop,
+          <Button
+            className="w-full"
+            loading={confirmPayment.isPending}
+            onClick={() => {
+              if (!payTarget) return;
+              confirmPayment.mutate({ obligationId: payTarget.id }, { onSuccess: () => setPayTarget(null) });
+            }}
+          >
+            {t('collection.payYes')}
+          </Button>,
+          <Button variant="secondary" className="w-full" onClick={() => setPayTarget(null)}>{t('common.cancel')}</Button>,
+          false,
+        )}
+      />
+
+      <Sheet
+        open={removeTarget != null}
+        onClose={() => setRemoveTarget(null)}
+        title={removeTarget ? t('collection.removeTitle', { name: removeTarget.name }) : ''}
+        description={t('collection.removeBody')}
+        footer={sheetPair(
+          desktop,
+          <Button
+            variant="danger"
+            className="w-full"
+            loading={revoke.isPending}
+            onClick={() => {
+              if (!removeTarget) return;
+              revoke.mutate({ targetUserId: removeTarget.userId }, { onSuccess: () => setRemoveTarget(null) });
+            }}
+          >
+            {t('collection.removeYes')}
+          </Button>,
+          <Button variant="secondary" className="w-full" onClick={() => setRemoveTarget(null)}>{t('collection.stay')}</Button>,
+          true,
+        )}
+      />
+
+      <Sheet
+        open={adminOpen}
+        onClose={() => setAdminOpen(false)}
+        title={adminHold ? t('collection.resumeTitle') : t('collection.suspendTitle')}
+        description={adminHold ? t('collection.resumeBody') : undefined}
+        footer={sheetPair(
+          desktop,
+          <Button
+            variant={adminHold ? 'primary' : 'danger'}
+            className="w-full"
+            loading={block.isPending || unblock.isPending}
+            disabled={!adminHold && reason == null}
+            onClick={() => {
+              if (adminHold) {
+                unblock.mutate({ id: data.id }, { onSuccess: () => setAdminOpen(false) });
+                return;
+              }
+              if (!reason) return;
+              block.mutate({ id: data.id, reason }, { onSuccess: () => setAdminOpen(false) });
+            }}
+          >
+            {adminHold ? t('collection.resume') : t('collection.suspend')}
+          </Button>,
+          <Button variant="secondary" className="w-full" onClick={() => setAdminOpen(false)}>{t('common.cancel')}</Button>,
+          !adminHold,
+        )}
+      >
+        {adminHold ? null : (
+          <div className="flex flex-col gap-2">
+            {REASONS.map((item) => (
+              <button
+                key={item}
+                type="button"
+                aria-pressed={reason === item}
+                onClick={() => setReason(item)}
+                className={reason === item
+                  ? 'so-focus min-h-row rounded-lg bg-ink px-4 text-left text-body font-bold text-canvas'
+                  : 'so-focus min-h-row rounded-lg border border-line bg-canvas px-4 text-left text-body font-bold text-ink'}
+              >
+                {t(`collection.reason.${item}`)}
+              </button>
+            ))}
+          </div>
+        )}
+      </Sheet>
+
+      {helpOpen ? <ChatAssistant /> : null}
+    </Screen>
   );
 }

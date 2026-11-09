@@ -7,8 +7,8 @@ import { isAdmin } from '../admin.js';
 import { getAskAccess, assertAskAllowed, isSpecialAsker } from '../services/ask-access.service.js';
 import { BLOCK_REASONS } from '../config/ask.js';
 
-/** Chat links are shown as buttons to every participant: only plain web links, never javascript: etc. (SO-14) */
-const chatLinkSchema = z.string().max(500).url().refine((u) => /^https?:\/\//i.test(u), 'Link must start with https://');
+/** Chat links are shown as buttons: https only, never javascript: or http (SO-14). */
+const chatLinkSchema = z.string().max(500).url().refine((u) => /^https:\/\//i.test(u), 'Link must start with https://');
 
 function assertAdmin(userId: string) {
   if (!isAdmin(userId)) throw new TRPCError({ code: 'FORBIDDEN', message: 'Only admins can block collections' });
@@ -150,8 +150,44 @@ export const collectionRouter = router({
         GROUP BY u.id
       `;
       const countMap = new Map(connectionCounts.map((c) => [c.user_id, Number(c.count)]));
+      const visible = collection.obligations.filter((o) => o.unsubscribedAt == null);
+      const renewal = collection.type === 'REGULAR' && collection.cycleNumber > 1 && collection.currentCycleStart != null;
+      const acked = new Set<string>();
+      if (renewal) {
+        const rows = await ctx.db.notification.findMany({
+          where: {
+            collectionId: collection.id,
+            type: 'CYCLE_RENEWED',
+            wave: collection.cycleNumber,
+            status: 'RESPONDED',
+          },
+          select: { userId: true },
+        });
+        for (const row of rows) acked.add(row.userId);
+      }
 
-      const currentAmount = collection.obligations.reduce((sum, o) => sum + o.amount, 0);
+      // A direct connection created with (or after) the collection is treated as a public-link join.
+      // There is no source column on Connection. Friends from before the collection are left alone.
+      const viaLink = new Set<string>();
+      if (ctx.userId === collection.creatorId && visible.length > 0) {
+        const pairs = visible.map((o) => {
+          const [userAId, userBId] = [collection.creatorId, o.userId].sort();
+          return { userAId: userAId!, userBId: userBId! };
+        });
+        const links = await ctx.db.connection.findMany({
+          where: { OR: pairs },
+          select: { userAId: true, userBId: true, createdAt: true },
+        });
+        const started = collection.createdAt.getTime() - 60_000;
+        for (const link of links) {
+          if (link.createdAt.getTime() < started) continue;
+          const other = link.userAId === collection.creatorId ? link.userBId : link.userAId;
+          viaLink.add(other);
+        }
+      }
+
+      const cycleStart = collection.currentCycleStart?.getTime() ?? 0;
+      const currentAmount = visible.reduce((sum, o) => sum + o.amount, 0);
       return {
         ...collection,
         currentAmount,
@@ -159,12 +195,15 @@ export const collectionRouter = router({
           ...collection.creator,
           connectionCount: countMap.get(collection.creatorId) || 0,
         },
-        obligations: collection.obligations.map((o) => ({
+        obligations: visible.map((o) => ({
           ...o,
           user: {
             ...o.user,
             connectionCount: countMap.get(o.userId) || 0,
           },
+          /** null outside a renewal cycle; false until the person confirms the new cycle. */
+          cycleConfirmed: renewal ? o.createdAt.getTime() >= cycleStart || acked.has(o.userId) : null,
+          joinedViaLink: viaLink.has(o.userId),
         })),
       };
     }),
@@ -293,26 +332,45 @@ export const collectionRouter = router({
       where: { creatorId: ctx.userId, status: { in: ['ACTIVE', 'BLOCKED'] } },
       include: {
         _count: { select: { obligations: true } },
-        obligations: { select: { amount: true } },
+        obligations: { select: { amount: true, unsubscribedAt: true } },
       },
       orderBy: { createdAt: 'desc' },
     });
-    return collections.map((col) => ({
-      ...col,
-      currentAmount: col.obligations.reduce((sum, o) => sum + o.amount, 0),
-      obligations: undefined,
-    }));
+    return collections.map((col) => {
+      const active = col.obligations.filter((o) => o.unsubscribedAt == null);
+      return {
+        ...col,
+        currentAmount: active.reduce((sum, o) => sum + o.amount, 0),
+        participantCount: active.length,
+        obligations: undefined,
+      };
+    });
   }),
 
   myParticipating: protectedProcedure.query(async ({ ctx }) => {
-    return ctx.db.obligation.findMany({
-      where: { userId: ctx.userId },
+    const rows = await ctx.db.obligation.findMany({
+      where: { userId: ctx.userId, unsubscribedAt: null },
       include: {
         collection: {
-          include: { creator: { select: { id: true, name: true, photoUrl: true } } },
+          include: {
+            creator: { select: { id: true, name: true, photoUrl: true } },
+            obligations: { select: { amount: true, unsubscribedAt: true } },
+          },
         },
       },
       orderBy: { createdAt: 'desc' },
+    });
+    return rows.map((row) => {
+      const { obligations, ...collection } = row.collection;
+      const active = obligations.filter((o) => o.unsubscribedAt == null);
+      return {
+        ...row,
+        collection: {
+          ...collection,
+          currentAmount: active.reduce((sum, o) => sum + o.amount, 0),
+          participantCount: active.length,
+        },
+      };
     });
   }),
 
@@ -324,11 +382,12 @@ export const collectionRouter = router({
         where: { id: input.id },
         include: {
           creator: { select: { id: true, name: true, photoUrl: true } },
-          obligations: { select: { amount: true } },
+          obligations: { select: { amount: true, unsubscribedAt: true } },
         },
       });
       if (!collection) throw new TRPCError({ code: 'NOT_FOUND' });
-      const currentAmount = collection.obligations.reduce((sum, o) => sum + o.amount, 0);
+      const active = collection.obligations.filter((o) => o.unsubscribedAt == null);
+      const currentAmount = active.reduce((sum, o) => sum + o.amount, 0);
       return {
         id: collection.id,
         type: collection.type,
@@ -336,8 +395,11 @@ export const collectionRouter = router({
         amount: collection.amount,
         currentAmount,
         currency: collection.currency,
+        createdAt: collection.createdAt,
+        closedAt: collection.closedAt,
+        blockReason: collection.blockReason,
         creator: collection.creator,
-        _count: { obligations: collection.obligations.length },
+        _count: { obligations: active.length },
       };
     }),
 });

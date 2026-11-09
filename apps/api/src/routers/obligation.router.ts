@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { router, protectedProcedure } from '../trpc.js';
 import { TRPCError } from '@trpc/server';
-import { MIN_OBLIGATION_AMOUNT, NOTIFICATION_TTL_HOURS } from '@so/shared';
+import { MIN_OBLIGATION_AMOUNT, NOTIFICATION_TTL_HOURS, REGULAR_CYCLE_DAYS } from '@so/shared';
 import { sendGoalReachedToCreator } from '../services/notification.service.js';
 
 export const obligationRouter = router({
@@ -296,5 +296,52 @@ export const obligationRouter = router({
         where: { id: obligation.id },
         data: { unsubscribedAt: new Date() },
       });
+    }),
+
+  /**
+   * Caller keeps their amount for the current regular cycle.
+   * Obligation has no cycle-ack column, so the ack is the CYCLE_RENEWED row
+   * for this wave with status RESPONDED. expiresAt is past the cycle end,
+   * otherwise the hourly cleanup would drop the ack mid-cycle.
+   */
+  confirmCycle: protectedProcedure
+    .input(z.object({ collectionId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const collection = await ctx.db.collection.findUnique({ where: { id: input.collectionId } });
+      if (!collection) throw new TRPCError({ code: 'NOT_FOUND' });
+      if (collection.type !== 'REGULAR' || collection.cycleNumber < 2 || collection.currentCycleStart == null) {
+        throw new TRPCError({ code: 'BAD_REQUEST', message: 'Collection is not waiting for a cycle confirmation' });
+      }
+      if (collection.status !== 'ACTIVE') {
+        throw new TRPCError({ code: 'BAD_REQUEST', message: 'Collection is not active' });
+      }
+      const obligation = await ctx.db.obligation.findFirst({
+        where: { collectionId: input.collectionId, userId: ctx.userId, unsubscribedAt: null },
+      });
+      if (!obligation) throw new TRPCError({ code: 'NOT_FOUND', message: 'Active intention not found' });
+
+      const cycleEnd = collection.currentCycleStart.getTime() + REGULAR_CYCLE_DAYS * 24 * 60 * 60 * 1000;
+      const expiresAt = new Date(cycleEnd + 8 * 24 * 60 * 60 * 1000);
+      await ctx.db.notification.upsert({
+        where: {
+          userId_collectionId_type_wave: {
+            userId: ctx.userId,
+            collectionId: input.collectionId,
+            type: 'CYCLE_RENEWED',
+            wave: collection.cycleNumber,
+          },
+        },
+        create: {
+          userId: ctx.userId,
+          collectionId: input.collectionId,
+          type: 'CYCLE_RENEWED',
+          handshakePath: [],
+          expiresAt,
+          wave: collection.cycleNumber,
+          status: 'RESPONDED',
+        },
+        update: { status: 'RESPONDED', expiresAt },
+      });
+      return { ok: true as const };
     }),
 });
