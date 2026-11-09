@@ -5,8 +5,9 @@ import { MIN_COLLECTION_AMOUNT, NOTIFICATION_RATIO } from '@so/shared';
 import { sendCollectionNotifications, sendCollectionClosedTg } from '../services/notification.service.js';
 import { isAdmin } from '../admin.js';
 import { getAskAccess, assertAskAllowed, isSpecialAsker } from '../services/ask-access.service.js';
-import { BLOCK_REASONS } from '../config/ask.js';
-import { activeObligationTotals } from '../services/collection-amount.js';
+import { ADMIN_BLOCK_REASONS } from '../config/ask.js';
+import { activeObligationTotals, syncCollectionGoal } from '../services/collection-amount.js';
+import { settleOpenReviews } from '../services/moderation.service.js';
 
 /** Chat links are shown as buttons: https only, never javascript: or http (SO-14). */
 const chatLinkSchema = z.string().max(500).url().refine((u) => /^https:\/\//i.test(u), 'Link must start with https://');
@@ -25,7 +26,7 @@ export const collectionRouter = router({
 
   /** Admin-only: suspend a collection with a reason. Participants see it as paused. */
   block: protectedProcedure
-    .input(z.object({ id: z.string(), reason: z.enum(BLOCK_REASONS) }))
+    .input(z.object({ id: z.string(), reason: z.enum(ADMIN_BLOCK_REASONS) }))
     .mutation(async ({ ctx, input }) => {
       assertAdmin(ctx.userId);
       const collection = await ctx.db.collection.findUnique({ where: { id: input.id } });
@@ -55,10 +56,13 @@ export const collectionRouter = router({
       if (collection.status !== 'BLOCKED' || collection.blockReason == null) {
         throw new TRPCError({ code: 'BAD_REQUEST', message: 'Collection is not blocked by an admin' });
       }
-      return ctx.db.collection.update({
+      await ctx.db.collection.update({
         where: { id: input.id },
         data: { status: 'ACTIVE', blockedAt: null, blockReason: null },
       });
+      // A goal hold must come back if the circle (or an admin) lift was the only reason it stayed paused.
+      await syncCollectionGoal(ctx.db, input.id);
+      return ctx.db.collection.findUniqueOrThrow({ where: { id: input.id } });
     }),
 
   /**
@@ -155,6 +159,7 @@ export const collectionRouter = router({
   getById: protectedProcedure
     .input(z.object({ id: z.string() }))
     .query(async ({ ctx, input }) => {
+      await settleOpenReviews(ctx.db, input.id).catch((err) => console.error('[moderation] settle on read', err));
       const collection = await ctx.db.collection.findUnique({
         where: { id: input.id },
         include: {
@@ -417,6 +422,7 @@ export const collectionRouter = router({
   getPublic: publicProcedure
     .input(z.object({ id: z.string() }))
     .query(async ({ ctx, input }) => {
+      await settleOpenReviews(ctx.db, input.id).catch((err) => console.error('[moderation] settle on public read', err));
       const collection = await ctx.db.collection.findUnique({
         where: { id: input.id },
         include: {
