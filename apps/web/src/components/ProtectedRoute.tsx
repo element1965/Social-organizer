@@ -18,12 +18,17 @@ export function ProtectedRoute({ children }: { children: React.ReactNode }) {
   // Only a rejected token ends the session. Network/5xx (e.g. hosting down) must not log the
   // user out: during the Railway outage 23–25.09.2026 every app open wiped the session.
   const isError = error?.data?.code === 'UNAUTHORIZED';
+  // The account behind a stored session was deleted (e.g. on another device): sign out to "Account deleted".
+  const isDeleted = error?.data?.code === 'FORBIDDEN' && error.message === 'Account has been deleted';
 
   // The server rejected a stored session (auth.html №21): "Sign in again", then back to where the person was.
   // The target is fixed once (a ref), and logout() runs in an effect followed by a full load of that target:
   // otherwise the signed-out render of the shell gate would send the person to "/?redirect=" first.
   // The redirect is sanitised again where it is followed (onboarding/flow.ts safePath).
   const expiredTarget = useRef<string | null>(null);
+  if (isAuthenticated && isDeleted && expiredTarget.current === null) {
+    expiredTarget.current = '/login?deleted=1';
+  }
   if (isAuthenticated && isError && expiredTarget.current === null) {
     const back = safePath(location.pathname + location.search);
     expiredTarget.current =
@@ -52,8 +57,8 @@ export function ProtectedRoute({ children }: { children: React.ReactNode }) {
   // Wait for user data to load
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full" />
+      <div className="flex min-h-screen items-center justify-center bg-canvas">
+        <div className="h-8 w-8 animate-spin rounded-full border-4 border-care border-t-transparent" />
       </div>
     );
   }

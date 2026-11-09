@@ -28,11 +28,16 @@ const isAuthed = middleware(async ({ ctx, next }) => {
     where: { id: ctx.userId },
     select: { deletedAt: true },
   });
-  if (user?.deletedAt) {
+  // A valid token for an account that no longer exists (hard-deleted, auto-deleted, or a reset local database):
+  // UNAUTHORIZED makes every client sign out instead of retrying forever on NOT_FOUND.
+  if (!user) {
+    throw new TRPCError({ code: 'UNAUTHORIZED', message: 'Account not found' });
+  }
+  if (user.deletedAt) {
     throw new TRPCError({ code: 'FORBIDDEN', message: 'Account has been deleted' });
   }
   // Activity heartbeat (lastSeen + inactivity stage reset), throttled and fire-and-forget
-  if (user) touchUser(ctx.db, ctx.userId);
+  touchUser(ctx.db, ctx.userId);
   return next({ ctx: { ...ctx, userId: ctx.userId } });
 });
 
