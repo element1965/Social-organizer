@@ -1,20 +1,9 @@
 @import './styles/tokens.css';
+@import './styles/typography.css';
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-/* Telegram Mini App CSS custom properties */
-:root {
-  --tg-bg-color: #ffffff;
-  --tg-text-color: #000000;
-  --tg-hint-color: #999999;
-  --tg-link-color: #2481cc;
-  --tg-button-color: #2481cc;
-  --tg-button-text-color: #ffffff;
-  --tg-secondary-bg-color: #efeff3;
-  --tg-header-bg-color: #ffffff;
-}
 
 /* System bars (status bar / gesture bar).
    On Android 15+ the app is drawn edge-to-edge; Capacitor writes the bar sizes
@@ -26,7 +15,8 @@
 
 body {
   padding-top: var(--sa-top);
-  background-color: rgb(var(--so-canvas)); /* same as Layout */
+  background-color: rgb(var(--so-canvas));
+  color: rgb(var(--so-ink));
 }
 
 /* Solid strip under the status bar so scrolled content does not run under the clock */
@@ -50,35 +40,29 @@ body::before {
   padding-bottom: var(--sa-bottom);
 }
 
-/* App container: no max-width on #root so landing page is full-width.
-   Internal pages are constrained via Layout component. */
-
-/* Dark scrollbar for dropdowns */
 .scrollbar-dark::-webkit-scrollbar {
   width: 6px;
 }
 
 .scrollbar-dark::-webkit-scrollbar-track {
-  background: #1f2937;
-  border-radius: 3px;
+  background: rgb(var(--so-surface));
+  border-radius: var(--r-xs);
 }
 
 .scrollbar-dark::-webkit-scrollbar-thumb {
-  background: #4b5563;
-  border-radius: 3px;
+  background: rgb(var(--so-ink-subtle));
+  border-radius: var(--r-xs);
 }
 
 .scrollbar-dark::-webkit-scrollbar-thumb:hover {
-  background: #6b7280;
+  background: rgb(var(--so-ink-muted));
 }
 
-/* Firefox */
 .scrollbar-dark {
   scrollbar-width: thin;
-  scrollbar-color: #4b5563 #1f2937;
+  scrollbar-color: rgb(var(--so-ink-subtle)) rgb(var(--so-surface));
 }
 
-/* Flip card */
 .flip-container {
   perspective: 1000px;
 }
@@ -102,11 +86,19 @@ body::before {
   transform: rotateY(180deg);
 }
 
-/* Fade-in animation for copied banner */
 .animate-fade-in {
   animation: fadeIn 0.25s ease-out;
 }
+
 @keyframes fadeIn {
   from { opacity: 0; transform: scale(0.95); }
   to { opacity: 1; transform: scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .flip-inner,
+  .animate-fade-in {
+    animation: none;
+    transition: none;
+  }
 }
