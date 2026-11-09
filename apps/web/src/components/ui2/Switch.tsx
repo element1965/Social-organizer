@@ -17,7 +17,8 @@ export function Switch({ checked, onCheckedChange, label, disabled }: SwitchProp
       disabled={disabled}
       onClick={() => onCheckedChange(!checked)}
       className={cn(
-        'relative h-[30px] w-12 shrink-0 rounded-pill transition-colors duration-200 motion-reduce:transition-none',
+        // Every size in rem (30 × 48 px at the base size), so "Large text" scales the whole control
+        'relative h-[1.875rem] w-12 shrink-0 rounded-pill transition-colors duration-200 motion-reduce:transition-none',
         'so-focus',
         'disabled:opacity-[0.45]',
         checked ? 'bg-care' : 'bg-line',
@@ -27,8 +28,8 @@ export function Switch({ checked, onCheckedChange, label, disabled }: SwitchProp
         className={cn(
           // left-0: without it the knob starts at its static position (the track centre) and the
           // translate pushes it past the right edge
-          'absolute left-0 top-[3px] h-6 w-6 rounded-full bg-surface shadow-float transition-transform duration-200 motion-reduce:transition-none',
-          checked ? 'translate-x-[21px]' : 'translate-x-[3px]',
+          'absolute left-0 top-[0.1875rem] h-6 w-6 rounded-full bg-surface shadow-float transition-transform duration-200 motion-reduce:transition-none',
+          checked ? 'translate-x-[1.3125rem]' : 'translate-x-[0.1875rem]',
         )}
       />
     </button>
