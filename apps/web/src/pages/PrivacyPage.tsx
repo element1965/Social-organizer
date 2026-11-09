@@ -38,6 +38,7 @@ export function PrivacyPage() {
           <li>{t('legal.policy.s3b')}</li>
           <li>{t('legal.policy.s3c')}</li>
           <li>{t('legal.policy.s3d')}</li>
+          <li>{t('legal.policy.s3e')}</li>
         </ul>
       ),
     },

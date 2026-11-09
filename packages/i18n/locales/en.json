@@ -914,7 +914,8 @@
       "s7Title": "7. Open Source",
       "s7": "Social Organizer is fully open source. You can review our codebase and how your data is handled at <gh>github.com/element1965/Social-organizer</gh>.",
       "s8Title": "8. Contact",
-      "s8": "For questions about this Privacy Policy or your data, contact us via <bot>Telegram</bot>."
+      "s8": "For questions about this Privacy Policy or your data, contact us via <bot>Telegram</bot>.",
+      "s3e": "To decide who hears about a request for help first: we count how often you open and answer such requests, and how many you got lately. These counts are never shown to anyone and used for nothing else."
     },
     "termsTitle": "Terms of Service",
     "termsMeta": "Last updated: February 7, 2025",

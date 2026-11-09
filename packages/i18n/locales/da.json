@@ -914,7 +914,8 @@
       "s7Title": "7. Åben kildekode",
       "s7": "Social Organizer har fuldt ud åben kildekode. Du kan gennemgå vores kode og se, hvordan dine data behandles, på <gh>github.com/element1965/Social-organizer</gh>.",
       "s8Title": "8. Kontakt",
-      "s8": "Har du spørgsmål om denne privatlivspolitik eller dine data, så kontakt os via <bot>Telegram</bot>."
+      "s8": "Har du spørgsmål om denne privatlivspolitik eller dine data, så kontakt os via <bot>Telegram</bot>.",
+      "s3e": "For at afgøre, hvem der først hører om en anmodning om hjælp: vi tæller, hvor ofte du åbner og svarer på sådanne anmodninger, og hvor mange du har fået for nylig. Tallene vises ikke til nogen og bruges ikke til andet."
     },
     "termsTitle": "Servicevilkår",
     "termsMeta": "Senest opdateret: 7. februar 2025",

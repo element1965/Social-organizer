@@ -914,7 +914,8 @@
       "s7Title": "7. Avoin lähdekoodi",
       "s7": "Social Organizer on täysin avointa lähdekoodia. Voit tarkastella koodiamme ja sitä, miten tietojasi käsitellään, osoitteessa <gh>github.com/element1965/Social-organizer</gh>.",
       "s8Title": "8. Yhteystiedot",
-      "s8": "Jos sinulla on kysyttävää tästä tietosuojakäytännöstä tai tiedoistasi, ota yhteyttä <bot>Telegramissa</bot>."
+      "s8": "Jos sinulla on kysyttävää tästä tietosuojakäytännöstä tai tiedoistasi, ota yhteyttä <bot>Telegramissa</bot>.",
+      "s3e": "Jotta voimme päättää, kuka saa avunpyynnön ensin: laskemme, kuinka usein avaat ja vastaat tällaisiin pyyntöihin ja kuinka monta olet saanut viime aikoina. Lukuja ei näytetä kenellekään eikä käytetä mihinkään muuhun."
     },
     "termsTitle": "Käyttöehdot",
     "termsMeta": "Päivitetty viimeksi: 7. helmikuuta 2025",

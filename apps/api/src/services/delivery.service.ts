@@ -40,6 +40,22 @@ interface Target {
   telegramId: string | null;
   lang: string;
   newCollections: boolean;
+  hasPush: boolean;
+}
+
+/**
+ * Who would actually get a "new collection" message outside the app right now: not muted, and the
+ * picked channel really reaches them (Telegram linked, or a push subscription for the app channel).
+ * Everyone else would only get the in-app entry, so they must not take a slot of a notification wave.
+ */
+export async function reachableForNewCollections(db: PrismaClient, userIds: string[]): Promise<Set<string>> {
+  const targets = await loadTargets(db, userIds);
+  const out = new Set<string>();
+  for (const t of targets.values()) {
+    if (!t.newCollections) continue;
+    if (t.channel === 'TELEGRAM' ? !!t.telegramId : t.hasPush) out.add(t.userId);
+  }
+  return out;
 }
 
 /**
@@ -74,16 +90,14 @@ async function loadTargets(db: PrismaClient, userIds: string[]): Promise<Map<str
   const map = new Map<string, Target>();
   for (const u of users) {
     const telegramId = u.platformAccounts[0]?.platformId ?? null;
+    const hasPush = u._count.pushSubscriptions + u._count.nativePushTokens > 0;
     map.set(u.id, {
       userId: u.id,
       telegramId,
       lang: u.language || 'en',
       newCollections: u.notifyNewCollections,
-      channel: pickChannel({
-        notifyChannel: u.notifyChannel as Channel | null,
-        hasPush: u._count.pushSubscriptions + u._count.nativePushTokens > 0,
-        telegramId,
-      }),
+      hasPush,
+      channel: pickChannel({ notifyChannel: u.notifyChannel as Channel | null, hasPush, telegramId }),
     });
   }
   return map;

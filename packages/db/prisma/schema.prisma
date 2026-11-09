@@ -142,6 +142,7 @@ model User {
   pushSubscriptions        PushSubscription[]
   nativePushTokens         NativePushToken[]
   notificationDeliveries   NotificationDelivery[]
+  notifyStats              NotifyStats?
   pendingFrom              PendingConnection[]      @relation("pendingFrom")
   pendingTo                PendingConnection[]      @relation("pendingTo")
   skills                   UserSkill[]
@@ -792,6 +793,33 @@ model SupportMessage {
 
 /// One row per external notification sent to a person (SO-45): the unique event key makes repeats,
 /// worker retries and races a no-op, so one event gives one external message.
+/// How a person reacts to requests for help (docs/notifications/behaviour-routing.md).
+/// Only counters, never which collection or whom they helped. Never shown to anyone;
+/// used only to order and route notification waves. Counters decay (half-life ~60 days).
+model NotifyStats {
+  userId              String    @id
+  /// Requests delivered through an external channel (Telegram or push)
+  sent                Float     @default(0)
+  /// Collections opened after a notification
+  opened              Float     @default(0)
+  /// Collections joined after a notification
+  responded           Float     @default(0)
+  /// Notifications swiped away
+  dismissed           Float     @default(0)
+  /// External requests in a row with no open and no response
+  ignoreStreak        Int       @default(0)
+  /// Average minutes from notification to joining (moving average)
+  responseMinutes     Float?
+  lastSentAt          DateTime?
+  lastRespondedAt     DateTime?
+  /// When the decayed counters were last brought up to date
+  decayedAt           DateTime  @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("notify_stats")
+}
+
 model NotificationDelivery {
   id        String        @id @default(cuid())
   userId    String

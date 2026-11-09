@@ -5,6 +5,7 @@ import { MIN_COLLECTION_AMOUNT, NOTIFICATION_RATIO } from '@so/shared';
 import { sendCollectionNotifications, sendCollectionClosedTg } from '../services/notification.service.js';
 import { isAdmin } from '../admin.js';
 import { invalidateGraph } from '../services/graph-cache.service.js';
+import { recordOpened } from '../services/notify-routing.service.js';
 import { getAskAccess, assertAskAllowed, isSpecialAsker } from '../services/ask-access.service.js';
 import { ADMIN_BLOCK_REASONS } from '../config/ask.js';
 import { activeObligationTotals, syncCollectionGoal } from '../services/collection-amount.js';
@@ -173,6 +174,10 @@ export const collectionRouter = router({
         },
       });
       if (!collection) throw new TRPCError({ code: 'NOT_FOUND' });
+      // Opening a collection one was asked to help with, from any entry point (feed, Telegram, push)
+      if (collection.creatorId !== ctx.userId) {
+        recordOpened(ctx.db, ctx.userId, collection.id).catch((err) => console.error('[notify-stats] open', err));
+      }
 
       // The author has seen the responses: they won't come again in the grouped message (SO-45)
       if (collection.creatorId === ctx.userId) {

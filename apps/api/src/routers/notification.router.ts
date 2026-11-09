@@ -2,6 +2,7 @@ import { z } from 'zod';
 import { TRPCError } from '@trpc/server';
 import { router, protectedProcedure, paginationInput } from '../trpc.js';
 import type { PrismaClient } from '@so/db';
+import { recordDismissed, recordOpenedById } from '../services/notify-routing.service.js';
 
 /** Opening or dismissing a notice must not wipe a cycle acknowledgement (RESPONDED). */
 async function setNotificationStatus(
@@ -100,12 +101,15 @@ export const notificationRouter = router({
   markRead: protectedProcedure
     .input(z.object({ id: z.string() }))
     .mutation(async ({ ctx, input }) => {
+      // Before the status flips: only the first open of a request counts (notify-routing)
+      await recordOpenedById(ctx.db, ctx.userId, input.id).catch((err) => console.error('[notify-stats] open', err));
       return setNotificationStatus(ctx.db, ctx.userId, input.id, 'READ');
     }),
 
   dismiss: protectedProcedure
     .input(z.object({ id: z.string() }))
     .mutation(async ({ ctx, input }) => {
+      await recordDismissed(ctx.db, ctx.userId, input.id).catch((err) => console.error('[notify-stats] dismiss', err));
       return setNotificationStatus(ctx.db, ctx.userId, input.id, 'DISMISSED');
     }),
 
