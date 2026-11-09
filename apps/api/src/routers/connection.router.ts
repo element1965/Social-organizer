@@ -5,6 +5,7 @@ import { GRAPH_SLICE_DEPTH } from '@so/shared';
 import { getGraphSlice, findPathBetweenUsers } from '../services/bfs.service.js';
 import { canViewContacts } from '../services/visibility.service.js';
 import { countConnections } from '../services/connection-request.service.js';
+import { bfsNetwork } from '../services/network.service.js';
 
 export const connectionRouter = router({
   list: protectedProcedure.query(async ({ ctx }) => {
@@ -128,46 +129,7 @@ export const connectionRouter = router({
       if (pending) bfsUserId = pending.toUserId;
     }
 
-    // In-memory BFS: load all connections, traverse in JS (no temp files)
-    const allConns = await ctx.db.connection.findMany({
-      select: { userAId: true, userBId: true, createdAt: true },
-    });
-    const adj = new Map<string, Array<{ neighbor: string; createdAt: Date }>>();
-    for (const c of allConns) {
-      if (!adj.has(c.userAId)) adj.set(c.userAId, []);
-      if (!adj.has(c.userBId)) adj.set(c.userBId, []);
-      adj.get(c.userAId)!.push({ neighbor: c.userBId, createdAt: c.createdAt });
-      adj.get(c.userBId)!.push({ neighbor: c.userAId, createdAt: c.createdAt });
-    }
-
-    const deletedUsers = new Set(
-      (await ctx.db.user.findMany({ where: { deletedAt: { not: null } }, select: { id: true } })).map(u => u.id),
-    );
-
-    const visited = new Map<string, { depth: number; maxConnAt: Date }>();
-    const queue: Array<{ userId: string; depth: number; maxConnAt: Date }> = [];
-    for (const { neighbor, createdAt } of adj.get(bfsUserId) || []) {
-      if (neighbor === bfsUserId || deletedUsers.has(neighbor)) continue;
-      if (!visited.has(neighbor)) {
-        visited.set(neighbor, { depth: 1, maxConnAt: createdAt });
-        queue.push({ userId: neighbor, depth: 1, maxConnAt: createdAt });
-      }
-    }
-    let qi = 0;
-    while (qi < queue.length && visited.size < 500) {
-      const { userId, depth, maxConnAt } = queue[qi++]!;
-      if (depth >= 99) continue;
-      for (const { neighbor, createdAt } of adj.get(userId) || []) {
-        if (neighbor === bfsUserId || visited.has(neighbor) || deletedUsers.has(neighbor)) continue;
-        const newMax = createdAt > maxConnAt ? createdAt : maxConnAt;
-        visited.set(neighbor, { depth: depth + 1, maxConnAt: newMax });
-        queue.push({ userId: neighbor, depth: depth + 1, maxConnAt: newMax });
-      }
-    }
-
-    const recipients = Array.from(visited.entries()).map(([user_id, v]) => ({
-      user_id, depth: v.depth, max_conn_at: v.maxConnAt as Date | null,
-    }));
+    const recipients = await bfsNetwork(ctx.db, bfsUserId);
 
     const byDepth: Record<number, number> = {};
     const userIdsByDepth: Record<number, string[]> = {};

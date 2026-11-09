@@ -1,15 +1,65 @@
 import { z } from 'zod';
 import { router, protectedProcedure, publicProcedure } from '../trpc.js';
 import { TRPCError } from '@trpc/server';
-import { MIN_COLLECTION_AMOUNT, NOTIFICATION_RATIO, MIN_CONNECTIONS_TO_CREATE } from '@so/shared';
+import { MIN_COLLECTION_AMOUNT, NOTIFICATION_RATIO } from '@so/shared';
 import { sendCollectionNotifications, sendCollectionClosedTg } from '../services/notification.service.js';
 import { isAdmin } from '../admin.js';
-import { countConnections } from '../services/connection-request.service.js';
+import { getAskAccess, assertAskAllowed, assertFirstAskCap, isSpecialAsker } from '../services/ask-access.service.js';
+import { BLOCK_REASONS } from '../config/ask.js';
 
 /** Chat links are shown as buttons to every participant: only plain web links, never javascript: etc. (SO-14) */
 const chatLinkSchema = z.string().max(500).url().refine((u) => /^https?:\/\//i.test(u), 'Link must start with https://');
 
+function assertAdmin(userId: string) {
+  if (!isAdmin(userId)) throw new TRPCError({ code: 'FORBIDDEN', message: 'Only admins can block collections' });
+}
+
 export const collectionRouter = router({
+  /** Whether the user may create a request, with the numbers the "path to request" card renders. */
+  askAccess: protectedProcedure.query(async ({ ctx }) => {
+    const access = await getAskAccess(ctx.db, ctx.userId);
+    const special = await isSpecialAsker(ctx.db, ctx.userId);
+    return special ? { ...access, allowed: true, maxFirstAmount: null } : access;
+  }),
+
+  /** Admin-only: suspend a collection with a reason. Participants see it as paused. */
+  block: protectedProcedure
+    .input(z.object({ id: z.string(), reason: z.enum(BLOCK_REASONS) }))
+    .mutation(async ({ ctx, input }) => {
+      assertAdmin(ctx.userId);
+      const collection = await ctx.db.collection.findUnique({ where: { id: input.id } });
+      if (!collection) throw new TRPCError({ code: 'NOT_FOUND' });
+      if (collection.status !== 'ACTIVE') {
+        throw new TRPCError({ code: 'BAD_REQUEST', message: 'Only active collections can be blocked' });
+      }
+      const blocked = await ctx.db.collection.update({
+        where: { id: input.id },
+        data: { status: 'BLOCKED', blockedAt: new Date(), blockReason: input.reason },
+      });
+      // Stop the request from circulating: pending "new request" notifications are no longer actionable
+      await ctx.db.notification.updateMany({
+        where: { collectionId: input.id, type: { in: ['NEW_COLLECTION', 'RE_NOTIFY'] }, status: { in: ['UNREAD', 'READ'] } },
+        data: { status: 'EXPIRED' },
+      });
+      return blocked;
+    }),
+
+  /** Admin-only: lift an admin block. */
+  unblock: protectedProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      assertAdmin(ctx.userId);
+      const collection = await ctx.db.collection.findUnique({ where: { id: input.id } });
+      if (!collection) throw new TRPCError({ code: 'NOT_FOUND' });
+      if (collection.status !== 'BLOCKED' || collection.blockReason == null) {
+        throw new TRPCError({ code: 'BAD_REQUEST', message: 'Collection is not blocked by an admin' });
+      }
+      return ctx.db.collection.update({
+        where: { id: input.id },
+        data: { status: 'ACTIVE', blockedAt: null, blockReason: null },
+      });
+    }),
+
   create: protectedProcedure
     .input(z.object({
       type: z.enum(['EMERGENCY', 'REGULAR']),
@@ -32,16 +82,10 @@ export const collectionRouter = router({
         throw new TRPCError({ code: 'BAD_REQUEST', message: `Amount must be at least ${MIN_COLLECTION_AMOUNT}` });
       }
 
-      // Minimum confirmed acquaintances (SO-15): Connection rows on either side of the pair,
-      // however they were made. Invite links and pending requests don't count.
+      // Path to a request: enough direct connections and a big enough network, plus a cap on the first request.
       if (!isSpecial) {
-        const connectionCount = await countConnections(ctx.db, ctx.userId);
-        if (connectionCount < MIN_CONNECTIONS_TO_CREATE) {
-          throw new TRPCError({
-            code: 'FORBIDDEN',
-            message: `You need at least ${MIN_CONNECTIONS_TO_CREATE} confirmed connections. You have ${connectionCount}.`,
-          });
-        }
+        assertAskAllowed(await getAskAccess(ctx.db, ctx.userId, { quick: true }));
+        if (input.amount != null) await assertFirstAskCap(ctx.db, ctx.userId, input.amount);
       }
 
       // Limit: max 1 emergency + 1 regular at the same time
@@ -138,6 +182,12 @@ export const collectionRouter = router({
       if (collection.creatorId !== ctx.userId) throw new TRPCError({ code: 'FORBIDDEN' });
       if (collection.status !== 'ACTIVE' && collection.status !== 'BLOCKED') {
         throw new TRPCError({ code: 'BAD_REQUEST', message: 'Can only update active collections' });
+      }
+      if (collection.blockReason != null) {
+        throw new TRPCError({ code: 'FORBIDDEN', message: 'COLLECTION_BLOCKED: This collection is suspended by an administrator' });
+      }
+      if (input.amount != null && !(await isSpecialAsker(ctx.db, ctx.userId))) {
+        await assertFirstAskCap(ctx.db, ctx.userId, input.amount, collection.id);
       }
 
       const amountUSD = input.amount;
