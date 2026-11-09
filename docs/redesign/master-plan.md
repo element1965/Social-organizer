@@ -35,9 +35,10 @@
 | 0 | База ветки `redesign` | — | `redesign` | координатор | влит | 2026-11-09: `redesign` = документы + макеты + `main`, коммит 90308cc |
 | 1 | Каркас, токены, `ui2`, AppShell | 0 | `redesign-wp1-shell` | Grok | в работе | 2026-11-09 старт; блокирует 2, 4–7, 10 |
 | 3 | 3D-граф: производительность и визуал | 0 | `redesign-wp3-graph` | Grok | в работе | 2026-11-09 старт, worktree `../so-wp3` |
-| 4a | API Просьбы и Сбора: пороги, `collection.askAccess`, `block/unblock` | 0 | `redesign-api-prep` | Claude | в работе | 2026-11-09 старт, worktree `../so-api`; серверная часть WP4 |
-| 6a | API Добавить: `invite.generate({ ttl })`, приём без `pending` | 0 | `redesign-api-prep` | Claude | в работе | вместе с 4a, одна ветка |
-| 7a | Фигуры `components/figures/*`, `lib/device.ts`, `lib/scrollPlay.ts` | 0 | `redesign-wp7-figures` | Claude | в работе | 2026-11-09 старт, worktree `../so-figs`; общие для WP7 и WP10 |
+| 4a | API Просьбы и Сбора: пороги, `collection.askAccess`, `block/unblock` | 0 | `redesign-api-prep` | Claude | влит | 2026-11-09, 0de3380; ревью Sonnet: 6 замечаний исправлены. Миграция `20261109120000_ask_block_reason_invite_ttl` — в прод вручную перед выкатом. Потолок суммы просьбы — ждёт решения |
+| 6a | API Добавить: `invite.generate({ ttl })`, приём без `pending` | 0 | `redesign-api-prep` | Claude | влит | вместе с 4a |
+| 7a | Фигуры `components/figures/*`, `lib/device.ts`, `lib/scrollPlay.ts` | 0 | `redesign-wp7-figures` | Claude | влит | 2026-11-09, ревью Sonnet: 10 замечаний исправлены; визуальная сверка с `figures.js` — после мерджа WP1 (нужны токены v2) |
+| 11 | Самомодерация сборов: жалобы → вопрос ближнему кругу автора → приостановка | 4a | — | — | — | предложение у владельца продукта, ждёт решения |
 | 2 | Круг, лента, Люди | 1 | `redesign-wp2-circle` | — | — | новые пропсы графа — после мерджа WP3 |
 | 4 | Просьба, Сбор, публичная страница сбора | 1, 4a | `redesign-wp4-ask-collection` | — | — | серверная часть вынесена в 4a |
 | 5 | Профиль, Аккаунт, Участие, Сборы, Помощь, Человек | 1 | `redesign-wp5-profile` | — | — | |
