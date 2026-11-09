@@ -418,6 +418,7 @@
     "confirmDelete": "Delete",
     "contacts": "Contacts",
     "contactsDesc": "Add ways to contact you for network members",
+    "addContact": "Add a contact",
     "monthlyBudget": "Declared monthly",
     "budgetDesc": "How much you can contribute to mutual support each month",
     "currentBudget": "Remaining",

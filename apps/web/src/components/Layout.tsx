@@ -62,7 +62,7 @@ export function Layout() {
   }, []);
 
   return (
-    <div className="min-h-[calc(100vh-var(--sa-top))] bg-gray-50 dark:bg-gray-950 flex flex-col max-w-md mx-auto relative">
+    <div className="app-shell bg-gray-50 dark:bg-gray-950 flex flex-col max-w-md mx-auto relative">
       {/* Help button — absolute top-right, doesn't push content down */}
       {location.pathname !== '/dashboard' && (
         <button

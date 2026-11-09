@@ -6,7 +6,7 @@ import { useAuth } from '../hooks/useAuth';
 import { Card, CardContent, CardHeader } from '../components/ui/card';
 import { Avatar } from '../components/ui/avatar';
 import { Spinner } from '../components/ui/spinner';
-import { Wallet, Calendar, Pencil, Check, X, UserPlus, VolumeX, Copy, ChevronDown, ChevronUp, Users } from 'lucide-react';
+import { Wallet, Calendar, Pencil, Check, X, UserPlus, VolumeX, Copy, ChevronDown, ChevronUp, Users, ArrowLeft } from 'lucide-react';
 import { HandshakePath } from '../components/HandshakePath';
 import { SocialIcon } from '../components/ui/social-icons';
 import { buildContactUrl, isSafeContactUrl } from '@so/shared';
@@ -20,6 +20,11 @@ export function ProfilePage() {
   const myId = useAuth((s) => s.userId);
   const resolve = useNicknames();
   const isOwn = paramId === myId;
+
+  // A profile opened from deep in a long list starts at its top
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [paramId]);
 
   // Redirect own profile to settings
   useEffect(() => {
@@ -79,16 +84,35 @@ export function ProfilePage() {
   const [nicknameInput, setNicknameInput] = useState('');
   const [copiedContact, setCopiedContact] = useState<string | null>(null);
 
+  // Back to wherever the user came from (graph or list — those screens restore their own
+  // position). Opened by a direct link there is no in-app history: go to the network.
+  const goBack = () => {
+    const idx = (window.history.state as { idx?: number } | null)?.idx ?? 0;
+    if (idx > 0) navigate(-1);
+    else navigate('/network');
+  };
+  const backButton = (
+    <button
+      onClick={goBack}
+      aria-label={t('common.back')}
+      title={t('common.back')}
+      className="absolute top-3 left-4 z-40 w-10 h-10 rounded-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center justify-center transition-colors shadow-lg"
+    >
+      <ArrowLeft className="w-5 h-5 text-gray-700 dark:text-gray-200" />
+    </button>
+  );
+
   if (isOwn) return null;
-  if (isLoading) return <div className="flex justify-center py-12"><Spinner /></div>;
-  if (!user) return <div className="p-4 text-center text-gray-500 dark:text-gray-300">{t('common.notFound')}</div>;
+  if (isLoading) return <div className="relative pt-14">{backButton}<div className="flex justify-center py-12"><Spinner /></div></div>;
+  if (!user) return <div className="relative pt-14">{backButton}<div className="p-4 text-center text-gray-500 dark:text-gray-300">{t('common.notFound')}</div></div>;
 
   const registrationDate = user.createdAt
     ? new Date(user.createdAt).toLocaleDateString(i18n.language, { year: 'numeric', month: 'long', day: 'numeric' })
     : null;
 
   return (
-    <div className="p-4 space-y-4">
+    <div className="relative p-4 space-y-4">
+      {backButton}
       <div className="flex flex-col items-center text-center">
         <Avatar src={user.photoUrl} name={user.name} size="lg" className="mb-3" />
         <div className="flex items-center gap-2">
