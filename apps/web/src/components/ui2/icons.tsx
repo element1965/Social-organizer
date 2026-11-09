@@ -21,12 +21,16 @@ function Svg({ strokeWidth = 1.8, children, ...props }: IconProps) {
 
 export function IconCircle(props: IconProps) {
   return (
-    <Svg strokeWidth={1.7} {...props}>
-      <circle cx="12" cy="12.4" r="2.2" fill="currentColor" stroke="none" />
-      <circle cx="5.6" cy="7.4" r="1.6" fill="currentColor" stroke="none" />
-      <circle cx="18.4" cy="7.6" r="1.6" fill="currentColor" stroke="none" />
-      <circle cx="16.6" cy="17.6" r="1.6" fill="currentColor" stroke="none" />
-      <path d="M7 8.4 10.3 11.2M13.9 11.3 17 8.6M13.3 13.9l2.3 2.7" />
+    // The network as a ball (like the 3D scene): an outline, the equator and a meridian,
+    // you in the middle and people on the surface
+    <Svg strokeWidth={1.6} {...props}>
+      <circle cx="12" cy="12" r="9" />
+      <ellipse cx="12" cy="12" rx="9" ry="3.4" strokeWidth={1.2} opacity={0.75} />
+      <ellipse cx="12" cy="12" rx="3.6" ry="9" strokeWidth={1.2} opacity={0.75} />
+      <circle cx="12" cy="12" r="2.3" fill="currentColor" stroke="none" />
+      <circle cx="4.2" cy="13.7" r="1.5" fill="currentColor" stroke="none" />
+      <circle cx="18.9" cy="14.2" r="1.5" fill="currentColor" stroke="none" />
+      <circle cx="13.8" cy="4.2" r="1.5" fill="currentColor" stroke="none" />
     </Svg>
   );
 }
