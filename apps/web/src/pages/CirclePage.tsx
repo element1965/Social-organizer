@@ -66,8 +66,6 @@ export function CirclePage() {
 
   const hiddenRings = useCircleStore((s) => s.hiddenRings);
   const setRingHidden = useCircleStore((s) => s.setRingHidden);
-  const savedView = useCircleStore((s) => s.view);
-  const saveView = useCircleStore((s) => s.saveView);
   const setSelected = useCircleStore((s) => s.setSelected);
   const setHighlightPath = useCircleStore((s) => s.setHighlightPath);
 
@@ -174,14 +172,6 @@ export function CirclePage() {
     setSelected(selectedId);
     setHighlightPath(highlightPath);
   }, [selectedId, highlightPath, setSelected, setHighlightPath]);
-
-  // Save the camera when the Circle unmounts (Person, Collection, People) — screens.md §3.
-  useEffect(() => {
-    return () => {
-      const view = graphRef.current?.getView() ?? null;
-      if (view) saveView(view);
-    };
-  }, [saveView]);
 
   const cardPerson = useMemo<CardPerson | null>(() => {
     if (!selectedId) return null;
@@ -291,8 +281,6 @@ export function CirclePage() {
       highlightPath={highlightPath}
       hiddenRings={hiddenRings}
       onNodeTap={onNodeTap}
-      initialView={savedView}
-      resumeKey={`${layer}:${selectedId ?? ''}`}
       dimmed={layer === 'person' && phone}
     />
   );
