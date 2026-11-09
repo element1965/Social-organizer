@@ -34,6 +34,15 @@
 - Service ID (Redis): dbc66e68-9310-42a6-821f-eb32c6bde6b1
 - Environment ID: 5ce68db1-c13c-4eea-b512-e06c40aba1c2
 
+## Staging (ветка redesign)
+- Environment `staging`: 28424a41-88a7-4044-8074-82c174a078e2 (те же service ID, что в production)
+- URL: https://social-organizer-staging.up.railway.app — автодеплой при push в `redesign`
+- Postgres staging: TCP proxy mainline.proxy.rlwy.net:40274, БД social_organizer, данные — seed-dev (тестовые люди)
+- Коды входа: `MAIL_LOG_TO_STDOUT=1` → в логах сервиса (`mail:test-outbox`)
+- В staging НЕ задавать TELEGRAM_BOT_TOKEN / FEEDBACK_CHAT_ID / FIREBASE_SERVICE_ACCOUNT / VAPID_* (webhook прод-бота и пуши реальным людям)
+- `railway environment new --duplicate` деплоит СРАЗУ, не staged — не использовать для новых окружений с секретами
+- Удалять сервисы в проекте у нас нет прав (не admin); MCP Railway не может менять source/ветку (нет GitHub-привязки) — ветку меняют в дашборде
+
 # Telegram Bot
 - Username: @socialorganizer_bot
 - Env: VITE_TELEGRAM_BOT_USERNAME=socialorganizer_bot (build-time, нужен в Railway)
