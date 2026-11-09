@@ -64,6 +64,14 @@ export interface NetworkGraphProps {
   darkMode?: boolean;
   /** In-canvas focus / fit buttons. Default true so existing screens keep them. */
   showControls?: boolean;
+  /**
+   * Controlled focus (e.g. the open person card). When set, the camera flies close to that node, follows it
+   * and slowly orbits it; when cleared, it glides back to the pose it had before. Passing the prop at all
+   * (even null) turns off the built-in fly on tap, so the screen owns the focus.
+   */
+  focusId?: string | null;
+  /** While focused, show the node this fraction of the height above the middle (room for a bottom card). */
+  focusLift?: number;
 }
 
 export interface NetworkGraphHandle {
@@ -90,10 +98,16 @@ const AUTO_ROTATE_SPEED = 1.1;   // OrbitControls units (1 = one turn per minute
 const AUTO_ROTATE_RESUME_MS = 2500;
 const LABELS_PER_FRAME = 6;      // lazily created labels per frame
 const BOB_AMPLITUDE = 0.7;       // gentle floating of close nodes
-const CHARGE_BASE = 38;          // node repulsion; lower = a more compact graph
-// Pull of the spherical shells (0 = free-form layout). Kept soft: a stiff pull overshoots and
-// makes nodes visibly bounce while the graph forms.
-const BALL_STRENGTH = 0.12;
+const CHARGE_BASE = 14;          // node repulsion; lower = a more compact graph
+const CHARGE_RANGE = 160;        // repulsion reach; short, so far parts of a big graph do not push it apart
+const LINK_BASE = 12;            // link length for a leaf
+// Pull of the spherical shells (0 = free-form layout). Firm enough to hold a compact ball;
+// the speed limit (MAX_NODE_SPEED) keeps it from bouncing while the graph forms.
+const BALL_STRENGTH = 0.22;
+/** Outer shell radius for a graph of n nodes: grows with the cube root, so the ball keeps its density. */
+const ballOuter = (n: number) => 9 * Math.cbrt(Math.max(1, n)) + 22;
+const FOCUS_ROTATE_SPEED = 1.6;  // orbit around a focused node (OrbitControls units)
+const FOCUS_FLY_MS = 900;
 const BALL_SHELLS = [0, 0.38, 0.7, 1]; // shell radius by depth, as a fraction of the outer radius
 const MAX_NODE_SPEED = 4;        // world units per tick; caps the "explosion" of the first ticks
 const MIN_DOT_PX = 0.0042;       // far dots stay a few pixels; nearer rings stay larger
@@ -380,6 +394,8 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
   showControls = true,
   logoUrl = '/logo.png',
   initialView,
+  focusId,
+  focusLift = 0,
 }, ref) {
   const fgRef = useRef<FGRef>(null);
   const theme: 'light' | 'dark' = themeProp ?? (darkMode ? 'dark' : 'light');
@@ -395,6 +411,18 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
   onNodeClickRef.current = onNodeClick;
   const onNodeTapRef = useRef(onNodeTap);
   onNodeTapRef.current = onNodeTap;
+
+  // Controlled focus: the frame loop follows and orbits the node, and lifts it above a bottom card
+  const focusControlled = focusId !== undefined;
+  const focusControlledRef = useRef(focusControlled);
+  focusControlledRef.current = focusControlled;
+  const focusRef = useRef<{ id: string | null; kick: boolean; lift: number; before: GraphView | null }>({
+    id: null,
+    kick: false,
+    lift: 0,
+    before: null,
+  });
+  focusRef.current.lift = focusLift;
 
   /* ----- Stable graph data: node objects survive re-renders, layout is kept ----- */
 
@@ -1084,12 +1112,11 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       charge.strength((node: any) => {
         const d = subtreeRef.current.get(String(node.id ?? '')) ?? 0;
-        // Leaf: -CHARGE, subtree=1: -2x, subtree=2: -3.5x, subtree=3: -5.5x
-        return -CHARGE_BASE * (1 + d * (d + 1) / 4);
+        // Leaf: -CHARGE, each level of subtree below adds half (linear: a dense ball, not a starburst)
+        return -CHARGE_BASE * (1 + d * 0.5);
       });
-      if (typeof charge.distanceMax === 'function') charge.distanceMax(320); // bounds the cost of big graphs
+      if (typeof charge.distanceMax === 'function') charge.distanceMax(CHARGE_RANGE); // also bounds the cost
     }
-    const BASE_LINK_DIST = 22;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const linkForce = fg.d3Force('link') as any;
     if (linkForce && typeof linkForce.distance === 'function') {
@@ -1102,8 +1129,8 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
         // The "child" node is the one with greater depth
         const childId = tgtDepth > srcDepth ? String(tgtId) : String(srcId);
         const d = subtreeRef.current.get(childId) ?? 0;
-        // Quadratic growth: d=0→1x, d=1→1.5x, d=2→2.5x, d=3→4x
-        return BASE_LINK_DIST * (1 + d * (d + 1) / 4);
+        // Gentle growth: d=0→1x, d=1→1.3x, d=2→1.6x, d=3→1.9x
+        return LINK_BASE * (1 + d * 0.3);
       });
     }
 
@@ -1111,7 +1138,7 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
     // so the network forms a round cloud instead of sprawling like a tree. ---
     let ballNodes: SimNode[] = [];
     const ball = (alpha: number) => {
-      const outer = 14 * Math.cbrt(Math.max(1, sizeRef.current)) + 34;
+      const outer = ballOuter(sizeRef.current);
       for (const n of ballNodes) {
         if (n.fx != null) continue; // pinned center
         const x = n.x ?? 0, y = n.y ?? 0, z = n.z ?? 0;
@@ -1232,6 +1259,7 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
     const flyV = new THREE.Vector3();
     const flyQ = new THREE.Quaternion();
     const flyQ2 = new THREE.Quaternion();
+    let liftCur = 0;
 
     const frame = (now: number) => {
       raf = requestAnimationFrame(frame);
@@ -1278,6 +1306,44 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
         flyV.copy(fly.d0).applyQuaternion(flyQ2).multiplyScalar(fly.r0 + (fly.r1 - fly.r0) * e);
         fg.cameraPosition({ x: flyV.x, y: flyV.y, z: flyV.z }, { x: 0, y: 0, z: 0 });
         if (k >= 1) fly.active = false;
+      }
+
+      // Controlled focus: start the slow orbit, keep the look-at on the node while the layout drifts
+      // (the camera moves by the same step, so the orbit distance holds), lift it above a bottom card.
+      const foc = focusRef.current;
+      if (foc.kick) {
+        foc.kick = false;
+        if (!reducedRef.current && controls) {
+          controls.autoRotate = true;
+          rotTarget = FOCUS_ROTATE_SPEED;
+        }
+      }
+      const orbit = controls as unknown as { target?: THREE.Vector3 } | undefined;
+      if (foc.id && !viewFly.active && orbit?.target) {
+        const n = nodeMapRef.current.get(foc.id);
+        if (n && typeof n.x === 'number') {
+          const t = orbit.target;
+          const dx = (n.x - t.x) * 0.12;
+          const dy = ((n.y ?? 0) - t.y) * 0.12;
+          const dz = ((n.z ?? 0) - t.z) * 0.12;
+          if (dx * dx + dy * dy + dz * dz > 1e-8) {
+            t.set(t.x + dx, t.y + dy, t.z + dz);
+            cam.position.set(cam.position.x + dx, cam.position.y + dy, cam.position.z + dz);
+          }
+        }
+      }
+      const persp = cam as THREE.PerspectiveCamera;
+      const liftWant = foc.id ? foc.lift : 0;
+      if (liftWant !== 0 || liftCur !== 0) {
+        liftCur += (liftWant - liftCur) * Math.min(1, dt * 0.006);
+        const el = (fg.renderer() as THREE.WebGLRenderer | undefined)?.domElement;
+        if (Math.abs(liftCur) < 0.002 && liftWant === 0) {
+          liftCur = 0;
+          persp.clearViewOffset();
+        } else if (el && el.clientWidth > 0 && el.clientHeight > 0) {
+          // Shifting the view window down moves the picture (and the focused node) up
+          persp.setViewOffset(el.clientWidth, el.clientHeight, 0, liftCur * el.clientHeight, el.clientWidth, el.clientHeight);
+        }
       }
 
       // Smooth auto-rotate ramp. prefers-reduced-motion holds the speed at zero and does not resume.
@@ -1606,7 +1672,8 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
     // distance band, and the orbit now turns around that node. "To me" and Fit glide back to the center.
     const fg = fgRef.current;
     const { x, y, z } = node;
-    if (fg && typeof x === 'number' && typeof y === 'number' && typeof z === 'number') {
+    // With a controlled focus the screen answers the tap through `focusId`, which flies the camera
+    if (!focusControlledRef.current && fg && typeof x === 'number' && typeof y === 'number' && typeof z === 'number') {
       lifeRef.current.userTouched = true;
       const target = new THREE.Vector3(x, y, z);
       const cam = fg.camera() as THREE.Camera;
@@ -1621,6 +1688,54 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
     try { fgRef.current?.pauseAnimation(); } catch { /* noop */ }
     onNodeClickRef.current(String(node.id));
   }, [flyPose, lookAt]);
+
+  // Controlled focus: fly close to the node (keeping the viewing direction), or back to the pose before it
+  useEffect(() => {
+    if (!focusControlled) return;
+    const f = focusRef.current;
+    const next = focusId ?? null;
+    if (next === f.id) return;
+    const prev = f.id;
+    f.id = next;
+    // No cleanup that cancels retries: under StrictMode the re-run sees the same id and returns early,
+    // and a stale retry stops by itself once the focus has changed.
+    if (next) {
+      lifeRef.current.userTouched = true; // the intro fit must not take the camera away
+      // The node may still be without a position right after mount: retry a few times
+      const go = (tries: number) => {
+        const fg = fgRef.current;
+        const node = nodeMapRef.current.get(next);
+        if (focusRef.current.id !== next) return;
+        if (!fg || !node || typeof node.x !== 'number') {
+          if (tries > 0) setTimeout(() => go(tries - 1), 250);
+          return;
+        }
+        const cam = fg.camera() as THREE.PerspectiveCamera;
+        if (!prev && !f.before) {
+          const look = lookAt();
+          f.before = {
+            position: { x: cam.position.x, y: cam.position.y, z: cam.position.z },
+            target: { x: look.x, y: look.y, z: look.z },
+          };
+        }
+        const target = new THREE.Vector3(node.x, node.y ?? 0, node.z ?? 0);
+        const dir = cam.position.clone().sub(target);
+        if (dir.lengthSq() < 1e-6) dir.set(0, 0, 1);
+        const dist = THREE.MathUtils.clamp(ballOuter(sizeRef.current) * 0.55, 38, 75);
+        flyPose(target.clone().add(dir.normalize().multiplyScalar(dist)), target, FOCUS_FLY_MS);
+        f.kick = true;
+      };
+      go(12);
+    } else if (f.before) {
+      const b = f.before;
+      f.before = null;
+      flyPose(
+        new THREE.Vector3(b.position.x, b.position.y, b.position.z),
+        new THREE.Vector3(b.target.x, b.target.y, b.target.z),
+        FOCUS_FLY_MS,
+      );
+    }
+  }, [focusControlled, focusId, flyPose, lookAt]);
 
   const handleNodeHover = useCallback((node: { id?: string | number } | null) => {
     lifeRef.current.hoverId = node?.id != null ? String(node.id) : null;

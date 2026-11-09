@@ -19,6 +19,10 @@ type CircleGraphProps = {
   onNodeTap: (id: string) => void;
   /** Dim the scene while the person card is open. */
   dimmed?: boolean;
+  /** The person whose card is open: the camera flies to them and slowly orbits. */
+  focusId?: string | null;
+  /** Fraction of the height to raise the focused person by (room for a card at the bottom). */
+  focusLift?: number;
 };
 
 /**
@@ -32,7 +36,7 @@ type CircleGraphProps = {
  * People, or a phone/desktop layout switch) and handed back as `initialView`, which skips the intro fly.
  */
 export const CircleGraph = forwardRef<CircleGraphHandle, CircleGraphProps>(function CircleGraph(
-  { myId, people, edges, highlightPath, hiddenRings, onNodeTap, dimmed },
+  { myId, people, edges, highlightPath, hiddenRings, onNodeTap, dimmed, focusId, focusLift },
   ref,
 ) {
   const boxRef = useRef<HTMLDivElement>(null);
@@ -115,6 +119,8 @@ export const CircleGraph = forwardRef<CircleGraphHandle, CircleGraphProps>(funct
             highlightPath={highlightPath}
             hiddenRings={hiddenRings}
             initialView={initialView}
+            focusId={focusId ?? null}
+            focusLift={focusLift}
             showControls={false}
             theme="dark"
           />
