@@ -1,10 +1,9 @@
 import { useState, useRef, useEffect } from 'react';
-import { MessageCircle, X, Send, Mic, MicOff, Loader2, HelpCircle, Megaphone, Users } from 'lucide-react';
+import { Send, Mic, MicOff, Loader2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
 import { cn } from '../lib/utils';
 import { trpc } from '../lib/trpc';
-import { BroadcastPanel } from './BroadcastPanel';
+import { Segmented } from './ui2/Segmented';
 
 interface Message {
   id: string;
@@ -13,21 +12,9 @@ interface Message {
   viaVoice?: boolean;
 }
 
-type ViewState = 'collapsed' | 'expanded' | 'chatOpen' | 'broadcastOpen';
-
-export function ChatAssistant() {
+export function ChatAssistant({ page = false }: { page?: boolean }) {
   const { t, i18n } = useTranslation();
-  const navigate = useNavigate();
-  const [viewState, setViewState] = useState<ViewState>('collapsed');
-
-  // Listen for external toggle event (from Layout header button)
-  useEffect(() => {
-    const handler = () => {
-      setViewState((prev) => (prev === 'collapsed' ? 'expanded' : 'collapsed'));
-    };
-    window.addEventListener('toggle-help-menu', handler);
-    return () => window.removeEventListener('toggle-help-menu', handler);
-  }, []);
+  const utils = trpc.useUtils();
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [isListening, setIsListening] = useState(false);
@@ -42,9 +29,10 @@ export function ChatAssistant() {
   // Visible viewport (shrinks when the on-screen keyboard opens on iOS/Android)
   const [viewport, setViewport] = useState<{ height: number; top: number } | null>(null);
 
-  const { data: settings } = trpc.settings.get.useQuery();
-  const { data: adminData } = trpc.faq.isAdmin.useQuery();
-  const isAdmin = adminData?.isAdmin ?? false;
+  const { data: settings } = trpc.settings.get.useQuery(undefined, { enabled: page });
+  const updateVoice = trpc.settings.updateVoiceGender.useMutation({
+    onSuccess: () => { void utils.settings.get.invalidate(); },
+  });
   const chatMutation = trpc.chat.send.useMutation();
   const speakMutation = trpc.chat.speak.useMutation();
 
@@ -209,7 +197,7 @@ export function ChatAssistant() {
   const quickTopicsEn = ['handshake', 'intention', 'capabilities', 'how to start'];
   const quickTopics = i18n.language.startsWith('ru') ? quickTopicsRu : quickTopicsEn;
 
-  const isOpen = viewState === 'chatOpen';
+  const isOpen = page;
 
   // Keep the chat panel inside the visible viewport so the keyboard never covers the input row
   useEffect(() => {
@@ -226,116 +214,28 @@ export function ChatAssistant() {
     };
   }, [isOpen]);
 
-  // Notify Layout to hide bottom nav when chat/broadcast is open
-  useEffect(() => {
-    window.dispatchEvent(new CustomEvent('chat-panel-toggle', { detail: isOpen || viewState === 'broadcastOpen' }));
-    return () => { window.dispatchEvent(new CustomEvent('chat-panel-toggle', { detail: false })); };
-  }, [isOpen, viewState]);
+  if (!page) return null;
 
   return (
-    <>
-      {/* Transparent overlay to close expanded menu */}
-      {viewState === 'expanded' && (
-        <div
-          className="fixed inset-0 z-30"
-          onClick={() => setViewState('collapsed')}
-        />
-      )}
-
-      {/* Sub-buttons (Broadcast + FAQ + Chat) — positioned near the top-right help button */}
-      {viewState === 'expanded' && (
-        <div className="fixed top-[calc(72px+var(--sa-top))] right-4 z-40 flex flex-col items-end gap-2">
-          {/* FAQ button */}
-          <button
-            onClick={() => {
-              setViewState('collapsed');
-              navigate('/faq');
-            }}
-            className="flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-gray-800 text-gray-900 dark:text-white rounded-full shadow-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-200 animate-in fade-in slide-in-from-top-4"
-          >
-            <HelpCircle className="w-5 h-5 text-amber-500" />
-            <span className="text-sm font-medium">FAQ</span>
-          </button>
-          {/* Chat button */}
-          <button
-            onClick={() => setViewState('chatOpen')}
-            className="flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-gray-800 text-gray-900 dark:text-white rounded-full shadow-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-200 animate-in fade-in slide-in-from-top-4"
-            style={{ animationDelay: '50ms' }}
-          >
-            <MessageCircle className="w-5 h-5 text-blue-500" />
-            <span className="text-sm font-medium">{t('chat.title')}</span>
-          </button>
-          {/* Broadcast button (admin only) */}
-          {isAdmin && (
-            <button
-              onClick={() => setViewState('broadcastOpen')}
-              className="flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-gray-800 text-gray-900 dark:text-white rounded-full shadow-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-200 animate-in fade-in slide-in-from-top-4"
-              style={{ animationDelay: '100ms' }}
-            >
-              <Megaphone className="w-5 h-5 text-emerald-500" />
-              <span className="text-sm font-medium">{t('broadcast.title')}</span>
-            </button>
-          )}
-          {/* Support chat button (admin only) */}
-          {isAdmin && (
-            <button
-              onClick={() => {
-                setViewState('collapsed');
-                navigate('/support');
-              }}
-              className="flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-gray-800 text-gray-900 dark:text-white rounded-full shadow-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-200 animate-in fade-in slide-in-from-top-4"
-              style={{ animationDelay: '150ms' }}
-            >
-              <Users className="w-5 h-5 text-purple-500" />
-              <span className="text-sm font-medium">{t('support.chatButton')}</span>
-            </button>
-          )}
-        </div>
-      )}
-
-      {/* Main floating button — hidden, replaced by Layout header button */}
-      <button
-        onClick={() => {
-          if (viewState === 'collapsed') setViewState('expanded');
-          else if (viewState === 'expanded') setViewState('collapsed');
-        }}
-        className={cn(
-          "fixed bottom-20 right-4 w-14 h-14 rounded-full shadow-lg",
-          "flex items-center justify-center transition-all z-40",
-          "hover:scale-105 active:scale-95",
-          "hidden"
-        )}
-        aria-label={t('chat.openHelp')}
-      >
-        {viewState === 'expanded' ? (
-          <X className="w-6 h-6" />
-        ) : (
-          <HelpCircle className="w-6 h-6" />
-        )}
-      </button>
-
-      {/* Chat panel */}
-      {isOpen && (
-        <div
-          className="fixed inset-x-0 top-0 h-[100dvh] bg-white dark:bg-gray-900 z-50 flex flex-col overflow-hidden pt-safe pb-safe"
-          style={viewport ? { height: viewport.height, top: viewport.top } : undefined}
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="chat-assistant-title"
-        >
-          {/* Header */}
-          <div className="flex items-center justify-between gap-2 pl-4 pr-2 py-2 border-b border-gray-200 dark:border-gray-700">
-            <h3 id="chat-assistant-title" className="min-w-0 font-semibold text-gray-900 dark:text-white flex items-center gap-2">
-              <MessageCircle className="w-5 h-5 shrink-0 text-blue-600 dark:text-blue-400" aria-hidden="true" />
-              {t('chat.title')}
-            </h3>
-            <button
-              onClick={() => setViewState('collapsed')}
-              aria-label={t('chat.close')}
-              className="w-11 h-11 shrink-0 flex items-center justify-center rounded-full text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 dark:focus-visible:ring-blue-400"
-            >
-              <X className="w-5 h-5" aria-hidden="true" />
-            </button>
+    <div
+      className="flex h-[calc(100dvh-var(--sa-top)-7rem)] flex-col overflow-hidden rounded-lg bg-white dark:bg-gray-900"
+      style={viewport ? { height: Math.max(240, viewport.height - 112) } : undefined}
+      role="region"
+      aria-labelledby="chat-assistant-title"
+    >
+          <div className="flex items-center justify-between gap-3 border-b border-line px-4 py-2">
+            <h3 id="chat-assistant-title" className="sr-only">{t('chat.title')}</h3>
+            <span className="text-body-s font-bold text-ink">{t('help.voice')}</span>
+            <Segmented
+              variant="inline"
+              label={t('help.voice')}
+              value={settings?.voiceGender === 'MALE' ? 'MALE' : 'FEMALE'}
+              onChange={(voiceGender) => updateVoice.mutate({ voiceGender })}
+              options={[
+                { value: 'FEMALE', label: t('settings.voiceFemale') },
+                { value: 'MALE', label: t('settings.voiceMale') },
+              ]}
+            />
           </div>
 
           {/* Messages */}
@@ -443,13 +343,6 @@ export function ChatAssistant() {
               <Send className="w-5 h-5" aria-hidden="true" />
             </button>
           </div>
-        </div>
-      )}
-
-      {/* Broadcast panel */}
-      {viewState === 'broadcastOpen' && (
-        <BroadcastPanel onClose={() => setViewState('collapsed')} />
-      )}
-    </>
+    </div>
   );
 }
