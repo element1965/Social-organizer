@@ -1,6 +1,6 @@
 import { cn } from '../../lib/utils';
 
-export type SegmentOption<T extends string> = { value: T; label: string };
+export type SegmentOption<T extends string> = { value: T; label: string; disabled?: boolean };
 
 type SegmentedProps<T extends string> = {
   value: T;
@@ -40,9 +40,10 @@ export function Segmented<T extends string>({
             type="button"
             role="tab"
             aria-selected={selected}
+            disabled={option.disabled}
             onClick={() => onChange(option.value)}
             className={cn(
-              'so-focus font-bold',
+              'so-focus font-bold disabled:opacity-40',
               variant === 'inline'
                 ? 'h-[30px] rounded-sm px-2.5 text-micro'
                 : 'h-secondary rounded-md px-2 text-body-s',

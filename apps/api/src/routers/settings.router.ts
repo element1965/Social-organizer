@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { router, protectedProcedure } from '../trpc.js';
 import { TRPCError } from '@trpc/server';
+import { pickChannel } from '../services/delivery.service.js';
 
 export const settingsRouter = router({
   get: protectedProcedure.query(async ({ ctx }) => {
@@ -11,10 +12,22 @@ export const settingsRouter = router({
         fontScale: true, hideContacts: true,
         city: true, countryCode: true, latitude: true, longitude: true,
         notifyRenewalReminder: true, notifyRenewalStart: true,
+        notifyChannel: true, notifyNewCollections: true,
+        platformAccounts: { where: { platform: 'TELEGRAM' }, select: { id: true }, take: 1 },
+        _count: { select: { pushSubscriptions: true, nativePushTokens: true } },
       },
     });
     if (!user) throw new TRPCError({ code: 'NOT_FOUND' });
-    return user;
+    const { platformAccounts, _count, ...rest } = user;
+    const telegramLinked = platformAccounts.length > 0;
+    const hasPush = _count.pushSubscriptions + _count.nativePushTokens > 0;
+    return {
+      ...rest,
+      telegramLinked,
+      hasPush,
+      // The one channel events go to right now (SO-45): the person's choice or the automatic one
+      effectiveChannel: pickChannel({ notifyChannel: user.notifyChannel, hasPush, telegramId: telegramLinked ? 'linked' : null }),
+    };
   }),
 
   updateLanguage: protectedProcedure
@@ -69,6 +82,28 @@ export const settingsRouter = router({
         where: { id: ctx.userId },
         data: { notifyRenewalStart: input.enabled },
       });
+    }),
+
+  /** One channel for event notifications: app push or Telegram, never both (SO-45) */
+  updateNotifyChannel: protectedProcedure
+    .input(z.object({ channel: z.enum(['APP', 'TELEGRAM']) }))
+    .mutation(async ({ ctx, input }) => {
+      if (input.channel === 'TELEGRAM') {
+        const linked = await ctx.db.platformAccount.findFirst({
+          where: { userId: ctx.userId, platform: 'TELEGRAM' }, select: { id: true },
+        });
+        if (!linked) throw new TRPCError({ code: 'PRECONDITION_FAILED', message: 'TELEGRAM_NOT_LINKED' });
+      }
+      await ctx.db.user.update({ where: { id: ctx.userId }, data: { notifyChannel: input.channel } });
+      return { ok: true };
+    }),
+
+  /** New collections of other people; own requests and responses are not affected (SO-45) */
+  updateNotifyNewCollections: protectedProcedure
+    .input(z.object({ enabled: z.boolean() }))
+    .mutation(async ({ ctx, input }) => {
+      await ctx.db.user.update({ where: { id: ctx.userId }, data: { notifyNewCollections: input.enabled } });
+      return { ok: true };
     }),
 
   updateGeo: protectedProcedure

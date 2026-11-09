@@ -49,7 +49,7 @@ export function ProtectedRoute({ children }: { children: React.ReactNode }) {
 
   if (!isAuthenticated) {
     // Preserve current path as redirect so user returns after login
-    const redirectPath = location.pathname + location.search;
+    const redirectPath = safePath(location.pathname + location.search) ?? '/dashboard';
     if (isNativeApp) {
       const target = redirectPath !== '/dashboard' ? `/login?redirect=${encodeURIComponent(redirectPath)}` : '/login';
       return <Navigate to={target} replace />;

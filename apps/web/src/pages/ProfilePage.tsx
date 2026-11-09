@@ -62,6 +62,12 @@ export function ProfilePage() {
   const updateStart = trpc.settings.updateNotifyRenewalStart.useMutation({
     onSuccess: () => utils.settings.get.invalidate(),
   });
+  const updateChannel = trpc.settings.updateNotifyChannel.useMutation({
+    onSuccess: () => utils.settings.get.invalidate(),
+  });
+  const updateNewCollections = trpc.settings.updateNotifyNewCollections.useMutation({
+    onSuccess: () => utils.settings.get.invalidate(),
+  });
 
   const [notesOpen, setNotesOpen] = useState(false);
   const [languageOpen, setLanguageOpen] = useState(false);
@@ -111,7 +117,15 @@ export function ProfilePage() {
   const cyclesOn = prefs.notifyRenewalReminder && prefs.notifyRenewalStart;
   const soundOn = prefs.soundEnabled;
   const pushState = push.isSupported ? push.isSubscribed : null;
-  const flags = [cyclesOn, soundOn, ...(pushState === null ? [] : [pushState])];
+  const newCollectionsOn = prefs.notifyNewCollections;
+  const flags = [cyclesOn, newCollectionsOn, soundOn, ...(pushState === null ? [] : [pushState])];
+  // One external channel for event notifications (SO-45): the person's choice or the automatic one
+  const channel = prefs.effectiveChannel === 'TELEGRAM' ? 'TELEGRAM' : 'APP';
+  const channelHint = [
+    channel === 'TELEGRAM' ? t('settings.notifyChannelHintTelegram') : t('settings.notifyChannelHintApp'),
+    prefs.telegramLinked ? null : t('profile.notifyTelegramNotLinked'),
+    channel === 'APP' && !prefs.hasPush && push.isSupported ? t('settings.notifyPushOff') : null,
+  ].filter(Boolean).join(' ');
   const onCount = flags.filter(Boolean).length;
   const notesValue = onCount === 0
     ? t('profile.notificationsOff')
@@ -196,6 +210,29 @@ export function ProfilePage() {
           />
           {notesOpen ? (
             <div className="border-t border-line-soft">
+              <div className="flex min-h-row flex-wrap items-center justify-between gap-2 px-4 py-2">
+                <span className="text-body font-body text-ink">{t('profile.notifyChannel')}</span>
+                <Segmented
+                  variant="inline"
+                  label={t('settings.notifyChannelLabel')}
+                  value={channel}
+                  onChange={(next) => {
+                    if (next !== channel && !updateChannel.isPending) updateChannel.mutate({ channel: next });
+                  }}
+                  options={[
+                    { value: 'APP', label: t('settings.notifyChannelApp') },
+                    { value: 'TELEGRAM', label: t('settings.notifyChannelTelegram'), disabled: !prefs.telegramLinked },
+                  ]}
+                />
+              </div>
+              <p className="px-4 pb-3 text-label font-semibold text-ink-muted">{channelHint}</p>
+              <Row
+                title={t('settings.notifyNewCollections')}
+                variant="toggle"
+                checked={newCollectionsOn}
+                onCheckedChange={(enabled) => updateNewCollections.mutate({ enabled })}
+              />
+              <p className="px-4 pb-3 text-label font-semibold text-ink-muted">{t('settings.notifyNewCollectionsHint')}</p>
               <Row
                 title={t('profile.notifyCycles')}
                 variant="toggle"
@@ -220,6 +257,9 @@ export function ProfilePage() {
                   }}
                 />
               ) : null}
+              <p className="border-t border-line-soft px-4 py-3 text-label font-semibold text-ink-muted">
+                {t('settings.notifyMyEventsHint')}
+              </p>
             </div>
           ) : null}
         </div>

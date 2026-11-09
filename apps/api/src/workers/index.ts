@@ -11,6 +11,7 @@ import { processCleanupBlockedPending } from './cleanup-blocked-pending.worker.j
 import { processOnboardingReminder } from './onboarding-reminder.worker.js';
 import { processReviewClose } from './review-close.worker.js';
 import { processInactiveCleanup } from './inactive-cleanup.worker.js';
+import { processResponseDigest } from './response-digest.worker.js';
 
 let connection: IORedis | null = null;
 
@@ -108,6 +109,10 @@ export function setupQueues(): void {
     every: 24 * 60 * 60 * 1000, // 24 hours
   }, { name: 'inactive-account-cleanup' });
 
+  // --- Responses to a collection, grouped into one message (SO-45): event-driven, delayed ---
+  new Queue('response-digest', queueOpts(redis));
+  new Worker('response-digest', processResponseDigest, { connection: redis });
+
   console.log('BullMQ: all queues and workers initialized');
 }
 
@@ -124,4 +129,18 @@ export async function enqueueTgBroadcast(messages: TgBroadcastMessage[]): Promis
   const redis = getRedisConnection();
   const queue = new Queue('telegram-broadcast', queueOpts(redis));
   await queue.add('tg-broadcast', { messages });
+}
+
+let responseDigestQueue: Queue | null = null;
+
+/**
+ * Plans the grouped "new responses" message for a collection (SO-45). One delayed job per collection and
+ * time window (job id), so all intentions in the window become one message. Returns false without Redis.
+ */
+export async function enqueueResponseDigest(collectionId: string, delayMs: number): Promise<boolean> {
+  if (!process.env.REDIS_URL) return false;
+  if (!responseDigestQueue) responseDigestQueue = new Queue('response-digest', queueOpts(getRedisConnection()));
+  const windowId = Math.floor(Date.now() / delayMs);
+  await responseDigestQueue.add('response-digest', { collectionId }, { jobId: `resp-${collectionId}-${windowId}`, delay: delayMs });
+  return true;
 }

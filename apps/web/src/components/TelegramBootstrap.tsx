@@ -5,6 +5,10 @@ import { useTelegramInit, useTelegramBackButton } from '../hooks/useTelegram';
 import { useAuth } from '../hooks/useAuth';
 import { ProviderWait } from './onboarding/ProviderWait';
 import { TelegramFailed } from './onboarding/TelegramFailed';
+import { safeInviteToken } from './onboarding/flow';
+
+/** Collection ids and invite tokens from start params / storage are opaque url-safe strings. */
+const isSafeToken = (token: string | null | undefined): token is string => safeInviteToken(token) !== null;
 
 export function TelegramBootstrap({ children }: { children: React.ReactNode }) {
   const { isReady, isTelegram, failed, retry, dismiss } = useTelegramInit();
@@ -35,27 +39,33 @@ export function TelegramBootstrap({ children }: { children: React.ReactNode }) {
         let inviteToken: string | null = null;
         if (startParam?.startsWith('collection_')) {
           const collectionId = startParam.slice('collection_'.length);
-          navigate(`/collection/${collectionId}`, { replace: true });
-          return;
+          if (isSafeToken(collectionId)) {
+            navigate(`/collection/${encodeURIComponent(collectionId)}`, { replace: true });
+            return;
+          }
         }
 
         if (startParam?.startsWith('sos_')) {
           const collectionId = startParam.slice('sos_'.length);
-          navigate(`/collection/${collectionId}?sos=true`, { replace: true });
-          return;
+          if (isSafeToken(collectionId)) {
+            navigate(`/collection/${encodeURIComponent(collectionId)}?sos=true`, { replace: true });
+            return;
+          }
         }
 
         if (startParam?.startsWith('invite_')) {
-          inviteToken = startParam.slice('invite_'.length);
+          const t = startParam.slice('invite_'.length);
+          if (isSafeToken(t)) inviteToken = t;
         }
 
         if (!inviteToken) {
-          inviteToken = localStorage.getItem('pendingInviteToken');
+          const stored = localStorage.getItem('pendingInviteToken');
+          if (isSafeToken(stored)) inviteToken = stored;
         }
 
         if (inviteToken) {
           localStorage.setItem('pendingInviteToken', inviteToken);
-          navigate(`/invite/${inviteToken}`, { replace: true });
+          navigate(`/invite/${encodeURIComponent(inviteToken)}`, { replace: true });
           return;
         }
       } else {
@@ -63,8 +73,10 @@ export function TelegramBootstrap({ children }: { children: React.ReactNode }) {
         const inviteToken = localStorage.getItem('pendingInviteToken');
         if (inviteToken) {
           localStorage.removeItem('pendingInviteToken');
-          navigate(`/invite/${inviteToken}`, { replace: true });
-          return;
+          if (isSafeToken(inviteToken)) {
+            navigate(`/invite/${encodeURIComponent(inviteToken)}`, { replace: true });
+            return;
+          }
         }
       }
     }
