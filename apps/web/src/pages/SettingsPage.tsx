@@ -17,7 +17,7 @@ import { languageNames } from '@so/i18n';
 import { Input } from '../components/ui/input';
 import { SocialIcon } from '../components/ui/social-icons';
 import { usePushNotifications } from '../hooks/usePushNotifications';
-import { validateContact } from '@so/shared';
+import { validateContact, type ContactType } from '@so/shared';
 import { InviteBlock } from '../components/InviteBlock';
 import { isTelegramWebApp } from '@so/tg-adapter';
 import { Capacitor } from '@capacitor/core';
@@ -46,7 +46,7 @@ export function SettingsPage() {
     debounceTimers.current[type] = setTimeout(() => {
       if (!contacts) return;
       const updates = contacts.map(c => ({
-        type: c.type,
+        type: c.type as ContactType,
         value: type === c.type ? value : (contactValues[c.type] ?? c.value),
       }));
       updateContacts.mutate(updates, {

@@ -6,6 +6,7 @@ import { trpc } from '../lib/trpc';
 import { Button } from '../components/ui/button';
 import { Logo } from '../components/Logo';
 import { takePendingSosPath } from '../lib/inviteUrl';
+import { safeRedirectPath, invitePath, isSafeToken } from '../lib/safeRedirect';
 import { Mail, Eye, EyeOff, Send, KeyRound } from 'lucide-react';
 import { isTelegramWebApp, getTGInitData } from '@so/tg-adapter';
 import { Capacitor } from '@capacitor/core';
@@ -37,7 +38,7 @@ export function LoginPage() {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const redirect = searchParams.get('redirect');
+  const redirect = safeRedirectPath(searchParams.get('redirect'));
   const returnedError = searchParams.get('error');
   const login = useAuth((s) => s.login);
   const inTelegram = isTelegramWebApp();
@@ -55,11 +56,11 @@ export function LoginPage() {
 
   // The invite survives every method: it stays in localStorage until InvitePage accepts it
   const pendingInviteToken = localStorage.getItem('pendingInviteToken');
-  const effectiveRedirect = redirect || (pendingInviteToken ? `/invite/${pendingInviteToken}` : null);
+  const effectiveRedirect = redirect || invitePath(pendingInviteToken);
 
   const afterLogin = (isNew: boolean) => {
     const pendingSos = takePendingSosPath();
-    const target = effectiveRedirect || pendingSos;
+    const target = safeRedirectPath(effectiveRedirect || pendingSos);
     if (target) {
       // Full page reload to reinitialize trpcClient (important after demo mode)
       window.location.href = target;
@@ -206,8 +207,9 @@ export function LoginPage() {
     }
     // Website without the Telegram button: continue in the bot's mini app, keeping the invite
     const bot = methods?.telegramBot || 'socialorganizer_bot';
-    const inviteToken = pendingInviteToken || (effectiveRedirect?.startsWith('/invite/') ? effectiveRedirect.slice('/invite/'.length) : null);
-    window.open(inviteToken ? `https://t.me/${bot}?startapp=invite_${inviteToken}` : `https://t.me/${bot}`, '_blank');
+    const rawInviteToken = pendingInviteToken || (effectiveRedirect?.startsWith('/invite/') ? effectiveRedirect.slice('/invite/'.length) : null);
+    const inviteToken = isSafeToken(rawInviteToken) ? rawInviteToken : null;
+    window.open(inviteToken ? `https://t.me/${bot}?startapp=invite_${encodeURIComponent(inviteToken)}` : `https://t.me/${bot}`, '_blank');
   };
 
   // ---- Google ----
