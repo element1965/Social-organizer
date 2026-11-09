@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { TRPCError } from '@trpc/server';
-import { router, protectedProcedure } from '../trpc.js';
+import { router, protectedProcedure, publicProcedure } from '../trpc.js';
 import { ADMIN_IDS, CLUSTER_ROOT_OVERRIDE } from '../admin.js';
 
 class UnionFindStats {
@@ -16,7 +16,19 @@ class UnionFindStats {
   }
 }
 
+/** Cache for the public site numbers: every guest hits the landing page, the count changes slowly. */
+const PUBLIC_TTL_MS = 10 * 60 * 1000;
+let publicCache: { users: number; at: number } | null = null;
+
 export const statsRouter = router({
+  // Public numbers for the site hero ("1 240 people in one network"). Aggregate only, no personal data.
+  public: publicProcedure.query(async ({ ctx }) => {
+    if (publicCache && Date.now() - publicCache.at < PUBLIC_TTL_MS) return { users: publicCache.users };
+    const users = await ctx.db.user.count({ where: { deletedAt: null } });
+    publicCache = { users, at: Date.now() };
+    return { users };
+  }),
+
   byPeriod: protectedProcedure
     .input(z.object({ days: z.number().min(1).max(365) }))
     .query(async ({ ctx, input }) => {

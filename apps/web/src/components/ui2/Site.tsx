@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
 import { cn } from '../../lib/utils';
+import { BrandMark } from './BrandMark';
 import { Button } from './Button';
 
 export function Panel({
@@ -49,7 +50,10 @@ export function SiteHeader({
 }) {
   return (
     <header className="flex h-[72px] items-center gap-6 px-6 text-ink">
-      <span className="text-body font-extrabold tracking-tight">{brand}</span>
+      <span className="flex items-center gap-2.5 text-body font-extrabold tracking-tight">
+        <BrandMark size={30} />
+        {brand}
+      </span>
       <nav className="hidden items-center gap-5 md:flex" aria-label={brand}>
         {links.map((link) => (
           <a key={link.href} href={link.href} className={cn('text-body-s font-bold', link.active ? 'text-ink' : 'text-ink-muted')}>
@@ -89,7 +93,10 @@ export function SiteFooter({
 }) {
   return (
     <footer className="flex flex-col gap-3 px-6 py-8 text-ink md:flex-row md:items-center">
-      <span className="text-body font-extrabold">{brand}</span>
+      <span className="flex items-center gap-2 text-body font-extrabold">
+        <BrandMark size={24} />
+        {brand}
+      </span>
       <span className="text-caption font-semibold text-ink-muted">{note}</span>
       <nav className="flex flex-wrap gap-4 md:ml-auto">
         {links.map((link) => (
