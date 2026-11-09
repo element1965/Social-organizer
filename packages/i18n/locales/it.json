@@ -1188,7 +1188,11 @@
     "confirmError": "Non ha funzionato. Riprova.",
     "waiting_many": "{{count}} ti aspettano",
     "waiting_one": "{{count}} ti aspetta",
-    "waiting_other": "{{count}} ti aspettano"
+    "waiting_other": "{{count}} ti aspettano",
+    "sortLabel": "Ordine",
+    "sortNew": "Più recenti",
+    "sortName": "A–Z",
+    "showMore": "Mostra altri · ne restano {{total}}"
   },
   "account": {
     "firstName": "Nome",

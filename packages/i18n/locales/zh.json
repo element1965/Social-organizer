@@ -1174,7 +1174,11 @@
     "dontKnow": "我们不认识",
     "confirmBody": "{{name}} 通过你的链接来了。请确认你们认识。",
     "confirmError": "没有成功。请重试。",
-    "waiting_other": "{{count}} 人在等你"
+    "waiting_other": "{{count}} 人在等你",
+    "sortLabel": "排序",
+    "sortNew": "最新优先",
+    "sortName": "按名称",
+    "showMore": "显示更多 · 还有 {{total}} 人"
   },
   "account": {
     "firstName": "名",

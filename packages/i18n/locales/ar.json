@@ -1209,7 +1209,11 @@
     "waiting_one": "{{count}} شخص ينتظرك",
     "waiting_two": "{{count}} شخصان ينتظرانك",
     "waiting_zero": "لا أحد ينتظرك ({{count}})",
-    "waiting_other": "{{count}} شخص ينتظرك"
+    "waiting_other": "{{count}} شخص ينتظرك",
+    "sortLabel": "الترتيب",
+    "sortNew": "الأحدث أولاً",
+    "sortName": "أ–ي",
+    "showMore": "عرض المزيد · متبقٍ {{total}}"
   },
   "account": {
     "firstName": "الاسم",

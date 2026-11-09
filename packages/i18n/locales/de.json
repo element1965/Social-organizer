@@ -1181,7 +1181,11 @@
     "confirmBody": "{{name}} ist über Ihren Link gekommen. Bestätigen Sie, dass Sie sich kennen.",
     "confirmError": "Das hat nicht geklappt. Versuchen Sie es erneut.",
     "waiting_one": "{{count}} wartet auf Sie",
-    "waiting_other": "{{count}} warten auf Sie"
+    "waiting_other": "{{count}} warten auf Sie",
+    "sortLabel": "Sortierung",
+    "sortNew": "Neueste zuerst",
+    "sortName": "A–Z",
+    "showMore": "Mehr zeigen · noch {{total}}"
   },
   "account": {
     "firstName": "Vorname",

@@ -1195,7 +1195,11 @@
     "waiting_few": "{{count}} osoby na Ciebie czekają",
     "waiting_many": "{{count}} osób na Ciebie czeka",
     "waiting_one": "{{count}} osoba na Ciebie czeka",
-    "waiting_other": "{{count}} osoby na Ciebie czeka"
+    "waiting_other": "{{count}} osoby na Ciebie czeka",
+    "sortLabel": "Sortowanie",
+    "sortNew": "Najnowsze",
+    "sortName": "A–Z",
+    "showMore": "Pokaż więcej · zostało {{total}}"
   },
   "account": {
     "firstName": "Imię",

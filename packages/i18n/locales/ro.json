@@ -1188,7 +1188,11 @@
     "confirmError": "Nu a mers. Încearcă din nou.",
     "waiting_few": "{{count}} persoane te așteaptă",
     "waiting_one": "{{count}} persoană te așteaptă",
-    "waiting_other": "{{count}} de persoane te așteaptă"
+    "waiting_other": "{{count}} de persoane te așteaptă",
+    "sortLabel": "Sortare",
+    "sortNew": "Cele mai noi",
+    "sortName": "A–Z",
+    "showMore": "Arată mai mult · au rămas {{total}}"
   },
   "account": {
     "firstName": "Prenume",

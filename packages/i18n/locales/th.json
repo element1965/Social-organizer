@@ -1174,7 +1174,11 @@
     "dontKnow": "เราไม่รู้จักกัน",
     "confirmBody": "{{name}} มาจากลิงก์ของคุณ ยืนยันว่าเรารู้จักกัน",
     "confirmError": "ทำไม่สำเร็จ ลองอีกครั้ง",
-    "waiting_other": "มี {{count}} คนกำลังรอคุณ"
+    "waiting_other": "มี {{count}} คนกำลังรอคุณ",
+    "sortLabel": "เรียงลำดับ",
+    "sortNew": "ใหม่สุดก่อน",
+    "sortName": "ก–ฮ",
+    "showMore": "แสดงเพิ่ม · เหลือ {{total}}"
   },
   "account": {
     "firstName": "ชื่อ",

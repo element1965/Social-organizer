@@ -1195,7 +1195,11 @@
     "waiting_few": "{{count}} na vás čekají",
     "waiting_many": "{{count}} na vás čeká",
     "waiting_one": "{{count}} na vás čeká",
-    "waiting_other": "{{count}} na vás čeká"
+    "waiting_other": "{{count}} na vás čeká",
+    "sortLabel": "Řazení",
+    "sortNew": "Nejnovější",
+    "sortName": "A–Z",
+    "showMore": "Zobrazit další · zbývá {{total}}"
   },
   "account": {
     "firstName": "Jméno",

@@ -1181,7 +1181,11 @@
     "know": "We know each other",
     "dontKnow": "We don’t",
     "confirmBody": "{{name}} came through your link. Confirm that you know each other.",
-    "confirmError": "That did not work. Try again."
+    "confirmError": "That did not work. Try again.",
+    "sortLabel": "Sort",
+    "sortNew": "Newest first",
+    "sortName": "A–Z",
+    "showMore": "Show more · {{total}} left"
   },
   "account": {
     "firstName": "First name",

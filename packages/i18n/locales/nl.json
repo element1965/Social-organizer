@@ -1181,7 +1181,11 @@
     "confirmBody": "{{name}} kwam via je link. Bevestig dat jullie elkaar kennen.",
     "confirmError": "Dat lukte niet. Probeer opnieuw.",
     "waiting_one": "{{count}} wacht op je",
-    "waiting_other": "{{count}} wachten op je"
+    "waiting_other": "{{count}} wachten op je",
+    "sortLabel": "Sorteren",
+    "sortNew": "Nieuwste eerst",
+    "sortName": "A–Z",
+    "showMore": "Meer tonen · nog {{total}}"
   },
   "account": {
     "firstName": "Voornaam",

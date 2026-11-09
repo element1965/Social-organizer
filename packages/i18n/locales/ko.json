@@ -1174,7 +1174,11 @@
     "dontKnow": "모르는 사이예요",
     "confirmBody": "{{name}}님이 내 링크로 들어왔어요. 아는 사이인지 확인해 주세요.",
     "confirmError": "되지 않았어요. 다시 시도해 주세요.",
-    "waiting_other": "{{count}}명이 기다리고 있어요"
+    "waiting_other": "{{count}}명이 기다리고 있어요",
+    "sortLabel": "정렬",
+    "sortNew": "최신순",
+    "sortName": "이름순",
+    "showMore": "더 보기 · {{total}}명 남음"
   },
   "account": {
     "firstName": "이름",
