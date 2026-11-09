@@ -14,13 +14,11 @@ import {
   AddQrStub,
   AddScanStub,
   AddStub,
-  AskStub,
   CircleStub,
   HelpStub,
   HistoryStub,
   HowStub,
   IntroStub,
-  OpenStub,
   PeopleStub,
   PersonStub,
   ProfileRedirect,
@@ -31,7 +29,9 @@ import {
 import { useAuth } from './hooks/useAuth';
 import { LoginPage } from './pages/LoginPage';
 import { LandingPage } from './pages/LandingPage';
+import { AskPage } from './pages/AskPage';
 import { CollectionPage } from './pages/CollectionPage';
+import { OpenCollectionsPage } from './pages/OpenCollectionsPage';
 import { RetiredFeaturePage } from './pages/RetiredFeaturePage';
 import { InvitePage } from './pages/InvitePage';
 import { SettingsPage } from './pages/SettingsPage';
@@ -234,14 +234,14 @@ export function App() {
 
             <Route element={<ShellGate />}>
               <Route path="/" element={<HomeIndex />} />
-              <Route path="/ask" element={<AskStub />} />
+              <Route path="/ask" element={<AskPage />} />
               <Route path="/add" element={<AddStub />} />
               <Route path="/add/qr" element={<AddQrStub />} />
               <Route path="/add/scan" element={<AddScanStub />} />
               <Route path="/me" element={<ProfileStub />} />
               <Route path="/me/account" element={<AccountStub />} />
               <Route path="/me/stake" element={<StakeStub />} />
-              <Route path="/me/open" element={<OpenStub />} />
+              <Route path="/me/open" element={<OpenCollectionsPage />} />
               <Route path="/me/history" element={<HistoryStub />} />
               <Route path="/me/help" element={<HelpStub />} />
               <Route path="/me/settings" element={<SettingsPage />} />
