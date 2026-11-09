@@ -403,7 +403,8 @@
     "markedMany": "Transferuri marcate: {{n}}",
     "undo": "Anulează",
     "markError": "Marcajul nu a fost salvat. Încearcă din nou.",
-    "paidToggle": "Transferul de la {{name}} primit"
+    "paidToggle": "Transferul de la {{name}} primit",
+    "allReceived": "Toate transferurile primite · {{sum}}"
   },
   "profile": {
     "phone": "Telefon",

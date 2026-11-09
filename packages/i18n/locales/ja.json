@@ -397,7 +397,8 @@
     "markedMany": "チェックした送金: {{n}}",
     "undo": "元に戻す",
     "markError": "保存できませんでした。もう一度お試しください。",
-    "paidToggle": "{{name}}さんの送金を受け取り"
+    "paidToggle": "{{name}}さんの送金を受け取り",
+    "allReceived": "すべての送金を受け取りました · {{sum}}"
   },
   "profile": {
     "phone": "電話番号",

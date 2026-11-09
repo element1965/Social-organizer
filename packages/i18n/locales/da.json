@@ -400,7 +400,8 @@
     "markedMany": "Overførsler markeret: {{n}}",
     "undo": "Fortryd",
     "markError": "Markeringen blev ikke gemt. Prøv igen.",
-    "paidToggle": "Overførsel fra {{name}} modtaget"
+    "paidToggle": "Overførsel fra {{name}} modtaget",
+    "allReceived": "Alle overførsler modtaget · {{sum}}"
   },
   "profile": {
     "phone": "Telefon",

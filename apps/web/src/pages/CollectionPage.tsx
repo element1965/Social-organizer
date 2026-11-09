@@ -564,13 +564,14 @@ export function CollectionPage() {
           onPerson={(userIdToOpen) => navigate(`/person/${userIdToOpen}`)}
           onRemove={setRemoveTarget}
           onSaved={refresh}
+          onCloseCollection={() => setCloseOpen(true)}
         />
       ) : (
         <ParticipantList people={people} showPaid={false} onPerson={(userIdToOpen) => navigate(`/person/${userIdToOpen}`)} />
       )}
 
       {owner && !closed ? (
-        <Button variant="textDanger" className="mt-4 w-full" onClick={() => setCloseOpen(true)}>
+        <Button variant="secondary" className="mt-5 w-full border-sos/40 text-sos hover:bg-sos/10" onClick={() => setCloseOpen(true)}>
           {t('collection.close')}
         </Button>
       ) : null}

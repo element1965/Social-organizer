@@ -403,7 +403,8 @@
     "markedMany": "Transferências marcadas: {{n}}",
     "undo": "Desfazer",
     "markError": "Não foi possível salvar a marca. Tente de novo.",
-    "paidToggle": "Transferência de {{name}} recebida"
+    "paidToggle": "Transferência de {{name}} recebida",
+    "allReceived": "Todas as transferências recebidas · {{sum}}"
   },
   "profile": {
     "phone": "Telefone",

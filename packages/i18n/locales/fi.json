@@ -400,7 +400,8 @@
     "markedMany": "Siirtoja merkitty: {{n}}",
     "undo": "Kumoa",
     "markError": "Merkintää ei tallennettu. Yritä uudelleen.",
-    "paidToggle": "Siirto henkilöltä {{name}} saatu"
+    "paidToggle": "Siirto henkilöltä {{name}} saatu",
+    "allReceived": "Kaikki siirrot saatu · {{sum}}"
   },
   "profile": {
     "phone": "Puhelin",

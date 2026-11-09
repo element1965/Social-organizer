@@ -397,7 +397,8 @@
     "markedMany": "已标记转账：{{n}}",
     "undo": "撤销",
     "markError": "标记未能保存，请重试。",
-    "paidToggle": "已收到 {{name}} 的转账"
+    "paidToggle": "已收到 {{name}} 的转账",
+    "allReceived": "已收到全部转账 · {{sum}}"
   },
   "profile": {
     "phone": "电话",

@@ -403,7 +403,8 @@
     "markedMany": "העברות שסומנו: {{n}}",
     "undo": "ביטול",
     "markError": "הסימון לא נשמר. נסו שוב.",
-    "paidToggle": "ההעברה מ{{name}} התקבלה"
+    "paidToggle": "ההעברה מ{{name}} התקבלה",
+    "allReceived": "כל ההעברות התקבלו · {{sum}}"
   },
   "profile": {
     "phone": "טלפון",

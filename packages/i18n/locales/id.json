@@ -397,7 +397,8 @@
     "markedMany": "Transfer ditandai: {{n}}",
     "undo": "Urungkan",
     "markError": "Tanda gagal disimpan. Coba lagi.",
-    "paidToggle": "Transfer dari {{name}} diterima"
+    "paidToggle": "Transfer dari {{name}} diterima",
+    "allReceived": "Semua transfer diterima · {{sum}}"
   },
   "profile": {
     "phone": "Telepon",

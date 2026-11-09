@@ -400,7 +400,8 @@
     "markedMany": "İşaretlenen transfer: {{n}}",
     "undo": "Geri al",
     "markError": "İşaret kaydedilemedi. Tekrar deneyin.",
-    "paidToggle": "{{name}} kişisinin transferi alındı"
+    "paidToggle": "{{name}} kişisinin transferi alındı",
+    "allReceived": "Tüm transferler alındı · {{sum}}"
   },
   "profile": {
     "phone": "Telefon",

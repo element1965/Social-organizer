@@ -397,7 +397,8 @@
     "markedMany": "Đã đánh dấu: {{n}}",
     "undo": "Hoàn tác",
     "markError": "Không lưu được. Hãy thử lại.",
-    "paidToggle": "Đã nhận khoản của {{name}}"
+    "paidToggle": "Đã nhận khoản của {{name}}",
+    "allReceived": "Đã nhận mọi khoản chuyển · {{sum}}"
   },
   "profile": {
     "phone": "Điện thoại",

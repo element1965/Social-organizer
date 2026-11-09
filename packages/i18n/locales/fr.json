@@ -403,7 +403,8 @@
     "markedMany": "Virements marqués : {{n}}",
     "undo": "Annuler",
     "markError": "La marque n’a pas été enregistrée. Réessayez.",
-    "paidToggle": "Virement de {{name}} reçu"
+    "paidToggle": "Virement de {{name}} reçu",
+    "allReceived": "Tous les virements reçus · {{sum}}"
   },
   "profile": {
     "phone": "Téléphone",
