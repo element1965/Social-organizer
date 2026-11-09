@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Десктоп и планшет — экраны</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="web.css">
+</head>
+<body>
+<h1>Приложение на десктопе и планшете</h1>
+<p class="lead">Одни и те же экраны, другая оболочка. От 1024 px таб-бар становится сайдбаром 240 px, Круг получает две колонки (сцена и лента), остальные экраны — колонку 680 px по центру, листы — диалоги 440 px. От 768 до 1023 сайдбар сжимается до рейла с иконками. Ниже 768 — телефонная раскладка из остальных макетов, без изменений.</p>
+<div class="bp">
+  <div><b>до 768</b>Телефон: таб-бар, листы снизу, сцена во весь экран.</div>
+  <div><b>768–1023</b>Планшет: рейл 76 px с иконками, две колонки в Круге, остальное — колонка на всю ширину с полями 16.</div>
+  <div><b>1024–1439</b>Десктоп: сайдбар 240 px с подписями, колонка контента 680 по центру, сцена + лента 400.</div>
+  <div><b>от 1440</b>То же, лента 440; контент не растёт: шире 680 строки не читаются.</div>
+</div>
+<div id="row"></div>
+<script src="shared.js"></script>
+<script src="web.js"></script>
+<script>
+const FEED = [
+  row("М", "Мария просит 300 $", "через Олег брат · 2 дня назад", `<span class="amt">100 $</span>`),
+  row("Д", "Денис: новый цикл до 12 апреля", "ждём ваши 15 $", `<span class="pill warm">ждёт вас</span>`),
+  row("О", "Олег подтвердил знакомство", "теперь 1-е рукопожатие · вчера", I.fwd),
+  row("К", "Катя вошла по ссылке сбора", "2-е рукопожатие · вчера", I.fwd),
+  row("И", "Ирина добавила 3 человек", "+ 3 во 2-м рукопожатии", I.fwd),
+  row("Л", "Сбор Лены закрыт", "собрано 80 из 80 $ · вы 20 $", I.fwd),
+];
+const scenebox = (w, h, seed) => `<div class="scenebox">${planet(w, h, 110, seed)}<div class="who"><span>1-е <b>118</b></span><span>2-е <b>640</b></span><span>3-е <b>482</b></span></div><div class="ctl"><span>${I.plus}</span><span>${I.minus}</span><span>${I.fit}</span></div><div class="legend"><span><i style="background:var(--care-bright)"></i>Вы</span><span><i style="background:var(--node-1)"></i>1-е</span><span><i style="background:var(--node-2)"></i>2-е</span><span><i style="background:var(--node-3)"></i>3-е</span></div></div>`;
+const helpCard = `<div class="card"><span class="lbl">Сеть может помочь</span><div class="stat"><b>1 860 $</b><span>1 240 человек</span><span class="d">+40 $ за неделю</span></div></div>`;
+
+const D1 = `<div class="frame app">${side("circle", { badge: 2 })}<div class="main">
+${mainbar({ title: "Круг", right: `<span class="ibtn">${I.search}</span>` })}
+<div class="circle">${scenebox(840, 720, 7)}
+<div class="col">${helpCard}<div class="label"><span>Лента</span><span>2 новых</span></div><div class="group">${FEED.join("")}</div></div>
+</div></div></div>`;
+
+const D2 = `<div class="frame app">${side("circle")}<div class="main">
+${mainbar({ title: "Круг", right: `<span class="ibtn">${I.search}</span>` })}
+<div class="circle">${scenebox(840, 720, 7)}
+<div class="col pp"><div class="card">
+  <span class="crumb" style="color:var(--teal);font-weight:700;font-size:14px;display:inline-flex;align-items:center;gap:2px">${I.back}Лента</span>
+  <div class="head" style="margin-top:12px"><span class="ava">О</span><span><b>Олег Ким</b><span>1-е рукопожатие · подпись «брат»</span></span></div>
+  <div class="kv"><div><b>42</b><span>в его круге</span></div><div><b>310</b><span>видно через него</span></div></div>
+  <div class="acts"><span class="btn primary">Сбор</span><span class="btn secondary">Открыть</span><span class="btn secondary">Контакты</span></div>
+</div>
+<div class="label"><span>Общие знакомые · 3</span></div><div class="group">${row("И", "Ирина Соколова", "1-е рукопожатие", I.fwd)}${row("Л", "Лена Мороз", "1-е рукопожатие", I.fwd)}${row("Т", "Тимур Алиев", "через Олег", I.fwd)}</div>
+<span class="textbtn danger">Убрать из круга</span>
+</div></div></div></div>`;
+
+const headCard = `<div class="card">${path(["Вы", "Олег брат", "Мария"])}<div class="who" style="display:flex;align-items:center;gap:12px"><span class="ava" style="width:48px;height:48px;border-radius:16px;background:var(--teal-soft);color:var(--teal);display:grid;place-items:center;font-weight:800;font-size:18px">М</span><span><b style="display:block;font-size:22px;letter-spacing:-.03em;line-height:1.1">Мария Коваль</b><span style="display:block;margin-top:3px;color:var(--muted);font-size:13px;font-weight:600">Разовая помощь · 2 дня назад</span></span></div>${meter(15, 100, 300)}<p class="hint">Сбор закрывает Мария. Сумма может не дойти до цели.</p></div>`;
+const joinedCard = `<div class="card"><div style="display:flex;align-items:center;gap:12px"><div class="big" style="flex:1"><b>15 $</b><span>вы участвуете</span></div><span style="height:40px;padding:0 14px;border-radius:12px;background:var(--canvas);font-weight:700;font-size:14px;display:grid;place-items:center">Изменить</span></div><div class="actions"><div class="btn primary">${I.chat}Открыть чат сбора</div></div><p class="hint">Как передать деньги, договариваются в чате. Приложение это не фиксирует.</p></div>`;
+const PEOPLE = [["Олег Соколов", "1-е рукопожатие", 10], ["Юки Танака", "через Олег", 30], ["Том Беккер", "через Ирина", 20], ["Чен Вэй", "через Олег", 40], ["Анна", "вы", 15, true]];
+const plist = `<div class="label"><span>Участники · 5</span></div><div class="group">${PEOPLE.map(([n, s, a, me]) => row(n[0], n, s, `<span class="amt ${me ? "me" : ""}">${a} $</span>`)).join("")}</div>`;
+
+const D3 = `<div class="frame app">${side("circle")}<div class="main">
+${mainbar({ back: "Круг", title: "Сбор", right: `<span class="trail">Отказаться</span>` })}
+<div class="content">${headCard}${joinedCard}${plist}</div>
+</div></div>`;
+
+const D4 = `<div class="frame app">${side("circle")}<div class="main">
+${mainbar({ back: "Круг", title: "Сбор", right: `<span class="trail">Отказаться</span>` })}
+<div class="content">${headCard}${joinedCard}${plist}</div>
+</div><div class="dim"><div class="dialog"><h3>Отказаться от участия?</h3><p class="sub">Ваши 15 $ уйдут из сбора Марии. Вернуться можно, пока сбор открыт.</p><div class="btns"><span class="btn danger">Отказаться</span><span class="btn secondary">Остаться</span></div></div></div></div>`;
+
+const D5 = `<div class="frame app">${side("profile")}<div class="main">
+${mainbar({ title: "Профиль" })}
+<div class="content">
+<div class="card" style="display:flex;align-items:center;gap:14px"><span style="width:64px;height:64px;border-radius:20px;background:var(--teal-soft);color:var(--teal);display:grid;place-items:center;font-weight:800;font-size:24px">А</span><span style="flex:1"><b style="display:block;font-size:22px;letter-spacing:-.03em">Анна Петрова</b><span style="display:block;color:var(--muted);font-size:14px;margin-top:3px">118 в круге · 1 240 в сети</span></span><span style="height:40px;padding:0 14px;border-radius:12px;background:var(--canvas);font-weight:700;font-size:14px;display:grid;place-items:center">Изменить</span></div>
+<div class="label"><span>Участие</span></div><div class="group">${row(I.wallet, "Минимальное участие", "15 $ · изменить можно в любой момент", `<span class="amt">15 $</span>`)}${row(I.clock, "Сборы", "1 открытый · 6 прошлых", I.fwd)}</div>
+<div class="label"><span>Аккаунт</span></div><div class="group">${row(I.me, "Аккаунт", "anna@example.com · Google", I.fwd)}${row(I.chat, "Контакты", "Telegram, телефон · видны 1-му рукопожатию", I.fwd)}${row(I.moon, "Тема", "Авто", I.fwd)}</div>
+<div class="label"><span>Ещё</span></div><div class="group">${row(I.help, "Помощь", "", I.fwd)}${row(I.circle, "О приложении", "версия 2.0 · открытый код", I.fwd)}</div>
+<span class="textbtn">Выйти</span>
+</div></div></div>`;
+
+const T1 = `<div class="frame app tablet">${side("circle", { rail: true })}<div class="main">
+${mainbar({ title: "Круг", right: `<span class="ibtn">${I.search}</span>` })}
+<div class="circle">${scenebox(420, 1000, 7)}
+<div class="col">${helpCard}<div class="label"><span>Лента</span><span>2 новых</span></div><div class="group">${FEED.join("")}</div></div>
+</div></div></div>`;
+
+document.getElementById("row").innerHTML = [
+  wide("circle", "", D1, "<small>1</small>Круг на десктопе", `<p>Сайдбар вместо таб-бара: те же четыре раздела, «Добавить человека» как отдельная тёмная кнопка (на телефоне это экран из Круга, на десктопе места хватает), внизу Помощь, тема и вы. Сцена с планетой занимает левую часть и не прячется за лентой: лента — колонка 400 px справа, сверху «Сеть может помочь». На телефоне эти два слоя переключаются жестом; здесь они видны одновременно, и это главное, что даёт широкий экран.</p>
+<ul><li>Счётчики колец и легенда лежат на сцене полупрозрачными пилюлями, как на телефоне. Кнопки +, − и «вписать» справа: мышью колесо работает, но кнопки нужны для трекпада и доступности.</li><li>Поиск по людям — в шапке, на телефоне он на экране Люди.</li><li>Бейдж на «Круг» в сайдбаре — число новых строк ленты, вместо точки на табе.</li></ul>`),
+  wide("person", "", D2, "<small>2</small>Человек в правой колонке", `<p>Клик по узлу на сцене или по строке ленты не открывает лист снизу: карточка человека занимает правую колонку, лента возвращается по «‹ Лента». Сцена при этом подсвечивает выбранного и его связи. Действия те же, что в листе на телефоне: Сбор (если открыт), Открыть, Контакты; «Убрать из круга» текстом внизу.</p>`),
+  wide("collection", "", D3, "<small>3</small>Сбор и другие вторичные экраны", `<p>Всё, что на телефоне открывается пушем (Сбор, Просьба, Человек из списка, Люди, Добавить, Аккаунт), на десктопе — колонка 680 px по центру области контента, с крошкой «‹ Круг» и заголовком в верхней строке. Карточки и списки те же, что на телефоне, без изменений в ширине элементов. Шире 680 колонка не растёт: строка списка и подсказка иначе не читаются.</p>`),
+  wide("dialog", "", D4, "<small>4</small>Лист становится диалогом", `<p>Все листы снизу (Отказаться, Закрыть сбор, Убрать из круга, QR сбора, Путь к просьбе) на десктопе — диалог 440 px по центру с тем же содержимым. Кнопки в ряд, опасная слева, как в листе.</p>`),
+  wide("profile", "", D5, "<small>5</small>Профиль", `<p>Та же колонка 680: карточка с аватаром и «Изменить», группы Участие, Аккаунт, Ещё. Переключатель темы на десктопе дублируется в сайдбаре, потому что на большом экране его ищут там.</p>`),
+  wide("tablet", "t", T1, "<small>6</small>Планшет 834 px", `<p>Между 768 и 1023: рейл 76 px с иконками без подписей, в Круге сцена и лента 320 px рядом. Вторичные экраны — колонка на всю ширину с полями 16. Листы остаются листами снизу до 1024.</p>`),
+].join("");
+</script>
+</body>
+</html>

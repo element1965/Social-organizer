@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Сайт — экраны</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="web.css">
+</head>
+<body>
+<h1>Сайт</h1>
+<p class="lead">Публичная часть www.orginizer.com на 1280 px: главная для гостя, вход, страницы по ссылке (приглашение, сбор) и правовые тексты. Те же токены и компоненты, что в приложении; одна ширина контента 1184 px (48 px поля), колонка текста не шире 60 символов.</p>
+<div id="row"></div>
+<script src="shared.js"></script>
+<script src="web.js"></script>
+<script>
+const HOME = `<div class="frame">
+${siteTop("")}
+<div class="hero">
+  <div>
+    <h1>Помощь через людей, которых знаешь</h1>
+    <p class="lead">Social Organizer показывает, как вы связаны с людьми вокруг: напрямую, через друзей, через друзей друзей. Когда нужна помощь, просьба идёт по этим связям, и <b>из небольших сумм многих складывается нужное одному</b>.</p>
+    <div class="cta"><span class="btn primary">Начать</span><span class="btn secondary">Как это работает</span></div>
+    <div class="facts"><span class="pill">Открытый код</span><span class="pill">Некоммерческий</span><span class="pill">Не держит деньги</span></div>
+  </div>
+  <div class="planet">${planet(560, 480, 110, 7)}<div class="tag"><span>1 240 человек в одной сети</span><span>3 рукопожатия</span></div></div>
+</div>
+<div class="sec" id="how">
+  <h2>Как это работает</h2>
+  <p class="lead">Три шага, и никакого организатора.</p>
+  <div class="steps">
+    <div class="step"><div class="pic">${pic(0)}</div><span class="n">1</span><h3>Вы в центре своего круга</h3><p>Добавьте <b>людей, которых знаете лично</b>: по ссылке или QR при встрече. Через них вы видите их знакомых — второе и третье рукопожатие.</p></div>
+    <div class="step"><div class="pic">${pic(1)}</div><span class="n">2</span><h3>Просьба идёт по рукопожатиям</h3><p>Сначала её слышат ваши люди, потом их люди. <b>Чем больше вокруг, тем дальше идёт сигнал.</b> Каждый решает сам, участвовать ли.</p></div>
+    <div class="step"><div class="pic">${pic(2)}</div><span class="n">3</span><h3>Откликнувшиеся собираются в чате</h3><p>Каждый называет свою сумму и входит в чат сбора. <b>Деньги передают лично</b>, приложение только показывает, кто с кем.</p></div>
+  </div>
+</div>
+<div class="sec">
+  <div class="two-col">
+    <div>
+      <h2>Шесть знакомых, один круг</h2>
+      <p class="lead">На юге Китая такой круг называют <b>хуэй</b>. Шесть знакомых кладут по доле раз в месяц. Один забирает доли этого месяца. Месяц спустя — следующий.</p>
+      <p class="say">Social Organizer делает то же без организатора и без очереди: круг — это ваши рукопожатия, а доли получает тот, кому нужно сейчас.</p>
+      <div class="months"><span>Январь</span><span>Февраль</span><span class="on">Март</span><span>Апрель</span><span>Май</span><span>Июнь</span></div>
+    </div>
+    <div class="table"><div class="ring"></div><div class="well"></div>
+      <span class="person" style="left:50%;top:12%">Мария</span><span class="person" style="left:85%;top:31%">Олег</span><span class="person on" style="left:85%;top:69%">Вы</span><span class="person" style="left:50%;top:88%">Ирина</span><span class="person" style="left:15%;top:69%">Денис</span><span class="person" style="left:15%;top:31%">Лена</span>
+      <span class="token" style="left:38%;top:38%"></span><span class="token" style="left:44%;top:36%"></span><span class="token" style="left:50%;top:35%"></span><span class="token" style="left:56%;top:36%"></span><span class="token" style="left:62%;top:38%"></span>
+      <span class="take" style="top:56%">В марте — вы<small>пять долей по 15 $</small></span>
+    </div>
+  </div>
+</div>
+<div class="sec">
+  <div class="two-col">
+    <div>
+      <h2>Просьба идёт по рукопожатиям</h2>
+      <p class="lead">Вы видите просьбу Марии, потому что её знает Олег, а Олега знаете вы. Просьба — это вопрос, на который можно не ответить. <b>Никаких обязательств.</b></p>
+    </div>
+    <div><div class="chain"><span class="node on">Мария Коваль<small>просит 300 $</small></span><span class="bridge"><i></i></span><span class="node on">Олег<small>ваш брат</small></span><span class="bridge"><i></i></span><span class="node">Вы<small>решаете сами</small></span></div></div>
+  </div>
+</div>
+<div class="sec">
+  <h2>Чего приложение не делает</h2>
+  <div class="nots">
+    <div class="not"><i>${I.wallet}</i><h3>Не держит деньги</h3><p>Передача происходит лично, в чате сбора. Приложение показывает, кто с кем, и не больше.</p></div>
+    <div class="not"><i>${I.free}</i><h3>Не берёт комиссию</h3><p>Открытый код, некоммерческий проект. Ни подписки, ни рекламы, ни процента со сборов.</p></div>
+    <div class="not"><i>${I.shield}</i><h3>Не решает за вас</h3><p>Кого добавить, сколько давать, участвовать ли — каждый раз ваш выбор. Отказ ничего не ломает.</p></div>
+  </div>
+</div>
+<div class="sec" id="start">
+  <div class="two-col">
+    <div>
+      <h2>Начните с людей, которых уже знаете</h2>
+      <p class="lead"><b>Есть ссылка от знакомого?</b> Откройте её: она приведёт прямо в его круг. Нет — войдите и позовите первых пятерых сами.</p>
+      <div class="stores"><span class="store">${I.tg}Открыть в Telegram</span><span class="store">${I.play}Google Play</span><span class="store">${I.apple}App Store</span><span class="store light">В браузере</span></div>
+    </div>
+    <div class="planet" style="height:320px">${planet(560, 320, 80, 11)}</div>
+  </div>
+</div>
+${siteFoot()}
+</div>`;
+
+const LOGIN = `<div class="frame centre-page">${siteTop("")}
+<div class="body"><div class="panel">
+  <h2>Войдите или создайте аккаунт</h2><p class="say">Один аккаунт для телефона и сайта. Пароль не нужен.</p>
+  <div class="auths"><div class="auth apple">${I.apple}Продолжить с Apple</div><div class="auth google">${I.google}Продолжить с Google</div><div class="auth tg">${I.tg}Продолжить с Telegram</div></div>
+  <div class="mail">Войти по почте</div>
+  <p class="legal">Продолжая, вы принимаете <u>условия</u> и <u>политику</u>.</p>
+</div></div></div>`;
+
+const INVITE = `<div class="frame centre-page">${siteTop("")}
+<div class="body"><div class="panel pubcard">
+  <span class="ava">О</span><h2>Олег Ким зовёт вас в свой круг</h2>
+  <p class="why">Помощь через людей, которых знаешь. Войдите, и Олег подтвердит, что вы знакомы.</p>
+  <div class="facts" style="display:flex;gap:8px;margin-top:16px"><span class="pill">1 240 человек в сети</span><span class="pill teal">может помочь на 1 860 $</span></div>
+  <div class="auths" style="width:100%"><div class="auth apple">${I.apple}Продолжить с Apple</div><div class="auth google">${I.google}Продолжить с Google</div><div class="auth tg">${I.tg}Продолжить с Telegram</div></div>
+  <div class="mail">Войти по почте</div>
+  <p class="legal">Продолжая, вы принимаете <u>условия</u> и <u>политику</u>.</p>
+</div></div></div>`;
+
+const SOS = `<div class="frame centre-page">${siteTop("")}
+<div class="body"><div class="panel pubcard">
+  <span class="ava">А</span><h2>Анне нужна помощь</h2><p class="why">Разовая помощь · открыт 2 дня назад</p>
+  <div class="card"><div class="big" style="justify-content:space-between"><b style="font-size:28px">100 $</b><span>из 300 $</span></div><div class="meter" style="margin-top:10px"><i class="rest" style="width:33%"></i></div><p class="hint">4 участника · деньги передают лично</p></div>
+  <div class="joinnote" style="display:flex;gap:12px;align-items:flex-start;margin-top:12px;padding:12px 14px;border-radius:16px;background:var(--teal-soft);font-size:14px;line-height:1.4;text-align:left"><span><b>Вы станете частью круга Анны.</b> Присоединяясь, вы подтверждаете, что знаете её лично.</span></div>
+  <div class="btn primary">Присоединиться</div><p class="hint">Дальше вход: Apple, Google, Telegram или почта.</p>
+</div></div></div>`;
+
+const LEGAL = `<div class="frame fixed">${siteTop("")}
+<div class="toc"><span class="on">Конфиденциальность</span><span>Условия</span><span>Удаление аккаунта</span></div>
+<div class="prose">
+  <h1>Конфиденциальность</h1><p class="meta">Обновлено 1 ноября 2026</p>
+  <h2>Что мы храним</h2><p>Имя, способ входа, контакты, которые вы сами указали, и ваши связи с другими людьми. Суммы участия и сборы, в которых вы участвуете. Ничего из этого не продаётся и не передаётся третьим лицам.</p>
+  <h2>Кто видит ваши данные</h2><p>Имя и аватар видят люди до третьего рукопожатия. Контакты — только первое рукопожатие, и только если вы не скрыли их в Профиле. Публичная страница сбора показывает имя автора, сумму и прогресс любому, у кого есть ссылка.</p>
+  <h2>Удаление</h2><p class="m">Аккаунт удаляется из Профиля → Аккаунт → Удалить аккаунт, или по ссылке ниже без входа. Связи, участие и сборы удаляются вместе с ним в течение 24 часов.</p>
+</div></div>`;
+
+document.getElementById("row").innerHTML = [
+  wide("home", "", HOME, "<small>1</small>Главная для гостя", `<p>Один экран на три вопроса: что это, как работает, что не делает. Сверху вниз: hero с планетой (это тот же <code>GlobeNetwork</code>, что сейчас, на тёмной сцене в карточке 560×480, а не во весь фон), три шага с теми же картинками, что в интро приложения, метафора хуэй из старого концепта, цепочка рукопожатий, три честных «не», блок сторов. Тёмный полноэкранный фон и шесть абзацев текущего лендинга ушли: светлый холст и те же карточки, что в приложении, так что после входа ничего не меняется.</p>
+<ul><li>Один акцент на экран: кнопка «Начать» и подсветка в схемах — <code>care</code>. Планета — единственный тёмный блок.</li><li>Три пилюли под hero («Открытый код · Некоммерческий · Не держит деньги») повторяют то, что раньше было бейджем в шапке и двумя абзацами ниже.</li><li>Блок «Начать» объясняет, что делать с полученной ссылкой: это главный вход для новых людей, и сейчас об этом сказано одной строкой «Got a link?».</li><li class="risk">Вариант <code>arvut</code> (иврит, RTL) в первую версию не входит: это языковой вариант того же лендинга, когда будет трафик.</li></ul>`),
+  wide("login", "", LOGIN, "<small>2</small>Вход на сайте", `<p>Панель 460 px по центру холста, шапка сайта остаётся. Содержимое — то же, что на телефоне: три кнопки, почта текстом, юридическая строка. Почта и код открываются в той же панели.</p>`),
+  wide("invite", "", INVITE, "<small>3</small>Приглашение по ссылке", `<p>Та же панель, композиция экрана приглашения из онбординга: аватар, заголовок с именем, одна фраза, две пилюли-факта, кнопки входа. На широком экране ничего не растягивается: панель и есть «телефон».</p>`),
+  wide("sos", "", SOS, "<small>4</small>Публичная страница сбора", `<p>Панель с карточкой суммы, плашкой о круге и одной кнопкой «Присоединиться». Это та же страница, что на телефоне (<code>/sos/:id</code>); ширина панели 460 вместо полной ширины.</p>`),
+  wide("legal", "", LEGAL, "<small>5</small>Правовые тексты", `<p>Один шаблон для конфиденциальности, условий и удаления аккаунта: заголовок 40 px, дата, колонка 720 px, строка 16 px с интерлиньяжем 1.6, оглавление слева. Текст на странице — черновик по текущим правилам приложения, финальную редакцию пишет владелец.</p>`),
+].join("");
+</script>
+</body>
+</html>
