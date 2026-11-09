@@ -58,9 +58,16 @@ export function RingChips({ counts, mode, hiddenRings, onToggle, onSelf, classNa
           );
         })}
         {onSelf ? (
-          <Chip variant="onscene" className="ml-auto text-node-1 backdrop-blur-md" onClick={onSelf}>
+          // On a phone only the icon: three counters with three-digit numbers already fill the row
+          <Chip
+            variant="onscene"
+            aria-label={t('circle.toSelf')}
+            title={t('circle.toSelf')}
+            className="ml-auto shrink-0 text-node-1 backdrop-blur-md max-sm:w-[34px] max-sm:px-0"
+            onClick={onSelf}
+          >
             <IconAim className="h-4 w-4" />
-            {t('circle.toSelf')}
+            <span className="max-sm:hidden">{t('circle.toSelf')}</span>
           </Chip>
         ) : null}
       </div>
