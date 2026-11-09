@@ -7,50 +7,57 @@
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="shared.css">
 <style>
+  /* One vertical rhythm for every full-screen flow step:
+     top row 70, picture of a fixed height, 24 to the title, 10 to the text, at least 32 to the buttons. */
   .flow { position:absolute; inset:0; display:flex; flex-direction:column; padding:70px 20px 36px; }
-  .brand { display:flex; align-items:center; gap:8px; font-weight:800; font-size:15px; letter-spacing:-.02em; }
+  .brand { display:flex; align-items:center; gap:8px; font-weight:800; font-size:15px; letter-spacing:-.02em; height:26px; }
   .brand img { width:26px; height:26px; border-radius:8px; }
-  .flow h2 { margin:22px 0 0; font-size:30px; letter-spacing:-.045em; line-height:1.02; text-wrap:balance; }
+  .corner { position:absolute; right:16px; top:62px; height:40px; padding:0 12px; border-radius:12px; display:grid; place-items:center; font-weight:700; font-size:14px; }
+  .corner.lang { background:var(--paper); color:var(--muted); box-shadow:inset 0 0 0 1px var(--line); }
+  .corner.skip { color:var(--muted); }
+  .pic { flex:none; height:240px; margin-top:16px; display:flex; align-items:center; justify-content:center; }
+  .pic.tall { height:328px; margin-top:12px; }
+  .pic svg { height:100%; width:auto; }
+  .flow h2 { margin:24px 0 0; font-size:30px; letter-spacing:-.045em; line-height:1.02; text-wrap:balance; }
   .flow .say { margin:10px 0 0; color:var(--muted); font-size:15px; line-height:1.4; max-width:32ch; }
   .flow .say b { color:var(--ink); }
-  .pic { flex:1; min-height:0; display:flex; align-items:center; justify-content:center; }
-  .pic svg { width:100%; height:auto; max-height:100%; }
-  .flow .foot { position:static; margin-top:auto; }
+  .flow .foot { position:static; margin-top:auto; padding-top:32px; }
   .auths { display:flex; flex-direction:column; gap:10px; }
   .auth { height:56px; border-radius:16px; display:flex; align-items:center; justify-content:center; gap:10px; font-weight:700; font-size:17px; }
   .auth svg { width:20px; height:20px; }
   .auth.apple { background:#111; color:#fff; }
   .auth.google { background:#fff; color:var(--ink); box-shadow:inset 0 0 0 1px var(--line); }
   .auth.tg { background:#229ED9; color:#fff; }
-  .mail { text-align:center; margin-top:14px; color:var(--teal); font-weight:700; font-size:15px; min-height:40px; line-height:40px; }
-  .legal { text-align:center; color:var(--muted); font-size:12px; line-height:1.4; margin-top:8px; }
+  .mail { text-align:center; margin-top:8px; color:var(--teal); font-weight:700; font-size:15px; min-height:44px; line-height:44px; }
+  .legal { text-align:center; color:var(--muted); font-size:12px; line-height:1.4; margin:4px 0 0; }
   .legal u { text-decoration:none; color:var(--muted); font-weight:700; }
-  .inviter { display:flex; align-items:center; gap:12px; margin-top:18px; }
-  .inviter .ava { width:52px; height:52px; border-radius:18px; background:var(--teal-soft); color:var(--teal); display:grid; place-items:center; font-weight:800; font-size:20px; }
-  .inviter .t b { display:block; font-size:17px; letter-spacing:-.02em; }
-  .inviter .t span { display:block; color:var(--muted); font-size:13px; font-weight:600; margin-top:2px; }
-  .dots { display:flex; gap:6px; align-items:center; justify-content:center; margin:14px 0 0; }
+  /* invite: centred like the public collection page, so the two "outside" entrances look alike */
+  .centre { text-align:center; display:flex; flex-direction:column; align-items:center; }
+  .centre .ava { width:84px; height:84px; border-radius:28px; background:var(--teal-soft); color:var(--teal); display:grid; place-items:center; font-weight:800; font-size:32px; margin-top:44px; }
+  .centre h2 { margin-top:16px; }
+  .centre .say { max-width:30ch; }
+  .facts { display:flex; gap:8px; margin-top:16px; }
+  .dots { display:flex; gap:6px; align-items:center; justify-content:center; margin:20px 0 0; }
   .dots i { width:7px; height:7px; border-radius:50%; background:var(--line); display:block; }
   .dots i.on { width:22px; border-radius:4px; background:var(--ink); }
-  .pair { display:grid; grid-template-columns:auto 1fr; gap:10px; align-items:center; margin-top:12px; }
-  .skip { color:var(--muted); font-weight:700; font-size:15px; padding:0 10px; }
-  .codes { display:grid; grid-template-columns:repeat(6,1fr); gap:8px; margin-top:16px; }
+  .codes { display:grid; grid-template-columns:repeat(6,1fr); gap:8px; margin-top:20px; }
   .codes span { height:56px; border-radius:14px; background:var(--paper); box-shadow:inset 0 0 0 1px var(--line); display:grid; place-items:center; font-size:24px; font-weight:800; letter-spacing:-.03em; }
   .codes span.on { box-shadow:inset 0 0 0 2px var(--teal); }
   .codes span.cur { position:relative; }
   .codes span.cur::after { content:""; width:2px; height:26px; background:var(--teal); border-radius:1px; }
-  .okbox { display:flex; gap:12px; align-items:flex-start; margin-top:18px; padding:14px; border-radius:18px; background:var(--paper); box-shadow:0 10px 28px rgba(20,33,30,.06); }
-  .okbox i { flex:none; width:40px; height:40px; border-radius:13px; background:var(--teal-soft); color:var(--teal); display:grid; place-items:center; }
-  .okbox i svg { width:20px; height:20px; }
-  .okbox b { display:block; font-size:16px; letter-spacing:-.02em; }
-  .okbox span { display:block; color:var(--muted); font-size:14px; line-height:1.4; margin-top:3px; }
-  .lang { position:absolute; right:16px; top:60px; height:34px; padding:0 10px; border-radius:11px; background:var(--paper); color:var(--muted); font-weight:700; font-size:13px; display:grid; place-items:center; box-shadow:inset 0 0 0 1px var(--line); }
-  .seedcard .money { margin-top:4px; }
+  .chips { display:flex; gap:8px; margin-top:12px; }
+  .chips span { height:40px; padding:0 16px; border-radius:12px; background:var(--canvas); display:grid; place-items:center; font-weight:700; font-size:15px; }
+  .chips span.on { background:var(--ink); color:var(--canvas); }
+  .seed .money { margin-top:4px; }
+  .sent { display:flex; gap:12px; align-items:center; margin-top:12px; padding:12px 14px; border-radius:16px; background:var(--care-soft); font-size:14px; line-height:1.4; color:var(--ink); }
+  .sent i { flex:none; width:36px; height:36px; border-radius:12px; background:var(--paper); color:var(--care); display:grid; place-items:center; }
+  .sent i svg { width:20px; height:20px; }
+  .sent b { font-weight:800; }
 </style>
 </head>
 <body>
 <h1>Онбординг и вход</h1>
-<p class="lead">Путь нового человека: ссылка от знакомого → вход → три кадра о том, как это работает → минимальное участие → пустой Круг (он уже есть в макете Круга). Вход один для всех: три кнопки и почта текстом. Девять экранов.</p>
+<p class="lead">Путь нового человека: ссылка от знакомого → вход → три кадра о том, как это работает → минимальное участие → пустой Круг (он уже есть в макете Круга). Вход один для всех: три кнопки и почта текстом. Девять экранов на одной вертикальной сетке: верхняя строка, картинка фиксированной высоты, заголовок, текст, кнопки с запасом не меньше 32 px.</p>
 <div class="row" id="row"></div>
 <script src="shared.js"></script>
 <script>
@@ -59,7 +66,7 @@ I.google = `<svg viewBox="0 0 24 24"><path fill="#4285F4" d="M21.6 12.2c0-.7-.1-
 I.tg = `<svg viewBox="0 0 24 24" fill="currentColor"><path d="m3.5 11.3 15.4-6c.7-.3 1.3.2 1.1 1.2l-2.6 12.3c-.2.9-.7 1.1-1.5.7l-4-3-1.9 1.9c-.2.2-.4.4-.8.4l.3-4 7.3-6.6c.3-.3-.1-.4-.5-.2l-9 5.7-3.9-1.2c-.8-.3-.8-.8.1-1.2z"/></svg>`;
 I.mailI = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5.5" width="17" height="13" rx="2.5"/><path d="m4 7 8 6 8-6"/></svg>`;
 
-/* explainer pictures: three frames */
+/* explainer pictures: the same network in three frames, always at the same place */
 function pic(step) {
   const d1 = "var(--ink)", d2 = "#7f918b", d3 = "#b3c0bb", teal = "var(--teal)";
   const N = [[160,150,22,d1],[70,80,13,d1],[250,70,13,d1],[60,230,13,d1],[260,220,13,d1],[20,150,9,d2],[300,140,9,d2],[120,20,9,d2],[210,280,9,d2],[300,40,6,d3],[20,60,6,d3],[20,260,6,d3]];
@@ -72,70 +79,72 @@ function pic(step) {
   const pulse = step === 1 ? `<circle r="6" fill="${teal}"><animateMotion dur="2.6s" repeatCount="indefinite" path="M160,150 L70,80 L20,150 L70,80 L160,150"/></circle>` : "";
   return `<svg viewBox="0 0 320 300">${lines}${dots}${you}${pulse}${chat}</svg>`;
 }
-const INTRO = [["Вы в центре своего круга", "Рядом <b>люди, которых вы знаете лично</b>. Через них вы видите их знакомых: это второе и третье рукопожатие."], ["Просьба идёт по рукопожатиям", "Сначала её слышат ваши люди, потом их люди. <b>Чем больше вокруг, тем дальше идёт сигнал.</b>"], ["Откликнувшиеся собираются в чате", "Каждый называет свою сумму и входит в чат сбора. <b>Деньги передают лично</b>, приложение только показывает, кто с кем."]];
+const INTRO = [["Вы в центре своего круга", "Рядом <b>люди, которых вы знаете лично</b>. Через них вы видите их знакомых: это второе и третье рукопожатие."], ["Просьба идёт по рукопожатиям", "Сначала её слышат ваши люди, потом их люди. <b>Чем больше вокруг, тем дальше идёт сигнал.</b>"], ["Откликнувшиеся собираются в чате", "Каждый называет свою сумму и входит в чат сбора. <b>Деньги передают лично.</b>"]];
+
+const auths = `<div class="auths"><div class="auth apple">${I.apple}Продолжить с Apple</div><div class="auth google">${I.google}Продолжить с Google</div><div class="auth tg">${I.tg}Продолжить с Telegram</div></div>
+<div class="mail">Войти по почте</div>
+<p class="legal">Продолжая, вы принимаете <u>условия</u> и <u>политику</u>.</p>`;
+const brand = `<div class="brand"><img src="${MARK}" alt="">Social Organizer</div>`;
 
 const introPhone = (step) => `<div class="phone">${status()}<div class="flow">
-<div class="brand"><img src="${MARK}" alt="">Social Organizer</div>
-<div class="pic">${pic(step)}</div>
+${step < 2 ? `<span class="corner skip">Пропустить</span>` : ""}
+<div class="pic tall">${pic(step)}</div>
 <h2>${INTRO[step][0]}</h2><p class="say">${INTRO[step][1]}</p>
 <div class="dots">${[0,1,2].map(i => `<i class="${i === step ? "on" : ""}"></i>`).join("")}</div>
-<div class="foot"><div class="pair"><span class="skip">${step < 2 ? "Пропустить" : ""}</span><div class="btn primary">${step < 2 ? "Дальше" : "Понятно"}</div></div></div>
+<div class="foot"><div class="btn primary">${step < 2 ? "Дальше" : "Понятно"}</div></div>
 </div>${home()}</div>`;
 
-const P1 = `<div class="phone">${status()}<div class="flow"><div class="brand"><img src="${MARK}" alt="">Social Organizer</div><span class="lang">RU</span>
+const P1 = `<div class="phone">${status()}<div class="flow centre">${brand}<span class="corner lang">RU</span>
+<span class="ava">О</span>
 <h2>Олег Ким зовёт вас в свой круг</h2>
-<div class="inviter"><span class="ava">О</span><span class="t"><b>Олег Ким</b><span>В сети 1 240 человек · сеть может помочь на 1 860 $</span></span></div>
 <p class="say">Помощь через людей, которых знаешь. Войдите, и Олег подтвердит, что вы знакомы.</p>
-<div class="foot"><div class="auths"><div class="auth apple">${I.apple}Продолжить с Apple</div><div class="auth google">${I.google}Продолжить с Google</div><div class="auth tg">${I.tg}Продолжить с Telegram</div></div>
-<div class="mail">Войти по почте</div>
-<p class="legal">Продолжая, вы принимаете <u>условия</u> и <u>политику</u>.</p></div>
+<div class="facts"><span class="pill">1 240 человек в сети</span><span class="pill teal">может помочь на 1 860 $</span></div>
+<div class="foot" style="width:100%;text-align:left">${auths}</div>
 </div>${home()}</div>`;
 
-const P2 = `<div class="phone">${status()}<div class="flow"><div class="brand"><img src="${MARK}" alt="">Social Organizer</div><span class="lang">RU</span>
+const P2 = `<div class="phone">${status()}<div class="flow">${brand}<span class="corner lang">RU</span>
 <div class="pic">${pic(0)}</div>
 <h2>Войдите или создайте аккаунт</h2><p class="say">Один аккаунт для телефона и сайта. Пароль не нужен.</p>
-<div class="foot"><div class="auths"><div class="auth apple">${I.apple}Продолжить с Apple</div><div class="auth google">${I.google}Продолжить с Google</div><div class="auth tg">${I.tg}Продолжить с Telegram</div></div>
-<div class="mail">Войти по почте</div>
-<p class="legal">Продолжая, вы принимаете <u>условия</u> и <u>политику</u>.</p></div>
+<div class="foot">${auths}</div>
 </div>${home()}</div>`;
 
 const P3 = `<div class="phone">${status()}${nav("Назад")}<div class="page notabs"><h2 class="h">Почта</h2>
-<div class="card"><span class="lbl">Ваша почта</span><div class="field filled">anna@example.com<span class="caret" style="width:2px;height:24px;background:var(--teal);margin-left:2px"></span></div><p class="hint">Пришлём шестизначный код. Если аккаунта нет, он появится после ввода кода.</p><div class="actions"><div class="btn primary">${I.mailI}Получить код</div></div></div>
+<div class="card"><span class="lbl">Ваша почта</span><div class="field filled">anna@example.com<span class="caret" style="width:2px;height:24px;background:var(--teal);margin-left:2px"></span></div><p class="hint">Пришлём код из шести цифр. Если аккаунта нет, он появится после кода.</p><div class="actions"><div class="btn primary">${I.mailI}Получить код</div></div></div>
 </div>${home()}</div>`;
 
 const P4 = `<div class="phone">${status()}${nav("Назад")}<div class="page notabs"><h2 class="h">Код из письма</h2>
-<p class="sub" style="margin:-6px 0 0">Отправили на <b>anna@example.com</b></p>
+<p class="sub" style="margin:-4px 0 0">Отправили на <b>anna@example.com</b></p>
 <div class="codes"><span class="on">4</span><span class="on">8</span><span class="on">1</span><span class="cur"></span><span></span><span></span></div>
-<p class="hint" style="margin-top:14px">Код действует 10 минут. <span class="link">Отправить ещё раз</span> можно через 0:42.</p>
+<p class="hint" style="margin-top:16px">Код действует 10 минут. <span class="link">Отправить ещё раз</span> через 0:42.</p>
 <span class="textbtn">Изменить адрес</span>
 </div>${home()}</div>`;
 
 const P5 = introPhone(0), P6 = introPhone(1), P7 = introPhone(2);
 
-const P8 = `<div class="phone">${status()}<div class="flow"><div class="brand"><img src="${MARK}" alt="">Social Organizer</div>
-<div class="okbox"><i>${I.check}</i><span><b>Олег получит заявку</b><span>Он подтвердит, что вы знакомы, и станет вашим первым рукопожатием. Вы увидите это в ленте.</span></span></div>
-<h2>Сколько вы готовы давать в сбор?</h2><p class="say">Небольшая сумма, которую вы готовы дать, когда кто-то из вашей сети попросит. Из таких сумм складывается «Сеть может помочь». Изменить можно в любой момент.</p>
-<div class="card seedcard" style="margin-top:16px"><span class="lbl">Моё минимальное участие</span><div class="money">15<span class="caret"></span><small>$</small></div><div class="chips" style="display:flex;gap:8px;margin-top:10px"><span style="height:40px;padding:0 14px;border-radius:12px;background:var(--canvas);display:grid;place-items:center;font-weight:700">5</span><span style="height:40px;padding:0 14px;border-radius:12px;background:var(--ink);color:#fff;display:grid;place-items:center;font-weight:700">15</span><span style="height:40px;padding:0 14px;border-radius:12px;background:var(--canvas);display:grid;place-items:center;font-weight:700">30</span><span style="height:40px;padding:0 14px;border-radius:12px;background:var(--canvas);display:grid;place-items:center;font-weight:700">50</span></div></div>
+const P8 = `<div class="phone">${status()}<div class="flow">${brand}
+<h2 style="margin-top:28px">Сколько вы готовы давать?</h2><p class="say">Сумма на случай, когда попросит кто-то из вашей сети. Из таких сумм складывается «Сеть может помочь».</p>
+<div class="card seed" style="margin-top:20px"><span class="lbl">Моё минимальное участие</span><div class="money">15<span class="caret"></span><small>$</small></div><div class="chips"><span>5</span><span class="on">15</span><span>30</span><span>50</span></div><p class="hint">Изменить можно в любой момент в Профиле.</p></div>
+<div class="sent"><i>${I.check}</i><span><b>Заявка Олегу отправлена.</b> Когда он подтвердит, станет вашим 1-м рукопожатием.</span></div>
 <div class="foot"><div class="btn primary">В круг</div></div>
 </div>${home()}</div>`;
 
-const P9 = `<div class="phone">${status()}<div class="flow"><div class="brand"><img src="${MARK}" alt="">Social Organizer</div>
+const P9 = `<div class="phone">${status()}<div class="flow">${brand}
 <div class="pic">${pic(0)}</div>
 <h2>Эта ссылка уже не работает</h2><p class="say">Приглашение использовано или человек удалил аккаунт. Попросите новую ссылку или покажите свой QR при встрече.</p>
-<div class="foot"><div class="btn primary">Открыть приложение</div><div class="btn ghost" style="margin-top:10px">Войти</div></div>
+<div class="foot"><div class="btn primary">Открыть приложение</div><div class="btn ghost">Войти</div></div>
 </div>${home()}</div>`;
 
 document.getElementById("row").innerHTML = [
-  section("invite", P1, "<small>1</small>Приглашение", `<p>Человек открыл ссылку знакомого. Экран говорит, кто зовёт и что это за место, одной строкой: «Помощь через людей, которых знаешь». Цифры про сеть Олега — доказательство, что здесь кто-то есть. Три кнопки входа, почта текстом, юридическая строка внизу.</p>
-<ul><li>Три кадра-объяснения из старого прототипа здесь не нужны: они идут после входа, когда человек уже внутри и не отвлекается на выбор способа.</li><li>Если человек уже вошёл в приложение и открыл чужую ссылку — тот же экран без кнопок входа, с кнопкой «Мы знакомы».</li></ul>`),
-  section("login", P2, "<small>2</small>Вход без ссылки", `<p>Тот же экран для тех, кто пришёл сам: из сторов или с сайта. Вместо пригласившего — картинка круга и обещание «пароль не нужен». Google и Apple работают через системный браузер и deep link, как сейчас; Telegram — виджет на сайте и бот в приложении.</p>
+  section("invite", P1, "<small>1</small>Приглашение", `<p>Человек открыл ссылку знакомого. Композиция та же, что у публичной страницы сбора: бренд, крупный аватар, заголовок, одна фраза о месте, две пилюли-факта. Два входа «снаружи» выглядят одинаково. Имя Олега один раз, в заголовке; раньше оно стояло дважды, а цифры сети ломались на две строки.</p>
+<ul><li>Три кадра-объяснения здесь не нужны: они идут после входа, когда человек уже внутри и не отвлекается на выбор способа.</li><li>Если человек уже вошёл в приложение и открыл чужую ссылку — тот же экран без кнопок входа, с кнопкой «Мы знакомы».</li></ul>`),
+  section("login", P2, "<small>2</small>Вход без ссылки", `<p>Тот же экран для тех, кто пришёл сам: из сторов или с сайта. Картинка круга фиксированной высоты 240, заголовок и одна фраза, до кнопок не меньше 32 px. Google и Apple работают через системный браузер и deep link, как сейчас; Telegram — виджет на сайте и бот в приложении.</p>
 <ul><li>Пароль остался только по прямой ссылке для старых аккаунтов; «Код из Telegram-бота» убран.</li><li>Переключатель языка в углу: язык определяется по системе, но его можно сменить до входа.</li></ul>`),
   section("mail", P3, "<small>3</small>Почта", `<p>Одно поле, одна кнопка, одна фраза о том, что будет дальше. Регистрация и вход не различаются: аккаунт появляется после кода.</p>`),
   section("code", P4, "<small>4</small>Код", `<p>Шесть ячеек, автоотправка после шестой цифры, таймер повторной отправки и «Изменить адрес». Никакой кнопки «Войти»: правильный код сам ведёт дальше.</p>`),
-  section("i1", P5, "<small>5</small>Интро 1 из 3", `<p>Три кадра вместо четырёх: «Вы в центре», «Просьба идёт по рукопожатиям», «Откликнувшиеся собираются в чате». Картинка — та же сеть, что потом станет 3D-графом, в плоском виде. «Пропустить» слева, «Дальше» справа, точки показывают, где вы.</p>`),
+  section("i1", P5, "<small>5</small>Интро 1 из 3", `<p>Три кадра вместо четырёх. Без бренда: в приложении он уже не нужен, а место отдано картинке. Сеть стоит на одном и том же месте во всех трёх кадрах, чтобы при свайпе менялась подсветка, а не положение. «Пропустить» в правом верхнем углу, одна кнопка «Дальше» во всю ширину, точки над ней.</p>`),
   section("i2", P6, "<small>6</small>Интро 2 из 3", `<p>Путь просьбы подсвечен бирюзой, по нему бежит импульс. Одно жирное предложение на кадр: «Чем больше вокруг, тем дальше идёт сигнал» — это и есть причина добавлять людей.</p>`),
-  section("i3", P7, "<small>7</small>Интро 3 из 3", `<p>Чат сбора и честная фраза, что деньги передают лично. Кнопка «Понятно». Интро показывается один раз и доступно из Помощи.</p>`),
-  section("seed", P8, "<small>8</small>Минимальное участие", `<p>Единственный вопрос перед Кругом. Сверху подтверждение, что заявка к Олегу ушла и что будет дальше. Сумма с пресетами, по умолчанию 15 $, пояснение в два предложения. «В круг» ведёт на пустой Круг с тремя шагами (макет Круга, данные «Вы первый» или с одной связью, когда Олег подтвердит).</p>
+  section("i3", P7, "<small>7</small>Интро 3 из 3", `<p>Чат сбора и честная фраза, что деньги передают лично. Кнопка «Понятно», «Пропустить» уже не нужно. Интро показывается один раз и доступно из Помощи.</p>`),
+  section("seed", P8, "<small>8</small>Минимальное участие", `<p>Единственный вопрос перед Кругом, поэтому он идёт первым: заголовок, одна фраза, поле с пресетами. Что сумму можно изменить, сказано подсказкой внутри карточки, а не третьим предложением в тексте. Статус заявки Олегу стоит после поля, как спокойная плашка: это не вопрос и не действие. «В круг» ведёт на пустой Круг с тремя шагами.</p>
 <ul><li>Это замена экрану «Узел» из старого прототипа и карточке «Заявлено на месяц» из настроек.</li></ul>`),
   section("bad", P9, "<small>9</small>Ссылка не работает", `<p>Один экран на все плохие случаи: приглашение использовано, пригласивший удалил аккаунт, токен не найден. Текст объясняет, что делать: попросить новую ссылку или встретиться и показать QR. Приложение всё равно можно открыть.</p>`)
 ].join("");
