@@ -17,6 +17,7 @@ import { CircleGraph, type CircleGraphHandle } from '../components/circle/Circle
 import { useCircleStore, type Ring } from '../components/circle/circle-store';
 import { AcquaintSheet, type AcquaintRequest } from '../components/circle/AcquaintSheet';
 import { EventFeed } from '../components/circle/EventFeed';
+import { ReviewFeedRows } from '../components/moderation/ReviewFeedRows';
 import { NetStats } from '../components/circle/NetStats';
 import { PathToRequestSheet } from '../components/circle/PathToRequestSheet';
 import { PersonCard, type CardPerson } from '../components/circle/PersonCard';
@@ -299,9 +300,13 @@ export function CirclePage() {
   const toggleRing = (ring: Ring) => setRingHidden(ring, !hiddenRings.includes(ring));
 
   const feedBody = empty ? (
-    <StartCard profileDone={profileDone} direct={direct} waiting={(events.some((e) => e.kind === 'waiting'))} />
+    <>
+      <ReviewFeedRows />
+      <StartCard profileDone={profileDone} direct={direct} waiting={(events.some((e) => e.kind === 'waiting'))} />
+    </>
   ) : (
     <>
+      <ReviewFeedRows />
       {connectionsReady && direct < ASK_MIN_DIRECT ? <GrowStrip direct={direct} onOpen={() => setPathOpen(true)} /> : null}
       <EventFeed
         events={events}

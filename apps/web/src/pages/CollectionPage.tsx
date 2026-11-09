@@ -6,6 +6,8 @@ import { AskProgressSync } from '../components/collection/AskProgressSync';
 import { IconChat, IconClock, IconPen, IconQr, IconShare } from '../components/collection/icons';
 import { ParticipantList, type ParticipantRow } from '../components/collection/ParticipantList';
 import { QrSheet } from '../components/collection/QrSheet';
+import { CommunityHoldNote } from '../components/moderation/CommunityHoldNote';
+import { ComplainEntry } from '../components/moderation/ComplainEntry';
 import { amountIssue, asDate, firstName, formatDay, isHttpsUrl, parseWhole, relativePast, shortUrl } from '../components/collection/text';
 import { ChatAssistant } from '../components/ChatAssistant';
 import { Avatar } from '../components/ui2/Avatar';
@@ -166,14 +168,16 @@ export function CollectionPage() {
   // The server list already drops unsubscribed rows. Filter here too so an older API does not put them back.
   const activeObligations = data.obligations.filter((row) => row.unsubscribedAt == null);
   const myObl = activeObligations.find((row) => row.userId === userId);
+  const communityHold = data.blockReason === 'COMMUNITY';
   const adminHold = data.status === 'BLOCKED' && isReason(data.blockReason);
+  const held = adminHold || communityHold;
   const goalMet = data.status === 'BLOCKED' && !data.blockReason;
   const closed = data.status === 'CLOSED' || data.status === 'CANCELLED';
   const hasGoal = data.amount != null && data.amount > 0;
   const renewal = data.type === 'REGULAR' && data.cycleNumber > 1 && data.currentCycleStart != null;
-  const needsConfirm = !!myObl && renewal && myObl.cycleConfirmed === false && !adminHold && !closed && data.status === 'ACTIVE';
-  const showDecline = !owner && !!myObl && !closed && !adminHold;
-  const showAdmin = admin.data?.isAdmin === true && !closed && (data.status === 'ACTIVE' || adminHold);
+  const needsConfirm = !!myObl && renewal && myObl.cycleConfirmed === false && !held && !closed && data.status === 'ACTIVE';
+  const showDecline = !owner && !!myObl && !closed && !held;
+  const showAdmin = admin.data?.isAdmin === true && !closed && (data.status === 'ACTIVE' || held);
   const language = i18n.language;
   const creatorName = resolve(data.creatorId, data.creator.name);
   const stake = Math.max(MIN_OBLIGATION_AMOUNT, Math.round(me.data?.monthlyBudget || MIN_OBLIGATION_AMOUNT));
@@ -198,7 +202,7 @@ export function CollectionPage() {
     index === 0 ? t('common.you') : resolve(person.id, person.name)
   ));
   const showPath = !owner && pathNames.length > 1;
-  const showCloseNote = !owner && !closed && !adminHold && !needsConfirm && !goalMet && hasGoal;
+  const showCloseNote = !owner && !closed && !held && !needsConfirm && !goalMet && hasGoal;
 
   const back = closed
     ? { label: t('collection.pastCrumb'), to: '/me/history' }
@@ -334,7 +338,7 @@ export function CollectionPage() {
   const sosUrl = buildSosInviteUrl(data.id);
   const headerAction = showAdmin ? (
     <Button variant="text" onClick={() => { setReason(null); setAdminOpen(true); }}>
-      {adminHold ? t('collection.resume') : t('collection.suspend')}
+      {held ? t('collection.resume') : t('collection.suspend')}
     </Button>
   ) : showDecline ? (
     <Button variant="textDanger" onClick={() => setDeclineOpen(true)}>{t('collection.decline')}</Button>
@@ -371,6 +375,8 @@ export function CollectionPage() {
         ) : null}
       </Card>
 
+      {communityHold ? <CommunityHoldNote owner={owner} onSupport={() => setHelpOpen(true)} /> : null}
+
       {adminHold ? (
         <div className="mt-3 rounded-xl bg-sos-soft px-4 py-3 text-body-s font-semibold text-sos">
           <p className="font-extrabold">{t('collection.suspended')}</p>
@@ -385,7 +391,7 @@ export function CollectionPage() {
         </div>
       ) : null}
 
-      {owner && !hasGoal && !closed ? (
+      {owner && !hasGoal && !closed && !held ? (
         <Card className="mt-3">
           <Input
             variant="money"
@@ -398,7 +404,7 @@ export function CollectionPage() {
         </Card>
       ) : null}
 
-      {!owner && !myObl && data.status === 'ACTIVE' && !adminHold ? (
+      {!owner && !myObl && data.status === 'ACTIVE' && !held ? (
         <Card className="mt-3">
           <Input
             variant="money"
@@ -470,7 +476,7 @@ export function CollectionPage() {
         </Card>
       ) : null}
 
-      {!owner && myObl && !needsConfirm && !closed && !adminHold ? (
+      {!owner && myObl && !needsConfirm && !closed && !held ? (
         <Card className="mt-3">
           {editing ? (
             <>
@@ -537,7 +543,7 @@ export function CollectionPage() {
               <IconPen className="h-5 w-5 shrink-0 text-care" />
             </button>
           )}
-          {!adminHold ? (
+          {!held ? (
             <>
               <div className="mt-3 grid grid-cols-[1fr_56px] gap-2.5">
                 <Button className="w-full" icon={<IconShare />} onClick={share}>
@@ -566,6 +572,8 @@ export function CollectionPage() {
           {t('collection.close')}
         </Button>
       ) : null}
+
+      {!owner && !closed && !held ? <ComplainEntry collectionId={data.id} /> : null}
 
       <QrSheet open={qrOpen} url={sosUrl} onClose={() => setQrOpen(false)} />
 
@@ -648,17 +656,17 @@ export function CollectionPage() {
       <Sheet
         open={adminOpen}
         onClose={() => setAdminOpen(false)}
-        title={adminHold ? t('collection.resumeTitle') : t('collection.suspendTitle')}
-        description={adminHold ? t('collection.resumeBody') : undefined}
+        title={held ? t('collection.resumeTitle') : t('collection.suspendTitle')}
+        description={held ? t('collection.resumeBody') : undefined}
         footer={sheetPair(
           desktop,
           <Button
-            variant={adminHold ? 'primary' : 'danger'}
+            variant={held ? 'primary' : 'danger'}
             className="w-full"
             loading={block.isPending || unblock.isPending}
-            disabled={!adminHold && reason == null}
+            disabled={!held && reason == null}
             onClick={() => {
-              if (adminHold) {
+              if (held) {
                 unblock.mutate({ id: data.id }, { onSuccess: () => setAdminOpen(false) });
                 return;
               }
@@ -666,13 +674,13 @@ export function CollectionPage() {
               block.mutate({ id: data.id, reason }, { onSuccess: () => setAdminOpen(false) });
             }}
           >
-            {adminHold ? t('collection.resume') : t('collection.suspend')}
+            {held ? t('collection.resume') : t('collection.suspend')}
           </Button>,
           <Button variant="secondary" className="w-full" onClick={() => setAdminOpen(false)}>{t('common.cancel')}</Button>,
-          !adminHold,
+          !held,
         )}
       >
-        {adminHold ? null : (
+        {held ? null : (
           <div className="flex flex-col gap-2">
             {REASONS.map((item) => (
               <button

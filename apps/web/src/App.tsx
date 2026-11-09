@@ -54,6 +54,10 @@ const DevUI = import.meta.env.DEV
   ? lazy(() => import('./components/ui2/DevUIPage').then((module) => ({ default: module.DevUIPage })))
   : null;
 
+const ModerationPreview = import.meta.env.DEV
+  ? lazy(() => import('./pages/ModerationPreviewPage').then((module) => ({ default: module.ModerationPreviewPage })))
+  : null;
+
 function GoogleAuthDeepLinkHandler() {
   const login = useAuth((s) => s.login);
   const navigate = useNavigate();
@@ -233,6 +237,16 @@ export function App() {
                 element={
                   <Suspense fallback={null}>
                     <DevUI />
+                  </Suspense>
+                }
+              />
+            ) : null}
+            {ModerationPreview ? (
+              <Route
+                path="/dev/moderation"
+                element={
+                  <Suspense fallback={null}>
+                    <ModerationPreview />
                   </Suspense>
                 }
               />
