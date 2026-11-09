@@ -14,14 +14,10 @@ import {
   AddScanStub,
   AddStub,
   AskStub,
-  CircleStub,
-  HowStub,
-  IntroStub,
-  PeopleStub,
   ProfileRedirect,
-  SeedStub,
 } from './components/ui2/stubs';
 import { useAuth } from './hooks/useAuth';
+import { afterSignInPath, readPendingInvite, safeInviteToken, setPendingInvite } from './components/onboarding/flow';
 import { LoginPage } from './pages/LoginPage';
 import { LandingPage } from './pages/LandingPage';
 import { CollectionPage } from './pages/CollectionPage';
@@ -37,15 +33,20 @@ import { AdminStatsPage } from './pages/AdminStatsPage';
 import { AssistantPage } from './pages/AssistantPage';
 import { BroadcastScreen } from './pages/BroadcastScreen';
 import { FaqScreen } from './pages/FaqScreen';
+import { IntroPage } from './pages/IntroPage';
+import { SeedPage } from './pages/SeedPage';
 import { SosLandingPage } from './pages/SosLandingPage';
 import { SupportChatPage } from './pages/SupportChatPage';
 import { PrivacyPage } from './pages/PrivacyPage';
 import { TermsPage } from './pages/TermsPage';
 import { DeleteAccountPage } from './pages/DeleteAccountPage';
+import { HowPage } from './pages/HowPage';
+import { GetRedirect, RedirectHome } from './components/site/redirects';
 import { GoogleCallbackPage } from './pages/GoogleCallbackPage';
 import { AppleCallbackPage } from './pages/AppleCallbackPage';
+import { CirclePage } from './pages/CirclePage';
+import { PeoplePage } from './pages/PeoplePage';
 
-const isArvut = window.location.hostname.startsWith('arvuthadadit');
 const isNativeApp = Capacitor.isNativePlatform();
 
 const DevUI = import.meta.env.DEV
@@ -86,10 +87,11 @@ function GoogleAuthDeepLinkHandler() {
           login(at, rt, uid);
           // Prefer the invite token carried through the OAuth round-trip (inv),
           // fall back to one saved before the browser was opened.
-          const pendingInvite = params.get('inv') || localStorage.getItem('pendingInviteToken');
+          const pendingInvite = safeInviteToken(params.get('inv')) || readPendingInvite();
           // Keep pendingInviteToken until InvitePage accepts it.
-          if (pendingInvite) localStorage.setItem('pendingInviteToken', pendingInvite);
-          navigate(pendingInvite ? `/invite/${pendingInvite}` : '/', { replace: true });
+          if (pendingInvite) setPendingInvite(pendingInvite);
+          // A new account goes through the intro first (components/onboarding/flow.ts)
+          navigate(afterSignInPath(params.get('isNew') === '1', pendingInvite ? `/invite/${pendingInvite}` : null), { replace: true });
         } else {
           navigate('/login', { replace: true });
         }
@@ -121,8 +123,8 @@ function HomeIndex() {
     return <Navigate to={redirectParam ? `/login?redirect=${encodeURIComponent(redirectParam)}` : '/login'} replace />;
   }
 
-  if (!isAuthenticated) return <LandingPage variant={isArvut ? 'arvut' : undefined} />;
-  return <CircleStub />;
+  if (!isAuthenticated) return <LandingPage />;
+  return <CirclePage />;
 }
 
 const INVITE_REDIRECT_KEY = 'so.inviteRedirected';
@@ -200,8 +202,9 @@ export function App() {
           <NativePushBootstrap />
           <GoogleAuthDeepLinkHandler />
           <Routes>
-            <Route path="/welcome" element={<LandingPage variant={isArvut ? 'arvut' : undefined} />} />
-            <Route path="/arvut" element={<LandingPage variant="arvut" />} />
+            <Route path="/welcome" element={<RedirectHome />} />
+            <Route path="/arvut" element={<RedirectHome />} />
+            <Route path="/get" element={<GetRedirect />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/auth/google/callback" element={<GoogleCallbackPage />} />
             <Route path="/auth/apple/done" element={<AppleCallbackPage />} />
@@ -210,9 +213,9 @@ export function App() {
             <Route path="/delete-account" element={<DeleteAccountPage />} />
             <Route path="/invite/:token" element={<InvitePage />} />
             <Route path="/sos/:collectionId" element={<SosLandingPage />} />
-            <Route path="/how" element={<HowStub />} />
-            <Route path="/intro" element={<ProtectedRoute><IntroStub /></ProtectedRoute>} />
-            <Route path="/seed" element={<ProtectedRoute><SeedStub /></ProtectedRoute>} />
+            <Route path="/how" element={<HowPage />} />
+            <Route path="/intro" element={<ProtectedRoute><IntroPage /></ProtectedRoute>} />
+            <Route path="/seed" element={<ProtectedRoute><SeedPage /></ProtectedRoute>} />
 
             <Route path="/dashboard" element={<Navigate to="/" replace />} />
             <Route path="/network" element={<Navigate to="/" replace />} />
@@ -251,8 +254,8 @@ export function App() {
               <Route path="/me/broadcast" element={<BroadcastScreen />} />
               <Route path="/me/stats" element={<AdminStatsPage />} />
               <Route path="/me/settings" element={<Navigate to="/me" replace />} />
-              <Route path="/people" element={<PeopleStub />} />
-              <Route path="/people/:ring" element={<PeopleStub />} />
+              <Route path="/people" element={<PeoplePage />} />
+              <Route path="/people/:ring" element={<PeoplePage />} />
               <Route path="/person/:id" element={<PersonPage />} />
               <Route path="/collection/:id" element={<CollectionPage />} />
               <Route path="/support" element={<SupportChatPage />} />

@@ -7,6 +7,7 @@ import { useGraphSync } from '../../hooks/useGraphSync';
 import { useTelegramHaptics } from '../../hooks/useTelegram';
 import { useTheme } from '../../hooks/useTheme';
 import { AskMark } from './AskMark';
+import { BrandMark } from './BrandMark';
 import { Avatar } from './Avatar';
 import { BannerProvider } from './Banner';
 import { useAskProgress, type AskProgress } from './ask-progress';
@@ -219,12 +220,12 @@ export function ShellChrome({
     >
       {interactive ? (
         <Link to="/" onClick={activate} className={cn('so-focus flex items-center gap-2.5 rounded-md', rail ? 'pb-4' : 'px-2.5 pb-[18px] pt-1')}>
-          <BrandMark rail={rail} />
+          <ShellBrandMark rail={rail} />
           {rail ? null : <span className="text-body-s font-extrabold tracking-tight">{t('common.appName')}</span>}
         </Link>
       ) : (
         <div className={cn('flex items-center gap-2.5', rail ? 'pb-4' : 'px-2.5 pb-[18px] pt-1')}>
-          <BrandMark rail={rail} />
+          <ShellBrandMark rail={rail} />
           {rail ? null : <span className="text-body-s font-extrabold tracking-tight">{t('common.appName')}</span>}
         </div>
       )}
@@ -291,17 +292,8 @@ export function ShellChrome({
   );
 }
 
-function BrandMark({ rail }: { rail: boolean }) {
-  return (
-    <span
-      className={cn(
-        'grid place-items-center rounded-sm bg-care text-care-on',
-        rail ? 'h-8 w-8' : 'h-7 w-7',
-      )}
-    >
-      <IconCircle className="h-4 w-4" />
-    </span>
-  );
+function ShellBrandMark({ rail }: { rail: boolean }) {
+  return <BrandMark size={rail ? 32 : 28} />;
 }
 
 function UserFace({ user, compact }: { user: ShellUser; compact?: boolean }) {

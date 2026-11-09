@@ -1,242 +1,338 @@
-import { useEffect, useRef } from 'react';
-import { useParams, useNavigate, Navigate } from 'react-router-dom';
-import { Capacitor } from '@capacitor/core';
+import { useEffect, useRef, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { trpc } from '../lib/trpc';
 import { useAuth } from '../hooks/useAuth';
-import { Card, CardContent } from '../components/ui/card';
-import { Button } from '../components/ui/button';
-import { Avatar } from '../components/ui/avatar';
-import { Spinner } from '../components/ui/spinner';
-import { CheckCircle, LogIn, Clock } from 'lucide-react';
-import { Logo } from '../components/Logo';
-import { LandingPage } from './LandingPage';
+import { Avatar, Button, Pill, formatMoney } from '../components/ui2';
+import { NetFigure } from '../components/figures';
+import { BrandLine, LanguageCorner, OnboardingFrame, StepText } from '../components/onboarding/OnboardingFrame';
+import { SignInFlow } from '../components/onboarding/SignInFlow';
+import {
+  homePath,
+  introPath,
+  isFirstRunPending,
+  readPendingInvite as readPending,
+  setPendingInvite as setPending,
+} from '../components/onboarding/flow';
+import { useNetLabels } from '../components/onboarding/figureLabels';
+import { CheckMark } from '../components/onboarding/brand';
 
-export function InvitePage() {
-  const { token } = useParams<{ token: string }>();
-  const isAuthenticated = useAuth((s) => s.isAuthenticated);
-  const logout = useAuth((s) => s.logout);
-  const isDemo = localStorage.getItem('accessToken') === 'demo-token';
-  const isRealUser = isAuthenticated && !isDemo;
+/** Thin-space thousands, as everywhere in the app ("1 240"). */
+const num = (n: number) => Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+const firstName = (name: string) => name.trim().split(/\s+/)[0] || name;
 
-  // Save invite token to localStorage so it survives auth redirects and tab switches
-  useEffect(() => {
-    if (!isRealUser && token) {
-      localStorage.setItem('pendingInviteToken', token);
-    }
-  }, [isRealUser, token]);
-
-  // Verify token is still valid by making a lightweight query
-  const { isError: meError } = trpc.user.me.useQuery(undefined, {
-    enabled: isRealUser,
-    retry: 1,
-  });
-
-  // Stale token — clear auth and show landing
-  if (isRealUser && meError) {
-    logout();
-  }
-
-  // Not authenticated — show landing page with invite token preserved
-  if (!isRealUser || meError) {
-    // Inside the installed app the landing only offers store/Telegram buttons, so a new
-    // user could not sign up and the invite was never accepted. Go straight to sign-up;
-    // LoginPage brings the user back here (pendingInviteToken) to accept the invite.
-    if (Capacitor.isNativePlatform() && token) {
-      localStorage.setItem('pendingInviteToken', token);
-      return <Navigate to={`/login?redirect=${encodeURIComponent(`/invite/${token}`)}`} replace />;
-    }
-    return <LandingPage inviteToken={token} />;
-  }
-
-  return <InviteAcceptView token={token!} />;
+/** Errors that mean the link itself is dead (one screen for all of them). */
+type TrpcLikeError = { message?: string; data?: { code?: string } | null } | null | undefined;
+/** Not found, inviter deleted, expired (all NOT_FOUND on the API) or already used by someone else. */
+function isDeadError(err: TrpcLikeError): boolean {
+  if (!err) return false;
+  return err.data?.code === 'NOT_FOUND' || err.message === 'Invite already used';
 }
 
-/** Signed-in part: all hooks live here, so the auth gate above never changes the hook order. */
-function InviteAcceptView({ token }: { token: string }) {
+/**
+ * Invite (screens.md §12, onboarding.html №1, 9). A guest sees who calls them and signs in right here;
+ * a signed-in person opening someone's link gets the same screen with "We know each other".
+ * After sign-in through the invite the request is sent automatically and a new person goes on to the intro.
+ */
+export function InvitePage() {
+  const { token = '' } = useParams<{ token: string }>();
+  const isAuthenticated = useAuth((s) => s.isAuthenticated);
+  const logout = useAuth((s) => s.logout);
+  const isRealUser = isAuthenticated && localStorage.getItem('accessToken') !== 'demo-token';
+  // A newcomer decided by the sign-in path (flow.ts), read once before effects can clear anything
+  const [firstRun] = useState(isFirstRunPending);
+
+  // Read before any effect: TelegramBootstrap drops the pending token as soon as a signed-in person lands here.
+  // Signing in from this invite is the "yes", so it is accepted without asking again.
+  const [cameThroughInvite] = useState(() => !!token && readPending() === token);
+
+  const invite = trpc.invite.getByToken.useQuery({ token }, { enabled: !!token });
+  const me = trpc.user.me.useQuery(undefined, { enabled: isRealUser, retry: 1 });
+  const sessionDead = isRealUser && me.error?.data?.code === 'UNAUTHORIZED';
+
+  // A stale session: drop it and show the guest screen
+  useEffect(() => {
+    if (sessionDead) logout();
+  }, [sessionDead, logout]);
+
+  // Keep the invite through every sign-in path (OAuth round-trips, Telegram, reloads)
+  useEffect(() => {
+    if (!isRealUser && token && invite.data) setPending(token);
+  }, [isRealUser, token, invite.data]);
+
+  const usedByOther =
+    !!invite.data?.usedById && !!me.data && invite.data.usedById !== me.data.id;
+  const dead = !token || isDeadError(invite.error) || (isRealUser && usedByOther);
+  // A network/server hiccup is not a dead link: offer a retry and keep the pending token
+  const transient = !!invite.error && !dead;
+
+  // A dead invite must not send the home redirect back here
+  useEffect(() => {
+    if (dead && readPending() === token) setPending(null);
+  }, [dead, token]);
+
+  if (dead) return <DeadLink signedIn={isRealUser && !sessionDead} />;
+  if (transient) return <RetryScreen onRetry={() => void invite.refetch()} busy={invite.isFetching} />;
+  if (invite.isLoading || (isRealUser && me.isLoading)) return <Loading />;
+  if (!invite.data) return <DeadLink signedIn={isRealUser} />;
+
+  const inviter = invite.data.inviter;
+  const networkCount = Number((invite.data as { networkCount?: number }).networkCount ?? 0);
+  const total = Math.round(Number((invite.data as { totalIntentions?: number }).totalIntentions ?? 0));
+  const hero = <InviteHero name={inviter.name} photoUrl={inviter.photoUrl} networkCount={networkCount} total={total} />;
+
+  if (!isRealUser || sessionDead || !me.data) {
+    return <SignInFlow top={<BrandLine />} centre redirect={`/invite/${token}`} hero={hero} />;
+  }
+
+  return (
+    <AcceptView
+      token={token}
+      inviterId={inviter.id}
+      inviterName={inviter.name}
+      meId={me.data.id}
+      firstRun={firstRun || !me.data.onboardingCompleted}
+      cameThroughInvite={cameThroughInvite}
+      hero={<InviteHero name={inviter.name} photoUrl={inviter.photoUrl} networkCount={networkCount} total={total} signedIn />}
+    />
+  );
+}
+
+function InviteHero({
+  name,
+  photoUrl,
+  networkCount,
+  total,
+  signedIn = false,
+}: {
+  name: string;
+  photoUrl?: string | null;
+  networkCount: number;
+  total: number;
+  /** Signed-in variant: no "sign in" in the sentence. */
+  signedIn?: boolean;
+}) {
+  const { t } = useTranslation();
+  return (
+    <>
+      <Avatar name={name} src={photoUrl} size={88} className="mt-10" />
+      <h1 className="mt-4 text-h2 font-bold [text-wrap:balance]">{t('invite.calls', { name })}</h1>
+      <p className="mt-2.5 max-w-[30ch] text-body-s text-ink-muted">{t(signedIn ? 'invite.sayKnown' : 'invite.say', { name: firstName(name) })}</p>
+      <div className="mt-4 flex flex-wrap justify-center gap-2">
+        <Pill className="whitespace-nowrap">{t('invite.network', { count: networkCount, n: num(networkCount) })}</Pill>
+        {/* An intention is at least 1 $, so a smaller total is not shown at all */}
+        {total >= 1 ? (
+          <Pill tone="care" className="whitespace-nowrap">
+            {t('invite.canHelp', { amount: formatMoney(total) })}
+          </Pill>
+        ) : null}
+      </div>
+    </>
+  );
+}
+
+/** Signed in: "We know each other" (or the automatic accept right after signing in through this link). */
+function AcceptView({
+  token,
+  inviterId,
+  inviterName,
+  meId,
+  firstRun,
+  cameThroughInvite,
+  hero,
+}: {
+  token: string;
+  inviterId: string;
+  inviterName: string;
+  meId: string;
+  /** A new account: auto-accept, then the intro (never the result screen). */
+  firstRun: boolean;
+  cameThroughInvite: boolean;
+  hero: React.ReactNode;
+}) {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const logout = useAuth((s) => s.logout);
-  const autoAcceptTriggered = useRef(false);
-  const { data: me } = trpc.user.me.useQuery();
+  const autoTried = useRef(false);
 
-  const { data: invite, isLoading, isFetched, error } = trpc.invite.getByToken.useQuery(
-    { token: token! },
-    { enabled: !!token },
-  );
   const accept = trpc.invite.accept.useMutation({
     onSuccess: () => {
-      localStorage.removeItem('pendingInviteToken');
+      setPending(null);
+      if (firstRun) navigate(introPath(), { replace: true });
     },
     onError: (err) => {
-      // If token is invalid/expired, clear auth state so user sees login button.
-      // Other failures are terminal for this link: drop it so home does not reopen the invite.
       if (err.data?.code === 'UNAUTHORIZED') {
+        setPending(token);
         logout();
         return;
       }
-      localStorage.removeItem('pendingInviteToken');
+      // Any other failure is final for this link: drop it so home does not reopen the invite
+      setPending(null);
     },
   });
 
-  const notFound = isFetched && (!!error || !invite);
-  const alreadyUsed =
-    !isLoading && !!invite && !!me && !!invite.usedById && invite.usedById !== me.id && !accept.isSuccess;
+  const own = inviterId === meId;
 
-  // A dead invite must not send ShellGate back here after Back → / → home.
   useEffect(() => {
-    if (notFound || alreadyUsed) localStorage.removeItem('pendingInviteToken');
-  }, [notFound, alreadyUsed]);
-
-  const leave = () => {
-    localStorage.removeItem('pendingInviteToken');
-    navigate('/');
-  };
-
-  // Auto-accept invite when authenticated user lands on this page
-  useEffect(() => {
-    if (
-      invite &&
-      me &&
-      (!invite.usedById || invite.usedById === me.id) &&
-      !accept.isPending &&
-      !accept.isSuccess &&
-      !accept.error &&
-      !autoAcceptTriggered.current &&
-      token
-    ) {
-      autoAcceptTriggered.current = true;
-      localStorage.removeItem('pendingInviteToken');
+    if (own || autoTried.current) return;
+    if (cameThroughInvite || firstRun) {
+      autoTried.current = true;
       accept.mutate({ token });
     }
-  }, [invite, me, accept.isPending, accept.isSuccess, accept.error, token]);
+  }, [own, cameThroughInvite, firstRun, accept, token]);
 
-  // While the request waits, check every few seconds so the screen switches to
-  // "You know each other" as soon as the inviter confirms (no need to leave this page)
-  const isWaiting = accept.isSuccess && !!(accept.data as any)?.pending;
-  const { data: intro } = trpc.pending.introStatus.useQuery(undefined, { enabled: isWaiting, refetchInterval: 5000 });
-  const confirmedNow = isWaiting && intro?.state === 'connected' && intro.person?.id === invite?.inviter.id;
-  const openNetwork = () => {
-    // The dashboard card would repeat the same "You know each other" message — mark it as seen
-    if (me && invite) {
-      try { localStorage.setItem(`acquaintanceSeen:${me.id}:${invite.inviter.id}`, '1'); } catch { /* storage blocked */ }
-    }
-    navigate('/network');
-  };
+  // While the request waits, poll so the screen turns into "You know each other" when the inviter confirms
+  const result = accept.data as { alreadyConnected?: boolean; pending?: boolean } | undefined;
+  const waiting = accept.isSuccess && !!result?.pending;
+  const intro = trpc.pending.introStatus.useQuery(undefined, { enabled: waiting && !firstRun, refetchInterval: 5000 });
+  const confirmedNow = waiting && intro.data?.state === 'connected' && intro.data.person?.id === inviterId;
+  const connected = accept.isSuccess && (!!result?.alreadyConnected || confirmedNow || !result?.pending);
 
-  if (isLoading) return <div className="flex justify-center py-12"><Spinner /></div>;
-
-  if (error || !invite) {
-    const inviterGone = error?.message === 'INVITER_DELETED';
+  if (own) {
     return (
-      <div className="min-h-screen flex items-center justify-center px-6">
-        <Card>
-          <CardContent className="py-8 text-center">
-            <p className="text-gray-500 dark:text-gray-300">{inviterGone ? t('acquaintance.inviteGone') : t('common.notFound')}</p>
-            <Button className="mt-4" onClick={leave}>
-              {inviterGone ? t('acquaintance.inviteSomeone') : t('common.back')}
-            </Button>
-          </CardContent>
-        </Card>
-      </div>
+      <OnboardingFrame
+        top={<BrandLine />}
+        corner={<LanguageCorner />}
+        centre
+        foot={<Button className="w-full" onClick={() => navigate('/add')}>{t('invite.shareOwn')}</Button>}
+      >
+        <Avatar name={inviterName} size={88} className="mt-10" />
+        <StepText centre title={t('invite.ownTitle')}>{t('invite.ownText')}</StepText>
+      </OnboardingFrame>
     );
   }
 
-  if (invite.usedById && me && invite.usedById !== me.id && !accept.isSuccess) {
-    return (
-      <div className="min-h-screen flex items-center justify-center px-6">
-        <Card>
-          <CardContent className="py-8 text-center">
-            <p className="text-gray-500 dark:text-gray-300">{t('invite.alreadyUsed')}</p>
-            <Button className="mt-4" onClick={leave}>{t('common.back')}</Button>
-          </CardContent>
-        </Card>
-      </div>
+  if (isDeadError(accept.error)) {
+    return <DeadLink signedIn />;
+  }
+
+  const errorText = accept.error
+    ? accept.error.message === 'CONNECTION_LIMIT_SELF'
+      ? t('pending.errLimitSelf')
+      : accept.error.message === 'CONNECTION_LIMIT_OTHER'
+        ? t('pending.errLimitOther')
+        : t('invite.failed')
+    : '';
+
+  const name = firstName(inviterName);
+  let foot: React.ReactNode;
+  if (accept.isSuccess && !firstRun) {
+    foot = (
+      <>
+        <StatusPlaque>
+          {connected ? (
+            <b className="font-bold">{t('invite.connected', { name: inviterName })}</b>
+          ) : (
+            <>
+              <b className="font-bold">{t('invite.sent')}</b> {t('invite.sentText', { name })}
+            </>
+          )}
+        </StatusPlaque>
+        <Button className="mt-4 w-full" onClick={() => navigate('/', { replace: true })}>
+          {t('invite.toCircle')}
+        </Button>
+      </>
+    );
+  } else {
+    foot = (
+      <>
+        {errorText ? (
+          <p role="alert" className="mb-3 text-center text-caption font-semibold text-sos">
+            {errorText}
+          </p>
+        ) : null}
+        <Button
+          className="w-full"
+          loading={accept.isPending || (accept.isSuccess && firstRun)}
+          onClick={() => {
+            accept.reset();
+            accept.mutate({ token });
+          }}
+        >
+          {accept.error ? t('common.retry') : t('invite.known')}
+        </Button>
+        <button
+          type="button"
+          onClick={() => {
+            setPending(null);
+            navigate(homePath(), { replace: true });
+          }}
+          className="so-focus mt-2 block min-h-11 w-full text-center text-body-s font-bold text-ink-muted"
+        >
+          {t('invite.notNow')}
+        </button>
+      </>
     );
   }
 
   return (
-    <div className="flex flex-col items-center justify-center px-4 py-6" style={{ minHeight: '100dvh', paddingBottom: 'max(1.5rem, env(safe-area-inset-bottom))' }}>
-      <Card className="w-full max-w-sm">
-        <CardContent className="py-5 text-center">
-          <Logo size={48} className="text-gray-900 dark:text-teal-400 mx-auto mb-3" />
-          <Avatar src={invite.inviter.photoUrl} name={invite.inviter.name} size="lg" className="mx-auto mb-3" />
-          <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-4">
-            {(() => {
-              // An intention is at least 1 $, so a smaller total is not shown at all.
-              const total = Math.round((invite as any).totalIntentions ?? 0);
-              const vars = { name: invite.inviter.name, count: (invite as any).networkCount ?? 0 };
-              return total >= 1 ? t('invite.from', { ...vars, amount: total }) : t('invite.fromNoAmount', vars);
-            })()}
-          </h2>
+    <OnboardingFrame top={<BrandLine />} corner={<LanguageCorner />} centre foot={foot}>
+      {hero}
+    </OnboardingFrame>
+  );
+}
 
-          {(accept.isSuccess && (accept.data as any)?.alreadyConnected) || confirmedNow ? (
-            <div className="flex flex-col items-center gap-2">
-              <CheckCircle className="w-10 h-10 text-green-500" />
-              <p className="text-base font-semibold text-green-600">{t('acquaintance.connectedTitle', { name: invite.inviter.name })}</p>
-              <p className="text-xs text-gray-500 dark:text-gray-300">{t('acquaintance.connectedText')}</p>
-              <Button className="w-full mt-1" size="lg" onClick={openNetwork}>
-                {t('acquaintance.openNetwork')}
-              </Button>
-            </div>
-          ) : accept.isSuccess && (accept.data as any)?.pending ? (
-            <div className="flex flex-col items-center gap-2">
-              <Clock className="w-10 h-10 text-amber-500" />
-              <p className="text-base font-semibold text-amber-600">{t('acquaintance.waitingBadge')}</p>
-              <p className="text-xs text-gray-500 dark:text-gray-300">{t('acquaintance.waitingText', { name: invite.inviter.name })}</p>
-              <Button className="w-full mt-1" size="lg" onClick={() => navigate('/dashboard')}>
-                {t('acquaintance.continue')}
-              </Button>
-            </div>
-          ) : accept.isSuccess ? (
-            <div className="flex flex-col items-center gap-2">
-              <CheckCircle className="w-10 h-10 text-green-500" />
-              <p className="text-base font-semibold text-green-600">{t('invite.success')}</p>
-              <Button className="w-full mt-1" size="lg" onClick={() => navigate('/network')}>
-                {t('network.title')}
-              </Button>
-            </div>
-          ) : (
-            <div className="flex flex-col items-center gap-2">
-              <Spinner />
-              <p className="text-sm text-gray-500 dark:text-gray-300">{t('invite.accepting') || 'Accepting...'}</p>
-            </div>
-          )}
-          {accept.error && (
-            <div className="mt-3 p-3 bg-red-50 dark:bg-red-950 rounded-lg">
-              <p className="text-sm text-red-600 dark:text-red-400 font-medium">
-                {accept.error.message === 'INVITER_DELETED' ? t('acquaintance.inviteGone')
-                  : accept.error.message === 'CONNECTION_LIMIT_SELF' ? t('pending.errLimitSelf')
-                  : accept.error.message === 'CONNECTION_LIMIT_OTHER' ? t('pending.errLimitOther')
-                  : accept.error.message}
-              </p>
-              {accept.error.data?.code === 'UNAUTHORIZED' ? (
-                <Button
-                  className="w-full mt-2"
-                  size="lg"
-                  onClick={() => {
-                    if (token) localStorage.setItem('pendingInviteToken', token);
-                    window.location.href = `/login?redirect=/invite/${token}`;
-                  }}
-                >
-                  <LogIn className="w-4 h-4 mr-2" /> {t('invite.loginToAccept')}
-                </Button>
-              ) : (
-                <Button
-                  className="w-full mt-2"
-                  size="lg"
-                  onClick={() => {
-                    autoAcceptTriggered.current = false;
-                    accept.reset();
-                  }}
-                >
-                  {t('common.retry') || 'Retry'}
-                </Button>
-              )}
-            </div>
-          )}
-        </CardContent>
-      </Card>
+function StatusPlaque({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="flex items-center gap-3 rounded-lg bg-care-soft px-3.5 py-3 text-left text-caption text-ink">
+      <i className="grid h-9 w-9 shrink-0 place-items-center rounded-md bg-surface text-care">
+        <CheckMark className="h-5 w-5" />
+      </i>
+      <span>{children}</span>
     </div>
+  );
+}
+
+/** One screen for every dead link: used, the inviter deleted the account, expired or not found. */
+function DeadLink({ signedIn }: { signedIn: boolean }) {
+  const { t } = useTranslation();
+  const navigate = useNavigate();
+  const labels = useNetLabels();
+  return (
+    <OnboardingFrame
+      top={<BrandLine />}
+      foot={
+        <>
+          <Button className="w-full" onClick={() => navigate(signedIn ? homePath() : '/', { replace: true })}>
+            {t('invite.openApp')}
+          </Button>
+          {signedIn ? null : (
+            <Button variant="ghost" className="mt-2.5 w-full" onClick={() => navigate('/login')}>
+              {t('invite.signIn')}
+            </Button>
+          )}
+        </>
+      }
+    >
+      <div className="mt-4 flex h-[240px] items-center justify-center">
+        <NetFigure step={0} labels={labels} className="h-full w-auto" />
+      </div>
+      <StepText title={t('invite.deadTitle')}>{t('invite.deadText')}</StepText>
+    </OnboardingFrame>
+  );
+}
+
+/** getByToken failed for a transient reason: keep the invite and let the person try again. */
+function RetryScreen({ onRetry, busy }: { onRetry: () => void; busy: boolean }) {
+  const { t } = useTranslation();
+  return (
+    <OnboardingFrame
+      top={<BrandLine />}
+      foot={
+        <Button className="w-full" loading={busy} onClick={onRetry}>
+          {t('common.retry')}
+        </Button>
+      }
+    >
+      <StepText title={t('invite.loadFailedTitle')}>{t('invite.loadFailedText')}</StepText>
+    </OnboardingFrame>
+  );
+}
+
+function Loading() {
+  return (
+    <main className="grid min-h-[100dvh] place-items-center bg-canvas">
+      <span className="so-spin h-8 w-8 rounded-full border-[3px] border-care/30 border-t-care" aria-label="…" />
+    </main>
   );
 }
