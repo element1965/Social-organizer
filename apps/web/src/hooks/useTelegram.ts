@@ -89,6 +89,7 @@ const ROOT_PATHS = [
   '/add',
   '/me',
   '/how',
+  '/get',
   '/privacy',
   '/terms',
   '/delete-account',
