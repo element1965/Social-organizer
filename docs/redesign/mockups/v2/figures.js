@@ -98,3 +98,52 @@ ${NAMES.map((_, i) => `<span class="coin" data-i="${i}">${SHARE}</span>`).join("
   go(o.month || 0);
   return api;
 }
+
+
+/* ---- shared drawing helpers for the figures below ---- */
+const figGlyph = (x, y, r, color) => `<circle cx="${x}" cy="${(y - r * .2).toFixed(1)}" r="${(r * .27).toFixed(1)}" fill="${color}"/><path d="M${(x - r * .52).toFixed(1)} ${(y + r * .66).toFixed(1)} a${(r * .52).toFixed(1)} ${(r * .52).toFixed(1)} 0 0 1 ${(r * 1.04).toFixed(1)} 0z" fill="${color}"/>`;
+const figText = (x, y, size, weight, color, txt, anchor) => `<text x="${x}" y="${y}" text-anchor="${anchor || "middle"}" ${FIG_FONT} font-size="${size}" font-weight="${weight}" fill="${color}">${txt}</text>`;
+/* a person: hot = care, dashed = not yet connected */
+const figPerson = (x, y, r, o) => {
+  const hot = o.hot, stroke = hot ? "var(--care)" : "var(--line-strong)";
+  return `<g ${o.data != null ? `data-i="${o.data}" style="cursor:pointer"` : ""}><circle cx="${x}" cy="${y}" r="${r}" fill="${hot ? "var(--care-soft)" : "var(--paper)"}" stroke="${stroke}" stroke-width="${hot ? 2 : 1.5}" ${o.dashed ? 'stroke-dasharray="4 4"' : ""}/>${figGlyph(x, y, r, hot ? "var(--care)" : o.dashed ? "var(--subtle)" : "var(--ink)")}${o.name ? figText(x, y + r + 16, 13, 700, hot ? "var(--care)" : "var(--ink)", o.name) : ""}${o.sub ? figText(x, y + r + 31, 11, 700, "var(--muted)", o.sub) : ""}</g>`;
+};
+const figYou = (x, y, r, o) => `<g ${o.data != null ? `data-i="${o.data}" style="cursor:pointer"` : ""}>${o.halo ? `<circle cx="${x}" cy="${y}" r="${r + 10}" fill="none" stroke="var(--care)" stroke-width="1.5" opacity=".45"/>` : ""}<circle cx="${x}" cy="${y}" r="${r}" fill="${o.hot === false ? "var(--paper)" : "var(--care)"}" stroke="${o.hot === false ? "var(--line-strong)" : "none"}" stroke-width="1.5"/>${figText(x, y + r * .22, Math.round(r * .6), 800, o.hot === false ? "var(--ink)" : "var(--on-care)", "Вы")}${o.name ? figText(x, y + r + 16, 13, 700, o.hot === false ? "var(--ink)" : "var(--care)", o.name) : ""}${o.sub ? figText(x, y + r + 31, 11, 700, "var(--muted)", o.sub) : ""}</g>`;
+const figPill = (x, y, txt, hot) => { const w = txt.length * 7 + 20; return `<g><rect x="${(x - w / 2).toFixed(1)}" y="${y - 11}" width="${w}" height="22" rx="11" fill="${hot ? "var(--care)" : "var(--paper)"}" stroke="${hot ? "none" : "var(--line-strong)"}"/>${figText(x, y + 4, 11, 800, hot ? "var(--on-care)" : "var(--ink)", txt)}</g>`; };
+
+/* Handshake rings: you, six people you know, then the people they know. depth 0..2 lights the rings up to it. */
+function orbitFigure(depth) {
+  const C = 220, R = [78, 140, 200], NAMES = ["Кира", "Олег", "Ира", "Дима", "Лена", "Макс"];
+  const P = (a, r) => ({ x: C + Math.cos(a * Math.PI / 180) * r, y: C + Math.sin(a * Math.PI / 180) * r });
+  const on = (k) => k <= depth;
+  const ring = (k, inner) => `<g style="transition:opacity var(--dur-base)" opacity="${on(k) ? 1 : .15}"><circle cx="${C}" cy="${C}" r="${R[k]}" fill="none" stroke="var(--line)" stroke-dasharray="2 6" stroke-linecap="round"/>${inner}</g>`;
+  let r3 = ""; for (let i = 0; i < 72; i++) { const p = P(i * 5 - 90 + 2.5, R[2]); r3 += `<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="2.6" fill="var(--line-strong)"/>`; }
+  let r2 = ""; for (let i = 0; i < 36; i++) { const p = P(i * 10 - 90 + 5, R[1]); r2 += `<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="6" fill="var(--surface-2)" stroke="var(--line-strong)" stroke-width="1.2"/>`; }
+  let r1 = ""; NAMES.forEach((n, i) => { const p = P(-90 + i * 60, R[0]); r1 += `<line x1="${C}" y1="${C}" x2="${p.x.toFixed(1)}" y2="${p.y.toFixed(1)}" stroke="var(--line-strong)" stroke-width="1.5"/>`; });
+  NAMES.forEach((n, i) => { const p = P(-90 + i * 60, R[0]); r1 += figPerson(+p.x.toFixed(1), +p.y.toFixed(1), 16, { name: n }); });
+  const pills = [["1-е · 6", 0], ["2-е · 36", 1], ["3-е · 216", 2]].map(([t, k]) => { const p = P(-42, R[k]); return `<g style="transition:opacity var(--dur-base)" opacity="${on(k) ? 1 : .35}">${figPill(+p.x.toFixed(1), +p.y.toFixed(1), t, depth === k)}</g>`; }).join("");
+  return `<svg viewBox="0 0 440 440" role="img" aria-label="Кольца рукопожатий">${ring(2, r3)}${ring(1, r2)}${ring(0, r1)}${figYou(C, C, 24, { halo: depth === 0 })}${pills}</svg>`;
+}
+
+/* Vouching: Maria asks, Oleg knows her, you know Oleg. step lights the path up to that person. */
+function chainFigure(step) {
+  const X = [60, 200, 340], Y = 50, r = 24;
+  const seg = (i) => `<line x1="${X[i] + r + 4}" y1="${Y}" x2="${X[i + 1] - r - 4}" y2="${Y}" stroke="${i < step ? "var(--care)" : "var(--line-strong)"}" stroke-width="${i < step ? 3 : 1.5}" stroke-linecap="round" stroke-dasharray="${i < step ? "none" : "4 5"}"/>`;
+  let s = seg(0) + seg(1);
+  s += figPerson(X[0], Y, r, { hot: step >= 0, name: "Мария", sub: "просит 300 $", data: 0 });
+  s += figPerson(X[1], Y, r, { hot: step >= 1, name: "Олег", sub: "ваш брат", data: 1 });
+  s += figYou(X[2], Y, r, { hot: step >= 2, name: "Вы", sub: "решаете сами", data: 2 });
+  s += `<g><rect x="${X[0] + 10}" y="${Y - 48}" width="54" height="22" rx="11" fill="var(--care)"/>${figText(X[0] + 37, Y - 33, 11, 800, "var(--on-care)", "300 $")}</g>`;
+  if (step > 0) s += `<circle r="5" fill="var(--care)"><animateMotion dur="${1.1 * step}s" repeatCount="indefinite" path="M${X[0] + r + 4} ${Y} L${X[step] - r - 4} ${Y}"/></circle>`;
+  return `<svg viewBox="0 0 400 110" role="img" aria-label="Путь просьбы">${s}</svg>`;
+}
+
+/* A new person: opened your link (0), you confirmed (1). */
+function joinFigure(step) {
+  const XA = 110, XB = 290, Y = 50, r = 24, mid = (XA + XB) / 2;
+  let s = `<line x1="${XA + r + 4}" y1="${Y}" x2="${XB - r - 4}" y2="${Y}" stroke="${step ? "var(--care)" : "var(--line-strong)"}" stroke-width="${step ? 3 : 1.5}" stroke-linecap="round" stroke-dasharray="${step ? "none" : "4 5"}"/>`;
+  s += figPill(mid, Y, step ? "знакомы ✓" : "ссылка", !!step);
+  s += figPerson(XA, Y, r, { hot: !!step, dashed: !step, name: "Катя", sub: step ? "1-е рукопожатие" : "вошла по ссылке", data: 0 });
+  s += figYou(XB, Y, r, { name: "Вы", sub: step ? "подтвердили" : "получили пуш", data: 1 });
+  return `<svg viewBox="0 0 400 110" role="img" aria-label="Новый человек">${s}</svg>`;
+}

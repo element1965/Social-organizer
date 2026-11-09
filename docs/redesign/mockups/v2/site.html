@@ -53,7 +53,7 @@ ${siteTop("")}
       <h2>Просьба идёт по рукопожатиям</h2>
       <p class="lead">Вы видите просьбу Марии, потому что её знает Олег, а Олега знаете вы. Просьба — это вопрос, на который можно не ответить. <b>Никаких обязательств.</b></p>
     </div>
-    <div><div class="chain"><span class="node on">Мария Коваль<small>просит 300 $</small></span><span class="bridge"><i></i></span><span class="node on">Олег<small>ваш брат</small></span><span class="bridge"><i></i></span><span class="node">Вы<small>решаете сами</small></span></div></div>
+    <div class="fig" id="siteChain"></div>
   </div>
 </div>
 <div class="sec">
@@ -120,6 +120,7 @@ document.getElementById("row").innerHTML = [
   wide("sos", "", SOS, "<small>4</small>Публичная страница сбора", `<p>Панель с карточкой суммы, плашкой о круге и одной кнопкой «Присоединиться». Это та же страница, что на телефоне (<code>/sos/:id</code>); ширина панели 460 вместо полной ширины.</p>`),
   wide("legal", "", LEGAL, "<small>5</small>Правовые тексты", `<p>Один шаблон для конфиденциальности, условий и удаления аккаунта: заголовок 40 px, дата, колонка 720 px, строка 16 px с интерлиньяжем 1.6, оглавление слева. Текст на странице — черновик по текущим правилам приложения, финальную редакцию пишет владелец.</p>`),
 ].join("");
+document.getElementById("siteChain").innerHTML = chainFigure(2);
 mountHui(document.getElementById("siteRing"), { static: true, month: 2, stage: 1, names: ["Мария", "Олег", "Вы", "Ирина", "Денис", "Лена"] });
 </script>
 </body>

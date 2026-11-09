@@ -28,20 +28,10 @@
   .hui .months button, .hui .rings button { height:40px; padding:0 14px; border-radius:12px; background:var(--paper); box-shadow:inset 0 0 0 1px var(--line); font-weight:700; }
   .hui .months button[aria-pressed="true"], .hui .rings button[aria-pressed="true"] { background:var(--ink); color:var(--canvas); box-shadow:none; }
   /* the growing circle */
-  .hui .orbit { position:relative; width:440px; height:440px; margin:0 auto; }
-  .hui .orbit .me { position:absolute; left:50%; top:50%; width:52px; height:52px; margin:-26px 0 0 -26px; border-radius:50%; background:var(--care); color:var(--on-care); display:grid; place-items:center; font-weight:800; font-size:14px; z-index:2; }
-  .hui .orbit .r { position:absolute; left:50%; top:50%; border-radius:50%; border:1px solid var(--line); transform:translate(-50%,-50%); transition:opacity var(--dur-base) var(--ease-out); }
-  .hui .orbit .r i { position:absolute; left:50%; top:50%; border-radius:50%; background:var(--ink); transform:translate(-50%,-50%); }
-  .hui .orbit .r.off { opacity:.12; }
-  .hui .orbit .r.r2 i { background:var(--muted); }
-  .hui .orbit .r.r3 i { background:var(--subtle); }
-  .hui .orbit .cap { position:absolute; left:50%; bottom:-4px; transform:translateX(-50%); font-size:13px; font-weight:700; color:var(--muted); white-space:nowrap; }
   .hui .sum { display:flex; align-items:baseline; gap:10px; margin-top:16px; }
   .hui .sum b { font-size:40px; letter-spacing:-.05em; font-weight:800; font-variant-numeric:tabular-nums; }
   .hui .sum span { color:var(--muted); font-size:15px; font-weight:600; }
-  .hui .chain .node { cursor:pointer; transition:background var(--dur-base), color var(--dur-base); }
-  .hui .chain.two { grid-template-columns:1fr 72px 1fr; max-width:360px; }
-  .hui .chain .bridge i { transition:left var(--dur-base) var(--ease-out); }
+  .hui .fig.chain, .hui .fig.join { max-width:480px; }
   .hui .cta { padding:64px 48px 72px; border-top:1px solid var(--line-soft); display:flex; align-items:center; gap:28px; }
   .hui .cta h2 { margin:0; font-size:32px; letter-spacing:-.035em; line-height:1.08; font-weight:800; flex:1; }
   .hui .cta .btn { padding:0 24px; width:auto; }
@@ -55,14 +45,10 @@
     .hui .sec { grid-template-columns:1fr; gap:24px; padding:40px 16px; }
     .hui .sec .copy h2 { font-size:28px; }
     .hui .say { font-size:16px; }
-    .hui .hui-ring, .hui .orbit { width:320px; height:320px; }
+    .hui .hui-ring { width:320px; height:320px; }
+    .hui .fig.orbit { width:320px; }
     .hui .hui-ring .seat .ava { width:40px; height:40px; font-size:15px; }
     .hui .hui-ring .pot .sum { font-size:20px; }
-    .hui .chain { grid-template-columns:1fr; gap:0; max-width:none; }
-    .hui .chain .bridge { height:40px; width:2px; margin:0 auto; }
-    .hui .chain .bridge::before { left:0; right:auto; top:0; bottom:0; width:2px; height:auto; }
-    .hui .chain .bridge i { left:-6px; top:calc(50% - 7px); }
-    .hui .chain.two { grid-template-columns:1fr; }
     .hui .cta { flex-direction:column; align-items:stretch; padding:40px 16px 48px; gap:16px; }
     .hui .cta .btn { width:100%; }
     .hui .cta .btn + .btn { margin:10px 0 0; }
@@ -88,7 +74,7 @@ const RINGS = [
   { n: 216, label: "3-е рукопожатие", say: "Ещё один шаг — <b>216 человек</b>. Просьба доходит и до них, через тех, кто вас знает." },
 ];
 const CHAIN = ["<b>Мария Коваль</b> просит помощи. Вы её не знаете.", "<b>Олег</b>, ваш брат, знает Марию. Поэтому её просьбу видит он.", "<b>Вы</b> видите просьбу, потому что знаете Олега. Отвечать или нет — решаете сами."];
-const JOIN = ["Человек открывает вашу ссылку и входит. <b>Это ещё не связь.</b>", "Вы получаете пуш и подтверждаете: да, мы знакомы. <b>Теперь это 1-е рукопожатие.</b>"];
+const JOIN = ["Катя открывает вашу ссылку и входит. <b>Это ещё не связь:</b> вам приходит пуш.", "Вы подтверждаете: да, мы знакомы. <b>Теперь Катя — ваше 1-е рукопожатие.</b>"];
 
 function huiPage(mobile) {
   const top = mobile ? `<div class="top">${brandRow()}<span class="btn primary md">Войти</span></div>` : siteTop("how");
@@ -100,15 +86,15 @@ function huiPage(mobile) {
 </div>
 <div class="sec s-orbit">
   <div class="copy"><h2>Без организатора и без очереди</h2><p class="lead">В Social Organizer круг не замыкается на шестерых. Ваши знакомые знают своих, и просьба идёт по рукопожатиям. <b>Доли получает не следующий по очереди, а тот, кому нужно сейчас.</b></p><div class="rings"></div><p class="say"></p><div class="sum"><b></b><span>если каждый готов дать 15 $</span></div></div>
-  <div class="orbit"><span class="me">Вы</span></div>
+  <div class="fig orbit"></div>
 </div>
 <div class="sec s-chain">
-  <div class="copy"><h2>Поручительство</h2><p class="lead">Вы видите только просьбы, до которых есть путь из знакомых. Нажмите на звено.</p><p class="say"></p></div>
-  <div><div class="chain"></div></div>
+  <div class="copy"><h2>Поручительство</h2><p class="lead">Вы видите только просьбы, до которых есть путь из знакомых. Нажмите на человека.</p><p class="say"></p></div>
+  <div class="fig chain"></div>
 </div>
 <div class="sec s-join">
   <div class="copy"><h2>Новый человек</h2><p class="lead">В круг попадают только через знакомого, и только после его подтверждения.</p><p class="say"></p></div>
-  <div><div class="chain two"></div></div>
+  <div class="fig join"></div>
 </div>
 <div class="cta"><h2>Начните с людей, которых уже знаете</h2><span class="btn primary">Начать</span><span class="btn secondary">В браузере</span></div>
 ${siteFoot()}
@@ -125,26 +111,23 @@ function mount(root) {
   ring.go(0);
   /* orbit */
   const orbit = root.querySelector(".orbit"), rings = root.querySelector(".rings"), say2 = root.querySelector(".s-orbit .say"), sum = root.querySelector(".sum b");
-  const size = orbit.getBoundingClientRect().width || 440;
-  const R = [size * .3, size * .62, size * .96];
-  const ringEls = RINGS.map((r, k) => { const d = document.createElement("div"); d.className = `r r${k + 1}`; d.style.width = d.style.height = R[k] + "px"; const cnt = Math.min(r.n, k === 0 ? 6 : k === 1 ? 24 : 48); const dot = k === 0 ? 14 : k === 1 ? 9 : 6; for (let i = 0; i < cnt; i++) { const a = (-90 + i * 360 / cnt) * Math.PI / 180; const e = document.createElement("i"); e.style.width = e.style.height = dot + "px"; e.style.left = 50 + Math.cos(a) * 50 + "%"; e.style.top = 50 + Math.sin(a) * 50 + "%"; d.appendChild(e); } const cap = document.createElement("span"); cap.className = "cap"; cap.textContent = `${r.label} · ${r.n}`; d.appendChild(cap); orbit.appendChild(d); return d; });
-  let depth = 0;
-  function setDepth(k) { depth = k; ringEls.forEach((d, i) => d.classList.toggle("off", i > k)); rings.querySelectorAll("button").forEach((b, i) => b.setAttribute("aria-pressed", String(i === k))); say2.innerHTML = RINGS[k].say; const total = RINGS.slice(0, k + 1).reduce((a, r) => a + r.n, 0); sum.textContent = (total * 15).toLocaleString("ru-RU") + " $"; }
+  function setDepth(k) { orbit.innerHTML = orbitFigure(k); rings.querySelectorAll("button").forEach((b, i) => b.setAttribute("aria-pressed", String(i === k))); say2.innerHTML = RINGS[k].say; const total = RINGS.slice(0, k + 1).reduce((a, r) => a + r.n, 0); sum.textContent = (total * 15).toLocaleString("ru-RU") + " $"; }
   RINGS.forEach((r, k) => { const b = document.createElement("button"); b.textContent = r.label; b.onclick = () => setDepth(k); rings.appendChild(b); });
+  orbit.addEventListener("click", (e) => { const n = e.target.closest("[data-i]"); if (n) setDepth(+n.dataset.i); });
   setDepth(0);
-  /* chains */
-  function buildChain(el, labels, subs, copy, sayEl) {
+  /* chains: click a person to move the step */
+  function figSteps(host, render, copy, sayEl) {
     let step = 0;
-    labels.forEach((l, i) => { if (i) { const br = document.createElement("span"); br.className = "bridge"; br.appendChild(document.createElement("i")); el.appendChild(br); } const b = document.createElement("button"); b.className = "node"; b.innerHTML = `${l}<small>${subs[i]}</small>`; b.onclick = () => { step = i; refresh(); }; el.appendChild(b); });
-    function refresh() { el.querySelectorAll(".node").forEach((n, i) => n.classList.toggle("on", i <= step)); el.querySelectorAll(".bridge i").forEach((d, i) => { d.style.left = i < step ? "calc(100% - 14px)" : "0"; }); sayEl.innerHTML = copy[step]; }
-    refresh();
+    const draw = () => { host.innerHTML = render(step); sayEl.innerHTML = copy[step]; };
+    host.addEventListener("click", (e) => { const n = e.target.closest("[data-i]"); if (n) { step = +n.dataset.i; draw(); } });
+    draw();
   }
-  buildChain(root.querySelector(".s-chain .chain"), ["Мария Коваль", "Олег", "Вы"], ["просит 300 $", "ваш брат", "решаете сами"], CHAIN, root.querySelector(".s-chain .say"));
-  buildChain(root.querySelector(".s-join .chain"), ["Ссылка", "Пуш"], ["человек вошёл", "вы подтвердили"], JOIN, root.querySelector(".s-join .say"));
+  figSteps(root.querySelector(".s-chain .fig"), chainFigure, CHAIN, root.querySelector(".s-chain .say"));
+  figSteps(root.querySelector(".s-join .fig"), joinFigure, JOIN, root.querySelector(".s-join .say"));
 }
 
 document.getElementById("row").innerHTML = [
-  wide("desk", "", `<div class="frame" id="f1">${huiPage(false)}</div>`, "<small>1</small>1280 px", `<p>Четыре интерактива по одному на мысль. «Как ходит доля»: клик по месяцу или имени собирает пять долей в центре у того, кто берёт в этом месяце. «Без организатора и без очереди»: три кольца рукопожатий с числами 6 / 36 / 216 и суммой, которую даёт каждое кольцо при 15 $ с человека — это ответ, зачем звать людей. «Поручительство» и «Новый человек» — цепочки из старого концепта, с подписями под звеньями.</p>
+  wide("desk", "", `<div class="frame" id="f1">${huiPage(false)}</div>`, "<small>1</small>1280 px", `<p>Четыре интерактива по одному на мысль. «Как ходит доля»: клик по месяцу или имени собирает пять долей в центре у того, кто берёт в этом месяце. «Без организатора и без очереди»: три кольца рукопожатий с числами 6 / 36 / 216 и суммой, которую даёт каждое кольцо при 15 $ с человека — это ответ, зачем звать людей. «Поручительство» и «Новый человек» — те же люди-аватары в ряд: клик по человеку двигает шаг, путь до него подсвечивается, по нему бежит импульс.</p>
 <ul><li>Страница живёт на сайте как «Как это работает» и открывается из шапки, из Помощи в приложении и после третьего кадра интро («Подробнее»).</li><li>Все цвета — токены: на тёмной теме кольца и доли перекрашиваются сами. Переходы 420 мс с <code>ease-out</code>, при <code>prefers-reduced-motion</code> — без анимации.</li><li class="risk">Числа 36 и 216 — пример при шести знакомых у каждого. В приложении на странице стоит показать реальные средние по сети, когда они появятся.</li></ul>`),
   wide("mob", "m", `<div class="frame m" id="f2">${huiPage(true)}</div>`, "<small>2</small>390 px", `<p>Та же разметка. Контейнерный запрос складывает колонки, кольца сжимаются до 320 px, цепочки становятся вертикальными, кнопки — во всю ширину. В шапке только бренд и «Войти».</p>`),
 ].join("");
