@@ -21,10 +21,18 @@ const DEMO_COLLECTION = {
   currency: 'USD',
   createdAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
   closedAt: null as string | null,
-  blockReason: null as string | null,
+  suspended: false,
   creator: { id: 'demo', name: 'Андрей Луб', photoUrl: null as string | null },
   _count: { obligations: 7 },
 };
+
+const TELEGRAM_BOT = (import.meta.env.VITE_TELEGRAM_BOT_USERNAME as string | undefined)?.trim() || '';
+
+/** Old API exposes blockReason; the new one exposes suspended and never the raw reason. */
+function isSuspended(collection: { status: string; suspended?: boolean; blockReason?: string | null }): boolean {
+  if (typeof collection.suspended === 'boolean') return collection.suspended;
+  return collection.status === 'BLOCKED' && collection.blockReason != null;
+}
 
 export function SosLandingPage() {
   const { collectionId } = useParams<{ collectionId: string }>();
@@ -90,8 +98,11 @@ export function SosLandingPage() {
             people={collection._count.obligations}
             opened={asDate(collection.createdAt)}
             closed={asDate(collection.closedAt)}
-            blockReason={collection.blockReason}
+            suspended={isSuspended(collection)}
             language={language}
+            telegramUrl={!isPreview && collectionId && TELEGRAM_BOT && !isTelegramWebApp()
+              ? `https://t.me/${TELEGRAM_BOT}?startapp=sos_${collectionId}`
+              : null}
             onJoin={join}
           />
         )}
@@ -112,8 +123,9 @@ type PublicBodyProps = {
   people: number;
   opened: Date | null;
   closed: Date | null;
-  blockReason: string | null;
+  suspended: boolean;
   language: string;
+  telegramUrl: string | null;
   onJoin: () => void;
 };
 
@@ -129,14 +141,15 @@ function PublicBody({
   people,
   opened,
   closed,
-  blockReason,
+  suspended,
   language,
+  telegramUrl,
   onJoin,
 }: PublicBodyProps) {
   const { t } = useTranslation();
   const closedStatus = status === 'CLOSED' || status === 'CANCELLED';
-  const adminHold = status === 'BLOCKED' && blockReason != null;
-  const goalMet = status === 'BLOCKED' && blockReason == null;
+  const adminHold = status === 'BLOCKED' && suspended;
+  const goalMet = status === 'BLOCKED' && !suspended;
   const joinable = status === 'ACTIVE';
   const hasGoal = amount != null && amount > 0;
   const percent = hasGoal ? Math.max(0, Math.min(100, (currentAmount / amount) * 100)) : 0;
@@ -189,6 +202,11 @@ function PublicBody({
         {joinable ? (
           <>
             <Button className="w-full" onClick={onJoin}>{t('sos.join')}</Button>
+            {telegramUrl ? (
+              <a href={telegramUrl} className="mt-3 block text-center text-body-s font-extrabold text-care">
+                {t('sos.openTelegram')}
+              </a>
+            ) : null}
             <p className="mt-3 text-center text-label font-semibold text-ink-muted">{t('sos.joinNext')}</p>
           </>
         ) : (

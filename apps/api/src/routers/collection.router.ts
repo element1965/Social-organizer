@@ -6,6 +6,7 @@ import { sendCollectionNotifications, sendCollectionClosedTg } from '../services
 import { isAdmin } from '../admin.js';
 import { getAskAccess, assertAskAllowed, isSpecialAsker } from '../services/ask-access.service.js';
 import { BLOCK_REASONS } from '../config/ask.js';
+import { activeObligationTotals } from '../services/collection-amount.js';
 
 /** Chat links are shown as buttons: https only, never javascript: or http (SO-14). */
 const chatLinkSchema = z.string().max(500).url().refine((u) => /^https:\/\//i.test(u), 'Link must start with https://');
@@ -58,6 +59,32 @@ export const collectionRouter = router({
         where: { id: input.id },
         data: { status: 'ACTIVE', blockedAt: null, blockReason: null },
       });
+    }),
+
+  /**
+   * Author removes a person who joined through this collection's public link.
+   * Deletes that connection only. Does not create a reverse pending request
+   * and does not change their pledge.
+   */
+  removeJoiner: protectedProcedure
+    .input(z.object({ collectionId: z.string(), userId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      if (input.userId === ctx.userId) {
+        throw new TRPCError({ code: 'BAD_REQUEST', message: 'Cannot remove yourself' });
+      }
+      const collection = await ctx.db.collection.findUnique({ where: { id: input.collectionId } });
+      if (!collection) throw new TRPCError({ code: 'NOT_FOUND' });
+      if (collection.creatorId !== ctx.userId) throw new TRPCError({ code: 'FORBIDDEN' });
+
+      const [userAId, userBId] = [ctx.userId, input.userId].sort();
+      const connection = await ctx.db.connection.findUnique({
+        where: { userAId_userBId: { userAId: userAId!, userBId: userBId! } },
+      });
+      if (!connection || connection.viaCollectionId !== input.collectionId) {
+        throw new TRPCError({ code: 'BAD_REQUEST', message: 'This person did not join from this collection link' });
+      }
+      await ctx.db.connection.delete({ where: { id: connection.id } });
+      return { ok: true as const };
     }),
 
   create: protectedProcedure
@@ -166,28 +193,22 @@ export const collectionRouter = router({
         for (const row of rows) acked.add(row.userId);
       }
 
-      // A direct connection created with (or after) the collection is treated as a public-link join.
-      // There is no source column on Connection. Friends from before the collection are left alone.
+      // Recorded by invite.acceptSos. Older connections stay null and are not guessed.
       const viaLink = new Set<string>();
-      if (ctx.userId === collection.creatorId && visible.length > 0) {
-        const pairs = visible.map((o) => {
-          const [userAId, userBId] = [collection.creatorId, o.userId].sort();
-          return { userAId: userAId!, userBId: userBId! };
-        });
+      if (ctx.userId === collection.creatorId) {
         const links = await ctx.db.connection.findMany({
-          where: { OR: pairs },
-          select: { userAId: true, userBId: true, createdAt: true },
+          where: { viaCollectionId: collection.id },
+          select: { userAId: true, userBId: true },
         });
-        const started = collection.createdAt.getTime() - 60_000;
         for (const link of links) {
-          if (link.createdAt.getTime() < started) continue;
           const other = link.userAId === collection.creatorId ? link.userBId : link.userAId;
           viaLink.add(other);
         }
       }
 
       const cycleStart = collection.currentCycleStart?.getTime() ?? 0;
-      const currentAmount = visible.reduce((sum, o) => sum + o.amount, 0);
+      const totals = await activeObligationTotals(ctx.db, collection.id);
+      const currentAmount = totals.amount;
       return {
         ...collection,
         currentAmount,
@@ -382,24 +403,22 @@ export const collectionRouter = router({
         where: { id: input.id },
         include: {
           creator: { select: { id: true, name: true, photoUrl: true } },
-          obligations: { select: { amount: true, unsubscribedAt: true } },
         },
       });
       if (!collection) throw new TRPCError({ code: 'NOT_FOUND' });
-      const active = collection.obligations.filter((o) => o.unsubscribedAt == null);
-      const currentAmount = active.reduce((sum, o) => sum + o.amount, 0);
+      const totals = await activeObligationTotals(ctx.db, collection.id);
       return {
         id: collection.id,
         type: collection.type,
         status: collection.status,
         amount: collection.amount,
-        currentAmount,
+        currentAmount: totals.amount,
         currency: collection.currency,
         createdAt: collection.createdAt,
         closedAt: collection.closedAt,
-        blockReason: collection.blockReason,
+        suspended: collection.status === 'BLOCKED' && collection.blockReason != null,
         creator: collection.creator,
-        _count: { obligations: active.length },
+        _count: { obligations: totals.count },
       };
     }),
 });

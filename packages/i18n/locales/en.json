@@ -372,7 +372,7 @@
     "declineTitle": "Decline participation?",
     "stay": "Stay",
     "cycleUntil": "New cycle until {{date}}.",
-    "cycleElse": "Confirm, or {{amount}} will not count in this cycle.",
+    "cycleElse": "Your {{amount}} stays in the total. Confirm so the author knows you are still in.",
     "confirmAmount": "Confirm {{amount}}",
     "otherAmount": "Other amount",
     "participantsCount": "Participants: {{count}}",
@@ -1125,6 +1125,7 @@
     "joinCircleBody": "By joining, you confirm that you know this person personally.",
     "join": "Join",
     "joinNext": "Next is sign-in: Apple, Google, Telegram, or email.",
+    "openTelegram": "Open in Telegram",
     "closedLine": "This collection is closed.",
     "suspendedLine": "This collection is paused.",
     "fullLine": "The goal is collected."

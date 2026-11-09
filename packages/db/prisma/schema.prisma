@@ -168,6 +168,8 @@ model Connection {
   nicknameByA String?
   nicknameByB String?
   createdAt   DateTime @default(now())
+  // Set only when invite.acceptSos creates this row. No FK: the collection may be deleted later.
+  viaCollectionId String?
 
   userA User @relation("connectionFromUser", fields: [userAId], references: [id], onDelete: Cascade)
   userB User @relation("connectionToUser", fields: [userBId], references: [id], onDelete: Cascade)
@@ -175,6 +177,7 @@ model Connection {
   @@unique([userAId, userBId])
   @@index([userAId])
   @@index([userBId])
+  @@index([viaCollectionId])
   @@map("connections")
 }
 
