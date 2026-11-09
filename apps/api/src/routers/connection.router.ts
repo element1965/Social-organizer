@@ -4,7 +4,7 @@ import { TRPCError } from '@trpc/server';
 import { GRAPH_SLICE_DEPTH } from '@so/shared';
 import { getGraphSlice, findPathBetweenUsers } from '../services/bfs.service.js';
 import { canViewContacts } from '../services/visibility.service.js';
-import { syncMilestonesForPair } from '../services/milestone.service.js';
+import { countConnections } from '../services/connection-request.service.js';
 
 export const connectionRouter = router({
   list: protectedProcedure.query(async ({ ctx }) => {
@@ -90,34 +90,13 @@ export const connectionRouter = router({
       });
     }),
 
-  add: protectedProcedure
-    .input(z.object({ userId: z.string() }))
-    .mutation(async ({ ctx, input }) => {
-      if (input.userId === ctx.userId) {
-        throw new TRPCError({ code: 'BAD_REQUEST', message: 'Cannot connect to yourself' });
-      }
-      const [userAId, userBId] = [ctx.userId, input.userId].sort();
-      const existing = await ctx.db.connection.findUnique({
-        where: { userAId_userBId: { userAId: userAId!, userBId: userBId! } },
-      });
-      if (existing) {
-        throw new TRPCError({ code: 'CONFLICT', message: 'Already connected' });
-      }
-      const created = await ctx.db.connection.create({ data: { userAId: userAId!, userBId: userBId! } });
-      await syncMilestonesForPair(ctx.db, ctx.userId, input.userId);
-      return created;
-    }),
+  // No `add`: a connection is created only when the other person confirms it (pending request,
+  // invite) or through an SOS link. A one-sided add would let anyone farm the SOS threshold (SO-15).
 
   getCount: protectedProcedure.query(async ({ ctx }) => {
-    const [count, inviteCount] = await Promise.all([
-      ctx.db.connection.count({
-        where: { OR: [{ userAId: ctx.userId }, { userBId: ctx.userId }] },
-      }),
-      ctx.db.inviteLink.count({
-        where: { inviterId: ctx.userId, usedById: { not: null } },
-      }),
-    ]);
-    return { count, inviteCount };
+    // Confirmed acquaintances — the same number the server uses for SOS and the 150 limit (SO-15)
+    const count = await countConnections(ctx.db, ctx.userId);
+    return { count };
   }),
 
   graphSlice: protectedProcedure

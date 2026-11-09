@@ -21,7 +21,7 @@ export interface RemovedUserInfo {
 }
 
 /** Remove a user who blocked the bot.
- *  If the user has invitees — soft delete (mute) to keep their network intact.
+ *  If the user has confirmed connections or invitees — soft delete (mute) to keep their network intact (SO-15).
  *  Otherwise — hard delete with full cleanup (no traces left).
  *  Returns info about the removed user (for logging purposes). */
 export async function removeBlockedUser(chatId: string | number): Promise<RemovedUserInfo | null> {
@@ -34,15 +34,18 @@ export async function removeBlockedUser(chatId: string | number): Promise<Remove
     });
     if (account?.userId) {
       const userId = account.userId;
+      const { countConnections } = await import('./connection-request.service.js');
       // Fetch user info before deletion for logging
-      const [user, contacts, usedInviteCount] = await Promise.all([
+      const [user, contacts, usedInviteCount, connectionCount] = await Promise.all([
         db.user.findUnique({ where: { id: userId }, select: { name: true } }),
         db.userContact.findMany({ where: { userId }, select: { type: true, value: true } }),
         db.inviteLink.count({ where: { inviterId: userId, usedById: { not: null } } }),
+        countConnections(db, userId),
       ]);
 
-      if (usedInviteCount > 0) {
-        // Has invitees — soft delete (mute) so their network stays intact
+      // Same scenario rule as user.delete (SO-15): confirmed connections or invitees → soft delete
+      if (usedInviteCount > 0 || connectionCount > 0) {
+        // Has connections or invitees — soft delete (mute) so their network stays intact
         await db.user.update({
           where: { id: userId },
           data: {
@@ -53,7 +56,7 @@ export async function removeBlockedUser(chatId: string | number): Promise<Remove
             photoUrl: null,
           },
         });
-        console.log(`[TG Bot] Soft-deleted (muted) user ${platformId} (${user?.name}, userId: ${userId}) — has ${usedInviteCount} invitees`);
+        console.log(`[TG Bot] Soft-deleted (muted) user ${platformId} (${user?.name}, userId: ${userId}) — ${connectionCount} connections, ${usedInviteCount} invitees`);
       } else {
         // No invitees — full delete with no traces
         await db.inviteLink.updateMany({
