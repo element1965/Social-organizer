@@ -15,13 +15,11 @@ import {
   AddScanStub,
   AddStub,
   AskStub,
-  CircleStub,
   HelpStub,
   HistoryStub,
   HowStub,
   IntroStub,
   OpenStub,
-  PeopleStub,
   PersonStub,
   ProfileRedirect,
   ProfileStub,
@@ -42,6 +40,8 @@ import { TermsPage } from './pages/TermsPage';
 import { DeleteAccountPage } from './pages/DeleteAccountPage';
 import { GoogleCallbackPage } from './pages/GoogleCallbackPage';
 import { AppleCallbackPage } from './pages/AppleCallbackPage';
+import { CirclePage } from './pages/CirclePage';
+import { PeoplePage } from './pages/PeoplePage';
 
 const isArvut = window.location.hostname.startsWith('arvuthadadit');
 const isNativeApp = Capacitor.isNativePlatform();
@@ -120,7 +120,7 @@ function HomeIndex() {
   }
 
   if (!isAuthenticated) return <LandingPage variant={isArvut ? 'arvut' : undefined} />;
-  return <CircleStub />;
+  return <CirclePage />;
 }
 
 const INVITE_REDIRECT_KEY = 'so.inviteRedirected';
@@ -245,8 +245,8 @@ export function App() {
               <Route path="/me/history" element={<HistoryStub />} />
               <Route path="/me/help" element={<HelpStub />} />
               <Route path="/me/settings" element={<SettingsPage />} />
-              <Route path="/people" element={<PeopleStub />} />
-              <Route path="/people/:ring" element={<PeopleStub />} />
+              <Route path="/people" element={<PeoplePage />} />
+              <Route path="/people/:ring" element={<PeoplePage />} />
               <Route path="/person/:id" element={<PersonStub />} />
               <Route path="/collection/:id" element={<CollectionPage />} />
               <Route path="/support" element={<SupportChatPage />} />
