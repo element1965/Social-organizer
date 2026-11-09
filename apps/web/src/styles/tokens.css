@@ -1,57 +1,169 @@
 /*
- * Semantic color tokens (palette "Ink and teal"). Values are "R G B" so Tailwind can add opacity:
- * bg-surface/80. Light theme on :root, dark theme on html.dark (set by hooks/useTheme.ts).
+ * Semantic color tokens for the redesign.
+ * Canonical values: docs/redesign/mockups/v2/tokens.css.
+ *
+ * --so-* values are "R G B" triplets so Tailwind can add opacity (bg-surface/80).
+ * Light theme on :root and .light. Dark theme on html.dark and .dark.
+ * Line colors are the ink triplet; Tailwind applies .14 / .08 / .24 alpha.
+ * Scene colors stay dark in both themes.
  */
-:root {
-  --so-canvas: 244 247 252;      /* #F4F7FC page background */
-  --so-surface: 255 255 255;     /* cards */
-  --so-surface-2: 234 239 247;   /* #EAEFF7 nested blocks, inputs */
-  --so-ink: 25 47 84;            /* #192F54 text, people */
-  --so-ink-muted: 91 107 134;    /* #5B6B86 secondary text */
-  --so-ink-subtle: 138 153 179;  /* #8A99B3 hints, placeholders */
-  --so-line: 216 224 236;        /* #D8E0EC hairlines */
-  --so-line-strong: 184 195 214; /* #B8C3D6 */
+:root,
+.light {
+  --so-canvas: 243 246 244;
+  --so-surface: 255 255 255;
+  --so-surface-2: 233 238 236;
+  --so-ink: 20 33 30;
+  --so-ink-muted: 92 109 104;
+  --so-ink-subtle: 138 154 149;
+  --so-line: 20 33 30;
 
-  --so-care: 8 127 113;          /* #087F71 participation, primary action */
-  --so-care-hover: 8 103 92;     /* #08675C */
-  --so-care-soft: 230 245 242;   /* #E6F5F2 */
+  --so-care: 8 127 113;
+  --so-care-hover: 8 103 92;
+  --so-care-soft: 229 245 243;
   --so-on-care: 255 255 255;
+  --so-care-bright: 13 148 136;
 
-  --so-link: 84 104 212;         /* #5468D4 connections, links */
-  --so-link-soft: 238 241 252;   /* #EEF1FC */
+  --so-link: 84 104 212;
+  --so-link-soft: 238 241 252;
 
-  --so-sos: 196 62 66;           /* #C43E42 */
-  --so-sos-hover: 163 50 54;     /* #A33236 */
-  --so-sos-soft: 252 238 238;    /* #FCEEEE */
-  --so-on-sos: 255 255 255;
-
-  --so-warm: 242 190 104;        /* #F2BE68 rare accent */
-  --so-warm-soft: 253 246 233;   /* #FDF6E9 */
-}
-
-html.dark {
-  --so-canvas: 14 26 46;         /* #0E1A2E */
-  --so-surface: 22 37 63;        /* #16253F */
-  --so-surface-2: 28 42 67;      /* #1C2A43 */
-  --so-ink: 230 236 247;         /* #E6ECF7 */
-  --so-ink-muted: 147 163 191;   /* #93A3BF */
-  --so-ink-subtle: 104 120 148;  /* #687894 */
-  --so-line: 46 61 88;           /* #2E3D58 */
-  --so-line-strong: 67 83 111;   /* #43536F */
-
-  --so-care: 43 169 154;         /* #2BA99A */
-  --so-care-hover: 91 191 174;   /* #5BBFAE */
-  --so-care-soft: 10 82 74;      /* #0A524A */
-  --so-on-care: 4 36 31;         /* #04241F */
-
-  --so-link: 154 168 240;        /* #9AA8F0 */
-  --so-link-soft: 40 50 101;     /* #283265 */
-
-  --so-sos: 217 87 91;           /* #D9575B */
-  --so-sos-hover: 229 135 137;   /* #E58789 */
-  --so-sos-soft: 110 36 39;      /* #6E2427 */
+  --so-sos: 197 52 44;
+  --so-sos-hover: 163 44 37;
+  --so-sos-soft: 251 234 232;
   --so-on-sos: 255 255 255;
 
   --so-warm: 242 190 104;
-  --so-warm-soft: 98 59 27;      /* #623B1B */
+  --so-warm-soft: 253 241 227;
+  --so-warm-ink: 154 90 22;
+
+  --so-scene: 11 21 19;
+  --so-scene-2: 19 36 32;
+  --so-scene-3: 27 51 46;
+  --so-node-1: 231 238 235;
+  --so-node-2: 159 176 170;
+  --so-node-3: 95 112 105;
+  --so-care-scene: 95 211 198;
+
+  --canvas: #f3f6f4;
+  --paper: #ffffff;
+  --surface-2: #e9eeec;
+  --ink: #14211e;
+  --muted: #5c6d68;
+  --subtle: #8a9a95;
+  --line: rgba(20, 33, 30, 0.14);
+  --line-soft: rgba(20, 33, 30, 0.08);
+  --line-strong: rgba(20, 33, 30, 0.24);
+  --care: #087f71;
+  --teal: #087f71;
+  --care-hover: #08675c;
+  --care-soft: #e5f5f3;
+  --teal-soft: #e5f5f3;
+  --on-care: #ffffff;
+  --care-bright: #0d9488;
+  --link: #5468d4;
+  --link-soft: #eef1fc;
+  --sos: #c5342c;
+  --danger: #c5342c;
+  --sos-hover: #a32c25;
+  --sos-soft: #fbeae8;
+  --danger-soft: #fbeae8;
+  --on-sos: #ffffff;
+  --warm: #f2be68;
+  --warm-soft: #fdf1e3;
+  --warm-ink: #9a5a16;
+  --scene: #0b1513;
+  --scene-2: #132420;
+  --scene-3: #1b332e;
+  --node-1: #e7eeeb;
+  --node-2: #9fb0aa;
+  --node-3: #5f7069;
+  --care-scene: #5fd3c6;
+  --star: rgba(231, 238, 235, 0.9);
+
+  --shadow-card: 0 10px 28px rgba(20, 33, 30, 0.06);
+  --shadow-float: 0 6px 16px rgba(20, 33, 30, 0.1), inset 0 0 0 1px rgba(20, 33, 30, 0.08);
+  --shadow-sheet: 0 20px 50px rgba(0, 0, 0, 0.4);
+  --shadow-banner: 0 16px 36px rgba(20, 33, 30, 0.16), 0 0 0 1px rgba(20, 33, 30, 0.06);
+
+  --r-xs: 4px;
+  --r-sm: 8px;
+  --r-md: 12px;
+  --r-lg: 16px;
+  --r-xl: 22px;
+  --r-2xl: 30px;
+  --r-pill: 999px;
+
+  --h-primary: 56px;
+  --h-secondary: 48px;
+  --h-small: 40px;
+  --h-chip: 32px;
+  --h-icon: 36px;
+  --h-row: 56px;
+
+  --ease-out: cubic-bezier(0.22, 0.8, 0.24, 1);
+  --ease-in: cubic-bezier(0.4, 0, 1, 1);
+  --dur-fast: 0.15s;
+  --dur-base: 0.26s;
+  --dur-screen: 0.42s;
+  --font: Manrope, "Segoe UI", system-ui, sans-serif;
+
+  color-scheme: light;
+}
+
+html.dark,
+.dark {
+  --so-canvas: 18 25 23;
+  --so-surface: 28 38 34;
+  --so-surface-2: 36 48 43;
+  --so-ink: 231 238 235;
+  --so-ink-muted: 147 165 159;
+  --so-ink-subtle: 111 129 123;
+  --so-line: 231 238 235;
+
+  --so-care: 43 179 164;
+  --so-care-hover: 91 191 174;
+  --so-care-soft: 21 52 47;
+  --so-on-care: 4 36 31;
+
+  --so-link: 154 168 240;
+  --so-link-soft: 40 50 101;
+
+  --so-sos: 224 138 130;
+  --so-sos-hover: 232 164 158;
+  --so-sos-soft: 74 33 30;
+  --so-on-sos: 18 25 23;
+
+  --so-warm-soft: 58 42 18;
+  --so-warm-ink: 240 194 122;
+
+  --canvas: #121917;
+  --paper: #1c2622;
+  --surface-2: #24302b;
+  --ink: #e7eeeb;
+  --muted: #93a59f;
+  --subtle: #6f817b;
+  --line: rgba(231, 238, 235, 0.14);
+  --line-soft: rgba(231, 238, 235, 0.08);
+  --line-strong: rgba(231, 238, 235, 0.24);
+  --care: #2bb3a4;
+  --teal: #2bb3a4;
+  --care-hover: #5bbfae;
+  --care-soft: #15342f;
+  --teal-soft: #15342f;
+  --on-care: #04241f;
+  --link: #9aa8f0;
+  --link-soft: #283265;
+  --sos: #e08a82;
+  --danger: #e08a82;
+  --sos-hover: #e8a49e;
+  --sos-soft: #4a211e;
+  --danger-soft: #4a211e;
+  --on-sos: #121917;
+  --warm-soft: #3a2a12;
+  --warm-ink: #f0c27a;
+
+  --shadow-card: 0 10px 28px rgba(0, 0, 0, 0.32);
+  --shadow-float: 0 6px 16px rgba(0, 0, 0, 0.36), inset 0 0 0 1px rgba(231, 238, 235, 0.12);
+  --shadow-banner: 0 16px 36px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(231, 238, 235, 0.08);
+
+  color-scheme: dark;
 }
