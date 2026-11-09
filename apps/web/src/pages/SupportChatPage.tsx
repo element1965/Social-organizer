@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FileText, Loader2, Paperclip, Send, Volume2, X } from 'lucide-react';
 import { trpc, authFetch } from '../lib/trpc';
@@ -102,6 +102,14 @@ export function SupportChatPage() {
     refetchInterval: 10000,
   });
 
+  // Keep the open thread pointed at the latest row for that conversation.
+  useEffect(() => {
+    if (!selected || !conversations.data) return;
+    const fresh = conversations.data.find((conv) => conv.key === selected.key);
+    if (!fresh || fresh === selected) return;
+    setSelected(fresh);
+  }, [conversations.data, selected]);
+
   const messages = trpc.support.getMessages.useQuery(
     { userId: selected?.userId ?? undefined, platformId: selected?.platformId ?? undefined },
     { enabled: !!selected, refetchInterval: 5000 },
@@ -173,10 +181,11 @@ export function SupportChatPage() {
       title={selected ? personName : t('support.title')}
       back={screenBack}
       width="column"
+      fill={!!selected}
       action={selected ? <Avatar name={personName} src={selected.photoUrl} size={36} /> : undefined}
     >
       {selected ? (
-        <div className="flex h-[calc(100dvh-var(--sa-top)-var(--sa-bottom)-6.5rem)] flex-col">
+        <div className="flex min-h-0 flex-1 flex-col">
           <div className="min-h-0 flex-1 space-y-3 overflow-y-auto py-3">
             {messages.isLoading ? (
               <div className="flex justify-center py-8">
@@ -215,7 +224,7 @@ export function SupportChatPage() {
           </div>
 
           {attachment && (
-            <div className="mb-1 flex items-center gap-2 rounded-lg border border-line bg-link-soft px-3 py-2 text-body-s text-link">
+            <div className="mb-1 flex shrink-0 items-center gap-2 rounded-lg border border-line bg-link-soft px-3 py-2 text-body-s text-link">
               <span className="min-w-0 flex-1 truncate">{attachment.name || attachment.mediaType}</span>
               <button type="button" onClick={() => setAttachment(null)} className="so-focus shrink-0 text-sos" aria-label={t('common.close')}>
                 <X className="h-4 w-4" />
@@ -223,7 +232,7 @@ export function SupportChatPage() {
             </div>
           )}
 
-          <div className="flex items-center gap-2 border-t border-line py-3">
+          <div className="flex shrink-0 items-center gap-2 border-t border-line py-3">
             <input
               ref={fileInputRef}
               type="file"
@@ -241,7 +250,9 @@ export function SupportChatPage() {
             <input
               value={reply}
               onChange={(e) => setReply(e.target.value)}
-              onKeyDown={(e) => e.key === 'Enter' && !e.shiftKey && handleSend()}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' && !e.shiftKey && !e.nativeEvent.isComposing) handleSend();
+              }}
               placeholder={t('support.replyPlaceholder')}
               aria-label={t('support.replyPlaceholder')}
               className={fieldCls}

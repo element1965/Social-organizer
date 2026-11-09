@@ -4,9 +4,11 @@
  * Semantic colors read CSS variables and flip with html.dark, so components
  * do not use a dark: variant or the old gray/blue/teal/red/amber ramps.
  *
- * This file fails the build when a file under apps/web/src contains a hex
- * color, a Tailwind dark: variant, or an old color ramp (gray, slate, blue,
- * teal, amber, yellow, emerald, red, plus bg-white, text-white, bg-black).
+ * This file fails the build when a file under apps/web/src (.js, .jsx, .ts,
+ * .tsx, .css) or apps/web/index.html contains a hex color, a Tailwind dark:
+ * variant, an old color ramp (the default Tailwind palette plus a digit), or a
+ * bare white/black utility (bg, text, border, ring, fill, stroke, from, via,
+ * to, divide, outline, shadow).
  * Brand marks (components/onboarding/brand.tsx, components/ui/social-icons.tsx)
  * and styles/tokens.css are the only exceptions.
  */
@@ -20,7 +22,7 @@ const line = (alpha) => `rgb(var(--so-line) / ${alpha})`;
 const here = path.dirname(fileURLToPath(import.meta.url));
 const srcRoot = path.join(here, 'src');
 
-const lintTargets = [srcRoot];
+const lintTargets = [srcRoot, path.join(here, 'index.html')];
 
 /** Brand colors and the token source. Everything else must use semantic tokens. */
 const lintSkip = new Set([
@@ -36,7 +38,7 @@ function walk(entry, out) {
     for (const name of fs.readdirSync(entry)) walk(path.join(entry, name), out);
     return;
   }
-  if (/\.(tsx?|css)$/.test(entry)) out.push(entry);
+  if (/\.(jsx?|tsx?|css|html)$/.test(entry)) out.push(entry);
 }
 
 /** Drop comments so a note like #123 is not read as a hex color. Newlines stay so line numbers match. */
@@ -52,8 +54,8 @@ function lintDesignTokens() {
   const problems = [];
   const hexRe = /#[0-9A-Fa-f]{3,8}\b/;
   const darkRe = /(^|[^A-Za-z0-9_-])dark:/;
-  const rampRe = /(^|[^A-Za-z0-9_-])(?:[a-z0-9-]+:)*(?:gray|slate|blue|teal|amber|yellow|emerald|red)-\d{1,3}(?![A-Za-z0-9_-])/;
-  const bareRe = /(^|[^A-Za-z0-9_-])(?:[a-z0-9-]+:)*(?:bg-white|text-white|bg-black)(?![A-Za-z0-9_-])/;
+  const rampRe = /(^|[^A-Za-z0-9_-])(?:[a-z0-9-]+:)*(?:gray|slate|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)-\d{1,3}(?![A-Za-z0-9_-])/;
+  const bareRe = /(^|[^A-Za-z0-9_-])(?:[a-z0-9-]+:)*(?:bg|text|border|ring|fill|stroke|from|via|to|divide|outline|shadow)-(?:white|black)(?![A-Za-z0-9_-])/;
   for (const file of files) {
     if (lintSkip.has(file)) continue;
     const lines = maskComments(fs.readFileSync(file, 'utf8')).split(/\r?\n/);

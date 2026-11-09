@@ -14,6 +14,9 @@ import { cn } from '../lib/utils';
 const fieldCls =
   'w-full rounded-lg border border-line bg-surface-2 px-3.5 py-2.5 text-body-s font-semibold text-ink outline-none placeholder:text-ink-subtle focus:border-care';
 
+/** http(s), mailto, tel, or a site path. Anything else is shown as plain text. */
+const SAFE_FAQ_URL = /^(https?:|mailto:|tel:|\/)/i;
+
 /** Render text with markdown-style links: [label](url). */
 function FaqAnswer({ text }: { text: string }) {
   const parts = text.split(/(\[[^\]]+\]\([^)]+\))/g);
@@ -21,14 +24,22 @@ function FaqAnswer({ text }: { text: string }) {
     <p className="whitespace-pre-wrap text-body-s text-ink-muted">
       {parts.map((part, i) => {
         const match = part.match(/^\[([^\]]+)\]\(([^)]+)\)$/);
-        if (match) {
-          return (
-            <a key={i} href={match[2]} target="_blank" rel="noopener noreferrer" className="font-semibold text-link underline">
-              {match[1]}
-            </a>
-          );
-        }
-        return <span key={i}>{part}</span>;
+        const label = match?.[1];
+        const rawUrl = match?.[2];
+        if (!label || rawUrl === undefined) return <span key={i}>{part}</span>;
+        const url = rawUrl.trim();
+        if (!SAFE_FAQ_URL.test(url)) return <span key={i}>{label}</span>;
+        const external = /^https?:/i.test(url);
+        return (
+          <a
+            key={i}
+            href={url}
+            className="font-semibold text-link underline"
+            {...(external ? { target: '_blank' as const, rel: 'noopener noreferrer' } : {})}
+          >
+            {label}
+          </a>
+        );
       })}
     </p>
   );

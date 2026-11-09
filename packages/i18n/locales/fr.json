@@ -1449,7 +1449,6 @@
     "step3": "Activez les <b>Notifications</b>",
     "step4": "Revenez dans l’application",
     "checkAgain": "Vérifier à nouveau",
-    "checkHint": "Après avoir activé les notifications, touchez « Vérifier à nouveau »",
-    "notNow": "Pas maintenant"
+    "checkHint": "Après avoir activé les notifications, touchez « Vérifier à nouveau »"
   }
 }
