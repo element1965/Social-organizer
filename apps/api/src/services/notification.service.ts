@@ -223,7 +223,7 @@ export async function sendPendingNotification(
 }
 
 /**
- * A person from the inviter's first circle deleted their account: one message to the inviter.
+ * A person from the inviter's 1st handshake deleted their account: one message to the inviter.
  */
 export async function sendUserDeletedNotification(
   db: PrismaClient,
@@ -234,9 +234,9 @@ export async function sendUserDeletedNotification(
   await deliver(db, inviterUserId, {
     key: `left:${deletedUserId ?? deletedUserName}`,
     kind: 'network',
-    push: { title: 'Someone left', body: 'A person from your network deleted their account.', url: `${WEB_APP_URL}/network` },
+    push: { title: 'Someone left', body: 'A person from your 1st handshake deleted their account.', url: `${WEB_APP_URL}/network` },
     telegram: (lang) => ({
-      text: `👋 <b>${tg(lang, 'userDeleted') || 'User left'}</b>\n\n${(tg(lang, 'userDeletedBody') || '{{name}} from your first circle has deleted their account.').replace('{{name}}', deletedUserName)}`,
+      text: `👋 <b>${tg(lang, 'userDeleted') || 'User left'}</b>\n\n${(tg(lang, 'userDeletedBody') || '{{name}} from your 1st handshake deleted their account.').replace('{{name}}', deletedUserName)}`,
     }),
   });
 }
@@ -381,7 +381,7 @@ export async function sendCycleRenewalReminderTg(
   await deliverMany(db, recipientUserIds, (userId) => ({
     key: `cycle:${collectionId}:${collection.cycleNumber}:reminder`,
     kind: 'cycle',
-    push: { title: 'Cycle renewal reminder', body: 'In 3 days a new cycle of regular support starts.', url: webAppLink },
+    push: { title: 'New cycle in 3 days', body: 'A collection you are in (every 28 days) starts a new cycle in 3 days.', url: webAppLink },
     telegram: (lang) => ({
       text: `🔔 <b>${tg(lang, 'renewalReminderTitle')}</b>\n\n${tg(lang, 'renewalReminderBody').replace('{{name}}', names.get(userId) || '').replace('{{creator}}', creator.name)}${cycleDetails(lang, contributions.get(userId), periodStart, periodEnd)}`,
       replyMarkup: { inline_keyboard: [[{ text: `📱 ${tg(lang, 'open')}`, web_app: { url: webAppLink } }]] },
@@ -417,7 +417,7 @@ export async function sendCycleRenewedTg(
   await deliverMany(db, recipientUserIds, (userId) => ({
     key: `cycle:${collectionId}:${collection.cycleNumber}:start`,
     kind: 'cycle',
-    push: { title: 'New cycle started', body: 'A new cycle of regular support has started.', url: webAppLink },
+    push: { title: 'New cycle started', body: 'A collection you are in (every 28 days) has started a new cycle.', url: webAppLink },
     telegram: (lang) => {
       const buttons: TgReplyMarkup['inline_keyboard'] = [];
       if (collection.chatLink) buttons.push([{ text: `💬 ${tg(lang, 'open')}`, url: collection.chatLink }]);
@@ -452,7 +452,7 @@ async function dispatchNewCollection(
   const webAppLink = `${WEB_APP_URL}/collection/${collectionId}`;
   const push = type === 'RE_NOTIFY'
     ? { title: 'Reminder', body: 'A collection in your network still needs support.', url: webAppLink }
-    : { title: 'New Collection', body: 'Someone in your network needs support.', url: webAppLink };
+    : { title: 'New collection', body: 'Someone in your network needs support.', url: webAppLink };
 
   const outcomes = await deliverMany(db, recipientUserIds, () => ({
     key: `col:${collectionId}:new`, // one message per person per collection, whatever the wave

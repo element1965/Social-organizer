@@ -164,11 +164,11 @@ function PersonScreen() {
   const viaNode = path.length > 2 ? path[path.length - 2] : undefined;
   const viaName = viaNode ? resolve(viaNode.id, viaNode.name) : '';
   const ring = depth === 1
-    ? t('person.ring1')
+    ? t('circle.rings.full1')
     : depth === 2
-      ? t('person.ring2')
+      ? t('circle.rings.full2')
       : depth === 3
-        ? t('person.ring3')
+        ? t('circle.rings.full3')
         : depth > 3
           ? t('person.ringN', { n: depth })
           : '';
@@ -382,7 +382,7 @@ function PersonScreen() {
       <Sheet
         open={removeOpen}
         onClose={() => setRemoveOpen(false)}
-        title={t('person.removeTitle')}
+        title={t('person.removeTitle', { name: display })}
         description={t('person.removeBody')}
         footer={
           <>

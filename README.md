@@ -89,7 +89,7 @@ Windows local setup, the empty-database `db push` caveat, and the test accounts 
 | UserContact | User contacts (social networks, messengers) |
 | PlatformAccount | Platform bindings (FB/TG/Apple/Google) |
 | Connection | Connection between users (userAId < userBId) with optional nicknames (nicknameByA, nicknameByB) |
-| Collection | Fundraising (emergency/regular) with amount in $ (originalAmount/originalCurrency are legacy, no longer written) |
+| Collection | Fundraising (one-time help / every 28 days; `EMERGENCY`/`REGULAR` in the DB) with amount in $ (originalAmount/originalCurrency are legacy, no longer written) |
 | Obligation | Intention for a collection with amount in $ (originalAmount/originalCurrency are legacy, no longer written) |
 | Notification | Notification with handshake path |
 | IgnoreEntry | Ignore record |
@@ -377,8 +377,8 @@ Before this split the entry was 1858 KB / 558 KB gzip and the landing also pulle
 | **Signal for support** | Creating a collection when support is needed. The network is notified through handshake chains |
 | **Handshake chain** | Path of connections between two users through mutual acquaintances |
 | **Connection count** | Number of first-level connections (handshakes) a user has |
-| **Current Capabilities** | Sum of remaining monthly budgets across the user's network (up to 3 handshake levels) |
-| **Monthly budget** | Optional amount a user is willing to contribute to mutual support each month (stored in USD) |
+| **Your network can help** | Sum of minimum participation across the user's network (up to 3 handshake levels) |
+| **Minimum participation** | Amount a user is ready to give to one collection of someone they know (whole $, stored in `monthlyBudget`; not per month, never decremented). Prefilled when joining a collection |
 
 ## Redesign
 
