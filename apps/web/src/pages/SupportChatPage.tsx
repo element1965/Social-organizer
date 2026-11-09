@@ -30,13 +30,14 @@ function MediaPreview({ fileId, mediaType, mediaName, isAdmin }: {
   mediaName?: string | null;
   isAdmin: boolean;
 }) {
+  const { t } = useTranslation();
   const url = `/api/media/${fileId}`;
   if (mediaType === 'photo') {
     return (
       <a href={url} target="_blank" rel="noopener noreferrer" className="block">
         <img
           src={url}
-          alt="photo"
+          alt={t('support.photoAlt')}
           className="max-w-[220px] max-h-[220px] rounded-xl object-cover"
           loading="lazy"
         />

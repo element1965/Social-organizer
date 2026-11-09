@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, type ElementType, type ReactNode } from 'react';
+import { useTranslation } from 'react-i18next';
 import { onEnter, prefersReducedMotion, seq } from '../../lib/scrollPlay';
 import { cn } from '../../lib/utils';
 
@@ -22,8 +23,7 @@ export function useSitePhone(): boolean {
   return useMediaQuery('(max-width: 600px)');
 }
 
-/** The neutral title and description from index.html; every page restores them when it leaves. */
-export const BASE_TITLE = 'Social Organizer';
+/** The description from index.html; every page restores it when it leaves. */
 const BASE_DESCRIPTION =
   typeof document === 'undefined' ? '' : document.querySelector('meta[name="description"]')?.getAttribute('content') ?? '';
 
@@ -32,15 +32,16 @@ const BASE_DESCRIPTION =
  * ones back on leave, so app routes never inherit a site page's title.
  */
 export function useDocumentTitle(title: string, description?: string) {
+  const { t } = useTranslation();
   useEffect(() => {
     document.title = title;
     const meta = document.querySelector('meta[name="description"]');
     if (description && meta) meta.setAttribute('content', description);
     return () => {
-      document.title = BASE_TITLE;
+      document.title = t('common.appName');
       if (description && meta) meta.setAttribute('content', BASE_DESCRIPTION);
     };
-  }, [title, description]);
+  }, [title, description, t]);
 }
 
 /**
