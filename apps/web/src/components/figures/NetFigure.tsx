@@ -43,8 +43,9 @@ const R2 = 126;
 export function NetFigure({ step, labels, className }: NetFigureProps) {
   const reduce = usePrefersReducedMotion();
   const L = { ...NET_LABELS_RU, ...labels };
+  const names = L.names.length >= 6 ? L.names : NET_LABELS_RU.names;
 
-  const ring1 = L.names.slice(0, 6).map((n, i) => ({ n, i, ...polar(CX, CY, -90 + i * 60, R1) }));
+  const ring1 = names.slice(0, 6).map((n, i) => ({ n, i, ...polar(CX, CY, -90 + i * 60, R1) }));
   const kids = ring1.flatMap((_p, i) =>
     [-18, 18].map((d, k) => ({ p: i, k, ...polar(CX, CY, -90 + i * 60 + d, R2) })),
   );
@@ -91,7 +92,7 @@ export function NetFigure({ step, labels, className }: NetFigureProps) {
 
   return (
     <svg viewBox="0 0 320 300" role="img" aria-label={L.aria} className={className}>
-      <g opacity={dim ? 0.38 : 1} style={reduce ? undefined : { transition: 'opacity var(--dur-base)' }}>
+      <g opacity={dim ? 0.38 : 1} style={reduce ? undefined : { transition: 'opacity var(--dur-base, .26s)' }}>
         <circle cx={CX} cy={CY} r={R1} fill="none" stroke={C.line} strokeDasharray="2 6" strokeLinecap="round" />
         <circle cx={CX} cy={CY} r={R2} fill="none" stroke={C.line} strokeDasharray="2 6" strokeLinecap="round" opacity={0.8} />
         {ring1.map((p) => (

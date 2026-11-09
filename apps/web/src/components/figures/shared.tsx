@@ -20,7 +20,12 @@ export const C = {
   careSoft: tok('care-soft'),
   onCare: tok('on-care'),
   warm: tok('warm'),
+  warmSoft: tok('warm-soft'),
+  warmInk: tok('warm-ink'),
 } as const;
+
+/** Token-based keyboard focus ring for selectable SVG items. */
+const FOCUS_RING = 'outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[rgb(var(--so-care))]';
 
 export const FIG_FONT = 'Manrope, "Segoe UI", system-ui, sans-serif';
 
@@ -59,12 +64,14 @@ export function FigText({
 }
 
 /** Makes an SVG group a button when `onSelect` is given. */
-function pick(onSelect?: () => void, label?: string) {
+function pick(onSelect?: () => void, label?: string, pressed?: boolean) {
   if (!onSelect) return {};
   return {
     style: { cursor: 'pointer' } as const,
     role: 'button' as const,
     tabIndex: 0,
+    'aria-pressed': pressed ?? false,
+    className: FOCUS_RING,
     'aria-label': label,
     onClick: onSelect,
     onKeyDown: (e: KeyboardEvent<SVGGElement>) => {
@@ -86,6 +93,7 @@ export function Person({
   name,
   sub,
   onSelect,
+  selected,
 }: {
   x: number;
   y: number;
@@ -95,9 +103,10 @@ export function Person({
   name?: string;
   sub?: string;
   onSelect?: () => void;
+  selected?: boolean;
 }) {
   return (
-    <g {...pick(onSelect, name)}>
+    <g {...pick(onSelect, name, selected)}>
       <circle
         cx={x}
         cy={y}
@@ -133,6 +142,7 @@ export function You({
   name,
   sub,
   onSelect,
+  selected,
 }: {
   x: number;
   y: number;
@@ -143,9 +153,10 @@ export function You({
   name?: string;
   sub?: string;
   onSelect?: () => void;
+  selected?: boolean;
 }) {
   return (
-    <g {...pick(onSelect, name ?? label)}>
+    <g {...pick(onSelect, name ?? label, selected)}>
       {halo && <circle cx={x} cy={y} r={r + 10} fill="none" stroke={C.care} strokeWidth={1.5} opacity={0.45} />}
       <circle cx={x} cy={y} r={r} fill={hot ? C.care : C.paper} stroke={hot ? 'none' : C.lineStrong} strokeWidth={1.5} />
       <FigText x={x} y={y + r * 0.22} size={Math.round(r * 0.6)} weight={800} color={hot ? C.onCare : C.ink}>

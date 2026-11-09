@@ -62,12 +62,12 @@ export function ChainFigure({ step, labels, onSelect, className }: ChainFigurePr
   };
 
   return (
-    <svg viewBox="0 0 400 110" role="img" aria-label={L.aria} className={className}>
+    <svg viewBox="0 0 400 110" role={onSelect ? "group" : "img"} aria-label={L.aria} className={className}>
       {seg(0)}
       {seg(1)}
-      <Person x={X[0]} y={Y} r={R} hot name={L.asker} sub={L.askerSub} onSelect={sel(0)} />
-      <Person x={X[1]} y={Y} r={R} hot={step >= 1} name={L.mediator} sub={L.mediatorSub} onSelect={sel(1)} />
-      <You x={X[2]} y={Y} r={R} hot={step >= 2} label={L.you} name={L.you} sub={L.youSub} onSelect={sel(2)} />
+      <Person x={X[0]} y={Y} r={R} hot name={L.asker} sub={L.askerSub} onSelect={sel(0)} selected={step === 0} />
+      <Person x={X[1]} y={Y} r={R} hot={step >= 1} name={L.mediator} sub={L.mediatorSub} onSelect={sel(1)} selected={step === 1} />
+      <You x={X[2]} y={Y} r={R} hot={step >= 2} label={L.you} name={L.you} sub={L.youSub} onSelect={sel(2)} selected={step === 2} />
       <g>
         <rect x={X[0] + 10} y={Y - 48} width={54} height={22} rx={11} fill={C.care} />
         <FigText x={X[0] + 37} y={Y - 33} size={11} weight={800} color={C.onCare}>
@@ -75,7 +75,7 @@ export function ChainFigure({ step, labels, onSelect, className }: ChainFigurePr
         </FigText>
       </g>
       {step > 0 && !reduce && (
-        <circle r={5} fill={C.care}>
+        <circle key={step} r={5} fill={C.care}>
           <animateMotion dur={`${1.1 * step}s`} repeatCount="indefinite" path={`M${X[0] + R + 4} ${Y} L${X[step]! - R - 4} ${Y}`} />
         </circle>
       )}

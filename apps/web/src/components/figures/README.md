@@ -16,3 +16,6 @@ const [ref, depth] = useScrollPlay<HTMLDivElement, 0 | 1 | 2>([0, 1, 2], { gap: 
 - `ChainFigure step={0|1|2}`, `JoinFigure step={0|1}`: optional `onSelect` makes people tappable. viewBox 400x110.
 - `HuiFigure`: `month`/`defaultMonth`/`onMonthChange`, `playKey` (change to replay), `static`+`stage`, `size` (320 on phones).
 - Every figure takes `labels` (partial); defaults are Russian (`*_LABELS_RU`). Wire i18n by passing translated strings.
+
+Note: figures depend on the v2 token semantics (`--so-line` is the ink base color; hairlines are `rgb(var(--so-line) / .14|.24)`).
+`reveal()` from `lib/scrollPlay.ts` is for static markup only; in React use `useScrollPlay` / `onEnter`.
