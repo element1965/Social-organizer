@@ -22,7 +22,7 @@ function AuthButton({
   disabled,
 }: {
   children: ReactNode;
-  icon: ReactNode;
+  icon?: ReactNode;
   className?: string | false;
   style?: CSSProperties;
   onClick: () => void;
@@ -40,7 +40,7 @@ function AuthButton({
         className,
       )}
     >
-      <span className="inline-flex h-5 w-5 shrink-0">{icon}</span>
+      {icon ? <span className="inline-flex h-5 w-5 shrink-0">{icon}</span> : null}
       {children}
     </button>
   );
@@ -122,17 +122,24 @@ export function AuthButtons({
       </div>
 
       {email && onEmail && providers.includes('email') ? (
-        <button
-          type="button"
-          onClick={onEmail}
-          disabled={busy}
-          className={cn(
-            'so-focus mt-2 block min-h-11 w-full rounded-lg text-center text-body-s font-bold text-care',
-            last === 'email' && 'ring-2 ring-inset ring-care',
-          )}
-        >
-          {t('login.email')}
-        </button>
+        last === 'email' ? (
+          // Used last time: a full button of the same size as the others, ringed like any last-used method
+          <div className="mt-2.5">
+            <AuthButton onClick={onEmail} disabled={busy} className={cn('border border-line bg-surface text-ink', LAST_RING)}>
+              {t('login.email')}
+            </AuthButton>
+          </div>
+        ) : (
+          // Otherwise e-mail stays a quiet text link under the buttons (auth.html), with the same 10 px rhythm
+          <button
+            type="button"
+            onClick={onEmail}
+            disabled={busy}
+            className="so-focus mt-2.5 block min-h-11 w-full rounded-lg text-center text-body-s font-bold text-care"
+          >
+            {t('login.email')}
+          </button>
+        )
       ) : null}
       {legal ? <LegalLine /> : null}
     </div>
