@@ -145,10 +145,12 @@ export function ShellChrome({
         'so-focus flex h-full flex-1 flex-col items-center justify-center gap-1 text-tab font-bold',
         active ? 'text-care' : 'text-ink-subtle',
       );
+      // Every icon sits in the same 28 px box and the label has a fixed line, so the labels line up
+      // whatever the icon (the Ask tile is larger than the line icons)
       const inner = (
         <>
-          {icon}
-          <span>{label}</span>
+          <span className="grid h-[28px] w-[28px] place-items-center">{icon}</span>
+          <span className="block whitespace-nowrap leading-[16px]">{label}</span>
         </>
       );
       if (!interactive) {
@@ -175,10 +177,10 @@ export function ShellChrome({
         style={{ height: 'calc(84px + var(--sa-bottom))', paddingBottom: 'var(--sa-bottom)' }}
       >
         <div className="flex h-[84px]">
-          {tab('/', t('nav.circle'), section === 'circle', <IconCircle className="h-6 w-6" />)}
+          {tab('/', t('nav.circle'), section === 'circle', <IconCircle className="h-[24px] w-[24px]" />)}
           {tab('/ask', t('nav.ask'), section === 'ask', <AskMark progress={ask} />)}
-          {tab('/add', t('nav.add'), section === 'add', <IconAdd className="h-6 w-6" />)}
-          {tab('/me', t('nav.profile'), section === 'profile', <IconPerson className="h-6 w-6" />)}
+          {tab('/add', t('nav.add'), section === 'add', <IconAdd className="h-[24px] w-[24px]" />)}
+          {tab('/me', t('nav.profile'), section === 'profile', <IconPerson className="h-[24px] w-[24px]" />)}
         </div>
       </nav>
     );
