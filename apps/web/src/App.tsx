@@ -18,7 +18,6 @@ import {
   CircleStub,
   HelpStub,
   HistoryStub,
-  HowStub,
   IntroStub,
   OpenStub,
   PeopleStub,
@@ -40,6 +39,8 @@ import { SupportChatPage } from './pages/SupportChatPage';
 import { PrivacyPage } from './pages/PrivacyPage';
 import { TermsPage } from './pages/TermsPage';
 import { DeleteAccountPage } from './pages/DeleteAccountPage';
+import { HowPage } from './pages/HowPage';
+import { GetRedirect, RedirectHome } from './components/site/redirects';
 import { GoogleCallbackPage } from './pages/GoogleCallbackPage';
 import { AppleCallbackPage } from './pages/AppleCallbackPage';
 
@@ -198,8 +199,9 @@ export function App() {
           <NativePushBootstrap />
           <GoogleAuthDeepLinkHandler />
           <Routes>
-            <Route path="/welcome" element={<LandingPage variant={isArvut ? 'arvut' : undefined} />} />
-            <Route path="/arvut" element={<LandingPage variant="arvut" />} />
+            <Route path="/welcome" element={<RedirectHome />} />
+            <Route path="/arvut" element={<RedirectHome />} />
+            <Route path="/get" element={<GetRedirect />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/auth/google/callback" element={<GoogleCallbackPage />} />
             <Route path="/auth/apple/done" element={<AppleCallbackPage />} />
@@ -208,7 +210,7 @@ export function App() {
             <Route path="/delete-account" element={<DeleteAccountPage />} />
             <Route path="/invite/:token" element={<InvitePage />} />
             <Route path="/sos/:collectionId" element={<SosLandingPage />} />
-            <Route path="/how" element={<HowStub />} />
+            <Route path="/how" element={<HowPage />} />
             <Route path="/intro" element={<ProtectedRoute><IntroStub /></ProtectedRoute>} />
             <Route path="/seed" element={<ProtectedRoute><SeedStub /></ProtectedRoute>} />
 

@@ -1,390 +1,210 @@
-import { lazy, Suspense, useState, useRef, useEffect } from 'react';
-import { useSearchParams, Link } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
-import { ChevronDown, ChevronUp, Languages, Github } from 'lucide-react';
-import { languageNames } from '@so/i18n';
-import { useScrollProgress } from '../hooks/useScrollProgress';
-import { Logo } from '../components/Logo';
-import { VideoGuide } from '../components/VideoGuide';
+import { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
+import { Trans, useTranslation } from 'react-i18next';
+import { trpc } from '../lib/trpc';
+import { useDevice } from '../lib/device';
+import { ChainFigure, HuiFigure, NetFigure, type ChainStep } from '../components/figures';
+import { DeviceEntry } from '../components/site/DeviceEntry';
+import { HeroScene } from '../components/site/HeroScene';
+import { Reveal, usePlayOnEnter, useSitePhone } from '../components/site/hooks';
+import { IconFree, IconShield, IconWallet } from '../components/site/icons';
+import { SitePage } from '../components/site/SitePage';
+import { StoreButtons } from '../components/site/StoreButtons';
+import { useFigureLabels, useMoney } from '../components/site/figureLabels';
 
-const LazyGlobeNetwork = lazy(() =>
-  import('@so/graph-3d').then((m) => ({ default: m.GlobeNetwork })),
-);
+const B = { b: <b /> };
+const PUBLIC_STATS_KEY = 'so_publicStats';
 
-function LanguageSwitcher() {
-  const { i18n } = useTranslation();
-  const [open, setOpen] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
-
+/** Real size of the network for the hero pill; the last known value is shown at once and refreshed. */
+function usePublicUsers(): number | null {
+  const [cached] = useState<number | null>(() => {
+    try {
+      const v = Number(JSON.parse(localStorage.getItem(PUBLIC_STATS_KEY) || 'null')?.users);
+      return Number.isFinite(v) && v > 0 ? v : null;
+    } catch {
+      return null;
+    }
+  });
+  const q = trpc.stats.public.useQuery(undefined, { staleTime: 10 * 60 * 1000, retry: false });
   useEffect(() => {
-    const handler = (e: MouseEvent) => {
-      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
-    };
-    document.addEventListener('mousedown', handler);
-    return () => document.removeEventListener('mousedown', handler);
-  }, []);
-
-  const current = (i18n.language?.slice(0, 2) || 'en') as keyof typeof languageNames;
-
-  return (
-    <div ref={ref} className="relative">
-      <button
-        onClick={() => setOpen(!open)}
-        className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/10 text-white text-sm transition-colors"
-      >
-        <Languages size={16} />
-        <span>{languageNames[current] || current}</span>
-      </button>
-      {open && (
-        <div className="absolute right-0 mt-2 w-48 max-h-72 overflow-y-auto rounded-xl bg-gray-950 backdrop-blur-md border border-gray-800 shadow-2xl z-50 scrollbar-dark">
-          {Object.entries(languageNames).map(([code, name]) => (
-            <button
-              key={code}
-              onClick={() => { i18n.changeLanguage(code); localStorage.setItem('language', code); setOpen(false); }}
-              className={`w-full text-left px-4 py-2.5 text-sm hover:bg-gray-800 transition-colors ${code === current ? 'text-teal-400 font-medium bg-gray-900' : 'text-gray-300'}`}
-            >
-              {name}
-            </button>
-          ))}
-        </div>
-      )}
-    </div>
-  );
+    if (q.data?.users) {
+      try {
+        localStorage.setItem(PUBLIC_STATS_KEY, JSON.stringify({ users: q.data.users }));
+      } catch {
+        /* private mode */
+      }
+    }
+  }, [q.data?.users]);
+  return q.data?.users ?? cached;
 }
 
-export function LandingPage({ variant, inviteToken: inviteTokenProp }: { variant?: 'arvut'; inviteToken?: string } = {}) {
-  const { t: _t, i18n } = useTranslation();
-  const t = (variant === 'arvut'
-    ? (key: string) => _t(key.replace('landing.', 'landingArvut.') as any)
-    : _t) as typeof _t;
-  const [searchParams] = useSearchParams();
-  const inviteParam = searchParams.get('invite');
-  const fromDemo = searchParams.get('from') === 'demo';
-  const pendingInvite = inviteTokenProp || inviteParam || localStorage.getItem('pendingInviteToken');
-  const [showDemoBanner, setShowDemoBanner] = useState(fromDemo);
+/**
+ * Home for a guest (screens.md §17, site.html №1 / №6). Signed-in users get the circle instead (App.tsx).
+ * `inviteToken` comes from the invite page for guests who opened a link: store buttons then carry it.
+ * `variant` is the retired Hebrew `arvut` landing; it is accepted and ignored (not in the first version).
+ */
+export function LandingPage({ inviteToken }: { variant?: 'arvut'; inviteToken?: string } = {}) {
+  const { t, i18n } = useTranslation();
+  const [params] = useSearchParams();
+  const device = useDevice();
+  const phone = useSitePhone();
+  const labels = useFigureLabels();
+  const money = useMoney();
+  const users = usePublicUsers();
 
-  // Persist invite token so Telegram bot link can use it
+  // Keep the invite so the Telegram bot, stores and sign-in can pick it up later.
+  const inviteParam = params.get('invite');
   useEffect(() => {
-    const tokenToSave = inviteTokenProp || inviteParam;
-    if (tokenToSave) localStorage.setItem('pendingInviteToken', tokenToSave);
-  }, [inviteTokenProp, inviteParam]);
-
-  // Force Hebrew for Arvut variant
-  useEffect(() => {
-    if (variant === 'arvut') {
-      i18n.changeLanguage('he');
-      localStorage.setItem('language', 'he');
+    const token = inviteToken || inviteParam;
+    if (token) {
+      try {
+        localStorage.setItem('pendingInviteToken', token);
+      } catch {
+        /* private mode */
+      }
     }
-  }, [variant, i18n]);
+  }, [inviteToken, inviteParam]);
 
-  // Build Telegram bot link with invite param if available
-  const tgBotLink = pendingInvite
-    ? `https://t.me/socialorganizer_bot?start=invite_${pendingInvite}`
-    : 'https://t.me/socialorganizer_bot';
+  // Hui table: the month the chips and the figure show; replays when it scrolls into view.
+  const [month, setMonth] = useState(2);
+  const [huiPlay, setHuiPlay] = useState(0);
+  const huiRef = usePlayOnEnter<number>(() => setHuiPlay((n) => n + 1), [1], 0);
 
-  // Build Google Play link with install referrer if available.
-  // The referrer (invite_TOKEN) is delivered to the Android app via the Play
-  // Install Referrer API and handled in MainActivity → loads /invite/TOKEN.
-  const gpStoreLink = pendingInvite
-    ? `https://play.google.com/store/apps/details?id=com.socialorganizer.app&referrer=invite_${pendingInvite}`
-    : 'https://play.google.com/store/apps/details?id=com.socialorganizer.app';
+  const [chainStep, setChainStep] = useState<ChainStep>(0);
+  const chainRef = usePlayOnEnter<ChainStep>(setChainStep, [0, 1, 2], 1000);
 
-  // Build App Store link with an Apple campaign token (ct) when an invite is present.
-  // NOTE: Apple does NOT deliver this token to the app after install (no equivalent
-  // of Android's Install Referrer), so on iOS the invite is tracked in App Store
-  // Connect analytics only — it does not auto-apply inside the app.
-  const appStoreLink = pendingInvite
-    ? `https://apps.apple.com/app/id6768132198?ct=invite_${pendingInvite}`
-    : 'https://apps.apple.com/app/id6768132198';
-
-  const scrollProgress = useScrollProgress();
-  const [scrollY, setScrollY] = useState(0);
-
-  useEffect(() => {
-    const handleScroll = () => setScrollY(window.scrollY);
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  const scrollToContent = () => {
-    window.scrollTo({ top: window.innerHeight, behavior: 'smooth' });
-  };
-
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
-
-  // Logo animation: starts at center, moves to top-left corner as user scrolls
-  const logoProgress = Math.min(scrollY / 300, 1); // 0 to 1 over first 300px of scroll
-  const logoScale = 1 - logoProgress * 0.6; // 1 -> 0.4
-  const logoOpacityInHero = 1 - logoProgress; // Fade out in hero
-  const logoOpacityFixed = logoProgress; // Fade in fixed
-
-  // Hero transition: planet moves up and shrinks over first 500px
-  const HERO_TRANSITION_PX = 500;
-  const heroProgress = Math.min(scrollY / HERO_TRANSITION_PX, 1);
+  const months = labels.hui.months ?? [];
+  const homeNames = t('landing.hui.names', { returnObjects: true }) as unknown as string[];
+  const nf = new Intl.NumberFormat(i18n.language || 'en');
 
   return (
-    <div dir={variant === 'arvut' ? 'rtl' : undefined} className="min-h-screen bg-gradient-to-b from-blue-950 via-gray-950 to-blue-950">
-      {/* Fixed 3D background */}
-      <div className="fixed inset-0 pointer-events-none">
-        <Suspense fallback={null}>
-          <LazyGlobeNetwork scrollProgress={scrollProgress} heroProgress={heroProgress} />
-        </Suspense>
-      </div>
-
-      {/* Fixed logo in top-left corner (appears on scroll) */}
-      <div
-        className="fixed top-4 left-4 z-20 transition-opacity duration-300"
-        style={{ opacity: logoOpacityFixed }}
-      >
-        <Logo size={50} className="text-teal-400" />
-      </div>
-
-      {/* Open-source badge + GitHub — fixed top center */}
-      <div className="fixed top-4 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/10 backdrop-blur-sm border border-white/10">
-        <span className="text-gray-300 text-xs">{t('landing.openSourceBadge')}</span>
-        <a
-          href="https://github.com/element1965/Social-organizer"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-gray-300 hover:text-white transition-colors"
-          aria-label="GitHub"
-        >
-          <Github size={16} />
-        </a>
-      </div>
-
-      {/* Language switcher — fixed top-right (hidden for arvut) */}
-      {variant !== 'arvut' && (
-        <div className="fixed top-4 right-4 z-20">
-          <LanguageSwitcher />
-        </div>
-      )}
-
-      {/* Demo mode banner */}
-      {showDemoBanner && (
-        <div className="fixed top-0 left-0 right-0 z-30 bg-amber-500/95 backdrop-blur-sm text-gray-900 px-4 py-3 text-center shadow-lg">
-          <button
-            onClick={() => setShowDemoBanner(false)}
-            className="absolute top-2 right-3 text-gray-900/60 hover:text-gray-900 text-xl leading-none"
-          >&times;</button>
-          <p className="text-sm font-medium max-w-lg mx-auto">
-            {t('landing.demoBanner')}
+    <SitePage title={t('landing.meta.title')}>
+      <section className="site-hero" aria-labelledby="hero-title">
+        <div>
+          <h1 id="hero-title">{t('landing.hero.title')}</h1>
+          <p className="lead">
+            <Trans i18nKey="landing.hero.lead" components={B} />
           </p>
+          <DeviceEntry device={device} invite={inviteToken} />
+          <div className="site-facts">
+            <span className="site-pill">{t('landing.hero.factOpen')}</span>
+            <span className="site-pill">{t('landing.hero.factNonprofit')}</span>
+            <span className="site-pill">{t('landing.hero.factNoMoney')}</span>
+          </div>
         </div>
-      )}
-
-      {/* Scrolling content */}
-      <div className="relative z-10">
-
-        {/* === Section 1: Hero (100vh) === */}
-        <section className="min-h-screen flex flex-col items-center justify-center px-6 text-center">
-          {/* Logo with scroll animation - fades out and shrinks */}
-          <div
-            className="mb-4 transition-all duration-200"
-            style={{
-              opacity: logoOpacityInHero,
-              transform: `scale(${logoScale})`,
+        <Reveal>
+          <HeroScene
+            ariaLabel={t('landing.hero.sceneAria')}
+            labels={{
+              you: t('landing.hero.sceneYou'),
+              ask: t('landing.hero.sceneAsk', { amount: money(300) }),
+              done: t('landing.hero.sceneDone', { amount: money(300) }),
+              coin: '15',
             }}
           >
-            <Logo size={120} className="text-teal-400" />
-          </div>
-          <h1 className="text-5xl md:text-7xl font-bold text-white mb-4 tracking-tight">
-            {variant === 'arvut' ? 'ערבות הדדית' : 'Social Organizer'}
-          </h1>
-          <p className="text-gray-300 text-lg md:text-xl max-w-2xl mb-3 leading-relaxed whitespace-pre-line">
-            {t('landing.heroSubtitle')}
-          </p>
-          <p className="text-teal-300 text-base md:text-lg font-semibold italic mb-1 tracking-wide">
-            {t('landing.heroSmallLine')}
-          </p>
-          <p className="text-gray-300 text-sm mb-10">
-            {t('landing.heroCopyline')}
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4">
-            <button
-              onClick={() => document.getElementById('download')?.scrollIntoView({ behavior: 'smooth' })}
-              className="px-8 py-3 bg-teal-500 hover:bg-teal-400 text-white font-semibold rounded-xl transition-colors text-lg"
-            >
-              {t('landing.heroStart')}
-            </button>
-            <button
-              onClick={scrollToContent}
-              className="px-8 py-3 bg-white/10 hover:bg-white/20 text-white font-semibold rounded-xl transition-colors text-lg backdrop-blur-sm border border-white/10"
-            >
-              {t('landing.heroLearnMore')}
-            </button>
-          </div>
-          <button
-            onClick={scrollToContent}
-            className="absolute bottom-10 animate-bounce text-white/50 hover:text-white/80 transition-colors"
-            aria-label="Scroll down"
-          >
-            <ChevronDown size={32} />
-          </button>
-        </section>
+            <div className="tag">
+              {users ? <span>{t('landing.hero.statPeople', { count: users, n: nf.format(users) })}</span> : null}
+              <span>{t('landing.hero.statDepth')}</span>
+            </div>
+          </HeroScene>
+        </Reveal>
+      </section>
 
-        {/* === Block 1: Core Idea === */}
-        <section className="flex flex-col items-center justify-center px-6 py-20">
-          <div className="max-w-2xl w-full text-center">
-            <h2 className="text-3xl md:text-5xl font-bold text-white mb-8">
-              {t('landing.principleTitle')}
-            </h2>
-            <p className="text-gray-300 text-lg md:text-xl leading-relaxed whitespace-pre-line">
-              {t('landing.principleText')}
+      <Reveal as="section" className="site-sec" id="how" aria-labelledby="steps-title">
+        <h2 id="steps-title">{t('landing.steps.title')}</h2>
+        <p className="lead">{t('landing.steps.lead')}</p>
+        <Reveal group className="site-steps">
+          {([0, 1, 2] as const).map((k) => (
+            <div key={k} className="site-step">
+              <div className="pic">
+                <NetFigure step={k} labels={labels.net} />
+              </div>
+              <span className="n">{k + 1}</span>
+              <h3>{t(`landing.steps.s${k + 1}Title`)}</h3>
+              <p>
+                <Trans i18nKey={`landing.steps.s${k + 1}Text`} components={B} />
+              </p>
+            </div>
+          ))}
+        </Reveal>
+      </Reveal>
+
+      <Reveal as="section" className="site-sec" aria-labelledby="hui-title">
+        <div className="site-two">
+          <div>
+            <h2 id="hui-title">{t('landing.hui.title')}</h2>
+            <p className="lead">
+              <Trans i18nKey="landing.hui.lead" components={B} />
+            </p>
+            <p className="site-say">{t('landing.hui.say')}</p>
+            <div className="site-chips" role="group" aria-label={t('landing.hui.monthsAria')}>
+              {months.map((m, i) => (
+                <button key={m} type="button" aria-pressed={i === month} onClick={() => setMonth(i)}>
+                  {m}
+                </button>
+              ))}
+            </div>
+          </div>
+          <div ref={huiRef}>
+            <HuiFigure
+              month={month}
+              onMonthChange={setMonth}
+              playKey={huiPlay}
+              size={phone ? 320 : 440}
+              labels={{ ...labels.hui, names: homeNames }}
+            />
+          </div>
+        </div>
+      </Reveal>
+
+      <Reveal as="section" className="site-sec" aria-labelledby="chain-title">
+        <div className="site-two">
+          <div>
+            <h2 id="chain-title">{t('landing.chain.title')}</h2>
+            <p className="lead">
+              <Trans i18nKey="landing.chain.lead" components={B} />
             </p>
           </div>
-        </section>
-
-        {/* === Block 2: How it works === */}
-        <section className="flex flex-col items-center justify-center px-6 py-20">
-          <div className="max-w-2xl w-full text-center">
-            <h2 className="text-3xl md:text-5xl font-bold text-white mb-8">
-              {t('landing.exampleTitle')}
-            </h2>
-            <p className="text-gray-300 text-lg md:text-xl leading-relaxed whitespace-pre-line">
-              {t('landing.exampleText')}
-            </p>
+          <div ref={chainRef} className="site-fig chain">
+            <ChainFigure step={chainStep} labels={labels.chain} onSelect={setChainStep} />
           </div>
-        </section>
+        </div>
+      </Reveal>
 
-        {/* === Block 3: Each new person matters === */}
-        <section className="flex flex-col items-center justify-center px-6 py-20">
-          <div className="max-w-2xl w-full text-center">
-            <h2 className="text-3xl md:text-5xl font-bold text-white mb-8">
-              {t('landing.analogTitle')}
-            </h2>
-            <p className="text-gray-300 text-lg md:text-xl leading-relaxed whitespace-pre-line">
-              {t('landing.analogText')}
-            </p>
+      <Reveal as="section" className="site-sec" aria-labelledby="nots-title">
+        <h2 id="nots-title">{t('landing.nots.title')}</h2>
+        <Reveal group className="site-nots">
+          <div className="site-not">
+            <i aria-hidden="true">
+              <IconWallet />
+            </i>
+            <h3>{t('landing.nots.moneyTitle')}</h3>
+            <p>{t('landing.nots.moneyText')}</p>
           </div>
-        </section>
-
-        {/* === Block 4: Only two signals === */}
-        <section className="flex flex-col items-center justify-center px-6 py-20">
-          <div className="max-w-2xl w-full text-center">
-            <h2 className="text-3xl md:text-5xl font-bold text-white mb-8">
-              {t('landing.neutralTitle')}
-            </h2>
-            <p className="text-gray-300 text-lg md:text-xl leading-relaxed whitespace-pre-line">
-              {t('landing.neutralText')}
-            </p>
+          <div className="site-not">
+            <i aria-hidden="true">
+              <IconFree />
+            </i>
+            <h3>{t('landing.nots.feeTitle')}</h3>
+            <p>{t('landing.nots.feeText')}</p>
           </div>
-        </section>
-
-        {/* === Block 5: No Platform === */}
-        <section className="flex flex-col items-center justify-center px-6 py-20">
-          <div className="max-w-2xl w-full text-center">
-            <h2 className="text-3xl md:text-5xl font-bold text-white mb-8">
-              {t('landing.scaleTitle')}
-            </h2>
-            <p className="text-gray-300 text-lg md:text-xl leading-relaxed whitespace-pre-line">
-              {t('landing.scaleText')}
-            </p>
+          <div className="site-not">
+            <i aria-hidden="true">
+              <IconShield />
+            </i>
+            <h3>{t('landing.nots.choiceTitle')}</h3>
+            <p>{t('landing.nots.choiceText')}</p>
           </div>
-        </section>
+        </Reveal>
+      </Reveal>
 
-        {/* === Block 6: Open-source === */}
-        <section className="flex flex-col items-center justify-center px-6 py-20">
-          <div className="max-w-2xl w-full text-center">
-            <h2 className="text-3xl md:text-5xl font-bold text-white mb-8">
-              {t('landing.block6Title')}
-            </h2>
-            <p className="text-gray-300 text-lg md:text-xl leading-relaxed whitespace-pre-line">
-              {t('landing.block6Text')}
-            </p>
-          </div>
-        </section>
-
-        {/* === Section: CTA + Download === */}
-        <section id="download" className="min-h-[50vh] flex flex-col items-center justify-center px-6 py-20">
-          <h2 className="text-3xl md:text-5xl font-bold text-white mb-4 text-center">
-            {t('landing.ctaTitle')}
-          </h2>
-          <p className="text-gray-400 text-base mb-4 text-center">
-            {t('landing.ctaSmallLine')}
-          </p>
-          <VideoGuide video="invite-link" label="title" colorClassName="text-teal-400 hover:text-teal-300" className="mb-8" />
-
-          {/* Main CTAs — Telegram + Google Play side by side */}
-          <div className="flex flex-col sm:flex-row gap-4 mb-12">
-            <a
-              href={tgBotLink}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="px-10 py-5 bg-white/5 hover:bg-white/10 backdrop-blur-sm border-2 border-teal-400 rounded-xl flex items-center gap-3 transition-all shadow-[0_0_20px_rgba(45,212,191,0.3)] hover:shadow-[0_0_30px_rgba(45,212,191,0.5)]"
-            >
-              <svg className="w-8 h-8 text-teal-400" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
-              </svg>
-              <span className="text-teal-400 text-lg font-semibold">{t('landing.ctaButton')}</span>
-            </a>
-
-            <a
-              href={gpStoreLink}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="px-10 py-5 bg-white/5 hover:bg-white/10 backdrop-blur-sm border-2 border-teal-400 rounded-xl flex items-center gap-3 transition-all shadow-[0_0_20px_rgba(45,212,191,0.3)] hover:shadow-[0_0_30px_rgba(45,212,191,0.5)]"
-            >
-              <svg className="w-8 h-8 text-teal-400" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M3,20.5V3.5C3,2.91 3.34,2.39 3.84,2.15L13.69,12L3.84,21.85C3.34,21.6 3,21.09 3,20.5M16.81,15.12L6.05,21.34L14.54,12.85L16.81,15.12M20.16,10.81C20.5,11.08 20.75,11.5 20.75,12C20.75,12.5 20.53,12.9 20.18,13.18L17.89,14.5L15.39,12L17.89,9.5L20.16,10.81M6.05,2.66L16.81,8.88L14.54,11.15L6.05,2.66Z"/>
-              </svg>
-              <span className="text-teal-400 text-lg font-semibold">{t('landing.ctaGooglePlay')}</span>
-            </a>
-
-            <a
-              href={appStoreLink}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="px-10 py-5 bg-white/5 hover:bg-white/10 backdrop-blur-sm border-2 border-teal-400 rounded-xl flex items-center gap-3 transition-all shadow-[0_0_20px_rgba(45,212,191,0.3)] hover:shadow-[0_0_30px_rgba(45,212,191,0.5)]"
-            >
-              <svg className="w-8 h-8 text-teal-400" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
-              </svg>
-              <span className="text-teal-400 text-lg font-semibold">App Store</span>
-            </a>
-          </div>
-
-          {/* No install needed: sign up right here; the invite token is kept in pendingInviteToken */}
-          <a
-            href="/login"
-            className="-mt-6 mb-12 text-teal-300 hover:text-teal-200 underline underline-offset-4 text-base font-medium"
-          >
-            {t('landing.ctaBrowser')}
-          </a>
-
-        </section>
-
-        {/* === Footer === */}
-        <footer className="px-6 pt-12 pb-24 text-center border-t border-white/5">
-          <p className="text-gray-500 dark:text-gray-300 text-sm mb-3">{t('landing.footer')}</p>
-          <div className="flex items-center justify-center gap-4 mb-8">
-            <a
-              href="https://github.com/element1965/Social-organizer"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 text-gray-400 hover:text-white transition-colors"
-            >
-              <Github size={16} /> GitHub
-            </a>
-            <span className="text-gray-700">|</span>
-            <Link to="/privacy" className="text-gray-400 hover:text-white transition-colors text-sm">Privacy Policy</Link>
-            <span className="text-gray-700">|</span>
-            <Link to="/terms" className="text-gray-400 hover:text-white transition-colors text-sm">Terms of Service</Link>
-          </div>
-          <div className="mt-8">
-            <button
-              onClick={scrollToTop}
-              className="mx-auto w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 border border-white/20 flex items-center justify-center text-white/60 hover:text-white transition-all animate-bounce"
-              aria-label="Scroll to top"
-            >
-              <ChevronUp size={24} />
-            </button>
-          </div>
-        </footer>
-
-      </div>
-    </div>
+      <Reveal as="section" className="site-sec" id="start" aria-labelledby="start-title">
+        <h2 id="start-title">{t('landing.start.title')}</h2>
+        <p className="lead">
+          <Trans i18nKey="landing.start.lead" components={B} />
+        </p>
+        <StoreButtons device={device} invite={inviteToken} />
+      </Reveal>
+    </SitePage>
   );
 }
