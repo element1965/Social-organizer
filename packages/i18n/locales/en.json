@@ -702,7 +702,246 @@
     "block6Text": "No control\nNo intermediaries\n\nIt doesn't process payments\nIt doesn't hold funds\n\nEverything happens between people",
     "huiLine": "Like a traditional rotating savings group (Hui / 會 / 계) — but decentralized, digital, and without a central organizer.",
     "ctaGooglePlay": "Install from Google Play",
-    "ctaBrowser": "Or continue in the browser — no install needed"
+    "ctaBrowser": "Or continue in the browser — no install needed",
+    "site": {
+      "brand": "Social Organizer",
+      "nav": "Site sections",
+      "how": "How it works",
+      "help": "Help",
+      "github": "GitHub",
+      "login": "Sign in",
+      "language": "Language",
+      "themeDark": "Switch to dark theme",
+      "themeLight": "Switch to light theme",
+      "footerNote": "Open source · Non-profit project",
+      "privacy": "Privacy",
+      "terms": "Terms",
+      "deleteAccount": "Delete account",
+      "home": "Home"
+    },
+    "meta": {
+      "title": "Social Organizer — help through people you know"
+    },
+    "hero": {
+      "title": "Help through people you know",
+      "lead": "Social Organizer shows how you are connected to the people around you: directly, through friends, through friends of friends. When someone needs help, the request travels along these connections, and <b>small amounts from many add up to what one person needs</b>.",
+      "factOpen": "Open source",
+      "factNonprofit": "Non-profit",
+      "factNoMoney": "Holds no money",
+      "play": "Get it on Google Play",
+      "appstore": "Download on the App Store",
+      "startWeb": "Start in the browser",
+      "web": "In the browser",
+      "how": "How it works",
+      "tgAlt": "Prefer Telegram?",
+      "tgOpen": "Open it there",
+      "sceneAria": "A request travels by handshakes, help comes back",
+      "sceneYou": "You",
+      "sceneAsk": "request · {{amount}}",
+      "sceneDone": "raised {{amount}}",
+      "statPeople_one": "{{n}} person in one network",
+      "statPeople_other": "{{n}} people in one network",
+      "statDepth": "3 handshakes"
+    },
+    "steps": {
+      "title": "How it works",
+      "lead": "Three steps, and no organiser.",
+      "s1Title": "You are at the centre of your circle",
+      "s1Text": "Add <b>people you know in person</b>: with a link, or a QR code when you meet. Through them you see the people they know — the second and third handshake.",
+      "s2Title": "A request travels by handshakes",
+      "s2Text": "Your people hear it first, then their people. <b>The more people around, the further the signal goes.</b> Everyone decides for themselves whether to take part.",
+      "s3Title": "Those who respond meet in a chat",
+      "s3Text": "Each names their own amount and joins the collection chat. <b>Money is handed over in person</b>; the app only shows who is with whom."
+    },
+    "hui": {
+      "title": "Six friends, one circle",
+      "lead": "In southern China such a circle is called a <b>hui</b>. Six friends put in a share once a month. One of them takes that month’s shares. A month later, the next one does.",
+      "say": "Social Organizer does the same without an organiser and without a queue: the circle is your handshakes, and the shares go to whoever needs them now.",
+      "monthsAria": "Month of the circle",
+      "names": [
+        "Maria",
+        "Oleg",
+        "You",
+        "Irina",
+        "Denis",
+        "Lena"
+      ]
+    },
+    "chain": {
+      "title": "A request travels by handshakes",
+      "lead": "You see Maria’s request because Oleg knows her, and you know Oleg. A request is a question you may leave unanswered. <b>No obligations.</b>"
+    },
+    "nots": {
+      "title": "What the app does not do",
+      "moneyTitle": "Holds no money",
+      "moneyText": "Money is handed over in person, in the collection chat. The app shows who is with whom, nothing more.",
+      "feeTitle": "Takes no fee",
+      "feeText": "Open source, a non-profit project. No subscription, no ads, no cut of collections.",
+      "choiceTitle": "Does not decide for you",
+      "choiceText": "Whom to add, how much to give, whether to take part — it is your choice every time. Saying no breaks nothing."
+    },
+    "start": {
+      "title": "Start with people you already know",
+      "lead": "<b>Got a link from someone you know?</b> Open it: it leads straight into their circle. No link — sign in and invite your first five yourself.",
+      "play": "Google Play",
+      "appstore": "App Store",
+      "telegram": "Open in Telegram",
+      "web": "In the browser",
+      "qrTitle": "The app on your phone",
+      "qrText": "Point your camera: the right store opens.",
+      "qrAria": "QR code with a link to the app"
+    }
+  },
+  "how": {
+    "meta": {
+      "title": "How it works — Social Organizer"
+    },
+    "hero": {
+      "title": "Six friends, one circle",
+      "lead": "In southern China such a circle is called a <b>hui</b>. Six friends put in a share once a month. One of them takes that month’s shares. A month later the next one takes them. There is no organiser: everyone knows everyone."
+    },
+    "table": {
+      "title": "How a share moves",
+      "lead": "Tap a month or a name: five shares go onto the table, and one person takes them.",
+      "monthsAria": "Month of the circle",
+      "says": [
+        "<b>Lin</b> takes January’s shares. Five friends put in a share each.",
+        "<b>Chen</b> takes February’s shares. Lin puts in a share too.",
+        "<b>Mei</b> takes March’s shares. Chen puts in a share too.",
+        "<b>Guo</b> takes April’s shares. Mei puts in a share too.",
+        "<b>Sun</b> takes May’s shares. Guo puts in a share too.",
+        "<b>Huang</b> takes June’s shares. The circle is closed: everyone got it once."
+      ]
+    },
+    "orbit": {
+      "title": "No organiser and no queue",
+      "lead": "In Social Organizer the circle is not limited to six. Your friends know their own, and a request travels by handshakes. <b>The shares go not to the next in line but to whoever needs them now.</b>",
+      "ringsAria": "Handshake depth",
+      "rings": [
+        "1st handshake",
+        "2nd handshake",
+        "3rd handshake"
+      ],
+      "says": [
+        "<b>Six people you know.</b> This is the circle: people you have confirmed you know.",
+        "Each of the six has their own six. <b>36 people</b> you do not know, but someone of yours does.",
+        "One more step — <b>216 people</b>. The request reaches them too, through those who know you."
+      ],
+      "sumNote": "if everyone is ready to give {{share}}"
+    },
+    "chain": {
+      "title": "Vouching",
+      "lead": "You only see requests that have a path to you through people you know. Tap a person.",
+      "says": [
+        "<b>Maria Koval</b> asks for help. You do not know her.",
+        "<b>Oleg</b>, your brother, knows Maria. That is why he sees her request.",
+        "<b>You</b> see the request because you know Oleg. Whether to answer is up to you."
+      ]
+    },
+    "join": {
+      "title": "A new person",
+      "lead": "People join the circle only through someone they know, and only after that person confirms.",
+      "says": [
+        "Katya opens your link and signs in. <b>This is not a connection yet:</b> you get a push.",
+        "You confirm: yes, we know each other. <b>Now Katya is your 1st handshake.</b>"
+      ]
+    },
+    "cta": {
+      "title": "Start with people you already know",
+      "start": "Start",
+      "web": "In the browser"
+    },
+    "figures": {
+      "net": {
+        "names": [
+          "Kira",
+          "Oleg",
+          "Ira",
+          "Dima",
+          "Lena",
+          "Max"
+        ],
+        "you": "You",
+        "asker": "Maria",
+        "amount": "$300",
+        "chatTitle": "Collection chat",
+        "chatMembers": "Maria · Oleg · Lena",
+        "aria": "Your circle"
+      },
+      "orbit": {
+        "names": [
+          "Kira",
+          "Oleg",
+          "Ira",
+          "Dima",
+          "Lena",
+          "Max"
+        ],
+        "you": "You",
+        "pills": [
+          "1st · 6",
+          "2nd · 36",
+          "3rd · 216"
+        ],
+        "aria": "Handshake rings"
+      },
+      "chain": {
+        "asker": "Maria",
+        "askerSub": "asks for $300",
+        "mediator": "Oleg",
+        "mediatorSub": "your brother",
+        "you": "You",
+        "youSub": "you decide",
+        "amount": "$300",
+        "aria": "Path of a request"
+      },
+      "join": {
+        "newcomer": "Katya",
+        "newcomerSub": [
+          "came by link",
+          "1st handshake"
+        ],
+        "you": "You",
+        "youSub": [
+          "got a push",
+          "confirmed"
+        ],
+        "link": [
+          "link",
+          "we know ✓"
+        ],
+        "aria": "A new person"
+      },
+      "hui": {
+        "names": [
+          "Lin",
+          "Chen",
+          "Mei",
+          "Guo",
+          "Sun",
+          "Huang"
+        ],
+        "months": [
+          "January",
+          "February",
+          "March",
+          "April",
+          "May",
+          "June"
+        ],
+        "each": "everyone puts in a share",
+        "onTable": "shares on the table",
+        "takes": "{{name}} takes it",
+        "aria": "Hui table"
+      }
+    }
+  },
+  "legal": {
+    "toc": "Legal documents",
+    "contents": "Contents",
+    "privacy": "Privacy",
+    "terms": "Terms",
+    "deleteAccount": "Account deletion"
   },
   "tgBot": {
     "newEmergency": "New Emergency Collection",

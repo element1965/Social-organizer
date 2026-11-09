@@ -2,6 +2,7 @@
  * Device-aware entry for the site: the native way in first, Telegram second, the rest as text.
  * Port of docs/redesign/mockups/v2/device.js; returns data, the components render it.
  */
+import { useState } from 'react';
 
 export type Device = 'android' | 'ios' | 'desktop';
 
@@ -94,4 +95,59 @@ export function storeButtons(dev: Device): StoreButtons {
     ],
     qr: true,
   };
+}
+
+/** Public store and bot addresses. */
+export const STORE_URL = {
+  play: 'https://play.google.com/store/apps/details?id=com.socialorganizer.app',
+  appstore: 'https://apps.apple.com/app/id6768132198',
+  telegram: 'https://t.me/socialorganizer_bot',
+} as const;
+
+export interface StoreLinks {
+  play: string;
+  appstore: string;
+  telegram: string;
+}
+
+/**
+ * Store links that carry a pending invite: Google Play gets an install referrer (delivered to the app via the
+ * Play Install Referrer API), Telegram a start parameter. Apple only records the campaign token (ct) in App Store
+ * Connect analytics; it does not reach the app after install.
+ */
+export function storeLinks(invite?: string | null): StoreLinks {
+  if (!invite) return { ...STORE_URL };
+  const ref = `invite_${encodeURIComponent(invite)}`;
+  return {
+    play: `${STORE_URL.play}&referrer=${ref}`,
+    appstore: `${STORE_URL.appstore}?ct=${ref}`,
+    telegram: `${STORE_URL.telegram}?start=${ref}`,
+  };
+}
+
+/** Where `/get` (the QR on the desktop site) sends a phone: its store; anything else gets the site. */
+export function getTarget(dev: Device, invite?: string | null): string {
+  const links = storeLinks(invite);
+  if (dev === 'android') return links.play;
+  if (dev === 'ios') return links.appstore;
+  return invite ? `/invite/${encodeURIComponent(invite)}` : '/';
+}
+
+const DEVICES: readonly Device[] = ['android', 'ios', 'desktop'];
+
+/**
+ * The visitor's device. `?device=android|ios|desktop` overrides the User-Agent so the three variants can be
+ * checked from one browser (QA, screenshots); it only changes the order of buttons, never what is available.
+ */
+export function useDevice(): Device {
+  const [dev] = useState<Device>(() => {
+    try {
+      const forced = new URLSearchParams(window.location.search).get('device');
+      if (forced && (DEVICES as readonly string[]).includes(forced)) return forced as Device;
+    } catch {
+      /* no window */
+    }
+    return detectDevice();
+  });
+  return dev;
 }
