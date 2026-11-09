@@ -36,7 +36,7 @@ function planet(w, h, n, seed) {
 }
 
 const brandRow = (cls) => `<div class="${cls || "brand"}"><img src="${MARK}" alt="">Social Organizer</div>`;
-const siteTop = (on) => `<div class="top">${brandRow()}<nav><span class="${on === "how" ? "on" : ""}">Как это работает</span><span class="${on === "help" ? "on" : ""}">Помощь</span><span>GitHub</span></nav><div class="right"><span class="lang">RU</span><span class="btn primary md">Войти</span></div></div>`;
+const siteTop = (on) => `<div class="top">${brandRow()}<nav><span class="${on === "how" ? "on" : ""}">Как это работает</span><span class="${on === "help" ? "on" : ""}">Помощь</span><span>GitHub</span></nav><div class="right"><span class="lang">RU</span><span class="ibtn" data-theme-toggle title="Тема">${I.moon}</span><span class="btn primary md">Войти</span></div></div>`;
 const siteFoot = () => `<div class="sitefoot">${brandRow()}<span>Открытый код · Некоммерческий проект</span><div class="links"><span>GitHub</span><span>Конфиденциальность</span><span>Условия</span><span>Удалить аккаунт</span><span>RU</span></div></div>`;
 
 /* app shell */
