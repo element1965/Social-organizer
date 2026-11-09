@@ -11,9 +11,6 @@ import { NativePushBootstrap } from './components/NativePushBootstrap';
 import { AppShell } from './components/ui2/AppShell';
 import {
   AccountStub,
-  AddQrStub,
-  AddScanStub,
-  AddStub,
   AskStub,
   CircleStub,
   HelpStub,
@@ -42,6 +39,9 @@ import { TermsPage } from './pages/TermsPage';
 import { DeleteAccountPage } from './pages/DeleteAccountPage';
 import { GoogleCallbackPage } from './pages/GoogleCallbackPage';
 import { AppleCallbackPage } from './pages/AppleCallbackPage';
+import { AddPage } from './pages/AddPage';
+import { QrPage } from './pages/QrPage';
+import { ScanPage } from './pages/ScanPage';
 
 const isArvut = window.location.hostname.startsWith('arvuthadadit');
 const isNativeApp = Capacitor.isNativePlatform();
@@ -235,9 +235,9 @@ export function App() {
             <Route element={<ShellGate />}>
               <Route path="/" element={<HomeIndex />} />
               <Route path="/ask" element={<AskStub />} />
-              <Route path="/add" element={<AddStub />} />
-              <Route path="/add/qr" element={<AddQrStub />} />
-              <Route path="/add/scan" element={<AddScanStub />} />
+              <Route path="/add" element={<AddPage />} />
+              <Route path="/add/qr" element={<QrPage />} />
+              <Route path="/add/scan" element={<ScanPage />} />
               <Route path="/me" element={<ProfileStub />} />
               <Route path="/me/account" element={<AccountStub />} />
               <Route path="/me/stake" element={<StakeStub />} />
