@@ -168,8 +168,8 @@
     "codeSent": "Sent to <b>{{email}}</b>",
     "codeLabel": "Six-digit code",
     "codeValid": "The code is valid for 10 minutes.",
-    "resendIn": "You can resend it in {{time}}.",
-    "resend": "Send again",
+    "resendIn": "You can resend it in <t>{{time}}</t>",
+    "resend": "Send the code again",
     "checking": "Checking the code…",
     "changeEmail": "Change the address",
     "passwordTitle": "Sign in with a password"
