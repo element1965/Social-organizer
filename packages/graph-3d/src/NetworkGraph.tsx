@@ -3,6 +3,7 @@ import ForceGraph3D from 'react-force-graph-3d';
 import SpriteText from 'three-spritetext';
 import * as THREE from 'three';
 import { createAvatarClient } from './avatarCache';
+import { layoutOf, writeLayout } from './layoutCache';
 import {
   type GraphColors,
   colorsKey,
@@ -392,6 +393,9 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
   /* ----- Stable graph data: node objects survive re-renders, layout is kept ----- */
 
   const nodeMapRef = useRef<Map<string, SimNode>>(new Map());
+  const ownerRef = useRef('');
+  /** Every current node had a saved position: do not reheat (cooldownTicks 0). */
+  const layoutHoldRef = useRef(false);
   const visRef = useRef<Map<string, NodeVis>>(new Map());
   const introSeenRef = useRef<Set<string>>(new Set());
   const needsRefreshRef = useRef(false);
@@ -421,7 +425,9 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
     }
 
     const created: SimNode[] = [];
+    let centerId = '';
     for (const n of nodes) {
+      if (n.isCenter && n.id) centerId = n.id;
       seen.add(n.id);
       let s = map.get(n.id);
       if (!s) {
@@ -446,10 +452,25 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
       next.push(s);
     }
 
+    const layout = centerId ? layoutOf(centerId) : undefined;
+    // Cached nodes start where the user left them, before anyone new is placed,
+    // so a newcomer can bloom from a neighbour that already has a spot.
+    if (layout) {
+      for (const s of created) {
+        const hit = layout.get(s.id);
+        if (!hit) continue;
+        s.x = hit.x;
+        s.y = hit.y;
+        s.z = hit.z;
+      }
+    }
+
     // "Bloom": parents first, each new node starts a short random hop from an already placed
     // neighbor (compressed link length), then the simulation lets the graph unfold and glide.
+    // Nodes restored from the layout cache are already placed and skip this.
     created.sort((a, b) => (a.depth ?? (a.isCenter ? 0 : 1)) - (b.depth ?? (b.isCenter ? 0 : 1)));
     for (const s of created) {
+      if (typeof s.x === 'number' && Number.isFinite(s.x)) continue;
       let anchor: SimNode | undefined;
       for (const nbId of adj.get(s.id) ?? []) {
         const nb = map.get(nbId);
@@ -463,6 +484,31 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
       s.y = (anchor?.y ?? 0) + hop * q * Math.sin(a);
       s.z = (anchor?.z ?? 0) + hop * u;
     }
+
+    // All current nodes cached → freeze (no reheat). Otherwise pin the cached ones
+    // so only newcomers move, and release those pins when the engine stops.
+    let hold = !!layout && next.length > 0;
+    if (layout) {
+      for (const s of next) {
+        const hit = layout.get(s.id);
+        if (!hit) {
+          hold = false;
+          continue;
+        }
+        if (s.isCenter) continue;
+        const x = typeof s.x === 'number' && Number.isFinite(s.x) ? s.x : hit.x;
+        const y = typeof s.y === 'number' && Number.isFinite(s.y) ? s.y : hit.y;
+        const z = typeof s.z === 'number' && Number.isFinite(s.z) ? s.z : hit.z;
+        s.x = x;
+        s.y = y;
+        s.z = z;
+        s.fx = x;
+        s.fy = y;
+        s.fz = z;
+      }
+    }
+    ownerRef.current = centerId;
+    layoutHoldRef.current = hold;
     for (const id of [...map.keys()]) {
       if (!seen.has(id)) {
         map.delete(id);
@@ -495,6 +541,7 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
     return { nodes: next, links: edges.map((e) => ({ source: e.source, target: e.target })) };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [signature]);
+  const holdLayout = layoutHoldRef.current;
 
   /* ----- Shared GPU resources (one set per mounted graph) ----- */
 
@@ -1731,11 +1778,20 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
         onEngineStop={() => {
           simRef.current = false;
           linkDirtyRef.current = true;
+          const owner = ownerRef.current;
+          if (owner) writeLayout(owner, nodeMapRef.current.values());
+          for (const n of nodeMapRef.current.values()) {
+            if (n.isCenter) continue;
+            n.fx = undefined;
+            n.fy = undefined;
+            n.fz = undefined;
+          }
           if (lifeRef.current.userTouched || initialViewRef.current) return;
           fitCameraRef.current(reducedRef.current ? 0 : 1400);
         }}
         enableNodeDrag={false}
         warmupTicks={0}
+        cooldownTicks={holdLayout ? 0 : Infinity}
         cooldownTime={7000}
         d3AlphaDecay={0.014}
         d3VelocityDecay={0.28}
