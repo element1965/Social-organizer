@@ -206,8 +206,6 @@ export const inviteRouter = router({
   acceptSos: protectedProcedure
     .input(z.object({ collectionId: z.string() }))
     .mutation(async ({ ctx, input }) => {
-      console.log('[invite.acceptSos] userId:', ctx.userId, 'collectionId:', input.collectionId);
-
       const collection = await ctx.db.collection.findUnique({
         where: { id: input.collectionId },
         select: { id: true, creatorId: true, status: true },
@@ -220,8 +218,6 @@ export const inviteRouter = router({
       }
 
       const [userAId, userBId] = [ctx.userId, creatorId].sort();
-
-      // Check if already connected
       const existing = await ctx.db.connection.findUnique({
         where: { userAId_userBId: { userAId: userAId!, userBId: userBId! } },
       });
@@ -229,10 +225,18 @@ export const inviteRouter = router({
         return { success: true, alreadyConnected: true, connectedWith: creatorId };
       }
 
-      // Create direct connection (SOS bypasses pending approval, but not the 150 limit)
-      await ctx.db.$transaction(async (tx) => {
-        await createConnectionWithinLimit(tx, ctx.userId, creatorId);
-        // Resolve any existing pending connections between them
+      // A closed, cancelled, or held collection must not add a handshake.
+      if (collection.status !== 'ACTIVE') {
+        throw new TRPCError({ code: 'BAD_REQUEST', message: 'Collection is not active' });
+      }
+
+      // Create direct connection (SOS bypasses pending approval, but not the 150 limit).
+      // viaCollectionId is written only on this create, never on an existing friendship.
+      const outcome = await ctx.db.$transaction(async (tx) => {
+        const created = await createConnectionWithinLimit(tx, ctx.userId, creatorId, {
+          viaCollectionId: collection.id,
+        });
+        if (created !== 'created') return created;
         await tx.pendingConnection.updateMany({
           where: {
             OR: [
@@ -243,9 +247,12 @@ export const inviteRouter = router({
           },
           data: { status: 'ACCEPTED', resolvedAt: new Date() },
         });
+        return created;
       });
+      if (outcome !== 'created') {
+        return { success: true, alreadyConnected: true, connectedWith: creatorId };
+      }
 
-      console.log('[invite.acceptSos] direct connection created:', ctx.userId, '<->', creatorId);
       await syncMilestonesForPair(ctx.db, ctx.userId, creatorId);
 
       const applicant = await ctx.db.user.findUnique({
