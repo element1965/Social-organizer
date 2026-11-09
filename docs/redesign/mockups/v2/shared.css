@@ -6,8 +6,8 @@ h1 { margin:0 0 6px; font-size:28px; letter-spacing:-.03em; }
 .lead { margin:0 0 28px; color:var(--muted); max-width:70ch; font-size:15px; line-height:1.5; }
 .row { display:flex; flex-wrap:wrap; gap:40px 32px; align-items:flex-start; }
 .variant { width:390px; }
-.variant h2 { margin:18px 0 6px; font-size:18px; letter-spacing:-.02em; }
-.variant h2 small { color:var(--teal); font-weight:800; margin-right:8px; }
+.variant > h2 { margin:18px 0 6px; font-size:18px; letter-spacing:-.02em; }
+.variant > h2 small { color:var(--teal); font-weight:800; margin-right:8px; }
 .variant p, .variant li { font-size:14px; line-height:1.5; }
 .variant ul { padding-left:18px; margin:6px 0 0; }
 .variant .risk { color:var(--muted); }
