@@ -21,7 +21,7 @@
   .mine svg.fwd { width:18px; height:18px; color:var(--subtle); flex:none; }
   .steps { margin:0; padding:0; list-style:none; counter-reset:s; }
   .steps li { display:grid; grid-template-columns:28px 1fr; gap:12px; align-items:start; padding:8px 0; font-size:15px; line-height:1.4; }
-  .steps li::before { counter-increment:s; content:counter(s); width:28px; height:28px; border-radius:50%; background:var(--ink); color:#fff; font-size:13px; font-weight:800; display:grid; place-items:center; }
+  .steps li::before { counter-increment:s; content:counter(s); width:28px; height:28px; border-radius:50%; background:var(--ink); color:var(--canvas); font-size:13px; font-weight:800; display:grid; place-items:center; }
   .apps { display:flex; gap:8px; flex-wrap:wrap; margin-top:12px; }
   .apps span { height:30px; padding:0 10px; border-radius:9px; background:var(--canvas); color:var(--muted); font-size:12px; font-weight:700; display:grid; place-items:center; }
 </style>
@@ -30,6 +30,7 @@
 <h1>Просьба</h1>
 <p class="lead">Экран открыт: у пользователя 118 прямых связей и 1 240 человек в сети, «Сеть может помочь» 1 860 $. Одна карточка, одно действие. Четыре состояния: чистая форма, ошибки, активный собственный сбор над формой, лист «Как создать чат?».</p>
 <div class="row" id="row"></div>
+<script src="theme.js"></script>
 <script src="shared.js"></script>
 <script>
 const form = (o = {}) => `

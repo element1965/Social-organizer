@@ -35,7 +35,7 @@
   .btn.pressed { transform:scale(.96); }
   .btn.disabled { opacity:.45; }
   .btn.loading { position:relative; color:transparent; }
-  .btn.loading::after { content:""; position:absolute; width:20px; height:20px; border-radius:50%; border:2.5px solid rgba(255,255,255,.4); border-top-color:#fff; animation:spin .8s linear infinite; }
+  .btn.loading::after { content:""; position:absolute; width:20px; height:20px; border-radius:50%; border:2.5px solid color-mix(in srgb, currentColor 40%, transparent); border-top-color:currentColor; animation:spin .8s linear infinite; }
   @keyframes spin { to { transform:rotate(360deg); } }
   .field.focus { border-color:var(--care); box-shadow:0 0 0 1px var(--care); }
   .chipz { display:flex; gap:8px; flex-wrap:wrap; }
@@ -47,14 +47,14 @@
   .chip.preset.on { background:var(--ink); color:var(--on-care); box-shadow:none; }
   .dark .chip.preset.on { color:var(--canvas); }
   .sw-toggle { width:48px; height:30px; border-radius:15px; background:var(--line); position:relative; display:inline-block; }
-  .sw-toggle::after { content:""; position:absolute; top:3px; left:3px; width:24px; height:24px; border-radius:50%; background:#fff; box-shadow:0 2px 6px rgba(20,33,30,.2); }
+  .sw-toggle::after { content:""; position:absolute; top:3px; left:3px; width:24px; height:24px; border-radius:50%; background:var(--paper); box-shadow:0 2px 6px rgba(20,33,30,.2); }
   .sw-toggle.on { background:var(--care); } .sw-toggle.on::after { left:21px; }
   .ava { display:inline-grid; place-items:center; background:var(--care-soft); color:var(--care); font-weight:800; position:relative; }
   .ava i { position:absolute; right:-3px; bottom:-3px; width:12px; height:12px; border-radius:50%; background:var(--care); box-shadow:0 0 0 3px var(--paper); }
   .scenebox { background:radial-gradient(120% 90% at 50% 38%, var(--scene-2) 0%, var(--scene) 60%, #070e0d 100%); border-radius:var(--r-xl); padding:16px; color:var(--node-1); }
   .onscene { height:34px; padding:0 10px; border-radius:var(--r-md); display:inline-flex; align-items:center; gap:6px; font-size:12px; font-weight:700; background:rgba(19,36,32,.78); color:var(--node-2); box-shadow:inset 0 0 0 1px rgba(231,238,235,.14); }
-  .onscene b { color:#fff; font-size:14px; }
-  .onscene.away { background:var(--care-bright); color:#fff; box-shadow:none; }
+  .onscene b { color:var(--node-1); font-size:14px; }
+  .onscene.away { background:var(--care-bright); color:var(--scene); box-shadow:none; }
   .ev2 { display:flex; align-items:center; gap:12px; min-height:64px; padding:10px 12px 10px 10px; border-radius:20px; background:var(--paper); box-shadow:var(--shadow-card); }
   .ev2 .ico { width:38px; height:38px; border-radius:var(--r-md); background:var(--surface-2); display:grid; place-items:center; color:var(--ink); }
   .ev2 .ico.hot { background:var(--care-soft); color:var(--care); }
@@ -111,6 +111,7 @@
   <div class="box"><span class="lbl">Фокус (клавиатура)</span><div class="btn secondary focus-demo">Кнопка в фокусе</div></div>
 </div>
 
+<script src="theme.js"></script>
 <script src="shared.js"></script>
 <script>
 const css = (v) => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
