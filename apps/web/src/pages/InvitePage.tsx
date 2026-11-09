@@ -228,9 +228,9 @@ function AcceptView({
 
   const errorText = accept.error
     ? accept.error.message === 'CONNECTION_LIMIT_SELF'
-      ? t('pending.errLimitSelf')
+      ? t('add.limitSelf')
       : accept.error.message === 'CONNECTION_LIMIT_OTHER'
-        ? t('pending.errLimitOther')
+        ? t('add.limitOther')
         : t('invite.failed')
     : '';
 

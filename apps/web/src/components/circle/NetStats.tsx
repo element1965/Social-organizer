@@ -4,6 +4,7 @@ import { cn } from '../../lib/utils';
 import { Button } from '../ui2/Button';
 import { Sheet } from '../ui2/Sheet';
 import { formatMoney } from '../ui2/format';
+import { IconInfo } from './icons';
 
 type NetStatsProps = {
   people: number;
@@ -14,7 +15,7 @@ type NetStatsProps = {
   className?: string;
 };
 
-/** "N people in the network" and "The network can help". Tap explains the sum. */
+/** "N people in the network" and "Your network can help" with an ⓘ mark. Tap explains the sum. */
 export function NetStats({ people, canHelp, weekDelta, variant, className }: NetStatsProps) {
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
@@ -27,7 +28,10 @@ export function NetStats({ people, canHelp, weekDelta, variant, className }: Net
           <b className="block truncate text-[17px] font-extrabold tracking-tight text-node-1">
             {t('circle.stats.people', { count: people })}
           </b>
-          <span className="mt-0.5 block text-label font-semibold text-node-2">{t('circle.stats.canHelp')}</span>
+          <span className="mt-0.5 flex items-center gap-1 text-label font-semibold text-node-2">
+            {t('circle.stats.canHelp')}
+            <IconInfo className="h-3.5 w-3.5 shrink-0" />
+          </span>
         </span>
         <span className="shrink-0 text-right">
           <b className="block text-h3 font-extrabold tabular-nums text-node-1">{formatMoney(canHelp)}</b>
@@ -36,7 +40,10 @@ export function NetStats({ people, canHelp, weekDelta, variant, className }: Net
       </span>
     ) : (
       <span className="block w-full text-left">
-        <span className="block text-label font-bold text-ink-muted">{t('circle.stats.canHelp')}</span>
+        <span className="flex items-center gap-1 text-label font-bold text-ink-muted">
+          {t('circle.stats.canHelp')}
+          <IconInfo className="h-3.5 w-3.5 shrink-0" />
+        </span>
         <span className="mt-1.5 flex flex-wrap items-baseline gap-x-3 gap-y-1">
           <b className="text-h2 font-extrabold tabular-nums text-ink">{formatMoney(canHelp)}</b>
           <span className="text-caption font-semibold text-ink-muted">{t('circle.stats.peopleShort', { count: people })}</span>

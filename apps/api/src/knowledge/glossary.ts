@@ -14,16 +14,16 @@ INTENTION (OBLIGATION)
 A recorded voluntary commitment to support another person. NOT a debt, loan, or legal obligation. The actual transfer of funds happens outside the organizer — the app only records the intention and its fulfillment.
 
 SUPPORT SIGNAL (COLLECTION)
-A request for help when someone needs support. Two types:
-- Emergency: urgent need, notifications sent immediately through the network (up to 3 handshake levels)
-- Regular: 28-day cycles, auto-closes and can be renewed
+What opens when someone asks for help (the Ask tab). Two kinds:
+- One-time help: notifications go out through the network (up to 3 handshake levels); open until the author closes it
+- Every 28 days: runs in 28-day cycles; participants confirm their amount each cycle
 Each collection has a chat link for direct communication with the creator.
 
-MONTHLY BUDGET
-Optional personal limit for monthly support activity. Stored in USD equivalent. Decreases when intentions are fulfilled. This is NOT a pooled fund or shared account — it reflects individual readiness to help.
+MINIMUM PARTICIPATION
+The amount a person is ready to give to one collection of someone in their network, in whole dollars. Filled in when they join a collection; they can give more. Not per month, and it does not decrease. This is NOT a pooled fund or shared account — it reflects individual readiness to help.
 
-CURRENT CAPABILITIES
-Aggregated sum of remaining monthly budgets across the user's network (up to 3 handshake levels). An indicator of collective readiness to help — not an actual account or guaranteed funds.
+YOUR NETWORK CAN HELP
+Aggregated sum of minimum participation across the user's network (up to 3 handshake levels). An indicator of collective readiness to help — not an actual account or guaranteed funds.
 
 NETWORK
 Your connections and their connections, up to 3 handshake levels deep. Notifications propagate through this network based on handshake chains.
@@ -44,7 +44,7 @@ WAVE
 Each notification round for a collection. Wave 1 is sent on creation, subsequent waves are sent by the re-notify worker every 12 hours.
 
 CYCLE (28 DAYS)
-Regular collections operate in 28-day cycles. When a cycle ends, the collection auto-closes and can be renewed for a new cycle.
+Collections every 28 days operate in 28-day cycles. When a cycle ends, the collection auto-closes and can be renewed for a new cycle.
 
 BLOCKED STATUS
 A collection becomes BLOCKED when the sum of intentions reaches or exceeds the requested amount. No more intentions can be added.

@@ -38,6 +38,17 @@ export function IconDone(props: IconProps) {
   );
 }
 
+/** ⓘ: marks a label that opens an explanation. */
+export function IconInfo(props: IconProps) {
+  return (
+    <Svg {...props}>
+      <circle cx="12" cy="12" r="8.5" />
+      <path d="M12 11v5" />
+      <path d="M12 7.9v.1" strokeWidth={2.4} />
+    </Svg>
+  );
+}
+
 export function IconCheck(props: IconProps) {
   return (
     <Svg strokeWidth={2.4} {...props}>

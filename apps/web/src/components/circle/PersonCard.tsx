@@ -55,7 +55,7 @@ export function PersonCard({ person, variant, onClose }: Props) {
   });
 
   const ring = t(`circle.rings.full${Math.min(3, Math.max(1, person.depth))}`);
-  const sub = [ring, person.via.length ? t('circle.person.via', { name: person.via[person.via.length - 1] }) : null]
+  const sub = [ring, person.via.length ? t('person.via', { name: person.via[person.via.length - 1] }) : null]
     .filter(Boolean)
     .join(' · ');
   const pathNames = [t('common.you'), ...person.via, person.name];
@@ -65,21 +65,21 @@ export function PersonCard({ person, variant, onClose }: Props) {
     actions.push({
       key: 'collection',
       label: person.collection.amount != null
-        ? t('circle.person.collectionAmount', { amount: formatMoney(person.collection.amount) })
-        : t('circle.person.collection'),
+        ? t('person.collectionAmount', { amount: formatMoney(person.collection.amount) })
+        : t('person.openCollection'),
       primary: true,
       onClick: () => navigate(`/collection/${person.collection!.id}`),
     });
   }
   actions.push({
     key: 'open',
-    label: t('circle.person.open'),
+    label: t('person.open'),
     primary: actions.length === 0,
     onClick: () => navigate(`/person/${person.id}`),
   });
   // The phone card keeps two actions (mockup): Collection + Open, or Open + Contacts.
   if (direct && filled.length > 0 && (variant === 'column' || actions.length < 2)) {
-    actions.push({ key: 'contacts', label: t('circle.person.contacts'), primary: false, onClick: () => setContactsOpen(true) });
+    actions.push({ key: 'contacts', label: t('person.contacts'), primary: false, onClick: () => setContactsOpen(true) });
   }
 
   const head = (
@@ -90,7 +90,7 @@ export function PersonCard({ person, variant, onClose }: Props) {
         <span className="mt-0.5 block truncate text-label font-semibold text-ink-muted">{sub}</span>
         {person.accountName !== person.name ? (
           <span className="block truncate text-label font-semibold text-ink-muted">
-            {t('circle.person.account', { name: person.accountName })}
+            {t('person.accountName', { name: person.accountName })}
           </span>
         ) : null}
       </span>
@@ -140,15 +140,15 @@ export function PersonCard({ person, variant, onClose }: Props) {
       </section>
       {variant === 'column' && direct ? (
         <Button variant="textDanger" className="mt-3" onClick={() => setRemoveOpen(true)}>
-          {t('circle.person.remove')}
+          {t('person.remove')}
         </Button>
       ) : null}
 
       <Sheet
         open={contactsOpen}
         onClose={() => setContactsOpen(false)}
-        title={t('circle.person.contactsTitle', { name: person.name })}
-        description={t('circle.person.contactsHint')}
+        title={t('person.contactsTitle', { name: person.name })}
+        description={t('person.contactsHint')}
         footer={
           <Button variant="secondary" onClick={() => setContactsOpen(false)}>
             {t('common.close')}
@@ -173,15 +173,15 @@ export function PersonCard({ person, variant, onClose }: Props) {
       <Sheet
         open={removeOpen}
         onClose={() => setRemoveOpen(false)}
-        title={t('circle.person.removeTitle', { name: person.name })}
-        description={t('circle.person.removeBody')}
+        title={t('person.removeTitle', { name: person.name })}
+        description={t('person.removeBody')}
         footer={
           <>
             <Button variant="danger" loading={revoke.isPending} onClick={() => revoke.mutate({ targetUserId: person.id })}>
-              {t('circle.person.removeConfirm')}
+              {t('person.removeConfirm')}
             </Button>
             <Button variant="secondary" onClick={() => setRemoveOpen(false)}>
-              {t('circle.person.keep')}
+              {t('person.keep')}
             </Button>
           </>
         }

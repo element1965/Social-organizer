@@ -8,16 +8,16 @@ Q: Why is there a limit of 150 connections?
 A: This is based on Dunbar's number — the cognitive limit of stable relationships a human brain can maintain. It ensures that every connection is meaningful, not just a number.
 
 Q: How do support signals (collections) work?
-A: When you need help, create a collection specifying the amount and type (emergency or regular). Your network is notified through handshake chains. People who want to help record their intentions. All actual transfers happen outside the app.
+A: When you need help, open a collection from the Ask tab with the amount and how often: one-time help or every 28 days. Your network is notified through handshake chains. People who want to help record their intentions. All actual transfers happen outside the app.
 
-Q: What's the difference between Emergency and Regular collections?
-A: Emergency collections send notifications immediately and stay active until closed. Regular collections run in 28-day cycles — they auto-close after 28 days and can be renewed.
+Q: What's the difference between one-time help and every 28 days?
+A: One-time help stays open until the author closes it. A collection every 28 days runs in 28-day cycles: participants confirm their amount each cycle, with a reminder 3 days before.
 
-Q: How does the monthly budget work?
-A: It's an optional personal limit you set in Settings. It represents how much you're willing to help per month (in USD equivalent). It decreases when you fulfill intentions. It resets monthly. It's completely voluntary.
+Q: What is minimum participation?
+A: The amount you are ready to give to one collection of someone in your network, in whole dollars. It is filled in for you when you join a collection, and you can give more. It is not per month and it does not go down when you join. Change it in Profile → Minimum participation, or choose "I can't help right now". The app does not take money.
 
-Q: What are "Current Capabilities" on the dashboard?
-A: It's the sum of remaining monthly budgets across your network (up to 3 handshake levels). It shows the collective readiness to help — but it's not a guaranteed fund or actual account.
+Q: What does "Your network can help" mean?
+A: It's the sum of minimum participation of people in your network (up to 3 handshake levels). It shows the collective readiness to help — but it's not a guaranteed fund or actual account.
 
 Q: How many people see my collection notification?
 A: The 1:1 ratio means: the amount you enter = the number of people notified. A $100 collection notifies up to 100 people. The system uses BFS to find recipients through your handshake chains.

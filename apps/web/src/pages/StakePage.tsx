@@ -88,7 +88,7 @@ export function StakePage() {
           </Button>
           {save.isError ? <p className="mt-2 text-label font-semibold text-sos">{t('common.error')}</p> : null}
 
-          <Card className="mt-6" title={t('profile.networkMirror')} subtitle={t('profile.networkMirrorHint')}>
+          <Card className="mt-6" title={t('circle.stats.canHelp')} subtitle={t('circle.stats.explain')}>
             <p className="text-h2 font-extrabold tabular-nums text-ink">
               {canHelp == null ? t('common.loading') : formatMoney(canHelp)}
             </p>

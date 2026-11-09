@@ -84,7 +84,7 @@ export function ResultSheet({ person, onClose }: ResultSheetProps) {
           {person.pending ? null : (
             <div className="mt-4">
               <Input
-                label={t('add.nickname')}
+                label={t('person.nickname')}
                 hint={t('add.nicknameHint', { name: givenName(person.name) })}
                 value={nickname}
                 onChange={(event) => setNickname(event.target.value)}

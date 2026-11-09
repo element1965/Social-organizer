@@ -19,10 +19,10 @@ import { AcquaintSheet, type AcquaintRequest } from '../components/circle/Acquai
 import { EventFeed } from '../components/circle/EventFeed';
 import { ReviewFeedRows } from '../components/moderation/ReviewFeedRows';
 import { NetStats } from '../components/circle/NetStats';
-import { PathToRequestSheet } from '../components/circle/PathToRequestSheet';
+import { GrowStrip, PathToRequestSheet } from '../components/circle/PathToRequest';
 import { PersonCard, type CardPerson } from '../components/circle/PersonCard';
 import { RingChips } from '../components/circle/RingChips';
-import { GrowStrip, StartCard } from '../components/circle/StartCard';
+import { StartCard } from '../components/circle/StartCard';
 import { useCircleNetwork } from '../components/circle/network';
 import { IconFit, IconMinus, IconPlus, IconUp } from '../components/circle/icons';
 import { ASK_MIN_DIRECT } from '@so/shared';
