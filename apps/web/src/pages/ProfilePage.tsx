@@ -9,7 +9,7 @@ import { Spinner } from '../components/ui/spinner';
 import { Wallet, Calendar, Pencil, Check, X, UserPlus, VolumeX, Copy, ChevronDown, ChevronUp, Users } from 'lucide-react';
 import { HandshakePath } from '../components/HandshakePath';
 import { SocialIcon } from '../components/ui/social-icons';
-import { buildContactUrl } from '@so/shared';
+import { buildContactUrl, isSafeContactUrl } from '@so/shared';
 import { isTelegramWebApp } from '@so/tg-adapter';
 import { useNicknames } from '../hooks/useNicknames';
 
@@ -169,6 +169,7 @@ export function ProfilePage() {
             <div className="flex flex-wrap gap-2">
               {contacts.filter((c: { value?: string }) => c.value).map((contact: { type: string; value: string; icon?: string; label?: string }) => {
                 const url = buildContactUrl(contact.type, contact.value);
+                if (!isSafeContactUrl(url)) return null;
                 const isMobile = /Android|iPhone|iPad/i.test(navigator.userAgent);
                 const isInstagramMobile = contact.type === 'instagram' && isMobile;
                 const username = contact.type === 'instagram' ? contact.value.replace(/^@/, '').replace(/^(?:https?:\/\/)?(?:www\.)?instagram\.com\//, '').replace(/\/$/, '') : '';

@@ -32,8 +32,27 @@ export const CONTACT_TYPES = [
 
 export type ContactType = typeof CONTACT_TYPES[number]['type'];
 
+export const CONTACT_TYPE_IDS = CONTACT_TYPES.map((c) => c.type) as unknown as [ContactType, ...ContactType[]];
+export const MAX_CONTACT_VALUE_LENGTH = 300;
+
+/** Only these schemes may ever be rendered as a contact link or passed to openLink. */
+export function isSafeContactUrl(url: string): boolean {
+  return /^(https?:|mailto:|tel:)/i.test(url);
+}
+
+/** A value that looks like "scheme:..." but is not http(s) (e.g. javascript:, data:). */
+export function hasForeignScheme(value: string): boolean {
+  return /^[a-z][a-z0-9+.-]*:/i.test(value) && !/^https?:\/\//i.test(value);
+}
+
+/** Returns '' for unknown types and for anything that is not a safe http/https/mailto URL. */
 export function buildContactUrl(type: string, value: string): string {
-  if (value.startsWith('http')) return value;
+  const url = buildContactUrlUnchecked(type, value);
+  return isSafeContactUrl(url) ? url : '';
+}
+
+function buildContactUrlUnchecked(type: string, value: string): string {
+  if (/^https?:\/\//i.test(value)) return value;
   const clean = value.replace(/^@/, '');
   switch (type) {
     case 'telegram': return `https://t.me/${clean}`;
@@ -45,7 +64,7 @@ export function buildContactUrl(type: string, value: string): string {
     case 'email': return `mailto:${value}`;
     case 'tiktok': return `https://tiktok.com/@${clean}`;
     case 'whatsapp': return `https://wa.me/${value.replace(/\D/g, '')}`;
-    case 'website': return value.startsWith('http') ? value : `https://${value}`;
-    default: return value;
+    case 'website': return `https://${value}`;
+    default: return '';
   }
 }
