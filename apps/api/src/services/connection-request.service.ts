@@ -1,4 +1,4 @@
-import type { PrismaClient } from '@so/db';
+import type { PrismaClient, Prisma } from '@so/db';
 import { TRPCError } from '@trpc/server';
 import { MAX_CONNECTIONS } from '@so/shared';
 import { sendPendingNotification } from './notification.service.js';
@@ -38,8 +38,43 @@ function sortPair(a: string, b: string): [string, string] {
   return a < b ? [a, b] : [b, a];
 }
 
-export async function countConnections(db: PrismaClient, userId: string): Promise<number> {
+type Db = PrismaClient | Prisma.TransactionClient;
+
+/**
+ * The one definition of a confirmed acquaintance (SO-15): a Connection row the user is part of,
+ * on either side of the pair. Invite links and pending requests are not acquaintances.
+ * Pairs are stored sorted and unique (userAId_userBId), and self-pairs are never created,
+ * so the count has no duplicates and never includes the user.
+ * Used for the SOS threshold, the 150 limit and the account deletion scenario.
+ */
+export async function countConnections(db: Db, userId: string): Promise<number> {
   return db.connection.count({ where: { OR: [{ userAId: userId }, { userBId: userId }] } });
+}
+
+/**
+ * Creates the connection inside a transaction and checks the 150 limit for both people atomically:
+ * both user rows are locked (in id order, so two transactions can't deadlock), then counted.
+ * Two parallel confirmations at 149/150 are serialized and the second one fails; a repeat returns 'exists'.
+ */
+export async function createConnectionWithinLimit(
+  tx: Prisma.TransactionClient,
+  actorId: string,
+  otherId: string,
+): Promise<'created' | 'exists'> {
+  if (actorId === otherId) throw new TRPCError({ code: 'BAD_REQUEST', message: 'Cannot connect to yourself' });
+  const [userAId, userBId] = sortPair(actorId, otherId);
+  await tx.$queryRaw`SELECT id FROM users WHERE id IN (${userAId}, ${userBId}) ORDER BY id FOR UPDATE`;
+  const existing = await tx.connection.findUnique({ where: { userAId_userBId: { userAId, userBId } } });
+  if (existing) return 'exists';
+  const [mine, theirs] = await Promise.all([countConnections(tx, actorId), countConnections(tx, otherId)]);
+  if (mine >= MAX_CONNECTIONS) {
+    throw new TRPCError({ code: 'PRECONDITION_FAILED', message: REQUEST_ERRORS.limitSelf });
+  }
+  if (theirs >= MAX_CONNECTIONS) {
+    throw new TRPCError({ code: 'PRECONDITION_FAILED', message: REQUEST_ERRORS.limitOther });
+  }
+  await tx.connection.create({ data: { userAId, userBId } });
+  return 'created';
 }
 
 /** Throws if adding a new connection between the two users would exceed the limit for either of them. */
@@ -92,12 +127,8 @@ export async function respondToConnectionRequest(
     });
     if (res.count === 0) return false;
     if (action === 'accept') {
-      const [userAId, userBId] = sortPair(pending.fromUserId, pending.toUserId);
-      await tx.connection.upsert({
-        where: { userAId_userBId: { userAId, userBId } },
-        create: { userAId, userBId },
-        update: {},
-      });
+      // Limit is re-checked under row locks; a failure rolls back the status change too
+      await createConnectionWithinLimit(tx, pending.toUserId, pending.fromUserId);
     }
     return true;
   });

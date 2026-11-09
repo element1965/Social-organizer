@@ -87,9 +87,10 @@ export function CreateCollectionPage() {
 
   const { data: adminData } = trpc.faq.isAdmin.useQuery();
   const isSpecial = me?.role === 'AUTHOR' || me?.role === 'DEVELOPER' || adminData?.isAdmin;
-  const inviteCount = connectionCount?.inviteCount ?? 0;
-  const hasEnoughConnections = isSpecial || inviteCount >= MIN_CONNECTIONS_TO_CREATE;
-  const connectionsNeeded = MIN_CONNECTIONS_TO_CREATE - inviteCount;
+  // Confirmed acquaintances, the same number the server checks for SOS (SO-15)
+  const confirmedCount = connectionCount?.count ?? 0;
+  const hasEnoughConnections = isSpecial || confirmedCount >= MIN_CONNECTIONS_TO_CREATE;
+  const connectionsNeeded = MIN_CONNECTIONS_TO_CREATE - confirmedCount;
 
   return (
     <div className="p-4">
@@ -348,7 +349,7 @@ export function CreateCollectionPage() {
               {t('create.notEnoughConnectionsText', { min: MIN_CONNECTIONS_TO_CREATE })}
             </p>
             <div className="flex items-center justify-center gap-2 py-2">
-              <div className="text-3xl font-bold text-red-600">{inviteCount}</div>
+              <div className="text-3xl font-bold text-red-600">{confirmedCount}</div>
               <div className="text-gray-400">/</div>
               <div className="text-3xl font-bold text-gray-400">{MIN_CONNECTIONS_TO_CREATE}</div>
             </div>

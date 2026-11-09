@@ -12,16 +12,14 @@ type Kind = 'FIRST_CONNECTION' | 'TEN_CONNECTIONS';
  * A newly reached milestone gets one short confirmation inside the card (no push, no sound);
  * the animation is skipped for people who prefer reduced motion.
  *
- * `variant="dashboard"` (default) shows only milestones still in progress (plus the one-time
+ * `variant="progress"` (default, network page) shows only milestones still in progress (plus the one-time
  * confirmation of a fresh one); reached milestones live in the history variant on the settings page.
- * `suppressFirst` — the acquaintance card is already celebrating the first handshake right now.
+ * Not shown on the dashboard (SO-44).
  */
 export function MilestonesCard({
-  suppressFirst = false,
-  variant = 'dashboard',
+  variant = 'progress',
 }: {
-  suppressFirst?: boolean;
-  variant?: 'dashboard' | 'history';
+  variant?: 'progress' | 'history';
 }) {
   const { t, i18n } = useTranslation();
   const utils = trpc.useUtils();
@@ -32,10 +30,10 @@ export function MilestonesCard({
 
   if (!data) return null;
   const anyAchieved = data.items.some((m) => m.achievedAt);
-  if (data.current === 0 && !anyAchieved) return null; // the dashboard shows the "add first connection" block instead
+  if (data.current === 0 && !anyAchieved) return null; // nothing yet: the dashboard shows the "add first connection" block
 
   const isHistory = variant === 'history';
-  // Dashboard: only what is still in progress; history: only what is reached
+  // Progress: only what is still in progress; history: only what is reached
   const visibleItems = data.items.filter((m) => (isHistory ? !!m.achievedAt : !m.achievedAt));
 
   const title = (kind: Kind) => (kind === 'FIRST_CONNECTION' ? t('milestones.first') : t('milestones.ten'));
@@ -45,7 +43,7 @@ export function MilestonesCard({
   // One confirmation at a time, the bigger milestone first
   const fresh = isHistory ? undefined : [...data.items]
     .reverse()
-    .find((m) => m.achievedAt && !m.seen && !(suppressFirst && m.kind === 'FIRST_CONNECTION'));
+    .find((m) => m.achievedAt && !m.seen);
 
   if (visibleItems.length === 0 && !fresh) return null;
 

@@ -8,6 +8,7 @@ import { useTheme } from '../hooks/useTheme';
 import { useNicknames } from '../hooks/useNicknames';
 import { Avatar } from '../components/ui/avatar';
 import { Spinner } from '../components/ui/spinner';
+import { MilestonesCard } from '../components/MilestonesCard';
 import { Users, Globe, List, Wallet, ChevronDown, ChevronUp, Layers, TrendingUp, BarChart2, UserPlus, Search } from 'lucide-react';
 const LazyNetworkGraph = lazy(() =>
   import('@so/graph-3d').then((m) => ({ default: m.NetworkGraph })),
@@ -358,6 +359,9 @@ export function MyNetworkPage() {
               })}
             </div>
           )}
+
+          {/* Milestones still in progress (reached ones are in Settings, SO-44/48) */}
+          <div className="mt-4"><MilestonesCard /></div>
 
           {/* Network growth stats + chart */}
           {Object.keys(byDepth).length > 0 && (
