@@ -25,13 +25,36 @@
     <script>
       // telegram-web-app.js blocks first paint. Load it only inside a Mini App,
       // and do it during parse so @so/tg-adapter sees window.Telegram before React boots.
+      // A full-page navigation drops the launch hash. Desktop, iOS and Android still
+      // expose TelegramWebviewProxy; Web A/K stays an iframe and keeps
+      // sessionStorage __telegram__initParams (or a tgWebApp hash).
       (function () {
+        function storedParams() {
+          try {
+            return !!sessionStorage.getItem('__telegram__initParams');
+          } catch (e) {
+            return false;
+          }
+        }
+        function inIframe() {
+          try {
+            return window.parent !== window;
+          } catch (e) {
+            return true;
+          }
+        }
         function inTelegram() {
           try {
             var href = location.href || '';
+            var hash = location.hash || '';
             if (href.indexOf('tgWebAppData') !== -1) return true;
-            if ((location.hash || '').indexOf('tgWebApp') !== -1) return true;
-            return /Telegram/i.test(navigator.userAgent || '');
+            if (hash.indexOf('tgWebApp') !== -1) return true;
+            if (/Telegram/i.test(navigator.userAgent || '')) return true;
+            if (window.TelegramWebviewProxy) return true;
+            if (storedParams()) return true;
+            // Web A/K: iframe plus stored init params or a tgWebApp hash.
+            if (inIframe() && (storedParams() || hash.indexOf('tgWebApp') !== -1)) return true;
+            return false;
           } catch (e) {
             return false;
           }

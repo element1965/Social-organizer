@@ -143,9 +143,12 @@ Old URLs (`/dashboard`, `/network`, `/notifications`, `/create`, `/settings`, `/
 `/matches`, `/skills`, `/needs`) redirect. The planet, globe, clouds, video guides, demo mode, and the
 retired-feature page are gone. The 3D view that remains is `NetworkGraph` on the Circle, in its own chunk.
 
-`telegram-web-app.js` is injected during HTML parse only when the URL contains `tgWebAppData` or
-`#tgWebApp`, or the user agent contains `Telegram`, so a normal browser does not wait on it and
-`@so/tg-adapter` still sees `window.Telegram` before React boots inside a Mini App.
+`telegram-web-app.js` is injected during HTML parse, before the app entry, only inside Telegram:
+`tgWebAppData` or `tgWebApp` in the URL or hash, a Telegram user agent, `window.TelegramWebviewProxy`,
+sessionStorage `__telegram__initParams`, or an iframe that has those stored params or a `tgWebApp` hash.
+The extra checks cover a full-page reload inside Telegram Desktop, iOS, Android, and Web A/K, where the
+launch hash is already gone. A normal browser does not wait on the script, and `@so/tg-adapter` still
+sees `window.Telegram` before React boots inside a Mini App.
 
 ## Production migrations to apply by hand
 

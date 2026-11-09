@@ -18,7 +18,11 @@ import { GetRedirect, RedirectHome } from './components/site/redirects';
 
 /** Named-export pages, each its own chunk. The guest landing stays in the entry chunk. */
 function lazyPage<M, K extends keyof M>(load: () => Promise<M>, name: K) {
-  return lazy(() => load().then((module) => ({ default: module[name] as ComponentType })));
+  return lazy(() =>
+    load()
+      .catch(() => load())
+      .then((module) => ({ default: module[name] as ComponentType })),
+  );
 }
 
 /** Light stand-in while a route chunk loads. The shell stays put; public pages cover the viewport. */
