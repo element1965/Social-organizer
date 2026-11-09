@@ -67,7 +67,7 @@ function StepHead({ label, value, goal }: { label: string; value: number; goal: 
     <div className="flex items-baseline justify-between text-body-s font-bold">
       <span>{label}</span>
       <span className={cn('tabular-nums', value >= goal ? 'text-care' : 'text-ink-muted')}>
-        {t('path.of', { count: value, goal })}
+        {t('path.of', { count: Math.min(value, goal), goal })}
       </span>
     </div>
   );

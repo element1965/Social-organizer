@@ -50,18 +50,34 @@ function ReloadScreen() {
   );
 }
 
-class AppErrorBoundary extends React.Component<React.PropsWithChildren, { failed: boolean }> {
-  state = { failed: false };
+class AppErrorBoundary extends React.Component<React.PropsWithChildren, { failed: boolean; attempt: number }> {
+  state = { failed: false, attempt: 0 };
 
-  static getDerivedStateFromError(): { failed: boolean } {
+  static getDerivedStateFromError(error: unknown): Partial<{ failed: boolean }> {
+    // A DOM node that something outside React already took away (a browser extension or translator,
+    // a portal torn down with its parent) throws NotFoundError from removeChild. The state is intact:
+    // one quiet remount of the tree beats a "Reload the page" screen.
+    if (error instanceof DOMException && error.name === 'NotFoundError' && !domRecovered) {
+      domRecovered = true;
+      return {};
+    }
     return { failed: true };
+  }
+
+  componentDidCatch(error: unknown) {
+    if (error instanceof DOMException && error.name === 'NotFoundError' && !this.state.failed) {
+      this.setState((s) => ({ attempt: s.attempt + 1 }));
+    }
   }
 
   render() {
     if (this.state.failed) return <ReloadScreen />;
-    return this.props.children;
+    return <React.Fragment key={this.state.attempt}>{this.props.children}</React.Fragment>;
   }
 }
+
+/** The quiet remount after a stray DOM error happens once per page load, so a real loop still reaches the reload screen. */
+let domRecovered = false;
 
 applyStoredFontScale();
 

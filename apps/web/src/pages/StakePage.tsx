@@ -37,7 +37,8 @@ export function StakePage() {
   });
 
   const saved = me.data?.monthlyBudget;
-  const current = saved == null ? '' : String(Math.round(saved));
+  // Not set yet counts as 1 $ everywhere else (a collection's minimum), so the field starts there
+  const current = saved == null ? '1' : String(Math.round(saved));
   const [raw, setRaw] = useState<string | null>(null);
   const value = raw ?? current;
   const parsed = parseStake(value);
@@ -63,7 +64,7 @@ export function StakePage() {
               value={value}
               onValueChange={setRaw}
               error={showError ? t('profile.stakeMin') : undefined}
-              hint={parsed === 0 ? t('profile.stakeNone') : t('profile.stakeHint')}
+              hint={save.isSuccess && unchanged ? t('profile.stakeSaved') : parsed === 0 ? t('profile.stakeNone') : t('profile.stakeHint')}
             />
           </div>
           <div className="mt-4 flex flex-wrap gap-2">
