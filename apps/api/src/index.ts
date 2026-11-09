@@ -21,6 +21,7 @@ import { AccountExistsError } from './services/identity.service.js';
 import { backfillBotStartInvites } from './services/invite-fallback.service.js';
 import { getDb } from '@so/db';
 import { isAdmin } from './admin.js';
+import { startInactiveCleanupTimer, logInactiveCleanupConfig } from './services/inactive-cleanup.service.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -404,14 +405,22 @@ async function start() {
     }
 
     // BullMQ workers (only if Redis is available)
+    let queuesStarted = false;
     if (process.env.REDIS_URL) {
       try {
         setupQueues();
+        queuesStarted = true;
         console.log('BullMQ workers started');
       } catch (err) {
         console.warn('BullMQ init failed (Redis may be unavailable):', err);
       }
     }
+    // Without BullMQ the daily inactive-account cleanup runs on an in-process timer
+    // (an advisory lock keeps it to one run at a time across replicas)
+    if (!queuesStarted) {
+      startInactiveCleanupTimer(getDb());
+    }
+    logInactiveCleanupConfig();
 
     await app.listen({ port: PORT, host: HOST });
     console.log(`API server running on http://${HOST}:${PORT}`);

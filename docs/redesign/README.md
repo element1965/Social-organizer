@@ -32,6 +32,17 @@ Redesign documents (Russian):
 **Native apps load the production web URL** (`apps/web/capacitor.config.ts`), so every web deploy from `main`
 reaches iOS/Android users immediately, without a store release.
 
+## Apply before deploy
+
+Railway does not run migrations. Before `redesign` is merged into `main`, apply these to production by hand
+(`cd packages/db && npx prisma migrate deploy` with the public URL, see the root CLAUDE.md), in this order:
+
+- `20261109120000_ask_block_reason_invite_ttl`
+- `20261109140000_connection_via_collection`
+- `20261109160000_collection_moderation` (also creates the partial index `collection_reviews_one_open_idx`)
+- `20261109180000_user_inactivity_cleanup` (`users.inactivityStage`, `users.inactivityWarnedAt`). The API tolerates
+  the columns being missing (activity falls back to `lastSeen` only), but the daily cleanup fails until it is applied.
+
 ## Design tokens
 
 Palette "Ink and teal". Semantic tokens are CSS variables in `apps/web/src/styles/tokens.css`

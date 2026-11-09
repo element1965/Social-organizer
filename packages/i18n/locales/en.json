@@ -1312,8 +1312,8 @@
     "deleteAccount": "Account deletion",
     "del": {
       "meta": "Social Organizer · updated 9 November 2026",
-      "lead": "You delete your account in the app or on the website, with no e-mails and no waiting.",
-      "step1": "Open the app or orginizer.com and sign in",
+      "lead": "You delete your account yourself, from inside it: in the app, on the website or in the Telegram Mini App. No e-mails and no waiting.",
+      "step1": "Open the app, orginizer.com or the Telegram Mini App and sign in",
       "step2": "Profile → Account",
       "step3": "At the bottom, “Delete account”",
       "step4": "Confirm “Delete forever” in the sheet",
@@ -1326,8 +1326,8 @@
       "gone5": "Notifications, push subscriptions, settings, chats with the assistant",
       "whenTitle": "Timing and what remains",
       "whenText": "Deletion is immediate and cannot be undone. If you had connections, other people’s networks keep “Deleted user” in place of your name, with no personal data. Past collections of other people keep the amounts without your name.",
-      "noAccessTitle": "No access to your account?",
-      "noAccessText": "Write to <bot>@socialorganizer_bot</bot> in Telegram with the e-mail or username you signed in with. We delete the account manually within 30 days and reply when it is done."
+      "noAccessTitle": "Can’t sign in?",
+      "noAccessText": "Accounts are deleted only from inside the account; there is no deletion by request. If you can’t sign in, the profile is deleted automatically after 2 years without sign-ins. We warn 30 and 7 days before that through Telegram, push notifications and e-mail, whichever the account has."
     }
   },
   "tgBot": {

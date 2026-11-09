@@ -2,6 +2,7 @@ import { initTRPC, TRPCError } from '@trpc/server';
 import { z } from 'zod';
 import type { Context } from './context.js';
 import { SKILLS_FEATURE_ENABLED } from './services/mvp-scope.js';
+import { touchUser } from './services/activity.service.js';
 
 const t = initTRPC.context<Context>().create({
   // Additive error data, so older clients keep working: ACCOUNT_EXISTS_OTHER_METHOD carries the masked e-mail
@@ -30,11 +31,8 @@ const isAuthed = middleware(async ({ ctx, next }) => {
   if (user?.deletedAt) {
     throw new TRPCError({ code: 'FORBIDDEN', message: 'Account has been deleted' });
   }
-  // fire-and-forget — don't slow down every request
-  ctx.db.user.update({
-    where: { id: ctx.userId },
-    data: { lastSeen: new Date() },
-  }).catch(() => {});
+  // Activity heartbeat (lastSeen + inactivity stage reset), throttled and fire-and-forget
+  if (user) touchUser(ctx.db, ctx.userId);
   return next({ ctx: { ...ctx, userId: ctx.userId } });
 });
 

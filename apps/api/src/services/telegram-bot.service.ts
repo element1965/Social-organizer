@@ -2,6 +2,7 @@ import { createHash } from 'node:crypto';
 import { getDb } from '@so/db';
 import { translateWithCache } from './translate.service.js';
 import { isRetiredChainMessage } from './mvp-scope.js';
+import { touchTelegramUser } from './activity.service.js';
 
 const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN || '';
 const WEB_APP_URL = process.env.WEB_APP_URL || 'https://www.orginizer.com';
@@ -267,11 +268,17 @@ export const ONBOARDING_REMINDERS = [
   },
 ] as const;
 
-/** Low-level wrapper: send a message via Telegram Bot API with 429 retry */
+/**
+ * Low-level wrapper: send a message via Telegram Bot API with 429 retry.
+ * By default a "blocked / deactivated" answer removes the user (removeBlockedUser).
+ * `keepOnBlocked` turns that off: the send just fails (used by the inactivity notices,
+ * which must never delete anyone by themselves).
+ */
 export async function sendTelegramMessage(
   chatId: string | number,
   text: string,
   replyMarkup?: TgReplyMarkup,
+  opts: { keepOnBlocked?: boolean } = {},
 ): Promise<boolean> {
   if (!TELEGRAM_BOT_TOKEN) return false;
 
@@ -295,7 +302,7 @@ export async function sendTelegramMessage(
 
     // User blocked the bot or account deactivated — remove from DB
     if (isBlockedError(res.status, json.description)) {
-      await removeBlockedUser(chatId);
+      if (!opts.keepOnBlocked) await removeBlockedUser(chatId);
       return false;
     }
 
@@ -809,6 +816,9 @@ export async function sendNextChainMessage(chatId: number): Promise<boolean> {
 
 /** Handle incoming Telegram bot update (webhook) */
 export async function handleTelegramUpdate(update: TgUpdate): Promise<void> {
+  // Bot interaction of a linked account counts as activity (inactivity cleanup)
+  touchTelegramUser(getDb(), update.callback_query?.from.id ?? update.message?.from?.id);
+
   // Handle callback query (inline button press)
   const cbq = update.callback_query;
   if (cbq?.data && /^pc_[ar]:/.test(cbq.data)) {

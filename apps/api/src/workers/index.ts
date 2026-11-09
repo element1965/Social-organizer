@@ -10,6 +10,7 @@ import { processAutoChain } from './auto-chain.worker.js';
 import { processCleanupBlockedPending } from './cleanup-blocked-pending.worker.js';
 import { processOnboardingReminder } from './onboarding-reminder.worker.js';
 import { processReviewClose } from './review-close.worker.js';
+import { processInactiveCleanup } from './inactive-cleanup.worker.js';
 
 let connection: IORedis | null = null;
 
@@ -99,6 +100,13 @@ export function setupQueues(): void {
   reviewCloseQueue.upsertJobScheduler('review-close-scheduler', {
     every: 15 * 60 * 1000,
   }, { name: 'review-close' });
+
+  // --- Inactive account cleanup (2 years without sign-ins): daily ---
+  const inactiveCleanupQueue = new Queue('inactive-account-cleanup', queueOpts(redis));
+  new Worker('inactive-account-cleanup', processInactiveCleanup, { connection: redis });
+  inactiveCleanupQueue.upsertJobScheduler('inactive-account-cleanup-scheduler', {
+    every: 24 * 60 * 60 * 1000, // 24 hours
+  }, { name: 'inactive-account-cleanup' });
 
   console.log('BullMQ: all queues and workers initialized');
 }

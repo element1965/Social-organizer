@@ -108,6 +108,10 @@ model User {
   // OK-majority dismissals. Two strikes start a 30-day ban and reset the count.
   complaintStrikes    Int       @default(0)
   complaintBanUntil   DateTime?
+  // Inactivity cleanup: accounts without sign-ins for 2 years are deleted.
+  // Stage 0 = no warning, 1 = 30-day warning sent, 2 = 7-day warning sent. Activity resets both.
+  inactivityStage     Int       @default(0)
+  inactivityWarnedAt  DateTime?
 
   platformAccounts PlatformAccount[]
   connectionsFrom  Connection[]      @relation("connectionFromUser")
