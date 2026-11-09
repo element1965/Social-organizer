@@ -980,9 +980,18 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
       v.dot.scale.set(dotSize, dotSize, 1);
     }
 
+    // The pulse ring exists only on nodes that have shown it (online or on the path): one object
+    // less per node for the renderer to walk every frame
+    const showPulse = !isC && !n.isDeleted && ((v.online && level <= 1) || onPath);
+    if (showPulse && !v.pulse) {
+      const pulse = new THREE.Sprite(res.pulseMaterial);
+      pulse.raycast = noRaycast;
+      pulse.renderOrder = 3;
+      v.inner.add(pulse);
+      v.pulse = pulse;
+    }
     if (v.pulse) {
-      const show = !isC && !n.isDeleted && ((v.online && level <= 1) || onPath);
-      v.pulse.visible = show;
+      v.pulse.visible = showPulse;
       const body = isC ? MARK_SIZE : (v.avatar.visible ? avatarSize : v.dot.scale.x);
       v.pulse.scale.set(body * (isC ? 1.38 : 1.9), body * (isC ? 1.38 : 1.9), 1);
       v.pulse.material = pathRef.current.dim && !onPath ? res.pulseDimMaterial : res.pulseMaterial;
@@ -1090,12 +1099,6 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
       avatar.renderOrder = 2;
     }
 
-    const pulse = new THREE.Sprite(res.pulseMaterial);
-    pulse.raycast = noRaycast;
-    pulse.visible = false;
-    pulse.renderOrder = 3;
-    inner.add(pulse);
-
     const seen = introSeenRef.current.has(node.id);
     const prev = visRef.current.get(node.id);
     if (prev?.label) disposeLabel(prev.label);
@@ -1107,7 +1110,7 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
       dot,
       glow,
       label: null,
-      pulse,
+      pulse: null,
       level: showCached ? 0 : -1,
       sf,
       online: isOnline(node.lastSeen),
@@ -1416,8 +1419,11 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
         const fast = quality.dtAvg < 14;
         quality.slowSince = slow ? quality.slowSince || now : 0;
         quality.fastSince = fast ? quality.fastSince || now : 0;
-        if (slow && now - quality.slowSince > 1500 && now - quality.changedAt > 2000 && max * quality.scale > 1.01) {
-          quality.scale = Math.max(1 / max, quality.scale - 0.25);
+        // A screen capped at 30 Hz (battery saver) also looks "slow": there one step only (×0.75);
+        // down to 1 device pixel only when frames are really late (under ~25 fps)
+        const floor = quality.dtAvg > 40 ? 1 / max : Math.max(1 / max, 0.75);
+        if (slow && now - quality.slowSince > 1500 && now - quality.changedAt > 2000 && quality.scale > floor + 0.01) {
+          quality.scale = Math.max(floor, quality.scale - 0.25);
           quality.changedAt = now;
           quality.slowSince = 0;
           quality.dtAvg = 16.7;
