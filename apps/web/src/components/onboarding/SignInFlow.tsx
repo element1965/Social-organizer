@@ -155,27 +155,32 @@ export function SignInFlow({
             {signIn.error}
           </p>
         ) : null}
-        <p className="mt-4 text-label text-ink-muted" aria-live="polite">
+        <p className="mt-4 text-label text-ink-muted">{t('login.codeValid')}</p>
+        {/* One fixed-height line: the countdown (fixed-width m:ss, no reflow each second), "checking",
+            or the resend button once the timer ends */}
+        <div className="mt-0.5 flex h-6 items-center whitespace-nowrap text-label text-ink-muted">
           {signIn.verifying ? (
-            t('login.checking')
+            <span aria-live="polite">{t('login.checking')}</span>
+          ) : timer ? (
+            <span>
+              <Trans
+                i18nKey="login.resendIn"
+                values={{ time: fmtTimer(signIn.resendLeft) }}
+                components={{ t: <span className="inline-block min-w-[4ch] tabular-nums" /> }}
+              />
+            </span>
           ) : (
-            <>
-              {t('login.codeValid')}{' '}
-              {timer ? (
-                t('login.resendIn', { time: fmtTimer(signIn.resendLeft) })
-              ) : (
-                <button
-                  type="button"
-                  onClick={() => signIn.sendCode(email)}
-                  disabled={signIn.busy}
-                  className="so-focus font-bold text-care"
-                >
-                  {t('login.resend')}
-                </button>
-              )}
-            </>
+            <button
+              type="button"
+              onClick={() => signIn.sendCode(email)}
+              disabled={signIn.busy}
+              // A 44 px hit area without changing the line height
+              className="so-focus relative h-6 font-bold leading-6 text-care before:absolute before:-inset-x-1 before:-inset-y-2.5"
+            >
+              {t('login.resend')}
+            </button>
           )}
-        </p>
+        </div>
         <button
           type="button"
           onClick={back}
