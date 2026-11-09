@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { router, protectedProcedure } from '../trpc.js';
 import { TRPCError } from '@trpc/server';
-import { CONTACT_TYPES, CURRENCY_CODES, MIN_OBLIGATION_AMOUNT, contactValueAllowed, type ContactType } from '@so/shared';
+import { CONTACT_TYPES, CONTACT_TYPE_IDS, MAX_CONTACT_VALUE_LENGTH, hasForeignScheme, CURRENCY_CODES, MIN_OBLIGATION_AMOUNT, contactValueAllowed } from '@so/shared';
 import { canViewContacts } from '../services/visibility.service.js';
 import { deleteUserAccount } from '../services/account-deletion.service.js';
 
@@ -127,9 +127,14 @@ export const userRouter = router({
 
   updateContacts: protectedProcedure
     .input(z.array(z.object({
-      type: z.enum(CONTACT_TYPES.map((item) => item.type) as [ContactType, ...ContactType[]]),
-      value: z.string().max(2000),
-    })))
+      type: z.enum(CONTACT_TYPE_IDS),
+      // Empty value = delete the contact; anything else must not carry a non-http(s) scheme
+      value: z.string().trim().max(MAX_CONTACT_VALUE_LENGTH),
+    }).refine(
+      // Legacy 'mailto:' e-mails stay valid; every other non-http(s) scheme (javascript:, data:, ...) is rejected
+      (c) => !hasForeignScheme(c.value) || (c.type === 'email' && /^mailto:/i.test(c.value)),
+      { message: 'Invalid contact value', path: ['value'] },
+    )).max(CONTACT_TYPE_IDS.length))
     .mutation(async ({ ctx, input }) => {
       // Telegram is auto-managed for Telegram sign-in; other users may set it themselves
       const hasTelegramLogin = (await ctx.db.platformAccount.count({

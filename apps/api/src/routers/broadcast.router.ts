@@ -113,9 +113,9 @@ export const broadcastRouter = router({
         }
       }
 
-      // Web Push to ALL users (not just TG users)
+      // Web Push only to people without Telegram: Telegram users already got it there (one channel, SO-45)
       const allUsers = await ctx.db.user.findMany({
-        where: { deletedAt: null },
+        where: { deletedAt: null, platformAccounts: { none: { platform: 'TELEGRAM' } } },
         select: { id: true },
       });
       sendWebPush(ctx.db, allUsers.map((u) => u.id), {

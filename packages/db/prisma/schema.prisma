@@ -7,6 +7,11 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum NotifyChannel {
+  APP
+  TELEGRAM
+}
+
 enum Platform {
   FACEBOOK
   TELEGRAM
@@ -100,6 +105,11 @@ model User {
   budgetUpdatedAt     DateTime?
   notifyRenewalReminder Boolean @default(true)
   notifyRenewalStart    Boolean @default(true)
+  /// One external channel for event notifications (SO-45). null = automatic: app push if the person has a
+  /// push subscription/token, otherwise Telegram if linked. Never both.
+  notifyChannel       NotifyChannel?
+  /// New collections of people the person may be notified about (SO-45). Requests and responses stay on.
+  notifyNewCollections Boolean  @default(true)
   referralSlug        String?   @unique
   createdAt           DateTime  @default(now())
   updatedAt           DateTime  @updatedAt
@@ -113,31 +123,32 @@ model User {
   inactivityStage     Int       @default(0)
   inactivityWarnedAt  DateTime?
 
-  platformAccounts PlatformAccount[]
-  connectionsFrom  Connection[]      @relation("connectionFromUser")
-  connectionsTo    Connection[]      @relation("connectionToUser")
-  collections      Collection[]
-  obligations      Obligation[]
-  notifications    Notification[]
-  ignoreFrom       IgnoreEntry[]     @relation("ignoreFrom")
-  ignoreTo         IgnoreEntry[]     @relation("ignoreTo")
-  linkingCodes     LinkingCode[]
-  invitesSent      InviteLink[]      @relation("inviter")
-  invitesUsed      InviteLink[]      @relation("inviteUsedBy")
-  contacts         UserContact[]
-  chatMessages     ChatMessage[]
-  faqItems         FaqItem[]
-  pushSubscriptions  PushSubscription[]
-  nativePushTokens   NativePushToken[]
-  pendingFrom      PendingConnection[] @relation("pendingFrom")
-  pendingTo        PendingConnection[] @relation("pendingTo")
-  skills           UserSkill[]
-  needs            UserNeed[]
-  skillsCompleted  Boolean   @default(false)
-  city             String?
-  countryCode      String?   @map("country_code")
-  latitude         Float?
-  longitude        Float?
+  platformAccounts         PlatformAccount[]
+  connectionsFrom          Connection[]             @relation("connectionFromUser")
+  connectionsTo            Connection[]             @relation("connectionToUser")
+  collections              Collection[]
+  obligations              Obligation[]
+  notifications            Notification[]
+  ignoreFrom               IgnoreEntry[]            @relation("ignoreFrom")
+  ignoreTo                 IgnoreEntry[]            @relation("ignoreTo")
+  linkingCodes             LinkingCode[]
+  invitesSent              InviteLink[]             @relation("inviter")
+  invitesUsed              InviteLink[]             @relation("inviteUsedBy")
+  contacts                 UserContact[]
+  chatMessages             ChatMessage[]
+  faqItems                 FaqItem[]
+  pushSubscriptions        PushSubscription[]
+  nativePushTokens         NativePushToken[]
+  notificationDeliveries   NotificationDelivery[]
+  pendingFrom              PendingConnection[]      @relation("pendingFrom")
+  pendingTo                PendingConnection[]      @relation("pendingTo")
+  skills                   UserSkill[]
+  needs                    UserNeed[]
+  skillsCompleted          Boolean                  @default(false)
+  city                     String?
+  countryCode              String?                  @map("country_code")
+  latitude                 Float?
+  longitude                Float?
   skillMatchNotifsReceived SkillMatchNotification[] @relation("skillMatchRecipient")
   skillMatchNotifsSent     SkillMatchNotification[] @relation("skillMatchActor")
   suggestedCategories      SuggestedCategory[]
@@ -231,6 +242,8 @@ model Collection {
   // COMMUNITY is the circle's decision and must not be cleared by the goal arithmetic.
   blockReason       String?
   closedAt          DateTime?
+  /// Last time the author opened the collection: responses seen before it are not sent again (SO-45)
+  creatorViewedAt   DateTime?
   createdAt         DateTime         @default(now())
   updatedAt         DateTime         @updatedAt
 
@@ -404,16 +417,16 @@ model LinkingCode {
 }
 
 model InviteLink {
-  id        String   @id @default(cuid())
+  id        String    @id @default(cuid())
   inviterId String
-  token     String   @unique
+  token     String    @unique
   usedById  String?
-  createdAt DateTime @default(now())
+  createdAt DateTime  @default(now())
   usedAt    DateTime?
   expiresAt DateTime? // set for short-lived in-person (QR) tokens; null = never expires
 
-  inviter  User  @relation("inviter", fields: [inviterId], references: [id], onDelete: Cascade)
-  usedBy   User? @relation("inviteUsedBy", fields: [usedById], references: [id], onDelete: SetNull)
+  inviter User  @relation("inviter", fields: [inviterId], references: [id], onDelete: Cascade)
+  usedBy  User? @relation("inviteUsedBy", fields: [usedById], references: [id], onDelete: SetNull)
 
   @@index([token])
   @@map("invite_links")
@@ -422,7 +435,7 @@ model InviteLink {
 model UserContact {
   id        String   @id @default(cuid())
   userId    String
-  type      String   // telegram, whatsapp, facebook, instagram, twitter, linkedin, vk, email, website
+  type      String // telegram, whatsapp, facebook, instagram, twitter, linkedin, vk, email, website
   value     String
   createdAt DateTime @default(now())
 
@@ -479,12 +492,12 @@ model NativePushToken {
 }
 
 model PendingConnection {
-  id          String                  @id @default(cuid())
-  fromUserId  String
-  toUserId    String
-  status      PendingConnectionStatus @default(PENDING)
-  resolvedAt  DateTime?
-  createdAt   DateTime                @default(now())
+  id         String                  @id @default(cuid())
+  fromUserId String
+  toUserId   String
+  status     PendingConnectionStatus @default(PENDING)
+  resolvedAt DateTime?
+  createdAt  DateTime                @default(now())
 
   fromUser User @relation("pendingFrom", fields: [fromUserId], references: [id], onDelete: Cascade)
   toUser   User @relation("pendingTo", fields: [toUserId], references: [id], onDelete: Cascade)
@@ -503,67 +516,71 @@ enum ScheduledPostStatus {
 }
 
 model ScheduledPost {
-  id           String              @id @default(cuid())
+  id           String                  @id @default(cuid())
   text         String
-  mediaType    String              @default("text")
+  mediaType    String                  @default("text")
   mediaUrl     String?
   mediaFileId  String?
   buttonUrl    String?
   buttonText   String?
   scheduledAt  DateTime
-  status       ScheduledPostStatus @default(PENDING)
+  status       ScheduledPostStatus     @default(PENDING)
   sentAt       DateTime?
   sentCount    Int?
   errorMessage String?
   createdById  String
-  createdAt    DateTime            @default(now())
-  updatedAt    DateTime            @updatedAt
+  createdAt    DateTime                @default(now())
+  updatedAt    DateTime                @updatedAt
   deliveries   ScheduledPostDelivery[]
+
   @@index([status, scheduledAt])
   @@map("scheduled_posts")
 }
 
 model ScheduledPostDelivery {
-  id     String    @id @default(cuid())
+  id     String        @id @default(cuid())
   postId String
   userId String
-  sentAt DateTime  @default(now())
+  sentAt DateTime      @default(now())
   readAt DateTime?
   post   ScheduledPost @relation(fields: [postId], references: [id], onDelete: Cascade)
+
   @@unique([postId, userId])
   @@index([userId, readAt])
   @@map("scheduled_post_deliveries")
 }
 
 model AutoChainMessage {
-  id          String   @id @default(cuid())
+  id          String              @id @default(cuid())
   text        String
-  mediaType   String   @default("text")
+  mediaType   String              @default("text")
   mediaUrl    String?
   mediaFileId String?
   buttonUrl   String?
   buttonText  String?
   dayOffset   Int
-  sortOrder   Int      @default(0)
-  intervalMin Int      @default(120)
-  variant     String   @default("all")
-  isActive    Boolean  @default(true)
-  sentCount   Int      @default(0)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  sortOrder   Int                 @default(0)
+  intervalMin Int                 @default(120)
+  variant     String              @default("all")
+  isActive    Boolean             @default(true)
+  sentCount   Int                 @default(0)
+  createdAt   DateTime            @default(now())
+  updatedAt   DateTime            @updatedAt
   deliveries  AutoChainDelivery[]
+
   @@index([isActive, dayOffset, sortOrder])
   @@map("auto_chain_messages")
 }
 
 model AutoChainDelivery {
-  id        String    @id @default(cuid())
+  id        String           @id @default(cuid())
   messageId String
   userId    String
-  sentAt    DateTime  @default(now())
+  sentAt    DateTime         @default(now())
   readAt    DateTime?
-  success   Boolean   @default(true)
+  success   Boolean          @default(true)
   message   AutoChainMessage @relation(fields: [messageId], references: [id], onDelete: Cascade)
+
   @@unique([messageId, userId])
   @@index([userId, readAt])
   @@map("auto_chain_deliveries")
@@ -725,17 +742,17 @@ model MatchChain {
 }
 
 model MatchChainLink {
-  id               String  @id @default(cuid())
-  chainId          String
-  position         Int
-  giverId          String
-  receiverId       String
-  categoryId       String
-  offerHours       Float?
-  offerDescription String?
-  giverConfirmed   Boolean @default(false)
+  id                String  @id @default(cuid())
+  chainId           String
+  position          Int
+  giverId           String
+  receiverId        String
+  categoryId        String
+  offerHours        Float?
+  offerDescription  String?
+  giverConfirmed    Boolean @default(false)
   receiverConfirmed Boolean @default(false)
-  giverCompleted   Boolean @default(false)
+  giverCompleted    Boolean @default(false)
   receiverCompleted Boolean @default(false)
 
   chain    MatchChain    @relation(fields: [chainId], references: [id], onDelete: Cascade)
@@ -758,8 +775,8 @@ model SupportMessage {
   adminId     String?
   message     String   @default("")
   mediaFileId String?
-  mediaType   String?  // photo | video | document | voice
-  mediaName   String?  // original filename for documents
+  mediaType   String? // photo | video | document | voice
+  mediaName   String? // original filename for documents
   createdAt   DateTime @default(now())
 
   user  User? @relation("supportMessageUser", fields: [userId], references: [id], onDelete: SetNull)
@@ -769,4 +786,20 @@ model SupportMessage {
   @@index([platformId])
   @@index([createdAt])
   @@map("support_messages")
+}
+
+/// One row per external notification sent to a person (SO-45): the unique event key makes repeats,
+/// worker retries and races a no-op, so one event gives one external message.
+model NotificationDelivery {
+  id        String        @id @default(cuid())
+  userId    String
+  eventKey  String
+  channel   NotifyChannel
+  createdAt DateTime      @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, eventKey])
+  @@index([createdAt])
+  @@map("notification_deliveries")
 }

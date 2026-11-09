@@ -36,6 +36,14 @@ export const CONTACT_TYPES = [
 
 export type ContactType = typeof CONTACT_TYPES[number]['type'];
 
+export const CONTACT_TYPE_IDS = CONTACT_TYPES.map((c) => c.type) as unknown as [ContactType, ...ContactType[]];
+export const MAX_CONTACT_VALUE_LENGTH = 300;
+
+/** A value that looks like "scheme:..." but is not http(s) (e.g. javascript:, data:). */
+export function hasForeignScheme(value: string): boolean {
+  return /^[a-z][a-z0-9+.-]*:/i.test(value) && !/^https?:\/\//i.test(value);
+}
+
 const SAFE_CONTACT_URL = /^(https?:|mailto:|tel:)/i;
 const DANGEROUS_SCHEME = /^(javascript|data|vbscript|file):/i;
 

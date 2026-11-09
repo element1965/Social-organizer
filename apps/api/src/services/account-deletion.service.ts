@@ -129,7 +129,7 @@ export async function deleteUserAccount(
 
   // Notify inviter that user from their first circle has been deleted
   if (inviteLink?.inviterId && deletingUser.name) {
-    sendUserDeletedNotification(db, inviteLink.inviterId, deletingUser.name)
+    sendUserDeletedNotification(db, inviteLink.inviterId, deletingUser.name, userId)
       .catch((err) => console.error('[UserDelete] Failed to notify inviter:', err));
   }
 

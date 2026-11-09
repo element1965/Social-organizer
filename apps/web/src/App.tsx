@@ -13,7 +13,7 @@ import {
   ProfileRedirect,
 } from './components/ui2/stubs';
 import { useAuth } from './hooks/useAuth';
-import { afterSignInPath, readPendingInvite, safeInviteToken, safeMasked, setPendingInvite } from './components/onboarding/flow';
+import { afterSignInPath, readPendingInvite, safeInviteToken, safeMasked, safePath, setPendingInvite } from './components/onboarding/flow';
 import { LoginPage } from './pages/LoginPage';
 import { LandingPage } from './pages/LandingPage';
 import { AskPage } from './pages/AskPage';
@@ -126,9 +126,9 @@ function HomeIndex() {
   const [params] = useSearchParams();
 
   if (!isAuthenticated && isNativeApp) {
-    const inviteParam = params.get('invite');
+    const inviteParam = safeInviteToken(params.get('invite'));
     if (inviteParam) return <Navigate to={`/invite/${inviteParam}`} replace />;
-    const redirectParam = params.get('redirect');
+    const redirectParam = safePath(params.get('redirect'));
     return <Navigate to={redirectParam ? `/login?redirect=${encodeURIComponent(redirectParam)}` : '/login'} replace />;
   }
 
@@ -167,8 +167,9 @@ function ShellGate() {
   const location = useLocation();
   const [params] = useSearchParams();
 
-  if (location.pathname === '/' && params.get('invite')) {
-    return <Navigate to={`/invite/${params.get('invite')}`} replace />;
+  const inviteParam = safeInviteToken(params.get('invite'));
+  if (location.pathname === '/' && inviteParam) {
+    return <Navigate to={`/invite/${inviteParam}`} replace />;
   }
 
   if (!isAuthenticated) {
@@ -179,7 +180,9 @@ function ShellGate() {
   }
 
   if (location.pathname === '/') {
-    const pendingInvite = localStorage.getItem('pendingInviteToken');
+    const storedInvite = localStorage.getItem('pendingInviteToken');
+    const pendingInvite = safeInviteToken(storedInvite);
+    if (storedInvite && !pendingInvite) localStorage.removeItem('pendingInviteToken');
     if (pendingInvite) {
       if (inviteRedirectSeen(pendingInvite)) {
         localStorage.removeItem('pendingInviteToken');
