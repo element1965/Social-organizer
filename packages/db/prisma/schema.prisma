@@ -105,6 +105,9 @@ model User {
   updatedAt           DateTime  @updatedAt
   deletedAt           DateTime?
   lastSeen            DateTime?
+  // OK-majority dismissals. Two strikes start a 30-day ban and reset the count.
+  complaintStrikes    Int       @default(0)
+  complaintBanUntil   DateTime?
 
   platformAccounts PlatformAccount[]
   connectionsFrom  Connection[]      @relation("connectionFromUser")
@@ -139,6 +142,8 @@ model User {
   supportMessagesAsUser    SupportMessage[]         @relation("supportMessageUser")
   supportMessagesAsAdmin   SupportMessage[]         @relation("supportMessageAdmin")
   milestones               UserMilestone[]
+  collectionComplaints     CollectionComplaint[]
+  reviewVotes              CollectionReviewVote[]
 
   @@map("users")
 }
@@ -218,7 +223,9 @@ model Collection {
   currentCycleStart DateTime?
   cycleNumber       Int              @default(1)
   blockedAt         DateTime?
-  blockReason       String? // set only when an admin blocked the collection (goal-reached BLOCKED has none)
+  // Set when an admin or the circle paused the collection. Goal-reached BLOCKED leaves this null.
+  // COMMUNITY is the circle's decision and must not be cleared by the goal arithmetic.
+  blockReason       String?
   closedAt          DateTime?
   createdAt         DateTime         @default(now())
   updatedAt         DateTime         @updatedAt
@@ -226,10 +233,89 @@ model Collection {
   creator       User           @relation(fields: [creatorId], references: [id], onDelete: Cascade)
   obligations   Obligation[]
   notifications Notification[]
+  complaints    CollectionComplaint[]
+  reviews       CollectionReview[]
 
   @@index([creatorId])
   @@index([status])
   @@map("collections")
+}
+
+enum ComplaintReason {
+  COMPLAINTS
+  SUSPECTED_FRAUD
+  RULES_VIOLATION
+  ACCOUNT_HACKED
+}
+
+enum ReviewStatus {
+  OPEN
+  UPHELD
+  DISMISSED
+  INCONCLUSIVE
+  ESCALATED
+}
+
+enum ReviewAnswer {
+  PROBLEM
+  OK
+  UNKNOWN
+}
+
+// One report per person per collection. Dismissed reports are deleted; the strike counter on User remembers them.
+model CollectionComplaint {
+  id           String          @id @default(cuid())
+  collectionId String
+  userId       String
+  reason       ComplaintReason
+  comment      String?         @db.VarChar(280)
+  createdAt    DateTime        @default(now())
+
+  collection Collection @relation(fields: [collectionId], references: [id], onDelete: Cascade)
+  user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([collectionId, userId])
+  @@index([userId])
+  @@map("collection_complaints")
+}
+
+// Partial unique index collection_reviews_one_open_idx
+// (WHERE status IN ('OPEN', 'ESCALATED')) allows one active review per collection.
+// Prisma cannot express a partial index. Do not drop it.
+model CollectionReview {
+  id           String       @id @default(cuid())
+  collectionId String
+  startedAt    DateTime     @default(now())
+  closesAt     DateTime
+  status       ReviewStatus @default(OPEN)
+  decidedAt    DateTime?
+  // Direct connections of the author, minus the people who had already reported, snapshotted at open.
+  // Empty when the circle was too small and the review was escalated to admins.
+  audienceIds  String[]     @default([])
+  // Reports that opened this review. Hacked-account mail and deletion use this set only.
+  complaintIds String[]     @default([])
+
+  collection Collection             @relation(fields: [collectionId], references: [id], onDelete: Cascade)
+  votes      CollectionReviewVote[]
+
+  @@index([collectionId, status])
+  @@index([status, closesAt])
+  @@map("collection_reviews")
+}
+
+model CollectionReviewVote {
+  id        String       @id @default(cuid())
+  reviewId  String
+  userId    String
+  answer    ReviewAnswer
+  createdAt DateTime     @default(now())
+
+  review CollectionReview @relation(fields: [reviewId], references: [id], onDelete: Cascade)
+  user   User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([reviewId, userId])
+  @@index([userId])
+  @@map("collection_review_votes")
 }
 
 model Obligation {

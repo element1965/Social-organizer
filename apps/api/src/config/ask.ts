@@ -8,11 +8,23 @@ export const ASK_ERRORS = {
   locked: 'ASK_LOCKED',
 } as const;
 
-/** Reasons an admin can pick when blocking a collection. */
-export const BLOCK_REASONS = [
+/** Reasons an admin can pick when blocking a collection. COMMUNITY is set only by the circle. */
+export const ADMIN_BLOCK_REASONS = [
   'COMPLAINTS',
   'SUSPECTED_FRAUD',
   'RULES_VIOLATION',
   'AUTHOR_REQUEST',
 ] as const;
+
+export const BLOCK_REASONS = [...ADMIN_BLOCK_REASONS, 'COMMUNITY'] as const;
 export type BlockReason = (typeof BLOCK_REASONS)[number];
+export type AdminBlockReason = (typeof ADMIN_BLOCK_REASONS)[number];
+
+/** Reasons a participant or a 1st-handshake contact can pick. Not the admin-only "author asked". */
+export const COMPLAINT_REASONS = [
+  'COMPLAINTS',
+  'SUSPECTED_FRAUD',
+  'RULES_VIOLATION',
+  'ACCOUNT_HACKED',
+] as const;
+export type ComplaintReasonCode = (typeof COMPLAINT_REASONS)[number];

@@ -14,6 +14,7 @@ import { Screen } from '../components/ui2/Screen';
 import { Segmented } from '../components/ui2/Segmented';
 import { Sheet } from '../components/ui2/Sheet';
 import { formatMoney } from '../components/ui2/format';
+import { AdminReviews } from '../components/moderation/AdminReviews';
 import { AboutSheet } from '../components/profile/AboutSheet';
 import { LanguageSheet } from '../components/profile/LanguageSheet';
 import { QueryState } from '../components/profile/QueryState';
@@ -257,6 +258,7 @@ export function ProfilePage() {
               variant="link"
               trailing={supportCount > 0 ? <Pill tone="care">{String(supportCount)}</Pill> : undefined}
             />
+            <AdminReviews />
           </Group>
         </section>
       ) : null}
