@@ -791,6 +791,8 @@ export function handleDemoRequest(path: string, input: unknown): unknown {
       return collections;
     case 'collection.myParticipating':
       return myObligations;
+    case 'collection.myHistory':
+      return [];
     case 'collection.getById': {
       const id = inp?.id as string;
       const coll = collections.find((c) => c.id === id);

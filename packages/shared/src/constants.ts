@@ -36,20 +36,36 @@ export const CONTACT_TYPES = [
 
 export type ContactType = typeof CONTACT_TYPES[number]['type'];
 
+const SAFE_CONTACT_URL = /^(https?:|mailto:|tel:)/i;
+const DANGEROUS_SCHEME = /^(javascript|data|vbscript|file):/i;
+
+/** True when a contact href is safe to render or pass to openLink. */
+export function isSafeContactUrl(url: string): boolean {
+  return SAFE_CONTACT_URL.test(url.trim());
+}
+
 export function buildContactUrl(type: string, value: string): string {
-  if (value.startsWith('http')) return value;
-  const clean = value.replace(/^@/, '');
+  const raw = value.trim();
+  if (!raw || DANGEROUS_SCHEME.test(raw)) return '';
+  const known = CONTACT_TYPES.some((item) => item.type === type) || type === 'phone';
+  if (!known) return '';
+  if (/^https?:/i.test(raw)) return isSafeContactUrl(raw) ? raw : '';
+
+  const clean = raw.replace(/^@/, '');
+  let url = '';
   switch (type) {
-    case 'telegram': return `https://t.me/${clean}`;
-    case 'instagram': return `https://instagram.com/${clean}`;
-    case 'twitter': return `https://x.com/${clean}`;
-    case 'facebook': return `https://facebook.com/${clean}`;
-    case 'linkedin': return `https://linkedin.com/in/${clean}`;
-    case 'vk': return `https://vk.com/${clean}`;
-    case 'email': return `mailto:${value}`;
-    case 'tiktok': return `https://tiktok.com/@${clean}`;
-    case 'whatsapp': return `https://wa.me/${value.replace(/\D/g, '')}`;
-    case 'website': return value.startsWith('http') ? value : `https://${value}`;
-    default: return value;
+    case 'telegram': url = `https://t.me/${clean}`; break;
+    case 'instagram': url = `https://instagram.com/${clean}`; break;
+    case 'twitter': url = `https://x.com/${clean}`; break;
+    case 'facebook': url = `https://facebook.com/${clean}`; break;
+    case 'linkedin': url = `https://linkedin.com/in/${clean}`; break;
+    case 'vk': url = `https://vk.com/${clean}`; break;
+    case 'email': url = /^mailto:/i.test(raw) ? raw : `mailto:${raw}`; break;
+    case 'tiktok': url = `https://tiktok.com/@${clean}`; break;
+    case 'whatsapp': url = `https://wa.me/${raw.replace(/\D/g, '')}`; break;
+    case 'website': url = `https://${raw}`; break;
+    case 'phone': url = /^tel:/i.test(raw) ? raw : `tel:${raw}`; break;
+    default: return '';
   }
+  return isSafeContactUrl(url) ? url : '';
 }
