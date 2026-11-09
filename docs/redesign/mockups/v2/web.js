@@ -35,19 +35,6 @@ function planet(w, h, n, seed) {
   return `<svg viewBox="0 0 ${w} ${h}" preserveAspectRatio="xMidYMid slice"><defs><radialGradient id="g${s}" cx="50%" cy="45%" r="55%"><stop offset="0" style="stop-color:var(--scene-3)" stop-opacity=".95"/><stop offset=".7" style="stop-color:var(--scene-2)" stop-opacity=".4"/><stop offset="1" style="stop-color:var(--scene)" stop-opacity="0"/></radialGradient></defs><rect width="${w}" height="${h}" fill="var(--scene)"/>${stars}<circle cx="${cx}" cy="${cy}" r="${S * 1.15}" fill="url(#g${s})"/>${edges}${dots}${me}</svg>`;
 }
 
-/* the three explainer frames, same as onboarding.html */
-function pic(step) {
-  const d1 = "var(--ink)", d2 = "var(--muted)", d3 = "var(--subtle)", teal = "var(--teal)";
-  const N = [[160,150,22,d1],[70,80,13,d1],[250,70,13,d1],[60,230,13,d1],[260,220,13,d1],[20,150,9,d2],[300,140,9,d2],[120,20,9,d2],[210,280,9,d2],[300,40,6,d3],[20,60,6,d3],[20,260,6,d3]];
-  const E = [[0,1],[0,2],[0,3],[0,4],[1,5],[2,6],[1,7],[4,8],[6,9],[5,10],[3,11]];
-  const hot = step === 1 ? new Set(["0-1","1-5","1-7"]) : new Set();
-  const lines = E.map(([a,b]) => `<path d="M${N[a][0]} ${N[a][1]} L${N[b][0]} ${N[b][1]}" fill="none" stroke="${hot.has(a+"-"+b) ? teal : "var(--line-strong)"}" stroke-width="${hot.has(a+"-"+b) ? 3 : 1.6}" stroke-linecap="round"/>`).join("");
-  const dots = N.map(([x,y,r,c], i) => `<circle cx="${x}" cy="${y}" r="${r}" fill="${step === 1 && [0,1,5,7].includes(i) ? teal : c}"/>`).join("");
-  const you = `<circle cx="160" cy="150" r="34" fill="none" stroke="${teal}" stroke-width="2" opacity="${step === 0 ? 1 : 0}"/><text x="160" y="200" text-anchor="middle" font-family="Manrope" font-size="15" font-weight="800" fill="var(--ink)">Вы</text>`;
-  const chat = step === 2 ? `<g><rect x="72" y="232" width="176" height="44" rx="22" fill="var(--paper)" stroke="var(--line)"/><circle cx="96" cy="254" r="6" fill="${teal}"/><circle cx="112" cy="254" r="6" fill="${d1}"/><circle cx="128" cy="254" r="6" fill="${d2}"/><text x="188" y="259" text-anchor="middle" font-family="Manrope" font-size="14" font-weight="800" fill="var(--ink)">чат сбора</text></g>` : "";
-  return `<svg viewBox="0 0 320 300">${lines}${dots}${you}${chat}</svg>`;
-}
-
 const brandRow = (cls) => `<div class="${cls || "brand"}"><img src="${MARK}" alt="">Social Organizer</div>`;
 const siteTop = (on) => `<div class="top">${brandRow()}<nav><span class="${on === "how" ? "on" : ""}">Как это работает</span><span class="${on === "help" ? "on" : ""}">Помощь</span><span>GitHub</span></nav><div class="right"><span class="lang">RU</span><span class="btn primary md">Войти</span></div></div>`;
 const siteFoot = () => `<div class="sitefoot">${brandRow()}<span>Открытый код · Некоммерческий проект</span><div class="links"><span>GitHub</span><span>Конфиденциальность</span><span>Условия</span><span>Удалить аккаунт</span><span>RU</span></div></div>`;

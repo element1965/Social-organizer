@@ -25,7 +25,7 @@ Redesign documents (Russian):
 - [mockups/v2/](mockups/v2/index.html) — the new screen designs (source of truth for the redesign): the style guide, Circle
   with its live states, Request, Collection, Add, Profile, People, onboarding, plus the public site (`site.html`), the
   "How it works" page (`hui.html`) and the desktop/tablet shell (`desktop.html`). Every page has a theme switch
-  (bottom right). Same static server, `http://localhost:8787/v2/`.
+  (bottom right); the explainer figures (network, hui table) live in `figures.js`. Same static server, `http://localhost:8787/v2/`.
 
 **Native apps load the production web URL** (`apps/web/capacitor.config.ts`), so every web deploy from `main`
 reaches iOS/Android users immediately, without a store release.
