@@ -571,6 +571,7 @@
     "questionPlaceholder": "Вопрос",
     "answerPlaceholder": "Ответ",
     "deleteConfirm": "Удалить этот вопрос?",
+    "edit": "Изменить",
     "localized": "Переведено",
     "localizeAll": "Перевести на все языки",
     "addPhoto": "Добавить фото",
@@ -641,7 +642,12 @@
     "triggering": "Запуск...",
     "triggerSuccess": "Авторассылка запущена",
     "triggerError": "Ошибка запуска",
-    "urlPlaceholder": "https://..."
+    "urlPlaceholder": "https://...",
+    "deleteConfirm": "Удалить это сообщение?",
+    "statusPending": "Ожидает",
+    "statusSent": "Отправлено",
+    "statusCancelled": "Отменено",
+    "statusFailed": "Не отправлено"
   },
   "contacts": {
     "telegram": "Telegram",
@@ -1108,7 +1114,8 @@
     "replyPlaceholder": "Ответить...",
     "unknownUser": "Неизвестный пользователь",
     "attachFile": "Прикрепить файл",
-    "photoAlt": "фото"
+    "photoAlt": "фото",
+    "file": "Файл"
   },
   "videoGuide": {
     "play": "Смотреть видеоинструкцию",
@@ -1454,6 +1461,7 @@
     "step3": "Включи <b>Уведомления</b>",
     "step4": "Вернись в приложение",
     "checkAgain": "Проверить снова",
-    "checkHint": "После включения уведомлений нажми «Проверить снова»"
+    "checkHint": "После включения уведомлений нажми «Проверить снова»",
+    "notNow": "Не сейчас"
   }
 }

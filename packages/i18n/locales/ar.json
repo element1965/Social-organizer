@@ -581,6 +581,7 @@
     "questionPlaceholder": "السؤال",
     "answerPlaceholder": "الإجابة",
     "deleteConfirm": "هل تريد حذف هذا السؤال؟",
+    "edit": "تعديل",
     "localized": "مترجم",
     "localizeAll": "ترجمة لجميع اللغات",
     "addPhoto": "إضافة صورة",
@@ -651,7 +652,12 @@
     "triggering": "جارٍ التشغيل...",
     "triggerSuccess": "تم تشغيل السلسلة التلقائية",
     "triggerError": "فشل التشغيل",
-    "urlPlaceholder": "https://..."
+    "urlPlaceholder": "https://...",
+    "deleteConfirm": "حذف هذه الرسالة؟",
+    "statusPending": "قيد الانتظار",
+    "statusSent": "تم الإرسال",
+    "statusCancelled": "ملغى",
+    "statusFailed": "فشل"
   },
   "contacts": {
     "telegram": "Telegram",
@@ -1122,7 +1128,8 @@
     "replyPlaceholder": "الرد...",
     "unknownUser": "مستخدم غير معروف",
     "attachFile": "إرفاق ملف",
-    "photoAlt": "صورة"
+    "photoAlt": "صورة",
+    "file": "ملف"
   },
   "videoGuide": {
     "play": "شاهد الفيديو التعليمي",
@@ -1478,6 +1485,7 @@
     "step3": "فعّل <b>الإشعارات</b>",
     "step4": "عُد إلى التطبيق",
     "checkAgain": "تحقق مرة أخرى",
-    "checkHint": "بعد تفعيل الإشعارات، اضغط «تحقق مرة أخرى»"
+    "checkHint": "بعد تفعيل الإشعارات، اضغط «تحقق مرة أخرى»",
+    "notNow": "ليس الآن"
   }
 }

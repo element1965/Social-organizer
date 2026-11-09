@@ -1,105 +1,107 @@
-import { useState, useEffect } from 'react';
-import { X, Send, Loader2, Clock, Link2, Trash2, ToggleLeft, ToggleRight, BarChart3, Pencil, Check, Play } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { BarChart3, Check, Clock, Link2, Pencil, Play, Send, Trash2, ToggleLeft, ToggleRight } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { trpc, authFetch } from '../lib/trpc';
+import { Button } from './ui2/Button';
+import { Pill, type PillTone } from './ui2/Pill';
+import { Segmented } from './ui2/Segmented';
+import { Sheet } from './ui2/Sheet';
 import { MessageComposer, type MessageData } from './MessageComposer';
-
-interface BroadcastPanelProps {
-  onClose: () => void;
-}
+import { cn } from '../lib/utils';
 
 type Tab = 'send' | 'scheduled' | 'autochain';
 type Variant = 'all' | 'invited' | 'organic';
 
 const emptyMessage: MessageData = { text: '', mediaType: 'text' };
 
-const inputCls = 'w-full p-2 text-sm rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500';
+const fieldCls =
+  'w-full rounded-lg border border-line bg-surface-2 px-3.5 py-2.5 text-body-s font-semibold text-ink outline-none placeholder:text-ink-subtle focus:border-care disabled:opacity-50';
+
+const STATUS_TONE: Record<string, PillTone> = {
+  PENDING: 'warm',
+  SENT: 'care',
+  CANCELLED: 'neutral',
+  FAILED: 'sos',
+};
 
 function StatusBadge({ status }: { status: string }) {
   const { t } = useTranslation();
-  const colors: Record<string, string> = {
-    PENDING: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400',
-    SENT: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-400',
-    CANCELLED: 'bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-300',
-    FAILED: 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400',
-  };
   const key = `broadcast.status${status.charAt(0) + status.slice(1).toLowerCase()}`;
-  return (
-    <span className={`px-2 py-0.5 text-xs rounded-full font-medium ${colors[status] || 'bg-gray-100'}`}>
-      {t(key)}
-    </span>
-  );
+  return <Pill tone={STATUS_TONE[status] ?? 'neutral'}>{t(key)}</Pill>;
 }
 
 function VariantBadge({ variant }: { variant: string }) {
   const { t } = useTranslation();
   if (variant === 'all') return null;
-  const colors: Record<string, string> = {
-    invited: 'bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400',
-    organic: 'bg-cyan-100 dark:bg-cyan-900/30 text-cyan-700 dark:text-cyan-400',
-  };
-  const labels: Record<string, string> = {
-    invited: t('broadcast.variantInvited'),
-    organic: t('broadcast.variantOrganic'),
-  };
-  return (
-    <span className={`text-xs px-1.5 py-0.5 rounded font-medium ${colors[variant] || ''}`}>
-      {labels[variant] || variant}
-    </span>
-  );
+  const tone: PillTone = variant === 'invited' ? 'warm' : 'link';
+  const label = variant === 'invited'
+    ? t('broadcast.variantInvited')
+    : variant === 'organic'
+      ? t('broadcast.variantOrganic')
+      : variant;
+  return <Pill tone={tone}>{label}</Pill>;
 }
 
 function VariantSelector({ value, onChange, disabled }: { value: Variant; onChange: (v: Variant) => void; disabled?: boolean }) {
   const { t } = useTranslation();
-  const opts: { key: Variant; label: string }[] = [
-    { key: 'all', label: t('broadcast.variantAll') },
-    { key: 'invited', label: t('broadcast.variantInvited') },
-    { key: 'organic', label: t('broadcast.variantOrganic') },
-  ];
   return (
-    <div className="flex gap-1">
-      {opts.map((o) => (
-        <button
-          key={o.key}
-          onClick={() => onChange(o.key)}
-          disabled={disabled}
-          className={`flex-1 py-1.5 text-xs font-medium rounded-lg transition-colors ${
-            value === o.key
-              ? 'bg-emerald-600 text-white'
-              : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300'
-          }`}
-        >
-          {o.label}
-        </button>
-      ))}
-    </div>
+    <Segmented
+      label={t('broadcast.variantAll')}
+      value={value}
+      onChange={onChange}
+      options={[
+        { value: 'all', label: t('broadcast.variantAll'), disabled },
+        { value: 'invited', label: t('broadcast.variantInvited'), disabled },
+        { value: 'organic', label: t('broadcast.variantOrganic'), disabled },
+      ]}
+    />
   );
 }
 
-export function BroadcastPanel({ onClose }: BroadcastPanelProps) {
+function NumField({
+  label,
+  value,
+  min,
+  onChange,
+  disabled,
+}: {
+  label: string;
+  value: number;
+  min: number;
+  onChange: (value: number) => void;
+  disabled?: boolean;
+}) {
+  return (
+    <label className="block">
+      <span className="mb-1.5 block text-label font-semibold text-ink-muted">{label}</span>
+      <input
+        type="number"
+        min={min}
+        value={value}
+        onChange={(event) => onChange(Number(event.target.value))}
+        className={fieldCls}
+        disabled={disabled}
+      />
+    </label>
+  );
+}
+
+export function BroadcastPanel() {
   const { t } = useTranslation();
   const [tab, setTab] = useState<Tab>('send');
-
-  // Track visual viewport to keep modal above iOS keyboard
-  const [kbOffset, setKbOffset] = useState(0);
-  useEffect(() => {
-    const vv = window.visualViewport;
-    if (!vv) return;
-    const update = () => {
-      const offset = Math.max(0, window.innerHeight - vv.offsetTop - vv.height);
-      setKbOffset(offset);
-    };
-    vv.addEventListener('resize', update);
-    vv.addEventListener('scroll', update);
-    return () => { vv.removeEventListener('resize', update); vv.removeEventListener('scroll', update); };
-  }, []);
   const [msg, setMsg] = useState<MessageData>({ ...emptyMessage });
   const [result, setResult] = useState<string | null>(null);
+  const [resultError, setResultError] = useState(false);
+  const [deleteId, setDeleteId] = useState<string | null>(null);
 
-  // --- Send tab ---
+  const note = (text: string, error = false) => {
+    setResult(text);
+    setResultError(error);
+  };
+
   const sendAllMutation = trpc.broadcast.sendAll.useMutation({
-    onSuccess: (data) => setResult(t('broadcast.sentSuccess', { count: data.sent })),
-    onError: () => setResult(t('broadcast.error')),
+    onSuccess: (data) => note(t('broadcast.sentSuccess', { count: data.sent })),
+    onError: () => note(t('broadcast.error'), true),
   });
 
   const handleSend = () => {
@@ -115,25 +117,24 @@ export function BroadcastPanel({ onClose }: BroadcastPanelProps) {
     });
   };
 
-  // --- Scheduled tab ---
   const [scheduledMsg, setScheduledMsg] = useState<MessageData>({ ...emptyMessage });
   const [scheduledAt, setScheduledAt] = useState('');
   const scheduledList = trpc.broadcast.listScheduled.useQuery(undefined, { enabled: tab === 'scheduled' });
   const scheduleMutation = trpc.broadcast.schedulePost.useMutation({
     onSuccess: () => {
-      setResult(t('broadcast.scheduledSuccess'));
+      note(t('broadcast.scheduledSuccess'));
       setScheduledMsg({ ...emptyMessage });
       setScheduledAt('');
       scheduledList.refetch();
     },
-    onError: () => setResult(t('broadcast.error')),
+    onError: () => note(t('broadcast.error'), true),
   });
   const cancelMutation = trpc.broadcast.cancelScheduled.useMutation({
     onSuccess: () => {
-      setResult(t('broadcast.cancelledSuccess'));
+      note(t('broadcast.cancelledSuccess'));
       scheduledList.refetch();
     },
-    onError: () => setResult(t('broadcast.error')),
+    onError: () => note(t('broadcast.error'), true),
   });
 
   const handleSchedule = () => {
@@ -150,7 +151,6 @@ export function BroadcastPanel({ onClose }: BroadcastPanelProps) {
     });
   };
 
-  // --- Auto-chain tab ---
   const [chainMsg, setChainMsg] = useState<MessageData>({ ...emptyMessage });
   const [chainDay, setChainDay] = useState(0);
   const [chainOrder, setChainOrder] = useState(0);
@@ -177,7 +177,7 @@ export function BroadcastPanel({ onClose }: BroadcastPanelProps) {
   const chainStatsQuery = trpc.broadcast.chainStats.useQuery(undefined, { enabled: tab === 'autochain' });
   const createChainMutation = trpc.broadcast.createChainMessage.useMutation({
     onSuccess: () => {
-      setResult(t('broadcast.chainAdded'));
+      note(t('broadcast.chainAdded'));
       setChainMsg({ ...emptyMessage });
       setChainDay(0);
       setChainOrder(0);
@@ -185,7 +185,7 @@ export function BroadcastPanel({ onClose }: BroadcastPanelProps) {
       chainList.refetch();
       chainStatsQuery.refetch();
     },
-    onError: () => setResult(t('broadcast.error')),
+    onError: () => note(t('broadcast.error'), true),
   });
   const updateChainMutation = trpc.broadcast.updateChainMessage.useMutation({
     onSuccess: () => {
@@ -236,371 +236,281 @@ export function BroadcastPanel({ onClose }: BroadcastPanelProps) {
     });
   };
 
-  // Mark read on mount
   const markRead = trpc.broadcast.markRead.useMutation();
   useEffect(() => { markRead.mutate(); }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const isPending = sendAllMutation.isPending
     || scheduleMutation.isPending || createChainMutation.isPending;
 
-  const tabCls = (t: Tab) => `flex-1 py-2 text-xs font-medium rounded-lg transition-colors ${
-    tab === t ? 'bg-emerald-600 text-white' : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300'
-  }`;
-
-  const bottomPx = kbOffset > 0 ? kbOffset + 8 : 80; // 80 = bottom-20 (5rem)
-  const maxHeightPx = `calc(100dvh - ${bottomPx + 16}px)`;
-
   return (
-    <div
-      className="fixed inset-x-4 bg-white dark:bg-gray-900 rounded-2xl shadow-2xl z-50 flex flex-col border border-gray-200 dark:border-gray-700"
-      style={{ bottom: `${bottomPx}px`, maxHeight: maxHeightPx }}
-    >
-      {/* Header */}
-      <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
-        <h3 className="font-semibold text-gray-900 dark:text-white flex items-center gap-2">
-          <Send className="w-5 h-5 text-emerald-500" />
-          {t('broadcast.title')}
-        </h3>
-        <button onClick={onClose} className="p-1 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full">
-          <X className="w-5 h-5 text-gray-500 dark:text-gray-300" />
-        </button>
-      </div>
+    <div className="space-y-3 pb-4">
+      <Segmented
+        label={t('broadcast.title')}
+        value={tab}
+        onChange={(next) => { setTab(next); setResult(null); }}
+        options={[
+          { value: 'send', label: t('broadcast.tabSend') },
+          { value: 'scheduled', label: t('broadcast.tabScheduled') },
+          { value: 'autochain', label: t('broadcast.tabAutoChain') },
+        ]}
+      />
 
-      {/* Tabs */}
-      <div className="flex gap-1 p-2 px-4">
-        <button onClick={() => { setTab('send'); setResult(null); }} className={tabCls('send')}>{t('broadcast.tabSend')}</button>
-        <button onClick={() => { setTab('scheduled'); setResult(null); }} className={tabCls('scheduled')}>{t('broadcast.tabScheduled')}</button>
-        <button onClick={() => { setTab('autochain'); setResult(null); }} className={tabCls('autochain')}>{t('broadcast.tabAutoChain')}</button>
-      </div>
-
-      <div className="flex-1 overflow-y-auto p-4 space-y-3">
-        {/* === SEND TAB === */}
-        {tab === 'send' && (
-          <>
-            <MessageComposer value={msg} onChange={setMsg} disabled={isPending} />
-          </>
-        )}
-
-        {/* === SCHEDULED TAB === */}
-        {tab === 'scheduled' && (
-          <>
-            <MessageComposer value={scheduledMsg} onChange={setScheduledMsg} disabled={isPending} />
-
-            <div className="space-y-1">
-              <label className="flex items-center gap-1.5 text-xs text-gray-500 dark:text-gray-300">
-                <Clock className="w-3.5 h-3.5" />
-                {t('broadcast.scheduledAt')}
-              </label>
-              <input
-                type="datetime-local"
-                value={scheduledAt}
-                onChange={(e) => setScheduledAt(e.target.value)}
-                className={inputCls}
-                disabled={isPending}
-              />
-            </div>
-
-            {/* Schedule button */}
-            <button
-              onClick={handleSchedule}
-              disabled={!scheduledMsg.text.trim() || !scheduledAt || isPending}
-              className="w-full py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 disabled:opacity-50 transition-colors flex items-center justify-center gap-2 text-sm font-medium"
-            >
-              {scheduleMutation.isPending ? (
-                <><Loader2 className="w-4 h-4 animate-spin" />{t('broadcast.scheduling')}</>
-              ) : (
-                <><Clock className="w-4 h-4" />{t('broadcast.schedule')}</>
-              )}
-            </button>
-
-            {/* Scheduled posts list */}
-            <div className="border-t border-gray-200 dark:border-gray-700 pt-3 space-y-2">
-              {scheduledList.data?.length === 0 && (
-                <p className="text-xs text-gray-400 text-center py-2">{t('broadcast.noScheduled')}</p>
-              )}
-              {scheduledList.data?.map((post) => (
-                <div key={post.id} className="p-3 rounded-lg bg-gray-50 dark:bg-gray-800 space-y-1.5">
-                  <div className="flex items-start justify-between gap-2">
-                    <p
-                      onClick={() => toggleExpand(post.id)}
-                      className={`text-sm text-gray-900 dark:text-gray-100 cursor-pointer whitespace-pre-wrap ${expandedIds.has(post.id) ? '' : 'line-clamp-2'}`}
-                    >{post.text}</p>
-                    <StatusBadge status={post.status} />
-                  </div>
-                  <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-300">
-                    <span>{new Date(post.scheduledAt).toLocaleString()}</span>
-                    <div className="flex items-center gap-2">
-                      {post.sentCount != null && (
-                        <span className="flex items-center gap-1">
-                          <BarChart3 className="w-3 h-3" />
-                          {post._count.deliveries} / {(post.deliveries as unknown[]).length} {t('broadcast.reads')}
-                        </span>
-                      )}
-                      {post.status === 'PENDING' && (
-                        <button
-                          onClick={() => cancelMutation.mutate({ id: post.id })}
-                          disabled={cancelMutation.isPending}
-                          className="text-red-400 hover:text-red-600 text-xs"
-                        >
-                          {t('broadcast.cancelPost')}
-                        </button>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </>
-        )}
-
-        {/* === AUTO-CHAIN TAB === */}
-        {tab === 'autochain' && (
-          <>
-            {/* Stats */}
-            {chainStatsQuery.data && (
-              <div className="grid grid-cols-3 gap-2 text-center">
-                <div className="p-2 rounded-lg bg-gray-50 dark:bg-gray-800">
-                  <div className="text-lg font-bold text-emerald-600">{chainStatsQuery.data.activeMessages}</div>
-                  <div className="text-xs text-gray-500 dark:text-gray-300">{t('broadcast.activeMessages')}</div>
-                </div>
-                <div className="p-2 rounded-lg bg-gray-50 dark:bg-gray-800">
-                  <div className="text-lg font-bold text-blue-600">{chainStatsQuery.data.totalDeliveries}</div>
-                  <div className="text-xs text-gray-500 dark:text-gray-300">{t('broadcast.totalDeliveries')}</div>
-                </div>
-                <div className="p-2 rounded-lg bg-gray-50 dark:bg-gray-800">
-                  <div className="text-lg font-bold text-purple-600">{chainStatsQuery.data.openRate}%</div>
-                  <div className="text-xs text-gray-500 dark:text-gray-300">{t('broadcast.openRate')}</div>
-                </div>
-              </div>
-            )}
-
-            {/* Trigger button */}
-            <button
-              onClick={async () => {
-                setTriggerLoading(true);
-                setResult(null);
-                try {
-                  const token = localStorage.getItem('accessToken');
-                  const res = await authFetch('/api/trigger-autochain', {
-                    method: 'POST',
-                    headers: { Authorization: `Bearer ${token}` },
-                  });
-                  if (res.ok) {
-                    setResult(t('broadcast.triggerSuccess'));
-                    chainStatsQuery.refetch();
-                  } else {
-                    const body = await res.json().catch(() => ({}));
-                    setResult(`${t('broadcast.triggerError')}: ${body.error || res.status}`);
-                  }
-                } catch {
-                  setResult(t('broadcast.triggerError'));
-                } finally {
-                  setTriggerLoading(false);
-                }
-              }}
-              disabled={triggerLoading}
-              className="w-full py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 disabled:opacity-50 transition-colors flex items-center justify-center gap-2 text-sm font-medium"
-            >
-              {triggerLoading ? (
-                <><Loader2 className="w-4 h-4 animate-spin" />{t('broadcast.triggering')}</>
-              ) : (
-                <><Play className="w-4 h-4" />{t('broadcast.triggerNow')}</>
-              )}
-            </button>
-
-            {/* Add form */}
-            <MessageComposer value={chainMsg} onChange={setChainMsg} disabled={isPending} />
-
-            {/* Variant selector */}
-            <VariantSelector value={chainVariant} onChange={setChainVariant} disabled={isPending} />
-
-            <div className="grid grid-cols-3 gap-2">
-              <div>
-                <label className="text-xs text-gray-500 dark:text-gray-300">{t('broadcast.chainDayOffset')}</label>
-                <input
-                  type="number"
-                  min={0}
-                  value={chainDay}
-                  onChange={(e) => setChainDay(Number(e.target.value))}
-                  className={inputCls}
-                  disabled={isPending}
-                />
-              </div>
-              <div>
-                <label className="text-xs text-gray-500 dark:text-gray-300">{t('broadcast.chainSortOrder')}</label>
-                <input
-                  type="number"
-                  min={0}
-                  value={chainOrder}
-                  onChange={(e) => setChainOrder(Number(e.target.value))}
-                  className={inputCls}
-                  disabled={isPending}
-                />
-              </div>
-              <div>
-                <label className="text-xs text-gray-500 dark:text-gray-300">{t('broadcast.chainInterval')}</label>
-                <input
-                  type="number"
-                  min={1}
-                  value={chainInterval}
-                  onChange={(e) => setChainInterval(Number(e.target.value))}
-                  className={inputCls}
-                  disabled={isPending}
-                />
-              </div>
-            </div>
-
-            <button
-              onClick={handleAddChain}
-              disabled={!chainMsg.text.trim() || isPending}
-              className="w-full py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 disabled:opacity-50 transition-colors flex items-center justify-center gap-2 text-sm font-medium"
-            >
-              {createChainMutation.isPending ? (
-                <><Loader2 className="w-4 h-4 animate-spin" />{t('broadcast.adding')}</>
-              ) : (
-                <><Link2 className="w-4 h-4" />{t('broadcast.addChainMessage')}</>
-              )}
-            </button>
-
-            {/* Chain messages list */}
-            <div className="border-t border-gray-200 dark:border-gray-700 pt-3 space-y-2">
-              {chainList.data?.length === 0 && (
-                <p className="text-xs text-gray-400 text-center py-2">{t('broadcast.noChainMessages')}</p>
-              )}
-              {chainList.data?.map((cm) => (
-                <div key={cm.id} className="p-3 rounded-lg bg-gray-50 dark:bg-gray-800 space-y-1.5">
-                  {editingId === cm.id ? (
-                    /* --- Edit mode --- */
-                    <div className="space-y-2">
-                      <textarea
-                        value={editText}
-                        onChange={(e) => setEditText(e.target.value)}
-                        className={`${inputCls} resize-y`}
-                        rows={3}
-                      />
-                      <VariantSelector value={editVariant} onChange={setEditVariant} />
-                      <div className="grid grid-cols-3 gap-2">
-                        <div>
-                          <label className="text-xs text-gray-500 dark:text-gray-300">{t('broadcast.chainDayOffset')}</label>
-                          <input type="number" min={0} value={editDay} onChange={(e) => setEditDay(Number(e.target.value))} className={inputCls} />
-                        </div>
-                        <div>
-                          <label className="text-xs text-gray-500 dark:text-gray-300">{t('broadcast.chainSortOrder')}</label>
-                          <input type="number" min={0} value={editOrder} onChange={(e) => setEditOrder(Number(e.target.value))} className={inputCls} />
-                        </div>
-                        <div>
-                          <label className="text-xs text-gray-500 dark:text-gray-300">{t('broadcast.chainInterval')}</label>
-                          <input type="number" min={1} value={editInterval} onChange={(e) => setEditInterval(Number(e.target.value))} className={inputCls} />
-                        </div>
-                      </div>
-                      <div className="flex gap-2">
-                        <button
-                          onClick={saveEdit}
-                          disabled={updateChainMutation.isPending || !editText.trim()}
-                          className="flex-1 py-1.5 bg-emerald-600 text-white rounded-lg text-xs font-medium flex items-center justify-center gap-1 disabled:opacity-50"
-                        >
-                          <Check className="w-3.5 h-3.5" />{t('common.save')}
-                        </button>
-                        <button
-                          onClick={() => setEditingId(null)}
-                          className="flex-1 py-1.5 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg text-xs font-medium"
-                        >
-                          {t('common.cancel')}
-                        </button>
-                      </div>
-                    </div>
-                  ) : (
-                    /* --- View mode --- */
-                    <>
-                      <div className="flex items-start justify-between gap-2">
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-center gap-2 mb-1 flex-wrap">
-                            <span className="text-xs font-medium text-emerald-600 dark:text-emerald-400">
-                              {t('broadcast.chainDay', { day: cm.dayOffset })}
-                            </span>
-                            <span className="text-xs text-gray-400">#{cm.sortOrder}</span>
-                            {cm.mediaType !== 'text' && (
-                              <span className="text-xs px-1.5 py-0.5 rounded bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400">
-                                {cm.mediaType}
-                              </span>
-                            )}
-                            <VariantBadge variant={cm.variant} />
-                          </div>
-                          <p
-                            onClick={() => toggleExpand(cm.id)}
-                            className={`text-sm text-gray-900 dark:text-gray-100 cursor-pointer whitespace-pre-wrap ${expandedIds.has(cm.id) ? '' : 'line-clamp-2'}`}
-                          >{cm.text}</p>
-                        </div>
-                      </div>
-                      <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-300">
-                        <div className="flex items-center gap-3">
-                          <span>{t('broadcast.deliveries')}: {cm._count.deliveries}</span>
-                          <span>{t('broadcast.reads')}: {(cm.deliveries as unknown[]).length}</span>
-                          {cm._count.deliveries > 0 && (
-                            <span className="text-purple-500">
-                              {Math.round(((cm.deliveries as unknown[]).length / cm._count.deliveries) * 100)}% {t('broadcast.openRate')}
-                            </span>
-                          )}
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <button
-                            onClick={() => startEdit(cm)}
-                            className="text-blue-400 hover:text-blue-600"
-                            title={t('broadcast.editChain')}
-                          >
-                            <Pencil className="w-4 h-4" />
-                          </button>
-                          <button
-                            onClick={() => updateChainMutation.mutate({ id: cm.id, isActive: !cm.isActive })}
-                            className="flex items-center gap-0.5"
-                            title={cm.isActive ? t('broadcast.active') : t('broadcast.inactive')}
-                          >
-                            {cm.isActive ? (
-                              <ToggleRight className="w-5 h-5 text-emerald-500" />
-                            ) : (
-                              <ToggleLeft className="w-5 h-5 text-gray-400" />
-                            )}
-                          </button>
-                          <button
-                            onClick={() => { if (confirm(t('common.confirm') + '?')) deleteChainMutation.mutate({ id: cm.id }); }}
-                            className="text-red-400 hover:text-red-600"
-                          >
-                            <Trash2 className="w-4 h-4" />
-                          </button>
-                        </div>
-                      </div>
-                    </>
-                  )}
-                </div>
-              ))}
-            </div>
-          </>
-        )}
-
-        {/* Result message */}
-        {result && (
-          <p className={`text-sm text-center py-1 ${result.includes('Failed') || result.includes('ошибка') || result.includes('Ошибка') ? 'text-red-500' : 'text-emerald-500'}`}>
-            {result}
-          </p>
-        )}
-      </div>
-
-      {/* Send button (only for send tab) */}
       {tab === 'send' && (
-        <div className="p-4 border-t border-gray-200 dark:border-gray-700">
-          <button
-            onClick={handleSend}
-            disabled={!msg.text.trim() || isPending}
-            className="w-full py-2.5 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 disabled:opacity-50 transition-colors flex items-center justify-center gap-2 text-sm font-medium"
-          >
-            {sendAllMutation.isPending ? (
-              <><Loader2 className="w-4 h-4 animate-spin" />{t('broadcast.sending')}</>
-            ) : (
-              <><Send className="w-4 h-4" />{t('broadcast.send')}</>
-            )}
-          </button>
-        </div>
+        <>
+          <MessageComposer value={msg} onChange={setMsg} disabled={isPending} />
+          <Button className="w-full" onClick={handleSend} disabled={!msg.text.trim()} loading={sendAllMutation.isPending} icon={<Send className="h-4 w-4" />}>
+            {sendAllMutation.isPending ? t('broadcast.sending') : t('broadcast.send')}
+          </Button>
+        </>
       )}
+
+      {tab === 'scheduled' && (
+        <>
+          <MessageComposer value={scheduledMsg} onChange={setScheduledMsg} disabled={isPending} />
+          <label className="block">
+            <span className="mb-1.5 flex items-center gap-1.5 text-label font-semibold text-ink-muted">
+              <Clock className="h-3.5 w-3.5" />
+              {t('broadcast.scheduledAt')}
+            </span>
+            <input
+              type="datetime-local"
+              value={scheduledAt}
+              onChange={(e) => setScheduledAt(e.target.value)}
+              className={fieldCls}
+              disabled={isPending}
+            />
+          </label>
+          <Button
+            className="w-full"
+            onClick={handleSchedule}
+            disabled={!scheduledMsg.text.trim() || !scheduledAt}
+            loading={scheduleMutation.isPending}
+            icon={<Clock className="h-4 w-4" />}
+          >
+            {scheduleMutation.isPending ? t('broadcast.scheduling') : t('broadcast.schedule')}
+          </Button>
+          <div className="space-y-2 border-t border-line pt-3">
+            {scheduledList.data?.length === 0 && (
+              <p className="py-2 text-center text-label font-semibold text-ink-subtle">{t('broadcast.noScheduled')}</p>
+            )}
+            {scheduledList.data?.map((post) => (
+              <div key={post.id} className="space-y-1.5 rounded-lg bg-surface p-3 shadow-card">
+                <div className="flex items-start justify-between gap-2">
+                  <p
+                    onClick={() => toggleExpand(post.id)}
+                    className={cn(
+                      'cursor-pointer whitespace-pre-wrap text-body-s text-ink',
+                      expandedIds.has(post.id) ? '' : 'line-clamp-2',
+                    )}
+                  >{post.text}</p>
+                  <StatusBadge status={post.status} />
+                </div>
+                <div className="flex items-center justify-between text-label font-semibold text-ink-muted">
+                  <span>{new Date(post.scheduledAt).toLocaleString()}</span>
+                  <div className="flex items-center gap-2">
+                    {post.sentCount != null && (
+                      <span className="flex items-center gap-1">
+                        <BarChart3 className="h-3 w-3" />
+                        {post._count.deliveries} / {(post.deliveries as unknown[]).length} {t('broadcast.reads')}
+                      </span>
+                    )}
+                    {post.status === 'PENDING' && (
+                      <Button
+                        variant="textDanger"
+                        size="sm"
+                        onClick={() => cancelMutation.mutate({ id: post.id })}
+                        disabled={cancelMutation.isPending}
+                      >
+                        {t('broadcast.cancelPost')}
+                      </Button>
+                    )}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </>
+      )}
+
+      {tab === 'autochain' && (
+        <>
+          {chainStatsQuery.data && (
+            <div className="grid grid-cols-3 gap-2 text-center">
+              <div className="rounded-lg bg-surface p-2 shadow-card">
+                <div className="text-h3 font-bold text-care">{chainStatsQuery.data.activeMessages}</div>
+                <div className="text-label font-semibold text-ink-muted">{t('broadcast.activeMessages')}</div>
+              </div>
+              <div className="rounded-lg bg-surface p-2 shadow-card">
+                <div className="text-h3 font-bold text-link">{chainStatsQuery.data.totalDeliveries}</div>
+                <div className="text-label font-semibold text-ink-muted">{t('broadcast.totalDeliveries')}</div>
+              </div>
+              <div className="rounded-lg bg-surface p-2 shadow-card">
+                <div className="text-h3 font-bold text-warm-ink">{chainStatsQuery.data.openRate}%</div>
+                <div className="text-label font-semibold text-ink-muted">{t('broadcast.openRate')}</div>
+              </div>
+            </div>
+          )}
+
+          <Button
+            variant="secondary"
+            className="w-full"
+            disabled={triggerLoading}
+            loading={triggerLoading}
+            icon={<Play className="h-4 w-4" />}
+            onClick={async () => {
+              setTriggerLoading(true);
+              setResult(null);
+              try {
+                const token = localStorage.getItem('accessToken');
+                const res = await authFetch('/api/trigger-autochain', {
+                  method: 'POST',
+                  headers: { Authorization: `Bearer ${token}` },
+                });
+                if (res.ok) {
+                  note(t('broadcast.triggerSuccess'));
+                  chainStatsQuery.refetch();
+                } else {
+                  const body = await res.json().catch(() => ({})) as { error?: string };
+                  note(`${t('broadcast.triggerError')}: ${body.error || res.status}`, true);
+                }
+              } catch {
+                note(t('broadcast.triggerError'), true);
+              } finally {
+                setTriggerLoading(false);
+              }
+            }}
+          >
+            {triggerLoading ? t('broadcast.triggering') : t('broadcast.triggerNow')}
+          </Button>
+
+          <MessageComposer value={chainMsg} onChange={setChainMsg} disabled={isPending} />
+          <VariantSelector value={chainVariant} onChange={setChainVariant} disabled={isPending} />
+
+          <div className="grid grid-cols-3 gap-2">
+            <NumField label={t('broadcast.chainDayOffset')} value={chainDay} min={0} onChange={setChainDay} disabled={isPending} />
+            <NumField label={t('broadcast.chainSortOrder')} value={chainOrder} min={0} onChange={setChainOrder} disabled={isPending} />
+            <NumField label={t('broadcast.chainInterval')} value={chainInterval} min={1} onChange={setChainInterval} disabled={isPending} />
+          </div>
+
+          <Button
+            className="w-full"
+            onClick={handleAddChain}
+            disabled={!chainMsg.text.trim()}
+            loading={createChainMutation.isPending}
+            icon={<Link2 className="h-4 w-4" />}
+          >
+            {createChainMutation.isPending ? t('broadcast.adding') : t('broadcast.addChainMessage')}
+          </Button>
+
+          <div className="space-y-2 border-t border-line pt-3">
+            {chainList.data?.length === 0 && (
+              <p className="py-2 text-center text-label font-semibold text-ink-subtle">{t('broadcast.noChainMessages')}</p>
+            )}
+            {chainList.data?.map((cm) => (
+              <div key={cm.id} className="space-y-1.5 rounded-lg bg-surface p-3 shadow-card">
+                {editingId === cm.id ? (
+                  <div className="space-y-2">
+                    <textarea
+                      value={editText}
+                      onChange={(e) => setEditText(e.target.value)}
+                      className={`${fieldCls} resize-y`}
+                      rows={3}
+                    />
+                    <VariantSelector value={editVariant} onChange={setEditVariant} />
+                    <div className="grid grid-cols-3 gap-2">
+                      <NumField label={t('broadcast.chainDayOffset')} value={editDay} min={0} onChange={setEditDay} />
+                      <NumField label={t('broadcast.chainSortOrder')} value={editOrder} min={0} onChange={setEditOrder} />
+                      <NumField label={t('broadcast.chainInterval')} value={editInterval} min={1} onChange={setEditInterval} />
+                    </div>
+                    <div className="flex gap-2">
+                      <Button className="flex-1" size="md" onClick={saveEdit} disabled={!editText.trim()} loading={updateChainMutation.isPending} icon={<Check className="h-3.5 w-3.5" />}>
+                        {t('common.save')}
+                      </Button>
+                      <Button className="flex-1" variant="secondary" size="md" onClick={() => setEditingId(null)}>
+                        {t('common.cancel')}
+                      </Button>
+                    </div>
+                  </div>
+                ) : (
+                  <>
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <span className="text-label font-bold text-care">{t('broadcast.chainDay', { day: cm.dayOffset })}</span>
+                      <span className="text-label font-semibold text-ink-subtle">#{cm.sortOrder}</span>
+                      {cm.mediaType !== 'text' && <Pill tone="link">{cm.mediaType}</Pill>}
+                      <VariantBadge variant={cm.variant} />
+                    </div>
+                    <p
+                      onClick={() => toggleExpand(cm.id)}
+                      className={cn(
+                        'cursor-pointer whitespace-pre-wrap text-body-s text-ink',
+                        expandedIds.has(cm.id) ? '' : 'line-clamp-2',
+                      )}
+                    >{cm.text}</p>
+                    <div className="flex items-center justify-between text-label font-semibold text-ink-muted">
+                      <div className="flex items-center gap-3">
+                        <span>{t('broadcast.deliveries')}: {cm._count.deliveries}</span>
+                        <span>{t('broadcast.reads')}: {(cm.deliveries as unknown[]).length}</span>
+                        {cm._count.deliveries > 0 && (
+                          <span className="text-warm-ink">
+                            {Math.round(((cm.deliveries as unknown[]).length / cm._count.deliveries) * 100)}% {t('broadcast.openRate')}
+                          </span>
+                        )}
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <Button variant="icon" aria-label={t('broadcast.editChain')} title={t('broadcast.editChain')} onClick={() => startEdit(cm)} icon={<Pencil className="h-4 w-4" />} />
+                        <Button
+                          variant="icon"
+                          aria-label={cm.isActive ? t('broadcast.active') : t('broadcast.inactive')}
+                          title={cm.isActive ? t('broadcast.active') : t('broadcast.inactive')}
+                          onClick={() => updateChainMutation.mutate({ id: cm.id, isActive: !cm.isActive })}
+                          icon={cm.isActive ? <ToggleRight className="h-5 w-5 text-care" /> : <ToggleLeft className="h-5 w-5 text-ink-subtle" />}
+                        />
+                        <Button
+                          variant="icon"
+                          className="text-sos"
+                          aria-label={t('broadcast.deleteConfirm')}
+                          onClick={() => setDeleteId(cm.id)}
+                          icon={<Trash2 className="h-4 w-4" />}
+                        />
+                      </div>
+                    </div>
+                  </>
+                )}
+              </div>
+            ))}
+          </div>
+        </>
+      )}
+
+      {result && (
+        <p className={cn('py-1 text-center text-body-s font-semibold', resultError ? 'text-sos' : 'text-care')}>
+          {result}
+        </p>
+      )}
+
+      <Sheet
+        open={deleteId != null}
+        onClose={() => setDeleteId(null)}
+        title={t('broadcast.deleteConfirm')}
+        footer={
+          <>
+            <Button variant="secondary" onClick={() => setDeleteId(null)}>
+              {t('common.cancel')}
+            </Button>
+            <Button
+              variant="danger"
+              loading={deleteChainMutation.isPending}
+              onClick={() => {
+                if (!deleteId) return;
+                deleteChainMutation.mutate({ id: deleteId });
+                setDeleteId(null);
+              }}
+            >
+              {t('common.confirm')}
+            </Button>
+          </>
+        }
+      />
     </div>
   );
 }

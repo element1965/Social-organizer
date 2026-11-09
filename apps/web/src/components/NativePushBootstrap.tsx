@@ -2,9 +2,11 @@ import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Trans, useTranslation } from 'react-i18next';
 import { Capacitor } from '@capacitor/core';
-import { Bell, BellOff, Settings } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth';
 import { trpc } from '../lib/trpc';
+import { Button } from './ui2/Button';
+import { BrandMark } from './ui2/BrandMark';
+import { OnboardingFrame, StepText } from './onboarding/OnboardingFrame';
 
 const NATIVE_TOKEN_KEY = 'fcm_push_token';
 
@@ -32,6 +34,8 @@ export function NativePushBootstrap() {
 
   const [permStatus, setPermStatus] = useState<PermStatus>('checking');
   const [requesting, setRequesting] = useState(false);
+  // "Not now" hides the prompt for this visit. It does not grant, deny, or persist anything.
+  const [skipped, setSkipped] = useState(false);
 
   // Set up FCM listeners (once per session) — Android only
   useEffect(() => {
@@ -105,6 +109,7 @@ export function NativePushBootstrap() {
     if (!isAuthenticated) {
       listenersSet.current = false;
       setPermStatus('checking');
+      setSkipped(false);
     }
   }, [isAuthenticated]);
 
@@ -135,90 +140,69 @@ export function NativePushBootstrap() {
   // Still checking — show spinner to avoid flash (Android only)
   if (permStatus === 'checking') {
     return (
-      <div className="fixed inset-0 z-[200] bg-gray-950 flex items-center justify-center">
-        <div className="animate-spin w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full" />
+      <div className="fixed inset-0 z-[200] grid place-items-center bg-canvas">
+        <span className="so-spin h-8 w-8 rounded-full border-2 border-care/40 border-t-care" />
       </div>
     );
   }
 
   // Granted — render nothing, app works normally
   if (permStatus === 'granted') return null;
+  // Prompt can be dismissed for this visit. Denied still blocks, same as before.
+  if (permStatus === 'prompt' && skipped) return null;
 
-  // Gate: prompt or denied (Android only)
+  const prompt = permStatus === 'prompt';
+
   return (
-    <div className="fixed inset-0 z-[200] bg-gradient-to-b from-blue-950 to-gray-950 flex flex-col items-center justify-center px-6">
-      <div className="w-full max-w-sm flex flex-col items-center text-center">
-
-        {permStatus === 'prompt' && (
-          <>
-            <div className="w-20 h-20 rounded-full bg-blue-600/20 border-2 border-blue-500 flex items-center justify-center mb-6">
-              <Bell className="w-10 h-10 text-blue-400" />
-            </div>
-            <h1 className="text-2xl font-bold text-white mb-3">
-              {t('nativePush.promptTitle')}
-            </h1>
-            <p className="text-gray-400 text-sm leading-relaxed mb-8">
-              {t('nativePush.promptBody')}
-            </p>
-            <button
-              onClick={handleRequestPermission}
-              disabled={requesting}
-              className="w-full py-4 bg-blue-600 hover:bg-blue-500 active:bg-blue-700 text-white font-bold text-base rounded-2xl transition-colors disabled:opacity-60 flex items-center justify-center gap-3"
-            >
-              {requesting ? (
-                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-              ) : (
-                <Bell className="w-5 h-5" />
-              )}
-              {requesting ? t('nativePush.requesting') : t('nativePush.enable')}
-            </button>
-          </>
+    <div className="fixed inset-0 z-[200] overflow-y-auto bg-canvas">
+      <OnboardingFrame
+        centre
+        foot={
+          <div className="flex w-full flex-col items-center gap-1">
+            <Button className="w-full" loading={requesting} onClick={() => void handleRequestPermission()}>
+              {prompt
+                ? requesting
+                  ? t('nativePush.requesting')
+                  : t('nativePush.enable')
+                : t('nativePush.checkAgain')}
+            </Button>
+            {prompt ? (
+              <Button variant="text" onClick={() => setSkipped(true)}>
+                {t('nativePush.notNow')}
+              </Button>
+            ) : (
+              <p className="px-2 pt-2 text-center text-label font-semibold text-ink-subtle">{t('nativePush.checkHint')}</p>
+            )}
+          </div>
+        }
+      >
+        <div className="mt-8 flex justify-center">
+          <BrandMark size={84} />
+        </div>
+        <StepText centre title={prompt ? t('nativePush.promptTitle') : t('nativePush.deniedTitle')}>
+          {prompt ? t('nativePush.promptBody') : t('nativePush.deniedBody')}
+        </StepText>
+        {prompt ? null : (
+          <ol className="mt-5 w-full space-y-2 rounded-xl bg-surface p-4 text-left text-body-s text-ink shadow-card">
+            <li className="flex items-start gap-2">
+              <span className="font-bold text-care">1.</span>
+              <Trans i18nKey="nativePush.step1" components={{ b: <strong className="font-bold text-ink" /> }} />
+            </li>
+            <li className="flex items-start gap-2">
+              <span className="font-bold text-care">2.</span>
+              <Trans i18nKey="nativePush.step2" components={{ b: <strong className="font-bold text-ink" /> }} />
+            </li>
+            <li className="flex items-start gap-2">
+              <span className="font-bold text-care">3.</span>
+              <Trans i18nKey="nativePush.step3" components={{ b: <strong className="font-bold text-ink" /> }} />
+            </li>
+            <li className="flex items-start gap-2">
+              <span className="font-bold text-care">4.</span>
+              {t('nativePush.step4')}
+            </li>
+          </ol>
         )}
-
-        {permStatus === 'denied' && (
-          <>
-            <div className="w-20 h-20 rounded-full bg-red-600/20 border-2 border-red-500 flex items-center justify-center mb-6">
-              <BellOff className="w-10 h-10 text-red-400" />
-            </div>
-            <h1 className="text-2xl font-bold text-white mb-3">
-              {t('nativePush.deniedTitle')}
-            </h1>
-            <p className="text-gray-400 text-sm leading-relaxed mb-2">
-              {t('nativePush.deniedBody')}
-            </p>
-            <div className="w-full bg-gray-800/60 border border-gray-700 rounded-xl p-4 mb-8 text-left space-y-2">
-              <p className="text-gray-300 text-sm flex items-start gap-2">
-                <span className="text-blue-400 font-bold shrink-0">1.</span>
-                <Trans i18nKey="nativePush.step1" components={{ b: <strong className="text-white" /> }} />
-              </p>
-              <p className="text-gray-300 text-sm flex items-start gap-2">
-                <span className="text-blue-400 font-bold shrink-0">2.</span>
-                <Trans i18nKey="nativePush.step2" components={{ b: <strong className="text-white" /> }} />
-              </p>
-              <p className="text-gray-300 text-sm flex items-start gap-2">
-                <span className="text-blue-400 font-bold shrink-0">3.</span>
-                <Trans i18nKey="nativePush.step3" components={{ b: <strong className="text-white" /> }} />
-              </p>
-              <p className="text-gray-300 text-sm flex items-start gap-2">
-                <span className="text-blue-400 font-bold shrink-0">4.</span>
-                {t('nativePush.step4')}
-              </p>
-            </div>
-            <button
-              onClick={handleRequestPermission}
-              disabled={requesting}
-              className="w-full py-4 bg-gray-700 hover:bg-gray-600 active:bg-gray-800 text-white font-semibold text-sm rounded-2xl transition-colors disabled:opacity-60 flex items-center justify-center gap-2 mb-3"
-            >
-              <Settings className="w-4 h-4" />
-              {t('nativePush.checkAgain')}
-            </button>
-            <p className="text-gray-600 text-xs">
-              {t('nativePush.checkHint')}
-            </p>
-          </>
-        )}
-
-      </div>
+      </OnboardingFrame>
     </div>
   );
 }

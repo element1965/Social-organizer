@@ -561,6 +561,7 @@
     "questionPlaceholder": "प्रश्न",
     "answerPlaceholder": "उत्तर",
     "deleteConfirm": "क्या आप यह प्रश्न हटाना चाहते हैं?",
+    "edit": "संपादित करें",
     "localized": "अनुवादित",
     "localizeAll": "सभी भाषाओं में अनुवाद करें",
     "addPhoto": "फोटो जोड़ें",
@@ -631,7 +632,12 @@
     "triggering": "चल रहा है...",
     "triggerSuccess": "ऑटो-चेन सफलतापूर्वक चल गई",
     "triggerError": "चलाना विफल रहा",
-    "urlPlaceholder": "https://..."
+    "urlPlaceholder": "https://...",
+    "deleteConfirm": "यह संदेश हटाएँ?",
+    "statusPending": "लंबित",
+    "statusSent": "भेजा गया",
+    "statusCancelled": "रद्द",
+    "statusFailed": "विफल"
   },
   "contacts": {
     "telegram": "Telegram",
@@ -1094,7 +1100,8 @@
     "replyPlaceholder": "उत्तर दें...",
     "unknownUser": "अज्ञात उपयोगकर्ता",
     "attachFile": "फ़ाइल संलग्न करें",
-    "photoAlt": "फ़ोटो"
+    "photoAlt": "फ़ोटो",
+    "file": "फ़ाइल"
   },
   "videoGuide": {
     "play": "वीडियो निर्देश देखें",
@@ -1430,6 +1437,7 @@
     "step3": "<b>सूचनाएँ</b> चालू करें",
     "step4": "ऐप पर वापस आएँ",
     "checkAgain": "फिर जाँचें",
-    "checkHint": "सूचनाएँ चालू करने के बाद “फिर जाँचें” दबाएँ"
+    "checkHint": "सूचनाएँ चालू करने के बाद “फिर जाँचें” दबाएँ",
+    "notNow": "अभी नहीं"
   }
 }

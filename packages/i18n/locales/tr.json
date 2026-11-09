@@ -561,6 +561,7 @@
     "questionPlaceholder": "Soru",
     "answerPlaceholder": "Cevap",
     "deleteConfirm": "Bu soruyu silmek istiyor musunuz?",
+    "edit": "Düzenle",
     "localized": "Çevrildi",
     "localizeAll": "Tüm dillere çevir",
     "addPhoto": "Fotoğraf ekle",
@@ -631,7 +632,12 @@
     "triggering": "Çalışıyor...",
     "triggerSuccess": "Otomatik zincir başarıyla çalıştı",
     "triggerError": "Çalıştırılamadı",
-    "urlPlaceholder": "https://..."
+    "urlPlaceholder": "https://...",
+    "deleteConfirm": "Bu mesaj silinsin mi?",
+    "statusPending": "Bekliyor",
+    "statusSent": "Gönderildi",
+    "statusCancelled": "İptal edildi",
+    "statusFailed": "Başarısız"
   },
   "contacts": {
     "telegram": "Telegram",
@@ -1094,7 +1100,8 @@
     "replyPlaceholder": "Yanıtla...",
     "unknownUser": "Bilinmeyen kullanıcı",
     "attachFile": "Dosya ekle",
-    "photoAlt": "fotoğraf"
+    "photoAlt": "fotoğraf",
+    "file": "Dosya"
   },
   "videoGuide": {
     "play": "Video talimatı izle",
@@ -1430,6 +1437,7 @@
     "step3": "<b>Bildirimler</b>'i açın",
     "step4": "Uygulamaya geri dönün",
     "checkAgain": "Yeniden kontrol et",
-    "checkHint": "Bildirimleri açtıktan sonra «Yeniden kontrol et»e dokunun"
+    "checkHint": "Bildirimleri açtıktan sonra «Yeniden kontrol et»e dokunun",
+    "notNow": "Şimdi değil"
   }
 }

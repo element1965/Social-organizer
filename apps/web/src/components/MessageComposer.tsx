@@ -1,7 +1,8 @@
 import { authFetch } from '../lib/trpc';
-import { useState, useRef } from 'react';
-import { Loader2, Upload, Link, Paperclip, X } from 'lucide-react';
+import { useRef, useState } from 'react';
+import { Link, Loader2, Paperclip, Upload, X } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { Button } from './ui2/Button';
 
 export interface MessageData {
   text: string;
@@ -18,7 +19,8 @@ interface MessageComposerProps {
   disabled?: boolean;
 }
 
-const inputCls = 'w-full p-2 text-sm rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500';
+const fieldCls =
+  'w-full rounded-lg border border-line bg-surface-2 px-3.5 py-2.5 text-body-s font-semibold text-ink outline-none placeholder:text-ink-subtle focus:border-care disabled:opacity-50';
 
 /** Detect media type from URL string */
 function detectMediaTypeFromUrl(url: string): 'photo' | 'video' | 'text' {
@@ -88,20 +90,22 @@ export function MessageComposer({ value, onChange, disabled }: MessageComposerPr
     onChange({ ...value, mediaUrl: url, mediaType: detected === 'text' && url.trim() ? 'photo' : detected, mediaFileId: undefined });
   };
 
+  const focusIntoView = (event: React.FocusEvent<HTMLElement>) => {
+    setTimeout(() => event.target.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 300);
+  };
+
   return (
     <div className="space-y-3">
-      {/* Message textarea */}
       <textarea
         value={value.text}
         onChange={(e) => onChange({ ...value, text: e.target.value })}
         placeholder={t('broadcast.messagePlaceholder')}
-        className={`${inputCls} resize-y`}
+        className={`${fieldCls} resize-y`}
         rows={3}
         disabled={disabled}
-        onFocus={(e) => setTimeout(() => e.target.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 300)}
+        onFocus={focusIntoView}
       />
 
-      {/* Media: file upload + URL */}
       <div className="space-y-2">
         <div className="flex items-center gap-2">
           <input
@@ -111,24 +115,21 @@ export function MessageComposer({ value, onChange, disabled }: MessageComposerPr
             onChange={handleFileSelect}
             className="hidden"
           />
-          <button
+          <Button
+            variant="secondary"
+            size="sm"
             onClick={() => fileInputRef.current?.click()}
             disabled={uploading || disabled}
-            className="flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+            icon={uploading ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Upload className="h-3.5 w-3.5" />}
           >
-            {uploading ? (
-              <Loader2 className="w-3.5 h-3.5 animate-spin" />
-            ) : (
-              <Upload className="w-3.5 h-3.5" />
-            )}
             {t('broadcast.uploadFile')}
-          </button>
+          </Button>
           {mediaFileName && (
-            <span className="flex items-center gap-1 text-xs text-emerald-600 dark:text-emerald-400">
-              <Paperclip className="w-3 h-3" />
+            <span className="flex items-center gap-1 text-label font-semibold text-care">
+              <Paperclip className="h-3 w-3" />
               {mediaFileName}
-              <button onClick={clearMedia} className="ml-1 text-gray-400 hover:text-red-400">
-                <X className="w-3 h-3" />
+              <button type="button" onClick={clearMedia} className="so-focus ml-1 text-ink-subtle hover:text-sos" aria-label={t('common.close')}>
+                <X className="h-3 w-3" />
               </button>
             </span>
           )}
@@ -139,17 +140,16 @@ export function MessageComposer({ value, onChange, disabled }: MessageComposerPr
             value={value.mediaUrl || ''}
             onChange={(e) => handleUrlChange(e.target.value)}
             placeholder={t('broadcast.mediaUrlPlaceholder')}
-            className={inputCls}
+            className={fieldCls}
             disabled={disabled}
-            onFocus={(e) => setTimeout(() => e.target.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 300)}
+            onFocus={focusIntoView}
           />
         )}
       </div>
 
-      {/* Button link */}
       <div className="space-y-2">
-        <div className="flex items-center gap-1.5 text-xs text-gray-500 dark:text-gray-300">
-          <Link className="w-3.5 h-3.5" />
+        <div className="flex items-center gap-1.5 text-label font-semibold text-ink-muted">
+          <Link className="h-3.5 w-3.5" />
           {t('broadcast.buttonLink')}
         </div>
         <div className="flex gap-2">
@@ -157,17 +157,17 @@ export function MessageComposer({ value, onChange, disabled }: MessageComposerPr
             value={value.buttonText || ''}
             onChange={(e) => onChange({ ...value, buttonText: e.target.value })}
             placeholder={t('broadcast.buttonTextPlaceholder')}
-            className={`${inputCls} flex-1`}
+            className={`${fieldCls} flex-1`}
             disabled={disabled}
-            onFocus={(e) => setTimeout(() => e.target.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 300)}
+            onFocus={focusIntoView}
           />
           <input
             value={value.buttonUrl || ''}
             onChange={(e) => onChange({ ...value, buttonUrl: e.target.value })}
             placeholder={t('broadcast.urlPlaceholder')}
-            className={`${inputCls} flex-[2]`}
+            className={`${fieldCls} flex-[2]`}
             disabled={disabled}
-            onFocus={(e) => setTimeout(() => e.target.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 300)}
+            onFocus={focusIntoView}
           />
         </div>
       </div>

@@ -1,11 +1,38 @@
-import { useState, useRef } from 'react';
-import { HelpCircle, ChevronDown, ChevronUp, Plus, Pencil, Trash2, X, Check, Globe, Loader2, ImagePlus, Link2 } from 'lucide-react';
+import { useRef, useState } from 'react';
+import { Check, Globe, ImagePlus, Link2, Loader2, Pencil, Trash2, X } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { trpc, authFetch } from '../lib/trpc';
-import { Card } from '../components/ui/card';
-import { RichText } from '../components/ui/rich-text';
+import { Button } from '../components/ui2/Button';
+import { Card } from '../components/ui2/Card';
+import { Group } from '../components/ui2/Group';
+import { Sheet } from '../components/ui2/Sheet';
+import { IconChevron } from '../components/ui2/icons';
+import { cn } from '../lib/utils';
 
 // FAQ content lives in the DB (one row per language, translations share groupId = source item id).
+
+const fieldCls =
+  'w-full rounded-lg border border-line bg-surface-2 px-3.5 py-2.5 text-body-s font-semibold text-ink outline-none placeholder:text-ink-subtle focus:border-care';
+
+/** Render text with markdown-style links: [label](url). */
+function FaqAnswer({ text }: { text: string }) {
+  const parts = text.split(/(\[[^\]]+\]\([^)]+\))/g);
+  return (
+    <p className="whitespace-pre-wrap text-body-s text-ink-muted">
+      {parts.map((part, i) => {
+        const match = part.match(/^\[([^\]]+)\]\(([^)]+)\)$/);
+        if (match) {
+          return (
+            <a key={i} href={match[2]} target="_blank" rel="noopener noreferrer" className="font-semibold text-link underline">
+              {match[1]}
+            </a>
+          );
+        }
+        return <span key={i}>{part}</span>;
+      })}
+    </p>
+  );
+}
 
 export function FaqPage({ embedded = false }: { embedded?: boolean }) {
   const { t, i18n } = useTranslation();
@@ -34,6 +61,7 @@ export function FaqPage({ embedded = false }: { embedded?: boolean }) {
   const [openId, setOpenId] = useState<string | null>(null);
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
+  const [deleteId, setDeleteId] = useState<string | null>(null);
   const [formQuestion, setFormQuestion] = useState('');
   const [formAnswer, setFormAnswer] = useState('');
   const [formImageUrl, setFormImageUrl] = useState<string | null>(null);
@@ -115,9 +143,10 @@ export function FaqPage({ embedded = false }: { embedded?: boolean }) {
     );
   };
 
-  const handleDelete = (id: string) => {
-    if (!confirm(t('faq.deleteConfirm'))) return;
-    deleteMutation.mutate({ id });
+  const confirmDelete = () => {
+    if (!deleteId) return;
+    deleteMutation.mutate({ id: deleteId });
+    setDeleteId(null);
   };
 
   const startEdit = (item: { id: string; question: string; answer: string; imageUrl?: string | null }) => {
@@ -137,53 +166,34 @@ export function FaqPage({ embedded = false }: { embedded?: boolean }) {
   };
 
   const showAdminTools = isAdmin && !showForm && !editingId;
+  const saving = createMutation.isPending || updateMutation.isPending;
 
   return (
-    <div className={embedded ? 'max-w-2xl' : 'p-4 pb-24 max-w-2xl mx-auto'}>
-      {(showAdminTools || !embedded) && (
-      <div className={embedded ? 'mb-4 flex items-center justify-end' : 'mb-4 flex items-center justify-between pr-12'}>
-        {embedded ? null : (
-        <h1 className="text-xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
-          <HelpCircle className="w-6 h-6 text-amber-500" />
-          {t('faq.title')}
-        </h1>
-        )}
-        {showAdminTools && (
-          <div className="flex items-center gap-2">
-            {displayItems.some(i => !(i as typeof i & { isLocalized?: boolean }).isLocalized) && (
-              <button
-                onClick={() => localizeAllMutation.mutate()}
-                disabled={localizeAllMutation.isPending}
-                className="flex items-center gap-1.5 px-3 py-1.5 text-sm bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 disabled:opacity-50 transition-colors"
-              >
-                {localizeAllMutation.isPending ? (
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                ) : (
-                  <Globe className="w-4 h-4" />
-                )}
-                {t('faq.localizeAll')}
-              </button>
-            )}
-            <button
-              onClick={() => { setShowForm(true); setFormQuestion(''); setFormAnswer(''); setFormImageUrl(null); }}
-              className="flex items-center gap-1.5 px-3 py-1.5 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-            >
-              <Plus className="w-4 h-4" />
-              {t('faq.addItem')}
-            </button>
-          </div>
-        )}
-      </div>
+    <div className={embedded ? '' : 'mx-auto max-w-2xl pb-24'}>
+      {showAdminTools && (
+        <div className="mb-3 flex items-center justify-end gap-2">
+          {displayItems.some(i => !(i as typeof i & { isLocalized?: boolean }).isLocalized) && (
+            <Button size="md" variant="secondary" onClick={() => localizeAllMutation.mutate()} loading={localizeAllMutation.isPending} icon={<Globe className="h-4 w-4" />}>
+              {t('faq.localizeAll')}
+            </Button>
+          )}
+          <Button
+            size="md"
+            onClick={() => { setShowForm(true); setFormQuestion(''); setFormAnswer(''); setFormImageUrl(null); }}
+            icon={<span className="text-body-l leading-none">+</span>}
+          >
+            {t('faq.addItem')}
+          </Button>
+        </div>
       )}
 
-      {/* Create / Edit form */}
       {(showForm || editingId) && (
-        <Card className="mb-4 p-4">
+        <Card className="mb-4">
           <textarea
             value={formQuestion}
             onChange={e => setFormQuestion(e.target.value)}
             placeholder={t('faq.questionPlaceholder')}
-            className="w-full mb-2 p-2 text-sm rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-y"
+            className={cn(fieldCls, 'mb-2 resize-y')}
             rows={2}
           />
           <textarea
@@ -191,38 +201,39 @@ export function FaqPage({ embedded = false }: { embedded?: boolean }) {
             value={formAnswer}
             onChange={e => setFormAnswer(e.target.value)}
             placeholder={t('faq.answerPlaceholder')}
-            className="w-full mb-2 p-2 text-sm rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-y"
+            className={cn(fieldCls, 'mb-2 resize-y')}
             rows={4}
           />
-          {/* Insert link button + popup */}
           <div className="relative mb-3">
-            <button
+            <Button
               type="button"
+              variant="secondary"
+              size="md"
               onClick={() => { setShowLinkPopup(!showLinkPopup); setLinkText(''); setLinkUrl(''); }}
-              className="flex items-center gap-1.5 px-3 py-1.5 text-sm text-gray-600 dark:text-gray-300 border border-dashed border-gray-300 dark:border-gray-600 rounded-lg hover:border-blue-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+              icon={<Link2 className="h-4 w-4" />}
             >
-              <Link2 className="w-4 h-4" />
               {t('faq.insertLink')}
-            </button>
+            </Button>
             {showLinkPopup && (
-              <div className="absolute left-0 top-full mt-1 z-10 p-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-xl shadow-lg space-y-2 w-72">
+              <div className="absolute left-0 top-full z-10 mt-1 w-72 space-y-2 rounded-xl border border-line bg-surface p-3 shadow-float">
                 <input
                   type="text"
                   value={linkText}
                   onChange={e => setLinkText(e.target.value)}
                   placeholder={t('faq.linkTextPlaceholder')}
-                  className="w-full p-2 text-sm rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className={fieldCls}
                 />
                 <input
                   type="url"
                   value={linkUrl}
                   onChange={e => setLinkUrl(e.target.value)}
                   placeholder={t('faq.urlPlaceholder')}
-                  className="w-full p-2 text-sm rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className={fieldCls}
                 />
                 <div className="flex gap-2">
-                  <button
+                  <Button
                     type="button"
+                    size="md"
                     disabled={!linkText.trim() || !linkUrl.trim()}
                     onClick={() => {
                       const md = `[${linkText.trim()}](${linkUrl.trim()})`;
@@ -238,23 +249,17 @@ export function FaqPage({ embedded = false }: { embedded?: boolean }) {
                       }
                       setShowLinkPopup(false);
                     }}
-                    className="flex items-center gap-1 px-3 py-1.5 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 transition-colors"
+                    icon={<Check className="h-4 w-4" />}
                   >
-                    <Check className="w-3.5 h-3.5" />
                     {t('faq.insert')}
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setShowLinkPopup(false)}
-                    className="px-3 py-1.5 text-sm text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-gray-100 transition-colors"
-                  >
+                  </Button>
+                  <Button type="button" variant="text" size="md" onClick={() => setShowLinkPopup(false)}>
                     {t('common.cancel')}
-                  </button>
+                  </Button>
                 </div>
               </div>
             )}
           </div>
-          {/* Image upload */}
           <div className="mb-3">
             <input
               ref={fileInputRef}
@@ -265,74 +270,66 @@ export function FaqPage({ embedded = false }: { embedded?: boolean }) {
             />
             {formImageUrl ? (
               <div className="relative inline-block">
-                <img src={formImageUrl} alt="" className="max-h-32 rounded-lg border border-gray-200 dark:border-gray-700" />
+                <img src={formImageUrl} alt="" className="max-h-32 rounded-lg border border-line" />
                 <button
+                  type="button"
                   onClick={() => setFormImageUrl(null)}
-                  className="absolute -top-2 -right-2 w-5 h-5 bg-red-500 text-white rounded-full flex items-center justify-center text-xs hover:bg-red-600"
+                  aria-label={t('common.close')}
+                  className="so-focus absolute -right-2 -top-2 grid h-5 w-5 place-items-center rounded-full bg-sos text-sos-on"
                 >
-                  <X className="w-3 h-3" />
+                  <X className="h-3 w-3" />
                 </button>
               </div>
             ) : (
-              <button
+              <Button
+                variant="secondary"
+                size="md"
                 onClick={() => fileInputRef.current?.click()}
                 disabled={uploading}
-                className="flex items-center gap-1.5 px-3 py-1.5 text-sm text-gray-600 dark:text-gray-300 border border-dashed border-gray-300 dark:border-gray-600 rounded-lg hover:border-blue-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors disabled:opacity-50"
+                loading={uploading}
+                icon={<ImagePlus className="h-4 w-4" />}
               >
-                {uploading ? (
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                ) : (
-                  <ImagePlus className="w-4 h-4" />
-                )}
                 {t('faq.addPhoto')}
-              </button>
+              </Button>
             )}
           </div>
           <div className="flex gap-2">
-            <button
+            <Button
+              size="md"
               onClick={editingId ? handleUpdate : handleCreate}
-              disabled={!formQuestion.trim() || !formAnswer.trim() || createMutation.isPending || updateMutation.isPending}
-              className="flex items-center gap-1.5 px-3 py-1.5 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 transition-colors"
+              disabled={!formQuestion.trim() || !formAnswer.trim()}
+              loading={saving}
+              icon={<Check className="h-4 w-4" />}
             >
-              <Check className="w-4 h-4" />
               {t('common.save')}
-            </button>
-            <button
-              onClick={cancelEdit}
-              className="flex items-center gap-1.5 px-3 py-1.5 text-sm bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
-            >
-              <X className="w-4 h-4" />
+            </Button>
+            <Button variant="secondary" size="md" onClick={cancelEdit} icon={<X className="h-4 w-4" />}>
               {t('common.cancel')}
-            </button>
+            </Button>
           </div>
         </Card>
       )}
 
-      {/* FAQ items accordion */}
       {isLoading ? (
-        <p className="text-center text-gray-500 dark:text-gray-300 py-8">{t('common.loading')}</p>
+        <p className="py-8 text-center text-body-s text-ink-muted">{t('common.loading')}</p>
       ) : displayItems.length === 0 ? (
-        <p className="text-center text-gray-500 dark:text-gray-300 py-8">{t('faq.empty')}</p>
+        <p className="py-8 text-center text-body-s text-ink-muted">{t('faq.empty')}</p>
       ) : (
-        <div className="space-y-2">
+        <Group>
           {displayItems.map(item => {
             const isExpanded = openId === item.id;
             const isBeingEdited = editingId === item.id;
             const faqItem = item as typeof item & { isLocalized?: boolean; imageUrl?: string | null };
             return (
-              <Card key={item.id} className="overflow-hidden">
+              <div key={item.id}>
                 <button
+                  type="button"
                   onClick={() => handleToggle(item.id)}
-                  className="w-full flex items-center justify-between p-4 text-left"
+                  aria-expanded={isExpanded}
+                  className="so-focus flex min-h-row w-full items-center gap-3 px-4 py-3 text-left"
                 >
-                  <span className="text-sm font-medium text-gray-900 dark:text-white pr-2">
-                    {item.question}
-                  </span>
-                  {isExpanded ? (
-                    <ChevronUp className="w-5 h-5 text-gray-400 shrink-0" />
-                  ) : (
-                    <ChevronDown className="w-5 h-5 text-gray-400 shrink-0" />
-                  )}
+                  <span className="min-w-0 flex-1 text-body font-body text-ink">{item.question}</span>
+                  <IconChevron className={cn('h-[18px] w-[18px] shrink-0 text-ink-subtle transition-transform duration-fast', isExpanded && 'rotate-90')} />
                 </button>
                 {isExpanded && !isBeingEdited && (
                   <div className="px-4 pb-4">
@@ -340,49 +337,59 @@ export function FaqPage({ embedded = false }: { embedded?: boolean }) {
                       <img
                         src={faqItem.imageUrl}
                         alt=""
-                        className="max-w-full rounded-lg mb-3 border border-gray-200 dark:border-gray-700"
+                        className="mb-3 max-w-full rounded-lg border border-line"
                       />
                     )}
-                    <RichText text={item.answer} className="text-sm text-gray-600 dark:text-gray-300 whitespace-pre-wrap" />
+                    <FaqAnswer text={item.answer} />
                     {isAdmin && (
-                      <div className="flex items-center gap-2 mt-3 pt-3 border-t border-gray-100 dark:border-gray-800">
-                        <button
+                      <div className="mt-3 flex items-center gap-1 border-t border-line-soft pt-2">
+                        <Button
+                          variant="icon"
+                          aria-label={t('faq.edit')}
                           onClick={() => startEdit({ ...item, imageUrl: faqItem.imageUrl })}
-                          className="flex items-center gap-1 text-xs text-gray-500 dark:text-gray-300 hover:text-blue-600 transition-colors"
-                        >
-                          <Pencil className="w-3.5 h-3.5" />
-                        </button>
-                        <button
-                          onClick={() => handleDelete(item.id)}
-                          className="flex items-center gap-1 text-xs text-gray-500 dark:text-gray-300 hover:text-red-600 transition-colors"
-                        >
-                          <Trash2 className="w-3.5 h-3.5" />
-                        </button>
-                        <button
+                          icon={<Pencil className="h-4 w-4" />}
+                        />
+                        <Button
+                          variant="icon"
+                          className="text-sos"
+                          aria-label={t('faq.deleteConfirm')}
+                          onClick={() => setDeleteId(item.id)}
+                          icon={<Trash2 className="h-4 w-4" />}
+                        />
+                        <Button
+                          variant="icon"
+                          className={faqItem.isLocalized ? 'text-care' : 'text-ink-subtle'}
+                          aria-label={faqItem.isLocalized ? t('faq.localized') : t('faq.localizeAll')}
+                          title={faqItem.isLocalized ? t('faq.localized') : t('faq.localizeAll')}
                           onClick={() => localizeMutation.mutate({ id: item.id })}
                           disabled={localizeMutation.isPending}
-                          className={`flex items-center gap-1 text-xs transition-colors ml-1 ${
-                            faqItem.isLocalized
-                              ? 'text-emerald-500 hover:text-emerald-600'
-                              : 'text-gray-400 hover:text-emerald-600'
-                          }`}
-                          title={faqItem.isLocalized ? t('faq.localized') : t('faq.localizeAll')}
-                        >
-                          {localizeMutation.isPending ? (
-                            <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                          ) : (
-                            <Globe className="w-3.5 h-3.5" />
-                          )}
-                        </button>
+                          icon={localizeMutation.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Globe className="h-4 w-4" />}
+                        />
                       </div>
                     )}
                   </div>
                 )}
-              </Card>
+              </div>
             );
           })}
-        </div>
+        </Group>
       )}
+
+      <Sheet
+        open={deleteId != null}
+        onClose={() => setDeleteId(null)}
+        title={t('faq.deleteConfirm')}
+        footer={
+          <>
+            <Button variant="secondary" onClick={() => setDeleteId(null)}>
+              {t('common.cancel')}
+            </Button>
+            <Button variant="danger" onClick={confirmDelete} loading={deleteMutation.isPending}>
+              {t('common.confirm')}
+            </Button>
+          </>
+        }
+      />
     </div>
   );
 }

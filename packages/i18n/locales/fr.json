@@ -566,6 +566,7 @@
     "questionPlaceholder": "Question",
     "answerPlaceholder": "Réponse",
     "deleteConfirm": "Supprimer cette question ?",
+    "edit": "Modifier",
     "localized": "Traduit",
     "localizeAll": "Traduire dans toutes les langues",
     "addPhoto": "Ajouter une photo",
@@ -636,7 +637,12 @@
     "triggering": "Exécution...",
     "triggerSuccess": "Chaîne auto lancée avec succès",
     "triggerError": "Échec du lancement",
-    "urlPlaceholder": "https://..."
+    "urlPlaceholder": "https://...",
+    "deleteConfirm": "Supprimer ce message ?",
+    "statusPending": "En attente",
+    "statusSent": "Envoyé",
+    "statusCancelled": "Annulé",
+    "statusFailed": "Échec"
   },
   "contacts": {
     "telegram": "Telegram",
@@ -1101,7 +1107,8 @@
     "replyPlaceholder": "Répondre...",
     "unknownUser": "Utilisateur inconnu",
     "attachFile": "Joindre un fichier",
-    "photoAlt": "photo"
+    "photoAlt": "photo",
+    "file": "Fichier"
   },
   "videoGuide": {
     "play": "Regarder la vidéo explicative",
@@ -1442,6 +1449,7 @@
     "step3": "Activez les <b>Notifications</b>",
     "step4": "Revenez dans l’application",
     "checkAgain": "Vérifier à nouveau",
-    "checkHint": "Après avoir activé les notifications, touchez « Vérifier à nouveau »"
+    "checkHint": "Après avoir activé les notifications, touchez « Vérifier à nouveau »",
+    "notNow": "Pas maintenant"
   }
 }

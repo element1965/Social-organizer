@@ -566,6 +566,7 @@
     "questionPlaceholder": "שאלה",
     "answerPlaceholder": "תשובה",
     "deleteConfirm": "למחוק את השאלה הזאת?",
+    "edit": "עריכה",
     "localized": "מתורגם",
     "localizeAll": "תרגם הכל",
     "addPhoto": "הוסף תמונה",
@@ -636,7 +637,12 @@
     "triggering": "רץ...",
     "triggerSuccess": "השרשרת האוטומטית הופעלה",
     "triggerError": "ההפעלה נכשלה",
-    "urlPlaceholder": "https://..."
+    "urlPlaceholder": "https://...",
+    "deleteConfirm": "למחוק את ההודעה הזו?",
+    "statusPending": "בהמתנה",
+    "statusSent": "נשלח",
+    "statusCancelled": "בוטל",
+    "statusFailed": "נכשל"
   },
   "contacts": {
     "telegram": "Telegram",
@@ -1101,7 +1107,8 @@
     "replyPlaceholder": "השב...",
     "unknownUser": "משתמש לא ידוע",
     "attachFile": "צרף קובץ",
-    "photoAlt": "תמונה"
+    "photoAlt": "תמונה",
+    "file": "קובץ"
   },
   "videoGuide": {
     "play": "צפו בסרטון ההדרכה",
@@ -1442,6 +1449,7 @@
     "step3": "הפעילו <b>התראות</b>",
     "step4": "חזרו לאפליקציה",
     "checkAgain": "בדיקה שוב",
-    "checkHint": "אחרי הפעלת ההתראות, לחצו על «בדיקה שוב»"
+    "checkHint": "אחרי הפעלת ההתראות, לחצו על «בדיקה שוב»",
+    "notNow": "לא עכשיו"
   }
 }

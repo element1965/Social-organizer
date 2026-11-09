@@ -561,6 +561,7 @@
     "questionPlaceholder": "Vraag",
     "answerPlaceholder": "Antwoord",
     "deleteConfirm": "Deze vraag verwijderen?",
+    "edit": "Bewerken",
     "localized": "Vertaald",
     "localizeAll": "Vertaal naar alle talen",
     "addPhoto": "Foto toevoegen",
@@ -631,7 +632,12 @@
     "triggering": "Bezig...",
     "triggerSuccess": "Auto-keten is gestart",
     "triggerError": "Starten mislukt",
-    "urlPlaceholder": "https://..."
+    "urlPlaceholder": "https://...",
+    "deleteConfirm": "Dit bericht verwijderen?",
+    "statusPending": "In afwachting",
+    "statusSent": "Verzonden",
+    "statusCancelled": "Geannuleerd",
+    "statusFailed": "Mislukt"
   },
   "contacts": {
     "telegram": "Telegram",
@@ -1094,7 +1100,8 @@
     "replyPlaceholder": "Reageer...",
     "unknownUser": "Onbekende gebruiker",
     "attachFile": "Bestand bijvoegen",
-    "photoAlt": "foto"
+    "photoAlt": "foto",
+    "file": "Bestand"
   },
   "videoGuide": {
     "play": "Bekijk de video-instructie",
@@ -1430,6 +1437,7 @@
     "step3": "Zet <b>Meldingen</b> aan",
     "step4": "Kom terug naar de app",
     "checkAgain": "Opnieuw controleren",
-    "checkHint": "Tik op “Opnieuw controleren” nadat je meldingen hebt aangezet"
+    "checkHint": "Tik op “Opnieuw controleren” nadat je meldingen hebt aangezet",
+    "notNow": "Niet nu"
   }
 }

@@ -1,8 +1,10 @@
 import { useState, useRef, useEffect } from 'react';
-import { Send, Mic, MicOff, Loader2 } from 'lucide-react';
+import { Send, Mic, MicOff } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { cn } from '../lib/utils';
 import { trpc } from '../lib/trpc';
+import { Button } from './ui2/Button';
+import { Chip } from './ui2/Chip';
 import { Segmented } from './ui2/Segmented';
 
 interface Message {
@@ -210,133 +212,110 @@ export function ChatAssistant() {
     };
   }, []);
 
+  const canSend = Boolean(input.trim()) && !isListening && !isLoading;
+
   return (
     <div
-      className="flex h-[calc(100dvh-var(--sa-top)-7rem)] flex-col overflow-hidden rounded-lg bg-white dark:bg-gray-900"
+      className="flex h-[calc(100dvh-var(--sa-top)-7rem)] flex-col overflow-hidden"
       style={viewport ? { height: Math.max(240, viewport.height - 112) } : undefined}
       role="region"
       aria-labelledby="chat-assistant-title"
     >
-          <div className="flex items-center justify-between gap-3 border-b border-line px-4 py-2">
-            <h3 id="chat-assistant-title" className="sr-only">{t('chat.title')}</h3>
-            <span className="text-body-s font-bold text-ink">{t('help.voice')}</span>
-            <Segmented
-              variant="inline"
-              label={t('help.voice')}
-              value={settings?.voiceGender === 'MALE' ? 'MALE' : 'FEMALE'}
-              onChange={(voiceGender) => updateVoice.mutate({ voiceGender })}
-              options={[
-                { value: 'FEMALE', label: t('settings.voiceFemale') },
-                { value: 'MALE', label: t('settings.voiceMale') },
-              ]}
-            />
-          </div>
+      <div className="flex items-center justify-between gap-3 border-b border-line py-2">
+        <h3 id="chat-assistant-title" className="sr-only">{t('chat.title')}</h3>
+        <span className="text-body-s font-bold text-ink">{t('help.voice')}</span>
+        <Segmented
+          variant="inline"
+          label={t('help.voice')}
+          value={settings?.voiceGender === 'MALE' ? 'MALE' : 'FEMALE'}
+          onChange={(voiceGender) => updateVoice.mutate({ voiceGender })}
+          options={[
+            { value: 'FEMALE', label: t('settings.voiceFemale') },
+            { value: 'MALE', label: t('settings.voiceMale') },
+          ]}
+        />
+      </div>
 
-          {/* Messages */}
-          <div className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden p-4 space-y-3">
-            {messages.length === 0 && (
-              <div className="text-center py-4">
-                <p className="text-sm text-gray-600 dark:text-gray-300 mb-3">
-                  {t('chat.welcomeMessage')}
-                </p>
-                <div className="flex flex-wrap gap-2 justify-center">
-                  {quickTopics.map((term) => (
-                    <button
-                      key={term}
-                      onClick={() => handleSendMessage(term, false)}
-                      className="min-h-[44px] px-4 py-2 text-sm rounded-full border transition-colors bg-gray-100 text-gray-800 border-gray-500 hover:bg-gray-200 active:bg-gray-300 dark:bg-gray-800 dark:text-gray-100 dark:border-gray-400 dark:hover:bg-gray-700 dark:active:bg-gray-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-600 focus-visible:ring-offset-white dark:focus-visible:ring-blue-400 dark:focus-visible:ring-offset-gray-900 disabled:cursor-not-allowed disabled:bg-gray-100 disabled:text-gray-600 disabled:border-gray-400 dark:disabled:bg-gray-800 dark:disabled:text-gray-300 dark:disabled:border-gray-500"
-                      disabled={isLoading}
-                    >
-                      {term}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
-            {messages.map((msg) => (
-              <div
-                key={msg.id}
-                className={cn(
-                  "max-w-[85%] p-3 rounded-2xl text-sm whitespace-pre-wrap break-words",
-                  msg.role === 'user'
-                    ? "ml-auto bg-blue-600 text-white rounded-br-md"
-                    : "bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white rounded-bl-md"
-                )}
-              >
-                {msg.content}
-              </div>
-            ))}
-            {isLoading && (
-              <div className="flex items-center gap-2 text-gray-600 dark:text-gray-300" role="status">
-                <Loader2 className="w-4 h-4 animate-spin" aria-hidden="true" />
-                <span className="text-sm">{t('common.loading')}</span>
-              </div>
-            )}
-            <div ref={messagesEndRef} />
-          </div>
-
-          {/* Send error: the text is back in the field, retry sends it once */}
-          {sendError && (
-            <div role="alert" className="flex items-center justify-between gap-2 px-4 py-2 text-sm bg-red-50 text-red-800 dark:bg-red-950 dark:text-red-200 border-t border-red-200 dark:border-red-800">
-              <span className="min-w-0">{t('chat.sendError')}</span>
-              <button
-                onClick={handleSubmit}
-                disabled={!input.trim() || isLoading}
-                className="min-h-[44px] shrink-0 px-3 font-medium underline rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-700 dark:focus-visible:ring-red-300"
-              >
-                {t('common.retry')}
-              </button>
+      <div className="min-h-0 flex-1 space-y-3 overflow-y-auto overflow-x-hidden py-4">
+        {messages.length === 0 && (
+          <div className="py-4 text-center">
+            <p className="mb-3 text-body-s text-ink-muted">{t('chat.welcomeMessage')}</p>
+            <div className="flex flex-wrap justify-center gap-2">
+              {quickTopics.map((term) => (
+                <Chip key={term} variant="preset" disabled={isLoading} onClick={() => handleSendMessage(term, false)}>
+                  {term}
+                </Chip>
+              ))}
             </div>
-          )}
-
-          {/* Input */}
-          <div className="px-3 py-2 border-t border-gray-200 dark:border-gray-700 flex items-end gap-2">
-            <button
-              onClick={toggleListening}
-              disabled={isLoading}
-              className={cn(
-                "w-11 h-11 rounded-full shrink-0 flex items-center justify-center transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 dark:focus-visible:ring-blue-400",
-                isListening
-                  ? "bg-red-100 dark:bg-red-900/40 text-red-700 dark:text-red-300 animate-pulse"
-                  : "bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700",
-                isLoading && "opacity-50 cursor-not-allowed"
-              )}
-              aria-label={isListening ? t('chat.stopListening') : t('chat.startListening')}
-              aria-pressed={isListening}
-            >
-              {isListening ? <MicOff className="w-5 h-5" aria-hidden="true" /> : <Mic className="w-5 h-5" aria-hidden="true" />}
-            </button>
-            <textarea
-              ref={inputRef}
-              rows={1}
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyDown={(e) => {
-                // Enter sends, Shift+Enter adds a new line (IME composition is left alone)
-                if (e.key === 'Enter' && !e.shiftKey && !e.nativeEvent.isComposing) {
-                  e.preventDefault();
-                  handleSubmit();
-                }
-              }}
-              placeholder={t('chat.placeholder')}
-              aria-label={t('chat.inputLabel')}
-              className="flex-1 min-w-0 min-h-[44px] max-h-32 resize-none overflow-y-auto break-words rounded-2xl border border-gray-500 dark:border-gray-400 bg-white dark:bg-gray-800 px-3 py-2.5 text-sm leading-5 text-gray-900 dark:text-gray-100 placeholder:text-gray-500 dark:placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-600 dark:focus:ring-blue-400 focus:border-transparent"
-              disabled={isListening || isLoading}
-            />
-            <button
-              onClick={handleSubmit}
-              disabled={!input.trim() || isListening || isLoading}
-              aria-label={t('chat.send')}
-              className={cn(
-                "w-11 h-11 shrink-0 rounded-full flex items-center justify-center transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-600 focus-visible:ring-offset-white dark:focus-visible:ring-blue-400 dark:focus-visible:ring-offset-gray-900",
-                (!input.trim() || isListening || isLoading)
-                  ? "bg-gray-200 text-gray-600 dark:bg-gray-700 dark:text-gray-300 cursor-not-allowed"
-                  : "bg-blue-700 text-white hover:bg-blue-800"
-              )}
-            >
-              <Send className="w-5 h-5" aria-hidden="true" />
-            </button>
           </div>
+        )}
+        {messages.map((msg) => (
+          <div
+            key={msg.id}
+            className={cn(
+              'max-w-[85%] whitespace-pre-wrap break-words rounded-2xl p-3 text-body-s',
+              msg.role === 'user'
+                ? 'ml-auto rounded-br-md bg-care text-care-on'
+                : 'rounded-bl-md border border-line bg-surface text-ink',
+            )}
+          >
+            {msg.content}
+          </div>
+        ))}
+        {isLoading && (
+          <div className="flex items-center gap-2 text-ink-muted" role="status">
+            <span className="so-spin h-4 w-4 rounded-full border-2 border-current/40 border-t-current" aria-hidden />
+            <span className="text-body-s">{t('common.loading')}</span>
+          </div>
+        )}
+        <div ref={messagesEndRef} />
+      </div>
+
+      {sendError && (
+        <div role="alert" className="flex items-center justify-between gap-2 border-t border-sos/30 bg-sos-soft px-1 py-1 text-body-s text-sos">
+          <span className="min-w-0">{t('chat.sendError')}</span>
+          <Button variant="textDanger" onClick={handleSubmit} disabled={!input.trim() || isLoading}>
+            {t('common.retry')}
+          </Button>
+        </div>
+      )}
+
+      <div className="flex items-end gap-2 border-t border-line py-2">
+        <Button
+          variant="icon"
+          className={cn('h-11 w-11 shrink-0 rounded-lg', isListening && 'border-transparent bg-sos-soft text-sos')}
+          onClick={toggleListening}
+          disabled={isLoading}
+          aria-label={isListening ? t('chat.stopListening') : t('chat.startListening')}
+          aria-pressed={isListening}
+          icon={isListening ? <MicOff className="h-5 w-5" /> : <Mic className="h-5 w-5" />}
+        />
+        <textarea
+          ref={inputRef}
+          rows={1}
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          onKeyDown={(e) => {
+            // Enter sends, Shift+Enter adds a new line (IME composition is left alone)
+            if (e.key === 'Enter' && !e.shiftKey && !e.nativeEvent.isComposing) {
+              e.preventDefault();
+              handleSubmit();
+            }
+          }}
+          placeholder={t('chat.placeholder')}
+          aria-label={t('chat.inputLabel')}
+          className="max-h-32 min-h-11 w-full min-w-0 flex-1 resize-none overflow-y-auto break-words rounded-lg border border-line bg-surface-2 px-3.5 py-2.5 text-body-s font-semibold leading-5 text-ink outline-none placeholder:text-ink-subtle focus:border-care disabled:opacity-50"
+          disabled={isListening || isLoading}
+        />
+        <Button
+          variant="primary"
+          className="h-11 w-11 shrink-0 rounded-lg px-0"
+          onClick={handleSubmit}
+          disabled={!canSend}
+          aria-label={t('chat.send')}
+          icon={<Send className="h-5 w-5" />}
+        />
+      </div>
     </div>
   );
 }

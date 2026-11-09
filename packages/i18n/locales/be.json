@@ -571,6 +571,7 @@
     "questionPlaceholder": "Пытанне",
     "answerPlaceholder": "Адказ",
     "deleteConfirm": "Выдаліць гэтае пытанне?",
+    "edit": "Змяніць",
     "localized": "Перакладзена",
     "localizeAll": "Перакласці на ўсе мовы",
     "addPhoto": "Дадаць фота",
@@ -641,7 +642,12 @@
     "triggering": "Запуск...",
     "triggerSuccess": "Аўталанцужок запушчаны",
     "triggerError": "Памылка запуску",
-    "urlPlaceholder": "https://..."
+    "urlPlaceholder": "https://...",
+    "deleteConfirm": "Выдаліць гэтае паведамленне?",
+    "statusPending": "Чакае",
+    "statusSent": "Адпраўлена",
+    "statusCancelled": "Скасавана",
+    "statusFailed": "Не адпраўлена"
   },
   "contacts": {
     "telegram": "Telegram",
@@ -1108,7 +1114,8 @@
     "replyPlaceholder": "Адказаць...",
     "unknownUser": "Невядомы карыстальнік",
     "attachFile": "Прымацаваць файл",
-    "photoAlt": "фота"
+    "photoAlt": "фота",
+    "file": "Файл"
   },
   "videoGuide": {
     "play": "Глядзець відэаінструкцыю",
@@ -1454,6 +1461,7 @@
     "step3": "Уключыце <b>Апавяшчэнні</b>",
     "step4": "Вярніцеся ў праграму",
     "checkAgain": "Праверыць зноў",
-    "checkHint": "Пасля ўключэння апавяшчэнняў націсніце «Праверыць зноў»"
+    "checkHint": "Пасля ўключэння апавяшчэнняў націсніце «Праверыць зноў»",
+    "notNow": "Не зараз"
   }
 }
