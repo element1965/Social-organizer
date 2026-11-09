@@ -4,7 +4,7 @@ import { TRPCError } from '@trpc/server';
 import { MIN_COLLECTION_AMOUNT, NOTIFICATION_RATIO } from '@so/shared';
 import { sendCollectionNotifications, sendCollectionClosedTg } from '../services/notification.service.js';
 import { isAdmin } from '../admin.js';
-import { getAskAccess, assertAskAllowed, assertFirstAskCap, isSpecialAsker } from '../services/ask-access.service.js';
+import { getAskAccess, assertAskAllowed, isSpecialAsker } from '../services/ask-access.service.js';
 import { BLOCK_REASONS } from '../config/ask.js';
 
 /** Chat links are shown as buttons to every participant: only plain web links, never javascript: etc. (SO-14) */
@@ -19,7 +19,7 @@ export const collectionRouter = router({
   askAccess: protectedProcedure.query(async ({ ctx }) => {
     const access = await getAskAccess(ctx.db, ctx.userId);
     const special = await isSpecialAsker(ctx.db, ctx.userId);
-    return special ? { ...access, allowed: true, maxFirstAmount: null } : access;
+    return special ? { ...access, allowed: true } : access;
   }),
 
   /** Admin-only: suspend a collection with a reason. Participants see it as paused. */
@@ -82,10 +82,9 @@ export const collectionRouter = router({
         throw new TRPCError({ code: 'BAD_REQUEST', message: `Amount must be at least ${MIN_COLLECTION_AMOUNT}` });
       }
 
-      // Path to a request: enough direct connections and a big enough network, plus a cap on the first request.
+      // Path to a request: enough direct connections and a big enough network. The amount is not capped.
       if (!isSpecial) {
         assertAskAllowed(await getAskAccess(ctx.db, ctx.userId, { quick: true }));
-        if (input.amount != null) await assertFirstAskCap(ctx.db, ctx.userId, input.amount);
       }
 
       // Limit: max 1 emergency + 1 regular at the same time
@@ -185,9 +184,6 @@ export const collectionRouter = router({
       }
       if (collection.blockReason != null) {
         throw new TRPCError({ code: 'FORBIDDEN', message: 'COLLECTION_BLOCKED: This collection is suspended by an administrator' });
-      }
-      if (input.amount != null && !(await isSpecialAsker(ctx.db, ctx.userId))) {
-        await assertFirstAskCap(ctx.db, ctx.userId, input.amount, collection.id);
       }
 
       const amountUSD = input.amount;

@@ -1,7 +1,7 @@
 import { TRPCError } from '@trpc/server';
 import type { PrismaClient } from '@so/db';
-import { MIN_COLLECTION_AMOUNT, ASK_MIN_DIRECT, ASK_MIN_NETWORK } from '@so/shared';
-import { ASK_ERRORS, ASK_FIRST_AMOUNT_FACTOR, ASK_NETWORK_SCAN_LIMIT } from '../config/ask.js';
+import { ASK_MIN_DIRECT, ASK_MIN_NETWORK } from '@so/shared';
+import { ASK_ERRORS, ASK_NETWORK_SCAN_LIMIT } from '../config/ask.js';
 import { isAdmin } from '../admin.js';
 import { countConnections } from './connection-request.service.js';
 import { bfsNetwork } from './network.service.js';
@@ -14,9 +14,11 @@ export interface AskAccess {
   networkCount: number;
   needDirect: number;
   needNetwork: number;
-  /** Cap for the user's first ever request; null once they already had one. */
-  maxFirstAmount: number | null;
-  isFirstAsk: boolean;
+  /**
+   * What the network can help with now (sum of members' remaining budgets); null in quick mode.
+   * Soft guidance only: the UI warns when a request exceeds it, the server never blocks on it.
+   */
+  networkCanHelp: number | null;
 }
 
 /** Authors, developers and admins are not subject to the thresholds. */
@@ -35,22 +37,16 @@ async function networkCanHelp(db: Db, members: Array<{ user_id: string }>): Prom
   return users.reduce((s, u) => s + (u.remainingBudget ?? 0), 0);
 }
 
-function capFor(canHelp: number): number {
-  return Math.max(MIN_COLLECTION_AMOUNT, Math.floor(canHelp * ASK_FIRST_AMOUNT_FACTOR));
-}
-
 /**
  * Full numbers for the UI. With `quick`, the walk stops as soon as the network threshold is reached
- * (enough for the allow decision; networkCount is then capped and maxFirstAmount is null).
+ * (enough for the allow decision; networkCount is then capped and networkCanHelp is null).
  */
 export async function getAskAccess(db: Db, userId: string, opts: { quick?: boolean } = {}): Promise<AskAccess> {
-  const [directCount, members, previousAsks] = await Promise.all([
+  const [directCount, members] = await Promise.all([
     countConnections(db, userId),
     bfsNetwork(db, userId, opts.quick ? ASK_MIN_NETWORK : ASK_NETWORK_SCAN_LIMIT),
-    db.collection.count({ where: { creatorId: userId } }),
   ]);
-  const isFirstAsk = previousAsks === 0;
-  const maxFirstAmount = !opts.quick && isFirstAsk ? capFor(await networkCanHelp(db, members)) : null;
+  const canHelp = opts.quick ? null : await networkCanHelp(db, members);
 
   return {
     allowed: directCount >= ASK_MIN_DIRECT && members.length >= ASK_MIN_NETWORK,
@@ -58,8 +54,7 @@ export async function getAskAccess(db: Db, userId: string, opts: { quick?: boole
     networkCount: members.length,
     needDirect: ASK_MIN_DIRECT,
     needNetwork: ASK_MIN_NETWORK,
-    maxFirstAmount,
-    isFirstAsk,
+    networkCanHelp: canHelp,
   };
 }
 
@@ -68,25 +63,6 @@ export function assertAskAllowed(access: Pick<AskAccess, 'allowed'>): void {
     throw new TRPCError({
       code: 'FORBIDDEN',
       message: `${ASK_ERRORS.locked}: Need at least ${ASK_MIN_DIRECT} direct connections and ${ASK_MIN_NETWORK} people in your network`,
-    });
-  }
-}
-
-/**
- * The user's first ever collection is capped at 2x what the network can help with.
- * `excludeCollectionId` is the collection being edited, so editing the only collection still counts as "first".
- */
-export async function assertFirstAskCap(db: Db, userId: string, amount: number, excludeCollectionId?: string): Promise<void> {
-  const others = await db.collection.count({
-    where: { creatorId: userId, ...(excludeCollectionId ? { id: { not: excludeCollectionId } } : {}) },
-  });
-  if (others > 0) return;
-  const members = await bfsNetwork(db, userId, ASK_NETWORK_SCAN_LIMIT);
-  const cap = capFor(await networkCanHelp(db, members));
-  if (amount > cap) {
-    throw new TRPCError({
-      code: 'BAD_REQUEST',
-      message: `${ASK_ERRORS.amountCap}: Your first request can be at most $${cap}`,
     });
   }
 }
