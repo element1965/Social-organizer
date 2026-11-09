@@ -117,7 +117,6 @@ export function ProfilePage() {
   // The sum the person can check (rings 1–3); the full reach is a ceiling, told on the Circle and in the minimum screen
   const canHelp = access.data?.networkCanHelpVisible ?? caps.data?.visibleTotal ?? access.data?.networkCanHelp ?? caps.data?.total ?? null;
   const visiblePeople = access.data?.networkVisible ?? access.data?.networkCount ?? 0;
-  const farPeople = access.data?.networkFar ?? 0;
   const openCount = active.data && participating.data
     ? active.data.length + participating.data.filter((row) => isOpenParticipation(row, profile.id)).length
     : null;
@@ -174,12 +173,7 @@ export function ProfilePage() {
       <Group title={t('profile.participation')}>
         <Row
           title={t('circle.stats.canHelp')}
-          subtitle={access.data
-            ? [
-                t(networkKey(visiblePeople), { count: visiblePeople }),
-                farPeople > 0 ? t('circle.stats.far', { n: farPeople >= 5 ? `~${farPeople}` : farPeople }) : null,
-              ].filter(Boolean).join(' · ')
-            : undefined}
+          subtitle={access.data ? t(networkKey(visiblePeople), { count: visiblePeople }) : undefined}
           variant="value"
           value={canHelp == null ? undefined : formatMoney(canHelp)}
           chevron={false}

@@ -224,9 +224,7 @@
       "peopleShort_other": "{{count}} people",
       "canHelp": "Your network can help",
       "explain": "What the people you can see (up to the 3rd handshake) can still give this period. A request goes out in waves, nearest first, up to the 6th handshake, so the far rings can add more, but that is a ceiling, not a promise.",
-      "weekDelta": "+{{amount}} this week",
-      "far": "and {{n}} more further out",
-      "ceiling": "up to {{amount}} with the far rings"
+      "weekDelta": "+{{amount}} this week"
     },
     "rings": {
       "short1": "1st",

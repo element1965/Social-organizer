@@ -45,7 +45,6 @@ export function StakePage() {
   const showError = value.trim() !== '' && parsed == null;
   const unchanged = saved != null && parsed === Math.round(saved);
   const canHelp = access.data?.networkCanHelpVisible ?? caps.data?.visibleTotal ?? access.data?.networkCanHelp ?? caps.data?.total ?? null;
-  const ceiling = access.data?.networkCanHelp ?? caps.data?.total ?? null;
 
   const submit = () => {
     if (parsed == null) return;
@@ -94,11 +93,7 @@ export function StakePage() {
             <p className="text-h2 font-extrabold tabular-nums text-ink">
               {canHelp == null ? t('common.loading') : formatMoney(canHelp)}
             </p>
-            {canHelp != null && ceiling != null && ceiling > canHelp ? (
-              <p className="mt-1 text-label font-semibold text-ink-muted">
-                {t('circle.stats.ceiling', { amount: formatMoney(ceiling) })}
-              </p>
-            ) : null}
+
           </Card>
         </>
       )}
