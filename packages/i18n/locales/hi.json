@@ -1274,7 +1274,9 @@
     "open": "खोलें",
     "contactsTitle": "संपर्क: {{name}}",
     "contactsHint": "ये दूसरे ऐप में खुलेंगे।",
-    "withdrawRequest": "वापस लें"
+    "withdrawRequest": "वापस लें",
+    "requestCooldown": "अनुरोध वापस लिया गया। नया {{when}} के बाद भेज सकते हैं।",
+    "requestCooldownSoon": "अनुरोध वापस लिया गया। नया एक दिन बाद भेज सकते हैं।"
   },
   "help": {
     "faq": "सवाल और जवाब",

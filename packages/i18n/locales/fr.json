@@ -1285,7 +1285,9 @@
     "open": "Ouvrir",
     "contactsTitle": "Contacts : {{name}}",
     "contactsHint": "Ils s’ouvrent dans une autre application.",
-    "withdrawRequest": "Retirer"
+    "withdrawRequest": "Retirer",
+    "requestCooldown": "Demande retirée. Vous pourrez en envoyer une nouvelle après {{when}}.",
+    "requestCooldownSoon": "Demande retirée. Vous pourrez en envoyer une nouvelle un jour après."
   },
   "help": {
     "faq": "Questions et réponses",

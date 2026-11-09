@@ -1274,7 +1274,9 @@
     "open": "Avaa",
     "contactsTitle": "Yhteystiedot: {{name}}",
     "contactsHint": "Ne avautuvat toisessa sovelluksessa.",
-    "withdrawRequest": "Peru"
+    "withdrawRequest": "Peru",
+    "requestCooldown": "Pyyntö peruttu. Uuden voi lähettää {{when}} jälkeen.",
+    "requestCooldownSoon": "Pyyntö peruttu. Uuden voi lähettää vuorokauden kuluttua."
   },
   "help": {
     "faq": "Kysymykset ja vastaukset",

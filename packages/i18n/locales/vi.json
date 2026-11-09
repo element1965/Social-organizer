@@ -1263,7 +1263,9 @@
     "open": "Mở",
     "contactsTitle": "Liên hệ: {{name}}",
     "contactsHint": "Sẽ mở trong ứng dụng khác.",
-    "withdrawRequest": "Rút lại"
+    "withdrawRequest": "Rút lại",
+    "requestCooldown": "Đã rút lời mời. Bạn có thể gửi lời mời mới sau {{when}}.",
+    "requestCooldownSoon": "Đã rút lời mời. Bạn có thể gửi lời mời mới sau một ngày."
   },
   "help": {
     "faq": "Câu hỏi thường gặp",

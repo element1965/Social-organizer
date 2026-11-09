@@ -1274,7 +1274,9 @@
     "open": "Öffnen",
     "contactsTitle": "Kontakte: {{name}}",
     "contactsHint": "Sie öffnen sich in einer anderen App.",
-    "withdrawRequest": "Zurückziehen"
+    "withdrawRequest": "Zurückziehen",
+    "requestCooldown": "Anfrage zurückgezogen. Eine neue ist ab {{when}} möglich.",
+    "requestCooldownSoon": "Anfrage zurückgezogen. Eine neue ist einen Tag danach möglich."
   },
   "help": {
     "faq": "Fragen und Antworten",

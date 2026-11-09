@@ -1285,7 +1285,9 @@
     "open": "פתיחה",
     "contactsTitle": "אנשי קשר: {{name}}",
     "contactsHint": "הם נפתחים באפליקציה אחרת.",
-    "withdrawRequest": "לבטל"
+    "withdrawRequest": "לבטל",
+    "requestCooldown": "הבקשה בוטלה. אפשר לשלוח חדשה אחרי {{when}}.",
+    "requestCooldownSoon": "הבקשה בוטלה. אפשר לשלוח חדשה אחרי יממה."
   },
   "help": {
     "faq": "שאלות ותשובות",

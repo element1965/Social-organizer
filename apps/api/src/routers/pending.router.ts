@@ -5,6 +5,13 @@ import { sendPendingNotification } from '../services/notification.service.js';
 import { respondToConnectionRequest } from '../services/connection-request.service.js';
 import { syncMilestones } from '../services/milestone.service.js';
 
+/** How long a withdrawn request blocks a new one to the same person. */
+export const REQUEST_COOLDOWN_MS = 24 * 60 * 60 * 1000;
+
+function cooldownUntil(resolvedAt: Date | null): number {
+  return resolvedAt ? resolvedAt.getTime() + REQUEST_COOLDOWN_MS : 0;
+}
+
 export const pendingRouter = router({
   incoming: protectedProcedure.query(async ({ ctx }) => {
     return ctx.db.pendingConnection.findMany({
@@ -105,6 +112,19 @@ export const pendingRouter = router({
         throw new TRPCError({ code: 'CONFLICT', message: 'Request already pending' });
       }
 
+      // A withdrawn request blocks a new one for a while: send/withdraw loops would otherwise
+      // flood the person with notifications
+      const withdrawn = await ctx.db.pendingConnection.findFirst({
+        where: { fromUserId: ctx.userId, toUserId: input.targetUserId, status: 'CANCELLED' },
+      });
+      if (withdrawn) {
+        if (cooldownUntil(withdrawn.resolvedAt) > Date.now()) {
+          throw new TRPCError({ code: 'TOO_MANY_REQUESTS', message: 'REQUEST_COOLDOWN' });
+        }
+        // The pair is unique, so the old row makes room for the new request (and its own notification key)
+        await ctx.db.pendingConnection.delete({ where: { id: withdrawn.id } });
+      }
+
       const created = await ctx.db.pendingConnection.create({
         data: { fromUserId: ctx.userId, toUserId: input.targetUserId, createdAt: new Date() },
       });
@@ -136,18 +156,28 @@ export const pendingRouter = router({
         },
         orderBy: { createdAt: 'desc' },
       });
-      if (!pending) return { status: 'none' as const };
-      return { status: pending.status.toLowerCase() as 'pending' | 'accepted' | 'rejected' };
+      if (!pending) return { status: 'none' as const, retryAt: null };
+      // After the current user withdrew a request: when a new one can be sent (null once the cooldown is over)
+      const until = pending.status === 'CANCELLED' && pending.fromUserId === ctx.userId ? cooldownUntil(pending.resolvedAt) : 0;
+      return {
+        status: pending.status.toLowerCase() as 'pending' | 'accepted' | 'rejected' | 'cancelled',
+        retryAt: until > Date.now() ? new Date(until).toISOString() : null,
+      };
     }),
 
-  /** Withdraws the current user's own unanswered request to a person. The row is deleted, so a new one can be sent later. */
+  /**
+   * Withdraws the current user's own unanswered request to a person. The row is kept as CANCELLED:
+   * a new request to the same person is possible only after REQUEST_COOLDOWN_MS.
+   */
   cancel: protectedProcedure
     .input(z.object({ targetUserId: z.string() }))
     .mutation(async ({ ctx, input }) => {
-      const res = await ctx.db.pendingConnection.deleteMany({
+      const now = new Date();
+      const res = await ctx.db.pendingConnection.updateMany({
         where: { fromUserId: ctx.userId, toUserId: input.targetUserId, status: 'PENDING' },
+        data: { status: 'CANCELLED', resolvedAt: now },
       });
-      return { cancelled: res.count > 0 };
+      return { cancelled: res.count > 0, retryAt: new Date(cooldownUntil(now)).toISOString() };
     }),
 
   reject: protectedProcedure

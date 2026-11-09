@@ -52,6 +52,8 @@ enum PendingConnectionStatus {
   PENDING
   ACCEPTED
   REJECTED
+  /// Withdrawn by the sender; resolvedAt starts the cooldown before a new request to the same person
+  CANCELLED
 }
 
 enum NotificationType {
