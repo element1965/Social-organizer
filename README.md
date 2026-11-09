@@ -272,7 +272,7 @@ React 19 SPA with tRPC client.
 
 ### Pages
 
-Route pages other than the guest landing are `React.lazy`. The Circle chunk is prefetched after sign-in. `telegram-web-app.js` loads only when the page is opened inside Telegram (`tgWebAppData`, a `#tgWebApp` hash, or a Telegram user agent).
+Route pages other than the guest landing are `React.lazy`. The Circle chunk is prefetched after sign-in. A failed lazy chunk retries the import once; if the preload still fails, the page reloads once (a sessionStorage timestamp stops a loop) and then shows a reload screen. `telegram-web-app.js` is injected during HTML parse, before the app entry, only inside Telegram: `tgWebAppData` or `tgWebApp` in the URL or hash, a Telegram user agent, `window.TelegramWebviewProxy`, sessionStorage `__telegram__initParams`, or an iframe that has those stored params or a `tgWebApp` hash. That still matches after a full-page reload inside Telegram Desktop, iOS, Android, and Web A/K. A normal browser does not request the script.
 
 | Page | Path | Description |
 |------|------|-------------|
@@ -314,7 +314,7 @@ Measured on this branch. The guest document does not preload Three.js, the force
 
 | Chunk | Raw | Gzip | When |
 |-------|-----|------|------|
-| index (entry, includes locales) | 1558 KB | 474 KB | Always |
+| index (entry, includes locales) | 1560 KB | 474 KB | Always |
 | CSS | 76 KB | 15 KB | Always |
 | CirclePage | 42 KB | 13 KB | After sign-in (prefetched) |
 | graph3d (Three.js + force-graph) | 1317 KB | 357 KB | When the Circle graph loads |
