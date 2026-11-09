@@ -39,7 +39,7 @@ function build(): Built {
     nodes.push({
       id,
       name,
-      photoUrl: null,
+      photoUrl: i === 0 || i === 1 || i === 2 || i === 4 ? `/avatars/${i}.png` : null,
       depth: 1,
       connectionCount: 2 + Math.floor(rnd() * 6),
       lastSeen: i === 1 ? new Date().toISOString() : null,
@@ -104,6 +104,7 @@ export function App() {
   const [hidden, setHidden] = useState<number[]>([]);
   const [showControls, setShowControls] = useState(false);
   const [tapped, setTapped] = useState('hover a node for the tooltip');
+  const [generation, setGeneration] = useState(0);
   const savedView = useRef<GraphView | null>(null);
   const [viewZ, setViewZ] = useState('');
 
@@ -131,6 +132,7 @@ export function App() {
   return (
     <div style={{ height: '100%', background: '#0b1513' }}>
       <NetworkGraph
+        key={generation}
         ref={graph}
         nodes={data.nodes}
         edges={data.edges}
@@ -169,6 +171,7 @@ export function App() {
         <button style={chip} onClick={() => setShowControls((v) => !v)}>
           {showControls ? 'Canvas buttons on' : 'Canvas buttons off'}
         </button>
+        <button style={chip} onClick={() => setGeneration((n) => n + 1)}>Remount</button>
         <span style={{ color: '#9fb0aa', font: '600 13px Manrope, sans-serif' }}>{tapped}</span>
       </div>
     </div>
