@@ -32,6 +32,7 @@ export function Sheet({
   const titleId = useId();
   const descId = useId();
   const panelRef = useRef<HTMLDivElement>(null);
+  const dragY = useRef<number | null>(null);
   // A contained sheet is a gallery frame. It must not lock page scroll or steal focus.
   useFocusTrap(open && !contained, panelRef, onClose);
 
@@ -52,6 +53,13 @@ export function Sheet({
           : 'w-full rounded-r-2xl px-[18px] pb-[calc(16px+var(--sa-bottom))] pt-5',
       )}
       onMouseDown={(event) => event.stopPropagation()}
+      onPointerDown={(event) => {
+        if (!dialog) dragY.current = event.clientY;
+      }}
+      onPointerUp={(event) => {
+        if (dragY.current != null && event.clientY - dragY.current > 48) onClose();
+        dragY.current = null;
+      }}
     >
       <h2 id={titleId} className={cn('text-title', dialog ? 'font-extrabold' : 'font-bold')}>
         {title}
