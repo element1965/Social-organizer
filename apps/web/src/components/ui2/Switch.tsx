@@ -25,7 +25,9 @@ export function Switch({ checked, onCheckedChange, label, disabled }: SwitchProp
     >
       <span
         className={cn(
-          'absolute top-[3px] h-6 w-6 rounded-full bg-surface shadow-float transition-transform duration-200 motion-reduce:transition-none',
+          // left-0: without it the knob starts at its static position (the track centre) and the
+          // translate pushes it past the right edge
+          'absolute left-0 top-[3px] h-6 w-6 rounded-full bg-surface shadow-float transition-transform duration-200 motion-reduce:transition-none',
           checked ? 'translate-x-[21px]' : 'translate-x-[3px]',
         )}
       />
