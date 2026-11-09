@@ -1,5 +1,5 @@
 import { useState, type ReactNode } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { ASK_MIN_DIRECT, ASK_MIN_NETWORK } from '@so/shared';
 import { trpc } from '../../lib/trpc';
@@ -102,17 +102,22 @@ function PathSteps({ data }: { data: PathData }) {
       <section className="mt-3.5 border-t border-line-soft pt-3.5">
         <StepHead label={t('path.network')} value={data.network} goal={data.needNetwork} />
         <Progress value={data.network} goal={data.needNetwork} />
-        {data.lonely.length > 0 ? (
+        {/* Nudging people to bring theirs only helps while the network step is still open */}
+        {data.lonely.length > 0 && data.network < data.needNetwork ? (
           <>
             <p className="mt-2 text-label text-ink-muted">
               {t('path.lonely', { names: lonelyNames.join(', '), count: data.lonely.length })}
             </p>
             <div className="mt-2 flex flex-wrap items-center gap-2">
               {data.lonely.slice(0, 5).map((c) => (
-                <span key={c.userId} className="inline-flex max-w-[140px] items-center gap-1.5 rounded-pill bg-care-soft py-0.5 pl-0.5 pr-2.5">
+                <Link
+                  key={c.userId}
+                  to={`/person/${c.userId}`}
+                  className="so-focus inline-flex max-w-[140px] items-center gap-1.5 rounded-pill bg-care-soft py-0.5 pl-0.5 pr-2.5 hover:bg-surface-2"
+                >
                   <Avatar name={c.displayName} src={c.photoUrl} size={36} className="h-6 w-6 rounded-pill text-micro" />
                   <span className="truncate text-label font-semibold text-ink">{c.displayName.split(/\s+/)[0]}</span>
-                </span>
+                </Link>
               ))}
               <Button variant="ghost" size="sm" className="ml-auto bg-care-soft text-care" onClick={() => void remind()}>
                 {copied ? t('common.copied') : t('path.remind')}
