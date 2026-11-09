@@ -21,7 +21,7 @@ import { AccountExistsError } from './services/identity.service.js';
 import { backfillBotStartInvites } from './services/invite-fallback.service.js';
 import { getDb } from '@so/db';
 import { isAdmin } from './admin.js';
-import { startInactiveCleanupTimer } from './services/inactive-cleanup.service.js';
+import { startInactiveCleanupTimer, logInactiveCleanupConfig } from './services/inactive-cleanup.service.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -420,6 +420,7 @@ async function start() {
     if (!queuesStarted) {
       startInactiveCleanupTimer(getDb());
     }
+    logInactiveCleanupConfig();
 
     await app.listen({ port: PORT, host: HOST });
     console.log(`API server running on http://${HOST}:${PORT}`);

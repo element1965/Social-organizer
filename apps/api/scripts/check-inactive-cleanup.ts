@@ -1,6 +1,7 @@
 /**
  * Checks the 2-year inactivity cleanup against the LOCAL database (localhost only).
- * Creates two throwaway users, runs the routine with an injected clock and cleans up.
+ * Creates throwaway users (inactive-*@test.local), runs the routine with an injected clock
+ * and cleans up.
  * Run from the repo root: pnpm --filter @so/api exec tsx scripts/check-inactive-cleanup.ts
  */
 import { readFileSync } from 'node:fs';
@@ -45,6 +46,7 @@ function isLocalDb(url: string | undefined): boolean {
 }
 
 const day = (d: Date) => d.toISOString().slice(0, 10);
+const ADMIN_ID = 'inactive-check-admin';
 
 async function main() {
   loadEnvFile(resolve(process.cwd(), '../../packages/db/.env'));
@@ -54,64 +56,92 @@ async function main() {
   }
   const outbox = join(tmpdir(), `so-inactive-check-${Date.now()}.log`);
   process.env.DEV_MAIL_OUTBOX = outbox;
+  process.env.ADMIN_IDS = ADMIN_ID;
   delete process.env.RESEND_API_KEY;
   delete process.env.TELEGRAM_BOT_TOKEN;
 
   const { PrismaClient } = await import('@so/db');
   const svc = await import('../src/services/inactive-cleanup.service.js');
+  const { touchUserNow } = await import('../src/services/activity.service.js');
+  const { deleteUserAccount } = await import('../src/services/account-deletion.service.js');
   const db = new PrismaClient();
-  const emails = ['inactive-a@test.local', 'inactive-b@test.local'];
-  await db.user.deleteMany({ where: { email: { in: emails } } });
+  const email = (k: string) => `inactive-${k}@test.local`;
+  const testUsers = { OR: [{ email: { startsWith: 'inactive-', endsWith: '@test.local' } }, { id: ADMIN_ID }, { name: 'Inactive E' }] };
+  const cleanup = async () => {
+    await db.collection.deleteMany({ where: { creator: testUsers } });
+    await db.user.deleteMany({ where: testUsers });
+  };
+  await cleanup();
 
   const T = new Date();
   const at = (days: number) => new Date(T.getTime() + days * DAY);
-  // A: last seen 725 days ago (2-year mark in 5 days), Russian.
-  const a = await db.user.create({ data: { name: 'Inactive A', email: emails[0], language: 'ru', lastSeen: at(-725), createdAt: at(-900) } });
-  // B: never seen, created 800 days ago (mark already passed: must still get both warnings first).
-  const b = await db.user.create({ data: { name: 'Inactive B', email: emails[1], language: 'en', lastSeen: null, createdAt: at(-800) } });
-  const ids = [a.id, b.id];
+  // A: last seen 725 days ago (2-year mark in 5 days), Russian, e-mail.
+  const a = await db.user.create({ data: { name: 'Inactive A', email: email('a'), language: 'ru', lastSeen: at(-725), createdAt: at(-900) } });
+  // B: never seen, created 800 days ago (mark already passed: must still get both notices first).
+  const b = await db.user.create({ data: { name: 'Inactive B', email: email('b'), language: 'en', lastSeen: null, createdAt: at(-800) } });
+  // C: inactive author of an ACTIVE collection with a pledge from D: exempt.
+  const c = await db.user.create({ data: { name: 'Inactive C', email: email('c'), lastSeen: at(-800), createdAt: at(-900) } });
+  const d = await db.user.create({ data: { name: 'Active D', email: email('d'), lastSeen: T, createdAt: at(-100) } });
+  const coll = await db.collection.create({ data: { creatorId: c.id, type: 'EMERGENCY', chatLink: 'https://t.me/test', amount: 100 } });
+  await db.obligation.create({ data: { collectionId: coll.id, userId: d.id, amount: 10 } });
+  // E: no channel at all (no e-mail, Telegram or push): notices undelivered, still deleted.
+  const e = await db.user.create({ data: { name: 'Inactive E', email: null, lastSeen: at(-800), createdAt: at(-900) } });
+  // F: listed in ADMIN_IDS: never processed.
+  const f = await db.user.create({ data: { id: ADMIN_ID, name: 'Inactive admin', email: email('f'), lastSeen: at(-800), createdAt: at(-900) } });
+  const ids = [a.id, b.id, c.id, d.id, e.id, f.id];
 
-  const notices: Array<{ userId: string; stage: number; text: string; deleteOn: string }> = [];
-  type Target = Parameters<typeof svc.sendInactivityNotice>[1];
-  type Notice = Parameters<typeof svc.sendInactivityNotice>[2];
-  const notify = async (d: typeof db, u: Target, n: Notice) => {
-    notices.push({ userId: n.userId, stage: n.stage, text: n.text, deleteOn: day(n.deleteOn) });
-    await svc.sendInactivityNotice(d, u, n); // real channels: the e-mail lands in the dev outbox
+  const notices: Array<{ userId: string; stage: number; text: string; deleteOn: string; channels: number }> = [];
+  const notify: import('../src/services/inactive-cleanup.service.js').InactivityNotifier = async (dbc, u, n) => {
+    const channels = await svc.sendInactivityNotice(dbc, u, n); // real channels: e-mail lands in the dev outbox
+    notices.push({ userId: n.userId, stage: n.stage, text: n.text, deleteOn: day(n.deleteOn), channels });
+    return channels;
   };
   const run = (now: Date) => svc.runInactiveCleanup(db, { now, notify, onlyUserIds: ids });
   const stageOf = async (id: string) =>
     (await db.user.findUnique({ where: { id }, select: { inactivityStage: true } }))?.inactivityStage ?? null;
+  const counts = (r: { warned30: number; warned7: number; deleted: number }) => [r.warned30, r.warned7, r.deleted];
 
   try {
-    // Day 0: first warning to both; deletion date = day 30 (B's mark has already passed).
+    // Day 0: first notice to A, B, E; deletion date = day 30 (marks already near or passed).
     let r = await run(T);
-    check('day 0: two 30-day warnings', [r.warned30, r.warned7, r.deleted], [2, 0, 0]);
-    check('day 0: stages', [await stageOf(a.id), await stageOf(b.id)], [1, 1]);
+    check('day 0: three 30-day notices, nothing deleted', counts(r), [3, 0, 0]);
+    check('day 0: E reached no channel', r.undelivered, 1);
+    check('day 0: C exempt (live collection with a pledge)', r.exempt, 1);
+    check('day 0: stages A,B,C,E,F', await Promise.all([a, b, c, e, f].map((u) => stageOf(u.id))), [1, 1, 0, 1, 0]);
     const na = notices.find((n) => n.userId === a.id);
     const nb = notices.find((n) => n.userId === b.id);
     check('ru text', !!na && na.text.startsWith('Ваш профиль в Social Organizer будет удалён') && na.text.endsWith('Чтобы сохранить его, просто войдите.'), true);
     check('en text', !!nb && nb.text.startsWith('Your Social Organizer profile will be deleted on'), true);
-    check('announced date = day 30 for both', [na?.deleteOn, nb?.deleteOn], [day(at(30)), day(at(30))]);
+    check('announced date = day 30', [na?.deleteOn, nb?.deleteOn], [day(at(30)), day(at(30))]);
     let outboxText = '';
     try { outboxText = readFileSync(outbox, 'utf8'); } catch { /* nothing written */ }
-    check('e-mail notices in dev outbox', outboxText.includes(emails[0]) && outboxText.includes(emails[1]), true);
+    check('e-mail notices in dev outbox (A, B)', outboxText.includes(email('a')) && outboxText.includes(email('b')), true);
+    check('admin F got no notice', notices.some((n) => n.userId === f.id), false);
 
     r = await run(T);
-    check('day 0 again: idempotent', [r.warned30, r.warned7, r.deleted], [0, 0, 0]);
+    check('day 0 again: idempotent', counts(r), [0, 0, 0]);
 
     r = await run(at(22));
-    check('day 22: too early for 2nd warning', [r.warned30, r.warned7, r.deleted], [0, 0, 0]);
+    check('day 22: too early for 2nd notice', counts(r), [0, 0, 0]);
 
     r = await run(at(23));
-    check('day 23: two 7-day warnings', [r.warned30, r.warned7, r.deleted], [0, 2, 0]);
-    check('day 23: stages', [await stageOf(a.id), await stageOf(b.id)], [2, 2]);
-    check('7-day notice keeps the announced date', notices.filter((n) => n.stage === 2).map((n) => n.deleteOn), [day(at(30)), day(at(30))]);
+    check('day 23: three 7-day notices', counts(r), [0, 3, 0]);
+    check('day 23: stages A,B,E', await Promise.all([a, b, e].map((u) => stageOf(u.id))), [2, 2, 2]);
+    check('7-day notice keeps the announced date', [...new Set(notices.filter((n) => n.stage === 2).map((n) => n.deleteOn))], [day(at(30))]);
 
     r = await run(at(29));
     check('day 29: nothing deleted yet', r.deleted, 0);
 
-    // B signs in on day 29 (what the auth middleware does): the stage resets, the profile is kept.
-    await db.user.update({ where: { id: b.id }, data: { lastSeen: at(29), inactivityStage: 0, inactivityWarnedAt: null } });
+    // B signs in on day 29: the real activity path resets the stage.
+    await touchUserNow(db, b.id);
+    const bTouched = await db.user.findUnique({ where: { id: b.id }, select: { inactivityStage: true, inactivityWarnedAt: true, lastSeen: true } });
+    check('touchUser: stage reset, lastSeen set', [bTouched?.inactivityStage, bTouched?.inactivityWarnedAt, !!bTouched?.lastSeen], [0, null, true]);
+    // The real clock is "day 0"; move B's activity to day 29 of the simulated timeline.
+    await db.user.update({ where: { id: b.id }, data: { lastSeen: at(29) } });
+
+    // The deletion guard runs inside the transaction: a refusing guard keeps the account.
+    const refused = await deleteUserAccount(db, a.id, { guard: async () => false });
+    check('guard refusal keeps the account', [refused, !!(await db.user.findUnique({ where: { id: a.id } }))], [null, true]);
 
     // Advisory lock: a run while another holder has the lock is skipped.
     const lockKey = 'so:inactive-account-cleanup';
@@ -122,15 +152,16 @@ async function main() {
     check('locked run is skipped', skipped.skipped, true);
 
     r = await svc.runInactiveCleanupLocked(db, { now: at(30), notify, onlyUserIds: ids });
-    check('day 30: A deleted, B kept', [r.deleted, r.skipped ?? false], [1, false]);
-    check('A is gone (no ties: hard delete)', await db.user.findUnique({ where: { id: a.id } }), null);
-    const bRow = await db.user.findUnique({ where: { id: b.id }, select: { inactivityStage: true, deletedAt: true } });
-    check('B still active, stage 0', [bRow?.inactivityStage, bRow?.deletedAt ?? null], [0, null]);
+    check('day 30: A and E deleted (undelivered does not block)', [r.deleted, r.skipped ?? false], [2, false]);
+    check('A gone', await db.user.findUnique({ where: { id: a.id } }), null);
+    check('E gone', await db.user.findUnique({ where: { id: e.id } }), null);
+    const kept = await db.user.count({ where: { id: { in: [b.id, c.id, f.id] }, deletedAt: null } });
+    check('B, C, F still active', kept, 3);
 
     r = await run(at(31));
-    check('day 31: B not warned again (fresh 2-year period)', [r.warned30, r.warned7, r.deleted], [0, 0, 0]);
+    check('day 31: nobody warned again', counts(r), [0, 0, 0]);
   } finally {
-    await db.user.deleteMany({ where: { email: { in: emails } } });
+    await cleanup();
     await db.$disconnect();
   }
 
