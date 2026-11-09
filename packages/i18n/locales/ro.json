@@ -566,6 +566,7 @@
     "questionPlaceholder": "Întrebare",
     "answerPlaceholder": "Răspuns",
     "deleteConfirm": "Ștergi această întrebare?",
+    "edit": "Editează",
     "localized": "Tradus",
     "localizeAll": "Traduce în toate limbile",
     "addPhoto": "Adaugă foto",
@@ -636,7 +637,12 @@
     "triggering": "Se rulează...",
     "triggerSuccess": "Lanțul automat a pornit",
     "triggerError": "Pornirea a eșuat",
-    "urlPlaceholder": "https://..."
+    "urlPlaceholder": "https://...",
+    "deleteConfirm": "Ștergi acest mesaj?",
+    "statusPending": "În așteptare",
+    "statusSent": "Trimis",
+    "statusCancelled": "Anulat",
+    "statusFailed": "Eșuat"
   },
   "contacts": {
     "telegram": "Telegram",
@@ -1101,7 +1107,8 @@
     "replyPlaceholder": "Răspunde...",
     "unknownUser": "Utilizator necunoscut",
     "attachFile": "Atașează un fișier",
-    "photoAlt": "poză"
+    "photoAlt": "poză",
+    "file": "Fișier"
   },
   "videoGuide": {
     "play": "Urmărește instrucțiunile video",

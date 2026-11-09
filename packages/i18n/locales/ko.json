@@ -556,6 +556,7 @@
     "questionPlaceholder": "질문",
     "answerPlaceholder": "답변",
     "deleteConfirm": "이 질문을 삭제할까요?",
+    "edit": "편집",
     "localized": "번역됨",
     "localizeAll": "모든 언어로 번역",
     "addPhoto": "사진 추가",
@@ -626,7 +627,12 @@
     "triggering": "실행 중...",
     "triggerSuccess": "자동 발송을 시작했어요",
     "triggerError": "실행하지 못했어요",
-    "urlPlaceholder": "https://..."
+    "urlPlaceholder": "https://...",
+    "deleteConfirm": "이 메시지를 삭제할까요?",
+    "statusPending": "대기",
+    "statusSent": "보냄",
+    "statusCancelled": "취소됨",
+    "statusFailed": "실패"
   },
   "contacts": {
     "telegram": "Telegram",
@@ -1087,7 +1093,8 @@
     "replyPlaceholder": "답장...",
     "unknownUser": "알 수 없는 사용자",
     "attachFile": "파일 첨부",
-    "photoAlt": "사진"
+    "photoAlt": "사진",
+    "file": "파일"
   },
   "videoGuide": {
     "play": "영상 안내 보기",

@@ -566,6 +566,7 @@
     "questionPlaceholder": "Pergunta",
     "answerPlaceholder": "Resposta",
     "deleteConfirm": "Excluir esta pergunta?",
+    "edit": "Editar",
     "localized": "Traduzido",
     "localizeAll": "Traduzir para todos os idiomas",
     "addPhoto": "Adicionar foto",
@@ -636,7 +637,12 @@
     "triggering": "Executando...",
     "triggerSuccess": "Cadeia auto executada com sucesso",
     "triggerError": "Falha na execução",
-    "urlPlaceholder": "https://..."
+    "urlPlaceholder": "https://...",
+    "deleteConfirm": "Excluir esta mensagem?",
+    "statusPending": "Pendente",
+    "statusSent": "Enviado",
+    "statusCancelled": "Cancelado",
+    "statusFailed": "Falhou"
   },
   "contacts": {
     "telegram": "Telegram",
@@ -1101,7 +1107,8 @@
     "replyPlaceholder": "Responder...",
     "unknownUser": "Usuário desconhecido",
     "attachFile": "Anexar arquivo",
-    "photoAlt": "foto"
+    "photoAlt": "foto",
+    "file": "Arquivo"
   },
   "videoGuide": {
     "play": "Ver o vídeo de instruções",

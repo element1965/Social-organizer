@@ -561,6 +561,7 @@
     "questionPlaceholder": "Spørgsmål",
     "answerPlaceholder": "Svar",
     "deleteConfirm": "Slet dette spørgsmål?",
+    "edit": "Rediger",
     "localized": "Oversat",
     "localizeAll": "Oversæt til alle sprog",
     "addPhoto": "Tilføj foto",
@@ -631,7 +632,12 @@
     "triggering": "Kører...",
     "triggerSuccess": "Autokæden blev startet",
     "triggerError": "Kunne ikke starte",
-    "urlPlaceholder": "https://..."
+    "urlPlaceholder": "https://...",
+    "deleteConfirm": "Slet denne besked?",
+    "statusPending": "Afventer",
+    "statusSent": "Sendt",
+    "statusCancelled": "Annulleret",
+    "statusFailed": "Mislykkedes"
   },
   "contacts": {
     "telegram": "Telegram",
@@ -1094,7 +1100,8 @@
     "replyPlaceholder": "Svar...",
     "unknownUser": "Ukendt bruger",
     "attachFile": "Vedhæft fil",
-    "photoAlt": "foto"
+    "photoAlt": "foto",
+    "file": "Fil"
   },
   "videoGuide": {
     "play": "Se videovejledningen",
