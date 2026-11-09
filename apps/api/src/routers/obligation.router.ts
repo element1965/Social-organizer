@@ -41,7 +41,7 @@ export const obligationRouter = router({
         if ((totalAmount._sum.amount ?? 0) >= collection.amount) {
           await ctx.db.collection.update({
             where: { id: input.collectionId },
-            data: { status: 'BLOCKED', blockedAt: new Date() },
+            data: { status: 'BLOCKED', blockedAt: new Date(), blockReason: null },
           });
 
           // Mark existing NEW_COLLECTION/RE_NOTIFY notifications as EXPIRED
@@ -172,7 +172,7 @@ export const obligationRouter = router({
         if (sum >= collection.amount && collection.status === 'ACTIVE') {
           await ctx.db.collection.update({
             where: { id: collection.id },
-            data: { status: 'BLOCKED', blockedAt: new Date() },
+            data: { status: 'BLOCKED', blockedAt: new Date(), blockReason: null },
           });
 
           // Mark existing notifications as EXPIRED and create COLLECTION_BLOCKED
@@ -221,10 +221,11 @@ export const obligationRouter = router({
           sendGoalReachedToCreator(ctx.db, collection.id, collection.creatorId).catch((err) =>
             console.error('[TG GoalReached] Failed:', err),
           );
-        } else if (sum < collection.amount && collection.status === 'BLOCKED') {
+        } else if (sum < collection.amount && collection.status === 'BLOCKED' && collection.blockReason == null) {
+          // (an admin block, blockReason != null, is never lifted by the goal arithmetic)
           await ctx.db.collection.update({
             where: { id: collection.id },
-            data: { status: 'ACTIVE', blockedAt: null },
+            data: { status: 'ACTIVE', blockedAt: null, blockReason: null },
           });
 
           // Collection unblocked: mark COLLECTION_BLOCKED notifications as EXPIRED

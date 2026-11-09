@@ -15,7 +15,11 @@ export const MAX_BFS_RECIPIENTS = 10_000;
 export const NOTIFICATION_RATIO = 1; // сумма = количество уведомлений (1:1)
 export const FB_BUNDLE_SIZE_LIMIT_MB = 5;
 export const GRAPH_SLICE_DEPTH = 3;
+/** @deprecated Superseded by ASK_MIN_DIRECT / ASK_MIN_NETWORK; kept because the old UI still reads it. */
 export const MIN_CONNECTIONS_TO_CREATE = 10;
+/** Request thresholds (server-enforced): confirmed direct connections and people in the whole network. */
+export const ASK_MIN_DIRECT = 5;
+export const ASK_MIN_NETWORK = 10;
 
 export const CONTACT_TYPES = [
   { type: 'telegram', label: 'Telegram', icon: 'telegram', placeholder: '@username или t.me/...' },

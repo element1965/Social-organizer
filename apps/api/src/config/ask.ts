@@ -1,6 +1,5 @@
 /** Thresholds for creating a request (collection). Single source for the server checks and the UI progress. */
-export const ASK_MIN_DIRECT = 5; // confirmed direct connections (1st ring)
-export const ASK_MIN_NETWORK = 10; // people reachable in the whole network
+// ASK_MIN_DIRECT / ASK_MIN_NETWORK live in @so/shared
 export const ASK_FIRST_AMOUNT_FACTOR = 2; // first ever request <= factor x what the network can help with
 export const ASK_NETWORK_SCAN_LIMIT = 500; // BFS stops once this many people are found
 

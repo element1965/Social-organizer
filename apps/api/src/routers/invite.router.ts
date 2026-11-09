@@ -9,6 +9,8 @@ import { sendTelegramMessage, type TgReplyMarkup } from '../services/telegram-bo
 import { syncMilestonesForPair } from '../services/milestone.service.js';
 import { translateWithCache } from '../services/translate.service.js';
 
+const INVITE_EXPIRED_MESSAGE = 'INVITE_EXPIRED: This invite has expired';
+
 export const inviteRouter = router({
   /**
    * Without ttl: the usual single-use link (no expiry), exactly as before.
@@ -52,15 +54,14 @@ export const inviteRouter = router({
 
         if (!invite.usedById) {
           if (invite.expiresAt && invite.expiresAt.getTime() <= Date.now()) {
-            throw new TRPCError({ code: 'NOT_FOUND', message: 'INVITE_EXPIRED' });
+            throw new TRPCError({ code: 'NOT_FOUND', message: INVITE_EXPIRED_MESSAGE });
           }
-          const claimed = await ctx.db.inviteLink.updateMany({
-            where: { id: invite.id, usedById: null, ...(invite.expiresAt ? { expiresAt: { gt: new Date() } } : {}) },
-            data: { usedById: ctx.userId, usedAt: new Date() },
-          });
-          // Lost a race with another scanner (single use) or the token expired in between
-          if (claimed.count === 0 && invite.expiresAt) {
-            throw new TRPCError({ code: 'BAD_REQUEST', message: 'Invite already used' });
+          // In-person tokens are claimed later, in the same transaction as the connection
+          if (!invite.expiresAt) {
+            await ctx.db.inviteLink.updateMany({
+              where: { id: invite.id, usedById: null },
+              data: { usedById: ctx.userId, usedAt: new Date() },
+            });
           }
         }
       } else {
@@ -94,7 +95,18 @@ export const inviteRouter = router({
 
       // In-person (QR) token: the meeting is the first handshake, so connect right away, no confirmation step
       if (inPerson) {
+        // Claim + connection are atomic: if the 150 limit fails, the token stays unused
         await ctx.db.$transaction(async (tx) => {
+          const claimed = await tx.inviteLink.updateMany({
+            where: {
+              id: invite!.id,
+              OR: [{ usedById: null, expiresAt: { gt: new Date() } }, { usedById: ctx.userId }],
+            },
+            data: { usedById: ctx.userId, usedAt: invite!.usedAt ?? new Date() },
+          });
+          if (claimed.count === 0) {
+            throw new TRPCError({ code: 'BAD_REQUEST', message: 'Invite already used' });
+          }
           await createConnectionWithinLimit(tx, ctx.userId, inviterId);
           await tx.pendingConnection.updateMany({
             where: {
@@ -274,7 +286,7 @@ export const inviteRouter = router({
       if (invite) {
         if (invite.inviter.deletedAt) throw new TRPCError({ code: 'NOT_FOUND', message: 'INVITER_DELETED' });
         if (invite.expiresAt && !invite.usedById && invite.expiresAt.getTime() <= Date.now()) {
-          throw new TRPCError({ code: 'NOT_FOUND', message: 'INVITE_EXPIRED' });
+          throw new TRPCError({ code: 'NOT_FOUND', message: INVITE_EXPIRED_MESSAGE });
         }
         const stats = await getInviterStats(invite.inviterId);
         return { ...invite, ...stats };
