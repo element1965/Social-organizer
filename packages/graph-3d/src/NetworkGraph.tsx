@@ -416,9 +416,9 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
   const focusControlled = focusId !== undefined;
   const focusControlledRef = useRef(focusControlled);
   focusControlledRef.current = focusControlled;
-  const focusRef = useRef<{ id: string | null; kick: boolean; lift: number; before: GraphView | null }>({
+  const focusRef = useRef<{ id: string | null; kick: number; lift: number; before: GraphView | null }>({
     id: null,
-    kick: false,
+    kick: 0, // auto-rotate speed to switch to on the next frame (0: none)
     lift: 0,
     before: null,
   });
@@ -1312,10 +1312,11 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
       // (the camera moves by the same step, so the orbit distance holds), lift it above a bottom card.
       const foc = focusRef.current;
       if (foc.kick) {
-        foc.kick = false;
+        const speed = foc.kick;
+        foc.kick = 0;
         if (!reducedRef.current && controls) {
           controls.autoRotate = true;
-          rotTarget = FOCUS_ROTATE_SPEED;
+          rotTarget = speed;
         }
       }
       const orbit = controls as unknown as { target?: THREE.Vector3 } | undefined;
@@ -1729,17 +1730,23 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
         // Close enough to read the name, far enough to see the person's own links around them
         const dist = THREE.MathUtils.clamp(ballOuter(sizeRef.current) * 1.4, 90, 150);
         flyPose(target.clone().add(dir.normalize().multiplyScalar(dist)), target, FOCUS_FLY_MS);
-        f.kick = true;
+        f.kick = FOCUS_ROTATE_SPEED;
       };
       go(12);
-    } else if (f.before) {
+    } else if (prev) {
+      // Back to the overview around me, at the usual rotation speed
       const b = f.before;
       f.before = null;
-      flyPose(
-        new THREE.Vector3(b.position.x, b.position.y, b.position.z),
-        new THREE.Vector3(b.target.x, b.target.y, b.target.z),
-        FOCUS_FLY_MS,
-      );
+      f.kick = AUTO_ROTATE_SPEED;
+      if (b) {
+        flyPose(
+          new THREE.Vector3(b.position.x, b.position.y, b.position.z),
+          new THREE.Vector3(b.target.x, b.target.y, b.target.z),
+          FOCUS_FLY_MS,
+        );
+      } else {
+        fitCameraRef.current(FOCUS_FLY_MS);
+      }
     }
   }, [focusControlled, focusId, flyPose, lookAt]);
 
@@ -1863,6 +1870,10 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
     getView: () => {
       const fg = fgRef.current;
       if (!fg) return null;
+      // While a person is focused, hand out the pose from before the focus: a screen that saves the view
+      // and remounts later (Person page, then Back) must come back to the overview, not orbit that person
+      const before = focusRef.current.id ? focusRef.current.before : null;
+      if (before) return { position: { ...before.position }, target: { ...before.target } };
       const cam = fg.camera() as THREE.PerspectiveCamera | undefined;
       if (!cam) return null;
       const controls = fg.controls() as { target?: THREE.Vector3 } | undefined;
