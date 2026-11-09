@@ -72,6 +72,11 @@ export interface NetworkGraphProps {
   focusId?: string | null;
   /** While focused, show the node this fraction of the height above the middle (room for a bottom card). */
   focusLift?: number;
+  /**
+   * People beyond the drawn rings, nearest first (e.g. [4th, 5th]), drawn only as a dust of dots around
+   * the ball. Pass rounded counts: the dots never map to particular people.
+   */
+  farRings?: number[];
 }
 
 export interface NetworkGraphHandle {
@@ -105,6 +110,8 @@ const LINK_BASE = 12;            // link length for a leaf
 // the speed limit (MAX_NODE_SPEED) keeps it from bouncing while the graph forms.
 const BALL_STRENGTH = 0.22;
 /** Outer shell radius for a graph of n nodes: grows with the cube root, so the ball keeps its density. */
+/** Most dots in the far-ring dust; above this, dots stand for several people each. */
+const FAR_DOTS_MAX = 700;
 const ballOuter = (n: number) => 9 * Math.cbrt(Math.max(1, n)) + 22;
 const FOCUS_ROTATE_SPEED = 1.6;  // orbit around a focused node (OrbitControls units)
 const FOCUS_FLY_MS = 900;
@@ -396,6 +403,7 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
   initialView,
   focusId,
   focusLift = 0,
+  farRings,
 }, ref) {
   const fgRef = useRef<FGRef>(null);
   const theme: 'light' | 'dark' = themeProp ?? (darkMode ? 'dark' : 'light');
@@ -1616,6 +1624,70 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
       try { fg.refresh(); } catch { /* noop */ }
     }
   }, [graphData, res]);
+
+  // Far rings (4th, 5th handshake) as an anonymous dust around the ball: no nodes, no links, no names.
+  // Dots stand for a rounded count and are scattered at random, so they say "how many", never "who" or "via whom".
+  const farKey = (farRings ?? []).join(',');
+  useEffect(() => {
+    const fg = fgRef.current;
+    const scene = fg?.scene?.() as THREE.Scene | undefined;
+    if (!scene) return;
+    const old = scene.getObjectByName('so-far');
+    if (old) {
+      scene.remove(old);
+      ((old as THREE.Points).geometry as THREE.BufferGeometry).dispose();
+      ((old as THREE.Points).material as THREE.Material).dispose();
+    }
+    const counts = (farRings ?? []).map((n) => Math.max(0, Math.round(n)));
+    const want = counts.reduce((sum, n) => sum + n, 0);
+    if (want === 0) return;
+    // One dot is one person only for a small network; a big one is drawn at a fixed density
+    const scale = Math.min(1, FAR_DOTS_MAX / want);
+    const outer = ballOuter(sizeRef.current);
+    const positions: number[] = [];
+    let seed = 0x9e3779b9;
+    const rand = () => {
+      seed = (seed * 1664525 + 1013904223) >>> 0;
+      return seed / 0x100000000;
+    };
+    counts.forEach((n, i) => {
+      const dots = Math.max(n > 0 ? 3 : 0, Math.round(n * scale));
+      const inner = outer * (1.25 + i * 0.45);
+      const thick = outer * 0.4;
+      for (let k = 0; k < dots; k++) {
+        const z = rand() * 2 - 1;
+        const a = rand() * Math.PI * 2;
+        const r = inner + rand() * thick;
+        const ring = Math.sqrt(1 - z * z);
+        positions.push(Math.cos(a) * ring * r, z * r, Math.sin(a) * ring * r);
+      }
+    });
+    const geom = new THREE.BufferGeometry();
+    geom.setAttribute('position', new THREE.BufferAttribute(new Float32Array(positions), 3));
+    const parsed = parseColor(colorsRef.current.node3);
+    const mat = new THREE.PointsMaterial({
+      color: parsed.color,
+      opacity: 0.55,
+      transparent: true,
+      size: 2.2,
+      sizeAttenuation: true,
+      depthWrite: false,
+      map: res.discTexture,
+      alphaTest: 0.3,
+    });
+    const dust = new THREE.Points(geom, mat);
+    dust.name = 'so-far';
+    dust.raycast = noRaycast;
+    dust.frustumCulled = false;
+    scene.add(dust);
+    return () => {
+      scene.remove(dust);
+      geom.dispose();
+      mat.dispose();
+    };
+    // sizeRef follows graphData; farKey covers the counts
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [farKey, graphData, res]);
 
   // Palette, then path: repaint dots and labels. Link accessors read pathRef.
   useEffect(() => {

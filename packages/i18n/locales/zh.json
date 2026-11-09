@@ -234,7 +234,9 @@
       "open": "{{ring}}：{{count}}。打开列表",
       "hide": "在图谱上隐藏{{ring}}",
       "show": "在图谱上显示{{ring}}",
-      "caption": "握手"
+      "caption": "握手",
+      "farther": "第4–5度: 约{{value}}",
+      "fartherFew": "第4–5度: 几人"
     },
     "feed": {
       "title": "动态",

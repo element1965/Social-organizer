@@ -236,7 +236,9 @@
       "open": "{{ring}}: {{count}}. Avaa lista",
       "hide": "Piilota {{ring}} graafista",
       "show": "Näytä {{ring}} graafissa",
-      "caption": "Kädenpuristukset"
+      "caption": "Kädenpuristukset",
+      "farther": "4.–5.: ~{{value}}",
+      "fartherFew": "4.–5.: muutama"
     },
     "feed": {
       "title": "Syöte",

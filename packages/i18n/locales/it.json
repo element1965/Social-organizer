@@ -238,7 +238,9 @@
       "open": "{{ring}}: {{count}}. Apri l'elenco",
       "hide": "Nascondi {{ring}} sul grafo",
       "show": "Mostra {{ring}} sul grafo",
-      "caption": "Strette di mano"
+      "caption": "Strette di mano",
+      "farther": "4°–5°: ~{{value}}",
+      "fartherFew": "4°–5°: alcuni"
     },
     "feed": {
       "title": "Bacheca",

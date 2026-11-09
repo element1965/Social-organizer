@@ -238,7 +238,9 @@
       "open": "{{ring}}: {{count}}. Abrir a lista",
       "hide": "Ocultar o {{ring}} no grafo",
       "show": "Mostrar o {{ring}} no grafo",
-      "caption": "Apertos de mão"
+      "caption": "Apertos de mão",
+      "farther": "4.º–5.º: ~{{value}}",
+      "fartherFew": "4.º–5.º: alguns"
     },
     "feed": {
       "title": "Feed",

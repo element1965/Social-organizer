@@ -1,6 +1,7 @@
 import type { PrismaClient, Prisma } from '@so/db';
 import { sendUserDeletedNotification } from './notification.service.js';
 import { countConnections } from './connection-request.service.js';
+import { invalidateGraph } from './graph-cache.service.js';
 
 /**
  * Deletes an account. Single source for the user-initiated deletion (`user.delete`)
@@ -87,6 +88,8 @@ export async function deleteUserAccount(
         ],
       },
     });
+    // Inside the transaction: a reload racing the commit is caught by the cache's signature check
+    invalidateGraph();
 
     if (!hasNetworkTies) {
       // No connections and no invitees — full delete with no traces

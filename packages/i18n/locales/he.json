@@ -238,7 +238,9 @@
       "open": "{{ring}}: {{count}}. פתיחת הרשימה",
       "hide": "הסתרת {{ring}} בגרף",
       "show": "הצגת {{ring}} בגרף",
-      "caption": "לחיצות יד"
+      "caption": "לחיצות יד",
+      "farther": "4–5: ~{{value}}",
+      "fartherFew": "4–5: כמה"
     },
     "feed": {
       "title": "פיד",
