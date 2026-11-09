@@ -13,8 +13,13 @@
 import { PrismaClient, type User } from '@prisma/client';
 
 const url = process.env.DATABASE_URL ?? '';
-if (!/@(localhost|127\.0\.0\.1)(:\d+)?\//.test(url)) {
-  console.error('seed-dev: DATABASE_URL is not a local database, refusing to run.');
+// A staging database may be seeded only when its exact host:port is named in SEED_DEV_ALLOW_HOST,
+// so a production URL left in the environment is never wiped by accident.
+const allowHost = process.env.SEED_DEV_ALLOW_HOST;
+const isLocal = /@(localhost|127\.0\.0\.1)(:\d+)?\//.test(url);
+const isAllowedRemote = !!allowHost && url.includes(`@${allowHost}/`);
+if (!isLocal && !isAllowedRemote) {
+  console.error('seed-dev: DATABASE_URL is not a local database (or SEED_DEV_ALLOW_HOST), refusing to run.');
   process.exit(1);
 }
 
