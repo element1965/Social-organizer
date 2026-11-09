@@ -13,7 +13,7 @@ import { AuthButtons } from './AuthButtons';
 import { CodeCells } from './CodeCells';
 import { BackLink, BrandLine, LanguageCorner, OnboardingFrame, StepText } from './OnboardingFrame';
 import { MailMark, TELEGRAM_BG, TELEGRAM_FG, TelegramMark } from './brand';
-import { readPendingInvite } from './flow';
+import { readPendingInvite, safeMasked } from './flow';
 import { AlertGlyph, InfoGlyph, Note, Spinner, StateTile, TextButton, UndoGlyph } from './states';
 import { useSignIn } from './useSignIn';
 
@@ -147,7 +147,8 @@ export function SignInFlow({
 
   // ---- Account linking (№13): Google/Apple brought the e-mail of an old password account ----
   if (step === 'main' && (urlError === 'account_exists' || signIn.linking)) {
-    const masked = signIn.linking?.masked ?? urlMasked;
+    // Validated, then rendered as a React text child (never interpolated into the translation)
+    const masked = safeMasked(signIn.linking?.masked) ?? safeMasked(urlMasked);
     const leave = () => {
       signIn.clearLinking();
       const nextParams = new URLSearchParams(params);
@@ -180,7 +181,7 @@ export function SignInFlow({
         </StateTile>
         <StepText title={t('login.linkTitle')}>
           {masked ? (
-            <Trans i18nKey="login.linkText" values={{ email: masked }} components={{ b: <b /> }} />
+            <Trans i18nKey="login.linkText" components={{ b: <b>{masked}</b> }} />
           ) : (
             t('login.linkTextNoEmail')
           )}
@@ -299,7 +300,7 @@ export function SignInFlow({
       <OnboardingFrame top={<BackLink label={t('common.back')} onClick={back} />}>
         <h1 className="mt-2 text-h1 font-bold">{t('login.codeTitle')}</h1>
         <p className="mt-1 break-words text-caption text-ink-muted [&_b]:font-bold [&_b]:text-ink">
-          <Trans i18nKey="login.codeSent" values={{ email: email.trim() }} components={{ b: <b /> }} />
+          <Trans i18nKey="login.codeSent" components={{ b: <b>{email.trim()}</b> }} />
         </p>
         <CodeCells
           value={code}

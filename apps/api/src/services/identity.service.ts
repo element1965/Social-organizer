@@ -10,13 +10,13 @@ import { Prisma, type PrismaClient } from '@so/db';
 
 /**
  * Hide most of an e-mail for screens that must say which account exists without disclosing it:
- * "anna@gmail.com" → "an•••@gmail.com" (one letter kept for local parts of 1–2 letters).
+ * "anna.petrova@gmail.com" → "an•••@gmail.com", "anna@gmail.com" → "a•••@gmail.com" (one character kept for local parts shorter than 6, two otherwise).
  */
 export function maskEmail(email: string): string {
   const at = email.lastIndexOf('@');
   if (at <= 0) return '•••';
   const local = email.slice(0, at);
-  const keep = local.length > 2 ? 2 : 1;
+  const keep = local.length < 6 ? 1 : 2;
   return `${local.slice(0, keep)}•••${email.slice(at)}`;
 }
 

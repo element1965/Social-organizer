@@ -16,8 +16,9 @@ const METHOD_NAME: Record<Exclude<LoginMethod, 'email'>, string> = { google: 'Go
 function useReturnLine(email: string | null | undefined): ReactNode {
   const { t } = useTranslation();
   const method = getLastLoginMethod();
-  const values = { email, method: method && method !== 'email' ? METHOD_NAME[method] : '' };
-  const b = { b: <b className="font-bold text-ink" /> };
+  // The address is a React text child, not an interpolated value
+  const values = { method: method && method !== 'email' ? METHOD_NAME[method] : '' };
+  const b = { b: <b className="font-bold text-ink">{email}</b> };
   if (method === 'email' && email) return <Trans i18nKey="profile.logoutByEmail" values={values} components={b} />;
   if (method && method !== 'email' && email) return <Trans i18nKey="profile.logoutByMethodEmail" values={values} components={b} />;
   if (method && method !== 'email') return <Trans i18nKey="profile.logoutByMethod" values={values} components={b} />;
@@ -101,6 +102,13 @@ export function DeleteAccountSheet({
   const mine = trpc.collection.myActive.useQuery(undefined, { enabled: open });
   const joined = trpc.collection.myParticipating.useQuery(undefined, { enabled: open });
   const loading = connections.isLoading || mine.isLoading || joined.isLoading;
+  // Without the real numbers the sheet cannot say what goes away: no deletion until they load
+  const countsFailed = connections.isError || mine.isError || joined.isError;
+  const retryCounts = () => {
+    if (connections.isError) void connections.refetch();
+    if (mine.isError) void mine.refetch();
+    if (joined.isError) void joined.refetch();
+  };
 
   const people = connections.data?.count ?? 0;
   const ownOpen = mine.data?.length ?? 0;
@@ -119,13 +127,20 @@ export function DeleteAccountSheet({
           <Button variant="secondary" onClick={onClose}>
             {t('account.keep')}
           </Button>
-          <Button variant="danger" loading={pending} disabled={loading} onClick={onConfirm}>
+          <Button variant="danger" loading={pending} disabled={loading || countsFailed} onClick={onConfirm}>
             {t('account.deleteConfirm')}
           </Button>
         </>
       }
     >
-      {loading ? (
+      {countsFailed ? (
+        <div className="py-4 text-center" role="alert">
+          <p className="text-label font-semibold text-sos">{t('account.deleteCountsFailed')}</p>
+          <Button variant="secondary" size="md" className="mt-3" onClick={retryCounts}>
+            {t('common.retry')}
+          </Button>
+        </div>
+      ) : loading ? (
         <div className="grid place-items-center py-6">
           <Spinner label={t('common.loading')} />
         </div>
