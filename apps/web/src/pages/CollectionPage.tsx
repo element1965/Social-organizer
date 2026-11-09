@@ -477,9 +477,10 @@ export function CollectionPage() {
           {editing ? (
             <>
               <Input variant="money" label={t('collection.yourAmount')} value={editAmount} onValueChange={setEditAmount} error={editError} />
-              <div className="mt-3 flex flex-col gap-2">
+              {/* Two full-size buttons side by side: Cancel is as easy to reach as Save */}
+              <div className="mt-3 grid grid-cols-2 gap-2">
+                <Button variant="secondary" className="w-full" onClick={() => setEditing(false)}>{t('common.cancel')}</Button>
                 <Button className="w-full" loading={updateObligation.isPending} onClick={saveEdit}>{t('collection.saveAmount')}</Button>
-                <Button variant="text" className="w-full" onClick={() => setEditing(false)}>{t('common.cancel')}</Button>
               </div>
             </>
           ) : (
@@ -497,7 +498,8 @@ export function CollectionPage() {
               </Button>
             </div>
           )}
-          {isHttpsUrl(data.chatLink) ? (
+          {/* Hidden while the amount is edited: one main action at a time */}
+          {isHttpsUrl(data.chatLink) && !editing ? (
             <Button className="mt-4 w-full" icon={<IconChat />} onClick={() => window.open(data.chatLink, '_blank', 'noopener,noreferrer')}>
               {t('collection.openCollectionChat')}
             </Button>
@@ -521,9 +523,9 @@ export function CollectionPage() {
                 autoCapitalize="none"
                 onChange={(event) => { setChatValue(event.target.value); setChatError(''); }}
               />
-              <div className="mt-3 flex flex-col gap-2">
+              <div className="mt-3 grid grid-cols-2 gap-2">
+                <Button variant="secondary" className="w-full" onClick={() => setChatEditing(false)}>{t('common.cancel')}</Button>
                 <Button className="w-full" loading={updateChat.isPending} onClick={saveChat}>{t('collection.saveAmount')}</Button>
-                <Button variant="text" className="w-full" onClick={() => setChatEditing(false)}>{t('common.cancel')}</Button>
               </div>
             </>
           ) : (

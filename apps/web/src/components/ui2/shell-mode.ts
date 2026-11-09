@@ -60,7 +60,20 @@ export function isPushPath(pathname: string): boolean {
   );
 }
 
-export type ShellSection = 'circle' | 'people' | 'ask' | 'add' | 'profile';
+/**
+ * Phone screens that keep the whole height for themselves: chats with a composer at the bottom and
+ * the camera / live QR. Every other screen, pushed ones included, keeps the tab bar, so the way to the
+ * other sections is always one tap away.
+ */
+export function hidesTabBar(pathname: string): boolean {
+  return (
+    pathname.startsWith('/me/help/assistant') ||
+    pathname.startsWith('/support') ||
+    pathname.startsWith('/add/')
+  );
+}
+
+export type ShellSection ='circle' | 'people' | 'ask' | 'add' | 'profile';
 
 export function shellSection(pathname: string): ShellSection | null {
   if (pathname === '/' || pathname.startsWith('/collection')) return 'circle';

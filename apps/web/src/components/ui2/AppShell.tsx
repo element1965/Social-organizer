@@ -19,7 +19,7 @@ import {
   IconPeople,
   IconPerson,
 } from './icons';
-import { isPushPath, shellSection, useShellMode, type ShellMode, type ShellSection } from './shell-mode';
+import { hidesTabBar, shellSection, useShellMode, type ShellMode, type ShellSection } from './shell-mode';
 
 export type ThemeChoice = 'light' | 'dark' | 'system';
 
@@ -263,7 +263,7 @@ function LiveShell() {
   const ask = useAskProgress();
   const { data: unread } = trpc.notification.unreadCount.useQuery(undefined, { refetchInterval: 30_000 });
   const { data: me } = trpc.user.me.useQuery();
-  const showTabs = mode === 'tabs' && !isPushPath(location.pathname);
+  const showTabs = mode === 'tabs' && !hidesTabBar(location.pathname);
   const user: ShellUser = {
     name: me?.name ?? '',
     email: me?.email ?? null,
