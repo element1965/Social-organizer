@@ -522,7 +522,9 @@
     "logoutByMethod": "Entró con {{method}}. Puede volver de la misma forma.",
     "logoutByEmail": "Entró con un código enviado a <b/>. Puede volver de la misma forma.",
     "logoutEmailOnly": "Puede volver de la misma forma o con un código enviado a <b/>.",
-    "logoutGeneric": "Puede volver de la misma forma en que entró."
+    "logoutGeneric": "Puede volver de la misma forma en que entró.",
+    "notifyChannel": "Canal",
+    "notifyTelegramNotLinked": "Conecte Telegram en «Cuenta» para recibir los mensajes allí."
   },
   "settings": {
     "title": "Ajustes",
@@ -541,7 +543,20 @@
     "connectTelegramHint": "Entre con Telegram en esta misma cuenta: no se creará una segunda cuenta.",
     "telegramConnected": "Telegram está conectado a su cuenta",
     "telegramLinkConflict": "Este Telegram ya tiene una cuenta propia con datos, así que no se conectó. Escriba a soporte y las uniremos.",
-    "telegramLinkInvalid": "El enlace ha caducado. Pulse «Conectar Telegram» en los ajustes de la app otra vez."
+    "telegramLinkInvalid": "El enlace ha caducado. Pulse «Conectar Telegram» en los ajustes de la app otra vez.",
+    "notifyTitle": "Notificaciones",
+    "notifyChannelLabel": "Un canal para las notificaciones",
+    "notifyChannelApp": "App",
+    "notifyChannelTelegram": "Telegram",
+    "notifyChannelHintApp": "Los mensajes llegan solo a la app; Telegram no los repite.",
+    "notifyChannelHintTelegram": "Los mensajes llegan solo a Telegram; la app no los repite.",
+    "notifyTelegramNotLinked": "Conecte Telegram abajo para recibir los mensajes allí.",
+    "notifyPushOff": "Active las notificaciones push para verlas en este dispositivo.",
+    "notifyNewCollections": "Nuevas recaudaciones",
+    "notifyNewCollectionsHint": "Avisar cuando alguien de quien puedo recibir notificaciones abra una recaudación",
+    "notifyMyEvents": "Mis eventos",
+    "notifyMyEventsHint": "Las solicitudes de conexión y las respuestas a mi recaudación llegan siempre. Las respuestas llegan en un solo mensaje.",
+    "notifyAnyChat": "Elija un canal para las notificaciones. Para hablar entre ustedes sirve cualquier chat."
   },
   "faq": {
     "title": "Preguntas frecuentes",
@@ -906,8 +921,8 @@
     "deleteAccount": "Eliminación de la cuenta",
     "del": {
       "meta": "Social Organizer · actualizado el 9 de noviembre de 2026",
-      "lead": "Elimina su cuenta en la aplicación o en el sitio, sin correos y sin espera.",
-      "step1": "Abra la aplicación u orginizer.com y entre",
+      "lead": "Elimina su cuenta usted mismo, desde dentro: en la aplicación, en el sitio o en la Telegram Mini App. Sin correos y sin espera.",
+      "step1": "Abra la aplicación, orginizer.com o la Telegram Mini App y entre",
       "step2": "Perfil → Cuenta",
       "step3": "Abajo, «Eliminar la cuenta»",
       "step4": "Confirme «Eliminar para siempre» en la hoja",
@@ -920,8 +935,8 @@
       "gone5": "Notificaciones, suscripciones push, ajustes, chats con el asistente",
       "whenTitle": "Plazos y qué queda",
       "whenText": "La eliminación es inmediata y no se puede deshacer. Si tenía conexiones, en las redes de otras personas quedará «Usuario eliminado» en lugar de su nombre, sin datos personales. Las recaudaciones pasadas de otras personas conservan las cantidades sin su nombre.",
-      "noAccessTitle": "¿No tiene acceso a su cuenta?",
-      "noAccessText": "Escriba a <bot>@socialorganizer_bot</bot> en Telegram con el correo o el nombre de usuario con el que entraba. Eliminamos la cuenta a mano en un plazo de 30 días y respondemos cuando esté hecho."
+      "noAccessTitle": "¿No puede entrar?",
+      "noAccessText": "La cuenta solo se elimina desde dentro; no hay eliminación a petición. Si no puede entrar, el perfil se elimina automáticamente tras 2 años sin entradas. Avisamos 30 y 7 días antes por Telegram, notificaciones push y correo, por donde la cuenta los tenga."
     },
     "privacyTitle": "Política de privacidad",
     "privacyMeta": "Última actualización: 7 de febrero de 2025",
@@ -944,12 +959,12 @@
       "s4b": "<b>Telegram:</b> los datos necesarios para que la miniaplicación funcione dentro de Telegram.",
       "s4c": "<b>Proveedores de alojamiento:</b> nuestros servidores tratan sus datos para prestar el servicio.",
       "s5Title": "5. Almacenamiento y seguridad",
-      "s5": "Sus datos se almacenan en una base de datos PostgreSQL segura. Usamos conexiones cifradas (HTTPS/TLS), autenticación basada en JWT y prácticas de seguridad habituales en el sector para proteger su información.",
+      "s5": "Sus datos se almacenan en una base de datos PostgreSQL segura. Usamos conexiones cifradas (HTTPS/TLS), autenticación basada en JWT y prácticas de seguridad habituales en el sector para proteger su información. Las cuentas sin entradas durante 2 años se eliminan automáticamente, tras avisos con 30 y 7 días de antelación.",
       "s6Title": "6. Sus derechos",
       "s6lead": "Usted tiene derecho a:",
       "s6a": "Consultar sus datos personales desde el perfil y los ajustes.",
       "s6b": "Corregir o actualizar su información en cualquier momento.",
-      "s6c": "Solicitar la eliminación de su cuenta y de los datos asociados.",
+      "s6c": "Eliminar su cuenta y los datos asociados usted mismo en Perfil → Cuenta.",
       "s6d": "Exportar sus datos en un formato legible por máquina.",
       "s7Title": "7. Código abierto",
       "s7": "Social Organizer es totalmente de código abierto. Puede revisar el código y cómo se tratan sus datos en <gh>github.com/element1965/Social-organizer</gh>.",
@@ -1036,7 +1051,9 @@
     "pendingErrLimitOther": "Esta persona ya tiene 150 conocidos",
     "pendingErrGone": "Esta persona eliminó su cuenta",
     "pendingErrResolved": "Esta solicitud ya fue respondida",
-    "pendingErrNotYours": "Esta solicitud no es para esta cuenta de Telegram"
+    "pendingErrNotYours": "Esta solicitud no es para esta cuenta de Telegram",
+    "responsesTitle": "Nuevas respuestas a su recaudación",
+    "responsesBody": "Nuevas respuestas: {{count}}. Abra la recaudación para verlas."
   },
   "pending": {
     "errLimitSelf": "Ya tiene 150 conocidos: es el máximo.",

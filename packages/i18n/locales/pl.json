@@ -527,7 +527,9 @@
     "logoutByMethod": "Logowanie było przez {{method}}. Wrócisz w ten sam sposób.",
     "logoutByEmail": "Logowanie było kodem wysłanym na <b/>. Wrócisz w ten sam sposób.",
     "logoutEmailOnly": "Wrócisz w ten sam sposób albo kodem wysłanym na <b/>.",
-    "logoutGeneric": "Wrócisz w ten sam sposób, w jaki się logowałeś."
+    "logoutGeneric": "Wrócisz w ten sam sposób, w jaki się logowałeś.",
+    "notifyChannel": "Kanał",
+    "notifyTelegramNotLinked": "Połącz Telegram w „Konto”, żeby dostawać tam wiadomości."
   },
   "settings": {
     "title": "Ustawienia",
@@ -546,7 +548,20 @@
     "connectTelegramHint": "Loguj się przez Telegram do tego samego konta — drugie konto nie zostanie utworzone.",
     "telegramConnected": "Telegram jest połączony z Twoim kontem",
     "telegramLinkConflict": "Ten Telegram ma już osobne konto z danymi, więc nie został połączony. Napisz do wsparcia — połączymy je.",
-    "telegramLinkInvalid": "Link wygasł. Naciśnij ponownie „Połącz Telegram” w ustawieniach aplikacji."
+    "telegramLinkInvalid": "Link wygasł. Naciśnij ponownie „Połącz Telegram” w ustawieniach aplikacji.",
+    "notifyTitle": "Powiadomienia",
+    "notifyChannelLabel": "Jeden kanał powiadomień",
+    "notifyChannelApp": "Aplikacja",
+    "notifyChannelTelegram": "Telegram",
+    "notifyChannelHintApp": "Wiadomości przychodzą tylko do aplikacji, Telegram ich nie powtarza.",
+    "notifyChannelHintTelegram": "Wiadomości przychodzą tylko do Telegrama, aplikacja ich nie powtarza.",
+    "notifyTelegramNotLinked": "Połącz Telegram poniżej, żeby dostawać tam wiadomości.",
+    "notifyPushOff": "Włącz powiadomienia push, żeby widzieć je na tym urządzeniu.",
+    "notifyNewCollections": "Nowe zbiórki",
+    "notifyNewCollectionsHint": "Daj znać, gdy zbiórkę otworzy ktoś, o kim mogę dostać powiadomienie",
+    "notifyMyEvents": "Moje zdarzenia",
+    "notifyMyEventsHint": "Prośby o połączenie i odzewy na moją zbiórkę przychodzą zawsze. Odzewy przychodzą jedną wiadomością.",
+    "notifyAnyChat": "Wybierz kanał powiadomień. Do rozmowy nada się dowolny czat."
   },
   "faq": {
     "title": "Najczęściej zadawane pytania",
@@ -913,8 +928,8 @@
     "deleteAccount": "Usuwanie konta",
     "del": {
       "meta": "Social Organizer · aktualizacja 9 listopada 2026",
-      "lead": "Konto usuwasz w aplikacji albo na stronie, bez e-maili i bez czekania.",
-      "step1": "Otwórz aplikację albo orginizer.com i zaloguj się",
+      "lead": "Konto usuwasz sam, od środka: w aplikacji, na stronie albo w Telegram Mini App. Bez e-maili i bez czekania.",
+      "step1": "Otwórz aplikację, orginizer.com albo Telegram Mini App i zaloguj się",
       "step2": "Profil → Konto",
       "step3": "Na dole „Usuń konto”",
       "step4": "Potwierdź „Usuń na zawsze” w panelu",
@@ -927,8 +942,8 @@
       "gone5": "Powiadomienia, subskrypcje push, ustawienia, czaty z asystentem",
       "whenTitle": "Kiedy i co zostaje",
       "whenText": "Usunięcie jest natychmiastowe i nie da się go cofnąć. Jeśli miałeś połączenia, w sieciach innych osób zamiast imienia zostanie „Usunięty użytkownik”, bez danych osobowych. Minione zbiórki innych osób zachowują kwoty bez Twojego imienia.",
-      "noAccessTitle": "Nie masz dostępu do konta?",
-      "noAccessText": "Napisz na Telegramie do <bot>@socialorganizer_bot</bot> i podaj e-mail albo nazwę, którą się logowałeś. Usuniemy konto ręcznie w ciągu 30 dni i odpowiemy, gdy będzie gotowe."
+      "noAccessTitle": "Nie możesz się zalogować?",
+      "noAccessText": "Konto usuwa się tylko od środka, na prośbę nie usuwamy. Jeśli nie możesz się zalogować, profil zostanie usunięty automatycznie po 2 latach bez logowania. Ostrzeżemy 30 i 7 dni wcześniej przez Telegram, powiadomienia push i e-mail — tam, gdzie konto je ma."
     },
     "privacyTitle": "Polityka prywatności",
     "privacyMeta": "Ostatnia aktualizacja: 7 lutego 2025",
@@ -951,12 +966,12 @@
       "s4b": "<b>Telegram:</b> dane, bez których mini-aplikacja nie działa wewnątrz Telegramu.",
       "s4c": "<b>Hostingu:</b> serwery przetwarzają dane, żeby usługa działała.",
       "s5Title": "5. Przechowywanie i bezpieczeństwo",
-      "s5": "Dane są przechowywane w zabezpieczonej bazie PostgreSQL. Używamy szyfrowanych połączeń (HTTPS/TLS), uwierzytelniania JWT i zwykłych w branży środków ochrony.",
+      "s5": "Dane są przechowywane w zabezpieczonej bazie PostgreSQL. Używamy szyfrowanych połączeń (HTTPS/TLS), uwierzytelniania JWT i zwykłych w branży środków ochrony. Konta bez logowania przez 2 lata są usuwane automatycznie, po ostrzeżeniach na 30 i 7 dni wcześniej.",
       "s6Title": "6. Twoje prawa",
       "s6lead": "Masz prawo:",
       "s6a": "Przeglądać swoje dane osobowe w profilu i ustawieniach.",
       "s6b": "Poprawiać i aktualizować informacje w dowolnej chwili.",
-      "s6c": "Zażądać usunięcia konta i powiązanych danych.",
+      "s6c": "Samemu usunąć konto i powiązane dane: Profil → Konto.",
       "s6d": "Wyeksportować swoje dane w formacie czytelnym dla maszyn.",
       "s7Title": "7. Otwarty kod",
       "s7": "Social Organizer jest w pełni otwarty. Kod i sposób przetwarzania danych możesz sprawdzić na <gh>github.com/element1965/Social-organizer</gh>.",
@@ -1043,7 +1058,9 @@
     "pendingErrLimitOther": "Ta osoba ma już 150 znajomych",
     "pendingErrGone": "Ta osoba usunęła konto",
     "pendingErrResolved": "Na tę prośbę już odpowiedziano",
-    "pendingErrNotYours": "Ta prośba nie jest dla tego konta Telegram"
+    "pendingErrNotYours": "Ta prośba nie jest dla tego konta Telegram",
+    "responsesTitle": "Nowe odzewy na Twoją zbiórkę",
+    "responsesBody": "Nowe odzewy: {{count}}. Otwórz zbiórkę, żeby je zobaczyć."
   },
   "pending": {
     "errLimitSelf": "Masz już 150 znajomych — to maksimum.",

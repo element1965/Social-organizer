@@ -517,7 +517,9 @@
     "logoutByMethod": "Je logde in met {{method}}. Kom op dezelfde manier terug.",
     "logoutByEmail": "Je logde in met een code naar <b/>. Kom op dezelfde manier terug.",
     "logoutEmailOnly": "Kom op dezelfde manier terug, of met een code naar <b/>.",
-    "logoutGeneric": "Je kunt terugkomen op de manier waarop je inlogde."
+    "logoutGeneric": "Je kunt terugkomen op de manier waarop je inlogde.",
+    "notifyChannel": "Kanaal",
+    "notifyTelegramNotLinked": "Koppel Telegram bij “Account” om berichten daar te krijgen."
   },
   "settings": {
     "title": "Instellingen",
@@ -536,7 +538,20 @@
     "connectTelegramHint": "Log via Telegram in op hetzelfde account — er wordt geen tweede account aangemaakt.",
     "telegramConnected": "Telegram is gekoppeld aan je account",
     "telegramLinkConflict": "Deze Telegram heeft al een apart account met gegevens en is daarom niet gekoppeld. Schrijf naar support, dan voegen we ze samen.",
-    "telegramLinkInvalid": "De link is verlopen. Tik opnieuw op ‘Telegram koppelen’ in de app-instellingen."
+    "telegramLinkInvalid": "De link is verlopen. Tik opnieuw op ‘Telegram koppelen’ in de app-instellingen.",
+    "notifyTitle": "Meldingen",
+    "notifyChannelLabel": "Eén kanaal voor meldingen",
+    "notifyChannelApp": "App",
+    "notifyChannelTelegram": "Telegram",
+    "notifyChannelHintApp": "Berichten komen alleen in de app, Telegram herhaalt ze niet.",
+    "notifyChannelHintTelegram": "Berichten komen alleen in Telegram, de app herhaalt ze niet.",
+    "notifyTelegramNotLinked": "Koppel Telegram hieronder om berichten daar te krijgen.",
+    "notifyPushOff": "Zet pushmeldingen aan om ze op dit apparaat te zien.",
+    "notifyNewCollections": "Nieuwe inzamelingen",
+    "notifyNewCollectionsHint": "Laat het weten wanneer iemand over wie ik een melding kan krijgen een inzameling opent",
+    "notifyMyEvents": "Mijn gebeurtenissen",
+    "notifyMyEventsHint": "Verbindingsverzoeken en reacties op mijn inzameling komen altijd. Reacties komen in één bericht.",
+    "notifyAnyChat": "Kies een kanaal voor meldingen. Om met elkaar te praten werkt elke chat."
   },
   "faq": {
     "title": "Veelgestelde vragen",
@@ -899,8 +914,8 @@
     "deleteAccount": "Account verwijderen",
     "del": {
       "meta": "Social Organizer · bijgewerkt 9 november 2026",
-      "lead": "Je verwijdert je account in de app of op de website, zonder e-mails en zonder wachten.",
-      "step1": "Open de app of orginizer.com en log in",
+      "lead": "Je verwijdert je account zelf, van binnenuit: in de app, op de site of in de Telegram Mini App. Geen e-mails en geen wachten.",
+      "step1": "Open de app, orginizer.com of de Telegram Mini App en log in",
       "step2": "Profiel → Account",
       "step3": "Onderaan, “Account verwijderen”",
       "step4": "Bevestig “Voor altijd verwijderen” in het paneel",
@@ -913,8 +928,8 @@
       "gone5": "Meldingen, push-abonnementen, instellingen, chats met de assistent",
       "whenTitle": "Timing en wat blijft",
       "whenText": "Verwijderen gebeurt meteen en kan niet ongedaan worden gemaakt. Had je verbindingen, dan blijft in de netwerken van anderen “Verwijderde gebruiker” staan in plaats van je naam, zonder persoonsgegevens. Eerdere inzamelingen van anderen bewaren de bedragen zonder je naam.",
-      "noAccessTitle": "Geen toegang tot je account?",
-      "noAccessText": "Schrijf in Telegram naar <bot>@socialorganizer_bot</bot> met het e-mailadres of de gebruikersnaam waarmee je inlogde. We verwijderen het account handmatig binnen 30 dagen en laten het weten als het klaar is."
+      "noAccessTitle": "Lukt inloggen niet?",
+      "noAccessText": "Accounts worden alleen van binnenuit verwijderd; op verzoek verwijderen we niet. Als je niet kunt inloggen, wordt het profiel automatisch verwijderd na 2 jaar zonder aanmelden. We waarschuwen 30 en 7 dagen van tevoren via Telegram, pushmeldingen en e-mail — waar het account die heeft."
     },
     "privacyTitle": "Privacybeleid",
     "privacyMeta": "Laatst bijgewerkt: 7 februari 2025",
@@ -937,12 +952,12 @@
       "s4b": "<b>Telegram:</b> gegevens die nodig zijn om de Mini App in Telegram te laten werken.",
       "s4c": "<b>Hostingproviders:</b> onze servers verwerken je gegevens om de dienst te leveren.",
       "s5Title": "5. Opslag en beveiliging",
-      "s5": "Je gegevens staan in een beveiligde PostgreSQL-database. We gebruiken versleutelde verbindingen (HTTPS/TLS), authenticatie op basis van JWT en volgen de gebruikelijke beveiligingspraktijken om je informatie te beschermen.",
+      "s5": "Je gegevens staan in een beveiligde PostgreSQL-database. We gebruiken versleutelde verbindingen (HTTPS/TLS), authenticatie op basis van JWT en volgen de gebruikelijke beveiligingspraktijken om je informatie te beschermen. Accounts zonder aanmelding gedurende 2 jaar worden automatisch verwijderd, na berichten 30 en 7 dagen van tevoren.",
       "s6Title": "6. Je rechten",
       "s6lead": "Je hebt het recht om:",
       "s6a": "Je persoonsgegevens te bekijken via je profiel en instellingen.",
       "s6b": "Je gegevens op elk moment te corrigeren of bij te werken.",
-      "s6c": "Verwijdering van je account en bijbehorende gegevens te vragen.",
+      "s6c": "Je account en de bijbehorende gegevens zelf te verwijderen in Profiel → Account.",
       "s6d": "Je gegevens te exporteren in een machineleesbaar formaat.",
       "s7Title": "7. Open source",
       "s7": "Social Organizer is volledig open source. Je kunt onze code en hoe je gegevens worden verwerkt bekijken op <gh>github.com/element1965/Social-organizer</gh>.",
@@ -1029,7 +1044,9 @@
     "pendingErrLimitOther": "Deze persoon heeft al 150 kennissen",
     "pendingErrGone": "Deze persoon heeft het account verwijderd",
     "pendingErrResolved": "Dit verzoek is al beantwoord",
-    "pendingErrNotYours": "Dit verzoek is niet voor dit Telegram-account"
+    "pendingErrNotYours": "Dit verzoek is niet voor dit Telegram-account",
+    "responsesTitle": "Nieuwe reacties op je inzameling",
+    "responsesBody": "Nieuwe reacties: {{count}}. Open de inzameling om ze te zien."
   },
   "pending": {
     "errLimitSelf": "Je hebt al 150 kennissen. Dat is het maximum.",

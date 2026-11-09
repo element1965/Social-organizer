@@ -517,7 +517,9 @@
     "logoutByMethod": "Du loggede ind med {{method}}. Kom tilbage på samme måde.",
     "logoutByEmail": "Du loggede ind med en kode sendt til <b/>. Kom tilbage på samme måde.",
     "logoutEmailOnly": "Kom tilbage på samme måde eller med en kode sendt til <b/>.",
-    "logoutGeneric": "Du kan komme tilbage på samme måde, som du loggede ind."
+    "logoutGeneric": "Du kan komme tilbage på samme måde, som du loggede ind.",
+    "notifyChannel": "Kanal",
+    "notifyTelegramNotLinked": "Forbind Telegram under »Konto« for at få beskeder dér."
   },
   "settings": {
     "title": "Indstillinger",
@@ -536,7 +538,20 @@
     "connectTelegramHint": "Log ind via Telegram på den samme konto — der oprettes ikke en ny konto.",
     "telegramConnected": "Telegram er forbundet til din konto",
     "telegramLinkConflict": "Denne Telegram har allerede en separat konto med data, så den blev ikke forbundet. Skriv til support, så samler vi dem.",
-    "telegramLinkInvalid": "Linket er udløbet. Tryk på »Forbind Telegram« i appens indstillinger igen."
+    "telegramLinkInvalid": "Linket er udløbet. Tryk på »Forbind Telegram« i appens indstillinger igen.",
+    "notifyTitle": "Notifikationer",
+    "notifyChannelLabel": "Én kanal til notifikationer",
+    "notifyChannelApp": "App",
+    "notifyChannelTelegram": "Telegram",
+    "notifyChannelHintApp": "Beskeder kommer kun til appen, Telegram gentager dem ikke.",
+    "notifyChannelHintTelegram": "Beskeder kommer kun til Telegram, appen gentager dem ikke.",
+    "notifyTelegramNotLinked": "Forbind Telegram nedenfor for at få beskeder dér.",
+    "notifyPushOff": "Slå push-notifikationer til for at se dem på denne enhed.",
+    "notifyNewCollections": "Nye indsamlinger",
+    "notifyNewCollectionsHint": "Giv besked, når nogen jeg kan få besked om åbner en indsamling",
+    "notifyMyEvents": "Mine begivenheder",
+    "notifyMyEventsHint": "Forbindelsesanmodninger og tilbagemeldinger på min indsamling kommer altid. Tilbagemeldinger kommer i én besked.",
+    "notifyAnyChat": "Vælg en kanal til notifikationer. Enhver chat duer til at tale sammen."
   },
   "faq": {
     "title": "Ofte stillede spørgsmål",
@@ -899,8 +914,8 @@
     "deleteAccount": "Sletning af konto",
     "del": {
       "meta": "Social Organizer · opdateret 9. november 2026",
-      "lead": "Du sletter din konto i appen eller på hjemmesiden, uden e-mails og uden ventetid.",
-      "step1": "Åbn appen eller orginizer.com, og log ind",
+      "lead": "Du sletter selv din konto, indefra: i appen, på webstedet eller i Telegram Mini App. Ingen e-mails og ingen ventetid.",
+      "step1": "Åbn appen, orginizer.com eller Telegram Mini App, og log ind",
       "step2": "Profil → Konto",
       "step3": "Nederst: »Slet konto«",
       "step4": "Bekræft »Slet for altid« i arket",
@@ -913,8 +928,8 @@
       "gone5": "Notifikationer, push-abonnementer, indstillinger, chats med assistenten",
       "whenTitle": "Tidspunkt og det, der bliver",
       "whenText": "Sletningen sker med det samme og kan ikke fortrydes. Hvis du havde forbindelser, står der »Slettet bruger« i stedet for dit navn i andres netværk, uden personlige data. Tidligere indsamlinger hos andre beholder beløbene uden dit navn.",
-      "noAccessTitle": "Ingen adgang til din konto?",
-      "noAccessText": "Skriv til <bot>@socialorganizer_bot</bot> på Telegram med den e-mail eller det brugernavn, du loggede ind med. Vi sletter kontoen manuelt inden for 30 dage og svarer, når det er gjort."
+      "noAccessTitle": "Kan du ikke logge ind?",
+      "noAccessText": "Konti slettes kun indefra, og vi sletter ikke på anmodning. Hvis du ikke kan logge ind, slettes profilen automatisk efter 2 år uden login. Vi advarer 30 og 7 dage før via Telegram, push-notifikationer og e-mail — dér hvor kontoen har det."
     },
     "privacyTitle": "Privatlivspolitik",
     "privacyMeta": "Senest opdateret: 7. februar 2025",
@@ -937,12 +952,12 @@
       "s4b": "<b>Telegram:</b> data, der er nødvendige, for at Mini App kan fungere i Telegram.",
       "s4c": "<b>Hostingudbydere:</b> vores servere behandler dine data for at levere tjenesten.",
       "s5Title": "5. Opbevaring og sikkerhed",
-      "s5": "Dine data opbevares i en sikker PostgreSQL-database. Vi bruger krypterede forbindelser (HTTPS/TLS), JWT-baseret godkendelse og følger branchens sædvanlige sikkerhedspraksis for at beskytte dine oplysninger.",
+      "s5": "Dine data opbevares i en sikker PostgreSQL-database. Vi bruger krypterede forbindelser (HTTPS/TLS), JWT-baseret godkendelse og følger branchens sædvanlige sikkerhedspraksis for at beskytte dine oplysninger. Konti uden login i 2 år slettes automatisk, efter varsler 30 og 7 dage i forvejen.",
       "s6Title": "6. Dine rettigheder",
       "s6lead": "Du har ret til at:",
       "s6a": "Se dine personoplysninger via din profil og dine indstillinger.",
       "s6b": "Rette eller opdatere dine oplysninger når som helst.",
-      "s6c": "Bede om sletning af din konto og tilknyttede data.",
+      "s6c": "Selv slette din konto og tilknyttede data under Profil → Konto.",
       "s6d": "Eksportere dine data i et maskinlæsbart format.",
       "s7Title": "7. Åben kildekode",
       "s7": "Social Organizer har fuldt ud åben kildekode. Du kan gennemgå vores kode og se, hvordan dine data behandles, på <gh>github.com/element1965/Social-organizer</gh>.",
@@ -1029,7 +1044,9 @@
     "pendingErrLimitOther": "Denne person har allerede 150 bekendte",
     "pendingErrGone": "Denne person har slettet kontoen",
     "pendingErrResolved": "Anmodningen er allerede besvaret",
-    "pendingErrNotYours": "Anmodningen er ikke til denne Telegram-konto"
+    "pendingErrNotYours": "Anmodningen er ikke til denne Telegram-konto",
+    "responsesTitle": "Nye tilbagemeldinger på din indsamling",
+    "responsesBody": "Nye tilbagemeldinger: {{count}}. Åbn indsamlingen for at se dem."
   },
   "pending": {
     "errLimitSelf": "Du har allerede 150 bekendte. Det er maksimum.",

@@ -512,7 +512,9 @@
     "logoutByMethod": "你通过 {{method}} 登录。请用同样方式回来。",
     "logoutByEmail": "你用发到 <b/> 的验证码登录。请用同样方式回来。",
     "logoutEmailOnly": "可以用同样方式回来，或用发到 <b/> 的验证码。",
-    "logoutGeneric": "你可以用当初登录的方式回来。"
+    "logoutGeneric": "你可以用当初登录的方式回来。",
+    "notifyChannel": "渠道",
+    "notifyTelegramNotLinked": "在“账号”里连接 Telegram，以便在那里接收消息。"
   },
   "settings": {
     "title": "设置",
@@ -531,7 +533,20 @@
     "connectTelegramHint": "通过 Telegram 登录同一个账户——不会创建第二个账户。",
     "telegramConnected": "Telegram 已连接到你的账户",
     "telegramLinkConflict": "该 Telegram 已有一个包含数据的独立账户，因此未连接。请联系客服，我们会为你合并。",
-    "telegramLinkInvalid": "链接已过期。请在应用设置中再次点击“连接 Telegram”。"
+    "telegramLinkInvalid": "链接已过期。请在应用设置中再次点击“连接 Telegram”。",
+    "notifyTitle": "通知",
+    "notifyChannelLabel": "通知只用一个渠道",
+    "notifyChannelApp": "应用",
+    "notifyChannelTelegram": "Telegram",
+    "notifyChannelHintApp": "消息只发到应用，Telegram 不重复发送。",
+    "notifyChannelHintTelegram": "消息只发到 Telegram，应用不重复发送。",
+    "notifyTelegramNotLinked": "在下方连接 Telegram，以便在那里接收消息。",
+    "notifyPushOff": "打开推送通知，才能在这台设备上看到。",
+    "notifyNewCollections": "新的筹款",
+    "notifyNewCollectionsHint": "当我可以收到其通知的人发起筹款时告诉我",
+    "notifyMyEvents": "我的事件",
+    "notifyMyEventsHint": "连接申请和对我筹款的回应总会发来。回应合在一条消息里。",
+    "notifyAnyChat": "选择通知渠道。互相说话用哪个聊天都可以。"
   },
   "faq": {
     "title": "常见问题",
@@ -892,8 +907,8 @@
     "deleteAccount": "账号删除",
     "del": {
       "meta": "Social Organizer · 更新于 2026 年 11 月 9 日",
-      "lead": "你可以在应用或网站上删除账号，无需发邮件，也无需等待。",
-      "step1": "打开应用或 orginizer.com 并登录",
+      "lead": "账号由你自己从内部删除：在应用、网站或 Telegram Mini App 里。没有邮件，也不用等待。",
+      "step1": "打开应用、orginizer.com 或 Telegram Mini App 并登录",
       "step2": "资料 → 账号",
       "step3": "底部的“删除账号”",
       "step4": "在面板中确认“永久删除”",
@@ -906,8 +921,8 @@
       "gone5": "通知、推送订阅、设置、与助手的聊天",
       "whenTitle": "时间和会留下什么",
       "whenText": "删除立即生效，且无法撤销。如果你有联系，其他人的网络里会用“已删除的用户”代替你的名字，不含个人数据。其他人的过往筹款会保留金额，但不含你的名字。",
-      "noAccessTitle": "无法访问你的账号？",
-      "noAccessText": "在 Telegram 联系 <bot>@socialorganizer_bot</bot>，写上你登录时用的邮箱或用户名。我们会在 30 天内手动删除账号，完成后回复你。"
+      "noAccessTitle": "无法登录？",
+      "noAccessText": "账号只能从内部删除，我们不按请求删除。如果无法登录，资料会在连续 2 年未登录后自动删除。我们会在此前 30 天和 7 天，通过 Telegram、推送通知和电子邮件发出提醒，账号里有哪种就用哪种。"
     },
     "privacyTitle": "隐私政策",
     "privacyMeta": "最近更新：2025 年 2 月 7 日",
@@ -930,12 +945,12 @@
       "s4b": "<b>Telegram：</b>小程序在 Telegram 内运行所必需的数据。",
       "s4c": "<b>托管服务商：</b>我们的服务器会处理你的数据以提供服务。",
       "s5Title": "5. 数据存储与安全",
-      "s5": "你的数据存储在安全的 PostgreSQL 数据库中。我们使用加密连接（HTTPS/TLS）、基于 JWT 的身份验证，并遵循业界标准的安全做法来保护你的信息。",
+      "s5": "你的数据存储在安全的 PostgreSQL 数据库中。我们使用加密连接（HTTPS/TLS）、基于 JWT 的身份验证，并遵循业界标准的安全做法来保护你的信息。连续 2 年未登录的账号会在提前 30 天和 7 天通知后自动删除。",
       "s6Title": "6. 你的权利",
       "s6lead": "你有权：",
       "s6a": "通过资料和设置访问你的个人数据。",
       "s6b": "随时更正或更新你的信息。",
-      "s6c": "要求删除你的账号及相关数据。",
+      "s6c": "在资料 → 账号中自行删除账号及相关数据。",
       "s6d": "以机器可读的格式导出你的数据。",
       "s7Title": "7. 开源",
       "s7": "Social Organizer 完全开源。你可以在 <gh>github.com/element1965/Social-organizer</gh> 查看我们的代码，以及数据如何被处理。",
@@ -1022,7 +1037,9 @@
     "pendingErrLimitOther": "此人已有 150 位认识的人",
     "pendingErrGone": "此人已删除账号",
     "pendingErrResolved": "这个申请已经回复过了",
-    "pendingErrNotYours": "这个申请不是发给这个 Telegram 账号的"
+    "pendingErrNotYours": "这个申请不是发给这个 Telegram 账号的",
+    "responsesTitle": "你的筹款有新回应",
+    "responsesBody": "新回应：{{count}}。打开筹款查看。"
   },
   "pending": {
     "errLimitSelf": "你已有 150 位认识的人——这是上限。",

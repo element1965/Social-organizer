@@ -517,7 +517,9 @@
     "logoutByMethod": "Sie haben sich mit {{method}} angemeldet. Zurück geht es genauso.",
     "logoutByEmail": "Sie haben sich mit einem Code an <b/> angemeldet. Zurück geht es genauso.",
     "logoutEmailOnly": "Zurück geht es auf demselben Weg oder mit einem Code an <b/>.",
-    "logoutGeneric": "Sie können auf demselben Weg zurück, auf dem Sie sich angemeldet haben."
+    "logoutGeneric": "Sie können auf demselben Weg zurück, auf dem Sie sich angemeldet haben.",
+    "notifyChannel": "Kanal",
+    "notifyTelegramNotLinked": "Verbinden Sie Telegram unter „Konto“, damit die Nachrichten dort ankommen."
   },
   "settings": {
     "title": "Einstellungen",
@@ -536,7 +538,20 @@
     "connectTelegramHint": "Melden Sie sich über Telegram im selben Konto an – es wird kein zweites Konto erstellt.",
     "telegramConnected": "Telegram ist mit Ihrem Konto verbunden",
     "telegramLinkConflict": "Dieses Telegram hat bereits ein eigenes Konto mit Daten und wurde daher nicht verbunden. Schreiben Sie dem Support – wir führen sie zusammen.",
-    "telegramLinkInvalid": "Der Link ist abgelaufen. Tippen Sie in den App-Einstellungen erneut auf „Telegram verbinden“."
+    "telegramLinkInvalid": "Der Link ist abgelaufen. Tippen Sie in den App-Einstellungen erneut auf „Telegram verbinden“.",
+    "notifyTitle": "Benachrichtigungen",
+    "notifyChannelLabel": "Ein Kanal für Benachrichtigungen",
+    "notifyChannelApp": "App",
+    "notifyChannelTelegram": "Telegram",
+    "notifyChannelHintApp": "Nachrichten kommen nur in die App, Telegram wiederholt sie nicht.",
+    "notifyChannelHintTelegram": "Nachrichten kommen nur in Telegram, die App wiederholt sie nicht.",
+    "notifyTelegramNotLinked": "Verbinden Sie Telegram unten, damit die Nachrichten dort ankommen.",
+    "notifyPushOff": "Schalten Sie Push-Benachrichtigungen ein, um sie auf diesem Gerät zu sehen.",
+    "notifyNewCollections": "Neue Sammlungen",
+    "notifyNewCollectionsHint": "Benachrichtigen, wenn jemand, über den ich benachrichtigt werden kann, eine Sammlung eröffnet",
+    "notifyMyEvents": "Meine Ereignisse",
+    "notifyMyEventsHint": "Verbindungsanfragen und Rückmeldungen auf meine Sammlung kommen immer. Rückmeldungen kommen in einer Nachricht.",
+    "notifyAnyChat": "Wählen Sie einen Kanal für Benachrichtigungen. Zum Reden miteinander geht jeder Chat."
   },
   "faq": {
     "title": "Häufige Fragen",
@@ -899,8 +914,8 @@
     "deleteAccount": "Kontolöschung",
     "del": {
       "meta": "Social Organizer · aktualisiert am 9. November 2026",
-      "lead": "Sie löschen Ihr Konto in der App oder auf der Website, ohne E-Mails und ohne Wartezeit.",
-      "step1": "Öffnen Sie die App oder orginizer.com und melden Sie sich an",
+      "lead": "Sie löschen Ihr Konto selbst, von innen: in der App, auf der Website oder in der Telegram Mini App. Keine E-Mails und keine Wartezeit.",
+      "step1": "Öffnen Sie die App, orginizer.com oder die Telegram Mini App und melden Sie sich an",
       "step2": "Profil → Konto",
       "step3": "Unten „Konto löschen“",
       "step4": "Bestätigen Sie im Fenster „Für immer löschen“",
@@ -913,8 +928,8 @@
       "gone5": "Benachrichtigungen, Push-Abos, Einstellungen, Chats mit dem Assistenten",
       "whenTitle": "Zeitpunkt und was bleibt",
       "whenText": "Die Löschung erfolgt sofort und lässt sich nicht rückgängig machen. Wenn Sie Verbindungen hatten, bleibt in den Netzwerken anderer Menschen „Gelöschter Nutzer“ anstelle Ihres Namens, ohne persönliche Daten. Vergangene Sammlungen anderer Menschen behalten die Beträge ohne Ihren Namen.",
-      "noAccessTitle": "Kein Zugang zu Ihrem Konto?",
-      "noAccessText": "Schreiben Sie in Telegram an <bot>@socialorganizer_bot</bot> und nennen Sie die E-Mail oder den Nutzernamen, mit dem Sie sich angemeldet haben. Wir löschen das Konto innerhalb von 30 Tagen von Hand und antworten, wenn es erledigt ist."
+      "noAccessTitle": "Anmeldung nicht möglich?",
+      "noAccessText": "Konten werden nur von innen gelöscht; auf Anfrage löschen wir nicht. Wenn Sie sich nicht anmelden können, wird das Profil nach 2 Jahren ohne Anmeldung automatisch gelöscht. Wir warnen 30 und 7 Tage vorher über Telegram, Push-Benachrichtigungen und E-Mail — wo das Konto sie hat."
     },
     "privacyTitle": "Datenschutzerklärung",
     "privacyMeta": "Zuletzt aktualisiert: 7. Februar 2025",
@@ -937,12 +952,12 @@
       "s4b": "<b>Telegram:</b> Daten, ohne die die Mini App innerhalb von Telegram nicht funktioniert.",
       "s4c": "<b>Hosting-Anbietern:</b> Unsere Server verarbeiten Ihre Daten, um den Dienst zu erbringen.",
       "s5Title": "5. Speicherung und Sicherheit",
-      "s5": "Ihre Daten liegen in einer gesicherten PostgreSQL-Datenbank. Wir nutzen verschlüsselte Verbindungen (HTTPS/TLS), eine Anmeldung auf JWT-Basis und branchenübliche Sicherheitsmaßnahmen, um Ihre Angaben zu schützen.",
+      "s5": "Ihre Daten liegen in einer gesicherten PostgreSQL-Datenbank. Wir nutzen verschlüsselte Verbindungen (HTTPS/TLS), eine Anmeldung auf JWT-Basis und branchenübliche Sicherheitsmaßnahmen, um Ihre Angaben zu schützen. Konten ohne Anmeldung seit 2 Jahren werden automatisch gelöscht, nach Hinweisen 30 und 7 Tage im Voraus.",
       "s6Title": "6. Ihre Rechte",
       "s6lead": "Sie haben das Recht:",
       "s6a": "Ihre personenbezogenen Daten über Profil und Einstellungen einzusehen.",
       "s6b": "Ihre Angaben jederzeit zu korrigieren oder zu aktualisieren.",
-      "s6c": "Die Löschung Ihres Kontos und der zugehörigen Daten zu verlangen.",
+      "s6c": "Ihr Konto und die zugehörigen Daten selbst zu löschen: Profil → Konto.",
       "s6d": "Ihre Daten in einem maschinenlesbaren Format zu exportieren.",
       "s7Title": "7. Open Source",
       "s7": "Social Organizer ist vollständig Open Source. Den Code und den Umgang mit Ihren Daten können Sie einsehen unter <gh>github.com/element1965/Social-organizer</gh>.",
@@ -1029,7 +1044,9 @@
     "pendingErrLimitOther": "Diese Person hat bereits 150 Bekannte",
     "pendingErrGone": "Diese Person hat das Konto gelöscht",
     "pendingErrResolved": "Diese Anfrage wurde bereits beantwortet",
-    "pendingErrNotYours": "Diese Anfrage ist nicht für dieses Telegram-Konto"
+    "pendingErrNotYours": "Diese Anfrage ist nicht für dieses Telegram-Konto",
+    "responsesTitle": "Neue Rückmeldungen auf Ihre Sammlung",
+    "responsesBody": "Neue Rückmeldungen: {{count}}. Öffnen Sie die Sammlung, um sie zu sehen."
   },
   "pending": {
     "errLimitSelf": "Sie haben bereits 150 Bekannte, das ist das Maximum.",

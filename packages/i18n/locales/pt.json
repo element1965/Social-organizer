@@ -522,7 +522,9 @@
     "logoutByMethod": "Você entrou com {{method}}. Volte do mesmo jeito.",
     "logoutByEmail": "Você entrou com um código enviado para <b/>. Volte do mesmo jeito.",
     "logoutEmailOnly": "Volte do mesmo jeito ou com um código enviado para <b/>.",
-    "logoutGeneric": "Você pode voltar do mesmo jeito que entrou."
+    "logoutGeneric": "Você pode voltar do mesmo jeito que entrou.",
+    "notifyChannel": "Canal",
+    "notifyTelegramNotLinked": "Conecte o Telegram em «Conta» para receber as mensagens lá."
   },
   "settings": {
     "title": "Configurações",
@@ -541,7 +543,20 @@
     "connectTelegramHint": "Entre pelo Telegram nesta mesma conta — não será criada uma segunda conta.",
     "telegramConnected": "O Telegram está conectado à sua conta",
     "telegramLinkConflict": "Este Telegram já tem uma conta separada com dados, por isso não foi conectado. Escreva ao suporte e vamos uni-las.",
-    "telegramLinkInvalid": "O link expirou. Toque em «Conectar Telegram» nas configurações do app novamente."
+    "telegramLinkInvalid": "O link expirou. Toque em «Conectar Telegram» nas configurações do app novamente.",
+    "notifyTitle": "Notificações",
+    "notifyChannelLabel": "Um canal para as notificações",
+    "notifyChannelApp": "App",
+    "notifyChannelTelegram": "Telegram",
+    "notifyChannelHintApp": "As mensagens chegam só ao app; o Telegram não as repete.",
+    "notifyChannelHintTelegram": "As mensagens chegam só ao Telegram; o app não as repete.",
+    "notifyTelegramNotLinked": "Conecte o Telegram abaixo para receber as mensagens lá.",
+    "notifyPushOff": "Ative as notificações push para vê-las neste dispositivo.",
+    "notifyNewCollections": "Novas arrecadações",
+    "notifyNewCollectionsHint": "Avisar quando alguém de quem posso receber avisos abrir uma arrecadação",
+    "notifyMyEvents": "Meus eventos",
+    "notifyMyEventsHint": "Solicitações de conexão e respostas à minha arrecadação sempre chegam. As respostas chegam em uma só mensagem.",
+    "notifyAnyChat": "Escolha um canal para as notificações. Para conversar, qualquer chat serve."
   },
   "faq": {
     "title": "Perguntas frequentes",
@@ -906,8 +921,8 @@
     "deleteAccount": "Exclusão da conta",
     "del": {
       "meta": "Social Organizer · atualizado em 9 de novembro de 2026",
-      "lead": "Você exclui sua conta no aplicativo ou no site, sem e-mails e sem espera.",
-      "step1": "Abra o aplicativo ou orginizer.com e entre",
+      "lead": "Você exclui a conta por conta própria, por dentro: no app, no site ou no Telegram Mini App. Sem e-mails e sem espera.",
+      "step1": "Abra o app, orginizer.com ou o Telegram Mini App e entre",
       "step2": "Perfil → Conta",
       "step3": "No final, «Excluir conta»",
       "step4": "Confirme «Excluir para sempre» no painel",
@@ -920,8 +935,8 @@
       "gone5": "Notificações, inscrições de push, configurações, conversas com o assistente",
       "whenTitle": "Prazo e o que fica",
       "whenText": "A exclusão é imediata e não pode ser desfeita. Se você tinha conexões, as redes de outras pessoas mantêm «Usuário excluído» no lugar do seu nome, sem dados pessoais. Arrecadações passadas de outras pessoas mantêm os valores sem o seu nome.",
-      "noAccessTitle": "Sem acesso à sua conta?",
-      "noAccessText": "Escreva para <bot>@socialorganizer_bot</bot> no Telegram com o e-mail ou o nome de usuário com que você entrou. Excluímos a conta manualmente em até 30 dias e respondemos quando estiver feito."
+      "noAccessTitle": "Não consegue entrar?",
+      "noAccessText": "A conta só é excluída por dentro; não há exclusão por pedido. Se você não consegue entrar, o perfil é excluído automaticamente após 2 anos sem entradas. Avisamos 30 e 7 dias antes pelo Telegram, por notificações push e por e-mail — onde a conta tiver."
     },
     "privacyTitle": "Política de privacidade",
     "privacyMeta": "Atualizado em 7 de fevereiro de 2025",
@@ -944,12 +959,12 @@
       "s4b": "<b>Telegram:</b> dados necessários para o miniaplicativo funcionar dentro do Telegram.",
       "s4c": "<b>Provedores de hospedagem:</b> nossos servidores processam seus dados para entregar o serviço.",
       "s5Title": "5. Armazenamento e segurança",
-      "s5": "Seus dados ficam em um banco PostgreSQL seguro. Usamos conexões criptografadas (HTTPS/TLS), autenticação baseada em JWT e práticas de segurança comuns do setor para proteger suas informações.",
+      "s5": "Seus dados ficam em um banco PostgreSQL seguro. Usamos conexões criptografadas (HTTPS/TLS), autenticação baseada em JWT e práticas de segurança comuns do setor para proteger suas informações. Contas sem entrada por 2 anos são excluídas automaticamente, depois de avisos com 30 e 7 dias de antecedência.",
       "s6Title": "6. Seus direitos",
       "s6lead": "Você tem o direito de:",
       "s6a": "Acessar seus dados pessoais pelo perfil e pelas configurações.",
       "s6b": "Corrigir ou atualizar suas informações a qualquer momento.",
-      "s6c": "Pedir a exclusão da sua conta e dos dados associados.",
+      "s6c": "Excluir por conta própria sua conta e os dados associados em Perfil → Conta.",
       "s6d": "Exportar seus dados num formato legível por máquina.",
       "s7Title": "7. Código aberto",
       "s7": "O Social Organizer é totalmente de código aberto. Você pode ver nosso código e como seus dados são tratados em <gh>github.com/element1965/Social-organizer</gh>.",
@@ -1036,7 +1051,9 @@
     "pendingErrLimitOther": "Esta pessoa já tem 150 conhecidos",
     "pendingErrGone": "Esta pessoa excluiu a conta",
     "pendingErrResolved": "Este pedido já foi respondido",
-    "pendingErrNotYours": "Este pedido não é para esta conta do Telegram"
+    "pendingErrNotYours": "Este pedido não é para esta conta do Telegram",
+    "responsesTitle": "Novas respostas à sua arrecadação",
+    "responsesBody": "Novas respostas: {{count}}. Abra a arrecadação para vê-las."
   },
   "pending": {
     "errLimitSelf": "Você já tem 150 conhecidos, esse é o máximo.",
