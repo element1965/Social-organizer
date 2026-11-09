@@ -8,7 +8,12 @@ import { IconInfo } from './icons';
 
 type NetStatsProps = {
   people: number;
+  /** What the visible rings 1–3 can give */
   canHelp: number;
+  /** People beyond the visible rings, rounded (0: none) */
+  far?: number;
+  /** What everyone up to the 6th handshake could give: shown only when it is more than canHelp */
+  ceiling?: number;
   /** Week delta. Not in the API yet (ux-audit §7.1 p.6): hidden while undefined. */
   weekDelta?: number;
   variant: 'scene' | 'card';
@@ -16,10 +21,13 @@ type NetStatsProps = {
 };
 
 /** "N people in the network" and "Your network can help" with an ⓘ mark. Tap explains the sum. */
-export function NetStats({ people, canHelp, weekDelta, variant, className }: NetStatsProps) {
+export function NetStats({ people, canHelp, far = 0, ceiling, weekDelta, variant, className }: NetStatsProps) {
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const delta = weekDelta && weekDelta > 0 ? t('circle.stats.weekDelta', { amount: formatMoney(weekDelta) }) : null;
+
+  const farLine = far > 0 ? t('circle.stats.far', { n: far >= 5 ? `~${far}` : far }) : null;
+  const ceilingLine = ceiling != null && ceiling > canHelp ? t('circle.stats.ceiling', { amount: formatMoney(ceiling) }) : null;
 
   const body =
     variant === 'scene' ? (
@@ -28,6 +36,7 @@ export function NetStats({ people, canHelp, weekDelta, variant, className }: Net
           <b className="block truncate text-[17px] font-extrabold tracking-tight text-node-1">
             {t('circle.stats.people', { count: people })}
           </b>
+          {farLine ? <span className="block truncate text-label font-semibold text-node-2">{farLine}</span> : null}
           <span className="mt-0.5 flex items-center gap-1 text-label font-semibold text-node-2">
             {t('circle.stats.canHelp')}
             <IconInfo className="h-3.5 w-3.5 shrink-0" />
@@ -35,6 +44,7 @@ export function NetStats({ people, canHelp, weekDelta, variant, className }: Net
         </span>
         <span className="shrink-0 text-right">
           <b className="block text-h3 font-extrabold tabular-nums text-node-1">{formatMoney(canHelp)}</b>
+          {ceilingLine ? <span className="block text-label font-semibold text-node-2">{ceilingLine}</span> : null}
           {delta ? <span className="block text-label font-bold text-care-scene">{delta}</span> : null}
         </span>
       </span>
@@ -47,8 +57,10 @@ export function NetStats({ people, canHelp, weekDelta, variant, className }: Net
         <span className="mt-1.5 flex flex-wrap items-baseline gap-x-3 gap-y-1">
           <b className="text-h2 font-extrabold tabular-nums text-ink">{formatMoney(canHelp)}</b>
           <span className="text-caption font-semibold text-ink-muted">{t('circle.stats.peopleShort', { count: people })}</span>
+          {farLine ? <span className="text-caption font-semibold text-ink-muted">{farLine}</span> : null}
           {delta ? <span className="text-caption font-bold text-care">{delta}</span> : null}
         </span>
+        {ceilingLine ? <span className="mt-1 block text-label font-semibold text-ink-muted">{ceilingLine}</span> : null}
       </span>
     );
 

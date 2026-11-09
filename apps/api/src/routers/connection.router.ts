@@ -252,7 +252,12 @@ export const connectionRouter = router({
       // You + the network as every screen shows it (visible rings exactly, the far part rounded once)
       totalReachable: 1 + counts.shown,
       /** The same as `totalReachable` without you: the "N people" next to "can help" */
-      networkPeople: counts.shown,
+      /** People in the visible rings 1–3 (the headline) and, separately, the rounded far part */
+      networkPeople: counts.visible,
+      networkFar: counts.farShown,
+      networkShown: counts.shown,
+      networkCanHelpVisible: counts.canHelpVisible,
+      networkCanHelp: counts.canHelp,
       byDepth,
       far,
       usersByDepth,

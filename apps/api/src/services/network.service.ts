@@ -106,7 +106,19 @@ export async function countNetworkByDepth(
 export async function networkReach(
   db: PrismaClient,
   rootId: string,
-): Promise<{ byDepth: Record<number, number>; exact: number; shown: number; canHelp: number }> {
+): Promise<{
+  byDepth: Record<number, number>;
+  exact: number;
+  shown: number;
+  /** People in the visible rings 1–3 (exact: they are shown by name) */
+  visible: number;
+  /** People beyond the visible rings, rounded the same way as `shown` */
+  farShown: number;
+  /** Ceiling: what everyone up to the 6th handshake can still give */
+  canHelp: number;
+  /** What the visible rings 1–3 can give: the part a person can check by eye */
+  canHelpVisible: number;
+}> {
   const { byDepth, total, ids } = await countNetworkByDepth(db, rootId);
   let visible = 0;
   for (let depth = 1; depth <= VISIBLE_RINGS; depth++) visible += byDepth[depth] ?? 0;
@@ -115,12 +127,17 @@ export async function networkReach(
   const farShown = far > 0 ? (roundFarCount(far).few ? far : roundFarCount(far).count) : 0;
   const shown = visible + farShown;
   let canHelp = 0;
+  let canHelpVisible = 0;
   if (ids.length > 0) {
-    const rows = await db.$queryRaw<Array<{ total: number | null }>>`
-      SELECT COALESCE(SUM("remainingBudget"), 0)::float AS total
+    // ids come in handshake order, so the first `visible` of them are exactly the rings 1–3
+    const visibleIds = ids.slice(0, visible);
+    const rows = await db.$queryRaw<Array<{ total: number | null; visible_total: number | null }>>`
+      SELECT COALESCE(SUM("remainingBudget"), 0)::float AS total,
+             COALESCE(SUM("remainingBudget") FILTER (WHERE id = ANY(${visibleIds})), 0)::float AS visible_total
       FROM users WHERE id = ANY(${ids}) AND "remainingBudget" > 0
     `;
     canHelp = Math.round(rows[0]?.total ?? 0);
+    canHelpVisible = Math.round(rows[0]?.visible_total ?? 0);
   }
-  return { byDepth, exact: total, shown, canHelp };
+  return { byDepth, exact: total, shown, visible, farShown, canHelp, canHelpVisible };
 }

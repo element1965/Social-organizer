@@ -19,6 +19,11 @@ export interface AskAccess {
    * Soft guidance only: the UI warns when a request exceeds it, the server never blocks on it.
    */
   networkCanHelp: number | null;
+  /** The visible rings only (1–3): people and the sum they can give; null in quick mode */
+  networkVisible: number | null;
+  networkCanHelpVisible: number | null;
+  /** People beyond the visible rings, rounded */
+  networkFar: number | null;
 }
 
 /** Authors, developers and admins are not subject to the thresholds. */
@@ -46,6 +51,9 @@ export async function getAskAccess(db: Db, userId: string, opts: { quick?: boole
       needDirect: ASK_MIN_DIRECT,
       needNetwork: ASK_MIN_NETWORK,
       networkCanHelp: null,
+      networkVisible: null,
+      networkCanHelpVisible: null,
+      networkFar: null,
     };
   }
 
@@ -58,6 +66,9 @@ export async function getAskAccess(db: Db, userId: string, opts: { quick?: boole
     needDirect: ASK_MIN_DIRECT,
     needNetwork: ASK_MIN_NETWORK,
     networkCanHelp: reach.canHelp,
+    networkVisible: reach.visible,
+    networkCanHelpVisible: reach.canHelpVisible,
+    networkFar: reach.farShown,
   };
 }
 
