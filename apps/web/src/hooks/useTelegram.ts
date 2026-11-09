@@ -80,7 +80,22 @@ export function useTelegramInit() {
   return { isReady, isTelegram: isTelegramWebApp() };
 }
 
-const ROOT_PATHS = ['/', '/welcome', '/login', '/dashboard'];
+const ROOT_PATHS = [
+  '/',
+  '/welcome',
+  '/login',
+  '/dashboard',
+  '/ask',
+  '/add',
+  '/me',
+  '/how',
+  '/get',
+  '/privacy',
+  '/terms',
+  '/delete-account',
+  '/dev/ui',
+  '/arvut',
+];
 
 export function useTelegramBackButton() {
   const navigate = useNavigate();
