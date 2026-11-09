@@ -70,7 +70,7 @@ type ItemProps = {
 
 function NavItem({ to, label, active, rail, interactive, onActivate, children, badge }: ItemProps) {
   const className = cn(
-    'so-focus group relative flex items-center gap-3 rounded-r-md text-body-s font-bold',
+    'so-focus group relative flex items-center gap-3 rounded-md text-body-s font-bold',
     rail ? 'h-[52px] w-[52px] justify-center' : 'h-11 px-3',
     active ? 'bg-care-soft text-care' : 'text-ink-muted hover:text-ink',
   );
@@ -79,12 +79,12 @@ function NavItem({ to, label, active, rail, interactive, onActivate, children, b
       <span className="grid h-[22px] w-[22px] place-items-center">{children}</span>
       {rail ? null : <span className="min-w-0 flex-1 truncate">{label}</span>}
       {!rail && badge ? (
-        <span className="grid h-[22px] min-w-[22px] place-items-center rounded-r-pill bg-sos px-1.5 text-micro font-bold tabular-nums text-sos-on">
+        <span className="grid h-[22px] min-w-[22px] place-items-center rounded-pill bg-sos px-1.5 text-micro font-bold tabular-nums text-sos-on">
           {badge}
         </span>
       ) : null}
       {rail ? (
-        <span className="pointer-events-none absolute left-[calc(100%+8px)] top-1/2 z-30 -translate-y-1/2 whitespace-nowrap rounded-r-sm bg-ink px-2 py-1 text-micro font-bold text-canvas opacity-0 group-hover:opacity-100 group-focus-within:opacity-100">
+        <span className="pointer-events-none absolute left-[calc(100%+8px)] top-1/2 z-30 -translate-y-1/2 whitespace-nowrap rounded-sm bg-ink px-2 py-1 text-micro font-bold text-canvas opacity-0 group-hover:opacity-100 group-focus-within:opacity-100">
           {label}
         </span>
       ) : null}
@@ -193,7 +193,7 @@ export function ShellChrome({
   }
 
   const addClass = cn(
-    'so-focus mt-3.5 flex items-center justify-center gap-2 rounded-r-md bg-ink font-bold text-canvas',
+    'so-focus mt-3.5 flex items-center justify-center gap-2 rounded-md bg-ink font-bold text-canvas',
     rail ? 'h-[52px] w-[52px]' : 'h-11 w-full text-body-s',
     section === 'add' && 'outline outline-2 outline-offset-2 outline-care',
   );
@@ -218,7 +218,7 @@ export function ShellChrome({
       )}
     >
       {interactive ? (
-        <Link to="/" onClick={activate} className={cn('so-focus flex items-center gap-2.5 rounded-r-md', rail ? 'pb-4' : 'px-2.5 pb-[18px] pt-1')}>
+        <Link to="/" onClick={activate} className={cn('so-focus flex items-center gap-2.5 rounded-md', rail ? 'pb-4' : 'px-2.5 pb-[18px] pt-1')}>
           <BrandMark rail={rail} />
           {rail ? null : <span className="text-body-s font-extrabold tracking-tight">{t('common.appName')}</span>}
         </Link>
@@ -253,10 +253,10 @@ export function ShellChrome({
             aria-label={t('nav.theme')}
             title={t('nav.theme')}
             onClick={() => onTheme(nextTheme(theme))}
-            className="so-focus group relative grid h-[52px] w-[52px] place-items-center rounded-r-md text-ink-muted hover:text-ink"
+            className="so-focus group relative grid h-[52px] w-[52px] place-items-center rounded-md text-ink-muted hover:text-ink"
           >
             {theme === 'dark' ? <IconSun className="h-[22px] w-[22px]" /> : <IconMoon className="h-[22px] w-[22px]" />}
-            <span className="pointer-events-none absolute left-[calc(100%+8px)] top-1/2 z-30 -translate-y-1/2 whitespace-nowrap rounded-r-sm bg-ink px-2 py-1 text-micro font-bold text-canvas opacity-0 group-hover:opacity-100">
+            <span className="pointer-events-none absolute left-[calc(100%+8px)] top-1/2 z-30 -translate-y-1/2 whitespace-nowrap rounded-sm bg-ink px-2 py-1 text-micro font-bold text-canvas opacity-0 group-hover:opacity-100">
               {t('nav.theme')}
             </span>
           </button>
@@ -277,12 +277,12 @@ export function ShellChrome({
             to="/me"
             onClick={activate}
             aria-label={rail ? user.name || t('nav.profile') : undefined}
-            className={cn('so-focus flex items-center gap-2.5 rounded-r-md', rail ? 'p-1' : 'min-w-0 px-3 py-2.5')}
+            className={cn('so-focus flex items-center gap-2.5 rounded-md', rail ? 'p-1' : 'min-w-0 px-3 py-2.5')}
           >
             <UserFace user={user} compact={rail} />
           </Link>
         ) : (
-          <div className={cn('flex items-center gap-2.5 rounded-r-md', rail ? 'p-1' : 'min-w-0 px-3 py-2.5')}>
+          <div className={cn('flex items-center gap-2.5 rounded-md', rail ? 'p-1' : 'min-w-0 px-3 py-2.5')}>
             <UserFace user={user} compact={rail} />
           </div>
         )}
@@ -295,7 +295,7 @@ function BrandMark({ rail }: { rail: boolean }) {
   return (
     <span
       className={cn(
-        'grid place-items-center rounded-r-sm bg-care text-care-on',
+        'grid place-items-center rounded-sm bg-care text-care-on',
         rail ? 'h-8 w-8' : 'h-7 w-7',
       )}
     >

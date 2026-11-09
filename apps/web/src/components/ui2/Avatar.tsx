@@ -1,11 +1,11 @@
 import { cn } from '../../lib/utils';
 
 const sizeClass = {
-  36: 'h-9 w-9 rounded-r-md text-micro',
-  40: 'h-10 w-10 rounded-r-md text-body-s',
-  48: 'h-12 w-12 rounded-r-lg text-body-l',
-  64: 'h-16 w-16 rounded-r-xl text-h3',
-  88: 'h-[88px] w-[88px] rounded-r-2xl text-h1',
+  36: 'h-9 w-9 rounded-md text-micro',
+  40: 'h-10 w-10 rounded-md text-body-s',
+  48: 'h-12 w-12 rounded-lg text-body-l',
+  64: 'h-16 w-16 rounded-xl text-h3',
+  88: 'h-[88px] w-[88px] rounded-2xl text-h1',
 } as const;
 
 export type AvatarSize = keyof typeof sizeClass;

@@ -21,7 +21,7 @@ export function EventRow({ icon, title, subtitle, amount, hot = false, onClick, 
     <>
       <span
         className={cn(
-          'grid h-[38px] w-[38px] shrink-0 place-items-center rounded-r-md',
+          'grid h-[38px] w-[38px] shrink-0 place-items-center rounded-md',
           hot ? 'bg-care-soft text-care' : 'bg-surface-2 text-ink',
         )}
       >

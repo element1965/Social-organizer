@@ -26,8 +26,8 @@ export function Segmented<T extends string>({
       aria-label={label}
       className={cn(
         variant === 'inline'
-          ? 'inline-flex gap-0.5 rounded-r-md bg-canvas p-0.5'
-          : 'grid gap-1 rounded-r-lg bg-canvas p-1',
+          ? 'inline-flex gap-0.5 rounded-md bg-canvas p-0.5'
+          : 'grid gap-1 rounded-lg bg-canvas p-1',
         className,
       )}
       style={variant === 'block' ? { gridTemplateColumns: `repeat(${options.length}, minmax(0, 1fr))` } : undefined}
@@ -44,8 +44,8 @@ export function Segmented<T extends string>({
             className={cn(
               'so-focus font-bold',
               variant === 'inline'
-                ? 'h-[30px] rounded-r-sm px-2.5 text-micro'
-                : 'h-secondary rounded-r-md px-2 text-body-s',
+                ? 'h-[30px] rounded-sm px-2.5 text-micro'
+                : 'h-secondary rounded-md px-2 text-body-s',
               selected
                 ? variant === 'inline'
                   ? 'bg-surface text-ink shadow-card'

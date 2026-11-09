@@ -19,7 +19,7 @@ export function Pill({ tone = 'neutral', className, children, ...rest }: PillPro
   return (
     <span
       className={cn(
-        'inline-flex h-[26px] items-center gap-1.5 rounded-r-sm px-2.5 text-micro font-bold',
+        'inline-flex h-[26px] items-center gap-1.5 rounded-sm px-2.5 text-micro font-bold',
         toneClass[tone],
         className,
       )}

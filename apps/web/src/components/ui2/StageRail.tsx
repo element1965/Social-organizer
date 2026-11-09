@@ -13,7 +13,7 @@ export function StageRail({ steps, done }: StageRailProps) {
         const on = index < done;
         return (
           <li key={step}>
-            <i className={cn('block h-1 rounded-r-xs', on ? 'bg-care' : 'bg-line')} />
+            <i className={cn('block h-1 rounded-xs', on ? 'bg-care' : 'bg-line')} />
             <span className={cn('mt-1.5 block text-micro font-bold', on ? 'text-ink' : 'text-ink-muted')}>{step}</span>
           </li>
         );

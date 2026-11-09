@@ -22,7 +22,7 @@ export function Group({ title, children, className }: { title?: string; children
   return (
     <section className={className}>
       {title ? <h2 className="mb-1.5 mt-4 px-1 text-label font-bold text-ink-muted">{title}</h2> : null}
-      <div className="divide-y divide-line-soft overflow-hidden rounded-r-lg bg-surface shadow-card">{children}</div>
+      <div className="divide-y divide-line-soft overflow-hidden rounded-lg bg-surface shadow-card">{children}</div>
     </section>
   );
 }

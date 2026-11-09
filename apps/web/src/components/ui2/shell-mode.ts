@@ -15,11 +15,18 @@ export function useMediaQuery(query: string): boolean {
   );
 
   useEffect(() => {
-    const media = window.matchMedia(query);
+    const media = window.matchMedia(query) as MediaQueryList & {
+      addListener?: (listener: () => void) => void;
+      removeListener?: (listener: () => void) => void;
+    };
     const onChange = () => setMatches(media.matches);
     onChange();
-    media.addEventListener('change', onChange);
-    return () => media.removeEventListener('change', onChange);
+    if (typeof media.addEventListener === 'function') {
+      media.addEventListener('change', onChange);
+      return () => media.removeEventListener('change', onChange);
+    }
+    media.addListener?.(onChange);
+    return () => media.removeListener?.(onChange);
   }, [query]);
 
   return matches;

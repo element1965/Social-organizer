@@ -1,5 +1,8 @@
-import { Navigate, useParams } from 'react-router-dom';
+import { Navigate, useNavigate, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { languageNames } from '@so/i18n';
+import { trpc } from '../../lib/trpc';
+import { useAuth } from '../../hooks/useAuth';
 import { useTheme } from '../../hooks/useTheme';
 import { Card } from './Card';
 import { Group, Row } from './Group';
@@ -65,9 +68,20 @@ export function AddScanStub() {
 }
 
 export function ProfileStub() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const navigate = useNavigate();
+  const logout = useAuth((state) => state.logout);
   const mode = useTheme((state) => state.mode);
   const setMode = useTheme((state) => state.setMode);
+  const updateLanguage = trpc.settings.updateLanguage.useMutation();
+  const language = (i18n.resolvedLanguage || i18n.language || 'en').slice(0, 2);
+
+  const onLanguage = (lang: string) => {
+    i18n.changeLanguage(lang);
+    localStorage.setItem('language', lang);
+    updateLanguage.mutate({ language: lang });
+  };
+
   return (
     <Screen width="column">
       <h1 className="pt-6 text-h1 font-extrabold text-ink">{t('nav.profile')}</h1>
@@ -87,12 +101,30 @@ export function ProfileStub() {
           />
         </div>
       </Group>
+      <Group title={t('settings.language')}>
+        <div className="px-4 py-3">
+          <select
+            className="h-11 w-full rounded-md border border-line bg-surface px-3 text-body-s font-semibold text-ink"
+            aria-label={t('settings.language')}
+            value={language}
+            onChange={(event) => onLanguage(event.target.value)}
+          >
+            {Object.entries(languageNames).map(([code, name]) => (
+              <option key={code} value={code}>
+                {name}
+              </option>
+            ))}
+          </select>
+        </div>
+      </Group>
       <Group title={t('nav.main')}>
         <Row variant="link" title={t('nav.account')} to="/me/account" />
         <Row variant="link" title={t('nav.stake')} to="/me/stake" />
         <Row variant="link" title={t('nav.openCollections')} to="/me/open" />
         <Row variant="link" title={t('nav.history')} to="/me/history" />
         <Row variant="link" title={t('nav.help')} to="/me/help" />
+        <Row variant="link" title={t('nav.settings')} to="/me/settings" />
+        <Row variant="danger" title={t('settings.logout')} onClick={() => { logout(); navigate('/login'); }} />
       </Group>
       <Soon />
     </Screen>

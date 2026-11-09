@@ -36,6 +36,13 @@ function walk(entry, out) {
   if (/\.(tsx?|css)$/.test(entry)) out.push(entry);
 }
 
+/** Drop comments so a note like #123 is not read as a hex color. Newlines stay so line numbers match. */
+function maskComments(source) {
+  return source
+    .replace(/\/\*[\s\S]*?\*\//g, (block) => block.replace(/[^\n]/g, ' '))
+    .replace(/(^|[^:])\/\/[^\n]*/g, (match, prefix) => prefix + ' '.repeat(match.length - prefix.length));
+}
+
 function lintDesignTokens() {
   const files = [];
   for (const target of lintTargets) walk(target, files);
@@ -43,7 +50,7 @@ function lintDesignTokens() {
   const hexRe = /#[0-9A-Fa-f]{3,8}\b/;
   const darkRe = /(^|[^A-Za-z0-9_-])dark:/;
   for (const file of files) {
-    const lines = fs.readFileSync(file, 'utf8').split(/\r?\n/);
+    const lines = maskComments(fs.readFileSync(file, 'utf8')).split(/\r?\n/);
     lines.forEach((lineText, index) => {
       if (hexRe.test(lineText)) problems.push(`${path.relative(here, file)}:${index + 1}: hex color`);
       if (darkRe.test(lineText)) problems.push(`${path.relative(here, file)}:${index + 1}: dark: variant`);
@@ -163,14 +170,15 @@ export default {
         amber: warm,
         yellow: warm,
       },
+      // Named scale, not `r-*`. `rounded-r-lg` is Tailwind's right-side utility.
       borderRadius: {
-        'r-xs': 'var(--r-xs)',
-        'r-sm': 'var(--r-sm)',
-        'r-md': 'var(--r-md)',
-        'r-lg': 'var(--r-lg)',
-        'r-xl': 'var(--r-xl)',
-        'r-2xl': 'var(--r-2xl)',
-        'r-pill': 'var(--r-pill)',
+        xs: 'var(--r-xs)',
+        sm: 'var(--r-sm)',
+        md: 'var(--r-md)',
+        lg: 'var(--r-lg)',
+        xl: 'var(--r-xl)',
+        '2xl': 'var(--r-2xl)',
+        pill: 'var(--r-pill)',
         card: 'var(--r-xl)',
       },
       height: {

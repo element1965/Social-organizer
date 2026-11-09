@@ -17,7 +17,7 @@ export function Switch({ checked, onCheckedChange, label, disabled }: SwitchProp
       disabled={disabled}
       onClick={() => onCheckedChange(!checked)}
       className={cn(
-        'relative h-[30px] w-12 shrink-0 rounded-r-pill transition-colors duration-200 motion-reduce:transition-none',
+        'relative h-[30px] w-12 shrink-0 rounded-pill transition-colors duration-200 motion-reduce:transition-none',
         'so-focus',
         'disabled:opacity-[0.45]',
         checked ? 'bg-care' : 'bg-line',

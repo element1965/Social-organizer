@@ -18,7 +18,7 @@ export function Panel({
   return (
     <section
       className={cn(
-        'mx-auto w-full max-w-[460px] rounded-r-2xl bg-surface px-8 pb-7 pt-8 text-ink shadow-card',
+        'mx-auto w-full max-w-[460px] rounded-2xl bg-surface px-8 pb-7 pt-8 text-ink shadow-card',
         variant === 'pubcard' && 'text-center',
         className,
       )}
@@ -58,7 +58,7 @@ export function SiteHeader({
         ))}
       </nav>
       <div className="ml-auto flex items-center gap-2">
-        <span className="grid h-10 min-w-10 place-items-center rounded-r-md border border-line bg-surface px-2 text-label font-bold">
+        <span className="grid h-10 min-w-10 place-items-center rounded-md border border-line bg-surface px-2 text-label font-bold">
           {language}
         </span>
         <button
@@ -66,7 +66,7 @@ export function SiteHeader({
           aria-label={themeLabel}
           data-theme-toggle
           onClick={onTheme}
-          className="so-focus grid h-10 w-10 place-items-center rounded-r-md border border-line bg-surface"
+          className="so-focus grid h-10 w-10 place-items-center rounded-md border border-line bg-surface"
         >
           <span className="text-label font-bold">{themeLabel.slice(0, 1)}</span>
         </button>
@@ -115,7 +115,7 @@ export function StoreButton({
     <button
       type="button"
       className={cn(
-        'inline-flex h-primary items-center justify-center gap-2 rounded-r-lg px-4 text-body font-bold',
+        'inline-flex h-primary items-center justify-center gap-2 rounded-lg px-4 text-body font-bold',
         tone === 'dark' ? 'bg-ink text-canvas' : 'border border-line bg-surface text-ink',
       )}
     >

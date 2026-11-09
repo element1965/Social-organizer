@@ -34,6 +34,7 @@ import { LandingPage } from './pages/LandingPage';
 import { CollectionPage } from './pages/CollectionPage';
 import { RetiredFeaturePage } from './pages/RetiredFeaturePage';
 import { InvitePage } from './pages/InvitePage';
+import { SettingsPage } from './pages/SettingsPage';
 import { SosLandingPage } from './pages/SosLandingPage';
 import { SupportChatPage } from './pages/SupportChatPage';
 import { PrivacyPage } from './pages/PrivacyPage';
@@ -122,6 +123,32 @@ function HomeIndex() {
   return <CircleStub />;
 }
 
+const INVITE_REDIRECT_KEY = 'so.inviteRedirected';
+let inviteRedirectClaim: string | null = null;
+let inviteRedirectStored = false;
+
+function inviteRedirectSeen(token: string): boolean {
+  try {
+    return sessionStorage.getItem(INVITE_REDIRECT_KEY) === token;
+  } catch {
+    return inviteRedirectStored && inviteRedirectClaim === token;
+  }
+}
+
+/** One redirect per token per tab. A second pass renders the shell instead of looping. */
+function InviteRedirect({ token }: { token: string }) {
+  useEffect(() => {
+    inviteRedirectClaim = token;
+    inviteRedirectStored = true;
+    try {
+      sessionStorage.setItem(INVITE_REDIRECT_KEY, token);
+    } catch {
+      /* private mode: the module flag above is the record */
+    }
+  }, [token]);
+  return <Navigate to={`/invite/${token}`} replace />;
+}
+
 function ShellGate() {
   const isAuthenticated = useAuth((s) => s.isAuthenticated);
   const location = useLocation();
@@ -138,9 +165,16 @@ function ShellGate() {
     return <Navigate to={`/?redirect=${encodeURIComponent(redirectPath)}`} replace />;
   }
 
-  if (location.pathname === '/' ) {
+  if (location.pathname === '/') {
     const pendingInvite = localStorage.getItem('pendingInviteToken');
-    if (pendingInvite) return <Navigate to={`/invite/${pendingInvite}`} replace />;
+    if (pendingInvite) {
+      if (inviteRedirectSeen(pendingInvite)) {
+        localStorage.removeItem('pendingInviteToken');
+      } else {
+        inviteRedirectClaim = pendingInvite;
+        return <InviteRedirect token={pendingInvite} />;
+      }
+    }
   }
 
   return (
@@ -210,6 +244,7 @@ export function App() {
               <Route path="/me/open" element={<OpenStub />} />
               <Route path="/me/history" element={<HistoryStub />} />
               <Route path="/me/help" element={<HelpStub />} />
+              <Route path="/me/settings" element={<SettingsPage />} />
               <Route path="/people" element={<PeopleStub />} />
               <Route path="/people/:ring" element={<PeopleStub />} />
               <Route path="/person/:id" element={<PersonStub />} />

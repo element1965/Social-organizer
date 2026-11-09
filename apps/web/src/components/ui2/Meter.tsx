@@ -20,7 +20,7 @@ export function Meter({ mine, others, goal, showMine }: MeterProps) {
 
   return (
     <div>
-      <div className="mt-3 flex h-3 overflow-hidden rounded-r-sm bg-surface-2" role="img" aria-label={`${t('common.collected')} ${formatMoney(mine + others)}`}>
+      <div className="mt-3 flex h-3 overflow-hidden rounded-sm bg-surface-2" role="img" aria-label={`${t('common.collected')} ${formatMoney(mine + others)}`}>
         {minePct > 0 ? <i className="block h-full bg-ink" style={{ width: `${minePct}%` }} /> : null}
         {othersPct > 0 ? <i className="block h-full bg-care" style={{ width: `${othersPct}%` }} /> : null}
       </div>
