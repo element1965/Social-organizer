@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { buildContactUrl } from '@so/shared';
+import { buildContactUrl, isSafeContactUrl } from '@so/shared';
 import { trpc } from '../../lib/trpc';
 import { cn } from '../../lib/utils';
 import { Avatar } from '../ui2/Avatar';
@@ -156,13 +156,17 @@ export function PersonCard({ person, variant, onClose }: Props) {
         }
       >
         <div className="flex flex-wrap gap-2">
-          {filled.map((c) => (
-            <a key={c.type} href={buildContactUrl(c.type, c.value)} target="_blank" rel="noopener noreferrer" className="so-focus rounded-sm">
-              <Pill tone="care" className="h-9 px-3 text-caption">
-                {c.label}
-              </Pill>
-            </a>
-          ))}
+          {filled.map((c) => {
+            const href = buildContactUrl(c.type, c.value);
+            if (!isSafeContactUrl(href)) return null;
+            return (
+              <a key={c.type} href={href} target="_blank" rel="noopener noreferrer" className="so-focus rounded-sm">
+                <Pill tone="care" className="h-9 px-3 text-caption">
+                  {c.label}
+                </Pill>
+              </a>
+            );
+          })}
         </div>
       </Sheet>
 

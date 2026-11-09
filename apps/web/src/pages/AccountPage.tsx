@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { CONTACT_TYPES, validateContact } from '@so/shared';
+import { Capacitor } from '@capacitor/core';
+import { CONTACT_TYPES, contactValueAllowed, type ContactType } from '@so/shared';
 import { isTelegramWebApp } from '@so/tg-adapter';
 import { trpc } from '../lib/trpc';
 import { useAuth } from '../hooks/useAuth';
@@ -12,13 +13,18 @@ import { Screen } from '../components/ui2/Screen';
 import { Sheet } from '../components/ui2/Sheet';
 import { Avatar } from '../components/ui2/Avatar';
 import { QueryState } from '../components/profile/QueryState';
-import { publicHost } from '../components/profile/constants';
+import { ACCOUNT_NOTICE_KEY, publicHost } from '../components/profile/constants';
 import { trpcCode } from '../components/profile/errors';
 import { useSmartBack } from '../components/profile/useSmartBack';
 
 const FIXED_TYPES = new Set(['email', 'telegram']);
 
-type ExtraContact = { type: string; value: string };
+type ExtraContact = { type: ContactType; value: string };
+type ContactInput = { type: ContactType; value: string };
+
+function isContactType(value: string): value is ContactType {
+  return CONTACT_TYPES.some((item) => item.type === value);
+}
 
 function splitName(name: string): [string, string] {
   const trimmed = name.trim();
@@ -76,6 +82,8 @@ export function AccountPage() {
   const [formError, setFormError] = useState('');
   const [pickOpen, setPickOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
+  const [deleteError, setDeleteError] = useState(false);
+  const [photoError, setPhotoError] = useState('');
 
   const initialContacts = useRef<Map<string, string>>(new Map());
   const leaveSaved = useRef(false);
@@ -95,7 +103,7 @@ export function AccountPage() {
       if (contact.type === 'telegram') {
         setTelegram(contact.value);
         setTelegramLocked('locked' in contact && Boolean((contact as { locked?: boolean }).locked));
-      } else if (contact.value.trim() && !FIXED_TYPES.has(contact.type)) {
+      } else if (isContactType(contact.type) && contact.value.trim() && !FIXED_TYPES.has(contact.type)) {
         extra.push({ type: contact.type, value: contact.value });
       }
     }
@@ -107,7 +115,7 @@ export function AccountPage() {
   const profile = me.data;
   const originalSlug = (profile?.referralSlug ?? '').toLowerCase();
 
-  const validate = (report: boolean): { type: string; value: string }[] | null => {
+  const validate = (report: boolean): ContactInput[] | null => {
     const nextName = [first.trim(), last.trim()].filter(Boolean).join(' ');
     let ok = true;
     if (!nextName) {
@@ -123,19 +131,18 @@ export function AccountPage() {
       if (report) setSlugError(t('account.slugInvalid'));
     } else if (report) setSlugError('');
 
-    const payload: { type: string; value: string }[] = [{ type: 'telegram', value: telegram.trim() }];
+    const payload: ContactInput[] = [{ type: 'telegram', value: telegram.trim() }];
     for (const extra of extras) payload.push({ type: extra.type, value: extra.value.trim() });
     for (const [type, value] of initialContacts.current) {
-      if (FIXED_TYPES.has(type)) continue;
+      if (!isContactType(type) || FIXED_TYPES.has(type)) continue;
       if (!extras.some((extra) => extra.type === type) && value.trim()) payload.push({ type, value: '' });
     }
     const errors: Record<string, string> = {};
     for (const item of payload) {
       if (item.type === 'telegram' && telegramLocked) continue;
-      const key = validateContact(item.type, item.value);
-      if (key) {
+      if (!contactValueAllowed(item.type, item.value)) {
         ok = false;
-        errors[item.type] = t(key);
+        errors[item.type] = t('validation.invalidContact');
       }
     }
     if (report) setContactErrors(errors);
@@ -143,33 +150,99 @@ export function AccountPage() {
     return payload;
   };
 
+  const noteDropped = () => {
+    try {
+      sessionStorage.setItem(ACCOUNT_NOTICE_KEY, '1');
+    } catch {
+      /* storage unavailable */
+    }
+  };
+
   const persist = async (report: boolean): Promise<boolean> => {
     if (!profile) return false;
-    const payload = validate(report);
-    if (!payload) return false;
+    if (report) {
+      const payload = validate(true);
+      if (!payload) return false;
+      const nextName = [first.trim(), last.trim()].filter(Boolean).join(' ');
+      const nextPhone = phone.trim();
+      const nextSlug = slug.trim().toLowerCase();
+      setFormError('');
+      try {
+        if (nextName !== profile.name || nextPhone !== (profile.phone ?? '')) {
+          await updateUser.mutateAsync({ name: nextName, phone: nextPhone });
+        }
+        if (nextSlug && nextSlug !== originalSlug) {
+          await updateSlug.mutateAsync({ slug: nextSlug });
+        }
+        const changed = payload.some((item) => (initialContacts.current.get(item.type) ?? '') !== item.value);
+        if (changed) await updateContacts.mutateAsync(payload);
+        await Promise.all([
+          utils.user.me.invalidate(),
+          utils.user.getContacts.invalidate(),
+        ]);
+        return true;
+      } catch (error) {
+        if (trpcCode(error) === 'CONFLICT') setSlugError(t('account.slugTaken'));
+        else setFormError(t('common.error'));
+        return false;
+      }
+    }
+
+    const [given, family] = splitName(profile.name);
     const nextName = [first.trim(), last.trim()].filter(Boolean).join(' ');
     const nextPhone = phone.trim();
     const nextSlug = slug.trim().toLowerCase();
-    if (report) setFormError('');
+    let dropped = false;
+    const userPatch: { name?: string; phone?: string } = {};
+    if (!nextName) {
+      if (first.trim() !== given || last.trim() !== family) dropped = true;
+    } else if (nextName !== profile.name) {
+      userPatch.name = nextName;
+    }
+    if (!phoneOk(phone)) {
+      if (nextPhone !== (profile.phone ?? '')) dropped = true;
+    } else if (nextPhone !== (profile.phone ?? '')) {
+      userPatch.phone = nextPhone;
+    }
+    let slugToSave: string | null = null;
+    if (!slugOk(slug, originalSlug)) dropped = true;
+    else if (nextSlug && nextSlug !== originalSlug) slugToSave = nextSlug;
+
+    const payload: ContactInput[] = [];
+    if (!telegramLocked) {
+      const value = telegram.trim();
+      const previous = initialContacts.current.get('telegram') ?? '';
+      if (!contactValueAllowed('telegram', value)) {
+        if (value !== previous) dropped = true;
+      } else if (value !== previous) {
+        payload.push({ type: 'telegram', value });
+      }
+    }
+    for (const extra of extras) {
+      const value = extra.value.trim();
+      const previous = initialContacts.current.get(extra.type) ?? '';
+      if (!contactValueAllowed(extra.type, value)) {
+        if (value !== previous) dropped = true;
+        continue;
+      }
+      if (value !== previous) payload.push({ type: extra.type, value });
+    }
+    for (const [type, value] of initialContacts.current) {
+      if (!isContactType(type) || FIXED_TYPES.has(type)) continue;
+      if (!extras.some((extra) => extra.type === type) && value.trim()) payload.push({ type, value: '' });
+    }
+    if (dropped) noteDropped();
+    if (!userPatch.name && userPatch.phone === undefined && !slugToSave && payload.length === 0) return !dropped;
     try {
-      if (nextName !== profile.name || nextPhone !== (profile.phone ?? '')) {
-        await updateUser.mutateAsync({ name: nextName, phone: nextPhone });
-      }
-      if (nextSlug && nextSlug !== originalSlug) {
-        await updateSlug.mutateAsync({ slug: nextSlug });
-      }
-      const changed = payload.some((item) => (initialContacts.current.get(item.type) ?? '') !== item.value);
-      if (changed) await updateContacts.mutateAsync(payload);
+      if (userPatch.name || userPatch.phone !== undefined) await updateUser.mutateAsync(userPatch);
+      if (slugToSave) await updateSlug.mutateAsync({ slug: slugToSave });
+      if (payload.length) await updateContacts.mutateAsync(payload);
       await Promise.all([
         utils.user.me.invalidate(),
         utils.user.getContacts.invalidate(),
       ]);
-      return true;
-    } catch (error) {
-      if (report) {
-        if (trpcCode(error) === 'CONFLICT') setSlugError(t('account.slugTaken'));
-        else setFormError(t('common.error'));
-      }
+      return !dropped;
+    } catch {
       return false;
     }
   };
@@ -196,8 +269,13 @@ export function AccountPage() {
     if (!file) return;
     const img = new Image();
     const url = URL.createObjectURL(file);
+    img.onerror = () => {
+      URL.revokeObjectURL(url);
+      setPhotoError(t('account.photoInvalid'));
+    };
     img.onload = () => {
       URL.revokeObjectURL(url);
+      setPhotoError('');
       const canvas = document.createElement('canvas');
       const size = 200;
       canvas.width = size;
@@ -217,7 +295,7 @@ export function AccountPage() {
   };
 
   const connect = () => {
-    const win = window.open('', '_blank');
+    const win = Capacitor.isNativePlatform() ? null : window.open('', '_blank');
     connectTelegram.mutate(undefined, {
       onSuccess: ({ code }) => {
         const bot = import.meta.env.VITE_TELEGRAM_BOT_USERNAME || 'socialorganizer_bot';
@@ -280,6 +358,7 @@ export function AccountPage() {
         />
         <p className="text-body-s font-semibold text-ink-muted">{t('account.changePhoto')}</p>
       </div>
+      {photoError ? <p className="mt-2 text-label font-semibold text-sos">{photoError}</p> : null}
 
       <div className="mt-5 space-y-4">
         <Input
@@ -402,22 +481,35 @@ export function AccountPage() {
 
       <Sheet
         open={deleteOpen}
-        onClose={() => setDeleteOpen(false)}
+        onClose={() => {
+          setDeleteOpen(false);
+          setDeleteError(false);
+        }}
         title={t('account.deleteTitle')}
         description={t('account.deleteBody')}
         footer={
           <>
-            <Button variant="secondary" onClick={() => setDeleteOpen(false)}>{t('account.keep')}</Button>
+            <Button
+              variant="secondary"
+              onClick={() => {
+                setDeleteOpen(false);
+                setDeleteError(false);
+              }}
+            >
+              {t('account.keep')}
+            </Button>
             <Button
               variant="danger"
               loading={deleteAccount.isPending}
               onClick={() => {
-                leaveSaved.current = true;
+                setDeleteError(false);
                 deleteAccount.mutate(undefined, {
                   onSuccess: () => {
+                    leaveSaved.current = true;
                     logout();
                     navigate('/login', { replace: true });
                   },
+                  onError: () => setDeleteError(true),
                 });
               }}
             >
@@ -425,7 +517,9 @@ export function AccountPage() {
             </Button>
           </>
         }
-      />
+      >
+        {deleteError ? <p className="text-label font-semibold text-sos">{t('common.error')}</p> : null}
+      </Sheet>
     </Screen>
   );
 }

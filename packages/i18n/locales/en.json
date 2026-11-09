@@ -676,6 +676,7 @@
     "stakeLabel": "Amount per month",
     "stakeMin": "Minimum 1",
     "stakeHint": "How much you are ready to direct to someone you know in a month. The app does not take money.",
+    "stakeNone": "I can't help right now",
     "networkMirror": "Your network can help you",
     "networkMirrorHint": "What people in your network still have left to give.",
     "openTab": "Open",
@@ -1415,7 +1416,9 @@
     "phoneInvalid": "Use + and 10–15 digits",
     "nameRequired": "Enter a name",
     "changePhoto": "Change photo",
-    "notSet": "Not set"
+    "notSet": "Not set",
+    "photoInvalid": "This image could not be opened",
+    "autosaveDropped": "Some fields were not saved. Check the name, phone, link, and contacts."
   },
   "person": {
     "accountName": "In the account: {{name}}",
@@ -1443,7 +1446,8 @@
     "notInCircle": "This person is not in your circle",
     "deleted": "Deleted account",
     "contacts": "Contacts",
-    "helpedYou": "Helped you"
+    "helpedYou": "Helped you",
+    "pathLabel": "Handshake path"
   },
   "help": {
     "faq": "Questions and answers",

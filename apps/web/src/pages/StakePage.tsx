@@ -15,7 +15,7 @@ function parseStake(raw: string): number | null {
   const cleaned = raw.trim().replace(',', '.');
   if (!/^\d+$/.test(cleaned)) return null;
   const amount = Number(cleaned);
-  if (!Number.isInteger(amount) || amount < 1) return null;
+  if (!Number.isInteger(amount) || amount < 0) return null;
   return amount;
 }
 
@@ -36,11 +36,13 @@ export function StakePage() {
     },
   });
 
-  const current = me.data?.monthlyBudget && me.data.monthlyBudget > 0 ? String(Math.round(me.data.monthlyBudget)) : '';
+  const saved = me.data?.monthlyBudget;
+  const current = saved == null ? '' : String(Math.round(saved));
   const [raw, setRaw] = useState<string | null>(null);
   const value = raw ?? current;
   const parsed = parseStake(value);
   const showError = value.trim() !== '' && parsed == null;
+  const unchanged = saved != null && parsed === Math.round(saved);
   const canHelp = access.data?.networkCanHelp ?? caps.data?.total ?? null;
 
   const submit = () => {
@@ -61,7 +63,7 @@ export function StakePage() {
               value={value}
               onValueChange={setRaw}
               error={showError ? t('profile.stakeMin') : undefined}
-              hint={t('profile.stakeHint')}
+              hint={parsed === 0 ? t('profile.stakeNone') : t('profile.stakeHint')}
             />
           </div>
           <div className="mt-4 flex flex-wrap gap-2">
@@ -78,7 +80,7 @@ export function StakePage() {
           </div>
           <Button
             className="mt-6 w-full"
-            disabled={parsed == null || parsed === Number(current)}
+            disabled={parsed == null || unchanged}
             loading={save.isPending}
             onClick={submit}
           >
