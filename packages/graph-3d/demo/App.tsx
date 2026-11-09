@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState, type CSSProperties } from 'react';
-import { NetworkGraph, type GraphNode, type NetworkGraphHandle } from '../src/NetworkGraph';
+import { NetworkGraph, type GraphNode, type GraphView, type NetworkGraphHandle } from '../src/NetworkGraph';
 
 interface Built {
   nodes: GraphNode[];
@@ -48,10 +48,12 @@ function build(): Built {
     edges.push({ source: 'me', target: id });
   });
   const ring2: string[] = [];
+  const parentOf = new Map<string, string>();
   for (let i = 0; i < 28; i++) {
     const id = `b${i}`;
     const parent = ring1[Math.floor(rnd() * ring1.length)] ?? ring1[0]!;
     ring2.push(id);
+    parentOf.set(id, parent);
     nodes.push({
       id,
       name: i === 4 ? 'Мария Коваль' : `Второе ${i + 1}`,
@@ -62,11 +64,14 @@ function build(): Built {
     });
     edges.push({ source: parent, target: id });
   }
-  let pathEnd = 'b4';
+  let preferred = '';
+  let fallback = '';
   for (let i = 0; i < 48; i++) {
     const id = `c${i}`;
     const parent = ring2[Math.floor(rnd() * ring2.length)] ?? ring2[0]!;
-    if (parent === 'b4' && pathEnd === 'b4') pathEnd = id;
+    parentOf.set(id, parent);
+    if (!fallback) fallback = id;
+    if (!preferred && parent === 'b4') preferred = id;
     nodes.push({
       id,
       name: `Дальнее ${i + 1}`,
@@ -77,8 +82,17 @@ function build(): Built {
     });
     edges.push({ source: parent, target: id });
   }
-  const mariaParent = edges.find((e) => e.target === 'b4')?.source ?? 'a0';
-  return { nodes, edges, path: ['me', mariaParent, 'b4', pathEnd] };
+  for (const id of ring1) parentOf.set(id, 'me');
+  const path: string[] = [];
+  const seen = new Set<string>();
+  let cursor = preferred || fallback;
+  while (cursor && !seen.has(cursor)) {
+    seen.add(cursor);
+    path.push(cursor);
+    cursor = parentOf.get(cursor) ?? '';
+  }
+  path.reverse();
+  return { nodes, edges, path };
 }
 
 export function App() {
@@ -90,6 +104,8 @@ export function App() {
   const [hidden, setHidden] = useState<number[]>([]);
   const [showControls, setShowControls] = useState(false);
   const [tapped, setTapped] = useState('hover a node for the tooltip');
+  const savedView = useRef<GraphView | null>(null);
+  const [viewZ, setViewZ] = useState('');
 
   useEffect(() => {
     const onResize = () => setSize({ w: window.innerWidth, h: window.innerHeight });
@@ -131,6 +147,14 @@ export function App() {
         <button style={chip} onClick={() => graph.current?.zoomOut()}>−</button>
         <button style={chip} onClick={() => graph.current?.fit()}>Fit</button>
         <button style={chip} onClick={() => graph.current?.focusOnMe()}>Me</button>
+        <button style={chip} data-view-z={viewZ} onClick={() => {
+          const view = graph.current?.getView() ?? null;
+          savedView.current = view;
+          if (!view) { setViewZ(''); return; }
+          const p = view.position;
+          setViewZ(`${p.x.toFixed(2)},${p.y.toFixed(2)},${p.z.toFixed(2)}`);
+        }}>Save view</button>
+        <button style={chip} onClick={() => { if (savedView.current) graph.current?.setView(savedView.current, { animate: true }); }}>Restore view</button>
         <button style={{ ...chip, color: pathOn ? '#5fd3c6' : '#e7eeeb' }} onClick={() => setPathOn((v) => !v)}>
           {pathOn ? 'Path on' : 'Path off'}
         </button>

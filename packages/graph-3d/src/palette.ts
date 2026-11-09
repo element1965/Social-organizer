@@ -8,6 +8,8 @@ export interface GraphColors {
   care: string;
   /** Path nodes and the centre tile. Token `care-bright`. */
   careBright: string;
+  /** Mark tint on the care tile. White on-care: the tile is care-bright, and the scene does not follow the app theme. */
+  careOn: string;
   line: string;
   star: string;
   label: string;
@@ -20,6 +22,7 @@ export const GRAPH_COLORS: GraphColors = {
   node3: '#5f7069',
   care: '#5fd3c6',
   careBright: '#0d9488',
+  careOn: '#ffffff',
   line: 'rgba(231,238,235,0.16)',
   star: 'rgba(231,238,235,0.9)',
   label: '#e7eeeb',
