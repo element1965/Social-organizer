@@ -48,7 +48,7 @@
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<true/>
 	<key>NSCameraUsageDescription</key>
-	<string>Social Organizer uses the camera so you can take a photo for your profile picture.</string>
+	<string>Social Organizer uses the camera so you can take a profile photo and scan a QR code to add someone you know.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Social Organizer needs access to your photos so you can choose a profile picture.</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>

@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { trpc } from '../lib/trpc';
 import { useCachedNetworkStats } from '../hooks/useCachedNetworkStats';
-import { InvitePopup } from '../components/InvitePopup';
 import { VideoGuide } from '../components/VideoGuide';
 import { Card, CardContent, CardHeader } from '../components/ui/card';
 import { Button } from '../components/ui/button';
@@ -21,7 +20,6 @@ export function CreateCollectionPage() {
   const navigate = useNavigate();
   const resolve = useNicknames();
   const [showEntryWarning, setShowEntryWarning] = useState(false);
-  const [showInvitePopup, setShowInvitePopup] = useState(false);
   const [showNotEnough, setShowNotEnough] = useState(false);
   const [showChatHelp, setShowChatHelp] = useState(false);
 
@@ -357,7 +355,7 @@ export function CreateCollectionPage() {
               {t('create.connectionsRemaining', { count: connectionsNeeded })}
             </p>
             <div className="space-y-2 pt-2">
-              <Button className="w-full" size="lg" onClick={() => { setShowNotEnough(false); setShowInvitePopup(true); }}>
+              <Button className="w-full" size="lg" onClick={() => { setShowNotEnough(false); navigate('/add'); }}>
                 <UserPlus className="w-4 h-4 mr-2" />
                 {t('create.goToInvite')}
               </Button>
@@ -368,8 +366,6 @@ export function CreateCollectionPage() {
           </div>
         </div>
       )}
-
-      <InvitePopup open={showInvitePopup} onClose={() => setShowInvitePopup(false)} />
 
       {/* Entry warning modal — shown on submit before confirmation */}
       {showEntryWarning && (

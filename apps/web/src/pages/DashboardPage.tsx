@@ -4,10 +4,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { trpc } from '../lib/trpc';
 import { useCachedNetworkStats } from '../hooks/useCachedNetworkStats';
-import { InviteBlock } from '../components/InviteBlock';
-import { ShareSheet } from '../components/ShareSheet';
 import { VideoGuide } from '../components/VideoGuide';
-import { buildWebInviteUrl } from '../lib/inviteUrl';
 import { Card, CardContent } from '../components/ui/card';
 import { Button } from '../components/ui/button';
 import {
@@ -28,8 +25,6 @@ export function DashboardPage() {
   const navigate = useNavigate();
   const location = useLocation();
   const [showTgChatPopup, setShowTgChatPopup] = useState(false);
-  const [gateShareOpen, setGateShareOpen] = useState(false);
-  const [inviteShareOpen, setInviteShareOpen] = useState(false);
 
   const { data: me } = trpc.user.me.useQuery(undefined, { refetchInterval: 30000 });
   const { data: networkStats, isLoading: networkLoading } = useCachedNetworkStats();
@@ -43,10 +38,8 @@ export function DashboardPage() {
   const byDepth = networkStats?.byDepth ?? {};
 
   useEffect(() => {
-    if (location.hash === '#invite') {
-      setTimeout(() => document.getElementById('invite')?.scrollIntoView({ behavior: 'smooth' }), 100);
-    }
-  }, []);
+    if (location.hash === '#invite') navigate('/add');
+  }, [location.hash, navigate]);
 
   return (
     <div className="px-4 pt-2 pb-4 flex flex-col gap-4 relative">
@@ -93,7 +86,7 @@ export function DashboardPage() {
       </div>
 
       {/* First acquaintance: who invited me and the exact request state */}
-      <AcquaintanceCard onInvite={() => setGateShareOpen(true)} />
+      <AcquaintanceCard onInvite={() => navigate('/add')} />
 
       {/* Gate: need at least 1 connection — personal link / QR when there is no invite in progress */}
       {!networkLoading && networkStats && (introState === 'none' || introState === undefined)
@@ -104,27 +97,13 @@ export function DashboardPage() {
             <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-4">
               {t('dashboard.addFirstConnection')}
             </h2>
-            <Button className="w-full" size="lg" onClick={() => setGateShareOpen(true)}>
+            <Button className="w-full" size="lg" onClick={() => navigate('/add')}>
               <UserPlus className="w-4 h-4 mr-2" /> {t('create.goToInvite')}
             </Button>
             <VideoGuide video="app-start" label="title" className="mt-4" />
           </CardContent>
         </Card>
       )}
-
-      {/* ShareSheet for gate invite button */}
-      {(() => {
-        const token = me?.referralSlug || me?.id || '';
-        const url = token ? buildWebInviteUrl(token) : '';
-        return url ? (
-          <ShareSheet
-            open={gateShareOpen}
-            onClose={() => setGateShareOpen(false)}
-            url={url}
-            shareText={t('invite.shareText', { name: me?.name || '' })}
-          />
-        ) : null;
-      })()}
 
       {/* TG community chat popup */}
       {showTgChatPopup && (
@@ -211,20 +190,13 @@ export function DashboardPage() {
             </CardContent>
           </Card>
           <button
-            onClick={() => setInviteShareOpen(true)}
+            onClick={() => navigate('/add')}
             className="w-full flex items-center justify-center gap-2 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors font-semibold text-sm"
           >
             <Share2 className="w-4 h-4" />
             {t('dashboard.inviteTrusted')}
           </button>
-          <ShareSheet
-            open={inviteShareOpen}
-            onClose={() => setInviteShareOpen(false)}
-            url={(() => { const tok = me?.referralSlug || me?.id || ''; return tok ? buildWebInviteUrl(tok) : ''; })()}
-            shareText={t('invite.shareText', { name: me?.name || '' })}
-          />
         </div>
-        <InviteBlock id="invite" variant="qr" />
       </div>
 
 
