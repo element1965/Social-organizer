@@ -8,6 +8,7 @@
     "dev": "turbo dev",
     "lint": "turbo lint",
     "typecheck": "turbo typecheck",
+    "i18n:check": "node scripts/i18n-check.mjs",
     "db:migrate": "pnpm --filter @so/db migrate",
     "db:generate": "pnpm --filter @so/db generate",
     "db:push": "pnpm --filter @so/db push",

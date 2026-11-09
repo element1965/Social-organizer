@@ -83,7 +83,7 @@ function Gallery() {
 
   return (
     <div className="px-4 pb-16">
-      <Block title="Button">
+      <Block title={t(`${g}.blockButton`)}>
         <div className="flex flex-col items-start gap-3">
           <Button>{t('common.confirm')}</Button>
           <Button variant="secondary">{t(`${g}.acquainted`)}</Button>
@@ -99,7 +99,7 @@ function Gallery() {
         </div>
       </Block>
 
-      <Block title="Input">
+      <Block title={t(`${g}.blockInput`)}>
         <div className="flex max-w-md flex-col gap-4">
           <Input label={t(`${g}.placeholder`)} placeholder={t(`${g}.placeholder`)} />
           <Input label={t(`${g}.focused`)} defaultValue={t(`${g}.sampleName`)} className="border-care" />
@@ -113,7 +113,7 @@ function Gallery() {
         </div>
       </Block>
 
-      <Block title="Segmented">
+      <Block title={t(`${g}.blockSegmented`)}>
         <Segmented
           label={t('nav.ask')}
           value={segment}
@@ -138,11 +138,11 @@ function Gallery() {
         </div>
       </Block>
 
-      <Block title="Switch">
+      <Block title={t(`${g}.blockSwitch`)}>
         <Switch checked={on} onCheckedChange={setOn} label={t(`${g}.largeType`)} />
       </Block>
 
-      <Block title="Chip">
+      <Block title={t(`${g}.blockChip`)}>
         <div className="flex flex-wrap gap-2">
           <Chip variant="ring" dot="ink" count="9" active>
             {t(`${g}.ring1`)}
@@ -150,9 +150,9 @@ function Gallery() {
           <Chip variant="ring" dot="node-2" count="5">
             {t(`${g}.ring2`)}
           </Chip>
-          <Chip variant="preset">15 $</Chip>
+          <Chip variant="preset">{t(`${g}.sampleChip`)}</Chip>
           <Chip variant="preset" active>
-            30 $
+            {t(`${g}.sampleChipActive`)}
           </Chip>
           <Chip variant="onscene">{t(`${g}.backToSelf`)}</Chip>
           <Chip variant="action">{t(`${g}.backToSelf`)}</Chip>
@@ -162,7 +162,7 @@ function Gallery() {
         </div>
       </Block>
 
-      <Block title="Pill">
+      <Block title={t(`${g}.blockPill`)}>
         <div className="flex flex-wrap gap-2">
           <Pill>{t(`${g}.none`)}</Pill>
           <Pill tone="care">{t(`${g}.participating`)}</Pill>
@@ -172,7 +172,7 @@ function Gallery() {
         </div>
       </Block>
 
-      <Block title="Avatar">
+      <Block title={t(`${g}.blockAvatar`)}>
         <div className="flex flex-wrap items-end gap-3">
           <Avatar name={t(`${g}.sampleName`)} size={36} />
           <Avatar name={t(`${g}.sampleName`)} size={40} online />
@@ -182,13 +182,13 @@ function Gallery() {
         </div>
       </Block>
 
-      <Block title="Card">
+      <Block title={t(`${g}.blockCard`)}>
         <Card title={t(`${g}.sampleName`)} subtitle={t(`${g}.sampleVia`)}>
           <div className="rounded-lg bg-surface-2 p-3 text-body font-body">{t(`${g}.participating`)}</div>
         </Card>
       </Block>
 
-      <Block title="Group">
+      <Block title={t(`${g}.blockGroup`)}>
         <Group title={t('nav.account')}>
           <Row variant="link" title={t('nav.account')} subtitle={t(`${g}.lockedValue`)} icon={<IconBell className="h-5 w-5" />} />
           <Row variant="value" title={t('nav.stake')} value={formatMoney(15)} />
@@ -197,7 +197,7 @@ function Gallery() {
         </Group>
       </Block>
 
-      <Block title="EventRow">
+      <Block title={t(`${g}.blockEventRow`)}>
         <div className="flex flex-col gap-2">
           <EventRow
             hot
@@ -215,22 +215,22 @@ function Gallery() {
         </div>
       </Block>
 
-      <Block title="PersonRow">
-        <PersonRow name={t(`${g}.samplePerson`)} subtitle={t(`${g}.brought`)} value="3" online />
+      <Block title={t(`${g}.blockPersonRow`)}>
+        <PersonRow name={t(`${g}.samplePerson`)} subtitle={t(`${g}.brought`)} value={t(`${g}.sampleCount`)} online />
       </Block>
 
-      <Block title="Meter">
+      <Block title={t(`${g}.blockMeter`)}>
         <Meter mine={15} others={100} goal={300} />
         <div className="mt-4">
           <Meter mine={0} others={80} goal={300} showMine={false} />
         </div>
       </Block>
 
-      <Block title="StageRail">
+      <Block title={t(`${g}.blockStageRail`)}>
         <StageRail steps={[t(`${g}.stageAmount`), t(`${g}.stageTalk`), t(`${g}.stageClosed`)]} done={2} />
       </Block>
 
-      <Block title="PathFigure">
+      <Block title={t(`${g}.blockPathFigure`)}>
         <PathFigure names={[t('common.you'), t(`${g}.sampleName`)]} />
         <div className="mt-4">
           <PathFigure names={[t('common.you'), t(`${g}.nameBrother`), t(`${g}.sampleName`)]} />
@@ -242,14 +242,14 @@ function Gallery() {
         </div>
       </Block>
 
-      <Block title="AskMark">
+      <Block title={t(`${g}.blockAskMark`)}>
         <div className="flex items-center gap-4">
           <AskMark progress={{ circle: 1, network: 1 }} />
           <AskMark progress={askPartial} />
         </div>
       </Block>
 
-      <Block title="Banner">
+      <Block title={t(`${g}.blockBanner`)}>
         <Banner
           inline
           duration={0}
@@ -263,7 +263,7 @@ function Gallery() {
         </div>
       </Block>
 
-      <Block title="Sheet">
+      <Block title={t(`${g}.blockSheet`)}>
         <div className="relative h-[440px] overflow-hidden rounded-xl border border-line">
           <Sheet
             open={sheetOpen}
@@ -288,7 +288,7 @@ function Gallery() {
         </div>
       </Block>
 
-      <Block title="Screen">
+      <Block title={t(`${g}.blockScreen`)}>
         <div className="overflow-hidden rounded-xl border border-line">
           <Screen
             shell="tabs"
@@ -366,7 +366,7 @@ function Gallery() {
         </div>
       </Block>
 
-      <Block title="Scene">
+      <Block title={t(`${g}.blockScene`)}>
         <SceneBox>
           <Chip variant="onscene" count="9">
             {t(`${g}.ring1`)}
@@ -376,7 +376,7 @@ function Gallery() {
         </SceneBox>
       </Block>
 
-      <Block title="Site">
+      <Block title={t(`${g}.blockSite`)}>
         <div className="overflow-hidden rounded-xl border border-line">
           <SiteHeader
             brand={t('common.appName')}
@@ -384,13 +384,13 @@ function Gallery() {
               { label: t('nav.how'), href: '/how', active: true },
               { label: t('nav.help'), href: '/me/help' },
             ]}
-            language="EN"
+            language={t(`${g}.langSample`)}
             themeLabel={t('nav.theme')}
             onTheme={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
             loginLabel={t('auth.login')}
           />
           <div className="px-4 pb-6">
-            <Stat value="1 240" label={t('nav.people')} delta={t(`${g}.weekDelta`)} />
+            <Stat value={t(`${g}.sampleStat`)} label={t('nav.people')} delta={t(`${g}.weekDelta`)} />
             <div className="mt-4 flex flex-wrap gap-2">
               <StoreButton>{t('common.appName')}</StoreButton>
               <StoreButton tone="light">{t(`${g}.later`)}</StoreButton>
