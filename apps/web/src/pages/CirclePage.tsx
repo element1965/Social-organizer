@@ -282,6 +282,8 @@ export function CirclePage() {
       hiddenRings={hiddenRings}
       onNodeTap={onNodeTap}
       dimmed={layer === 'person' && phone}
+      focusId={selectedId}
+      focusLift={phone ? 0.16 : 0}
     />
   );
 

@@ -1,7 +1,7 @@
 /**
  * Settled node positions shared by every NetworkGraph. The map outlives unmount.
  * Keyed by the centre node so two people never share a layout.
- * Persisted at `so.graph.layout.v1:<centerId>` when the simulation stops, not per tick.
+ * Persisted at `so.graph.layout.v2:<centerId>` when the simulation stops, not per tick.
  */
 
 export interface LayoutPoint {
@@ -18,7 +18,7 @@ export interface LayoutSample {
   depth?: number;
 }
 
-const PREFIX = 'so.graph.layout.v1:';
+const PREFIX = 'so.graph.layout.v2:'; // v2: denser forces (2026-11-09), old sparse layouts are not reused
 const MAX_NODES = 2000;
 
 const owners = new Map<string, Map<string, LayoutPoint>>();
