@@ -10,13 +10,21 @@ import { syncMilestonesForPair } from '../services/milestone.service.js';
 import { translateWithCache } from '../services/translate.service.js';
 
 export const inviteRouter = router({
-  generate: protectedProcedure.mutation(async ({ ctx }) => {
-    const token = randomBytes(16).toString('hex');
-    const invite = await ctx.db.inviteLink.create({
-      data: { inviterId: ctx.userId, token },
-    });
-    return { token: invite.token, id: invite.id };
-  }),
+  /**
+   * Without ttl: the usual single-use link (no expiry), exactly as before.
+   * With ttl (seconds): a short-lived in-person token (live QR). Accepting it connects both people
+   * immediately, with no pending confirmation: meeting in person is the first handshake.
+   */
+  generate: protectedProcedure
+    .input(z.object({ ttl: z.number().int().min(10).max(24 * 60 * 60).optional() }).optional())
+    .mutation(async ({ ctx, input }) => {
+      const token = randomBytes(16).toString('hex');
+      const expiresAt = input?.ttl ? new Date(Date.now() + input.ttl * 1000) : null;
+      const invite = await ctx.db.inviteLink.create({
+        data: { inviterId: ctx.userId, token, expiresAt },
+      });
+      return { token: invite.token, id: invite.id, expiresAt: invite.expiresAt };
+    }),
 
   accept: protectedProcedure
     .input(z.object({ token: z.string() }))
@@ -29,6 +37,7 @@ export const inviteRouter = router({
       });
 
       let inviterId: string;
+      let inPerson = false;
 
       if (invite) {
         // The same person opening their link again (another device, a repeat after login) is not an error
@@ -39,12 +48,20 @@ export const inviteRouter = router({
           throw new TRPCError({ code: 'BAD_REQUEST', message: 'Cannot accept own invite' });
         }
         inviterId = invite.inviterId;
+        inPerson = invite.expiresAt != null;
 
         if (!invite.usedById) {
-          await ctx.db.inviteLink.updateMany({
-            where: { id: invite.id, usedById: null },
+          if (invite.expiresAt && invite.expiresAt.getTime() <= Date.now()) {
+            throw new TRPCError({ code: 'NOT_FOUND', message: 'INVITE_EXPIRED' });
+          }
+          const claimed = await ctx.db.inviteLink.updateMany({
+            where: { id: invite.id, usedById: null, ...(invite.expiresAt ? { expiresAt: { gt: new Date() } } : {}) },
             data: { usedById: ctx.userId, usedAt: new Date() },
           });
+          // Lost a race with another scanner (single use) or the token expired in between
+          if (claimed.count === 0 && invite.expiresAt) {
+            throw new TRPCError({ code: 'BAD_REQUEST', message: 'Invite already used' });
+          }
         }
       } else {
         // Try as permanent link (token = userId), then by referralSlug
@@ -73,6 +90,29 @@ export const inviteRouter = router({
       if (existingConnection) {
         console.log('[invite.accept] already connected:', ctx.userId, '<->', inviterId);
         return { success: true, alreadyConnected: true, connectedWith: inviterId };
+      }
+
+      // In-person (QR) token: the meeting is the first handshake, so connect right away, no confirmation step
+      if (inPerson) {
+        await ctx.db.$transaction(async (tx) => {
+          await createConnectionWithinLimit(tx, ctx.userId, inviterId);
+          await tx.pendingConnection.updateMany({
+            where: {
+              OR: [
+                { fromUserId: ctx.userId, toUserId: inviterId },
+                { fromUserId: inviterId, toUserId: ctx.userId },
+              ],
+              status: 'PENDING',
+            },
+            data: { status: 'ACCEPTED', resolvedAt: new Date() },
+          });
+        });
+        await syncMilestonesForPair(ctx.db, ctx.userId, inviterId);
+        const scanner = await ctx.db.user.findUnique({ where: { id: ctx.userId }, select: { name: true } });
+        sendPendingNotification(ctx.db, inviterId, 'accepted', scanner?.name || '').catch(() => {});
+        scanMatchesForUser(ctx.db, ctx.userId).catch(() => {});
+        scanMatchesForUser(ctx.db, inviterId).catch(() => {});
+        return { success: true, alreadyConnected: false, connectedWith: inviterId };
       }
 
       // Check if pending connection already exists in either direction
@@ -233,6 +273,9 @@ export const inviteRouter = router({
       });
       if (invite) {
         if (invite.inviter.deletedAt) throw new TRPCError({ code: 'NOT_FOUND', message: 'INVITER_DELETED' });
+        if (invite.expiresAt && !invite.usedById && invite.expiresAt.getTime() <= Date.now()) {
+          throw new TRPCError({ code: 'NOT_FOUND', message: 'INVITE_EXPIRED' });
+        }
         const stats = await getInviterStats(invite.inviterId);
         return { ...invite, ...stats };
       }
