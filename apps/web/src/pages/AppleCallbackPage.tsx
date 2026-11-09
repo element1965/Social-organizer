@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
+import { safeRedirectPath, invitePath } from '../lib/safeRedirect';
 import { takePendingSosPath } from '../lib/inviteUrl';
 
 // Web finish page for Sign in with Apple.
@@ -34,11 +35,12 @@ export function AppleCallbackPage() {
     const pendingInvite = params.get('inv') || localStorage.getItem('pendingInviteToken');
     localStorage.removeItem('pendingInviteToken');
     // Came from a collection link (/sos/:id) → back to that collection
-    const pendingSos = takePendingSosPath();
+    const pendingSos = safeRedirectPath(takePendingSosPath());
+    const inviteTarget = invitePath(pendingInvite);
     if (pendingSos) {
       window.location.href = pendingSos;
-    } else if (pendingInvite) {
-      window.location.href = `/invite/${pendingInvite}`;
+    } else if (inviteTarget) {
+      window.location.href = inviteTarget;
     } else {
       navigate('/dashboard');
     }

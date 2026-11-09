@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { trpc } from '../lib/trpc';
 import { useAuth } from '../hooks/useAuth';
+import { safeRedirectPath, invitePath } from '../lib/safeRedirect';
 import { takePendingSosPath } from '../lib/inviteUrl';
 
 // Handles Google OAuth redirect callback.
@@ -75,12 +76,13 @@ export function GoogleCallbackPage() {
             login(data.accessToken, data.refreshToken, data.userId);
             const pendingInvite = localStorage.getItem('pendingInviteToken');
             // Came from a collection link (/sos/:id) → back to that collection
-            const pendingSos = takePendingSosPath();
+            const pendingSos = safeRedirectPath(takePendingSosPath());
+            const inviteTarget = invitePath(pendingInvite);
             if (pendingSos) {
               window.location.href = pendingSos;
-            } else if (pendingInvite) {
+            } else if (inviteTarget) {
               localStorage.removeItem('pendingInviteToken');
-              window.location.href = `/invite/${pendingInvite}`;
+              window.location.href = inviteTarget;
             } else {
               navigate(data.isNew ? '/onboarding' : '/dashboard');
             }

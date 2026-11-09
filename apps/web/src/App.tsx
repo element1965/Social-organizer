@@ -11,6 +11,7 @@ import { ProtectedRoute } from './components/ProtectedRoute';
 import { NativePushBootstrap } from './components/NativePushBootstrap';
 // RequiredInfoGate removed — contacts are now optional, prompted via settings hint
 import { useAuth } from './hooks/useAuth';
+import { safeRedirectPath, isSafeToken } from './lib/safeRedirect';
 import { LoginPage } from './pages/LoginPage';
 import { LandingPage } from './pages/LandingPage';
 import { DashboardPage } from './pages/DashboardPage';
@@ -47,11 +48,11 @@ function HomeRoute() {
   // Native app: landing page doesn't make sense — send to login or invite
   if (isNativeApp) {
     const inviteParam = params.get('invite');
-    if (inviteParam) {
-      return <Navigate to={`/invite/${inviteParam}`} replace />;
+    if (isSafeToken(inviteParam)) {
+      return <Navigate to={`/invite/${encodeURIComponent(inviteParam)}`} replace />;
     }
     // Preserve any redirect param passed from ProtectedRoute
-    const redirectParam = params.get('redirect');
+    const redirectParam = safeRedirectPath(params.get('redirect'));
     return <Navigate to={redirectParam ? `/login?redirect=${encodeURIComponent(redirectParam)}` : '/login'} replace />;
   }
 
@@ -97,12 +98,13 @@ function GoogleAuthDeepLinkHandler() {
           // fall back to one saved before the browser was opened. This makes the
           // "join the inviter's cluster on first handshake" flow work for Apple
           // sign-in, the same way Telegram passes it via startapp.
-          const pendingInvite = params.get('inv') || localStorage.getItem('pendingInviteToken');
+          const rawInvite = params.get('inv') || localStorage.getItem('pendingInviteToken');
+          const pendingInvite = isSafeToken(rawInvite) ? rawInvite : null;
           // Keep pendingInviteToken until InvitePage accepts it: clearing it here let
           // TelegramBootstrap see "/login without invite" and send the user to the
           // dashboard, so invites were lost after Google/Apple sign-in in the app.
           if (pendingInvite) localStorage.setItem('pendingInviteToken', pendingInvite);
-          navigate(pendingInvite ? `/invite/${pendingInvite}` : '/dashboard', { replace: true });
+          navigate(pendingInvite ? `/invite/${encodeURIComponent(pendingInvite)}` : '/dashboard', { replace: true });
         } else {
           navigate('/login', { replace: true });
         }
