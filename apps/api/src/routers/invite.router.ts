@@ -4,7 +4,7 @@ import { router, publicProcedure, protectedProcedure } from '../trpc.js';
 import { TRPCError } from '@trpc/server';
 import { sendPendingNotification } from '../services/notification.service.js';
 import { scanMatchesForUser } from '../services/match-notification.service.js';
-import { respondToConnectionRequest } from '../services/connection-request.service.js';
+import { respondToConnectionRequest, createConnectionWithinLimit } from '../services/connection-request.service.js';
 import { sendTelegramMessage, type TgReplyMarkup } from '../services/telegram-bot.service.js';
 import { syncMilestonesForPair } from '../services/milestone.service.js';
 import { translateWithCache } from '../services/translate.service.js';
@@ -177,23 +177,20 @@ export const inviteRouter = router({
         return { success: true, alreadyConnected: true, connectedWith: creatorId };
       }
 
-      // Create direct connection (SOS bypasses pending approval)
-      await ctx.db.connection.upsert({
-        where: { userAId_userBId: { userAId: userAId!, userBId: userBId! } },
-        create: { userAId: userAId!, userBId: userBId! },
-        update: {},
-      });
-
-      // Resolve any existing pending connections between them
-      await ctx.db.pendingConnection.updateMany({
-        where: {
-          OR: [
-            { fromUserId: ctx.userId, toUserId: creatorId },
-            { fromUserId: creatorId, toUserId: ctx.userId },
-          ],
-          status: 'PENDING',
-        },
-        data: { status: 'ACCEPTED', resolvedAt: new Date() },
+      // Create direct connection (SOS bypasses pending approval, but not the 150 limit)
+      await ctx.db.$transaction(async (tx) => {
+        await createConnectionWithinLimit(tx, ctx.userId, creatorId);
+        // Resolve any existing pending connections between them
+        await tx.pendingConnection.updateMany({
+          where: {
+            OR: [
+              { fromUserId: ctx.userId, toUserId: creatorId },
+              { fromUserId: creatorId, toUserId: ctx.userId },
+            ],
+            status: 'PENDING',
+          },
+          data: { status: 'ACCEPTED', resolvedAt: new Date() },
+        });
       });
 
       console.log('[invite.acceptSos] direct connection created:', ctx.userId, '<->', creatorId);

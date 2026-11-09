@@ -1,6 +1,5 @@
 import { lazy, Suspense, useState, useEffect } from 'react';
-import { AcquaintanceCard, wasSeen as acquaintanceSeen } from '../components/AcquaintanceCard';
-import { MilestonesCard } from '../components/MilestonesCard';
+import { AcquaintanceCard } from '../components/AcquaintanceCard';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { trpc } from '../lib/trpc';
@@ -227,12 +226,6 @@ export function DashboardPage() {
         </div>
         <InviteBlock id="invite" variant="qr" />
       </div>
-
-      {/* Two milestones of the money MVP: first handshake and 10 direct connections */}
-      <MilestonesCard
-        suppressFirst={introState === 'connected' && (intro as { isFirstHandshake?: boolean } | undefined)?.isFirstHandshake === true
-          && !!me && !!intro?.person && !acquaintanceSeen(me.id, intro.person.id)}
-      />
 
 
     </div>

@@ -562,8 +562,6 @@ export function handleDemoRequest(path: string, input: unknown): unknown {
       return connections;
     case 'connection.getCount':
       return { count: 12, max: 150 };
-    case 'connection.add':
-      return { id: `conn-new-${Date.now()}`, userAId: DEMO_USER_ID, userBId: inp?.userId, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() };
     case 'connection.graphSlice':
       return graphSlice;
     case 'connection.findPath': {

@@ -4,6 +4,7 @@ import { TRPCError } from '@trpc/server';
 import { MIN_COLLECTION_AMOUNT, NOTIFICATION_RATIO, MIN_CONNECTIONS_TO_CREATE } from '@so/shared';
 import { sendCollectionNotifications, sendCollectionClosedTg } from '../services/notification.service.js';
 import { isAdmin } from '../admin.js';
+import { countConnections } from '../services/connection-request.service.js';
 
 /** Chat links are shown as buttons to every participant: only plain web links, never javascript: etc. (SO-14) */
 const chatLinkSchema = z.string().max(500).url().refine((u) => /^https?:\/\//i.test(u), 'Link must start with https://');
@@ -31,16 +32,14 @@ export const collectionRouter = router({
         throw new TRPCError({ code: 'BAD_REQUEST', message: `Amount must be at least ${MIN_COLLECTION_AMOUNT}` });
       }
 
-      // Check minimum connections requirement — only invite-based connections count
-      // (direct connection requests cannot be used to farm the threshold)
+      // Minimum confirmed acquaintances (SO-15): Connection rows on either side of the pair,
+      // however they were made. Invite links and pending requests don't count.
       if (!isSpecial) {
-        const inviteCount = await ctx.db.inviteLink.count({
-          where: { inviterId: ctx.userId, usedById: { not: null } },
-        });
-        if (inviteCount < MIN_CONNECTIONS_TO_CREATE) {
+        const connectionCount = await countConnections(ctx.db, ctx.userId);
+        if (connectionCount < MIN_CONNECTIONS_TO_CREATE) {
           throw new TRPCError({
             code: 'FORBIDDEN',
-            message: `You need at least ${MIN_CONNECTIONS_TO_CREATE} accepted invitations. You have ${inviteCount}.`,
+            message: `You need at least ${MIN_CONNECTIONS_TO_CREATE} confirmed connections. You have ${connectionCount}.`,
           });
         }
       }
