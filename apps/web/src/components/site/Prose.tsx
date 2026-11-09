@@ -27,11 +27,14 @@ export function Prose({
   doc,
   title,
   meta,
+  intro,
   sections,
 }: {
   doc: LegalDoc;
   title: string;
   meta?: string;
+  /** Content between the heading and the first section (e.g. the deletion steps). */
+  intro?: ReactNode;
   sections: ProseSection[];
 }) {
   const { t } = useTranslation();
@@ -56,6 +59,7 @@ export function Prose({
         <article className="site-prose">
           <h1>{title}</h1>
           {meta ? <p className="meta">{meta}</p> : null}
+          {intro}
           {sections.map((s) => (
             <section key={s.id} aria-labelledby={s.id}>
               <h2 id={s.id}>{s.title}</h2>

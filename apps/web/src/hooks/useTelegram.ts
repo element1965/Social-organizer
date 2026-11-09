@@ -24,18 +24,19 @@ function syncTelegramTheme() {
 
 export function useTelegramInit() {
   const [isReady, setIsReady] = useState(!isTelegramWebApp());
+  /** Mini App sign-in did not work (rejected or missing initData) and there is no stored session. */
+  const [failed, setFailed] = useState(false);
   const login = useAuth((s) => s.login);
   const loginMutation = trpc.auth.loginWithTelegram.useMutation();
   const didRun = useRef(false);
 
-  useEffect(() => {
-    if (!isTelegramWebApp() || didRun.current) return;
-    didRun.current = true;
+  /** A visible failure (auth.html №15) only when nothing else can sign the person in. */
+  const fail = () => {
+    if (!localStorage.getItem('accessToken')) setFailed(true);
+    setIsReady(true);
+  };
 
-    initTelegramWebApp();
-    syncTelegramTheme();
-    const unsub = onThemeChanged(syncTelegramTheme);
-
+  const attempt = () => {
     // Always refresh token from Telegram initData (previous JWT may be expired)
     const initData = getTGInitData();
     console.log('[TG Auth] initData present:', !!initData, 'length:', initData?.length ?? 0);
@@ -45,7 +46,7 @@ export function useTelegramInit() {
         .then((result) => {
           if (!result?.accessToken) {
             console.error('[TG Auth] login returned null/empty result');
-            setIsReady(true);
+            fail();
             return;
           }
           console.log('[TG Auth] login success, userId:', result.userId);
@@ -60,24 +61,45 @@ export function useTelegramInit() {
             const text = i18n.t(key);
             if (wa?.showAlert) wa.showAlert(text); else console.log('[TG Link]', text);
           }
+          setFailed(false);
           setIsReady(true);
         })
         .catch((err) => {
           console.error('[TG Auth] loginWithTelegram failed:', err.message || err);
-          console.error('[TG Auth] full error:', JSON.stringify(err));
-          // If re-auth failed but we have a stored token, still proceed
-          setIsReady(true);
+          // If re-auth failed but we have a stored token, still proceed; otherwise show the failure screen
+          fail();
         });
     } else {
       console.warn('[TG Auth] no initData, skipping auto-login');
-      setIsReady(true);
+      fail();
     }
+  };
 
+  useEffect(() => {
+    if (!isTelegramWebApp() || didRun.current) return;
+    didRun.current = true;
+
+    initTelegramWebApp();
+    syncTelegramTheme();
+    const unsub = onThemeChanged(syncTelegramTheme);
+    attempt();
     return unsub;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  return { isReady, isTelegram: isTelegramWebApp() };
+  return {
+    isReady,
+    isTelegram: isTelegramWebApp(),
+    failed,
+    /** Try again with the same initData (the failure screen's main button). */
+    retry: () => {
+      setFailed(false);
+      setIsReady(false);
+      attempt();
+    },
+    /** The person chose e-mail instead: leave the failure screen. */
+    dismiss: () => setFailed(false),
+  };
 }
 
 const ROOT_PATHS = [

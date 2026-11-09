@@ -1,84 +1,82 @@
+import { useNavigate } from 'react-router-dom';
+import { Trans, useTranslation } from 'react-i18next';
 import { Prose, type ProseSection } from '../components/site/Prose';
+import { Button } from '../components/ui2/Button';
+import { useAuth } from '../hooks/useAuth';
 
-// The text is kept word for word from the previous page (store listings link here); the owner writes the final
-// version. Note: the in-app path "Settings → Delete Account" becomes "Profile → Account" after the redesign.
 const BOT = 'https://t.me/socialorganizer_bot';
+const STEPS = ['legal.del.step1', 'legal.del.step2', 'legal.del.step3', 'legal.del.step4'] as const;
+const GONE = ['legal.del.gone1', 'legal.del.gone2', 'legal.del.gone3', 'legal.del.gone4', 'legal.del.gone5'] as const;
 
-const SECTIONS: ProseSection[] = [
-  {
-    id: 'how-to-delete',
-    title: 'How to Delete Your Account',
-    body: (
-      <>
-        <p>
-          You can delete your account and all associated data directly from the app.
-          Follow these steps:
-        </p>
-        <ol>
-          <li>Open the Social Organizer app or go to <a href="https://www.orginizer.com">www.orginizer.com</a></li>
-          <li>Log in to your account</li>
-          <li>Navigate to <strong>Settings</strong> (gear icon in the bottom navigation)</li>
-          <li>Scroll to the bottom of the Settings page</li>
-          <li>Tap <strong>"Delete Account"</strong></li>
-          <li>Confirm the deletion in the dialog that appears</li>
-        </ol>
-      </>
-    ),
-  },
-  {
-    id: 'deleted-data',
-    title: 'Data That Will Be Deleted',
-    body: (
-      <>
-        <p>Upon account deletion, the following data is <strong>permanently removed</strong>:</p>
-        <ul>
-          <li>Your profile information (name, email, phone, photo, bio)</li>
-          <li>Your contact links (Telegram, Instagram, WhatsApp, etc.)</li>
-          <li>Platform account bindings (Telegram, Google, Facebook, Apple)</li>
-          <li>Your network connections and invitation history</li>
-          <li>Support collections you created and your obligations</li>
-          <li>All notifications related to your account</li>
-          <li>Push notification subscriptions and FCM tokens</li>
-          <li>Your skills, needs, and match notifications</li>
-          <li>Chat messages with the AI assistant</li>
-          <li>Ignore list entries</li>
-          <li>Linking codes</li>
-          <li>Settings and preferences</li>
-        </ul>
-      </>
-    ),
-  },
-  {
-    id: 'retention',
-    title: 'Data Retention',
-    body: (
-      <>
-        <p>
-          Account deletion is <strong>immediate and irreversible</strong>.
-          All your personal data is deleted from our database within seconds of confirmation.
-          No personal data is retained after deletion.
-        </p>
-        <p>
-          If you had connections with other users, your name in their network will be replaced
-          with "Deleted user" to maintain data integrity, but no personal information is preserved.
-        </p>
-      </>
-    ),
-  },
-  {
-    id: 'contact',
-    title: 'Contact',
-    body: (
-      <p>
-        If you are unable to access your account and need assistance with deletion, contact us via{' '}
-        <a href={BOT} target="_blank" rel="noopener noreferrer">
-          Telegram
-        </a>.
-      </p>
-    ),
-  },
-];
-
+/**
+ * Public account-deletion page required by the stores (auth.html №25, №29): four numbered steps
+ * (Profile → Account), a button that signs in and opens Account, what is deleted, what remains,
+ * and manual deletion for people without access (within 30 days).
+ */
 export function DeleteAccountPage() {
-  return <Prose doc="delete" title="Account Deletion" meta="Social Organizer by Social Organizer Team" sections={SECTIONS} />;
+  const { t } = useTranslation();
+  const navigate = useNavigate();
+  const signedIn = useAuth((s) => s.isAuthenticated);
+
+  const sections: ProseSection[] = [
+    {
+      id: 'deleted-data',
+      title: t('legal.del.goneTitle'),
+      body: (
+        <ul>
+          {GONE.map((key) => (
+            <li key={key}>{t(key)}</li>
+          ))}
+        </ul>
+      ),
+    },
+    {
+      id: 'retention',
+      title: t('legal.del.whenTitle'),
+      body: <p>{t('legal.del.whenText')}</p>,
+    },
+    {
+      id: 'no-access',
+      title: t('legal.del.noAccessTitle'),
+      body: (
+        <p>
+          <Trans
+            i18nKey="legal.del.noAccessText"
+            components={{ bot: <a href={BOT} target="_blank" rel="noopener noreferrer" /> }}
+          />
+        </p>
+      ),
+    },
+  ];
+
+  return (
+    <Prose
+      doc="delete"
+      title={t('legal.deleteAccount')}
+      meta={t('legal.del.meta')}
+      sections={sections}
+      intro={
+        <>
+          <p>{t('legal.del.lead')}</p>
+          <div role="list" className="mt-4 overflow-hidden rounded-xl bg-surface shadow-card">
+            {STEPS.map((key, i) => (
+              <div
+                key={key}
+                role="listitem"
+                className="flex min-h-14 items-center gap-3 px-4 py-2 text-body leading-snug text-ink [&+div]:shadow-[inset_0_1px_0_rgb(var(--so-line)/0.08)]"
+              >
+                <span className="grid h-7 w-7 shrink-0 place-items-center rounded-[9px] bg-ink text-label font-extrabold text-canvas" aria-hidden>
+                  {i + 1}
+                </span>
+                <span>{t(key)}</span>
+              </div>
+            ))}
+          </div>
+          <Button className="mt-4 w-full" onClick={() => navigate(signedIn ? '/me/account' : '/login?redirect=%2Fme%2Faccount')}>
+            {t('legal.del.cta')}
+          </Button>
+        </>
+      }
+    />
+  );
 }

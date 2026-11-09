@@ -54,9 +54,11 @@ export interface UseSignInOptions {
   redirect?: string | null;
   /** Called with the new step when the e-mail flow moves on (email → code). */
   onCodeSent?: () => void;
+  /** The website opened the Telegram bot in a new tab (no widget, no Mini App). */
+  onTelegramOpened?: () => void;
 }
 
-export function useSignIn({ redirect, onCodeSent }: UseSignInOptions = {}) {
+export function useSignIn({ redirect, onCodeSent, onTelegramOpened }: UseSignInOptions = {}) {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const login = useAuth((s) => s.login);
@@ -74,8 +76,20 @@ export function useSignIn({ redirect, onCodeSent }: UseSignInOptions = {}) {
   }, []);
 
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setErrorText] = useState('');
+  /** Machine-readable reason of the current error (API code such as INVALID_CODE, or NETWORK). */
+  const [errorCode, setErrorCode] = useState<string | null>(null);
   const [resendLeft, setResendLeft] = useState(0);
+  /** TOO_MANY_CODES: no new code until this moment (ms since epoch). */
+  const [blockedUntil, setBlockedUntil] = useState(0);
+  const [now, setNow] = useState(() => Date.now());
+  /** Google/Apple brought an e-mail that belongs to an old password account (masked, may be empty). */
+  const [linking, setLinking] = useState<{ masked: string | null } | null>(null);
+
+  const setError = useCallback((text: string, code: string | null = null) => {
+    setErrorText(text);
+    setErrorCode(text ? code : null);
+  }, []);
 
   // Resend countdown
   useEffect(() => {
@@ -83,6 +97,14 @@ export function useSignIn({ redirect, onCodeSent }: UseSignInOptions = {}) {
     const id = setTimeout(() => setResendLeft((s) => s - 1), 1000);
     return () => clearTimeout(id);
   }, [resendLeft]);
+
+  // The "too many codes" wait is shown in minutes; tick every few seconds while it lasts
+  useEffect(() => {
+    if (blockedUntil <= now) return;
+    const id = setTimeout(() => setNow(Date.now()), 5000);
+    return () => clearTimeout(id);
+  }, [blockedUntil, now]);
+  const blockedLeft = Math.max(0, Math.ceil((blockedUntil - now) / 1000));
 
   /**
    * Finish a sign-in. First run is decided here from isNew (new accounts are created with
@@ -108,11 +130,13 @@ export function useSignIn({ redirect, onCodeSent }: UseSignInOptions = {}) {
       case 'CODE_EXPIRED': return t('signin.errExpired');
       case 'TOO_MANY_ATTEMPTS': return t('signin.errAttempts');
       case 'RESEND_TOO_SOON': return t('signin.errTooSoon', { sec: n ?? RESEND_SECONDS });
-      case 'TOO_MANY_CODES': return t('signin.errTooMany', { min: Math.max(1, Math.ceil((n ?? 3600) / 60)) });
+      case 'TOO_MANY_CODES': return t('login.errTooManyCodes', { min: Math.max(1, Math.ceil((n ?? 3600) / 60)) });
       case 'EMAIL_UNAVAILABLE': return t('signin.errUnavailable');
       default: return t('signin.errNetwork');
     }
   };
+  const knownCode = (c: string) =>
+    ['INVALID_CODE', 'CODE_EXPIRED', 'TOO_MANY_ATTEMPTS', 'TOO_MANY_CODES', 'EMAIL_UNAVAILABLE'].includes(c) ? c : 'NETWORK';
 
   const requestCode = trpc.auth.requestEmailCode.useMutation({
     onSuccess: (r) => {
@@ -129,13 +153,17 @@ export function useSignIn({ redirect, onCodeSent }: UseSignInOptions = {}) {
         onCodeSent?.();
         return;
       }
-      setError(codeErrorText(e.message));
+      if (c === 'TOO_MANY_CODES') {
+        setBlockedUntil(Date.now() + (n ?? 3600) * 1000);
+        setNow(Date.now());
+      }
+      setError(codeErrorText(e.message), knownCode(c));
     },
   });
 
   const verifyCode = trpc.auth.verifyEmailCode.useMutation({
     onSuccess: onTokens('email'),
-    onError: (e) => setError(codeErrorText(e.message)),
+    onError: (e) => setError(codeErrorText(e.message), knownCode(parseErr(e.message)[0])),
   });
 
   const sendCode = (email: string) => {
@@ -149,24 +177,24 @@ export function useSignIn({ redirect, onCodeSent }: UseSignInOptions = {}) {
     verifyCode.mutate({ email: email.trim(), code: value });
   };
 
-  // ---- Password (only via /login?mode=password, for old accounts) ----
+  // ---- Password: sign-in only, for accounts created with a password (only via /login?mode=password).
+  // Creating an account with a password was removed from the UI (decision 2026-11-09); the API stays.
   const loginEmailMutation = trpc.auth.loginWithEmail.useMutation({
     onSuccess: onTokens('email'),
-    onError: () => setError(t('auth.invalidCredentials')),
-  });
-  const registerMutation = trpc.auth.registerWithEmail.useMutation({
-    onSuccess: (data) => void onTokens('email')({ ...data, isNew: true }),
-    onError: (err) => setError(err.message === 'Email already registered' ? t('auth.emailExists') : t('signin.errFailed')),
+    onError: (err) =>
+      err.data?.code === 'UNAUTHORIZED'
+        ? setError(t('login.pwWrong'), 'INVALID_CREDENTIALS')
+        : setError(t('signin.errNetwork'), 'NETWORK'),
   });
 
   // ---- Telegram ----
   const telegramLoginMutation = trpc.auth.loginWithTelegram.useMutation({
     onSuccess: onTokens('telegram'),
-    onError: () => setError(t('auth.telegramError')),
+    onError: () => setError(t('login.failedWith', { provider: 'Telegram' }), 'PROVIDER_FAILED'),
   });
   const telegramWidgetMutation = trpc.auth.loginWithTelegramWidget.useMutation({
     onSuccess: onTokens('telegram'),
-    onError: () => setError(t('auth.telegramError')),
+    onError: () => setError(t('login.failedWith', { provider: 'Telegram' }), 'PROVIDER_FAILED'),
   });
   /** On the website with the Login Widget enabled, Telegram renders its own button into this container. */
   const useWidget = !inTelegram && !!methods?.telegramWidget;
@@ -206,16 +234,30 @@ export function useSignIn({ redirect, onCodeSent }: UseSignInOptions = {}) {
       return;
     }
     // Website without the Telegram button: continue in the bot's mini app, keeping the invite
+    window.open(telegramBotUrl(), '_blank');
+    // The site tab must not look frozen: the flow shows "Continue in Telegram"
+    onTelegramOpened?.();
+  };
+
+  /** The bot link, carrying the pending invite as startapp=invite_… (token validated and encoded). */
+  const telegramBotUrl = () => {
     const bot = methods?.telegramBot || 'socialorganizer_bot';
     const inviteToken = pendingInviteToken
       || safeInviteToken(effectiveRedirect?.startsWith('/invite/') ? effectiveRedirect.slice('/invite/'.length).split(/[?#]/)[0] : null);
-    window.open(inviteToken ? `https://t.me/${bot}?startapp=invite_${encodeURIComponent(inviteToken)}` : `https://t.me/${bot}`, '_blank');
+    return inviteToken ? `https://t.me/${bot}?startapp=invite_${encodeURIComponent(inviteToken)}` : `https://t.me/${bot}`;
   };
 
   // ---- Google ----
   const googleLoginMutation = trpc.auth.loginWithGoogle.useMutation({
     onSuccess: onTokens('google'),
-    onError: (err) => setError(err.message === 'ACCOUNT_EXISTS_OTHER_METHOD' ? t('signin.errAccountExists') : t('signin.errFailed')),
+    onError: (err) => {
+      if (err.message === 'ACCOUNT_EXISTS_OTHER_METHOD') {
+        const masked = (err.data as { maskedEmail?: string } | undefined)?.maskedEmail ?? null;
+        setLinking({ masked });
+        return;
+      }
+      setError(t('login.failedWith', { provider: 'Google' }), 'PROVIDER_FAILED');
+    },
   });
   /** Hidden container for the GIS fallback button (desktop, when One Tap is not shown). */
   const googleBtnRef = useRef<HTMLDivElement>(null);
@@ -328,8 +370,7 @@ export function useSignIn({ redirect, onCodeSent }: UseSignInOptions = {}) {
   const emailCodes = methods?.email !== false;
 
   const busy = loading || requestCode.isPending || verifyCode.isPending || googleLoginMutation.isPending
-    || telegramWidgetMutation.isPending || telegramLoginMutation.isPending || loginEmailMutation.isPending
-    || registerMutation.isPending;
+    || telegramWidgetMutation.isPending || telegramLoginMutation.isPending || loginEmailMutation.isPending;
 
   const start = (provider: Exclude<AuthProvider, 'email'>) => {
     if (provider === 'google') handleGoogle();
@@ -346,21 +387,24 @@ export function useSignIn({ redirect, onCodeSent }: UseSignInOptions = {}) {
     googleBtnRef,
     busy,
     error,
+    errorCode,
     setError,
+    /** Google/Apple account-linking state (desktop Google sign-in); the URL carries it for redirects. */
+    linking,
+    clearLinking: () => setLinking(null),
+    telegramBotUrl,
     // e-mail code
     sendCode,
     submitCode,
     sending: requestCode.isPending,
     verifying: verifyCode.isPending,
     resendLeft,
+    /** Seconds until a new code may be requested after TOO_MANY_CODES (0 when not blocked). */
+    blockedLeft,
     // password
     loginWithPassword: (email: string, password: string) => {
       setError('');
       loginEmailMutation.mutate({ email: email.trim(), password });
-    },
-    registerWithPassword: (email: string, password: string, name?: string) => {
-      setError('');
-      registerMutation.mutate({ email: email.trim(), password, name: name || undefined });
     },
   };
 }

@@ -79,8 +79,12 @@ function GoogleAuthDeepLinkHandler() {
       Browser.close().catch(() => {});
 
       if (!url.startsWith('socialorganizer://auth-success')) {
-        const reason = new URLSearchParams(url.split('?')[1] || '').get('reason');
-        navigate(reason === 'account_exists' ? '/login?error=account_exists' : '/login?error=failed', { replace: true });
+        const errParams = new URLSearchParams(url.split('?')[1] || '');
+        const reason = errParams.get('reason');
+        // account_exists may carry the masked e-mail ("an•••@gmail.com"); cancelled is a calm notice, not an error
+        const masked = reason === 'account_exists' ? errParams.get('m') : null;
+        const known = reason === 'account_exists' || reason === 'cancelled' ? reason : 'failed';
+        navigate(`/login?error=${known}${masked ? `&m=${encodeURIComponent(masked)}` : ''}`, { replace: true });
         return;
       }
       try {
