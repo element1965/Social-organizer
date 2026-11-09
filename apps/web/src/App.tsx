@@ -19,13 +19,11 @@ import {
   HelpStub,
   HistoryStub,
   HowStub,
-  IntroStub,
   OpenStub,
   PeopleStub,
   PersonStub,
   ProfileRedirect,
   ProfileStub,
-  SeedStub,
   StakeStub,
 } from './components/ui2/stubs';
 import { useAuth } from './hooks/useAuth';
@@ -34,6 +32,8 @@ import { LandingPage } from './pages/LandingPage';
 import { CollectionPage } from './pages/CollectionPage';
 import { RetiredFeaturePage } from './pages/RetiredFeaturePage';
 import { InvitePage } from './pages/InvitePage';
+import { IntroPage } from './pages/IntroPage';
+import { SeedPage } from './pages/SeedPage';
 import { SettingsPage } from './pages/SettingsPage';
 import { SosLandingPage } from './pages/SosLandingPage';
 import { SupportChatPage } from './pages/SupportChatPage';
@@ -209,8 +209,8 @@ export function App() {
             <Route path="/invite/:token" element={<InvitePage />} />
             <Route path="/sos/:collectionId" element={<SosLandingPage />} />
             <Route path="/how" element={<HowStub />} />
-            <Route path="/intro" element={<ProtectedRoute><IntroStub /></ProtectedRoute>} />
-            <Route path="/seed" element={<ProtectedRoute><SeedStub /></ProtectedRoute>} />
+            <Route path="/intro" element={<ProtectedRoute><IntroPage /></ProtectedRoute>} />
+            <Route path="/seed" element={<ProtectedRoute><SeedPage /></ProtectedRoute>} />
 
             <Route path="/dashboard" element={<Navigate to="/" replace />} />
             <Route path="/network" element={<Navigate to="/" replace />} />
