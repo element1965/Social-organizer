@@ -31,6 +31,13 @@ export interface GraphEdge {
   target: string;
 }
 
+/** Camera pose so a screen can leave the graph and come back to the same place. */
+export interface GraphView {
+  position: { x: number; y: number; z: number };
+  target: { x: number; y: number; z: number };
+  zoom?: number;
+}
+
 export interface NetworkGraphProps {
   nodes: GraphNode[];
   edges: GraphEdge[];
@@ -40,10 +47,14 @@ export interface NetworkGraphProps {
   hiddenRings?: number[];
   /** Scene palette. Defaults are the dark v2 tokens; the scene stays dark in both themes. */
   colors?: Partial<GraphColors>;
+  /** White-on-transparent brand mark. Drawn on the care tile, tinted with `colors.careOn`. */
+  logoUrl?: string;
+  /** Applied once on mount instead of the intro fit. No intro fly. */
+  initialView?: GraphView;
   width?: number;
   height?: number;
   onNodeClick?: (nodeId: string) => void;
-  /** Fires with the node on tap/click. Does not replace `onNodeClick`. */
+  /** Fires with the node on tap/click. Does not replace `onNodeClick` and does not pause rendering. */
   onNodeTap?: (node: GraphNode) => void;
   /** Overlay and tooltip only. The WebGL scene does not follow this. */
   theme?: 'light' | 'dark';
@@ -59,6 +70,8 @@ export interface NetworkGraphHandle {
   zoomOut: () => void;
   fit: () => void;
   focusOnMe: () => void;
+  getView: () => GraphView | null;
+  setView: (view: GraphView, options?: { animate?: boolean }) => void;
 }
 
 /* ---------- Tuning ---------- */
@@ -85,6 +98,9 @@ const MARK_SIZE = 10;            // centre tile, world units
 const NEAREST_LABELS = 8;        // labels on the nearest ring-1/2 nodes, plus the path
 const PATH_CURVE = 0.15;         // slight bend; 0 is a straight line
 const DIM_OPACITY = 0.35;
+const LINK_POINTS = 21;          // fixed buffer; never resized (straight links use the same curve with curvature 0)
+const LABEL_IDLE_MS = 2000;
+const LABEL_CAP = 30;
 
 /** Map connectionCount → avatar scale factor (1.0 – 1.6) */
 function sizeFromConnections(count: number): number {
@@ -149,6 +165,10 @@ interface NodeVis {
   phase: number;
   realAvatar: boolean;
   lastScale: number;
+  /** 0 while the label is wanted. Set when it stops being wanted, so it can be dropped after idle. */
+  unwantedAt: number;
+  /** Last time the label was wanted. LRU evicts the oldest non-centre, non-path labels. */
+  wantedAt: number;
 }
 
 interface SimLink {
@@ -194,7 +214,7 @@ function makeLabel(text: string, textHeight: number, color: string, stroke: stri
 }
 
 function labelLines(name: string, center: boolean): string {
-  const text = String(name ?? '').trim();
+  const text = String(name ?? '').trim() || '·';
   if (center) return text;
   const parts = text.split(/\s+/);
   const first = parts[0];
@@ -208,51 +228,100 @@ function endpointNode(end: string | SimNode | undefined, map: Map<string, SimNod
   return map.get(String(end));
 }
 
-/** Bend a library Line in place. Do not touch matrixAutoUpdate — the library repositions these. */
-function writeLinkLine(
+const LINK_EPS = 0.04;
+
+/**
+ * Own the line geometry. The buffer is allocated once at LINK_POINTS and never replaced.
+ * Curvature 0 is the same curve with the control point on the midpoint, so the library
+ * can keep linkCurvature at 0 and stop swapping attributes. Skip the write when the
+ * endpoints, bend, and ink are unchanged. Do not touch matrixAutoUpdate.
+ */
+function updateOwnedLink(
   line: THREE.Line,
   ax: number, ay: number, az: number,
   bx: number, by: number, bz: number,
   curvature: number,
+  color: number,
+  opacity: number,
 ) {
+  const ud = line.userData;
   const geom = line.geometry;
-  const segments = curvature > 0 ? 20 : 1;
-  const count = segments + 1;
-  let attr = geom.getAttribute('position') as THREE.BufferAttribute | undefined;
-  if (!attr || attr.count !== count) {
-    attr = new THREE.BufferAttribute(new Float32Array(count * 3), 3);
-    geom.setAttribute('position', attr);
-  }
-  const arr = attr.array as Float32Array;
-  if (curvature <= 0) {
-    arr[0] = ax; arr[1] = ay; arr[2] = az;
-    arr[3] = bx; arr[4] = by; arr[5] = bz;
-  } else {
-    const dx = bx - ax;
-    const dy = by - ay;
-    const dz = bz - az;
+  const prev = geom.getAttribute('position') as THREE.BufferAttribute | undefined;
+  const samePos = prev?.count === LINK_POINTS
+    && typeof ud.lx === 'number'
+    && Math.abs((ud.lx as number) - ax) < LINK_EPS
+    && Math.abs((ud.ly as number) - ay) < LINK_EPS
+    && Math.abs((ud.lz as number) - az) < LINK_EPS
+    && Math.abs((ud.mx as number) - bx) < LINK_EPS
+    && Math.abs((ud.my as number) - by) < LINK_EPS
+    && Math.abs((ud.mz as number) - bz) < LINK_EPS
+    && ud.cv === curvature;
+  const ownedMat = ud.soLineMat as THREE.Material | undefined;
+  const sameInk = ud.lc === color
+    && typeof ud.lo === 'number'
+    && Math.abs((ud.lo as number) - opacity) < 0.01
+    && !!ownedMat
+    && !ownedMat.userData.dead
+    && line.material === ownedMat;
+  if (samePos && sameInk) return;
+  if (!samePos) {
+    let attr = prev;
+    if (!attr || attr.count !== LINK_POINTS) {
+      attr = new THREE.BufferAttribute(new Float32Array(LINK_POINTS * 3), 3);
+      geom.setAttribute('position', attr);
+    }
+    const arr = attr.array as Float32Array;
+    const segments = LINK_POINTS - 1;
     let cx: number;
     let cy: number;
     let cz: number;
-    if (dx === 0 && dy === 0) {
-      cx = (ax + bx) / 2 + curvature * -dz;
+    if (curvature <= 0) {
+      cx = (ax + bx) / 2;
       cy = (ay + by) / 2;
-      cz = (az + bz) / 2 + curvature * dx;
-    } else {
-      cx = (ax + bx) / 2 + curvature * dy;
-      cy = (ay + by) / 2 - curvature * dx;
       cz = (az + bz) / 2;
+    } else {
+      const dx = bx - ax;
+      const dy = by - ay;
+      const dz = bz - az;
+      if (dx === 0 && dy === 0) {
+        cx = (ax + bx) / 2 + curvature * -dz;
+        cy = (ay + by) / 2;
+        cz = (az + bz) / 2 + curvature * dx;
+      } else {
+        cx = (ax + bx) / 2 + curvature * dy;
+        cy = (ay + by) / 2 - curvature * dx;
+        cz = (az + bz) / 2;
+      }
     }
-    for (let i = 0; i < count; i++) {
+    for (let i = 0; i < LINK_POINTS; i++) {
       const t = i / segments;
       const u = 1 - t;
-      arr[i * 3] = u * u * ax + 2 * u * t * cx + t * t * bx;
-      arr[i * 3 + 1] = u * u * ay + 2 * u * t * cy + t * t * by;
-      arr[i * 3 + 2] = u * u * az + 2 * u * t * cz + t * t * bz;
+      const uu = u * u;
+      const tt = t * t;
+      const ut2 = 2 * u * t;
+      arr[i * 3] = uu * ax + ut2 * cx + tt * bx;
+      arr[i * 3 + 1] = uu * ay + ut2 * cy + tt * by;
+      arr[i * 3 + 2] = uu * az + ut2 * cz + tt * bz;
     }
+    attr.needsUpdate = true;
+    ud.lx = ax; ud.ly = ay; ud.lz = az;
+    ud.mx = bx; ud.my = by; ud.mz = bz;
+    ud.cv = curvature;
   }
-  attr.needsUpdate = true;
-  geom.computeBoundingSphere();
+  if (!sameInk) {
+    paintLink(line, color, opacity);
+    ud.lc = color;
+    ud.lo = opacity;
+  }
+  if (line.frustumCulled) line.frustumCulled = false;
+}
+
+function lineOf(obj: THREE.Object3D): THREE.Line | null {
+  if ((obj as THREE.Line).isLine) return obj as THREE.Line;
+  for (const child of obj.children) {
+    if ((child as THREE.Line).isLine) return child as THREE.Line;
+  }
+  return null;
 }
 
 /**
@@ -278,6 +347,14 @@ function disposeLabel(l: SpriteText | null) {
   l.material.dispose();
 }
 
+function dropLabel(v: NodeVis) {
+  if (!v.label) return;
+  v.inner.remove(v.label);
+  disposeLabel(v.label);
+  v.label = null;
+  v.unwantedAt = 0;
+}
+
 /* ---------- Component ---------- */
 
 export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(function NetworkGraph({
@@ -294,6 +371,8 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
   darkMode = true,
   controlsHint: _controlsHint,
   showControls = true,
+  logoUrl = '/logo.png',
+  initialView,
 }, ref) {
   const fgRef = useRef<FGRef>(null);
   const theme: 'light' | 'dark' = themeProp ?? (darkMode ? 'dark' : 'light');
@@ -470,14 +549,127 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
     r0: 1,
     r1: 1,
   });
+  // Restored pose. Lerps camera position and look-at target. Separate from the orbit fly,
+  // which always looks at the origin.
+  const viewFlyRef = useRef({
+    active: false,
+    t0: 0,
+    dur: 700,
+    p0: new THREE.Vector3(),
+    p1: new THREE.Vector3(),
+    l0: new THREE.Vector3(),
+    l1: new THREE.Vector3(),
+    z0: 1,
+    z1: 1,
+  });
+  const initialViewRef = useRef(initialView);
+  const simRef = useRef(true);
+  const linkDirtyRef = useRef(false);
+  const linkScanRef = useRef(false);
+  const linkLinesRef = useRef<THREE.Line[]>([]);
+  const inkRef = useRef({
+    src: null as GraphColors | null,
+    care: 0,
+    careOp: 1,
+    plain: 0,
+    plainOp: 1,
+    dim: 0,
+    dimOp: 1,
+  });
+
+  const readInk = useCallback(() => {
+    const palette = colorsRef.current;
+    const ink = inkRef.current;
+    if (ink.src !== palette) {
+      const care = parseColor(palette.care);
+      const plain = parseColor(lineColor(palette.line, false));
+      const dim = parseColor(lineColor(palette.line, true));
+      ink.src = palette;
+      ink.care = care.color;
+      ink.careOp = 0.95 * (care.opacity || 1);
+      ink.plain = plain.color;
+      ink.plainOp = plain.opacity;
+      ink.dim = dim.color;
+      ink.dimOp = dim.opacity;
+    }
+    return ink;
+  }, []);
+
+  const styleLink = useCallback((line: THREE.Line, link: SimLink, ax: number, ay: number, az: number, bx: number, by: number, bz: number) => {
+    line.userData.soLink = link;
+    if (!line.userData.soListed) {
+      line.userData.soListed = true;
+      linkLinesRef.current.push(line);
+    }
+    const path = pathRef.current;
+    const src = typeof link.source === 'object' ? link.source.id : link.source;
+    const tgt = typeof link.target === 'object' ? link.target.id : link.target;
+    const on = !!(path.dim && src && tgt && path.links.has(`${src}\0${tgt}`));
+    const ink = readInk();
+    updateOwnedLink(
+      line,
+      ax, ay, az, bx, by, bz,
+      on ? PATH_CURVE : 0,
+      on ? ink.care : path.dim ? ink.dim : ink.plain,
+      on ? ink.careOp : path.dim ? ink.dimOp : ink.plainOp,
+    );
+  }, [readInk]);
+
+  const flushLinks = useCallback((scene: THREE.Scene | undefined) => {
+    if (linkScanRef.current || linkLinesRef.current.length === 0) {
+      for (const line of linkLinesRef.current) line.userData.soListed = false;
+      const next: THREE.Line[] = [];
+      scene?.traverse((obj) => {
+        const tagged = obj as THREE.Object3D & { __graphObjType?: string; __data?: SimLink };
+        if (tagged.__graphObjType !== 'link') return;
+        const line = lineOf(obj);
+        if (!line?.parent) return;
+        if (tagged.__data) line.userData.soLink = tagged.__data;
+        line.userData.soListed = true;
+        next.push(line);
+      });
+      linkLinesRef.current = next;
+      linkScanRef.current = false;
+    } else {
+      const cur = linkLinesRef.current;
+      let write = 0;
+      for (let i = 0; i < cur.length; i++) {
+        const line = cur[i];
+        if (line?.parent) cur[write++] = line;
+        else if (line) line.userData.soListed = false;
+      }
+      cur.length = write;
+    }
+    const map = nodeMapRef.current;
+    for (const line of linkLinesRef.current) {
+      const link = line.userData.soLink as SimLink | undefined;
+      if (!link) continue;
+      const a = endpointNode(link.source, map);
+      const b = endpointNode(link.target, map);
+      if (!a || !b || a.x == null || b.x == null) continue;
+      styleLink(line, link, a.x, a.y ?? 0, a.z ?? 0, b.x, b.y ?? 0, b.z ?? 0);
+    }
+    linkDirtyRef.current = false;
+  }, [styleLink]);
+
   const flyTo = useCallback((dir: THREE.Vector3, dist: number, ms: number) => {
     const fg = fgRef.current;
     if (!fg) return;
+    viewFlyRef.current.active = false;
     const cam = fg.camera() as THREE.Camera;
+    const aim = dir.clone().normalize();
+    if (aim.lengthSq() < 1e-6) aim.set(0, 0, 1);
+    if (reducedRef.current || ms <= 0) {
+      flyRef.current.active = false;
+      const p = aim.multiplyScalar(dist);
+      fg.cameraPosition({ x: p.x, y: p.y, z: p.z }, { x: 0, y: 0, z: 0 });
+      return;
+    }
     const f = flyRef.current;
     f.r0 = Math.max(1, cam.position.length());
     f.d0.copy(cam.position).normalize();
-    f.d1.copy(dir).normalize();
+    if (f.d0.lengthSq() < 1e-6) f.d0.set(0, 0, 1);
+    f.d1.copy(aim);
     f.r1 = dist;
     f.t0 = performance.now();
     f.dur = Math.max(1, ms);
@@ -490,9 +682,10 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
     const n = v.node;
     const depth = n.depth ?? (n.isCenter ? 0 : 1);
     if (n.isCenter || depth <= 0) return !!n.isCenter;
-    if (depth >= 3) return false;
     if (hiddenRef.current.has(depth)) return false;
-    if (pathRef.current.set.has(n.id)) return true;
+    // Path membership before the ring-3 cutoff, so a highlighted far node still gets its name.
+    if (pathRef.current.set.has(n.id) && !n.isDeleted) return true;
+    if (depth >= 3) return false;
     return nearestRef.current.has(n.id);
   }, []);
 
@@ -553,26 +746,28 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
         v.glow.scale.set(MARK_SIZE * 1.45, MARK_SIZE * 1.45, 1);
       }
     } else {
-      v.avatar.visible = level === 0;
+      const depth = n.depth ?? 1;
+      const showPhoto = level === 0 && depth === 1 && v.realAvatar;
+      v.avatar.visible = showPhoto;
       v.avatar.scale.set(avatarSize, avatarSize, 1);
-      v.dot.visible = level >= 1;
-      const dotSize = (level === 1 ? 3.15 * sf : level === 2 ? 2.05 * sf : 1.25) * boost;
+      v.dot.visible = !showPhoto;
+      const dotSize = (level <= 1 ? 3.15 * sf : level === 2 ? 2.05 * sf : 1.25) * boost;
       v.dot.scale.set(dotSize, dotSize, 1);
     }
 
     if (v.pulse) {
       const show = !isC && !n.isDeleted && ((v.online && level <= 1) || onPath);
       v.pulse.visible = show;
-      const body = isC ? MARK_SIZE : (v.dot.visible ? v.dot.scale.x : avatarSize);
+      const body = isC ? MARK_SIZE : (v.avatar.visible ? avatarSize : v.dot.scale.x);
       v.pulse.scale.set(body * (isC ? 1.38 : 1.9), body * (isC ? 1.38 : 1.9), 1);
       v.pulse.material = pathRef.current.dim && !onPath ? res.pulseDimMaterial : res.pulseMaterial;
     }
 
     if (v.label) {
       const base = v.label.userData.baseScale as THREE.Vector3;
-      const k = isC || level === 0 ? 1 : 0.9;
+      const k = isC || v.avatar.visible ? 1 : 0.9;
       v.label.scale.set(base.x * k, base.y * k, 1);
-      const body = isC ? MARK_SIZE : (level === 0 ? avatarSize : v.dot.scale.x);
+      const body = isC ? MARK_SIZE : (v.avatar.visible ? avatarSize : v.dot.scale.x);
       v.label.position.y = -(body / 2 + (base.y * k) / 2 + (isC ? 0.85 : 0.4));
     }
   }, [res]);
@@ -622,7 +817,7 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
     const inner = new THREE.Group();
     outer.add(inner);
 
-    const avatar = new THREE.Sprite(isC ? res.markMaterial(false) : res.placeholderMaterial(node, !!node.isDeleted));
+    const avatar = new THREE.Sprite(isC ? res.markMaterial(false) : res.dotMaterial(0xffffff, 0));
     avatar.name = 'avatar';
     avatar.visible = isC;
     if (isC) avatar.scale.set(MARK_SIZE, MARK_SIZE, 1);
@@ -674,6 +869,8 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
       phase: hash01(node.id + 'p') * Math.PI * 2,
       realAvatar: false,
       lastScale: -1,
+      unwantedAt: 0,
+      wantedAt: 0,
     };
     introSeenRef.current.add(node.id);
     visRef.current.set(node.id, v);
@@ -701,7 +898,7 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
     const dir = cam.position.clone();
     if (dir.lengthSq() < 1) dir.set(0.35, 0.3, 1);
     dir.normalize();
-    if (introSpin) dir.applyAxisAngle(new THREE.Vector3(0, 1, 0), 0.9).normalize();
+    if (introSpin && ms > 0 && !reducedRef.current) dir.applyAxisAngle(new THREE.Vector3(0, 1, 0), 0.9).normalize();
     flyTo(dir, dist, ms);
     const controls = fg.controls();
     if (controls) controls.maxDistance = Math.max(600, dist * 2.2);
@@ -724,19 +921,37 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
     let resumeTimer: ReturnType<typeof setTimeout> | null = null;
     const reduceMq = window.matchMedia('(prefers-reduced-motion: reduce)');
     reducedRef.current = reduceMq.matches;
-    const onReduce = () => { reducedRef.current = reduceMq.matches; };
-    reduceMq.addEventListener('change', onReduce);
     let rotTarget = reduceMq.matches ? 0 : AUTO_ROTATE_SPEED;
     let rotCur = 0;
+    const onReduce = () => {
+      reducedRef.current = reduceMq.matches;
+      if (!controls) return;
+      if (reduceMq.matches) {
+        rotTarget = 0;
+        rotCur = 0;
+        controls.autoRotate = false;
+        controls.autoRotateSpeed = 0;
+      } else {
+        controls.autoRotate = true;
+      }
+    };
+    reduceMq.addEventListener('change', onReduce);
     const onStart = () => {
       life.userTouched = true;
       flyRef.current.active = false;
+      viewFlyRef.current.active = false;
       rotTarget = 0;
       if (resumeTimer) clearTimeout(resumeTimer);
     };
     const onEnd = () => {
       if (resumeTimer) clearTimeout(resumeTimer);
-      resumeTimer = setTimeout(() => { rotTarget = AUTO_ROTATE_SPEED; }, AUTO_ROTATE_RESUME_MS);
+      if (reducedRef.current) {
+        rotTarget = 0;
+        return;
+      }
+      resumeTimer = setTimeout(() => {
+        if (!reducedRef.current) rotTarget = AUTO_ROTATE_SPEED;
+      }, AUTO_ROTATE_RESUME_MS);
     };
     if (controls) {
       controls.enableDamping = true;
@@ -745,7 +960,7 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
       controls.zoomSpeed = 0.8;
       controls.enablePan = false;
       controls.minDistance = 30;
-      controls.autoRotate = true;
+      controls.autoRotate = !reduceMq.matches;
       controls.autoRotateSpeed = 0;
       controls.addEventListener('start', onStart);
       controls.addEventListener('end', onEnd);
@@ -890,9 +1105,36 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
       if (!cam) return;
       camPos.copy(cam.position);
 
-      // Camera fly-to along an arc, eased in and out
+      // Restored view lerps position and look-at. The orbit fly always looks at the origin.
+      const viewFly = viewFlyRef.current;
       const fly = flyRef.current;
-      if (fly.active) {
+      if (viewFly.active) {
+        const k = Math.min(1, (now - viewFly.t0) / viewFly.dur);
+        const e = k < 0.5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2;
+        fg.cameraPosition(
+          {
+            x: viewFly.p0.x + (viewFly.p1.x - viewFly.p0.x) * e,
+            y: viewFly.p0.y + (viewFly.p1.y - viewFly.p0.y) * e,
+            z: viewFly.p0.z + (viewFly.p1.z - viewFly.p0.z) * e,
+          },
+          {
+            x: viewFly.l0.x + (viewFly.l1.x - viewFly.l0.x) * e,
+            y: viewFly.l0.y + (viewFly.l1.y - viewFly.l0.y) * e,
+            z: viewFly.l0.z + (viewFly.l1.z - viewFly.l0.z) * e,
+          },
+        );
+        const persp = cam as THREE.PerspectiveCamera;
+        const zoom = viewFly.z0 + (viewFly.z1 - viewFly.z0) * e;
+        if (Math.abs(persp.zoom - zoom) > 1e-4) {
+          persp.zoom = zoom;
+          persp.updateProjectionMatrix();
+        }
+        if (k >= 1) {
+          viewFly.active = false;
+          persp.zoom = viewFly.z1;
+          persp.updateProjectionMatrix();
+        }
+      } else if (fly.active) {
         const k = Math.min(1, (now - fly.t0) / fly.dur);
         const e = k < 0.5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2;
         flyQ.setFromUnitVectors(fly.d0, fly.d1);
@@ -902,23 +1144,33 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
         if (k >= 1) fly.active = false;
       }
 
-      // Smooth auto-rotate ramp. prefers-reduced-motion holds the speed at zero.
+      // Smooth auto-rotate ramp. prefers-reduced-motion holds the speed at zero and does not resume.
       if (reducedRef.current) rotTarget = 0;
-      if (controls) {
-        rotCur += (rotTarget - rotCur) * Math.min(1, dt * 0.004);
-        controls.autoRotateSpeed = rotCur;
+      if (controls && (rotTarget !== 0 || rotCur !== 0)) {
+        const next = rotCur + (rotTarget - rotCur) * Math.min(1, dt * 0.004);
+        if (Math.abs(next - rotCur) > 1e-4) {
+          rotCur = next;
+          controls.autoRotateSpeed = rotCur;
+        } else if (rotTarget === 0) {
+          rotCur = 0;
+          controls.autoRotateSpeed = 0;
+        }
       }
 
       const reduced = reducedRef.current;
       const pulse = reduced ? 0 : 0.5 + 0.5 * Math.sin(now * 0.003);
-      res.pulseMaterial.opacity = reduced ? 0.5 : 0.28 + 0.28 * pulse;
-      res.pulseDimMaterial.opacity = res.pulseMaterial.opacity * DIM_OPACITY;
+      const nextOp = reduced ? 0.5 : 0.28 + 0.28 * pulse;
+      if (Math.abs(res.pulseMaterial.opacity - nextOp) > 0.001) {
+        res.pulseMaterial.opacity = nextOp;
+        res.pulseDimMaterial.opacity = nextOp * DIM_OPACITY;
+      }
       let labelBudget = LABELS_PER_FRAME;
       const hoverId = life.hoverId;
 
       if (labelFrame++ % 6 === 0) {
         const ranked: { id: string; d2: number }[] = [];
         for (const v of visRef.current.values()) {
+          if (!v.outer.parent) continue;
           const depth = v.node.depth ?? 1;
           if (depth < 1 || depth > 2 || hiddenRef.current.has(depth)) continue;
           const p = v.outer.position;
@@ -935,6 +1187,7 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
       }
 
       for (const v of visRef.current.values()) {
+        if (!v.outer.parent) continue;
         const p = v.outer.position;
         const dx = p.x - camPos.x, dy = p.y - camPos.y, dz = p.z - camPos.z;
         const d2 = dx * dx + dy * dy + dz * dz;
@@ -942,9 +1195,17 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
         if (level !== v.level) applyLevel(v, level);
 
         const showLabel = wantsLabel(v);
-        if (showLabel && !v.label && (v.node.isCenter || labelBudget > 0)) {
-          createLabel(v);
-          if (!v.node.isCenter) labelBudget--;
+        const kept = !!v.node.isCenter || (pathRef.current.set.has(v.node.id) && !v.node.isDeleted);
+        if (showLabel) {
+          v.unwantedAt = 0;
+          v.wantedAt = now;
+          if (!v.label && (v.node.isCenter || labelBudget > 0)) {
+            createLabel(v);
+            if (!v.node.isCenter) labelBudget--;
+          }
+        } else if (v.label && !kept) {
+          if (v.unwantedAt === 0) v.unwantedAt = now;
+          else if (now - v.unwantedAt >= LABEL_IDLE_MS) dropLabel(v);
         }
         if (v.label) {
           v.label.visible = showLabel;
@@ -956,7 +1217,8 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
             mat.transparent = true;
           }
         }
-        if (level === 0 && v.node.photoUrl && !v.node.isCenter && !v.realAvatar) {
+        const depth = v.node.depth ?? (v.node.isCenter ? 0 : 1);
+        if (level === 0 && depth === 1 && v.node.photoUrl && !v.node.isCenter && !v.realAvatar) {
           res.requestPhoto(v.node.photoUrl, v.node.id);
         }
 
@@ -983,7 +1245,7 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
         }
 
         if (reduced) {
-          v.inner.position.y = 0;
+          if (v.inner.position.y !== 0) v.inner.position.y = 0;
         } else if (level <= 1) {
           v.inner.position.y = Math.sin(now * 0.0011 + v.phase) * BOB_AMPLITUDE;
         }
@@ -994,50 +1256,71 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
         }
       }
 
-      // Path colour and bend. The library freezes link materials after the accessor is set,
-      // and it stops moving lines once the simulation cools down.
-      const path = pathRef.current;
-      const careInk = parseColor(colorsRef.current.care);
-      const careHex = careInk.color;
-      const careOp = 0.95 * (careInk.opacity || 1);
-      const plainInk = parseColor(lineColor(colorsRef.current.line, false));
-      const dimInk = parseColor(lineColor(colorsRef.current.line, true));
-      const scene = fg.scene() as THREE.Scene | undefined;
-      scene?.traverse((obj) => {
-        if ((obj as { __graphObjType?: string }).__graphObjType !== 'link') return;
-        const link = (obj as { __data?: SimLink }).__data;
-        if (!link) return;
-        const line = (obj as THREE.Line).isLine
-          ? (obj as THREE.Line)
-          : (obj.children.find((c) => (c as THREE.Line).isLine) as THREE.Line | undefined);
-        if (!line) return;
-        const a = endpointNode(link.source, nodeMapRef.current);
-        const b = endpointNode(link.target, nodeMapRef.current);
-        if (!a || !b || a.x == null || b.x == null) return;
-        const on = !!(path.dim && a.id && b.id && path.links.has(`${a.id}\0${b.id}`));
-        try {
-          writeLinkLine(line, a.x, a.y ?? 0, a.z ?? 0, b.x, b.y ?? 0, b.z ?? 0, on ? PATH_CURVE : 0);
-          const ink = on ? { color: careHex, opacity: careOp } : path.dim ? dimInk : plainInk;
-          paintLink(line, ink.color, ink.opacity);
-        } catch { /* link mesh was rebuilt by the library */ }
-      });
+      if (labelFrame % 20 === 0) {
+        const labeled: NodeVis[] = [];
+        for (const v of visRef.current.values()) {
+          if (v.label) labeled.push(v);
+        }
+        if (labeled.length > LABEL_CAP) {
+          const pathNow = pathRef.current;
+          const evictable = labeled.filter((v) => !v.node.isCenter && !(pathNow.set.has(v.node.id) && !v.node.isDeleted));
+          evictable.sort((a, b) => {
+            const au = a.unwantedAt > 0 ? a.unwantedAt : Number.POSITIVE_INFINITY;
+            const bu = b.unwantedAt > 0 ? b.unwantedAt : Number.POSITIVE_INFINITY;
+            if (au !== bu) return au - bu;
+            return a.wantedAt - b.wantedAt;
+          });
+          let extra = labeled.length - LABEL_CAP;
+          for (const v of evictable) {
+            if (extra <= 0) break;
+            dropLabel(v);
+            extra--;
+          }
+        }
+      }
+
+      // While the simulation runs, linkPositionUpdate owns the lines. After it stops, one pass
+      // when the path or the palette is dirty. Settled links are skipped inside updateOwnedLink.
+      if (!simRef.current && linkDirtyRef.current) {
+        flushLinks(fg.scene() as THREE.Scene | undefined);
+      }
 
       res.pumpPhotos((nodeId, tex, url) => {
         const v = visRef.current.get(nodeId);
-        if (!v || v.node.isCenter) return;
+        if (!v || v.node.isCenter || !v.outer.parent) return;
         v.avatar.material = res.photoMaterial(url, !!v.node.isDeleted, tex);
         v.avatar.userData.matBase = v.avatar.material;
         v.avatar.userData.matDim = null;
         v.realAvatar = true;
         paintNode(v);
+        if (v.level >= 0) applyLevel(v, v.level);
       });
     };
     raf = requestAnimationFrame(frame);
 
-    // --- Camera intro: fly in while the graph blooms outward, refit as the layout settles ---
+    // --- Camera intro: fly in while the graph blooms. A restored view and reduced motion skip the fly. ---
     const timers: Array<ReturnType<typeof setTimeout>> = [];
-    timers.push(setTimeout(() => { if (!life.userTouched) fitCameraRef.current(1800, true); }, 350));
-    timers.push(setTimeout(() => { if (!life.userTouched) fitCameraRef.current(1500); }, 2600));
+    const restored = initialViewRef.current;
+    if (restored) {
+      life.userTouched = true;
+      rotTarget = 0;
+      rotCur = 0;
+      if (controls) controls.autoRotateSpeed = 0;
+      fg.cameraPosition(restored.position, restored.target);
+      const persp = fg.camera() as THREE.PerspectiveCamera;
+      if (restored.zoom != null && Number.isFinite(restored.zoom) && restored.zoom > 0) {
+        persp.zoom = restored.zoom;
+        persp.updateProjectionMatrix();
+      }
+      flyRef.current.active = false;
+      viewFlyRef.current.active = false;
+    } else if (reducedRef.current) {
+      if (controls) controls.autoRotate = false;
+      timers.push(setTimeout(() => { if (!life.userTouched) fitCameraRef.current(0); }, 350));
+    } else {
+      timers.push(setTimeout(() => { if (!life.userTouched) fitCameraRef.current(1800, true); }, 350));
+      timers.push(setTimeout(() => { if (!life.userTouched) fitCameraRef.current(1500); }, 2600));
+    }
 
     return () => {
       cancelAnimationFrame(raf);
@@ -1104,6 +1387,9 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
     if (refresh) {
       for (const v of visRef.current.values()) disposeLabel(v.label);
       visRef.current.clear();
+      linkLinesRef.current = [];
+      linkScanRef.current = true;
+      linkDirtyRef.current = true;
       res.resetMaterials();
       try { fg.refresh(); } catch { /* noop */ }
     }
@@ -1127,20 +1413,33 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
       restyleLabel(v);
       if (v.level >= 0) applyLevel(v, v.level);
     }
+    linkDirtyRef.current = true;
     const fg = fgRef.current;
     if (!fg) return;
-    if (typeof fg.linkColor === 'function') fg.linkColor(fg.linkColor());
-    if (typeof fg.linkCurvature === 'function') fg.linkCurvature(fg.linkCurvature());
     try { fg.renderer().render(fg.scene(), fg.camera()); } catch { /* noop */ }
   }, [colors, pathState, paintNode, restyleLabel, applyLevel, res]);
+
+  const hiddenBootRef = useRef(true);
+  useEffect(() => {
+    if (hiddenBootRef.current) {
+      hiddenBootRef.current = false;
+      return;
+    }
+    linkScanRef.current = true;
+    linkDirtyRef.current = true;
+  }, [hiddenKey]);
+
+  useEffect(() => {
+    res.setLogo(logoUrl || '/logo.png');
+  }, [logoUrl, res]);
 
   /* ----- Interaction ----- */
 
   const handleNodeClick = useCallback((node: SimNode) => {
     if (!node?.id) return;
+    // onNodeTap must not pause. The pause stays only for the legacy navigation callback.
     onNodeTapRef.current?.(node);
     if (!onNodeClickRef.current) return;
-    // Stop rendering right away when the page navigates away; teardown still happens on unmount.
     try { fgRef.current?.pauseAnimation(); } catch { /* noop */ }
     onNodeClickRef.current(String(node.id));
   }, []);
@@ -1175,20 +1474,28 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
     [],
   );
 
-  // Width 0 keeps the cheap 1px line. Curvature is applied in the frame loop for the path only.
-  const linkCurvature = useCallback(
-    (link: { source?: string | { id?: string }; target?: string | { id?: string } }) => {
-      const src = typeof link.source === 'object' ? link.source?.id : link.source;
-      const tgt = typeof link.target === 'object' ? link.target?.id : link.target;
-      return src && tgt && pathRef.current.links.has(`${src}\0${tgt}`) ? PATH_CURVE : 0;
-    },
-    [],
-  );
+  // Library curvature stays 0 so it never resizes the position buffer. Returning true tells it
+  // to skip its own write. Path bend is applied in styleLink.
+  const onLinkPosition = useCallback((
+    obj: THREE.Object3D,
+    coords: { start: { x: number; y: number; z: number }; end: { x: number; y: number; z: number } },
+    link: object,
+  ) => {
+    const line = lineOf(obj);
+    if (!line) return false;
+    styleLink(
+      line,
+      link as SimLink,
+      coords.start.x || 0, coords.start.y || 0, coords.start.z || 0,
+      coords.end.x || 0, coords.end.y || 0, coords.end.z || 0,
+    );
+    return true;
+  }, [styleLink]);
 
   const nodeLabel = useCallback(
     (node: { name?: string; connectionCount?: number; lastSeen?: string | Date | null }) => {
       const card = overlayColors(themeRef.current);
-      const name = escapeHtml(String(node.name ?? ''));
+      const name = escapeHtml(String(node.name ?? '').trim() || '·');
       const count = Number(node.connectionCount ?? 0) || 0;
       const online = isOnline(node.lastSeen);
       return `<div style="padding:10px 12px;border-radius:16px;background:${card.surface};color:${card.ink};font-family:Manrope,sans-serif;font-size:13px;line-height:1.35;font-weight:700;box-shadow:0 10px 28px rgba(11,21,19,.28);border:1px solid ${card.line};pointer-events:none;min-width:112px">
@@ -1210,8 +1517,22 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
   }, [flyTo]);
 
   const fitAll = useCallback(() => {
+    const fg = fgRef.current;
+    if (!fg) return;
+    let placed = false;
+    for (const n of nodeMapRef.current.values()) {
+      const x = n.x;
+      const y = n.y;
+      const z = n.z;
+      if (typeof x !== 'number' || typeof y !== 'number' || typeof z !== 'number') continue;
+      if (!Number.isFinite(x) || !Number.isFinite(y) || !Number.isFinite(z)) continue;
+      if (x !== 0 || y !== 0 || z !== 0) { placed = true; break; }
+    }
+    if (!placed) return;
     lifeRef.current.userTouched = true;
-    fitCameraRef.current(1000);
+    flyRef.current.active = false;
+    viewFlyRef.current.active = false;
+    fitCameraRef.current(reducedRef.current ? 0 : 1000);
   }, []);
 
   const zoomBy = useCallback((factor: number) => {
@@ -1231,6 +1552,50 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
     zoomOut: () => zoomBy(1.2),
     fit: () => fitAll(),
     focusOnMe: () => focusOnMe(),
+    getView: () => {
+      const fg = fgRef.current;
+      if (!fg) return null;
+      const cam = fg.camera() as THREE.PerspectiveCamera | undefined;
+      if (!cam) return null;
+      const controls = fg.controls() as { target?: THREE.Vector3 } | undefined;
+      const t = controls?.target;
+      return {
+        position: { x: cam.position.x, y: cam.position.y, z: cam.position.z },
+        target: { x: t?.x ?? 0, y: t?.y ?? 0, z: t?.z ?? 0 },
+        zoom: cam.zoom,
+      };
+    },
+    setView: (view, options) => {
+      const fg = fgRef.current;
+      if (!fg || !view?.position || !view?.target) return;
+      const nums = [view.position.x, view.position.y, view.position.z, view.target.x, view.target.y, view.target.z];
+      if (!nums.every((n) => typeof n === 'number' && Number.isFinite(n))) return;
+      lifeRef.current.userTouched = true;
+      flyRef.current.active = false;
+      const cam = fg.camera() as THREE.PerspectiveCamera;
+      const controls = fg.controls() as { target?: THREE.Vector3 } | undefined;
+      const zoom = view.zoom != null && Number.isFinite(view.zoom) && view.zoom > 0 ? view.zoom : cam.zoom;
+      if (!options?.animate || reducedRef.current) {
+        viewFlyRef.current.active = false;
+        fg.cameraPosition(view.position, view.target);
+        if (Math.abs(cam.zoom - zoom) > 1e-4) {
+          cam.zoom = zoom;
+          cam.updateProjectionMatrix();
+        }
+        return;
+      }
+      const f = viewFlyRef.current;
+      f.p0.copy(cam.position);
+      if (controls?.target) f.l0.copy(controls.target);
+      else f.l0.set(0, 0, 0);
+      f.p1.set(view.position.x, view.position.y, view.position.z);
+      f.l1.set(view.target.x, view.target.y, view.target.z);
+      f.z0 = cam.zoom || 1;
+      f.z1 = zoom || 1;
+      f.t0 = performance.now();
+      f.dur = 700;
+      f.active = true;
+    },
   }), [zoomBy, fitAll, focusOnMe]);
 
   useEffect(() => {
@@ -1316,13 +1681,20 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
         nodeVisibility={nodeVisible}
         nodeLabel={nodeLabel}
         linkColor={linkColor}
-        linkCurvature={linkCurvature}
+        linkCurvature={0}
+        linkPositionUpdate={onLinkPosition}
         linkWidth={0}
         linkOpacity={1}
         linkVisibility={linkVisible}
         onNodeClick={handleNodeClick}
         onNodeHover={handleNodeHover}
-        onEngineStop={() => { if (!lifeRef.current.userTouched) fitCameraRef.current(1400); }}
+        onEngineTick={() => { simRef.current = true; }}
+        onEngineStop={() => {
+          simRef.current = false;
+          linkDirtyRef.current = true;
+          if (lifeRef.current.userTouched || initialViewRef.current) return;
+          fitCameraRef.current(reducedRef.current ? 0 : 1400);
+        }}
         enableNodeDrag={false}
         warmupTicks={0}
         cooldownTime={7000}
@@ -1336,9 +1708,15 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
 
 /* ---------- Shared GPU resources ---------- */
 
-/** Care tile with the app mark: a fish facing left, eye punched, two legs, forked tail. */
-function paintMark(ctx: CanvasRenderingContext2D, size: number, fill: string, ink: string) {
-  const r = size * 0.28;
+/** Care tile. The brand mark is the real logo, tinted, not a redraw. */
+function paintTile(
+  ctx: CanvasRenderingContext2D,
+  size: number,
+  fill: string,
+  ink: string,
+  logo: HTMLImageElement | null,
+) {
+  const r = size * 0.29;
   ctx.clearRect(0, 0, size, size);
   ctx.beginPath();
   ctx.moveTo(r, 0);
@@ -1349,34 +1727,19 @@ function paintMark(ctx: CanvasRenderingContext2D, size: number, fill: string, in
   ctx.closePath();
   ctx.fillStyle = fill;
   ctx.fill();
-
-  const s = size / 100;
-  ctx.save();
-  ctx.translate(11 * s, 24 * s);
-  ctx.scale(s, s);
-  ctx.fillStyle = ink;
-  ctx.beginPath();
-  ctx.moveTo(2, 26);
-  ctx.bezierCurveTo(18, 4, 50, 2, 62, 18);
-  ctx.bezierCurveTo(68, 24, 68, 30, 62, 34);
-  ctx.bezierCurveTo(50, 50, 18, 48, 2, 26);
-  ctx.closePath();
-  ctx.moveTo(38, 24);
-  ctx.ellipse(28, 25, 11, 6.2, -0.35, 0, Math.PI * 2);
-  ctx.rect(20, 40, 11, 16);
-  ctx.rect(40, 40, 11, 16);
-  ctx.moveTo(58, 20);
-  ctx.lineTo(84, 0);
-  ctx.lineTo(78, 12);
-  ctx.lineTo(64, 26);
-  ctx.closePath();
-  ctx.moveTo(60, 32);
-  ctx.lineTo(86, 52);
-  ctx.lineTo(76, 56);
-  ctx.lineTo(58, 38);
-  ctx.closePath();
-  ctx.fill('evenodd');
-  ctx.restore();
+  if (!logo || !logo.naturalWidth) return;
+  const stamp = document.createElement('canvas');
+  stamp.width = size;
+  stamp.height = size;
+  const sctx = stamp.getContext('2d');
+  if (!sctx) return;
+  const boxW = size * 0.68;
+  const boxH = boxW * 0.71;
+  sctx.drawImage(logo, (size - boxW) / 2, (size - boxH) / 2, boxW, boxH);
+  sctx.globalCompositeOperation = 'source-in';
+  sctx.fillStyle = ink;
+  sctx.fillRect(0, 0, size, size);
+  ctx.drawImage(stamp, 0, 0);
 }
 
 function paintWash(ctx: CanvasRenderingContext2D, size: number, scene: string) {
@@ -1419,7 +1782,6 @@ function createResources() {
   });
 
   const materials = new Map<string, THREE.SpriteMaterial>();
-  const placeholderTextures = new Map<string, THREE.Texture>();
   const photoTextures = new Map<string, THREE.Texture>();
   const pending = new Set<string>();
   const waiting = new Map<string, Set<string>>();
@@ -1430,7 +1792,13 @@ function createResources() {
   let disposed = false;
   let colors: GraphColors = { ...resolveColors(null) };
   let markKey = '';
-  let markTex: THREE.Texture | null = null;
+  let markTex: THREE.CanvasTexture | null = null;
+  const markCanvas = document.createElement('canvas');
+  markCanvas.width = 256;
+  markCanvas.height = 256;
+  let logoImg: HTMLImageElement | null = null;
+  let logoUrl = '';
+  let logoState: 'idle' | 'loading' | 'ok' | 'fail' = 'idle';
 
   const cached = (key: string, make: () => THREE.SpriteMaterial) => {
     let m = materials.get(key);
@@ -1453,17 +1821,26 @@ function createResources() {
     return tex;
   };
 
-  const markMap = () => {
-    const key = `${colors.careBright}|${colors.node1}`;
-    if (markTex && markKey === key) return markTex;
-    if (markTex) {
-      markTex.dispose();
-      const idx = textures.indexOf(markTex);
-      if (idx >= 0) textures.splice(idx, 1);
+  const logoToken = () => (logoState === 'ok' && logoImg ? logoUrl : '');
+  const markKeyNow = () => `${colors.careBright}|${colors.careOn}|${logoToken()}`;
+  const redrawMark = () => {
+    const ctx = markCanvas.getContext('2d');
+    if (!ctx) return;
+    paintTile(ctx, 256, colors.careBright, colors.careOn, logoState === 'ok' ? logoImg : null);
+    if (!markTex) {
+      markTex = new THREE.CanvasTexture(markCanvas);
+      markTex.colorSpace = THREE.SRGBColorSpace;
+      markTex.generateMipmaps = false;
+      markTex.minFilter = THREE.LinearFilter;
+      track(markTex);
     }
-    markKey = key;
-    markTex = makeCanvasTexture(256, (ctx, s) => paintMark(ctx, s, colors.careBright, colors.node1));
-    return markTex;
+    markTex.needsUpdate = true;
+    markKey = markKeyNow();
+  };
+  const markMap = () => {
+    if (markTex && markKey === markKeyNow()) return markTex;
+    redrawMark();
+    return markTex!;
   };
 
   const api = {
@@ -1478,6 +1855,27 @@ function createResources() {
       pulseMaterial.color.set(care);
       pulseDimMaterial.color.set(care);
     },
+    setLogo(url: string) {
+      const next = url || '/logo.png';
+      if (logoUrl === next && logoState !== 'idle') return;
+      logoUrl = next;
+      logoState = 'loading';
+      logoImg = null;
+      const img = new Image();
+      img.onload = () => {
+        if (disposed || logoUrl !== next) return;
+        logoImg = img;
+        logoState = 'ok';
+        redrawMark();
+      };
+      img.onerror = () => {
+        if (logoUrl !== next) return;
+        logoImg = null;
+        logoState = 'fail';
+        redrawMark();
+      };
+      img.src = next;
+    },
     dotMaterial(color: number, opacity: number) {
       const op = opacity.toFixed(3);
       return cached(`dot:${color}:${op}`, () => new THREE.SpriteMaterial({
@@ -1486,7 +1884,7 @@ function createResources() {
     },
     markMaterial(dim: boolean) {
       const map = markMap();
-      return cached(`mark:${dim ? 1 : 0}:${colors.careBright}:${colors.node1}`, () => new THREE.SpriteMaterial({
+      return cached(`mark:${dim ? 1 : 0}:${colors.careBright}:${colors.careOn}`, () => new THREE.SpriteMaterial({
         map, transparent: true, opacity: dim ? 0.35 : 1, depthWrite: false,
       }));
     },
@@ -1500,28 +1898,6 @@ function createResources() {
       const key = `wash:${scene}`;
       return cached(key, () => new THREE.SpriteMaterial({
         map: sceneWash(scene), transparent: true, depthWrite: false, opacity: 1,
-      }));
-    },
-    placeholderMaterial(node: { name?: string; isCenter?: boolean }, deleted: boolean) {
-      const initial = (String(node.name ?? '?')[0] || '?').toUpperCase();
-      const key = `${initial}:${node.isCenter ? 1 : 0}`;
-      let tex = placeholderTextures.get(key);
-      if (!tex) {
-        tex = makeCanvasTexture(128, (ctx) => {
-          ctx.fillStyle = '#1b332e';
-          ctx.beginPath();
-          ctx.arc(64, 64, 64, 0, Math.PI * 2);
-          ctx.fill();
-          ctx.fillStyle = '#e7eeeb';
-          ctx.font = 'bold 64px sans-serif';
-          ctx.textAlign = 'center';
-          ctx.textBaseline = 'middle';
-          ctx.fillText(initial, 64, 68);
-        });
-        placeholderTextures.set(key, tex);
-      }
-      return cached(`ph:${key}:${deleted}`, () => new THREE.SpriteMaterial({
-        map: tex!, transparent: true, opacity: deleted ? 0.45 : 1, depthWrite: false,
       }));
     },
     photoMaterial(url: string, deleted: boolean, tex: THREE.Texture) {
