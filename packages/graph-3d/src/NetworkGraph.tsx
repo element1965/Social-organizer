@@ -617,6 +617,37 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
   });
   const initialViewRef = useRef(initialView);
   const simRef = useRef(true);
+
+  /** Fly the camera to `pos` while the look-at point moves to `look` (keeps the current zoom). */
+  const flyPose = useCallback((pos: THREE.Vector3, look: THREE.Vector3, ms: number) => {
+    const fg = fgRef.current;
+    if (!fg) return;
+    flyRef.current.active = false;
+    const cam = fg.camera() as THREE.PerspectiveCamera;
+    if (reducedRef.current || ms <= 0) {
+      viewFlyRef.current.active = false;
+      fg.cameraPosition({ x: pos.x, y: pos.y, z: pos.z }, { x: look.x, y: look.y, z: look.z });
+      return;
+    }
+    const controls = fg.controls() as { target?: THREE.Vector3 } | undefined;
+    const f = viewFlyRef.current;
+    f.p0.copy(cam.position);
+    if (controls?.target) f.l0.copy(controls.target);
+    else f.l0.set(0, 0, 0);
+    f.p1.copy(pos);
+    f.l1.copy(look);
+    f.z0 = cam.zoom || 1;
+    f.z1 = cam.zoom || 1;
+    f.t0 = performance.now();
+    f.dur = Math.max(1, ms);
+    f.active = true;
+  }, []);
+
+  /** Current look-at point of the orbit controls (the origin until a node was focused). */
+  const lookAt = useCallback((): THREE.Vector3 => {
+    const controls = fgRef.current?.controls() as { target?: THREE.Vector3 } | undefined;
+    return controls?.target ? controls.target.clone() : new THREE.Vector3();
+  }, []);
   const linkDirtyRef = useRef(false);
   const linkScanRef = useRef(false);
   const linkLinesRef = useRef<THREE.Line[]>([]);
@@ -712,6 +743,11 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
     const cam = fg.camera() as THREE.Camera;
     const aim = dir.clone().normalize();
     if (aim.lengthSq() < 1e-6) aim.set(0, 0, 1);
+    // Looking at a focused node: the orbit fly assumes the origin, so glide the look-at back with the camera.
+    if (lookAt().lengthSq() > 1) {
+      flyPose(aim.multiplyScalar(dist), new THREE.Vector3(), ms);
+      return;
+    }
     if (reducedRef.current || ms <= 0) {
       flyRef.current.active = false;
       const p = aim.multiplyScalar(dist);
@@ -727,7 +763,7 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
     f.t0 = performance.now();
     f.dur = Math.max(1, ms);
     f.active = true;
-  }, []);
+  }, [flyPose, lookAt]);
 
   /* ----- Node objects ----- */
 
@@ -970,14 +1006,14 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
     const vfov = (cam.fov * Math.PI) / 180;
     const hfov = 2 * Math.atan(Math.tan(vfov / 2) * (cam.aspect || 1));
     const dist = THREE.MathUtils.clamp((r / Math.sin(Math.min(vfov, hfov) / 2)) * 0.78, 90, 1600);
-    const dir = cam.position.clone();
+    const dir = cam.position.clone().sub(lookAt());
     if (dir.lengthSq() < 1) dir.set(0.35, 0.3, 1);
     dir.normalize();
     if (introSpin && ms > 0 && !reducedRef.current) dir.applyAxisAngle(new THREE.Vector3(0, 1, 0), 0.9).normalize();
     flyTo(dir, dist, ms);
     const controls = fg.controls();
     if (controls) controls.maxDistance = Math.max(600, dist * 2.2);
-  }, [graphData, flyTo]);
+  }, [graphData, flyTo, lookAt]);
   const fitCameraRef = useRef(fitCamera);
   fitCameraRef.current = fitCamera;
 
@@ -1566,12 +1602,25 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
 
   const handleNodeClick = useCallback((node: SimNode) => {
     if (!node?.id) return;
+    // Bring the tapped node to the middle of the view: the camera keeps its viewing direction and
+    // distance band, and the orbit now turns around that node. "To me" and Fit glide back to the center.
+    const fg = fgRef.current;
+    const { x, y, z } = node;
+    if (fg && typeof x === 'number' && typeof y === 'number' && typeof z === 'number') {
+      lifeRef.current.userTouched = true;
+      const target = new THREE.Vector3(x, y, z);
+      const cam = fg.camera() as THREE.Camera;
+      const dir = cam.position.clone().sub(lookAt());
+      if (dir.lengthSq() < 1e-6) dir.set(0, 0, 1);
+      const dist = THREE.MathUtils.clamp(dir.length() * 0.7, 70, 180);
+      flyPose(target.clone().add(dir.normalize().multiplyScalar(dist)), target, 800);
+    }
     // onNodeTap must not pause. The pause stays only for the legacy navigation callback.
     onNodeTapRef.current?.(node);
     if (!onNodeClickRef.current) return;
     try { fgRef.current?.pauseAnimation(); } catch { /* noop */ }
     onNodeClickRef.current(String(node.id));
-  }, []);
+  }, [flyPose, lookAt]);
 
   const handleNodeHover = useCallback((node: { id?: string | number } | null) => {
     lifeRef.current.hoverId = node?.id != null ? String(node.id) : null;
@@ -1640,10 +1689,11 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
     const fg = fgRef.current;
     if (!fg) return;
     lifeRef.current.userTouched = true;
-    const dir = (fg.camera() as THREE.Camera).position.clone();
+    // Keep the viewing direction (relative to whatever the camera looks at now).
+    const dir = (fg.camera() as THREE.Camera).position.clone().sub(lookAt());
     if (dir.lengthSq() < 1) dir.set(0, 0, 1);
     flyTo(dir, 85, 900);
-  }, [flyTo]);
+  }, [flyTo, lookAt]);
 
   const fitAll = useCallback(() => {
     const fg = fgRef.current;
@@ -1669,12 +1719,20 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
     if (!fg) return;
     lifeRef.current.userTouched = true;
     const cam = fg.camera() as THREE.Camera;
-    const dist = Math.max(1, cam.position.length());
     const controls = fg.controls() as { minDistance?: number; maxDistance?: number } | undefined;
     const min = controls?.minDistance ?? 30;
     const max = controls?.maxDistance && controls.maxDistance > min ? controls.maxDistance : 1600;
+    const look = lookAt();
+    if (look.lengthSq() > 1) {
+      // Zoom around the focused node, not back toward the center.
+      const offset = cam.position.clone().sub(look);
+      const dist = THREE.MathUtils.clamp(Math.max(1, offset.length()) * factor, min, max);
+      flyPose(look.clone().add(offset.normalize().multiplyScalar(dist)), look, 280);
+      return;
+    }
+    const dist = Math.max(1, cam.position.length());
     flyTo(cam.position, THREE.MathUtils.clamp(dist * factor, min, max), 280);
-  }, [flyTo]);
+  }, [flyTo, flyPose, lookAt]);
 
   useImperativeHandle(ref, () => ({
     zoomIn: () => zoomBy(0.8),

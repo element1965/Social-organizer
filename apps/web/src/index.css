@@ -79,3 +79,12 @@ body::before {
     transition: none;
   }
 }
+
+/* Graph hover card: the graph draws its own card (NetworkGraph nodeLabel), so the tooltip library's
+   default dark box around it must not show as a second, offset shadow. */
+.float-tooltip-kap {
+  background: transparent !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
+  max-width: none !important;
+}
