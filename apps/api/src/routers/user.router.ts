@@ -330,7 +330,7 @@ export const userRouter = router({
 
     // Notify inviter that user from their first circle has been deleted
     if (inviteLink?.inviterId && deletingUser?.name) {
-      sendUserDeletedNotification(ctx.db, inviteLink.inviterId, deletingUser.name)
+      sendUserDeletedNotification(ctx.db, inviteLink.inviterId, deletingUser.name, ctx.userId)
         .catch((err) => console.error('[UserDelete] Failed to notify inviter:', err));
     }
 

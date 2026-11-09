@@ -3,9 +3,8 @@ import { dirname, resolve } from 'node:path';
 import type { PrismaClient } from '@so/db';
 import { NOTIFICATION_TTL_HOURS, REGULAR_CYCLE_DAYS } from '@so/shared';
 import { findRecipientsViaBfs } from './bfs.service.js';
-import { sendTgMessages, type TgReplyMarkup } from './telegram-bot.service.js';
-import type { TgBroadcastMessage } from '../workers/tg-broadcast.worker.js';
-import { sendPushNotification } from './push.service.js';
+import type { TgReplyMarkup } from './telegram-bot.service.js';
+import { deliver, deliverMany } from './delivery.service.js';
 
 const WEB_APP_URL = process.env.WEB_APP_URL || 'https://www.orginizer.com';
 
@@ -34,6 +33,9 @@ export function tg(lang: string, key: string): string {
 
 /**
  * Send collection notifications via BFS traversal of connection graph.
+ * External messages: one per person, through their own channel (SO-45). A person hears about a collection
+ * once — a later wave (RE_NOTIFY) only reaches people who were not notified yet, and the shared event key
+ * stops a repeat. People who switched off new collections get the in-app entry only.
  */
 export async function sendCollectionNotifications(
   db: PrismaClient,
@@ -85,35 +87,17 @@ export async function sendCollectionNotifications(
     } catch { /* skip */ }
   }
 
-  if (created > 0) {
-    const recipientIds = recipients.map((r) => r.userId);
-
-    if (type === 'NEW_COLLECTION') {
-      dispatchNewCollectionTg(db, collectionId, creatorId, recipientIds).catch((err) =>
-        console.error('[TG Notify] Failed to dispatch:', err),
-      );
-      sendPushNotification(db, recipientIds, {
-        title: 'New Collection',
-        body: 'Someone in your network needs support.',
-        url: `${WEB_APP_URL}/collection/${collectionId}`,
-      }).catch((err) => console.error('[WebPush] Failed:', err));
-    } else if (type === 'RE_NOTIFY') {
-      dispatchNewCollectionTg(db, collectionId, creatorId, recipientIds).catch((err) =>
-        console.error('[TG ReNotify] Failed to dispatch:', err),
-      );
-      sendPushNotification(db, recipientIds, {
-        title: 'Reminder',
-        body: 'A collection in your network still needs support.',
-        url: `${WEB_APP_URL}/collection/${collectionId}`,
-      }).catch((err) => console.error('[WebPush ReNotify] Failed:', err));
-    }
+  if (created > 0 && (type === 'NEW_COLLECTION' || type === 'RE_NOTIFY')) {
+    dispatchNewCollection(db, collectionId, creatorId, recipients.map((r) => r.userId), type).catch((err) =>
+      console.error('[Notify] new collection dispatch failed:', err),
+    );
   }
 
   return created;
 }
 
 /**
- * Send Telegram notifications when a collection is closed.
+ * Collection closed by its author: one message to everyone who was notified about it.
  */
 export async function sendCollectionClosedTg(
   db: PrismaClient,
@@ -128,108 +112,27 @@ export async function sendCollectionClosedTg(
   const recipientUserIds = notifiedUsers.map((n) => n.userId).filter((id) => id !== creatorId);
   if (recipientUserIds.length === 0) return;
 
-  // Web Push in parallel
-  sendPushNotification(db, recipientUserIds, {
-    title: 'Collection Closed',
-    body: 'A collection has been closed by its creator.',
-    url: `${WEB_APP_URL}/collection/${collectionId}`,
-  }).catch((err) => console.error('[WebPush] Failed:', err));
-
-  // Get TG accounts + user language
-  const tgAccounts = await db.platformAccount.findMany({
-    where: { userId: { in: recipientUserIds }, platform: 'TELEGRAM' },
-    select: { platformId: true, user: { select: { language: true } } },
-  });
-  if (tgAccounts.length === 0) return;
-
   const creator = await db.user.findUnique({ where: { id: creatorId }, select: { name: true } });
-  const collection = await db.collection.findUnique({
-    where: { id: collectionId },
-    select: { amount: true },
-  });
+  const collection = await db.collection.findUnique({ where: { id: collectionId }, select: { amount: true } });
   if (!creator || !collection) return;
 
-  const amount = collection.amount;
-  const currency = 'USD'; // one unit of participation = 1 $, no currency conversion (SO-40)
+  const amountStr = collection.amount != null ? `${collection.amount} USD` : ''; // 1 unit = 1 $ (SO-40)
   const webAppLink = `${WEB_APP_URL}/collection/${collectionId}`;
 
-  const messages: TgBroadcastMessage[] = tgAccounts.map((acc) => {
-    const lang = acc.user?.language || 'en';
-    const amountStr = amount != null ? `${amount} ${currency}` : '';
-    const text = `✅ <b>${tg(lang, 'closed')}</b>\n\n${tg(lang, 'from')}: <b>${creator.name}</b>${amountStr ? `\n${tg(lang, 'amount')}: ${amountStr}` : ''}\n\n${tg(lang, 'closedBody')}`;
-    return {
-      telegramId: acc.platformId,
-      text,
-      replyMarkup: {
-        inline_keyboard: [[{ text: `📱 ${tg(lang, 'view')}`, web_app: { url: webAppLink } }]],
-      } as TgReplyMarkup,
-    };
-  });
-
-  await sendTgMessages(messages);
+  await deliverMany(db, recipientUserIds, () => ({
+    key: `col:${collectionId}:closed`,
+    kind: 'collection',
+    push: { title: 'Collection closed', body: 'A collection you were notified about has been closed.', url: webAppLink },
+    telegram: (lang) => ({
+      text: `✅ <b>${tg(lang, 'closed')}</b>\n\n${tg(lang, 'from')}: <b>${creator.name}</b>${amountStr ? `\n${tg(lang, 'amount')}: ${amountStr}` : ''}\n\n${tg(lang, 'closedBody')}`,
+      replyMarkup: { inline_keyboard: [[{ text: `📱 ${tg(lang, 'view')}`, web_app: { url: webAppLink } }]] },
+    }),
+  }));
 }
 
 /**
- * Send Telegram notifications when a collection is blocked (goal reached).
- */
-export async function sendCollectionBlockedTg(
-  db: PrismaClient,
-  collectionId: string,
-  creatorId: string,
-): Promise<void> {
-  const notifiedUsers = await db.notification.findMany({
-    where: { collectionId },
-    select: { userId: true },
-    distinct: ['userId'],
-  });
-  const recipientUserIds = notifiedUsers.map((n) => n.userId).filter((id) => id !== creatorId);
-  // Also notify the creator
-  recipientUserIds.push(creatorId);
-  if (recipientUserIds.length === 0) return;
-
-  // Web Push in parallel
-  sendPushNotification(db, recipientUserIds, {
-    title: 'Collection Goal Reached',
-    body: 'A collection has reached its target amount.',
-    url: `${WEB_APP_URL}/collection/${collectionId}`,
-  }).catch((err) => console.error('[WebPush] Failed:', err));
-
-  const tgAccounts = await db.platformAccount.findMany({
-    where: { userId: { in: recipientUserIds }, platform: 'TELEGRAM' },
-    select: { platformId: true, user: { select: { language: true } } },
-  });
-  if (tgAccounts.length === 0) return;
-
-  const creator = await db.user.findUnique({ where: { id: creatorId }, select: { name: true } });
-  const collection = await db.collection.findUnique({
-    where: { id: collectionId },
-    select: { amount: true },
-  });
-  if (!creator || !collection) return;
-
-  const amount = collection.amount;
-  const currency = 'USD';
-  const webAppLink = `${WEB_APP_URL}/collection/${collectionId}`;
-
-  const messages: TgBroadcastMessage[] = tgAccounts.map((acc) => {
-    const lang = acc.user?.language || 'en';
-    const amountStr = amount != null ? `${amount} ${currency}` : '';
-    const text = `🎯 <b>${tg(lang, 'blocked')}</b>\n\n${tg(lang, 'from')}: <b>${creator.name}</b>${amountStr ? `\n${tg(lang, 'amount')}: ${amountStr}` : ''}\n\n${tg(lang, 'blockedBody')}`;
-    return {
-      telegramId: acc.platformId,
-      text,
-      replyMarkup: {
-        inline_keyboard: [[{ text: `📱 ${tg(lang, 'view')}`, web_app: { url: webAppLink } }]],
-      } as TgReplyMarkup,
-    };
-  });
-
-  await sendTgMessages(messages);
-}
-
-/**
- * Send TG notification only to the collection creator when goal is reached.
- * Participants are NOT notified here — they will be notified when the creator manually closes.
+ * Goal reached: one message to the author only. Participants hear about it when the author closes the collection.
+ * Called from several places (intention, amount change, block check): the key stops a second message.
  */
 export async function sendGoalReachedToCreator(
   db: PrismaClient,
@@ -238,48 +141,33 @@ export async function sendGoalReachedToCreator(
 ): Promise<void> {
   const collection = await db.collection.findUnique({
     where: { id: collectionId },
-    select: { amount: true, chatLink: true },
+    select: { amount: true, chatLink: true, blockedAt: true, cycleNumber: true },
   });
   if (!collection) return;
 
-  const amount = collection.amount;
-  const currency = 'USD';
-  const amountStr = amount != null ? `${amount} ${currency}` : '';
+  const amountStr = collection.amount != null ? `${collection.amount} USD` : '';
   const webAppLink = `${WEB_APP_URL}/collection/${collectionId}`;
+  const stamp = collection.blockedAt ? collection.blockedAt.getTime() : `c${collection.cycleNumber}`;
 
-  // Web Push to creator
-  sendPushNotification(db, [creatorId], {
-    title: 'Goal Reached',
-    body: amountStr ? `Collection reached ${amountStr}` : 'Your collection reached its goal!',
-    url: webAppLink,
-  }).catch((err) => console.error('[WebPush GoalReached] Failed:', err));
-
-  // TG notification
-  const tgAccount = await db.platformAccount.findFirst({
-    where: { userId: creatorId, platform: 'TELEGRAM' },
-    select: { platformId: true, user: { select: { language: true } } },
+  await deliver(db, creatorId, {
+    key: `goal:${collectionId}:${stamp}`,
+    kind: 'response',
+    push: { title: 'Goal reached', body: 'Your collection reached its goal.', url: webAppLink },
+    telegram: (lang) => {
+      const buttons: TgReplyMarkup['inline_keyboard'] = [];
+      if (collection.chatLink) buttons.push([{ text: `💬 ${tg(lang, 'open')}`, url: collection.chatLink }]);
+      buttons.push([{ text: `📱 ${tg(lang, 'view')}`, web_app: { url: webAppLink } }]);
+      return {
+        text: `🎯 <b>${tg(lang, 'blocked')}</b>${amountStr ? `\n${tg(lang, 'amount')}: ${amountStr}` : ''}\n\n${tg(lang, 'blockedBody')}`,
+        replyMarkup: { inline_keyboard: buttons },
+      };
+    },
   });
-  if (!tgAccount) return;
-
-  const lang = tgAccount.user?.language || 'en';
-  const text = `🎯 <b>${tg(lang, 'blocked')}</b>${amountStr ? `\n${tg(lang, 'amount')}: ${amountStr}` : ''}\n\n${tg(lang, 'blockedBody')}`;
-
-  const buttons: Array<Array<{ text: string; web_app?: { url: string }; url?: string }>> = [];
-  if (collection.chatLink) {
-    buttons.push([{ text: `💬 ${tg(lang, 'open')}`, url: collection.chatLink }]);
-  }
-  buttons.push([{ text: `📱 ${tg(lang, 'view')}`, web_app: { url: webAppLink } }]);
-
-  await sendTgMessages([{
-    telegramId: tgAccount.platformId,
-    text,
-    replyMarkup: { inline_keyboard: buttons } as TgReplyMarkup,
-  }]);
 }
 
 /**
- * Send notification for pending connections (new request, accepted, rejected).
- * Sends both TG bot message and Web Push.
+ * Personal connection request and its answer. A request is announced once (no reminders for silence);
+ * it stays in the app until answered. In Telegram it can be answered right in the message.
  */
 export async function sendPendingNotification(
   db: PrismaClient,
@@ -289,91 +177,139 @@ export async function sendPendingNotification(
   actorTgUsername?: string,
   pendingId?: string,
 ): Promise<void> {
-  // Web Push
-  const pushTitle = type === 'new' ? 'New connection request'
-    : type === 'accepted' ? 'Request accepted'
-    : 'Request declined';
-  const pushBody = type === 'new' ? `${actorName} wants to connect`
-    : actorName;
-  // Accepted/declined go to the requester (usually the newcomer): home shows the acquaintance state
-  const pushUrl = type === 'new' ? `${WEB_APP_URL}/notifications` : `${WEB_APP_URL}/dashboard`;
-  sendPushNotification(db, [recipientUserId], { title: pushTitle, body: pushBody, url: pushUrl })
-    .catch((err) => console.error('[WebPush Pending] Failed:', err));
-
-  // TG notification
-  const tgAccount = await db.platformAccount.findFirst({
-    where: { userId: recipientUserId, platform: 'TELEGRAM' },
-    select: { platformId: true, user: { select: { language: true } } },
-  });
-  if (!tgAccount) return;
-
-  const lang = tgAccount.user?.language || 'en';
-  let text: string;
-  let replyMarkup: TgReplyMarkup | undefined;
   const notificationsUrl = `${WEB_APP_URL}/notifications`;
+  const dashboardUrl = `${WEB_APP_URL}/dashboard`;
+  // Without a request id (old callers) the key falls back to the name and the day
+  const ref = pendingId ?? `${actorName}:${new Date().toISOString().slice(0, 10)}`;
 
   if (type === 'new') {
-    const title = tg(lang, 'pendingNew') || 'New connection request';
-    const body = (tg(lang, 'pendingNewBody') || '{{name}} wants to connect').replace('{{name}}', actorName);
-    const tgLine = actorTgUsername ? `\n@${actorTgUsername}` : '';
-    text = `🔔 <b>${title}</b>\n\n${body}${tgLine}`;
-    // Answer right in the bot: same server record as in the app (connection-request.service)
-    const rows: TgReplyMarkup['inline_keyboard'] = [];
-    if (pendingId) {
-      rows.push([
-        { text: `✅ ${tg(lang, 'pendingAcceptBtn')}`, callback_data: `pc_a:${pendingId}` },
-        { text: `✖️ ${tg(lang, 'pendingRejectBtn')}`, callback_data: `pc_r:${pendingId}` },
-      ]);
-    }
-    rows.push([{ text: `📱 ${tg(lang, 'pendingView') || 'View'}`, web_app: { url: notificationsUrl } }]);
-    replyMarkup = { inline_keyboard: rows };
-  } else if (type === 'accepted') {
-    const title = tg(lang, 'pendingAccepted') || 'Request accepted';
-    text = `✅ <b>${title}</b>\n\n${actorName}`;
-    replyMarkup = {
-      inline_keyboard: [[{ text: `📱 ${tg(lang, 'open') || 'Open'}`, web_app: { url: `${WEB_APP_URL}/dashboard` } }]],
-    };
-  } else {
-    const title = tg(lang, 'pendingRejected') || 'Request declined';
-    text = `❌ <b>${title}</b>\n\n${actorName}\n\n${tg(lang, 'pendingRejectedNext')}`;
-    replyMarkup = {
-      inline_keyboard: [[{ text: `📱 ${tg(lang, 'open') || 'Open'}`, web_app: { url: `${WEB_APP_URL}/dashboard` } }]],
-    };
+    await deliver(db, recipientUserId, {
+      key: `req:${ref}`,
+      kind: 'request',
+      push: { title: 'New connection request', body: 'Someone wants to connect with you. Open the app to answer.', url: notificationsUrl },
+      telegram: (lang) => {
+        const title = tg(lang, 'pendingNew') || 'New connection request';
+        const body = (tg(lang, 'pendingNewBody') || '{{name}} wants to connect').replace('{{name}}', actorName);
+        const tgLine = actorTgUsername ? `\n@${actorTgUsername}` : '';
+        const rows: TgReplyMarkup['inline_keyboard'] = [];
+        if (pendingId) {
+          // Answer right in the bot: same server record as in the app (connection-request.service)
+          rows.push([
+            { text: `✅ ${tg(lang, 'pendingAcceptBtn')}`, callback_data: `pc_a:${pendingId}` },
+            { text: `✖️ ${tg(lang, 'pendingRejectBtn')}`, callback_data: `pc_r:${pendingId}` },
+          ]);
+        }
+        rows.push([{ text: `📱 ${tg(lang, 'pendingView') || 'View'}`, web_app: { url: notificationsUrl } }]);
+        return { text: `🔔 <b>${title}</b>\n\n${body}${tgLine}`, replyMarkup: { inline_keyboard: rows } };
+      },
+    });
+    return;
   }
 
-  await sendTgMessages([{ telegramId: tgAccount.platformId, text, replyMarkup }]);
+  const accepted = type === 'accepted';
+  await deliver(db, recipientUserId, {
+    key: `reqans:${ref}`,
+    kind: 'requestAnswer',
+    push: accepted
+      ? { title: 'Request accepted', body: 'Your connection request was accepted.', url: dashboardUrl }
+      : { title: 'Request declined', body: 'Your connection request was declined.', url: dashboardUrl },
+    telegram: (lang) => ({
+      text: accepted
+        ? `✅ <b>${tg(lang, 'pendingAccepted') || 'Request accepted'}</b>\n\n${actorName}`
+        : `❌ <b>${tg(lang, 'pendingRejected') || 'Request declined'}</b>\n\n${actorName}\n\n${tg(lang, 'pendingRejectedNext')}`,
+      replyMarkup: { inline_keyboard: [[{ text: `📱 ${tg(lang, 'open') || 'Open'}`, web_app: { url: dashboardUrl } }]] },
+    }),
+  });
 }
 
 /**
- * Send notification to the inviter when a user from their first circle deletes their account.
- * Sends both TG bot message and Web Push.
+ * A person from the inviter's first circle deleted their account: one message to the inviter.
  */
 export async function sendUserDeletedNotification(
   db: PrismaClient,
   inviterUserId: string,
   deletedUserName: string,
+  deletedUserId?: string,
 ): Promise<void> {
-  // Web Push
-  sendPushNotification(db, [inviterUserId], {
-    title: 'User left',
-    body: `${deletedUserName} has deleted their account.`,
-    url: `${WEB_APP_URL}/network`,
-  }).catch((err) => console.error('[WebPush UserDeleted] Failed:', err));
-
-  // TG notification
-  const tgAccount = await db.platformAccount.findFirst({
-    where: { userId: inviterUserId, platform: 'TELEGRAM' },
-    select: { platformId: true, user: { select: { language: true } } },
+  await deliver(db, inviterUserId, {
+    key: `left:${deletedUserId ?? deletedUserName}`,
+    kind: 'network',
+    push: { title: 'Someone left', body: 'A person from your network deleted their account.', url: `${WEB_APP_URL}/network` },
+    telegram: (lang) => ({
+      text: `👋 <b>${tg(lang, 'userDeleted') || 'User left'}</b>\n\n${(tg(lang, 'userDeletedBody') || '{{name}} from your first circle has deleted their account.').replace('{{name}}', deletedUserName)}`,
+    }),
   });
-  if (!tgAccount) return;
+}
 
-  const lang = tgAccount.user?.language || 'en';
-  const title = tg(lang, 'userDeleted') || 'User left';
-  const body = (tg(lang, 'userDeletedBody') || '{{name}} from your first circle has deleted their account.')
-    .replace('{{name}}', deletedUserName);
-  const text = `👋 <b>${title}</b>\n\n${body}`;
+/**
+ * Responses to the author's collection, grouped (SO-45): one message for all intentions that came after
+ * the last message to the author and that the author has not seen yet (opening the collection counts as seen).
+ * Nothing is sent once the collection is no longer active. Called with a delay after an intention
+ * (see scheduleResponseDigest), so close-in-time responses arrive as one message.
+ */
+export async function sendResponseDigest(
+  db: PrismaClient,
+  collectionId: string,
+): Promise<'sent' | 'nothing' | 'duplicate' | 'inactive'> {
+  const collection = await db.collection.findUnique({
+    where: { id: collectionId },
+    select: { creatorId: true, status: true, creatorViewedAt: true },
+  });
+  if (!collection) return 'nothing';
+  if (collection.status !== 'ACTIVE' && collection.status !== 'BLOCKED') return 'inactive';
 
-  await sendTgMessages([{ telegramId: tgAccount.platformId, text }]);
+  // Only responses newer than the last digest and newer than the author's last visit count
+  const lastDigest = await db.notificationDelivery.findFirst({
+    where: { userId: collection.creatorId, eventKey: { startsWith: `resp:${collectionId}:` } },
+    orderBy: { createdAt: 'desc' },
+    select: { createdAt: true },
+  });
+  const marks = [lastDigest?.createdAt, collection.creatorViewedAt].filter((d): d is Date => !!d);
+  const since = marks.length ? new Date(Math.max(...marks.map((d) => d.getTime()))) : undefined;
+
+  const fresh = await db.obligation.findMany({
+    where: { collectionId, userId: { not: collection.creatorId }, ...(since ? { createdAt: { gt: since } } : {}) },
+    orderBy: { createdAt: 'asc' },
+    select: { id: true },
+  });
+  if (fresh.length === 0) return 'nothing';
+
+  const count = fresh.length;
+  const webAppLink = `${WEB_APP_URL}/collection/${collectionId}`;
+  const outcome = await deliver(db, collection.creatorId, {
+    key: `resp:${collectionId}:${fresh[0]!.id}`,
+    kind: 'response',
+    push: { title: 'New responses', body: 'People responded to your collection. Open the app to see them.', url: webAppLink },
+    telegram: (lang) => ({
+      text: `🤝 <b>${tg(lang, 'responsesTitle')}</b>\n\n${tg(lang, 'responsesBody').replace('{{count}}', String(count))}`,
+      replyMarkup: { inline_keyboard: [[{ text: `📱 ${tg(lang, 'view')}`, web_app: { url: webAppLink } }]] },
+    }),
+  });
+  return outcome === 'sent' ? 'sent' : outcome === 'duplicate' ? 'duplicate' : 'nothing';
+}
+
+/** Window in which responses to one collection are grouped into one message */
+export const RESPONSE_DIGEST_DELAY_MS = 5 * 60 * 1000;
+
+const pendingDigests = new Map<string, NodeJS.Timeout>();
+
+/**
+ * Plans one grouped message about responses: the first intention opens the window, the following ones in
+ * the same window join it. With Redis the delayed job survives a restart (one job id per collection);
+ * without Redis an in-process timer is used.
+ */
+export async function scheduleResponseDigest(db: PrismaClient, collectionId: string): Promise<void> {
+  try {
+    const { enqueueResponseDigest } = await import('../workers/index.js');
+    if (await enqueueResponseDigest(collectionId, RESPONSE_DIGEST_DELAY_MS)) return;
+  } catch { /* no queue — fall back to a timer */ }
+  if (pendingDigests.has(collectionId)) return;
+  const timer = setTimeout(() => {
+    pendingDigests.delete(collectionId);
+    sendResponseDigest(db, collectionId).catch((err) => console.error('[Notify] response digest failed:', err));
+  }, RESPONSE_DIGEST_DELAY_MS);
+  timer.unref?.();
+  pendingDigests.set(collectionId, timer);
 }
 
 const DAY_MS = 24 * 60 * 60 * 1000;
@@ -416,9 +352,8 @@ function cycleDetails(lang: string, contribution: string | undefined, start: Dat
 }
 
 /**
- * Send "renewal reminder" notification (3 days before next cycle) via TG and push.
- * In-app Notification rows are created separately by the worker so we can apply
- * the unique (userId, collectionId, type, wave) constraint for deduplication.
+ * "Renewal reminder" (3 days before the next cycle of regular help, SO-1). The worker creates the in-app rows
+ * and passes only people with the reminder switched on; one external message per person and cycle.
  */
 export async function sendCycleRenewalReminderTg(
   db: PrismaClient,
@@ -430,7 +365,7 @@ export async function sendCycleRenewalReminderTg(
 
   const collection = await db.collection.findUnique({
     where: { id: collectionId },
-    select: { currentCycleStart: true },
+    select: { currentCycleStart: true, cycleNumber: true },
   });
   const creator = await db.user.findUnique({ where: { id: creatorId }, select: { name: true } });
   if (!collection || !creator) return;
@@ -440,47 +375,22 @@ export async function sendCycleRenewalReminderTg(
   const periodStart = new Date(cycleStart.getTime() + REGULAR_CYCLE_DAYS * DAY_MS);
   const periodEnd = new Date(periodStart.getTime() + (REGULAR_CYCLE_DAYS - 1) * DAY_MS); // last day of the cycle
   const contributions = await getUserContributions(db, collectionId, recipientUserIds);
+  const names = await userNames(db, recipientUserIds);
   const webAppLink = `${WEB_APP_URL}/collection/${collectionId}`;
 
-  // Push (web + native) — one per user so each sees their own contribution
-  for (const userId of recipientUserIds) {
-    const c = contributions.get(userId);
-    sendPushNotification(db, [userId], {
-      title: 'Cycle renewal reminder',
-      body: `In 3 days a new cycle starts for ${creator.name}'s regular support.${c ? ` Your contribution: ${c}.` : ''} Period: ${formatDate(periodStart, 'en')} — ${formatDate(periodEnd, 'en')}.`,
-      url: webAppLink,
-    }).catch((err) => console.error('[Push RenewalReminder] Failed:', err));
-  }
-
-  // Telegram
-  const tgAccounts = await db.platformAccount.findMany({
-    where: { userId: { in: recipientUserIds }, platform: 'TELEGRAM' },
-    select: { platformId: true, userId: true, user: { select: { name: true, language: true } } },
-  });
-  if (tgAccounts.length === 0) return;
-
-  const messages: TgBroadcastMessage[] = tgAccounts.map((acc) => {
-    const lang = acc.user?.language || 'en';
-    const userName = acc.user?.name || '';
-    const title = tg(lang, 'renewalReminderTitle');
-    const body = tg(lang, 'renewalReminderBody')
-      .replace('{{name}}', userName)
-      .replace('{{creator}}', creator.name);
-    const text = `🔔 <b>${title}</b>\n\n${body}${cycleDetails(lang, contributions.get(acc.userId), periodStart, periodEnd)}`;
-    return {
-      telegramId: acc.platformId,
-      text,
-      replyMarkup: {
-        inline_keyboard: [[{ text: `📱 ${tg(lang, 'open')}`, web_app: { url: webAppLink } }]],
-      } as TgReplyMarkup,
-    };
-  });
-
-  await sendTgMessages(messages);
+  await deliverMany(db, recipientUserIds, (userId) => ({
+    key: `cycle:${collectionId}:${collection.cycleNumber}:reminder`,
+    kind: 'cycle',
+    push: { title: 'Cycle renewal reminder', body: 'In 3 days a new cycle of regular support starts.', url: webAppLink },
+    telegram: (lang) => ({
+      text: `🔔 <b>${tg(lang, 'renewalReminderTitle')}</b>\n\n${tg(lang, 'renewalReminderBody').replace('{{name}}', names.get(userId) || '').replace('{{creator}}', creator.name)}${cycleDetails(lang, contributions.get(userId), periodStart, periodEnd)}`,
+      replyMarkup: { inline_keyboard: [[{ text: `📱 ${tg(lang, 'open')}`, web_app: { url: webAppLink } }]] },
+    }),
+  }));
 }
 
 /**
- * Send "cycle renewed" notification (cycle just started) via TG and push.
+ * "Cycle renewed" (a new cycle of regular help just started, SO-1): one external message per person and cycle.
  */
 export async function sendCycleRenewedTg(
   db: PrismaClient,
@@ -492,7 +402,7 @@ export async function sendCycleRenewedTg(
 
   const collection = await db.collection.findUnique({
     where: { id: collectionId },
-    select: { chatLink: true, currentCycleStart: true },
+    select: { chatLink: true, currentCycleStart: true, cycleNumber: true },
   });
   const creator = await db.user.findUnique({ where: { id: creatorId }, select: { name: true } });
   if (!collection || !creator) return;
@@ -501,95 +411,59 @@ export async function sendCycleRenewedTg(
   const periodStart = collection.currentCycleStart ?? new Date();
   const periodEnd = new Date(periodStart.getTime() + (REGULAR_CYCLE_DAYS - 1) * DAY_MS); // last day of the cycle
   const contributions = await getUserContributions(db, collectionId, recipientUserIds);
+  const names = await userNames(db, recipientUserIds);
   const webAppLink = `${WEB_APP_URL}/collection/${collectionId}`;
 
-  // Push — one per user so each sees their own contribution
-  for (const userId of recipientUserIds) {
-    const c = contributions.get(userId);
-    sendPushNotification(db, [userId], {
-      title: 'New cycle started',
-      body: `A new support cycle for ${creator.name} has started.${c ? ` Your contribution: ${c}.` : ''} Period: ${formatDate(periodStart, 'en')} — ${formatDate(periodEnd, 'en')}.`,
-      url: webAppLink,
-    }).catch((err) => console.error('[Push CycleRenewed] Failed:', err));
-  }
-
-  // Telegram
-  const tgAccounts = await db.platformAccount.findMany({
-    where: { userId: { in: recipientUserIds }, platform: 'TELEGRAM' },
-    select: { platformId: true, userId: true, user: { select: { name: true, language: true } } },
-  });
-  if (tgAccounts.length === 0) return;
-
-  const messages: TgBroadcastMessage[] = tgAccounts.map((acc) => {
-    const lang = acc.user?.language || 'en';
-    const userName = acc.user?.name || '';
-    const title = tg(lang, 'renewalStartTitle');
-    const body = tg(lang, 'renewalStartBody')
-      .replace('{{name}}', userName)
-      .replace('{{creator}}', creator.name);
-    const text = `🔁 <b>${title}</b>\n\n${body}${cycleDetails(lang, contributions.get(acc.userId), periodStart, periodEnd)}`;
-
-    const buttons: Array<Array<{ text: string; web_app?: { url: string }; url?: string }>> = [];
-    if (collection.chatLink) {
-      buttons.push([{ text: `💬 ${tg(lang, 'open')}`, url: collection.chatLink }]);
-    }
-    buttons.push([{ text: `📱 ${tg(lang, 'view')}`, web_app: { url: webAppLink } }]);
-
-    return {
-      telegramId: acc.platformId,
-      text,
-      replyMarkup: { inline_keyboard: buttons } as TgReplyMarkup,
-    };
-  });
-
-  await sendTgMessages(messages);
+  await deliverMany(db, recipientUserIds, (userId) => ({
+    key: `cycle:${collectionId}:${collection.cycleNumber}:start`,
+    kind: 'cycle',
+    push: { title: 'New cycle started', body: 'A new cycle of regular support has started.', url: webAppLink },
+    telegram: (lang) => {
+      const buttons: TgReplyMarkup['inline_keyboard'] = [];
+      if (collection.chatLink) buttons.push([{ text: `💬 ${tg(lang, 'open')}`, url: collection.chatLink }]);
+      buttons.push([{ text: `📱 ${tg(lang, 'view')}`, web_app: { url: webAppLink } }]);
+      return {
+        text: `🔁 <b>${tg(lang, 'renewalStartTitle')}</b>\n\n${tg(lang, 'renewalStartBody').replace('{{name}}', names.get(userId) || '').replace('{{creator}}', creator.name)}${cycleDetails(lang, contributions.get(userId), periodStart, periodEnd)}`,
+        replyMarkup: { inline_keyboard: buttons },
+      };
+    },
+  }));
 }
 
-/** Send new collection Telegram notifications with per-user language */
-async function dispatchNewCollectionTg(
+async function userNames(db: PrismaClient, ids: string[]): Promise<Map<string, string>> {
+  const users = await db.user.findMany({ where: { id: { in: ids } }, select: { id: true, name: true } });
+  return new Map(users.map((u) => [u.id, u.name]));
+}
+
+/** New collection (or a later wave): one message per person, through their own channel */
+async function dispatchNewCollection(
   db: PrismaClient,
   collectionId: string,
   creatorId: string,
   recipientUserIds: string[],
+  type: 'NEW_COLLECTION' | 'RE_NOTIFY',
 ): Promise<void> {
-  console.log(`[TG Notify] Starting dispatch for collection ${collectionId}, recipients: ${recipientUserIds.length}`);
-
-  const collection = await db.collection.findUnique({
-    where: { id: collectionId },
-    select: { type: true, amount: true },
-  });
-  if (!collection) return;
-
+  const collection = await db.collection.findUnique({ where: { id: collectionId }, select: { type: true, amount: true } });
   const creator = await db.user.findUnique({ where: { id: creatorId }, select: { name: true } });
-  if (!creator) return;
+  if (!collection || !creator) return;
 
-  // Get TG accounts + user language
-  const tgAccounts = await db.platformAccount.findMany({
-    where: { userId: { in: recipientUserIds }, platform: 'TELEGRAM' },
-    select: { platformId: true, user: { select: { language: true } } },
-  });
-  if (tgAccounts.length === 0) return;
-
-  const amount = collection.amount;
-  const currency = 'USD';
   const isEmergency = collection.type === 'EMERGENCY';
+  const amountStr = collection.amount != null ? `${collection.amount} USD` : '';
   const webAppLink = `${WEB_APP_URL}/collection/${collectionId}`;
+  const push = type === 'RE_NOTIFY'
+    ? { title: 'Reminder', body: 'A collection in your network still needs support.', url: webAppLink }
+    : { title: 'New Collection', body: 'Someone in your network needs support.', url: webAppLink };
 
-  const messages: TgBroadcastMessage[] = tgAccounts.map((acc) => {
-    const lang = acc.user?.language || 'en';
-    const emoji = isEmergency ? '🚨' : '📢';
-    const title = isEmergency ? tg(lang, 'newEmergency') : tg(lang, 'newRegular');
-    const amountStr = amount != null ? `${amount} ${currency}` : '';
-    const text = `${emoji} <b>${title}</b>\n\n${tg(lang, 'from')}: <b>${creator.name}</b>${amountStr ? `\n${tg(lang, 'amount')}: ${amountStr}` : ''}\n\n${tg(lang, 'networkSupport')}`;
-    return {
-      telegramId: acc.platformId,
-      text,
-      replyMarkup: {
-        inline_keyboard: [[{ text: `📱 ${tg(lang, 'open')}`, web_app: { url: webAppLink } }]],
-      } as TgReplyMarkup,
-    };
-  });
-
-  await sendTgMessages(messages);
+  const outcomes = await deliverMany(db, recipientUserIds, () => ({
+    key: `col:${collectionId}:new`, // one message per person per collection, whatever the wave
+    kind: 'newCollection',
+    push,
+    telegram: (lang) => ({
+      text: `${isEmergency ? '🚨' : '📢'} <b>${isEmergency ? tg(lang, 'newEmergency') : tg(lang, 'newRegular')}</b>\n\n${tg(lang, 'from')}: <b>${creator.name}</b>${amountStr ? `\n${tg(lang, 'amount')}: ${amountStr}` : ''}\n\n${tg(lang, 'networkSupport')}`,
+      replyMarkup: { inline_keyboard: [[{ text: `📱 ${tg(lang, 'open')}`, web_app: { url: webAppLink } }]] },
+    }),
+  }));
+  const counts: Record<string, number> = {};
+  for (const o of outcomes.values()) counts[o] = (counts[o] ?? 0) + 1;
+  console.log(`[Notify] collection ${collectionId} ${type}:`, counts);
 }
-

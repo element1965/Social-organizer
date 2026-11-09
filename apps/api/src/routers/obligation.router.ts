@@ -2,7 +2,7 @@ import { z } from 'zod';
 import { router, protectedProcedure } from '../trpc.js';
 import { TRPCError } from '@trpc/server';
 import { MIN_OBLIGATION_AMOUNT, NOTIFICATION_TTL_HOURS } from '@so/shared';
-import { sendGoalReachedToCreator } from '../services/notification.service.js';
+import { sendGoalReachedToCreator, scheduleResponseDigest } from '../services/notification.service.js';
 
 export const obligationRouter = router({
   create: protectedProcedure
@@ -31,6 +31,13 @@ export const obligationRouter = router({
           isSubscription: input.isSubscription,
         },
       });
+
+      // The author hears about responses as one grouped message, not one per person (SO-45)
+      if (collection.creatorId !== ctx.userId) {
+        scheduleResponseDigest(ctx.db, input.collectionId).catch((err) =>
+          console.error('[obligation.create] response digest not planned:', err),
+        );
+      }
 
       // Check if collection should be blocked (only if target amount is set)
       if (collection.amount != null) {

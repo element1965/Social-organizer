@@ -97,6 +97,12 @@ export const collectionRouter = router({
       });
       if (!collection) throw new TRPCError({ code: 'NOT_FOUND' });
 
+      // The author has seen the responses: they won't come again in the grouped message (SO-45)
+      if (collection.creatorId === ctx.userId) {
+        ctx.db.collection.update({ where: { id: collection.id }, data: { creatorViewedAt: new Date() } })
+          .catch(() => {});
+      }
+
       // Get connection counts for all participants and creator
       const userIds = [collection.creatorId, ...collection.obligations.map((o) => o.userId)];
       const connectionCounts = await ctx.db.$queryRaw<Array<{ user_id: string; count: bigint }>>`
