@@ -67,11 +67,12 @@ export function TelegramBootstrap({ children }: { children: React.ReactNode }) {
       }
     }
 
-    // Default: redirect away from public pages (but NOT if there's a pending invite)
-    if (location.pathname === '/' || location.pathname === '/welcome' || location.pathname === '/login') {
+    // Signed-in people leave the public entry pages. "/" is the circle now, so it stays.
+    // A pending invite is left for InvitePage; sending them home here used to drop it.
+    if (location.pathname === '/welcome' || location.pathname === '/login') {
       const hasPendingInvite = localStorage.getItem('pendingInviteToken');
       if (!hasPendingInvite) {
-        navigate('/dashboard', { replace: true });
+        navigate('/', { replace: true });
       }
     }
   }, [isTelegram, isReady, isAuthenticated, location.pathname, navigate]);
