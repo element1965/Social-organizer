@@ -50,12 +50,12 @@ export type AuthProvider = 'google' | 'apple' | 'telegram';
 /** Provider order per device: a single table, so a product decision on the order is a one-line change. */
 export const AUTH_ORDER: Record<Device, AuthProvider[]> = {
   android: ['google', 'telegram'],
-  ios: ['apple', 'google', 'telegram'],
-  desktop: ['google', 'apple', 'telegram'],
+  ios: ['apple', 'telegram', 'google'],
+  desktop: ['google', 'telegram', 'apple'],
 };
 
 export interface AuthButtons {
-  /** Provider buttons in display order; Telegram is always second after the native one on phones. */
+  /** Provider buttons in display order; Telegram is always second (decision 2026-11-09). */
   order: AuthProvider[];
   /** E-mail sign-in is always shown as text under the buttons. */
   mail: true;

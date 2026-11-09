@@ -21,7 +21,7 @@ function authButtons(dev, style) {
   const google = `<div class="auth google">${I.google}Продолжить с Google</div>`;
   const apple = `<div class="auth apple">${I.apple}Продолжить с Apple</div>`;
   const tg = `<div class="auth tg">${I.tg}Продолжить с Telegram</div>`;
-  const order = dev === "android" ? [google, tg] : dev === "ios" ? [apple, google, tg] : [google, apple, tg];
+  const order = dev === "android" ? [google, tg] : dev === "ios" ? [apple, tg, google] : [google, tg, apple];
   const more = dev === "android" ? `<p class="legal">Есть Apple ID? <u>Войти через Apple</u></p>` : "";
   return `<div class="auths"${style ? ` style="${style}"` : ""}>${order.join("")}</div><div class="mail">Войти по почте</div>${more}<p class="legal">Продолжая, вы принимаете <u>условия</u> и <u>политику</u>.</p>`;
 }
