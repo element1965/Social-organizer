@@ -3,6 +3,7 @@ import { resolveExternalIdentity } from './identity.service.js';
 import crypto from 'node:crypto';
 import type { PrismaClient } from '@so/db';
 import { createAccessToken, createRefreshToken } from './auth.service.js';
+import { touchUser } from './activity.service.js';
 
 // Sign in with Apple is verified entirely from the id_token returned by Apple's
 // web OAuth flow (response_type=code id_token, response_mode=form_post). We verify
@@ -149,6 +150,7 @@ export async function findOrCreateAppleUser(
       update: { userId: user.id },
     });
     await db.linkingCode.delete({ where: { id: linkingCode.id } });
+    touchUser(db, user.id);
     return { ...issue(user.id), userId: user.id, isNew: false };
   }
 
@@ -160,6 +162,7 @@ export async function findOrCreateAppleUser(
     verifiedEmail: apple.email_verified && apple.email ? apple.email : null,
     name,
   });
+  touchUser(db, userId);
   return { ...issue(userId), userId, isNew };
 }
 
