@@ -3,7 +3,7 @@ import { Trans, useTranslation } from 'react-i18next';
 import { Capacitor } from '@capacitor/core';
 import { NetFigure } from '../components/figures';
 import { Button } from '../components/ui2';
-import { BrandLine, OnboardingFrame, StepText, usePanelLayout } from '../components/onboarding/OnboardingFrame';
+import { BackLink, BrandLine, OnboardingFrame, StepText, usePanelLayout } from '../components/onboarding/OnboardingFrame';
 import { SignInFlow } from '../components/onboarding/SignInFlow';
 import { useNetLabels } from '../components/onboarding/figureLabels';
 import { CheckGlyph, StateTile, TextButton } from '../components/onboarding/states';
@@ -41,7 +41,14 @@ export function LoginPage() {
 
   return (
     <SignInFlow
-      top={<BrandLine />}
+      // The website's home is the landing page; inside the app there is nothing before sign-in
+      top={
+        Capacitor.isNativePlatform() ? (
+          <BrandLine />
+        ) : (
+          <BackLink label={t('common.back')} to={redirect ? `/?redirect=${encodeURIComponent(redirect)}` : '/'} />
+        )
+      }
       redirect={redirect}
       last={last}
       hero={
