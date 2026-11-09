@@ -289,7 +289,9 @@
       "tenTitle": "你的圈子里有 10 人",
       "tenBody": "现在有更多人能听到你的请求。继续添加你亲自认识的人。",
       "ok": "好"
-    }
+    },
+    "feedExpand": "展开动态",
+    "feedCollapse": "收起动态"
   },
   "people": {
     "title": "{{ring}} · {{count}}",

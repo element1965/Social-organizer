@@ -292,7 +292,9 @@
       "tenTitle": "10 ihmistä piirissäsi",
       "tenBody": "Pyyntösi kuuluu nyt selvästi useammalle. Lisää edelleen ihmisiä, jotka tunnet henkilökohtaisesti.",
       "ok": "Hienoa"
-    }
+    },
+    "feedExpand": "Laajenna syöte",
+    "feedCollapse": "Pienennä syöte"
   },
   "people": {
     "title": "{{ring}} · {{count}}",

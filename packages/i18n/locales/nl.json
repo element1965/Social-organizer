@@ -292,7 +292,9 @@
       "tenTitle": "10 mensen in je kring",
       "tenBody": "Veel meer mensen horen je verzoek nu. Blijf mensen toevoegen die je persoonlijk kent.",
       "ok": "Top"
-    }
+    },
+    "feedExpand": "Feed uitklappen",
+    "feedCollapse": "Feed inklappen"
   },
   "people": {
     "title": "{{ring}} · {{count}}",

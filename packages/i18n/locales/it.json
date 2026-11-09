@@ -295,7 +295,9 @@
       "tenTitle": "10 persone nel tuo cerchio",
       "tenBody": "Ora molte più persone sentono la tua richiesta. Continua ad aggiungere persone che conosci di persona.",
       "ok": "Ottimo"
-    }
+    },
+    "feedExpand": "Espandi il feed",
+    "feedCollapse": "Comprimi il feed"
   },
   "people": {
     "title": "{{ring}} · {{count}}",

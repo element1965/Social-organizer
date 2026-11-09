@@ -292,7 +292,9 @@
       "tenTitle": "10 personer i din krets",
       "tenBody": "Många fler hör din begäran nu. Fortsätt lägga till personer du känner personligen.",
       "ok": "Toppen"
-    }
+    },
+    "feedExpand": "Fäll ut flödet",
+    "feedCollapse": "Fäll ihop flödet"
   },
   "people": {
     "title": "{{ring}} · {{count}}",

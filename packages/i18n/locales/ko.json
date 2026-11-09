@@ -289,7 +289,9 @@
       "tenTitle": "서클에 10명",
       "tenBody": "이제 부탁을 듣는 사람이 훨씬 많아요. 직접 아는 사람을 계속 추가해 주세요.",
       "ok": "좋아요"
-    }
+    },
+    "feedExpand": "피드 펼치기",
+    "feedCollapse": "피드 접기"
   },
   "people": {
     "title": "{{ring}} · {{count}}",

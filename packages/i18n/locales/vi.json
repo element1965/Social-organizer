@@ -289,7 +289,9 @@
       "tenTitle": "10 người trong vòng tròn của bạn",
       "tenBody": "Giờ nhiều người hơn nghe lời nhờ của bạn. Hãy tiếp tục thêm người bạn quen trực tiếp.",
       "ok": "Tuyệt"
-    }
+    },
+    "feedExpand": "Mở rộng bảng tin",
+    "feedCollapse": "Thu gọn bảng tin"
   },
   "people": {
     "title": "{{ring}} · {{count}}",
