@@ -1294,7 +1294,8 @@
     "collectionAmount": "Sbírka {{amount}}",
     "open": "Otevřít",
     "contactsTitle": "Kontakty: {{name}}",
-    "contactsHint": "Otevřou se v jiné aplikaci."
+    "contactsHint": "Otevřou se v jiné aplikaci.",
+    "withdrawRequest": "Zrušit"
   },
   "help": {
     "faq": "Otázky a odpovědi",

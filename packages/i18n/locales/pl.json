@@ -1294,7 +1294,8 @@
     "collectionAmount": "Zbiórka {{amount}}",
     "open": "Otwórz",
     "contactsTitle": "Kontakty: {{name}}",
-    "contactsHint": "Otworzą się w innej aplikacji."
+    "contactsHint": "Otworzą się w innej aplikacji.",
+    "withdrawRequest": "Wycofaj"
   },
   "help": {
     "faq": "Pytania i odpowiedzi",

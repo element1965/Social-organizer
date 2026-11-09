@@ -1294,7 +1294,8 @@
     "collectionAmount": "Збор {{amount}}",
     "open": "Адкрыць",
     "contactsTitle": "Кантакты: {{name}}",
-    "contactsHint": "Адкрыюцца ў іншай праграме."
+    "contactsHint": "Адкрыюцца ў іншай праграме.",
+    "withdrawRequest": "Адклікаць"
   },
   "help": {
     "faq": "Пытанні і адказы",

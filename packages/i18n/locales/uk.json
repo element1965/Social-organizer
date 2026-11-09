@@ -1294,7 +1294,8 @@
     "collectionAmount": "Збір {{amount}}",
     "open": "Відкрити",
     "contactsTitle": "Контакти: {{name}}",
-    "contactsHint": "Вони відкриються в іншому застосунку."
+    "contactsHint": "Вони відкриються в іншому застосунку.",
+    "withdrawRequest": "Відкликати"
   },
   "help": {
     "faq": "Питання та відповіді",

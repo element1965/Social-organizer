@@ -1316,7 +1316,8 @@
     "collectionAmount": "جمع {{amount}}",
     "open": "فتح",
     "contactsTitle": "جهات الاتصال: {{name}}",
-    "contactsHint": "تُفتح في تطبيق آخر."
+    "contactsHint": "تُفتح في تطبيق آخر.",
+    "withdrawRequest": "سحب الطلب"
   },
   "help": {
     "faq": "أسئلة وأجوبة",

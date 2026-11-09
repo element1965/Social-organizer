@@ -1272,7 +1272,8 @@
     "collectionAmount": "Toplama {{amount}}",
     "open": "Aç",
     "contactsTitle": "İletişim: {{name}}",
-    "contactsHint": "Başka bir uygulamada açılır."
+    "contactsHint": "Başka bir uygulamada açılır.",
+    "withdrawRequest": "Geri çek"
   },
   "help": {
     "faq": "Sorular ve yanıtlar",

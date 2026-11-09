@@ -1261,7 +1261,8 @@
     "collectionAmount": "모금 {{amount}}",
     "open": "열기",
     "contactsTitle": "연락처: {{name}}",
-    "contactsHint": "다른 앱에서 열려요."
+    "contactsHint": "다른 앱에서 열려요.",
+    "withdrawRequest": "취소"
   },
   "help": {
     "faq": "자주 묻는 질문",

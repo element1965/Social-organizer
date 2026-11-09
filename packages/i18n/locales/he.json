@@ -1283,7 +1283,8 @@
     "collectionAmount": "איסוף {{amount}}",
     "open": "פתיחה",
     "contactsTitle": "אנשי קשר: {{name}}",
-    "contactsHint": "הם נפתחים באפליקציה אחרת."
+    "contactsHint": "הם נפתחים באפליקציה אחרת.",
+    "withdrawRequest": "לבטל"
   },
   "help": {
     "faq": "שאלות ותשובות",

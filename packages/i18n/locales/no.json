@@ -1272,7 +1272,8 @@
     "collectionAmount": "Innsamling {{amount}}",
     "open": "Åpne",
     "contactsTitle": "Kontakter: {{name}}",
-    "contactsHint": "De åpnes i en annen app."
+    "contactsHint": "De åpnes i en annen app.",
+    "withdrawRequest": "Trekk tilbake"
   },
   "help": {
     "faq": "Spørsmål og svar",
