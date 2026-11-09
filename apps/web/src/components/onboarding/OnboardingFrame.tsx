@@ -24,6 +24,7 @@ export function OnboardingFrame({
   top,
   corner,
   centre = false,
+  middle = false,
   children,
   foot,
   className,
@@ -33,6 +34,8 @@ export function OnboardingFrame({
   /** Absolutely placed in the top-right corner: language or "Skip". */
   corner?: ReactNode;
   centre?: boolean;
+  /** Phone only: centre the content vertically (form steps), so fields and buttons are within thumb reach. */
+  middle?: boolean;
   children: ReactNode;
   /** Bottom block: buttons. Pinned to the bottom on a phone. */
   foot?: ReactNode;
@@ -43,7 +46,16 @@ export function OnboardingFrame({
     <>
       {top ? <div className="flex h-[26px] items-center">{top}</div> : null}
       {corner ? <div className={cn('absolute right-4 z-10', panel ? 'right-6 top-6' : 'top-[18px]')}>{corner}</div> : null}
-      <div className={cn('flex flex-col', centre && 'items-center text-center')}>{children}</div>
+      <div
+        className={cn(
+          'flex flex-col',
+          centre && 'items-center text-center',
+          // Bottom padding equal to the top row keeps the block at the true centre of the screen
+          middle && !panel && 'flex-1 justify-center pb-[26px]',
+        )}
+      >
+        {children}
+      </div>
       {foot ? <div className="mt-auto w-full pt-8">{foot}</div> : null}
     </>
   );
