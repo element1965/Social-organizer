@@ -720,7 +720,8 @@
       "home": "Home"
     },
     "meta": {
-      "title": "Social Organizer — help through people you know"
+      "title": "Social Organizer — help through people you know",
+      "description": "Social Organizer shows how you are connected to the people around you. When someone needs help, the request travels along these connections, and small amounts from many add up to what one person needs. Open source, non-profit, holds no money."
     },
     "hero": {
       "title": "Help through people you know",
@@ -794,7 +795,8 @@
   },
   "how": {
     "meta": {
-      "title": "How it works — Social Organizer"
+      "title": "How it works — Social Organizer",
+      "description": "How a share moves in a circle of six friends, why no organiser is needed, and how a request travels by handshakes."
     },
     "hero": {
       "title": "Six friends, one circle",

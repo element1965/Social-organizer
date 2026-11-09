@@ -44,7 +44,6 @@ import { GetRedirect, RedirectHome } from './components/site/redirects';
 import { GoogleCallbackPage } from './pages/GoogleCallbackPage';
 import { AppleCallbackPage } from './pages/AppleCallbackPage';
 
-const isArvut = window.location.hostname.startsWith('arvuthadadit');
 const isNativeApp = Capacitor.isNativePlatform();
 
 const DevUI = import.meta.env.DEV
@@ -120,7 +119,7 @@ function HomeIndex() {
     return <Navigate to={redirectParam ? `/login?redirect=${encodeURIComponent(redirectParam)}` : '/login'} replace />;
   }
 
-  if (!isAuthenticated) return <LandingPage variant={isArvut ? 'arvut' : undefined} />;
+  if (!isAuthenticated) return <LandingPage />;
   return <CircleStub />;
 }
 

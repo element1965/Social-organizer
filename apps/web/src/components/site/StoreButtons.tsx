@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { QRCodeCanvas } from 'qrcode.react';
-import { storeButtons, type Device, type StoreId } from '../../lib/device';
+import { SITE_ORIGIN, storeButtons, type Device, type StoreId } from '../../lib/device';
 import { cn } from '../../lib/utils';
 import { usePendingInvite, useStoreLinks } from './DeviceEntry';
 import { IconApple, IconPlay, IconTelegram } from './icons';
@@ -46,7 +46,7 @@ export function StoreButtons({ device, invite }: { device: Device; invite?: stri
     }
   };
 
-  const qrValue = `${window.location.origin}/get${pending ? `?invite=${encodeURIComponent(pending)}` : ''}`;
+  const qrValue = `${SITE_ORIGIN}/get${pending ? `?invite=${encodeURIComponent(pending)}` : ''}`;
 
   return (
     <>

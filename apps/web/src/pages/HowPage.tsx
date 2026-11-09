@@ -58,7 +58,7 @@ export function HowPage() {
   const startHref = primary.id === 'play' ? links.play : primary.id === 'appstore' ? links.appstore : null;
 
   return (
-    <SitePage title={t('how.meta.title')} active="how" className="site-how">
+    <SitePage title={t('how.meta.title')} description={t('how.meta.description')} active="how" className="site-how">
       <Reveal as="section" className="site-hero1" aria-labelledby="how-title">
         <h1 id="how-title">{t('how.hero.title')}</h1>
         <p className="lead">

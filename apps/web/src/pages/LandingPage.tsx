@@ -41,9 +41,8 @@ function usePublicUsers(): number | null {
 /**
  * Home for a guest (screens.md §17, site.html №1 / №6). Signed-in users get the circle instead (App.tsx).
  * `inviteToken` comes from the invite page for guests who opened a link: store buttons then carry it.
- * `variant` is the retired Hebrew `arvut` landing; it is accepted and ignored (not in the first version).
  */
-export function LandingPage({ inviteToken }: { variant?: 'arvut'; inviteToken?: string } = {}) {
+export function LandingPage({ inviteToken }: { inviteToken?: string } = {}) {
   const { t, i18n } = useTranslation();
   const [params] = useSearchParams();
   const device = useDevice();
@@ -78,7 +77,7 @@ export function LandingPage({ inviteToken }: { variant?: 'arvut'; inviteToken?: 
   const nf = new Intl.NumberFormat(i18n.language || 'en');
 
   return (
-    <SitePage title={t('landing.meta.title')}>
+    <SitePage title={t('landing.meta.title')} description={t('landing.meta.description')}>
       <section className="site-hero" aria-labelledby="hero-title">
         <div>
           <h1 id="hero-title">{t('landing.hero.title')}</h1>

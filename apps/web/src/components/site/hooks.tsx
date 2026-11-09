@@ -22,15 +22,25 @@ export function useSitePhone(): boolean {
   return useMediaQuery('(max-width: 600px)');
 }
 
-/** Sets the document title while the page is shown. */
-export function useDocumentTitle(title: string) {
+/** The neutral title and description from index.html; every page restores them when it leaves. */
+export const BASE_TITLE = 'Social Organizer';
+const BASE_DESCRIPTION =
+  typeof document === 'undefined' ? '' : document.querySelector('meta[name="description"]')?.getAttribute('content') ?? '';
+
+/**
+ * Sets the document title (and optionally the meta description) while the page is shown, and puts the neutral
+ * ones back on leave, so app routes never inherit a site page's title.
+ */
+export function useDocumentTitle(title: string, description?: string) {
   useEffect(() => {
-    const prev = document.title;
     document.title = title;
+    const meta = document.querySelector('meta[name="description"]');
+    if (description && meta) meta.setAttribute('content', description);
     return () => {
-      document.title = prev;
+      document.title = BASE_TITLE;
+      if (description && meta) meta.setAttribute('content', BASE_DESCRIPTION);
     };
-  }, [title]);
+  }, [title, description]);
 }
 
 /**
