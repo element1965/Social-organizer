@@ -1,10 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { trpc } from '../lib/trpc';
 import { Button, Card, Chip } from '../components/ui2';
 import { BrandLine, OnboardingFrame, StepText } from '../components/onboarding/OnboardingFrame';
 import { CheckMark } from '../components/onboarding/brand';
+import { clearFirstRun, safePath } from '../components/onboarding/flow';
 
 const PRESETS = [1, 5, 15, 30];
 const DEFAULT_AMOUNT = 1;
@@ -17,6 +18,9 @@ const DEFAULT_AMOUNT = 1;
 export function SeedPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const [params] = useSearchParams();
+  // Where a newcomer was headed before the intro (an SOS link, say); only same-origin paths
+  const next = safePath(params.get('next'));
   const utils = trpc.useUtils();
   const { data: me } = trpc.user.me.useQuery();
   const { data: intro } = trpc.pending.introStatus.useQuery(undefined, { staleTime: 30_000 });
@@ -41,7 +45,8 @@ export function SeedPage() {
     try {
       await setBudget.mutateAsync({ amount, inputCurrency: 'USD' });
       await utils.user.me.invalidate();
-      navigate('/', { replace: true });
+      clearFirstRun();
+      navigate(next ?? '/', { replace: true });
     } catch {
       /* the error line below explains it; the amount stays */
     }

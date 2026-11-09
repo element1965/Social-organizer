@@ -7,7 +7,13 @@ import { Avatar, Button, Pill, formatMoney } from '../components/ui2';
 import { NetFigure } from '../components/figures';
 import { BrandLine, LanguageCorner, OnboardingFrame, StepText } from '../components/onboarding/OnboardingFrame';
 import { SignInFlow } from '../components/onboarding/SignInFlow';
-import { PENDING_INVITE_KEY } from '../components/onboarding/useSignIn';
+import {
+  homePath,
+  introPath,
+  isFirstRunPending,
+  readPendingInvite as readPending,
+  setPendingInvite as setPending,
+} from '../components/onboarding/flow';
 import { useNetLabels } from '../components/onboarding/figureLabels';
 import { CheckMark } from '../components/onboarding/brand';
 
@@ -15,27 +21,12 @@ import { CheckMark } from '../components/onboarding/brand';
 const num = (n: number) => Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
 const firstName = (name: string) => name.trim().split(/\s+/)[0] || name;
 
-function readPending(): string | null {
-  try {
-    return localStorage.getItem(PENDING_INVITE_KEY);
-  } catch {
-    return null;
-  }
-}
-function setPending(token: string | null) {
-  try {
-    if (token) localStorage.setItem(PENDING_INVITE_KEY, token);
-    else localStorage.removeItem(PENDING_INVITE_KEY);
-  } catch {
-    /* storage blocked */
-  }
-}
-
 /** Errors that mean the link itself is dead (one screen for all of them). */
-const DEAD_ERRORS = new Set(['INVITER_DELETED', 'Invite already used', 'Invite not found', 'NOT_FOUND']);
-function isDeadMessage(message: string | undefined): boolean {
-  if (!message) return true;
-  return DEAD_ERRORS.has(message) || /expired/i.test(message);
+type TrpcLikeError = { message?: string; data?: { code?: string } | null } | null | undefined;
+/** Not found, inviter deleted, expired (all NOT_FOUND on the API) or already used by someone else. */
+function isDeadError(err: TrpcLikeError): boolean {
+  if (!err) return false;
+  return err.data?.code === 'NOT_FOUND' || err.message === 'Invite already used';
 }
 
 /**
@@ -48,12 +39,14 @@ export function InvitePage() {
   const isAuthenticated = useAuth((s) => s.isAuthenticated);
   const logout = useAuth((s) => s.logout);
   const isRealUser = isAuthenticated && localStorage.getItem('accessToken') !== 'demo-token';
+  // A newcomer decided by the sign-in path (flow.ts), read once before effects can clear anything
+  const [firstRun] = useState(isFirstRunPending);
 
   // Read before any effect: TelegramBootstrap drops the pending token as soon as a signed-in person lands here.
   // Signing in from this invite is the "yes", so it is accepted without asking again.
   const [cameThroughInvite] = useState(() => !!token && readPending() === token);
 
-  const invite = trpc.invite.getByToken.useQuery({ token }, { enabled: !!token, retry: false });
+  const invite = trpc.invite.getByToken.useQuery({ token }, { enabled: !!token });
   const me = trpc.user.me.useQuery(undefined, { enabled: isRealUser, retry: 1 });
   const sessionDead = isRealUser && me.error?.data?.code === 'UNAUTHORIZED';
 
@@ -69,7 +62,9 @@ export function InvitePage() {
 
   const usedByOther =
     !!invite.data?.usedById && !!me.data && invite.data.usedById !== me.data.id;
-  const dead = (!!token && invite.isError) || !token || (isRealUser && usedByOther);
+  const dead = !token || isDeadError(invite.error) || (isRealUser && usedByOther);
+  // A network/server hiccup is not a dead link: offer a retry and keep the pending token
+  const transient = !!invite.error && !dead;
 
   // A dead invite must not send the home redirect back here
   useEffect(() => {
@@ -77,6 +72,7 @@ export function InvitePage() {
   }, [dead, token]);
 
   if (dead) return <DeadLink signedIn={isRealUser && !sessionDead} />;
+  if (transient) return <RetryScreen onRetry={() => void invite.refetch()} busy={invite.isFetching} />;
   if (invite.isLoading || (isRealUser && me.isLoading)) return <Loading />;
   if (!invite.data) return <DeadLink signedIn={isRealUser} />;
 
@@ -95,7 +91,7 @@ export function InvitePage() {
       inviterId={inviter.id}
       inviterName={inviter.name}
       meId={me.data.id}
-      onboarded={!!me.data.onboardingCompleted}
+      firstRun={firstRun || !me.data.onboardingCompleted}
       cameThroughInvite={cameThroughInvite}
       hero={<InviteHero name={inviter.name} photoUrl={inviter.photoUrl} networkCount={networkCount} total={total} signedIn />}
     />
@@ -141,7 +137,7 @@ function AcceptView({
   inviterId,
   inviterName,
   meId,
-  onboarded,
+  firstRun,
   cameThroughInvite,
   hero,
 }: {
@@ -149,7 +145,8 @@ function AcceptView({
   inviterId: string;
   inviterName: string;
   meId: string;
-  onboarded: boolean;
+  /** A new account: auto-accept, then the intro (never the result screen). */
+  firstRun: boolean;
   cameThroughInvite: boolean;
   hero: React.ReactNode;
 }) {
@@ -161,7 +158,7 @@ function AcceptView({
   const accept = trpc.invite.accept.useMutation({
     onSuccess: () => {
       setPending(null);
-      if (!onboarded) navigate('/intro', { replace: true });
+      if (firstRun) navigate(introPath(), { replace: true });
     },
     onError: (err) => {
       if (err.data?.code === 'UNAUTHORIZED') {
@@ -178,16 +175,16 @@ function AcceptView({
 
   useEffect(() => {
     if (own || autoTried.current) return;
-    if (cameThroughInvite || !onboarded) {
+    if (cameThroughInvite || firstRun) {
       autoTried.current = true;
       accept.mutate({ token });
     }
-  }, [own, cameThroughInvite, onboarded, accept, token]);
+  }, [own, cameThroughInvite, firstRun, accept, token]);
 
   // While the request waits, poll so the screen turns into "You know each other" when the inviter confirms
   const result = accept.data as { alreadyConnected?: boolean; pending?: boolean } | undefined;
   const waiting = accept.isSuccess && !!result?.pending;
-  const intro = trpc.pending.introStatus.useQuery(undefined, { enabled: waiting && onboarded, refetchInterval: 5000 });
+  const intro = trpc.pending.introStatus.useQuery(undefined, { enabled: waiting && !firstRun, refetchInterval: 5000 });
   const confirmedNow = waiting && intro.data?.state === 'connected' && intro.data.person?.id === inviterId;
   const connected = accept.isSuccess && (!!result?.alreadyConnected || confirmedNow || !result?.pending);
 
@@ -205,7 +202,7 @@ function AcceptView({
     );
   }
 
-  if (accept.error && isDeadMessage(accept.error.message) && accept.error.data?.code !== 'UNAUTHORIZED') {
+  if (isDeadError(accept.error)) {
     return <DeadLink signedIn />;
   }
 
@@ -219,7 +216,7 @@ function AcceptView({
 
   const name = firstName(inviterName);
   let foot: React.ReactNode;
-  if (accept.isSuccess && onboarded) {
+  if (accept.isSuccess && !firstRun) {
     foot = (
       <>
         <StatusPlaque>
@@ -246,7 +243,7 @@ function AcceptView({
         ) : null}
         <Button
           className="w-full"
-          loading={accept.isPending || (accept.isSuccess && !onboarded)}
+          loading={accept.isPending || (accept.isSuccess && firstRun)}
           onClick={() => {
             accept.reset();
             accept.mutate({ token });
@@ -258,7 +255,7 @@ function AcceptView({
           type="button"
           onClick={() => {
             setPending(null);
-            navigate('/', { replace: true });
+            navigate(homePath(), { replace: true });
           }}
           className="so-focus mt-2 block min-h-11 w-full text-center text-body-s font-bold text-ink-muted"
         >
@@ -296,7 +293,7 @@ function DeadLink({ signedIn }: { signedIn: boolean }) {
       top={<BrandLine />}
       foot={
         <>
-          <Button className="w-full" onClick={() => navigate('/', { replace: true })}>
+          <Button className="w-full" onClick={() => navigate(signedIn ? homePath() : '/', { replace: true })}>
             {t('invite.openApp')}
           </Button>
           {signedIn ? null : (
@@ -311,6 +308,23 @@ function DeadLink({ signedIn }: { signedIn: boolean }) {
         <NetFigure step={0} labels={labels} className="h-full w-auto" />
       </div>
       <StepText title={t('invite.deadTitle')}>{t('invite.deadText')}</StepText>
+    </OnboardingFrame>
+  );
+}
+
+/** getByToken failed for a transient reason: keep the invite and let the person try again. */
+function RetryScreen({ onRetry, busy }: { onRetry: () => void; busy: boolean }) {
+  const { t } = useTranslation();
+  return (
+    <OnboardingFrame
+      top={<BrandLine />}
+      foot={
+        <Button className="w-full" loading={busy} onClick={onRetry}>
+          {t('common.retry')}
+        </Button>
+      }
+    >
+      <StepText title={t('invite.loadFailedTitle')}>{t('invite.loadFailedText')}</StepText>
     </OnboardingFrame>
   );
 }

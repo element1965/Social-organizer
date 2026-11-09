@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { takePendingSosPath } from '../lib/inviteUrl';
+import { afterSignInPath, readPendingInvite, safeInviteToken, setPendingInvite } from '../components/onboarding/flow';
 
 // Web finish page for Sign in with Apple.
 // The backend (/api/auth/apple/callback) verifies the Apple id_token, creates the
@@ -31,17 +32,14 @@ export function AppleCallbackPage() {
     // Prefer the invite token carried through the OAuth round-trip (inv), fall back
     // to one saved before redirecting. Enables join-the-inviter's-cluster on first
     // handshake for Apple sign-in.
-    const pendingInvite = params.get('inv') || localStorage.getItem('pendingInviteToken');
-    localStorage.removeItem('pendingInviteToken');
-    // Came from a collection link (/sos/:id) → back to that collection
-    const pendingSos = takePendingSosPath();
-    if (pendingSos) {
-      window.location.href = pendingSos;
-    } else if (pendingInvite) {
-      window.location.href = `/invite/${pendingInvite}`;
-    } else {
-      navigate('/dashboard');
-    }
+    // The invite stays pending until InvitePage accepts it (that is how it knows to auto-accept).
+    const pendingInvite = safeInviteToken(params.get('inv')) || readPendingInvite();
+    if (pendingInvite) setPendingInvite(pendingInvite);
+    // A new account goes through the intro (onboarding/flow.ts); a collection link (/sos/:id) waits behind it
+    const target = takePendingSosPath() || (pendingInvite ? `/invite/${pendingInvite}` : null);
+    const path = afterSignInPath(params.get('isNew') === '1', target);
+    if (path === '/') navigate('/', { replace: true });
+    else window.location.href = path;
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

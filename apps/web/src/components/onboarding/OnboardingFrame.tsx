@@ -8,8 +8,8 @@ import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { Panel, useShellMode } from '../ui2';
+import { BrandMark } from '../ui2/BrandMark';
 import { IconBack } from '../ui2/icons';
-import { Logo } from '../Logo';
 import { cn } from '../../lib/utils';
 import { languageNames } from '@so/i18n';
 import { trpc } from '../../lib/trpc';
@@ -73,9 +73,7 @@ export function BrandLine() {
   const { t } = useTranslation();
   return (
     <span className="flex items-center gap-2 text-body-s font-extrabold tracking-tight">
-      <span className="grid h-[26px] w-[26px] place-items-center rounded-sm bg-care text-care-on">
-        <Logo size={18} />
-      </span>
+      <BrandMark size={26} />
       {t('common.appName')}
     </span>
   );

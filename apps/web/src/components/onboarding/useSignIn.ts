@@ -15,11 +15,11 @@ import { useAuth, markLoginMethod, type LoginMethod } from '../../hooks/useAuth'
 import { trpc } from '../../lib/trpc';
 import { takePendingSosPath } from '../../lib/inviteUrl';
 import { AUTH_ORDER, detectDevice, type AuthProvider } from '../../lib/device';
+import { afterSignInPath, clearDemoSession, readPendingInvite, safeInviteToken, safePath } from './flow';
 
 const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID as string | undefined;
 const APPLE_SERVICE_ID = import.meta.env.VITE_APPLE_SERVICE_ID as string | undefined;
 export const RESEND_SECONDS = 60;
-export const PENDING_INVITE_KEY = 'pendingInviteToken';
 
 declare global {
   interface Window {
@@ -33,22 +33,17 @@ function parseErr(message: string): [string, number | null] {
   return [code ?? '', n != null && n !== '' ? Number(n) : null];
 }
 
-/** Reads user.me with a fresh token (the store is not signed in yet). Errors count as onboarded: go home. */
+/** Reads user.me with a fresh token (the store is not signed in yet). Errors and timeouts count as onboarded. */
 async function isOnboarded(accessToken: string): Promise<boolean> {
   try {
-    const res = await fetch('/trpc/user.me', { headers: { Authorization: `Bearer ${accessToken}` } });
+    const res = await fetch('/trpc/user.me', {
+      headers: { Authorization: `Bearer ${accessToken}` },
+      signal: AbortSignal.timeout(5000),
+    });
     const body = (await res.json()) as { result?: { data?: { onboardingCompleted?: boolean } } };
     return body.result?.data?.onboardingCompleted !== false;
   } catch {
     return true;
-  }
-}
-
-function readPendingInvite(): string | null {
-  try {
-    return localStorage.getItem(PENDING_INVITE_KEY);
-  } catch {
-    return null;
   }
 }
 
@@ -70,7 +65,13 @@ export function useSignIn({ redirect, onCodeSent }: UseSignInOptions = {}) {
 
   // The invite survives every method: it stays in localStorage until InvitePage accepts it
   const pendingInviteToken = readPendingInvite();
-  const effectiveRedirect = redirect || (pendingInviteToken ? `/invite/${pendingInviteToken}` : null);
+  // Only same-origin relative paths are followed (?redirect= is user-controlled)
+  const effectiveRedirect = safePath(redirect) || (pendingInviteToken ? `/invite/${pendingInviteToken}` : null);
+
+  // Stale demo-mode tokens: clear them and reload so the tRPC client uses the real HTTP link
+  useEffect(() => {
+    clearDemoSession();
+  }, []);
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -84,27 +85,19 @@ export function useSignIn({ redirect, onCodeSent }: UseSignInOptions = {}) {
   }, [resendLeft]);
 
   /**
-   * Finish a sign-in: an invite/SOS target or the intro open with a full page load (fresh tRPC caches, and no
-   * race with TelegramBootstrap, which sends a signed-in person still on /login to "/"); everyone else goes home.
+   * Finish a sign-in. First run is decided here from isNew (new accounts are created with
+   * onboardingCompleted=true, so user.me cannot tell). Anything but home opens with a full page load:
+   * fresh tRPC caches, and no race with TelegramBootstrap, which sends a signed-in person on /login to "/".
    */
   const onTokens = (method: LoginMethod | null) => async (data: Tokens) => {
     if (method) markLoginMethod(method);
-    const target = effectiveRedirect || takePendingSosPath();
-    // A brand-new account, or an old one that never finished onboarding, starts with the intro
-    const onboarded = target || data.isNew ? !data.isNew : await isOnboarded(data.accessToken);
+    const target = effectiveRedirect || safePath(takePendingSosPath());
+    // Old accounts that never finished onboarding get the first run too
+    const isNew = !!data.isNew || !(await isOnboarded(data.accessToken));
+    const path = afterSignInPath(isNew, target);
     login(data.accessToken, data.refreshToken, data.userId);
-    if (target) {
-      // Full page reload to reinitialize the tRPC client and caches
-      window.location.href = target;
-      return;
-    }
-    if (onboarded) {
-      navigate('/', { replace: true });
-      return;
-    }
-    // A full load, not navigate(): in the same render TelegramBootstrap still sees /login with a signed-in
-    // store and would replace the in-app navigation with "/".
-    window.location.replace('/intro');
+    if (path === '/') navigate('/', { replace: true });
+    else window.location.href = path;
   };
 
   // ---- E-mail code ----
@@ -214,8 +207,9 @@ export function useSignIn({ redirect, onCodeSent }: UseSignInOptions = {}) {
     }
     // Website without the Telegram button: continue in the bot's mini app, keeping the invite
     const bot = methods?.telegramBot || 'socialorganizer_bot';
-    const inviteToken = pendingInviteToken || (effectiveRedirect?.startsWith('/invite/') ? effectiveRedirect.slice('/invite/'.length) : null);
-    window.open(inviteToken ? `https://t.me/${bot}?startapp=invite_${inviteToken}` : `https://t.me/${bot}`, '_blank');
+    const inviteToken = pendingInviteToken
+      || safeInviteToken(effectiveRedirect?.startsWith('/invite/') ? effectiveRedirect.slice('/invite/'.length).split(/[?#]/)[0] : null);
+    window.open(inviteToken ? `https://t.me/${bot}?startapp=invite_${encodeURIComponent(inviteToken)}` : `https://t.me/${bot}`, '_blank');
   };
 
   // ---- Google ----

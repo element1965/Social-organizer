@@ -27,6 +27,7 @@ import {
   StakeStub,
 } from './components/ui2/stubs';
 import { useAuth } from './hooks/useAuth';
+import { afterSignInPath, readPendingInvite, safeInviteToken, setPendingInvite } from './components/onboarding/flow';
 import { LoginPage } from './pages/LoginPage';
 import { LandingPage } from './pages/LandingPage';
 import { CollectionPage } from './pages/CollectionPage';
@@ -84,10 +85,11 @@ function GoogleAuthDeepLinkHandler() {
           login(at, rt, uid);
           // Prefer the invite token carried through the OAuth round-trip (inv),
           // fall back to one saved before the browser was opened.
-          const pendingInvite = params.get('inv') || localStorage.getItem('pendingInviteToken');
+          const pendingInvite = safeInviteToken(params.get('inv')) || readPendingInvite();
           // Keep pendingInviteToken until InvitePage accepts it.
-          if (pendingInvite) localStorage.setItem('pendingInviteToken', pendingInvite);
-          navigate(pendingInvite ? `/invite/${pendingInvite}` : '/', { replace: true });
+          if (pendingInvite) setPendingInvite(pendingInvite);
+          // A new account goes through the intro first (components/onboarding/flow.ts)
+          navigate(afterSignInPath(params.get('isNew') === '1', pendingInvite ? `/invite/${pendingInvite}` : null), { replace: true });
         } else {
           navigate('/login', { replace: true });
         }

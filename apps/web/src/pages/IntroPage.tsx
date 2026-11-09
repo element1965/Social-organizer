@@ -1,11 +1,12 @@
 import { useRef, useState, type TouchEvent } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Trans, useTranslation } from 'react-i18next';
 import { trpc } from '../lib/trpc';
 import { Button } from '../components/ui2';
 import { NetFigure, type NetStep } from '../components/figures';
 import { OnboardingFrame } from '../components/onboarding/OnboardingFrame';
 import { useNetLabels } from '../components/onboarding/figureLabels';
+import { isFirstRunPending, safePath } from '../components/onboarding/flow';
 import { cn } from '../lib/utils';
 
 const STEPS: NetStep[] = [0, 1, 2];
@@ -13,24 +14,34 @@ const STEPS: NetStep[] = [0, 1, 2];
 /**
  * Intro (screens.md §14, onboarding.html №5–7): three frames over the same network, which stays in place
  * while only the highlight changes. No brand line; "Skip" in the corner (not on the last frame).
- * First run: user.completeOnboarding, then the minimum participation question. Again from Help: back.
+ * First run (?first=1 from the sign-in path; see components/onboarding/flow.ts): user.completeOnboarding, then the
+ * minimum participation question, carrying ?next=. A rewatch from Help returns to /me/help.
  */
 export function IntroPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const labels = useNetLabels();
   const utils = trpc.useUtils();
-  const { data: me } = trpc.user.me.useQuery();
+  const [params] = useSearchParams();
+  const next = safePath(params.get('next'));
+  const me = trpc.user.me.useQuery();
   const complete = trpc.user.completeOnboarding.useMutation();
   const [step, setStep] = useState<NetStep>(0);
   const touchX = useRef<number | null>(null);
-  // Decided once: a person who already finished onboarding is watching it again from Help
+  // First run comes from the sign-in path, not from user.me (new accounts are created already "onboarded").
+  // user.me only covers old accounts that never finished. Decided once; until then Skip/Done wait.
   const firstRun = useRef<boolean | null>(null);
-  if (firstRun.current === null && me) firstRun.current = !me.onboardingCompleted;
+  if (firstRun.current === null) {
+    if (params.get('first') === '1' || isFirstRunPending()) firstRun.current = true;
+    else if (me.data) firstRun.current = !me.data.onboardingCompleted;
+    else if (me.isError) firstRun.current = false;
+  }
+  const resolved = firstRun.current !== null;
 
   const last = step === 2;
 
   const finish = async () => {
+    if (!resolved) return;
     if (firstRun.current) {
       try {
         await complete.mutateAsync();
@@ -38,11 +49,10 @@ export function IntroPage() {
         /* the intro must never trap anyone */
       }
       utils.user.me.setData(undefined, (old) => (old ? { ...old, onboardingCompleted: true } : old));
-      navigate('/seed', { replace: true });
+      navigate(next ? `/seed?first=1&next=${encodeURIComponent(next)}` : '/seed?first=1', { replace: true });
       return;
     }
-    if (window.history.length > 1) navigate(-1);
-    else navigate('/me/help', { replace: true });
+    navigate('/me/help', { replace: true });
   };
 
   const go = (next: number) => setStep(Math.max(0, Math.min(2, next)) as NetStep);
@@ -70,7 +80,7 @@ export function IntroPage() {
             <button
               type="button"
               onClick={() => void finish()}
-              disabled={complete.isPending}
+              disabled={complete.isPending || !resolved}
               className="so-focus grid h-10 place-items-center rounded-md px-3 text-caption font-bold text-ink-muted"
             >
               {t('intro.skip')}
@@ -78,7 +88,7 @@ export function IntroPage() {
           )
         }
         foot={
-          <Button className="w-full" loading={complete.isPending} onClick={() => (last ? void finish() : go(step + 1))}>
+          <Button className="w-full" loading={complete.isPending || (last && !resolved)} onClick={() => (last ? void finish() : go(step + 1))}>
             {last ? t('intro.done') : t('intro.next')}
           </Button>
         }
