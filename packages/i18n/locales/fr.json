@@ -219,7 +219,7 @@
     "fit": "Ajuster le réseau",
     "stats": {
       "canHelp": "Votre réseau peut aider",
-      "explain": "La somme des participations minimales des personnes de votre réseau : 1re, 2e et 3e poignées de main.",
+      "explain": "Ce que les personnes touchées par votre demande peuvent encore donner sur cette période. La demande part par vagues, des plus proches jusqu’à la 6e poignée de main.",
       "weekDelta": "+{{amount}} cette semaine",
       "people_many": "{{count}} de personnes dans votre réseau",
       "people_one": "{{count}} personne dans votre réseau",

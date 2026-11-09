@@ -219,7 +219,7 @@
     "fit": "Netwerk in beeld",
     "stats": {
       "canHelp": "Je netwerk kan helpen",
-      "explain": "De som van de minimale deelname van mensen in je netwerk: 1e, 2e en 3e handdruk.",
+      "explain": "Wat de mensen die je verzoek bereikt deze periode nog kunnen geven. Het gaat in golven, eerst naar de naasten, tot de 6e handdruk.",
       "weekDelta": "+{{amount}} deze week",
       "people_one": "{{count}} persoon in je netwerk",
       "people_other": "{{count}} personen in je netwerk",

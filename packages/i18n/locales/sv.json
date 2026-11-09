@@ -219,7 +219,7 @@
     "fit": "Anpassa nätverket",
     "stats": {
       "canHelp": "Ditt nätverk kan hjälpa",
-      "explain": "Summan av minsta deltagande för personerna i ditt nätverk: 1:a, 2:a och 3:e handslaget.",
+      "explain": "Vad de människor din förfrågan når fortfarande kan ge under perioden. Den går ut i vågor, närmast först, upp till 6:e handslaget.",
       "weekDelta": "+{{amount}} den här veckan",
       "people_one": "{{count}} person i ditt nätverk",
       "people_other": "{{count}} personer i ditt nätverk",

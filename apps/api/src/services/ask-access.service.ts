@@ -1,10 +1,10 @@
 import { TRPCError } from '@trpc/server';
 import type { PrismaClient } from '@so/db';
 import { ASK_MIN_DIRECT, ASK_MIN_NETWORK } from '@so/shared';
-import { ASK_ERRORS, ASK_NETWORK_SCAN_LIMIT } from '../config/ask.js';
+import { ASK_ERRORS } from '../config/ask.js';
 import { isAdmin } from '../admin.js';
 import { countConnections } from './connection-request.service.js';
-import { bfsNetwork } from './network.service.js';
+import { bfsNetwork, networkReach, NETWORK_MAX_DEPTH } from './network.service.js';
 
 type Db = PrismaClient;
 
@@ -28,33 +28,36 @@ export async function isSpecialAsker(db: Db, userId: string): Promise<boolean> {
   return u?.role === 'AUTHOR' || u?.role === 'DEVELOPER';
 }
 
-/** What the network can help with: the same figure the dashboard shows (sum of members' remaining budgets). */
-async function networkCanHelp(db: Db, members: Array<{ user_id: string }>): Promise<number> {
-  const users = await db.user.findMany({
-    where: { id: { in: members.map((m) => m.user_id) } },
-    select: { remainingBudget: true },
-  });
-  return users.reduce((s, u) => s + (u.remainingBudget ?? 0), 0);
-}
-
 /**
- * Full numbers for the UI. With `quick`, the walk stops as soon as the network threshold is reached
- * (enough for the allow decision; networkCount is then capped and networkCanHelp is null).
+ * Full numbers for the UI: the same reach and sum as the home screen (networkReach), so every screen
+ * agrees. With `quick`, the walk stops as soon as the network threshold is reached (enough for the
+ * allow decision; networkCount is then capped and networkCanHelp is null).
  */
 export async function getAskAccess(db: Db, userId: string, opts: { quick?: boolean } = {}): Promise<AskAccess> {
-  const [directCount, members] = await Promise.all([
-    countConnections(db, userId),
-    bfsNetwork(db, userId, opts.quick ? ASK_MIN_NETWORK : ASK_NETWORK_SCAN_LIMIT),
-  ]);
-  const canHelp = opts.quick ? null : await networkCanHelp(db, members);
+  if (opts.quick) {
+    const [directCount, members] = await Promise.all([
+      countConnections(db, userId),
+      bfsNetwork(db, userId, ASK_MIN_NETWORK, NETWORK_MAX_DEPTH),
+    ]);
+    return {
+      allowed: directCount >= ASK_MIN_DIRECT && members.length >= ASK_MIN_NETWORK,
+      directCount,
+      networkCount: members.length,
+      needDirect: ASK_MIN_DIRECT,
+      needNetwork: ASK_MIN_NETWORK,
+      networkCanHelp: null,
+    };
+  }
 
+  const [directCount, reach] = await Promise.all([countConnections(db, userId), networkReach(db, userId)]);
   return {
-    allowed: directCount >= ASK_MIN_DIRECT && members.length >= ASK_MIN_NETWORK,
+    // The threshold uses the exact count; the screens get the rounded one
+    allowed: directCount >= ASK_MIN_DIRECT && reach.exact >= ASK_MIN_NETWORK,
     directCount,
-    networkCount: members.length,
+    networkCount: reach.shown,
     needDirect: ASK_MIN_DIRECT,
     needNetwork: ASK_MIN_NETWORK,
-    networkCanHelp: canHelp,
+    networkCanHelp: reach.canHelp,
   };
 }
 

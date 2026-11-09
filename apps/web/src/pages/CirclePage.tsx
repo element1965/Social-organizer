@@ -89,7 +89,9 @@ export function CirclePage() {
   const empty = connectionsReady && direct === 0;
   const byDepth = (stats.data?.byDepth ?? {}) as Record<number, number>;
   const counts: Record<Ring, number> = { 1: byDepth[1] ?? 0, 2: byDepth[2] ?? 0, 3: byDepth[3] ?? 0 };
-  const peopleCount = empty ? 0 : counts[1] + counts[2] + counts[3];
+  // The whole reach of a request, as on the profile (rounded beyond the 3rd ring); older cached stats lack it
+  const networkPeople = (stats.data as { networkPeople?: number } | undefined)?.networkPeople;
+  const peopleCount = empty ? 0 : networkPeople ?? counts[1] + counts[2] + counts[3];
   // 4th and 5th rings: only rounded counts, drawn as anonymous dust
   const farRings = useFarRings().dots;
   const canHelp = empty ? 0 : caps.data?.total ?? 0;

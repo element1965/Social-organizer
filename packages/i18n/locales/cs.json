@@ -219,7 +219,7 @@
     "fit": "Vejít síť",
     "stats": {
       "canHelp": "Vaše síť může pomoct",
-      "explain": "Součet minimální účasti lidí ve vaší síti: 1., 2. a 3. podání ruky.",
+      "explain": "Kolik ještě mohou v tomto období dát lidé, ke kterým vaše prosba dojde. Jde ve vlnách, od nejbližších až po 6. podání ruky.",
       "weekDelta": "+{{amount}} tento týden",
       "people_few": "{{count}} lidé ve vaší síti",
       "people_many": "{{count}} člověka ve vaší síti",

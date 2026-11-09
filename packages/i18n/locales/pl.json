@@ -219,7 +219,7 @@
     "fit": "Wpasuj sieć",
     "stats": {
       "canHelp": "Twoja sieć może pomóc",
-      "explain": "Suma minimalnego udziału osób w Twojej sieci: 1., 2. i 3. uścisk dłoni.",
+      "explain": "Ile mogą jeszcze dać w tym okresie osoby, do których dotrze twoja prośba. Idzie falami, od najbliższych, do 6. uścisku dłoni.",
       "weekDelta": "+{{amount}} w tym tygodniu",
       "people_few": "{{count}} osoby w Twojej sieci",
       "people_many": "{{count}} osób w Twojej sieci",

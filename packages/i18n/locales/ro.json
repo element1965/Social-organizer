@@ -219,7 +219,7 @@
     "fit": "Încadrează rețeaua",
     "stats": {
       "canHelp": "Rețeaua ta poate ajuta",
-      "explain": "Suma participării minime a oamenilor din rețeaua ta: prima, a doua și a treia strângere de mână.",
+      "explain": "Cât mai pot da în această perioadă oamenii la care ajunge cererea ta. Pleacă în valuri, de la cei mai apropiați, până la a 6-a strângere de mână.",
       "weekDelta": "+{{amount}} săptămâna aceasta",
       "people_few": "{{count}} persoane în rețeaua ta",
       "people_one": "{{count}} persoană în rețeaua ta",

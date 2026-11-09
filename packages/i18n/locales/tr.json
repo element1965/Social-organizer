@@ -219,7 +219,7 @@
     "fit": "Ağı sığdır",
     "stats": {
       "canHelp": "Ağın yardımcı olabilir",
-      "explain": "Ağınızdaki kişilerin asgari katılımının toplamı: 1., 2. ve 3. tokalaşma.",
+      "explain": "İsteğinizin ulaştığı kişilerin bu dönemde hâlâ verebileceği miktar. İstek dalgalar hâlinde, en yakınlardan başlayıp 6. tokalaşmaya kadar gider.",
       "weekDelta": "Bu hafta +{{amount}}",
       "people_one": "Ağınızda {{count}} kişi",
       "people_other": "Ağınızda {{count}} kişi",

@@ -223,7 +223,7 @@
       "peopleShort_one": "{{count}} person",
       "peopleShort_other": "{{count}} people",
       "canHelp": "Your network can help",
-      "explain": "The sum of minimum participation of people in your network: 1st, 2nd and 3rd handshake.",
+      "explain": "What people your request reaches can still give this period. A request goes out in waves, nearest first, up to the 6th handshake.",
       "weekDelta": "+{{amount}} this week"
     },
     "rings": {

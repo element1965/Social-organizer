@@ -2,6 +2,7 @@ import { z } from 'zod';
 import { TRPCError } from '@trpc/server';
 import { router, protectedProcedure, publicProcedure } from '../trpc.js';
 import { ADMIN_IDS, CLUSTER_ROOT_OVERRIDE } from '../admin.js';
+import { networkReach } from '../services/network.service.js';
 
 class UnionFindStats {
   parent = new Map<string, string>();
@@ -409,7 +410,7 @@ export const statsRouter = router({
     return result;
   }),
 
-  // Current network capabilities (sum of all remainingBudget in the connected cluster)
+  // Current network capabilities: what the people a request reaches can still give this period
   networkCapabilities: protectedProcedure.query(async ({ ctx }) => {
     // If user has no connections, fallback to inviter's network (pending connection)
     let userId = ctx.userId;
@@ -426,26 +427,9 @@ export const statsRouter = router({
       if (pending) userId = pending.toUserId;
     }
 
-    // Find the entire connected cluster via recursive CTE (no depth limit)
-    const result = await ctx.db.$queryRaw<Array<{ total: number; contributors: bigint }>>`
-      WITH RECURSIVE cluster AS (
-        SELECT ${userId}::text AS user_id
-        UNION
-        SELECT CASE WHEN c."userAId" = cluster.user_id THEN c."userBId" ELSE c."userAId" END
-        FROM connections c
-        JOIN cluster ON c."userAId" = cluster.user_id OR c."userBId" = cluster.user_id
-      )
-      SELECT
-        COALESCE(SUM(u."remainingBudget"), 0)::float AS total,
-        COUNT(*)::bigint AS contributors
-      FROM users u
-      JOIN cluster ON u.id = cluster.user_id
-      WHERE u."remainingBudget" > 0 AND u."deletedAt" IS NULL
-    `;
-
-    return {
-      total: Math.round(result[0]?.total || 0),
-      contributors: Number(result[0]?.contributors || 0),
-    };
+    // The same reach and the same sum as the profile and the ask screen (networkReach):
+    // everyone a request travels to, up to the 6th handshake, without the person themselves
+    const reach = await networkReach(ctx.db, userId);
+    return { total: reach.canHelp, people: reach.shown };
   }),
 });

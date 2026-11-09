@@ -219,7 +219,7 @@
     "fit": "Sovita verkosto",
     "stats": {
       "canHelp": "Verkostosi voi auttaa",
-      "explain": "Verkostosi ihmisten vähimmäisosallistumisten summa: 1., 2. ja 3. kädenpuristus.",
+      "explain": "Mitä pyyntösi tavoittamat ihmiset voivat vielä antaa tällä jaksolla. Pyyntö lähtee aaltoina, lähimmistä alkaen, 6. kättelyyn asti.",
       "weekDelta": "+{{amount}} tällä viikolla",
       "people_one": "{{count}} henkilö verkostossasi",
       "people_other": "{{count}} henkilöä verkostossasi",
