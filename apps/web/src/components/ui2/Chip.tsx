@@ -34,14 +34,14 @@ export function Chip({
         'relative inline-flex items-center justify-center gap-1 whitespace-nowrap font-bold',
         'before:absolute before:-inset-y-1.5 before:inset-x-0',
         'so-focus',
-        variant === 'preset' && 'h-small rounded-r-md bg-surface px-3.5 text-body-s text-ink-muted shadow-float',
+        variant === 'preset' && 'h-small rounded-md bg-surface px-3.5 text-body-s text-ink-muted shadow-float',
         variant === 'preset' && active && 'bg-ink text-canvas shadow-none',
-        variant === 'ring' && 'h-chip rounded-r-md bg-surface px-2.5 text-micro text-ink-muted shadow-float',
+        variant === 'ring' && 'h-chip rounded-md bg-surface px-2.5 text-micro text-ink-muted shadow-float',
         variant === 'ring' && active && 'text-ink',
-        variant === 'action' && 'h-chip rounded-r-md bg-surface px-3 text-micro text-ink shadow-float',
+        variant === 'action' && 'h-chip rounded-md bg-surface px-3 text-micro text-ink shadow-float',
         variant === 'action' && active && 'bg-care text-care-on shadow-none',
         variant === 'onscene' &&
-          'h-[34px] rounded-r-md border border-node-1/15 bg-scene-2/80 px-2.5 text-micro text-node-2',
+          'h-[34px] rounded-md border border-node-1/15 bg-scene-2/80 px-2.5 text-micro text-node-2',
         variant === 'onscene' && active && 'border-transparent bg-care-bright text-scene',
         className,
       )}

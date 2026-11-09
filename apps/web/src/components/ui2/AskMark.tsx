@@ -32,7 +32,7 @@ export function AskMark({ progress, className }: AskMarkProps) {
       )}
       <span
         className={cn(
-          'grid h-[26px] w-[26px] place-items-center rounded-r-sm',
+          'grid h-[26px] w-[26px] place-items-center rounded-sm',
           ready ? 'bg-sos text-sos-on' : 'text-ink-subtle',
         )}
       >

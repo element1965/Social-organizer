@@ -1,4 +1,4 @@
-import { useId, useRef, type ReactNode } from 'react';
+import { useId, useRef, type PointerEvent, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 import { cn } from '../../lib/utils';
 import { useFocusTrap } from './focus-trap';
@@ -38,6 +38,20 @@ export function Sheet({
 
   if (!open) return null;
 
+  const startDrag = (event: PointerEvent<HTMLDivElement>) => {
+    if (dialog || event.button !== 0) return;
+    const target = event.target;
+    if (!(target instanceof Element)) return;
+    if (target.closest('input, textarea, select, [role="slider"]')) return;
+    dragY.current = event.clientY;
+    event.currentTarget.setPointerCapture(event.pointerId);
+  };
+
+  const finishDrag = (event: PointerEvent<HTMLDivElement>) => {
+    if (dragY.current != null && event.clientY - dragY.current > 48) onClose();
+    dragY.current = null;
+  };
+
   const panel = (
     <div
       ref={panelRef}
@@ -49,26 +63,22 @@ export function Sheet({
       className={cn(
         'so-sheet-in bg-surface text-ink shadow-sheet outline-none',
         dialog
-          ? 'w-[440px] max-w-[calc(100%-32px)] rounded-r-xl p-6'
-          : 'w-full rounded-r-2xl px-[18px] pb-[calc(16px+var(--sa-bottom))] pt-5',
+          ? 'w-[440px] max-w-[calc(100%-32px)] rounded-xl p-6'
+          : 'w-full rounded-2xl px-[18px] pb-[calc(16px+var(--sa-bottom))] pt-5',
       )}
       onMouseDown={(event) => event.stopPropagation()}
-      onPointerDown={(event) => {
-        if (!dialog) dragY.current = event.clientY;
-      }}
-      onPointerUp={(event) => {
-        if (dragY.current != null && event.clientY - dragY.current > 48) onClose();
-        dragY.current = null;
-      }}
     >
-      <h2 id={titleId} className={cn('text-title', dialog ? 'font-extrabold' : 'font-bold')}>
-        {title}
-      </h2>
-      {description ? (
-        <p id={descId} className="mt-1.5 text-caption font-semibold text-ink-muted">
-          {description}
-        </p>
-      ) : null}
+      <div onPointerDown={startDrag} onPointerUp={finishDrag} onPointerCancel={() => { dragY.current = null; }}>
+        {dialog ? null : <div className="mx-auto mb-3 h-1 w-9 rounded-pill bg-line-strong" aria-hidden />}
+        <h2 id={titleId} className={cn('text-title', dialog ? 'font-extrabold' : 'font-bold')}>
+          {title}
+        </h2>
+        {description ? (
+          <p id={descId} className="mt-1.5 text-caption font-semibold text-ink-muted">
+            {description}
+          </p>
+        ) : null}
+      </div>
       {children ? <div className="mt-3">{children}</div> : null}
       {footer ? (
         <div className={cn('mt-4', dialog ? 'grid grid-cols-2 gap-2.5' : 'flex flex-col gap-2.5')}>{footer}</div>

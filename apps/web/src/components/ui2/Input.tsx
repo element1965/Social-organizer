@@ -81,8 +81,8 @@ function TextField({ label, hint, error, variant, className, id, ...rest }: Text
             'w-full border bg-surface-2 text-ink outline-none placeholder:text-ink-subtle',
             'focus:border-care',
             search
-              ? 'h-secondary rounded-r-lg pl-10 pr-3 text-body-s font-semibold'
-              : 'h-primary rounded-r-lg px-3.5 text-body-l font-semibold',
+              ? 'h-secondary rounded-lg pl-10 pr-3 text-body-s font-semibold'
+              : 'h-primary rounded-lg px-3.5 text-body-l font-semibold',
             error ? 'border-sos' : 'border-line',
             className,
           )}
@@ -101,7 +101,7 @@ function LockedField({ label, hint, error, value, id, className }: TextProps) {
       <span
         id={fieldId}
         className={cn(
-          'flex h-primary items-center gap-2 rounded-r-lg border border-line bg-surface-2 px-3.5 text-body-l font-semibold text-ink',
+          'flex h-primary items-center gap-2 rounded-lg border border-line bg-surface-2 px-3.5 text-body-l font-semibold text-ink',
           className,
         )}
       >
@@ -194,7 +194,7 @@ function CodeField({ label, hint, error, value, onValueChange, id }: CodeProps) 
               focusAt(Math.min(pasted.length, 5));
             }}
             className={cn(
-              'h-primary w-12 rounded-r-lg border bg-surface-2 text-center text-body-l font-bold tabular-nums text-ink outline-none',
+              'h-primary w-12 rounded-lg border bg-surface-2 text-center text-body-l font-bold tabular-nums text-ink outline-none',
               'focus:border-2 focus:border-care',
               error ? 'border-sos' : 'border-line',
             )}

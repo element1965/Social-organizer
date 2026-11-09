@@ -184,7 +184,7 @@ function Gallery() {
 
       <Block title="Card">
         <Card title={t(`${g}.sampleName`)} subtitle={t(`${g}.sampleVia`)}>
-          <div className="rounded-r-lg bg-surface-2 p-3 text-body font-body">{t(`${g}.participating`)}</div>
+          <div className="rounded-lg bg-surface-2 p-3 text-body font-body">{t(`${g}.participating`)}</div>
         </Card>
       </Block>
 
@@ -264,7 +264,7 @@ function Gallery() {
       </Block>
 
       <Block title="Sheet">
-        <div className="relative h-[440px] overflow-hidden rounded-r-xl border border-line">
+        <div className="relative h-[440px] overflow-hidden rounded-xl border border-line">
           <Sheet
             open={sheetOpen}
             contained
@@ -275,7 +275,7 @@ function Gallery() {
             footer={declineFooter(() => setSheetOpen(false), 'ghost')}
           />
         </div>
-        <div className="relative mt-4 h-[360px] overflow-hidden rounded-r-xl border border-line">
+        <div className="relative mt-4 h-[360px] overflow-hidden rounded-xl border border-line">
           <Sheet
             open={dialogOpen}
             contained
@@ -289,7 +289,7 @@ function Gallery() {
       </Block>
 
       <Block title="Screen">
-        <div className="overflow-hidden rounded-r-xl border border-line">
+        <div className="overflow-hidden rounded-xl border border-line">
           <Screen
             shell="tabs"
             title={t('nav.person')}
@@ -299,7 +299,7 @@ function Gallery() {
             <p className="text-body font-body">{t('common.comingSoon')}</p>
           </Screen>
         </div>
-        <div className="mt-4 overflow-hidden rounded-r-xl border border-line">
+        <div className="mt-4 overflow-hidden rounded-xl border border-line">
           <Screen
             shell="sidebar"
             width="column"
@@ -314,7 +314,7 @@ function Gallery() {
 
       <Block title={t(`${g}.shell`)}>
         <p className="mb-2 text-label font-semibold text-ink-muted">{t(`${g}.tabs`)}</p>
-        <div className="relative h-[520px] max-w-[390px] overflow-hidden rounded-r-xl border border-line bg-canvas">
+        <div className="relative h-[520px] max-w-[390px] overflow-hidden rounded-xl border border-line bg-canvas">
           <div className="p-4">
             <h4 className="text-h1 font-extrabold">{t('nav.circle')}</h4>
           </div>
@@ -330,7 +330,7 @@ function Gallery() {
           />
         </div>
         <p className="mb-2 mt-4 text-label font-semibold text-ink-muted">{t(`${g}.rail`)}</p>
-        <div className="flex h-[520px] max-w-[640px] overflow-hidden rounded-r-xl border border-line bg-canvas">
+        <div className="flex h-[520px] max-w-[640px] overflow-hidden rounded-xl border border-line bg-canvas">
           <ShellChrome
             contained
             interactive={false}
@@ -347,7 +347,7 @@ function Gallery() {
           </div>
         </div>
         <p className="mb-2 mt-4 text-label font-semibold text-ink-muted">{t(`${g}.sidebar`)}</p>
-        <div className="flex h-[560px] overflow-hidden rounded-r-xl border border-line bg-canvas">
+        <div className="flex h-[560px] overflow-hidden rounded-xl border border-line bg-canvas">
           <ShellChrome
             contained
             interactive={false}
@@ -377,7 +377,7 @@ function Gallery() {
       </Block>
 
       <Block title="Site">
-        <div className="overflow-hidden rounded-r-xl border border-line">
+        <div className="overflow-hidden rounded-xl border border-line">
           <SiteHeader
             brand={t('common.appName')}
             links={[

@@ -60,7 +60,7 @@ function InviteAcceptView({ token }: { token: string }) {
   const autoAcceptTriggered = useRef(false);
   const { data: me } = trpc.user.me.useQuery();
 
-  const { data: invite, isLoading, error } = trpc.invite.getByToken.useQuery(
+  const { data: invite, isLoading, isFetched, error } = trpc.invite.getByToken.useQuery(
     { token: token! },
     { enabled: !!token },
   );
@@ -69,12 +69,29 @@ function InviteAcceptView({ token }: { token: string }) {
       localStorage.removeItem('pendingInviteToken');
     },
     onError: (err) => {
-      // If token is invalid/expired, clear auth state so user sees login button
+      // If token is invalid/expired, clear auth state so user sees login button.
+      // Other failures are terminal for this link: drop it so home does not reopen the invite.
       if (err.data?.code === 'UNAUTHORIZED') {
         logout();
+        return;
       }
+      localStorage.removeItem('pendingInviteToken');
     },
   });
+
+  const notFound = isFetched && (!!error || !invite);
+  const alreadyUsed =
+    !isLoading && !!invite && !!me && !!invite.usedById && invite.usedById !== me.id && !accept.isSuccess;
+
+  // A dead invite must not send ShellGate back here after Back → / → home.
+  useEffect(() => {
+    if (notFound || alreadyUsed) localStorage.removeItem('pendingInviteToken');
+  }, [notFound, alreadyUsed]);
+
+  const leave = () => {
+    localStorage.removeItem('pendingInviteToken');
+    navigate('/');
+  };
 
   // Auto-accept invite when authenticated user lands on this page
   useEffect(() => {
@@ -116,7 +133,7 @@ function InviteAcceptView({ token }: { token: string }) {
         <Card>
           <CardContent className="py-8 text-center">
             <p className="text-gray-500 dark:text-gray-300">{inviterGone ? t('acquaintance.inviteGone') : t('common.notFound')}</p>
-            <Button className="mt-4" onClick={() => navigate(inviterGone ? '/dashboard' : '/login')}>
+            <Button className="mt-4" onClick={leave}>
               {inviterGone ? t('acquaintance.inviteSomeone') : t('common.back')}
             </Button>
           </CardContent>
@@ -131,7 +148,7 @@ function InviteAcceptView({ token }: { token: string }) {
         <Card>
           <CardContent className="py-8 text-center">
             <p className="text-gray-500 dark:text-gray-300">{t('invite.alreadyUsed')}</p>
-            <Button className="mt-4" onClick={() => navigate('/dashboard')}>{t('common.back')}</Button>
+            <Button className="mt-4" onClick={leave}>{t('common.back')}</Button>
           </CardContent>
         </Card>
       </div>

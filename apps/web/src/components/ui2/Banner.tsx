@@ -47,9 +47,9 @@ export function Banner({ kicker, title, body, icon, onClose, duration = 5000, in
         start.current = null;
       }}
     >
-      <div className="flex items-center gap-3 rounded-r-xl bg-surface p-3 text-ink shadow-banner">
+      <div className="flex items-center gap-3 rounded-xl bg-surface p-3 text-ink shadow-banner">
         {icon ? (
-          <span className="grid h-9 w-9 shrink-0 place-items-center rounded-r-md bg-care-soft text-care">{icon}</span>
+          <span className="grid h-9 w-9 shrink-0 place-items-center rounded-md bg-care-soft text-care">{icon}</span>
         ) : null}
         <span className="min-w-0">
           {kicker ? <span className="block text-micro font-bold text-ink-muted">{kicker}</span> : null}

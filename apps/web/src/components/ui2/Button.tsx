@@ -39,15 +39,15 @@ export function Button({
   const box =
     variant === 'icon'
       ? resolved === 'md'
-        ? 'h-10 w-10 rounded-r-md'
-        : 'h-icon w-icon rounded-r-md'
+        ? 'h-10 w-10 rounded-md'
+        : 'h-icon w-icon rounded-md'
       : variant === 'text' || variant === 'textDanger'
-        ? 'min-h-small rounded-r-md px-2 text-body-s font-bold'
+        ? 'min-h-small rounded-md px-2 text-body-s font-bold'
         : resolved === 'md'
-          ? 'h-secondary rounded-r-lg px-4 text-body-s font-bold'
+          ? 'h-secondary rounded-lg px-4 text-body-s font-bold'
           : resolved === 'sm'
-            ? 'h-small rounded-r-md px-3 text-caption font-bold'
-            : 'h-primary rounded-r-lg px-4 text-body-l font-bold';
+            ? 'h-small rounded-md px-3 text-caption font-bold'
+            : 'h-primary rounded-lg px-4 text-body-l font-bold';
 
   return (
     <button

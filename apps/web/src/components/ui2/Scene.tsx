@@ -5,7 +5,7 @@ export function SceneBox({ children, className }: { children: ReactNode; classNa
   return (
     <div
       className={cn(
-        'rounded-r-xl bg-scene p-4 text-node-1',
+        'rounded-xl bg-scene p-4 text-node-1',
         'bg-[radial-gradient(120%_90%_at_50%_38%,rgb(var(--so-scene-2))_0%,rgb(var(--so-scene))_70%)]',
         className,
       )}
