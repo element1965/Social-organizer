@@ -2,6 +2,7 @@ import { initTRPC, TRPCError } from '@trpc/server';
 import { z } from 'zod';
 import type { Context } from './context.js';
 import { SKILLS_FEATURE_ENABLED } from './services/mvp-scope.js';
+import { touchUser } from './services/activity.service.js';
 
 const t = initTRPC.context<Context>().create({
   // Additive error data, so older clients keep working: ACCOUNT_EXISTS_OTHER_METHOD carries the masked e-mail
@@ -17,8 +18,6 @@ export const router = t.router;
 export const publicProcedure = t.procedure;
 export const middleware = t.middleware;
 
-const LAST_SEEN_THROTTLE_MS = 60 * 1000;
-
 // Auth middleware — ensures user is authenticated and not deleted
 const isAuthed = middleware(async ({ ctx, next }) => {
   if (!ctx.userId) {
@@ -27,26 +26,13 @@ const isAuthed = middleware(async ({ ctx, next }) => {
   // Check: deleted users cannot perform actions
   const user = await ctx.db.user.findUnique({
     where: { id: ctx.userId },
-    select: { deletedAt: true, lastSeen: true, inactivityStage: true },
+    select: { deletedAt: true },
   });
   if (user?.deletedAt) {
     throw new TRPCError({ code: 'FORBIDDEN', message: 'Account has been deleted' });
   }
-  // Activity heartbeat: lastSeen drives "online" display and the 2-year inactivity cleanup.
-  // Throttled to one write per minute; any activity also cancels pending inactivity warnings.
-  // Fire-and-forget — don't slow down every request.
-  if (user) {
-    const now = new Date();
-    const stale = !user.lastSeen || now.getTime() - user.lastSeen.getTime() > LAST_SEEN_THROTTLE_MS;
-    if (stale || user.inactivityStage > 0) {
-      ctx.db.user.update({
-        where: { id: ctx.userId },
-        data: user.inactivityStage > 0
-          ? { lastSeen: now, inactivityStage: 0, inactivityWarnedAt: null }
-          : { lastSeen: now },
-      }).catch(() => {});
-    }
-  }
+  // Activity heartbeat (lastSeen + inactivity stage reset), throttled and fire-and-forget
+  if (user) touchUser(ctx.db, ctx.userId);
   return next({ ctx: { ...ctx, userId: ctx.userId } });
 });
 

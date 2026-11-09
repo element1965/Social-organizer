@@ -18,6 +18,13 @@ import { resolveExternalIdentity, AccountExistsError } from '../services/identit
 import { requestEmailCode, verifyEmailCode, EmailCodeError } from '../services/email-code.service.js';
 import { isMailConfigured, MailUnavailableError } from '../services/mail.service.js';
 import { LINKING_CODE_TTL_MINUTES } from '@so/shared';
+import { touchUser } from '../services/activity.service.js';
+
+/** Access token for a successful sign-in / refresh / link-code flow; counts as activity. */
+function signedInToken(db: Context['db'], userId: string): string {
+  touchUser(db, userId);
+  return createAccessToken(userId);
+}
 
 /** Link-code lookup for tRPC callers: limited per IP, 429 when over the limit (SO-14). */
 async function linkCodeOrThrow(ctx: { db: Context['db']; ip: string }, code: string) {
@@ -148,7 +155,7 @@ export const authRouter = router({
         },
       });
 
-      const accessToken = createAccessToken(user.id);
+      const accessToken = signedInToken(ctx.db, user.id);
       const refreshToken = createRefreshToken(user.id);
 
       return { accessToken, refreshToken, userId: user.id };
@@ -173,7 +180,7 @@ export const authRouter = router({
         throw new TRPCError({ code: 'UNAUTHORIZED', message: 'Invalid email or password' });
       }
 
-      const accessToken = createAccessToken(user.id);
+      const accessToken = signedInToken(ctx.db, user.id);
       const refreshToken = createRefreshToken(user.id);
 
       return { accessToken, refreshToken, userId: user.id };
@@ -201,7 +208,7 @@ export const authRouter = router({
 
       const userId = await signInTelegramUser(ctx.db, tgUser, input.initData);
 
-      const accessToken = createAccessToken(userId);
+      const accessToken = signedInToken(ctx.db, userId);
       const refreshToken = createRefreshToken(userId);
 
       return { accessToken, refreshToken, userId, ...(linkResult ? { linkResult } : {}) };
@@ -238,7 +245,7 @@ export const authRouter = router({
           await ctx.db.user.update({ where: { id: user.id }, data: { photoUrl: googleUser.picture } });
         }
         await ctx.db.linkingCode.delete({ where: { id: linkingCode.id } });
-        const accessToken = createAccessToken(user.id);
+        const accessToken = signedInToken(ctx.db, user.id);
         const refreshToken = createRefreshToken(user.id);
         return { accessToken, refreshToken, userId: user.id, isNew: false };
       }
@@ -260,7 +267,7 @@ export const authRouter = router({
         throw err;
       }
 
-      const accessToken = createAccessToken(userId);
+      const accessToken = signedInToken(ctx.db, userId);
       const refreshToken = createRefreshToken(userId);
 
       return { accessToken, refreshToken, userId, isNew };
@@ -292,7 +299,7 @@ export const authRouter = router({
     .mutation(async ({ ctx, input }) => {
       try {
         const { userId, isNew } = await verifyEmailCode(ctx.db, input.email, input.code);
-        return { accessToken: createAccessToken(userId), refreshToken: createRefreshToken(userId), userId, isNew };
+        return { accessToken: signedInToken(ctx.db, userId), refreshToken: createRefreshToken(userId), userId, isNew };
       } catch (err) {
         throw toEmailCodeTrpcError(err);
       }
@@ -314,17 +321,17 @@ export const authRouter = router({
       const tgUser = validateTelegramWidget(input);
       if (!tgUser) throw new TRPCError({ code: 'UNAUTHORIZED', message: 'Invalid Telegram login data' });
       const userId = await signInTelegramUser(ctx.db, tgUser, `widget:${input.auth_date}`);
-      return { accessToken: createAccessToken(userId), refreshToken: createRefreshToken(userId), userId };
+      return { accessToken: signedInToken(ctx.db, userId), refreshToken: createRefreshToken(userId), userId };
     }),
 
   refresh: publicProcedure
     .input(z.object({ refreshToken: z.string() }))
-    .mutation(async ({ input }) => {
+    .mutation(async ({ ctx, input }) => {
       const payload = verifyToken(input.refreshToken, 'refresh');
       if (!payload) {
         throw new TRPCError({ code: 'UNAUTHORIZED', message: 'Invalid refresh token' });
       }
-      const accessToken = createAccessToken(payload.sub);
+      const accessToken = signedInToken(ctx.db, payload.sub);
       const refreshToken = createRefreshToken(payload.sub);
       return { accessToken, refreshToken };
     }),
@@ -357,7 +364,7 @@ export const authRouter = router({
 
       await ctx.db.linkingCode.delete({ where: { id: linkingCode.id } });
 
-      const accessToken = createAccessToken(user.id);
+      const accessToken = signedInToken(ctx.db, user.id);
       const refreshToken = createRefreshToken(user.id);
 
       return { accessToken, refreshToken, userId: user.id };
@@ -395,7 +402,7 @@ export const authRouter = router({
 
       await ctx.db.linkingCode.delete({ where: { id: linkingCode.id } });
 
-      const accessToken = createAccessToken(user.id);
+      const accessToken = signedInToken(ctx.db, user.id);
       const refreshToken = createRefreshToken(user.id);
 
       return { accessToken, refreshToken, userId: user.id };

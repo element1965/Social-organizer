@@ -1,4 +1,4 @@
-import type { PrismaClient } from '@so/db';
+import type { PrismaClient, Prisma } from '@so/db';
 import { sendUserDeletedNotification } from './notification.service.js';
 import { countConnections } from './connection-request.service.js';
 
@@ -8,11 +8,15 @@ import { countConnections } from './connection-request.service.js';
  *
  * Deletion scenario (SO-15): an account with confirmed connections or with invitees is muted
  * (soft delete) so the invite chain stays intact; otherwise it is deleted without traces.
- * Returns `null` when the user does not exist or is already deleted.
+ * Returns `null` when the user does not exist, is already deleted, or `guard` refused.
+ *
+ * `guard` runs first inside the deletion transaction (after locking the user row), so a final
+ * eligibility check cannot race with a concurrent sign-in. The user-initiated path passes none.
  */
 export async function deleteUserAccount(
   db: PrismaClient,
   userId: string,
+  opts: { guard?: (tx: Prisma.TransactionClient) => Promise<boolean> } = {},
 ): Promise<{ mode: 'hard' | 'soft' } | null> {
   // Capture user info before deletion
   const deletingUser = await db.user.findUnique({
@@ -30,7 +34,15 @@ export async function deleteUserAccount(
   });
 
   let mode: 'hard' | 'soft' = 'hard';
+  let refused = false;
   await db.$transaction(async (tx) => {
+    if (opts.guard) {
+      await tx.$executeRaw`SELECT 1 FROM "users" WHERE "id" = ${userId} FOR UPDATE`;
+      if (!(await opts.guard(tx))) {
+        refused = true;
+        return;
+      }
+    }
     // Connections are counted before they are removed below.
     // Pending requests and unused invite links don't count as connections.
     const [connectionCount, usedInviteCount] = await Promise.all([
@@ -112,6 +124,8 @@ export async function deleteUserAccount(
       await tx.userNeed.deleteMany({ where: { userId } });
     }
   });
+
+  if (refused) return null;
 
   // Notify inviter that user from their first circle has been deleted
   if (inviteLink?.inviterId && deletingUser.name) {
