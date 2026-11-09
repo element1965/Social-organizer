@@ -388,7 +388,20 @@
     "roleJoined": "Vous participez",
     "stageAmount": "Montant",
     "stageChat": "Chat",
-    "stageClosed": "Fermée"
+    "stageClosed": "Fermée",
+    "receivedSummary": "Reçu {{paid}} sur {{total}} · {{sum}} sur {{all}}",
+    "markTransfers": "Marquer les virements",
+    "markTitle": "Quel argent est arrivé ?",
+    "markHint": "Cochez tous ceux dont vous avez reçu le virement.",
+    "markPick": "Choisissez qui a envoyé",
+    "markConfirm": "Marquer · {{n}} · {{sum}}",
+    "selectAll": "Tout le monde · {{n}}",
+    "markedOne": "Virement de {{name}} marqué",
+    "unmarkedOne": "Marque retirée pour {{name}}",
+    "markedMany": "Virements marqués : {{n}}",
+    "undo": "Annuler",
+    "markError": "La marque n’a pas été enregistrée. Réessayez.",
+    "paidToggle": "Virement de {{name}} reçu"
   },
   "profile": {
     "phone": "Téléphone",

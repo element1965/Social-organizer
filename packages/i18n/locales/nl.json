@@ -385,7 +385,20 @@
     "roleJoined": "Je doet mee",
     "stageAmount": "Bedrag",
     "stageChat": "Chat",
-    "stageClosed": "Gesloten"
+    "stageClosed": "Gesloten",
+    "receivedSummary": "Ontvangen {{paid}} van {{total}} · {{sum}} van {{all}}",
+    "markTransfers": "Overboekingen markeren",
+    "markTitle": "Wiens geld is binnen?",
+    "markHint": "Vink iedereen aan van wie je de overboeking hebt ontvangen.",
+    "markPick": "Kies wie heeft overgemaakt",
+    "markConfirm": "Markeren · {{n}} · {{sum}}",
+    "selectAll": "Iedereen · {{n}}",
+    "markedOne": "Overboeking van {{name}} gemarkeerd",
+    "unmarkedOne": "Markering voor {{name}} verwijderd",
+    "markedMany": "Overboekingen gemarkeerd: {{n}}",
+    "undo": "Ongedaan maken",
+    "markError": "Markering niet opgeslagen. Probeer het opnieuw.",
+    "paidToggle": "Overboeking van {{name}} ontvangen"
   },
   "profile": {
     "phone": "Telefoon",

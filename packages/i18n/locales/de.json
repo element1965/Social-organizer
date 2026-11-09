@@ -385,7 +385,20 @@
     "roleJoined": "Sie sind dabei",
     "stageAmount": "Betrag",
     "stageChat": "Chat",
-    "stageClosed": "Geschlossen"
+    "stageClosed": "Geschlossen",
+    "receivedSummary": "Erhalten {{paid}} von {{total}} · {{sum}} von {{all}}",
+    "markTransfers": "Überweisungen markieren",
+    "markTitle": "Wessen Geld ist angekommen?",
+    "markHint": "Markiere alle, deren Überweisung schon da ist.",
+    "markPick": "Wähle, wer überwiesen hat",
+    "markConfirm": "Markieren · {{n}} · {{sum}}",
+    "selectAll": "Alle · {{n}}",
+    "markedOne": "Überweisung von {{name}} markiert",
+    "unmarkedOne": "Markierung für {{name}} entfernt",
+    "markedMany": "Überweisungen markiert: {{n}}",
+    "undo": "Rückgängig",
+    "markError": "Markierung nicht gespeichert. Versuch es noch einmal.",
+    "paidToggle": "Überweisung von {{name}} erhalten"
   },
   "profile": {
     "phone": "Telefon",

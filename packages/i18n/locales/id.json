@@ -382,7 +382,20 @@
     "roleJoined": "Anda ikut",
     "stageAmount": "Jumlah",
     "stageChat": "Chat",
-    "stageClosed": "Ditutup"
+    "stageClosed": "Ditutup",
+    "receivedSummary": "Diterima {{paid}} dari {{total}} · {{sum}} dari {{all}}",
+    "markTransfers": "Tandai transfer",
+    "markTitle": "Uang siapa yang sudah masuk?",
+    "markHint": "Centang semua yang transfernya sudah diterima.",
+    "markPick": "Pilih siapa yang mengirim",
+    "markConfirm": "Tandai · {{n}} · {{sum}}",
+    "selectAll": "Semua · {{n}}",
+    "markedOne": "Transfer dari {{name}} ditandai",
+    "unmarkedOne": "Tanda untuk {{name}} dihapus",
+    "markedMany": "Transfer ditandai: {{n}}",
+    "undo": "Urungkan",
+    "markError": "Tanda gagal disimpan. Coba lagi.",
+    "paidToggle": "Transfer dari {{name}} diterima"
   },
   "profile": {
     "phone": "Telepon",

@@ -382,7 +382,20 @@
     "roleJoined": "Bạn đang tham gia",
     "stageAmount": "Số tiền",
     "stageChat": "Chat",
-    "stageClosed": "Đã đóng"
+    "stageClosed": "Đã đóng",
+    "receivedSummary": "Đã nhận {{paid}}/{{total}} · {{sum}}/{{all}}",
+    "markTransfers": "Đánh dấu chuyển khoản",
+    "markTitle": "Tiền của ai đã đến?",
+    "markHint": "Đánh dấu tất cả những người đã chuyển tiền đến.",
+    "markPick": "Chọn người đã gửi",
+    "markConfirm": "Đánh dấu · {{n}} · {{sum}}",
+    "selectAll": "Tất cả · {{n}}",
+    "markedOne": "Đã đánh dấu khoản của {{name}}",
+    "unmarkedOne": "Đã bỏ đánh dấu cho {{name}}",
+    "markedMany": "Đã đánh dấu: {{n}}",
+    "undo": "Hoàn tác",
+    "markError": "Không lưu được. Hãy thử lại.",
+    "paidToggle": "Đã nhận khoản của {{name}}"
   },
   "profile": {
     "phone": "Điện thoại",

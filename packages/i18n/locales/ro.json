@@ -388,7 +388,20 @@
     "roleJoined": "Participi",
     "stageAmount": "Sumă",
     "stageChat": "Chat",
-    "stageClosed": "Închis"
+    "stageClosed": "Închis",
+    "receivedSummary": "Primit {{paid}} din {{total}} · {{sum}} din {{all}}",
+    "markTransfers": "Marchează transferurile",
+    "markTitle": "Ai cui bani au sosit?",
+    "markHint": "Bifează pe toți de la care ai primit transferul.",
+    "markPick": "Alege cine a trimis",
+    "markConfirm": "Marchează · {{n}} · {{sum}}",
+    "selectAll": "Toți · {{n}}",
+    "markedOne": "Transferul de la {{name}} marcat",
+    "unmarkedOne": "Marcaj eliminat pentru {{name}}",
+    "markedMany": "Transferuri marcate: {{n}}",
+    "undo": "Anulează",
+    "markError": "Marcajul nu a fost salvat. Încearcă din nou.",
+    "paidToggle": "Transferul de la {{name}} primit"
   },
   "profile": {
     "phone": "Telefon",

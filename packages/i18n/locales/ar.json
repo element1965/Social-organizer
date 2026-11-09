@@ -397,7 +397,20 @@
     "roleJoined": "أنت مشارك",
     "stageAmount": "المبلغ",
     "stageChat": "الدردشة",
-    "stageClosed": "مغلق"
+    "stageClosed": "مغلق",
+    "receivedSummary": "تم استلام {{paid}} من {{total}} · {{sum}} من {{all}}",
+    "markTransfers": "تحديد التحويلات",
+    "markTitle": "من وصلت أمواله؟",
+    "markHint": "حدّد كل من وصلك تحويله.",
+    "markPick": "اختر من أرسل",
+    "markConfirm": "تحديد · {{n}} · {{sum}}",
+    "selectAll": "الجميع · {{n}}",
+    "markedOne": "تم تحديد تحويل {{name}}",
+    "unmarkedOne": "أُزيل التحديد عن {{name}}",
+    "markedMany": "التحويلات المحددة: {{n}}",
+    "undo": "تراجع",
+    "markError": "تعذّر حفظ التحديد. حاول مرة أخرى.",
+    "paidToggle": "تم استلام تحويل {{name}}"
   },
   "profile": {
     "phone": "الهاتف",

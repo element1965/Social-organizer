@@ -382,7 +382,20 @@
     "roleJoined": "참여 중",
     "stageAmount": "금액",
     "stageChat": "채팅",
-    "stageClosed": "닫힘"
+    "stageClosed": "닫힘",
+    "receivedSummary": "받음 {{paid}}/{{total}} · {{sum}}/{{all}}",
+    "markTransfers": "송금 표시",
+    "markTitle": "누구의 돈이 들어왔나요?",
+    "markHint": "송금을 받은 사람을 모두 선택하세요.",
+    "markPick": "보낸 사람을 선택하세요",
+    "markConfirm": "표시 · {{n}} · {{sum}}",
+    "selectAll": "모두 · {{n}}",
+    "markedOne": "{{name}}님의 송금을 표시했어요",
+    "unmarkedOne": "{{name}}님 표시를 해제했어요",
+    "markedMany": "표시한 송금: {{n}}",
+    "undo": "실행 취소",
+    "markError": "저장하지 못했어요. 다시 시도하세요.",
+    "paidToggle": "{{name}}님의 송금 받음"
   },
   "profile": {
     "phone": "전화번호",

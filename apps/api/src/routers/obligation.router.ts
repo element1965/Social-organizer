@@ -130,6 +130,30 @@ export const obligationRouter = router({
       });
     }),
 
+  /**
+   * Mark several transfers as received (or clear the mark) in one go. Idempotent, unlike the
+   * confirmPayment toggle: rows already in the wanted state are left alone. Author only, one collection.
+   */
+  setPaid: protectedProcedure
+    .input(z.object({ obligationIds: z.array(z.string()).min(1).max(500), paid: z.boolean() }))
+    .mutation(async ({ ctx, input }) => {
+      const ids = [...new Set(input.obligationIds)];
+      const rows = await ctx.db.obligation.findMany({
+        where: { id: { in: ids } },
+        select: { id: true, collectionId: true, collection: { select: { creatorId: true } } },
+      });
+      if (rows.length !== ids.length) throw new TRPCError({ code: 'NOT_FOUND' });
+      if (rows.some((row) => row.collection.creatorId !== ctx.userId)) throw new TRPCError({ code: 'FORBIDDEN' });
+      if (new Set(rows.map((row) => row.collectionId)).size > 1) {
+        throw new TRPCError({ code: 'BAD_REQUEST', message: 'Transfers must belong to one collection' });
+      }
+      const result = await ctx.db.obligation.updateMany({
+        where: { id: { in: ids }, confirmedAt: input.paid ? null : { not: null } },
+        data: { confirmedAt: input.paid ? new Date() : null },
+      });
+      return { changed: result.count };
+    }),
+
   unsubscribe: protectedProcedure
     .input(z.object({ obligationId: z.string() }))
     .mutation(async ({ ctx, input }) => {

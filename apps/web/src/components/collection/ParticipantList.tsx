@@ -1,3 +1,4 @@
+import { useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { cn } from '../../lib/utils';
 import { Avatar } from '../ui2/Avatar';
@@ -22,10 +23,29 @@ type ParticipantListProps = {
   onPerson?: (userId: string) => void;
   onPaid?: (row: ParticipantRow) => void;
   onRemove?: (row: ParticipantRow) => void;
+  /** Opens the "Mark transfers" sheet. Shown while two or more transfers are not marked. */
+  onMarkMany?: () => void;
 };
 
-export function ParticipantList({ people, showPaid, onPerson, onPaid, onRemove }: ParticipantListProps) {
+export function ParticipantList({ people, showPaid, onPerson, onPaid, onRemove, onMarkMany }: ParticipantListProps) {
   const { t } = useTranslation();
+
+  // For the author: unmarked first. The order is taken when a row is first seen, so a row does not
+  // jump away under the finger when it is marked; it moves down on the next visit.
+  const firstSeen = useRef<Map<string, boolean>>(new Map());
+  const rows = useMemo(() => {
+    if (!showPaid) return people;
+    for (const row of people) if (!firstSeen.current.has(row.id)) firstSeen.current.set(row.id, row.paid);
+    return people
+      .map((row, index) => ({ row, index }))
+      .sort((a, b) => Number(firstSeen.current.get(a.row.id)) - Number(firstSeen.current.get(b.row.id)) || a.index - b.index)
+      .map(({ row }) => row);
+  }, [people, showPaid]);
+
+  const paid = people.filter((row) => row.paid);
+  const unpaidCount = people.length - paid.length;
+  const paidSum = paid.reduce((acc, row) => acc + row.amount, 0);
+  const allSum = people.reduce((acc, row) => acc + row.amount, 0);
 
   return (
     <section className="mt-4">
@@ -33,13 +53,30 @@ export function ParticipantList({ people, showPaid, onPerson, onPaid, onRemove }
         <h2 className="text-label font-bold text-ink-muted">{t('collection.participantsCount', { count: people.length })}</h2>
         {showPaid ? <span className="text-label font-bold text-ink-muted">{t('collection.transferred')}</span> : null}
       </div>
+      {showPaid && people.length > 0 ? (
+        <div className="mb-2 flex items-center gap-3 px-1">
+          <p className="min-w-0 flex-1 text-caption font-semibold text-ink-muted">
+            {t('collection.receivedSummary', {
+              paid: paid.length,
+              total: people.length,
+              sum: formatMoney(paidSum),
+              all: formatMoney(allSum),
+            })}
+          </p>
+          {onMarkMany && unpaidCount >= 2 ? (
+            <button type="button" onClick={onMarkMany} className="so-focus h-9 shrink-0 rounded-md px-1 text-caption font-bold text-care">
+              {t('collection.markTransfers')}
+            </button>
+          ) : null}
+        </div>
+      ) : null}
       {people.length === 0 ? (
         <p className="rounded-lg bg-surface px-4 py-6 text-center text-body-s font-semibold text-ink-muted shadow-card">
           {t('collection.emptyPeople')}
         </p>
       ) : (
         <ul className="divide-y divide-line-soft overflow-hidden rounded-lg bg-surface shadow-card">
-          {people.map((person) => (
+          {rows.map((person) => (
             <li key={person.id} className="flex min-h-row items-center gap-3 px-4 py-2">
               <Avatar name={person.name} src={person.photoUrl} size={40} />
               <span className="min-w-0 flex-1">
@@ -60,10 +97,11 @@ export function ParticipantList({ people, showPaid, onPerson, onPaid, onRemove }
                 <button
                   type="button"
                   aria-pressed={person.paid}
-                  aria-label={person.paid ? t('collection.payUndoTitle', { name: person.name }) : t('collection.payTitle', { name: person.name })}
+                  aria-label={t('collection.paidToggle', { name: person.name })}
                   onClick={() => onPaid?.(person)}
+                  // 44 px hit area around the 28 px box
                   className={cn(
-                    'so-focus grid h-7 w-7 place-items-center rounded-sm border',
+                    'so-focus relative grid h-7 w-7 place-items-center rounded-sm border transition-colors duration-150 before:absolute before:-inset-2',
                     person.paid ? 'border-care bg-care text-care-on' : 'border-line bg-canvas text-transparent',
                   )}
                 >

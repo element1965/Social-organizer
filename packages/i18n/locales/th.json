@@ -382,7 +382,20 @@
     "roleJoined": "คุณมีส่วนร่วม",
     "stageAmount": "จำนวน",
     "stageChat": "แชท",
-    "stageClosed": "ปิดแล้ว"
+    "stageClosed": "ปิดแล้ว",
+    "receivedSummary": "ได้รับ {{paid}}/{{total}} · {{sum}}/{{all}}",
+    "markTransfers": "ทำเครื่องหมายการโอน",
+    "markTitle": "เงินของใครเข้าแล้ว?",
+    "markHint": "เลือกทุกคนที่ได้รับเงินโอนแล้ว",
+    "markPick": "เลือกว่าใครโอน",
+    "markConfirm": "ทำเครื่องหมาย · {{n}} · {{sum}}",
+    "selectAll": "ทุกคน · {{n}}",
+    "markedOne": "ทำเครื่องหมายการโอนของ {{name}} แล้ว",
+    "unmarkedOne": "ลบเครื่องหมายของ {{name}} แล้ว",
+    "markedMany": "ทำเครื่องหมายแล้ว: {{n}}",
+    "undo": "เลิกทำ",
+    "markError": "บันทึกไม่สำเร็จ ลองอีกครั้ง",
+    "paidToggle": "ได้รับเงินโอนจาก {{name}} แล้ว"
   },
   "profile": {
     "phone": "โทรศัพท์",

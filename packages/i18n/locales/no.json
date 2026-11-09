@@ -385,7 +385,20 @@
     "roleJoined": "Du er med",
     "stageAmount": "Beløp",
     "stageChat": "Chat",
-    "stageClosed": "Lukket"
+    "stageClosed": "Lukket",
+    "receivedSummary": "Mottatt {{paid}} av {{total}} · {{sum}} av {{all}}",
+    "markTransfers": "Merk overføringer",
+    "markTitle": "Hvem sine penger har kommet?",
+    "markHint": "Huk av alle du har mottatt overføring fra.",
+    "markPick": "Velg hvem som har sendt",
+    "markConfirm": "Merk · {{n}} · {{sum}}",
+    "selectAll": "Alle · {{n}}",
+    "markedOne": "Overføring fra {{name}} merket",
+    "unmarkedOne": "Merking fjernet for {{name}}",
+    "markedMany": "Overføringer merket: {{n}}",
+    "undo": "Angre",
+    "markError": "Merkingen ble ikke lagret. Prøv igjen.",
+    "paidToggle": "Overføring fra {{name}} mottatt"
   },
   "profile": {
     "phone": "Telefon",

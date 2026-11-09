@@ -382,7 +382,20 @@
     "roleJoined": "参加中です",
     "stageAmount": "金額",
     "stageChat": "チャット",
-    "stageClosed": "終了"
+    "stageClosed": "終了",
+    "receivedSummary": "受け取り {{paid}}/{{total}} · {{sum}}/{{all}}",
+    "markTransfers": "送金をチェック",
+    "markTitle": "誰のお金が届きましたか？",
+    "markHint": "送金を受け取った人を全員チェックしてください。",
+    "markPick": "送金した人を選んでください",
+    "markConfirm": "チェック · {{n}} · {{sum}}",
+    "selectAll": "全員 · {{n}}",
+    "markedOne": "{{name}}さんの送金をチェックしました",
+    "unmarkedOne": "{{name}}さんのチェックを外しました",
+    "markedMany": "チェックした送金: {{n}}",
+    "undo": "元に戻す",
+    "markError": "保存できませんでした。もう一度お試しください。",
+    "paidToggle": "{{name}}さんの送金を受け取り"
   },
   "profile": {
     "phone": "電話番号",
