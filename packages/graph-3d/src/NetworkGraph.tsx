@@ -2,6 +2,7 @@ import { forwardRef, useCallback, useEffect, useImperativeHandle, useMemo, useRe
 import ForceGraph3D from 'react-force-graph-3d';
 import SpriteText from 'three-spritetext';
 import * as THREE from 'three';
+import { createAvatarClient } from './avatarCache';
 import {
   type GraphColors,
   colorsKey,
@@ -88,7 +89,6 @@ const INTRO_MS = 750;            // node pop-in duration
 const AUTO_ROTATE_SPEED = 1.1;   // OrbitControls units (1 = one turn per minute)
 const AUTO_ROTATE_RESUME_MS = 2500;
 const LABELS_PER_FRAME = 6;      // lazily created labels per frame
-const PHOTO_CONCURRENCY = 3;
 const BOB_AMPLITUDE = 0.7;       // gentle floating of close nodes
 const CHARGE_BASE = 38;          // node repulsion; lower = a more compact graph
 const BALL_STRENGTH = 0.5;       // pull of the spherical shells (0 = free-form layout)
@@ -746,8 +746,7 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
         v.glow.scale.set(MARK_SIZE * 1.45, MARK_SIZE * 1.45, 1);
       }
     } else {
-      const depth = n.depth ?? 1;
-      const showPhoto = level === 0 && depth === 1 && v.realAvatar;
+      const showPhoto = level === 0 && v.realAvatar;
       v.avatar.visible = showPhoto;
       v.avatar.scale.set(avatarSize, avatarSize, 1);
       v.dot.visible = !showPhoto;
@@ -812,20 +811,43 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
     const isC = !!node.isCenter;
     const sf = isC ? 1 : sizeFromConnections(node.connectionCount ?? 0);
     const depth = node.depth ?? (isC ? 0 : 1);
+    const photoUrl = !isC && node.photoUrl ? node.photoUrl : null;
+    const cachedPhoto = photoUrl ? res.peekPhoto(photoUrl) : null;
+    if (cachedPhoto && photoUrl) res.holdPhoto(photoUrl);
+    let showCached = false;
+    if (cachedPhoto) {
+      try {
+        const cam = fgRef.current?.camera?.() as THREE.Camera | undefined;
+        if (cam) {
+          const dx = (node.x ?? 0) - cam.position.x;
+          const dy = (node.y ?? 0) - cam.position.y;
+          const dz = (node.z ?? 0) - cam.position.z;
+          showCached = dx * dx + dy * dy + dz * dz < LOD_CLOSE2;
+        }
+      } catch { /* camera is not ready until the graph mounts */ }
+    }
 
     const outer = new THREE.Group();
     const inner = new THREE.Group();
     outer.add(inner);
 
-    const avatar = new THREE.Sprite(isC ? res.markMaterial(false) : res.dotMaterial(0xffffff, 0));
+    const avatar = new THREE.Sprite(
+      isC
+        ? res.markMaterial(false)
+        : cachedPhoto && photoUrl
+          ? res.photoMaterial(photoUrl, !!node.isDeleted, cachedPhoto)
+          : res.dotMaterial(0xffffff, 0),
+    );
     avatar.name = 'avatar';
-    avatar.visible = isC;
+    avatar.visible = isC || showCached;
+    if (photoUrl && cachedPhoto) avatar.userData.photoUrl = photoUrl;
     if (isC) avatar.scale.set(MARK_SIZE, MARK_SIZE, 1);
+    else if (showCached) avatar.scale.set(5 * sf, 5 * sf, 1);
     inner.add(avatar);
 
     const dotHex = depthColor(colorsRef.current, Math.max(1, depth));
     const dot = new THREE.Sprite(res.dotMaterial(parseColor(dotHex).color, 0.9));
-    dot.visible = !isC;
+    dot.visible = !isC && !showCached;
     if (!isC) {
       const dotSize = (depth <= 1 ? 3.15 : depth === 2 ? 2.05 : 1.25) * sf;
       dot.scale.set(dotSize, dotSize, 1);
@@ -860,14 +882,14 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
       glow,
       label: null,
       pulse,
-      level: -1,
+      level: showCached ? 0 : -1,
       sf,
       online: isOnline(node.lastSeen),
       // Staggered pop-in: closer circles first; nodes seen before (theme refresh) appear instantly
       bornAt: seen || isC ? -Infinity : performance.now() + depth * 160 + hash01(node.id) * 260,
       hover: 0,
       phase: hash01(node.id + 'p') * Math.PI * 2,
-      realAvatar: false,
+      realAvatar: !!cachedPhoto,
       lastScale: -1,
       unwantedAt: 0,
       wantedAt: 0,
@@ -1218,7 +1240,13 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
           }
         }
         const depth = v.node.depth ?? (v.node.isCenter ? 0 : 1);
-        if (level === 0 && depth === 1 && v.node.photoUrl && !v.node.isCenter && !v.realAvatar) {
+        if (
+          level === 0
+          && !v.node.isCenter
+          && v.node.photoUrl
+          && !v.realAvatar
+          && !hiddenRef.current.has(depth)
+        ) {
           res.requestPhoto(v.node.photoUrl, v.node.id);
         }
 
@@ -1287,10 +1315,11 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
 
       res.pumpPhotos((nodeId, tex, url) => {
         const v = visRef.current.get(nodeId);
-        if (!v || v.node.isCenter || !v.outer.parent) return;
+        if (!v || v.node.isCenter || v.node.photoUrl !== url) return;
         v.avatar.material = res.photoMaterial(url, !!v.node.isDeleted, tex);
         v.avatar.userData.matBase = v.avatar.material;
         v.avatar.userData.matDim = null;
+        v.avatar.userData.photoUrl = url;
         v.realAvatar = true;
         paintNode(v);
         if (v.level >= 0) applyLevel(v, v.level);
@@ -1432,6 +1461,16 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
   useEffect(() => {
     res.setLogo(logoUrl || '/logo.png');
   }, [logoUrl, res]);
+
+  // Ring 1 is fetched as soon as the data arrives. Rings 2–3 stay on the distance path in the frame loop.
+  useEffect(() => {
+    if (hiddenRef.current.has(1)) return;
+    for (const n of graphData.nodes) {
+      const depth = n.depth ?? (n.isCenter ? 0 : 1);
+      if (depth !== 1 || n.isCenter || !n.photoUrl) continue;
+      res.requestPhoto(n.photoUrl, n.id);
+    }
+  }, [signature, hiddenKey, graphData, res]);
 
   /* ----- Interaction ----- */
 
@@ -1782,13 +1821,7 @@ function createResources() {
   });
 
   const materials = new Map<string, THREE.SpriteMaterial>();
-  const photoTextures = new Map<string, THREE.Texture>();
-  const pending = new Set<string>();
-  const waiting = new Map<string, Set<string>>();
-  const photoQueue: Array<{ url: string; nodeId: string }> = [];
-  const ready: Array<{ nodeId: string; tex: THREE.Texture; url: string }> = [];
-  const failedPhotos = new Set<string>();
-  let active = 0;
+  const avatars = createAvatarClient();
   let disposed = false;
   let colors: GraphColors = { ...resolveColors(null) };
   let markKey = '';
@@ -1847,7 +1880,6 @@ function createResources() {
     discTexture,
     pulseMaterial,
     pulseDimMaterial,
-    photoQueue,
 
     setColors(next: GraphColors) {
       colors = next;
@@ -1906,56 +1938,20 @@ function createResources() {
       }));
     },
 
-    /** Queue a photo download (via the API proxy to bypass CORS); drawn as a circle on a 128px canvas. */
+    peekPhoto(url: string) {
+      return avatars.peek(url);
+    },
+    holdPhoto(url: string) {
+      avatars.hold(url);
+    },
+    /** Shared module cache. Same-origin and data URLs load directly; other hosts go through the image proxy. */
     requestPhoto(url: string, nodeId: string) {
-      if (failedPhotos.has(url)) return;
-      const tex = photoTextures.get(url);
-      if (tex) { ready.push({ nodeId, tex, url }); return; }
-      let set = waiting.get(url);
-      if (!set) { set = new Set(); waiting.set(url, set); }
-      if (set.has(nodeId)) return;
-      set.add(nodeId);
-      if (!pending.has(url)) {
-        pending.add(url);
-        photoQueue.push({ url, nodeId });
-      }
+      if (disposed) return;
+      avatars.request(url, nodeId);
     },
     pumpPhotos(apply: (nodeId: string, tex: THREE.Texture, url: string) => void) {
-      while (active < PHOTO_CONCURRENCY && photoQueue.length && !disposed) {
-        const job = photoQueue.shift()!;
-        active++;
-        const src = job.url.startsWith('/') || job.url.startsWith('data:') || job.url.startsWith('blob:') || job.url.startsWith(window.location.origin)
-          ? job.url
-          : `/api/image-proxy?url=${encodeURIComponent(job.url)}`;
-        const img = new Image();
-        img.crossOrigin = 'anonymous';
-        img.onload = () => {
-          active--;
-          if (disposed) return;
-          const tex = makeCanvasTexture(128, (ctx, s) => {
-            ctx.beginPath();
-            ctx.arc(s / 2, s / 2, s / 2, 0, Math.PI * 2);
-            ctx.closePath();
-            ctx.clip();
-            ctx.drawImage(img, 0, 0, s, s);
-          });
-          photoTextures.set(job.url, tex);
-          for (const id of waiting.get(job.url) ?? []) ready.push({ nodeId: id, tex, url: job.url });
-          waiting.delete(job.url);
-          pending.delete(job.url);
-        };
-        img.onerror = () => {
-          active--;
-          failedPhotos.add(job.url);
-          pending.delete(job.url);
-          waiting.delete(job.url);
-        };
-        img.src = src;
-      }
-      while (ready.length) {
-        const r = ready.shift()!;
-        apply(r.nodeId, r.tex, r.url);
-      }
+      if (disposed) return;
+      avatars.pump(apply);
     },
 
     /** Theme switch: tinted materials are rebuilt, textures stay. */
@@ -1971,7 +1967,8 @@ function createResources() {
       pulseDimMaterial.dispose();
       for (const t of textures) t.dispose();
       textures.length = 0;
-      photoQueue.length = 0;
+      // Avatar textures stay in the module cache. release() only drops this graph's pins.
+      avatars.release();
     },
   };
   return api;
