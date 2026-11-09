@@ -1,11 +1,15 @@
 import type { Job } from 'bullmq';
 import { getDb } from '@so/db';
+import { pruneDeliveries } from '../services/delivery.service.js';
 
 /**
  * Every hour: mark expired notifications as EXPIRED and delete old ones.
  */
 export async function processExpireNotifications(_job: Job): Promise<void> {
   const db = getDb();
+
+  // Delivery keys are only needed to stop repeats; old ones are dropped (SO-45)
+  await pruneDeliveries(db);
 
   // Mark unread expired notifications
   await db.notification.updateMany({

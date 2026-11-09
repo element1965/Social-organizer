@@ -201,13 +201,7 @@ export async function processAutoChain(_job: Job): Promise<void> {
         });
         totalSent++;
         sentTodaySet.add(acc.userId);
-
-        // Also send Web Push as notification preview
-        sendWebPush(db, [acc.userId], {
-          title: 'Social Organizer',
-          body: translatedText.replace(/<[^>]+>/g, '').slice(0, 100),
-          url: `${WEB_APP_URL}/dashboard`,
-        }).catch(() => {});
+        // No extra Web Push copy: the message already reached the person in Telegram (one channel, SO-45)
       }
 
       deliveredSet.add(key);

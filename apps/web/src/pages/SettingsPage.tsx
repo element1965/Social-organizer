@@ -10,7 +10,7 @@ import { Button } from '../components/ui/button';
 import { Select } from '../components/ui/select';
 import { Avatar } from '../components/ui/avatar';
 import { Spinner } from '../components/ui/spinner';
-import { Settings, Globe, Palette, Volume2, Bell, Mic, Link, Trash2, LogOut, Type, Users, Camera, Pencil, Check, HelpCircle, EyeOff, Copy, Wallet } from 'lucide-react';
+import { Settings, Globe, Palette, Volume2, Bell, Mic, Link, Trash2, LogOut, Type, Users, Camera, Pencil, Check, HelpCircle, EyeOff, Copy, Wallet, MessageCircle } from 'lucide-react';
 import { Tooltip } from '../components/ui/tooltip';
 import { cn } from '../lib/utils';
 import { languageNames } from '@so/i18n';
@@ -67,6 +67,8 @@ export function SettingsPage() {
   const updateHideContacts = trpc.settings.updateHideContacts.useMutation({ onSuccess: () => utils.settings.get.invalidate() });
   const updateRenewalReminder = trpc.settings.updateNotifyRenewalReminder.useMutation({ onSuccess: () => utils.settings.get.invalidate() });
   const updateRenewalStart = trpc.settings.updateNotifyRenewalStart.useMutation({ onSuccess: () => utils.settings.get.invalidate() });
+  const updateNotifyChannel = trpc.settings.updateNotifyChannel.useMutation({ onSuccess: () => utils.settings.get.invalidate() });
+  const updateNotifyNewCollections = trpc.settings.updateNotifyNewCollections.useMutation({ onSuccess: () => utils.settings.get.invalidate() });
   const generateCode = trpc.auth.generateLinkCode.useMutation();
   // "Connect Telegram": open the bot with a link code so the mini app signs in to THIS
   // account instead of creating a second one (see telegram-link.service on the API)
@@ -345,6 +347,64 @@ export function SettingsPage() {
           </div>
         )}
       </div></CardContent></Card>
+
+      {/* One channel for event notifications, new collections switch (SO-45) */}
+      <Card><CardContent className="py-3 space-y-3">
+        <div>
+          <p className="text-sm font-semibold text-gray-900 dark:text-white">{t('settings.notifyTitle')}</p>
+          <p className="text-xs text-gray-500 dark:text-gray-300">{t('settings.notifyChannelLabel')}</p>
+        </div>
+        <div className="rounded-lg border border-gray-200 dark:border-gray-700 divide-y divide-gray-200 dark:divide-gray-700">
+          {([
+            { value: 'APP' as const, icon: Bell, label: t('settings.notifyChannelApp'), disabled: false },
+            { value: 'TELEGRAM' as const, icon: MessageCircle, label: t('settings.notifyChannelTelegram'), disabled: !settings?.telegramLinked },
+          ]).map((opt) => {
+            const selected = settings?.effectiveChannel === opt.value;
+            return (
+              <button
+                key={opt.value}
+                type="button"
+                role="radio"
+                aria-checked={selected}
+                disabled={opt.disabled || updateNotifyChannel.isPending}
+                onClick={() => !selected && updateNotifyChannel.mutate({ channel: opt.value })}
+                className="w-full flex items-center gap-3 px-3 py-2.5 text-left disabled:opacity-50"
+              >
+                <opt.icon className="w-4 h-4 text-gray-500 dark:text-gray-300 shrink-0" />
+                <span className="text-sm text-gray-800 dark:text-gray-200 flex-1">{opt.label}</span>
+                <span className={cn('w-5 h-5 rounded-full border-2 flex items-center justify-center', selected ? 'border-teal-600' : 'border-gray-300 dark:border-gray-600')}>
+                  {selected && <span className="w-2.5 h-2.5 rounded-full bg-teal-600" />}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+        <p className="text-xs text-gray-500 dark:text-gray-300">
+          {settings?.effectiveChannel === 'TELEGRAM' ? t('settings.notifyChannelHintTelegram') : t('settings.notifyChannelHintApp')}
+          {!settings?.telegramLinked && ` ${t('settings.notifyTelegramNotLinked')}`}
+          {settings?.effectiveChannel === 'APP' && !settings?.hasPush && push.isSupported && ` ${t('settings.notifyPushOff')}`}
+        </p>
+        <div className="flex items-center gap-3">
+          <div className="flex-1 min-w-0">
+            <p className="text-sm font-medium text-gray-700 dark:text-gray-300">{t('settings.notifyNewCollections')}</p>
+            <p className="text-xs text-gray-500 dark:text-gray-300">{t('settings.notifyNewCollectionsHint')}</p>
+          </div>
+          <button
+            role="switch"
+            aria-checked={!!settings?.notifyNewCollections}
+            aria-label={t('settings.notifyNewCollections')}
+            onClick={() => updateNotifyNewCollections.mutate({ enabled: !settings?.notifyNewCollections })}
+            className={cn('w-11 h-6 rounded-full transition-colors relative shrink-0', settings?.notifyNewCollections ? 'bg-blue-600' : 'bg-gray-300 dark:bg-gray-600')}
+          >
+            <div className={cn('w-5 h-5 rounded-full bg-white shadow absolute top-0.5 transition-all', settings?.notifyNewCollections ? 'left-5' : 'left-0.5')} />
+          </button>
+        </div>
+        <div>
+          <p className="text-sm font-medium text-gray-700 dark:text-gray-300">{t('settings.notifyMyEvents')}</p>
+          <p className="text-xs text-gray-500 dark:text-gray-300">{t('settings.notifyMyEventsHint')}</p>
+        </div>
+        <p className="text-xs text-gray-400 dark:text-gray-400">{t('settings.notifyAnyChat')}</p>
+      </CardContent></Card>
 
       <Card><CardContent className="py-3 space-y-3">
         <div className="flex items-center gap-3">
