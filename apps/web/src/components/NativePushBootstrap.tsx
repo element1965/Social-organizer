@@ -34,8 +34,6 @@ export function NativePushBootstrap() {
 
   const [permStatus, setPermStatus] = useState<PermStatus>('checking');
   const [requesting, setRequesting] = useState(false);
-  // "Not now" hides the prompt for this visit. It does not grant, deny, or persist anything.
-  const [skipped, setSkipped] = useState(false);
 
   // Set up FCM listeners (once per session) — Android only
   useEffect(() => {
@@ -109,7 +107,6 @@ export function NativePushBootstrap() {
     if (!isAuthenticated) {
       listenersSet.current = false;
       setPermStatus('checking');
-      setSkipped(false);
     }
   }, [isAuthenticated]);
 
@@ -146,10 +143,9 @@ export function NativePushBootstrap() {
     );
   }
 
-  // Granted — render nothing, app works normally
+  // Granted — render nothing, app works normally.
+  // Prompt and denied both block until notifications are on.
   if (permStatus === 'granted') return null;
-  // Prompt can be dismissed for this visit. Denied still blocks, same as before.
-  if (permStatus === 'prompt' && skipped) return null;
 
   const prompt = permStatus === 'prompt';
 
@@ -166,11 +162,7 @@ export function NativePushBootstrap() {
                   : t('nativePush.enable')
                 : t('nativePush.checkAgain')}
             </Button>
-            {prompt ? (
-              <Button variant="text" onClick={() => setSkipped(true)}>
-                {t('nativePush.notNow')}
-              </Button>
-            ) : (
+            {prompt ? null : (
               <p className="px-2 pt-2 text-center text-label font-semibold text-ink-subtle">{t('nativePush.checkHint')}</p>
             )}
           </div>

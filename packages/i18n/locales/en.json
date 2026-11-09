@@ -1437,7 +1437,6 @@
     "step3": "Turn on <b>Notifications</b>",
     "step4": "Come back to the app",
     "checkAgain": "Check again",
-    "checkHint": "After you turn notifications on, tap “Check again”",
-    "notNow": "Not now"
+    "checkHint": "After you turn notifications on, tap “Check again”"
   }
 }

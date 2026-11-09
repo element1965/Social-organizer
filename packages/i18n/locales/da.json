@@ -1437,7 +1437,6 @@
     "step3": "Slå <b>Notifikationer</b> til",
     "step4": "Kom tilbage til appen",
     "checkAgain": "Tjek igen",
-    "checkHint": "Når du har slået notifikationer til, tryk på »Tjek igen«",
-    "notNow": "Ikke nu"
+    "checkHint": "Når du har slået notifikationer til, tryk på »Tjek igen«"
   }
 }

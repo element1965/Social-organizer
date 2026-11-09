@@ -1449,7 +1449,6 @@
     "step3": "Active las <b>Notificaciones</b>",
     "step4": "Vuelva a la aplicación",
     "checkAgain": "Comprobar de nuevo",
-    "checkHint": "Cuando active las notificaciones, toque «Comprobar de nuevo»",
-    "notNow": "Ahora no"
+    "checkHint": "Cuando active las notificaciones, toque «Comprobar de nuevo»"
   }
 }

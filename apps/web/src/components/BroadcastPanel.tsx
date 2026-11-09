@@ -24,10 +24,17 @@ const STATUS_TONE: Record<string, PillTone> = {
   FAILED: 'sos',
 };
 
+const STATUS_KEY: Record<string, string> = {
+  PENDING: 'broadcast.statusPending',
+  SENT: 'broadcast.statusSent',
+  CANCELLED: 'broadcast.statusCancelled',
+  FAILED: 'broadcast.statusFailed',
+};
+
 function StatusBadge({ status }: { status: string }) {
   const { t } = useTranslation();
-  const key = `broadcast.status${status.charAt(0) + status.slice(1).toLowerCase()}`;
-  return <Pill tone={STATUS_TONE[status] ?? 'neutral'}>{t(key)}</Pill>;
+  const key = STATUS_KEY[status];
+  return <Pill tone={STATUS_TONE[status] ?? 'neutral'}>{key ? t(key) : status}</Pill>;
 }
 
 function VariantBadge({ variant }: { variant: string }) {
