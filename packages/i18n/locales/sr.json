@@ -388,7 +388,20 @@
     "roleJoined": "Учествујете",
     "stageAmount": "Износ",
     "stageChat": "Ћаскање",
-    "stageClosed": "Затворено"
+    "stageClosed": "Затворено",
+    "receivedSummary": "Примљено {{paid}} од {{total}} · {{sum}} од {{all}}",
+    "markTransfers": "Означи уплате",
+    "markTitle": "Чији новац је стигао?",
+    "markHint": "Означите све од којих је уплата већ стигла.",
+    "markPick": "Изаберите ко је уплатио",
+    "markConfirm": "Означи · {{n}} · {{sum}}",
+    "selectAll": "Сви · {{n}}",
+    "markedOne": "Уплата од {{name}} означена",
+    "unmarkedOne": "Ознака за {{name}} уклоњена",
+    "markedMany": "Означено уплата: {{n}}",
+    "undo": "Опозови",
+    "markError": "Ознака није сачувана. Покушајте поново.",
+    "paidToggle": "Уплата од {{name}} примљена"
   },
   "profile": {
     "phone": "Телефон",

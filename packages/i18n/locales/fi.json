@@ -385,7 +385,20 @@
     "roleJoined": "Olet mukana",
     "stageAmount": "Summa",
     "stageChat": "Keskustelu",
-    "stageClosed": "Suljettu"
+    "stageClosed": "Suljettu",
+    "receivedSummary": "Saatu {{paid}}/{{total}} · {{sum}}/{{all}}",
+    "markTransfers": "Merkitse siirrot",
+    "markTitle": "Kenen rahat ovat tulleet?",
+    "markHint": "Merkitse kaikki, joilta siirto on jo saatu.",
+    "markPick": "Valitse, kuka lähetti",
+    "markConfirm": "Merkitse · {{n}} · {{sum}}",
+    "selectAll": "Kaikki · {{n}}",
+    "markedOne": "Siirto henkilöltä {{name}} merkitty",
+    "unmarkedOne": "Merkintä poistettu: {{name}}",
+    "markedMany": "Siirtoja merkitty: {{n}}",
+    "undo": "Kumoa",
+    "markError": "Merkintää ei tallennettu. Yritä uudelleen.",
+    "paidToggle": "Siirto henkilöltä {{name}} saatu"
   },
   "profile": {
     "phone": "Puhelin",

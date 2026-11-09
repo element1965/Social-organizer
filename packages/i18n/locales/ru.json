@@ -391,7 +391,20 @@
     "roleJoined": "Вы участвуете",
     "stageAmount": "Сумма",
     "stageChat": "Чат",
-    "stageClosed": "Закрыт"
+    "stageClosed": "Закрыт",
+    "receivedSummary": "Получено {{paid}} из {{total}} · {{sum}} из {{all}}",
+    "markTransfers": "Отметить переводы",
+    "markTitle": "Чьи деньги пришли?",
+    "markHint": "Отметьте всех, от кого перевод уже получен.",
+    "markPick": "Выберите, кто перевёл",
+    "markConfirm": "Отметить · {{n}} · {{sum}}",
+    "selectAll": "Все · {{n}}",
+    "markedOne": "Перевод от {{name}} отмечен",
+    "unmarkedOne": "Отметка для {{name}} снята",
+    "markedMany": "Отмечено переводов: {{n}}",
+    "undo": "Отменить",
+    "markError": "Не удалось сохранить отметку. Попробуйте ещё раз.",
+    "paidToggle": "Перевод от {{name}} получен"
   },
   "profile": {
     "phone": "Телефон",

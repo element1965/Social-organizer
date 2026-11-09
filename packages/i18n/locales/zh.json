@@ -382,7 +382,20 @@
     "roleJoined": "你已参与",
     "stageAmount": "金额",
     "stageChat": "聊天",
-    "stageClosed": "已关闭"
+    "stageClosed": "已关闭",
+    "receivedSummary": "已收到 {{paid}}/{{total}} · {{sum}}/{{all}}",
+    "markTransfers": "标记转账",
+    "markTitle": "谁的钱到了？",
+    "markHint": "勾选所有已收到转账的人。",
+    "markPick": "选择已转账的人",
+    "markConfirm": "标记 · {{n}} · {{sum}}",
+    "selectAll": "全部 · {{n}}",
+    "markedOne": "已标记 {{name}} 的转账",
+    "unmarkedOne": "已取消 {{name}} 的标记",
+    "markedMany": "已标记转账：{{n}}",
+    "undo": "撤销",
+    "markError": "标记未能保存，请重试。",
+    "paidToggle": "已收到 {{name}} 的转账"
   },
   "profile": {
     "phone": "电话",

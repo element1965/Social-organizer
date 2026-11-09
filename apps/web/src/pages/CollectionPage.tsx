@@ -5,6 +5,7 @@ import { MIN_COLLECTION_AMOUNT, MIN_OBLIGATION_AMOUNT, REGULAR_CYCLE_DAYS } from
 import { AskProgressSync } from '../components/collection/AskProgressSync';
 import { IconChat, IconClock, IconPen, IconQr, IconShare } from '../components/collection/icons';
 import { ParticipantList, type ParticipantRow } from '../components/collection/ParticipantList';
+import { MarkableParticipantList } from '../components/collection/PaidMarks';
 import { QrSheet } from '../components/collection/QrSheet';
 import { CommunityHoldNote } from '../components/moderation/CommunityHoldNote';
 import { ComplainEntry } from '../components/moderation/ComplainEntry';
@@ -85,7 +86,6 @@ export function CollectionPage() {
   const updateObligation = trpc.obligation.updateAmount.useMutation({ onSuccess: refresh });
   const confirmCycle = trpc.obligation.confirmCycle.useMutation({ onSuccess: refresh });
   const decline = trpc.obligation.unsubscribeFromCollection.useMutation({ onSuccess: refresh });
-  const confirmPayment = trpc.obligation.confirmPayment.useMutation({ onSuccess: refresh });
   const closeCollection = trpc.collection.close.useMutation({ onSuccess: refresh });
   const updateChat = trpc.collection.updateChatLink.useMutation({ onSuccess: refresh });
   const updateGoal = trpc.collection.updateAmount.useMutation({ onSuccess: refresh });
@@ -123,7 +123,6 @@ export function CollectionPage() {
   const [chatError, setChatError] = useState('');
   const [goalAmount, setGoalAmount] = useState('');
   const [goalError, setGoalError] = useState('');
-  const [payTarget, setPayTarget] = useState<ParticipantRow | null>(null);
   const [removeTarget, setRemoveTarget] = useState<ParticipantRow | null>(null);
   const [adminOpen, setAdminOpen] = useState(false);
   const [reason, setReason] = useState<BlockReason | null>(null);
@@ -556,13 +555,17 @@ export function CollectionPage() {
         </Card>
       ) : null}
 
-      <ParticipantList
-        people={people}
-        showPaid={owner && !closed}
-        onPerson={(userIdToOpen) => navigate(`/person/${userIdToOpen}`)}
-        onPaid={owner && !closed ? setPayTarget : undefined}
-        onRemove={owner && !closed ? setRemoveTarget : undefined}
-      />
+      {owner && !closed ? (
+        // The author marks transfers: one tap with undo, or several at once in a sheet
+        <MarkableParticipantList
+          people={people}
+          onPerson={(userIdToOpen) => navigate(`/person/${userIdToOpen}`)}
+          onRemove={setRemoveTarget}
+          onSaved={refresh}
+        />
+      ) : (
+        <ParticipantList people={people} showPaid={false} onPerson={(userIdToOpen) => navigate(`/person/${userIdToOpen}`)} />
+      )}
 
       {owner && !closed ? (
         <Button variant="textDanger" className="mt-4 w-full" onClick={() => setCloseOpen(true)}>
@@ -600,27 +603,6 @@ export function CollectionPage() {
           </Button>,
           <Button variant="secondary" className="w-full" onClick={() => setCloseOpen(false)}>{t('collection.stay')}</Button>,
           true,
-        )}
-      />
-
-      <Sheet
-        open={payTarget != null}
-        onClose={() => setPayTarget(null)}
-        title={payTarget ? t(payTarget.paid ? 'collection.payUndoTitle' : 'collection.payTitle', { name: payTarget.name }) : ''}
-        footer={sheetPair(
-          desktop,
-          <Button
-            className="w-full"
-            loading={confirmPayment.isPending}
-            onClick={() => {
-              if (!payTarget) return;
-              confirmPayment.mutate({ obligationId: payTarget.id }, { onSuccess: () => setPayTarget(null) });
-            }}
-          >
-            {t('collection.payYes')}
-          </Button>,
-          <Button variant="secondary" className="w-full" onClick={() => setPayTarget(null)}>{t('common.cancel')}</Button>,
-          false,
         )}
       />
 

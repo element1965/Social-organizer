@@ -391,7 +391,20 @@
     "roleJoined": "Ви берете участь",
     "stageAmount": "Сума",
     "stageChat": "Чат",
-    "stageClosed": "Закритий"
+    "stageClosed": "Закритий",
+    "receivedSummary": "Отримано {{paid}} з {{total}} · {{sum}} з {{all}}",
+    "markTransfers": "Позначити перекази",
+    "markTitle": "Чиї гроші надійшли?",
+    "markHint": "Позначте всіх, від кого переказ уже отримано.",
+    "markPick": "Оберіть, хто переказав",
+    "markConfirm": "Позначити · {{n}} · {{sum}}",
+    "selectAll": "Усі · {{n}}",
+    "markedOne": "Переказ від {{name}} позначено",
+    "unmarkedOne": "Позначку для {{name}} знято",
+    "markedMany": "Позначено переказів: {{n}}",
+    "undo": "Скасувати",
+    "markError": "Не вдалося зберегти позначку. Спробуйте ще раз.",
+    "paidToggle": "Переказ від {{name}} отримано"
   },
   "profile": {
     "phone": "Телефон",

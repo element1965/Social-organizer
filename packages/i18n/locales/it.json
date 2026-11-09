@@ -388,7 +388,20 @@
     "roleJoined": "Ci sei",
     "stageAmount": "Importo",
     "stageChat": "Chat",
-    "stageClosed": "Chiuso"
+    "stageClosed": "Chiuso",
+    "receivedSummary": "Ricevuti {{paid}} su {{total}} · {{sum}} su {{all}}",
+    "markTransfers": "Segna i bonifici",
+    "markTitle": "Di chi sono arrivati i soldi?",
+    "markHint": "Spunta tutti quelli di cui hai ricevuto il bonifico.",
+    "markPick": "Scegli chi ha inviato",
+    "markConfirm": "Segna · {{n}} · {{sum}}",
+    "selectAll": "Tutti · {{n}}",
+    "markedOne": "Bonifico di {{name}} segnato",
+    "unmarkedOne": "Segno tolto per {{name}}",
+    "markedMany": "Bonifici segnati: {{n}}",
+    "undo": "Annulla",
+    "markError": "Impossibile salvare il segno. Riprova.",
+    "paidToggle": "Bonifico di {{name}} ricevuto"
   },
   "profile": {
     "phone": "Telefono",

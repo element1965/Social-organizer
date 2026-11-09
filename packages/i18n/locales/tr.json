@@ -385,7 +385,20 @@
     "roleJoined": "Katılıyorsunuz",
     "stageAmount": "Tutar",
     "stageChat": "Sohbet",
-    "stageClosed": "Kapandı"
+    "stageClosed": "Kapandı",
+    "receivedSummary": "Alınan {{paid}}/{{total}} · {{sum}}/{{all}}",
+    "markTransfers": "Transferleri işaretle",
+    "markTitle": "Kimin parası geldi?",
+    "markHint": "Transferi gelen herkesi işaretleyin.",
+    "markPick": "Kimin gönderdiğini seçin",
+    "markConfirm": "İşaretle · {{n}} · {{sum}}",
+    "selectAll": "Herkes · {{n}}",
+    "markedOne": "{{name}} kişisinin transferi işaretlendi",
+    "unmarkedOne": "{{name}} için işaret kaldırıldı",
+    "markedMany": "İşaretlenen transfer: {{n}}",
+    "undo": "Geri al",
+    "markError": "İşaret kaydedilemedi. Tekrar deneyin.",
+    "paidToggle": "{{name}} kişisinin transferi alındı"
   },
   "profile": {
     "phone": "Telefon",

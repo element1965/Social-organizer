@@ -385,7 +385,20 @@
     "roleJoined": "You are in",
     "stageAmount": "Amount",
     "stageChat": "Chat",
-    "stageClosed": "Closed"
+    "stageClosed": "Closed",
+    "receivedSummary": "Received {{paid}} of {{total}} · {{sum}} of {{all}}",
+    "markTransfers": "Mark transfers",
+    "markTitle": "Whose money arrived?",
+    "markHint": "Tick everyone whose transfer you have received.",
+    "markPick": "Pick who sent the money",
+    "markConfirm": "Mark received · {{n}} · {{sum}}",
+    "selectAll": "Everyone · {{n}}",
+    "markedOne": "Transfer from {{name}} marked",
+    "unmarkedOne": "Mark removed for {{name}}",
+    "markedMany": "Transfers marked: {{n}}",
+    "undo": "Undo",
+    "markError": "Could not save the mark. Try again.",
+    "paidToggle": "Transfer from {{name}} received"
   },
   "profile": {
     "phone": "Phone",

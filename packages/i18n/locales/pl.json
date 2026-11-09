@@ -391,7 +391,20 @@
     "roleJoined": "Bierzesz udział",
     "stageAmount": "Kwota",
     "stageChat": "Czat",
-    "stageClosed": "Zamknięta"
+    "stageClosed": "Zamknięta",
+    "receivedSummary": "Otrzymano {{paid}} z {{total}} · {{sum}} z {{all}}",
+    "markTransfers": "Zaznacz przelewy",
+    "markTitle": "Czyje pieniądze dotarły?",
+    "markHint": "Zaznacz wszystkich, od których przelew już dotarł.",
+    "markPick": "Wybierz, kto przelał",
+    "markConfirm": "Zaznacz · {{n}} · {{sum}}",
+    "selectAll": "Wszyscy · {{n}}",
+    "markedOne": "Przelew od {{name}} zaznaczony",
+    "unmarkedOne": "Zaznaczenie dla {{name}} usunięte",
+    "markedMany": "Zaznaczono przelewów: {{n}}",
+    "undo": "Cofnij",
+    "markError": "Nie udało się zapisać. Spróbuj ponownie.",
+    "paidToggle": "Przelew od {{name}} otrzymany"
   },
   "profile": {
     "phone": "Telefon",

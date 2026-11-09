@@ -388,7 +388,20 @@
     "roleJoined": "Participa",
     "stageAmount": "Cantidad",
     "stageChat": "Chat",
-    "stageClosed": "Cerrada"
+    "stageClosed": "Cerrada",
+    "receivedSummary": "Recibido {{paid}} de {{total}} · {{sum}} de {{all}}",
+    "markTransfers": "Marcar transferencias",
+    "markTitle": "¿De quién llegó el dinero?",
+    "markHint": "Marca a todos de quienes ya recibiste la transferencia.",
+    "markPick": "Elige quién envió",
+    "markConfirm": "Marcar · {{n}} · {{sum}}",
+    "selectAll": "Todos · {{n}}",
+    "markedOne": "Transferencia de {{name}} marcada",
+    "unmarkedOne": "Marca quitada para {{name}}",
+    "markedMany": "Transferencias marcadas: {{n}}",
+    "undo": "Deshacer",
+    "markError": "No se pudo guardar la marca. Inténtalo de nuevo.",
+    "paidToggle": "Transferencia de {{name}} recibida"
   },
   "profile": {
     "phone": "Teléfono",

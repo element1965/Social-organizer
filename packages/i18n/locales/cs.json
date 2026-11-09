@@ -391,7 +391,20 @@
     "roleJoined": "Účastníte se",
     "stageAmount": "Částka",
     "stageChat": "Chat",
-    "stageClosed": "Uzavřeno"
+    "stageClosed": "Uzavřeno",
+    "receivedSummary": "Přijato {{paid}} z {{total}} · {{sum}} z {{all}}",
+    "markTransfers": "Označit převody",
+    "markTitle": "Čí peníze dorazily?",
+    "markHint": "Označte všechny, od kterých převod už dorazil.",
+    "markPick": "Vyberte, kdo poslal",
+    "markConfirm": "Označit · {{n}} · {{sum}}",
+    "selectAll": "Všichni · {{n}}",
+    "markedOne": "Převod od {{name}} označen",
+    "unmarkedOne": "Označení pro {{name}} zrušeno",
+    "markedMany": "Označeno převodů: {{n}}",
+    "undo": "Zpět",
+    "markError": "Označení se nepodařilo uložit. Zkuste to znovu.",
+    "paidToggle": "Převod od {{name}} přijat"
   },
   "profile": {
     "phone": "Telefon",
