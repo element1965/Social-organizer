@@ -18,6 +18,7 @@ import { Meter } from '../components/ui2/Meter';
 import { PathFigure } from '../components/ui2/PathFigure';
 import { Screen } from '../components/ui2/Screen';
 import { Sheet } from '../components/ui2/Sheet';
+import { StageRail } from '../components/ui2/StageRail';
 import { useShellMode } from '../components/ui2/shell-mode';
 import { useAuth } from '../hooks/useAuth';
 import { useNicknames } from '../hooks/useNicknames';
@@ -194,6 +195,9 @@ export function CollectionPage() {
     index === 0 ? t('common.you') : resolve(person.id, person.name)
   ));
   const showPath = !owner && pathNames.length > 1;
+  // Stage line (mockups v2): the amount, then the chat, then closed. Reached stages are lit.
+  const stages = [t('collection.stageAmount'), t('collection.stageChat'), t('collection.stageClosed')];
+  const stageDone = closed ? 3 : owner || myObl ? 2 : 1;
   const showCloseNote = !owner && !closed && !held && !needsConfirm && !goalMet && hasGoal;
 
   const back = closed
@@ -360,6 +364,7 @@ export function CollectionPage() {
         ) : (
           <p className="mt-3 text-label font-semibold text-ink-muted">{t('collection.noGoal')}</p>
         )}
+        <StageRail steps={stages} done={stageDone} />
         {showCloseNote ? (
           <p className="mt-3 text-label font-semibold text-ink-muted">
             {t('collection.closesNote', { name: firstName(creatorName) })}

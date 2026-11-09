@@ -16,9 +16,9 @@ type Props = {
 function errorKey(code: string | undefined): string {
   switch (code) {
     case 'CONNECTION_LIMIT_SELF':
-      return 'circle.acquaint.errLimitSelf';
+      return 'add.limitSelf';
     case 'CONNECTION_LIMIT_OTHER':
-      return 'circle.acquaint.errLimitOther';
+      return 'add.limitOther';
     case 'REQUESTER_DELETED':
       return 'circle.acquaint.errGone';
     case 'REQUEST_ALREADY_RESOLVED':
@@ -113,8 +113,8 @@ export function AcquaintSheet({ request, onClose }: Props) {
         }
       >
         <Input
-          label={t('circle.acquaint.labelField')}
-          hint={t('circle.acquaint.labelHint')}
+          label={t('person.nickname')}
+          hint={t('person.nicknameHint')}
           value={label}
           maxLength={100}
           onChange={(event) => setLabel(event.target.value)}
