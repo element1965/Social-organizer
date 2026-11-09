@@ -105,7 +105,7 @@ model User {
   updatedAt           DateTime  @updatedAt
   deletedAt           DateTime?
   lastSeen            DateTime?
-  // Dismissed reports. Two strikes start a 30-day ban and reset the count.
+  // OK-majority dismissals. Two strikes start a 30-day ban and reset the count.
   complaintStrikes    Int       @default(0)
   complaintBanUntil   DateTime?
 
@@ -252,6 +252,8 @@ enum ReviewStatus {
   OPEN
   UPHELD
   DISMISSED
+  INCONCLUSIVE
+  ESCALATED
 }
 
 enum ReviewAnswer {
@@ -277,7 +279,9 @@ model CollectionComplaint {
   @@map("collection_complaints")
 }
 
-// One OPEN review per collection is enforced by a partial unique index in the migration.
+// Partial unique index collection_reviews_one_open_idx
+// (WHERE status IN ('OPEN', 'ESCALATED')) allows one active review per collection.
+// Prisma cannot express a partial index. Do not drop it.
 model CollectionReview {
   id           String       @id @default(cuid())
   collectionId String
@@ -286,7 +290,10 @@ model CollectionReview {
   status       ReviewStatus @default(OPEN)
   decidedAt    DateTime?
   // Direct connections of the author, minus the people who had already reported, snapshotted at open.
+  // Empty when the circle was too small and the review was escalated to admins.
   audienceIds  String[]     @default([])
+  // Reports that opened this review. Hacked-account mail and deletion use this set only.
+  complaintIds String[]     @default([])
 
   collection Collection             @relation(fields: [collectionId], references: [id], onDelete: Cascade)
   votes      CollectionReviewVote[]

@@ -44,12 +44,25 @@ export function AdminReviews() {
             <div key={row.id} className="rounded-lg bg-canvas px-3 py-3">
               <p className="truncate text-body font-bold text-ink">{row.authorName}</p>
               <p className="mt-1 text-label font-semibold text-ink-muted">
-                {t('moderation.adminMeta', {
-                  complaints: row.complaintCount,
-                  votes: row.voteCount,
-                  audience: row.audienceCount,
-                })}
+                {row.kind === 'ESCALATION'
+                  ? t('moderation.adminEscalation')
+                  : t('moderation.adminMeta', {
+                      complaints: row.complaintCount,
+                      votes: row.voteCount,
+                      audience: row.audienceCount,
+                    })}
               </p>
+              {row.reasons.length > 0 ? (
+                <ul className="mt-1.5 flex flex-col gap-1">
+                  {row.reasons.map((item) => (
+                    <li key={item.reason} className="text-label font-semibold text-ink">
+                      {t(`moderation.reasons.${item.reason}`)}
+                      {' · '}
+                      {item.count}
+                    </li>
+                  ))}
+                </ul>
+              ) : null}
               <Link to={`/collection/${row.collectionId}`} className="so-focus mt-2 inline-flex text-body-s font-bold text-care" onClick={() => setOpen(false)}>
                 {t('moderation.openCollection')}
               </Link>

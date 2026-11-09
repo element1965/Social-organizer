@@ -26,18 +26,21 @@ export async function activeObligationTotals(
 
 /**
  * Goal-reached BLOCKED (blockReason stays null) follows the active total.
- * An admin hold (blockReason set) is never opened or replaced by this arithmetic.
+ * A hold with any blockReason, including COMMUNITY, is never opened, cleared, or replaced.
+ * The write is conditional on the status and reason just read, so a circle hold that lands
+ * between the read and the write is left untouched.
  */
 export async function syncCollectionGoal(db: PrismaClient, collectionId: string): Promise<void> {
   const collection = await db.collection.findUnique({ where: { id: collectionId } });
   if (!collection || collection.amount == null) return;
 
   const { amount: sum } = await activeObligationTotals(db, collectionId);
-  if (sum >= collection.amount && collection.status === 'ACTIVE') {
-    await db.collection.update({
-      where: { id: collectionId },
+  if (sum >= collection.amount && collection.status === 'ACTIVE' && collection.blockReason == null) {
+    const blocked = await db.collection.updateMany({
+      where: { id: collectionId, status: 'ACTIVE', blockReason: null },
       data: { status: 'BLOCKED', blockedAt: new Date(), blockReason: null },
     });
+    if (blocked.count !== 1) return;
 
     await db.notification.updateMany({
       where: {
@@ -86,10 +89,11 @@ export async function syncCollectionGoal(db: PrismaClient, collectionId: string)
   }
 
   if (sum < collection.amount && collection.status === 'BLOCKED' && collection.blockReason == null) {
-    await db.collection.update({
-      where: { id: collectionId },
+    const reopened = await db.collection.updateMany({
+      where: { id: collectionId, status: 'BLOCKED', blockReason: null },
       data: { status: 'ACTIVE', blockedAt: null, blockReason: null },
     });
+    if (reopened.count !== 1) return;
     await db.notification.updateMany({
       where: {
         collectionId,
