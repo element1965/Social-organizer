@@ -1,7 +1,7 @@
 export const SCREEN_GUIDE = `
 APP SCREENS GUIDE:
 
-The signed-in app has four tabs on a phone: Circle / Круг (/), Request / Просьба (/ask), Add / Добавить (/add), Profile / Профиль (/me). A wide screen uses the same destinations in a sidebar and adds People / Люди. Guests see the public site at / and the explainer at /how. Old addresses redirect: /dashboard, /network, /notifications, /welcome, /arvut, /matches, /skills, /needs → /; /create → /ask; /settings → /me; /faq → /me/help; /onboarding → /intro; /profile/:userId → /person/:id.
+The signed-in app has four tabs on a phone: Circle / Круг (/), Ask / Просьба (/ask), Add / Добавить (/add), Profile / Профиль (/me). A wide screen uses the same destinations in a sidebar and adds People / Люди. Guests see the public site at / and the explainer at /how. Old addresses redirect: /dashboard, /network, /notifications, /welcome, /arvut, /matches, /skills, /needs → /; /create → /ask; /settings → /me; /faq → /me/help; /onboarding → /intro; /profile/:userId → /person/:id.
 
 CIRCLE / КРУГ (/)
 Signed-in home. A 3D graph of the circle (three rings of handshakes) and a feed of requests and acquaintance events. Ring chips open People for that ring. Search opens People. An empty circle asks the person to add someone they know.
@@ -18,25 +18,25 @@ One person. Avatar, name, online (last seen under 5 minutes) or last seen, and t
 - Further out: "We are acquainted" sends a direct request. Contacts stay hidden until there is a direct handshake. Instagram on a phone copies the name instead of opening the app.
 - An open collection of theirs can be opened from here. Shared participation is listed. Someone outside the circle is marked as not in the circle.
 
-REQUEST / ПРОСЬБА (/ask)
-The request form (the old /create address opens this). One-time help, or every 28 days (participants confirm the amount each cycle; a reminder goes out 3 days before). Amount in whole dollars, minimum 10. A collection chat link (https) is required — any messenger. The app records the intention; it does not move money.
-The request stays closed until the circle is large enough (direct handshakes and the wider network). Until then the screen shows what is still missing and points to Add. A person has one open collection of each type. Sending opens the new collection.
+ASK / ПРОСЬБА (/ask)
+The ask form (the old /create address opens this). One-time help, or every 28 days (participants confirm the amount each cycle; a reminder goes out 3 days before). Amount in whole dollars, minimum 10. A collection chat link (https) is required — any messenger. The app records the intention; it does not move money.
+The request stays closed until the circle is large enough (direct handshakes and the wider network). Until then the screen shows what is still missing and points to Add. A person has one open collection of each type. "Open collection" / «Открыть сбор» sends it; what opens is the collection (сбор): "Your collection" / «Ваш сбор».
 
 ADD / ДОБАВИТЬ (/add, /add/qr, /add/scan)
 One invite link per person (orginizer.com and a QR). Share it, show the QR, or scan someone else's code. Incoming people wait here to be confirmed. When the circle is still too small to ask, a short path card says how many direct and network people are still needed.
 
 COLLECTION (/collection/:id)
-One collection. Creator, one-time or monthly, handshake path, progress toward the goal, and the chat.
+One collection. Creator, one-time help or every 28 days, handshake path, progress toward the goal, and the chat.
 States:
-- Open (ACTIVE): discussion. Anyone in reach can join with a whole-dollar amount (minimum 1 $). The field suggests their minimum participation. The stage line reads Discussion, plus one-time or monthly.
+- Open (ACTIVE): discussion. Anyone in reach can join with a whole-dollar amount (minimum 1 $). The field suggests their minimum participation. The stage line shows Amount → Chat → Closed.
 - Goal collected (BLOCKED, no reason): the pledged amount covers the goal. No new joins. The screen says the goal is collected.
 - Paused (BLOCKED with a reason): an admin pause, or a community hold. Joining and the chat stop. The owner sees the reason and can write to the assistant. On lists this shows as paused.
-- New cycle: a monthly collection's next 28 days. Current participants confirm the amount (waiting / confirmed). Confirming does not change the total already pledged.
-- Closed (CLOSED or CANCELLED): past. Opens from Collections in Profile. The owner can close an open collection. A participant can decline. The owner can set a missing goal and share a public link (/sos/:id). A person who joins from that public link becomes a direct handshake.
+- New cycle: a collection's next 28 days (every 28 days). Current participants confirm the amount (waiting / confirmed). Confirming does not change the total already pledged.
+- Closed (CLOSED or CANCELLED): past. Opens from Collections in Profile. The owner can close an open collection. A participant can leave ("Leave the collection" / «Выйти из сбора»). The owner can set a missing goal and share a public link (/sos/:id). A person who joins from that public link becomes a direct handshake.
 
 PROFILE / ПРОФИЛЬ (/me)
 - Account card → Account (/me/account): photo, name, slug, member since. Contacts (hide contacts is a switch). Connect Telegram, for an account that signed in another way, opens the bot with a link code and does not show the digits. Delete account is at the bottom of Account.
-- Participation: "Your network can help" (sum of what the circle is ready to direct — not money held by the app). Minimum participation (/me/stake): amount per month the person is ready to direct to someone they know; "I can't help right now" clears it; the app does not take the money. Collections (/me/history): open count on the row; open ones are also at /me/open, past ones in history.
+- Participation: "Your network can help" (sum of what the circle is ready to direct — not money held by the app). Minimum participation (/me/stake): the amount the person is ready to give to one collection of someone they know (not per month; it is filled in when they join, and they can give more); "I can't help right now" clears it; the app does not take the money. Collections (/me/history): open count on the row; open ones are also at /me/open, past ones in history.
 - Settings: theme Auto / Light / Dark. Notifications (the notifications channel): collection cycles (a reminder 3 days before a cycle and again on the day), sounds, and push when the device supports it. The row reads All, Some, or Off. Larger text. Language.
 - More: Help (/me/help), About, Sign out.
 - Admins only: Broadcast (/me/broadcast), Statistics (/me/stats), Support inbox (/support), and the moderation queue.

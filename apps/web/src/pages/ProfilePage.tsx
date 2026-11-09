@@ -166,7 +166,7 @@ export function ProfilePage() {
 
       <Group title={t('profile.participation')}>
         <Row
-          title={t('profile.networkCanHelp')}
+          title={t('circle.stats.canHelp')}
           subtitle={access.data ? t(networkKey(access.data.networkCount), { count: access.data.networkCount }) : undefined}
           variant="value"
           value={canHelp == null ? undefined : formatMoney(canHelp)}
