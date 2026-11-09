@@ -11,8 +11,10 @@
     "clean": "rm -rf dist *.tsbuildinfo"
   },
   "dependencies": {
+    "@capacitor-mlkit/barcode-scanning": "8.2.2",
     "@capacitor/browser": "^8.0.3",
     "@capacitor/push-notifications": "^8.0.1",
+    "@capacitor/share": "8.0.1",
     "@radix-ui/react-tooltip": "^1.2.8",
     "@so/graph-3d": "workspace:*",
     "@so/gun-backup": "workspace:*",
@@ -24,6 +26,7 @@
     "@trpc/react-query": "^11.0.0",
     "clsx": "^2.1.1",
     "i18next": "^25.0.0",
+    "jsqr": "^1.4.0",
     "lucide-react": "^0.563.0",
     "qrcode.react": "^4.2.0",
     "react": "^19.0.0",

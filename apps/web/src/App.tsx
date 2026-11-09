@@ -11,9 +11,6 @@ import { NativePushBootstrap } from './components/NativePushBootstrap';
 import { AppShell } from './components/ui2/AppShell';
 import {
   AccountStub,
-  AddQrStub,
-  AddScanStub,
-  AddStub,
   AskStub,
   HelpStub,
   HistoryStub,
@@ -44,6 +41,9 @@ import { GoogleCallbackPage } from './pages/GoogleCallbackPage';
 import { AppleCallbackPage } from './pages/AppleCallbackPage';
 import { CirclePage } from './pages/CirclePage';
 import { PeoplePage } from './pages/PeoplePage';
+const AddPage = lazy(() => import('./pages/AddPage').then((module) => ({ default: module.AddPage })));
+const QrPage = lazy(() => import('./pages/QrPage').then((module) => ({ default: module.QrPage })));
+const ScanPage = lazy(() => import('./pages/ScanPage').then((module) => ({ default: module.ScanPage })));
 
 const isNativeApp = Capacitor.isNativePlatform();
 
@@ -238,9 +238,9 @@ export function App() {
             <Route element={<ShellGate />}>
               <Route path="/" element={<HomeIndex />} />
               <Route path="/ask" element={<AskStub />} />
-              <Route path="/add" element={<AddStub />} />
-              <Route path="/add/qr" element={<AddQrStub />} />
-              <Route path="/add/scan" element={<AddScanStub />} />
+              <Route path="/add" element={<Suspense fallback={null}><AddPage /></Suspense>} />
+              <Route path="/add/qr" element={<Suspense fallback={null}><QrPage /></Suspense>} />
+              <Route path="/add/scan" element={<Suspense fallback={null}><ScanPage /></Suspense>} />
               <Route path="/me" element={<ProfileStub />} />
               <Route path="/me/account" element={<AccountStub />} />
               <Route path="/me/stake" element={<StakeStub />} />

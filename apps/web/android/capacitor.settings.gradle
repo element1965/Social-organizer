@@ -2,11 +2,17 @@
 include ':capacitor-android'
 project(':capacitor-android').projectDir = new File('../../../node_modules/.pnpm/@capacitor+android@8.1.0_@capacitor+core@8.1.0/node_modules/@capacitor/android/capacitor')
 
+include ':capacitor-mlkit-barcode-scanning'
+project(':capacitor-mlkit-barcode-scanning').projectDir = new File('../../../node_modules/.pnpm/@capacitor-mlkit+barcode-sc_05f1227636b42155a80b77a98e571c33/node_modules/@capacitor-mlkit/barcode-scanning/android')
+
 include ':capacitor-browser'
 project(':capacitor-browser').projectDir = new File('../../../node_modules/.pnpm/@capacitor+browser@8.0.3_@capacitor+core@8.1.0/node_modules/@capacitor/browser/android')
 
 include ':capacitor-push-notifications'
 project(':capacitor-push-notifications').projectDir = new File('../../../node_modules/.pnpm/@capacitor+push-notifications@8.0.1_@capacitor+core@8.1.0/node_modules/@capacitor/push-notifications/android')
+
+include ':capacitor-share'
+project(':capacitor-share').projectDir = new File('../../../node_modules/.pnpm/@capacitor+share@8.0.1_@capacitor+core@8.1.0/node_modules/@capacitor/share/android')
 
 include ':capacitor-app'
 project(':capacitor-app').projectDir = new File('../../../node_modules/.pnpm/@capacitor+app@8.0.1_@capacitor+core@8.1.0/node_modules/@capacitor/app/android')

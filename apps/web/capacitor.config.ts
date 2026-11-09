@@ -29,6 +29,11 @@ const config: CapacitorConfig = {
     PushNotifications: {
       presentationOptions: ['badge', 'sound', 'alert'],
     },
+    // Live QR scan draws the camera behind the WebView. Android is wired by cap sync.
+    // This iOS project is SPM. @capacitor-mlkit/barcode-scanning 8.2.2 ships CocoaPods only,
+    // so a store build needs the pod (or an SPM port) before native scan works on iOS.
+    // Until then the scanner falls back to the browser camera.
+    BarcodeScanner: {},
   },
 };
 
