@@ -266,7 +266,12 @@ export function useEvents(options: { displayName?: (id: string, fallback: string
   }, [notifications.data, incoming.data, outgoing.data, mine.data, participating.data, milestones.data, myId, t, name, dateFmt]);
 
   const loading =
-    notifications.isLoading || incoming.isLoading || outgoing.isLoading || participating.isLoading || mine.isLoading;
+    notifications.isLoading ||
+    incoming.isLoading ||
+    outgoing.isLoading ||
+    participating.isLoading ||
+    mine.isLoading ||
+    milestones.isLoading;
 
   return { events, loading, unreadCount: unread.data?.count ?? 0 };
 }
