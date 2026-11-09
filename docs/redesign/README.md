@@ -110,6 +110,20 @@ cd packages/db
   and `lib/demoData.ts` misses ~48 of 102 procedures (all `pending.*`, `milestone.*`, ...). Use the real local API.
 - Telegram / Google / Apple sign-in need the corresponding keys in the env files.
 
+### Testing on a phone
+
+Two ways, from quick to stable:
+
+1. **Dev server over Wi-Fi.** Vite listens on all interfaces (), so with the phone on the same
+   network open  (find the IP with ; the Vite banner prints it as "Network"). The API is
+   reached through the Vite proxy, which rewrites the browser's Origin to  for the CORS allowlist.
+   Sign in with the e-mail code from ; Google/Apple/Telegram sign-in do not work on a LAN
+   address. Plain http also means no PWA install and no camera (the QR scanner needs a secure context).
+2. **Staging on Railway.** A second deployment of the  branch with its own database and a railway.app
+   domain (https): the phone opens it in Chrome, installs it as a PWA from the browser menu, and the camera, web push and
+   OAuth redirects (once the staging domain is added in the Google/Apple consoles) all work. Production keeps serving
+    untouched. The native Android/iOS wrappers load production, so they are not part of this loop.
+
 ### Redis
 
 Without `REDIS_URL` the API starts normally and skips the BullMQ workers (reminders, broadcasts,
