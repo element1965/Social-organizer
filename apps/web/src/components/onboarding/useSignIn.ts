@@ -15,7 +15,7 @@ import { useAuth, markLoginMethod, type LoginMethod } from '../../hooks/useAuth'
 import { trpc } from '../../lib/trpc';
 import { takePendingSosPath } from '../../lib/inviteUrl';
 import { AUTH_ORDER, detectDevice, type AuthProvider } from '../../lib/device';
-import { afterSignInPath, clearDemoSession, readPendingInvite, safeInviteToken, safePath } from './flow';
+import { afterSignInPath, clearDemoSession, readPendingInvite, safeInviteToken, safeMasked, safePath } from './flow';
 
 const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID as string | undefined;
 const APPLE_SERVICE_ID = import.meta.env.VITE_APPLE_SERVICE_ID as string | undefined;
@@ -252,7 +252,7 @@ export function useSignIn({ redirect, onCodeSent, onTelegramOpened }: UseSignInO
     onSuccess: onTokens('google'),
     onError: (err) => {
       if (err.message === 'ACCOUNT_EXISTS_OTHER_METHOD') {
-        const masked = (err.data as { maskedEmail?: string } | undefined)?.maskedEmail ?? null;
+        const masked = safeMasked((err.data as { maskedEmail?: unknown } | undefined)?.maskedEmail);
         setLinking({ masked });
         return;
       }

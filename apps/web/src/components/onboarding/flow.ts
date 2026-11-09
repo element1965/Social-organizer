@@ -116,3 +116,11 @@ export function clearDemoSession(): boolean {
   window.location.reload();
   return true;
 }
+
+/**
+ * The masked e-mail of an existing account ("an•••@gmail.com") from the URL or the API, or null.
+ * Anything else is dropped and the linking screen is shown without the address.
+ */
+export function safeMasked(raw: unknown): string | null {
+  return typeof raw === 'string' && /^[^\s<>@]{1,3}•••@[A-Za-z0-9.-]{1,253}$/.test(raw) ? raw : null;
+}

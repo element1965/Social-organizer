@@ -165,7 +165,7 @@
     "emailHint": "We will send a six-digit code. If you have no account yet, it will be created after the code.",
     "getCode": "Get the code",
     "codeTitle": "Code from the e-mail",
-    "codeSent": "Sent to <b>{{email}}</b>",
+    "codeSent": "Sent to <b/>",
     "codeLabel": "Six-digit code",
     "codeValid": "The code is valid for 10 minutes.",
     "resendIn": "You can resend it in <t>{{time}}</t>",
@@ -181,7 +181,7 @@
     "cancelledWith": "Sign-in with {{provider}} was cancelled. Choose a way again.",
     "retry": "Try again",
     "linkTitle": "This e-mail is already in Social Organizer",
-    "linkText": "The account with <b>{{email}}</b> was created with a password. Confirm the e-mail with a code, and Google or Apple will open the same account.",
+    "linkText": "The account with <b/> was created with a password. Confirm the e-mail with a code, and Google or Apple will open the same account.",
     "linkTextNoEmail": "The account with this e-mail was created with a password. Confirm the e-mail with a code, and Google or Apple will open the same account.",
     "linkByCode": "Sign in with an e-mail code",
     "otherWay": "Another way to sign in",
@@ -816,10 +816,10 @@
     "left": "You left",
     "lifetime": "You joined {{givenCount}} times · {{givenAmount}}. People helped you {{receivedCount}} times · {{receivedAmount}}.",
     "goalMissing": "No amount set",
-    "logoutByMethodEmail": "You signed in with {{method}} (<b>{{email}}</b>). Come back the same way or with an e-mail code.",
+    "logoutByMethodEmail": "You signed in with {{method}} (<b/>). Come back the same way or with an e-mail code.",
     "logoutByMethod": "You signed in with {{method}}. Come back the same way.",
-    "logoutByEmail": "You signed in with a code sent to <b>{{email}}</b>. Come back the same way.",
-    "logoutEmailOnly": "Come back the same way or with a code sent to <b>{{email}}</b>.",
+    "logoutByEmail": "You signed in with a code sent to <b/>. Come back the same way.",
+    "logoutEmailOnly": "Come back the same way or with a code sent to <b/>.",
     "logoutGeneric": "You can come back the same way you signed in."
   },
   "settings": {
@@ -1711,7 +1711,8 @@
     "goneJoined_other": "Your part in {{count}} open collections",
     "keepPast": "Past collections stay with their authors",
     "keepPastNote": "without your name",
-    "deleteFailed": "Could not delete the account. Check your connection and try again."
+    "deleteFailed": "Could not delete the account. Check your connection and try again.",
+    "deleteCountsFailed": "Could not load what would be deleted. Check your connection and try again."
   },
   "person": {
     "accountName": "In the account: {{name}}",

@@ -13,7 +13,7 @@ import {
   ProfileRedirect,
 } from './components/ui2/stubs';
 import { useAuth } from './hooks/useAuth';
-import { afterSignInPath, readPendingInvite, safeInviteToken, setPendingInvite } from './components/onboarding/flow';
+import { afterSignInPath, readPendingInvite, safeInviteToken, safeMasked, setPendingInvite } from './components/onboarding/flow';
 import { LoginPage } from './pages/LoginPage';
 import { LandingPage } from './pages/LandingPage';
 import { AskPage } from './pages/AskPage';
@@ -82,7 +82,7 @@ function GoogleAuthDeepLinkHandler() {
         const errParams = new URLSearchParams(url.split('?')[1] || '');
         const reason = errParams.get('reason');
         // account_exists may carry the masked e-mail ("an•••@gmail.com"); cancelled is a calm notice, not an error
-        const masked = reason === 'account_exists' ? errParams.get('m') : null;
+        const masked = reason === 'account_exists' ? safeMasked(errParams.get('m')) : null;
         const known = reason === 'account_exists' || reason === 'cancelled' ? reason : 'failed';
         navigate(`/login?error=${known}${masked ? `&m=${encodeURIComponent(masked)}` : ''}`, { replace: true });
         return;

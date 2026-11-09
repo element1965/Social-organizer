@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { trpc } from '../lib/trpc';
 import { useAuth } from '../hooks/useAuth';
 import { takePendingSosPath } from '../lib/inviteUrl';
-import { afterSignInPath, readPendingInvite } from '../components/onboarding/flow';
+import { afterSignInPath, readPendingInvite, safeMasked } from '../components/onboarding/flow';
 import { ProviderWait } from '../components/onboarding/ProviderWait';
 
 // Handles Google OAuth redirect callback.
@@ -95,7 +95,7 @@ export function GoogleCallbackPage() {
         },
         onError: (err) =>
           err.message === 'ACCOUNT_EXISTS_OTHER_METHOD'
-            ? goError('account_exists', (err.data as { maskedEmail?: string } | undefined)?.maskedEmail)
+            ? goError('account_exists', safeMasked((err.data as { maskedEmail?: unknown } | undefined)?.maskedEmail))
             : goError('failed'),
       },
     );
