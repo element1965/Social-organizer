@@ -35,7 +35,7 @@
 | 0 | База ветки `redesign` | — | `redesign` | координатор | влит | 2026-11-09: `redesign` = документы + макеты + `main`, коммит 90308cc |
 | 1 | Каркас, токены, `ui2`, AppShell | 0 | `redesign-wp1-shell` | Grok | в работе | 2026-11-09 старт; блокирует 2, 4–7, 10 |
 | 3 | 3D-граф: производительность и визуал | 0 | `redesign-wp3-graph` | Grok | в работе | 2026-11-09 старт, worktree `../so-wp3` |
-| 4a | API Просьбы и Сбора: пороги, `collection.askAccess`, `block/unblock` | 0 | `redesign-api-prep` | Claude | влит | 2026-11-09, 0de3380; ревью Sonnet: 6 замечаний исправлены. Миграция `20261109120000_ask_block_reason_invite_ttl` — в прод вручную перед выкатом. Потолок суммы просьбы — ждёт решения |
+| 4a | API Просьбы и Сбора: пороги, `collection.askAccess`, `block/unblock` | 0 | `redesign-api-prep` | Claude | влит | 2026-11-09, 0de3380; ревью Sonnet: 6 замечаний исправлены. Миграция `20261109120000_ask_block_reason_invite_ttl` — в прод вручную перед выкатом. Потолка суммы нет (решение 2026-11-09): `askAccess.networkCanHelp` для предупреждения в UI |
 | 6a | API Добавить: `invite.generate({ ttl })`, приём без `pending` | 0 | `redesign-api-prep` | Claude | влит | вместе с 4a |
 | 7a | Фигуры `components/figures/*`, `lib/device.ts`, `lib/scrollPlay.ts` | 0 | `redesign-wp7-figures` | Claude | влит | 2026-11-09, ревью Sonnet: 10 замечаний исправлены; визуальная сверка с `figures.js` — после мерджа WP1 (нужны токены v2) |
 | 11 | Самомодерация сборов: жалобы → вопрос ближнему кругу автора → приостановка | 4a | — | — | — | предложение у владельца продукта, ждёт решения |
