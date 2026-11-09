@@ -9,6 +9,7 @@ import { processScheduledPost } from './scheduled-post.worker.js';
 import { processAutoChain } from './auto-chain.worker.js';
 import { processCleanupBlockedPending } from './cleanup-blocked-pending.worker.js';
 import { processOnboardingReminder } from './onboarding-reminder.worker.js';
+import { processReviewClose } from './review-close.worker.js';
 
 let connection: IORedis | null = null;
 
@@ -91,6 +92,13 @@ export function setupQueues(): void {
   onboardingReminderQueue.upsertJobScheduler('onboarding-reminder-scheduler', {
     every: 60 * 60 * 1000, // 1 hour
   }, { name: 'onboarding-reminder' });
+
+  // --- Circle review close: every 15 minutes. Without Redis, reads and votes close due reviews. ---
+  const reviewCloseQueue = new Queue('collection-review-close', queueOpts(redis));
+  new Worker('collection-review-close', processReviewClose, { connection: redis });
+  reviewCloseQueue.upsertJobScheduler('review-close-scheduler', {
+    every: 15 * 60 * 1000,
+  }, { name: 'review-close' });
 
   console.log('BullMQ: all queues and workers initialized');
 }

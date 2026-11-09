@@ -1662,5 +1662,50 @@
     "replayIntro": "Show the intro again",
     "community": "Community chat",
     "voice": "Voice"
+  },
+  "moderation": {
+    "complain": "Report this collection",
+    "complainTitle": "Report this collection",
+    "complainBody": "The author's close circle sees the report. The author does not see individual reports, and names stay hidden.",
+    "comment": "Comment",
+    "commentHint": "Optional, up to 280 characters.",
+    "submit": "Send report",
+    "reasons": {
+      "COMPLAINTS": "Complaints from participants",
+      "SUSPECTED_FRAUD": "Suspected fraud",
+      "RULES_VIOLATION": "Rules violation",
+      "ACCOUNT_HACKED": "The account looks taken over"
+    },
+    "feedTitle": "People reported {{name}}'s collection",
+    "feedSubtitle": "Do you know anything?",
+    "questionTitle": "People reported {{name}}'s collection",
+    "questionBody": "Names of the people who reported stay hidden.",
+    "reasonsHeading": "Reasons",
+    "openCollection": "Open collection",
+    "vote": {
+      "PROBLEM": "Yes, there is a problem — pause it",
+      "OK": "It is fine, this is a mistake",
+      "UNKNOWN": "I don't know"
+    },
+    "voted": "Answer saved",
+    "heldTitle": "Collection paused by the circle",
+    "heldOwner": "People close to you decided this.",
+    "adminOpen": "Open circle questions",
+    "adminEmpty": "No open questions",
+    "adminMeta": "{{complaints}} reports · {{votes}} of {{audience}} answered",
+    "uphold": "Pause",
+    "dismiss": "Drop reports",
+    "errors": {
+      "AUTHOR": "You can't report your own collection",
+      "NOT_ELIGIBLE": "Only participants and the author's 1st handshake can report",
+      "ALREADY": "You already reported this collection",
+      "BANNED": "After two dropped reports, new ones are unavailable for 30 days",
+      "UNAVAILABLE": "This collection can't be reported",
+      "REVIEW_OPEN": "The circle is already reviewing this collection",
+      "REVIEW_CLOSED": "This question is already closed",
+      "NOT_AUDIENCE": "This question was not sent to you",
+      "ALREADY_VOTED": "You already answered",
+      "GENERIC": "Could not send"
+    }
   }
 }

@@ -19,6 +19,7 @@ import { skillsRouter } from './skills.router.js';
 import { matchesRouter } from './matches.router.js';
 import { supportRouter } from './support.router.js';
 import { milestoneRouter } from './milestone.router.js';
+import { moderationRouter } from './moderation.router.js';
 
 export const appRouter = router({
   auth: authRouter,
@@ -41,6 +42,7 @@ export const appRouter = router({
   matches: matchesRouter,
   support: supportRouter,
   milestone: milestoneRouter,
+  moderation: moderationRouter,
 });
 
 export type AppRouter = typeof appRouter;
