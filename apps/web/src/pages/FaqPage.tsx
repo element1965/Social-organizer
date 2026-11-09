@@ -73,8 +73,8 @@ export function FaqPage({ embedded = false }: { embedded?: boolean }) {
       });
 
       if (!res.ok) {
-        const err = await res.json().catch(() => ({ error: 'Upload failed' }));
-        alert((err as { error?: string }).error || 'Upload failed');
+        const err = await res.json().catch(() => ({}));
+        alert((err as { error?: string }).error || t('faq.uploadFailed'));
         return;
       }
 
@@ -82,7 +82,7 @@ export function FaqPage({ embedded = false }: { embedded?: boolean }) {
       // Store as /api/media/<fileId> URL for display
       setFormImageUrl(`/api/media/${data.fileId}`);
     } catch {
-      alert('Upload failed');
+      alert(t('faq.uploadFailed'));
     } finally {
       setUploading(false);
       if (fileInputRef.current) fileInputRef.current.value = '';
@@ -221,7 +221,7 @@ export function FaqPage({ embedded = false }: { embedded?: boolean }) {
                   type="url"
                   value={linkUrl}
                   onChange={e => setLinkUrl(e.target.value)}
-                  placeholder="https://..."
+                  placeholder={t('faq.urlPlaceholder')}
                   className="w-full p-2 text-sm rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
                 <div className="flex gap-2">

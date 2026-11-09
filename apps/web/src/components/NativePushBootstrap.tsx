@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Trans, useTranslation } from 'react-i18next';
 import { Capacitor } from '@capacitor/core';
 import { Bell, BellOff, Settings } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth';
@@ -22,6 +23,7 @@ export function NativePushBootstrap() {
   // and must never block the app — we don't init it here and never render a
   // spinner/gate, which previously caused an infinite loading screen on iPad
   // after a full-page reload (e.g. returning from Sign in with Apple).
+  const { t } = useTranslation();
   const gateAllowed = Capacitor.getPlatform() === 'android';
   const isAuthenticated = useAuth((s) => s.isAuthenticated);
   const navigate = useNavigate();
@@ -153,11 +155,10 @@ export function NativePushBootstrap() {
               <Bell className="w-10 h-10 text-blue-400" />
             </div>
             <h1 className="text-2xl font-bold text-white mb-3">
-              Включи уведомления
+              {t('nativePush.promptTitle')}
             </h1>
             <p className="text-gray-400 text-sm leading-relaxed mb-8">
-              Social Organizer работает через уведомления — именно так ты узнаёшь о новых сборах в твоей сети.
-              Без уведомлений приложение теряет смысл.
+              {t('nativePush.promptBody')}
             </p>
             <button
               onClick={handleRequestPermission}
@@ -169,7 +170,7 @@ export function NativePushBootstrap() {
               ) : (
                 <Bell className="w-5 h-5" />
               )}
-              {requesting ? 'Запрашиваем...' : 'Включить уведомления'}
+              {requesting ? t('nativePush.requesting') : t('nativePush.enable')}
             </button>
           </>
         )}
@@ -180,27 +181,27 @@ export function NativePushBootstrap() {
               <BellOff className="w-10 h-10 text-red-400" />
             </div>
             <h1 className="text-2xl font-bold text-white mb-3">
-              Уведомления отключены
+              {t('nativePush.deniedTitle')}
             </h1>
             <p className="text-gray-400 text-sm leading-relaxed mb-2">
-              Ты запретил уведомления. Чтобы продолжить, включи их вручную:
+              {t('nativePush.deniedBody')}
             </p>
             <div className="w-full bg-gray-800/60 border border-gray-700 rounded-xl p-4 mb-8 text-left space-y-2">
               <p className="text-gray-300 text-sm flex items-start gap-2">
                 <span className="text-blue-400 font-bold shrink-0">1.</span>
-                Открой <strong className="text-white">Настройки</strong> телефона
+                <Trans i18nKey="nativePush.step1" components={{ b: <strong className="text-white" /> }} />
               </p>
               <p className="text-gray-300 text-sm flex items-start gap-2">
                 <span className="text-blue-400 font-bold shrink-0">2.</span>
-                Перейди в <strong className="text-white">Приложения → Social Organizer</strong>
+                <Trans i18nKey="nativePush.step2" components={{ b: <strong className="text-white" /> }} />
               </p>
               <p className="text-gray-300 text-sm flex items-start gap-2">
                 <span className="text-blue-400 font-bold shrink-0">3.</span>
-                Включи <strong className="text-white">Уведомления</strong>
+                <Trans i18nKey="nativePush.step3" components={{ b: <strong className="text-white" /> }} />
               </p>
               <p className="text-gray-300 text-sm flex items-start gap-2">
                 <span className="text-blue-400 font-bold shrink-0">4.</span>
-                Вернись в приложение
+                {t('nativePush.step4')}
               </p>
             </div>
             <button
@@ -209,10 +210,10 @@ export function NativePushBootstrap() {
               className="w-full py-4 bg-gray-700 hover:bg-gray-600 active:bg-gray-800 text-white font-semibold text-sm rounded-2xl transition-colors disabled:opacity-60 flex items-center justify-center gap-2 mb-3"
             >
               <Settings className="w-4 h-4" />
-              Проверить снова
+              {t('nativePush.checkAgain')}
             </button>
             <p className="text-gray-600 text-xs">
-              После включения уведомлений нажми «Проверить снова»
+              {t('nativePush.checkHint')}
             </p>
           </>
         )}

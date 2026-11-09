@@ -192,10 +192,8 @@ export function ChatAssistant({ page = false }: { page?: boolean }) {
     el.style.height = `${el.scrollHeight}px`;
   }, [input]);
 
-  // Quick topic buttons based on language
-  const quickTopicsRu = ['рукопожатие', 'намерение', 'возможности', 'как начать'];
-  const quickTopicsEn = ['handshake', 'intention', 'capabilities', 'how to start'];
-  const quickTopics = i18n.language.startsWith('ru') ? quickTopicsRu : quickTopicsEn;
+  const topicValue = t('chat.topics', { returnObjects: true });
+  const quickTopics = Array.isArray(topicValue) ? topicValue.filter((item): item is string => typeof item === 'string') : [];
 
   const isOpen = page;
 

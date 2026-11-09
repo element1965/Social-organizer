@@ -164,7 +164,7 @@ export function MessageComposer({ value, onChange, disabled }: MessageComposerPr
           <input
             value={value.buttonUrl || ''}
             onChange={(e) => onChange({ ...value, buttonUrl: e.target.value })}
-            placeholder="https://..."
+            placeholder={t('broadcast.urlPlaceholder')}
             className={`${inputCls} flex-[2]`}
             disabled={disabled}
             onFocus={(e) => setTimeout(() => e.target.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 300)}

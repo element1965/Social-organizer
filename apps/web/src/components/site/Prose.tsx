@@ -39,7 +39,7 @@ export function Prose({
 }) {
   const { t } = useTranslation();
   return (
-    <SitePage title={`${title} — Social Organizer`} active="legal">
+    <SitePage title={`${title} — ${t('common.appName')}`} active="legal">
       <div className="site-legal">
         <nav className="site-toc" aria-label={t('legal.toc')}>
           {DOCS.map((d) => (
