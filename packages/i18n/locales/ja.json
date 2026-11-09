@@ -1261,7 +1261,8 @@
     "collectionAmount": "募金 {{amount}}",
     "open": "開く",
     "contactsTitle": "連絡先：{{name}}",
-    "contactsHint": "別のアプリで開きます。"
+    "contactsHint": "別のアプリで開きます。",
+    "withdrawRequest": "取り消す"
   },
   "help": {
     "faq": "よくある質問",

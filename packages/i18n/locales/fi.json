@@ -1272,7 +1272,8 @@
     "collectionAmount": "Keräys {{amount}}",
     "open": "Avaa",
     "contactsTitle": "Yhteystiedot: {{name}}",
-    "contactsHint": "Ne avautuvat toisessa sovelluksessa."
+    "contactsHint": "Ne avautuvat toisessa sovelluksessa.",
+    "withdrawRequest": "Peru"
   },
   "help": {
     "faq": "Kysymykset ja vastaukset",

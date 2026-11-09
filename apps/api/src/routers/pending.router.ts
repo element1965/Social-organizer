@@ -140,6 +140,16 @@ export const pendingRouter = router({
       return { status: pending.status.toLowerCase() as 'pending' | 'accepted' | 'rejected' };
     }),
 
+  /** Withdraws the current user's own unanswered request to a person. The row is deleted, so a new one can be sent later. */
+  cancel: protectedProcedure
+    .input(z.object({ targetUserId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const res = await ctx.db.pendingConnection.deleteMany({
+        where: { fromUserId: ctx.userId, toUserId: input.targetUserId, status: 'PENDING' },
+      });
+      return { cancelled: res.count > 0 };
+    }),
+
   reject: protectedProcedure
     .input(z.object({ pendingId: z.string() }))
     .mutation(async ({ ctx, input }) => {

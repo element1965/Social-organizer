@@ -1261,7 +1261,8 @@
     "collectionAmount": "Đợt quyên góp {{amount}}",
     "open": "Mở",
     "contactsTitle": "Liên hệ: {{name}}",
-    "contactsHint": "Sẽ mở trong ứng dụng khác."
+    "contactsHint": "Sẽ mở trong ứng dụng khác.",
+    "withdrawRequest": "Rút lại"
   },
   "help": {
     "faq": "Câu hỏi thường gặp",

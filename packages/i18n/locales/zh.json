@@ -1261,7 +1261,8 @@
     "collectionAmount": "筹款 {{amount}}",
     "open": "打开",
     "contactsTitle": "联系方式：{{name}}",
-    "contactsHint": "会在其他应用中打开。"
+    "contactsHint": "会在其他应用中打开。",
+    "withdrawRequest": "撤回"
   },
   "help": {
     "faq": "常见问题",

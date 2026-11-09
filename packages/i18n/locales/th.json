@@ -1261,7 +1261,8 @@
     "collectionAmount": "การระดม {{amount}}",
     "open": "เปิด",
     "contactsTitle": "ช่องทางติดต่อ: {{name}}",
-    "contactsHint": "จะเปิดในแอปอื่น"
+    "contactsHint": "จะเปิดในแอปอื่น",
+    "withdrawRequest": "ถอนคำขอ"
   },
   "help": {
     "faq": "คำถามและคำตอบ",

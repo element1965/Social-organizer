@@ -1283,7 +1283,8 @@
     "collectionAmount": "Colectă {{amount}}",
     "open": "Deschide",
     "contactsTitle": "Contacte: {{name}}",
-    "contactsHint": "Se deschid în altă aplicație."
+    "contactsHint": "Se deschid în altă aplicație.",
+    "withdrawRequest": "Retrage"
   },
   "help": {
     "faq": "Întrebări și răspunsuri",

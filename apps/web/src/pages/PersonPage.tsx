@@ -81,6 +81,14 @@ function PersonScreen() {
       }
     },
   });
+  const cancelRequest = trpc.pending.cancel.useMutation({
+    onSuccess: () => {
+      // Forget the local "sent" result too, otherwise the page keeps showing the request
+      sendRequest.reset();
+      void utils.pending.myPending.invalidate();
+      void utils.pending.directStatus.invalidate({ targetUserId: id });
+    },
+  });
   const revoke = trpc.connection.revoke.useMutation({
     onSuccess: () => {
       void utils.connection.list.invalidate();
@@ -306,7 +314,17 @@ function PersonScreen() {
       {deeper ? (
         <div className="mt-5">
           {requestSent ? (
-            <p className="rounded-lg bg-care-soft px-4 py-3 text-body-s font-bold text-care">{t('person.requestSent')}</p>
+            <div className="flex items-center gap-3 rounded-lg bg-care-soft py-1 pl-4 pr-1">
+              <p className="min-w-0 flex-1 py-2 text-body-s font-bold text-care">{t('person.requestSent')}</p>
+              <Button
+                variant="text"
+                className="min-h-[44px] px-3"
+                loading={cancelRequest.isPending}
+                onClick={() => cancelRequest.mutate({ targetUserId: id })}
+              >
+                {t('person.withdrawRequest')}
+              </Button>
+            </div>
           ) : (
             <>
               <Button className="w-full" loading={sendRequest.isPending} onClick={() => sendRequest.mutate({ targetUserId: id })}>

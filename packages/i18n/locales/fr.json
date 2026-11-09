@@ -1283,7 +1283,8 @@
     "collectionAmount": "Collecte {{amount}}",
     "open": "Ouvrir",
     "contactsTitle": "Contacts : {{name}}",
-    "contactsHint": "Ils s’ouvrent dans une autre application."
+    "contactsHint": "Ils s’ouvrent dans une autre application.",
+    "withdrawRequest": "Retirer"
   },
   "help": {
     "faq": "Questions et réponses",

@@ -1272,7 +1272,8 @@
     "collectionAmount": "Sammlung {{amount}}",
     "open": "Öffnen",
     "contactsTitle": "Kontakte: {{name}}",
-    "contactsHint": "Sie öffnen sich in einer anderen App."
+    "contactsHint": "Sie öffnen sich in einer anderen App.",
+    "withdrawRequest": "Zurückziehen"
   },
   "help": {
     "faq": "Fragen und Antworten",

@@ -1261,7 +1261,8 @@
     "collectionAmount": "Pengumpulan {{amount}}",
     "open": "Buka",
     "contactsTitle": "Kontak: {{name}}",
-    "contactsHint": "Terbuka di aplikasi lain."
+    "contactsHint": "Terbuka di aplikasi lain.",
+    "withdrawRequest": "Batalkan"
   },
   "help": {
     "faq": "Pertanyaan dan jawaban",

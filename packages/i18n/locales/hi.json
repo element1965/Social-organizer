@@ -1272,7 +1272,8 @@
     "collectionAmount": "संग्रह {{amount}}",
     "open": "खोलें",
     "contactsTitle": "संपर्क: {{name}}",
-    "contactsHint": "ये दूसरे ऐप में खुलेंगे।"
+    "contactsHint": "ये दूसरे ऐप में खुलेंगे।",
+    "withdrawRequest": "वापस लें"
   },
   "help": {
     "faq": "सवाल और जवाब",

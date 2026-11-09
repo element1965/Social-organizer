@@ -1272,7 +1272,8 @@
     "collectionAmount": "Inzameling {{amount}}",
     "open": "Openen",
     "contactsTitle": "Contacten: {{name}}",
-    "contactsHint": "Ze openen in een andere app."
+    "contactsHint": "Ze openen in een andere app.",
+    "withdrawRequest": "Intrekken"
   },
   "help": {
     "faq": "Vragen en antwoorden",

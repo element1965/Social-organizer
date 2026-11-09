@@ -1283,7 +1283,8 @@
     "collectionAmount": "Arrecadação {{amount}}",
     "open": "Abrir",
     "contactsTitle": "Contatos: {{name}}",
-    "contactsHint": "Eles abrem em outro aplicativo."
+    "contactsHint": "Eles abrem em outro aplicativo.",
+    "withdrawRequest": "Retirar"
   },
   "help": {
     "faq": "Perguntas frequentes",
