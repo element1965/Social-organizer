@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { useAuth } from '../../hooks/useAuth';
-import type { GraphView } from './CircleGraph';
+import type { GraphView } from '@so/graph-3d';
 
 export type Ring = 1 | 2 | 3;
 

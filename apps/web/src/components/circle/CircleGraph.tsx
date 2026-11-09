@@ -1,92 +1,44 @@
-import {
-  forwardRef,
-  lazy,
-  Suspense,
-  useCallback,
-  useEffect,
-  useImperativeHandle,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
-import type { Ring } from './circle-store';
+import { forwardRef, lazy, Suspense, useCallback, useEffect, useImperativeHandle, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import type { GraphNode, GraphView, NetworkGraphHandle } from '@so/graph-3d';
+import { useCircleStore, type Ring } from './circle-store';
 import type { NetPerson } from './network';
 
-type GraphModule = typeof import('@so/graph-3d');
-let graphComponent: GraphModule['NetworkGraph'] | null = null;
+const LazyNetworkGraph = lazy(() => import('@so/graph-3d').then((m) => ({ default: m.NetworkGraph })));
 
-const LazyNetworkGraph = lazy(() =>
-  import('@so/graph-3d').then((m) => {
-    graphComponent = m.NetworkGraph;
-    return { default: m.NetworkGraph };
-  }),
-);
+export type { GraphView };
 
-/**
- * Camera state for "back to the same place". Opaque here: WP3 defines the shape
- * (position, target, zoom) and returns it from NetworkGraph ref getView().
- */
-export type GraphView = Record<string, unknown>;
-
-export type CircleGraphHandle = {
-  zoomIn: () => void;
-  zoomOut: () => void;
-  fit: () => void;
-  focusOnMe: () => void;
-  getView: () => GraphView | null;
-  setView: (view: GraphView) => void;
-};
+export type CircleGraphHandle = Pick<NetworkGraphHandle, 'zoomIn' | 'zoomOut' | 'fit' | 'focusOnMe' | 'getView' | 'setView'>;
 
 type CircleGraphProps = {
   myId: string | null;
   people: Map<string, NetPerson>;
   edges: Array<{ from: string; to: string }>;
-  /** Ids from me to the selected person. Not drawn until WP3 (see below). */
+  /** Ids from me to the selected person (or to the first request author). */
   highlightPath: string[];
   hiddenRings: Ring[];
   onNodeTap: (id: string) => void;
-  /** Camera to restore on mount (no intro animation). */
-  initialView?: GraphView | null;
-  /** Changes with the URL layer/selection; the graph makes sure it is animating after each change. */
-  resumeKey?: string;
   /** Dim the scene while the person card is open. */
   dimmed?: boolean;
 };
 
-type ForceGraphApi = { resumeAnimation?: () => void };
-
 /**
- * TODO(WP3): the current NetworkGraph pauses its render loop inside onNodeClick (it expected a
- * navigation away) and exposes no ref. Until `onNodeTap` lands, the wrapper reaches the force-graph
- * instance through the NetworkGraph fiber (its first hook is `fgRef`) and calls resumeAnimation().
- * Delete this function once NetworkGraph has onNodeTap.
- */
-function resumeLegacyGraph(box: HTMLElement | null) {
-  const root = box?.firstElementChild;
-  if (!root || !graphComponent) return;
-  const key = Object.keys(root).find((k) => k.startsWith('__reactFiber$'));
-  if (!key) return;
-  type Fiber = { type: unknown; return: Fiber | null; memoizedState: { memoizedState?: { current?: ForceGraphApi } } | null };
-  let fiber = (root as unknown as Record<string, Fiber>)[key] ?? null;
-  while (fiber && fiber.type !== graphComponent) fiber = fiber.return;
-  try {
-    fiber?.memoizedState?.memoizedState?.current?.resumeAnimation?.();
-  } catch {
-    /* graph already torn down */
-  }
-}
-
-/**
- * The only place that talks to @so/graph-3d. WP3 adds onNodeTap, highlightPath that works with
- * the ref, hiddenRings, theme and ref methods (zoomIn/zoomOut/fit/focusOnMe/getView/setView);
- * wiring them is a short change here.
+ * The only place that talks to @so/graph-3d.
+ *
+ * Colours: the graph defaults (`GRAPH_COLORS`) are the dark v2 scene tokens (`--so-scene`, `--so-node-1..3`,
+ * `--so-care-scene`, `--so-care-bright`), which the app does not redefine per theme, so no `colors` prop is
+ * passed. The scene stays dark in both themes, hence `theme="dark"` for the in-canvas tooltip.
+ *
+ * Camera: the view is saved to the Circle store when the graph unmounts (navigation to Person, Collection,
+ * People, or a phone/desktop layout switch) and handed back as `initialView`, which skips the intro fly.
  */
 export const CircleGraph = forwardRef<CircleGraphHandle, CircleGraphProps>(function CircleGraph(
-  { myId, people, edges, highlightPath, hiddenRings, onNodeTap, initialView, resumeKey, dimmed },
+  { myId, people, edges, highlightPath, hiddenRings, onNodeTap, dimmed },
   ref,
 ) {
   const boxRef = useRef<HTMLDivElement>(null);
+  const graphRef = useRef<NetworkGraphHandle | null>(null);
   const [size, setSize] = useState<{ w: number; h: number } | null>(null);
+  const saveView = useCircleStore((s) => s.saveView);
 
   useEffect(() => {
     const el = boxRef.current;
@@ -103,99 +55,68 @@ export const CircleGraph = forwardRef<CircleGraphHandle, CircleGraphProps>(funct
     return () => observer.disconnect();
   }, []);
 
-  // TODO(WP3): pass hiddenRings to NetworkGraph instead of filtering the data here.
-  const data = useMemo(() => {
-    const hidden = new Set<number>(hiddenRings);
-    const nodes = [...people.values()]
-      .filter((p) => p.depth === 0 || !hidden.has(p.depth))
-      .map((p) => ({
-        id: p.id,
-        name: p.name,
-        photoUrl: p.photoUrl,
-        isCenter: p.id === myId,
-        depth: p.depth,
-        connectionCount: p.connectionCount,
-        lastSeen: p.lastSeen,
-      }));
-    const kept = new Set(nodes.map((n) => n.id));
-    const links = edges
-      .filter((e) => kept.has(e.from) && kept.has(e.to))
-      .map((e) => ({ source: e.from, target: e.to }));
-    return { nodes, links };
-  }, [people, edges, hiddenRings, myId]);
-
-  const handleTap = useCallback(
-    (id: string) => {
-      onNodeTap(id);
-      // The legacy graph has just paused itself; keep it alive (TODO(WP3): drop with onNodeTap).
-      requestAnimationFrame(() => resumeLegacyGraph(boxRef.current));
+  // A layout-effect cleanup runs before the child graph drops its imperative handle, so getView() still works.
+  useLayoutEffect(
+    () => () => {
+      const view = graphRef.current?.getView();
+      if (view) saveView(view);
     },
-    [onNodeTap],
+    [saveView],
   );
 
-  // Safety net: after every layer or selection change the scene is animating again.
-  useEffect(() => {
-    const frame = requestAnimationFrame(() => resumeLegacyGraph(boxRef.current));
-    return () => cancelAnimationFrame(frame);
-  }, [resumeKey]);
+  const data = useMemo(() => {
+    const nodes: GraphNode[] = [...people.values()].map((p) => ({
+      id: p.id,
+      name: p.name,
+      photoUrl: p.photoUrl,
+      isCenter: p.id === myId,
+      depth: p.depth,
+      connectionCount: p.connectionCount,
+      lastSeen: p.lastSeen,
+    }));
+    const links = edges.map((e) => ({ source: e.from, target: e.to }));
+    return { nodes, links };
+  }, [people, edges, myId]);
 
-  // Shims over the current graph: its built-in buttons are hidden and clicked programmatically,
-  // zoom goes through a wheel event on the canvas (OrbitControls listens to it).
-  const clickBuiltIn = (label: string) => {
-    boxRef.current?.querySelector<HTMLButtonElement>(`button[aria-label="${label}"]`)?.click();
-  };
-  const wheel = (deltaY: number) => {
-    const canvas = boxRef.current?.querySelector('canvas');
-    if (!canvas) return;
-    const rect = canvas.getBoundingClientRect();
-    canvas.dispatchEvent(
-      new WheelEvent('wheel', {
-        deltaY,
-        clientX: rect.left + rect.width / 2,
-        clientY: rect.top + rect.height / 2,
-        bubbles: true,
-        cancelable: true,
-      }),
-    );
-  };
+  const handleTap = useCallback((node: GraphNode) => onNodeTap(node.id), [onNodeTap]);
 
   useImperativeHandle(
     ref,
     () => ({
-      // TODO(WP3): graphRef.zoomIn() / zoomOut() / fit() / focusOnMe().
-      zoomIn: () => wheel(-240),
-      zoomOut: () => wheel(240),
-      fit: () => clickBuiltIn('Show whole network'),
-      focusOnMe: () => clickBuiltIn('Focus on me'),
-      // TODO(WP3): return graphRef.getView() and call graphRef.setView(view) once they exist.
-      getView: () => null,
-      setView: () => undefined,
+      zoomIn: () => graphRef.current?.zoomIn(),
+      zoomOut: () => graphRef.current?.zoomOut(),
+      fit: () => graphRef.current?.fit(),
+      focusOnMe: () => graphRef.current?.focusOnMe(),
+      getView: () => graphRef.current?.getView() ?? null,
+      setView: (view, options) => graphRef.current?.setView(view, options),
     }),
     [],
   );
 
-  // TODO(WP3): pass initialView to setView right after the first frame, without the pop-in intro.
-  void initialView;
-  // TODO(WP3): pass highlightPath. The current NetworkGraph crashes when it changes
-  // (`fg.linkColor is not a function`: the force-graph ref has no accessor methods).
-  void highlightPath;
+  // Read when the graph mounts (NetworkGraph applies initialView once), so a view saved by a graph that
+  // unmounted in the same commit is already in the store.
+  const initialView = useCircleStore.getState().view ?? undefined;
 
   return (
     <div
       ref={boxRef}
-      // The legacy graph draws its own buttons with an inline display; the Circle has its own controls.
-      className="absolute inset-0 overflow-hidden [&_button]:!hidden"
+      className="absolute inset-0 overflow-hidden"
       style={{ opacity: dimmed ? 0.55 : 1, transition: 'opacity 420ms cubic-bezier(0.22, 0.8, 0.24, 1)' }}
     >
       {size && data.nodes.length > 0 ? (
         <Suspense fallback={<SceneSkeleton />}>
           <LazyNetworkGraph
+            ref={graphRef}
             nodes={data.nodes}
             edges={data.links}
             width={size.w}
             height={size.h}
-            onNodeClick={handleTap}
-            darkMode
+            onNodeTap={handleTap}
+            highlightPath={highlightPath}
+            hiddenRings={hiddenRings}
+            initialView={initialView}
+            showControls={false}
+            theme="dark"
           />
         </Suspense>
       ) : (
