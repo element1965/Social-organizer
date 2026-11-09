@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import type { TFunction } from 'i18next';
 import { X, ChevronDown } from 'lucide-react';
 import { Button } from './ui/button';
 
@@ -12,7 +13,7 @@ interface PeriodPickerProps {
   onChange: (days: number) => void;
 }
 
-function periodLabel(t: (key: string) => string, days: number): string {
+function periodLabel(t: TFunction, days: number): string {
   if (days === 0) return t('dashboard.periodAllTime');
   if (days === 1) return t('dashboard.periodPast1');
   if (days === 7) return t('dashboard.periodPast7');
@@ -20,7 +21,7 @@ function periodLabel(t: (key: string) => string, days: number): string {
   if (days === 28) return t('dashboard.periodPast28');
   if (days === 90) return t('dashboard.periodPast90');
   if (days === 365) return t('dashboard.periodPast365');
-  return `${days}d`;
+  return t('dashboard.periodDays', { count: days });
 }
 
 export function PeriodPicker({ open, onClose, value, onChange }: PeriodPickerProps) {
