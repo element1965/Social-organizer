@@ -288,7 +288,8 @@
       "milestoneWith": "With {{name}}",
       "milestoneGrow": "Your circle is growing",
       "quietTitle": "All quiet",
-      "quietBody": "Requests, new people and collection cycles will show up here."
+      "quietBody": "Requests, new people and collection cycles will show up here.",
+      "dismiss": "Hide: {{name}}"
     },
     "start": {
       "lead": "You are the first in your circle.",
