@@ -97,6 +97,9 @@ export function storeButtons(dev: Device): StoreButtons {
   };
 }
 
+/** Canonical public origin: the QR on the desktop site must open production, not the host it was shown on. */
+export const SITE_ORIGIN = 'https://www.orginizer.com';
+
 /** Public store and bot addresses. */
 export const STORE_URL = {
   play: 'https://play.google.com/store/apps/details?id=com.socialorganizer.app',

@@ -3,7 +3,7 @@ import { Link, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { languageNames } from '@so/i18n';
 import { useTheme } from '../../hooks/useTheme';
-import { Logo } from '../Logo';
+import { BrandMark } from '../ui2/BrandMark';
 import { IconMoon, IconSun } from '../ui2/icons';
 
 export const GITHUB_URL = 'https://github.com/element1965/Social-organizer';
@@ -16,10 +16,7 @@ export function SiteBrand({ small }: { small?: boolean } = {}) {
   const { t } = useTranslation();
   return (
     <Link to="/" className="site-brand">
-      {/* The brand mark is the existing logo (public/logo.png via Logo); never redraw it. */}
-      <span className="site-mark" aria-hidden="true">
-        <Logo size={small ? 17 : 22} />
-      </span>
+      <BrandMark size={small ? 24 : 30} />
       {t('landing.site.brand')}
     </Link>
   );

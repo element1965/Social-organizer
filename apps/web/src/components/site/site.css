@@ -39,7 +39,6 @@
 /* ---------- header ---------- */
 .site-top { height: 72px; display: flex; align-items: center; gap: 28px; padding: 0 48px; }
 .site-brand { display: inline-flex; align-items: center; gap: 10px; font-weight: 800; font-size: 16px; letter-spacing: -.02em; color: var(--ink); }
-.site-mark { width: 30px; height: 30px; border-radius: 9px; background: var(--care); color: var(--on-care); display: grid; place-items: center; flex: none; }
 .site-top nav { display: flex; gap: 24px; font-weight: 700; font-size: 15px; }
 .site-top nav a { color: var(--muted); }
 .site-top nav a:hover, .site-top nav a[aria-current="page"] { color: var(--ink); }
@@ -53,7 +52,6 @@
 /* ---------- footer ---------- */
 .site-foot { padding: 40px 48px; border-top: 1px solid var(--line-soft); display: flex; align-items: center; gap: 24px; color: var(--muted); font-size: 14px; font-weight: 600; }
 .site-foot .site-brand { gap: 8px; }
-.site-foot .site-mark { width: 24px; height: 24px; border-radius: 7px; }
 .site-foot .links { margin-left: auto; display: flex; gap: 20px; align-items: center; flex-wrap: wrap; }
 .site-foot .links a { color: var(--muted); }
 .site-foot .links a:hover { color: var(--ink); }

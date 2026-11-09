@@ -8,6 +8,7 @@ import './site.css';
 /** Frame of every public page: header, content, footer on the light canvas (or dark by theme). */
 export function SitePage({
   title,
+  description,
   active,
   footer = true,
   className,
@@ -15,12 +16,14 @@ export function SitePage({
 }: {
   /** Document title. */
   title: string;
+  /** Meta description for this page (landing, /how); restored on leave. */
+  description?: string;
   active?: SiteSection;
   footer?: boolean;
   className?: string;
   children: ReactNode;
 }) {
-  useDocumentTitle(title);
+  useDocumentTitle(title, description);
   return (
     <div className={cn('site', className)}>
       <div className="site-wrap flex flex-1 flex-col">
