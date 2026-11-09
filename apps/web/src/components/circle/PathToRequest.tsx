@@ -19,6 +19,8 @@ import { Sheet } from '../ui2/Sheet';
  */
 
 type PathData = {
+  /** askAccess answered: until then nothing about the lock is known. */
+  ready: boolean;
   allowed: boolean;
   direct: number;
   network: number;
@@ -35,6 +37,7 @@ function usePathData(enabled = true): PathData {
     .filter((c) => c.connectionCount <= 1)
     .map((c) => ({ userId: c.userId, displayName: c.displayName || c.name, photoUrl: c.photoUrl }));
   return {
+    ready: access.isSuccess,
     allowed: access.data?.allowed === true,
     direct: access.data?.directCount ?? connections.data?.length ?? 0,
     network: access.data?.networkCount ?? 0,
@@ -159,7 +162,8 @@ export function PathToRequestSheet({ open, onClose, children }: { open: boolean;
 export function PathCard({ className }: { className?: string }) {
   const { t } = useTranslation();
   const data = usePathData();
-  if (data.allowed) return null;
+  // No flash of "almost there" for people who can already ask, and nothing if the check failed.
+  if (!data.ready || data.allowed) return null;
   return (
     <Card className={className}>
       <h2 className="text-body font-extrabold tracking-tight text-ink">{pathTitle(t, data)}</h2>

@@ -5,7 +5,7 @@ import { trpc } from '../lib/trpc';
 import { Button, Card, Chip } from '../components/ui2';
 import { BackLink, OnboardingFrame, StepText } from '../components/onboarding/OnboardingFrame';
 import { CheckMark } from '../components/onboarding/brand';
-import { clearFirstRun, safePath } from '../components/onboarding/flow';
+import { clearFirstRun, introPath, safePath } from '../components/onboarding/flow';
 
 const PRESETS = [1, 5, 15, 30];
 const DEFAULT_AMOUNT = 1;
@@ -57,7 +57,7 @@ export function SeedPage() {
 
   return (
     <OnboardingFrame
-      top={<BackLink label={t('common.back')} to={next ? `/intro?first=1&next=${encodeURIComponent(next)}` : '/intro?first=1'} />}
+      top={<BackLink label={t('common.back')} to={introPath(next)} />}
       foot={
         <Button className="w-full" loading={setBudget.isPending} disabled={!valid} onClick={() => void submit()}>
           {t('intro.seed.go')}
