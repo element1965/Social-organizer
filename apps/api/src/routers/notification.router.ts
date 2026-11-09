@@ -1,5 +1,23 @@
 import { z } from 'zod';
+import { TRPCError } from '@trpc/server';
 import { router, protectedProcedure, paginationInput } from '../trpc.js';
+import type { PrismaClient } from '@so/db';
+
+/** Opening or dismissing a notice must not wipe a cycle acknowledgement (RESPONDED). */
+async function setNotificationStatus(
+  db: PrismaClient,
+  userId: string,
+  id: string,
+  status: 'READ' | 'DISMISSED',
+) {
+  await db.notification.updateMany({
+    where: { id, userId, status: { not: 'RESPONDED' } },
+    data: { status },
+  });
+  const row = await db.notification.findFirst({ where: { id, userId } });
+  if (!row) throw new TRPCError({ code: 'NOT_FOUND' });
+  return row;
+}
 
 export const notificationRouter = router({
   list: protectedProcedure
@@ -82,19 +100,13 @@ export const notificationRouter = router({
   markRead: protectedProcedure
     .input(z.object({ id: z.string() }))
     .mutation(async ({ ctx, input }) => {
-      return ctx.db.notification.update({
-        where: { id: input.id, userId: ctx.userId },
-        data: { status: 'READ' },
-      });
+      return setNotificationStatus(ctx.db, ctx.userId, input.id, 'READ');
     }),
 
   dismiss: protectedProcedure
     .input(z.object({ id: z.string() }))
     .mutation(async ({ ctx, input }) => {
-      return ctx.db.notification.update({
-        where: { id: input.id, userId: ctx.userId },
-        data: { status: 'DISMISSED' },
-      });
+      return setNotificationStatus(ctx.db, ctx.userId, input.id, 'DISMISSED');
     }),
 
   dismissAll: protectedProcedure

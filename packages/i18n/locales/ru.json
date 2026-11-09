@@ -372,7 +372,7 @@
     "declineTitle": "Отказаться от участия?",
     "stay": "Остаться",
     "cycleUntil": "Новый цикл до {{date}}.",
-    "cycleElse": "Подтвердите участие, иначе {{amount}} не войдут в этот цикл.",
+    "cycleElse": "Ваши {{amount}} остаются в сумме. Подтвердите, чтобы автор видел, что вы в этом цикле.",
     "confirmAmount": "Подтвердить {{amount}}",
     "otherAmount": "Другая сумма",
     "participantsCount": "Участников: {{count}}",
@@ -1127,6 +1127,7 @@
     "joinCircleBody": "Присоединяясь, вы подтверждаете, что знаете этого человека лично.",
     "join": "Присоединиться",
     "joinNext": "Дальше вход: Apple, Google, Telegram или почта.",
+    "openTelegram": "Открыть в Telegram",
     "closedLine": "Сбор закрыт.",
     "suspendedLine": "Сбор приостановлен.",
     "fullLine": "Цель собрана."

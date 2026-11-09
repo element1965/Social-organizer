@@ -87,7 +87,7 @@ export function CollectionPage() {
   const closeCollection = trpc.collection.close.useMutation({ onSuccess: refresh });
   const updateChat = trpc.collection.updateChatLink.useMutation({ onSuccess: refresh });
   const updateGoal = trpc.collection.updateAmount.useMutation({ onSuccess: refresh });
-  const revoke = trpc.connection.revoke.useMutation({
+  const removeJoiner = trpc.collection.removeJoiner.useMutation({
     onSuccess: () => {
       refresh();
       utils.connection.list.invalidate();
@@ -178,9 +178,9 @@ export function CollectionPage() {
   const creatorName = resolve(data.creatorId, data.creator.name);
   const stake = Math.max(MIN_OBLIGATION_AMOUNT, Math.round(me.data?.monthlyBudget || MIN_OBLIGATION_AMOUNT));
 
-  const counted = activeObligations.filter((row) => !renewal || row.cycleConfirmed !== false);
-  const mineTotal = counted.filter((row) => row.userId === userId).reduce((sum, row) => sum + row.amount, 0);
-  const othersTotal = counted.filter((row) => row.userId !== userId).reduce((sum, row) => sum + row.amount, 0);
+  // Every active pledge counts until the person declines. Confirming a cycle does not change the total.
+  const mineTotal = activeObligations.filter((row) => row.userId === userId).reduce((sum, row) => sum + row.amount, 0);
+  const othersTotal = activeObligations.filter((row) => row.userId !== userId).reduce((sum, row) => sum + row.amount, 0);
 
   const typeLabel = data.type === 'REGULAR' ? t('collection.monthly') : t('collection.oneTime');
   let subtitle = typeLabel;
@@ -629,10 +629,13 @@ export function CollectionPage() {
           <Button
             variant="danger"
             className="w-full"
-            loading={revoke.isPending}
+            loading={removeJoiner.isPending}
             onClick={() => {
               if (!removeTarget) return;
-              revoke.mutate({ targetUserId: removeTarget.userId }, { onSuccess: () => setRemoveTarget(null) });
+              removeJoiner.mutate(
+                { collectionId: data.id, userId: removeTarget.userId },
+                { onSuccess: () => setRemoveTarget(null) },
+              );
             }}
           >
             {t('collection.removeYes')}
