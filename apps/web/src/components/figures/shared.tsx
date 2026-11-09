@@ -1,6 +1,6 @@
 /*
  * Shared drawing pieces for the explainer figures. Colors are the --so-* token triplets ("R G B"),
- * so both themes switch by themselves; no hex and no `dark:` variants here.
+ * so both themes switch by themselves; no hex colors and no theme variants here.
  */
 import type { KeyboardEvent, ReactNode } from 'react';
 

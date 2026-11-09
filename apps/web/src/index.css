@@ -40,25 +40,25 @@ body::before {
   padding-bottom: var(--sa-bottom);
 }
 
-.scrollbar-dark::-webkit-scrollbar {
+.scrollbar-ink::-webkit-scrollbar {
   width: 6px;
 }
 
-.scrollbar-dark::-webkit-scrollbar-track {
+.scrollbar-ink::-webkit-scrollbar-track {
   background: rgb(var(--so-surface));
   border-radius: var(--r-xs);
 }
 
-.scrollbar-dark::-webkit-scrollbar-thumb {
+.scrollbar-ink::-webkit-scrollbar-thumb {
   background: rgb(var(--so-ink-subtle));
   border-radius: var(--r-xs);
 }
 
-.scrollbar-dark::-webkit-scrollbar-thumb:hover {
+.scrollbar-ink::-webkit-scrollbar-thumb:hover {
   background: rgb(var(--so-ink-muted));
 }
 
-.scrollbar-dark {
+.scrollbar-ink {
   scrollbar-width: thin;
   scrollbar-color: rgb(var(--so-ink-subtle)) rgb(var(--so-surface));
 }

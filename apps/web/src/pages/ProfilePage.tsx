@@ -31,7 +31,11 @@ function networkKey(count: number): 'profile.networkOne' | 'profile.networkFew' 
 
 type ThemeChoice = 'system' | 'light' | 'dark';
 
-const themeToApi = { system: 'SYSTEM', light: 'LIGHT', dark: 'DARK' } as const;
+function themeToApi(choice: ThemeChoice): 'SYSTEM' | 'LIGHT' | 'DARK' {
+  if (choice === 'system') return 'SYSTEM';
+  if (choice === 'light') return 'LIGHT';
+  return 'DARK';
+}
 
 export function ProfilePage() {
   const { t, i18n } = useTranslation();
@@ -138,7 +142,7 @@ export function ProfilePage() {
 
   const chooseTheme = (next: ThemeChoice) => {
     setMode(next);
-    updateTheme.mutate({ theme: themeToApi[next] });
+    updateTheme.mutate({ theme: themeToApi(next) });
   };
 
   const setCycles = (enabled: boolean) => {
