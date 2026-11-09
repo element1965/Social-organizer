@@ -298,6 +298,19 @@ export function CirclePage() {
   const feedBody = empty ? (
     <>
       <ReviewFeedRows />
+      {/* The first person who comes by the link is an incoming request: it must show here, above the start steps.
+          A sent request ("waiting") is already told by the start card itself. */}
+      {events.some((e) => e.kind !== 'waiting') ? (
+        <EventFeed
+          events={events.filter((e) => e.kind !== 'waiting')}
+          loading={loading}
+          dayLabels={phone}
+          onOpen={openEvent}
+          onDismiss={(event) => {
+            for (const id of event.notificationIds ?? []) dismiss.mutate({ id });
+          }}
+        />
+      ) : null}
       <StartCard profileDone={profileDone} direct={direct} waiting={(events.some((e) => e.kind === 'waiting'))} />
     </>
   ) : (
