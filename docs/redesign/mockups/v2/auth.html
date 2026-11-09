@@ -1,0 +1,417 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Вход и доступ — состояния</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="web.css">
+<style>
+  /* The full-screen flow step from onboarding.html: top row 70, picture, 24 to the title, 10 to the text, ≥32 to the buttons. */
+  .flow { position:absolute; inset:0; display:flex; flex-direction:column; padding:70px 20px 36px; }
+  .brand { display:flex; align-items:center; gap:8px; font-weight:800; font-size:15px; letter-spacing:-.02em; height:26px; }
+  .brand img { width:26px; height:26px; border-radius:8px; }
+  .corner { position:absolute; right:16px; top:62px; height:40px; padding:0 12px; border-radius:12px; display:grid; place-items:center; font-weight:700; font-size:14px; }
+  .corner.lang { background:var(--paper); color:var(--muted); box-shadow:inset 0 0 0 1px var(--line); }
+  .pic { flex:none; height:240px; margin-top:16px; display:flex; align-items:center; justify-content:center; }
+  .pic.small { height:150px; }
+  .pic svg { height:100%; width:auto; }
+  .flow h2 { margin:24px 0 0; font-size:30px; letter-spacing:-.045em; line-height:1.02; text-wrap:balance; }
+  .flow .say { margin:10px 0 0; color:var(--muted); font-size:15px; line-height:1.4; max-width:32ch; }
+  .flow .say b { color:var(--ink); }
+  .flow .foot { position:static; margin-top:auto; padding-top:32px; }
+  .centre { text-align:center; display:flex; flex-direction:column; align-items:center; }
+  .centre .ava { width:84px; height:84px; border-radius:28px; background:var(--teal-soft); color:var(--teal); display:grid; place-items:center; font-weight:800; font-size:32px; margin-top:44px; }
+  .centre h2 { margin-top:16px; }
+  .centre .say { max-width:30ch; }
+  .centre .foot { width:100%; text-align:left; }
+  .facts { display:flex; gap:8px; margin-top:16px; }
+
+  /* a state picture: one glyph in a soft tile, where a state has no network figure */
+  .tile { flex:none; width:96px; height:96px; border-radius:30px; display:grid; place-items:center; margin-top:56px; background:var(--paper); color:var(--muted); box-shadow:var(--shadow-card); }
+  .tile svg { width:44px; height:44px; }
+  .tile.care { background:var(--care-soft); color:var(--care); box-shadow:none; }
+  .tile.sos { background:var(--sos-soft); color:var(--sos); box-shadow:none; }
+  .tile.warm { background:var(--warm-soft); color:var(--warm-ink); box-shadow:none; }
+  .centre .tile { margin-top:72px; }
+  /* in a left-aligned step the tile sits in the 240 picture slot, like the figure in onboarding №9 */
+  .pic .tile { margin:0; width:120px; height:120px; border-radius:36px; }
+  .pic .tile svg { width:52px; height:52px; }
+
+  /* spinner: care on a care tint, the design-system loading state */
+  .spin { width:32px; height:32px; border-radius:50%; border:3px solid var(--care-soft); border-top-color:var(--care); animation:spin .9s linear infinite; }
+  .spin.sm { width:16px; height:16px; border-width:2px; display:inline-block; vertical-align:-3px; margin-right:6px; }
+  @keyframes spin { to { transform:rotate(360deg); } }
+  @media (prefers-reduced-motion: reduce) { .spin { animation-duration:2.4s; } }
+
+  /* status plaque: the same shape as the "request sent" plaque in onboarding №8, four tones */
+  .note { display:flex; gap:12px; align-items:center; padding:12px 14px; border-radius:16px; background:var(--paper); box-shadow:inset 0 0 0 1px var(--line); font-size:14px; line-height:1.4; color:var(--ink); text-align:left; }
+  .note i { flex:none; width:36px; height:36px; border-radius:12px; background:var(--canvas); color:var(--muted); display:grid; place-items:center; }
+  .note i svg { width:20px; height:20px; }
+  .note b { font-weight:800; }
+  .note .link { white-space:nowrap; }
+  .note.err { background:var(--sos-soft); box-shadow:none; }
+  .note.err i { background:var(--paper); color:var(--sos); }
+  .note.warm { background:var(--warm-soft); box-shadow:none; }
+  .note.warm i { background:var(--paper); color:var(--warm-ink); }
+  .note.care { background:var(--care-soft); box-shadow:none; }
+  .note.care i { background:var(--paper); color:var(--care); }
+  .note + .auths, .note + .btn { margin-top:12px; }
+
+  /* the method used last time: a care ring on its button, named in the text above (order does not change) */
+  .auth.lastp { box-shadow:inset 0 0 0 2px var(--care); }
+
+  /* code cells (onboarding №4) and their states */
+  .codes { display:grid; grid-template-columns:repeat(6,1fr); gap:8px; margin-top:20px; }
+  .codes span { height:56px; border-radius:14px; background:var(--paper); box-shadow:inset 0 0 0 1px var(--line); display:grid; place-items:center; font-size:24px; font-weight:800; letter-spacing:-.03em; }
+  .codes span.on { box-shadow:inset 0 0 0 2px var(--teal); }
+  .codes span.cur::after { content:""; width:2px; height:26px; background:var(--teal); border-radius:1px; }
+  .codes.bad span { box-shadow:inset 0 0 0 2px var(--danger); }
+  .codes.bad span.cur::after { background:var(--danger); }
+  .codes.off span { background:var(--canvas); color:var(--subtle); box-shadow:inset 0 0 0 1px var(--line-soft); }
+  .codes.busy span { color:var(--muted); }
+  .timer { margin-top:2px; height:24px; display:flex; align-items:center; color:var(--muted); font-size:13px; font-variant-numeric:tabular-nums; white-space:nowrap; }
+  .page .hint.err { font-size:13px; }
+  .pwd { letter-spacing:.18em; }
+  .field .show { margin-left:auto; color:var(--teal); font-weight:700; font-size:14px; letter-spacing:0; }
+  .btn.off { opacity:.45; }
+  .or { margin:20px 4px 10px; font-size:13px; font-weight:700; color:var(--muted); }
+
+  /* the Telegram Mini App header (drawn by Telegram, shown for context) */
+  .tgbar { position:absolute; left:0; right:0; top:54px; height:48px; display:flex; align-items:center; justify-content:space-between; padding:0 16px; background:var(--paper); box-shadow:0 1px 0 var(--line-soft); font-size:15px; font-weight:700; z-index:4; }
+  .tgbar span:first-child, .tgbar span:last-child { color:var(--muted); min-width:64px; }
+  .tgbar span:last-child { text-align:right; }
+  .flow.tg { padding-top:118px; }
+  .boot { position:absolute; inset:102px 0 0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:20px; }
+  .boot img { width:72px; height:72px; border-radius:22px; }
+  .boot p { margin:0; color:var(--muted); font-size:15px; font-weight:600; }
+
+  /* background screens under a sheet (profile.html rows) */
+  .under { filter:brightness(.85); }
+  .me { display:flex; align-items:center; gap:14px; padding:4px 4px 14px; }
+  .me .ava { width:64px; height:64px; border-radius:22px; overflow:hidden; }
+  .me .ava img { width:100%; height:100%; }
+  .me .t b { display:block; font-size:24px; letter-spacing:-.04em; line-height:1.05; }
+  .me .t span { display:block; margin-top:4px; color:var(--muted); font-size:13px; font-weight:600; }
+  .glabel { margin:16px 4px 6px; font-size:13px; font-weight:700; color:var(--muted); }
+  .rw { display:flex; align-items:center; gap:12px; min-height:54px; padding:0 16px; font-weight:650; font-size:16px; }
+  .rw + .rw { box-shadow:inset 0 1px 0 var(--line-soft); }
+  .rw .tail { margin-left:auto; display:flex; align-items:center; gap:6px; color:var(--muted); font-weight:600; font-size:15px; }
+  .rw .tail b { color:var(--ink); font-weight:800; }
+  .rw .fwd { width:18px; height:18px; color:var(--subtle); }
+  .rw.danger { color:var(--danger); }
+  .field.lock { color:var(--ink); font-weight:600; }
+
+  /* what a deletion takes away: a list inside the sheet */
+  .gone { list-style:none; margin:4px 0 0; padding:0; }
+  .gone li { display:flex; gap:12px; align-items:flex-start; padding:9px 0; font-size:15px; line-height:1.35; }
+  .gone li + li { box-shadow:inset 0 1px 0 var(--line-soft); }
+  .gone li i { flex:none; width:24px; height:24px; border-radius:var(--r-sm); background:var(--sos-soft); color:var(--sos); display:grid; place-items:center; margin-top:-1px; }
+  .gone li i svg { width:14px; height:14px; }
+  .gone li span small { display:block; color:var(--muted); font-size:13px; font-weight:600; margin-top:1px; }
+  .gone li.keep i { background:var(--canvas); color:var(--muted); }
+  .sheet .btn { margin-top:14px; }
+  .sheet .btn + .btn { margin-top:10px; }
+
+  /* the public /delete-account page */
+  .steps2 { list-style:none; counter-reset:s; margin:16px 0 0; padding:0; background:var(--paper); border-radius:22px; box-shadow:var(--shadow-card); }
+  .steps2 li { counter-increment:s; display:flex; gap:12px; align-items:center; min-height:56px; padding:8px 16px; font-size:16px; line-height:1.35; }
+  .steps2 li + li { box-shadow:inset 0 1px 0 var(--line-soft); }
+  .steps2 li::before { content:counter(s); flex:none; width:28px; height:28px; border-radius:9px; background:var(--ink); color:var(--canvas); display:grid; place-items:center; font-weight:800; font-size:13px; }
+  .prose .btn { margin-top:16px; width:100%; }
+  .prose ul { margin:10px 0 0; padding-left:20px; font-size:16px; line-height:1.6; }
+  .frame.m .prose ul { font-size:15px; }
+  .prose .note { margin-top:16px; }
+
+  /* desktop panel content */
+  .panel .back { display:inline-flex; align-items:center; gap:2px; color:var(--teal); font-weight:700; font-size:15px; margin:-8px 0 14px -4px; }
+  .panel .back svg { width:20px; height:20px; }
+  .panel .tile { margin:0 0 20px; width:72px; height:72px; border-radius:22px; }
+  .panel .tile svg { width:34px; height:34px; }
+  .panel .foot2 { margin-top:24px; }
+  .panel .codes { margin-top:20px; }
+  .panel .textbtn { margin-top:8px; }
+  .frame .note { font-size:14px; }
+
+  .sechead { margin:56px 0 6px; }
+  .sechead + .lead { margin-bottom:20px; }
+</style>
+</head>
+<body>
+<h1>Вход и доступ: все состояния</h1>
+<p class="lead">Дополнение к <a href="onboarding.html">онбордингу</a> (там главный путь: приглашение, вход, почта и код, интро, минимальное участие, нерабочая ссылка). Здесь всё остальное, что человек может увидеть на пути в аккаунт и из него: пароль для старых аккаунтов, ошибки почты и кода, возврат из Google и Apple, Telegram, варианты приглашения, истёкшая сессия, выход и удаление аккаунта. Сетка, компоненты и токены те же; порядок кнопок входа — по устройству (<code>AUTH_ORDER</code>): Android — Google, Telegram, почта; iPhone — Apple, Google, Telegram, почта; компьютер — Google, Apple, Telegram, почта. Внутри Telegram Google и Apple скрыты.</p>
+<div id="groups"></div>
+<script src="theme.js"></script>
+<script src="shared.js"></script>
+<script src="web.js"></script>
+<script src="figures.js"></script>
+<script src="device.js"></script>
+<script>
+I.info = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 11v5M12 7.8h.01"/></svg>`;
+I.mailI = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5.5" width="17" height="13" rx="2.5"/><path d="m4 7 8 6 8-6"/></svg>`;
+I.alert = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.6v5.2M12 16.3h.01"/></svg>`;
+I.undo = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4.5 9.5 9 5"/><path d="M4.5 9.5H14a5.5 5.5 0 0 1 0 11h-3"/></svg>`;
+I.offline = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 18.5h10.2a3.8 3.8 0 0 0 .6-7.6A5.6 5.6 0 0 0 7.2 9.4 4.6 4.6 0 0 0 7 18.5z"/><path d="m4 4 16 16"/></svg>`;
+I.x = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M7 7l10 10M17 7 7 17"/></svg>`;
+I.dash = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M7 12h10"/></svg>`;
+I.key = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="8.5" cy="12" r="3.8"/><path d="M12.3 12H20M17 12v3M20 12v2.5"/></svg>`;
+
+const brand = `<div class="brand"><img src="${MARK}" alt="">Social Organizer</div>`;
+const lang = `<span class="corner lang">RU</span>`;
+const legal = `<p class="legal">Продолжая, вы принимаете <u>условия</u> и <u>политику</u>.</p>`;
+const AUTH = {
+  google: `<div class="auth google">${I.google}Продолжить с Google</div>`,
+  apple: `<div class="auth apple">${I.apple}Продолжить с Apple</div>`,
+  telegram: `<div class="auth tg">${I.tg}Продолжить с Telegram</div>`,
+};
+/* sign-in buttons in AUTH_ORDER (apps/web/src/lib/device.ts); e-mail is always the text line after them */
+const ORDER = { android: ["google", "telegram"], ios: ["apple", "google", "telegram"], desktop: ["google", "apple", "telegram"] };
+const auths = (dev, o = {}) => `<div class="auths">${ORDER[dev].filter((p) => !(o.skip || []).includes(p)).map((p) => o.last === p ? AUTH[p].replace('class="auth ', 'class="auth lastp ') : AUTH[p]).join("")}</div><div class="mail">Войти по почте</div>${o.legal === false ? "" : legal}`;
+const note = (tone, icon, html) => `<div class="note ${tone}"><i>${icon}</i><span>${html}</span></div>`;
+const phone = (inner) => `<div class="phone">${status()}${inner}${home()}</div>`;
+const tgbar = `<div class="tgbar"><span>Закрыть</span><span>Social Organizer</span><span>···</span></div>`;
+const cells = (vals, cls, cur) => `<div class="codes ${cls || ""}">${[0, 1, 2, 3, 4, 5].map((i) => `<span class="${vals[i] && !cls ? "on" : ""}${i === cur ? " cur" : ""}">${vals[i] || ""}</span>`).join("")}</div>`;
+const codeHead = (mail) => `<h2 class="h">Код из письма</h2><p class="sub" style="margin:-4px 0 0">Отправили на <b>${mail || "anna@example.com"}</b></p>`;
+
+/* login screen with an optional plaque above the buttons (picture shrinks to keep the rhythm) */
+const loginWith = (dev, plaque, o = {}) => phone(`<div class="flow">${brand}${lang}
+<div class="pic${plaque || o.small ? " small" : ""}">${netFigure(0)}</div>
+<h2>${o.title || "Войдите или создайте аккаунт"}</h2><p class="say">${o.say || "Один аккаунт для телефона и сайта. Пароль не нужен."}</p>
+<div class="foot">${plaque || ""}${auths(dev, o)}</div></div>`);
+
+/* ---------- 1. password ---------- */
+const PW1 = phone(`${nav("Назад")}<div class="page notabs"><h2 class="h">Вход с паролем</h2>
+<div class="seg" style="margin:0 0 12px"><span class="on">Войти</span><span>Создать аккаунт</span></div>
+<div class="card"><span class="lbl">Почта</span><div class="field filled">anna@example.com</div>
+<span class="lbl" style="margin-top:14px">Пароль</span><div class="field filled bad"><span class="pwd">••••••••</span><span class="show">Показать</span></div>
+<p class="hint err">Неверная почта или пароль.</p>
+<div class="actions"><div class="btn primary">Войти</div></div></div>
+<span class="textbtn">Войти без пароля, кодом на почту</span>
+<p class="hint" style="text-align:center;margin-top:4px">Пароль остался только для аккаунтов, созданных до 2026 года.</p>
+</div>`);
+
+const PW2 = phone(`${nav("Назад")}<div class="page notabs"><h2 class="h">Вход с паролем</h2>
+<div class="seg" style="margin:0 0 12px"><span>Войти</span><span class="on">Создать аккаунт</span></div>
+<div class="card"><span class="lbl">Имя</span><div class="field filled">Анна</div>
+<span class="lbl" style="margin-top:14px">Почта</span><div class="field filled bad">anna@example.com</div>
+<p class="hint err">Эта почта уже зарегистрирована. <span class="link">Войти</span></p>
+<span class="lbl" style="margin-top:14px">Пароль</span><div class="field filled"><span class="pwd">••••••</span><span class="show">Показать</span></div>
+<p class="hint">Не меньше 6 символов.</p>
+<div class="actions"><div class="btn primary">Создать аккаунт</div></div></div>
+<span class="textbtn">Без пароля, кодом на почту</span>
+</div>`);
+
+/* ---------- 2. e-mail and code ---------- */
+const M1 = phone(`${nav("Назад")}<div class="page notabs"><h2 class="h">Почта</h2>
+<div class="card"><span class="lbl">Ваша почта</span><div class="field filled bad">anna@examplecom</div><p class="hint err">В адресе ошибка. Пример: name@example.com</p><div class="actions"><div class="btn primary">${I.mailI}Получить код</div></div></div>
+</div>`);
+
+const M2 = phone(`${nav("Назад")}<div class="page notabs"><h2 class="h">Почта</h2>
+<div class="card"><span class="lbl">Ваша почта</span><div class="field filled">anna@example.com</div><p class="hint err">Слишком много кодов за час. Новый можно получить через 42 мин.</p><div class="actions"><div class="btn primary off">${I.mailI}Получить код через 42 мин</div></div></div>
+<p class="or">Не хотите ждать? Войдите иначе</p>${auths("ios", { legal: false }).replace(/<div class="mail">.*?<\/div>/, "")}
+</div>`);
+
+const C1 = phone(`${nav("Назад")}<div class="page notabs">${codeHead()}
+${cells([], "bad", 0)}
+<p class="hint err" role="alert" style="margin-top:12px">Неверный код. Осталось попыток: 3</p>
+<p class="hint" style="margin-top:14px">Код действует 10 минут.</p>
+<div class="timer">Отправить ещё раз можно через 0:31</div>
+<span class="textbtn">Изменить адрес</span>
+</div>`);
+
+const C2 = phone(`${nav("Назад")}<div class="page notabs">${codeHead()}
+${cells(["4", "8", "1", "9", "0", "6"], "busy")}
+<p class="hint" style="margin-top:14px">Код действует 10 минут.</p>
+<div class="timer"><span class="spin sm"></span>Проверяем код…</div>
+<span class="textbtn">Изменить адрес</span>
+</div>`);
+
+const C3 = phone(`${nav("Назад")}<div class="page notabs">${codeHead()}
+${cells([], "", 0)}
+<p class="hint" style="margin-top:14px">Код действует 10 минут.</p>
+<div class="timer"><span class="link">Отправить код ещё раз</span></div>
+<p class="hint" style="margin-top:6px">Письма нет? Проверьте «Спам» и адрес.</p>
+<span class="textbtn">Изменить адрес</span>
+</div>`);
+
+const C4 = phone(`${nav("Назад")}<div class="page notabs">${codeHead()}
+${cells([], "off")}
+<p class="hint err" role="alert" style="margin-top:12px">Пять неверных попыток. Этот код больше не работает.</p>
+<div class="actions"><div class="btn primary">${I.mailI}Отправить новый код</div></div>
+<span class="textbtn">Изменить адрес</span>
+</div>`);
+
+const C5 = phone(`${nav("Назад")}<div class="page notabs">${codeHead()}
+${cells([], "off")}
+<p class="hint err" role="alert" style="margin-top:12px">Код устарел: с отправки прошло больше 10 минут.</p>
+<div class="actions"><div class="btn primary">${I.mailI}Отправить новый код</div></div>
+<span class="textbtn">Изменить адрес</span>
+</div>`);
+
+/* ---------- 3. Google and Apple return ---------- */
+const O1 = phone(`<div class="flow centre">${brand}
+<span class="tile">${I.google}</span>
+<h2>Входим через Google…</h2><p class="say">Пара секунд. Окно Google закроется само.</p>
+<div style="margin-top:28px"><span class="spin" style="display:block"></span></div>
+<div class="foot"><span class="textbtn">Вернуться ко входу</span></div></div>`);
+
+const O2 = loginWith("ios", note("", I.undo, "Вход через Apple отменён. Выберите способ ещё раз."));
+const O3 = loginWith("android", note("err", I.alert, "Не удалось войти через Google. <span class=\"link\">Повторить</span>"));
+
+const O4 = phone(`<div class="flow">${brand}
+<div class="pic"><span class="tile care">${I.mailI}</span></div>
+<h2>Эта почта уже есть в Social Organizer</h2>
+<p class="say">Аккаунт с адресом <b>an•••@gmail.com</b> создан с паролем. Подтвердите почту кодом, и Google будет входить в тот же аккаунт.</p>
+<div class="foot"><div class="btn primary">${I.mailI}Войти кодом на почту</div><div class="btn ghost">Другой способ входа</div></div></div>`);
+
+/* ---------- 4. Telegram ---------- */
+const T1 = phone(`${tgbar}<div class="boot"><img src="${MARK}" alt=""><span class="spin"></span><p>Входим через Telegram…</p></div>`);
+
+const T2 = phone(`${tgbar}<div class="flow tg">
+<div class="pic" style="margin-top:0"><span class="tile sos">${I.tg}</span></div>
+<h2>Не получилось войти через Telegram</h2>
+<p class="say">Telegram не передал данные входа. Так бывает со старой кнопкой бота или плохой связью.</p>
+<div class="foot"><div class="btn primary">Попробовать ещё раз</div><div class="mail">Войти по почте</div></div></div>`);
+
+const T3 = phone(`<div class="flow">${brand}
+<div class="pic"><span class="tile">${I.tg}</span></div>
+<h2>Продолжите в Telegram</h2>
+<p class="say">Открыли бота <b>@socialorganizer_bot</b>. Нажмите «Запустить»: Social Organizer откроется внутри Telegram, приглашение Олега сохранено.</p>
+<div class="foot">${note("", I.info, "Эта вкладка больше не нужна, вход продолжится в Telegram.")}<div class="auth tg" style="margin-top:12px">${I.tg}Открыть Telegram ещё раз</div><span class="textbtn">Выбрать другой способ</span></div></div>`);
+
+/* ---------- 5. invite ---------- */
+const inviteHero = (say) => `${brand}${lang}<span class="ava">О</span>
+<h2>Олег Ким зовёт вас в свой круг</h2>
+<p class="say">${say}</p>
+<div class="facts"><span class="pill">1 240 человек в сети</span><span class="pill teal">может помочь на 1 860 $</span></div>`;
+
+const V1 = phone(`<div class="flow centre">${inviteHero("Помощь через людей, которых знаешь. Нажмите «Мы знакомы», и Олег получит заявку.")}
+<div class="foot"><div class="btn primary">Мы знакомы</div><span class="textbtn">Не сейчас</span></div></div>`);
+
+const V2 = phone(`<div class="flow centre">${inviteHero("Помощь через людей, которых знаешь. Нажмите «Мы знакомы», и Олег получит заявку.")}
+<div class="foot">${note("warm", I.clock, "<b>Ждём подтверждения Олега.</b> Когда он подтвердит, станет вашим 1-м рукопожатием.")}<div class="btn primary" style="margin-top:16px">В круг</div></div></div>`);
+
+const V3 = phone(`<div class="flow centre">${brand}${lang}<span class="ava" style="overflow:hidden"><img src="${MARK}" alt="" style="width:100%;height:100%"></span>
+<h2>Это ваша ссылка</h2>
+<p class="say">По ней к вам придут знакомые. Отправьте её человеку, которого знаете лично.</p>
+<div class="facts"><span class="pill">orginizer.com/anna</span></div>
+<div class="foot"><div class="btn primary">${I.share}Поделиться ссылкой</div><span class="textbtn">В круг</span></div></div>`);
+
+const V4 = phone(`<div class="flow">${brand}
+<div class="pic"><span class="tile">${I.offline}</span></div>
+<h2>Не удалось открыть приглашение</h2><p class="say">Похоже, нет связи. Ссылка сохранена, попробуйте ещё раз.</p>
+<div class="foot"><div class="btn primary">Повторить</div></div></div>`);
+
+/* ---------- 6. session, sign-out ---------- */
+const S1 = loginWith("android", "", { title: "Войдите снова", say: "Сессия истекла. В прошлый раз вы входили через <b>Google</b>, после входа вернём вас туда, где были.", last: "google" });
+
+const profileUnder = `<div class="page noNav under">
+<div class="me"><span class="ava"><img src="${MARK}" alt=""></span><span class="t"><b>Анна Петрова</b><span>orginizer.com/anna · в круге с марта 2026</span></span></div>
+<div class="glabel">Участие</div><div class="group"><div class="rw"><span>Сеть может помочь</span><span class="tail"><b>1 860 $</b></span></div><div class="rw"><span>Минимальное участие</span><span class="tail"><b>15 $</b>${I.fwd}</span></div></div>
+<div class="glabel">Ещё</div><div class="group"><div class="rw"><span>Помощь</span><span class="tail">${I.fwd}</span></div><div class="rw"><span>О приложении</span><span class="tail">${I.fwd}</span></div><div class="rw"><span>Выйти</span></div></div>
+</div>${tabs("me")}`;
+
+const S2 = phone(`${profileUnder}<div class="scrim"><div class="sheet"><h3>Выйти из аккаунта?</h3>
+<p class="sub">Вы входили через Google (anna@gmail.com). Вернуться можно так же или кодом на почту.</p>
+<div class="btn danger">Выйти</div><div class="btn ghost">Остаться</div></div></div>`);
+
+/* ---------- 7. delete account ---------- */
+const accountUnder = `${nav("Профиль", "Аккаунт", "Готово")}<div class="page notabs under">
+<div class="card"><span class="lbl">Имя</span><div class="field filled">Анна</div><span class="lbl" style="margin-top:14px">Фамилия</span><div class="field filled">Петрова</div></div>
+<div class="card"><span class="lbl">Почта</span><div class="field lock">anna@gmail.com</div></div>
+<span class="textbtn danger">Удалить аккаунт</span></div>`;
+
+const D1 = phone(`${accountUnder}<div class="scrim"><div class="sheet"><h3>Удалить аккаунт?</h3>
+<p class="sub" style="margin-bottom:6px">Это нельзя отменить. Сразу после подтверждения:</p>
+<ul class="gone">
+<li><i>${I.x}</i><span>Профиль, контакты и способы входа<small>имя, фото, почта, Telegram, Google</small></span></li>
+<li><i>${I.x}</i><span>Связи с 14 людьми и заявки<small>у них вы станете «Удалённый пользователь»</small></span></li>
+<li><i>${I.x}</i><span>Ваш открытый сбор закроется<small>и ваше участие в 2 открытых сборах</small></span></li>
+<li class="keep"><i>${I.dash}</i><span>Прошлые сборы останутся у авторов<small>без вашего имени</small></span></li>
+</ul>
+<div class="btn danger">Удалить навсегда</div><div class="btn ghost">Оставить</div></div></div>`);
+
+const D2 = phone(`<div class="flow centre">${brand}
+<span class="tile">${I.check}</span>
+<h2>Аккаунт удалён</h2>
+<p class="say">Профиль, связи и открытые сборы удалены. Люди из вашего круга увидят «Удалённый пользователь».</p>
+<div class="foot"><div class="btn primary">На главную</div><span class="textbtn">Создать новый аккаунт</span></div></div>`);
+
+const DEL_BODY = (m) => `<h1>Удаление аккаунта</h1><p class="meta">Social Organizer · обновлено 9 ноября 2026</p>
+<p>Аккаунт удаляется в приложении или на сайте, без писем и ожидания.</p>
+<ol class="steps2"><li>Откройте приложение или orginizer.com и войдите</li><li>Профиль → Аккаунт</li><li>Внизу «Удалить аккаунт»</li><li>Подтвердите в листе «Удалить навсегда»</li></ol>
+<div class="btn primary">Войти и удалить аккаунт</div>
+<h2>Что удаляется</h2>
+<ul><li>Профиль: имя, фото, телефон, почта, контакты</li><li>Способы входа: Telegram, Google, Apple, пароль</li><li>Связи, приглашения и заявки</li><li>Ваши открытые сборы и участие в открытых сборах</li><li>Уведомления, подписки на push, настройки, переписка с помощником</li></ul>
+<h2>Сроки и что остаётся</h2>
+<p>Удаление сразу и без возврата. Если у вас были связи, в сетях других людей вместо имени останется «Удалённый пользователь», без личных данных. Прошлые сборы других людей сохраняют суммы без вашего имени.</p>
+<h2>Нет доступа к аккаунту?</h2>
+<p>Напишите в Telegram <b>@socialorganizer_bot</b> с почтой или ником, которым входили. Удалим вручную и ответим, когда готово.</p>`;
+const DELPAGE = (m) => `<div class="frame fixed${m ? " m" : ""}">${siteTop("")}
+<div class="toc"><span>Конфиденциальность</span><span>Условия</span><span class="on">Удаление аккаунта</span></div>
+<div class="prose">${DEL_BODY(m)}</div></div>`;
+
+/* ---------- desktop panels (≥1024: the same content in the 460 panel of site.html) ---------- */
+const panelPage = (inner, cls) => `<div class="frame centre-page">${siteTop("")}<div class="body"><div class="panel ${cls || ""}">${inner}</div></div></div>`;
+const W1 = panelPage(`<span class="back">${I.back}Назад</span><h2>Код из письма</h2><p class="say">Отправили на <b style="color:var(--ink)">anna@example.com</b></p>
+${cells([], "bad", 0)}<p class="hint err" style="margin-top:12px">Неверный код. Осталось попыток: 3</p>
+<p class="hint" style="margin-top:14px">Код действует 10 минут.</p><div class="timer"><span class="link">Отправить код ещё раз</span></div>
+<span class="textbtn">Изменить адрес</span>`);
+const W2 = panelPage(`<span class="tile care">${I.mailI}</span><h2>Эта почта уже есть в Social Organizer</h2>
+<p class="say">Аккаунт с адресом <b style="color:var(--ink)">an•••@gmail.com</b> создан с паролем. Подтвердите почту кодом, и Google будет входить в тот же аккаунт.</p>
+<div class="foot2"><div class="btn primary">${I.mailI}Войти кодом на почту</div><div class="btn ghost">Другой способ входа</div></div>`);
+const W3 = panelPage(`<h2>Войдите снова</h2><p class="say">Сессия истекла. В прошлый раз вы входили через <b style="color:var(--ink)">Google</b>, после входа вернём вас туда, где были.</p>
+<div style="margin-top:24px">${auths("desktop", { last: "google" })}</div>`);
+
+const GROUPS = [
+  ["Пароль для старых аккаунтов", "Открывается только по прямой ссылке <code>/login?mode=password</code> или если коды на почту выключены на сервере (<code>auth.methods.email = false</code>). Сейчас это одна форма с двумя кнопками и полем «Имя (для нового аккаунта)»; предлагаю сегмент «Войти / Создать аккаунт», чтобы имя появлялось только там, где оно нужно.", [
+    section("pw", PW1, "<small>1</small>Вход с паролем", `<p>Почта, пароль с «Показать», одна кнопка. Ошибка одной строкой под паролем, без уточнения, что именно неверно. Ниже выход в обычный вход: «Войти без пароля, кодом на почту».</p><ul><li>API: <code>auth.loginWithEmail</code> → <code>UNAUTHORIZED "Invalid email or password"</code>.</li></ul>`),
+    section("pw-new", PW2, "<small>2</small>Создать аккаунт с паролем", `<p>Тот же экран, сегмент на «Создать аккаунт»: имя первым полем, подсказка про 6 символов под паролем. Если почта уже занята — ошибка под почтой со ссылкой «Войти», которая переключает сегмент и сохраняет адрес.</p><ul><li>API: <code>auth.registerWithEmail</code> → <code>CONFLICT "Email already registered"</code>; прочее — «Не удалось войти».</li><li class="risk">Новые аккаунты с паролем не нужны продукту; если владелец согласен, сегмент «Создать» можно убрать совсем и оставить только вход.</li></ul>`),
+  ]],
+  ["Почта и код: ошибки", "Шаг почты и шаг кода уже есть в онбординге (№3–4). Здесь — что видит человек, когда что-то пошло не так. Ошибка всегда под полем, строкой <code>sos</code> 13/600; кнопка не исчезает.", [
+    section("mail-bad", M1, "<small>3</small>Почта: неверный адрес", `<p>Проверка на устройстве до запроса: рамка <code>sos</code>, причина и пример вместо подсказки. Кнопка остаётся активной: тап ведёт к полю.</p><ul><li>Сейчас — системная подсказка браузера <code>type=email</code>; нужна своя, на языке интерфейса.</li></ul>`),
+    section("mail-many", M2, "<small>4</small>Почта: слишком много кодов", `<p>Пять кодов за час на один адрес. Говорим, сколько ждать (минуты из ответа API), кнопка показывает обратный отсчёт, и сразу ниже — другие способы входа по устройству, чтобы не ждать.</p><ul><li>API: <code>auth.requestEmailCode</code> → <code>TOO_MANY_REQUESTS "TOO_MANY_CODES:2520"</code> (секунды).</li><li>Тот же вид для <code>SERVICE_UNAVAILABLE "EMAIL_UNAVAILABLE"</code> («Письма сейчас не отправляются. Выберите другой способ входа») и сетевой ошибки, только без отсчёта.</li><li><code>RESEND_TOO_SOON</code> ошибки не показывает: сразу открывается шаг кода с таймером.</li></ul>`),
+    section("code-wrong", C1, "<small>5</small>Код: неверный", `<p>Ячейки очищаются и краснеют, курсор в первой; под ними «Осталось попыток: 3». Набор первой цифры снимает красное. Таймер повтора идёт дальше.</p><ul><li>API: <code>auth.verifyEmailCode</code> → <code>BAD_REQUEST "INVALID_CODE:3"</code>. Без числа («Неверный код. Попробуйте ещё раз или запросите новый») — код уже использован на другом устройстве.</li></ul>`),
+    section("code-check", C2, "<small>6</small>Код: проверяем", `<p>После шестой цифры ячейки гаснут до <code>muted</code>, строка таймера на время запроса становится «Проверяем код…» с маленьким спиннером. Высота строки та же, ничего не прыгает.</p>`),
+    section("code-resend", C3, "<small>7</small>Код: можно отправить ещё раз", `<p>Таймер 60 с закончился (онбординг №4 показывает его идущим): строка становится кнопкой «Отправить код ещё раз» с зоной касания 44. Под ней подсказка про «Спам» — именно в этот момент человек начинает сомневаться, что письмо придёт.</p><ul><li>API: <code>auth.requestEmailCode</code> → <code>resendInSec</code> перезапускает таймер.</li></ul>`),
+    section("code-locked", C4, "<small>8</small>Код: попытки кончились", `<p>Пять неверных попыток: ячейки неактивны, причина одной строкой и одна основная кнопка «Отправить новый код» (вместо ссылки в строке таймера — здесь это единственное действие).</p><ul><li>API: <code>TOO_MANY_REQUESTS "TOO_MANY_ATTEMPTS"</code>. Если новый код ещё нельзя запросить, кнопка показывает отсчёт, как в №4.</li></ul>`),
+    section("code-expired", C5, "<small>9</small>Код: устарел", `<p>Человек вернулся к письму позже 10 минут. Тот же вид, что №8, другая причина.</p><ul><li>API: <code>BAD_REQUEST "CODE_EXPIRED"</code>.</li></ul>`),
+  ]],
+  ["Возврат из Google и Apple", "Google и Apple открываются в системном браузере (в приложении) или полной переадресацией (мобильный браузер), а возвращаются на <code>/auth/google/callback</code> и <code>/auth/apple/done</code> или через deep link. Сейчас эти страницы — тёмный экран с английским «Signing in with Google...»; заменяются экраном в общей сетке.", [
+    section("oauth-wait", O1, "<small>10</small>Входим через Google…", `<p>Бренд, знак провайдера в плитке, заголовок, одна фраза, спиннер <code>care</code>. Через 10 с снизу появляется «Вернуться ко входу» — на случай, если вкладка повисла. Для Apple — тот же экран с яблоком.</p><ul><li>Данные: <code>auth.loginWithGoogle</code> (id_token из фрагмента), Apple — токены из фрагмента от <code>POST /api/auth/apple/callback</code>.</li></ul>`),
+    section("oauth-cancel", O2, "<small>11</small>Вход отменён", `<p>Человек закрыл окно Apple или Google. Это не ошибка: спокойная плашка без красного, экран входа как обычно. Показан iPhone: Apple, Google, Telegram.</p><ul><li>Сейчас отмена неотличима от ошибки (нет <code>id_token</code> → <code>?error=failed</code>). Нужна причина <code>?error=cancelled</code>: Google возвращает <code>#error=access_denied</code>, Apple — <code>error=user_cancelled_authorize</code> в form_post.</li></ul>`),
+    section("oauth-fail", O3, "<small>12</small>Вход не удался", `<p>Плашка <code>sos-soft</code> над кнопками называет провайдера и предлагает повторить; кнопки ниже — те же, любой другой способ в один тап. Показан Android: Google, Telegram.</p><ul><li>API: <code>/login?error=failed</code> (Google: <code>UNAUTHORIZED "Invalid Google token"</code>; Apple: неверный id_token). В приложении — deep link <code>socialorganizer://auth-error?reason=failed</code>.</li></ul>`),
+    section("oauth-exists", O4, "<small>13</small>Почта уже есть: привязка аккаунта", `<p>Google или Apple принёс почту, которая уже принадлежит старому аккаунту с паролем (почта в нём не подтверждена, сливать нельзя). Отдельный экран вместо длинной красной строки: что случилось, одно действие «Войти кодом на почту» (адрес подставлен), «Другой способ входа». После входа кодом Google сам привяжется к этому аккаунту.</p><ul><li>API: <code>CONFLICT "ACCOUNT_EXISTS_OTHER_METHOD"</code> → <code>/login?error=account_exists</code>.</li><li class="risk">Адрес в тексте и подстановка в поле требуют, чтобы API вернул маскированную почту (сейчас не возвращает). Без неё — тот же экран без адреса.</li></ul>`),
+  ]],
+  ["Telegram", "Три разных пути: внутри Mini App вход автоматический по <code>initData</code>; на сайте — виджет Telegram (если включён) или переход в бота; внутри Telegram кнопки Google и Apple скрыты.", [
+    section("tg-auto", T1, "<small>14</small>Mini App: входим", `<p>Шапку рисует Telegram. Мы показываем только знак, спиннер и «Входим через Telegram…» — без кнопок, обычно это меньше секунды. Цвета наши, от Telegram берём только светлую или тёмную схему.</p><ul><li>API: <code>auth.loginWithTelegram({ initData })</code> в <code>TelegramBootstrap</code>.</li></ul>`),
+    section("tg-fail", T2, "<small>15</small>Mini App: вход не удался", `<p>Сейчас ошибка не видна: человек молча попадает на экран входа. Предлагаю отдельный экран: причина простыми словами, «Попробовать ещё раз» (повтор с тем же <code>initData</code>) и почта текстом. Google и Apple не показываем: в Mini App они не работают.</p><ul><li>API: <code>UNAUTHORIZED "Invalid Telegram initData"</code> или пустой <code>initData</code>.</li></ul>`),
+    section("tg-web", T3, "<small>16</small>Сайт: продолжите в Telegram", `<p>На сайте без виджета кнопка Telegram открывает бота в новой вкладке. Вкладка сайта не должна выглядеть зависшей: объясняем, что вход продолжится в Telegram и приглашение сохранено (<code>startapp=invite_…</code>), даём открыть бота ещё раз или выбрать другой способ.</p><ul><li>Если включён виджет (<code>auth.methods.telegramWidget</code>), вход завершается на сайте: <code>auth.loginWithTelegramWidget</code>, ошибка — «Ошибка входа через Telegram» плашкой как в №12.</li></ul>`),
+  ]],
+  ["Приглашение: другие случаи", "Основной экран приглашения и нерабочая ссылка — в онбординге (№1, №9). Здесь — вошедший человек и сбои.", [
+    section("inv-known", V1, "<small>17</small>Вошедший: «Мы знакомы»", `<p>Человек уже в приложении и открыл чужую ссылку. Тот же экран, но вместо кнопок входа — «Мы знакомы» и «Не сейчас»; фраза говорит, что будет после нажатия.</p><ul><li>API: <code>invite.getByToken</code>, <code>user.me</code>; кнопка — <code>invite.accept</code>. Ошибки лимита (<code>CONNECTION_LIMIT_SELF/OTHER</code>) и прочие — строкой <code>sos</code> над кнопкой, кнопка становится «Повторить».</li><li>Если вошёл по этой же ссылке, заявка уходит сама, без нажатия.</li></ul>`),
+    section("inv-sent", V2, "<small>18</small>Заявка отправлена", `<p>После «Мы знакомы» кнопки сменяются тёплой плашкой «Ждём подтверждения Олега» (<code>warm</code> — цвет ожидания) и «В круг». Экран опрашивает статус раз в 5 с: когда Олег подтвердит, плашка становится <code>care</code> с галочкой «Вы и Олег Ким знакомы».</p><ul><li>API: <code>invite.accept</code> → <code>{ pending: true }</code>; <code>pending.introStatus</code> каждые 5 с.</li><li class="risk">Сейчас в коде плашка <code>care</code> в обоих состояниях — стоит развести.</li></ul>`),
+    section("inv-own", V3, "<small>19</small>Своя ссылка", `<p>Человек открыл собственное приглашение (проверял, как оно выглядит). Свой аватар, «Это ваша ссылка», адрес пилюлей и «Поделиться ссылкой» — сразу то, ради чего он сюда пришёл.</p><ul><li>Условие: <code>inviter.id === me.id</code>; кнопка ведёт на Добавить.</li></ul>`),
+    section("inv-retry", V4, "<small>20</small>Не удалось загрузить", `<p>Сетевой сбой — не мёртвая ссылка: токен сохраняется, одна кнопка «Повторить». Иконка вместо схемы круга, чтобы не путать с №9 онбординга.</p><ul><li>API: <code>invite.getByToken</code> с ошибкой, отличной от <code>NOT_FOUND</code> / «Invite already used».</li></ul>`),
+  ]],
+  ["Сессия и выход", "", [
+    section("expired", S1, "<small>21</small>Сессия истекла", `<p>Токен отклонён сервером: заголовок «Войдите снова» и одна фраза вместо общего приветствия, способ, которым входили в прошлый раз, назван в тексте и обведён <code>care</code> на своей кнопке. Порядок кнопок не меняется. После входа — обратно на исходный экран (<code>?redirect=</code>). После «Выйти» — обычный экран входа с той же обводкой и строкой «В прошлый раз вы входили через …».</p><ul><li>Условие: <code>user.me</code> → <code>UNAUTHORIZED</code> в <code>ProtectedRoute</code>; метка — <code>markLoginMethod</code> (ключ <code>signin.lastMethod</code> уже есть).</li><li class="risk">Сейчас на сайте истёкшая сессия молча отправляет на главную <code>/?redirect=</code>. Нужен <code>/login?reason=expired&amp;redirect=…</code>.</li></ul>`),
+    section("logout", S2, "<small>22</small>Выйти: подтверждение", `<p>Лист над Профилем: вопрос, одна строка о том, как вернуться (способ и адрес, которыми входили), «Выйти» <code>danger</code> и «Остаться». Сетевых запросов нет, выход локальный.</p><ul><li>Данные: способ входа из <code>markLoginMethod</code>, почта из <code>user.me</code>. Сейчас текст «Снова войти можно по коду на почту» — неверен для тех, кто без почты (Telegram).</li></ul>`),
+  ]],
+  ["Удаление аккаунта", "Сторы требуют, чтобы удаление было и в приложении, и на публичной странице, доступной без входа.", [
+    section("delete", D1, "<small>23</small>Удалить аккаунт: лист", `<p>Из Аккаунта, текстовой кнопкой внизу. Лист перечисляет, что исчезнет, с реальными числами (связи, открытые сборы), и одной серой строкой — что останется. Кнопка «Удалить навсегда» <code>danger</code>, «Оставить» ghost. Ошибка — строкой <code>sos</code> над кнопками.</p><ul><li>API: <code>user.delete</code>. Числа: <code>connection.count</code>, <code>collection.myActive</code>, <code>collection.myParticipating</code>.</li><li>Заменяет текст «Профиль скроется у людей в круге» — он не говорит, что удаляются связи и закрываются сборы.</li></ul>`),
+    section("deleted", D2, "<small>24</small>Аккаунт удалён", `<p>Финальный экран вместо молчаливого перехода на вход: что сделано и как это видят другие. «На главную» ведёт на сайт или экран входа в приложении; «Создать новый аккаунт» — честная возможность вернуться.</p><ul><li>Сейчас после <code>user.delete</code> сразу <code>/login</code>; нужен <code>/login?deleted=1</code> или отдельный маршрут.</li></ul>`),
+    wide("delete-page-m", "m", DELPAGE(1), "<small>25</small>Публичная страница /delete-account, телефон", `<p>Шаблон правовых текстов сайта (site.html №5, №10). Четыре шага пронумерованной карточкой (путь «Профиль → Аккаунт», а не старые «Настройки»), кнопка «Войти и удалить аккаунт» (<code>/login?redirect=/me/account</code>), что удаляется, сроки, что делать без доступа к аккаунту. Ссылка на страницу — в подвале сайта и в карточках сторов.</p><ul><li class="risk">Текст — черновик на русском по текущему <code>user.delete</code>; сейчас страница на английском, финальную редакцию и срок ручного удаления пишет владелец.</li></ul>`),
+  ]],
+  ["Десктоп, от 1024", "Те же состояния в панели 460 px по центру холста, как вход и приглашение на сайте (site.html №2–3). Содержимое и порядок один в один с телефоном; кнопки входа — в порядке для компьютера.", [
+    wide("d-code", "", W1, "<small>26</small>Код: неверный, десктоп", `<p>Панель вместо телефона: «‹ Назад» в панели, ячейки, ошибка, строка повтора. Шапка сайта остаётся.</p>`),
+    wide("d-exists", "", W2, "<small>27</small>Почта уже есть, десктоп", `<p>Экран привязки аккаунта (№13) в панели: плитка 72 вместо 96, кнопки во всю ширину панели.</p>`),
+    wide("d-expired", "", W3, "<small>28</small>Сессия истекла, десктоп", `<p>Без картинки круга: панель короче, кнопки в порядке Google, Apple, Telegram, почта; Google обведён как способ прошлого входа.</p>`),
+    wide("d-delete", "", DELPAGE(0), "<small>29</small>/delete-account на 1280", `<p>Колонка 720, оглавление слева со страницами конфиденциальности и условий.</p>`),
+  ]],
+];
+
+document.getElementById("groups").innerHTML = GROUPS.map(([h, lead, items]) => `<h1 class="sechead">${h}</h1>${lead ? `<p class="lead">${lead}</p>` : ""}<div class="row">${items.join("")}</div>`).join("");
+</script>
+</body>
+</html>
