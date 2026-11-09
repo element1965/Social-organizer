@@ -37,7 +37,9 @@ export function EventRow({ icon, title, subtitle, amount, hot = false, onClick, 
   );
 
   return (
-    <div className="so-event-in overflow-hidden">
+    // Clips the row while it is swiped away; rounded like the card, otherwise the clipped shadow
+    // shows as dark square corners
+    <div className="so-event-in overflow-hidden rounded-[20px]">
       <div
         className={cn(
           'flex min-h-16 items-center gap-3 rounded-[20px] bg-surface px-2.5 py-2.5 shadow-card',
