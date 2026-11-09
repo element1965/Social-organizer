@@ -3,6 +3,11 @@
 body { padding:40px 32px 80px; }
 .variant.wide { width:1280px; }
 .variant.wide.t { width:834px; }
+.variant.wide.m { width:390px; }
+.frame.m { width:390px; }
+.frame.m.centre-page { min-height:auto; }
+.frame.m.fixed { height:auto; }
+.frame { container-type:inline-size; }
 .frame { position:relative; width:1280px; background:var(--canvas); color:var(--ink); border-radius:18px; overflow:hidden; box-shadow:0 30px 60px rgba(20,33,30,.14), 0 0 0 1px rgba(20,33,30,.08); font-size:15px; line-height:1.4; }
 .frame.app { height:800px; display:grid; grid-template-columns:240px 1fr; grid-template-rows:100%; }
 .frame.app.tablet { width:834px; height:1112px; grid-template-columns:76px 1fr; }
@@ -211,3 +216,39 @@ body { padding:40px 32px 80px; }
 .qrcard b { display:block; font-size:15px; letter-spacing:-.01em; }
 .qrcard span span { color:var(--muted); }
 .top .ibtn { width:40px; height:40px; }
+
+/* the site at phone width: same markup, one column */
+@container (max-width: 600px) {
+  .top { padding:0 16px; height:64px; gap:12px; }
+  .top nav, .top .lang { display:none; }
+  .hero { grid-template-columns:1fr; gap:24px; padding:12px 16px 40px; }
+  .hero h1 { font-size:36px; }
+  .hero .lead { font-size:17px; }
+  .hero .cta { flex-direction:column; }
+  .hero .cta .btn { width:100%; }
+  .hero .facts { flex-wrap:wrap; }
+  .planet { height:320px; border-radius:22px; }
+  .sec { padding:40px 16px; }
+  .sec h2 { font-size:28px; }
+  .steps, .nots { grid-template-columns:1fr; gap:14px; }
+  .step .pic { height:200px; }
+  .two-col { grid-template-columns:1fr; gap:24px; }
+  .hui-ring { width:320px; height:320px; }
+  .hui-ring .seat .ava { width:40px; height:40px; font-size:15px; }
+  .hui-ring .pot .sum { font-size:20px; }
+  .fig { max-width:none; }
+  .stores { flex-direction:column; }
+  .store { justify-content:center; }
+  .qrcard { display:none; }
+  .sitefoot { flex-wrap:wrap; padding:28px 16px; gap:12px; }
+  .sitefoot .links { margin-left:0; flex-wrap:wrap; gap:12px; }
+  .centre-page { min-height:auto; }
+  .centre-page .body { padding:8px 16px 40px; display:block; }
+  .panel { width:auto; padding:24px 20px 20px; border-radius:22px; }
+  .panel h2 { font-size:26px; }
+  .frame.fixed { height:auto; }
+  .toc { position:static; width:auto; flex-direction:row; flex-wrap:wrap; gap:8px 16px; padding:8px 16px 0; }
+  .prose { width:auto; margin:0 16px; padding:16px 0 48px; }
+  .prose h1 { font-size:30px; }
+  .prose p { font-size:15px; }
+}
