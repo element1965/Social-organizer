@@ -1,5 +1,5 @@
-import { useState, useCallback, lazy, Suspense, useMemo } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useState, useCallback, lazy, Suspense, useMemo, useEffect, useRef } from 'react';
+import { useNavigate, useNavigationType, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { trpc } from '../lib/trpc';
 import { useCachedNetworkStats } from '../hooks/useCachedNetworkStats';
@@ -17,6 +17,28 @@ const LazyNetworkGraph = lazy(() =>
 const LEGEND_COLORS_DARK = ['#3b82f6', '#6366f1', '#06b6d4', '#64748b'];
 const LEGEND_COLORS_LIGHT = ['#2563eb', '#4f46e5', '#0891b2', '#475569'];
 const LEGEND_LABELS = ['You', '1°', '2°', '3°'];
+
+// List position (open handshake level + scroll), so "Back" from a profile returns to the same row
+const LIST_STATE_KEY = 'network-list-state';
+interface ListState { expandedDepth: number | null; scrollY: number }
+
+function readListState(): ListState | null {
+  try {
+    const raw = sessionStorage.getItem(LIST_STATE_KEY);
+    if (!raw) return null;
+    const s = JSON.parse(raw) as Partial<ListState>;
+    return {
+      expandedDepth: typeof s.expandedDepth === 'number' ? s.expandedDepth : null,
+      scrollY: typeof s.scrollY === 'number' ? s.scrollY : 0,
+    };
+  } catch {
+    return null;
+  }
+}
+
+function writeListState(state: ListState) {
+  try { sessionStorage.setItem(LIST_STATE_KEY, JSON.stringify(state)); } catch { /* private mode */ }
+}
 
 function timeAgo(date: string | Date | null): string {
   if (!date) return '';
@@ -42,6 +64,8 @@ export function MyNetworkPage() {
   const view = (searchParams.get('view') === '3d' ? '3d' : 'list') as 'list' | '3d';
   const setView = (v: 'list' | '3d') => setSearchParams(v === 'list' ? {} : { view: v }, { replace: true });
   const [showClusters, setShowClusters] = useState(false);
+  // "Back" (browser / profile back button) restores where the user was; a fresh visit starts clean
+  const cameBack = useNavigationType() === 'POP';
   // Navigate from graph node click — deferred so Three.js finishes its render frame first
   const navigateToProfile = useCallback((id: string) => {
     setTimeout(() => navigate(`/profile/${id}`), 0);
@@ -57,8 +81,25 @@ export function MyNetworkPage() {
     refetchInterval: 120000,
   });
 
-  const [expandedDepth, setExpandedDepth] = useState<number | null>(null);
+  const restoreListRef = useRef<ListState | null>(cameBack && view === 'list' ? readListState() : null);
+  const [expandedDepth, setExpandedDepth] = useState<number | null>(() => restoreListRef.current?.expandedDepth ?? null);
   const { data: networkStats, isLoading } = useCachedNetworkStats();
+
+  const openProfileFromList = (id: string) => {
+    writeListState({ expandedDepth, scrollY: window.scrollY });
+    navigate(`/profile/${id}`);
+  };
+
+  // Restore the scroll position once the list is rendered
+  const hasListData = !isLoading && !!networkStats;
+  useEffect(() => {
+    const saved = restoreListRef.current;
+    if (!saved || !hasListData) return;
+    restoreListRef.current = null;
+    // One-shot: a later reload or Back from some other screen starts clean
+    try { sessionStorage.removeItem(LIST_STATE_KEY); } catch { /* private mode */ }
+    requestAnimationFrame(() => window.scrollTo(0, saved.scrollY));
+  }, [hasListData]);
   const { data: graphData } = trpc.connection.graphSlice.useQuery(undefined, {
     enabled: view === '3d',
     refetchInterval: 60000,
@@ -184,6 +225,8 @@ export function MyNetworkPage() {
                   width={window.innerWidth - 32}
                   height={window.innerHeight - 200}
                   onNodeClick={navigateToProfile}
+                  persistKey={`network:${myId ?? ''}`}
+                  restoreView={cameBack}
                   darkMode={isDark}
                 />
               ) : (
@@ -307,7 +350,7 @@ export function MyNetworkPage() {
                           return (
                             <button
                               key={user.id}
-                              onClick={() => navigate(`/profile/${user.id}`)}
+                              onClick={() => openProfileFromList(user.id)}
                               className={`w-full flex items-center gap-2 p-2 ${isRecent ? 'bg-green-50 dark:bg-green-900/20 hover:bg-green-100 dark:hover:bg-green-900/30' : 'hover:bg-gray-50 dark:hover:bg-gray-800/50'}`}
                             >
                               <Avatar src={user.photoUrl} name={resolve(user.id, user.name)} size="sm" />
@@ -486,7 +529,7 @@ export function MyNetworkPage() {
                     filtered.map((u, i) => (
                       <button
                         key={u.id}
-                        onClick={() => navigate(`/profile/${u.id}`)}
+                        onClick={() => openProfileFromList(u.id)}
                         className="w-full flex items-center gap-2 px-4 py-2.5 hover:bg-gray-50 dark:hover:bg-gray-800/50 border-b border-gray-100 dark:border-gray-800 last:border-0"
                       >
                         <span className="w-5 text-xs font-bold text-gray-400 flex-shrink-0 text-right">{i + 1}</span>

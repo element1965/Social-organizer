@@ -1,4 +1,5 @@
 import { useState, useRef, useCallback } from 'react';
+import { flushSync } from 'react-dom';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { trpc } from '../lib/trpc';
@@ -36,6 +37,8 @@ export function SettingsPage() {
   const { data: me } = trpc.user.me.useQuery();
   const [savedTypes, setSavedTypes] = useState<Record<string, boolean>>({});
   const [contactValues, setContactValues] = useState<Record<string, string>>({});
+  // Empty contacts opened with an "add" chip stay as inputs until the user leaves the page
+  const [openedTypes, setOpenedTypes] = useState<Record<string, boolean>>({});
   const debounceTimers = useRef<Record<string, ReturnType<typeof setTimeout>>>({});
   const updateContacts = trpc.user.updateContacts.useMutation({
     onSuccess: () => utils.user.getContacts.invalidate(),
@@ -203,7 +206,11 @@ export function SettingsPage() {
           </div>
         </CardHeader>
         <CardContent className="space-y-3">
-          {contacts?.map((contact) => {
+          {/* Only filled (or just opened) contacts get an input; the rest are compact "add" chips */}
+          {contacts?.filter((contact) => {
+            const locked = contact.type === 'telegram' && !!(contact as { locked?: boolean }).locked;
+            return locked || openedTypes[contact.type] || (contactValues[contact.type] ?? contact.value).trim() !== '';
+          }).map((contact) => {
             const isTelegram = contact.type === 'telegram' && !!(contact as { locked?: boolean }).locked;
             const currentVal = contactValues[contact.type];
             const displayVal = currentVal ?? contact.value;
@@ -218,6 +225,8 @@ export function SettingsPage() {
                   onChange={(e) => {
                     if (isTelegram) return;
                     const val = e.target.value;
+                    // Clearing a field must not make it jump away mid-typing
+                    setOpenedTypes(prev => (prev[contact.type] ? prev : { ...prev, [contact.type]: true }));
                     setContactValues(prev => ({ ...prev, [contact.type]: val }));
                     autosaveContact(contact.type, val);
                   }}
@@ -233,6 +242,37 @@ export function SettingsPage() {
               </div>
             );
           })}
+          {(() => {
+            const empty = contacts?.filter((contact) => {
+              const locked = contact.type === 'telegram' && !!(contact as { locked?: boolean }).locked;
+              return !locked && !openedTypes[contact.type] && (contactValues[contact.type] ?? contact.value).trim() === '';
+            }) ?? [];
+            if (empty.length === 0) return null;
+            return (
+              <div>
+                <p className="text-xs text-gray-500 dark:text-gray-400 mb-2">{t('settings.addContact')}</p>
+                <div className="flex flex-wrap gap-2">
+                  {empty.map((contact) => (
+                    <button
+                      key={contact.type}
+                      type="button"
+                      onClick={() => {
+                        // Render the input synchronously and focus it inside the tap handler:
+                        // iOS WebViews open the keyboard only for a focus made in the gesture
+                        flushSync(() => setOpenedTypes((prev) => ({ ...prev, [contact.type]: true })));
+                        document.getElementById(`contact-${contact.type}`)?.focus();
+                      }}
+                      title={contact.label}
+                      aria-label={contact.label}
+                      className="w-10 h-10 rounded-full border border-dashed border-gray-300 dark:border-gray-600 flex items-center justify-center text-gray-500 dark:text-gray-300 hover:border-blue-500 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+                    >
+                      <SocialIcon type={contact.icon} className="w-5 h-5" />
+                    </button>
+                  ))}
+                </div>
+              </div>
+            );
+          })()}
         </CardContent>
       </Card>
 

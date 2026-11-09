@@ -112,3 +112,11 @@ body::before {
   from { opacity: 0; transform: scale(0.95); }
   to { opacity: 1; transform: scale(1); }
 }
+
+/* App shell height. 100vh is the viewport with the browser toolbars hidden, so on phones
+   (mobile browsers, Telegram WebView) a page exactly 100vh tall scrolls by the toolbar height
+   even when the content fits. dvh is the real visible height; vh stays as the fallback. */
+.app-shell {
+  min-height: calc(100vh - var(--sa-top));
+  min-height: calc(100dvh - var(--sa-top));
+}
