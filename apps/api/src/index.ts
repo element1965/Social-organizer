@@ -78,16 +78,20 @@ function appleRedirect(
   platform: string,
   tokens: { accessToken: string; refreshToken: string; userId: string; isNew: boolean } | null,
   invite?: string,
-  reason: 'failed' | 'account_exists' = 'failed',
+  reason: 'failed' | 'account_exists' | 'cancelled' = 'failed',
+  /** Masked e-mail of the existing account (account_exists only); never the full address. */
+  maskedEmail?: string | null,
 ) {
   if (!tokens) {
-    // The reason lets the sign-in screen show the next step (SO-21)
-    if (platform === 'ios') return appleHtmlRedirect(reply, `socialorganizer://auth-error?reason=${reason}`);
+    // The reason lets the sign-in screen show the next step (SO-21). Older clients treat any unknown reason
+    // as "failed", so "cancelled" and the extra "m" parameter are backward compatible.
+    const extra = maskedEmail ? `&m=${encodeURIComponent(maskedEmail)}` : '';
+    if (platform === 'ios') return appleHtmlRedirect(reply, `socialorganizer://auth-error?reason=${reason}${extra}`);
     if (platform === 'android') {
-      const fb = encodeURIComponent(`${APP_BASE_URL}/login?error=${reason}`);
-      return appleHtmlRedirect(reply, `intent://auth-error?reason=${reason}#Intent;scheme=socialorganizer;package=com.socialorganizer.app;S.browser_fallback_url=${fb};end`);
+      const fb = encodeURIComponent(`${APP_BASE_URL}/login?error=${reason}${extra}`);
+      return appleHtmlRedirect(reply, `intent://auth-error?reason=${reason}${extra}#Intent;scheme=socialorganizer;package=com.socialorganizer.app;S.browser_fallback_url=${fb};end`);
     }
-    return reply.redirect(`${APP_BASE_URL}/login?error=${reason}`, 302);
+    return reply.redirect(`${APP_BASE_URL}/login?error=${reason}${extra}`, 302);
   }
 
   const params = new URLSearchParams({
@@ -350,11 +354,14 @@ async function start() {
 
       const sendBack = (
         tokens: { accessToken: string; refreshToken: string; userId: string; isNew: boolean } | null,
-        reason?: 'failed' | 'account_exists',
+        reason?: 'failed' | 'account_exists' | 'cancelled',
+        maskedEmail?: string | null,
       ) => {
-        return appleRedirect(reply, platform, tokens, invite, reason);
+        return appleRedirect(reply, platform, tokens, invite, reason, maskedEmail);
       };
 
+      // The person closed the Apple sheet: not an error, the sign-in screen says so calmly
+      if (body.error === 'user_cancelled_authorize') return sendBack(null, 'cancelled');
       if (!idToken) return sendBack(null);
       const apple = await verifyAppleIdToken(idToken);
       if (!apple) return sendBack(null);
@@ -363,7 +370,7 @@ async function start() {
         const result = await findOrCreateAppleUser(getDb(), apple, displayName, linkCode, [`ip:${clientIp(req.raw)}`]);
         return sendBack(result);
       } catch (err) {
-        if (err instanceof AccountExistsError) return sendBack(null, 'account_exists');
+        if (err instanceof AccountExistsError) return sendBack(null, 'account_exists', err.maskedEmail);
         console.error('[Apple] login failed:', err);
         return sendBack(null);
       }

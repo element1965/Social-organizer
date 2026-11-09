@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { languageNames, type SupportedLanguage } from '@so/i18n';
 import { trpc } from '../lib/trpc';
@@ -7,15 +7,14 @@ import { useAuth } from '../hooks/useAuth';
 import { useTheme } from '../hooks/useTheme';
 import { usePushNotifications } from '../hooks/usePushNotifications';
 import { Avatar } from '../components/ui2/Avatar';
-import { Button } from '../components/ui2/Button';
 import { Group, Row } from '../components/ui2/Group';
 import { Pill } from '../components/ui2/Pill';
 import { Screen } from '../components/ui2/Screen';
 import { Segmented } from '../components/ui2/Segmented';
-import { Sheet } from '../components/ui2/Sheet';
 import { formatMoney } from '../components/ui2/format';
 import { AdminReviews } from '../components/moderation/AdminReviews';
 import { AboutSheet } from '../components/profile/AboutSheet';
+import { LogoutSheet } from '../components/onboarding/AccountSheets';
 import { LanguageSheet } from '../components/profile/LanguageSheet';
 import { QueryState } from '../components/profile/QueryState';
 import { countForm, isOpenParticipation, openCountKey } from '../components/profile/collections';
@@ -36,7 +35,6 @@ const themeToApi = { system: 'SYSTEM', light: 'LIGHT', dark: 'DARK' } as const;
 
 export function ProfilePage() {
   const { t, i18n } = useTranslation();
-  const navigate = useNavigate();
   const utils = trpc.useUtils();
   const logout = useAuth((state) => state.logout);
   const mode = useTheme((state) => state.mode);
@@ -136,7 +134,8 @@ export function ProfilePage() {
 
   const signOut = () => {
     logout();
-    navigate('/login', { replace: true });
+    // A full load, so the shell gate does not send /me to the landing before the sign-in screen opens
+    window.location.replace('/login');
   };
 
   return (
@@ -265,18 +264,7 @@ export function ProfilePage() {
 
       <LanguageSheet open={languageOpen} onClose={() => setLanguageOpen(false)} />
       <AboutSheet open={aboutOpen} onClose={() => setAboutOpen(false)} />
-      <Sheet
-        open={logoutOpen}
-        onClose={() => setLogoutOpen(false)}
-        title={t('profile.logoutTitle')}
-        description={t('profile.logoutBody')}
-        footer={
-          <>
-            <Button variant="secondary" onClick={() => setLogoutOpen(false)}>{t('profile.stay')}</Button>
-            <Button variant="danger" onClick={signOut}>{t('profile.logoutConfirm')}</Button>
-          </>
-        }
-      />
+      <LogoutSheet open={logoutOpen} onClose={() => setLogoutOpen(false)} onConfirm={signOut} email={profile.email} />
     </Screen>
   );
 }

@@ -11,6 +11,7 @@ import { Group, Row } from '../components/ui2/Group';
 import { Input } from '../components/ui2/Input';
 import { Screen } from '../components/ui2/Screen';
 import { Sheet } from '../components/ui2/Sheet';
+import { DeleteAccountSheet } from '../components/onboarding/AccountSheets';
 import { Avatar } from '../components/ui2/Avatar';
 import { QueryState } from '../components/profile/QueryState';
 import { ACCOUNT_NOTICE_KEY, publicHost } from '../components/profile/constants';
@@ -479,47 +480,29 @@ export function AccountPage() {
         </div>
       </Sheet>
 
-      <Sheet
+      <DeleteAccountSheet
         open={deleteOpen}
+        selfId={profile.id}
+        pending={deleteAccount.isPending}
+        failed={deleteError}
         onClose={() => {
           setDeleteOpen(false);
           setDeleteError(false);
         }}
-        title={t('account.deleteTitle')}
-        description={t('account.deleteBody')}
-        footer={
-          <>
-            <Button
-              variant="secondary"
-              onClick={() => {
-                setDeleteOpen(false);
-                setDeleteError(false);
-              }}
-            >
-              {t('account.keep')}
-            </Button>
-            <Button
-              variant="danger"
-              loading={deleteAccount.isPending}
-              onClick={() => {
-                setDeleteError(false);
-                deleteAccount.mutate(undefined, {
-                  onSuccess: () => {
-                    leaveSaved.current = true;
-                    logout();
-                    navigate('/login', { replace: true });
-                  },
-                  onError: () => setDeleteError(true),
-                });
-              }}
-            >
-              {t('account.deleteConfirm')}
-            </Button>
-          </>
-        }
-      >
-        {deleteError ? <p className="text-label font-semibold text-sos">{t('common.error')}</p> : null}
-      </Sheet>
+        onConfirm={() => {
+          setDeleteError(false);
+          deleteAccount.mutate(undefined, {
+            onSuccess: () => {
+              leaveSaved.current = true;
+              logout();
+              // №24: say what happened instead of a silent jump to the sign-in screen
+              // A full load: logout() would otherwise let the shell gate send this route to the landing first
+              window.location.replace('/login?deleted=1');
+            },
+            onError: () => setDeleteError(true),
+          });
+        }}
+      />
     </Screen>
   );
 }

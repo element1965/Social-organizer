@@ -1,7 +1,9 @@
+import { useEffect, useRef } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { Capacitor } from '@capacitor/core';
 import { useAuth } from '../hooks/useAuth';
 import { trpc } from '../lib/trpc';
+import { safePath } from './onboarding/flow';
 
 const isNativeApp = Capacitor.isNativePlatform();
 
@@ -17,7 +19,24 @@ export function ProtectedRoute({ children }: { children: React.ReactNode }) {
   // user out: during the Railway outage 23–25.09.2026 every app open wiped the session.
   const isError = error?.data?.code === 'UNAUTHORIZED';
 
-  // Clear stale demo tokens — demo mode is disabled
+  // The server rejected a stored session (auth.html №21): "Sign in again", then back to where the person was.
+  // The target is fixed once (a ref), and logout() runs in an effect followed by a full load of that target:
+  // otherwise the signed-out render of the shell gate would send the person to "/?redirect=" first.
+  // The redirect is sanitised again where it is followed (onboarding/flow.ts safePath).
+  const expiredTarget = useRef<string | null>(null);
+  if (isAuthenticated && isError && expiredTarget.current === null) {
+    const back = safePath(location.pathname + location.search);
+    expiredTarget.current =
+      back && back !== '/' ? `/login?reason=expired&redirect=${encodeURIComponent(back)}` : '/login?reason=expired';
+  }
+  const expired = expiredTarget.current;
+  useEffect(() => {
+    if (!expired) return;
+    logout();
+    window.location.replace(expired);
+  }, [expired, logout]);
+
+  // Clear stale demo tokens — demo mode is disabled (after the hooks, so their order never changes)
   if (localStorage.getItem('accessToken') === 'demo-token') {
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
@@ -26,17 +45,7 @@ export function ProtectedRoute({ children }: { children: React.ReactNode }) {
     return null;
   }
 
-  // Stale/expired token — clear auth and redirect
-  if (isAuthenticated && isError) {
-    logout();
-    const redirectPath = location.pathname + location.search;
-    if (isNativeApp) {
-      const target = redirectPath !== '/dashboard' ? `/login?redirect=${encodeURIComponent(redirectPath)}` : '/login';
-      return <Navigate to={target} replace />;
-    }
-    const target = redirectPath !== '/dashboard' ? `/?redirect=${encodeURIComponent(redirectPath)}` : '/';
-    return <Navigate to={target} replace />;
-  }
+  if (expired) return null;
 
   if (!isAuthenticated) {
     // Preserve current path as redirect so user returns after login

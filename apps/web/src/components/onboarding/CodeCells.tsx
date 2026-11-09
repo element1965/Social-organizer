@@ -13,6 +13,7 @@ export function CodeCells({
   label,
   invalid = false,
   busy = false,
+  off = false,
 }: {
   value: string;
   onChange: (value: string) => void;
@@ -21,6 +22,8 @@ export function CodeCells({
   invalid?: boolean;
   /** Verifying: the field stays focused but read-only (disabling it would drop focus and the keyboard). */
   busy?: boolean;
+  /** This code no longer works (attempts used up or expired): cells are inactive until a new code. */
+  off?: boolean;
 }) {
   const ref = useRef<HTMLInputElement>(null);
   const [focused, setFocused] = useState(false);
@@ -31,8 +34,8 @@ export function CodeCells({
 
   // After a rejected code the field is cleared; put the caret back so the person can retype at once
   useEffect(() => {
-    if (invalid) ref.current?.focus();
-  }, [invalid]);
+    if (invalid && !off) ref.current?.focus();
+  }, [invalid, off]);
 
   const cursor = Math.min(value.length, 5);
 
@@ -41,14 +44,16 @@ export function CodeCells({
       <div className="grid grid-cols-6 gap-2" aria-hidden>
         {Array.from({ length: 6 }, (_, i) => {
           const digit = value[i];
-          const current = focused && i === cursor && value.length < 6;
+          const current = focused && !off && i === cursor && value.length < 6;
           return (
             <span
               key={i}
               className={cn(
                 'grid h-primary place-items-center rounded-lg bg-surface text-h3 font-extrabold tabular-nums text-ink shadow-[inset_0_0_0_1px_rgb(var(--so-line)/0.14)]',
-                digit && 'shadow-[inset_0_0_0_2px_rgb(var(--so-care))]',
-                invalid && 'shadow-[inset_0_0_0_2px_rgb(var(--so-sos))]',
+                digit && !busy && 'shadow-[inset_0_0_0_2px_rgb(var(--so-care))]',
+                busy && 'text-ink-muted',
+                invalid && !off && 'shadow-[inset_0_0_0_2px_rgb(var(--so-sos))]',
+                off && 'bg-canvas text-ink-subtle shadow-[inset_0_0_0_1px_rgb(var(--so-line)/0.08)]',
               )}
             >
               {digit ?? (current ? <i className="block motion-safe:animate-pulse h-[26px] w-0.5 rounded-[1px] bg-care" /> : null)}
@@ -67,6 +72,7 @@ export function CodeCells({
         maxLength={6}
         value={value}
         readOnly={busy}
+        disabled={off}
         aria-busy={busy || undefined}
         onFocus={() => setFocused(true)}
         onBlur={() => setFocused(false)}

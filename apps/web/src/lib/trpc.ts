@@ -62,6 +62,9 @@ export function refreshSession(): Promise<boolean> {
       if (!res.ok) return false;
       const data = (await res.json())?.result?.data as { accessToken?: string; refreshToken?: string } | undefined;
       if (!data?.accessToken || !data.refreshToken) return false;
+      // Signed out (or signed in as someone else) while the request was in flight: drop the result,
+      // otherwise it would quietly restore a session the person just ended.
+      if (localStorage.getItem('refreshToken') !== refreshToken) return false;
       useAuth.getState().setTokens(data.accessToken, data.refreshToken);
       return true;
     } catch {
