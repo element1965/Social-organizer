@@ -1,5 +1,4 @@
 import { Capacitor } from '@capacitor/core';
-import jsQR from 'jsqr';
 import { detectDevice } from './device';
 
 export type ScanTarget =
@@ -50,49 +49,90 @@ function decodePart(value: string): string {
   }
 }
 
+const TOKEN = /^[A-Za-z0-9_-]+$/;
+const BOT = (import.meta.env.VITE_TELEGRAM_BOT_USERNAME || 'socialorganizer_bot').toLowerCase();
+
+function tokenOf(value: string): string | null {
+  const decoded = decodePart(value).trim();
+  return TOKEN.test(decoded) ? decoded : null;
+}
+
+/** App origins that may carry an invite. Anything else is not our code. */
+function isOurHost(url: URL): boolean {
+  const hostname = url.hostname.toLowerCase();
+  if (hostname === 'orginizer.com' || hostname === 'www.orginizer.com') return true;
+  try {
+    return url.host.toLowerCase() === new URL(window.location.origin).host.toLowerCase();
+  } catch {
+    return false;
+  }
+}
+
+function isOurBot(url: URL): boolean {
+  if (url.hostname.toLowerCase() !== 't.me') return false;
+  const bot = url.pathname.split('/').filter(Boolean)[0];
+  return bot?.toLowerCase() === BOT;
+}
+
+function fromStartParam(start: string | null): ScanTarget | null {
+  if (!start) return null;
+  if (start.startsWith('invite_')) {
+    const token = tokenOf(start.slice('invite_'.length));
+    return token ? { kind: 'invite', token } : { kind: 'unknown' };
+  }
+  if (start.startsWith('sos_')) {
+    const id = tokenOf(start.slice('sos_'.length));
+    return id ? { kind: 'sos', id } : { kind: 'unknown' };
+  }
+  return null;
+}
+
 /**
  * Turn a scanned string into an invite token or a collection id.
- * Accepts /invite/:token, ?invite=, Telegram start=invite_, /sos/:id, and orginizer.com/<slug>.
+ * A URL counts only on our origin (this page, orginizer.com, www.orginizer.com)
+ * or as t.me/<bot> start params. /sos/<id> accepts only an id of letters, digits, "_" and "-".
+ * Any other string is not our code.
  */
 export function parseScannedText(raw: string): ScanTarget {
   const text = raw.trim();
   if (!text) return { kind: 'unknown' };
 
-  let url: URL | null = null;
+  let url: URL;
   try {
     url = new URL(text);
   } catch {
-    url = null;
-  }
-
-  if (url) {
-    const parts = url.pathname.split('/').filter(Boolean);
-    const head = parts[0];
-    const second = parts[1];
-    if (head === 'sos' && second) return { kind: 'sos', id: decodePart(second) };
-
-    const inviteAt = parts.indexOf('invite');
-    const inviteToken = inviteAt >= 0 ? parts[inviteAt + 1] : undefined;
-    if (inviteToken) return { kind: 'invite', token: decodePart(inviteToken) };
-
-    const queryInvite = url.searchParams.get('invite');
-    if (queryInvite) return { kind: 'invite', token: queryInvite };
-
-    const start = url.searchParams.get('start') || url.searchParams.get('startapp');
-    if (start?.startsWith('invite_') && start.length > 'invite_'.length) {
-      return { kind: 'invite', token: start.slice('invite_'.length) };
-    }
-    if (start?.startsWith('sos_') && start.length > 'sos_'.length) {
-      return { kind: 'sos', id: start.slice('sos_'.length) };
-    }
-
-    if (parts.length === 1 && head && !RESERVED.has(head.toLowerCase())) {
-      return { kind: 'invite', token: decodePart(head) };
-    }
     return { kind: 'unknown' };
   }
+  if (url.protocol !== 'http:' && url.protocol !== 'https:') return { kind: 'unknown' };
 
-  if (/^[A-Za-z0-9_-]{3,80}$/.test(text)) return { kind: 'invite', token: text };
+  if (isOurBot(url)) {
+    return fromStartParam(url.searchParams.get('start') || url.searchParams.get('startapp')) ?? { kind: 'unknown' };
+  }
+  if (!isOurHost(url)) return { kind: 'unknown' };
+
+  const parts = url.pathname.split('/').filter(Boolean);
+  const head = parts[0] ? decodePart(parts[0]) : undefined;
+  const second = parts[1] ? decodePart(parts[1]) : undefined;
+  if (head === 'sos') {
+    return second && TOKEN.test(second) ? { kind: 'sos', id: second } : { kind: 'unknown' };
+  }
+
+  const inviteAt = parts.findIndex((part) => decodePart(part) === 'invite');
+  const inviteToken = inviteAt >= 0 ? parts[inviteAt + 1] : undefined;
+  if (inviteToken) {
+    const token = tokenOf(inviteToken);
+    return token ? { kind: 'invite', token } : { kind: 'unknown' };
+  }
+
+  const queryInvite = url.searchParams.get('invite');
+  if (queryInvite) {
+    const token = tokenOf(queryInvite);
+    return token ? { kind: 'invite', token } : { kind: 'unknown' };
+  }
+
+  if (parts.length === 1 && head && TOKEN.test(head) && !RESERVED.has(head.toLowerCase())) {
+    return { kind: 'invite', token: head };
+  }
   return { kind: 'unknown' };
 }
 
@@ -142,6 +182,12 @@ interface StartOptions {
   video: HTMLVideoElement | null;
   onCode: (value: string) => void;
   paused: () => boolean;
+  signal?: AbortSignal;
+  isCancelled?: () => boolean;
+}
+
+function cancelled(options: StartOptions): boolean {
+  return Boolean(options.signal?.aborted || options.isCancelled?.());
 }
 
 function idle(phase: ScanPhase): ScanSession {
@@ -187,10 +233,13 @@ function setNativeChrome(on: boolean): void {
 
 async function startNative(options: StartOptions): Promise<ScanSession | null> {
   if (!Capacitor.isNativePlatform()) return null;
+  let scanner: typeof import('@capacitor-mlkit/barcode-scanning') | null = null;
   try {
-    const { BarcodeScanner, BarcodeFormat, LensFacing } = await import('@capacitor-mlkit/barcode-scanning');
+    scanner = await import('@capacitor-mlkit/barcode-scanning');
+    const { BarcodeScanner, BarcodeFormat, LensFacing } = scanner;
     const support = await BarcodeScanner.isSupported();
-    if (!support.supported) return idle('missing');
+    // Unsupported here means "no native scanner", so the caller opens the browser camera.
+    if (support.supported === false) return null;
 
     let permission = await BarcodeScanner.checkPermissions();
     if (permission.camera !== 'granted') {
@@ -229,6 +278,10 @@ async function startNative(options: StartOptions): Promise<ScanSession | null> {
     };
   } catch (error) {
     setNativeChrome(false);
+    if (scanner) {
+      await scanner.BarcodeScanner.removeAllListeners().catch(() => undefined);
+      await scanner.BarcodeScanner.stopScan().catch(() => undefined);
+    }
     if (unimplemented(error)) return null;
     const message = error instanceof Error ? error.message : '';
     if (/permission|denied/i.test(message)) return idle('denied');
@@ -238,6 +291,7 @@ async function startNative(options: StartOptions): Promise<ScanSession | null> {
 
 async function startWeb(options: StartOptions): Promise<ScanSession> {
   const video = options.video;
+  if (cancelled(options)) return idle('error');
   if (!video || !navigator.mediaDevices?.getUserMedia) return idle('unsupported');
 
   let stream: MediaStream;
@@ -250,13 +304,32 @@ async function startWeb(options: StartOptions): Promise<ScanSession> {
     return idle(cameraPhase(error));
   }
 
+  const release = () => {
+    stream.getTracks().forEach((track) => track.stop());
+    if (video.srcObject === stream) video.srcObject = null;
+  };
+
+  // The caller may have unmounted or hidden the page while the prompt was open.
+  if (cancelled(options)) {
+    release();
+    return idle('error');
+  }
+
   video.srcObject = stream;
   video.muted = true;
   video.playsInline = true;
+  if (cancelled(options)) {
+    release();
+    return idle('error');
+  }
   try {
     await video.play();
   } catch {
-    stream.getTracks().forEach((track) => track.stop());
+    release();
+    return idle('error');
+  }
+  if (cancelled(options)) {
+    release();
     return idle('error');
   }
 
@@ -271,6 +344,12 @@ async function startWeb(options: StartOptions): Promise<ScanSession> {
   const detector = barcodeDetector();
   const canvas = document.createElement('canvas');
   const ctx = canvas.getContext('2d', { willReadFrequently: true });
+  // jsQR is only fetched when this browser has no BarcodeDetector.
+  const jsQR = detector ? null : (await import('jsqr')).default;
+  if (cancelled(options)) {
+    release();
+    return idle('error');
+  }
 
   const read = async () => {
     if (stopped || options.paused() || video.readyState < 2) return;
@@ -280,7 +359,7 @@ async function startWeb(options: StartOptions): Promise<ScanSession> {
       if (value) options.onCode(value);
       return;
     }
-    if (!ctx || !video.videoWidth) return;
+    if (!jsQR || !ctx || !video.videoWidth) return;
     const width = Math.min(video.videoWidth, 480);
     const height = Math.max(1, Math.round(video.videoHeight * (width / video.videoWidth)));
     canvas.width = width;
@@ -311,8 +390,7 @@ async function startWeb(options: StartOptions): Promise<ScanSession> {
     stop: () => {
       stopped = true;
       cancelAnimationFrame(frame);
-      stream.getTracks().forEach((item) => item.stop());
-      video.srcObject = null;
+      release();
     },
     toggleTorch: async () => {
       if (!track || !torch) return;

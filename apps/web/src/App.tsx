@@ -40,9 +40,9 @@ import { HowPage } from './pages/HowPage';
 import { GetRedirect, RedirectHome } from './components/site/redirects';
 import { GoogleCallbackPage } from './pages/GoogleCallbackPage';
 import { AppleCallbackPage } from './pages/AppleCallbackPage';
-import { AddPage } from './pages/AddPage';
-import { QrPage } from './pages/QrPage';
-import { ScanPage } from './pages/ScanPage';
+const AddPage = lazy(() => import('./pages/AddPage').then((module) => ({ default: module.AddPage })));
+const QrPage = lazy(() => import('./pages/QrPage').then((module) => ({ default: module.QrPage })));
+const ScanPage = lazy(() => import('./pages/ScanPage').then((module) => ({ default: module.ScanPage })));
 
 const isNativeApp = Capacitor.isNativePlatform();
 
@@ -236,9 +236,9 @@ export function App() {
             <Route element={<ShellGate />}>
               <Route path="/" element={<HomeIndex />} />
               <Route path="/ask" element={<AskStub />} />
-              <Route path="/add" element={<AddPage />} />
-              <Route path="/add/qr" element={<QrPage />} />
-              <Route path="/add/scan" element={<ScanPage />} />
+              <Route path="/add" element={<Suspense fallback={null}><AddPage /></Suspense>} />
+              <Route path="/add/qr" element={<Suspense fallback={null}><QrPage /></Suspense>} />
+              <Route path="/add/scan" element={<Suspense fallback={null}><ScanPage /></Suspense>} />
               <Route path="/me" element={<ProfileStub />} />
               <Route path="/me/account" element={<AccountStub />} />
               <Route path="/me/stake" element={<StakeStub />} />

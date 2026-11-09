@@ -290,25 +290,63 @@ function WebScanner({
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
-    let cancelled = false;
-    void openWebScanner({
-      video,
-      onCode: (value) => onCodeRef.current(value),
-      paused: () => pausedRef.current(),
-    }).then((session) => {
-      if (cancelled) {
-        session.stop();
+    let disposed = false;
+    let session: ScanSession | null = null;
+    let controller: AbortController | null = null;
+
+    const stopSession = () => {
+      controller?.abort();
+      controller = null;
+      session?.stop();
+      session = null;
+      sessionRef.current = null;
+    };
+
+    const start = () => {
+      if (disposed || document.visibilityState === 'hidden') return;
+      stopSession();
+      const next = new AbortController();
+      controller = next;
+      void openWebScanner({
+        video,
+        onCode: (value) => onCodeRef.current(value),
+        paused: () => pausedRef.current(),
+        signal: next.signal,
+        isCancelled: () => disposed || next.signal.aborted,
+      }).then((opened) => {
+        if (disposed || next.signal.aborted) {
+          opened.stop();
+          return;
+        }
+        session = opened;
+        sessionRef.current = opened;
+        setTorch(opened.torch);
+        setPhase(opened.phase);
+        if (opened.phase !== 'live') onBlocked(opened.phase);
+      });
+    };
+
+    const onVisibility = () => {
+      if (document.visibilityState === 'hidden') {
+        stopSession();
         return;
       }
-      sessionRef.current = session;
-      setTorch(session.torch);
-      setPhase(session.phase);
-      if (session.phase !== 'live') onBlocked(session.phase);
-    });
+      if (document.visibilityState === 'visible') start();
+    };
+
+    const onPageHide = () => {
+      stopSession();
+    };
+
+    document.addEventListener('visibilitychange', onVisibility);
+    window.addEventListener('pagehide', onPageHide);
+    if (document.visibilityState !== 'hidden') start();
+
     return () => {
-      cancelled = true;
-      sessionRef.current?.stop();
-      sessionRef.current = null;
+      disposed = true;
+      stopSession();
+      document.removeEventListener('visibilitychange', onVisibility);
+      window.removeEventListener('pagehide', onPageHide);
     };
   }, [onBlocked]);
 

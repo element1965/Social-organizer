@@ -7,6 +7,8 @@ import { IconScan } from './icons';
 import { liveInviteUrl } from './links';
 
 const TTL_MS = 60_000;
+const MIN_GAP_MS = 3_000;
+const MAX_BACKOFF_MS = 30_000;
 const RING = 2 * Math.PI * 126;
 
 interface Pass {
@@ -35,43 +37,120 @@ export function LiveQr({ onScan, onDone }: { onScan: () => void; onDone: () => v
     let stopped = false;
     let pending = false;
     let current: Pass | null = null;
+    let failures = 0;
+    let lastIssued = 0;
+    let epoch = 0;
+    let wantFresh = false;
+    let waitTimer = 0;
+    let interval = 0;
+
+    const hidden = () => document.visibilityState === 'hidden';
+    const visible = () => document.visibilityState === 'visible';
+
+    const clearWait = () => {
+      if (waitTimer) window.clearTimeout(waitTimer);
+      waitTimer = 0;
+    };
+
+    const clearTick = () => {
+      if (interval) window.clearInterval(interval);
+      interval = 0;
+    };
+
+    // The countdown is the client clock from the moment the pass arrives.
+    // The server expiresAt is not compared with Date.now(): a skewed clock would refresh immediately.
+    const nextDelay = () => {
+      const since = lastIssued > 0 ? Date.now() - lastIssued : MIN_GAP_MS;
+      const floor = lastIssued > 0 ? Math.max(0, MIN_GAP_MS - since) : 0;
+      const backoff = failures > 0 ? Math.min(MAX_BACKOFF_MS, MIN_GAP_MS * 2 ** (failures - 1)) : 0;
+      return Math.max(floor, backoff);
+    };
+
+    const schedule = (delay: number) => {
+      clearWait();
+      waitTimer = window.setTimeout(() => {
+        waitTimer = 0;
+        void issue();
+      }, delay);
+    };
+
+    const armTick = () => {
+      clearTick();
+      interval = window.setInterval(() => {
+        if (!current || !visible()) return;
+        const time = Date.now();
+        setNow(time);
+        if (time >= current.expiresAt) {
+          current = null;
+          setPass(null);
+          void issue();
+        }
+      }, 250);
+    };
 
     const issue = async () => {
-      if (pending) return;
+      if (stopped || pending || hidden()) return;
+      const delay = nextDelay();
+      if (delay > 0) {
+        schedule(delay);
+        return;
+      }
       pending = true;
+      const ticket = epoch;
+      lastIssued = Date.now();
       try {
         const res = await generateRef.current({ ttl: 60 });
-        if (stopped) return;
-        const expiresAt = res.expiresAt ? new Date(res.expiresAt).getTime() : Date.now() + TTL_MS;
-        current = { token: res.token, expiresAt };
+        if (stopped || ticket !== epoch || hidden()) return;
+        const issuedAt = Date.now();
+        current = { token: res.token, expiresAt: issuedAt + TTL_MS };
+        failures = 0;
         setPass(current);
+        setNow(issuedAt);
         setFailed(false);
       } catch {
-        if (!stopped) setFailed(true);
+        if (stopped || ticket !== epoch || hidden()) return;
+        failures += 1;
+        current = null;
+        setPass(null);
+        setFailed(true);
+        schedule(nextDelay());
       } finally {
         pending = false;
+        if (!stopped && wantFresh && visible()) {
+          wantFresh = false;
+          void issue();
+        }
       }
     };
 
-    const tick = () => {
-      const time = Date.now();
-      setNow(time);
-      if (current && time >= current.expiresAt) {
+    const onVisibility = () => {
+      if (hidden()) {
+        epoch += 1;
+        wantFresh = false;
+        clearWait();
+        clearTick();
         current = null;
-        void issue();
+        setPass(null);
+        return;
       }
+      if (!visible()) return;
+      armTick();
+      setNow(Date.now());
+      if (pending) wantFresh = true;
+      else void issue();
     };
 
-    void issue();
-    const interval = window.setInterval(tick, 250);
-    const onVisible = () => {
-      if (document.visibilityState === 'visible') tick();
-    };
-    document.addEventListener('visibilitychange', onVisible);
+    document.addEventListener('visibilitychange', onVisibility);
+    if (visible()) {
+      armTick();
+      void issue();
+    }
     return () => {
       stopped = true;
-      window.clearInterval(interval);
-      document.removeEventListener('visibilitychange', onVisible);
+      epoch += 1;
+      clearWait();
+      clearTick();
+      document.removeEventListener('visibilitychange', onVisibility);
     };
   }, [retry]);
 
