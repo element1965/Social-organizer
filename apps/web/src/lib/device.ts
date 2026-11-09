@@ -45,28 +45,22 @@ export function heroCta(dev: Device): HeroCta {
   return { primary: { id: 'web', kind: 'primary' }, secondary: { id: 'how', kind: 'secondary' }, telegramAlt: false };
 }
 
-export type AuthProvider = 'google' | 'apple' | 'telegram';
+export type AuthProvider = 'google' | 'apple' | 'telegram' | 'email';
 
-/** Provider order per device: a single table, so a product decision on the order is a one-line change. */
+/** Sign-in options per device, in display order (product decision 2026-11-09). E-mail is always last. */
 export const AUTH_ORDER: Record<Device, AuthProvider[]> = {
-  android: ['google', 'telegram'],
-  ios: ['apple', 'telegram', 'google'],
-  desktop: ['google', 'telegram', 'apple'],
+  android: ['google', 'telegram', 'email'],
+  ios: ['apple', 'google', 'telegram', 'email'],
+  desktop: ['google', 'apple', 'telegram', 'email'],
 };
 
 export interface AuthButtons {
-  /** Provider buttons in display order; Telegram is always second (decision 2026-11-09). */
+  /** Sign-in options in display order; the last one is always e-mail. */
   order: AuthProvider[];
-  /** E-mail sign-in is always shown as text under the buttons. */
-  mail: true;
-  /** Android: a small "Have an Apple ID? Sign in with Apple" link instead of a full button. */
-  appleLink: boolean;
 }
 
-/** Sign-in: native first, Telegram next, the other native way as a small link (Android) or last button. */
 export function authButtons(dev: Device): AuthButtons {
-  const order = AUTH_ORDER[dev];
-  return { order, mail: true, appleLink: dev === 'android' };
+  return { order: AUTH_ORDER[dev] };
 }
 
 export type StoreId = 'play' | 'appstore' | 'web' | 'telegram';
