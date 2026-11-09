@@ -43,14 +43,22 @@ body { padding:40px 32px 80px; }
 .step p b { color:var(--ink); }
 .two-col { display:grid; grid-template-columns:1fr 1fr; gap:48px; align-items:center; }
 /* hui ring */
-.table { position:relative; width:440px; height:440px; margin:0 auto; }
-.table .ring { position:absolute; inset:12%; border-radius:50%; border:1px solid var(--line); }
-.table .well { position:absolute; inset:24%; border-radius:50%; background:var(--care-soft); }
-.table .person { position:absolute; transform:translate(-50%,-50%); font-weight:700; font-size:16px; padding:8px 12px; border-radius:12px; background:var(--paper); box-shadow:var(--shadow-card); }
-.table .person.on { color:var(--care); box-shadow:inset 0 0 0 2px var(--care), var(--shadow-card); }
-.table .token { position:absolute; width:16px; height:16px; border-radius:5px; background:var(--care); transform:translate(-50%,-50%); }
-.table .take { position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); text-align:center; font-weight:800; font-size:22px; letter-spacing:-.03em; }
-.table .take small { display:block; font-size:13px; color:var(--muted); font-weight:700; margin-top:2px; }
+/* hui table: seats, pot, coins */
+.hui-ring { position:relative; width:440px; height:440px; margin:0 auto; }
+.hui-ring > svg { position:absolute; inset:0; width:100%; height:100%; }
+.hui-ring .seat { position:absolute; transform:translate(-50%,-50%); display:flex; flex-direction:column; align-items:center; gap:6px; border:0; background:none; padding:0; cursor:pointer; font:inherit; color:inherit; }
+.hui-ring .seat:focus-visible { outline:2px solid var(--care); outline-offset:4px; border-radius:12px; }
+.hui-ring .seat .ava { width:48px; height:48px; border-radius:50%; background:var(--paper); box-shadow:var(--shadow-card), inset 0 0 0 1px var(--line); display:grid; place-items:center; font-weight:800; font-size:18px; transition:background var(--dur-base), color var(--dur-base), transform var(--dur-base) var(--ease-out), box-shadow var(--dur-base); }
+.hui-ring .seat .nm { font-size:13px; font-weight:700; color:var(--muted); white-space:nowrap; }
+.hui-ring .seat.on .ava { background:var(--care); color:var(--on-care); box-shadow:0 0 0 4px var(--care-soft), var(--shadow-card); transform:scale(1.12); }
+.hui-ring .seat.on .nm { color:var(--ink); }
+.hui-ring .seat .badge { position:absolute; top:-30px; left:50%; transform:translate(-50%,6px); height:24px; padding:0 10px; border-radius:12px; background:var(--care-soft); color:var(--care); font-size:12px; font-weight:800; line-height:24px; opacity:0; transition:opacity var(--dur-base), transform var(--dur-base) var(--ease-out); white-space:nowrap; }
+.hui-ring .seat.got .badge { opacity:1; transform:translate(-50%,0); }
+.hui-ring .pot { position:absolute; left:50%; top:50%; width:46%; height:46%; transform:translate(-50%,-50%); border-radius:50%; background:var(--surface-2); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px; padding-top:34px; text-align:center; }
+.hui-ring .pot .mon { font-size:13px; font-weight:700; color:var(--muted); }
+.hui-ring .pot .sum { font-size:26px; font-weight:800; letter-spacing:-.04em; font-variant-numeric:tabular-nums; line-height:1.1; }
+.hui-ring .pot .note { font-size:12px; font-weight:700; color:var(--muted); }
+.hui-ring .coin { position:absolute; width:28px; height:28px; border-radius:50%; background:var(--warm); color:var(--scene); display:grid; place-items:center; font-size:11px; font-weight:800; transform:translate(-50%,-50%); box-shadow:0 2px 6px rgba(0,0,0,.18); transition:left var(--dur-screen) var(--ease-out), top var(--dur-screen) var(--ease-out), opacity var(--dur-base); z-index:2; pointer-events:none; }
 .months { display:flex; gap:8px; flex-wrap:wrap; margin-top:22px; }
 .months span { height:40px; padding:0 14px; border-radius:12px; background:var(--paper); box-shadow:inset 0 0 0 1px var(--line); font-weight:700; display:grid; place-items:center; }
 .months span.on { background:var(--ink); color:var(--canvas); box-shadow:none; }

@@ -14,6 +14,7 @@
 <script src="theme.js"></script>
 <script src="shared.js"></script>
 <script src="web.js"></script>
+<script src="figures.js"></script>
 <script>
 const HOME = `<div class="frame">
 ${siteTop("")}
@@ -30,9 +31,9 @@ ${siteTop("")}
   <h2>Как это работает</h2>
   <p class="lead">Три шага, и никакого организатора.</p>
   <div class="steps">
-    <div class="step"><div class="pic">${pic(0)}</div><span class="n">1</span><h3>Вы в центре своего круга</h3><p>Добавьте <b>людей, которых знаете лично</b>: по ссылке или QR при встрече. Через них вы видите их знакомых — второе и третье рукопожатие.</p></div>
-    <div class="step"><div class="pic">${pic(1)}</div><span class="n">2</span><h3>Просьба идёт по рукопожатиям</h3><p>Сначала её слышат ваши люди, потом их люди. <b>Чем больше вокруг, тем дальше идёт сигнал.</b> Каждый решает сам, участвовать ли.</p></div>
-    <div class="step"><div class="pic">${pic(2)}</div><span class="n">3</span><h3>Откликнувшиеся собираются в чате</h3><p>Каждый называет свою сумму и входит в чат сбора. <b>Деньги передают лично</b>, приложение только показывает, кто с кем.</p></div>
+    <div class="step"><div class="pic">${netFigure(0)}</div><span class="n">1</span><h3>Вы в центре своего круга</h3><p>Добавьте <b>людей, которых знаете лично</b>: по ссылке или QR при встрече. Через них вы видите их знакомых — второе и третье рукопожатие.</p></div>
+    <div class="step"><div class="pic">${netFigure(1)}</div><span class="n">2</span><h3>Просьба идёт по рукопожатиям</h3><p>Сначала её слышат ваши люди, потом их люди. <b>Чем больше вокруг, тем дальше идёт сигнал.</b> Каждый решает сам, участвовать ли.</p></div>
+    <div class="step"><div class="pic">${netFigure(2)}</div><span class="n">3</span><h3>Откликнувшиеся собираются в чате</h3><p>Каждый называет свою сумму и входит в чат сбора. <b>Деньги передают лично</b>, приложение только показывает, кто с кем.</p></div>
   </div>
 </div>
 <div class="sec">
@@ -43,11 +44,7 @@ ${siteTop("")}
       <p class="say">Social Organizer делает то же без организатора и без очереди: круг — это ваши рукопожатия, а доли получает тот, кому нужно сейчас.</p>
       <div class="months"><span>Январь</span><span>Февраль</span><span class="on">Март</span><span>Апрель</span><span>Май</span><span>Июнь</span></div>
     </div>
-    <div class="table"><div class="ring"></div><div class="well"></div>
-      <span class="person" style="left:50%;top:12%">Мария</span><span class="person" style="left:85%;top:31%">Олег</span><span class="person on" style="left:85%;top:69%">Вы</span><span class="person" style="left:50%;top:88%">Ирина</span><span class="person" style="left:15%;top:69%">Денис</span><span class="person" style="left:15%;top:31%">Лена</span>
-      <span class="token" style="left:38%;top:38%"></span><span class="token" style="left:44%;top:36%"></span><span class="token" style="left:50%;top:35%"></span><span class="token" style="left:56%;top:36%"></span><span class="token" style="left:62%;top:38%"></span>
-      <span class="take" style="top:56%">В марте — вы<small>пять долей по 15 $</small></span>
-    </div>
+    <div id="siteRing"></div>
   </div>
 </div>
 <div class="sec">
@@ -123,6 +120,7 @@ document.getElementById("row").innerHTML = [
   wide("sos", "", SOS, "<small>4</small>Публичная страница сбора", `<p>Панель с карточкой суммы, плашкой о круге и одной кнопкой «Присоединиться». Это та же страница, что на телефоне (<code>/sos/:id</code>); ширина панели 460 вместо полной ширины.</p>`),
   wide("legal", "", LEGAL, "<small>5</small>Правовые тексты", `<p>Один шаблон для конфиденциальности, условий и удаления аккаунта: заголовок 40 px, дата, колонка 720 px, строка 16 px с интерлиньяжем 1.6, оглавление слева. Текст на странице — черновик по текущим правилам приложения, финальную редакцию пишет владелец.</p>`),
 ].join("");
+mountHui(document.getElementById("siteRing"), { static: true, month: 2, stage: 1, names: ["Мария", "Олег", "Вы", "Ирина", "Денис", "Лена"] });
 </script>
 </body>
 </html>
