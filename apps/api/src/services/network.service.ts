@@ -111,7 +111,9 @@ export async function networkReach(
   let visible = 0;
   for (let depth = 1; depth <= VISIBLE_RINGS; depth++) visible += byDepth[depth] ?? 0;
   const far = total - visible;
-  const shown = visible + (far > 0 ? Math.max(roundFarCount(far).count, 1) : 0);
+  // A handful beyond the rings ("a few" in the chips) is still counted as it is, so the headline does not understate
+  const farShown = far > 0 ? (roundFarCount(far).few ? far : roundFarCount(far).count) : 0;
+  const shown = visible + farShown;
   let canHelp = 0;
   if (ids.length > 0) {
     const rows = await db.$queryRaw<Array<{ total: number | null }>>`

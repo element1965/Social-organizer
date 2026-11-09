@@ -26,6 +26,8 @@ export function SeedPage() {
   const { data: me } = trpc.user.me.useQuery();
   const { data: intro } = trpc.pending.introStatus.useQuery(undefined, { staleTime: 30_000 });
   const setBudget = trpc.user.setMonthlyBudget.useMutation();
+  const updateUser = trpc.user.update.useMutation();
+  const [name, setName] = useState('');
   const [value, setValue] = useState(String(DEFAULT_AMOUNT));
   const seeded = useRef(false);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -36,14 +38,19 @@ export function SeedPage() {
     seeded.current = true;
     const current = Math.round(Number((me as { monthlyBudget?: number | null }).monthlyBudget ?? 0));
     if (current >= 1) setValue(String(current));
+    // An e-mail sign-up starts with a name taken from the address: show it so it can be corrected
+    setName(String((me as { name?: string | null }).name ?? ''));
   }, [me]);
 
   const amount = value === '' ? NaN : Number(value);
-  const valid = Number.isInteger(amount) && amount >= 1;
+  const validAmount = Number.isInteger(amount) && amount >= 1;
+  const validName = name.trim().length > 0;
+  const valid = validAmount && validName;
 
   const submit = async () => {
     if (!valid) return;
     try {
+      await updateUser.mutateAsync({ name: name.trim() });
       await setBudget.mutateAsync({ amount, inputCurrency: 'USD' });
       await utils.user.me.invalidate();
       clearFirstRun();
@@ -59,7 +66,7 @@ export function SeedPage() {
     <OnboardingFrame
       top={<BackLink label={t('common.back')} to={introPath(next)} />}
       foot={
-        <Button className="w-full" loading={setBudget.isPending} disabled={!valid} onClick={() => void submit()}>
+        <Button className="w-full" loading={setBudget.isPending || updateUser.isPending} disabled={!valid} onClick={() => void submit()}>
           {t('intro.seed.go')}
         </Button>
       }
@@ -74,11 +81,27 @@ export function SeedPage() {
         }}
       >
         <Card className="mt-5">
+          <label htmlFor="seed-name" className="mb-1.5 block text-label font-semibold text-ink-muted">
+            {t('intro.seed.name')}
+          </label>
+          <input
+            id="seed-name"
+            value={name}
+            maxLength={100}
+            autoComplete="name"
+            placeholder={t('intro.seed.namePlaceholder')}
+            aria-invalid={!validName || undefined}
+            onChange={(event) => setName(event.target.value)}
+            className="h-12 w-full rounded-md bg-canvas px-3.5 text-body font-semibold text-ink outline-none placeholder:text-ink-subtle"
+          />
+          <p className={`mb-4 mt-1.5 text-label ${validName ? 'text-ink-muted' : 'font-semibold text-sos'}`}>
+            {validName ? t('intro.seed.nameHint') : t('intro.seed.nameMin')}
+          </p>
           <label htmlFor="seed-amount" className="mb-1.5 block text-label font-semibold text-ink-muted">
             {t('intro.seed.label')}
           </label>
           <div
-            className={`flex h-[72px] items-baseline gap-1.5 border-b-2 ${!valid && value !== '' ? 'border-sos' : value === '' ? 'border-line-strong' : 'border-transparent'}`}
+            className={`flex h-[72px] items-baseline gap-1.5 border-b-2 ${!validAmount && value !== '' ? 'border-sos' : value === '' ? 'border-line-strong' : 'border-transparent'}`}
             onClick={() => inputRef.current?.focus()}
           >
             <input
@@ -89,7 +112,7 @@ export function SeedPage() {
               autoComplete="off"
               value={value}
               style={{ width: `${Math.max(1, value.length) + 0.1}ch` }}
-              aria-invalid={!valid || undefined}
+              aria-invalid={!validAmount || undefined}
               aria-describedby="seed-hint"
               onChange={(event) => setValue(event.target.value.replace(/\D/g, '').replace(/^0+(?=\d)/, '').slice(0, 7))}
               className="min-w-[1ch] max-w-full bg-transparent text-display font-extrabold tabular-nums text-ink caret-care outline-none placeholder:text-ink-subtle"
@@ -114,10 +137,10 @@ export function SeedPage() {
               );
             })}
           </div>
-          <p id="seed-hint" className={`mt-2.5 text-label ${!valid ? 'font-semibold text-sos' : 'text-ink-muted'}`}>
-            {!valid ? t('intro.seed.min') : t('intro.seed.hint')}
+          <p id="seed-hint" className={`mt-2.5 text-label ${!validAmount ? 'font-semibold text-sos' : 'text-ink-muted'}`}>
+            {!validAmount ? t('intro.seed.min') : t('intro.seed.hint')}
           </p>
-          {setBudget.isError ? (
+          {setBudget.isError || updateUser.isError ? (
             <p role="alert" className="mt-2 text-label font-semibold text-sos">
               {t('intro.seed.failed')}
             </p>

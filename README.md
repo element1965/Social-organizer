@@ -294,6 +294,7 @@ Route pages other than the guest landing are `React.lazy`. The Circle chunk is p
 | HowPage | `/how` | How it works |
 | LoginPage | `/login` | E-mail code, Telegram, Google, Apple |
 | IntroPage | `/intro` | First-run intro (`/onboarding` redirects here) |
+| SeedPage | `/seed` | First-run step after the intro: name (prefilled from the sign-up, required) and minimum participation |
 | CirclePage | `/` (signed in) | Circle: 3D graph, feed, tab bar |
 | AskPage | `/ask` | Ask for support (`/create` redirects here) |
 | AddPage | `/add`, `/add/qr`, `/add/scan` | Invite link, QR, scan |

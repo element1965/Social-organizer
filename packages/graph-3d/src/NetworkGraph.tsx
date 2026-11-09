@@ -1264,6 +1264,9 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
     let last = performance.now();
     let labelFrame = 0;
     const camPos = new THREE.Vector3();
+    // Labels that would sit on top of another label on screen (recomputed a few times a second)
+    const crowded = new Set<string>();
+    const projV = new THREE.Vector3();
     const flyV = new THREE.Vector3();
     const flyQ = new THREE.Quaternion();
     const flyQ2 = new THREE.Quaternion();
@@ -1397,6 +1400,29 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
         nearestRef.current = next;
       }
 
+      if (labelFrame % 6 === 1) {
+        // Greedy pass in screen space: the centre and path labels keep their place, the nearest others next;
+        // a label that falls within a label-sized box of one already kept is hidden until the view changes
+        const items: { id: string; x: number; y: number; prio: number; d2: number }[] = [];
+        for (const v of visRef.current.values()) {
+          if (!v.outer.parent || !v.label) continue;
+          v.outer.getWorldPosition(projV);
+          const d2 = projV.distanceToSquared(camPos);
+          projV.project(cam);
+          if (projV.z > 1) continue;
+          const onPath = pathRef.current.set.has(v.node.id) && !v.node.isDeleted;
+          items.push({ id: v.node.id, x: projV.x, y: projV.y, prio: v.node.isCenter ? 0 : onPath ? 1 : 2, d2 });
+        }
+        items.sort((a, b) => a.prio - b.prio || a.d2 - b.d2);
+        crowded.clear();
+        const kept: { x: number; y: number }[] = [];
+        for (const it of items) {
+          const hit = kept.some((k) => Math.abs(k.x - it.x) < 0.3 && Math.abs(k.y - it.y) < 0.13);
+          if (hit && it.prio === 2) crowded.add(it.id);
+          else kept.push(it);
+        }
+      }
+
       for (const v of visRef.current.values()) {
         if (!v.outer.parent) continue;
         const p = v.outer.position;
@@ -1425,7 +1451,7 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
           else if (now - v.unwantedAt >= LABEL_IDLE_MS) dropLabel(v);
         }
         if (v.label) {
-          v.label.visible = showLabel;
+          v.label.visible = showLabel && !crowded.has(v.node.id);
           const dimLabel = pathRef.current.dim && !pathRef.current.set.has(v.node.id);
           const mat = v.label.material as THREE.SpriteMaterial;
           const op = dimLabel ? DIM_OPACITY : 1;

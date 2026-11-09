@@ -471,7 +471,8 @@
     "logoutEmailOnly": "Come back the same way or with a code sent to <b/>.",
     "logoutGeneric": "You can come back the same way you signed in.",
     "notifyChannel": "Channel",
-    "notifyTelegramNotLinked": "Connect Telegram in Account to get messages there."
+    "notifyTelegramNotLinked": "Connect Telegram in Account to get messages there.",
+    "stakeSaved": "Saved"
   },
   "settings": {
     "title": "Settings",
@@ -1143,7 +1144,11 @@
       "sent": "Request sent.",
       "sentText": "Once {{name}} confirms, they become your 1st handshake.",
       "connected": "{{name}} is your 1st handshake.",
-      "go": "Save and continue"
+      "go": "Save and continue",
+      "name": "My name",
+      "namePlaceholder": "First and last name",
+      "nameHint": "This is how people in your circle will see you.",
+      "nameMin": "Enter your name"
     }
   },
   "add": {
