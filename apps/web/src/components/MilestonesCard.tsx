@@ -7,6 +7,10 @@ import { Avatar } from './ui/avatar';
 type Kind = 'FIRST_CONNECTION' | 'TEN_CONNECTIONS';
 
 /**
+ * @deprecated Replaced by feed rows and the congratulation sheet on the Circle
+ * (pages/CirclePage.tsx, hooks/useEvents.ts). Still used only by the old SettingsPage (WP5 removes it);
+ * delete this file together with SettingsPage.
+ *
  * Money MVP milestones (SO-44): first handshake and 10 direct confirmed connections.
  * Shows the fact, the date and, while still connected, the person it happened with.
  * A newly reached milestone gets one short confirmation inside the card (no push, no sound);

@@ -15,24 +15,23 @@ import {
   AddScanStub,
   AddStub,
   AskStub,
-  CircleStub,
   HelpStub,
   HistoryStub,
-  IntroStub,
   OpenStub,
-  PeopleStub,
   PersonStub,
   ProfileRedirect,
   ProfileStub,
-  SeedStub,
   StakeStub,
 } from './components/ui2/stubs';
 import { useAuth } from './hooks/useAuth';
+import { afterSignInPath, readPendingInvite, safeInviteToken, setPendingInvite } from './components/onboarding/flow';
 import { LoginPage } from './pages/LoginPage';
 import { LandingPage } from './pages/LandingPage';
 import { CollectionPage } from './pages/CollectionPage';
 import { RetiredFeaturePage } from './pages/RetiredFeaturePage';
 import { InvitePage } from './pages/InvitePage';
+import { IntroPage } from './pages/IntroPage';
+import { SeedPage } from './pages/SeedPage';
 import { SettingsPage } from './pages/SettingsPage';
 import { SosLandingPage } from './pages/SosLandingPage';
 import { SupportChatPage } from './pages/SupportChatPage';
@@ -43,6 +42,8 @@ import { HowPage } from './pages/HowPage';
 import { GetRedirect, RedirectHome } from './components/site/redirects';
 import { GoogleCallbackPage } from './pages/GoogleCallbackPage';
 import { AppleCallbackPage } from './pages/AppleCallbackPage';
+import { CirclePage } from './pages/CirclePage';
+import { PeoplePage } from './pages/PeoplePage';
 
 const isNativeApp = Capacitor.isNativePlatform();
 
@@ -84,10 +85,11 @@ function GoogleAuthDeepLinkHandler() {
           login(at, rt, uid);
           // Prefer the invite token carried through the OAuth round-trip (inv),
           // fall back to one saved before the browser was opened.
-          const pendingInvite = params.get('inv') || localStorage.getItem('pendingInviteToken');
+          const pendingInvite = safeInviteToken(params.get('inv')) || readPendingInvite();
           // Keep pendingInviteToken until InvitePage accepts it.
-          if (pendingInvite) localStorage.setItem('pendingInviteToken', pendingInvite);
-          navigate(pendingInvite ? `/invite/${pendingInvite}` : '/', { replace: true });
+          if (pendingInvite) setPendingInvite(pendingInvite);
+          // A new account goes through the intro first (components/onboarding/flow.ts)
+          navigate(afterSignInPath(params.get('isNew') === '1', pendingInvite ? `/invite/${pendingInvite}` : null), { replace: true });
         } else {
           navigate('/login', { replace: true });
         }
@@ -120,7 +122,7 @@ function HomeIndex() {
   }
 
   if (!isAuthenticated) return <LandingPage />;
-  return <CircleStub />;
+  return <CirclePage />;
 }
 
 const INVITE_REDIRECT_KEY = 'so.inviteRedirected';
@@ -210,8 +212,8 @@ export function App() {
             <Route path="/invite/:token" element={<InvitePage />} />
             <Route path="/sos/:collectionId" element={<SosLandingPage />} />
             <Route path="/how" element={<HowPage />} />
-            <Route path="/intro" element={<ProtectedRoute><IntroStub /></ProtectedRoute>} />
-            <Route path="/seed" element={<ProtectedRoute><SeedStub /></ProtectedRoute>} />
+            <Route path="/intro" element={<ProtectedRoute><IntroPage /></ProtectedRoute>} />
+            <Route path="/seed" element={<ProtectedRoute><SeedPage /></ProtectedRoute>} />
 
             <Route path="/dashboard" element={<Navigate to="/" replace />} />
             <Route path="/network" element={<Navigate to="/" replace />} />
@@ -246,8 +248,8 @@ export function App() {
               <Route path="/me/history" element={<HistoryStub />} />
               <Route path="/me/help" element={<HelpStub />} />
               <Route path="/me/settings" element={<SettingsPage />} />
-              <Route path="/people" element={<PeopleStub />} />
-              <Route path="/people/:ring" element={<PeopleStub />} />
+              <Route path="/people" element={<PeoplePage />} />
+              <Route path="/people/:ring" element={<PeoplePage />} />
               <Route path="/person/:id" element={<PersonStub />} />
               <Route path="/collection/:id" element={<CollectionPage />} />
               <Route path="/support" element={<SupportChatPage />} />

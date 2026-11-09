@@ -15,12 +15,9 @@ import {
   IconAdd,
   IconCircle,
   IconHelp,
-  IconMoon,
   IconPeople,
   IconPerson,
-  IconSun,
 } from './icons';
-import { Segmented } from './Segmented';
 import { isPushPath, shellSection, useShellMode, type ShellMode, type ShellSection } from './shell-mode';
 
 export type ThemeChoice = 'light' | 'dark' | 'system';
@@ -45,13 +42,6 @@ type ShellChromeProps = {
   /** Draw inside a preview frame instead of the viewport. */
   contained?: boolean;
 };
-
-const THEME_ORDER: ThemeChoice[] = ['system', 'light', 'dark'];
-
-function nextTheme(mode: ThemeChoice): ThemeChoice {
-  const index = THEME_ORDER.indexOf(mode);
-  return THEME_ORDER[(index + 1) % THEME_ORDER.length] ?? 'system';
-}
 
 function badgeLabel(count: number): string | null {
   if (count <= 0) return null;
@@ -113,8 +103,6 @@ export function ShellChrome({
   ask,
   unread = 0,
   user,
-  theme,
-  onTheme,
   interactive = true,
   contained = false,
 }: ShellChromeProps) {
@@ -123,8 +111,10 @@ export function ShellChrome({
   const activate = () => {
     if (interactive) selection();
   };
-  const rail = mode === 'rail';
-  const badge = mode === 'sidebar' ? badgeLabel(unread) : null;
+  // Tablet ('rail' layout mode) also gets the labelled sidebar, only narrower (product decision 2026-11-09).
+  const compact = mode === 'rail';
+  const rail = false;
+  const badge = mode === 'tabs' ? null : badgeLabel(unread);
   const helpCurrent = pathname === '/me/help';
 
   const circle = (
@@ -193,98 +183,51 @@ export function ShellChrome({
     );
   }
 
-  const addClass = cn(
-    'so-focus mt-3.5 flex items-center justify-center gap-2 rounded-md bg-ink font-bold text-canvas',
-    rail ? 'h-[52px] w-[52px]' : 'h-11 w-full text-body-s',
-    section === 'add' && 'outline outline-2 outline-offset-2 outline-care',
+  const addItem = (
+    <NavItem to="/add" label={t('nav.add')} active={section === 'add'} rail={rail} interactive={interactive} onActivate={activate}>
+      <IconAdd className="h-[22px] w-[22px]" />
+    </NavItem>
   );
-  const addInner = (
-    <>
-      <IconAdd className="h-5 w-5" />
-      {rail ? null : t('nav.addPerson')}
-    </>
-  );
-  const themeOptions: { value: ThemeChoice; label: string }[] = [
-    { value: 'system', label: t('common.themeAuto') },
-    { value: 'light', label: t('common.themeLight') },
-    { value: 'dark', label: t('common.themeDark') },
-  ];
 
   return (
     <aside
       className={cn(
-        'flex shrink-0 flex-col border-r border-line-soft bg-surface',
-        rail ? 'w-[76px] items-center px-2.5 py-4' : 'w-[240px] px-3 pb-4 pt-5',
+        // z-40 keeps the shell above page content; the column always fits the viewport and scrolls inside if needed
+        'relative z-40 flex min-h-0 shrink-0 flex-col overflow-y-auto overscroll-contain border-r border-line-soft bg-surface',
+        compact ? 'w-[200px] px-2.5 pb-3 pt-4' : 'w-[240px] px-3 pb-4 pt-5',
         contained ? 'h-full' : 'sticky top-[var(--sa-top)] h-[calc(100dvh-var(--sa-top))]',
       )}
     >
       {interactive ? (
-        <Link to="/" onClick={activate} className={cn('so-focus flex items-center gap-2.5 rounded-md', rail ? 'pb-4' : 'px-2.5 pb-[18px] pt-1')}>
-          <ShellBrandMark rail={rail} />
-          {rail ? null : <span className="text-body-s font-extrabold tracking-tight">{t('common.appName')}</span>}
+        <Link to="/" onClick={activate} className="so-focus flex shrink-0 items-center gap-2.5 rounded-md px-2.5 pb-[18px] pt-1">
+          <ShellBrandMark rail={false} />
+          <span className="truncate text-body-s font-extrabold tracking-tight">{t('common.appName')}</span>
         </Link>
       ) : (
-        <div className={cn('flex items-center gap-2.5', rail ? 'pb-4' : 'px-2.5 pb-[18px] pt-1')}>
-          <ShellBrandMark rail={rail} />
-          {rail ? null : <span className="text-body-s font-extrabold tracking-tight">{t('common.appName')}</span>}
+        <div className="flex shrink-0 items-center gap-2.5 px-2.5 pb-[18px] pt-1">
+          <ShellBrandMark rail={false} />
+          <span className="truncate text-body-s font-extrabold tracking-tight">{t('common.appName')}</span>
         </div>
       )}
-      <nav aria-label={t('nav.main')} className={cn('flex flex-col gap-0.5', rail && 'items-center')}>
+      {/* Same destinations as the phone tab bar, plus People */}
+      <nav aria-label={t('nav.main')} className="flex flex-col gap-0.5">
         {circle}
         {people}
         {askItem}
+        {addItem}
         {profile}
       </nav>
-      {interactive ? (
-        <Link to="/add" aria-label={t('nav.addPerson')} className={addClass} onClick={activate}>
-          {addInner}
-        </Link>
-      ) : (
-        <button type="button" aria-label={t('nav.addPerson')} className={addClass}>
-          {addInner}
-        </button>
-      )}
-      <div className={cn('mt-auto flex flex-col gap-0.5', rail ? 'items-center' : 'pt-4')}>
+      <div className="mt-auto flex shrink-0 flex-col gap-0.5 pt-4">
         <NavItem to="/me/help" label={t('nav.help')} active={helpCurrent} rail={rail} interactive={interactive} onActivate={activate}>
           <IconHelp className="h-[22px] w-[22px]" />
         </NavItem>
-        {rail ? (
-          <button
-            type="button"
-            aria-label={t('nav.theme')}
-            title={t('nav.theme')}
-            onClick={() => onTheme(nextTheme(theme))}
-            className="so-focus group relative grid h-[52px] w-[52px] place-items-center rounded-md text-ink-muted hover:text-ink"
-          >
-            {theme === 'dark' ? <IconSun className="h-[22px] w-[22px]" /> : <IconMoon className="h-[22px] w-[22px]" />}
-            <span className="pointer-events-none absolute left-[calc(100%+8px)] top-1/2 z-30 -translate-y-1/2 whitespace-nowrap rounded-sm bg-ink px-2 py-1 text-micro font-bold text-canvas opacity-0 group-hover:opacity-100">
-              {t('nav.theme')}
-            </span>
-          </button>
-        ) : (
-          <div className="px-1 py-2">
-            <Segmented
-              variant="inline"
-              label={t('nav.theme')}
-              value={theme}
-              onChange={onTheme}
-              options={themeOptions}
-              className="max-w-full"
-            />
-          </div>
-        )}
         {interactive ? (
-          <Link
-            to="/me"
-            onClick={activate}
-            aria-label={rail ? user.name || t('nav.profile') : undefined}
-            className={cn('so-focus flex items-center gap-2.5 rounded-md', rail ? 'p-1' : 'min-w-0 px-3 py-2.5')}
-          >
-            <UserFace user={user} compact={rail} />
+          <Link to="/me" onClick={activate} className="so-focus flex min-w-0 items-center gap-2.5 rounded-md px-3 py-2.5">
+            <UserFace user={user} />
           </Link>
         ) : (
-          <div className={cn('flex items-center gap-2.5 rounded-md', rail ? 'p-1' : 'min-w-0 px-3 py-2.5')}>
-            <UserFace user={user} compact={rail} />
+          <div className="flex min-w-0 items-center gap-2.5 rounded-md px-3 py-2.5">
+            <UserFace user={user} />
           </div>
         )}
       </div>
