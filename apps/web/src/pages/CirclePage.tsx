@@ -648,7 +648,7 @@ function DesktopCircle({ sidebar, graph, graphRef, empty, counts, hiddenRings, s
             </>
           )}
         </div>
-        <aside className={cn('flex min-h-0 shrink-0 flex-col overflow-y-auto', sidebar ? 'w-[400px] min-[1440px]:w-[440px]' : 'w-[320px]')}>
+        <aside className={cn('flex min-h-0 shrink-0 flex-col overflow-y-auto overflow-x-hidden', sidebar ? 'w-[400px] min-[1440px]:w-[440px]' : 'w-[320px]')}>
           {person ?? (
             <>
               {stats}
