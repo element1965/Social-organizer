@@ -556,6 +556,7 @@
     "questionPlaceholder": "Pertanyaan",
     "answerPlaceholder": "Jawaban",
     "deleteConfirm": "Hapus pertanyaan ini?",
+    "edit": "Ubah",
     "localized": "Diterjemahkan",
     "localizeAll": "Terjemahkan ke semua bahasa",
     "addPhoto": "Tambah foto",
@@ -626,7 +627,12 @@
     "triggering": "Menjalankan...",
     "triggerSuccess": "Rantai otomatis berhasil dijalankan",
     "triggerError": "Gagal menjalankan",
-    "urlPlaceholder": "https://..."
+    "urlPlaceholder": "https://...",
+    "deleteConfirm": "Hapus pesan ini?",
+    "statusPending": "Menunggu",
+    "statusSent": "Terkirim",
+    "statusCancelled": "Dibatalkan",
+    "statusFailed": "Gagal"
   },
   "contacts": {
     "telegram": "Telegram",
@@ -1087,7 +1093,8 @@
     "replyPlaceholder": "Balas...",
     "unknownUser": "Pengguna tidak diketahui",
     "attachFile": "Lampirkan file",
-    "photoAlt": "foto"
+    "photoAlt": "foto",
+    "file": "Berkas"
   },
   "videoGuide": {
     "play": "Tonton video petunjuk",

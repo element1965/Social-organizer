@@ -556,6 +556,7 @@
     "questionPlaceholder": "Câu hỏi",
     "answerPlaceholder": "Câu trả lời",
     "deleteConfirm": "Xóa câu hỏi này?",
+    "edit": "Sửa",
     "localized": "Đã dịch",
     "localizeAll": "Dịch sang tất cả ngôn ngữ",
     "addPhoto": "Thêm ảnh",
@@ -626,7 +627,12 @@
     "triggering": "Đang chạy...",
     "triggerSuccess": "Đã chạy chuỗi tự động",
     "triggerError": "Chạy không được",
-    "urlPlaceholder": "https://..."
+    "urlPlaceholder": "https://...",
+    "deleteConfirm": "Xóa tin nhắn này?",
+    "statusPending": "Đang chờ",
+    "statusSent": "Đã gửi",
+    "statusCancelled": "Đã hủy",
+    "statusFailed": "Thất bại"
   },
   "contacts": {
     "telegram": "Telegram",
@@ -1087,7 +1093,8 @@
     "replyPlaceholder": "Trả lời...",
     "unknownUser": "Người dùng không xác định",
     "attachFile": "Đính kèm tệp",
-    "photoAlt": "ảnh"
+    "photoAlt": "ảnh",
+    "file": "Tệp"
   },
   "videoGuide": {
     "play": "Xem video hướng dẫn",

@@ -556,6 +556,7 @@
     "questionPlaceholder": "问题",
     "answerPlaceholder": "回答",
     "deleteConfirm": "删除此问题？",
+    "edit": "编辑",
     "localized": "已翻译",
     "localizeAll": "翻译为所有语言",
     "addPhoto": "添加照片",
@@ -626,7 +627,12 @@
     "triggering": "正在运行…",
     "triggerSuccess": "自动链已成功触发",
     "triggerError": "触发失败",
-    "urlPlaceholder": "https://..."
+    "urlPlaceholder": "https://...",
+    "deleteConfirm": "删除这条消息？",
+    "statusPending": "待发送",
+    "statusSent": "已发送",
+    "statusCancelled": "已取消",
+    "statusFailed": "失败"
   },
   "contacts": {
     "telegram": "Telegram",
@@ -1087,7 +1093,8 @@
     "replyPlaceholder": "回复...",
     "unknownUser": "未知用户",
     "attachFile": "附加文件",
-    "photoAlt": "照片"
+    "photoAlt": "照片",
+    "file": "文件"
   },
   "videoGuide": {
     "play": "观看视频说明",

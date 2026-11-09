@@ -571,6 +571,7 @@
     "questionPlaceholder": "Запитання",
     "answerPlaceholder": "Відповідь",
     "deleteConfirm": "Видалити це запитання?",
+    "edit": "Змінити",
     "localized": "Перекладено",
     "localizeAll": "Перекласти на всі мови",
     "addPhoto": "Додати фото",
@@ -641,7 +642,12 @@
     "triggering": "Запуск...",
     "triggerSuccess": "Авторозсилку запущено",
     "triggerError": "Помилка запуску",
-    "urlPlaceholder": "https://..."
+    "urlPlaceholder": "https://...",
+    "deleteConfirm": "Видалити це повідомлення?",
+    "statusPending": "Очікує",
+    "statusSent": "Надіслано",
+    "statusCancelled": "Скасовано",
+    "statusFailed": "Не надіслано"
   },
   "contacts": {
     "telegram": "Telegram",
@@ -1108,7 +1114,8 @@
     "replyPlaceholder": "Відповісти...",
     "unknownUser": "Невідомий користувач",
     "attachFile": "Прикріпити файл",
-    "photoAlt": "фото"
+    "photoAlt": "фото",
+    "file": "Файл"
   },
   "videoGuide": {
     "play": "Дивитися відеоінструкцію",

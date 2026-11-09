@@ -561,6 +561,7 @@
     "questionPlaceholder": "Kysymys",
     "answerPlaceholder": "Vastaus",
     "deleteConfirm": "Poista tämä kysymys?",
+    "edit": "Muokkaa",
     "localized": "Käännetty",
     "localizeAll": "Käännä kaikille kielille",
     "addPhoto": "Lisää kuva",
@@ -631,7 +632,12 @@
     "triggering": "Käynnistetään...",
     "triggerSuccess": "Autoketju käynnistettiin",
     "triggerError": "Käynnistys epäonnistui",
-    "urlPlaceholder": "https://..."
+    "urlPlaceholder": "https://...",
+    "deleteConfirm": "Poistetaanko tämä viesti?",
+    "statusPending": "Odottaa",
+    "statusSent": "Lähetetty",
+    "statusCancelled": "Peruttu",
+    "statusFailed": "Epäonnistui"
   },
   "contacts": {
     "telegram": "Telegram",
@@ -1094,7 +1100,8 @@
     "replyPlaceholder": "Vastaa...",
     "unknownUser": "Tuntematon käyttäjä",
     "attachFile": "Liitä tiedosto",
-    "photoAlt": "kuva"
+    "photoAlt": "kuva",
+    "file": "Tiedosto"
   },
   "videoGuide": {
     "play": "Katso video-ohje",

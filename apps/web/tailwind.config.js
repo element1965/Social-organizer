@@ -1,13 +1,16 @@
 /**
  * Design tokens (redesign palette, green-black, from styles/tokens.css).
  *
- * Semantic colors read CSS variables and flip with html.dark, so new code
- * does not use a dark: variant. Legacy gray/blue/teal/red/amber ramps stay
- * mapped onto the same palette because a few screens that were not restyled
- * still use those classes (support chat, FAQ, assistant, broadcast).
+ * Semantic colors read CSS variables and flip with html.dark, so components
+ * do not use a dark: variant or the old gray/blue/teal/red/amber ramps.
  *
- * This file also fails the build when redesign files in apps/web/src contain
- * a hex color or a Tailwind dark: variant. tokens.css is the only exception.
+ * This file fails the build when a file under apps/web/src (.js, .jsx, .ts,
+ * .tsx, .css) or apps/web/index.html contains a hex color, a Tailwind dark:
+ * variant, an old color ramp (the default Tailwind palette plus a digit), or a
+ * bare white/black utility (bg, text, border, ring, fill, stroke, from, via,
+ * to, divide, outline, shadow).
+ * Brand marks (components/onboarding/brand.tsx, components/ui/social-icons.tsx)
+ * and styles/tokens.css are the only exceptions.
  */
 import fs from 'node:fs';
 import path from 'node:path';
@@ -19,12 +22,14 @@ const line = (alpha) => `rgb(var(--so-line) / ${alpha})`;
 const here = path.dirname(fileURLToPath(import.meta.url));
 const srcRoot = path.join(here, 'src');
 
-const lintTargets = [
-  path.join(srcRoot, 'components', 'ui2'),
-  path.join(srcRoot, 'App.tsx'),
-  path.join(srcRoot, 'index.css'),
-  path.join(srcRoot, 'styles', 'typography.css'),
-];
+const lintTargets = [srcRoot, path.join(here, 'index.html')];
+
+/** Brand colors and the token source. Everything else must use semantic tokens. */
+const lintSkip = new Set([
+  path.join(srcRoot, 'components', 'onboarding', 'brand.tsx'),
+  path.join(srcRoot, 'components', 'ui', 'social-icons.tsx'),
+  path.join(srcRoot, 'styles', 'tokens.css'),
+]);
 
 function walk(entry, out) {
   if (!fs.existsSync(entry)) return;
@@ -33,7 +38,7 @@ function walk(entry, out) {
     for (const name of fs.readdirSync(entry)) walk(path.join(entry, name), out);
     return;
   }
-  if (/\.(tsx?|css)$/.test(entry)) out.push(entry);
+  if (/\.(jsx?|tsx?|css|html)$/.test(entry)) out.push(entry);
 }
 
 /** Drop comments so a note like #123 is not read as a hex color. Newlines stay so line numbers match. */
@@ -49,11 +54,17 @@ function lintDesignTokens() {
   const problems = [];
   const hexRe = /#[0-9A-Fa-f]{3,8}\b/;
   const darkRe = /(^|[^A-Za-z0-9_-])dark:/;
+  const rampRe = /(^|[^A-Za-z0-9_-])(?:[a-z0-9-]+:)*(?:gray|slate|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)-\d{1,3}(?![A-Za-z0-9_-])/;
+  const bareRe = /(^|[^A-Za-z0-9_-])(?:[a-z0-9-]+:)*(?:bg|text|border|ring|fill|stroke|from|via|to|divide|outline|shadow)-(?:white|black)(?![A-Za-z0-9_-])/;
   for (const file of files) {
+    if (lintSkip.has(file)) continue;
     const lines = maskComments(fs.readFileSync(file, 'utf8')).split(/\r?\n/);
     lines.forEach((lineText, index) => {
-      if (hexRe.test(lineText)) problems.push(`${path.relative(here, file)}:${index + 1}: hex color`);
-      if (darkRe.test(lineText)) problems.push(`${path.relative(here, file)}:${index + 1}: dark: variant`);
+      const where = `${path.relative(here, file)}:${index + 1}`;
+      if (hexRe.test(lineText)) problems.push(`${where}: hex color`);
+      if (darkRe.test(lineText)) problems.push(`${where}: dark: variant`);
+      if (rampRe.test(lineText)) problems.push(`${where}: old color ramp`);
+      if (bareRe.test(lineText)) problems.push(`${where}: bare white or black`);
     });
   }
   if (problems.length > 0) {
@@ -62,76 +73,6 @@ function lintDesignTokens() {
 }
 
 lintDesignTokens();
-
-const ink = {
-  50: '#f3f6f4',
-  100: '#e9eeec',
-  200: '#d5deda',
-  300: '#b7c4bf',
-  400: '#8a9a95',
-  500: '#5c6d68',
-  600: '#3d524c',
-  700: '#2c3d38',
-  800: '#1c2622',
-  900: '#14211e',
-  950: '#121917',
-};
-
-const periwinkle = {
-  50: '#eef1fc',
-  100: '#dde3fa',
-  200: '#bcc6f4',
-  300: '#9aa8f0',
-  400: '#7486e2',
-  500: '#5468d4',
-  600: '#4557c4',
-  700: '#3946a3',
-  800: '#2f3a82',
-  900: '#283265',
-  950: '#1a2042',
-};
-
-const teal = {
-  50: '#e5f5f3',
-  100: '#c6eae3',
-  200: '#93d6ca',
-  300: '#5bbfae',
-  400: '#2bb3a4',
-  500: '#12917f',
-  600: '#087f71',
-  700: '#08675c',
-  800: '#0a524a',
-  900: '#0b433d',
-  950: '#042824',
-};
-
-const sos = {
-  50: '#fbeae8',
-  100: '#f6d4d1',
-  200: '#eeada8',
-  300: '#e08a82',
-  400: '#d2655c',
-  500: '#cc4d44',
-  600: '#c5342c',
-  700: '#a32c25',
-  800: '#7d241f',
-  900: '#5c1d19',
-  950: '#3c1012',
-};
-
-const warm = {
-  50: '#fdf1e3',
-  100: '#fbebcb',
-  200: '#f7d9a0',
-  300: '#f2be68',
-  400: '#eaa845',
-  500: '#d98f2b',
-  600: '#b8731f',
-  700: '#9a5a16',
-  800: '#77471d',
-  900: '#623b1b',
-  950: '#3a2a12',
-};
 
 /** @type {import('tailwindcss').Config} */
 export default {
@@ -159,16 +100,6 @@ export default {
         node: { 1: token('node-1'), 2: token('node-2'), 3: token('node-3') },
         success: token('care'),
         warning: token('warm'),
-        gray: ink,
-        slate: ink,
-        blue: periwinkle,
-        indigo: periwinkle,
-        teal,
-        green: teal,
-        emerald: teal,
-        red: sos,
-        amber: warm,
-        yellow: warm,
       },
       // Named scale, not `r-*`. `rounded-r-lg` is Tailwind's right-side utility.
       borderRadius: {

@@ -561,6 +561,7 @@
     "questionPlaceholder": "Spørsmål",
     "answerPlaceholder": "Svar",
     "deleteConfirm": "Slette dette spørsmålet?",
+    "edit": "Rediger",
     "localized": "Oversatt",
     "localizeAll": "Oversett til alle språk",
     "addPhoto": "Legg til bilde",
@@ -631,7 +632,12 @@
     "triggering": "Kjører...",
     "triggerSuccess": "Autokjeden er startet",
     "triggerError": "Kunne ikke starte",
-    "urlPlaceholder": "https://..."
+    "urlPlaceholder": "https://...",
+    "deleteConfirm": "Slette denne meldingen?",
+    "statusPending": "Venter",
+    "statusSent": "Sendt",
+    "statusCancelled": "Avbrutt",
+    "statusFailed": "Mislyktes"
   },
   "contacts": {
     "telegram": "Telegram",
@@ -1094,7 +1100,8 @@
     "replyPlaceholder": "Svar...",
     "unknownUser": "Ukjent bruker",
     "attachFile": "Legg ved fil",
-    "photoAlt": "bilde"
+    "photoAlt": "bilde",
+    "file": "Fil"
   },
   "videoGuide": {
     "play": "Se videoveiledningen",

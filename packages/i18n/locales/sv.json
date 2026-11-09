@@ -561,6 +561,7 @@
     "questionPlaceholder": "Fråga",
     "answerPlaceholder": "Svar",
     "deleteConfirm": "Ta bort denna fråga?",
+    "edit": "Redigera",
     "localized": "Översatt",
     "localizeAll": "Översätt till alla språk",
     "addPhoto": "Lägg till foto",
@@ -631,7 +632,12 @@
     "triggering": "Kör...",
     "triggerSuccess": "Autokedjan har startats",
     "triggerError": "Kunde inte starta",
-    "urlPlaceholder": "https://..."
+    "urlPlaceholder": "https://...",
+    "deleteConfirm": "Ta bort det här meddelandet?",
+    "statusPending": "Väntar",
+    "statusSent": "Skickat",
+    "statusCancelled": "Avbrutet",
+    "statusFailed": "Misslyckades"
   },
   "contacts": {
     "telegram": "Telegram",
@@ -1094,7 +1100,8 @@
     "replyPlaceholder": "Svara...",
     "unknownUser": "Okänd användare",
     "attachFile": "Bifoga fil",
-    "photoAlt": "foto"
+    "photoAlt": "foto",
+    "file": "Fil"
   },
   "videoGuide": {
     "play": "Se videoinstruktionen",
