@@ -35,7 +35,8 @@ export type FeedEvent = {
   hot: boolean;
   personId?: string;
   collectionId?: string;
-  notificationId?: string;
+  /** Every unread notification the row stands for: read or dismissed together. */
+  notificationIds?: string[];
   pendingId?: string;
   milestone?: MilestoneKind;
 };
@@ -89,7 +90,7 @@ export function useEvents(options: { displayName?: (id: string, fallback: string
   const name = options.displayName ?? ((_id: string, fallback: string) => fallback);
 
   const unread = trpc.notification.unreadCount.useQuery(undefined, { refetchInterval: POLL_MS });
-  const notifications = trpc.notification.list.useQuery({ limit: 30 }, { refetchInterval: 60_000 });
+  const notifications = trpc.notification.list.useQuery({ limit: 100 }, { refetchInterval: 60_000 });
   const incoming = trpc.pending.incoming.useQuery(undefined, { refetchInterval: POLL_MS });
   const outgoing = trpc.pending.myPending.useQuery(undefined, { refetchInterval: 60_000 });
   const participating = trpc.collection.myParticipating.useQuery(undefined, { refetchInterval: 60_000 });
@@ -114,24 +115,62 @@ export function useEvents(options: { displayName?: (id: string, fallback: string
 
   const events = useMemo<FeedEvent[]>(() => {
     const out: FeedEvent[] = [];
-    const seenCollections = new Set<string>();
     const items = (notifications.data?.items ?? []) as unknown as NotificationItem[];
 
+    // Collections I already joined: their requests are handled, they show as "Discussion" rows.
+    const joined = new Map<string, { amount: number; at: number; creator: Person; id: string; ids: string[] }>();
+    for (const o of participating.data ?? []) {
+      const c = o.collection;
+      if (!c || c.status !== 'ACTIVE' || o.unsubscribedAt || c.creatorId === myId) continue;
+      const prev = joined.get(c.id);
+      joined.set(c.id, {
+        id: c.id,
+        amount: (prev?.amount ?? 0) + o.amount,
+        at: Math.max(prev?.at ?? 0, new Date(o.createdAt).getTime()),
+        creator: c.creator,
+        ids: prev?.ids ?? [],
+      });
+    }
+
+    // One row per collection and kind; every unread notification it collapses is carried along,
+    // so opening or dismissing the row clears all of them. Items arrive newest first.
+    const rows = new Map<string, FeedEvent>();
+    const covered = new Set<string>();
     for (const n of items) {
       if (n.status !== 'UNREAD' || !n.collection) continue;
       const c = n.collection;
-      const creator = name(c.creator.id, c.creator.name);
-      const at = new Date(n.createdAt).getTime();
-      const base = { id: `n:${n.id}`, at, notificationId: n.id, collectionId: c.id, personId: c.creator.id };
+      const isRequest = REQUEST_TYPES.has(n.type);
+      const isCycle = n.type === 'CYCLE_RENEWED' || n.type === 'CYCLE_RENEWAL_REMINDER';
 
-      if (REQUEST_TYPES.has(n.type)) {
-        if (c.status !== 'ACTIVE' || seenCollections.has(c.id)) continue;
-        seenCollections.add(c.id);
+      if (isRequest && joined.has(c.id)) {
+        joined.get(c.id)!.ids.push(n.id);
+        continue;
+      }
+
+      const group = isRequest ? 'request' : isCycle ? 'cycle' : n.type;
+      const key = `${group}:${c.id}`;
+      const existing = rows.get(key);
+      if (existing) {
+        existing.notificationIds!.push(n.id);
+        continue;
+      }
+
+      const creator = name(c.creator.id, c.creator.name);
+      const base = {
+        id: `n:${key}`,
+        at: new Date(n.createdAt).getTime(),
+        notificationIds: [n.id],
+        collectionId: c.id,
+        personId: c.creator.id,
+      };
+
+      if (isRequest) {
+        if (c.status !== 'ACTIVE') continue;
         const path = n.handshakePathResolved ?? [];
         // Path runs from the author to me: the person next to me is the one I know.
         const near = path.length > 2 ? path[path.length - 2] : undefined;
         const kind = c.type === 'REGULAR' ? t('circle.feed.every') : t('circle.feed.once');
-        out.push({
+        rows.set(key, {
           ...base,
           kind: 'request',
           title: creator,
@@ -142,15 +181,11 @@ export function useEvents(options: { displayName?: (id: string, fallback: string
           amountValue: c.amount,
           hot: true,
         });
-        continue;
-      }
-
-      if (n.type === 'CYCLE_RENEWED' || n.type === 'CYCLE_RENEWAL_REMINDER') {
+      } else if (isCycle) {
         const end = cycleEnd(n);
         const total = (c.obligations ?? []).reduce((sum, o) => sum + o.amount, 0);
         const date = end ? dateFmt.format(end) : '';
-        seenCollections.add(c.id);
-        out.push({
+        rows.set(key, {
           ...base,
           kind: 'cycle',
           title: creator,
@@ -160,23 +195,18 @@ export function useEvents(options: { displayName?: (id: string, fallback: string
               : t('circle.feed.cycle', { date }),
           hot: n.type === 'CYCLE_RENEWED',
         });
+      } else if (n.type === 'COLLECTION_CLOSED') {
+        rows.set(key, { ...base, kind: 'closed', title: creator, subtitle: t('circle.feed.closed'), hot: false });
+      } else if (n.type === 'COLLECTION_BLOCKED') {
+        rows.set(key, { ...base, kind: 'blocked', title: creator, subtitle: t('circle.feed.blocked'), hot: false });
+      } else if (n.type === 'NEW_OBLIGATION') {
+        rows.set(key, { ...base, kind: 'joined', title: t('circle.feed.joinedTitle'), subtitle: t('circle.feed.joined'), hot: false });
+      } else {
         continue;
       }
-
-      if (n.type === 'COLLECTION_CLOSED') {
-        seenCollections.add(c.id);
-        out.push({ ...base, kind: 'closed', title: creator, subtitle: t('circle.feed.closed'), hot: false });
-        continue;
-      }
-      if (n.type === 'COLLECTION_BLOCKED') {
-        seenCollections.add(c.id);
-        out.push({ ...base, kind: 'blocked', title: creator, subtitle: t('circle.feed.blocked'), hot: false });
-        continue;
-      }
-      if (n.type === 'NEW_OBLIGATION') {
-        out.push({ ...base, kind: 'joined', title: t('circle.feed.joinedTitle'), subtitle: t('circle.feed.joined'), hot: false });
-      }
+      covered.add(c.id);
     }
+    out.push(...rows.values());
 
     for (const p of incoming.data ?? []) {
       out.push({
@@ -205,7 +235,7 @@ export function useEvents(options: { displayName?: (id: string, fallback: string
 
     for (const col of mine.data ?? []) {
       if (col.status !== 'ACTIVE') continue;
-      seenCollections.add(col.id);
+      covered.add(col.id);
       out.push({
         id: `mine:${col.id}`,
         kind: 'mine',
@@ -220,21 +250,9 @@ export function useEvents(options: { displayName?: (id: string, fallback: string
       });
     }
 
-    // One row per collection I take part in, unless a fresher event already covers it.
-    const byCollection = new Map<string, { amount: number; at: number; creator: Person; id: string }>();
-    for (const o of participating.data ?? []) {
-      const c = o.collection;
-      if (!c || c.status !== 'ACTIVE' || o.unsubscribedAt || c.creatorId === myId) continue;
-      const prev = byCollection.get(c.id);
-      byCollection.set(c.id, {
-        id: c.id,
-        amount: (prev?.amount ?? 0) + o.amount,
-        at: Math.max(prev?.at ?? 0, new Date(o.createdAt).getTime()),
-        creator: c.creator,
-      });
-    }
-    for (const row of byCollection.values()) {
-      if (seenCollections.has(row.id)) continue;
+    // One row per collection I take part in, unless a fresher event (cycle, closed) covers it.
+    for (const row of joined.values()) {
+      if (covered.has(row.id)) continue;
       out.push({
         id: `part:${row.id}`,
         kind: 'participating',
@@ -244,6 +262,7 @@ export function useEvents(options: { displayName?: (id: string, fallback: string
         hot: false,
         collectionId: row.id,
         personId: row.creator.id,
+        notificationIds: row.ids.length ? row.ids : undefined,
       });
     }
 

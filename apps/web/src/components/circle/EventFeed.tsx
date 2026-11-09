@@ -1,9 +1,9 @@
-import type { ReactNode } from 'react';
+import { useRef, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { EventRow } from '../ui2/EventRow';
 import { IconBell, IconHand, IconUserPlus } from '../ui2/icons';
 import type { FeedEvent, FeedKind } from '../../hooks/useEvents';
-import { IconClock, IconDone, IconPause, IconRepeat } from './icons';
+import { IconClock, IconClose, IconDone, IconPause, IconRepeat } from './icons';
 
 const ICONS: Record<FeedKind, ReactNode> = {
   request: <IconBell className="h-5 w-5" />,
@@ -34,6 +34,7 @@ function startOfToday(): number {
 
 export function EventFeed({ events, loading, onOpen, onDismiss, dayLabels = false }: EventFeedProps) {
   const { t } = useTranslation();
+  const swipedAt = useRef(0);
 
   if (loading && events.length === 0) {
     return (
@@ -61,19 +62,46 @@ export function EventFeed({ events, loading, onOpen, onDismiss, dayLabels = fals
         <section key={group.label ?? 'all'}>
           {group.label ? <h3 className="mx-1 mb-2 mt-1 text-label font-bold text-ink-muted">{group.label}</h3> : null}
           <ul className="flex flex-col gap-2 pb-2">
-            {group.rows.map((event) => (
-              <li key={event.id}>
-                <EventRow
-                  icon={ICONS[event.kind]}
-                  title={event.title}
-                  subtitle={event.subtitle}
-                  amount={event.amount}
-                  hot={event.hot}
-                  onClick={() => onOpen(event)}
-                  onDismiss={event.notificationId ? () => onDismiss(event) : undefined}
-                />
-              </li>
-            ))}
+            {group.rows.map((event) => {
+              const dismissable = Boolean(event.notificationIds?.length);
+              const remove = () => {
+                // EventRow fires its click right after a swipe; swallow that click.
+                swipedAt.current = Date.now();
+                onDismiss(event);
+              };
+              return (
+                <li
+                  key={event.id}
+                  className="group relative"
+                  onKeyDown={(e) => {
+                    if (dismissable && (e.key === 'Delete' || e.key === 'Backspace')) remove();
+                  }}
+                >
+                  <EventRow
+                    icon={ICONS[event.kind]}
+                    title={event.title}
+                    subtitle={event.subtitle}
+                    amount={event.amount}
+                    hot={event.hot}
+                    onClick={() => {
+                      if (Date.now() - swipedAt.current < 400) return;
+                      onOpen(event);
+                    }}
+                    onDismiss={dismissable ? remove : undefined}
+                  />
+                  {dismissable ? (
+                    <button
+                      type="button"
+                      onClick={remove}
+                      aria-label={t('circle.feed.dismiss', { name: event.title })}
+                      className="so-focus absolute -right-1 -top-1 grid h-6 w-6 place-items-center rounded-full bg-surface-2 text-ink-muted opacity-0 shadow-float transition-opacity focus:opacity-100 group-hover:opacity-100 motion-reduce:transition-none"
+                    >
+                      <IconClose className="h-3 w-3" />
+                    </button>
+                  ) : null}
+                </li>
+              );
+            })}
           </ul>
         </section>
       ))}

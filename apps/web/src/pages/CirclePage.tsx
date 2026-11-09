@@ -11,7 +11,8 @@ import { Button } from '../components/ui2/Button';
 import { MainBar } from '../components/ui2/MainBar';
 import { Sheet } from '../components/ui2/Sheet';
 import { useShellMode } from '../components/ui2/shell-mode';
-import { IconBack, IconBell, IconCircle, IconSearch } from '../components/ui2/icons';
+import { BrandMark } from '../components/ui2/BrandMark';
+import { IconBack, IconBell, IconSearch } from '../components/ui2/icons';
 import { CircleGraph, type CircleGraphHandle } from '../components/circle/CircleGraph';
 import { useCircleStore, type Ring } from '../components/circle/circle-store';
 import { AcquaintSheet, type AcquaintRequest } from '../components/circle/AcquaintSheet';
@@ -71,9 +72,10 @@ export function CirclePage() {
 
   const [params, setParams] = useSearchParams();
   const selectedId = params.get('person');
-  const layer: Layer = selectedId ? 'person' : params.get('graph') ? 'graph' : 'feed';
+  // The graph layer exists only on the phone; tablet and desktop always show scene and feed.
+  const layer: Layer = selectedId ? 'person' : params.get('graph') && phone ? 'graph' : 'feed';
 
-  const graphRef = useRef<(CircleGraphHandle & { resume: () => void }) | null>(null);
+  const graphRef = useRef<CircleGraphHandle | null>(null);
   const lastNodeTap = useRef(0);
   const [acquaint, setAcquaint] = useState<AcquaintRequest | null>(null);
   const [pathOpen, setPathOpen] = useState(false);
@@ -97,29 +99,51 @@ export function CirclePage() {
     (next: Layer, personId?: string) => {
       const search = next === 'person' && personId ? `?person=${encodeURIComponent(personId)}` : next === 'graph' ? '?graph=1' : '';
       if (next === 'feed') {
-        if ((location.state as { pushed?: boolean } | null)?.pushed) navigate(-1);
+        // Only step back over an entry this page pushed itself; a cold load or a deep link
+        // (initial history entry) replaces instead, so Back never leaves the app.
+        const pushed = (location.state as { pushed?: boolean } | null)?.pushed && location.key !== 'default';
+        if (pushed) navigate(-1);
         else setParams({}, { replace: true });
         return;
       }
       // Stack one entry over the feed; switching between graph and person replaces it.
       const replace = layer !== 'feed';
-      navigate({ pathname: '/', search }, { replace, state: { pushed: true } });
+      const pushed = replace ? Boolean((location.state as { pushed?: boolean } | null)?.pushed) : true;
+      navigate({ pathname: '/', search }, { replace, state: { pushed } });
     },
-    [layer, location.state, navigate, setParams],
+    [layer, location.key, location.state, navigate, setParams],
   );
 
   const closeCard = useCallback(() => {
-    graphRef.current?.resume();
     if (phone) openLayer('graph');
     else openLayer('feed');
   }, [openLayer, phone]);
 
+  // Telegram BackButton closes the card, then the graph (phone layers only).
   useEffect(() => {
-    if (!isTelegramWebApp() || layer === 'feed') return;
-    const back = () => navigate(-1);
+    if (!isTelegramWebApp() || !phone || layer === 'feed') return;
+    const back = () => (layer === 'person' ? closeCard() : openLayer('feed'));
     showBackButton(back);
     return () => hideBackButton(back);
-  }, [layer, navigate]);
+  }, [closeCard, layer, openLayer, phone]);
+
+  // A person outside the loaded graph (deep link, old link) opens the Person screen instead.
+  useEffect(() => {
+    if (!selectedId || !net.slice.isSuccess || net.people.has(selectedId)) return;
+    navigate(`/person/${encodeURIComponent(selectedId)}`, { replace: true });
+  }, [selectedId, net.slice.isSuccess, net.people, navigate]);
+
+  // Escape closes the card, then the graph (unless a sheet has the focus and handles it).
+  useEffect(() => {
+    if (layer === 'feed') return;
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key !== 'Escape' || document.querySelector('[role="dialog"]')) return;
+      if (layer === 'person') closeCard();
+      else openLayer('feed');
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [closeCard, layer, openLayer]);
 
   // Gesture hint: once per session, three seconds, the first time the graph opens.
   useEffect(() => {
@@ -203,7 +227,7 @@ export function CirclePage() {
 
   const openEvent = useCallback(
     (event: FeedEvent) => {
-      if (event.notificationId) markRead.mutate({ id: event.notificationId });
+      for (const id of event.notificationIds ?? []) markRead.mutate({ id });
       switch (event.kind) {
         case 'incoming':
           if (event.pendingId && event.personId) {
@@ -227,15 +251,19 @@ export function CirclePage() {
   );
 
   // First handshake: one short congratulation sheet, once (screens.md, "Milestones").
+  // It waits while another sheet is open (acquaintance, path to request, contacts…).
   const autoMilestone = useRef(false);
+  const firstMilestone = events.some((e) => e.kind === 'milestone' && e.milestone === 'FIRST_CONNECTION');
+  const otherSheetOpen = acquaint != null || pathOpen;
   useEffect(() => {
-    if (autoMilestone.current) return;
-    const first = events.find((e) => e.kind === 'milestone' && e.milestone === 'FIRST_CONNECTION');
-    if (first) {
+    if (autoMilestone.current || !firstMilestone || otherSheetOpen) return;
+    const timer = window.setTimeout(() => {
+      if (document.querySelector('[role="dialog"]')) return;
       autoMilestone.current = true;
       setMilestone('FIRST_CONNECTION');
-    }
-  }, [events]);
+    }, 600);
+    return () => window.clearTimeout(timer);
+  }, [firstMilestone, otherSheetOpen]);
 
   const closeMilestone = () => {
     if (milestone) markMilestone.mutate({ kind: milestone });
@@ -263,6 +291,7 @@ export function CirclePage() {
       hiddenRings={hiddenRings}
       onNodeTap={onNodeTap}
       initialView={savedView}
+      resumeKey={`${layer}:${selectedId ?? ''}`}
       dimmed={layer === 'person' && phone}
     />
   );
@@ -279,7 +308,9 @@ export function CirclePage() {
         loading={loading}
         dayLabels={phone}
         onOpen={openEvent}
-        onDismiss={(event) => event.notificationId && dismiss.mutate({ id: event.notificationId })}
+        onDismiss={(event) => {
+          for (const id of event.notificationIds ?? []) dismiss.mutate({ id });
+        }}
       />
     </>
   );
@@ -331,10 +362,7 @@ export function CirclePage() {
       hint={hint}
       person={cardPerson ? <PersonCard person={cardPerson} variant="floating" onClose={closeCard} /> : null}
       onOpenGraph={() => openLayer('graph')}
-      onBackToFeed={() => {
-        graphRef.current?.resume();
-        openLayer('feed');
-      }}
+      onBackToFeed={() => openLayer('feed')}
       onSceneTap={() => {
         // A node tap fires first; an empty-space tap opens the graph or closes the card.
         window.setTimeout(() => {
@@ -353,7 +381,7 @@ export function CirclePage() {
 type PhoneProps = {
   layer: Layer;
   graph: React.ReactNode;
-  graphRef: React.RefObject<(CircleGraphHandle & { resume: () => void }) | null>;
+  graphRef: React.RefObject<CircleGraphHandle | null>;
   empty: boolean;
   counts: Record<Ring, number>;
   hiddenRings: Ring[];
@@ -446,9 +474,7 @@ function PhoneCircle({
         )}
       >
         <div className="mb-2.5 flex items-center gap-2 text-body-s font-extrabold tracking-tight text-node-1">
-          <span className="grid h-[26px] w-[26px] place-items-center rounded-sm bg-care text-care-on">
-            <IconCircle className="h-4 w-4" />
-          </span>
+          <BrandMark size={26} />
           {t('common.appName')}
         </div>
         <div className={feedLayer ? 'pointer-events-auto' : undefined}>{stats}</div>
@@ -463,7 +489,7 @@ function PhoneCircle({
           ease,
           feedLayer ? 'pointer-events-none -translate-y-2.5 opacity-0' : 'opacity-100',
         )}
-        tabIndex={feedLayer ? -1 : 0}
+        inert={feedLayer}
       >
         <IconBack className="h-[18px] w-[18px]" />
         {t('nav.circle')}
@@ -503,7 +529,7 @@ function PhoneCircle({
           height: sheetH,
           transform: feedLayer ? (drag ? `translateY(${drag}px)` : undefined) : `translateY(${sheetH + 16}px)`,
         }}
-        aria-hidden={!feedLayer}
+        inert={!feedLayer}
       >
         <div
           className="grid h-[26px] shrink-0 cursor-grab touch-none place-items-center"
@@ -515,7 +541,7 @@ function PhoneCircle({
             setDrag(null);
           }}
           role="button"
-          tabIndex={feedLayer ? 0 : -1}
+          tabIndex={0}
           aria-label={t('circle.openGraph')}
           onKeyDown={(event) => {
             if (event.key === 'Enter' || event.key === ' ') onOpenGraph();
@@ -535,7 +561,7 @@ function PhoneCircle({
           ease,
           layer === 'graph' ? 'opacity-100' : 'pointer-events-none translate-y-20 opacity-0',
         )}
-        tabIndex={layer === 'graph' ? 0 : -1}
+        inert={layer !== 'graph'}
       >
         <i className="grid h-[22px] min-w-[22px] place-items-center rounded-[7px] bg-care px-1 text-micro font-bold not-italic text-care-on">
           {eventsCount}
@@ -558,9 +584,7 @@ function EmptyScene({ name }: { name: string }) {
     <div className="absolute inset-0 grid place-items-center" aria-hidden>
       <div className="relative grid h-56 w-56 place-items-center rounded-full border border-dashed border-node-2/35">
         <div className="flex flex-col items-center gap-2">
-          <span className="grid h-12 w-12 place-items-center rounded-[14px] bg-care text-care-on shadow-[0_0_40px_rgb(var(--so-care-scene)/0.35)]">
-            <IconCircle className="h-6 w-6" />
-          </span>
+          <BrandMark size={48} className="shadow-[0_0_40px_rgb(var(--so-care-scene)/0.35)]" />
           <span className="text-body-s font-extrabold text-node-1">{name}</span>
         </div>
       </div>
@@ -573,7 +597,7 @@ function EmptyScene({ name }: { name: string }) {
 type DesktopProps = {
   sidebar: boolean;
   graph: React.ReactNode;
-  graphRef: React.RefObject<(CircleGraphHandle & { resume: () => void }) | null>;
+  graphRef: React.RefObject<CircleGraphHandle | null>;
   empty: boolean;
   counts: Record<Ring, number>;
   hiddenRings: Ring[];
