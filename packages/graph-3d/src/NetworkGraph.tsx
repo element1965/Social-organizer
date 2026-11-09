@@ -127,7 +127,6 @@ const MARK_SIZE = 10;            // centre tile, world units
 const NEAREST_LABELS = 8;        // labels on the nearest ring-1/2 nodes, plus the path
 const PATH_CURVE = 0.15;         // slight bend; 0 is a straight line
 const DIM_OPACITY = 0.35;
-const LINK_POINTS = 21;          // fixed buffer; never resized (straight links use the same curve with curvature 0)
 const LABEL_IDLE_MS = 2000;
 const LABEL_CAP = 30;
 
@@ -182,7 +181,12 @@ interface NodeVis {
   outer: THREE.Group;      // positioned by the force graph
   inner: THREE.Group;      // scaled (intro/hover) and bobbing
   avatar: THREE.Sprite;
+  /** Never rendered (DotLayer draws the dots); keeps the size and lets tap / hover find the node. */
   dot: THREE.Sprite;
+  /** Dot colour (linear rgb) and alpha for DotLayer */
+  dotRgba: [number, number, number, number];
+  /** Squared distance to the camera this frame (dot sorting) */
+  d2: number;
   glow: THREE.Sprite | null;
   label: SpriteText | null;
   pulse: THREE.Sprite | null;
@@ -198,12 +202,6 @@ interface NodeVis {
   unwantedAt: number;
   /** Last time the label was wanted. LRU evicts the oldest non-centre, non-path labels. */
   wantedAt: number;
-}
-
-interface SimLink {
-  source: string | SimNode;
-  target: string | SimNode;
-  __lineObj?: THREE.Object3D;
 }
 
 interface PathState {
@@ -251,123 +249,235 @@ function labelLines(name: string, center: boolean): string {
   return `${first}\n${parts.slice(1).join(' ')}`;
 }
 
-function endpointNode(end: string | SimNode | undefined, map: Map<string, SimNode>): SimNode | undefined {
-  if (!end) return undefined;
-  if (typeof end === 'object') return end;
-  return map.get(String(end));
+/* ---------- Batched layers: one draw call for all links, one for all dots ---------- */
+
+const PATH_SEGMENTS = 20;        // a highlighted (curved) link is drawn with this many segments
+const tmpColor = new THREE.Color();
+
+/** sRGB hex → linear rgb into `out` at `i` (vertex colours are in the working colour space). */
+function writeLinear(out: Float32Array, i: number, hex: number, alpha: number) {
+  tmpColor.setHex(hex);
+  out[i] = tmpColor.r;
+  out[i + 1] = tmpColor.g;
+  out[i + 2] = tmpColor.b;
+  out[i + 3] = alpha;
 }
 
-const LINK_EPS = 0.04;
+interface LinkEnds {
+  a: SimNode;
+  b: SimNode;
+  /** `${a.id}\0${b.id}` as given in the data, for the path lookup */
+  key: string;
+}
 
 /**
- * Own the line geometry. The buffer is allocated once at LINK_POINTS and never replaced.
- * Curvature 0 is the same curve with the control point on the midpoint, so the library
- * can keep linkCurvature at 0 and stop swapping attributes. Skip the write when the
- * endpoints, bend, and ink are unchanged. Do not touch matrixAutoUpdate.
+ * Every link of the graph in two draw calls instead of one per link: all straight links in one
+ * LineSegments with per-vertex colour and alpha, and the few links of a highlighted path, curved,
+ * in a second one on top. Positions are rewritten only while the layout moves.
  */
-function updateOwnedLink(
-  line: THREE.Line,
-  ax: number, ay: number, az: number,
-  bx: number, by: number, bz: number,
-  curvature: number,
-  color: number,
-  opacity: number,
-) {
-  const ud = line.userData;
-  const geom = line.geometry;
-  const prev = geom.getAttribute('position') as THREE.BufferAttribute | undefined;
-  const samePos = prev?.count === LINK_POINTS
-    && typeof ud.lx === 'number'
-    && Math.abs((ud.lx as number) - ax) < LINK_EPS
-    && Math.abs((ud.ly as number) - ay) < LINK_EPS
-    && Math.abs((ud.lz as number) - az) < LINK_EPS
-    && Math.abs((ud.mx as number) - bx) < LINK_EPS
-    && Math.abs((ud.my as number) - by) < LINK_EPS
-    && Math.abs((ud.mz as number) - bz) < LINK_EPS
-    && ud.cv === curvature;
-  const ownedMat = ud.soLineMat as THREE.Material | undefined;
-  const sameInk = ud.lc === color
-    && typeof ud.lo === 'number'
-    && Math.abs((ud.lo as number) - opacity) < 0.01
-    && !!ownedMat
-    && !ownedMat.userData.dead
-    && line.material === ownedMat;
-  if (samePos && sameInk) return;
-  if (!samePos) {
-    let attr = prev;
-    if (!attr || attr.count !== LINK_POINTS) {
-      attr = new THREE.BufferAttribute(new Float32Array(LINK_POINTS * 3), 3);
-      geom.setAttribute('position', attr);
+class LinkLayer {
+  readonly group = new THREE.Group();
+  private readonly plainGeom = new THREE.BufferGeometry();
+  private readonly pathGeom = new THREE.BufferGeometry();
+  private readonly plainMat = new THREE.LineBasicMaterial({ vertexColors: true, transparent: true, depthWrite: false });
+  private readonly pathMat = new THREE.LineBasicMaterial({ transparent: true, depthWrite: false });
+  private links: LinkEnds[] = [];
+  private onPath: LinkEnds[] = [];
+  private pos = new Float32Array(0);
+  private col = new Float32Array(0);
+  private pathPos = new Float32Array(0);
+
+  constructor() {
+    const plain = new THREE.LineSegments(this.plainGeom, this.plainMat);
+    const path = new THREE.LineSegments(this.pathGeom, this.pathMat);
+    for (const obj of [plain, path]) {
+      obj.raycast = noRaycast;
+      obj.frustumCulled = false;
+      this.group.add(obj);
     }
-    const arr = attr.array as Float32Array;
-    const segments = LINK_POINTS - 1;
-    let cx: number;
-    let cy: number;
-    let cz: number;
-    if (curvature <= 0) {
-      cx = (ax + bx) / 2;
-      cy = (ay + by) / 2;
-      cz = (az + bz) / 2;
-    } else {
-      const dx = bx - ax;
-      const dy = by - ay;
-      const dz = bz - az;
-      if (dx === 0 && dy === 0) {
-        cx = (ax + bx) / 2 + curvature * -dz;
-        cy = (ay + by) / 2;
-        cz = (az + bz) / 2 + curvature * dx;
-      } else {
-        cx = (ax + bx) / 2 + curvature * dy;
-        cy = (ay + by) / 2 - curvature * dx;
-        cz = (az + bz) / 2;
+    // Under the nodes; the path over the other links
+    plain.renderOrder = -2;
+    path.renderOrder = -1;
+    this.group.name = 'so-links';
+  }
+
+  setLinks(links: LinkEnds[]) {
+    this.links = links;
+    this.pos = new Float32Array(links.length * 6);
+    this.col = new Float32Array(links.length * 8);
+    const posAttr = new THREE.BufferAttribute(this.pos, 3).setUsage(THREE.DynamicDrawUsage);
+    const colAttr = new THREE.BufferAttribute(this.col, 4).setUsage(THREE.DynamicDrawUsage);
+    this.plainGeom.setAttribute('position', posAttr);
+    this.plainGeom.setAttribute('color', colAttr);
+    this.plainGeom.setDrawRange(0, links.length * 2);
+  }
+
+  /** Colours and the path set. Cheap; call when the path, hidden rings or palette change. */
+  paint(opts: {
+    isPath: (key: string) => boolean;
+    shown: (n: SimNode) => boolean;
+    plain: number; plainOp: number;
+    care: number; careOp: number;
+  }) {
+    const onPath: LinkEnds[] = [];
+    for (let i = 0; i < this.links.length; i++) {
+      const l = this.links[i]!;
+      const shown = opts.shown(l.a) && opts.shown(l.b);
+      const path = shown && opts.isPath(l.key);
+      if (path) onPath.push(l);
+      const alpha = shown && !path ? opts.plainOp : 0;
+      writeLinear(this.col, i * 8, opts.plain, alpha);
+      writeLinear(this.col, i * 8 + 4, opts.plain, alpha);
+    }
+    const colAttr = this.plainGeom.getAttribute('color') as THREE.BufferAttribute | undefined;
+    if (colAttr) colAttr.needsUpdate = true;
+
+    this.onPath = onPath;
+    this.pathPos = new Float32Array(onPath.length * PATH_SEGMENTS * 6);
+    this.pathGeom.setAttribute('position', new THREE.BufferAttribute(this.pathPos, 3).setUsage(THREE.DynamicDrawUsage));
+    this.pathGeom.setDrawRange(0, onPath.length * PATH_SEGMENTS * 2);
+    this.pathMat.color.setHex(opts.care);
+    this.pathMat.opacity = opts.careOp;
+  }
+
+  /** Writes link positions from the current node positions. */
+  update() {
+    const p = this.pos;
+    for (let i = 0; i < this.links.length; i++) {
+      const { a, b } = this.links[i]!;
+      const o = i * 6;
+      p[o] = a.x ?? 0; p[o + 1] = a.y ?? 0; p[o + 2] = a.z ?? 0;
+      p[o + 3] = b.x ?? 0; p[o + 4] = b.y ?? 0; p[o + 5] = b.z ?? 0;
+    }
+    const posAttr = this.plainGeom.getAttribute('position') as THREE.BufferAttribute | undefined;
+    if (posAttr) posAttr.needsUpdate = true;
+
+    // Path links: a slight quadratic bend, as before
+    const q = this.pathPos;
+    let w = 0;
+    for (const { a, b } of this.onPath) {
+      const ax = a.x ?? 0, ay = a.y ?? 0, az = a.z ?? 0;
+      const bx = b.x ?? 0, by = b.y ?? 0, bz = b.z ?? 0;
+      const dx = bx - ax, dy = by - ay, dz = bz - az;
+      let cx = (ax + bx) / 2, cy = (ay + by) / 2, cz = (az + bz) / 2;
+      if (dx === 0 && dy === 0) { cx += PATH_CURVE * -dz; cz += PATH_CURVE * dx; }
+      else { cx += PATH_CURVE * dy; cy -= PATH_CURVE * dx; }
+      let px = ax, py = ay, pz = az;
+      for (let s = 1; s <= PATH_SEGMENTS; s++) {
+        const t = s / PATH_SEGMENTS, u = 1 - t;
+        const nx = u * u * ax + 2 * u * t * cx + t * t * bx;
+        const ny = u * u * ay + 2 * u * t * cy + t * t * by;
+        const nz = u * u * az + 2 * u * t * cz + t * t * bz;
+        q[w++] = px; q[w++] = py; q[w++] = pz;
+        q[w++] = nx; q[w++] = ny; q[w++] = nz;
+        px = nx; py = ny; pz = nz;
       }
     }
-    for (let i = 0; i < LINK_POINTS; i++) {
-      const t = i / segments;
-      const u = 1 - t;
-      const uu = u * u;
-      const tt = t * t;
-      const ut2 = 2 * u * t;
-      arr[i * 3] = uu * ax + ut2 * cx + tt * bx;
-      arr[i * 3 + 1] = uu * ay + ut2 * cy + tt * by;
-      arr[i * 3 + 2] = uu * az + ut2 * cz + tt * bz;
-    }
-    attr.needsUpdate = true;
-    ud.lx = ax; ud.ly = ay; ud.lz = az;
-    ud.mx = bx; ud.my = by; ud.mz = bz;
-    ud.cv = curvature;
+    const pathAttr = this.pathGeom.getAttribute('position') as THREE.BufferAttribute | undefined;
+    if (pathAttr) pathAttr.needsUpdate = true;
   }
-  if (!sameInk) {
-    paintLink(line, color, opacity);
-    ud.lc = color;
-    ud.lo = opacity;
+
+  dispose() {
+    this.plainGeom.dispose();
+    this.pathGeom.dispose();
+    this.plainMat.dispose();
+    this.pathMat.dispose();
   }
-  if (line.frustumCulled) line.frustumCulled = false;
 }
 
-function lineOf(obj: THREE.Object3D): THREE.Line | null {
-  if ((obj as THREE.Line).isLine) return obj as THREE.Line;
-  for (const child of obj.children) {
-    if ((child as THREE.Line).isLine) return child as THREE.Line;
-  }
-  return null;
+const DOT_VERTEX = /* glsl */ `
+attribute float size;
+attribute vec4 rgba;
+uniform float uScale;
+varying vec4 vRgba;
+void main() {
+  vRgba = rgba;
+  vec4 mv = modelViewMatrix * vec4(position, 1.0);
+  // Same on-screen size as a sprite of \`size\` world units
+  gl_PointSize = size * uScale / max(0.001, -mv.z);
+  gl_Position = projectionMatrix * mv;
 }
+`;
+
+const DOT_FRAGMENT = /* glsl */ `
+uniform sampler2D uMap;
+varying vec4 vRgba;
+void main() {
+  float a = vRgba.a * texture2D(uMap, gl_PointCoord).a;
+  if (a < 0.01) discard;
+  gl_FragColor = vec4(vRgba.rgb, a);
+  #include <colorspace_fragment>
+}
+`;
 
 /**
- * Per-link material. The library only re-colours lines when the linkColor accessor
- * identity changes, and it disposes the previous material, so a shared material is unsafe.
+ * The dots of all nodes in one draw call (they used to be one sprite each). The frame loop hands in the
+ * visible dots sorted far to near, so overlapping dots blend like the sprites did. The per-node sprite
+ * stays in the scene, with a material that never renders, only so tap and hover keep finding the node.
  */
-function paintLink(line: THREE.Line, color: number, opacity: number) {
-  let mat = line.userData.soLineMat as THREE.LineBasicMaterial | undefined;
-  if (!mat || mat.userData.dead) {
-    mat = new THREE.LineBasicMaterial({ transparent: true, depthWrite: false });
-    mat.addEventListener('dispose', () => { mat!.userData.dead = true; });
-    line.userData.soLineMat = mat;
+class DotLayer {
+  readonly points: THREE.Points;
+  private readonly geom = new THREE.BufferGeometry();
+  readonly material: THREE.ShaderMaterial;
+  private cap = 0;
+  private pos = new Float32Array(0);
+  private rgba = new Float32Array(0);
+  private size = new Float32Array(0);
+
+  constructor(map: THREE.Texture) {
+    this.material = new THREE.ShaderMaterial({
+      uniforms: { uMap: { value: map }, uScale: { value: 1 } },
+      vertexShader: DOT_VERTEX,
+      fragmentShader: DOT_FRAGMENT,
+      transparent: true,
+      depthWrite: false,
+    });
+    this.points = new THREE.Points(this.geom, this.material);
+    this.points.name = 'so-dots';
+    this.points.raycast = noRaycast;
+    this.points.frustumCulled = false;
+    this.ensure(64);
   }
-  if (mat.color.getHex() !== color) mat.color.set(color);
-  if (Math.abs(mat.opacity - opacity) > 0.01) mat.opacity = opacity;
-  mat.transparent = opacity < 1;
-  if (line.material !== mat) line.material = mat;
+
+  private ensure(n: number) {
+    if (n <= this.cap) return;
+    this.cap = Math.max(n, this.cap * 2);
+    this.pos = new Float32Array(this.cap * 3);
+    this.rgba = new Float32Array(this.cap * 4);
+    this.size = new Float32Array(this.cap);
+    this.geom.setAttribute('position', new THREE.BufferAttribute(this.pos, 3).setUsage(THREE.DynamicDrawUsage));
+    this.geom.setAttribute('rgba', new THREE.BufferAttribute(this.rgba, 4).setUsage(THREE.DynamicDrawUsage));
+    this.geom.setAttribute('size', new THREE.BufferAttribute(this.size, 1).setUsage(THREE.DynamicDrawUsage));
+  }
+
+  /** Pixels per world unit at distance 1: matches how sprites are sized. */
+  setScale(scale: number) {
+    this.material.uniforms.uScale!.value = scale;
+  }
+
+  /** `list` is far → near. */
+  write(list: NodeVis[]) {
+    this.ensure(list.length);
+    const p = this.pos, c = this.rgba, s = this.size;
+    for (let i = 0; i < list.length; i++) {
+      const v = list[i]!;
+      const o = v.outer.position;
+      p[i * 3] = o.x;
+      p[i * 3 + 1] = o.y + v.inner.position.y;
+      p[i * 3 + 2] = o.z;
+      c[i * 4] = v.dotRgba[0]; c[i * 4 + 1] = v.dotRgba[1]; c[i * 4 + 2] = v.dotRgba[2]; c[i * 4 + 3] = v.dotRgba[3];
+      s[i] = v.dot.scale.x * v.inner.scale.x;
+    }
+    for (const name of ['position', 'rgba', 'size']) {
+      (this.geom.getAttribute(name) as THREE.BufferAttribute).needsUpdate = true;
+    }
+    this.geom.setDrawRange(0, list.length);
+  }
+
+  dispose() {
+    this.geom.dispose();
+    this.material.dispose();
+  }
 }
 
 function disposeLabel(l: SpriteText | null) {
@@ -684,9 +794,28 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
     const controls = fgRef.current?.controls() as { target?: THREE.Vector3 } | undefined;
     return controls?.target ? controls.target.clone() : new THREE.Vector3();
   }, []);
-  const linkDirtyRef = useRef(false);
-  const linkScanRef = useRef(false);
-  const linkLinesRef = useRef<THREE.Line[]>([]);
+  // Batched layers: every link in one draw call, every dot in one (see LinkLayer / DotLayer)
+  const graphDataRef = useRef(graphData);
+  graphDataRef.current = graphData;
+  /** Links with their node objects (the simulation moves those in place) */
+  const resolveLinks = useCallback((): LinkEnds[] => {
+    const map = nodeMapRef.current;
+    const out: LinkEnds[] = [];
+    for (const l of graphDataRef.current.links as Array<{ source: string | SimNode; target: string | SimNode }>) {
+      const sid = typeof l.source === 'object' ? l.source.id : l.source;
+      const tid = typeof l.target === 'object' ? l.target.id : l.target;
+      const a = map.get(String(sid));
+      const b = map.get(String(tid));
+      if (a && b) out.push({ a, b, key: `${a.id}\0${b.id}` });
+    }
+    return out;
+  }, []);
+  const linksRef = useRef<LinkLayer | null>(null);
+  const dotsRef = useRef<DotLayer | null>(null);
+  /** Link colours need repainting: the path, hidden rings or palette changed, or new data */
+  const linkPaintRef = useRef(true);
+  /** Link positions need one rewrite although the layout is not moving */
+  const linkMoveRef = useRef(true);
   const inkRef = useRef({
     src: null as GraphColors | null,
     care: 0,
@@ -715,62 +844,29 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
     return ink;
   }, []);
 
-  const styleLink = useCallback((line: THREE.Line, link: SimLink, ax: number, ay: number, az: number, bx: number, by: number, bz: number) => {
-    line.userData.soLink = link;
-    if (!line.userData.soListed) {
-      line.userData.soListed = true;
-      linkLinesRef.current.push(line);
-    }
-    const path = pathRef.current;
-    const src = typeof link.source === 'object' ? link.source.id : link.source;
-    const tgt = typeof link.target === 'object' ? link.target.id : link.target;
-    const on = !!(path.dim && src && tgt && path.links.has(`${src}\0${tgt}`));
-    const ink = readInk();
-    updateOwnedLink(
-      line,
-      ax, ay, az, bx, by, bz,
-      on ? PATH_CURVE : 0,
-      on ? ink.care : path.dim ? ink.dim : ink.plain,
-      on ? ink.careOp : path.dim ? ink.dimOp : ink.plainOp,
-    );
-  }, [readInk]);
+  /** Shown on the scene: the centre always, others unless their ring is hidden. */
+  const shownNode = useCallback((n: SimNode) => {
+    if (n.isCenter) return true;
+    const depth = n.depth ?? depthRef.current.get(n.id) ?? 1;
+    return depth <= 0 || !hiddenRef.current.has(depth);
+  }, []);
 
-  const flushLinks = useCallback((scene: THREE.Scene | undefined) => {
-    if (linkScanRef.current || linkLinesRef.current.length === 0) {
-      for (const line of linkLinesRef.current) line.userData.soListed = false;
-      const next: THREE.Line[] = [];
-      scene?.traverse((obj) => {
-        const tagged = obj as THREE.Object3D & { __graphObjType?: string; __data?: SimLink };
-        if (tagged.__graphObjType !== 'link') return;
-        const line = lineOf(obj);
-        if (!line?.parent) return;
-        if (tagged.__data) line.userData.soLink = tagged.__data;
-        line.userData.soListed = true;
-        next.push(line);
-      });
-      linkLinesRef.current = next;
-      linkScanRef.current = false;
-    } else {
-      const cur = linkLinesRef.current;
-      let write = 0;
-      for (let i = 0; i < cur.length; i++) {
-        const line = cur[i];
-        if (line?.parent) cur[write++] = line;
-        else if (line) line.userData.soListed = false;
-      }
-      cur.length = write;
-    }
-    const map = nodeMapRef.current;
-    for (const line of linkLinesRef.current) {
-      const link = line.userData.soLink as SimLink | undefined;
-      if (!link) continue;
-      const a = endpointNode(link.source, map);
-      const b = endpointNode(link.target, map);
-      if (!a || !b || a.x == null || b.x == null) continue;
-      styleLink(line, link, a.x, a.y ?? 0, a.z ?? 0, b.x, b.y ?? 0, b.z ?? 0);
-    }
-    linkDirtyRef.current = false;
-  }, [styleLink]);
+  const paintLinks = useCallback(() => {
+    const layer = linksRef.current;
+    if (!layer) return;
+    const path = pathRef.current;
+    const ink = readInk();
+    layer.paint({
+      isPath: (key) => path.dim && path.links.has(key),
+      shown: shownNode,
+      plain: path.dim ? ink.dim : ink.plain,
+      plainOp: path.dim ? ink.dimOp : ink.plainOp,
+      care: ink.care,
+      careOp: ink.careOp,
+    });
+    linkPaintRef.current = false;
+    linkMoveRef.current = true;
+  }, [readInk, shownNode]);
 
   const flyTo = useCallback((dir: THREE.Vector3, dist: number, ms: number) => {
     const fg = fgRef.current;
@@ -832,7 +928,12 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
     const hex = onPath ? palette.careBright : depthColor(palette, Math.max(1, depth));
     const base = n.isDeleted ? 0.3 : depth <= 1 ? 0.96 : depth === 2 ? 0.74 : 0.5;
     const parsed = parseColor(hex);
-    v.dot.material = res.dotMaterial(parsed.color, dim ? base * DIM_OPACITY : base);
+    // Drawn by DotLayer: keep the colour and alpha on the node
+    tmpColor.setHex(parsed.color);
+    v.dotRgba[0] = tmpColor.r;
+    v.dotRgba[1] = tmpColor.g;
+    v.dotRgba[2] = tmpColor.b;
+    v.dotRgba[3] = dim ? base * DIM_OPACITY : base;
     const want = dim ? DIM_OPACITY : n.isDeleted ? 0.45 : 1;
     const baseMat = (v.avatar.userData.matBase as THREE.SpriteMaterial | undefined) ?? (v.avatar.material as THREE.SpriteMaterial);
     v.avatar.userData.matBase = baseMat;
@@ -970,8 +1071,8 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
     else if (showCached) avatar.scale.set(5 * sf, 5 * sf, 1);
     inner.add(avatar);
 
-    const dotHex = depthColor(colorsRef.current, Math.max(1, depth));
-    const dot = new THREE.Sprite(res.dotMaterial(parseColor(dotHex).color, 0.9));
+    // Never rendered: DotLayer draws all dots at once. The sprite keeps the size and the hit area.
+    const dot = new THREE.Sprite(res.hitMaterial);
     dot.visible = !isC && !showCached;
     if (!isC) {
       const dotSize = (depth <= 1 ? 3.15 : depth === 2 ? 2.05 : 1.25) * sf;
@@ -1016,6 +1117,8 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
       phase: hash01(node.id + 'p') * Math.PI * 2,
       realAvatar: !!cachedPhoto,
       lastScale: -1,
+      dotRgba: [1, 1, 1, 0],
+      d2: 0,
       unwantedAt: 0,
       wantedAt: 0,
     };
@@ -1191,8 +1294,12 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
 
     // --- Renderer: cap DPR at 2, and again if the screen scale changes ---
     const renderer = fg.renderer() as THREE.WebGLRenderer;
+    // Resolution: the screen's (at most 2), lowered by the frame loop while frames come late
+    // (see "Adaptive resolution" there) and raised back once they are fast again
+    const quality = { scale: 1, slowSince: 0, fastSince: 0, changedAt: 0, dtAvg: 16.7 };
     const applyDpr = () => {
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+      const max = Math.min(window.devicePixelRatio || 1, 2);
+      renderer.setPixelRatio(Math.max(1, max * quality.scale));
       const size = renderer.getSize(new THREE.Vector2());
       renderer.setSize(size.x, size.y, false);
       renderer.render(fg.scene(), fg.camera());
@@ -1211,8 +1318,20 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
     });
     resizeObserver.observe(renderer.domElement);
 
-    // Soft centre wash + a few stars, behind the nodes. Added once per scene.
     const scene = fg.scene() as THREE.Scene;
+
+    // Batched links and dots (replace the per-link lines and per-node dot sprites)
+    const linkLayer = new LinkLayer();
+    const dotLayer = new DotLayer(res.discTexture);
+    scene.add(linkLayer.group, dotLayer.points);
+    linksRef.current = linkLayer;
+    dotsRef.current = dotLayer;
+    linkLayer.setLinks(resolveLinks());
+    linkPaintRef.current = true;
+    const dotList: NodeVis[] = [];
+    const farFirst = (a: NodeVis, b: NodeVis) => b.d2 - a.d2;
+
+    // Soft centre wash + a few stars, behind the nodes. Added once per scene.
     const existingStars = scene.getObjectByName('so-stars') as THREE.Points | undefined;
     if (existingStars) {
       sceneFxRef.current.stars = existingStars;
@@ -1286,6 +1405,31 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
     const frameBody = (now: number) => {
       const dt = Math.min(100, now - last);
       last = now;
+
+      // Adaptive resolution: when frames keep coming late (under ~42 fps for 1.5 s) the canvas renders
+      // fewer pixels, step by step down to 1 device pixel; after 10 s of fast frames it steps back up.
+      // Long gaps (tab in the background, a one-off hitch) are ignored.
+      if (dt < 60) {
+        quality.dtAvg += (dt - quality.dtAvg) * 0.05;
+        const max = Math.min(window.devicePixelRatio || 1, 2);
+        const slow = quality.dtAvg > 24;
+        const fast = quality.dtAvg < 14;
+        quality.slowSince = slow ? quality.slowSince || now : 0;
+        quality.fastSince = fast ? quality.fastSince || now : 0;
+        if (slow && now - quality.slowSince > 1500 && now - quality.changedAt > 2000 && max * quality.scale > 1.01) {
+          quality.scale = Math.max(1 / max, quality.scale - 0.25);
+          quality.changedAt = now;
+          quality.slowSince = 0;
+          quality.dtAvg = 16.7;
+          applyDpr();
+        } else if (fast && now - quality.fastSince > 10000 && quality.scale < 1) {
+          quality.scale = Math.min(1, quality.scale + 0.25);
+          quality.changedAt = now;
+          quality.fastSince = 0;
+          applyDpr();
+        }
+        if (debug) (debug as { quality?: unknown }).quality = { scale: quality.scale, dtAvg: +quality.dtAvg.toFixed(1) };
+      }
       const cam = fg.camera() as THREE.Camera | undefined;
       if (!cam) return;
       camPos.copy(cam.position);
@@ -1433,6 +1577,7 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
         }
       }
 
+      dotList.length = 0;
       for (const v of visRef.current.values()) {
         if (!v.outer.parent) continue;
         const p = v.outer.position;
@@ -1519,6 +1664,29 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
           const ps = body * (v.node.isCenter ? 1.38 : 1.9) * (1 + 0.12 * pulse);
           v.pulse.scale.set(ps, ps, 1);
         }
+        if (v.dot.visible && v.outer.visible && v.lastScale > 0.001) {
+          v.d2 = d2;
+          dotList.push(v);
+        }
+      }
+
+      // All dots in one draw call, far to near so overlapping ones blend like separate sprites did
+      const dots = dotsRef.current;
+      if (dots) {
+        dotList.sort(farFirst);
+        const canvasH = (fg.renderer() as THREE.WebGLRenderer).domElement.height;
+        dots.setScale(((cam as THREE.PerspectiveCamera).projectionMatrix.elements[5] ?? 1) * canvasH * 0.5);
+        dots.write(dotList);
+      }
+
+      // Links: colours when the path / rings / palette change, positions while the layout moves
+      const links = linksRef.current;
+      if (links) {
+        if (linkPaintRef.current) paintLinks();
+        if (simRef.current || linkMoveRef.current) {
+          links.update();
+          linkMoveRef.current = false;
+        }
       }
 
       if (labelFrame % 20 === 0) {
@@ -1542,12 +1710,6 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
             extra--;
           }
         }
-      }
-
-      // While the simulation runs, linkPositionUpdate owns the lines. After it stops, one pass
-      // when the path or the palette is dirty. Settled links are skipped inside updateOwnedLink.
-      if (!simRef.current && linkDirtyRef.current) {
-        flushLinks(fg.scene() as THREE.Scene | undefined);
       }
 
       res.pumpPhotos((nodeId, tex, url) => {
@@ -1597,6 +1759,11 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
       resizeObserver.disconnect();
       sceneFxRef.current.stars = null;
       sceneFxRef.current.glow = null;
+      scene.remove(linkLayer.group, dotLayer.points);
+      linkLayer.dispose();
+      dotLayer.dispose();
+      if (linksRef.current === linkLayer) linksRef.current = null;
+      if (dotsRef.current === dotLayer) dotsRef.current = null;
       if (controls) {
         controls.removeEventListener('start', onStart);
         controls.removeEventListener('end', onEnd);
@@ -1650,16 +1817,16 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
     if (!fg) return;
     const refresh = needsRefreshRef.current;
     needsRefreshRef.current = false;
+    // New data: the link layer takes the new set of links (node objects are kept by id)
+    linksRef.current?.setLinks(resolveLinks());
+    linkPaintRef.current = true;
     if (refresh) {
       for (const v of visRef.current.values()) disposeLabel(v.label);
       visRef.current.clear();
-      linkLinesRef.current = [];
-      linkScanRef.current = true;
-      linkDirtyRef.current = true;
       res.resetMaterials();
       try { fg.refresh(); } catch { /* noop */ }
     }
-  }, [graphData, res]);
+  }, [graphData, res, resolveLinks]);
 
   // Far rings (4th, 5th handshake) as an anonymous dust around the ball: no nodes, no links, no names.
   // Dots stand for a rounded count and are scattered at random, so they say "how many", never "who" or "via whom".
@@ -1743,7 +1910,7 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
       restyleLabel(v);
       if (v.level >= 0) applyLevel(v, v.level);
     }
-    linkDirtyRef.current = true;
+    linkPaintRef.current = true;
     const fg = fgRef.current;
     if (!fg) return;
     try { fg.renderer().render(fg.scene(), fg.camera()); } catch { /* noop */ }
@@ -1755,8 +1922,7 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
       hiddenBootRef.current = false;
       return;
     }
-    linkScanRef.current = true;
-    linkDirtyRef.current = true;
+    linkPaintRef.current = true;
   }, [hiddenKey]);
 
   useEffect(() => {
@@ -1868,43 +2034,6 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
     if (depth <= 0) return true;
     return !hiddenRef.current.has(depth);
   }, [hiddenKey]);
-
-  const linkVisible = useCallback((link: { source?: string | SimNode; target?: string | SimNode }) => {
-    const src = typeof link.source === 'object' ? link.source : nodeMapRef.current.get(String(link.source ?? ''));
-    const tgt = typeof link.target === 'object' ? link.target : nodeMapRef.current.get(String(link.target ?? ''));
-    if (!src || !tgt) return true;
-    return nodeVisible(src) && nodeVisible(tgt);
-  }, [nodeVisible]);
-
-  const linkColor = useCallback(
-    (link: { source?: string | { id?: string }; target?: string | { id?: string } }) => {
-      const src = typeof link.source === 'object' ? link.source?.id : link.source;
-      const tgt = typeof link.target === 'object' ? link.target?.id : link.target;
-      const path = pathRef.current;
-      const palette = colorsRef.current;
-      if (src && tgt && path.links.has(`${src}\0${tgt}`)) return withAlpha(palette.care, 0.95);
-      return lineColor(palette.line, path.dim);
-    },
-    [],
-  );
-
-  // Library curvature stays 0 so it never resizes the position buffer. Returning true tells it
-  // to skip its own write. Path bend is applied in styleLink.
-  const onLinkPosition = useCallback((
-    obj: THREE.Object3D,
-    coords: { start: { x: number; y: number; z: number }; end: { x: number; y: number; z: number } },
-    link: object,
-  ) => {
-    const line = lineOf(obj);
-    if (!line) return false;
-    styleLink(
-      line,
-      link as SimLink,
-      coords.start.x || 0, coords.start.y || 0, coords.start.z || 0,
-      coords.end.x || 0, coords.end.y || 0, coords.end.z || 0,
-    );
-    return true;
-  }, [styleLink]);
 
   const nodeLabel = useCallback(
     (node: { name?: string; connectionCount?: number; lastSeen?: string | Date | null }) => {
@@ -2107,18 +2236,14 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
         nodeThreeObjectExtend={false}
         nodeVisibility={nodeVisible}
         nodeLabel={nodeLabel}
-        linkColor={linkColor}
-        linkCurvature={0}
-        linkPositionUpdate={onLinkPosition}
-        linkWidth={0}
-        linkOpacity={1}
-        linkVisibility={linkVisible}
+        // Links are drawn by LinkLayer (one draw call); the library only uses them for the layout
+        linkVisibility={false}
         onNodeClick={handleNodeClick}
         onNodeHover={handleNodeHover}
         onEngineTick={() => { simRef.current = true; }}
         onEngineStop={() => {
           simRef.current = false;
-          linkDirtyRef.current = true;
+          linkMoveRef.current = true;
           const owner = ownerRef.current;
           if (owner) writeLayout(owner, nodeMapRef.current.values());
           for (const n of nodeMapRef.current.values()) {
@@ -2273,8 +2398,12 @@ function createResources() {
     return markTex!;
   };
 
+  // Tap / hover target that never renders (the dot itself is drawn by DotLayer)
+  const hitMaterial = new THREE.SpriteMaterial({ visible: false });
+
   const api = {
     discTexture,
+    hitMaterial,
     pulseMaterial,
     pulseDimMaterial,
 
@@ -2362,6 +2491,7 @@ function createResources() {
       materials.clear();
       pulseMaterial.dispose();
       pulseDimMaterial.dispose();
+      hitMaterial.dispose();
       for (const t of textures) t.dispose();
       textures.length = 0;
       // Avatar textures stay in the module cache. release() only drops this graph's pins.
