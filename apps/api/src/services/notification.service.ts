@@ -2,7 +2,8 @@ import { createRequire } from 'node:module';
 import { dirname, resolve } from 'node:path';
 import type { PrismaClient } from '@so/db';
 import { NOTIFICATION_TTL_HOURS, REGULAR_CYCLE_DAYS } from '@so/shared';
-import { findRecipientsViaBfs } from './bfs.service.js';
+import { findRecipientsViaBfs, type BfsRecipient } from './bfs.service.js';
+import { planWave, recordSent } from './notify-routing.service.js';
 import type { TgReplyMarkup } from './telegram-bot.service.js';
 import { deliver, deliverMany } from './delivery.service.js';
 
@@ -63,7 +64,21 @@ export async function sendCollectionNotifications(
     ignoredUserIds.add(n.userId);
   }
 
-  const recipients = await findRecipientsViaBfs(db, creatorId, undefined, maxRecipients, [...ignoredUserIds]);
+  // Requests for help are routed by behaviour (notify-routing.service): the wave budget counts only external
+  // messages, and people who should not get one now get the in-app entry without taking a slot.
+  // Other types keep the plain nearest-first walk.
+  const isRequest = type === 'NEW_COLLECTION' || type === 'RE_NOTIFY';
+  let recipients: BfsRecipient[];
+  let external: BfsRecipient[];
+  if (isRequest) {
+    const reach = await findRecipientsViaBfs(db, creatorId, undefined, Infinity, [...ignoredUserIds]);
+    const plan = await planWave(db, reach, maxRecipients ?? reach.length);
+    recipients = [...plan.external, ...plan.inApp];
+    external = plan.external;
+  } else {
+    recipients = await findRecipientsViaBfs(db, creatorId, undefined, maxRecipients, [...ignoredUserIds]);
+    external = recipients;
+  }
   if (recipients.length === 0) return 0;
 
   const expiresAt = new Date(Date.now() + NOTIFICATION_TTL_HOURS * 60 * 60 * 1000);
@@ -87,8 +102,8 @@ export async function sendCollectionNotifications(
     } catch { /* skip */ }
   }
 
-  if (created > 0 && (type === 'NEW_COLLECTION' || type === 'RE_NOTIFY')) {
-    dispatchNewCollection(db, collectionId, creatorId, recipients.map((r) => r.userId), type).catch((err) =>
+  if (created > 0 && isRequest && external.length > 0) {
+    dispatchNewCollection(db, collectionId, creatorId, external.map((r) => r.userId), type).catch((err) =>
       console.error('[Notify] new collection dispatch failed:', err),
     );
   }
@@ -466,4 +481,6 @@ async function dispatchNewCollection(
   const counts: Record<string, number> = {};
   for (const o of outcomes.values()) counts[o] = (counts[o] ?? 0) + 1;
   console.log(`[Notify] collection ${collectionId} ${type}:`, counts);
+  const delivered = [...outcomes.entries()].filter(([, o]) => o === 'sent').map(([id]) => id);
+  await recordSent(db, delivered).catch((err) => console.error('[Notify] stats not recorded:', err));
 }

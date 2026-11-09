@@ -4,6 +4,7 @@ import { TRPCError } from '@trpc/server';
 import { MIN_OBLIGATION_AMOUNT, REGULAR_CYCLE_DAYS } from '@so/shared';
 import { syncCollectionGoal } from '../services/collection-amount.js';
 import { scheduleResponseDigest } from '../services/notification.service.js';
+import { recordResponded } from '../services/notify-routing.service.js';
 
 export const obligationRouter = router({
   create: protectedProcedure
@@ -35,6 +36,7 @@ export const obligationRouter = router({
 
       // The author hears about responses as one grouped message, not one per person (SO-45)
       if (collection.creatorId !== ctx.userId) {
+        recordResponded(ctx.db, ctx.userId, input.collectionId).catch((err) => console.error('[notify-stats] respond', err));
         scheduleResponseDigest(ctx.db, input.collectionId).catch((err) =>
           console.error('[obligation.create] response digest not planned:', err),
         );

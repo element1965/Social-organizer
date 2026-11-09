@@ -914,7 +914,8 @@
       "s7Title": "7. Açık kaynak",
       "s7": "Social Organizer tamamen açık kaynaklıdır. Kod tabanımızı ve verilerinizin nasıl işlendiğini <gh>github.com/element1965/Social-organizer</gh> adresinde inceleyebilirsiniz.",
       "s8Title": "8. İletişim",
-      "s8": "Bu gizlilik politikası veya verileriniz hakkında sorularınız için <bot>Telegram</bot> üzerinden bize ulaşın."
+      "s8": "Bu gizlilik politikası veya verileriniz hakkında sorularınız için <bot>Telegram</bot> üzerinden bize ulaşın.",
+      "s3e": "Bir yardım isteğinin önce kime gideceğine karar vermek için: bu tür istekleri ne sıklıkla açıp yanıtladığınızı ve son zamanlarda kaç tane aldığınızı sayarız. Bu sayılar kimseye gösterilmez ve başka hiçbir amaçla kullanılmaz."
     },
     "termsTitle": "Kullanım koşulları",
     "termsMeta": "Son güncelleme: 7 Şubat 2025",

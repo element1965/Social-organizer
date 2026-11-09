@@ -914,7 +914,8 @@
       "s7Title": "7. Öppen källkod",
       "s7": "Social Organizer är helt öppen källkod. Du kan granska koden och hur dina uppgifter hanteras på <gh>github.com/element1965/Social-organizer</gh>.",
       "s8Title": "8. Kontakt",
-      "s8": "Om du har frågor om den här integritetspolicyn eller dina uppgifter, kontakta oss via <bot>Telegram</bot>."
+      "s8": "Om du har frågor om den här integritetspolicyn eller dina uppgifter, kontakta oss via <bot>Telegram</bot>.",
+      "s3e": "För att avgöra vem som först får en förfrågan om hjälp: vi räknar hur ofta du öppnar och svarar på sådana förfrågningar och hur många du fått på senare tid. Siffrorna visas inte för någon och används inte till något annat."
     },
     "termsTitle": "Användarvillkor",
     "termsMeta": "Senast uppdaterad: 7 februari 2025",

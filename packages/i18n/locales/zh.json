@@ -909,7 +909,8 @@
       "s7Title": "7. 开源",
       "s7": "Social Organizer 完全开源。你可以在 <gh>github.com/element1965/Social-organizer</gh> 查看我们的代码，以及数据如何被处理。",
       "s8Title": "8. 联系方式",
-      "s8": "如对本隐私政策或你的数据有疑问，请通过 <bot>Telegram</bot> 联系我们。"
+      "s8": "如对本隐私政策或你的数据有疑问，请通过 <bot>Telegram</bot> 联系我们。",
+      "s3e": "为了决定求助先发给谁：我们统计你打开和回应这类求助的频率，以及最近收到了多少条。这些统计不会展示给任何人，也不会用于其他用途。"
     },
     "termsTitle": "服务条款",
     "termsMeta": "最近更新：2025 年 2 月 7 日",

@@ -909,7 +909,8 @@
       "s7Title": "7. Sumber Terbuka",
       "s7": "Social Organizer sepenuhnya sumber terbuka. Anda dapat meninjau kode dan cara data Anda ditangani di <gh>github.com/element1965/Social-organizer</gh>.",
       "s8Title": "8. Kontak",
-      "s8": "Untuk pertanyaan tentang Kebijakan Privasi ini atau data Anda, hubungi kami lewat <bot>Telegram</bot>."
+      "s8": "Untuk pertanyaan tentang Kebijakan Privasi ini atau data Anda, hubungi kami lewat <bot>Telegram</bot>.",
+      "s3e": "Untuk menentukan siapa yang lebih dulu menerima permintaan bantuan: kami menghitung seberapa sering Anda membuka dan menanggapi permintaan seperti itu, dan berapa banyak yang Anda terima belakangan ini. Hitungan ini tidak ditampilkan kepada siapa pun dan tidak dipakai untuk hal lain."
     },
     "termsTitle": "Ketentuan Layanan",
     "termsMeta": "Terakhir diperbarui: 7 Februari 2025",
