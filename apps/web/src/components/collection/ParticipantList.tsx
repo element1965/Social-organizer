@@ -32,14 +32,15 @@ export function ParticipantList({ people, showPaid, onPerson, onPaid, onRemove, 
 
   // For the author: unmarked first. The order is taken when a row is first seen, so a row does not
   // jump away under the finger when it is marked; it moves down on the next visit.
-  const firstSeen = useRef<Map<string, boolean>>(new Map());
+  // Both the paid flag and the position are taken at first sight: the server may return the rows in
+  // another order after a change, and the row must still stay where it was
+  const firstSeen = useRef<Map<string, { paid: boolean; order: number }>>(new Map());
   const rows = useMemo(() => {
     if (!showPaid) return people;
-    for (const row of people) if (!firstSeen.current.has(row.id)) firstSeen.current.set(row.id, row.paid);
-    return people
-      .map((row, index) => ({ row, index }))
-      .sort((a, b) => Number(firstSeen.current.get(a.row.id)) - Number(firstSeen.current.get(b.row.id)) || a.index - b.index)
-      .map(({ row }) => row);
+    const seen = firstSeen.current;
+    for (const row of people) if (!seen.has(row.id)) seen.set(row.id, { paid: row.paid, order: seen.size });
+    const key = (row: ParticipantRow) => seen.get(row.id)!;
+    return [...people].sort((a, b) => Number(key(a).paid) - Number(key(b).paid) || key(a).order - key(b).order);
   }, [people, showPaid]);
 
   const paid = people.filter((row) => row.paid);
