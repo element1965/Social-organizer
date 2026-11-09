@@ -6,7 +6,7 @@
 CREATE TYPE "ComplaintReason" AS ENUM ('COMPLAINTS', 'SUSPECTED_FRAUD', 'RULES_VIOLATION', 'ACCOUNT_HACKED');
 
 -- CreateEnum
-CREATE TYPE "ReviewStatus" AS ENUM ('OPEN', 'UPHELD', 'DISMISSED');
+CREATE TYPE "ReviewStatus" AS ENUM ('OPEN', 'UPHELD', 'DISMISSED', 'INCONCLUSIVE', 'ESCALATED');
 
 -- CreateEnum
 CREATE TYPE "ReviewAnswer" AS ENUM ('PROBLEM', 'OK', 'UNKNOWN');
@@ -36,6 +36,7 @@ CREATE TABLE "collection_reviews" (
     "status" "ReviewStatus" NOT NULL DEFAULT 'OPEN',
     "decidedAt" TIMESTAMP(3),
     "audienceIds" TEXT[] DEFAULT ARRAY[]::TEXT[],
+    "complaintIds" TEXT[] DEFAULT ARRAY[]::TEXT[],
 
     CONSTRAINT "collection_reviews_pkey" PRIMARY KEY ("id")
 );
@@ -59,8 +60,8 @@ CREATE INDEX "collection_reviews_status_closesAt_idx" ON "collection_reviews"("s
 CREATE UNIQUE INDEX "collection_review_votes_reviewId_userId_key" ON "collection_review_votes"("reviewId", "userId");
 CREATE INDEX "collection_review_votes_userId_idx" ON "collection_review_votes"("userId");
 
--- One open review per collection. Prisma schema cannot express a partial index.
-CREATE UNIQUE INDEX "collection_reviews_one_open_idx" ON "collection_reviews"("collectionId") WHERE "status" = 'OPEN';
+-- One OPEN or ESCALATED review per collection. Prisma cannot express a partial index. Do not drop it.
+CREATE UNIQUE INDEX "collection_reviews_one_open_idx" ON "collection_reviews"("collectionId") WHERE "status" IN ('OPEN', 'ESCALATED');
 
 -- AddForeignKey
 ALTER TABLE "collection_complaints" ADD CONSTRAINT "collection_complaints_collectionId_fkey" FOREIGN KEY ("collectionId") REFERENCES "collections"("id") ON DELETE CASCADE ON UPDATE CASCADE;
