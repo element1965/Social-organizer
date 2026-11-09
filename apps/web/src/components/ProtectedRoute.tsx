@@ -2,6 +2,7 @@ import { Navigate, useLocation } from 'react-router-dom';
 import { Capacitor } from '@capacitor/core';
 import { useAuth } from '../hooks/useAuth';
 import { trpc } from '../lib/trpc';
+import { safePath } from './onboarding/flow';
 
 const isNativeApp = Capacitor.isNativePlatform();
 
@@ -26,15 +27,12 @@ export function ProtectedRoute({ children }: { children: React.ReactNode }) {
     return null;
   }
 
-  // Stale/expired token — clear auth and redirect
+  // The server rejected a stored session (auth.html №21): "Sign in again", then back to where the person was.
+  // The redirect is sanitised again where it is followed (onboarding/flow.ts safePath).
   if (isAuthenticated && isError) {
     logout();
-    const redirectPath = location.pathname + location.search;
-    if (isNativeApp) {
-      const target = redirectPath !== '/dashboard' ? `/login?redirect=${encodeURIComponent(redirectPath)}` : '/login';
-      return <Navigate to={target} replace />;
-    }
-    const target = redirectPath !== '/dashboard' ? `/?redirect=${encodeURIComponent(redirectPath)}` : '/';
+    const back = safePath(location.pathname + location.search);
+    const target = back && back !== '/' ? `/login?reason=expired&redirect=${encodeURIComponent(back)}` : '/login?reason=expired';
     return <Navigate to={target} replace />;
   }
 

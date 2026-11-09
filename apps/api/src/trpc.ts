@@ -3,7 +3,15 @@ import { z } from 'zod';
 import type { Context } from './context.js';
 import { SKILLS_FEATURE_ENABLED } from './services/mvp-scope.js';
 
-const t = initTRPC.context<Context>().create();
+const t = initTRPC.context<Context>().create({
+  // Additive error data, so older clients keep working: ACCOUNT_EXISTS_OTHER_METHOD carries the masked e-mail
+  // of the existing account ("an•••@gmail.com") for the account-linking screen. Never the full address.
+  errorFormatter({ shape, error }) {
+    const cause = error.cause as { maskedEmail?: unknown } | undefined;
+    const maskedEmail = typeof cause?.maskedEmail === 'string' ? cause.maskedEmail : undefined;
+    return maskedEmail ? { ...shape, data: { ...shape.data, maskedEmail } } : shape;
+  },
+});
 
 export const router = t.router;
 export const publicProcedure = t.procedure;

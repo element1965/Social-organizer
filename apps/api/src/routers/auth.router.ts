@@ -256,7 +256,7 @@ export const authRouter = router({
           accessToken: input.idToken,
         }));
       } catch (err) {
-        if (err instanceof AccountExistsError) throw new TRPCError({ code: 'CONFLICT', message: err.message });
+        if (err instanceof AccountExistsError) throw new TRPCError({ code: 'CONFLICT', message: err.message, cause: err });
         throw err;
       }
 

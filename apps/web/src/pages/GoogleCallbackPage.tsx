@@ -4,6 +4,7 @@ import { trpc } from '../lib/trpc';
 import { useAuth } from '../hooks/useAuth';
 import { takePendingSosPath } from '../lib/inviteUrl';
 import { afterSignInPath, readPendingInvite } from '../components/onboarding/flow';
+import { ProviderWait } from '../components/onboarding/ProviderWait';
 
 // Handles Google OAuth redirect callback.
 // Opened in Chrome Custom Tab after Google auth.
@@ -41,15 +42,24 @@ export function GoogleCallbackPage() {
     }
 
     // reason lets the sign-in screen show the next step (SO-21)
-    const goError = (reason: 'failed' | 'account_exists' = 'failed') => {
+    // "cancelled" (the person closed Google) and the masked e-mail ("m") are new; older app builds treat any
+    // unknown reason as "failed" and ignore "m", so the deep link stays backward compatible.
+    const goError = (reason: 'failed' | 'account_exists' | 'cancelled' = 'failed', masked?: string | null) => {
+      const extra = masked ? `&m=${encodeURIComponent(masked)}` : '';
       if (isNativeCallback) {
-        const fallback = encodeURIComponent(`https://www.orginizer.com/login?error=${reason}`);
-        window.location.href = `intent://auth-error?reason=${reason}#Intent;scheme=socialorganizer;package=com.socialorganizer.app;S.browser_fallback_url=${fallback};end`;
+        const fallback = encodeURIComponent(`https://www.orginizer.com/login?error=${reason}${extra}`);
+        window.location.href = `intent://auth-error?reason=${reason}${extra}#Intent;scheme=socialorganizer;package=com.socialorganizer.app;S.browser_fallback_url=${fallback};end`;
       } else {
-        navigate(`/login?error=${reason}`);
+        navigate(`/login?error=${reason}${extra}`, { replace: true });
       }
     };
 
+    // Google returns #error=access_denied when the person cancels the consent screen
+    const oauthError = hashParams.get('error');
+    if (oauthError === 'access_denied') {
+      goError('cancelled');
+      return;
+    }
     if (!idToken) {
       goError();
       return;
@@ -83,18 +93,14 @@ export function GoogleCallbackPage() {
             else window.location.href = path;
           }
         },
-        onError: (err) => goError(err.message === 'ACCOUNT_EXISTS_OTHER_METHOD' ? 'account_exists' : 'failed'),
+        onError: (err) =>
+          err.message === 'ACCOUNT_EXISTS_OTHER_METHOD'
+            ? goError('account_exists', (err.data as { maskedEmail?: string } | undefined)?.maskedEmail)
+            : goError('failed'),
       },
     );
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  return (
-    <div className="flex items-center justify-center min-h-screen bg-slate-900">
-      <div className="text-white text-center">
-        <div className="animate-spin w-8 h-8 border-2 border-white border-t-transparent rounded-full mx-auto mb-4" />
-        <p>Signing in with Google...</p>
-      </div>
-    </div>
-  );
+  return <ProviderWait provider="google" />;
 }
