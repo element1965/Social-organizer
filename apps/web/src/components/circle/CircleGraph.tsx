@@ -183,7 +183,8 @@ export const CircleGraph = forwardRef<CircleGraphHandle, CircleGraphProps>(funct
   return (
     <div
       ref={boxRef}
-      className="absolute inset-0 overflow-hidden [&_button]:hidden"
+      // The legacy graph draws its own buttons with an inline display; the Circle has its own controls.
+      className="absolute inset-0 overflow-hidden [&_button]:!hidden"
       style={{ opacity: dimmed ? 0.55 : 1, transition: 'opacity 420ms cubic-bezier(0.22, 0.8, 0.24, 1)' }}
     >
       {size && data.nodes.length > 0 ? (
