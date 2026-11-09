@@ -517,7 +517,9 @@
     "logoutByMethod": "Du loggade in med {{method}}. Du kan komma tillbaka på samma sätt.",
     "logoutByEmail": "Du loggade in med en kod som skickades till <b/>. Du kan komma tillbaka på samma sätt.",
     "logoutEmailOnly": "Du kan komma tillbaka på samma sätt eller med en kod som skickas till <b/>.",
-    "logoutGeneric": "Du kan komma tillbaka på samma sätt som du loggade in."
+    "logoutGeneric": "Du kan komma tillbaka på samma sätt som du loggade in.",
+    "notifyChannel": "Kanal",
+    "notifyTelegramNotLinked": "Anslut Telegram under ”Konto” för att få meddelanden där."
   },
   "settings": {
     "title": "Inställningar",
@@ -536,7 +538,20 @@
     "connectTelegramHint": "Logga in via Telegram på samma konto — inget nytt konto skapas.",
     "telegramConnected": "Telegram är anslutet till ditt konto",
     "telegramLinkConflict": "Detta Telegram har redan ett eget konto med data, så det anslöts inte. Skriv till support så slår vi ihop dem.",
-    "telegramLinkInvalid": "Länken har gått ut. Tryck på ”Anslut Telegram” i appens inställningar igen."
+    "telegramLinkInvalid": "Länken har gått ut. Tryck på ”Anslut Telegram” i appens inställningar igen.",
+    "notifyTitle": "Notiser",
+    "notifyChannelLabel": "En kanal för notiser",
+    "notifyChannelApp": "App",
+    "notifyChannelTelegram": "Telegram",
+    "notifyChannelHintApp": "Meddelanden kommer bara till appen, Telegram upprepar dem inte.",
+    "notifyChannelHintTelegram": "Meddelanden kommer bara till Telegram, appen upprepar dem inte.",
+    "notifyTelegramNotLinked": "Anslut Telegram nedan för att få meddelanden där.",
+    "notifyPushOff": "Slå på pushnotiser för att se dem på den här enheten.",
+    "notifyNewCollections": "Nya insamlingar",
+    "notifyNewCollectionsHint": "Säg till när någon jag kan få notis om öppnar en insamling",
+    "notifyMyEvents": "Mina händelser",
+    "notifyMyEventsHint": "Anslutningsförfrågningar och svar på min insamling kommer alltid. Svaren kommer i ett meddelande.",
+    "notifyAnyChat": "Välj en kanal för notiser. För att prata med varandra fungerar vilken chatt som helst."
   },
   "faq": {
     "title": "Vanliga frågor",
@@ -899,8 +914,8 @@
     "deleteAccount": "Radering av konto",
     "del": {
       "meta": "Social Organizer · uppdaterad 9 november 2026",
-      "lead": "Du raderar kontot i appen eller på webbplatsen, utan e-post och utan väntan.",
-      "step1": "Öppna appen eller orginizer.com och logga in",
+      "lead": "Du raderar kontot själv, inifrån: i appen, på webbplatsen eller i Telegram Mini App. Inga e-postmeddelanden och ingen väntan.",
+      "step1": "Öppna appen, orginizer.com eller Telegram Mini App och logga in",
       "step2": "Profil → Konto",
       "step3": "Längst ner, ”Radera konto”",
       "step4": "Bekräfta ”Radera för alltid” i arket",
@@ -913,8 +928,8 @@
       "gone5": "Notiser, push-prenumerationer, inställningar, chattar med assistenten",
       "whenTitle": "Tid och det som finns kvar",
       "whenText": "Raderingen sker direkt och kan inte ångras. Om du hade kopplingar står ”Raderad användare” kvar i stället för ditt namn i andras nätverk, utan personuppgifter. Tidigare insamlingar hos andra behåller beloppen utan ditt namn.",
-      "noAccessTitle": "Ingen åtkomst till kontot?",
-      "noAccessText": "Skriv till <bot>@socialorganizer_bot</bot> i Telegram med e-postadressen eller användarnamnet du loggade in med. Vi raderar kontot manuellt inom 30 dagar och svarar när det är klart."
+      "noAccessTitle": "Går det inte att logga in?",
+      "noAccessText": "Konton raderas bara inifrån; vi raderar inte på begäran. Om du inte kan logga in raderas profilen automatiskt efter 2 år utan inloggningar. Vi varnar 30 och 7 dagar innan via Telegram, pushnotiser och e-post — där kontot har det."
     },
     "privacyTitle": "Integritetspolicy",
     "privacyMeta": "Senast uppdaterad: 7 februari 2025",
@@ -937,12 +952,12 @@
       "s4b": "<b>Telegram:</b> uppgifter som behövs för att miniprogrammet ska fungera i Telegram.",
       "s4c": "<b>Webbhotell:</b> våra servrar behandlar dina uppgifter för att leverera tjänsten.",
       "s5Title": "5. Lagring och säkerhet",
-      "s5": "Dina uppgifter lagras i en säker PostgreSQL-databas. Vi använder krypterade anslutningar (HTTPS/TLS), autentisering med JWT och följer branschens vanliga säkerhetsrutiner för att skydda dina uppgifter.",
+      "s5": "Dina uppgifter lagras i en säker PostgreSQL-databas. Vi använder krypterade anslutningar (HTTPS/TLS), autentisering med JWT och följer branschens vanliga säkerhetsrutiner för att skydda dina uppgifter. Konton utan inloggning i 2 år raderas automatiskt, efter besked 30 och 7 dagar i förväg.",
       "s6Title": "6. Dina rättigheter",
       "s6lead": "Du har rätt att:",
       "s6a": "Se dina personuppgifter i profilen och inställningarna.",
       "s6b": "Rätta eller uppdatera dina uppgifter när som helst.",
-      "s6c": "Begära att ditt konto och tillhörande uppgifter raderas.",
+      "s6c": "Själv radera ditt konto och tillhörande uppgifter under Profil → Konto.",
       "s6d": "Exportera dina uppgifter i ett maskinläsbart format.",
       "s7Title": "7. Öppen källkod",
       "s7": "Social Organizer är helt öppen källkod. Du kan granska koden och hur dina uppgifter hanteras på <gh>github.com/element1965/Social-organizer</gh>.",
@@ -1029,7 +1044,9 @@
     "pendingErrLimitOther": "Den här personen har redan 150 bekanta",
     "pendingErrGone": "Den här personen har raderat kontot",
     "pendingErrResolved": "Förfrågan har redan besvarats",
-    "pendingErrNotYours": "Förfrågan är inte till det här Telegram-kontot"
+    "pendingErrNotYours": "Förfrågan är inte till det här Telegram-kontot",
+    "responsesTitle": "Nya svar på din insamling",
+    "responsesBody": "Nya svar: {{count}}. Öppna insamlingen för att se dem."
   },
   "pending": {
     "errLimitSelf": "Du har redan 150 bekanta. Det är maxgränsen.",

@@ -522,7 +522,9 @@
     "logoutByMethod": "Te-ai conectat cu {{method}}. Poți reveni la fel.",
     "logoutByEmail": "Te-ai conectat cu un cod trimis la <b/>. Poți reveni la fel.",
     "logoutEmailOnly": "Poți reveni la fel sau cu un cod trimis la <b/>.",
-    "logoutGeneric": "Poți reveni la fel cum te-ai conectat."
+    "logoutGeneric": "Poți reveni la fel cum te-ai conectat.",
+    "notifyChannel": "Canal",
+    "notifyTelegramNotLinked": "Conectează Telegram în „Cont” ca să primești mesajele acolo."
   },
   "settings": {
     "title": "Setări",
@@ -541,7 +543,20 @@
     "connectTelegramHint": "Intră prin Telegram în același cont — nu se va crea un al doilea cont.",
     "telegramConnected": "Telegram este conectat la contul tău",
     "telegramLinkConflict": "Acest Telegram are deja un cont separat cu date, așa că nu a fost conectat. Scrie la suport și le unim.",
-    "telegramLinkInvalid": "Linkul a expirat. Apasă din nou „Conectează Telegram” în setările aplicației."
+    "telegramLinkInvalid": "Linkul a expirat. Apasă din nou „Conectează Telegram” în setările aplicației.",
+    "notifyTitle": "Notificări",
+    "notifyChannelLabel": "Un singur canal pentru notificări",
+    "notifyChannelApp": "Aplicație",
+    "notifyChannelTelegram": "Telegram",
+    "notifyChannelHintApp": "Mesajele vin doar în aplicație, Telegram nu le repetă.",
+    "notifyChannelHintTelegram": "Mesajele vin doar în Telegram, aplicația nu le repetă.",
+    "notifyTelegramNotLinked": "Conectează Telegram mai jos ca să primești mesajele acolo.",
+    "notifyPushOff": "Pornește notificările push ca să le vezi pe acest dispozitiv.",
+    "notifyNewCollections": "Colecte noi",
+    "notifyNewCollectionsHint": "Spune-mi când cineva despre care pot primi notificări deschide o colectă",
+    "notifyMyEvents": "Evenimentele mele",
+    "notifyMyEventsHint": "Cererile de conexiune și răspunsurile la colecta mea vin mereu. Răspunsurile vin într-un singur mesaj.",
+    "notifyAnyChat": "Alege un canal pentru notificări. Pentru a vorbi între voi merge orice chat."
   },
   "faq": {
     "title": "Întrebări frecvente",
@@ -906,8 +921,8 @@
     "deleteAccount": "Ștergerea contului",
     "del": {
       "meta": "Social Organizer · actualizat 9 noiembrie 2026",
-      "lead": "Îți ștergi contul în aplicație sau pe site, fără e-mailuri și fără așteptare.",
-      "step1": "Deschide aplicația sau orginizer.com și conectează-te",
+      "lead": "Ștergi contul tu însuți, din interior: în aplicație, pe site sau în Telegram Mini App. Fără e-mailuri și fără așteptare.",
+      "step1": "Deschide aplicația, orginizer.com sau Telegram Mini App și conectează-te",
       "step2": "Profil → Cont",
       "step3": "Jos, „Șterge contul”",
       "step4": "Confirmă „Șterge definitiv” în panou",
@@ -920,8 +935,8 @@
       "gone5": "Notificările, abonările push, setările, conversațiile cu asistentul",
       "whenTitle": "Când se întâmplă și ce rămâne",
       "whenText": "Ștergerea e imediată și nu se poate anula. Dacă aveai legături, în rețelele altor oameni rămâne „Utilizator șters” în locul numelui tău, fără date personale. Colectele trecute ale altor oameni păstrează sumele, fără numele tău.",
-      "noAccessTitle": "Nu ai acces la cont?",
-      "noAccessText": "Scrie pe Telegram la <bot>@socialorganizer_bot</bot> și spune e-mailul sau numele de utilizator cu care te conectai. Ștergem contul manual în cel mult 30 de zile și îți răspundem când e gata."
+      "noAccessTitle": "Nu reușești să te conectezi?",
+      "noAccessText": "Contul se șterge doar din interior; nu ștergem la cerere. Dacă nu reușești să te conectezi, profilul se șterge automat după 2 ani fără conectări. Avertizăm cu 30 și cu 7 zile înainte prin Telegram, notificări push și e-mail — unde contul le are."
     },
     "privacyTitle": "Politica de confidențialitate",
     "privacyMeta": "Ultima actualizare: 7 februarie 2025",
@@ -944,12 +959,12 @@
       "s4b": "<b>Telegram:</b> datele fără de care mini-aplicația nu funcționează în Telegram.",
       "s4c": "<b>Furnizorii de găzduire:</b> serverele noastre prelucrează datele ca să livreze serviciul.",
       "s5Title": "5. Stocare și securitate",
-      "s5": "Datele tale sunt stocate într-o bază PostgreSQL securizată. Folosim conexiuni criptate (HTTPS/TLS), autentificare pe bază de JWT și practici de securitate obișnuite în industrie ca să îți protejăm informațiile.",
+      "s5": "Datele tale sunt stocate într-o bază PostgreSQL securizată. Folosim conexiuni criptate (HTTPS/TLS), autentificare pe bază de JWT și practici de securitate obișnuite în industrie ca să îți protejăm informațiile. Conturile fără conectare timp de 2 ani se șterg automat, după înștiințări cu 30 și 7 zile înainte.",
       "s6Title": "6. Drepturile tale",
       "s6lead": "Ai dreptul:",
       "s6a": "Să îți accesezi datele personale din profil și din setări.",
       "s6b": "Să corectezi sau să actualizezi informațiile oricând.",
-      "s6c": "Să soliciți ștergerea contului și a datelor asociate.",
+      "s6c": "Să îți ștergi singur contul și datele asociate în Profil → Cont.",
       "s6d": "Să îți exporți datele într-un format care poate fi citit de un program.",
       "s7Title": "7. Cod deschis",
       "s7": "Social Organizer este integral cu cod deschis. Poți vedea codul și felul în care sunt prelucrate datele pe <gh>github.com/element1965/Social-organizer</gh>.",
@@ -1036,7 +1051,9 @@
     "pendingErrLimitOther": "Această persoană are deja 150 de cunoscuți",
     "pendingErrGone": "Această persoană și-a șters contul",
     "pendingErrResolved": "La această cerere s-a răspuns deja",
-    "pendingErrNotYours": "Această cerere nu este pentru acest cont Telegram"
+    "pendingErrNotYours": "Această cerere nu este pentru acest cont Telegram",
+    "responsesTitle": "Răspunsuri noi la colecta ta",
+    "responsesBody": "Răspunsuri noi: {{count}}. Deschide colecta ca să le vezi."
   },
   "pending": {
     "errLimitSelf": "Ai deja 150 de cunoscuți — este maximul.",

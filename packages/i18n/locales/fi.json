@@ -517,7 +517,9 @@
     "logoutByMethod": "Kirjauduit tavalla {{method}}. Voit palata samalla tavalla.",
     "logoutByEmail": "Kirjauduit koodilla osoitteeseen <b/>. Voit palata samalla tavalla.",
     "logoutEmailOnly": "Voit palata samalla tavalla tai koodilla osoitteeseen <b/>.",
-    "logoutGeneric": "Voit palata samalla tavalla kuin kirjauduit."
+    "logoutGeneric": "Voit palata samalla tavalla kuin kirjauduit.",
+    "notifyChannel": "Kanava",
+    "notifyTelegramNotLinked": "Yhdistä Telegram kohdassa ”Tili”, niin viestit tulevat sinne."
   },
   "settings": {
     "title": "Asetukset",
@@ -536,7 +538,20 @@
     "connectTelegramHint": "Kirjaudu Telegramin kautta samalle tilille — toista tiliä ei luoda.",
     "telegramConnected": "Telegram on yhdistetty tiliisi",
     "telegramLinkConflict": "Tällä Telegramilla on jo oma tili tietoineen, joten sitä ei yhdistetty. Kirjoita tukeen, niin yhdistämme ne.",
-    "telegramLinkInvalid": "Linkki on vanhentunut. Paina sovelluksen asetuksissa uudelleen ”Yhdistä Telegram”."
+    "telegramLinkInvalid": "Linkki on vanhentunut. Paina sovelluksen asetuksissa uudelleen ”Yhdistä Telegram”.",
+    "notifyTitle": "Ilmoitukset",
+    "notifyChannelLabel": "Yksi kanava ilmoituksille",
+    "notifyChannelApp": "Sovellus",
+    "notifyChannelTelegram": "Telegram",
+    "notifyChannelHintApp": "Viestit tulevat vain sovellukseen, Telegram ei toista niitä.",
+    "notifyChannelHintTelegram": "Viestit tulevat vain Telegramiin, sovellus ei toista niitä.",
+    "notifyTelegramNotLinked": "Yhdistä Telegram alla, jotta saat viestit sinne.",
+    "notifyPushOff": "Ota push-ilmoitukset käyttöön, jotta näet ne tällä laitteella.",
+    "notifyNewCollections": "Uudet keräykset",
+    "notifyNewCollectionsHint": "Kerro, kun joku, josta minulle voi tulla ilmoitus, avaa keräyksen",
+    "notifyMyEvents": "Omat tapahtumat",
+    "notifyMyEventsHint": "Yhteyspyynnöt ja vastaukset keräykseeni tulevat aina. Vastaukset tulevat yhdessä viestissä.",
+    "notifyAnyChat": "Valitse kanava ilmoituksille. Keskusteluun käy mikä tahansa chat."
   },
   "faq": {
     "title": "Usein kysytyt kysymykset",
@@ -899,8 +914,8 @@
     "deleteAccount": "Tilin poistaminen",
     "del": {
       "meta": "Social Organizer · päivitetty 9. marraskuuta 2026",
-      "lead": "Poistat tilisi sovelluksessa tai verkkosivulla, ilman sähköposteja ja ilman odotusta.",
-      "step1": "Avaa sovellus tai orginizer.com ja kirjaudu",
+      "lead": "Poistat tilisi itse, sen sisältä: sovelluksessa, sivustolla tai Telegram Mini Appissa. Ei sähköposteja eikä odotusta.",
+      "step1": "Avaa sovellus, orginizer.com tai Telegram Mini App ja kirjaudu",
       "step2": "Profiili → Tili",
       "step3": "Alhaalla ”Poista tili”",
       "step4": "Vahvista paneelissa ”Poista pysyvästi”",
@@ -913,8 +928,8 @@
       "gone5": "Ilmoitukset, push-tilaukset, asetukset, keskustelut avustajan kanssa",
       "whenTitle": "Ajoitus ja mitä jää",
       "whenText": "Poisto on välitön, eikä sitä voi perua. Jos sinulla oli yhteyksiä, muiden verkostoissa nimesi tilalla näkyy ”Poistettu käyttäjä”, ilman henkilötietoja. Muiden aiemmat keräykset säilyttävät summat ilman nimeäsi.",
-      "noAccessTitle": "Eikö tiliisi pääse?",
-      "noAccessText": "Kirjoita Telegramissa osoitteeseen <bot>@socialorganizer_bot</bot> ja kerro sähköposti tai käyttäjänimi, jolla kirjauduit. Poistamme tilin käsin 30 päivän kuluessa ja vastaamme, kun se on tehty."
+      "noAccessTitle": "Eikö kirjautuminen onnistu?",
+      "noAccessText": "Tili poistetaan vain sen sisältä, emmekä poista pyynnöstä. Jos kirjautuminen ei onnistu, profiili poistetaan automaattisesti 2 vuoden jälkeen ilman kirjautumisia. Varoitamme 30 ja 7 päivää ennen sitä Telegramissa, push-ilmoituksella ja sähköpostitse — sinne, minne tilillä on yhteys."
     },
     "privacyTitle": "Tietosuojakäytäntö",
     "privacyMeta": "Päivitetty viimeksi: 7. helmikuuta 2025",
@@ -937,12 +952,12 @@
       "s4b": "<b>Telegramille:</b> tiedot, joita minisovellus tarvitsee toimiakseen Telegramissa.",
       "s4c": "<b>Palveluntarjoajille:</b> palvelimemme käsittelevät tietojasi palvelun toimittamiseksi.",
       "s5Title": "5. Tietojen säilytys ja turvallisuus",
-      "s5": "Tietosi säilytetään suojatussa PostgreSQL-tietokannassa. Käytämme salattuja yhteyksiä (HTTPS/TLS), JWT-todennusta ja alan vakiintuneita suojauskäytäntöjä tietojesi turvaamiseksi.",
+      "s5": "Tietosi säilytetään suojatussa PostgreSQL-tietokannassa. Käytämme salattuja yhteyksiä (HTTPS/TLS), JWT-todennusta ja alan vakiintuneita suojauskäytäntöjä tietojesi turvaamiseksi. Tilit, joihin ei ole kirjauduttu 2 vuoteen, poistetaan automaattisesti, kun niistä on ilmoitettu 30 ja 7 päivää etukäteen.",
       "s6Title": "6. Oikeutesi",
       "s6lead": "Sinulla on oikeus:",
       "s6a": "Tarkastella henkilötietojasi profiilissa ja asetuksissa.",
       "s6b": "Korjata tai päivittää tietojasi milloin tahansa.",
-      "s6c": "Pyytää tilisi ja siihen liittyvien tietojen poistamista.",
+      "s6c": "Poistaa tilisi ja siihen liittyvät tiedot itse: Profiili → Tili.",
       "s6d": "Viedä tietosi koneellisesti luettavassa muodossa.",
       "s7Title": "7. Avoin lähdekoodi",
       "s7": "Social Organizer on täysin avointa lähdekoodia. Voit tarkastella koodiamme ja sitä, miten tietojasi käsitellään, osoitteessa <gh>github.com/element1965/Social-organizer</gh>.",
@@ -1029,7 +1044,9 @@
     "pendingErrLimitOther": "Tällä henkilöllä on jo 150 tuttavaa",
     "pendingErrGone": "Tämä henkilö on poistanut tilinsä",
     "pendingErrResolved": "Tähän pyyntöön on jo vastattu",
-    "pendingErrNotYours": "Tämä pyyntö ei ole tälle Telegram-tilille"
+    "pendingErrNotYours": "Tämä pyyntö ei ole tälle Telegram-tilille",
+    "responsesTitle": "Uusia vastauksia keräykseesi",
+    "responsesBody": "Uusia vastauksia: {{count}}. Avaa keräys nähdäksesi ne."
   },
   "pending": {
     "errLimitSelf": "Sinulla on jo 150 tuttavaa. Se on enimmäismäärä.",

@@ -512,7 +512,9 @@
     "logoutByMethod": "{{method}}でログインしました。同じ方法で戻れます。",
     "logoutByEmail": "<b/>に送ったコードでログインしました。同じ方法で戻れます。",
     "logoutEmailOnly": "同じ方法か、<b/>に送るコードで戻れます。",
-    "logoutGeneric": "ログインしたときと同じ方法で戻れます。"
+    "logoutGeneric": "ログインしたときと同じ方法で戻れます。",
+    "notifyChannel": "チャンネル",
+    "notifyTelegramNotLinked": "メッセージをそこで受け取るには、「アカウント」でTelegramを連携してください。"
   },
   "settings": {
     "title": "設定",
@@ -531,7 +533,20 @@
     "connectTelegramHint": "Telegramから同じアカウントにログインできます。2つ目のアカウントは作成されません。",
     "telegramConnected": "Telegramがアカウントに連携されました",
     "telegramLinkConflict": "このTelegramにはデータのある別のアカウントがあるため、連携されませんでした。サポートにご連絡いただければ統合します。",
-    "telegramLinkInvalid": "リンクの有効期限が切れました。アプリの設定で「Telegramを連携」をもう一度押してください。"
+    "telegramLinkInvalid": "リンクの有効期限が切れました。アプリの設定で「Telegramを連携」をもう一度押してください。",
+    "notifyTitle": "通知",
+    "notifyChannelLabel": "通知は一つのチャンネル",
+    "notifyChannelApp": "アプリ",
+    "notifyChannelTelegram": "Telegram",
+    "notifyChannelHintApp": "メッセージはアプリだけに届き、Telegramには重複しません。",
+    "notifyChannelHintTelegram": "メッセージはTelegramだけに届き、アプリには重複しません。",
+    "notifyTelegramNotLinked": "メッセージをそこで受け取るには、下でTelegramを連携してください。",
+    "notifyPushOff": "この端末で見るには、プッシュ通知をオンにしてください。",
+    "notifyNewCollections": "新しい募金",
+    "notifyNewCollectionsHint": "通知を受けられる人が募金を開いたら知らせる",
+    "notifyMyEvents": "自分のイベント",
+    "notifyMyEventsHint": "接続リクエストと、自分の募金への反応は必ず届きます。反応は一つのメッセージにまとまります。",
+    "notifyAnyChat": "通知のチャンネルを選んでください。会話にはどのチャットでも使えます。"
   },
   "faq": {
     "title": "よくある質問",
@@ -892,8 +907,8 @@
     "deleteAccount": "アカウントの削除",
     "del": {
       "meta": "Social Organizer · 2026年11月9日更新",
-      "lead": "アカウントは、アプリかウェブサイトで削除します。メールも、待ち時間もありません。",
-      "step1": "アプリまたは orginizer.com を開き、ログインする",
+      "lead": "アカウントは自分で、中から削除します。アプリ、ウェブサイト、または Telegram Mini App で行い、メールも待ち時間もありません。",
+      "step1": "アプリ、orginizer.com、または Telegram Mini App を開いてログインする",
       "step2": "プロフィール → アカウント",
       "step3": "一番下の「アカウントを削除」",
       "step4": "シートで「完全に削除」を確認する",
@@ -906,8 +921,8 @@
       "gone5": "通知、プッシュの購読、設定、アシスタントとのチャット",
       "whenTitle": "時期と、残るもの",
       "whenText": "削除はすぐに行われ、元に戻せません。つながりがあった場合、他の人のネットワークではあなたの名前の位置に「削除されたユーザー」が残り、個人データはありません。他の人の過去の募金には、金額だけが残り、あなたの名前はありません。",
-      "noAccessTitle": "アカウントにアクセスできませんか？",
-      "noAccessText": "Telegram の<bot>@socialorganizer_bot</bot>に、ログインに使ったメールかユーザー名を書いて送ってください。30日以内に手動でアカウントを削除し、終わったら返信します。"
+      "noAccessTitle": "ログインできませんか？",
+      "noAccessText": "アカウントの削除は中からだけです。依頼による削除はありません。ログインできない場合、2年間ログインがなければプロフィールは自動で削除されます。その30日前と7日前に、Telegram、プッシュ通知、メールのうちアカウントにある方法で知らせます。"
     },
     "privacyTitle": "プライバシーポリシー",
     "privacyMeta": "最終更新：2025年2月7日",
@@ -930,12 +945,12 @@
       "s4b": "<b>Telegram：</b>ミニアプリが Telegram の中で動くために必要なデータ。",
       "s4c": "<b>ホスティング事業者：</b>サービスを届けるため、サーバーがデータを処理します。",
       "s5Title": "5. 保管と安全",
-      "s5": "データは、安全な PostgreSQL のデータベースに保管します。暗号化された接続（HTTPS/TLS）、JWT による認証、業界で一般的な安全対策で情報を守ります。",
+      "s5": "データは、安全な PostgreSQL のデータベースに保管します。暗号化された接続（HTTPS/TLS）、JWT による認証、業界で一般的な安全対策で情報を守ります。2年間ログインのないアカウントは、30日前と7日前の通知のあと、自動で削除されます。",
       "s6Title": "6. あなたの権利",
       "s6lead": "あなたには、次の権利があります。",
       "s6a": "プロフィールと設定から、自分の個人データにアクセスすること。",
       "s6b": "いつでも情報を訂正し、更新すること。",
-      "s6c": "アカウントと、それに紐づくデータの削除を求めること。",
+      "s6c": "プロフィール → アカウントで、アカウントと関連データを自分で削除すること。",
       "s6d": "機械が読める形式で、自分のデータを書き出すこと。",
       "s7Title": "7. オープンソース",
       "s7": "Social Organizer は、すべてオープンソースです。コードとデータの扱い方は、<gh>github.com/element1965/Social-organizer</gh>で確認できます。",
@@ -1022,7 +1037,9 @@
     "pendingErrLimitOther": "この人の知り合いはすでに150人です",
     "pendingErrGone": "この人はアカウントを削除しました",
     "pendingErrResolved": "このリクエストにはすでに返答されています",
-    "pendingErrNotYours": "このリクエストはこのTelegramアカウント宛てではありません"
+    "pendingErrNotYours": "このリクエストはこのTelegramアカウント宛てではありません",
+    "responsesTitle": "あなたの募金への新しい反応",
+    "responsesBody": "新しい反応: {{count}}。募金を開いて確認してください。"
   },
   "pending": {
     "errLimitSelf": "知り合いがすでに150人います。これが上限です。",

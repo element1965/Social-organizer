@@ -517,7 +517,9 @@
     "logoutByMethod": "{{method}} ile giriş yaptınız. Aynı yolla dönebilirsiniz.",
     "logoutByEmail": "<b/> adresine gelen kodla giriş yaptınız. Aynı yolla dönebilirsiniz.",
     "logoutEmailOnly": "Aynı yolla veya <b/> adresine gelen kodla dönebilirsiniz.",
-    "logoutGeneric": "Giriş yaptığınız yolla dönebilirsiniz."
+    "logoutGeneric": "Giriş yaptığınız yolla dönebilirsiniz.",
+    "notifyChannel": "Kanal",
+    "notifyTelegramNotLinked": "İletilerin oraya gelmesi için Telegram'ı «Hesap» bölümünde bağlayın."
   },
   "settings": {
     "title": "Ayarlar",
@@ -536,7 +538,20 @@
     "connectTelegramHint": "Telegram ile aynı hesaba girin — ikinci bir hesap oluşturulmaz.",
     "telegramConnected": "Telegram hesabınıza bağlandı",
     "telegramLinkConflict": "Bu Telegram'ın zaten verileri olan ayrı bir hesabı var, bu yüzden bağlanmadı. Desteğe yazın, birleştirelim.",
-    "telegramLinkInvalid": "Bağlantının süresi doldu. Uygulama ayarlarında «Telegram'ı bağla»ya tekrar dokunun."
+    "telegramLinkInvalid": "Bağlantının süresi doldu. Uygulama ayarlarında «Telegram'ı bağla»ya tekrar dokunun.",
+    "notifyTitle": "Bildirimler",
+    "notifyChannelLabel": "Bildirimler için tek kanal",
+    "notifyChannelApp": "Uygulama",
+    "notifyChannelTelegram": "Telegram",
+    "notifyChannelHintApp": "İletiler yalnızca uygulamaya gelir, Telegram onları tekrarlamaz.",
+    "notifyChannelHintTelegram": "İletiler yalnızca Telegram'a gelir, uygulama onları tekrarlamaz.",
+    "notifyTelegramNotLinked": "İletileri orada almak için aşağıdan Telegram'ı bağlayın.",
+    "notifyPushOff": "Bu cihazda görmek için push bildirimlerini açın.",
+    "notifyNewCollections": "Yeni toplamalar",
+    "notifyNewCollectionsHint": "Hakkında bildirim alabileceğim biri toplama açınca haber verin",
+    "notifyMyEvents": "Olaylarım",
+    "notifyMyEventsHint": "Bağlantı istekleri ve toplamama gelen karşılıklar her zaman gelir. Karşılıklar tek iletide gelir.",
+    "notifyAnyChat": "Bildirimler için bir kanal seçin. Birbirinizle konuşmak için herhangi bir sohbet olur."
   },
   "faq": {
     "title": "Sık sorulan sorular",
@@ -899,8 +914,8 @@
     "deleteAccount": "Hesap silme",
     "del": {
       "meta": "Social Organizer · 9 Kasım 2026 güncellendi",
-      "lead": "Hesabınızı uygulamada veya sitede silersiniz; e-posta yok, bekleme yok.",
-      "step1": "Uygulamayı veya orginizer.com adresini açıp giriş yapın",
+      "lead": "Hesabı kendiniz, içinden silersiniz: uygulamada, sitede veya Telegram Mini App'te. E-posta yok, bekleme yok.",
+      "step1": "Uygulamayı, orginizer.com'u veya Telegram Mini App'i açın ve girin",
       "step2": "Profil → Hesap",
       "step3": "Altta «Hesabı sil»",
       "step4": "Panelde «Sonsuza dek sil»i onaylayın",
@@ -913,8 +928,8 @@
       "gone5": "Bildirimler, push abonelikleri, ayarlar, asistanla yazışmalar",
       "whenTitle": "Süre ve kalanlar",
       "whenText": "Silme hemen olur ve geri alınamaz. Bağlantılarınız varsa, başkalarının ağlarında adınızın yerinde kişisel veri olmadan «Silinmiş kullanıcı» kalır. Başkalarının geçmiş toplamaları tutarları adınız olmadan saklar.",
-      "noAccessTitle": "Hesabınıza erişemiyor musunuz?",
-      "noAccessText": "Telegram'da <bot>@socialorganizer_bot</bot> adresine, giriş yaptığınız e-posta veya kullanıcı adıyla yazın. Hesabı 30 gün içinde elle siler ve bitince yanıtlarız."
+      "noAccessTitle": "Giriş yapılamıyor mu?",
+      "noAccessText": "Hesap yalnızca içinden silinir; istek üzerine silmiyoruz. Giriş yapamıyorsanız profil, 2 yıl giriş olmayınca otomatik silinir. Bundan 30 ve 7 gün önce Telegram, push bildirimi ve e-posta ile uyarırız — hesapta hangisi varsa."
     },
     "privacyTitle": "Gizlilik politikası",
     "privacyMeta": "Son güncelleme: 7 Şubat 2025",
@@ -937,12 +952,12 @@
       "s4b": "<b>Telegram:</b> mini uygulamanın Telegram içinde çalışması için gerekli veriler.",
       "s4c": "<b>Barındırma sağlayıcıları:</b> sunucularımız hizmeti sunmak için verilerinizi işler.",
       "s5Title": "5. Veri saklama ve güvenlik",
-      "s5": "Verileriniz güvenli bir PostgreSQL veritabanında saklanır. Bilgilerinizi korumak için şifreli bağlantılar (HTTPS/TLS), JWT tabanlı kimlik doğrulama ve sektörün olağan güvenlik uygulamalarını kullanırız.",
+      "s5": "Verileriniz güvenli bir PostgreSQL veritabanında saklanır. Bilgilerinizi korumak için şifreli bağlantılar (HTTPS/TLS), JWT tabanlı kimlik doğrulama ve sektörün olağan güvenlik uygulamalarını kullanırız. 2 yıl boyunca girilmeyen hesaplar, 30 ve 7 gün önceden bildirimden sonra otomatik silinir.",
       "s6Title": "6. Haklarınız",
       "s6lead": "Şu haklara sahipsiniz:",
       "s6a": "Kişisel verilerinize profilinizden ve ayarlardan erişmek.",
       "s6b": "Bilgilerinizi istediğiniz zaman düzeltmek veya güncellemek.",
-      "s6c": "Hesabınızın ve ilişkili verilerin silinmesini istemek.",
+      "s6c": "Hesabınızı ve ilişkili verileri kendiniz silmek: Profil → Hesap.",
       "s6d": "Verilerinizi makinece okunur biçimde dışa aktarmak.",
       "s7Title": "7. Açık kaynak",
       "s7": "Social Organizer tamamen açık kaynaklıdır. Kod tabanımızı ve verilerinizin nasıl işlendiğini <gh>github.com/element1965/Social-organizer</gh> adresinde inceleyebilirsiniz.",
@@ -1029,7 +1044,9 @@
     "pendingErrLimitOther": "Bu kişinin zaten 150 tanıdığı var",
     "pendingErrGone": "Bu kişi hesabını sildi",
     "pendingErrResolved": "Bu isteğe zaten yanıt verildi",
-    "pendingErrNotYours": "Bu istek bu Telegram hesabı için değil"
+    "pendingErrNotYours": "Bu istek bu Telegram hesabı için değil",
+    "responsesTitle": "Toplamanıza yeni karşılıklar",
+    "responsesBody": "Yeni karşılıklar: {{count}}. Görmek için toplamayı açın."
   },
   "pending": {
     "errLimitSelf": "Zaten 150 tanıdığınız var — bu üst sınır.",

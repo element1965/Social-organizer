@@ -512,7 +512,9 @@
     "logoutByMethod": "{{method}}로 로그인했어요. 같은 방법으로 다시 들어올 수 있어요.",
     "logoutByEmail": "<b/>로 보낸 코드로 로그인했어요. 같은 방법으로 다시 들어올 수 있어요.",
     "logoutEmailOnly": "같은 방법으로, 또는 <b/>로 보낸 코드로 다시 들어올 수 있어요.",
-    "logoutGeneric": "로그인했던 방법으로 다시 들어올 수 있어요."
+    "logoutGeneric": "로그인했던 방법으로 다시 들어올 수 있어요.",
+    "notifyChannel": "채널",
+    "notifyTelegramNotLinked": "메시지를 받으려면 “계정”에서 Telegram을 연결해 주세요."
   },
   "settings": {
     "title": "설정",
@@ -531,7 +533,20 @@
     "connectTelegramHint": "Telegram으로 같은 계정에 로그인해요. 두 번째 계정은 만들어지지 않아요.",
     "telegramConnected": "Telegram이 계정에 연결됐어요",
     "telegramLinkConflict": "이 Telegram에는 이미 데이터가 있는 별도 계정이 있어서 연결하지 않았어요. 지원팀에 쓰면 합쳐 드릴게요.",
-    "telegramLinkInvalid": "링크가 만료됐어요. 앱 설정에서 “Telegram 연결”을 다시 눌러 주세요."
+    "telegramLinkInvalid": "링크가 만료됐어요. 앱 설정에서 “Telegram 연결”을 다시 눌러 주세요.",
+    "notifyTitle": "알림",
+    "notifyChannelLabel": "알림은 하나의 채널",
+    "notifyChannelApp": "앱",
+    "notifyChannelTelegram": "Telegram",
+    "notifyChannelHintApp": "메시지는 앱으로만 오고, Telegram은 같은 내용을 다시 보내지 않아요.",
+    "notifyChannelHintTelegram": "메시지는 Telegram으로만 오고, 앱은 같은 내용을 다시 보내지 않아요.",
+    "notifyTelegramNotLinked": "메시지를 받으려면 아래에서 Telegram을 연결해 주세요.",
+    "notifyPushOff": "이 기기에서 보려면 푸시 알림을 켜 주세요.",
+    "notifyNewCollections": "새 모금",
+    "notifyNewCollectionsHint": "알림을 받을 수 있는 사람이 모금을 열면 알려 주세요",
+    "notifyMyEvents": "내 이벤트",
+    "notifyMyEventsHint": "연결 요청과 내 모금에 대한 반응은 항상 와요. 반응은 메시지 하나로 와요.",
+    "notifyAnyChat": "알림 채널을 고르세요. 서로 이야기하는 데는 어떤 채팅이든 돼요."
   },
   "faq": {
     "title": "자주 묻는 질문",
@@ -892,8 +907,8 @@
     "deleteAccount": "계정 삭제",
     "del": {
       "meta": "Social Organizer · 2026년 11월 9일 업데이트",
-      "lead": "계정은 앱이나 웹사이트에서 삭제해요. 메일도, 대기도 필요 없어요.",
-      "step1": "앱이나 orginizer.com을 열고 로그인해요",
+      "lead": "계정은 직접, 안에서 삭제해요. 앱, 웹사이트, 또는 Telegram Mini App에서요. 이메일도 기다림도 없어요.",
+      "step1": "앱, orginizer.com 또는 Telegram Mini App을 열고 로그인하세요",
       "step2": "프로필 → 계정",
       "step3": "맨 아래의 “계정 삭제”",
       "step4": "시트에서 “영구 삭제”를 확인해요",
@@ -906,8 +921,8 @@
       "gone5": "알림, 푸시 구독, 설정, 도우미와의 대화",
       "whenTitle": "시기와 남는 것",
       "whenText": "삭제는 바로 되고, 되돌릴 수 없어요. 연결이 있었다면 다른 사람의 네트워크에는 이름 대신 “삭제된 사용자”만 남고, 개인 정보는 없어요. 다른 사람의 지난 모금에는 이름 없이 금액만 남아요.",
-      "noAccessTitle": "계정에 들어갈 수 없나요?",
-      "noAccessText": "Telegram의 <bot>@socialorganizer_bot</bot>으로, 로그인에 쓴 이메일이나 사용자 이름을 적어 보내 주세요. 30일 안에 계정을 직접 삭제하고, 끝나면 답해 드려요."
+      "noAccessTitle": "로그인이 안 되나요?",
+      "noAccessText": "계정은 안에서만 삭제되고, 요청으로는 삭제하지 않아요. 로그인할 수 없으면 2년 동안 로그인이 없을 때 프로필이 자동으로 삭제돼요. 그 30일 전과 7일 전에 Telegram, 푸시 알림, 이메일 중 계정에 있는 곳으로 알려 드려요."
     },
     "privacyTitle": "개인정보 처리방침",
     "privacyMeta": "최종 업데이트: 2025년 2월 7일",
@@ -930,12 +945,12 @@
       "s4b": "<b>Telegram:</b> 미니앱이 Telegram 안에서 동작하는 데 필요한 정보.",
       "s4c": "<b>호스팅 제공자:</b> 서버가 서비스를 제공하려고 정보를 처리해요.",
       "s5Title": "5. 보관과 보안",
-      "s5": "정보는 안전한 PostgreSQL 데이터베이스에 저장돼요. 암호화된 연결(HTTPS/TLS), JWT 기반 인증, 그리고 업계에서 쓰는 보안 방식으로 정보를 보호해요.",
+      "s5": "정보는 안전한 PostgreSQL 데이터베이스에 저장돼요. 암호화된 연결(HTTPS/TLS), JWT 기반 인증, 그리고 업계에서 쓰는 보안 방식으로 정보를 보호해요. 2년 동안 로그인이 없는 계정은 30일 전과 7일 전 안내 뒤에 자동으로 삭제돼요.",
       "s6Title": "6. 권리",
       "s6lead": "이런 권리가 있어요.",
       "s6a": "프로필과 설정에서 개인 정보를 볼 수 있어요.",
       "s6b": "언제든 정보를 고치거나 업데이트할 수 있어요.",
-      "s6c": "계정과 관련 정보의 삭제를 요구할 수 있어요.",
+      "s6c": "프로필 → 계정에서 계정과 관련 정보를 직접 삭제할 수 있어요.",
       "s6d": "기계가 읽을 수 있는 형식으로 정보를 내보낼 수 있어요.",
       "s7Title": "7. 오픈 소스",
       "s7": "Social Organizer는 전부 오픈 소스예요. 코드와 정보 처리 방식은 <gh>github.com/element1965/Social-organizer</gh>에서 볼 수 있어요.",
@@ -1022,7 +1037,9 @@
     "pendingErrLimitOther": "이 사람은 지인이 이미 150명이에요",
     "pendingErrGone": "이 사람이 계정을 삭제했어요",
     "pendingErrResolved": "이미 응답한 요청이에요",
-    "pendingErrNotYours": "이 Telegram 계정에 온 요청이 아니에요"
+    "pendingErrNotYours": "이 Telegram 계정에 온 요청이 아니에요",
+    "responsesTitle": "내 모금에 대한 새 반응",
+    "responsesBody": "새 반응: {{count}}. 모금을 열어 확인하세요."
   },
   "pending": {
     "errLimitSelf": "지인이 이미 150명이에요. 최대예요.",

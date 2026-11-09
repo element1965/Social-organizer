@@ -512,7 +512,9 @@
     "logoutByMethod": "Anda masuk dengan {{method}}. Kembali dengan cara yang sama.",
     "logoutByEmail": "Anda masuk dengan kode yang dikirim ke <b/>. Kembali dengan cara yang sama.",
     "logoutEmailOnly": "Kembali dengan cara yang sama atau dengan kode yang dikirim ke <b/>.",
-    "logoutGeneric": "Anda bisa kembali dengan cara yang sama seperti saat masuk."
+    "logoutGeneric": "Anda bisa kembali dengan cara yang sama seperti saat masuk.",
+    "notifyChannel": "Kanal",
+    "notifyTelegramNotLinked": "Hubungkan Telegram di “Akun” agar pesan sampai di sana."
   },
   "settings": {
     "title": "Pengaturan",
@@ -531,7 +533,20 @@
     "connectTelegramHint": "Masuk lewat Telegram ke akun yang sama — tidak akan dibuat akun kedua.",
     "telegramConnected": "Telegram terhubung ke akun Anda",
     "telegramLinkConflict": "Telegram ini sudah punya akun terpisah berisi data, jadi tidak dihubungkan. Tulis ke dukungan, kami akan menggabungkannya.",
-    "telegramLinkInvalid": "Tautan kedaluwarsa. Tekan «Hubungkan Telegram» di pengaturan aplikasi lagi."
+    "telegramLinkInvalid": "Tautan kedaluwarsa. Tekan «Hubungkan Telegram» di pengaturan aplikasi lagi.",
+    "notifyTitle": "Notifikasi",
+    "notifyChannelLabel": "Satu kanal untuk notifikasi",
+    "notifyChannelApp": "Aplikasi",
+    "notifyChannelTelegram": "Telegram",
+    "notifyChannelHintApp": "Pesan hanya masuk ke aplikasi, Telegram tidak mengulanginya.",
+    "notifyChannelHintTelegram": "Pesan hanya masuk ke Telegram, aplikasi tidak mengulanginya.",
+    "notifyTelegramNotLinked": "Hubungkan Telegram di bawah agar pesan sampai di sana.",
+    "notifyPushOff": "Nyalakan notifikasi push agar terlihat di perangkat ini.",
+    "notifyNewCollections": "Pengumpulan baru",
+    "notifyNewCollectionsHint": "Beri tahu saya saat seseorang yang boleh saya terima notifikasinya membuka pengumpulan",
+    "notifyMyEvents": "Peristiwa saya",
+    "notifyMyEventsHint": "Permintaan koneksi dan tanggapan pada pengumpulan saya selalu datang. Tanggapan datang dalam satu pesan.",
+    "notifyAnyChat": "Pilih kanal untuk notifikasi. Obrolan apa pun bisa dipakai untuk saling berbicara."
   },
   "faq": {
     "title": "FAQ",
@@ -892,8 +907,8 @@
     "deleteAccount": "Penghapusan akun",
     "del": {
       "meta": "Social Organizer · diperbarui 9 November 2026",
-      "lead": "Anda menghapus akun di aplikasi atau di situs, tanpa email dan tanpa menunggu.",
-      "step1": "Buka aplikasi atau orginizer.com dan masuk",
+      "lead": "Anda menghapus akun sendiri, dari dalam: di aplikasi, di situs, atau di Telegram Mini App. Tanpa email dan tanpa menunggu.",
+      "step1": "Buka aplikasi, orginizer.com, atau Telegram Mini App dan masuk",
       "step2": "Profil → Akun",
       "step3": "Di bagian bawah, “Hapus akun”",
       "step4": "Konfirmasi “Hapus selamanya” di lembar",
@@ -906,8 +921,8 @@
       "gone5": "Notifikasi, langganan push, pengaturan, chat dengan asisten",
       "whenTitle": "Waktu dan yang tersisa",
       "whenText": "Penghapusan langsung dan tidak bisa dibatalkan. Jika Anda punya koneksi, jaringan orang lain menyimpan “Pengguna dihapus” sebagai pengganti nama Anda, tanpa data pribadi. Pengumpulan sebelumnya milik orang lain menyimpan jumlah tanpa nama Anda.",
-      "noAccessTitle": "Tidak bisa mengakses akun?",
-      "noAccessText": "Tulis ke <bot>@socialorganizer_bot</bot> di Telegram dengan email atau nama pengguna yang Anda pakai untuk masuk. Kami menghapus akun secara manual dalam 30 hari dan membalas saat selesai."
+      "noAccessTitle": "Tidak bisa masuk?",
+      "noAccessText": "Akun hanya dihapus dari dalam; kami tidak menghapus berdasarkan permintaan. Jika Anda tidak bisa masuk, profil terhapus otomatis setelah 2 tahun tanpa masuk. Kami memberi tahu 30 dan 7 hari sebelumnya lewat Telegram, notifikasi push, dan email — ke mana pun akun memilikinya."
     },
     "privacyTitle": "Kebijakan Privasi",
     "privacyMeta": "Terakhir diperbarui: 7 Februari 2025",
@@ -930,12 +945,12 @@
       "s4b": "<b>Telegram:</b> data yang diperlukan agar Mini App berfungsi di dalam Telegram.",
       "s4c": "<b>Penyedia hosting:</b> server kami memproses data Anda untuk menjalankan layanan.",
       "s5Title": "5. Penyimpanan dan Keamanan Data",
-      "s5": "Data Anda disimpan di basis data PostgreSQL yang aman. Kami memakai koneksi terenkripsi (HTTPS/TLS), autentikasi berbasis JWT, dan mengikuti praktik keamanan yang lazim di industri untuk melindungi informasi Anda.",
+      "s5": "Data Anda disimpan di basis data PostgreSQL yang aman. Kami memakai koneksi terenkripsi (HTTPS/TLS), autentikasi berbasis JWT, dan mengikuti praktik keamanan yang lazim di industri untuk melindungi informasi Anda. Akun yang tidak masuk selama 2 tahun dihapus otomatis, setelah pemberitahuan 30 dan 7 hari sebelumnya.",
       "s6Title": "6. Hak Anda",
       "s6lead": "Anda berhak untuk:",
       "s6a": "Mengakses data pribadi melalui profil dan pengaturan.",
       "s6b": "Memperbaiki atau memperbarui informasi kapan saja.",
-      "s6c": "Meminta penghapusan akun dan data terkait.",
+      "s6c": "Menghapus sendiri akun dan data terkait di Profil → Akun.",
       "s6d": "Mengekspor data dalam format yang dapat dibaca mesin.",
       "s7Title": "7. Sumber Terbuka",
       "s7": "Social Organizer sepenuhnya sumber terbuka. Anda dapat meninjau kode dan cara data Anda ditangani di <gh>github.com/element1965/Social-organizer</gh>.",
@@ -1022,7 +1037,9 @@
     "pendingErrLimitOther": "Orang ini sudah punya 150 kenalan",
     "pendingErrGone": "Orang ini menghapus akunnya",
     "pendingErrResolved": "Permintaan ini sudah dijawab",
-    "pendingErrNotYours": "Permintaan ini bukan untuk akun Telegram ini"
+    "pendingErrNotYours": "Permintaan ini bukan untuk akun Telegram ini",
+    "responsesTitle": "Tanggapan baru pada pengumpulan Anda",
+    "responsesBody": "Tanggapan baru: {{count}}. Buka pengumpulan untuk melihatnya."
   },
   "pending": {
     "errLimitSelf": "Anda sudah punya 150 kenalan, itu batas maksimum.",

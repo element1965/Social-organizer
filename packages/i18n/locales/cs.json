@@ -527,7 +527,9 @@
     "logoutByMethod": "Přihlásili jste se přes {{method}}. Vrátit se můžete stejně.",
     "logoutByEmail": "Přihlásili jste se kódem na e-mail <b/>. Vrátit se můžete stejně.",
     "logoutEmailOnly": "Vrátit se můžete stejným způsobem, nebo kódem na e-mail <b/>.",
-    "logoutGeneric": "Vrátit se můžete stejným způsobem, jakým jste se přihlásili."
+    "logoutGeneric": "Vrátit se můžete stejným způsobem, jakým jste se přihlásili.",
+    "notifyChannel": "Kanál",
+    "notifyTelegramNotLinked": "Propojte Telegram v části „Účet“, aby vám tam chodily zprávy."
   },
   "settings": {
     "title": "Nastavení",
@@ -546,7 +548,20 @@
     "connectTelegramHint": "Přihlašujte se přes Telegram do stejného účtu — druhý účet se nevytvoří.",
     "telegramConnected": "Telegram je propojen s vaším účtem",
     "telegramLinkConflict": "Tento Telegram už má samostatný účet s daty, proto nebyl propojen. Napište podpoře — sloučíme je.",
-    "telegramLinkInvalid": "Odkaz vypršel. V nastavení aplikace znovu klepněte na „Propojit Telegram“."
+    "telegramLinkInvalid": "Odkaz vypršel. V nastavení aplikace znovu klepněte na „Propojit Telegram“.",
+    "notifyTitle": "Oznámení",
+    "notifyChannelLabel": "Jeden kanál pro oznámení",
+    "notifyChannelApp": "Aplikace",
+    "notifyChannelTelegram": "Telegram",
+    "notifyChannelHintApp": "Zprávy chodí jen do aplikace, Telegram je neopakuje.",
+    "notifyChannelHintTelegram": "Zprávy chodí jen do Telegramu, aplikace je neopakuje.",
+    "notifyTelegramNotLinked": "Propojte Telegram níže, aby vám tam chodily zprávy.",
+    "notifyPushOff": "Zapněte push oznámení, ať je vidíte na tomto zařízení.",
+    "notifyNewCollections": "Nové sbírky",
+    "notifyNewCollectionsHint": "Dát vědět, když sbírku otevře někdo, o kom mi mohou chodit oznámení",
+    "notifyMyEvents": "Moje události",
+    "notifyMyEventsHint": "Žádosti o připojení a odezvy na mou sbírku chodí vždy. Odezvy přijdou v jedné zprávě.",
+    "notifyAnyChat": "Vyberte kanál pro oznámení. Na povídání se hodí libovolný chat."
   },
   "faq": {
     "title": "Otázky a odpovědi",
@@ -913,8 +928,8 @@
     "deleteAccount": "Smazání účtu",
     "del": {
       "meta": "Social Organizer · aktualizováno 9. listopadu 2026",
-      "lead": "Účet smažete v aplikaci nebo na webu, bez e-mailů a bez čekání.",
-      "step1": "Otevřete aplikaci nebo orginizer.com a přihlaste se",
+      "lead": "Účet smažete sami, zevnitř: v aplikaci, na webu nebo v Telegram Mini App. Bez e-mailů a bez čekání.",
+      "step1": "Otevřete aplikaci, orginizer.com nebo Telegram Mini App a přihlaste se",
       "step2": "Profil → Účet",
       "step3": "Dole „Smazat účet“",
       "step4": "V panelu potvrďte „Smazat navždy“",
@@ -927,8 +942,8 @@
       "gone5": "Oznámení, odběry push, nastavení, chaty s asistentem",
       "whenTitle": "Lhůty a co zůstane",
       "whenText": "Smazání je okamžité a nejde vrátit. Pokud jste měli spojení, v sítích ostatních místo jména zůstane „Smazaný uživatel“, bez osobních údajů. Minulé sbírky jiných lidí si částky ponechají bez vašeho jména.",
-      "noAccessTitle": "Nemáte k účtu přístup?",
-      "noAccessText": "Napište na Telegramu <bot>@socialorganizer_bot</bot> a uveďte e-mail nebo uživatelské jméno, kterým jste se přihlašovali. Účet smažeme ručně do 30 dnů a ozveme se, až to bude hotové."
+      "noAccessTitle": "Nedaří se přihlásit?",
+      "noAccessText": "Účet se maže jen zevnitř, na požádání ho nemažeme. Když se nedaří přihlásit, profil se smaže automaticky po 2 letech bez přihlášení. 30 a 7 dní předtím pošleme upozornění přes Telegram, push oznámení a e-mail — kam to účet má."
     },
     "privacyTitle": "Zásady ochrany soukromí",
     "privacyMeta": "Naposledy aktualizováno: 7. února 2025",
@@ -951,12 +966,12 @@
       "s4b": "<b>Telegramem:</b> údaje, bez kterých mini-aplikace v Telegramu nefunguje.",
       "s4c": "<b>Poskytovateli hostingu:</b> naše servery údaje zpracovávají, aby služba fungovala.",
       "s5Title": "5. Ukládání a zabezpečení",
-      "s5": "Údaje jsou uložené v zabezpečené databázi PostgreSQL. Používáme šifrovaná spojení (HTTPS/TLS), ověřování pomocí JWT a běžná bezpečnostní opatření v oboru, abychom vaše údaje chránili.",
+      "s5": "Údaje jsou uložené v zabezpečené databázi PostgreSQL. Používáme šifrovaná spojení (HTTPS/TLS), ověřování pomocí JWT a běžná bezpečnostní opatření v oboru, abychom vaše údaje chránili. Účty bez přihlášení po dobu 2 let se mažou automaticky, po upozorněních 30 a 7 dní předem.",
       "s6Title": "6. Vaše práva",
       "s6lead": "Máte právo:",
       "s6a": "Nahlížet na své osobní údaje v profilu a v nastavení.",
       "s6b": "Údaje kdykoli opravit nebo aktualizovat.",
-      "s6c": "Požádat o smazání účtu a souvisejících údajů.",
+      "s6c": "Smazat účet a související údaje sami: Profil → Účet.",
       "s6d": "Exportovat své údaje ve strojově čitelném formátu.",
       "s7Title": "7. Otevřený kód",
       "s7": "Social Organizer je celý s otevřeným kódem. Kód i to, jak se s údaji nakládá, si můžete prohlédnout na <gh>github.com/element1965/Social-organizer</gh>.",
@@ -1043,7 +1058,9 @@
     "pendingErrLimitOther": "Tento člověk už má 150 známých",
     "pendingErrGone": "Tento člověk smazal účet",
     "pendingErrResolved": "Na tuto žádost už bylo odpovězeno",
-    "pendingErrNotYours": "Tato žádost není pro tento účet Telegram"
+    "pendingErrNotYours": "Tato žádost není pro tento účet Telegram",
+    "responsesTitle": "Nové odezvy na vaši sbírku",
+    "responsesBody": "Nové odezvy: {{count}}. Otevřete sbírku a podívejte se."
   },
   "pending": {
     "errLimitSelf": "Už máte 150 známých — to je maximum.",

@@ -512,7 +512,9 @@
     "logoutByMethod": "Bạn đã đăng nhập bằng {{method}}. Có thể quay lại cùng cách.",
     "logoutByEmail": "Bạn đã đăng nhập bằng mã gửi tới <b/>. Có thể quay lại cùng cách.",
     "logoutEmailOnly": "Có thể quay lại cùng cách hoặc bằng mã gửi tới <b/>.",
-    "logoutGeneric": "Bạn có thể quay lại bằng cách đã dùng để đăng nhập."
+    "logoutGeneric": "Bạn có thể quay lại bằng cách đã dùng để đăng nhập.",
+    "notifyChannel": "Kênh",
+    "notifyTelegramNotLinked": "Kết nối Telegram trong «Tài khoản» để nhận tin ở đó."
   },
   "settings": {
     "title": "Cài đặt",
@@ -531,7 +533,20 @@
     "connectTelegramHint": "Đăng nhập qua Telegram vào cùng tài khoản này — sẽ không tạo tài khoản thứ hai.",
     "telegramConnected": "Telegram đã được kết nối với tài khoản của bạn",
     "telegramLinkConflict": "Telegram này đã có tài khoản riêng chứa dữ liệu nên chưa được kết nối. Hãy nhắn hỗ trợ, chúng tôi sẽ gộp lại.",
-    "telegramLinkInvalid": "Liên kết đã hết hạn. Nhấn «Kết nối Telegram» trong cài đặt ứng dụng lần nữa."
+    "telegramLinkInvalid": "Liên kết đã hết hạn. Nhấn «Kết nối Telegram» trong cài đặt ứng dụng lần nữa.",
+    "notifyTitle": "Thông báo",
+    "notifyChannelLabel": "Một kênh cho thông báo",
+    "notifyChannelApp": "Ứng dụng",
+    "notifyChannelTelegram": "Telegram",
+    "notifyChannelHintApp": "Tin chỉ đến ứng dụng, Telegram không gửi lại.",
+    "notifyChannelHintTelegram": "Tin chỉ đến Telegram, ứng dụng không gửi lại.",
+    "notifyTelegramNotLinked": "Kết nối Telegram bên dưới để nhận tin ở đó.",
+    "notifyPushOff": "Bật thông báo push để thấy trên thiết bị này.",
+    "notifyNewCollections": "Đợt quyên góp mới",
+    "notifyNewCollectionsHint": "Báo tôi khi người mà tôi có thể nhận thông báo mở một đợt quyên góp",
+    "notifyMyEvents": "Sự kiện của tôi",
+    "notifyMyEventsHint": "Yêu cầu kết nối và phản hồi cho đợt quyên góp của tôi luôn đến. Phản hồi đến trong một tin.",
+    "notifyAnyChat": "Chọn một kênh cho thông báo. Trò chuyện với nhau thì chat nào cũng được."
   },
   "faq": {
     "title": "Câu hỏi thường gặp",
@@ -892,8 +907,8 @@
     "deleteAccount": "Xóa tài khoản",
     "del": {
       "meta": "Social Organizer · cập nhật 9 tháng 11 năm 2026",
-      "lead": "Bạn xóa tài khoản trong ứng dụng hoặc trên trang web, không cần email và không phải chờ.",
-      "step1": "Mở ứng dụng hoặc orginizer.com và đăng nhập",
+      "lead": "Bạn tự xóa tài khoản, từ bên trong: trong ứng dụng, trên trang web hoặc trong Telegram Mini App. Không email và không chờ.",
+      "step1": "Mở ứng dụng, orginizer.com hoặc Telegram Mini App rồi đăng nhập",
       "step2": "Hồ sơ → Tài khoản",
       "step3": "Ở cuối, «Xóa tài khoản»",
       "step4": "Xác nhận «Xóa vĩnh viễn» trong bảng",
@@ -906,8 +921,8 @@
       "gone5": "Thông báo, đăng ký push, cài đặt, chat với trợ lý",
       "whenTitle": "Thời điểm và những gì còn lại",
       "whenText": "Việc xóa diễn ra ngay và không hoàn tác được. Nếu bạn có kết nối, mạng lưới của người khác sẽ giữ «Người dùng đã xóa» thay cho tên bạn, không kèm dữ liệu cá nhân. Các đợt quyên góp trước của người khác giữ số tiền mà không có tên bạn.",
-      "noAccessTitle": "Không vào được tài khoản?",
-      "noAccessText": "Hãy viết cho <bot>@socialorganizer_bot</bot> trên Telegram, kèm email hoặc tên người dùng bạn đã dùng để đăng nhập. Chúng tôi xóa tài khoản thủ công trong vòng 30 ngày và trả lời khi xong."
+      "noAccessTitle": "Không đăng nhập được?",
+      "noAccessText": "Tài khoản chỉ xóa từ bên trong; chúng tôi không xóa theo yêu cầu. Nếu không đăng nhập được, hồ sơ bị xóa tự động sau 2 năm không đăng nhập. Chúng tôi báo trước 30 và 7 ngày qua Telegram, thông báo push và email — nơi tài khoản có."
     },
     "privacyTitle": "Chính sách quyền riêng tư",
     "privacyMeta": "Cập nhật lần cuối: 7 tháng 2 năm 2025",
@@ -930,12 +945,12 @@
       "s4b": "<b>Telegram:</b> dữ liệu cần để Mini App hoạt động trong Telegram.",
       "s4c": "<b>Nhà cung cấp máy chủ:</b> máy chủ của chúng tôi xử lý dữ liệu để cung cấp dịch vụ.",
       "s5Title": "5. Lưu trữ và bảo mật dữ liệu",
-      "s5": "Dữ liệu của bạn được lưu trong cơ sở dữ liệu PostgreSQL an toàn. Chúng tôi dùng kết nối mã hóa (HTTPS/TLS), xác thực dựa trên JWT, và các biện pháp bảo mật thông dụng trong ngành để bảo vệ thông tin của bạn.",
+      "s5": "Dữ liệu của bạn được lưu trong cơ sở dữ liệu PostgreSQL an toàn. Chúng tôi dùng kết nối mã hóa (HTTPS/TLS), xác thực dựa trên JWT, và các biện pháp bảo mật thông dụng trong ngành để bảo vệ thông tin của bạn. Tài khoản không đăng nhập trong 2 năm bị xóa tự động, sau thông báo trước 30 và 7 ngày.",
       "s6Title": "6. Quyền của bạn",
       "s6lead": "Bạn có quyền:",
       "s6a": "Xem dữ liệu cá nhân qua hồ sơ và cài đặt.",
       "s6b": "Sửa hoặc cập nhật thông tin bất cứ lúc nào.",
-      "s6c": "Yêu cầu xóa tài khoản và dữ liệu liên quan.",
+      "s6c": "Tự xóa tài khoản và dữ liệu liên quan trong Hồ sơ → Tài khoản.",
       "s6d": "Xuất dữ liệu ở định dạng máy đọc được.",
       "s7Title": "7. Mã nguồn mở",
       "s7": "Social Organizer là mã nguồn mở hoàn toàn. Bạn có thể xem mã nguồn và cách dữ liệu được xử lý tại <gh>github.com/element1965/Social-organizer</gh>.",
@@ -1022,7 +1037,9 @@
     "pendingErrLimitOther": "Người này đã có 150 người quen",
     "pendingErrGone": "Người này đã xóa tài khoản",
     "pendingErrResolved": "Yêu cầu này đã được trả lời",
-    "pendingErrNotYours": "Yêu cầu này không dành cho tài khoản Telegram này"
+    "pendingErrNotYours": "Yêu cầu này không dành cho tài khoản Telegram này",
+    "responsesTitle": "Phản hồi mới cho đợt quyên góp của bạn",
+    "responsesBody": "Phản hồi mới: {{count}}. Mở đợt quyên góp để xem."
   },
   "pending": {
     "errLimitSelf": "Bạn đã có 150 người quen — đó là mức tối đa.",

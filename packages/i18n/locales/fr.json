@@ -522,7 +522,9 @@
     "logoutByMethod": "Vous vous êtes connecté avec {{method}}. Vous pouvez revenir de la même façon.",
     "logoutByEmail": "Vous vous êtes connecté avec un code envoyé à <b/>. Vous pouvez revenir de la même façon.",
     "logoutEmailOnly": "Vous pouvez revenir de la même façon ou avec un code envoyé à <b/>.",
-    "logoutGeneric": "Vous pouvez revenir de la même façon que lors de la connexion."
+    "logoutGeneric": "Vous pouvez revenir de la même façon que lors de la connexion.",
+    "notifyChannel": "Canal",
+    "notifyTelegramNotLinked": "Connectez Telegram dans « Compte » pour y recevoir les messages."
   },
   "settings": {
     "title": "Paramètres",
@@ -541,7 +543,20 @@
     "connectTelegramHint": "Connectez-vous via Telegram au même compte — aucun second compte ne sera créé.",
     "telegramConnected": "Telegram est connecté à votre compte",
     "telegramLinkConflict": "Ce Telegram a déjà un compte séparé avec des données, il n'a donc pas été connecté. Écrivez au support, nous les fusionnerons.",
-    "telegramLinkInvalid": "Le lien a expiré. Appuyez de nouveau sur « Connecter Telegram » dans les réglages de l'app."
+    "telegramLinkInvalid": "Le lien a expiré. Appuyez de nouveau sur « Connecter Telegram » dans les réglages de l'app.",
+    "notifyTitle": "Notifications",
+    "notifyChannelLabel": "Un seul canal pour les notifications",
+    "notifyChannelApp": "Application",
+    "notifyChannelTelegram": "Telegram",
+    "notifyChannelHintApp": "Les messages n’arrivent que dans l’application, Telegram ne les répète pas.",
+    "notifyChannelHintTelegram": "Les messages n’arrivent que dans Telegram, l’application ne les répète pas.",
+    "notifyTelegramNotLinked": "Connectez Telegram ci-dessous pour y recevoir les messages.",
+    "notifyPushOff": "Activez les notifications push pour les voir sur cet appareil.",
+    "notifyNewCollections": "Nouvelles collectes",
+    "notifyNewCollectionsHint": "Prévenir quand une personne dont je peux recevoir des notifications ouvre une collecte",
+    "notifyMyEvents": "Mes événements",
+    "notifyMyEventsHint": "Les demandes de connexion et les réponses à ma collecte arrivent toujours. Les réponses arrivent en un seul message.",
+    "notifyAnyChat": "Choisissez un canal pour les notifications. Pour se parler, n’importe quel chat convient."
   },
   "faq": {
     "title": "Questions fréquentes",
@@ -906,8 +921,8 @@
     "deleteAccount": "Suppression du compte",
     "del": {
       "meta": "Social Organizer · mis à jour le 9 novembre 2026",
-      "lead": "Vous supprimez votre compte dans l’application ou sur le site, sans e-mail et sans attente.",
-      "step1": "Ouvrez l’application ou orginizer.com et connectez-vous",
+      "lead": "Vous supprimez vous-même votre compte, de l’intérieur : dans l’application, sur le site ou dans la Telegram Mini App. Sans e-mail et sans attente.",
+      "step1": "Ouvrez l’application, orginizer.com ou la Telegram Mini App et connectez-vous",
       "step2": "Profil → Compte",
       "step3": "En bas, « Supprimer le compte »",
       "step4": "Confirmez « Supprimer définitivement » dans le panneau",
@@ -920,8 +935,8 @@
       "gone5": "Notifications, abonnements push, réglages, discussions avec l’assistant",
       "whenTitle": "Délai et ce qui reste",
       "whenText": "La suppression est immédiate et irréversible. Si vous aviez des liens, les réseaux des autres conservent « Utilisateur supprimé » à la place de votre nom, sans données personnelles. Les collectes passées des autres conservent les montants sans votre nom.",
-      "noAccessTitle": "Pas d’accès à votre compte ?",
-      "noAccessText": "Écrivez à <bot>@socialorganizer_bot</bot> sur Telegram en indiquant l’e-mail ou le nom d’utilisateur avec lequel vous vous connectiez. Nous supprimons le compte manuellement sous 30 jours et répondons une fois que c’est fait."
+      "noAccessTitle": "Connexion impossible ?",
+      "noAccessText": "Un compte se supprime seulement de l’intérieur ; il n’y a pas de suppression sur demande. Si vous ne pouvez pas vous connecter, le profil est supprimé automatiquement après 2 ans sans connexion. Nous prévenons 30 et 7 jours avant, par Telegram, notifications push et e-mail, là où le compte en a."
     },
     "privacyTitle": "Politique de confidentialité",
     "privacyMeta": "Dernière mise à jour : 7 février 2025",
@@ -944,12 +959,12 @@
       "s4b": "<b>Telegram :</b> les données nécessaires au fonctionnement de la mini-application dans Telegram.",
       "s4c": "<b>Les hébergeurs :</b> nos serveurs traitent vos données pour fournir le service.",
       "s5Title": "5. Stockage et sécurité des données",
-      "s5": "Vos données sont stockées dans une base PostgreSQL sécurisée. Nous utilisons des connexions chiffrées (HTTPS/TLS), une authentification fondée sur JWT, et appliquons les pratiques de sécurité courantes du secteur pour protéger vos informations.",
+      "s5": "Vos données sont stockées dans une base PostgreSQL sécurisée. Nous utilisons des connexions chiffrées (HTTPS/TLS), une authentification fondée sur JWT, et appliquons les pratiques de sécurité courantes du secteur pour protéger vos informations. Les comptes sans connexion depuis 2 ans sont supprimés automatiquement, après des avis 30 et 7 jours à l’avance.",
       "s6Title": "6. Vos droits",
       "s6lead": "Vous avez le droit de :",
       "s6a": "Accéder à vos données personnelles depuis votre profil et vos réglages.",
       "s6b": "Corriger ou mettre à jour vos informations à tout moment.",
-      "s6c": "Demander la suppression de votre compte et des données associées.",
+      "s6c": "Supprimer vous-même votre compte et les données associées dans Profil → Compte.",
       "s6d": "Exporter vos données dans un format lisible par machine.",
       "s7Title": "7. Open source",
       "s7": "Social Organizer est entièrement open source. Vous pouvez consulter notre code et la façon dont vos données sont traitées sur <gh>github.com/element1965/Social-organizer</gh>.",
@@ -1036,7 +1051,9 @@
     "pendingErrLimitOther": "Cette personne a déjà 150 connaissances",
     "pendingErrGone": "Cette personne a supprimé son compte",
     "pendingErrResolved": "Il a déjà été répondu à cette demande",
-    "pendingErrNotYours": "Cette demande n'est pas pour ce compte Telegram"
+    "pendingErrNotYours": "Cette demande n'est pas pour ce compte Telegram",
+    "responsesTitle": "Nouvelles réponses à votre collecte",
+    "responsesBody": "Nouvelles réponses : {{count}}. Ouvrez la collecte pour les voir."
   },
   "pending": {
     "errLimitSelf": "Vous avez déjà 150 connaissances, c'est le maximum.",
