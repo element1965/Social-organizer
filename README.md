@@ -236,7 +236,7 @@ The hourly `cleanup-blocked-pending` worker treated any failed `getChat` as "use
 A separate Railway environment `staging` in the same project runs the `redesign` branch with its own Postgres and Redis.
 
 - **URL:** https://social-organizer-staging.up.railway.app (auto-deploy on `git push` to `redesign`)
-- **Data:** fictional test people from `packages/db/prisma/seed-dev.ts` (no production data). Sign in by e-mail as `anna@test.local` (active), `new@test.local` (empty circle) or `maria@test.local`.
+- **Data:** fictional test people from `packages/db/prisma/seed-dev.ts` (no production data). Sign in by e-mail as `anna@test.local` (active), `big@test.local` (large network: 36 direct, 244 people over three levels), `new@test.local` (empty circle) or `maria@test.local`.
 - **Sign-in codes:** there is no Resend key; `MAIL_LOG_TO_STDOUT=1` prints each code to the service log (Railway → staging → Social-organizer → Logs, search `mail:test-outbox`).
 - **Never set** `TELEGRAM_BOT_TOKEN`, `FEEDBACK_CHAT_ID`, `FIREBASE_SERVICE_ACCOUNT` or `VAPID_*` in staging: on start the API re-points the bot webhook, and push keys would reach real devices. `JWT_SECRET` differs from production.
 - **Schema / reseed:** staging uses `prisma db push`, not migrations. With the staging public URL in `DATABASE_URL`: `cd packages/db && npx prisma db push`, then `SEED_DEV_ALLOW_HOST=<host:port> npx tsx prisma/seed-dev.ts` (the seed wipes the database and refuses any host not named there).

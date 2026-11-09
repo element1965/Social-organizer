@@ -9,6 +9,7 @@
  *                     an incoming acquaintance request
  *   new@test.local    brand-new member with an empty circle (onboarding)
  *   maria@test.local  author of an active emergency collection
+ *   big@test.local    large network: 36 direct connections, ~250 people over three levels, its own collections
  */
 import { PrismaClient, type User } from '@prisma/client';
 
@@ -165,8 +166,129 @@ async function main() {
     await db.obligation.create({ data: { collectionId: closed.id, userId: u[key]!.id, amount, createdAt: ago(19) } });
   }
 
+  const big = await seedBigNetwork();
+
   console.log(`seed-dev: ${PEOPLE.length} users, ${EDGES.length} connections, 3 collections.`);
-  console.log('Sign in as anna@test.local (active) or new@test.local (empty circle).');
+  console.log(`seed-dev: big@test.local — ${big.people} people in the network (${big.l1}/${big.l2}/${big.l3} by level), ${big.edges} connections.`);
+  console.log('Sign in as anna@test.local (active), big@test.local (large network) or new@test.local (empty circle).');
+}
+
+/**
+ * A separate cluster (not linked to Anna's) around big@test.local, about 250 people deep in three levels,
+ * for screens that only show their problems on a large network (3D graph, long lists, level grouping).
+ * A fixed-seed generator keeps the same names and links on every run.
+ */
+async function seedBigNetwork() {
+  let state = 20261109;
+  const rnd = () => ((state = (state * 1103515245 + 12345) % 2147483648) / 2147483648);
+  const pick = <T,>(list: readonly T[]) => list[Math.floor(rnd() * list.length)]!;
+
+  const FIRST = ['Alex', 'Bella', 'Carlos', 'Dana', 'Emil', 'Fatima', 'Georg', 'Hana', 'Ilya', 'Jasmin', 'Kenji', 'Lea',
+    'Marek', 'Nora', 'Omar', 'Petra', 'Quinn', 'Rosa', 'Stefan', 'Tara', 'Umar', 'Vera', 'Wim', 'Xenia', 'Yara', 'Zoran',
+    'Aiko', 'Boris', 'Clara', 'Diego', 'Elif', 'Felix', 'Greta', 'Hugo', 'Ines', 'Jonas', 'Kira', 'Luca', 'Mila', 'Nils'];
+  const LAST = ['Adler', 'Brandt', 'Costa', 'Dumont', 'Eriksen', 'Fischer', 'Garcia', 'Huang', 'Ivanova', 'Jensen', 'Kim',
+    'Lopez', 'Moreau', 'Nakamura', 'Okafor', 'Park', 'Quist', 'Rahman', 'Silva', 'Tran', 'Ueda', 'Varga', 'Wong', 'Yilmaz',
+    'Zielinski', 'Bauer', 'Chopra', 'Dvorak', 'Haas', 'Lindqvist'];
+  const CITIES = ['Taipei', 'Berlin', 'Lisbon', 'Warsaw', 'Tokyo', 'Toronto', 'Tbilisi', 'Prague', undefined, undefined];
+  const BUDGETS = [0, 5, 10, 10, 15, 20, 25, 30, 50, 100];
+
+  // Shape: 36 direct connections, each with 3 of their own (108), most of those with one more (~100)
+  const L1 = 36;
+  type Node = { key: string; level: 1 | 2 | 3; parent: string };
+  const nodes: Node[] = [];
+  for (let i = 0; i < L1; i++) nodes.push({ key: `bnet-1-${i}`, level: 1, parent: 'big' });
+  for (const p of nodes.filter((n) => n.level === 1)) {
+    for (let j = 0; j < 3; j++) nodes.push({ key: `${p.key}-${j}`.replace('bnet-1', 'bnet-2'), level: 2, parent: p.key });
+  }
+  for (const p of nodes.filter((n) => n.level === 2)) {
+    if (rnd() < 0.93) nodes.push({ key: p.key.replace('bnet-2', 'bnet-3'), level: 3, parent: p.key });
+  }
+
+  const owner = await db.user.create({
+    data: {
+      name: 'Boris Grand', email: 'big@test.local', emailVerifiedAt: ago(200), language: 'ru', city: 'Taipei',
+      monthlyBudget: 100, remainingBudget: 100, budgetUpdatedAt: ago(2), onboardingCompleted: true,
+      createdAt: ago(200), lastSeen: ago(0), contacts: { create: [{ type: 'telegram', value: 'big_test' }] },
+    },
+  });
+
+  const created = await db.user.createManyAndReturn({
+    data: nodes.map((n, i) => {
+      const budget = pick(BUDGETS);
+      return {
+        name: `${pick(FIRST)} ${pick(LAST)}`,
+        email: `${n.key}@test.local`,
+        emailVerifiedAt: ago(190 - (i % 180)),
+        language: rnd() < 0.3 ? 'ru' : 'en',
+        city: pick(CITIES),
+        monthlyBudget: budget || null,
+        remainingBudget: budget || null,
+        budgetUpdatedAt: budget ? ago(1 + (i % 20)) : null,
+        onboardingCompleted: true,
+        createdAt: ago(190 - (i % 180)),
+        lastSeen: ago(i % 30),
+      };
+    }),
+    select: { id: true, email: true },
+  });
+  const id: Record<string, string> = { big: owner.id };
+  for (const c of created) id[c.email!.replace('@test.local', '')] = c.id;
+
+  // Tree links plus some links inside a level, so the graph is not a pure tree
+  const pairs = new Set<string>();
+  const edges: { userAId: string; userBId: string; createdAt: Date }[] = [];
+  const link = (a: string, b: string, days: number) => {
+    const [x, y] = [id[a]!, id[b]!].sort();
+    const k = `${x}|${y}`;
+    if (x === y || pairs.has(k)) return;
+    pairs.add(k);
+    edges.push({ userAId: x!, userBId: y!, createdAt: ago(days) });
+  };
+  nodes.forEach((n, i) => link(n.parent, n.key, 180 - (i % 170)));
+  const l1 = nodes.filter((n) => n.level === 1);
+  const l2 = nodes.filter((n) => n.level === 2);
+  for (let i = 0; i < 25; i++) link(pick(l1).key, pick(l1).key, 30 + i);
+  for (let i = 0; i < 40; i++) link(pick(l2).key, pick(l2).key, 20 + i);
+  await db.connection.createMany({ data: edges });
+
+  // An active request from a direct connection, with pledges from the network
+  const author = l1[0]!.key;
+  const emergency = await db.collection.create({
+    data: {
+      creatorId: id[author]!, type: 'EMERGENCY', amount: 800, chatLink: 'https://t.me/+test_big_help',
+      status: 'ACTIVE', createdAt: ago(1),
+    },
+  });
+  await db.obligation.createMany({
+    data: l2.slice(0, 18).map((n, i) => ({ collectionId: emergency.id, userId: id[n.key]!, amount: 10 + (i % 4) * 10, createdAt: ago(0.5) })),
+  });
+  await db.notification.create({
+    data: {
+      userId: owner.id, collectionId: emergency.id, type: 'NEW_COLLECTION',
+      handshakePath: [id[author]!, owner.id], expiresAt: inDays(1), createdAt: ago(0.1),
+    },
+  });
+
+  // The owner's own regular collection with subscribers among direct connections
+  const regular = await db.collection.create({
+    data: {
+      creatorId: owner.id, type: 'REGULAR', amount: 500, chatLink: 'https://t.me/+test_big_regular',
+      status: 'ACTIVE', currentCycleStart: ago(7), createdAt: ago(7),
+    },
+  });
+  await db.obligation.createMany({
+    data: l1.slice(1, 13).map((n, i) => ({
+      collectionId: regular.id, userId: id[n.key]!, amount: 10 + (i % 3) * 5, isSubscription: true, createdAt: ago(6),
+    })),
+  });
+
+  return {
+    people: nodes.length,
+    l1: l1.length,
+    l2: l2.length,
+    l3: nodes.filter((n) => n.level === 3).length,
+    edges: edges.length,
+  };
 }
 
 main()
