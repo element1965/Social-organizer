@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { NetFigure } from '../components/figures';
@@ -17,16 +16,6 @@ export function LoginPage() {
   const redirect = params.get('redirect');
   const returnedError = params.get('error');
   const labels = useNetLabels();
-
-  // If the user was in demo mode, clear tokens and reload so the tRPC client uses the real HTTP link
-  useEffect(() => {
-    if (localStorage.getItem('accessToken') === 'demo-token') {
-      localStorage.removeItem('accessToken');
-      localStorage.removeItem('refreshToken');
-      localStorage.removeItem('userId');
-      window.location.reload();
-    }
-  }, []);
 
   const initialError =
     returnedError === 'account_exists' ? t('signin.errAccountExists') : returnedError ? t('signin.errFailed') : undefined;

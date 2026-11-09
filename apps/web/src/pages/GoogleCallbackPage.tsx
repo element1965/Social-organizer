@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { trpc } from '../lib/trpc';
 import { useAuth } from '../hooks/useAuth';
 import { takePendingSosPath } from '../lib/inviteUrl';
+import { afterSignInPath, readPendingInvite } from '../components/onboarding/flow';
 
 // Handles Google OAuth redirect callback.
 // Opened in Chrome Custom Tab after Google auth.
@@ -73,17 +74,13 @@ export function GoogleCallbackPage() {
             window.location.href = `intent://auth-success?${params}#Intent;scheme=socialorganizer;package=com.socialorganizer.app;S.browser_fallback_url=${fallback};end`;
           } else {
             login(data.accessToken, data.refreshToken, data.userId);
-            const pendingInvite = localStorage.getItem('pendingInviteToken');
-            // Came from a collection link (/sos/:id) → back to that collection
-            const pendingSos = takePendingSosPath();
-            if (pendingSos) {
-              window.location.href = pendingSos;
-            } else if (pendingInvite) {
-              localStorage.removeItem('pendingInviteToken');
-              window.location.href = `/invite/${pendingInvite}`;
-            } else {
-              navigate(data.isNew ? '/onboarding' : '/dashboard');
-            }
+            // The pending invite stays until InvitePage accepts it (that is how it knows to auto-accept).
+            // A new account goes through the intro (onboarding/flow.ts); an SOS link waits behind it.
+            const pendingInvite = readPendingInvite();
+            const target = takePendingSosPath() || (pendingInvite ? `/invite/${pendingInvite}` : null);
+            const path = afterSignInPath(!!data.isNew, target);
+            if (path === '/') navigate('/', { replace: true });
+            else window.location.href = path;
           }
         },
         onError: (err) => goError(err.message === 'ACCOUNT_EXISTS_OTHER_METHOD' ? 'account_exists' : 'failed'),

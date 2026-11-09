@@ -12,14 +12,15 @@ export function CodeCells({
   onComplete,
   label,
   invalid = false,
-  disabled = false,
+  busy = false,
 }: {
   value: string;
   onChange: (value: string) => void;
   onComplete: (value: string) => void;
   label: string;
   invalid?: boolean;
-  disabled?: boolean;
+  /** Verifying: the field stays focused but read-only (disabling it would drop focus and the keyboard). */
+  busy?: boolean;
 }) {
   const ref = useRef<HTMLInputElement>(null);
   const [focused, setFocused] = useState(false);
@@ -27,6 +28,11 @@ export function CodeCells({
   useEffect(() => {
     ref.current?.focus();
   }, []);
+
+  // After a rejected code the field is cleared; put the caret back so the person can retype at once
+  useEffect(() => {
+    if (invalid) ref.current?.focus();
+  }, [invalid]);
 
   const cursor = Math.min(value.length, 5);
 
@@ -60,7 +66,8 @@ export function CodeCells({
         aria-invalid={invalid || undefined}
         maxLength={6}
         value={value}
-        disabled={disabled}
+        readOnly={busy}
+        aria-busy={busy || undefined}
         onFocus={() => setFocused(true)}
         onBlur={() => setFocused(false)}
         onChange={(event) => {

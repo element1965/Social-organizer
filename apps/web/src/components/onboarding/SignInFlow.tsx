@@ -148,7 +148,7 @@ export function SignInFlow({
           onComplete={(v) => signIn.submitCode(email, v)}
           label={t('login.codeLabel')}
           invalid={!!signIn.error}
-          disabled={signIn.verifying}
+          busy={signIn.verifying}
         />
         {signIn.error ? (
           <p role="alert" className="mt-3 text-label font-semibold text-sos">

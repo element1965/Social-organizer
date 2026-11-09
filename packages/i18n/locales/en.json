@@ -698,7 +698,9 @@
     "ownTitle": "This is your link",
     "ownText": "People you know join you through it. Send it to someone you know personally.",
     "shareOwn": "Share the link",
-    "sayKnown": "Help through people you know. Tap “We know each other”, and {{name}} gets your request."
+    "sayKnown": "Help through people you know. Tap “We know each other”, and {{name}} gets your request.",
+    "loadFailedTitle": "Could not open the invite",
+    "loadFailedText": "It looks like there is no connection. The link is saved; please try again."
   },
   "landing": {
     "openSourceBadge": "Unlimited Hui (會). No organizer needed.",
