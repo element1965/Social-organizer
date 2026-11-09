@@ -299,6 +299,8 @@ export function MarkableParticipantList({
           marks.markMany(chosen);
         }}
       />
+      {/* Room under the list while a floating bar is up, so it never covers the last rows */}
+      {(allPaid && !offerDismissed) || marks.undo ? <div aria-hidden className="h-20" /> : null}
       <FloatingBars>
         {allPaid && !offerDismissed ? (
           <CloseOffer sum={total} onClose={onCloseCollection} onDismiss={() => setOfferDismissed(true)} />
