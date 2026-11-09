@@ -234,7 +234,7 @@ export function SignInFlow({
     const cannotSend = code === 'TOO_MANY_CODES' || code === 'EMAIL_UNAVAILABLE' || code === 'NETWORK';
     const fieldError = emailBad ? t('login.emailBad') : signIn.error || undefined;
     return (
-      <OnboardingFrame top={<BackLink label={t('common.back')} onClick={back} />}>
+      <OnboardingFrame middle top={<BackLink label={t('common.back')} onClick={back} />}>
         <h1 className="mt-2 text-h1 font-bold">{t('login.emailTitle')}</h1>
         <form
           className="mt-3.5"
@@ -297,7 +297,7 @@ export function SignInFlow({
     const dead = signIn.errorCode === 'TOO_MANY_ATTEMPTS' || signIn.errorCode === 'CODE_EXPIRED';
     const wait = Math.max(signIn.resendLeft, signIn.blockedLeft);
     return (
-      <OnboardingFrame top={<BackLink label={t('common.back')} onClick={back} />}>
+      <OnboardingFrame middle top={<BackLink label={t('common.back')} onClick={back} />}>
         <h1 className="mt-2 text-h1 font-bold">{t('login.codeTitle')}</h1>
         <p className="mt-1 break-words text-caption text-ink-muted [&_b]:font-bold [&_b]:text-ink">
           <Trans i18nKey="login.codeSent" components={{ b: <b>{email.trim()}</b> }} />
@@ -376,7 +376,7 @@ export function SignInFlow({
   if (step === 'password') {
     // Sign-in only, for accounts created with a password before 2026; creating one was removed (2026-11-09)
     return (
-      <OnboardingFrame top={<BackLink label={t('common.back')} onClick={back} />}>
+      <OnboardingFrame middle top={<BackLink label={t('common.back')} onClick={back} />}>
         <h1 className="mt-2 text-h1 font-bold">{t('login.passwordTitle')}</h1>
         <form
           className="mt-3.5"
