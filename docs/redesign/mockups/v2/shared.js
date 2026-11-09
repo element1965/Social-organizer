@@ -20,9 +20,11 @@ const tabs = (on) => `<nav class="tabs"><span class="tab ${on === "circle" ? "on
 const nav = (back, title, trail, trailCls) => `<div class="nav"><span class="back">${I.back}${back}</span>${title ? `<span class="title">${title}</span>` : ""}${trail ? `<span class="trail ${trailCls || ""}">${trail}</span>` : ""}</div>`;
 const row = (ava, name, sub, right) => `<div class="r"><span class="ava">${ava}</span><span class="t"><b>${name}</b>${sub ? `<span>${sub}</span>` : ""}</span>${right || ""}</div>`;
 const path = (names) => `<div class="path">${names.map((n, i) => `<span class="${i === 0 ? "me" : i === names.length - 1 ? "end" : ""}"><i></i>${n}</span>${i < names.length - 1 ? "<em></em>" : ""}`).join("")}</div>`;
-const meter = (mine, others, goal) => {
+const meter = (mine, others, goal, opts = {}) => {
   const m = Math.min(100, mine / goal * 100), o = Math.min(100 - m, others / goal * 100);
-  return `<div class="meter"><i class="mine" style="width:${m}%"></i><i class="rest" style="width:${o}%"></i></div><div class="meterkey"><span><i style="background:var(--ink)"></i>Вы ${mine} $</span><span><i style="background:var(--teal)"></i>Другие ${others} $</span><b>Цель ${goal} $</b></div>`;
+  const mineKey = mine > 0 ? `<span><i style="background:var(--ink)"></i>Вы ${mine} $</span>` : "";
+  const restLabel = mine > 0 ? "Другие" : "Собрано";
+  return `<div class="meter"><i class="mine" style="width:${m}%"></i><i class="rest" style="width:${o}%"></i></div><div class="meterkey">${mineKey}<span><i style="background:var(--teal)"></i>${restLabel} ${others} $</span><b>Цель ${goal} $</b></div>`;
 };
 const stages = (step) => `<div class="stages">${["Сумма", "Обсуждение", "Закрыт"].map((n, i) => `<div class="${i < step ? "on" : ""}"><i></i><span>${n}</span></div>`).join("")}</div>`;
 function section(id, phone, title, html) {
