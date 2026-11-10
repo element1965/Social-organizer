@@ -424,7 +424,7 @@
     "networkMany": "{{count}} personer",
     "minimum": "Minsta deltagande",
     "stakeEmpty": "Inte angivet",
-    "collections": "Behov",
+    "collections": "Behov och deltagande",
     "openOne": "{{count}} öppen",
     "openMany": "{{count}} öppna",
     "notifications": "Notiser",
@@ -479,7 +479,8 @@
     "notifyChannel": "Kanal",
     "notifyTelegramNotLinked": "Anslut Telegram under ”Konto” för att få meddelanden där.",
     "stakeSaved": "Sparat",
-    "factsLine": "För stängda behov: anmält deltagande — {{reported}}, markerat som mottaget av författare — {{marked}}. Dessa två tal ser personerna i ditt nätverk."
+    "factsLine": "För stängda behov: anmält deltagande — {{reported}}, markerat som mottaget av författare — {{marked}}. Dessa två tal ser personerna i ditt nätverk.",
+    "needCounts": "Öppna: {{open}} · Tidigare: {{past}}"
   },
   "settings": {
     "title": "Inställningar",

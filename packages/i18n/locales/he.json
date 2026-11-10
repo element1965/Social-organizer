@@ -427,7 +427,7 @@
     "networkMany": "{{count}} אנשים",
     "minimum": "השתתפות מינימלית",
     "stakeEmpty": "לא הוגדר",
-    "collections": "צרכים",
+    "collections": "צרכים והשתתפות",
     "openOne": "{{count}} פתוח",
     "openMany": "{{count}} פתוחים",
     "notifications": "התראות",
@@ -482,7 +482,8 @@
     "notifyChannel": "ערוץ",
     "notifyTelegramNotLinked": "חברו את Telegram ב«חשבון» כדי לקבל שם הודעות.",
     "stakeSaved": "נשמר",
-    "factsLine": "לגבי צרכים סגורים: דיווחי השתתפות {{reported}}, סומנו כהתקבלו על ידי היוצרים {{marked}}. אנשי הרשת שלכם רואים את שני המספרים האלה."
+    "factsLine": "לגבי צרכים סגורים: דיווחי השתתפות {{reported}}, סומנו כהתקבלו על ידי היוצרים {{marked}}. אנשי הרשת שלכם רואים את שני המספרים האלה.",
+    "needCounts": "פתוחים: {{open}} · קודמים: {{past}}"
   },
   "settings": {
     "title": "הגדרות",

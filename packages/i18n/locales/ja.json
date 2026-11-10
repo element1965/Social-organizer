@@ -421,7 +421,7 @@
     "networkMany": "{{count}}人",
     "minimum": "最低の参加",
     "stakeEmpty": "未設定",
-    "collections": "ニーズ",
+    "collections": "ニーズと参加",
     "openOne": "開いているニーズ {{count}}件",
     "openMany": "開いているニーズ {{count}}件",
     "notifications": "通知",
@@ -476,7 +476,8 @@
     "notifyChannel": "チャンネル",
     "notifyTelegramNotLinked": "メッセージをそこで受け取るには、「アカウント」でTelegramを連携してください。",
     "stakeSaved": "保存しました",
-    "factsLine": "終了したニーズについて：知らせた参加 {{reported}} 件、作成者が受け取り済みと記録 {{marked}} 件。この2つの数字は、あなたのネットワークの人に見えます。"
+    "factsLine": "終了したニーズについて：知らせた参加 {{reported}} 件、作成者が受け取り済みと記録 {{marked}} 件。この2つの数字は、あなたのネットワークの人に見えます。",
+    "needCounts": "開いているもの: {{open}} · 過去: {{past}}"
   },
   "settings": {
     "title": "設定",

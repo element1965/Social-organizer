@@ -424,7 +424,7 @@
     "networkMany": "{{count}} लोग",
     "minimum": "न्यूनतम भागीदारी",
     "stakeEmpty": "सेट नहीं",
-    "collections": "ज़रूरतें",
+    "collections": "ज़रूरतें और भागीदारी",
     "openOne": "{{count}} खुला",
     "openMany": "{{count}} खुले",
     "notifications": "सूचनाएँ",
@@ -479,7 +479,8 @@
     "notifyChannel": "चैनल",
     "notifyTelegramNotLinked": "संदेश वहाँ पाने के लिए “खाता” में Telegram जोड़ें।",
     "stakeSaved": "सहेजा गया",
-    "factsLine": "बंद ज़रूरतों के लिए: बताई गई भागीदारी {{reported}}, लेखकों द्वारा मिला हुआ चिह्नित {{marked}}। आपके नेटवर्क के लोग ये दो संख्याएँ देखते हैं।"
+    "factsLine": "बंद ज़रूरतों के लिए: बताई गई भागीदारी {{reported}}, लेखकों द्वारा मिला हुआ चिह्नित {{marked}}। आपके नेटवर्क के लोग ये दो संख्याएँ देखते हैं।",
+    "needCounts": "खुले: {{open}} · पिछले: {{past}}"
   },
   "settings": {
     "title": "सेटिंग्स",

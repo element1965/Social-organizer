@@ -421,7 +421,7 @@
     "networkMany": "{{count}} orang",
     "minimum": "Partisipasi minimum",
     "stakeEmpty": "Belum diatur",
-    "collections": "Kebutuhan",
+    "collections": "Kebutuhan dan Partisipasi",
     "openOne": "{{count}} terbuka",
     "openMany": "{{count}} terbuka",
     "notifications": "Notifikasi",
@@ -476,7 +476,8 @@
     "notifyChannel": "Kanal",
     "notifyTelegramNotLinked": "Hubungkan Telegram di “Akun” agar pesan sampai di sana.",
     "stakeSaved": "Tersimpan",
-    "factsLine": "Untuk Kebutuhan yang sudah ditutup: partisipasi dinyatakan {{reported}}, ditandai diterima oleh penulis {{marked}}. Orang-orang di jaringan Anda melihat kedua angka ini."
+    "factsLine": "Untuk Kebutuhan yang sudah ditutup: partisipasi dinyatakan {{reported}}, ditandai diterima oleh penulis {{marked}}. Orang-orang di jaringan Anda melihat kedua angka ini.",
+    "needCounts": "Terbuka: {{open}} · Sebelumnya: {{past}}"
   },
   "settings": {
     "title": "Pengaturan",

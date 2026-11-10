@@ -424,7 +424,7 @@
     "networkMany": "{{count}} kişi",
     "minimum": "Asgari katılım",
     "stakeEmpty": "Belirtilmedi",
-    "collections": "İhtiyaçlar",
+    "collections": "İhtiyaçlar ve Katılım",
     "openOne": "{{count}} açık",
     "openMany": "{{count}} açık",
     "notifications": "Bildirimler",
@@ -479,7 +479,8 @@
     "notifyChannel": "Kanal",
     "notifyTelegramNotLinked": "İletilerin oraya gelmesi için Telegram'ı «Hesap» bölümünde bağlayın.",
     "stakeSaved": "Kaydedildi",
-    "factsLine": "Kapanan ihtiyaçlar için: bildirilen katılım — {{reported}}, yazarlarca alındı işaretlenen — {{marked}}. Bu iki sayıyı ağınızdaki kişiler görür."
+    "factsLine": "Kapanan ihtiyaçlar için: bildirilen katılım — {{reported}}, yazarlarca alındı işaretlenen — {{marked}}. Bu iki sayıyı ağınızdaki kişiler görür.",
+    "needCounts": "Açık: {{open}} · Geçmiş: {{past}}"
   },
   "settings": {
     "title": "Ayarlar",

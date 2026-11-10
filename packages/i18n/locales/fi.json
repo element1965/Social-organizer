@@ -424,7 +424,7 @@
     "networkMany": "{{count}} henkilöä",
     "minimum": "Vähimmäisosallistuminen",
     "stakeEmpty": "Ei asetettu",
-    "collections": "Tarpeet",
+    "collections": "Tarpeet ja osallistuminen",
     "openOne": "{{count}} avoin",
     "openMany": "{{count}} avointa",
     "notifications": "Ilmoitukset",
@@ -479,7 +479,8 @@
     "notifyChannel": "Kanava",
     "notifyTelegramNotLinked": "Yhdistä Telegram kohdassa ”Tili”, niin viestit tulevat sinne.",
     "stakeSaved": "Tallennettu",
-    "factsLine": "Suljettujen tarpeiden osalta: ilmoitettuja osallistumisia {{reported}}, tekijöiden saaduksi merkitsemiä {{marked}}. Verkostosi ihmiset näkevät nämä kaksi lukua."
+    "factsLine": "Suljettujen tarpeiden osalta: ilmoitettuja osallistumisia {{reported}}, tekijöiden saaduksi merkitsemiä {{marked}}. Verkostosi ihmiset näkevät nämä kaksi lukua.",
+    "needCounts": "Avoimet: {{open}} · Aiemmat: {{past}}"
   },
   "settings": {
     "title": "Asetukset",

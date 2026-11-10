@@ -424,7 +424,7 @@
     "networkMany": "{{count}} people",
     "minimum": "Minimum participation",
     "stakeEmpty": "Not set",
-    "collections": "Needs",
+    "collections": "Needs and Participation",
     "openOne": "{{count}} open",
     "openMany": "{{count}} open",
     "notifications": "Notifications",
@@ -479,7 +479,8 @@
     "notifyChannel": "Channel",
     "notifyTelegramNotLinked": "Connect Telegram in Account to get messages there.",
     "stakeSaved": "Saved",
-    "factsLine": "For closed Needs: Participation reported {{reported}}, marked as received by authors {{marked}}. People in your network see these two numbers."
+    "factsLine": "For closed Needs: Participation reported {{reported}}, marked as received by authors {{marked}}. People in your network see these two numbers.",
+    "needCounts": "Open: {{open}} · Past: {{past}}"
   },
   "settings": {
     "title": "Settings",

@@ -427,7 +427,7 @@
     "networkMany": "{{count}} особа",
     "minimum": "Минимално учешће",
     "stakeEmpty": "Није задато",
-    "collections": "Потребе",
+    "collections": "Потребе и учешће",
     "openOne": "{{count}} отворен",
     "openMany": "{{count}} отворених",
     "notifications": "Обавештења",
@@ -482,7 +482,8 @@
     "notifyChannel": "Канал",
     "notifyTelegramNotLinked": "Повежите Telegram у „Налог“, да бисте тамо примали поруке.",
     "stakeSaved": "Сачувано",
-    "factsLine": "За затворене потребе: пријава о учешћу — {{reported}}, означено од аутора као примљено — {{marked}}. Ова два броја виде људи из ваше мреже."
+    "factsLine": "За затворене потребе: пријава о учешћу — {{reported}}, означено од аутора као примљено — {{marked}}. Ова два броја виде људи из ваше мреже.",
+    "needCounts": "Отворени: {{open}} · Прошли: {{past}}"
   },
   "settings": {
     "title": "Подешавања",

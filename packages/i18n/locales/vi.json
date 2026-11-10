@@ -421,7 +421,7 @@
     "networkMany": "{{count}} người",
     "minimum": "Mức tham gia tối thiểu",
     "stakeEmpty": "Chưa đặt",
-    "collections": "Nhu cầu",
+    "collections": "Nhu cầu và sự tham gia",
     "openOne": "{{count}} đang mở",
     "openMany": "{{count}} đang mở",
     "notifications": "Thông báo",
@@ -476,7 +476,8 @@
     "notifyChannel": "Kênh",
     "notifyTelegramNotLinked": "Kết nối Telegram trong «Tài khoản» để nhận tin ở đó.",
     "stakeSaved": "Đã lưu",
-    "factsLine": "Theo các Nhu cầu đã đóng: số lần báo tham gia — {{reported}}, tác giả đánh dấu đã nhận — {{marked}}. Hai con số này hiển thị với những người trong mạng lưới của bạn."
+    "factsLine": "Theo các Nhu cầu đã đóng: số lần báo tham gia — {{reported}}, tác giả đánh dấu đã nhận — {{marked}}. Hai con số này hiển thị với những người trong mạng lưới của bạn.",
+    "needCounts": "Đang mở: {{open}} · Trước đây: {{past}}"
   },
   "settings": {
     "title": "Cài đặt",

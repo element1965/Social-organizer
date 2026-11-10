@@ -427,7 +427,7 @@
     "networkMany": "{{count}} persoane",
     "minimum": "Participare minimă",
     "stakeEmpty": "Nesetată",
-    "collections": "Nevoi",
+    "collections": "Nevoi și participare",
     "openOne": "{{count}} deschisă",
     "openMany": "{{count}} deschise",
     "notifications": "Notificări",
@@ -482,7 +482,8 @@
     "notifyChannel": "Canal",
     "notifyTelegramNotLinked": "Conectează Telegram în „Cont” ca să primești mesajele acolo.",
     "stakeSaved": "Salvat",
-    "factsLine": "Pentru Nevoile închise: participare declarată {{reported}}, marcat de autori ca primit {{marked}}. Oamenii din rețeaua ta văd aceste două numere."
+    "factsLine": "Pentru Nevoile închise: participare declarată {{reported}}, marcat de autori ca primit {{marked}}. Oamenii din rețeaua ta văd aceste două numere.",
+    "needCounts": "Deschise: {{open}} · Trecute: {{past}}"
   },
   "settings": {
     "title": "Setări",

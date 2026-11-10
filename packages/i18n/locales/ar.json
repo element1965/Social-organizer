@@ -436,7 +436,7 @@
     "networkMany": "{{count}} شخصًا",
     "minimum": "الحد الأدنى للمشاركة",
     "stakeEmpty": "غير محدد",
-    "collections": "الاحتياجات",
+    "collections": "الاحتياجات والمشاركة",
     "openOne": "{{count}} جمع مفتوح",
     "openMany": "{{count}} جموع مفتوحة",
     "notifications": "الإشعارات",
@@ -491,7 +491,8 @@
     "notifyChannel": "القناة",
     "notifyTelegramNotLinked": "اربط Telegram في «الحساب» لتصل الرسائل إلى هناك.",
     "stakeSaved": "تم الحفظ",
-    "factsLine": "للاحتياجات المغلقة: بلاغات المشاركة {{reported}}، حددها المؤلفون كمستلمة {{marked}}. يرى هذين الرقمين أشخاص شبكتك."
+    "factsLine": "للاحتياجات المغلقة: بلاغات المشاركة {{reported}}، حددها المؤلفون كمستلمة {{marked}}. يرى هذين الرقمين أشخاص شبكتك.",
+    "needCounts": "المفتوحة: {{open}} · السابقة: {{past}}"
   },
   "settings": {
     "title": "الإعدادات",

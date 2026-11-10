@@ -421,7 +421,7 @@
     "networkMany": "{{count}} 人",
     "minimum": "最低参与",
     "stakeEmpty": "未设置",
-    "collections": "需求",
+    "collections": "需求与参与",
     "openOne": "{{count}} 个进行中",
     "openMany": "{{count}} 个进行中",
     "notifications": "通知",
@@ -476,7 +476,8 @@
     "notifyChannel": "渠道",
     "notifyTelegramNotLinked": "在“账号”里连接 Telegram，以便在那里接收消息。",
     "stakeSaved": "已保存",
-    "factsLine": "针对已关闭的需求：参与告知 {{reported}} 次，作者标记为已收到 {{marked}} 次。你网络中的人可以看到这两个数字。"
+    "factsLine": "针对已关闭的需求：参与告知 {{reported}} 次，作者标记为已收到 {{marked}} 次。你网络中的人可以看到这两个数字。",
+    "needCounts": "进行中: {{open}} · 过往: {{past}}"
   },
   "settings": {
     "title": "设置",

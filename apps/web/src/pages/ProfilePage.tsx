@@ -17,7 +17,8 @@ import { AboutSheet } from '../components/profile/AboutSheet';
 import { LogoutSheet } from '../components/onboarding/AccountSheets';
 import { LanguageSheet } from '../components/profile/LanguageSheet';
 import { QueryState } from '../components/profile/QueryState';
-import { countForm, isOpenParticipation, openCountKey } from '../components/profile/collections';
+import { countForm } from '../components/profile/collections';
+import { useNeedCounts } from '../components/profile/useNeedCounts';
 import { ACCOUNT_NOTICE_KEY, publicHost } from '../components/profile/constants';
 import { formatLongDate } from '../components/profile/dates';
 import { applyFontScale } from '../components/profile/fontScale';
@@ -51,8 +52,7 @@ export function ProfilePage() {
   const caps = trpc.stats.networkCapabilities.useQuery(undefined, {
     enabled: access.isSuccess && access.data.networkCanHelp == null,
   });
-  const active = trpc.collection.myActive.useQuery();
-  const participating = trpc.collection.myParticipating.useQuery();
+  const needCounts = useNeedCounts();
   const admin = trpc.faq.isAdmin.useQuery();
   const isAdmin = admin.data?.isAdmin === true;
   const conversations = trpc.support.listConversations.useQuery(undefined, { enabled: isAdmin });
@@ -117,9 +117,6 @@ export function ProfilePage() {
   // The sum the person can check (rings 1–3); the full reach is a ceiling, told on the Circle and in the minimum screen
   const canHelp = access.data?.networkCanHelpVisible ?? caps.data?.visibleTotal ?? access.data?.networkCanHelp ?? caps.data?.total ?? null;
   const visiblePeople = access.data?.networkVisible ?? access.data?.networkCount ?? 0;
-  const openCount = active.data && participating.data
-    ? active.data.length + participating.data.filter((row) => isOpenParticipation(row, profile.id)).length
-    : null;
   const cyclesOn = prefs.notifyRenewalReminder && prefs.notifyRenewalStart;
   const soundOn = prefs.soundEnabled;
   const pushState = push.isSupported ? push.isSubscribed : null;
@@ -186,8 +183,8 @@ export function ProfilePage() {
         />
         <Row
           title={t('profile.collections')}
-          variant="value"
-          value={openCount == null ? undefined : t(openCountKey(openCount), { count: openCount })}
+          subtitle={needCounts ? t('profile.needCounts', { open: needCounts.open, past: needCounts.past }) : undefined}
+          variant="link"
           to="/me/history"
         />
       </Group>
