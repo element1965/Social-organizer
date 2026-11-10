@@ -5,7 +5,7 @@ import { hideBackButton, isTelegramWebApp, showBackButton } from '@so/tg-adapter
 import { trpc } from '../lib/trpc';
 import { cn } from '../lib/utils';
 import { useCachedNetworkStats } from '../hooks/useCachedNetworkStats';
-import { MILESTONE_KEYS, useEvents, useNewEvents, type FeedEvent, type MilestoneKind } from '../hooks/useEvents';
+import { MILESTONE_KEYS, useDeclineNeed, useEvents, useNewEvents, type FeedEvent, type MilestoneKind } from '../hooks/useEvents';
 import { useBanner } from '../components/ui2/Banner';
 import { Button } from '../components/ui2/Button';
 import { MainBar } from '../components/ui2/MainBar';
@@ -31,6 +31,11 @@ import { ASK_MIN_DIRECT } from '@so/shared';
 type Layer = 'feed' | 'graph' | 'person';
 
 const HINT_KEY = 'so.circle.gestureHint';
+/**
+ * Impulses (incoming Needs) handed to the graph, nearest ring first. The graph draws the first five that have a
+ * run on the shown rings, so a few more are passed: one entirely on a hidden ring must not take a slot.
+ */
+const MAX_IMPULSES = 12;
 const SCENE_BG =
   'bg-scene bg-[radial-gradient(120%_90%_at_50%_38%,rgb(var(--so-scene-2))_0%,rgb(var(--so-scene))_60%)]';
 
@@ -63,7 +68,7 @@ export function CirclePage() {
   const stats = useCachedNetworkStats();
   const caps = trpc.stats.networkCapabilities.useQuery(undefined, { refetchInterval: 60_000 });
   const me = trpc.user.me.useQuery();
-  const { events, loading } = useEvents({ displayName: net.displayName });
+  const { events, impulses, loading } = useEvents({ displayName: net.displayName });
 
   const hiddenRings = useCircleStore((s) => s.hiddenRings);
   const setRingHidden = useCircleStore((s) => s.setRingHidden);
@@ -168,13 +173,23 @@ export function CirclePage() {
 
   /* ----- selection, path, saved camera ----- */
 
-  const firstRequest = events.find((e) => e.kind === 'request' && e.personId && net.people.has(e.personId));
+  // The selection path is the highlight. Active incoming Needs are separate: the graph runs a pulse along each
+  // path (asker to me) and, with nobody selected, highlights those paths itself.
   const pathTo = net.pathTo;
-  const highlightPath = useMemo(() => {
-    if (selectedId) return pathTo(selectedId);
-    if (firstRequest?.personId) return pathTo(firstRequest.personId);
-    return [];
-  }, [selectedId, firstRequest?.personId, pathTo]);
+  const highlightPath = useMemo(() => (selectedId ? pathTo(selectedId) : []), [selectedId, pathTo]);
+  const impulsePaths = useMemo(() => {
+    const list: Array<{ id: string; ring: number; at: number; path: string[] }> = [];
+    for (const need of impulses) {
+      const asker = net.people.get(need.personId);
+      // Inside the drawn rings: the path the graph uses everywhere. Beyond them: the path the notice recorded;
+      // the graph draws the part of it that is in the picture.
+      const path = asker ? [...pathTo(need.personId)].reverse() : need.path;
+      if (path.length < 2) continue;
+      list.push({ id: need.id, ring: asker?.depth ?? 9, at: need.at, path });
+    }
+    list.sort((a, b) => a.ring - b.ring || b.at - a.at);
+    return list.slice(0, MAX_IMPULSES).map(({ id, path }) => ({ id, path }));
+  }, [impulses, net.people, pathTo]);
 
   useEffect(() => {
     setSelected(selectedId);
@@ -220,6 +235,21 @@ export function CirclePage() {
       void utils.notification.unreadCount.invalidate();
     },
   });
+  const declineNeed = useDeclineNeed();
+  // A request row is dismissed as a whole Need (read notices too), so its impulse ends with it
+  const dismissEvent = useCallback(
+    (event: FeedEvent) => {
+      if (event.kind === 'request' && event.collectionId) {
+        // The notices of the row go at once, as before; the read ones of the same Need are swept afterwards
+        const known = event.notificationIds ?? [];
+        for (const id of known) dismiss.mutate({ id });
+        void declineNeed(event.collectionId, [], known);
+        return;
+      }
+      for (const id of event.notificationIds ?? []) dismiss.mutate({ id });
+    },
+    [declineNeed, dismiss],
+  );
   const markMilestone = trpc.milestone.markSeen.useMutation({
     onSuccess: () => void utils.milestone.list.invalidate(),
   });
@@ -287,6 +317,7 @@ export function CirclePage() {
       people={net.people}
       edges={net.edges}
       highlightPath={highlightPath}
+      impulses={impulsePaths}
       hiddenRings={hiddenRings}
       onNodeTap={onNodeTap}
       dimmed={layer === 'person' && phone}
@@ -308,9 +339,7 @@ export function CirclePage() {
           events={events.filter((e) => e.kind !== 'waiting')}
           loading={loading}
           onOpen={openEvent}
-          onDismiss={(event) => {
-            for (const id of event.notificationIds ?? []) dismiss.mutate({ id });
-          }}
+          onDismiss={dismissEvent}
         />
       ) : null}
       <StartCard profileDone={profileDone} direct={direct} waiting={(events.some((e) => e.kind === 'waiting'))} />
@@ -323,9 +352,7 @@ export function CirclePage() {
         events={events}
         loading={loading}
         onOpen={openEvent}
-        onDismiss={(event) => {
-          for (const id of event.notificationIds ?? []) dismiss.mutate({ id });
-        }}
+        onDismiss={dismissEvent}
       />
     </>
   );

@@ -1,5 +1,5 @@
 import { forwardRef, lazy, Suspense, useCallback, useEffect, useImperativeHandle, useLayoutEffect, useMemo, useRef, useState } from 'react';
-import type { GraphNode, GraphView, NetworkGraphHandle } from '@so/graph-3d';
+import type { GraphImpulse, GraphNode, GraphView, NetworkGraphHandle } from '@so/graph-3d';
 import { useCircleStore, type Ring } from './circle-store';
 import type { NetPerson } from './network';
 
@@ -13,8 +13,10 @@ type CircleGraphProps = {
   myId: string | null;
   people: Map<string, NetPerson>;
   edges: Array<{ from: string; to: string }>;
-  /** Ids from me to the selected person (or to the first request author). */
+  /** Ids from me to the selected person. Empty when nobody is selected. */
   highlightPath: string[];
+  /** Active incoming Needs, nearest first: ids from the asker to me. The graph runs a pulse along each. */
+  impulses?: GraphImpulse[];
   hiddenRings: Ring[];
   onNodeTap: (id: string) => void;
   /** Dim the scene while the person card is open. */
@@ -38,7 +40,7 @@ type CircleGraphProps = {
  * People, or a phone/desktop layout switch) and handed back as `initialView`, which skips the intro fly.
  */
 export const CircleGraph = forwardRef<CircleGraphHandle, CircleGraphProps>(function CircleGraph(
-  { myId, people, edges, highlightPath, hiddenRings, onNodeTap, dimmed, focusId, focusLift, farRings },
+  { myId, people, edges, highlightPath, impulses, hiddenRings, onNodeTap, dimmed, focusId, focusLift, farRings },
   ref,
 ) {
   const boxRef = useRef<HTMLDivElement>(null);
@@ -119,6 +121,7 @@ export const CircleGraph = forwardRef<CircleGraphHandle, CircleGraphProps>(funct
             height={size.h}
             onNodeTap={handleTap}
             highlightPath={highlightPath}
+            impulses={impulses}
             hiddenRings={hiddenRings}
             initialView={initialView}
             focusId={focusId ?? null}
