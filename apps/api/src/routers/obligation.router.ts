@@ -156,6 +156,65 @@ export const obligationRouter = router({
       return { changed: result.count };
     }),
 
+  /**
+   * Author-only history of "received" marks per finished cycle of a regular collection.
+   * The marks are the author's private record: nobody else can read this. Cycles with no marks are
+   * listed with zeros (a missing mark means "not marked", nothing more). Period dates are derived
+   * from the current cycle start, so they are approximate by the hourly lag of the close job.
+   */
+  receiptHistory: protectedProcedure
+    .input(z.object({ collectionId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const collection = await ctx.db.collection.findUnique({
+        where: { id: input.collectionId },
+        select: { creatorId: true, type: true, cycleNumber: true, currentCycleStart: true },
+      });
+      if (!collection) throw new TRPCError({ code: 'NOT_FOUND' });
+      if (collection.creatorId !== ctx.userId) throw new TRPCError({ code: 'FORBIDDEN' });
+      if (collection.type !== 'REGULAR') return { cycles: [] };
+
+      const receipts = await ctx.db.obligationReceipt.findMany({
+        where: { collectionId: input.collectionId, cycleNumber: { gte: collection.cycleNumber - 12 } },
+        include: { user: { select: { id: true, name: true, photoUrl: true } } },
+        orderBy: [{ cycleNumber: 'desc' }, { confirmedAt: 'asc' }],
+      });
+      if (receipts.length === 0) return { cycles: [] };
+
+      const byCycle = new Map<number, typeof receipts>();
+      for (const r of receipts) byCycle.set(r.cycleNumber, [...(byCycle.get(r.cycleNumber) ?? []), r]);
+
+      const cycleMs = REGULAR_CYCLE_DAYS * 24 * 60 * 60 * 1000;
+      const current = collection.currentCycleStart?.getTime() ?? null;
+      const cycles: Array<{
+        cycleNumber: number;
+        startsAt: Date | null;
+        endsAt: Date | null;
+        markedCount: number;
+        markedAmount: number;
+        marked: Array<{ userId: string; name: string; photoUrl: string | null; amount: number; confirmedAt: Date }>;
+      }> = [];
+      const newest = collection.cycleNumber - 1;
+      for (let n = newest; n >= 1 && cycles.length < 12; n--) {
+        const rows = byCycle.get(n) ?? [];
+        const endsAt = current != null ? current - (collection.cycleNumber - 1 - n) * cycleMs : null;
+        cycles.push({
+          cycleNumber: n,
+          startsAt: endsAt != null ? new Date(endsAt - cycleMs) : null,
+          endsAt: endsAt != null ? new Date(endsAt) : null,
+          markedCount: rows.length,
+          markedAmount: rows.reduce((sum, r) => sum + r.amount, 0),
+          marked: rows.map((r) => ({
+            userId: r.userId,
+            name: r.user.name,
+            photoUrl: r.user.photoUrl,
+            amount: r.amount,
+            confirmedAt: r.confirmedAt,
+          })),
+        });
+      }
+      return { cycles };
+    }),
+
   unsubscribe: protectedProcedure
     .input(z.object({ obligationId: z.string() }))
     .mutation(async ({ ctx, input }) => {

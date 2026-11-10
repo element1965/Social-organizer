@@ -285,7 +285,9 @@ export const statsRouter = router({
       const where = { userId, unsubscribedAt: null, collection: { status: 'CLOSED' as const } };
       const [reported, marked] = await Promise.all([
         ctx.db.obligation.count({ where }),
-        ctx.db.obligation.count({ where: { ...where, confirmedAt: { not: null } } }),
+        // A regular collection moves its marks into per-cycle receipts at every cycle close,
+        // so a pledge marked in any past cycle still counts once.
+        ctx.db.obligation.count({ where: { ...where, OR: [{ confirmedAt: { not: null } }, { receipts: { some: {} } }] } }),
       ]);
       return { reported, marked };
     }),

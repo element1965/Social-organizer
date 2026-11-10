@@ -6,13 +6,15 @@ type EventRowProps = {
   icon: ReactNode;
   title: string;
   subtitle?: ReactNode;
+  /** Optional free text from the author, clamped to two lines. */
+  note?: string;
   amount?: string;
   hot?: boolean;
   onClick?: () => void;
   onDismiss?: () => void;
 };
 
-export function EventRow({ icon, title, subtitle, amount, hot = false, onClick, onDismiss }: EventRowProps) {
+export function EventRow({ icon, title, subtitle, note, amount, hot = false, onClick, onDismiss }: EventRowProps) {
   const start = useRef<{ x: number; y: number } | null>(null);
   const drag = useRef(0);
   const [offset, setOffset] = useState(0);
@@ -30,6 +32,7 @@ export function EventRow({ icon, title, subtitle, amount, hot = false, onClick, 
       <span className="min-w-0 flex-1">
         <span className="block truncate text-body font-body text-ink">{title}</span>
         {subtitle ? <span className="mt-0.5 block truncate text-label font-semibold text-ink-muted">{subtitle}</span> : null}
+        {note ? <span dir="auto" className="mt-0.5 line-clamp-2 block break-words text-label font-semibold text-ink">{note}</span> : null}
       </span>
       {amount ? <span className="text-body font-extrabold tabular-nums text-ink">{amount}</span> : null}
       <IconChevron className="h-[18px] w-[18px] shrink-0 text-ink-subtle" />

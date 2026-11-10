@@ -12,6 +12,8 @@ import { processOnboardingReminder } from './onboarding-reminder.worker.js';
 import { processReviewClose } from './review-close.worker.js';
 import { processInactiveCleanup } from './inactive-cleanup.worker.js';
 import { processResponseDigest } from './response-digest.worker.js';
+import { processReNotify } from './re-notify.worker.js';
+import { processSpecialNotify } from './special-notify.worker.js';
 
 let connection: IORedis | null = null;
 
@@ -108,6 +110,20 @@ export function setupQueues(): void {
   inactiveCleanupQueue.upsertJobScheduler('inactive-account-cleanup-scheduler', {
     every: 24 * 60 * 60 * 1000, // 24 hours
   }, { name: 'inactive-account-cleanup' });
+
+  // --- Repeat waves for emergency collections: hourly run, the 12-hour gate is per collection ---
+  const reNotifyQueue = new Queue('collection-re-notify', queueOpts(redis));
+  new Worker('collection-re-notify', processReNotify, { connection: redis });
+  reNotifyQueue.upsertJobScheduler('re-notify-scheduler', {
+    every: 60 * 60 * 1000, // 1 hour
+  }, { name: 're-notify' });
+
+  // --- Author/Developer collections told to people who already helped: every hour ---
+  const specialNotifyQueue = new Queue('special-notify', queueOpts(redis));
+  new Worker('special-notify', processSpecialNotify, { connection: redis });
+  specialNotifyQueue.upsertJobScheduler('special-notify-scheduler', {
+    every: 60 * 60 * 1000, // 1 hour
+  }, { name: 'special-notify' });
 
   // --- Responses to a collection, grouped into one message (SO-45): event-driven, delayed ---
   new Queue('response-digest', queueOpts(redis));

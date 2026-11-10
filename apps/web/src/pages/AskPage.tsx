@@ -10,6 +10,7 @@ import { Input } from '../components/ui2/Input';
 import { Meter } from '../components/ui2/Meter';
 import { Screen } from '../components/ui2/Screen';
 import { Segmented } from '../components/ui2/Segmented';
+import { Textarea } from '../components/ui2/Textarea';
 import { Sheet } from '../components/ui2/Sheet';
 import { useShellMode } from '../components/ui2/shell-mode';
 import { formatMoney } from '../components/ui2/format';
@@ -19,6 +20,8 @@ import { PathToRequestSheet } from '../components/circle/PathToRequest';
 import { useNeedCounts } from '../components/profile/useNeedCounts';
 
 const APPS = ['appTelegram', 'appWhatsApp', 'appSignal', 'appViber', 'appDiscord', 'appOther'] as const;
+
+const DESCRIPTION_MAX = 300;
 
 type AskType = 'EMERGENCY' | 'REGULAR';
 
@@ -78,6 +81,7 @@ function AskBody() {
   const [type, setType] = useState<AskType>('EMERGENCY');
   const [amount, setAmount] = useState('');
   const [chat, setChat] = useState('');
+  const [description, setDescription] = useState('');
   const [errors, setErrors] = useState<{ amount?: string; chat?: string; form?: string }>({});
   const [howOpen, setHowOpen] = useState(false);
   const [largeOpen, setLargeOpen] = useState(false);
@@ -126,7 +130,7 @@ function AskBody() {
     if (whole == null) return;
     setErrors({});
     create.mutate(
-      { type, amount: whole, chatLink: chat.trim(), inputCurrency: 'USD' },
+      { type, amount: whole, chatLink: chat.trim(), description: description.trim() || undefined, inputCurrency: 'USD' },
       {
         onError: (error) => {
           const message = error.message;
@@ -215,6 +219,15 @@ function AskBody() {
               {t('ask.chatHow')}
             </button>
           )}
+        </div>
+        <div className="mt-4">
+          <Textarea
+            label={t('ask.descLabel')}
+            value={description}
+            placeholder={t('ask.descPlaceholder')}
+            max={DESCRIPTION_MAX}
+            onChange={(event) => setDescription(event.target.value)}
+          />
         </div>
         <p className="mt-4 rounded-lg bg-care-soft px-3.5 py-3 text-caption font-semibold text-ink">{reach}</p>
         {errors.form ? <p className="mt-3 text-label font-semibold text-sos">{errors.form}</p> : null}
