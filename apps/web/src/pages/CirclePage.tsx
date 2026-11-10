@@ -482,6 +482,62 @@ function PhoneCircle({
     if (!feedLayer) setExpanded(false);
   }, [feedLayer]);
 
+  // The expanded feed closes with a downward swipe anywhere on it once the list is scrolled to the top,
+  // like a system sheet, not only from the handle. Native listeners: touchmove must be non-passive to stop
+  // the browser from treating the pull as an overscroll.
+  const scrollRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (!el || !feedLayer || !expanded) return;
+    let start: { x: number; y: number } | null = null;
+    let pulling = false;
+    let dy = 0;
+    const onStart = (event: TouchEvent) => {
+      const touch = event.touches[0];
+      if (!touch || event.touches.length !== 1 || el.scrollTop > 0) {
+        start = null;
+        return;
+      }
+      start = { x: touch.clientX, y: touch.clientY };
+      pulling = false;
+      dy = 0;
+    };
+    const onMove = (event: TouchEvent) => {
+      const touch = event.touches[0];
+      if (!start || !touch) return;
+      dy = touch.clientY - start.y;
+      if (!pulling) {
+        const dx = touch.clientX - start.x;
+        if (dy < -6 || Math.abs(dx) > Math.abs(dy)) {
+          start = null; // scrolling the list up or a sideways gesture: leave it to the browser
+          return;
+        }
+        if (dy < 8 || el.scrollTop > 0) return;
+        pulling = true;
+      }
+      event.preventDefault();
+      setDrag(Math.max(0, dy));
+    };
+    const onEnd = () => {
+      if (pulling) {
+        setDrag(null);
+        if (dy > 60) setExpanded(false);
+      }
+      start = null;
+      pulling = false;
+    };
+    el.addEventListener('touchstart', onStart, { passive: true });
+    el.addEventListener('touchmove', onMove, { passive: false });
+    el.addEventListener('touchend', onEnd);
+    el.addEventListener('touchcancel', onEnd);
+    return () => {
+      el.removeEventListener('touchstart', onStart);
+      el.removeEventListener('touchmove', onMove);
+      el.removeEventListener('touchend', onEnd);
+      el.removeEventListener('touchcancel', onEnd);
+    };
+  }, [feedLayer, expanded]);
+
   const onHandleDown = (event: ReactPointerEvent<HTMLDivElement>) => {
     dragStart.current = event.clientY;
     event.currentTarget.setPointerCapture(event.pointerId);
@@ -658,7 +714,7 @@ function PhoneCircle({
         >
           <span className="h-[5px] w-10 rounded-pill bg-line-strong" />
         </div>
-        <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-4 pb-4">
+        <div ref={scrollRef} className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-4 pb-4">
           <div ref={feedRef}>{feed}</div>
         </div>
       </section>
