@@ -148,6 +148,9 @@ export function heroScene(canvas: HTMLCanvasElement, getLabels: () => HeroSceneL
   const pill = (x: number, y: number, txt: string, fill: string, color: string) => {
     ctx.font = '700 12px Manrope, sans-serif';
     const w = ctx.measureText(txt).width + 20;
+    // Keep the whole pill inside the card (the phone card is only 240 px tall).
+    x = Math.min(Math.max(x, w / 2 + 8), W - w / 2 - 8);
+    y = Math.min(Math.max(y, 19), H - 19);
     ctx.fillStyle = fill;
     ctx.beginPath();
     if (typeof ctx.roundRect === 'function') ctx.roundRect(x - w / 2, y - 11, w, 22, 11);
@@ -284,7 +287,7 @@ export function heroScene(canvas: HTMLCanvasElement, getLabels: () => HeroSceneL
       ctx!.stroke();
     }
     const full = arrived === helpers.length;
-    if (askK > 0) pill(pa.x, pa.y - 28, full ? L.done : L.ask, full ? COL.bright : COL.askPill, COL.n1);
+    if (askK > 0) pill(pa.x, pa.y - 28 < 19 ? pa.y + 28 : pa.y - 28, full ? L.done : L.ask, full ? COL.bright : COL.askPill, COL.n1);
     ctx!.globalAlpha = 1;
     /* signal pulse */
     if (inSignal) dot(along(pathPts, sigK), 5, COL.care, COL.care);

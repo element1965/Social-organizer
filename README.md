@@ -399,6 +399,8 @@ Before this split the entry was 1858 KB / 558 KB gzip and the landing also pulle
 
 The `redesign` branch replaces the old dashboard, network page, and planet landing with four tabs: Circle, Ask, Add, and Profile. Guests see the public site at `/` and the explainer at `/how`. Screen specs are in [docs/redesign/](docs/redesign/README.md).
 
+The landing (`LandingPage.tsx`, `components/site/`): on phones the live network scene opens the page above the title, so it is on the first screen with the store button. Under the buttons one line shows the real number of people in the network (`stats.public`); no collection figures are shown. "How it works" is one sticky figure whose step follows the scroll (`StepStory`). Blocks fade in as soon as any part of them is near the bottom of the screen.
+
 Demo mode, the video guides, and the retired-feature page are removed.
 
 Apply these migrations by hand on production (they are already in `packages/db/prisma/migrations`):

@@ -7,8 +7,10 @@ export function SiteFooter() {
   const { t } = useTranslation();
   return (
     <footer className="site-foot">
-      <SiteBrand small />
-      <span>{t('landing.site.footerNote')}</span>
+      <div className="about">
+        <SiteBrand small />
+        <span>{t('landing.site.footerNote')}</span>
+      </div>
       <nav className="links" aria-label={t('landing.site.nav')}>
         <Link to="/how" className="phone-only">
           {t('landing.site.how')}
@@ -24,6 +26,7 @@ export function SiteFooter() {
         <Link to="/delete-account">{t('landing.site.deleteAccount')}</Link>
         <LanguageSelect />
       </nav>
+      <p className="copy">© {new Date().getFullYear()} {t('landing.site.brand')}</p>
     </footer>
   );
 }
