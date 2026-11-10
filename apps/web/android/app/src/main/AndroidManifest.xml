@@ -30,6 +30,19 @@
                 <data android:scheme="socialorganizer" />
             </intent-filter>
 
+            <!-- App Links: invite links (live QR, shared invites) open the app instead of the browser.
+                 Verified against https://<host>/.well-known/assetlinks.json (served by the API).
+                 Hosts come from build.gradle (production: orginizer.com, staging build: the staging domain). -->
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="https" />
+                <data android:host="${appLinkHost}" />
+                <data android:host="${appLinkHostAlt}" />
+                <data android:pathPrefix="/invite/" />
+            </intent-filter>
+
         </activity>
 
         <meta-data android:name="com.google.mlkit.vision.DEPENDENCIES" android:value="barcode_ui"/>
