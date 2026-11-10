@@ -261,14 +261,23 @@ export function App() {
     // networkMode 'always': a request without a network fails at once and says so (the offline screens react to it)
     // instead of waiting paused; a mutation then fails visibly rather than firing later on its own.
     defaultOptions: {
-      queries: { retry: 1, refetchOnWindowFocus: false, networkMode: 'always' },
+      queries: {
+        retry: 1,
+        // The one retry waits 1–3 s, spread at random, so clients do not all return in the same second
+        retryDelay: () => 1000 + Math.random() * 2000,
+        refetchOnWindowFocus: false,
+        networkMode: 'always',
+      },
       mutations: { networkMode: 'always' },
     },
   }));
   const [trpcClient] = useState(() => getTrpcClient());
 
   // The connection came back (the browser says so, or the server answers again): refresh what is on screen
-  useEffect(() => onRecovery(() => void queryClient.invalidateQueries()), [queryClient]);
+  // (spread over a few seconds: after an outage every open app comes back at the same moment)
+  useEffect(() => onRecovery(() => {
+    window.setTimeout(() => void queryClient.invalidateQueries(), Math.random() * 4000);
+  }), [queryClient]);
 
   return (
     <trpc.Provider client={trpcClient} queryClient={queryClient}>

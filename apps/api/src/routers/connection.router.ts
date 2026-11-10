@@ -309,7 +309,7 @@ export const connectionRouter = router({
       await ctx.db.connection.delete({
         where: { userAId_userBId: { userAId: userAId!, userBId: userBId! } },
       });
-      invalidateGraph();
+      invalidateGraph([userAId!, userBId!]);
 
       // Create pending as if target requested connection (awaiting my confirmation)
       await ctx.db.pendingConnection.upsert({
