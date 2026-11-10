@@ -1413,5 +1413,19 @@
     "step4": "Revino în aplicație",
     "checkAgain": "Verifică din nou",
     "checkHint": "După ce activezi notificările, atinge „Verifică din nou”"
+  },
+  "adminPerson": {
+    "budget": "Angajament în această perioadă",
+    "registered": "Înregistrare",
+    "registeredValue": "{{date}} · ziua {{n}}",
+    "connections": "Conexiuni directe",
+    "needsCreated": "Nevoi create",
+    "needsOpen": "Deschise acum",
+    "needsWithHelp": "Nevoi cu participare",
+    "tookPartIn": "A participat la nevoi",
+    "historyLabel": "Istoric participare",
+    "given": "A dat · {{n}}",
+    "received": "A primit · {{n}}",
+    "projectDay": "Ziua proiectului"
   }
 }

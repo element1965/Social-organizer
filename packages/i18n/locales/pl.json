@@ -1424,5 +1424,19 @@
     "step4": "Wróć do aplikacji",
     "checkAgain": "Sprawdź ponownie",
     "checkHint": "Gdy włączysz powiadomienia, stuknij „Sprawdź ponownie”"
+  },
+  "adminPerson": {
+    "budget": "Deklaracja w tym okresie",
+    "registered": "Rejestracja",
+    "registeredValue": "{{date}} · dzień {{n}}",
+    "connections": "Bezpośrednie połączenia",
+    "needsCreated": "Utworzone potrzeby",
+    "needsOpen": "Otwarte teraz",
+    "needsWithHelp": "Potrzeby z udziałem",
+    "tookPartIn": "Udział w potrzebach",
+    "historyLabel": "Historia udziału",
+    "given": "Dał(a) · {{n}}",
+    "received": "Otrzymał(a) · {{n}}",
+    "projectDay": "Dzień projektu"
   }
 }

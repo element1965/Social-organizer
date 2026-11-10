@@ -1391,5 +1391,19 @@
     "step4": "Quay lại ứng dụng",
     "checkAgain": "Kiểm tra lại",
     "checkHint": "Sau khi bật thông báo, hãy nhấn «Kiểm tra lại»"
+  },
+  "adminPerson": {
+    "budget": "Cam kết kỳ này",
+    "registered": "Đăng ký",
+    "registeredValue": "{{date}} · ngày {{n}}",
+    "connections": "Kết nối trực tiếp",
+    "needsCreated": "Nhu cầu đã tạo",
+    "needsOpen": "Đang mở",
+    "needsWithHelp": "Nhu cầu có tham gia",
+    "tookPartIn": "Đã tham gia nhu cầu",
+    "historyLabel": "Lịch sử tham gia",
+    "given": "Đã cho · {{n}}",
+    "received": "Đã nhận · {{n}}",
+    "projectDay": "Ngày dự án"
   }
 }

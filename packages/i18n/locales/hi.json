@@ -1402,5 +1402,19 @@
     "step4": "ऐप पर वापस आएँ",
     "checkAgain": "फिर जाँचें",
     "checkHint": "सूचनाएँ चालू करने के बाद “फिर जाँचें” दबाएँ"
+  },
+  "adminPerson": {
+    "budget": "इस अवधि में संकल्प",
+    "registered": "पंजीकरण",
+    "registeredValue": "{{date}} · दिन {{n}}",
+    "connections": "सीधे संपर्क",
+    "needsCreated": "बनाई गई ज़रूरतें",
+    "needsOpen": "अभी खुली",
+    "needsWithHelp": "भागीदारी वाली ज़रूरतें",
+    "tookPartIn": "ज़रूरतों में भाग लिया",
+    "historyLabel": "भागीदारी इतिहास",
+    "given": "दिया · {{n}}",
+    "received": "पाया · {{n}}",
+    "projectDay": "प्रोजेक्ट का दिन"
   }
 }

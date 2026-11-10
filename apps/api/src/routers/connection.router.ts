@@ -4,6 +4,7 @@ import { TRPCError } from '@trpc/server';
 import { GRAPH_SLICE_DEPTH } from '@so/shared';
 import { getGraphSlice, findPathBetweenUsers } from '../services/bfs.service.js';
 import { canViewContacts } from '../services/visibility.service.js';
+import { isAdmin } from '../admin.js';
 import { countConnections } from '../services/connection-request.service.js';
 import { bfsNetwork, networkReach, roundFarCount, VISIBLE_RINGS, type FarCount } from '../services/network.service.js';
 import { invalidateGraph } from '../services/graph-cache.service.js';
@@ -57,7 +58,8 @@ export const connectionRouter = router({
   listForUser: protectedProcedure
     .input(z.object({ userId: z.string() }))
     .query(async ({ ctx, input }) => {
-      const canView = await canViewContacts(ctx.db, ctx.userId, input.userId);
+      // Admins see anyone's connections (admin block on the person page)
+      const canView = isAdmin(ctx.userId) || (await canViewContacts(ctx.db, ctx.userId, input.userId));
       if (!canView) return [];
 
       const connections = await ctx.db.connection.findMany({

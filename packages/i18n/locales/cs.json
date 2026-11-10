@@ -1424,5 +1424,19 @@
     "step4": "Vraťte se do aplikace",
     "checkAgain": "Zkontrolovat znovu",
     "checkHint": "Až oznámení zapnete, klepněte na „Zkontrolovat znovu“"
+  },
+  "adminPerson": {
+    "budget": "Příslib v tomto období",
+    "registered": "Registrace",
+    "registeredValue": "{{date}} · den {{n}}",
+    "connections": "Přímá spojení",
+    "needsCreated": "Vytvořené potřeby",
+    "needsOpen": "Nyní otevřené",
+    "needsWithHelp": "Potřeby s účastí",
+    "tookPartIn": "Účast na potřebách",
+    "historyLabel": "Historie účasti",
+    "given": "Dal(a) · {{n}}",
+    "received": "Dostal(a) · {{n}}",
+    "projectDay": "Den projektu"
   }
 }

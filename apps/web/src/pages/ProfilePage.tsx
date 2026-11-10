@@ -24,6 +24,7 @@ import { MILESTONE_KEYS, type MilestoneKind } from '../hooks/useEvents';
 import { ACCOUNT_NOTICE_KEY, publicHost } from '../components/profile/constants';
 import { formatLongDate } from '../components/profile/dates';
 import { applyFontScale } from '../components/profile/fontScale';
+import { kyivDayCount } from '../components/admin/adminDay';
 
 function networkKey(count: number): 'profile.networkOne' | 'profile.networkFew' | 'profile.networkMany' {
   const form = countForm(count);
@@ -309,6 +310,9 @@ export function ProfilePage() {
             <Pill tone="warm">{t('profile.adminBadge')}</Pill>
           </div>
           <Group>
+            {me.data?.createdAt ? (
+              <Row title={t('adminPerson.projectDay')} value={String(kyivDayCount(me.data.createdAt))} variant="value" chevron={false} />
+            ) : null}
             <Row title={t('profile.broadcast')} to="/me/broadcast" variant="link" />
             <Row title={t('profile.statistics')} to="/me/stats" variant="link" />
             <Row

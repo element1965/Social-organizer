@@ -42,7 +42,8 @@ function packageName(id: string): string | null {
 // Origin http://<pc-ip>:3000; it is rewritten to localhost:3000, which the API's CORS allowlist accepts.
 // Production serves web and API from one domain and never goes through this proxy.
 const apiProxy = (extra: Record<string, unknown> = {}) => ({
-  target: 'http://localhost:3001',
+  // DEV_API_TARGET lets a second local stack (own API port) run next to the default one
+  target: process.env.DEV_API_TARGET || 'http://localhost:3001',
   changeOrigin: true,
   configure: (proxy: { on: (event: string, cb: (req: { getHeader: (k: string) => unknown; setHeader: (k: string, v: string) => void }) => void) => void }) => {
     proxy.on('proxyReq', (proxyReq) => {

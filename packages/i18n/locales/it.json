@@ -1413,5 +1413,19 @@
     "step4": "Torna all'app",
     "checkAgain": "Controlla di nuovo",
     "checkHint": "Dopo aver attivato le notifiche, tocca «Controlla di nuovo»"
+  },
+  "adminPerson": {
+    "budget": "Impegno in questo periodo",
+    "registered": "Registrazione",
+    "registeredValue": "{{date}} · giorno {{n}}",
+    "connections": "Connessioni dirette",
+    "needsCreated": "Bisogni creati",
+    "needsOpen": "Aperti ora",
+    "needsWithHelp": "Bisogni con partecipazione",
+    "tookPartIn": "Ha partecipato a bisogni",
+    "historyLabel": "Cronologia partecipazione",
+    "given": "Ha dato · {{n}}",
+    "received": "Ha ricevuto · {{n}}",
+    "projectDay": "Giorno del progetto"
   }
 }

@@ -1446,5 +1446,19 @@
     "step4": "عُد إلى التطبيق",
     "checkAgain": "تحقق مرة أخرى",
     "checkHint": "بعد تفعيل الإشعارات، اضغط «تحقق مرة أخرى»"
+  },
+  "adminPerson": {
+    "budget": "التعهد في هذه الفترة",
+    "registered": "التسجيل",
+    "registeredValue": "{{date}} · اليوم {{n}}",
+    "connections": "اتصالات مباشرة",
+    "needsCreated": "احتياجات منشأة",
+    "needsOpen": "مفتوحة الآن",
+    "needsWithHelp": "احتياجات بها مشاركة",
+    "tookPartIn": "شارك في احتياجات",
+    "historyLabel": "سجل المشاركة",
+    "given": "قدّم · {{n}}",
+    "received": "تلقّى · {{n}}",
+    "projectDay": "يوم المشروع"
   }
 }

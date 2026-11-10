@@ -1391,5 +1391,19 @@
     "step4": "Kembali ke aplikasi",
     "checkAgain": "Periksa lagi",
     "checkHint": "Setelah notifikasi aktif, ketuk “Periksa lagi”"
+  },
+  "adminPerson": {
+    "budget": "Komitmen periode ini",
+    "registered": "Terdaftar",
+    "registeredValue": "{{date}} · hari ke-{{n}}",
+    "connections": "Koneksi langsung",
+    "needsCreated": "Kebutuhan dibuat",
+    "needsOpen": "Terbuka sekarang",
+    "needsWithHelp": "Kebutuhan dengan partisipasi",
+    "tookPartIn": "Ikut dalam kebutuhan",
+    "historyLabel": "Riwayat partisipasi",
+    "given": "Memberi · {{n}}",
+    "received": "Menerima · {{n}}",
+    "projectDay": "Hari proyek"
   }
 }

@@ -1402,5 +1402,19 @@
     "step4": "Kom tillbaka till appen",
     "checkAgain": "Kontrollera igen",
     "checkHint": "När du har slagit på notiser, tryck på ”Kontrollera igen”"
+  },
+  "adminPerson": {
+    "budget": "Åtagande denna period",
+    "registered": "Registrerad",
+    "registeredValue": "{{date}} · dag {{n}}",
+    "connections": "Direkta kontakter",
+    "needsCreated": "Skapade behov",
+    "needsOpen": "Öppna nu",
+    "needsWithHelp": "Behov med deltagande",
+    "tookPartIn": "Deltog i behov",
+    "historyLabel": "Deltagandehistorik",
+    "given": "Gav · {{n}}",
+    "received": "Fick · {{n}}",
+    "projectDay": "Projektdag"
   }
 }

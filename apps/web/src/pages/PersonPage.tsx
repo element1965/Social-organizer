@@ -13,6 +13,7 @@ import { Input } from '../components/ui2/Input';
 import { Screen } from '../components/ui2/Screen';
 import { PathChain } from '../components/person/PathChain';
 import { Sheet } from '../components/ui2/Sheet';
+import { AdminPersonPanel } from '../components/admin/AdminPersonPanel';
 import { formatMoney } from '../components/ui2/format';
 import { SocialIcon } from '../components/ui/social-icons';
 import { isLive } from '../components/profile/collections';
@@ -44,6 +45,8 @@ function PersonScreen() {
   const resolve = useNicknames();
 
   const me = trpc.user.me.useQuery();
+  const admin = trpc.faq.isAdmin.useQuery();
+  const isAdmin = admin.data?.isAdmin === true;
   const isSelf = me.data?.id === id;
   const other = !!id && me.isSuccess && !isSelf;
   const user = trpc.user.getById.useQuery({ userId: id }, { enabled: other });
@@ -405,6 +408,10 @@ function PersonScreen() {
         </Group>
       ) : participating.isSuccess && activeAsks.length === 0 ? (
         <p className="mt-6 px-1 text-body-s font-semibold text-ink-muted">{t('person.noShared')}</p>
+      ) : null}
+
+      {isAdmin && !deleted ? (
+        <AdminPersonPanel userId={id} createdAt={person.createdAt} remainingBudget={person.remainingBudget} />
       ) : null}
 
       {ring1 ? (

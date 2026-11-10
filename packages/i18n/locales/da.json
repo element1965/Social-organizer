@@ -1402,5 +1402,19 @@
     "step4": "Kom tilbage til appen",
     "checkAgain": "Tjek igen",
     "checkHint": "Når du har slået notifikationer til, tryk på »Tjek igen«"
+  },
+  "adminPerson": {
+    "budget": "Tilsagn i denne periode",
+    "registered": "Registreret",
+    "registeredValue": "{{date}} · dag {{n}}",
+    "connections": "Direkte forbindelser",
+    "needsCreated": "Oprettede behov",
+    "needsOpen": "Åbne nu",
+    "needsWithHelp": "Behov med deltagelse",
+    "tookPartIn": "Deltog i behov",
+    "historyLabel": "Deltagelseshistorik",
+    "given": "Gav · {{n}}",
+    "received": "Modtog · {{n}}",
+    "projectDay": "Projektdag"
   }
 }
