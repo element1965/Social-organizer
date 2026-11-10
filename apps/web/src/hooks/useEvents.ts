@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { REGULAR_CYCLE_DAYS } from '@so/shared';
 import { trpc } from '../lib/trpc';
@@ -54,12 +54,13 @@ export type FeedEvent = {
 type Person = { id: string; name: string };
 
 // Loose shapes: notification.list returns Prisma rows plus resolved paths.
-type NotificationItem = {
+export type NotificationItem = {
   id: string;
   type: string;
   status: string;
   wave?: number | null;
   createdAt: string | Date;
+  expiresAt?: string | Date | null;
   collectionId: string;
   handshakePath?: unknown;
   handshakePathResolved?: Person[];
@@ -78,6 +79,54 @@ type NotificationItem = {
 };
 
 const REQUEST_TYPES = new Set(['NEW_COLLECTION', 'RE_NOTIFY', 'SPECIAL_AUTHOR', 'SPECIAL_DEVELOPER']);
+
+/**
+ * A request notice that still waits for my decision: the Need is ACTIVE (not closed, cancelled, paused or at its
+ * goal), the notice has not expired and it is UNREAD or READ. READ counts: opening the Need marks the notice read
+ * (the API does it in collection.getById), which says "seen", not "decided". Joining the Need (an active
+ * Participation) and dismissing the notice are the decisions; both are checked by the caller / the dismissal.
+ */
+export function isPendingRequest(n: NotificationItem, now: number): boolean {
+  if (!REQUEST_TYPES.has(n.type)) return false;
+  if (n.status !== 'UNREAD' && n.status !== 'READ') return false;
+  if (n.collection?.status !== 'ACTIVE') return false;
+  if (n.expiresAt != null && new Date(n.expiresAt).getTime() <= now) return false;
+  return true;
+}
+
+/**
+ * Re-renders the caller when the nearest pending request notice expires (a timer to its `expiresAt`), so an
+ * impulse or a "Not now" button does not outlive its notice while the screen stays open: the query data keeps
+ * its identity, so nothing else would recompute. Optionally only the notices of one Need.
+ */
+export function useExpiryTick(items: NotificationItem[] | undefined, collectionId?: string): number {
+  const [tick, setTick] = useState(0);
+  useEffect(() => {
+    if (!items) return;
+    const now = Date.now();
+    let next = Infinity;
+    for (const n of items) {
+      if (collectionId && n.collectionId !== collectionId) continue;
+      if (n.expiresAt == null || !isPendingRequest(n, now)) continue;
+      next = Math.min(next, new Date(n.expiresAt).getTime());
+    }
+    if (!Number.isFinite(next)) return;
+    // setTimeout caps at about 24.8 days; the notice TTL is a day, but stay safe
+    const timer = window.setTimeout(() => setTick((x) => x + 1), Math.min(Math.max(next - now, 0) + 50, 2_000_000_000));
+    return () => window.clearTimeout(timer);
+  }, [items, collectionId, tick]);
+  return tick;
+}
+
+/** An active incoming Need for the graph: the signal that travels from its author to me. */
+export type ImpulseNeed = {
+  /** The Need (collection) id */
+  id: string;
+  personId: string;
+  at: number;
+  /** Ids from the author to me, as the notice recorded them (may reach beyond the drawn rings) */
+  path: string[];
+};
 
 /** Last day of the cycle a regular-cycle notification refers to. */
 function cycleEnd(n: NotificationItem): Date | null {
@@ -298,6 +347,30 @@ export function useEvents(options: { displayName?: (id: string, fallback: string
     return out.sort((a, b) => b.at - a.at);
   }, [notifications.data, incoming.data, outgoing.data, mine.data, participating.data, milestones.data, myId, t, name, dateFmt]);
 
+  // Active incoming Needs I have not decided on: unlike the feed rows (unread only) they stay after the Need was
+  // opened, and end when I join, dismiss the notice, or the Need is no longer active (see isPendingRequest).
+  const expiryTick = useExpiryTick(notifications.data?.items as unknown as NotificationItem[] | undefined);
+  const impulses = useMemo<ImpulseNeed[]>(() => {
+    // Until my Participations are known a Need I joined could flash up
+    if (!notifications.data || !participating.data) return [];
+    const joined = new Set<string>();
+    for (const o of participating.data) {
+      if (!o.unsubscribedAt && o.collection?.status === 'ACTIVE') joined.add(o.collection.id);
+    }
+    const now = Date.now();
+    const byNeed = new Map<string, ImpulseNeed>();
+    for (const n of notifications.data.items as unknown as NotificationItem[]) {
+      const c = n.collection;
+      if (!c || c.creatorId === myId || joined.has(c.id) || !isPendingRequest(n, now)) continue;
+      const at = new Date(n.createdAt).getTime();
+      const prev = byNeed.get(c.id);
+      if (prev && prev.at >= at) continue;
+      byNeed.set(c.id, { id: c.id, personId: c.creator.id, at, path: (n.handshakePathResolved ?? []).map((p) => p.id) });
+    }
+    return [...byNeed.values()].sort((a, b) => b.at - a.at);
+    // expiryTick: the memo reads the clock, and the data keeps its identity while a notice runs out
+  }, [notifications.data, participating.data, myId, expiryTick]);
+
   const loading =
     notifications.isLoading ||
     incoming.isLoading ||
@@ -306,7 +379,45 @@ export function useEvents(options: { displayName?: (id: string, fallback: string
     mine.isLoading ||
     milestones.isLoading;
 
-  return { events, loading, unreadCount: unread.data?.count ?? 0 };
+  return { events, impulses, loading, unreadCount: unread.data?.count ?? 0 };
+}
+
+/**
+ * "Not for me": dismisses the request notices of a Need, which ends its impulse on the graph. The notices in
+ * `dismissIds` go first, at once; the rest (the unread and read ones of the same Need) are swept in the background
+ * after a list fetch, skipping `skipIds` (already being dismissed by the caller). Resolves true when the asked
+ * dismissals worked (with no `dismissIds`: when the sweep did).
+ */
+export function useDeclineNeed() {
+  const utils = trpc.useUtils();
+  const dismiss = trpc.notification.dismiss.useMutation();
+  // Typed by hand: the inferred result type is deep enough to trip the compiler
+  const dismissOne = dismiss.mutateAsync as unknown as (input: { id: string }) => Promise<unknown>;
+  return useCallback(
+    async (collectionId: string, dismissIds: string[] = [], skipIds: string[] = []): Promise<boolean> => {
+      const handled = new Set([...dismissIds, ...skipIds]);
+      const known = Promise.all(dismissIds.map((id) => dismissOne({ id }).then(() => true, () => false)));
+      const sweep = (async () => {
+        try {
+          const list = (await utils.client.notification.list.query({ limit: 100 })) as unknown as { items: NotificationItem[] };
+          const rest = list.items.filter(
+            (n) => n.collectionId === collectionId && !handled.has(n.id) && REQUEST_TYPES.has(n.type) && (n.status === 'UNREAD' || n.status === 'READ'),
+          );
+          const done = await Promise.all(rest.map((n) => dismissOne({ id: n.id }).then(() => true, () => false)));
+          return done.every(Boolean);
+        } catch {
+          return false;
+        }
+      })();
+      const [knownOk, sweepOk] = await Promise.all([known, sweep]);
+      await Promise.all([
+        utils.notification.list.invalidate(undefined, { refetchType: 'all' }),
+        utils.notification.unreadCount.invalidate(undefined, { refetchType: 'all' }),
+      ]);
+      return dismissIds.length ? knownOk.every(Boolean) : sweepOk;
+    },
+    [utils, dismissOne],
+  );
 }
 
 /** Feed sections, in display order: what waits for me, my own Needs, Needs I take part in, people. */
