@@ -222,7 +222,7 @@ const PHASES = [
     { id: 'load-poll', t: 'Реже опрашивать тяжёлые списки, один таймер непрочитанного', n: 'network.ts, useEvents.ts, CirclePage.tsx; повтор запроса и возврат после сбоя разнесены по времени.', who: 'code', done: 1 },
     { id: 'load-chat', t: 'Лимиты ассистента и озвучки, кэш подсказки', n: 'chat.router.ts; числа меняются переменными CHAT_LIMIT_* и SPEAK_LIMIT_*.', who: 'code', block: 1, done: 1 },
     { id: 'load-compress', t: 'Сжатие ответов API', n: '@fastify/compress.', who: 'code', done: 1 },
-    { id: 'load-migrate-staging', t: 'Стейджинг: обновить схему и выложить ветку', n: 'prisma db push на базу стейджинга, затем один push в redesign.', who: 'author', block: 1 },
+    { id: 'load-migrate-staging', t: 'Стейджинг: обновить схему и выложить ветку', n: 'Сделано 10 ноября: схема обновлена (prisma db push), сборка b31553e работает, «Круг» и новый режим опроса проверены в браузере.', who: 'author', block: 1, done: 1 },
     { id: 'load-test', t: 'Нагрузочный тест на стейджинге с сетью на 100 тыс. человек', n: 'Засеять синтетический граф, прогнать типичную минуту экрана «Круг» для 500–2000 одновременных людей, записать p95 и память.', who: 'code', block: 1 },
     { id: 'load-outbox', t: 'Вынести рассылку волны из запроса в фоновую задачу', n: 'Сейчас создание потребности ждёт, пока запишутся все уведомления.', who: 'code' },
     { id: 'load-changes', t: 'Один лёгкий запрос «что изменилось» вместо трёх таймеров на «Круге»', n: 'unreadCount, pending.incoming, myOpenReviews.', who: 'code' },
