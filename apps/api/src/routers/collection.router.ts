@@ -95,7 +95,7 @@ export const collectionRouter = router({
         throw new TRPCError({ code: 'BAD_REQUEST', message: 'This person did not join from this collection link' });
       }
       await ctx.db.connection.delete({ where: { id: connection.id } });
-      invalidateGraph();
+      invalidateGraph([userAId!, userBId!]);
       return { ok: true as const };
     }),
 

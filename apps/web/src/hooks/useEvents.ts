@@ -149,7 +149,8 @@ export function useEvents(options: { displayName?: (id: string, fallback: string
   const utils = trpc.useUtils();
   const name = options.displayName ?? ((_id: string, fallback: string) => fallback);
 
-  const unread = trpc.notification.unreadCount.useQuery(undefined, { refetchInterval: POLL_MS });
+  // The shell already re-reads the unread count every 30 s; a second timer here doubled the requests
+  const unread = trpc.notification.unreadCount.useQuery();
   const notifications = trpc.notification.list.useQuery({ limit: 100 }, { refetchInterval: 60_000 });
   const incoming = trpc.pending.incoming.useQuery(undefined, { refetchInterval: POLL_MS });
   const outgoing = trpc.pending.myPending.useQuery(undefined, { refetchInterval: 60_000 });

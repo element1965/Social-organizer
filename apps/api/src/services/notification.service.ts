@@ -9,6 +9,9 @@ import { deliver, deliverMany } from './delivery.service.js';
 
 const WEB_APP_URL = process.env.WEB_APP_URL || 'https://www.orginizer.com';
 
+/** People written per insert when a wave is stored. */
+const INSERT_BATCH = 1000;
+
 /* Load locale JSON files via createRequire (avoids Node 18 ESM JSON import assertion issue) */
 const _require = createRequire(import.meta.url);
 const i18nDir = resolve(dirname(_require.resolve('@so/i18n')), '..');
@@ -83,23 +86,23 @@ export async function sendCollectionNotifications(
 
   const expiresAt = new Date(Date.now() + NOTIFICATION_TTL_HOURS * 60 * 60 * 1000);
 
+  // One insert per batch instead of one round trip per person: a wave can reach thousands of people.
+  // Rows that already exist (a retried wave) are skipped by the unique key and still count as told.
   let created = 0;
-  for (const recipient of recipients) {
+  for (let i = 0; i < recipients.length; i += INSERT_BATCH) {
+    const batch = recipients.slice(i, i + INSERT_BATCH);
     try {
-      await db.notification.upsert({
-        where: {
-          userId_collectionId_type_wave: {
-            userId: recipient.userId, collectionId, type, wave,
-          },
-        },
-        create: {
+      await db.notification.createMany({
+        data: batch.map((recipient) => ({
           userId: recipient.userId, collectionId, type,
           handshakePath: recipient.path, expiresAt, wave,
-        },
-        update: {},
+        })),
+        skipDuplicates: true,
       });
-      created++;
-    } catch { /* skip */ }
+      created += batch.length;
+    } catch (err) {
+      console.error('[Notify] wave batch failed:', err);
+    }
   }
 
   if (created > 0 && isRequest && external.length > 0) {

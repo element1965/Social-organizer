@@ -1,5 +1,5 @@
 import type { PrismaClient } from '@so/db';
-import { getGraph } from './graph-cache.service.js';
+import { getGraph, graphVersion, onGraphInvalidated } from './graph-cache.service.js';
 
 export interface NetworkMember {
   user_id: string;
@@ -89,7 +89,8 @@ export async function countNetworkByDepth(
       }
     }
     if (next.length > 0) byDepth[depth] = next.length;
-    ids.push(...next);
+    // No spread: a ring can hold more people than a call may take arguments
+    for (const id of next) ids.push(id);
     frontier = next;
   }
   return { byDepth, total: ids.length, ids };
@@ -103,10 +104,7 @@ export async function countNetworkByDepth(
  * - `canHelp`: the sum of what these people can still give this period (remaining budgets).
  * The person themselves is not counted in either.
  */
-export async function networkReach(
-  db: PrismaClient,
-  rootId: string,
-): Promise<{
+export interface NetworkReach {
   byDepth: Record<number, number>;
   exact: number;
   shown: number;
@@ -118,7 +116,125 @@ export async function networkReach(
   canHelp: number;
   /** What the visible rings 1–3 can give: the part a person can check by eye */
   canHelpVisible: number;
-}> {
+}
+
+/**
+ * A walk up to the 6th handshake touches most of a large network, and every screen asks for it
+ * (home, profile, the ask screen, each of them on a timer). The numbers are kept per person:
+ * - while nothing in the graph changed, for REACH_TTL_MS (only the budgets inside the sum can move);
+ * - after the graph changed somewhere, for REACH_STALE_MS at most, so far rings catch up within a minute;
+ * - a person whose own connections changed is dropped at once (invalidateGraph passes the ids),
+ *   so their own new acquaintance is in the numbers on the next request.
+ * Server-side thresholds (the path to a request) use the same value: it is at most a minute behind
+ * for far rings and exact for the person's own connections.
+ */
+const REACH_TTL_MS = 5 * 60_000;
+const REACH_STALE_MS = 60_000;
+const REACH_CACHE_MAX = 20_000;
+
+const reachCache = new Map<string, { value: NetworkReach; at: number; version: number }>();
+const reachLoading = new Map<string, Promise<NetworkReach>>();
+/** Bumped when entries are dropped, so a walk that started before does not store an old answer. */
+let reachEpoch = 0;
+
+/**
+ * An invalidation often comes from inside a transaction that has not committed yet. For this long after
+ * it, the people named in it are answered with a fresh walk every time and nothing is kept for them,
+ * so a walk that ran just before the commit cannot stay as their number.
+ */
+const REACH_DIRTY_MS = 3_000;
+const reachDirty = new Map<string, number>();
+let reachAllDirtyUntil = 0;
+
+function isReachDirty(rootId: string, now: number): boolean {
+  if (now < reachAllDirtyUntil) return true;
+  const until = reachDirty.get(rootId);
+  if (until === undefined) return false;
+  if (now < until) return true;
+  reachDirty.delete(rootId);
+  return false;
+}
+
+onGraphInvalidated((userIds) => {
+  reachEpoch++;
+  const until = Date.now() + REACH_DIRTY_MS;
+  if (!userIds) {
+    reachCache.clear();
+    reachDirty.clear();
+    reachAllDirtyUntil = until;
+    return;
+  }
+  if (reachDirty.size > 10_000) reachDirty.clear();
+  for (const id of userIds) {
+    reachCache.delete(id);
+    reachDirty.set(id, until);
+  }
+});
+
+/** Drops every kept reach (a person changed what they can give, tests). */
+export function clearReachCache(userIds?: string[]): void {
+  reachEpoch++;
+  if (!userIds) reachCache.clear();
+  else for (const id of userIds) reachCache.delete(id);
+}
+
+export async function networkReach(db: PrismaClient, rootId: string): Promise<NetworkReach> {
+  if (isReachDirty(rootId, Date.now())) return computeNetworkReach(db, rootId);
+  const hit = reachCache.get(rootId);
+  if (hit) {
+    const age = Date.now() - hit.at;
+    if (age < REACH_STALE_MS || (age < REACH_TTL_MS && hit.version === graphVersion())) return hit.value;
+  }
+  const pending = reachLoading.get(rootId);
+  if (pending) return pending;
+
+  const epoch = reachEpoch;
+  const promise = computeNetworkReach(db, rootId)
+    .then((value) => {
+      if (epoch === reachEpoch) {
+        if (reachCache.size >= REACH_CACHE_MAX) {
+          // Oldest entries first (a Map keeps insertion order)
+          let drop = REACH_CACHE_MAX / 10;
+          for (const key of reachCache.keys()) {
+            reachCache.delete(key);
+            if (--drop <= 0) break;
+          }
+        }
+        reachCache.delete(rootId);
+        reachCache.set(rootId, { value, at: Date.now(), version: graphVersion() });
+      }
+      return value;
+    })
+    .finally(() => reachLoading.delete(rootId));
+  reachLoading.set(rootId, promise);
+  return promise;
+}
+
+/**
+ * Remaining budgets of everyone who has one, for sums over very large reaches: sending hundreds of
+ * thousands of ids to the database for every person costs more than reading the budgets once a minute.
+ */
+const BUDGET_SNAPSHOT_MS = 60_000;
+const BUDGET_SQL_MAX_IDS = 5_000;
+let budgetSnapshot: { at: number; byUser: Map<string, number> } | null = null;
+let budgetLoading: Promise<Map<string, number>> | null = null;
+
+async function remainingBudgets(db: PrismaClient): Promise<Map<string, number>> {
+  if (budgetSnapshot && Date.now() - budgetSnapshot.at < BUDGET_SNAPSHOT_MS) return budgetSnapshot.byUser;
+  if (!budgetLoading) {
+    budgetLoading = db.user
+      .findMany({ where: { remainingBudget: { gt: 0 }, deletedAt: null }, select: { id: true, remainingBudget: true } })
+      .then((rows) => {
+        const byUser = new Map(rows.map((r) => [r.id, r.remainingBudget ?? 0]));
+        budgetSnapshot = { at: Date.now(), byUser };
+        return byUser;
+      })
+      .finally(() => { budgetLoading = null; });
+  }
+  return budgetLoading;
+}
+
+async function computeNetworkReach(db: PrismaClient, rootId: string): Promise<NetworkReach> {
   const { byDepth, total, ids } = await countNetworkByDepth(db, rootId);
   let visible = 0;
   for (let depth = 1; depth <= VISIBLE_RINGS; depth++) visible += byDepth[depth] ?? 0;
@@ -128,7 +244,18 @@ export async function networkReach(
   const shown = visible + farShown;
   let canHelp = 0;
   let canHelpVisible = 0;
-  if (ids.length > 0) {
+  if (ids.length > BUDGET_SQL_MAX_IDS) {
+    // ids come in handshake order, so the first `visible` of them are exactly the rings 1–3
+    const budgets = await remainingBudgets(db);
+    for (let i = 0; i < ids.length; i++) {
+      const b = budgets.get(ids[i]!);
+      if (!b) continue;
+      canHelp += b;
+      if (i < visible) canHelpVisible += b;
+    }
+    canHelp = Math.round(canHelp);
+    canHelpVisible = Math.round(canHelpVisible);
+  } else if (ids.length > 0) {
     // ids come in handshake order, so the first `visible` of them are exactly the rings 1–3
     const visibleIds = ids.slice(0, visible);
     const rows = await db.$queryRaw<Array<{ total: number | null; visible_total: number | null }>>`

@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from 'react';
+import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { trpc } from '../../lib/trpc';
 import { useAuth } from '../../hooks/useAuth';
 
@@ -22,14 +22,34 @@ type SliceNode = {
   lastSeen: string | Date | null;
 };
 
+/** How often the heavy network queries are re-read on a timer, and how long a fresh answer is reused. */
+export const NETWORK_POLL_MS = 5 * 60_000;
+export const NETWORK_STALE_MS = 60_000;
+
 /**
  * Graph slice (3 rings) with nicknames applied and a parent for every node, so the UI can say
  * "through whom" and highlight a path without another request.
  */
 export function useCircleNetwork() {
   const myId = useAuth((s) => s.userId);
-  const slice = trpc.connection.graphSlice.useQuery(undefined, { refetchInterval: 60_000 });
-  const connections = trpc.connection.list.useQuery(undefined, { refetchInterval: 60_000 });
+  const utils = trpc.useUtils();
+  // The lists of people are heavy, so they are re-read every 5 minutes; a cheap count of the person's
+  // own connections is watched every minute and a change in it refreshes them at once.
+  const slice = trpc.connection.graphSlice.useQuery(undefined, { refetchInterval: NETWORK_POLL_MS, staleTime: NETWORK_STALE_MS });
+  const connections = trpc.connection.list.useQuery(undefined, { refetchInterval: NETWORK_POLL_MS, staleTime: NETWORK_STALE_MS });
+  const count = trpc.connection.getCount.useQuery(undefined, { refetchInterval: 60_000 });
+  const lastCount = useRef<number | null>(null);
+  useEffect(() => {
+    const now = count.data?.count;
+    if (now === undefined) return;
+    if (lastCount.current !== null && lastCount.current !== now) {
+      void utils.connection.graphSlice.invalidate();
+      void utils.connection.list.invalidate();
+      void utils.connection.getNetworkStats.invalidate();
+      void utils.stats.networkCapabilities.invalidate();
+    }
+    lastCount.current = now;
+  }, [count.data?.count, utils]);
 
   const nicknames = useMemo(() => {
     const map = new Map<string, string>();

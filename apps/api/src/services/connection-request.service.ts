@@ -83,7 +83,7 @@ export async function createConnectionWithinLimit(
     },
   });
   // Still inside the transaction: a reload racing the commit is caught by the cache's signature check
-  invalidateGraph();
+  invalidateGraph([userAId, userBId]);
   return 'created';
 }
 
