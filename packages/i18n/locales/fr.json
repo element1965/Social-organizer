@@ -1464,6 +1464,8 @@
     "crowded": "Plusieurs personnes secouent à proximité. Utilisez plutôt le code QR.",
     "openQr": "Utiliser le code QR",
     "tooMany": "Trop de tentatives. Attendez une minute puis secouez à nouveau.",
-    "enable": "Activer la secousse"
+    "enable": "Activer la secousse",
+    "hintTitle": "Secouez simplement vos téléphones",
+    "hintBody": "Côte à côte, secouez les deux téléphones au même moment. L’app trouve l’autre personne, il ne reste qu’à confirmer. Fonctionne sur n’importe quel écran."
   }
 }

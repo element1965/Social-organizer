@@ -1464,6 +1464,8 @@
     "crowded": "Nekoliko osoba trese telefon u blizini. Koristite QR kod.",
     "openQr": "Koristi QR kod",
     "tooMany": "Previše pokušaja. Sačekajte minut i protresite ponovo.",
-    "enable": "Uključi tresenje"
+    "enable": "Uključi tresenje",
+    "hintTitle": "Само протресите телефоне",
+    "hintBody": "Стојећи једно поред другог, протресите оба телефона у истом тренутку. Апликација проналази другу особу, остаје само да потврдите. Ради на сваком екрану."
   }
 }

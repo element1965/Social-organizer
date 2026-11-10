@@ -1442,6 +1442,8 @@
     "crowded": "Beberapa orang menggoyang di dekat Anda. Gunakan kode QR.",
     "openQr": "Gunakan kode QR",
     "tooMany": "Terlalu banyak percobaan. Tunggu semenit lalu goyangkan lagi.",
-    "enable": "Aktifkan goyang"
+    "enable": "Aktifkan goyang",
+    "hintTitle": "Cukup goyangkan ponsel",
+    "hintBody": "Berdiri berdekatan, goyangkan kedua ponsel di saat yang sama. Aplikasi menemukan orang lainnya, kalian tinggal konfirmasi. Berfungsi di layar mana pun."
   }
 }

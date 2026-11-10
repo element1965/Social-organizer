@@ -1453,6 +1453,8 @@
     "crowded": "Yakınlarda birkaç kişi sallıyor. QR kodu kullanın.",
     "openQr": "QR kodu kullan",
     "tooMany": "Çok fazla deneme. Bir dakika bekleyip tekrar sallayın.",
-    "enable": "Sallamayı etkinleştir"
+    "enable": "Sallamayı etkinleştir",
+    "hintTitle": "Telefonları sallamanız yeterli",
+    "hintBody": "Yan yana durup iki telefonu aynı anda sallayın. Uygulama diğer kişiyi bulur, siz sadece onaylarsınız. Her ekranda çalışır."
   }
 }

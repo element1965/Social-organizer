@@ -1464,6 +1464,8 @@
     "crowded": "Più persone stanno scuotendo qui vicino. Usa il codice QR.",
     "openQr": "Usa il codice QR",
     "tooMany": "Troppi tentativi. Aspetta un minuto e scuoti di nuovo.",
-    "enable": "Attiva la scossa"
+    "enable": "Attiva la scossa",
+    "hintTitle": "Basta scuotere i telefoni",
+    "hintBody": "Vicini, scuotete entrambi i telefoni nello stesso momento. L’app trova l’altra persona e dovete solo confermare. Funziona su qualsiasi schermata."
   }
 }

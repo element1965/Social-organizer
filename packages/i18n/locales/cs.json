@@ -1475,6 +1475,8 @@
     "crowded": "Poblíž protřepává telefon více lidí. Použijte QR kód.",
     "openQr": "Použít QR kód",
     "tooMany": "Příliš mnoho pokusů. Počkejte minutu a protřepte znovu.",
-    "enable": "Zapnout protřepání"
+    "enable": "Zapnout protřepání",
+    "hintTitle": "Stačí zatřást telefony",
+    "hintBody": "Vedle sebe zatřeste oběma telefony ve stejnou chvíli. Aplikace najde druhého člověka a stačí jen potvrdit. Funguje na každé obrazovce."
   }
 }

@@ -1475,6 +1475,8 @@
     "crowded": "Kilka osób potrząsa w pobliżu. Użyj kodu QR.",
     "openQr": "Użyj kodu QR",
     "tooMany": "Zbyt wiele prób. Odczekaj minutę i potrząśnij ponownie.",
-    "enable": "Włącz potrząsanie"
+    "enable": "Włącz potrząsanie",
+    "hintTitle": "Po prostu potrząśnijcie telefonami",
+    "hintBody": "Stojąc obok siebie, potrząśnijcie oboma telefonami w tej samej chwili. Aplikacja znajdzie drugą osobę, wystarczy potwierdzić. Działa na każdym ekranie."
   }
 }

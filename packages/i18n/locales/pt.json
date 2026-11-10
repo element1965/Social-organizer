@@ -1464,6 +1464,8 @@
     "crowded": "Várias pessoas estão agitando por perto. Use o código QR.",
     "openQr": "Usar código QR",
     "tooMany": "Muitas tentativas. Aguarde um minuto e agite de novo.",
-    "enable": "Ativar agitação"
+    "enable": "Ativar agitação",
+    "hintTitle": "Basta agitar os telemóveis",
+    "hintBody": "Lado a lado, agitem os dois telemóveis ao mesmo tempo. A app encontra a outra pessoa e só precisam de confirmar. Funciona em qualquer ecrã."
   }
 }

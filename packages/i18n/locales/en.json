@@ -1453,6 +1453,8 @@
     "crowded": "Several people are shaking nearby. Use the QR code instead.",
     "openQr": "Use QR code",
     "tooMany": "Too many tries. Wait a minute and shake again.",
-    "enable": "Enable shake to connect"
+    "enable": "Enable shake to connect",
+    "hintTitle": "Just shake your phones",
+    "hintBody": "Standing together, shake both phones at the same moment. The app finds the other person, and you both just confirm. Works on any screen."
   }
 }

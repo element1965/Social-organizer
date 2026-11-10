@@ -1453,6 +1453,8 @@
     "crowded": "Useita ihmisiä ravistaa lähellä. Käytä QR-koodia.",
     "openQr": "Käytä QR-koodia",
     "tooMany": "Liian monta yritystä. Odota minuutti ja ravista uudelleen.",
-    "enable": "Ota ravistus käyttöön"
+    "enable": "Ota ravistus käyttöön",
+    "hintTitle": "Ravistakaa vain puhelimia",
+    "hintBody": "Ravistakaa molempia puhelimia samaan aikaan vierekkäin. Sovellus löytää toisen ihmisen, ja te vain vahvistatte. Toimii millä tahansa näkymällä."
   }
 }

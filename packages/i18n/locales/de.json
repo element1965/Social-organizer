@@ -1453,6 +1453,8 @@
     "crowded": "Mehrere Personen schütteln in der Nähe. Nutze stattdessen den QR-Code.",
     "openQr": "QR-Code verwenden",
     "tooMany": "Zu viele Versuche. Warte eine Minute und schüttle erneut.",
-    "enable": "Schütteln aktivieren"
+    "enable": "Schütteln aktivieren",
+    "hintTitle": "Einfach die Handys schütteln",
+    "hintBody": "Schüttelt beide Handys nebeneinander im selben Moment. Die App findet die andere Person, ihr bestätigt nur noch. Funktioniert auf jedem Bildschirm."
   }
 }

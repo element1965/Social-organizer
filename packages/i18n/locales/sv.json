@@ -1453,6 +1453,8 @@
     "crowded": "Flera personer skakar i närheten. Använd QR-koden i stället.",
     "openQr": "Använd QR-kod",
     "tooMany": "För många försök. Vänta en minut och skaka igen.",
-    "enable": "Aktivera skakning"
+    "enable": "Aktivera skakning",
+    "hintTitle": "Skaka bara telefonerna",
+    "hintBody": "Skaka båda telefonerna samtidigt när ni står bredvid varandra. Appen hittar den andra personen och ni bekräftar bara. Fungerar på alla skärmar."
   }
 }
