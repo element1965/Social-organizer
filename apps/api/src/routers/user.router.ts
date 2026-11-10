@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { router, protectedProcedure } from '../trpc.js';
+import { isDataUrl, storeAvatar } from '../services/avatar.service.js';
 import { TRPCError } from '@trpc/server';
 import { CONTACT_TYPES, CONTACT_TYPE_IDS, MAX_CONTACT_VALUE_LENGTH, hasForeignScheme, CURRENCY_CODES, MIN_OBLIGATION_AMOUNT, contactValueAllowed } from '@so/shared';
 import { canViewContacts } from '../services/visibility.service.js';
@@ -32,7 +33,14 @@ export const userRouter = router({
       photoUrl: z.string().max(200000).optional(),
     }))
     .mutation(async ({ ctx, input }) => {
-      return ctx.db.user.update({ where: { id: ctx.userId }, data: input });
+      const data = { ...input };
+      // An uploaded photo (data URL) is stored apart; the profile keeps its short address
+      if (isDataUrl(data.photoUrl)) {
+        const stored = await storeAvatar(ctx.db, ctx.userId, data.photoUrl);
+        if (!stored) throw new TRPCError({ code: 'BAD_REQUEST', message: 'Unsupported photo' });
+        data.photoUrl = stored;
+      }
+      return ctx.db.user.update({ where: { id: ctx.userId }, data });
     }),
 
   getById: protectedProcedure

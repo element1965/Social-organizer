@@ -6,6 +6,7 @@ import { dirname, resolve } from 'node:path';
 import { existsSync } from 'node:fs';
 import Fastify, { type FastifyReply } from 'fastify';
 import cors from '@fastify/cors';
+import compress from '@fastify/compress';
 import multipart from '@fastify/multipart';
 import fastifyStatic from '@fastify/static';
 import {
@@ -22,6 +23,7 @@ import { backfillBotStartInvites } from './services/invite-fallback.service.js';
 import { getDb } from '@so/db';
 import { isAdmin } from './admin.js';
 import { startInactiveCleanupTimer, logInactiveCleanupConfig } from './services/inactive-cleanup.service.js';
+import { readAvatar, backfillAvatars } from './services/avatar.service.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -142,6 +144,10 @@ async function start() {
       origin: (origin, cb) => cb(null, !origin || allowedOrigins.has(origin)),
     });
 
+    // Compressed answers (gzip/brotli) for JSON and text over 1 KB: lists of people shrink several times.
+    // Pictures and video are already compressed and are left alone.
+    await app.register(compress, { global: true, threshold: 1024, encodings: ['br', 'gzip'] });
+
     // Multipart (file uploads, 50MB limit)
     await app.register(multipart, { limits: { fileSize: 50 * 1024 * 1024 } });
 
@@ -161,6 +167,8 @@ async function start() {
     // Rate limits (SO-14): strict on sign-in procedures, a calm global cap on everything else
     app.addHook('onRequest', async (req, reply) => {
       const ip = clientIp(req.raw);
+      // Profile photos are small, cached for good and come hundreds at a time when a large circle opens
+      if (req.url.startsWith('/api/avatar/')) return;
       if (!hit(`all:${ip}`, 600, MINUTE)) {
         return reply.status(429).send({ error: 'Too many requests' });
       }
@@ -305,6 +313,23 @@ async function start() {
       }
     });
 
+    // Uploaded profile photos. The hash in the address changes with the photo, so the answer never
+    // goes stale and the browser keeps it; lists of people carry only this short address.
+    app.get('/api/avatar/:userId/:hash', async (req, reply) => {
+      const { userId, hash } = req.params as { userId: string; hash: string };
+      if (!/^[a-f0-9]{32}$/.test(hash)) return reply.status(404).send({ error: 'Not found' });
+      try {
+        const avatar = await readAvatar(getDb(), userId, hash);
+        if (!avatar) return reply.status(404).send({ error: 'Not found' });
+        reply.header('Content-Type', avatar.mime);
+        reply.header('X-Content-Type-Options', 'nosniff');
+        reply.header('Cache-Control', 'public, max-age=31536000, immutable');
+        return reply.send(avatar.data);
+      } catch {
+        return reply.status(404).send({ error: 'Not found' });
+      }
+    });
+
     // Deep link trampoline — opens Instagram app to the correct profile
     // on Android (bypasses App Links interception that loses the path)
     app.get('/api/open/instagram/:username', async (req, reply) => {
@@ -443,6 +468,11 @@ async function start() {
     if (process.env.TELEGRAM_BOT_TOKEN && process.env.WEB_APP_URL) {
       setTelegramWebhook(`${process.env.WEB_APP_URL}/api/telegram-webhook`).catch(() => {});
     }
+
+    // Photos stored the old way (data URL inside users.photoUrl) move to their own table
+    backfillAvatars(getDb()).catch((err) => {
+      console.error('[Startup] avatar backfill failed:', err);
+    });
 
     // Backfill invites lost by the mini app (fire-and-forget, consumes tokens on apply)
     backfillBotStartInvites(getDb()).catch((err) => {

@@ -24,7 +24,7 @@ import { PersonCard, type CardPerson } from '../components/circle/PersonCard';
 import { RingChips } from '../components/circle/RingChips';
 import { useFarRings } from '../components/circle/far-rings';
 import { StartCard } from '../components/circle/StartCard';
-import { useCircleNetwork } from '../components/circle/network';
+import { useCircleNetwork, NETWORK_POLL_MS, NETWORK_STALE_MS } from '../components/circle/network';
 import { IconAim, IconFit, IconMinus, IconPlus, IconShrink, IconUp } from '../components/circle/icons';
 import { ASK_MIN_DIRECT } from '@so/shared';
 
@@ -66,7 +66,7 @@ export function CirclePage() {
 
   const net = useCircleNetwork();
   const stats = useCachedNetworkStats();
-  const caps = trpc.stats.networkCapabilities.useQuery(undefined, { refetchInterval: 60_000 });
+  const caps = trpc.stats.networkCapabilities.useQuery(undefined, { refetchInterval: NETWORK_POLL_MS, staleTime: NETWORK_STALE_MS });
   const me = trpc.user.me.useQuery();
   const { events, impulses, loading } = useEvents({ displayName: net.displayName });
 

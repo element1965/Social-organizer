@@ -117,7 +117,7 @@ export function ReviewFeedRows() {
   const utils = trpc.useUtils();
   const reviews = trpc.moderation.myOpenReviews.useQuery(undefined, {
     retry: false,
-    refetchInterval: 20_000,
+    refetchInterval: 60_000,
   });
   const vote = trpc.moderation.vote.useMutation({
     onSuccess: async () => {
