@@ -50,7 +50,7 @@ fresh();
   const b = registerShake({ userId: 'B', ip: '1.1.1.1', geo: { lat: 48.85, lng: 2.35, accuracy: 20 } });
   advance(1000);
   check('far-apart geo does not match', getShakeStatus(a).state === 'searching' && getShakeStatus(b).state === 'searching');
-  advance(3000);
+  advance(6000);
   check('far-apart geo ends as none', getShakeStatus(a).state === 'none' && getShakeStatus(b).state === 'none');
 }
 
@@ -79,24 +79,24 @@ fresh();
   );
 }
 
-// A lone shake: searching, then none after 3 s
+// A lone shake: searching, then none after 6 s
 fresh();
 {
   const a = registerShake({ userId: 'A', ip: '1.1.1.1' });
   advance(1000);
   check('lone shake is searching at 1 s', getShakeStatus(a).state === 'searching');
-  advance(2200);
-  check('lone shake is none after 3 s', getShakeStatus(a).state === 'none');
+  advance(5200);
+  check('lone shake is none after 6 s', getShakeStatus(a).state === 'none');
 }
 
 // Shakes far apart in time never match
 fresh();
 {
   const a = registerShake({ userId: 'A', ip: '1.1.1.1' });
-  advance(2000);
+  advance(4000);
   const b = registerShake({ userId: 'B', ip: '1.1.1.1' });
   advance(700);
-  check('shakes 2 s apart do not match', getShakeStatus(b).state === 'searching');
+  check('shakes 4 s apart do not match', getShakeStatus(b).state === 'searching');
   void a;
 }
 

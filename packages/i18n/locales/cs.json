@@ -2,6 +2,7 @@
   "common": {
     "appName": "Social Organizer",
     "loading": "Načítání...",
+    "stillLoading": "Stále se načítá…",
     "error": "Došlo k chybě",
     "retry": "Zkusit znovu",
     "save": "Uložit",

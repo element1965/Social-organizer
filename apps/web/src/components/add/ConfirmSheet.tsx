@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button } from '../ui2/Button';
 import { Sheet } from '../ui2/Sheet';
+import { refreshNetwork } from '../../lib/refreshNetwork';
 import { trpc } from '../../lib/trpc';
 
 interface ConfirmPerson {
@@ -27,11 +28,7 @@ export function ConfirmSheet({ person, onClose }: ConfirmSheetProps) {
   const busy = accept.isPending || reject.isPending;
 
   const refresh = async () => {
-    await Promise.all([
-      utils.pending.incoming.invalidate(),
-      utils.connection.list.invalidate(),
-      utils.collection.askAccess.invalidate(),
-    ]);
+    await refreshNetwork(utils);
   };
 
   const run = async (kind: 'accept' | 'reject') => {

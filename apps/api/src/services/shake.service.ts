@@ -41,12 +41,12 @@ export type ShakeSearchStatus =
   | { state: 'matched'; pair: ShakePair; otherUserId: string };
 
 /** Two shakes count as simultaneous when their server receipt times differ by at most this */
-export const MATCH_WINDOW_MS = 1500;
+export const MATCH_WINDOW_MS = 3000;
 /** A pairing is committed only once the newest shake is this old, so a third phone can still show up */
 export const SETTLE_MS = 500;
 /** A shake that found nobody is reported as 'none' after this */
-export const SEARCH_TIMEOUT_MS = 3000;
-const ENTRY_TTL_MS = 5000;
+export const SEARCH_TIMEOUT_MS = 6000;
+const ENTRY_TTL_MS = 8000;
 export const PAIR_TTL_MS = 30_000;
 const PAIR_KEEP_MS = 60_000;
 const MIN_GEO_RADIUS_M = 150;

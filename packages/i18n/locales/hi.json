@@ -2,6 +2,7 @@
   "common": {
     "appName": "Social Organizer",
     "loading": "लोड हो रहा है...",
+    "stillLoading": "अभी भी लोड हो रहा है…",
     "error": "एक त्रुटि हुई",
     "retry": "पुनः प्रयास करें",
     "save": "सहेजें",

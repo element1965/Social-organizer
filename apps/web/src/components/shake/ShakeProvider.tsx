@@ -9,6 +9,7 @@ import { Sheet } from '../ui2/Sheet';
 import { useAuth } from '../../hooks/useAuth';
 import { useShakeDetector } from '../../hooks/useShakeDetector';
 import { isScannerActive } from '../../lib/scanner';
+import { refreshNetwork } from '../../lib/refreshNetwork';
 import { trpc } from '../../lib/trpc';
 
 const SEARCH_POLL_MS = 500;
@@ -120,11 +121,7 @@ function ShakeFlow() {
   );
 
   const refreshAfterConnect = useCallback(() => {
-    void Promise.all([
-      utils.pending.incoming.invalidate(),
-      utils.connection.list.invalidate(),
-      utils.collection.askAccess.invalidate(),
-    ]);
+    void refreshNetwork(utils);
   }, [utils]);
 
   const apply = useCallback(

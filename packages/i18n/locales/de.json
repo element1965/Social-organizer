@@ -2,6 +2,7 @@
   "common": {
     "appName": "Social Organizer",
     "loading": "Laden...",
+    "stillLoading": "Lädt noch…",
     "error": "Ein Fehler ist aufgetreten",
     "retry": "Erneut versuchen",
     "save": "Speichern",

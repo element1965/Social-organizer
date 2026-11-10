@@ -5,6 +5,7 @@ import { useAuth } from '../hooks/useAuth';
 import { trpc } from '../lib/trpc';
 import { useOffline } from '../lib/connectivity';
 import { safePath } from './onboarding/flow';
+import { AppLoader } from './ui2/AppLoader';
 
 const isNativeApp = Capacitor.isNativePlatform();
 
@@ -59,11 +60,7 @@ export function ProtectedRoute({ children }: { children: React.ReactNode }) {
   // Wait for user data to load
   // Offline there is nothing to wait for: the saved copy screens take over
   if (isLoading && !offline) {
-    return (
-      <div className="flex min-h-screen items-center justify-center bg-canvas">
-        <div className="h-8 w-8 animate-spin rounded-full border-4 border-care border-t-transparent" />
-      </div>
-    );
+    return <AppLoader />;
   }
 
   return <>{children}</>;
