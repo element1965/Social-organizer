@@ -41,7 +41,49 @@ android {
                 signingConfig signingConfigs.release
             }
         }
+        // Test build that wraps the Railway staging environment instead of production.
+        // Debug-signed, installs next to the store app (own package id and name).
+        // Build with: node scripts/build-android-staging.mjs
+        staging {
+            initWith debug
+            applicationIdSuffix ".staging"
+            versionNameSuffix "-staging"
+            resValue "string", "app_name", "SO Staging"
+            resValue "string", "title_activity_main", "SO Staging"
+            matchingFallbacks = ['debug']
+        }
     }
+    sourceSets {
+        staging {
+            assets.srcDirs += ["$buildDir/generated/staging-assets"]
+        }
+    }
+}
+
+// The staging build overrides capacitor.config.json (written by `cap sync` into main assets)
+// with a copy whose server.url points at staging. Build-type assets win over main.
+def stagingUrl = project.findProperty('stagingUrl') ?: 'https://social-organizer-staging.up.railway.app'
+def stagingAssetsDir = file("$buildDir/generated/staging-assets")
+def mainCapConfig = file('src/main/assets/capacitor.config.json')
+
+tasks.register('generateStagingCapacitorConfig') {
+    inputs.file(mainCapConfig).optional()
+    inputs.property('stagingUrl', stagingUrl)
+    outputs.dir(stagingAssetsDir)
+    doLast {
+        if (!mainCapConfig.exists()) {
+            throw new GradleException("capacitor.config.json not found in main assets. Run `npx cap sync android` first.")
+        }
+        def config = new groovy.json.JsonSlurper().parse(mainCapConfig)
+        config.server = (config.server ?: [:]) + [url: stagingUrl]
+        stagingAssetsDir.mkdirs()
+        new File(stagingAssetsDir, 'capacitor.config.json').text =
+            groovy.json.JsonOutput.prettyPrint(groovy.json.JsonOutput.toJson(config))
+    }
+}
+
+tasks.matching { it.name == 'mergeStagingAssets' }.configureEach {
+    dependsOn 'generateStagingCapacitorConfig'
 }
 
 repositories {

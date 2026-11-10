@@ -271,6 +271,20 @@ Output: `apps/web/android/app/build/outputs/bundle/release/app-release.aab`
 - **Version:** bump `versionCode` and `versionName` in `apps/web/android/app/build.gradle`
 - **Upload:** manually via Google Play Console
 
+#### Staging test app (on a real phone)
+
+The `staging` build type wraps the Railway staging URL instead of production. It is debug-signed, has its own package `com.socialorganizer.app.staging` and the name **SO Staging**, so it installs next to the Google Play app.
+
+```bash
+# Phone connected over USB with USB debugging on
+node scripts/build-android-staging.mjs            # web build → cap sync → assembleStaging → adb install + launch
+node scripts/build-android-staging.mjs --no-web   # reuse apps/web/dist
+```
+
+- The URL comes from `-PstagingUrl` (default `https://social-organizer-staging.up.railway.app`); Gradle writes an overriding `capacitor.config.json` into the staging assets.
+- `src/staging/google-services.json` is the production Firebase config with the staging package name, so the build passes. Native push for staging needs the package registered as its own Android app in Firebase, plus a push key on a backend that never reaches real users (staging has none on purpose).
+- Sign in with the email code from the staging logs. Google and Apple sign-in return through the `socialorganizer://` scheme, which the store app also registers, so Android may ask which app should open it.
+
 ### iOS (App Store)
 
 Capacitor-based iOS wrapper (`apps/web/ios/`) that loads the production web URL. Build via Xcode (`bash scripts/deploy-ios.sh` → Archive → Upload). Bundle `com.socialorganizer.app`, Apple ID `6768132198`. Listing/metadata are managed through the App Store Connect API (key in `secrets/asc/`). Because the UI is served from the web, most fixes ship via a Railway deploy and a plain re-submit of the same binary — a new Xcode archive is only needed for native/Info.plist changes. Full flow in `IOS_DEPLOY.md`; Sign in with Apple setup in `APPLE_SIGNIN.md`.
