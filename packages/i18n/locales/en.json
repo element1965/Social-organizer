@@ -267,12 +267,17 @@
       "mineCollected": "{{collected}} reported",
       "participating": "You are in · your {{amount}}",
       "milestoneFirst": "First handshake",
-      "milestoneTen": "10 people in your circle",
       "milestoneWith": "With {{name}}",
       "milestoneGrow": "Your circle is growing",
       "quietTitle": "All quiet",
       "quietBody": "Needs, new people and cycles will show up here.",
-      "dismiss": "Hide: {{name}}"
+      "dismiss": "Hide: {{name}}",
+      "milestoneUnlocked": "You can report a Need",
+      "milestoneUnlockedSub": "Your circle and network have grown enough",
+      "milestoneFirstNeed": "First Need",
+      "milestoneFirstNeedSub": "The message is travelling by handshakes",
+      "milestoneFirstPart": "First Participation",
+      "milestoneFirstPartSub": "The author of the Need sees your Participation"
     },
     "start": {
       "lead": "You are the first in your circle.",
@@ -295,9 +300,10 @@
     "milestone": {
       "firstTitle": "First handshake",
       "firstBody": "Your Need can now reach the first person, and through them go further.",
-      "tenTitle": "10 people in your circle",
-      "tenBody": "Many more people receive your Need now. Keep adding people you know personally.",
-      "ok": "Great"
+      "ok": "Great",
+      "unlockedBody": "Your circle and network now have enough people. When you need it, open the “{{tab}}” tab: the message will travel by handshakes.",
+      "firstNeedBody": "The message about your Need travels by handshakes, nearest first. Whoever decides to take part will appear on the Need page and in the participants’ chat.",
+      "firstPartBody": "You have reported Participation. What to do next and how, you agree directly with the author, in the participants’ chat."
     },
     "feedExpand": "Expand the feed",
     "feedCollapse": "Collapse the feed"
@@ -486,7 +492,8 @@
     "notifyTelegramNotLinked": "Connect Telegram in Account to get messages there.",
     "stakeSaved": "Saved",
     "factsLine": "For closed Needs: Participation reported {{reported}}, marked as received by authors {{marked}}. People in your network see these two numbers.",
-    "needCounts": "Open: {{open}} · Past: {{past}}"
+    "needCounts": "Open: {{open}} · Past: {{past}}",
+    "stages": "Milestones"
   },
   "settings": {
     "title": "Settings",

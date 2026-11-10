@@ -51,7 +51,7 @@ export const pendingRouter = router({
     });
     if (connected) {
       // "First handshake" only for the connection that actually reached the first milestone
-      await syncMilestones(ctx.db, ctx.userId, { restored: true });
+      await syncMilestones(ctx.db, ctx.userId, { silent: true });
       const first = await ctx.db.userMilestone.findUnique({
         where: { userId_kind: { userId: ctx.userId, kind: 'FIRST_CONNECTION' } },
         select: { relatedUserId: true },

@@ -263,13 +263,18 @@
       "mineCollected": "已表明 {{collected}}",
       "participating": "你已参与 · 你的 {{amount}}",
       "milestoneFirst": "第1次握手",
-      "milestoneTen": "你的圈子里有 10 人",
       "milestoneWith": "与 {{name}}",
       "milestoneGrow": "你的圈子在扩大",
       "quietTitle": "暂无动态",
       "quietBody": "需求、新人和周期会出现在这里。",
       "dismiss": "隐藏：{{name}}",
-      "newCount_other": "{{count}} 条新的"
+      "newCount_other": "{{count}} 条新的",
+      "milestoneUnlocked": "可以告知需求了",
+      "milestoneUnlockedSub": "你的圈子和网络已经足够大",
+      "milestoneFirstNeed": "第一个需求",
+      "milestoneFirstNeedSub": "消息正沿握手传递",
+      "milestoneFirstPart": "第一次参与",
+      "milestoneFirstPartSub": "需求的发起人能看到你的参与"
     },
     "start": {
       "lead": "你是圈子里的第一个人。",
@@ -292,9 +297,10 @@
     "milestone": {
       "firstTitle": "第1次握手",
       "firstBody": "现在你的需求消息可以到达第一个人，并经他们继续传递。",
-      "tenTitle": "你的圈子里有 10 人",
-      "tenBody": "现在有更多人能收到你的需求消息。继续添加你亲自认识的人。",
-      "ok": "好"
+      "ok": "好",
+      "unlockedBody": "现在你的圈子和网络里已有足够多的人。需要时，打开“{{tab}}”标签页：消息会沿握手传递。",
+      "firstNeedBody": "关于你需求的消息沿握手传递，由近及远。决定参与的人会出现在需求页面和参与者聊天中。",
+      "firstPartBody": "你已告知参与。接下来做什么、怎么做，请在参与者聊天中直接与需求发起人商定。"
     },
     "feedExpand": "展开动态",
     "feedCollapse": "收起动态"
@@ -483,7 +489,8 @@
     "notifyTelegramNotLinked": "在“账号”里连接 Telegram，以便在那里接收消息。",
     "stakeSaved": "已保存",
     "factsLine": "针对已关闭的需求：参与告知 {{reported}} 次，作者标记为已收到 {{marked}} 次。你网络中的人可以看到这两个数字。",
-    "needCounts": "进行中: {{open}} · 过往: {{past}}"
+    "needCounts": "进行中: {{open}} · 过往: {{past}}",
+    "stages": "阶段"
   },
   "settings": {
     "title": "设置",

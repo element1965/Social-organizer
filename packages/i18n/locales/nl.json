@@ -265,14 +265,19 @@
       "mineCollected": "{{collected}} genoemd",
       "participating": "Je doet mee · jouw {{amount}}",
       "milestoneFirst": "Eerste handdruk",
-      "milestoneTen": "10 mensen in je kring",
       "milestoneWith": "Met {{name}}",
       "milestoneGrow": "Je kring groeit",
       "quietTitle": "Alles rustig",
       "quietBody": "Behoeften, nieuwe mensen en cycli verschijnen hier.",
       "dismiss": "Verbergen: {{name}}",
       "newCount_one": "{{count}} nieuw",
-      "newCount_other": "{{count}} nieuwe"
+      "newCount_other": "{{count}} nieuwe",
+      "milestoneUnlocked": "Je kunt een behoefte melden",
+      "milestoneUnlockedSub": "Je kring en netwerk zijn groot genoeg geworden",
+      "milestoneFirstNeed": "Eerste behoefte",
+      "milestoneFirstNeedSub": "Het bericht gaat via handdrukken",
+      "milestoneFirstPart": "Eerste deelname",
+      "milestoneFirstPartSub": "De indiener van de behoefte ziet je deelname"
     },
     "start": {
       "lead": "Jij bent de eerste in je kring.",
@@ -295,9 +300,10 @@
     "milestone": {
       "firstTitle": "Eerste handdruk",
       "firstBody": "Je behoefte kan nu de eerste persoon bereiken, en via die persoon verder gaan.",
-      "tenTitle": "10 mensen in je kring",
-      "tenBody": "Veel meer mensen ontvangen nu je bericht over een behoefte. Blijf mensen toevoegen die je persoonlijk kent.",
-      "ok": "Top"
+      "ok": "Top",
+      "unlockedBody": "In je kring en netwerk zijn nu genoeg mensen. Open als je het nodig hebt het tabblad “{{tab}}”: het bericht gaat via handdrukken.",
+      "firstNeedBody": "Het bericht over je behoefte gaat via handdrukken, eerst naar de dichtstbijzijnden. Wie besluit deel te nemen, verschijnt op de behoeftepagina en in de chat van de deelnemers.",
+      "firstPartBody": "Je hebt je deelname gemeld. Wat je daarna doet en hoe, spreek je rechtstreeks af met de indiener, in de chat van de deelnemers."
     },
     "feedExpand": "Feed uitklappen",
     "feedCollapse": "Feed inklappen"
@@ -486,7 +492,8 @@
     "notifyTelegramNotLinked": "Koppel Telegram bij “Account” om berichten daar te krijgen.",
     "stakeSaved": "Opgeslagen",
     "factsLine": "Voor gesloten Behoeften: gemelde deelname {{reported}}, door auteurs als ontvangen gemarkeerd {{marked}}. Mensen in je netwerk zien deze twee getallen.",
-    "needCounts": "Open: {{open}} · Eerder: {{past}}"
+    "needCounts": "Open: {{open}} · Eerder: {{past}}",
+    "stages": "Mijlpalen"
   },
   "settings": {
     "title": "Instellingen",

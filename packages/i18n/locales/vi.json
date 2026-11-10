@@ -263,13 +263,18 @@
       "mineCollected": "Đã nêu {{collected}}",
       "participating": "Bạn đang tham gia · {{amount}} của bạn",
       "milestoneFirst": "Cái bắt tay thứ 1",
-      "milestoneTen": "10 người trong vòng tròn của bạn",
       "milestoneWith": "Với {{name}}",
       "milestoneGrow": "Vòng tròn của bạn đang lớn lên",
       "quietTitle": "Đang yên ắng",
       "quietBody": "Nhu cầu, người mới và các chu kỳ sẽ hiện ở đây.",
       "dismiss": "Ẩn: {{name}}",
-      "newCount_other": "{{count}} mới"
+      "newCount_other": "{{count}} mới",
+      "milestoneUnlocked": "Bạn có thể thông báo nhu cầu",
+      "milestoneUnlockedSub": "Vòng tròn và mạng lưới của bạn đã đủ lớn",
+      "milestoneFirstNeed": "Nhu cầu đầu tiên",
+      "milestoneFirstNeedSub": "Thông báo đang đi theo các cái bắt tay",
+      "milestoneFirstPart": "Lần tham gia đầu tiên",
+      "milestoneFirstPartSub": "Người đăng nhu cầu thấy sự tham gia của bạn"
     },
     "start": {
       "lead": "Bạn là người đầu tiên trong vòng tròn của bạn.",
@@ -292,9 +297,10 @@
     "milestone": {
       "firstTitle": "Cái bắt tay thứ 1",
       "firstBody": "Giờ thông báo về nhu cầu của bạn có thể tới người đầu tiên, và qua họ đi xa hơn.",
-      "tenTitle": "10 người trong vòng tròn của bạn",
-      "tenBody": "Giờ nhiều người hơn nhận được thông báo về nhu cầu. Hãy tiếp tục thêm người bạn quen trực tiếp.",
-      "ok": "Tuyệt"
+      "ok": "Tuyệt",
+      "unlockedBody": "Giờ vòng tròn và mạng lưới của bạn đã có đủ người. Khi cần, hãy mở tab “{{tab}}”: thông báo sẽ đi theo các cái bắt tay.",
+      "firstNeedBody": "Thông báo về nhu cầu của bạn đi theo các cái bắt tay, từ người gần nhất đến người xa hơn. Ai quyết định tham gia sẽ xuất hiện trên trang nhu cầu và trong chat của người tham gia.",
+      "firstPartBody": "Bạn đã thông báo tham gia. Việc tiếp theo là gì và làm thế nào, bạn trao đổi trực tiếp với người đăng nhu cầu, trong chat của người tham gia."
     },
     "feedExpand": "Mở rộng bảng tin",
     "feedCollapse": "Thu gọn bảng tin"
@@ -483,7 +489,8 @@
     "notifyTelegramNotLinked": "Kết nối Telegram trong «Tài khoản» để nhận tin ở đó.",
     "stakeSaved": "Đã lưu",
     "factsLine": "Theo các Nhu cầu đã đóng: số lần báo tham gia — {{reported}}, tác giả đánh dấu đã nhận — {{marked}}. Hai con số này hiển thị với những người trong mạng lưới của bạn.",
-    "needCounts": "Đang mở: {{open}} · Trước đây: {{past}}"
+    "needCounts": "Đang mở: {{open}} · Trước đây: {{past}}",
+    "stages": "Các chặng"
   },
   "settings": {
     "title": "Cài đặt",

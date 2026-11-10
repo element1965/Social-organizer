@@ -10,6 +10,7 @@ import { getAskAccess, assertAskAllowed, isSpecialAsker } from '../services/ask-
 import { ADMIN_BLOCK_REASONS } from '../config/ask.js';
 import { activeObligationTotals, syncCollectionGoal } from '../services/collection-amount.js';
 import { settleOpenReviews } from '../services/moderation.service.js';
+import { syncMilestonesQuietly } from '../services/milestone.service.js';
 
 /** Chat links are shown as buttons: https only, never javascript: or http (SO-14). */
 const chatLinkSchema = z.string().max(500).url().refine((u) => /^https:\/\//i.test(u), 'Link must start with https://');
@@ -154,6 +155,7 @@ export const collectionRouter = router({
           currentCycleStart: input.type === 'REGULAR' ? new Date() : null,
         },
       });
+      await syncMilestonesQuietly(ctx.db, ctx.userId); // "first Need"
 
       // With an amount, special creators (Author/Developer/admin) are announced through the network like
       // everyone else; without one there is no BFS. The special-notify worker additionally tells people

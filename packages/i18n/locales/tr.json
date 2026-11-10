@@ -265,14 +265,19 @@
       "mineCollected": "{{collected}} belirtildi",
       "participating": "Katılıyorsunuz · sizin {{amount}}",
       "milestoneFirst": "İlk tokalaşma",
-      "milestoneTen": "Çevrenizde 10 kişi",
       "milestoneWith": "{{name}} ile",
       "milestoneGrow": "Çevreniz büyüyor",
       "quietTitle": "Şimdilik sessiz",
       "quietBody": "İhtiyaçlar, yeni kişiler ve döngüler burada görünecek.",
       "dismiss": "Gizle: {{name}}",
       "newCount_one": "{{count}} yeni",
-      "newCount_other": "{{count}} yeni"
+      "newCount_other": "{{count}} yeni",
+      "milestoneUnlocked": "İhtiyaç bildirebilirsiniz",
+      "milestoneUnlockedSub": "Çevreniz ve ağınız yeterince büyüdü",
+      "milestoneFirstNeed": "İlk ihtiyaç",
+      "milestoneFirstNeedSub": "Bildirim tokalaşmalarla ilerliyor",
+      "milestoneFirstPart": "İlk katılım",
+      "milestoneFirstPartSub": "İhtiyacı bildiren kişi katılımınızı görüyor"
     },
     "start": {
       "lead": "Çevrenizdeki ilk kişi sizsiniz.",
@@ -295,9 +300,10 @@
     "milestone": {
       "firstTitle": "İlk tokalaşma",
       "firstBody": "İhtiyaç bildiriminiz artık ilk kişiye ulaşabilir ve onun üzerinden daha ileri gidebilir.",
-      "tenTitle": "Çevrenizde 10 kişi",
-      "tenBody": "İhtiyaç bildiriminizi artık belirgin biçimde daha çok kişi alıyor. Kişisel olarak tanıdıklarınızı eklemeye devam edin.",
-      "ok": "Harika"
+      "ok": "Harika",
+      "unlockedBody": "Çevrenizde ve ağınızda artık yeterince insan var. Gerektiğinde “{{tab}}” sekmesini açın: bildirim tokalaşmalarla ilerler.",
+      "firstNeedBody": "İhtiyaç bildiriminiz tokalaşmalarla, en yakından uzağa doğru ilerler. Katılmaya karar eden kişi ihtiyaç sayfasında ve katılımcı sohbetinde görünür.",
+      "firstPartBody": "Katılımınızı bildirdiniz. Bundan sonra ne yapılacağını ve nasıl yapılacağını, katılımcı sohbetinde ihtiyacı bildiren kişiyle doğrudan kararlaştırırsınız."
     },
     "feedExpand": "Akışı genişlet",
     "feedCollapse": "Akışı daralt"
@@ -486,7 +492,8 @@
     "notifyTelegramNotLinked": "İletilerin oraya gelmesi için Telegram'ı «Hesap» bölümünde bağlayın.",
     "stakeSaved": "Kaydedildi",
     "factsLine": "Kapanan ihtiyaçlar için: bildirilen katılım — {{reported}}, yazarlarca alındı işaretlenen — {{marked}}. Bu iki sayıyı ağınızdaki kişiler görür.",
-    "needCounts": "Açık: {{open}} · Geçmiş: {{past}}"
+    "needCounts": "Açık: {{open}} · Geçmiş: {{past}}",
+    "stages": "Aşamalar"
   },
   "settings": {
     "title": "Ayarlar",

@@ -269,7 +269,6 @@
       "mineCollected": "Uvedeno {{collected}}",
       "participating": "Účastníte se · vaše {{amount}}",
       "milestoneFirst": "První podání ruky",
-      "milestoneTen": "10 lidí ve vašem kruhu",
       "milestoneWith": "S člověkem {{name}}",
       "milestoneGrow": "Váš kruh roste",
       "quietTitle": "Zatím klid",
@@ -278,7 +277,13 @@
       "newCount_few": "{{count}} nová",
       "newCount_many": "{{count}} nového",
       "newCount_one": "{{count}} nové",
-      "newCount_other": "{{count}} nových"
+      "newCount_other": "{{count}} nových",
+      "milestoneUnlocked": "Můžete oznámit potřebu",
+      "milestoneUnlockedSub": "Váš kruh a síť dostatečně vyrostly",
+      "milestoneFirstNeed": "První potřeba",
+      "milestoneFirstNeedSub": "Oznámení putuje po podáních ruky",
+      "milestoneFirstPart": "První účast",
+      "milestoneFirstPartSub": "Autor potřeby vidí vaši účast"
     },
     "start": {
       "lead": "Ve svém kruhu jste první.",
@@ -301,9 +306,10 @@
     "milestone": {
       "firstTitle": "První podání ruky",
       "firstBody": "Oznámení o vaší potřebě teď může dojít k prvnímu člověku a přes něj dál.",
-      "tenTitle": "10 lidí ve vašem kruhu",
-      "tenBody": "Oznámení o potřebě teď dostává výrazně víc lidí. Přidávejte dál ty, které znáte osobně.",
-      "ok": "Skvělé"
+      "ok": "Skvělé",
+      "unlockedBody": "Ve vašem kruhu a síti je teď dost lidí. Až bude potřeba, otevřete záložku „{{tab}}“: oznámení půjde po podáních ruky.",
+      "firstNeedBody": "Oznámení o vaší potřebě putuje po podáních ruky, od nejbližších k vzdálenějším. Kdo se rozhodne zúčastnit, objeví se na stránce potřeby a v chatu účastníků.",
+      "firstPartBody": "Oznámili jste účast. Co a jak udělat dál, domluvíte přímo s autorem potřeby v chatu účastníků."
     },
     "feedExpand": "Rozbalit přehled",
     "feedCollapse": "Sbalit přehled"
@@ -492,7 +498,8 @@
     "notifyTelegramNotLinked": "Propojte Telegram v části „Účet“, aby vám tam chodily zprávy.",
     "stakeSaved": "Uloženo",
     "factsLine": "U uzavřených potřeb: hlášení o účasti {{reported}}, autory označeno jako přijaté {{marked}}. Tato dvě čísla vidí lidé ve vaší síti.",
-    "needCounts": "Otevřené: {{open}} · Minulé: {{past}}"
+    "needCounts": "Otevřené: {{open}} · Minulé: {{past}}",
+    "stages": "Etapy"
   },
   "settings": {
     "title": "Nastavení",

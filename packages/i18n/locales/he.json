@@ -267,7 +267,6 @@
       "mineCollected": "דווחו {{collected}}",
       "participating": "אתם בפנים · {{amount}} שלכם",
       "milestoneFirst": "לחיצת היד ה-1",
-      "milestoneTen": "10 אנשים במעגל",
       "milestoneWith": "עם {{name}}",
       "milestoneGrow": "המעגל שלכם גדל",
       "quietTitle": "הכול שקט",
@@ -275,7 +274,13 @@
       "dismiss": "הסתרה: {{name}}",
       "newCount_one": "{{count}} חדש",
       "newCount_two": "{{count}} חדשים",
-      "newCount_other": "{{count}} חדשים"
+      "newCount_other": "{{count}} חדשים",
+      "milestoneUnlocked": "אפשר לדווח על צורך",
+      "milestoneUnlockedSub": "המעגל והרשת שלכם גדלו מספיק",
+      "milestoneFirstNeed": "הצורך הראשון",
+      "milestoneFirstNeedSub": "ההודעה נעה בלחיצות יד",
+      "milestoneFirstPart": "ההשתתפות הראשונה",
+      "milestoneFirstPartSub": "מי שדיווח על הצורך רואה את ההשתתפות שלכם"
     },
     "start": {
       "lead": "אתם הראשונים במעגל.",
@@ -298,9 +303,10 @@
     "milestone": {
       "firstTitle": "לחיצת היד ה-1",
       "firstBody": "ההודעה על הצורך שלכם יכולה להגיע עכשיו לאדם הראשון, ודרכו להמשיך הלאה.",
-      "tenTitle": "10 אנשים במעגל",
-      "tenBody": "הרבה יותר אנשים מקבלים עכשיו את ההודעה על הצורך. המשיכו להוסיף אנשים שאתם מכירים אישית.",
-      "ok": "מעולה"
+      "ok": "מעולה",
+      "unlockedBody": "במעגל וברשת שלכם יש עכשיו מספיק אנשים. כשיהיה צורך, פתחו את הלשונית ”{{tab}}“: ההודעה תנוע בלחיצות יד.",
+      "firstNeedBody": "ההודעה על הצורך שלכם נעה בלחיצות יד, מהקרובים אל הרחוקים. מי שיחליט להשתתף יופיע בעמוד הצורך ובצ'אט המשתתפים.",
+      "firstPartBody": "דיווחתם על השתתפות. מה לעשות הלאה ואיך, תסכמו ישירות עם מי שדיווח על הצורך, בצ'אט המשתתפים."
     },
     "feedExpand": "להרחיב את הפיד",
     "feedCollapse": "לכווץ את הפיד"
@@ -489,7 +495,8 @@
     "notifyTelegramNotLinked": "חברו את Telegram ב«חשבון» כדי לקבל שם הודעות.",
     "stakeSaved": "נשמר",
     "factsLine": "לגבי צרכים סגורים: דיווחי השתתפות {{reported}}, סומנו כהתקבלו על ידי היוצרים {{marked}}. אנשי הרשת שלכם רואים את שני המספרים האלה.",
-    "needCounts": "פתוחים: {{open}} · קודמים: {{past}}"
+    "needCounts": "פתוחים: {{open}} · קודמים: {{past}}",
+    "stages": "שלבים"
   },
   "settings": {
     "title": "הגדרות",

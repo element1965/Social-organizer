@@ -265,14 +265,19 @@
       "mineCollected": "{{collected}} angivet",
       "participating": "Du er med · dine {{amount}}",
       "milestoneFirst": "Første håndtryk",
-      "milestoneTen": "10 personer i din kreds",
       "milestoneWith": "Med {{name}}",
       "milestoneGrow": "Din kreds vokser",
       "quietTitle": "Helt stille",
       "quietBody": "Behov, nye personer og cyklusser vises her.",
       "dismiss": "Skjul: {{name}}",
       "newCount_one": "{{count}} ny",
-      "newCount_other": "{{count}} nye"
+      "newCount_other": "{{count}} nye",
+      "milestoneUnlocked": "Du kan melde et behov",
+      "milestoneUnlockedSub": "Din kreds og dit netværk er vokset nok",
+      "milestoneFirstNeed": "Første behov",
+      "milestoneFirstNeedSub": "Beskeden går via håndtryk",
+      "milestoneFirstPart": "Første deltagelse",
+      "milestoneFirstPartSub": "Den, der har meldt behovet, kan se din deltagelse"
     },
     "start": {
       "lead": "Du er den første i din kreds.",
@@ -295,9 +300,10 @@
     "milestone": {
       "firstTitle": "Første håndtryk",
       "firstBody": "Din besked om et behov kan nu nå den første person og gå videre gennem vedkommende.",
-      "tenTitle": "10 personer i din kreds",
-      "tenBody": "Mange flere personer modtager nu din besked om et behov. Bliv ved med at tilføje personer, du kender personligt.",
-      "ok": "Godt"
+      "ok": "Godt",
+      "unlockedBody": "I din kreds og dit netværk er der nu nok mennesker. Når du får brug for det, så åbn fanen “{{tab}}”: beskeden går via håndtryk.",
+      "firstNeedBody": "Beskeden om dit behov går via håndtryk, fra de nærmeste til de fjernere. Den, der vælger at deltage, dukker op på behovets side og i deltagernes chat.",
+      "firstPartBody": "Du har meldt din deltagelse. Hvad og hvordan der skal ske herefter, aftaler du direkte med den, der har meldt behovet, i deltagernes chat."
     },
     "feedExpand": "Fold feedet ud",
     "feedCollapse": "Fold feedet sammen"
@@ -486,7 +492,8 @@
     "notifyTelegramNotLinked": "Forbind Telegram under »Konto« for at få beskeder dér.",
     "stakeSaved": "Gemt",
     "factsLine": "For lukkede behov: meldte deltagelser {{reported}}, markeret som modtaget af forfattere {{marked}}. Folk i dit netværk ser disse to tal.",
-    "needCounts": "Åbne: {{open}} · Tidligere: {{past}}"
+    "needCounts": "Åbne: {{open}} · Tidligere: {{past}}",
+    "stages": "Etaper"
   },
   "settings": {
     "title": "Indstillinger",

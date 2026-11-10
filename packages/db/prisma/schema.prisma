@@ -209,7 +209,11 @@ model Connection {
 // removing a connection later does not take it back (the current count is shown separately).
 enum MilestoneKind {
   FIRST_CONNECTION
+  // Old second milestone: kept for rows written before, no longer recorded or shown
   TEN_CONNECTIONS
+  NEED_UNLOCKED
+  FIRST_NEED
+  FIRST_PARTICIPATION
 }
 
 model UserMilestone {

@@ -265,14 +265,19 @@
       "mineCollected": "{{collected}} angivet",
       "participating": "Du är med · dina {{amount}}",
       "milestoneFirst": "Första handslaget",
-      "milestoneTen": "10 personer i din krets",
       "milestoneWith": "Med {{name}}",
       "milestoneGrow": "Din krets växer",
       "quietTitle": "Allt är lugnt",
       "quietBody": "Behov, nya personer och cykler visas här.",
       "dismiss": "Dölj: {{name}}",
       "newCount_one": "{{count}} ny",
-      "newCount_other": "{{count}} nya"
+      "newCount_other": "{{count}} nya",
+      "milestoneUnlocked": "Du kan anmäla ett behov",
+      "milestoneUnlockedSub": "Din krets och ditt nätverk har vuxit tillräckligt",
+      "milestoneFirstNeed": "Första behovet",
+      "milestoneFirstNeedSub": "Meddelandet går via handslag",
+      "milestoneFirstPart": "Första deltagandet",
+      "milestoneFirstPartSub": "Den som anmälde behovet ser ditt deltagande"
     },
     "start": {
       "lead": "Du är först i din krets.",
@@ -295,9 +300,10 @@
     "milestone": {
       "firstTitle": "Första handslaget",
       "firstBody": "Ditt behov kan nu nå den första personen och gå vidare genom hen.",
-      "tenTitle": "10 personer i din krets",
-      "tenBody": "Många fler personer får ditt behov nu. Fortsätt lägga till personer du känner personligen.",
-      "ok": "Toppen"
+      "ok": "Toppen",
+      "unlockedBody": "Nu finns det tillräckligt många i din krets och ditt nätverk. När du behöver det öppnar du fliken ”{{tab}}”: meddelandet går via handslag.",
+      "firstNeedBody": "Meddelandet om ditt behov går via handslag, de närmaste först. Den som bestämmer sig för att delta dyker upp på behovssidan och i deltagarnas chatt.",
+      "firstPartBody": "Du har anmält ditt deltagande. Vad som ska göras härnäst och hur avtalar du direkt med den som anmälde behovet, i deltagarnas chatt."
     },
     "feedExpand": "Fäll ut flödet",
     "feedCollapse": "Fäll ihop flödet"
@@ -486,7 +492,8 @@
     "notifyTelegramNotLinked": "Anslut Telegram under ”Konto” för att få meddelanden där.",
     "stakeSaved": "Sparat",
     "factsLine": "För stängda behov: anmält deltagande — {{reported}}, markerat som mottaget av författare — {{marked}}. Dessa två tal ser personerna i ditt nätverk.",
-    "needCounts": "Öppna: {{open}} · Tidigare: {{past}}"
+    "needCounts": "Öppna: {{open}} · Tidigare: {{past}}",
+    "stages": "Milstolpar"
   },
   "settings": {
     "title": "Inställningar",
