@@ -152,7 +152,7 @@ FIREBASE_SERVICE_ACCOUNT={"type":"service_account",...}  # FCM service account J
 |--------|------------|
 | `auth` | methods, requestEmailCode, verifyEmailCode, loginWithTelegramWidget, registerWithEmail, loginWithEmail, loginWithTelegram, loginWithGoogle, refresh, generateLinkCode, loginWithLinkCode, claimWithLinkCode |
 | `user` | me, update, getById, getStats, getContacts, updateContacts, completeOnboarding, delete, setMonthlyBudget |
-| `connection` | list, listForUser, getCount (confirmed connections), graphSlice (2-3 levels), findPath, getNetworkStats (exact counts and people for rings 1–3, rounded counts only for rings 4–5), getNickname, setNickname |
+| `connection` | list, listForUser, getCount (confirmed connections), graphSlice (2-3 levels), findPath, getNetworkStats (exact counts and people for rings 1–3, rounded counts only for rings 4–5), getNickname, setNickname, revoke ("Remove from circle": deletes the connection and the request rows between the two; no new request comes back) |
 | `collection` | create (optional `description`), getById, getPublic, updateAmount, updateChatLink, updateDescription (author only), close, cancel, myActive, myParticipating |
 | `obligation` | create, myList, unsubscribe, confirmPayment, setPaid, receiptHistory (author only: "received" marks of past cycles) |
 | `notification` | list (cursor pagination), markRead, dismiss, unreadCount |
