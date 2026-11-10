@@ -1,15 +1,30 @@
 import type { ReactNode } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { cn } from '../../lib/utils';
 import { IconBack } from './icons';
 
 export type Crumb = { label: string; to?: string; onClick?: () => void };
 
-export function MainBar({ back, title, action }: { back?: Crumb; title?: string; action?: ReactNode }) {
+export function MainBar({
+  back,
+  title,
+  action,
+  column = false,
+}: {
+  back?: Crumb;
+  title?: string;
+  action?: ReactNode;
+  /** Keep the bar's contents in the same centered 680px column as the screen body. */
+  column?: boolean;
+}) {
   return (
-    <div className="sticky top-[var(--sa-top)] z-20 flex h-16 items-center gap-3.5 bg-canvas px-7">
-      {back ? <CrumbLink crumb={back} size="md" /> : null}
-      {title ? <h1 className="truncate text-h3 font-extrabold text-ink">{title}</h1> : null}
-      {action ? <div className="ml-auto flex items-center gap-2.5">{action}</div> : null}
+    <div className={cn('sticky top-[var(--sa-top)] z-20 bg-canvas', !column && 'px-7')}>
+      {/* Same box as the Screen body (680px with px-4 inside), so the edges line up. */}
+      <div className={cn('flex h-16 items-center gap-3.5', column && 'mx-auto w-full max-w-[680px] px-4')}>
+        {back ? <CrumbLink crumb={back} size="md" /> : null}
+        {title ? <h1 className="truncate text-h3 font-extrabold text-ink">{title}</h1> : null}
+        {action ? <div className="ml-auto flex items-center gap-2.5">{action}</div> : null}
+      </div>
     </div>
   );
 }
