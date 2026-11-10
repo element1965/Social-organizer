@@ -43,11 +43,10 @@
 .site-top nav a { color: var(--muted); }
 .site-top nav a:hover, .site-top nav a[aria-current="page"] { color: var(--ink); }
 .site-top .right { margin-left: auto; display: flex; gap: 10px; align-items: center; }
-/* The visible part is the language code; a transparent native select on top keeps it accessible. */
-.site-lang { position: relative; display: inline-grid; place-items: center; min-width: 44px; height: 40px; padding: 0 12px; border-radius: var(--r-md); background: var(--paper); box-shadow: inset 0 0 0 1px var(--line); color: var(--muted); font: 700 14px/1 var(--font); text-transform: uppercase; }
-.site-lang:focus-within { outline: 2px solid var(--care); outline-offset: 3px; }
-.site-lang select { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; border: 0; cursor: pointer; font: 600 15px var(--font); }
-.site-lang select option { color: var(--ink); background: var(--paper); }
+/* Language chip: opens the shared language sheet (components/profile/LanguageSheet.tsx). */
+.site-lang { display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-width: 44px; height: 40px; padding: 0 12px; border: 0; border-radius: var(--r-md); background: var(--paper); box-shadow: inset 0 0 0 1px var(--line); color: var(--muted); font: 700 14px/1 var(--font); text-transform: uppercase; cursor: pointer; transition: color var(--dur-fast); }
+.site-lang:hover { color: var(--ink); }
+.site-lang svg { width: 16px; height: 16px; }
 
 /* ---------- footer ---------- */
 .site-foot { padding: 48px 48px 40px; border-top: 1px solid var(--line-soft); display: grid; grid-template-columns: auto 1fr; gap: 12px 32px; align-items: start; color: var(--muted); font-size: 14px; font-weight: 600; }
