@@ -313,6 +313,8 @@
     "confirm": "Confirm you know each other",
     "inCircle": "{{count}} in their circle",
     "noneYet": "Has not added anyone yet",
+    "brought": "Brought in {{count}}",
+    "pledged": "{{amount}} pledged",
     "via": "through {{path}}",
     "empty": "Nobody yet",
     "notFound": "Nobody found"

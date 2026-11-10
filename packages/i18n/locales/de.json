@@ -313,6 +313,8 @@
     "confirm": "Bestätigen Sie, dass Sie sich kennen",
     "inCircle": "{{count}} im eigenen Kreis",
     "noneYet": "Hat noch niemanden hinzugefügt",
+    "brought": "Hat {{count}} eingeladen",
+    "pledged": "{{amount}} zugesagt",
     "via": "über {{path}}",
     "empty": "Noch niemand",
     "notFound": "Niemand gefunden"

@@ -313,6 +313,8 @@
     "confirm": "Bekreft at dere kjenner hverandre",
     "inCircle": "{{count}} i kretsen sin",
     "noneYet": "Har ikke lagt til noen ennå",
+    "brought": "Har tatt med {{count}}",
+    "pledged": "{{amount}} lovet",
     "via": "via {{path}}",
     "empty": "Ingen ennå",
     "notFound": "Ingen funnet"

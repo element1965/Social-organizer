@@ -310,6 +310,8 @@
     "confirm": "아는 사이인지 확인",
     "inCircle": "서클에 {{count}}명",
     "noneYet": "아직 아무도 추가하지 않았어요",
+    "brought": "{{count}}명 초대",
+    "pledged": "{{amount}} 약속",
     "via": "{{path}} 경유",
     "empty": "아직 아무도 없어요",
     "notFound": "아무도 찾지 못했어요"

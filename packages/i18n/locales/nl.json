@@ -313,6 +313,8 @@
     "confirm": "Bevestig dat jullie elkaar kennen",
     "inCircle": "{{count}} in hun kring",
     "noneYet": "Heeft nog niemand toegevoegd",
+    "brought": "Bracht {{count}} mee",
+    "pledged": "{{amount}} toegezegd",
     "via": "via {{path}}",
     "empty": "Nog niemand",
     "notFound": "Niemand gevonden"

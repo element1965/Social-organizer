@@ -313,6 +313,8 @@
     "confirm": "Bekräfta att ni känner varandra",
     "inCircle": "{{count}} i sin krets",
     "noneYet": "Har inte lagt till någon ännu",
+    "brought": "Har bjudit in {{count}}",
+    "pledged": "{{amount}} utlovat",
     "via": "via {{path}}",
     "empty": "Ingen ännu",
     "notFound": "Ingen hittades"

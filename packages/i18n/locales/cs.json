@@ -319,6 +319,8 @@
     "confirm": "Potvrďte, že se znáte",
     "inCircle": "{{count}} v jejich kruhu",
     "noneYet": "Zatím nikoho nepřidal",
+    "brought": "Přivedl(a) {{count}}",
+    "pledged": "přislíbeno {{amount}}",
     "via": "přes {{path}}",
     "empty": "Zatím nikdo",
     "notFound": "Nikdo nenalezen"

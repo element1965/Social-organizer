@@ -310,6 +310,8 @@
     "confirm": "确认你们认识",
     "inCircle": "其圈子里有 {{count}} 人",
     "noneYet": "还没有添加任何人",
+    "brought": "带来 {{count}} 人",
+    "pledged": "承诺 {{amount}}",
     "via": "经由 {{path}}",
     "empty": "还没有人",
     "notFound": "没有找到"

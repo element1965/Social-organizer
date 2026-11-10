@@ -8,6 +8,7 @@ import { Input } from '../components/ui2/Input';
 import { PersonRow } from '../components/ui2/PersonRow';
 import { Screen } from '../components/ui2/Screen';
 import { Segmented } from '../components/ui2/Segmented';
+import { formatMoney } from '../components/ui2/format';
 import { AcquaintSheet, type AcquaintRequest } from '../components/circle/AcquaintSheet';
 import { useCircleStore, type Ring } from '../components/circle/circle-store';
 import { useCircleNetwork } from '../components/circle/network';
@@ -30,6 +31,7 @@ type DepthUser = {
   photoUrl: string | null;
   connectedAt: string | Date | null;
   createdAt: string | Date | null;
+  remainingBudget?: number | null;
 };
 
 function parseRing(value: string | undefined): Ring {
@@ -53,12 +55,18 @@ export function PeoplePage() {
   const visible = !hiddenRings.includes(ring);
 
   const entries = useMemo<Entry[]>(() => {
+    // What a person brings to the network: their pledge this period (the budget "Your network can help" sums).
+    const pledged = (budget: number | null | undefined) =>
+      budget != null && budget > 0 ? t('people.pledged', { amount: formatMoney(Math.round(budget)) }) : null;
     if (ring === 1) {
       return (net.connections.data ?? []).map((c) => {
         const others = Math.max(0, c.connectionCount - 1);
         const parts: string[] = [];
         if (c.nickname && c.nickname !== c.name) parts.push(c.name);
-        parts.push(others > 0 ? t('people.inCircle', { count: others }) : t('people.noneYet'));
+        // People they connected besides you: how many they brought into the network
+        parts.push(others > 0 ? t('people.brought', { count: others }) : t('people.noneYet'));
+        const pledge = pledged(c.remainingBudget);
+        if (pledge) parts.push(pledge);
         return {
           id: c.userId,
           name: c.displayName,
@@ -74,7 +82,9 @@ export function PeoplePage() {
       return {
         id: u.id,
         name: net.displayName(u.id, u.name),
-        subtitle: via.length ? t('people.via', { path: via.join(' → ') }) : t(`circle.rings.full${ring}`),
+        subtitle: [via.length ? t('people.via', { path: via.join(' → ') }) : t(`circle.rings.full${ring}`), pledged(u.remainingBudget)]
+          .filter(Boolean)
+          .join(' · '),
         photoUrl: u.photoUrl,
         at: new Date(u.connectedAt ?? u.createdAt ?? 0).getTime(),
       };

@@ -316,6 +316,8 @@
     "confirm": "Confirmă că vă cunoașteți",
     "inCircle": "{{count}} în cercul lor",
     "noneYet": "Nu a adăugat pe nimeni încă",
+    "brought": "A adus {{count}}",
+    "pledged": "{{amount}} promiși",
     "via": "prin {{path}}",
     "empty": "Nimeni încă",
     "notFound": "Nu am găsit pe nimeni"
