@@ -1,9 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
 import { Navigate, useNavigate, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { buildContactUrl, isSafeContactUrl } from '@so/shared';
 import { isTelegramWebApp } from '@so/tg-adapter';
+import { saveContacts } from '@so/gun-backup';
 import { trpc } from '../lib/trpc';
+import { toSavedContacts } from '../lib/savedCopy';
+import { useAuth } from '../hooks/useAuth';
 import { useNicknames } from '../hooks/useNicknames';
 import { Avatar } from '../components/ui2/Avatar';
 import { Button } from '../components/ui2/Button';
@@ -12,6 +14,7 @@ import { Group, Row } from '../components/ui2/Group';
 import { Input } from '../components/ui2/Input';
 import { Screen } from '../components/ui2/Screen';
 import { PathChain } from '../components/person/PathChain';
+import { contactHref } from '../components/person/contactHref';
 import { Sheet } from '../components/ui2/Sheet';
 import { AdminPersonPanel } from '../components/admin/AdminPersonPanel';
 import { formatMoney } from '../components/ui2/format';
@@ -25,11 +28,6 @@ import { QueryState } from '../components/profile/QueryState';
 import { useSmartBack } from '../components/profile/useSmartBack';
 
 type Ask = { id: string; type: string; amount: number | null; status: string };
-
-function contactHref(type: string, value: string): string {
-  const url = type === 'phone' ? `tel:${value.trim()}` : buildContactUrl(type, value);
-  return isSafeContactUrl(url) ? url : '';
-}
 
 export function PersonPage() {
   const { id = '' } = useParams();
@@ -103,6 +101,15 @@ function PersonScreen() {
       navigate('/');
     },
   });
+
+  // Keep the contacts of a direct connection for the offline copy: exactly what the server just showed this viewer
+  const myId = useAuth((s) => s.userId);
+  const savedPhone = user.data?.phone;
+  const savedContacts = contacts.data;
+  useEffect(() => {
+    if (!myId || !ring1 || !user.isSuccess || !contacts.isSuccess) return;
+    void saveContacts(myId, id, toSavedContacts(savedPhone, savedContacts ?? [])).catch(() => undefined);
+  }, [myId, ring1, id, user.isSuccess, contacts.isSuccess, savedPhone, savedContacts]);
 
   const [draft, setDraft] = useState<string | null>(null);
   const [contactsOpen, setContactsOpen] = useState(false);

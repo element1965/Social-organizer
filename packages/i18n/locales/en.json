@@ -325,6 +325,17 @@
     "empty": "Nobody yet",
     "notFound": "Nobody found"
   },
+  "offline": {
+    "banner": "No connection. Showing the copy saved on this device, {{time}}.",
+    "bannerNoCopy": "No connection. Nothing is saved on this device yet.",
+    "empty": "Open the app online once and your people will be saved here.",
+    "needsConnection": "Needs a connection",
+    "contactsNotSaved": "This person's contacts are not saved on this device yet. They are saved when you open their page online.",
+    "tapHint": "Contacts are saved for direct connections only.",
+    "unavailableTitle": "This screen needs a connection",
+    "unavailableBody": "Connect to the internet and try again. The people saved on this device are still available.",
+    "showSaved": "Show saved people"
+  },
   "collection": {
     "close": "Close Need",
     "saveAmount": "Save",

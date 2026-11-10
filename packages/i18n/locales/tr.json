@@ -325,6 +325,17 @@
     "empty": "Henüz kimse yok",
     "notFound": "Kimse bulunamadı"
   },
+  "offline": {
+    "banner": "Bağlantı yok. Bu cihazda kayıtlı kopya gösteriliyor, {{time}}.",
+    "bannerNoCopy": "Bağlantı yok. Bu cihazda henüz kayıtlı bir şey yok.",
+    "empty": "Uygulamayı bir kez çevrimiçi açın, kişileriniz burada saklanır.",
+    "needsConnection": "Bağlantı gerekir",
+    "contactsNotSaved": "Bu kişinin iletişim bilgileri henüz bu cihaza kaydedilmedi. Sayfasını çevrimiçi açtığınızda kaydedilir.",
+    "tapHint": "İletişim bilgileri yalnızca doğrudan bağlantılar için kaydedilir.",
+    "unavailableTitle": "Bu ekran için bağlantı gerekir",
+    "unavailableBody": "İnternete bağlanıp tekrar deneyin. Bu cihazda kayıtlı kişiler kullanılabilir durumda.",
+    "showSaved": "Kayıtlı kişileri göster"
+  },
   "collection": {
     "close": "İhtiyacı kapat",
     "saveAmount": "Kaydet",

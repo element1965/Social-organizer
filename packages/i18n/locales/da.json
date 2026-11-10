@@ -325,6 +325,17 @@
     "empty": "Ingen endnu",
     "notFound": "Ingen fundet"
   },
+  "offline": {
+    "banner": "Ingen forbindelse. Viser kopien gemt på denne enhed, {{time}}.",
+    "bannerNoCopy": "Ingen forbindelse. Der er endnu intet gemt på denne enhed.",
+    "empty": "Åbn appen én gang online, så bliver dine personer gemt her.",
+    "needsConnection": "Kræver forbindelse",
+    "contactsNotSaved": "Denne persons kontaktoplysninger er endnu ikke gemt på enheden. De gemmes, når du åbner personens side online.",
+    "tapHint": "Kontaktoplysninger gemmes kun for direkte forbindelser.",
+    "unavailableTitle": "Denne skærm kræver forbindelse",
+    "unavailableBody": "Opret forbindelse til internettet, og prøv igen. De personer, der er gemt på denne enhed, er stadig tilgængelige.",
+    "showSaved": "Vis gemte personer"
+  },
   "collection": {
     "close": "Luk behov",
     "saveAmount": "Gem",

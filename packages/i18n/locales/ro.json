@@ -328,6 +328,17 @@
     "empty": "Nimeni încă",
     "notFound": "Nu am găsit pe nimeni"
   },
+  "offline": {
+    "banner": "Fără conexiune. Se afișează copia salvată pe acest dispozitiv, {{time}}.",
+    "bannerNoCopy": "Fără conexiune. Nu este încă nimic salvat pe acest dispozitiv.",
+    "empty": "Deschide aplicația o dată online și oamenii tăi vor fi salvați aici.",
+    "needsConnection": "Necesită conexiune",
+    "contactsNotSaved": "Contactele acestei persoane nu sunt încă salvate pe acest dispozitiv. Se salvează când îi deschizi pagina online.",
+    "tapHint": "Contactele se salvează doar pentru conexiunile directe.",
+    "unavailableTitle": "Acest ecran necesită conexiune",
+    "unavailableBody": "Conectează-te la internet și încearcă din nou. Persoanele salvate pe acest dispozitiv rămân disponibile.",
+    "showSaved": "Arată persoanele salvate"
+  },
   "collection": {
     "close": "Închide nevoia",
     "saveAmount": "Salvează",

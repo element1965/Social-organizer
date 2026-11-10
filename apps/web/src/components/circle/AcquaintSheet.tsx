@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { trpc } from '../../lib/trpc';
+import { useOffline } from '../../lib/connectivity';
+import { OfflineHint } from '../offline/OfflineNotice';
 import { Button } from '../ui2/Button';
 import { Input } from '../ui2/Input';
 import { Sheet } from '../ui2/Sheet';
@@ -34,6 +36,7 @@ function errorKey(code: string | undefined): string {
  */
 export function AcquaintSheet({ request, onClose }: Props) {
   const { t } = useTranslation();
+  const offline = useOffline();
   const utils = trpc.useUtils();
   const [step, setStep] = useState<'ask' | 'label'>('ask');
   const [label, setLabel] = useState('');
@@ -132,14 +135,14 @@ export function AcquaintSheet({ request, onClose }: Props) {
       description={t('circle.acquaint.sub')}
       footer={
         <>
-          <Button onClick={() => accept.mutate({ pendingId: request.pendingId })} loading={accept.isPending} disabled={reject.isPending}>
+          <Button onClick={() => accept.mutate({ pendingId: request.pendingId })} loading={accept.isPending} disabled={reject.isPending || offline}>
             {t('circle.acquaint.yes')}
           </Button>
           <Button
             variant="secondary"
             onClick={() => reject.mutate({ pendingId: request.pendingId })}
             loading={reject.isPending}
-            disabled={accept.isPending}
+            disabled={accept.isPending || offline}
           >
             {t('circle.acquaint.no')}
           </Button>
@@ -153,6 +156,7 @@ export function AcquaintSheet({ request, onClose }: Props) {
       ) : (
         <p className="text-caption text-ink-muted">{t('circle.acquaint.meetHint')}</p>
       )}
+      {offline ? <OfflineHint className="mt-2 text-label font-semibold text-ink-muted" /> : null}
     </Sheet>
   );
 }
