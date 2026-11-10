@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { QRCodeCanvas } from 'qrcode.react';
+import { QR_LOGO_LEVEL, qrLogo } from '../../lib/qrLogo';
 import { SITE_ORIGIN, storeButtons, type Device, type StoreId } from '../../lib/device';
 import { cn } from '../../lib/utils';
 import { usePendingInvite, useStoreLinks } from './DeviceEntry';
@@ -70,7 +71,7 @@ export function StoreButtons({ device, invite }: { device: Device; invite?: stri
       </div>
       {qr ? (
         <div className="site-qr">
-          <QRCodeCanvas value={qrValue} size={128} marginSize={2} role="img" aria-label={t('landing.start.qrAria')} />
+          <QRCodeCanvas value={qrValue} size={128} marginSize={2} level={QR_LOGO_LEVEL} imageSettings={qrLogo(128)} role="img" aria-label={t('landing.start.qrAria')} />
           <span>
             <b>{t('landing.start.qrTitle')}</b>
             <span>{t('landing.start.qrText')}</span>

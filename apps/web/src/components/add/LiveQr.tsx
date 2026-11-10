@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { QRCodeSVG } from 'qrcode.react';
+import { QR_LOGO_LEVEL, qrLogo } from '../../lib/qrLogo';
 import { Button } from '../ui2/Button';
 import { trpc } from '../../lib/trpc';
 import { IconScan } from './icons';
@@ -175,7 +176,7 @@ export function LiveQr({ onScan, onDone }: { onScan: () => void; onDone: () => v
           />
         </svg>
         <div className="grid h-[200px] w-[200px] place-items-center overflow-hidden rounded-xl bg-surface shadow-float" role="img" aria-label={t('add.myQr')}>
-          {url ? <QRCodeSVG value={url} size={164} level="M" /> : null}
+          {url ? <QRCodeSVG value={url} size={164} level={QR_LOGO_LEVEL} imageSettings={qrLogo(164)} /> : null}
         </div>
       </div>
       <p className="mt-3.5 text-h2 font-extrabold tabular-nums text-ink" aria-live="polite">

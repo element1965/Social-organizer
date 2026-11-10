@@ -329,7 +329,7 @@ Old paths `/dashboard`, `/network`, `/notifications`, `/matches`, `/skills`, `/n
 - **UI:** ui2 components + semantic tokens in `styles/tokens.css`. A few older screens still use the legacy Tailwind ramps
 - **i18n:** i18next v25 + react-i18next (28 languages), auto-detect via navigator.language
 - **Icons:** lucide-react + custom SVGs for social networks
-- **QR:** qrcode.react (the scanner chunk loads jsQR on `/add/scan`)
+- **QR:** qrcode.react (the scanner chunk loads jsQR on `/add/scan`). Every code carries the dark logo in the centre (`lib/qrLogo.ts`, error correction level H)
 - **Backup:** @so/gun-backup (Gun.js + IndexedDB), started from the signed-in shell
 
 ### Bundle size (vite build, guest landing)
