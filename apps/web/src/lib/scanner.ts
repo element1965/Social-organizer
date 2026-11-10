@@ -405,12 +405,34 @@ async function startWeb(options: StartOptions): Promise<ScanSession> {
  * Returns null when the plugin is not on this platform, so the caller can use the browser camera.
  */
 export function openNativeScanner(options: StartOptions): Promise<ScanSession | null> {
-  return startNative(options);
+  return startNative(options).then(trackSession);
 }
 
 /** getUserMedia plus BarcodeDetector, or jsQR when the browser has no detector. */
 export function openWebScanner(options: StartOptions): Promise<ScanSession> {
-  return startWeb(options);
+  return startWeb(options).then(trackSession);
+}
+
+let liveScanners = 0;
+
+/** True while a camera scan session is live; the shake detector stays quiet then. */
+export function isScannerActive(): boolean {
+  return liveScanners > 0;
+}
+
+function trackSession<T extends ScanSession | null>(session: T): T {
+  if (!session || session.phase !== 'live') return session;
+  liveScanners += 1;
+  let released = false;
+  const stop = session.stop;
+  session.stop = () => {
+    if (!released) {
+      released = true;
+      liveScanners = Math.max(0, liveScanners - 1);
+    }
+    stop();
+  };
+  return session;
 }
 
 export async function openScannerSettings(): Promise<void> {

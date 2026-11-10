@@ -1421,5 +1421,27 @@
     "received": "Vào nhu cầu của bạn",
     "count": "lượt tham gia: {{n}}",
     "marked": "Với các nhu cầu đã đóng, người tạo đã đánh dấu nhận được {{marked}} trên {{reported}}. Mọi người trong mạng lưới của bạn thấy hai con số này."
+  },
+  "shake": {
+    "title": "Ghép đôi bằng cách lắc",
+    "searching": "Đang tìm người ở gần…",
+    "searchingHint": "Hãy nhờ người kia lắc điện thoại ngay bây giờ.",
+    "matchBody": "Đây có phải người bạn vừa lắc điện thoại cùng không?",
+    "confirm": "Xác nhận",
+    "notThem": "Không phải họ",
+    "alreadyConnected": "Hai bạn đã kết nối",
+    "close": "Đóng",
+    "waiting": "Đang chờ {{name}}…",
+    "connected": "Đã kết nối",
+    "connectedBody": "Bạn và {{name}} đã kết nối.",
+    "openProfile": "Mở hồ sơ",
+    "declined": "Kết nối đã bị từ chối.",
+    "expired": "Hết thời gian. Hãy lắc lại.",
+    "failed": "Không thể kết nối. Hãy thử lại.",
+    "none": "Không tìm thấy ai. Hãy lắc cùng lúc hoặc dùng mã QR.",
+    "crowded": "Có nhiều người đang lắc gần đây. Hãy dùng mã QR.",
+    "openQr": "Dùng mã QR",
+    "tooMany": "Quá nhiều lần thử. Chờ một phút rồi lắc lại.",
+    "enable": "Bật tính năng lắc"
   }
 }

@@ -158,6 +158,7 @@ FIREBASE_SERVICE_ACCOUNT={"type":"service_account",...}  # FCM service account J
 | `notification` | list (cursor pagination), markRead, dismiss, unreadCount |
 | `settings` | get, updateLanguage/Theme/Sound/FontScale/HideContacts/Geo, ignoreList/addIgnore/removeIgnore |
 | `invite` | generate, accept, getByToken |
+| `shake` | register, status, respond (shake to connect: in-memory pairing of two shakes, both confirm, then an in-person connection) |
 | `stats` | profile (obligationsGiven + obligationsReceived), help, networkCapabilities, participationFacts (two counts for a profile: Participation reported and marked as received by authors, closed Needs only) |
 | `milestone` | list (the four milestones, reached or not, + current direct connections; catches up from stored facts), markSeen |
 | `currency` | list, detectCurrency, rates, convert, toUSD |
@@ -360,6 +361,7 @@ Before this split the entry was 1858 KB / 558 KB gzip and the landing also pulle
 
 ## Key Features
 
+- **Shake to connect** — two people shake their phones at the same moment on any screen of the app. Each phone calls `shake.register`; the server (`services/shake.service.ts`, in memory, single API instance) pairs shakes that arrived within 1.5 s from the same public IP or close geolocation (sent only if the person already allowed it, never prompted), waiting 0.5 s so a third shake nearby turns the result into "crowded" (use the QR code) instead of a wrong match. Both see the other person and confirm; then they are connected in person (`connectInPersonTx`, the same path as the live QR, within the 150 limit). Closing the sheet declines. Detector: `apps/web/src/hooks/useShakeDetector.ts`; overlay: `components/shake/ShakeProvider.tsx` (ignored while typing, while the QR camera is on or while a sheet is open). iOS: in the native app the first tap anywhere silently asks for motion access (Capacitor grants it without a dialog); in a plain mobile browser the Add and QR screens show an "Enable shake" button. Local check: `apps/api/scripts/check-shake-matcher.ts`
 - **One unit — $** — all amounts are entered, stored and displayed in $ (conditional dollars, 1 $ = 1 unit of participation); no currency choice and no conversion
 - **Connection count** — displayed next to every user throughout the app
 - **Handshake path** — shown when viewing profiles and collections of non-direct connections

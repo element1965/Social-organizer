@@ -1443,5 +1443,27 @@
     "received": "Nas suas necessidades",
     "count": "participações: {{n}}",
     "marked": "Nas necessidades encerradas, os autores marcaram como recebidas {{marked}} de {{reported}}. As pessoas da sua rede veem esses dois números."
+  },
+  "shake": {
+    "title": "Combinação por agitação",
+    "searching": "Procurando alguém por perto…",
+    "searchingHint": "Peça à outra pessoa para agitar o telefone agora.",
+    "matchBody": "É a pessoa com quem você agitou o telefone?",
+    "confirm": "Confirmar",
+    "notThem": "Não é essa pessoa",
+    "alreadyConnected": "Vocês já estão conectados",
+    "close": "Fechar",
+    "waiting": "Aguardando {{name}}…",
+    "connected": "Vocês estão conectados",
+    "connectedBody": "Você e {{name}} agora estão conectados.",
+    "openProfile": "Abrir perfil",
+    "declined": "A conexão foi recusada.",
+    "expired": "O tempo acabou. Agite de novo.",
+    "failed": "Não foi possível conectar. Tente novamente.",
+    "none": "Ninguém encontrado. Agitem juntos ao mesmo tempo ou usem o código QR.",
+    "crowded": "Várias pessoas estão agitando por perto. Use o código QR.",
+    "openQr": "Usar código QR",
+    "tooMany": "Muitas tentativas. Aguarde um minuto e agite de novo.",
+    "enable": "Ativar agitação"
   }
 }

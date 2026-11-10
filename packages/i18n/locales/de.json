@@ -1432,5 +1432,27 @@
     "received": "An Ihren Bedarfen",
     "count": "Beteiligungen: {{n}}",
     "marked": "Bei geschlossenen Bedarfen haben Autoren {{marked}} von {{reported}} Beteiligungen als erhalten markiert. Die Leute in Ihrem Netzwerk sehen diese beiden Zahlen."
+  },
+  "shake": {
+    "title": "Schüttel-Treffer",
+    "searching": "Suche nach jemandem in der Nähe…",
+    "searchingHint": "Bitte die andere Person, jetzt ihr Handy zu schütteln.",
+    "matchBody": "Ist das die Person, mit der du geschüttelt hast?",
+    "confirm": "Bestätigen",
+    "notThem": "Nicht diese Person",
+    "alreadyConnected": "Ihr seid bereits verbunden",
+    "close": "Schließen",
+    "waiting": "Warte auf {{name}}…",
+    "connected": "Ihr seid verbunden",
+    "connectedBody": "Du und {{name}} seid jetzt verbunden.",
+    "openProfile": "Profil öffnen",
+    "declined": "Die Verbindung wurde abgelehnt.",
+    "expired": "Die Zeit ist abgelaufen. Schüttle erneut.",
+    "failed": "Verbindung nicht möglich. Versuche es noch einmal.",
+    "none": "Niemand gefunden. Schüttelt gleichzeitig oder nutzt den QR-Code.",
+    "crowded": "Mehrere Personen schütteln in der Nähe. Nutze stattdessen den QR-Code.",
+    "openQr": "QR-Code verwenden",
+    "tooMany": "Zu viele Versuche. Warte eine Minute und schüttle erneut.",
+    "enable": "Schütteln aktivieren"
   }
 }

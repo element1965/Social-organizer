@@ -4,7 +4,7 @@ import { router, publicProcedure, protectedProcedure } from '../trpc.js';
 import { TRPCError } from '@trpc/server';
 import { sendPendingNotification } from '../services/notification.service.js';
 import { scanMatchesForUser } from '../services/match-notification.service.js';
-import { respondToConnectionRequest, createConnectionWithinLimit } from '../services/connection-request.service.js';
+import { respondToConnectionRequest, createConnectionWithinLimit, connectInPersonTx } from '../services/connection-request.service.js';
 import { sendTelegramMessage, type TgReplyMarkup } from '../services/telegram-bot.service.js';
 import { syncMilestonesForPair } from '../services/milestone.service.js';
 import { translateWithCache } from '../services/translate.service.js';
@@ -107,17 +107,7 @@ export const inviteRouter = router({
           if (claimed.count === 0) {
             throw new TRPCError({ code: 'BAD_REQUEST', message: 'Invite already used' });
           }
-          await createConnectionWithinLimit(tx, ctx.userId, inviterId);
-          await tx.pendingConnection.updateMany({
-            where: {
-              OR: [
-                { fromUserId: ctx.userId, toUserId: inviterId },
-                { fromUserId: inviterId, toUserId: ctx.userId },
-              ],
-              status: 'PENDING',
-            },
-            data: { status: 'ACCEPTED', resolvedAt: new Date() },
-          });
+          await connectInPersonTx(tx, ctx.userId, inviterId);
         });
         await syncMilestonesForPair(ctx.db, ctx.userId, inviterId);
         const scanner = await ctx.db.user.findUnique({ where: { id: ctx.userId }, select: { name: true } });
