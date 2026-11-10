@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Trans, useTranslation } from 'react-i18next';
 import { trpc } from '../lib/trpc';
@@ -36,6 +36,73 @@ function usePublicUsers(): number | null {
     }
   }, [q.data?.users]);
   return q.data?.users ?? cached;
+}
+
+/**
+ * "How it works" as one figure that follows the reader: the text blocks scroll past a sticky NetFigure, and the block
+ * the reader has reached sets its step.
+ */
+function StepStory({ labels }: { labels: ReturnType<typeof useFigureLabels>['net'] }) {
+  const { t } = useTranslation();
+  const [step, setStep] = useState<0 | 1 | 2>(0);
+  const refs = useRef<(HTMLDivElement | null)[]>([]);
+  useEffect(() => {
+    // The current step is the last block whose top has passed 55% of the screen. Measured on scroll (one rAF), so a
+    // fast fling that jumps over a block still lands on the right step.
+    let raf = 0;
+    const pick = () => {
+      raf = 0;
+      const line = window.innerHeight * 0.55;
+      let k = 0;
+      refs.current.forEach((el, i) => {
+        if (el && el.getBoundingClientRect().top < line) k = i;
+      });
+      setStep(k as 0 | 1 | 2);
+    };
+    const onScroll = () => {
+      if (!raf) raf = requestAnimationFrame(pick);
+    };
+    pick();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onScroll);
+    };
+  }, []);
+  return (
+    <div className="site-story">
+      <div className="fig" aria-hidden="true">
+        <div className="pic">
+          <NetFigure step={step} labels={labels} />
+        </div>
+        <div className="bars">
+          {([0, 1, 2] as const).map((k) => (
+            <i key={k} className={k <= step ? 'on' : undefined} />
+          ))}
+        </div>
+      </div>
+      <ol className="texts">
+        {([0, 1, 2] as const).map((k) => (
+          <li key={k}>
+            <div
+              ref={(el) => {
+                refs.current[k] = el;
+              }}
+              className={k === step ? 'beat on' : 'beat'}
+            >
+              <span className="n">{k + 1}</span>
+              <h3>{t(`landing.steps.s${k + 1}Title`)}</h3>
+              <p>
+                <Trans i18nKey={`landing.steps.s${k + 1}Text`} components={B} />
+              </p>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </div>
+  );
 }
 
 /**
@@ -85,13 +152,23 @@ export function LandingPage({ inviteToken }: { inviteToken?: string } = {}) {
             <Trans i18nKey="landing.hero.lead" components={B} />
           </p>
           <DeviceEntry device={device} invite={inviteToken} />
+          {users ? (
+            <p className="site-proof">
+              <span className="dots" aria-hidden="true">
+                <i />
+                <i />
+                <i />
+              </span>
+              {t('landing.hero.statPeople', { count: users, n: nf.format(users) })}
+            </p>
+          ) : null}
           <div className="site-facts">
             <span className="site-pill">{t('landing.hero.factOpen')}</span>
             <span className="site-pill">{t('landing.hero.factNonprofit')}</span>
             <span className="site-pill">{t('landing.hero.factNoMoney')}</span>
           </div>
         </div>
-        <Reveal>
+        <div className="site-hero-scene">
           <HeroScene
             ariaLabel={t('landing.hero.sceneAria')}
             labels={{
@@ -102,35 +179,23 @@ export function LandingPage({ inviteToken }: { inviteToken?: string } = {}) {
             }}
           >
             <div className="tag">
-              {users ? <span>{t('landing.hero.statPeople', { count: users, n: nf.format(users) })}</span> : null}
               <span>{t('landing.hero.statDepth')}</span>
             </div>
           </HeroScene>
-        </Reveal>
+        </div>
       </section>
 
-      <Reveal as="section" className="site-sec" id="how" aria-labelledby="steps-title">
-        <h2 id="steps-title">{t('landing.steps.title')}</h2>
-        <p className="lead">{t('landing.steps.lead')}</p>
-        <Reveal group className="site-steps">
-          {([0, 1, 2] as const).map((k) => (
-            <div key={k} className="site-step">
-              <div className="pic">
-                <NetFigure step={k} labels={labels.net} />
-              </div>
-              <span className="n">{k + 1}</span>
-              <h3>{t(`landing.steps.s${k + 1}Title`)}</h3>
-              <p>
-                <Trans i18nKey={`landing.steps.s${k + 1}Text`} components={B} />
-              </p>
-            </div>
-          ))}
+      <section className="site-sec" id="how" aria-labelledby="steps-title">
+        <Reveal>
+          <h2 id="steps-title">{t('landing.steps.title')}</h2>
+          <p className="lead">{t('landing.steps.lead')}</p>
         </Reveal>
-      </Reveal>
+        <StepStory labels={labels.net} />
+      </section>
 
-      <Reveal as="section" className="site-sec" aria-labelledby="hui-title">
+      <section className="site-sec" aria-labelledby="hui-title">
         <div className="site-two">
-          <div>
+          <Reveal>
             <h2 id="hui-title">{t('landing.hui.title')}</h2>
             <p className="lead">
               <Trans i18nKey="landing.hui.lead" components={B} />
@@ -143,7 +208,7 @@ export function LandingPage({ inviteToken }: { inviteToken?: string } = {}) {
                 </button>
               ))}
             </div>
-          </div>
+          </Reveal>
           <div ref={huiRef}>
             <HuiFigure
               month={month}
@@ -154,24 +219,26 @@ export function LandingPage({ inviteToken }: { inviteToken?: string } = {}) {
             />
           </div>
         </div>
-      </Reveal>
+      </section>
 
-      <Reveal as="section" className="site-sec" aria-labelledby="chain-title">
+      <section className="site-sec" aria-labelledby="chain-title">
         <div className="site-two">
-          <div>
+          <Reveal>
             <h2 id="chain-title">{t('landing.chain.title')}</h2>
             <p className="lead">
               <Trans i18nKey="landing.chain.lead" components={B} />
             </p>
-          </div>
+          </Reveal>
           <div ref={chainRef} className="site-fig chain">
             <ChainFigure step={chainStep} labels={labels.chain} onSelect={setChainStep} />
           </div>
         </div>
-      </Reveal>
+      </section>
 
-      <Reveal as="section" className="site-sec" aria-labelledby="nots-title">
-        <h2 id="nots-title">{t('landing.nots.title')}</h2>
+      <section className="site-sec" aria-labelledby="nots-title">
+        <Reveal>
+          <h2 id="nots-title">{t('landing.nots.title')}</h2>
+        </Reveal>
         <Reveal group className="site-nots">
           <div className="site-not">
             <i aria-hidden="true">
@@ -195,15 +262,17 @@ export function LandingPage({ inviteToken }: { inviteToken?: string } = {}) {
             <p>{t('landing.nots.choiceText')}</p>
           </div>
         </Reveal>
-      </Reveal>
+      </section>
 
-      <Reveal as="section" className="site-sec" id="start" aria-labelledby="start-title">
-        <h2 id="start-title">{t('landing.start.title')}</h2>
-        <p className="lead">
-          <Trans i18nKey="landing.start.lead" components={B} />
-        </p>
-        <StoreButtons device={device} invite={inviteToken} />
-      </Reveal>
+      <section className="site-sec" id="start" aria-labelledby="start-title">
+        <Reveal>
+          <h2 id="start-title">{t('landing.start.title')}</h2>
+          <p className="lead">
+            <Trans i18nKey="landing.start.lead" components={B} />
+          </p>
+          <StoreButtons device={device} invite={inviteToken} />
+        </Reveal>
+      </section>
     </SitePage>
   );
 }

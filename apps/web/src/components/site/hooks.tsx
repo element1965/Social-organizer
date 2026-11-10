@@ -45,8 +45,9 @@ export function useDocumentTitle(title: string, description?: string) {
 }
 
 /**
- * Fade-in once when the element comes into view (threshold .15), as `reveal()` in lib/scrollPlay.ts does for static
- * markup. `group` staggers the children by 80 ms instead of moving the block itself.
+ * Fade-in once as soon as any part of the element is 8% above the bottom of the screen. The threshold is 0, so a block
+ * taller than the screen still shows (a ratio threshold on a tall block left the screen empty while scrolling).
+ * `group` staggers the children by 80 ms instead of moving the block itself.
  */
 export function Reveal({
   as: Tag = 'div',
@@ -66,8 +67,8 @@ export function Reveal({
   const [shown, setShown] = useState(prefersReducedMotion);
   useEffect(() => {
     if (shown) return;
-    return onEnter(ref.current, () => setShown(true), { threshold: group ? 0.2 : 0.15 });
-  }, [shown, group]);
+    return onEnter(ref.current, () => setShown(true), { threshold: 0, rootMargin: '0px 0px -8% 0px' });
+  }, [shown]);
   return (
     <Tag ref={ref} className={cn(className, group ? 'rvg' : 'rv', shown && 'in')} {...rest}>
       {children}
