@@ -118,6 +118,15 @@ const FOCUS_FLY_MS = 900;
 const BALL_SHELLS = [0, 0.38, 0.7, 1]; // shell radius by depth, as a fraction of the outer radius
 const MAX_NODE_SPEED = 4;        // world units per tick; caps the "explosion" of the first ticks
 const MIN_DOT_PX = 0.0042;       // far dots stay a few pixels; nearer rings stay larger
+// Dot sizes in world units by LOD level (near, mid, far); the near and mid ones grow with connections
+const DOT_NEAR = 2.6;
+const DOT_MID = 1.75;
+const DOT_FAR = 1.1;
+// On-screen cap of a dot (CSS px, times sqrt of the connection factor): a dot the camera passes close to
+// stays a dot instead of filling the view
+const DOT_MAX_PX = 11;
+// Same for a photo: big enough to recognise, never a disc across the view
+const AVATAR_MAX_PX = 34;
 const LOD_HYSTERESIS = 1.08;     // a node must move 8% past a LOD border to switch back (no flicker)
 // Nodes the camera flies through fade out instead of filling the screen and blocking the view
 const NEAR_HIDE = 6;
@@ -195,6 +204,8 @@ interface NodeVis {
   d2: number;
   /** Label size factor that keeps its lines between LABEL_MIN_PX and LABEL_MAX_PX on screen */
   labelFit: number;
+  /** Largest photo size in world units that stays within AVATAR_MAX_PX at the current distance (frame loop) */
+  avatarCap: number;
   glow: THREE.Sprite | null;
   label: SpriteText | null;
   pulse: THREE.Sprite | null;
@@ -967,7 +978,7 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
     const isC = !!n.isCenter;
     const sf = v.sf;
     const onPath = pathRef.current.set.has(n.id) && !n.isDeleted;
-    const avatarSize = (isC ? MARK_SIZE : 5) * sf;
+    const avatarSize = isC ? MARK_SIZE : Math.min(5 * sf, v.avatarCap);
     const boost = !isC && onPath ? 1.4 : 1;
     v.level = level;
 
@@ -984,7 +995,7 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
       v.avatar.visible = showPhoto;
       v.avatar.scale.set(avatarSize, avatarSize, 1);
       v.dot.visible = !showPhoto;
-      const dotSize = (level <= 1 ? 3.15 * sf : level === 2 ? 2.05 * sf : 1.25) * boost;
+      const dotSize = (level <= 1 ? DOT_NEAR * sf : level === 2 ? DOT_MID * sf : DOT_FAR) * boost;
       v.dot.scale.set(dotSize, dotSize, 1);
     }
 
@@ -1094,7 +1105,7 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
     const dot = new THREE.Sprite(res.hitMaterial);
     dot.visible = !isC && !showCached;
     if (!isC) {
-      const dotSize = (depth <= 1 ? 3.15 : depth === 2 ? 2.05 : 1.25) * sf;
+      const dotSize = (depth <= 1 ? DOT_NEAR : depth === 2 ? DOT_MID : DOT_FAR) * sf;
       dot.scale.set(dotSize, dotSize, 1);
     }
     inner.add(dot);
@@ -1133,6 +1144,7 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
       dotRgba: [1, 1, 1, 0],
       d2: 0,
       labelFit: 1,
+      avatarCap: Infinity,
       unwantedAt: 0,
       wantedAt: 0,
     };
@@ -1660,13 +1672,25 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
           res.requestPhoto(v.node.photoUrl, v.node.id);
         }
 
-        // Far nodes keep a minimum on-screen size, like stars
-        if (!v.node.isCenter && level >= 2) {
+        // Dots keep their on-screen size in bounds: far ones a minimum, like stars; near ones a cap, so a dot
+        // the camera passes close to does not balloon
+        if (!v.node.isCenter && v.dot.visible) {
           const onPath = pathRef.current.set.has(v.node.id) && !v.node.isDeleted;
-          const want = Math.sqrt(d2) * MIN_DOT_PX * (onPath ? 1.35 : 1);
-          const base = (level === 2 ? 2.05 * v.sf : 1.25) * (onPath ? 1.4 : 1);
-          const size = Math.max(base, want);
+          const boost = onPath ? 1.4 : 1;
+          const dist = Math.max(1, Math.sqrt(d2));
+          const base = (level <= 1 ? DOT_NEAR * v.sf : level === 2 ? DOT_MID * v.sf : DOT_FAR) * boost;
+          const min = level >= 2 ? dist * MIN_DOT_PX * (onPath ? 1.35 : 1) : 0;
+          const max = (DOT_MAX_PX * Math.sqrt(v.sf) * boost * dist) / pxPerUnit;
+          const size = Math.min(Math.max(base, min), max);
           if (Math.abs(size - v.dot.scale.x) > size * 0.03) v.dot.scale.set(size, size, 1);
+        }
+        if (!v.node.isCenter && v.avatar.visible) {
+          const cap = (AVATAR_MAX_PX * Math.max(1, Math.sqrt(d2))) / pxPerUnit;
+          const want = Math.min(5 * v.sf, cap);
+          if (Math.abs(want - v.avatar.scale.x) > want * 0.03) {
+            v.avatarCap = cap;
+            applyLevel(v, v.level); // resizes the photo, its pulse ring and the label offset together
+          }
         }
 
         // Pop-in + hover emphasis. Reduced motion skips the pop and the float.
@@ -1694,7 +1718,7 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
           v.inner.position.y = Math.sin(now * 0.0011 + v.phase) * BOB_AMPLITUDE;
         }
         if (!reduced && v.pulse && v.pulse.visible && v.online) {
-          const body = v.node.isCenter ? MARK_SIZE : (v.dot.visible ? v.dot.scale.x : (v.node.isCenter ? MARK_SIZE : 5) * v.sf);
+          const body = v.node.isCenter ? MARK_SIZE : (v.dot.visible ? v.dot.scale.x : v.avatar.scale.x);
           const ps = body * (v.node.isCenter ? 1.38 : 1.9) * (1 + 0.12 * pulse);
           v.pulse.scale.set(ps, ps, 1);
         }
