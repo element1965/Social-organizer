@@ -205,7 +205,7 @@
 /* who: 'author' — действие автора; 'code' — правка в репозитории. block: без этого этап не закрывается. done: уже сделано на дату составления. */
 const PHASES = [
   { id: 'p0', title: 'Этап 0. Безопасность', when: 'До любого объявления', items: [
-    { id: 'sec-railway', t: 'Сменить токен Railway', n: 'Лежал в CLAUDE.md в публичной истории git (коммиты 533671c…9589a37 и 488a039…8c95b64).', who: 'author', block: 1 },
+    { id: 'sec-railway', t: 'Сменить токен Railway', n: 'Лежал в CLAUDE.md в публичной истории git (коммиты 533671c…9589a37 и 488a039…8c95b64).', who: 'author', block: 1, done: 1 },
     { id: 'sec-pg', t: 'Сменить пароль продовой базы PostgreSQL', n: 'Публичный URL с паролем был в CLAUDE.md и в 13 скриптах (scripts/, packages/db/) до 8c95b64. После смены обновить DATABASE_URL сервиса API и db-backup.', who: 'author', block: 1 },
     { id: 'sec-keystore', t: 'Сменить ключ загрузки Android', n: 'Пароль keystore был в истории. В Play Console: «Целостность приложения» → запрос на сброс ключа загрузки.', who: 'author', block: 1 },
     { id: 'sec-history', t: 'Решить, чистить ли историю git', n: 'После смены секретов утёкшие значения бесполезны. Чистка (git filter-repo) переписывает все хэши и ломает форки; делать только если смена невозможна.', who: 'author' },
