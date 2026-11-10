@@ -12,6 +12,7 @@ import { BrandMark } from './BrandMark';
 import { Avatar } from './Avatar';
 import { BannerProvider } from './Banner';
 import { useAskProgress, type AskProgress } from './ask-progress';
+import { AskProgressSync } from '../collection/AskProgressSync';
 import {
   IconAdd,
   IconCircle,
@@ -274,6 +275,8 @@ function LiveShell() {
 
   return (
     <div data-shell={mode} className="flex min-h-[calc(100dvh-var(--sa-top))] bg-canvas text-ink">
+      {/* The Need tab reads this on every screen, so the shell keeps it fresh, not only the Need pages. */}
+      <AskProgressSync />
       {mode === 'tabs' ? null : (
         <ShellChrome
           mode={mode}
