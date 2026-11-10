@@ -484,7 +484,6 @@
     "noPast": "Nicio înregistrare",
     "pastVia": "prin {{name}}",
     "left": "Participare retrasă",
-    "lifetime": "Ai anunțat participarea de {{givenCount}} ori · {{givenAmount}}. La nevoile tale au participat de {{receivedCount}} ori · {{receivedAmount}}.",
     "goalMissing": "Nicio sumă setată",
     "logoutByMethodEmail": "Te-ai conectat cu {{method}} (<b/>). Poți reveni la fel sau cu un cod pe e-mail.",
     "logoutByMethod": "Te-ai conectat cu {{method}}. Poți reveni la fel.",
@@ -494,7 +493,6 @@
     "notifyChannel": "Canal",
     "notifyTelegramNotLinked": "Conectează Telegram în „Cont” ca să primești mesajele acolo.",
     "stakeSaved": "Salvat",
-    "factsLine": "Pentru Nevoile închise: participare declarată {{reported}}, marcat de autori ca primit {{marked}}. Oamenii din rețeaua ta văd aceste două numere.",
     "needCounts": "Deschise: {{open}} · Trecute: {{past}}",
     "stages": "Etape"
   },
@@ -1427,5 +1425,12 @@
     "given": "A dat · {{n}}",
     "received": "A primit · {{n}}",
     "projectDay": "Ziua proiectului"
+  },
+  "participationSummary": {
+    "title": "Participare până acum",
+    "gave": "Ați participat",
+    "received": "La nevoile dvs.",
+    "count": "participări: {{n}}",
+    "marked": "La nevoile închise, autorii au marcat ca primite {{marked}} din {{reported}}. Oamenii din rețeaua dvs. văd aceste două numere."
   }
 }

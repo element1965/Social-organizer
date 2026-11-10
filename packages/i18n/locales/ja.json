@@ -478,7 +478,6 @@
     "noPast": "記録はありません",
     "pastVia": "{{name}}経由",
     "left": "参加を取り下げました",
-    "lifetime": "あなたが参加を知らせたのは{{givenCount}}回 · {{givenAmount}}です。あなたのニーズに参加があったのは{{receivedCount}}回 · {{receivedAmount}}です。",
     "goalMissing": "金額は未設定です",
     "logoutByMethodEmail": "{{method}}（<b/>）でログインしました。同じ方法か、メールのコードで戻れます。",
     "logoutByMethod": "{{method}}でログインしました。同じ方法で戻れます。",
@@ -488,7 +487,6 @@
     "notifyChannel": "チャンネル",
     "notifyTelegramNotLinked": "メッセージをそこで受け取るには、「アカウント」でTelegramを連携してください。",
     "stakeSaved": "保存しました",
-    "factsLine": "終了したニーズについて：知らせた参加 {{reported}} 件、作成者が受け取り済みと記録 {{marked}} 件。この2つの数字は、あなたのネットワークの人に見えます。",
     "needCounts": "開いているもの: {{open}} · 過去: {{past}}",
     "stages": "段階"
   },
@@ -1405,5 +1403,12 @@
     "given": "提供 · {{n}}",
     "received": "受け取り · {{n}}",
     "projectDay": "プロジェクト日数"
+  },
+  "participationSummary": {
+    "title": "これまでの参加",
+    "gave": "あなたの参加",
+    "received": "あなたのニーズへ",
+    "count": "参加数: {{n}}",
+    "marked": "終了したニーズで、作成者は {{reported}} 件中 {{marked}} 件を受け取り済みにしました。この2つの数字はあなたのネットワークの人に表示されます。"
   }
 }

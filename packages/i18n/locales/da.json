@@ -481,7 +481,6 @@
     "noPast": "Ingen poster",
     "pastVia": "via {{name}}",
     "left": "Deltagelse trukket tilbage",
-    "lifetime": "Du har meldt deltagelse {{givenCount}} gange · {{givenAmount}}. Andre har deltaget i dine behov {{receivedCount}} gange · {{receivedAmount}}.",
     "goalMissing": "Intet beløb angivet",
     "logoutByMethodEmail": "Du loggede ind med {{method}} (<b/>). Kom tilbage på samme måde eller med en e-mailkode.",
     "logoutByMethod": "Du loggede ind med {{method}}. Kom tilbage på samme måde.",
@@ -491,7 +490,6 @@
     "notifyChannel": "Kanal",
     "notifyTelegramNotLinked": "Forbind Telegram under »Konto« for at få beskeder dér.",
     "stakeSaved": "Gemt",
-    "factsLine": "For lukkede behov: meldte deltagelser {{reported}}, markeret som modtaget af forfattere {{marked}}. Folk i dit netværk ser disse to tal.",
     "needCounts": "Åbne: {{open}} · Tidligere: {{past}}",
     "stages": "Etaper"
   },
@@ -1416,5 +1414,12 @@
     "given": "Gav · {{n}}",
     "received": "Modtog · {{n}}",
     "projectDay": "Projektdag"
+  },
+  "participationSummary": {
+    "title": "Deltagelse indtil nu",
+    "gave": "Du deltog",
+    "received": "I dine behov",
+    "count": "deltagelser: {{n}}",
+    "marked": "For lukkede behov markerede forfatterne {{marked}} af {{reported}} som modtaget. Folk i dit netværk ser disse to tal."
   }
 }

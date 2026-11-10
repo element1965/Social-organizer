@@ -481,7 +481,6 @@
     "noPast": "No entries",
     "pastVia": "via {{name}}",
     "left": "Participation withdrawn",
-    "lifetime": "You reported Participation {{givenCount}} times · {{givenAmount}}. People took part in your Needs {{receivedCount}} times · {{receivedAmount}}.",
     "goalMissing": "No amount set",
     "logoutByMethodEmail": "You signed in with {{method}} (<b/>). Come back the same way or with an e-mail code.",
     "logoutByMethod": "You signed in with {{method}}. Come back the same way.",
@@ -491,7 +490,6 @@
     "notifyChannel": "Channel",
     "notifyTelegramNotLinked": "Connect Telegram in Account to get messages there.",
     "stakeSaved": "Saved",
-    "factsLine": "For closed Needs: Participation reported {{reported}}, marked as received by authors {{marked}}. People in your network see these two numbers.",
     "needCounts": "Open: {{open}} · Past: {{past}}",
     "stages": "Milestones"
   },
@@ -1416,5 +1414,12 @@
     "given": "Gave · {{n}}",
     "received": "Received · {{n}}",
     "projectDay": "Project day"
+  },
+  "participationSummary": {
+    "title": "Participation so far",
+    "gave": "You took part",
+    "received": "In your needs",
+    "count": "pledges: {{n}}",
+    "marked": "On closed needs, authors marked {{marked}} of {{reported}} pledges as received. People in your network see these two numbers."
   }
 }

@@ -481,7 +481,6 @@
     "noPast": "Keine Einträge",
     "pastVia": "über {{name}}",
     "left": "Beteiligung zurückgezogen",
-    "lifetime": "Sie haben {{givenCount}} Mal Ihre Beteiligung gemeldet · {{givenAmount}}. An Ihren Bedarfen haben sich {{receivedCount}} Mal Menschen beteiligt · {{receivedAmount}}.",
     "goalMissing": "Kein Betrag angegeben",
     "logoutByMethodEmail": "Sie haben sich mit {{method}} angemeldet (<b/>). Zurück geht es genauso oder mit einem E-Mail-Code.",
     "logoutByMethod": "Sie haben sich mit {{method}} angemeldet. Zurück geht es genauso.",
@@ -491,7 +490,6 @@
     "notifyChannel": "Kanal",
     "notifyTelegramNotLinked": "Verbinden Sie Telegram unter „Konto“, damit die Nachrichten dort ankommen.",
     "stakeSaved": "Gespeichert",
-    "factsLine": "Bei geschlossenen Bedarfen: Beteiligungsmeldungen {{reported}}, von Autoren als erhalten markiert {{marked}}. Die Leute in Ihrem Netzwerk sehen diese beiden Zahlen.",
     "needCounts": "Offen: {{open}} · Vergangene: {{past}}",
     "stages": "Etappen"
   },
@@ -1416,5 +1414,12 @@
     "given": "Gegeben · {{n}}",
     "received": "Erhalten · {{n}}",
     "projectDay": "Projekttag"
+  },
+  "participationSummary": {
+    "title": "Beteiligung bisher",
+    "gave": "Sie haben sich beteiligt",
+    "received": "An Ihren Bedarfen",
+    "count": "Beteiligungen: {{n}}",
+    "marked": "Bei geschlossenen Bedarfen haben Autoren {{marked}} von {{reported}} Beteiligungen als erhalten markiert. Die Leute in Ihrem Netzwerk sehen diese beiden Zahlen."
   }
 }

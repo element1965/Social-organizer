@@ -478,7 +478,6 @@
     "noPast": "Không có mục nào",
     "pastVia": "qua {{name}}",
     "left": "Đã rút lại sự tham gia",
-    "lifetime": "Bạn đã thông báo tham gia {{givenCount}} lần · {{givenAmount}}. Mọi người đã tham gia vào nhu cầu của bạn {{receivedCount}} lần · {{receivedAmount}}.",
     "goalMissing": "Chưa đặt số tiền",
     "logoutByMethodEmail": "Bạn đã đăng nhập bằng {{method}} (<b/>). Có thể quay lại cùng cách hoặc bằng mã email.",
     "logoutByMethod": "Bạn đã đăng nhập bằng {{method}}. Có thể quay lại cùng cách.",
@@ -488,7 +487,6 @@
     "notifyChannel": "Kênh",
     "notifyTelegramNotLinked": "Kết nối Telegram trong «Tài khoản» để nhận tin ở đó.",
     "stakeSaved": "Đã lưu",
-    "factsLine": "Theo các Nhu cầu đã đóng: số lần báo tham gia — {{reported}}, tác giả đánh dấu đã nhận — {{marked}}. Hai con số này hiển thị với những người trong mạng lưới của bạn.",
     "needCounts": "Đang mở: {{open}} · Trước đây: {{past}}",
     "stages": "Các chặng"
   },
@@ -1405,5 +1403,12 @@
     "given": "Đã cho · {{n}}",
     "received": "Đã nhận · {{n}}",
     "projectDay": "Ngày dự án"
+  },
+  "participationSummary": {
+    "title": "Tham gia đến nay",
+    "gave": "Bạn đã tham gia",
+    "received": "Vào nhu cầu của bạn",
+    "count": "lượt tham gia: {{n}}",
+    "marked": "Với các nhu cầu đã đóng, người tạo đã đánh dấu nhận được {{marked}} trên {{reported}}. Mọi người trong mạng lưới của bạn thấy hai con số này."
   }
 }

@@ -481,7 +481,6 @@
     "noPast": "Kayıt yok",
     "pastVia": "{{name}} üzerinden",
     "left": "Katılım geri çekildi",
-    "lifetime": "{{givenCount}} kez katılım bildirdiniz · {{givenAmount}}. İhtiyaçlarınıza {{receivedCount}} kez katılım oldu · {{receivedAmount}}.",
     "goalMissing": "Tutar belirtilmedi",
     "logoutByMethodEmail": "{{method}} ile giriş yaptınız (<b/>). Aynı yolla veya e-posta koduyla dönebilirsiniz.",
     "logoutByMethod": "{{method}} ile giriş yaptınız. Aynı yolla dönebilirsiniz.",
@@ -491,7 +490,6 @@
     "notifyChannel": "Kanal",
     "notifyTelegramNotLinked": "İletilerin oraya gelmesi için Telegram'ı «Hesap» bölümünde bağlayın.",
     "stakeSaved": "Kaydedildi",
-    "factsLine": "Kapanan ihtiyaçlar için: bildirilen katılım — {{reported}}, yazarlarca alındı işaretlenen — {{marked}}. Bu iki sayıyı ağınızdaki kişiler görür.",
     "needCounts": "Açık: {{open}} · Geçmiş: {{past}}",
     "stages": "Aşamalar"
   },
@@ -1416,5 +1414,12 @@
     "given": "Verdi · {{n}}",
     "received": "Aldı · {{n}}",
     "projectDay": "Proje günü"
+  },
+  "participationSummary": {
+    "title": "Şimdiye kadarki katılım",
+    "gave": "Katıldınız",
+    "received": "İhtiyaçlarınıza",
+    "count": "katılım: {{n}}",
+    "marked": "Kapanan ihtiyaçlarda yazarlar {{reported}} katılımdan {{marked}} tanesini alındı olarak işaretledi. Ağınızdaki kişiler bu iki sayıyı görür."
   }
 }

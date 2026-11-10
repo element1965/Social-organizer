@@ -481,7 +481,6 @@
     "noPast": "Ei merkintöjä",
     "pastVia": "{{name}} kautta",
     "left": "Osallistuminen peruttu",
-    "lifetime": "Olet ilmoittanut osallistumisesta: {{givenCount}} · {{givenAmount}}. Tarpeisiisi on osallistuttu: {{receivedCount}} · {{receivedAmount}}.",
     "goalMissing": "Summaa ei ole asetettu",
     "logoutByMethodEmail": "Kirjauduit tavalla {{method}} (<b/>). Voit palata samalla tavalla tai sähköpostikoodilla.",
     "logoutByMethod": "Kirjauduit tavalla {{method}}. Voit palata samalla tavalla.",
@@ -491,7 +490,6 @@
     "notifyChannel": "Kanava",
     "notifyTelegramNotLinked": "Yhdistä Telegram kohdassa ”Tili”, niin viestit tulevat sinne.",
     "stakeSaved": "Tallennettu",
-    "factsLine": "Suljettujen tarpeiden osalta: ilmoitettuja osallistumisia {{reported}}, tekijöiden saaduksi merkitsemiä {{marked}}. Verkostosi ihmiset näkevät nämä kaksi lukua.",
     "needCounts": "Avoimet: {{open}} · Aiemmat: {{past}}",
     "stages": "Vaiheet"
   },
@@ -1416,5 +1414,12 @@
     "given": "Antoi · {{n}}",
     "received": "Sai · {{n}}",
     "projectDay": "Projektin päivä"
+  },
+  "participationSummary": {
+    "title": "Osallistuminen tähän mennessä",
+    "gave": "Osallistuit",
+    "received": "Tarpeisiisi",
+    "count": "osallistumisia: {{n}}",
+    "marked": "Suljetuissa tarpeissa tekijät merkitsivät vastaanotetuksi {{marked}}/{{reported}}. Verkostosi ihmiset näkevät nämä kaksi lukua."
   }
 }

@@ -478,7 +478,6 @@
     "noPast": "没有记录",
     "pastVia": "经由 {{name}}",
     "left": "已撤回参与",
-    "lifetime": "你告知参与：{{givenCount}} 次 · {{givenAmount}}。有人参与你的需求：{{receivedCount}} 次 · {{receivedAmount}}。",
     "goalMissing": "未设置金额",
     "logoutByMethodEmail": "你通过 {{method}}（<b/>）登录。可以用同样方式回来，或用邮箱验证码。",
     "logoutByMethod": "你通过 {{method}} 登录。请用同样方式回来。",
@@ -488,7 +487,6 @@
     "notifyChannel": "渠道",
     "notifyTelegramNotLinked": "在“账号”里连接 Telegram，以便在那里接收消息。",
     "stakeSaved": "已保存",
-    "factsLine": "针对已关闭的需求：参与告知 {{reported}} 次，作者标记为已收到 {{marked}} 次。你网络中的人可以看到这两个数字。",
     "needCounts": "进行中: {{open}} · 过往: {{past}}",
     "stages": "阶段"
   },
@@ -1405,5 +1403,12 @@
     "given": "给予 · {{n}}",
     "received": "收到 · {{n}}",
     "projectDay": "项目天数"
+  },
+  "participationSummary": {
+    "title": "参与总览",
+    "gave": "你参与了",
+    "received": "在你的需求中",
+    "count": "参与次数：{{n}}",
+    "marked": "在已关闭的需求中，发起人把 {{reported}} 次中的 {{marked}} 次标为已收到。你网络中的人能看到这两个数字。"
   }
 }

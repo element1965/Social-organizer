@@ -487,7 +487,6 @@
     "noPast": "Žádné záznamy",
     "pastVia": "přes {{name}}",
     "left": "Účast odvolána",
-    "lifetime": "Oznámili jste účast: {{givenCount}}× · {{givenAmount}}. Ve vašich potřebách se zapojili: {{receivedCount}}× · {{receivedAmount}}.",
     "goalMissing": "Částka není uvedena",
     "logoutByMethodEmail": "Přihlásili jste se přes {{method}} (<b/>). Vrátit se můžete stejně, nebo kódem z e-mailu.",
     "logoutByMethod": "Přihlásili jste se přes {{method}}. Vrátit se můžete stejně.",
@@ -497,7 +496,6 @@
     "notifyChannel": "Kanál",
     "notifyTelegramNotLinked": "Propojte Telegram v části „Účet“, aby vám tam chodily zprávy.",
     "stakeSaved": "Uloženo",
-    "factsLine": "U uzavřených potřeb: hlášení o účasti {{reported}}, autory označeno jako přijaté {{marked}}. Tato dvě čísla vidí lidé ve vaší síti.",
     "needCounts": "Otevřené: {{open}} · Minulé: {{past}}",
     "stages": "Etapy"
   },
@@ -1438,5 +1436,12 @@
     "given": "Dal(a) · {{n}}",
     "received": "Dostal(a) · {{n}}",
     "projectDay": "Den projektu"
+  },
+  "participationSummary": {
+    "title": "Účast zatím",
+    "gave": "Zúčastnili jste se",
+    "received": "Ve vašich potřebách",
+    "count": "účastí: {{n}}",
+    "marked": "U uzavřených potřeb autoři označili jako přijaté {{marked}} z {{reported}}. Lidé ve vaší síti vidí tato dvě čísla."
   }
 }

@@ -481,7 +481,6 @@
     "noPast": "Inga poster",
     "pastVia": "via {{name}}",
     "left": "Deltagande indraget",
-    "lifetime": "Du anmälde deltagande {{givenCount}} gånger · {{givenAmount}}. Andra deltog i dina behov {{receivedCount}} gånger · {{receivedAmount}}.",
     "goalMissing": "Inget belopp angivet",
     "logoutByMethodEmail": "Du loggade in med {{method}} (<b/>). Du kan komma tillbaka på samma sätt eller med en kod till e-posten.",
     "logoutByMethod": "Du loggade in med {{method}}. Du kan komma tillbaka på samma sätt.",
@@ -491,7 +490,6 @@
     "notifyChannel": "Kanal",
     "notifyTelegramNotLinked": "Anslut Telegram under ”Konto” för att få meddelanden där.",
     "stakeSaved": "Sparat",
-    "factsLine": "För stängda behov: anmält deltagande — {{reported}}, markerat som mottaget av författare — {{marked}}. Dessa två tal ser personerna i ditt nätverk.",
     "needCounts": "Öppna: {{open}} · Tidigare: {{past}}",
     "stages": "Milstolpar"
   },
@@ -1416,5 +1414,12 @@
     "given": "Gav · {{n}}",
     "received": "Fick · {{n}}",
     "projectDay": "Projektdag"
+  },
+  "participationSummary": {
+    "title": "Deltagande hittills",
+    "gave": "Du deltog",
+    "received": "I dina behov",
+    "count": "deltaganden: {{n}}",
+    "marked": "För stängda behov markerade författarna {{marked}} av {{reported}} som mottagna. Personer i ditt nätverk ser dessa två siffror."
   }
 }
