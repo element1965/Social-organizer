@@ -341,6 +341,30 @@ async function start() {
       return reply.send(`<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>Opening Instagram...</title></head><body style="background:#000;color:#fff;display:flex;align-items:center;justify-content:center;height:100vh;margin:0;font-family:system-ui"><p>Opening @${username}...</p><script>var u=navigator.userAgent;if(/android/i.test(u)){window.location.href='${intentUri}'}else if(/iPhone|iPad/i.test(u)){window.location.href='instagram://user?username=${username}';setTimeout(function(){window.location.href='https://instagram.com/${username}'},1500)}else{window.location.href='https://instagram.com/${username}'}</script><noscript><a href="https://instagram.com/${username}">Open profile</a></noscript></body></html>`);
     });
 
+    // Android App Links: lets Android open /invite/ links (camera, Lens, messengers) straight in the app.
+    // ANDROID_CERT_SHA256: comma-separated SHA-256 signing-cert fingerprints (production: the Play App Signing
+    // key from Play Console → App integrity). ANDROID_APP_PACKAGE: defaults to the store package; the staging
+    // environment points it at com.socialorganizer.app.staging.
+    app.get('/.well-known/assetlinks.json', async (_req, reply) => {
+      const fingerprints = (process.env.ANDROID_CERT_SHA256 || '')
+        .split(',')
+        .map((value) => value.trim().toUpperCase())
+        .filter((value) => /^([0-9A-F]{2}:){31}[0-9A-F]{2}$/.test(value));
+      if (fingerprints.length === 0) return reply.status(404).send('Not configured');
+      reply.header('Content-Type', 'application/json');
+      reply.header('Cache-Control', 'public, max-age=3600');
+      return reply.send([
+        {
+          relation: ['delegate_permission/common.handle_all_urls'],
+          target: {
+            namespace: 'android_app',
+            package_name: process.env.ANDROID_APP_PACKAGE || 'com.socialorganizer.app',
+            sha256_cert_fingerprints: fingerprints,
+          },
+        },
+      ]);
+    });
+
     // Sign in with Apple — domain verification file.
     // Apple requires hosting the association file at this exact path when configuring
     // the Services ID. Paste the file contents into the APPLE_DOMAIN_ASSOCIATION env var.

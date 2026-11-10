@@ -16,6 +16,8 @@ android {
         versionCode 14
         versionName "2.3"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        // Hosts whose /invite/ links open the app (App Links, see AndroidManifest.xml)
+        manifestPlaceholders = [appLinkHost: "www.orginizer.com", appLinkHostAlt: "orginizer.com"]
         aaptOptions {
              // Files and dirs to omit from the packaged assets dir, modified to accommodate modern web apps.
              // Default: https://android.googlesource.com/platform/frameworks/base/+/282e181b58cf72b6ca770dc7ca5f91f135444502/tools/aapt/AaptAssets.cpp#61
@@ -50,6 +52,9 @@ android {
             versionNameSuffix "-staging"
             resValue "string", "app_name", "SO Staging"
             resValue "string", "title_activity_main", "SO Staging"
+            // Staging invite links open SO Staging; orginizer.com links stay with the store app
+            def stagingHost = new URI(project.findProperty('stagingUrl') ?: 'https://social-organizer-staging.up.railway.app').host
+            manifestPlaceholders = [appLinkHost: stagingHost, appLinkHostAlt: stagingHost]
             matchingFallbacks = ['debug']
         }
     }
