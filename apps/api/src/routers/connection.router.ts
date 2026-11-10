@@ -306,17 +306,22 @@ export const connectionRouter = router({
       });
       if (!conn) throw new TRPCError({ code: 'NOT_FOUND', message: 'Connection not found' });
 
-      await ctx.db.connection.delete({
-        where: { userAId_userBId: { userAId: userAId!, userBId: userBId! } },
-      });
+      // "Remove from circle" is final: no request comes back. The old request rows between the two go too,
+      // so a later shake, QR or "We know each other" starts clean (the pair is unique per direction).
+      await ctx.db.$transaction([
+        ctx.db.connection.delete({
+          where: { userAId_userBId: { userAId: userAId!, userBId: userBId! } },
+        }),
+        ctx.db.pendingConnection.deleteMany({
+          where: {
+            OR: [
+              { fromUserId: ctx.userId, toUserId: input.targetUserId },
+              { fromUserId: input.targetUserId, toUserId: ctx.userId },
+            ],
+          },
+        }),
+      ]);
       invalidateGraph([userAId!, userBId!]);
-
-      // Create pending as if target requested connection (awaiting my confirmation)
-      await ctx.db.pendingConnection.upsert({
-        where: { fromUserId_toUserId: { fromUserId: input.targetUserId, toUserId: ctx.userId } },
-        create: { fromUserId: input.targetUserId, toUserId: ctx.userId, createdAt: new Date() },
-        update: { status: 'PENDING', resolvedAt: null },
-      });
 
       return { success: true };
     }),
