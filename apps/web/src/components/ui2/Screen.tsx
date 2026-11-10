@@ -34,7 +34,7 @@ export function Screen({ title, back, action, width = 'full', children, classNam
         className,
       )}
     >
-      {showHeader && desktop ? <MainBar back={back} title={title} action={action} /> : null}
+      {showHeader && desktop ? <MainBar back={back} title={title} action={action} column={width === 'column'} /> : null}
       {showHeader && !desktop ? (
         <div className="relative sticky top-[var(--sa-top)] z-20 flex h-12 items-center bg-canvas px-2">
           {back ? <CrumbLink crumb={back} size="lg" /> : <span />}
