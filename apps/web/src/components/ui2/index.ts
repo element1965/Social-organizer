@@ -25,6 +25,7 @@ export { Sheet } from './Sheet';
 export { Panel, Prose, SiteFooter, SiteHeader, Stat, StoreButton } from './Site';
 export { StageRail } from './StageRail';
 export { Switch } from './Switch';
+export { Textarea } from './Textarea';
 export { ASK_CIRCLE_GOAL, ASK_NETWORK_GOAL, askRing, setAskProgress, useAskProgress } from './ask-progress';
 export type { AskProgress } from './ask-progress';
 export { formatMoney } from './format';
