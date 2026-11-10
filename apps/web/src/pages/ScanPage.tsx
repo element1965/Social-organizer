@@ -17,6 +17,7 @@ import {
   type ScanPhase,
   type ScanSession,
 } from '../lib/scanner';
+import { refreshNetwork } from '../lib/refreshNetwork';
 import { trpc } from '../lib/trpc';
 
 const HOLD_MS = 1600;
@@ -104,11 +105,7 @@ function useScanConsume() {
             nickname = invite.inviter.name;
           }
         }
-        await Promise.all([
-          utils.pending.incoming.invalidate(),
-          utils.connection.list.invalidate(),
-          utils.collection.askAccess.invalidate(),
-        ]);
+        await refreshNetwork(utils);
         setNotice(null);
         setPerson({
           userId: result.connectedWith,

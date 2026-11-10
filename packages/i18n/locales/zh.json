@@ -2,6 +2,7 @@
   "common": {
     "appName": "Social Organizer",
     "loading": "加载中...",
+    "stillLoading": "仍在加载…",
     "error": "发生错误",
     "retry": "重试",
     "save": "保存",

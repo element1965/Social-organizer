@@ -2,6 +2,7 @@
   "common": {
     "appName": "Social Organizer",
     "loading": "로딩 중...",
+    "stillLoading": "아직 불러오는 중…",
     "error": "오류가 발생했어요",
     "retry": "다시 시도",
     "save": "저장",

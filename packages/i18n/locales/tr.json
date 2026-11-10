@@ -2,6 +2,7 @@
   "common": {
     "appName": "Social Organizer",
     "loading": "Yükleniyor...",
+    "stillLoading": "Hâlâ yükleniyor…",
     "error": "Bir hata oluştu",
     "retry": "Tekrar deneyin",
     "save": "Kaydet",

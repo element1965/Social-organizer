@@ -11,6 +11,7 @@ import { ProtectedRoute } from './components/ProtectedRoute';
 import { ShakeProvider } from './components/shake/ShakeProvider';
 import { NativePushBootstrap } from './components/NativePushBootstrap';
 import { AppShell } from './components/ui2/AppShell';
+import { AppLoader } from './components/ui2/AppLoader';
 import { ProfileRedirect } from './components/ui2/stubs';
 import { useAuth } from './hooks/useAuth';
 import { afterSignInPath, readPendingInvite, safeInviteToken, safeMasked, safePath, setPendingInvite } from './components/onboarding/flow';
@@ -31,11 +32,10 @@ function lazyPage<M, K extends keyof M>(load: () => Promise<M>, name: K) {
 /** Light stand-in while a route chunk loads. The shell stays put; public pages cover the viewport. */
 function RouteFallback({ full = false }: { full?: boolean }) {
   const { t } = useTranslation();
+  // The full-page fallback is the start-up loader, the same picture as the one in index.html
+  if (full) return <AppLoader />;
   return (
-    <div
-      className={full ? 'grid min-h-dvh place-items-center bg-canvas' : 'grid min-h-[40vh] place-items-center'}
-      role="status"
-    >
+    <div className="grid min-h-[40vh] place-items-center" role="status">
       <span className="sr-only">{t('common.loading')}</span>
       <div className="h-8 w-8 animate-spin rounded-full border-4 border-line border-t-care" aria-hidden />
     </div>

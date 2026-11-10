@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { App } from './App';
 import { BrandMark } from './components/ui2/BrandMark';
+import { captureBootPhase } from './components/ui2/AppLoader';
 import { applyStoredFontScale } from './components/profile/fontScale';
 import i18n, { i18nReady } from './lib/i18n';
 import { registerServiceWorkerOnLoad } from './lib/serviceWorker';
@@ -89,6 +90,8 @@ sweepSavedCopy();
 registerServiceWorkerOnLoad();
 
 function render() {
+  // Keep the inline loader animation phase so the React loader continues it
+  captureBootPhase();
   ReactDOM.createRoot(document.getElementById('root')!).render(
     <React.StrictMode>
       <AppErrorBoundary>

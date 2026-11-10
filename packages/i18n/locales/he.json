@@ -2,6 +2,7 @@
   "common": {
     "appName": "Social Organizer",
     "loading": "טוען...",
+    "stillLoading": "עדיין נטען…",
     "error": "אירעה שגיאה",
     "retry": "נסה שוב",
     "save": "שמור",

@@ -84,6 +84,33 @@
         } catch (e) {}
       })();
     </script>
+    <style>
+      /* Start-up loader. Pure CSS so it paints before the JS bundle arrives. The same markup is
+         rendered by components/ui2/AppLoader.tsx, which relies on these rules. Colours are the
+         app tokens (canvas, care, ink-muted) as rgb triplets; keep them in sync with styles/tokens.css. */
+      html { --b-bg: 243 246 244; --b-care: 8 127 113; --b-dot: 13 148 136; --b-on: 255 255 255; --b-muted: 92 109 104; background: rgb(var(--b-bg)); }
+      html.dark { --b-bg: 18 25 23; --b-care: 70 165 150; --b-dot: 108 188 175; --b-on: 4 36 31; --b-muted: 147 165 159; }
+      .so-boot { position: fixed; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 28px; background: rgb(var(--b-bg)); z-index: 2000; }
+      .so-boot-out { pointer-events: none; animation: so-boot-out 320ms ease forwards; }
+      .so-boot-stage { position: relative; width: 168px; height: 168px; }
+      .so-boot-ring { position: absolute; border-radius: 50%; border: 1px solid rgb(var(--b-dot) / 0.22); animation: so-boot-spin 18s linear infinite; animation-delay: var(--boot-delay, 0s); }
+      .so-boot-r1 { inset: 0; }
+      .so-boot-r2 { inset: 28px; animation-duration: 12s; animation-direction: reverse; }
+      .so-boot-ring b { position: absolute; inset: 0; transform: rotate(var(--a)); }
+      .so-boot-ring b::before { content: ''; position: absolute; left: 50%; top: 0; width: var(--d, 8px); height: var(--d, 8px); margin: calc(var(--d, 8px) / -2) 0 0 calc(var(--d, 8px) / -2); border-radius: 50%; background: rgb(var(--b-dot)); opacity: var(--o, 1); animation: so-boot-pulse 3s ease-in-out infinite; animation-delay: calc(var(--boot-delay, 0s) + var(--p, 0s)); }
+      .so-boot-mark { position: absolute; inset: 52px; display: grid; place-items: center; border-radius: 18px; background: rgb(var(--b-care)); color: rgb(var(--b-on)); animation: so-boot-breathe 3s ease-in-out infinite; animation-delay: var(--boot-delay, 0s); }
+      .so-boot-mark i { display: block; width: 44px; height: 31px; background: currentColor; -webkit-mask: url(/logo.png) center / contain no-repeat; mask: url(/logo.png) center / contain no-repeat; }
+      .so-boot-note { margin: 0; min-height: 20px; font: 600 14px/20px system-ui, sans-serif; color: rgb(var(--b-muted)); animation: so-boot-in 400ms ease both; }
+      @keyframes so-boot-spin { to { transform: rotate(360deg); } }
+      @keyframes so-boot-pulse { 0%, 100% { transform: scale(1); opacity: var(--o, 1); } 50% { transform: scale(1.35); opacity: 1; } }
+      @keyframes so-boot-breathe { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+      @keyframes so-boot-in { from { opacity: 0; } to { opacity: 1; } }
+      @keyframes so-boot-out { to { opacity: 0; } }
+      @media (prefers-reduced-motion: reduce) {
+        .so-boot-ring, .so-boot-ring b::before, .so-boot-mark { animation: none; }
+        .so-boot-out { animation-duration: 1ms; }
+      }
+    </style>
     <script src="https://accounts.google.com/gsi/client" async defer></script>
   </head>
   <body>
@@ -94,7 +121,15 @@
         self.GPUShaderStage = { VERTEX: 1, FRAGMENT: 2, COMPUTE: 4 };
       }
     </script>
-    <div id="root"></div>
+    <div id="root">
+      <div class="so-boot" role="status" aria-label="Social Organizer">
+        <div class="so-boot-stage" aria-hidden="true">
+          <span class="so-boot-ring so-boot-r1"><b style="--a: 0deg; --d: 9px"></b><b style="--a: 120deg; --d: 6px; --o: 0.6; --p: -1s"></b><b style="--a: 235deg; --d: 7px; --o: 0.8; --p: -2s"></b></span>
+          <span class="so-boot-ring so-boot-r2"><b style="--a: 60deg; --d: 6px; --o: 0.7; --p: -0.5s"></b><b style="--a: 200deg; --d: 8px; --p: -1.5s"></b></span>
+          <span class="so-boot-mark"><i></i></span>
+        </div>
+      </div>
+    </div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

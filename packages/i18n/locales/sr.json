@@ -2,6 +2,7 @@
   "common": {
     "appName": "Social Organizer",
     "loading": "Учитавање...",
+    "stillLoading": "Још се учитава…",
     "error": "Дошло је до грешке",
     "retry": "Покушајте поново",
     "save": "Сачувајте",
