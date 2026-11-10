@@ -16,13 +16,13 @@ export interface ChainFigureLabels {
 
 export const CHAIN_LABELS_RU: ChainFigureLabels = {
   asker: 'Мария',
-  askerSub: 'просит 300 $',
+  askerSub: 'нужно 300 $',
   mediator: 'Олег',
   mediatorSub: 'ваш брат',
   you: 'Вы',
   youSub: 'решаете сами',
   amount: '300 $',
-  aria: 'Путь просьбы',
+  aria: 'Путь сообщения',
 };
 
 export interface ChainFigureProps {

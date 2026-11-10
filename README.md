@@ -2,7 +2,9 @@
 
 The open-source utility of **EXODUS 2.0 — a digital societal innovation**: direct peer-to-peer coordination of already connected people, without a central authority.
 
-The Social Organizer records observable facts of participation among people who already know each other. **It records — it does not evaluate.** No communities are created, no governance is introduced, no scores are assigned. From recorded actions a reference graph emerges, and with it predictability based on behaviour rather than trust as a prerequisite. Mutual coverage of risk makes the benefit of participation calculable to each person from locally available information.
+The Social Organizer is a coordination tool, not a fundraising service, a platform, a fund or a payment intermediary. It has exactly two signals: a **Need** (a participant's message about what they need) and a **Participation** (another participant's message about their own voluntary participation). It records the two signals and notifies people about them. **It records — it does not evaluate.** Everyone decides for themselves; whatever participants then do, they agree and do directly with each other, outside the tool. It does not accept, transfer, hold or distribute funds and it guarantees no outcome.
+
+Wording rules for the interface, the landing and the assistant, the open questions for the author and the release checklist are in [docs/release/launch-readiness.md](docs/release/launch-readiness.md). In the code and the database a Need is still the `Collection` record and a Participation is the `Obligation` record; those names never reach the interface.
 
 It is a single web build, runtime-detected across surfaces: a regular website, a Telegram Mini App, and native iOS / Android apps (Capacitor wrappers loading the production web URL).
 
@@ -89,8 +91,8 @@ Windows local setup, the empty-database `db push` caveat, and the test accounts 
 | UserContact | User contacts (social networks, messengers) |
 | PlatformAccount | Platform bindings (FB/TG/Apple/Google) |
 | Connection | Connection between users (userAId < userBId) with optional nicknames (nicknameByA, nicknameByB) |
-| Collection | Fundraising (one-time help / every 28 days; `EMERGENCY`/`REGULAR` in the DB) with amount in $ (originalAmount/originalCurrency are legacy, no longer written) |
-| Obligation | Intention for a collection with amount in $ (originalAmount/originalCurrency are legacy, no longer written) |
+| Collection | A Need: a participant's message about what they need (one time / every 28 days; `EMERGENCY`/`REGULAR` in the DB) with amount in $ (originalAmount/originalCurrency are legacy, no longer written) |
+| Obligation | A Participation: a participant's message about their own voluntary participation in a Need, with amount in $ (originalAmount/originalCurrency are legacy, no longer written) |
 | Notification | Notification with handshake path |
 | IgnoreEntry | Ignore record |
 | LinkingCode | 6-digit linking code (5 min TTL) |
@@ -388,8 +390,8 @@ Before this split the entry was 1858 KB / 558 KB gzip and the landing also pulle
 | Term | Description |
 |------|-------------|
 | **Handshake** | Mutual confirmation of an existing meaningful connection between two people |
-| **Intention** | Voluntary decision to help. No pressure — everyone decides for themselves whether to participate |
-| **Signal for support** | Creating a collection when support is needed. The network is notified through handshake chains |
+| **Need** | One of the two signals: a participant's message about what they need (amount, one time or every 28 days, a chat link). The `Collection` record |
+| **Participation** | The other signal: a participant's message about their own voluntary participation, with an amount they name. A voluntary intention, not a payment. The `Obligation` record |
 | **Handshake chain** | Path of connections between two users through mutual acquaintances |
 | **Connection count** | Number of first-level connections (handshakes) a user has |
 | **Your network can help** | Sum of minimum participation of the people in the **visible rings 1–3** (what the person can check by eye). The headline counts the same visible people. The far rings (4th–5th) are only in the ring chips as a rounded count; the full reach is used by the request amount hint |
@@ -399,7 +401,9 @@ Before this split the entry was 1858 KB / 558 KB gzip and the landing also pulle
 
 The `redesign` branch replaces the old dashboard, network page, and planet landing with four tabs: Circle, Ask, Add, and Profile. Guests see the public site at `/` and the explainer at `/how`. Screen specs are in [docs/redesign/](docs/redesign/README.md).
 
-The landing (`LandingPage.tsx`, `components/site/`): on phones the live network scene opens the page above the title, so it is on the first screen with the store button. Under the buttons one line shows the real number of people in the network (`stats.public`); no collection figures are shown. "How it works" is one sticky figure whose step follows the scroll (`StepStory`). Blocks fade in as soon as any part of them is near the bottom of the screen. The language chip on the site, on sign-in, and in Profile opens one `LanguageSheet` (a bottom sheet on phones, a dialog on wide screens) instead of the native select. The Circle feed is split by meaning: Waiting for you (requests, acquaintance requests), Your Needs (own Needs and their status rows, a flag icon), You are in (Needs you take part in, a hand icon), People. On desktop the scene has zoom, Back to me, and an expand button that hides the feed column (Escape brings it back).
+The landing (`LandingPage.tsx`, `components/site/`) follows the author's copy: the hero, four steps, Principles, the path through acquaintances, what the tool does not do, and a short FAQ (the payments answer lives there, not in the hero). The hui table is only on `/how`, last, as a historical example.
+
+Layout notes: on phones the live network scene opens the page above the title, so it is on the first screen with the store button. Under the buttons one line shows the real number of people in the network (`stats.public`); no collection figures are shown. "How it works" is one sticky figure whose step follows the scroll (`StepStory`). Blocks fade in as soon as any part of them is near the bottom of the screen. The language chip on the site, on sign-in, and in Profile opens one `LanguageSheet` (a bottom sheet on phones, a dialog on wide screens) instead of the native select. The Circle feed is split by meaning: Waiting for you (requests, acquaintance requests), Your Needs (own Needs and their status rows, a flag icon), You are in (Needs you take part in, a hand icon), People. On desktop the scene has zoom, Back to me, and an expand button that hides the feed column (Escape brings it back).
 
 Demo mode, the video guides, and the retired-feature page are removed.
 

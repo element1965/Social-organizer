@@ -7,23 +7,32 @@ A: Go to Network page, generate an invite link or QR code, and share it with som
 Q: Why is there a limit of 150 connections?
 A: This is based on Dunbar's number — the cognitive limit of stable relationships a human brain can maintain. It ensures that every connection is meaningful, not just a number.
 
-Q: How do support signals (collections) work?
-A: When you need help, open a collection from the Ask tab with the amount and how often: one-time help or every 28 days. Your network is notified through handshake chains. People who want to help record their intentions. All actual transfers happen outside the app.
+Q: What are the two signals?
+A: Social Organizer has exactly two signals. A Need is a participant's message about what they need. A Participation is another participant's message about their own voluntary participation. Nothing else is recorded as a signal.
 
-Q: What's the difference between one-time help and every 28 days?
-A: One-time help stays open until the author closes it. A collection every 28 days runs in 28-day cycles: participants confirm their amount each cycle, with a reminder 3 days before.
+Q: How do I report a Need?
+A: Open the Need tab, enter the amount, choose one time or every 28 days, add a link to a chat in any messenger and tap "Report a Need". Your network is notified through handshake chains. People who decide to take part report Participation with an amount they name. Whatever they then do, they agree and do directly with you, outside Social Organizer.
+
+Q: What's the difference between one time and every 28 days?
+A: A one-time Need stays open until the author closes it. A Need every 28 days runs in 28-day cycles: participants confirm their amount each cycle, with a reminder 3 days before.
 
 Q: What is minimum participation?
-A: The amount you are ready to give to one collection of someone in your network, in whole dollars. It is filled in for you when you join a collection, and you can give more. It is not per month and it does not go down when you join. Change it in Profile → Minimum participation, or choose "I can't help right now". The app does not take money.
+A: The amount you are ready to name when someone in your network reports a Need, in whole dollars. It is filled in for you when you report Participation, and you can name more. It is not per month and it does not go down. Change it in Profile → Minimum participation, or choose "I can't help right now". Social Organizer does not accept or transfer money.
 
 Q: What does "Your network can help" mean?
-A: It's the sum of minimum participation of people in your network (up to 3 handshake levels). It shows the collective readiness to help — but it's not a guaranteed fund or actual account.
+A: It's the sum of minimum participation named by people in your network (up to 3 handshake levels). It is a reference figure, not a promise, not a fund and not an account: everyone decides for themselves each time.
 
-Q: How many people see my collection notification?
-A: The 1:1 ratio means: the amount you enter = the number of people notified. A $100 collection notifies up to 100 people. The system uses BFS to find recipients through your handshake chains.
+Q: How many people are notified about my Need?
+A: The amount you enter sets how many people are notified: a Need for $100 notifies up to 100 people, nearest first, in waves along your handshake chains.
 
-Q: Does the app handle money?
-A: No. The organizer only records intentions and confirmations. All actual transfers happen outside the app, through any method the participants choose (cash, bank transfer, crypto, etc.).
+Q: Does Social Organizer process payments?
+A: No. Social Organizer does not accept, transfer or hold funds. Anything participants do between themselves, they do directly, outside the service.
+
+Q: Do participants hand over money?
+A: They may. A Need names an amount and a Participation names how much a participant is ready to hand over. If participants hand over money, they do it themselves and directly, by their own arrangement in their chat. The author of a Need can mark what they received; that is their own mark, Social Organizer does not verify it.
+
+Q: Does the service guarantee assistance?
+A: No. The outcome depends on the independent decisions and actual actions of participants. Taking part is voluntary and declining carries no sanction.
 
 Q: How do I ignore someone?
 A: Go to Settings → Ignore List → Add user. This stops their notifications from reaching you but keeps the handshake intact. They won't be notified that you ignored them. You can reverse it anytime.
@@ -32,13 +41,13 @@ Q: Can I link multiple accounts (Telegram + Google)?
 A: Yes. Go to Settings, generate a 6-digit linking code, then log in with the other platform and enter the code. Both accounts will be linked to one profile.
 
 Q: How do I delete my account?
-A: Go to Settings → scroll to the bottom → Delete Account. This removes all your data permanently. Active collections will be cancelled.
+A: Go to Settings → scroll to the bottom → Delete Account. This removes all your data permanently. Open Needs will be closed.
 
-Q: What happens when a collection gets "blocked"?
-A: When the sum of intentions reaches or exceeds the requested amount, the collection status changes to BLOCKED. This means enough help has been pledged and no more intentions can be added.
+Q: What happens when the amount needed is reported?
+A: When the reported Participation reaches the amount of the Need, no new Participation can be added. It means participants have named that amount; it does not mean that anything has been handed over.
 
 Q: How does the handshake chain path work in notifications?
-A: Each notification shows the chain of connections through which it reached you. For example: "Alice → Bob → You" means Alice created the collection, Bob is your mutual connection who links you.
+A: Each notification shows the chain of connections through which it reached you. For example: "Alice → Bob → You" means Alice reported the Need, Bob is your mutual connection who links you.
 
 Q: Can I use the app without Telegram?
 A: Yes. The app works as a regular website. Telegram Mini App mode provides auto-login and some UX enhancements, but all features work in the browser too.
@@ -49,6 +58,6 @@ A: 25 languages: English, Russian, Spanish, French, German, Portuguese, Italian,
 Q: How does the 3D globe on the landing page work?
 A: It's a Three.js visualization using real NASA Blue Marble textures with bump maps, specular lighting for water, animated clouds, and a network of nodes on the surface representing connections.
 
-Q: What is reputation in this app?
-A: Reputation is not a score or rating. It simply emerges from your visible history: confirmed handshakes, fulfilled intentions, participation in collections. Others can see your track record on your profile.
+Q: Is there a rating or reputation score?
+A: No. Social Organizer records, it does not evaluate. There are no scores or ratings.
 `;

@@ -519,10 +519,10 @@ export async function sendCollectionNotificationTg(
   collectionId: string,
 ): Promise<boolean> {
   const emoji = type === 'EMERGENCY' ? '🚨' : '📢';
-  const typeLabel = type === 'EMERGENCY' ? 'Emergency' : 'Regular';
+  const typeLabel = type === 'EMERGENCY' ? 'one time' : 'every 28 days';
 
   const amountStr = amount != null ? `${amount} ${currency}` : 'open';
-  const text = `${emoji} <b>New ${typeLabel} Collection</b>\n\nFrom: <b>${creatorName}</b>\nAmount: ${amountStr}\n\nSomeone in your network needs support.`;
+  const text = `${emoji} <b>New Need · ${typeLabel}</b>\n\nFrom: <b>${creatorName}</b>\nAmount: ${amountStr}\n\nSomeone in your network has reported a Need.`;
 
   const webAppLink = `${WEB_APP_URL}/collection/${collectionId}`;
 

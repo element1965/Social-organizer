@@ -15,7 +15,8 @@ const RING_SIZES = [6, 36, 216] as const;
 const SHARE = 15;
 
 /**
- * "How it works" (`/how`, screens.md §17, mockups/v2/hui.html): four interactives, one markup for 1280 and 390.
+ * "How it works" (`/how`, screens.md §17): the two signals, then four interactives, one markup for 1280 and 390.
+ * The hui table comes last, as a historical example of mutual assistance and not as the model of the product.
  * Each figure plays its sequence when half of it is on screen and again on every return; sections fade in once.
  * Under prefers-reduced-motion figures show their final state.
  */
@@ -29,26 +30,26 @@ export function HowPage() {
   const loginHref = useLoginHref();
   const arr = (key: string) => t(key, { returnObjects: true }) as unknown as string[];
 
-  /* 1. hui table */
+  /* 4. hui table (historical example, shown last) */
   const [month, setMonth] = useState(0);
   const [huiPlay, setHuiPlay] = useState(0);
   const huiRef = usePlayOnEnter<number>(() => setHuiPlay((n) => n + 1), [1], 0);
   const months = labels.hui.months ?? [];
   const tableSays = arr('how.table.says');
 
-  /* 2. handshake rings */
+  /* 1. handshake rings */
   const [depth, setDepth] = useState<OrbitDepth>(0);
   const orbitRef = usePlayOnEnter<OrbitDepth>(setDepth, [0, 1, 2], 900);
   const rings = arr('how.orbit.rings');
   const orbitSays = arr('how.orbit.says');
   const reach = RING_SIZES.slice(0, depth + 1).reduce((a, n) => a + n, 0) * SHARE;
 
-  /* 3. vouching chain */
+  /* 2. path through acquaintances */
   const [chain, setChain] = useState<ChainStep>(0);
   const chainRef = usePlayOnEnter<ChainStep>(setChain, [0, 1, 2], 1000);
   const chainSays = arr('how.chain.says');
 
-  /* 4. a new person */
+  /* 3. a new person */
   const [join, setJoin] = useState<JoinStep>(0);
   const joinRef = usePlayOnEnter<JoinStep>(setJoin, [0, 1], 1400);
   const joinSays = arr('how.join.says');
@@ -64,26 +65,6 @@ export function HowPage() {
         <p className="lead">
           <Trans i18nKey="how.hero.lead" components={B} />
         </p>
-      </Reveal>
-
-      <Reveal as="section" className="site-sec" aria-labelledby="table-title">
-        <div className="copy">
-          <h2 id="table-title">{t('how.table.title')}</h2>
-          <p className="lead">{t('how.table.lead')}</p>
-          <div className="site-chips" role="group" aria-label={t('how.table.monthsAria')}>
-            {months.map((m, i) => (
-              <button key={m} type="button" aria-pressed={i === month} onClick={() => setMonth(i)}>
-                {m}
-              </button>
-            ))}
-          </div>
-          <p className="site-say" aria-live="polite">
-            <Trans defaults={tableSays[month] ?? ''} components={B} />
-          </p>
-        </div>
-        <div ref={huiRef}>
-          <HuiFigure month={month} onMonthChange={setMonth} playKey={huiPlay} size={phone ? 320 : 440} labels={labels.hui} />
-        </div>
       </Reveal>
 
       <Reveal as="section" className="site-sec" aria-labelledby="orbit-title">
@@ -135,6 +116,27 @@ export function HowPage() {
         </div>
         <div ref={joinRef} className="site-fig chain">
           <JoinFigure step={join} labels={labels.join} onSelect={setJoin} />
+        </div>
+      </Reveal>
+
+      <Reveal as="section" className="site-sec" aria-labelledby="table-title">
+        <div className="copy">
+          <h2 id="table-title">{t('how.table.title')}</h2>
+          <p className="lead">{t('how.table.lead')}</p>
+          <p className="site-note">{t('how.table.note')}</p>
+          <div className="site-chips" role="group" aria-label={t('how.table.monthsAria')}>
+            {months.map((m, i) => (
+              <button key={m} type="button" aria-pressed={i === month} onClick={() => setMonth(i)}>
+                {m}
+              </button>
+            ))}
+          </div>
+          <p className="site-say" aria-live="polite">
+            <Trans defaults={tableSays[month] ?? ''} components={B} />
+          </p>
+        </div>
+        <div ref={huiRef}>
+          <HuiFigure month={month} onMonthChange={setMonth} playKey={huiPlay} size={phone ? 320 : 440} labels={labels.hui} />
         </div>
       </Reveal>
 

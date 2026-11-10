@@ -62,7 +62,9 @@
 .site-hero { position: relative; isolation: isolate; display: grid; grid-template-columns: 1fr 560px; gap: 48px; align-items: center; padding: 40px 48px 72px; }
 /* A soft glow of the brand colour behind the scene; drawn with the token, so both themes follow. */
 .site-hero::before { content: ''; position: absolute; z-index: -1; inset: -64px 0 0 30%; background: radial-gradient(closest-side, color-mix(in oklab, var(--care) 16%, transparent), transparent); pointer-events: none; }
-.site-hero h1 { font-size: 60px; line-height: .98; letter-spacing: -.05em; font-weight: 800; text-wrap: balance; }
+.site-hero h1 { font-size: clamp(44px, 4.6vw, 60px); line-height: .98; letter-spacing: -.05em; font-weight: 800; text-wrap: balance; overflow-wrap: break-word; }
+.site-hero > div { min-width: 0; }
+@container (max-width: 1180px) { .site-hero { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); } }
 .site-hero .lead { margin-top: 20px; font-size: 19px; line-height: 1.45; color: var(--muted); max-width: 44ch; }
 .site-hero .lead b { color: var(--care); }
 .site-hero-scene { animation: site-rise .7s var(--ease-out) both; }
@@ -117,7 +119,19 @@
 .site-not { background: var(--paper); border-radius: var(--r-xl); padding: 22px; box-shadow: var(--shadow-card); }
 .site-not i { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 13px; background: var(--canvas); color: var(--ink); }
 .site-not i svg { width: 22px; height: 22px; }
-.site-not h3 { margin-top: 14px; }
+.site-not h3 { margin-top: 14px; font-size: 17px; line-height: 1.25; font-weight: 800; }
+.site-not p { margin-top: 6px; color: var(--muted); line-height: 1.5; }
+.site-nots.four { grid-template-columns: repeat(4, 1fr); }
+.site-not .n { display: inline-grid; place-items: center; width: 32px; height: 32px; border-radius: 10px; background: var(--care); color: var(--on-care); font-weight: 800; font-size: 14px; }
+.site-faq { margin-top: 28px; max-width: 760px; }
+.site-faq details { border-bottom: 1px solid var(--line); }
+.site-faq summary { display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 56px; padding: 10px 0; cursor: pointer; list-style: none; font-size: 18px; font-weight: 700; color: var(--ink); }
+.site-faq summary::-webkit-details-marker { display: none; }
+.site-faq summary::after { content: '+'; flex: none; font-size: 22px; font-weight: 500; color: var(--muted); }
+.site-faq details[open] summary::after { content: '−'; }
+.site-faq summary:focus-visible { outline: 2px solid var(--care); outline-offset: 2px; border-radius: 6px; }
+.site-faq p { margin: 0 0 18px; color: var(--muted); font-size: 16px; line-height: 1.55; max-width: 62ch; }
+.site-note { margin-top: 14px; color: var(--muted); font-size: 15px; line-height: 1.5; max-width: 46ch; }
 .site-stores { display: flex; gap: 12px; margin-top: 28px; flex-wrap: wrap; }
 .site-store { height: 56px; padding: 0 20px; border-radius: var(--r-lg); background: var(--ink); color: var(--canvas); display: inline-flex; align-items: center; justify-content: center; gap: 10px; font-weight: 700; font-size: 16px; }
 .site-store svg { width: 22px; height: 22px; }
@@ -194,7 +208,7 @@
   .site-hero::before { inset: auto 0 0 0; height: 70%; }
   .site-hero .lead { max-width: 60ch; }
   .site-two, .site-how .site-sec { grid-template-columns: 1fr; }
-  .site-nots { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+  .site-nots, .site-nots.four { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
 }
 
 /* the site at phone width: same markup, one column */
@@ -224,7 +238,7 @@
   .site-story li:last-child .beat { min-height: 0; }
   .site-story h3 { font-size: 23px; }
   .site-story p { font-size: 16px; }
-  .site-nots { grid-template-columns: 1fr; gap: 14px; }
+  .site-nots, .site-nots.four { grid-template-columns: 1fr; gap: 14px; }
   .site-two, .site-how .site-sec { grid-template-columns: 1fr; gap: 24px; }
   .site-how .site-say { font-size: 16px; }
   .site-fig.orbit { width: 320px; }
