@@ -608,14 +608,18 @@ function PhoneCircle({
 
   return (
     <div
-      ref={rootRef}
       className={cn('relative overflow-hidden', SCENE_BG)}
+      // Runs up under the status bar for looks only; everything is laid out in the area below it.
       style={{ marginTop: 'calc(-1 * var(--sa-top))', height: 'calc(100dvh - 84px - var(--sa-bottom))' }}
     >
-      {/* Scene: shrinks to the space above the feed, grows to full height in the graph layer. */}
+      {/* The usable area under the status bar: sheet sizes are measured from it, as before. */}
+      <div ref={rootRef} aria-hidden className="pointer-events-none invisible absolute inset-x-0 bottom-0 top-[var(--sa-top)]" />
+      {/* Scene: shrinks to the space above the feed, grows to full height in the graph layer.
+          It grows by the status bar height at both ends (the bottom part is clipped), so the
+          graph centre stays exactly where it is without the status bar strip. */}
       <div
         className={cn('absolute inset-x-0 top-0', ease)}
-        style={{ bottom: feedLayer ? sheetH - 24 : 0 }}
+        style={{ bottom: `calc(${feedLayer ? sheetH - 24 : 0}px - var(--sa-top))` }}
         onPointerDown={(event) => {
           down.current = { x: event.clientX, y: event.clientY };
         }}
@@ -695,8 +699,6 @@ function PhoneCircle({
         )}
         style={{
           height: liveH,
-          // The expanded feed stops below the status bar, not under the clock
-          maxHeight: 'calc(100% - var(--sa-top))',
           transform: feedLayer
             ? slide
               ? `translateY(${slide}px)`
