@@ -2,7 +2,6 @@ import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { MIN_COLLECTION_AMOUNT, MIN_OBLIGATION_AMOUNT, REGULAR_CYCLE_DAYS } from '@so/shared';
-import { AskProgressSync } from '../components/collection/AskProgressSync';
 import { IconChat, IconClock, IconPen, IconQr, IconShare } from '../components/collection/icons';
 import { PreviousCycles } from '../components/collection/PreviousCycles';
 import { ParticipantList, type ParticipantRow } from '../components/collection/ParticipantList';
@@ -396,7 +395,6 @@ export function CollectionPage() {
       title={desktop ? (owner ? t('collection.yours') : t('collection.title')) : undefined}
       action={headerAction}
     >
-      <AskProgressSync />
       <Card className="mt-2">
         {showPath ? <div className="mb-4"><PathFigure names={pathNames} /></div> : null}
         <div className="flex items-center gap-3">
