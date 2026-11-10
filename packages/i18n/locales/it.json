@@ -427,7 +427,7 @@
     "networkMany": "{{count}} persone",
     "minimum": "Partecipazione minima",
     "stakeEmpty": "Non impostata",
-    "collections": "Bisogni",
+    "collections": "Bisogni e partecipazione",
     "openOne": "{{count}} aperta",
     "openMany": "{{count}} aperte",
     "notifications": "Notifiche",
@@ -482,7 +482,8 @@
     "notifyChannel": "Canale",
     "notifyTelegramNotLinked": "Collega Telegram in «Account» per ricevere i messaggi lì.",
     "stakeSaved": "Salvato",
-    "factsLine": "Per i Bisogni chiusi: partecipazioni comunicate {{reported}}, segnate come ricevute dagli autori {{marked}}. Le persone della tua rete vedono questi due numeri."
+    "factsLine": "Per i Bisogni chiusi: partecipazioni comunicate {{reported}}, segnate come ricevute dagli autori {{marked}}. Le persone della tua rete vedono questi due numeri.",
+    "needCounts": "Aperte: {{open}} · Passate: {{past}}"
   },
   "settings": {
     "title": "Impostazioni",

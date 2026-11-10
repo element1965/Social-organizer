@@ -16,6 +16,7 @@ import { formatMoney } from '../components/ui2/format';
 import { Card } from '../components/ui2/Card';
 import { trpc } from '../lib/trpc';
 import { PathToRequestSheet } from '../components/circle/PathToRequest';
+import { useNeedCounts } from '../components/profile/useNeedCounts';
 
 const APPS = ['appTelegram', 'appWhatsApp', 'appSignal', 'appViber', 'appDiscord', 'appOther'] as const;
 
@@ -33,8 +34,31 @@ export function AskPage() {
     >
       <AskProgressSync />
       {desktop ? null : <h1 className="pt-6 text-h1 font-extrabold text-ink">{t('ask.title')}</h1>}
+      <NeedsLink />
       <AskBody />
     </Screen>
+  );
+}
+
+/** Where the person finds their open and past Needs and the ones they take part in (the list at /me/history). */
+function NeedsLink() {
+  const { t } = useTranslation();
+  const counts = useNeedCounts();
+  return (
+    <Link
+      to="/me/history"
+      className="so-focus mt-4 flex min-h-row items-center gap-3 rounded-xl bg-surface px-4 py-3 shadow-card"
+    >
+      <span className="min-w-0 flex-1">
+        <span className="block text-body font-bold text-ink">{t('profile.collections')}</span>
+        {counts ? (
+          <span className="mt-0.5 block text-label font-semibold text-ink-muted">
+            {t('profile.needCounts', { open: counts.open, past: counts.past })}
+          </span>
+        ) : null}
+      </span>
+      <IconChevron className="h-[18px] w-[18px] shrink-0 text-ink-subtle" />
+    </Link>
   );
 }
 

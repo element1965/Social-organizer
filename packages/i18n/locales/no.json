@@ -424,7 +424,7 @@
     "networkMany": "{{count}} personer",
     "minimum": "Minste deltakelse",
     "stakeEmpty": "Ikke satt",
-    "collections": "Behov",
+    "collections": "Behov og deltakelse",
     "openOne": "{{count}} åpen",
     "openMany": "{{count}} åpne",
     "notifications": "Varsler",
@@ -479,7 +479,8 @@
     "notifyChannel": "Kanal",
     "notifyTelegramNotLinked": "Koble til Telegram under «Konto» for å få meldingene der.",
     "stakeSaved": "Lagret",
-    "factsLine": "For lukkede Behov: meldt deltakelse {{reported}}, merket som mottatt av forfattere {{marked}}. Folk i nettverket ditt ser disse to tallene."
+    "factsLine": "For lukkede Behov: meldt deltakelse {{reported}}, merket som mottatt av forfattere {{marked}}. Folk i nettverket ditt ser disse to tallene.",
+    "needCounts": "Åpne: {{open}} · Tidligere: {{past}}"
   },
   "settings": {
     "title": "Innstillinger",

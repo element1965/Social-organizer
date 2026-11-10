@@ -424,7 +424,7 @@
     "networkMany": "{{count}} personen",
     "minimum": "Minimale deelname",
     "stakeEmpty": "Niet ingesteld",
-    "collections": "Behoeften",
+    "collections": "Behoeften en deelname",
     "openOne": "{{count}} open",
     "openMany": "{{count}} open",
     "notifications": "Meldingen",
@@ -479,7 +479,8 @@
     "notifyChannel": "Kanaal",
     "notifyTelegramNotLinked": "Koppel Telegram bij “Account” om berichten daar te krijgen.",
     "stakeSaved": "Opgeslagen",
-    "factsLine": "Voor gesloten Behoeften: gemelde deelname {{reported}}, door auteurs als ontvangen gemarkeerd {{marked}}. Mensen in je netwerk zien deze twee getallen."
+    "factsLine": "Voor gesloten Behoeften: gemelde deelname {{reported}}, door auteurs als ontvangen gemarkeerd {{marked}}. Mensen in je netwerk zien deze twee getallen.",
+    "needCounts": "Open: {{open}} · Eerder: {{past}}"
   },
   "settings": {
     "title": "Instellingen",

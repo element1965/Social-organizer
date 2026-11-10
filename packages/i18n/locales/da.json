@@ -424,7 +424,7 @@
     "networkMany": "{{count}} personer",
     "minimum": "Mindste deltagelse",
     "stakeEmpty": "Ikke angivet",
-    "collections": "Behov",
+    "collections": "Behov og deltagelse",
     "openOne": "{{count}} åben",
     "openMany": "{{count}} åbne",
     "notifications": "Notifikationer",
@@ -479,7 +479,8 @@
     "notifyChannel": "Kanal",
     "notifyTelegramNotLinked": "Forbind Telegram under »Konto« for at få beskeder dér.",
     "stakeSaved": "Gemt",
-    "factsLine": "For lukkede behov: meldte deltagelser {{reported}}, markeret som modtaget af forfattere {{marked}}. Folk i dit netværk ser disse to tal."
+    "factsLine": "For lukkede behov: meldte deltagelser {{reported}}, markeret som modtaget af forfattere {{marked}}. Folk i dit netværk ser disse to tal.",
+    "needCounts": "Åbne: {{open}} · Tidligere: {{past}}"
   },
   "settings": {
     "title": "Indstillinger",

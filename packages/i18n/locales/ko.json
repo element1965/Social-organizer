@@ -421,7 +421,7 @@
     "networkMany": "{{count}}명",
     "minimum": "최소 참여",
     "stakeEmpty": "아직 없어요",
-    "collections": "필요",
+    "collections": "필요와 참여",
     "openOne": "열린 필요 {{count}}개",
     "openMany": "열린 필요 {{count}}개",
     "notifications": "알림",
@@ -476,7 +476,8 @@
     "notifyChannel": "채널",
     "notifyTelegramNotLinked": "메시지를 받으려면 “계정”에서 Telegram을 연결해 주세요.",
     "stakeSaved": "저장했어요",
-    "factsLine": "닫힌 필요 기준: 알린 참여 {{reported}}건, 작성자가 받음으로 표시 {{marked}}건. 이 두 숫자는 내 네트워크의 사람들에게 보여요."
+    "factsLine": "닫힌 필요 기준: 알린 참여 {{reported}}건, 작성자가 받음으로 표시 {{marked}}건. 이 두 숫자는 내 네트워크의 사람들에게 보여요.",
+    "needCounts": "열린 필요: {{open}} · 지난 필요: {{past}}"
   },
   "settings": {
     "title": "설정",

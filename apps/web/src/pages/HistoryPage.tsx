@@ -80,7 +80,7 @@ export function HistoryPage() {
   const history = trpc.collection.myHistory.useQuery(undefined, { retry: false });
   const help = trpc.stats.help.useQuery();
   const facts = trpc.stats.participationFacts.useQuery();
-  const [tab, setTab] = useState<'open' | 'past'>('open');
+  const [picked, setTab] = useState<'open' | 'past' | null>(null);
 
   // An API that has not loaded this procedure yet must not blank Open and Past.
   const historyMissing = history.isError && trpcCode(history.error) === 'NOT_FOUND';
@@ -111,6 +111,9 @@ export function HistoryPage() {
       .map((row) => ({ kind: 'join' as const, at: timeOf(row.createdAt), row })),
   ].sort((a, b) => b.at - a.at);
 
+  // Nothing open but something past: show Past straight away instead of an empty Open tab.
+  const tab = picked ?? (!loading && openRows.length === 0 && pastRows.length > 0 ? 'past' : 'open');
+
   const lifetime = help.data && (help.data.given.count > 0 || help.data.received.count > 0)
     ? t('profile.lifetime', {
         givenCount: help.data.given.count,
@@ -121,7 +124,7 @@ export function HistoryPage() {
     : null;
 
   return (
-    <Screen title={t('profile.collections')} back={back} width="column">
+    <Screen title={t('collection.pastCrumb')} back={back} width="column">
       <div className="mt-2">
         <Segmented
           label={t('profile.collections')}

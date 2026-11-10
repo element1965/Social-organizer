@@ -430,7 +430,7 @@
     "networkMany": "{{count}} lidí",
     "minimum": "Minimální účast",
     "stakeEmpty": "Nenastaveno",
-    "collections": "Potřeby",
+    "collections": "Potřeby a účast",
     "openOne": "{{count}} otevřená",
     "openMany": "{{count}} otevřených",
     "notifications": "Oznámení",
@@ -485,7 +485,8 @@
     "notifyChannel": "Kanál",
     "notifyTelegramNotLinked": "Propojte Telegram v části „Účet“, aby vám tam chodily zprávy.",
     "stakeSaved": "Uloženo",
-    "factsLine": "U uzavřených potřeb: hlášení o účasti {{reported}}, autory označeno jako přijaté {{marked}}. Tato dvě čísla vidí lidé ve vaší síti."
+    "factsLine": "U uzavřených potřeb: hlášení o účasti {{reported}}, autory označeno jako přijaté {{marked}}. Tato dvě čísla vidí lidé ve vaší síti.",
+    "needCounts": "Otevřené: {{open}} · Minulé: {{past}}"
   },
   "settings": {
     "title": "Nastavení",
