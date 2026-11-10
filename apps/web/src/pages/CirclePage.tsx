@@ -470,6 +470,32 @@ function PhoneCircle({
     }
   };
 
+  // The collapsed "Events" pill can be pulled up like a sheet handle: the feed rises with the finger and opens past
+  // a short pull; a tap still opens it through onClick.
+  const [pull, setPull] = useState<number | null>(null);
+  const pullStart = useRef<number | null>(null);
+  const pulledAt = useRef(0);
+  const onPillDown = (event: ReactPointerEvent<HTMLButtonElement>) => {
+    if (event.button !== 0) return;
+    pullStart.current = event.clientY;
+    event.currentTarget.setPointerCapture(event.pointerId);
+  };
+  const onPillMove = (event: ReactPointerEvent<HTMLButtonElement>) => {
+    if (pullStart.current == null) return;
+    const dy = Math.min(0, event.clientY - pullStart.current);
+    if (pull != null || dy < -6) setPull(Math.max(-(sheetH + 16), dy));
+  };
+  const onPillUp = (event: ReactPointerEvent<HTMLButtonElement>) => {
+    if (pullStart.current == null) return;
+    const dy = event.clientY - pullStart.current;
+    pullStart.current = null;
+    setPull(null);
+    if (dy < -6) {
+      pulledAt.current = Date.now(); // the click that follows a pull is not a second tap
+      if (dy < -40) onBackToFeed();
+    }
+  };
+
   // Sheet height and offset while dragging: up grows it (to full), down shrinks it when expanded,
   // or slides the normal sheet away toward the graph
   const d = drag ?? 0;
@@ -564,11 +590,15 @@ function PhoneCircle({
         aria-label={t('circle.feed.title')}
         className={cn(
           'absolute inset-x-0 bottom-0 z-20 flex flex-col rounded-t-[30px] bg-canvas shadow-sheet',
-          drag == null && ease,
+          drag == null && pull == null && ease,
         )}
         style={{
           height: liveH,
-          transform: feedLayer ? (slide ? `translateY(${slide}px)` : undefined) : `translateY(${sheetH + 16}px)`,
+          transform: feedLayer
+            ? slide
+              ? `translateY(${slide}px)`
+              : undefined
+            : `translateY(${sheetH + 16 + (pull ?? 0)}px)`,
         }}
         inert={!feedLayer}
       >
@@ -597,12 +627,23 @@ function PhoneCircle({
       {/* Collapsed feed (graph layer). */}
       <button
         type="button"
-        onClick={onBackToFeed}
+        onClick={() => {
+          if (Date.now() - pulledAt.current < 400) return;
+          onBackToFeed();
+        }}
+        onPointerDown={onPillDown}
+        onPointerMove={onPillMove}
+        onPointerUp={onPillUp}
+        onPointerCancel={() => {
+          pullStart.current = null;
+          setPull(null);
+        }}
         className={cn(
-          'so-focus absolute bottom-4 left-1/2 z-20 inline-flex h-11 -translate-x-1/2 items-center gap-2 whitespace-nowrap rounded-lg bg-surface pl-3.5 pr-4 text-caption font-bold text-ink shadow-sheet',
-          ease,
+          'so-focus absolute bottom-4 left-1/2 z-20 inline-flex h-11 -translate-x-1/2 touch-none items-center gap-2 whitespace-nowrap rounded-lg bg-surface pl-3.5 pr-4 text-caption font-bold text-ink shadow-sheet',
+          pull == null && ease,
           layer === 'graph' ? 'opacity-100' : 'pointer-events-none translate-y-20 opacity-0',
         )}
+        style={pull != null ? { transform: `translate(-50%, ${pull}px)`, opacity: Math.max(0, 1 + pull / 120) } : undefined}
         inert={layer !== 'graph'}
       >
         <i className="grid h-[22px] min-w-[22px] place-items-center rounded-[7px] bg-care px-1 text-micro font-bold not-italic text-care-on">
