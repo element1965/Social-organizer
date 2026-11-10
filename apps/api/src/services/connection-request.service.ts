@@ -87,6 +87,30 @@ export async function createConnectionWithinLimit(
   return 'created';
 }
 
+/**
+ * In-person connect (live QR, shake): the meeting is the first handshake, so the connection is created
+ * right away within the 150 limit and any pending request between the two people is resolved as accepted.
+ * Must run inside a transaction. Returns 'exists' when they were already connected.
+ */
+export async function connectInPersonTx(
+  tx: Prisma.TransactionClient,
+  actorId: string,
+  otherId: string,
+): Promise<'created' | 'exists'> {
+  const outcome = await createConnectionWithinLimit(tx, actorId, otherId);
+  await tx.pendingConnection.updateMany({
+    where: {
+      OR: [
+        { fromUserId: actorId, toUserId: otherId },
+        { fromUserId: otherId, toUserId: actorId },
+      ],
+      status: 'PENDING',
+    },
+    data: { status: 'ACCEPTED', resolvedAt: new Date() },
+  });
+  return outcome;
+}
+
 /** Throws if adding a new connection between the two users would exceed the limit for either of them. */
 export async function assertConnectionSlots(db: PrismaClient, actorId: string, otherId: string): Promise<void> {
   const [userAId, userBId] = sortPair(actorId, otherId);

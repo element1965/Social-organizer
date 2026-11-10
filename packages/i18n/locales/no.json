@@ -1432,5 +1432,27 @@
     "received": "I dine behov",
     "count": "deltakelser: {{n}}",
     "marked": "For lukkede behov markerte forfatterne {{marked}} av {{reported}} som mottatt. Folk i nettverket ditt ser disse to tallene."
+  },
+  "shake": {
+    "title": "Rystetreff",
+    "searching": "Leter etter noen i nærheten…",
+    "searchingHint": "Be den andre om å riste telefonen akkurat nå.",
+    "matchBody": "Er dette personen du ristet telefon med?",
+    "confirm": "Bekreft",
+    "notThem": "Ikke denne",
+    "alreadyConnected": "Dere er allerede koblet sammen",
+    "close": "Lukk",
+    "waiting": "Venter på {{name}}…",
+    "connected": "Dere er koblet sammen",
+    "connectedBody": "Du og {{name}} er nå koblet sammen.",
+    "openProfile": "Åpne profil",
+    "declined": "Forbindelsen ble avslått.",
+    "expired": "Tiden gikk ut. Rist igjen.",
+    "failed": "Kunne ikke koble sammen. Prøv igjen.",
+    "none": "Fant ingen. Rist samtidig, eller bruk QR-koden.",
+    "crowded": "Flere personer rister i nærheten. Bruk QR-koden i stedet.",
+    "openQr": "Bruk QR-kode",
+    "tooMany": "For mange forsøk. Vent ett minutt og rist igjen.",
+    "enable": "Slå på risting"
   }
 }

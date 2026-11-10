@@ -1443,5 +1443,27 @@
     "received": "La nevoile dvs.",
     "count": "participări: {{n}}",
     "marked": "La nevoile închise, autorii au marcat ca primite {{marked}} din {{reported}}. Oamenii din rețeaua dvs. văd aceste două numere."
+  },
+  "shake": {
+    "title": "Potrivire prin scuturare",
+    "searching": "Căutăm pe cineva în apropiere…",
+    "searchingHint": "Roagă cealaltă persoană să scuture telefonul chiar acum.",
+    "matchBody": "Aceasta este persoana cu care ai scuturat telefonul?",
+    "confirm": "Confirmă",
+    "notThem": "Nu e ea",
+    "alreadyConnected": "Sunteți deja conectați",
+    "close": "Închide",
+    "waiting": "Se așteaptă {{name}}…",
+    "connected": "Sunteți conectați",
+    "connectedBody": "Tu și {{name}} sunteți acum conectați.",
+    "openProfile": "Deschide profilul",
+    "declined": "Conexiunea a fost refuzată.",
+    "expired": "Timpul a expirat. Scutură din nou.",
+    "failed": "Nu s-a putut conecta. Încearcă din nou.",
+    "none": "Nu am găsit pe nimeni. Scuturați în același moment sau folosiți codul QR.",
+    "crowded": "Mai multe persoane scutură în apropiere. Folosește codul QR.",
+    "openQr": "Folosește codul QR",
+    "tooMany": "Prea multe încercări. Așteaptă un minut și scutură din nou.",
+    "enable": "Activează scuturarea"
   }
 }

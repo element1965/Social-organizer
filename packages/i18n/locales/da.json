@@ -1432,5 +1432,27 @@
     "received": "I dine behov",
     "count": "deltagelser: {{n}}",
     "marked": "For lukkede behov markerede forfatterne {{marked}} af {{reported}} som modtaget. Folk i dit netværk ser disse to tal."
+  },
+  "shake": {
+    "title": "Ryst-match",
+    "searching": "Leder efter nogen i nærheden…",
+    "searchingHint": "Bed den anden om at ryste sin telefon lige nu.",
+    "matchBody": "Er det personen, du rystede telefon med?",
+    "confirm": "Bekræft",
+    "notThem": "Ikke dem",
+    "alreadyConnected": "I er allerede forbundet",
+    "close": "Luk",
+    "waiting": "Venter på {{name}}…",
+    "connected": "I er forbundet",
+    "connectedBody": "Du og {{name}} er nu forbundet.",
+    "openProfile": "Åbn profil",
+    "declined": "Forbindelsen blev afvist.",
+    "expired": "Tiden er gået. Ryst igen.",
+    "failed": "Kunne ikke oprette forbindelse. Prøv igen.",
+    "none": "Ingen fundet. Ryst samtidig, eller brug QR-koden.",
+    "crowded": "Flere personer ryster i nærheden. Brug QR-koden i stedet.",
+    "openQr": "Brug QR-kode",
+    "tooMany": "For mange forsøg. Vent et minut og ryst igen.",
+    "enable": "Aktivér ryst"
   }
 }

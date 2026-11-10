@@ -1443,5 +1443,27 @@
     "received": "En sus necesidades",
     "count": "participaciones: {{n}}",
     "marked": "En necesidades cerradas, los autores marcaron como recibidas {{marked}} de {{reported}}. Las personas de su red ven estos dos números."
+  },
+  "shake": {
+    "title": "Coincidencia por sacudida",
+    "searching": "Buscando a alguien cerca…",
+    "searchingHint": "Pide a la otra persona que sacuda su teléfono ahora mismo.",
+    "matchBody": "¿Es la persona con la que sacudiste el teléfono?",
+    "confirm": "Confirmar",
+    "notThem": "No es esa persona",
+    "alreadyConnected": "Ya estáis conectados",
+    "close": "Cerrar",
+    "waiting": "Esperando a {{name}}…",
+    "connected": "Estáis conectados",
+    "connectedBody": "Tú y {{name}} ya estáis conectados.",
+    "openProfile": "Abrir perfil",
+    "declined": "La conexión fue rechazada.",
+    "expired": "Se acabó el tiempo. Sacude otra vez.",
+    "failed": "No se pudo conectar. Inténtalo de nuevo.",
+    "none": "No se encontró a nadie. Sacudid a la vez o usad el código QR.",
+    "crowded": "Varias personas están sacudiendo cerca. Usa el código QR.",
+    "openQr": "Usar código QR",
+    "tooMany": "Demasiados intentos. Espera un minuto y sacude de nuevo.",
+    "enable": "Activar sacudida"
   }
 }
