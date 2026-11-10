@@ -2,7 +2,6 @@ import { useRef, useState, type FormEvent } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { LARGE_AMOUNT_WARNING, MIN_COLLECTION_AMOUNT } from '@so/shared';
-import { AskProgressSync } from '../components/collection/AskProgressSync';
 import { IconChevron } from '../components/ui2/icons';
 import { amountIssue, formatCount, isHttpsUrl, parseWhole } from '../components/collection/text';
 import { Button } from '../components/ui2/Button';
@@ -38,7 +37,6 @@ export function AskPage() {
       back={desktop ? { label: t('nav.circle'), to: '/' } : undefined}
       action={desktop ? <NeedsLink /> : undefined}
     >
-      <AskProgressSync />
       {desktop ? null : (
         <div className="flex items-center justify-between gap-3 pt-6">
           <h1 className="min-w-0 truncate text-h1 font-extrabold text-ink">{t('ask.title')}</h1>

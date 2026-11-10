@@ -3,16 +3,51 @@ import { useEffect, useState } from 'react';
 /**
  * Fractions toward the request gate: first ring / 5, and reachable network / 10.
  * Both must reach 1 before the request tab leaves its quiet state.
- * WP4 calls setAskProgress from network stats. Until then the tab stays open.
+ * AskProgressSync (mounted in the signed-in shell) feeds it from collection.askAccess.
  */
 export const ASK_CIRCLE_GOAL = 5;
 export const ASK_NETWORK_GOAL = 10;
 
 export type AskProgress = { circle: number; network: number };
 
-const OPEN: AskProgress = { circle: 1, network: 1 };
+/**
+ * Before the server answers, the tab shows the last value this user saw (kept per user), or the quiet state.
+ * Starting "open" made the hand red on every app start until the Need screen was visited.
+ */
+const QUIET: AskProgress = { circle: 0, network: 0 };
+const STORE_KEY = 'so.askProgress';
 
-let current: AskProgress = OPEN;
+function storedUserId(): string | null {
+  try {
+    return localStorage.getItem('userId');
+  } catch {
+    return null;
+  }
+}
+
+function readCached(): AskProgress | null {
+  try {
+    const raw = localStorage.getItem(STORE_KEY);
+    if (!raw) return null;
+    const saved = JSON.parse(raw) as { userId?: string; circle?: number; network?: number };
+    if (!saved.userId || saved.userId !== storedUserId()) return null;
+    return { circle: clamp(Number(saved.circle)), network: clamp(Number(saved.network)) };
+  } catch {
+    return null;
+  }
+}
+
+function writeCached(value: AskProgress) {
+  const userId = storedUserId();
+  if (!userId) return;
+  try {
+    localStorage.setItem(STORE_KEY, JSON.stringify({ userId, ...value }));
+  } catch {
+    // storage may be unavailable (private mode); the server value still applies for this session
+  }
+}
+
+let current: AskProgress = readCached() ?? QUIET;
 const listeners = new Set<(value: AskProgress) => void>();
 
 export function setAskProgress(next: AskProgress) {
@@ -20,6 +55,7 @@ export function setAskProgress(next: AskProgress) {
     circle: clamp(next.circle),
     network: clamp(next.network),
   };
+  writeCached(current);
   listeners.forEach((listener) => listener(current));
 }
 

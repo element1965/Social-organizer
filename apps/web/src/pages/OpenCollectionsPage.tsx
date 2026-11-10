@@ -1,7 +1,6 @@
 import { useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { AskProgressSync } from '../components/collection/AskProgressSync';
 import { Avatar } from '../components/ui2/Avatar';
 import { Button } from '../components/ui2/Button';
 import { Card } from '../components/ui2/Card';
@@ -90,7 +89,6 @@ export function OpenCollectionsPage() {
 
   return (
     <Screen width="column" title={t('collection.openTitle')} back={{ label: t('nav.profile'), to: '/me' }}>
-      <AskProgressSync />
       {loading ? <p className="pt-6 text-body-s font-semibold text-ink-muted">{t('common.loading')}</p> : null}
       {!loading && failed ? (
         <Card className="mt-4">
