@@ -263,13 +263,18 @@
       "mineCollected": "{{collected}} dinyatakan",
       "participating": "Anda ikut · {{amount}} Anda",
       "milestoneFirst": "Jabat tangan ke-1",
-      "milestoneTen": "10 orang di lingkaran Anda",
       "milestoneWith": "Dengan {{name}}",
       "milestoneGrow": "Lingkaran Anda bertambah",
       "quietTitle": "Semua tenang",
       "quietBody": "Kebutuhan, orang baru, dan siklus akan muncul di sini.",
       "dismiss": "Sembunyikan: {{name}}",
-      "newCount_other": "{{count}} baru"
+      "newCount_other": "{{count}} baru",
+      "milestoneUnlocked": "Anda bisa menyampaikan kebutuhan",
+      "milestoneUnlockedSub": "Lingkaran dan jaringan Anda sudah cukup besar",
+      "milestoneFirstNeed": "Kebutuhan pertama",
+      "milestoneFirstNeedSub": "Pesan berjalan lewat jabat tangan",
+      "milestoneFirstPart": "Partisipasi pertama",
+      "milestoneFirstPartSub": "Penyampai kebutuhan melihat partisipasi Anda"
     },
     "start": {
       "lead": "Anda yang pertama di lingkaran Anda.",
@@ -292,9 +297,10 @@
     "milestone": {
       "firstTitle": "Jabat tangan ke-1",
       "firstBody": "Kini pesan tentang kebutuhan Anda bisa sampai ke orang pertama, dan melalui mereka berjalan lebih jauh.",
-      "tenTitle": "10 orang di lingkaran Anda",
-      "tenBody": "Kini jauh lebih banyak orang menerima pesan tentang kebutuhan. Terus tambahkan orang yang Anda kenal secara pribadi.",
-      "ok": "Bagus"
+      "ok": "Bagus",
+      "unlockedBody": "Di lingkaran dan jaringan Anda kini sudah ada cukup orang. Saat dibutuhkan, buka tab “{{tab}}”: pesan akan berjalan lewat jabat tangan.",
+      "firstNeedBody": "Pesan tentang kebutuhan Anda berjalan lewat jabat tangan, dari yang terdekat ke yang lebih jauh. Siapa pun yang memutuskan ikut serta akan muncul di halaman kebutuhan dan di chat peserta.",
+      "firstPartBody": "Anda telah menyampaikan partisipasi. Apa dan bagaimana langkah selanjutnya, Anda sepakati langsung dengan penyampai kebutuhan, di chat peserta."
     },
     "feedExpand": "Luaskan umpan",
     "feedCollapse": "Ciutkan umpan"
@@ -483,7 +489,8 @@
     "notifyTelegramNotLinked": "Hubungkan Telegram di “Akun” agar pesan sampai di sana.",
     "stakeSaved": "Tersimpan",
     "factsLine": "Untuk Kebutuhan yang sudah ditutup: partisipasi dinyatakan {{reported}}, ditandai diterima oleh penulis {{marked}}. Orang-orang di jaringan Anda melihat kedua angka ini.",
-    "needCounts": "Terbuka: {{open}} · Sebelumnya: {{past}}"
+    "needCounts": "Terbuka: {{open}} · Sebelumnya: {{past}}",
+    "stages": "Tahapan"
   },
   "settings": {
     "title": "Pengaturan",

@@ -265,14 +265,19 @@
       "mineCollected": "{{collected}} angegeben",
       "participating": "Sie sind dabei · Ihre {{amount}}",
       "milestoneFirst": "1. Handschlag",
-      "milestoneTen": "10 Personen in Ihrem Kreis",
       "milestoneWith": "Mit {{name}}",
       "milestoneGrow": "Ihr Kreis wächst",
       "quietTitle": "Alles ruhig",
       "quietBody": "Bedarfe, neue Menschen und Zyklen erscheinen hier.",
       "dismiss": "Ausblenden: {{name}}",
       "newCount_one": "{{count}} neu",
-      "newCount_other": "{{count}} neue"
+      "newCount_other": "{{count}} neue",
+      "milestoneUnlocked": "Sie können einen Bedarf melden",
+      "milestoneUnlockedSub": "Ihr Kreis und Ihr Netz sind groß genug gewachsen",
+      "milestoneFirstNeed": "Erster Bedarf",
+      "milestoneFirstNeedSub": "Die Meldung geht über Handschläge",
+      "milestoneFirstPart": "Erste Beteiligung",
+      "milestoneFirstPartSub": "Wer den Bedarf gemeldet hat, sieht Ihre Beteiligung"
     },
     "start": {
       "lead": "Sie sind die erste Person in Ihrem Kreis.",
@@ -295,9 +300,10 @@
     "milestone": {
       "firstTitle": "1. Handschlag",
       "firstBody": "Ihr Bedarf kann jetzt die erste Person erreichen und über sie weitergehen.",
-      "tenTitle": "10 Personen in Ihrem Kreis",
-      "tenBody": "Deutlich mehr Menschen erhalten die Meldung Ihres Bedarfs jetzt. Fügen Sie weiter Menschen hinzu, die Sie persönlich kennen.",
-      "ok": "Gut"
+      "ok": "Gut",
+      "unlockedBody": "In Ihrem Kreis und Netz sind jetzt genug Menschen. Wenn es nötig wird, öffnen Sie den Tab „{{tab}}“: Die Meldung geht über Handschläge.",
+      "firstNeedBody": "Die Meldung über Ihren Bedarf geht über Handschläge, von den Nächsten zu den Entfernteren. Wer sich beteiligen möchte, erscheint auf der Seite des Bedarfs und im Chat der Beteiligten.",
+      "firstPartBody": "Sie haben Ihre Beteiligung gemeldet. Was und wie es weitergeht, besprechen Sie direkt mit der Person, die den Bedarf gemeldet hat, im Chat der Beteiligten."
     },
     "feedExpand": "Feed aufklappen",
     "feedCollapse": "Feed zuklappen"
@@ -486,7 +492,8 @@
     "notifyTelegramNotLinked": "Verbinden Sie Telegram unter „Konto“, damit die Nachrichten dort ankommen.",
     "stakeSaved": "Gespeichert",
     "factsLine": "Bei geschlossenen Bedarfen: Beteiligungsmeldungen {{reported}}, von Autoren als erhalten markiert {{marked}}. Die Leute in Ihrem Netzwerk sehen diese beiden Zahlen.",
-    "needCounts": "Offen: {{open}} · Vergangene: {{past}}"
+    "needCounts": "Offen: {{open}} · Vergangene: {{past}}",
+    "stages": "Etappen"
   },
   "settings": {
     "title": "Einstellungen",

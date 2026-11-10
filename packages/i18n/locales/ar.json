@@ -273,7 +273,6 @@
       "mineCollected": "المُعلَن {{collected}}",
       "participating": "أنت مشارك · مبلغك {{amount}}",
       "milestoneFirst": "المصافحة الأولى",
-      "milestoneTen": "10 أشخاص في دائرتك",
       "milestoneWith": "مع {{name}}",
       "milestoneGrow": "دائرتك تكبر",
       "quietTitle": "كل شيء هادئ",
@@ -284,7 +283,13 @@
       "newCount_one": "{{count}} جديد",
       "newCount_two": "{{count}} جديدان",
       "newCount_zero": "{{count}} جدد",
-      "newCount_other": "{{count}} جديد"
+      "newCount_other": "{{count}} جديد",
+      "milestoneUnlocked": "يمكنك الإعلان عن احتياج",
+      "milestoneUnlockedSub": "دائرتك وشبكتك كبرتا بما يكفي",
+      "milestoneFirstNeed": "أول احتياج",
+      "milestoneFirstNeedSub": "يسير الإعلان عبر المصافحات",
+      "milestoneFirstPart": "أول مشاركة",
+      "milestoneFirstPartSub": "صاحب الاحتياج يرى مشاركتك"
     },
     "start": {
       "lead": "أنت الأول في دائرتك.",
@@ -307,9 +312,10 @@
     "milestone": {
       "firstTitle": "المصافحة الأولى",
       "firstBody": "يمكن الآن أن يصل إعلانك عن احتياجك إلى الشخص الأول، وعبره إلى ما هو أبعد.",
-      "tenTitle": "10 أشخاص في دائرتك",
-      "tenBody": "يصل الإعلان عن الاحتياج الآن إلى عدد أكبر بكثير من الناس. واصل إضافة من تعرفهم شخصيًا.",
-      "ok": "رائع"
+      "ok": "رائع",
+      "unlockedBody": "في دائرتك وشبكتك الآن عدد كافٍ من الأشخاص. عندما تحتاج إلى ذلك، افتح تبويب «{{tab}}»: سيسير الإعلان عبر المصافحات.",
+      "firstNeedBody": "يسير الإعلان عن احتياجك عبر المصافحات، من الأقرب إلى الأبعد. من يقرر المشاركة سيظهر في صفحة الاحتياج وفي دردشة المشاركين.",
+      "firstPartBody": "لقد أعلنت عن مشاركتك. ما الذي ستفعله بعد ذلك وكيف، تتفق عليه مباشرة مع صاحب الاحتياج في دردشة المشاركين."
     },
     "feedExpand": "توسيع الموجز",
     "feedCollapse": "طي الموجز"
@@ -498,7 +504,8 @@
     "notifyTelegramNotLinked": "اربط Telegram في «الحساب» لتصل الرسائل إلى هناك.",
     "stakeSaved": "تم الحفظ",
     "factsLine": "للاحتياجات المغلقة: بلاغات المشاركة {{reported}}، حددها المؤلفون كمستلمة {{marked}}. يرى هذين الرقمين أشخاص شبكتك.",
-    "needCounts": "المفتوحة: {{open}} · السابقة: {{past}}"
+    "needCounts": "المفتوحة: {{open}} · السابقة: {{past}}",
+    "stages": "المراحل"
   },
   "settings": {
     "title": "الإعدادات",

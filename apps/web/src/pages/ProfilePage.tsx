@@ -14,11 +14,13 @@ import { Segmented } from '../components/ui2/Segmented';
 import { formatMoney } from '../components/ui2/format';
 import { AdminReviews } from '../components/moderation/AdminReviews';
 import { AboutSheet } from '../components/profile/AboutSheet';
+import { Sheet } from '../components/ui2/Sheet';
 import { LogoutSheet } from '../components/onboarding/AccountSheets';
 import { LanguageSheet } from '../components/profile/LanguageSheet';
 import { QueryState } from '../components/profile/QueryState';
 import { countForm } from '../components/profile/collections';
 import { useNeedCounts } from '../components/profile/useNeedCounts';
+import { MILESTONE_KEYS, type MilestoneKind } from '../hooks/useEvents';
 import { ACCOUNT_NOTICE_KEY, publicHost } from '../components/profile/constants';
 import { formatLongDate } from '../components/profile/dates';
 import { applyFontScale } from '../components/profile/fontScale';
@@ -53,6 +55,7 @@ export function ProfilePage() {
     enabled: access.isSuccess && access.data.networkCanHelp == null,
   });
   const needCounts = useNeedCounts();
+  const milestones = trpc.milestone.list.useQuery();
   const admin = trpc.faq.isAdmin.useQuery();
   const isAdmin = admin.data?.isAdmin === true;
   const conversations = trpc.support.listConversations.useQuery(undefined, { enabled: isAdmin });
@@ -76,6 +79,7 @@ export function ProfilePage() {
   const [notesOpen, setNotesOpen] = useState(false);
   const [languageOpen, setLanguageOpen] = useState(false);
   const [aboutOpen, setAboutOpen] = useState(false);
+  const [stagesOpen, setStagesOpen] = useState(false);
   const [logoutOpen, setLogoutOpen] = useState(false);
   const [autosaveNote, setAutosaveNote] = useState(false);
 
@@ -117,6 +121,10 @@ export function ProfilePage() {
   // The sum the person can check (rings 1–3); the full reach is a ceiling, told on the Circle and in the minimum screen
   const canHelp = access.data?.networkCanHelpVisible ?? caps.data?.visibleTotal ?? access.data?.networkCanHelp ?? caps.data?.total ?? null;
   const visiblePeople = access.data?.networkVisible ?? access.data?.networkCount ?? 0;
+  const reached = (milestones.data?.items ?? [])
+    .filter((m) => m.achievedAt != null && m.kind in MILESTONE_KEYS)
+    .map((m) => ({ kind: m.kind as MilestoneKind, achievedAt: m.achievedAt as Date | string }))
+    .sort((a, b) => new Date(a.achievedAt).getTime() - new Date(b.achievedAt).getTime()); // stable: ties keep the server order
   const cyclesOn = prefs.notifyRenewalReminder && prefs.notifyRenewalStart;
   const soundOn = prefs.soundEnabled;
   const pushState = push.isSupported ? push.isSubscribed : null;
@@ -187,6 +195,15 @@ export function ProfilePage() {
           variant="link"
           to="/me/history"
         />
+        {/* Reached milestones: one row here, the list with dates opens in a sheet; only the person sees them */}
+        {reached.length > 0 ? (
+          <Row
+            title={t('profile.stages')}
+            variant="value"
+            value={t('path.of', { count: reached.length, goal: milestones.data?.items.length ?? reached.length })}
+            onClick={() => setStagesOpen(true)}
+          />
+        ) : null}
       </Group>
 
       <Group title={t('settings.title')}>
@@ -307,6 +324,16 @@ export function ProfilePage() {
 
       <LanguageSheet open={languageOpen} onClose={() => setLanguageOpen(false)} />
       <AboutSheet open={aboutOpen} onClose={() => setAboutOpen(false)} />
+      <Sheet open={stagesOpen} onClose={() => setStagesOpen(false)} title={t('profile.stages')}>
+        <ul className="divide-y divide-line-soft">
+          {reached.map((m) => (
+            <li key={m.kind} className="py-3">
+              <span className="block text-body font-body text-ink">{t(MILESTONE_KEYS[m.kind].title)}</span>
+              <span className="mt-0.5 block text-label font-semibold text-ink-muted">{formatLongDate(m.achievedAt, i18n.language)}</span>
+            </li>
+          ))}
+        </ul>
+      </Sheet>
       <LogoutSheet open={logoutOpen} onClose={() => setLogoutOpen(false)} onConfirm={signOut} email={profile.email} />
     </Screen>
   );

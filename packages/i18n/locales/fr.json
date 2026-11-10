@@ -267,7 +267,6 @@
       "mineCollected": "{{collected}} déclarés",
       "participating": "Vous participez · vos {{amount}}",
       "milestoneFirst": "1re poignée de main",
-      "milestoneTen": "10 personnes dans votre cercle",
       "milestoneWith": "Avec {{name}}",
       "milestoneGrow": "Votre cercle s’agrandit",
       "quietTitle": "Tout est calme",
@@ -275,7 +274,13 @@
       "dismiss": "Masquer : {{name}}",
       "newCount_many": "{{count}} de nouveaux",
       "newCount_one": "{{count}} nouveau",
-      "newCount_other": "{{count}} nouveaux"
+      "newCount_other": "{{count}} nouveaux",
+      "milestoneUnlocked": "Vous pouvez annoncer un besoin",
+      "milestoneUnlockedSub": "Votre cercle et votre réseau ont assez grandi",
+      "milestoneFirstNeed": "Premier besoin",
+      "milestoneFirstNeedSub": "Le message circule par les poignées de main",
+      "milestoneFirstPart": "Première participation",
+      "milestoneFirstPartSub": "L’auteur du besoin voit votre participation"
     },
     "start": {
       "lead": "Vous êtes la première personne de votre cercle.",
@@ -298,9 +303,10 @@
     "milestone": {
       "firstTitle": "1re poignée de main",
       "firstBody": "Le message sur votre besoin peut maintenant atteindre une première personne, puis aller plus loin par elle.",
-      "tenTitle": "10 personnes dans votre cercle",
-      "tenBody": "Bien plus de personnes reçoivent maintenant le message sur votre besoin. Continuez à ajouter des personnes que vous connaissez personnellement.",
-      "ok": "Parfait"
+      "ok": "Parfait",
+      "unlockedBody": "Votre cercle et votre réseau comptent maintenant assez de monde. Le moment venu, ouvrez l’onglet « {{tab}} » : le message circulera par les poignées de main.",
+      "firstNeedBody": "Le message sur votre besoin circule par les poignées de main, des plus proches aux plus lointains. Qui décide de participer apparaît sur la page du besoin et dans le chat des participants.",
+      "firstPartBody": "Vous avez annoncé votre participation. Ce qu’il faut faire ensuite et comment, vous en convenez directement avec l’auteur du besoin, dans le chat des participants."
     },
     "feedExpand": "Déplier le fil",
     "feedCollapse": "Replier le fil"
@@ -489,7 +495,8 @@
     "notifyTelegramNotLinked": "Connectez Telegram dans « Compte » pour y recevoir les messages.",
     "stakeSaved": "Enregistré",
     "factsLine": "Pour les Besoins fermés : participations déclarées {{reported}}, marquées comme reçues par les auteurs {{marked}}. Les personnes de votre réseau voient ces deux nombres.",
-    "needCounts": "Ouvertes: {{open}} · Passées: {{past}}"
+    "needCounts": "Ouvertes: {{open}} · Passées: {{past}}",
+    "stages": "Étapes"
   },
   "settings": {
     "title": "Paramètres",

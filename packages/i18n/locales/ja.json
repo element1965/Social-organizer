@@ -263,13 +263,18 @@
       "mineCollected": "{{collected}}が表明されました",
       "participating": "参加中です · あなたの{{amount}}",
       "milestoneFirst": "最初の握手",
-      "milestoneTen": "サークルに10人",
       "milestoneWith": "{{name}}とともに",
       "milestoneGrow": "あなたのサークルが広がっています",
       "quietTitle": "今は静かです",
       "quietBody": "ニーズ、新しい人、周期がここに表示されます。",
       "dismiss": "隠す：{{name}}",
-      "newCount_other": "新着 {{count}}"
+      "newCount_other": "新着 {{count}}",
+      "milestoneUnlocked": "ニーズを知らせられます",
+      "milestoneUnlockedSub": "あなたのサークルとネットワークが十分に広がりました",
+      "milestoneFirstNeed": "最初のニーズ",
+      "milestoneFirstNeedSub": "知らせが握手に沿って進んでいます",
+      "milestoneFirstPart": "最初の参加",
+      "milestoneFirstPartSub": "ニーズを知らせた人があなたの参加を見られます"
     },
     "start": {
       "lead": "あなたは、自分のサークルの最初の人です。",
@@ -292,9 +297,10 @@
     "milestone": {
       "firstTitle": "最初の握手",
       "firstBody": "あなたのニーズの知らせは、最初の人に届き、その人を通ってさらに先へ進めます。",
-      "tenTitle": "サークルに10人",
-      "tenBody": "ニーズの知らせを受け取る人が、はっきりと増えました。個人的に知っている人を、これからも加えてください。",
-      "ok": "よかったです"
+      "ok": "よかったです",
+      "unlockedBody": "あなたのサークルとネットワークに、十分な人数がそろいました。必要になったら「{{tab}}」タブを開いてください。知らせは握手に沿って進みます。",
+      "firstNeedBody": "あなたのニーズの知らせは、握手に沿って、近い人から遠い人へ進みます。参加すると決めた人は、ニーズのページと参加者のチャットに表示されます。",
+      "firstPartBody": "参加を知らせました。このあと何をどうするかは、ニーズを知らせた人と参加者のチャットで直接決めます。"
     },
     "feedExpand": "フィードを広げる",
     "feedCollapse": "フィードをたたむ"
@@ -483,7 +489,8 @@
     "notifyTelegramNotLinked": "メッセージをそこで受け取るには、「アカウント」でTelegramを連携してください。",
     "stakeSaved": "保存しました",
     "factsLine": "終了したニーズについて：知らせた参加 {{reported}} 件、作成者が受け取り済みと記録 {{marked}} 件。この2つの数字は、あなたのネットワークの人に見えます。",
-    "needCounts": "開いているもの: {{open}} · 過去: {{past}}"
+    "needCounts": "開いているもの: {{open}} · 過去: {{past}}",
+    "stages": "段階"
   },
   "settings": {
     "title": "設定",

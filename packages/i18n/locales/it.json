@@ -267,7 +267,6 @@
       "mineCollected": "Dichiarati {{collected}}",
       "participating": "Ci sei · i tuoi {{amount}}",
       "milestoneFirst": "Prima stretta di mano",
-      "milestoneTen": "10 persone nel tuo cerchio",
       "milestoneWith": "Con {{name}}",
       "milestoneGrow": "Il tuo cerchio sta crescendo",
       "quietTitle": "Tutto tranquillo",
@@ -275,7 +274,13 @@
       "dismiss": "Nascondi: {{name}}",
       "newCount_many": "{{count}} nuovi",
       "newCount_one": "{{count}} nuovo",
-      "newCount_other": "{{count}} nuovi"
+      "newCount_other": "{{count}} nuovi",
+      "milestoneUnlocked": "Puoi comunicare un bisogno",
+      "milestoneUnlockedSub": "Il tuo cerchio e la tua rete sono cresciuti abbastanza",
+      "milestoneFirstNeed": "Primo bisogno",
+      "milestoneFirstNeedSub": "Il messaggio viaggia per strette di mano",
+      "milestoneFirstPart": "Prima partecipazione",
+      "milestoneFirstPartSub": "Chi ha comunicato il bisogno vede la tua partecipazione"
     },
     "start": {
       "lead": "Nel tuo cerchio ci sei solo tu.",
@@ -298,9 +303,10 @@
     "milestone": {
       "firstTitle": "Prima stretta di mano",
       "firstBody": "Ora il messaggio sul tuo bisogno può arrivare alla prima persona e, attraverso di lei, andare oltre.",
-      "tenTitle": "10 persone nel tuo cerchio",
-      "tenBody": "Ora molte più persone ricevono il messaggio sul tuo bisogno. Continua ad aggiungere persone che conosci di persona.",
-      "ok": "Ottimo"
+      "ok": "Ottimo",
+      "unlockedBody": "Nel tuo cerchio e nella tua rete ora ci sono abbastanza persone. Quando servirà, apri la scheda «{{tab}}»: il messaggio viaggerà per strette di mano.",
+      "firstNeedBody": "Il messaggio sul tuo bisogno viaggia per strette di mano, dai più vicini ai più lontani. Chi decide di partecipare compare nella pagina del bisogno e nella chat dei partecipanti.",
+      "firstPartBody": "Hai comunicato la partecipazione. Cosa fare dopo e come, lo concordi direttamente con chi ha comunicato il bisogno, nella chat dei partecipanti."
     },
     "feedExpand": "Espandi il feed",
     "feedCollapse": "Comprimi il feed"
@@ -489,7 +495,8 @@
     "notifyTelegramNotLinked": "Collega Telegram in «Account» per ricevere i messaggi lì.",
     "stakeSaved": "Salvato",
     "factsLine": "Per i Bisogni chiusi: partecipazioni comunicate {{reported}}, segnate come ricevute dagli autori {{marked}}. Le persone della tua rete vedono questi due numeri.",
-    "needCounts": "Aperte: {{open}} · Passate: {{past}}"
+    "needCounts": "Aperte: {{open}} · Passate: {{past}}",
+    "stages": "Tappe"
   },
   "settings": {
     "title": "Impostazioni",

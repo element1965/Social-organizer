@@ -5,6 +5,7 @@ import { MIN_OBLIGATION_AMOUNT, REGULAR_CYCLE_DAYS } from '@so/shared';
 import { syncCollectionGoal } from '../services/collection-amount.js';
 import { scheduleResponseDigest } from '../services/notification.service.js';
 import { recordResponded } from '../services/notify-routing.service.js';
+import { syncMilestonesQuietly } from '../services/milestone.service.js';
 
 export const obligationRouter = router({
   create: protectedProcedure
@@ -43,6 +44,7 @@ export const obligationRouter = router({
       }
 
       await syncCollectionGoal(ctx.db, input.collectionId);
+      await syncMilestonesQuietly(ctx.db, ctx.userId); // "first Participation"
       return obligation;
     }),
 

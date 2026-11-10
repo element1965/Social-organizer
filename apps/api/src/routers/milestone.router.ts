@@ -3,12 +3,12 @@ import { router, protectedProcedure } from '../trpc.js';
 import { MILESTONES, syncMilestones } from '../services/milestone.service.js';
 import { countConnections } from '../services/connection-request.service.js';
 
-const kindSchema = z.enum(['FIRST_CONNECTION', 'TEN_CONNECTIONS']);
+const kindSchema = z.enum(MILESTONES);
 
 export const milestoneRouter = router({
-  /** Both milestones of the current user with the current number of direct connections. */
+  /** The milestones of the current user, reached or not, with the current number of direct connections. */
   list: protectedProcedure.query(async ({ ctx }) => {
-    // Catch up from saved connections (old accounts, or a missed sync) without a "new" confirmation
+    // Catch up from stored facts (old accounts, a missed sync, a network that grew through other people)
     await syncMilestones(ctx.db, ctx.userId, { restored: true });
 
     const [rows, current] = await Promise.all([
@@ -41,11 +41,10 @@ export const milestoneRouter = router({
 
     return {
       current,
-      items: MILESTONES.map((m) => {
-        const row = rows.find((r) => r.kind === m.kind);
+      items: MILESTONES.map((kind) => {
+        const row = rows.find((r) => r.kind === kind);
         return {
-          kind: m.kind,
-          threshold: m.threshold,
+          kind,
           achievedAt: row?.achievedAt ?? null,
           seen: row ? row.seenAt != null : true,
           person: row?.relatedUserId ? people.get(row.relatedUserId) ?? null : null,

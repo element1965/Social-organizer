@@ -5,7 +5,7 @@ import { hideBackButton, isTelegramWebApp, showBackButton } from '@so/tg-adapter
 import { trpc } from '../lib/trpc';
 import { cn } from '../lib/utils';
 import { useCachedNetworkStats } from '../hooks/useCachedNetworkStats';
-import { useEvents, useNewEvents, type FeedEvent, type MilestoneKind } from '../hooks/useEvents';
+import { MILESTONE_KEYS, useEvents, useNewEvents, type FeedEvent, type MilestoneKind } from '../hooks/useEvents';
 import { useBanner } from '../components/ui2/Banner';
 import { Button } from '../components/ui2/Button';
 import { MainBar } from '../components/ui2/MainBar';
@@ -337,8 +337,8 @@ export function CirclePage() {
       <Sheet
         open={milestone != null}
         onClose={closeMilestone}
-        title={milestone === 'TEN_CONNECTIONS' ? t('circle.milestone.tenTitle') : t('circle.milestone.firstTitle')}
-        description={milestone === 'TEN_CONNECTIONS' ? t('circle.milestone.tenBody') : t('circle.milestone.firstBody')}
+        title={milestone ? t(MILESTONE_KEYS[milestone].title) : ''}
+        description={milestone ? t(MILESTONE_KEYS[milestone].body, { tab: t('nav.ask') }) : undefined}
         footer={<Button onClick={closeMilestone}>{t('circle.milestone.ok')}</Button>}
       />
     </>

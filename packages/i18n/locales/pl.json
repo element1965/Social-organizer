@@ -269,7 +269,6 @@
       "mineCollected": "Zgłoszono {{collected}}",
       "participating": "Bierzesz udział · Twoje {{amount}}",
       "milestoneFirst": "1. uścisk dłoni",
-      "milestoneTen": "10 osób w Twoim kręgu",
       "milestoneWith": "Z osobą: {{name}}",
       "milestoneGrow": "Twój krąg rośnie",
       "quietTitle": "Na razie cisza",
@@ -278,7 +277,13 @@
       "newCount_few": "{{count}} nowe",
       "newCount_many": "{{count}} nowych",
       "newCount_one": "{{count}} nowe",
-      "newCount_other": "{{count}} nowego"
+      "newCount_other": "{{count}} nowego",
+      "milestoneUnlocked": "Możesz zgłosić potrzebę",
+      "milestoneUnlockedSub": "Twój krąg i sieć urosły wystarczająco",
+      "milestoneFirstNeed": "Pierwsza potrzeba",
+      "milestoneFirstNeedSub": "Wiadomość idzie po uściskach dłoni",
+      "milestoneFirstPart": "Pierwszy udział",
+      "milestoneFirstPartSub": "Autor potrzeby widzi Twój udział"
     },
     "start": {
       "lead": "Jesteś pierwszy w swoim kręgu.",
@@ -301,9 +306,10 @@
     "milestone": {
       "firstTitle": "1. uścisk dłoni",
       "firstBody": "Teraz wiadomość o Twojej potrzebie może dotrzeć do pierwszej osoby, a przez nią — dalej.",
-      "tenTitle": "10 osób w Twoim kręgu",
-      "tenBody": "Wiadomość o potrzebie dostaje teraz wyraźnie więcej osób. Dodawaj dalej tych, których znasz osobiście.",
-      "ok": "Super"
+      "ok": "Super",
+      "unlockedBody": "W Twoim kręgu i sieci jest już dość osób. Gdy będzie potrzeba, otwórz kartę „{{tab}}”: wiadomość pójdzie po uściskach dłoni.",
+      "firstNeedBody": "Wiadomość o Twojej potrzebie idzie po uściskach dłoni, od najbliższych do dalszych. Kto zdecyduje się wziąć udział, pojawi się na stronie potrzeby i w czacie uczestników.",
+      "firstPartBody": "Zgłosiłeś udział. Co i jak robić dalej, ustalasz bezpośrednio z autorem potrzeby, w czacie uczestników."
     },
     "feedExpand": "Rozwiń kanał",
     "feedCollapse": "Zwiń kanał"
@@ -492,7 +498,8 @@
     "notifyTelegramNotLinked": "Połącz Telegram w „Konto”, żeby dostawać tam wiadomości.",
     "stakeSaved": "Zapisano",
     "factsLine": "Dotyczy zamkniętych Potrzeb: zgłoszony udział {{reported}}, oznaczone przez autorów jako otrzymane {{marked}}. Osoby z Twojej sieci widzą te dwie liczby.",
-    "needCounts": "Otwarte: {{open}} · Minione: {{past}}"
+    "needCounts": "Otwarte: {{open}} · Minione: {{past}}",
+    "stages": "Etapy"
   },
   "settings": {
     "title": "Ustawienia",

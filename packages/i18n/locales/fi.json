@@ -265,14 +265,19 @@
       "mineCollected": "Ilmoitettu {{collected}}",
       "participating": "Olet mukana · sinun {{amount}}",
       "milestoneFirst": "Ensimmäinen kädenpuristus",
-      "milestoneTen": "10 ihmistä piirissäsi",
       "milestoneWith": "{{name}} kanssa",
       "milestoneGrow": "Piirisi kasvaa",
       "quietTitle": "Hiljaista",
       "quietBody": "Tarpeet, uudet ihmiset ja jaksot näkyvät täällä.",
       "dismiss": "Piilota: {{name}}",
       "newCount_one": "{{count}} uusi",
-      "newCount_other": "{{count}} uutta"
+      "newCount_other": "{{count}} uutta",
+      "milestoneUnlocked": "Voit ilmoittaa tarpeesta",
+      "milestoneUnlockedSub": "Piirisi ja verkostosi ovat kasvaneet riittävästi",
+      "milestoneFirstNeed": "Ensimmäinen tarve",
+      "milestoneFirstNeedSub": "Viesti kulkee kädenpuristuksia pitkin",
+      "milestoneFirstPart": "Ensimmäinen osallistuminen",
+      "milestoneFirstPartSub": "Tarpeen ilmoittaja näkee osallistumisesi"
     },
     "start": {
       "lead": "Olet ensimmäinen piirissäsi.",
@@ -295,9 +300,10 @@
     "milestone": {
       "firstTitle": "Ensimmäinen kädenpuristus",
       "firstBody": "Viesti tarpeestasi voi nyt tavoittaa ensimmäisen henkilön ja kulkea hänen kauttaan eteenpäin.",
-      "tenTitle": "10 ihmistä piirissäsi",
-      "tenBody": "Viesti tarpeesta tavoittaa nyt selvästi useamman ihmisen. Lisää edelleen ihmisiä, jotka tunnet henkilökohtaisesti.",
-      "ok": "Hienoa"
+      "ok": "Hienoa",
+      "unlockedBody": "Piirissäsi ja verkostossasi on nyt riittävästi ihmisiä. Kun tarve tulee, avaa välilehti ”{{tab}}”: viesti kulkee kädenpuristuksia pitkin.",
+      "firstNeedBody": "Viesti tarpeestasi kulkee kädenpuristuksia pitkin, lähimmistä kauempiin. Kuka tahansa osallistumisen päättävä näkyy tarpeen sivulla ja osallistujien keskustelussa.",
+      "firstPartBody": "Olet ilmoittanut osallistumisesta. Mitä tehdä seuraavaksi ja miten, sovit suoraan tarpeen ilmoittajan kanssa osallistujien keskustelussa."
     },
     "feedExpand": "Laajenna syöte",
     "feedCollapse": "Pienennä syöte"
@@ -486,7 +492,8 @@
     "notifyTelegramNotLinked": "Yhdistä Telegram kohdassa ”Tili”, niin viestit tulevat sinne.",
     "stakeSaved": "Tallennettu",
     "factsLine": "Suljettujen tarpeiden osalta: ilmoitettuja osallistumisia {{reported}}, tekijöiden saaduksi merkitsemiä {{marked}}. Verkostosi ihmiset näkevät nämä kaksi lukua.",
-    "needCounts": "Avoimet: {{open}} · Aiemmat: {{past}}"
+    "needCounts": "Avoimet: {{open}} · Aiemmat: {{past}}",
+    "stages": "Vaiheet"
   },
   "settings": {
     "title": "Asetukset",

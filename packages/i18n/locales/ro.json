@@ -267,7 +267,6 @@
       "mineCollected": "Declarat {{collected}}",
       "participating": "Participi · {{amount}} de la tine",
       "milestoneFirst": "Prima strângere de mână",
-      "milestoneTen": "10 persoane în cercul tău",
       "milestoneWith": "Cu {{name}}",
       "milestoneGrow": "Cercul tău crește",
       "quietTitle": "Liniște",
@@ -275,7 +274,13 @@
       "dismiss": "Ascunde: {{name}}",
       "newCount_few": "{{count}} noutăți",
       "newCount_one": "{{count}} noutate",
-      "newCount_other": "{{count}} de noutăți"
+      "newCount_other": "{{count}} de noutăți",
+      "milestoneUnlocked": "Poți anunța o nevoie",
+      "milestoneUnlockedSub": "Cercul și rețeaua ta au crescut destul",
+      "milestoneFirstNeed": "Prima nevoie",
+      "milestoneFirstNeedSub": "Mesajul merge pe strângeri de mână",
+      "milestoneFirstPart": "Prima participare",
+      "milestoneFirstPartSub": "Autorul nevoii îți vede participarea"
     },
     "start": {
       "lead": "Ești prima persoană din cercul tău.",
@@ -298,9 +303,10 @@
     "milestone": {
       "firstTitle": "Prima strângere de mână",
       "firstBody": "Acum mesajul despre nevoia ta poate ajunge la prima persoană și, prin ea, mai departe.",
-      "tenTitle": "10 persoane în cercul tău",
-      "tenBody": "Mesajul despre nevoia ta ajunge acum la mult mai mulți oameni. Continuă să adaugi persoane pe care le cunoști personal.",
-      "ok": "Grozav"
+      "ok": "Grozav",
+      "unlockedBody": "În cercul și în rețeaua ta sunt acum destui oameni. Când e nevoie, deschide fila „{{tab}}”: mesajul va merge pe strângeri de mână.",
+      "firstNeedBody": "Mesajul despre nevoia ta merge pe strângeri de mână, de la cei mai apropiați la cei mai îndepărtați. Cine hotărăște să participe apare pe pagina nevoii și în chatul participanților.",
+      "firstPartBody": "Ai anunțat participarea. Ce faci mai departe și cum, stabilești direct cu autorul, în chatul participanților."
     },
     "feedExpand": "Extinde fluxul",
     "feedCollapse": "Restrânge fluxul"
@@ -489,7 +495,8 @@
     "notifyTelegramNotLinked": "Conectează Telegram în „Cont” ca să primești mesajele acolo.",
     "stakeSaved": "Salvat",
     "factsLine": "Pentru Nevoile închise: participare declarată {{reported}}, marcat de autori ca primit {{marked}}. Oamenii din rețeaua ta văd aceste două numere.",
-    "needCounts": "Deschise: {{open}} · Trecute: {{past}}"
+    "needCounts": "Deschise: {{open}} · Trecute: {{past}}",
+    "stages": "Etape"
   },
   "settings": {
     "title": "Setări",

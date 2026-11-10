@@ -263,13 +263,18 @@
       "mineCollected": "{{collected}} 밝혔어요",
       "participating": "참여 중 · 내 {{amount}}",
       "milestoneFirst": "1차 악수",
-      "milestoneTen": "서클에 10명",
       "milestoneWith": "{{name}}님과 함께",
       "milestoneGrow": "서클이 커지고 있어요",
       "quietTitle": "조용해요",
       "quietBody": "필요, 새 사람, 주기가 여기에 나타나요.",
       "dismiss": "숨기기: {{name}}",
-      "newCount_other": "새 {{count}}"
+      "newCount_other": "새 {{count}}",
+      "milestoneUnlocked": "필요를 알릴 수 있어요",
+      "milestoneUnlockedSub": "서클과 네트워크가 충분히 커졌어요",
+      "milestoneFirstNeed": "첫 필요",
+      "milestoneFirstNeedSub": "알림이 악수를 따라 이동하고 있어요",
+      "milestoneFirstPart": "첫 참여",
+      "milestoneFirstPartSub": "필요를 올린 사람이 내 참여를 볼 수 있어요"
     },
     "start": {
       "lead": "이 서클의 첫 사람이에요.",
@@ -292,9 +297,10 @@
     "milestone": {
       "firstTitle": "1차 악수",
       "firstBody": "이제 내 필요가 첫 사람에게 닿고, 그 사람을 통해 더 멀리 갈 수 있어요.",
-      "tenTitle": "서클에 10명",
-      "tenBody": "이제 필요 알림을 받는 사람이 훨씬 많아요. 직접 아는 사람을 계속 추가해 주세요.",
-      "ok": "좋아요"
+      "ok": "좋아요",
+      "unlockedBody": "이제 서클과 네트워크에 사람이 충분해요. 필요할 때 “{{tab}}” 탭을 열어 보세요. 알림이 악수를 따라 이동해요.",
+      "firstNeedBody": "내 필요에 대한 알림이 가까운 사람부터 악수를 따라 이동해요. 참여하기로 한 사람은 필요 페이지와 참여자 채팅에 나타나요.",
+      "firstPartBody": "참여를 알렸어요. 이후에 무엇을 어떻게 할지는 참여자 채팅에서 필요를 올린 사람과 직접 정하면 돼요."
     },
     "feedExpand": "피드 펼치기",
     "feedCollapse": "피드 접기"
@@ -483,7 +489,8 @@
     "notifyTelegramNotLinked": "메시지를 받으려면 “계정”에서 Telegram을 연결해 주세요.",
     "stakeSaved": "저장했어요",
     "factsLine": "닫힌 필요 기준: 알린 참여 {{reported}}건, 작성자가 받음으로 표시 {{marked}}건. 이 두 숫자는 내 네트워크의 사람들에게 보여요.",
-    "needCounts": "열린 필요: {{open}} · 지난 필요: {{past}}"
+    "needCounts": "열린 필요: {{open}} · 지난 필요: {{past}}",
+    "stages": "단계"
   },
   "settings": {
     "title": "설정",

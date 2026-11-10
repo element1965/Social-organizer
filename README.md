@@ -110,7 +110,7 @@ Windows local setup, the empty-database `db push` caveat, and the test accounts 
 | SkillCategory | Skill/need category with key, group, sortOrder, isOnline (221 categories in 15 groups) |
 | UserSkill | User's offered skill (link to SkillCategory) with optional note |
 | UserNeed | User's need (link to SkillCategory) with optional note |
-| UserMilestone | Money MVP milestone (FIRST_CONNECTION / TEN_CONNECTIONS): recorded once per user with achievedAt, the person whose connection reached it, and seenAt for the one-time in-app confirmation. A historical fact — removing a connection later does not take it back |
+| UserMilestone | A milestone reached by a user (FIRST_CONNECTION / NEED_UNLOCKED / FIRST_NEED / FIRST_PARTICIPATION; TEN_CONNECTIONS is kept in the enum for old rows only): recorded once per user with achievedAt, the person whose connection reached the first one, and seenAt for the one-time in-app confirmation. A historical fact — removing a connection or closing a Need later does not take it back |
 | SkillMatchNotification | Notification when a connected user's skill matches another's need (userId, matchUserId, categoryId) |
 
 ## Scripts
@@ -158,7 +158,7 @@ FIREBASE_SERVICE_ACCOUNT={"type":"service_account",...}  # FCM service account J
 | `settings` | get, updateLanguage/Theme/Sound/FontScale/HideContacts/Geo, ignoreList/addIgnore/removeIgnore |
 | `invite` | generate, accept, getByToken |
 | `stats` | profile (obligationsGiven + obligationsReceived), help, networkCapabilities, participationFacts (two counts for a profile: Participation reported and marked as received by authors, closed Needs only) |
-| `milestone` | list (both milestones + current direct connections; restores missing ones from saved connections), markSeen |
+| `milestone` | list (the four milestones, reached or not, + current direct connections; catches up from stored facts), markSeen |
 | `currency` | list, detectCurrency, rates, convert, toUSD |
 | `push` | vapidPublicKey, subscribe, unsubscribe, registerNativeToken, unregisterNativeToken |
 | `faq` | list, top, all, incrementView, localize, isAdmin, create, update, delete (admin-gated CRUD with view ranking and LLM auto-translation to 26 languages) |
@@ -176,7 +176,7 @@ FIREBASE_SERVICE_ACCOUNT={"type":"service_account",...}  # FCM service account J
 - **Telegram Bot** — Collection notifications (new, blocked, closed) via Bot API with rate-limited broadcast (25 msg/sec batches via BullMQ)
 - **Web Push** — Browser push notifications via web-push library with VAPID, auto-cleanup of expired subscriptions
 - **FCM Push** — Native Android push notifications via Firebase Cloud Messaging (firebase-admin), auto-cleanup of expired tokens
-- **Milestones** — `milestone.service.ts`: two money-MVP milestones counted from confirmed `Connection` rows only (invite links and pending requests never count); synced right after every new connection (request accept, SOS accept), unique per user, no push, no rating. UI: a reached milestone shows once in the circle feed; there is no milestones card
+- **Milestones** — `milestone.service.ts`: a record of what actually changed for a person. FIRST_CONNECTION (first confirmed connection), NEED_UNLOCKED (the Need tab thresholds are met: `ASK_MIN_DIRECT` direct connections and `ASK_MIN_NETWORK` people in the network), FIRST_NEED, FIRST_PARTICIPATION (in somebody else's Need). Only stored rows count (invite links and pending requests never do); synced right after a new connection, a new Need and a new Participation, and on `milestone.list`, where facts older than a day are stored as seen. Unique per user, no push, no rating, no milestones for amounts or headcount. UI: a reached milestone shows once in the Circle feed with a short sheet, then stays behind one Profile row, "Milestones · 3 of 4", which opens the list with dates (only the person sees it). Migration `20261110120000_milestones_by_meaning` (apply manually before deploy)
 - **Currency** — Exchange rates service is kept but not used for amounts: intentions, capacity and goals are entered in $ only (1 $ = 1 unit of participation, SO-40)
 - **Geo** — IP-based country detection for currency auto-selection (ip-api.com)
 
@@ -420,6 +420,7 @@ Apply these migrations by hand on production (they are already in `packages/db/p
 - `20261109120000_ask_block_reason_invite_ttl`
 - `20261109140000_connection_via_collection`
 - `20261109160000_collection_moderation`
+- `20261110120000_milestones_by_meaning`
 - inactivity-cleanup migration — being added in parallel; the folder name is not in this branch yet
 
 ## Current Status

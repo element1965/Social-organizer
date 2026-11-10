@@ -20,7 +20,15 @@ export type FeedKind =
   | 'waiting'
   | 'milestone';
 
-export type MilestoneKind = 'FIRST_CONNECTION' | 'TEN_CONNECTIONS';
+export type MilestoneKind = 'FIRST_CONNECTION' | 'NEED_UNLOCKED' | 'FIRST_NEED' | 'FIRST_PARTICIPATION';
+
+/** Locale keys of a milestone: its name (feed row, sheet title, Profile list), the feed subtitle and the sheet text. */
+export const MILESTONE_KEYS: Record<MilestoneKind, { title: string; sub: string; body: string }> = {
+  FIRST_CONNECTION: { title: 'circle.feed.milestoneFirst', sub: 'circle.feed.milestoneGrow', body: 'circle.milestone.firstBody' },
+  NEED_UNLOCKED: { title: 'circle.feed.milestoneUnlocked', sub: 'circle.feed.milestoneUnlockedSub', body: 'circle.milestone.unlockedBody' },
+  FIRST_NEED: { title: 'circle.feed.milestoneFirstNeed', sub: 'circle.feed.milestoneFirstNeedSub', body: 'circle.milestone.firstNeedBody' },
+  FIRST_PARTICIPATION: { title: 'circle.feed.milestoneFirstPart', sub: 'circle.feed.milestoneFirstPartSub', body: 'circle.milestone.firstPartBody' },
+};
 
 export type FeedEvent = {
   id: string;
@@ -273,12 +281,14 @@ export function useEvents(options: { displayName?: (id: string, fallback: string
     for (const m of milestones.data?.items ?? []) {
       if (!m.achievedAt || m.seen) continue;
       const kind = m.kind as MilestoneKind;
+      const keys = MILESTONE_KEYS[kind];
+      if (!keys) continue;
       out.push({
         id: `ms:${kind}`,
         kind: 'milestone',
         at: new Date(m.achievedAt).getTime(),
-        title: kind === 'FIRST_CONNECTION' ? t('circle.feed.milestoneFirst') : t('circle.feed.milestoneTen'),
-        subtitle: m.person ? t('circle.feed.milestoneWith', { name: name(m.person.id, m.person.name) }) : t('circle.feed.milestoneGrow'),
+        title: t(keys.title),
+        subtitle: m.person ? t('circle.feed.milestoneWith', { name: name(m.person.id, m.person.name) }) : t(keys.sub),
         hot: true,
         milestone: kind,
         personId: m.person?.id,
