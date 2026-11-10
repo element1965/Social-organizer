@@ -4,6 +4,8 @@ import { useTranslation } from 'react-i18next';
 import { languageNames } from '@so/i18n/languages';
 import { useTheme } from '../../hooks/useTheme';
 import { BrandMark } from '../ui2/BrandMark';
+import { LanguageSheet, useCurrentLanguage } from '../profile/LanguageSheet';
+import { IconGlobe } from './icons';
 import { IconMoon, IconSun } from '../ui2/icons';
 
 export const GITHUB_URL = 'https://github.com/element1965/Social-organizer';
@@ -50,34 +52,19 @@ export function ThemeButton() {
   );
 }
 
+/** Language chip ("🌐 EN") that opens the shared language sheet. */
 export function LanguageSelect() {
-  const { t, i18n } = useTranslation();
-  const current = (i18n.language || 'en').slice(0, 2);
+  const { t } = useTranslation();
+  const current = useCurrentLanguage();
+  const [open, setOpen] = useState(false);
   return (
-    <label className="site-lang">
-      <span className="sr-only">{t('landing.site.language')}</span>
-      <span className="code" aria-hidden="true">
-        {current}
-      </span>
-      <select
-        value={current}
-        onChange={(e) => {
-          const code = e.target.value;
-          void i18n.changeLanguage(code);
-          try {
-            localStorage.setItem('language', code);
-          } catch {
-            /* private mode */
-          }
-        }}
-      >
-        {Object.entries(languageNames).map(([code, name]) => (
-          <option key={code} value={code}>
-            {name}
-          </option>
-        ))}
-      </select>
-    </label>
+    <>
+      <button type="button" className="site-lang" aria-haspopup="dialog" aria-label={`${t('landing.site.language')}: ${languageNames[current]}`} onClick={() => setOpen(true)}>
+        <IconGlobe />
+        <span className="code">{current}</span>
+      </button>
+      <LanguageSheet open={open} onClose={() => setOpen(false)} />
+    </>
   );
 }
 

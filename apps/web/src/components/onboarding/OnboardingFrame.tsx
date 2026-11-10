@@ -4,7 +4,7 @@
  * buttons pinned to the bottom. On a phone it fills the screen; from 768 px (outside the native app and
  * Telegram) the same content sits in a 460 px Panel centred on the canvas, as on the website.
  */
-import type { ReactNode } from 'react';
+import { useState, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { Panel, useShellMode } from '../ui2';
@@ -12,8 +12,8 @@ import { BrandMark } from '../ui2/BrandMark';
 import { IconBack } from '../ui2/icons';
 import { cn } from '../../lib/utils';
 import { languageNames } from '@so/i18n/languages';
-import { trpc } from '../../lib/trpc';
-import { useAuth } from '../../hooks/useAuth';
+import { LanguageSheet, useCurrentLanguage } from '../profile/LanguageSheet';
+import { IconGlobe } from '../site/icons';
 
 /** True when the step is drawn inside the desktop panel rather than full screen. */
 export function usePanelLayout(): boolean {
@@ -99,37 +99,25 @@ export function BackLink({ label, onClick, to }: { label: string; onClick?: () =
   );
 }
 
-/** Language switch in the corner: a native select dressed as the "RU" chip. */
+/** Language switch in the corner: the "RU" chip opens the shared language sheet. */
 export function LanguageCorner() {
-  const { t, i18n } = useTranslation();
-  const isAuthenticated = useAuth((s) => s.isAuthenticated);
-  const updateLanguage = trpc.settings.updateLanguage.useMutation();
-  const current = (i18n.resolvedLanguage || i18n.language || 'en').slice(0, 2);
+  const { t } = useTranslation();
+  const current = useCurrentLanguage();
+  const [open, setOpen] = useState(false);
   return (
-    <label className="relative grid h-10 min-w-10 place-items-center rounded-md border border-line bg-surface px-3 text-caption font-bold uppercase text-ink-muted">
-      {current}
-      <select
-        aria-label={t('login.language')}
-        value={current}
-        onChange={(event) => {
-          const lang = event.target.value;
-          void i18n.changeLanguage(lang);
-          try {
-            localStorage.setItem('language', lang);
-          } catch {
-            /* storage blocked */
-          }
-          if (isAuthenticated) updateLanguage.mutate({ language: lang });
-        }}
-        className="absolute inset-0 cursor-pointer appearance-none opacity-0"
+    <>
+      <button
+        type="button"
+        aria-haspopup="dialog"
+        aria-label={`${t('login.language')}: ${languageNames[current]}`}
+        onClick={() => setOpen(true)}
+        className="so-focus inline-flex h-10 min-w-10 items-center justify-center gap-1.5 rounded-md border border-line bg-surface px-3 text-caption font-bold uppercase text-ink-muted transition-colors hover:text-ink"
       >
-        {Object.entries(languageNames).map(([code, name]) => (
-          <option key={code} value={code}>
-            {name}
-          </option>
-        ))}
-      </select>
-    </label>
+        <IconGlobe className="h-4 w-4" />
+        {current}
+      </button>
+      <LanguageSheet open={open} onClose={() => setOpen(false)} />
+    </>
   );
 }
 
