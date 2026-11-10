@@ -4,9 +4,39 @@ import { NETWORK_MAX_DEPTH } from './network.service.js';
 
 export interface BfsRecipient {
   userId: string;
+  /** Handshake path from the start user to this person, both included. */
   path: string[];
   depth: number;
   maxConnAt: Date | null;
+}
+
+/**
+ * One person reached by the walk. The path is rebuilt from the parents only when somebody reads it:
+ * a wave over a large network reaches far more people than it finally notifies, and a ready-made
+ * array per person was most of the memory of a request.
+ */
+class BfsNode implements BfsRecipient {
+  private built: string[] | null = null;
+
+  constructor(
+    readonly userId: string,
+    readonly depth: number,
+    readonly maxConnAt: Date | null,
+    private readonly parent: BfsNode | null,
+  ) {}
+
+  get path(): string[] {
+    if (!this.built) {
+      const out: string[] = new Array(this.depth + 1);
+      let node: BfsNode | null = this;
+      for (let i = this.depth; node && i >= 0; i--) {
+        out[i] = node.userId;
+        node = node.parent;
+      }
+      this.built = out;
+    }
+    return this.built;
+  }
 }
 
 /**
@@ -49,21 +79,20 @@ export async function findRecipientsViaBfs(
 
   const seen = new Set<string>([startUserId]);
   const recipients: BfsRecipient[] = [];
-  const queue: Array<{ userId: string; depth: number; path: string[]; maxConnAt: Date | null }> = [
-    { userId: startUserId, depth: 0, path: [], maxConnAt: null },
-  ];
+  const queue: BfsNode[] = [new BfsNode(startUserId, 0, null, null)];
 
   for (let qi = 0; qi < queue.length && recipients.length < maxRecipients; qi++) {
-    const { userId, depth, path, maxConnAt } = queue[qi]!;
+    const current = queue[qi]!;
+    const { depth, maxConnAt } = current;
     if (depth >= maxDepth) continue;
-    const newPath = [...path, userId];
-    for (const { neighbor, createdAt } of adj.get(userId) || []) {
+    for (const { neighbor, createdAt } of adj.get(current.userId) || []) {
       if (seen.has(neighbor) || deleted.has(neighbor)) continue;
       seen.add(neighbor);
       const newMaxConnAt = maxConnAt && maxConnAt > createdAt ? maxConnAt : createdAt;
-      queue.push({ userId: neighbor, depth: depth + 1, path: newPath, maxConnAt: newMaxConnAt });
+      const node = new BfsNode(neighbor, depth + 1, newMaxConnAt, current);
+      queue.push(node);
       if (excludeSet.has(neighbor)) continue;
-      recipients.push({ userId: neighbor, path: [...newPath, neighbor], depth: depth + 1, maxConnAt: newMaxConnAt });
+      recipients.push(node);
       // The cap is exact: one notification per unit of the amount, never more
       if (recipients.length >= maxRecipients) break;
     }

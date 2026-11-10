@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { trpc } from '../lib/trpc';
+import { NETWORK_POLL_MS, NETWORK_STALE_MS } from '../components/circle/network';
 
 const CACHE_KEY = 'so_networkStats';
 const MAX_AGE_MS = 24 * 60 * 60 * 1000; // 24h
@@ -18,11 +19,13 @@ function readCache() {
 
 /**
  * Wrapper around getNetworkStats that persists results to localStorage.
- * Shows cached data instantly, fetches fresh in background every 60s.
+ * Shows cached data instantly, fetches fresh in background every 5 minutes
+ * (useCircleNetwork refreshes it sooner when the person's own connections change).
  */
 export function useCachedNetworkStats() {
   const query = trpc.connection.getNetworkStats.useQuery(undefined, {
-    refetchInterval: 60000,
+    refetchInterval: NETWORK_POLL_MS,
+    staleTime: NETWORK_STALE_MS,
     placeholderData: readCache(),
   });
 

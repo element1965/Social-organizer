@@ -4,6 +4,35 @@ import { router, protectedProcedure } from '../trpc.js';
 import { getDb } from '@so/db';
 import { SCREEN_GUIDE } from '../knowledge/screens.js';
 import { translateText } from '../services/translate.service.js';
+import { TRPCError } from '@trpc/server';
+import { hit, HOUR } from '../services/rate-limit.service.js';
+
+/**
+ * The assistant and the voice are the only paid-per-call parts of the service, so they are bounded:
+ * per person (hour and day) and for everyone together per day. Numbers can be changed without a deploy.
+ */
+const DAY = 24 * HOUR;
+const limit = (name: string, fallback: number) => {
+  const n = Number(process.env[name]);
+  return Number.isFinite(n) && n > 0 ? n : fallback;
+};
+const CHAT_PER_HOUR = limit('CHAT_LIMIT_PER_HOUR', 30);
+const CHAT_PER_DAY = limit('CHAT_LIMIT_PER_DAY', 100);
+const CHAT_ALL_PER_DAY = limit('CHAT_LIMIT_ALL_PER_DAY', 5000);
+const SPEAK_PER_HOUR = limit('SPEAK_LIMIT_PER_HOUR', 40);
+const SPEAK_ALL_PER_DAY = limit('SPEAK_LIMIT_ALL_PER_DAY', 3000);
+
+function assertWithinLimits(checks: Array<[key: string, max: number, windowMs: number]>): void {
+  for (const [key, max, windowMs] of checks) {
+    if (!hit(key, max, windowMs)) {
+      throw new TRPCError({ code: 'TOO_MANY_REQUESTS', message: 'ASSISTANT_LIMIT' });
+    }
+  }
+}
+
+/** The system prompt (screen guide + FAQ, translated when needed) is the same for everyone in a language. */
+const PROMPT_TTL_MS = 10 * 60_000;
+const promptCache = new Map<string, { prompt: string; at: number }>();
 
 // Grok API is compatible with OpenAI SDK — lazy init to avoid crash if key is missing at startup
 let grok: OpenAI | null = null;
@@ -80,6 +109,15 @@ async function sendFeedbackToTelegram(userMessage: string, userId: string): Prom
 }
 
 async function getSystemPrompt(language: string): Promise<string> {
+  const cached = promptCache.get(language);
+  if (cached && Date.now() - cached.at < PROMPT_TTL_MS) return cached.prompt;
+  const prompt = await buildSystemPrompt(language);
+  if (promptCache.size > 200) promptCache.clear();
+  promptCache.set(language, { prompt, at: Date.now() });
+  return prompt;
+}
+
+async function buildSystemPrompt(language: string): Promise<string> {
   const db = getDb();
   // Normalize to 2-char language code so 'ru-RU' → 'ru', 'en-US' → 'en', etc.
   const lang2 = language.slice(0, 2).toLowerCase();
@@ -163,6 +201,11 @@ export const chatRouter = router({
     }))
     .mutation(async ({ ctx, input }) => {
       const { message, language } = input;
+      assertWithinLimits([
+        [`chat:h:${ctx.userId}`, CHAT_PER_HOUR, HOUR],
+        [`chat:d:${ctx.userId}`, CHAT_PER_DAY, DAY],
+        ['chat:all', CHAT_ALL_PER_DAY, DAY],
+      ]);
 
       const systemPrompt = await getSystemPrompt(language);
       const chatMessages: { role: 'system' | 'user'; content: string }[] = [
@@ -244,7 +287,11 @@ export const chatRouter = router({
       text: z.string().max(500),
       voice: z.enum(['nova', 'onyx']).default('nova'),
     }))
-    .mutation(async ({ input }) => {
+    .mutation(async ({ ctx, input }) => {
+      assertWithinLimits([
+        [`speak:h:${ctx.userId}`, SPEAK_PER_HOUR, HOUR],
+        ['speak:all', SPEAK_ALL_PER_DAY, DAY],
+      ]);
       try {
         const response = await getOpenAITts().audio.speech.create({
           model: 'tts-1',

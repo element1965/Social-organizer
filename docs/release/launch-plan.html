@@ -1,0 +1,374 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Social Organizer — план выпуска</title>
+<style>
+  :root {
+    --canvas: #f3f6f4; --paper: #ffffff; --surface-2: #e9eeec;
+    --ink: #14211e; --muted: #5c6d68; --subtle: #8a9a95;
+    --line: rgba(20, 33, 30, .14); --line-soft: rgba(20, 33, 30, .08);
+    --care: #087f71; --care-soft: #e5f5f3; --sos: #c5342c; --sos-soft: #fbeae8;
+    --warm-soft: #fdf1e3; --warm-ink: #9a5a16; --link: #5468d4; --link-soft: #eef1fc;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --canvas: #0b1513; --paper: #132420; --surface-2: #1b332e;
+      --ink: #e7eeeb; --muted: #9fb0aa; --subtle: #5f7069;
+      --line: rgba(231, 238, 235, .16); --line-soft: rgba(231, 238, 235, .09);
+      --care: #5fd3c6; --care-soft: #12332f; --sos: #f08a82; --sos-soft: #3a1c1a;
+      --warm-soft: #33291a; --warm-ink: #f2be68; --link: #9aa8f0; --link-soft: #1c2340;
+    }
+  }
+  :root[data-theme="dark"] {
+    --canvas: #0b1513; --paper: #132420; --surface-2: #1b332e;
+    --ink: #e7eeeb; --muted: #9fb0aa; --subtle: #5f7069;
+    --line: rgba(231, 238, 235, .16); --line-soft: rgba(231, 238, 235, .09);
+    --care: #5fd3c6; --care-soft: #12332f; --sos: #f08a82; --sos-soft: #3a1c1a;
+    --warm-soft: #33291a; --warm-ink: #f2be68; --link: #9aa8f0; --link-soft: #1c2340;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0; background: var(--canvas); color: var(--ink);
+    font: 16px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+  .wrap { max-width: 920px; margin: 0 auto; padding: 28px 16px 72px; }
+  header h1 { font-size: 30px; line-height: 1.2; margin: 0 0 8px; letter-spacing: -.01em; }
+  header p { margin: 0; color: var(--muted); max-width: 62ch; }
+  .meta { margin-top: 10px; font-size: 13px; color: var(--subtle); }
+  h2 { font-size: 21px; margin: 40px 0 6px; letter-spacing: -.005em; }
+  h2 + .lead { margin: 0 0 14px; color: var(--muted); max-width: 68ch; }
+  h3 { font-size: 16px; margin: 0; }
+  a { color: var(--link); }
+  code { font: 13px/1.4 ui-monospace, "Cascadia Code", Consolas, monospace; background: var(--surface-2); padding: 1px 5px; border-radius: 4px; overflow-wrap: anywhere; }
+
+  .summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 10px; margin-top: 22px; }
+  .stat { background: var(--paper); border: 1px solid var(--line-soft); border-radius: 12px; padding: 12px 14px; }
+  .stat b { display: block; font-size: 24px; line-height: 1.2; font-variant-numeric: tabular-nums; }
+  .stat span { font-size: 13px; color: var(--muted); }
+  .bar { height: 6px; background: var(--surface-2); border-radius: 3px; overflow: hidden; margin-top: 8px; }
+  .bar i { display: block; height: 100%; width: 0; background: var(--care); transition: width .25s; }
+
+  .toolbar { display: flex; flex-wrap: wrap; gap: 8px; margin: 18px 0 0; }
+  .toolbar button {
+    font: inherit; font-size: 14px; color: var(--ink); background: var(--paper);
+    border: 1px solid var(--line); border-radius: 999px; padding: 6px 14px; cursor: pointer;
+  }
+  .toolbar button[aria-pressed="true"] { background: var(--care-soft); border-color: var(--care); color: var(--care); }
+  .toolbar button:focus-visible, .item input:focus-visible { outline: 2px solid var(--link); outline-offset: 2px; }
+
+  .phase { background: var(--paper); border: 1px solid var(--line-soft); border-radius: 14px; margin-top: 12px; }
+  .phase > summary { list-style: none; cursor: pointer; padding: 14px 16px; display: grid; grid-template-columns: 1fr auto; gap: 4px 12px; align-items: center; }
+  .phase > summary::-webkit-details-marker { display: none; }
+  .phase .when { font-size: 13px; color: var(--muted); grid-column: 1; }
+  .phase .count { font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; grid-row: 1 / span 2; grid-column: 2; text-align: right; min-width: 64px; }
+  .phase .count b { color: var(--ink); font-size: 15px; }
+  .phase .bar { grid-column: 1 / -1; margin-top: 6px; }
+  .phase[open] > summary { border-bottom: 1px solid var(--line-soft); }
+  .items { margin: 0; padding: 4px 0; list-style: none; }
+  .item { display: grid; grid-template-columns: 24px 1fr; gap: 10px; padding: 9px 16px; align-items: start; }
+  .item + .item { border-top: 1px solid var(--line-soft); }
+  .item input { width: 18px; height: 18px; margin: 3px 0 0; accent-color: var(--care); cursor: pointer; }
+  .item label { cursor: pointer; }
+  .item .note { display: block; font-size: 13.5px; color: var(--muted); margin-top: 2px; }
+  .item.done label > span:first-child { color: var(--subtle); text-decoration: line-through; text-decoration-thickness: 1px; }
+  .tag { display: inline-block; font-size: 11.5px; line-height: 1; padding: 3px 7px; border-radius: 999px; margin-left: 6px; vertical-align: 2px; white-space: nowrap; }
+  .tag.author { background: var(--warm-soft); color: var(--warm-ink); }
+  .tag.code { background: var(--link-soft); color: var(--link); }
+  .tag.block { background: var(--sos-soft); color: var(--sos); }
+  .hidden { display: none; }
+
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; }
+  .card { background: var(--paper); border: 1px solid var(--line-soft); border-radius: 14px; padding: 14px 16px; }
+  .card p, .card ul { margin: 6px 0 0; color: var(--muted); font-size: 14.5px; }
+  .card ul { padding-left: 18px; }
+  .card li + li { margin-top: 3px; }
+
+  .tablewrap { overflow-x: auto; background: var(--paper); border: 1px solid var(--line-soft); border-radius: 14px; }
+  table { border-collapse: collapse; width: 100%; font-size: 14.5px; min-width: 560px; }
+  th, td { text-align: left; padding: 9px 14px; border-bottom: 1px solid var(--line-soft); vertical-align: top; }
+  th { font-size: 12.5px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; }
+  tr:last-child td { border-bottom: 0; }
+  td.num { font-variant-numeric: tabular-nums; white-space: nowrap; }
+  footer { margin-top: 44px; font-size: 13px; color: var(--subtle); }
+  @media print { .toolbar { display: none; } .phase { break-inside: avoid; } body { background: #fff; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <h1>План выпуска и распространения</h1>
+  <p>Social Organizer как открытый некоммерческий продукт: что закрыть до объявления, в каком порядке выходить и как распространять. Галочки сохраняются в этом браузере.</p>
+  <div class="meta">Ветка <code>redesign</code> · составлен 11 ноября 2026 · основание: аудит кода, метрики Railway и симуляция сети на 10 тыс. – 1 млн человек</div>
+</header>
+
+<div class="summary" aria-live="polite">
+  <div class="stat"><b id="s-done">0</b><span>пунктов закрыто из <span id="s-total">0</span></span><div class="bar"><i id="s-bar"></i></div></div>
+  <div class="stat"><b id="s-block">0</b><span>блокирующих осталось</span></div>
+  <div class="stat"><b id="s-author">0</b><span>ждут решения или действия автора</span></div>
+</div>
+
+<div class="toolbar" role="group" aria-label="Фильтр">
+  <button type="button" data-filter="all" aria-pressed="true">Все</button>
+  <button type="button" data-filter="open" aria-pressed="false">Не закрытые</button>
+  <button type="button" data-filter="block" aria-pressed="false">Блокирующие</button>
+  <button type="button" data-filter="author" aria-pressed="false">Автор</button>
+  <button type="button" id="expand">Развернуть всё</button>
+</div>
+
+<h2>Чеклист по этапам</h2>
+<p class="lead">Этапы идут по порядку: следующий начинается, когда в предыдущем закрыты блокирующие пункты. «Автор» — действие или решение, которое нельзя сделать из кода.</p>
+<div id="phases"></div>
+
+<h2>Как распространять</h2>
+<p class="lead">Потребность открывается при 5 прямых связях и 10 людях в сети, поэтому польза появляется только в плотной группе. Сто человек из одного сообщества дают больше, чем тысяча одиночных установок.</p>
+<div class="cards">
+  <div class="card">
+    <h3>1. Закрытый круг</h3>
+    <p>2–3 недели, 3–5 готовых сообществ по 30–150 человек.</p>
+    <ul>
+      <li>У каждого сообщества один проводник, который приглашает первых 10 лично.</li>
+      <li>Приглашение только по ссылке или QR от знакомого, без публичной регистрации «в пустоту».</li>
+      <li>Раз в неделю короткий разговор с проводниками: что непонятно, где застряли.</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h3>2. Открытый код</h3>
+    <p>Когда репозиторий приведён в порядок и запуск у себя занимает одну команду.</p>
+    <ul>
+      <li>Show HN, r/selfhosted, r/opensource, Lobsters.</li>
+      <li>P2P Foundation и статья на Zenodo — уже есть, дать ссылку на код.</li>
+      <li>Материал «как устроена сеть рукопожатий»: граф в памяти, волны уведомлений, почему нет рейтингов.</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h3>3. Сообщества взаимопомощи</h3>
+    <p>После первых историй из закрытого круга.</p>
+    <ul>
+      <li>Соседские и диаспорные группы, кассы взаимопомощи, кооперативы, волонтёрские сети.</li>
+      <li>Telegram-каналы и чаты: бот и мини-приложение снимают шаг установки.</li>
+      <li>Набор для проводника: одна страница «как привести свой круг», QR-плакат, ответы на частые вопросы.</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h3>4. Устойчивость</h3>
+    <p>Некоммерческий проект живёт, пока расходы малы и видны.</p>
+    <ul>
+      <li>Открытый бюджет на Open Collective: сколько стоит месяц и сколько человек он обслуживает.</li>
+      <li>Заявки: NLnet (NGI Zero), Prototype Fund; для хостинга — программы для открытых и общественных проектов.</li>
+      <li>Правило: ни рекламы, ни продажи данных, ни платных функций.</li>
+    </ul>
+  </div>
+</div>
+
+<h2>Что измерять</h2>
+<p class="lead">Число установок здесь мало что говорит. Показатели ниже считаются из уже хранимых фактов (вехи, связи, потребности).</p>
+<div class="tablewrap">
+<table>
+  <thead><tr><th>Показатель</th><th>Откуда</th><th>Ориентир для закрытого круга</th></tr></thead>
+  <tbody>
+    <tr><td>Доля новых людей с первой связью за 24 часа</td><td>веха <code>FIRST_CONNECTION</code></td><td class="num">≥ 70 %</td></tr>
+    <tr><td>Доля дошедших до открытия потребности</td><td>веха <code>NEED_UNLOCKED</code></td><td class="num">≥ 30 % за 2 недели</td></tr>
+    <tr><td>Потребности, по которым заявленное участие достигло суммы</td><td>статус <code>BLOCKED</code> без причины</td><td class="num">≥ 50 %</td></tr>
+    <tr><td>Время от потребности до первого участия</td><td><code>NotifyStats.responseMinutes</code></td><td class="num">медиана &lt; 6 часов</td></tr>
+    <tr><td>Люди, пришедшие по приглашению, на одного активного</td><td>связи и ссылки приглашений</td><td class="num">≥ 1,2</td></tr>
+    <tr><td>Расход на 1000 активных в месяц</td><td>счёт Railway и LLM</td><td class="num">публиковать</td></tr>
+  </tbody>
+</table>
+</div>
+
+<h2>Нагрузка и затраты</h2>
+<p class="lead">Симуляция повторяет структуры и обходы графа из API на синтетической сети; это замер процессора и памяти одного процесса, без базы. Колонка «после» — что изменили правки в ветке.</p>
+<div class="tablewrap">
+<table>
+  <thead><tr><th>Узкое место</th><th>Было</th><th>После правок</th></tr></thead>
+  <tbody>
+    <tr><td>Расчёт охвата сети (до 6-го рукопожатия)</td><td>Каждый запрос, 2 раза в минуту на человека; 229 мс при 100 тыс. человек и ~13 связях</td><td>Хранится на человека до 5 минут; свои новые связи видны сразу</td></tr>
+    <tr><td>Новая связь в сети</td><td>Перечитывалась вся таблица связей</td><td>Дочитываются только новые строки; полная перезагрузка лишь при удалении</td></tr>
+    <tr><td>Кольцо больше ~120 тыс. человек</td><td>Ошибка переполнения стека</td><td>Исправлено</td></tr>
+    <tr><td>Создание потребности</td><td>Один запрос к базе на каждого получателя, путь хранится для всех достигнутых</td><td>Вставка пачками по 1000, путь строится только для уведомляемых, индекс по потребности</td></tr>
+    <tr><td>Загруженные фото</td><td>10–20 КБ на человека внутри каждого списка людей</td><td>Короткий адрес в списках, картинка кэшируется в браузере навсегда</td></tr>
+    <tr><td>Опрос сервера клиентом</td><td>Тяжёлые списки раз в минуту, счётчик непрочитанного двумя таймерами</td><td>Списки раз в 5 минут и сразу при изменении своих связей; один таймер</td></tr>
+    <tr><td>Ассистент и озвучка</td><td>Без ограничений, перевод FAQ на каждое сообщение</td><td>Лимиты на человека и на сутки, подсказка хранится 10 минут</td></tr>
+    <tr><td>Ответы API</td><td>Без сжатия</td><td>gzip / brotli</td></tr>
+  </tbody>
+</table>
+</div>
+<p class="lead" style="margin-top:14px">Что остаётся на рост: при плотной сети в сотни тысяч человек сам обход всё ещё занимает сотни миллисекунд на первый запрос человека — следующим шагом граф переводится на числовые массивы и расчёт выносится из потока запросов. Реального нагрузочного теста на стейджинге ещё не было.</p>
+
+<footer>Файл: <code>docs/release/launch-plan.html</code>. Связанные документы: <code>docs/release/launch-readiness.md</code> (словарь и решения автора), <code>README.md</code>.</footer>
+</div>
+
+<script>
+/* who: 'author' — действие автора; 'code' — правка в репозитории. block: без этого этап не закрывается. done: уже сделано на дату составления. */
+const PHASES = [
+  { id: 'p0', title: 'Этап 0. Безопасность', when: 'До любого объявления', items: [
+    { id: 'sec-railway', t: 'Сменить токен Railway', n: 'Лежал в CLAUDE.md в публичной истории git (коммиты 533671c…9589a37 и 488a039…8c95b64).', who: 'author', block: 1 },
+    { id: 'sec-pg', t: 'Сменить пароль продовой базы PostgreSQL', n: 'Публичный URL с паролем был в CLAUDE.md и в 13 скриптах (scripts/, packages/db/) до 8c95b64. После смены обновить DATABASE_URL сервиса API и db-backup.', who: 'author', block: 1 },
+    { id: 'sec-keystore', t: 'Сменить ключ загрузки Android', n: 'Пароль keystore был в истории. В Play Console: «Целостность приложения» → запрос на сброс ключа загрузки.', who: 'author', block: 1 },
+    { id: 'sec-history', t: 'Решить, чистить ли историю git', n: 'После смены секретов утёкшие значения бесполезны. Чистка (git filter-repo) переписывает все хэши и ломает форки; делать только если смена невозможна.', who: 'author' },
+    { id: 'sec-claude-md', t: 'Убрать CLAUDE.md из отслеживания', n: 'Файл указан в .gitignore, но отслеживается: git rm --cached. ID сервисов и адреса прокси базы перенести в приватные заметки.', who: 'code', block: 1 },
+    { id: 'sec-firebase', t: 'Ограничить ключ Firebase из google-services.json', n: 'Ключ публичный по замыслу, но в консоли GCP его надо привязать к пакету com.socialorganizer.app и нужным API.', who: 'author' },
+    { id: 'sec-devsecret', t: "Убрать запасное значение 'dev-secret' в email-code.service.ts", n: 'Недостижимо при заданном JWT_SECRET, но в открытом коде выглядит как дыра.', who: 'code' },
+    { id: 'sec-sourcemaps', t: 'Выключить публичные source maps в продовой сборке', n: 'apps/web/vite.config.ts: sourcemap: true.', who: 'code' },
+  ]},
+  { id: 'p1', title: 'Этап 1. Нагрузка и стоимость', when: 'До закрытого круга', items: [
+    { id: 'load-reach', t: 'Кэш охвата сети на человека', n: 'network.service.ts: до 5 минут, сброс при изменении своих связей.', who: 'code', block: 1, done: 1 },
+    { id: 'load-append', t: 'Граф дополняется новыми связями без перечитывания таблицы', n: 'graph-cache.service.ts.', who: 'code', block: 1, done: 1 },
+    { id: 'load-wave', t: 'Волна уведомлений: вставка пачками, путь по требованию, индекс', n: 'notification.service.ts, bfs.service.ts, индекс notifications(collectionId).', who: 'code', block: 1, done: 1 },
+    { id: 'load-avatars', t: 'Загруженные фото по короткому кэшируемому адресу', n: 'Таблица user_avatars, /api/avatar/<id>/<hash>; старые фото переносятся при старте.', who: 'code', block: 1, done: 1 },
+    { id: 'load-poll', t: 'Реже опрашивать тяжёлые списки, один таймер непрочитанного', n: 'network.ts, useEvents.ts, CirclePage.tsx; повтор запроса и возврат после сбоя разнесены по времени.', who: 'code', done: 1 },
+    { id: 'load-chat', t: 'Лимиты ассистента и озвучки, кэш подсказки', n: 'chat.router.ts; числа меняются переменными CHAT_LIMIT_* и SPEAK_LIMIT_*.', who: 'code', block: 1, done: 1 },
+    { id: 'load-compress', t: 'Сжатие ответов API', n: '@fastify/compress.', who: 'code', done: 1 },
+    { id: 'load-migrate-staging', t: 'Стейджинг: обновить схему и выложить ветку', n: 'prisma db push на базу стейджинга, затем один push в redesign.', who: 'author', block: 1 },
+    { id: 'load-test', t: 'Нагрузочный тест на стейджинге с сетью на 100 тыс. человек', n: 'Засеять синтетический граф, прогнать типичную минуту экрана «Круг» для 500–2000 одновременных людей, записать p95 и память.', who: 'code', block: 1 },
+    { id: 'load-outbox', t: 'Вынести рассылку волны из запроса в фоновую задачу', n: 'Сейчас создание потребности ждёт, пока запишутся все уведомления.', who: 'code' },
+    { id: 'load-changes', t: 'Один лёгкий запрос «что изменилось» вместо трёх таймеров на «Круге»', n: 'unreadCount, pending.incoming, myOpenReviews.', who: 'code' },
+    { id: 'cost-redis', t: 'Решить судьбу Redis', n: 'Самая дорогая часть за неделю (в среднем 0,52 ГБ из-за накопленных заданий, сейчас 0,06 ГБ). Периодические задачи можно перевести на таймеры в процессе с блокировкой PostgreSQL, как уже сделано для очистки неактивных аккаунтов.', who: 'author' },
+    { id: 'cost-staging', t: 'Включать стейджинг только на время проверок', n: 'Сейчас он постоянно дублирует три сервиса.', who: 'author' },
+    { id: 'cost-cdn', t: 'Поставить Cloudflare перед сайтом', n: 'Бесплатный тариф: статика и фото уходят с края сети, а не с Railway.', who: 'author' },
+    { id: 'cost-gun', t: 'Решить, нужен ли серверный Gun-relay', n: 'Держит сокет на каждую вкладку ради третьей копии графа; копия на устройстве работает и без него.', who: 'author' },
+  ]},
+  { id: 'p2', title: 'Этап 2. Продукт к выпуску', when: 'До закрытого круга', items: [
+    { id: 'rel-migrations', t: 'Применить миграции на проде', n: 'По порядку из README (раздел Redesign) и новую 20261111120000_load_fixes. Только вручную: prisma migrate deploy с публичным URL.', who: 'author', block: 1 },
+    { id: 'rel-merge-main', t: 'Влить main в redesign, затем redesign в main', n: 'В main попадают автоматические коммиты и срочные правки; сначала забрать их.', who: 'author', block: 1 },
+    { id: 'rel-faq', t: 'Переписать строки FAQ в продовой базе под новый словарь', n: 'Потребность / Участие; из launch-readiness.md.', who: 'author', block: 1 },
+    { id: 'rel-chain', t: 'Проверить тексты авто-цепочки и запланированных постов', n: 'AutoChainMessage, ScheduledPost в продовой базе.', who: 'author', block: 1 },
+    { id: 'rel-privacy', t: 'Дополнить политику приватности', n: 'Назвать обработчиков: Railway, Cloudflare, Resend, Firebase, Google, Apple, xAI и OpenAI (ассистент). Описать журнал ассистента и пересылку обратной связи в Telegram.', who: 'author', block: 1 },
+    { id: 'rel-legal', t: 'Юридическая проверка условий и политики', n: 'Возраст 16 лет, упоминание денег в сторах, страны первого круга.', who: 'author', block: 1 },
+    { id: 'rel-export', t: 'Выгрузка своих данных', n: 'Кнопка в «Аккаунте»: профиль, связи, потребности, участие в JSON. Для ЕС обязательна.', who: 'code', block: 1 },
+    { id: 'rel-ios-push', t: 'Push на iOS', n: 'Нет entitlements для APNs: человек на iOS без Telegram узнаёт о потребности только внутри приложения. Нужна новая сборка в Xcode.', who: 'code', block: 1 },
+    { id: 'rel-android-gate', t: 'Смягчить экран уведомлений на Android', n: 'NativePushBootstrap.tsx блокирует приложение до разрешения — риск на ревью и отток.', who: 'code' },
+    { id: 'rel-ios-invite', t: 'Приглашение на iOS после установки', n: 'Сейчас не применяется само. Universal Links (associated domains) или код приглашения из буфера.', who: 'code' },
+    { id: 'rel-min-version', t: 'Проверка минимальной версии в нативных обёртках', n: 'Экран «обновите приложение» по флагу с сервера.', who: 'code' },
+    { id: 'rel-zoom', t: 'Разрешить масштабирование страницы', n: 'index.html: убрать user-scalable=no, maximum-scale=1.', who: 'code' },
+    { id: 'rel-graph-boundary', t: 'Отдельная граница ошибок вокруг 3D-графа', n: 'Сбой WebGL не должен ронять всё приложение на экран перезагрузки.', who: 'code' },
+    { id: 'rel-store-assets', t: 'Новые скриншоты и описания в сторах, OG-картинка', n: 'play-store-assets показывает старый интерфейс.', who: 'author' },
+    { id: 'rel-languages', t: 'Вычитка 3–4 приоритетных языков носителями', n: 'Остальные 24 помечены как машинный перевод.', who: 'author' },
+    { id: 'rel-monitoring', t: 'Наблюдение: ошибки и доступность', n: 'Сбор ошибок (Sentry для открытых проектов бесплатен), внешний пинг /health, оповещение в чат поддержки.', who: 'code', block: 1 },
+    { id: 'rel-restore', t: 'Учебное восстановление базы из резервной копии', n: 'По инструкции из README в новую базу; записать время.', who: 'author', block: 1 },
+  ]},
+  { id: 'p3', title: 'Этап 3. Открытый репозиторий', when: 'До публичного объявления кода', items: [
+    { id: 'oss-license', t: 'Выбрать лицензию и добавить файл LICENSE', n: 'README говорит MIT, файла нет. MIT разрешает закрытые коммерческие форки; AGPL-3.0 обязывает публиковать изменения сервиса. Лицензии «только некоммерческое» открытыми не считаются.', who: 'author', block: 1 },
+    { id: 'oss-docs', t: 'SECURITY.md, CONTRIBUTING.md, CODE_OF_CONDUCT.md', n: 'В SECURITY — адрес для сообщений об уязвимостях и срок ответа.', who: 'code', block: 1 },
+    { id: 'oss-ci', t: 'CI в GitHub Actions', n: 'install, typecheck, build, i18n:check. Сейчас проверок нет совсем, а pnpm lint ничего не запускает.', who: 'code', block: 1 },
+    { id: 'oss-checks', t: 'Собрать проверочные скрипты в одну команду и починить устаревшие', n: 'apps/api/scripts/check-*.ts. check-connection-counts и check-notifications ждут старые правила и падают.', who: 'code' },
+    { id: 'oss-env', t: 'Полный .env.example и таблица переменных в README', n: 'Не хватает 16 переменных; описать, что без Redis не работают периодические задачи.', who: 'code', block: 1 },
+    { id: 'oss-compose', t: 'docker-compose: PostgreSQL + API одной командой', n: 'Условие для r/selfhosted и для тех, кто хочет свой экземпляр.', who: 'code', block: 1 },
+    { id: 'oss-hardcode', t: 'Убрать зашитые orginizer.com и socialorganizer_bot', n: 'Около 12 файлов API, CORS, capacitor.config.ts, MAIL_FROM. Требовать WEB_APP_URL.', who: 'code' },
+    { id: 'oss-cleanup', t: 'Почистить корень и разовые скрипты', n: 'add_accepting.py, photo_*.jpg, googlef*.html, разовые скрипты для прода в scripts/ и packages/db/, заглушка apps/mobile, мёртвый geo.service.ts.', who: 'code' },
+    { id: 'oss-readme', t: 'README для постороннего читателя', n: 'Что это, скриншот, запуск за 5 минут, как помочь. Внутренние документы (PLAN, SPEC, чеклист iOS) — в docs/ или архив. Раздел о размере сборки устарел.', who: 'code' },
+    { id: 'oss-templates', t: 'Шаблоны issue и PR, метки good first issue', n: '5–10 небольших задач для первых участников.', who: 'code' },
+  ]},
+  { id: 'p4', title: 'Этап 4. Закрытый круг', when: '2–3 недели', items: [
+    { id: 'soft-communities', t: 'Выбрать 3–5 сообществ и проводника в каждом', n: '30–150 человек, которые уже знакомы между собой.', who: 'author', block: 1 },
+    { id: 'soft-kit', t: 'Набор проводника', n: 'Одна страница «как привести свой круг», QR-плакат, короткое видео первого шага.', who: 'author' },
+    { id: 'soft-channel', t: 'Канал обратной связи', n: 'Чат поддержки уже есть в приложении; назначить, кто отвечает и за сколько.', who: 'author', block: 1 },
+    { id: 'soft-metrics', t: 'Еженедельная сводка показателей', n: 'Раздел «Что измерять» ниже; считается из базы.', who: 'code' },
+    { id: 'soft-review', t: 'Разбор после круга', n: 'Где люди застряли до первой связи и до открытия потребности; что править до публичного выхода.', who: 'author', block: 1 },
+  ]},
+  { id: 'p5', title: 'Этап 5. Публичный выход', when: 'После разбора закрытого круга', items: [
+    { id: 'pub-stores', t: 'Обновления в App Store и Google Play', n: 'Play: track production через scripts/deploy-android.mjs, увеличить versionCode.', who: 'author', block: 1 },
+    { id: 'pub-story', t: 'Две-три настоящие истории из закрытого круга', n: 'С согласия людей; без сумм, если они не хотят.', who: 'author' },
+    { id: 'pub-post', t: 'Текст объявления и техническая статья', n: 'Что это и чем не является; как устроена сеть; ссылка на код и на запуск у себя.', who: 'author', block: 1 },
+    { id: 'pub-channels', t: 'Публикации: Show HN, r/selfhosted, r/opensource, P2P Foundation', n: 'В разные дни; автор отвечает в комментариях первые сутки.', who: 'author' },
+    { id: 'pub-capacity', t: 'Запас мощности на день объявления', n: 'Поднять лимит памяти API, проверить лимиты LLM, держать под рукой выключатель ассистента.', who: 'author', block: 1 },
+    { id: 'pub-freeze', t: 'Заморозка выкладок за сутки до объявления', n: 'Только срочные исправления.', who: 'author' },
+  ]},
+  { id: 'p6', title: 'Этап 6. После выхода', when: 'Первые три месяца', items: [
+    { id: 'post-collective', t: 'Open Collective с открытым бюджетом', n: 'Публиковать расход на месяц и на 1000 активных людей.', who: 'author' },
+    { id: 'post-grants', t: 'Заявки на гранты', n: 'NLnet NGI Zero, Prototype Fund; приложить статью с Zenodo и показатели закрытого круга.', who: 'author' },
+    { id: 'post-typed-graph', t: 'Граф на числовых массивах, расчёт вне потока запросов', n: 'Нужен на подходе к сотням тысяч человек: память с ~1,4 ГБ до ~0,1 ГБ на миллион.', who: 'code' },
+    { id: 'post-sse', t: 'События с сервера вместо опроса', n: 'Server-Sent Events для ленты «Круга».', who: 'code' },
+    { id: 'post-nonmoney', t: 'Немонетарные потребности', n: 'Открытый вопрос автора из launch-readiness.md.', who: 'author' },
+    { id: 'post-governance', t: 'Правила проекта', n: 'Кто принимает изменения, как решаются споры, кто владеет доменом и аккаунтами сторов.', who: 'author' },
+  ]},
+];
+
+const KEY = 'so-launch-plan-v1';
+let saved = {};
+try { saved = JSON.parse(localStorage.getItem(KEY) || '{}') || {}; } catch (e) { saved = {}; }
+const isDone = (it) => (it.id in saved ? !!saved[it.id] : !!it.done);
+let filter = 'all';
+
+const root = document.getElementById('phases');
+const esc = (s) => s.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+function render() {
+  root.innerHTML = PHASES.map((p, i) => `
+    <details class="phase" id="${p.id}" ${i < 2 ? 'open' : ''}>
+      <summary>
+        <h3>${esc(p.title)}</h3>
+        <span class="when">${esc(p.when)}</span>
+        <span class="count"><b data-done></b> / ${p.items.length}</span>
+        <div class="bar"><i></i></div>
+      </summary>
+      <ul class="items">
+        ${p.items.map((it) => `
+          <li class="item" data-id="${it.id}">
+            <input type="checkbox" id="c-${it.id}" ${isDone(it) ? 'checked' : ''}>
+            <label for="c-${it.id}">
+              <span>${esc(it.t)}</span>${it.block ? '<span class="tag block">блокирует</span>' : ''}<span class="tag ${it.who}">${it.who === 'author' ? 'автор' : 'код'}</span>
+              <span class="note">${esc(it.n)}</span>
+            </label>
+          </li>`).join('')}
+      </ul>
+    </details>`).join('');
+  update();
+}
+
+function update() {
+  let total = 0, done = 0, block = 0, author = 0;
+  for (const p of PHASES) {
+    let pd = 0;
+    for (const it of p.items) {
+      const d = isDone(it);
+      total++; if (d) { done++; pd++; }
+      if (!d && it.block) block++;
+      if (!d && it.who === 'author') author++;
+      const li = root.querySelector(`[data-id="${it.id}"]`);
+      li.classList.toggle('done', d);
+      const show = filter === 'all' || (!d && (filter === 'open' || (filter === 'block' && it.block) || (filter === 'author' && it.who === 'author')));
+      li.classList.toggle('hidden', !show);
+    }
+    const el = document.getElementById(p.id);
+    el.querySelector('[data-done]').textContent = pd;
+    el.querySelector('.bar i').style.width = (100 * pd / p.items.length) + '%';
+    el.classList.toggle('hidden', filter !== 'all' && !el.querySelector('.item:not(.hidden)'));
+  }
+  document.getElementById('s-done').textContent = done;
+  document.getElementById('s-total').textContent = total;
+  document.getElementById('s-bar').style.width = (100 * done / total) + '%';
+  document.getElementById('s-block').textContent = block;
+  document.getElementById('s-author').textContent = author;
+}
+
+root.addEventListener('change', (e) => {
+  const li = e.target.closest('.item');
+  if (!li) return;
+  saved[li.dataset.id] = e.target.checked;
+  try { localStorage.setItem(KEY, JSON.stringify(saved)); } catch (err) { /* private window: the page still works */ }
+  update();
+});
+
+document.querySelector('.toolbar').addEventListener('click', (e) => {
+  const b = e.target.closest('button');
+  if (!b) return;
+  if (b.id === 'expand') {
+    const open = b.textContent === 'Развернуть всё';
+    root.querySelectorAll('details').forEach((d) => { d.open = open; });
+    b.textContent = open ? 'Свернуть всё' : 'Развернуть всё';
+    return;
+  }
+  filter = b.dataset.filter;
+  document.querySelectorAll('[data-filter]').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+  if (filter !== 'all') root.querySelectorAll('details').forEach((d) => { d.open = true; });
+  update();
+});
+
+render();
+</script>
+</body>
+</html>
