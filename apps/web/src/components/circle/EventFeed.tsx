@@ -1,18 +1,19 @@
 import { useRef, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { EventRow } from '../ui2/EventRow';
-import { IconBell, IconHand, IconUserPlus } from '../ui2/icons';
-import type { FeedEvent, FeedKind } from '../../hooks/useEvents';
-import { IconClock, IconClose, IconDone, IconPause, IconRepeat } from './icons';
+import { IconBell, IconHand, IconPeople, IconUserPlus } from '../ui2/icons';
+import { useAuth } from '../../hooks/useAuth';
+import { FEED_GROUPS, feedGroup, type FeedEvent, type FeedGroup, type FeedKind } from '../../hooks/useEvents';
+import { IconClock, IconClose, IconDone, IconFlag, IconPause, IconRepeat } from './icons';
 
 const ICONS: Record<FeedKind, ReactNode> = {
   request: <IconBell className="h-5 w-5" />,
-  mine: <IconHand className="h-5 w-5" />,
+  mine: <IconFlag className="h-5 w-5" />,
   participating: <IconHand className="h-5 w-5" />,
   cycle: <IconRepeat className="h-5 w-5" />,
   closed: <IconDone className="h-5 w-5" />,
   blocked: <IconPause className="h-5 w-5" />,
-  joined: <IconHand className="h-5 w-5" />,
+  joined: <IconPeople className="h-5 w-5" />,
   incoming: <IconUserPlus className="h-5 w-5" />,
   waiting: <IconClock className="h-5 w-5" />,
   milestone: <IconDone className="h-5 w-5" />,
@@ -23,17 +24,22 @@ type EventFeedProps = {
   loading?: boolean;
   onOpen: (event: FeedEvent) => void;
   onDismiss: (event: FeedEvent) => void;
-  /** Group rows under "Today" / "Earlier" (phone sheet). The desktop column has its own heading. */
-  dayLabels?: boolean;
 };
 
-function startOfToday(): number {
-  const now = new Date();
-  return new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
-}
+const GROUP_TITLE: Record<FeedGroup, string> = {
+  needs: 'circle.feed.groupNeeds',
+  mine: 'circle.feed.groupMine',
+  helping: 'circle.feed.groupHelping',
+  people: 'circle.feed.groupPeople',
+};
 
-export function EventFeed({ events, loading, onOpen, onDismiss, dayLabels = false }: EventFeedProps) {
+/**
+ * The Circle feed in sections by meaning (what waits for me, my Needs, Needs I am in, people), newest first inside
+ * each. Rows of my own Needs carry the flag, rows of Needs I take part in the hand.
+ */
+export function EventFeed({ events, loading, onOpen, onDismiss }: EventFeedProps) {
   const { t } = useTranslation();
+  const myId = useAuth((s) => s.userId);
   const swipedAt = useRef(0);
 
   if (loading && events.length === 0) {
@@ -48,19 +54,27 @@ export function EventFeed({ events, loading, onOpen, onDismiss, dayLabels = fals
 
   if (events.length === 0) return <QuietFeed />;
 
-  const today = startOfToday();
-  const groups: Array<{ label: string | null; rows: FeedEvent[] }> = dayLabels
-    ? [
-        { label: t('circle.feed.today'), rows: events.filter((e) => e.at >= today) },
-        { label: t('circle.feed.earlier'), rows: events.filter((e) => e.at < today) },
-      ].filter((g) => g.rows.length > 0)
-    : [{ label: null, rows: events }];
+  const byGroup = new Map<FeedGroup, FeedEvent[]>();
+  for (const event of events) {
+    const g = feedGroup(event, myId);
+    const list = byGroup.get(g);
+    if (list) list.push(event);
+    else byGroup.set(g, [event]);
+  }
+  const groups = FEED_GROUPS.filter((g) => byGroup.has(g)).map((g) => ({
+    key: g,
+    label: t(GROUP_TITLE[g]),
+    rows: byGroup.get(g)!.sort((a, b) => b.at - a.at),
+  }));
 
   return (
     <div className="flex flex-col">
       {groups.map((group) => (
-        <section key={group.label ?? 'all'}>
-          {group.label ? <h3 className="mx-1 mb-2 mt-1 text-label font-bold text-ink-muted">{group.label}</h3> : null}
+        <section key={group.key} aria-label={group.label}>
+          <h3 className="mx-1 mb-2 mt-1 flex items-baseline justify-between text-label font-bold text-ink-muted">
+            <span>{group.label}</span>
+            <span className="tabular-nums text-ink-subtle">{group.rows.length}</span>
+          </h3>
           <ul className="flex flex-col gap-2 pb-2">
             {group.rows.map((event) => {
               const dismissable = Boolean(event.notificationIds?.length);
