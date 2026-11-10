@@ -1402,5 +1402,19 @@
     "step4": "Palaa sovellukseen",
     "checkAgain": "Tarkista uudelleen",
     "checkHint": "Kun olet ottanut ilmoitukset käyttöön, napauta ”Tarkista uudelleen”"
+  },
+  "adminPerson": {
+    "budget": "Sitoumus tällä jaksolla",
+    "registered": "Rekisteröitynyt",
+    "registeredValue": "{{date}} · päivä {{n}}",
+    "connections": "Suorat yhteydet",
+    "needsCreated": "Luodut tarpeet",
+    "needsOpen": "Avoinna nyt",
+    "needsWithHelp": "Tarpeet, joihin osallistuttu",
+    "tookPartIn": "Osallistunut tarpeisiin",
+    "historyLabel": "Osallistumishistoria",
+    "given": "Antoi · {{n}}",
+    "received": "Sai · {{n}}",
+    "projectDay": "Projektin päivä"
   }
 }

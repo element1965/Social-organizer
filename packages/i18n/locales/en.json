@@ -1402,5 +1402,19 @@
     "step4": "Come back to the app",
     "checkAgain": "Check again",
     "checkHint": "After you turn notifications on, tap “Check again”"
+  },
+  "adminPerson": {
+    "budget": "Pledged this period",
+    "registered": "Registered",
+    "registeredValue": "{{date}} · day {{n}}",
+    "connections": "Direct connections",
+    "needsCreated": "Needs created",
+    "needsOpen": "Needs open now",
+    "needsWithHelp": "Needs with participation",
+    "tookPartIn": "Took part in needs",
+    "historyLabel": "Participation history",
+    "given": "Gave · {{n}}",
+    "received": "Received · {{n}}",
+    "projectDay": "Project day"
   }
 }

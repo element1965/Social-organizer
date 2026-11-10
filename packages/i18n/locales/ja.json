@@ -1391,5 +1391,19 @@
     "step4": "アプリに戻る",
     "checkAgain": "もう一度確認",
     "checkHint": "通知をオンにしたら、「もう一度確認」をタップしてください"
+  },
+  "adminPerson": {
+    "budget": "今期の申し出",
+    "registered": "登録",
+    "registeredValue": "{{date}} · {{n}}日目",
+    "connections": "直接のつながり",
+    "needsCreated": "作成したニーズ",
+    "needsOpen": "現在オープン",
+    "needsWithHelp": "参加があったニーズ",
+    "tookPartIn": "参加したニーズ",
+    "historyLabel": "参加履歴",
+    "given": "提供 · {{n}}",
+    "received": "受け取り · {{n}}",
+    "projectDay": "プロジェクト日数"
   }
 }

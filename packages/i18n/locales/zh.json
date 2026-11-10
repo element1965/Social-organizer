@@ -1391,5 +1391,19 @@
     "step4": "回到应用",
     "checkAgain": "再次检查",
     "checkHint": "打开通知后，点“再次检查”"
+  },
+  "adminPerson": {
+    "budget": "本期承诺",
+    "registered": "注册",
+    "registeredValue": "{{date}} · 第 {{n}} 天",
+    "connections": "直接联系",
+    "needsCreated": "发起的需求",
+    "needsOpen": "当前开放",
+    "needsWithHelp": "有参与的需求",
+    "tookPartIn": "参与过的需求",
+    "historyLabel": "参与记录",
+    "given": "给予 · {{n}}",
+    "received": "收到 · {{n}}",
+    "projectDay": "项目天数"
   }
 }

@@ -1413,5 +1413,19 @@
     "step4": "Volte ao aplicativo",
     "checkAgain": "Verificar de novo",
     "checkHint": "Depois de ativar as notificações, toque em «Verificar de novo»"
+  },
+  "adminPerson": {
+    "budget": "Compromisso neste período",
+    "registered": "Registro",
+    "registeredValue": "{{date}} · dia {{n}}",
+    "connections": "Conexões diretas",
+    "needsCreated": "Necessidades criadas",
+    "needsOpen": "Abertas agora",
+    "needsWithHelp": "Necessidades com participação",
+    "tookPartIn": "Participou de necessidades",
+    "historyLabel": "Histórico de participação",
+    "given": "Deu · {{n}}",
+    "received": "Recebeu · {{n}}",
+    "projectDay": "Dia do projeto"
   }
 }

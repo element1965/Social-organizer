@@ -1402,5 +1402,19 @@
     "step4": "Kom tilbake til appen",
     "checkAgain": "Sjekk igjen",
     "checkHint": "Når du har slått på varsler, trykk på «Sjekk igjen»"
+  },
+  "adminPerson": {
+    "budget": "Tilsagn i denne perioden",
+    "registered": "Registrert",
+    "registeredValue": "{{date}} · dag {{n}}",
+    "connections": "Direkte forbindelser",
+    "needsCreated": "Opprettede behov",
+    "needsOpen": "Åpne nå",
+    "needsWithHelp": "Behov med deltakelse",
+    "tookPartIn": "Deltok i behov",
+    "historyLabel": "Deltakelseshistorikk",
+    "given": "Ga · {{n}}",
+    "received": "Mottok · {{n}}",
+    "projectDay": "Prosjektdag"
   }
 }

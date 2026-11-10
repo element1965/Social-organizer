@@ -1391,5 +1391,19 @@
     "step4": "앱으로 돌아와요",
     "checkAgain": "다시 확인",
     "checkHint": "알림을 켠 다음 “다시 확인”을 눌러 주세요"
+  },
+  "adminPerson": {
+    "budget": "이번 기간 약속",
+    "registered": "가입",
+    "registeredValue": "{{date}} · {{n}}일째",
+    "connections": "직접 연결",
+    "needsCreated": "만든 필요",
+    "needsOpen": "현재 진행 중",
+    "needsWithHelp": "참여가 있는 필요",
+    "tookPartIn": "참여한 필요",
+    "historyLabel": "참여 기록",
+    "given": "준 · {{n}}",
+    "received": "받은 · {{n}}",
+    "projectDay": "프로젝트 일차"
   }
 }

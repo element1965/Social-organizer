@@ -1413,5 +1413,19 @@
     "step4": "חזרו לאפליקציה",
     "checkAgain": "בדיקה שוב",
     "checkHint": "אחרי הפעלת ההתראות, לחצו על «בדיקה שוב»"
+  },
+  "adminPerson": {
+    "budget": "התחייבות בתקופה זו",
+    "registered": "הרשמה",
+    "registeredValue": "{{date}} · יום {{n}}",
+    "connections": "קשרים ישירים",
+    "needsCreated": "צרכים שנוצרו",
+    "needsOpen": "פתוחים כעת",
+    "needsWithHelp": "צרכים עם השתתפות",
+    "tookPartIn": "השתתף בצרכים",
+    "historyLabel": "היסטוריית השתתפות",
+    "given": "נתן · {{n}}",
+    "received": "קיבל · {{n}}",
+    "projectDay": "יום הפרויקט"
   }
 }

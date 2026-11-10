@@ -1413,5 +1413,19 @@
     "step4": "Вратите се у апликацију",
     "checkAgain": "Проверите поново",
     "checkHint": "Кад укључите обавештења, додирните „Проверите поново“"
+  },
+  "adminPerson": {
+    "budget": "Обећање у овом периоду",
+    "registered": "Регистрација",
+    "registeredValue": "{{date}} · дан {{n}}",
+    "connections": "Директне везе",
+    "needsCreated": "Креиране потребе",
+    "needsOpen": "Отворене сада",
+    "needsWithHelp": "Потребе са учешћем",
+    "tookPartIn": "Учешће у потребама",
+    "historyLabel": "Историја учешћа",
+    "given": "Дао/ла · {{n}}",
+    "received": "Добио/ла · {{n}}",
+    "projectDay": "Дан пројекта"
   }
 }

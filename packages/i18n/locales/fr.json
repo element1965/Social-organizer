@@ -1413,5 +1413,19 @@
     "step4": "Revenez dans l’application",
     "checkAgain": "Vérifier à nouveau",
     "checkHint": "Après avoir activé les notifications, touchez « Vérifier à nouveau »"
+  },
+  "adminPerson": {
+    "budget": "Engagement sur cette période",
+    "registered": "Inscription",
+    "registeredValue": "{{date}} · jour {{n}}",
+    "connections": "Connexions directes",
+    "needsCreated": "Besoins créés",
+    "needsOpen": "Ouverts maintenant",
+    "needsWithHelp": "Besoins avec participation",
+    "tookPartIn": "A participé à des besoins",
+    "historyLabel": "Historique de participation",
+    "given": "A donné · {{n}}",
+    "received": "A reçu · {{n}}",
+    "projectDay": "Jour du projet"
   }
 }

@@ -1413,5 +1413,19 @@
     "step4": "Vuelva a la aplicación",
     "checkAgain": "Comprobar de nuevo",
     "checkHint": "Cuando active las notificaciones, toque «Comprobar de nuevo»"
+  },
+  "adminPerson": {
+    "budget": "Aporte en este período",
+    "registered": "Registro",
+    "registeredValue": "{{date}} · día {{n}}",
+    "connections": "Conexiones directas",
+    "needsCreated": "Necesidades creadas",
+    "needsOpen": "Abiertas ahora",
+    "needsWithHelp": "Necesidades con participación",
+    "tookPartIn": "Participó en necesidades",
+    "historyLabel": "Historial de participación",
+    "given": "Dio · {{n}}",
+    "received": "Recibió · {{n}}",
+    "projectDay": "Día del proyecto"
   }
 }
