@@ -42,6 +42,8 @@ Railway does not run migrations. Before `redesign` is merged into `main`, apply 
 - `20261109160000_collection_moderation` (also creates the partial index `collection_reviews_one_open_idx`)
 - `20261109180000_user_inactivity_cleanup` (`users.inactivityStage`, `users.inactivityWarnedAt`). The API tolerates
   the columns being missing (activity falls back to `lastSeen` only), but the daily cleanup fails until it is applied.
+- `20261110100000_collection_description_receipts` (`collections.description`, table `obligation_receipts`). Required:
+  the API reads both, so collection pages and the cycle close fail until it is applied.
 
 ## Design tokens
 

@@ -21,6 +21,7 @@ const DEMO_COLLECTION = {
   currency: 'USD',
   createdAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
   closedAt: null as string | null,
+  description: null as string | null,
   suspended: false,
   creator: { id: 'demo', name: 'Андрей Луб', photoUrl: null as string | null },
   _count: { obligations: 7 },
@@ -99,6 +100,7 @@ export function SosLandingPage() {
             opened={asDate(collection.createdAt)}
             closed={asDate(collection.closedAt)}
             suspended={isSuspended(collection)}
+            description={collection.description ?? null}
             language={language}
             telegramUrl={!isPreview && collectionId && TELEGRAM_BOT && !isTelegramWebApp()
               ? `https://t.me/${TELEGRAM_BOT}?startapp=sos_${collectionId}`
@@ -124,6 +126,7 @@ type PublicBodyProps = {
   opened: Date | null;
   closed: Date | null;
   suspended: boolean;
+  description: string | null;
   language: string;
   telegramUrl: string | null;
   onJoin: () => void;
@@ -142,6 +145,7 @@ function PublicBody({
   opened,
   closed,
   suspended,
+  description,
   language,
   telegramUrl,
   onJoin,
@@ -169,7 +173,11 @@ function PublicBody({
       <h1 className="mt-3.5 text-center text-h2 font-extrabold">{headline}</h1>
       <p className="mt-2 text-center text-body-s font-semibold text-ink-muted">{when}</p>
 
-      <section className="mt-6 w-full rounded-xl bg-surface p-4 text-left shadow-card">
+      {description ? (
+        <p dir="auto" className="mt-4 w-full whitespace-pre-line break-words text-center text-body font-semibold text-ink">{description}</p>
+      ) : null}
+
+      <section className="mt-6 w-full rounded-xl bg-surface p-4 text-start shadow-card">
         {hasGoal ? (
           <>
             <div className="flex items-baseline justify-between gap-3">

@@ -3,6 +3,49 @@ import { getDb } from '@so/db';
 import { REGULAR_CYCLE_DAYS, NOTIFICATION_TTL_HOURS } from '@so/shared';
 import { sendCycleRenewedTg } from '../services/notification.service.js';
 
+type ReceiptDb = Pick<ReturnType<typeof getDb>, 'obligation' | 'obligationReceipt'>;
+
+/**
+ * Moves the author's "received" marks of the cycle that just ended into the per-cycle history,
+ * then clears them so the new cycle starts unmarked. Runs for unsubscribed people too (their
+ * obligation is deleted right after; the receipt keeps the record). Idempotent: the unique key
+ * (collectionId, userId, cycleNumber) plus skipDuplicates, and a second run finds no marks left.
+ */
+export async function recordCycleReceipts(db: ReceiptDb, collectionId: string, endedCycle: number): Promise<number> {
+  const marked = await db.obligation.findMany({
+    where: { collectionId, confirmedAt: { not: null } },
+    select: { id: true, userId: true, amount: true, confirmedAt: true },
+    orderBy: { createdAt: 'asc' },
+  });
+  if (marked.length === 0) return 0;
+
+  // One receipt per person and cycle: if someone has two marked pledges, their amounts add up.
+  const byUser = new Map<string, { obligationId: string; amount: number; confirmedAt: Date }>();
+  for (const o of marked) {
+    const at = o.confirmedAt as Date;
+    const prev = byUser.get(o.userId);
+    if (!prev) byUser.set(o.userId, { obligationId: o.id, amount: o.amount, confirmedAt: at });
+    else byUser.set(o.userId, { obligationId: prev.obligationId, amount: prev.amount + o.amount, confirmedAt: prev.confirmedAt > at ? prev.confirmedAt : at });
+  }
+
+  const created = await db.obligationReceipt.createMany({
+    data: [...byUser.entries()].map(([userId, r]) => ({
+      collectionId,
+      userId,
+      cycleNumber: endedCycle,
+      obligationId: r.obligationId,
+      amount: r.amount,
+      confirmedAt: r.confirmedAt,
+    })),
+    skipDuplicates: true,
+  });
+  await db.obligation.updateMany({
+    where: { id: { in: marked.map((o) => o.id) } },
+    data: { confirmedAt: null },
+  });
+  return created.count;
+}
+
 /**
  * Every hour: check regular collections with completed 28-day cycle.
  * Close current cycle and open new one.
@@ -56,6 +99,9 @@ export async function processCycleClose(_job: Job): Promise<void> {
           blockedAt: null,
         },
       });
+
+      // The author's received marks of the ended cycle go to the history; the new cycle starts unmarked
+      await recordCycleReceipts(tx, collection.id, collection.cycleNumber);
 
       // Notification about cycle closure (with undercollection if needed)
       const notifType = undercollected ? 'COLLECTION_CLOSED' : 'COLLECTION_CLOSED';
