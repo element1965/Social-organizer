@@ -4,6 +4,8 @@
  *
  * --so-* values are "R G B" triplets so Tailwind can add opacity (bg-surface/80).
  * Light theme on :root and .light. Dark theme on html.dark and .dark.
+ * care-text is care for text on canvas/surface; in dark it is lighter than the
+ * care fill so small text stays readable while fills stay calm.
  * Line colors are the ink triplet; Tailwind applies .14 / .08 / .24 alpha.
  * Scene colors stay dark in both themes.
  */
@@ -20,6 +22,7 @@
   --so-care: 8 127 113;
   --so-care-hover: 8 103 92;
   --so-care-soft: 229 245 243;
+  --so-care-text: 8 127 113;
   --so-on-care: 255 255 255;
   --so-care-bright: 13 148 136;
 
@@ -56,6 +59,7 @@
   --teal: #087f71;
   --care-hover: #08675c;
   --care-soft: #e5f5f3;
+  --care-text: #087f71;
   --teal-soft: #e5f5f3;
   --on-care: #ffffff;
   --care-bright: #0d9488;
@@ -119,9 +123,10 @@ html.dark,
   --so-ink-subtle: 111 129 123;
   --so-line: 231 238 235;
 
-  --so-care: 43 179 164;
-  --so-care-hover: 91 191 174;
-  --so-care-soft: 21 52 47;
+  --so-care: 70 165 150;
+  --so-care-hover: 95 176 163;
+  --so-care-soft: 24 47 43;
+  --so-care-text: 108 188 175;
   --so-on-care: 4 36 31;
 
   --so-link: 154 168 240;
@@ -144,11 +149,12 @@ html.dark,
   --line: rgba(231, 238, 235, 0.14);
   --line-soft: rgba(231, 238, 235, 0.08);
   --line-strong: rgba(231, 238, 235, 0.24);
-  --care: #2bb3a4;
-  --teal: #2bb3a4;
-  --care-hover: #5bbfae;
-  --care-soft: #15342f;
-  --teal-soft: #15342f;
+  --care: #46a596;
+  --teal: #46a596;
+  --care-hover: #5fb0a3;
+  --care-soft: #182f2b;
+  --care-text: #6cbcaf;
+  --teal-soft: #182f2b;
   --on-care: #04241f;
   --link: #9aa8f0;
   --link-soft: #283265;
