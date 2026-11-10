@@ -1443,5 +1443,27 @@
     "received": "À vos besoins",
     "count": "participations : {{n}}",
     "marked": "Sur les besoins clos, les auteurs ont marqué {{marked}} sur {{reported}} comme reçues. Les personnes de votre réseau voient ces deux chiffres."
+  },
+  "shake": {
+    "title": "Correspondance par secousse",
+    "searching": "Recherche de quelqu’un à proximité…",
+    "searchingHint": "Demandez à l’autre personne de secouer son téléphone maintenant.",
+    "matchBody": "Est-ce la personne avec qui vous avez secoué ?",
+    "confirm": "Confirmer",
+    "notThem": "Pas cette personne",
+    "alreadyConnected": "Vous êtes déjà en contact",
+    "close": "Fermer",
+    "waiting": "En attente de {{name}}…",
+    "connected": "Vous êtes en contact",
+    "connectedBody": "Vous et {{name}} êtes maintenant en contact.",
+    "openProfile": "Ouvrir le profil",
+    "declined": "La connexion a été refusée.",
+    "expired": "Temps écoulé. Secouez à nouveau.",
+    "failed": "Connexion impossible. Réessayez.",
+    "none": "Personne trouvé. Secouez au même moment ou utilisez le code QR.",
+    "crowded": "Plusieurs personnes secouent à proximité. Utilisez plutôt le code QR.",
+    "openQr": "Utiliser le code QR",
+    "tooMany": "Trop de tentatives. Attendez une minute puis secouez à nouveau.",
+    "enable": "Activer la secousse"
   }
 }

@@ -1443,5 +1443,27 @@
     "received": "У вашим потребама",
     "count": "учешћа: {{n}}",
     "marked": "Код затворених потреба аутори су означили као примљено {{marked}} од {{reported}}. Људи у вашој мрежи виде ова два броја."
+  },
+  "shake": {
+    "title": "Podudaranje tresenjem",
+    "searching": "Tražimo nekoga u blizini…",
+    "searchingHint": "Zamolite drugu osobu da odmah protrese telefon.",
+    "matchBody": "Da li je ovo osoba sa kojom ste tresli telefon?",
+    "confirm": "Potvrdi",
+    "notThem": "Nije ta osoba",
+    "alreadyConnected": "Već ste povezani",
+    "close": "Zatvori",
+    "waiting": "Čekamo {{name}}…",
+    "connected": "Povezani ste",
+    "connectedBody": "Vi i {{name}} ste sada povezani.",
+    "openProfile": "Otvori profil",
+    "declined": "Povezivanje je odbijeno.",
+    "expired": "Vreme je isteklo. Protresite ponovo.",
+    "failed": "Povezivanje nije uspelo. Pokušajte ponovo.",
+    "none": "Niko nije pronađen. Tresite istovremeno ili koristite QR kod.",
+    "crowded": "Nekoliko osoba trese telefon u blizini. Koristite QR kod.",
+    "openQr": "Koristi QR kod",
+    "tooMany": "Previše pokušaja. Sačekajte minut i protresite ponovo.",
+    "enable": "Uključi tresenje"
   }
 }

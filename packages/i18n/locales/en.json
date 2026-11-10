@@ -1432,5 +1432,27 @@
     "received": "In your needs",
     "count": "pledges: {{n}}",
     "marked": "On closed needs, authors marked {{marked}} of {{reported}} pledges as received. People in your network see these two numbers."
+  },
+  "shake": {
+    "title": "Shake match",
+    "searching": "Looking for someone nearby…",
+    "searchingHint": "Ask the other person to shake their phone right now.",
+    "matchBody": "Is this the person you shook phones with?",
+    "confirm": "Confirm",
+    "notThem": "Not them",
+    "alreadyConnected": "You're already connected",
+    "close": "Close",
+    "waiting": "Waiting for {{name}}…",
+    "connected": "You're connected",
+    "connectedBody": "You and {{name}} are now connected.",
+    "openProfile": "Open profile",
+    "declined": "The connection was declined.",
+    "expired": "Time ran out. Shake again to try once more.",
+    "failed": "Could not connect. Try again.",
+    "none": "Nobody found. Shake together at the same moment, or use the QR code.",
+    "crowded": "Several people are shaking nearby. Use the QR code instead.",
+    "openQr": "Use QR code",
+    "tooMany": "Too many tries. Wait a minute and shake again.",
+    "enable": "Enable shake to connect"
   }
 }

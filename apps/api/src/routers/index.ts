@@ -21,7 +21,10 @@ import { supportRouter } from './support.router.js';
 import { milestoneRouter } from './milestone.router.js';
 import { moderationRouter } from './moderation.router.js';
 
+import { shakeRouter } from './shake.router.js';
+
 export const appRouter = router({
+  shake: shakeRouter,
   auth: authRouter,
   user: userRouter,
   connection: connectionRouter,

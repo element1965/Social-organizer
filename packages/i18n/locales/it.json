@@ -1443,5 +1443,27 @@
     "received": "Ai tuoi bisogni",
     "count": "partecipazioni: {{n}}",
     "marked": "Nei bisogni chiusi, gli autori hanno segnato come ricevute {{marked}} su {{reported}}. Le persone della tua rete vedono questi due numeri."
+  },
+  "shake": {
+    "title": "Corrispondenza con scossa",
+    "searching": "Cerco qualcuno vicino…",
+    "searchingHint": "Chiedi all’altra persona di scuotere il telefono adesso.",
+    "matchBody": "È la persona con cui hai scosso il telefono?",
+    "confirm": "Conferma",
+    "notThem": "Non è lei",
+    "alreadyConnected": "Siete già in contatto",
+    "close": "Chiudi",
+    "waiting": "In attesa di {{name}}…",
+    "connected": "Siete in contatto",
+    "connectedBody": "Tu e {{name}} ora siete in contatto.",
+    "openProfile": "Apri profilo",
+    "declined": "La connessione è stata rifiutata.",
+    "expired": "Tempo scaduto. Scuoti di nuovo.",
+    "failed": "Impossibile connettersi. Riprova.",
+    "none": "Nessuno trovato. Scuotete insieme nello stesso momento o usate il codice QR.",
+    "crowded": "Più persone stanno scuotendo qui vicino. Usa il codice QR.",
+    "openQr": "Usa il codice QR",
+    "tooMany": "Troppi tentativi. Aspetta un minuto e scuoti di nuovo.",
+    "enable": "Attiva la scossa"
   }
 }

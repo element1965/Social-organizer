@@ -1421,5 +1421,27 @@
     "received": "在你的需求中",
     "count": "参与次数：{{n}}",
     "marked": "在已关闭的需求中，发起人把 {{reported}} 次中的 {{marked}} 次标为已收到。你网络中的人能看到这两个数字。"
+  },
+  "shake": {
+    "title": "摇一摇配对",
+    "searching": "正在寻找附近的人…",
+    "searchingHint": "请让对方现在也摇一摇手机。",
+    "matchBody": "这是和你一起摇手机的人吗？",
+    "confirm": "确认",
+    "notThem": "不是他",
+    "alreadyConnected": "你们已经建立联系",
+    "close": "关闭",
+    "waiting": "正在等待 {{name}}…",
+    "connected": "已建立联系",
+    "connectedBody": "你和 {{name}} 现在已建立联系。",
+    "openProfile": "打开主页",
+    "declined": "连接被拒绝。",
+    "expired": "时间已到，请再摇一次。",
+    "failed": "无法连接，请重试。",
+    "none": "没有找到人。请同时摇动手机，或使用二维码。",
+    "crowded": "附近有多人在摇手机，请改用二维码。",
+    "openQr": "使用二维码",
+    "tooMany": "尝试次数过多，请等一分钟后再摇。",
+    "enable": "开启摇一摇"
   }
 }

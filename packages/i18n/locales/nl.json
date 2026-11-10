@@ -1432,5 +1432,27 @@
     "received": "Aan uw behoeften",
     "count": "deelnames: {{n}}",
     "marked": "Bij gesloten behoeften markeerden auteurs {{marked}} van {{reported}} als ontvangen. Mensen in uw netwerk zien deze twee getallen."
+  },
+  "shake": {
+    "title": "Schudmatch",
+    "searching": "Op zoek naar iemand in de buurt…",
+    "searchingHint": "Vraag de ander om nu zijn telefoon te schudden.",
+    "matchBody": "Is dit de persoon met wie je hebt geschud?",
+    "confirm": "Bevestigen",
+    "notThem": "Niet deze persoon",
+    "alreadyConnected": "Jullie zijn al verbonden",
+    "close": "Sluiten",
+    "waiting": "Wachten op {{name}}…",
+    "connected": "Jullie zijn verbonden",
+    "connectedBody": "Jij en {{name}} zijn nu verbonden.",
+    "openProfile": "Profiel openen",
+    "declined": "De verbinding is geweigerd.",
+    "expired": "De tijd is om. Schud nog eens.",
+    "failed": "Verbinden is niet gelukt. Probeer het opnieuw.",
+    "none": "Niemand gevonden. Schud op hetzelfde moment of gebruik de QR-code.",
+    "crowded": "Meerdere mensen schudden in de buurt. Gebruik de QR-code.",
+    "openQr": "QR-code gebruiken",
+    "tooMany": "Te veel pogingen. Wacht een minuut en schud opnieuw.",
+    "enable": "Schudden inschakelen"
   }
 }

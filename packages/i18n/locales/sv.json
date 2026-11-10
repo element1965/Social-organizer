@@ -1432,5 +1432,27 @@
     "received": "I dina behov",
     "count": "deltaganden: {{n}}",
     "marked": "För stängda behov markerade författarna {{marked}} av {{reported}} som mottagna. Personer i ditt nätverk ser dessa två siffror."
+  },
+  "shake": {
+    "title": "Skakträff",
+    "searching": "Letar efter någon i närheten…",
+    "searchingHint": "Be den andra personen skaka sin telefon just nu.",
+    "matchBody": "Är det personen du skakade telefon med?",
+    "confirm": "Bekräfta",
+    "notThem": "Inte den personen",
+    "alreadyConnected": "Ni är redan anslutna",
+    "close": "Stäng",
+    "waiting": "Väntar på {{name}}…",
+    "connected": "Ni är anslutna",
+    "connectedBody": "Du och {{name}} är nu anslutna.",
+    "openProfile": "Öppna profil",
+    "declined": "Anslutningen avslogs.",
+    "expired": "Tiden gick ut. Skaka igen.",
+    "failed": "Det gick inte att ansluta. Försök igen.",
+    "none": "Ingen hittades. Skaka samtidigt eller använd QR-koden.",
+    "crowded": "Flera personer skakar i närheten. Använd QR-koden i stället.",
+    "openQr": "Använd QR-kod",
+    "tooMany": "För många försök. Vänta en minut och skaka igen.",
+    "enable": "Aktivera skakning"
   }
 }

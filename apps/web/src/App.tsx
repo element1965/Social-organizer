@@ -8,6 +8,7 @@ import { Capacitor } from '@capacitor/core';
 import { trpc, getTrpcClient } from './lib/trpc';
 import { TelegramBootstrap } from './components/TelegramBootstrap';
 import { ProtectedRoute } from './components/ProtectedRoute';
+import { ShakeProvider } from './components/shake/ShakeProvider';
 import { NativePushBootstrap } from './components/NativePushBootstrap';
 import { AppShell } from './components/ui2/AppShell';
 import { ProfileRedirect } from './components/ui2/stubs';
@@ -287,6 +288,7 @@ export function App() {
           <NativePushBootstrap />
           <GoogleAuthDeepLinkHandler />
           <PrefetchCircle />
+          <ShakeProvider />
           <Routes>
             <Route path="/welcome" element={<RedirectHome />} />
             <Route path="/arvut" element={<RedirectHome />} />

@@ -1421,5 +1421,27 @@
     "received": "Dalam kebutuhan Anda",
     "count": "partisipasi: {{n}}",
     "marked": "Pada kebutuhan yang ditutup, pembuat menandai {{marked}} dari {{reported}} sebagai diterima. Orang di jaringan Anda melihat kedua angka ini."
+  },
+  "shake": {
+    "title": "Kecocokan goyang",
+    "searching": "Mencari seseorang di dekat Anda…",
+    "searchingHint": "Minta orang lain menggoyangkan ponselnya sekarang.",
+    "matchBody": "Apakah ini orang yang Anda goyangkan ponselnya bersama?",
+    "confirm": "Konfirmasi",
+    "notThem": "Bukan dia",
+    "alreadyConnected": "Kalian sudah terhubung",
+    "close": "Tutup",
+    "waiting": "Menunggu {{name}}…",
+    "connected": "Kalian terhubung",
+    "connectedBody": "Anda dan {{name}} sekarang terhubung.",
+    "openProfile": "Buka profil",
+    "declined": "Koneksi ditolak.",
+    "expired": "Waktu habis. Goyangkan lagi.",
+    "failed": "Tidak dapat terhubung. Coba lagi.",
+    "none": "Tidak ada yang ditemukan. Goyangkan bersamaan atau gunakan kode QR.",
+    "crowded": "Beberapa orang menggoyang di dekat Anda. Gunakan kode QR.",
+    "openQr": "Gunakan kode QR",
+    "tooMany": "Terlalu banyak percobaan. Tunggu semenit lalu goyangkan lagi.",
+    "enable": "Aktifkan goyang"
   }
 }
