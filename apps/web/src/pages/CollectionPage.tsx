@@ -28,6 +28,7 @@ import { useNicknames } from '../hooks/useNicknames';
 import { buildSosInviteUrl } from '../lib/inviteUrl';
 import { trpc } from '../lib/trpc';
 import { useOffline } from '../lib/connectivity';
+import { isPendingRequest, useDeclineNeed, useExpiryTick, type NotificationItem } from '../hooks/useEvents';
 import { OfflineHint } from '../components/offline/OfflineNotice';
 
 const DESCRIPTION_MAX = 300;
@@ -77,6 +78,11 @@ export function CollectionPage() {
   const admin = trpc.faq.isAdmin.useQuery();
   const connections = trpc.connection.list.useQuery();
   const collection = trpc.collection.getById.useQuery({ id: id ?? '' }, { enabled: !!id, refetchInterval: 30_000 });
+  // The request notice of this Need: while it waits for my decision the graph on the Circle shows its impulse
+  const notices = trpc.notification.list.useQuery({ limit: 100 });
+  const declineNeed = useDeclineNeed();
+  const noticeItems = notices.data?.items as unknown as NotificationItem[] | undefined;
+  useExpiryTick(noticeItems, id);
   const path = trpc.connection.findPath.useQuery(
     { targetUserId: collection.data?.creatorId ?? '' },
     { enabled: !!collection.data && collection.data.creatorId !== userId },
@@ -86,13 +92,20 @@ export function CollectionPage() {
     if (!id) return;
     utils.collection.getById.invalidate({ id });
     utils.collection.myActive.invalidate();
-    utils.collection.myParticipating.invalidate();
+    // All, not only mounted queries: the Circle is not mounted here, and must not show a stale impulse on return
+    utils.collection.myParticipating.invalidate(undefined, { refetchType: 'all' });
   };
 
   const createObligation = trpc.obligation.create.useMutation({ onSuccess: refresh });
   const updateObligation = trpc.obligation.updateAmount.useMutation({ onSuccess: refresh });
   const confirmCycle = trpc.obligation.confirmCycle.useMutation({ onSuccess: refresh });
-  const decline = trpc.obligation.unsubscribeFromCollection.useMutation({ onSuccess: refresh });
+  // Withdrawing a Participation is a decision too: the request notice must not bring the impulse back
+  const decline = trpc.obligation.unsubscribeFromCollection.useMutation({
+    onSuccess: (_row, vars) => {
+      refresh();
+      void declineNeed(vars.collectionId);
+    },
+  });
   const closeCollection = trpc.collection.close.useMutation({ onSuccess: refresh });
   const updateChat = trpc.collection.updateChatLink.useMutation({ onSuccess: refresh });
   const updateDescription = trpc.collection.updateDescription.useMutation({ onSuccess: refresh });
@@ -123,6 +136,8 @@ export function CollectionPage() {
   const [editError, setEditError] = useState('');
   const [otherOpen, setOtherOpen] = useState(false);
   const [declineOpen, setDeclineOpen] = useState(false);
+  const [leaving, setLeaving] = useState(false);
+  const [leaveError, setLeaveError] = useState(false);
   const [closeOpen, setCloseOpen] = useState(false);
   const [qrOpen, setQrOpen] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -180,6 +195,11 @@ export function CollectionPage() {
   const renewal = data.type === 'REGULAR' && data.cycleNumber > 1 && data.currentCycleStart != null;
   const needsConfirm = !!myObl && renewal && myObl.cycleConfirmed === false && !held && !closed && data.status === 'ACTIVE';
   const showDecline = !owner && !!myObl && !closed && !held;
+  // Asked to help, not yet in, and the notice is still open: "Not now" ends the impulse on the Circle
+  const pendingIds = (noticeItems ?? [])
+    .filter((n) => n.collectionId === data.id && isPendingRequest(n, Date.now()))
+    .map((n) => n.id);
+  const waitsForMe = !owner && !myObl && data.status === 'ACTIVE' && !held && pendingIds.length > 0;
   const showAdmin = admin.data?.isAdmin === true && !closed && (data.status === 'ACTIVE' || held);
   const language = i18n.language;
   const creatorName = resolve(data.creatorId, data.creator.name);
@@ -287,6 +307,16 @@ export function CollectionPage() {
       return;
     }
     place();
+  };
+
+  // The decision is made: back where the Back action goes. A failure stays on the page and says so.
+  const notNow = async () => {
+    setLeaving(true);
+    setLeaveError(false);
+    const ok = await declineNeed(data.id, pendingIds);
+    setLeaving(false);
+    if (ok) navigate(back.to);
+    else setLeaveError(true);
   };
 
   const saveEdit = () => {
@@ -435,6 +465,10 @@ export function CollectionPage() {
           />
           <Button className="mt-4 w-full" loading={createObligation.isPending || setBudget.isPending} disabled={offline} onClick={join}>{t('collection.participate')}</Button>
           {offline ? <OfflineHint /> : null}
+          {waitsForMe ? (
+            <Button variant="text" className="mt-2 min-h-11 w-full" loading={leaving} disabled={offline} onClick={notNow}>{t('invite.notNow')}</Button>
+          ) : null}
+          {leaveError ? <p role="alert" className="mt-2 text-label font-semibold text-sos">{t('common.error')}</p> : null}
         </Card>
       ) : null}
 
