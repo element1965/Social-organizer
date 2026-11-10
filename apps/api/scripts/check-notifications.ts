@@ -179,6 +179,36 @@ async function main() {
   check('answer: one message to the requester, one connection after two parallel accepts', tgTo('g').length === 1 && links === 1, `g=${tgTo('g').length} links=${links}`);
   rows.push(['Connection request', "addressee's channel (Telegram: accept/decline buttons)", 'no reminders for silence', '1 message; answer 1 message']);
 
+  // --- 6b. Direct request: repeat after a decline, after a removed connection, and in parallel
+  tgSent.length = 0;
+  const errOf = (p: Promise<unknown>) => p.then(() => null, (e: any) => `${e?.code}:${e?.message}`);
+  await db.connection.deleteMany({ where: pair(id('d'), id('e')) });
+  await db.pendingConnection.deleteMany({ where: { OR: [{ fromUserId: id('d') }, { toUserId: id('d') }] } });
+  tgSent.length = 0;
+  const race = await Promise.allSettled([
+    call(id('d')).pending.sendDirectRequest({ targetUserId: id('e') }),
+    call(id('d')).pending.sendDirectRequest({ targetUserId: id('e') }),
+  ]);
+  await sleep(300);
+  const raceErr = race.find((r) => r.status === 'rejected') as PromiseRejectedResult | undefined;
+  check('direct request ×2 in parallel → one message, the other gets a clear "already pending"',
+    tgTo('e').length === 1 && (!raceErr || raceErr.reason?.code === 'CONFLICT'), `e=${tgTo('e').length} err=${raceErr?.reason?.code ?? 'none'}`);
+  const dp = await db.pendingConnection.findFirst({ where: { fromUserId: id('d'), toUserId: id('e') }, select: { id: true } });
+  await call(id('e')).pending.reject({ pendingId: dp!.id });
+  tgSent.length = 0;
+  const afterDecline = await errOf(call(id('d')).pending.sendDirectRequest({ targetUserId: id('e') }));
+  await sleep(300);
+  check('repeat after a decline → clear refusal, no message', afterDecline === 'CONFLICT:Request declined' && tgTo('e').length === 0,
+    `${afterDecline} e=${tgTo('e').length}`);
+  // Accepted earlier, connection removed later: a new request is a new event
+  await db.pendingConnection.update({ where: { id: dp!.id }, data: { status: 'ACCEPTED' } });
+  tgSent.length = 0;
+  const afterRemoved = await errOf(call(id('d')).pending.sendDirectRequest({ targetUserId: id('e') }));
+  await sleep(300);
+  check('new request after a removed connection → accepted, one message', afterRemoved === null && tgTo('e').length === 1,
+    `${afterRemoved ?? 'ok'} e=${tgTo('e').length}`);
+  rows.push(['Direct request: repeat after decline', '—', 'declined → clear refusal, nothing sent', '0 messages']);
+
   // --- 7. Regular help (SO-1): reminder once per cycle, unsubscribe and switch respected
   tgSent.length = 0;
   const DAY = 24 * 60 * 60 * 1000;
