@@ -218,7 +218,7 @@
     "zoomOut": "Micșorează",
     "fit": "Încadrează rețeaua",
     "stats": {
-      "canHelp": "Rețeaua ta poate ajuta",
+      "canHelp": "Participarea minimă a rețelei",
       "explain": "Cât mai sunt gata să declare în această perioadă oamenii pe care îi vezi (până la a 3-a strângere de mână): suma participării lor minime. Mesajul despre o nevoie pleacă în valuri, de la cei mai apropiați, până la a 6-a strângere de mână. E o valoare orientativă, nu o promisiune: fiecare decide singur dacă participă.",
       "weekDelta": "+{{amount}} săptămâna aceasta",
       "people_few": "{{count}} persoane în rețeaua ta",
@@ -400,7 +400,7 @@
     "receivedSummary": "Primit {{paid}} din {{total}} · {{sum}} din {{all}}",
     "markTransfers": "Marchează ce ai primit",
     "markTitle": "De la cine ai primit deja bani?",
-    "markHint": "Bifează pe toți de la care a sosit deja suma indicată. E marcajul tău: Social Organizer nu vede și nu verifică transferurile.",
+    "markHint": "Bifează pe toți de la care a sosit deja suma indicată. Doar tu vezi marcajul în sine; Social Organizer nu vede și nu verifică transferurile. După închiderea Nevoii, numărul de marcaje apare în profilul participantului.",
     "markPick": "Alege de la cine ai primit",
     "markConfirm": "Marchează · {{n}} · {{sum}}",
     "selectAll": "Toți · {{n}}",
@@ -479,7 +479,8 @@
     "logoutGeneric": "Poți reveni la fel cum te-ai conectat.",
     "notifyChannel": "Canal",
     "notifyTelegramNotLinked": "Conectează Telegram în „Cont” ca să primești mesajele acolo.",
-    "stakeSaved": "Salvat"
+    "stakeSaved": "Salvat",
+    "factsLine": "Pentru Nevoile închise: participare declarată {{reported}}, marcat de autori ca primit {{marked}}. Oamenii din rețeaua ta văd aceste două numere."
   },
   "settings": {
     "title": "Setări",
@@ -732,7 +733,9 @@
       "q4": "Procesează Social Organizer plăți?",
       "a4": "Nu. Social Organizer nu primește, nu transferă și nu păstrează fonduri. Orice fac participanții între ei, fac direct, în afara serviciului.",
       "q5": "Predau participanții bani?",
-      "a5": "Pot. În mesajul despre o nevoie, participantul indică o sumă, iar în anunțul de participare — cât e gata să predea. Dacă participanții predau bani, o fac singuri și direct, după înțelegerea lor. Social Organizer nu verifică dacă predarea a avut loc."
+      "a5": "Pot. În mesajul despre o nevoie, participantul indică o sumă, iar în anunțul de participare — cât e gata să predea. Dacă participanții predau bani, o fac singuri și direct, după înțelegerea lor. Social Organizer nu verifică dacă predarea a avut loc.",
+      "q6": "În ce sunt exprimate sumele?",
+      "a6": "În dolari americani: o unitate de cont comună, pentru ca sumele să fie comparabile. În ce monedă și în ce fel să acționeze, participanții hotărăsc singuri."
     }
   },
   "how": {
@@ -983,7 +986,8 @@
       "s10Title": "10. Modificări ale condițiilor",
       "s10": "Putem actualiza condițiile acestea din când în când. Dacă continui să folosești aplicația după modificări, înseamnă că accepți noua variantă.",
       "s11Title": "11. Contact",
-      "s11": "Pentru întrebări despre condițiile acestea, scrie-ne prin <bot>Telegram</bot>."
+      "s11": "Pentru întrebări despre condițiile acestea, scrie-ne prin <bot>Telegram</bot>.",
+      "s6b": "Sumele din serviciu sunt exprimate în dolari americani ca unitate de cont comună. În ce monedă și în ce fel să acționeze, participanții hotărăsc între ei."
     }
   },
   "tgBot": {
@@ -1065,8 +1069,8 @@
   "ask": {
     "title": "Nevoie",
     "amountLabel": "Cât e nevoie",
-    "amountHint": "Rețeaua ta poate ajuta cu aproximativ {{amount}}",
-    "amountWarn": "Rețeaua ta poate ajuta acum cu aproximativ {{amount}}: participarea declarată poate să nu ajungă",
+    "amountHint": "Participarea minimă a rețelei tale este de aproximativ {{amount}}",
+    "amountWarn": "Participarea minimă a rețelei tale este acum de aproximativ {{amount}}, așa că participarea declarată poate să nu ajungă",
     "minAmount": "Minimum 10 $",
     "whole": "Doar dolari întregi",
     "typeLabel": "Cât de des",
@@ -1312,7 +1316,11 @@
     "contactsHint": "Se deschid în altă aplicație.",
     "withdrawRequest": "Retrage",
     "requestCooldown": "Cerere retrasă. Poți trimite alta după {{when}}.",
-    "requestCooldownSoon": "Cerere retrasă. Poți trimite alta după o zi."
+    "requestCooldownSoon": "Cerere retrasă. Poți trimite alta după o zi.",
+    "factsTitle": "Participare",
+    "factsReported": "Participare declarată",
+    "factsMarked": "Marcat de autori ca primit",
+    "factsNote": "Pentru Nevoile închise. Marcajul este pus de autorul Nevoii; Social Organizer nu îl verifică."
   },
   "help": {
     "faq": "Întrebări și răspunsuri",

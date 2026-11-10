@@ -79,6 +79,7 @@ export function HistoryPage() {
   const participating = trpc.collection.myParticipating.useQuery();
   const history = trpc.collection.myHistory.useQuery(undefined, { retry: false });
   const help = trpc.stats.help.useQuery();
+  const facts = trpc.stats.participationFacts.useQuery();
   const [tab, setTab] = useState<'open' | 'past'>('open');
 
   // An API that has not loaded this procedure yet must not blank Open and Past.
@@ -162,6 +163,11 @@ export function HistoryPage() {
         </div>
       )}
       {lifetime ? <p className="mt-4 px-1 text-label font-semibold text-ink-muted">{lifetime}</p> : null}
+      {facts.data && facts.data.reported > 0 ? (
+        <p className="mt-2 px-1 text-label font-semibold text-ink-muted">
+          {t('profile.factsLine', { reported: facts.data.reported, marked: facts.data.marked })}
+        </p>
+      ) : null}
     </Screen>
   );
 }

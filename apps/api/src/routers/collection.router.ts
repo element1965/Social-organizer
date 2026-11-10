@@ -236,6 +236,8 @@ export const collectionRouter = router({
         },
         obligations: visible.map((o) => ({
           ...o,
+          // The received mark is the author's own record; other viewers never get it.
+          confirmedAt: ctx.userId === collection.creatorId ? o.confirmedAt : null,
           user: {
             ...o.user,
             connectionCount: countMap.get(o.userId) || 0,

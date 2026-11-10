@@ -218,7 +218,7 @@
     "zoomOut": "Alejar",
     "fit": "Encajar la red",
     "stats": {
-      "canHelp": "Su red puede ayudar",
+      "canHelp": "Participación mínima de la red",
       "explain": "Cuánto más están dispuestas a indicar en este periodo las personas que usted ve (hasta el 3.er apretón de manos): es la suma de su participación mínima. El mensaje sobre una necesidad se envía por oleadas, de los más cercanos hasta el 6.º apretón de manos. Es una referencia, no una promesa: cada quien decide por sí mismo si participa.",
       "weekDelta": "+{{amount}} esta semana",
       "people_many": "{{count}} de personas en su red",
@@ -400,7 +400,7 @@
     "receivedSummary": "Recibido {{paid}} de {{total}} · {{sum}} de {{all}}",
     "markTransfers": "Marcar lo recibido",
     "markTitle": "¿De quién ha recibido ya dinero?",
-    "markHint": "Marque a todos de quienes ya ha llegado la cantidad indicada. Es una marca suya: Social Organizer no ve ni verifica las transferencias.",
+    "markHint": "Marca a todos de quienes ya ha llegado el importe indicado. La marca en sí solo la ves tú; Social Organizer no ve ni verifica las transferencias. Cuando se cierre la Necesidad, el número de marcas aparecerá en el perfil del participante.",
     "markPick": "Elija de quién ha recibido",
     "markConfirm": "Marcar · {{n}} · {{sum}}",
     "selectAll": "Todos · {{n}}",
@@ -479,7 +479,8 @@
     "logoutGeneric": "Puede volver de la misma forma en que entró.",
     "notifyChannel": "Canal",
     "notifyTelegramNotLinked": "Conecte Telegram en «Cuenta» para recibir los mensajes allí.",
-    "stakeSaved": "Guardado"
+    "stakeSaved": "Guardado",
+    "factsLine": "Sobre Necesidades cerradas: participaciones declaradas {{reported}}, marcadas como recibidas por los autores {{marked}}. Las personas de tu red ven estos dos números."
   },
   "settings": {
     "title": "Ajustes",
@@ -732,7 +733,9 @@
       "q4": "¿Procesa pagos Social Organizer?",
       "a4": "No. Social Organizer no acepta, no transfiere ni retiene fondos. Lo que los participantes hagan entre sí, lo hacen directamente, fuera del servicio.",
       "q5": "¿Entregan dinero los participantes?",
-      "a5": "Pueden hacerlo. Una necesidad indica una cantidad, y una participación indica cuánto está dispuesto a entregar el participante. Si los participantes entregan dinero, lo hacen ellos mismos y directamente, según su propio acuerdo. Social Organizer no verifica si la entrega se produjo."
+      "a5": "Pueden hacerlo. Una necesidad indica una cantidad, y una participación indica cuánto está dispuesto a entregar el participante. Si los participantes entregan dinero, lo hacen ellos mismos y directamente, según su propio acuerdo. Social Organizer no verifica si la entrega se produjo.",
+      "q6": "¿En qué se expresan los importes?",
+      "a6": "En dólares estadounidenses: es una unidad de cuenta común, para que los importes sean comparables. En qué moneda y de qué manera actuar lo deciden los propios participantes."
     }
   },
   "how": {
@@ -983,7 +986,8 @@
       "s10Title": "10. Cambios de las condiciones",
       "s10": "Podemos actualizar estas condiciones de vez en cuando. Seguir usando la aplicación después de los cambios supone aceptar las nuevas condiciones.",
       "s11Title": "11. Contacto",
-      "s11": "Si tiene preguntas sobre estas condiciones, contáctenos por <bot>Telegram</bot>."
+      "s11": "Si tiene preguntas sobre estas condiciones, contáctenos por <bot>Telegram</bot>.",
+      "s6b": "Los importes del servicio se expresan en dólares estadounidenses como unidad de cuenta común. En qué moneda y de qué manera actuar lo deciden los participantes entre sí."
     }
   },
   "tgBot": {
@@ -1065,8 +1069,8 @@
   "ask": {
     "title": "Necesidad",
     "amountLabel": "Cuánto hace falta",
-    "amountHint": "Tu red puede ayudar con unos {{amount}}",
-    "amountWarn": "Su red puede ayudar ahora con unos {{amount}}, así que la participación declarada puede no alcanzar",
+    "amountHint": "La participación mínima de tu red es de unos {{amount}}",
+    "amountWarn": "La participación mínima de tu red es ahora de unos {{amount}}: la participación declarada puede no alcanzar",
     "minAmount": "Mínimo 10 $",
     "whole": "Solo dólares enteros",
     "typeLabel": "Con qué frecuencia",
@@ -1312,7 +1316,11 @@
     "contactsHint": "Se abren en otra aplicación.",
     "withdrawRequest": "Retirar",
     "requestCooldown": "Solicitud retirada. Podrás enviar otra después de {{when}}.",
-    "requestCooldownSoon": "Solicitud retirada. Podrás enviar otra un día después."
+    "requestCooldownSoon": "Solicitud retirada. Podrás enviar otra un día después.",
+    "factsTitle": "Participación",
+    "factsReported": "Participaciones declaradas",
+    "factsMarked": "Marcado como recibido por autores",
+    "factsNote": "Sobre Necesidades cerradas. La marca la pone el autor de la Necesidad; Social Organizer no la verifica."
   },
   "help": {
     "faq": "Preguntas y respuestas",

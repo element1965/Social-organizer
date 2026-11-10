@@ -218,7 +218,7 @@
     "zoomOut": "Uzaklaştır",
     "fit": "Ağı sığdır",
     "stats": {
-      "canHelp": "Ağın yardımcı olabilir",
+      "canHelp": "Ağın asgari katılımı",
       "explain": "Gördüğünüz kişilerin (3. tokalaşmaya kadar) bu dönemde belirtmeye hâlâ hazır olduğu tutar: asgari katılımlarının toplamı. İhtiyaç bildirimi dalgalar hâlinde, en yakınlardan başlayarak 6. tokalaşmaya kadar gider. Bu bir gösterge, söz değildir: katılıp katılmamaya herkes kendisi karar verir.",
       "weekDelta": "Bu hafta +{{amount}}",
       "people_one": "Ağınızda {{count}} kişi",
@@ -397,7 +397,7 @@
     "receivedSummary": "Alınan {{paid}}/{{total}} · {{sum}}/{{all}}",
     "markTransfers": "Alınanları işaretle",
     "markTitle": "Kimden para aldınız?",
-    "markHint": "Belirttiği tutar size ulaşmış olan herkesi işaretleyin. Bu sizin kendi işaretinizdir: Social Organizer aktarımları görmez ve doğrulamaz.",
+    "markHint": "Belirttiği tutar ulaşmış olan herkesi işaretleyin. İşareti yalnızca siz görürsünüz; Social Organizer aktarımları görmez ve doğrulamaz. İhtiyaç kapandıktan sonra işaret sayısı katılımcının profilinde görünür.",
     "markPick": "Kimden aldığınızı seçin",
     "markConfirm": "İşaretle · {{n}} · {{sum}}",
     "selectAll": "Herkes · {{n}}",
@@ -476,7 +476,8 @@
     "logoutGeneric": "Giriş yaptığınız yolla dönebilirsiniz.",
     "notifyChannel": "Kanal",
     "notifyTelegramNotLinked": "İletilerin oraya gelmesi için Telegram'ı «Hesap» bölümünde bağlayın.",
-    "stakeSaved": "Kaydedildi"
+    "stakeSaved": "Kaydedildi",
+    "factsLine": "Kapanan ihtiyaçlar için: bildirilen katılım — {{reported}}, yazarlarca alındı işaretlenen — {{marked}}. Bu iki sayıyı ağınızdaki kişiler görür."
   },
   "settings": {
     "title": "Ayarlar",
@@ -727,7 +728,9 @@
       "q4": "Social Organizer ödeme işler mi?",
       "a4": "Hayır. Social Organizer para kabul etmez, aktarmaz ve tutmaz. Katılımcıların kendi aralarında yaptığı her şeyi doğrudan, hizmetin dışında yaparlar.",
       "q5": "Katılımcılar para devreder mi?",
-      "a5": "Edebilirler. İhtiyaç bildiriminde katılımcı bir tutar belirtir, katılım bildiriminde ise ne kadar vermeye hazır olduğunu belirtir. Katılımcılar para devrederse bunu kendileri ve doğrudan, kendi anlaşmalarına göre yaparlar. Social Organizer devrin gerçekleşip gerçekleşmediğini doğrulamaz."
+      "a5": "Edebilirler. İhtiyaç bildiriminde katılımcı bir tutar belirtir, katılım bildiriminde ise ne kadar vermeye hazır olduğunu belirtir. Katılımcılar para devrederse bunu kendileri ve doğrudan, kendi anlaşmalarına göre yaparlar. Social Organizer devrin gerçekleşip gerçekleşmediğini doğrulamaz.",
+      "q6": "Tutarlar hangi birimle belirtilir?",
+      "a6": "ABD doları ile: tutarların karşılaştırılabilmesi için ortak bir hesap birimidir. Hangi para biriminin ve hangi yolun kullanılacağına katılımcılar kendileri karar verir."
     }
   },
   "how": {
@@ -978,7 +981,8 @@
       "s10Title": "10. Koşul değişiklikleri",
       "s10": "Bu koşulları zaman zaman güncelleyebiliriz. Değişikliklerden sonra uygulamayı kullanmaya devam etmeniz, yeni koşulları kabul ettiğiniz anlamına gelir.",
       "s11Title": "11. İletişim",
-      "s11": "Bu koşullar hakkında sorularınız için <bot>Telegram</bot> üzerinden bize ulaşın."
+      "s11": "Bu koşullar hakkında sorularınız için <bot>Telegram</bot> üzerinden bize ulaşın.",
+      "s6b": "Hizmetteki tutarlar, ortak bir hesap birimi olarak ABD doları ile belirtilir. Hangi para biriminin ve hangi yolun kullanılacağına katılımcılar kendi aralarında karar verir."
     }
   },
   "tgBot": {
@@ -1060,8 +1064,8 @@
   "ask": {
     "title": "İhtiyaç",
     "amountLabel": "Ne kadar gerekli",
-    "amountHint": "Ağın yardımcı olabilir: yaklaşık {{amount}}",
-    "amountWarn": "Ağınız şu anda yaklaşık {{amount}} kadar destek olabilir: belirtilen katılım yetmeyebilir",
+    "amountHint": "Ağınızın asgari katılımı yaklaşık {{amount}}",
+    "amountWarn": "Ağınızın asgari katılımı şu anda yaklaşık {{amount}}: belirtilen katılım yetmeyebilir",
     "minAmount": "En az 10 $",
     "whole": "Yalnızca tam dolar",
     "typeLabel": "Ne sıklıkla",
@@ -1301,7 +1305,11 @@
     "contactsHint": "Başka bir uygulamada açılır.",
     "withdrawRequest": "Geri çek",
     "requestCooldown": "İstek geri çekildi. Yenisini {{when}} sonrasında gönderebilirsiniz.",
-    "requestCooldownSoon": "İstek geri çekildi. Yenisini bir gün sonra gönderebilirsiniz."
+    "requestCooldownSoon": "İstek geri çekildi. Yenisini bir gün sonra gönderebilirsiniz.",
+    "factsTitle": "Katılım",
+    "factsReported": "Bildirilen katılım",
+    "factsMarked": "Yazarlarca alındı işaretlenen",
+    "factsNote": "Kapanan ihtiyaçlar için. İşareti ihtiyacın yazarı koyar, Social Organizer bunu doğrulamaz."
   },
   "help": {
     "faq": "Sorular ve yanıtlar",

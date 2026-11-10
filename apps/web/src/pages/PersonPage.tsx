@@ -52,6 +52,7 @@ function PersonScreen() {
   const contacts = trpc.user.getContacts.useQuery({ userId: id }, { enabled: other });
   const participating = trpc.collection.myParticipating.useQuery(undefined, { enabled: other });
   const notes = trpc.notification.list.useQuery({ limit: 100 }, { enabled: other });
+  const facts = trpc.stats.participationFacts.useQuery({ userId: id }, { enabled: other && !!id });
   const history = trpc.stats.helpHistory.useQuery(
     { userId: me.data?.id ?? '' },
     { enabled: other && !!me.data?.id },
@@ -387,6 +388,16 @@ function PersonScreen() {
           </div>
         )}
       </section>
+
+      {facts.data && facts.data.reported > 0 ? (
+        <Group title={t('person.factsTitle')}>
+          <Row title={t('person.factsReported')} value={String(facts.data.reported)} variant="value" chevron={false} />
+          <Row title={t('person.factsMarked')} value={String(facts.data.marked)} variant="value" chevron={false} />
+        </Group>
+      ) : null}
+      {facts.data && facts.data.reported > 0 ? (
+        <p className="mt-2 px-1 text-label font-semibold text-ink-muted">{t('person.factsNote')}</p>
+      ) : null}
 
       {joined.length > 0 || helpedYou.length > 0 ? (
         <Group title={t('person.shared')}>

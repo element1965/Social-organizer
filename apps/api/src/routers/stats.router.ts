@@ -273,6 +273,23 @@ export const statsRouter = router({
   }),
 
   // Help history: who this user helped & who helped this user
+  /**
+   * Two recorded facts about a person, shown side by side on their profile: how many times they reported
+   * Participation and how many of those the authors marked as received. Closed Needs only, withdrawn
+   * Participation is not counted. Counts, not a score: nothing is derived from them.
+   */
+  participationFacts: protectedProcedure
+    .input(z.object({ userId: z.string().optional() }).optional())
+    .query(async ({ ctx, input }) => {
+      const userId = input?.userId ?? ctx.userId;
+      const where = { userId, unsubscribedAt: null, collection: { status: 'CLOSED' as const } };
+      const [reported, marked] = await Promise.all([
+        ctx.db.obligation.count({ where }),
+        ctx.db.obligation.count({ where: { ...where, confirmedAt: { not: null } } }),
+      ]);
+      return { reported, marked };
+    }),
+
   helpHistory: protectedProcedure
     .input(z.object({ userId: z.string() }))
     .query(async ({ ctx, input }) => {

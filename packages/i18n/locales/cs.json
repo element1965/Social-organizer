@@ -218,7 +218,7 @@
     "zoomOut": "Oddálit",
     "fit": "Vejít síť",
     "stats": {
-      "canHelp": "Vaše síť může pomoct",
+      "canHelp": "Minimální účast sítě",
       "explain": "Kolik ještě lidé, které vidíte (až do 3. podání ruky), ochotně uvedou v tomto období: je to součet jejich minimální účasti. Oznámení o potřebě putuje ve vlnách, od nejbližších až po 6. podání ruky. Je to orientační údaj, ne příslib: každý se sám rozhoduje, zda se zapojí.",
       "weekDelta": "+{{amount}} tento týden",
       "people_few": "{{count}} lidé ve vaší síti",
@@ -403,7 +403,7 @@
     "receivedSummary": "Přijato {{paid}} z {{total}} · {{sum}} z {{all}}",
     "markTransfers": "Označit přijaté",
     "markTitle": "Od koho jste už peníze přijali?",
-    "markHint": "Označte všechny, od kterých uvedená částka už dorazila. Je to vaše vlastní značka: Social Organizer převody nevidí ani neověřuje.",
+    "markHint": "Označte všechny, od kterých už uvedená částka dorazila. Samotnou značku vidíte jen vy; Social Organizer převody nevidí ani neověřuje. Po uzavření potřeby se počet značek objeví v profilu účastníka.",
     "markPick": "Vyberte, od koho jste přijali",
     "markConfirm": "Označit · {{n}} · {{sum}}",
     "selectAll": "Všichni · {{n}}",
@@ -482,7 +482,8 @@
     "logoutGeneric": "Vrátit se můžete stejným způsobem, jakým jste se přihlásili.",
     "notifyChannel": "Kanál",
     "notifyTelegramNotLinked": "Propojte Telegram v části „Účet“, aby vám tam chodily zprávy.",
-    "stakeSaved": "Uloženo"
+    "stakeSaved": "Uloženo",
+    "factsLine": "U uzavřených potřeb: hlášení o účasti {{reported}}, autory označeno jako přijaté {{marked}}. Tato dvě čísla vidí lidé ve vaší síti."
   },
   "settings": {
     "title": "Nastavení",
@@ -737,7 +738,9 @@
       "q4": "Zpracovává Social Organizer platby?",
       "a4": "Ne. Social Organizer nepřijímá, nepřevádí ani nedrží finanční prostředky. Cokoli účastníci mezi sebou dělají, dělají přímo, mimo službu.",
       "q5": "Předávají účastníci peníze?",
-      "a5": "Mohou. V oznámení o potřebě účastník uvádí částku a v oznámení o účasti, kolik je ochoten předat. Pokud účastníci peníze předávají, dělají to sami a přímo, podle své dohody. Social Organizer neověřuje, zda k předání došlo."
+      "a5": "Mohou. V oznámení o potřebě účastník uvádí částku a v oznámení o účasti, kolik je ochoten předat. Pokud účastníci peníze předávají, dělají to sami a přímo, podle své dohody. Social Organizer neověřuje, zda k předání došlo.",
+      "q6": "V čem jsou uvedeny částky?",
+      "a6": "V amerických dolarech: je to společná účetní jednotka, aby byly částky srovnatelné. V jaké měně a jakým způsobem jednat, rozhodují účastníci sami."
     }
   },
   "how": {
@@ -988,7 +991,8 @@
       "s10Title": "10. Změny podmínek",
       "s10": "Tyto podmínky můžeme čas od času aktualizovat. Další používání aplikace po změně znamená souhlas s novým zněním.",
       "s11Title": "11. Kontakt",
-      "s11": "Otázky k těmto podmínkám pište přes <bot>Telegram</bot>."
+      "s11": "Otázky k těmto podmínkám pište přes <bot>Telegram</bot>.",
+      "s6b": "Částky ve službě jsou uvedeny v amerických dolarech jako společná účetní jednotka. V jaké měně a jakým způsobem jednat, rozhodují účastníci mezi sebou."
     }
   },
   "tgBot": {
@@ -1070,8 +1074,8 @@
   "ask": {
     "title": "Potřeba",
     "amountLabel": "Kolik je potřeba",
-    "amountHint": "Vaše síť může pomoct zhruba částkou {{amount}}",
-    "amountWarn": "Vaše síť teď může pomoci zhruba částkou {{amount}}, takže uvedená účast nemusí stačit",
+    "amountHint": "Minimální účast vaší sítě je zhruba {{amount}}",
+    "amountWarn": "Minimální účast vaší sítě je teď zhruba {{amount}}, takže uvedená účast nemusí stačit",
     "minAmount": "Nejméně 10 $",
     "whole": "Jen celá čísla",
     "typeLabel": "Jak často",
@@ -1323,7 +1327,11 @@
     "contactsHint": "Otevřou se v jiné aplikaci.",
     "withdrawRequest": "Zrušit",
     "requestCooldown": "Žádost zrušena. Novou lze poslat po {{when}}.",
-    "requestCooldownSoon": "Žádost zrušena. Novou lze poslat den poté."
+    "requestCooldownSoon": "Žádost zrušena. Novou lze poslat den poté.",
+    "factsTitle": "Účast",
+    "factsReported": "Hlášení o účasti",
+    "factsMarked": "Autory označeno jako přijaté",
+    "factsNote": "U uzavřených potřeb. Značku nastavuje autor potřeby, Social Organizer ji neověřuje."
   },
   "help": {
     "faq": "Otázky a odpovědi",

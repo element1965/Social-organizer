@@ -218,7 +218,7 @@
     "zoomOut": "Perkecil",
     "fit": "Paskan jaringan",
     "stats": {
-      "canHelp": "Jaringan Anda bisa membantu",
+      "canHelp": "Partisipasi minimum jaringan",
       "explain": "Berapa lagi yang siap disebutkan pada periode ini oleh orang-orang yang Anda lihat (hingga jabat tangan ke-3): jumlah partisipasi minimum mereka. Pesan tentang kebutuhan berjalan bergelombang, dari yang terdekat, hingga jabat tangan ke-6. Ini hanya acuan, bukan janji: setiap orang memutuskan sendiri apakah ikut serta.",
       "weekDelta": "+{{amount}} minggu ini",
       "people_other": "{{count}} orang di jaringan Anda",
@@ -394,7 +394,7 @@
     "receivedSummary": "Diterima {{paid}} dari {{total}} · {{sum}} dari {{all}}",
     "markTransfers": "Tandai yang diterima",
     "markTitle": "Uang dari siapa yang sudah Anda terima?",
-    "markHint": "Centang semua orang yang jumlah disebutkannya sudah sampai. Ini tanda Anda sendiri: Social Organizer tidak melihat dan tidak memeriksa transfer.",
+    "markHint": "Centang semua orang yang jumlah disebutkannya sudah sampai. Hanya Anda yang melihat tanda itu sendiri; Social Organizer tidak melihat dan tidak memeriksa transfer. Setelah Kebutuhan ditutup, jumlah tanda muncul di profil peserta.",
     "markPick": "Pilih dari siapa Anda menerima",
     "markConfirm": "Tandai · {{n}} · {{sum}}",
     "selectAll": "Semua · {{n}}",
@@ -473,7 +473,8 @@
     "logoutGeneric": "Anda bisa kembali dengan cara yang sama seperti saat masuk.",
     "notifyChannel": "Kanal",
     "notifyTelegramNotLinked": "Hubungkan Telegram di “Akun” agar pesan sampai di sana.",
-    "stakeSaved": "Tersimpan"
+    "stakeSaved": "Tersimpan",
+    "factsLine": "Untuk Kebutuhan yang sudah ditutup: partisipasi dinyatakan {{reported}}, ditandai diterima oleh penulis {{marked}}. Orang-orang di jaringan Anda melihat kedua angka ini."
   },
   "settings": {
     "title": "Pengaturan",
@@ -722,7 +723,9 @@
       "q4": "Apakah Social Organizer memproses pembayaran?",
       "a4": "Tidak. Social Organizer tidak menerima, tidak mentransfer, dan tidak menahan dana. Apa pun yang dilakukan peserta di antara mereka, dilakukan langsung oleh mereka, di luar layanan.",
       "q5": "Apakah peserta menyerahkan uang?",
-      "a5": "Bisa saja. Dalam pesan kebutuhan, peserta menyebut jumlah, dan dalam pesan partisipasi, berapa yang siap diserahkan. Jika peserta menyerahkan uang, mereka melakukannya sendiri dan langsung, sesuai kesepakatan mereka. Social Organizer tidak memeriksa apakah penyerahan itu terjadi."
+      "a5": "Bisa saja. Dalam pesan kebutuhan, peserta menyebut jumlah, dan dalam pesan partisipasi, berapa yang siap diserahkan. Jika peserta menyerahkan uang, mereka melakukannya sendiri dan langsung, sesuai kesepakatan mereka. Social Organizer tidak memeriksa apakah penyerahan itu terjadi.",
+      "q6": "Jumlahnya dalam mata uang apa?",
+      "a6": "Dalam dolar AS: ini satuan hitung bersama agar jumlah dapat dibandingkan. Mata uang dan cara apa yang dipakai ditentukan sendiri oleh para peserta."
     }
   },
   "how": {
@@ -973,7 +976,8 @@
       "s10Title": "10. Perubahan Ketentuan",
       "s10": "Kami dapat memperbarui ketentuan ini dari waktu ke waktu. Pemakaian Aplikasi yang berlanjut setelah perubahan berarti Anda menerima ketentuan yang baru.",
       "s11Title": "11. Kontak",
-      "s11": "Untuk pertanyaan tentang Ketentuan ini, hubungi kami lewat <bot>Telegram</bot>."
+      "s11": "Untuk pertanyaan tentang Ketentuan ini, hubungi kami lewat <bot>Telegram</bot>.",
+      "s6b": "Jumlah di layanan dinyatakan dalam dolar AS sebagai satuan hitung bersama. Mata uang dan cara apa yang dipakai ditentukan antar peserta."
     }
   },
   "tgBot": {
@@ -1055,8 +1059,8 @@
   "ask": {
     "title": "Kebutuhan",
     "amountLabel": "Berapa yang dibutuhkan",
-    "amountHint": "Jaringan Anda bisa membantu sekitar {{amount}}",
-    "amountWarn": "Jaringan Anda saat ini bisa membantu sekitar {{amount}}, sehingga partisipasi yang dinyatakan mungkin kurang",
+    "amountHint": "Partisipasi minimum jaringan Anda sekitar {{amount}}",
+    "amountWarn": "Partisipasi minimum jaringan Anda saat ini sekitar {{amount}}, sehingga partisipasi yang dinyatakan mungkin kurang",
     "minAmount": "Minimum 10 $",
     "whole": "Hanya dolar bulat",
     "typeLabel": "Seberapa sering",
@@ -1290,7 +1294,11 @@
     "contactsHint": "Terbuka di aplikasi lain.",
     "withdrawRequest": "Batalkan",
     "requestCooldown": "Permintaan dibatalkan. Anda bisa mengirim yang baru setelah {{when}}.",
-    "requestCooldownSoon": "Permintaan dibatalkan. Anda bisa mengirim yang baru sehari kemudian."
+    "requestCooldownSoon": "Permintaan dibatalkan. Anda bisa mengirim yang baru sehari kemudian.",
+    "factsTitle": "Partisipasi",
+    "factsReported": "Partisipasi dinyatakan",
+    "factsMarked": "Ditandai diterima oleh penulis",
+    "factsNote": "Untuk Kebutuhan yang sudah ditutup. Tanda ini diberikan oleh penulis Kebutuhan; Social Organizer tidak memeriksanya."
   },
   "help": {
     "faq": "Pertanyaan dan jawaban",

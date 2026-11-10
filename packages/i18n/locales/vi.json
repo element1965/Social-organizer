@@ -218,7 +218,7 @@
     "zoomOut": "Thu nhỏ",
     "fit": "Vừa khít mạng lưới",
     "stats": {
-      "canHelp": "Mạng lưới của bạn có thể giúp",
+      "canHelp": "Mức tham gia tối thiểu của mạng lưới",
       "explain": "Những người bạn nhìn thấy (đến cái bắt tay thứ 3) còn sẵn sàng nêu thêm bao nhiêu trong kỳ này: tổng mức tham gia tối thiểu của họ. Thông báo về nhu cầu đi theo từng đợt, từ người gần nhất đến cái bắt tay thứ 6. Đây chỉ là con số tham khảo, không phải lời hứa: mỗi người tự quyết định có tham gia hay không.",
       "weekDelta": "+{{amount}} tuần này",
       "people_other": "{{count}} người trong mạng lưới của bạn",
@@ -394,7 +394,7 @@
     "receivedSummary": "Đã nhận {{paid}}/{{total}} · {{sum}}/{{all}}",
     "markTransfers": "Đánh dấu đã nhận",
     "markTitle": "Bạn đã nhận tiền từ ai?",
-    "markHint": "Đánh dấu tất cả những người mà số tiền đã nêu đã đến. Đây là dấu của riêng bạn: Social Organizer không thấy và không kiểm tra các khoản chuyển.",
+    "markHint": "Hãy đánh dấu tất cả những người mà số tiền đã nêu đã đến. Chỉ bạn thấy dấu này; Social Organizer không thấy và không kiểm tra các khoản chuyển. Sau khi Nhu cầu đóng, số lượng dấu sẽ hiện trong hồ sơ của người tham gia.",
     "markPick": "Chọn người bạn đã nhận từ",
     "markConfirm": "Đánh dấu · {{n}} · {{sum}}",
     "selectAll": "Tất cả · {{n}}",
@@ -473,7 +473,8 @@
     "logoutGeneric": "Bạn có thể quay lại bằng cách đã dùng để đăng nhập.",
     "notifyChannel": "Kênh",
     "notifyTelegramNotLinked": "Kết nối Telegram trong «Tài khoản» để nhận tin ở đó.",
-    "stakeSaved": "Đã lưu"
+    "stakeSaved": "Đã lưu",
+    "factsLine": "Theo các Nhu cầu đã đóng: số lần báo tham gia — {{reported}}, tác giả đánh dấu đã nhận — {{marked}}. Hai con số này hiển thị với những người trong mạng lưới của bạn."
   },
   "settings": {
     "title": "Cài đặt",
@@ -722,7 +723,9 @@
       "q4": "Social Organizer có xử lý thanh toán không?",
       "a4": "Không. Social Organizer không nhận, không chuyển và không giữ tiền. Mọi việc giữa những người tham gia đều do họ thực hiện trực tiếp, bên ngoài dịch vụ.",
       "q5": "Người tham gia có chuyển tiền cho nhau không?",
-      "a5": "Có thể. Trong thông báo về nhu cầu, người tham gia nêu một số tiền, còn trong thông báo về sự tham gia thì nêu số tiền mình sẵn sàng chuyển. Nếu những người tham gia chuyển tiền, họ tự làm và làm trực tiếp, theo thỏa thuận của họ. Social Organizer không kiểm tra việc chuyển có diễn ra hay không."
+      "a5": "Có thể. Trong thông báo về nhu cầu, người tham gia nêu một số tiền, còn trong thông báo về sự tham gia thì nêu số tiền mình sẵn sàng chuyển. Nếu những người tham gia chuyển tiền, họ tự làm và làm trực tiếp, theo thỏa thuận của họ. Social Organizer không kiểm tra việc chuyển có diễn ra hay không.",
+      "q6": "Các khoản được tính bằng gì?",
+      "a6": "Bằng đô la Mỹ: đây là đơn vị tính chung để các khoản có thể so sánh được. Dùng loại tiền nào và theo cách nào là do những người tham gia tự quyết định."
     }
   },
   "how": {
@@ -973,7 +976,8 @@
       "s10Title": "10. Thay đổi điều khoản",
       "s10": "Chúng tôi có thể cập nhật các điều khoản này theo thời gian. Tiếp tục dùng Ứng dụng sau khi có thay đổi đồng nghĩa với việc chấp nhận điều khoản mới.",
       "s11Title": "11. Liên hệ",
-      "s11": "Nếu có câu hỏi về các Điều khoản này, hãy liên hệ qua <bot>Telegram</bot>."
+      "s11": "Nếu có câu hỏi về các Điều khoản này, hãy liên hệ qua <bot>Telegram</bot>.",
+      "s6b": "Các khoản trong dịch vụ được nêu bằng đô la Mỹ như một đơn vị tính chung. Dùng loại tiền nào và theo cách nào do những người tham gia tự quyết định với nhau."
     }
   },
   "tgBot": {
@@ -1055,8 +1059,8 @@
   "ask": {
     "title": "Nhu cầu",
     "amountLabel": "Cần bao nhiêu",
-    "amountHint": "Mạng lưới của bạn có thể giúp khoảng {{amount}}",
-    "amountWarn": "Mạng lưới của bạn lúc này có thể hỗ trợ khoảng {{amount}}, nên sự tham gia đã nêu có thể không đủ",
+    "amountHint": "Mức tham gia tối thiểu của mạng lưới của bạn là khoảng {{amount}}",
+    "amountWarn": "Hiện mức tham gia tối thiểu của mạng lưới của bạn là khoảng {{amount}}: phần tham gia đã nêu có thể không đủ",
     "minAmount": "Tối thiểu 10 $",
     "whole": "Chỉ số nguyên đô la",
     "typeLabel": "Tần suất",
@@ -1290,7 +1294,11 @@
     "contactsHint": "Sẽ mở trong ứng dụng khác.",
     "withdrawRequest": "Rút lại",
     "requestCooldown": "Đã rút lời mời. Bạn có thể gửi lời mời mới sau {{when}}.",
-    "requestCooldownSoon": "Đã rút lời mời. Bạn có thể gửi lời mời mới sau một ngày."
+    "requestCooldownSoon": "Đã rút lời mời. Bạn có thể gửi lời mời mới sau một ngày.",
+    "factsTitle": "Tham gia",
+    "factsReported": "Số lần báo tham gia",
+    "factsMarked": "Tác giả đánh dấu đã nhận",
+    "factsNote": "Tính theo các Nhu cầu đã đóng. Dấu do tác giả của Nhu cầu đặt, Social Organizer không kiểm tra."
   },
   "help": {
     "faq": "Câu hỏi thường gặp",

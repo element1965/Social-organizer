@@ -19,7 +19,7 @@ A: A one-time Need stays open until the author closes it. A Need every 28 days r
 Q: What is minimum participation?
 A: The amount you are ready to name when someone in your network reports a Need, in whole dollars. It is filled in for you when you report Participation, and you can name more. It is not per month and it does not go down. Change it in Profile → Minimum participation, or choose "I can't help right now". Social Organizer does not accept or transfer money.
 
-Q: What does "Your network can help" mean?
+Q: What does "Minimum participation of the network" mean?
 A: It's the sum of minimum participation named by people in your network (up to 3 handshake levels). It is a reference figure, not a promise, not a fund and not an account: everyone decides for themselves each time.
 
 Q: How many people are notified about my Need?
@@ -30,6 +30,12 @@ A: No. Social Organizer does not accept, transfer or hold funds. Anything partic
 
 Q: Do participants hand over money?
 A: They may. A Need names an amount and a Participation names how much a participant is ready to hand over. If participants hand over money, they do it themselves and directly, by their own arrangement in their chat. The author of a Need can mark what they received; that is their own mark, Social Organizer does not verify it.
+
+Q: What are the amounts in?
+A: In US dollars, as a common unit of account so that amounts can be compared. Which currency and which way to use is up to participants.
+
+Q: What do the two numbers on a profile mean?
+A: "Participation reported" is how many times the person reported Participation in Needs that are now closed. "Marked as received by authors" is how many of those the authors of the Needs marked as received. They are two recorded facts shown side by side, not a rating: Social Organizer does not verify the marks and derives nothing from them. Only the author sees the mark itself inside a Need.
 
 Q: Does the service guarantee assistance?
 A: No. The outcome depends on the independent decisions and actual actions of participants. Taking part is voluntary and declining carries no sanction.
