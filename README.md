@@ -305,7 +305,7 @@ Route pages other than the guest landing are `React.lazy`. The Circle chunk is p
 | AskPage | `/ask` | Report a Need (`/create` redirects here). A compact link in the title row ("All · N", open plus past) leads to the list at `/me/history`; it takes no height, so the form and its button stay on the first screen |
 | AddPage | `/add`, `/add/qr`, `/add/scan` | Invite link, QR, scan |
 | ProfilePage | `/me` | Own profile (`/settings` redirects here) |
-| HistoryPage | `/me/history` | Own Needs and the ones the person takes part in, tabs Open and Past (opens on Past when nothing is open). Reached from the Need tab and from Profile; both rows show the same counts (`useNeedCounts`) |
+| HistoryPage | `/me/history` | Own Needs and the ones the person takes part in, tabs Open and Past (opens on Past when nothing is open). On top, a "Participation so far" card (replaces the old Helped / Helped me half-circle of the SOS screen): two equal columns — the amount and number of the person's own pledges, and of pledges in their Needs (`stats.help`) — plus, for closed Needs, how many pledges authors marked as received (`stats.participationFacts`). No ratio or balance is shown on purpose; the card is hidden while both counts are zero. It is deliberately not on the Ask screen, so a request never looks like a debt. Reached from the Need tab and from Profile; both rows show the same counts (`useNeedCounts`) |
 | AccountPage | `/me/account` | Account, including Connect Telegram |
 | PersonPage | `/person/:id` | Another person (`/profile/:userId` redirects here) |
 | PeoplePage | `/people` | People in the circle |

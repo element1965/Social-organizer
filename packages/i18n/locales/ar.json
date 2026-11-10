@@ -493,7 +493,6 @@
     "noPast": "لا سجلات",
     "pastVia": "عبر {{name}}",
     "left": "سُحبت المشاركة",
-    "lifetime": "أعلنت عن مشاركتك {{givenCount}} مرات · {{givenAmount}}. شارك الأشخاص في احتياجاتك {{receivedCount}} مرات · {{receivedAmount}}.",
     "goalMissing": "لم يُحدَّد مبلغ",
     "logoutByMethodEmail": "سجّلت الدخول عبر {{method}} (<b/>). يمكنك العودة بالطريقة نفسها أو برمز البريد الإلكتروني.",
     "logoutByMethod": "سجّلت الدخول عبر {{method}}. يمكنك العودة بالطريقة نفسها.",
@@ -503,7 +502,6 @@
     "notifyChannel": "القناة",
     "notifyTelegramNotLinked": "اربط Telegram في «الحساب» لتصل الرسائل إلى هناك.",
     "stakeSaved": "تم الحفظ",
-    "factsLine": "للاحتياجات المغلقة: بلاغات المشاركة {{reported}}، حددها المؤلفون كمستلمة {{marked}}. يرى هذين الرقمين أشخاص شبكتك.",
     "needCounts": "المفتوحة: {{open}} · السابقة: {{past}}",
     "stages": "المراحل"
   },
@@ -1460,5 +1458,12 @@
     "given": "قدّم · {{n}}",
     "received": "تلقّى · {{n}}",
     "projectDay": "يوم المشروع"
+  },
+  "participationSummary": {
+    "title": "المشاركة حتى الآن",
+    "gave": "شاركتَ",
+    "received": "في احتياجاتك",
+    "count": "مشاركات: {{n}}",
+    "marked": "في الاحتياجات المغلقة، علّم أصحابها {{marked}} من {{reported}} كمستلمة. يرى أشخاص شبكتك هذين الرقمين."
   }
 }

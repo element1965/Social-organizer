@@ -478,7 +478,6 @@
     "noPast": "Tidak ada entri",
     "pastVia": "lewat {{name}}",
     "left": "Partisipasi ditarik",
-    "lifetime": "Anda menyampaikan partisipasi: {{givenCount}} · {{givenAmount}}. Pada kebutuhan Anda ada partisipasi: {{receivedCount}} · {{receivedAmount}}.",
     "goalMissing": "Jumlah belum diatur",
     "logoutByMethodEmail": "Anda masuk dengan {{method}} (<b/>). Kembali dengan cara yang sama atau dengan kode email.",
     "logoutByMethod": "Anda masuk dengan {{method}}. Kembali dengan cara yang sama.",
@@ -488,7 +487,6 @@
     "notifyChannel": "Kanal",
     "notifyTelegramNotLinked": "Hubungkan Telegram di “Akun” agar pesan sampai di sana.",
     "stakeSaved": "Tersimpan",
-    "factsLine": "Untuk Kebutuhan yang sudah ditutup: partisipasi dinyatakan {{reported}}, ditandai diterima oleh penulis {{marked}}. Orang-orang di jaringan Anda melihat kedua angka ini.",
     "needCounts": "Terbuka: {{open}} · Sebelumnya: {{past}}",
     "stages": "Tahapan"
   },
@@ -1405,5 +1403,12 @@
     "given": "Memberi · {{n}}",
     "received": "Menerima · {{n}}",
     "projectDay": "Hari proyek"
+  },
+  "participationSummary": {
+    "title": "Partisipasi sejauh ini",
+    "gave": "Anda ikut serta",
+    "received": "Dalam kebutuhan Anda",
+    "count": "partisipasi: {{n}}",
+    "marked": "Pada kebutuhan yang ditutup, pembuat menandai {{marked}} dari {{reported}} sebagai diterima. Orang di jaringan Anda melihat kedua angka ini."
   }
 }

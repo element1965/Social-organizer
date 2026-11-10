@@ -481,7 +481,6 @@
     "noPast": "Ingen oppføringer",
     "pastVia": "via {{name}}",
     "left": "Deltakelsen er trukket tilbake",
-    "lifetime": "Du meldte om deltakelse {{givenCount}} ganger · {{givenAmount}}. Folk deltok i behovene dine {{receivedCount}} ganger · {{receivedAmount}}.",
     "goalMissing": "Ingen beløp satt",
     "logoutByMethodEmail": "Du logget inn med {{method}} (<b/>). Kom tilbake på samme måte eller med en e-postkode.",
     "logoutByMethod": "Du logget inn med {{method}}. Kom tilbake på samme måte.",
@@ -491,7 +490,6 @@
     "notifyChannel": "Kanal",
     "notifyTelegramNotLinked": "Koble til Telegram under «Konto» for å få meldingene der.",
     "stakeSaved": "Lagret",
-    "factsLine": "For lukkede Behov: meldt deltakelse {{reported}}, merket som mottatt av forfattere {{marked}}. Folk i nettverket ditt ser disse to tallene.",
     "needCounts": "Åpne: {{open}} · Tidligere: {{past}}",
     "stages": "Etapper"
   },
@@ -1416,5 +1414,12 @@
     "given": "Ga · {{n}}",
     "received": "Mottok · {{n}}",
     "projectDay": "Prosjektdag"
+  },
+  "participationSummary": {
+    "title": "Deltakelse så langt",
+    "gave": "Du deltok",
+    "received": "I dine behov",
+    "count": "deltakelser: {{n}}",
+    "marked": "For lukkede behov markerte forfatterne {{marked}} av {{reported}} som mottatt. Folk i nettverket ditt ser disse to tallene."
   }
 }

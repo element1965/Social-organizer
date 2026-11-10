@@ -478,7 +478,6 @@
     "noPast": "기록이 없어요",
     "pastVia": "{{name}} 경유",
     "left": "참여를 거뒀어요",
-    "lifetime": "내가 참여를 알린 횟수 {{givenCount}}번 · {{givenAmount}}. 내 필요에 참여한 횟수 {{receivedCount}}번 · {{receivedAmount}}.",
     "goalMissing": "금액이 없어요",
     "logoutByMethodEmail": "{{method}}(<b/>)로 로그인했어요. 같은 방법으로, 또는 이메일 코드로 다시 들어올 수 있어요.",
     "logoutByMethod": "{{method}}로 로그인했어요. 같은 방법으로 다시 들어올 수 있어요.",
@@ -488,7 +487,6 @@
     "notifyChannel": "채널",
     "notifyTelegramNotLinked": "메시지를 받으려면 “계정”에서 Telegram을 연결해 주세요.",
     "stakeSaved": "저장했어요",
-    "factsLine": "닫힌 필요 기준: 알린 참여 {{reported}}건, 작성자가 받음으로 표시 {{marked}}건. 이 두 숫자는 내 네트워크의 사람들에게 보여요.",
     "needCounts": "열린 필요: {{open}} · 지난 필요: {{past}}",
     "stages": "단계"
   },
@@ -1405,5 +1403,12 @@
     "given": "준 · {{n}}",
     "received": "받은 · {{n}}",
     "projectDay": "프로젝트 일차"
+  },
+  "participationSummary": {
+    "title": "지금까지의 참여",
+    "gave": "내가 참여함",
+    "received": "내 필요에",
+    "count": "참여: {{n}}",
+    "marked": "종료된 필요에서 작성자가 {{reported}}건 중 {{marked}}건을 받음으로 표시했습니다. 내 네트워크 사람들이 이 두 숫자를 봅니다."
   }
 }

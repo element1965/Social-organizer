@@ -8,12 +8,12 @@ import { Meter } from '../components/ui2/Meter';
 import { Pill } from '../components/ui2/Pill';
 import { Screen } from '../components/ui2/Screen';
 import { Segmented } from '../components/ui2/Segmented';
-import { formatMoney } from '../components/ui2/format';
 import { trpcCode } from '../components/profile/errors';
 import { QueryState } from '../components/profile/QueryState';
 import { countForm, cycleDeadline, isOpenParticipation, isPastParticipation } from '../components/profile/collections';
 import { formatDayMonth } from '../components/profile/dates';
 import { useSmartBack } from '../components/profile/useSmartBack';
+import { ParticipationSummary } from '../components/profile/ParticipationSummary';
 
 type ActiveRow = {
   id: string;
@@ -114,17 +114,9 @@ export function HistoryPage() {
   // Nothing open but something past: show Past straight away instead of an empty Open tab.
   const tab = picked ?? (!loading && openRows.length === 0 && pastRows.length > 0 ? 'past' : 'open');
 
-  const lifetime = help.data && (help.data.given.count > 0 || help.data.received.count > 0)
-    ? t('profile.lifetime', {
-        givenCount: help.data.given.count,
-        givenAmount: formatMoney(help.data.given.totalAmount),
-        receivedCount: help.data.received.count,
-        receivedAmount: formatMoney(help.data.received.totalAmount),
-      })
-    : null;
-
   return (
     <Screen title={t('collection.pastCrumb')} back={back} width="column">
+      {help.data ? <ParticipationSummary given={help.data.given} received={help.data.received} facts={facts.data} /> : null}
       <div className="mt-2">
         <Segmented
           label={t('profile.collections')}
@@ -165,12 +157,6 @@ export function HistoryPage() {
           )}
         </div>
       )}
-      {lifetime ? <p className="mt-4 px-1 text-label font-semibold text-ink-muted">{lifetime}</p> : null}
-      {facts.data && facts.data.reported > 0 ? (
-        <p className="mt-2 px-1 text-label font-semibold text-ink-muted">
-          {t('profile.factsLine', { reported: facts.data.reported, marked: facts.data.marked })}
-        </p>
-      ) : null}
     </Screen>
   );
 }

@@ -484,7 +484,6 @@
     "noPast": "אין רשומות",
     "pastVia": "דרך {{name}}",
     "left": "ההשתתפות בוטלה",
-    "lifetime": "דיווחתם על השתתפות {{givenCount}} פעמים · {{givenAmount}}. בצרכים שלכם השתתפו {{receivedCount}} פעמים · {{receivedAmount}}.",
     "goalMissing": "לא צוין סכום",
     "logoutByMethodEmail": "התחברתם עם {{method}} (<b/>). אפשר לחזור באותה דרך או עם קוד לדוא״ל.",
     "logoutByMethod": "התחברתם עם {{method}}. אפשר לחזור באותה דרך.",
@@ -494,7 +493,6 @@
     "notifyChannel": "ערוץ",
     "notifyTelegramNotLinked": "חברו את Telegram ב«חשבון» כדי לקבל שם הודעות.",
     "stakeSaved": "נשמר",
-    "factsLine": "לגבי צרכים סגורים: דיווחי השתתפות {{reported}}, סומנו כהתקבלו על ידי היוצרים {{marked}}. אנשי הרשת שלכם רואים את שני המספרים האלה.",
     "needCounts": "פתוחים: {{open}} · קודמים: {{past}}",
     "stages": "שלבים"
   },
@@ -1427,5 +1425,12 @@
     "given": "נתן · {{n}}",
     "received": "קיבל · {{n}}",
     "projectDay": "יום הפרויקט"
+  },
+  "participationSummary": {
+    "title": "השתתפות עד כה",
+    "gave": "השתתפת",
+    "received": "בצרכים שלך",
+    "count": "השתתפויות: {{n}}",
+    "marked": "בצרכים סגורים, היוצרים סימנו {{marked}} מתוך {{reported}} כהתקבלו. האנשים ברשת שלך רואים את שני המספרים האלה."
   }
 }

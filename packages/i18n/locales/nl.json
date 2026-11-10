@@ -481,7 +481,6 @@
     "noPast": "Geen items",
     "pastVia": "via {{name}}",
     "left": "Deelname ingetrokken",
-    "lifetime": "Je meldde deelname: {{givenCount}} keer · {{givenAmount}}. Mensen namen deel aan je behoeften: {{receivedCount}} keer · {{receivedAmount}}.",
     "goalMissing": "Geen bedrag ingesteld",
     "logoutByMethodEmail": "Je logde in met {{method}} (<b/>). Kom op dezelfde manier terug, of met een e-mailcode.",
     "logoutByMethod": "Je logde in met {{method}}. Kom op dezelfde manier terug.",
@@ -491,7 +490,6 @@
     "notifyChannel": "Kanaal",
     "notifyTelegramNotLinked": "Koppel Telegram bij “Account” om berichten daar te krijgen.",
     "stakeSaved": "Opgeslagen",
-    "factsLine": "Voor gesloten Behoeften: gemelde deelname {{reported}}, door auteurs als ontvangen gemarkeerd {{marked}}. Mensen in je netwerk zien deze twee getallen.",
     "needCounts": "Open: {{open}} · Eerder: {{past}}",
     "stages": "Mijlpalen"
   },
@@ -1416,5 +1414,12 @@
     "given": "Gaf · {{n}}",
     "received": "Ontving · {{n}}",
     "projectDay": "Projectdag"
+  },
+  "participationSummary": {
+    "title": "Deelname tot nu toe",
+    "gave": "U deed mee",
+    "received": "Aan uw behoeften",
+    "count": "deelnames: {{n}}",
+    "marked": "Bij gesloten behoeften markeerden auteurs {{marked}} van {{reported}} als ontvangen. Mensen in uw netwerk zien deze twee getallen."
   }
 }

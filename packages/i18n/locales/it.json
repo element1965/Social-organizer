@@ -484,7 +484,6 @@
     "noPast": "Nessuna voce",
     "pastVia": "tramite {{name}}",
     "left": "Partecipazione ritirata",
-    "lifetime": "Hai comunicato la partecipazione {{givenCount}} volte · {{givenAmount}}. Le persone hanno partecipato ai tuoi bisogni {{receivedCount}} volte · {{receivedAmount}}.",
     "goalMissing": "Nessun importo indicato",
     "logoutByMethodEmail": "Hai fatto l'accesso con {{method}} (<b/>). Puoi tornare allo stesso modo o con un codice e-mail.",
     "logoutByMethod": "Hai fatto l'accesso con {{method}}. Puoi tornare allo stesso modo.",
@@ -494,7 +493,6 @@
     "notifyChannel": "Canale",
     "notifyTelegramNotLinked": "Collega Telegram in «Account» per ricevere i messaggi lì.",
     "stakeSaved": "Salvato",
-    "factsLine": "Per i Bisogni chiusi: partecipazioni comunicate {{reported}}, segnate come ricevute dagli autori {{marked}}. Le persone della tua rete vedono questi due numeri.",
     "needCounts": "Aperte: {{open}} · Passate: {{past}}",
     "stages": "Tappe"
   },
@@ -1427,5 +1425,12 @@
     "given": "Ha dato · {{n}}",
     "received": "Ha ricevuto · {{n}}",
     "projectDay": "Giorno del progetto"
+  },
+  "participationSummary": {
+    "title": "Partecipazione finora",
+    "gave": "Hai partecipato",
+    "received": "Ai tuoi bisogni",
+    "count": "partecipazioni: {{n}}",
+    "marked": "Nei bisogni chiusi, gli autori hanno segnato come ricevute {{marked}} su {{reported}}. Le persone della tua rete vedono questi due numeri."
   }
 }
