@@ -69,7 +69,12 @@ export function TermsPage() {
     {
       id: 'financial-disclaimer',
       title: t('legal.termsDoc.s6Title'),
-      body: <p>{t('legal.termsDoc.s6')}</p>,
+      body: (
+        <>
+          <p>{t('legal.termsDoc.s6')}</p>
+          <p>{t('legal.termsDoc.s6b')}</p>
+        </>
+      ),
     },
     {
       id: 'liability',

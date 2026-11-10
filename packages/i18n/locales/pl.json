@@ -218,7 +218,7 @@
     "zoomOut": "Oddal",
     "fit": "Wpasuj sieć",
     "stats": {
-      "canHelp": "Twoja sieć może pomóc",
+      "canHelp": "Minimalny udział sieci",
       "explain": "Ile osoby, które widzisz (do 3. uścisku dłoni), są jeszcze gotowe zgłosić w tym okresie: to suma ich minimalnego udziału. Wiadomość o potrzebie idzie falami, od najbliższych, do 6. uścisku dłoni. To punkt odniesienia, a nie obietnica: każdy sam decyduje, czy weźmie udział.",
       "weekDelta": "+{{amount}} w tym tygodniu",
       "people_few": "{{count}} osoby w Twojej sieci",
@@ -403,7 +403,7 @@
     "receivedSummary": "Otrzymano {{paid}} z {{total}} · {{sum}} z {{all}}",
     "markTransfers": "Zaznacz otrzymane",
     "markTitle": "Od kogo już otrzymałeś pieniądze?",
-    "markHint": "Zaznacz wszystkich, od których podana kwota już dotarła. To Twoje własne zaznaczenie: Social Organizer nie widzi przekazów i ich nie sprawdza.",
+    "markHint": "Zaznacz wszystkich, od których podana kwota już dotarła. Samo zaznaczenie widzisz tylko Ty; Social Organizer nie widzi przekazów i ich nie sprawdza. Po zamknięciu Potrzeby liczba oznaczeń pojawi się w profilu uczestnika.",
     "markPick": "Wybierz, od kogo otrzymałeś",
     "markConfirm": "Zaznacz · {{n}} · {{sum}}",
     "selectAll": "Wszyscy · {{n}}",
@@ -482,7 +482,8 @@
     "logoutGeneric": "Wrócisz w ten sam sposób, w jaki się logowałeś.",
     "notifyChannel": "Kanał",
     "notifyTelegramNotLinked": "Połącz Telegram w „Konto”, żeby dostawać tam wiadomości.",
-    "stakeSaved": "Zapisano"
+    "stakeSaved": "Zapisano",
+    "factsLine": "Dotyczy zamkniętych Potrzeb: zgłoszony udział {{reported}}, oznaczone przez autorów jako otrzymane {{marked}}. Osoby z Twojej sieci widzą te dwie liczby."
   },
   "settings": {
     "title": "Ustawienia",
@@ -737,7 +738,9 @@
       "q4": "Czy Social Organizer obsługuje płatności?",
       "a4": "Nie. Social Organizer nie przyjmuje, nie przekazuje ani nie przetrzymuje środków. Wszelkie działania między uczestnikami podejmują oni bezpośrednio, poza serwisem.",
       "q5": "Czy uczestnicy przekazują pieniądze?",
-      "a5": "Mogą. W zgłoszeniu potrzeby uczestnik podaje kwotę, a w zgłoszeniu udziału — ile jest gotów przekazać. Jeśli uczestnicy przekazują pieniądze, robią to sami i bezpośrednio, według własnych ustaleń. Social Organizer nie sprawdza, czy przekaz się odbył."
+      "a5": "Mogą. W zgłoszeniu potrzeby uczestnik podaje kwotę, a w zgłoszeniu udziału — ile jest gotów przekazać. Jeśli uczestnicy przekazują pieniądze, robią to sami i bezpośrednio, według własnych ustaleń. Social Organizer nie sprawdza, czy przekaz się odbył.",
+      "q6": "W czym podane są kwoty?",
+      "a6": "W dolarach amerykańskich: to wspólna jednostka rozliczeniowa, aby kwoty były porównywalne. W jakiej walucie i w jaki sposób działać, uczestnicy decydują sami."
     }
   },
   "how": {
@@ -988,7 +991,8 @@
       "s10Title": "10. Zmiany regulaminu",
       "s10": "Od czasu do czasu możemy aktualizować ten regulamin. Dalsze korzystanie z aplikacji po zmianach oznacza zgodę na nową wersję.",
       "s11Title": "11. Kontakt",
-      "s11": "Pytania o ten regulamin kieruj do nas przez <bot>Telegram</bot>."
+      "s11": "Pytania o ten regulamin kieruj do nas przez <bot>Telegram</bot>.",
+      "s6b": "Kwoty w serwisie są podane w dolarach amerykańskich jako wspólna jednostka rozliczeniowa. W jakiej walucie i w jaki sposób działać, uczestnicy ustalają między sobą."
     }
   },
   "tgBot": {
@@ -1070,8 +1074,8 @@
   "ask": {
     "title": "Potrzeba",
     "amountLabel": "Ile potrzeba",
-    "amountHint": "Twoja sieć może pomóc kwotą około {{amount}}",
-    "amountWarn": "Twoja sieć może teraz wesprzeć kwotą około {{amount}}: zgłoszonego udziału może zabraknąć",
+    "amountHint": "Minimalny udział Twojej sieci to około {{amount}}",
+    "amountWarn": "Minimalny udział Twojej sieci to teraz około {{amount}}, więc zgłoszonego udziału może zabraknąć",
     "minAmount": "Minimum 10 $",
     "whole": "Tylko pełne dolary",
     "typeLabel": "Jak często",
@@ -1323,7 +1327,11 @@
     "contactsHint": "Otworzą się w innej aplikacji.",
     "withdrawRequest": "Wycofaj",
     "requestCooldown": "Prośba wycofana. Nową można wysłać po {{when}}.",
-    "requestCooldownSoon": "Prośba wycofana. Nową można wysłać dobę później."
+    "requestCooldownSoon": "Prośba wycofana. Nową można wysłać dobę później.",
+    "factsTitle": "Udział",
+    "factsReported": "Zgłoszony udział",
+    "factsMarked": "Oznaczone przez autorów jako otrzymane",
+    "factsNote": "Dotyczy zamkniętych Potrzeb. Oznaczenie ustawia autor Potrzeby; Social Organizer go nie weryfikuje."
   },
   "help": {
     "faq": "Pytania i odpowiedzi",

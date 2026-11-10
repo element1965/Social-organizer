@@ -156,7 +156,7 @@ FIREBASE_SERVICE_ACCOUNT={"type":"service_account",...}  # FCM service account J
 | `notification` | list (cursor pagination), markRead, dismiss, unreadCount |
 | `settings` | get, updateLanguage/Theme/Sound/FontScale/HideContacts/Geo, ignoreList/addIgnore/removeIgnore |
 | `invite` | generate, accept, getByToken |
-| `stats` | profile (obligationsGiven + obligationsReceived), help, networkCapabilities |
+| `stats` | profile (obligationsGiven + obligationsReceived), help, networkCapabilities, participationFacts (two counts for a profile: Participation reported and marked as received by authors, closed Needs only) |
 | `milestone` | list (both milestones + current direct connections; restores missing ones from saved connections), markSeen |
 | `currency` | list, detectCurrency, rates, convert, toUSD |
 | `push` | vapidPublicKey, subscribe, unsubscribe, registerNativeToken, unregisterNativeToken |
@@ -210,6 +210,7 @@ The network must survive losing the database or the hosting provider. Three inde
 - **Rate limits** (in memory, per client IP from `X-Real-IP`): 600 requests/min on everything; 30 per 15 min on guessable sign-in procedures (e-mail code request/check, email login/register, link-code login/claim); 10 wrong link-code attempts per hour per IP (and per Telegram/Apple account) across every flow that accepts a 6-digit code. Link-code issue and use are logged with `[link-code]`.
 - **Data exposure.** `user.me` never returns the password hash or coordinates; `user.getById` returns a phone only under the same rule as contacts (`canViewContacts`).
 - **Push.** `push.subscribe` won't move an endpoint owned by another user unless the subscription keys match (same browser, another account) — otherwise 403.
+- **Received marks** are the author's own record: `collection.getById` returns `confirmedAt` only to the author of the Need. Other people see only the two profile counts from `stats.participationFacts`.
 - **Collection chat links** must be `http(s)://` (no `javascript:` links on the collection page or in bot buttons).
 - **Telegram webhook** is registered with a `secret_token` (derived from the bot token); calls without the matching `X-Telegram-Bot-Api-Secret-Token` header get 401.
 - **CORS** allows only our own origins (orginizer.com, the Capacitor app, local dev, `WEB_APP_URL`).
@@ -394,7 +395,7 @@ Before this split the entry was 1858 KB / 558 KB gzip and the landing also pulle
 | **Participation** | The other signal: a participant's message about their own voluntary participation, with an amount they name. A voluntary intention, not a payment. The `Obligation` record |
 | **Handshake chain** | Path of connections between two users through mutual acquaintances |
 | **Connection count** | Number of first-level connections (handshakes) a user has |
-| **Your network can help** | Sum of minimum participation of the people in the **visible rings 1–3** (what the person can check by eye). The headline counts the same visible people. The far rings (4th–5th) are only in the ring chips as a rounded count; the full reach is used by the request amount hint |
+| **Minimum participation of the network** | Sum of minimum participation of the people in the **visible rings 1–3** (what the person can check by eye). The headline counts the same visible people. The far rings (4th–5th) are only in the ring chips as a rounded count; the full reach is used by the request amount hint |
 | **Minimum participation** | Amount a user is ready to give to one collection of someone they know (whole $, stored in `monthlyBudget`; not per month, never decremented). Prefilled when joining a collection |
 
 ## Redesign

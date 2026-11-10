@@ -16,7 +16,7 @@ import { useFigureLabels, useMoney } from '../components/site/figureLabels';
 const BEAT_FRAMES: readonly NetStep[] = [0, 1, 2, 2];
 const BEATS = [0, 1, 2, 3] as const;
 const PRINCIPLES = [1, 2, 3, 4] as const;
-const FAQ = [1, 2, 3, 4, 5] as const;
+const FAQ = [1, 2, 3, 4, 5, 6] as const;
 
 const B = { b: <b /> };
 const PUBLIC_STATS_KEY = 'so_publicStats';
@@ -173,7 +173,7 @@ export function LandingPage({ inviteToken }: { inviteToken?: string } = {}) {
               you: t('landing.hero.sceneYou'),
               ask: t('landing.hero.sceneAsk', { amount: money(300) }),
               done: t('landing.hero.sceneDone', { amount: money(300) }),
-              coin: '15',
+              coin: '',
             }}
           >
             <div className="tag">

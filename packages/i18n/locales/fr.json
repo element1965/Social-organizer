@@ -218,7 +218,7 @@
     "zoomOut": "Dézoomer",
     "fit": "Ajuster le réseau",
     "stats": {
-      "canHelp": "Votre réseau peut aider",
+      "canHelp": "Participation minimale du réseau",
       "explain": "Ce que les personnes que vous voyez (jusqu’à la 3e poignée de main) sont encore prêtes à indiquer sur cette période : la somme de leur participation minimale. Le message sur un besoin part par vagues, des plus proches jusqu’à la 6e poignée de main. C’est un repère, pas une promesse : chacun décide lui-même de participer ou non.",
       "weekDelta": "+{{amount}} cette semaine",
       "people_many": "{{count}} de personnes dans votre réseau",
@@ -400,7 +400,7 @@
     "receivedSummary": "Reçu {{paid}} sur {{total}} · {{sum}} sur {{all}}",
     "markTransfers": "Indiquer les réceptions",
     "markTitle": "De qui avez-vous déjà reçu de l’argent ?",
-    "markHint": "Cochez toutes les personnes dont le montant indiqué est déjà arrivé. C’est votre propre indication : Social Organizer ne voit ni ne vérifie les transferts.",
+    "markHint": "Cochez toutes les personnes dont le montant indiqué est déjà arrivé. Seul vous voyez la marque elle-même ; Social Organizer ne voit ni ne vérifie les transferts. Une fois le Besoin fermé, le nombre de marques apparaît dans le profil du participant.",
     "markPick": "Choisissez de qui vous avez reçu",
     "markConfirm": "Marquer · {{n}} · {{sum}}",
     "selectAll": "Tout le monde · {{n}}",
@@ -479,7 +479,8 @@
     "logoutGeneric": "Vous pouvez revenir de la même façon que lors de la connexion.",
     "notifyChannel": "Canal",
     "notifyTelegramNotLinked": "Connectez Telegram dans « Compte » pour y recevoir les messages.",
-    "stakeSaved": "Enregistré"
+    "stakeSaved": "Enregistré",
+    "factsLine": "Pour les Besoins fermés : participations déclarées {{reported}}, marquées comme reçues par les auteurs {{marked}}. Les personnes de votre réseau voient ces deux nombres."
   },
   "settings": {
     "title": "Paramètres",
@@ -732,7 +733,9 @@
       "q4": "Social Organizer traite-t-il des paiements ?",
       "a4": "Non. Social Organizer n’accepte, ne transfère ni ne détient de fonds. Tout ce que les participants font entre eux, ils le font directement, en dehors du service.",
       "q5": "Les participants remettent-ils de l’argent ?",
-      "a5": "Ils le peuvent. Dans l’annonce d’un besoin, le participant indique un montant, et dans l’annonce de participation, combien il est prêt à remettre. Si des participants remettent de l’argent, ils le font eux-mêmes et directement, selon leur propre arrangement. Social Organizer ne vérifie pas si une remise a eu lieu."
+      "a5": "Ils le peuvent. Dans l’annonce d’un besoin, le participant indique un montant, et dans l’annonce de participation, combien il est prêt à remettre. Si des participants remettent de l’argent, ils le font eux-mêmes et directement, selon leur propre arrangement. Social Organizer ne vérifie pas si une remise a eu lieu.",
+      "q6": "Dans quelle unité sont exprimés les montants ?",
+      "a6": "En dollars américains : c’est une unité de compte commune, pour que les montants soient comparables. Dans quelle monnaie et de quelle manière agir, les participants en décident eux-mêmes."
     }
   },
   "how": {
@@ -983,7 +986,8 @@
       "s10Title": "10. Modifications des conditions",
       "s10": "Nous pouvons mettre à jour ces conditions de temps à autre. Continuer à utiliser l’application après des modifications vaut acceptation des nouvelles conditions.",
       "s11Title": "11. Contact",
-      "s11": "Pour toute question sur ces conditions, contactez-nous via <bot>Telegram</bot>."
+      "s11": "Pour toute question sur ces conditions, contactez-nous via <bot>Telegram</bot>.",
+      "s6b": "Les montants dans le service sont exprimés en dollars américains comme unité de compte commune. Dans quelle monnaie et de quelle manière agir, les participants en décident entre eux."
     }
   },
   "tgBot": {
@@ -1065,8 +1069,8 @@
   "ask": {
     "title": "Besoin",
     "amountLabel": "Montant nécessaire",
-    "amountHint": "Votre réseau peut aider à hauteur d’environ {{amount}}",
-    "amountWarn": "Votre réseau peut actuellement aider à hauteur d’environ {{amount}} : la participation déclarée peut ne pas suffire",
+    "amountHint": "La participation minimale de votre réseau est d’environ {{amount}}",
+    "amountWarn": "La participation minimale de votre réseau est actuellement d’environ {{amount}} : la participation déclarée peut ne pas suffire",
     "minAmount": "Minimum 10 $",
     "whole": "Uniquement des dollars entiers",
     "typeLabel": "Fréquence",
@@ -1312,7 +1316,11 @@
     "contactsHint": "Ils s’ouvrent dans une autre application.",
     "withdrawRequest": "Retirer",
     "requestCooldown": "Demande retirée. Vous pourrez en envoyer une nouvelle après {{when}}.",
-    "requestCooldownSoon": "Demande retirée. Vous pourrez en envoyer une nouvelle un jour après."
+    "requestCooldownSoon": "Demande retirée. Vous pourrez en envoyer une nouvelle un jour après.",
+    "factsTitle": "Participation",
+    "factsReported": "Participations déclarées",
+    "factsMarked": "Marqué reçu par les auteurs",
+    "factsNote": "Pour les Besoins fermés. La marque est posée par l’auteur du Besoin ; Social Organizer ne la vérifie pas."
   },
   "help": {
     "faq": "Questions et réponses",

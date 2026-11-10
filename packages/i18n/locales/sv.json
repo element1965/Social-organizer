@@ -218,7 +218,7 @@
     "zoomOut": "Zooma ut",
     "fit": "Anpassa nätverket",
     "stats": {
-      "canHelp": "Ditt nätverk kan hjälpa",
+      "canHelp": "Nätverkets minsta deltagande",
       "explain": "Vad personerna du ser (upp till 3:e handslaget) fortfarande är beredda att ange under perioden: summan av deras minsta deltagande. Ett behov går ut i vågor, närmast först, upp till 6:e handslaget. Det är en riktpunkt, inte ett löfte: var och en bestämmer själv om hen vill delta.",
       "weekDelta": "+{{amount}} den här veckan",
       "people_one": "{{count}} person i ditt nätverk",
@@ -397,7 +397,7 @@
     "receivedSummary": "Mottaget {{paid}} av {{total}} · {{sum}} av {{all}}",
     "markTransfers": "Markera mottaget",
     "markTitle": "Från vem har du redan tagit emot pengar?",
-    "markHint": "Bocka för alla vars angivna belopp redan har kommit. Det är din egen markering: Social Organizer ser eller kontrollerar inte överföringar.",
+    "markHint": "Markera alla vars angivna belopp redan har kommit. Själva markeringen ser bara du; Social Organizer ser eller kontrollerar inte överföringar. När behovet har stängts visas antalet markeringar i deltagarens profil.",
     "markPick": "Välj vem du tog emot från",
     "markConfirm": "Markera · {{n}} · {{sum}}",
     "selectAll": "Alla · {{n}}",
@@ -476,7 +476,8 @@
     "logoutGeneric": "Du kan komma tillbaka på samma sätt som du loggade in.",
     "notifyChannel": "Kanal",
     "notifyTelegramNotLinked": "Anslut Telegram under ”Konto” för att få meddelanden där.",
-    "stakeSaved": "Sparat"
+    "stakeSaved": "Sparat",
+    "factsLine": "För stängda behov: anmält deltagande — {{reported}}, markerat som mottaget av författare — {{marked}}. Dessa två tal ser personerna i ditt nätverk."
   },
   "settings": {
     "title": "Inställningar",
@@ -727,7 +728,9 @@
       "q4": "Hanterar Social Organizer betalningar?",
       "a4": "Nej. Social Organizer tar inte emot, överför eller håller inne pengar. Allt som deltagarna gör sinsemellan gör de direkt, utanför tjänsten.",
       "q5": "Lämnar deltagarna över pengar?",
-      "a5": "Det kan de göra. I ett behov anger deltagaren ett belopp, och i ett deltagande anger deltagaren hur mycket hen är beredd att lämna över. Om deltagare lämnar över pengar gör de det själva och direkt, enligt sin egen överenskommelse. Social Organizer kontrollerar inte om en överlämning har ägt rum."
+      "a5": "Det kan de göra. I ett behov anger deltagaren ett belopp, och i ett deltagande anger deltagaren hur mycket hen är beredd att lämna över. Om deltagare lämnar över pengar gör de det själva och direkt, enligt sin egen överenskommelse. Social Organizer kontrollerar inte om en överlämning har ägt rum.",
+      "q6": "I vilken enhet anges beloppen?",
+      "a6": "I US-dollar: det är en gemensam räkneenhet, så att beloppen går att jämföra. Vilken valuta och vilket sätt som används bestämmer deltagarna själva."
     }
   },
   "how": {
@@ -978,7 +981,8 @@
       "s10Title": "10. Ändringar av villkoren",
       "s10": "Vi kan uppdatera de här villkoren då och då. Fortsatt användning av appen efter ändringar innebär att du godkänner de nya villkoren.",
       "s11Title": "11. Kontakt",
-      "s11": "Om du har frågor om de här villkoren, kontakta oss via <bot>Telegram</bot>."
+      "s11": "Om du har frågor om de här villkoren, kontakta oss via <bot>Telegram</bot>.",
+      "s6b": "Beloppen i tjänsten anges i US-dollar som en gemensam räkneenhet. Vilken valuta och vilket sätt som används bestämmer deltagarna sinsemellan."
     }
   },
   "tgBot": {
@@ -1060,8 +1064,8 @@
   "ask": {
     "title": "Behov",
     "amountLabel": "Hur mycket som behövs",
-    "amountHint": "Ditt nätverk kan hjälpa med ungefär {{amount}}",
-    "amountWarn": "Ditt nätverk kan just nu hjälpa till med ungefär {{amount}}, så angivet deltagande kanske inte räcker",
+    "amountHint": "Ditt nätverks minsta deltagande är ungefär {{amount}}",
+    "amountWarn": "Ditt nätverks minsta deltagande är just nu ungefär {{amount}}, så angivet deltagande kanske inte räcker",
     "minAmount": "Minst 10 $",
     "whole": "Bara hela dollar",
     "typeLabel": "Hur ofta",
@@ -1301,7 +1305,11 @@
     "contactsHint": "De öppnas i en annan app.",
     "withdrawRequest": "Dra tillbaka",
     "requestCooldown": "Förfrågan återkallad. Du kan skicka en ny efter {{when}}.",
-    "requestCooldownSoon": "Förfrågan återkallad. Du kan skicka en ny efter ett dygn."
+    "requestCooldownSoon": "Förfrågan återkallad. Du kan skicka en ny efter ett dygn.",
+    "factsTitle": "Deltagande",
+    "factsReported": "Anmält deltagande",
+    "factsMarked": "Markerat som mottaget av författare",
+    "factsNote": "För stängda behov. Markeringen sätts av behovets författare, Social Organizer kontrollerar den inte."
   },
   "help": {
     "faq": "Frågor och svar",

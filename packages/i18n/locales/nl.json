@@ -218,7 +218,7 @@
     "zoomOut": "Uitzoomen",
     "fit": "Netwerk in beeld",
     "stats": {
-      "canHelp": "Je netwerk kan helpen",
+      "canHelp": "Minimale deelname van het netwerk",
       "explain": "Wat de mensen die je kunt zien (tot de 3e handdruk) deze periode nog bereid zijn te noemen: de som van hun minimale deelname. Een bericht over een behoefte gaat in golven uit, eerst naar de naasten, tot de 6e handdruk. Dit is een richtgetal, geen belofte: iedereen beslist zelf of hij of zij deelneemt.",
       "weekDelta": "+{{amount}} deze week",
       "people_one": "{{count}} persoon in je netwerk",
@@ -397,7 +397,7 @@
     "receivedSummary": "Ontvangen {{paid}} van {{total}} · {{sum}} van {{all}}",
     "markTransfers": "Ontvangst markeren",
     "markTitle": "Van wie heb je al geld ontvangen?",
-    "markHint": "Vink iedereen aan van wie het genoemde bedrag al is binnengekomen. Dit is je eigen markering: Social Organizer ziet of controleert geen overdrachten.",
+    "markHint": "Vink iedereen aan van wie het genoemde bedrag al is binnengekomen. Alleen jij ziet de markering zelf; Social Organizer ziet of controleert geen overdrachten. Na het sluiten van de Behoefte verschijnt het aantal markeringen in het profiel van de deelnemer.",
     "markPick": "Kies van wie je hebt ontvangen",
     "markConfirm": "Markeren · {{n}} · {{sum}}",
     "selectAll": "Iedereen · {{n}}",
@@ -476,7 +476,8 @@
     "logoutGeneric": "Je kunt terugkomen op de manier waarop je inlogde.",
     "notifyChannel": "Kanaal",
     "notifyTelegramNotLinked": "Koppel Telegram bij “Account” om berichten daar te krijgen.",
-    "stakeSaved": "Opgeslagen"
+    "stakeSaved": "Opgeslagen",
+    "factsLine": "Voor gesloten Behoeften: gemelde deelname {{reported}}, door auteurs als ontvangen gemarkeerd {{marked}}. Mensen in je netwerk zien deze twee getallen."
   },
   "settings": {
     "title": "Instellingen",
@@ -727,7 +728,9 @@
       "q4": "Verwerkt Social Organizer betalingen?",
       "a4": "Nee. Social Organizer ontvangt, verstuurt of beheert geen geld. Alles wat deelnemers onderling doen, doen ze rechtstreeks, buiten de dienst.",
       "q5": "Dragen deelnemers geld over?",
-      "a5": "Dat kan. In een melding van een behoefte noemt een deelnemer een bedrag, en in een melding van deelname hoeveel hij of zij bereid is over te dragen. Als deelnemers geld overdragen, doen ze dat zelf en rechtstreeks, volgens hun eigen afspraak. Social Organizer controleert niet of een overdracht heeft plaatsgevonden."
+      "a5": "Dat kan. In een melding van een behoefte noemt een deelnemer een bedrag, en in een melding van deelname hoeveel hij of zij bereid is over te dragen. Als deelnemers geld overdragen, doen ze dat zelf en rechtstreeks, volgens hun eigen afspraak. Social Organizer controleert niet of een overdracht heeft plaatsgevonden.",
+      "q6": "In welke valuta staan de bedragen?",
+      "a6": "In Amerikaanse dollars: een gemeenschappelijke rekeneenheid, zodat bedragen vergelijkbaar zijn. In welke valuta en op welke manier te handelen, bepalen de deelnemers zelf."
     }
   },
   "how": {
@@ -978,7 +981,8 @@
       "s10Title": "10. Wijzigingen van de voorwaarden",
       "s10": "We kunnen deze voorwaarden af en toe bijwerken. Als je de app daarna blijft gebruiken, ga je akkoord met de nieuwe voorwaarden.",
       "s11Title": "11. Contact",
-      "s11": "Voor vragen over deze voorwaarden neem je contact op via <bot>Telegram</bot>."
+      "s11": "Voor vragen over deze voorwaarden neem je contact op via <bot>Telegram</bot>.",
+      "s6b": "Bedragen in de dienst staan in Amerikaanse dollars als gemeenschappelijke rekeneenheid. In welke valuta en op welke manier te handelen, wordt onderling door de deelnemers bepaald."
     }
   },
   "tgBot": {
@@ -1060,8 +1064,8 @@
   "ask": {
     "title": "Behoefte",
     "amountLabel": "Hoeveel is er nodig",
-    "amountHint": "Je netwerk kan helpen met ongeveer {{amount}}",
-    "amountWarn": "Je netwerk kan op dit moment met ongeveer {{amount}} helpen, dus de gemelde deelname komt misschien tekort",
+    "amountHint": "De minimale deelname van je netwerk is ongeveer {{amount}}",
+    "amountWarn": "De minimale deelname van je netwerk is nu ongeveer {{amount}}, dus de gemelde deelname kan tekortschieten",
     "minAmount": "Minimaal 10 $",
     "whole": "Alleen hele dollars",
     "typeLabel": "Hoe vaak",
@@ -1301,7 +1305,11 @@
     "contactsHint": "Ze openen in een andere app.",
     "withdrawRequest": "Intrekken",
     "requestCooldown": "Verzoek ingetrokken. Een nieuw kan na {{when}}.",
-    "requestCooldownSoon": "Verzoek ingetrokken. Een nieuw kan een dag later."
+    "requestCooldownSoon": "Verzoek ingetrokken. Een nieuw kan een dag later.",
+    "factsTitle": "Deelname",
+    "factsReported": "Gemelde deelname",
+    "factsMarked": "Door auteurs als ontvangen gemarkeerd",
+    "factsNote": "Voor gesloten Behoeften. De markering wordt gezet door de auteur van een Behoefte; Social Organizer controleert die niet."
   },
   "help": {
     "faq": "Vragen en antwoorden",

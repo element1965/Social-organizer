@@ -34,8 +34,8 @@
       "filled": "Filled in",
       "errorReason": "A chat is required: people who report Participation gather there.",
       "moneyLabel": "How much is needed",
-      "moneyHint": "Up to 3 720 $: that is what your network can help with now.",
-      "moneyError": "Your network can help with up to 3 720 $ right now.",
+      "moneyHint": "Minimum participation of the network is up to $3,720 now.",
+      "moneyError": "Minimum participation of the network is up to $3,720 now.",
       "once": "One time",
       "every": "Every 28 days",
       "ring1": "1st",
@@ -222,7 +222,7 @@
       "people_other": "{{count}} people in your network",
       "peopleShort_one": "{{count}} person",
       "peopleShort_other": "{{count}} people",
-      "canHelp": "Your network can help",
+      "canHelp": "Minimum participation of the network",
       "explain": "What the people you can see (up to the 3rd handshake) are still ready to name this period: the sum of their minimum participation. A Need goes out in waves, nearest first, up to the 6th handshake. This is a reference figure, not a promise: everyone decides for themselves whether to take part.",
       "weekDelta": "+{{amount}} this week"
     },
@@ -397,7 +397,7 @@
     "receivedSummary": "Received {{paid}} of {{total}} · {{sum}} of {{all}}",
     "markTransfers": "Mark as received",
     "markTitle": "Whose money have you received?",
-    "markHint": "Tick everyone whose named amount has arrived. This is your own mark: Social Organizer does not see or verify transfers.",
+    "markHint": "Tick everyone whose named amount has arrived. Only you see the mark itself; Social Organizer does not see or verify transfers. After the Need is closed, the number of marks appears in the participant’s profile.",
     "markPick": "Pick who you received from",
     "markConfirm": "Mark received · {{n}} · {{sum}}",
     "selectAll": "Everyone · {{n}}",
@@ -476,7 +476,8 @@
     "logoutGeneric": "You can come back the same way you signed in.",
     "notifyChannel": "Channel",
     "notifyTelegramNotLinked": "Connect Telegram in Account to get messages there.",
-    "stakeSaved": "Saved"
+    "stakeSaved": "Saved",
+    "factsLine": "For closed Needs: Participation reported {{reported}}, marked as received by authors {{marked}}. People in your network see these two numbers."
   },
   "settings": {
     "title": "Settings",
@@ -727,7 +728,9 @@
       "q4": "Does Social Organizer process payments?",
       "a4": "No. Social Organizer does not accept, transfer or hold funds. Anything participants do between themselves, they do directly, outside the service.",
       "q5": "Do participants hand over money?",
-      "a5": "They may. A Need names an amount, and a Participation names how much a participant is ready to hand over. If participants hand over money, they do it themselves and directly, by their own arrangement. Social Organizer does not verify whether a handover took place."
+      "a5": "They may. A Need names an amount, and a Participation names how much a participant is ready to hand over. If participants hand over money, they do it themselves and directly, by their own arrangement. Social Organizer does not verify whether a handover took place.",
+      "q6": "What are the amounts in?",
+      "a6": "In US dollars: a common unit of account, so that amounts can be compared. Which currency and which way to use is up to participants."
     }
   },
   "how": {
@@ -978,7 +981,8 @@
       "s10Title": "10. Changes to Terms",
       "s10": "We may update these terms from time to time. Continued use of the App after changes constitutes acceptance of the new terms.",
       "s11Title": "11. Contact",
-      "s11": "For questions about these Terms, contact us via <bot>Telegram</bot>."
+      "s11": "For questions about these Terms, contact us via <bot>Telegram</bot>.",
+      "s6b": "Amounts in the service are stated in US dollars as a common unit of account. Which currency and which way to use is decided between participants."
     }
   },
   "tgBot": {
@@ -1060,8 +1064,8 @@
   "ask": {
     "title": "Need",
     "amountLabel": "How much is needed",
-    "amountHint": "Your network can help with about {{amount}}",
-    "amountWarn": "Your network can help with about {{amount}} right now, so reported Participation may fall short",
+    "amountHint": "Minimum participation of your network is about {{amount}}",
+    "amountWarn": "Minimum participation of your network is about {{amount}} right now, so reported Participation may fall short",
     "minAmount": "Minimum 10 $",
     "whole": "Whole dollars only",
     "typeLabel": "How often",
@@ -1301,7 +1305,11 @@
     "contactsHint": "They open in another app.",
     "withdrawRequest": "Withdraw",
     "requestCooldown": "Request withdrawn. You can send a new one after {{when}}.",
-    "requestCooldownSoon": "Request withdrawn. You can send a new one a day after withdrawing."
+    "requestCooldownSoon": "Request withdrawn. You can send a new one a day after withdrawing.",
+    "factsTitle": "Participation",
+    "factsReported": "Participation reported",
+    "factsMarked": "Marked as received by authors",
+    "factsNote": "For closed Needs. The mark is set by the author of a Need; Social Organizer does not verify it."
   },
   "help": {
     "faq": "Questions and answers",

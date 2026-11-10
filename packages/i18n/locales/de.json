@@ -218,7 +218,7 @@
     "zoomOut": "Verkleinern",
     "fit": "Netzwerk einpassen",
     "stats": {
-      "canHelp": "Ihr Netzwerk kann helfen",
+      "canHelp": "Mindestbeteiligung des Netzwerks",
       "explain": "Wie viel die Menschen, die Sie sehen (bis zum 3. Handschlag), in diesem Zeitraum noch nennen möchten: die Summe ihrer Mindestbeteiligung. Die Meldung eines Bedarfs geht in Wellen hinaus, zuerst an die Nächsten, bis zum 6. Handschlag. Das ist ein Richtwert, kein Versprechen: Jede Person entscheidet selbst, ob sie sich beteiligt.",
       "weekDelta": "+{{amount}} diese Woche",
       "people_one": "{{count}} Person in Ihrem Netzwerk",
@@ -397,7 +397,7 @@
     "receivedSummary": "Erhalten {{paid}} von {{total}} · {{sum}} von {{all}}",
     "markTransfers": "Erhaltenes markieren",
     "markTitle": "Von wem haben Sie schon Geld erhalten?",
-    "markHint": "Markieren Sie alle, von denen der genannte Betrag schon angekommen ist. Das ist Ihre eigene Markierung: Social Organizer sieht und prüft keine Überweisungen.",
+    "markHint": "Markieren Sie alle, von denen der genannte Betrag schon angekommen ist. Die Markierung selbst sehen nur Sie; Social Organizer sieht und prüft keine Überweisungen. Nach dem Schließen des Bedarfs erscheint die Anzahl der Markierungen im Profil des Teilnehmers.",
     "markPick": "Wählen Sie, von wem Sie erhalten haben",
     "markConfirm": "Markieren · {{n}} · {{sum}}",
     "selectAll": "Alle · {{n}}",
@@ -476,7 +476,8 @@
     "logoutGeneric": "Sie können auf demselben Weg zurück, auf dem Sie sich angemeldet haben.",
     "notifyChannel": "Kanal",
     "notifyTelegramNotLinked": "Verbinden Sie Telegram unter „Konto“, damit die Nachrichten dort ankommen.",
-    "stakeSaved": "Gespeichert"
+    "stakeSaved": "Gespeichert",
+    "factsLine": "Bei geschlossenen Bedarfen: Beteiligungsmeldungen {{reported}}, von Autoren als erhalten markiert {{marked}}. Die Leute in Ihrem Netzwerk sehen diese beiden Zahlen."
   },
   "settings": {
     "title": "Einstellungen",
@@ -727,7 +728,9 @@
       "q4": "Wickelt Social Organizer Zahlungen ab?",
       "a4": "Nein. Social Organizer nimmt keine Gelder an, überweist keine und hält keine. Was die Beteiligten untereinander tun, tun sie direkt, außerhalb des Dienstes.",
       "q5": "Übergeben die Beteiligten Geld?",
-      "a5": "Sie können es. In der Meldung eines Bedarfs nennt die Person einen Betrag, und in der Meldung der Beteiligung, wie viel sie zu übergeben bereit ist. Wenn Beteiligte Geld übergeben, tun sie das selbst und direkt, nach eigener Absprache. Social Organizer prüft nicht, ob eine Übergabe stattgefunden hat."
+      "a5": "Sie können es. In der Meldung eines Bedarfs nennt die Person einen Betrag, und in der Meldung der Beteiligung, wie viel sie zu übergeben bereit ist. Wenn Beteiligte Geld übergeben, tun sie das selbst und direkt, nach eigener Absprache. Social Organizer prüft nicht, ob eine Übergabe stattgefunden hat.",
+      "q6": "Worin sind die Beträge angegeben?",
+      "a6": "In US-Dollar: eine gemeinsame Recheneinheit, damit die Beträge vergleichbar sind. In welcher Währung und auf welche Weise gehandelt wird, entscheiden die Beteiligten selbst."
     }
   },
   "how": {
@@ -978,7 +981,8 @@
       "s10Title": "10. Änderungen der Bedingungen",
       "s10": "Wir können diese Bedingungen von Zeit zu Zeit aktualisieren. Die weitere Nutzung der App nach Änderungen gilt als Zustimmung zu der neuen Fassung.",
       "s11Title": "11. Kontakt",
-      "s11": "Fragen zu diesen Bedingungen richten Sie über <bot>Telegram</bot> an uns."
+      "s11": "Fragen zu diesen Bedingungen richten Sie über <bot>Telegram</bot> an uns.",
+      "s6b": "Beträge im Dienst sind in US-Dollar als gemeinsamer Recheneinheit angegeben. In welcher Währung und auf welche Weise gehandelt wird, entscheiden die Beteiligten untereinander."
     }
   },
   "tgBot": {
@@ -1060,8 +1064,8 @@
   "ask": {
     "title": "Bedarf",
     "amountLabel": "Wie viel gebraucht wird",
-    "amountHint": "„Ihr Netzwerk kann helfen“ mit etwa {{amount}}",
-    "amountWarn": "Ihr Netzwerk kann gerade mit etwa {{amount}} unterstützen, die angegebene Beteiligung reicht daher vielleicht nicht",
+    "amountHint": "Die Mindestbeteiligung Ihres Netzwerks beträgt etwa {{amount}}",
+    "amountWarn": "Die Mindestbeteiligung Ihres Netzwerks beträgt gerade etwa {{amount}}, die angegebene Beteiligung reicht daher vielleicht nicht",
     "minAmount": "Mindestens 10 $",
     "whole": "Nur ganze Dollar",
     "typeLabel": "Wie oft",
@@ -1301,7 +1305,11 @@
     "contactsHint": "Sie öffnen sich in einer anderen App.",
     "withdrawRequest": "Zurückziehen",
     "requestCooldown": "Anfrage zurückgezogen. Eine neue ist ab {{when}} möglich.",
-    "requestCooldownSoon": "Anfrage zurückgezogen. Eine neue ist einen Tag danach möglich."
+    "requestCooldownSoon": "Anfrage zurückgezogen. Eine neue ist einen Tag danach möglich.",
+    "factsTitle": "Beteiligung",
+    "factsReported": "Beteiligungsmeldungen",
+    "factsMarked": "Von Autoren als erhalten markiert",
+    "factsNote": "Bei geschlossenen Bedarfen. Die Markierung setzt der Autor eines Bedarfs; Social Organizer prüft sie nicht."
   },
   "help": {
     "faq": "Fragen und Antworten",

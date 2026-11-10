@@ -218,7 +218,7 @@
     "zoomOut": "缩小",
     "fit": "适配网络",
     "stats": {
-      "canHelp": "你的网络可以帮忙",
+      "canHelp": "网络的最低参与",
       "explain": "你能看到的人（最远到第3度握手）在本周期还愿意表明的金额：这是他们最低参与之和。需求消息会分批发出，从最近的人开始，最远到第6度握手。这只是参考数字，不是承诺：是否参与，每个人自己决定。",
       "weekDelta": "本周 +{{amount}}",
       "people_other": "你的网络里有 {{count}} 人",
@@ -394,7 +394,7 @@
     "receivedSummary": "已收到 {{paid}}/{{total}} · {{sum}}/{{all}}",
     "markTransfers": "标记已收到",
     "markTitle": "你已收到谁的钱？",
-    "markHint": "勾选所有所说金额已到的人。这是你自己的标记：Social Organizer 看不到也不核实转账。",
+    "markHint": "请勾选所有所说金额已到的人。标记本身只有你能看到；Social Organizer 看不到也不核实转账。需求关闭后，标记数量会显示在参与者的资料中。",
     "markPick": "选择你从谁那里收到",
     "markConfirm": "标记 · {{n}} · {{sum}}",
     "selectAll": "全部 · {{n}}",
@@ -473,7 +473,8 @@
     "logoutGeneric": "你可以用当初登录的方式回来。",
     "notifyChannel": "渠道",
     "notifyTelegramNotLinked": "在“账号”里连接 Telegram，以便在那里接收消息。",
-    "stakeSaved": "已保存"
+    "stakeSaved": "已保存",
+    "factsLine": "针对已关闭的需求：参与告知 {{reported}} 次，作者标记为已收到 {{marked}} 次。你网络中的人可以看到这两个数字。"
   },
   "settings": {
     "title": "设置",
@@ -722,7 +723,9 @@
       "q4": "Social Organizer 处理付款吗？",
       "a4": "不处理。Social Organizer 不接收、不转移、不保管资金。参与者之间做的任何事，都由他们直接进行，在服务之外。",
       "q5": "参与者会交付钱款吗？",
-      "a5": "可能会。在需求消息里，参与者写明金额；在参与消息里，写明自己准备交付多少。如果参与者交付钱款，那是他们自己、直接、按自己的约定进行的。Social Organizer 不核实交付是否发生。"
+      "a5": "可能会。在需求消息里，参与者写明金额；在参与消息里，写明自己准备交付多少。如果参与者交付钱款，那是他们自己、直接、按自己的约定进行的。Social Organizer 不核实交付是否发生。",
+      "q6": "金额以什么计价？",
+      "a6": "以美元计：这是通用的计量单位，便于金额相互比较。使用哪种货币、采用什么方式，由参与者自行决定。"
     }
   },
   "how": {
@@ -973,7 +976,8 @@
       "s10Title": "10. 条款变更",
       "s10": "我们可能会不时更新这些条款。变更后继续使用本应用，即表示接受新条款。",
       "s11Title": "11. 联系方式",
-      "s11": "如对这些条款有疑问，请通过 <bot>Telegram</bot> 联系我们。"
+      "s11": "如对这些条款有疑问，请通过 <bot>Telegram</bot> 联系我们。",
+      "s6b": "服务中的金额以美元表示，作为通用的计量单位。使用哪种货币、采用什么方式，由参与者之间自行决定。"
     }
   },
   "tgBot": {
@@ -1055,8 +1059,8 @@
   "ask": {
     "title": "需求",
     "amountLabel": "需要多少",
-    "amountHint": "你的网络大约可以帮忙 {{amount}}",
-    "amountWarn": "你的网络目前大约能参与 {{amount}}：已表明的参与可能不够",
+    "amountHint": "你的网络的最低参与约为 {{amount}}",
+    "amountWarn": "你的网络目前的最低参与约为 {{amount}}：已表明的参与可能不够",
     "minAmount": "最少 10 $",
     "whole": "只能填整数美元",
     "typeLabel": "频率",
@@ -1290,7 +1294,11 @@
     "contactsHint": "会在其他应用中打开。",
     "withdrawRequest": "撤回",
     "requestCooldown": "已撤回申请。{{when}} 之后可以重新发送。",
-    "requestCooldownSoon": "已撤回申请。一天后可以重新发送。"
+    "requestCooldownSoon": "已撤回申请。一天后可以重新发送。",
+    "factsTitle": "参与",
+    "factsReported": "参与告知数",
+    "factsMarked": "作者标记为已收到",
+    "factsNote": "针对已关闭的需求。标记由需求的作者设置，Social Organizer 不核实。"
   },
   "help": {
     "faq": "常见问题",

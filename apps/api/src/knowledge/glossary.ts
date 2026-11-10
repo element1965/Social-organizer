@@ -19,7 +19,7 @@ The other signal: a participant's message about their own voluntary participatio
 MINIMUM PARTICIPATION
 The amount a person is ready to name when someone in their network reports a Need, in whole dollars. Filled in when they report Participation; they can name more. Not per month, and it does not decrease. This is NOT a pooled fund or shared account.
 
-YOUR NETWORK CAN HELP
+MINIMUM PARTICIPATION OF THE NETWORK
 Sum of minimum participation named across the user's network (up to 3 handshake levels). A reference figure, not a promise, not an account and not guaranteed funds.
 
 NETWORK

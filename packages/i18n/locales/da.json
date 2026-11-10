@@ -218,7 +218,7 @@
     "zoomOut": "Zoom ud",
     "fit": "Tilpas netværket",
     "stats": {
-      "canHelp": "Dit netværk kan hjælpe",
+      "canHelp": "Netværkets mindste deltagelse",
       "explain": "Hvad de mennesker, du kan se (op til 3. håndtryk), stadig er klar til at angive i denne periode: summen af deres mindste deltagelse. En besked om et behov går ud i bølger, nærmeste først, op til 6. håndtryk. Det er et pejlemærke, ikke et løfte: alle bestemmer selv, om de vil deltage.",
       "weekDelta": "+{{amount}} denne uge",
       "people_one": "{{count}} person i dit netværk",
@@ -397,7 +397,7 @@
     "receivedSummary": "Modtaget {{paid}} af {{total}} · {{sum}} af {{all}}",
     "markTransfers": "Markér som modtaget",
     "markTitle": "Hvis penge har du modtaget?",
-    "markHint": "Sæt flueben ved alle, hvis angivne beløb allerede er kommet. Det er din egen markering: Social Organizer ser eller kontrollerer ikke overførsler.",
+    "markHint": "Sæt flueben ved alle, hvis angivne beløb allerede er kommet. Selve markeringen ser kun du; Social Organizer ser eller kontrollerer ikke overførsler. Når behovet er lukket, vises antallet af markeringer i deltagerens profil.",
     "markPick": "Vælg, hvem du har modtaget fra",
     "markConfirm": "Markér · {{n}} · {{sum}}",
     "selectAll": "Alle · {{n}}",
@@ -476,7 +476,8 @@
     "logoutGeneric": "Du kan komme tilbage på samme måde, som du loggede ind.",
     "notifyChannel": "Kanal",
     "notifyTelegramNotLinked": "Forbind Telegram under »Konto« for at få beskeder dér.",
-    "stakeSaved": "Gemt"
+    "stakeSaved": "Gemt",
+    "factsLine": "For lukkede behov: meldte deltagelser {{reported}}, markeret som modtaget af forfattere {{marked}}. Folk i dit netværk ser disse to tal."
   },
   "settings": {
     "title": "Indstillinger",
@@ -727,7 +728,9 @@
       "q4": "Behandler Social Organizer betalinger?",
       "a4": "Nej. Social Organizer modtager, overfører eller opbevarer ikke penge. Alt, hvad deltagerne gør mellem sig, gør de direkte, uden for tjenesten.",
       "q5": "Giver deltagerne penge videre?",
-      "a5": "Det kan de. Et behov angiver et beløb, og en deltagelse angiver, hvor meget en deltager er klar til at give videre. Hvis deltagerne giver penge videre, gør de det selv og direkte, efter deres egen aftale. Social Organizer kontrollerer ikke, om en overdragelse har fundet sted."
+      "a5": "Det kan de. Et behov angiver et beløb, og en deltagelse angiver, hvor meget en deltager er klar til at give videre. Hvis deltagerne giver penge videre, gør de det selv og direkte, efter deres egen aftale. Social Organizer kontrollerer ikke, om en overdragelse har fundet sted.",
+      "q6": "Hvad er beløbene angivet i?",
+      "a6": "I amerikanske dollar: en fælles regneenhed, så beløbene kan sammenlignes. Hvilken valuta og hvilken måde, der bruges, afgør deltagerne selv."
     }
   },
   "how": {
@@ -978,7 +981,8 @@
       "s10Title": "10. Ændringer af vilkår",
       "s10": "Vi kan opdatere disse vilkår fra tid til anden. Fortsat brug af appen efter ændringer betyder, at du accepterer de nye vilkår.",
       "s11Title": "11. Kontakt",
-      "s11": "Har du spørgsmål om disse vilkår, så kontakt os via <bot>Telegram</bot>."
+      "s11": "Har du spørgsmål om disse vilkår, så kontakt os via <bot>Telegram</bot>.",
+      "s6b": "Beløb i tjenesten er angivet i amerikanske dollar som en fælles regneenhed. Hvilken valuta og hvilken måde, der bruges, afgør deltagerne indbyrdes."
     }
   },
   "tgBot": {
@@ -1060,8 +1064,8 @@
   "ask": {
     "title": "Behov",
     "amountLabel": "Hvor meget der er brug for",
-    "amountHint": "Dit netværk kan hjælpe med ca. {{amount}}",
-    "amountWarn": "Dit netværk kan lige nu hjælpe med ca. {{amount}}, så den angivne deltagelse rækker måske ikke",
+    "amountHint": "Dit netværks mindste deltagelse er ca. {{amount}}",
+    "amountWarn": "Dit netværks mindste deltagelse er lige nu ca. {{amount}}, så den angivne deltagelse rækker måske ikke",
     "minAmount": "Mindst 10 $",
     "whole": "Kun hele dollar",
     "typeLabel": "Hvor ofte",
@@ -1301,7 +1305,11 @@
     "contactsHint": "Kontakterne åbner i en anden app.",
     "withdrawRequest": "Træk tilbage",
     "requestCooldown": "Anmodning trukket tilbage. Du kan sende en ny efter {{when}}.",
-    "requestCooldownSoon": "Anmodning trukket tilbage. Du kan sende en ny efter et døgn."
+    "requestCooldownSoon": "Anmodning trukket tilbage. Du kan sende en ny efter et døgn.",
+    "factsTitle": "Deltagelse",
+    "factsReported": "Meldte deltagelser",
+    "factsMarked": "Markeret som modtaget af forfattere",
+    "factsNote": "For lukkede behov. Markeringen sættes af behovets forfatter; Social Organizer kontrollerer den ikke."
   },
   "help": {
     "faq": "Spørgsmål og svar",
