@@ -105,9 +105,29 @@ export const pendingRouter = router({
         throw new TRPCError({ code: 'CONFLICT', message: 'Request already pending' });
       }
 
-      const created = await ctx.db.pendingConnection.create({
-        data: { fromUserId: ctx.userId, toUserId: input.targetUserId, createdAt: new Date() },
+      // An earlier answered request from me to this person (one row per pair and direction)
+      const previous = await ctx.db.pendingConnection.findUnique({
+        where: { fromUserId_toUserId: { fromUserId: ctx.userId, toUserId: input.targetUserId } },
       });
+      // Declined: the person is not asked again (SO-45, one notice per request)
+      if (previous?.status === 'REJECTED') {
+        throw new TRPCError({ code: 'CONFLICT', message: 'Request declined' });
+      }
+      // Accepted earlier, connection removed since: a new request is a new event
+      if (previous) {
+        await ctx.db.pendingConnection.delete({ where: { id: previous.id } });
+      }
+
+      let created;
+      try {
+        created = await ctx.db.pendingConnection.create({
+          data: { fromUserId: ctx.userId, toUserId: input.targetUserId, createdAt: new Date() },
+        });
+      } catch (err: any) {
+        // Two parallel requests: the second one sees the first
+        if (err?.code === 'P2002') throw new TRPCError({ code: 'CONFLICT', message: 'Request already pending' });
+        throw err;
+      }
 
       const [sender, senderTgContact] = await Promise.all([
         ctx.db.user.findUnique({
