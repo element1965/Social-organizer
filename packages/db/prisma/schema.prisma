@@ -130,6 +130,7 @@ model User {
   connectionsTo            Connection[]             @relation("connectionToUser")
   collections              Collection[]
   obligations              Obligation[]
+  obligationReceipts       ObligationReceipt[]
   notifications            Notification[]
   ignoreFrom               IgnoreEntry[]            @relation("ignoreFrom")
   ignoreTo                 IgnoreEntry[]            @relation("ignoreTo")
@@ -237,6 +238,8 @@ model Collection {
   originalAmount    Float?
   originalCurrency  String?
   chatLink          String
+  /// What the collection is for: plain text, max 300 chars, rendered as text only
+  description       String?
   status            CollectionStatus @default(ACTIVE)
   currentCycleStart DateTime?
   cycleNumber       Int              @default(1)
@@ -255,6 +258,7 @@ model Collection {
   notifications Notification[]
   complaints    CollectionComplaint[]
   reviews       CollectionReview[]
+  receipts      ObligationReceipt[]
 
   @@index([creatorId])
   @@index([status])
@@ -352,10 +356,34 @@ model Obligation {
 
   collection Collection @relation(fields: [collectionId], references: [id], onDelete: Cascade)
   user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  receipts   ObligationReceipt[]
 
   @@index([collectionId])
   @@index([userId])
   @@map("obligations")
+}
+
+/// The author's private "received" mark for one finished cycle of a regular collection.
+/// Written when the cycle closes; the live mark (Obligation.confirmedAt) is then cleared.
+/// obligationId is nullable with SetNull: a person who unsubscribed has their obligation deleted
+/// at cycle close, but the author's record of the ended cycle stays.
+model ObligationReceipt {
+  id           String   @id @default(cuid())
+  obligationId String?
+  collectionId String
+  userId       String
+  cycleNumber  Int
+  amount       Float
+  confirmedAt  DateTime
+  createdAt    DateTime @default(now())
+
+  obligation Obligation? @relation(fields: [obligationId], references: [id], onDelete: SetNull)
+  collection Collection  @relation(fields: [collectionId], references: [id], onDelete: Cascade)
+  user       User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([collectionId, userId, cycleNumber])
+  @@index([collectionId, cycleNumber])
+  @@map("obligation_receipts")
 }
 
 model Notification {

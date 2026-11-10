@@ -14,6 +14,10 @@ import { settleOpenReviews } from '../services/moderation.service.js';
 /** Chat links are shown as buttons: https only, never javascript: or http (SO-14). */
 const chatLinkSchema = z.string().max(500).url().refine((u) => /^https:\/\//i.test(u), 'Link must start with https://');
 
+/** What the collection is for: plain text, shown as text only (never HTML). Empty becomes null. */
+const descriptionSchema = z.string().trim().max(300);
+const toDescription = (value: string | undefined) => (value ? value : null);
+
 function assertAdmin(userId: string) {
   if (!isAdmin(userId)) throw new TRPCError({ code: 'FORBIDDEN', message: 'Only admins can block collections' });
 }
@@ -100,6 +104,7 @@ export const collectionRouter = router({
       amount: z.number().int().min(MIN_COLLECTION_AMOUNT).nullable().optional(), // whole $ only
       inputCurrency: z.literal('USD').default('USD'), // amounts are in $ only: 1 $ = 1 unit, no conversion (SO-40)
       chatLink: chatLinkSchema,
+      description: descriptionSchema.optional(),
     }))
     .mutation(async ({ ctx, input }) => {
       // Check creator role
@@ -145,13 +150,15 @@ export const collectionRouter = router({
           amount: amountUSD,
           currency: 'USD',
           chatLink: input.chatLink,
+          description: toDescription(input.description),
           currentCycleStart: input.type === 'REGULAR' ? new Date() : null,
         },
       });
 
-      // BFS distribution NOT sent for special profiles (Author/Developer)
-      // Their notifications come through special-notify worker after first intention
-      if (!isSpecial && amountUSD != null) {
+      // With an amount, special creators (Author/Developer/admin) are announced through the network like
+      // everyone else; without one there is no BFS. The special-notify worker additionally tells people
+      // who already helped someone about Author/Developer collections.
+      if (amountUSD != null) {
         const maxRecipients = Math.ceil(amountUSD / NOTIFICATION_RATIO);
         await sendCollectionNotifications(ctx.db, collection.id, ctx.userId, 'NEW_COLLECTION', 1, maxRecipients);
       }
@@ -304,6 +311,22 @@ export const collectionRouter = router({
       });
     }),
 
+  /** Author edits the short description at any time while the collection is open. */
+  updateDescription: protectedProcedure
+    .input(z.object({ id: z.string(), description: descriptionSchema }))
+    .mutation(async ({ ctx, input }) => {
+      const collection = await ctx.db.collection.findUnique({ where: { id: input.id } });
+      if (!collection) throw new TRPCError({ code: 'NOT_FOUND' });
+      if (collection.creatorId !== ctx.userId) throw new TRPCError({ code: 'FORBIDDEN' });
+      if (collection.status !== 'ACTIVE' && collection.status !== 'BLOCKED') {
+        throw new TRPCError({ code: 'BAD_REQUEST', message: 'Can only update active collections' });
+      }
+      return ctx.db.collection.update({
+        where: { id: input.id },
+        data: { description: toDescription(input.description) },
+      });
+    }),
+
   close: protectedProcedure
     .input(z.object({ id: z.string() }))
     .mutation(async ({ ctx, input }) => {
@@ -453,6 +476,8 @@ export const collectionRouter = router({
         amount: collection.amount,
         currentAmount: totals.amount,
         currency: collection.currency,
+        // The author's text is not shown publicly while the collection is paused by moderation
+        description: collection.status === 'BLOCKED' && collection.blockReason != null ? null : collection.description,
         createdAt: collection.createdAt,
         closedAt: collection.closedAt,
         suspended: collection.status === 'BLOCKED' && collection.blockReason != null,

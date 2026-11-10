@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { MIN_COLLECTION_AMOUNT, MIN_OBLIGATION_AMOUNT, REGULAR_CYCLE_DAYS } from '@so/shared';
 import { AskProgressSync } from '../components/collection/AskProgressSync';
 import { IconChat, IconClock, IconPen, IconQr, IconShare } from '../components/collection/icons';
+import { PreviousCycles } from '../components/collection/PreviousCycles';
 import { ParticipantList, type ParticipantRow } from '../components/collection/ParticipantList';
 import { MarkableParticipantList } from '../components/collection/PaidMarks';
 import { QrSheet } from '../components/collection/QrSheet';
@@ -19,12 +20,15 @@ import { Meter } from '../components/ui2/Meter';
 import { PathFigure } from '../components/ui2/PathFigure';
 import { Screen } from '../components/ui2/Screen';
 import { Sheet } from '../components/ui2/Sheet';
+import { Textarea } from '../components/ui2/Textarea';
 import { StageRail } from '../components/ui2/StageRail';
 import { useShellMode } from '../components/ui2/shell-mode';
 import { useAuth } from '../hooks/useAuth';
 import { useNicknames } from '../hooks/useNicknames';
 import { buildSosInviteUrl } from '../lib/inviteUrl';
 import { trpc } from '../lib/trpc';
+
+const DESCRIPTION_MAX = 300;
 
 const REASONS = ['COMPLAINTS', 'SUSPECTED_FRAUD', 'RULES_VIOLATION', 'AUTHOR_REQUEST'] as const;
 type BlockReason = (typeof REASONS)[number];
@@ -88,6 +92,7 @@ export function CollectionPage() {
   const decline = trpc.obligation.unsubscribeFromCollection.useMutation({ onSuccess: refresh });
   const closeCollection = trpc.collection.close.useMutation({ onSuccess: refresh });
   const updateChat = trpc.collection.updateChatLink.useMutation({ onSuccess: refresh });
+  const updateDescription = trpc.collection.updateDescription.useMutation({ onSuccess: refresh });
   const updateGoal = trpc.collection.updateAmount.useMutation({ onSuccess: refresh });
   const removeJoiner = trpc.collection.removeJoiner.useMutation({
     onSuccess: () => {
@@ -121,6 +126,9 @@ export function CollectionPage() {
   const [chatEditing, setChatEditing] = useState(false);
   const [chatValue, setChatValue] = useState('');
   const [chatError, setChatError] = useState('');
+  const [descEditing, setDescEditing] = useState(false);
+  const [descValue, setDescValue] = useState('');
+  const [descError, setDescError] = useState('');
   const [goalAmount, setGoalAmount] = useState('');
   const [goalError, setGoalError] = useState('');
   const [removeTarget, setRemoveTarget] = useState<ParticipantRow | null>(null);
@@ -172,6 +180,7 @@ export function CollectionPage() {
   const showAdmin = admin.data?.isAdmin === true && !closed && (data.status === 'ACTIVE' || held);
   const language = i18n.language;
   const creatorName = resolve(data.creatorId, data.creator.name);
+  const description = data.description?.trim() || '';
   const stake = Math.max(MIN_OBLIGATION_AMOUNT, Math.round(me.data?.monthlyBudget || MIN_OBLIGATION_AMOUNT));
 
   // Every active pledge counts until the person declines. Confirming a cycle does not change the total.
@@ -319,6 +328,14 @@ export function CollectionPage() {
     );
   };
 
+  const saveDescription = () => {
+    setDescError('');
+    updateDescription.mutate(
+      { id: data.id, description: descValue.trim() },
+      { onSuccess: () => setDescEditing(false), onError: () => setDescError(t('common.error')) },
+    );
+  };
+
   const saveGoal = () => {
     const issue = amountIssue(goalAmount, MIN_COLLECTION_AMOUNT);
     const amount = parseWhole(goalAmount);
@@ -358,6 +375,9 @@ export function CollectionPage() {
             <p className="mt-0.5 text-label font-semibold text-ink-muted">{subtitle}</p>
           </div>
         </div>
+        {description && (!owner || closed) ? (
+          <p dir="auto" className="mt-3 whitespace-pre-line break-words text-body-s font-semibold text-ink">{description}</p>
+        ) : null}
         {hasGoal ? (
           <Meter mine={mineTotal} others={othersTotal} goal={data.amount ?? 0} showMine={!owner && mineTotal > 0} />
         ) : (
@@ -513,6 +533,36 @@ export function CollectionPage() {
 
       {owner && !closed ? (
         <Card className="mt-3">
+          {descEditing ? (
+            <div className="mb-3">
+              <Textarea
+                label={t('collection.descLabel')}
+                value={descValue}
+                placeholder={t('ask.descPlaceholder')}
+                max={DESCRIPTION_MAX}
+                error={descError}
+                onChange={(event) => { setDescValue(event.target.value); setDescError(''); }}
+              />
+              <div className="mt-3 grid grid-cols-2 gap-2">
+                <Button variant="secondary" className="w-full" onClick={() => setDescEditing(false)}>{t('common.cancel')}</Button>
+                <Button className="w-full" loading={updateDescription.isPending} onClick={saveDescription}>{t('collection.saveAmount')}</Button>
+              </div>
+            </div>
+          ) : (
+            <button
+              type="button"
+              className="so-focus mb-3 flex min-h-row w-full items-center gap-3 rounded-lg bg-canvas px-3.5 py-3 text-start"
+              onClick={() => { setDescValue(description); setDescError(''); setDescEditing(true); }}
+            >
+              <span className="min-w-0 flex-1">
+                <span className="block text-micro font-semibold text-ink-muted">{t('collection.descLabel')}</span>
+                <span dir="auto" className={description ? 'line-clamp-3 block whitespace-pre-line break-words text-body-s font-extrabold' : 'block text-body-s font-semibold text-ink-muted'}>
+                  {description || t('collection.descAdd')}
+                </span>
+              </span>
+              <IconPen className="h-5 w-5 shrink-0 text-care" />
+            </button>
+          )}
           {chatEditing ? (
             <>
               <Input
@@ -569,6 +619,8 @@ export function CollectionPage() {
       ) : (
         <ParticipantList people={people} showPaid={false} onPerson={(userIdToOpen) => navigate(`/person/${userIdToOpen}`)} />
       )}
+
+      {owner && data.type === 'REGULAR' ? <PreviousCycles collectionId={data.id} /> : null}
 
       {owner && !closed ? (
         <Button variant="secondary" className="mt-5 w-full border-sos/40 text-sos hover:bg-sos/10" onClick={() => setCloseOpen(true)}>

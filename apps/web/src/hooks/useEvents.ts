@@ -28,6 +28,8 @@ export type FeedEvent = {
   at: number;
   title: string;
   subtitle: string;
+  /** What the author wrote the request is for (plain text), shown under the subtitle. */
+  note?: string;
   amount?: string;
   /** Raw goal of a request, for the person card ("Collection 80 $"). */
   amountValue?: number | null;
@@ -57,6 +59,7 @@ type NotificationItem = {
     id: string;
     type: string;
     status: string;
+    description?: string | null;
     amount: number | null;
     cycleNumber: number | null;
     currentCycleStart: string | Date | null;
@@ -177,6 +180,7 @@ export function useEvents(options: { displayName?: (id: string, fallback: string
           subtitle: near
             ? t('circle.feed.requestVia', { name: name(near.id, near.name), kind })
             : t('circle.feed.request', { kind }),
+          note: c.description?.trim() || undefined,
           amount: c.amount != null ? formatMoney(c.amount) : undefined,
           amountValue: c.amount,
           hot: true,

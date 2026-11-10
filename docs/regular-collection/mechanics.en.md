@@ -1,5 +1,11 @@
 # Regular collection and QR code: how it works today
 
+> **Update 2026-11-10 (`redesign` branch).** Four gaps listed in this document are closed; the text below describes the state before them:
+> - **Collection description** exists now: an optional field of up to 300 characters (`Collection.description`), shown on the collection page, the public `/sos/<id>` page and in the feed.
+> - **Per-cycle tracking:** when a cycle closes, the "received" marks are saved to a history (`ObligationReceipt`) and cleared; the author sees a "Previous cycles" block. The history is visible to the author only.
+> - **Special roles:** a collection of an `AUTHOR`/`DEVELOPER` or an admin with an amount is announced at creation like any other; the `special-notify` worker is scheduled.
+> - **Repeat waves** (`re-notify`, every 12 hours) are on for one-time collections only. A regular collection still notifies once.
+
 This document is based only on the repository code (branch `main`, commit `3924fe4`). File paths are given
 so that every statement can be checked. Next to it are the video instructions
 `apps/web/public/videos/regular-collection/<locale>.mp4` (one per app language), recorded on a local copy of the app.

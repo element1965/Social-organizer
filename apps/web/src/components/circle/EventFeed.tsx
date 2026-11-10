@@ -95,6 +95,7 @@ export function EventFeed({ events, loading, onOpen, onDismiss }: EventFeedProps
                     icon={ICONS[event.kind]}
                     title={event.title}
                     subtitle={event.subtitle}
+                    note={event.note}
                     amount={event.amount}
                     hot={event.hot}
                     onClick={() => {
