@@ -328,6 +328,17 @@
     "empty": "Personne pour le moment",
     "notFound": "Aucun résultat"
   },
+  "offline": {
+    "banner": "Pas de connexion. Affichage de la copie enregistrée sur cet appareil, {{time}}.",
+    "bannerNoCopy": "Pas de connexion. Rien n'est encore enregistré sur cet appareil.",
+    "empty": "Ouvrez l'application une fois en ligne et vos proches seront enregistrés ici.",
+    "needsConnection": "Nécessite une connexion",
+    "contactsNotSaved": "Les contacts de cette personne ne sont pas encore enregistrés sur cet appareil. Ils le sont quand vous ouvrez sa page en ligne.",
+    "tapHint": "Les contacts ne sont enregistrés que pour les connexions directes.",
+    "unavailableTitle": "Cet écran nécessite une connexion",
+    "unavailableBody": "Connectez-vous à Internet et réessayez. Les personnes enregistrées sur cet appareil restent disponibles.",
+    "showSaved": "Afficher les personnes enregistrées"
+  },
   "collection": {
     "close": "Fermer le besoin",
     "saveAmount": "Enregistrer",

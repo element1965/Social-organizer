@@ -15,6 +15,8 @@ import { useAuth } from './hooks/useAuth';
 import { afterSignInPath, readPendingInvite, safeInviteToken, safeMasked, safePath, setPendingInvite } from './components/onboarding/flow';
 import { LandingPage } from './pages/LandingPage';
 import { GetRedirect, RedirectHome } from './components/site/redirects';
+import { HomeGate, OfflineRouteBoundary, PeopleGate, PersonGate } from './components/offline/gates';
+import { onRecovery } from './lib/connectivity';
 
 /** Named-export pages, each its own chunk. The guest landing stays in the entry chunk. */
 function lazyPage<M, K extends keyof M>(load: () => Promise<M>, name: K) {
@@ -50,7 +52,9 @@ function PublicRoutes() {
 function ShellRoutes() {
   return (
     <Suspense fallback={<RouteFallback />}>
-      <Outlet />
+      <OfflineRouteBoundary>
+        <Outlet />
+      </OfflineRouteBoundary>
     </Suspense>
   );
 }
@@ -181,7 +185,11 @@ function HomeIndex() {
   }
 
   if (!isAuthenticated) return <LandingPage />;
-  return <CirclePage />;
+  return (
+    <HomeGate>
+      <CirclePage />
+    </HomeGate>
+  );
 }
 
 const INVITE_REDIRECT_KEY = 'so.inviteRedirected';
@@ -250,9 +258,17 @@ function ShellGate() {
 
 export function App() {
   const [queryClient] = useState(() => new QueryClient({
-    defaultOptions: { queries: { retry: 1, refetchOnWindowFocus: false } },
+    // networkMode 'always': a request without a network fails at once and says so (the offline screens react to it)
+    // instead of waiting paused; a mutation then fails visibly rather than firing later on its own.
+    defaultOptions: {
+      queries: { retry: 1, refetchOnWindowFocus: false, networkMode: 'always' },
+      mutations: { networkMode: 'always' },
+    },
   }));
   const [trpcClient] = useState(() => getTrpcClient());
+
+  // The connection came back (the browser says so, or the server answers again): refresh what is on screen
+  useEffect(() => onRecovery(() => void queryClient.invalidateQueries()), [queryClient]);
 
   return (
     <trpc.Provider client={trpcClient} queryClient={queryClient}>
@@ -331,9 +347,9 @@ export function App() {
                 <Route path="/me/broadcast" element={<BroadcastScreen />} />
                 <Route path="/me/stats" element={<AdminStatsPage />} />
                 <Route path="/me/settings" element={<Navigate to="/me" replace />} />
-                <Route path="/people" element={<PeoplePage />} />
-                <Route path="/people/:ring" element={<PeoplePage />} />
-                <Route path="/person/:id" element={<PersonPage />} />
+                <Route path="/people" element={<PeopleGate><PeoplePage /></PeopleGate>} />
+                <Route path="/people/:ring" element={<PeopleGate><PeoplePage /></PeopleGate>} />
+                <Route path="/person/:id" element={<PersonGate><PersonPage /></PersonGate>} />
                 <Route path="/collection/:id" element={<CollectionPage />} />
                 <Route path="/support" element={<SupportChatPage />} />
                 <Route path="*" element={<Navigate to="/" replace />} />

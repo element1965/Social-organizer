@@ -331,6 +331,17 @@
     "empty": "Na razie nikogo",
     "notFound": "Nikogo nie znaleziono"
   },
+  "offline": {
+    "banner": "Brak połączenia. Wyświetlana jest kopia zapisana na tym urządzeniu, {{time}}.",
+    "bannerNoCopy": "Brak połączenia. Na tym urządzeniu nic jeszcze nie zapisano.",
+    "empty": "Otwórz aplikację raz z dostępem do internetu, a Twoi ludzie zapiszą się tutaj.",
+    "needsConnection": "Wymaga połączenia",
+    "contactsNotSaved": "Kontakty tej osoby nie są jeszcze zapisane na tym urządzeniu. Zapiszą się, gdy otworzysz jej stronę online.",
+    "tapHint": "Kontakty są zapisywane tylko dla bezpośrednich znajomych.",
+    "unavailableTitle": "Ten ekran wymaga połączenia",
+    "unavailableBody": "Połącz się z internetem i spróbuj ponownie. Osoby zapisane na tym urządzeniu są nadal dostępne.",
+    "showSaved": "Pokaż zapisane osoby"
+  },
   "collection": {
     "close": "Zamknij potrzebę",
     "saveAmount": "Zapisz",

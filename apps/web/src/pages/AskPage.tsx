@@ -16,6 +16,8 @@ import { useShellMode } from '../components/ui2/shell-mode';
 import { formatMoney } from '../components/ui2/format';
 import { Card } from '../components/ui2/Card';
 import { trpc } from '../lib/trpc';
+import { useOffline } from '../lib/connectivity';
+import { OfflineHint } from '../components/offline/OfflineNotice';
 import { PathToRequestSheet } from '../components/circle/PathToRequest';
 import { useNeedCounts } from '../components/profile/useNeedCounts';
 
@@ -66,6 +68,7 @@ function NeedsLink() {
 
 function AskBody() {
   const { t, i18n } = useTranslation();
+  const offline = useOffline();
   const navigate = useNavigate();
   const utils = trpc.useUtils();
   const access = trpc.collection.askAccess.useQuery();
@@ -230,9 +233,10 @@ function AskBody() {
         </div>
         <p className="mt-4 rounded-lg bg-care-soft px-3.5 py-3 text-caption font-semibold text-ink">{reach}</p>
         {errors.form ? <p className="mt-3 text-label font-semibold text-sos">{errors.form}</p> : null}
-        <Button type="submit" className="mt-4 w-full" loading={create.isPending}>
+        <Button type="submit" className="mt-4 w-full" loading={create.isPending} disabled={offline}>
           {t('ask.submit')}
         </Button>
+        {offline ? <OfflineHint /> : null}
       </form>
 
       <Sheet

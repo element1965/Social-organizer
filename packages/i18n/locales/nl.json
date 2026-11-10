@@ -325,6 +325,17 @@
     "empty": "Nog niemand",
     "notFound": "Niemand gevonden"
   },
+  "offline": {
+    "banner": "Geen verbinding. De kopie die op dit apparaat is opgeslagen wordt getoond, {{time}}.",
+    "bannerNoCopy": "Geen verbinding. Er is nog niets opgeslagen op dit apparaat.",
+    "empty": "Open de app één keer online en je mensen worden hier bewaard.",
+    "needsConnection": "Verbinding nodig",
+    "contactsNotSaved": "De contactgegevens van deze persoon zijn nog niet op dit apparaat opgeslagen. Ze worden opgeslagen als je hun pagina online opent.",
+    "tapHint": "Contactgegevens worden alleen bewaard voor directe connecties.",
+    "unavailableTitle": "Dit scherm heeft verbinding nodig",
+    "unavailableBody": "Maak verbinding met internet en probeer het opnieuw. De mensen die op dit apparaat zijn opgeslagen blijven beschikbaar.",
+    "showSaved": "Opgeslagen mensen tonen"
+  },
   "collection": {
     "close": "Behoefte sluiten",
     "saveAmount": "Opslaan",

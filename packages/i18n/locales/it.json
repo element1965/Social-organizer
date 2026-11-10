@@ -328,6 +328,17 @@
     "empty": "Ancora nessuno",
     "notFound": "Nessuno trovato"
   },
+  "offline": {
+    "banner": "Nessuna connessione. Mostro la copia salvata su questo dispositivo, {{time}}.",
+    "bannerNoCopy": "Nessuna connessione. Su questo dispositivo non c'è ancora nulla di salvato.",
+    "empty": "Apri l'app una volta online e le tue persone verranno salvate qui.",
+    "needsConnection": "Serve una connessione",
+    "contactsNotSaved": "I contatti di questa persona non sono ancora salvati su questo dispositivo. Vengono salvati quando apri la sua pagina online.",
+    "tapHint": "I contatti vengono salvati solo per le connessioni dirette.",
+    "unavailableTitle": "Questa schermata richiede una connessione",
+    "unavailableBody": "Collegati a internet e riprova. Le persone salvate su questo dispositivo restano disponibili.",
+    "showSaved": "Mostra le persone salvate"
+  },
   "collection": {
     "close": "Chiudi il bisogno",
     "saveAmount": "Salva",

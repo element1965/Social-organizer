@@ -328,6 +328,17 @@
     "empty": "Nadie todavía",
     "notFound": "No hay nadie"
   },
+  "offline": {
+    "banner": "Sin conexión. Se muestra la copia guardada en este dispositivo, {{time}}.",
+    "bannerNoCopy": "Sin conexión. Todavía no hay nada guardado en este dispositivo.",
+    "empty": "Abre la aplicación una vez con conexión y tu gente se guardará aquí.",
+    "needsConnection": "Requiere conexión",
+    "contactsNotSaved": "Los contactos de esta persona aún no están guardados en este dispositivo. Se guardan al abrir su página con conexión.",
+    "tapHint": "Los contactos se guardan solo para las conexiones directas.",
+    "unavailableTitle": "Esta pantalla necesita conexión",
+    "unavailableBody": "Conéctate a internet e inténtalo de nuevo. Las personas guardadas en este dispositivo siguen disponibles.",
+    "showSaved": "Mostrar personas guardadas"
+  },
   "collection": {
     "close": "Cerrar necesidad",
     "saveAmount": "Guardar",

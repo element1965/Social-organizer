@@ -325,6 +325,17 @@
     "empty": "Ingen ennå",
     "notFound": "Ingen funnet"
   },
+  "offline": {
+    "banner": "Ingen tilkobling. Viser kopien som er lagret på denne enheten, {{time}}.",
+    "bannerNoCopy": "Ingen tilkobling. Ingenting er lagret på denne enheten ennå.",
+    "empty": "Åpne appen én gang på nett, så lagres menneskene dine her.",
+    "needsConnection": "Krever tilkobling",
+    "contactsNotSaved": "Kontaktinformasjonen til denne personen er ikke lagret på enheten ennå. Den lagres når du åpner siden deres på nett.",
+    "tapHint": "Kontaktinformasjon lagres bare for direkte forbindelser.",
+    "unavailableTitle": "Denne skjermen krever tilkobling",
+    "unavailableBody": "Koble til internett og prøv igjen. Personene som er lagret på denne enheten er fortsatt tilgjengelige.",
+    "showSaved": "Vis lagrede personer"
+  },
   "collection": {
     "close": "Lukk behovet",
     "saveAmount": "Lagre",

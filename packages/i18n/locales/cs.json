@@ -331,6 +331,17 @@
     "empty": "Zatím nikdo",
     "notFound": "Nikdo nenalezen"
   },
+  "offline": {
+    "banner": "Bez připojení. Zobrazuje se kopie uložená v tomto zařízení, {{time}}.",
+    "bannerNoCopy": "Bez připojení. V tomto zařízení zatím nic není uloženo.",
+    "empty": "Otevřete aplikaci jednou online a vaši lidé se zde uloží.",
+    "needsConnection": "Vyžaduje připojení",
+    "contactsNotSaved": "Kontakty této osoby zatím nejsou v zařízení uloženy. Uloží se, když otevřete její stránku online.",
+    "tapHint": "Kontakty se ukládají jen u přímých spojení.",
+    "unavailableTitle": "Tato obrazovka vyžaduje připojení",
+    "unavailableBody": "Připojte se k internetu a zkuste to znovu. Lidé uložení v tomto zařízení jsou stále dostupní.",
+    "showSaved": "Zobrazit uložené lidi"
+  },
   "collection": {
     "close": "Uzavřít potřebu",
     "saveAmount": "Uložit",
