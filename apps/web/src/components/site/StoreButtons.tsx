@@ -5,7 +5,7 @@ import { QR_LOGO_LEVEL, qrLogo } from '../../lib/qrLogo';
 import { SITE_ORIGIN, storeButtons, type Device, type StoreId } from '../../lib/device';
 import { cn } from '../../lib/utils';
 import { usePendingInvite, useStoreLinks } from './DeviceEntry';
-import { IconApple, IconPlay, IconTelegram } from './icons';
+import { IconApple, IconGlobe, IconPlay, IconTelegram } from './icons';
 import { useLoginHref } from './SiteHeader';
 
 /**
@@ -43,7 +43,12 @@ export function StoreButtons({ device, invite }: { device: Device; invite?: stri
           </>
         );
       default:
-        return t('landing.start.web');
+        return (
+          <>
+            <IconGlobe />
+            {t('landing.start.web')}
+          </>
+        );
     }
   };
 
