@@ -482,6 +482,14 @@ function PhoneCircle({
     if (!feedLayer) setExpanded(false);
   }, [feedLayer]);
 
+  // The scene runs up under the status bar (clock, battery), as in the mockup:
+  // the solid strip that normally covers it is switched off while this screen is shown.
+  useEffect(() => {
+    const root = document.documentElement;
+    root.classList.add('scene-under-bar');
+    return () => root.classList.remove('scene-under-bar');
+  }, []);
+
   // The expanded feed closes with a downward swipe anywhere on it once the list is scrolled to the top,
   // like a system sheet, not only from the handle. Native listeners: touchmove must be non-passive to stop
   // the browser from treating the pull as an overscroll.
@@ -602,7 +610,7 @@ function PhoneCircle({
     <div
       ref={rootRef}
       className={cn('relative overflow-hidden', SCENE_BG)}
-      style={{ height: 'calc(100dvh - var(--sa-top) - 84px - var(--sa-bottom))' }}
+      style={{ marginTop: 'calc(-1 * var(--sa-top))', height: 'calc(100dvh - 84px - var(--sa-bottom))' }}
     >
       {/* Scene: shrinks to the space above the feed, grows to full height in the graph layer. */}
       <div
@@ -624,7 +632,7 @@ function PhoneCircle({
       {/* Header: brand and numbers; fades out when the graph opens. */}
       <div
         className={cn(
-          'pointer-events-none absolute inset-x-0 top-0 z-10 bg-gradient-to-b from-scene/90 via-scene/55 to-transparent px-5 pb-8 pt-2',
+          'pointer-events-none absolute inset-x-0 top-0 z-10 bg-gradient-to-b from-scene/90 via-scene/55 to-transparent px-5 pb-8 pt-[calc(0.5rem+var(--sa-top))]',
           ease,
           feedLayer ? 'opacity-100' : '-translate-y-4 opacity-0',
         )}
@@ -641,7 +649,7 @@ function PhoneCircle({
         type="button"
         onClick={onBackToFeed}
         className={cn(
-          'so-focus absolute left-4 top-2 z-20 inline-flex h-9 items-center gap-1 rounded-md border border-node-1/15 bg-scene-2/80 pl-2 pr-3 text-caption font-bold text-node-1 backdrop-blur-md',
+          'so-focus absolute left-4 top-[calc(0.5rem+var(--sa-top))] z-20 inline-flex h-9 items-center gap-1 rounded-md border border-node-1/15 bg-scene-2/80 pl-2 pr-3 text-caption font-bold text-node-1 backdrop-blur-md',
           ease,
           feedLayer ? 'pointer-events-none -translate-y-2.5 opacity-0' : 'opacity-100',
         )}
@@ -652,7 +660,7 @@ function PhoneCircle({
       </button>
       <p
         className={cn(
-          'pointer-events-none absolute inset-x-0 top-14 z-10 text-center text-micro font-semibold text-node-2',
+          'pointer-events-none absolute inset-x-0 top-[calc(3.5rem+var(--sa-top))] z-10 text-center text-micro font-semibold text-node-2',
           ease,
           hint && layer === 'graph' ? 'opacity-100' : 'opacity-0',
         )}
@@ -687,6 +695,8 @@ function PhoneCircle({
         )}
         style={{
           height: liveH,
+          // The expanded feed stops below the status bar, not under the clock
+          maxHeight: 'calc(100% - var(--sa-top))',
           transform: feedLayer
             ? slide
               ? `translateY(${slide}px)`

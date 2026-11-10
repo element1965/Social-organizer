@@ -32,6 +32,11 @@ body::before {
   pointer-events: none;
 }
 
+/* Screens with a full-bleed scene (the phone circle) draw under the status bar themselves */
+html.scene-under-bar body::before {
+  display: none;
+}
+
 .pt-safe {
   padding-top: var(--sa-top);
 }
