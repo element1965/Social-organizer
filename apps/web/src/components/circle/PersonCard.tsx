@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { buildContactUrl, isSafeContactUrl } from '@so/shared';
+import { refreshNetwork } from '../../lib/refreshNetwork';
 import { trpc } from '../../lib/trpc';
 import { cn } from '../../lib/utils';
 import { Avatar } from '../ui2/Avatar';
@@ -44,11 +45,7 @@ export function PersonCard({ person, variant, onClose }: Props) {
   const [removeOpen, setRemoveOpen] = useState(false);
   const revoke = trpc.connection.revoke.useMutation({
     onSuccess: () => {
-      void utils.connection.list.invalidate();
-      void utils.connection.graphSlice.invalidate();
-      void utils.connection.getNetworkStats.invalidate();
-      void utils.stats.networkCapabilities.invalidate();
-      void utils.pending.incoming.invalidate();
+      void refreshNetwork(utils);
       setRemoveOpen(false);
       onClose();
     },

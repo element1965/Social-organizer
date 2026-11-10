@@ -3,6 +3,7 @@ import { Navigate, useNavigate, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { isTelegramWebApp } from '@so/tg-adapter';
 import { saveContacts } from '@so/gun-backup';
+import { refreshNetwork } from '../lib/refreshNetwork';
 import { trpc } from '../lib/trpc';
 import { toSavedContacts } from '../lib/savedCopy';
 import { useAuth } from '../hooks/useAuth';
@@ -94,10 +95,7 @@ function PersonScreen() {
   });
   const revoke = trpc.connection.revoke.useMutation({
     onSuccess: () => {
-      void utils.connection.list.invalidate();
-      void utils.connection.findPath.invalidate();
-      void utils.pending.incoming.invalidate();
-      void utils.pending.myPending.invalidate();
+      void refreshNetwork(utils);
       navigate('/');
     },
   });
