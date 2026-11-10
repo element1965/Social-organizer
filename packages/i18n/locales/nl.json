@@ -1105,7 +1105,9 @@
     "appOther": "Anders",
     "preview": "Zo ziet het eruit",
     "previewHide": "Voorbeeld verbergen",
-    "previewCaption": "Zo ziet een behoefte eruit in de kring"
+    "previewCaption": "Zo ziet een behoefte eruit in de kring",
+    "allLink": "Alles · {{count}}",
+    "allLinkPlain": "Alles"
   },
   "path": {
     "title": "Bijna: straks hoort men van je behoefte",

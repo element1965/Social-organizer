@@ -1100,7 +1100,9 @@
     "appOther": "Khác",
     "preview": "Trông như thế nào",
     "previewHide": "Ẩn ví dụ",
-    "previewCaption": "Nhu cầu trông như thế này trong vòng tròn"
+    "previewCaption": "Nhu cầu trông như thế này trong vòng tròn",
+    "allLink": "Tất cả · {{count}}",
+    "allLinkPlain": "Tất cả"
   },
   "path": {
     "title": "Sắp rồi: mọi người sắp biết về nhu cầu của bạn",

@@ -1115,7 +1115,9 @@
     "appOther": "Jiný",
     "preview": "Jak to vypadá",
     "previewHide": "Skrýt ukázku",
-    "previewCaption": "Takhle potřeba vypadá v kruhu"
+    "previewCaption": "Takhle potřeba vypadá v kruhu",
+    "allLink": "Všichni · {{count}}",
+    "allLinkPlain": "Všichni"
   },
   "path": {
     "title": "Už jen kousek a o vaší potřebě se lidé dozvědí",

@@ -1110,7 +1110,9 @@
     "appOther": "Autre",
     "preview": "Aperçu",
     "previewHide": "Masquer l’exemple",
-    "previewCaption": "Voici comment un besoin apparaît dans le cercle"
+    "previewCaption": "Voici comment un besoin apparaît dans le cercle",
+    "allLink": "Tous · {{count}}",
+    "allLinkPlain": "Tous"
   },
   "path": {
     "title": "Encore un peu : bientôt on apprendra votre besoin",

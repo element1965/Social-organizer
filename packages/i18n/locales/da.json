@@ -1105,7 +1105,9 @@
     "appOther": "Anden",
     "preview": "Sådan ser det ud",
     "previewHide": "Skjul eksemplet",
-    "previewCaption": "Sådan ser et behov ud i kredsen"
+    "previewCaption": "Sådan ser et behov ud i kredsen",
+    "allLink": "Alle · {{count}}",
+    "allLinkPlain": "Alle"
   },
   "path": {
     "title": "Næsten i mål: snart får andre kendskab til dit behov",

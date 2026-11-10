@@ -1110,7 +1110,9 @@
     "appOther": "Outro",
     "preview": "Como fica",
     "previewHide": "Ocultar o exemplo",
-    "previewCaption": "Assim a necessidade aparece no círculo"
+    "previewCaption": "Assim a necessidade aparece no círculo",
+    "allLink": "Todos · {{count}}",
+    "allLinkPlain": "Todos"
   },
   "path": {
     "title": "Falta pouco, e as pessoas vão saber da sua necessidade",

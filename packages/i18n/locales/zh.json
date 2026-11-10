@@ -1100,7 +1100,9 @@
     "appOther": "其他",
     "preview": "看起来是什么样",
     "previewHide": "隐藏示例",
-    "previewCaption": "需求在圈子里是这样显示的"
+    "previewCaption": "需求在圈子里是这样显示的",
+    "allLink": "全部 · {{count}}",
+    "allLinkPlain": "全部"
   },
   "path": {
     "title": "就快了：很快人们就会得知你的需求",

@@ -1105,7 +1105,9 @@
     "appOther": "अन्य",
     "preview": "यह कैसा दिखता है",
     "previewHide": "उदाहरण छिपाएँ",
-    "previewCaption": "वृत्त में ज़रूरत ऐसी दिखती है"
+    "previewCaption": "वृत्त में ज़रूरत ऐसी दिखती है",
+    "allLink": "सभी · {{count}}",
+    "allLinkPlain": "सभी"
   },
   "path": {
     "title": "थोड़ा और, और लोग आपकी ज़रूरत के बारे में जानेंगे",

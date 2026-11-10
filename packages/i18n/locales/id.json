@@ -1100,7 +1100,9 @@
     "appOther": "Lainnya",
     "preview": "Tampilannya",
     "previewHide": "Sembunyikan contoh",
-    "previewCaption": "Begini tampilan kebutuhan di lingkaran"
+    "previewCaption": "Begini tampilan kebutuhan di lingkaran",
+    "allLink": "Semua · {{count}}",
+    "allLinkPlain": "Semua"
   },
   "path": {
     "title": "Hampir sampai: sebentar lagi orang akan tahu kebutuhan Anda",

@@ -1100,7 +1100,9 @@
     "appOther": "기타",
     "preview": "이렇게 보여요",
     "previewHide": "예시 숨기기",
-    "previewCaption": "서클에서 필요는 이렇게 보여요"
+    "previewCaption": "서클에서 필요는 이렇게 보여요",
+    "allLink": "전체 · {{count}}",
+    "allLinkPlain": "전체"
   },
   "path": {
     "title": "거의 다 왔어요. 곧 사람들이 내 필요를 알게 돼요",

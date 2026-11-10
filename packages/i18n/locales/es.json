@@ -1110,7 +1110,9 @@
     "appOther": "Otro",
     "preview": "Cómo se ve",
     "previewHide": "Ocultar el ejemplo",
-    "previewCaption": "Así se ve una necesidad en el círculo"
+    "previewCaption": "Así se ve una necesidad en el círculo",
+    "allLink": "Todos · {{count}}",
+    "allLinkPlain": "Todos"
   },
   "path": {
     "title": "Ya casi: pronto se sabrá de su necesidad",
