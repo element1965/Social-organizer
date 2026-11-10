@@ -286,6 +286,17 @@ node scripts/build-android-staging.mjs --no-web   # reuse apps/web/dist
 - `src/staging/google-services.json` is the production Firebase config with the staging package name, so the build passes. Native push for staging needs the package registered as its own Android app in Firebase, plus a push key on a backend that never reaches real users (staging has none on purpose).
 - Sign in with the email code from the staging logs. Google and Apple sign-in return through the `socialorganizer://` scheme, which the store app also registers, so Android may ask which app should open it.
 
+#### App Links (invite QR opens the app)
+
+`https://<host>/invite/<token>` links (the live QR, shared invites) open the installed app instead of the browser: a phone camera or Google Lens offers the app, and the app routes the link to its invite page (`appLinkPath` in `App.tsx`).
+
+- **Manifest:** an `autoVerify` intent-filter for `/invite/`; hosts come from `manifestPlaceholders` in `app/build.gradle` (release: `www.orginizer.com` and `orginizer.com`, staging build: the staging domain).
+- **Verification file:** the API serves `/.well-known/assetlinks.json` from env `ANDROID_CERT_SHA256` (comma-separated SHA-256 signing-cert fingerprints) and `ANDROID_APP_PACKAGE` (default `com.socialorganizer.app`). Without fingerprints it returns 404.
+- **Production:** use the Play App Signing certificate (Play Console → App integrity → App signing → SHA-256), not the upload key. The filter ships with the next store build.
+- **Staging:** `ANDROID_APP_PACKAGE=com.socialorganizer.app.staging`, `ANDROID_CERT_SHA256` = the debug keystore fingerprint (`keytool -list -v -keystore ~/.android/debug.keystore -alias androiddebugkey -storepass android`).
+- **Check on a device:** `adb shell pm get-app-links com.socialorganizer.app.staging` shows `verified` once the file is served; re-run verification with `adb shell pm verify-app-links --re-verify <package>`.
+- Live QR codes are always black on white with a 4-module quiet zone: phone cameras do not find a code that touches a dark background.
+
 ### iOS (App Store)
 
 Capacitor-based iOS wrapper (`apps/web/ios/`) that loads the production web URL. Build via Xcode (`bash scripts/deploy-ios.sh` → Archive → Upload). Bundle `com.socialorganizer.app`, Apple ID `6768132198`. Listing/metadata are managed through the App Store Connect API (key in `secrets/asc/`). Because the UI is served from the web, most fixes ship via a Railway deploy and a plain re-submit of the same binary — a new Xcode archive is only needed for native/Info.plist changes. Full flow in `IOS_DEPLOY.md`; Sign in with Apple setup in `APPLE_SIGNIN.md`.

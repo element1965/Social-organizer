@@ -12,7 +12,6 @@ import {
   overlayColors,
   parseColor,
   resolveColors,
-  withAlpha,
 } from './palette';
 
 /* ---------- Types ---------- */
@@ -1235,7 +1234,7 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
 
   const nearestRef = useRef<Set<string>>(new Set());
   const reducedRef = useRef(false);
-  const sceneFxRef = useRef<{ stars: THREE.Points | null; glow: THREE.Sprite | null }>({ stars: null, glow: null });
+  const sceneFxRef = useRef<{ stars: THREE.Points | null; glow: THREE.Mesh | null }>({ stars: null, glow: null });
 
   const lifeRef = useRef<{ disposeTimer: ReturnType<typeof setTimeout> | null; userTouched: boolean; hoverId: string | null }>({
     disposeTimer: null,
@@ -1863,7 +1862,7 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
     const existingStars = scene.getObjectByName('so-stars') as THREE.Points | undefined;
     if (existingStars) {
       sceneFxRef.current.stars = existingStars;
-      sceneFxRef.current.glow = scene.getObjectByName('so-glow') as THREE.Sprite | null;
+      sceneFxRef.current.glow = (scene.getObjectByName('so-glow') as THREE.Mesh | undefined) ?? null;
     } else {
       const starCount = 80;
       const positions = new Float32Array(starCount * 3);
@@ -1896,8 +1895,9 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
       scene.add(stars);
       sceneFxRef.current.stars = stars;
 
-      const glow = new THREE.Sprite(res.sceneGlowMaterial(colorsRef.current.scene));
+      const glow = new THREE.Mesh(res.washGeometry, res.sceneGlowMaterial(colorsRef.current.scene));
       glow.name = 'so-glow';
+      glow.frustumCulled = false; // billboarded in the shader: the plane's own bounds do not apply
       glow.position.set(0, 0, -40);
       glow.scale.set(340, 340, 1);
       glow.raycast = noRaycast;
@@ -2930,14 +2930,59 @@ function paintTile(
   ctx.drawImage(stamp, 0, 0);
 }
 
-function paintWash(ctx: CanvasRenderingContext2D, size: number, scene: string) {
-  const g = ctx.createRadialGradient(size * 0.5, size * 0.42, size * 0.04, size * 0.5, size * 0.46, size * 0.5);
-  g.addColorStop(0, 'rgba(27,51,46,0.85)');
-  g.addColorStop(0.62, 'rgba(19,36,32,0.28)');
-  g.addColorStop(1, withAlpha(scene, 0));
-  ctx.fillStyle = g;
-  ctx.fillRect(0, 0, size, size);
+/*
+ * Centre wash: a camera-facing quad whose radial gradient is computed per pixel and dithered.
+ * It used to be a 256px canvas texture: a very dark, low-alpha 8-bit gradient (premultiplied in the
+ * canvas) stretched over most of the screen, which showed as visible rings ("staircase") and blocks.
+ * Colours are sRGB and written as-is: the default framebuffer holds sRGB values (no colorspace chunk).
+ */
+const WASH_VERTEX = /* glsl */ `
+varying vec2 vUv;
+void main() {
+  vUv = uv;
+  // Billboard like THREE.Sprite: keep the centre in view space, offset the corners by the world scale
+  vec4 mv = modelViewMatrix * vec4(0.0, 0.0, 0.0, 1.0);
+  vec2 scale = vec2(length(modelMatrix[0].xyz), length(modelMatrix[1].xyz));
+  mv.xy += position.xy * scale;
+  gl_Position = projectionMatrix * mv;
 }
+`;
+
+const WASH_FRAGMENT = /* glsl */ `
+varying vec2 vUv;
+
+// Two-circle radial gradient as in canvas createRadialGradient (canvas units, y down)
+const vec2 C0 = vec2(0.5, 0.42);
+const float R0 = 0.04;
+const vec2 C1 = vec2(0.5, 0.46);
+const float R1 = 0.5;
+
+float ign(vec2 p) { return fract(52.9829189 * fract(dot(p, vec2(0.06711056, 0.00583715)))); }
+
+void main() {
+  vec2 p = vec2(vUv.x, 1.0 - vUv.y);
+  vec2 d = C1 - C0;
+  float dr = R1 - R0;
+  vec2 q = p - C0;
+  float a = dot(d, d) - dr * dr;
+  float b = dot(q, d) + R0 * dr;
+  float c = dot(q, q) - R0 * R0;
+  float disc = max(b * b - a * c, 0.0);
+  float t = clamp((b - sqrt(disc)) / a, 0.0, 1.0);
+
+  // Stops (premultiplied): rgb(27,51,46) at 0.85, rgb(19,36,32) at 0.28 (t = 0.62), transparent at 1
+  vec4 s0 = vec4(vec3(27.0, 51.0, 46.0) / 255.0 * 0.85, 0.85);
+  vec4 s1 = vec4(vec3(19.0, 36.0, 32.0) / 255.0 * 0.28, 0.28);
+  vec4 col = t < 0.62 ? mix(s0, s1, t / 0.62) : mix(s1, vec4(0.0), (t - 0.62) / 0.38);
+  if (col.a <= 0.0) discard;
+
+  // Triangular dither of about +-1 LSB breaks the 8-bit steps of such a dark gradient
+  vec2 fc = gl_FragCoord.xy;
+  float n = ign(fc) + ign(fc + vec2(47.0, 17.0)) - 1.0;
+  col.rgb += n / 255.0;
+  gl_FragColor = col;
+}
+`;
 
 function createResources() {
   const textures: THREE.Texture[] = [];
@@ -3013,15 +3058,15 @@ function createResources() {
   };
   tintImpulse(colors.care);
 
-  const washTextures = new Map<string, THREE.Texture>();
-  const sceneWash = (scene: string) => {
-    let tex = washTextures.get(scene);
-    if (!tex) {
-      tex = makeCanvasTexture(256, (ctx, s) => paintWash(ctx, s, scene));
-      washTextures.set(scene, tex);
-    }
-    return tex;
-  };
+  // Centre wash: one quad and one shader material (premultiplied output over the scene colour)
+  const washGeometry = new THREE.PlaneGeometry(1, 1);
+  const washMaterial = new THREE.ShaderMaterial({
+    vertexShader: WASH_VERTEX,
+    fragmentShader: WASH_FRAGMENT,
+    transparent: true,
+    premultipliedAlpha: true,
+    depthWrite: false,
+  });
 
   const logoToken = () => (logoState === 'ok' && logoImg ? logoUrl : '');
   const markKeyNow = () => `${colors.careBright}|${colors.careOn}|${logoToken()}`;
@@ -3101,11 +3146,10 @@ function createResources() {
         map: discTexture, color, transparent: true, opacity: 0.22, depthWrite: false,
       }));
     },
-    sceneGlowMaterial(scene: string) {
-      const key = `wash:${scene}`;
-      return cached(key, () => new THREE.SpriteMaterial({
-        map: sceneWash(scene), transparent: true, depthWrite: false, opacity: 1,
-      }));
+    washGeometry,
+    /** The wash is drawn over the scene clear colour, so it does not depend on it. */
+    sceneGlowMaterial(_scene: string) {
+      return washMaterial;
     },
     photoMaterial(url: string, deleted: boolean, tex: THREE.Texture) {
       return cached(`photo:${url}:${deleted}`, () => new THREE.SpriteMaterial({
@@ -3142,6 +3186,8 @@ function createResources() {
       pulseDimMaterial.dispose();
       impulseMaterial.dispose();
       hitMaterial.dispose();
+      washMaterial.dispose();
+      washGeometry.dispose();
       for (const t of textures) t.dispose();
       textures.length = 0;
       // Avatar textures stay in the module cache. release() only drops this graph's pins.

@@ -175,8 +175,20 @@ export function LiveQr({ onScan, onDone }: { onScan: () => void; onDone: () => v
             strokeDashoffset={RING * (1 - fraction)}
           />
         </svg>
-        <div className="grid h-[200px] w-[200px] place-items-center overflow-hidden rounded-xl bg-surface shadow-float" role="img" aria-label={t('add.myQr')}>
-          {url ? <QRCodeSVG value={url} size={164} level={QR_LOGO_LEVEL} imageSettings={qrLogo(164)} /> : null}
+        {/* Always black on white with a 4-module quiet zone, whatever the theme: phone cameras and Google Lens
+            do not find a code that touches a dark background, only our own scanner forgives that. */}
+        <div className="grid h-[200px] w-[200px] place-items-center overflow-hidden rounded-xl bg-white shadow-float" role="img" aria-label={t('add.myQr')}>
+          {url ? (
+            <QRCodeSVG
+              value={url}
+              size={196}
+              marginSize={4}
+              level={QR_LOGO_LEVEL}
+              imageSettings={qrLogo(196)}
+              fgColor="#000000"
+              bgColor="#ffffff"
+            />
+          ) : null}
         </div>
       </div>
       <p className="mt-3.5 text-h2 font-extrabold tabular-nums text-ink" aria-live="polite">
