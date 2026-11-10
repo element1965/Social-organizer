@@ -1432,5 +1432,27 @@
     "received": "Tarpeisiisi",
     "count": "osallistumisia: {{n}}",
     "marked": "Suljetuissa tarpeissa tekijät merkitsivät vastaanotetuksi {{marked}}/{{reported}}. Verkostosi ihmiset näkevät nämä kaksi lukua."
+  },
+  "shake": {
+    "title": "Ravistusosuma",
+    "searching": "Etsitään jotakuta lähistöltä…",
+    "searchingHint": "Pyydä toista ravistamaan puhelintaan juuri nyt.",
+    "matchBody": "Onko tämä henkilö, jonka kanssa ravistit?",
+    "confirm": "Vahvista",
+    "notThem": "Ei hän",
+    "alreadyConnected": "Olette jo yhteydessä",
+    "close": "Sulje",
+    "waiting": "Odotetaan henkilöä {{name}}…",
+    "connected": "Olette yhteydessä",
+    "connectedBody": "Sinä ja {{name}} olette nyt yhteydessä.",
+    "openProfile": "Avaa profiili",
+    "declined": "Yhteys hylättiin.",
+    "expired": "Aika loppui. Ravista uudelleen.",
+    "failed": "Yhdistäminen epäonnistui. Yritä uudelleen.",
+    "none": "Ketään ei löytynyt. Ravistakaa samaan aikaan tai käyttäkää QR-koodia.",
+    "crowded": "Useita ihmisiä ravistaa lähellä. Käytä QR-koodia.",
+    "openQr": "Käytä QR-koodia",
+    "tooMany": "Liian monta yritystä. Odota minuutti ja ravista uudelleen.",
+    "enable": "Ota ravistus käyttöön"
   }
 }

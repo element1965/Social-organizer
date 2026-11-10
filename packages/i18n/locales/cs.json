@@ -1454,5 +1454,27 @@
     "received": "Ve vašich potřebách",
     "count": "účastí: {{n}}",
     "marked": "U uzavřených potřeb autoři označili jako přijaté {{marked}} z {{reported}}. Lidé ve vaší síti vidí tato dvě čísla."
+  },
+  "shake": {
+    "title": "Shoda protřepáním",
+    "searching": "Hledáme někoho poblíž…",
+    "searchingHint": "Požádejte druhou osobu, aby teď protřepala telefon.",
+    "matchBody": "Je to osoba, se kterou jste protřepali telefon?",
+    "confirm": "Potvrdit",
+    "notThem": "To není ona",
+    "alreadyConnected": "Už jste propojeni",
+    "close": "Zavřít",
+    "waiting": "Čekáme na {{name}}…",
+    "connected": "Jste propojeni",
+    "connectedBody": "Vy a {{name}} jste nyní propojeni.",
+    "openProfile": "Otevřít profil",
+    "declined": "Spojení bylo odmítnuto.",
+    "expired": "Čas vypršel. Protřepte znovu.",
+    "failed": "Spojení se nepodařilo. Zkuste to znovu.",
+    "none": "Nikdo nenalezen. Protřepte ve stejnou chvíli nebo použijte QR kód.",
+    "crowded": "Poblíž protřepává telefon více lidí. Použijte QR kód.",
+    "openQr": "Použít QR kód",
+    "tooMany": "Příliš mnoho pokusů. Počkejte minutu a protřepte znovu.",
+    "enable": "Zapnout protřepání"
   }
 }

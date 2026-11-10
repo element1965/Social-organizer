@@ -1454,5 +1454,27 @@
     "received": "W Twoich potrzebach",
     "count": "udziałów: {{n}}",
     "marked": "W zamkniętych potrzebach autorzy oznaczyli jako otrzymane {{marked}} z {{reported}}. Ludzie z Twojej sieci widzą te dwie liczby."
+  },
+  "shake": {
+    "title": "Dopasowanie przez potrząśnięcie",
+    "searching": "Szukamy kogoś w pobliżu…",
+    "searchingHint": "Poproś drugą osobę, aby teraz potrząsnęła telefonem.",
+    "matchBody": "Czy to osoba, z którą potrząsałeś telefonem?",
+    "confirm": "Potwierdź",
+    "notThem": "To nie ta osoba",
+    "alreadyConnected": "Jesteście już połączeni",
+    "close": "Zamknij",
+    "waiting": "Czekamy na {{name}}…",
+    "connected": "Jesteście połączeni",
+    "connectedBody": "Ty i {{name}} jesteście teraz połączeni.",
+    "openProfile": "Otwórz profil",
+    "declined": "Połączenie zostało odrzucone.",
+    "expired": "Czas minął. Potrząśnij jeszcze raz.",
+    "failed": "Nie udało się połączyć. Spróbuj ponownie.",
+    "none": "Nikogo nie znaleziono. Potrząśnijcie w tym samym momencie albo użyjcie kodu QR.",
+    "crowded": "Kilka osób potrząsa w pobliżu. Użyj kodu QR.",
+    "openQr": "Użyj kodu QR",
+    "tooMany": "Zbyt wiele prób. Odczekaj minutę i potrząśnij ponownie.",
+    "enable": "Włącz potrząsanie"
   }
 }

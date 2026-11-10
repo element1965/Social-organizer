@@ -1432,5 +1432,27 @@
     "received": "İhtiyaçlarınıza",
     "count": "katılım: {{n}}",
     "marked": "Kapanan ihtiyaçlarda yazarlar {{reported}} katılımdan {{marked}} tanesini alındı olarak işaretledi. Ağınızdaki kişiler bu iki sayıyı görür."
+  },
+  "shake": {
+    "title": "Sallama eşleşmesi",
+    "searching": "Yakınlarda biri aranıyor…",
+    "searchingHint": "Diğer kişiden hemen telefonunu sallamasını isteyin.",
+    "matchBody": "Telefon salladığınız kişi bu mu?",
+    "confirm": "Onayla",
+    "notThem": "O değil",
+    "alreadyConnected": "Zaten bağlısınız",
+    "close": "Kapat",
+    "waiting": "{{name}} bekleniyor…",
+    "connected": "Bağlandınız",
+    "connectedBody": "Sen ve {{name}} artık bağlısınız.",
+    "openProfile": "Profili aç",
+    "declined": "Bağlantı reddedildi.",
+    "expired": "Süre doldu. Tekrar sallayın.",
+    "failed": "Bağlanılamadı. Tekrar deneyin.",
+    "none": "Kimse bulunamadı. Aynı anda sallayın veya QR kodu kullanın.",
+    "crowded": "Yakınlarda birkaç kişi sallıyor. QR kodu kullanın.",
+    "openQr": "QR kodu kullan",
+    "tooMany": "Çok fazla deneme. Bir dakika bekleyip tekrar sallayın.",
+    "enable": "Sallamayı etkinleştir"
   }
 }

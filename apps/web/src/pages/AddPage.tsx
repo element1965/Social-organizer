@@ -7,6 +7,7 @@ import { ArrivalList } from '../components/add/ArrivalList';
 import { ConfirmSheet } from '../components/add/ConfirmSheet';
 import { LinkCard } from '../components/add/LinkCard';
 import { inviteSlug } from '../components/add/links';
+import { EnableShakeButton } from '../components/shake/EnableShakeButton';
 import { PathCard } from '../components/circle/PathToRequest';
 import { trpc } from '../lib/trpc';
 
@@ -49,6 +50,7 @@ export function AddPage() {
           <div className="h-40 animate-pulse rounded-lg bg-surface-2" />
         </Card>
       )}
+      <EnableShakeButton className="mt-4 w-full" />
       {/* While asking is locked, the explanation sits below the link: the link is what to do first. */}
       <PathCard className="mt-4" />
       {listFailed ? (
