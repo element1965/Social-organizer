@@ -1115,7 +1115,9 @@
     "appOther": "Inny",
     "preview": "Jak to wygląda",
     "previewHide": "Ukryj przykład",
-    "previewCaption": "Tak potrzeba wygląda w kręgu"
+    "previewCaption": "Tak potrzeba wygląda w kręgu",
+    "allLink": "Wszyscy · {{count}}",
+    "allLinkPlain": "Wszyscy"
   },
   "path": {
     "title": "Jeszcze trochę i ludzie dowiedzą się o potrzebie",

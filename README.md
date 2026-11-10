@@ -299,7 +299,7 @@ Route pages other than the guest landing are `React.lazy`. The Circle chunk is p
 | IntroPage | `/intro` | First-run intro (`/onboarding` redirects here) |
 | SeedPage | `/seed` | First-run step after the intro: name (prefilled from the sign-up, required) and minimum participation |
 | CirclePage | `/` (signed in) | Circle: 3D graph, feed, tab bar |
-| AskPage | `/ask` | Report a Need (`/create` redirects here). A row above the form, "Needs and Participation" with the open and past counts, leads to the list at `/me/history` |
+| AskPage | `/ask` | Report a Need (`/create` redirects here). A compact link in the title row ("All · N", open plus past) leads to the list at `/me/history`; it takes no height, so the form and its button stay on the first screen |
 | AddPage | `/add`, `/add/qr`, `/add/scan` | Invite link, QR, scan |
 | ProfilePage | `/me` | Own profile (`/settings` redirects here) |
 | HistoryPage | `/me/history` | Own Needs and the ones the person takes part in, tabs Open and Past (opens on Past when nothing is open). Reached from the Need tab and from Profile; both rows show the same counts (`useNeedCounts`) |

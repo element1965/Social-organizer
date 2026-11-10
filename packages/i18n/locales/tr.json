@@ -1105,7 +1105,9 @@
     "appOther": "Diğer",
     "preview": "Nasıl görünür",
     "previewHide": "Örneği gizle",
-    "previewCaption": "İhtiyaç çevrede böyle görünür"
+    "previewCaption": "İhtiyaç çevrede böyle görünür",
+    "allLink": "Tümü · {{count}}",
+    "allLinkPlain": "Tümü"
   },
   "path": {
     "title": "Az kaldı: ihtiyacınız yakında duyulacak",

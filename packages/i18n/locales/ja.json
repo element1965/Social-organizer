@@ -1100,7 +1100,9 @@
     "appOther": "その他",
     "preview": "見え方",
     "previewHide": "例を隠す",
-    "previewCaption": "サークルでは、ニーズはこのように見えます"
+    "previewCaption": "サークルでは、ニーズはこのように見えます",
+    "allLink": "すべて · {{count}}",
+    "allLinkPlain": "すべて"
   },
   "path": {
     "title": "もう少しで、あなたのニーズが届きます",

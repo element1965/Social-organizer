@@ -1110,7 +1110,9 @@
     "appOther": "Други",
     "preview": "Како то изгледа",
     "previewHide": "Сакријте пример",
-    "previewCaption": "Овако потреба изгледа у кругу"
+    "previewCaption": "Овако потреба изгледа у кругу",
+    "allLink": "Сви · {{count}}",
+    "allLinkPlain": "Сви"
   },
   "path": {
     "title": "Још мало, и сазнаће се о потреби",

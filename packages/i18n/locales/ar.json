@@ -1125,7 +1125,9 @@
     "appOther": "أخرى",
     "preview": "كيف يبدو",
     "previewHide": "إخفاء المثال",
-    "previewCaption": "هكذا يبدو الاحتياج في الدائرة"
+    "previewCaption": "هكذا يبدو الاحتياج في الدائرة",
+    "allLink": "الكل · {{count}}",
+    "allLinkPlain": "الكل"
   },
   "path": {
     "title": "اقتربنا: سيعلم الناس قريبًا باحتياجك",

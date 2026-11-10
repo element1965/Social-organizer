@@ -31,33 +31,32 @@ export function AskPage() {
       width="column"
       title={desktop ? t('ask.title') : undefined}
       back={desktop ? { label: t('nav.circle'), to: '/' } : undefined}
+      action={desktop ? <NeedsLink /> : undefined}
     >
       <AskProgressSync />
-      {desktop ? null : <h1 className="pt-6 text-h1 font-extrabold text-ink">{t('ask.title')}</h1>}
-      <NeedsLink />
+      {desktop ? null : (
+        <div className="flex items-center justify-between gap-3 pt-6">
+          <h1 className="min-w-0 truncate text-h1 font-extrabold text-ink">{t('ask.title')}</h1>
+          <NeedsLink />
+        </div>
+      )}
       <AskBody />
     </Screen>
   );
 }
 
-/** Where the person finds their open and past Needs and the ones they take part in (the list at /me/history). */
+/** Compact link to the list of open and past Needs and the ones the person takes part in (/me/history). */
 function NeedsLink() {
   const { t } = useTranslation();
   const counts = useNeedCounts();
   return (
     <Link
       to="/me/history"
-      className="so-focus mt-4 flex min-h-row items-center gap-3 rounded-xl bg-surface px-4 py-3 shadow-card"
+      aria-label={t('profile.collections')}
+      className="so-focus inline-flex min-h-[44px] shrink-0 items-center gap-0.5 whitespace-nowrap text-body-s font-bold text-care"
     >
-      <span className="min-w-0 flex-1">
-        <span className="block text-body font-bold text-ink">{t('profile.collections')}</span>
-        {counts ? (
-          <span className="mt-0.5 block text-label font-semibold text-ink-muted">
-            {t('profile.needCounts', { open: counts.open, past: counts.past })}
-          </span>
-        ) : null}
-      </span>
-      <IconChevron className="h-[18px] w-[18px] shrink-0 text-ink-subtle" />
+      {counts ? t('ask.allLink', { count: counts.open + counts.past }) : t('ask.allLinkPlain')}
+      <IconChevron className="h-[18px] w-[18px] shrink-0" />
     </Link>
   );
 }

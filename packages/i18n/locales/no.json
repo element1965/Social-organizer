@@ -1105,7 +1105,9 @@
     "appOther": "Annet",
     "preview": "Slik ser det ut",
     "previewHide": "Skjul eksempelet",
-    "previewCaption": "Slik ser et behov ut i kretsen"
+    "previewCaption": "Slik ser et behov ut i kretsen",
+    "allLink": "Alle · {{count}}",
+    "allLinkPlain": "Alle"
   },
   "path": {
     "title": "Snart får folk vite om behovet ditt",

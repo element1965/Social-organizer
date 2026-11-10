@@ -1110,7 +1110,9 @@
     "appOther": "אחר",
     "preview": "איך זה נראה",
     "previewHide": "הסתרת הדוגמה",
-    "previewCaption": "ככה צורך נראה במעגל"
+    "previewCaption": "ככה צורך נראה במעגל",
+    "allLink": "הכול · {{count}}",
+    "allLinkPlain": "הכול"
   },
   "path": {
     "title": "עוד קצת, ויידעו על הצורך",

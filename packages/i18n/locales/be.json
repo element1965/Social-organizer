@@ -1115,7 +1115,9 @@
     "appOther": "Іншы",
     "preview": "Як гэта выглядае",
     "previewHide": "Схаваць прыклад",
-    "previewCaption": "Так патрэба выглядае ў коле"
+    "previewCaption": "Так патрэба выглядае ў коле",
+    "allLink": "Усе · {{count}}",
+    "allLinkPlain": "Усе"
   },
   "path": {
     "title": "Яшчэ трохі, і пра патрэбу даведаюцца",

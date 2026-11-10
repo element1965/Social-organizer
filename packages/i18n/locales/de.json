@@ -1105,7 +1105,9 @@
     "appOther": "Andere",
     "preview": "So sieht es aus",
     "previewHide": "Beispiel ausblenden",
-    "previewCaption": "So sieht ein Bedarf im Kreis aus"
+    "previewCaption": "So sieht ein Bedarf im Kreis aus",
+    "allLink": "Alle · {{count}}",
+    "allLinkPlain": "Alle"
   },
   "path": {
     "title": "Fast geschafft: Bald erfahren Menschen von Ihrem Bedarf",

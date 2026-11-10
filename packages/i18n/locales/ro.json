@@ -1110,7 +1110,9 @@
     "appOther": "Altul",
     "preview": "Cum arată",
     "previewHide": "Ascunde exemplul",
-    "previewCaption": "Așa arată o nevoie în cerc"
+    "previewCaption": "Așa arată o nevoie în cerc",
+    "allLink": "Toți · {{count}}",
+    "allLinkPlain": "Toți"
   },
   "path": {
     "title": "Încă puțin, și oamenii vor afla de nevoia ta",

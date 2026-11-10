@@ -1110,7 +1110,9 @@
     "appOther": "Altro",
     "preview": "Come appare",
     "previewHide": "Nascondi l'esempio",
-    "previewCaption": "Così appare un bisogno nel cerchio"
+    "previewCaption": "Così appare un bisogno nel cerchio",
+    "allLink": "Tutti · {{count}}",
+    "allLinkPlain": "Tutti"
   },
   "path": {
     "title": "Ancora un po' e le persone verranno a sapere del tuo bisogno",

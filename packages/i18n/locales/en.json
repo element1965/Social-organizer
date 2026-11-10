@@ -1105,7 +1105,9 @@
     "appOther": "Other",
     "preview": "What it looks like",
     "previewHide": "Hide the example",
-    "previewCaption": "This is how a Need looks in the circle"
+    "previewCaption": "This is how a Need looks in the circle",
+    "allLink": "All · {{count}}",
+    "allLinkPlain": "All"
   },
   "path": {
     "title": "Almost there: soon people will learn of your Need",
