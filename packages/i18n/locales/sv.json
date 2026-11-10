@@ -325,6 +325,17 @@
     "empty": "Ingen ännu",
     "notFound": "Ingen hittades"
   },
+  "offline": {
+    "banner": "Ingen anslutning. Visar kopian som sparats på den här enheten, {{time}}.",
+    "bannerNoCopy": "Ingen anslutning. Inget är sparat på den här enheten ännu.",
+    "empty": "Öppna appen en gång med internet så sparas dina personer här.",
+    "needsConnection": "Kräver anslutning",
+    "contactsNotSaved": "Den här personens kontaktuppgifter är inte sparade på enheten ännu. De sparas när du öppnar personens sida online.",
+    "tapHint": "Kontaktuppgifter sparas bara för direkta kontakter.",
+    "unavailableTitle": "Den här skärmen kräver anslutning",
+    "unavailableBody": "Anslut till internet och försök igen. Personerna som sparats på den här enheten finns kvar.",
+    "showSaved": "Visa sparade personer"
+  },
   "collection": {
     "close": "Stäng behovet",
     "saveAmount": "Spara",

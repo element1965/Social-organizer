@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { trpc } from '../lib/trpc';
 import { useCachedNetworkStats } from '../hooks/useCachedNetworkStats';
+import { Button } from '../components/ui2/Button';
 import { Group, Row } from '../components/ui2/Group';
 import { Input } from '../components/ui2/Input';
 import { PersonRow } from '../components/ui2/PersonRow';
@@ -116,6 +117,8 @@ export function PeoplePage() {
   const rest = ring === 1 ? filtered.filter((e) => now - e.at >= WEEK_MS) : filtered;
   const loading = ring === 1 ? net.connections.isLoading : stats.isLoading && !stats.data;
   const total = entries.length;
+  // A failed list is not an empty one (no connection, server trouble)
+  const failed = ring === 1 ? net.connections.isError && !net.connections.data : stats.isError && !stats.data;
 
   const open = (entry: Entry) => {
     if (entry.pendingId) {
@@ -175,6 +178,13 @@ export function PeoplePage() {
           {[0, 1, 2, 3].map((i) => (
             <div key={i} className="h-14 animate-pulse rounded-lg bg-surface motion-reduce:animate-none" />
           ))}
+        </div>
+      ) : failed ? (
+        <div className="mt-8 text-center">
+          <p className="text-body-s font-semibold text-ink-muted">{t('common.error')}</p>
+          <Button variant="secondary" size="md" className="mt-3" onClick={() => void (ring === 1 ? net.connections.refetch() : stats.refetch())}>
+            {t('common.retry')}
+          </Button>
         </div>
       ) : filtered.length === 0 && requests.length === 0 ? (
         <p className="mt-8 text-center text-body-s font-semibold text-ink-muted">

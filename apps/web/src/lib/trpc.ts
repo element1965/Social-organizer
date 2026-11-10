@@ -2,6 +2,7 @@ import { createTRPCReact } from '@trpc/react-query';
 import { httpBatchLink } from '@trpc/client';
 import type { AppRouter } from '../../../api/src/routers/index';
 import { useAuth } from '../hooks/useAuth';
+import { isNetworkFailure, reportReachable, reportUnreachable } from './connectivity';
 
 export const trpc = createTRPCReact<AppRouter>();
 
@@ -22,30 +23,52 @@ function secondsLeft(token: string): number | null {
   }
 }
 
-let refreshing: Promise<boolean> | null = null;
+/** fetch that tells the connectivity state whether the server answered at all (any HTTP status counts as an answer). */
+async function trackedFetch(input: RequestInfo | URL, init?: RequestInit): Promise<Response> {
+  try {
+    const res = await fetch(input, init);
+    reportReachable();
+    return res;
+  } catch (error) {
+    if (isNetworkFailure(error)) reportUnreachable();
+    throw error;
+  }
+}
+
+/**
+ * renewed: a new pair is stored. rejected: the server refused the refresh token (the session is really over).
+ * unavailable: no answer or a server-side failure (offline, outage): the session must be kept.
+ */
+export type Renewal = 'renewed' | 'rejected' | 'unavailable';
+
+let refreshing: Promise<Renewal> | null = null;
 
 /** Exchange the refresh token for a new pair. One request at a time for all callers. */
-export function refreshSession(): Promise<boolean> {
+export function refreshSession(): Promise<Renewal> {
   if (refreshing) return refreshing;
-  refreshing = (async () => {
+  refreshing = (async (): Promise<Renewal> => {
     const refreshToken = localStorage.getItem('refreshToken');
-    if (!refreshToken) return false;
+    if (!refreshToken) return 'rejected';
     try {
-      const res = await fetch('/trpc/auth.refresh', {
+      const res = await trackedFetch('/trpc/auth.refresh', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ refreshToken }),
       });
-      if (!res.ok) return false;
+      if (!res.ok) {
+        // Only a client error means "this token is not accepted". 5xx, 408 and 429 are the server's trouble.
+        const refused = res.status >= 400 && res.status < 500 && res.status !== 408 && res.status !== 429;
+        return refused ? 'rejected' : 'unavailable';
+      }
       const data = (await res.json())?.result?.data as { accessToken?: string; refreshToken?: string } | undefined;
-      if (!data?.accessToken || !data.refreshToken) return false;
+      if (!data?.accessToken || !data.refreshToken) return 'unavailable';
       // Signed out (or signed in as someone else) while the request was in flight: drop the result,
       // otherwise it would quietly restore a session the person just ended.
-      if (localStorage.getItem('refreshToken') !== refreshToken) return false;
+      if (localStorage.getItem('refreshToken') !== refreshToken) return 'rejected';
       useAuth.getState().setTokens(data.accessToken, data.refreshToken);
-      return true;
+      return 'renewed';
     } catch {
-      return false; // network error: keep the session, the next request tries again
+      return 'unavailable'; // network error: keep the session, the next request tries again
     } finally {
       setTimeout(() => { refreshing = null; }, 0);
     }
@@ -68,9 +91,13 @@ export async function authFetch(input: RequestInfo | URL, init?: RequestInit): P
     const left = secondsLeft(token);
     if (left !== null && left < 60) await refreshSession();
   }
-  const res = await fetch(input, withAuth(init));
-  if (res.status === 401 && localStorage.getItem('refreshToken') && (await refreshSession())) {
-    return fetch(input, withAuth(init));
+  const res = await trackedFetch(input, withAuth(init));
+  if (res.status === 401 && localStorage.getItem('refreshToken')) {
+    const renewal = await refreshSession();
+    if (renewal === 'renewed') return trackedFetch(input, withAuth(init));
+    // The renewal itself could not be done (no network, server trouble): this is not a rejected session.
+    // Fail like a network error so the 401 never reaches the sign-out path.
+    if (renewal === 'unavailable') throw new TypeError('Session renewal is unavailable');
   }
   return res;
 }

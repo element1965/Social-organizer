@@ -322,6 +322,17 @@
     "empty": "Belum ada siapa pun",
     "notFound": "Tidak ada yang ditemukan"
   },
+  "offline": {
+    "banner": "Tidak ada koneksi. Menampilkan salinan yang tersimpan di perangkat ini, {{time}}.",
+    "bannerNoCopy": "Tidak ada koneksi. Belum ada yang tersimpan di perangkat ini.",
+    "empty": "Buka aplikasi sekali saat online dan orang-orang Anda akan tersimpan di sini.",
+    "needsConnection": "Perlu koneksi",
+    "contactsNotSaved": "Kontak orang ini belum tersimpan di perangkat ini. Kontak tersimpan saat Anda membuka halamannya secara online.",
+    "tapHint": "Kontak hanya disimpan untuk koneksi langsung.",
+    "unavailableTitle": "Layar ini memerlukan koneksi",
+    "unavailableBody": "Sambungkan ke internet lalu coba lagi. Orang-orang yang tersimpan di perangkat ini tetap tersedia.",
+    "showSaved": "Tampilkan orang tersimpan"
+  },
   "collection": {
     "close": "Tutup kebutuhan",
     "saveAmount": "Simpan",

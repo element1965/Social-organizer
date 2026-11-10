@@ -27,6 +27,8 @@ import { useAuth } from '../hooks/useAuth';
 import { useNicknames } from '../hooks/useNicknames';
 import { buildSosInviteUrl } from '../lib/inviteUrl';
 import { trpc } from '../lib/trpc';
+import { useOffline } from '../lib/connectivity';
+import { OfflineHint } from '../components/offline/OfflineNotice';
 
 const DESCRIPTION_MAX = 300;
 
@@ -65,6 +67,7 @@ export function CollectionPage() {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const desktop = useShellMode() === 'sidebar';
+  const offline = useOffline();
   const userId = useAuth((state) => state.userId);
   const resolve = useNicknames();
   const utils = trpc.useUtils();
@@ -430,7 +433,8 @@ export function CollectionPage() {
             error={joinError}
             hint={joinError ? undefined : t('collection.minStake', { amount: formatMoney(stake) })}
           />
-          <Button className="mt-4 w-full" loading={createObligation.isPending || setBudget.isPending} onClick={join}>{t('collection.participate')}</Button>
+          <Button className="mt-4 w-full" loading={createObligation.isPending || setBudget.isPending} disabled={offline} onClick={join}>{t('collection.participate')}</Button>
+          {offline ? <OfflineHint /> : null}
         </Card>
       ) : null}
 

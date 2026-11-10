@@ -325,6 +325,17 @@
     "empty": "Ei vielä ketään",
     "notFound": "Ketään ei löytynyt"
   },
+  "offline": {
+    "banner": "Ei yhteyttä. Näytetään tälle laitteelle tallennettu kopio, {{time}}.",
+    "bannerNoCopy": "Ei yhteyttä. Tälle laitteelle ei ole vielä tallennettu mitään.",
+    "empty": "Avaa sovellus kerran verkossa, niin ihmisesi tallentuvat tähän.",
+    "needsConnection": "Vaatii yhteyden",
+    "contactsNotSaved": "Tämän henkilön yhteystietoja ei ole vielä tallennettu laitteelle. Ne tallentuvat, kun avaat hänen sivunsa verkossa.",
+    "tapHint": "Yhteystiedot tallennetaan vain suorille yhteyksille.",
+    "unavailableTitle": "Tämä näkymä vaatii yhteyden",
+    "unavailableBody": "Yhdistä internetiin ja yritä uudelleen. Tälle laitteelle tallennetut ihmiset ovat edelleen käytettävissä.",
+    "showSaved": "Näytä tallennetut ihmiset"
+  },
   "collection": {
     "close": "Sulje tarve",
     "saveAmount": "Tallenna",
