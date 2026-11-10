@@ -25,7 +25,7 @@ import { RingChips } from '../components/circle/RingChips';
 import { useFarRings } from '../components/circle/far-rings';
 import { StartCard } from '../components/circle/StartCard';
 import { useCircleNetwork } from '../components/circle/network';
-import { IconFit, IconMinus, IconPlus, IconUp } from '../components/circle/icons';
+import { IconAim, IconFit, IconMinus, IconPlus, IconShrink, IconUp } from '../components/circle/icons';
 import { ASK_MIN_DIRECT } from '@so/shared';
 
 type Layer = 'feed' | 'graph' | 'person';
@@ -307,7 +307,6 @@ export function CirclePage() {
         <EventFeed
           events={events.filter((e) => e.kind !== 'waiting')}
           loading={loading}
-          dayLabels={phone}
           onOpen={openEvent}
           onDismiss={(event) => {
             for (const id of event.notificationIds ?? []) dismiss.mutate({ id });
@@ -323,7 +322,6 @@ export function CirclePage() {
       <EventFeed
         events={events}
         loading={loading}
-        dayLabels={phone}
         onOpen={openEvent}
         onDismiss={(event) => {
           for (const id of event.notificationIds ?? []) dismiss.mutate({ id });
@@ -656,6 +654,27 @@ function DesktopCircle({ sidebar, graph, graphRef, empty, counts, hiddenRings, s
   const { t } = useTranslation();
   const ctl =
     'so-focus grid h-10 w-10 place-items-center rounded-md border border-node-1/15 bg-scene-2/80 text-node-1 backdrop-blur-md hover:bg-scene-3';
+  // Expanded: the scene takes the whole width and the feed column steps aside (the desktop "open the graph").
+  const [wide, setWide] = useState(false);
+  const toggleWide = () => {
+    setWide((value) => !value);
+    // Refit once the canvas has its new size.
+    window.setTimeout(() => graphRef.current?.fit(), 320);
+  };
+  useEffect(() => {
+    if (!wide) return;
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') toggleWide();
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+    // toggleWide only reads refs and setters
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [wide]);
+  // A person card needs the column: opening one leaves the expanded scene.
+  useEffect(() => {
+    if (person) setWide(false);
+  }, [person]);
 
   return (
     <div className="flex h-[calc(100dvh-var(--sa-top)-var(--sa-bottom))] flex-col">
@@ -684,15 +703,28 @@ function DesktopCircle({ sidebar, graph, graphRef, empty, counts, hiddenRings, s
                 <button type="button" className={ctl} aria-label={t('circle.zoomOut')} onClick={() => graphRef.current?.zoomOut()}>
                   <IconMinus className="h-5 w-5" />
                 </button>
-                <button type="button" className={ctl} aria-label={t('circle.fit')} onClick={() => graphRef.current?.fit()}>
-                  <IconFit className="h-5 w-5" />
+                <button type="button" className={ctl} aria-label={t('circle.toSelf')} title={t('circle.toSelf')} onClick={() => graphRef.current?.focusOnMe()}>
+                  <IconAim className="h-5 w-5" />
+                </button>
+                <button
+                  type="button"
+                  className={ctl}
+                  aria-pressed={wide}
+                  aria-label={wide ? t('circle.feedExpand') : t('circle.openGraph')}
+                  title={wide ? t('circle.feedExpand') : t('circle.openGraph')}
+                  onClick={toggleWide}
+                >
+                  {wide ? <IconShrink className="h-5 w-5" /> : <IconFit className="h-5 w-5" />}
                 </button>
               </div>
               <Legend />
             </>
           )}
         </div>
-        <aside className={cn('flex min-h-0 shrink-0 flex-col overflow-y-auto overflow-x-hidden', sidebar ? 'w-[400px] min-[1440px]:w-[440px]' : 'w-[280px]')}>
+        <aside
+          className={cn('flex min-h-0 shrink-0 flex-col overflow-y-auto overflow-x-hidden', sidebar ? 'w-[400px] min-[1440px]:w-[440px]' : 'w-[280px]', wide && 'hidden')}
+          inert={wide}
+        >
           {person ?? (
             <>
               {stats}

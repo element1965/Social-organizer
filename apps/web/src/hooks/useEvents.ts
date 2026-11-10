@@ -295,6 +295,33 @@ export function useEvents(options: { displayName?: (id: string, fallback: string
   return { events, loading, unreadCount: unread.data?.count ?? 0 };
 }
 
+/** Feed sections, in display order: what waits for me, my own Needs, Needs I take part in, people. */
+export type FeedGroup = 'needs' | 'mine' | 'helping' | 'people';
+export const FEED_GROUPS: readonly FeedGroup[] = ['needs', 'mine', 'helping', 'people'];
+
+/**
+ * The section a row belongs to. Status rows (new cycle, closed, paused) go with their Need: under "Your Needs"
+ * when I am the author, under "You are in" otherwise.
+ */
+export function feedGroup(event: FeedEvent, myId: string | null | undefined): FeedGroup {
+  switch (event.kind) {
+    case 'request':
+    case 'incoming':
+      return 'needs';
+    case 'mine':
+    case 'joined':
+      return 'mine';
+    case 'participating':
+      return 'helping';
+    case 'cycle':
+    case 'closed':
+    case 'blocked':
+      return myId && event.personId === myId ? 'mine' : 'helping';
+    default:
+      return 'people';
+  }
+}
+
 /** Kinds that arrive from someone else and deserve the top banner. */
 export const BANNER_KINDS: ReadonlySet<FeedKind> = new Set(['request', 'cycle', 'incoming', 'joined', 'closed', 'milestone']);
 

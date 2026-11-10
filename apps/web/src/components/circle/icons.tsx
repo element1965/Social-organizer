@@ -99,6 +99,25 @@ export function IconFit(props: IconProps) {
   );
 }
 
+/** A flag on a pole: your own Need. */
+export function IconFlag(props: IconProps) {
+  return (
+    <Svg strokeWidth={1.9} {...props}>
+      <path d="M5.5 21V4.5" />
+      <path d="M5.5 5h11.2c.7 0 1 .8.6 1.3L15 9.5l2.3 3.2c.4.5.1 1.3-.6 1.3H5.5" />
+    </Svg>
+  );
+}
+
+/** Corners pointing in: leave the expanded scene. */
+export function IconShrink(props: IconProps) {
+  return (
+    <Svg strokeWidth={2} {...props}>
+      <path d="M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5" />
+    </Svg>
+  );
+}
+
 export function IconClose(props: IconProps) {
   return (
     <Svg strokeWidth={2} {...props}>
