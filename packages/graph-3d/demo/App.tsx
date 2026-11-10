@@ -4,7 +4,10 @@ import { NetworkGraph, type GraphNode, type GraphView, type NetworkGraphHandle }
 interface Built {
   nodes: GraphNode[];
   edges: { source: string; target: string }[];
+  /** A selected person's path, me first (the highlight without pulses) */
   path: string[];
+  /** Active incoming Needs: asker first, me last */
+  impulses: { id: string; path: string[] }[];
 }
 
 const RING1 = ['Олег брат', 'Ирина Соколова', 'Катя Белова', 'Денис Волков', 'Лена Мороз', 'Тимур Алиев', 'Марина Пак', 'Кирилл Семёнов'];
@@ -29,6 +32,7 @@ function buildBig(total: number): Built {
   const nodes: GraphNode[] = [{ id: 'me', name: 'Анна', photoUrl: null, isCenter: true, depth: 0, connectionCount: 0, lastSeen: new Date().toISOString() }];
   const edges: Built['edges'] = [];
   const rings: string[][] = [[], [], []];
+  const parentOf = new Map<string, string>();
   const sizes = [Math.min(150, Math.round(total * 0.15)), Math.round(total * 0.4)];
   sizes.push(total - sizes[0]! - sizes[1]!);
   for (let r = 0; r < 3; r++) {
@@ -36,6 +40,7 @@ function buildBig(total: number): Built {
       const id = `r${r + 1}-${i}`;
       const parent = r === 0 ? 'me' : rings[r - 1]![Math.floor(rnd() * rings[r - 1]!.length)]!;
       rings[r]!.push(id);
+      parentOf.set(id, parent);
       nodes.push({
         id,
         name: `Человек ${r + 1}.${i + 1}`,
@@ -56,7 +61,18 @@ function buildBig(total: number): Built {
     }
   }
   const last = rings[2]![0] ?? rings[1]![0]!;
-  return { nodes, edges, path: ['me', rings[0]![0]!, rings[1]![0]!, last].filter(Boolean) };
+  const up = (id: string): string[] => {
+    const out: string[] = [];
+    for (let cursor: string | undefined = id; cursor && out.length < 6; cursor = parentOf.get(cursor)) out.push(cursor);
+    return out.length > 1 ? out : [];
+  };
+  const path = ['me', rings[0]![0]!, rings[1]![0]!, last].filter(Boolean);
+  const impulses = [
+    { id: 'need-1', path: [...path].reverse() },
+    { id: 'need-2', path: up(rings[1]![5]!) },
+    { id: 'need-3', path: up(rings[0]![7]!) },
+  ].filter((i) => i.path.length > 1);
+  return { nodes, edges, path, impulses };
 }
 
 const BIG = Number(new URLSearchParams(window.location.search).get('n') || 0);
@@ -136,7 +152,18 @@ function build(): Built {
     cursor = parentOf.get(cursor) ?? '';
   }
   path.reverse();
-  return { nodes, edges, path };
+  // Needs: a far asker (3 rings away), one in ring 2 and a direct one (the paths share links on purpose)
+  const up = (id: string): string[] => {
+    const out: string[] = [];
+    for (let cursor: string | undefined = id; cursor && out.length < 6; cursor = parentOf.get(cursor)) out.push(cursor);
+    return out;
+  };
+  const impulses = [
+    { id: 'need-1', path: [...path].reverse() },
+    { id: 'need-2', path: up('b9') },
+    { id: 'need-3', path: up('a3') },
+  ];
+  return { nodes, edges, path, impulses };
 }
 
 export function App() {
@@ -144,7 +171,9 @@ export function App() {
   const data = useMemo(build, []);
   const [size, setSize] = useState(() => ({ w: window.innerWidth, h: window.innerHeight }));
   const [theme, setTheme] = useState<'light' | 'dark'>('dark');
-  const [pathOn, setPathOn] = useState(true);
+  // "Selected path" stands for a tapped person (highlight without pulses); impulses are the incoming Needs
+  const [pathOn, setPathOn] = useState(false);
+  const [impulsesOn, setImpulsesOn] = useState(true);
   const [hidden, setHidden] = useState<number[]>([]);
   const [showControls, setShowControls] = useState(false);
   const [tapped, setTapped] = useState('hover a node for the tooltip');
@@ -184,6 +213,7 @@ export function App() {
         height={size.h}
         theme={theme}
         highlightPath={pathOn ? data.path : undefined}
+        impulses={impulsesOn ? data.impulses : undefined}
         hiddenRings={hidden}
         showControls={showControls}
         onNodeTap={(node) => setTapped(`${node.name} · ring ${node.depth ?? 0}`)}
@@ -202,7 +232,10 @@ export function App() {
         }}>Save view</button>
         <button style={chip} onClick={() => { if (savedView.current) graph.current?.setView(savedView.current, { animate: true }); }}>Restore view</button>
         <button style={{ ...chip, color: pathOn ? '#5fd3c6' : '#e7eeeb' }} onClick={() => setPathOn((v) => !v)}>
-          {pathOn ? 'Path on' : 'Path off'}
+          {pathOn ? 'Selected path on' : 'Selected path off'}
+        </button>
+        <button style={{ ...chip, color: impulsesOn ? '#5fd3c6' : '#e7eeeb' }} onClick={() => setImpulsesOn((v) => !v)}>
+          {impulsesOn ? 'Impulses on' : 'Impulses off'}
         </button>
         {[1, 2, 3].map((ring) => (
           <button key={ring} style={{ ...chip, color: hidden.includes(ring) ? '#5f7069' : '#e7eeeb' }} onClick={() => toggleRing(ring)}>

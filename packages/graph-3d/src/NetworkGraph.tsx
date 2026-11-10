@@ -40,11 +40,31 @@ export interface GraphView {
   zoom?: number;
 }
 
+/** An active incoming Need: a signal that travels along the handshake path towards me. */
+export interface GraphImpulse {
+  id: string;
+  /**
+   * Node ids from the asker to me. The pulses travel in array order and arrive at the last id, which is
+   * normally the centre. Unknown ids are ignored: the graph uses the run of the path that ends at the last
+   * id, is in the graph and is on a shown ring (an asker beyond the drawn rings starts from the nearest drawn person).
+   */
+  path: string[];
+}
+
 export interface NetworkGraphProps {
   nodes: GraphNode[];
   edges: GraphEdge[];
   /** Node ids from me to the target. Unknown ids are ignored. Fewer than two matches: no dimming. */
   highlightPath?: string[];
+  /**
+   * Active incoming Needs, nearest first. The graph draws the first five that have a run on the drawn rings (so
+   * the screen may pass a few more: one that is entirely on a hidden ring does not take a slot). Each one gets its path drawn as a
+   * curved care-coloured link and small pulses that travel from the asker to me; the asker keeps a breathing
+   * ring. With no `highlightPath` the impulse paths are the highlight (the rest of the scene dims). With a
+   * `highlightPath` (a selected person) that path is the highlight and the impulses keep running, dimmed.
+   * With `prefers-reduced-motion` nothing moves: a steady bead gradient points from the asker to me.
+   */
+  impulses?: GraphImpulse[];
   /** Ring depths to hide. The centre (depth 0) always stays. */
   hiddenRings?: number[];
   /** Scene palette. Defaults are the dark v2 tokens; the scene stays dark in both themes. */
@@ -228,10 +248,21 @@ interface PathState {
   set: Set<string>;
   /** Both directions of each consecutive pair. */
   links: Set<string>;
+  /** Impulse links that are not part of the highlighted path: drawn curved, but softer. */
+  soft: Set<string>;
   dim: boolean;
 }
 
-const EMPTY_PATH: PathState = { set: new Set(), links: new Set(), dim: false };
+const EMPTY_SET: Set<string> = new Set();
+const EMPTY_PATH: PathState = { set: new Set(), links: new Set(), soft: EMPTY_SET, dim: false };
+
+/** The impulse paths in the graph: the run of each one that is drawn, ending at me. */
+interface ImpulseState {
+  items: { id: string; ids: string[]; /** the run starts at the asker itself */ source: boolean }[];
+  links: Set<string>;
+  set: Set<string>;
+}
+const EMPTY_IMPULSES: ImpulseState = { items: [], links: EMPTY_SET, set: EMPTY_SET };
 
 const noRaycast = () => { /* decorative objects must not take part in hover raycasting */ };
 
@@ -271,6 +302,7 @@ function labelLines(name: string, center: boolean): string {
 /* ---------- Batched layers: one draw call for all links, one for all dots ---------- */
 
 const PATH_SEGMENTS = 20;        // a highlighted (curved) link is drawn with this many segments
+const SOFT_LINK_OPACITY = 0.4;   // impulse links outside the highlighted path, relative to the path links
 const tmpColor = new THREE.Color();
 
 /** sRGB hex → linear rgb into `out` at `i` (vertex colours are in the working colour space). */
@@ -290,38 +322,81 @@ interface LinkEnds {
 }
 
 /**
- * Every link of the graph in two draw calls instead of one per link: all straight links in one
+ * Control point of the slight bend of a curved link from a to b. The bend flips with the order of the ends,
+ * so everything that follows a drawn curve (the impulse pulses) must use the order the link is stored in.
+ * The result is in `bend`: one shared scratch, no allocation.
+ */
+const bend = { x: 0, y: 0, z: 0 };
+function bendControl(ax: number, ay: number, az: number, bx: number, by: number, bz: number) {
+  const dx = bx - ax, dy = by - ay, dz = bz - az;
+  let cx = (ax + bx) / 2, cy = (ay + by) / 2, cz = (az + bz) / 2;
+  if (dx === 0 && dy === 0) { cx += PATH_CURVE * -dz; cz += PATH_CURVE * dx; }
+  else { cx += PATH_CURVE * dy; cy -= PATH_CURVE * dx; }
+  bend.x = cx; bend.y = cy; bend.z = cz;
+}
+
+/** Writes the curves of `list` as line segments (PATH_SEGMENTS per link) into `q`. */
+function writeCurves(list: LinkEnds[], q: Float32Array) {
+  let w = 0;
+  for (const { a, b } of list) {
+    const ax = a.x ?? 0, ay = a.y ?? 0, az = a.z ?? 0;
+    const bx = b.x ?? 0, by = b.y ?? 0, bz = b.z ?? 0;
+    bendControl(ax, ay, az, bx, by, bz);
+    const cx = bend.x, cy = bend.y, cz = bend.z;
+    let px = ax, py = ay, pz = az;
+    for (let s = 1; s <= PATH_SEGMENTS; s++) {
+      const t = s / PATH_SEGMENTS, u = 1 - t;
+      const nx = u * u * ax + 2 * u * t * cx + t * t * bx;
+      const ny = u * u * ay + 2 * u * t * cy + t * t * by;
+      const nz = u * u * az + 2 * u * t * cz + t * t * bz;
+      q[w++] = px; q[w++] = py; q[w++] = pz;
+      q[w++] = nx; q[w++] = ny; q[w++] = nz;
+      px = nx; py = ny; pz = nz;
+    }
+  }
+}
+
+/**
+ * Every link of the graph in a few draw calls instead of one per link: all straight links in one
  * LineSegments with per-vertex colour and alpha, and the few links of a highlighted path, curved,
- * in a second one on top. Positions are rewritten only while the layout moves.
+ * in a second one on top (plus a third, softer one for impulse links outside the highlighted path).
+ * Positions are rewritten only while the layout moves.
  */
 class LinkLayer {
   readonly group = new THREE.Group();
   private readonly plainGeom = new THREE.BufferGeometry();
   private readonly pathGeom = new THREE.BufferGeometry();
+  private readonly softGeom = new THREE.BufferGeometry();
   private readonly plainMat = new THREE.LineBasicMaterial({ vertexColors: true, transparent: true, depthWrite: false });
   private readonly pathMat = new THREE.LineBasicMaterial({ transparent: true, depthWrite: false });
+  private readonly softMat = new THREE.LineBasicMaterial({ transparent: true, depthWrite: false });
   private links: LinkEnds[] = [];
   private onPath: LinkEnds[] = [];
+  private onSoft: LinkEnds[] = [];
   private pos = new Float32Array(0);
   private col = new Float32Array(0);
   private pathPos = new Float32Array(0);
+  private softPos = new Float32Array(0);
 
   constructor() {
     const plain = new THREE.LineSegments(this.plainGeom, this.plainMat);
+    const soft = new THREE.LineSegments(this.softGeom, this.softMat);
     const path = new THREE.LineSegments(this.pathGeom, this.pathMat);
-    for (const obj of [plain, path]) {
+    for (const obj of [plain, soft, path]) {
       obj.raycast = noRaycast;
       obj.frustumCulled = false;
       this.group.add(obj);
     }
     // Under the nodes; the path over the other links
     plain.renderOrder = -2;
+    soft.renderOrder = -1.5;
     path.renderOrder = -1;
     this.group.name = 'so-links';
   }
 
   setLinks(links: LinkEnds[]) {
     this.links = links;
+    this.plainGeom.dispose(); // the attributes below are replaced; free the old GL buffers
     this.pos = new Float32Array(links.length * 6);
     this.col = new Float32Array(links.length * 8);
     const posAttr = new THREE.BufferAttribute(this.pos, 3).setUsage(THREE.DynamicDrawUsage);
@@ -331,20 +406,41 @@ class LinkLayer {
     this.plainGeom.setDrawRange(0, links.length * 2);
   }
 
+  /**
+   * A curved layer for `list`: reuses `cur` while it is big enough (only the draw range changes) and grows it
+   * otherwise. A replaced attribute is not freed by three, so the geometry is disposed first (it drops the GL
+   * buffers of its current attributes and uploads the new one on the next render).
+   */
+  private curves(geom: THREE.BufferGeometry, list: LinkEnds[], cur: Float32Array<ArrayBuffer>): Float32Array<ArrayBuffer> {
+    const need = list.length * PATH_SEGMENTS * 6;
+    let buf = cur;
+    if (cur.length < need || cur.length === 0) {
+      geom.dispose();
+      buf = new Float32Array(Math.max(need, cur.length * 2, PATH_SEGMENTS * 6 * 4));
+      geom.setAttribute('position', new THREE.BufferAttribute(buf, 3).setUsage(THREE.DynamicDrawUsage));
+    }
+    geom.setDrawRange(0, list.length * PATH_SEGMENTS * 2);
+    return buf;
+  }
+
   /** Colours and the path set. Cheap; call when the path, hidden rings or palette change. */
   paint(opts: {
     isPath: (key: string) => boolean;
+    isSoft: (key: string) => boolean;
     shown: (n: SimNode) => boolean;
     plain: number; plainOp: number;
     care: number; careOp: number;
   }) {
     const onPath: LinkEnds[] = [];
+    const onSoft: LinkEnds[] = [];
     for (let i = 0; i < this.links.length; i++) {
       const l = this.links[i]!;
       const shown = opts.shown(l.a) && opts.shown(l.b);
       const path = shown && opts.isPath(l.key);
+      const soft = shown && !path && opts.isSoft(l.key);
       if (path) onPath.push(l);
-      const alpha = shown && !path ? opts.plainOp : 0;
+      else if (soft) onSoft.push(l);
+      const alpha = shown && !path && !soft ? opts.plainOp : 0;
       writeLinear(this.col, i * 8, opts.plain, alpha);
       writeLinear(this.col, i * 8 + 4, opts.plain, alpha);
     }
@@ -352,11 +448,13 @@ class LinkLayer {
     if (colAttr) colAttr.needsUpdate = true;
 
     this.onPath = onPath;
-    this.pathPos = new Float32Array(onPath.length * PATH_SEGMENTS * 6);
-    this.pathGeom.setAttribute('position', new THREE.BufferAttribute(this.pathPos, 3).setUsage(THREE.DynamicDrawUsage));
-    this.pathGeom.setDrawRange(0, onPath.length * PATH_SEGMENTS * 2);
+    this.onSoft = onSoft;
+    this.pathPos = this.curves(this.pathGeom, onPath, this.pathPos);
+    this.softPos = this.curves(this.softGeom, onSoft, this.softPos);
     this.pathMat.color.setHex(opts.care);
     this.pathMat.opacity = opts.careOp;
+    this.softMat.color.setHex(opts.care);
+    this.softMat.opacity = opts.careOp * SOFT_LINK_OPACITY;
   }
 
   /** Writes link positions from the current node positions. */
@@ -372,35 +470,21 @@ class LinkLayer {
     if (posAttr) posAttr.needsUpdate = true;
 
     // Path links: a slight quadratic bend, as before
-    const q = this.pathPos;
-    let w = 0;
-    for (const { a, b } of this.onPath) {
-      const ax = a.x ?? 0, ay = a.y ?? 0, az = a.z ?? 0;
-      const bx = b.x ?? 0, by = b.y ?? 0, bz = b.z ?? 0;
-      const dx = bx - ax, dy = by - ay, dz = bz - az;
-      let cx = (ax + bx) / 2, cy = (ay + by) / 2, cz = (az + bz) / 2;
-      if (dx === 0 && dy === 0) { cx += PATH_CURVE * -dz; cz += PATH_CURVE * dx; }
-      else { cx += PATH_CURVE * dy; cy -= PATH_CURVE * dx; }
-      let px = ax, py = ay, pz = az;
-      for (let s = 1; s <= PATH_SEGMENTS; s++) {
-        const t = s / PATH_SEGMENTS, u = 1 - t;
-        const nx = u * u * ax + 2 * u * t * cx + t * t * bx;
-        const ny = u * u * ay + 2 * u * t * cy + t * t * by;
-        const nz = u * u * az + 2 * u * t * cz + t * t * bz;
-        q[w++] = px; q[w++] = py; q[w++] = pz;
-        q[w++] = nx; q[w++] = ny; q[w++] = nz;
-        px = nx; py = ny; pz = nz;
-      }
-    }
+    writeCurves(this.onPath, this.pathPos);
     const pathAttr = this.pathGeom.getAttribute('position') as THREE.BufferAttribute | undefined;
     if (pathAttr) pathAttr.needsUpdate = true;
+    writeCurves(this.onSoft, this.softPos);
+    const softAttr = this.softGeom.getAttribute('position') as THREE.BufferAttribute | undefined;
+    if (softAttr) softAttr.needsUpdate = true;
   }
 
   dispose() {
     this.plainGeom.dispose();
     this.pathGeom.dispose();
+    this.softGeom.dispose();
     this.plainMat.dispose();
     this.pathMat.dispose();
+    this.softMat.dispose();
   }
 }
 
@@ -499,6 +583,355 @@ class DotLayer {
   }
 }
 
+/* ---------- Impulses: pulses travelling along the paths of active incoming Needs ---------- */
+
+const IMPULSE_MAX = 5;                  // impulses drawn at once; the screen passes the nearest first
+const IMPULSE_SLOTS = IMPULSE_MAX + 3;  // plus a few that are fading out
+const IMPULSE_NODES = 8;                // longest run of a path (people)
+const IMPULSE_POINTS = 16;              // points per impulse: the head and its tail (dense, so it reads as one comet)
+const IMPULSE_PERIOD = 6000;            // one cycle: the trip and a rest, ms
+const IMPULSE_MS_PER_LINK = 1500;
+const IMPULSE_MAX_TRAVEL = 4200;
+const IMPULSE_TAIL = 26;                // tail length, world units
+const IMPULSE_HEAD_SIZE = 6;            // world units (a ring-1 dot is 2.6)
+const IMPULSE_TAIL_SIZE = 1.8;
+const IMPULSE_LAUNCH_MS = 700;          // the asker's ring swells for this long at each launch
+const IMPULSE_FADE_IN = 500;
+const IMPULSE_FADE_OUT = 600;
+const IMPULSE_DIM = 0.4;                // gain of an impulse outside the highlighted path
+
+const IMPULSE_VERTEX = /* glsl */ `
+attribute float size;
+attribute float alpha;
+uniform float uScale;
+uniform float uPx;
+varying float vA;
+void main() {
+  vA = alpha;
+  vec4 mv = modelViewMatrix * vec4(position, 1.0);
+  float px = size * uScale / max(0.001, -mv.z);
+  // On screen the head stays 11 to 28 CSS px: it does not vanish when zoomed out, nor become a blob close up
+  gl_PointSize = alpha > 0.004 ? clamp(px, (3.0 + 1.4 * size) * uPx, (10.0 + 3.0 * size) * uPx) : 0.0;
+  gl_Position = projectionMatrix * mv;
+}
+`;
+
+const IMPULSE_FRAGMENT = /* glsl */ `
+uniform vec3 uCore;
+uniform vec3 uGlow;
+varying float vA;
+void main() {
+  float d = length(gl_PointCoord - 0.5) * 2.0;
+  if (d > 1.0) discard;
+  // A soft halo around a brighter core; the tail points are dimmer, so only the head has a white-hot core
+  float halo = pow(1.0 - d, 2.0);
+  float core = smoothstep(0.55, 0.0, d) * smoothstep(0.25, 0.9, vA);
+  float a = clamp(vA * (0.75 * halo + 0.5 * core), 0.0, 1.0);
+  if (a < 0.01) discard;
+  gl_FragColor = vec4(mix(uGlow, uCore, core), a);
+  #include <colorspace_fragment>
+}
+`;
+
+interface ImpulseSlot {
+  used: boolean;
+  id: string;
+  /** Asker first, me last */
+  nodes: SimNode[];
+  /** Segment j (nodes[j] to nodes[j + 1]) is stored as nodes[j + 1] to nodes[j] in the link data */
+  rev: boolean[];
+  travelMs: number;
+  phase: number;
+  /** 0..1, eased in and out when the impulse appears or goes */
+  fade: number;
+  target: number;
+  dimmed: boolean;
+  /** The first node is the asker itself (not just the nearest drawn person) */
+  source: boolean;
+  /** 1 at the moment of launch, then falls to 0: swells the asker's ring */
+  launch: number;
+  /** Reduced motion and rest: the points are rewritten only when something changed */
+  dirty: boolean;
+  sig: number;
+  lastFade: number;
+  /** Alphas are all zero in the buffer */
+  zeroed: boolean;
+  shown: boolean;
+}
+
+interface ImpulseInput {
+  id: string;
+  nodes: SimNode[];
+  dimmed: boolean;
+  source: boolean;
+}
+
+/**
+ * A few glowing pulses (one `THREE.Points`, one draw call, fixed buffers) that run along the curved
+ * path links from the asker to me: a bright head with a short fading tail. Positions are evaluated every frame from
+ * the node positions with the same bend as LinkLayer, so they stay on the drawn line while the layout moves
+ * or the camera turns. Nothing is allocated per frame. Reduced motion: no travel, a steady bead gradient
+ * that grows towards me.
+ */
+class ImpulseLayer {
+  readonly points: THREE.Points;
+  readonly slots: ImpulseSlot[] = [];
+  /** Any slot in use (visible or fading): the frame loop calls update() only then */
+  live = false;
+  private readonly geom = new THREE.BufferGeometry();
+  private readonly material: THREE.ShaderMaterial;
+  private readonly pos = new Float32Array(IMPULSE_SLOTS * IMPULSE_POINTS * 3);
+  private readonly alpha = new Float32Array(IMPULSE_SLOTS * IMPULSE_POINTS);
+  private readonly size = new Float32Array(IMPULSE_SLOTS * IMPULSE_POINTS);
+  private fwd = new Map<SimNode, Set<SimNode>>();
+  private wasReduced = false;
+  private sig = 0;
+  // Per-frame scratch
+  private readonly cum = new Float32Array(IMPULSE_NODES);
+  private readonly segA = new Float32Array(IMPULSE_NODES * 3);
+  private readonly segB = new Float32Array(IMPULSE_NODES * 3);
+  private readonly segC = new Float32Array(IMPULSE_NODES * 3);
+  private readonly at = { x: 0, y: 0, z: 0 };
+
+  constructor(material: THREE.ShaderMaterial) {
+    this.material = material;
+    for (let i = 0; i < IMPULSE_SLOTS; i++) {
+      this.slots.push({
+        used: false, id: '', nodes: [], rev: [], travelMs: 1500, phase: 0,
+        fade: 0, target: 0, dimmed: false, source: false, launch: 0,
+        dirty: true, sig: 0, lastFade: -1, zeroed: false, shown: false,
+      });
+    }
+    this.geom.setAttribute('position', new THREE.BufferAttribute(this.pos, 3).setUsage(THREE.DynamicDrawUsage));
+    this.geom.setAttribute('alpha', new THREE.BufferAttribute(this.alpha, 1).setUsage(THREE.DynamicDrawUsage));
+    this.geom.setAttribute('size', new THREE.BufferAttribute(this.size, 1).setUsage(THREE.DynamicDrawUsage));
+    this.points = new THREE.Points(this.geom, material);
+    this.points.name = 'so-impulses';
+    this.points.raycast = noRaycast;
+    this.points.frustumCulled = false;
+    // After the links (-2..-1), before every node sprite, dot layer (0) and label: a pulse that passes through
+    // a person dips under their avatar. Nothing writes depth before it, so no quad can hide it.
+    this.points.renderOrder = -0.5;
+    this.points.visible = false;
+  }
+
+  /** Device pixels per world unit at distance 1 (as for the dots), and the renderer's pixel ratio. */
+  setView(scale: number, pixelRatio: number) {
+    this.material.uniforms.uScale!.value = scale;
+    this.material.uniforms.uPx!.value = pixelRatio;
+  }
+
+  /** The links as stored, to know which way each curve bends. */
+  setLinks(links: LinkEnds[]) {
+    const fwd = new Map<SimNode, Set<SimNode>>();
+    for (const { a, b } of links) {
+      let set = fwd.get(a);
+      if (!set) { set = new Set(); fwd.set(a, set); }
+      set.add(b);
+    }
+    this.fwd = fwd;
+    for (const sl of this.slots) if (sl.used) this.bindDirections(sl);
+  }
+
+  private bindDirections(sl: ImpulseSlot) {
+    sl.rev.length = 0;
+    sl.dirty = true;
+    for (let j = 0; j + 1 < sl.nodes.length; j++) {
+      const p = sl.nodes[j]!, q = sl.nodes[j + 1]!;
+      sl.rev.push(!this.fwd.get(p)?.has(q) && !!this.fwd.get(q)?.has(p));
+    }
+  }
+
+  /** Phase of a new impulse: as far as possible in the cycle from the running ones, so heads do not pile up. */
+  private pickPhase(id: string): number {
+    const jitter = hash01(id) * (IMPULSE_PERIOD / 12);
+    let best = jitter;
+    let bestGap = -1;
+    for (let i = 0; i < 12; i++) {
+      const c = (i * IMPULSE_PERIOD / 12 + jitter) % IMPULSE_PERIOD;
+      let gap = IMPULSE_PERIOD;
+      for (const s of this.slots) {
+        if (!s.used || s.target <= 0) continue;
+        const d = Math.abs(c - s.phase);
+        gap = Math.min(gap, d, IMPULSE_PERIOD - d);
+      }
+      if (gap > bestGap) { bestGap = gap; best = c; }
+    }
+    return best;
+  }
+
+  /** The impulses that are on now. Ones that are gone fade out and free their slot. */
+  set(items: ImpulseInput[]) {
+    const keep = new Set<string>();
+    for (const it of items) {
+      if (it.nodes.length < 2) continue;
+      keep.add(it.id);
+      let sl = this.slots.find((s) => s.used && s.id === it.id);
+      if (!sl) {
+        sl = this.slots.find((s) => !s.used);
+        if (!sl) {
+          // Full: take the faintest one that is on its way out
+          for (const s of this.slots) if (s.target <= 0 && (!sl || s.fade < sl.fade)) sl = s;
+        }
+        if (!sl) continue;
+        sl.used = true;
+        sl.id = it.id;
+        sl.fade = 0;
+        sl.phase = this.pickPhase(it.id);
+      }
+      sl.target = 1;
+      sl.nodes.length = 0;
+      for (let i = 0; i < it.nodes.length && i < IMPULSE_NODES; i++) sl.nodes.push(it.nodes[i]!);
+      sl.travelMs = Math.min(IMPULSE_MAX_TRAVEL, IMPULSE_MS_PER_LINK * (sl.nodes.length - 1));
+      sl.dimmed = it.dimmed;
+      sl.source = it.source;
+      this.bindDirections(sl);
+    }
+    this.live = false;
+    for (const s of this.slots) {
+      if (s.used && !keep.has(s.id)) s.target = 0;
+      if (s.used) this.live = true;
+    }
+    if (!this.live) this.points.visible = false;
+  }
+
+  /** Chord lengths and bend control points of the run; the total length, or -1 while a node has no position yet. */
+  private measure(sl: ImpulseSlot): number {
+    let total = 0;
+    let sig = 0;
+    this.cum[0] = 0;
+    for (let j = 0; j + 1 < sl.nodes.length; j++) {
+      const p = sl.nodes[j]!, q = sl.nodes[j + 1]!;
+      if (typeof p.x !== 'number' || typeof q.x !== 'number') return -1;
+      const a = sl.rev[j] ? q : p;
+      const b = sl.rev[j] ? p : q;
+      const ax = a.x ?? 0, ay = a.y ?? 0, az = a.z ?? 0;
+      const bx = b.x ?? 0, by = b.y ?? 0, bz = b.z ?? 0;
+      bendControl(ax, ay, az, bx, by, bz);
+      const o = j * 3;
+      this.segA[o] = ax; this.segA[o + 1] = ay; this.segA[o + 2] = az;
+      this.segB[o] = bx; this.segB[o + 1] = by; this.segB[o + 2] = bz;
+      this.segC[o] = bend.x; this.segC[o + 1] = bend.y; this.segC[o + 2] = bend.z;
+      const dx = q.x - p.x, dy = (q.y ?? 0) - (p.y ?? 0), dz = (q.z ?? 0) - (p.z ?? 0);
+      total += Math.sqrt(dx * dx + dy * dy + dz * dz);
+      this.cum[j + 1] = total;
+      sig += p.x + (p.y ?? 0) * 3 + (p.z ?? 0) * 7;
+    }
+    this.sig = sig;
+    return Number.isFinite(total) ? total : -1;
+  }
+
+  /** Point at `dist` along the run (0..total) on the curves; into `this.at`. */
+  private locate(sl: ImpulseSlot, dist: number) {
+    const last = sl.nodes.length - 2;
+    let j = 0;
+    while (j < last && dist > this.cum[j + 1]!) j++;
+    const len = Math.max(1e-6, this.cum[j + 1]! - this.cum[j]!);
+    let t = Math.min(1, Math.max(0, (dist - this.cum[j]!) / len));
+    if (sl.rev[j]) t = 1 - t;
+    const u = 1 - t;
+    const o = j * 3;
+    const at = this.at;
+    at.x = u * u * this.segA[o]! + 2 * u * t * this.segC[o]! + t * t * this.segB[o]!;
+    at.y = u * u * this.segA[o + 1]! + 2 * u * t * this.segC[o + 1]! + t * t * this.segB[o + 1]!;
+    at.z = u * u * this.segA[o + 2]! + 2 * u * t * this.segC[o + 2]! + t * t * this.segB[o + 2]!;
+  }
+
+  update(now: number, dt: number, reduced: boolean) {
+    let any = false;
+    let used = false;
+    let changed = false;
+    if (reduced !== this.wasReduced) {
+      this.wasReduced = reduced;
+      for (const s of this.slots) s.dirty = true;
+    }
+    for (let si = 0; si < this.slots.length; si++) {
+      const sl = this.slots[si]!;
+      const base = si * IMPULSE_POINTS;
+      if (!sl.used) continue;
+      // Fade in and out (reduced motion: at once)
+      if (reduced) sl.fade = sl.target;
+      else if (sl.fade < sl.target) sl.fade = Math.min(sl.target, sl.fade + dt / IMPULSE_FADE_IN);
+      else if (sl.fade > sl.target) sl.fade = Math.max(sl.target, sl.fade - dt / IMPULSE_FADE_OUT);
+      if (sl.fade <= 0 && sl.target <= 0) {
+        sl.used = false;
+        sl.launch = 0;
+        sl.shown = false;
+        for (let k = 0; k < IMPULSE_POINTS; k++) this.alpha[base + k] = 0;
+        changed = true;
+        continue;
+      }
+      used = true;
+
+      // Where in the cycle we are. The rest part of the cycle writes nothing but a one-off clear.
+      sl.launch = 0;
+      let prog = 0;
+      if (!reduced) {
+        const cyc = (now + sl.phase) % IMPULSE_PERIOD;
+        prog = cyc / sl.travelMs;
+        if (cyc < IMPULSE_LAUNCH_MS) sl.launch = (1 - cyc / IMPULSE_LAUNCH_MS) ** 2;
+      }
+      const resting = !reduced && prog >= 1;
+      const total = resting ? 0 : this.measure(sl);
+      if (total <= 0) {
+        sl.shown = false;
+        if (!sl.zeroed) {
+          for (let k = 0; k < IMPULSE_POINTS; k++) this.alpha[base + k] = 0;
+          sl.zeroed = true;
+          changed = true;
+        }
+        continue;
+      }
+      // Reduced motion: the picture is static, so rewrite it only when the layout, the impulse or the fade moved
+      if (reduced && !sl.dirty && this.sig === sl.sig && sl.fade === sl.lastFade) {
+        if (sl.shown) any = true;
+        continue;
+      }
+      sl.dirty = false;
+      sl.sig = this.sig;
+      sl.lastFade = sl.fade;
+
+      const gain = sl.fade * (sl.dimmed ? IMPULSE_DIM : 1);
+      const tail = Math.min(IMPULSE_TAIL, total * 0.5);
+      const headDist = reduced ? total * 0.97 : prog * prog * (3 - 2 * prog) * (total + tail);
+      let wrote = false;
+      for (let k = 0; k < IMPULSE_POINTS; k++) {
+        const f = k / (IMPULSE_POINTS - 1);
+        const d = reduced ? headDist - f * total * 0.95 : headDist - f * tail;
+        const i = base + k;
+        if (d < 0 || d > total) {
+          this.alpha[i] = 0;
+          continue;
+        }
+        this.locate(sl, d);
+        this.pos[i * 3] = this.at.x;
+        this.pos[i * 3 + 1] = this.at.y;
+        this.pos[i * 3 + 2] = this.at.z;
+        // Soft ends: the pulse comes out of the asker and sinks into the next person
+        const edge = reduced ? 1 : Math.min(1, d / 4, (total - d) / 6);
+        this.size[i] = IMPULSE_TAIL_SIZE + (IMPULSE_HEAD_SIZE - IMPULSE_TAIL_SIZE) * Math.pow(1 - f, 1.2);
+        this.alpha[i] = Math.pow(1 - f, reduced ? 1.0 : 1.4) * edge * gain * (reduced ? 0.9 : 1);
+        wrote = true;
+      }
+      sl.shown = wrote;
+      sl.zeroed = !wrote;
+      changed = true;
+      if (wrote) any = true;
+    }
+    this.live = used;
+    this.points.visible = any;
+    if (changed && any) {
+      for (const name of ['position', 'alpha', 'size']) {
+        (this.geom.getAttribute(name) as THREE.BufferAttribute).needsUpdate = true;
+      }
+    }
+  }
+
+  dispose() {
+    this.geom.dispose();
+  }
+}
+
 function disposeLabel(l: SpriteText | null) {
   if (!l) return;
   l.material.map?.dispose();
@@ -519,6 +952,7 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
   nodes,
   edges,
   highlightPath,
+  impulses,
   hiddenRings,
   colors: colorsProp,
   width,
@@ -720,25 +1154,6 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
   if (!resRef.current) resRef.current = createResources();
   const res = resRef.current;
   sizeRef.current = graphData.nodes.length;
-  const highlightKey = (highlightPath ?? []).join('\u0001');
-  const pathState = useMemo(() => {
-    const ids: string[] = [];
-    const seen = new Set<string>();
-    for (const id of highlightPath ?? []) {
-      if (!id || seen.has(id) || !nodeMapRef.current.has(id)) continue;
-      seen.add(id);
-      ids.push(id);
-    }
-    if (ids.length < 2) return EMPTY_PATH;
-    const links = new Set<string>();
-    for (let i = 1; i < ids.length; i++) links.add(`${ids[i - 1]}\0${ids[i]}`).add(`${ids[i]}\0${ids[i - 1]}`);
-    return { set: new Set(ids), links, dim: true };
-    // highlightKey covers the array; signature covers membership in the graph.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [highlightKey, signature]);
-  const pathRef = useRef<PathState>(pathState);
-  pathRef.current = pathState;
-
   const hiddenKey = (hiddenRings ?? []).join(',');
   const hiddenRef = useRef<Set<number>>(new Set());
   hiddenRef.current = useMemo(() => {
@@ -747,6 +1162,77 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
     return next;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [hiddenKey]);
+
+  // Impulses: for each one the run of its path that ends at me, is in the graph, on a shown ring and linked
+  // person to person. An asker beyond the drawn rings (or on a hidden ring) simply starts from the nearest
+  // drawn person; ids that are not in the graph are ignored.
+  const impulsesKey = (impulses ?? []).map((i) => i.id + '\u0002' + i.path.join('\u0003')).join('\u0001');
+  const impulseState = useMemo<ImpulseState>(() => {
+    if (!impulses?.length) return EMPTY_IMPULSES;
+    const map = nodeMapRef.current;
+    const edgeKeys = new Set<string>();
+    for (const e of edges) edgeKeys.add(`${e.source}\0${e.target}`).add(`${e.target}\0${e.source}`);
+    const shown = (n: SimNode) => {
+      const depth = n.depth ?? depthRef.current.get(n.id) ?? (n.isCenter ? 0 : 1);
+      return n.isCenter || depth <= 0 || !hiddenRef.current.has(depth);
+    };
+    const items: ImpulseState['items'] = [];
+    const links = new Set<string>();
+    const set = new Set<string>();
+    const seenIds = new Set<string>();
+    for (const imp of impulses) {
+      if (items.length >= IMPULSE_MAX) break;
+      if (!imp?.id || seenIds.has(imp.id) || !Array.isArray(imp.path)) continue;
+      seenIds.add(imp.id);
+      const run: string[] = [];
+      for (let i = imp.path.length - 1; i >= 0 && run.length < IMPULSE_NODES; i--) {
+        const id = imp.path[i]!;
+        const node = id ? map.get(id) : undefined;
+        if (!node || run.includes(id) || !shown(node)) break;
+        if (run.length && !edgeKeys.has(`${id}\0${run[run.length - 1]}`)) break;
+        run.push(id);
+      }
+      if (run.length < 2) continue;
+      run.reverse();
+      for (let i = 0; i < run.length; i++) {
+        set.add(run[i]!);
+        if (i > 0) links.add(`${run[i - 1]}\0${run[i]}`).add(`${run[i]}\0${run[i - 1]}`);
+      }
+      items.push({ id: imp.id, ids: run, source: run[0] === imp.path[0] });
+    }
+    return items.length ? { items, links, set } : EMPTY_IMPULSES;
+    // impulsesKey covers the array; signature covers the nodes and edges; hiddenKey the rings.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [impulsesKey, hiddenKey, signature]);
+
+  const highlightKey = (highlightPath ?? []).join('\u0001');
+  const pathState = useMemo<PathState>(() => {
+    const ids: string[] = [];
+    const seen = new Set<string>();
+    for (const id of highlightPath ?? []) {
+      if (!id || seen.has(id) || !nodeMapRef.current.has(id)) continue;
+      seen.add(id);
+      ids.push(id);
+    }
+    if (ids.length >= 2) {
+      const links = new Set<string>();
+      for (let i = 1; i < ids.length; i++) links.add(`${ids[i - 1]}\0${ids[i]}`).add(`${ids[i]}\0${ids[i - 1]}`);
+      // A selected person's path is the highlight; impulse links outside it stay drawn, but softer
+      const soft = new Set<string>();
+      for (const key of impulseState.links) if (!links.has(key)) soft.add(key);
+      return { set: new Set(ids), links, soft, dim: true };
+    }
+    // No selection: the impulse paths are the highlight
+    if (impulseState.items.length) return { set: impulseState.set, links: impulseState.links, soft: EMPTY_SET, dim: true };
+    return EMPTY_PATH;
+    // highlightKey covers the array; signature covers membership in the graph.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [highlightKey, impulseState, signature]);
+  const pathRef = useRef<PathState>(pathState);
+  pathRef.current = pathState;
+  /** Askers of the live impulses: they keep their ring even when they are not on the highlighted path */
+  const sourceIdsRef = useRef<Set<string>>(new Set());
+
   const nearestRef = useRef<Set<string>>(new Set());
   const reducedRef = useRef(false);
   const sceneFxRef = useRef<{ stars: THREE.Points | null; glow: THREE.Sprite | null }>({ stars: null, glow: null });
@@ -831,6 +1317,7 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
   }, []);
   const linksRef = useRef<LinkLayer | null>(null);
   const dotsRef = useRef<DotLayer | null>(null);
+  const impulseRef = useRef<ImpulseLayer | null>(null);
   /** Link colours need repainting: the path, hidden rings or palette changed, or new data */
   const linkPaintRef = useRef(true);
   /** Link positions need one rewrite although the layout is not moving */
@@ -877,6 +1364,7 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
     const ink = readInk();
     layer.paint({
       isPath: (key) => path.dim && path.links.has(key),
+      isSoft: (key) => path.soft.has(key),
       shown: shownNode,
       plain: path.dim ? ink.dim : ink.plain,
       plainOp: path.dim ? ink.dimOp : ink.plainOp,
@@ -1001,7 +1489,7 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
 
     // The pulse ring exists only on nodes that have shown it (online or on the path): one object
     // less per node for the renderer to walk every frame
-    const showPulse = !isC && !n.isDeleted && ((v.online && level <= 1) || onPath);
+    const showPulse = !isC && !n.isDeleted && ((v.online && level <= 1) || onPath || sourceIdsRef.current.has(n.id));
     if (showPulse && !v.pulse) {
       const pulse = new THREE.Sprite(res.pulseMaterial);
       pulse.raycast = noRaycast;
@@ -1352,8 +1840,22 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
     scene.add(linkLayer.group, dotLayer.points);
     linksRef.current = linkLayer;
     dotsRef.current = dotLayer;
-    linkLayer.setLinks(resolveLinks());
+    const impulseLayer = new ImpulseLayer(res.impulseMaterial);
+    scene.add(impulseLayer.points);
+    impulseRef.current = impulseLayer;
+    const firstLinks = resolveLinks();
+    linkLayer.setLinks(firstLinks);
+    impulseLayer.setLinks(firstLinks);
     linkPaintRef.current = true;
+    // The impulse work runs only while the canvas is on screen (and the tab visible: rAF stops by itself)
+    let onScreen = true;
+    const screenObserver = typeof IntersectionObserver === 'undefined'
+      ? null
+      : new IntersectionObserver((entries) => {
+        const last = entries[entries.length - 1];
+        if (last) onScreen = last.isIntersecting;
+      });
+    screenObserver?.observe(renderer.domElement);
     const dotList: NodeVis[] = [];
     const farFirst = (a: NodeVis, b: NodeVis) => b.d2 - a.d2;
 
@@ -1747,6 +2249,38 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
         }
       }
 
+      // Impulses: pulses along the incoming-Need paths, after the links so both read the same positions.
+      // Nothing runs while there are none, the canvas is off screen or the tab is hidden.
+      const imp = impulseRef.current;
+      if (imp && imp.live && onScreen && !document.hidden) {
+        const gl = fg.renderer() as THREE.WebGLRenderer;
+        imp.setView(
+          ((cam as THREE.PerspectiveCamera).projectionMatrix.elements[5] ?? 1) * gl.domElement.height * 0.5,
+          gl.getPixelRatio(),
+        );
+        imp.update(now, dt, reduced);
+        // The asker's ring swells at each launch (steady and a bit larger with reduced motion)
+        // (two impulses from one asker: the larger swell wins; the ring keeps its usual breathing)
+        for (let a = 0; a < imp.slots.length; a++) {
+          const sl = imp.slots[a]!;
+          if (!sl.used || !sl.source || sl.fade <= 0) continue;
+          let swell = 0;
+          let first = true;
+          for (let b = 0; b < imp.slots.length; b++) {
+            const o = imp.slots[b]!;
+            if (!o.used || !o.source || o.fade <= 0 || o.nodes[0] !== sl.nodes[0]) continue;
+            if (b < a) { first = false; break; }
+            swell = Math.max(swell, (reduced ? 0.3 : 0.45 * o.launch) * o.fade);
+          }
+          if (!first) continue;
+          const v = visRef.current.get(sl.nodes[0]!.id);
+          if (!v?.pulse || !v.pulse.visible) continue;
+          const body = v.dot.visible ? v.dot.scale.x : v.avatar.scale.x;
+          const ps = body * 1.9 * (1 + swell) * (1 + 0.12 * pulse);
+          v.pulse.scale.set(ps, ps, 1);
+        }
+      }
+
       if (labelFrame % 20 === 0) {
         const labeled: NodeVis[] = [];
         for (const v of visRef.current.values()) {
@@ -1817,11 +2351,14 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
       resizeObserver.disconnect();
       sceneFxRef.current.stars = null;
       sceneFxRef.current.glow = null;
-      scene.remove(linkLayer.group, dotLayer.points);
+      screenObserver?.disconnect();
+      scene.remove(linkLayer.group, dotLayer.points, impulseLayer.points);
       linkLayer.dispose();
       dotLayer.dispose();
+      impulseLayer.dispose();
       if (linksRef.current === linkLayer) linksRef.current = null;
       if (dotsRef.current === dotLayer) dotsRef.current = null;
+      if (impulseRef.current === impulseLayer) impulseRef.current = null;
       if (controls) {
         controls.removeEventListener('start', onStart);
         controls.removeEventListener('end', onEnd);
@@ -1876,7 +2413,9 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
     const refresh = needsRefreshRef.current;
     needsRefreshRef.current = false;
     // New data: the link layer takes the new set of links (node objects are kept by id)
-    linksRef.current?.setLinks(resolveLinks());
+    const links = resolveLinks();
+    linksRef.current?.setLinks(links);
+    impulseRef.current?.setLinks(links);
     linkPaintRef.current = true;
     if (refresh) {
       for (const v of visRef.current.values()) disposeLabel(v.label);
@@ -1982,6 +2521,36 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
     }
     linkPaintRef.current = true;
   }, [hiddenKey]);
+
+  // Hand the impulses to the layer. One that is not on the highlighted path (a person is selected) runs dimmed.
+  useEffect(() => {
+    const layer = impulseRef.current;
+    if (!layer) return;
+    const map = nodeMapRef.current;
+    const items: ImpulseInput[] = [];
+    for (const it of impulseState.items) {
+      const nodes: SimNode[] = [];
+      for (const id of it.ids) {
+        const node = map.get(id);
+        if (node) nodes.push(node);
+      }
+      if (nodes.length < 2) continue;
+      let onHighlight = true;
+      for (let i = 1; i < it.ids.length && onHighlight; i++) onHighlight = pathState.links.has(`${it.ids[i - 1]}\0${it.ids[i]}`);
+      items.push({ id: it.id, nodes, dimmed: pathState.dim && !onHighlight, source: it.source });
+    }
+    layer.set(items);
+    // Askers get their ring (applyLevel reads sourceIdsRef); refresh the ones that gained or lost it
+    const prev = sourceIdsRef.current;
+    const next = new Set<string>();
+    for (const it of items) if (it.source) next.add(it.nodes[0]!.id);
+    sourceIdsRef.current = next;
+    for (const id of [...prev, ...next]) {
+      if (prev.has(id) === next.has(id)) continue;
+      const v = visRef.current.get(id);
+      if (v && v.level >= 0) applyLevel(v, v.level);
+    }
+  }, [impulseState, pathState, graphData, applyLevel]);
 
   useEffect(() => {
     res.setLogo(logoUrl || '/logo.png');
@@ -2424,6 +2993,26 @@ function createResources() {
   });
   const pulseDimMaterial = pulseMaterial.clone();
 
+  // Impulse pulses: one material, tinted from the palette (care for the glow, a lighter care for the core)
+  const impulseMaterial = new THREE.ShaderMaterial({
+    uniforms: {
+      uScale: { value: 1 },
+      uPx: { value: 1 },
+      uCore: { value: new THREE.Color() },
+      uGlow: { value: new THREE.Color() },
+    },
+    vertexShader: IMPULSE_VERTEX,
+    fragmentShader: IMPULSE_FRAGMENT,
+    transparent: true,
+    depthWrite: false,
+  });
+  const tintImpulse = (care: string) => {
+    const hex = parseColor(care).color;
+    (impulseMaterial.uniforms.uGlow!.value as THREE.Color).setHex(hex);
+    (impulseMaterial.uniforms.uCore!.value as THREE.Color).setHex(hex).lerp(tmpColor.setHex(0xffffff), 0.7);
+  };
+  tintImpulse(colors.care);
+
   const washTextures = new Map<string, THREE.Texture>();
   const sceneWash = (scene: string) => {
     let tex = washTextures.get(scene);
@@ -2464,9 +3053,11 @@ function createResources() {
     hitMaterial,
     pulseMaterial,
     pulseDimMaterial,
+    impulseMaterial,
 
     setColors(next: GraphColors) {
       colors = next;
+      tintImpulse(next.care);
       const care = parseColor(next.care).color;
       pulseMaterial.color.set(care);
       pulseDimMaterial.color.set(care);
@@ -2549,6 +3140,7 @@ function createResources() {
       materials.clear();
       pulseMaterial.dispose();
       pulseDimMaterial.dispose();
+      impulseMaterial.dispose();
       hitMaterial.dispose();
       for (const t of textures) t.dispose();
       textures.length = 0;
