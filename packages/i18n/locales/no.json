@@ -1453,6 +1453,8 @@
     "crowded": "Flere personer rister i nærheten. Bruk QR-koden i stedet.",
     "openQr": "Bruk QR-kode",
     "tooMany": "For mange forsøk. Vent ett minutt og rist igjen.",
-    "enable": "Slå på risting"
+    "enable": "Slå på risting",
+    "hintTitle": "Bare rist telefonene",
+    "hintBody": "Rist begge telefonene samtidig mens dere står ved siden av hverandre. Appen finner den andre personen, og dere bekrefter bare. Fungerer på alle skjermer."
   }
 }

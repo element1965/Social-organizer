@@ -1464,6 +1464,8 @@
     "crowded": "Mai multe persoane scutură în apropiere. Folosește codul QR.",
     "openQr": "Folosește codul QR",
     "tooMany": "Prea multe încercări. Așteaptă un minut și scutură din nou.",
-    "enable": "Activează scuturarea"
+    "enable": "Activează scuturarea",
+    "hintTitle": "Doar scuturați telefoanele",
+    "hintBody": "Unul lângă altul, scuturați ambele telefoane în același moment. Aplicația găsește cealaltă persoană, iar voi doar confirmați. Funcționează pe orice ecran."
   }
 }

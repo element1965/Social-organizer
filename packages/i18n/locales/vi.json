@@ -1442,6 +1442,8 @@
     "crowded": "Có nhiều người đang lắc gần đây. Hãy dùng mã QR.",
     "openQr": "Dùng mã QR",
     "tooMany": "Quá nhiều lần thử. Chờ một phút rồi lắc lại.",
-    "enable": "Bật tính năng lắc"
+    "enable": "Bật tính năng lắc",
+    "hintTitle": "Chỉ cần lắc điện thoại",
+    "hintBody": "Đứng cạnh nhau, lắc cả hai điện thoại cùng lúc. Ứng dụng sẽ tìm người kia, hai bạn chỉ cần xác nhận. Hoạt động ở mọi màn hình."
   }
 }

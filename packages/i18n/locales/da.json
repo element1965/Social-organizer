@@ -1453,6 +1453,8 @@
     "crowded": "Flere personer ryster i nærheden. Brug QR-koden i stedet.",
     "openQr": "Brug QR-kode",
     "tooMany": "For mange forsøg. Vent et minut og ryst igen.",
-    "enable": "Aktivér ryst"
+    "enable": "Aktivér ryst",
+    "hintTitle": "Ryst bare telefonerne",
+    "hintBody": "Ryst begge telefoner på samme tid, mens I står ved siden af hinanden. Appen finder den anden person, og I bekræfter bare. Virker på alle skærme."
   }
 }

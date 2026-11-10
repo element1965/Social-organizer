@@ -1453,6 +1453,8 @@
     "crowded": "Meerdere mensen schudden in de buurt. Gebruik de QR-code.",
     "openQr": "QR-code gebruiken",
     "tooMany": "Te veel pogingen. Wacht een minuut en schud opnieuw.",
-    "enable": "Schudden inschakelen"
+    "enable": "Schudden inschakelen",
+    "hintTitle": "Schud gewoon jullie telefoons",
+    "hintBody": "Schud naast elkaar beide telefoons op hetzelfde moment. De app vindt de ander, jullie bevestigen alleen nog. Werkt op elk scherm."
   }
 }
