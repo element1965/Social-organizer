@@ -111,6 +111,21 @@ const ModerationPreview = import.meta.env.DEV
   ? lazy(() => import('./pages/ModerationPreviewPage').then((module) => ({ default: module.ModerationPreviewPage })))
   : null;
 
+/** In-app path for an https App Link on our origin (only /invite/<token>, as declared in AndroidManifest.xml). */
+function appLinkPath(raw: string): string | null {
+  let url: URL;
+  try {
+    url = new URL(raw);
+  } catch {
+    return null;
+  }
+  if (url.protocol !== 'https:') return null;
+  const host = url.hostname.toLowerCase();
+  const ours = host === 'orginizer.com' || host === 'www.orginizer.com' || host === window.location.hostname.toLowerCase();
+  if (!ours || !/^\/invite\/[A-Za-z0-9_-]+\/?$/.test(url.pathname)) return null;
+  return url.pathname + url.search;
+}
+
 function GoogleAuthDeepLinkHandler() {
   const login = useAuth((s) => s.login);
   const navigate = useNavigate();
@@ -125,7 +140,16 @@ function GoogleAuthDeepLinkHandler() {
 
     const handleUrl = (event: { url?: string }) => {
       const url = event?.url;
-      if (!url || !url.startsWith('socialorganizer://auth-')) return;
+      if (!url) return;
+      // App Links: an https invite link (phone camera, Lens, a messenger) opened the app. Show its page in-app.
+      const appPath = appLinkPath(url);
+      if (appPath) {
+        if (processedRef.current.has(url)) return;
+        processedRef.current.add(url);
+        navigate(appPath);
+        return;
+      }
+      if (!url.startsWith('socialorganizer://auth-')) return;
       if (processedRef.current.has(url)) return;
       processedRef.current.add(url);
 
