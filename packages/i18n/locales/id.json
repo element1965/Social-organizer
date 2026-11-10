@@ -310,6 +310,8 @@
     "confirm": "Konfirmasi bahwa Anda saling mengenal",
     "inCircle": "{{count}} di lingkaran mereka",
     "noneYet": "Belum menambahkan siapa pun",
+    "brought": "Mengajak {{count}}",
+    "pledged": "{{amount}} dijanjikan",
     "via": "lewat {{path}}",
     "empty": "Belum ada siapa pun",
     "notFound": "Tidak ada yang ditemukan"

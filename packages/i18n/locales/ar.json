@@ -325,6 +325,8 @@
     "confirm": "أكّد أننا نعرف بعضنا",
     "inCircle": "{{count}} في دائرتهم",
     "noneYet": "لم يُضف أحدًا بعد",
+    "brought": "أحضر {{count}}",
+    "pledged": "تعهّد بـ {{amount}}",
     "via": "عبر {{path}}",
     "empty": "لا أحد بعد",
     "notFound": "لم يُعثر على أحد"

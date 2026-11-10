@@ -316,6 +316,8 @@
     "confirm": "Confirme que se conhecem",
     "inCircle": "{{count}} no círculo dessa pessoa",
     "noneYet": "Ainda não adicionou ninguém",
+    "brought": "Trouxe {{count}}",
+    "pledged": "{{amount}} prometidos",
     "via": "via {{path}}",
     "empty": "Ninguém ainda",
     "notFound": "Ninguém encontrado"

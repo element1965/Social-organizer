@@ -310,6 +310,8 @@
     "confirm": "知り合いであることを確認してください",
     "inCircle": "その人のサークルに{{count}}人",
     "noneYet": "まだ誰も加えていません",
+    "brought": "{{count}}人を招待",
+    "pledged": "{{amount}}を表明",
     "via": "{{path}}経由",
     "empty": "まだ誰もいません",
     "notFound": "見つかりませんでした"

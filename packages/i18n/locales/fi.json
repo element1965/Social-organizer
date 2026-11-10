@@ -313,6 +313,8 @@
     "confirm": "Vahvista, että tunnette toisenne",
     "inCircle": "{{count}} hänen piirissään",
     "noneYet": "Ei ole vielä lisännyt ketään",
+    "brought": "Toi mukaan {{count}}",
+    "pledged": "{{amount}} luvattu",
     "via": "{{path}} kautta",
     "empty": "Ei vielä ketään",
     "notFound": "Ketään ei löytynyt"

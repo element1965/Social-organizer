@@ -313,6 +313,8 @@
     "confirm": "Birbirinizi tanıdığınızı onaylayın",
     "inCircle": "Çevresinde {{count}} kişi",
     "noneYet": "Henüz kimseyi eklemedi",
+    "brought": "{{count}} kişi getirdi",
+    "pledged": "{{amount}} taahhüt",
     "via": "{{path}} üzerinden",
     "empty": "Henüz kimse yok",
     "notFound": "Kimse bulunamadı"
