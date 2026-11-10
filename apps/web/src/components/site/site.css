@@ -66,7 +66,7 @@
 .site-hero > div { min-width: 0; }
 @container (max-width: 1180px) { .site-hero { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); } }
 .site-hero .lead { margin-top: 20px; font-size: 19px; line-height: 1.45; color: var(--muted); max-width: 44ch; }
-.site-hero .lead b { color: var(--care); }
+.site-hero .lead b { color: var(--care-text); }
 .site-hero-scene { animation: site-rise .7s var(--ease-out) both; }
 @keyframes site-rise { from { opacity: 0; transform: translateY(12px) scale(.985); } to { opacity: 1; transform: none; } }
 .site-hero .site-proof { display: flex; align-items: center; gap: 10px; margin-top: 20px; font-size: 15px; font-weight: 700; color: var(--ink); font-variant-numeric: tabular-nums; }
@@ -78,7 +78,7 @@
 .site-cta { display: flex; gap: 12px; margin-top: 28px; flex-wrap: wrap; }
 .site-alt { display: flex; align-items: center; gap: 8px; margin-top: 14px; font-size: 14px; font-weight: 700; color: var(--muted); }
 .site-alt svg { width: 18px; height: 18px; color: var(--link); }
-.site-alt a { color: var(--care); display: inline-flex; align-items: center; min-height: 24px; padding: 0 2px; }
+.site-alt a { color: var(--care-text); display: inline-flex; align-items: center; min-height: 24px; padding: 0 2px; }
 .site-facts { display: flex; gap: 8px; margin-top: 22px; flex-wrap: wrap; }
 .site-pill { display: inline-flex; align-items: center; height: 26px; padding: 0 10px; border-radius: var(--r-sm); background: var(--surface-2); color: var(--muted); font-size: 12px; font-weight: 700; }
 .site-planet { position: relative; height: 480px; border-radius: var(--r-2xl); overflow: hidden; background: var(--scene); box-shadow: var(--shadow-banner); }
@@ -91,7 +91,7 @@
 .site-sec .lead { margin-top: 12px; font-size: 17px; line-height: 1.5; color: var(--muted); max-width: 60ch; }
 .site-sec .lead b { color: var(--ink); }
 .site-say { margin-top: 18px; font-size: 17px; line-height: 1.45; max-width: 40ch; color: var(--ink); }
-.site-say b { color: var(--care); }
+.site-say b { color: var(--care-text); }
 /* "How it works": one sticky figure, the text blocks scroll past it (StepStory in LandingPage.tsx). */
 .site-story { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; margin-top: 24px; }
 .site-story .fig { position: sticky; top: 24px; align-self: start; height: min(440px, calc(100vh - 48px)); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px; background: var(--paper); border-radius: var(--r-2xl); box-shadow: var(--shadow-card); padding: 20px; }
@@ -174,7 +174,7 @@
 .site-prose ul { list-style: disc; }
 .site-prose ol { list-style: decimal; }
 .site-prose li + li { margin-top: 4px; }
-.site-prose a { color: var(--care); text-decoration: underline; text-underline-offset: 3px; }
+.site-prose a { color: var(--care-text); text-decoration: underline; text-underline-offset: 3px; }
 .site-prose .m { color: var(--muted); }
 
 /* ---------- scroll reveal (lib/scrollPlay.ts) ---------- */

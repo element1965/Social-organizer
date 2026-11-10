@@ -19,6 +19,7 @@
   --so-care: 8 127 113;          --care: #087f71;  --teal: #087f71;
   --so-care-hover: 8 103 92;     --care-hover: #08675c;
   --so-care-soft: 229 245 243;   --care-soft: #e5f5f3; --teal-soft: #e5f5f3;
+  --so-care-text: 8 127 113;     --care-text: #087f71;
   --so-on-care: 255 255 255;     --on-care: #ffffff;
   --care-bright: #0d9488;        /* graph highlights on the dark scene only */
   /* link: connections, secondary accent */
@@ -63,9 +64,10 @@ html.dark, .dark {
   --so-ink-muted: 147 165 159;   --muted: #93a59f;
   --so-ink-subtle: 111 129 123;  --subtle: #6f817b;
   --so-line: 231 238 235;        --line: rgba(231,238,235,.14); --line-soft: rgba(231,238,235,.08); --line-strong: rgba(231,238,235,.24);
-  --so-care: 43 179 164;         --care: #2bb3a4; --teal: #2bb3a4;
-  --so-care-hover: 91 191 174;   --care-hover: #5bbfae;
-  --so-care-soft: 21 52 47;      --care-soft: #15342f; --teal-soft: #15342f;
+  --so-care: 70 165 150;         --care: #46a596; --teal: #46a596;
+  --so-care-hover: 95 176 163;   --care-hover: #5fb0a3;
+  --so-care-soft: 24 47 43;      --care-soft: #182f2b; --teal-soft: #182f2b;
+  --so-care-text: 108 188 175;   --care-text: #6cbcaf;  /* care for text; lighter than the fill */
   --so-on-care: 4 36 31;         --on-care: #04241f;
   --so-link: 154 168 240;        --link: #9aa8f0;
   --so-link-soft: 40 50 101;     --link-soft: #283265;

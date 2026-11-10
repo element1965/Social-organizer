@@ -39,6 +39,9 @@ const MAX_IMPULSES = 12;
 const SCENE_BG =
   'bg-scene bg-[radial-gradient(120%_90%_at_50%_38%,rgb(var(--so-scene-2))_0%,rgb(var(--so-scene))_60%)]';
 
+/** Feed sheet parts around the content: the 26px drag handle and the 16px bottom padding. */
+const SHEET_CHROME = 26 + 16;
+
 function useBoxHeight<T extends HTMLElement>() {
   const ref = useRef<T>(null);
   const [height, setHeight] = useState(0);
@@ -459,7 +462,14 @@ function PhoneCircle({
 }: PhoneProps) {
   const { t } = useTranslation();
   const [rootRef, height] = useBoxHeight<HTMLDivElement>();
-  const sheetH = Math.max(280, Math.round(height * 0.42));
+  const [feedRef, feedContentH] = useBoxHeight<HTMLDivElement>();
+  // An empty circle has nothing to show in the graph, so the sheet grows to fit the start card and its
+  // button (up to ~70% of the screen) instead of hiding the button under the tab bar.
+  const baseSheetH = Math.max(280, Math.round(height * 0.42));
+  const sheetH =
+    empty && feedContentH > 0
+      ? Math.max(baseSheetH, Math.min(Math.round(height * 0.7), feedContentH + SHEET_CHROME))
+      : baseSheetH;
   // Expanded feed: the sheet covers the scene, for reading a long feed. Not kept in the URL.
   const fullH = Math.max(sheetH, height - 8);
   const feedLayer = layer === 'feed';
@@ -648,7 +658,9 @@ function PhoneCircle({
         >
           <span className="h-[5px] w-10 rounded-pill bg-line-strong" />
         </div>
-        <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-4 pb-4">{feed}</div>
+        <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-4 pb-4">
+          <div ref={feedRef}>{feed}</div>
+        </div>
       </section>
 
       {/* Collapsed feed (graph layer). */}
