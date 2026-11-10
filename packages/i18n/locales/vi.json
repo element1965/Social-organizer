@@ -322,6 +322,17 @@
     "empty": "Chưa có ai",
     "notFound": "Không tìm thấy ai"
   },
+  "offline": {
+    "banner": "Không có kết nối. Đang hiển thị bản sao đã lưu trên thiết bị này, {{time}}.",
+    "bannerNoCopy": "Không có kết nối. Chưa có gì được lưu trên thiết bị này.",
+    "empty": "Hãy mở ứng dụng một lần khi có mạng, những người của bạn sẽ được lưu tại đây.",
+    "needsConnection": "Cần có kết nối",
+    "contactsNotSaved": "Thông tin liên hệ của người này chưa được lưu trên thiết bị. Chúng sẽ được lưu khi bạn mở trang của họ khi có mạng.",
+    "tapHint": "Thông tin liên hệ chỉ được lưu cho các kết nối trực tiếp.",
+    "unavailableTitle": "Màn hình này cần có kết nối",
+    "unavailableBody": "Hãy kết nối internet và thử lại. Những người đã lưu trên thiết bị này vẫn dùng được.",
+    "showSaved": "Hiện những người đã lưu"
+  },
   "collection": {
     "close": "Đóng nhu cầu",
     "saveAmount": "Lưu",

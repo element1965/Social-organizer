@@ -4,6 +4,9 @@ import { App } from './App';
 import { BrandMark } from './components/ui2/BrandMark';
 import { applyStoredFontScale } from './components/profile/fontScale';
 import i18n, { i18nReady } from './lib/i18n';
+import { registerServiceWorkerOnLoad } from './lib/serviceWorker';
+import { isOffline } from './lib/connectivity';
+import { sweepSavedCopy } from './lib/savedCopy';
 import './index.css';
 
 /** One automatic reload after a stale lazy chunk. The timestamp blocks a loop. */
@@ -12,6 +15,8 @@ const PRELOAD_RELOAD_WINDOW_MS = 10_000;
 
 window.addEventListener('vite:preloadError', (event) => {
   event.preventDefault();
+  // No connection: a reload cannot fetch the missing file; the route boundary explains it instead
+  if (isOffline()) return;
   let recent = false;
   try {
     const previous = Number(sessionStorage.getItem(PRELOAD_RELOAD_KEY) || '0');
@@ -80,6 +85,8 @@ class AppErrorBoundary extends React.Component<React.PropsWithChildren, { failed
 let domRecovered = false;
 
 applyStoredFontScale();
+sweepSavedCopy();
+registerServiceWorkerOnLoad();
 
 function render() {
   ReactDOM.createRoot(document.getElementById('root')!).render(

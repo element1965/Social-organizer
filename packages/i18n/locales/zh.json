@@ -322,6 +322,17 @@
     "empty": "还没有人",
     "notFound": "没有找到"
   },
+  "offline": {
+    "banner": "无网络连接。正在显示保存在此设备上的副本，{{time}}。",
+    "bannerNoCopy": "无网络连接。此设备上还没有保存任何内容。",
+    "empty": "联网打开一次应用，你的人脉就会保存在这里。",
+    "needsConnection": "需要网络连接",
+    "contactsNotSaved": "此人的联系方式尚未保存到此设备。联网打开其页面后会自动保存。",
+    "tapHint": "只保存直接联系人的联系方式。",
+    "unavailableTitle": "此页面需要网络连接",
+    "unavailableBody": "请连接互联网后重试。保存在此设备上的人员仍可查看。",
+    "showSaved": "查看已保存的人员"
+  },
   "collection": {
     "close": "关闭需求",
     "saveAmount": "保存",

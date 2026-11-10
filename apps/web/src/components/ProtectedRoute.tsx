@@ -3,6 +3,7 @@ import { Navigate, useLocation } from 'react-router-dom';
 import { Capacitor } from '@capacitor/core';
 import { useAuth } from '../hooks/useAuth';
 import { trpc } from '../lib/trpc';
+import { useOffline } from '../lib/connectivity';
 import { safePath } from './onboarding/flow';
 
 const isNativeApp = Capacitor.isNativePlatform();
@@ -11,6 +12,7 @@ export function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const isAuthenticated = useAuth((s) => s.isAuthenticated);
   const logout = useAuth((s) => s.logout);
   const location = useLocation();
+  const offline = useOffline();
   const { isLoading, error } = trpc.user.me.useQuery(undefined, {
     enabled: isAuthenticated,
     retry: 1,
@@ -55,7 +57,8 @@ export function ProtectedRoute({ children }: { children: React.ReactNode }) {
   }
 
   // Wait for user data to load
-  if (isLoading) {
+  // Offline there is nothing to wait for: the saved copy screens take over
+  if (isLoading && !offline) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-canvas">
         <div className="h-8 w-8 animate-spin rounded-full border-4 border-care border-t-transparent" />

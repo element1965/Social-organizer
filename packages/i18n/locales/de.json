@@ -325,6 +325,17 @@
     "empty": "Noch niemand",
     "notFound": "Niemand gefunden"
   },
+  "offline": {
+    "banner": "Keine Verbindung. Angezeigt wird die auf diesem Gerät gespeicherte Kopie, {{time}}.",
+    "bannerNoCopy": "Keine Verbindung. Auf diesem Gerät ist noch nichts gespeichert.",
+    "empty": "Öffne die App einmal mit Internet, dann werden deine Kontakte hier gespeichert.",
+    "needsConnection": "Verbindung erforderlich",
+    "contactsNotSaved": "Die Kontaktdaten dieser Person sind noch nicht auf diesem Gerät gespeichert. Sie werden gespeichert, wenn du ihre Seite online öffnest.",
+    "tapHint": "Kontaktdaten werden nur für direkte Verbindungen gespeichert.",
+    "unavailableTitle": "Dieser Bildschirm braucht eine Verbindung",
+    "unavailableBody": "Verbinde dich mit dem Internet und versuche es erneut. Die auf diesem Gerät gespeicherten Personen bleiben verfügbar.",
+    "showSaved": "Gespeicherte Personen anzeigen"
+  },
   "collection": {
     "close": "Bedarf schließen",
     "saveAmount": "Speichern",

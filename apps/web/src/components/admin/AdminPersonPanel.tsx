@@ -92,7 +92,7 @@ export function AdminPersonPanel({ userId, createdAt, remainingBudget }: Props) 
       <div className="mt-2 max-h-80 overflow-y-auto rounded-lg bg-surface shadow-card">
         {rows.length === 0 ? (
           <p className="py-6 text-center text-body-s font-semibold text-ink-muted">
-            {history.isLoading ? t('common.loading') : t('profile.noPast')}
+            {history.isLoading ? t('common.loading') : history.isError ? t('common.error') : t('profile.noPast')}
           </p>
         ) : (
           <div className="divide-y divide-line-soft">

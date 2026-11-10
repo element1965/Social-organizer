@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { Capacitor } from '@capacitor/core';
 import { trpc } from '../lib/trpc';
+import { registerServiceWorker } from '../lib/serviceWorker';
 
 const NATIVE_TOKEN_KEY = 'fcm_push_token';
 
@@ -120,7 +121,8 @@ export function usePushNotifications() {
           setLoading(false);
           return;
         }
-        const reg = await navigator.serviceWorker.register('/sw.js');
+        const reg = await registerServiceWorker({ force: true });
+        if (!reg) throw new Error('Service worker is unavailable');
         await navigator.serviceWorker.ready;
 
         const permission = await Notification.requestPermission();
