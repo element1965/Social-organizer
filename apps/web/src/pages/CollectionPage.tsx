@@ -593,9 +593,10 @@ export function CollectionPage() {
           )}
           {!held ? (
             <>
-              <div className="mt-3 grid grid-cols-[1fr_56px] gap-2.5">
-                <Button className="w-full" icon={<IconShare />} onClick={share}>
-                  {copied ? t('collection.shareCopied') : t('collection.share')}
+              {/* The share button may shrink (minmax(0,1fr)) and carries the short label, so the QR button always keeps its 56 px */}
+              <div className="mt-3 grid grid-cols-[minmax(0,1fr)_56px] gap-2.5">
+                <Button className="w-full min-w-0" icon={<IconShare />} aria-label={t('collection.share')} onClick={share}>
+                  {copied ? t('collection.shareCopied') : t('add.share')}
                 </Button>
                 <Button variant="secondary" className="w-full px-0" aria-label={t('collection.qrSheetTitle')} onClick={() => setQrOpen(true)}>
                   <IconQr className="h-5 w-5" />
