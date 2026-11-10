@@ -21,7 +21,7 @@ export const NET_LABELS_RU: NetFigureLabels = {
   you: 'Вы',
   asker: 'Мария',
   amount: '300 $',
-  chatTitle: 'Чат сбора',
+  chatTitle: 'Чат участников',
   chatMembers: 'Мария · Олег · Лена',
   aria: 'Схема круга',
 };

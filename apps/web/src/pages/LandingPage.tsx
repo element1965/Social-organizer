@@ -3,14 +3,20 @@ import { useSearchParams } from 'react-router-dom';
 import { Trans, useTranslation } from 'react-i18next';
 import { trpc } from '../lib/trpc';
 import { useDevice } from '../lib/device';
-import { ChainFigure, HuiFigure, NetFigure, type ChainStep } from '../components/figures';
+import { ChainFigure, NetFigure, type ChainStep, type NetStep } from '../components/figures';
 import { DeviceEntry } from '../components/site/DeviceEntry';
 import { HeroScene } from '../components/site/HeroScene';
-import { Reveal, usePlayOnEnter, useSitePhone } from '../components/site/hooks';
+import { Reveal, usePlayOnEnter } from '../components/site/hooks';
 import { IconFree, IconShield, IconWallet } from '../components/site/icons';
 import { SitePage } from '../components/site/SitePage';
 import { StoreButtons } from '../components/site/StoreButtons';
 import { useFigureLabels, useMoney } from '../components/site/figureLabels';
+
+/** Which NetFigure frame each of the four text beats shows: the circle, the message path, then the chat twice. */
+const BEAT_FRAMES: readonly NetStep[] = [0, 1, 2, 2];
+const BEATS = [0, 1, 2, 3] as const;
+const PRINCIPLES = [1, 2, 3, 4] as const;
+const FAQ = [1, 2, 3, 4, 5] as const;
 
 const B = { b: <b /> };
 const PUBLIC_STATS_KEY = 'so_publicStats';
@@ -44,7 +50,7 @@ function usePublicUsers(): number | null {
  */
 function StepStory({ labels }: { labels: ReturnType<typeof useFigureLabels>['net'] }) {
   const { t } = useTranslation();
-  const [step, setStep] = useState<0 | 1 | 2>(0);
+  const [step, setStep] = useState<(typeof BEATS)[number]>(0);
   const refs = useRef<(HTMLDivElement | null)[]>([]);
   useEffect(() => {
     // The current step is the last block whose top has passed 55% of the screen. Measured on scroll (one rAF), so a
@@ -57,7 +63,7 @@ function StepStory({ labels }: { labels: ReturnType<typeof useFigureLabels>['net
       refs.current.forEach((el, i) => {
         if (el && el.getBoundingClientRect().top < line) k = i;
       });
-      setStep(k as 0 | 1 | 2);
+      setStep(k as (typeof BEATS)[number]);
     };
     const onScroll = () => {
       if (!raf) raf = requestAnimationFrame(pick);
@@ -75,16 +81,16 @@ function StepStory({ labels }: { labels: ReturnType<typeof useFigureLabels>['net
     <div className="site-story">
       <div className="fig" aria-hidden="true">
         <div className="pic">
-          <NetFigure step={step} labels={labels} />
+          <NetFigure step={BEAT_FRAMES[step] ?? 0} labels={labels} />
         </div>
         <div className="bars">
-          {([0, 1, 2] as const).map((k) => (
+          {BEATS.map((k) => (
             <i key={k} className={k <= step ? 'on' : undefined} />
           ))}
         </div>
       </div>
       <ol className="texts">
-        {([0, 1, 2] as const).map((k) => (
+        {BEATS.map((k) => (
           <li key={k}>
             <div
               ref={(el) => {
@@ -113,7 +119,6 @@ export function LandingPage({ inviteToken }: { inviteToken?: string } = {}) {
   const { t, i18n } = useTranslation();
   const [params] = useSearchParams();
   const device = useDevice();
-  const phone = useSitePhone();
   const labels = useFigureLabels();
   const money = useMoney();
   const users = usePublicUsers();
@@ -131,16 +136,9 @@ export function LandingPage({ inviteToken }: { inviteToken?: string } = {}) {
     }
   }, [inviteToken, inviteParam]);
 
-  // Hui table: the month the chips and the figure show; replays when it scrolls into view.
-  const [month, setMonth] = useState(2);
-  const [huiPlay, setHuiPlay] = useState(0);
-  const huiRef = usePlayOnEnter<number>(() => setHuiPlay((n) => n + 1), [1], 0);
-
   const [chainStep, setChainStep] = useState<ChainStep>(0);
   const chainRef = usePlayOnEnter<ChainStep>(setChainStep, [0, 1, 2], 1000);
 
-  const months = labels.hui.months ?? [];
-  const homeNames = t('landing.hui.names', { returnObjects: true }) as unknown as string[];
   const nf = new Intl.NumberFormat(i18n.language || 'en');
 
   return (
@@ -193,32 +191,21 @@ export function LandingPage({ inviteToken }: { inviteToken?: string } = {}) {
         <StepStory labels={labels.net} />
       </section>
 
-      <section className="site-sec" aria-labelledby="hui-title">
-        <div className="site-two">
-          <Reveal>
-            <h2 id="hui-title">{t('landing.hui.title')}</h2>
-            <p className="lead">
-              <Trans i18nKey="landing.hui.lead" components={B} />
-            </p>
-            <p className="site-say">{t('landing.hui.say')}</p>
-            <div className="site-chips" role="group" aria-label={t('landing.hui.monthsAria')}>
-              {months.map((m, i) => (
-                <button key={m} type="button" aria-pressed={i === month} onClick={() => setMonth(i)}>
-                  {m}
-                </button>
-              ))}
+      <section className="site-sec" aria-labelledby="principles-title">
+        <Reveal>
+          <h2 id="principles-title">{t('landing.principles.title')}</h2>
+        </Reveal>
+        <Reveal group className="site-nots four">
+          {PRINCIPLES.map((n) => (
+            <div key={n} className="site-not">
+              <span className="n" aria-hidden="true">
+                {n}
+              </span>
+              <h3>{t(`landing.principles.p${n}Title`)}</h3>
+              <p>{t(`landing.principles.p${n}Text`)}</p>
             </div>
-          </Reveal>
-          <div ref={huiRef}>
-            <HuiFigure
-              month={month}
-              onMonthChange={setMonth}
-              playKey={huiPlay}
-              size={phone ? 320 : 440}
-              labels={{ ...labels.hui, names: homeNames }}
-            />
-          </div>
-        </div>
+          ))}
+        </Reveal>
       </section>
 
       <section className="site-sec" aria-labelledby="chain-title">
@@ -261,6 +248,20 @@ export function LandingPage({ inviteToken }: { inviteToken?: string } = {}) {
             <h3>{t('landing.nots.choiceTitle')}</h3>
             <p>{t('landing.nots.choiceText')}</p>
           </div>
+        </Reveal>
+      </section>
+
+      <section className="site-sec" id="faq" aria-labelledby="faq-title">
+        <Reveal>
+          <h2 id="faq-title">{t('landing.faq.title')}</h2>
+        </Reveal>
+        <Reveal className="site-faq">
+          {FAQ.map((n) => (
+            <details key={n}>
+              <summary>{t(`landing.faq.q${n}`)}</summary>
+              <p>{t(`landing.faq.a${n}`)}</p>
+            </details>
+          ))}
         </Reveal>
       </section>
 

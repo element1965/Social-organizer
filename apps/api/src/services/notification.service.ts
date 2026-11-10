@@ -137,7 +137,7 @@ export async function sendCollectionClosedTg(
   await deliverMany(db, recipientUserIds, () => ({
     key: `col:${collectionId}:closed`,
     kind: 'collection',
-    push: { title: 'Collection closed', body: 'A collection you were notified about has been closed.', url: webAppLink },
+    push: { title: 'Need closed', body: 'A Need you were notified about has been closed.', url: webAppLink },
     telegram: (lang) => ({
       text: `✅ <b>${tg(lang, 'closed')}</b>\n\n${tg(lang, 'from')}: <b>${creator.name}</b>${amountStr ? `\n${tg(lang, 'amount')}: ${amountStr}` : ''}\n\n${tg(lang, 'closedBody')}`,
       replyMarkup: { inline_keyboard: [[{ text: `📱 ${tg(lang, 'view')}`, web_app: { url: webAppLink } }]] },
@@ -167,7 +167,7 @@ export async function sendGoalReachedToCreator(
   await deliver(db, creatorId, {
     key: `goal:${collectionId}:${stamp}`,
     kind: 'response',
-    push: { title: 'Goal reached', body: 'Your collection reached its goal.', url: webAppLink },
+    push: { title: 'Amount reported', body: 'Participation reported in your Need has reached the amount needed.', url: webAppLink },
     telegram: (lang) => {
       const buttons: TgReplyMarkup['inline_keyboard'] = [];
       if (collection.chatLink) buttons.push([{ text: `💬 ${tg(lang, 'open')}`, url: collection.chatLink }]);
@@ -294,7 +294,7 @@ export async function sendResponseDigest(
   const outcome = await deliver(db, collection.creatorId, {
     key: `resp:${collectionId}:${fresh[0]!.id}`,
     kind: 'response',
-    push: { title: 'New responses', body: 'People responded to your collection. Open the app to see them.', url: webAppLink },
+    push: { title: 'New Participation', body: 'People reported Participation in your Need. Open the app to see them.', url: webAppLink },
     telegram: (lang) => ({
       text: `🤝 <b>${tg(lang, 'responsesTitle')}</b>\n\n${tg(lang, 'responsesBody').replace('{{count}}', String(count))}`,
       replyMarkup: { inline_keyboard: [[{ text: `📱 ${tg(lang, 'view')}`, web_app: { url: webAppLink } }]] },
@@ -396,7 +396,7 @@ export async function sendCycleRenewalReminderTg(
   await deliverMany(db, recipientUserIds, (userId) => ({
     key: `cycle:${collectionId}:${collection.cycleNumber}:reminder`,
     kind: 'cycle',
-    push: { title: 'New cycle in 3 days', body: 'A collection you are in (every 28 days) starts a new cycle in 3 days.', url: webAppLink },
+    push: { title: 'New cycle in 3 days', body: 'A Need you take part in (every 28 days) starts a new cycle in 3 days.', url: webAppLink },
     telegram: (lang) => ({
       text: `🔔 <b>${tg(lang, 'renewalReminderTitle')}</b>\n\n${tg(lang, 'renewalReminderBody').replace('{{name}}', names.get(userId) || '').replace('{{creator}}', creator.name)}${cycleDetails(lang, contributions.get(userId), periodStart, periodEnd)}`,
       replyMarkup: { inline_keyboard: [[{ text: `📱 ${tg(lang, 'open')}`, web_app: { url: webAppLink } }]] },
@@ -432,7 +432,7 @@ export async function sendCycleRenewedTg(
   await deliverMany(db, recipientUserIds, (userId) => ({
     key: `cycle:${collectionId}:${collection.cycleNumber}:start`,
     kind: 'cycle',
-    push: { title: 'New cycle started', body: 'A collection you are in (every 28 days) has started a new cycle.', url: webAppLink },
+    push: { title: 'New cycle started', body: 'A Need you take part in (every 28 days) has started a new cycle.', url: webAppLink },
     telegram: (lang) => {
       const buttons: TgReplyMarkup['inline_keyboard'] = [];
       if (collection.chatLink) buttons.push([{ text: `💬 ${tg(lang, 'open')}`, url: collection.chatLink }]);
@@ -466,8 +466,8 @@ async function dispatchNewCollection(
   const amountStr = collection.amount != null ? `${collection.amount} USD` : '';
   const webAppLink = `${WEB_APP_URL}/collection/${collectionId}`;
   const push = type === 'RE_NOTIFY'
-    ? { title: 'Reminder', body: 'A collection in your network still needs support.', url: webAppLink }
-    : { title: 'New collection', body: 'Someone in your network needs support.', url: webAppLink };
+    ? { title: 'Reminder', body: 'A Need in your network is still open.', url: webAppLink }
+    : { title: 'New Need', body: 'Someone in your network has reported a Need.', url: webAppLink };
 
   const outcomes = await deliverMany(db, recipientUserIds, () => ({
     key: `col:${collectionId}:new`, // one message per person per collection, whatever the wave
