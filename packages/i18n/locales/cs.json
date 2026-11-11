@@ -684,12 +684,12 @@
       "deleteAccount": "Smazat účet"
     },
     "meta": {
-      "title": "Social Organizer — pomoc začíná koordinovaným jednáním",
-      "description": "Social Organizer pomáhá účastníkům oznamovat potřeby a dobrovolnou účast. Rozhodnutí činí sami účastníci a pomoc probíhá přímo mezi nimi. Otevřený kód, neziskový projekt."
+      "title": "Social Organizer — síť lidí, které znáte",
+      "description": "Vybudujte si síť lidí, které znáte osobně. Když v ní někdo oznámí potřebu, dozví se o ní přesně tolik lidí, kolik je v ní dolarů, nejdřív ti nejbližší. Účastníci se rozhodují sami a jednají přímo. Otevřený kód, nezisková služba."
     },
     "hero": {
-      "title": "Pomoc začíná koordinovaným jednáním",
-      "lead": "Social Organizer pomáhá účastníkům oznamovat potřeby a dobrovolnou účast. <b>Rozhodnutí činí sami účastníci a pomoc probíhá přímo mezi nimi.</b>",
+      "title": "Nejdřív síť lidí, které znáte",
+      "lead": "Social Organizer začíná vaší sítí: lidmi, které znáte osobně, a lidmi, které znají oni. <b>Když v ní někdo oznámí potřebu, dozví se o ní přesně tolik lidí, kolik je v ní dolarů.</b> Koordinace přichází až potom, přímo mezi účastníky.",
       "factOpen": "Otevřený kód",
       "factNonprofit": "Neziskový",
       "factNoMoney": "Dobrovolná účast",
@@ -700,7 +700,7 @@
       "how": "Zjistěte, jak to funguje",
       "tgAlt": "Raději Telegram?",
       "tgOpen": "Otevřít tam",
-      "sceneAria": "Oznámení o potřebě putuje po podáních ruky, účastníci oznamují účast",
+      "sceneAria": "Síť roste od vás, podání ruky za podáním ruky; potřeba v ní putuje a účastníci oznamují účast",
       "sceneYou": "Vy",
       "sceneAsk": "potřeba · {{amount}}",
       "sceneDone": "účast · {{amount}}",
@@ -708,23 +708,24 @@
       "statPeople_few": "{{n}} lidé v jedné síti",
       "statPeople_many": "{{n}} člověka v jedné síti",
       "statPeople_one": "{{n}} člověk v jedné síti",
-      "statPeople_other": "{{n}} lidí v jedné síti"
+      "statPeople_other": "{{n}} lidí v jedné síti",
+      "sceneNet": "Vaše síť · {n}"
     },
     "steps": {
       "title": "Jak to funguje",
-      "lead": "Čtyři kroky. V každém rozhoduje sám účastník.",
-      "s1Title": "Účastník oznámí potřebu",
-      "s1Text": "Potřeba (Need) je první ze dvou signálů. Říká, <b>kolik je potřeba a kde se spojit</b>: částka a odkaz na chat.",
-      "s2Title": "Ostatní se dozvědí a rozhodnou se sami",
-      "s2Text": "Oznámení putuje po podáních ruky: nejdřív k lidem, které účastník zná osobně, pak k jejich známým. <b>Každý se sám rozhoduje, zda může pomoci.</b>",
-      "s3Title": "Ti, kdo chtějí, oznámí účast",
-      "s3Text": "Účast (Participation) je druhý signál: <b>dobrovolný záměr</b>, ne platba.",
-      "s4Title": "Kroky se dějí přímo, mimo Social Organizer",
-      "s4Text": "Co a jak udělat, účastníci domlouvají a provádějí <b>přímo mezi sebou</b>, ve svém chatu."
+      "lead": "Na prvním místě je síť. Vše ostatní se odehrává uvnitř ní.",
+      "s1Title": "Budujete svou síť",
+      "s1Text": "Přidejte lidi, které znáte osobně, odkazem nebo QR kódem. <b>Každý z nich potvrdí, že se znáte.</b>",
+      "s2Title": "Sahá dál, než vidíte",
+      "s2Text": "Přes své lidi se dostanete k jejich lidem: 2. a 3. podání ruky. <b>Vidíte jen svá tři podání ruky, nikdy celou síť.</b>",
+      "s3Title": "Potřeba se dostane k tolika lidem, kolik dolarů uvádí",
+      "s3Text": "Potřeba na {{amount}} se dostane přesně k {{n}} lidem, nejdřív k nejbližším podle podání ruky. <b>Pro každého z nich je to jedna příležitost zapojit se</b> a jakmile je částka pokryta, potřeba se uzavře.",
+      "s4Title": "Koordinace přichází potom",
+      "s4Text": "Ti, kdo chtějí, oznámí účast a záměry se sčítají jako při crowdfundingu. <b>Co a jak udělat, domlouvají účastníci přímo mezi sebou</b>, ve svém chatu."
     },
     "chain": {
       "title": "Oznámení putuje po podáních ruky",
-      "lead": "Potřebu Marie vidíte, protože ji zná Oleg a Olega znáte vy. Na oznámení nemusíte odpovídat. <b>Žádné závazky.</b>"
+      "lead": "Potřebu Marie vidíte, protože ji zná Oleg a Olega znáte vy. Dostane se jen k tolika lidem, kolik dolarů uvádí, nejdřív k nejbližším. Můžete ji nechat bez odpovědi. <b>Žádné závazky.</b>"
     },
     "nots": {
       "title": "Co Social Organizer nedělá",
@@ -754,13 +755,13 @@
       "p2Text": "Každý se rozhoduje sám, bez organizátora a bez hodnocení. Za odmítnutí nehrozí žádné sankce.",
       "p3Title": "Přímé spojení účastníků",
       "p3Text": "Dohody a kroky zůstávají mezi lidmi, které spojují potvrzené známosti.",
-      "p4Title": "Minimální koordinace",
-      "p4Text": "Dva signály a oznámení o nich. Bez centralizovaného rozdělování."
+      "p4Title": "Na prvním místě je síť",
+      "p4Text": "Signály putují jen přes potvrzené známosti. Žádná společná pokladna, žádný provozovatel, žádné centrální rozdělování."
     },
     "faq": {
       "title": "Stručně o hlavním",
       "q1": "Co Social Organizer dělá?",
-      "a1": "Zaznamenává dva signály — potřebu (Need) a účast (Participation) — a zajišťuje související zpětnou vazbu. Nejedná za účastníky.",
+      "a1": "Pomáhá vám vybudovat síť lidí, které znáte osobně, a nechává jí putovat dva signály, potřebu a účast. Nejedná za účastníky.",
       "q2": "Musím se zapojit?",
       "a2": "Ne. Účast je dobrovolná a každý se rozhoduje samostatně.",
       "q3": "Zaručuje služba pomoc?",
@@ -770,31 +771,19 @@
       "q5": "Předávají účastníci peníze?",
       "a5": "Mohou. V oznámení o potřebě účastník uvádí částku a v oznámení o účasti, kolik je ochoten předat. Pokud účastníci peníze předávají, dělají to sami a přímo, podle své dohody. Social Organizer neověřuje, zda k předání došlo.",
       "q6": "V čem jsou uvedeny částky?",
-      "a6": "V amerických dolarech: je to společná účetní jednotka, aby byly částky srovnatelné. V jaké měně a jakým způsobem jednat, rozhodují účastníci sami."
+      "a6": "V amerických dolarech: je to společná účetní jednotka, aby byly částky srovnatelné. V jaké měně a jakým způsobem jednat, rozhodují účastníci sami.",
+      "q7": "Čím se liší od online platforem vzájemné pomoci?",
+      "a7": "Čínské platformy vzájemné pomoci měly jednoho provozovatele, vybíraly od členů peníze a slibovaly výplaty jako pojištění; v roce 2021 byly zavřeny. Social Organizer nemá provozovatele, pokladnu ani výplaty: jen lidi, kteří se znají, dva signály a dobrovolnou účast."
     }
   },
   "how": {
     "meta": {
       "title": "Jak to funguje — Social Organizer",
-      "description": "Dva signály — potřeba a účast: jak oznámení putuje po podáních ruky a proč se kroky dějí přímo mezi účastníky."
+      "description": "Nejdřív síť lidí, které znáte, potom potřeba, která se dostane k tolika lidem, kolik dolarů uvádí, potom přímá koordinace. A čím se liší od čínských online platforem vzájemné pomoci."
     },
     "hero": {
-      "title": "Dva signály a přímé spojení",
-      "lead": "Social Organizer má jen dva signály. <b>Potřeba</b> (Need) je oznámení účastníka o tom, co potřebuje. <b>Účast</b> (Participation) je oznámení jiného účastníka o jeho vlastní dobrovolné účasti. Vše ostatní si lidé domlouvají a dělají sami, přímo."
-    },
-    "table": {
-      "title": "Historický příklad: hui",
-      "lead": "Na jihu Číny šest známých jednou za měsíc složí podíl a jeden z nich si podíly toho měsíce vezme. Klepněte na měsíc nebo na jméno.",
-      "monthsAria": "Měsíc kruhu",
-      "says": [
-        "<b>Lin</b> si bere podíly za leden. Pět přátel dalo po podílu.",
-        "<b>Chen</b> si bere podíly za únor. Lin dává podíl taky.",
-        "<b>Mei</b> si bere podíly za březen. Chen dává podíl taky.",
-        "<b>Guo</b> si bere podíly za duben. Mei dává podíl taky.",
-        "<b>Sun</b> si bere podíly za květen. Guo dává podíl taky.",
-        "<b>Huang</b> si bere podíly za červen. Kruh se uzavřel: každý dostal jednou."
-      ],
-      "note": "Je to příklad dobrovolné pomoci mezi známými, ne uspořádání Social Organizer: nemá společnou kasu, pořadník ani povinné podíly."
+      "title": "Nejdřív síť, potom signály",
+      "lead": "Social Organizer začíná sítí lidí, které znáte osobně. Putují v ní dva signály. <b>Potřeba</b> (Need) je oznámení účastníka o tom, co potřebuje. <b>Účast</b> (Participation) je oznámení jiného účastníka o jeho vlastní dobrovolné účasti. Vše ostatní si lidé domlouvají a dělají sami, přímo."
     },
     "orbit": {
       "title": "Jak daleko oznámení dojde",
@@ -814,7 +803,7 @@
     },
     "chain": {
       "title": "Cesta přes známé",
-      "lead": "Vidíte jen potřeby, ke kterým vede cesta přes lidi, které znáte. Klepněte na člověka.",
+      "lead": "Potřeba se dostane k tolika lidem, kolik dolarů uvádí, nejdřív k nejbližším podle podání ruky. Vidíte jen potřeby, ke kterým vede cesta přes lidi, které znáte. Klepněte na člověka.",
       "says": [
         "<b>Maria Koval</b> oznamuje potřebu. Vy ji neznáte.",
         "<b>Oleg</b>, váš bratr, zná Marii. Proto její oznámení dostane on.",
@@ -822,8 +811,8 @@
       ]
     },
     "join": {
-      "title": "Nový člověk",
-      "lead": "Do kruhu se člověk dostane jen přes někoho, koho zná, a až ten to potvrdí.",
+      "title": "Začíná to člověkem, kterého znáte",
+      "lead": "Síť roste jen přes lidi, kteří se znají: někdo se připojí přes váš odkaz a vy známost potvrdíte.",
       "says": [
         "Katya otevře váš odkaz a přihlásí se. <b>To ještě není spojení:</b> přijde vám push.",
         "Potvrdíte: ano, známe se. <b>Teď je Katya vaše 1. podání ruky.</b>"
@@ -917,6 +906,46 @@
         "takes": "bere si to {{name}}",
         "aria": "Stůl hui"
       }
+    },
+    "compare": {
+      "title": "Nejbližší příklad: čínská online vzájemná pomoc",
+      "lead": "V letech 2018 až 2021 sdružovaly čínské online platformy vzájemné pomoci stovky milionů členů: největší z nich, Xianghubao, jich měla přes 100 milionů. <b>Členové si navzájem hradili náklady na vážné nemoci, každý jen pár dolarů ročně.</b> V roce 2021 úřady zavřely celé odvětví: jeden provozovatel fakticky provozoval pojištění.",
+      "note": "Social Organizer si nechává myšlenku, že mnoho lidí nese každý malou část, a vypouští to, co tyto platformy dělalo křehkými.",
+      "caption": "Čínské online platformy vzájemné pomoci ve srovnání se Social Organizer",
+      "them": "Online platformy vzájemné pomoci",
+      "us": "Social Organizer",
+      "rows": [
+        [
+          "Kdo to provozuje",
+          "Jeden provozovatel",
+          "Nikdo: síť lidí, kteří se znají"
+        ],
+        [
+          "Peníze",
+          "Vybírá je od členů platforma",
+          "Neprocházejí nikdy službou"
+        ],
+        [
+          "Co se slibuje",
+          "Výplata jako u pojištění",
+          "Nic: účast je dobrovolná"
+        ],
+        [
+          "Kdo se může přidat",
+          "Každý, kdo zaplatí",
+          "Jen přes potvrzenou známost"
+        ],
+        [
+          "Kdo se o žádosti dozví",
+          "Všichni na platformě",
+          "Tolik lidí, kolik dolarů potřeba uvádí, nejdřív nejbližší"
+        ],
+        [
+          "Co lze zavřít",
+          "Platformu, a s ní všechno",
+          "Není tu pokladna ani výplaty, které by šlo zavřít"
+        ]
+      ]
     }
   },
   "legal": {

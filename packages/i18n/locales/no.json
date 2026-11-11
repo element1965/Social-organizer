@@ -676,12 +676,12 @@
       "deleteAccount": "Slett konto"
     },
     "meta": {
-      "title": "Social Organizer — bistand begynner med samordnede handlinger",
-      "description": "Social Organizer hjelper deltakere å melde om behov og frivillig deltakelse. Deltakerne tar selv beslutningene, og bistanden skjer direkte mellom dem. Åpen kildekode, et ideelt prosjekt."
+      "title": "Social Organizer — et nettverk av folk du kjenner",
+      "description": "Bygg et nettverk av folk du kjenner personlig. Når noen i det melder om et behov, får akkurat så mange vite om det som beløpet i dollar tilsier, de nærmeste først. Deltakerne bestemmer selv og handler direkte. Åpen kildekode, et ideelt prosjekt."
     },
     "hero": {
-      "title": "Bistand begynner med samordnede handlinger",
-      "lead": "Social Organizer hjelper deltakere å melde om behov og frivillig deltakelse. <b>Deltakerne tar selv beslutningene, og bistanden skjer direkte mellom dem.</b>",
+      "title": "Først et nettverk av folk du kjenner",
+      "lead": "Social Organizer begynner med nettverket ditt: folk du kjenner personlig, og folkene de kjenner. <b>Når noen i det melder om et behov, får akkurat så mange vite om det som beløpet i dollar tilsier.</b> Koordineringen kommer etterpå, direkte mellom deltakerne.",
       "factOpen": "Åpen kildekode",
       "factNonprofit": "Ideelt",
       "factNoMoney": "Frivillig deltakelse",
@@ -692,29 +692,30 @@
       "how": "Slik fungerer det",
       "tgAlt": "Foretrekker du Telegram?",
       "tgOpen": "Åpne den der",
-      "sceneAria": "Et behov går via håndtrykk, deltakerne melder om deltakelse",
+      "sceneAria": "Et nettverk vokser ut fra deg, håndtrykk for håndtrykk; et behov går gjennom det og deltakere melder om deltakelse",
       "sceneYou": "Du",
       "sceneAsk": "behov · {{amount}}",
       "sceneDone": "deltakelse · {{amount}}",
       "statDepth": "3 håndtrykk",
       "statPeople_one": "{{n}} person i ett nettverk",
-      "statPeople_other": "{{n}} personer i ett nettverk"
+      "statPeople_other": "{{n}} personer i ett nettverk",
+      "sceneNet": "Ditt nettverk · {n}"
     },
     "steps": {
       "title": "Slik fungerer det",
-      "lead": "Fire steg. I hvert av dem bestemmer deltakeren selv.",
-      "s1Title": "En deltaker melder om et behov",
-      "s1Text": "Et behov (Need) er det første av to signaler. Det sier <b>hvor mye som trengs og hvor man kan ta kontakt</b>: et beløp og en lenke til en chat.",
-      "s2Title": "Andre får vite det og bestemmer selv",
-      "s2Text": "Meldingen går via håndtrykk: først til personene deltakeren kjenner personlig, deretter til deres bekjente. <b>Alle bestemmer selv om de kan bistå.</b>",
-      "s3Title": "De som ønsker det, melder om deltakelse",
-      "s3Text": "Deltakelse (Participation) er det andre signalet: <b>en frivillig intensjon</b>, ikke en betaling.",
-      "s4Title": "Handlinger skjer direkte, utenfor Social Organizer",
-      "s4Text": "Hva som skal gjøres og hvordan, avtaler og utfører deltakerne <b>direkte med hverandre</b>, i sin egen chat."
+      "lead": "Nettverket kommer først. Alt annet skjer inni det.",
+      "s1Title": "Du bygger nettverket ditt",
+      "s1Text": "Legg til folk du kjenner personlig, med en lenke eller en QR-kode. <b>Hver av dem bekrefter at dere kjenner hverandre.</b>",
+      "s2Title": "Det rekker lenger enn du ser",
+      "s2Text": "Gjennom folkene dine når du folkene deres: det andre og tredje håndtrykket. <b>Du ser bare dine egne tre håndtrykk, aldri hele nettverket.</b>",
+      "s3Title": "Et behov når like mange som beløpet i dollar",
+      "s3Text": "Et behov på {{amount}} når akkurat {{n}} personer, de nærmeste håndtrykkene først. <b>For hver av dem er det én mulighet til å bidra</b>, og når beløpet er dekket, lukkes behovet.",
+      "s4Title": "Koordineringen kommer etterpå",
+      "s4Text": "De som ønsker det, melder om deltakelse, og intensjonene legges sammen, som i crowdfunding. <b>Hva som skal gjøres og hvordan, avtaler deltakerne direkte</b>, i sin egen chat."
     },
     "chain": {
       "title": "Et behov går via håndtrykk",
-      "lead": "Du ser behovet til Maria fordi Oleg kjenner henne, og du kjenner Oleg. Du kan la meldingen stå ubesvart. <b>Ingen forpliktelser.</b>"
+      "lead": "Du ser behovet til Maria fordi Oleg kjenner henne, og du kjenner Oleg. Det når bare like mange som beløpet i dollar, de nærmeste først. Du kan la det stå ubesvart. <b>Ingen forpliktelser.</b>"
     },
     "nots": {
       "title": "Hva Social Organizer ikke gjør",
@@ -744,13 +745,13 @@
       "p2Text": "Alle bestemmer selv, uten organisator og uten vurderinger. Å avslå gir ingen sanksjoner.",
       "p3Title": "Direkte kontakt mellom deltakerne",
       "p3Text": "Avtaler og handlinger forblir mellom personer som er knyttet sammen av bekreftede bekjentskaper.",
-      "p4Title": "Minimal koordinering",
-      "p4Text": "To signaler og varsler om dem. Uten sentralisert fordeling."
+      "p4Title": "Nettverket kommer først",
+      "p4Text": "Signaler går bare gjennom bekreftede bekjentskaper. Ingen felles pott, ingen operatør, ingen sentralisert fordeling."
     },
     "faq": {
       "title": "Kort om det viktigste",
       "q1": "Hva gjør Social Organizer?",
-      "a1": "Registrerer to signaler — behov (Need) og deltakelse (Participation) — og gir den tilbakemeldingen som hører til. Tjenesten handler ikke på vegne av deltakerne.",
+      "a1": "Den hjelper deg å bygge et nettverk av folk du kjenner personlig, og lar to signaler, behov (Need) og deltakelse (Participation), gå gjennom det. Den handler ikke på vegne av deltakerne.",
       "q2": "Må jeg delta?",
       "a2": "Nei. Deltakelse er frivillig, og alle tar sin egen beslutning.",
       "q3": "Garanterer tjenesten bistand?",
@@ -760,31 +761,19 @@
       "q5": "Overleverer deltakerne penger?",
       "a5": "Det kan de. I meldingen om et behov oppgir deltakeren et beløp, og i meldingen om deltakelse hvor mye vedkommende er klar til å overlevere. Hvis deltakerne overleverer penger, gjør de det selv og direkte, etter egen avtale. Social Organizer kontrollerer ikke om en overlevering har funnet sted.",
       "q6": "Hvilken valuta er beløpene oppgitt i?",
-      "a6": "I amerikanske dollar: en felles regneenhet, slik at beløp kan sammenlignes. Hvilken valuta og hvilken måte som brukes, avgjør deltakerne selv."
+      "a6": "I amerikanske dollar: en felles regneenhet, slik at beløp kan sammenlignes. Hvilken valuta og hvilken måte som brukes, avgjør deltakerne selv.",
+      "q7": "Hvordan skiller den seg fra nettbaserte gjensidige hjelpeplattformer?",
+      "a7": "Kinas gjensidige hjelpeplattformer hadde én operatør, tok betalt av medlemmene og lovet utbetalinger som en forsikring, og i 2021 ble de stengt. Social Organizer har ingen operatør, ingen pott og ingen utbetalinger: bare folk som kjenner hverandre, to signaler og frivillig deltakelse."
     }
   },
   "how": {
     "meta": {
       "title": "Slik fungerer det — Social Organizer",
-      "description": "To signaler — behov og deltakelse: hvordan en melding går via håndtrykk, og hvorfor handlinger skjer direkte mellom deltakerne."
+      "description": "Først et nettverk av folk du kjenner, så et behov som når like mange som beløpet i dollar, så direkte koordinering. Og hvordan det skiller seg fra Kinas nettbaserte gjensidige hjelpeplattformer."
     },
     "hero": {
-      "title": "To signaler og direkte kontakt",
-      "lead": "I Social Organizer finnes det bare to signaler. Et <b>behov</b> (Need) er en deltakers melding om hva vedkommende trenger. En <b>deltakelse</b> (Participation) er en annen deltakers melding om sin egen frivillige deltakelse. Alt annet avtaler og gjør folk selv, direkte."
-    },
-    "table": {
-      "title": "Et historisk eksempel: hui",
-      "lead": "I Sør-Kina legger seks bekjente inn en andel én gang i måneden, og én av dem tar månedens andeler. Trykk på en måned eller et navn.",
-      "monthsAria": "Kretsens måned",
-      "says": [
-        "<b>Lin</b> tar andelene for januar. Fem venner la inn en andel hver.",
-        "<b>Chen</b> tar andelene for februar. Lin legger inn en andel også.",
-        "<b>Mei</b> tar andelene for mars. Chen legger inn en andel også.",
-        "<b>Guo</b> tar andelene for april. Mei legger inn en andel også.",
-        "<b>Sun</b> tar andelene for mai. Guo legger inn en andel også.",
-        "<b>Huang</b> tar andelene for juni. Kretsen er fullført: alle fikk én gang."
-      ],
-      "note": "Dette er et eksempel på frivillig bistand mellom bekjente, ikke hvordan Social Organizer er bygd opp: der finnes det ingen felles kasse, ingen kø og ingen obligatoriske andeler."
+      "title": "Først nettverket, så signalene",
+      "lead": "Social Organizer begynner med et nettverk av folk du kjenner personlig. To signaler går gjennom det. Et <b>behov</b> (Need) er en deltakers melding om hva vedkommende trenger. En <b>deltakelse</b> (Participation) er en annen deltakers melding om sin egen frivillige deltakelse. Alt annet avtaler og gjør folk selv, direkte."
     },
     "orbit": {
       "title": "Hvor langt en melding går",
@@ -804,7 +793,7 @@
     },
     "chain": {
       "title": "En vei gjennom personer du kjenner",
-      "lead": "Du ser bare behov som har en vei til deg gjennom personer du kjenner. Trykk på en person.",
+      "lead": "Et behov når like mange som beløpet i dollar, de nærmeste håndtrykkene først. Du ser bare behov som har en vei til deg gjennom folk du kjenner. Trykk på en person.",
       "says": [
         "<b>Maria Koval</b> melder om et behov. Du kjenner henne ikke.",
         "<b>Oleg</b>, broren din, kjenner Maria. Derfor får han meldingen hennes.",
@@ -812,8 +801,8 @@
       ]
     },
     "join": {
-      "title": "En ny person",
-      "lead": "Personer kommer inn i kretsen bare gjennom noen de kjenner, og bare etter at den personen bekrefter.",
+      "title": "Det begynner med en person du kjenner",
+      "lead": "Nettverket vokser bare gjennom folk som kjenner hverandre: noen blir med via lenken din, og du bekrefter bekjentskapet.",
       "says": [
         "Katya åpner lenken din og logger inn. <b>Dette er ikke en forbindelse ennå:</b> du får et push.",
         "Du bekrefter: ja, vi kjenner hverandre. <b>Nå er Katya ditt 1. håndtrykk.</b>"
@@ -907,6 +896,46 @@
         "takes": "{{name}} tar dem",
         "aria": "Hui-bord"
       }
+    },
+    "compare": {
+      "title": "Det nærmeste eksemplet: Kinas nettbaserte gjensidige hjelp",
+      "lead": "Fra 2018 til 2021 samlet Kinas nettbaserte gjensidige hjelpeplattformer hundrevis av millioner medlemmer: den største, Xianghubao, hadde over 100 millioner. <b>Medlemmene delte kostnadene ved hverandres alvorlige sykdom, noen få dollar i året hver.</b> I 2021 stengte myndighetene hele sektoren: én operatør drev i praksis en forsikring.",
+      "note": "Social Organizer beholder ideen, mange som hver tar en liten del, og dropper det som gjorde disse plattformene skjøre.",
+      "caption": "Kinas nettbaserte gjensidige hjelpeplattformer sammenlignet med Social Organizer",
+      "them": "Nettbaserte gjensidige hjelpeplattformer",
+      "us": "Social Organizer",
+      "rows": [
+        [
+          "Hvem som driver det",
+          "Én operatør",
+          "Ingen: et nettverk av folk som kjenner hverandre"
+        ],
+        [
+          "Penger",
+          "Kreves inn av plattformen fra medlemmene",
+          "Går aldri gjennom tjenesten"
+        ],
+        [
+          "Hva som er lovet",
+          "En utbetaling, som en forsikring",
+          "Ingenting: deltakelse er frivillig"
+        ],
+        [
+          "Hvem som kan bli med",
+          "Alle som betaler",
+          "Bare gjennom et bekreftet bekjentskap"
+        ],
+        [
+          "Hvem som får vite om en forespørsel",
+          "Alle på plattformen",
+          "Like mange som beløpet i dollar, de nærmeste først"
+        ],
+        [
+          "Hva som kan stenges",
+          "Plattformen, og dermed alt",
+          "Det finnes ingen pott og ingen utbetalinger å stenge"
+        ]
+      ]
     }
   },
   "legal": {

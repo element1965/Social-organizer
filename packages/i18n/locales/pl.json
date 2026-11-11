@@ -684,12 +684,12 @@
       "deleteAccount": "Usuń konto"
     },
     "meta": {
-      "title": "Social Organizer — wsparcie zaczyna się od uzgodnionych działań",
-      "description": "Social Organizer pomaga uczestnikom zgłaszać potrzeby i dobrowolny udział. Decyzje podejmują sami uczestnicy, a wsparcie odbywa się bezpośrednio między nimi. Otwarty kod, projekt non-profit."
+      "title": "Social Organizer — sieć ludzi, których znasz",
+      "description": "Zbuduj sieć ludzi, których znasz osobiście. Gdy ktoś z niej zgłosi potrzebę, dowie się o niej dokładnie tyle osób, ile dolarów w niej wskazano, zaczynając od najbliższych. Uczestnicy decydują sami i działają bezpośrednio. Otwarty kod, projekt non-profit."
     },
     "hero": {
-      "title": "Wsparcie zaczyna się od uzgodnionych działań",
-      "lead": "Social Organizer pomaga uczestnikom zgłaszać potrzeby i dobrowolny udział. <b>Decyzje podejmują sami uczestnicy, a wsparcie odbywa się bezpośrednio między nimi.</b>",
+      "title": "Najpierw sieć ludzi, których znasz",
+      "lead": "Social Organizer zaczyna się od Twojej sieci: ludzi, których znasz osobiście, i ludzi, których znają oni. <b>Gdy ktoś z niej zgłosi potrzebę, dowie się o niej dokładnie tyle osób, ile dolarów w niej wskazano.</b> Koordynacja przychodzi potem, bezpośrednio między uczestnikami.",
       "factOpen": "Otwarty kod",
       "factNonprofit": "Non-profit",
       "factNoMoney": "Dobrowolny udział",
@@ -700,7 +700,7 @@
       "how": "Zobacz, jak to działa",
       "tgAlt": "Wygodniej w Telegramie?",
       "tgOpen": "Otwórz tam",
-      "sceneAria": "Wiadomość o potrzebie idzie po uściskach dłoni, uczestnicy zgłaszają udział",
+      "sceneAria": "Sieć rośnie od Ciebie, uścisk dłoni po uścisku; potrzeba wędruje po niej, a uczestnicy zgłaszają udział",
       "sceneYou": "Ty",
       "sceneAsk": "potrzeba · {{amount}}",
       "sceneDone": "udział · {{amount}}",
@@ -708,23 +708,24 @@
       "statPeople_few": "{{n}} osoby w jednej sieci",
       "statPeople_many": "{{n}} osób w jednej sieci",
       "statPeople_one": "{{n}} osoba w jednej sieci",
-      "statPeople_other": "{{n}} osoby w jednej sieci"
+      "statPeople_other": "{{n}} osoby w jednej sieci",
+      "sceneNet": "Twoja sieć · {n}"
     },
     "steps": {
       "title": "Jak to działa",
-      "lead": "Cztery kroki. Na każdym decyzję podejmuje sam uczestnik.",
-      "s1Title": "Uczestnik zgłasza potrzebę",
-      "s1Text": "Potrzeba (Need) to pierwszy z dwóch sygnałów. Mówi, <b>ile jest potrzebne i gdzie się skontaktować</b>: kwota i link do czatu.",
-      "s2Title": "Inni się dowiadują i decydują sami",
-      "s2Text": "Wiadomość idzie po uściskach dłoni: najpierw do osób, które uczestnik zna osobiście, potem do ich znajomych. <b>Każdy sam decyduje, czy może wesprzeć.</b>",
-      "s3Title": "Chętni zgłaszają udział",
-      "s3Text": "Udział (Participation) to drugi sygnał: <b>dobrowolny zamiar</b>, a nie płatność.",
-      "s4Title": "Działania — bezpośrednio, poza Social Organizer",
-      "s4Text": "Co i jak zrobić, uczestnicy ustalają i wykonują <b>bezpośrednio ze sobą</b>, na własnym czacie."
+      "lead": "Najpierw sieć. Wszystko inne dzieje się w niej.",
+      "s1Title": "Budujesz swoją sieć",
+      "s1Text": "Dodawaj osoby, które znasz osobiście, przez link lub kod QR. <b>Każda z nich potwierdza, że się znacie.</b>",
+      "s2Title": "Sięga dalej, niż widzisz",
+      "s2Text": "Przez swoich ludzi docierasz do ich ludzi: to drugi i trzeci uścisk dłoni. <b>Widzisz tylko własne trzy uściski dłoni, nigdy całą sieć.</b>",
+      "s3Title": "Potrzeba dociera do tylu osób, ile dolarów wskazuje",
+      "s3Text": "Potrzeba na {{amount}} dociera dokładnie do {{n}} osób, zaczynając od najbliższych uściskami dłoni. <b>Dla każdej z nich to jedna szansa, by wziąć udział</b>, a gdy kwota zostanie pokryta, potrzeba się zamyka.",
+      "s4Title": "Koordynacja przychodzi potem",
+      "s4Text": "Chętni zgłaszają udział, a zamiary się sumują, jak w crowdfundingu. <b>Co i jak zrobić, uczestnicy ustalają bezpośrednio</b>, na własnym czacie."
     },
     "chain": {
       "title": "Wiadomość idzie po uściskach dłoni",
-      "lead": "Widzisz potrzebę Marii, bo zna ją Oleg, a Ty znasz Olega. Na wiadomość możesz nie odpowiadać. <b>Żadnych zobowiązań.</b>"
+      "lead": "Widzisz potrzebę Marii, bo zna ją Oleg, a Ty znasz Olega. Dociera tylko do tylu osób, ile dolarów wskazuje, zaczynając od najbliższych. Możesz nie odpowiadać. <b>Żadnych zobowiązań.</b>"
     },
     "nots": {
       "title": "Czego Social Organizer nie robi",
@@ -754,13 +755,13 @@
       "p2Text": "Każdy decyduje sam, bez organizatora i bez ocen. Za odmowę nie ma sankcji.",
       "p3Title": "Bezpośredni kontakt uczestników",
       "p3Text": "Ustalenia i działania toczą się między osobami powiązanymi potwierdzoną znajomością.",
-      "p4Title": "Minimalna koordynacja",
-      "p4Text": "Dwa sygnały i powiadomienia o nich. Bez scentralizowanego podziału."
+      "p4Title": "Najpierw sieć",
+      "p4Text": "Sygnały idą tylko przez potwierdzone znajomości. Bez wspólnej puli, bez operatora, bez scentralizowanego podziału."
     },
     "faq": {
       "title": "Najważniejsze w skrócie",
       "q1": "Co robi Social Organizer?",
-      "a1": "Rejestruje dwa sygnały — potrzebę (Need) i udział (Participation) — i zapewnia powiązane z nimi informacje zwrotne. Nie wykonuje działań za uczestników.",
+      "a1": "Pomaga zbudować sieć ludzi, których znasz osobiście, i pozwala przesyłać nią dwa sygnały — potrzebę (Need) i udział (Participation) —. Nie działa w imieniu uczestników.",
       "q2": "Czy muszę brać udział?",
       "a2": "Nie. Udział jest dobrowolny, a każdy podejmuje decyzję samodzielnie.",
       "q3": "Czy serwis gwarantuje wsparcie?",
@@ -770,31 +771,19 @@
       "q5": "Czy uczestnicy przekazują pieniądze?",
       "a5": "Mogą. W zgłoszeniu potrzeby uczestnik podaje kwotę, a w zgłoszeniu udziału — ile jest gotów przekazać. Jeśli uczestnicy przekazują pieniądze, robią to sami i bezpośrednio, według własnych ustaleń. Social Organizer nie sprawdza, czy przekaz się odbył.",
       "q6": "W czym podane są kwoty?",
-      "a6": "W dolarach amerykańskich: to wspólna jednostka rozliczeniowa, aby kwoty były porównywalne. W jakiej walucie i w jaki sposób działać, uczestnicy decydują sami."
+      "a6": "W dolarach amerykańskich: to wspólna jednostka rozliczeniowa, aby kwoty były porównywalne. W jakiej walucie i w jaki sposób działać, uczestnicy decydują sami.",
+      "q7": "Czym różni się od internetowych platform wzajemnej pomocy?",
+      "a7": "Chińskie platformy wzajemnej pomocy miały jednego operatora, pobierały opłaty od członków i obiecywały wypłaty jak w ubezpieczeniu, a w 2021 roku zostały zamknięte. Social Organizer nie ma operatora, puli ani wypłat: są tylko ludzie, którzy się znają, dwa sygnały i dobrowolny udział."
     }
   },
   "how": {
     "meta": {
       "title": "Jak to działa — Social Organizer",
-      "description": "Dwa sygnały — potrzeba i udział: jak wiadomość idzie po uściskach dłoni i dlaczego działania odbywają się bezpośrednio między uczestnikami."
+      "description": "Najpierw sieć ludzi, których znasz, potem potrzeba, która dociera do tylu osób, ile dolarów wskazuje, potem bezpośrednia koordynacja. I czym różni się od chińskich internetowych platform wzajemnej pomocy."
     },
     "hero": {
-      "title": "Dwa sygnały i bezpośredni kontakt",
-      "lead": "W Social Organizer są tylko dwa sygnały. <b>Potrzeba</b> (Need) to wiadomość uczestnika o tym, czego potrzebuje. <b>Udział</b> (Participation) to wiadomość innego uczestnika o jego własnym dobrowolnym udziale. Całą resztę ludzie ustalają i robią sami, bezpośrednio."
-    },
-    "table": {
-      "title": "Przykład historyczny: hui",
-      "lead": "Na południu Chin sześcioro znajomych raz w miesiącu wnosi swoje udziały, a jedna osoba zabiera udziały z danego miesiąca. Stuknij miesiąc albo imię.",
-      "monthsAria": "Miesiąc kręgu",
-      "says": [
-        "<b>Lin</b> zabiera udziały stycznia. Pięcioro znajomych włożyło po udziale.",
-        "<b>Chen</b> zabiera udziały lutego. Lin też wkłada udział.",
-        "<b>Mei</b> zabiera udziały marca. Chen też wkłada udział.",
-        "<b>Guo</b> zabiera udziały kwietnia. Mei też wkłada udział.",
-        "<b>Sun</b> zabiera udziały maja. Guo też wkłada udział.",
-        "<b>Huang</b> zabiera udziały czerwca. Krąg się zamknął: każdy dostał raz."
-      ],
-      "note": "To przykład dobrowolnego wsparcia między znajomymi, a nie budowa Social Organizer: nie ma w nim wspólnej kasy, kolejki ani obowiązkowych udziałów."
+      "title": "Najpierw sieć, potem sygnały",
+      "lead": "Social Organizer zaczyna się od sieci ludzi, których znasz osobiście. Przechodzą przez nią dwa sygnały. <b>Potrzeba</b> (Need) to wiadomość uczestnika o tym, czego potrzebuje. <b>Udział</b> (Participation) to wiadomość innego uczestnika o jego własnym dobrowolnym udziale. Całą resztę ludzie ustalają i robią sami, bezpośrednio."
     },
     "orbit": {
       "title": "Jak daleko idzie wiadomość",
@@ -814,7 +803,7 @@
     },
     "chain": {
       "title": "Droga przez znajomych",
-      "lead": "Widzisz tylko te potrzeby, do których prowadzi droga przez osoby, które znasz. Stuknij osobę.",
+      "lead": "Potrzeba dociera do tylu osób, ile dolarów wskazuje, zaczynając od najbliższych uściskami dłoni. Widzisz tylko potrzeby, które mają do Ciebie drogę przez ludzi, których znasz. Dotknij osoby.",
       "says": [
         "<b>Maria Koval</b> zgłasza potrzebę. Nie znasz jej.",
         "<b>Oleg</b>, Twój brat, zna Marię. Dlatego to on dostaje jej wiadomość.",
@@ -822,8 +811,8 @@
       ]
     },
     "join": {
-      "title": "Nowa osoba",
-      "lead": "Do kręgu wchodzi się tylko przez kogoś znajomego i dopiero po jego potwierdzeniu.",
+      "title": "Zaczyna się od osoby, którą znasz",
+      "lead": "Sieć rośnie tylko przez ludzi, którzy się znają: ktoś dołącza z Twojego linku, a Ty potwierdzasz znajomość.",
       "says": [
         "Katya otwiera Twój link i się loguje. <b>To jeszcze nie połączenie:</b> dostajesz powiadomienie push.",
         "Potwierdzasz: tak, znamy się. <b>Teraz Katya jest Twoim 1. uściskiem dłoni.</b>"
@@ -917,6 +906,46 @@
         "takes": "zabiera {{name}}",
         "aria": "Stół hui"
       }
+    },
+    "compare": {
+      "title": "Najbliższy przykład: chińska internetowa wzajemna pomoc",
+      "lead": "W latach 2018–2021 chińskie internetowe platformy wzajemnej pomocy zgromadziły setki milionów członków: największa, Xianghubao, miała ich ponad 100 milionów. <b>Członkowie dzielili się kosztami poważnej choroby innych, po kilka dolarów rocznie każdy.</b> W 2021 roku regulatorzy zamknęli cały sektor: jeden operator prowadził w praktyce ubezpieczenie.",
+      "note": "Social Organizer zachowuje ideę, że wielu ludzi bierze na siebie po małej części, i odrzuca to, co czyniło te platformy kruchymi.",
+      "caption": "Chińskie internetowe platformy wzajemnej pomocy w porównaniu z Social Organizer",
+      "them": "Internetowe platformy wzajemnej pomocy",
+      "us": "Social Organizer",
+      "rows": [
+        [
+          "Kto to prowadzi",
+          "Jeden operator",
+          "Nikt: sieć ludzi, którzy się znają"
+        ],
+        [
+          "Pieniądze",
+          "Platforma pobiera je od członków",
+          "Nigdy nie przechodzą przez serwis"
+        ],
+        [
+          "Co jest obiecane",
+          "Wypłata, jak w ubezpieczeniu",
+          "Nic: udział jest dobrowolny"
+        ],
+        [
+          "Kto może dołączyć",
+          "Każdy, kto płaci",
+          "Tylko przez potwierdzoną znajomość"
+        ],
+        [
+          "Kto dowiaduje się o prośbie",
+          "Wszyscy na platformie",
+          "Tyle osób, ile dolarów wskazuje potrzeba, od najbliższych"
+        ],
+        [
+          "Co można zamknąć",
+          "Platformę, a z nią wszystko",
+          "Nie ma puli ani wypłat, które dałoby się zamknąć"
+        ]
+      ]
     }
   },
   "legal": {

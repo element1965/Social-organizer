@@ -676,12 +676,12 @@
       "deleteAccount": "Account verwijderen"
     },
     "meta": {
-      "title": "Social Organizer — hulp begint met afgestemde acties",
-      "description": "Social Organizer helpt deelnemers hun behoeften en vrijwillige deelname te melden. De deelnemers nemen zelf hun beslissingen en de hulp vindt rechtstreeks tussen hen plaats. Open source, een project zonder winstoogmerk."
+      "title": "Social Organizer — een netwerk van mensen die je kent",
+      "description": "Bouw een netwerk van mensen die je persoonlijk kent. Meldt iemand daarin een behoefte, dan hoort precies zoveel mensen ervan als het bedrag in dollars, de dichtstbijzijnden eerst. Deelnemers beslissen zelf en handelen rechtstreeks. Open source, een project zonder winstoogmerk."
     },
     "hero": {
-      "title": "Hulp begint met afgestemde acties",
-      "lead": "Social Organizer helpt deelnemers hun behoeften en vrijwillige deelname te melden. <b>De deelnemers nemen zelf hun beslissingen en de hulp vindt rechtstreeks tussen hen plaats.</b>",
+      "title": "Eerst een netwerk van mensen die je kent",
+      "lead": "Social Organizer begint bij jouw netwerk: mensen die je persoonlijk kent, en de mensen die zij kennen. <b>Meldt iemand daarin een behoefte, dan hoort precies zoveel mensen ervan als het bedrag in dollars.</b> De coördinatie volgt daarna, rechtstreeks tussen de deelnemers.",
       "factOpen": "Open source",
       "factNonprofit": "Zonder winstoogmerk",
       "factNoMoney": "Vrijwillige deelname",
@@ -692,29 +692,30 @@
       "how": "Zo werkt het",
       "tgAlt": "Liever Telegram?",
       "tgOpen": "Daar openen",
-      "sceneAria": "Een bericht over een behoefte gaat via handdrukken, deelnemers melden hun deelname",
+      "sceneAria": "Een netwerk groeit vanuit jou, handdruk na handdruk; een behoefte gaat erdoorheen en deelnemers melden hun deelname",
       "sceneYou": "Jij",
       "sceneAsk": "behoefte · {{amount}}",
       "sceneDone": "deelname · {{amount}}",
       "statDepth": "3 handdrukken",
       "statPeople_one": "{{n}} persoon in één netwerk",
-      "statPeople_other": "{{n}} personen in één netwerk"
+      "statPeople_other": "{{n}} personen in één netwerk",
+      "sceneNet": "Jouw netwerk · {n}"
     },
     "steps": {
       "title": "Hoe het werkt",
-      "lead": "Vier stappen. Bij elke stap beslist de deelnemer zelf.",
-      "s1Title": "Een deelnemer meldt een behoefte",
-      "s1Text": "Een behoefte (Need) is het eerste van twee signalen. Daarin staat <b>hoeveel er nodig is en waar je contact kunt opnemen</b>: een bedrag en een chatlink.",
-      "s2Title": "Anderen horen het en beslissen zelf",
-      "s2Text": "Het bericht gaat via handdrukken: eerst naar mensen die de deelnemer persoonlijk kent, daarna naar hun kennissen. <b>Iedereen beslist zelf of hij of zij kan helpen.</b>",
-      "s3Title": "Wie wil, meldt deelname",
-      "s3Text": "Deelname (Participation) is het tweede signaal: <b>een vrijwillig voornemen</b>, geen betaling.",
-      "s4Title": "Acties verlopen rechtstreeks, buiten Social Organizer",
-      "s4Text": "Wat er gedaan wordt en hoe, spreken de deelnemers af en voeren ze uit <b>rechtstreeks met elkaar</b>, in hun eigen chat."
+      "lead": "Het netwerk komt eerst. Al het andere gebeurt daarbinnen.",
+      "s1Title": "Jij bouwt je netwerk",
+      "s1Text": "Voeg mensen toe die je persoonlijk kent, via een link of een QR-code. <b>Elk van hen bevestigt dat jullie elkaar kennen.</b>",
+      "s2Title": "Het reikt verder dan je ziet",
+      "s2Text": "Via jouw mensen bereik je die van hen: de 2e en 3e handdruk. <b>Je ziet alleen je eigen drie handdrukken, nooit het hele netwerk.</b>",
+      "s3Title": "Een behoefte bereikt zoveel mensen als het bedrag in dollars",
+      "s3Text": "Een behoefte van {{amount}} bereikt precies {{n}} mensen, de dichtstbijzijnde handdrukken eerst. <b>Voor elk van hen is het één kans om mee te doen</b>, en zodra het bedrag gedekt is, sluit de behoefte.",
+      "s4Title": "De coördinatie volgt",
+      "s4Text": "Wie wil, meldt deelname, en de voornemens tellen op, zoals bij crowdfunding. <b>Wat er gedaan wordt en hoe, spreken de deelnemers rechtstreeks af</b>, in hun eigen chat."
     },
     "chain": {
       "title": "Een bericht gaat via handdrukken",
-      "lead": "Je ziet de behoefte van Maria omdat Oleg haar kent, en jij Oleg kent. Je mag het bericht onbeantwoord laten. <b>Geen verplichtingen.</b>"
+      "lead": "Je ziet de behoefte van Maria omdat Oleg haar kent, en jij Oleg kent. Ze bereikt alleen zoveel mensen als het bedrag in dollars, de dichtstbijzijnden eerst. Je mag het onbeantwoord laten. <b>Geen verplichtingen.</b>"
     },
     "nots": {
       "title": "Wat Social Organizer niet doet",
@@ -744,13 +745,13 @@
       "p2Text": "Iedereen beslist zelf, zonder organisator en zonder beoordelingen. Weigeren heeft geen sancties.",
       "p3Title": "Rechtstreeks contact tussen deelnemers",
       "p3Text": "Afspraken en acties blijven tussen mensen die verbonden zijn door bevestigde kennismakingen.",
-      "p4Title": "Minimale coördinatie",
-      "p4Text": "Twee signalen en meldingen daarover. Geen gecentraliseerde verdeling."
+      "p4Title": "Het netwerk komt eerst",
+      "p4Text": "Signalen gaan alleen via bevestigde kennismakingen. Geen gemeenschappelijke pot, geen beheerder, geen gecentraliseerde verdeling."
     },
     "faq": {
       "title": "Kort en bondig",
       "q1": "Wat doet Social Organizer?",
-      "a1": "Het legt twee signalen vast, behoefte (Need) en deelname (Participation), en zorgt voor de bijbehorende terugkoppeling. Het handelt niet namens de deelnemers.",
+      "a1": "Het helpt je een netwerk te bouwen van mensen die je persoonlijk kent, en laat twee signalen, behoefte (Need) en deelname (Participation), erdoorheen gaan. Het handelt niet namens de deelnemers.",
       "q2": "Moet ik deelnemen?",
       "a2": "Nee. Deelname is vrijwillig en iedereen neemt zelf een besluit.",
       "q3": "Garandeert de dienst hulp?",
@@ -760,31 +761,19 @@
       "q5": "Dragen deelnemers geld over?",
       "a5": "Dat kan. In een melding van een behoefte noemt een deelnemer een bedrag, en in een melding van deelname hoeveel hij of zij bereid is over te dragen. Als deelnemers geld overdragen, doen ze dat zelf en rechtstreeks, volgens hun eigen afspraak. Social Organizer controleert niet of een overdracht heeft plaatsgevonden.",
       "q6": "In welke valuta staan de bedragen?",
-      "a6": "In Amerikaanse dollars: een gemeenschappelijke rekeneenheid, zodat bedragen vergelijkbaar zijn. In welke valuta en op welke manier te handelen, bepalen de deelnemers zelf."
+      "a6": "In Amerikaanse dollars: een gemeenschappelijke rekeneenheid, zodat bedragen vergelijkbaar zijn. In welke valuta en op welke manier te handelen, bepalen de deelnemers zelf.",
+      "q7": "Hoe verschilt het van online platforms voor onderlinge hulp?",
+      "a7": "De Chinese platforms voor onderlinge hulp hadden één beheerder, rekenden bijdragen aan leden en beloofden uitkeringen zoals een verzekering; in 2021 werden ze gesloten. Social Organizer heeft geen beheerder, geen pot en geen uitkeringen: alleen mensen die elkaar kennen, twee signalen en vrijwillige deelname."
     }
   },
   "how": {
     "meta": {
       "title": "Hoe het werkt — Social Organizer",
-      "description": "Twee signalen, behoefte en deelname: hoe een bericht via handdrukken gaat en waarom acties rechtstreeks tussen deelnemers plaatsvinden."
+      "description": "Eerst een netwerk van mensen die je kent, dan een behoefte die zoveel mensen bereikt als het bedrag in dollars, dan directe coördinatie. En hoe het verschilt van de Chinese online platforms voor onderlinge hulp."
     },
     "hero": {
-      "title": "Twee signalen en een directe verbinding",
-      "lead": "Social Organizer heeft maar twee signalen. Een <b>behoefte</b> (Need) is het bericht van een deelnemer over wat hij of zij nodig heeft. Een <b>deelname</b> (Participation) is het bericht van een andere deelnemer over zijn of haar eigen vrijwillige deelname. Al het andere spreken mensen zelf af en doen ze zelf, rechtstreeks."
-    },
-    "table": {
-      "title": "Een historisch voorbeeld: de hui",
-      "lead": "In Zuid-China leggen zes vrienden eens per maand een deel in, en één van hen neemt de delen van die maand. Tik op een maand of een naam.",
-      "monthsAria": "Maand van de kring",
-      "says": [
-        "<b>Lin</b> neemt de delen van januari. Vijf vrienden leggen elk een deel in.",
-        "<b>Chen</b> neemt de delen van februari. Lin legt ook een deel in.",
-        "<b>Mei</b> neemt de delen van maart. Chen legt ook een deel in.",
-        "<b>Guo</b> neemt de delen van april. Mei legt ook een deel in.",
-        "<b>Sun</b> neemt de delen van mei. Guo legt ook een deel in.",
-        "<b>Huang</b> neemt de delen van juni. De kring is rond: iedereen heeft één keer gekregen."
-      ],
-      "note": "Dit is een voorbeeld van vrijwillige hulp tussen mensen die elkaar kennen, niet de opzet van Social Organizer: daar is geen gezamenlijke pot, geen wachtrij en zijn er geen verplichte delen."
+      "title": "Eerst het netwerk, dan de signalen",
+      "lead": "Social Organizer begint bij een netwerk van mensen die je persoonlijk kent. Er gaan twee signalen doorheen. Een <b>behoefte</b> (Need) is het bericht van een deelnemer over wat hij of zij nodig heeft. Een <b>deelname</b> (Participation) is het bericht van een andere deelnemer over zijn of haar eigen vrijwillige deelname. Al het andere spreken mensen zelf af en doen ze zelf, rechtstreeks."
     },
     "orbit": {
       "title": "Hoe ver een bericht reikt",
@@ -804,7 +793,7 @@
     },
     "chain": {
       "title": "Een pad via mensen die je kent",
-      "lead": "Je ziet alleen behoeften waar een pad naartoe loopt via mensen die je kent. Tik op een persoon.",
+      "lead": "Een behoefte bereikt zoveel mensen als het bedrag in dollars, de dichtstbijzijnde handdrukken eerst. Je ziet alleen behoeften die via mensen die je kent een pad naar jou hebben. Tik op een persoon.",
       "says": [
         "<b>Maria Koval</b> meldt een behoefte. Jij kent haar niet.",
         "<b>Oleg</b>, je broer, kent Maria. Daarom ontvangt hij haar bericht.",
@@ -812,8 +801,8 @@
       ]
     },
     "join": {
-      "title": "Een nieuw persoon",
-      "lead": "Mensen komen alleen in de kring via iemand die ze kennen, en pas nadat die persoon dat bevestigt.",
+      "title": "Het begint bij iemand die je kent",
+      "lead": "Het netwerk groeit alleen via mensen die elkaar kennen: iemand sluit zich aan via jouw link, en jij bevestigt de kennismaking.",
       "says": [
         "Katya opent je link en logt in. <b>Dit is nog geen verbinding:</b> jij krijgt een push.",
         "Je bevestigt: ja, we kennen elkaar. <b>Nu is Katya je 1e handdruk.</b>"
@@ -907,6 +896,46 @@
         "takes": "{{name}} neemt het",
         "aria": "Hui-tafel"
       }
+    },
+    "compare": {
+      "title": "Het meest verwante voorbeeld: Chinese online onderlinge hulp",
+      "lead": "Van 2018 tot 2021 verzamelden de Chinese online platforms voor onderlinge hulp honderden miljoenen leden: de grootste, Xianghubao, had er meer dan 100 miljoen. <b>Leden deelden de kosten van elkaars ernstige ziekte, elk enkele dollars per jaar.</b> In 2021 sloten toezichthouders de hele sector: één beheerder runde in feite een verzekering.",
+      "note": "Social Organizer behoudt het idee, veel mensen die elk een klein deel dragen, en laat weg wat die platforms kwetsbaar maakte.",
+      "caption": "Chinese online platforms voor onderlinge hulp vergeleken met Social Organizer",
+      "them": "Online platforms voor onderlinge hulp",
+      "us": "Social Organizer",
+      "rows": [
+        [
+          "Wie het beheert",
+          "Eén beheerder",
+          "Niemand: een netwerk van mensen die elkaar kennen"
+        ],
+        [
+          "Geld",
+          "Door het platform bij leden geïnd",
+          "Gaat nooit via de dienst"
+        ],
+        [
+          "Wat er beloofd wordt",
+          "Een uitkering, zoals een verzekering",
+          "Niets: deelname is vrijwillig"
+        ],
+        [
+          "Wie kan meedoen",
+          "Iedereen die betaalt",
+          "Alleen via een bevestigde kennismaking"
+        ],
+        [
+          "Wie een verzoek te zien krijgt",
+          "Iedereen op het platform",
+          "Zoveel mensen als het bedrag in dollars, de dichtstbijzijnden eerst"
+        ],
+        [
+          "Wat stilgelegd kan worden",
+          "Het platform, en daarmee alles",
+          "Er is geen pot en er zijn geen uitkeringen om stil te leggen"
+        ]
+      ]
     }
   },
   "legal": {

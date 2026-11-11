@@ -676,12 +676,12 @@
       "deleteAccount": "Poista tili"
     },
     "meta": {
-      "title": "Social Organizer — apu alkaa yhteisesti sovituista toimista",
-      "description": "Social Organizer auttaa osallistujia ilmoittamaan tarpeista ja vapaaehtoisesta osallistumisesta. Osallistujat tekevät päätökset itse, ja apu tapahtuu suoraan heidän välillään. Avoin lähdekoodi, voittoa tavoittelematon hanke."
+      "title": "Social Organizer — verkosto ihmisistä, jotka tunnet",
+      "description": "Rakenna verkosto ihmisistä, jotka tunnet henkilökohtaisesti. Kun joku siinä ilmoittaa tarpeesta, siitä saa tietää täsmälleen yhtä monta ihmistä kuin siinä on dollareita, lähimmät ensin. Osallistujat päättävät itse ja toimivat suoraan. Avoin lähdekoodi, voittoa tavoittelematon hanke."
     },
     "hero": {
-      "title": "Apu alkaa yhteisesti sovituista toimista",
-      "lead": "Social Organizer auttaa osallistujia ilmoittamaan tarpeista ja vapaaehtoisesta osallistumisesta. <b>Osallistujat tekevät päätökset itse, ja apu tapahtuu suoraan heidän välillään.</b>",
+      "title": "Ensin verkosto ihmisistä, jotka tunnet",
+      "lead": "Social Organizer alkaa sinun verkostostasi: ihmisistä, jotka tunnet henkilökohtaisesti, ja heidän tuttavistaan. <b>Kun joku siinä ilmoittaa tarpeesta, siitä saa tietää täsmälleen yhtä monta ihmistä kuin siinä on dollareita.</b> Koordinointi seuraa perässä, suoraan osallistujien kesken.",
       "factOpen": "Avoin lähdekoodi",
       "factNonprofit": "Voittoa tavoittelematon",
       "factNoMoney": "Vapaaehtoinen osallistuminen",
@@ -692,29 +692,30 @@
       "how": "Katso, miten se toimii",
       "tgAlt": "Telegram mieluummin?",
       "tgOpen": "Avaa se siellä",
-      "sceneAria": "Viesti tarpeesta kulkee kädenpuristuksia pitkin, osallistujat ilmoittavat osallistumisestaan",
+      "sceneAria": "Verkosto kasvaa sinusta lähtien kädenpuristus kerrallaan; tarve kulkee siinä ja osallistujat ilmoittavat osallistumisestaan",
       "sceneYou": "Sinä",
       "sceneAsk": "tarve · {{amount}}",
       "sceneDone": "osallistuminen · {{amount}}",
       "statDepth": "3 kädenpuristusta",
       "statPeople_one": "{{n}} henkilö yhdessä verkostossa",
-      "statPeople_other": "{{n}} henkilöä yhdessä verkostossa"
+      "statPeople_other": "{{n}} henkilöä yhdessä verkostossa",
+      "sceneNet": "Verkostosi · {n}"
     },
     "steps": {
       "title": "Näin se toimii",
-      "lead": "Neljä askelta. Joka vaiheessa osallistuja päättää itse.",
-      "s1Title": "Osallistuja ilmoittaa tarpeesta",
-      "s1Text": "Tarve (Need) on ensimmäinen kahdesta signaalista. Siinä kerrotaan, <b>paljonko tarvitaan ja mistä saa yhteyden</b>: summa ja linkki keskusteluun.",
-      "s2Title": "Muut saavat tietää ja päättävät itse",
-      "s2Text": "Viesti kulkee kädenpuristuksia pitkin: ensin henkilöille, jotka osallistuja tuntee henkilökohtaisesti, sitten heidän tuttavilleen. <b>Jokainen päättää itse, voiko auttaa.</b>",
-      "s3Title": "Halukkaat ilmoittavat osallistumisestaan",
-      "s3Text": "Osallistuminen (Participation) on toinen signaali: <b>vapaaehtoinen aikomus</b>, ei maksu.",
-      "s4Title": "Toimet tapahtuvat suoraan, Social Organizerin ulkopuolella",
-      "s4Text": "Mitä tehdään ja miten, osallistujat sopivat ja toteuttavat <b>suoraan keskenään</b> omassa keskustelussaan."
+      "lead": "Verkosto tulee ensin. Kaikki muu tapahtuu sen sisällä.",
+      "s1Title": "Rakennat verkostosi",
+      "s1Text": "Lisää ihmisiä, jotka tunnet henkilökohtaisesti, linkillä tai QR-koodilla. <b>Jokainen heistä vahvistaa, että tunnette toisenne.</b>",
+      "s2Title": "Se ulottuu pidemmälle kuin näet",
+      "s2Text": "Omiesi kautta tavoitat heidän omansa: 2. ja 3. kädenpuristuksen. <b>Näet vain omat kolme kädenpuristustasi, et koskaan koko verkostoa.</b>",
+      "s3Title": "Tarve tavoittaa yhtä monta ihmistä kuin siinä on dollareita",
+      "s3Text": "{{amount}} suuruinen tarve tavoittaa täsmälleen {{n}} ihmistä, kädenpuristuksilta lähimmät ensin. <b>Jokaiselle heistä se on yksi tilaisuus osallistua</b>, ja kun summa on katettu, tarve sulkeutuu.",
+      "s4Title": "Koordinointi seuraa perässä",
+      "s4Text": "Halukkaat ilmoittavat osallistumisestaan, ja aikomukset kertyvät yhteen kuten joukkorahoituksessa. <b>Mitä tehdään ja miten, osallistujat sopivat suoraan keskenään</b>, omassa keskustelussaan."
     },
     "chain": {
       "title": "Viesti kulkee kädenpuristuksia pitkin",
-      "lead": "Näet Marian tarpeen, koska Oleg tuntee hänet ja sinä tunnet Olegin. Viestiin voi jättää vastaamatta. <b>Ei velvoitteita.</b>"
+      "lead": "Näet Marian tarpeen, koska Oleg tuntee hänet ja sinä tunnet Olegin. Se tavoittaa vain yhtä monta ihmistä kuin siinä on dollareita, lähimmät ensin. Siihen voi jättää vastaamatta. <b>Ei velvoitteita.</b>"
     },
     "nots": {
       "title": "Mitä Social Organizer ei tee",
@@ -744,13 +745,13 @@
       "p2Text": "Jokainen päättää itse, ilman järjestäjää ja ilman arvosanoja. Kieltäytymisestä ei seuraa seuraamuksia.",
       "p3Title": "Osallistujien suora yhteys",
       "p3Text": "Sopimukset ja toimet pysyvät ihmisten välillä, joita yhdistävät vahvistetut tuttavuudet.",
-      "p4Title": "Minimaalinen koordinointi",
-      "p4Text": "Kaksi signaalia ja ilmoitukset niistä. Ei keskitettyä jakamista."
+      "p4Title": "Verkosto tulee ensin",
+      "p4Text": "Signaalit kulkevat vain vahvistettujen tuttavuuksien kautta. Ei yhteistä kassaa, ei ylläpitäjää, ei keskitettyä jakoa."
     },
     "faq": {
       "title": "Lyhyesti olennaisesta",
       "q1": "Mitä Social Organizer tekee?",
-      "a1": "Se tallentaa kaksi signaalia, tarpeen (Need) ja osallistumisen (Participation), ja tarjoaa niihin liittyvän palautteen. Se ei toimi osallistujien puolesta.",
+      "a1": "Se auttaa rakentamaan verkoston ihmisistä, jotka tunnet henkilökohtaisesti, ja antaa kahden signaalin, tarpeen ja osallistumisen, kulkea sen läpi. Se ei toimi osallistujien puolesta.",
       "q2": "Onko pakko osallistua?",
       "a2": "Ei. Osallistuminen on vapaaehtoista, ja jokainen tekee päätöksensä itse.",
       "q3": "Takaako palvelu avun?",
@@ -760,31 +761,19 @@
       "q5": "Luovuttavatko osallistujat rahaa?",
       "a5": "He voivat. Tarpeessa osallistuja nimeää summan, ja osallistumisessa nimetään, paljonko osallistuja on valmis luovuttamaan. Jos osallistujat luovuttavat rahaa, he tekevät sen itse ja suoraan, oman sopimuksensa mukaan. Social Organizer ei tarkista, onko luovutus tapahtunut.",
       "q6": "Missä yksikössä summat ilmoitetaan?",
-      "a6": "Yhdysvaltain dollareina: se on yhteinen laskentayksikkö, jotta summat ovat vertailukelpoisia. Missä valuutassa ja millä tavalla toimitaan, osallistujat päättävät itse."
+      "a6": "Yhdysvaltain dollareina: se on yhteinen laskentayksikkö, jotta summat ovat vertailukelpoisia. Missä valuutassa ja millä tavalla toimitaan, osallistujat päättävät itse.",
+      "q7": "Miten se eroaa verkossa toimivista keskinäisen avun alustoista?",
+      "a7": "Kiinan keskinäisen avun alustoilla oli yksi ylläpitäjä, ne perivät jäseniltä maksuja ja lupasivat korvauksia kuin vakuutus, ja vuonna 2021 ne suljettiin. Social Organizerilla ei ole ylläpitäjää, kassaa eikä korvauksia: vain toisensa tuntevia ihmisiä, kaksi signaalia ja vapaaehtoinen osallistuminen."
     }
   },
   "how": {
     "meta": {
       "title": "Näin se toimii — Social Organizer",
-      "description": "Kaksi signaalia, tarve ja osallistuminen: miten viesti kulkee kädenpuristuksia pitkin ja miksi toimet tapahtuvat suoraan osallistujien välillä."
+      "description": "Ensin verkosto ihmisistä, jotka tunnet, sitten tarve, joka tavoittaa yhtä monta ihmistä kuin siinä on dollareita, sitten suora koordinointi. Ja miten tämä eroaa Kiinan verkossa toimivista keskinäisen avun alustoista."
     },
     "hero": {
-      "title": "Kaksi signaalia ja suora yhteys",
-      "lead": "Social Organizerissa on vain kaksi signaalia. <b>Tarve</b> (Need) on osallistujan viesti siitä, mitä hän tarvitsee. <b>Osallistuminen</b> (Participation) on toisen osallistujan viesti omasta vapaaehtoisesta osallistumisestaan. Kaiken muun ihmiset sopivat ja tekevät itse, suoraan."
-    },
-    "table": {
-      "title": "Historiallinen esimerkki: hui",
-      "lead": "Etelä-Kiinassa kuusi tuttavaa laittaa osuuden kerran kuussa, ja yksi heistä ottaa kyseisen kuun osuudet. Napauta kuukautta tai nimeä.",
-      "monthsAria": "Piirin kuukausi",
-      "says": [
-        "<b>Lin</b> ottaa tammikuun osuudet. Viisi ystävää laittaa kukin osuuden.",
-        "<b>Chen</b> ottaa helmikuun osuudet. Lin laittaa osuuden myös.",
-        "<b>Mei</b> ottaa maaliskuun osuudet. Chen laittaa osuuden myös.",
-        "<b>Guo</b> ottaa huhtikuun osuudet. Mei laittaa osuuden myös.",
-        "<b>Sun</b> ottaa toukokuun osuudet. Guo laittaa osuuden myös.",
-        "<b>Huang</b> ottaa kesäkuun osuudet. Piiri sulkeutuu: jokainen sai kerran."
-      ],
-      "note": "Tämä on esimerkki vapaaehtoisesta avusta tuttavien kesken, ei kuvaus Social Organizerin rakenteesta: siinä ei ole yhteistä kassaa, jonoa eikä pakollisia osuuksia."
+      "title": "Ensin verkosto, sitten signaalit",
+      "lead": "Social Organizer alkaa verkostosta ihmisistä, jotka tunnet henkilökohtaisesti. Kaksi signaalia kulkee sen läpi. <b>Tarve</b> (Need) on osallistujan viesti siitä, mitä hän tarvitsee. <b>Osallistuminen</b> (Participation) on toisen osallistujan viesti omasta vapaaehtoisesta osallistumisestaan. Kaiken muun ihmiset sopivat ja tekevät itse, suoraan."
     },
     "orbit": {
       "title": "Kuinka pitkälle viesti kulkee",
@@ -804,7 +793,7 @@
     },
     "chain": {
       "title": "Polku tuttavien kautta",
-      "lead": "Näet vain ne tarpeet, joihin on polku tuttavien kautta. Napauta henkilöä.",
+      "lead": "Tarve tavoittaa yhtä monta ihmistä kuin siinä on dollareita, kädenpuristuksilta lähimmät ensin. Näet vain ne tarpeet, joihin on polku tuttavien kautta. Napauta henkilöä.",
       "says": [
         "<b>Maria Koval</b> ilmoittaa tarpeesta. Et tunne häntä.",
         "<b>Oleg</b>, veljesi, tuntee Marian. Siksi hän saa tämän viestin.",
@@ -812,8 +801,8 @@
       ]
     },
     "join": {
-      "title": "Uusi henkilö",
-      "lead": "Ihmiset liittyvät piiriin vain tutun kautta, ja vasta kun tämä vahvistaa.",
+      "title": "Se alkaa ihmisestä, jonka tunnet",
+      "lead": "Verkosto kasvaa vain toisensa tuntevien ihmisten kautta: joku liittyy linkkisi kautta, ja sinä vahvistat tuttavuuden.",
       "says": [
         "Katya avaa linkkisi ja kirjautuu. <b>Tämä ei ole vielä yhteys:</b> saat ilmoituksen.",
         "Vahvistat: kyllä, tunnemme toisemme. <b>Nyt Katya on 1. kädenpuristuksesi.</b>"
@@ -907,6 +896,46 @@
         "takes": "{{name}} ottaa sen",
         "aria": "Hui-pöytä"
       }
+    },
+    "compare": {
+      "title": "Lähin esimerkki: Kiinan keskinäinen apu verkossa",
+      "lead": "Vuosina 2018–2021 Kiinan verkossa toimivat keskinäisen avun alustat keräsivät satoja miljoonia jäseniä: suurimmalla, Xianghubaolla, oli yli 100 miljoonaa. <b>Jäsenet jakoivat toistensa vakavien sairauksien kulut, kukin vain muutaman dollarin vuodessa.</b> Vuonna 2021 viranomaiset sulkivat koko alan: yksi ylläpitäjä pyöritti käytännössä vakuutusta.",
+      "note": "Social Organizer säilyttää idean, jossa moni ihminen kantaa kukin pienen osan, ja jättää pois sen, mikä teki noista alustoista hauraita.",
+      "caption": "Kiinan verkossa toimivat keskinäisen avun alustat verrattuna Social Organizeriin",
+      "them": "Keskinäisen avun alustat verkossa",
+      "us": "Social Organizer",
+      "rows": [
+        [
+          "Kuka pyörittää",
+          "Yksi ylläpitäjä",
+          "Ei kukaan: toisensa tuntevien ihmisten verkosto"
+        ],
+        [
+          "Raha",
+          "Alusta perii sen jäseniltä",
+          "Ei kulje koskaan palvelun kautta"
+        ],
+        [
+          "Mitä luvataan",
+          "Korvaus, kuten vakuutuksessa",
+          "Ei mitään: osallistuminen on vapaaehtoista"
+        ],
+        [
+          "Kuka voi liittyä",
+          "Kuka tahansa, joka maksaa",
+          "Vain vahvistetun tuttavuuden kautta"
+        ],
+        [
+          "Kuka saa tietää pyynnöstä",
+          "Kaikki alustalla",
+          "Yhtä monta ihmistä kuin tarpeessa on dollareita, lähimmät ensin"
+        ],
+        [
+          "Mitä voidaan sulkea",
+          "Alusta, ja sen mukana kaikki",
+          "Ei ole kassaa eikä korvauksia, joita voisi sulkea"
+        ]
+      ]
     }
   },
   "legal": {

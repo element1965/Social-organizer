@@ -672,12 +672,12 @@
       "deleteAccount": "Xóa tài khoản"
     },
     "meta": {
-      "title": "Social Organizer — hỗ trợ bắt đầu từ những hành động được phối hợp",
-      "description": "Social Organizer giúp người tham gia thông báo nhu cầu và sự tham gia tự nguyện. Mỗi người tự quyết định, còn việc hỗ trợ diễn ra trực tiếp giữa họ. Mã nguồn mở, dự án phi lợi nhuận."
+      "title": "Social Organizer — mạng lưới những người bạn quen",
+      "description": "Xây dựng mạng lưới những người bạn quen trực tiếp. Khi ai đó trong mạng lưới báo một nhu cầu, số người biết tin đúng bằng số đô la nêu trong đó, người gần nhất trước. Người tham gia tự quyết định và hành động trực tiếp. Mã nguồn mở, một dự án phi lợi nhuận."
     },
     "hero": {
-      "title": "Hỗ trợ bắt đầu từ những hành động được phối hợp",
-      "lead": "Social Organizer giúp người tham gia thông báo nhu cầu và sự tham gia tự nguyện. <b>Mỗi người tự quyết định, còn việc hỗ trợ diễn ra trực tiếp giữa họ.</b>",
+      "title": "Trước hết là mạng lưới những người bạn quen",
+      "lead": "Social Organizer bắt đầu từ mạng lưới của bạn: những người bạn quen trực tiếp, và những người họ quen. <b>Khi ai đó trong mạng lưới báo một nhu cầu, số người biết tin đúng bằng số đô la nêu trong đó.</b> Sự phối hợp đến sau, trực tiếp giữa những người tham gia.",
       "factOpen": "Mã nguồn mở",
       "factNonprofit": "Phi lợi nhuận",
       "factNoMoney": "Tham gia tự nguyện",
@@ -688,28 +688,29 @@
       "how": "Xem cách hoạt động",
       "tgAlt": "Thích Telegram hơn?",
       "tgOpen": "Mở ở đó",
-      "sceneAria": "Thông báo về nhu cầu đi theo các cái bắt tay, người tham gia thông báo sự tham gia",
+      "sceneAria": "Một mạng lưới lớn dần từ bạn, từng cái bắt tay; một nhu cầu đi trong đó và người tham gia thông báo sự tham gia",
       "sceneYou": "Bạn",
       "sceneAsk": "nhu cầu · {{amount}}",
       "sceneDone": "tham gia · {{amount}}",
       "statDepth": "3 cái bắt tay",
-      "statPeople_other": "{{n}} người trong một mạng lưới"
+      "statPeople_other": "{{n}} người trong một mạng lưới",
+      "sceneNet": "Mạng lưới của bạn · {n}"
     },
     "steps": {
       "title": "Cách hoạt động",
-      "lead": "Bốn bước. Ở mỗi bước, người tham gia tự quyết định.",
-      "s1Title": "Một người tham gia thông báo nhu cầu",
-      "s1Text": "Nhu cầu (Need) là tín hiệu đầu tiên trong hai tín hiệu. Trong đó nêu <b>cần bao nhiêu và liên hệ ở đâu</b>: một số tiền và liên kết đến chat.",
-      "s2Title": "Những người khác biết và tự quyết định",
-      "s2Text": "Thông báo đi theo các cái bắt tay: trước tiên tới những người mà người tham gia quen trực tiếp, rồi tới người quen của họ. <b>Mỗi người tự quyết định mình có thể hỗ trợ hay không.</b>",
-      "s3Title": "Ai muốn thì thông báo tham gia",
-      "s3Text": "Sự tham gia (Participation) là tín hiệu thứ hai: <b>một ý định tự nguyện</b>, không phải khoản thanh toán.",
-      "s4Title": "Hành động diễn ra trực tiếp, bên ngoài Social Organizer",
-      "s4Text": "Làm gì và làm thế nào, những người tham gia tự thỏa thuận và thực hiện <b>trực tiếp với nhau</b>, trong chat của họ."
+      "lead": "Mạng lưới đến trước. Mọi thứ khác diễn ra bên trong nó.",
+      "s1Title": "Bạn xây mạng lưới của mình",
+      "s1Text": "Thêm những người bạn quen trực tiếp, bằng liên kết hoặc mã QR. <b>Mỗi người trong số họ xác nhận rằng hai bên quen nhau.</b>",
+      "s2Title": "Nó đi xa hơn những gì bạn thấy",
+      "s2Text": "Qua người của bạn, bạn tới người của họ: cái bắt tay thứ 2 và thứ 3. <b>Bạn chỉ thấy ba cái bắt tay của riêng mình, không bao giờ thấy cả mạng lưới.</b>",
+      "s3Title": "Một nhu cầu tới số người bằng số đô la nó nêu",
+      "s3Text": "Một nhu cầu {{amount}} tới đúng {{n}} người, người gần nhất theo số cái bắt tay trước. <b>Với mỗi người, đó là một cơ hội để tham gia</b>, và khi đủ số tiền, nhu cầu đóng lại.",
+      "s4Title": "Sự phối hợp đến sau",
+      "s4Text": "Ai muốn thì thông báo tham gia, và các ý định cộng dồn lại, như gây quỹ cộng đồng. <b>Làm gì và làm thế nào, những người tham gia thỏa thuận trực tiếp</b>, trong chat của họ."
     },
     "chain": {
       "title": "Thông báo đi theo các cái bắt tay",
-      "lead": "Bạn thấy nhu cầu của Maria vì Oleg quen cô ấy, và bạn quen Oleg. Bạn có thể không trả lời thông báo. <b>Không có nghĩa vụ nào.</b>"
+      "lead": "Bạn thấy nhu cầu của Maria vì Oleg quen cô ấy, và bạn quen Oleg. Nhu cầu chỉ tới số người bằng số đô la nó nêu, người gần nhất trước. Bạn có thể không trả lời. <b>Không có nghĩa vụ nào.</b>"
     },
     "nots": {
       "title": "Social Organizer không làm gì",
@@ -739,13 +740,13 @@
       "p2Text": "Mỗi người tự quyết định, không có người tổ chức và không có đánh giá. Từ chối không bị xử phạt.",
       "p3Title": "Liên hệ trực tiếp giữa những người tham gia",
       "p3Text": "Các thỏa thuận và hành động diễn ra giữa những người được nối với nhau bằng các mối quen đã xác nhận.",
-      "p4Title": "Phối hợp tối thiểu",
-      "p4Text": "Hai tín hiệu và các thông báo về chúng. Không có sự phân phối tập trung."
+      "p4Title": "Mạng lưới đến trước",
+      "p4Text": "Tín hiệu chỉ đi qua những mối quen đã xác nhận. Không có quỹ chung, không có đơn vị vận hành, không có phân phối tập trung."
     },
     "faq": {
       "title": "Điều chính, ngắn gọn",
       "q1": "Social Organizer làm gì?",
-      "a1": "Ghi nhận hai tín hiệu — nhu cầu (Need) và sự tham gia (Participation) — và cung cấp phản hồi gắn với chúng. Dịch vụ không hành động thay cho người tham gia.",
+      "a1": "Dịch vụ giúp bạn xây mạng lưới những người bạn quen trực tiếp, và để hai tín hiệu, nhu cầu (Need) và sự tham gia (Participation), đi trong đó. Dịch vụ không hành động thay cho người tham gia.",
       "q2": "Tôi có bắt buộc phải tham gia không?",
       "a2": "Không. Việc tham gia là tự nguyện, và mỗi người tự đưa ra quyết định của mình.",
       "q3": "Dịch vụ có đảm bảo sự hỗ trợ không?",
@@ -755,31 +756,19 @@
       "q5": "Người tham gia có chuyển tiền cho nhau không?",
       "a5": "Có thể. Trong thông báo về nhu cầu, người tham gia nêu một số tiền, còn trong thông báo về sự tham gia thì nêu số tiền mình sẵn sàng chuyển. Nếu những người tham gia chuyển tiền, họ tự làm và làm trực tiếp, theo thỏa thuận của họ. Social Organizer không kiểm tra việc chuyển có diễn ra hay không.",
       "q6": "Các khoản được tính bằng gì?",
-      "a6": "Bằng đô la Mỹ: đây là đơn vị tính chung để các khoản có thể so sánh được. Dùng loại tiền nào và theo cách nào là do những người tham gia tự quyết định."
+      "a6": "Bằng đô la Mỹ: đây là đơn vị tính chung để các khoản có thể so sánh được. Dùng loại tiền nào và theo cách nào là do những người tham gia tự quyết định.",
+      "q7": "Nó khác gì các nền tảng tương trợ trực tuyến?",
+      "a7": "Các nền tảng tương trợ của Trung Quốc chỉ có một đơn vị vận hành, thu tiền của thành viên và hứa chi trả như bảo hiểm, và năm 2021 đã bị đóng cửa. Social Organizer không có đơn vị vận hành, không có quỹ và không có khoản chi trả nào: chỉ có những người quen nhau, hai tín hiệu và sự tham gia tự nguyện."
     }
   },
   "how": {
     "meta": {
       "title": "Cách hoạt động — Social Organizer",
-      "description": "Hai tín hiệu — nhu cầu và sự tham gia: thông báo đi theo các cái bắt tay thế nào và vì sao các hành động diễn ra trực tiếp giữa những người tham gia."
+      "description": "Trước hết là mạng lưới những người bạn quen, rồi một nhu cầu tới số người bằng số đô la nó nêu, rồi phối hợp trực tiếp. Và điểm khác với các nền tảng tương trợ trực tuyến của Trung Quốc."
     },
     "hero": {
-      "title": "Hai tín hiệu và liên hệ trực tiếp",
-      "lead": "Social Organizer chỉ có hai tín hiệu. <b>Nhu cầu</b> (Need) là thông báo của một người tham gia về điều họ cần. <b>Sự tham gia</b> (Participation) là thông báo của một người tham gia khác về sự tham gia tự nguyện của chính họ. Mọi thứ còn lại, mọi người tự thỏa thuận và tự làm, trực tiếp."
-    },
-    "table": {
-      "title": "Một ví dụ lịch sử: hui",
-      "lead": "Ở miền nam Trung Quốc, sáu người quen mỗi tháng góp một phần, và một người nhận các phần của tháng đó. Nhấn một tháng hoặc một tên.",
-      "monthsAria": "Tháng của vòng tròn",
-      "says": [
-        "<b>Lin</b> nhận các phần của tháng Một. Năm người bạn mỗi người góp một phần.",
-        "<b>Chen</b> nhận các phần của tháng Hai. Lin cũng góp một phần.",
-        "<b>Mei</b> nhận các phần của tháng Ba. Chen cũng góp một phần.",
-        "<b>Guo</b> nhận các phần của tháng Tư. Mei cũng góp một phần.",
-        "<b>Sun</b> nhận các phần của tháng Năm. Guo cũng góp một phần.",
-        "<b>Huang</b> nhận các phần của tháng Sáu. Vòng tròn khép lại: ai cũng nhận một lần."
-      ],
-      "note": "Đây là ví dụ về sự hỗ trợ tự nguyện giữa những người quen biết nhau, không phải cách Social Organizer được xây dựng: ở đây không có quỹ chung, không xếp hàng và không có phần bắt buộc."
+      "title": "Trước là mạng lưới, sau là các tín hiệu",
+      "lead": "Social Organizer bắt đầu từ mạng lưới những người bạn quen trực tiếp. Hai tín hiệu đi trong đó. <b>Nhu cầu</b> (Need) là thông báo của một người tham gia về điều họ cần. <b>Sự tham gia</b> (Participation) là thông báo của một người tham gia khác về sự tham gia tự nguyện của chính họ. Mọi thứ còn lại, mọi người tự thỏa thuận và tự làm, trực tiếp."
     },
     "orbit": {
       "title": "Thông báo đi xa đến đâu",
@@ -799,7 +788,7 @@
     },
     "chain": {
       "title": "Đường đi qua những người quen",
-      "lead": "Bạn chỉ thấy những nhu cầu có đường tới bạn qua người bạn quen. Hãy nhấn một người.",
+      "lead": "Một nhu cầu tới số người bằng số đô la nó nêu, người gần nhất theo số cái bắt tay trước. Bạn chỉ thấy những nhu cầu có đường tới bạn qua người bạn quen. Chạm vào một người.",
       "says": [
         "<b>Maria Koval</b> thông báo một nhu cầu. Bạn không quen cô ấy.",
         "<b>Oleg</b>, anh trai bạn, quen Maria. Vì thế anh ấy nhận được thông báo của cô.",
@@ -807,8 +796,8 @@
       ]
     },
     "join": {
-      "title": "Người mới",
-      "lead": "Người chỉ vào vòng tròn qua người họ quen, và chỉ sau khi người đó xác nhận.",
+      "title": "Bắt đầu từ một người bạn quen",
+      "lead": "Mạng lưới chỉ lớn lên qua những người quen nhau: ai đó vào bằng liên kết của bạn, và bạn xác nhận mối quen.",
       "says": [
         "Katya mở liên kết của bạn và đăng nhập. <b>Đây chưa phải kết nối:</b> bạn nhận một thông báo đẩy.",
         "Bạn xác nhận: đúng, chúng tôi quen nhau. <b>Giờ Katya là cái bắt tay thứ 1 của bạn.</b>"
@@ -902,6 +891,46 @@
         "takes": "{{name}} nhận",
         "aria": "Bàn hui"
       }
+    },
+    "compare": {
+      "title": "Ví dụ gần nhất: tương trợ trực tuyến ở Trung Quốc",
+      "lead": "Từ 2018 đến 2021, các nền tảng tương trợ trực tuyến của Trung Quốc thu hút hàng trăm triệu thành viên: lớn nhất là Xianghubao, với hơn 100 triệu. <b>Các thành viên chia nhau chi phí bệnh nặng của nhau, mỗi người vài đô la một năm.</b> Năm 2021, cơ quan quản lý đóng cả lĩnh vực: một đơn vị vận hành đang làm điều thực chất là bảo hiểm.",
+      "note": "Social Organizer giữ lại ý tưởng, nhiều người mỗi người gánh một phần nhỏ, và bỏ đi điều khiến các nền tảng đó mong manh.",
+      "caption": "Các nền tảng tương trợ trực tuyến của Trung Quốc so với Social Organizer",
+      "them": "Nền tảng tương trợ trực tuyến",
+      "us": "Social Organizer",
+      "rows": [
+        [
+          "Ai vận hành",
+          "Một đơn vị vận hành",
+          "Không ai: một mạng lưới những người quen nhau"
+        ],
+        [
+          "Tiền",
+          "Nền tảng thu từ thành viên",
+          "Không bao giờ đi qua dịch vụ"
+        ],
+        [
+          "Điều được hứa",
+          "Một khoản chi trả, như bảo hiểm",
+          "Không gì cả: tham gia là tự nguyện"
+        ],
+        [
+          "Ai có thể vào",
+          "Bất kỳ ai đóng tiền",
+          "Chỉ qua một mối quen đã xác nhận"
+        ],
+        [
+          "Ai biết về một yêu cầu",
+          "Mọi người trên nền tảng",
+          "Số người bằng số đô la nhu cầu nêu, người gần nhất trước"
+        ],
+        [
+          "Cái gì có thể bị đóng",
+          "Nền tảng, và cùng với nó là tất cả",
+          "Không có quỹ và không có khoản chi trả nào để đóng"
+        ]
+      ]
     }
   },
   "legal": {

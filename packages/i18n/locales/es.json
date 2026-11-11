@@ -680,12 +680,12 @@
       "deleteAccount": "Eliminar la cuenta"
     },
     "meta": {
-      "title": "Social Organizer — la ayuda mutua empieza con acciones coordinadas",
-      "description": "Social Organizer ayuda a los participantes a comunicar necesidades y su participación voluntaria. Las decisiones las toman los propios participantes, y la ayuda mutua ocurre directamente entre ellos. Código abierto, proyecto sin ánimo de lucro."
+      "title": "Social Organizer — una red de personas que usted conoce",
+      "description": "Construya una red de personas que conoce en persona. Cuando alguien de ella comunica una necesidad, se entera exactamente tanta gente como dólares indica, primero los más cercanos. Los participantes deciden por sí mismos y actúan directamente. Código abierto, un proyecto sin ánimo de lucro."
     },
     "hero": {
-      "title": "La ayuda mutua empieza con acciones coordinadas",
-      "lead": "Social Organizer ayuda a los participantes a comunicar necesidades y su participación voluntaria. <b>Las decisiones las toman los propios participantes, y la ayuda mutua ocurre directamente entre ellos.</b>",
+      "title": "Primero, una red de personas que usted conoce",
+      "lead": "Social Organizer empieza por su red: personas que conoce en persona y las personas que ellas conocen. <b>Cuando alguien de ella comunica una necesidad, se entera exactamente tanta gente como dólares indica.</b> La coordinación viene después, directamente entre los participantes.",
       "factOpen": "Código abierto",
       "factNonprofit": "Sin ánimo de lucro",
       "factNoMoney": "Participación voluntaria",
@@ -696,30 +696,31 @@
       "how": "Ver cómo funciona",
       "tgAlt": "¿Mejor en Telegram?",
       "tgOpen": "Ábralo allí",
-      "sceneAria": "El mensaje sobre una necesidad viaja por los apretones de manos y los participantes comunican su participación",
+      "sceneAria": "Una red crece a partir de usted, apretón de manos tras apretón de manos; una necesidad viaja por ella y los participantes comunican su participación",
       "sceneYou": "Usted",
       "sceneAsk": "necesidad · {{amount}}",
       "sceneDone": "participación · {{amount}}",
       "statDepth": "3 apretones de manos",
       "statPeople_many": "{{n}} de personas en una red",
       "statPeople_one": "{{n}} persona en una red",
-      "statPeople_other": "{{n}} personas en una red"
+      "statPeople_other": "{{n}} personas en una red",
+      "sceneNet": "Su red · {n}"
     },
     "steps": {
       "title": "Cómo funciona",
-      "lead": "Cuatro pasos. En cada uno decide el propio participante.",
-      "s1Title": "Un participante comunica una necesidad",
-      "s1Text": "La necesidad (Need) es la primera de las dos señales. Dice <b>cuánto se necesita y dónde ponerse en contacto</b>: una cantidad y un enlace al chat.",
-      "s2Title": "Otros se enteran y deciden por sí mismos",
-      "s2Text": "El mensaje viaja por los apretones de manos: primero a quienes el participante conoce en persona, luego a sus conocidos. <b>Cada quien decide por sí mismo si puede ayudar.</b>",
-      "s3Title": "Quienes lo desean comunican su participación",
-      "s3Text": "La participación (Participation) es la segunda señal: <b>una intención voluntaria</b>, no un pago.",
-      "s4Title": "Las acciones, directamente y fuera de Social Organizer",
-      "s4Text": "Qué hacer y cómo, lo acuerdan y lo realizan los participantes <b>directamente entre sí</b>, en su propio chat."
+      "lead": "Primero está la red. Todo lo demás ocurre dentro de ella.",
+      "s1Title": "Usted construye su red",
+      "s1Text": "Añada a personas que conoce en persona, con un enlace o un código QR. <b>Cada una de ellas confirma que ustedes se conocen.</b>",
+      "s2Title": "Llega más lejos de lo que ve",
+      "s2Text": "A través de su gente llega a la suya: el 2.º y el 3.er apretón de manos. <b>Solo ve sus propios tres apretones de manos, nunca la red entera.</b>",
+      "s3Title": "Una necesidad llega a tantas personas como dólares indica",
+      "s3Text": "Una necesidad de {{amount}} llega exactamente a {{n}} personas, primero las más cercanas por apretones de manos. <b>Para cada una es una oportunidad de participar</b>, y en cuanto se cubre la cantidad, la necesidad se cierra.",
+      "s4Title": "La coordinación viene después",
+      "s4Text": "Quienes quieren comunican su participación, y las intenciones se suman, como en el crowdfunding. <b>Qué hacer y cómo lo acuerdan directamente los participantes</b>, en su propio chat."
     },
     "chain": {
       "title": "El mensaje viaja por los apretones de manos",
-      "lead": "Ve la necesidad de Maria porque Oleg la conoce, y usted conoce a Oleg. Puede dejar el mensaje sin respuesta. <b>Sin obligaciones.</b>"
+      "lead": "Ve la necesidad de Maria porque Oleg la conoce, y usted conoce a Oleg. Llega solo a tantas personas como dólares indica, primero las más cercanas. Puede dejarla sin respuesta. <b>Sin obligaciones.</b>"
     },
     "nots": {
       "title": "Lo que Social Organizer no hace",
@@ -749,13 +750,13 @@
       "p2Text": "Cada quien decide por sí mismo, sin organizador y sin valoraciones. Negarse no tiene sanciones.",
       "p3Title": "Conexión directa entre participantes",
       "p3Text": "Los acuerdos y las acciones quedan entre personas unidas por conocimientos confirmados.",
-      "p4Title": "Coordinación mínima",
-      "p4Text": "Dos señales y notificaciones sobre ellas. Sin distribución centralizada."
+      "p4Title": "Primero la red",
+      "p4Text": "Las señales viajan solo por conocimientos confirmados. Sin bote común, sin operador, sin reparto centralizado."
     },
     "faq": {
       "title": "Lo esencial",
       "q1": "¿Qué hace Social Organizer?",
-      "a1": "Registra dos señales, la necesidad (Need) y la participación (Participation), y ofrece la respuesta vinculada a ellas. No actúa en nombre de los participantes.",
+      "a1": "Le ayuda a construir una red de personas que conoce en persona y deja que dos señales, la necesidad y la participación, viajen por ella. No actúa en nombre de los participantes.",
       "q2": "¿Tengo que participar?",
       "a2": "No. La participación es voluntaria y cada quien toma su propia decisión.",
       "q3": "¿Garantiza el servicio la ayuda?",
@@ -765,31 +766,19 @@
       "q5": "¿Entregan dinero los participantes?",
       "a5": "Pueden hacerlo. Una necesidad indica una cantidad, y una participación indica cuánto está dispuesto a entregar el participante. Si los participantes entregan dinero, lo hacen ellos mismos y directamente, según su propio acuerdo. Social Organizer no verifica si la entrega se produjo.",
       "q6": "¿En qué se expresan los importes?",
-      "a6": "En dólares estadounidenses: es una unidad de cuenta común, para que los importes sean comparables. En qué moneda y de qué manera actuar lo deciden los propios participantes."
+      "a6": "En dólares estadounidenses: es una unidad de cuenta común, para que los importes sean comparables. En qué moneda y de qué manera actuar lo deciden los propios participantes.",
+      "q7": "¿En qué se diferencia de las plataformas de ayuda mutua en línea?",
+      "a7": "Las plataformas chinas de ayuda mutua tenían un único operador, cobraban a sus miembros y prometían pagos como un seguro; en 2021 fueron cerradas. Social Organizer no tiene operador, ni bote, ni pagos: solo personas que se conocen, dos señales y participación voluntaria."
     }
   },
   "how": {
     "meta": {
       "title": "Cómo funciona — Social Organizer",
-      "description": "Dos señales, necesidad y participación: cómo viaja un mensaje por los apretones de manos y por qué las acciones ocurren directamente entre los participantes."
+      "description": "Primero una red de personas que usted conoce, luego una necesidad que llega a tantas personas como dólares indica, luego coordinación directa. Y en qué se diferencia de las plataformas chinas de ayuda mutua en línea."
     },
     "hero": {
-      "title": "Dos señales y una conexión directa",
-      "lead": "Social Organizer tiene solo dos señales. La <b>necesidad</b> (Need) es el mensaje de un participante sobre lo que necesita. La <b>participación</b> (Participation) es el mensaje de otro participante sobre su propia participación voluntaria. Todo lo demás lo acuerdan y lo hacen las personas mismas, directamente."
-    },
-    "table": {
-      "title": "Un ejemplo histórico: el hui",
-      "lead": "En el sur de China, seis conocidos ponen una parte una vez al mes, y uno se lleva las partes de ese mes. Toque un mes o un nombre.",
-      "monthsAria": "Mes del círculo",
-      "says": [
-        "<b>Lin</b> se lleva las partes de enero. Cinco amistades pusieron una parte cada una.",
-        "<b>Chen</b> se lleva las partes de febrero. Lin también pone una parte.",
-        "<b>Mei</b> se lleva las partes de marzo. Chen también pone una parte.",
-        "<b>Guo</b> se lleva las partes de abril. Mei también pone una parte.",
-        "<b>Sun</b> se lleva las partes de mayo. Guo también pone una parte.",
-        "<b>Huang</b> se lleva las partes de junio. El círculo se cierra: cada quien recibió una vez."
-      ],
-      "note": "Es un ejemplo de ayuda mutua voluntaria entre conocidos, no la forma en que está hecho Social Organizer: este no tiene caja común, ni turnos, ni partes obligatorias."
+      "title": "Primero la red, luego las señales",
+      "lead": "Social Organizer empieza por una red de personas que usted conoce en persona. Dos señales viajan por ella. La <b>necesidad</b> (Need) es el mensaje de un participante sobre lo que necesita. La <b>participación</b> (Participation) es el mensaje de otro participante sobre su propia participación voluntaria. Todo lo demás lo acuerdan y lo hacen las personas mismas, directamente."
     },
     "orbit": {
       "title": "Hasta dónde llega un mensaje",
@@ -809,7 +798,7 @@
     },
     "chain": {
       "title": "Un camino de conocidos",
-      "lead": "Solo ve las necesidades que llegan hasta usted por un camino de conocidos. Toque a una persona.",
+      "lead": "Una necesidad llega a tantas personas como dólares indica, primero las más cercanas por apretones de manos. Solo ve las necesidades que llegan hasta usted por un camino de conocidos. Toque a una persona.",
       "says": [
         "<b>Maria Koval</b> comunica una necesidad. Usted no la conoce.",
         "<b>Oleg</b>, su hermano, conoce a Maria. Por eso él recibe su mensaje.",
@@ -817,8 +806,8 @@
       ]
     },
     "join": {
-      "title": "Una persona nueva",
-      "lead": "Las personas entran en el círculo solo a través de alguien que conocen, y solo después de que esa persona lo confirme.",
+      "title": "Empieza con una persona que usted conoce",
+      "lead": "La red crece solo a través de personas que se conocen: alguien entra con su enlace y usted confirma el conocimiento.",
       "says": [
         "Katya abre su enlace y entra. <b>Esto aún no es una conexión:</b> le llega un aviso.",
         "Usted confirma: sí, nos conocemos. <b>Ahora Katya es su 1.er apretón.</b>"
@@ -912,6 +901,46 @@
         "takes": "{{name}} se la lleva",
         "aria": "Mesa del hui"
       }
+    },
+    "compare": {
+      "title": "El ejemplo más cercano: la ayuda mutua en línea en China",
+      "lead": "De 2018 a 2021, las plataformas chinas de ayuda mutua en línea reunieron a cientos de millones de miembros: la mayor, Xianghubao, superó los 100 millones. <b>Los miembros se repartían el coste de las enfermedades graves de los demás, unos pocos dólares al año cada uno.</b> En 2021 los reguladores cerraron todo el sector: un único operador gestionaba, en la práctica, un seguro.",
+      "note": "Social Organizer conserva la idea, muchas personas asumiendo cada una una parte pequeña, y descarta lo que hacía frágiles a esas plataformas.",
+      "caption": "Las plataformas chinas de ayuda mutua en línea comparadas con Social Organizer",
+      "them": "Plataformas de ayuda mutua en línea",
+      "us": "Social Organizer",
+      "rows": [
+        [
+          "Quién la dirige",
+          "Un único operador",
+          "Nadie: una red de personas que se conocen"
+        ],
+        [
+          "Dinero",
+          "La plataforma lo cobra a los miembros",
+          "Nunca pasa por el servicio"
+        ],
+        [
+          "Qué se promete",
+          "Un pago, como en un seguro",
+          "Nada: la participación es voluntaria"
+        ],
+        [
+          "Quién puede unirse",
+          "Cualquiera que pague",
+          "Solo a través de un conocimiento confirmado"
+        ],
+        [
+          "Quién se entera de una petición",
+          "Todos en la plataforma",
+          "Tantas personas como dólares indica la necesidad, primero las más cercanas"
+        ],
+        [
+          "Qué se puede cerrar",
+          "La plataforma y, con ella, todo",
+          "No hay bote ni pagos que cerrar"
+        ]
+      ]
     }
   },
   "legal": {

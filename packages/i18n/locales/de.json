@@ -676,12 +676,12 @@
       "deleteAccount": "Konto löschen"
     },
     "meta": {
-      "title": "Social Organizer — Unterstützung beginnt mit abgestimmtem Handeln",
-      "description": "Social Organizer hilft Beteiligten, ihren Bedarf und ihre freiwillige Beteiligung zu melden. Die Beteiligten entscheiden selbst, und die Unterstützung geschieht direkt zwischen ihnen. Open Source, ein gemeinnütziges Projekt."
+      "title": "Social Organizer — ein Netzwerk aus Menschen, die Sie kennen",
+      "description": "Bauen Sie ein Netzwerk aus Menschen auf, die Sie persönlich kennen. Meldet jemand darin einen Bedarf, erfahren genau so viele Menschen davon, wie Dollar darin stehen, die Nächsten zuerst. Die Beteiligten entscheiden selbst und handeln direkt. Open Source, ein gemeinnütziges Projekt."
     },
     "hero": {
-      "title": "Unterstützung beginnt mit abgestimmtem Handeln",
-      "lead": "Social Organizer hilft Beteiligten, ihren Bedarf und ihre freiwillige Beteiligung zu melden. <b>Die Beteiligten entscheiden selbst, und die Unterstützung geschieht direkt zwischen ihnen.</b>",
+      "title": "Zuerst ein Netzwerk aus Menschen, die Sie kennen",
+      "lead": "Social Organizer beginnt mit Ihrem Netzwerk: Menschen, die Sie persönlich kennen, und die Menschen, die sie kennen. <b>Meldet jemand darin einen Bedarf, erfahren genau so viele Menschen davon, wie Dollar darin stehen.</b> Die Abstimmung folgt danach, direkt zwischen den Beteiligten.",
       "factOpen": "Open Source",
       "factNonprofit": "Gemeinnützig",
       "factNoMoney": "Freiwillige Beteiligung",
@@ -692,29 +692,30 @@
       "how": "So funktioniert es",
       "tgAlt": "Lieber Telegram?",
       "tgOpen": "Dort öffnen",
-      "sceneAria": "Die Meldung eines Bedarfs geht über Handschläge, Beteiligte melden ihre Beteiligung",
+      "sceneAria": "Ein Netzwerk wächst von Ihnen aus, Handschlag für Handschlag; ein Bedarf wandert darin, und Beteiligte melden ihre Beteiligung",
       "sceneYou": "Sie",
       "sceneAsk": "Bedarf · {{amount}}",
       "sceneDone": "Beteiligung · {{amount}}",
       "statDepth": "3 Handschläge",
       "statPeople_one": "{{n}} Person in einem Netzwerk",
-      "statPeople_other": "{{n}} Personen in einem Netzwerk"
+      "statPeople_other": "{{n}} Personen in einem Netzwerk",
+      "sceneNet": "Ihr Netzwerk · {n}"
     },
     "steps": {
       "title": "So funktioniert es",
-      "lead": "Vier Schritte. Bei jedem entscheidet die Person selbst.",
-      "s1Title": "Eine Person meldet einen Bedarf",
-      "s1Text": "Der Bedarf (Need) ist das erste von zwei Signalen. Er sagt, <b>wie viel gebraucht wird und wo man sich melden kann</b>: ein Betrag und ein Chat-Link.",
-      "s2Title": "Andere erfahren davon und entscheiden selbst",
-      "s2Text": "Die Meldung geht über Handschläge: zuerst an die, die die Person persönlich kennt, dann an deren Bekannte. <b>Jede Person entscheidet selbst, ob sie unterstützen kann.</b>",
-      "s3Title": "Wer möchte, meldet seine Beteiligung",
-      "s3Text": "Die Beteiligung (Participation) ist das zweite Signal: <b>eine freiwillige Absicht</b>, keine Zahlung.",
-      "s4Title": "Handeln direkt, außerhalb von Social Organizer",
-      "s4Text": "Was und wie getan wird, vereinbaren und erledigen die Beteiligten <b>direkt miteinander</b>, in ihrem eigenen Chat."
+      "lead": "Zuerst kommt das Netzwerk. Alles andere geschieht darin.",
+      "s1Title": "Sie bauen Ihr Netzwerk auf",
+      "s1Text": "Fügen Sie Menschen hinzu, die Sie persönlich kennen, per Link oder QR-Code. <b>Jede dieser Personen bestätigt, dass Sie sich kennen.</b>",
+      "s2Title": "Es reicht weiter, als Sie sehen",
+      "s2Text": "Über Ihre Leute erreichen Sie deren Leute: den 2. und 3. Handschlag. <b>Sie sehen nur Ihre eigenen drei Handschläge, nie das ganze Netzwerk.</b>",
+      "s3Title": "Ein Bedarf erreicht so viele Menschen, wie er Dollar nennt",
+      "s3Text": "Ein Bedarf von {{amount}} erreicht genau {{n}} Menschen, die Nächsten nach Handschlägen zuerst. <b>Für jede dieser Personen ist es eine Gelegenheit, sich zu beteiligen</b>, und sobald der Betrag gedeckt ist, schließt der Bedarf.",
+      "s4Title": "Die Abstimmung folgt",
+      "s4Text": "Wer möchte, meldet eine Beteiligung, und die Absichten summieren sich, wie beim Crowdfunding. <b>Was und wie getan wird, vereinbaren die Beteiligten direkt</b>, in ihrem eigenen Chat."
     },
     "chain": {
       "title": "Die Meldung eines Bedarfs geht über Handschläge",
-      "lead": "Sie sehen Marias Bedarf, weil Oleg sie kennt und Sie Oleg kennen. Die Meldung dürfen Sie unbeantwortet lassen. <b>Keine Verpflichtungen.</b>"
+      "lead": "Sie sehen Marias Bedarf, weil Oleg sie kennt und Sie Oleg kennen. Er erreicht nur so viele Menschen, wie er Dollar nennt, die Nächsten zuerst. Sie dürfen ihn unbeantwortet lassen. <b>Keine Verpflichtungen.</b>"
     },
     "nots": {
       "title": "Was Social Organizer nicht tut",
@@ -744,13 +745,13 @@
       "p2Text": "Jede Person entscheidet selbst, ohne Organisator und ohne Bewertungen. Ein Nein hat keine Folgen.",
       "p3Title": "Direkte Verbindung der Beteiligten",
       "p3Text": "Absprachen und Handeln bleiben zwischen Menschen, die durch bestätigte Bekanntschaft verbunden sind.",
-      "p4Title": "Minimale Koordination",
-      "p4Text": "Zwei Signale und Benachrichtigungen darüber. Keine zentrale Verteilung."
+      "p4Title": "Zuerst das Netzwerk",
+      "p4Text": "Signale laufen nur über bestätigte Bekanntschaften. Kein gemeinsamer Topf, keinen Betreiber, keine zentrale Verteilung."
     },
     "faq": {
       "title": "Das Wichtigste in Kürze",
       "q1": "Was macht Social Organizer?",
-      "a1": "Es erfasst zwei Signale — Bedarf (Need) und Beteiligung (Participation) — und sorgt für die damit verbundene Rückmeldung. Es handelt nicht anstelle der Beteiligten.",
+      "a1": "Es hilft Ihnen, ein Netzwerk aus Menschen aufzubauen, die Sie persönlich kennen, und lässt zwei Signale darin wandern: Bedarf und Beteiligung. Es handelt nicht anstelle der Beteiligten.",
       "q2": "Muss ich mich beteiligen?",
       "a2": "Nein. Die Beteiligung ist freiwillig, und jede Person entscheidet selbst.",
       "q3": "Garantiert der Dienst Unterstützung?",
@@ -760,31 +761,19 @@
       "q5": "Übergeben die Beteiligten Geld?",
       "a5": "Sie können es. In der Meldung eines Bedarfs nennt die Person einen Betrag, und in der Meldung der Beteiligung, wie viel sie zu übergeben bereit ist. Wenn Beteiligte Geld übergeben, tun sie das selbst und direkt, nach eigener Absprache. Social Organizer prüft nicht, ob eine Übergabe stattgefunden hat.",
       "q6": "Worin sind die Beträge angegeben?",
-      "a6": "In US-Dollar: eine gemeinsame Recheneinheit, damit die Beträge vergleichbar sind. In welcher Währung und auf welche Weise gehandelt wird, entscheiden die Beteiligten selbst."
+      "a6": "In US-Dollar: eine gemeinsame Recheneinheit, damit die Beträge vergleichbar sind. In welcher Währung und auf welche Weise gehandelt wird, entscheiden die Beteiligten selbst.",
+      "q7": "Worin unterscheidet es sich von Online-Plattformen für gegenseitige Hilfe?",
+      "a7": "Chinas Plattformen für gegenseitige Hilfe hatten einen Betreiber, zogen Beiträge von Mitgliedern ein und versprachen Auszahlungen wie eine Versicherung; 2021 wurden sie geschlossen. Social Organizer hat keinen Betreiber, keinen Topf und keine Auszahlungen: nur Menschen, die sich kennen, zwei Signale und freiwillige Beteiligung."
     }
   },
   "how": {
     "meta": {
       "title": "So funktioniert es — Social Organizer",
-      "description": "Zwei Signale — Bedarf und Beteiligung: wie eine Meldung über Handschläge geht und warum das Handeln direkt zwischen den Beteiligten geschieht."
+      "description": "Zuerst ein Netzwerk aus Menschen, die Sie kennen, dann ein Bedarf, der so viele Menschen erreicht, wie er Dollar nennt, dann direkte Abstimmung. Und worin es sich von Chinas Online-Plattformen für gegenseitige Hilfe unterscheidet."
     },
     "hero": {
-      "title": "Zwei Signale und eine direkte Verbindung",
-      "lead": "Social Organizer kennt nur zwei Signale. Ein <b>Bedarf</b> (Need) ist die Meldung einer Person darüber, was sie braucht. Eine <b>Beteiligung</b> (Participation) ist die Meldung einer anderen Person über ihre eigene freiwillige Beteiligung. Alles Weitere vereinbaren und tun die Menschen selbst, direkt."
-    },
-    "table": {
-      "title": "Ein historisches Beispiel: der Hui",
-      "lead": "In Südchina legen sechs Bekannte einmal im Monat einen Anteil ein, und eine Person nimmt die Anteile dieses Monats. Tippen Sie auf einen Monat oder einen Namen.",
-      "monthsAria": "Monat des Kreises",
-      "says": [
-        "<b>Lin</b> nimmt die Anteile vom Januar. Fünf Freunde haben je einen Anteil eingelegt.",
-        "<b>Chen</b> nimmt die Anteile vom Februar. Lin legt auch einen Anteil ein.",
-        "<b>Mei</b> nimmt die Anteile vom März. Chen legt auch einen Anteil ein.",
-        "<b>Guo</b> nimmt die Anteile vom April. Mei legt auch einen Anteil ein.",
-        "<b>Sun</b> nimmt die Anteile vom Mai. Guo legt auch einen Anteil ein.",
-        "<b>Huang</b> nimmt die Anteile vom Juni. Der Kreis schließt sich: Jede Person hat einmal bekommen."
-      ],
-      "note": "Das ist ein Beispiel für freiwillige Unterstützung zwischen Menschen, die sich kennen, und nicht der Aufbau von Social Organizer: Es gibt dort keine gemeinsame Kasse, keine Warteschlange und keine Pflichtanteile."
+      "title": "Zuerst das Netzwerk, dann die Signale",
+      "lead": "Social Organizer beginnt mit einem Netzwerk aus Menschen, die Sie persönlich kennen. Zwei Signale wandern darin. Ein <b>Bedarf</b> (Need) ist die Meldung einer Person darüber, was sie braucht. Eine <b>Beteiligung</b> (Participation) ist die Meldung einer anderen Person über ihre eigene freiwillige Beteiligung. Alles Weitere vereinbaren und tun die Menschen selbst, direkt."
     },
     "orbit": {
       "title": "Wie weit eine Meldung geht",
@@ -804,7 +793,7 @@
     },
     "chain": {
       "title": "Ein Weg über Bekannte",
-      "lead": "Sie sehen nur Bedarfe, zu denen ein Weg über Menschen führt, die Sie kennen. Tippen Sie auf eine Person.",
+      "lead": "Ein Bedarf erreicht so viele Menschen, wie er Dollar nennt, die Nächsten nach Handschlägen zuerst. Sie sehen nur Bedarfe, zu denen ein Weg über Menschen führt, die Sie kennen. Tippen Sie auf eine Person.",
       "says": [
         "<b>Maria Koval</b> meldet einen Bedarf. Sie kennen sie nicht.",
         "<b>Oleg</b>, Ihr Bruder, kennt Maria. Darum erhält er ihre Meldung.",
@@ -812,8 +801,8 @@
       ]
     },
     "join": {
-      "title": "Eine neue Person",
-      "lead": "In den Kreis kommt nur, wer über eine bekannte Person kommt, und erst nach deren Bestätigung.",
+      "title": "Es beginnt mit einer Person, die Sie kennen",
+      "lead": "Das Netzwerk wächst nur über Menschen, die sich kennen: Jemand kommt über Ihren Link, und Sie bestätigen die Bekanntschaft.",
       "says": [
         "Katya öffnet Ihren Link und meldet sich an. <b>Das ist noch keine Verbindung:</b> Sie bekommen eine Push-Nachricht.",
         "Sie bestätigen: Ja, wir kennen uns. <b>Jetzt ist Katya Ihr 1. Handschlag.</b>"
@@ -907,6 +896,46 @@
         "takes": "{{name}} nimmt sie",
         "aria": "Hui-Tisch"
       }
+    },
+    "compare": {
+      "title": "Das nächstliegende Beispiel: Chinas Online-Plattformen für gegenseitige Hilfe",
+      "lead": "Von 2018 bis 2021 versammelten Chinas Online-Plattformen für gegenseitige Hilfe Hunderte Millionen Mitglieder: Die größte, Xianghubao, hatte über 100 Millionen. <b>Die Mitglieder teilten sich die Kosten schwerer Krankheiten untereinander, jedes nur wenige Dollar im Jahr.</b> 2021 schlossen die Behörden den ganzen Sektor: Ein Betreiber führte faktisch eine Versicherung.",
+      "note": "Social Organizer behält die Idee, dass viele Menschen je einen kleinen Teil tragen, und lässt weg, was diese Plattformen anfällig machte.",
+      "caption": "Chinas Online-Plattformen für gegenseitige Hilfe im Vergleich mit Social Organizer",
+      "them": "Online-Plattformen für gegenseitige Hilfe",
+      "us": "Social Organizer",
+      "rows": [
+        [
+          "Wer es betreibt",
+          "Ein Betreiber",
+          "Niemand: ein Netzwerk aus Menschen, die sich kennen"
+        ],
+        [
+          "Geld",
+          "Wird von der Plattform bei den Mitgliedern eingezogen",
+          "Läuft nie über den Dienst"
+        ],
+        [
+          "Was versprochen wird",
+          "Eine Auszahlung, wie bei einer Versicherung",
+          "Nichts: Beteiligung ist freiwillig"
+        ],
+        [
+          "Wer beitreten kann",
+          "Jeder, der zahlt",
+          "Nur über eine bestätigte Bekanntschaft"
+        ],
+        [
+          "Wer von einer Anfrage erfährt",
+          "Alle auf der Plattform",
+          "So viele Menschen, wie der Bedarf Dollar nennt, die Nächsten zuerst"
+        ],
+        [
+          "Was abgeschaltet werden kann",
+          "Die Plattform, und mit ihr alles",
+          "Es gibt keinen Topf und keine Auszahlungen, die man abschalten könnte"
+        ]
+      ]
     }
   },
   "legal": {
