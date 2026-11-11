@@ -15,6 +15,8 @@ import { trpc } from '../../lib/trpc';
 
 const SEARCH_POLL_MS = 500;
 const WAIT_POLL_MS = 1000;
+/** Failed status reads in a row before the sheet gives up */
+const STATUS_RETRIES = 3;
 const GEO_TIMEOUT_MS = 1500;
 
 interface Person {
@@ -142,12 +144,20 @@ function ShakeFlow() {
 
   const poll = useCallback(
     async (ticket: string, id: number) => {
+      let misses = 0;
       while (run.current === id) {
         let status;
         try {
           status = await utils.client.shake.status.query({ ticket });
+          misses = 0;
         } catch {
           if (run.current !== id) return;
+          // A dropped request on a weak connection is not the end: the other person may be waiting
+          misses += 1;
+          if (misses < STATUS_RETRIES) {
+            await new Promise((r) => window.setTimeout(r, WAIT_POLL_MS));
+            continue;
+          }
           setView({ kind: 'error', message: t('shake.failed') });
           return;
         }
@@ -283,7 +293,7 @@ function ShakeFlow() {
         <span className="text-body font-bold text-ink">{person.name}</span>
       </div>
     );
-    if (match.alreadyConnected) {
+    if (match.alreadyConnected && match.pairState !== 'connected') {
       title = t('shake.alreadyConnected');
       content = avatar;
       footer = closeBtn('primary');

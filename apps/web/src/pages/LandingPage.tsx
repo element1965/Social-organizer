@@ -143,8 +143,16 @@ export function LandingPage({ inviteToken }: { inviteToken?: string } = {}) {
 
   return (
     <SitePage title={t('landing.meta.title')} description={t('landing.meta.description')}>
-      <section className="site-hero" aria-labelledby="hero-title">
-        <div>
+      <section className="site-hero dark" aria-labelledby="hero-title">
+        <HeroScene
+          ariaLabel={t('landing.hero.sceneAria')}
+          labels={{
+            you: t('landing.hero.sceneYou'),
+            ask: t('landing.hero.sceneAsk', { amount: money(300) }),
+            done: t('landing.hero.sceneDone', { amount: money(300) }),
+          }}
+        />
+        <div className="site-hero-copy">
           <h1 id="hero-title">{t('landing.hero.title')}</h1>
           <p className="lead">
             <Trans i18nKey="landing.hero.lead" components={B} />
@@ -166,21 +174,9 @@ export function LandingPage({ inviteToken }: { inviteToken?: string } = {}) {
             <span className="site-pill">{t('landing.hero.factNoMoney')}</span>
           </div>
         </div>
-        <div className="site-hero-scene">
-          <HeroScene
-            ariaLabel={t('landing.hero.sceneAria')}
-            labels={{
-              you: t('landing.hero.sceneYou'),
-              ask: t('landing.hero.sceneAsk', { amount: money(300) }),
-              done: t('landing.hero.sceneDone', { amount: money(300) }),
-              coin: '',
-            }}
-          >
-            <div className="tag">
-              <span>{t('landing.hero.statDepth')}</span>
-            </div>
-          </HeroScene>
-        </div>
+        <span className="site-hero-tag" aria-hidden="true">
+          {t('landing.hero.statDepth')}
+        </span>
       </section>
 
       <section className="site-sec" id="how" aria-labelledby="steps-title">

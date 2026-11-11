@@ -59,32 +59,37 @@
 .site-foot .phone-only { display: none; }
 
 /* ---------- landing ---------- */
-.site-hero { position: relative; isolation: isolate; display: grid; grid-template-columns: 1fr 560px; gap: 48px; align-items: center; padding: 40px 48px 72px; }
-/* A soft glow of the brand colour behind the scene; drawn with the token, so both themes follow. */
-.site-hero::before { content: ''; position: absolute; z-index: -1; inset: -64px 0 0 30%; background: radial-gradient(closest-side, color-mix(in oklab, var(--care) 16%, transparent), transparent); pointer-events: none; }
+/*
+ * The hero is a dark scene panel (class "dark" in the markup, so the copy takes the dark tokens) with the live 3D
+ * network behind the copy (HeroScene / heroGraph.ts). Where the ball sits is set here and read by the canvas:
+ * --hero-gx: centre x as a share of the width; --hero-gr: ball radius as a share of the width (also capped by the
+ * height); --hero-graph-h: height of the zone the ball is centred in (0 = the whole panel).
+ */
+.site-hero { --hero-gx: .7; --hero-gr: .26; --hero-graph-h: 0; position: relative; isolation: isolate; display: flex; align-items: center; min-height: 600px; margin: 8px 24px 0; padding: 72px 56px; border-radius: var(--r-2xl); overflow: hidden; background: var(--scene); color: var(--ink); box-shadow: var(--shadow-banner); }
+.site-hero-graph { position: absolute; inset: 0; z-index: 0; width: 100%; height: 100%; display: block; cursor: grab; touch-action: pan-y; animation: site-fade .9s var(--ease-out) both; }
+.site-hero-graph.drag { cursor: grabbing; }
+/* Scrim so the copy stays readable over the network. It lets the pointer through to the canvas. */
+.site-hero::after { content: ''; position: absolute; inset: 0; z-index: 1; pointer-events: none; background: linear-gradient(90deg, rgb(var(--so-scene) / .92) 0%, rgb(var(--so-scene) / .7) 34%, rgb(var(--so-scene) / 0) 58%); }
+/* The copy lets drags through between its blocks; the blocks themselves stay selectable and clickable. */
+.site-hero-copy { position: relative; z-index: 2; width: 100%; max-width: 560px; min-width: 0; pointer-events: none; }
+.site-hero-copy > * { pointer-events: auto; }
 .site-hero h1 { font-size: clamp(44px, 4.6vw, 60px); line-height: .98; letter-spacing: -.05em; font-weight: 800; text-wrap: balance; overflow-wrap: break-word; }
-.site-hero > div { min-width: 0; }
-@container (max-width: 1180px) { .site-hero { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); } }
 .site-hero .lead { margin-top: 20px; font-size: 19px; line-height: 1.45; color: var(--muted); max-width: 44ch; }
 .site-hero .lead b { color: var(--care-text); }
-.site-hero-scene { animation: site-rise .7s var(--ease-out) both; }
-@keyframes site-rise { from { opacity: 0; transform: translateY(12px) scale(.985); } to { opacity: 1; transform: none; } }
+@keyframes site-fade { from { opacity: 0; } to { opacity: 1; } }
 .site-hero .site-proof { display: flex; align-items: center; gap: 10px; margin-top: 20px; font-size: 15px; font-weight: 700; color: var(--ink); font-variant-numeric: tabular-nums; }
 .site-proof .dots { display: inline-flex; }
-.site-proof .dots i { width: 22px; height: 22px; border-radius: 50%; background: var(--care); box-shadow: 0 0 0 2px var(--canvas); }
+.site-proof .dots i { width: 22px; height: 22px; border-radius: 50%; background: var(--care); box-shadow: 0 0 0 2px var(--scene); }
 .site-proof .dots i + i { margin-left: -7px; }
 .site-proof .dots i:nth-child(2) { background: var(--node-1); }
-.site-proof .dots i:nth-child(3) { background: var(--surface-2); box-shadow: 0 0 0 2px var(--canvas), inset 0 0 0 1px var(--line-strong); }
+.site-proof .dots i:nth-child(3) { background: var(--surface-2); box-shadow: 0 0 0 2px var(--scene), inset 0 0 0 1px var(--line-strong); }
 .site-cta { display: flex; gap: 12px; margin-top: 28px; flex-wrap: wrap; }
 .site-alt { display: flex; align-items: center; gap: 8px; margin-top: 14px; font-size: 14px; font-weight: 700; color: var(--muted); }
 .site-alt svg { width: 18px; height: 18px; color: var(--link); }
 .site-alt a { color: var(--care-text); display: inline-flex; align-items: center; min-height: 24px; padding: 0 2px; }
 .site-facts { display: flex; gap: 8px; margin-top: 22px; flex-wrap: wrap; }
 .site-pill { display: inline-flex; align-items: center; height: 26px; padding: 0 10px; border-radius: var(--r-sm); background: var(--surface-2); color: var(--muted); font-size: 12px; font-weight: 700; }
-.site-planet { position: relative; height: 480px; border-radius: var(--r-2xl); overflow: hidden; background: var(--scene); box-shadow: var(--shadow-banner); }
-.site-planet canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
-.site-planet .tag { position: absolute; left: 20px; bottom: 18px; right: 20px; display: flex; gap: 8px; flex-wrap: wrap; }
-.site-planet .tag span { height: 30px; padding: 0 12px; border-radius: var(--r-sm); background: rgb(var(--so-node-1) / .12); color: var(--node-1); font-size: 13px; font-weight: 700; display: grid; place-items: center; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+.site-hero-tag { position: absolute; z-index: 2; right: 24px; bottom: 20px; height: 30px; padding: 0 12px; border-radius: var(--r-sm); background: rgb(var(--so-node-1) / .12); color: var(--node-1); font-size: 13px; font-weight: 700; display: grid; place-items: center; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); pointer-events: none; }
 
 .site-sec { padding: 72px 48px; border-top: 1px solid var(--line-soft); }
 .site-sec h2 { font-size: 40px; letter-spacing: -.04em; line-height: 1.04; font-weight: 800; text-wrap: balance; }
@@ -187,7 +192,7 @@
 .site .rvg > :nth-child(4) { transition-delay: 240ms; }
 @media (prefers-reduced-motion: reduce) {
   .site .rv, .site .rvg > * { opacity: 1; transform: none; transition: none; }
-  .site-hero-scene { animation: none; }
+  .site-hero-graph { animation: none; }
   .site-story .beat { transition: none; }
   .site-btn { transition: none; }
   .site-btn:active { transform: none; }
@@ -204,8 +209,11 @@
 
 /* tablet and narrow desktop windows: the hero and the two-column sections stack before the phone layout */
 @container (max-width: 960px) {
-  .site-hero { grid-template-columns: 1fr; }
-  .site-hero::before { inset: auto 0 0 0; height: 70%; }
+  /* Stacked: the ball sits in a zone on top, the copy below it over a scrim that rises from the bottom. */
+  .site-hero { --hero-gx: .5; --hero-gr: .4; --hero-graph-h: 380px; align-items: flex-end; min-height: 0; padding: calc(var(--hero-graph-h) - 24px) 40px 48px; }
+  .site-hero::after { background: linear-gradient(180deg, rgb(var(--so-scene) / 0) 0, rgb(var(--so-scene) / 0) calc(var(--hero-graph-h) - 110px), rgb(var(--so-scene) / .86) calc(var(--hero-graph-h) + 10px)); }
+  .site-hero-copy { max-width: none; }
+  .site-hero-tag { top: calc(var(--hero-graph-h) - 56px); bottom: auto; right: auto; left: 50%; transform: translateX(-50%); }
   .site-hero .lead { max-width: 60ch; }
   .site-two, .site-how .site-sec { grid-template-columns: 1fr; }
   .site-nots, .site-nots.four { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
@@ -215,10 +223,7 @@
 @container (max-width: 600px) {
   .site-top { padding: 0 16px; height: 64px; gap: 12px; }
   .site-top nav, .site-top .site-lang { display: none; }
-  .site-hero { grid-template-columns: 1fr; gap: 20px; padding: 8px 16px 40px; }
-  /* The scene opens the page on phones, so the network is on the first screen; the buttons stay above the fold. */
-  .site-hero-scene { order: -1; }
-  .site-hero::before { inset: -40px -16px auto; height: 300px; }
+  .site-hero { --hero-graph-h: 300px; --hero-gr: .44; margin: 4px 12px 0; padding: calc(var(--hero-graph-h) - 20px) 20px 32px; border-radius: var(--r-xl); }
   .site-hero h1 { font-size: 40px; }
   .site-hero1 h1 { font-size: 36px; }
   .site-hero .lead { margin-top: 14px; }
@@ -226,8 +231,6 @@
   .site-hero .lead, .site-hero1 .lead { font-size: 17px; }
   .site-cta { flex-direction: column; }
   .site-cta .site-btn { width: 100%; }
-  .site-planet { height: 240px; border-radius: var(--r-xl); }
-  .site-planet .tag { left: 14px; bottom: 12px; }
   .site-sec { padding: 40px 16px; }
   .site-sec h2 { font-size: 30px; }
   .site-endcta h2 { font-size: 28px; }

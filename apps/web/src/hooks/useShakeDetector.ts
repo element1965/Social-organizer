@@ -176,7 +176,8 @@ export function useShakeDetector(onShake: () => void, enabled = true) {
       const onTap = () => {
         if (permission === 'granted') return;
         void request().then(() => {
-          if (permission === 'granted') removeTap?.();
+          // A clear answer either way ends the asking; only a failed request (no gesture) tries again
+          if (permission === 'granted' || permission === 'denied') removeTap?.();
         });
       };
       document.addEventListener('pointerup', onTap, true);
