@@ -398,7 +398,7 @@ Before this split the entry was 1858 KB / 558 KB gzip and the landing also pulle
 - **Contact links** — all social network contact types (Telegram, Instagram, Twitter, LinkedIn, VK, Facebook, WhatsApp, Email, Website) open correct URLs via `buildContactUrl`
 - **TG username auto-save** — Telegram username automatically saved/updated as contact on each login
 - **Online status indicator** — green dot + "Online" when last seen within 5 minutes, gray dot + relative time otherwise; auto-updated on every authenticated API call
-- **Hide contacts** — users can hide their contacts from non-connected users; direct connections and notified users still see them
+- **Hide contacts** — off by default; users can hide their contacts from non-connected users; direct connections and notified users still see them
 - **Connection nicknames** — custom names for connections (like a phone book), editable from the person screen; the nickname replaces the real name across the circle, people, and collections
 - **Telegram Mini App** — auto-login via initData, BackButton navigation, haptic feedback on tab switches, theme sync, CSS variable injection from Telegram themeParams
 - **Onboarding** — auto-shown for new users, completable flag in database
