@@ -676,12 +676,12 @@
       "deleteAccount": "Hesabı sil"
     },
     "meta": {
-      "title": "Social Organizer — destek, eşgüdümlü eylemle başlar",
-      "description": "Social Organizer, katılımcıların ihtiyaçlarını ve gönüllü katılımlarını bildirmesine yardımcı olur. Kararları katılımcılar kendileri verir, destek doğrudan aralarında gerçekleşir. Açık kaynak, kâr amacı gütmeyen bir proje."
+      "title": "Social Organizer — tanıdığınız insanların ağı",
+      "description": "Yüz yüze tanıdığınız insanlardan bir ağ kurun. Ağdaki biri ihtiyaç bildirdiğinde, belirtilen dolar kadar kişi bunu öğrenir, en yakınlar önce. Katılımcılar kendileri karar verir ve doğrudan hareket eder. Açık kaynak, kâr amacı gütmeyen bir proje."
     },
     "hero": {
-      "title": "Destek, eşgüdümlü eylemle başlar",
-      "lead": "Social Organizer, katılımcıların ihtiyaçlarını ve gönüllü katılımlarını bildirmesine yardımcı olur. <b>Kararları katılımcılar kendileri verir, destek doğrudan aralarında gerçekleşir.</b>",
+      "title": "Önce tanıdığınız insanların ağı",
+      "lead": "Social Organizer ağınızla başlar: yüz yüze tanıdığınız insanlar ve onların tanıdıkları. <b>Ağdaki biri ihtiyaç bildirdiğinde, belirtilen dolar kadar kişi bunu öğrenir.</b> Eşgüdüm bunun ardından gelir, doğrudan katılımcılar arasında.",
       "factOpen": "Açık kaynak",
       "factNonprofit": "Kâr amacı gütmez",
       "factNoMoney": "Gönüllü katılım",
@@ -692,29 +692,30 @@
       "how": "Nasıl çalıştığını görün",
       "tgAlt": "Telegram mı daha uygun?",
       "tgOpen": "Orada açın",
-      "sceneAria": "İhtiyaç bildirimi tokalaşmalarla ilerler, katılımcılar katılım bildirir",
+      "sceneAria": "Ağ sizden başlayarak tokalaşma tokalaşma büyür; ihtiyaç ağın içinde ilerler ve katılımcılar katılım bildirir",
       "sceneYou": "Siz",
       "sceneAsk": "ihtiyaç · {{amount}}",
       "sceneDone": "katılım · {{amount}}",
       "statDepth": "3 tokalaşma",
       "statPeople_one": "Tek ağda {{n}} kişi",
-      "statPeople_other": "Tek ağda {{n}} kişi"
+      "statPeople_other": "Tek ağda {{n}} kişi",
+      "sceneNet": "Ağınız · {n}"
     },
     "steps": {
       "title": "Nasıl çalışır",
-      "lead": "Dört adım. Her birinde karar katılımcının kendisine aittir.",
-      "s1Title": "Bir katılımcı ihtiyaç bildirir",
-      "s1Text": "İhtiyaç (Need), iki sinyalden ilkidir. İçinde <b>ne kadar gerektiği ve nasıl iletişime geçileceği</b> yazar: bir tutar ve bir sohbet bağlantısı.",
-      "s2Title": "Diğerleri öğrenir ve kendileri karar verir",
-      "s2Text": "Bildirim tokalaşmalar boyunca ilerler: önce katılımcının kişisel olarak tanıdıklarına, sonra onların tanıdıklarına. <b>Destek olup olamayacağına herkes kendisi karar verir.</b>",
-      "s3Title": "İsteyenler katılım bildirir",
-      "s3Text": "Katılım (Participation) ikinci sinyaldir: <b>gönüllü bir niyet</b>, ödeme değil.",
-      "s4Title": "Eylemler doğrudan, Social Organizer dışında gerçekleşir",
-      "s4Text": "Ne yapılacağını ve nasıl yapılacağını katılımcılar kendi sohbetlerinde <b>doğrudan birbirleriyle</b> kararlaştırır ve gerçekleştirir."
+      "lead": "Önce ağ gelir. Geri kalan her şey onun içinde olur.",
+      "s1Title": "Ağınızı siz kurarsınız",
+      "s1Text": "Yüz yüze tanıdığınız kişileri bir bağlantı ya da QR kodla ekleyin. <b>Her biri birbirinizi tanıdığınızı onaylar.</b>",
+      "s2Title": "Gördüğünüzden daha uzağa ulaşır",
+      "s2Text": "Kendi insanlarınız üzerinden onların insanlarına ulaşırsınız: 2. ve 3. tokalaşma. <b>Yalnızca kendi üç tokalaşmanızı görürsünüz, ağın tamamını asla.</b>",
+      "s3Title": "İhtiyaç, belirttiği dolar kadar kişiye ulaşır",
+      "s3Text": "{{amount}} tutarındaki bir ihtiyaç tam olarak {{n}} kişiye ulaşır, önce tokalaşma olarak en yakınlara. <b>Her biri için bu katılmak üzere bir fırsattır</b> ve tutar karşılandığında ihtiyaç kapanır.",
+      "s4Title": "Eşgüdüm bunu izler",
+      "s4Text": "İsteyenler katılım bildirir ve niyetler, kitle fonlamasındaki gibi toplanır. <b>Ne yapılacağını ve nasıl yapılacağını katılımcılar doğrudan kararlaştırır</b>, kendi sohbetlerinde."
     },
     "chain": {
       "title": "İhtiyaç bildirimi tokalaşmalarla ilerler",
-      "lead": "Maria'nın ihtiyacını görürsünüz, çünkü onu Oleg tanır, siz de Oleg'i tanırsınız. Mesajı yanıtsız bırakabilirsiniz. <b>Yükümlülük yok.</b>"
+      "lead": "Maria'nın ihtiyacını görürsünüz, çünkü onu Oleg tanır, siz de Oleg'i tanırsınız. İhtiyaç yalnızca belirttiği dolar kadar kişiye ulaşır, önce en yakınlara. Yanıtsız bırakabilirsiniz. <b>Yükümlülük yok.</b>"
     },
     "nots": {
       "title": "Social Organizer'ın yapmadıkları",
@@ -744,13 +745,13 @@
       "p2Text": "Herkes kendi kararını verir; düzenleyen de puanlama da yoktur. Reddetmenin yaptırımı yoktur.",
       "p3Title": "Katılımcılar arasında doğrudan bağ",
       "p3Text": "Anlaşmalar ve eylemler, onaylanmış tanışıklıkla bağlı kişiler arasında kalır.",
-      "p4Title": "Asgari eşgüdüm",
-      "p4Text": "İki sinyal ve bunlarla ilgili bildirimler. Merkezî dağıtım yok."
+      "p4Title": "Önce ağ gelir",
+      "p4Text": "Sinyaller yalnızca onaylanmış tanışıklıklar üzerinden ilerler. Ortak havuz yok, işletmeci yok, merkezî dağıtım yok."
     },
     "faq": {
       "title": "Kısaca temel noktalar",
       "q1": "Social Organizer ne yapar?",
-      "a1": "İki sinyali kaydeder — ihtiyaç (Need) ve katılım (Participation) — ve bunlarla bağlantılı geri bildirimi sağlar. Katılımcılar adına eylem yapmaz.",
+      "a1": "Yüz yüze tanıdığınız insanlardan bir ağ kurmanıza yardım eder ve iki sinyalin, yani ihtiyaç (Need) ile katılım (Participation) sinyallerinin, bu ağ içinde ilerlemesini sağlar. Katılımcılar adına hareket etmez.",
       "q2": "Katılmak zorunda mıyım?",
       "a2": "Hayır. Katılım gönüllüdür ve herkes kendi kararını kendisi verir.",
       "q3": "Hizmet desteği garanti eder mi?",
@@ -760,31 +761,19 @@
       "q5": "Katılımcılar para devreder mi?",
       "a5": "Edebilirler. İhtiyaç bildiriminde katılımcı bir tutar belirtir, katılım bildiriminde ise ne kadar vermeye hazır olduğunu belirtir. Katılımcılar para devrederse bunu kendileri ve doğrudan, kendi anlaşmalarına göre yaparlar. Social Organizer devrin gerçekleşip gerçekleşmediğini doğrulamaz.",
       "q6": "Tutarlar hangi birimle belirtilir?",
-      "a6": "ABD doları ile: tutarların karşılaştırılabilmesi için ortak bir hesap birimidir. Hangi para biriminin ve hangi yolun kullanılacağına katılımcılar kendileri karar verir."
+      "a6": "ABD doları ile: tutarların karşılaştırılabilmesi için ortak bir hesap birimidir. Hangi para biriminin ve hangi yolun kullanılacağına katılımcılar kendileri karar verir.",
+      "q7": "Çevrimiçi karşılıklı yardım platformlarından farkı nedir?",
+      "a7": "Çin'deki karşılıklı yardım platformlarının tek bir işletmecisi vardı, üyelerden para toplar ve sigorta gibi ödeme vaat ederdi; 2021'de kapatıldılar. Social Organizer'ın işletmecisi, havuzu ve ödemesi yoktur: yalnızca birbirini tanıyan insanlar, iki sinyal ve gönüllü katılım vardır."
     }
   },
   "how": {
     "meta": {
       "title": "Nasıl çalışır — Social Organizer",
-      "description": "İki sinyal — ihtiyaç ve katılım: bildirim tokalaşmalar boyunca nasıl ilerler ve eylemler neden doğrudan katılımcılar arasında gerçekleşir."
+      "description": "Önce tanıdığınız insanların ağı, sonra belirttiği dolar kadar kişiye ulaşan bir ihtiyaç, sonra doğrudan eşgüdüm. Ve Çin'deki çevrimiçi karşılıklı yardım platformlarından farkı."
     },
     "hero": {
-      "title": "İki sinyal ve doğrudan bağ",
-      "lead": "Social Organizer'da yalnızca iki sinyal vardır. <b>İhtiyaç</b> (Need), bir katılımcının neye ihtiyacı olduğunu bildirmesidir. <b>Katılım</b> (Participation), başka bir katılımcının kendi gönüllü katılımını bildirmesidir. Gerisini insanlar kendileri, doğrudan kararlaştırır ve yapar."
-    },
-    "table": {
-      "title": "Tarihî bir örnek: hui",
-      "lead": "Güney Çin'de altı tanıdık ayda bir pay koyar ve biri o ayın paylarını alır. Bir aya veya bir ada dokunun.",
-      "monthsAria": "Çevrenin ayı",
-      "says": [
-        "<b>Lin</b> ocak paylarını alır. Beş arkadaş birer pay koyar.",
-        "<b>Chen</b> şubat paylarını alır. Lin de bir pay koyar.",
-        "<b>Mei</b> mart paylarını alır. Chen de bir pay koyar.",
-        "<b>Guo</b> nisan paylarını alır. Mei de bir pay koyar.",
-        "<b>Sun</b> mayıs paylarını alır. Guo da bir pay koyar.",
-        "<b>Huang</b> haziran paylarını alır. Çevre tamamlandı: herkes bir kez aldı."
-      ],
-      "note": "Bu, birbirini tanıyan kişiler arasındaki gönüllü desteğe bir örnektir; Social Organizer'ın yapısı değildir: onda ortak kasa, sıra ve zorunlu pay yoktur."
+      "title": "Önce ağ, sonra sinyaller",
+      "lead": "Social Organizer, yüz yüze tanıdığınız insanların bir ağıyla başlar. Ağın içinde iki sinyal ilerler. <b>İhtiyaç</b> (Need), bir katılımcının neye ihtiyacı olduğunu bildirmesidir. <b>Katılım</b> (Participation), başka bir katılımcının kendi gönüllü katılımını bildirmesidir. Gerisini insanlar kendileri, doğrudan kararlaştırır ve yapar."
     },
     "orbit": {
       "title": "Bildirim ne kadar uzağa gider",
@@ -804,7 +793,7 @@
     },
     "chain": {
       "title": "Tanıdıklar üzerinden bir yol",
-      "lead": "Yalnızca tanıdıklarınız üzerinden size yolu olan ihtiyaçları görürsünüz. Bir kişiye dokunun.",
+      "lead": "İhtiyaç, belirttiği dolar kadar kişiye ulaşır, önce tokalaşma olarak en yakınlara. Yalnızca tanıdığınız insanlar üzerinden size yolu olan ihtiyaçları görürsünüz. Bir kişiye dokunun.",
       "says": [
         "<b>Maria Koval</b> ihtiyaç bildiriyor. Onu tanımıyorsunuz.",
         "Kardeşiniz <b>Oleg</b>, Maria'yı tanıyor. Bu yüzden onun bildirimini o alıyor.",
@@ -812,8 +801,8 @@
       ]
     },
     "join": {
-      "title": "Yeni bir kişi",
-      "lead": "Kişiler çevreye yalnızca bir tanıdıkları üzerinden ve o kişi onayladıktan sonra girer.",
+      "title": "Tanıdığınız bir kişiyle başlar",
+      "lead": "Ağ yalnızca birbirini tanıyan insanlar üzerinden büyür: biri bağlantınızla katılır ve siz tanışıklığı onaylarsınız.",
       "says": [
         "Katya bağlantınızı açıp giriş yapar. <b>Bu henüz bir bağlantı değil:</b> size bir bildirim gelir.",
         "Onaylarsınız: evet, birbirimizi tanıyoruz. <b>Katya artık 1. tokalaşmanız.</b>"
@@ -907,6 +896,46 @@
         "takes": "{{name}} alır",
         "aria": "Hui masası"
       }
+    },
+    "compare": {
+      "title": "En yakın örnek: Çin'de çevrimiçi karşılıklı yardım",
+      "lead": "2018'den 2021'e kadar Çin'deki çevrimiçi karşılıklı yardım platformları yüz milyonlarca üye topladı: en büyüğü Xianghubao'nun 100 milyondan fazla üyesi vardı. <b>Üyeler birbirlerinin ağır hastalık masraflarını paylaştı, kişi başı yılda birkaç dolar.</b> 2021'de düzenleyiciler tüm sektörü kapattı: tek bir işletmeci fiilen sigorta işletiyordu.",
+      "note": "Social Organizer fikri korur, yani çok sayıda insanın her birinin küçük bir pay üstlenmesini, ve o platformları kırılgan yapan şeyi bırakır.",
+      "caption": "Çin'deki çevrimiçi karşılıklı yardım platformları ve Social Organizer karşılaştırması",
+      "them": "Çevrimiçi karşılıklı yardım platformları",
+      "us": "Social Organizer",
+      "rows": [
+        [
+          "Kim işletir",
+          "Tek bir işletmeci",
+          "Kimse: birbirini tanıyan insanların ağı"
+        ],
+        [
+          "Para",
+          "Platform üyelerden tahsil eder",
+          "Hizmetten asla geçmez"
+        ],
+        [
+          "Ne vaat edilir",
+          "Sigorta gibi bir ödeme",
+          "Hiçbir şey: katılım gönüllüdür"
+        ],
+        [
+          "Kim katılabilir",
+          "Ödeyen herkes",
+          "Yalnızca onaylanmış bir tanışıklık üzerinden"
+        ],
+        [
+          "Talebi kim öğrenir",
+          "Platformdaki herkes",
+          "İhtiyacın belirttiği dolar kadar kişi, önce en yakınlar"
+        ],
+        [
+          "Ne kapatılabilir",
+          "Platform ve onunla birlikte her şey",
+          "Kapatılacak havuz da ödeme de yok"
+        ]
+      ]
     }
   },
   "legal": {

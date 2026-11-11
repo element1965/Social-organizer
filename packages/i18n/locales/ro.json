@@ -680,12 +680,12 @@
       "deleteAccount": "Șterge contul"
     },
     "meta": {
-      "title": "Social Organizer — ajutorul începe cu acțiuni coordonate",
-      "description": "Social Organizer îi ajută pe participanți să anunțe nevoi și participare voluntară. Deciziile le iau participanții înșiși, iar ajutorul se dă direct între ei. Cod deschis, proiect non-profit."
+      "title": "Social Organizer — o rețea de oameni pe care îi cunoști",
+      "description": "Construiește o rețea de oameni pe care îi cunoști personal. Când cineva din ea anunță o nevoie, află exact atâția oameni câți dolari are suma, începând cu cei mai apropiați. Participanții decid singuri și acționează direct. Open source, un proiect nonprofit."
     },
     "hero": {
-      "title": "Ajutorul începe cu acțiuni coordonate",
-      "lead": "Social Organizer îi ajută pe participanți să anunțe nevoi și participare voluntară. <b>Deciziile le iau participanții înșiși, iar ajutorul se dă direct între ei.</b>",
+      "title": "Mai întâi, o rețea de oameni pe care îi cunoști",
+      "lead": "Social Organizer începe cu rețeaua ta: oameni pe care îi cunoști personal și oamenii pe care îi cunosc ei. <b>Când cineva din ea anunță o nevoie, află exact atâția oameni câți dolari are suma.</b> Coordonarea vine după aceea, direct între participanți.",
       "factOpen": "Cod deschis",
       "factNonprofit": "Non-profit",
       "factNoMoney": "Participare voluntară",
@@ -696,30 +696,31 @@
       "how": "Vezi cum funcționează",
       "tgAlt": "Preferi Telegram?",
       "tgOpen": "Deschide-l acolo",
-      "sceneAria": "Mesajul despre o nevoie merge pe strângeri de mână, participanții anunță participarea",
+      "sceneAria": "O rețea crește pornind de la tine, strângere de mână cu strângere de mână; o nevoie circulă prin ea, iar participanții anunță participarea",
       "sceneYou": "Tu",
       "sceneAsk": "nevoie · {{amount}}",
       "sceneDone": "participare · {{amount}}",
       "statDepth": "3 strângeri de mână",
       "statPeople_few": "{{n}} persoane într-o singură rețea",
       "statPeople_one": "{{n}} persoană într-o singură rețea",
-      "statPeople_other": "{{n}} de persoane într-o singură rețea"
+      "statPeople_other": "{{n}} de persoane într-o singură rețea",
+      "sceneNet": "Rețeaua ta · {n}"
     },
     "steps": {
       "title": "Cum funcționează",
-      "lead": "Patru pași. La fiecare, decide participantul însuși.",
-      "s1Title": "Un participant anunță o nevoie",
-      "s1Text": "Nevoia (Need) este primul dintre cele două semnale. Spune <b>cât este necesar și unde se poate lua legătura</b>: o sumă și un link către chat.",
-      "s2Title": "Ceilalți află și decid singuri",
-      "s2Text": "Mesajul merge pe strângeri de mână: mai întâi la cei pe care participantul îi cunoaște personal, apoi la cunoscuții lor. <b>Fiecare decide singur dacă poate ajuta.</b>",
-      "s3Title": "Cei care vor anunță participarea",
-      "s3Text": "Participarea (Participation) este al doilea semnal: <b>o intenție voluntară</b>, nu o plată.",
-      "s4Title": "Acțiunile au loc direct, în afara Social Organizer",
-      "s4Text": "Ce și cum se face, participanții stabilesc și îndeplinesc <b>direct între ei</b>, în chatul lor."
+      "lead": "Rețeaua vine prima. Totul se întâmplă înăuntrul ei.",
+      "s1Title": "Îți construiești rețeaua",
+      "s1Text": "Adaugi oameni pe care îi cunoști personal, printr-un link sau un cod QR. <b>Fiecare dintre ei confirmă că vă cunoașteți.</b>",
+      "s2Title": "Ajunge mai departe decât vezi",
+      "s2Text": "Prin oamenii tăi ajungi la oamenii lor: a 2-a și a 3-a strângere de mână. <b>Vezi doar propriile tale trei strângeri de mână, niciodată toată rețeaua.</b>",
+      "s3Title": "O nevoie ajunge la atâția oameni câți dolari are suma",
+      "s3Text": "O nevoie de {{amount}} ajunge la exact {{n}} oameni, începând cu cei mai apropiați prin strângeri de mână. <b>Pentru fiecare dintre ei este o singură șansă de a participa</b>, iar când suma este acoperită, nevoia se închide.",
+      "s4Title": "Coordonarea vine după aceea",
+      "s4Text": "Cei care vor anunță participarea, iar intențiile se adună, ca într-un crowdfunding. <b>Ce se face și cum, participanții stabilesc direct între ei</b>, în chatul lor."
     },
     "chain": {
       "title": "Mesajul merge pe strângeri de mână",
-      "lead": "Vezi nevoia Mariei pentru că Oleg o cunoaște, iar tu îl cunoști pe Oleg. Poți să nu răspunzi la mesaj. <b>Nicio obligație.</b>"
+      "lead": "Vezi nevoia Mariei pentru că Oleg o cunoaște, iar tu îl cunoști pe Oleg. Ea ajunge doar la atâția oameni câți dolari are suma, începând cu cei mai apropiați. Poți să nu răspunzi. <b>Nicio obligație.</b>"
     },
     "nots": {
       "title": "Ce nu face Social Organizer",
@@ -749,13 +750,13 @@
       "p2Text": "Fiecare decide singur, fără organizator și fără evaluări. Refuzul nu atrage sancțiuni.",
       "p3Title": "Legătură directă între participanți",
       "p3Text": "Înțelegerile și acțiunile rămân între oamenii legați prin cunoștințe confirmate.",
-      "p4Title": "Coordonare minimă",
-      "p4Text": "Două semnale și notificări despre ele. Fără distribuire centralizată."
+      "p4Title": "Rețeaua vine prima",
+      "p4Text": "Semnalele circulă doar prin cunoștințe confirmate. Fără fond comun, fără operator, fără distribuire centralizată."
     },
     "faq": {
       "title": "Pe scurt, esențialul",
       "q1": "Ce face Social Organizer?",
-      "a1": "Înregistrează două semnale — nevoia (Need) și participarea (Participation) — și oferă feedbackul legat de ele. Nu acționează în locul participanților.",
+      "a1": "Te ajută să construiești o rețea de oameni pe care îi cunoști personal și lasă două semnale, nevoia (Need) și participarea (Participation), să circule prin ea. Nu acționează în locul participanților.",
       "q2": "Sunt obligat să particip?",
       "a2": "Nu. Participarea este voluntară, iar fiecare decide singur.",
       "q3": "Garantează serviciul ajutorul?",
@@ -765,31 +766,19 @@
       "q5": "Predau participanții bani?",
       "a5": "Pot. În mesajul despre o nevoie, participantul indică o sumă, iar în anunțul de participare — cât e gata să predea. Dacă participanții predau bani, o fac singuri și direct, după înțelegerea lor. Social Organizer nu verifică dacă predarea a avut loc.",
       "q6": "În ce sunt exprimate sumele?",
-      "a6": "În dolari americani: o unitate de cont comună, pentru ca sumele să fie comparabile. În ce monedă și în ce fel să acționeze, participanții hotărăsc singuri."
+      "a6": "În dolari americani: o unitate de cont comună, pentru ca sumele să fie comparabile. În ce monedă și în ce fel să acționeze, participanții hotărăsc singuri.",
+      "q7": "Prin ce diferă de platformele online de ajutor reciproc?",
+      "a7": "Platformele chineze de ajutor reciproc aveau un singur operator, luau bani de la membri și promiteau plăți ca o asigurare, iar în 2021 au fost închise. Social Organizer nu are operator, fond sau plăți: doar oameni care se cunosc, două semnale și participare voluntară."
     }
   },
   "how": {
     "meta": {
       "title": "Cum funcționează — Social Organizer",
-      "description": "Două semnale — nevoia și participarea: cum merge un mesaj pe strângeri de mână și de ce acțiunile au loc direct între participanți."
+      "description": "Mai întâi o rețea de oameni pe care îi cunoști, apoi o nevoie care ajunge la atâția oameni câți dolari are suma, apoi coordonare directă. Și prin ce diferă de platformele chineze online de ajutor reciproc."
     },
     "hero": {
-      "title": "Două semnale și o legătură directă",
-      "lead": "În Social Organizer există doar două semnale. <b>Nevoia</b> (Need) este mesajul unui participant despre ce are nevoie. <b>Participarea</b> (Participation) este mesajul altui participant despre propria participare voluntară. Tot restul oamenii stabilesc și fac singuri, direct."
-    },
-    "table": {
-      "title": "Un exemplu istoric: hui",
-      "lead": "În sudul Chinei, șase cunoscuți pun câte o parte o dată pe lună, iar unul dintre ei ia părțile lunii aceleia. Atinge o lună sau un nume.",
-      "monthsAria": "Luna cercului",
-      "says": [
-        "<b>Lin</b> ia părțile din ianuarie. Cinci prieteni au pus câte o parte.",
-        "<b>Chen</b> ia părțile din februarie. Și Lin pune o parte.",
-        "<b>Mei</b> ia părțile din martie. Și Chen pune o parte.",
-        "<b>Guo</b> ia părțile din aprilie. Și Mei pune o parte.",
-        "<b>Sun</b> ia părțile din mai. Și Guo pune o parte.",
-        "<b>Huang</b> ia părțile din iunie. Cercul s-a închis: fiecare a primit o dată."
-      ],
-      "note": "Este un exemplu de ajutor voluntar între oameni care se cunosc, nu felul în care e construit Social Organizer: acolo nu există o casă comună, un rând sau părți obligatorii."
+      "title": "Mai întâi rețeaua, apoi semnalele",
+      "lead": "Social Organizer începe cu o rețea de oameni pe care îi cunoști personal. Prin ea circulă două semnale. <b>Nevoia</b> (Need) este mesajul unui participant despre ce are nevoie. <b>Participarea</b> (Participation) este mesajul altui participant despre propria participare voluntară. Tot restul oamenii stabilesc și fac singuri, direct."
     },
     "orbit": {
       "title": "Cât de departe merge mesajul",
@@ -809,7 +798,7 @@
     },
     "chain": {
       "title": "Un drum prin cunoscuți",
-      "lead": "Vezi doar nevoile către care există un drum prin oameni cunoscuți. Atinge o persoană.",
+      "lead": "O nevoie ajunge la atâția oameni câți dolari are suma, începând cu cei mai apropiați prin strângeri de mână. Vezi doar nevoile care au un drum până la tine prin oameni pe care îi cunoști. Atinge o persoană.",
       "says": [
         "<b>Maria Koval</b> anunță o nevoie. Nu o cunoști.",
         "<b>Oleg</b>, fratele tău, o cunoaște pe Maria. De aceea mesajul ei ajunge la el.",
@@ -817,8 +806,8 @@
       ]
     },
     "join": {
-      "title": "O persoană nouă",
-      "lead": "În cerc se intră doar prin cineva cunoscut, și doar după ce persoana aceea confirmă.",
+      "title": "Începe cu o persoană pe care o cunoști",
+      "lead": "Rețeaua crește doar prin oameni care se cunosc: cineva se alătură prin linkul tău, iar tu confirmi cunoștința.",
       "says": [
         "Katya îți deschide linkul și se conectează. <b>Încă nu e o legătură:</b> primești un push.",
         "Confirmi: da, ne cunoaștem. <b>Acum Katya e prima ta strângere de mână.</b>"
@@ -912,6 +901,46 @@
         "takes": "le ia {{name}}",
         "aria": "Masa hui"
       }
+    },
+    "compare": {
+      "title": "Cel mai apropiat exemplu: ajutorul reciproc online din China",
+      "lead": "Între 2018 și 2021, platformele chineze online de ajutor reciproc au adunat sute de milioane de membri: cea mai mare, Xianghubao, avea peste 100 de milioane. <b>Membrii își împărțeau costul bolii grave a celorlalți, câțiva dolari pe an fiecare.</b> În 2021, autoritățile de reglementare au închis întregul sector: un singur operator administra, de fapt, o asigurare.",
+      "note": "Social Organizer păstrează ideea, mulți oameni care iau fiecare o parte mică, și renunță la ceea ce făcea acele platforme fragile.",
+      "caption": "Platformele chineze online de ajutor reciproc comparate cu Social Organizer",
+      "them": "Platforme online de ajutor reciproc",
+      "us": "Social Organizer",
+      "rows": [
+        [
+          "Cine o conduce",
+          "Un singur operator",
+          "Nimeni: o rețea de oameni care se cunosc"
+        ],
+        [
+          "Banii",
+          "Încasați de platformă de la membri",
+          "Nu trec niciodată prin serviciu"
+        ],
+        [
+          "Ce se promite",
+          "O plată, ca la asigurare",
+          "Nimic: participarea este voluntară"
+        ],
+        [
+          "Cine poate intra",
+          "Oricine plătește",
+          "Doar printr-o cunoștință confirmată"
+        ],
+        [
+          "Cine află de o cerere",
+          "Toți cei de pe platformă",
+          "Atâția oameni câți dolari are nevoia, începând cu cei mai apropiați"
+        ],
+        [
+          "Ce poate fi închis",
+          "Platforma, și odată cu ea totul",
+          "Nu există fond și nici plăți care să poată fi închise"
+        ]
+      ]
     }
   },
   "legal": {

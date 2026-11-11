@@ -12,11 +12,16 @@ import { SitePage } from '../components/site/SitePage';
 import { StoreButtons } from '../components/site/StoreButtons';
 import { useFigureLabels, useMoney } from '../components/site/figureLabels';
 
-/** Which NetFigure frame each of the four text beats shows: the circle, the message path, then the chat twice. */
-const BEAT_FRAMES: readonly NetStep[] = [0, 1, 2, 2];
+/**
+ * Which NetFigure frame each of the four text beats shows. The network comes first (twice the circle: you build it,
+ * it reaches further than you see), then a Need travels in it, and coordination is what follows: the chat.
+ */
+const BEAT_FRAMES: readonly NetStep[] = [0, 0, 1, 2];
+/** The example Need in the steps: $300 reaches exactly 300 people (one notification per unit of the amount). */
+const EXAMPLE_NEED = 300;
 const BEATS = [0, 1, 2, 3] as const;
 const PRINCIPLES = [1, 2, 3, 4] as const;
-const FAQ = [1, 2, 3, 4, 5, 6] as const;
+const FAQ = [1, 2, 3, 4, 5, 6, 7] as const;
 
 const B = { b: <b /> };
 const PUBLIC_STATS_KEY = 'so_publicStats';
@@ -49,7 +54,9 @@ function usePublicUsers(): number | null {
  * the reader has reached sets its step.
  */
 function StepStory({ labels }: { labels: ReturnType<typeof useFigureLabels>['net'] }) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const money = useMoney();
+  const values = { amount: money(EXAMPLE_NEED), n: new Intl.NumberFormat(i18n.language || 'en').format(EXAMPLE_NEED) };
   const [step, setStep] = useState<(typeof BEATS)[number]>(0);
   const refs = useRef<(HTMLDivElement | null)[]>([]);
   useEffect(() => {
@@ -101,7 +108,7 @@ function StepStory({ labels }: { labels: ReturnType<typeof useFigureLabels>['net
               <span className="n">{k + 1}</span>
               <h3>{t(`landing.steps.s${k + 1}Title`)}</h3>
               <p>
-                <Trans i18nKey={`landing.steps.s${k + 1}Text`} components={B} />
+                <Trans i18nKey={`landing.steps.s${k + 1}Text`} values={values} components={B} />
               </p>
             </div>
           </li>
@@ -150,6 +157,7 @@ export function LandingPage({ inviteToken }: { inviteToken?: string } = {}) {
             you: t('landing.hero.sceneYou'),
             ask: t('landing.hero.sceneAsk', { amount: money(300) }),
             done: t('landing.hero.sceneDone', { amount: money(300) }),
+            net: t('landing.hero.sceneNet'),
           }}
         />
         <div className="site-hero-copy">

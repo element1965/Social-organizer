@@ -672,12 +672,12 @@
       "deleteAccount": "Hapus akun"
     },
     "meta": {
-      "title": "Social Organizer — saling membantu dimulai dari tindakan yang terkoordinasi",
-      "description": "Social Organizer membantu peserta menyampaikan kebutuhan dan partisipasi sukarela. Keputusan diambil sendiri oleh peserta, dan saling membantu terjadi langsung di antara mereka. Sumber terbuka, proyek nirlaba."
+      "title": "Social Organizer — jaringan orang yang Anda kenal",
+      "description": "Bangun jaringan orang yang Anda kenal secara pribadi. Saat seseorang di dalamnya melaporkan kebutuhan, sebanyak dolar yang disebutkannya itulah jumlah orang yang mengetahuinya, dimulai dari yang terdekat. Peserta memutuskan sendiri dan bertindak langsung. Sumber terbuka, proyek nirlaba."
     },
     "hero": {
-      "title": "Saling membantu dimulai dari tindakan yang terkoordinasi",
-      "lead": "Social Organizer membantu peserta menyampaikan kebutuhan dan partisipasi sukarela. <b>Keputusan diambil sendiri oleh peserta, dan saling membantu terjadi langsung di antara mereka.</b>",
+      "title": "Pertama-tama, jaringan orang yang Anda kenal",
+      "lead": "Social Organizer dimulai dari jaringan Anda: orang yang Anda kenal secara pribadi, dan orang yang mereka kenal. <b>Saat seseorang di dalamnya melaporkan kebutuhan, tepat sebanyak dolar yang disebutkannya itulah jumlah orang yang mengetahuinya.</b> Koordinasi menyusul, langsung di antara peserta.",
       "factOpen": "Sumber terbuka",
       "factNonprofit": "Nirlaba",
       "factNoMoney": "Partisipasi sukarela",
@@ -688,28 +688,29 @@
       "how": "Lihat cara kerjanya",
       "tgAlt": "Lebih suka Telegram?",
       "tgOpen": "Buka di sana",
-      "sceneAria": "Pesan tentang kebutuhan berjalan lewat jabat tangan, peserta menyampaikan partisipasi",
+      "sceneAria": "Jaringan tumbuh dari Anda, jabat tangan demi jabat tangan; sebuah kebutuhan berjalan di dalamnya dan peserta menyampaikan partisipasi",
       "sceneYou": "Anda",
       "sceneAsk": "kebutuhan · {{amount}}",
       "sceneDone": "partisipasi · {{amount}}",
       "statDepth": "3 jabat tangan",
-      "statPeople_other": "{{n}} orang dalam satu jaringan"
+      "statPeople_other": "{{n}} orang dalam satu jaringan",
+      "sceneNet": "Jaringan Anda · {n}"
     },
     "steps": {
       "title": "Cara kerja",
-      "lead": "Empat langkah. Di setiap langkah, peserta memutuskan sendiri.",
-      "s1Title": "Peserta menyampaikan kebutuhan",
-      "s1Text": "Kebutuhan (Need) adalah yang pertama dari dua sinyal. Isinya <b>berapa yang dibutuhkan dan di mana bisa dihubungi</b>: jumlah dan tautan chat.",
-      "s2Title": "Orang lain tahu dan memutuskan sendiri",
-      "s2Text": "Pesan berjalan lewat jabat tangan: pertama ke orang yang dikenal peserta secara pribadi, lalu ke kenalan mereka. <b>Setiap orang memutuskan sendiri apakah bisa membantu.</b>",
-      "s3Title": "Yang bersedia menyampaikan partisipasi",
-      "s3Text": "Partisipasi (Participation) adalah sinyal kedua: <b>niat sukarela</b>, bukan pembayaran.",
-      "s4Title": "Tindakan dilakukan langsung, di luar Social Organizer",
-      "s4Text": "Apa yang dilakukan dan bagaimana, peserta menyepakati dan menjalankannya <b>langsung satu sama lain</b>, di chat mereka sendiri."
+      "lead": "Jaringan datang lebih dulu. Semua yang lain terjadi di dalamnya.",
+      "s1Title": "Anda membangun jaringan Anda",
+      "s1Text": "Tambahkan orang yang Anda kenal secara pribadi, lewat tautan atau kode QR. <b>Masing-masing mengonfirmasi bahwa kalian saling mengenal.</b>",
+      "s2Title": "Jangkauannya lebih jauh dari yang Anda lihat",
+      "s2Text": "Lewat orang-orang Anda, Anda menjangkau orang-orang mereka: jabat tangan ke-2 dan ke-3. <b>Anda hanya melihat tiga jabat tangan Anda sendiri, tidak pernah seluruh jaringan.</b>",
+      "s3Title": "Kebutuhan menjangkau sebanyak dolar yang disebutkannya",
+      "s3Text": "Kebutuhan sebesar {{amount}} menjangkau tepat {{n}} orang, dimulai dari yang terdekat lewat jabat tangan. <b>Bagi masing-masing, itu satu kesempatan untuk ikut serta</b>, dan begitu jumlahnya terpenuhi, kebutuhan itu ditutup.",
+      "s4Title": "Koordinasi menyusul",
+      "s4Text": "Yang bersedia menyampaikan partisipasi, dan niat-niat itu bertambah, seperti dalam urun dana. <b>Apa yang dilakukan dan bagaimana, peserta sepakati langsung</b>, di chat mereka sendiri."
     },
     "chain": {
       "title": "Pesan berjalan lewat jabat tangan",
-      "lead": "Anda melihat kebutuhan Maria karena Oleg mengenalnya, dan Anda mengenal Oleg. Pesan itu boleh tidak Anda tanggapi. <b>Tidak ada kewajiban.</b>"
+      "lead": "Anda melihat kebutuhan Maria karena Oleg mengenalnya, dan Anda mengenal Oleg. Kebutuhan itu hanya menjangkau sebanyak dolar yang disebutkannya, dimulai dari yang terdekat. Boleh tidak Anda tanggapi. <b>Tidak ada kewajiban.</b>"
     },
     "nots": {
       "title": "Yang tidak dilakukan Social Organizer",
@@ -739,13 +740,13 @@
       "p2Text": "Setiap orang memutuskan sendiri, tanpa penyelenggara dan tanpa penilaian. Menolak tidak dikenai sanksi.",
       "p3Title": "Hubungan langsung antarpeserta",
       "p3Text": "Kesepakatan dan tindakan tetap di antara orang-orang yang terhubung lewat perkenalan yang dikonfirmasi.",
-      "p4Title": "Koordinasi minimal",
-      "p4Text": "Dua sinyal dan notifikasi tentangnya. Tanpa pembagian terpusat."
+      "p4Title": "Jaringan datang lebih dulu",
+      "p4Text": "Sinyal hanya berjalan lewat perkenalan yang dikonfirmasi. Tanpa dana bersama, tanpa operator, tanpa pembagian terpusat."
     },
     "faq": {
       "title": "Hal pokok secara singkat",
       "q1": "Apa yang dilakukan Social Organizer?",
-      "a1": "Mencatat dua sinyal, kebutuhan (Need) dan partisipasi (Participation), serta menyediakan umpan balik yang terkait dengannya. Layanan ini tidak bertindak atas nama peserta.",
+      "a1": "Membantu Anda membangun jaringan orang yang Anda kenal secara pribadi, dan membiarkan dua sinyal, kebutuhan (Need) dan partisipasi (Participation), berjalan di dalamnya. Layanan ini tidak bertindak atas nama peserta.",
       "q2": "Apakah saya wajib ikut serta?",
       "a2": "Tidak. Partisipasi bersifat sukarela, dan setiap orang mengambil keputusannya sendiri.",
       "q3": "Apakah layanan ini menjamin adanya bantuan?",
@@ -755,31 +756,19 @@
       "q5": "Apakah peserta menyerahkan uang?",
       "a5": "Bisa saja. Dalam pesan kebutuhan, peserta menyebut jumlah, dan dalam pesan partisipasi, berapa yang siap diserahkan. Jika peserta menyerahkan uang, mereka melakukannya sendiri dan langsung, sesuai kesepakatan mereka. Social Organizer tidak memeriksa apakah penyerahan itu terjadi.",
       "q6": "Jumlahnya dalam mata uang apa?",
-      "a6": "Dalam dolar AS: ini satuan hitung bersama agar jumlah dapat dibandingkan. Mata uang dan cara apa yang dipakai ditentukan sendiri oleh para peserta."
+      "a6": "Dalam dolar AS: ini satuan hitung bersama agar jumlah dapat dibandingkan. Mata uang dan cara apa yang dipakai ditentukan sendiri oleh para peserta.",
+      "q7": "Apa bedanya dengan platform saling membantu online?",
+      "a7": "Platform saling membantu di Tiongkok punya satu operator, memungut uang dari anggota dan menjanjikan pembayaran seperti asuransi, lalu pada 2021 ditutup. Social Organizer tidak punya operator, dana, maupun pembayaran: hanya orang yang saling kenal, dua sinyal, dan partisipasi sukarela."
     }
   },
   "how": {
     "meta": {
       "title": "Cara kerja — Social Organizer",
-      "description": "Dua sinyal, kebutuhan dan partisipasi: bagaimana pesan berjalan lewat jabat tangan dan mengapa tindakan terjadi langsung di antara peserta."
+      "description": "Pertama jaringan orang yang Anda kenal, lalu kebutuhan yang menjangkau sebanyak dolar yang disebutkannya, lalu koordinasi langsung. Dan apa bedanya dengan platform saling membantu online di Tiongkok."
     },
     "hero": {
-      "title": "Dua sinyal dan hubungan langsung",
-      "lead": "Di Social Organizer hanya ada dua sinyal. <b>Kebutuhan</b> (Need) adalah pesan seorang peserta tentang apa yang ia butuhkan. <b>Partisipasi</b> (Participation) adalah pesan peserta lain tentang partisipasi sukarelanya sendiri. Segala hal lain disepakati dan dilakukan orang sendiri, secara langsung."
-    },
-    "table": {
-      "title": "Contoh historis: hui",
-      "lead": "Di Tiongkok selatan, enam kenalan sebulan sekali menaruh satu bagian, dan satu orang mengambil bagian bulan itu. Ketuk bulan atau nama.",
-      "monthsAria": "Bulan lingkaran",
-      "says": [
-        "<b>Lin</b> mengambil bagian Januari. Lima teman masing-masing menyetor bagian.",
-        "<b>Chen</b> mengambil bagian Februari. Lin juga menyetor bagian.",
-        "<b>Mei</b> mengambil bagian Maret. Chen juga menyetor bagian.",
-        "<b>Guo</b> mengambil bagian April. Mei juga menyetor bagian.",
-        "<b>Sun</b> mengambil bagian Mei. Guo juga menyetor bagian.",
-        "<b>Huang</b> mengambil bagian Juni. Lingkaran tertutup: setiap orang mendapat giliran sekali."
-      ],
-      "note": "Ini contoh saling membantu secara sukarela di antara orang yang saling kenal, bukan cara Social Organizer dibangun: di dalamnya tidak ada kas bersama, antrean, atau bagian wajib."
+      "title": "Jaringan dulu, baru sinyal",
+      "lead": "Social Organizer dimulai dari jaringan orang yang Anda kenal secara pribadi. Dua sinyal berjalan di dalamnya. <b>Kebutuhan</b> (Need) adalah pesan seorang peserta tentang apa yang ia butuhkan. <b>Partisipasi</b> (Participation) adalah pesan peserta lain tentang partisipasi sukarelanya sendiri. Segala hal lain disepakati dan dilakukan orang sendiri, secara langsung."
     },
     "orbit": {
       "title": "Seberapa jauh pesan berjalan",
@@ -799,7 +788,7 @@
     },
     "chain": {
       "title": "Jalur lewat orang yang Anda kenal",
-      "lead": "Anda hanya melihat kebutuhan yang punya jalur ke Anda lewat orang yang Anda kenal. Ketuk seseorang.",
+      "lead": "Kebutuhan menjangkau sebanyak dolar yang disebutkannya, dimulai dari yang terdekat lewat jabat tangan. Anda hanya melihat kebutuhan yang punya jalur ke Anda lewat orang yang Anda kenal. Ketuk seseorang.",
       "says": [
         "<b>Maria Koval</b> menyampaikan kebutuhan. Anda tidak mengenalnya.",
         "<b>Oleg</b>, saudara Anda, mengenal Maria. Itu sebabnya ia menerima pesannya.",
@@ -807,8 +796,8 @@
       ]
     },
     "join": {
-      "title": "Orang baru",
-      "lead": "Orang bergabung ke lingkaran hanya melalui seseorang yang mereka kenal, dan hanya setelah orang itu mengonfirmasi.",
+      "title": "Dimulai dari orang yang Anda kenal",
+      "lead": "Jaringan tumbuh hanya lewat orang yang saling kenal: seseorang bergabung lewat tautan Anda, dan Anda mengonfirmasi perkenalan itu.",
       "says": [
         "Katya membuka tautan Anda dan masuk. <b>Ini belum sebuah koneksi:</b> Anda mendapat push.",
         "Anda mengonfirmasi: ya, kami saling mengenal. <b>Sekarang Katya adalah jabat tangan ke-1 Anda.</b>"
@@ -902,6 +891,46 @@
         "takes": "{{name}} mengambilnya",
         "aria": "Meja hui"
       }
+    },
+    "compare": {
+      "title": "Contoh terdekat: saling membantu online di Tiongkok",
+      "lead": "Pada 2018–2021 platform saling membantu online di Tiongkok menghimpun ratusan juta anggota: yang terbesar, Xianghubao, punya lebih dari 100 juta. <b>Anggota menanggung bersama biaya penyakit berat satu sama lain, beberapa dolar setahun per orang.</b> Pada 2021 regulator menutup seluruh sektor itu: satu operator pada dasarnya menjalankan asuransi.",
+      "note": "Social Organizer mempertahankan idenya, banyak orang masing-masing mengambil bagian kecil, dan membuang hal yang membuat platform itu rapuh.",
+      "caption": "Platform saling membantu online di Tiongkok dibandingkan dengan Social Organizer",
+      "them": "Platform saling membantu online",
+      "us": "Social Organizer",
+      "rows": [
+        [
+          "Siapa yang menjalankan",
+          "Satu operator",
+          "Tidak ada: jaringan orang yang saling kenal"
+        ],
+        [
+          "Uang",
+          "Dipungut platform dari anggota",
+          "Tidak pernah melewati layanan"
+        ],
+        [
+          "Apa yang dijanjikan",
+          "Pembayaran, seperti asuransi",
+          "Tidak ada: partisipasi bersifat sukarela"
+        ],
+        [
+          "Siapa yang bisa bergabung",
+          "Siapa saja yang membayar",
+          "Hanya lewat perkenalan yang dikonfirmasi"
+        ],
+        [
+          "Siapa yang tahu ada permintaan",
+          "Semua orang di platform",
+          "Sebanyak dolar yang disebut kebutuhan, dimulai dari yang terdekat"
+        ],
+        [
+          "Apa yang bisa ditutup",
+          "Platformnya, dan semuanya bersama itu",
+          "Tidak ada dana dan pembayaran yang bisa ditutup"
+        ]
+      ]
     }
   },
   "legal": {

@@ -2,7 +2,8 @@
  * Landing hero backdrop: a small 3D network drawn with Canvas 2D and a hand-rolled perspective projection.
  * No WebGL, no three.js: the site stays light. It copies the look of the Circle scene in the app
  * (packages/graph-3d): a ball of people on depth shells around you, thin links, care-coloured paths with a comet,
- * on the dark scene. The data is fake (about 90 people) and the story plays in a loop:
+ * on the dark scene. The data is fake (about 90 people). First the network grows out of you, handshake by
+ * handshake (the network comes first; everything else happens inside it). Then the story plays in a loop:
  * a Need lights up on the far shell, a comet carries it by handshakes to you, a wave tells your circle,
  * shares come back from all over the ball until the ring around the asker is full.
  *
@@ -18,6 +19,8 @@ export interface HeroGraphLabels {
   ask: string;
   /** Pill once the ring is full. */
   done: string;
+  /** Pill under you while the network grows; "{n}" is the number of people so far. */
+  net: string;
 }
 
 export interface HeroGraphHandle {
@@ -46,6 +49,11 @@ const PATH_CURVE = 0.12;
 /** One story loop, seconds. */
 const T = 11;
 const PH = { ask: [0, 1], signal: [1, 3.6], wave: [3.6, 5], help: [5, 8.8], done: [8.8, 11] } as const;
+/** Prologue, seconds: the network grows shell by shell before the first Need. */
+const GROW = 4.2;
+const GROW_SHELL = 1.05; // a shell starts this long after the previous one
+const GROW_SPREAD = 0.85; // people of one shell appear over this long
+const GROW_POP = 0.4; // one person grows in over this long
 /** Moment shown under reduced motion: the Need has reached you, the path is lit. */
 const STILL_T = 3.45;
 
@@ -113,6 +121,7 @@ export function heroGraph(canvas: HTMLCanvasElement, getLabels: () => HeroGraphL
   const depth: number[] = [0];
   const size: number[] = [0];
   const phase: number[] = [0];
+  const born: number[] = [0]; // second of the prologue a person appears at
   const parent: number[] = [-1];
   const shellOf: number[][] = [[0]];
   SHELLS.forEach((sh, k) => {
@@ -130,6 +139,7 @@ export function heroGraph(canvas: HTMLCanvasElement, getLabels: () => HeroGraphL
       depth.push(k + 1);
       size.push(sh.size * (0.85 + R() * 0.35));
       phase.push(R() * TAU);
+      born.push(k * GROW_SHELL + R() * GROW_SPREAD);
       parent.push(-1);
       ids.push(bx.length - 1);
     }
@@ -193,6 +203,8 @@ export function heroGraph(canvas: HTMLCanvasElement, getLabels: () => HeroGraphL
   const sk = new Float32Array(N); // perspective factor relative to z = 0
   const order = Array.from({ length: N }, (_v, i) => i);
   const bucket = new Uint8Array(E);
+  const grown = new Float32Array(N).fill(1); // 0..1: how far a person has grown in during the prologue
+  grown[0] = 1;
 
   /* ---------- layout (CSS owns it: see .site-hero in site.css) ---------- */
   let W = 1;
@@ -375,8 +387,13 @@ export function heroGraph(canvas: HTMLCanvasElement, getLabels: () => HeroGraphL
   let time = 0; // seconds of played story; does not advance while paused
   function draw() {
     const L = getLabels();
-    const t = reduce ? STILL_T : time % T;
-    const c = reduce ? 0 : Math.floor(time / T);
+    // The prologue runs once; the story loop starts after it
+    const growing = !reduce && time < GROW;
+    const st = reduce ? 0 : Math.max(0, time - GROW);
+    const t = reduce ? STILL_T : growing ? 0 : st % T;
+    const c = reduce ? 0 : Math.floor(st / T);
+    const gt = reduce ? GROW : time;
+    for (let i = 1; i < N; i++) grown[i] = ease((gt - born[i]!) / GROW_POP);
     const tw = reduce ? 0 : time;
 
     const yw = yaw + tiltX;
@@ -439,8 +456,11 @@ export function heroGraph(canvas: HTMLCanvasElement, getLabels: () => HeroGraphL
         const a = ea[e]!;
         const d = eb[e]!;
         if (lit(a) && lit(d)) continue;
-        ctx!.moveTo(sx[a]!, sy[a]!);
-        ctx!.lineTo(sx[d]!, sy[d]!);
+        const k = Math.min(grown[a]!, grown[d]!);
+        if (k <= 0) continue;
+        const [o, x] = born[a]! <= born[d]! ? [a, d] : [d, a];
+        ctx!.moveTo(sx[o]!, sy[o]!);
+        ctx!.lineTo(sx[o]! + (sx[x]! - sx[o]!) * k, sy[o]! + (sy[x]! - sy[o]!) * k);
       }
       ctx!.stroke();
     }
@@ -487,9 +507,11 @@ export function heroGraph(canvas: HTMLCanvasElement, getLabels: () => HeroGraphL
       const x = sx[i]!;
       const y = sy[i]!;
       const k = sk[i]!;
-      let r = size[i]! * k * scale;
-      const f = fade(sz[i]!);
-      if (i === asker && storyA > 0) continue; // drawn on top
+      const gk = grown[i]!;
+      if (gk <= 0) continue;
+      let r = size[i]! * k * scale * (0.3 + 0.7 * gk);
+      const f = fade(sz[i]!) * gk;
+      if (i === asker && storyA > 0 && !growing) continue; // drawn on top
       const isLit = lit(i);
       if (isLit) {
         ctx!.globalAlpha = storyA;
@@ -530,7 +552,7 @@ export function heroGraph(canvas: HTMLCanvasElement, getLabels: () => HeroGraphL
     const ax = sx[asker]!;
     const ay = sy[asker]!;
     const askK = ease(t / PH.ask[1]);
-    if (storyA > 0) {
+    if (storyA > 0 && !growing) {
       const ar = (size[asker]! + 2.2 * askK) * sk[asker]! * scale;
       ctx!.globalAlpha = storyA;
       glow(glowCare, ax, ay, ar * 5);
@@ -583,6 +605,14 @@ export function heroGraph(canvas: HTMLCanvasElement, getLabels: () => HeroGraphL
         ctx!.stroke();
         ctx!.lineCap = 'butt';
       }
+      ctx!.globalAlpha = 1;
+    }
+    /* while the network grows: how many people it has so far, under you */
+    if (growing) {
+      let n = 0;
+      for (let i = 1; i < N; i++) if (grown[i]! > 0.5) n++;
+      ctx!.globalAlpha = clamp((GROW - time) / 0.5, 0, 1) * clamp(time / 0.4, 0, 1);
+      pill(cx, cy + 34 * scale, L.net.replace('{n}', String(n)), S.pillAsk);
       ctx!.globalAlpha = 1;
     }
     if (storyA > 0 && askK > 0) {

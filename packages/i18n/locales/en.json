@@ -690,12 +690,12 @@
       "deleteAccount": "Delete account"
     },
     "meta": {
-      "title": "Social Organizer — assistance begins with coordinated action",
-      "description": "Social Organizer helps participants report Needs and voluntary Participation. Participants make their own decisions, and assistance happens directly between them. Open source, a non-profit project."
+      "title": "Social Organizer — a network of people you know",
+      "description": "Build a network of people you know in person. When someone in it reports a Need, exactly as many people learn of it as the dollars it names, nearest first. Participants decide for themselves and act directly. Open source, a non-profit project."
     },
     "hero": {
-      "title": "Assistance begins with coordinated action",
-      "lead": "Social Organizer helps participants report Needs and voluntary Participation. <b>Participants make their own decisions, and assistance happens directly between them.</b>",
+      "title": "First, a network of people you know",
+      "lead": "Social Organizer starts with your network: people you know in person, and the people they know. <b>When someone in it reports a Need, exactly as many people learn of it as the dollars it names.</b> Coordination follows, directly between participants.",
       "factOpen": "Open source",
       "factNonprofit": "Non-profit",
       "factNoMoney": "Voluntary participation",
@@ -706,29 +706,30 @@
       "how": "See how it works",
       "tgAlt": "Prefer Telegram?",
       "tgOpen": "Open it there",
-      "sceneAria": "A Need travels by handshakes, participants report Participation",
+      "sceneAria": "A network grows from you, handshake by handshake; a Need travels in it and participants report Participation",
       "sceneYou": "You",
       "sceneAsk": "Need · {{amount}}",
       "sceneDone": "Participation · {{amount}}",
       "statPeople_one": "{{n}} person in one network",
       "statPeople_other": "{{n}} people in one network",
-      "statDepth": "3 handshakes"
+      "statDepth": "3 handshakes",
+      "sceneNet": "Your network · {n}"
     },
     "steps": {
       "title": "How it works",
-      "lead": "Four steps. At each one the participant decides for themselves.",
-      "s1Title": "A participant reports a Need",
-      "s1Text": "A Need is the first of two signals. It says <b>how much is needed and where to get in touch</b>: an amount and a chat link.",
-      "s2Title": "Others learn of it and decide for themselves",
-      "s2Text": "The message travels by handshakes: first to people the participant knows in person, then to the people they know. <b>Everyone decides for themselves whether they can assist.</b>",
-      "s3Title": "Those who wish report Participation",
-      "s3Text": "Participation is the second signal: <b>a voluntary intention</b>, not a payment.",
-      "s4Title": "Actions happen directly, outside Social Organizer",
-      "s4Text": "What to do and how, participants agree and carry out <b>directly with each other</b>, in their own chat."
+      "lead": "The network comes first. Everything else happens inside it.",
+      "s1Title": "You build your network",
+      "s1Text": "Add people you know in person, by a link or a QR code. <b>Each of them confirms that you know each other.</b>",
+      "s2Title": "It reaches further than you see",
+      "s2Text": "Through your people you reach theirs: the 2nd and 3rd handshake. <b>You see only your own three handshakes, never the whole network.</b>",
+      "s3Title": "A Need reaches as many people as it names dollars",
+      "s3Text": "A Need of {{amount}} reaches exactly {{n}} people, nearest by handshakes first. <b>For each of them it is one chance to take part</b>, and once the amount is covered, the Need closes.",
+      "s4Title": "Coordination follows",
+      "s4Text": "Those who wish report Participation, and intentions add up, as in crowdfunding. <b>What to do and how, participants agree directly</b>, in their own chat."
     },
     "chain": {
       "title": "A Need travels by handshakes",
-      "lead": "You see Maria’s Need because Oleg knows her, and you know Oleg. You may leave the message unanswered. <b>No obligations.</b>"
+      "lead": "You see Maria’s Need because Oleg knows her, and you know Oleg. It reaches only as many people as it names dollars, the nearest first. You may leave it unanswered. <b>No obligations.</b>"
     },
     "nots": {
       "title": "What Social Organizer does not do",
@@ -758,13 +759,13 @@
       "p2Text": "Everyone decides for themselves, with no organiser and no scores. Declining carries no sanction.",
       "p3Title": "Direct connection between participants",
       "p3Text": "Arrangements and actions stay between people linked by confirmed acquaintance.",
-      "p4Title": "Minimal coordination",
-      "p4Text": "Two signals and notifications about them. No centralised distribution."
+      "p4Title": "The network comes first",
+      "p4Text": "Signals travel only through confirmed acquaintances. No common pot, no operator, no centralised distribution."
     },
     "faq": {
       "title": "The essentials",
       "q1": "What does Social Organizer do?",
-      "a1": "It records two signals, Need and Participation, and provides the feedback connected with them. It does not act on behalf of participants.",
+      "a1": "It helps you build a network of people you know in person, and lets two signals, Need and Participation, travel through it. It does not act on behalf of participants.",
       "q2": "Do I have to take part?",
       "a2": "No. Participation is voluntary, and everyone makes their own decision.",
       "q3": "Does the service guarantee assistance?",
@@ -774,31 +775,19 @@
       "q5": "Do participants hand over money?",
       "a5": "They may. A Need names an amount, and a Participation names how much a participant is ready to hand over. If participants hand over money, they do it themselves and directly, by their own arrangement. Social Organizer does not verify whether a handover took place.",
       "q6": "What are the amounts in?",
-      "a6": "In US dollars: a common unit of account, so that amounts can be compared. Which currency and which way to use is up to participants."
+      "a6": "In US dollars: a common unit of account, so that amounts can be compared. Which currency and which way to use is up to participants.",
+      "q7": "How is it different from online mutual aid platforms?",
+      "a7": "China’s mutual aid platforms had one operator, charged members and promised payouts like insurance, and in 2021 they were shut down. Social Organizer has no operator, no pot and no payouts: only people who know each other, two signals and voluntary participation."
     }
   },
   "how": {
     "meta": {
       "title": "How it works — Social Organizer",
-      "description": "Two signals, Need and Participation: how a message travels by handshakes and why actions happen directly between participants."
+      "description": "First a network of people you know, then a Need that reaches as many people as it names dollars, then direct coordination. And how it differs from China’s online mutual aid platforms."
     },
     "hero": {
-      "title": "Two signals and a direct connection",
-      "lead": "Social Organizer has only two signals. A <b>Need</b> is a participant’s message about what they need. A <b>Participation</b> is another participant’s message about their own voluntary participation. Everything else people agree and do themselves, directly."
-    },
-    "table": {
-      "title": "A historical example: the hui",
-      "lead": "In southern China six friends put in a share once a month, and one of them takes that month’s shares. Tap a month or a name.",
-      "monthsAria": "Month of the circle",
-      "says": [
-        "<b>Lin</b> takes January’s shares. Five friends put in a share each.",
-        "<b>Chen</b> takes February’s shares. Lin puts in a share too.",
-        "<b>Mei</b> takes March’s shares. Chen puts in a share too.",
-        "<b>Guo</b> takes April’s shares. Mei puts in a share too.",
-        "<b>Sun</b> takes May’s shares. Guo puts in a share too.",
-        "<b>Huang</b> takes June’s shares. The circle is closed: everyone got it once."
-      ],
-      "note": "This is an example of voluntary assistance between people who know each other, not how Social Organizer is built: it has no common pot, no queue and no required shares."
+      "title": "First the network, then the signals",
+      "lead": "Social Organizer starts with a network of people you know in person. Two signals travel through it. A <b>Need</b> is a participant’s message about what they need. A <b>Participation</b> is another participant’s message about their own voluntary participation. Everything else people agree and do themselves, directly."
     },
     "orbit": {
       "title": "How far a message travels",
@@ -818,7 +807,7 @@
     },
     "chain": {
       "title": "A path through people you know",
-      "lead": "You only see Needs that have a path to you through people you know. Tap a person.",
+      "lead": "A Need reaches as many people as it names dollars, the nearest by handshakes first. You only see Needs that have a path to you through people you know. Tap a person.",
       "says": [
         "<b>Maria Koval</b> reports a Need. You do not know her.",
         "<b>Oleg</b>, your brother, knows Maria. That is why he receives her message.",
@@ -826,8 +815,8 @@
       ]
     },
     "join": {
-      "title": "A new person",
-      "lead": "People join the circle only through someone they know, and only after that person confirms.",
+      "title": "It starts with a person you know",
+      "lead": "The network grows only through people who know each other: someone joins by your link, and you confirm the acquaintance.",
       "says": [
         "Katya opens your link and signs in. <b>This is not a connection yet:</b> you get a push.",
         "You confirm: yes, we know each other. <b>Now Katya is your 1st handshake.</b>"
@@ -922,7 +911,47 @@
         "aria": "Hui table"
       }
     },
-    "backToInvite": "Back to the invitation"
+    "backToInvite": "Back to the invitation",
+    "compare": {
+      "title": "The closest example: China’s online mutual aid",
+      "lead": "From 2018 to 2021 China’s online mutual aid platforms gathered hundreds of millions of members: the largest, Xianghubao, had over 100 million. <b>Members shared the cost of each other’s serious illness, a few dollars a year each.</b> In 2021 regulators closed the whole sector: one operator was running what was in effect insurance.",
+      "note": "Social Organizer keeps the idea, many people each taking a small part, and drops what made those platforms fragile.",
+      "caption": "China’s online mutual aid platforms compared with Social Organizer",
+      "them": "Online mutual aid platforms",
+      "us": "Social Organizer",
+      "rows": [
+        [
+          "Who runs it",
+          "One operator",
+          "Nobody: a network of people who know each other"
+        ],
+        [
+          "Money",
+          "Charged from members by the platform",
+          "Never passes through the service"
+        ],
+        [
+          "What is promised",
+          "A payout, like insurance",
+          "Nothing: participation is voluntary"
+        ],
+        [
+          "Who can join",
+          "Anyone who pays",
+          "Only through a confirmed acquaintance"
+        ],
+        [
+          "Who learns of a request",
+          "Everyone on the platform",
+          "As many people as the Need names dollars, nearest first"
+        ],
+        [
+          "What can be shut down",
+          "The platform, and with it everything",
+          "There is no pot and no payouts to shut down"
+        ]
+      ]
+    }
   },
   "legal": {
     "toc": "Legal documents",

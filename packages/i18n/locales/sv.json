@@ -676,12 +676,12 @@
       "deleteAccount": "Radera konto"
     },
     "meta": {
-      "title": "Social Organizer — bistånd börjar med samordnade handlingar",
-      "description": "Social Organizer hjälper deltagare att anmäla behov och frivilligt deltagande. Deltagarna fattar sina egna beslut, och biståndet sker direkt mellan dem. Öppen källkod, ett ideellt projekt."
+      "title": "Social Organizer — ett nätverk av människor du känner",
+      "description": "Bygg ett nätverk av människor du känner personligen. När någon i det anmäler ett behov får exakt lika många personer veta om det som beloppet i dollar, de närmaste först. Deltagarna bestämmer själva och agerar direkt. Öppen källkod, ett ideellt projekt."
     },
     "hero": {
-      "title": "Bistånd börjar med samordnade handlingar",
-      "lead": "Social Organizer hjälper deltagare att anmäla behov och frivilligt deltagande. <b>Deltagarna fattar sina egna beslut, och biståndet sker direkt mellan dem.</b>",
+      "title": "Först ett nätverk av människor du känner",
+      "lead": "Social Organizer börjar med ditt nätverk: människor du känner personligen, och de som de känner. <b>När någon i det anmäler ett behov får exakt lika många personer veta om det som beloppet i dollar.</b> Samordningen följer, direkt mellan deltagarna.",
       "factOpen": "Öppen källkod",
       "factNonprofit": "Ideellt",
       "factNoMoney": "Frivilligt deltagande",
@@ -692,29 +692,30 @@
       "how": "Så fungerar det",
       "tgAlt": "Hellre Telegram?",
       "tgOpen": "Öppna där",
-      "sceneAria": "Ett behov går via handslag, deltagarna anmäler deltagande",
+      "sceneAria": "Ett nätverk växer ut från dig, handslag för handslag; ett behov färdas i det och deltagarna anmäler deltagande",
       "sceneYou": "Du",
       "sceneAsk": "behov · {{amount}}",
       "sceneDone": "deltagande · {{amount}}",
       "statDepth": "3 handslag",
       "statPeople_one": "{{n}} person i ett nätverk",
-      "statPeople_other": "{{n}} personer i ett nätverk"
+      "statPeople_other": "{{n}} personer i ett nätverk",
+      "sceneNet": "Ditt nätverk · {n}"
     },
     "steps": {
       "title": "Så fungerar det",
-      "lead": "Fyra steg. I varje steg bestämmer deltagaren själv.",
-      "s1Title": "En deltagare anmäler ett behov",
-      "s1Text": "Ett behov (Need) är den första av två signaler. Där står <b>hur mycket som behövs och var man kan nå personen</b>: ett belopp och en chattlänk.",
-      "s2Title": "Andra får veta och bestämmer själva",
-      "s2Text": "Meddelandet går via handslag: först till personer deltagaren känner personligen, sedan till deras bekanta. <b>Var och en bestämmer själv om hen kan bistå.</b>",
-      "s3Title": "De som vill anmäler deltagande",
-      "s3Text": "Deltagande (Participation) är den andra signalen: <b>en frivillig avsikt</b>, inte en betalning.",
-      "s4Title": "Handlingarna sker direkt, utanför Social Organizer",
-      "s4Text": "Vad som ska göras och hur kommer deltagarna överens om och utför <b>direkt med varandra</b>, i sin egen chatt."
+      "lead": "Nätverket kommer först. Allt annat sker inne i det.",
+      "s1Title": "Du bygger ditt nätverk",
+      "s1Text": "Lägg till människor du känner personligen, via en länk eller en QR-kod. <b>Var och en av dem bekräftar att ni känner varandra.</b>",
+      "s2Title": "Det når längre än du ser",
+      "s2Text": "Via dina människor når du deras: 2:a och 3:e handslaget. <b>Du ser bara dina egna tre handslag, aldrig hela nätverket.</b>",
+      "s3Title": "Ett behov når lika många personer som det anger dollar",
+      "s3Text": "Ett behov på {{amount}} når exakt {{n}} personer, de närmaste i handslag först. <b>För var och en av dem är det en chans att delta</b>, och när beloppet är täckt stängs behovet.",
+      "s4Title": "Samordningen följer",
+      "s4Text": "De som vill anmäler deltagande, och avsikterna läggs ihop, som vid crowdfunding. <b>Vad som ska göras och hur kommer deltagarna överens om direkt</b>, i sin egen chatt."
     },
     "chain": {
       "title": "Ett behov går via handslag",
-      "lead": "Du ser Marias behov för att Oleg känner henne, och du känner Oleg. Du kan låta meddelandet vara obesvarat. <b>Inga skyldigheter.</b>"
+      "lead": "Du ser Marias behov för att Oleg känner henne, och du känner Oleg. Det når bara lika många personer som det anger dollar, de närmaste först. Du kan låta det vara obesvarat. <b>Inga skyldigheter.</b>"
     },
     "nots": {
       "title": "Vad Social Organizer inte gör",
@@ -744,13 +745,13 @@
       "p2Text": "Var och en bestämmer själv, utan organisatör och utan betyg. Att tacka nej medför inga sanktioner.",
       "p3Title": "Direkt kontakt mellan deltagare",
       "p3Text": "Överenskommelser och handlingar stannar mellan personer som är förbundna genom bekräftade bekantskaper.",
-      "p4Title": "Minimal samordning",
-      "p4Text": "Två signaler och aviseringar om dem. Ingen centraliserad fördelning."
+      "p4Title": "Nätverket kommer först",
+      "p4Text": "Signaler går bara via bekräftade bekantskaper. Ingen gemensam kassa, ingen operatör, ingen centraliserad fördelning."
     },
     "faq": {
       "title": "Det viktigaste i korthet",
       "q1": "Vad gör Social Organizer?",
-      "a1": "Den registrerar två signaler — behov (Need) och deltagande (Participation) — och ger den återkoppling som hör till dem. Den utför inga handlingar åt deltagarna.",
+      "a1": "Den hjälper dig bygga ett nätverk av människor du känner personligen och låter två signaler, behov (Need) och deltagande (Participation), färdas i det. Den agerar inte åt deltagarna.",
       "q2": "Måste jag delta?",
       "a2": "Nej. Deltagande är frivilligt, och var och en fattar sitt eget beslut.",
       "q3": "Garanterar tjänsten bistånd?",
@@ -760,31 +761,19 @@
       "q5": "Lämnar deltagarna över pengar?",
       "a5": "Det kan de göra. I ett behov anger deltagaren ett belopp, och i ett deltagande anger deltagaren hur mycket hen är beredd att lämna över. Om deltagare lämnar över pengar gör de det själva och direkt, enligt sin egen överenskommelse. Social Organizer kontrollerar inte om en överlämning har ägt rum.",
       "q6": "I vilken enhet anges beloppen?",
-      "a6": "I US-dollar: det är en gemensam räkneenhet, så att beloppen går att jämföra. Vilken valuta och vilket sätt som används bestämmer deltagarna själva."
+      "a6": "I US-dollar: det är en gemensam räkneenhet, så att beloppen går att jämföra. Vilken valuta och vilket sätt som används bestämmer deltagarna själva.",
+      "q7": "Hur skiljer det sig från nätbaserade plattformar för ömsesidig hjälp?",
+      "a7": "Kinas plattformar för ömsesidig hjälp hade en enda operatör, tog avgifter av medlemmarna och lovade utbetalningar som en försäkring, och 2021 stängdes de. Social Organizer har ingen operatör, ingen kassa och inga utbetalningar: bara människor som känner varandra, två signaler och frivilligt deltagande."
     }
   },
   "how": {
     "meta": {
       "title": "Så fungerar det — Social Organizer",
-      "description": "Två signaler, behov och deltagande: hur ett meddelande går via handslag och varför handlingarna sker direkt mellan deltagarna."
+      "description": "Först ett nätverk av människor du känner, sedan ett behov som når lika många personer som det anger dollar, sedan direkt samordning. Och hur det skiljer sig från Kinas nätbaserade plattformar för ömsesidig hjälp."
     },
     "hero": {
-      "title": "Två signaler och en direkt kontakt",
-      "lead": "Social Organizer har bara två signaler. Ett <b>behov</b> (Need) är en deltagares meddelande om vad hen behöver. Ett <b>deltagande</b> (Participation) är en annan deltagares meddelande om sitt eget frivilliga deltagande. Allt annat kommer människor överens om och gör själva, direkt."
-    },
-    "table": {
-      "title": "Ett historiskt exempel: hui",
-      "lead": "I södra Kina lägger sex bekanta in en andel en gång i månaden, och en av dem tar månadens andelar. Tryck på en månad eller ett namn.",
-      "monthsAria": "Kretsens månad",
-      "says": [
-        "<b>Lin</b> tar andelarna i januari. Fem vänner lägger in en andel var.",
-        "<b>Chen</b> tar andelarna i februari. Lin lägger in en andel också.",
-        "<b>Mei</b> tar andelarna i mars. Chen lägger in en andel också.",
-        "<b>Guo</b> tar andelarna i april. Mei lägger in en andel också.",
-        "<b>Sun</b> tar andelarna i maj. Guo lägger in en andel också.",
-        "<b>Huang</b> tar andelarna i juni. Kretsen är sluten: alla fick en gång."
-      ],
-      "note": "Det här är ett exempel på frivilligt bistånd mellan personer som känner varandra, inte hur Social Organizer är uppbyggt: där finns ingen gemensam kassa, ingen kö och inga obligatoriska andelar."
+      "title": "Först nätverket, sedan signalerna",
+      "lead": "Social Organizer börjar med ett nätverk av människor du känner personligen. Två signaler färdas i det. Ett <b>behov</b> (Need) är en deltagares meddelande om vad hen behöver. Ett <b>deltagande</b> (Participation) är en annan deltagares meddelande om sitt eget frivilliga deltagande. Allt annat kommer människor överens om och gör själva, direkt."
     },
     "orbit": {
       "title": "Hur långt ett meddelande når",
@@ -804,7 +793,7 @@
     },
     "chain": {
       "title": "En väg genom personer du känner",
-      "lead": "Du ser bara behov som har en väg till dig genom personer du känner. Tryck på en person.",
+      "lead": "Ett behov når lika många personer som det anger dollar, de närmaste i handslag först. Du ser bara behov som har en väg till dig via människor du känner. Tryck på en person.",
       "says": [
         "<b>Maria Koval</b> anmäler ett behov. Du känner henne inte.",
         "<b>Oleg</b>, din bror, känner Maria. Därför får han hennes meddelande.",
@@ -812,8 +801,8 @@
       ]
     },
     "join": {
-      "title": "En ny person",
-      "lead": "Personer kommer in i kretsen bara genom någon de känner, och bara efter att den personen bekräftar.",
+      "title": "Det börjar med en person du känner",
+      "lead": "Nätverket växer bara genom människor som känner varandra: någon går med via din länk, och du bekräftar bekantskapen.",
       "says": [
         "Katya öppnar din länk och loggar in. <b>Det är inte en koppling ännu:</b> du får en notis.",
         "Du bekräftar: ja, vi känner varandra. <b>Nu är Katya ditt 1:a handslag.</b>"
@@ -907,6 +896,46 @@
         "takes": "{{name}} tar dem",
         "aria": "Hui-bordet"
       }
+    },
+    "compare": {
+      "title": "Det närmaste exemplet: Kinas nätbaserade ömsesidiga hjälp",
+      "lead": "Från 2018 till 2021 samlade Kinas nätbaserade plattformar för ömsesidig hjälp hundratals miljoner medlemmar: den största, Xianghubao, hade över 100 miljoner. <b>Medlemmarna delade på kostnaden för varandras allvarliga sjukdom, några dollar om året var.</b> 2021 stängde myndigheterna hela sektorn: en operatör drev i praktiken en försäkring.",
+      "note": "Social Organizer behåller idén, många människor som tar var sin liten del, och släpper det som gjorde de plattformarna sköra.",
+      "caption": "Kinas nätbaserade plattformar för ömsesidig hjälp jämfört med Social Organizer",
+      "them": "Nätbaserade plattformar för ömsesidig hjälp",
+      "us": "Social Organizer",
+      "rows": [
+        [
+          "Vem driver det",
+          "En operatör",
+          "Ingen: ett nätverk av människor som känner varandra"
+        ],
+        [
+          "Pengar",
+          "Tas ut av plattformen från medlemmarna",
+          "Går aldrig via tjänsten"
+        ],
+        [
+          "Vad som utlovas",
+          "En utbetalning, som en försäkring",
+          "Ingenting: deltagande är frivilligt"
+        ],
+        [
+          "Vem kan gå med",
+          "Alla som betalar",
+          "Bara via en bekräftad bekantskap"
+        ],
+        [
+          "Vem får veta om en förfrågan",
+          "Alla på plattformen",
+          "Lika många personer som behovet anger dollar, de närmaste först"
+        ],
+        [
+          "Vad kan stängas",
+          "Plattformen, och med den allt",
+          "Det finns ingen kassa och inga utbetalningar att stänga"
+        ]
+      ]
     }
   },
   "legal": {

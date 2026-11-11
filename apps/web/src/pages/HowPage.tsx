@@ -3,9 +3,9 @@ import { Link, useSearchParams } from 'react-router-dom';
 import { readPendingInvite, safeInviteToken } from '../components/onboarding/flow';
 import { Trans, useTranslation } from 'react-i18next';
 import { heroCta, useDevice } from '../lib/device';
-import { ChainFigure, HuiFigure, JoinFigure, OrbitFigure, type ChainStep, type JoinStep, type OrbitDepth } from '../components/figures';
+import { ChainFigure, JoinFigure, OrbitFigure, type ChainStep, type JoinStep, type OrbitDepth } from '../components/figures';
 import { useStoreLinks } from '../components/site/DeviceEntry';
-import { Reveal, usePlayOnEnter, useSitePhone } from '../components/site/hooks';
+import { Reveal, usePlayOnEnter } from '../components/site/hooks';
 import { useLoginHref } from '../components/site/SiteHeader';
 import { SitePage } from '../components/site/SitePage';
 import { useFigureLabels, useMoney } from '../components/site/figureLabels';
@@ -15,16 +15,19 @@ const B = { b: <b /> };
 const RING_SIZES = [6, 36, 216] as const;
 const SHARE = 15;
 
+/** Rows of the comparison with China's online mutual aid platforms (how.compare.rows). */
+const COMPARE_ROWS = 6;
+
 /**
- * "How it works" (`/how`, screens.md §17): the two signals, then four interactives, one markup for 1280 and 390.
- * The hui table comes last, as a historical example of mutual assistance and not as the model of the product.
+ * "How it works" (`/how`, screens.md §17), in the order things happen: the network is built first (a new person,
+ * then how far it reaches), a Need travels inside it, and last the closest real example, China's online mutual aid
+ * platforms, side by side with Social Organizer. One markup for 1280 and 390.
  * Each figure plays its sequence when half of it is on screen and again on every return; sections fade in once.
  * Under prefers-reduced-motion figures show their final state.
  */
 export function HowPage() {
   const { t } = useTranslation();
   const device = useDevice();
-  const phone = useSitePhone();
   const labels = useFigureLabels();
   const money = useMoney();
   const links = useStoreLinks();
@@ -35,29 +38,23 @@ export function HowPage() {
   const invite = safeInviteToken(params.get('invite')) ?? (params.has('invite') ? readPendingInvite() : null);
   const backToInvite = invite ? `/invite/${encodeURIComponent(invite)}` : null;
 
-  /* 4. hui table (historical example, shown last) */
-  const [month, setMonth] = useState(0);
-  const [huiPlay, setHuiPlay] = useState(0);
-  const huiRef = usePlayOnEnter<number>(() => setHuiPlay((n) => n + 1), [1], 0);
-  const months = labels.hui.months ?? [];
-  const tableSays = arr('how.table.says');
-
-  /* 1. handshake rings */
+  /* 2. handshake rings */
   const [depth, setDepth] = useState<OrbitDepth>(0);
   const orbitRef = usePlayOnEnter<OrbitDepth>(setDepth, [0, 1, 2], 900);
   const rings = arr('how.orbit.rings');
   const orbitSays = arr('how.orbit.says');
   const reach = RING_SIZES.slice(0, depth + 1).reduce((a, n) => a + n, 0) * SHARE;
 
-  /* 2. path through acquaintances */
+  /* 3. path through acquaintances */
   const [chain, setChain] = useState<ChainStep>(0);
   const chainRef = usePlayOnEnter<ChainStep>(setChain, [0, 1, 2], 1000);
   const chainSays = arr('how.chain.says');
 
-  /* 3. a new person */
+  /* 1. a new person */
   const [join, setJoin] = useState<JoinStep>(0);
   const joinRef = usePlayOnEnter<JoinStep>(setJoin, [0, 1], 1400);
   const joinSays = arr('how.join.says');
+  const rows = Array.from({ length: COMPARE_ROWS }, (_v, i) => arr(`how.compare.rows.${i}`));
 
   // "Start": the device's own way in (Google Play, App Store, or the browser on a computer).
   const primary = heroCta(device).primary;
@@ -75,6 +72,19 @@ export function HowPage() {
         <p className="lead">
           <Trans i18nKey="how.hero.lead" components={B} />
         </p>
+      </Reveal>
+
+      <Reveal as="section" className="site-sec" aria-labelledby="join-title">
+        <div className="copy">
+          <h2 id="join-title">{t('how.join.title')}</h2>
+          <p className="lead">{t('how.join.lead')}</p>
+          <p className="site-say" aria-live="polite">
+            <Trans defaults={joinSays[join] ?? ''} components={B} />
+          </p>
+        </div>
+        <div ref={joinRef} className="site-fig chain">
+          <JoinFigure step={join} labels={labels.join} onSelect={setJoin} />
+        </div>
       </Reveal>
 
       <Reveal as="section" className="site-sec" aria-labelledby="orbit-title">
@@ -116,38 +126,33 @@ export function HowPage() {
         </div>
       </Reveal>
 
-      <Reveal as="section" className="site-sec" aria-labelledby="join-title">
+      <Reveal as="section" className="site-sec site-compare-sec" aria-labelledby="compare-title">
         <div className="copy">
-          <h2 id="join-title">{t('how.join.title')}</h2>
-          <p className="lead">{t('how.join.lead')}</p>
-          <p className="site-say" aria-live="polite">
-            <Trans defaults={joinSays[join] ?? ''} components={B} />
+          <h2 id="compare-title">{t('how.compare.title')}</h2>
+          <p className="lead">
+            <Trans i18nKey="how.compare.lead" components={B} />
           </p>
+          <p className="site-note">{t('how.compare.note')}</p>
         </div>
-        <div ref={joinRef} className="site-fig chain">
-          <JoinFigure step={join} labels={labels.join} onSelect={setJoin} />
-        </div>
-      </Reveal>
-
-      <Reveal as="section" className="site-sec" aria-labelledby="table-title">
-        <div className="copy">
-          <h2 id="table-title">{t('how.table.title')}</h2>
-          <p className="lead">{t('how.table.lead')}</p>
-          <p className="site-note">{t('how.table.note')}</p>
-          <div className="site-chips" role="group" aria-label={t('how.table.monthsAria')}>
-            {months.map((m, i) => (
-              <button key={m} type="button" aria-pressed={i === month} onClick={() => setMonth(i)}>
-                {m}
-              </button>
+        <table className="site-compare">
+          <caption className="sr-only">{t('how.compare.caption')}</caption>
+          <thead>
+            <tr>
+              <td />
+              <th scope="col">{t('how.compare.them')}</th>
+              <th scope="col">{t('how.compare.us')}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map((r) => (
+              <tr key={r[0]}>
+                <th scope="row">{r[0]}</th>
+                <td>{r[1]}</td>
+                <td>{r[2]}</td>
+              </tr>
             ))}
-          </div>
-          <p className="site-say" aria-live="polite">
-            <Trans defaults={tableSays[month] ?? ''} components={B} />
-          </p>
-        </div>
-        <div ref={huiRef}>
-          <HuiFigure month={month} onMonthChange={setMonth} playKey={huiPlay} size={phone ? 320 : 440} labels={labels.hui} />
-        </div>
+          </tbody>
+        </table>
       </Reveal>
 
       <Reveal as="section" className="site-endcta" aria-labelledby="cta-title">
