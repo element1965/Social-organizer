@@ -205,7 +205,8 @@
     "scan": "Scan",
     "how": "How it works",
     "person": "Person",
-    "collection": "Need"
+    "collection": "Need",
+    "attention": "waiting for you"
   },
   "circle": {
     "toSelf": "Back to me",
@@ -278,7 +279,8 @@
       "milestoneFirstNeed": "First Need",
       "milestoneFirstNeedSub": "The message is travelling by handshakes",
       "milestoneFirstPart": "First Participation",
-      "milestoneFirstPartSub": "The author of the Need sees your Participation"
+      "milestoneFirstPartSub": "The author of the Need sees your Participation",
+      "accepted": "confirmed the acquaintance · you are in each other's circle"
     },
     "start": {
       "lead": "You are the first in your circle.",

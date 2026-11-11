@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { REGULAR_CYCLE_DAYS } from '@so/shared';
 import { trpc } from '../lib/trpc';
 import { useAuth } from './useAuth';
+import { useAcceptedRecent } from './useAcceptedRecent';
 import { formatMoney } from '../components/ui2/format';
 
 const DAY_MS = 24 * 60 * 60 * 1000;
@@ -18,7 +19,8 @@ export type FeedKind =
   | 'joined'
   | 'incoming'
   | 'waiting'
-  | 'milestone';
+  | 'milestone'
+  | 'accepted';
 
 export type MilestoneKind = 'FIRST_CONNECTION' | 'NEED_UNLOCKED' | 'FIRST_NEED' | 'FIRST_PARTICIPATION';
 
@@ -157,6 +159,7 @@ export function useEvents(options: { displayName?: (id: string, fallback: string
   const participating = trpc.collection.myParticipating.useQuery(undefined, { refetchInterval: 60_000 });
   const mine = trpc.collection.myActive.useQuery(undefined, { refetchInterval: 60_000 });
   const milestones = trpc.milestone.list.useQuery(undefined, { refetchInterval: 60_000 });
+  const accepted = useAcceptedRecent();
 
   // A changed unread counter means new notifications: refresh the list right away.
   const lastCount = useRef<number | null>(null);
@@ -345,8 +348,24 @@ export function useEvents(options: { displayName?: (id: string, fallback: string
       });
     }
 
+    // My requests that were confirmed: the person who asked learns it here even when Telegram / push did not
+    // reach them. The first-handshake milestone already says it for that one person.
+    const firstWith = out.find((e) => e.kind === 'milestone' && e.milestone === 'FIRST_CONNECTION')?.personId;
+    for (const a of accepted.items) {
+      if (a.person.id === firstWith) continue;
+      out.push({
+        id: `acc:${a.id}`,
+        kind: 'accepted',
+        at: a.at,
+        title: name(a.person.id, a.person.name),
+        subtitle: t('circle.feed.accepted'),
+        hot: a.unseen,
+        personId: a.person.id,
+      });
+    }
+
     return out.sort((a, b) => b.at - a.at);
-  }, [notifications.data, incoming.data, outgoing.data, mine.data, participating.data, milestones.data, myId, t, name, dateFmt]);
+  }, [notifications.data, incoming.data, outgoing.data, mine.data, participating.data, milestones.data, accepted.items, myId, t, name, dateFmt]);
 
   // Active incoming Needs I have not decided on: unlike the feed rows (unread only) they stay after the Need was
   // opened, and end when I join, dismiss the notice, or the Need is no longer active (see isPendingRequest).
@@ -380,7 +399,7 @@ export function useEvents(options: { displayName?: (id: string, fallback: string
     mine.isLoading ||
     milestones.isLoading;
 
-  return { events, impulses, loading, unreadCount: unread.data?.count ?? 0 };
+  return { events, impulses, loading, unreadCount: unread.data?.count ?? 0, markAcceptedSeen: accepted.markSeen };
 }
 
 /**
@@ -414,6 +433,7 @@ export function useDeclineNeed() {
       await Promise.all([
         utils.notification.list.invalidate(undefined, { refetchType: 'all' }),
         utils.notification.unreadCount.invalidate(undefined, { refetchType: 'all' }),
+        utils.notification.attention.invalidate(undefined, { refetchType: 'all' }),
       ]);
       return dismissIds.length ? knownOk.every(Boolean) : sweepOk;
     },
@@ -449,7 +469,7 @@ export function feedGroup(event: FeedEvent, myId: string | null | undefined): Fe
 }
 
 /** Kinds that arrive from someone else and deserve the top banner. */
-export const BANNER_KINDS: ReadonlySet<FeedKind> = new Set(['request', 'cycle', 'incoming', 'joined', 'closed', 'milestone']);
+export const BANNER_KINDS: ReadonlySet<FeedKind> = new Set(['request', 'cycle', 'incoming', 'joined', 'closed', 'milestone', 'accepted']);
 
 /**
  * Calls onNew with events that appeared after the first load (ids not seen before), newest first.

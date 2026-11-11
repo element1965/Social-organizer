@@ -7,6 +7,8 @@ import { syncMilestones } from '../services/milestone.service.js';
 
 export { REQUEST_COOLDOWN_MS } from '../services/connection-request.service.js';
 
+const ACCEPTED_RECENT_MS = 7 * 24 * 60 * 60 * 1000;
+
 export const pendingRouter = router({
   incoming: protectedProcedure.query(async ({ ctx }) => {
     return ctx.db.pendingConnection.findMany({
@@ -57,6 +59,26 @@ export const pendingRouter = router({
     if (pending.status === 'PENDING') return { state: 'waiting' as const, person, connectionCount };
     if (pending.status === 'REJECTED') return { state: 'declined' as const, person, connectionCount };
     return { state: 'none' as const, person: null, connectionCount };
+  }),
+
+  /**
+   * My requests the other person confirmed in the last 7 days: the in-app "X confirmed the acquaintance"
+   * for the person who asked. Telegram / push may not reach them (no Start in the bot, no subscription),
+   * so the app itself has to say it. "Seen" is kept on the device.
+   */
+  acceptedRecent: protectedProcedure.query(async ({ ctx }) => {
+    const rows = await ctx.db.pendingConnection.findMany({
+      where: {
+        fromUserId: ctx.userId,
+        status: 'ACCEPTED',
+        resolvedAt: { gte: new Date(Date.now() - ACCEPTED_RECENT_MS) },
+        toUser: { deletedAt: null },
+      },
+      include: { toUser: { select: { id: true, name: true, photoUrl: true } } },
+      orderBy: { resolvedAt: 'desc' },
+      take: 20,
+    });
+    return rows.map((r) => ({ id: r.id, at: r.resolvedAt!, person: r.toUser }));
   }),
 
   incomingCount: protectedProcedure.query(async ({ ctx }) => {

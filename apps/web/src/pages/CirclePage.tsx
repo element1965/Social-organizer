@@ -75,7 +75,7 @@ export function CirclePage() {
   const stats = useCachedNetworkStats();
   const caps = trpc.stats.networkCapabilities.useQuery(undefined, { refetchInterval: NETWORK_POLL_MS, staleTime: NETWORK_STALE_MS });
   const me = trpc.user.me.useQuery();
-  const { events, impulses, loading } = useEvents({ displayName: net.displayName });
+  const { events, impulses, loading, markAcceptedSeen } = useEvents({ displayName: net.displayName });
 
   const hiddenRings = useCircleStore((s) => s.hiddenRings);
   const setRingHidden = useCircleStore((s) => s.setRingHidden);
@@ -86,6 +86,17 @@ export function CirclePage() {
   const selectedId = params.get('person');
   // The graph layer exists only on the phone; tablet and desktop always show scene and feed.
   const layer: Layer = selectedId ? 'person' : params.get('graph') && phone ? 'graph' : 'feed';
+
+  // Confirmations of my requests count in the navigation badge until the feed has shown them
+  const unseenAccepted = events.some((e) => e.kind === 'accepted' && e.hot);
+  const feedVisible = !phone || layer === 'feed';
+  useEffect(() => {
+    if (!unseenAccepted || !feedVisible) return;
+    const timer = window.setTimeout(() => {
+      if (document.visibilityState === 'visible') markAcceptedSeen();
+    }, 1500);
+    return () => window.clearTimeout(timer);
+  }, [unseenAccepted, feedVisible, markAcceptedSeen]);
 
   const graphRef = useRef<CircleGraphHandle | null>(null);
   const lastNodeTap = useRef(0);
@@ -240,12 +251,14 @@ export function CirclePage() {
     onSuccess: () => {
       void utils.notification.list.invalidate();
       void utils.notification.unreadCount.invalidate();
+      void utils.notification.attention.invalidate();
     },
   });
   const dismiss = trpc.notification.dismiss.useMutation({
     onSuccess: () => {
       void utils.notification.list.invalidate();
       void utils.notification.unreadCount.invalidate();
+      void utils.notification.attention.invalidate();
     },
   });
   const declineNeed = useDeclineNeed();
@@ -280,6 +293,7 @@ export function CirclePage() {
           if (event.milestone) setMilestone(event.milestone);
           return;
         case 'waiting':
+        case 'accepted':
           if (event.personId && !phone && net.people.has(event.personId)) openLayer('person', event.personId);
           else if (event.personId) navigate(`/person/${event.personId}`);
           return;

@@ -122,6 +122,36 @@ export const notificationRouter = router({
       return { count: result.count };
     }),
 
+  /**
+   * What waits for the person's own decision, for the badges in the navigation:
+   * - `needs`: active Needs of others with a notice that has not expired and that they have neither joined nor declined;
+   * - `incoming`: connection requests to confirm.
+   * Confirmations of their own requests come from `pending.acceptedRecent` ("seen" lives on the device).
+   */
+  attention: protectedProcedure.query(async ({ ctx }) => {
+    const [needRows, incoming] = await Promise.all([
+      // One per Need, however many waves reached the person; the same rule as "Waiting for you" in the Circle
+      // feed: opened (READ) still waits for a decision, only joining or "Not now" ends it
+      ctx.db.notification.findMany({
+        where: {
+          userId: ctx.userId,
+          status: { in: ['UNREAD', 'READ'] },
+          type: { in: ['NEW_COLLECTION', 'RE_NOTIFY', 'SPECIAL_AUTHOR', 'SPECIAL_DEVELOPER'] },
+          expiresAt: { gt: new Date() },
+          collection: {
+            status: 'ACTIVE',
+            creatorId: { not: ctx.userId },
+            obligations: { none: { userId: ctx.userId, unsubscribedAt: null } },
+          },
+        },
+        distinct: ['collectionId'],
+        select: { collectionId: true },
+      }),
+      ctx.db.pendingConnection.count({ where: { toUserId: ctx.userId, status: 'PENDING' } }),
+    ]);
+    return { needs: needRows.length, incoming };
+  }),
+
   unreadCount: protectedProcedure.query(async ({ ctx }) => {
     const count = await ctx.db.notification.count({
       where: { userId: ctx.userId, status: 'UNREAD' },
