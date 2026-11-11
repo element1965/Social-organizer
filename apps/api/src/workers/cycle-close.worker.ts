@@ -59,6 +59,9 @@ export async function processCycleClose(_job: Job): Promise<void> {
     where: {
       type: 'REGULAR',
       status: { in: ['ACTIVE', 'BLOCKED'] },
+      // A suspension (admin or circle review) freezes the cycle: rolling over would reopen the Need.
+      // Only a goal hold (no reason) rolls over; after unblock the overdue cycle closes on the next run.
+      blockReason: null,
       currentCycleStart: { lte: cutoff },
     },
     select: {

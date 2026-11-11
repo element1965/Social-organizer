@@ -57,7 +57,9 @@ export const inviteRouter = router({
           throw new TRPCError({ code: 'BAD_REQUEST', message: 'Cannot accept own invite' });
         }
         inviterId = invite.inviterId;
-        inPerson = invite.expiresAt != null;
+        // In-person only while the token is live. A replay of an old token by the person who used it
+        // (e.g. after the inviter removed them) becomes an ordinary request the inviter confirms.
+        inPerson = invite.expiresAt != null && invite.expiresAt.getTime() > Date.now();
 
         if (!invite.usedById) {
           if (invite.expiresAt && invite.expiresAt.getTime() <= Date.now()) {
@@ -109,7 +111,8 @@ export const inviteRouter = router({
           const claimed = await tx.inviteLink.updateMany({
             where: {
               id: invite!.id,
-              OR: [{ usedById: null, expiresAt: { gt: new Date() } }, { usedById: ctx.userId }],
+              expiresAt: { gt: new Date() },
+              OR: [{ usedById: null }, { usedById: ctx.userId }],
             },
             data: { usedById: ctx.userId, usedAt: invite!.usedAt ?? new Date() },
           });

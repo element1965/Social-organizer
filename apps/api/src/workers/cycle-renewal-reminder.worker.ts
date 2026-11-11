@@ -27,6 +27,7 @@ export async function processCycleRenewalReminder(_job: Job): Promise<void> {
     where: {
       type: 'REGULAR',
       status: { in: ['ACTIVE', 'BLOCKED'] },
+      blockReason: null, // no renewal reminders for a suspended Need
       currentCycleStart: { gte: windowStart, lt: windowEnd },
     },
     select: {
