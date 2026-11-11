@@ -1445,6 +1445,12 @@
     "tooMany": "Terlalu banyak percobaan. Tunggu semenit lalu goyangkan lagi.",
     "enable": "Aktifkan goyang",
     "hintTitle": "Cukup goyangkan ponsel",
-    "hintBody": "Berdiri berdekatan, goyangkan kedua ponsel di saat yang sama. Aplikasi menemukan orang lainnya, kalian tinggal konfirmasi. Berfungsi di layar mana pun."
+    "hintBody": "Berdiri berdekatan, goyangkan kedua ponsel di saat yang sama. Aplikasi menemukan orang lainnya, kalian tinggal konfirmasi. Berfungsi di layar mana pun.",
+    "codeTitle": "Bandingkan kode",
+    "codeBody": "Tunjukkan layar Anda ke orang lain. Jika ia melihat tiga simbol yang sama, konfirmasi.",
+    "codeSame": "Kode sama",
+    "codeDifferent": "Kode berbeda",
+    "codeWaiting": "Menunggu orang lain mengonfirmasi kode…",
+    "codeLabel": "Kode: {{code}}"
   }
 }

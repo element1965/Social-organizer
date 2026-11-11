@@ -36,6 +36,14 @@ export type ShakePair = {
   connectedBefore?: boolean;
   /** True while the router is writing the connection, so a double tap cannot connect twice */
   connecting?: boolean;
+  /**
+   * Paired only because they were the only two shakes in the window (no shared network, no close geo).
+   * Such a pair could be two strangers far apart, or a script fishing for whoever shakes: neither person
+   * is shown until both confirm that they see the same code on each other's screen.
+   */
+  weak: boolean;
+  /** Three symbols shown on both phones; the same on both. */
+  code: string[];
 };
 
 export type ShakeSearchStatus =
@@ -85,8 +93,35 @@ function contradicts(a: ShakeEntry, b: ShakeEntry): boolean {
   return meters > geoDistanceLimitM(a.geo, b.geo);
 }
 
+/**
+ * Symbols for the pair code: distinct shapes and colours that are easy to compare across two screens
+ * and read the same in every language.
+ */
+export const CODE_SYMBOLS = ['🍋', '🚲', '🌙', '🐳', '🌵', '🎈', '🍄', '⚓', '🦊', '🍉', '🎲', '🌻', '🔑', '🐝', '🍒', '⛵'] as const;
+
+function pairCode(): string[] {
+  const bytes = randomBytes(3);
+  return [...bytes].map((b) => CODE_SYMBOLS[b % CODE_SYMBOLS.length]!);
+}
+
+/**
+ * The part of an address that names one network: the whole IPv4 address (NAT gives one per network),
+ * the /64 prefix of an IPv6 address (each phone on the same Wi-Fi has its own address in it).
+ */
+export function networkKey(ip: string): string {
+  const raw = ip.trim().toLowerCase();
+  const mapped = /^::ffff:(\d+\.\d+\.\d+\.\d+)$/.exec(raw);
+  if (mapped) return mapped[1]!;
+  if (!raw.includes(':')) return raw;
+  const [head = '', tail = ''] = raw.split('::');
+  const left = head ? head.split(':') : [];
+  const right = raw.includes('::') && tail ? tail.split(':') : [];
+  const groups = raw.includes('::') ? [...left, ...Array(Math.max(0, 8 - left.length - right.length)).fill('0'), ...right] : left;
+  return groups.slice(0, 4).map((g) => g.replace(/^0+(?=.)/, '')).join(':') + '::/64';
+}
+
 function isStrong(a: ShakeEntry, b: ShakeEntry): boolean {
-  if (a.ip === b.ip) return true;
+  if (networkKey(a.ip) === networkKey(b.ip)) return true;
   // Reaching here means contradicts() is false, so two geo points are within range
   return !!a.geo && !!b.geo;
 }
@@ -157,6 +192,8 @@ function evaluate(): void {
           expiresAt: t + PAIR_TTL_MS,
           accepted: new Set(),
           state: 'waiting',
+          weak: !isStrong(e, c.other),
+          code: pairCode(),
         };
         pairs.set(pair.pairId, pair);
         e.pairId = pair.pairId;

@@ -1456,6 +1456,12 @@
     "tooMany": "Too many tries. Wait a minute and shake again.",
     "enable": "Enable shake to connect",
     "hintTitle": "Just shake your phones",
-    "hintBody": "Standing together, shake both phones at the same moment. The app finds the other person, and you both just confirm. Works on any screen."
+    "hintBody": "Standing together, shake both phones at the same moment. The app finds the other person, and you both just confirm. Works on any screen.",
+    "codeTitle": "Compare the code",
+    "codeBody": "Show your screen to the other person. If they see the same three symbols, confirm.",
+    "codeSame": "Same code",
+    "codeDifferent": "Different code",
+    "codeWaiting": "Waiting for the other person to confirm the code…",
+    "codeLabel": "Code: {{code}}"
   }
 }

@@ -1478,6 +1478,12 @@
     "tooMany": "Příliš mnoho pokusů. Počkejte minutu a protřepte znovu.",
     "enable": "Zapnout protřepání",
     "hintTitle": "Stačí zatřást telefony",
-    "hintBody": "Vedle sebe zatřeste oběma telefony ve stejnou chvíli. Aplikace najde druhého člověka a stačí jen potvrdit. Funguje na každé obrazovce."
+    "hintBody": "Vedle sebe zatřeste oběma telefony ve stejnou chvíli. Aplikace najde druhého člověka a stačí jen potvrdit. Funguje na každé obrazovce.",
+    "codeTitle": "Porovnejte kód",
+    "codeBody": "Ukažte obrazovku druhé osobě. Pokud vidí stejné tři symboly, potvrďte.",
+    "codeSame": "Stejný kód",
+    "codeDifferent": "Jiný kód",
+    "codeWaiting": "Čekáme, až druhá osoba potvrdí kód…",
+    "codeLabel": "Kód: {{code}}"
   }
 }

@@ -1445,6 +1445,12 @@
     "tooMany": "Quá nhiều lần thử. Chờ một phút rồi lắc lại.",
     "enable": "Bật tính năng lắc",
     "hintTitle": "Chỉ cần lắc điện thoại",
-    "hintBody": "Đứng cạnh nhau, lắc cả hai điện thoại cùng lúc. Ứng dụng sẽ tìm người kia, hai bạn chỉ cần xác nhận. Hoạt động ở mọi màn hình."
+    "hintBody": "Đứng cạnh nhau, lắc cả hai điện thoại cùng lúc. Ứng dụng sẽ tìm người kia, hai bạn chỉ cần xác nhận. Hoạt động ở mọi màn hình.",
+    "codeTitle": "So sánh mã",
+    "codeBody": "Cho người kia xem màn hình. Nếu họ thấy đúng ba biểu tượng này, hãy xác nhận.",
+    "codeSame": "Mã giống nhau",
+    "codeDifferent": "Mã khác",
+    "codeWaiting": "Đang chờ người kia xác nhận mã…",
+    "codeLabel": "Mã: {{code}}"
   }
 }

@@ -1456,6 +1456,12 @@
     "tooMany": "For mange forsøg. Vent et minut og ryst igen.",
     "enable": "Aktivér ryst",
     "hintTitle": "Ryst bare telefonerne",
-    "hintBody": "Ryst begge telefoner på samme tid, mens I står ved siden af hinanden. Appen finder den anden person, og I bekræfter bare. Virker på alle skærme."
+    "hintBody": "Ryst begge telefoner på samme tid, mens I står ved siden af hinanden. Appen finder den anden person, og I bekræfter bare. Virker på alle skærme.",
+    "codeTitle": "Sammenlign koden",
+    "codeBody": "Vis din skærm til den anden. Hvis de ser de samme tre symboler, så bekræft.",
+    "codeSame": "Samme kode",
+    "codeDifferent": "Anden kode",
+    "codeWaiting": "Venter på, at den anden bekræfter koden…",
+    "codeLabel": "Kode: {{code}}"
   }
 }

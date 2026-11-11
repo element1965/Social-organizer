@@ -1456,6 +1456,12 @@
     "tooMany": "Zu viele Versuche. Warte eine Minute und schüttle erneut.",
     "enable": "Schütteln aktivieren",
     "hintTitle": "Einfach die Handys schütteln",
-    "hintBody": "Schüttelt beide Handys nebeneinander im selben Moment. Die App findet die andere Person, ihr bestätigt nur noch. Funktioniert auf jedem Bildschirm."
+    "hintBody": "Schüttelt beide Handys nebeneinander im selben Moment. Die App findet die andere Person, ihr bestätigt nur noch. Funktioniert auf jedem Bildschirm.",
+    "codeTitle": "Code vergleichen",
+    "codeBody": "Zeig dem anderen deinen Bildschirm. Wenn er dieselben drei Symbole sieht, bestätige.",
+    "codeSame": "Gleicher Code",
+    "codeDifferent": "Anderer Code",
+    "codeWaiting": "Warten, bis die andere Person den Code bestätigt…",
+    "codeLabel": "Code: {{code}}"
   }
 }

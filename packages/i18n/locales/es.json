@@ -1467,6 +1467,12 @@
     "tooMany": "Demasiados intentos. Espera un minuto y sacude de nuevo.",
     "enable": "Activar sacudida",
     "hintTitle": "Solo agitad los teléfonos",
-    "hintBody": "Juntos, agitad los dos teléfonos a la vez. La app encuentra a la otra persona y solo tenéis que confirmar. Funciona en cualquier pantalla."
+    "hintBody": "Juntos, agitad los dos teléfonos a la vez. La app encuentra a la otra persona y solo tenéis que confirmar. Funciona en cualquier pantalla.",
+    "codeTitle": "Compara el código",
+    "codeBody": "Muestra tu pantalla a la otra persona. Si ve los mismos tres símbolos, confirma.",
+    "codeSame": "Mismo código",
+    "codeDifferent": "Código distinto",
+    "codeWaiting": "Esperando a que la otra persona confirme el código…",
+    "codeLabel": "Código: {{code}}"
   }
 }

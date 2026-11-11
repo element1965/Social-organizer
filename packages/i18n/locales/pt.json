@@ -1467,6 +1467,12 @@
     "tooMany": "Muitas tentativas. Aguarde um minuto e agite de novo.",
     "enable": "Ativar agitação",
     "hintTitle": "Basta agitar os telemóveis",
-    "hintBody": "Lado a lado, agitem os dois telemóveis ao mesmo tempo. A app encontra a outra pessoa e só precisam de confirmar. Funciona em qualquer ecrã."
+    "hintBody": "Lado a lado, agitem os dois telemóveis ao mesmo tempo. A app encontra a outra pessoa e só precisam de confirmar. Funciona em qualquer ecrã.",
+    "codeTitle": "Compare o código",
+    "codeBody": "Mostre sua tela à outra pessoa. Se ela vir os mesmos três símbolos, confirme.",
+    "codeSame": "Mesmo código",
+    "codeDifferent": "Código diferente",
+    "codeWaiting": "Aguardando a outra pessoa confirmar o código…",
+    "codeLabel": "Código: {{code}}"
   }
 }

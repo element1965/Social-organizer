@@ -1467,6 +1467,12 @@
     "tooMany": "Troppi tentativi. Aspetta un minuto e scuoti di nuovo.",
     "enable": "Attiva la scossa",
     "hintTitle": "Basta scuotere i telefoni",
-    "hintBody": "Vicini, scuotete entrambi i telefoni nello stesso momento. L’app trova l’altra persona e dovete solo confermare. Funziona su qualsiasi schermata."
+    "hintBody": "Vicini, scuotete entrambi i telefoni nello stesso momento. L’app trova l’altra persona e dovete solo confermare. Funziona su qualsiasi schermata.",
+    "codeTitle": "Confronta il codice",
+    "codeBody": "Mostra lo schermo all'altra persona. Se vede gli stessi tre simboli, conferma.",
+    "codeSame": "Stesso codice",
+    "codeDifferent": "Codice diverso",
+    "codeWaiting": "In attesa che l'altra persona confermi il codice…",
+    "codeLabel": "Codice: {{code}}"
   }
 }

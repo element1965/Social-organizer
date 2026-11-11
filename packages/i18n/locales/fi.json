@@ -1456,6 +1456,12 @@
     "tooMany": "Liian monta yritystä. Odota minuutti ja ravista uudelleen.",
     "enable": "Ota ravistus käyttöön",
     "hintTitle": "Ravistakaa vain puhelimia",
-    "hintBody": "Ravistakaa molempia puhelimia samaan aikaan vierekkäin. Sovellus löytää toisen ihmisen, ja te vain vahvistatte. Toimii millä tahansa näkymällä."
+    "hintBody": "Ravistakaa molempia puhelimia samaan aikaan vierekkäin. Sovellus löytää toisen ihmisen, ja te vain vahvistatte. Toimii millä tahansa näkymällä.",
+    "codeTitle": "Vertaa koodia",
+    "codeBody": "Näytä näyttösi toiselle. Jos hän näkee samat kolme symbolia, vahvista.",
+    "codeSame": "Sama koodi",
+    "codeDifferent": "Eri koodi",
+    "codeWaiting": "Odotetaan, että toinen vahvistaa koodin…",
+    "codeLabel": "Koodi: {{code}}"
   }
 }

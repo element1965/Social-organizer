@@ -187,6 +187,34 @@ async function main() {
   await waitShake('hal', tH3.ticket, '10.9.0.4');
   check('already connected pair → told so', sG3.state === 'matched' && sG3.alreadyConnected === true, `${sG3.state} already=${sG3.alreadyConnected}`);
 
+  // Two shakes with no shared network and no geo: paired blind, nobody shown before the code is confirmed
+  await db.connection.deleteMany({ where: pair(id('ivy'), id('max')) });
+  await sleep(3500); // a weak pair needs no other shake anywhere in the 3 s window
+  const [tW1, tW2] = await Promise.all([call(id('ivy'), '10.20.0.1').shake.register(), call(id('max'), '10.30.0.1').shake.register()]);
+  const [w1, w2]: any[] = await Promise.all([waitShake('ivy', tW1.ticket, '10.20.0.1'), waitShake('max', tW2.ticket, '10.30.0.1')]);
+  check('no shared network, no geo → weak pair with the person hidden on both phones',
+    w1.state === 'matched' && w1.weak === true && w1.person === null && w2.person === null, `${w1.state} weak=${w1.weak} person=${JSON.stringify(w1.person)}`);
+  check('both phones get the same three-symbol code', Array.isArray(w1.code) && w1.code.length === 3 && w1.code.join() === w2.code?.join(), `${w1.code?.join('')} / ${w2.code?.join('')}`);
+  const wa: any = await call(id('ivy'), '10.20.0.1').shake.respond({ pairId: w1.pairId, accept: true });
+  check('one confirmed the code → still nobody shown', wa.person === null && wa.pairState === 'waiting', `${wa.pairState}`);
+  const wb: any = await call(id('max'), '10.30.0.1').shake.respond({ pairId: w2.pairId, accept: true });
+  const wa2: any = await call(id('ivy'), '10.20.0.1').shake.status({ ticket: tW1.ticket });
+  check('both confirmed → connected, and only now each sees who it is',
+    wb.pairState === 'connected' && wb.person?.id === id('ivy') && wa2.person?.id === id('max') && (await connected('ivy', 'max')), `${wb.pairState}`);
+  await sleep(3500);
+  const [tW3, tW4] = await Promise.all([call(id('lea'), '10.40.0.1').shake.register(), call(id('fil'), '10.50.0.1').shake.register()]);
+  const [w3]: any[] = await Promise.all([waitShake('lea', tW3.ticket, '10.40.0.1'), waitShake('fil', tW4.ticket, '10.50.0.1')]);
+  const wd: any = await call(id('lea'), '10.40.0.1').shake.respond({ pairId: w3.pairId, accept: false });
+  const wd2: any = await call(id('fil'), '10.50.0.1').shake.status({ ticket: tW4.ticket });
+  check('a different code → declined, and who it was is never shown', wd.pairState === 'declined' && wd.person === null && wd2.person === null, wd.pairState);
+
+  // Phones on one Wi-Fi with IPv6: each has its own address in the same /64
+  const v6a = '2a02:8109:b6c0:1d00:1111:2222:3333:4444';
+  const v6b = '2a02:8109:b6c0:1d00:aaaa:bbbb:cccc:dddd';
+  const [t6a, t6b] = await Promise.all([call(id('kim'), v6a).shake.register(), call(id('jon'), v6b).shake.register()]);
+  const [s6]: any[] = await Promise.all([waitShake('kim', t6a.ticket, v6a), waitShake('jon', t6b.ticket, v6b)]);
+  check('IPv6 in one /64 → a strong pair, the person shown at once', s6.state === 'matched' && s6.weak === false && s6.person?.id === id('jon'), `weak=${s6.weak}`);
+
   const ipE = '10.9.0.5';
   const tLone = await call(id('fil'), ipE).shake.register();
   const lone: any = await waitShake('fil', tLone.ticket, ipE);
