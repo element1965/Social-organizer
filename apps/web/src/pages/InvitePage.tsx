@@ -110,6 +110,7 @@ export function InvitePage() {
       token={token}
       inviterId={inviter.id}
       inviterName={inviter.name}
+      inviterPhotoUrl={inviter.photoUrl}
       meId={me.data.id}
       firstRun={firstRun || !me.data.onboardingCompleted}
       cameThroughInvite={cameThroughInvite}
@@ -167,6 +168,7 @@ function AcceptView({
   token,
   inviterId,
   inviterName,
+  inviterPhotoUrl,
   meId,
   firstRun,
   cameThroughInvite,
@@ -175,6 +177,7 @@ function AcceptView({
   token: string;
   inviterId: string;
   inviterName: string;
+  inviterPhotoUrl?: string | null;
   meId: string;
   /** A new account: auto-accept, then the intro (never the result screen). */
   firstRun: boolean;
@@ -234,7 +237,7 @@ function AcceptView({
           </>
         }
       >
-        <Avatar name={inviterName} size={88} className="mt-10" />
+        <Avatar name={inviterName} src={inviterPhotoUrl} size={88} className="mt-10" />
         <StepText centre title={t('invite.ownTitle')}>{t('invite.ownText')}</StepText>
         <div className="mt-4 flex justify-center">
           <Pill className="max-w-full truncate">{buildWebInviteUrl(token).replace(/^https?:\/\/(www\.)?/, '')}</Pill>
