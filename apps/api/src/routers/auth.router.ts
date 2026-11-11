@@ -12,13 +12,14 @@ import { validateTelegramInitData, validateTelegramWidget, isTelegramWidgetEnabl
 import { applyBotStartInvite } from '../services/invite-fallback.service.js';
 import { findLinkingCode, LinkCodeRateLimitError } from '../services/link-code.service.js';
 import type { Context } from '../context.js';
-import { linkTelegramByCode, type TelegramLinkResult } from '../services/telegram-link.service.js';
+import { isEmptyAccount, linkTelegramByCode, mergeEmptyAccountInto, type TelegramLinkResult } from '../services/telegram-link.service.js';
 import { verifyGoogleIdToken } from '../services/google.service.js';
 import { resolveExternalIdentity, AccountExistsError } from '../services/identity.service.js';
 import { requestEmailCode, verifyEmailCode, EmailCodeError } from '../services/email-code.service.js';
 import { isMailConfigured, MailUnavailableError } from '../services/mail.service.js';
 import { LINKING_CODE_TTL_MINUTES } from '@so/shared';
 import { touchUser } from '../services/activity.service.js';
+import { restoreMutedAccount } from '../services/account-restore.service.js';
 
 /** Access token for a successful sign-in / refresh / link-code flow; counts as activity. */
 function signedInToken(db: Context['db'], userId: string): string {
@@ -58,6 +59,13 @@ async function signInTelegramUser(db: Context['db'], tgUser: TelegramUserData, p
 
   if (platformAccount) {
     userId = platformAccount.userId;
+    if (platformAccount.user.deletedAt) {
+      // Muted by the bot (it kept the connections): signing in again brings the account back
+      const tgName = [tgUser.first_name, tgUser.last_name].filter(Boolean).join(' ');
+      if (await restoreMutedAccount(db, userId, { name: tgName, photoUrl: tgUser.photo_url })) {
+        platformAccount.user.photoUrl = null;
+      }
+    }
     // Update user photo if changed
     if (tgUser.photo_url && platformAccount.user.photoUrl !== tgUser.photo_url) {
       await db.user.update({
@@ -235,6 +243,14 @@ export const authRouter = router({
         const user = await ctx.db.user.findUnique({ where: { id: linkingCode.userId } });
         if (!user || user.deletedAt) {
           throw new TRPCError({ code: 'NOT_FOUND', message: 'User not found' });
+        }
+        // This Google already made its own empty account: fold it in, so the person keeps one account
+        const googleAccount = await ctx.db.platformAccount.findUnique({
+          where: { platform_platformId: { platform: 'GOOGLE', platformId: googleUser.sub } },
+          select: { userId: true },
+        });
+        if (googleAccount && googleAccount.userId !== user.id && await isEmptyAccount(ctx.db, googleAccount.userId)) {
+          await mergeEmptyAccountInto(ctx.db, googleAccount.userId, user.id);
         }
         // Attach Google platform account (upsert in case already linked)
         await ctx.db.platformAccount.upsert({

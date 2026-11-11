@@ -1,4 +1,5 @@
 import { Prisma, type PrismaClient } from '@so/db';
+import { restoreMutedAccount } from './account-restore.service.js';
 
 /**
  * One person = one account across sign-in methods (SO-21).
@@ -51,6 +52,8 @@ async function resolveOnce(db: PrismaClient, id: ExternalIdentity): Promise<{ us
     include: { user: { select: { photoUrl: true } } },
   });
   if (account) {
+    // An account the Telegram bot muted comes back when its owner signs in again
+    await restoreMutedAccount(db, account.userId, { name: id.name, photoUrl: id.photoUrl });
     if (id.photoUrl && account.user.photoUrl !== id.photoUrl && id.platform === 'GOOGLE') {
       await db.user.update({ where: { id: account.userId }, data: { photoUrl: id.photoUrl } });
     }

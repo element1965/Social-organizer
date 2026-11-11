@@ -8,6 +8,8 @@ import { OnboardingFrame } from '../components/onboarding/OnboardingFrame';
 import { useNetLabels } from '../components/onboarding/figureLabels';
 import { isFirstRunPending, safePath } from '../components/onboarding/flow';
 import { cn } from '../lib/utils';
+import { isTelegramWebApp } from '@so/tg-adapter';
+import { useConnectTelegram } from '../hooks/useConnectTelegram';
 
 const STEPS: NetStep[] = [0, 1, 2];
 
@@ -37,6 +39,14 @@ export function IntroPage() {
     else if (me.isError) firstRun.current = false;
   }
   const resolved = firstRun.current !== null;
+  // A new account made with Google, Apple or e-mail: the person may already have one through Telegram.
+  // Connecting it now folds this empty account into that one instead of leaving two.
+  const telegram = useConnectTelegram();
+  const offerTelegram =
+    firstRun.current === true &&
+    !isTelegramWebApp() &&
+    !!me.data &&
+    !me.data.platformAccounts.some((account) => account.platform === 'TELEGRAM');
 
   const last = step === 2;
 
@@ -123,6 +133,14 @@ export function IntroPage() {
             </button>
           ))}
         </div>
+        {offerTelegram ? (
+          <div className="mt-6 rounded-lg bg-surface-2 px-4 py-3">
+            <p className="text-label font-semibold text-ink-muted">{t('intro.haveTelegram')}</p>
+            <Button className="mt-2" variant="secondary" size="md" loading={telegram.isPending} onClick={telegram.connect}>
+              {t('settings.connectTelegram')}
+            </Button>
+          </div>
+        ) : null}
       </OnboardingFrame>
     </div>
   );

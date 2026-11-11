@@ -1,11 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Capacitor } from '@capacitor/core';
 import { CONTACT_TYPES, contactValueAllowed, type ContactType } from '@so/shared';
 import { isTelegramWebApp } from '@so/tg-adapter';
 import { trpc } from '../lib/trpc';
 import { useAuth } from '../hooks/useAuth';
+import { useConnectTelegram } from '../hooks/useConnectTelegram';
 import { Button } from '../components/ui2/Button';
 import { Group, Row } from '../components/ui2/Group';
 import { Input } from '../components/ui2/Input';
@@ -66,7 +66,7 @@ export function AccountPage() {
     onSuccess: () => utils.settings.get.invalidate(),
   });
   const deleteAccount = trpc.user.delete.useMutation();
-  const connectTelegram = trpc.auth.generateLinkCode.useMutation();
+  const { connect, isPending: connectPending } = useConnectTelegram();
 
   const [ready, setReady] = useState(false);
   const [first, setFirst] = useState('');
@@ -295,19 +295,6 @@ export function AccountPage() {
     img.src = url;
   };
 
-  const connect = () => {
-    const win = Capacitor.isNativePlatform() ? null : window.open('', '_blank');
-    connectTelegram.mutate(undefined, {
-      onSuccess: ({ code }) => {
-        const bot = import.meta.env.VITE_TELEGRAM_BOT_USERNAME || 'socialorganizer_bot';
-        const url = `https://t.me/${bot}?startapp=link_${code}`;
-        if (win) win.location.href = url;
-        else window.open(url, '_blank');
-      },
-      onError: () => win?.close(),
-    });
-  };
-
   const available = CONTACT_TYPES.filter(
     (contact) => !FIXED_TYPES.has(contact.type) && !extras.some((extra) => extra.type === contact.type),
   );
@@ -449,7 +436,7 @@ export function AccountPage() {
         <p className="mt-4 px-1 text-label font-semibold text-ink-muted">{t('settings.telegramConnected')}</p>
       ) : isTelegramWebApp() ? null : (
         <div className="mt-4">
-          <Button variant="secondary" size="md" onClick={connect} loading={connectTelegram.isPending}>
+          <Button variant="secondary" size="md" onClick={connect} loading={connectPending}>
             {t('settings.connectTelegram')}
           </Button>
           <p className="mt-2 px-1 text-label font-semibold text-ink-muted">{t('settings.connectTelegramHint')}</p>
