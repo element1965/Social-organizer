@@ -280,7 +280,17 @@
       "milestoneFirstNeedSub": "The message is travelling by handshakes",
       "milestoneFirstPart": "First Participation",
       "milestoneFirstPartSub": "The author of the Need sees your Participation",
-      "accepted": "confirmed the acquaintance · you are in each other's circle"
+      "accepted": "confirmed the acquaintance · you are in each other's circle",
+      "stack": {
+        "waiting": "Waiting for confirmation",
+        "incoming": "Want to connect",
+        "accepted": "Now in your circle",
+        "participating": "You take part",
+        "closed": "Completed",
+        "names": "{{names}} and {{count}} more",
+        "more": "{{count}} more",
+        "less": "Show less"
+      }
     },
     "start": {
       "lead": "You are the first in your circle.",
