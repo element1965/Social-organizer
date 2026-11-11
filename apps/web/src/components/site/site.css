@@ -93,6 +93,8 @@
 .site-hero-tag { position: absolute; z-index: 2; right: 24px; bottom: 20px; height: 30px; padding: 0 12px; border-radius: var(--r-sm); background: rgb(var(--so-node-1) / .12); color: var(--node-1); font-size: 13px; font-weight: 700; display: grid; place-items: center; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); pointer-events: none; }
 
 .site-sec { padding: 72px 48px; border-top: 1px solid var(--line-soft); }
+/* The hero panel is its own frame: no divider right under it. */
+.site-hero + .site-sec { border-top: 0; }
 .site-sec h2 { font-size: 40px; letter-spacing: -.04em; line-height: 1.04; font-weight: 800; text-wrap: balance; }
 .site-sec .lead { margin-top: 12px; font-size: 17px; line-height: 1.5; color: var(--muted); max-width: 60ch; }
 .site-sec .lead b { color: var(--ink); }
