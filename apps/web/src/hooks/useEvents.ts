@@ -243,7 +243,6 @@ export function useEvents(options: { displayName?: (id: string, fallback: string
           subtitle: near
             ? t('circle.feed.requestVia', { name: name(near.id, near.name), kind })
             : t('circle.feed.request', { kind }),
-          note: c.description?.trim() || undefined,
           amount: c.amount != null ? formatMoney(c.amount) : undefined,
           amountValue: c.amount,
           hot: true,
