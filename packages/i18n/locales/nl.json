@@ -1456,6 +1456,12 @@
     "tooMany": "Te veel pogingen. Wacht een minuut en schud opnieuw.",
     "enable": "Schudden inschakelen",
     "hintTitle": "Schud gewoon jullie telefoons",
-    "hintBody": "Schud naast elkaar beide telefoons op hetzelfde moment. De app vindt de ander, jullie bevestigen alleen nog. Werkt op elk scherm."
+    "hintBody": "Schud naast elkaar beide telefoons op hetzelfde moment. De app vindt de ander, jullie bevestigen alleen nog. Werkt op elk scherm.",
+    "codeTitle": "Vergelijk de code",
+    "codeBody": "Laat je scherm aan de ander zien. Ziet die dezelfde drie symbolen, bevestig dan.",
+    "codeSame": "Zelfde code",
+    "codeDifferent": "Andere code",
+    "codeWaiting": "Wachten tot de ander de code bevestigt…",
+    "codeLabel": "Code: {{code}}"
   }
 }

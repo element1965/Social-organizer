@@ -20,7 +20,11 @@ import {
 export type ShakeMatched = {
   state: 'matched';
   pairId: string;
-  person: { id: string; name: string; photoUrl: string | null };
+  /** Null on a weak pair until both confirmed the code: nobody learns who the other is before that */
+  person: { id: string; name: string; photoUrl: string | null } | null;
+  /** Paired without a shared network or close geo: compare the code before anything else */
+  weak: boolean;
+  code: string[];
   alreadyConnected: boolean;
   iAccepted: boolean;
   otherAccepted: boolean;
@@ -56,11 +60,15 @@ async function describeMatch(db: PrismaClient, userId: string, pair: ShakePair):
     if (error === 'CONNECTION_LIMIT_SELF') error = 'CONNECTION_LIMIT_OTHER';
     else if (error === 'CONNECTION_LIMIT_OTHER') error = 'CONNECTION_LIMIT_SELF';
   }
+  const hidden = pair.weak && pair.state !== 'connected';
   return {
     state: 'matched',
     pairId: pair.pairId,
-    person: { id: other.id, name: other.name, photoUrl: other.photoUrl },
-    alreadyConnected: pair.connectedBefore === true,
+    person: hidden ? null : { id: other.id, name: other.name, photoUrl: other.photoUrl },
+    weak: pair.weak,
+    code: pair.code,
+    // On a weak pair even "you already know each other" says who it is, so it waits for the code too
+    alreadyConnected: !hidden && pair.connectedBefore === true,
     iAccepted: pair.accepted.has(userId),
     otherAccepted: pair.accepted.has(otherId),
     pairState: pair.state,
@@ -93,6 +101,10 @@ export const shakeRouter = router({
   status: protectedProcedure
     .input(z.object({ ticket: z.string().min(1).max(100) }))
     .query(async ({ ctx, input }): Promise<ShakeStatus> => {
+      // The phone polls about once a second for up to ~40 s; more than that is not a phone
+      if (!hit('shake-status:' + ctx.userId, 150, MINUTE)) {
+        throw new TRPCError({ code: 'TOO_MANY_REQUESTS', message: 'Too many shakes, try again in a minute' });
+      }
       const owner = getTicketOwner(input.ticket);
       if (owner && owner !== ctx.userId) throw new TRPCError({ code: 'NOT_FOUND', message: 'Shake not found' });
       const status = getShakeStatus(input.ticket);
@@ -104,6 +116,9 @@ export const shakeRouter = router({
   respond: protectedProcedure
     .input(z.object({ pairId: z.string().min(1).max(100), accept: z.boolean() }))
     .mutation(async ({ ctx, input }): Promise<ShakeMatched> => {
+      if (!hit('shake-respond:' + ctx.userId, 30, MINUTE)) {
+        throw new TRPCError({ code: 'TOO_MANY_REQUESTS', message: 'Too many shakes, try again in a minute' });
+      }
       const pair = getPair(input.pairId);
       if (!pair || !pair.users.includes(ctx.userId)) {
         throw new TRPCError({ code: 'NOT_FOUND', message: 'Shake not found' });

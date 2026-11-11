@@ -28,7 +28,10 @@ interface Person {
 interface Matched {
   state: 'matched';
   pairId: string;
-  person: Person;
+  /** Hidden on a weak pair (no shared network or close geo) until both confirm the code */
+  person: Person | null;
+  weak?: boolean;
+  code?: string[];
   alreadyConnected: boolean;
   iAccepted: boolean;
   otherAccepted: boolean;
@@ -133,7 +136,7 @@ function ShakeFlow() {
       if (match.pairState === 'connected' && !celebrated.current) {
         celebrated.current = true;
         void haptic('success');
-        if (!match.alreadyConnected) {
+        if (!match.alreadyConnected && match.person) {
           void announceJoin(utils, { id: match.person.id, name: match.person.name, photoUrl: match.person.photoUrl ?? null });
         }
         refreshAfterConnect();
@@ -285,6 +288,46 @@ function ShakeFlow() {
     footer = qrButtons;
   } else if (view?.kind === 'error') {
     title = view.message;
+    footer = closeBtn('primary');
+  } else if (match && !person && match.pairState === 'waiting') {
+    // Weak pair: nobody is shown before both confirm the same code on each other's screen
+    const code = (
+      <div className="flex justify-center gap-3 py-4" aria-label={t('shake.codeLabel', { code: (match.code ?? []).join(' ') })}>
+        {(match.code ?? []).map((symbol, index) => (
+          <span key={index} className="grid h-16 w-16 place-items-center rounded-lg bg-care-soft text-[34px] leading-none" aria-hidden>
+            {symbol}
+          </span>
+        ))}
+      </div>
+    );
+    content = code;
+    if (match.iAccepted) {
+      title = t('shake.codeWaiting');
+      footer = closeBtn();
+    } else {
+      title = t('shake.codeTitle');
+      body = t('shake.codeBody');
+      footer = (
+        <>
+          <Button loading={busy} disabled={busy} onClick={() => void answer(match.pairId, true)}>
+            {t('shake.codeSame')}
+          </Button>
+          <Button variant="secondary" disabled={busy} onClick={() => void answer(match.pairId, false)}>
+            {t('shake.codeDifferent')}
+          </Button>
+        </>
+      );
+    }
+  } else if (match && !person) {
+    // A weak pair that ended without both confirming: who it was stays unknown
+    title =
+      match.pairState === 'declined'
+        ? t('shake.declined')
+        : match.pairState === 'expired'
+          ? t('shake.expired')
+          : match.error
+            ? errorText({ message: match.error })
+            : t('shake.failed');
     footer = closeBtn('primary');
   } else if (match && person) {
     const avatar = (

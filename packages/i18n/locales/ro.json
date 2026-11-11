@@ -1467,6 +1467,12 @@
     "tooMany": "Prea multe încercări. Așteaptă un minut și scutură din nou.",
     "enable": "Activează scuturarea",
     "hintTitle": "Doar scuturați telefoanele",
-    "hintBody": "Unul lângă altul, scuturați ambele telefoane în același moment. Aplicația găsește cealaltă persoană, iar voi doar confirmați. Funcționează pe orice ecran."
+    "hintBody": "Unul lângă altul, scuturați ambele telefoane în același moment. Aplicația găsește cealaltă persoană, iar voi doar confirmați. Funcționează pe orice ecran.",
+    "codeTitle": "Comparați codul",
+    "codeBody": "Arată ecranul celeilalte persoane. Dacă vede aceleași trei simboluri, confirmă.",
+    "codeSame": "Același cod",
+    "codeDifferent": "Cod diferit",
+    "codeWaiting": "Așteptăm ca cealaltă persoană să confirme codul…",
+    "codeLabel": "Cod: {{code}}"
   }
 }

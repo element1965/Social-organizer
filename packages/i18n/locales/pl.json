@@ -1478,6 +1478,12 @@
     "tooMany": "Zbyt wiele prób. Odczekaj minutę i potrząśnij ponownie.",
     "enable": "Włącz potrząsanie",
     "hintTitle": "Po prostu potrząśnijcie telefonami",
-    "hintBody": "Stojąc obok siebie, potrząśnijcie oboma telefonami w tej samej chwili. Aplikacja znajdzie drugą osobę, wystarczy potwierdzić. Działa na każdym ekranie."
+    "hintBody": "Stojąc obok siebie, potrząśnijcie oboma telefonami w tej samej chwili. Aplikacja znajdzie drugą osobę, wystarczy potwierdzić. Działa na każdym ekranie.",
+    "codeTitle": "Porównajcie kod",
+    "codeBody": "Pokaż ekran drugiej osobie. Jeśli widzi te same trzy symbole — potwierdź.",
+    "codeSame": "Kod się zgadza",
+    "codeDifferent": "Inny kod",
+    "codeWaiting": "Czekamy, aż druga osoba potwierdzi kod…",
+    "codeLabel": "Kod: {{code}}"
   }
 }

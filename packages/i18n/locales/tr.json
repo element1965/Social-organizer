@@ -1456,6 +1456,12 @@
     "tooMany": "Çok fazla deneme. Bir dakika bekleyip tekrar sallayın.",
     "enable": "Sallamayı etkinleştir",
     "hintTitle": "Telefonları sallamanız yeterli",
-    "hintBody": "Yan yana durup iki telefonu aynı anda sallayın. Uygulama diğer kişiyi bulur, siz sadece onaylarsınız. Her ekranda çalışır."
+    "hintBody": "Yan yana durup iki telefonu aynı anda sallayın. Uygulama diğer kişiyi bulur, siz sadece onaylarsınız. Her ekranda çalışır.",
+    "codeTitle": "Kodu karşılaştırın",
+    "codeBody": "Ekranınızı karşınızdakine gösterin. Aynı üç simgeyi görüyorsa onaylayın.",
+    "codeSame": "Kod aynı",
+    "codeDifferent": "Kod farklı",
+    "codeWaiting": "Karşı tarafın kodu onaylaması bekleniyor…",
+    "codeLabel": "Kod: {{code}}"
   }
 }

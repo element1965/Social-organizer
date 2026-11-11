@@ -1467,6 +1467,12 @@
     "tooMany": "Trop de tentatives. Attendez une minute puis secouez à nouveau.",
     "enable": "Activer la secousse",
     "hintTitle": "Secouez simplement vos téléphones",
-    "hintBody": "Côte à côte, secouez les deux téléphones au même moment. L’app trouve l’autre personne, il ne reste qu’à confirmer. Fonctionne sur n’importe quel écran."
+    "hintBody": "Côte à côte, secouez les deux téléphones au même moment. L’app trouve l’autre personne, il ne reste qu’à confirmer. Fonctionne sur n’importe quel écran.",
+    "codeTitle": "Comparez le code",
+    "codeBody": "Montrez votre écran à l'autre personne. Si elle voit les trois mêmes symboles, confirmez.",
+    "codeSame": "Même code",
+    "codeDifferent": "Code différent",
+    "codeWaiting": "En attente de la confirmation de l'autre personne…",
+    "codeLabel": "Code : {{code}}"
   }
 }

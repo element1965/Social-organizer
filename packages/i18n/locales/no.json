@@ -1456,6 +1456,12 @@
     "tooMany": "For mange forsøk. Vent ett minutt og rist igjen.",
     "enable": "Slå på risting",
     "hintTitle": "Bare rist telefonene",
-    "hintBody": "Rist begge telefonene samtidig mens dere står ved siden av hverandre. Appen finner den andre personen, og dere bekrefter bare. Fungerer på alle skjermer."
+    "hintBody": "Rist begge telefonene samtidig mens dere står ved siden av hverandre. Appen finner den andre personen, og dere bekrefter bare. Fungerer på alle skjermer.",
+    "codeTitle": "Sammenlign koden",
+    "codeBody": "Vis skjermen til den andre. Hvis de ser de samme tre symbolene, bekreft.",
+    "codeSame": "Samme kode",
+    "codeDifferent": "Annen kode",
+    "codeWaiting": "Venter på at den andre bekrefter koden…",
+    "codeLabel": "Kode: {{code}}"
   }
 }
