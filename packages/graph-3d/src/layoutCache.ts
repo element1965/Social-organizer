@@ -112,3 +112,32 @@ export function writeLayout(centerId: string, nodes: Iterable<LayoutSample>): vo
     /* quota or private mode: the in-memory map still survives unmount */
   }
 }
+
+/**
+ * Owners whose last saved layout was taken while the simulation was still moving (the person left the
+ * screen early). Their positions are a good start, but not final: the next graph lets them settle
+ * instead of freezing them half-way. In memory only; a reload trusts the stored layout.
+ */
+const unsettled = new Set<string>();
+
+export function setLayoutSettled(centerId: string, settled: boolean): void {
+  if (!centerId) return;
+  if (settled) unsettled.delete(centerId);
+  else unsettled.add(centerId);
+}
+
+export function isLayoutSettled(centerId: string): boolean {
+  return !unsettled.has(centerId);
+}
+
+/** Nodes already shown once per owner, so coming back to the graph does not replay the pop-in. */
+const introSeen = new Map<string, Set<string>>();
+
+export function introSeenOf(centerId: string): Set<string> {
+  let set = introSeen.get(centerId);
+  if (!set) {
+    set = new Set();
+    introSeen.set(centerId, set);
+  }
+  return set;
+}

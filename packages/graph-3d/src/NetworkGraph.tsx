@@ -1,9 +1,9 @@
-import { forwardRef, useCallback, useEffect, useImperativeHandle, useMemo, useRef } from 'react';
+import { forwardRef, useCallback, useEffect, useImperativeHandle, useMemo, useRef, useState } from 'react';
 import ForceGraph3D from 'react-force-graph-3d';
 import SpriteText from 'three-spritetext';
 import * as THREE from 'three';
 import { createAvatarClient } from './avatarCache';
-import { layoutOf, writeLayout } from './layoutCache';
+import { introSeenOf, isLayoutSettled, layoutOf, setLayoutSettled, writeLayout } from './layoutCache';
 import {
   type GraphColors,
   colorsKey,
@@ -96,6 +96,8 @@ export interface NetworkGraphProps {
    * the ball. Pass rounded counts: the dots never map to particular people.
    */
   farRings?: number[];
+  /** Height in CSS px of the UI laid over the bottom of the canvas: names that would fall under it are hidden. */
+  labelInsetBottom?: number;
 }
 
 export interface NetworkGraphHandle {
@@ -153,6 +155,9 @@ const NEAR_FADE = 20;
 const NEAR_FADE2 = NEAR_FADE * NEAR_FADE;
 const MARK_SIZE = 10;            // centre tile, world units
 const NEAREST_LABELS = 8;        // labels on the nearest ring-1/2 nodes, plus the path
+const NEAREST_HOLD_MS = 1500;    // a name stays this long after its node leaves the nearest few
+const NEAREST_HOLD_EXTRA = 4;    // at most this many held names on top of NEAREST_LABELS
+const LABEL_FADE_MS = 180;       // name fade in / out
 const PATH_CURVE = 0.15;         // slight bend; 0 is a straight line
 const DIM_OPACITY = 0.35;
 const LABEL_IDLE_MS = 2000;
@@ -240,6 +245,8 @@ interface NodeVis {
   unwantedAt: number;
   /** Last time the label was wanted. LRU evicts the oldest non-centre, non-path labels. */
   wantedAt: number;
+  /** 0..1 eased label opacity: names fade in and out instead of blinking while the camera turns */
+  labelShow: number;
 }
 
 interface PathState {
@@ -943,7 +950,10 @@ function dropLabel(v: NodeVis) {
   disposeLabel(v.label);
   v.label = null;
   v.unwantedAt = 0;
+  v.labelShow = 0;
 }
+
+const NO_HINT = () => '';
 
 /* ---------- Component ---------- */
 
@@ -966,6 +976,7 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
   focusId,
   focusLift = 0,
   farRings,
+  labelInsetBottom = 0,
 }, ref) {
   const fgRef = useRef<FGRef>(null);
   const theme: 'light' | 'dark' = themeProp ?? (darkMode ? 'dark' : 'light');
@@ -993,6 +1004,8 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
     before: null,
   });
   focusRef.current.lift = focusLift;
+  const labelInsetRef = useRef(labelInsetBottom);
+  labelInsetRef.current = labelInsetBottom;
 
   /* ----- Stable graph data: node objects survive re-renders, layout is kept ----- */
 
@@ -1091,8 +1104,11 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
 
     // All current nodes cached → freeze (no reheat). Otherwise pin the cached ones
     // so only newcomers move, and release those pins when the engine stops.
-    let hold = !!layout && next.length > 0;
-    if (layout) {
+    // A layout saved before the simulation stopped (the person left early) is only a start: nothing is
+    // frozen or pinned, the graph settles from there instead of from scratch.
+    const settled = !centerId || isLayoutSettled(centerId);
+    let hold = !!layout && next.length > 0 && settled;
+    if (layout && settled) {
       for (const s of next) {
         const hit = layout.get(s.id);
         if (!hit) {
@@ -1113,6 +1129,8 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
     }
     ownerRef.current = centerId;
     layoutHoldRef.current = hold;
+    // Shown-once memory per owner outlives the component: coming back does not replay the pop-in
+    if (centerId) introSeenRef.current = introSeenOf(centerId);
     for (const id of [...map.keys()]) {
       if (!seen.has(id)) {
         map.delete(id);
@@ -1634,6 +1652,7 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
       avatarCap: Infinity,
       unwantedAt: 0,
       wantedAt: 0,
+      labelShow: 0,
     };
     introSeenRef.current.add(node.id);
     visRef.current.set(node.id, v);
@@ -1836,6 +1855,10 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
     // Batched links and dots (replace the per-link lines and per-node dot sprites)
     const linkLayer = new LinkLayer();
     const dotLayer = new DotLayer(res.discTexture);
+    // Dots go after every avatar and the mark (0..2) and before pulses (3) and labels (4). They are one
+    // draw call, so the renderer cannot sort them among the sprites; drawn after them and depth-tested,
+    // a dot in front of a face shows and a dot behind it hides, whatever the camera angle.
+    dotLayer.points.renderOrder = 2.5;
     scene.add(linkLayer.group, dotLayer.points);
     linksRef.current = linkLayer;
     dotsRef.current = dotLayer;
@@ -1913,6 +1936,8 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
     const camPos = new THREE.Vector3();
     // Labels that would sit on top of another label on screen (recomputed a few times a second)
     const crowded = new Set<string>();
+    // Last time each node was among the nearest few (label hold)
+    const nearSince = new Map<string, number>();
     const projV = new THREE.Vector3();
     const flyV = new THREE.Vector3();
     const flyQ = new THREE.Quaternion();
@@ -2080,31 +2105,81 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
         const next = new Set<string>();
         for (let i = 0; i < ranked.length && next.size < NEAREST_LABELS; i++) {
           const id = ranked[i]?.id;
-          if (id) next.add(id);
+          if (id) { next.add(id); nearSince.set(id, now); }
         }
+        // A name that just dropped out of the nearest few keeps its place a little longer, so a turning
+        // camera does not hand the names from person to person every few frames
+        for (const id of nearestRef.current) {
+          if (next.has(id) || next.size >= NEAREST_LABELS + NEAREST_HOLD_EXTRA) continue;
+          if (now - (nearSince.get(id) ?? 0) < NEAREST_HOLD_MS) next.add(id);
+        }
+        for (const [id, at] of nearSince) if (now - at > NEAREST_HOLD_MS * 4) nearSince.delete(id);
         nearestRef.current = next;
       }
 
       if (labelFrame % 6 === 1) {
-        // Greedy pass in screen space: the centre and path labels keep their place, the nearest others next;
-        // a label that falls within a label-sized box of one already kept is hidden until the view changes
-        const items: { id: string; x: number; y: number; prio: number; d2: number }[] = [];
+        // Greedy pass in screen pixels, on the label's real box (it hangs under its node): the centre and
+        // path labels keep their place, the nearest others next. A name that would cover a kept name, or
+        // an avatar nearer to the camera than its own person, is hidden until the view changes. Names that
+        // fall under the panel at the bottom of the canvas are hidden too.
+        const el = (fg.renderer() as THREE.WebGLRenderer).domElement;
+        const W = el.clientWidth || 1;
+        const H = el.clientHeight || 1;
+        const ppu = ((cam as THREE.PerspectiveCamera).projectionMatrix.elements[5] ?? 1) * H * 0.5;
+        const bandTop = H - Math.max(0, labelInsetRef.current);
+        type Box = { x0: number; y0: number; x1: number; y1: number };
+        const boxAt = (world: THREE.Vector3, w: number, h: number): Box | null => {
+          const dist = Math.max(1, world.distanceTo(camPos));
+          projV.copy(world).project(cam);
+          if (projV.z > 1) return null;
+          const cx = (projV.x + 1) * 0.5 * W;
+          const cy = (1 - projV.y) * 0.5 * H;
+          const hw = (w * ppu) / dist / 2;
+          const hh = (h * ppu) / dist / 2;
+          return { x0: cx - hw, y0: cy - hh, x1: cx + hw, y1: cy + hh };
+        };
+        const overlaps = (a: Box, b: Box, pad: number) =>
+          a.x0 < b.x1 + pad && b.x0 < a.x1 + pad && a.y0 < b.y1 + pad && b.y0 < a.y1 + pad;
+
+        const items: { id: string; box: Box; prio: number; d2: number }[] = [];
+        const faces: { id: string; box: Box; d2: number }[] = [];
         for (const v of visRef.current.values()) {
-          if (!v.outer.parent || !v.label) continue;
+          if (!v.outer.parent) continue;
+          const s = Math.max(0, v.lastScale);
+          if (s < 0.01) continue;
           v.outer.getWorldPosition(projV);
           const d2 = projV.distanceToSquared(camPos);
-          projV.project(cam);
-          if (projV.z > 1) continue;
+          if (v.avatar.visible) {
+            const size = (v.node.isCenter ? MARK_SIZE : v.avatar.scale.x) * s * 0.9;
+            const box = boxAt(projV.clone(), size, size);
+            if (box) faces.push({ id: v.node.id, box, d2 });
+          }
+          if (!v.label) continue;
+          const lw = v.label.scale.x * s;
+          const lh = v.label.scale.y * s;
+          v.label.getWorldPosition(projV);
+          const box = boxAt(projV, lw, lh);
+          if (!box) continue;
           const onPath = pathRef.current.set.has(v.node.id) && !v.node.isDeleted;
-          items.push({ id: v.node.id, x: projV.x, y: projV.y, prio: v.node.isCenter ? 0 : onPath ? 1 : 2, d2 });
+          items.push({ id: v.node.id, box, prio: v.node.isCenter ? 0 : onPath ? 1 : 2, d2 });
         }
         items.sort((a, b) => a.prio - b.prio || a.d2 - b.d2);
         crowded.clear();
-        const kept: { x: number; y: number }[] = [];
+        const kept: Box[] = [];
         for (const it of items) {
-          const hit = kept.some((k) => Math.abs(k.x - it.x) < 0.3 && Math.abs(k.y - it.y) < 0.13);
-          if (hit && it.prio === 2) crowded.add(it.id);
-          else kept.push(it);
+          if (it.prio > 0 && it.box.y1 > bandTop) {
+            crowded.add(it.id);
+            continue;
+          }
+          if (it.prio === 2) {
+            const hitsName = kept.some((k) => overlaps(k, it.box, 4));
+            const hitsFace = !hitsName && faces.some((f) => f.id !== it.id && f.d2 < it.d2 && overlaps(f.box, it.box, 0));
+            if (hitsName || hitsFace) {
+              crowded.add(it.id);
+              continue;
+            }
+          }
+          kept.push(it.box);
         }
       }
 
@@ -2140,7 +2215,13 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
           else if (now - v.unwantedAt >= LABEL_IDLE_MS) dropLabel(v);
         }
         if (v.label) {
-          v.label.visible = showLabel && !crowded.has(v.node.id);
+          const wantShown = showLabel && !crowded.has(v.node.id) ? 1 : 0;
+          if (reduced) v.labelShow = wantShown;
+          else if (v.labelShow !== wantShown) {
+            const step = dt / LABEL_FADE_MS;
+            v.labelShow = wantShown > v.labelShow ? Math.min(1, v.labelShow + step) : Math.max(0, v.labelShow - step);
+          }
+          v.label.visible = v.labelShow > 0.01;
           // On-screen size of one text line at fit 1; keep it between the limits
           if (v.label.visible) {
             const base = v.label.userData.baseScale as THREE.Vector3;
@@ -2157,7 +2238,7 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
           }
           const dimLabel = pathRef.current.dim && !pathRef.current.set.has(v.node.id);
           const mat = v.label.material as THREE.SpriteMaterial;
-          const op = dimLabel ? DIM_OPACITY : 1;
+          const op = (dimLabel ? DIM_OPACITY : 1) * v.labelShow;
           if (mat.opacity !== op) {
             mat.opacity = op;
             mat.transparent = true;
@@ -2362,6 +2443,13 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
       if (controls) {
         controls.removeEventListener('start', onStart);
         controls.removeEventListener('end', onEnd);
+      }
+      // Leaving while the layout still moves: keep where everyone is now, so the next visit starts here
+      // and only finishes settling (the engine-stop save never comes for this graph)
+      const owner = ownerRef.current;
+      if (owner && simRef.current) {
+        writeLayout(owner, nodeMapRef.current.values());
+        setLayoutSettled(owner, false);
       }
       // Deferred teardown (see StrictMode note above). Use `fg` from the closure: by the time
       // this runs React has already cleared fgRef.current.
@@ -2662,6 +2750,7 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
     return !hiddenRef.current.has(depth);
   }, [hiddenKey]);
 
+  const [canHover] = useState(() => typeof window === 'undefined' || !window.matchMedia || window.matchMedia('(hover: hover)').matches);
   const nodeLabel = useCallback(
     (node: { name?: string; connectionCount?: number; lastSeen?: string | Date | null }) => {
       const card = overlayColors(themeRef.current);
@@ -2862,7 +2951,8 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
         nodeThreeObject={nodeThreeObject}
         nodeThreeObjectExtend={false}
         nodeVisibility={nodeVisible}
-        nodeLabel={nodeLabel}
+        // A touch screen has no hover: the hint would stay after a tap and cover the graph (a tap opens the person)
+        nodeLabel={canHover ? nodeLabel : NO_HINT}
         // Links are drawn by LinkLayer (one draw call); the library only uses them for the layout
         linkVisibility={false}
         onNodeClick={handleNodeClick}
@@ -2872,7 +2962,10 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
           simRef.current = false;
           linkMoveRef.current = true;
           const owner = ownerRef.current;
-          if (owner) writeLayout(owner, nodeMapRef.current.values());
+          if (owner) {
+            writeLayout(owner, nodeMapRef.current.values());
+            setLayoutSettled(owner, true);
+          }
           for (const n of nodeMapRef.current.values()) {
             if (n.isCenter) continue;
             n.fx = undefined;
@@ -3136,8 +3229,9 @@ function createResources() {
     },
     markMaterial(dim: boolean) {
       const map = markMap();
+      // Writes depth inside the tile only (alphaTest): names and dots behind "me" no longer show through it
       return cached(`mark:${dim ? 1 : 0}:${colors.careBright}:${colors.careOn}`, () => new THREE.SpriteMaterial({
-        map, transparent: true, opacity: dim ? 0.35 : 1, depthWrite: false,
+        map, transparent: true, opacity: dim ? 0.35 : 1, alphaTest: 0.5,
       }));
     },
     glowMaterial() {
@@ -3152,8 +3246,10 @@ function createResources() {
       return washMaterial;
     },
     photoMaterial(url: string, deleted: boolean, tex: THREE.Texture) {
+      // The photo is a disc on a square texture: alphaTest keeps the clear corners out of the depth buffer,
+      // so they no longer cut dots, names and other avatars behind them
       return cached(`photo:${url}:${deleted}`, () => new THREE.SpriteMaterial({
-        map: tex, transparent: true, opacity: deleted ? 0.5 : 1,
+        map: tex, transparent: true, opacity: deleted ? 0.5 : 1, alphaTest: 0.5,
       }));
     },
 
