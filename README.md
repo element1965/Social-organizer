@@ -92,7 +92,7 @@ Windows local setup, the empty-database `db push` caveat, and the test accounts 
 | UserContact | User contacts (social networks, messengers) |
 | PlatformAccount | Platform bindings (FB/TG/Apple/Google) |
 | Connection | Connection between users (userAId < userBId) with optional nicknames (nicknameByA, nicknameByB) |
-| Collection | A Need: a participant's message about what they need (Emergency / Regular — a Regular one renews every 28 days; `EMERGENCY`/`REGULAR` in the DB) with amount in $ (originalAmount/originalCurrency are legacy, no longer written); optional `description` — what it is for, plain text up to 300 characters; the Need form no longer asks for it (people talk it over in the chat), the author can still add it on the Need page |
+| Collection | A Need: a participant's message about what they need (Emergency / Regular — a Regular one renews every 28 days; `EMERGENCY`/`REGULAR` in the DB) with amount in $ (originalAmount/originalCurrency are legacy, no longer written); optional `description` — legacy free text (up to 300 characters); no screen asks for it or shows it any more: people talk the situation over in the chat, outside the app |
 | ObligationReceipt | The author's private "received" mark for one finished cycle of a regular Need (collectionId, userId, cycleNumber, amount, confirmedAt; unique per person and cycle). Written when the cycle closes; `obligationId` becomes null when the person's Participation is removed |
 | Obligation | A Participation: a participant's message about their own voluntary participation in a Need, with amount in $ (originalAmount/originalCurrency are legacy, no longer written) |
 | Notification | Notification with handshake path |
