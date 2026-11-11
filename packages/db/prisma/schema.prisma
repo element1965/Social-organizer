@@ -97,7 +97,7 @@ model User {
   soundEnabled        Boolean     @default(true)
   voiceGender         VoiceGender @default(FEMALE)
   fontScale           Float       @default(1.0)
-  hideContacts        Boolean     @default(true)
+  hideContacts        Boolean     @default(false)
   role                UserRole  @default(REGULAR)
   onboardingCompleted Boolean   @default(false)
   onboardingReminderSent Int    @default(0)
