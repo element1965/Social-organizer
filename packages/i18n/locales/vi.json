@@ -1395,18 +1395,11 @@
     }
   },
   "nativePush": {
-    "promptTitle": "Bật thông báo",
-    "promptBody": "Social Organizer hoạt động qua thông báo — đó là cách bạn biết về các nhu cầu mới trong mạng lưới của mình. Không có thông báo, các tín hiệu sẽ không đến được với bạn.",
+    "promptTitle": "Bật thông báo?",
+    "promptBody": "Bạn sẽ biết ngay về các yêu cầu và nhu cầu trong mạng lưới của mình. Không có thông báo, mọi thứ vẫn nằm trong nhật ký sự kiện và bạn có thể bật sau trong Cài đặt.",
     "enable": "Bật thông báo",
     "requesting": "Đang yêu cầu…",
-    "deniedTitle": "Thông báo đang tắt",
-    "deniedBody": "Bạn đã tắt thông báo. Để tiếp tục, hãy bật thủ công:",
-    "step1": "Mở <b>Cài đặt</b> trên điện thoại",
-    "step2": "Vào <b>Ứng dụng → Social Organizer</b>",
-    "step3": "Bật <b>Thông báo</b>",
-    "step4": "Quay lại ứng dụng",
-    "checkAgain": "Kiểm tra lại",
-    "checkHint": "Sau khi bật thông báo, hãy nhấn «Kiểm tra lại»"
+    "notNow": "Để sau"
   },
   "adminPerson": {
     "budget": "Cam kết kỳ này",

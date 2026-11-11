@@ -1395,18 +1395,11 @@
     }
   },
   "nativePush": {
-    "promptTitle": "打开通知",
-    "promptBody": "Social Organizer 靠通知运作——你会这样得知网络里的新需求。没有通知，信号就到不了你这里。",
+    "promptTitle": "开启通知?",
+    "promptBody": "你会第一时间知道网络中的请求和需求。不开启通知，所有内容仍在事件记录中，之后也可以在设置里开启。",
     "enable": "打开通知",
     "requesting": "正在请求…",
-    "deniedTitle": "通知已关闭",
-    "deniedBody": "你关闭了通知。要继续，请手动打开：",
-    "step1": "打开手机的<b>设置</b>",
-    "step2": "进入<b>应用 → Social Organizer</b>",
-    "step3": "打开<b>通知</b>",
-    "step4": "回到应用",
-    "checkAgain": "再次检查",
-    "checkHint": "打开通知后，点“再次检查”"
+    "notNow": "暂不"
   },
   "adminPerson": {
     "budget": "本期承诺",

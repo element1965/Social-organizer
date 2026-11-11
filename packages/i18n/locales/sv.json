@@ -1406,18 +1406,11 @@
     }
   },
   "nativePush": {
-    "promptTitle": "Slå på notiser",
-    "promptBody": "Social Organizer fungerar genom notiser — så får du veta om nya behov i ditt nätverk. Utan notiser når signalerna dig inte.",
+    "promptTitle": "Slå på aviseringar?",
+    "promptBody": "Du får direkt veta om förfrågningar och behov i ditt nätverk. Utan aviseringar finns allt i händelseloggen, och du kan slå på dem senare i inställningarna.",
     "enable": "Slå på notiser",
     "requesting": "Begär…",
-    "deniedTitle": "Notiser är av",
-    "deniedBody": "Du stängde av notiser. För att fortsätta slår du på dem själv:",
-    "step1": "Öppna telefonens <b>Inställningar</b>",
-    "step2": "Gå till <b>Appar → Social Organizer</b>",
-    "step3": "Slå på <b>Notiser</b>",
-    "step4": "Kom tillbaka till appen",
-    "checkAgain": "Kontrollera igen",
-    "checkHint": "När du har slagit på notiser, tryck på ”Kontrollera igen”"
+    "notNow": "Inte nu"
   },
   "adminPerson": {
     "budget": "Åtagande denna period",

@@ -1395,18 +1395,11 @@
     }
   },
   "nativePush": {
-    "promptTitle": "알림 켜기",
-    "promptBody": "Social Organizer는 알림으로 움직여요. 내 네트워크의 새 필요 소식을 알림으로 들어요. 알림이 없으면 신호가 나에게 닿지 않아요.",
+    "promptTitle": "알림을 켤까요?",
+    "promptBody": "내 네트워크의 요청과 필요를 바로 알 수 있어요. 알림이 없어도 모든 내용은 이벤트 기록에 있고, 나중에 설정에서 켤 수 있어요.",
     "enable": "알림 켜기",
     "requesting": "요청하는 중…",
-    "deniedTitle": "알림이 꺼져 있어요",
-    "deniedBody": "알림을 꺼 두었어요. 계속하려면 직접 켜 주세요.",
-    "step1": "휴대폰의 <b>설정</b>을 열어요",
-    "step2": "<b>앱 → Social Organizer</b>로 이동해요",
-    "step3": "<b>알림</b>을 켜요",
-    "step4": "앱으로 돌아와요",
-    "checkAgain": "다시 확인",
-    "checkHint": "알림을 켠 다음 “다시 확인”을 눌러 주세요"
+    "notNow": "나중에"
   },
   "adminPerson": {
     "budget": "이번 기간 약속",

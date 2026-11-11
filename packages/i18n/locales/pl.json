@@ -1428,18 +1428,11 @@
     }
   },
   "nativePush": {
-    "promptTitle": "Włącz powiadomienia",
-    "promptBody": "Social Organizer działa przez powiadomienia — tak dowiadujesz się o nowych potrzebach w swojej sieci. Bez powiadomień sygnały do Ciebie nie dotrą.",
+    "promptTitle": "Włączyć powiadomienia?",
+    "promptBody": "Od razu dowiesz się o prośbach i potrzebach w swojej sieci. Bez powiadomień wszystko jest w dzienniku zdarzeń, a włączyć je można później w ustawieniach.",
     "enable": "Włącz powiadomienia",
     "requesting": "Prosimy o zgodę…",
-    "deniedTitle": "Powiadomienia są wyłączone",
-    "deniedBody": "Wyłączyłeś powiadomienia. Żeby iść dalej, włącz je ręcznie:",
-    "step1": "Otwórz <b>Ustawienia</b> telefonu",
-    "step2": "Wejdź w <b>Aplikacje → Social Organizer</b>",
-    "step3": "Włącz <b>Powiadomienia</b>",
-    "step4": "Wróć do aplikacji",
-    "checkAgain": "Sprawdź ponownie",
-    "checkHint": "Gdy włączysz powiadomienia, stuknij „Sprawdź ponownie”"
+    "notNow": "Nie teraz"
   },
   "adminPerson": {
     "budget": "Deklaracja w tym okresie",

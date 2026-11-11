@@ -1406,18 +1406,11 @@
     }
   },
   "nativePush": {
-    "promptTitle": "Turn on notifications",
-    "promptBody": "Social Organizer works through notifications — that is how you learn about new Needs in your network. Without notifications the signals will not reach you.",
+    "promptTitle": "Turn on notifications?",
+    "promptBody": "You will hear about requests and Needs in your network right away. Without notifications everything is still in the feed on the Circle, and you can turn them on later in Settings.",
     "enable": "Turn on notifications",
     "requesting": "Requesting…",
-    "deniedTitle": "Notifications are off",
-    "deniedBody": "You turned notifications off. To continue, turn them on by hand:",
-    "step1": "Open your phone’s <b>Settings</b>",
-    "step2": "Go to <b>Apps → Social Organizer</b>",
-    "step3": "Turn on <b>Notifications</b>",
-    "step4": "Come back to the app",
-    "checkAgain": "Check again",
-    "checkHint": "After you turn notifications on, tap “Check again”"
+    "notNow": "Not now"
   },
   "adminPerson": {
     "budget": "Pledged this period",

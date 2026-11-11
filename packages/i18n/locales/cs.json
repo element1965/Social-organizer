@@ -1428,18 +1428,11 @@
     }
   },
   "nativePush": {
-    "promptTitle": "Zapněte oznámení",
-    "promptBody": "Social Organizer funguje přes oznámení — tak se dozvíte o nových potřebách ve své síti. Bez oznámení se signály k vám nedostanou.",
+    "promptTitle": "Zapnout oznámení?",
+    "promptBody": "Hned se dozvíte o žádostech a potřebách ve své síti. Bez oznámení je vše v deníku událostí a zapnout je můžete později v nastavení.",
     "enable": "Zapnout oznámení",
     "requesting": "Žádáme…",
-    "deniedTitle": "Oznámení jsou vypnutá",
-    "deniedBody": "Oznámení jste vypnuli. Abyste mohli pokračovat, zapněte je ručně:",
-    "step1": "Otevřete <b>Nastavení</b> telefonu",
-    "step2": "Přejděte do <b>Aplikace → Social Organizer</b>",
-    "step3": "Zapněte <b>Oznámení</b>",
-    "step4": "Vraťte se do aplikace",
-    "checkAgain": "Zkontrolovat znovu",
-    "checkHint": "Až oznámení zapnete, klepněte na „Zkontrolovat znovu“"
+    "notNow": "Teď ne"
   },
   "adminPerson": {
     "budget": "Příslib v tomto období",

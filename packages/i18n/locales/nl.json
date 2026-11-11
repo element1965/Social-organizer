@@ -1406,18 +1406,11 @@
     }
   },
   "nativePush": {
-    "promptTitle": "Zet meldingen aan",
-    "promptBody": "Social Organizer werkt via meldingen — zo hoor je over nieuwe behoeften in je netwerk. Zonder meldingen bereiken de signalen je niet.",
+    "promptTitle": "Meldingen inschakelen?",
+    "promptBody": "Je hoort meteen over verzoeken en behoeften in je netwerk. Zonder meldingen staat alles in het gebeurtenissenlogboek, en je kunt ze later in de instellingen aanzetten.",
     "enable": "Zet meldingen aan",
     "requesting": "Aanvragen…",
-    "deniedTitle": "Meldingen staan uit",
-    "deniedBody": "Je hebt meldingen uitgezet. Zet ze handmatig aan om verder te gaan:",
-    "step1": "Open de <b>Instellingen</b> van je telefoon",
-    "step2": "Ga naar <b>Apps → Social Organizer</b>",
-    "step3": "Zet <b>Meldingen</b> aan",
-    "step4": "Kom terug naar de app",
-    "checkAgain": "Opnieuw controleren",
-    "checkHint": "Tik op “Opnieuw controleren” nadat je meldingen hebt aangezet"
+    "notNow": "Niet nu"
   },
   "adminPerson": {
     "budget": "Toezegging deze periode",

@@ -1406,18 +1406,11 @@
     }
   },
   "nativePush": {
-    "promptTitle": "Slå notifikationer til",
-    "promptBody": "Social Organizer fungerer gennem notifikationer — sådan hører du om nye behov i dit netværk. Uden notifikationer når signalerne ikke frem til dig.",
+    "promptTitle": "Slå notifikationer til?",
+    "promptBody": "Du hører straks om anmodninger og behov i dit netværk. Uden notifikationer står alt i hændelsesloggen, og du kan slå dem til senere i indstillinger.",
     "enable": "Slå notifikationer til",
     "requesting": "Anmoder…",
-    "deniedTitle": "Notifikationer er slået fra",
-    "deniedBody": "Du har slået notifikationer fra. For at fortsætte skal du slå dem til manuelt:",
-    "step1": "Åbn telefonens <b>Indstillinger</b>",
-    "step2": "Gå til <b>Apps → Social Organizer</b>",
-    "step3": "Slå <b>Notifikationer</b> til",
-    "step4": "Kom tilbage til appen",
-    "checkAgain": "Tjek igen",
-    "checkHint": "Når du har slået notifikationer til, tryk på »Tjek igen«"
+    "notNow": "Ikke nu"
   },
   "adminPerson": {
     "budget": "Tilsagn i denne periode",

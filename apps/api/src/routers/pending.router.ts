@@ -112,22 +112,35 @@ export const pendingRouter = router({
         throw new TRPCError({ code: 'CONFLICT', message: 'Request already pending' });
       }
 
+      // An earlier request from me to this person (one row per pair and direction)
+      const previous = await ctx.db.pendingConnection.findUnique({
+        where: { fromUserId_toUserId: { fromUserId: ctx.userId, toUserId: input.targetUserId } },
+      });
+      // Declined: the person is not asked again (SO-45, one notice per request)
+      if (previous?.status === 'REJECTED') {
+        throw new TRPCError({ code: 'CONFLICT', message: 'Request declined' });
+      }
       // A withdrawn request blocks a new one for a while: send/withdraw loops would otherwise
       // flood the person with notifications
-      const withdrawn = await ctx.db.pendingConnection.findFirst({
-        where: { fromUserId: ctx.userId, toUserId: input.targetUserId, status: 'CANCELLED' },
-      });
-      if (withdrawn) {
-        if (cooldownUntil(withdrawn.resolvedAt) > Date.now()) {
-          throw new TRPCError({ code: 'TOO_MANY_REQUESTS', message: 'REQUEST_COOLDOWN' });
-        }
-        // The pair is unique, so the old row makes room for the new request (and its own notification key)
-        await ctx.db.pendingConnection.delete({ where: { id: withdrawn.id } });
+      if (previous?.status === 'CANCELLED' && cooldownUntil(previous.resolvedAt) > Date.now()) {
+        throw new TRPCError({ code: 'TOO_MANY_REQUESTS', message: 'REQUEST_COOLDOWN' });
+      }
+      // Withdrawn past the cooldown, or accepted earlier and the connection removed since: a new request
+      // is a new event. The pair is unique, so the old row makes room (and its own notification key)
+      if (previous) {
+        await ctx.db.pendingConnection.delete({ where: { id: previous.id } });
       }
 
-      const created = await ctx.db.pendingConnection.create({
-        data: { fromUserId: ctx.userId, toUserId: input.targetUserId, createdAt: new Date() },
-      });
+      let created;
+      try {
+        created = await ctx.db.pendingConnection.create({
+          data: { fromUserId: ctx.userId, toUserId: input.targetUserId, createdAt: new Date() },
+        });
+      } catch (err: any) {
+        // Two parallel requests: the second one sees the first
+        if (err?.code === 'P2002') throw new TRPCError({ code: 'CONFLICT', message: 'Request already pending' });
+        throw err;
+      }
 
       const [sender, senderTgContact] = await Promise.all([
         ctx.db.user.findUnique({

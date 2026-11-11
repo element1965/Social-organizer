@@ -1406,18 +1406,11 @@
     }
   },
   "nativePush": {
-    "promptTitle": "Bildirimleri açın",
-    "promptBody": "Social Organizer bildirimlerle çalışır; ağınızdaki yeni ihtiyaçları böyle öğrenirsiniz. Bildirimler olmadan sinyaller size ulaşmaz.",
+    "promptTitle": "Bildirimler açılsın mı?",
+    "promptBody": "Ağınızdaki istekleri ve ihtiyaçları hemen öğrenirsiniz. Bildirimler olmadan da her şey olay günlüğünde görünür; bunları daha sonra ayarlardan açabilirsiniz.",
     "enable": "Bildirimleri açın",
     "requesting": "İsteniyor…",
-    "deniedTitle": "Bildirimler kapalı",
-    "deniedBody": "Bildirimleri kapattınız. Devam etmek için elle açın:",
-    "step1": "Telefonunuzda <b>Ayarlar</b>'ı açın",
-    "step2": "<b>Uygulamalar → Social Organizer</b> bölümüne gidin",
-    "step3": "<b>Bildirimler</b>'i açın",
-    "step4": "Uygulamaya geri dönün",
-    "checkAgain": "Yeniden kontrol et",
-    "checkHint": "Bildirimleri açtıktan sonra «Yeniden kontrol et»e dokunun"
+    "notNow": "Şimdi değil"
   },
   "adminPerson": {
     "budget": "Bu dönemki taahhüt",
