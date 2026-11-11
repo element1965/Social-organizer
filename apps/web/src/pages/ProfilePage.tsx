@@ -144,7 +144,7 @@ export function ProfilePage() {
     : onCount === flags.length
       ? t('profile.notificationsAll')
       : t('profile.notificationsSome');
-  const slugLine = profile.referralSlug ? `${publicHost()}/${profile.referralSlug}` : publicHost();
+  const slugLine = profile.referralSlug ? `${publicHost()}/i/${profile.referralSlug}` : publicHost();
   const since = t('profile.memberSince', { date: formatLongDate(profile.createdAt, i18n.language) });
   const supportCount = conversations.data?.length ?? 0;
 

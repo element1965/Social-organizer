@@ -1,6 +1,17 @@
 import { useEffect } from 'react';
-import { Navigate, useLocation } from 'react-router-dom';
+import { Navigate, useLocation, useParams } from 'react-router-dom';
 import { detectDevice, getTarget } from '../../lib/device';
+import { safeInviteToken } from '../onboarding/flow';
+
+/**
+ * `/i/<slug>` — the short personal link shown on the invite card (orginizer.com/i/anna).
+ * It opens the same invite page as `/?invite=anna`; anything that is not a valid slug goes home.
+ */
+export function SlugRedirect() {
+  const { slug } = useParams();
+  const token = safeInviteToken(slug);
+  return <Navigate to={token ? `/invite/${token}` : '/'} replace />;
+}
 
 /** Old landing URLs (`/welcome`, `/arvut`) open the home page; the query (`?invite=`, `?redirect=`) is kept. */
 export function RedirectHome() {

@@ -1266,7 +1266,10 @@
     "sortLabel": "Sort",
     "sortNew": "Newest first",
     "sortName": "A–Z",
-    "showMore": "Show more · {{total}} left"
+    "showMore": "Show more · {{total}} left",
+    "editLink": "Change link",
+    "linkPlaceholder": "your name or nickname",
+    "linkEditHint": "links with the old address will stop working"
   },
   "account": {
     "firstName": "First name",

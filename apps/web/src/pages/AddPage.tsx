@@ -45,7 +45,7 @@ export function AddPage() {
     <Screen width="column">
       <h1 className="pt-6 text-h1 font-extrabold text-ink">{t('nav.add')}</h1>
       {me.data ? (
-        <LinkCard slug={inviteSlug(me.data)} name={me.data.name} />
+        <LinkCard slug={inviteSlug(me.data)} name={me.data.name} customSlug={me.data.referralSlug} />
       ) : (
         <Card className="mt-4" aria-busy="true">
           <div className="h-40 animate-pulse rounded-lg bg-surface-2" />

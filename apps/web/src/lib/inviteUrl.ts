@@ -17,11 +17,11 @@ export function buildInviteUrl(token: string): string {
 }
 
 /**
- * Build web invite URL (always points to landing page).
- * Used for sharing outside Telegram — recipient sees landing first.
+ * Build the short web invite URL, orginizer.com/i/<token>, for sharing outside Telegram.
+ * It opens the same invite page as the older /?invite=<token> form, which keeps working.
  */
 export function buildWebInviteUrl(token: string): string {
-  return `${WEB_APP_URL}/?invite=${token}`;
+  return `${WEB_APP_URL}/i/${encodeURIComponent(token)}`;
 }
 
 /**

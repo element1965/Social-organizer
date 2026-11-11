@@ -4,7 +4,7 @@ export function inviteSlug(user: { id: string; referralSlug?: string | null }): 
   return user.referralSlug || user.id;
 }
 
-/** Brand label shown on the card: orginizer.com/anna. The host drops a leading www. */
+/** Label shown on the card: host "orginizer.com/i" + slug "anna". The host drops a leading www. */
 export function prettyInvite(slug: string): { host: string; slug: string } {
   let host = 'orginizer.com';
   try {
@@ -12,14 +12,12 @@ export function prettyInvite(slug: string): { host: string; slug: string } {
   } catch {
     host = 'orginizer.com';
   }
-  return { host, slug };
+  return { host: `${host}/i`, slug };
 }
 
-/**
- * Working permanent link. /:slug is not a route, so the shared URL is the existing ?invite= form.
- */
+/** Working permanent link: /i/<slug> opens the invite page (SlugRedirect). Old ?invite= links still work. */
 export function permanentInviteUrl(slug: string): string {
-  return `${PUBLIC_ORIGIN}/?invite=${encodeURIComponent(slug)}`;
+  return `${PUBLIC_ORIGIN}/i/${encodeURIComponent(slug)}`;
 }
 
 /** Live QR. Uses the current origin so two browsers on the same dev server can read each other. */
