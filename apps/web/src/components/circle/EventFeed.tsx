@@ -17,6 +17,7 @@ const ICONS: Record<FeedKind, ReactNode> = {
   incoming: <IconUserPlus className="h-5 w-5" />,
   waiting: <IconClock className="h-5 w-5" />,
   milestone: <IconDone className="h-5 w-5" />,
+  accepted: <IconPeople className="h-5 w-5" />,
 };
 
 type EventFeedProps = {

@@ -11,6 +11,7 @@ export function refreshNetwork(utils: Utils): Promise<unknown> {
   return Promise.all([
     utils.connection.invalidate(),
     utils.pending.invalidate(),
+    utils.notification.attention.invalidate(),
     utils.milestone.invalidate(),
     utils.stats.invalidate(),
     utils.user.me.invalidate(),

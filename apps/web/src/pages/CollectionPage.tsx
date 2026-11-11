@@ -93,6 +93,8 @@ export function CollectionPage() {
     utils.collection.myActive.invalidate();
     // All, not only mounted queries: the Circle is not mounted here, and must not show a stale impulse on return
     utils.collection.myParticipating.invalidate(undefined, { refetchType: 'all' });
+    // Joining decides the request: the navigation badge drops at once
+    utils.notification.attention.invalidate(undefined, { refetchType: 'all' });
   };
 
   const createObligation = trpc.obligation.create.useMutation({ onSuccess: refresh });

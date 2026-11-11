@@ -205,7 +205,8 @@
     "scan": "Считать",
     "how": "Как это работает",
     "person": "Человек",
-    "collection": "Потребность"
+    "collection": "Потребность",
+    "attention": "ждёт вашего внимания"
   },
   "circle": {
     "toSelf": "К себе",
@@ -284,7 +285,8 @@
       "milestoneFirstNeed": "Первая потребность",
       "milestoneFirstNeedSub": "Сообщение пошло по рукопожатиям",
       "milestoneFirstPart": "Первое участие",
-      "milestoneFirstPartSub": "Автор потребности видит ваше участие"
+      "milestoneFirstPartSub": "Автор потребности видит ваше участие",
+      "accepted": "подтвердил(а) знакомство · вы в круге друг у друга"
     },
     "start": {
       "lead": "Вы первый в своём круге.",

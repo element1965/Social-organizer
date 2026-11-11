@@ -51,6 +51,7 @@ export function AcquaintSheet({ request, onClose }: Props) {
 
   const refresh = () => {
     void utils.pending.incoming.invalidate();
+    void utils.notification.attention.invalidate();
     void utils.pending.incomingCount.invalidate();
     void utils.connection.list.invalidate();
     void utils.connection.graphSlice.invalidate();

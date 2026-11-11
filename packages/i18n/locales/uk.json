@@ -205,7 +205,8 @@
     "scan": "Сканувати",
     "how": "Як це працює",
     "person": "Людина",
-    "collection": "Потреба"
+    "collection": "Потреба",
+    "attention": "чекає на вашу увагу"
   },
   "circle": {
     "toSelf": "До себе",
@@ -284,7 +285,8 @@
       "milestoneFirstNeed": "Перша потреба",
       "milestoneFirstNeedSub": "Повідомлення йде рукостисканнями",
       "milestoneFirstPart": "Перша участь",
-      "milestoneFirstPartSub": "Автор потреби бачить вашу участь"
+      "milestoneFirstPartSub": "Автор потреби бачить вашу участь",
+      "accepted": "підтвердив(-ла) знайомство · ви в колі одне в одного"
     },
     "start": {
       "lead": "Ви перші у своєму колі.",
