@@ -62,6 +62,7 @@ export function AccountPage() {
   const updateUser = trpc.user.update.useMutation();
   const updateSlug = trpc.user.updateReferralSlug.useMutation();
   const updateContacts = trpc.user.updateContacts.useMutation();
+  const showEmail = trpc.user.updateContacts.useMutation();
   const updateHide = trpc.settings.updateHideContacts.useMutation({
     onSuccess: () => utils.settings.get.invalidate(),
   });
@@ -114,6 +115,9 @@ export function AccountPage() {
   }, [contacts.data, me.data, ready]);
 
   const profile = me.data;
+  // An e-mail contact is what others see; the sign-in e-mail above is not shown unless this is on
+  const emailContact = contacts.data?.find((c) => c.type === 'email')?.value ?? '';
+  const emailShown = emailContact.trim().length > 0;
   const originalSlug = (profile?.referralSlug ?? '').toLowerCase();
 
   const validate = (report: boolean): ContactInput[] | null => {
@@ -421,6 +425,24 @@ export function AccountPage() {
       </div>
 
       <Group title={t('settings.contacts')}>
+        {profile.email ? (
+          <div>
+            {/* The sign-in e-mail is private until the person chooses to show it */}
+            <Row
+              title={t('account.showEmail')}
+              variant="toggle"
+              checked={emailShown}
+              onCheckedChange={(on) =>
+                showEmail.mutate([{ type: 'email', value: on ? profile.email ?? '' : '' }], {
+                  onSuccess: () => void utils.user.getContacts.invalidate(),
+                })
+              }
+            />
+            <p className="px-4 pb-3 text-label font-semibold text-ink-muted">
+              {emailShown ? t('account.showEmailOn', { email: emailContact }) : t('account.showEmailOff')}
+            </p>
+          </div>
+        ) : null}
         <div>
           <Row
             title={t('settings.hideContacts')}

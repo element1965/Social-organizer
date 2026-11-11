@@ -1349,7 +1349,10 @@
     "goneJoined_few": "Ваша участь у {{count}} відкритих потребах",
     "goneJoined_many": "Ваша участь у {{count}} відкритих потребах",
     "goneJoined_one": "Ваша участь у {{count}} відкритій потребі",
-    "goneJoined_other": "Ваша участь у {{count}} відкритої потреби"
+    "goneJoined_other": "Ваша участь у {{count}} відкритої потреби",
+    "showEmail": "Показувати пошту в контактах",
+    "showEmailOn": "У контактах: {{email}}.",
+    "showEmailOff": "Пошту для входу бачите лише ви."
   },
   "person": {
     "accountName": "В акаунті: {{name}}",
