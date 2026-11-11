@@ -1,6 +1,7 @@
 import { forwardRef, lazy, Suspense, useCallback, useEffect, useImperativeHandle, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import type { GraphImpulse, GraphNode, GraphView, NetworkGraphHandle } from '@so/graph-3d';
 import { useCircleStore, type Ring } from './circle-store';
+import { useIsDark } from '../../hooks/useIsDark';
 import type { NetPerson } from './network';
 
 const LazyNetworkGraph = lazy(() => import('@so/graph-3d').then((m) => ({ default: m.NetworkGraph })));
@@ -36,7 +37,7 @@ type CircleGraphProps = {
  *
  * Colours: the graph defaults (`GRAPH_COLORS`) are the dark v2 scene tokens (`--so-scene`, `--so-node-1..3`,
  * `--so-care-scene`, `--so-care-bright`), which the app does not redefine per theme, so no `colors` prop is
- * passed. The scene stays dark in both themes, hence `theme="dark"` for the in-canvas tooltip.
+ * passed for the dark theme; the light theme gets the light scene (`sceneTheme`, `GRAPH_COLORS_LIGHT`) and the light tooltip.
  *
  * Camera: the view is saved to the Circle store when the graph unmounts (navigation to Person, Collection,
  * People, or a phone/desktop layout switch) and handed back as `initialView`, which skips the intro fly.
@@ -49,6 +50,8 @@ export const CircleGraph = forwardRef<CircleGraphHandle, CircleGraphProps>(funct
   const graphRef = useRef<NetworkGraphHandle | null>(null);
   const [size, setSize] = useState<{ w: number; h: number } | null>(null);
   const saveView = useCircleStore((s) => s.saveView);
+  // The scene follows the app theme: a pale scene in the light theme (scene tokens are scoped in CirclePage)
+  const dark = useIsDark();
 
   useEffect(() => {
     const el = boxRef.current;
@@ -131,7 +134,8 @@ export const CircleGraph = forwardRef<CircleGraphHandle, CircleGraphProps>(funct
             farRings={farRings}
             labelInsetBottom={labelInsetBottom}
             showControls={false}
-            theme="dark"
+            theme={dark ? 'dark' : 'light'}
+            sceneTheme={dark ? 'dark' : 'light'}
           />
         </Suspense>
       ) : (

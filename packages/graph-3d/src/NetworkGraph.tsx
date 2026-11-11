@@ -6,6 +6,7 @@ import { createAvatarClient } from './avatarCache';
 import { introSeenOf, isLayoutSettled, layoutOf, setLayoutSettled, writeLayout } from './layoutCache';
 import {
   type GraphColors,
+  GRAPH_COLORS_LIGHT,
   colorsKey,
   depthColor,
   lineColor,
@@ -79,6 +80,8 @@ export interface NetworkGraphProps {
   onNodeTap?: (node: GraphNode) => void;
   /** Overlay and tooltip only. The WebGL scene does not follow this. */
   theme?: 'light' | 'dark';
+  /** Scene palette when `colors` is not given: the dark scene (default) or the light one for a light app theme. */
+  sceneTheme?: 'light' | 'dark';
   /** @deprecated Prefer `theme`. Honoured when `theme` is omitted. */
   darkMode?: boolean;
   /** In-canvas focus / fit buttons. Default true so existing screens keep them. */
@@ -977,13 +980,15 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
   focusLift = 0,
   farRings,
   labelInsetBottom = 0,
+  sceneTheme = 'dark',
 }, ref) {
   const fgRef = useRef<FGRef>(null);
   const theme: 'light' | 'dark' = themeProp ?? (darkMode ? 'dark' : 'light');
   const themeRef = useRef(theme);
   themeRef.current = theme;
-  const colorKey = colorsKey(colorsProp);
-  const colors = useMemo(() => resolveColors(colorsProp), [colorKey]); // eslint-disable-line react-hooks/exhaustive-deps
+  const baseColors = colorsProp ?? (sceneTheme === 'light' ? GRAPH_COLORS_LIGHT : null);
+  const colorKey = `${sceneTheme}|${colorsKey(colorsProp)}`;
+  const colors = useMemo(() => resolveColors(baseColors), [colorKey]); // eslint-disable-line react-hooks/exhaustive-deps
   const colorsRef = useRef(colors);
   colorsRef.current = colors;
 
@@ -3042,6 +3047,8 @@ void main() {
 `;
 
 const WASH_FRAGMENT = /* glsl */ `
+uniform vec3 uWash;
+uniform vec3 uWashEdge;
 varying vec2 vUv;
 
 // Two-circle radial gradient as in canvas createRadialGradient (canvas units, y down)
@@ -3063,9 +3070,9 @@ void main() {
   float disc = max(b * b - a * c, 0.0);
   float t = clamp((b - sqrt(disc)) / a, 0.0, 1.0);
 
-  // Stops (premultiplied): rgb(27,51,46) at 0.85, rgb(19,36,32) at 0.28 (t = 0.62), transparent at 1
-  vec4 s0 = vec4(vec3(27.0, 51.0, 46.0) / 255.0 * 0.85, 0.85);
-  vec4 s1 = vec4(vec3(19.0, 36.0, 32.0) / 255.0 * 0.28, 0.28);
+  // Stops (premultiplied): wash at 0.85, washEdge at 0.28 (t = 0.62), transparent at 1
+  vec4 s0 = vec4(uWash * 0.85, 0.85);
+  vec4 s1 = vec4(uWashEdge * 0.28, 0.28);
   vec4 col = t < 0.62 ? mix(s0, s1, t / 0.62) : mix(s1, vec4(0.0), (t - 0.62) / 0.38);
   if (col.a <= 0.0) discard;
 
@@ -3156,10 +3163,18 @@ function createResources() {
   const washMaterial = new THREE.ShaderMaterial({
     vertexShader: WASH_VERTEX,
     fragmentShader: WASH_FRAGMENT,
+    uniforms: { uWash: { value: new THREE.Color() }, uWashEdge: { value: new THREE.Color() } },
     transparent: true,
     premultipliedAlpha: true,
     depthWrite: false,
   });
+
+  // Uniforms are sRGB numbers used as is (the shader writes them straight to the screen, like the old constants)
+  const tintWash = () => {
+    (washMaterial.uniforms.uWash!.value as THREE.Color).setHex(parseColor(colors.wash).color, THREE.LinearSRGBColorSpace);
+    (washMaterial.uniforms.uWashEdge!.value as THREE.Color).setHex(parseColor(colors.washEdge).color, THREE.LinearSRGBColorSpace);
+  };
+  tintWash();
 
   const logoToken = () => (logoState === 'ok' && logoImg ? logoUrl : '');
   const markKeyNow = () => `${colors.careBright}|${colors.careOn}|${logoToken()}`;
@@ -3196,6 +3211,7 @@ function createResources() {
     setColors(next: GraphColors) {
       colors = next;
       tintImpulse(next.care);
+      tintWash();
       const care = parseColor(next.care).color;
       pulseMaterial.color.set(care);
       pulseDimMaterial.color.set(care);

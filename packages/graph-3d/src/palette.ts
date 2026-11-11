@@ -1,4 +1,4 @@
-/** Dark v2 scene tokens. The planet stays this dark in both app themes. */
+/** Scene colours. `GRAPH_COLORS` is the dark scene, `GRAPH_COLORS_LIGHT` the one for the light app theme. */
 export interface GraphColors {
   scene: string;
   node1: string;
@@ -13,6 +13,9 @@ export interface GraphColors {
   line: string;
   star: string;
   label: string;
+  /** Centre wash behind the ball: inner and outer colour of the radial glow. */
+  wash: string;
+  washEdge: string;
 }
 
 export const GRAPH_COLORS: GraphColors = {
@@ -26,6 +29,25 @@ export const GRAPH_COLORS: GraphColors = {
   line: 'rgba(231,238,235,0.16)',
   star: 'rgba(231,238,235,0.9)',
   label: '#e7eeeb',
+  wash: '#1b332e',
+  washEdge: '#132420',
+};
+
+/** Light theme: a pale scene, ink dots and names, the darker care teal (AA contrast on light), a white centre glow. */
+export const GRAPH_COLORS_LIGHT: GraphColors = {
+  scene: '#eef3f1',
+  // Dots are softer than the ink text: a dark ink dot per person would drown the names
+  node1: '#3d5852',
+  node2: '#7f938d',
+  node3: '#b3c0bb',
+  care: '#087f71',
+  careBright: '#0d9488',
+  careOn: '#ffffff',
+  line: 'rgba(20,33,30,0.18)',
+  star: 'rgba(20,33,30,0.3)',
+  label: '#14211e',
+  wash: '#ffffff',
+  washEdge: '#f7faf9',
 };
 
 /** Tooltip card. `theme` changes only these. */
