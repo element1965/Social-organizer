@@ -401,7 +401,7 @@ export function AccountPage() {
           autoCapitalize="none"
           autoCorrect="off"
           spellCheck={false}
-          hint={t('account.linkHint', { host: publicHost() })}
+          hint={t('account.linkHint', { host: `${publicHost()}/i` })}
           onChange={(event) => setSlug(event.target.value)}
           error={slugError || undefined}
         />

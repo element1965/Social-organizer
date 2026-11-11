@@ -310,7 +310,7 @@ The landing download buttons carry the inviter's token so new users join the inv
 - **App Store:** `?ct=invite_TOKEN` Apple campaign token — App Store Connect analytics only; iOS has no Install Referrer, so the invite is not auto-applied in-app after install
 - **Browser:** "Or continue in the browser" under the buttons → `/login`; the token waits in `pendingInviteToken` and is accepted after sign-up
 
-There is one invite link per user — `https://www.orginizer.com/?invite=TOKEN`, shared from Add (link and QR). The person who opens it picks Telegram, the app or the browser. Inside the installed app `/invite/TOKEN` goes straight to `/login` (no landing), and `pendingInviteToken` is kept until `InvitePage` accepts it — also across the Google/Apple deep-link return (`socialorganizer://auth-success`).
+There is one invite link per user — `https://www.orginizer.com/i/TOKEN`, shared from Add (link and QR). TOKEN is the personal ID (`referralSlug`, 3–30 characters: letters, numbers, `_`, `-`) or, until one is chosen, the user id; the ID is edited right on the Add card ("Change link") or in Account. `/i/TOKEN` redirects to `/invite/TOKEN` (`SlugRedirect`); the older `/?invite=TOKEN` form keeps working. The person who opens it picks Telegram, the app or the browser. Inside the installed app `/invite/TOKEN` goes straight to `/login` (no landing), and `pendingInviteToken` is kept until `InvitePage` accepts it — also across the Google/Apple deep-link return (`socialorganizer://auth-success`).
 
 ### Connecting Telegram to an existing account
 

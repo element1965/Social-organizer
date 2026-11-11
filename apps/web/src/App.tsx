@@ -16,7 +16,7 @@ import { ProfileRedirect } from './components/ui2/stubs';
 import { useAuth } from './hooks/useAuth';
 import { afterSignInPath, readPendingInvite, safeInviteToken, safeMasked, safePath, setPendingInvite } from './components/onboarding/flow';
 import { LandingPage } from './pages/LandingPage';
-import { GetRedirect, RedirectHome } from './components/site/redirects';
+import { GetRedirect, RedirectHome, SlugRedirect } from './components/site/redirects';
 import { HomeGate, OfflineRouteBoundary, PeopleGate, PersonGate } from './components/offline/gates';
 import { onRecovery } from './lib/connectivity';
 
@@ -328,6 +328,8 @@ export function App() {
             <Route path="/skills/*" element={<Navigate to="/" replace />} />
             <Route path="/needs/*" element={<Navigate to="/" replace />} />
             <Route path="/profile/:userId" element={<ProfileRedirect />} />
+            {/* Short personal link orginizer.com/i/<slug> */}
+            <Route path="/i/:slug" element={<SlugRedirect />} />
 
             <Route element={<PublicRoutes />}>
               <Route path="/login" element={<LoginPage />} />

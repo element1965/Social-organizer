@@ -1280,7 +1280,10 @@
     "sortLabel": "Сортировка",
     "sortNew": "Сначала новые",
     "sortName": "А–Я",
-    "showMore": "Показать ещё · осталось {{total}}"
+    "showMore": "Показать ещё · осталось {{total}}",
+    "editLink": "Изменить ссылку",
+    "linkPlaceholder": "ваше имя или ник",
+    "linkEditHint": "ссылки со старым адресом перестанут работать"
   },
   "account": {
     "firstName": "Имя",
