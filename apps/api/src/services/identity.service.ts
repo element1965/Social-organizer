@@ -46,7 +46,7 @@ async function resolveOnce(db: PrismaClient, id: ExternalIdentity): Promise<{ us
 
   // 2. Same e-mail already has an account
   if (email) {
-    const existing = await db.user.findUnique({ where: { email } });
+    const existing = await db.user.findUnique({ where: { email }, omit: { passwordHash: false } });
     if (existing) {
       // Attach only when the existing account's e-mail is proven too
       // (or it never had a password, i.e. it came from a verified provider).
