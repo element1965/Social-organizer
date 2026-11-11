@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Trans, useTranslation } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
+import { useQueryClient } from '@tanstack/react-query';
 import { Capacitor } from '@capacitor/core';
 import { useAuth } from '../hooks/useAuth';
 import { trpc } from '../lib/trpc';
@@ -9,14 +10,24 @@ import { BrandMark } from './ui2/BrandMark';
 import { OnboardingFrame, StepText } from './onboarding/OnboardingFrame';
 
 const NATIVE_TOKEN_KEY = 'fcm_push_token';
+// The person chose "Not now" or declined the system prompt: never ask again on start (SO-45)
+const GATE_SKIPPED_KEY = 'push_gate_skipped';
 
-type PermStatus = 'checking' | 'granted' | 'prompt' | 'denied';
+function gateSkipped(): boolean {
+  try { return localStorage.getItem(GATE_SKIPPED_KEY) === '1'; } catch { return false; }
+}
+function skipGate() {
+  try { localStorage.setItem(GATE_SKIPPED_KEY, '1'); } catch { /* storage unavailable */ }
+}
+
+type PermStatus = 'checking' | 'hidden' | 'prompt';
 
 /**
  * Native push bootstrap.
  * - iOS: push is OPTIONAL (App Store guideline 4.5.4). Never blocks the app —
  *   listeners are set up silently and the gate is never shown. Users opt in via Settings.
- * - Android: blocks the app with a full-screen gate until push notifications are enabled.
+ * - Android: offers push once on a full-screen screen with "Not now". Declining never blocks the app:
+ *   events stay in the in-app journal and push can be turned on later in Settings (SO-45).
  *
  * Must be rendered inside BrowserRouter and trpc.Provider.
  */
@@ -29,6 +40,7 @@ export function NativePushBootstrap() {
   const gateAllowed = Capacitor.getPlatform() === 'android';
   const isAuthenticated = useAuth((s) => s.isAuthenticated);
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const listenersSet = useRef(false);
   const registerNativeMutation = trpc.push.registerNativeToken.useMutation();
 
@@ -49,7 +61,7 @@ export function NativePushBootstrap() {
         const regListener = await PushNotifications.addListener('registration', (token) => {
           const fcmToken = token.value;
           localStorage.setItem(NATIVE_TOKEN_KEY, fcmToken);
-          setPermStatus('granted');
+          setPermStatus('hidden');
           registerNativeMutation.mutate({ token: fcmToken, platform: 'android' });
         });
 
@@ -64,6 +76,8 @@ export function NativePushBootstrap() {
             if (url && typeof url === 'string') {
               const path = url.replace(/^https?:\/\/[^/]+/, '');
               if (path) navigate(path);
+              // The app may resume on the same page: reload its data so the change behind the push is visible
+              queryClient.invalidateQueries();
             }
           },
         );
@@ -79,22 +93,20 @@ export function NativePushBootstrap() {
         const perm = await PushNotifications.checkPermissions();
 
         if (perm.receive === 'granted' || savedToken) {
-          setPermStatus('granted');
+          setPermStatus('hidden');
           // Re-register to keep token fresh
           await PushNotifications.register();
-        } else if (!gateAllowed) {
-          // iOS: push is optional — don't block. Never show the gate.
-          setPermStatus('granted');
-        } else if (perm.receive === 'denied') {
-          setPermStatus('denied');
+        } else if (perm.receive === 'denied' || gateSkipped()) {
+          // Declined or postponed: the app works without push
+          setPermStatus('hidden');
         } else {
-          // 'prompt' or 'prompt-with-rationale' — show the gate (Android only)
+          // 'prompt' or 'prompt-with-rationale' — offer push once (Android only)
           setPermStatus('prompt');
         }
       } catch (err) {
         console.error('[NativePush] Init failed:', err);
         // Don't block the app on init errors
-        setPermStatus('granted');
+        setPermStatus('hidden');
       }
     })();
 
@@ -118,9 +130,10 @@ export function NativePushBootstrap() {
       const result = await PushNotifications.requestPermissions();
       if (result.receive === 'granted') {
         await PushNotifications.register();
-        // permStatus will be set to 'granted' via the 'registration' listener
+        // permStatus will be set to 'hidden' via the 'registration' listener
       } else {
-        setPermStatus('denied');
+        skipGate();
+        setPermStatus('hidden');
       }
     } catch (err) {
       console.error('[NativePush] requestPermissions failed:', err);
@@ -143,57 +156,39 @@ export function NativePushBootstrap() {
     );
   }
 
-  // Granted — render nothing, app works normally.
-  // Prompt and denied both block until notifications are on.
-  if (permStatus === 'granted') return null;
+  // Granted, declined or postponed — render nothing, app works normally
+  if (permStatus === 'hidden') return null;
 
-  const prompt = permStatus === 'prompt';
-
+  // Offer push once (Android only)
   return (
     <div className="fixed inset-0 z-[200] overflow-y-auto bg-canvas">
       <OnboardingFrame
         centre
         foot={
-          <div className="flex w-full flex-col items-center gap-1">
+          <div className="flex w-full flex-col items-center gap-2">
             <Button className="w-full" loading={requesting} onClick={() => void handleRequestPermission()}>
-              {prompt
-                ? requesting
-                  ? t('nativePush.requesting')
-                  : t('nativePush.enable')
-                : t('nativePush.checkAgain')}
+              {requesting ? t('nativePush.requesting') : t('nativePush.enable')}
             </Button>
-            {prompt ? null : (
-              <p className="px-2 pt-2 text-center text-label font-semibold text-ink-subtle">{t('nativePush.checkHint')}</p>
-            )}
+            <Button
+              className="w-full"
+              variant="secondary"
+              disabled={requesting}
+              onClick={() => {
+                skipGate();
+                setPermStatus('hidden');
+              }}
+            >
+              {t('nativePush.notNow')}
+            </Button>
           </div>
         }
       >
         <div className="mt-8 flex justify-center">
           <BrandMark size={84} />
         </div>
-        <StepText centre title={prompt ? t('nativePush.promptTitle') : t('nativePush.deniedTitle')}>
-          {prompt ? t('nativePush.promptBody') : t('nativePush.deniedBody')}
+        <StepText centre title={t('nativePush.promptTitle')}>
+          {t('nativePush.promptBody')}
         </StepText>
-        {prompt ? null : (
-          <ol className="mt-5 w-full space-y-2 rounded-xl bg-surface p-4 text-left text-body-s text-ink shadow-card">
-            <li className="flex items-start gap-2">
-              <span className="font-bold text-care">1.</span>
-              <Trans i18nKey="nativePush.step1" components={{ b: <strong className="font-bold text-ink" /> }} />
-            </li>
-            <li className="flex items-start gap-2">
-              <span className="font-bold text-care">2.</span>
-              <Trans i18nKey="nativePush.step2" components={{ b: <strong className="font-bold text-ink" /> }} />
-            </li>
-            <li className="flex items-start gap-2">
-              <span className="font-bold text-care">3.</span>
-              <Trans i18nKey="nativePush.step3" components={{ b: <strong className="font-bold text-ink" /> }} />
-            </li>
-            <li className="flex items-start gap-2">
-              <span className="font-bold text-care">4.</span>
-              {t('nativePush.step4')}
-            </li>
-          </ol>
-        )}
       </OnboardingFrame>
     </div>
   );

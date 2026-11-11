@@ -1406,18 +1406,11 @@
     }
   },
   "nativePush": {
-    "promptTitle": "Benachrichtigungen einschalten",
-    "promptBody": "Social Organizer lebt von Benachrichtigungen — so erfahren Sie von neuen Bedarfen in Ihrem Netzwerk. Ohne Benachrichtigungen erreichen Sie die Signale nicht.",
+    "promptTitle": "Benachrichtigungen einschalten?",
+    "promptBody": "So erfährst du sofort von Anfragen und Bedarfen in deinem Netzwerk. Ohne Benachrichtigungen steht alles im Ereignisprotokoll, und du kannst sie später in den Einstellungen einschalten.",
     "enable": "Benachrichtigungen einschalten",
     "requesting": "Wird angefragt…",
-    "deniedTitle": "Benachrichtigungen sind aus",
-    "deniedBody": "Sie haben Benachrichtigungen ausgeschaltet. Schalten Sie sie von Hand wieder ein:",
-    "step1": "Öffnen Sie die <b>Einstellungen</b> Ihres Telefons",
-    "step2": "Gehen Sie zu <b>Apps → Social Organizer</b>",
-    "step3": "Schalten Sie <b>Benachrichtigungen</b> ein",
-    "step4": "Kommen Sie zurück in die App",
-    "checkAgain": "Erneut prüfen",
-    "checkHint": "Wenn die Benachrichtigungen an sind, tippen Sie auf „Erneut prüfen“"
+    "notNow": "Nicht jetzt"
   },
   "adminPerson": {
     "budget": "Zusage in diesem Zeitraum",

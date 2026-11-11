@@ -7,7 +7,9 @@ let prisma: PrismaClient;
 
 export function getDb(): PrismaClient {
   if (!prisma) {
-    prisma = new PrismaClient();
+    // The password hash never leaves the database by accident: queries that need it
+    // (password sign-in, account linking) ask for it with `omit: { passwordHash: false }`.
+    prisma = new PrismaClient({ omit: { user: { passwordHash: true } } }) as unknown as PrismaClient;
   }
   return prisma;
 }

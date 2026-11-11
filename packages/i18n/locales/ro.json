@@ -1417,18 +1417,11 @@
     }
   },
   "nativePush": {
-    "promptTitle": "Activează notificările",
-    "promptBody": "Social Organizer funcționează prin notificări — așa afli despre nevoile noi din rețeaua ta. Fără notificări, semnalele nu ajung la tine.",
+    "promptTitle": "Activezi notificările?",
+    "promptBody": "Afli imediat despre cereri și nevoi din rețeaua ta. Fără notificări totul rămâne în jurnalul de evenimente, iar le poți activa mai târziu din setări.",
     "enable": "Activează notificările",
     "requesting": "Se cere…",
-    "deniedTitle": "Notificările sunt oprite",
-    "deniedBody": "Ai oprit notificările. Ca să continui, activează-le manual:",
-    "step1": "Deschide <b>Setările</b> telefonului",
-    "step2": "Mergi la <b>Aplicații → Social Organizer</b>",
-    "step3": "Activează <b>Notificările</b>",
-    "step4": "Revino în aplicație",
-    "checkAgain": "Verifică din nou",
-    "checkHint": "După ce activezi notificările, atinge „Verifică din nou”"
+    "notNow": "Nu acum"
   },
   "adminPerson": {
     "budget": "Angajament în această perioadă",

@@ -1395,18 +1395,11 @@
     }
   },
   "nativePush": {
-    "promptTitle": "Aktifkan notifikasi",
-    "promptBody": "Social Organizer bekerja lewat notifikasi — begitulah Anda mengetahui kebutuhan baru di jaringan Anda. Tanpa notifikasi, sinyal tidak akan sampai kepada Anda.",
+    "promptTitle": "Aktifkan notifikasi?",
+    "promptBody": "Anda akan langsung tahu tentang permintaan dan kebutuhan di jaringan Anda. Tanpa notifikasi semuanya tetap ada di log peristiwa, dan Anda bisa mengaktifkannya nanti di Pengaturan.",
     "enable": "Aktifkan notifikasi",
     "requesting": "Meminta…",
-    "deniedTitle": "Notifikasi nonaktif",
-    "deniedBody": "Anda menonaktifkan notifikasi. Untuk melanjutkan, aktifkan secara manual:",
-    "step1": "Buka <b>Pengaturan</b> ponsel Anda",
-    "step2": "Masuk ke <b>Aplikasi → Social Organizer</b>",
-    "step3": "Aktifkan <b>Notifikasi</b>",
-    "step4": "Kembali ke aplikasi",
-    "checkAgain": "Periksa lagi",
-    "checkHint": "Setelah notifikasi aktif, ketuk “Periksa lagi”"
+    "notNow": "Nanti saja"
   },
   "adminPerson": {
     "budget": "Komitmen periode ini",

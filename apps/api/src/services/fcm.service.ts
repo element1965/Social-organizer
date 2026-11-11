@@ -59,9 +59,10 @@ export async function sendFcmPush(
         data: payload.url ? { url: payload.url } : undefined,
         android: {
           priority: 'high',
+          // No clickAction: the default opens the app, and the app routes by data.url.
+          // 'FCM_PLUGIN_ACTIVITY' (cordova-plugin-fcm) matches no activity here, so a tap did nothing.
           notification: {
             sound: 'default',
-            clickAction: 'FCM_PLUGIN_ACTIVITY',
           },
         },
       });

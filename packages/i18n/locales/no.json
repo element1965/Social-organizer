@@ -1406,18 +1406,11 @@
     }
   },
   "nativePush": {
-    "promptTitle": "Slå på varsler",
-    "promptBody": "Social Organizer fungerer gjennom varsler — slik får du vite om nye behov i nettverket ditt. Uten varsler når ikke signalene frem til deg.",
+    "promptTitle": "Slå på varsler?",
+    "promptBody": "Du får straks vite om forespørsler og behov i nettverket ditt. Uten varsler ligger alt i hendelsesloggen, og du kan slå dem på senere i innstillingene.",
     "enable": "Slå på varsler",
     "requesting": "Ber om tilgang…",
-    "deniedTitle": "Varsler er av",
-    "deniedBody": "Du har slått av varsler. For å fortsette må du slå dem på manuelt:",
-    "step1": "Åpne <b>Innstillinger</b> på telefonen",
-    "step2": "Gå til <b>Apper → Social Organizer</b>",
-    "step3": "Slå på <b>Varsler</b>",
-    "step4": "Kom tilbake til appen",
-    "checkAgain": "Sjekk igjen",
-    "checkHint": "Når du har slått på varsler, trykk på «Sjekk igjen»"
+    "notNow": "Ikke nå"
   },
   "adminPerson": {
     "budget": "Tilsagn i denne perioden",

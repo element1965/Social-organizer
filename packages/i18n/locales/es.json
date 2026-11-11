@@ -1417,18 +1417,11 @@
     }
   },
   "nativePush": {
-    "promptTitle": "Active las notificaciones",
-    "promptBody": "Social Organizer funciona a través de las notificaciones: así se entera de las necesidades nuevas en su red. Sin notificaciones, las señales no le llegarán.",
+    "promptTitle": "¿Activar las notificaciones?",
+    "promptBody": "Así sabrás al momento de las solicitudes y necesidades de tu red. Sin notificaciones todo sigue en el registro de eventos y puedes activarlas más tarde en Ajustes.",
     "enable": "Activar las notificaciones",
     "requesting": "Solicitando…",
-    "deniedTitle": "Las notificaciones están desactivadas",
-    "deniedBody": "Desactivó las notificaciones. Para continuar, actívelas a mano:",
-    "step1": "Abra los <b>Ajustes</b> del teléfono",
-    "step2": "Vaya a <b>Aplicaciones → Social Organizer</b>",
-    "step3": "Active las <b>Notificaciones</b>",
-    "step4": "Vuelva a la aplicación",
-    "checkAgain": "Comprobar de nuevo",
-    "checkHint": "Cuando active las notificaciones, toque «Comprobar de nuevo»"
+    "notNow": "Ahora no"
   },
   "adminPerson": {
     "budget": "Aporte en este período",
