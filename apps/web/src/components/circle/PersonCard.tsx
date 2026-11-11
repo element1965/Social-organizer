@@ -39,7 +39,9 @@ export function PersonCard({ person, variant, onClose }: Props) {
   const navigate = useNavigate();
   const utils = trpc.useUtils();
   const direct = person.depth === 1;
-  const contacts = trpc.user.getContacts.useQuery({ userId: person.id }, { enabled: direct });
+  // Same as the person page: ask for anyone, the server decides what this viewer may see (hideContacts,
+  // direct connection, a Need that reached them). Gating by the 1st ring hid contacts the profile shows.
+  const contacts = trpc.user.getContacts.useQuery({ userId: person.id });
   const filled = (contacts.data ?? []).filter((c) => c.value);
   const [contactsOpen, setContactsOpen] = useState(false);
   const [removeOpen, setRemoveOpen] = useState(false);
@@ -75,7 +77,7 @@ export function PersonCard({ person, variant, onClose }: Props) {
     onClick: () => navigate(`/person/${person.id}`),
   });
   // The phone card keeps two actions (mockup): Collection + Open, or Open + Contacts.
-  if (direct && filled.length > 0 && (variant === 'column' || actions.length < 2)) {
+  if (filled.length > 0 && (variant === 'column' || actions.length < 2)) {
     actions.push({ key: 'contacts', label: t('person.contacts'), primary: false, onClick: () => setContactsOpen(true) });
   }
 
