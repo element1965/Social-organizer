@@ -1452,5 +1452,14 @@
     "codeDifferent": "Mã khác",
     "codeWaiting": "Đang chờ người kia xác nhận mã…",
     "codeLabel": "Mã: {{code}}"
+  },
+  "getApp": {
+    "title": "Cài ứng dụng",
+    "text": "Thông báo đến ổn định hơn, và Vòng tròn của bạn chỉ cách một chạm từ màn hình chính.",
+    "dismiss": "Ẩn",
+    "row": "Ứng dụng điện thoại",
+    "sheetTitle": "Ứng dụng điện thoại",
+    "play": "Google Play",
+    "appstore": "App Store"
   }
 }

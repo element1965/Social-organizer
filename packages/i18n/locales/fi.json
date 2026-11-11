@@ -1463,5 +1463,14 @@
     "codeDifferent": "Eri koodi",
     "codeWaiting": "Odotetaan, että toinen vahvistaa koodin…",
     "codeLabel": "Koodi: {{code}}"
+  },
+  "getApp": {
+    "title": "Asenna sovellus",
+    "text": "Ilmoitukset tulevat luotettavammin perille, ja Piirisi on yhden napautuksen päässä aloitusnäytöltä.",
+    "dismiss": "Piilota",
+    "row": "Puhelinsovellus",
+    "sheetTitle": "Puhelinsovellus",
+    "play": "Google Play",
+    "appstore": "App Store"
   }
 }

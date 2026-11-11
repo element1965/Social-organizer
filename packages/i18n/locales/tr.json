@@ -1463,5 +1463,14 @@
     "codeDifferent": "Kod farklı",
     "codeWaiting": "Karşı tarafın kodu onaylaması bekleniyor…",
     "codeLabel": "Kod: {{code}}"
+  },
+  "getApp": {
+    "title": "Uygulamayı yükleyin",
+    "text": "Bildirimler daha güvenilir ulaşır ve Çemberiniz ana ekrandan tek dokunuşla açılır.",
+    "dismiss": "Gizle",
+    "row": "Telefon uygulaması",
+    "sheetTitle": "Telefon uygulaması",
+    "play": "Google Play",
+    "appstore": "App Store"
   }
 }

@@ -1485,5 +1485,14 @@
     "codeDifferent": "Jiný kód",
     "codeWaiting": "Čekáme, až druhá osoba potvrdí kód…",
     "codeLabel": "Kód: {{code}}"
+  },
+  "getApp": {
+    "title": "Nainstalujte si aplikaci",
+    "text": "Oznámení dorazí spolehlivěji a váš Kruh je na jedno klepnutí z domovské obrazovky.",
+    "dismiss": "Skrýt",
+    "row": "Aplikace do telefonu",
+    "sheetTitle": "Aplikace do telefonu",
+    "play": "Google Play",
+    "appstore": "App Store"
   }
 }

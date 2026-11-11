@@ -1452,5 +1452,14 @@
     "codeDifferent": "Kode berbeda",
     "codeWaiting": "Menunggu orang lain mengonfirmasi kode…",
     "codeLabel": "Kode: {{code}}"
+  },
+  "getApp": {
+    "title": "Pasang aplikasinya",
+    "text": "Notifikasi datang lebih andal, dan Lingkaran Anda hanya sekali ketuk dari layar utama.",
+    "dismiss": "Sembunyikan",
+    "row": "Aplikasi untuk ponsel",
+    "sheetTitle": "Aplikasi untuk ponsel",
+    "play": "Google Play",
+    "appstore": "App Store"
   }
 }

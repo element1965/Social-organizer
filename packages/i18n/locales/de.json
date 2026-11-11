@@ -1463,5 +1463,14 @@
     "codeDifferent": "Anderer Code",
     "codeWaiting": "Warten, bis die andere Person den Code bestätigt…",
     "codeLabel": "Code: {{code}}"
+  },
+  "getApp": {
+    "title": "Holen Sie sich die App",
+    "text": "Benachrichtigungen kommen zuverlässiger an, und Ihr Kreis ist mit einem Tipp vom Startbildschirm erreichbar.",
+    "dismiss": "Ausblenden",
+    "row": "App fürs Telefon",
+    "sheetTitle": "App fürs Telefon",
+    "play": "Google Play",
+    "appstore": "App Store"
   }
 }

@@ -1474,5 +1474,14 @@
     "codeDifferent": "Código diferente",
     "codeWaiting": "Aguardando a outra pessoa confirmar o código…",
     "codeLabel": "Código: {{code}}"
+  },
+  "getApp": {
+    "title": "Instale o app",
+    "text": "As notificações chegam com mais confiança e o seu Círculo fica a um toque na tela inicial.",
+    "dismiss": "Ocultar",
+    "row": "App para o celular",
+    "sheetTitle": "App para o celular",
+    "play": "Google Play",
+    "appstore": "App Store"
   }
 }

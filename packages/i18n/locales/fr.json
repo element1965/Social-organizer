@@ -1474,5 +1474,14 @@
     "codeDifferent": "Code différent",
     "codeWaiting": "En attente de la confirmation de l'autre personne…",
     "codeLabel": "Code : {{code}}"
+  },
+  "getApp": {
+    "title": "Installez l'application",
+    "text": "Les notifications arrivent plus sûrement, et votre Cercle est à portée d'un geste depuis l'écran d'accueil.",
+    "dismiss": "Masquer",
+    "row": "L'application mobile",
+    "sheetTitle": "L'application mobile",
+    "play": "Google Play",
+    "appstore": "App Store"
   }
 }

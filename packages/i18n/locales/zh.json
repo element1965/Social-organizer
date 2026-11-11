@@ -1452,5 +1452,14 @@
     "codeDifferent": "代码不同",
     "codeWaiting": "正在等待对方确认代码…",
     "codeLabel": "代码：{{code}}"
+  },
+  "getApp": {
+    "title": "安装应用",
+    "text": "通知更可靠，主屏幕上轻点一下即可打开你的圈子。",
+    "dismiss": "隐藏",
+    "row": "手机应用",
+    "sheetTitle": "手机应用",
+    "play": "Google Play",
+    "appstore": "App Store"
   }
 }
