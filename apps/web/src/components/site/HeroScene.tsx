@@ -1,23 +1,12 @@
-import { useEffect, useRef, type ReactNode } from 'react';
+import { useEffect, useRef } from 'react';
 import { usePrefersReducedMotion } from '../../lib/scrollPlay';
-import { cn } from '../../lib/utils';
-import { heroScene, type HeroSceneLabels } from './heroCanvas';
+import { heroGraph, type HeroGraphLabels } from './heroGraph';
 
 /**
- * The live scene of the site hero in a dark card: 560×480 on desktop, 320 px tall on phones (site.css).
- * Overlays (the pills with real numbers) go in `children`.
+ * The live 3D network behind the landing hero (heroGraph.ts). Fills its positioned parent; the parent sets
+ * where the ball sits through --hero-gx / --hero-gr / --hero-graph-h (site.css).
  */
-export function HeroScene({
-  labels,
-  ariaLabel,
-  className,
-  children,
-}: {
-  labels: HeroSceneLabels;
-  ariaLabel: string;
-  className?: string;
-  children?: ReactNode;
-}) {
+export function HeroScene({ labels, ariaLabel }: { labels: HeroGraphLabels; ariaLabel: string }) {
   const ref = useRef<HTMLCanvasElement>(null);
   const reduce = usePrefersReducedMotion();
   const labelsRef = useRef(labels);
@@ -26,14 +15,8 @@ export function HeroScene({
   useEffect(() => {
     const canvas = ref.current;
     if (!canvas) return;
-    const scene = heroScene(canvas, () => labelsRef.current, reduce);
-    return scene.destroy;
+    return heroGraph(canvas, () => labelsRef.current, reduce).destroy;
   }, [reduce]);
 
-  return (
-    <div className={cn('site-planet', className)}>
-      <canvas ref={ref} role="img" aria-label={ariaLabel} />
-      {children}
-    </div>
-  );
+  return <canvas ref={ref} className="site-hero-graph" role="img" aria-label={ariaLabel} />;
 }
