@@ -46,6 +46,8 @@ export type FeedEvent = {
   /** Needs the viewer: shown with the care accent. */
   hot: boolean;
   personId?: string;
+  /** The person on the row, for the avatars of a stacked card. */
+  photoUrl?: string | null;
   collectionId?: string;
   /** Every unread notification the row stands for: read or dismissed together. */
   notificationIds?: string[];
@@ -282,6 +284,7 @@ export function useEvents(options: { displayName?: (id: string, fallback: string
         subtitle: t('circle.feed.incoming'),
         hot: true,
         personId: p.fromUser.id,
+        photoUrl: p.fromUser.photoUrl,
         pendingId: p.id,
       });
     }
@@ -295,6 +298,7 @@ export function useEvents(options: { displayName?: (id: string, fallback: string
         subtitle: t('circle.feed.waiting'),
         hot: false,
         personId: p.toUser.id,
+        photoUrl: p.toUser.photoUrl,
       });
     }
 
@@ -324,6 +328,7 @@ export function useEvents(options: { displayName?: (id: string, fallback: string
         at: row.at,
         title: name(row.creator.id, row.creator.name),
         subtitle: t('circle.feed.participating', { amount: formatMoney(row.amount) }),
+        amountValue: row.amount,
         hot: false,
         collectionId: row.id,
         personId: row.creator.id,
@@ -361,6 +366,7 @@ export function useEvents(options: { displayName?: (id: string, fallback: string
         subtitle: t('circle.feed.accepted'),
         hot: a.unseen,
         personId: a.person.id,
+        photoUrl: a.person.photoUrl,
       });
     }
 
