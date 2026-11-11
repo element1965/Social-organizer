@@ -670,7 +670,8 @@
     "network_few": "{{n}} людини в мережі",
     "network_many": "{{n}} людей у мережі",
     "network_one": "{{n}} людина в мережі",
-    "network_other": "{{n}} людини в мережі"
+    "network_other": "{{n}} людини в мережі",
+    "howItWorks": "Як влаштований Social Organizer"
   },
   "landing": {
     "site": {
@@ -922,7 +923,8 @@
         "takes": "забирає {{name}}",
         "aria": "Стіл хуей"
       }
-    }
+    },
+    "backToInvite": "Повернутися до запрошення"
   },
   "legal": {
     "toc": "Правові документи",
@@ -1222,7 +1224,7 @@
       "nameHint": "Так вас побачать люди з вашого кола.",
       "nameMin": "Введіть ім'я"
     },
-    "haveTelegram": "Уже входили в Social Organizer через Telegram? Підключіть його: залишитеся в тому акаунті, зі своїм колом, а другий не з’явиться."
+    "haveTelegramLink": "Уже входили через Telegram? Підключіть його"
   },
   "add": {
     "linkLabel": "Ваше посилання",

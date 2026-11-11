@@ -662,7 +662,8 @@
     "sayKnown": "Mutual assistance between people who know each other. Tap “We know each other”, and {{name}} gets your request.",
     "loadFailedTitle": "Could not open the invite",
     "loadFailedText": "It looks like there is no connection. The link is saved; please try again.",
-    "waiting": "Waiting for confirmation."
+    "waiting": "Waiting for confirmation.",
+    "howItWorks": "How Social Organizer works"
   },
   "landing": {
     "site": {
@@ -912,7 +913,8 @@
         "takes": "{{name}} takes it",
         "aria": "Hui table"
       }
-    }
+    },
+    "backToInvite": "Back to the invitation"
   },
   "legal": {
     "toc": "Legal documents",
@@ -1210,7 +1212,7 @@
       "nameHint": "This is how people in your circle will see you.",
       "nameMin": "Enter your name"
     },
-    "haveTelegram": "Already used Social Organizer through Telegram? Connect it, and you will stay in that account with your circle instead of starting a second one."
+    "haveTelegramLink": "Already used Social Organizer through Telegram? Connect it"
   },
   "add": {
     "linkLabel": "Your link",
