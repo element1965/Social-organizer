@@ -1345,7 +1345,8 @@
     "factsTitle": "Osallistuminen",
     "factsReported": "Ilmoitetut osallistumiset",
     "factsMarked": "Tekijöiden saaduksi merkitsemä",
-    "factsNote": "Suljettujen tarpeiden osalta. Merkinnän tekee tarpeen tekijä; Social Organizer ei tarkista sitä."
+    "factsNote": "Suljettujen tarpeiden osalta. Merkinnän tekee tarpeen tekijä; Social Organizer ei tarkista sitä.",
+    "requestDeclined": "Tuttavuutta ei vahvistettu. Jos tunnette toisenne, näyttäkää toisillenne QR-koodi tavatessanne."
   },
   "help": {
     "faq": "Kysymykset ja vastaukset",

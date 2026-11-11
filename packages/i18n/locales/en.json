@@ -1345,7 +1345,8 @@
     "factsTitle": "Participation",
     "factsReported": "Participation reported",
     "factsMarked": "Marked as received by authors",
-    "factsNote": "For closed Needs. The mark is set by the author of a Need; Social Organizer does not verify it."
+    "factsNote": "For closed Needs. The mark is set by the author of a Need; Social Organizer does not verify it.",
+    "requestDeclined": "The acquaintance was not confirmed. If you know each other, show each other your QR code when you meet."
   },
   "help": {
     "faq": "Questions and answers",

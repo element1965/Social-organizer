@@ -2,15 +2,10 @@ import { z } from 'zod';
 import { router, protectedProcedure } from '../trpc.js';
 import { TRPCError } from '@trpc/server';
 import { sendPendingNotification } from '../services/notification.service.js';
-import { respondToConnectionRequest } from '../services/connection-request.service.js';
+import { cooldownUntil, openConnectionRequest, respondToConnectionRequest } from '../services/connection-request.service.js';
 import { syncMilestones } from '../services/milestone.service.js';
 
-/** How long a withdrawn request blocks a new one to the same person. */
-export const REQUEST_COOLDOWN_MS = 24 * 60 * 60 * 1000;
-
-function cooldownUntil(resolvedAt: Date | null): number {
-  return resolvedAt ? resolvedAt.getTime() + REQUEST_COOLDOWN_MS : 0;
-}
+export { REQUEST_COOLDOWN_MS } from '../services/connection-request.service.js';
 
 export const pendingRouter = router({
   incoming: protectedProcedure.query(async ({ ctx }) => {
@@ -112,35 +107,9 @@ export const pendingRouter = router({
         throw new TRPCError({ code: 'CONFLICT', message: 'Request already pending' });
       }
 
-      // An earlier request from me to this person (one row per pair and direction)
-      const previous = await ctx.db.pendingConnection.findUnique({
-        where: { fromUserId_toUserId: { fromUserId: ctx.userId, toUserId: input.targetUserId } },
-      });
-      // Declined: the person is not asked again (SO-45, one notice per request)
-      if (previous?.status === 'REJECTED') {
-        throw new TRPCError({ code: 'CONFLICT', message: 'Request declined' });
-      }
-      // A withdrawn request blocks a new one for a while: send/withdraw loops would otherwise
-      // flood the person with notifications
-      if (previous?.status === 'CANCELLED' && cooldownUntil(previous.resolvedAt) > Date.now()) {
-        throw new TRPCError({ code: 'TOO_MANY_REQUESTS', message: 'REQUEST_COOLDOWN' });
-      }
-      // Withdrawn past the cooldown, or accepted earlier and the connection removed since: a new request
-      // is a new event. The pair is unique, so the old row makes room (and its own notification key)
-      if (previous) {
-        await ctx.db.pendingConnection.delete({ where: { id: previous.id } });
-      }
-
-      let created;
-      try {
-        created = await ctx.db.pendingConnection.create({
-          data: { fromUserId: ctx.userId, toUserId: input.targetUserId, createdAt: new Date() },
-        });
-      } catch (err: any) {
-        // Two parallel requests: the second one sees the first
-        if (err?.code === 'P2002') throw new TRPCError({ code: 'CONFLICT', message: 'Request already pending' });
-        throw err;
-      }
+      // Declined, cooling down after a withdrawal, or a parallel request first: the shared rules decide
+      const created = await openConnectionRequest(ctx.db, ctx.userId, input.targetUserId);
+      if (!created) throw new TRPCError({ code: 'CONFLICT', message: 'Request already pending' });
 
       const [sender, senderTgContact] = await Promise.all([
         ctx.db.user.findUnique({
@@ -169,12 +138,14 @@ export const pendingRouter = router({
         },
         orderBy: { createdAt: 'desc' },
       });
-      if (!pending) return { status: 'none' as const, retryAt: null };
+      if (!pending) return { status: 'none' as const, retryAt: null, mine: false };
       // After the current user withdrew a request: when a new one can be sent (null once the cooldown is over)
       const until = pending.status === 'CANCELLED' && pending.fromUserId === ctx.userId ? cooldownUntil(pending.resolvedAt) : 0;
       return {
         status: pending.status.toLowerCase() as 'pending' | 'accepted' | 'rejected' | 'cancelled',
         retryAt: until > Date.now() ? new Date(until).toISOString() : null,
+        /** The row is the current user's own request (so 'rejected' means the other person declined it) */
+        mine: pending.fromUserId === ctx.userId,
       };
     }),
 

@@ -1345,7 +1345,8 @@
     "factsTitle": "Deltakelse",
     "factsReported": "Meldt deltakelse",
     "factsMarked": "Merket som mottatt av forfattere",
-    "factsNote": "For lukkede Behov. Merket settes av forfatteren av et Behov; Social Organizer kontrollerer det ikke."
+    "factsNote": "For lukkede Behov. Merket settes av forfatteren av et Behov; Social Organizer kontrollerer det ikke.",
+    "requestDeclined": "Bekjentskapet ble ikke bekreftet. Hvis dere kjenner hverandre, vis hverandre QR-koden når dere møtes."
   },
   "help": {
     "faq": "Spørsmål og svar",

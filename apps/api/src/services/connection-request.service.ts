@@ -180,3 +180,51 @@ export async function respondToConnectionRequest(
 
   return { ...base, outcome: action === 'accept' ? 'accepted' : 'rejected' };
 }
+
+/** How long a withdrawn request blocks a new one to the same person. */
+export const REQUEST_COOLDOWN_MS = 24 * 60 * 60 * 1000;
+
+export function cooldownUntil(resolvedAt: Date | null): number {
+  return resolvedAt ? resolvedAt.getTime() + REQUEST_COOLDOWN_MS : 0;
+}
+
+/**
+ * Opens a new request from one person to another, by the same rules on every path (direct request,
+ * personal link, the bot's lost-link fallback). The caller has already checked that the two are not
+ * connected and that no request between them is waiting.
+ *
+ * - An earlier request the person declined: not asked again (SO-45, one notice per request). CONFLICT.
+ * - An earlier request withdrawn less than a day ago: TOO_MANY_REQUESTS, against send/withdraw loops.
+ * - Any other earlier row (withdrawn long ago, accepted and the connection removed since) makes room for a
+ *   new row, so the request gets a new id and with it its own notification and a fresh place in the feed.
+ *
+ * Returns the new row, or null when a parallel call created it first (that call sends the notification).
+ */
+export async function openConnectionRequest(
+  db: PrismaClient,
+  fromUserId: string,
+  toUserId: string,
+): Promise<{ id: string } | null> {
+  const previous = await db.pendingConnection.findUnique({
+    where: { fromUserId_toUserId: { fromUserId, toUserId } },
+  });
+  if (previous?.status === 'PENDING') return null;
+  if (previous?.status === 'REJECTED') {
+    throw new TRPCError({ code: 'CONFLICT', message: 'Request declined' });
+  }
+  if (previous?.status === 'CANCELLED' && cooldownUntil(previous.resolvedAt) > Date.now()) {
+    throw new TRPCError({ code: 'TOO_MANY_REQUESTS', message: 'REQUEST_COOLDOWN' });
+  }
+  if (previous) {
+    await db.pendingConnection.deleteMany({ where: { id: previous.id, status: previous.status } });
+  }
+  try {
+    return await db.pendingConnection.create({
+      data: { fromUserId, toUserId, createdAt: new Date() },
+      select: { id: true },
+    });
+  } catch (err: unknown) {
+    if ((err as { code?: string })?.code === 'P2002') return null;
+    throw err;
+  }
+}

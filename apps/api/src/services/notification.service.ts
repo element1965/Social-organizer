@@ -6,6 +6,7 @@ import { findRecipientsViaBfs, type BfsRecipient } from './bfs.service.js';
 import { planWave, recordSent } from './notify-routing.service.js';
 import type { TgReplyMarkup } from './telegram-bot.service.js';
 import { deliver, deliverMany } from './delivery.service.js';
+import { tgEscape } from './tg-html.js';
 
 const WEB_APP_URL = process.env.WEB_APP_URL || 'https://www.orginizer.com';
 
@@ -142,7 +143,7 @@ export async function sendCollectionClosedTg(
     kind: 'collection',
     push: { title: 'Need closed', body: 'A Need you were notified about has been closed.', url: webAppLink },
     telegram: (lang) => ({
-      text: `✅ <b>${tg(lang, 'closed')}</b>\n\n${tg(lang, 'from')}: <b>${creator.name}</b>${amountStr ? `\n${tg(lang, 'amount')}: ${amountStr}` : ''}\n\n${tg(lang, 'closedBody')}`,
+      text: `✅ <b>${tg(lang, 'closed')}</b>\n\n${tg(lang, 'from')}: <b>${tgEscape(creator.name)}</b>${amountStr ? `\n${tg(lang, 'amount')}: ${amountStr}` : ''}\n\n${tg(lang, 'closedBody')}`,
       replyMarkup: { inline_keyboard: [[{ text: `📱 ${tg(lang, 'view')}`, web_app: { url: webAppLink } }]] },
     }),
   }));
@@ -207,7 +208,7 @@ export async function sendPendingNotification(
       push: { title: 'New connection request', body: 'Someone wants to connect with you. Open the app to answer.', url: notificationsUrl },
       telegram: (lang) => {
         const title = tg(lang, 'pendingNew') || 'New connection request';
-        const body = (tg(lang, 'pendingNewBody') || '{{name}} wants to connect').replace('{{name}}', actorName);
+        const body = (tg(lang, 'pendingNewBody') || '{{name}} wants to connect').replace('{{name}}', tgEscape(actorName));
         const tgLine = actorTgUsername ? `\n@${actorTgUsername}` : '';
         const rows: TgReplyMarkup['inline_keyboard'] = [];
         if (pendingId) {
@@ -233,8 +234,8 @@ export async function sendPendingNotification(
       : { title: 'Request declined', body: 'Your connection request was declined.', url: dashboardUrl },
     telegram: (lang) => ({
       text: accepted
-        ? `✅ <b>${tg(lang, 'pendingAccepted') || 'Request accepted'}</b>\n\n${actorName}`
-        : `❌ <b>${tg(lang, 'pendingRejected') || 'Request declined'}</b>\n\n${actorName}\n\n${tg(lang, 'pendingRejectedNext')}`,
+        ? `✅ <b>${tg(lang, 'pendingAccepted') || 'Request accepted'}</b>\n\n${tgEscape(actorName)}`
+        : `❌ <b>${tg(lang, 'pendingRejected') || 'Request declined'}</b>\n\n${tgEscape(actorName)}\n\n${tg(lang, 'pendingRejectedNext')}`,
       replyMarkup: { inline_keyboard: [[{ text: `📱 ${tg(lang, 'open') || 'Open'}`, web_app: { url: dashboardUrl } }]] },
     }),
   });
@@ -254,7 +255,7 @@ export async function sendUserDeletedNotification(
     kind: 'network',
     push: { title: 'Someone left', body: 'A person from your 1st handshake deleted their account.', url: `${WEB_APP_URL}/network` },
     telegram: (lang) => ({
-      text: `👋 <b>${tg(lang, 'userDeleted') || 'User left'}</b>\n\n${(tg(lang, 'userDeletedBody') || '{{name}} from your 1st handshake deleted their account.').replace('{{name}}', deletedUserName)}`,
+      text: `👋 <b>${tg(lang, 'userDeleted') || 'User left'}</b>\n\n${(tg(lang, 'userDeletedBody') || '{{name}} from your 1st handshake deleted their account.').replace('{{name}}', tgEscape(deletedUserName))}`,
     }),
   });
 }
@@ -401,7 +402,7 @@ export async function sendCycleRenewalReminderTg(
     kind: 'cycle',
     push: { title: 'New cycle in 3 days', body: 'A Need you take part in (every 28 days) starts a new cycle in 3 days.', url: webAppLink },
     telegram: (lang) => ({
-      text: `🔔 <b>${tg(lang, 'renewalReminderTitle')}</b>\n\n${tg(lang, 'renewalReminderBody').replace('{{name}}', names.get(userId) || '').replace('{{creator}}', creator.name)}${cycleDetails(lang, contributions.get(userId), periodStart, periodEnd)}`,
+      text: `🔔 <b>${tg(lang, 'renewalReminderTitle')}</b>\n\n${tg(lang, 'renewalReminderBody').replace('{{name}}', tgEscape(names.get(userId))).replace('{{creator}}', tgEscape(creator.name))}${cycleDetails(lang, contributions.get(userId), periodStart, periodEnd)}`,
       replyMarkup: { inline_keyboard: [[{ text: `📱 ${tg(lang, 'open')}`, web_app: { url: webAppLink } }]] },
     }),
   }));
@@ -441,7 +442,7 @@ export async function sendCycleRenewedTg(
       if (collection.chatLink) buttons.push([{ text: `💬 ${tg(lang, 'open')}`, url: collection.chatLink }]);
       buttons.push([{ text: `📱 ${tg(lang, 'view')}`, web_app: { url: webAppLink } }]);
       return {
-        text: `🔁 <b>${tg(lang, 'renewalStartTitle')}</b>\n\n${tg(lang, 'renewalStartBody').replace('{{name}}', names.get(userId) || '').replace('{{creator}}', creator.name)}${cycleDetails(lang, contributions.get(userId), periodStart, periodEnd)}`,
+        text: `🔁 <b>${tg(lang, 'renewalStartTitle')}</b>\n\n${tg(lang, 'renewalStartBody').replace('{{name}}', tgEscape(names.get(userId))).replace('{{creator}}', tgEscape(creator.name))}${cycleDetails(lang, contributions.get(userId), periodStart, periodEnd)}`,
         replyMarkup: { inline_keyboard: buttons },
       };
     },
@@ -477,7 +478,7 @@ async function dispatchNewCollection(
     kind: 'newCollection',
     push,
     telegram: (lang) => ({
-      text: `${isEmergency ? '🚨' : '📢'} <b>${isEmergency ? tg(lang, 'newEmergency') : tg(lang, 'newRegular')}</b>\n\n${tg(lang, 'from')}: <b>${creator.name}</b>${amountStr ? `\n${tg(lang, 'amount')}: ${amountStr}` : ''}\n\n${tg(lang, 'networkSupport')}`,
+      text: `${isEmergency ? '🚨' : '📢'} <b>${isEmergency ? tg(lang, 'newEmergency') : tg(lang, 'newRegular')}</b>\n\n${tg(lang, 'from')}: <b>${tgEscape(creator.name)}</b>${amountStr ? `\n${tg(lang, 'amount')}: ${amountStr}` : ''}\n\n${tg(lang, 'networkSupport')}`,
       replyMarkup: { inline_keyboard: [[{ text: `📱 ${tg(lang, 'open')}`, web_app: { url: webAppLink } }]] },
     }),
   }));

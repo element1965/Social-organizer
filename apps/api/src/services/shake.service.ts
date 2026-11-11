@@ -30,6 +30,10 @@ export type ShakePair = {
   declinedBy?: string;
   state: PairState;
   error?: string;
+  /** Who got the error: a limit message is worded for them and swapped for the other person */
+  errorFor?: string;
+  /** Whether the two were connected before this shake; read once, before anyone answers */
+  connectedBefore?: boolean;
   /** True while the router is writing the connection, so a double tap cannot connect twice */
   connecting?: boolean;
 };
@@ -50,6 +54,10 @@ const ENTRY_TTL_MS = 8000;
 export const PAIR_TTL_MS = 30_000;
 const PAIR_KEEP_MS = 60_000;
 const MIN_GEO_RADIUS_M = 150;
+/** A wider radius would pair strangers far apart (a claimed accuracy of kilometres matches a whole city) */
+const MAX_GEO_RADIUS_M = 500;
+/** Coarser fixes than this say nothing about being in one room: such geo is ignored */
+export const MAX_GEO_ACCURACY_M = 200;
 
 let now: () => number = () => Date.now();
 const entries = new Map<string, ShakeEntry>();
@@ -67,7 +75,7 @@ export function __resetShakeState(): void {
 }
 
 function geoDistanceLimitM(a: ShakeGeo, b: ShakeGeo): number {
-  return Math.max(MIN_GEO_RADIUS_M, a.accuracy + b.accuracy);
+  return Math.min(MAX_GEO_RADIUS_M, Math.max(MIN_GEO_RADIUS_M, a.accuracy + b.accuracy));
 }
 
 /** Both have geo and are farther apart than their accuracy allows: they cannot be together */
@@ -165,7 +173,9 @@ export function registerShake(input: { userId: string; ip: string; geo?: ShakeGe
     if (e.userId === input.userId && !e.pairId) entries.delete(ticket);
   }
   const ticket = randomBytes(12).toString('hex');
-  entries.set(ticket, { ticket, userId: input.userId, at: now(), ip: input.ip, geo: input.geo });
+  // A coarse fix (cell towers, a claimed accuracy of kilometres) cannot place two phones together
+  const geo = input.geo && input.geo.accuracy <= MAX_GEO_ACCURACY_M ? input.geo : undefined;
+  entries.set(ticket, { ticket, userId: input.userId, at: now(), ip: input.ip, geo });
   evaluate();
   return ticket;
 }
@@ -219,12 +229,13 @@ export function recordResponse(pair: ShakePair, userId: string, accept: boolean)
   return 'waiting';
 }
 
-export function finishPair(pair: ShakePair, result: { ok: true } | { ok: false; error: string }): void {
+export function finishPair(pair: ShakePair, result: { ok: true } | { ok: false; error: string; userId: string }): void {
   pair.connecting = false;
   if (result.ok) {
     pair.state = 'connected';
   } else {
     pair.state = 'failed';
     pair.error = result.error;
+    pair.errorFor = result.userId;
   }
 }

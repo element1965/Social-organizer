@@ -1345,7 +1345,8 @@
     "factsTitle": "Katılım",
     "factsReported": "Bildirilen katılım",
     "factsMarked": "Yazarlarca alındı işaretlenen",
-    "factsNote": "Kapanan ihtiyaçlar için. İşareti ihtiyacın yazarı koyar, Social Organizer bunu doğrulamaz."
+    "factsNote": "Kapanan ihtiyaçlar için. İşareti ihtiyacın yazarı koyar, Social Organizer bunu doğrulamaz.",
+    "requestDeclined": "Tanışıklık onaylanmadı. Birbirinizi tanıyorsanız, buluştuğunuzda QR kodunuzu birbirinize gösterin."
   },
   "help": {
     "faq": "Sorular ve yanıtlar",

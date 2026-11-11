@@ -1,5 +1,6 @@
 import type { PrismaClient } from '@so/db';
 import { sendPendingNotification } from './notification.service.js';
+import { openConnectionRequest } from './connection-request.service.js';
 
 /**
  * Resolve an invite token to the inviter's userId.
@@ -60,11 +61,13 @@ export async function applyBotStartInvite(
   });
   if (pending) return;
 
-  const created = await db.pendingConnection.upsert({
-    where: { fromUserId_toUserId: { fromUserId: userId, toUserId: inviterId } },
-    create: { fromUserId: userId, toUserId: inviterId },
-    update: { status: 'PENDING', resolvedAt: null },
-  });
+  // A deleted inviter can never answer: no dead request
+  const inviter = await db.user.findUnique({ where: { id: inviterId }, select: { deletedAt: true } });
+  if (!inviter || inviter.deletedAt) return;
+
+  // Same rules as the link itself: a declined or recently withdrawn request is not reopened
+  const created = await openConnectionRequest(db, userId, inviterId).catch(() => null);
+  if (!created) return;
 
   console.log('[invite-fallback] pending connection created from botStart:', userId, '->', inviterId);
 

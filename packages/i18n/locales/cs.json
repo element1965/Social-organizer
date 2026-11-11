@@ -1367,7 +1367,8 @@
     "factsTitle": "Účast",
     "factsReported": "Hlášení o účasti",
     "factsMarked": "Autory označeno jako přijaté",
-    "factsNote": "U uzavřených potřeb. Značku nastavuje autor potřeby, Social Organizer ji neověřuje."
+    "factsNote": "U uzavřených potřeb. Značku nastavuje autor potřeby, Social Organizer ji neověřuje.",
+    "requestDeclined": "Známost nebyla potvrzena. Pokud se znáte, ukažte si při setkání QR kód."
   },
   "help": {
     "faq": "Otázky a odpovědi",

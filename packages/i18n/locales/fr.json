@@ -1356,7 +1356,8 @@
     "factsTitle": "Participation",
     "factsReported": "Participations déclarées",
     "factsMarked": "Marqué reçu par les auteurs",
-    "factsNote": "Pour les Besoins fermés. La marque est posée par l’auteur du Besoin ; Social Organizer ne la vérifie pas."
+    "factsNote": "Pour les Besoins fermés. La marque est posée par l’auteur du Besoin ; Social Organizer ne la vérifie pas.",
+    "requestDeclined": "La connaissance n'a pas été confirmée. Si vous vous connaissez, montrez-vous votre QR code quand vous vous voyez."
   },
   "help": {
     "faq": "Questions et réponses",

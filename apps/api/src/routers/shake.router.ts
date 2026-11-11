@@ -41,20 +41,30 @@ async function describeMatch(db: PrismaClient, userId: string, pair: ShakePair):
     select: { id: true, name: true, photoUrl: true, deletedAt: true },
   });
   if (!other || other.deletedAt) return null;
-  const [userAId, userBId] = [userId, otherId].sort();
-  const connection = await db.connection.findUnique({
-    where: { userAId_userBId: { userAId: userAId!, userBId: userBId! } },
-    select: { id: true },
-  });
+  // Read once, before anyone answers: after this shake connects them, they must not look "already connected"
+  if (pair.connectedBefore === undefined && pair.state === 'waiting' && !pair.connecting && pair.accepted.size < 2) {
+    const [userAId, userBId] = [userId, otherId].sort();
+    const connection = await db.connection.findUnique({
+      where: { userAId_userBId: { userAId: userAId!, userBId: userBId! } },
+      select: { id: true },
+    });
+    pair.connectedBefore = !!connection;
+  }
+  // A limit message is worded for the person who hit it; the other one sees it the other way round
+  let error = pair.error;
+  if (error && pair.errorFor && pair.errorFor !== userId) {
+    if (error === 'CONNECTION_LIMIT_SELF') error = 'CONNECTION_LIMIT_OTHER';
+    else if (error === 'CONNECTION_LIMIT_OTHER') error = 'CONNECTION_LIMIT_SELF';
+  }
   return {
     state: 'matched',
     pairId: pair.pairId,
     person: { id: other.id, name: other.name, photoUrl: other.photoUrl },
-    alreadyConnected: !!connection,
+    alreadyConnected: pair.connectedBefore === true,
     iAccepted: pair.accepted.has(userId),
     otherAccepted: pair.accepted.has(otherId),
     pairState: pair.state,
-    ...(pair.error ? { error: pair.error } : {}),
+    ...(error ? { error } : {}),
   };
 }
 
@@ -109,7 +119,7 @@ export const shakeRouter = router({
           finishPair(pair, { ok: true });
         } catch (err) {
           const message = err instanceof TRPCError || err instanceof Error ? err.message : 'Connection failed';
-          finishPair(pair, { ok: false, error: message });
+          finishPair(pair, { ok: false, error: message, userId: ctx.userId });
           throw err;
         }
         syncMilestonesForPair(ctx.db, ctx.userId, otherId).catch(() => {});
