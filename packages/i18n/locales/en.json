@@ -1327,7 +1327,10 @@
     "keepPast": "Past Needs stay with their authors",
     "keepPastNote": "without your name",
     "deleteFailed": "Could not delete the account. Check your connection and try again.",
-    "deleteCountsFailed": "Could not load what would be deleted. Check your connection and try again."
+    "deleteCountsFailed": "Could not load what would be deleted. Check your connection and try again.",
+    "showEmail": "Show my e-mail in contacts",
+    "showEmailOn": "Shown in your contacts: {{email}}.",
+    "showEmailOff": "Your sign-in e-mail is visible only to you."
   },
   "person": {
     "accountName": "In the account: {{name}}",

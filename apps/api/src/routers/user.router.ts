@@ -91,7 +91,7 @@ export const userRouter = router({
         if (!canView) return [];
       }
 
-      let contacts = await ctx.db.userContact.findMany({
+      const contacts = await ctx.db.userContact.findMany({
         where: { userId: targetId },
       });
 
@@ -100,17 +100,10 @@ export const userRouter = router({
       if (isOwn) {
         const me = await ctx.db.user.findUnique({
           where: { id: ctx.userId },
-          select: { email: true, platformAccounts: { where: { platform: 'TELEGRAM' }, select: { id: true } } },
+          select: { platformAccounts: { where: { platform: 'TELEGRAM' }, select: { id: true } } },
         });
-        // Account e-mail (Google / e-mail sign-up) becomes the e-mail contact once
-        if (me?.email && !contacts.some(c => c.type === 'email')) {
-          const created = await ctx.db.userContact.upsert({
-            where: { userId_type: { userId: ctx.userId, type: 'email' } },
-            create: { userId: ctx.userId, type: 'email', value: me.email },
-            update: {},
-          });
-          contacts = [...contacts, created];
-        }
+        // The sign-in e-mail stays private: it becomes a contact only when the person switches
+        // "Show my e-mail in contacts" on (Account page). It used to be copied here silently.
         // Telegram is filled automatically only for Telegram sign-in; others type it themselves
         const telegramLocked = (me?.platformAccounts.length ?? 0) > 0;
         return CONTACT_TYPES.map(ct => ({
