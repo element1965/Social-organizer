@@ -304,7 +304,13 @@
       "firstPartBody": "你已告知参与。接下来做什么、怎么做，请在参与者聊天中直接与需求发起人商定。"
     },
     "feedExpand": "展开动态",
-    "feedCollapse": "收起动态"
+    "feedCollapse": "收起动态",
+    "join": {
+      "title": "{{name}} 已在你的圈子里",
+      "loading": "正在加载人脉网络…",
+      "ready": "图谱已更新",
+      "added": "你的网络扩大了：+{{count}}"
+    }
   },
   "people": {
     "title": "{{ring}} · {{count}}",

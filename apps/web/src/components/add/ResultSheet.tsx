@@ -68,21 +68,33 @@ export function ResultSheet({ person, onClose }: ResultSheetProps) {
   };
 
   return (
-    <Sheet open={person != null} onClose={onClose} title={person?.name ?? ''} description={subtitle}>
+    <Sheet
+      open={person != null}
+      onClose={onClose}
+      title={person?.name ?? ''}
+      description={subtitle}
+      leading={
+        person ? (
+          <span className="relative block">
+            <Avatar name={person.name} src={person.photoUrl} size={48} />
+            {person.pending ? null : (
+              <span className="absolute -bottom-1 -right-1 grid h-[22px] w-[22px] place-items-center rounded-full bg-care text-care-on ring-[3px] ring-surface">
+                <IconCheck className="h-3 w-3" />
+              </span>
+            )}
+          </span>
+        ) : null
+      }
+      meta={
+        person && !person.pending ? (
+          <span className="text-micro font-bold text-care">{t('add.resultConfirmed')}</span>
+        ) : null
+      }
+    >
       {person ? (
         <>
-          <div className="flex items-center gap-3">
-            <Avatar name={person.name} src={person.photoUrl} size={48} />
-            <span className="sr-only">{person.name}</span>
-          </div>
           {person.pending ? null : (
-            <div className="mt-3 flex items-center gap-2.5 rounded-lg bg-care-soft px-3 py-2.5 text-label font-bold text-care">
-              <IconCheck className="h-[18px] w-[18px] shrink-0" />
-              {t('add.resultConfirmed')}
-            </div>
-          )}
-          {person.pending ? null : (
-            <div className="mt-4">
+            <div className="mt-1">
               <Input
                 label={t('person.nickname')}
                 hint={t('add.nicknameHint', { name: givenName(person.name) })}

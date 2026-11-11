@@ -307,7 +307,13 @@
       "firstPartBody": "Du har meldt din deltagelse. Hvad og hvordan der skal ske herefter, aftaler du direkte med den, der har meldt behovet, i deltagernes chat."
     },
     "feedExpand": "Fold feedet ud",
-    "feedCollapse": "Fold feedet sammen"
+    "feedCollapse": "Fold feedet sammen",
+    "join": {
+      "title": "{{name}} er i din kreds",
+      "loading": "Indlæser netværket…",
+      "ready": "Grafen er opdateret",
+      "added": "Dit netværk voksede: +{{count}}"
+    }
   },
   "people": {
     "title": "{{ring}} · {{count}}",

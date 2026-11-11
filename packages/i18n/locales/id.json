@@ -304,7 +304,13 @@
       "firstPartBody": "Anda telah menyampaikan partisipasi. Apa dan bagaimana langkah selanjutnya, Anda sepakati langsung dengan penyampai kebutuhan, di chat peserta."
     },
     "feedExpand": "Luaskan umpan",
-    "feedCollapse": "Ciutkan umpan"
+    "feedCollapse": "Ciutkan umpan",
+    "join": {
+      "title": "{{name}} ada di lingkaran Anda",
+      "loading": "Memuat jaringan…",
+      "ready": "Grafik diperbarui",
+      "added": "Jaringan Anda bertambah: +{{count}}"
+    }
   },
   "people": {
     "title": "{{ring}} · {{count}}",

@@ -313,7 +313,13 @@
       "firstPartBody": "Oznámili jste účast. Co a jak udělat dál, domluvíte přímo s autorem potřeby v chatu účastníků."
     },
     "feedExpand": "Rozbalit přehled",
-    "feedCollapse": "Sbalit přehled"
+    "feedCollapse": "Sbalit přehled",
+    "join": {
+      "title": "{{name}} je ve vašem kruhu",
+      "loading": "Načítáme síť známostí…",
+      "ready": "Graf aktualizován",
+      "added": "Síť vyrostla: +{{count}}"
+    }
   },
   "people": {
     "title": "{{ring}} · {{count}}",

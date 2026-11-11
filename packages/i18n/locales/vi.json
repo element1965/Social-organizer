@@ -304,7 +304,13 @@
       "firstPartBody": "Bạn đã thông báo tham gia. Việc tiếp theo là gì và làm thế nào, bạn trao đổi trực tiếp với người đăng nhu cầu, trong chat của người tham gia."
     },
     "feedExpand": "Mở rộng bảng tin",
-    "feedCollapse": "Thu gọn bảng tin"
+    "feedCollapse": "Thu gọn bảng tin",
+    "join": {
+      "title": "{{name}} đã ở trong vòng của bạn",
+      "loading": "Đang tải mạng lưới…",
+      "ready": "Đã cập nhật biểu đồ",
+      "added": "Mạng lưới của bạn tăng: +{{count}}"
+    }
   },
   "people": {
     "title": "{{ring}} · {{count}}",

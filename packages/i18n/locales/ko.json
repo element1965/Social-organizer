@@ -304,7 +304,13 @@
       "firstPartBody": "참여를 알렸어요. 이후에 무엇을 어떻게 할지는 참여자 채팅에서 필요를 올린 사람과 직접 정하면 돼요."
     },
     "feedExpand": "피드 펼치기",
-    "feedCollapse": "피드 접기"
+    "feedCollapse": "피드 접기",
+    "join": {
+      "title": "{{name}} 님이 내 서클에 들어왔어요",
+      "loading": "네트워크를 불러오는 중…",
+      "ready": "그래프가 업데이트되었어요",
+      "added": "네트워크가 커졌어요: +{{count}}"
+    }
   },
   "people": {
     "title": "{{ring}} · {{count}}",

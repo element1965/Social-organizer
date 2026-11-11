@@ -313,7 +313,13 @@
       "firstPartBody": "Zgłosiłeś udział. Co i jak robić dalej, ustalasz bezpośrednio z autorem potrzeby, w czacie uczestników."
     },
     "feedExpand": "Rozwiń kanał",
-    "feedCollapse": "Zwiń kanał"
+    "feedCollapse": "Zwiń kanał",
+    "join": {
+      "title": "{{name}} jest w Twoim kręgu",
+      "loading": "Wczytujemy sieć znajomości…",
+      "ready": "Graf zaktualizowany",
+      "added": "Sieć urosła: +{{count}}"
+    }
   },
   "people": {
     "title": "{{ring}} · {{count}}",

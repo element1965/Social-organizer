@@ -307,7 +307,13 @@
       "firstPartBody": "Sie haben Ihre Beteiligung gemeldet. Was und wie es weitergeht, besprechen Sie direkt mit der Person, die den Bedarf gemeldet hat, im Chat der Beteiligten."
     },
     "feedExpand": "Feed aufklappen",
-    "feedCollapse": "Feed zuklappen"
+    "feedCollapse": "Feed zuklappen",
+    "join": {
+      "title": "{{name}} ist in deinem Kreis",
+      "loading": "Netzwerk wird geladen…",
+      "ready": "Graph aktualisiert",
+      "added": "Dein Netzwerk ist gewachsen: +{{count}}"
+    }
   },
   "people": {
     "title": "{{ring}} · {{count}}",

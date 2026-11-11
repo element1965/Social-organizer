@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { trpc } from '../../lib/trpc';
 import { useAuth } from '../../hooks/useAuth';
+import { announceJoin, JOIN_MAX_MS, sliceSize, useJoining } from './joining';
 
 export type NetPerson = {
   id: string;
@@ -25,6 +26,8 @@ type SliceNode = {
 /** How often the heavy network queries are re-read on a timer, and how long a fresh answer is reused. */
 export const NETWORK_POLL_MS = 5 * 60_000;
 export const NETWORK_STALE_MS = 60_000;
+/** The cheap count of my own connections: a change in it is how a join made on the other phone shows up here. */
+const COUNT_POLL_MS = 20_000;
 
 /**
  * Graph slice (3 rings) with nicknames applied and a parent for every node, so the UI can say
@@ -37,11 +40,16 @@ export function useCircleNetwork() {
   // own connections is watched every minute and a change in it refreshes them at once.
   const slice = trpc.connection.graphSlice.useQuery(undefined, { refetchInterval: NETWORK_POLL_MS, staleTime: NETWORK_STALE_MS });
   const connections = trpc.connection.list.useQuery(undefined, { refetchInterval: NETWORK_POLL_MS, staleTime: NETWORK_STALE_MS });
-  const count = trpc.connection.getCount.useQuery(undefined, { refetchInterval: 60_000 });
+  const count = trpc.connection.getCount.useQuery(undefined, { refetchInterval: COUNT_POLL_MS });
   const lastCount = useRef<number | null>(null);
   useEffect(() => {
     const now = count.data?.count;
     if (now === undefined) return;
+    if (lastCount.current !== null && now > lastCount.current && !useJoining.getState().person) {
+      // Someone joined from the other side (they scanned my code or accepted my request): the same
+      // "joining" state as for a join made here. It also starts the slice load.
+      void announceJoin(utils, undefined, sliceSize(utils));
+    }
     if (lastCount.current !== null && lastCount.current !== now) {
       void utils.connection.graphSlice.invalidate();
       void utils.connection.list.invalidate();
@@ -57,11 +65,35 @@ export function useCircleNetwork() {
     return map;
   }, [connections.data]);
 
+  // A connection made a moment ago: drawn at once on the first ring, before the slice with their network is back.
+  const joined = useJoining((s) => s.person);
+  const joinedSince = useJoining((s) => s.since);
+  const clearJoin = useJoining((s) => s.clear);
+  const me = trpc.user.me.useQuery(undefined, { enabled: joined != null });
+  const sliceFresh = slice.isSuccess && slice.dataUpdatedAt >= joinedSince && !slice.isFetching;
+  const joinedLoaded = joined != null && sliceFresh;
+  const joinedBefore = useJoining((s) => s.before);
+  useEffect(() => {
+    if (!joined) return;
+    const left = JOIN_MAX_MS - (Date.now() - joinedSince);
+    const timer = window.setTimeout(clearJoin, Math.max(0, left));
+    return () => window.clearTimeout(timer);
+  }, [joined, joinedSince, clearJoin]);
+
   const model = useMemo(() => {
     const people = new Map<string, NetPerson>();
     const parent = new Map<string, string>();
-    const nodes = (slice.data?.nodes ?? []) as SliceNode[];
-    const edges = slice.data?.edges ?? [];
+    let nodes = (slice.data?.nodes ?? []) as SliceNode[];
+    let edges = slice.data?.edges ?? [];
+    if (joined && myId && !nodes.some((n) => n.id === joined.id)) {
+      const extra: SliceNode[] = [];
+      if (!nodes.some((n) => n.id === myId)) {
+        extra.push({ id: myId, name: me.data?.name ?? '', photoUrl: me.data?.photoUrl ?? null, depth: 0, connectionCount: 1, lastSeen: null });
+      }
+      extra.push({ id: joined.id, name: joined.name, photoUrl: joined.photoUrl, depth: 1, connectionCount: 1, lastSeen: null });
+      nodes = [...nodes, ...extra];
+      edges = [...edges, { from: myId, to: joined.id }];
+    }
     for (const n of nodes) {
       const depth = n.id === myId ? 0 : n.depth;
       people.set(n.id, {
@@ -83,7 +115,7 @@ export function useCircleNetwork() {
       if (a.depth === b.depth + 1 && !parent.has(a.id)) parent.set(a.id, b.id);
     }
     return { people, parent, nodes, edges };
-  }, [slice.data, nicknames, myId]);
+  }, [slice.data, nicknames, myId, joined, me.data?.name, me.data?.photoUrl]);
 
   /** Ids from me to the person, inclusive. Empty when the person is not in the slice. */
   const pathTo = useCallback(
@@ -128,6 +160,18 @@ export function useCircleNetwork() {
     pathTo,
     viaNames,
     displayName,
+    /** The person who just joined, while the Circle tells about it; `loaded` once their network is in the slice. */
+    joining: joined
+      ? {
+          person: { ...joined, name: nicknames.get(joined.id) || joined.name },
+          loaded: joinedLoaded,
+          // People who came with them: the slice grew by more than me and the person themselves
+          added: joinedLoaded
+            ? Math.max(0, (slice.data?.nodes.length ?? 0) - Math.max(1, joinedBefore) - 1)
+            : 0,
+        }
+      : null,
+    clearJoining: clearJoin,
   };
 }
 

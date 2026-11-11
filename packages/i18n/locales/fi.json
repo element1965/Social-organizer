@@ -307,7 +307,13 @@
       "firstPartBody": "Olet ilmoittanut osallistumisesta. Mitä tehdä seuraavaksi ja miten, sovit suoraan tarpeen ilmoittajan kanssa osallistujien keskustelussa."
     },
     "feedExpand": "Laajenna syöte",
-    "feedCollapse": "Pienennä syöte"
+    "feedCollapse": "Pienennä syöte",
+    "join": {
+      "title": "{{name}} on piirissäsi",
+      "loading": "Ladataan verkostoa…",
+      "ready": "Graafi päivitetty",
+      "added": "Verkostosi kasvoi: +{{count}}"
+    }
   },
   "people": {
     "title": "{{ring}} · {{count}}",

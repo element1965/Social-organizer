@@ -304,7 +304,13 @@
       "firstPartBody": "参加を知らせました。このあと何をどうするかは、ニーズを知らせた人と参加者のチャットで直接決めます。"
     },
     "feedExpand": "フィードを広げる",
-    "feedCollapse": "フィードをたたむ"
+    "feedCollapse": "フィードをたたむ",
+    "join": {
+      "title": "{{name}}さんがあなたの輪に加わりました",
+      "loading": "ネットワークを読み込み中…",
+      "ready": "グラフを更新しました",
+      "added": "ネットワークが広がりました: +{{count}}"
+    }
   },
   "people": {
     "title": "{{ring}} · {{count}}",

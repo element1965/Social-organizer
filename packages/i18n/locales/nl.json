@@ -307,7 +307,13 @@
       "firstPartBody": "Je hebt je deelname gemeld. Wat je daarna doet en hoe, spreek je rechtstreeks af met de indiener, in de chat van de deelnemers."
     },
     "feedExpand": "Feed uitklappen",
-    "feedCollapse": "Feed inklappen"
+    "feedCollapse": "Feed inklappen",
+    "join": {
+      "title": "{{name}} zit in je kring",
+      "loading": "Netwerk wordt geladen…",
+      "ready": "Graaf bijgewerkt",
+      "added": "Je netwerk is gegroeid: +{{count}}"
+    }
   },
   "people": {
     "title": "{{ring}} · {{count}}",

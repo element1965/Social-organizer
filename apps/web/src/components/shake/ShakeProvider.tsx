@@ -10,6 +10,7 @@ import { useAuth } from '../../hooks/useAuth';
 import { useShakeDetector } from '../../hooks/useShakeDetector';
 import { isScannerActive } from '../../lib/scanner';
 import { refreshNetwork } from '../../lib/refreshNetwork';
+import { announceJoin } from '../circle/joining';
 import { trpc } from '../../lib/trpc';
 
 const SEARCH_POLL_MS = 500;
@@ -130,10 +131,13 @@ function ShakeFlow() {
       if (match.pairState === 'connected' && !celebrated.current) {
         celebrated.current = true;
         void haptic('success');
+        if (!match.alreadyConnected) {
+          void announceJoin(utils, { id: match.person.id, name: match.person.name, photoUrl: match.person.photoUrl ?? null });
+        }
         refreshAfterConnect();
       }
     },
-    [refreshAfterConnect],
+    [refreshAfterConnect, utils],
   );
 
   const poll = useCallback(
