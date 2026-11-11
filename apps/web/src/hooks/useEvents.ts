@@ -405,7 +405,7 @@ export function useEvents(options: { displayName?: (id: string, fallback: string
     mine.isLoading ||
     milestones.isLoading;
 
-  return { events, impulses, loading, unreadCount: unread.data?.count ?? 0, markAcceptedSeen: accepted.markSeen };
+  return { events, impulses, loading, unreadCount: unread.data?.count ?? 0, markAcceptedSeen: accepted.markSeen, dismissAccepted: accepted.dismiss };
 }
 
 /**

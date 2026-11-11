@@ -75,7 +75,7 @@ export function CirclePage() {
   const stats = useCachedNetworkStats();
   const caps = trpc.stats.networkCapabilities.useQuery(undefined, { refetchInterval: NETWORK_POLL_MS, staleTime: NETWORK_STALE_MS });
   const me = trpc.user.me.useQuery();
-  const { events, impulses, loading, markAcceptedSeen } = useEvents({ displayName: net.displayName });
+  const { events, impulses, loading, markAcceptedSeen, dismissAccepted } = useEvents({ displayName: net.displayName });
 
   const hiddenRings = useCircleStore((s) => s.hiddenRings);
   const setRingHidden = useCircleStore((s) => s.setRingHidden);
@@ -292,8 +292,13 @@ export function CirclePage() {
         case 'milestone':
           if (event.milestone) setMilestone(event.milestone);
           return;
-        case 'waiting':
         case 'accepted':
+          // One tap is enough: open the person and take the row off the feed
+          dismissAccepted(event.id.replace(/^acc:/, ''));
+          if (event.personId && !phone && net.people.has(event.personId)) openLayer('person', event.personId);
+          else if (event.personId) navigate(`/person/${event.personId}`);
+          return;
+        case 'waiting':
           if (event.personId && !phone && net.people.has(event.personId)) openLayer('person', event.personId);
           else if (event.personId) navigate(`/person/${event.personId}`);
           return;
@@ -303,7 +308,7 @@ export function CirclePage() {
           if (event.collectionId) navigate(`/collection/${event.collectionId}`);
       }
     },
-    [markRead, navigate, net.people, openLayer, phone],
+    [markRead, navigate, net.people, openLayer, phone, dismissAccepted],
   );
 
   // First handshake: one short congratulation sheet, once (screens.md, "Milestones").
