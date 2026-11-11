@@ -310,7 +310,13 @@
       "firstPartBody": "Ha comunicado su participación. Qué hacer a continuación y cómo, lo acuerda directamente con quien comunicó la necesidad, en el chat de participantes."
     },
     "feedExpand": "Expandir el feed",
-    "feedCollapse": "Contraer el feed"
+    "feedCollapse": "Contraer el feed",
+    "join": {
+      "title": "{{name}} está en tu círculo",
+      "loading": "Cargando su red…",
+      "ready": "Grafo actualizado",
+      "added": "Tu red creció: +{{count}}"
+    }
   },
   "people": {
     "title": "{{ring}} · {{count}}",

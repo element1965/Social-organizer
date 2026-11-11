@@ -9,6 +9,10 @@ type SheetProps = {
   onClose: () => void;
   title: string;
   description?: string;
+  /** Shown left of the title (an avatar), so a person's sheet does not spend a row on it. */
+  leading?: ReactNode;
+  /** A short line under the description, inside the header. */
+  meta?: ReactNode;
   children?: ReactNode;
   footer?: ReactNode;
   /** auto follows the shell: dialog from 1024, sheet below that and on phone shells. */
@@ -22,6 +26,8 @@ export function Sheet({
   onClose,
   title,
   description,
+  leading,
+  meta,
   children,
   footer,
   presentation = 'auto',
@@ -70,14 +76,20 @@ export function Sheet({
     >
       <div onPointerDown={startDrag} onPointerUp={finishDrag} onPointerCancel={() => { dragY.current = null; }}>
         {dialog ? null : <div className="mx-auto mb-3 h-1 w-9 rounded-pill bg-line-strong" aria-hidden />}
-        <h2 id={titleId} className={cn('text-title', dialog ? 'font-extrabold' : 'font-bold')}>
-          {title}
-        </h2>
-        {description ? (
-          <p id={descId} className="mt-1.5 text-caption font-semibold text-ink-muted">
-            {description}
-          </p>
-        ) : null}
+        <div className={leading ? 'flex items-center gap-3.5' : undefined}>
+          {leading ? <div className="shrink-0">{leading}</div> : null}
+          <div className="min-w-0 flex-1">
+            <h2 id={titleId} className={cn('text-title', dialog ? 'font-extrabold' : 'font-bold', leading && 'truncate')}>
+              {title}
+            </h2>
+            {description ? (
+              <p id={descId} className={cn('text-caption font-semibold text-ink-muted', leading ? 'mt-0.5' : 'mt-1.5')}>
+                {description}
+              </p>
+            ) : null}
+            {meta ? <div className="mt-1">{meta}</div> : null}
+          </div>
+        </div>
       </div>
       {children ? <div className="mt-3">{children}</div> : null}
       {footer ? (

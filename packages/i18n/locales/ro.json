@@ -310,7 +310,13 @@
       "firstPartBody": "Ai anunțat participarea. Ce faci mai departe și cum, stabilești direct cu autorul, în chatul participanților."
     },
     "feedExpand": "Extinde fluxul",
-    "feedCollapse": "Restrânge fluxul"
+    "feedCollapse": "Restrânge fluxul",
+    "join": {
+      "title": "{{name}} este în cercul tău",
+      "loading": "Se încarcă rețeaua…",
+      "ready": "Graf actualizat",
+      "added": "Rețeaua ta a crescut: +{{count}}"
+    }
   },
   "people": {
     "title": "{{ring}} · {{count}}",

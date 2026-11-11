@@ -310,7 +310,13 @@
       "firstPartBody": "Vous avez annoncé votre participation. Ce qu’il faut faire ensuite et comment, vous en convenez directement avec l’auteur du besoin, dans le chat des participants."
     },
     "feedExpand": "Déplier le fil",
-    "feedCollapse": "Replier le fil"
+    "feedCollapse": "Replier le fil",
+    "join": {
+      "title": "{{name}} est dans votre cercle",
+      "loading": "Chargement de son réseau…",
+      "ready": "Graphe mis à jour",
+      "added": "Votre réseau a grandi : +{{count}}"
+    }
   },
   "people": {
     "title": "{{ring}} · {{count}}",

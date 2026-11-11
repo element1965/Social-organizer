@@ -307,7 +307,13 @@
       "firstPartBody": "Du har anmält ditt deltagande. Vad som ska göras härnäst och hur avtalar du direkt med den som anmälde behovet, i deltagarnas chatt."
     },
     "feedExpand": "Fäll ut flödet",
-    "feedCollapse": "Fäll ihop flödet"
+    "feedCollapse": "Fäll ihop flödet",
+    "join": {
+      "title": "{{name}} finns i din krets",
+      "loading": "Läser in nätverket…",
+      "ready": "Grafen är uppdaterad",
+      "added": "Ditt nätverk växte: +{{count}}"
+    }
   },
   "people": {
     "title": "{{ring}} · {{count}}",

@@ -18,6 +18,7 @@ import {
   type ScanSession,
 } from '../lib/scanner';
 import { refreshNetwork } from '../lib/refreshNetwork';
+import { announceJoin } from '../components/circle/joining';
 import { trpc } from '../lib/trpc';
 
 const HOLD_MS = 1600;
@@ -104,6 +105,10 @@ function useScanConsume() {
           } catch {
             nickname = invite.inviter.name;
           }
+        }
+        // A new connection: the Circle shows the person at once and starts loading their network now
+        if (!pending && !already) {
+          void announceJoin(utils, { id: result.connectedWith, name: nickname, photoUrl: invite.inviter.photoUrl ?? null });
         }
         await refreshNetwork(utils);
         setNotice(null);

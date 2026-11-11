@@ -307,7 +307,13 @@
       "firstPartBody": "You have reported Participation. What to do next and how, you agree directly with the author, in the participants’ chat."
     },
     "feedExpand": "Expand the feed",
-    "feedCollapse": "Collapse the feed"
+    "feedCollapse": "Collapse the feed",
+    "join": {
+      "title": "{{name}} is in your circle",
+      "loading": "Loading their network…",
+      "ready": "Graph updated",
+      "added": "Your network grew: +{{count}}"
+    }
   },
   "people": {
     "title": "{{ring}} · {{count}}",

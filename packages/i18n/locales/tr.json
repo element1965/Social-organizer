@@ -307,7 +307,13 @@
       "firstPartBody": "Katılımınızı bildirdiniz. Bundan sonra ne yapılacağını ve nasıl yapılacağını, katılımcı sohbetinde ihtiyacı bildiren kişiyle doğrudan kararlaştırırsınız."
     },
     "feedExpand": "Akışı genişlet",
-    "feedCollapse": "Akışı daralt"
+    "feedCollapse": "Akışı daralt",
+    "join": {
+      "title": "{{name}} artık çevrenizde",
+      "loading": "Ağ yükleniyor…",
+      "ready": "Grafik güncellendi",
+      "added": "Ağınız büyüdü: +{{count}}"
+    }
   },
   "people": {
     "title": "{{ring}} · {{count}}",

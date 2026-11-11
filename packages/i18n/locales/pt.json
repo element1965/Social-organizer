@@ -310,7 +310,13 @@
       "firstPartBody": "Você informou sua participação. O que fazer a seguir e como, você combina diretamente com o autor, no chat dos participantes."
     },
     "feedExpand": "Expandir o feed",
-    "feedCollapse": "Recolher o feed"
+    "feedCollapse": "Recolher o feed",
+    "join": {
+      "title": "{{name}} está no seu círculo",
+      "loading": "Carregando a rede…",
+      "ready": "Grafo atualizado",
+      "added": "Sua rede cresceu: +{{count}}"
+    }
   },
   "people": {
     "title": "{{ring}} · {{count}}",

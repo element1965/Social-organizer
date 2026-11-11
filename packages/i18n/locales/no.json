@@ -307,7 +307,13 @@
       "firstPartBody": "Du har meldt om deltakelse. Hva som skal gjøres videre og hvordan, avtaler du direkte med den som meldte behovet, i deltakernes chat."
     },
     "feedExpand": "Utvid feeden",
-    "feedCollapse": "Skjul feeden"
+    "feedCollapse": "Skjul feeden",
+    "join": {
+      "title": "{{name}} er i kretsen din",
+      "loading": "Laster inn nettverket…",
+      "ready": "Grafen er oppdatert",
+      "added": "Nettverket ditt vokste: +{{count}}"
+    }
   },
   "people": {
     "title": "{{ring}} · {{count}}",

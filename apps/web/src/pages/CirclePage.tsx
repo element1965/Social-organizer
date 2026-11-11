@@ -24,6 +24,7 @@ import { PersonCard, type CardPerson } from '../components/circle/PersonCard';
 import { RingChips } from '../components/circle/RingChips';
 import { useFarRings } from '../components/circle/far-rings';
 import { StartCard } from '../components/circle/StartCard';
+import { JoinCard } from '../components/circle/JoinCard';
 import { useCircleNetwork, NETWORK_POLL_MS, NETWORK_STALE_MS } from '../components/circle/network';
 import { IconAim, IconFit, IconMinus, IconPlus, IconShrink, IconUp } from '../components/circle/icons';
 import { ASK_MIN_DIRECT } from '@so/shared';
@@ -92,8 +93,9 @@ export function CirclePage() {
 
   /* ----- numbers ----- */
 
-  const direct = net.connections.data?.length ?? 0;
-  const connectionsReady = net.connections.isSuccess;
+  // A person who joined a moment ago counts before the list of connections is read again
+  const direct = Math.max(net.connections.data?.length ?? 0, net.joining ? 1 : 0);
+  const connectionsReady = net.connections.isSuccess || net.joining != null;
   const empty = connectionsReady && direct === 0;
   const byDepth = (stats.data?.byDepth ?? {}) as Record<number, number>;
   const counts: Record<Ring, number> = { 1: byDepth[1] ?? 0, 2: byDepth[2] ?? 0, 3: byDepth[3] ?? 0 };
@@ -179,7 +181,12 @@ export function CirclePage() {
   // The selection path is the highlight. Active incoming Needs are separate: the graph runs a pulse along each
   // path (asker to me) and, with nobody selected, highlights those paths itself.
   const pathTo = net.pathTo;
-  const highlightPath = useMemo(() => (selectedId ? pathTo(selectedId) : []), [selectedId, pathTo]);
+  // While a new person's network loads, the line to them is lit: the join is visible on the scene itself
+  const joiningId = net.joining && !net.joining.loaded ? net.joining.person.id : null;
+  const highlightPath = useMemo(
+    () => (selectedId ? pathTo(selectedId) : joiningId ? pathTo(joiningId) : []),
+    [selectedId, joiningId, pathTo],
+  );
   const impulsePaths = useMemo(() => {
     const list: Array<{ id: string; ring: number; at: number; path: string[] }> = [];
     for (const need of impulses) {
@@ -349,6 +356,7 @@ export function CirclePage() {
     </>
   ) : (
     <>
+      {net.joining ? <JoinCard joining={net.joining} onDone={net.clearJoining} /> : null}
       <ReviewFeedRows />
       {connectionsReady && direct < ASK_MIN_DIRECT ? <GrowStrip direct={direct} onOpen={() => setPathOpen(true)} /> : null}
       <EventFeed

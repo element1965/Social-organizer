@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Button } from '../ui2/Button';
 import { Sheet } from '../ui2/Sheet';
 import { refreshNetwork } from '../../lib/refreshNetwork';
+import { announceJoin, sliceSize } from '../circle/joining';
 import { trpc } from '../../lib/trpc';
 
 interface ConfirmPerson {
@@ -35,9 +36,12 @@ export function ConfirmSheet({ person, onClose }: ConfirmSheetProps) {
     if (!person) return;
     setError(false);
     try {
+      const before = sliceSize(utils);
       if (kind === 'accept') await accept.mutateAsync({ pendingId: person.pendingId });
       else await reject.mutateAsync({ pendingId: person.pendingId });
       await refresh();
+      // The newest connection is the person just confirmed
+      if (kind === 'accept') void announceJoin(utils, undefined, before);
       onClose();
     } catch {
       setError(true);
