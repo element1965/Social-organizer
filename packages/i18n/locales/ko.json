@@ -1452,5 +1452,14 @@
     "codeDifferent": "다른 코드",
     "codeWaiting": "상대가 코드를 확인하기를 기다리는 중…",
     "codeLabel": "코드: {{code}}"
+  },
+  "getApp": {
+    "title": "앱 설치하기",
+    "text": "알림이 더 안정적으로 오고, 홈 화면에서 한 번만 누르면 서클이 열립니다.",
+    "dismiss": "숨기기",
+    "row": "휴대폰용 앱",
+    "sheetTitle": "휴대폰용 앱",
+    "play": "Google Play",
+    "appstore": "App Store"
   }
 }

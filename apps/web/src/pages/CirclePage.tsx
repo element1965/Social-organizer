@@ -25,6 +25,7 @@ import { RingChips } from '../components/circle/RingChips';
 import { useFarRings } from '../components/circle/far-rings';
 import { StartCard } from '../components/circle/StartCard';
 import { JoinCard } from '../components/circle/JoinCard';
+import { GetAppCard } from '../components/app/GetApp';
 import { useCircleNetwork, NETWORK_POLL_MS, NETWORK_STALE_MS } from '../components/circle/network';
 import { IconAim, IconFit, IconMinus, IconPlus, IconShrink, IconUp } from '../components/circle/icons';
 import { ASK_MIN_DIRECT } from '@so/shared';
@@ -356,6 +357,7 @@ export function CirclePage() {
         />
       ) : null}
       <StartCard profileDone={profileDone} direct={direct} waiting={(events.some((e) => e.kind === 'waiting'))} />
+      <GetAppCard />
     </>
   ) : (
     <>
@@ -368,6 +370,8 @@ export function CirclePage() {
         onOpen={openEvent}
         onDismiss={dismissEvent}
       />
+      {/* Below the events: what waits for the person matters more than the install prompt */}
+      <GetAppCard />
     </>
   );
 

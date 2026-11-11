@@ -1474,5 +1474,14 @@
     "codeDifferent": "Codice diverso",
     "codeWaiting": "In attesa che l'altra persona confermi il codice…",
     "codeLabel": "Codice: {{code}}"
+  },
+  "getApp": {
+    "title": "Installa l'app",
+    "text": "Le notifiche arrivano in modo più affidabile e il tuo Cerchio è a un tocco dalla schermata Home.",
+    "dismiss": "Nascondi",
+    "row": "L'app per il telefono",
+    "sheetTitle": "L'app per il telefono",
+    "play": "Google Play",
+    "appstore": "App Store"
   }
 }

@@ -1463,5 +1463,14 @@
     "codeDifferent": "Andere code",
     "codeWaiting": "Wachten tot de ander de code bevestigt…",
     "codeLabel": "Code: {{code}}"
+  },
+  "getApp": {
+    "title": "Installeer de app",
+    "text": "Meldingen komen betrouwbaarder binnen en je Kring is één tik verwijderd op je beginscherm.",
+    "dismiss": "Verbergen",
+    "row": "App voor je telefoon",
+    "sheetTitle": "App voor je telefoon",
+    "play": "Google Play",
+    "appstore": "App Store"
   }
 }

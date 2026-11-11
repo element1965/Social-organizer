@@ -1474,5 +1474,14 @@
     "codeDifferent": "Cod diferit",
     "codeWaiting": "Așteptăm ca cealaltă persoană să confirme codul…",
     "codeLabel": "Cod: {{code}}"
+  },
+  "getApp": {
+    "title": "Instalează aplicația",
+    "text": "Notificările ajung mai sigur, iar Cercul tău e la o atingere de ecranul principal.",
+    "dismiss": "Ascunde",
+    "row": "Aplicația pentru telefon",
+    "sheetTitle": "Aplicația pentru telefon",
+    "play": "Google Play",
+    "appstore": "App Store"
   }
 }

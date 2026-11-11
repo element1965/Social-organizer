@@ -14,6 +14,8 @@ import { Segmented } from '../components/ui2/Segmented';
 import { formatMoney } from '../components/ui2/format';
 import { AdminReviews } from '../components/moderation/AdminReviews';
 import { AboutSheet } from '../components/profile/AboutSheet';
+import { GetAppSheet } from '../components/app/GetApp';
+import { isInNativeApp } from '../components/app/getAppPrompt';
 import { Sheet } from '../components/ui2/Sheet';
 import { LogoutSheet } from '../components/onboarding/AccountSheets';
 import { LanguageSheet } from '../components/profile/LanguageSheet';
@@ -80,6 +82,7 @@ export function ProfilePage() {
   const [notesOpen, setNotesOpen] = useState(false);
   const [languageOpen, setLanguageOpen] = useState(false);
   const [aboutOpen, setAboutOpen] = useState(false);
+  const [appOpen, setAppOpen] = useState(false);
   const [stagesOpen, setStagesOpen] = useState(false);
   const [logoutOpen, setLogoutOpen] = useState(false);
   const [autosaveNote, setAutosaveNote] = useState(false);
@@ -299,6 +302,7 @@ export function ProfilePage() {
 
       <Group title={t('profile.more')}>
         <Row title={t('nav.help')} to="/me/help" variant="link" />
+        {isInNativeApp() ? null : <Row title={t('getApp.row')} variant="link" onClick={() => setAppOpen(true)} />}
         <Row title={t('profile.about')} variant="link" onClick={() => setAboutOpen(true)} />
         <Row title={t('settings.logout')} variant="danger" onClick={() => setLogoutOpen(true)} />
       </Group>
@@ -328,6 +332,7 @@ export function ProfilePage() {
 
       <LanguageSheet open={languageOpen} onClose={() => setLanguageOpen(false)} />
       <AboutSheet open={aboutOpen} onClose={() => setAboutOpen(false)} />
+      <GetAppSheet open={appOpen} onClose={() => setAppOpen(false)} />
       <Sheet open={stagesOpen} onClose={() => setStagesOpen(false)} title={t('profile.stages')}>
         <ul className="divide-y divide-line-soft">
           {reached.map((m) => (

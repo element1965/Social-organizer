@@ -1468,5 +1468,14 @@
     "codeDifferent": "Different code",
     "codeWaiting": "Waiting for the other person to confirm the code…",
     "codeLabel": "Code: {{code}}"
+  },
+  "getApp": {
+    "title": "Get the app",
+    "text": "Notifications arrive more reliably, and your Circle is one tap away on the home screen.",
+    "dismiss": "Hide",
+    "row": "App for your phone",
+    "sheetTitle": "App for your phone",
+    "play": "Google Play",
+    "appstore": "App Store"
   }
 }

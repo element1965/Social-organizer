@@ -1485,5 +1485,14 @@
     "codeDifferent": "Inny kod",
     "codeWaiting": "Czekamy, aż druga osoba potwierdzi kod…",
     "codeLabel": "Kod: {{code}}"
+  },
+  "getApp": {
+    "title": "Zainstaluj aplikację",
+    "text": "Powiadomienia docierają pewniej, a Twój Krąg jest o jedno dotknięcie od ekranu głównego.",
+    "dismiss": "Ukryj",
+    "row": "Aplikacja na telefon",
+    "sheetTitle": "Aplikacja na telefon",
+    "play": "Google Play",
+    "appstore": "App Store"
   }
 }

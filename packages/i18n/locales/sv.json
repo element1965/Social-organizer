@@ -1463,5 +1463,14 @@
     "codeDifferent": "Annan kod",
     "codeWaiting": "Väntar på att den andra bekräftar koden…",
     "codeLabel": "Kod: {{code}}"
+  },
+  "getApp": {
+    "title": "Skaffa appen",
+    "text": "Aviseringar kommer fram säkrare, och din Cirkel finns ett tryck bort på hemskärmen.",
+    "dismiss": "Dölj",
+    "row": "App för telefonen",
+    "sheetTitle": "App för telefonen",
+    "play": "Google Play",
+    "appstore": "App Store"
   }
 }

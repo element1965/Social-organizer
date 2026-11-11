@@ -1463,5 +1463,14 @@
     "codeDifferent": "Annen kode",
     "codeWaiting": "Venter på at den andre bekrefter koden…",
     "codeLabel": "Kode: {{code}}"
+  },
+  "getApp": {
+    "title": "Last ned appen",
+    "text": "Varsler kommer sikrere fram, og Sirkelen din er ett trykk unna på hjemskjermen.",
+    "dismiss": "Skjul",
+    "row": "App for telefonen",
+    "sheetTitle": "App for telefonen",
+    "play": "Google Play",
+    "appstore": "App Store"
   }
 }

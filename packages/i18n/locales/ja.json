@@ -1452,5 +1452,14 @@
     "codeDifferent": "違うコード",
     "codeWaiting": "相手がコードを確認するのを待っています…",
     "codeLabel": "コード: {{code}}"
+  },
+  "getApp": {
+    "title": "アプリを入手",
+    "text": "通知がより確実に届き、ホーム画面からワンタップでサークルを開けます。",
+    "dismiss": "非表示",
+    "row": "スマホ用アプリ",
+    "sheetTitle": "スマホ用アプリ",
+    "play": "Google Play",
+    "appstore": "App Store"
   }
 }
