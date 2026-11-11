@@ -99,7 +99,8 @@
 .site-say b { color: var(--care-text); }
 /* "How it works": one sticky figure, the text blocks scroll past it (StepStory in LandingPage.tsx). */
 .site-story { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; margin-top: 24px; }
-.site-story .fig { position: sticky; top: 24px; align-self: start; height: min(440px, calc(100vh - 48px)); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px; background: var(--paper); border-radius: var(--r-2xl); box-shadow: var(--shadow-card); padding: 20px; }
+/* The figure stays in the middle of the screen while the steps scroll past it. */
+.site-story .fig { --fig-h: min(440px, calc(100vh - 48px)); position: sticky; top: calc((100vh - var(--fig-h)) / 2); align-self: start; height: var(--fig-h); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px; background: var(--paper); border-radius: var(--r-2xl); box-shadow: var(--shadow-card); padding: 20px; }
 .site-story .pic { flex: 1; min-height: 0; width: 100%; display: flex; align-items: center; justify-content: center; }
 .site-story .pic svg { height: 100%; width: auto; max-width: 100%; }
 .site-story .bars { display: flex; gap: 6px; }
