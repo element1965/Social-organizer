@@ -29,7 +29,8 @@ export interface AvatarClient {
   hold(url: string): void;
   peek(url: string): THREE.Texture | null;
   request(url: string, nodeId: string): void;
-  pump(apply: (nodeId: string, tex: THREE.Texture, url: string) => void): void;
+  /** Hands at most `max` ready photos to `apply` (the rest wait for the next frame). */
+  pump(apply: (nodeId: string, tex: THREE.Texture, url: string) => void, max?: number): void;
   release(): void;
 }
 
@@ -280,9 +281,10 @@ export function createAvatarClient(): AvatarClient {
       // Already waiting: still kick the queue so a failure older than 10 minutes can retry once.
       enqueue(url);
     },
-    pump(apply) {
+    pump(apply, max = Infinity) {
       if (released) return;
-      while (ready.length > 0) {
+      let left = max;
+      while (ready.length > 0 && left-- > 0) {
         const item = ready.shift();
         if (!item) break;
         readyKeys.delete(`${item.nodeId}\0${item.url}`);

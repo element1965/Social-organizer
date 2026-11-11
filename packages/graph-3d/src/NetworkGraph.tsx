@@ -151,6 +151,15 @@ const DOT_FAR = 1.1;
 const DOT_MAX_PX = 11;
 // Same for a photo: big enough to recognise, never a disc across the view
 const AVATAR_MAX_PX = 34;
+// Photos: decided by their size on screen, not by a distance border the orbiting camera keeps crossing
+const PHOTO_SHOW_PX = 18;        // a photo appears when it would be at least this big on screen
+const PHOTO_HIDE_PX = 15;        // and goes back to a dot below this (a 20% margin)
+const PHOTO_DWELL_MS = 1500;     // a photo that appeared stays at least this long
+const PHOTO_MAX = 40;            // photos on screen at once, the biggest first
+const PHOTO_PRELOAD_PX = 9;      // fetch the photo already from this size, so it is ready when it is wanted
+const PHOTO_PRELOAD_MAX = 60;    // photos kept fetched ahead (well under the 150 the texture cache holds)
+const PHOTO_GROW_MS = 180;       // dot grows into the photo (and back) instead of a swap
+const PHOTOS_PER_FRAME = 4;      // freshly loaded photos applied per frame: no burst of many at once
 const LOD_HYSTERESIS = 1.08;     // a node must move 8% past a LOD border to switch back (no flicker)
 // Nodes the camera flies through fade out instead of filling the screen and blocking the view
 const NEAR_HIDE = 6;
@@ -250,6 +259,12 @@ interface NodeVis {
   wantedAt: number;
   /** 0..1 eased label opacity: names fade in and out instead of blinking while the camera turns */
   labelShow: number;
+  /** 0..1 eased: 0 = the dot, 1 = the full photo; in between the photo grows from the dot size */
+  photoShow: number;
+  /** The photo is wanted now (screen size, the 40 biggest, the dwell) */
+  photoWant: boolean;
+  /** When the photo last started to be wanted (dwell) */
+  photoSince: number;
 }
 
 interface PathState {
@@ -1501,11 +1516,14 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
         v.glow.scale.set(MARK_SIZE * 1.45, MARK_SIZE * 1.45, 1);
       }
     } else {
-      const showPhoto = level === 0 && v.realAvatar;
-      v.avatar.visible = showPhoto;
-      v.avatar.scale.set(avatarSize, avatarSize, 1);
-      v.dot.visible = !showPhoto;
+      const showPhoto = v.realAvatar && v.photoShow > 0.001;
       const dotSize = (level <= 1 ? DOT_NEAR * sf : level === 2 ? DOT_MID * sf : DOT_FAR) * boost;
+      // The photo starts at the dot's size and grows to its own, so nothing jumps
+      const t = 1 - Math.pow(1 - Math.min(1, v.photoShow), 3);
+      const photoSize = dotSize + (avatarSize - dotSize) * t;
+      v.avatar.visible = showPhoto;
+      v.avatar.scale.set(photoSize, photoSize, 1);
+      v.dot.visible = !showPhoto;
       v.dot.scale.set(dotSize, dotSize, 1);
     }
 
@@ -1521,7 +1539,7 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
     }
     if (v.pulse) {
       v.pulse.visible = showPulse;
-      const body = isC ? MARK_SIZE : (v.avatar.visible ? avatarSize : v.dot.scale.x);
+      const body = isC ? MARK_SIZE : (v.avatar.visible ? v.avatar.scale.x : v.dot.scale.x);
       v.pulse.scale.set(body * (isC ? 1.38 : 1.9), body * (isC ? 1.38 : 1.9), 1);
       v.pulse.material = pathRef.current.dim && !onPath ? res.pulseDimMaterial : res.pulseMaterial;
     }
@@ -1531,7 +1549,7 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
       // labelFit keeps the text within a readable on-screen size, whatever the distance (frame loop)
       const k = (isC || v.avatar.visible ? 1 : 0.9) * v.labelFit;
       v.label.scale.set(base.x * k, base.y * k, 1);
-      const body = isC ? MARK_SIZE : (v.avatar.visible ? avatarSize : v.dot.scale.x);
+      const body = isC ? MARK_SIZE : (v.avatar.visible ? v.avatar.scale.x : v.dot.scale.x);
       v.label.position.y = -(body / 2 + (base.y * k) / 2 + (isC ? 0.85 : 0.4));
     }
   }, [res]);
@@ -1658,6 +1676,10 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
       unwantedAt: 0,
       wantedAt: 0,
       labelShow: 0,
+      photoShow: showCached ? 1 : 0,
+      photoWant: showCached,
+      // A photo shown from the cache at mount holds through the first frames, before the first ranking pass
+      photoSince: showCached ? performance.now() : 0,
     };
     introSeenRef.current.add(node.id);
     visRef.current.set(node.id, v);
@@ -1941,6 +1963,8 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
     const camPos = new THREE.Vector3();
     // Labels that would sit on top of another label on screen (recomputed a few times a second)
     const crowded = new Set<string>();
+    // Nodes whose photo may show now (ranking pass)
+    const photoAllowed = new Set<string>();
     // Last time each node was among the nearest few (label hold)
     const nearSince = new Map<string, number>();
     const projV = new THREE.Vector3();
@@ -2122,6 +2146,28 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
         nearestRef.current = next;
       }
 
+      if (labelFrame % 6 === 2) {
+        const el = (fg.renderer() as THREE.WebGLRenderer).domElement;
+        const ppu = ((cam as THREE.PerspectiveCamera).projectionMatrix.elements[5] ?? 1) * (el.clientHeight || 1) * 0.5;
+        const ranked: { v: NodeVis; px: number }[] = [];
+        for (const v of visRef.current.values()) {
+          if (!v.outer.parent || v.node.isCenter || !v.node.photoUrl) continue;
+          const depth = v.node.depth ?? 1;
+          if (hiddenRef.current.has(depth)) continue;
+          const dist = Math.max(1, v.outer.position.distanceTo(camPos));
+          const px = (5 * v.sf * ppu) / dist;
+          if (px >= PHOTO_PRELOAD_PX) ranked.push({ v, px });
+        }
+        ranked.sort((a, b) => b.px - a.px);
+        photoAllowed.clear();
+        for (let i = 0; i < ranked.length; i++) {
+          const { v, px } = ranked[i]!;
+          if (i < PHOTO_PRELOAD_MAX && !v.realAvatar) res.requestPhoto(v.node.photoUrl!, v.node.id);
+          // A shown photo keeps its place down to the lower size (margin); a new one needs the higher
+          if (photoAllowed.size < PHOTO_MAX && px >= (v.photoWant ? PHOTO_HIDE_PX : PHOTO_SHOW_PX)) photoAllowed.add(v.node.id);
+        }
+      }
+
       if (labelFrame % 6 === 1) {
         // Greedy pass in screen pixels, on the label's real box (it hangs under its node): the centre and
         // path labels keep their place, the nearest others next. A name that would cover a kept name, or
@@ -2206,6 +2252,19 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
         }
         if (level !== v.level) applyLevel(v, level);
 
+        if (!v.node.isCenter) {
+          let want = v.realAvatar && photoAllowed.has(v.node.id);
+          if (!want && v.photoWant && now - v.photoSince < PHOTO_DWELL_MS) want = true; // dwell
+          if (want && !v.photoWant) v.photoSince = now;
+          v.photoWant = want;
+          const goal = want ? 1 : 0;
+          if (v.photoShow !== goal) {
+            const step = reduced ? 1 : dt / PHOTO_GROW_MS;
+            v.photoShow = goal > v.photoShow ? Math.min(1, v.photoShow + step) : Math.max(0, v.photoShow - step);
+            applyLevel(v, v.level);
+          }
+        }
+
         const showLabel = wantsLabel(v);
         const kept = !!v.node.isCenter || (pathRef.current.set.has(v.node.id) && !v.node.isDeleted);
         if (showLabel) {
@@ -2248,16 +2307,6 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
             mat.opacity = op;
             mat.transparent = true;
           }
-        }
-        const depth = v.node.depth ?? (v.node.isCenter ? 0 : 1);
-        if (
-          level === 0
-          && !v.node.isCenter
-          && v.node.photoUrl
-          && !v.realAvatar
-          && !hiddenRef.current.has(depth)
-        ) {
-          res.requestPhoto(v.node.photoUrl, v.node.id);
         }
 
         // Dots keep their on-screen size in bounds: far ones a minimum, like stars; near ones a cap, so a dot
@@ -2400,7 +2449,7 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
         v.realAvatar = true;
         paintNode(v);
         if (v.level >= 0) applyLevel(v, v.level);
-      });
+      }, PHOTOS_PER_FRAME);
     };
     raf = requestAnimationFrame(frame);
 
@@ -3280,9 +3329,9 @@ function createResources() {
       if (disposed) return;
       avatars.request(url, nodeId);
     },
-    pumpPhotos(apply: (nodeId: string, tex: THREE.Texture, url: string) => void) {
+    pumpPhotos(apply: (nodeId: string, tex: THREE.Texture, url: string) => void, max?: number) {
       if (disposed) return;
-      avatars.pump(apply);
+      avatars.pump(apply, max);
     },
 
     /** Theme switch: tinted materials are rebuilt, textures stay. */
