@@ -1334,7 +1334,8 @@
     "factsTitle": "参加",
     "factsReported": "知らせた参加の数",
     "factsMarked": "作成者が受け取り済みと記録",
-    "factsNote": "終了したニーズが対象です。記録はニーズの作成者が付けるもので、Social Organizer は確認しません。"
+    "factsNote": "終了したニーズが対象です。記録はニーズの作成者が付けるもので、Social Organizer は確認しません。",
+    "requestDeclined": "知り合いであることは確認されませんでした。知り合いなら、会ったときにお互いの QR コードを見せ合ってください。"
   },
   "help": {
     "faq": "よくある質問",

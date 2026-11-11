@@ -1356,7 +1356,8 @@
     "factsTitle": "Partecipazione",
     "factsReported": "Partecipazioni comunicate",
     "factsMarked": "Segnato come ricevuto dagli autori",
-    "factsNote": "Per i Bisogni chiusi. Il segno lo mette l'autore del Bisogno; Social Organizer non lo verifica."
+    "factsNote": "Per i Bisogni chiusi. Il segno lo mette l'autore del Bisogno; Social Organizer non lo verifica.",
+    "requestDeclined": "La conoscenza non è stata confermata. Se vi conoscete, mostratevi il codice QR quando vi incontrate."
   },
   "help": {
     "faq": "Domande e risposte",

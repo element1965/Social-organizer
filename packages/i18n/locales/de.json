@@ -1345,7 +1345,8 @@
     "factsTitle": "Beteiligung",
     "factsReported": "Beteiligungsmeldungen",
     "factsMarked": "Von Autoren als erhalten markiert",
-    "factsNote": "Bei geschlossenen Bedarfen. Die Markierung setzt der Autor eines Bedarfs; Social Organizer prüft sie nicht."
+    "factsNote": "Bei geschlossenen Bedarfen. Die Markierung setzt der Autor eines Bedarfs; Social Organizer prüft sie nicht.",
+    "requestDeclined": "Die Bekanntschaft wurde nicht bestätigt. Wenn ihr euch kennt, zeigt euch beim Treffen gegenseitig den QR-Code."
   },
   "help": {
     "faq": "Fragen und Antworten",

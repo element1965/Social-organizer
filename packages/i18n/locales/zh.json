@@ -1334,7 +1334,8 @@
     "factsTitle": "参与",
     "factsReported": "参与告知数",
     "factsMarked": "作者标记为已收到",
-    "factsNote": "针对已关闭的需求。标记由需求的作者设置，Social Organizer 不核实。"
+    "factsNote": "针对已关闭的需求。标记由需求的作者设置，Social Organizer 不核实。",
+    "requestDeclined": "相识未被确认。如果你们认识，见面时互相出示二维码即可。"
   },
   "help": {
     "faq": "常见问题",

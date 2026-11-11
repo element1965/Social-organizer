@@ -1345,7 +1345,8 @@
     "factsTitle": "Deltagande",
     "factsReported": "Anmält deltagande",
     "factsMarked": "Markerat som mottaget av författare",
-    "factsNote": "För stängda behov. Markeringen sätts av behovets författare, Social Organizer kontrollerar den inte."
+    "factsNote": "För stängda behov. Markeringen sätts av behovets författare, Social Organizer kontrollerar den inte.",
+    "requestDeclined": "Bekantskapen bekräftades inte. Om ni känner varandra, visa varandra QR-koden när ni ses."
   },
   "help": {
     "faq": "Frågor och svar",

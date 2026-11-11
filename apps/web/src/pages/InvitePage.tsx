@@ -50,11 +50,21 @@ export function InvitePage() {
   const logout = useAuth((s) => s.logout);
   const isRealUser = isAuthenticated;
   // A newcomer decided by the sign-in path (flow.ts), read once before effects can clear anything
-  const [firstRun] = useState(isFirstRunPending);
+  const [firstRun, setFirstRun] = useState(isFirstRunPending);
 
   // Read before any effect: TelegramBootstrap drops the pending token as soon as a signed-in person lands here.
   // Signing in from this invite is the "yes", so it is accepted without asking again.
-  const [cameThroughInvite] = useState(() => !!token && readPending() === token);
+  const [cameThroughInvite, setCameThroughInvite] = useState(() => !!token && readPending() === token);
+
+  // Signed in right on this page without a reload (native Google/Apple return to the same route, so the page
+  // is not mounted again): that sign-in came through the invite too, and a new account goes on to the intro.
+  const [guestHere, setGuestHere] = useState(!isAuthenticated);
+  if (!isAuthenticated && !guestHere) setGuestHere(true);
+  if (isAuthenticated && guestHere) {
+    setGuestHere(false);
+    if (token) setCameThroughInvite(true);
+    if (isFirstRunPending()) setFirstRun(true);
+  }
 
   const invite = trpc.invite.getByToken.useQuery({ token }, { enabled: !!token });
   const me = trpc.user.me.useQuery(undefined, { enabled: isRealUser, retry: 1 });
@@ -187,7 +197,7 @@ function AcceptView({
     if (own || autoTried.current) return;
     if (cameThroughInvite || firstRun) {
       autoTried.current = true;
-      accept.mutate({ token });
+      accept.mutate({ token, viaLink: true });
     }
   }, [own, cameThroughInvite, firstRun, accept, token]);
 
@@ -231,7 +241,11 @@ function AcceptView({
       ? t('add.limitSelf')
       : accept.error.message === 'CONNECTION_LIMIT_OTHER'
         ? t('add.limitOther')
-        : t('invite.failed')
+        : accept.error.message === 'Request declined'
+          ? t('person.requestDeclined')
+          : accept.error.message === 'REQUEST_COOLDOWN'
+            ? t('person.requestCooldownSoon')
+            : t('invite.failed')
     : '';
 
   const name = firstName(inviterName);
@@ -267,7 +281,7 @@ function AcceptView({
           loading={accept.isPending || (accept.isSuccess && firstRun)}
           onClick={() => {
             accept.reset();
-            accept.mutate({ token });
+            accept.mutate({ token, viaLink: true });
           }}
         >
           {accept.error ? t('common.retry') : t('invite.known')}

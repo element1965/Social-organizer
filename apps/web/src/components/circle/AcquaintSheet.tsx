@@ -15,7 +15,7 @@ type Props = {
 };
 
 /** Server error codes from connection-request.service mapped to a clear next step. */
-function errorKey(code: string | undefined): string {
+export function errorKey(code: string | undefined): string {
   switch (code) {
     case 'CONNECTION_LIMIT_SELF':
       return 'add.limitSelf';

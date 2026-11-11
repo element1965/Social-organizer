@@ -1,4 +1,5 @@
 import { createHash } from 'node:crypto';
+import { tgEscape } from './tg-html.js';
 import { getDb } from '@so/db';
 import { translateWithCache } from './translate.service.js';
 import { isRetiredChainMessage } from './mvp-scope.js';
@@ -872,7 +873,7 @@ export async function handleTelegramUpdate(update: TgUpdate): Promise<void> {
       ]);
       const inviterName = inviter?.name || 'Someone';
 
-      await sendTelegramMessage(chatId, loc.invite(name, inviterName, stats.people, stats.totalUsd), {
+      await sendTelegramMessage(chatId, loc.invite(tgEscape(name), tgEscape(inviterName), stats.people, stats.totalUsd), {
         inline_keyboard: [[{ text: loc.acceptBtn, web_app: { url: webAppUrl } }]],
       });
 
@@ -943,7 +944,7 @@ export async function handleTelegramUpdate(update: TgUpdate): Promise<void> {
     }
 
     // Plain /start — open the app + link to landing
-    await sendTelegramMessage(chatId, loc.welcome(name), {
+    await sendTelegramMessage(chatId, loc.welcome(tgEscape(name)), {
       inline_keyboard: [[{ text: loc.openBtn, web_app: { url: WEB_APP_URL } }]],
     });
 

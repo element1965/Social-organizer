@@ -1334,7 +1334,8 @@
     "factsTitle": "Partisipasi",
     "factsReported": "Partisipasi dinyatakan",
     "factsMarked": "Ditandai diterima oleh penulis",
-    "factsNote": "Untuk Kebutuhan yang sudah ditutup. Tanda ini diberikan oleh penulis Kebutuhan; Social Organizer tidak memeriksanya."
+    "factsNote": "Untuk Kebutuhan yang sudah ditutup. Tanda ini diberikan oleh penulis Kebutuhan; Social Organizer tidak memeriksanya.",
+    "requestDeclined": "Perkenalan tidak dikonfirmasi. Jika kalian saling kenal, tunjukkan kode QR satu sama lain saat bertemu."
   },
   "help": {
     "faq": "Pertanyaan dan jawaban",

@@ -1367,7 +1367,8 @@
     "factsTitle": "Udział",
     "factsReported": "Zgłoszony udział",
     "factsMarked": "Oznaczone przez autorów jako otrzymane",
-    "factsNote": "Dotyczy zamkniętych Potrzeb. Oznaczenie ustawia autor Potrzeby; Social Organizer go nie weryfikuje."
+    "factsNote": "Dotyczy zamkniętych Potrzeb. Oznaczenie ustawia autor Potrzeby; Social Organizer go nie weryfikuje.",
+    "requestDeclined": "Znajomość nie została potwierdzona. Jeśli się znacie, pokażcie sobie kod QR przy spotkaniu."
   },
   "help": {
     "faq": "Pytania i odpowiedzi",

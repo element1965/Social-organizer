@@ -4,7 +4,7 @@ import { router, publicProcedure, protectedProcedure } from '../trpc.js';
 import { TRPCError } from '@trpc/server';
 import { sendPendingNotification } from '../services/notification.service.js';
 import { scanMatchesForUser } from '../services/match-notification.service.js';
-import { respondToConnectionRequest, createConnectionWithinLimit, connectInPersonTx } from '../services/connection-request.service.js';
+import { respondToConnectionRequest, createConnectionWithinLimit, connectInPersonTx, openConnectionRequest, assertConnectionSlots } from '../services/connection-request.service.js';
 import { sendTelegramMessage, type TgReplyMarkup } from '../services/telegram-bot.service.js';
 import { syncMilestonesForPair } from '../services/milestone.service.js';
 import { translateWithCache } from '../services/translate.service.js';
@@ -29,7 +29,14 @@ export const inviteRouter = router({
     }),
 
   accept: protectedProcedure
-    .input(z.object({ token: z.string() }))
+    .input(z.object({
+      token: z.string(),
+      /**
+       * Opened as a link (the guest invite page), not scanned in the app. A live QR that expired while a
+       * newcomer was signing up then becomes an ordinary request to the inviter instead of a dead link.
+       */
+      viaLink: z.boolean().optional(),
+    }))
     .mutation(async ({ ctx, input }) => {
       console.log('[invite.accept] userId:', ctx.userId, 'token:', input.token.slice(0, 8) + '...');
 
@@ -54,7 +61,9 @@ export const inviteRouter = router({
 
         if (!invite.usedById) {
           if (invite.expiresAt && invite.expiresAt.getTime() <= Date.now()) {
-            throw new TRPCError({ code: 'NOT_FOUND', message: INVITE_EXPIRED_MESSAGE });
+            if (!input.viaLink) throw new TRPCError({ code: 'NOT_FOUND', message: INVITE_EXPIRED_MESSAGE });
+            // Too late for an in-person connection: a request the inviter confirms, as with their personal link
+            inPerson = false;
           }
           // In-person tokens are claimed later, in the same transaction as the connection
           if (!invite.expiresAt) {
@@ -138,12 +147,11 @@ export const inviteRouter = router({
         return { success: true, pending: true, connectedWith: inviterId };
       }
 
-      // Create pending connection (fromUser = person clicking link, toUser = link owner)
-      const created = await ctx.db.pendingConnection.upsert({
-        where: { fromUserId_toUserId: { fromUserId: ctx.userId, toUserId: inviterId } },
-        create: { fromUserId: ctx.userId, toUserId: inviterId },
-        update: { status: 'PENDING', resolvedAt: null },
-      });
+      // Same rules as a direct request: a declined person is not asked again, a recent withdrawal waits,
+      // and an old row makes room for a new one (its own notification). Meeting in person still connects.
+      await assertConnectionSlots(ctx.db, ctx.userId, inviterId);
+      const created = await openConnectionRequest(ctx.db, ctx.userId, inviterId);
+      if (!created) return { success: true, pending: true, connectedWith: inviterId };
 
       console.log('[invite.accept] pending connection created:', ctx.userId, '->', inviterId);
 
@@ -282,11 +290,22 @@ export const inviteRouter = router({
       });
       if (invite) {
         if (invite.inviter.deletedAt) throw new TRPCError({ code: 'NOT_FOUND', message: 'INVITER_DELETED' });
-        if (invite.expiresAt && !invite.usedById && invite.expiresAt.getTime() <= Date.now()) {
-          throw new TRPCError({ code: 'NOT_FOUND', message: INVITE_EXPIRED_MESSAGE });
-        }
+        // An expired live QR still shows who invited: signing up takes longer than the code lives, and
+        // accepting it from this page sends an ordinary request (accept with viaLink)
+        const expired = !!invite.expiresAt && !invite.usedById && invite.expiresAt.getTime() <= Date.now();
         const stats = await getInviterStats(invite.inviterId);
-        return { ...invite, ...stats };
+        // Only what the page needs: another person's id is never sent, only that someone else used it
+        return {
+          id: invite.id,
+          token: invite.token,
+          inviterId: invite.inviterId,
+          usedById: invite.usedById ? (invite.usedById === ctx.userId ? invite.usedById : 'someone-else') : null,
+          usedAt: invite.usedAt,
+          createdAt: invite.createdAt,
+          expired,
+          inviter: { id: invite.inviter.id, name: invite.inviter.name, photoUrl: invite.inviter.photoUrl },
+          ...stats,
+        };
       }
 
       // Try as permanent link (token = userId), then by referralSlug

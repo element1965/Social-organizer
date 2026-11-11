@@ -217,7 +217,14 @@ function PersonScreen() {
   const joined = (participating.data ?? []).filter((row) => row.collection.creator.id === id);
   const joinedIds = new Set(joined.map((row) => row.id));
   const helpedYou = (history.data?.helpedBy ?? []).filter((row) => row.userId === id && !joinedIds.has(row.id));
-  const requestSent = (outgoing.data ?? []).some((row) => row.toUser.id === id) || (sendRequest.isSuccess && !('autoConnected' in sendRequest.data && sendRequest.data.autoConnected)) || trpcCode(sendRequest.error) === 'CONFLICT';
+  // My request was declined: the person is not asked again (SO-45); meeting in person still connects
+  const declined =
+    sendRequest.error?.message === 'Request declined' || (direct.data?.status === 'rejected' && direct.data.mine);
+  const requestSent =
+    !declined &&
+    ((outgoing.data ?? []).some((row) => row.toUser.id === id) ||
+      (sendRequest.isSuccess && !('autoConnected' in sendRequest.data && sendRequest.data.autoConnected)) ||
+      trpcCode(sendRequest.error) === 'CONFLICT');
 
   // After a withdrawal a new request waits out a cooldown on the server (against send/withdraw loops)
   const retryIso = direct.data?.retryAt ?? (cancelRequest.isSuccess ? cancelRequest.data.retryAt : null);
@@ -320,7 +327,11 @@ function PersonScreen() {
 
       {deeper ? (
         <div className="mt-5">
-          {requestSent ? (
+          {declined ? (
+            <p className="rounded-lg bg-surface px-4 py-3 text-body-s font-semibold text-ink-muted shadow-card">
+              {t('person.requestDeclined')}
+            </p>
+          ) : requestSent ? (
             <div className="flex items-center gap-3 rounded-lg bg-care-soft py-1 pl-4 pr-1">
               <p className="min-w-0 flex-1 py-2 text-body-s font-bold text-care">{t('person.requestSent')}</p>
               <Button

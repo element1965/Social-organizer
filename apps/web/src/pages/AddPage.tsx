@@ -19,7 +19,8 @@ interface ConfirmPerson {
 export function AddPage() {
   const { t } = useTranslation();
   const me = trpc.user.me.useQuery();
-  const incoming = trpc.pending.incoming.useQuery();
+  // A request through my link can arrive while this screen is open
+  const incoming = trpc.pending.incoming.useQuery(undefined, { refetchInterval: 20_000 });
   const connections = trpc.connection.list.useQuery();
   const [confirm, setConfirm] = useState<ConfirmPerson | null>(null);
 
