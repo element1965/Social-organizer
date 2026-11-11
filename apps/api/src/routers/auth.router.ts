@@ -162,6 +162,7 @@ export const authRouter = router({
     .mutation(async ({ ctx, input }) => {
       const user = await ctx.db.user.findUnique({
         where: { email: input.email.toLowerCase() },
+        omit: { passwordHash: false },
       });
 
       if (!user || !user.passwordHash) {
@@ -319,9 +320,14 @@ export const authRouter = router({
 
   refresh: publicProcedure
     .input(z.object({ refreshToken: z.string() }))
-    .mutation(async ({ input }) => {
+    .mutation(async ({ ctx, input }) => {
       const payload = verifyToken(input.refreshToken, 'refresh');
       if (!payload) {
+        throw new TRPCError({ code: 'UNAUTHORIZED', message: 'Invalid refresh token' });
+      }
+      // A deleted account gets no new tokens
+      const user = await ctx.db.user.findUnique({ where: { id: payload.sub }, select: { deletedAt: true } });
+      if (!user || user.deletedAt) {
         throw new TRPCError({ code: 'UNAUTHORIZED', message: 'Invalid refresh token' });
       }
       const accessToken = createAccessToken(payload.sub);
