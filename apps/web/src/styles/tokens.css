@@ -113,6 +113,29 @@
   color-scheme: light;
 }
 
+/*
+ * The Circle scene follows the app theme. Scene tokens stay dark everywhere else (landing hero, QR camera,
+ * figures); inside .scene-follows-theme in the light theme they become a pale scene with ink text.
+ * The 3D graph itself switches to GRAPH_COLORS_LIGHT (CircleGraph, sceneTheme).
+ */
+html:not(.dark) .scene-follows-theme {
+  --so-scene: 238 243 241;
+  --so-scene-2: 248 251 250;
+  --so-scene-3: 226 233 230;
+  --so-node-1: 20 33 30;
+  --so-node-2: 74 90 85;
+  --so-node-3: 138 154 149;
+  --so-care-scene: 8 127 113;
+  --scene: #eef3f1;
+  --scene-2: #f8fbfa;
+  --scene-3: #e2e9e6;
+  --node-1: #14211e;
+  --node-2: #4a5a55;
+  --node-3: #8a9a95;
+  --care-scene: #087f71;
+  --star: rgba(20, 33, 30, 0.3);
+}
+
 html.dark,
 .dark {
   --so-canvas: 18 25 23;

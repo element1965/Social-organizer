@@ -637,7 +637,7 @@ function PhoneCircle({
 
   return (
     <div
-      className={cn('relative overflow-hidden', SCENE_BG)}
+      className={cn('scene-follows-theme relative overflow-hidden', SCENE_BG)}
       // Runs up under the status bar for looks only; everything is laid out in the area below it.
       style={{ marginTop: 'calc(-1 * var(--sa-top))', height: 'calc(100dvh - 84px - var(--sa-bottom))' }}
     >
@@ -866,7 +866,7 @@ function DesktopCircle({ sidebar, graph, graphRef, empty, counts, hiddenRings, s
   }, [person]);
 
   return (
-    <div className="flex h-[calc(100dvh-var(--sa-top)-var(--sa-bottom))] flex-col">
+    <div className="scene-follows-theme flex h-[calc(100dvh-var(--sa-top)-var(--sa-bottom))] flex-col">
       <MainBar
         title={t('nav.circle')}
         action={

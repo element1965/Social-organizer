@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
+import { useIsDark } from '../../hooks/useIsDark';
 import { Link, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { languageNames } from '@so/i18n/languages';
@@ -22,21 +23,6 @@ export function SiteBrand({ small }: { small?: boolean } = {}) {
       {t('landing.site.brand')}
     </Link>
   );
-}
-
-/** True when html.dark is on (the effective theme, whatever the stored mode). */
-function useIsDark(): boolean {
-  const mode = useTheme((s) => s.mode);
-  const [dark, setDark] = useState(() => document.documentElement.classList.contains('dark'));
-  useEffect(() => {
-    const root = document.documentElement;
-    const sync = () => setDark(root.classList.contains('dark'));
-    sync();
-    const mo = new MutationObserver(sync);
-    mo.observe(root, { attributes: true, attributeFilter: ['class'] });
-    return () => mo.disconnect();
-  }, [mode]);
-  return dark;
 }
 
 /** Moon / sun button. Same `theme` key as the app's Auto / Light / Dark setting. */
