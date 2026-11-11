@@ -37,6 +37,8 @@ const HINT_KEY = 'so.circle.gestureHint';
  * run on the shown rings, so a few more are passed: one entirely on a hidden ring must not take a slot.
  */
 const MAX_IMPULSES = 12;
+/** Bottom of the phone graph covered by the ring chips (76 px up + header line + chips): no names there. */
+const PHONE_CHIPS_INSET = 76 + 72;
 const SCENE_BG =
   'bg-scene bg-[radial-gradient(120%_90%_at_50%_38%,rgb(var(--so-scene-2))_0%,rgb(var(--so-scene))_60%)]';
 
@@ -334,6 +336,7 @@ export function CirclePage() {
       focusId={selectedId}
       focusLift={phone ? 0.16 : 0}
       farRings={farRings}
+      labelInsetBottom={phone ? PHONE_CHIPS_INSET : 0}
     />
   );
 
@@ -680,6 +683,18 @@ function PhoneCircle({
       >
         {t('circle.gestureHint')}
       </p>
+
+      {/* Soft scrim under the ring chips in the graph layer, so passing names and dots do not run into them. */}
+      {empty ? null : (
+        <div
+          aria-hidden
+          className={cn(
+            'pointer-events-none absolute inset-x-0 bottom-0 z-10 h-[168px] bg-gradient-to-t from-scene/90 via-scene/60 to-transparent',
+            ease,
+            layer === 'graph' ? 'opacity-100' : 'opacity-0',
+          )}
+        />
+      )}
 
       {/* Ring chips: links to People over the feed, ring filters in the graph layer. */}
       {empty ? null : (
