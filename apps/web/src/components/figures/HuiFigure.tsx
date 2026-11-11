@@ -157,7 +157,7 @@ export function HuiFigure({
       >
         <span style={{ fontSize: 13, fontWeight: 700, color: C.muted }}>{L.months[month]}</span>
         <b style={{ fontSize: small ? 20 : 26, fontWeight: 800, letterSpacing: '-.04em', fontVariantNumeric: 'tabular-nums', lineHeight: 1.1, color: C.ink }}>{potSum}</b>
-        <small style={{ fontSize: 12, fontWeight: 700, color: C.muted }}>{note}</small>
+        <small style={{ fontSize: 12, fontWeight: 700, lineHeight: 1.25, maxWidth: '86%', color: C.muted }}>{note}</small>
       </div>
 
       {names.map((n, i) => {
@@ -250,7 +250,8 @@ export function HuiFigure({
           top = `${p.y}%`;
           opacity = 0;
         } else if (stage === 0) {
-          const p = pt(i, 0.72);
+          // Closer to the pot on a phone: at 320 px a coin at .72 lands on the seat names and on the bottom seat.
+          const p = pt(i, small ? 0.62 : 0.72);
           left = `${p.x}%`;
           top = `${p.y}%`;
         } else if (stage === 1) {

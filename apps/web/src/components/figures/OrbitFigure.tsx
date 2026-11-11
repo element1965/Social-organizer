@@ -65,7 +65,10 @@ export function OrbitFigure({ depth, labels, className }: OrbitFigureProps) {
       </g>
       <You x={C0} y={C0} r={24} halo={depth === 0} label={L.you} />
       {L.pills.map((t, k) => {
-        const p = polar(C0, C0, -42, R[k]!);
+        // -60 is halfway between Kira (-90) and Oleg (-30). The first ring is full of people and names, so its pill
+        // sits just outside them, in the free band before the second ring; the others sit on their own ring, a little higher, so
+        // the first two pills do not touch.
+        const p = k === 0 ? polar(C0, C0, -60, 108) : polar(C0, C0, -66, R[k]!);
         return (
           <g key={k} style={fade} opacity={on(k) ? 1 : 0.35}>
             <Pill x={r1(p.x)} y={r1(p.y)} text={t} hot={depth === k} />

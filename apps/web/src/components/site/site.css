@@ -16,7 +16,8 @@
 }
 .site main { flex: 1; }
 :where(.site) a { color: inherit; text-decoration: none; }
-.site h1, .site h2, .site h3, .site p { margin: 0; }
+/* Zero specificity, so a class on a heading or paragraph (.site-say, .site-note) can set its own margin. */
+:where(.site) :where(h1, h2, h3, p) { margin: 0; }
 .site b, .site strong { font-weight: 800; }
 .site .so-focus:focus-visible,
 .site a:focus-visible,
