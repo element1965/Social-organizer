@@ -83,7 +83,15 @@ export function Sheet({
               {title}
             </h2>
             {description ? (
-              <p id={descId} className={cn('text-caption font-semibold text-ink-muted', leading ? 'mt-0.5' : 'mt-1.5')}>
+              <p
+                id={descId}
+                className={cn(
+                  'font-semibold text-ink-muted',
+                  // A dialog is read, not glanced at: body size
+                  dialog && !leading ? 'mt-2 text-body-s' : 'text-caption',
+                  leading ? 'mt-0.5' : dialog ? null : 'mt-1.5',
+                )}
+              >
                 {description}
               </p>
             ) : null}
@@ -93,7 +101,8 @@ export function Sheet({
       </div>
       {children ? <div className="mt-3">{children}</div> : null}
       {footer ? (
-        <div className={cn('mt-4', dialog ? 'grid grid-cols-2 gap-2.5' : 'flex flex-col gap-2.5')}>{footer}</div>
+        // Dialog: one equal column per button across the full width, so a lone "Close" is not left at half width
+        <div className={cn(dialog ? 'mt-5 grid auto-cols-fr grid-flow-col gap-2.5' : 'mt-4 flex flex-col gap-2.5')}>{footer}</div>
       ) : null}
     </div>
   );

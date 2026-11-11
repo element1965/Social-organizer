@@ -38,8 +38,6 @@ type ShellChromeProps = {
   ask: AskProgress;
   /** What waits for the person on the Circle: Needs to decide, requests to confirm, fresh confirmations. */
   unread?: number;
-  /** Requests to confirm wait on Add as well: a dot there. */
-  addDot?: boolean;
   user: ShellUser;
   theme: ThemeChoice;
   onTheme: (mode: ThemeChoice) => void;
@@ -63,11 +61,9 @@ type ItemProps = {
   onActivate: () => void;
   children: ReactNode;
   badge?: string | null;
-  dot?: boolean;
 };
 
-function NavItem({ to, label, active, rail, interactive, onActivate, children, badge, dot }: ItemProps) {
-  const { t } = useTranslation();
+function NavItem({ to, label, active, rail, interactive, onActivate, children, badge }: ItemProps) {
   const className = cn(
     'so-focus group relative flex items-center gap-3 rounded-md text-body-s font-bold',
     rail ? 'h-[52px] w-[52px] justify-center' : 'h-11 px-3',
@@ -81,8 +77,6 @@ function NavItem({ to, label, active, rail, interactive, onActivate, children, b
         <span className="grid h-[22px] min-w-[22px] place-items-center rounded-pill bg-sos px-1.5 text-micro font-bold tabular-nums text-sos-on">
           {badge}
         </span>
-      ) : !rail && dot ? (
-        <span className="h-2.5 w-2.5 rounded-full bg-sos" aria-label={t('nav.attention')} />
       ) : null}
       {rail ? (
         <span className="pointer-events-none absolute left-[calc(100%+8px)] top-1/2 z-30 -translate-y-1/2 whitespace-nowrap rounded-sm bg-ink px-2 py-1 text-micro font-bold text-canvas opacity-0 group-hover:opacity-100 group-focus-within:opacity-100">
@@ -112,7 +106,6 @@ export function ShellChrome({
   pathname = '/',
   ask,
   unread = 0,
-  addDot = false,
   user,
   interactive = true,
   contained = false,
@@ -150,7 +143,7 @@ export function ShellChrome({
   );
 
   if (mode === 'tabs') {
-    const tab = (to: string, label: string, active: boolean, icon: ReactNode, mark?: { count?: string | null; dot?: boolean }) => {
+    const tab = (to: string, label: string, active: boolean, icon: ReactNode, mark?: { count?: string | null }) => {
       const className = cn(
         'so-focus flex h-full flex-1 flex-col items-center justify-center gap-1 text-tab font-bold',
         active ? 'text-care' : 'text-ink-subtle',
@@ -165,12 +158,10 @@ export function ShellChrome({
               <span className="absolute -right-2.5 -top-1.5 grid h-[18px] min-w-[18px] place-items-center rounded-pill bg-sos px-1 text-micro font-bold leading-none tabular-nums text-sos-on">
                 {mark.count}
               </span>
-            ) : mark?.dot ? (
-              <span className="absolute -right-1 -top-0.5 h-2.5 w-2.5 rounded-full bg-sos ring-2 ring-surface" />
             ) : null}
           </span>
           <span className="block whitespace-nowrap leading-[16px]">{label}</span>
-          {mark?.count || mark?.dot ? <span className="sr-only">{t('nav.attention')}</span> : null}
+          {mark?.count ? <span className="sr-only">{t('nav.attention')}</span> : null}
         </>
       );
       if (!interactive) {
@@ -199,7 +190,7 @@ export function ShellChrome({
         <div className="flex h-[84px]">
           {tab('/', t('nav.circle'), section === 'circle', <IconCircle className="h-[24px] w-[24px]" />, { count: badge })}
           {tab('/ask', t('nav.ask'), section === 'ask', <AskMark progress={ask} />)}
-          {tab('/add', t('nav.add'), section === 'add', <IconAdd className="h-[24px] w-[24px]" />, { dot: addDot })}
+          {tab('/add', t('nav.add'), section === 'add', <IconAdd className="h-[24px] w-[24px]" />)}
           {tab('/me', t('nav.profile'), section === 'profile', <IconPerson className="h-[24px] w-[24px]" />)}
         </div>
       </nav>
@@ -207,7 +198,7 @@ export function ShellChrome({
   }
 
   const addItem = (
-    <NavItem to="/add" label={t('nav.add')} active={section === 'add'} rail={rail} interactive={interactive} onActivate={activate} dot={addDot}>
+    <NavItem to="/add" label={t('nav.add')} active={section === 'add'} rail={rail} interactive={interactive} onActivate={activate}>
       <IconAdd className="h-[22px] w-[22px]" />
     </NavItem>
   );
@@ -286,7 +277,6 @@ function LiveShell() {
   const { data: attention } = trpc.notification.attention.useQuery(undefined, { refetchInterval: 30_000 });
   const accepted = useAcceptedRecent();
   const waiting = (attention?.needs ?? 0) + (attention?.incoming ?? 0) + accepted.unseen;
-  const addDot = (attention?.incoming ?? 0) > 0;
   const { data: me } = trpc.user.me.useQuery();
   const showTabs = mode === 'tabs' && !hidesTabBar(location.pathname);
   const user: ShellUser = {
@@ -306,7 +296,6 @@ function LiveShell() {
           pathname={location.pathname}
           ask={ask}
           unread={waiting}
-          addDot={addDot}
           user={user}
           theme={theme}
           onTheme={setMode}
@@ -325,7 +314,6 @@ function LiveShell() {
           pathname={location.pathname}
           ask={ask}
           unread={waiting}
-          addDot={addDot}
           user={user}
           theme={theme}
           onTheme={setMode}
