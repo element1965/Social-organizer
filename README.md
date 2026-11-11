@@ -234,7 +234,7 @@ createdb social_organizer && pg_restore --no-owner --no-acl -d "$NEW_DATABASE_UR
 Then point `DATABASE_URL` of the API to the new database and deploy. Never restore over the production DB in place — restore into a new database and switch.
 
 ### Incident 26.09–03.10.2026
-The hourly `cleanup-blocked-pending` worker treated any failed `getChat` as "user blocked the bot" and deleted 29 active users at midnight runs (hard delete for users without invitees, soft delete otherwise). Fixed in `768157c`: only HTTP 403 counts as blocked, and a run stops after 3 removals with an alert to the support chat. 28 wrongly removed users were restored (soft-deleted ones fully; hard-deleted ones re-created with the same ids, Telegram link and contacts from the support chat log — their connections were lost).
+The hourly `cleanup-blocked-pending` worker treated any failed `getChat` as "user blocked the bot" and deleted 29 active users at midnight runs (hard delete for users without invitees, soft delete otherwise). Fixed in `768157c`: only HTTP 403 counts as blocked, and a run stops after 3 removals with an alert to the support chat. On 11.11.2026 the send path did the same to a newcomer: the first notification after their invite was confirmed got 403 "bot can't initiate conversation with a user" (they signed in without pressing Start in the bot), the account was muted and they made a second one with Google. Now only an explicit "bot was blocked by the user" / "user is deactivated" mutes anyone (`isBlockedError`, also in the nightly `getChat` check), every 400/403 send failure is logged with Telegram's description, and a muted account comes back when its owner signs in again (`account-restore.service.ts`: a deleted account that still has connections was muted by the bot, since the owner's own deletion removes every connection). Local check: `apps/api/scripts/check-account-recovery.ts`. 28 wrongly removed users were restored (soft-deleted ones fully; hard-deleted ones re-created with the same ids, Telegram link and contacts from the support chat log — their connections were lost).
 
 ## Deployment
 
@@ -301,6 +301,13 @@ node scripts/build-android-staging.mjs --no-web   # reuse apps/web/dist
 
 Capacitor-based iOS wrapper (`apps/web/ios/`) that loads the production web URL. Build via Xcode (`bash scripts/deploy-ios.sh` → Archive → Upload). Bundle `com.socialorganizer.app`, Apple ID `6768132198`. Listing/metadata are managed through the App Store Connect API (key in `secrets/asc/`). Because the UI is served from the web, most fixes ship via a Railway deploy and a plain re-submit of the same binary — a new Xcode archive is only needed for native/Info.plist changes. Full flow in `IOS_DEPLOY.md`; Sign in with Apple setup in `APPLE_SIGNIN.md`.
 
+### Getting the app from the web version
+
+Signed-in users of the web version also see the stores, not only guests on the landing (`components/app/GetApp.tsx`):
+
+- **Circle card** — in a phone browser only (Android → Google Play, iPhone → App Store), below the event feed. Closing it hides it for 30 days (`localStorage` `so.getApp.dismissedAt`). Not shown in the native app, in the Telegram Mini App, or on a computer
+- **Profile → More → "App for your phone"** — a sheet with the store for this device; on a computer (and Telegram Desktop) both stores and a QR to `/get`, which opens the right store on the phone. Hidden in the native app; shown in the Mini App, where links open through `Telegram.WebApp.openLink`
+
 ### Invite referral across surfaces
 
 The landing download buttons carry the inviter's token so new users join the inviter's cluster on first handshake:
@@ -314,7 +321,7 @@ There is one invite link per user — `https://www.orginizer.com/i/TOKEN`, share
 
 ### Connecting Telegram to an existing account
 
-Account (`/me/account`) → "Connect Telegram" (shown to users who signed in with Google / e-mail / Apple) creates a link code and opens `t.me/<bot>?startapp=link_CODE` without showing the digits. `loginWithTelegram` reads `start_param` from the signed initData and calls `linkTelegramByCode` (`apps/api/src/services/telegram-link.service.ts`): a Telegram that was never used is attached to the code owner; an empty duplicate account (no connections, collections or obligations) is merged — Telegram and pending invite requests move over, the duplicate is deleted; a duplicate with data is left alone (`linkResult: 'conflict'`, the mini app shows a message). The Telegram contact is editable by hand until Telegram is connected; the account e-mail fills the e-mail contact.
+Account (`/me/account`) → "Connect Telegram" (shown to users who signed in with Google / e-mail / Apple) creates a link code and opens `t.me/<bot>?startapp=link_CODE` without showing the digits. `loginWithTelegram` reads `start_param` from the signed initData and calls `linkTelegramByCode` (`apps/api/src/services/telegram-link.service.ts`): a Telegram that was never used is attached to the code owner; an empty duplicate account (no connections, collections or obligations) is merged — Telegram and pending invite requests move over, the duplicate is deleted; a duplicate with data is left alone (`linkResult: 'conflict'`, the mini app shows a message) — unless the code owner is the empty one: a person who came back with Google / Apple / e-mail and got a fresh account is folded into the Telegram account with the network (`mergeEmptyAccountInto`: sign-in methods, a proven e-mail and open invite requests move over, the empty account is deleted, `linkResult: 'merged'`). Signing in with Google from a Telegram link code folds an empty Google account the same way. A new account made with Google, Apple or e-mail sees "Already used Social Organizer through Telegram? Connect it" on the intro. The Telegram contact is editable by hand until Telegram is connected; the account e-mail fills the e-mail contact.
 
 ## Web Frontend (apps/web)
 

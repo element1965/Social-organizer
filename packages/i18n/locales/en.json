@@ -536,7 +536,8 @@
     "notifyPushOff": "Turn on push notifications to see them on this device.",
     "notifyNewCollections": "New Needs",
     "notifyNewCollectionsHint": "Tell me when someone I can be notified about reports a Need",
-    "notifyMyEventsHint": "Connection requests and Participation in my Need always come. Participation arrives as one message."
+    "notifyMyEventsHint": "Connection requests and Participation in my Need always come. Participation arrives as one message.",
+    "telegramLinkMerged": "Telegram is connected. You are in your existing account; the empty second one was removed. Sign in the same way on your other devices."
   },
   "faq": {
     "title": "Questions and answers",
@@ -1206,7 +1207,8 @@
       "namePlaceholder": "First and last name",
       "nameHint": "This is how people in your circle will see you.",
       "nameMin": "Enter your name"
-    }
+    },
+    "haveTelegram": "Already used Social Organizer through Telegram? Connect it, and you will stay in that account with your circle instead of starting a second one."
   },
   "add": {
     "linkLabel": "Your link",

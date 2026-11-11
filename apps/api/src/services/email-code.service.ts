@@ -2,6 +2,7 @@ import crypto from 'node:crypto';
 import type { PrismaClient } from '@so/db';
 import { sendMail } from './mail.service.js';
 import { isUniqueViolation } from './identity.service.js';
+import { restoreMutedAccount } from './account-restore.service.js';
 
 /**
  * Sign-in with a one-time e-mail code (SO-21).
@@ -126,6 +127,8 @@ export async function verifyEmailCode(db: PrismaClient, rawEmail: string, code: 
 async function findOrCreateEmailUser(db: PrismaClient, email: string): Promise<{ userId: string; isNew: boolean }> {
   const existing = await db.user.findUnique({ where: { email } });
   if (existing) {
+    // An account the Telegram bot muted comes back when its owner signs in again
+    await restoreMutedAccount(db, existing.id);
     // The same person who once signed up with a password: the code proves the mailbox
     if (!existing.emailVerifiedAt) {
       await db.user.update({ where: { id: existing.id }, data: { emailVerifiedAt: new Date() } });

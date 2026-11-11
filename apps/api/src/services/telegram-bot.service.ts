@@ -111,7 +111,7 @@ export async function checkChatExists(chatId: string | number): Promise<boolean>
     // Only 403 (bot was blocked / user is deactivated) means the user is gone. "chat not found" (400)
     // also comes for people who use the app but never pressed Start in the bot, and 429 / 5xx are
     // transient: since 26.09.2026 the midnight run deleted ~30 active users this way.
-    if (res.status === 403) return false;
+    if (isBlockedError(res.status, json.description)) return false;
     console.warn(`[TG Bot] getChat ${chatId} failed (${res.status}: ${json.description ?? 'no description'}) — treating as reachable`);
     return true;
   } catch {
@@ -120,14 +120,22 @@ export async function checkChatExists(chatId: string | number): Promise<boolean>
   }
 }
 
+/**
+ * Only an explicit "blocked" or "deactivated" answer means the person is gone. Telegram also answers
+ * 403 "bot can't initiate conversation with a user" and 400 "chat not found" to people who signed in
+ * (Login Widget, a mini app opened from a link) but never pressed Start in the bot: they are active
+ * users the bot simply cannot write to first. On 11.11.2026 a newcomer was muted this way by the
+ * first notification after their invite was confirmed.
+ */
 function isBlockedError(status: number, description?: string): boolean {
-  if (status === 403) return true;
-  if (description && (
-    description.includes('bot was blocked') ||
-    description.includes('user is deactivated') ||
-    description.includes('chat not found')
-  )) return true;
-  return false;
+  if (status !== 403 || !description) return false;
+  const d = description.toLowerCase();
+  return d.includes('bot was blocked') || d.includes('user is deactivated');
+}
+
+/** Why a send failed, for the log only: the status and Telegram's short description (never the text). */
+function logSendFailure(chatId: string | number, status: number, description?: string) {
+  console.warn(`[TG] send to ${chatId} failed (${status}: ${description ?? 'no description'})`);
 }
 
 export interface TgReplyMarkup {
@@ -302,6 +310,7 @@ export async function sendTelegramMessage(
     if (json.ok) return true;
 
     // User blocked the bot or account deactivated — remove from DB
+    if (!json.ok && (res.status === 403 || res.status === 400)) logSendFailure(chatId, res.status, json.description);
     if (isBlockedError(res.status, json.description)) {
       if (!opts.keepOnBlocked) await removeBlockedUser(chatId);
       return false;
@@ -383,6 +392,8 @@ export async function sendTelegramPhoto(
 
   if (json.ok) return true;
 
+  if (!json.ok && (res.status === 403 || res.status === 400)) logSendFailure(chatId, res.status, json.description);
+
   if (isBlockedError(res.status, json.description)) {
     await removeBlockedUser(chatId);
     return false;
@@ -455,6 +466,8 @@ export async function sendTelegramVideo(
 
   if (json.ok) return true;
 
+  if (!json.ok && (res.status === 403 || res.status === 400)) logSendFailure(chatId, res.status, json.description);
+
   if (isBlockedError(res.status, json.description)) {
     await removeBlockedUser(chatId);
     return false;
@@ -502,6 +515,7 @@ export async function sendTelegramDocument(
   });
   const json = (await res.json()) as TgApiResponse;
   if (json.ok) return true;
+  if (!json.ok && (res.status === 403 || res.status === 400)) logSendFailure(chatId, res.status, json.description);
   if (isBlockedError(res.status, json.description)) {
     await removeBlockedUser(chatId);
     return false;

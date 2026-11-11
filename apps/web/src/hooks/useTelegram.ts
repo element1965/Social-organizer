@@ -56,6 +56,7 @@ export function useTelegramInit() {
           if (linkResult) {
             const key = linkResult === 'conflict' ? 'settings.telegramLinkConflict'
               : linkResult === 'invalid' ? 'settings.telegramLinkInvalid'
+              : linkResult === 'merged' ? 'settings.telegramLinkMerged'
               : 'settings.telegramConnected';
             const wa = (window as unknown as { Telegram?: { WebApp?: { showAlert?: (m: string) => void } } }).Telegram?.WebApp;
             const text = i18n.t(key);
