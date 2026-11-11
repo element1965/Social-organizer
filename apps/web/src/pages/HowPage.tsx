@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
+import { readPendingInvite, safeInviteToken } from '../components/onboarding/flow';
 import { Trans, useTranslation } from 'react-i18next';
 import { heroCta, useDevice } from '../lib/device';
 import { ChainFigure, HuiFigure, JoinFigure, OrbitFigure, type ChainStep, type JoinStep, type OrbitDepth } from '../components/figures';
@@ -29,6 +30,10 @@ export function HowPage() {
   const links = useStoreLinks();
   const loginHref = useLoginHref();
   const arr = (key: string) => t(key, { returnObjects: true }) as unknown as string[];
+  // Opened from an invite (the guest skipped the landing): every way out leads back to that invite
+  const [params] = useSearchParams();
+  const invite = safeInviteToken(params.get('invite')) ?? (params.has('invite') ? readPendingInvite() : null);
+  const backToInvite = invite ? `/invite/${encodeURIComponent(invite)}` : null;
 
   /* 4. hui table (historical example, shown last) */
   const [month, setMonth] = useState(0);
@@ -61,6 +66,11 @@ export function HowPage() {
   return (
     <SitePage title={t('how.meta.title')} description={t('how.meta.description')} active="how" className="site-how">
       <Reveal as="section" className="site-hero1" aria-labelledby="how-title">
+        {backToInvite ? (
+          <Link className="site-btn secondary md mb-6 self-start" to={backToInvite}>
+            ← {t('how.backToInvite')}
+          </Link>
+        ) : null}
         <h1 id="how-title">{t('how.hero.title')}</h1>
         <p className="lead">
           <Trans i18nKey="how.hero.lead" components={B} />
@@ -142,7 +152,11 @@ export function HowPage() {
 
       <Reveal as="section" className="site-endcta" aria-labelledby="cta-title">
         <h2 id="cta-title">{t('how.cta.title')}</h2>
-        {startHref ? (
+        {backToInvite ? (
+          <Link className="site-btn primary" to={backToInvite}>
+            {t('how.backToInvite')}
+          </Link>
+        ) : startHref ? (
           <a className="site-btn primary" href={startHref} target="_blank" rel="noopener noreferrer">
             {t('how.cta.start')}
           </a>
@@ -151,9 +165,11 @@ export function HowPage() {
             {t('how.cta.start')}
           </Link>
         )}
-        <Link className="site-btn secondary" to={loginHref}>
-          {t('how.cta.web')}
-        </Link>
+        {backToInvite ? null : (
+          <Link className="site-btn secondary" to={loginHref}>
+            {t('how.cta.web')}
+          </Link>
+        )}
       </Reveal>
     </SitePage>
   );

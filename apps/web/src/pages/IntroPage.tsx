@@ -98,9 +98,22 @@ export function IntroPage() {
           )
         }
         foot={
-          <Button className="w-full" loading={complete.isPending || (last && !resolved)} onClick={() => (last ? void finish() : go(step + 1))}>
-            {last ? t('intro.done') : t('intro.next')}
-          </Button>
+          <>
+            <Button className="w-full" loading={complete.isPending || (last && !resolved)} onClick={() => (last ? void finish() : go(step + 1))}>
+              {last ? t('intro.done') : t('intro.next')}
+            </Button>
+            {/* One quiet line under the button: it must not push the button off a phone screen */}
+            {offerTelegram ? (
+              <button
+                type="button"
+                onClick={telegram.connect}
+                disabled={telegram.isPending}
+                className="so-focus mt-2 block min-h-11 w-full text-center text-caption font-semibold text-ink-muted"
+              >
+                {t('intro.haveTelegramLink')}
+              </button>
+            ) : null}
+          </>
         }
       >
         {/* Top row is empty on the intro (no brand), the picture keeps the shared rhythm */}
@@ -133,14 +146,6 @@ export function IntroPage() {
             </button>
           ))}
         </div>
-        {offerTelegram ? (
-          <div className="mt-6 rounded-lg bg-surface-2 px-4 py-3">
-            <p className="text-label font-semibold text-ink-muted">{t('intro.haveTelegram')}</p>
-            <Button className="mt-2" variant="secondary" size="md" loading={telegram.isPending} onClick={telegram.connect}>
-              {t('settings.connectTelegram')}
-            </Button>
-          </div>
-        ) : null}
       </OnboardingFrame>
     </div>
   );

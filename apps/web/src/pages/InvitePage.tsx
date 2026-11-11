@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { trpc } from '../lib/trpc';
 import { useAuth } from '../hooks/useAuth';
@@ -99,7 +99,7 @@ export function InvitePage() {
   const inviter = invite.data.inviter;
   const networkCount = Number((invite.data as { networkCount?: number }).networkCount ?? 0);
   const total = Math.round(Number((invite.data as { totalIntentions?: number }).totalIntentions ?? 0));
-  const hero = <InviteHero name={inviter.name} photoUrl={inviter.photoUrl} networkCount={networkCount} total={total} />;
+  const hero = <InviteHero name={inviter.name} photoUrl={inviter.photoUrl} networkCount={networkCount} total={total} token={token} />;
 
   if (!isRealUser || sessionDead || !me.data) {
     return <SignInFlow top={<BrandLine />} centre redirect={`/invite/${token}`} hero={hero} />;
@@ -113,7 +113,7 @@ export function InvitePage() {
       meId={me.data.id}
       firstRun={firstRun || !me.data.onboardingCompleted}
       cameThroughInvite={cameThroughInvite}
-      hero={<InviteHero name={inviter.name} photoUrl={inviter.photoUrl} networkCount={networkCount} total={total} signedIn />}
+      hero={<InviteHero name={inviter.name} photoUrl={inviter.photoUrl} networkCount={networkCount} total={total} token={token} signedIn />}
     />
   );
 }
@@ -123,12 +123,15 @@ function InviteHero({
   photoUrl,
   networkCount,
   total,
+  token,
   signedIn = false,
 }: {
   name: string;
   photoUrl?: string | null;
   networkCount: number;
   total: number;
+  /** For the way back from "How it works" */
+  token: string;
   /** Signed-in variant: no "sign in" in the sentence. */
   signedIn?: boolean;
 }) {
@@ -147,6 +150,14 @@ function InviteHero({
           </Pill>
         ) : null}
       </div>
+      {/* A guest through a link skips the landing: one tap to the explanation, and a way back to this invite */}
+      <Link
+        to={`/how?invite=${encodeURIComponent(token)}`}
+        className="so-focus mt-4 inline-flex min-h-11 items-center gap-1 text-body-s font-bold text-care"
+      >
+        {t('invite.howItWorks')}
+        <span aria-hidden>→</span>
+      </Link>
     </>
   );
 }

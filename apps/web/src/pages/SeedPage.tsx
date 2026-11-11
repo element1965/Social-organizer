@@ -38,8 +38,12 @@ export function SeedPage() {
     seeded.current = true;
     const current = Math.round(Number((me as { monthlyBudget?: number | null }).monthlyBudget ?? 0));
     if (current >= 1) setValue(String(current));
-    // An e-mail sign-up starts with a name taken from the address: show it so it can be corrected
-    setName(String((me as { name?: string | null }).name ?? ''));
+    // An e-mail sign-up starts with a name taken from the address ("anna.k" from anna.k@…): nobody would
+    // recognise that in their circle, so the field starts empty and asks for a real name instead
+    const currentName = String((me as { name?: string | null }).name ?? '');
+    const email = String((me as { email?: string | null }).email ?? '');
+    const fromAddress = !!email && currentName === (email.split('@')[0] ?? '');
+    setName(fromAddress ? '' : currentName);
   }, [me]);
 
   const amount = value === '' ? NaN : Number(value);
