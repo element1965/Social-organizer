@@ -235,8 +235,6 @@
       "full2": "2. Handschlag",
       "full3": "3. Handschlag",
       "open": "{{ring}}: {{count}}. Liste öffnen",
-      "hide": "{{ring}} im Graph ausblenden",
-      "show": "{{ring}} im Graph anzeigen",
       "caption": "Handschläge",
       "farther": "4.–5.: ~{{value}}",
       "fartherFew": "4.–5.: einige"

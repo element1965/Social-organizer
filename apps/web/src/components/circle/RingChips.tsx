@@ -11,10 +11,8 @@ const DOT: Record<Ring, string> = { 1: 'bg-node-1', 2: 'bg-node-2', 3: 'bg-node-
 
 type RingChipsProps = {
   counts: Record<Ring, number>;
-  /** link: a tap opens People for the ring. filter: a tap hides or shows the ring on the scene. */
-  mode: 'link' | 'filter';
+  /** Rings hidden on the graph (switched in People) are drawn dimmed. */
   hiddenRings: Ring[];
-  onToggle?: (ring: Ring) => void;
   /** "Back to me" button at the end of the row. Omit to hide it. */
   onSelf?: () => void;
   className?: string;
@@ -24,8 +22,10 @@ type RingChipsProps = {
 /**
  * Ring counters on the scene ("● 9 1st") and the "Back to me" button. A one-word caption above the
  * chips says what the rings are, so "1st / 2nd / 3rd" reads without the intro; aria-labels carry the full text.
+ * A tap opens People for the ring, over the feed and on the expanded graph alike; the switch that shows or
+ * hides a ring on the graph is in that list.
  */
-export function RingChips({ counts, mode, hiddenRings, onToggle, onSelf, className, style }: RingChipsProps) {
+export function RingChips({ counts, hiddenRings, onSelf, className, style }: RingChipsProps) {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const far = useFarRings();
@@ -46,14 +46,9 @@ export function RingChips({ counts, mode, hiddenRings, onToggle, onSelf, classNa
             <Chip
               key={ring}
               variant="onscene"
-              aria-pressed={mode === 'filter' ? !hidden : undefined}
-              aria-label={
-                mode === 'filter'
-                  ? t(hidden ? 'circle.rings.show' : 'circle.rings.hide', { ring: t(`circle.rings.full${ring}`) })
-                  : t('circle.rings.open', { ring: t(`circle.rings.full${ring}`), count: counts[ring] })
-              }
+              aria-label={t('circle.rings.open', { ring: t(`circle.rings.full${ring}`), count: counts[ring] })}
               className={cn('backdrop-blur-md', hidden && 'opacity-40')}
-              onClick={() => (mode === 'filter' ? onToggle?.(ring) : navigate(`/people/${ring}`))}
+              onClick={() => navigate(`/people/${ring}`)}
             >
               <i className={cn('h-2 w-2 rounded-full', DOT[ring])} aria-hidden />
               <b className="text-caption font-extrabold tabular-nums tracking-tight text-node-1">{counts[ring]}</b>

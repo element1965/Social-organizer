@@ -233,8 +233,6 @@
       "full2": "2차 악수",
       "full3": "3차 악수",
       "open": "{{ring}}: {{count}}. 목록 열기",
-      "hide": "그래프에서 {{ring}} 숨기기",
-      "show": "그래프에서 {{ring}} 보기",
       "caption": "악수",
       "farther": "4–5번째: 약 {{value}}",
       "fartherFew": "4–5번째: 몇 명"

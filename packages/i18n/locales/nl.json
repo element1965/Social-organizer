@@ -235,8 +235,6 @@
       "full2": "2e handdruk",
       "full3": "3e handdruk",
       "open": "{{ring}}: {{count}}. Lijst openen",
-      "hide": "De {{ring}} verbergen op de graaf",
-      "show": "De {{ring}} tonen op de graaf",
       "caption": "Handdrukken",
       "farther": "4e–5e: ~{{value}}",
       "fartherFew": "4e–5e: een paar"

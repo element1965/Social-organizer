@@ -78,7 +78,6 @@ export function CirclePage() {
   const { events, impulses, loading, markAcceptedSeen, dismissAccepted } = useEvents({ displayName: net.displayName });
 
   const hiddenRings = useCircleStore((s) => s.hiddenRings);
-  const setRingHidden = useCircleStore((s) => s.setRingHidden);
   const setSelected = useCircleStore((s) => s.setSelected);
   const setHighlightPath = useCircleStore((s) => s.setHighlightPath);
 
@@ -360,7 +359,6 @@ export function CirclePage() {
     />
   );
 
-  const toggleRing = (ring: Ring) => setRingHidden(ring, !hiddenRings.includes(ring));
 
   const feedBody = empty ? (
     <>
@@ -434,7 +432,6 @@ export function CirclePage() {
       empty={empty}
       counts={counts}
       hiddenRings={hiddenRings}
-      onToggleRing={toggleRing}
       stats={<NetStats variant="scene" people={peopleCount} canHelp={canHelp} />}
       feed={feedBody}
       eventsCount={events.length}
@@ -464,7 +461,6 @@ type PhoneProps = {
   empty: boolean;
   counts: Record<Ring, number>;
   hiddenRings: Ring[];
-  onToggleRing: (ring: Ring) => void;
   stats: React.ReactNode;
   feed: React.ReactNode;
   eventsCount: number;
@@ -483,7 +479,6 @@ function PhoneCircle({
   empty,
   counts,
   hiddenRings,
-  onToggleRing,
   stats,
   feed,
   eventsCount,
@@ -719,13 +714,11 @@ function PhoneCircle({
         />
       )}
 
-      {/* Ring chips: links to People over the feed, ring filters in the graph layer. */}
+      {/* Ring chips: links to the People list of each ring, over the feed and on the expanded graph. */}
       {empty ? null : (
         <RingChips
           counts={counts}
-          mode={feedLayer ? 'link' : 'filter'}
           hiddenRings={hiddenRings}
-          onToggle={onToggleRing}
           onSelf={() => graphRef.current?.focusOnMe()}
           className={cn(
             'absolute inset-x-4 z-20',
@@ -889,7 +882,7 @@ function DesktopCircle({ sidebar, graph, graphRef, empty, counts, hiddenRings, s
           {graph}
           {empty ? null : (
             <>
-              <RingChips counts={counts} mode="link" hiddenRings={hiddenRings} className="absolute left-4 top-4 z-10" />
+              <RingChips counts={counts} hiddenRings={hiddenRings} className="absolute left-4 top-4 z-10" />
               <div className="absolute right-4 top-4 z-10 flex flex-col gap-2">
                 <button type="button" className={ctl} aria-label={t('circle.zoomIn')} onClick={() => graphRef.current?.zoomIn()}>
                   <IconPlus className="h-5 w-5" />

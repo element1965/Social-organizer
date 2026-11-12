@@ -235,8 +235,6 @@
       "full2": "2. håndtrykk",
       "full3": "3. håndtrykk",
       "open": "{{ring}}: {{count}}. Åpne listen",
-      "hide": "Skjul {{ring}} i grafen",
-      "show": "Vis {{ring}} i grafen",
       "caption": "Håndtrykk",
       "farther": "4.–5.: ~{{value}}",
       "fartherFew": "4.–5.: noen få"

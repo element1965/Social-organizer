@@ -237,8 +237,6 @@
       "full2": "2.º apretón",
       "full3": "3.er apretón",
       "open": "{{ring}}: {{count}}. Abrir la lista",
-      "hide": "Ocultar el {{ring}} en el grafo",
-      "show": "Mostrar el {{ring}} en el grafo",
       "caption": "Apretones de manos",
       "farther": "4.º–5.º: ~{{value}}",
       "fartherFew": "4.º–5.º: algunos"
