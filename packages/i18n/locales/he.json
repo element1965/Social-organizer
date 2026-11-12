@@ -328,10 +328,17 @@
     "inCircle": "{{count}} במעגל שלהם",
     "noneYet": "עדיין לא הוסיפו אף אחד",
     "brought": "הביא/ה {{count}}",
-    "pledged": "{{amount}} הובטחו",
+    "pledged": "כוונה {{amount}}",
     "via": "דרך {{path}}",
     "empty": "עדיין אין אף אחד",
-    "notFound": "לא נמצא אף אחד"
+    "notFound": "לא נמצא אף אחד",
+    "sort": "מיון",
+    "sortRecent": "החדשים",
+    "sortName": "שם",
+    "sortIntention": "כוונה",
+    "sortBrought": "הביאו",
+    "foundElsewhere": "אין אף אחד בשם הזה בלחיצת היד הזו. נמצאו באחרות:",
+    "alsoElsewhere": "גם בלחיצות ידיים אחרות"
   },
   "offline": {
     "banner": "אין חיבור. מוצג העותק ששמור במכשיר זה, {{time}}.",

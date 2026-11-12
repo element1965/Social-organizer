@@ -322,10 +322,17 @@
     "inCircle": "其圈子里有 {{count}} 人",
     "noneYet": "还没有添加任何人",
     "brought": "带来 {{count}} 人",
-    "pledged": "承诺 {{amount}}",
+    "pledged": "意向 {{amount}}",
     "via": "经由 {{path}}",
     "empty": "还没有人",
-    "notFound": "没有找到"
+    "notFound": "没有找到",
+    "sort": "排序",
+    "sortRecent": "最新",
+    "sortName": "姓名",
+    "sortIntention": "意向",
+    "sortBrought": "带来",
+    "foundElsewhere": "这次握手中没有这个名字。在其他握手中找到:",
+    "alsoElsewhere": "其他握手中也有"
   },
   "offline": {
     "banner": "无网络连接。正在显示保存在此设备上的副本，{{time}}。",

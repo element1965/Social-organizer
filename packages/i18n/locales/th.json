@@ -322,10 +322,17 @@
     "inCircle": "{{count}} คนในวงของเขา",
     "noneYet": "ยังไม่ได้เพิ่มใคร",
     "brought": "ชวนมา {{count}} คน",
-    "pledged": "ให้คำมั่น {{amount}}",
+    "pledged": "ความตั้งใจ {{amount}}",
     "via": "ผ่าน {{path}}",
     "empty": "ยังไม่มีใคร",
-    "notFound": "ไม่พบใคร"
+    "notFound": "ไม่พบใคร",
+    "sort": "เรียง",
+    "sortRecent": "ใหม่สุด",
+    "sortName": "ชื่อ",
+    "sortIntention": "ความตั้งใจ",
+    "sortBrought": "ชวนมา",
+    "foundElsewhere": "ไม่มีใครชื่อนี้ในการจับมือครั้งนี้ พบในครั้งอื่น:",
+    "alsoElsewhere": "มีในการจับมือครั้งอื่นด้วย"
   },
   "offline": {
     "banner": "ไม่มีการเชื่อมต่อ กำลังแสดงสำเนาที่บันทึกไว้ในอุปกรณ์นี้ {{time}}",

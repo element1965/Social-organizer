@@ -325,10 +325,17 @@
     "inCircle": "{{count}} in hun kring",
     "noneYet": "Heeft nog niemand toegevoegd",
     "brought": "Bracht {{count}} mee",
-    "pledged": "{{amount}} toegezegd",
+    "pledged": "intentie {{amount}}",
     "via": "via {{path}}",
     "empty": "Nog niemand",
-    "notFound": "Niemand gevonden"
+    "notFound": "Niemand gevonden",
+    "sort": "Volgorde",
+    "sortRecent": "Nieuwste",
+    "sortName": "Naam",
+    "sortIntention": "Intentie",
+    "sortBrought": "Meegebracht",
+    "foundElsewhere": "Niemand met die naam in deze handdruk. Gevonden in andere:",
+    "alsoElsewhere": "Ook in andere handdrukken"
   },
   "offline": {
     "banner": "Geen verbinding. De kopie die op dit apparaat is opgeslagen wordt getoond, {{time}}.",

@@ -325,10 +325,17 @@
     "inCircle": "{{count}} i sin krets",
     "noneYet": "Har inte lagt till någon ännu",
     "brought": "Har bjudit in {{count}}",
-    "pledged": "{{amount}} utlovat",
+    "pledged": "avsikt {{amount}}",
     "via": "via {{path}}",
     "empty": "Ingen ännu",
-    "notFound": "Ingen hittades"
+    "notFound": "Ingen hittades",
+    "sort": "Sortera",
+    "sortRecent": "Nyaste",
+    "sortName": "Namn",
+    "sortIntention": "Avsikt",
+    "sortBrought": "Inbjudna",
+    "foundElsewhere": "Ingen med det namnet i detta handslag. Hittades i andra:",
+    "alsoElsewhere": "Även i andra handslag"
   },
   "offline": {
     "banner": "Ingen anslutning. Visar kopian som sparats på den här enheten, {{time}}.",

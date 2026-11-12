@@ -322,10 +322,17 @@
     "inCircle": "その人のサークルに{{count}}人",
     "noneYet": "まだ誰も加えていません",
     "brought": "{{count}}人を招待",
-    "pledged": "{{amount}}を表明",
+    "pledged": "意向 {{amount}}",
     "via": "{{path}}経由",
     "empty": "まだ誰もいません",
-    "notFound": "見つかりませんでした"
+    "notFound": "見つかりませんでした",
+    "sort": "並び順",
+    "sortRecent": "新しい順",
+    "sortName": "名前",
+    "sortIntention": "意向",
+    "sortBrought": "招待数",
+    "foundElsewhere": "この握手には該当する名前の人がいません。他の握手で見つかりました:",
+    "alsoElsewhere": "他の握手にも"
   },
   "offline": {
     "banner": "接続されていません。この端末に保存したコピーを表示しています（{{time}}）。",

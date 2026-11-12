@@ -337,10 +337,17 @@
     "inCircle": "{{count}} في دائرتهم",
     "noneYet": "لم يُضف أحدًا بعد",
     "brought": "أحضر {{count}}",
-    "pledged": "تعهّد بـ {{amount}}",
+    "pledged": "نيّة {{amount}}",
     "via": "عبر {{path}}",
     "empty": "لا أحد بعد",
-    "notFound": "لم يُعثر على أحد"
+    "notFound": "لم يُعثر على أحد",
+    "sort": "الترتيب",
+    "sortRecent": "الأحدث",
+    "sortName": "الاسم",
+    "sortIntention": "النيّة",
+    "sortBrought": "من أحضرهم",
+    "foundElsewhere": "لا أحد بهذا الاسم في هذه المصافحة. وُجدوا في مصافحات أخرى:",
+    "alsoElsewhere": "أيضًا في مصافحات أخرى"
   },
   "offline": {
     "banner": "لا يوجد اتصال. يتم عرض النسخة المحفوظة على هذا الجهاز، {{time}}.",

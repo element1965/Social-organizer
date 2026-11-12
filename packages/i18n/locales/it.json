@@ -328,10 +328,17 @@
     "inCircle": "{{count}} nel suo cerchio",
     "noneYet": "Non ha ancora aggiunto nessuno",
     "brought": "Ha portato {{count}}",
-    "pledged": "{{amount}} promessi",
+    "pledged": "intenzione {{amount}}",
     "via": "tramite {{path}}",
     "empty": "Ancora nessuno",
-    "notFound": "Nessuno trovato"
+    "notFound": "Nessuno trovato",
+    "sort": "Ordine",
+    "sortRecent": "Recenti",
+    "sortName": "Nome",
+    "sortIntention": "Intenzione",
+    "sortBrought": "Portati",
+    "foundElsewhere": "Nessuno con questo nome in questa stretta di mano. Trovati nelle altre:",
+    "alsoElsewhere": "Anche in altre strette di mano"
   },
   "offline": {
     "banner": "Nessuna connessione. Mostro la copia salvata su questo dispositivo, {{time}}.",

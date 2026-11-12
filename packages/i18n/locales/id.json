@@ -322,10 +322,17 @@
     "inCircle": "{{count}} di lingkaran mereka",
     "noneYet": "Belum menambahkan siapa pun",
     "brought": "Mengajak {{count}}",
-    "pledged": "{{amount}} dijanjikan",
+    "pledged": "niat {{amount}}",
     "via": "lewat {{path}}",
     "empty": "Belum ada siapa pun",
-    "notFound": "Tidak ada yang ditemukan"
+    "notFound": "Tidak ada yang ditemukan",
+    "sort": "Urutan",
+    "sortRecent": "Terbaru",
+    "sortName": "Nama",
+    "sortIntention": "Niat",
+    "sortBrought": "Diajak",
+    "foundElsewhere": "Tidak ada yang bernama itu di jabat tangan ini. Ditemukan di yang lain:",
+    "alsoElsewhere": "Juga di jabat tangan lain"
   },
   "offline": {
     "banner": "Tidak ada koneksi. Menampilkan salinan yang tersimpan di perangkat ini, {{time}}.",

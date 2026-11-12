@@ -325,10 +325,17 @@
     "inCircle": "{{count}} hänen piirissään",
     "noneYet": "Ei ole vielä lisännyt ketään",
     "brought": "Toi mukaan {{count}}",
-    "pledged": "{{amount}} luvattu",
+    "pledged": "aikomus {{amount}}",
     "via": "{{path}} kautta",
     "empty": "Ei vielä ketään",
-    "notFound": "Ketään ei löytynyt"
+    "notFound": "Ketään ei löytynyt",
+    "sort": "Järjestys",
+    "sortRecent": "Uusimmat",
+    "sortName": "Nimi",
+    "sortIntention": "Aikomus",
+    "sortBrought": "Tuonut mukaan",
+    "foundElsewhere": "Tässä kädenpuristuksessa ei ole ketään tällä nimellä. Löytyi muista:",
+    "alsoElsewhere": "Myös muissa kädenpuristuksissa"
   },
   "offline": {
     "banner": "Ei yhteyttä. Näytetään tälle laitteelle tallennettu kopio, {{time}}.",
