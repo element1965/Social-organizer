@@ -673,11 +673,11 @@
     },
     "meta": {
       "title": "Social Organizer — jaringan orang yang Anda kenal",
-      "description": "Bangun jaringan orang yang Anda kenal secara pribadi. Saat seseorang di dalamnya melaporkan kebutuhan, sebanyak dolar yang disebutkannya itulah jumlah orang yang mengetahuinya, dimulai dari yang terdekat. Peserta memutuskan sendiri dan bertindak langsung. Sumber terbuka, proyek nirlaba."
+      "description": "Bangun jaringan orang yang Anda kenal secara pribadi: jaringan ini membagi risiko setiap orang ke banyak orang. Saat seseorang di dalamnya melaporkan kebutuhan, sebanyak dolar yang disebutkannya itulah jumlah orang yang mengetahuinya, dimulai dari yang terdekat. Peserta memutuskan sendiri dan bertindak langsung. Sumber terbuka, proyek nirlaba."
     },
     "hero": {
       "title": "Pertama-tama, jaringan orang yang Anda kenal",
-      "lead": "Social Organizer dimulai dari jaringan Anda: orang yang Anda kenal secara pribadi, dan orang yang mereka kenal. <b>Saat seseorang di dalamnya melaporkan kebutuhan, tepat sebanyak dolar yang disebutkannya itulah jumlah orang yang mengetahuinya.</b> Koordinasi menyusul, langsung di antara peserta.",
+      "lead": "Social Organizer dimulai dari jaringan Anda: orang yang Anda kenal secara pribadi, dan orang yang mereka kenal. Bersama-sama mereka membuat risiko setiap orang dapat ditanggung. <b>Saat seseorang di dalamnya melaporkan kebutuhan, tepat sebanyak dolar yang disebutkannya itulah jumlah orang yang mengetahuinya</b>, dan masing-masing dapat mengambil bagian kecil.",
       "factOpen": "Sumber terbuka",
       "factNonprofit": "Nirlaba",
       "factNoMoney": "Partisipasi sukarela",
@@ -741,7 +741,7 @@
       "p3Title": "Hubungan langsung antarpeserta",
       "p3Text": "Kesepakatan dan tindakan tetap di antara orang-orang yang terhubung lewat perkenalan yang dikonfirmasi.",
       "p4Title": "Jaringan datang lebih dulu",
-      "p4Text": "Sinyal hanya berjalan lewat perkenalan yang dikonfirmasi. Tanpa dana bersama, tanpa operator, tanpa pembagian terpusat."
+      "p4Text": "Sinyal hanya berjalan lewat perkenalan yang dikonfirmasi. Risiko dibagi di antara orang-orang, tidak dikumpulkan di satu tempat: tanpa dana bersama, tanpa operator, tanpa pembayaran yang dijanjikan."
     },
     "faq": {
       "title": "Hal pokok secara singkat",
@@ -758,7 +758,9 @@
       "q6": "Jumlahnya dalam mata uang apa?",
       "a6": "Dalam dolar AS: ini satuan hitung bersama agar jumlah dapat dibandingkan. Mata uang dan cara apa yang dipakai ditentukan sendiri oleh para peserta.",
       "q7": "Apa bedanya dengan platform saling membantu online?",
-      "a7": "Platform saling membantu di Tiongkok punya satu operator, memungut uang dari anggota dan menjanjikan pembayaran seperti asuransi, lalu pada 2021 ditutup. Social Organizer tidak punya operator, dana, maupun pembayaran: hanya orang yang saling kenal, dua sinyal, dan partisipasi sukarela."
+      "a7": "Platform saling membantu di Tiongkok punya satu operator, memungut uang dari anggota dan menjanjikan pembayaran seperti asuransi, lalu pada 2021 ditutup. Social Organizer tidak punya operator, dana, maupun pembayaran: hanya orang yang saling kenal, dua sinyal, dan partisipasi sukarela.",
+      "q8": "Apakah ini asuransi?",
+      "a8": "Bukan. Asuransi mengumpulkan iuran ke dalam dana di muka dan menjanjikan pembayaran. Di sini tidak ada yang membayar di muka dan tidak ada yang dijanjikan: risiko satu orang dibagi ke banyak orang yang saling kenal, dan mereka yang memutuskan ikut masing-masing mengambil bagian kecil."
     }
   },
   "how": {
@@ -895,7 +897,7 @@
     "compare": {
       "title": "Contoh terdekat: saling membantu online di Tiongkok",
       "lead": "Pada 2018–2021 platform saling membantu online di Tiongkok menghimpun ratusan juta anggota: yang terbesar, Xianghubao, punya lebih dari 100 juta. <b>Anggota menanggung bersama biaya penyakit berat satu sama lain, beberapa dolar setahun per orang.</b> Pada 2021 regulator menutup seluruh sektor itu: satu operator pada dasarnya menjalankan asuransi.",
-      "note": "Social Organizer mempertahankan idenya, banyak orang masing-masing mengambil bagian kecil, dan membuang hal yang membuat platform itu rapuh.",
+      "note": "Social Organizer mempertahankan idenya, risiko satu orang dibagi ke banyak orang yang masing-masing mengambil bagian kecil, dan membuang hal yang membuat platform itu rapuh: operator, dana, dan pembayaran yang dijanjikan.",
       "caption": "Platform saling membantu online di Tiongkok dibandingkan dengan Social Organizer",
       "them": "Platform saling membantu online",
       "us": "Social Organizer",

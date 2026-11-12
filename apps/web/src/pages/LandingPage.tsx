@@ -21,7 +21,7 @@ const BEAT_FRAMES: readonly NetStep[] = [0, 0, 1, 2];
 const EXAMPLE_NEED = 300;
 const BEATS = [0, 1, 2, 3] as const;
 const PRINCIPLES = [1, 2, 3, 4] as const;
-const FAQ = [1, 2, 3, 4, 5, 6, 7] as const;
+const FAQ = [1, 2, 3, 4, 5, 6, 7, 8] as const;
 
 const B = { b: <b /> };
 const PUBLIC_STATS_KEY = 'so_publicStats';

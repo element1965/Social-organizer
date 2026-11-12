@@ -677,11 +677,11 @@
     },
     "meta": {
       "title": "Social Organizer — et netværk af mennesker, du kender",
-      "description": "Byg et netværk af mennesker, du kender personligt. Når en i netværket melder et behov, hører præcis lige så mange mennesker om det, som der er dollar i det, de nærmeste først. Deltagerne bestemmer selv og handler direkte. Open source, et nonprofitprojekt."
+      "description": "Byg et netværk af mennesker, du kender personligt: det fordeler hver persons risici ud på mange. Når en i netværket melder et behov, hører præcis lige så mange mennesker om det, som der er dollar i det, de nærmeste først. Deltagerne bestemmer selv og handler direkte. Open source, et nonprofitprojekt."
     },
     "hero": {
       "title": "Først et netværk af mennesker, du kender",
-      "lead": "Social Organizer begynder med dit netværk: mennesker, du kender personligt, og dem, de kender. <b>Når en i netværket melder et behov, hører præcis lige så mange mennesker om det, som der er dollar i det.</b> Koordineringen følger bagefter, direkte mellem deltagerne.",
+      "lead": "Social Organizer begynder med dit netværk: mennesker, du kender personligt, og dem, de kender. Sammen gør de hver persons risici til at bære. <b>Når en i netværket melder et behov, hører præcis lige så mange mennesker om det, som der er dollar i det</b>, og hver af dem kan tage en lille del.",
       "factOpen": "Åben kildekode",
       "factNonprofit": "Ikke-kommerciel",
       "factNoMoney": "Frivillig deltagelse",
@@ -746,7 +746,7 @@
       "p3Title": "Direkte forbindelse mellem deltagerne",
       "p3Text": "Aftaler og handlinger bliver mellem personer, der er forbundet af bekræftede bekendtskaber.",
       "p4Title": "Netværket kommer først",
-      "p4Text": "Signaler går kun gennem bekræftede bekendtskaber. Ingen fælles pulje, ingen operatør, ingen central fordeling."
+      "p4Text": "Signaler går kun gennem bekræftede bekendtskaber. Risici deles mellem mennesker og samles ikke ét sted: ingen fælles pulje, ingen operatør, ingen lovede udbetalinger."
     },
     "faq": {
       "title": "Det vigtigste kort",
@@ -763,7 +763,9 @@
       "q6": "Hvad er beløbene angivet i?",
       "a6": "I amerikanske dollar: en fælles regneenhed, så beløbene kan sammenlignes. Hvilken valuta og hvilken måde, der bruges, afgør deltagerne selv.",
       "q7": "Hvordan adskiller den sig fra onlineplatforme til gensidig hjælp?",
-      "a7": "Kinas platforme til gensidig hjælp havde én operatør, opkrævede penge hos medlemmerne og lovede udbetalinger som en forsikring, og i 2021 blev de lukket. Social Organizer har ingen operatør, ingen pulje og ingen udbetalinger: kun mennesker, der kender hinanden, to signaler og frivillig deltagelse."
+      "a7": "Kinas platforme til gensidig hjælp havde én operatør, opkrævede penge hos medlemmerne og lovede udbetalinger som en forsikring, og i 2021 blev de lukket. Social Organizer har ingen operatør, ingen pulje og ingen udbetalinger: kun mennesker, der kender hinanden, to signaler og frivillig deltagelse.",
+      "q8": "Er det en forsikring?",
+      "a8": "Nej. En forsikring opkræver bidrag til en fond på forhånd og lover en udbetaling. Her betaler ingen noget på forhånd, og intet er lovet: ét menneskes risiko fordeles på mange, der kender hinanden, og de, der beslutter at deltage, tager hver en lille del."
     }
   },
   "how": {
@@ -900,7 +902,7 @@
     "compare": {
       "title": "Det nærmeste eksempel: Kinas gensidige hjælp på nettet",
       "lead": "Fra 2018 til 2021 samlede Kinas onlineplatforme til gensidig hjælp hundredvis af millioner medlemmer: den største, Xianghubao, havde over 100 millioner. <b>Medlemmerne delte udgifterne til hinandens alvorlige sygdomme, nogle få dollar om året hver.</b> I 2021 lukkede myndighederne hele branchen: én operatør drev i praksis en forsikring.",
-      "note": "Social Organizer beholder ideen, mange mennesker, der hver tager en lille del, og dropper det, der gjorde de platforme skrøbelige.",
+      "note": "Social Organizer beholder ideen, at ét menneskes risiko fordeles på mange, som hver tager en lille del, og dropper det, der gjorde de platforme skrøbelige: operatøren, puljen og de lovede udbetalinger.",
       "caption": "Kinas onlineplatforme til gensidig hjælp sammenlignet med Social Organizer",
       "them": "Onlineplatforme til gensidig hjælp",
       "us": "Social Organizer",

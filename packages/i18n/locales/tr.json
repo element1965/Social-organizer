@@ -677,11 +677,11 @@
     },
     "meta": {
       "title": "Social Organizer — tanıdığınız insanların ağı",
-      "description": "Yüz yüze tanıdığınız insanlardan bir ağ kurun. Ağdaki biri ihtiyaç bildirdiğinde, belirtilen dolar kadar kişi bunu öğrenir, en yakınlar önce. Katılımcılar kendileri karar verir ve doğrudan hareket eder. Açık kaynak, kâr amacı gütmeyen bir proje."
+      "description": "Yüz yüze tanıdığınız insanlardan bir ağ kurun: herkesin riskini birçok kişiye yayar. Ağdaki biri ihtiyaç bildirdiğinde, belirtilen dolar kadar kişi bunu öğrenir, en yakınlar önce. Katılımcılar kendileri karar verir ve doğrudan hareket eder. Açık kaynak, kâr amacı gütmeyen bir proje."
     },
     "hero": {
       "title": "Önce tanıdığınız insanların ağı",
-      "lead": "Social Organizer ağınızla başlar: yüz yüze tanıdığınız insanlar ve onların tanıdıkları. <b>Ağdaki biri ihtiyaç bildirdiğinde, belirtilen dolar kadar kişi bunu öğrenir.</b> Eşgüdüm bunun ardından gelir, doğrudan katılımcılar arasında.",
+      "lead": "Social Organizer ağınızla başlar: yüz yüze tanıdığınız insanlar ve onların tanıdıkları. Birlikte herkesin riskini taşınabilir kılarlar. <b>Ağdaki biri ihtiyaç bildirdiğinde, belirtilen dolar kadar kişi bunu öğrenir</b>, ve her biri küçük bir pay üstlenebilir.",
       "factOpen": "Açık kaynak",
       "factNonprofit": "Kâr amacı gütmez",
       "factNoMoney": "Gönüllü katılım",
@@ -746,7 +746,7 @@
       "p3Title": "Katılımcılar arasında doğrudan bağ",
       "p3Text": "Anlaşmalar ve eylemler, onaylanmış tanışıklıkla bağlı kişiler arasında kalır.",
       "p4Title": "Önce ağ gelir",
-      "p4Text": "Sinyaller yalnızca onaylanmış tanışıklıklar üzerinden ilerler. Ortak havuz yok, işletmeci yok, merkezî dağıtım yok."
+      "p4Text": "Sinyaller yalnızca onaylanmış tanışıklıklar üzerinden ilerler. Riskler insanlar arasında paylaşılır, bir yerde toplanmaz: ortak havuz yok, işletmeci yok, vaat edilmiş ödeme yok."
     },
     "faq": {
       "title": "Kısaca temel noktalar",
@@ -763,7 +763,9 @@
       "q6": "Tutarlar hangi birimle belirtilir?",
       "a6": "ABD doları ile: tutarların karşılaştırılabilmesi için ortak bir hesap birimidir. Hangi para biriminin ve hangi yolun kullanılacağına katılımcılar kendileri karar verir.",
       "q7": "Çevrimiçi karşılıklı yardım platformlarından farkı nedir?",
-      "a7": "Çin'deki karşılıklı yardım platformlarının tek bir işletmecisi vardı, üyelerden para toplar ve sigorta gibi ödeme vaat ederdi; 2021'de kapatıldılar. Social Organizer'ın işletmecisi, havuzu ve ödemesi yoktur: yalnızca birbirini tanıyan insanlar, iki sinyal ve gönüllü katılım vardır."
+      "a7": "Çin'deki karşılıklı yardım platformlarının tek bir işletmecisi vardı, üyelerden para toplar ve sigorta gibi ödeme vaat ederdi; 2021'de kapatıldılar. Social Organizer'ın işletmecisi, havuzu ve ödemesi yoktur: yalnızca birbirini tanıyan insanlar, iki sinyal ve gönüllü katılım vardır.",
+      "q8": "Bu bir sigorta mı?",
+      "a8": "Hayır. Sigorta önceden katkı toplayıp bir fona koyar ve ödeme vaat eder. Burada kimse önceden bir şey ödemez ve hiçbir şey vaat edilmez: bir kişinin riski birbirini tanıyan birçok kişiye yayılır, katılmaya karar verenler de küçük bir pay üstlenir."
     }
   },
   "how": {
@@ -900,7 +902,7 @@
     "compare": {
       "title": "En yakın örnek: Çin'de çevrimiçi karşılıklı yardım",
       "lead": "2018'den 2021'e kadar Çin'deki çevrimiçi karşılıklı yardım platformları yüz milyonlarca üye topladı: en büyüğü Xianghubao'nun 100 milyondan fazla üyesi vardı. <b>Üyeler birbirlerinin ağır hastalık masraflarını paylaştı, kişi başı yılda birkaç dolar.</b> 2021'de düzenleyiciler tüm sektörü kapattı: tek bir işletmeci fiilen sigorta işletiyordu.",
-      "note": "Social Organizer fikri korur, yani çok sayıda insanın her birinin küçük bir pay üstlenmesini, ve o platformları kırılgan yapan şeyi bırakır.",
+      "note": "Social Organizer fikri korur, yani bir kişinin riskinin her biri küçük bir pay üstlenen çok kişiye yayılmasını, ve o platformları kırılgan yapan şeyi bırakır: işletmeciyi, havuzu ve vaat edilmiş ödemeleri.",
       "caption": "Çin'deki çevrimiçi karşılıklı yardım platformları ve Social Organizer karşılaştırması",
       "them": "Çevrimiçi karşılıklı yardım platformları",
       "us": "Social Organizer",

@@ -681,11 +681,11 @@
     },
     "meta": {
       "title": "Social Organizer — una red de personas que usted conoce",
-      "description": "Construya una red de personas que conoce en persona. Cuando alguien de ella comunica una necesidad, se entera exactamente tanta gente como dólares indica, primero los más cercanos. Los participantes deciden por sí mismos y actúan directamente. Código abierto, un proyecto sin ánimo de lucro."
+      "description": "Construya una red de personas que conoce en persona: reparte los riesgos de cada uno entre muchos. Cuando alguien de ella comunica una necesidad, se entera exactamente tanta gente como dólares indica, primero los más cercanos. Los participantes deciden por sí mismos y actúan directamente. Código abierto, un proyecto sin ánimo de lucro."
     },
     "hero": {
       "title": "Primero, una red de personas que usted conoce",
-      "lead": "Social Organizer empieza por su red: personas que conoce en persona y las personas que ellas conocen. <b>Cuando alguien de ella comunica una necesidad, se entera exactamente tanta gente como dólares indica.</b> La coordinación viene después, directamente entre los participantes.",
+      "lead": "Social Organizer empieza por su red: personas que conoce en persona y las personas que ellas conocen. Juntas hacen llevaderos los riesgos de cada uno. <b>Cuando alguien de ella comunica una necesidad, se entera exactamente tanta gente como dólares indica</b>, y cada una puede asumir una parte pequeña.",
       "factOpen": "Código abierto",
       "factNonprofit": "Sin ánimo de lucro",
       "factNoMoney": "Participación voluntaria",
@@ -751,7 +751,7 @@
       "p3Title": "Conexión directa entre participantes",
       "p3Text": "Los acuerdos y las acciones quedan entre personas unidas por conocimientos confirmados.",
       "p4Title": "Primero la red",
-      "p4Text": "Las señales viajan solo por conocimientos confirmados. Sin bote común, sin operador, sin reparto centralizado."
+      "p4Text": "Las señales viajan solo por conocimientos confirmados. Los riesgos se reparten entre las personas y no se juntan en un solo lugar: sin bote común, sin operador, sin pagos prometidos."
     },
     "faq": {
       "title": "Lo esencial",
@@ -768,7 +768,9 @@
       "q6": "¿En qué se expresan los importes?",
       "a6": "En dólares estadounidenses: es una unidad de cuenta común, para que los importes sean comparables. En qué moneda y de qué manera actuar lo deciden los propios participantes.",
       "q7": "¿En qué se diferencia de las plataformas de ayuda mutua en línea?",
-      "a7": "Las plataformas chinas de ayuda mutua tenían un único operador, cobraban a sus miembros y prometían pagos como un seguro; en 2021 fueron cerradas. Social Organizer no tiene operador, ni bote, ni pagos: solo personas que se conocen, dos señales y participación voluntaria."
+      "a7": "Las plataformas chinas de ayuda mutua tenían un único operador, cobraban a sus miembros y prometían pagos como un seguro; en 2021 fueron cerradas. Social Organizer no tiene operador, ni bote, ni pagos: solo personas que se conocen, dos señales y participación voluntaria.",
+      "q8": "¿Es un seguro?",
+      "a8": "No. Un seguro reúne cuotas en un fondo por adelantado y promete un pago. Aquí nadie paga nada por adelantado y no se promete nada: el riesgo de una persona se reparte entre muchas que se conocen, y quienes deciden participar asumen cada uno una parte pequeña."
     }
   },
   "how": {
@@ -905,7 +907,7 @@
     "compare": {
       "title": "El ejemplo más cercano: la ayuda mutua en línea en China",
       "lead": "De 2018 a 2021, las plataformas chinas de ayuda mutua en línea reunieron a cientos de millones de miembros: la mayor, Xianghubao, superó los 100 millones. <b>Los miembros se repartían el coste de las enfermedades graves de los demás, unos pocos dólares al año cada uno.</b> En 2021 los reguladores cerraron todo el sector: un único operador gestionaba, en la práctica, un seguro.",
-      "note": "Social Organizer conserva la idea, muchas personas asumiendo cada una una parte pequeña, y descarta lo que hacía frágiles a esas plataformas.",
+      "note": "Social Organizer conserva la idea, el riesgo de uno repartido entre muchos que asumen cada uno una parte pequeña, y descarta lo que hacía frágiles a esas plataformas: el operador, el bote y los pagos prometidos.",
       "caption": "Las plataformas chinas de ayuda mutua en línea comparadas con Social Organizer",
       "them": "Plataformas de ayuda mutua en línea",
       "us": "Social Organizer",
