@@ -237,8 +237,6 @@
       "full2": "2e poignée de main",
       "full3": "3e poignée de main",
       "open": "{{ring}} : {{count}}. Ouvrir la liste",
-      "hide": "Masquer la {{ring}} sur le graphe",
-      "show": "Afficher la {{ring}} sur le graphe",
       "caption": "Poignées de main",
       "farther": "4e–5e : ~{{value}}",
       "fartherFew": "4e–5e : quelques-uns"

@@ -239,8 +239,6 @@
       "full2": "2. podání ruky",
       "full3": "3. podání ruky",
       "open": "{{ring}}: {{count}}. Otevřít seznam",
-      "hide": "Skrýt {{ring}} v grafu",
-      "show": "Zobrazit {{ring}} v grafu",
       "caption": "Podání ruky",
       "farther": "4.–5.: ~{{value}}",
       "fartherFew": "4.–5.: několik"

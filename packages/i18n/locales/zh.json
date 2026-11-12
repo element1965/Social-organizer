@@ -233,8 +233,6 @@
       "full2": "第2次握手",
       "full3": "第3次握手",
       "open": "{{ring}}：{{count}}。打开列表",
-      "hide": "在图谱上隐藏{{ring}}",
-      "show": "在图谱上显示{{ring}}",
       "caption": "握手",
       "farther": "第4–5度: 约{{value}}",
       "fartherFew": "第4–5度: 几人"

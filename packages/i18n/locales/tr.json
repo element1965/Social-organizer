@@ -235,8 +235,6 @@
       "full2": "2. tokalaşma",
       "full3": "3. tokalaşma",
       "open": "{{ring}}: {{count}}. Listeyi aç",
-      "hide": "Grafikte gizle: {{ring}}",
-      "show": "Grafikte göster: {{ring}}",
       "caption": "Tokalaşmalar",
       "farther": "4.–5.: ~{{value}}",
       "fartherFew": "4.–5.: birkaç kişi"

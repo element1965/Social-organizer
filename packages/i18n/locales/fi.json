@@ -235,8 +235,6 @@
       "full2": "2. kädenpuristus",
       "full3": "3. kädenpuristus",
       "open": "{{ring}}: {{count}}. Avaa lista",
-      "hide": "Piilota {{ring}} graafista",
-      "show": "Näytä {{ring}} graafissa",
       "caption": "Kädenpuristukset",
       "farther": "4.–5.: ~{{value}}",
       "fartherFew": "4.–5.: muutama"

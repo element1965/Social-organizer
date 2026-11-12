@@ -236,8 +236,6 @@
       "full2": "2nd handshake",
       "full3": "3rd handshake",
       "open": "{{ring}}: {{count}}. Open the list",
-      "hide": "Hide the {{ring}} on the graph",
-      "show": "Show the {{ring}} on the graph",
       "caption": "Handshakes",
       "farther": "4th–5th: ~{{value}}",
       "fartherFew": "4th–5th: a few"

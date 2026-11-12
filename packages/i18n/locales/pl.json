@@ -239,8 +239,6 @@
       "full2": "2. uścisk dłoni",
       "full3": "3. uścisk dłoni",
       "open": "{{ring}}: {{count}}. Otwórz listę",
-      "hide": "Ukryj {{ring}} na grafie",
-      "show": "Pokaż {{ring}} na grafie",
       "caption": "Uściski dłoni",
       "farther": "4.–5.: ~{{value}}",
       "fartherFew": "4.–5.: kilka osób"

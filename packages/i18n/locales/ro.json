@@ -237,8 +237,6 @@
       "full2": "a doua strângere de mână",
       "full3": "a treia strângere de mână",
       "open": "{{ring}}: {{count}}. Deschide lista",
-      "hide": "Ascunde {{ring}} pe graf",
-      "show": "Arată {{ring}} pe graf",
       "caption": "Strângeri de mână",
       "farther": "4–5: ~{{value}}",
       "fartherFew": "4–5: câțiva"
