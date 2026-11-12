@@ -506,8 +506,7 @@
     "notifyChannel": "Kanaal",
     "notifyTelegramNotLinked": "Koppel Telegram bij “Account” om berichten daar te krijgen.",
     "stakeSaved": "Opgeslagen",
-    "needCounts": "Open: {{open}} · Eerder: {{past}}",
-    "stages": "Mijlpalen"
+    "needCounts": "Open: {{open}} · Eerder: {{past}}"
   },
   "settings": {
     "title": "Instellingen",

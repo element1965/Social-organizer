@@ -506,8 +506,7 @@
     "notifyChannel": "Kanal",
     "notifyTelegramNotLinked": "İletilerin oraya gelmesi için Telegram'ı «Hesap» bölümünde bağlayın.",
     "stakeSaved": "Kaydedildi",
-    "needCounts": "Açık: {{open}} · Geçmiş: {{past}}",
-    "stages": "Aşamalar"
+    "needCounts": "Açık: {{open}} · Geçmiş: {{past}}"
   },
   "settings": {
     "title": "Ayarlar",

@@ -509,8 +509,7 @@
     "notifyChannel": "ערוץ",
     "notifyTelegramNotLinked": "חברו את Telegram ב«חשבון» כדי לקבל שם הודעות.",
     "stakeSaved": "נשמר",
-    "needCounts": "פתוחים: {{open}} · קודמים: {{past}}",
-    "stages": "שלבים"
+    "needCounts": "פתוחים: {{open}} · קודמים: {{past}}"
   },
   "settings": {
     "title": "הגדרות",

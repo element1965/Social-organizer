@@ -509,8 +509,7 @@
     "notifyChannel": "Canal",
     "notifyTelegramNotLinked": "Conectează Telegram în „Cont” ca să primești mesajele acolo.",
     "stakeSaved": "Salvat",
-    "needCounts": "Deschise: {{open}} · Trecute: {{past}}",
-    "stages": "Etape"
+    "needCounts": "Deschise: {{open}} · Trecute: {{past}}"
   },
   "settings": {
     "title": "Setări",

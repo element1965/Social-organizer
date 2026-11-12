@@ -506,8 +506,7 @@
     "notifyChannel": "Kanal",
     "notifyTelegramNotLinked": "Verbinden Sie Telegram unter „Konto“, damit die Nachrichten dort ankommen.",
     "stakeSaved": "Gespeichert",
-    "needCounts": "Offen: {{open}} · Vergangene: {{past}}",
-    "stages": "Etappen"
+    "needCounts": "Offen: {{open}} · Vergangene: {{past}}"
   },
   "settings": {
     "title": "Einstellungen",

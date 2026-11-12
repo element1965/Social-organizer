@@ -503,8 +503,7 @@
     "notifyChannel": "ช่องทาง",
     "notifyTelegramNotLinked": "เชื่อมต่อ Telegram ใน “บัญชี” เพื่อรับข้อความที่นั่น",
     "stakeSaved": "บันทึกแล้ว",
-    "needCounts": "ที่เปิดอยู่: {{open}} · ที่ผ่านมา: {{past}}",
-    "stages": "ขั้นที่ผ่านมา"
+    "needCounts": "ที่เปิดอยู่: {{open}} · ที่ผ่านมา: {{past}}"
   },
   "settings": {
     "title": "ตั้งค่า",

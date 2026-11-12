@@ -509,8 +509,7 @@
     "notifyChannel": "Канал",
     "notifyTelegramNotLinked": "Повежите Telegram у „Налог“, да бисте тамо примали поруке.",
     "stakeSaved": "Сачувано",
-    "needCounts": "Отворени: {{open}} · Прошли: {{past}}",
-    "stages": "Фазе"
+    "needCounts": "Отворени: {{open}} · Прошли: {{past}}"
   },
   "settings": {
     "title": "Подешавања",
