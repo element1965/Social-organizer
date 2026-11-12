@@ -343,7 +343,7 @@
     "needsConnection": "Kræver forbindelse",
     "contactsNotSaved": "Denne persons kontaktoplysninger er endnu ikke gemt på enheden. De gemmes, når du åbner personens side online.",
     "tapHint": "Kontaktoplysninger gemmes kun for direkte forbindelser.",
-    "unavailableTitle": "Denne skærm kræver forbindelse",
+    "unavailableTitle": "Ingen forbindelse",
     "unavailableBody": "Opret forbindelse til internettet, og prøv igen. De personer, der er gemt på denne enhed, er stadig tilgængelige.",
     "showSaved": "Vis gemte personer"
   },

@@ -346,7 +346,7 @@
     "needsConnection": "Necesită conexiune",
     "contactsNotSaved": "Contactele acestei persoane nu sunt încă salvate pe acest dispozitiv. Se salvează când îi deschizi pagina online.",
     "tapHint": "Contactele se salvează doar pentru conexiunile directe.",
-    "unavailableTitle": "Acest ecran necesită conexiune",
+    "unavailableTitle": "Fără conexiune",
     "unavailableBody": "Conectează-te la internet și încearcă din nou. Persoanele salvate pe acest dispozitiv rămân disponibile.",
     "showSaved": "Arată persoanele salvate"
   },

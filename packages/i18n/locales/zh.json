@@ -340,7 +340,7 @@
     "needsConnection": "需要网络连接",
     "contactsNotSaved": "此人的联系方式尚未保存到此设备。联网打开其页面后会自动保存。",
     "tapHint": "只保存直接联系人的联系方式。",
-    "unavailableTitle": "此页面需要网络连接",
+    "unavailableTitle": "无网络连接",
     "unavailableBody": "请连接互联网后重试。保存在此设备上的人员仍可查看。",
     "showSaved": "查看已保存的人员"
   },

@@ -343,7 +343,7 @@
     "needsConnection": "Kräver anslutning",
     "contactsNotSaved": "Den här personens kontaktuppgifter är inte sparade på enheten ännu. De sparas när du öppnar personens sida online.",
     "tapHint": "Kontaktuppgifter sparas bara för direkta kontakter.",
-    "unavailableTitle": "Den här skärmen kräver anslutning",
+    "unavailableTitle": "Ingen anslutning",
     "unavailableBody": "Anslut till internet och försök igen. Personerna som sparats på den här enheten finns kvar.",
     "showSaved": "Visa sparade personer"
   },

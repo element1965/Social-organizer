@@ -60,11 +60,21 @@ function ShellRoutes() {
   );
 }
 
-/** Warm the Circle chunk as soon as a session exists, so the signed-in home is ready. */
+/**
+ * Warm the Circle chunk as soon as a session exists, so the signed-in home is ready. The People list and the
+ * Person screen follow a little later: once fetched, the service worker keeps them, so they open without a
+ * connection too.
+ */
 function PrefetchCircle() {
   const isAuthenticated = useAuth((s) => s.isAuthenticated);
   useEffect(() => {
-    if (isAuthenticated) void loadCircle();
+    if (!isAuthenticated) return;
+    void loadCircle();
+    const timer = window.setTimeout(() => {
+      void loadPeople().catch(() => undefined);
+      void loadPerson().catch(() => undefined);
+    }, 4000);
+    return () => window.clearTimeout(timer);
   }, [isAuthenticated]);
   return null;
 }
@@ -81,7 +91,8 @@ const AccountPage = lazyPage(() => import('./pages/AccountPage'), 'AccountPage')
 const StakePage = lazyPage(() => import('./pages/StakePage'), 'StakePage');
 const HistoryPage = lazyPage(() => import('./pages/HistoryPage'), 'HistoryPage');
 const HelpPage = lazyPage(() => import('./pages/HelpPage'), 'HelpPage');
-const PersonPage = lazyPage(() => import('./pages/PersonPage'), 'PersonPage');
+const loadPerson = () => import('./pages/PersonPage');
+const PersonPage = lazyPage(loadPerson, 'PersonPage');
 const AdminStatsPage = lazyPage(() => import('./pages/AdminStatsPage'), 'AdminStatsPage');
 const AssistantPage = lazyPage(() => import('./pages/AssistantPage'), 'AssistantPage');
 const BroadcastScreen = lazyPage(() => import('./pages/BroadcastScreen'), 'BroadcastScreen');
@@ -96,7 +107,8 @@ const DeleteAccountPage = lazyPage(() => import('./pages/DeleteAccountPage'), 'D
 const HowPage = lazyPage(() => import('./pages/HowPage'), 'HowPage');
 const GoogleCallbackPage = lazyPage(() => import('./pages/GoogleCallbackPage'), 'GoogleCallbackPage');
 const AppleCallbackPage = lazyPage(() => import('./pages/AppleCallbackPage'), 'AppleCallbackPage');
-const PeoplePage = lazyPage(() => import('./pages/PeoplePage'), 'PeoplePage');
+const loadPeople = () => import('./pages/PeoplePage');
+const PeoplePage = lazyPage(loadPeople, 'PeoplePage');
 const AddPage = lazyPage(() => import('./pages/AddPage'), 'AddPage');
 const QrPage = lazyPage(() => import('./pages/QrPage'), 'QrPage');
 const ScanPage = lazyPage(() => import('./pages/ScanPage'), 'ScanPage');

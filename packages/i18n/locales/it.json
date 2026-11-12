@@ -346,7 +346,7 @@
     "needsConnection": "Serve una connessione",
     "contactsNotSaved": "I contatti di questa persona non sono ancora salvati su questo dispositivo. Vengono salvati quando apri la sua pagina online.",
     "tapHint": "I contatti vengono salvati solo per le connessioni dirette.",
-    "unavailableTitle": "Questa schermata richiede una connessione",
+    "unavailableTitle": "Nessuna connessione",
     "unavailableBody": "Collegati a internet e riprova. Le persone salvate su questo dispositivo restano disponibili.",
     "showSaved": "Mostra le persone salvate"
   },

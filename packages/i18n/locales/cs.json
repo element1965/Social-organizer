@@ -349,7 +349,7 @@
     "needsConnection": "Vyžaduje připojení",
     "contactsNotSaved": "Kontakty této osoby zatím nejsou v zařízení uloženy. Uloží se, když otevřete její stránku online.",
     "tapHint": "Kontakty se ukládají jen u přímých spojení.",
-    "unavailableTitle": "Tato obrazovka vyžaduje připojení",
+    "unavailableTitle": "Bez připojení",
     "unavailableBody": "Připojte se k internetu a zkuste to znovu. Lidé uložení v tomto zařízení jsou stále dostupní.",
     "showSaved": "Zobrazit uložené lidi"
   },

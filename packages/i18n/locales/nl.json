@@ -343,7 +343,7 @@
     "needsConnection": "Verbinding nodig",
     "contactsNotSaved": "De contactgegevens van deze persoon zijn nog niet op dit apparaat opgeslagen. Ze worden opgeslagen als je hun pagina online opent.",
     "tapHint": "Contactgegevens worden alleen bewaard voor directe connecties.",
-    "unavailableTitle": "Dit scherm heeft verbinding nodig",
+    "unavailableTitle": "Geen verbinding",
     "unavailableBody": "Maak verbinding met internet en probeer het opnieuw. De mensen die op dit apparaat zijn opgeslagen blijven beschikbaar.",
     "showSaved": "Opgeslagen mensen tonen"
   },

@@ -343,7 +343,7 @@
     "needsConnection": "Krever tilkobling",
     "contactsNotSaved": "Kontaktinformasjonen til denne personen er ikke lagret på enheten ennå. Den lagres når du åpner siden deres på nett.",
     "tapHint": "Kontaktinformasjon lagres bare for direkte forbindelser.",
-    "unavailableTitle": "Denne skjermen krever tilkobling",
+    "unavailableTitle": "Ingen tilkobling",
     "unavailableBody": "Koble til internett og prøv igjen. Personene som er lagret på denne enheten er fortsatt tilgjengelige.",
     "showSaved": "Vis lagrede personer"
   },

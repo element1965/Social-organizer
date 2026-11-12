@@ -346,7 +346,7 @@
     "needsConnection": "Requiere conexión",
     "contactsNotSaved": "Los contactos de esta persona aún no están guardados en este dispositivo. Se guardan al abrir su página con conexión.",
     "tapHint": "Los contactos se guardan solo para las conexiones directas.",
-    "unavailableTitle": "Esta pantalla necesita conexión",
+    "unavailableTitle": "Sin conexión",
     "unavailableBody": "Conéctate a internet e inténtalo de nuevo. Las personas guardadas en este dispositivo siguen disponibles.",
     "showSaved": "Mostrar personas guardadas"
   },

@@ -355,7 +355,7 @@
     "needsConnection": "Needs a connection",
     "contactsNotSaved": "This person's contacts are not saved on this device yet. They are saved when you open their page online.",
     "tapHint": "Contacts are saved for direct connections only.",
-    "unavailableTitle": "This screen needs a connection",
+    "unavailableTitle": "No connection",
     "unavailableBody": "Connect to the internet and try again. The people saved on this device are still available.",
     "showSaved": "Show saved people"
   },
