@@ -44,7 +44,11 @@ export function PersonRow({ name, subtitle, value, valueCaption, subtitleLines =
   const className = 'flex min-h-row w-full items-center gap-3 px-4 py-2 text-left';
   if (onClick) {
     return (
-      <button type="button" className={className} onClick={onClick}>
+      <button
+        type="button"
+        className={cn(className, 'so-focus transition-colors duration-fast ease-so active:bg-surface-2 motion-reduce:transition-none')}
+        onClick={onClick}
+      >
         {body}
       </button>
     );

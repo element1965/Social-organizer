@@ -66,7 +66,7 @@ export function SavedPeople({ title }: { title: string }) {
       ) : (
         <>
           {groups.map(({ level, list }) => (
-            <Group key={level} title={t('people.title', { ring: t(`circle.rings.full${level}`), count: list.length })}>
+            <Group key={level} title={t('people.title', { ring: t(`circle.rings.full${level}`), count: list.length })} stagger>
               {list.map((person) => (
                 <PersonRow
                   key={person.id}

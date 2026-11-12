@@ -134,7 +134,7 @@ export function HistoryPage() {
         openRows.length === 0 ? (
           <p className="py-8 text-center text-body font-semibold text-ink-muted">{t('profile.noOpen')}</p>
         ) : (
-          <div className="mt-3 space-y-3">
+          <div className="so-stagger mt-3 space-y-3">
             {openRows.map((entry) =>
               entry.kind === 'own' ? (
                 <OwnCard key={entry.row.id} row={entry.row} meName={me.data.name} mePhoto={me.data.photoUrl} lang={i18n.language} />
@@ -147,7 +147,7 @@ export function HistoryPage() {
       ) : pastRows.length === 0 ? (
         <p className="py-8 text-center text-body font-semibold text-ink-muted">{t('profile.noPast')}</p>
       ) : (
-        <div className="mt-3 space-y-3">
+        <div className="so-stagger mt-3 space-y-3">
           {pastRows.map((entry) =>
             entry.kind === 'own' ? (
               <OwnCard key={`own-${entry.row.id}`} row={entry.row} meName={me.data.name} mePhoto={me.data.photoUrl} lang={i18n.language} />

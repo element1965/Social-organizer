@@ -46,7 +46,8 @@ export function Screen({ title, back, action, width = 'full', children, classNam
       ) : null}
       <div
         className={cn(
-          'px-4 pb-6',
+          // Each route mounts its own Screen, so this plays once per screen change
+          'so-screen-in px-4 pb-6',
           fill && 'flex min-h-0 flex-1 flex-col',
           width === 'column' && desktop && 'mx-auto w-full max-w-[680px]',
         )}

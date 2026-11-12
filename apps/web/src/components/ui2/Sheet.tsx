@@ -2,6 +2,7 @@ import { useId, useRef, type PointerEvent, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 import { cn } from '../../lib/utils';
 import { useFocusTrap } from './focus-trap';
+import { usePresence } from './presence';
 import { useShellMode } from './shell-mode';
 
 type SheetProps = {
@@ -41,8 +42,10 @@ export function Sheet({
   const dragY = useRef<number | null>(null);
   // A contained sheet is a gallery frame. It must not lock page scroll or steal focus.
   useFocusTrap(open && !contained, panelRef, onClose);
+  // Stays on screen for its exit: the panel slides down (a dialog shrinks) while the backdrop fades
+  const { mounted, leaving } = usePresence(open, 200);
 
-  if (!open) return null;
+  if (!mounted) return null;
 
   const startDrag = (event: PointerEvent<HTMLDivElement>) => {
     if (dialog || event.button !== 0) return;
@@ -67,7 +70,8 @@ export function Sheet({
       aria-describedby={description ? descId : undefined}
       tabIndex={-1}
       className={cn(
-        'so-sheet-in bg-surface text-ink shadow-sheet outline-none',
+        'bg-surface text-ink shadow-sheet outline-none',
+        dialog ? (leaving ? 'so-dialog-out' : 'so-dialog-in') : leaving ? 'so-sheet-out' : 'so-sheet-in',
         dialog
           ? 'w-[440px] max-w-[calc(100%-32px)] rounded-xl p-6'
           : 'w-full rounded-2xl px-[18px] pb-[calc(16px+var(--sa-bottom))] pt-5',
@@ -111,6 +115,7 @@ export function Sheet({
     <div
       className={cn(
         'flex bg-scene/50',
+        leaving ? 'so-fade-out pointer-events-none' : 'so-fade-in',
         contained ? 'absolute inset-0' : 'fixed inset-0 z-50',
         dialog ? 'items-center justify-center p-4' : 'items-end p-2.5',
       )}

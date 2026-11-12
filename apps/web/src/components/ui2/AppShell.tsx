@@ -65,7 +65,7 @@ type ItemProps = {
 
 function NavItem({ to, label, active, rail, interactive, onActivate, children, badge }: ItemProps) {
   const className = cn(
-    'so-focus group relative flex items-center gap-3 rounded-md text-body-s font-bold',
+    'so-focus group relative flex items-center gap-3 rounded-md text-body-s font-bold transition-colors duration-base ease-so motion-reduce:transition-none',
     rail ? 'h-[52px] w-[52px] justify-center' : 'h-11 px-3',
     active ? 'bg-care-soft text-care' : 'text-ink-muted hover:text-ink',
   );
@@ -74,12 +74,12 @@ function NavItem({ to, label, active, rail, interactive, onActivate, children, b
       <span className="grid h-[22px] w-[22px] place-items-center">{children}</span>
       {rail ? null : <span className="min-w-0 flex-1 truncate">{label}</span>}
       {!rail && badge ? (
-        <span className="grid h-[22px] min-w-[22px] place-items-center rounded-pill bg-sos px-1.5 text-micro font-bold tabular-nums text-sos-on">
+        <span key={badge} className="so-pop grid h-[22px] min-w-[22px] place-items-center rounded-pill bg-sos px-1.5 text-micro font-bold tabular-nums text-sos-on">
           {badge}
         </span>
       ) : null}
       {rail ? (
-        <span className="pointer-events-none absolute left-[calc(100%+8px)] top-1/2 z-30 -translate-y-1/2 whitespace-nowrap rounded-sm bg-ink px-2 py-1 text-micro font-bold text-canvas opacity-0 group-hover:opacity-100 group-focus-within:opacity-100">
+        <span className="pointer-events-none absolute left-[calc(100%+8px)] top-1/2 z-30 -translate-y-1/2 whitespace-nowrap rounded-sm bg-ink px-2 py-1 text-micro font-bold text-canvas opacity-0 transition-opacity duration-fast ease-so group-hover:opacity-100 group-focus-within:opacity-100 motion-reduce:transition-none">
           {label}
         </span>
       ) : null}
@@ -145,17 +145,20 @@ export function ShellChrome({
   if (mode === 'tabs') {
     const tab = (to: string, label: string, active: boolean, icon: ReactNode, mark?: { count?: string | null }) => {
       const className = cn(
-        'so-focus flex h-full flex-1 flex-col items-center justify-center gap-1 text-tab font-bold',
+        'so-focus flex h-full flex-1 flex-col items-center justify-center gap-1 text-tab font-bold transition-colors duration-base ease-so motion-reduce:transition-none',
         active ? 'text-care' : 'text-ink-subtle',
       );
       // Every icon sits in the same 28 px box and the label has a fixed line, so the labels line up
       // whatever the icon (the Ask tile is larger than the line icons)
       const inner = (
         <>
-          <span className="relative grid h-[28px] w-[28px] place-items-center">
+          <span className={cn('relative grid h-[28px] w-[28px] place-items-center', active && 'so-tab-bump')}>
             {icon}
             {mark?.count ? (
-              <span className="absolute -right-2.5 -top-1.5 grid h-[18px] min-w-[18px] place-items-center rounded-pill bg-sos px-1 text-micro font-bold leading-none tabular-nums text-sos-on">
+              <span
+                key={mark.count}
+                className="so-pop absolute -right-2.5 -top-1.5 grid h-[18px] min-w-[18px] place-items-center rounded-pill bg-sos px-1 text-micro font-bold leading-none tabular-nums text-sos-on"
+              >
                 {mark.count}
               </span>
             ) : null}

@@ -5,6 +5,7 @@ import { SITE_ORIGIN, STORE_URL, useDevice, type Device } from '../../lib/device
 import { QR_LOGO_LEVEL, qrLogo } from '../../lib/qrLogo';
 import { Button } from '../ui2/Button';
 import { Sheet } from '../ui2/Sheet';
+import { useExit } from '../ui2/presence';
 import { IconApple, IconPlay } from '../site/icons';
 import { openExternal } from '../profile/openExternal';
 import { dismissGetAppPrompt, showsGetAppPrompt } from './getAppPrompt';
@@ -38,32 +39,38 @@ export function GetAppCard() {
   const { t } = useTranslation();
   const device = useDevice();
   const [visible, setVisible] = useState(() => showsGetAppPrompt(device));
+  const exit = useExit(240);
   if (!visible) return null;
   const store = storesFor(device)[0] as Store;
 
+  // The card folds away (height and fade) before it leaves, so the feed below slides up instead of jumping
   const close = () => {
     dismissGetAppPrompt();
-    setVisible(false);
+    exit.start(() => setVisible(false));
   };
 
   return (
-    <section className="relative my-3 rounded-lg bg-surface p-4 shadow-card" aria-labelledby="get-app-title">
-      <button
-        type="button"
-        onClick={close}
-        aria-label={t('getApp.dismiss')}
-        className="so-focus absolute right-2 top-2 grid h-9 w-9 place-items-center rounded-md text-ink-subtle hover:text-ink"
-      >
-        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden>
-          <path d="M6 6l12 12M18 6L6 18" />
-        </svg>
-      </button>
-      <h2 id="get-app-title" className="pr-8 text-body font-bold text-ink">{t('getApp.title')}</h2>
-      <p className="mt-1 text-body-s text-ink-muted">{t('getApp.text')}</p>
-      <div className="mt-3">
-        <StoreButton store={store} primary />
+    <div className="so-collapse" data-state={exit.leaving ? 'closed' : 'open'}>
+      <div>
+        <section className="relative my-3 rounded-lg bg-surface p-4 shadow-card" aria-labelledby="get-app-title">
+          <button
+            type="button"
+            onClick={close}
+            aria-label={t('getApp.dismiss')}
+            className="so-focus absolute right-2 top-2 grid h-9 w-9 place-items-center rounded-md text-ink-subtle hover:text-ink"
+          >
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden>
+              <path d="M6 6l12 12M18 6L6 18" />
+            </svg>
+          </button>
+          <h2 id="get-app-title" className="pr-8 text-body font-bold text-ink">{t('getApp.title')}</h2>
+          <p className="mt-1 text-body-s text-ink-muted">{t('getApp.text')}</p>
+          <div className="mt-3">
+            <StoreButton store={store} primary />
+          </div>
+        </section>
       </div>
-    </section>
+    </div>
   );
 }
 

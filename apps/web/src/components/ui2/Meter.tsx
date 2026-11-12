@@ -21,8 +21,8 @@ export function Meter({ mine, others, goal, showMine }: MeterProps) {
   return (
     <div>
       <div className="mt-3 flex h-3 overflow-hidden rounded-sm bg-surface-2" role="img" aria-label={`${t('common.collected')} ${formatMoney(mine + others)}`}>
-        {minePct > 0 ? <i className="block h-full bg-ink" style={{ width: `${minePct}%` }} /> : null}
-        {othersPct > 0 ? <i className="block h-full bg-care" style={{ width: `${othersPct}%` }} /> : null}
+        {minePct > 0 ? <i className="block h-full bg-ink transition-[width] duration-screen ease-so motion-reduce:transition-none" style={{ width: `${minePct}%` }} /> : null}
+        {othersPct > 0 ? <i className="block h-full bg-care transition-[width] duration-screen ease-so motion-reduce:transition-none" style={{ width: `${othersPct}%` }} /> : null}
       </div>
       <div className="mt-2 flex flex-wrap items-center gap-x-3.5 gap-y-1 text-label font-semibold tabular-nums text-ink-muted">
         {participate ? (

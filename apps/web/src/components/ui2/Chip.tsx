@@ -32,6 +32,7 @@ export function Chip({
       type={type}
       className={cn(
         'relative inline-flex items-center justify-center gap-1 whitespace-nowrap font-bold',
+        'transition-[background-color,color,border-color,box-shadow,transform,opacity] duration-fast ease-so active:scale-[0.95] motion-reduce:transition-none motion-reduce:active:scale-100',
         'before:absolute before:-inset-y-1.5 before:inset-x-0',
         'so-focus',
         variant === 'preset' && 'h-small rounded-md bg-surface px-3.5 text-body-s text-ink-muted shadow-float',

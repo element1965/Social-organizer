@@ -51,7 +51,8 @@ function FieldChrome({
       {label ? <span className="mb-1.5 block text-label font-semibold text-ink-muted">{label}</span> : null}
       {children}
       {error ? (
-        <span id={hintId} className="mt-1.5 block text-label font-semibold text-sos">
+        // A new error fades in (keyed by its text), so it reads as a reaction to what was typed
+        <span key={error} id={hintId} className="so-fade-in mt-1.5 block text-label font-semibold text-sos">
           {error}
         </span>
       ) : hint ? (

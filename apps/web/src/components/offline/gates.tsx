@@ -139,8 +139,11 @@ function OfflineFallback({ people }: { people: boolean }) {
  */
 export function OfflineRouteBoundary({ children }: { children: ReactNode }) {
   const { pathname } = useLocation();
+  // One key per screen, not per address: switching handshakes (/people/1 → /people/2) keeps the People screen
+  // mounted, so its tabs and list animate instead of the whole screen being rebuilt
+  const screenKey = pathname.startsWith('/people') ? '/people' : pathname;
   return (
-    <Boundary key={pathname} pathname={pathname}>
+    <Boundary key={screenKey} pathname={pathname}>
       {children}
     </Boundary>
   );

@@ -1,0 +1,127 @@
+/*
+ * Micro-animations. One easing (the "so" curve) and three lengths: 150 ms for presses and toggles, 220–260 ms for
+ * things that appear or leave, 320 ms for sheets. Entrances use `backwards` fill, so no transform stays on the
+ * element after it settles (a lasting transform would trap `position: fixed` children). Everything here is off
+ * when the system asks for reduced motion.
+ */
+
+:root {
+  --so-ease: cubic-bezier(0.22, 0.8, 0.24, 1);
+  --so-ease-in: cubic-bezier(0.4, 0, 1, 1);
+}
+
+@keyframes so-screen-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes so-slide-next {
+  from { opacity: 0; transform: translateX(28px); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes so-slide-prev {
+  from { opacity: 0; transform: translateX(-28px); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes so-item-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes so-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes so-fade-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+@keyframes so-sheet-out {
+  from { opacity: 1; transform: none; }
+  to { opacity: 0; transform: translateY(28px); }
+}
+
+@keyframes so-dialog-in {
+  from { opacity: 0; transform: scale(0.96); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes so-dialog-out {
+  from { opacity: 1; transform: none; }
+  to { opacity: 0; transform: scale(0.96); }
+}
+
+@keyframes so-banner-out {
+  from { opacity: 1; transform: none; }
+  to { opacity: 0; transform: translateY(-16px); }
+}
+
+@keyframes so-pop {
+  0% { transform: scale(0.4); opacity: 0; }
+  60% { transform: scale(1.12); opacity: 1; }
+  100% { transform: none; }
+}
+
+@keyframes so-tab-bump {
+  0% { transform: scale(0.86); }
+  55% { transform: scale(1.08); }
+  100% { transform: none; }
+}
+
+.so-screen-in { animation: so-screen-in 240ms var(--so-ease) backwards; }
+.so-slide-next { animation: so-slide-next 240ms var(--so-ease) backwards; }
+.so-slide-prev { animation: so-slide-prev 240ms var(--so-ease) backwards; }
+.so-fade-in { animation: so-fade-in 200ms var(--so-ease) backwards; }
+.so-fade-out { animation: so-fade-out 180ms var(--so-ease-in) forwards; }
+.so-sheet-out { animation: so-sheet-out 200ms var(--so-ease-in) forwards; }
+.so-dialog-in { animation: so-dialog-in 220ms var(--so-ease) backwards; }
+.so-dialog-out { animation: so-dialog-out 160ms var(--so-ease-in) forwards; }
+.so-banner-out { animation: so-banner-out 200ms var(--so-ease-in) forwards; }
+.so-pop { animation: so-pop 320ms var(--so-ease) backwards; }
+.so-tab-bump { animation: so-tab-bump 320ms var(--so-ease); }
+
+/* Rows of a list come in one after another; past the tenth they share the last delay. */
+.so-stagger > * { animation: so-item-in 260ms var(--so-ease) backwards; }
+.so-stagger > *:nth-child(2) { animation-delay: 25ms; }
+.so-stagger > *:nth-child(3) { animation-delay: 50ms; }
+.so-stagger > *:nth-child(4) { animation-delay: 75ms; }
+.so-stagger > *:nth-child(5) { animation-delay: 100ms; }
+.so-stagger > *:nth-child(6) { animation-delay: 125ms; }
+.so-stagger > *:nth-child(7) { animation-delay: 150ms; }
+.so-stagger > *:nth-child(8) { animation-delay: 175ms; }
+.so-stagger > *:nth-child(9) { animation-delay: 200ms; }
+.so-stagger > *:nth-child(n + 10) { animation-delay: 225ms; }
+
+/* Height-and-fade collapse for things that leave the flow (a dismissed card, a removed row). */
+.so-collapse {
+  display: grid;
+  grid-template-rows: 1fr;
+  opacity: 1;
+  transition: grid-template-rows 240ms var(--so-ease), opacity 180ms var(--so-ease);
+}
+.so-collapse > * { min-height: 0; }
+/* Clipped only while folding, so an open card keeps its shadow */
+.so-collapse[data-state='closed'] > * { overflow: hidden; }
+.so-collapse[data-state='closed'] { grid-template-rows: 0fr; opacity: 0; }
+
+@media (prefers-reduced-motion: reduce) {
+  .so-screen-in,
+  .so-slide-next,
+  .so-slide-prev,
+  .so-fade-in,
+  .so-fade-out,
+  .so-sheet-out,
+  .so-dialog-in,
+  .so-dialog-out,
+  .so-banner-out,
+  .so-pop,
+  .so-tab-bump,
+  .so-stagger > * {
+    animation: none;
+  }
+  .so-collapse { transition: none; }
+}
