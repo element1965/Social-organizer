@@ -192,7 +192,7 @@ function OwnCard({
 }) {
   const { t } = useTranslation();
   const cycle = cycleText(row.type, row.cycleNumber, row.currentCycleStart, lang, t);
-  const form = countForm(row._count.obligations);
+  const form = countForm(row._count.obligations, lang);
   const participants = t(
     form === 'one' ? 'profile.participantOne' : form === 'few' ? 'profile.participantFew' : 'profile.participantMany',
     { count: row._count.obligations },

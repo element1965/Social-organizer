@@ -16,11 +16,11 @@ One of the two signals: a participant's message about what they need. It carries
 PARTICIPATION
 The other signal: a participant's message about their own voluntary participation in someone's Need, with an amount they name. It is a voluntary intention. It is NOT a payment and Social Organizer does not move money. What participants then do, they agree and do directly with each other, outside Social Organizer. In the database it is the "obligation" record; never use that word with people.
 
-MINIMUM PARTICIPATION
+INTENTION («Моё намерение», formerly "Minimum participation")
 The amount a person is ready to name when someone in their network reports a Need, in whole dollars. Filled in when they report Participation; they can name more. Not per month, and it does not decrease. This is NOT a pooled fund or shared account.
 
-MINIMUM PARTICIPATION OF THE NETWORK
-Sum of minimum participation named across the user's network (up to 3 handshake levels). A reference figure, not a promise, not an account and not guaranteed funds.
+DECLARED PARTICIPATION OF THE NETWORK («Заявленное участие сети»)
+Sum of the intentions named across the user's network (up to 3 handshake levels). A reference figure, not a promise, not an account and not guaranteed funds.
 
 NETWORK
 Your connections and their connections, up to 3 handshake levels deep. Notifications propagate through this network based on handshake chains.

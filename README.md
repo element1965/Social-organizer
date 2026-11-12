@@ -317,7 +317,7 @@ The landing download buttons carry the inviter's token so new users join the inv
 - **App Store:** `?ct=invite_TOKEN` Apple campaign token — App Store Connect analytics only; iOS has no Install Referrer, so the invite is not auto-applied in-app after install
 - **Browser:** "Or continue in the browser" under the buttons → `/login`; the token waits in `pendingInviteToken` and is accepted after sign-up
 
-There is one invite link per user — `https://www.orginizer.com/i/TOKEN`, shared from Add (link and QR). TOKEN is the personal ID (`referralSlug`, 3–30 characters: letters, numbers, `_`, `-`) or, until one is chosen, the user id; the ID is edited right on the Add card ("Change link") or in Account. `/i/TOKEN` redirects to `/invite/TOKEN` (`SlugRedirect`); the older `/?invite=TOKEN` form keeps working. A guest through a link skips the landing, so the invite screen links to "How Social Organizer works" (`/how?invite=TOKEN`); there the top button and the final call to action lead back to that invite instead of the stores. After sign-in a newcomer goes: invite (request sent automatically) → three intro frames (with a one-line "Already used Social Organizer through Telegram? Connect it" under the button for Google / Apple / e-mail accounts) → name and minimum participation (the name starts empty when it was only taken from the e-mail address) → the Circle with its start checklist. The person who opens it picks Telegram, the app or the browser. Inside the installed app `/invite/TOKEN` goes straight to `/login` (no landing), and `pendingInviteToken` is kept until `InvitePage` accepts it — also across the Google/Apple deep-link return (`socialorganizer://auth-success`).
+There is one invite link per user — `https://www.orginizer.com/i/TOKEN`, shared from Add (link and QR). TOKEN is the personal ID (`referralSlug`, 3–30 characters: letters, numbers, `_`, `-`) or, until one is chosen, the user id; the ID is edited right on the Add card ("Change link") or in Account. `/i/TOKEN` redirects to `/invite/TOKEN` (`SlugRedirect`); the older `/?invite=TOKEN` form keeps working. A guest through a link skips the landing, so the invite screen links to "How Social Organizer works" (`/how?invite=TOKEN`); there the top button and the final call to action lead back to that invite instead of the stores. After sign-in a newcomer goes: invite (request sent automatically) → three intro frames (with a one-line "Already used Social Organizer through Telegram? Connect it" under the button for Google / Apple / e-mail accounts) → name and intention (the name starts empty when it was only taken from the e-mail address) → the Circle with its start checklist. The person who opens it picks Telegram, the app or the browser. Inside the installed app `/invite/TOKEN` goes straight to `/login` (no landing), and `pendingInviteToken` is kept until `InvitePage` accepts it — also across the Google/Apple deep-link return (`socialorganizer://auth-success`).
 
 ### Connecting Telegram to an existing account
 
@@ -337,7 +337,7 @@ Route pages other than the guest landing are `React.lazy`. The Circle chunk is p
 | HowPage | `/how` | How it works |
 | LoginPage | `/login` | E-mail code, Telegram, Google, Apple |
 | IntroPage | `/intro` | First-run intro (`/onboarding` redirects here) |
-| SeedPage | `/seed` | First-run step after the intro: name (prefilled from the sign-up, required) and minimum participation |
+| SeedPage | `/seed` | First-run step after the intro: name (prefilled from the sign-up, required) and intention |
 | CirclePage | `/` (signed in) | Circle: 3D graph, feed, tab bar |
 | AskPage | `/ask` | Report a Need (`/create` redirects here). A compact link in the title row ("All · N", open plus past) leads to the list at `/me/history`; it takes no height, so the form and its button stay on the first screen |
 | AddPage | `/add`, `/add/qr`, `/add/scan` | Invite link, QR, scan |
@@ -452,8 +452,8 @@ Before this split the entry was 1858 KB / 558 KB gzip and the landing also pulle
 | **Participation** | The other signal: a participant's message about their own voluntary participation, with an amount they name. A voluntary intention, not a payment. The `Obligation` record |
 | **Handshake chain** | Path of connections between two users through mutual acquaintances |
 | **Connection count** | Number of first-level connections (handshakes) a user has |
-| **Minimum participation of the network** | Sum of minimum participation of the people in the **visible rings 1–3** (what the person can check by eye). The headline counts the same visible people. The far rings (4th–5th) are only in the ring chips as a rounded count; the full reach is used by the request amount hint |
-| **Minimum participation** | Amount a user is ready to give to one collection of someone they know (whole $, stored in `monthlyBudget`; not per month, never decremented). Prefilled when joining a collection |
+| **Declared participation of the network** | Sum of the intentions of the people in the **visible rings 1–3** (what the person can check by eye). The headline counts the same visible people. The far rings (4th–5th) are only in the ring chips as a rounded count; the full reach is used by the request amount hint |
+| **My intention** | Amount a user intends to name in one Need of someone they know (whole $, stored in `monthlyBudget`; not per month, never decremented). Prefilled when reporting Participation. Called "Minimum participation" until 12 Nov 2026. The Profile row "Activity" (formerly "Needs and Participation") opens the history |
 
 ## Redesign
 

@@ -16,11 +16,11 @@ A: Open the Need tab, enter the amount, choose one time or every 28 days, add a 
 Q: What's the difference between one time and every 28 days?
 A: A one-time Need stays open until the author closes it. A Need every 28 days runs in 28-day cycles: participants confirm their amount each cycle, with a reminder 3 days before.
 
-Q: What is minimum participation?
-A: The amount you are ready to name when someone in your network reports a Need, in whole dollars. It is filled in for you when you report Participation, and you can name more. It is not per month and it does not go down. Change it in Profile → Minimum participation, or choose "I can't help right now". Social Organizer does not accept or transfer money.
+Q: What is "My intention"?
+A: The amount you are ready to name when someone in your network reports a Need, in whole dollars. It is filled in for you when you report Participation, and you can name more. It is not per month and it does not go down. Change it in Profile → My intention, or choose "I can't help right now". Social Organizer does not accept or transfer money.
 
-Q: What does "Minimum participation of the network" mean?
-A: It's the sum of minimum participation named by people in your network (up to 3 handshake levels). It is a reference figure, not a promise, not a fund and not an account: everyone decides for themselves each time.
+Q: What does "Declared participation of the network" mean?
+A: It's the sum of the intentions named by people in your network (up to 3 handshake levels). It is a reference figure, not a promise, not a fund and not an account: everyone decides for themselves each time.
 
 Q: How many people are notified about my Need?
 A: The amount you enter sets how many people are notified: a Need for $100 notifies up to 100 people, nearest first, in waves along your handshake chains.
