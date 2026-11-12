@@ -708,32 +708,32 @@
     },
     "steps": {
       "title": "Como funciona",
-      "lead": "A rede vem primeiro. Tudo o mais acontece dentro dela.",
+      "lead": "Primeiro você constrói a rede. Necessidades e participação circulam dentro dela.",
       "s1Title": "Você monta a sua rede",
       "s1Text": "Adicione pessoas que você conhece pessoalmente, por um link ou um QR code. <b>Cada uma delas confirma que vocês se conhecem.</b>",
       "s2Title": "Ela chega mais longe do que você vê",
-      "s2Text": "Por meio das suas pessoas, você chega às pessoas delas: o 2º e o 3º aperto de mão. <b>Você vê só os seus próprios três apertos de mão, nunca a rede inteira.</b>",
+      "s2Text": "Pelas suas pessoas, você chega às pessoas delas: o 2º e o 3º aperto de mão. <b>Você enxerga três apertos de mão de profundidade, e ninguém vê a rede inteira.</b>",
       "s3Title": "Uma necessidade chega a tantas pessoas quantos dólares indica",
-      "s3Text": "Uma necessidade de {{amount}} chega a exatamente {{n}} pessoas, as mais próximas por apertos de mão primeiro. <b>Para cada uma delas é uma chance de participar</b>, e, quando o valor é coberto, a necessidade se encerra.",
+      "s3Text": "Uma necessidade de {{amount}} chega a exatamente {{n}} pessoas, as mais próximas por apertos de mão primeiro. <b>Cada uma delas tem uma chance de participar</b>, e a necessidade se encerra quando os participantes cobrem o valor.",
       "s4Title": "A coordenação vem depois",
-      "s4Text": "Quem quiser informa participação, e as intenções se somam, como em um financiamento coletivo. <b>O que fazer e como, os participantes combinam diretamente</b>, no próprio chat."
+      "s4Text": "Quem quiser informa a participação, e os valores se somam, como em um financiamento coletivo. <b>Os participantes combinam os detalhes diretamente</b>, no próprio chat."
     },
     "chain": {
       "title": "A mensagem percorre os apertos de mão",
-      "lead": "Você vê a necessidade de Maria porque Oleg a conhece, e você conhece Oleg. Ela chega a apenas tantas pessoas quantos dólares indica, as mais próximas primeiro. Você pode deixá-la sem resposta. <b>Sem obrigações.</b>"
+      "lead": "Você vê a necessidade de Maria porque Oleg a conhece, e você conhece Oleg. Ela chega a tantas pessoas quantos dólares indica, as mais próximas primeiro. <b>Você não deve nada</b> e pode deixá-la sem resposta."
     },
     "nots": {
       "title": "O que o Social Organizer não faz",
       "moneyTitle": "Não processa pagamentos",
       "moneyText": "Não recebe, não transfere e não retém fundos. Tudo o que os participantes fazem, fazem diretamente, fora do serviço.",
       "feeTitle": "Não cobra taxa",
-      "feeText": "Código aberto, projeto sem fins lucrativos. Sem assinatura, sem anúncios, sem porcentagem.",
+      "feeText": "O código é aberto, o projeto não tem fins lucrativos e você não paga nada por ele.",
       "choiceTitle": "Não decide por você",
-      "choiceText": "Quem adicionar, se vai participar e como — a escolha é sua, sempre. Recusar não quebra nada."
+      "choiceText": "Você escolhe quem adicionar, se vai participar e como. Você pode dizer não, e nada quebra."
     },
     "start": {
       "title": "Comece por pessoas que você já conhece",
-      "lead": "<b>Recebeu um link de alguém que você conhece?</b> Abra: ele leva direto ao círculo dessa pessoa. Sem link — entre e convide os primeiros cinco você mesmo.",
+      "lead": "<b>Recebeu um link de alguém que você conhece?</b> Abra e você entra no círculo dessa pessoa. Sem link? Entre e convide você mesmo os primeiros cinco.",
       "play": "Google Play",
       "appstore": "App Store",
       "telegram": "Abrir no Telegram",
@@ -745,11 +745,11 @@
     "principles": {
       "title": "Princípios",
       "p1Title": "Participação voluntária",
-      "p1Text": "Ninguém é obrigado a responder. Participar é uma decisão, não uma dívida.",
+      "p1Text": "Ninguém é obrigado a responder. Você decide a cada vez se vai participar.",
       "p2Title": "Decisão independente",
-      "p2Text": "Cada um decide por si, sem organizador e sem avaliações. Recusar não tem sanção.",
+      "p2Text": "Nenhum organizador decide por você, e ninguém avalia você. Se você recusar, nada acontece com você.",
       "p3Title": "Conexão direta entre os participantes",
-      "p3Text": "Os acordos e as ações ficam entre pessoas ligadas por conhecimentos confirmados.",
+      "p3Text": "Os participantes combinam e agem entre si, sem intermediários.",
       "p4Title": "A rede vem primeiro",
       "p4Text": "Os sinais passam só por conhecidos confirmados. Você divide os riscos com pessoas que conhece diretamente, sem fundo comum e sem operador."
     },
@@ -758,17 +758,17 @@
       "q1": "O que faz o Social Organizer?",
       "a1": "Ele ajuda você a montar uma rede de pessoas que conhece pessoalmente e faz dois sinais, a necessidade (Need) e a participação (Participation), percorrerem essa rede. Ele não age em nome dos participantes.",
       "q2": "Sou obrigado a participar?",
-      "a2": "Não. A participação é voluntária, e cada um toma a própria decisão.",
+      "a2": "Não. Você decide se vai participar.",
       "q3": "O serviço garante assistência?",
-      "a3": "Não. O resultado depende das decisões independentes e das ações reais dos participantes.",
+      "a3": "Não. O resultado depende do que os participantes decidem e fazem.",
       "q4": "O Social Organizer processa pagamentos?",
       "a4": "Não. O Social Organizer não recebe, não transfere e não retém fundos. Tudo o que os participantes fazem entre si, fazem diretamente, fora do serviço.",
       "q5": "Os participantes entregam dinheiro?",
       "a5": "Podem. Numa necessidade o participante indica um valor, e numa participação indica quanto está disposto a entregar. Se os participantes entregam dinheiro, fazem isso por conta própria e diretamente, conforme o acordo entre eles. O Social Organizer não verifica se a entrega aconteceu.",
       "q6": "Em que moeda estão os valores?",
-      "a6": "Em dólares americanos: uma unidade de conta comum, para que os valores sejam comparáveis. Em que moeda e de que forma agir, os participantes decidem por si.",
+      "a6": "Em dólares americanos: uma unidade de conta comum, para você comparar os valores. Os participantes escolhem a moeda e a forma.",
       "q7": "Em que ele difere das plataformas on-line de ajuda mútua?",
-      "a7": "As plataformas chinesas de ajuda mútua tinham um único operador, cobravam dos membros e prometiam pagamentos como um seguro, e em 2021 foram fechadas. O Social Organizer não tem operador, fundo nem pagamentos: apenas pessoas que se conhecem, dois sinais e participação voluntária.",
+      "a7": "Cada plataforma chinesa de ajuda mútua tinha um operador que cobrava dos membros e prometia pagamentos, como uma seguradora. Em 2021 os reguladores fecharam todas. O Social Organizer não tem operador nem fundo: pessoas que se conhecem enviam dois sinais e decidem por conta própria.",
       "q8": "Isso é um seguro?",
       "a8": "Não. Uma seguradora cobra seu dinheiro antes e promete um pagamento. Aqui você não paga nada antes e ninguém promete nada. Quando alguém da sua rede passa por um aperto, quem decide participar assume uma pequena parte."
     }

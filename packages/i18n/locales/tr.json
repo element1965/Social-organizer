@@ -703,32 +703,32 @@
     },
     "steps": {
       "title": "Nasıl çalışır",
-      "lead": "Önce ağ gelir. Geri kalan her şey onun içinde olur.",
+      "lead": "Önce ağı kurarsınız. İhtiyaçlar ve katılım ağın içinde ilerler.",
       "s1Title": "Ağınızı siz kurarsınız",
       "s1Text": "Yüz yüze tanıdığınız kişileri bir bağlantı ya da QR kodla ekleyin. <b>Her biri birbirinizi tanıdığınızı onaylar.</b>",
       "s2Title": "Gördüğünüzden daha uzağa ulaşır",
-      "s2Text": "Kendi insanlarınız üzerinden onların insanlarına ulaşırsınız: 2. ve 3. tokalaşma. <b>Yalnızca kendi üç tokalaşmanızı görürsünüz, ağın tamamını asla.</b>",
+      "s2Text": "Kendi insanlarınız üzerinden onların insanlarına ulaşırsınız: 2. ve 3. tokalaşma. <b>Üç tokalaşma derinliğine kadar görürsünüz, ağın tamamını ise kimse görmez.</b>",
       "s3Title": "İhtiyaç, belirttiği dolar kadar kişiye ulaşır",
-      "s3Text": "{{amount}} tutarındaki bir ihtiyaç tam olarak {{n}} kişiye ulaşır, önce tokalaşma olarak en yakınlara. <b>Her biri için bu katılmak üzere bir fırsattır</b> ve tutar karşılandığında ihtiyaç kapanır.",
+      "s3Text": "{{amount}} tutarındaki bir ihtiyaç tam olarak {{n}} kişiye ulaşır, önce tokalaşmayla en yakın olanlara. <b>Her birinin katılmak için bir şansı vardır</b> ve katılımcılar tutarı karşıladığında ihtiyaç kapanır.",
       "s4Title": "Eşgüdüm bunu izler",
-      "s4Text": "İsteyenler katılım bildirir ve niyetler, kitle fonlamasındaki gibi toplanır. <b>Ne yapılacağını ve nasıl yapılacağını katılımcılar doğrudan kararlaştırır</b>, kendi sohbetlerinde."
+      "s4Text": "İsteyenler katılım bildirir, tutarlar kitle fonlamasındaki gibi toplanır. <b>Ayrıntılarda katılımcılar doğrudan kendi aralarında anlaşır</b>, kendi sohbetlerinde."
     },
     "chain": {
       "title": "İhtiyaç bildirimi tokalaşmalarla ilerler",
-      "lead": "Maria'nın ihtiyacını görürsünüz, çünkü onu Oleg tanır, siz de Oleg'i tanırsınız. İhtiyaç yalnızca belirttiği dolar kadar kişiye ulaşır, önce en yakınlara. Yanıtsız bırakabilirsiniz. <b>Yükümlülük yok.</b>"
+      "lead": "Maria'nın ihtiyacını görürsünüz, çünkü onu Oleg tanır, siz de Oleg'i tanırsınız. İhtiyaç yalnızca belirttiği dolar kadar kişiye ulaşır, önce en yakınlara. <b>Kimseye bir borcunuz yoktur</b> ve yanıtsız bırakabilirsiniz."
     },
     "nots": {
       "title": "Social Organizer'ın yapmadıkları",
       "moneyTitle": "Ödeme işlemez",
       "moneyText": "Para kabul etmez, aktarmaz ve tutmaz. Katılımcılar ne yaparsa doğrudan, hizmetin dışında yapar.",
       "feeTitle": "Kesinti almaz",
-      "feeText": "Açık kaynak, kâr amacı gütmeyen bir proje. Abonelik yok, reklam yok, yüzde yok.",
+      "feeText": "Kod açık, proje kâr amacı gütmüyor ve onun için hiçbir şey ödemezsiniz.",
       "choiceTitle": "Sizin yerinize karar vermez",
-      "choiceText": "Kimi ekleyeceğiniz, katılıp katılmayacağınız ve nasıl katılacağınız her seferinde sizin seçiminiz. Hayır demek hiçbir şeyi bozmaz."
+      "choiceText": "Kimi ekleyeceğinizi, katılıp katılmayacağınızı ve nasıl katılacağınızı siz seçersiniz. Hayır diyebilirsiniz ve hiçbir şey bozulmaz."
     },
     "start": {
       "title": "Zaten tanıdığınız kişilerle başlayın",
-      "lead": "<b>Tanıdığınız birinden bağlantı mı var?</b> Açın: sizi doğrudan onun çevresine götürür. Yoksa giriş yapın ve ilk beş kişiyi kendiniz davet edin.",
+      "lead": "<b>Tanıdığınız birinden bağlantı mı aldınız?</b> Açın, onun çevresine girersiniz. Bağlantı yoksa giriş yapın ve ilk beş kişiyi kendiniz davet edin.",
       "play": "Google Play",
       "appstore": "App Store",
       "telegram": "Telegram'da aç",
@@ -740,11 +740,11 @@
     "principles": {
       "title": "İlkeler",
       "p1Title": "Gönüllü katılım",
-      "p1Text": "Kimse yanıt vermek zorunda değildir. Katılım bir karardır, borç değil.",
+      "p1Text": "Kimse yanıt vermek zorunda değildir. Katılıp katılmayacağınıza her seferinde siz karar verirsiniz.",
       "p2Title": "Bağımsız karar",
-      "p2Text": "Herkes kendi kararını verir; düzenleyen de puanlama da yoktur. Reddetmenin yaptırımı yoktur.",
+      "p2Text": "Hiçbir düzenleyici sizin yerinize karar vermez ve kimse sizi puanlamaz. Reddederseniz size hiçbir şey olmaz.",
       "p3Title": "Katılımcılar arasında doğrudan bağ",
-      "p3Text": "Anlaşmalar ve eylemler, onaylanmış tanışıklıkla bağlı kişiler arasında kalır.",
+      "p3Text": "Katılımcılar kendi aralarında anlaşır ve harekete geçer, aracı yoktur.",
       "p4Title": "Önce ağ gelir",
       "p4Text": "Sinyaller yalnızca onaylanmış tanışıklıklar üzerinden ilerler. Riskleri doğrudan tanıdığınız insanlarla paylaşırsınız, ortak havuz ve işletmeci olmadan."
     },
@@ -753,17 +753,17 @@
       "q1": "Social Organizer ne yapar?",
       "a1": "Yüz yüze tanıdığınız insanlardan bir ağ kurmanıza yardım eder ve iki sinyalin, yani ihtiyaç (Need) ile katılım (Participation) sinyallerinin, bu ağ içinde ilerlemesini sağlar. Katılımcılar adına hareket etmez.",
       "q2": "Katılmak zorunda mıyım?",
-      "a2": "Hayır. Katılım gönüllüdür ve herkes kendi kararını kendisi verir.",
+      "a2": "Hayır. Katılıp katılmayacağınıza siz karar verirsiniz.",
       "q3": "Hizmet desteği garanti eder mi?",
-      "a3": "Hayır. Sonuç, katılımcıların bağımsız kararlarına ve fiilî eylemlerine bağlıdır.",
+      "a3": "Hayır. Sonuç, katılımcıların ne karar verdiğine ve ne yaptığına bağlıdır.",
       "q4": "Social Organizer ödeme işler mi?",
-      "a4": "Hayır. Social Organizer para kabul etmez, aktarmaz ve tutmaz. Katılımcıların kendi aralarında yaptığı her şeyi doğrudan, hizmetin dışında yaparlar.",
+      "a4": "Hayır. Social Organizer para kabul etmez, aktarmaz ve tutmaz. Katılımcılar kendi aralarında ne yaparsa doğrudan, hizmetin dışında yapar.",
       "q5": "Katılımcılar para devreder mi?",
       "a5": "Edebilirler. İhtiyaç bildiriminde katılımcı bir tutar belirtir, katılım bildiriminde ise ne kadar vermeye hazır olduğunu belirtir. Katılımcılar para devrederse bunu kendileri ve doğrudan, kendi anlaşmalarına göre yaparlar. Social Organizer devrin gerçekleşip gerçekleşmediğini doğrulamaz.",
       "q6": "Tutarlar hangi birimle belirtilir?",
-      "a6": "ABD doları ile: tutarların karşılaştırılabilmesi için ortak bir hesap birimidir. Hangi para biriminin ve hangi yolun kullanılacağına katılımcılar kendileri karar verir.",
+      "a6": "ABD doları ile: tutarları karşılaştırabilmeniz için ortak bir hesap birimidir. Para birimini ve yolu katılımcılar kendileri seçer.",
       "q7": "Çevrimiçi karşılıklı yardım platformlarından farkı nedir?",
-      "a7": "Çin'deki karşılıklı yardım platformlarının tek bir işletmecisi vardı, üyelerden para toplar ve sigorta gibi ödeme vaat ederdi; 2021'de kapatıldılar. Social Organizer'ın işletmecisi, havuzu ve ödemesi yoktur: yalnızca birbirini tanıyan insanlar, iki sinyal ve gönüllü katılım vardır.",
+      "a7": "Çin'deki karşılıklı yardım platformlarının her birinin tek bir işletmecisi vardı; işletmeci üyelerden para toplar ve sigortacı gibi ödeme vaat ederdi. 2021'de düzenleyiciler hepsini kapattı. Social Organizer'ın işletmecisi ve havuzu yoktur: birbirini tanıyan insanlar iki sinyal gönderir ve kendileri karar verir.",
       "q8": "Bu bir sigorta mı?",
       "a8": "Hayır. Sigortacı parayı önceden alır ve ödeme vaat eder. Burada önceden hiçbir şey ödemezsiniz ve kimse bir şey vaat etmez. Ağınızdaki biri zor durumda kaldığında, katılmaya karar verenler küçük bir pay üstlenir."
     }

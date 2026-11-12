@@ -713,32 +713,32 @@
     },
     "steps": {
       "title": "Jak to działa",
-      "lead": "Najpierw sieć. Wszystko inne dzieje się w niej.",
+      "lead": "Najpierw budujesz sieć. Potrzeby i udział krążą wewnątrz niej.",
       "s1Title": "Budujesz swoją sieć",
       "s1Text": "Dodawaj osoby, które znasz osobiście, przez link lub kod QR. <b>Każda z nich potwierdza, że się znacie.</b>",
       "s2Title": "Sięga dalej, niż widzisz",
-      "s2Text": "Przez swoich ludzi docierasz do ich ludzi: to drugi i trzeci uścisk dłoni. <b>Widzisz tylko własne trzy uściski dłoni, nigdy całą sieć.</b>",
+      "s2Text": "Przez swoich ludzi docierasz do ich ludzi: to drugi i trzeci uścisk dłoni. <b>Widzisz trzy uściski dłoni w głąb, a całej sieci nie widzi nikt.</b>",
       "s3Title": "Potrzeba dociera do tylu osób, ile dolarów wskazuje",
-      "s3Text": "Potrzeba na {{amount}} dociera dokładnie do {{n}} osób, zaczynając od najbliższych uściskami dłoni. <b>Dla każdej z nich to jedna szansa, by wziąć udział</b>, a gdy kwota zostanie pokryta, potrzeba się zamyka.",
+      "s3Text": "Potrzeba na {{amount}} dociera do dokładnie {{n}} osób, najpierw do najbliższych uściskami dłoni. <b>Każda z nich ma jedną szansę, by wziąć udział</b>, a potrzeba zamyka się, gdy uczestnicy pokryją kwotę.",
       "s4Title": "Koordynacja przychodzi potem",
-      "s4Text": "Chętni zgłaszają udział, a zamiary się sumują, jak w crowdfundingu. <b>Co i jak zrobić, uczestnicy ustalają bezpośrednio</b>, na własnym czacie."
+      "s4Text": "Kto chce, zgłasza udział, a kwoty się sumują, jak w crowdfundingu. <b>Szczegóły uczestnicy ustalają bezpośrednio między sobą</b>, na własnym czacie."
     },
     "chain": {
       "title": "Wiadomość idzie po uściskach dłoni",
-      "lead": "Widzisz potrzebę Marii, bo zna ją Oleg, a Ty znasz Olega. Dociera tylko do tylu osób, ile dolarów wskazuje, zaczynając od najbliższych. Możesz nie odpowiadać. <b>Żadnych zobowiązań.</b>"
+      "lead": "Widzisz potrzebę Marii, bo zna ją Oleg, a Ty znasz Olega. Dociera tylko do tylu osób, ile dolarów wskazuje, najpierw do najbliższych. <b>Niczego nie musisz</b> i możesz zostawić ją bez odpowiedzi."
     },
     "nots": {
       "title": "Czego Social Organizer nie robi",
       "moneyTitle": "Nie obsługuje płatności",
-      "moneyText": "Nie przyjmuje, nie przekazuje ani nie przetrzymuje środków. Wszelkie działania uczestnicy podejmują bezpośrednio, poza serwisem.",
+      "moneyText": "Nie przyjmuje, nie przekazuje ani nie przetrzymuje środków. Co uczestnicy robią, robią bezpośrednio, poza serwisem.",
       "feeTitle": "Nie bierze prowizji",
-      "feeText": "Otwarty kod, projekt non-profit. Bez subskrypcji, bez reklam, bez procentów.",
+      "feeText": "Kod jest otwarty, projekt jest non-profit i nic za niego nie płacisz.",
       "choiceTitle": "Nie decyduje za Ciebie",
-      "choiceText": "Kogo dodać, czy wziąć udział i jak — za każdym razem decydujesz Ty. Odmowa niczego nie psuje."
+      "choiceText": "Ty wybierasz, kogo dodać, czy wziąć udział i jak. Możesz odmówić i nic się nie psuje."
     },
     "start": {
       "title": "Zacznij od osób, które już znasz",
-      "lead": "<b>Masz link od kogoś, kogo znasz?</b> Otwórz go: prowadzi prosto do jego kręgu. Nie masz — zaloguj się i zaproś pierwszych pięcioro sam.",
+      "lead": "<b>Masz link od kogoś, kogo znasz?</b> Otwórz go, a trafisz do jego kręgu. Nie masz linku? Zaloguj się i zaproś pierwszych pięć osób osobiście.",
       "play": "Google Play",
       "appstore": "App Store",
       "telegram": "Otwórz w Telegramie",
@@ -750,30 +750,30 @@
     "principles": {
       "title": "Zasady",
       "p1Title": "Dobrowolny udział",
-      "p1Text": "Nikt nie musi się odzywać. Udział to decyzja, a nie dług.",
+      "p1Text": "Nikt nie musi odpowiadać. Za każdym razem to Ty decydujesz, czy wziąć udział.",
       "p2Title": "Niezależna decyzja",
-      "p2Text": "Każdy decyduje sam, bez organizatora i bez ocen. Za odmowę nie ma sankcji.",
+      "p2Text": "Żaden organizator nie decyduje za Ciebie i nikt Cię nie ocenia. Jeśli odmówisz, nic Ci się nie stanie.",
       "p3Title": "Bezpośredni kontakt uczestników",
-      "p3Text": "Ustalenia i działania toczą się między osobami powiązanymi potwierdzoną znajomością.",
+      "p3Text": "Uczestnicy ustalają i robią wszystko między sobą, bez pośredników.",
       "p4Title": "Najpierw sieć",
       "p4Text": "Sygnały idą tylko przez potwierdzone znajomości. Dzielisz ryzyko z ludźmi, których znasz bezpośrednio, bez wspólnej puli i bez operatora."
     },
     "faq": {
       "title": "Najważniejsze w skrócie",
       "q1": "Co robi Social Organizer?",
-      "a1": "Pomaga zbudować sieć ludzi, których znasz osobiście, i pozwala przesyłać nią dwa sygnały — potrzebę (Need) i udział (Participation) —. Nie działa w imieniu uczestników.",
+      "a1": "Pomaga zbudować sieć ludzi, których znasz osobiście, i pozwala przesyłać nią dwa sygnały: potrzebę (Need) i udział (Participation). Nie działa w imieniu uczestników.",
       "q2": "Czy muszę brać udział?",
-      "a2": "Nie. Udział jest dobrowolny, a każdy podejmuje decyzję samodzielnie.",
+      "a2": "Nie. To Ty decydujesz, czy wziąć udział.",
       "q3": "Czy serwis gwarantuje wsparcie?",
-      "a3": "Nie. Wynik zależy od niezależnych decyzji i faktycznych działań uczestników.",
+      "a3": "Nie. Wynik zależy od tego, co uczestnicy postanowią i zrobią.",
       "q4": "Czy Social Organizer obsługuje płatności?",
-      "a4": "Nie. Social Organizer nie przyjmuje, nie przekazuje ani nie przetrzymuje środków. Wszelkie działania między uczestnikami podejmują oni bezpośrednio, poza serwisem.",
+      "a4": "Nie. Social Organizer nie przyjmuje, nie przekazuje ani nie przetrzymuje środków. Wszystko, co uczestnicy robią między sobą, robią bezpośrednio, poza serwisem.",
       "q5": "Czy uczestnicy przekazują pieniądze?",
-      "a5": "Mogą. W zgłoszeniu potrzeby uczestnik podaje kwotę, a w zgłoszeniu udziału — ile jest gotów przekazać. Jeśli uczestnicy przekazują pieniądze, robią to sami i bezpośrednio, według własnych ustaleń. Social Organizer nie sprawdza, czy przekaz się odbył.",
+      "a5": "Mogą. W zgłoszeniu potrzeby uczestnik podaje kwotę, a w zgłoszeniu udziału podaje, ile jest gotów przekazać. Jeśli uczestnicy przekazują pieniądze, robią to sami i bezpośrednio, według własnych ustaleń. Social Organizer nie sprawdza, czy przekaz się odbył.",
       "q6": "W czym podane są kwoty?",
-      "a6": "W dolarach amerykańskich: to wspólna jednostka rozliczeniowa, aby kwoty były porównywalne. W jakiej walucie i w jaki sposób działać, uczestnicy decydują sami.",
+      "a6": "W dolarach amerykańskich: to wspólna jednostka rozliczeniowa, żeby można było porównać kwoty. Walutę i sposób wybierają uczestnicy.",
       "q7": "Czym różni się od internetowych platform wzajemnej pomocy?",
-      "a7": "Chińskie platformy wzajemnej pomocy miały jednego operatora, pobierały opłaty od członków i obiecywały wypłaty jak w ubezpieczeniu, a w 2021 roku zostały zamknięte. Social Organizer nie ma operatora, puli ani wypłat: są tylko ludzie, którzy się znają, dwa sygnały i dobrowolny udział.",
+      "a7": "Każda z chińskich platform wzajemnej pomocy miała jednego operatora, który pobierał opłaty od członków i obiecywał wypłaty jak ubezpieczyciel. W 2021 roku władze zamknęły je wszystkie. Social Organizer nie ma operatora ani puli: ludzie, którzy się znają, przesyłają dwa sygnały i sami decydują.",
       "q8": "Czy to ubezpieczenie?",
       "a8": "Nie. Ubezpieczyciel z góry bierze od Ciebie pieniądze i obiecuje wypłatę. Tutaj z góry nic nie płacisz i nikt niczego nie obiecuje. Gdy komuś w Twojej sieci jest ciężko, ci, którzy zdecydują się wziąć udział, biorą na siebie po małej części."
     }

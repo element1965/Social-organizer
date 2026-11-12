@@ -703,32 +703,32 @@
     },
     "steps": {
       "title": "Slik fungerer det",
-      "lead": "Nettverket kommer først. Alt annet skjer inni det.",
+      "lead": "Først bygger du nettverket. Behov og deltakelse beveger seg inni det.",
       "s1Title": "Du bygger nettverket ditt",
       "s1Text": "Legg til folk du kjenner personlig, med en lenke eller en QR-kode. <b>Hver av dem bekrefter at dere kjenner hverandre.</b>",
       "s2Title": "Det rekker lenger enn du ser",
-      "s2Text": "Gjennom folkene dine når du folkene deres: det andre og tredje håndtrykket. <b>Du ser bare dine egne tre håndtrykk, aldri hele nettverket.</b>",
+      "s2Text": "Gjennom folkene dine når du folkene deres: det andre og tredje håndtrykket. <b>Du ser tre håndtrykk dypt, og ingen ser hele nettverket.</b>",
       "s3Title": "Et behov når like mange som beløpet i dollar",
-      "s3Text": "Et behov på {{amount}} når akkurat {{n}} personer, de nærmeste håndtrykkene først. <b>For hver av dem er det én mulighet til å bidra</b>, og når beløpet er dekket, lukkes behovet.",
+      "s3Text": "Et behov på {{amount}} når akkurat {{n}} personer, de nærmeste håndtrykkene først. <b>Hver av dem får én mulighet til å delta</b>, og behovet lukkes når deltakerne har dekket beløpet.",
       "s4Title": "Koordineringen kommer etterpå",
-      "s4Text": "De som ønsker det, melder om deltakelse, og intensjonene legges sammen, som i crowdfunding. <b>Hva som skal gjøres og hvordan, avtaler deltakerne direkte</b>, i sin egen chat."
+      "s4Text": "De som vil, melder fra om deltakelse, og beløpene legges sammen, som i crowdfunding. <b>Deltakerne avtaler detaljene direkte med hverandre</b>, i sin egen chat."
     },
     "chain": {
       "title": "Et behov går via håndtrykk",
-      "lead": "Du ser behovet til Maria fordi Oleg kjenner henne, og du kjenner Oleg. Det når bare like mange som beløpet i dollar, de nærmeste først. Du kan la det stå ubesvart. <b>Ingen forpliktelser.</b>"
+      "lead": "Du ser behovet til Maria fordi Oleg kjenner henne, og du kjenner Oleg. Det når bare like mange som det nevner dollar, de nærmeste først. <b>Du skylder ingenting</b>, og du kan la det stå ubesvart."
     },
     "nots": {
       "title": "Hva Social Organizer ikke gjør",
       "moneyTitle": "Behandler ingen betalinger",
       "moneyText": "Tar ikke imot, overfører eller holder tilbake midler. Det deltakerne gjør, gjør de direkte, utenfor tjenesten.",
       "feeTitle": "Tar ingen avgift",
-      "feeText": "Åpen kildekode, et ideelt prosjekt. Ingen abonnement, ingen annonser, ingen prosenter.",
+      "feeText": "Koden er åpen, prosjektet er ideelt, og du betaler ingenting for det.",
       "choiceTitle": "Bestemmer ikke for deg",
-      "choiceText": "Hvem du legger til, om du deltar og hvordan — det er ditt valg hver gang. Å si nei ødelegger ingenting."
+      "choiceText": "Du velger hvem du legger til, om du deltar og hvordan. Du kan si nei, og ingenting går i stykker."
     },
     "start": {
       "title": "Start med personer du allerede kjenner",
-      "lead": "<b>Har du en lenke fra noen du kjenner?</b> Åpne den: den fører rett inn i kretsen deres. Ingen lenke — logg inn og inviter de fem første selv.",
+      "lead": "<b>Har du en lenke fra noen du kjenner?</b> Åpne den, så havner du i kretsen deres. Ingen lenke? Logg inn og inviter de fem første selv.",
       "play": "Google Play",
       "appstore": "App Store",
       "telegram": "Åpne i Telegram",
@@ -740,11 +740,11 @@
     "principles": {
       "title": "Prinsipper",
       "p1Title": "Frivillig deltakelse",
-      "p1Text": "Ingen må svare. Deltakelse er en beslutning, ikke en plikt.",
+      "p1Text": "Ingen må svare. Du bestemmer hver gang om du vil delta.",
       "p2Title": "Uavhengig beslutning",
-      "p2Text": "Alle bestemmer selv, uten organisator og uten vurderinger. Å avslå gir ingen sanksjoner.",
+      "p2Text": "Ingen organisator bestemmer for deg, og ingen vurderer deg. Hvis du sier nei, skjer det ingenting med deg.",
       "p3Title": "Direkte kontakt mellom deltakerne",
-      "p3Text": "Avtaler og handlinger forblir mellom personer som er knyttet sammen av bekreftede bekjentskaper.",
+      "p3Text": "Deltakerne avtaler og handler seg imellom, uten mellomledd.",
       "p4Title": "Nettverket kommer først",
       "p4Text": "Signaler går bare gjennom bekreftede bekjentskaper. Du deler risiko med folk du kjenner direkte, uten felles pott og uten operatør."
     },
@@ -753,17 +753,17 @@
       "q1": "Hva gjør Social Organizer?",
       "a1": "Den hjelper deg å bygge et nettverk av folk du kjenner personlig, og lar to signaler, behov (Need) og deltakelse (Participation), gå gjennom det. Den handler ikke på vegne av deltakerne.",
       "q2": "Må jeg delta?",
-      "a2": "Nei. Deltakelse er frivillig, og alle tar sin egen beslutning.",
+      "a2": "Nei. Du bestemmer selv om du vil delta.",
       "q3": "Garanterer tjenesten bistand?",
-      "a3": "Nei. Utfallet avhenger av deltakernes uavhengige beslutninger og faktiske handlinger.",
+      "a3": "Nei. Utfallet avhenger av hva deltakerne bestemmer og gjør.",
       "q4": "Behandler Social Organizer betalinger?",
       "a4": "Nei. Social Organizer tar ikke imot, overfører eller holder tilbake midler. Alt deltakerne gjør seg imellom, gjør de direkte, utenfor tjenesten.",
       "q5": "Overleverer deltakerne penger?",
       "a5": "Det kan de. I meldingen om et behov oppgir deltakeren et beløp, og i meldingen om deltakelse hvor mye vedkommende er klar til å overlevere. Hvis deltakerne overleverer penger, gjør de det selv og direkte, etter egen avtale. Social Organizer kontrollerer ikke om en overlevering har funnet sted.",
       "q6": "Hvilken valuta er beløpene oppgitt i?",
-      "a6": "I amerikanske dollar: en felles regneenhet, slik at beløp kan sammenlignes. Hvilken valuta og hvilken måte som brukes, avgjør deltakerne selv.",
+      "a6": "I amerikanske dollar: en felles regneenhet, så du kan sammenligne beløp. Deltakerne velger selv valuta og måte.",
       "q7": "Hvordan skiller den seg fra nettbaserte gjensidige hjelpeplattformer?",
-      "a7": "Kinas gjensidige hjelpeplattformer hadde én operatør, tok betalt av medlemmene og lovet utbetalinger som en forsikring, og i 2021 ble de stengt. Social Organizer har ingen operatør, ingen pott og ingen utbetalinger: bare folk som kjenner hverandre, to signaler og frivillig deltakelse.",
+      "a7": "Hver av Kinas gjensidige hjelpeplattformer hadde én operatør som tok betalt av medlemmene og lovet utbetalinger, som et forsikringsselskap. I 2021 stengte myndighetene dem alle. Social Organizer har ingen operatør og ingen pott: folk som kjenner hverandre sender to signaler og bestemmer selv.",
       "q8": "Er dette en forsikring?",
       "a8": "Nei. Et forsikringsselskap tar pengene dine på forhånd og lover en utbetaling. Her betaler du ingenting på forhånd, og ingen lover noe. Når noen i nettverket ditt har det vanskelig, tar de som bestemmer seg for å delta, hver en liten del."
     }

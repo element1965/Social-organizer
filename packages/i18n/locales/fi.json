@@ -703,32 +703,32 @@
     },
     "steps": {
       "title": "Näin se toimii",
-      "lead": "Verkosto tulee ensin. Kaikki muu tapahtuu sen sisällä.",
+      "lead": "Rakennat ensin verkoston. Tarpeet ja osallistuminen kulkevat sen sisällä.",
       "s1Title": "Rakennat verkostosi",
       "s1Text": "Lisää ihmisiä, jotka tunnet henkilökohtaisesti, linkillä tai QR-koodilla. <b>Jokainen heistä vahvistaa, että tunnette toisenne.</b>",
       "s2Title": "Se ulottuu pidemmälle kuin näet",
-      "s2Text": "Omiesi kautta tavoitat heidän omansa: 2. ja 3. kädenpuristuksen. <b>Näet vain omat kolme kädenpuristustasi, et koskaan koko verkostoa.</b>",
+      "s2Text": "Omiesi kautta tavoitat heidän omansa: 2. ja 3. kädenpuristuksen. <b>Näet kolme kädenpuristusta syvälle, eikä kukaan näe koko verkostoa.</b>",
       "s3Title": "Tarve tavoittaa yhtä monta ihmistä kuin siinä on dollareita",
-      "s3Text": "{{amount}} suuruinen tarve tavoittaa täsmälleen {{n}} ihmistä, kädenpuristuksilta lähimmät ensin. <b>Jokaiselle heistä se on yksi tilaisuus osallistua</b>, ja kun summa on katettu, tarve sulkeutuu.",
+      "s3Text": "{{amount}} suuruinen tarve tavoittaa täsmälleen {{n}} ihmistä, kädenpuristuksilta lähimmät ensin. <b>Jokaisella heistä on yksi tilaisuus osallistua</b>, ja tarve sulkeutuu, kun osallistujat ovat kattaneet summan.",
       "s4Title": "Koordinointi seuraa perässä",
-      "s4Text": "Halukkaat ilmoittavat osallistumisestaan, ja aikomukset kertyvät yhteen kuten joukkorahoituksessa. <b>Mitä tehdään ja miten, osallistujat sopivat suoraan keskenään</b>, omassa keskustelussaan."
+      "s4Text": "Halukkaat ilmoittavat osallistumisestaan, ja summat kertyvät yhteen kuten joukkorahoituksessa. <b>Osallistujat sopivat yksityiskohdista suoraan keskenään</b>, omassa keskustelussaan."
     },
     "chain": {
       "title": "Viesti kulkee kädenpuristuksia pitkin",
-      "lead": "Näet Marian tarpeen, koska Oleg tuntee hänet ja sinä tunnet Olegin. Se tavoittaa vain yhtä monta ihmistä kuin siinä on dollareita, lähimmät ensin. Siihen voi jättää vastaamatta. <b>Ei velvoitteita.</b>"
+      "lead": "Näet Marian tarpeen, koska Oleg tuntee hänet ja sinä tunnet Olegin. Se tavoittaa vain yhtä monta ihmistä kuin siinä on dollareita, lähimmät ensin. <b>Et ole kenellekään mitään velkaa</b>, ja voit jättää siihen vastaamatta."
     },
     "nots": {
       "title": "Mitä Social Organizer ei tee",
       "moneyTitle": "Ei käsittele maksuja",
       "moneyText": "Se ei vastaanota, siirrä eikä pidä hallussaan varoja. Mitä osallistujat tekevät, he tekevät suoraan, palvelun ulkopuolella.",
       "feeTitle": "Ei peri maksua",
-      "feeText": "Avoin lähdekoodi, voittoa tavoittelematon hanke. Ei tilausta, ei mainoksia, ei prosenttiosuutta.",
+      "feeText": "Koodi on avoin, hanke on voittoa tavoittelematon, etkä maksa siitä mitään.",
       "choiceTitle": "Ei päätä puolestasi",
-      "choiceText": "Kenet lisäät, osallistutko ja miten — se on joka kerta sinun valintasi. Kieltäytyminen ei riko mitään."
+      "choiceText": "Valitset itse, kenet lisäät, osallistutko ja miten. Voit kieltäytyä, eikä mikään mene rikki."
     },
     "start": {
       "title": "Aloita ihmisistä, jotka jo tunnet",
-      "lead": "<b>Saitko linkin tutulta?</b> Avaa se: se vie suoraan hänen piiriinsä. Jos linkkiä ei ole, kirjaudu ja kutsu ensimmäiset viisi itse.",
+      "lead": "<b>Saitko linkin tutulta?</b> Avaa se, niin päädyt hänen piiriinsä. Ei linkkiä? Kirjaudu ja kutsu ensimmäiset viisi itse.",
       "play": "Google Play",
       "appstore": "App Store",
       "telegram": "Avaa Telegramissa",
@@ -740,11 +740,11 @@
     "principles": {
       "title": "Periaatteet",
       "p1Title": "Vapaaehtoinen osallistuminen",
-      "p1Text": "Kenenkään ei ole pakko vastata. Osallistuminen on päätös, ei velka.",
+      "p1Text": "Kenenkään ei ole pakko vastata. Päätät joka kerta itse, osallistutko.",
       "p2Title": "Itsenäinen päätös",
-      "p2Text": "Jokainen päättää itse, ilman järjestäjää ja ilman arvosanoja. Kieltäytymisestä ei seuraa seuraamuksia.",
+      "p2Text": "Mikään järjestäjä ei päätä puolestasi, eikä kukaan arvioi sinua. Jos kieltäydyt, sinulle ei tapahdu mitään.",
       "p3Title": "Osallistujien suora yhteys",
-      "p3Text": "Sopimukset ja toimet pysyvät ihmisten välillä, joita yhdistävät vahvistetut tuttavuudet.",
+      "p3Text": "Osallistujat sopivat ja toimivat keskenään, ilman välikäsiä.",
       "p4Title": "Verkosto tulee ensin",
       "p4Text": "Signaalit kulkevat vain vahvistettujen tuttavuuksien kautta. Jaat riskit ihmisten kanssa, jotka tunnet suoraan, ilman yhteistä kassaa ja ilman ylläpitäjää."
     },
@@ -753,17 +753,17 @@
       "q1": "Mitä Social Organizer tekee?",
       "a1": "Se auttaa rakentamaan verkoston ihmisistä, jotka tunnet henkilökohtaisesti, ja antaa kahden signaalin, tarpeen ja osallistumisen, kulkea sen läpi. Se ei toimi osallistujien puolesta.",
       "q2": "Onko pakko osallistua?",
-      "a2": "Ei. Osallistuminen on vapaaehtoista, ja jokainen tekee päätöksensä itse.",
+      "a2": "Ei. Päätät itse, osallistutko.",
       "q3": "Takaako palvelu avun?",
-      "a3": "Ei. Lopputulos riippuu osallistujien itsenäisistä päätöksistä ja todellisista toimista.",
+      "a3": "Ei. Lopputulos riippuu siitä, mitä osallistujat päättävät ja tekevät.",
       "q4": "Käsitteleekö Social Organizer maksuja?",
       "a4": "Ei. Social Organizer ei vastaanota, siirrä eikä pidä hallussaan varoja. Mitä osallistujat tekevät keskenään, he tekevät suoraan, palvelun ulkopuolella.",
       "q5": "Luovuttavatko osallistujat rahaa?",
       "a5": "He voivat. Tarpeessa osallistuja nimeää summan, ja osallistumisessa nimetään, paljonko osallistuja on valmis luovuttamaan. Jos osallistujat luovuttavat rahaa, he tekevät sen itse ja suoraan, oman sopimuksensa mukaan. Social Organizer ei tarkista, onko luovutus tapahtunut.",
       "q6": "Missä yksikössä summat ilmoitetaan?",
-      "a6": "Yhdysvaltain dollareina: se on yhteinen laskentayksikkö, jotta summat ovat vertailukelpoisia. Missä valuutassa ja millä tavalla toimitaan, osallistujat päättävät itse.",
+      "a6": "Yhdysvaltain dollareina: se on yhteinen laskentayksikkö, jotta voit vertailla summia. Osallistujat valitsevat valuutan ja tavan itse.",
       "q7": "Miten se eroaa verkossa toimivista keskinäisen avun alustoista?",
-      "a7": "Kiinan keskinäisen avun alustoilla oli yksi ylläpitäjä, ne perivät jäseniltä maksuja ja lupasivat korvauksia kuin vakuutus, ja vuonna 2021 ne suljettiin. Social Organizerilla ei ole ylläpitäjää, kassaa eikä korvauksia: vain toisensa tuntevia ihmisiä, kaksi signaalia ja vapaaehtoinen osallistuminen.",
+      "a7": "Jokaisella Kiinan keskinäisen avun alustalla oli yksi ylläpitäjä, joka peri jäseniltä maksuja ja lupasi korvauksia kuin vakuutusyhtiö. Vuonna 2021 viranomaiset sulkivat ne kaikki. Social Organizerilla ei ole ylläpitäjää eikä kassaa: toisensa tuntevat ihmiset lähettävät kaksi signaalia ja päättävät itse.",
       "q8": "Onko tämä vakuutus?",
       "a8": "Ei. Vakuutusyhtiö ottaa rahasi etukäteen ja lupaa korvauksen. Täällä et maksa mitään etukäteen eikä kukaan lupaa mitään. Kun jollakulla verkostossasi on vaikeaa, ne, jotka päättävät osallistua, ottavat kukin pienen osan."
     }
