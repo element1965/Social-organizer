@@ -328,7 +328,6 @@
     "inCircle": "{{count}} în cercul lor",
     "noneYet": "Nu a adăugat pe nimeni încă",
     "brought": "A adus {{count}}",
-    "pledged": "intenție {{amount}}",
     "via": "prin {{path}}",
     "empty": "Nimeni încă",
     "notFound": "Nu am găsit pe nimeni",

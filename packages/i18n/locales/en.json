@@ -337,7 +337,6 @@
     "inCircle": "{{count}} in their circle",
     "noneYet": "Has not added anyone yet",
     "brought": "Brought in {{count}}",
-    "pledged": "intention {{amount}}",
     "via": "through {{path}}",
     "empty": "Nobody yet",
     "notFound": "Nobody found",

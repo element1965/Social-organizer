@@ -328,7 +328,6 @@
     "inCircle": "{{count}} במעגל שלהם",
     "noneYet": "עדיין לא הוסיפו אף אחד",
     "brought": "הביא/ה {{count}}",
-    "pledged": "כוונה {{amount}}",
     "via": "דרך {{path}}",
     "empty": "עדיין אין אף אחד",
     "notFound": "לא נמצא אף אחד",

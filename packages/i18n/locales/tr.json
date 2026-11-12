@@ -325,7 +325,6 @@
     "inCircle": "Çevresinde {{count}} kişi",
     "noneYet": "Henüz kimseyi eklemedi",
     "brought": "{{count}} kişi getirdi",
-    "pledged": "niyet {{amount}}",
     "via": "{{path}} üzerinden",
     "empty": "Henüz kimse yok",
     "notFound": "Kimse bulunamadı",

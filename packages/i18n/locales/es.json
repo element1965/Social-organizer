@@ -328,7 +328,6 @@
     "inCircle": "{{count}} en su círculo",
     "noneYet": "Aún no ha añadido a nadie",
     "brought": "Trajo a {{count}}",
-    "pledged": "intención {{amount}}",
     "via": "a través de {{path}}",
     "empty": "Nadie todavía",
     "notFound": "No hay nadie",

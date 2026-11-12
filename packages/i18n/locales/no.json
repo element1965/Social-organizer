@@ -325,7 +325,6 @@
     "inCircle": "{{count}} i kretsen sin",
     "noneYet": "Har ikke lagt til noen ennå",
     "brought": "Har tatt med {{count}}",
-    "pledged": "intensjon {{amount}}",
     "via": "via {{path}}",
     "empty": "Ingen ennå",
     "notFound": "Ingen funnet",

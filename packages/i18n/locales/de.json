@@ -325,7 +325,6 @@
     "inCircle": "{{count}} im eigenen Kreis",
     "noneYet": "Hat noch niemanden hinzugefügt",
     "brought": "Hat {{count}} eingeladen",
-    "pledged": "Absicht {{amount}}",
     "via": "über {{path}}",
     "empty": "Noch niemand",
     "notFound": "Niemand gefunden",

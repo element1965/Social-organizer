@@ -325,7 +325,6 @@
     "inCircle": "{{count}} i sin krets",
     "noneYet": "Har inte lagt till någon ännu",
     "brought": "Har bjudit in {{count}}",
-    "pledged": "avsikt {{amount}}",
     "via": "via {{path}}",
     "empty": "Ingen ännu",
     "notFound": "Ingen hittades",

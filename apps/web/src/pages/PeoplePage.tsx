@@ -44,6 +44,8 @@ type Entry = {
   id: string;
   name: string;
   subtitle: string;
+  /** Their intention, shown at the row end ("15 $"); null when not set. */
+  value: string | null;
   photoUrl: string | null;
   at: number;
   /** Their intention this period, for sorting (0 when not set). */
@@ -93,20 +95,20 @@ export function PeoplePage() {
   // All three rings at once: the list shows the active one, the search also looks through the others
   const byRing = useMemo<Record<Ring, Entry[]>>(() => {
     // What a person brings to the network: their intention this period (the sum "Declared participation" adds up).
+    // Shown at the row end, so a long chain of acquaintances keeps the subtitle to itself
     const pledged = (budget: number | null | undefined) =>
-      budget != null && budget > 0 ? t('people.pledged', { amount: formatMoney(Math.round(budget)) }) : null;
+      budget != null && budget > 0 ? formatMoney(Math.round(budget)) : null;
     const first: Entry[] = (net.connections.data ?? []).map((c) => {
         const others = Math.max(0, c.connectionCount - 1);
         const parts: string[] = [];
         if (c.nickname && c.nickname !== c.name) parts.push(c.name);
         // People they connected besides you: how many they brought into the network
         parts.push(others > 0 ? t('people.brought', { count: others }) : t('people.noneYet'));
-        const pledge = pledged(c.remainingBudget);
-        if (pledge) parts.push(pledge);
         return {
           id: c.userId,
           name: c.displayName,
           subtitle: parts.join(' · '),
+          value: pledged(c.remainingBudget),
           photoUrl: c.photoUrl,
           at: new Date(c.createdAt).getTime(),
           intention: c.remainingBudget ?? 0,
@@ -120,9 +122,8 @@ export function PeoplePage() {
         return {
           id: u.id,
           name: net.displayName(u.id, u.name),
-          subtitle: [via.length ? t('people.via', { path: via.join(' → ') }) : t(`circle.rings.full${r}`), pledged(u.remainingBudget)]
-            .filter(Boolean)
-            .join(' · '),
+          subtitle: via.length ? t('people.via', { path: via.join(' → ') }) : t(`circle.rings.full${r}`),
+          value: pledged(u.remainingBudget),
           photoUrl: u.photoUrl,
           at: new Date(u.connectedAt ?? u.createdAt ?? 0).getTime(),
           intention: u.remainingBudget ?? 0,
@@ -171,6 +172,7 @@ export function PeoplePage() {
             id: p.fromUser.id,
             name: p.fromUser.name,
             subtitle: t('people.confirm'),
+            value: null,
             photoUrl: p.fromUser.photoUrl,
             at: new Date(p.createdAt).getTime(),
             intention: 0,
@@ -203,6 +205,9 @@ export function PeoplePage() {
         key={`${entry.pendingId ?? 'p'}:${entry.id}`}
         name={entry.name}
         subtitle={entry.subtitle}
+        subtitleLines={2}
+        value={entry.value ?? undefined}
+        valueCaption={entry.value ? t('people.sortIntention') : undefined}
         src={entry.photoUrl}
         onClick={() => open(entry)}
       />

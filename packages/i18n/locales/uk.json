@@ -343,7 +343,6 @@
     "inCircle": "{{count}} у своєму колі",
     "noneYet": "Ще нікого не додали",
     "brought": "Привів(-ла) {{count}}",
-    "pledged": "намір {{amount}}",
     "via": "через {{path}}",
     "empty": "Поки нікого",
     "notFound": "Нікого не знайдено",

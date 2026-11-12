@@ -337,7 +337,6 @@
     "inCircle": "{{count}} في دائرتهم",
     "noneYet": "لم يُضف أحدًا بعد",
     "brought": "أحضر {{count}}",
-    "pledged": "نيّة {{amount}}",
     "via": "عبر {{path}}",
     "empty": "لا أحد بعد",
     "notFound": "لم يُعثر على أحد",

@@ -325,7 +325,6 @@
     "inCircle": "{{count}} hänen piirissään",
     "noneYet": "Ei ole vielä lisännyt ketään",
     "brought": "Toi mukaan {{count}}",
-    "pledged": "aikomus {{amount}}",
     "via": "{{path}} kautta",
     "empty": "Ei vielä ketään",
     "notFound": "Ketään ei löytynyt",

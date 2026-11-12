@@ -322,7 +322,6 @@
     "inCircle": "その人のサークルに{{count}}人",
     "noneYet": "まだ誰も加えていません",
     "brought": "{{count}}人を招待",
-    "pledged": "意向 {{amount}}",
     "via": "{{path}}経由",
     "empty": "まだ誰もいません",
     "notFound": "見つかりませんでした",
