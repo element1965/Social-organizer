@@ -691,11 +691,11 @@
     },
     "meta": {
       "title": "Social Organizer — a network of people you know",
-      "description": "Build a network of people you know in person: it spreads each person’s risks across many. When someone in it reports a Need, exactly as many people learn of it as the dollars it names, nearest first. Participants decide for themselves and act directly. Open source, a non-profit project."
+      "description": "Build a network of people you know in person and share each other’s risks. A Need reaches exactly as many people as the dollars it names, nearest first. Participants decide for themselves and act directly. Open source, a non-profit project."
     },
     "hero": {
       "title": "First, a network of people you know",
-      "lead": "Social Organizer starts with your network: people you know in person, and the people they know. Together they make each person’s risks bearable. <b>When someone in it reports a Need, exactly as many people learn of it as the dollars it names</b>, and each of them may take a small part.",
+      "lead": "Social Organizer starts with your network: people you know in person, and the people they know. When one of you has a hard time, the others can share the load. <b>A Need reaches exactly as many people as the dollars it names, nearest first</b>, and each of them may take a small part.",
       "factOpen": "Open source",
       "factNonprofit": "Non-profit",
       "factNoMoney": "Voluntary participation",
@@ -760,7 +760,7 @@
       "p3Title": "Direct connection between participants",
       "p3Text": "Arrangements and actions stay between people linked by confirmed acquaintance.",
       "p4Title": "The network comes first",
-      "p4Text": "Signals travel only through confirmed acquaintances. Risks are shared between people, not pooled: no common pot, no operator, no promised payouts."
+      "p4Text": "Signals travel only through confirmed acquaintances. You share risks with people you know directly, without a common pot or an operator."
     },
     "faq": {
       "title": "The essentials",
@@ -779,7 +779,7 @@
       "q7": "How is it different from online mutual aid platforms?",
       "a7": "China’s mutual aid platforms had one operator, charged members and promised payouts like insurance, and in 2021 they were shut down. Social Organizer has no operator, no pot and no payouts: only people who know each other, two signals and voluntary participation.",
       "q8": "Is this insurance?",
-      "a8": "No. Insurance collects contributions into a fund in advance and promises a payout. Here nobody pays anything in advance and nothing is promised: one person’s risk is spread across many people who know each other, and those who decide to take part each take a small part."
+      "a8": "No. An insurer takes your money in advance and promises a payout. Here you pay nothing in advance and nobody promises anything. When someone in your network has a hard time, the people who decide to take part each take a small share."
     }
   },
   "how": {
@@ -917,7 +917,7 @@
     "compare": {
       "title": "The closest example: China’s online mutual aid",
       "lead": "From 2018 to 2021 China’s online mutual aid platforms gathered hundreds of millions of members: the largest, Xianghubao, had over 100 million. <b>Members shared the cost of each other’s serious illness, a few dollars a year each.</b> In 2021 regulators closed the whole sector: one operator was running what was in effect insurance.",
-      "note": "Social Organizer keeps the idea, one person’s risk spread across many who each take a small part, and drops what made those platforms fragile: the operator, the pot and the promised payouts.",
+      "note": "Social Organizer keeps their idea: when one person has a hard time, many people each take a small part. It has no operator and no pot.",
       "caption": "China’s online mutual aid platforms compared with Social Organizer",
       "them": "Online mutual aid platforms",
       "us": "Social Organizer",

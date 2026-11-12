@@ -685,11 +685,11 @@
     },
     "meta": {
       "title": "Social Organizer — síť lidí, které znáte",
-      "description": "Vybudujte si síť lidí, které znáte osobně: rozkládá rizika každého mezi mnoho lidí. Když v ní někdo oznámí potřebu, dozví se o ní přesně tolik lidí, kolik je v ní dolarů, nejdřív ti nejbližší. Účastníci se rozhodují sami a jednají přímo. Otevřený kód, nezisková služba."
+      "description": "Vybudujte si síť lidí, které znáte osobně, a sdílejte navzájem svá rizika. Potřeba se dostane k tolika lidem, kolik dolarů uvádí, nejdřív k těm nejbližším. Účastníci se rozhodují sami a jednají přímo. Otevřený kód, nezisková služba."
     },
     "hero": {
       "title": "Nejdřív síť lidí, které znáte",
-      "lead": "Social Organizer začíná vaší sítí: lidmi, které znáte osobně, a lidmi, které znají oni. Společně činí rizika každého snesitelnými. <b>Když v ní někdo oznámí potřebu, dozví se o ní přesně tolik lidí, kolik je v ní dolarů</b>, a každý z nich může převzít malou část.",
+      "lead": "Social Organizer začíná vaší sítí: lidmi, které znáte osobně, a lidmi, které znají oni. Když je někomu z vás těžko, ostatní mu mohou pomoct unést břemeno. <b>Potřeba se dostane k tolika lidem, kolik dolarů uvádí, nejdřív k těm nejbližším</b>, a každý z nich může převzít malou část.",
       "factOpen": "Otevřený kód",
       "factNonprofit": "Neziskový",
       "factNoMoney": "Dobrovolná účast",
@@ -756,7 +756,7 @@
       "p3Title": "Přímé spojení účastníků",
       "p3Text": "Dohody a kroky zůstávají mezi lidmi, které spojují potvrzené známosti.",
       "p4Title": "Na prvním místě je síť",
-      "p4Text": "Signály putují jen přes potvrzené známosti. Rizika se mezi lidmi sdílejí a neshromažďují se na jednom místě: žádná společná pokladna, žádný provozovatel, žádné slíbené výplaty."
+      "p4Text": "Signály putují jen přes potvrzené známosti. Rizika sdílíte s lidmi, které znáte osobně, bez společné pokladny a bez provozovatele."
     },
     "faq": {
       "title": "Stručně o hlavním",
@@ -775,7 +775,7 @@
       "q7": "Čím se liší od online platforem vzájemné pomoci?",
       "a7": "Čínské platformy vzájemné pomoci měly jednoho provozovatele, vybíraly od členů peníze a slibovaly výplaty jako pojištění; v roce 2021 byly zavřeny. Social Organizer nemá provozovatele, pokladnu ani výplaty: jen lidi, kteří se znají, dva signály a dobrovolnou účast.",
       "q8": "Je to pojištění?",
-      "a8": "Ne. Pojištění předem vybírá příspěvky do fondu a slibuje výplatu. Tady nikdo nic předem neplatí a nic se neslibuje: riziko jednoho člověka se rozkládá mezi mnoho lidí, kteří se znají, a ti, kdo se rozhodnou zapojit, převezmou každý malou část."
+      "a8": "Ne. Pojišťovna si od vás peníze bere předem a slibuje výplatu. Tady předem nic neplatíte a nikdo nic neslibuje. Když je někomu ve vaší síti těžko, ti, kdo se rozhodnou zapojit, převezmou každý malou část."
     }
   },
   "how": {
@@ -912,7 +912,7 @@
     "compare": {
       "title": "Nejbližší příklad: čínská online vzájemná pomoc",
       "lead": "V letech 2018 až 2021 sdružovaly čínské online platformy vzájemné pomoci stovky milionů členů: největší z nich, Xianghubao, jich měla přes 100 milionů. <b>Členové si navzájem hradili náklady na vážné nemoci, každý jen pár dolarů ročně.</b> V roce 2021 úřady zavřely celé odvětví: jeden provozovatel fakticky provozoval pojištění.",
-      "note": "Social Organizer si nechává myšlenku, že riziko jednoho se rozkládá mezi mnoho lidí a každý nese malou část, a vypouští to, co tyto platformy dělalo křehkými: provozovatele, pokladnu a slíbené výplaty.",
+      "note": "Social Organizer si nechává jejich myšlenku: když je jednomu těžko, mnoho lidí převezme každý malou část. Provozovatele ani pokladnu nemá.",
       "caption": "Čínské online platformy vzájemné pomoci ve srovnání se Social Organizer",
       "them": "Online platformy vzájemné pomoci",
       "us": "Social Organizer",
