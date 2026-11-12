@@ -681,11 +681,11 @@
     },
     "meta": {
       "title": "Social Organizer — una rete di persone che conosci",
-      "description": "Costruisci una rete di persone che conosci di persona. Quando qualcuno al suo interno segnala un bisogno, lo vengono a sapere tante persone quanti sono i dollari indicati, le più vicine per prime. I partecipanti decidono da sé e agiscono direttamente. Codice aperto, progetto non profit."
+      "description": "Costruisci una rete di persone che conosci di persona: distribuisce i rischi di ciascuno su molti. Quando qualcuno al suo interno segnala un bisogno, lo vengono a sapere tante persone quanti sono i dollari indicati, le più vicine per prime. I partecipanti decidono da sé e agiscono direttamente. Codice aperto, progetto non profit."
     },
     "hero": {
       "title": "Prima di tutto, una rete di persone che conosci",
-      "lead": "Social Organizer parte dalla tua rete: le persone che conosci di persona e quelle che conoscono loro. <b>Quando qualcuno al suo interno segnala un bisogno, lo vengono a sapere esattamente tante persone quanti sono i dollari indicati.</b> Il coordinamento ne è la conseguenza, direttamente tra i partecipanti.",
+      "lead": "Social Organizer parte dalla tua rete: le persone che conosci di persona e quelle che conoscono loro. Insieme rendono sostenibili i rischi di ciascuno. <b>Quando qualcuno al suo interno segnala un bisogno, lo vengono a sapere esattamente tante persone quanti sono i dollari indicati</b>, e ognuna può prendersi una piccola parte.",
       "factOpen": "Codice aperto",
       "factNonprofit": "Non profit",
       "factNoMoney": "Partecipazione volontaria",
@@ -751,7 +751,7 @@
       "p3Title": "Collegamento diretto tra i partecipanti",
       "p3Text": "Accordi e azioni restano tra persone legate da conoscenze confermate.",
       "p4Title": "Prima la rete",
-      "p4Text": "I segnali viaggiano solo attraverso conoscenze confermate. Nessuna cassa comune, nessun operatore, nessuna distribuzione centralizzata."
+      "p4Text": "I segnali viaggiano solo attraverso conoscenze confermate. I rischi si dividono tra le persone, non si raccolgono in un unico posto: nessuna cassa comune, nessun operatore, nessun rimborso promesso."
     },
     "faq": {
       "title": "L'essenziale",
@@ -768,7 +768,9 @@
       "q6": "In che valuta sono indicati gli importi?",
       "a6": "In dollari USA: è un'unità di conto comune, così che gli importi siano confrontabili. In quale valuta e in che modo agire lo decidono i partecipanti stessi.",
       "q7": "In cosa è diverso dalle piattaforme di mutuo aiuto online?",
-      "a7": "Le piattaforme cinesi di mutuo aiuto avevano un solo operatore, addebitavano denaro ai membri e promettevano rimborsi come un'assicurazione; nel 2021 sono state chiuse. Social Organizer non ha operatore, cassa né rimborsi: solo persone che si conoscono, due segnali e partecipazione volontaria."
+      "a7": "Le piattaforme cinesi di mutuo aiuto avevano un solo operatore, addebitavano denaro ai membri e promettevano rimborsi come un'assicurazione; nel 2021 sono state chiuse. Social Organizer non ha operatore, cassa né rimborsi: solo persone che si conoscono, due segnali e partecipazione volontaria.",
+      "q8": "È un'assicurazione?",
+      "a8": "No. Un'assicurazione raccoglie in anticipo i contributi in un fondo e promette un rimborso. Qui nessuno paga nulla in anticipo e nulla è promesso: il rischio di una persona si distribuisce su molte persone che si conoscono, e chi decide di partecipare si prende una piccola parte."
     }
   },
   "how": {
@@ -905,7 +907,7 @@
     "compare": {
       "title": "L'esempio più vicino: il mutuo aiuto online in Cina",
       "lead": "Dal 2018 al 2021 le piattaforme cinesi di mutuo aiuto online hanno raccolto centinaia di milioni di membri: la più grande, Xianghubao, ne aveva più di 100 milioni. <b>I membri si dividevano il costo delle gravi malattie l'uno dell'altro, pochi dollari l'anno ciascuno.</b> Nel 2021 le autorità hanno chiuso l'intero settore: un solo operatore gestiva di fatto un'assicurazione.",
-      "note": "Social Organizer conserva l'idea, tante persone che prendono ciascuna una piccola parte, e abbandona ciò che rendeva fragili quelle piattaforme.",
+      "note": "Social Organizer conserva l'idea, il rischio di uno distribuito su molti che si prendono ciascuno una piccola parte, e abbandona ciò che rendeva fragili quelle piattaforme: l'operatore, la cassa e i rimborsi promessi.",
       "caption": "Le piattaforme cinesi di mutuo aiuto online a confronto con Social Organizer",
       "them": "Piattaforme di mutuo aiuto online",
       "us": "Social Organizer",

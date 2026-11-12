@@ -673,11 +673,11 @@
     },
     "meta": {
       "title": "Social Organizer — mạng lưới những người bạn quen",
-      "description": "Xây dựng mạng lưới những người bạn quen trực tiếp. Khi ai đó trong mạng lưới báo một nhu cầu, số người biết tin đúng bằng số đô la nêu trong đó, người gần nhất trước. Người tham gia tự quyết định và hành động trực tiếp. Mã nguồn mở, một dự án phi lợi nhuận."
+      "description": "Xây dựng mạng lưới những người bạn quen trực tiếp: mạng lưới này chia rủi ro của mỗi người cho nhiều người. Khi ai đó trong mạng lưới báo một nhu cầu, số người biết tin đúng bằng số đô la nêu trong đó, người gần nhất trước. Người tham gia tự quyết định và hành động trực tiếp. Mã nguồn mở, một dự án phi lợi nhuận."
     },
     "hero": {
       "title": "Trước hết là mạng lưới những người bạn quen",
-      "lead": "Social Organizer bắt đầu từ mạng lưới của bạn: những người bạn quen trực tiếp, và những người họ quen. <b>Khi ai đó trong mạng lưới báo một nhu cầu, số người biết tin đúng bằng số đô la nêu trong đó.</b> Sự phối hợp đến sau, trực tiếp giữa những người tham gia.",
+      "lead": "Social Organizer bắt đầu từ mạng lưới của bạn: những người bạn quen trực tiếp, và những người họ quen. Cùng nhau, họ giúp rủi ro của mỗi người trở nên chịu đựng được. <b>Khi ai đó trong mạng lưới báo một nhu cầu, số người biết tin đúng bằng số đô la nêu trong đó</b>, và mỗi người trong số họ có thể nhận một phần nhỏ.",
       "factOpen": "Mã nguồn mở",
       "factNonprofit": "Phi lợi nhuận",
       "factNoMoney": "Tham gia tự nguyện",
@@ -741,7 +741,7 @@
       "p3Title": "Liên hệ trực tiếp giữa những người tham gia",
       "p3Text": "Các thỏa thuận và hành động diễn ra giữa những người được nối với nhau bằng các mối quen đã xác nhận.",
       "p4Title": "Mạng lưới đến trước",
-      "p4Text": "Tín hiệu chỉ đi qua những mối quen đã xác nhận. Không có quỹ chung, không có đơn vị vận hành, không có phân phối tập trung."
+      "p4Text": "Tín hiệu chỉ đi qua những mối quen đã xác nhận. Rủi ro được chia sẻ giữa mọi người, không bị gom lại một chỗ: không có quỹ chung, không có đơn vị vận hành, không có khoản chi trả được hứa."
     },
     "faq": {
       "title": "Điều chính, ngắn gọn",
@@ -758,7 +758,9 @@
       "q6": "Các khoản được tính bằng gì?",
       "a6": "Bằng đô la Mỹ: đây là đơn vị tính chung để các khoản có thể so sánh được. Dùng loại tiền nào và theo cách nào là do những người tham gia tự quyết định.",
       "q7": "Nó khác gì các nền tảng tương trợ trực tuyến?",
-      "a7": "Các nền tảng tương trợ của Trung Quốc chỉ có một đơn vị vận hành, thu tiền của thành viên và hứa chi trả như bảo hiểm, và năm 2021 đã bị đóng cửa. Social Organizer không có đơn vị vận hành, không có quỹ và không có khoản chi trả nào: chỉ có những người quen nhau, hai tín hiệu và sự tham gia tự nguyện."
+      "a7": "Các nền tảng tương trợ của Trung Quốc chỉ có một đơn vị vận hành, thu tiền của thành viên và hứa chi trả như bảo hiểm, và năm 2021 đã bị đóng cửa. Social Organizer không có đơn vị vận hành, không có quỹ và không có khoản chi trả nào: chỉ có những người quen nhau, hai tín hiệu và sự tham gia tự nguyện.",
+      "q8": "Đây có phải bảo hiểm không?",
+      "a8": "Không. Bảo hiểm thu đóng góp vào một quỹ từ trước và hứa chi trả. Ở đây không ai trả gì trước và không có gì được hứa: rủi ro của một người được chia cho nhiều người quen nhau, và ai quyết định tham gia thì nhận một phần nhỏ."
     }
   },
   "how": {
@@ -895,7 +897,7 @@
     "compare": {
       "title": "Ví dụ gần nhất: tương trợ trực tuyến ở Trung Quốc",
       "lead": "Từ 2018 đến 2021, các nền tảng tương trợ trực tuyến của Trung Quốc thu hút hàng trăm triệu thành viên: lớn nhất là Xianghubao, với hơn 100 triệu. <b>Các thành viên chia nhau chi phí bệnh nặng của nhau, mỗi người vài đô la một năm.</b> Năm 2021, cơ quan quản lý đóng cả lĩnh vực: một đơn vị vận hành đang làm điều thực chất là bảo hiểm.",
-      "note": "Social Organizer giữ lại ý tưởng, nhiều người mỗi người gánh một phần nhỏ, và bỏ đi điều khiến các nền tảng đó mong manh.",
+      "note": "Social Organizer giữ lại ý tưởng, rủi ro của một người được chia cho nhiều người mỗi người nhận một phần nhỏ, và bỏ đi điều khiến các nền tảng đó mong manh: đơn vị vận hành, quỹ chung và các khoản chi trả được hứa.",
       "caption": "Các nền tảng tương trợ trực tuyến của Trung Quốc so với Social Organizer",
       "them": "Nền tảng tương trợ trực tuyến",
       "us": "Social Organizer",
