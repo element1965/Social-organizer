@@ -506,8 +506,7 @@
     "notifyChannel": "Kanava",
     "notifyTelegramNotLinked": "Yhdistä Telegram kohdassa ”Tili”, niin viestit tulevat sinne.",
     "stakeSaved": "Tallennettu",
-    "needCounts": "Avoimet: {{open}} · Aiemmat: {{past}}",
-    "stages": "Vaiheet"
+    "needCounts": "Avoimet: {{open}} · Aiemmat: {{past}}"
   },
   "settings": {
     "title": "Asetukset",

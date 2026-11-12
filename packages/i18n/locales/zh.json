@@ -503,8 +503,7 @@
     "notifyChannel": "渠道",
     "notifyTelegramNotLinked": "在“账号”里连接 Telegram，以便在那里接收消息。",
     "stakeSaved": "已保存",
-    "needCounts": "进行中: {{open}} · 过往: {{past}}",
-    "stages": "阶段"
+    "needCounts": "进行中: {{open}} · 过往: {{past}}"
   },
   "settings": {
     "title": "设置",

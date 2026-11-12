@@ -503,8 +503,7 @@
     "notifyChannel": "Kanal",
     "notifyTelegramNotLinked": "Hubungkan Telegram di “Akun” agar pesan sampai di sana.",
     "stakeSaved": "Tersimpan",
-    "needCounts": "Terbuka: {{open}} · Sebelumnya: {{past}}",
-    "stages": "Tahapan"
+    "needCounts": "Terbuka: {{open}} · Sebelumnya: {{past}}"
   },
   "settings": {
     "title": "Pengaturan",

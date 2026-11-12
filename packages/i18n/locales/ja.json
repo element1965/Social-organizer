@@ -503,8 +503,7 @@
     "notifyChannel": "チャンネル",
     "notifyTelegramNotLinked": "メッセージをそこで受け取るには、「アカウント」でTelegramを連携してください。",
     "stakeSaved": "保存しました",
-    "needCounts": "開いているもの: {{open}} · 過去: {{past}}",
-    "stages": "段階"
+    "needCounts": "開いているもの: {{open}} · 過去: {{past}}"
   },
   "settings": {
     "title": "設定",

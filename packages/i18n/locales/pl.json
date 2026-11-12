@@ -512,8 +512,7 @@
     "notifyChannel": "Kanał",
     "notifyTelegramNotLinked": "Połącz Telegram w „Konto”, żeby dostawać tam wiadomości.",
     "stakeSaved": "Zapisano",
-    "needCounts": "Otwarte: {{open}} · Minione: {{past}}",
-    "stages": "Etapy"
+    "needCounts": "Otwarte: {{open}} · Minione: {{past}}"
   },
   "settings": {
     "title": "Ustawienia",

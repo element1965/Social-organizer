@@ -506,8 +506,7 @@
     "notifyChannel": "Kanal",
     "notifyTelegramNotLinked": "Koble til Telegram under «Konto» for å få meldingene der.",
     "stakeSaved": "Lagret",
-    "needCounts": "Åpne: {{open}} · Tidligere: {{past}}",
-    "stages": "Etapper"
+    "needCounts": "Åpne: {{open}} · Tidligere: {{past}}"
   },
   "settings": {
     "title": "Innstillinger",

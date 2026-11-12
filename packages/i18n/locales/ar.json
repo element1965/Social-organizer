@@ -518,8 +518,7 @@
     "notifyChannel": "القناة",
     "notifyTelegramNotLinked": "اربط Telegram في «الحساب» لتصل الرسائل إلى هناك.",
     "stakeSaved": "تم الحفظ",
-    "needCounts": "المفتوحة: {{open}} · السابقة: {{past}}",
-    "stages": "المراحل"
+    "needCounts": "المفتوحة: {{open}} · السابقة: {{past}}"
   },
   "settings": {
     "title": "الإعدادات",

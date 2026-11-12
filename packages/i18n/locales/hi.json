@@ -506,8 +506,7 @@
     "notifyChannel": "चैनल",
     "notifyTelegramNotLinked": "संदेश वहाँ पाने के लिए “खाता” में Telegram जोड़ें।",
     "stakeSaved": "सहेजा गया",
-    "needCounts": "खुले: {{open}} · पिछले: {{past}}",
-    "stages": "पड़ाव"
+    "needCounts": "खुले: {{open}} · पिछले: {{past}}"
   },
   "settings": {
     "title": "सेटिंग्स",

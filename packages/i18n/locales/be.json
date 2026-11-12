@@ -512,8 +512,7 @@
     "notifyChannel": "Канал",
     "notifyTelegramNotLinked": "Падключыце Telegram у раздзеле «Акаўнт», каб атрымліваць паведамленні там.",
     "stakeSaved": "Захавана",
-    "needCounts": "Адкрытыя: {{open}} · Мінулыя: {{past}}",
-    "stages": "Этапы"
+    "needCounts": "Адкрытыя: {{open}} · Мінулыя: {{past}}"
   },
   "settings": {
     "title": "Налады",

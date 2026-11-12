@@ -512,8 +512,7 @@
     "notifyChannel": "Kanál",
     "notifyTelegramNotLinked": "Propojte Telegram v části „Účet“, aby vám tam chodily zprávy.",
     "stakeSaved": "Uloženo",
-    "needCounts": "Otevřené: {{open}} · Minulé: {{past}}",
-    "stages": "Etapy"
+    "needCounts": "Otevřené: {{open}} · Minulé: {{past}}"
   },
   "settings": {
     "title": "Nastavení",

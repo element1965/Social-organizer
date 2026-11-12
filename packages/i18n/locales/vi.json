@@ -503,8 +503,7 @@
     "notifyChannel": "Kênh",
     "notifyTelegramNotLinked": "Kết nối Telegram trong «Tài khoản» để nhận tin ở đó.",
     "stakeSaved": "Đã lưu",
-    "needCounts": "Đang mở: {{open}} · Trước đây: {{past}}",
-    "stages": "Các chặng"
+    "needCounts": "Đang mở: {{open}} · Trước đây: {{past}}"
   },
   "settings": {
     "title": "Cài đặt",

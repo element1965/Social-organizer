@@ -524,8 +524,7 @@
     "notifyChannel": "Канал",
     "notifyTelegramNotLinked": "Подключите Telegram в разделе «Аккаунт», чтобы получать сообщения там.",
     "stakeSaved": "Сохранено",
-    "needCounts": "Открытые: {{open}} · Прошлые: {{past}}",
-    "stages": "Этапы"
+    "needCounts": "Открытые: {{open}} · Прошлые: {{past}}"
   },
   "settings": {
     "title": "Настройки",

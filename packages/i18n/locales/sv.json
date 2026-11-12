@@ -506,8 +506,7 @@
     "notifyChannel": "Kanal",
     "notifyTelegramNotLinked": "Anslut Telegram under ”Konto” för att få meddelanden där.",
     "stakeSaved": "Sparat",
-    "needCounts": "Öppna: {{open}} · Tidigare: {{past}}",
-    "stages": "Milstolpar"
+    "needCounts": "Öppna: {{open}} · Tidigare: {{past}}"
   },
   "settings": {
     "title": "Inställningar",

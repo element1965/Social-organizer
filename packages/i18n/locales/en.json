@@ -518,8 +518,7 @@
     "notifyChannel": "Channel",
     "notifyTelegramNotLinked": "Connect Telegram in Account to get messages there.",
     "stakeSaved": "Saved",
-    "needCounts": "Open: {{open}} · Past: {{past}}",
-    "stages": "Milestones"
+    "needCounts": "Open: {{open}} · Past: {{past}}"
   },
   "settings": {
     "title": "Settings",
