@@ -331,7 +331,6 @@
     "inCircle": "{{count}} v jejich kruhu",
     "noneYet": "Zatím nikoho nepřidal",
     "brought": "Přivedl(a) {{count}}",
-    "pledged": "záměr {{amount}}",
     "via": "přes {{path}}",
     "empty": "Zatím nikdo",
     "notFound": "Nikdo nenalezen",

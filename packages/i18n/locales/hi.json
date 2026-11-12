@@ -325,7 +325,6 @@
     "inCircle": "उनके वृत्त में {{count}}",
     "noneYet": "अभी तक किसी को नहीं जोड़ा",
     "brought": "{{count}} लोगों को लाए",
-    "pledged": "इरादा {{amount}}",
     "via": "{{path}} के ज़रिए",
     "empty": "अभी कोई नहीं",
     "notFound": "कोई नहीं मिला",

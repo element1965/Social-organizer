@@ -322,7 +322,6 @@
     "inCircle": "{{count}} người trong vòng tròn của họ",
     "noneYet": "Chưa thêm ai",
     "brought": "Đã mời {{count}}",
-    "pledged": "dự định {{amount}}",
     "via": "qua {{path}}",
     "empty": "Chưa có ai",
     "notFound": "Không tìm thấy ai",

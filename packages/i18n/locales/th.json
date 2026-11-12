@@ -322,7 +322,6 @@
     "inCircle": "{{count}} คนในวงของเขา",
     "noneYet": "ยังไม่ได้เพิ่มใคร",
     "brought": "ชวนมา {{count}} คน",
-    "pledged": "ความตั้งใจ {{amount}}",
     "via": "ผ่าน {{path}}",
     "empty": "ยังไม่มีใคร",
     "notFound": "ไม่พบใคร",
