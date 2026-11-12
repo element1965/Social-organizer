@@ -17,7 +17,7 @@ const STEPS: NetStep[] = [0, 1, 2];
  * Intro (screens.md §14, onboarding.html №5–7): three frames over the same network, which stays in place
  * while only the highlight changes. No brand line; "Skip" in the corner (not on the last frame).
  * First run (?first=1 from the sign-in path; see components/onboarding/flow.ts): user.completeOnboarding, then the
- * minimum participation question, carrying ?next=. A rewatch from Help returns to /me/help.
+ * intention question, carrying ?next=. A rewatch from Help returns to /me/help.
  */
 export function IntroPage() {
   const { t } = useTranslation();

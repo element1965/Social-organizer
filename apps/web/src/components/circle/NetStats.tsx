@@ -16,7 +16,7 @@ type NetStatsProps = {
   className?: string;
 };
 
-/** "N people in the network" and "Minimum participation of the network" with an ⓘ mark. Tap explains the sum. */
+/** "N people in the network" and "Declared participation of the network" with an ⓘ mark. Tap explains the sum. */
 export function NetStats({ people, canHelp, weekDelta, variant, className }: NetStatsProps) {
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);

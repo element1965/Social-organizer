@@ -28,8 +28,8 @@ import { formatLongDate } from '../components/profile/dates';
 import { applyFontScale } from '../components/profile/fontScale';
 import { kyivDayCount } from '../components/admin/adminDay';
 
-function networkKey(count: number): 'profile.networkOne' | 'profile.networkFew' | 'profile.networkMany' {
-  const form = countForm(count);
+function networkKey(count: number, lang: string): 'profile.networkOne' | 'profile.networkFew' | 'profile.networkMany' {
+  const form = countForm(count, lang);
   if (form === 'one') return 'profile.networkOne';
   if (form === 'few') return 'profile.networkFew';
   return 'profile.networkMany';
@@ -182,7 +182,7 @@ export function ProfilePage() {
       <Group title={t('profile.participation')}>
         <Row
           title={t('circle.stats.canHelp')}
-          subtitle={access.data ? t(networkKey(visiblePeople), { count: visiblePeople }) : undefined}
+          subtitle={access.data ? t(networkKey(visiblePeople, i18n.language), { count: visiblePeople }) : undefined}
           variant="value"
           value={canHelp == null ? undefined : formatMoney(canHelp)}
           chevron={false}

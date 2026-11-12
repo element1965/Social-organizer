@@ -4,7 +4,16 @@ export function isLive(status: string): boolean {
   return status === 'ACTIVE' || status === 'BLOCKED';
 }
 
-export function countForm(count: number): 'one' | 'few' | 'many' {
+/** Plural form for one/few/many keys. Uses the language's own rules when given (en: 261 → many). */
+export function countForm(count: number, lang?: string): 'one' | 'few' | 'many' {
+  if (lang) {
+    try {
+      const form = new Intl.PluralRules(lang).select(count);
+      return form === 'one' ? 'one' : form === 'few' ? 'few' : 'many';
+    } catch {
+      // Unknown locale: fall back to the Slavic rule below.
+    }
+  }
   const mod10 = count % 10;
   const mod100 = count % 100;
   if (mod10 === 1 && mod100 !== 11) return 'one';

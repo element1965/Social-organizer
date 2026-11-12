@@ -28,7 +28,7 @@ One invite link per person (orginizer.com and a QR). Share it, show the QR, or s
 NEED (/collection/:id)
 One Need. Author, one time or every 28 days, handshake path, reported Participation against the amount needed, and the participants' chat.
 States:
-- Open (ACTIVE). Anyone in reach can report Participation ("Report Participation" / «Сообщить об участии») with a whole-dollar amount (minimum 1 $). The field suggests their minimum participation. The stage line shows Amount → Chat → Closed. Participation is a voluntary intention, not a payment.
+- Open (ACTIVE). Anyone in reach can report Participation ("Report Participation" / «Сообщить об участии») with a whole-dollar amount (minimum 1 $). The field suggests their intention. The stage line shows Amount → Chat → Closed. Participation is a voluntary intention, not a payment.
 - Amount needed is reported (BLOCKED, no reason): reported Participation covers the amount needed. No new Participation. It does not mean anything was handed over.
 - Paused (BLOCKED with a reason): an admin pause, or a community hold. New Participation and the chat stop. The owner sees the reason and can write to the assistant. On lists this shows as paused.
 - New cycle: a Need's next 28 days (every 28 days). Current participants confirm the amount (waiting / confirmed). Confirming does not change the total already reported.
@@ -36,7 +36,7 @@ States:
 
 PROFILE / ПРОФИЛЬ (/me)
 - Account card → Account (/me/account): photo, name, slug, member since. Contacts (hide contacts is a switch). Connect Telegram, for an account that signed in another way, opens the bot with a link code and does not show the digits. Delete account is at the bottom of Account.
-- Participation: "Minimum participation of the network" (sum of minimum participation named by the circle — a reference figure, not a promise and not money held by anyone). Minimum participation (/me/stake): the amount the person is ready to name when someone they know reports a Need (not per month; it is filled in when they report Participation, and they can name more); "I can't help right now" clears it; Social Organizer does not accept money. Needs (/me/history): open count on the row; open ones are also at /me/open, past ones in history.
+- Participation: "Declared participation of the network" (sum of the intentions named by the circle — a reference figure, not a promise and not money held by anyone). My intention (/me/stake): the amount the person is ready to name when someone they know reports a Need (not per month; it is filled in when they report Participation, and they can name more); "I can't help right now" clears it; Social Organizer does not accept money. Activity (/me/history, Needs and Participation): open count on the row; open ones are also at /me/open, past ones in history.
 - Settings: theme Auto / Light / Dark. Notifications (the notifications channel): cycles (a reminder 3 days before a cycle and again on the day), sounds, and push when the device supports it. The row reads All, Some, or Off. Larger text. Language.
 - More: Help (/me/help), About, Sign out.
 - Admins only: Broadcast (/me/broadcast), Statistics (/me/stats), Support inbox (/support), and the moderation queue.

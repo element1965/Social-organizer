@@ -11,7 +11,7 @@ const PRESETS = [1, 5, 15, 30];
 const DEFAULT_AMOUNT = 1;
 
 /**
- * Minimum participation at the start (screens.md §15, onboarding.html №8): the only question before the
+ * Intention (formerly minimum participation) at the start (screens.md §15, onboarding.html №8): the only question before the
  * Circle, so it comes first. 1 $ is preselected, presets 1 / 5 / 15 / 30 or any whole number; a quiet plaque
  * about the request to the inviter. "Back" returns to the intro; "Save and continue" is one tap to the
  * empty Circle. There is no skip: the amount is never left empty.
