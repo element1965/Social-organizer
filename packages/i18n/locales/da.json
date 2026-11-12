@@ -771,11 +771,11 @@
   "how": {
     "meta": {
       "title": "Sådan fungerer det — Social Organizer",
-      "description": "Først et netværk af mennesker, du kender, så et behov, der når lige så mange mennesker, som det nævner dollar, så direkte koordinering. Og hvordan det adskiller sig fra Kinas onlineplatforme til gensidig hjælp."
+      "description": "Du bygger et netværk af mennesker, du kender. Et behov når lige så mange mennesker i det, som det nævner dollar, og deltagerne koordinerer direkte. Siden sammenligner også Social Organizer med Kinas onlineplatforme til gensidig hjælp."
     },
     "hero": {
       "title": "Først netværket, så signalerne",
-      "lead": "Social Organizer begynder med et netværk af mennesker, du kender personligt. To signaler bevæger sig gennem det. Et <b>behov</b> (Need) er en deltagers besked om, hvad vedkommende har brug for. En <b>deltagelse</b> (Participation) er en anden deltagers besked om sin egen frivillige deltagelse. Alt andet aftaler og gør folk selv, direkte."
+      "lead": "Social Organizer begynder med et netværk af mennesker, du kender personligt. To signaler bevæger sig gennem det. Med et <b>behov</b> siger en deltager, hvad vedkommende har brug for. Med en <b>deltagelse</b> siger en anden deltager, at vedkommende vil være med, og nævner et beløb. Alt andet aftaler og gør folk selv."
     },
     "orbit": {
       "title": "Hvor langt en besked når",
@@ -789,7 +789,7 @@
       "says": [
         "<b>Seks personer, du kender.</b> Det er kredsen: personer, du har bekræftet, at du kender.",
         "Hver af de seks har sine egne seks. <b>36 personer</b>, du ikke kender, men en af dine gør.",
-        "Et skridt mere — <b>216 personer</b>. Beskeden når også dem, gennem dem, der kender dig."
+        "Et skridt mere giver <b>216 personer</b>. Beskeden når også dem, gennem dem, der kender dig."
       ],
       "sumNote": "hvis alle angav {{share}}. Et forenklet eksempel: i virkeligheden overlapper kredse, og ingen behøver at deltage"
     },
@@ -799,7 +799,7 @@
       "says": [
         "<b>Maria Koval</b> melder et behov. Du kender hende ikke.",
         "<b>Oleg</b>, din bror, kender Maria. Derfor får han hendes besked.",
-        "<b>Du</b> får beskeden, fordi du kender Oleg. Om du vil deltage, bestemmer du selv."
+        "<b>Du</b> får beskeden, fordi du kender Oleg. Du bestemmer, om du vil deltage."
       ]
     },
     "join": {
@@ -901,7 +901,7 @@
     },
     "compare": {
       "title": "Det nærmeste eksempel: Kinas gensidige hjælp på nettet",
-      "lead": "Fra 2018 til 2021 samlede Kinas onlineplatforme til gensidig hjælp hundredvis af millioner medlemmer: den største, Xianghubao, havde over 100 millioner. <b>Medlemmerne delte udgifterne til hinandens alvorlige sygdomme, nogle få dollar om året hver.</b> I 2021 lukkede myndighederne hele branchen: én operatør drev i praksis en forsikring.",
+      "lead": "Fra 2018 til 2021 samlede Kinas onlineplatforme til gensidig hjælp hundredvis af millioner medlemmer: den største, Xianghubao, havde over 100 millioner. <b>Medlemmerne delte udgifterne til hinandens alvorlige sygdomme, nogle få dollar om året hver.</b> I 2021 lukkede myndighederne hele branchen, fordi hver platforms operatør i praksis drev en forsikring.",
       "note": "Social Organizer beholder deres idé: når én har det svært, tager mange hver en lille del. Det har ingen operatør og ingen pulje.",
       "caption": "Kinas onlineplatforme til gensidig hjælp sammenlignet med Social Organizer",
       "them": "Onlineplatforme til gensidig hjælp",
@@ -914,7 +914,7 @@
         ],
         [
           "Penge",
-          "Opkræves af platformen hos medlemmerne",
+          "Platformen opkræver penge hos medlemmerne",
           "Går aldrig gennem tjenesten"
         ],
         [

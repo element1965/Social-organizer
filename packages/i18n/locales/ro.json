@@ -776,11 +776,11 @@
   "how": {
     "meta": {
       "title": "Cum funcționează — Social Organizer",
-      "description": "Mai întâi o rețea de oameni pe care îi cunoști, apoi o nevoie care ajunge la atâția oameni câți dolari are suma, apoi coordonare directă. Și prin ce diferă de platformele chineze online de ajutor reciproc."
+      "description": "Construiești o rețea de oameni pe care îi cunoști. O nevoie ajunge la atâția oameni din ea câți dolari are suma, iar participanții se coordonează direct. Pagina compară și Social Organizer cu platformele chineze online de ajutor reciproc."
     },
     "hero": {
       "title": "Mai întâi rețeaua, apoi semnalele",
-      "lead": "Social Organizer începe cu o rețea de oameni pe care îi cunoști personal. Prin ea circulă două semnale. <b>Nevoia</b> (Need) este mesajul unui participant despre ce are nevoie. <b>Participarea</b> (Participation) este mesajul altui participant despre propria participare voluntară. Tot restul oamenii stabilesc și fac singuri, direct."
+      "lead": "Social Organizer începe cu o rețea de oameni pe care îi cunoști personal. Prin ea circulă două semnale. Prin <b>Nevoie</b> (Need), un participant spune de ce are nevoie. Prin <b>Participare</b> (Participation), alt participant spune că participă și indică o sumă. Tot restul oamenii stabilesc și fac singuri, direct."
     },
     "orbit": {
       "title": "Cât de departe merge mesajul",
@@ -794,7 +794,7 @@
       "says": [
         "<b>Șase oameni pe care îi cunoști.</b> Acesta e cercul: oameni cu care ai confirmat că vă cunoașteți.",
         "Fiecare dintre cei șase are ai săi șase. <b>36 de persoane</b> pe care nu le cunoști, dar le cunoaște cineva de-al tău.",
-        "Încă un pas — <b>216 persoane</b>. Mesajul ajunge și la ele, prin cei care te cunosc."
+        "Încă un pas și sunt <b>216 persoane</b>. Mesajul ajunge și la ele, prin cei care te cunosc."
       ],
       "sumNote": "dacă fiecare ar declara {{share}}. Exemplu simplificat: în viață cercurile se suprapun, iar nimeni nu e obligat să participe"
     },
@@ -906,7 +906,7 @@
     },
     "compare": {
       "title": "Cel mai apropiat exemplu: ajutorul reciproc online din China",
-      "lead": "Între 2018 și 2021, platformele chineze online de ajutor reciproc au adunat sute de milioane de membri: cea mai mare, Xianghubao, avea peste 100 de milioane. <b>Membrii își împărțeau costul bolii grave a celorlalți, câțiva dolari pe an fiecare.</b> În 2021, autoritățile de reglementare au închis întregul sector: un singur operator administra, de fapt, o asigurare.",
+      "lead": "Între 2018 și 2021, platformele chineze online de ajutor reciproc au adunat sute de milioane de membri: cea mai mare, Xianghubao, avea peste 100 de milioane. <b>Membrii își împărțeau costul bolii grave a celorlalți, câțiva dolari pe an fiecare.</b> În 2021, autoritățile de reglementare au închis întregul sector, pentru că operatorul fiecărei platforme administra, de fapt, o asigurare.",
       "note": "Social Organizer păstrează ideea lor: când unui om îi e greu, mulți iau fiecare o parte mică. Nu are operator și nici fond comun.",
       "caption": "Platformele chineze online de ajutor reciproc comparate cu Social Organizer",
       "them": "Platforme online de ajutor reciproc",
@@ -919,7 +919,7 @@
         ],
         [
           "Banii",
-          "Încasați de platformă de la membri",
+          "Platforma le încasează de la membri",
           "Nu trec niciodată prin serviciu"
         ],
         [

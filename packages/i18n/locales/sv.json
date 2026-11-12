@@ -771,11 +771,11 @@
   "how": {
     "meta": {
       "title": "Så fungerar det — Social Organizer",
-      "description": "Först ett nätverk av människor du känner, sedan ett behov som når lika många personer som det anger dollar, sedan direkt samordning. Och hur det skiljer sig från Kinas nätbaserade plattformar för ömsesidig hjälp."
+      "description": "Du bygger ett nätverk av människor du känner. Ett behov når lika många av dem som det anger dollar, och deltagarna samordnar sig direkt. Sidan jämför också Social Organizer med Kinas nätbaserade plattformar för ömsesidig hjälp."
     },
     "hero": {
       "title": "Först nätverket, sedan signalerna",
-      "lead": "Social Organizer börjar med ett nätverk av människor du känner personligen. Två signaler färdas i det. Ett <b>behov</b> (Need) är en deltagares meddelande om vad hen behöver. Ett <b>deltagande</b> (Participation) är en annan deltagares meddelande om sitt eget frivilliga deltagande. Allt annat kommer människor överens om och gör själva, direkt."
+      "lead": "Social Organizer börjar med ett nätverk av människor du känner personligen. Två signaler färdas i det. Med ett <b>behov</b> (Need) säger en deltagare vad hen behöver. Med ett <b>deltagande</b> (Participation) säger en annan deltagare att hen deltar och anger ett belopp. Allt annat kommer människor överens om och gör själva, direkt."
     },
     "orbit": {
       "title": "Hur långt ett meddelande når",
@@ -789,7 +789,7 @@
       "says": [
         "<b>Sex personer du känner.</b> Det här är kretsen: personer du har bekräftat att du känner.",
         "Var och en av de sex har sina egna sex. <b>36 personer</b> du inte känner, men som någon av dina gör.",
-        "Ett steg till — <b>216 personer</b>. Meddelandet når dem också, genom dem som känner dig."
+        "Ett steg till och det blir <b>216 personer</b>. Meddelandet når dem också, genom dem som känner dig."
       ],
       "sumNote": "om alla angav {{share}}. Ett förenklat exempel: i verkligheten överlappar kretsar, och ingen är skyldig att delta"
     },
@@ -901,7 +901,7 @@
     },
     "compare": {
       "title": "Det närmaste exemplet: Kinas nätbaserade ömsesidiga hjälp",
-      "lead": "Från 2018 till 2021 samlade Kinas nätbaserade plattformar för ömsesidig hjälp hundratals miljoner medlemmar: den största, Xianghubao, hade över 100 miljoner. <b>Medlemmarna delade på kostnaden för varandras allvarliga sjukdom, några dollar om året var.</b> 2021 stängde myndigheterna hela sektorn: en operatör drev i praktiken en försäkring.",
+      "lead": "Från 2018 till 2021 samlade Kinas nätbaserade plattformar för ömsesidig hjälp hundratals miljoner medlemmar: den största, Xianghubao, hade över 100 miljoner. <b>Medlemmarna delade på kostnaden för varandras allvarliga sjukdom, några dollar om året var.</b> 2021 stängde myndigheterna hela sektorn, eftersom operatören av varje plattform i praktiken drev en försäkring.",
       "note": "Social Organizer behåller deras idé: när en person har det svårt tar många var sin liten del. Det finns ingen operatör och ingen kassa.",
       "caption": "Kinas nätbaserade plattformar för ömsesidig hjälp jämfört med Social Organizer",
       "them": "Nätbaserade plattformar för ömsesidig hjälp",
@@ -914,7 +914,7 @@
         ],
         [
           "Pengar",
-          "Tas ut av plattformen från medlemmarna",
+          "Plattformen tar ut det från medlemmarna",
           "Går aldrig via tjänsten"
         ],
         [

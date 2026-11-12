@@ -771,11 +771,11 @@
   "how": {
     "meta": {
       "title": "Nasıl çalışır — Social Organizer",
-      "description": "Önce tanıdığınız insanların ağı, sonra belirttiği dolar kadar kişiye ulaşan bir ihtiyaç, sonra doğrudan eşgüdüm. Ve Çin'deki çevrimiçi karşılıklı yardım platformlarından farkı."
+      "description": "Tanıdığınız insanlardan bir ağ kurarsınız. İhtiyaç, bu ağda belirttiği dolar kadar kişiye ulaşır ve katılımcılar doğrudan eşgüdüm kurar. Sayfa ayrıca Social Organizer'ı Çin'deki çevrimiçi karşılıklı yardım platformlarıyla karşılaştırır."
     },
     "hero": {
       "title": "Önce ağ, sonra sinyaller",
-      "lead": "Social Organizer, yüz yüze tanıdığınız insanların bir ağıyla başlar. Ağın içinde iki sinyal ilerler. <b>İhtiyaç</b> (Need), bir katılımcının neye ihtiyacı olduğunu bildirmesidir. <b>Katılım</b> (Participation), başka bir katılımcının kendi gönüllü katılımını bildirmesidir. Gerisini insanlar kendileri, doğrudan kararlaştırır ve yapar."
+      "lead": "Social Organizer, yüz yüze tanıdığınız insanların bir ağıyla başlar. Ağın içinde iki sinyal ilerler. <b>İhtiyaç</b> (Need) ile bir katılımcı neye ihtiyacı olduğunu söyler. <b>Katılım</b> (Participation) ile başka bir katılımcı katılacağını söyler ve bir tutar belirtir. Gerisini insanlar kendileri, doğrudan kararlaştırır ve yapar."
     },
     "orbit": {
       "title": "Bildirim ne kadar uzağa gider",
@@ -789,7 +789,7 @@
       "says": [
         "<b>Tanıdığınız altı kişi.</b> Çevre budur: tanıştığınızı onayladığınız kişiler.",
         "Altısının da kendi altısı vardır. <b>36 kişi</b>; siz tanımazsınız ama sizden biri tanır.",
-        "Bir adım daha — <b>216 kişi</b>. Bildirim, sizi tanıyanlar üzerinden onlara da ulaşır."
+        "Bir adım daha ve <b>216 kişi</b> olur. Bildirim, sizi tanıyanlar üzerinden onlara da ulaşır."
       ],
       "sumNote": "herkes {{share}} belirtseydi. Basitleştirilmiş bir örnek: gerçek hayatta çevreler kesişir ve kimse katılmak zorunda değildir"
     },
@@ -901,7 +901,7 @@
     },
     "compare": {
       "title": "En yakın örnek: Çin'de çevrimiçi karşılıklı yardım",
-      "lead": "2018'den 2021'e kadar Çin'deki çevrimiçi karşılıklı yardım platformları yüz milyonlarca üye topladı: en büyüğü Xianghubao'nun 100 milyondan fazla üyesi vardı. <b>Üyeler birbirlerinin ağır hastalık masraflarını paylaştı, kişi başı yılda birkaç dolar.</b> 2021'de düzenleyiciler tüm sektörü kapattı: tek bir işletmeci fiilen sigorta işletiyordu.",
+      "lead": "2018'den 2021'e kadar Çin'deki çevrimiçi karşılıklı yardım platformları yüz milyonlarca üye topladı: en büyüğü Xianghubao'nun 100 milyondan fazla üyesi vardı. <b>Üyeler birbirlerinin ağır hastalık masraflarını paylaştı, kişi başı yılda birkaç dolar.</b> 2021'de düzenleyiciler tüm sektörü kapattı, çünkü her platformun işletmecisi fiilen sigorta işletiyordu.",
       "note": "Social Organizer onların fikrini korur: biri zor durumda kaldığında birçok kişi küçük bir pay üstlenir. İşletmeci de yok, havuz da.",
       "caption": "Çin'deki çevrimiçi karşılıklı yardım platformları ve Social Organizer karşılaştırması",
       "them": "Çevrimiçi karşılıklı yardım platformları",

@@ -785,11 +785,11 @@
   "how": {
     "meta": {
       "title": "How it works — Social Organizer",
-      "description": "First a network of people you know, then a Need that reaches as many people as it names dollars, then direct coordination. And how it differs from China’s online mutual aid platforms."
+      "description": "You build a network of people you know. A Need reaches as many people in it as the dollars it names, and participants coordinate directly. The page also compares Social Organizer with China’s online mutual aid platforms."
     },
     "hero": {
       "title": "First the network, then the signals",
-      "lead": "Social Organizer starts with a network of people you know in person. Two signals travel through it. A <b>Need</b> is a participant’s message about what they need. A <b>Participation</b> is another participant’s message about their own voluntary participation. Everything else people agree and do themselves, directly."
+      "lead": "Social Organizer starts with a network of people you know in person. Two signals travel through it. With a <b>Need</b>, a participant says what they need. With a <b>Participation</b>, another participant says they will take part and names an amount. People agree on the rest and do it themselves."
     },
     "orbit": {
       "title": "How far a message travels",
@@ -803,7 +803,7 @@
       "says": [
         "<b>Six people you know.</b> This is the circle: people you have confirmed you know.",
         "Each of the six has their own six. <b>36 people</b> you do not know, but someone of yours does.",
-        "One more step — <b>216 people</b>. The message reaches them too, through those who know you."
+        "One more step gives <b>216 people</b>. The message reaches them too, through those who know you."
       ],
       "sumNote": "if everyone named {{share}}. A simplified example: in life circles overlap, and nobody has to take part"
     },
@@ -813,7 +813,7 @@
       "says": [
         "<b>Maria Koval</b> reports a Need. You do not know her.",
         "<b>Oleg</b>, your brother, knows Maria. That is why he receives her message.",
-        "<b>You</b> receive the message because you know Oleg. Whether to take part is up to you."
+        "<b>You</b> receive the message because you know Oleg. You decide whether to take part."
       ]
     },
     "join": {
@@ -916,7 +916,7 @@
     "backToInvite": "Back to the invitation",
     "compare": {
       "title": "The closest example: China’s online mutual aid",
-      "lead": "From 2018 to 2021 China’s online mutual aid platforms gathered hundreds of millions of members: the largest, Xianghubao, had over 100 million. <b>Members shared the cost of each other’s serious illness, a few dollars a year each.</b> In 2021 regulators closed the whole sector: one operator was running what was in effect insurance.",
+      "lead": "From 2018 to 2021 China’s online mutual aid platforms gathered hundreds of millions of members: the largest, Xianghubao, had over 100 million. <b>Members shared the cost of each other’s serious illness, a few dollars a year each.</b> In 2021 regulators closed the whole sector, because each platform’s operator was in effect running insurance.",
       "note": "Social Organizer keeps their idea: when one person has a hard time, many people each take a small part. It has no operator and no pot.",
       "caption": "China’s online mutual aid platforms compared with Social Organizer",
       "them": "Online mutual aid platforms",
@@ -929,8 +929,8 @@
         ],
         [
           "Money",
-          "Charged from members by the platform",
-          "Never passes through the service"
+          "The platform charges members",
+          "Never goes through the service"
         ],
         [
           "What is promised",

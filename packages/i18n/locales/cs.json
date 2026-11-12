@@ -781,11 +781,11 @@
   "how": {
     "meta": {
       "title": "Jak to funguje — Social Organizer",
-      "description": "Nejdřív síť lidí, které znáte, potom potřeba, která se dostane k tolika lidem, kolik dolarů uvádí, potom přímá koordinace. A čím se liší od čínských online platforem vzájemné pomoci."
+      "description": "Budujete síť lidí, které znáte. Potřeba se dostane k tolika lidem v ní, kolik dolarů uvádí, a účastníci se domlouvají přímo. Stránka také porovnává Social Organizer s čínskými online platformami vzájemné pomoci."
     },
     "hero": {
       "title": "Nejdřív síť, potom signály",
-      "lead": "Social Organizer začíná sítí lidí, které znáte osobně. Putují v ní dva signály. <b>Potřeba</b> (Need) je oznámení účastníka o tom, co potřebuje. <b>Účast</b> (Participation) je oznámení jiného účastníka o jeho vlastní dobrovolné účasti. Vše ostatní si lidé domlouvají a dělají sami, přímo."
+      "lead": "Social Organizer začíná sítí lidí, které znáte osobně. Putují v ní dva signály. <b>Potřebou</b> účastník říká, co potřebuje. <b>Účastí</b> jiný účastník říká, že se zapojí, a uvádí částku. Vše ostatní si lidé domluví a udělají sami."
     },
     "orbit": {
       "title": "Jak daleko oznámení dojde",
@@ -799,7 +799,7 @@
       "says": [
         "<b>Šest lidí, které znáte.</b> To je kruh: lidé, u kterých jste potvrdili, že se znáte.",
         "Každý z těch šesti má svých šest. <b>36 lidí</b>, které neznáte, ale zná je někdo z vašich.",
-        "Ještě jeden krok — <b>216 lidí</b>. Oznámení dojde i k nim, přes ty, kdo znají vás."
+        "Ještě jeden krok a je to <b>216 lidí</b>. Oznámení dojde i k nim, přes ty, kdo znají vás."
       ],
       "sumNote": "kdyby každý uvedl {{share}}. Zjednodušený příklad: v životě se kruhy prolínají a nikdo se nemusí zapojit"
     },
@@ -809,7 +809,7 @@
       "says": [
         "<b>Maria Koval</b> oznamuje potřebu. Vy ji neznáte.",
         "<b>Oleg</b>, váš bratr, zná Marii. Proto její oznámení dostane on.",
-        "<b>Vy</b> oznámení dostanete, protože znáte Olega. Zda se zapojit, rozhodujete sami."
+        "<b>Vy</b> oznámení dostanete, protože znáte Olega. O zapojení rozhodujete vy."
       ]
     },
     "join": {
@@ -911,7 +911,7 @@
     },
     "compare": {
       "title": "Nejbližší příklad: čínská online vzájemná pomoc",
-      "lead": "V letech 2018 až 2021 sdružovaly čínské online platformy vzájemné pomoci stovky milionů členů: největší z nich, Xianghubao, jich měla přes 100 milionů. <b>Členové si navzájem hradili náklady na vážné nemoci, každý jen pár dolarů ročně.</b> V roce 2021 úřady zavřely celé odvětví: jeden provozovatel fakticky provozoval pojištění.",
+      "lead": "V letech 2018 až 2021 sdružovaly čínské online platformy vzájemné pomoci stovky milionů členů: největší z nich, Xianghubao, jich měla přes 100 milionů. <b>Členové si navzájem hradili náklady na vážné nemoci, každý jen pár dolarů ročně.</b> V roce 2021 úřady zavřely celé odvětví, protože provozovatel každé platformy fakticky provozoval pojištění.",
       "note": "Social Organizer si nechává jejich myšlenku: když je jednomu těžko, mnoho lidí převezme každý malou část. Provozovatele ani pokladnu nemá.",
       "caption": "Čínské online platformy vzájemné pomoci ve srovnání se Social Organizer",
       "them": "Online platformy vzájemné pomoci",
@@ -924,8 +924,8 @@
         ],
         [
           "Peníze",
-          "Vybírá je od členů platforma",
-          "Neprocházejí nikdy službou"
+          "Platforma vybírá peníze od členů",
+          "Nikdy neprocházejí službou"
         ],
         [
           "Co se slibuje",

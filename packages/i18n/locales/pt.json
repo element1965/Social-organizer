@@ -776,11 +776,11 @@
   "how": {
     "meta": {
       "title": "Como funciona — Social Organizer",
-      "description": "Primeiro uma rede de pessoas que você conhece, depois uma necessidade que chega a tantas pessoas quantos dólares indica, depois a coordenação direta. E em que isso difere das plataformas chinesas de ajuda mútua on-line."
+      "description": "Você constrói uma rede de pessoas que conhece. Uma necessidade chega a tantas pessoas dela quantos dólares indica, e os participantes se coordenam diretamente. A página também compara o Social Organizer com as plataformas chinesas de ajuda mútua on-line."
     },
     "hero": {
       "title": "Primeiro a rede, depois os sinais",
-      "lead": "O Social Organizer começa por uma rede de pessoas que você conhece pessoalmente. Dois sinais percorrem essa rede. A <b>necessidade</b> (Need) é a mensagem de um participante sobre o que ele precisa. A <b>participação</b> (Participation) é a mensagem de outro participante sobre a sua própria participação voluntária. Todo o resto as pessoas combinam e fazem por conta própria, diretamente."
+      "lead": "O Social Organizer começa por uma rede de pessoas que você conhece pessoalmente. Dois sinais percorrem essa rede. Com uma <b>necessidade</b> (Need), um participante diz do que precisa. Com uma <b>participação</b> (Participation), outro participante diz que vai participar e informa um valor. Todo o resto as pessoas combinam e fazem por conta própria, diretamente."
     },
     "orbit": {
       "title": "Até onde a mensagem chega",
@@ -794,7 +794,7 @@
       "says": [
         "<b>Seis pessoas que você conhece.</b> Este é o círculo: pessoas com quem você confirmou que se conhece.",
         "Cada um dos seis tem os seus seis. <b>36 pessoas</b> que você não conhece, mas alguém do seu círculo conhece.",
-        "Mais um passo — <b>216 pessoas</b>. A mensagem chega até elas também, por quem conhece você."
+        "Mais um passo e são <b>216 pessoas</b>. A mensagem chega até elas também, por quem conhece você."
       ],
       "sumNote": "se cada um indicasse {{share}}. Um exemplo simplificado: na vida os círculos se cruzam, e ninguém é obrigado a participar"
     },
@@ -906,7 +906,7 @@
     },
     "compare": {
       "title": "O exemplo mais próximo: a ajuda mútua on-line da China",
-      "lead": "De 2018 a 2021, as plataformas chinesas de ajuda mútua on-line reuniram centenas de milhões de membros: a maior, a Xianghubao, tinha mais de 100 milhões. <b>Os membros dividiam o custo da doença grave uns dos outros, alguns dólares por ano cada um.</b> Em 2021, os reguladores fecharam o setor inteiro: um único operador administrava, na prática, um seguro.",
+      "lead": "De 2018 a 2021, as plataformas chinesas de ajuda mútua on-line reuniram centenas de milhões de membros: a maior, a Xianghubao, tinha mais de 100 milhões. <b>Os membros dividiam o custo da doença grave uns dos outros, alguns dólares por ano cada um.</b> Em 2021, os reguladores fecharam o setor inteiro, porque o operador de cada plataforma administrava, na prática, um seguro.",
       "note": "O Social Organizer mantém a ideia deles: quando uma pessoa passa por um aperto, muita gente assume uma pequena parte cada uma. Não tem operador nem fundo comum.",
       "caption": "As plataformas chinesas de ajuda mútua on-line comparadas ao Social Organizer",
       "them": "Plataformas de ajuda mútua on-line",
@@ -919,7 +919,7 @@
         ],
         [
           "Dinheiro",
-          "Cobrado dos membros pela plataforma",
+          "A plataforma cobra dos membros",
           "Nunca passa pelo serviço"
         ],
         [

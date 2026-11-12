@@ -776,11 +776,11 @@
   "how": {
     "meta": {
       "title": "Cómo funciona — Social Organizer",
-      "description": "Primero una red de personas que usted conoce, luego una necesidad que llega a tantas personas como dólares indica, luego coordinación directa. Y en qué se diferencia de las plataformas chinas de ayuda mutua en línea."
+      "description": "Usted construye una red de personas que conoce. Una necesidad llega a tantas personas de esa red como dólares indica, y los participantes se coordinan directamente. La página también compara Social Organizer con las plataformas chinas de ayuda mutua en línea."
     },
     "hero": {
       "title": "Primero la red, luego las señales",
-      "lead": "Social Organizer empieza por una red de personas que usted conoce en persona. Dos señales viajan por ella. La <b>necesidad</b> (Need) es el mensaje de un participante sobre lo que necesita. La <b>participación</b> (Participation) es el mensaje de otro participante sobre su propia participación voluntaria. Todo lo demás lo acuerdan y lo hacen las personas mismas, directamente."
+      "lead": "Social Organizer empieza por una red de personas que usted conoce en persona. Dos señales viajan por ella. Con una <b>necesidad</b>, un participante dice lo que necesita. Con una <b>participación</b>, otro participante dice que participará e indica una cantidad. Lo demás lo acuerdan y lo hacen las personas mismas."
     },
     "orbit": {
       "title": "Hasta dónde llega un mensaje",
@@ -794,7 +794,7 @@
       "says": [
         "<b>Seis personas que conoce.</b> Eso es el círculo: personas con las que ha confirmado que se conocen.",
         "Cada una de las seis tiene sus propias seis. <b>36 personas</b> a las que usted no conoce, pero sí alguien de los suyos.",
-        "Un paso más: <b>216 personas</b>. El mensaje también les llega, a través de quienes le conocen."
+        "Un paso más da <b>216 personas</b>. El mensaje también les llega, a través de quienes le conocen."
       ],
       "sumNote": "si cada quien indicara {{share}}. Un ejemplo simplificado: en la vida los círculos se cruzan, y nadie está obligado a participar"
     },
@@ -804,7 +804,7 @@
       "says": [
         "<b>Maria Koval</b> comunica una necesidad. Usted no la conoce.",
         "<b>Oleg</b>, su hermano, conoce a Maria. Por eso él recibe su mensaje.",
-        "<b>Usted</b> recibe el mensaje porque conoce a Oleg. Participar o no lo decide usted."
+        "<b>Usted</b> recibe el mensaje porque conoce a Oleg. Usted decide si participa."
       ]
     },
     "join": {
@@ -906,7 +906,7 @@
     },
     "compare": {
       "title": "El ejemplo más cercano: la ayuda mutua en línea en China",
-      "lead": "De 2018 a 2021, las plataformas chinas de ayuda mutua en línea reunieron a cientos de millones de miembros: la mayor, Xianghubao, superó los 100 millones. <b>Los miembros se repartían el coste de las enfermedades graves de los demás, unos pocos dólares al año cada uno.</b> En 2021 los reguladores cerraron todo el sector: un único operador gestionaba, en la práctica, un seguro.",
+      "lead": "De 2018 a 2021, las plataformas chinas de ayuda mutua en línea reunieron a cientos de millones de miembros: la mayor, Xianghubao, superó los 100 millones. <b>Los miembros se repartían el coste de las enfermedades graves de los demás, unos pocos dólares al año cada uno.</b> En 2021 los reguladores cerraron todo el sector, porque el operador de cada plataforma gestionaba, en la práctica, un seguro.",
       "note": "Social Organizer conserva su idea: cuando a una persona le va mal, muchas asumen cada una una parte pequeña. No tiene operador ni bote.",
       "caption": "Las plataformas chinas de ayuda mutua en línea comparadas con Social Organizer",
       "them": "Plataformas de ayuda mutua en línea",
@@ -919,7 +919,7 @@
         ],
         [
           "Dinero",
-          "La plataforma lo cobra a los miembros",
+          "La plataforma cobra a los miembros",
           "Nunca pasa por el servicio"
         ],
         [

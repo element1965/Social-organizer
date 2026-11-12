@@ -771,11 +771,11 @@
   "how": {
     "meta": {
       "title": "Hoe het werkt — Social Organizer",
-      "description": "Eerst een netwerk van mensen die je kent, dan een behoefte die zoveel mensen bereikt als het bedrag in dollars, dan directe coördinatie. En hoe het verschilt van de Chinese online platforms voor onderlinge hulp."
+      "description": "Je bouwt een netwerk van mensen die je kent. Een behoefte bereikt zoveel mensen in dat netwerk als het bedrag in dollars, en deelnemers regelen het direct met elkaar. Op de pagina staat ook een vergelijking van Social Organizer met de Chinese online platforms voor onderlinge hulp."
     },
     "hero": {
       "title": "Eerst het netwerk, dan de signalen",
-      "lead": "Social Organizer begint bij een netwerk van mensen die je persoonlijk kent. Er gaan twee signalen doorheen. Een <b>behoefte</b> (Need) is het bericht van een deelnemer over wat hij of zij nodig heeft. Een <b>deelname</b> (Participation) is het bericht van een andere deelnemer over zijn of haar eigen vrijwillige deelname. Al het andere spreken mensen zelf af en doen ze zelf, rechtstreeks."
+      "lead": "Social Organizer begint bij een netwerk van mensen die je persoonlijk kent. Er gaan twee signalen doorheen. Met een <b>behoefte</b> (Need) zegt een deelnemer wat hij of zij nodig heeft. Met een <b>deelname</b> (Participation) zegt een andere deelnemer dat hij of zij meedoet en noemt een bedrag. Al het andere spreken mensen zelf af en doen ze zelf, rechtstreeks."
     },
     "orbit": {
       "title": "Hoe ver een bericht reikt",
@@ -789,7 +789,7 @@
       "says": [
         "<b>Zes mensen die je kent.</b> Dat is de kring: mensen van wie je hebt bevestigd dat je ze kent.",
         "Elk van de zes heeft een eigen zes. <b>36 mensen</b> die jij niet kent, maar iemand van jou wel.",
-        "Nog een stap — <b>216 mensen</b>. Het bericht bereikt hen ook, via degenen die jou kennen."
+        "Nog een stap en het zijn <b>216 mensen</b>. Het bericht bereikt hen ook, via degenen die jou kennen."
       ],
       "sumNote": "als iedereen {{share}} zou noemen. Een vereenvoudigd voorbeeld: in het echt overlappen kringen, en niemand is verplicht deel te nemen"
     },
@@ -901,7 +901,7 @@
     },
     "compare": {
       "title": "Het meest verwante voorbeeld: Chinese online onderlinge hulp",
-      "lead": "Van 2018 tot 2021 verzamelden de Chinese online platforms voor onderlinge hulp honderden miljoenen leden: de grootste, Xianghubao, had er meer dan 100 miljoen. <b>Leden deelden de kosten van elkaars ernstige ziekte, elk enkele dollars per jaar.</b> In 2021 sloten toezichthouders de hele sector: één beheerder runde in feite een verzekering.",
+      "lead": "Van 2018 tot 2021 verzamelden de Chinese online platforms voor onderlinge hulp honderden miljoenen leden: de grootste, Xianghubao, had er meer dan 100 miljoen. <b>Leden deelden de kosten van elkaars ernstige ziekte, elk enkele dollars per jaar.</b> In 2021 sloten toezichthouders de hele sector, omdat de beheerder van elk platform in feite een verzekering runde.",
       "note": "Social Organizer behoudt hun idee: als één mens het moeilijk heeft, nemen velen elk een klein deel op zich. Er is geen beheerder en geen pot.",
       "caption": "Chinese online platforms voor onderlinge hulp vergeleken met Social Organizer",
       "them": "Online platforms voor onderlinge hulp",
@@ -914,7 +914,7 @@
         ],
         [
           "Geld",
-          "Door het platform bij leden geïnd",
+          "Het platform int het bij de leden",
           "Gaat nooit via de dienst"
         ],
         [

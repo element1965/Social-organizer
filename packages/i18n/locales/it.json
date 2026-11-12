@@ -776,11 +776,11 @@
   "how": {
     "meta": {
       "title": "Come funziona — Social Organizer",
-      "description": "Prima una rete di persone che conosci, poi un bisogno che raggiunge tante persone quanti sono i dollari indicati, poi il coordinamento diretto. E in cosa si distingue dal mutuo aiuto online cinese."
+      "description": "Costruisci una rete di persone che conosci. Un bisogno raggiunge al suo interno tante persone quanti sono i dollari indicati, e i partecipanti si coordinano direttamente. La pagina confronta anche Social Organizer con il mutuo aiuto online cinese."
     },
     "hero": {
       "title": "Prima la rete, poi i segnali",
-      "lead": "Social Organizer parte da una rete di persone che conosci di persona. Al suo interno viaggiano due segnali. Il <b>bisogno</b> (Need) è il messaggio di un partecipante su ciò che gli serve. La <b>partecipazione</b> (Participation) è il messaggio di un altro partecipante sulla propria partecipazione volontaria. Tutto il resto le persone lo concordano e lo fanno da sole, direttamente."
+      "lead": "Social Organizer parte da una rete di persone che conosci di persona. Al suo interno viaggiano due segnali. Con un <b>bisogno</b>, un partecipante dice ciò che gli serve. Con una <b>partecipazione</b>, un altro partecipante dice che parteciperà e indica una cifra. Tutto il resto le persone lo concordano e lo fanno da sole."
     },
     "orbit": {
       "title": "Fin dove arriva il messaggio",
@@ -794,7 +794,7 @@
       "says": [
         "<b>Sei persone che conosci.</b> Questo è il cerchio: persone con cui hai confermato che vi conoscete.",
         "Ognuna delle sei ha le proprie sei. <b>36 persone</b> che non conosci, ma che qualcuno dei tuoi conosce.",
-        "Un altro passo: <b>216 persone</b>. Il messaggio arriva anche a loro, attraverso chi ti conosce."
+        "Un altro passo porta a <b>216 persone</b>. Il messaggio arriva anche a loro, attraverso chi ti conosce."
       ],
       "sumNote": "se ognuno indicasse {{share}}. Un esempio semplificato: nella vita i cerchi si sovrappongono e nessuno è obbligato a partecipare"
     },
@@ -804,7 +804,7 @@
       "says": [
         "<b>Maria Koval</b> comunica un bisogno. Non la conosci.",
         "<b>Oleg</b>, tuo fratello, conosce Maria. Per questo riceve il suo messaggio.",
-        "<b>Tu</b> ricevi il messaggio perché conosci Oleg. Se partecipare, decidi tu."
+        "<b>Tu</b> ricevi il messaggio perché conosci Oleg. Sei tu a decidere se partecipare."
       ]
     },
     "join": {
@@ -906,7 +906,7 @@
     },
     "compare": {
       "title": "L'esempio più vicino: il mutuo aiuto online in Cina",
-      "lead": "Dal 2018 al 2021 le piattaforme cinesi di mutuo aiuto online hanno raccolto centinaia di milioni di membri: la più grande, Xianghubao, ne aveva più di 100 milioni. <b>I membri si dividevano il costo delle gravi malattie l'uno dell'altro, pochi dollari l'anno ciascuno.</b> Nel 2021 le autorità hanno chiuso l'intero settore: un solo operatore gestiva di fatto un'assicurazione.",
+      "lead": "Dal 2018 al 2021 le piattaforme cinesi di mutuo aiuto online hanno raccolto centinaia di milioni di membri: la più grande, Xianghubao, ne aveva più di 100 milioni. <b>I membri si dividevano il costo delle gravi malattie l'uno dell'altro, pochi dollari l'anno ciascuno.</b> Nel 2021 le autorità hanno chiuso l'intero settore, perché l'operatore di ogni piattaforma gestiva di fatto un'assicurazione.",
       "note": "Social Organizer conserva la loro idea: quando una persona è in difficoltà, molte si prendono ciascuna una piccola parte. Non ha operatore né cassa.",
       "caption": "Le piattaforme cinesi di mutuo aiuto online a confronto con Social Organizer",
       "them": "Piattaforme di mutuo aiuto online",
@@ -919,7 +919,7 @@
         ],
         [
           "Denaro",
-          "Addebitato ai membri dalla piattaforma",
+          "La piattaforma addebita il denaro ai membri",
           "Non passa mai dal servizio"
         ],
         [

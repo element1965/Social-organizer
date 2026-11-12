@@ -776,11 +776,11 @@
   "how": {
     "meta": {
       "title": "Fonctionnement — Social Organizer",
-      "description": "D’abord un réseau de personnes que vous connaissez, puis un besoin qui atteint autant de personnes que de dollars indiqués, puis une coordination directe. Et en quoi cela diffère de l’entraide en ligne en Chine."
+      "description": "Vous construisez un réseau de personnes que vous connaissez. Un besoin atteint autant de personnes de ce réseau que de dollars indiqués, et les participants se coordonnent directement. La page compare aussi Social Organizer avec les plateformes chinoises d’entraide en ligne."
     },
     "hero": {
       "title": "D’abord le réseau, ensuite les signaux",
-      "lead": "Social Organizer commence par un réseau de personnes que vous connaissez en personne. Deux signaux y circulent. Un <b>besoin</b> (Need) est le message d’un participant sur ce dont il a besoin. Une <b>participation</b> (Participation) est le message d’un autre participant sur sa propre participation volontaire. Tout le reste, les gens en conviennent et le font eux-mêmes, directement."
+      "lead": "Social Organizer commence par un réseau de personnes que vous connaissez en personne. Deux signaux y circulent. Avec un <b>besoin</b>, un participant dit ce dont il a besoin. Avec une <b>participation</b>, un autre participant dit qu’il va participer et indique un montant. Tout le reste, les gens en conviennent et le font eux-mêmes."
     },
     "orbit": {
       "title": "Jusqu’où va un message",
@@ -794,7 +794,7 @@
       "says": [
         "<b>Six personnes que vous connaissez.</b> C’est le cercle : des personnes dont vous avez confirmé la connaissance.",
         "Chacune des six a ses propres six. <b>36 personnes</b> que vous ne connaissez pas, mais que quelqu’un des vôtres connaît.",
-        "Encore une étape — <b>216 personnes</b>. Le message les atteint aussi, par celles qui vous connaissent."
+        "Encore une étape donne <b>216 personnes</b>. Le message les atteint aussi, par celles qui vous connaissent."
       ],
       "sumNote": "si chacun indiquait {{share}}. Un exemple simplifié : dans la vie, les cercles se recoupent, et personne n’est obligé de participer"
     },
@@ -804,7 +804,7 @@
       "says": [
         "<b>Maria Koval</b> annonce un besoin. Vous ne la connaissez pas.",
         "<b>Oleg</b>, votre frère, connaît Maria. C’est pourquoi il reçoit son message.",
-        "<b>Vous</b> recevez le message parce que vous connaissez Oleg. Participer ou non, c’est à vous de décider."
+        "<b>Vous</b> recevez le message parce que vous connaissez Oleg. C’est vous qui décidez de participer."
       ]
     },
     "join": {
@@ -906,7 +906,7 @@
     },
     "compare": {
       "title": "L’exemple le plus proche : l’entraide en ligne en Chine",
-      "lead": "De 2018 à 2021, les plateformes chinoises d’entraide en ligne ont réuni des centaines de millions de membres : la plus grande, Xianghubao, en comptait plus de 100 millions. <b>Les membres se partageaient le coût des maladies graves des uns et des autres, quelques dollars par an chacun.</b> En 2021, les autorités ont fermé tout le secteur : un seul opérateur gérait en réalité une assurance.",
+      "lead": "De 2018 à 2021, les plateformes chinoises d’entraide en ligne ont réuni des centaines de millions de membres : la plus grande, Xianghubao, en comptait plus de 100 millions. <b>Les membres se partageaient le coût des maladies graves des uns et des autres, quelques dollars par an chacun.</b> En 2021, les autorités ont fermé tout le secteur, car l’opérateur de chaque plateforme gérait en réalité une assurance.",
       "note": "Social Organizer garde leur idée : quand une personne traverse une période difficile, beaucoup prennent chacune une petite part. Il n’a ni opérateur ni cagnotte.",
       "caption": "Les plateformes chinoises d’entraide en ligne comparées à Social Organizer",
       "them": "Plateformes d’entraide en ligne",
@@ -919,7 +919,7 @@
         ],
         [
           "Argent",
-          "Prélevé sur les membres par la plateforme",
+          "La plateforme prélève l’argent sur les membres",
           "Ne passe jamais par le service"
         ],
         [
