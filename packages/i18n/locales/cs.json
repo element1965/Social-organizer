@@ -331,10 +331,17 @@
     "inCircle": "{{count}} v jejich kruhu",
     "noneYet": "Zatím nikoho nepřidal",
     "brought": "Přivedl(a) {{count}}",
-    "pledged": "přislíbeno {{amount}}",
+    "pledged": "záměr {{amount}}",
     "via": "přes {{path}}",
     "empty": "Zatím nikdo",
-    "notFound": "Nikdo nenalezen"
+    "notFound": "Nikdo nenalezen",
+    "sort": "Řazení",
+    "sortRecent": "Nejnovější",
+    "sortName": "Jméno",
+    "sortIntention": "Záměr",
+    "sortBrought": "Přivedení",
+    "foundElsewhere": "V tomto podání ruky nikdo s tímto jménem není. Nalezeni v jiných:",
+    "alsoElsewhere": "Také v jiných podáních ruky"
   },
   "offline": {
     "banner": "Bez připojení. Zobrazuje se kopie uložená v tomto zařízení, {{time}}.",

@@ -2,8 +2,10 @@ import { useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { trpc } from '../lib/trpc';
+import { cn } from '../lib/utils';
 import { useCachedNetworkStats } from '../hooks/useCachedNetworkStats';
 import { Button } from '../components/ui2/Button';
+import { Chip } from '../components/ui2/Chip';
 import { Group, Row } from '../components/ui2/Group';
 import { Input } from '../components/ui2/Input';
 import { PersonRow } from '../components/ui2/PersonRow';
@@ -16,12 +18,38 @@ import { useCircleNetwork } from '../components/circle/network';
 
 const WEEK_MS = 7 * 24 * 60 * 60 * 1000;
 
+/** List order. "brought" exists only for the 1st handshake, where we know whom each person added. */
+type SortKey = 'recent' | 'name' | 'intention' | 'brought';
+const SORT_KEY = 'so.people.sort';
+
+function readSort(): SortKey {
+  try {
+    const value = localStorage.getItem(SORT_KEY);
+    if (value === 'name' || value === 'intention' || value === 'brought') return value;
+  } catch {
+    // Storage blocked (private mode): fall back to the default order.
+  }
+  return 'recent';
+}
+
+function saveSort(value: SortKey) {
+  try {
+    localStorage.setItem(SORT_KEY, value);
+  } catch {
+    // Not saved; the order still applies for this visit.
+  }
+}
+
 type Entry = {
   id: string;
   name: string;
   subtitle: string;
   photoUrl: string | null;
   at: number;
+  /** Their intention this period, for sorting (0 when not set). */
+  intention: number;
+  /** People they added besides you (1st handshake only). */
+  brought: number;
   /** Incoming request: opens the acquaintance sheet instead of the Person screen. */
   pendingId?: string;
 };
@@ -41,11 +69,18 @@ function parseRing(value: string | undefined): Ring {
 
 /** People of one ring with search and the "show on graph" switch (screens.md §2). */
 export function PeoplePage() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const params = useParams();
   const ring = parseRing(params.ring);
   const [query, setQuery] = useState('');
+  const [sortBy, setSortBy] = useState<SortKey>(readSort);
+  // "Brought in" is unknown beyond the 1st handshake: those lists use the default order
+  const sort: SortKey = sortBy === 'brought' && ring !== 1 ? 'recent' : sortBy;
+  const chooseSort = (value: SortKey) => {
+    setSortBy(value);
+    saveSort(value);
+  };
   const [acquaint, setAcquaint] = useState<AcquaintRequest | null>(null);
 
   const net = useCircleNetwork();
@@ -55,12 +90,12 @@ export function PeoplePage() {
   const setRingHidden = useCircleStore((s) => s.setRingHidden);
   const visible = !hiddenRings.includes(ring);
 
-  const entries = useMemo<Entry[]>(() => {
-    // What a person brings to the network: their pledge this period (the budget "Your network can help" sums).
+  // All three rings at once: the list shows the active one, the search also looks through the others
+  const byRing = useMemo<Record<Ring, Entry[]>>(() => {
+    // What a person brings to the network: their intention this period (the sum "Declared participation" adds up).
     const pledged = (budget: number | null | undefined) =>
       budget != null && budget > 0 ? t('people.pledged', { amount: formatMoney(Math.round(budget)) }) : null;
-    if (ring === 1) {
-      return (net.connections.data ?? []).map((c) => {
+    const first: Entry[] = (net.connections.data ?? []).map((c) => {
         const others = Math.max(0, c.connectionCount - 1);
         const parts: string[] = [];
         if (c.nickname && c.nickname !== c.name) parts.push(c.name);
@@ -74,29 +109,59 @@ export function PeoplePage() {
           subtitle: parts.join(' · '),
           photoUrl: c.photoUrl,
           at: new Date(c.createdAt).getTime(),
+          intention: c.remainingBudget ?? 0,
+          brought: others,
         };
       });
-    }
     const usersByDepth = (stats.data as { usersByDepth?: Record<number, DepthUser[]> } | undefined)?.usersByDepth ?? {};
-    return (usersByDepth[ring] ?? []).map((u) => {
-      const via = net.viaNames(u.id);
-      return {
-        id: u.id,
-        name: net.displayName(u.id, u.name),
-        subtitle: [via.length ? t('people.via', { path: via.join(' → ') }) : t(`circle.rings.full${ring}`), pledged(u.remainingBudget)]
-          .filter(Boolean)
-          .join(' · '),
-        photoUrl: u.photoUrl,
-        at: new Date(u.connectedAt ?? u.createdAt ?? 0).getTime(),
-      };
-    });
-  }, [ring, net, stats.data, t]);
+    const deeper = (r: 2 | 3): Entry[] =>
+      (usersByDepth[r] ?? []).map((u) => {
+        const via = net.viaNames(u.id);
+        return {
+          id: u.id,
+          name: net.displayName(u.id, u.name),
+          subtitle: [via.length ? t('people.via', { path: via.join(' → ') }) : t(`circle.rings.full${r}`), pledged(u.remainingBudget)]
+            .filter(Boolean)
+            .join(' · '),
+          photoUrl: u.photoUrl,
+          at: new Date(u.connectedAt ?? u.createdAt ?? 0).getTime(),
+          intention: u.remainingBudget ?? 0,
+          brought: 0,
+        };
+      });
+    return { 1: first, 2: deeper(2), 3: deeper(3) };
+  }, [net, stats.data, t]);
+  const entries = byRing[ring];
 
-  const sorted = useMemo(() => [...entries].sort((a, b) => b.at - a.at), [entries]);
+  const sortList = useMemo(() => {
+    const collator = new Intl.Collator(i18n.language, { sensitivity: 'base' });
+    const byName = (a: Entry, b: Entry) => collator.compare(a.name, b.name);
+    const order: Record<SortKey, (a: Entry, b: Entry) => number> = {
+      recent: (a, b) => b.at - a.at,
+      name: byName,
+      intention: (a, b) => b.intention - a.intention || byName(a, b),
+      brought: (a, b) => b.brought - a.brought || byName(a, b),
+    };
+    return (list: Entry[], key: SortKey) => [...list].sort(order[key]);
+  }, [i18n.language]);
+  const sorted = useMemo(() => sortList(entries, sort), [sortList, entries, sort]);
   const needle = query.trim().toLocaleLowerCase();
   const filtered = needle
     ? sorted.filter((e) => e.name.toLocaleLowerCase().includes(needle) || e.subtitle.toLocaleLowerCase().includes(needle))
     : sorted;
+  // Matches in the other rings, by name only ("through Oleg" would list half of a ring)
+  const elsewhere = needle
+    ? (([1, 2, 3] as Ring[])
+        .filter((r) => r !== ring)
+        .map((r) => ({
+          ring: r,
+          list: sortList(
+            byRing[r].filter((e) => e.name.toLocaleLowerCase().includes(needle)),
+            sortBy === 'brought' && r !== 1 ? 'recent' : sortBy,
+          ),
+        }))
+        .filter((group) => group.list.length > 0))
+    : [];
 
   const requests: Entry[] =
     ring === 1
@@ -108,13 +173,17 @@ export function PeoplePage() {
             subtitle: t('people.confirm'),
             photoUrl: p.fromUser.photoUrl,
             at: new Date(p.createdAt).getTime(),
+            intention: 0,
+            brought: 0,
             pendingId: p.id,
           }))
       : [];
 
   const now = Date.now();
-  const recent = ring === 1 ? filtered.filter((e) => now - e.at < WEEK_MS) : [];
-  const rest = ring === 1 ? filtered.filter((e) => now - e.at >= WEEK_MS) : filtered;
+  // The "Recent" block belongs to the default order only; another order shows one list
+  const splitRecent = ring === 1 && sort === 'recent';
+  const recent = splitRecent ? filtered.filter((e) => now - e.at < WEEK_MS) : [];
+  const rest = splitRecent ? filtered.filter((e) => now - e.at >= WEEK_MS) : filtered;
   const loading = ring === 1 ? net.connections.isLoading : stats.isLoading && !stats.data;
   const total = entries.length;
   // A failed list is not an empty one (no connection, server trouble)
@@ -139,6 +208,13 @@ export function PeoplePage() {
       />
     ));
 
+  const sortOptions: { value: SortKey; label: string }[] = [
+    { value: 'recent', label: t('people.sortRecent') },
+    { value: 'name', label: t('people.sortName') },
+    { value: 'intention', label: t('people.sortIntention') },
+    ...(ring === 1 ? [{ value: 'brought' as const, label: t('people.sortBrought') }] : []),
+  ];
+
   const ringOptions = ([1, 2, 3] as Ring[]).map((r) => ({ value: String(r) as '1' | '2' | '3', label: t(`circle.rings.short${r}`) }));
 
   return (
@@ -162,6 +238,21 @@ export function PeoplePage() {
           placeholder={t('people.search')}
           aria-label={t('people.search')}
         />
+        <div className="flex flex-wrap items-center gap-1.5" role="group" aria-label={t('people.sort')}>
+          <span className="shrink-0 text-micro font-bold text-ink-muted">{t('people.sort')}</span>
+          {sortOptions.map((option) => (
+            <Chip
+              key={option.value}
+              variant="action"
+              active={sort === option.value}
+              aria-pressed={sort === option.value}
+              className="shrink-0"
+              onClick={() => chooseSort(option.value)}
+            >
+              {option.label}
+            </Chip>
+          ))}
+        </div>
         <Group>
           <Row
             variant="toggle"
@@ -187,8 +278,8 @@ export function PeoplePage() {
           </Button>
         </div>
       ) : filtered.length === 0 && requests.length === 0 ? (
-        <p className="mt-8 text-center text-body-s font-semibold text-ink-muted">
-          {needle ? t('people.notFound') : t('people.empty')}
+        <p className={cn('text-center text-body-s font-semibold text-ink-muted', elsewhere.length ? 'mt-4' : 'mt-8')}>
+          {needle ? t(elsewhere.length ? 'people.foundElsewhere' : 'people.notFound') : t('people.empty')}
         </p>
       ) : (
         <>
@@ -202,6 +293,23 @@ export function PeoplePage() {
           ) : null}
         </>
       )}
+      {/* The search covers every handshake: matches from the other rings follow, each under its ring */}
+      {!loading && elsewhere.length > 0 ? (
+        <section className="mt-5" aria-label={t('people.alsoElsewhere')}>
+          {filtered.length + requests.length > 0 ? (
+            <p className="mb-1 px-1 text-micro font-bold text-ink-muted">{t('people.alsoElsewhere')}</p>
+          ) : null}
+          {elsewhere.map((group) => (
+            <Group
+              key={group.ring}
+              title={t('people.title', { ring: t(`circle.rings.full${group.ring}`), count: group.list.length })}
+              className="mt-3 first:mt-0"
+            >
+              {rows(group.list)}
+            </Group>
+          ))}
+        </section>
+      ) : null}
       <AcquaintSheet request={acquaint} onClose={() => setAcquaint(null)} />
     </Screen>
   );

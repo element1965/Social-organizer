@@ -325,10 +325,17 @@
     "inCircle": "उनके वृत्त में {{count}}",
     "noneYet": "अभी तक किसी को नहीं जोड़ा",
     "brought": "{{count}} लोगों को लाए",
-    "pledged": "{{amount}} का वादा",
+    "pledged": "इरादा {{amount}}",
     "via": "{{path}} के ज़रिए",
     "empty": "अभी कोई नहीं",
-    "notFound": "कोई नहीं मिला"
+    "notFound": "कोई नहीं मिला",
+    "sort": "क्रम",
+    "sortRecent": "नए",
+    "sortName": "नाम",
+    "sortIntention": "इरादा",
+    "sortBrought": "लाए",
+    "foundElsewhere": "इस हाथ मिलाने में इस नाम का कोई नहीं। दूसरों में मिले:",
+    "alsoElsewhere": "दूसरे हाथ मिलानों में भी"
   },
   "offline": {
     "banner": "कनेक्शन नहीं है। इस डिवाइस पर सहेजी गई कॉपी दिखाई जा रही है, {{time}}।",

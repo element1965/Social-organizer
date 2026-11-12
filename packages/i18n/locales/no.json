@@ -325,10 +325,17 @@
     "inCircle": "{{count}} i kretsen sin",
     "noneYet": "Har ikke lagt til noen ennå",
     "brought": "Har tatt med {{count}}",
-    "pledged": "{{amount}} lovet",
+    "pledged": "intensjon {{amount}}",
     "via": "via {{path}}",
     "empty": "Ingen ennå",
-    "notFound": "Ingen funnet"
+    "notFound": "Ingen funnet",
+    "sort": "Sorter",
+    "sortRecent": "Nyeste",
+    "sortName": "Navn",
+    "sortIntention": "Intensjon",
+    "sortBrought": "Tatt med",
+    "foundElsewhere": "Ingen med det navnet i dette håndtrykket. Funnet i andre:",
+    "alsoElsewhere": "Også i andre håndtrykk"
   },
   "offline": {
     "banner": "Ingen tilkobling. Viser kopien som er lagret på denne enheten, {{time}}.",

@@ -331,10 +331,17 @@
     "inCircle": "{{count}} w swoim kręgu",
     "noneYet": "Nikogo jeszcze nie dodano",
     "brought": "Zaprosił(a) {{count}}",
-    "pledged": "zadeklarowano {{amount}}",
+    "pledged": "zamiar {{amount}}",
     "via": "przez {{path}}",
     "empty": "Na razie nikogo",
-    "notFound": "Nikogo nie znaleziono"
+    "notFound": "Nikogo nie znaleziono",
+    "sort": "Kolejność",
+    "sortRecent": "Najnowsi",
+    "sortName": "Imię",
+    "sortIntention": "Zamiar",
+    "sortBrought": "Zaproszeni",
+    "foundElsewhere": "Nikt o tym imieniu w tym uścisku dłoni. Znaleziono w innych:",
+    "alsoElsewhere": "Także w innych uściskach dłoni"
   },
   "offline": {
     "banner": "Brak połączenia. Wyświetlana jest kopia zapisana na tym urządzeniu, {{time}}.",

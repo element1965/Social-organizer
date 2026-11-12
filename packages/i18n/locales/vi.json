@@ -322,10 +322,17 @@
     "inCircle": "{{count}} người trong vòng tròn của họ",
     "noneYet": "Chưa thêm ai",
     "brought": "Đã mời {{count}}",
-    "pledged": "cam kết {{amount}}",
+    "pledged": "dự định {{amount}}",
     "via": "qua {{path}}",
     "empty": "Chưa có ai",
-    "notFound": "Không tìm thấy ai"
+    "notFound": "Không tìm thấy ai",
+    "sort": "Sắp xếp",
+    "sortRecent": "Mới nhất",
+    "sortName": "Tên",
+    "sortIntention": "Dự định",
+    "sortBrought": "Đã mời",
+    "foundElsewhere": "Không có ai tên đó trong cái bắt tay này. Tìm thấy ở những cái khác:",
+    "alsoElsewhere": "Cũng có ở các cái bắt tay khác"
   },
   "offline": {
     "banner": "Không có kết nối. Đang hiển thị bản sao đã lưu trên thiết bị này, {{time}}.",

@@ -337,10 +337,17 @@
     "inCircle": "{{count}} in their circle",
     "noneYet": "Has not added anyone yet",
     "brought": "Brought in {{count}}",
-    "pledged": "{{amount}} pledged",
+    "pledged": "intention {{amount}}",
     "via": "through {{path}}",
     "empty": "Nobody yet",
-    "notFound": "Nobody found"
+    "notFound": "Nobody found",
+    "sort": "Sort",
+    "sortRecent": "Newest",
+    "sortName": "Name",
+    "sortIntention": "Intention",
+    "sortBrought": "Brought in",
+    "foundElsewhere": "Nobody by that name in this handshake. Found in others:",
+    "alsoElsewhere": "Also in other handshakes"
   },
   "offline": {
     "banner": "No connection. Showing the copy saved on this device, {{time}}.",

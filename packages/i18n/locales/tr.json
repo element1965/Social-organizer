@@ -325,10 +325,17 @@
     "inCircle": "Çevresinde {{count}} kişi",
     "noneYet": "Henüz kimseyi eklemedi",
     "brought": "{{count}} kişi getirdi",
-    "pledged": "{{amount}} taahhüt",
+    "pledged": "niyet {{amount}}",
     "via": "{{path}} üzerinden",
     "empty": "Henüz kimse yok",
-    "notFound": "Kimse bulunamadı"
+    "notFound": "Kimse bulunamadı",
+    "sort": "Sıra",
+    "sortRecent": "En yeni",
+    "sortName": "Ad",
+    "sortIntention": "Niyet",
+    "sortBrought": "Getirdiği",
+    "foundElsewhere": "Bu tokalaşmada bu isimde kimse yok. Diğerlerinde bulundu:",
+    "alsoElsewhere": "Diğer tokalaşmalarda da"
   },
   "offline": {
     "banner": "Bağlantı yok. Bu cihazda kayıtlı kopya gösteriliyor, {{time}}.",

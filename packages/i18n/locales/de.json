@@ -325,10 +325,17 @@
     "inCircle": "{{count}} im eigenen Kreis",
     "noneYet": "Hat noch niemanden hinzugefügt",
     "brought": "Hat {{count}} eingeladen",
-    "pledged": "{{amount}} zugesagt",
+    "pledged": "Absicht {{amount}}",
     "via": "über {{path}}",
     "empty": "Noch niemand",
-    "notFound": "Niemand gefunden"
+    "notFound": "Niemand gefunden",
+    "sort": "Sortierung",
+    "sortRecent": "Neueste",
+    "sortName": "Name",
+    "sortIntention": "Absicht",
+    "sortBrought": "Eingeladen",
+    "foundElsewhere": "Niemand mit diesem Namen in diesem Handschlag. Gefunden in anderen:",
+    "alsoElsewhere": "Auch in anderen Handschlägen"
   },
   "offline": {
     "banner": "Keine Verbindung. Angezeigt wird die auf diesem Gerät gespeicherte Kopie, {{time}}.",

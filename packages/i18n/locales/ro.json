@@ -328,10 +328,17 @@
     "inCircle": "{{count}} în cercul lor",
     "noneYet": "Nu a adăugat pe nimeni încă",
     "brought": "A adus {{count}}",
-    "pledged": "{{amount}} promiși",
+    "pledged": "intenție {{amount}}",
     "via": "prin {{path}}",
     "empty": "Nimeni încă",
-    "notFound": "Nu am găsit pe nimeni"
+    "notFound": "Nu am găsit pe nimeni",
+    "sort": "Ordine",
+    "sortRecent": "Recenți",
+    "sortName": "Nume",
+    "sortIntention": "Intenție",
+    "sortBrought": "Aduși",
+    "foundElsewhere": "Nimeni cu acest nume în această strângere de mână. Găsiți în altele:",
+    "alsoElsewhere": "Și în alte strângeri de mână"
   },
   "offline": {
     "banner": "Fără conexiune. Se afișează copia salvată pe acest dispozitiv, {{time}}.",
