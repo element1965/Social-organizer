@@ -771,11 +771,11 @@
   "how": {
     "meta": {
       "title": "Näin se toimii — Social Organizer",
-      "description": "Ensin verkosto ihmisistä, jotka tunnet, sitten tarve, joka tavoittaa yhtä monta ihmistä kuin siinä on dollareita, sitten suora koordinointi. Ja miten tämä eroaa Kiinan verkossa toimivista keskinäisen avun alustoista."
+      "description": "Rakennat verkoston ihmisistä, jotka tunnet. Tarve tavoittaa siinä yhtä monta ihmistä kuin siinä on dollareita, ja osallistujat sopivat suoraan keskenään. Sivulla verrataan myös Social Organizer -palvelua Kiinan verkossa toimiviin keskinäisen avun alustoihin."
     },
     "hero": {
       "title": "Ensin verkosto, sitten signaalit",
-      "lead": "Social Organizer alkaa verkostosta ihmisistä, jotka tunnet henkilökohtaisesti. Kaksi signaalia kulkee sen läpi. <b>Tarve</b> (Need) on osallistujan viesti siitä, mitä hän tarvitsee. <b>Osallistuminen</b> (Participation) on toisen osallistujan viesti omasta vapaaehtoisesta osallistumisestaan. Kaiken muun ihmiset sopivat ja tekevät itse, suoraan."
+      "lead": "Social Organizer alkaa verkostosta ihmisistä, jotka tunnet henkilökohtaisesti. Kaksi signaalia kulkee sen läpi. <b>Tarpeella</b> osallistuja kertoo, mitä hän tarvitsee. <b>Osallistumisella</b> toinen osallistuja kertoo, että hän on mukana, ja nimeää summan. Kaiken muun ihmiset sopivat ja tekevät itse."
     },
     "orbit": {
       "title": "Kuinka pitkälle viesti kulkee",
@@ -789,7 +789,7 @@
       "says": [
         "<b>Kuusi ihmistä, jotka tunnet.</b> Tämä on piiri: ihmiset, joiden kanssa olet vahvistanut tuttavuuden.",
         "Jokaisella kuudesta on omat kuutensa. <b>36 ihmistä</b>, joita et tunne, mutta joku omistasi tuntee.",
-        "Vielä yksi askel — <b>216 ihmistä</b>. Viesti tavoittaa heidätkin niiden kautta, jotka tuntevat sinut."
+        "Vielä yksi askel tuo <b>216 ihmistä</b>. Viesti tavoittaa heidätkin niiden kautta, jotka tuntevat sinut."
       ],
       "sumNote": "jos jokainen nimeäisi {{share}}. Yksinkertaistettu esimerkki: oikeassa elämässä piirit limittyvät, eikä kenenkään ole pakko osallistua"
     },
@@ -799,7 +799,7 @@
       "says": [
         "<b>Maria Koval</b> ilmoittaa tarpeesta. Et tunne häntä.",
         "<b>Oleg</b>, veljesi, tuntee Marian. Siksi hän saa tämän viestin.",
-        "<b>Sinä</b> saat viestin, koska tunnet Olegin. Osallistutko vai et, päätät itse."
+        "<b>Sinä</b> saat viestin, koska tunnet Olegin. Sinä päätät, osallistutko."
       ]
     },
     "join": {
@@ -901,7 +901,7 @@
     },
     "compare": {
       "title": "Lähin esimerkki: Kiinan keskinäinen apu verkossa",
-      "lead": "Vuosina 2018–2021 Kiinan verkossa toimivat keskinäisen avun alustat keräsivät satoja miljoonia jäseniä: suurimmalla, Xianghubaolla, oli yli 100 miljoonaa. <b>Jäsenet jakoivat toistensa vakavien sairauksien kulut, kukin vain muutaman dollarin vuodessa.</b> Vuonna 2021 viranomaiset sulkivat koko alan: yksi ylläpitäjä pyöritti käytännössä vakuutusta.",
+      "lead": "Vuodesta 2018 vuoteen 2021 Kiinan verkossa toimivat keskinäisen avun alustat keräsivät satoja miljoonia jäseniä: suurimmalla, Xianghubaolla, oli yli 100 miljoonaa. <b>Jäsenet jakoivat toistensa vakavien sairauksien kulut, kukin vain muutaman dollarin vuodessa.</b> Vuonna 2021 viranomaiset sulkivat koko alan, koska jokaisen alustan ylläpitäjä pyöritti käytännössä vakuutusta.",
       "note": "Social Organizer säilyttää heidän ideansa: kun yhdellä on vaikeaa, monet ottavat kukin pienen osan. Ylläpitäjää ja kassaa sillä ei ole.",
       "caption": "Kiinan verkossa toimivat keskinäisen avun alustat verrattuna Social Organizeriin",
       "them": "Keskinäisen avun alustat verkossa",
@@ -914,7 +914,7 @@
         ],
         [
           "Raha",
-          "Alusta perii sen jäseniltä",
+          "Alusta perii rahat jäseniltä",
           "Ei kulje koskaan palvelun kautta"
         ],
         [

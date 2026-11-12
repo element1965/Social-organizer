@@ -766,11 +766,11 @@
   "how": {
     "meta": {
       "title": "Cách hoạt động — Social Organizer",
-      "description": "Trước hết là mạng lưới những người bạn quen, rồi một nhu cầu tới số người bằng số đô la nó nêu, rồi phối hợp trực tiếp. Và điểm khác với các nền tảng tương trợ trực tuyến của Trung Quốc."
+      "description": "Bạn xây dựng một mạng lưới những người bạn quen. Một nhu cầu tới số người trong đó bằng số đô la nó nêu, và những người tham gia phối hợp trực tiếp. Trang này cũng so sánh Social Organizer với các nền tảng tương trợ trực tuyến của Trung Quốc."
     },
     "hero": {
       "title": "Trước là mạng lưới, sau là các tín hiệu",
-      "lead": "Social Organizer bắt đầu từ mạng lưới những người bạn quen trực tiếp. Hai tín hiệu đi trong đó. <b>Nhu cầu</b> (Need) là thông báo của một người tham gia về điều họ cần. <b>Sự tham gia</b> (Participation) là thông báo của một người tham gia khác về sự tham gia tự nguyện của chính họ. Mọi thứ còn lại, mọi người tự thỏa thuận và tự làm, trực tiếp."
+      "lead": "Social Organizer bắt đầu từ mạng lưới những người bạn quen trực tiếp. Hai tín hiệu đi trong đó. Với <b>Nhu cầu</b> (Need), một người tham gia nói họ cần gì. Với <b>Sự tham gia</b> (Participation), một người tham gia khác nói họ sẽ tham gia và nêu một số tiền. Mọi thứ còn lại, mọi người tự thỏa thuận và tự làm, trực tiếp."
     },
     "orbit": {
       "title": "Thông báo đi xa đến đâu",
@@ -784,7 +784,7 @@
       "says": [
         "<b>Sáu người bạn quen.</b> Đây chính là vòng tròn: những người bạn đã xác nhận là quen.",
         "Mỗi người trong sáu người có sáu người của họ. <b>36 người</b> bạn không quen, nhưng có người của bạn quen.",
-        "Thêm một bước — <b>216 người</b>. Thông báo cũng tới họ, qua những người quen bạn."
+        "Thêm một bước là <b>216 người</b>. Thông báo cũng tới họ, qua những người quen bạn."
       ],
       "sumNote": "nếu mỗi người nêu {{share}}. Một ví dụ đơn giản hóa: trong đời thực các vòng tròn chồng lên nhau, và không ai bắt buộc phải tham gia"
     },
@@ -896,7 +896,7 @@
     },
     "compare": {
       "title": "Ví dụ gần nhất: tương trợ trực tuyến ở Trung Quốc",
-      "lead": "Từ 2018 đến 2021, các nền tảng tương trợ trực tuyến của Trung Quốc thu hút hàng trăm triệu thành viên: lớn nhất là Xianghubao, với hơn 100 triệu. <b>Các thành viên chia nhau chi phí bệnh nặng của nhau, mỗi người vài đô la một năm.</b> Năm 2021, cơ quan quản lý đóng cả lĩnh vực: một đơn vị vận hành đang làm điều thực chất là bảo hiểm.",
+      "lead": "Từ 2018 đến 2021, các nền tảng tương trợ trực tuyến của Trung Quốc thu hút hàng trăm triệu thành viên: lớn nhất là Xianghubao, với hơn 100 triệu. <b>Các thành viên chia nhau chi phí bệnh nặng của nhau, mỗi người vài đô la một năm.</b> Năm 2021, cơ quan quản lý đóng cả lĩnh vực, vì đơn vị vận hành của mỗi nền tảng thực chất đang làm bảo hiểm.",
       "note": "Social Organizer giữ lại ý tưởng của họ: khi một người gặp khó khăn, nhiều người mỗi người nhận một phần nhỏ. Không có đơn vị vận hành và không có quỹ chung.",
       "caption": "Các nền tảng tương trợ trực tuyến của Trung Quốc so với Social Organizer",
       "them": "Nền tảng tương trợ trực tuyến",

@@ -766,11 +766,11 @@
   "how": {
     "meta": {
       "title": "Cara kerja — Social Organizer",
-      "description": "Pertama jaringan orang yang Anda kenal, lalu kebutuhan yang menjangkau sebanyak dolar yang disebutkannya, lalu koordinasi langsung. Dan apa bedanya dengan platform saling membantu online di Tiongkok."
+      "description": "Anda membangun jaringan orang yang Anda kenal. Kebutuhan menjangkau sebanyak dolar yang disebutkannya di dalam jaringan itu, dan para peserta berkoordinasi langsung. Halaman ini juga membandingkan Social Organizer dengan platform saling membantu online di Tiongkok."
     },
     "hero": {
       "title": "Jaringan dulu, baru sinyal",
-      "lead": "Social Organizer dimulai dari jaringan orang yang Anda kenal secara pribadi. Dua sinyal berjalan di dalamnya. <b>Kebutuhan</b> (Need) adalah pesan seorang peserta tentang apa yang ia butuhkan. <b>Partisipasi</b> (Participation) adalah pesan peserta lain tentang partisipasi sukarelanya sendiri. Segala hal lain disepakati dan dilakukan orang sendiri, secara langsung."
+      "lead": "Social Organizer dimulai dari jaringan orang yang Anda kenal secara pribadi. Dua sinyal berjalan di dalamnya. Dengan <b>kebutuhan</b>, seorang peserta menyampaikan apa yang ia butuhkan. Dengan <b>partisipasi</b>, peserta lain menyampaikan bahwa ia akan ikut dan menyebut jumlahnya. Orang menyepakati dan melakukan sisanya sendiri."
     },
     "orbit": {
       "title": "Seberapa jauh pesan berjalan",
@@ -784,7 +784,7 @@
       "says": [
         "<b>Enam orang yang Anda kenal.</b> Inilah lingkaran: orang yang telah Anda konfirmasi Anda kenal.",
         "Masing-masing dari enam itu punya enam orang sendiri. <b>36 orang</b> yang tidak Anda kenal, tetapi dikenal oleh salah satu orang Anda.",
-        "Satu langkah lagi — <b>216 orang</b>. Pesan sampai kepada mereka juga, melalui orang yang mengenal Anda."
+        "Satu langkah lagi menjadi <b>216 orang</b>. Pesan sampai kepada mereka juga, melalui orang yang mengenal Anda."
       ],
       "sumNote": "jika setiap orang menyebut {{share}}. Contoh yang disederhanakan: dalam kehidupan nyata lingkaran saling bersinggungan, dan tidak ada yang wajib ikut serta"
     },
@@ -794,7 +794,7 @@
       "says": [
         "<b>Maria Koval</b> menyampaikan kebutuhan. Anda tidak mengenalnya.",
         "<b>Oleg</b>, saudara Anda, mengenal Maria. Itu sebabnya ia menerima pesannya.",
-        "<b>Anda</b> menerima pesan karena Anda mengenal Oleg. Ikut serta atau tidak, Anda yang memutuskan."
+        "<b>Anda</b> menerima pesan karena Anda mengenal Oleg. Anda yang memutuskan ikut atau tidak."
       ]
     },
     "join": {
@@ -896,7 +896,7 @@
     },
     "compare": {
       "title": "Contoh terdekat: saling membantu online di Tiongkok",
-      "lead": "Pada 2018–2021 platform saling membantu online di Tiongkok menghimpun ratusan juta anggota: yang terbesar, Xianghubao, punya lebih dari 100 juta. <b>Anggota menanggung bersama biaya penyakit berat satu sama lain, beberapa dolar setahun per orang.</b> Pada 2021 regulator menutup seluruh sektor itu: satu operator pada dasarnya menjalankan asuransi.",
+      "lead": "Pada 2018 hingga 2021 platform saling membantu online di Tiongkok menghimpun ratusan juta anggota: yang terbesar, Xianghubao, punya lebih dari 100 juta. <b>Anggota menanggung bersama biaya penyakit berat satu sama lain, beberapa dolar setahun per orang.</b> Pada 2021 regulator menutup seluruh sektor itu karena operator setiap platform pada dasarnya menjalankan asuransi.",
       "note": "Social Organizer mempertahankan ide mereka: kalau satu orang sedang kesulitan, banyak orang masing-masing mengambil bagian kecil. Social Organizer tidak punya operator dan tidak punya dana.",
       "caption": "Platform saling membantu online di Tiongkok dibandingkan dengan Social Organizer",
       "them": "Platform saling membantu online",
@@ -909,7 +909,7 @@
         ],
         [
           "Uang",
-          "Dipungut platform dari anggota",
+          "Platform memungut uang dari anggota",
           "Tidak pernah melewati layanan"
         ],
         [

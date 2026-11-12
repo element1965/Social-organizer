@@ -771,11 +771,11 @@
   "how": {
     "meta": {
       "title": "So funktioniert es — Social Organizer",
-      "description": "Zuerst ein Netzwerk aus Menschen, die Sie kennen, dann ein Bedarf, der so viele Menschen erreicht, wie er Dollar nennt, dann direkte Abstimmung. Und worin es sich von Chinas Online-Plattformen für gegenseitige Hilfe unterscheidet."
+      "description": "Sie bauen ein Netzwerk aus Menschen auf, die Sie kennen. Ein Bedarf erreicht so viele Menschen darin, wie er Dollar nennt, und die Beteiligten stimmen sich direkt ab. Die Seite vergleicht Social Organizer außerdem mit Chinas Online-Plattformen für gegenseitige Hilfe."
     },
     "hero": {
       "title": "Zuerst das Netzwerk, dann die Signale",
-      "lead": "Social Organizer beginnt mit einem Netzwerk aus Menschen, die Sie persönlich kennen. Zwei Signale wandern darin. Ein <b>Bedarf</b> (Need) ist die Meldung einer Person darüber, was sie braucht. Eine <b>Beteiligung</b> (Participation) ist die Meldung einer anderen Person über ihre eigene freiwillige Beteiligung. Alles Weitere vereinbaren und tun die Menschen selbst, direkt."
+      "lead": "Social Organizer beginnt mit einem Netzwerk aus Menschen, die Sie persönlich kennen. Zwei Signale wandern darin. Mit einem <b>Bedarf</b> sagt eine Person, was sie braucht. Mit einer <b>Beteiligung</b> sagt eine andere Person, dass sie mitmacht, und nennt einen Betrag. Alles Weitere vereinbaren und tun die Menschen selbst."
     },
     "orbit": {
       "title": "Wie weit eine Meldung geht",
@@ -789,7 +789,7 @@
       "says": [
         "<b>Sechs Menschen, die Sie kennen.</b> Das ist der Kreis: Menschen, bei denen Sie bestätigt haben, dass Sie sich kennen.",
         "Jede der sechs Personen hat ihre eigenen sechs. <b>36 Menschen</b>, die Sie nicht kennen, aber jemand von Ihren schon.",
-        "Noch ein Schritt — <b>216 Menschen</b>. Die Meldung erreicht auch sie, über die, die Sie kennen."
+        "Ein weiterer Schritt ergibt <b>216 Menschen</b>. Die Meldung erreicht auch sie, über die, die Sie kennen."
       ],
       "sumNote": "wenn jede Person {{share}} nennen würde. Ein vereinfachtes Beispiel: Im Leben überschneiden sich Kreise, und niemand muss sich beteiligen"
     },
@@ -799,7 +799,7 @@
       "says": [
         "<b>Maria Koval</b> meldet einen Bedarf. Sie kennen sie nicht.",
         "<b>Oleg</b>, Ihr Bruder, kennt Maria. Darum erhält er ihre Meldung.",
-        "<b>Sie</b> erhalten die Meldung, weil Sie Oleg kennen. Ob Sie sich beteiligen, entscheiden Sie selbst."
+        "<b>Sie</b> erhalten die Meldung, weil Sie Oleg kennen. Sie entscheiden, ob Sie sich beteiligen."
       ]
     },
     "join": {
@@ -901,7 +901,7 @@
     },
     "compare": {
       "title": "Das nächstliegende Beispiel: Chinas Online-Plattformen für gegenseitige Hilfe",
-      "lead": "Von 2018 bis 2021 versammelten Chinas Online-Plattformen für gegenseitige Hilfe Hunderte Millionen Mitglieder: Die größte, Xianghubao, hatte über 100 Millionen. <b>Die Mitglieder teilten sich die Kosten schwerer Krankheiten untereinander, jedes nur wenige Dollar im Jahr.</b> 2021 schlossen die Behörden den ganzen Sektor: Ein Betreiber führte faktisch eine Versicherung.",
+      "lead": "Von 2018 bis 2021 versammelten Chinas Online-Plattformen für gegenseitige Hilfe Hunderte Millionen Mitglieder: Die größte, Xianghubao, hatte über 100 Millionen. <b>Die Mitglieder teilten sich die Kosten schwerer Krankheiten untereinander, jedes nur wenige Dollar im Jahr.</b> 2021 schlossen die Behörden den ganzen Sektor, weil der Betreiber jeder Plattform faktisch eine Versicherung führte.",
       "note": "Social Organizer behält ihre Idee: Wenn es einem Menschen schlecht geht, übernehmen viele jeweils einen kleinen Teil. Einen Betreiber und einen Topf gibt es nicht.",
       "caption": "Chinas Online-Plattformen für gegenseitige Hilfe im Vergleich mit Social Organizer",
       "them": "Online-Plattformen für gegenseitige Hilfe",
@@ -914,7 +914,7 @@
         ],
         [
           "Geld",
-          "Wird von der Plattform bei den Mitgliedern eingezogen",
+          "Die Plattform zieht es von den Mitgliedern ein",
           "Läuft nie über den Dienst"
         ],
         [

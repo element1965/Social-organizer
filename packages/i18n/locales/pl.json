@@ -781,11 +781,11 @@
   "how": {
     "meta": {
       "title": "Jak to działa — Social Organizer",
-      "description": "Najpierw sieć ludzi, których znasz, potem potrzeba, która dociera do tylu osób, ile dolarów wskazuje, potem bezpośrednia koordynacja. I czym różni się od chińskich internetowych platform wzajemnej pomocy."
+      "description": "Budujesz sieć ludzi, których znasz. Potrzeba dociera w niej do tylu osób, ile dolarów wskazuje, a uczestnicy koordynują się bezpośrednio. Na stronie jest też porównanie Social Organizer z chińskimi internetowymi platformami wzajemnej pomocy."
     },
     "hero": {
       "title": "Najpierw sieć, potem sygnały",
-      "lead": "Social Organizer zaczyna się od sieci ludzi, których znasz osobiście. Przechodzą przez nią dwa sygnały. <b>Potrzeba</b> (Need) to wiadomość uczestnika o tym, czego potrzebuje. <b>Udział</b> (Participation) to wiadomość innego uczestnika o jego własnym dobrowolnym udziale. Całą resztę ludzie ustalają i robią sami, bezpośrednio."
+      "lead": "Social Organizer zaczyna się od sieci ludzi, których znasz osobiście. Przechodzą przez nią dwa sygnały. Za pomocą <b>potrzeby</b> (Need) uczestnik mówi, czego potrzebuje. Za pomocą <b>udziału</b> (Participation) inny uczestnik mówi, że weźmie udział, i podaje kwotę. Całą resztę ludzie ustalają i robią sami, bezpośrednio."
     },
     "orbit": {
       "title": "Jak daleko idzie wiadomość",
@@ -799,7 +799,7 @@
       "says": [
         "<b>Sześć osób, które znasz.</b> To jest krąg: ludzie, przy których potwierdziłeś, że się znacie.",
         "Każda z sześciu osób ma swoje sześć. <b>36 osób</b>, których nie znasz, ale zna je ktoś z Twoich.",
-        "Jeszcze jeden krok — <b>216 osób</b>. Wiadomość dociera i do nich, przez tych, którzy Cię znają."
+        "Jeszcze jeden krok i jest <b>216 osób</b>. Wiadomość dociera i do nich, przez tych, którzy Cię znają."
       ],
       "sumNote": "gdyby każdy zgłosił {{share}}. Uproszczony przykład: w życiu kręgi się przecinają i nikt nie musi brać udziału"
     },
@@ -911,7 +911,7 @@
     },
     "compare": {
       "title": "Najbliższy przykład: chińska internetowa wzajemna pomoc",
-      "lead": "W latach 2018–2021 chińskie internetowe platformy wzajemnej pomocy zgromadziły setki milionów członków: największa, Xianghubao, miała ich ponad 100 milionów. <b>Członkowie dzielili się kosztami poważnej choroby innych, po kilka dolarów rocznie każdy.</b> W 2021 roku regulatorzy zamknęli cały sektor: jeden operator prowadził w praktyce ubezpieczenie.",
+      "lead": "Od 2018 do 2021 roku chińskie internetowe platformy wzajemnej pomocy zgromadziły setki milionów członków: największa, Xianghubao, miała ich ponad 100 milionów. <b>Członkowie dzielili się kosztami poważnej choroby innych, po kilka dolarów rocznie każdy.</b> W 2021 roku regulatorzy zamknęli cały sektor, bo operator każdej platformy w praktyce prowadził ubezpieczenie.",
       "note": "Social Organizer zachowuje ich ideę: gdy jednej osobie jest ciężko, wiele osób bierze na siebie po małej części. Nie ma w nim operatora ani puli.",
       "caption": "Chińskie internetowe platformy wzajemnej pomocy w porównaniu z Social Organizer",
       "them": "Internetowe platformy wzajemnej pomocy",
