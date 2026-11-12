@@ -681,11 +681,11 @@
     },
     "meta": {
       "title": "Social Organizer — o rețea de oameni pe care îi cunoști",
-      "description": "Construiește o rețea de oameni pe care îi cunoști personal: ea împarte riscurile fiecăruia între mulți. Când cineva din ea anunță o nevoie, află exact atâția oameni câți dolari are suma, începând cu cei mai apropiați. Participanții decid singuri și acționează direct. Open source, un proiect nonprofit."
+      "description": "Construiește o rețea de oameni pe care îi cunoști personal și împarte riscurile cu ei. O nevoie ajunge la exact atâția oameni câți dolari are suma, începând cu cei mai apropiați. Participanții decid singuri și acționează direct. Open source, un proiect nonprofit."
     },
     "hero": {
       "title": "Mai întâi, o rețea de oameni pe care îi cunoști",
-      "lead": "Social Organizer începe cu rețeaua ta: oameni pe care îi cunoști personal și oamenii pe care îi cunosc ei. Împreună, ei fac riscurile fiecăruia suportabile. <b>Când cineva din ea anunță o nevoie, află exact atâția oameni câți dolari are suma</b>, iar fiecare dintre ei poate lua o parte mică.",
+      "lead": "Social Organizer începe cu rețeaua ta: oameni pe care îi cunoști personal și oamenii pe care îi cunosc ei. Când unuia dintre voi îi e greu, ceilalți pot duce greul împreună. <b>O nevoie ajunge la exact atâția oameni câți dolari are suma, începând cu cei mai apropiați</b>, iar fiecare dintre ei poate lua o parte mică.",
       "factOpen": "Cod deschis",
       "factNonprofit": "Non-profit",
       "factNoMoney": "Participare voluntară",
@@ -751,7 +751,7 @@
       "p3Title": "Legătură directă între participanți",
       "p3Text": "Înțelegerile și acțiunile rămân între oamenii legați prin cunoștințe confirmate.",
       "p4Title": "Rețeaua vine prima",
-      "p4Text": "Semnalele circulă doar prin cunoștințe confirmate. Riscurile sunt împărțite între oameni, nu strânse la un loc: fără fond comun, fără operator, fără plăți promise."
+      "p4Text": "Semnalele circulă doar prin cunoștințe confirmate. Împarți riscurile cu oameni pe care îi cunoști direct, fără fond comun și fără operator."
     },
     "faq": {
       "title": "Pe scurt, esențialul",
@@ -770,7 +770,7 @@
       "q7": "Prin ce diferă de platformele online de ajutor reciproc?",
       "a7": "Platformele chineze de ajutor reciproc aveau un singur operator, luau bani de la membri și promiteau plăți ca o asigurare, iar în 2021 au fost închise. Social Organizer nu are operator, fond sau plăți: doar oameni care se cunosc, două semnale și participare voluntară.",
       "q8": "Este o asigurare?",
-      "a8": "Nu. Asigurarea strânge contribuții într-un fond în avans și promite o plată. Aici nimeni nu plătește nimic în avans și nimic nu e promis: riscul unui om este împărțit între mulți oameni care se cunosc, iar cei care hotărăsc să participe iau fiecare o parte mică."
+      "a8": "Nu. Un asigurator îți ia banii în avans și promite o plată. Aici nu plătești nimic în avans și nimeni nu promite nimic. Când cuiva din rețeaua ta îi e greu, cei care hotărăsc să participe iau fiecare o parte mică."
     }
   },
   "how": {
@@ -907,7 +907,7 @@
     "compare": {
       "title": "Cel mai apropiat exemplu: ajutorul reciproc online din China",
       "lead": "Între 2018 și 2021, platformele chineze online de ajutor reciproc au adunat sute de milioane de membri: cea mai mare, Xianghubao, avea peste 100 de milioane. <b>Membrii își împărțeau costul bolii grave a celorlalți, câțiva dolari pe an fiecare.</b> În 2021, autoritățile de reglementare au închis întregul sector: un singur operator administra, de fapt, o asigurare.",
-      "note": "Social Organizer păstrează ideea, riscul unui om împărțit între mulți care iau fiecare o parte mică, și renunță la ceea ce făcea acele platforme fragile: operatorul, fondul comun și plățile promise.",
+      "note": "Social Organizer păstrează ideea lor: când unui om îi e greu, mulți iau fiecare o parte mică. Nu are operator și nici fond comun.",
       "caption": "Platformele chineze online de ajutor reciproc comparate cu Social Organizer",
       "them": "Platforme online de ajutor reciproc",
       "us": "Social Organizer",

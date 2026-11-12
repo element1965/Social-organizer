@@ -677,11 +677,11 @@
     },
     "meta": {
       "title": "Social Organizer — ett nätverk av människor du känner",
-      "description": "Bygg ett nätverk av människor du känner personligen: det sprider var och ens risker över många. När någon i det anmäler ett behov får exakt lika många personer veta om det som beloppet i dollar, de närmaste först. Deltagarna bestämmer själva och agerar direkt. Öppen källkod, ett ideellt projekt."
+      "description": "Bygg ett nätverk av människor du känner personligen och dela riskerna med dem. Ett behov når exakt lika många personer som beloppet i dollar, de närmaste först. Deltagarna bestämmer själva och agerar direkt. Öppen källkod, ett ideellt projekt."
     },
     "hero": {
       "title": "Först ett nätverk av människor du känner",
-      "lead": "Social Organizer börjar med ditt nätverk: människor du känner personligen, och de som de känner. Tillsammans gör de var och ens risker möjliga att bära. <b>När någon i det anmäler ett behov får exakt lika många personer veta om det som beloppet i dollar</b>, och var och en av dem kan ta en liten del.",
+      "lead": "Social Organizer börjar med ditt nätverk: människor du känner personligen, och de som de känner. När någon av er har det svårt kan de andra dela bördan. <b>Ett behov når exakt lika många personer som beloppet i dollar, de närmaste först</b>, och var och en av dem kan ta en liten del.",
       "factOpen": "Öppen källkod",
       "factNonprofit": "Ideellt",
       "factNoMoney": "Frivilligt deltagande",
@@ -746,7 +746,7 @@
       "p3Title": "Direkt kontakt mellan deltagare",
       "p3Text": "Överenskommelser och handlingar stannar mellan personer som är förbundna genom bekräftade bekantskaper.",
       "p4Title": "Nätverket kommer först",
-      "p4Text": "Signaler går bara via bekräftade bekantskaper. Risker delas mellan människor, de samlas inte ihop: ingen gemensam kassa, ingen operatör, inga lovade utbetalningar."
+      "p4Text": "Signaler går bara via bekräftade bekantskaper. Du delar risker med människor du känner direkt, utan gemensam kassa och utan operatör."
     },
     "faq": {
       "title": "Det viktigaste i korthet",
@@ -765,7 +765,7 @@
       "q7": "Hur skiljer det sig från nätbaserade plattformar för ömsesidig hjälp?",
       "a7": "Kinas plattformar för ömsesidig hjälp hade en enda operatör, tog avgifter av medlemmarna och lovade utbetalningar som en försäkring, och 2021 stängdes de. Social Organizer har ingen operatör, ingen kassa och inga utbetalningar: bara människor som känner varandra, två signaler och frivilligt deltagande.",
       "q8": "Är det här en försäkring?",
-      "a8": "Nej. En försäkring samlar in avgifter i en fond i förväg och lovar en utbetalning. Här betalar ingen något i förväg och inget är lovat: en persons risk sprids över många som känner varandra, och de som väljer att delta tar var sin liten del."
+      "a8": "Nej. Ett försäkringsbolag tar dina pengar i förväg och lovar en utbetalning. Här betalar du inget i förväg och ingen lovar något. När någon i ditt nätverk har det svårt tar de som väljer att delta var sin liten del."
     }
   },
   "how": {
@@ -902,7 +902,7 @@
     "compare": {
       "title": "Det närmaste exemplet: Kinas nätbaserade ömsesidiga hjälp",
       "lead": "Från 2018 till 2021 samlade Kinas nätbaserade plattformar för ömsesidig hjälp hundratals miljoner medlemmar: den största, Xianghubao, hade över 100 miljoner. <b>Medlemmarna delade på kostnaden för varandras allvarliga sjukdom, några dollar om året var.</b> 2021 stängde myndigheterna hela sektorn: en operatör drev i praktiken en försäkring.",
-      "note": "Social Organizer behåller idén, en persons risk spridd över många som tar var sin liten del, och släpper det som gjorde de plattformarna sköra: operatören, kassan och de lovade utbetalningarna.",
+      "note": "Social Organizer behåller deras idé: när en person har det svårt tar många var sin liten del. Det finns ingen operatör och ingen kassa.",
       "caption": "Kinas nätbaserade plattformar för ömsesidig hjälp jämfört med Social Organizer",
       "them": "Nätbaserade plattformar för ömsesidig hjälp",
       "us": "Social Organizer",

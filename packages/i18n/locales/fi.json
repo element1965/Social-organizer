@@ -677,11 +677,11 @@
     },
     "meta": {
       "title": "Social Organizer — verkosto ihmisistä, jotka tunnet",
-      "description": "Rakenna verkosto ihmisistä, jotka tunnet henkilökohtaisesti: se jakaa jokaisen riskit monelle. Kun joku siinä ilmoittaa tarpeesta, siitä saa tietää täsmälleen yhtä monta ihmistä kuin siinä on dollareita, lähimmät ensin. Osallistujat päättävät itse ja toimivat suoraan. Avoin lähdekoodi, voittoa tavoittelematon hanke."
+      "description": "Rakenna verkosto ihmisistä, jotka tunnet henkilökohtaisesti, ja jakakaa toistenne riskit. Tarve tavoittaa täsmälleen yhtä monta ihmistä kuin siinä on dollareita, lähimmät ensin. Osallistujat päättävät itse ja toimivat suoraan. Avoin lähdekoodi, voittoa tavoittelematon hanke."
     },
     "hero": {
       "title": "Ensin verkosto ihmisistä, jotka tunnet",
-      "lead": "Social Organizer alkaa sinun verkostostasi: ihmisistä, jotka tunnet henkilökohtaisesti, ja heidän tuttavistaan. Yhdessä he tekevät jokaisen riskeistä kannettavia. <b>Kun joku siinä ilmoittaa tarpeesta, siitä saa tietää täsmälleen yhtä monta ihmistä kuin siinä on dollareita</b>, ja kukin heistä voi ottaa pienen osan.",
+      "lead": "Social Organizer alkaa sinun verkostostasi: ihmisistä, jotka tunnet henkilökohtaisesti, ja heidän tuttavistaan. Kun yhdellä teistä on vaikeaa, muut voivat jakaa taakan. <b>Tarve tavoittaa täsmälleen yhtä monta ihmistä kuin siinä on dollareita, lähimmät ensin</b>, ja kukin heistä voi ottaa pienen osan.",
       "factOpen": "Avoin lähdekoodi",
       "factNonprofit": "Voittoa tavoittelematon",
       "factNoMoney": "Vapaaehtoinen osallistuminen",
@@ -746,7 +746,7 @@
       "p3Title": "Osallistujien suora yhteys",
       "p3Text": "Sopimukset ja toimet pysyvät ihmisten välillä, joita yhdistävät vahvistetut tuttavuudet.",
       "p4Title": "Verkosto tulee ensin",
-      "p4Text": "Signaalit kulkevat vain vahvistettujen tuttavuuksien kautta. Riskit jaetaan ihmisten kesken eikä niitä kerätä yhteen paikkaan: ei yhteistä kassaa, ei ylläpitäjää, ei luvattuja korvauksia."
+      "p4Text": "Signaalit kulkevat vain vahvistettujen tuttavuuksien kautta. Jaat riskit ihmisten kanssa, jotka tunnet suoraan, ilman yhteistä kassaa ja ilman ylläpitäjää."
     },
     "faq": {
       "title": "Lyhyesti olennaisesta",
@@ -765,7 +765,7 @@
       "q7": "Miten se eroaa verkossa toimivista keskinäisen avun alustoista?",
       "a7": "Kiinan keskinäisen avun alustoilla oli yksi ylläpitäjä, ne perivät jäseniltä maksuja ja lupasivat korvauksia kuin vakuutus, ja vuonna 2021 ne suljettiin. Social Organizerilla ei ole ylläpitäjää, kassaa eikä korvauksia: vain toisensa tuntevia ihmisiä, kaksi signaalia ja vapaaehtoinen osallistuminen.",
       "q8": "Onko tämä vakuutus?",
-      "a8": "Ei. Vakuutus kerää maksuja etukäteen rahastoon ja lupaa korvauksen. Täällä kukaan ei maksa mitään etukäteen eikä mitään luvata: yhden ihmisen riski jakautuu monelle toisensa tuntevalle ihmiselle, ja ne, jotka päättävät osallistua, ottavat kukin pienen osan."
+      "a8": "Ei. Vakuutusyhtiö ottaa rahasi etukäteen ja lupaa korvauksen. Täällä et maksa mitään etukäteen eikä kukaan lupaa mitään. Kun jollakulla verkostossasi on vaikeaa, ne, jotka päättävät osallistua, ottavat kukin pienen osan."
     }
   },
   "how": {
@@ -902,7 +902,7 @@
     "compare": {
       "title": "Lähin esimerkki: Kiinan keskinäinen apu verkossa",
       "lead": "Vuosina 2018–2021 Kiinan verkossa toimivat keskinäisen avun alustat keräsivät satoja miljoonia jäseniä: suurimmalla, Xianghubaolla, oli yli 100 miljoonaa. <b>Jäsenet jakoivat toistensa vakavien sairauksien kulut, kukin vain muutaman dollarin vuodessa.</b> Vuonna 2021 viranomaiset sulkivat koko alan: yksi ylläpitäjä pyöritti käytännössä vakuutusta.",
-      "note": "Social Organizer säilyttää idean, jossa yhden riski jakautuu monelle ja kukin ottaa pienen osan, ja jättää pois sen, mikä teki noista alustoista hauraita: ylläpitäjän, kassan ja luvatut korvaukset.",
+      "note": "Social Organizer säilyttää heidän ideansa: kun yhdellä on vaikeaa, monet ottavat kukin pienen osan. Ylläpitäjää ja kassaa sillä ei ole.",
       "caption": "Kiinan verkossa toimivat keskinäisen avun alustat verrattuna Social Organizeriin",
       "them": "Keskinäisen avun alustat verkossa",
       "us": "Social Organizer",

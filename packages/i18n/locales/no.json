@@ -677,11 +677,11 @@
     },
     "meta": {
       "title": "Social Organizer — et nettverk av folk du kjenner",
-      "description": "Bygg et nettverk av folk du kjenner personlig: det sprer hvert menneskes risiko over mange. Når noen i det melder om et behov, får akkurat så mange vite om det som beløpet i dollar tilsier, de nærmeste først. Deltakerne bestemmer selv og handler direkte. Åpen kildekode, et ideelt prosjekt."
+      "description": "Bygg et nettverk av folk du kjenner personlig og del risikoen med hverandre. Et behov når akkurat så mange som beløpet i dollar tilsier, de nærmeste først. Deltakerne bestemmer selv og handler direkte. Åpen kildekode, et ideelt prosjekt."
     },
     "hero": {
       "title": "Først et nettverk av folk du kjenner",
-      "lead": "Social Organizer begynner med nettverket ditt: folk du kjenner personlig, og folkene de kjenner. Sammen gjør de hvert menneskes risiko til noe man kan bære. <b>Når noen i det melder om et behov, får akkurat så mange vite om det som beløpet i dollar tilsier</b>, og hver av dem kan ta en liten del.",
+      "lead": "Social Organizer begynner med nettverket ditt: folk du kjenner personlig, og folkene de kjenner. Når en av dere har det vanskelig, kan de andre dele byrden. <b>Et behov når akkurat så mange som beløpet i dollar tilsier, de nærmeste først</b>, og hver av dem kan ta en liten del.",
       "factOpen": "Åpen kildekode",
       "factNonprofit": "Ideelt",
       "factNoMoney": "Frivillig deltakelse",
@@ -746,7 +746,7 @@
       "p3Title": "Direkte kontakt mellom deltakerne",
       "p3Text": "Avtaler og handlinger forblir mellom personer som er knyttet sammen av bekreftede bekjentskaper.",
       "p4Title": "Nettverket kommer først",
-      "p4Text": "Signaler går bare gjennom bekreftede bekjentskaper. Risiko deles mellom folk, den samles ikke: ingen felles pott, ingen operatør, ingen lovede utbetalinger."
+      "p4Text": "Signaler går bare gjennom bekreftede bekjentskaper. Du deler risiko med folk du kjenner direkte, uten felles pott og uten operatør."
     },
     "faq": {
       "title": "Kort om det viktigste",
@@ -765,7 +765,7 @@
       "q7": "Hvordan skiller den seg fra nettbaserte gjensidige hjelpeplattformer?",
       "a7": "Kinas gjensidige hjelpeplattformer hadde én operatør, tok betalt av medlemmene og lovet utbetalinger som en forsikring, og i 2021 ble de stengt. Social Organizer har ingen operatør, ingen pott og ingen utbetalinger: bare folk som kjenner hverandre, to signaler og frivillig deltakelse.",
       "q8": "Er dette en forsikring?",
-      "a8": "Nei. En forsikring samler inn bidrag i et fond på forhånd og lover en utbetaling. Her betaler ingen noe på forhånd, og ingenting er lovet: én persons risiko spres over mange som kjenner hverandre, og de som velger å delta, tar hver en liten del."
+      "a8": "Nei. Et forsikringsselskap tar pengene dine på forhånd og lover en utbetaling. Her betaler du ingenting på forhånd, og ingen lover noe. Når noen i nettverket ditt har det vanskelig, tar de som bestemmer seg for å delta, hver en liten del."
     }
   },
   "how": {
@@ -902,7 +902,7 @@
     "compare": {
       "title": "Det nærmeste eksemplet: Kinas nettbaserte gjensidige hjelp",
       "lead": "Fra 2018 til 2021 samlet Kinas nettbaserte gjensidige hjelpeplattformer hundrevis av millioner medlemmer: den største, Xianghubao, hadde over 100 millioner. <b>Medlemmene delte kostnadene ved hverandres alvorlige sykdom, noen få dollar i året hver.</b> I 2021 stengte myndighetene hele sektoren: én operatør drev i praksis en forsikring.",
-      "note": "Social Organizer beholder ideen, én persons risiko spredt over mange som hver tar en liten del, og dropper det som gjorde disse plattformene skjøre: operatøren, potten og de lovede utbetalingene.",
+      "note": "Social Organizer beholder ideen deres: når én person har det vanskelig, tar mange hver en liten del. Det finnes ingen operatør og ingen pott.",
       "caption": "Kinas nettbaserte gjensidige hjelpeplattformer sammenlignet med Social Organizer",
       "them": "Nettbaserte gjensidige hjelpeplattformer",
       "us": "Social Organizer",

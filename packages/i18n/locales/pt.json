@@ -681,11 +681,11 @@
     },
     "meta": {
       "title": "Social Organizer — uma rede de pessoas que você conhece",
-      "description": "Monte uma rede de pessoas que você conhece pessoalmente: ela espalha os riscos de cada um entre muitos. Quando alguém dela informa uma necessidade, ficam sabendo exatamente tantas pessoas quantos dólares ela indica, as mais próximas primeiro. Os participantes decidem por conta própria e agem diretamente. Código aberto, um projeto sem fins lucrativos."
+      "description": "Monte uma rede de pessoas que você conhece pessoalmente e divida os riscos com elas. Uma necessidade chega a exatamente tantas pessoas quantos dólares ela indica, as mais próximas primeiro. Os participantes decidem por conta própria e agem diretamente. Código aberto, um projeto sem fins lucrativos."
     },
     "hero": {
       "title": "Primeiro, uma rede de pessoas que você conhece",
-      "lead": "O Social Organizer começa pela sua rede: pessoas que você conhece pessoalmente e as pessoas que elas conhecem. Juntas, elas tornam os riscos de cada um suportáveis. <b>Quando alguém dela informa uma necessidade, ficam sabendo exatamente tantas pessoas quantos dólares ela indica</b>, e cada uma delas pode assumir uma pequena parte.",
+      "lead": "O Social Organizer começa pela sua rede: pessoas que você conhece pessoalmente e as pessoas que elas conhecem. Quando alguém do grupo passa por um aperto, os outros podem dividir o peso. <b>Uma necessidade chega a exatamente tantas pessoas quantos dólares ela indica, as mais próximas primeiro</b>, e cada uma delas pode assumir uma pequena parte.",
       "factOpen": "Código aberto",
       "factNonprofit": "Sem fins lucrativos",
       "factNoMoney": "Participação voluntária",
@@ -751,7 +751,7 @@
       "p3Title": "Conexão direta entre os participantes",
       "p3Text": "Os acordos e as ações ficam entre pessoas ligadas por conhecimentos confirmados.",
       "p4Title": "A rede vem primeiro",
-      "p4Text": "Os sinais passam só por conhecimentos confirmados. Os riscos são compartilhados entre as pessoas, não reunidos: sem fundo comum, sem operador, sem pagamentos prometidos."
+      "p4Text": "Os sinais passam só por conhecidos confirmados. Você divide os riscos com pessoas que conhece diretamente, sem fundo comum e sem operador."
     },
     "faq": {
       "title": "O essencial",
@@ -770,7 +770,7 @@
       "q7": "Em que ele difere das plataformas on-line de ajuda mútua?",
       "a7": "As plataformas chinesas de ajuda mútua tinham um único operador, cobravam dos membros e prometiam pagamentos como um seguro, e em 2021 foram fechadas. O Social Organizer não tem operador, fundo nem pagamentos: apenas pessoas que se conhecem, dois sinais e participação voluntária.",
       "q8": "Isso é um seguro?",
-      "a8": "Não. O seguro recolhe contribuições em um fundo com antecedência e promete um pagamento. Aqui ninguém paga nada antes e nada é prometido: o risco de uma pessoa é dividido entre muitas que se conhecem, e quem decide participar assume uma pequena parte."
+      "a8": "Não. Uma seguradora cobra seu dinheiro antes e promete um pagamento. Aqui você não paga nada antes e ninguém promete nada. Quando alguém da sua rede passa por um aperto, quem decide participar assume uma pequena parte."
     }
   },
   "how": {
@@ -907,7 +907,7 @@
     "compare": {
       "title": "O exemplo mais próximo: a ajuda mútua on-line da China",
       "lead": "De 2018 a 2021, as plataformas chinesas de ajuda mútua on-line reuniram centenas de milhões de membros: a maior, a Xianghubao, tinha mais de 100 milhões. <b>Os membros dividiam o custo da doença grave uns dos outros, alguns dólares por ano cada um.</b> Em 2021, os reguladores fecharam o setor inteiro: um único operador administrava, na prática, um seguro.",
-      "note": "O Social Organizer mantém a ideia, o risco de uma pessoa dividido entre muitas que assumem cada uma uma pequena parte, e abre mão do que tornava essas plataformas frágeis: o operador, o fundo comum e os pagamentos prometidos.",
+      "note": "O Social Organizer mantém a ideia deles: quando uma pessoa passa por um aperto, muita gente assume uma pequena parte cada uma. Não tem operador nem fundo comum.",
       "caption": "As plataformas chinesas de ajuda mútua on-line comparadas ao Social Organizer",
       "them": "Plataformas de ajuda mútua on-line",
       "us": "Social Organizer",

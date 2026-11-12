@@ -677,11 +677,11 @@
     },
     "meta": {
       "title": "Social Organizer — een netwerk van mensen die je kent",
-      "description": "Bouw een netwerk van mensen die je persoonlijk kent: het spreidt de risico’s van ieder over velen. Meldt iemand daarin een behoefte, dan hoort precies zoveel mensen ervan als het bedrag in dollars, de dichtstbijzijnden eerst. Deelnemers beslissen zelf en handelen rechtstreeks. Open source, een project zonder winstoogmerk."
+      "description": "Bouw een netwerk van mensen die je persoonlijk kent en deel elkaars risico’s. Een behoefte bereikt precies zoveel mensen als het bedrag in dollars, de dichtstbijzijnden eerst. Deelnemers beslissen zelf en handelen rechtstreeks. Open source, een project zonder winstoogmerk."
     },
     "hero": {
       "title": "Eerst een netwerk van mensen die je kent",
-      "lead": "Social Organizer begint bij jouw netwerk: mensen die je persoonlijk kent, en de mensen die zij kennen. Samen maken ze de risico’s van ieder draaglijk. <b>Meldt iemand daarin een behoefte, dan hoort precies zoveel mensen ervan als het bedrag in dollars</b>, en ieder van hen kan een klein deel op zich nemen.",
+      "lead": "Social Organizer begint bij jouw netwerk: mensen die je persoonlijk kent, en de mensen die zij kennen. Heeft iemand van jullie het moeilijk, dan kunnen de anderen de last delen. <b>Een behoefte bereikt precies zoveel mensen als het bedrag in dollars, de dichtstbijzijnden eerst</b>, en ieder van hen kan een klein deel op zich nemen.",
       "factOpen": "Open source",
       "factNonprofit": "Zonder winstoogmerk",
       "factNoMoney": "Vrijwillige deelname",
@@ -746,7 +746,7 @@
       "p3Title": "Rechtstreeks contact tussen deelnemers",
       "p3Text": "Afspraken en acties blijven tussen mensen die verbonden zijn door bevestigde kennismakingen.",
       "p4Title": "Het netwerk komt eerst",
-      "p4Text": "Signalen gaan alleen via bevestigde kennismakingen. Risico’s worden gedeeld tussen mensen, niet gebundeld: geen gemeenschappelijke pot, geen beheerder, geen beloofde uitkeringen."
+      "p4Text": "Signalen gaan alleen via bevestigde kennismakingen. Je deelt risico’s met mensen die je rechtstreeks kent, zonder gemeenschappelijke pot en zonder beheerder."
     },
     "faq": {
       "title": "Kort en bondig",
@@ -765,7 +765,7 @@
       "q7": "Hoe verschilt het van online platforms voor onderlinge hulp?",
       "a7": "De Chinese platforms voor onderlinge hulp hadden één beheerder, rekenden bijdragen aan leden en beloofden uitkeringen zoals een verzekering; in 2021 werden ze gesloten. Social Organizer heeft geen beheerder, geen pot en geen uitkeringen: alleen mensen die elkaar kennen, twee signalen en vrijwillige deelname.",
       "q8": "Is dit een verzekering?",
-      "a8": "Nee. Een verzekering int vooraf bijdragen in een fonds en belooft een uitkering. Hier betaalt niemand vooraf iets en wordt niets beloofd: het risico van één persoon wordt gespreid over veel mensen die elkaar kennen, en wie besluit mee te doen, neemt een klein deel op zich."
+      "a8": "Nee. Een verzekeraar int je geld vooraf en belooft een uitkering. Hier betaal je vooraf niets en belooft niemand iets. Heeft iemand in je netwerk het moeilijk, dan neemt ieder die besluit mee te doen een klein deel op zich."
     }
   },
   "how": {
@@ -902,7 +902,7 @@
     "compare": {
       "title": "Het meest verwante voorbeeld: Chinese online onderlinge hulp",
       "lead": "Van 2018 tot 2021 verzamelden de Chinese online platforms voor onderlinge hulp honderden miljoenen leden: de grootste, Xianghubao, had er meer dan 100 miljoen. <b>Leden deelden de kosten van elkaars ernstige ziekte, elk enkele dollars per jaar.</b> In 2021 sloten toezichthouders de hele sector: één beheerder runde in feite een verzekering.",
-      "note": "Social Organizer behoudt het idee, het risico van één persoon gespreid over velen die elk een klein deel dragen, en laat weg wat die platforms kwetsbaar maakte: de beheerder, de pot en de beloofde uitkeringen.",
+      "note": "Social Organizer behoudt hun idee: als één mens het moeilijk heeft, nemen velen elk een klein deel op zich. Er is geen beheerder en geen pot.",
       "caption": "Chinese online platforms voor onderlinge hulp vergeleken met Social Organizer",
       "them": "Online platforms voor onderlinge hulp",
       "us": "Social Organizer",

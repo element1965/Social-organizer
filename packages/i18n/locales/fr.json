@@ -681,11 +681,11 @@
     },
     "meta": {
       "title": "Social Organizer — un réseau de personnes que vous connaissez",
-      "description": "Constituez un réseau de personnes que vous connaissez en personne : il répartit les risques de chacun entre beaucoup. Quand l’une d’elles annonce un besoin, autant de personnes l’apprennent que de dollars indiqués, les plus proches d’abord. Les participants décident eux-mêmes et agissent directement. Open source, projet à but non lucratif."
+      "description": "Constituez un réseau de personnes que vous connaissez en personne et partagez les risques les uns des autres. Un besoin atteint exactement autant de personnes que de dollars indiqués, les plus proches d’abord. Les participants décident eux-mêmes et agissent directement. Open source, projet à but non lucratif."
     },
     "hero": {
       "title": "D’abord, un réseau de personnes que vous connaissez",
-      "lead": "Social Organizer commence par votre réseau : les personnes que vous connaissez en personne, et celles qu’elles connaissent. Ensemble, elles rendent les risques de chacun supportables. <b>Quand quelqu’un du réseau annonce un besoin, exactement autant de personnes l’apprennent que de dollars indiqués</b>, et chacune peut en prendre une petite part.",
+      "lead": "Social Organizer commence par votre réseau : les personnes que vous connaissez en personne, et celles qu’elles connaissent. Quand l’un de vous traverse une période difficile, les autres peuvent l’aider à porter le poids. <b>Un besoin atteint exactement autant de personnes que de dollars indiqués, les plus proches d’abord</b>, et chacune peut en prendre une petite part.",
       "factOpen": "Open source",
       "factNonprofit": "À but non lucratif",
       "factNoMoney": "Participation volontaire",
@@ -751,7 +751,7 @@
       "p3Title": "Lien direct entre participants",
       "p3Text": "Les arrangements et les actions restent entre des personnes liées par des connaissances confirmées.",
       "p4Title": "Le réseau d’abord",
-      "p4Text": "Les signaux ne circulent que par des connaissances confirmées. Les risques sont partagés entre les personnes, pas rassemblés au même endroit : ni cagnotte commune, ni opérateur, ni versements promis."
+      "p4Text": "Les signaux ne circulent que par des connaissances confirmées. Vous partagez les risques avec des personnes que vous connaissez directement, sans cagnotte commune et sans opérateur."
     },
     "faq": {
       "title": "L’essentiel",
@@ -770,7 +770,7 @@
       "q7": "En quoi est-ce différent des plateformes d’entraide en ligne ?",
       "a7": "Les plateformes d’entraide chinoises avaient un seul opérateur, prélevaient de l’argent aux membres et promettaient des versements comme une assurance ; en 2021, elles ont été fermées. Social Organizer n’a ni opérateur, ni cagnotte, ni versements : seulement des personnes qui se connaissent, deux signaux et une participation volontaire.",
       "q8": "Est-ce une assurance ?",
-      "a8": "Non. Une assurance collecte des cotisations dans un fonds à l’avance et promet un versement. Ici, personne ne paie rien à l’avance et rien n’est promis : le risque d’une personne est réparti entre beaucoup de personnes qui se connaissent, et celles qui décident de participer prennent chacune une petite part."
+      "a8": "Non. Un assureur prend votre argent à l’avance et promet un versement. Ici, vous ne payez rien à l’avance et personne ne promet rien. Quand quelqu’un de votre réseau traverse une période difficile, celles et ceux qui décident de participer prennent chacun une petite part."
     }
   },
   "how": {
@@ -907,7 +907,7 @@
     "compare": {
       "title": "L’exemple le plus proche : l’entraide en ligne en Chine",
       "lead": "De 2018 à 2021, les plateformes chinoises d’entraide en ligne ont réuni des centaines de millions de membres : la plus grande, Xianghubao, en comptait plus de 100 millions. <b>Les membres se partageaient le coût des maladies graves des uns et des autres, quelques dollars par an chacun.</b> En 2021, les autorités ont fermé tout le secteur : un seul opérateur gérait en réalité une assurance.",
-      "note": "Social Organizer garde l’idée, le risque d’une personne réparti entre beaucoup qui prennent chacune une petite part, et abandonne ce qui rendait ces plateformes fragiles : l’opérateur, la cagnotte et les versements promis.",
+      "note": "Social Organizer garde leur idée : quand une personne traverse une période difficile, beaucoup prennent chacune une petite part. Il n’a ni opérateur ni cagnotte.",
       "caption": "Les plateformes chinoises d’entraide en ligne comparées à Social Organizer",
       "them": "Plateformes d’entraide en ligne",
       "us": "Social Organizer",

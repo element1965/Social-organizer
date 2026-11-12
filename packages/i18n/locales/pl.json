@@ -685,11 +685,11 @@
     },
     "meta": {
       "title": "Social Organizer — sieć ludzi, których znasz",
-      "description": "Zbuduj sieć ludzi, których znasz osobiście: rozkłada ona ryzyko każdego na wielu. Gdy ktoś z niej zgłosi potrzebę, dowie się o niej dokładnie tyle osób, ile dolarów w niej wskazano, zaczynając od najbliższych. Uczestnicy decydują sami i działają bezpośrednio. Otwarty kod, projekt non-profit."
+      "description": "Zbuduj sieć ludzi, których znasz osobiście, i dziel z nimi ryzyko. Potrzeba dociera do dokładnie tylu osób, ile dolarów w niej wskazano, zaczynając od najbliższych. Uczestnicy decydują sami i działają bezpośrednio. Otwarty kod, projekt non-profit."
     },
     "hero": {
       "title": "Najpierw sieć ludzi, których znasz",
-      "lead": "Social Organizer zaczyna się od Twojej sieci: ludzi, których znasz osobiście, i ludzi, których znają oni. Razem sprawiają, że ryzyko każdego da się udźwignąć. <b>Gdy ktoś z niej zgłosi potrzebę, dowie się o niej dokładnie tyle osób, ile dolarów w niej wskazano</b>, a każda z nich może wziąć na siebie małą część.",
+      "lead": "Social Organizer zaczyna się od Twojej sieci: ludzi, których znasz osobiście, i ludzi, których znają oni. Gdy komuś z was jest ciężko, pozostali mogą pomóc udźwignąć ten ciężar. <b>Potrzeba dociera do dokładnie tylu osób, ile dolarów w niej wskazano, zaczynając od najbliższych</b>, a każda z nich może wziąć na siebie małą część.",
       "factOpen": "Otwarty kod",
       "factNonprofit": "Non-profit",
       "factNoMoney": "Dobrowolny udział",
@@ -756,7 +756,7 @@
       "p3Title": "Bezpośredni kontakt uczestników",
       "p3Text": "Ustalenia i działania toczą się między osobami powiązanymi potwierdzoną znajomością.",
       "p4Title": "Najpierw sieć",
-      "p4Text": "Sygnały idą tylko przez potwierdzone znajomości. Ryzyko jest dzielone między ludzi, a nie zbierane razem: bez wspólnej puli, bez operatora, bez obiecanych wypłat."
+      "p4Text": "Sygnały idą tylko przez potwierdzone znajomości. Dzielisz ryzyko z ludźmi, których znasz bezpośrednio, bez wspólnej puli i bez operatora."
     },
     "faq": {
       "title": "Najważniejsze w skrócie",
@@ -775,7 +775,7 @@
       "q7": "Czym różni się od internetowych platform wzajemnej pomocy?",
       "a7": "Chińskie platformy wzajemnej pomocy miały jednego operatora, pobierały opłaty od członków i obiecywały wypłaty jak w ubezpieczeniu, a w 2021 roku zostały zamknięte. Social Organizer nie ma operatora, puli ani wypłat: są tylko ludzie, którzy się znają, dwa sygnały i dobrowolny udział.",
       "q8": "Czy to ubezpieczenie?",
-      "a8": "Nie. Ubezpieczenie z góry zbiera składki do funduszu i obiecuje wypłatę. Tutaj nikt nie płaci z góry i nic nie jest obiecane: ryzyko jednej osoby rozkłada się na wiele osób, które się znają, a ci, którzy zdecydują się wziąć udział, biorą na siebie małą część."
+      "a8": "Nie. Ubezpieczyciel z góry bierze od Ciebie pieniądze i obiecuje wypłatę. Tutaj z góry nic nie płacisz i nikt niczego nie obiecuje. Gdy komuś w Twojej sieci jest ciężko, ci, którzy zdecydują się wziąć udział, biorą na siebie po małej części."
     }
   },
   "how": {
@@ -912,7 +912,7 @@
     "compare": {
       "title": "Najbliższy przykład: chińska internetowa wzajemna pomoc",
       "lead": "W latach 2018–2021 chińskie internetowe platformy wzajemnej pomocy zgromadziły setki milionów członków: największa, Xianghubao, miała ich ponad 100 milionów. <b>Członkowie dzielili się kosztami poważnej choroby innych, po kilka dolarów rocznie każdy.</b> W 2021 roku regulatorzy zamknęli cały sektor: jeden operator prowadził w praktyce ubezpieczenie.",
-      "note": "Social Organizer zachowuje ideę, że ryzyko jednej osoby rozkłada się na wielu, z których każdy bierze małą część, i odrzuca to, co czyniło te platformy kruchymi: operatora, pulę i obiecane wypłaty.",
+      "note": "Social Organizer zachowuje ich ideę: gdy jednej osobie jest ciężko, wiele osób bierze na siebie po małej części. Nie ma w nim operatora ani puli.",
       "caption": "Chińskie internetowe platformy wzajemnej pomocy w porównaniu z Social Organizer",
       "them": "Internetowe platformy wzajemnej pomocy",
       "us": "Social Organizer",

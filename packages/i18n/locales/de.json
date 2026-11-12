@@ -677,11 +677,11 @@
     },
     "meta": {
       "title": "Social Organizer — ein Netzwerk aus Menschen, die Sie kennen",
-      "description": "Bauen Sie ein Netzwerk aus Menschen auf, die Sie persönlich kennen: Es verteilt die Risiken jedes Einzelnen auf viele. Meldet jemand darin einen Bedarf, erfahren genau so viele Menschen davon, wie Dollar darin stehen, die Nächsten zuerst. Die Beteiligten entscheiden selbst und handeln direkt. Open Source, ein gemeinnütziges Projekt."
+      "description": "Bauen Sie ein Netzwerk aus Menschen auf, die Sie persönlich kennen, und teilen Sie gegenseitig Ihre Risiken. Ein Bedarf erreicht genau so viele Menschen, wie er Dollar nennt, die Nächsten zuerst. Die Beteiligten entscheiden selbst und handeln direkt. Open Source, ein gemeinnütziges Projekt."
     },
     "hero": {
       "title": "Zuerst ein Netzwerk aus Menschen, die Sie kennen",
-      "lead": "Social Organizer beginnt mit Ihrem Netzwerk: Menschen, die Sie persönlich kennen, und die Menschen, die sie kennen. Gemeinsam machen sie die Risiken jedes Einzelnen tragbar. <b>Meldet jemand darin einen Bedarf, erfahren genau so viele Menschen davon, wie Dollar darin stehen</b>, und jeder von ihnen kann einen kleinen Teil übernehmen.",
+      "lead": "Social Organizer beginnt mit Ihrem Netzwerk: Menschen, die Sie persönlich kennen, und die Menschen, die sie kennen. Wenn es einem von Ihnen schlecht geht, können die anderen die Last mittragen. <b>Ein Bedarf erreicht genau so viele Menschen, wie er Dollar nennt, die Nächsten zuerst</b>, und jeder von ihnen kann einen kleinen Teil übernehmen.",
       "factOpen": "Open Source",
       "factNonprofit": "Gemeinnützig",
       "factNoMoney": "Freiwillige Beteiligung",
@@ -746,7 +746,7 @@
       "p3Title": "Direkte Verbindung der Beteiligten",
       "p3Text": "Absprachen und Handeln bleiben zwischen Menschen, die durch bestätigte Bekanntschaft verbunden sind.",
       "p4Title": "Zuerst das Netzwerk",
-      "p4Text": "Signale laufen nur über bestätigte Bekanntschaften. Risiken werden zwischen Menschen geteilt, nicht an einer Stelle gesammelt: kein gemeinsamer Topf, kein Betreiber, keine versprochenen Auszahlungen."
+      "p4Text": "Signale laufen nur über bestätigte Bekanntschaften. Sie teilen Risiken mit Menschen, die Sie direkt kennen, ohne gemeinsamen Topf und ohne Betreiber."
     },
     "faq": {
       "title": "Das Wichtigste in Kürze",
@@ -765,7 +765,7 @@
       "q7": "Worin unterscheidet es sich von Online-Plattformen für gegenseitige Hilfe?",
       "a7": "Chinas Plattformen für gegenseitige Hilfe hatten einen Betreiber, zogen Beiträge von Mitgliedern ein und versprachen Auszahlungen wie eine Versicherung; 2021 wurden sie geschlossen. Social Organizer hat keinen Betreiber, keinen Topf und keine Auszahlungen: nur Menschen, die sich kennen, zwei Signale und freiwillige Beteiligung.",
       "q8": "Ist das eine Versicherung?",
-      "a8": "Nein. Eine Versicherung sammelt vorab Beiträge in einem Fonds ein und verspricht eine Auszahlung. Hier zahlt niemand etwas im Voraus, und nichts wird versprochen: Das Risiko eines Menschen verteilt sich auf viele, die sich kennen, und wer mitmachen möchte, übernimmt jeweils einen kleinen Teil."
+      "a8": "Nein. Eine Versicherung nimmt Ihr Geld im Voraus und verspricht eine Auszahlung. Hier zahlen Sie nichts im Voraus, und niemand verspricht etwas. Wenn es jemandem in Ihrem Netzwerk schlecht geht, übernehmen die, die mitmachen möchten, jeweils einen kleinen Teil."
     }
   },
   "how": {
@@ -902,7 +902,7 @@
     "compare": {
       "title": "Das nächstliegende Beispiel: Chinas Online-Plattformen für gegenseitige Hilfe",
       "lead": "Von 2018 bis 2021 versammelten Chinas Online-Plattformen für gegenseitige Hilfe Hunderte Millionen Mitglieder: Die größte, Xianghubao, hatte über 100 Millionen. <b>Die Mitglieder teilten sich die Kosten schwerer Krankheiten untereinander, jedes nur wenige Dollar im Jahr.</b> 2021 schlossen die Behörden den ganzen Sektor: Ein Betreiber führte faktisch eine Versicherung.",
-      "note": "Social Organizer behält die Idee, dass das Risiko eines Einzelnen auf viele verteilt wird, die je einen kleinen Teil tragen, und lässt weg, was diese Plattformen anfällig machte: den Betreiber, den Topf und die versprochenen Auszahlungen.",
+      "note": "Social Organizer behält ihre Idee: Wenn es einem Menschen schlecht geht, übernehmen viele jeweils einen kleinen Teil. Einen Betreiber und einen Topf gibt es nicht.",
       "caption": "Chinas Online-Plattformen für gegenseitige Hilfe im Vergleich mit Social Organizer",
       "them": "Online-Plattformen für gegenseitige Hilfe",
       "us": "Social Organizer",
