@@ -698,32 +698,32 @@
     },
     "steps": {
       "title": "Cara kerja",
-      "lead": "Jaringan datang lebih dulu. Semua yang lain terjadi di dalamnya.",
+      "lead": "Anda membangun jaringan lebih dulu. Kebutuhan dan partisipasi berjalan di dalamnya.",
       "s1Title": "Anda membangun jaringan Anda",
       "s1Text": "Tambahkan orang yang Anda kenal secara pribadi, lewat tautan atau kode QR. <b>Masing-masing mengonfirmasi bahwa kalian saling mengenal.</b>",
       "s2Title": "Jangkauannya lebih jauh dari yang Anda lihat",
-      "s2Text": "Lewat orang-orang Anda, Anda menjangkau orang-orang mereka: jabat tangan ke-2 dan ke-3. <b>Anda hanya melihat tiga jabat tangan Anda sendiri, tidak pernah seluruh jaringan.</b>",
+      "s2Text": "Lewat orang-orang Anda, Anda menjangkau orang-orang mereka: jabat tangan ke-2 dan ke-3. <b>Anda melihat sedalam tiga jabat tangan, dan tidak ada yang melihat seluruh jaringan.</b>",
       "s3Title": "Kebutuhan menjangkau sebanyak dolar yang disebutkannya",
-      "s3Text": "Kebutuhan sebesar {{amount}} menjangkau tepat {{n}} orang, dimulai dari yang terdekat lewat jabat tangan. <b>Bagi masing-masing, itu satu kesempatan untuk ikut serta</b>, dan begitu jumlahnya terpenuhi, kebutuhan itu ditutup.",
+      "s3Text": "Kebutuhan sebesar {{amount}} menjangkau tepat {{n}} orang, dimulai dari yang terdekat lewat jabat tangan. <b>Masing-masing mendapat satu kesempatan untuk ikut serta</b>, dan kebutuhan itu ditutup begitu peserta memenuhi jumlahnya.",
       "s4Title": "Koordinasi menyusul",
-      "s4Text": "Yang bersedia menyampaikan partisipasi, dan niat-niat itu bertambah, seperti dalam urun dana. <b>Apa yang dilakukan dan bagaimana, peserta sepakati langsung</b>, di chat mereka sendiri."
+      "s4Text": "Yang bersedia menyampaikan partisipasi, dan jumlahnya bertambah, seperti dalam urun dana. <b>Para peserta menyepakati rincian langsung</b>, di chat mereka sendiri."
     },
     "chain": {
       "title": "Pesan berjalan lewat jabat tangan",
-      "lead": "Anda melihat kebutuhan Maria karena Oleg mengenalnya, dan Anda mengenal Oleg. Kebutuhan itu hanya menjangkau sebanyak dolar yang disebutkannya, dimulai dari yang terdekat. Boleh tidak Anda tanggapi. <b>Tidak ada kewajiban.</b>"
+      "lead": "Anda melihat kebutuhan Maria karena Oleg mengenalnya, dan Anda mengenal Oleg. Kebutuhan itu hanya menjangkau sebanyak dolar yang disebutkannya, dimulai dari yang terdekat. <b>Anda tidak berutang apa pun</b> dan boleh tidak menanggapinya."
     },
     "nots": {
       "title": "Yang tidak dilakukan Social Organizer",
       "moneyTitle": "Tidak memproses pembayaran",
       "moneyText": "Tidak menerima, tidak mentransfer, dan tidak menahan dana. Apa pun yang dilakukan peserta, mereka lakukan langsung, di luar layanan.",
       "feeTitle": "Tidak mengambil biaya",
-      "feeText": "Sumber terbuka, proyek nirlaba. Tanpa langganan, tanpa iklan, tanpa persentase.",
+      "feeText": "Kodenya terbuka, proyeknya nirlaba, dan Anda tidak membayar apa pun.",
       "choiceTitle": "Tidak memutuskan untuk Anda",
-      "choiceText": "Siapa yang ditambahkan, apakah ikut serta, dan bagaimana — itu pilihan Anda setiap kali. Menolak tidak merusak apa pun."
+      "choiceText": "Anda memilih siapa yang ditambahkan, apakah ikut serta, dan bagaimana. Anda boleh menolak, dan tidak ada yang rusak."
     },
     "start": {
       "title": "Mulai dari orang yang sudah Anda kenal",
-      "lead": "<b>Punya tautan dari seseorang yang Anda kenal?</b> Buka tautan itu: ia langsung masuk ke lingkaran mereka. Tidak ada tautan — masuk dan undang lima orang pertama sendiri.",
+      "lead": "<b>Punya tautan dari seseorang yang Anda kenal?</b> Buka tautan itu, dan Anda masuk ke lingkaran mereka. Tidak ada tautan? Masuk dan undang lima orang pertama sendiri.",
       "play": "Google Play",
       "appstore": "App Store",
       "telegram": "Buka di Telegram",
@@ -735,11 +735,11 @@
     "principles": {
       "title": "Prinsip",
       "p1Title": "Partisipasi sukarela",
-      "p1Text": "Tidak ada yang wajib menanggapi. Partisipasi adalah keputusan, bukan utang.",
+      "p1Text": "Tidak ada yang wajib menanggapi. Anda sendiri yang memutuskan setiap kali apakah ikut serta.",
       "p2Title": "Keputusan mandiri",
-      "p2Text": "Setiap orang memutuskan sendiri, tanpa penyelenggara dan tanpa penilaian. Menolak tidak dikenai sanksi.",
+      "p2Text": "Tidak ada penyelenggara yang memutuskan untuk Anda, dan tidak ada yang menilai Anda. Kalau Anda menolak, tidak terjadi apa-apa pada Anda.",
       "p3Title": "Hubungan langsung antarpeserta",
-      "p3Text": "Kesepakatan dan tindakan tetap di antara orang-orang yang terhubung lewat perkenalan yang dikonfirmasi.",
+      "p3Text": "Para peserta bersepakat dan bertindak di antara mereka sendiri, tanpa perantara.",
       "p4Title": "Jaringan datang lebih dulu",
       "p4Text": "Sinyal hanya berjalan lewat perkenalan yang dikonfirmasi. Anda berbagi risiko dengan orang yang Anda kenal langsung, tanpa dana bersama dan tanpa operator."
     },
@@ -748,17 +748,17 @@
       "q1": "Apa yang dilakukan Social Organizer?",
       "a1": "Membantu Anda membangun jaringan orang yang Anda kenal secara pribadi, dan membiarkan dua sinyal, kebutuhan (Need) dan partisipasi (Participation), berjalan di dalamnya. Layanan ini tidak bertindak atas nama peserta.",
       "q2": "Apakah saya wajib ikut serta?",
-      "a2": "Tidak. Partisipasi bersifat sukarela, dan setiap orang mengambil keputusannya sendiri.",
+      "a2": "Tidak. Anda sendiri yang memutuskan apakah ikut serta.",
       "q3": "Apakah layanan ini menjamin adanya bantuan?",
-      "a3": "Tidak. Hasilnya bergantung pada keputusan mandiri dan tindakan nyata para peserta.",
+      "a3": "Tidak. Hasilnya bergantung pada apa yang diputuskan dan dilakukan para peserta.",
       "q4": "Apakah Social Organizer memproses pembayaran?",
-      "a4": "Tidak. Social Organizer tidak menerima, tidak mentransfer, dan tidak menahan dana. Apa pun yang dilakukan peserta di antara mereka, dilakukan langsung oleh mereka, di luar layanan.",
+      "a4": "Tidak. Social Organizer tidak menerima, tidak mentransfer, dan tidak menahan dana. Apa pun yang dilakukan peserta di antara mereka, mereka lakukan langsung, di luar layanan.",
       "q5": "Apakah peserta menyerahkan uang?",
       "a5": "Bisa saja. Dalam pesan kebutuhan, peserta menyebut jumlah, dan dalam pesan partisipasi, berapa yang siap diserahkan. Jika peserta menyerahkan uang, mereka melakukannya sendiri dan langsung, sesuai kesepakatan mereka. Social Organizer tidak memeriksa apakah penyerahan itu terjadi.",
       "q6": "Jumlahnya dalam mata uang apa?",
-      "a6": "Dalam dolar AS: ini satuan hitung bersama agar jumlah dapat dibandingkan. Mata uang dan cara apa yang dipakai ditentukan sendiri oleh para peserta.",
+      "a6": "Dalam dolar AS: satuan hitung bersama agar Anda dapat membandingkan jumlah. Para peserta sendiri yang memilih mata uang dan caranya.",
       "q7": "Apa bedanya dengan platform saling membantu online?",
-      "a7": "Platform saling membantu di Tiongkok punya satu operator, memungut uang dari anggota dan menjanjikan pembayaran seperti asuransi, lalu pada 2021 ditutup. Social Organizer tidak punya operator, dana, maupun pembayaran: hanya orang yang saling kenal, dua sinyal, dan partisipasi sukarela.",
+      "a7": "Setiap platform saling membantu di Tiongkok punya satu operator yang memungut uang dari anggota dan menjanjikan pembayaran seperti asuransi. Pada 2021 regulator menutup semuanya. Social Organizer tidak punya operator dan tidak punya dana: orang yang saling kenal mengirim dua sinyal dan memutuskan sendiri.",
       "q8": "Apakah ini asuransi?",
       "a8": "Bukan. Perusahaan asuransi mengambil uang Anda di muka dan menjanjikan pembayaran. Di sini Anda tidak membayar apa pun di muka dan tidak ada yang menjanjikan apa pun. Kalau seseorang di jaringan Anda sedang kesulitan, mereka yang memutuskan ikut masing-masing mengambil bagian kecil."
     }

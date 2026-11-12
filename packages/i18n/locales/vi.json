@@ -698,32 +698,32 @@
     },
     "steps": {
       "title": "Cách hoạt động",
-      "lead": "Mạng lưới đến trước. Mọi thứ khác diễn ra bên trong nó.",
+      "lead": "Bạn xây mạng lưới trước. Nhu cầu và sự tham gia đi trong mạng lưới đó.",
       "s1Title": "Bạn xây mạng lưới của mình",
       "s1Text": "Thêm những người bạn quen trực tiếp, bằng liên kết hoặc mã QR. <b>Mỗi người trong số họ xác nhận rằng hai bên quen nhau.</b>",
       "s2Title": "Nó đi xa hơn những gì bạn thấy",
-      "s2Text": "Qua người của bạn, bạn tới người của họ: cái bắt tay thứ 2 và thứ 3. <b>Bạn chỉ thấy ba cái bắt tay của riêng mình, không bao giờ thấy cả mạng lưới.</b>",
+      "s2Text": "Qua người của bạn, bạn tới người của họ: cái bắt tay thứ 2 và thứ 3. <b>Bạn thấy sâu ba cái bắt tay, và không ai thấy cả mạng lưới.</b>",
       "s3Title": "Một nhu cầu tới số người bằng số đô la nó nêu",
-      "s3Text": "Một nhu cầu {{amount}} tới đúng {{n}} người, người gần nhất theo số cái bắt tay trước. <b>Với mỗi người, đó là một cơ hội để tham gia</b>, và khi đủ số tiền, nhu cầu đóng lại.",
+      "s3Text": "Một nhu cầu {{amount}} tới đúng {{n}} người, người gần nhất theo số cái bắt tay trước. <b>Mỗi người có một cơ hội để tham gia</b>, và nhu cầu đóng lại khi những người tham gia cùng đáp ứng đủ số tiền.",
       "s4Title": "Sự phối hợp đến sau",
-      "s4Text": "Ai muốn thì thông báo tham gia, và các ý định cộng dồn lại, như gây quỹ cộng đồng. <b>Làm gì và làm thế nào, những người tham gia thỏa thuận trực tiếp</b>, trong chat của họ."
+      "s4Text": "Ai muốn thì thông báo tham gia, và các khoản cộng dồn lại, như gây quỹ cộng đồng. <b>Những người tham gia tự thỏa thuận chi tiết với nhau</b>, trong chat của họ."
     },
     "chain": {
       "title": "Thông báo đi theo các cái bắt tay",
-      "lead": "Bạn thấy nhu cầu của Maria vì Oleg quen cô ấy, và bạn quen Oleg. Nhu cầu chỉ tới số người bằng số đô la nó nêu, người gần nhất trước. Bạn có thể không trả lời. <b>Không có nghĩa vụ nào.</b>"
+      "lead": "Bạn thấy nhu cầu của Maria vì Oleg quen cô ấy, và bạn quen Oleg. Nhu cầu chỉ tới số người bằng số đô la nó nêu, người gần nhất trước. <b>Bạn không nợ ai điều gì</b> và có thể không trả lời."
     },
     "nots": {
       "title": "Social Organizer không làm gì",
       "moneyTitle": "Không xử lý thanh toán",
       "moneyText": "Không nhận, không chuyển và không giữ tiền. Mọi việc người tham gia làm, họ làm trực tiếp, bên ngoài dịch vụ.",
       "feeTitle": "Không lấy phí",
-      "feeText": "Mã nguồn mở, dự án phi lợi nhuận. Không thuê bao, không quảng cáo, không lấy phần trăm.",
+      "feeText": "Mã nguồn mở, dự án phi lợi nhuận, và bạn không trả gì cho nó.",
       "choiceTitle": "Không quyết định thay bạn",
-      "choiceText": "Thêm ai, có tham gia hay không và theo cách nào — mỗi lần là lựa chọn của bạn. Nói không không phá vỡ điều gì."
+      "choiceText": "Bạn chọn thêm ai, có tham gia hay không và theo cách nào. Bạn có thể nói không, và không có gì bị phá vỡ."
     },
     "start": {
       "title": "Bắt đầu với người bạn đã quen",
-      "lead": "<b>Có liên kết từ người bạn quen?</b> Hãy mở: nó dẫn thẳng vào vòng tròn của họ. Không có liên kết — hãy đăng nhập và tự mời năm người đầu tiên.",
+      "lead": "<b>Có liên kết từ người bạn quen?</b> Hãy mở nó và bạn vào ngay vòng tròn của họ. Chưa có liên kết? Hãy đăng nhập và tự mời năm người đầu tiên.",
       "play": "Google Play",
       "appstore": "App Store",
       "telegram": "Mở trong Telegram",
@@ -735,11 +735,11 @@
     "principles": {
       "title": "Nguyên tắc",
       "p1Title": "Tham gia tự nguyện",
-      "p1Text": "Không ai bắt buộc phải đáp lại. Tham gia là một quyết định, không phải nghĩa vụ.",
+      "p1Text": "Không ai bắt buộc phải đáp lại. Mỗi lần bạn tự quyết định có tham gia hay không.",
       "p2Title": "Quyết định độc lập",
-      "p2Text": "Mỗi người tự quyết định, không có người tổ chức và không có đánh giá. Từ chối không bị xử phạt.",
+      "p2Text": "Không người tổ chức nào quyết định thay bạn, và không ai chấm điểm bạn. Nếu bạn từ chối, bạn không bị gì cả.",
       "p3Title": "Liên hệ trực tiếp giữa những người tham gia",
-      "p3Text": "Các thỏa thuận và hành động diễn ra giữa những người được nối với nhau bằng các mối quen đã xác nhận.",
+      "p3Text": "Những người tham gia tự thỏa thuận và hành động với nhau, không qua trung gian.",
       "p4Title": "Mạng lưới đến trước",
       "p4Text": "Tín hiệu chỉ đi qua những mối quen đã xác nhận. Bạn chia sẻ rủi ro với những người bạn quen trực tiếp, không có quỹ chung và không có đơn vị vận hành."
     },
@@ -748,17 +748,17 @@
       "q1": "Social Organizer làm gì?",
       "a1": "Dịch vụ giúp bạn xây mạng lưới những người bạn quen trực tiếp, và để hai tín hiệu, nhu cầu (Need) và sự tham gia (Participation), đi trong đó. Dịch vụ không hành động thay cho người tham gia.",
       "q2": "Tôi có bắt buộc phải tham gia không?",
-      "a2": "Không. Việc tham gia là tự nguyện, và mỗi người tự đưa ra quyết định của mình.",
+      "a2": "Không. Bạn tự quyết định có tham gia hay không.",
       "q3": "Dịch vụ có đảm bảo sự hỗ trợ không?",
-      "a3": "Không. Kết quả phụ thuộc vào các quyết định độc lập và hành động thực tế của những người tham gia.",
+      "a3": "Không. Kết quả phụ thuộc vào điều những người tham gia quyết định và làm.",
       "q4": "Social Organizer có xử lý thanh toán không?",
-      "a4": "Không. Social Organizer không nhận, không chuyển và không giữ tiền. Mọi việc giữa những người tham gia đều do họ thực hiện trực tiếp, bên ngoài dịch vụ.",
+      "a4": "Không. Social Organizer không nhận, không chuyển và không giữ tiền. Việc gì những người tham gia làm với nhau, họ làm trực tiếp, bên ngoài dịch vụ.",
       "q5": "Người tham gia có chuyển tiền cho nhau không?",
       "a5": "Có thể. Trong thông báo về nhu cầu, người tham gia nêu một số tiền, còn trong thông báo về sự tham gia thì nêu số tiền mình sẵn sàng chuyển. Nếu những người tham gia chuyển tiền, họ tự làm và làm trực tiếp, theo thỏa thuận của họ. Social Organizer không kiểm tra việc chuyển có diễn ra hay không.",
       "q6": "Các khoản được tính bằng gì?",
-      "a6": "Bằng đô la Mỹ: đây là đơn vị tính chung để các khoản có thể so sánh được. Dùng loại tiền nào và theo cách nào là do những người tham gia tự quyết định.",
+      "a6": "Bằng đô la Mỹ: đây là đơn vị tính chung để bạn so sánh các khoản. Loại tiền và cách làm do những người tham gia tự chọn.",
       "q7": "Nó khác gì các nền tảng tương trợ trực tuyến?",
-      "a7": "Các nền tảng tương trợ của Trung Quốc chỉ có một đơn vị vận hành, thu tiền của thành viên và hứa chi trả như bảo hiểm, và năm 2021 đã bị đóng cửa. Social Organizer không có đơn vị vận hành, không có quỹ và không có khoản chi trả nào: chỉ có những người quen nhau, hai tín hiệu và sự tham gia tự nguyện.",
+      "a7": "Mỗi nền tảng tương trợ của Trung Quốc có một đơn vị vận hành, đơn vị này thu tiền của thành viên và hứa chi trả như bảo hiểm. Năm 2021 cơ quan quản lý đã đóng cửa tất cả. Social Organizer không có đơn vị vận hành và không có quỹ: những người quen nhau gửi hai tín hiệu và tự quyết định.",
       "q8": "Đây có phải bảo hiểm không?",
       "a8": "Không. Công ty bảo hiểm thu tiền của bạn từ trước và hứa chi trả. Ở đây bạn không trả gì trước và không ai hứa gì cả. Khi ai đó trong mạng lưới của bạn gặp khó khăn, những người quyết định tham gia mỗi người nhận một phần nhỏ."
     }

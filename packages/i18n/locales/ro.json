@@ -708,32 +708,32 @@
     },
     "steps": {
       "title": "Cum funcționează",
-      "lead": "Rețeaua vine prima. Totul se întâmplă înăuntrul ei.",
+      "lead": "Mai întâi construiești rețeaua. Nevoile și participarea circulă înăuntrul ei.",
       "s1Title": "Îți construiești rețeaua",
       "s1Text": "Adaugi oameni pe care îi cunoști personal, printr-un link sau un cod QR. <b>Fiecare dintre ei confirmă că vă cunoașteți.</b>",
       "s2Title": "Ajunge mai departe decât vezi",
-      "s2Text": "Prin oamenii tăi ajungi la oamenii lor: a 2-a și a 3-a strângere de mână. <b>Vezi doar propriile tale trei strângeri de mână, niciodată toată rețeaua.</b>",
+      "s2Text": "Prin oamenii tăi ajungi la oamenii lor: a 2-a și a 3-a strângere de mână. <b>Vezi trei strângeri de mână în adâncime, iar toată rețeaua nu o vede nimeni.</b>",
       "s3Title": "O nevoie ajunge la atâția oameni câți dolari are suma",
-      "s3Text": "O nevoie de {{amount}} ajunge la exact {{n}} oameni, începând cu cei mai apropiați prin strângeri de mână. <b>Pentru fiecare dintre ei este o singură șansă de a participa</b>, iar când suma este acoperită, nevoia se închide.",
+      "s3Text": "O nevoie de {{amount}} ajunge la exact {{n}} oameni, începând cu cei mai apropiați prin strângeri de mână. <b>Fiecare are o singură șansă de a participa</b>, iar nevoia se închide când participanții acoperă suma.",
       "s4Title": "Coordonarea vine după aceea",
-      "s4Text": "Cei care vor anunță participarea, iar intențiile se adună, ca într-un crowdfunding. <b>Ce se face și cum, participanții stabilesc direct între ei</b>, în chatul lor."
+      "s4Text": "Cine vrea anunță participarea, iar sumele se adună, ca într-un crowdfunding. <b>Participanții stabilesc detaliile direct între ei</b>, în chatul lor."
     },
     "chain": {
       "title": "Mesajul merge pe strângeri de mână",
-      "lead": "Vezi nevoia Mariei pentru că Oleg o cunoaște, iar tu îl cunoști pe Oleg. Ea ajunge doar la atâția oameni câți dolari are suma, începând cu cei mai apropiați. Poți să nu răspunzi. <b>Nicio obligație.</b>"
+      "lead": "Vezi nevoia Mariei pentru că Oleg o cunoaște, iar tu îl cunoști pe Oleg. Ea ajunge doar la atâția oameni câți dolari numește, începând cu cei mai apropiați. <b>Nu datorezi nimic</b> și poți să nu răspunzi."
     },
     "nots": {
       "title": "Ce nu face Social Organizer",
       "moneyTitle": "Nu procesează plăți",
       "moneyText": "Nu primește, nu transferă și nu păstrează fonduri. Orice fac participanții, fac direct, în afara serviciului.",
       "feeTitle": "Nu ia comision",
-      "feeText": "Cod deschis, proiect non-profit. Fără abonament, fără reclame, fără procente.",
+      "feeText": "Codul este deschis, proiectul este non-profit și nu plătești nimic pentru el.",
       "choiceTitle": "Nu decide în locul tău",
-      "choiceText": "Pe cine adaugi, dacă participi și cum — de fiecare dată alegi tu. Un refuz nu strică nimic."
+      "choiceText": "Tu alegi pe cine adaugi, dacă participi și cum. Poți spune nu, și nu se strică nimic."
     },
     "start": {
       "title": "Începe cu oameni pe care îi cunoști deja",
-      "lead": "<b>Ai un link de la cineva cunoscut?</b> Deschide-l: te duce direct în cercul acelei persoane. N-ai link — conectează-te și invită tu primii cinci.",
+      "lead": "<b>Ai un link de la cineva cunoscut?</b> Deschide-l și intri în cercul acelei persoane. Nu ai link? Conectează-te și invită tu primii cinci.",
       "play": "Google Play",
       "appstore": "App Store",
       "telegram": "Deschide în Telegram",
@@ -745,11 +745,11 @@
     "principles": {
       "title": "Principii",
       "p1Title": "Participare voluntară",
-      "p1Text": "Nimeni nu e obligat să răspundă. Participarea e o decizie, nu o datorie.",
+      "p1Text": "Nimeni nu e obligat să răspundă. De fiecare dată decizi tu dacă participi.",
       "p2Title": "Decizie independentă",
-      "p2Text": "Fiecare decide singur, fără organizator și fără evaluări. Refuzul nu atrage sancțiuni.",
+      "p2Text": "Niciun organizator nu decide în locul tău și nimeni nu te evaluează. Dacă refuzi, nu pățești nimic.",
       "p3Title": "Legătură directă între participanți",
-      "p3Text": "Înțelegerile și acțiunile rămân între oamenii legați prin cunoștințe confirmate.",
+      "p3Text": "Participanții se înțeleg și acționează între ei, fără intermediari.",
       "p4Title": "Rețeaua vine prima",
       "p4Text": "Semnalele circulă doar prin cunoștințe confirmate. Împarți riscurile cu oameni pe care îi cunoști direct, fără fond comun și fără operator."
     },
@@ -758,17 +758,17 @@
       "q1": "Ce face Social Organizer?",
       "a1": "Te ajută să construiești o rețea de oameni pe care îi cunoști personal și lasă două semnale, nevoia (Need) și participarea (Participation), să circule prin ea. Nu acționează în locul participanților.",
       "q2": "Sunt obligat să particip?",
-      "a2": "Nu. Participarea este voluntară, iar fiecare decide singur.",
+      "a2": "Nu. Tu decizi dacă participi.",
       "q3": "Garantează serviciul ajutorul?",
-      "a3": "Nu. Rezultatul depinde de deciziile independente și de acțiunile reale ale participanților.",
+      "a3": "Nu. Rezultatul depinde de ce hotărăsc și fac participanții.",
       "q4": "Procesează Social Organizer plăți?",
       "a4": "Nu. Social Organizer nu primește, nu transferă și nu păstrează fonduri. Orice fac participanții între ei, fac direct, în afara serviciului.",
       "q5": "Predau participanții bani?",
-      "a5": "Pot. În mesajul despre o nevoie, participantul indică o sumă, iar în anunțul de participare — cât e gata să predea. Dacă participanții predau bani, o fac singuri și direct, după înțelegerea lor. Social Organizer nu verifică dacă predarea a avut loc.",
+      "a5": "Pot. În mesajul despre o nevoie, participantul indică o sumă, iar în anunțul de participare spune cât e gata să predea. Dacă participanții predau bani, o fac singuri și direct, după înțelegerea lor. Social Organizer nu verifică dacă predarea a avut loc.",
       "q6": "În ce sunt exprimate sumele?",
-      "a6": "În dolari americani: o unitate de cont comună, pentru ca sumele să fie comparabile. În ce monedă și în ce fel să acționeze, participanții hotărăsc singuri.",
+      "a6": "În dolari americani: o unitate de cont comună, ca să poți compara sumele. Moneda și modul le aleg participanții.",
       "q7": "Prin ce diferă de platformele online de ajutor reciproc?",
-      "a7": "Platformele chineze de ajutor reciproc aveau un singur operator, luau bani de la membri și promiteau plăți ca o asigurare, iar în 2021 au fost închise. Social Organizer nu are operator, fond sau plăți: doar oameni care se cunosc, două semnale și participare voluntară.",
+      "a7": "Fiecare platformă chineză de ajutor reciproc avea un operator care lua bani de la membri și promitea plăți, ca un asigurător. În 2021 autoritățile le-au închis pe toate. Social Organizer nu are operator și nici fond: oameni care se cunosc trimit două semnale și hotărăsc singuri.",
       "q8": "Este o asigurare?",
       "a8": "Nu. Un asigurator îți ia banii în avans și promite o plată. Aici nu plătești nimic în avans și nimeni nu promite nimic. Când cuiva din rețeaua ta îi e greu, cei care hotărăsc să participe iau fiecare o parte mică."
     }

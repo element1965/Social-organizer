@@ -717,32 +717,32 @@
     },
     "steps": {
       "title": "How it works",
-      "lead": "The network comes first. Everything else happens inside it.",
+      "lead": "You build the network first. Needs and Participation travel inside it.",
       "s1Title": "You build your network",
       "s1Text": "Add people you know in person, by a link or a QR code. <b>Each of them confirms that you know each other.</b>",
       "s2Title": "It reaches further than you see",
-      "s2Text": "Through your people you reach theirs: the 2nd and 3rd handshake. <b>You see only your own three handshakes, never the whole network.</b>",
+      "s2Text": "Through your people you reach theirs: the 2nd and 3rd handshake. <b>You see three handshakes deep, and nobody sees the whole network.</b>",
       "s3Title": "A Need reaches as many people as it names dollars",
-      "s3Text": "A Need of {{amount}} reaches exactly {{n}} people, nearest by handshakes first. <b>For each of them it is one chance to take part</b>, and once the amount is covered, the Need closes.",
+      "s3Text": "A Need of {{amount}} reaches exactly {{n}} people, nearest by handshakes first. <b>Each of them gets one chance to take part</b>, and the Need closes once participants cover the amount.",
       "s4Title": "Coordination follows",
-      "s4Text": "Those who wish report Participation, and intentions add up, as in crowdfunding. <b>What to do and how, participants agree directly</b>, in their own chat."
+      "s4Text": "Whoever wants to reports Participation, and the amounts add up, as in crowdfunding. <b>Participants agree on the details directly</b>, in their own chat."
     },
     "chain": {
       "title": "A Need travels by handshakes",
-      "lead": "You see Maria’s Need because Oleg knows her, and you know Oleg. It reaches only as many people as it names dollars, the nearest first. You may leave it unanswered. <b>No obligations.</b>"
+      "lead": "You see Maria’s Need because Oleg knows her, and you know Oleg. It reaches only as many people as it names dollars, the nearest first. <b>You owe nothing</b> and may leave it unanswered."
     },
     "nots": {
       "title": "What Social Organizer does not do",
       "moneyTitle": "Processes no payments",
       "moneyText": "It does not accept, transfer or hold funds. Whatever participants do, they do directly, outside the service.",
       "feeTitle": "Takes no fee",
-      "feeText": "Open source, a non-profit project. No subscription, no ads, no percentage.",
+      "feeText": "The code is open, the project is non-profit, and you pay nothing for it.",
       "choiceTitle": "Does not decide for you",
-      "choiceText": "Whom to add, whether to take part and how — it is your choice every time. Saying no breaks nothing."
+      "choiceText": "You choose whom to add, whether to take part and how. You can say no, and nothing breaks."
     },
     "start": {
       "title": "Start with people you already know",
-      "lead": "<b>Got a link from someone you know?</b> Open it: it leads straight into their circle. No link — sign in and invite your first five yourself.",
+      "lead": "<b>Got a link from someone you know?</b> Open it, and you land in their circle. No link? Sign in and invite your first five yourself.",
       "play": "Google Play",
       "appstore": "App Store",
       "telegram": "Open in Telegram",
@@ -754,11 +754,11 @@
     "principles": {
       "title": "Principles",
       "p1Title": "Voluntary participation",
-      "p1Text": "Nobody has to respond. Participation is a decision, not a debt.",
+      "p1Text": "Nobody has to respond. You decide each time whether to take part.",
       "p2Title": "Independent decision",
-      "p2Text": "Everyone decides for themselves, with no organiser and no scores. Declining carries no sanction.",
+      "p2Text": "No organiser decides for you, and nobody scores you. If you decline, nothing happens to you.",
       "p3Title": "Direct connection between participants",
-      "p3Text": "Arrangements and actions stay between people linked by confirmed acquaintance.",
+      "p3Text": "Participants agree and act among themselves, with nobody in between.",
       "p4Title": "The network comes first",
       "p4Text": "Signals travel only through confirmed acquaintances. You share risks with people you know directly, without a common pot or an operator."
     },
@@ -767,17 +767,17 @@
       "q1": "What does Social Organizer do?",
       "a1": "It helps you build a network of people you know in person, and lets two signals, Need and Participation, travel through it. It does not act on behalf of participants.",
       "q2": "Do I have to take part?",
-      "a2": "No. Participation is voluntary, and everyone makes their own decision.",
+      "a2": "No. You decide for yourself whether to take part.",
       "q3": "Does the service guarantee assistance?",
-      "a3": "No. The outcome depends on the independent decisions and actual actions of participants.",
+      "a3": "No. The result depends on what participants decide and do.",
       "q4": "Does Social Organizer process payments?",
       "a4": "No. Social Organizer does not accept, transfer or hold funds. Anything participants do between themselves, they do directly, outside the service.",
       "q5": "Do participants hand over money?",
       "a5": "They may. A Need names an amount, and a Participation names how much a participant is ready to hand over. If participants hand over money, they do it themselves and directly, by their own arrangement. Social Organizer does not verify whether a handover took place.",
       "q6": "What are the amounts in?",
-      "a6": "In US dollars: a common unit of account, so that amounts can be compared. Which currency and which way to use is up to participants.",
+      "a6": "In US dollars: a common unit of account, so you can compare amounts. Participants choose the currency and the way themselves.",
       "q7": "How is it different from online mutual aid platforms?",
-      "a7": "China’s mutual aid platforms had one operator, charged members and promised payouts like insurance, and in 2021 they were shut down. Social Organizer has no operator, no pot and no payouts: only people who know each other, two signals and voluntary participation.",
+      "a7": "Each of China’s mutual aid platforms had one operator that charged members and promised payouts, like an insurer. In 2021 regulators shut them all down. Social Organizer has no operator and no pot: people who know each other send two signals and decide for themselves.",
       "q8": "Is this insurance?",
       "a8": "No. An insurer takes your money in advance and promises a payout. Here you pay nothing in advance and nobody promises anything. When someone in your network has a hard time, the people who decide to take part each take a small share."
     }
