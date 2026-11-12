@@ -1,5 +1,6 @@
 import { createContext, useCallback, useContext, useEffect, useRef, useState, type ReactNode } from 'react';
 import { cn } from '../../lib/utils';
+import { prefersReducedMotion } from './presence';
 
 export type BannerContent = {
   kicker?: string;
@@ -19,10 +20,20 @@ type BannerProps = BannerContent & {
 export function Banner({ kicker, title, body, icon, onClose, duration = 5000, inline = false }: BannerProps) {
   const start = useRef<number | null>(null);
   const [gone, setGone] = useState(false);
+  const [leaving, setLeaving] = useState(false);
 
+  // Slides up and fades before it unmounts (at once with reduced motion)
   const close = useCallback(() => {
-    setGone(true);
-    onClose?.();
+    if (prefersReducedMotion()) {
+      setGone(true);
+      onClose?.();
+      return;
+    }
+    setLeaving(true);
+    window.setTimeout(() => {
+      setGone(true);
+      onClose?.();
+    }, 200);
   }, [onClose]);
 
   useEffect(() => {
@@ -36,7 +47,8 @@ export function Banner({ kicker, title, body, icon, onClose, duration = 5000, in
   return (
     <div
       className={cn(
-        'so-banner-in z-40',
+        leaving ? 'so-banner-out pointer-events-none' : 'so-banner-in',
+        'z-40',
         inline ? 'relative' : 'fixed inset-x-4 top-[calc(12px+var(--sa-top))] mx-auto max-w-md',
       )}
       onPointerDown={(event) => {

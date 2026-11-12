@@ -18,11 +18,22 @@ type RowProps = {
   trailing?: ReactNode;
 };
 
-export function Group({ title, children, className }: { title?: string; children: ReactNode; className?: string }) {
+/** stagger: the rows come in one after another when the group mounts (lists of people, history). */
+export function Group({
+  title,
+  children,
+  className,
+  stagger = false,
+}: {
+  title?: string;
+  children: ReactNode;
+  className?: string;
+  stagger?: boolean;
+}) {
   return (
     <section className={className}>
       {title ? <h2 className="mb-1.5 mt-4 px-1 text-label font-bold text-ink-muted">{title}</h2> : null}
-      <div className="divide-y divide-line-soft overflow-hidden rounded-lg bg-surface shadow-card">{children}</div>
+      <div className={cn('divide-y divide-line-soft overflow-hidden rounded-lg bg-surface shadow-card', stagger && 'so-stagger')}>{children}</div>
     </section>
   );
 }
@@ -58,6 +69,8 @@ export function Row({
   );
 
   const className = 'so-focus flex min-h-row w-full items-center gap-3 px-4 py-2 text-left';
+  // Tappable rows darken briefly under the finger
+  const pressable = cn(className, 'transition-colors duration-fast ease-so active:bg-surface-2 motion-reduce:transition-none');
 
   if (variant === 'toggle') {
     return (
@@ -76,7 +89,7 @@ export function Row({
 
   if (to) {
     return (
-      <Link to={to} className={className} onClick={onClick}>
+      <Link to={to} className={pressable} onClick={onClick}>
         {body}
       </Link>
     );
@@ -84,7 +97,7 @@ export function Row({
 
   if (onClick || variant === 'danger' || variant === 'link') {
     return (
-      <button type="button" className={className} onClick={onClick}>
+      <button type="button" className={pressable} onClick={onClick}>
         {body}
       </button>
     );

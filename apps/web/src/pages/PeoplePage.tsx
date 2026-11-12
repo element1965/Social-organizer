@@ -248,6 +248,16 @@ export function PeoplePage() {
     goRing(ring + (forward ? 1 : -1));
   };
 
+  // The list slides in from the side of the tab it came from (mirrored in right-to-left languages)
+  const lastRing = useRef(ring);
+  const slide = useRef<'so-slide-next' | 'so-slide-prev' | 'so-fade-in'>('so-fade-in');
+  if (lastRing.current !== ring) {
+    const forward = ring > lastRing.current;
+    const rtl = typeof document !== 'undefined' && document.documentElement.dir === 'rtl';
+    slide.current = forward !== rtl ? 'so-slide-next' : 'so-slide-prev';
+    lastRing.current = ring;
+  }
+
   const ringOptions = ([1, 2, 3] as Ring[]).map((r) => ({ value: String(r) as '1' | '2' | '3', label: t(`circle.rings.short${r}`) }));
 
   return (
@@ -298,52 +308,55 @@ export function PeoplePage() {
           </Group>
         </div>
 
-        {loading ? (
-          <div className="mt-4 flex flex-col gap-2" aria-busy>
-            {[0, 1, 2, 3].map((i) => (
-              <div key={i} className="h-14 animate-pulse rounded-lg bg-surface motion-reduce:animate-none" />
-            ))}
-          </div>
-        ) : failed ? (
-          <div className="mt-8 text-center">
-            <p className="text-body-s font-semibold text-ink-muted">{t('common.error')}</p>
-            <Button variant="secondary" size="md" className="mt-3" onClick={() => void (ring === 1 ? net.connections.refetch() : stats.refetch())}>
-              {t('common.retry')}
-            </Button>
-          </div>
-        ) : filtered.length === 0 && requests.length === 0 ? (
-          <p className={cn('text-center text-body-s font-semibold text-ink-muted', elsewhere.length ? 'mt-4' : 'mt-8')}>
-            {needle ? t(elsewhere.length ? 'people.foundElsewhere' : 'people.notFound') : t('people.empty')}
-          </p>
-        ) : (
-          <>
-            {requests.length + recent.length > 0 ? (
-              <Group title={t('people.recent')}>{rows([...requests, ...recent])}</Group>
-            ) : null}
-            {rest.length > 0 ? (
-              <Group title={ring === 1 && requests.length + recent.length > 0 ? t('people.all', { count: rest.length }) : undefined} className="mt-3">
-                {rows(rest)}
-              </Group>
-            ) : null}
-          </>
-        )}
-        {/* The search covers every handshake: matches from the other rings follow, each under its ring */}
-        {!loading && elsewhere.length > 0 ? (
-          <section className="mt-5" aria-label={t('people.alsoElsewhere')}>
-            {filtered.length + requests.length > 0 ? (
-              <p className="mb-1 px-1 text-micro font-bold text-ink-muted">{t('people.alsoElsewhere')}</p>
-            ) : null}
-            {elsewhere.map((group) => (
-              <Group
-                key={group.ring}
-                title={t('people.title', { ring: t(`circle.rings.full${group.ring}`), count: group.list.length })}
-                className="mt-3 first:mt-0"
-              >
-                {rows(group.list)}
-              </Group>
-            ))}
-          </section>
-        ) : null}
+        <div key={ring} className={slide.current}>
+          {loading ? (
+            <div className="mt-4 flex flex-col gap-2" aria-busy>
+              {[0, 1, 2, 3].map((i) => (
+                <div key={i} className="h-14 animate-pulse rounded-lg bg-surface motion-reduce:animate-none" />
+              ))}
+            </div>
+          ) : failed ? (
+            <div className="mt-8 text-center">
+              <p className="text-body-s font-semibold text-ink-muted">{t('common.error')}</p>
+              <Button variant="secondary" size="md" className="mt-3" onClick={() => void (ring === 1 ? net.connections.refetch() : stats.refetch())}>
+                {t('common.retry')}
+              </Button>
+            </div>
+          ) : filtered.length === 0 && requests.length === 0 ? (
+            <p className={cn('text-center text-body-s font-semibold text-ink-muted', elsewhere.length ? 'mt-4' : 'mt-8')}>
+              {needle ? t(elsewhere.length ? 'people.foundElsewhere' : 'people.notFound') : t('people.empty')}
+            </p>
+          ) : (
+            <>
+              {requests.length + recent.length > 0 ? (
+                <Group title={t('people.recent')} stagger>{rows([...requests, ...recent])}</Group>
+              ) : null}
+              {rest.length > 0 ? (
+                <Group title={ring === 1 && requests.length + recent.length > 0 ? t('people.all', { count: rest.length }) : undefined} className="mt-3" stagger>
+                  {rows(rest)}
+                </Group>
+              ) : null}
+            </>
+          )}
+          {/* The search covers every handshake: matches from the other rings follow, each under its ring */}
+          {!loading && elsewhere.length > 0 ? (
+            <section className="mt-5" aria-label={t('people.alsoElsewhere')}>
+              {filtered.length + requests.length > 0 ? (
+                <p className="mb-1 px-1 text-micro font-bold text-ink-muted">{t('people.alsoElsewhere')}</p>
+              ) : null}
+              {elsewhere.map((group) => (
+                <Group
+                  key={group.ring}
+                  title={t('people.title', { ring: t(`circle.rings.full${group.ring}`), count: group.list.length })}
+                  className="mt-3 first:mt-0"
+                  stagger
+                >
+                  {rows(group.list)}
+                </Group>
+              ))}
+            </section>
+          ) : null}
+        </div>
       </div>
       <AcquaintSheet request={acquaint} onClose={() => setAcquaint(null)} />
     </Screen>

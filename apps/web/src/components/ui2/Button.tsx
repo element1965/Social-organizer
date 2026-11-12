@@ -55,7 +55,7 @@ export function Button({
       disabled={disabled}
       aria-busy={loading || undefined}
       className={cn(
-        'relative inline-flex items-center justify-center gap-2 whitespace-nowrap tracking-tight transition-transform duration-fast ease-so',
+        'relative inline-flex items-center justify-center gap-2 whitespace-nowrap tracking-tight transition-[transform,background-color,color,border-color,opacity] duration-fast ease-so motion-reduce:transition-none',
         'so-focus',
         'active:scale-[0.96] disabled:pointer-events-none disabled:opacity-[0.45]',
         'motion-reduce:transition-none motion-reduce:active:scale-100',

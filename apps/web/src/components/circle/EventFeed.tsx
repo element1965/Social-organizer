@@ -9,6 +9,7 @@ import { useAuth } from '../../hooks/useAuth';
 import { FEED_GROUPS, feedGroup, type FeedEvent, type FeedGroup, type FeedKind } from '../../hooks/useEvents';
 import { IconClock, IconClose, IconDone, IconFlag, IconPause, IconRepeat } from './icons';
 import { IconChevron } from '../ui2/icons';
+import { prefersReducedMotion } from '../ui2/presence';
 
 /**
  * Same-kind rows fold into one card from this many on (two stay as rows: folding them saves nothing).
@@ -99,6 +100,8 @@ export function EventFeed({ events, loading, onOpen, onDismiss }: EventFeedProps
   const swipedAt = useRef(0);
   // Open stacks and "N more" lists, by key; closed by default
   const [open, setOpen] = useState<Set<string>>(() => new Set());
+  // Rows being dismissed fold away first; the feed drops them once the fold is over
+  const [leaving, setLeaving] = useState<Set<string>>(() => new Set());
   const toggle = (key: string) =>
     setOpen((prev) => {
       const next = new Set(prev);
@@ -176,39 +179,47 @@ export function EventFeed({ events, loading, onOpen, onDismiss }: EventFeedProps
               const remove = () => {
                 // EventRow fires its click right after a swipe; swallow that click.
                 swipedAt.current = Date.now();
-                onDismiss(event);
+                if (prefersReducedMotion()) {
+                  onDismiss(event);
+                  return;
+                }
+                setLeaving((prev) => new Set(prev).add(event.id));
+                window.setTimeout(() => onDismiss(event), 240);
               };
               return (
                 <li
                   key={event.id}
-                  className="group relative"
+                  className="so-collapse"
+                  data-state={leaving.has(event.id) ? 'closed' : 'open'}
                   onKeyDown={(e) => {
                     if (dismissable && (e.key === 'Delete' || e.key === 'Backspace')) remove();
                   }}
                 >
-                  <EventRow
-                    icon={ICONS[event.kind]}
-                    title={event.title}
-                    subtitle={event.subtitle}
-                    note={event.note}
-                    amount={event.amount}
-                    hot={event.hot}
-                    onClick={() => {
-                      if (Date.now() - swipedAt.current < 400) return;
-                      onOpen(event);
-                    }}
-                    onDismiss={dismissable ? remove : undefined}
-                  />
-                  {dismissable ? (
-                    <button
-                      type="button"
-                      onClick={remove}
-                      aria-label={t('circle.feed.dismiss', { name: event.title })}
-                      className="so-focus absolute right-1 top-1 grid h-6 w-6 place-items-center rounded-full bg-surface-2 text-ink-muted opacity-0 shadow-float transition-opacity focus:opacity-100 group-hover:opacity-100 motion-reduce:transition-none"
-                    >
-                      <IconClose className="h-3 w-3" />
-                    </button>
-                  ) : null}
+                  <div className="group relative">
+                    <EventRow
+                      icon={ICONS[event.kind]}
+                      title={event.title}
+                      subtitle={event.subtitle}
+                      note={event.note}
+                      amount={event.amount}
+                      hot={event.hot}
+                      onClick={() => {
+                        if (Date.now() - swipedAt.current < 400) return;
+                        onOpen(event);
+                      }}
+                      onDismiss={dismissable ? remove : undefined}
+                    />
+                    {dismissable ? (
+                      <button
+                        type="button"
+                        onClick={remove}
+                        aria-label={t('circle.feed.dismiss', { name: event.title })}
+                        className="so-focus absolute right-1 top-1 grid h-6 w-6 place-items-center rounded-full bg-surface-2 text-ink-muted opacity-0 shadow-float transition-opacity focus:opacity-100 group-hover:opacity-100 motion-reduce:transition-none"
+                      >
+                        <IconClose className="h-3 w-3" />
+                      </button>
+                    ) : null}
+                  </div>
                 </li>
               );
   }
