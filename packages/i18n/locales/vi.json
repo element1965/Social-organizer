@@ -340,7 +340,7 @@
     "needsConnection": "Cần có kết nối",
     "contactsNotSaved": "Thông tin liên hệ của người này chưa được lưu trên thiết bị. Chúng sẽ được lưu khi bạn mở trang của họ khi có mạng.",
     "tapHint": "Thông tin liên hệ chỉ được lưu cho các kết nối trực tiếp.",
-    "unavailableTitle": "Màn hình này cần có kết nối",
+    "unavailableTitle": "Không có kết nối",
     "unavailableBody": "Hãy kết nối internet và thử lại. Những người đã lưu trên thiết bị này vẫn dùng được.",
     "showSaved": "Hiện những người đã lưu"
   },

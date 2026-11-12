@@ -343,7 +343,7 @@
     "needsConnection": "Verbindung erforderlich",
     "contactsNotSaved": "Die Kontaktdaten dieser Person sind noch nicht auf diesem Gerät gespeichert. Sie werden gespeichert, wenn du ihre Seite online öffnest.",
     "tapHint": "Kontaktdaten werden nur für direkte Verbindungen gespeichert.",
-    "unavailableTitle": "Dieser Bildschirm braucht eine Verbindung",
+    "unavailableTitle": "Keine Verbindung",
     "unavailableBody": "Verbinde dich mit dem Internet und versuche es erneut. Die auf diesem Gerät gespeicherten Personen bleiben verfügbar.",
     "showSaved": "Gespeicherte Personen anzeigen"
   },

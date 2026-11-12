@@ -343,7 +343,7 @@
     "needsConnection": "Vaatii yhteyden",
     "contactsNotSaved": "Tämän henkilön yhteystietoja ei ole vielä tallennettu laitteelle. Ne tallentuvat, kun avaat hänen sivunsa verkossa.",
     "tapHint": "Yhteystiedot tallennetaan vain suorille yhteyksille.",
-    "unavailableTitle": "Tämä näkymä vaatii yhteyden",
+    "unavailableTitle": "Ei yhteyttä",
     "unavailableBody": "Yhdistä internetiin ja yritä uudelleen. Tälle laitteelle tallennetut ihmiset ovat edelleen käytettävissä.",
     "showSaved": "Näytä tallennetut ihmiset"
   },

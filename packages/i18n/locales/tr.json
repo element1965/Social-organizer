@@ -343,7 +343,7 @@
     "needsConnection": "Bağlantı gerekir",
     "contactsNotSaved": "Bu kişinin iletişim bilgileri henüz bu cihaza kaydedilmedi. Sayfasını çevrimiçi açtığınızda kaydedilir.",
     "tapHint": "İletişim bilgileri yalnızca doğrudan bağlantılar için kaydedilir.",
-    "unavailableTitle": "Bu ekran için bağlantı gerekir",
+    "unavailableTitle": "Bağlantı yok",
     "unavailableBody": "İnternete bağlanıp tekrar deneyin. Bu cihazda kayıtlı kişiler kullanılabilir durumda.",
     "showSaved": "Kayıtlı kişileri göster"
   },

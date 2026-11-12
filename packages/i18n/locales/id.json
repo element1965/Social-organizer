@@ -340,7 +340,7 @@
     "needsConnection": "Perlu koneksi",
     "contactsNotSaved": "Kontak orang ini belum tersimpan di perangkat ini. Kontak tersimpan saat Anda membuka halamannya secara online.",
     "tapHint": "Kontak hanya disimpan untuk koneksi langsung.",
-    "unavailableTitle": "Layar ini memerlukan koneksi",
+    "unavailableTitle": "Tidak ada koneksi",
     "unavailableBody": "Sambungkan ke internet lalu coba lagi. Orang-orang yang tersimpan di perangkat ini tetap tersedia.",
     "showSaved": "Tampilkan orang tersimpan"
   },

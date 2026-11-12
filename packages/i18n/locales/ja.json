@@ -340,7 +340,7 @@
     "needsConnection": "接続が必要です",
     "contactsNotSaved": "この人の連絡先はまだこの端末に保存されていません。オンラインでページを開くと保存されます。",
     "tapHint": "連絡先は直接つながっている人のみ保存されます。",
-    "unavailableTitle": "この画面には接続が必要です",
+    "unavailableTitle": "接続されていません",
     "unavailableBody": "インターネットに接続して、もう一度お試しください。この端末に保存した人は引き続き表示できます。",
     "showSaved": "保存した人を表示"
   },
