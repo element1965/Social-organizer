@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState, type TouchEvent } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { trpc } from '../lib/trpc';
@@ -215,6 +215,34 @@ export function PeoplePage() {
     ...(ring === 1 ? [{ value: 'brought' as const, label: t('people.sortBrought') }] : []),
   ];
 
+  // A horizontal swipe anywhere on the list switches the handshake, like the tabs above it.
+  // Touches near the screen edges are left to the system back gesture.
+  const swipe = useRef<{ x: number; y: number } | null>(null);
+  const goRing = (next: number) => {
+    if (next >= 1 && next <= 3 && next !== ring) navigate(`/people/${next}`, { replace: true });
+  };
+  const onTouchStart = (event: TouchEvent) => {
+    const touch = event.touches[0];
+    const edge = 24;
+    swipe.current =
+      touch && event.touches.length === 1 && touch.clientX > edge && touch.clientX < window.innerWidth - edge
+        ? { x: touch.clientX, y: touch.clientY }
+        : null;
+  };
+  const onTouchEnd = (event: TouchEvent) => {
+    const start = swipe.current;
+    swipe.current = null;
+    const touch = event.changedTouches[0];
+    if (!start || !touch) return;
+    const dx = touch.clientX - start.x;
+    const dy = touch.clientY - start.y;
+    // Mostly sideways and long enough, so a vertical scroll never flips the ring
+    if (Math.abs(dx) < 56 || Math.abs(dx) < Math.abs(dy) * 1.5) return;
+    const rtl = document.documentElement.dir === 'rtl';
+    const forward = rtl ? dx > 0 : dx < 0;
+    goRing(ring + (forward ? 1 : -1));
+  };
+
   const ringOptions = ([1, 2, 3] as Ring[]).map((r) => ({ value: String(r) as '1' | '2' | '3', label: t(`circle.rings.short${r}`) }));
 
   return (
@@ -223,93 +251,95 @@ export function PeoplePage() {
       back={{ label: t('nav.circle'), to: '/' }}
       width="column"
     >
-      <div className="flex flex-col gap-2.5 pt-2">
-        <Segmented
-          label={t('people.ring')}
-          value={String(ring) as '1' | '2' | '3'}
-          onChange={(value) => navigate(`/people/${value}`, { replace: true })}
-          options={ringOptions}
-        />
-        <Input
-          variant="search"
-          type="search"
-          value={query}
-          onChange={(event) => setQuery(event.target.value)}
-          placeholder={t('people.search')}
-          aria-label={t('people.search')}
-        />
-        <div className="flex flex-wrap items-center gap-1.5" role="group" aria-label={t('people.sort')}>
-          <span className="shrink-0 text-micro font-bold text-ink-muted">{t('people.sort')}</span>
-          {sortOptions.map((option) => (
-            <Chip
-              key={option.value}
-              variant="action"
-              active={sort === option.value}
-              aria-pressed={sort === option.value}
-              className="shrink-0"
-              onClick={() => chooseSort(option.value)}
-            >
-              {option.label}
-            </Chip>
-          ))}
-        </div>
-        <Group>
-          <Row
-            variant="toggle"
-            title={t('people.showOnGraph', { count: total })}
-            subtitle={t('people.showOnGraphHint')}
-            checked={visible}
-            onCheckedChange={(checked) => setRingHidden(ring, !checked)}
+      <div className="min-h-[70dvh]" onTouchStart={onTouchStart} onTouchEnd={onTouchEnd} onTouchCancel={() => (swipe.current = null)}>
+        <div className="flex flex-col gap-2.5 pt-2">
+          <Segmented
+            label={t('people.ring')}
+            value={String(ring) as '1' | '2' | '3'}
+            onChange={(value) => navigate(`/people/${value}`, { replace: true })}
+            options={ringOptions}
           />
-        </Group>
-      </div>
+          <Input
+            variant="search"
+            type="search"
+            value={query}
+            onChange={(event) => setQuery(event.target.value)}
+            placeholder={t('people.search')}
+            aria-label={t('people.search')}
+          />
+          <div className="flex flex-wrap items-center gap-1.5" role="group" aria-label={t('people.sort')}>
+            <span className="shrink-0 text-micro font-bold text-ink-muted">{t('people.sort')}</span>
+            {sortOptions.map((option) => (
+              <Chip
+                key={option.value}
+                variant="action"
+                active={sort === option.value}
+                aria-pressed={sort === option.value}
+                className="shrink-0"
+                onClick={() => chooseSort(option.value)}
+              >
+                {option.label}
+              </Chip>
+            ))}
+          </div>
+          <Group>
+            <Row
+              variant="toggle"
+              title={t('people.showOnGraph', { count: total })}
+              subtitle={t('people.showOnGraphHint')}
+              checked={visible}
+              onCheckedChange={(checked) => setRingHidden(ring, !checked)}
+            />
+          </Group>
+        </div>
 
-      {loading ? (
-        <div className="mt-4 flex flex-col gap-2" aria-busy>
-          {[0, 1, 2, 3].map((i) => (
-            <div key={i} className="h-14 animate-pulse rounded-lg bg-surface motion-reduce:animate-none" />
-          ))}
-        </div>
-      ) : failed ? (
-        <div className="mt-8 text-center">
-          <p className="text-body-s font-semibold text-ink-muted">{t('common.error')}</p>
-          <Button variant="secondary" size="md" className="mt-3" onClick={() => void (ring === 1 ? net.connections.refetch() : stats.refetch())}>
-            {t('common.retry')}
-          </Button>
-        </div>
-      ) : filtered.length === 0 && requests.length === 0 ? (
-        <p className={cn('text-center text-body-s font-semibold text-ink-muted', elsewhere.length ? 'mt-4' : 'mt-8')}>
-          {needle ? t(elsewhere.length ? 'people.foundElsewhere' : 'people.notFound') : t('people.empty')}
-        </p>
-      ) : (
-        <>
-          {requests.length + recent.length > 0 ? (
-            <Group title={t('people.recent')}>{rows([...requests, ...recent])}</Group>
-          ) : null}
-          {rest.length > 0 ? (
-            <Group title={ring === 1 && requests.length + recent.length > 0 ? t('people.all', { count: rest.length }) : undefined} className="mt-3">
-              {rows(rest)}
-            </Group>
-          ) : null}
-        </>
-      )}
-      {/* The search covers every handshake: matches from the other rings follow, each under its ring */}
-      {!loading && elsewhere.length > 0 ? (
-        <section className="mt-5" aria-label={t('people.alsoElsewhere')}>
-          {filtered.length + requests.length > 0 ? (
-            <p className="mb-1 px-1 text-micro font-bold text-ink-muted">{t('people.alsoElsewhere')}</p>
-          ) : null}
-          {elsewhere.map((group) => (
-            <Group
-              key={group.ring}
-              title={t('people.title', { ring: t(`circle.rings.full${group.ring}`), count: group.list.length })}
-              className="mt-3 first:mt-0"
-            >
-              {rows(group.list)}
-            </Group>
-          ))}
-        </section>
-      ) : null}
+        {loading ? (
+          <div className="mt-4 flex flex-col gap-2" aria-busy>
+            {[0, 1, 2, 3].map((i) => (
+              <div key={i} className="h-14 animate-pulse rounded-lg bg-surface motion-reduce:animate-none" />
+            ))}
+          </div>
+        ) : failed ? (
+          <div className="mt-8 text-center">
+            <p className="text-body-s font-semibold text-ink-muted">{t('common.error')}</p>
+            <Button variant="secondary" size="md" className="mt-3" onClick={() => void (ring === 1 ? net.connections.refetch() : stats.refetch())}>
+              {t('common.retry')}
+            </Button>
+          </div>
+        ) : filtered.length === 0 && requests.length === 0 ? (
+          <p className={cn('text-center text-body-s font-semibold text-ink-muted', elsewhere.length ? 'mt-4' : 'mt-8')}>
+            {needle ? t(elsewhere.length ? 'people.foundElsewhere' : 'people.notFound') : t('people.empty')}
+          </p>
+        ) : (
+          <>
+            {requests.length + recent.length > 0 ? (
+              <Group title={t('people.recent')}>{rows([...requests, ...recent])}</Group>
+            ) : null}
+            {rest.length > 0 ? (
+              <Group title={ring === 1 && requests.length + recent.length > 0 ? t('people.all', { count: rest.length }) : undefined} className="mt-3">
+                {rows(rest)}
+              </Group>
+            ) : null}
+          </>
+        )}
+        {/* The search covers every handshake: matches from the other rings follow, each under its ring */}
+        {!loading && elsewhere.length > 0 ? (
+          <section className="mt-5" aria-label={t('people.alsoElsewhere')}>
+            {filtered.length + requests.length > 0 ? (
+              <p className="mb-1 px-1 text-micro font-bold text-ink-muted">{t('people.alsoElsewhere')}</p>
+            ) : null}
+            {elsewhere.map((group) => (
+              <Group
+                key={group.ring}
+                title={t('people.title', { ring: t(`circle.rings.full${group.ring}`), count: group.list.length })}
+                className="mt-3 first:mt-0"
+              >
+                {rows(group.list)}
+              </Group>
+            ))}
+          </section>
+        ) : null}
+      </div>
       <AcquaintSheet request={acquaint} onClose={() => setAcquaint(null)} />
     </Screen>
   );
