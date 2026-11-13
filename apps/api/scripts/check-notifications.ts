@@ -128,7 +128,10 @@ async function main() {
   check('new collection reached b, c, d, e in the app journal', ['b', 'c', 'd', 'e'].every((p) => notified.has(id(p))), `notified=${[...notified].length}`);
   check('b (app channel): app delivery, no Telegram', bRows.length === 1 && bRows[0]!.channel === 'APP' && tgTo('b').length === 0);
   check('c (new collections off): no external message, entry stays in the app', cRows.length === 0 && tgTo('c').length === 0 && notified.has(id('c')));
-  check('d (no Telegram, no push): app only', dRows.length === 1 && dRows[0]!.channel === 'APP');
+  // Behaviour routing (docs/notifications/behaviour-routing.md): a person no channel reaches outside the app
+  // gets the in-app entry only and does not take a slot of the wave, so no delivery row is written for them
+  check('d (no Telegram, no push): in-app entry only, no external delivery', dRows.length === 0 && tgTo('d').length === 0 && notified.has(id('d')),
+    `rows=${dRows.map((r) => r.channel).join(',')}`);
   check('e (Telegram): exactly one Telegram message', tgTo('e').length === 1, `messages=${tgTo('e').length}`);
   rows.push(['New collection', 'each person: app or Telegram', 'switch "New collections" off → in-app entry only', '1 message per person']);
 
