@@ -116,8 +116,8 @@ async function main() {
     check(`${method}: request alone counts 0, confirmed counts 1`, res?.pending === true && beforeConfirm === 0 && mine === 1,
       `pending=${res?.pending} before=${beforeConfirm} after=${mine}`);
     check(`${method}: inviter count ${inviterExpected}`, theirs === inviterExpected, `inviter=${theirs}`);
-    check(`${method}: SOS refused with the same number`, !!sosErr?.includes('You have 1'), String(sosErr));
-    rows.push([method, String(beforeConfirm), String(mine), String(theirs), sosErr ? 'SOS refused (1/10)' : 'SOS allowed']);
+    check(`${method}: SOS refused, one connection is below the request thresholds`, !!sosErr?.startsWith('ASK_LOCKED'), String(sosErr));
+    rows.push([method, String(beforeConfirm), String(mine), String(theirs), sosErr ? 'SOS refused (1 connection)' : 'SOS allowed']);
   }
 
   console.log('\n| Sign-in | Count after request | Count after confirmation | Inviter count | Server decision |\n|---|---|---|---|---|');

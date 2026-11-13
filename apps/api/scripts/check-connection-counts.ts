@@ -13,6 +13,8 @@
 import { getDb } from '@so/db';
 import { appRouter } from '../src/routers/index.js';
 import { removeBlockedUser } from '../src/services/telegram-bot.service.js';
+import { invalidateGraph } from '../src/services/graph-cache.service.js';
+import { ASK_MIN_DIRECT, ASK_MIN_NETWORK } from '@so/shared';
 
 if (!/@(localhost|127\.0\.0\.1)(:\d+)?\//.test(process.env.DATABASE_URL || '')) {
   console.error('Refusing to run: DATABASE_URL is not a local database.');
@@ -57,7 +59,12 @@ async function cleanup() {
 
 async function connect(a: string, others: string[]) {
   await db.connection.createMany({ data: others.map((o) => pair(a, o)), skipDuplicates: true });
+  // Written straight to the table: the in-memory graph is told, as the app's own paths do
+  invalidateGraph([a, ...others]);
 }
+
+/** The refusal a person below the request thresholds gets (${ASK_MIN_DIRECT} direct, ${ASK_MIN_NETWORK} in the network). */
+const refusedAsLocked = (err: string | null) => !!err?.startsWith('ASK_LOCKED');
 
 async function main() {
   await cleanup();
@@ -82,8 +89,8 @@ async function main() {
   {
     const n = (await caller(id('zero')).connection.getCount()).count;
     const err = await errorOf(caller(id('zero')).collection.create({ type: 'EMERGENCY', amount: 100, chatLink: chat }));
-    check('0 connections + 10 used invites + 10 pending → count 0, SOS refused', n === 0 && !!err?.includes('You have 0'), `count=${n}; ${err}`);
-    rows.push(['0', '0 Connection, 10 used invite links, 10 pending requests', String(n), err ? 'SOS refused (0/10)' : 'SOS allowed']);
+    check('0 connections + 10 used invites + 10 pending → count 0, SOS refused', n === 0 && refusedAsLocked(err), `count=${n}; ${err}`);
+    rows.push(['0', '0 Connection, 10 used invite links, 10 pending requests', String(n), err ? `SOS refused (0/${ASK_MIN_DIRECT})` : 'SOS allowed']);
   }
 
   // --- 9: connections on both sides of the pair, plus pending requests
@@ -92,8 +99,8 @@ async function main() {
   {
     const n = (await caller(id('nine')).connection.getCount()).count;
     const err = await errorOf(caller(id('nine')).collection.create({ type: 'EMERGENCY', amount: 100, chatLink: chat }));
-    check('9 connections + 10 pending → count 9, SOS refused', n === 9 && !!err?.includes('You have 9'), `count=${n}; ${err}`);
-    rows.push(['9', '9 Connection, 10 pending requests', String(n), err ? 'SOS refused (9/10)' : 'SOS allowed']);
+    check(`9 connections + 10 pending → count 9, SOS refused (network 9 < ${ASK_MIN_NETWORK})`, n === 9 && refusedAsLocked(err), `count=${n}; ${err}`);
+    rows.push(['9', '9 Connection, 10 pending requests', String(n), err ? `SOS refused (network 9/${ASK_MIN_NETWORK})` : 'SOS allowed']);
   }
 
   // --- 10: connections only, no invite links at all
