@@ -188,7 +188,12 @@
     "waitText": "A couple of seconds. The {{provider}} window will close by itself.",
     "waitBack": "Back to sign-in",
     "lastMethodEmail": "Last time you signed in with <b>an e-mail code</b>.",
-    "expiredTextEmail": "Your session has expired. Last time you signed in with <b>an e-mail code</b>; after signing in we will take you back to where you were."
+    "expiredTextEmail": "Your session has expired. Last time you signed in with <b>an e-mail code</b>; after signing in we will take you back to where you were.",
+    "inviteCode": "I have an invitation code",
+    "inviteCodeLabel": "Invitation code or link",
+    "inviteCodePlaceholder": "Paste the code or the whole link",
+    "inviteCodeBad": "This doesn't look like an invitation code. Check it, or paste the whole link.",
+    "inviteCodeOpen": "Open the invitation"
   },
   "nav": {
     "circle": "Circle",
@@ -655,7 +660,7 @@
     "website": "Website"
   },
   "invite": {
-    "calls": "{{name}} invites you to their circle",
+    "calls": "{{name}} invites you",
     "say": "Mutual assistance between people who know each other. Sign in, and {{name}} will confirm that you know each other.",
     "network_one": "{{n}} person in the network",
     "network_other": "{{n}} people in the network",

@@ -64,6 +64,16 @@ export function safeInviteToken(raw: string | null | undefined): string | null {
   return raw && /^[\w-]+$/.test(raw) ? raw : null;
 }
 
+/**
+ * A code typed by hand (SO-24 п.1): the bare code, a personal address (/i/anna) or a whole invite link pasted
+ * from a message. Returns the code the invite page understands, or null.
+ */
+export function inviteCodeFromInput(raw: string): string | null {
+  const s = raw.trim();
+  const m = s.match(/(?:\/invite\/|\/i\/|[?&]invite=)([\w-]+)/);
+  return safeInviteToken(m ? m[1] : s);
+}
+
 export function readPendingInvite(): string | null {
   try {
     return safeInviteToken(storage()?.getItem(PENDING_INVITE_KEY));

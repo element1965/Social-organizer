@@ -188,7 +188,12 @@
     "waitText": "Et par sekunder. Vinduet til {{provider}} lukkes av seg selv.",
     "waitBack": "Tilbake til innlogging",
     "lastMethodEmail": "Sist logget du inn med <b>en e-postkode</b>.",
-    "expiredTextEmail": "Økten din er utløpt. Sist logget du inn med <b>en e-postkode</b>. Etter innlogging tar vi deg tilbake dit du var."
+    "expiredTextEmail": "Økten din er utløpt. Sist logget du inn med <b>en e-postkode</b>. Etter innlogging tar vi deg tilbake dit du var.",
+    "inviteCode": "Jeg har en invitasjonskode",
+    "inviteCodeLabel": "Invitasjonskode eller lenke",
+    "inviteCodePlaceholder": "Lim inn koden eller hele lenken",
+    "inviteCodeBad": "Dette ser ikke ut som en invitasjonskode. Sjekk den, eller lim inn hele lenken.",
+    "inviteCodeOpen": "Åpne invitasjonen"
   },
   "nav": {
     "circle": "Krets",
@@ -642,7 +647,7 @@
     "website": "Nettsted"
   },
   "invite": {
-    "calls": "{{name}} inviterer deg til kretsen sin",
+    "calls": "{{name}} inviterer deg",
     "say": "Bistand mellom personer som kjenner hverandre. Logg inn, så bekrefter {{name}} at dere kjenner hverandre.",
     "canHelp": "nettverkets oppgitte deltakelse: {{amount}}",
     "known": "Vi kjenner hverandre",
@@ -682,7 +687,8 @@
       "later": "Senere, fortsett i nettleseren",
       "continueWeb": "Fortsett i nettleseren",
       "qrText": "Rett telefonkameraet mot koden – appbutikken åpnes."
-    }
+    },
+    "howItWorks": "Slik fungerer Social Organizer"
   },
   "landing": {
     "site": {

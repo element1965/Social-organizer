@@ -188,7 +188,12 @@
     "waitText": "Câteva secunde. Fereastra {{provider}} se închide singură.",
     "waitBack": "Înapoi la conectare",
     "lastMethodEmail": "Data trecută te-ai conectat cu <b>un cod pe e-mail</b>.",
-    "expiredTextEmail": "Sesiunea a expirat. Data trecută te-ai conectat cu <b>un cod pe e-mail</b>; după conectare te ducem înapoi unde erai."
+    "expiredTextEmail": "Sesiunea a expirat. Data trecută te-ai conectat cu <b>un cod pe e-mail</b>; după conectare te ducem înapoi unde erai.",
+    "inviteCode": "Am un cod de invitație",
+    "inviteCodeLabel": "Cod sau link de invitație",
+    "inviteCodePlaceholder": "Lipește codul sau tot linkul",
+    "inviteCodeBad": "Nu pare un cod de invitație. Verifică-l sau lipește tot linkul.",
+    "inviteCodeOpen": "Deschide invitația"
   },
   "nav": {
     "circle": "Cercul",
@@ -645,7 +650,7 @@
     "website": "Site web"
   },
   "invite": {
-    "calls": "{{name}} te invită în cercul său",
+    "calls": "{{name}} te invită",
     "say": "Ajutor reciproc între oameni care se cunosc. Conectează-te, iar {{name}} va confirma că vă cunoașteți.",
     "canHelp": "participarea declarată a rețelei: {{amount}}",
     "known": "Ne cunoaștem",
@@ -686,7 +691,8 @@
       "later": "Mai târziu, continuă în browser",
       "continueWeb": "Continuă în browser",
       "qrText": "Îndreaptă camera telefonului spre cod: se deschide magazinul de aplicații."
-    }
+    },
+    "howItWorks": "Cum funcționează Social Organizer"
   },
   "landing": {
     "site": {

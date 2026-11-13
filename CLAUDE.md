@@ -1,0 +1,95 @@
+думай на русском
+читай редми и поддерживай его актуальность
+делай комит и пуш в гит
+
+# GitHub — всё на английском
+- README.md — на английском
+- Commit messages — на английском
+- PR descriptions — на английском
+- Code comments — на английском
+
+# PostgreSQL 17 (Railway)
+- Host (internal): PostgreSQL.railway.internal
+- Порт: 5432
+- Пароль: в переменных Railway (сервис Postgres), в коде и документах не хранить
+- Пользователь: postgres
+- БД: social_organizer
+- TCP Proxy (публичный доступ): ballast.proxy.rlwy.net:27469
+- Public URL: `DATABASE_PUBLIC_URL` в переменных сервиса Postgres в Railway. Скрипты берут его из `DATABASE_URL` / `RAILWAY_DATABASE_URL` окружения
+- Миграции: только вручную (Railway не поддерживает автоматические)
+- Как применить миграции:
+  1. В packages/db/.env временно заменить DATABASE_URL на Public URL (из Railway, см. выше)
+  2. cd packages/db && npx prisma migrate deploy
+  3. Вернуть DATABASE_URL обратно на localhost:5434
+
+# Railway
+- Token: в секретах проекта на портале Lambertain (`/api/dev/secrets`), в репо не хранить
+- Деплой только через git push (автодеплой при пуше в main)
+- URL: https://www.orginizer.com
+- Healthcheck: /health
+- GitHub репо: element1965/Social-organizer
+- Проект: ravishing-expression (9a699980-4ee1-4582-8d32-a9c865722736)
+- Service ID (API): 99e183b8-bdc7-4dd0-9fae-bc8e03900569
+- Service ID (PostgreSQL): 25065be4-8d13-4b64-8c47-fe67d835bbd3
+- Service ID (Redis): dbc66e68-9310-42a6-821f-eb32c6bde6b1
+- Environment ID: 5ce68db1-c13c-4eea-b512-e06c40aba1c2
+
+## Staging (ветка redesign)
+- Environment `staging`: 28424a41-88a7-4044-8074-82c174a078e2 (те же service ID, что в production)
+- URL: https://social-organizer-staging.up.railway.app — автодеплой при push в `redesign`
+- Postgres staging: TCP proxy mainline.proxy.rlwy.net:40274, БД social_organizer, данные — seed-dev (тестовые люди)
+- Коды входа: `MAIL_LOG_TO_STDOUT=1` → в логах сервиса (`mail:test-outbox`)
+- В staging НЕ задавать TELEGRAM_BOT_TOKEN / FEEDBACK_CHAT_ID / FIREBASE_SERVICE_ACCOUNT / VAPID_* (webhook прод-бота и пуши реальным людям)
+- `railway environment new --duplicate` деплоит СРАЗУ, не staged — не использовать для новых окружений с секретами
+- Удалять сервисы в проекте у нас нет прав (не admin); MCP Railway не может менять source/ветку (нет GitHub-привязки) — ветку меняют в дашборде
+
+# Telegram Bot
+- Username: @socialorganizer_bot
+- Env: VITE_TELEGRAM_BOT_USERNAME=socialorganizer_bot (build-time, нужен в Railway)
+
+# Sign in with Apple (web OAuth, без .p8 ключа)
+- Флоу зеркалит Google: системный браузер (SFSafariViewController/Custom Tab) → Apple form_post на `POST /api/auth/apple/callback` → deep link `socialorganizer://auth-success` (native) или `/auth/apple/done#...` (web). Работает в WKWebView-обёртке без пересборки бинарника.
+- Бэкенд верифицирует id_token по Apple JWKS (`apps/api/src/services/apple.service.ts`) — обмен code НЕ делается, приватный ключ не нужен.
+- Env (Railway): `APPLE_SERVICE_ID` (Services ID), `APPLE_BUNDLE_ID=com.socialorganizer.app`, `APPLE_DOMAIN_ASSOCIATION` (содержимое файла верификации домена).
+- Env (build-time, web): `VITE_APPLE_SERVICE_ID` (= APPLE_SERVICE_ID). Кнопка Apple показывается только если задан.
+- Настройка в Apple Developer — см. APPLE_SIGNIN.md.
+
+# Админы и рассылка
+- ADMIN_IDS задаются через env переменную (apps/api/src/admin.ts)
+- Рассылка (BroadcastPanel) — только для админов:
+  - Фронт: кнопка видна только при isAdmin (ChatAssistant.tsx)
+  - API: broadcast.sendAll, broadcast.sendDirect — assertAdmin()
+  - Upload: /api/broadcast/upload — isAdmin() check
+  - Обычные юзеры не видят кнопку и не могут вызвать API
+- Бюджет редактируется на дашборде (блок "Мои возможности"), не в настройках
+
+# Google Play (Android — Capacitor)
+- Package: com.socialorganizer.app
+- Проект: `apps/web/android/` (Capacitor, НЕ Bubblewrap/TWA)
+- Capacitor config: `apps/web/capacitor.config.ts` (url: https://www.orginizer.com)
+- Keystore: `keystore/release.jks` (alias: social-organizer; пароль — в `apps/web/android/keystore.properties`, файл не коммитится)
+- Keystore properties: `apps/web/android/keystore.properties`
+- Версия: `apps/web/android/app/build.gradle` → `versionCode` / `versionName` (увеличивать при каждом релизе)
+- JAVA_HOME: `C:\Program Files\Android\Android Studio\jbr`
+- Service account: `scripts/google-play-service-account.json` (НЕ коммитить — в .gitignore)
+  - Аккаунт: play-store-upload@ornate-fragment-465314-v2.iam.gserviceaccount.com
+  - Проект GCP: ornate-fragment-465314-v2
+
+## Деплой одной командой
+```
+node scripts/deploy-android.mjs [--track internal|alpha|beta|production]
+```
+Делает всё автоматически:
+1. Собирает web (`pnpm --filter @so/web build`)
+2. Синхронизирует Capacitor (`npx cap sync android`)
+3. Собирает AAB (`gradlew.bat bundleRelease`)
+4. Загружает в Google Play через API
+
+По умолчанию track = `internal`. Для публичного релиза: `--track production`
+
+## Ручная сборка (если нужен только AAB)
+```
+export JAVA_HOME="/c/Program Files/Android/Android Studio/jbr"
+cd apps/web/android && ./gradlew bundleRelease
+```
+Выходной файл: `apps/web/android/app/build/outputs/bundle/release/app-release.aab`

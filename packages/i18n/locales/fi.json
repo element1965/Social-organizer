@@ -188,7 +188,12 @@
     "waitText": "Pari sekuntia. {{provider}}-ikkuna sulkeutuu itsestään.",
     "waitBack": "Takaisin kirjautumiseen",
     "lastMethodEmail": "Viimeksi kirjauduit <b>sähköpostikoodilla</b>.",
-    "expiredTextEmail": "Istuntosi on vanhentunut. Viimeksi kirjauduit <b>sähköpostikoodilla</b>. Kirjautumisen jälkeen viemme sinut takaisin siihen, mihin jäit."
+    "expiredTextEmail": "Istuntosi on vanhentunut. Viimeksi kirjauduit <b>sähköpostikoodilla</b>. Kirjautumisen jälkeen viemme sinut takaisin siihen, mihin jäit.",
+    "inviteCode": "Minulla on kutsukoodi",
+    "inviteCodeLabel": "Kutsukoodi tai -linkki",
+    "inviteCodePlaceholder": "Liitä koodi tai koko linkki",
+    "inviteCodeBad": "Tämä ei näytä kutsukoodilta. Tarkista se tai liitä koko linkki.",
+    "inviteCodeOpen": "Avaa kutsu"
   },
   "nav": {
     "circle": "Piiri",
@@ -642,7 +647,7 @@
     "website": "Verkkosivusto"
   },
   "invite": {
-    "calls": "{{name}} kutsuu sinut piiriinsä",
+    "calls": "{{name}} kutsuu sinut",
     "say": "Keskinäistä apua ihmisten välillä, jotka tuntevat toisensa. Kirjaudu, niin {{name}} vahvistaa, että tunnette toisenne.",
     "canHelp": "verkoston ilmoitettu osallistuminen: {{amount}}",
     "known": "Tunnemme toisemme",
@@ -682,7 +687,8 @@
       "later": "Myöhemmin, jatka selaimessa",
       "continueWeb": "Jatka selaimessa",
       "qrText": "Osoita puhelimen kameralla koodia – sovelluskauppa avautuu."
-    }
+    },
+    "howItWorks": "Miten Social Organizer toimii"
   },
   "landing": {
     "site": {

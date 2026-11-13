@@ -188,7 +188,12 @@
     "waitText": "Beberapa detik. Jendela {{provider}} akan tertutup sendiri.",
     "waitBack": "Kembali ke masuk",
     "lastMethodEmail": "Terakhir kali Anda masuk dengan <b>kode email</b>.",
-    "expiredTextEmail": "Sesi Anda telah berakhir. Terakhir kali Anda masuk dengan <b>kode email</b>; setelah masuk, kami mengembalikan Anda ke tempat sebelumnya."
+    "expiredTextEmail": "Sesi Anda telah berakhir. Terakhir kali Anda masuk dengan <b>kode email</b>; setelah masuk, kami mengembalikan Anda ke tempat sebelumnya.",
+    "inviteCode": "Saya punya kode undangan",
+    "inviteCodeLabel": "Kode atau tautan undangan",
+    "inviteCodePlaceholder": "Tempel kode atau seluruh tautan",
+    "inviteCodeBad": "Ini tidak terlihat seperti kode undangan. Periksa lagi atau tempel seluruh tautan.",
+    "inviteCodeOpen": "Buka undangan"
   },
   "nav": {
     "circle": "Lingkaran",
@@ -639,7 +644,7 @@
     "website": "Situs web"
   },
   "invite": {
-    "calls": "{{name}} mengundang Anda ke lingkarannya",
+    "calls": "{{name}} mengundang Anda",
     "say": "Saling membantu secara langsung antara orang-orang yang saling kenal. Masuk, dan {{name}} akan mengonfirmasi bahwa Anda saling mengenal.",
     "canHelp": "partisipasi jaringan yang dinyatakan: {{amount}}",
     "known": "Kami saling mengenal",
@@ -678,7 +683,8 @@
       "later": "Nanti, lanjutkan di browser",
       "continueWeb": "Lanjutkan di browser",
       "qrText": "Arahkan kamera ponsel ke kode — toko aplikasi akan terbuka."
-    }
+    },
+    "howItWorks": "Cara kerja Social Organizer"
   },
   "landing": {
     "site": {

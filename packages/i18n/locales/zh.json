@@ -188,7 +188,12 @@
     "waitText": "几秒钟。{{provider}} 窗口会自己关闭。",
     "waitBack": "返回登录",
     "lastMethodEmail": "上次你用<b>邮箱验证码</b>登录。",
-    "expiredTextEmail": "登录已过期。上次你用<b>邮箱验证码</b>登录；登录后会回到你刚才的位置。"
+    "expiredTextEmail": "登录已过期。上次你用<b>邮箱验证码</b>登录；登录后会回到你刚才的位置。",
+    "inviteCode": "我有邀请码",
+    "inviteCodeLabel": "邀请码或链接",
+    "inviteCodePlaceholder": "粘贴邀请码或完整链接",
+    "inviteCodeBad": "这看起来不像邀请码。请检查，或粘贴完整链接。",
+    "inviteCodeOpen": "打开邀请"
   },
   "nav": {
     "circle": "圈子",
@@ -639,7 +644,7 @@
     "website": "网站"
   },
   "invite": {
-    "calls": "{{name}} 邀请你加入圈子",
+    "calls": "{{name}} 邀请你",
     "say": "认识的人之间的互助。登录后，{{name}} 会确认你们认识。",
     "canHelp": "网络已表明的参与：{{amount}}",
     "known": "我们认识",
@@ -678,7 +683,8 @@
       "later": "稍后，在浏览器中继续",
       "continueWeb": "在浏览器中继续",
       "qrText": "用手机摄像头对准二维码，即可打开应用商店。"
-    }
+    },
+    "howItWorks": "Social Organizer 如何运作"
   },
   "landing": {
     "site": {

@@ -188,7 +188,12 @@
     "waitText": "몇 초면 돼요. {{provider}} 창은 저절로 닫혀요.",
     "waitBack": "로그인으로 돌아가기",
     "lastMethodEmail": "지난번에는 <b>이메일 코드</b>로 로그인했어요.",
-    "expiredTextEmail": "세션이 만료됐어요. 지난번에는 <b>이메일 코드</b>로 로그인했고, 로그인하면 있던 곳으로 돌아갈게요."
+    "expiredTextEmail": "세션이 만료됐어요. 지난번에는 <b>이메일 코드</b>로 로그인했고, 로그인하면 있던 곳으로 돌아갈게요.",
+    "inviteCode": "초대 코드가 있어요",
+    "inviteCodeLabel": "초대 코드 또는 링크",
+    "inviteCodePlaceholder": "코드나 링크 전체를 붙여넣으세요",
+    "inviteCodeBad": "초대 코드가 아닌 것 같아요. 확인하거나 링크 전체를 붙여넣으세요.",
+    "inviteCodeOpen": "초대 열기"
   },
   "nav": {
     "circle": "서클",
@@ -639,7 +644,7 @@
     "website": "웹사이트"
   },
   "invite": {
-    "calls": "{{name}}님이 서클로 초대해요",
+    "calls": "{{name}}님의 초대",
     "say": "서로 아는 사람들 사이의 상호 도움이에요. 로그인하면 {{name}}님이 아는 사이인지 확인해요.",
     "canHelp": "네트워크가 밝힌 참여: {{amount}}",
     "known": "우리는 아는 사이입니다",
@@ -678,7 +683,8 @@
       "later": "나중에, 브라우저에서 계속",
       "continueWeb": "브라우저에서 계속",
       "qrText": "휴대폰 카메라를 코드에 비추면 앱 스토어가 열립니다."
-    }
+    },
+    "howItWorks": "Social Organizer 이용 방법"
   },
   "landing": {
     "site": {

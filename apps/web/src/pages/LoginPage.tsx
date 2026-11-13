@@ -1,13 +1,15 @@
+import { useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Trans, useTranslation } from 'react-i18next';
 import { Capacitor } from '@capacitor/core';
 import { NetFigure } from '../components/figures';
-import { Button } from '../components/ui2';
+import { Button, Card, Input } from '../components/ui2';
 import { BackLink, BrandLine, OnboardingFrame, StepText, usePanelLayout } from '../components/onboarding/OnboardingFrame';
 import { SignInFlow } from '../components/onboarding/SignInFlow';
 import { useNetLabels } from '../components/onboarding/figureLabels';
 import { CheckGlyph, StateTile, TextButton } from '../components/onboarding/states';
 import { getLastLoginMethod, type LoginMethod } from '../hooks/useAuth';
+import { inviteCodeFromInput, readPendingInvite } from '../components/onboarding/flow';
 
 const METHOD_NAME: Record<LoginMethod, string> = { google: 'Google', apple: 'Apple', telegram: 'Telegram', email: 'e-mail' };
 
@@ -79,9 +81,67 @@ export function LoginPage() {
               ) : null}
             </StepText>
           )}
+          {/* Nobody to accept yet: the invitation may have come as a code (SO-24 п.1) */}
+          {!redirect && !readPendingInvite() ? <InviteCodeEntry /> : null}
         </>
       }
     />
+  );
+}
+
+/**
+ * "I have an invitation code" (SO-24 п.1): for someone who installed the app without opening the link, or got
+ * the code from a person in words. Takes the bare code, a personal address or a whole pasted link, and opens
+ * the same invite page as the link does, so the request is created only there, after sign-in.
+ */
+function InviteCodeEntry() {
+  const { t } = useTranslation();
+  const navigate = useNavigate();
+  const [open, setOpen] = useState(false);
+  const [value, setValue] = useState('');
+  const [bad, setBad] = useState(false);
+
+  if (!open) {
+    return (
+      <div className="mt-3">
+        <TextButton tone="care" onClick={() => setOpen(true)}>
+          {t('login.inviteCode')}
+        </TextButton>
+      </div>
+    );
+  }
+  return (
+    <form
+      className="mt-4 w-full"
+      noValidate
+      onSubmit={(event) => {
+        event.preventDefault();
+        const code = inviteCodeFromInput(value);
+        if (!code) return setBad(true);
+        navigate(`/invite/${encodeURIComponent(code)}`);
+      }}
+    >
+      <Card>
+        <Input
+          id="invite-code"
+          autoFocus
+          autoCapitalize="none"
+          autoCorrect="off"
+          spellCheck={false}
+          label={t('login.inviteCodeLabel')}
+          placeholder={t('login.inviteCodePlaceholder')}
+          value={value}
+          onChange={(event) => {
+            setValue(event.target.value);
+            if (bad) setBad(false);
+          }}
+          error={bad ? t('login.inviteCodeBad') : undefined}
+        />
+        <Button type="submit" className="mt-4 w-full" disabled={!value.trim()}>
+          {t('login.inviteCodeOpen')}
+        </Button>
+      </Card>
+    </form>
   );
 }
 
