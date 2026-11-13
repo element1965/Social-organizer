@@ -1,6 +1,7 @@
-import { useMemo, useRef, useState, type TouchEvent } from 'react';
+import { useEffect, useMemo, useRef, useState, type TouchEvent } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { keepPreviousData } from '@tanstack/react-query';
 import { trpc } from '../lib/trpc';
 import { cn } from '../lib/utils';
 import { useCachedNetworkStats } from '../hooks/useCachedNetworkStats';
@@ -14,7 +15,7 @@ import { Segmented } from '../components/ui2/Segmented';
 import { formatMoney } from '../components/ui2/format';
 import { AcquaintSheet, type AcquaintRequest } from '../components/circle/AcquaintSheet';
 import { useCircleStore, type Ring } from '../components/circle/circle-store';
-import { useCircleNetwork } from '../components/circle/network';
+import { NETWORK_STALE_MS, useCircleNetwork } from '../components/circle/network';
 
 const WEEK_MS = 7 * 24 * 60 * 60 * 1000;
 
@@ -63,10 +64,43 @@ type DepthUser = {
   connectedAt: string | Date | null;
   createdAt: string | Date | null;
   remainingBudget?: number | null;
+  /** People between me and them, from the server (absent in the saved network numbers) */
+  via?: Array<{ id: string; name: string }>;
 };
 
 function parseRing(value: string | undefined): Ring {
   return value === '2' ? 2 : value === '3' ? 3 : 1;
+}
+
+/** People read per page on the 2nd and 3rd handshake ("Show more" reads the next page). */
+const RING_PAGE = 50;
+/** The server search waits until typing pauses. */
+const SEARCH_DELAY_MS = 300;
+
+function useDebounced<T>(value: T, delay: number): T {
+  const [settled, setSettled] = useState(value);
+  useEffect(() => {
+    const timer = window.setTimeout(() => setSettled(value), delay);
+    return () => window.clearTimeout(timer);
+  }, [value, delay]);
+  return settled;
+}
+
+/**
+ * The people of the 2nd or 3rd handshake, complete, page by page: ordered and searched on the server.
+ * `sort` is never "brought" here (unknown beyond the 1st handshake).
+ */
+function useRingPeople(ring: 2 | 3, search: string, sort: Exclude<SortKey, 'brought'>, enabled: boolean) {
+  return trpc.connection.ringPeople.useInfiniteQuery(
+    { ring, limit: RING_PAGE, search: search || undefined, sort },
+    {
+      enabled,
+      getNextPageParam: (last) => last.nextCursor ?? undefined,
+      staleTime: NETWORK_STALE_MS,
+      // While a new search or order loads, the rows already shown stay (filtered on the device meanwhile)
+      placeholderData: keepPreviousData,
+    },
+  );
 }
 
 /** People of one ring with search and the "show on graph" switch (screens.md §2). */
@@ -92,13 +126,41 @@ export function PeoplePage() {
   const setRingHidden = useCircleStore((s) => s.setRingHidden);
   const visible = !hiddenRings.includes(ring);
 
-  // All three rings at once: the list shows the active one, the search also looks through the others
-  const byRing = useMemo<Record<Ring, Entry[]>>(() => {
-    // What a person brings to the network: their intention this period (the sum "Declared participation" adds up).
-    // Shown at the row end, so a long chain of acquaintances keeps the subtitle to itself
-    const pledged = (budget: number | null | undefined) =>
-      budget != null && budget > 0 ? formatMoney(Math.round(budget)) : null;
-    const first: Entry[] = (net.connections.data ?? []).map((c) => {
+  const needle = query.trim().toLocaleLowerCase();
+  const serverSearch = useDebounced(query.trim(), SEARCH_DELAY_MS);
+  // The 2nd and 3rd handshake come from the server page by page; the other ring is read only for a search
+  const deepSort: Exclude<SortKey, 'brought'> = sortBy === 'brought' ? 'recent' : sortBy;
+  const ring2 = useRingPeople(2, serverSearch, deepSort, ring === 2 || serverSearch !== '');
+  const ring3 = useRingPeople(3, serverSearch, deepSort, ring === 3 || serverSearch !== '');
+
+  // The network numbers are re-read on a timer and when my connections change: the lists follow them
+  const utils = trpc.useUtils();
+  const statsAt = stats.dataUpdatedAt;
+  const lastStatsAt = useRef(statsAt);
+  useEffect(() => {
+    if (lastStatsAt.current && statsAt !== lastStatsAt.current) void utils.connection.ringPeople.invalidate();
+    lastStatsAt.current = statsAt;
+  }, [statsAt, utils]);
+
+  const sortList = useMemo(() => {
+    const collator = new Intl.Collator(i18n.language, { sensitivity: 'base' });
+    const byName = (a: Entry, b: Entry) => collator.compare(a.name, b.name);
+    const order: Record<SortKey, (a: Entry, b: Entry) => number> = {
+      recent: (a, b) => b.at - a.at,
+      name: byName,
+      intention: (a, b) => b.intention - a.intention || byName(a, b),
+      brought: (a, b) => b.brought - a.brought || byName(a, b),
+    };
+    return (list: Entry[], key: SortKey) => [...list].sort(order[key]);
+  }, [i18n.language]);
+
+  // What a person brings to the network: their intention this period (the sum "Declared participation" adds up).
+  // Shown at the row end, so a long chain of acquaintances keeps the subtitle to itself
+  const pledged = (budget: number | null | undefined) => (budget != null && budget > 0 ? formatMoney(Math.round(budget)) : null);
+
+  const first = useMemo<Entry[]>(
+    () =>
+      (net.connections.data ?? []).map((c) => {
         const others = Math.max(0, c.connectionCount - 1);
         const parts: string[] = [];
         if (c.nickname && c.nickname !== c.name) parts.push(c.name);
@@ -114,53 +176,113 @@ export function PeoplePage() {
           intention: c.remainingBudget ?? 0,
           brought: others,
         };
-      });
-    const usersByDepth = (stats.data as { usersByDepth?: Record<number, DepthUser[]> } | undefined)?.usersByDepth ?? {};
-    const deeper = (r: 2 | 3): Entry[] =>
-      (usersByDepth[r] ?? []).map((u) => {
-        const via = net.viaNames(u.id);
-        return {
-          id: u.id,
-          name: net.displayName(u.id, u.name),
-          subtitle: via.length ? t('people.via', { path: via.join(' → ') }) : t(`circle.rings.full${r}`),
-          value: pledged(u.remainingBudget),
-          photoUrl: u.photoUrl,
-          at: new Date(u.connectedAt ?? u.createdAt ?? 0).getTime(),
-          intention: u.remainingBudget ?? 0,
-          brought: 0,
-        };
-      });
-    return { 1: first, 2: deeper(2), 3: deeper(3) };
-  }, [net, stats.data, t]);
-  const entries = byRing[ring];
+      }),
+    [net.connections.data, t], // eslint-disable-line react-hooks/exhaustive-deps
+  );
 
-  const sortList = useMemo(() => {
-    const collator = new Intl.Collator(i18n.language, { sensitivity: 'base' });
-    const byName = (a: Entry, b: Entry) => collator.compare(a.name, b.name);
-    const order: Record<SortKey, (a: Entry, b: Entry) => number> = {
-      recent: (a, b) => b.at - a.at,
-      name: byName,
-      intention: (a, b) => b.intention - a.intention || byName(a, b),
-      brought: (a, b) => b.brought - a.brought || byName(a, b),
+  const deepEntry = (r: 2 | 3, u: DepthUser): Entry => {
+    // The path from the server names everyone on it; my nicknames replace the names of my own connections
+    const via = u.via ? u.via.map((p) => net.displayName(p.id, p.name)) : net.viaNames(u.id);
+    return {
+      id: u.id,
+      name: net.displayName(u.id, u.name),
+      subtitle: via.length ? t('people.via', { path: via.join(' → ') }) : t(`circle.rings.full${r}`),
+      value: pledged(u.remainingBudget),
+      photoUrl: u.photoUrl,
+      at: new Date(u.connectedAt ?? u.createdAt ?? 0).getTime(),
+      intention: u.remainingBudget ?? 0,
+      brought: 0,
     };
-    return (list: Entry[], key: SortKey) => [...list].sort(order[key]);
-  }, [i18n.language]);
-  const sorted = useMemo(() => sortList(entries, sort), [sortList, entries, sort]);
-  const needle = query.trim().toLocaleLowerCase();
-  const filtered = needle
-    ? sorted.filter((e) => e.name.toLocaleLowerCase().includes(needle) || e.subtitle.toLocaleLowerCase().includes(needle))
-    : sorted;
+  };
+
+  /** One ring as the screen shows it: ordered, filtered by the search, with what is left to read. */
+  type RingList = {
+    list: Entry[];
+    /** People in the ring, or the matches of the search */
+    total: number;
+    left: number;
+    loading: boolean;
+    failed: boolean;
+    fetchingMore: boolean;
+    more: () => void;
+    retry: () => void;
+  };
+  // Matches by name; in the open ring also by the subtitle ("through Oleg"), as far as the rows on the device go
+  const matches = (e: Entry, r: Ring) =>
+    !needle || e.name.toLocaleLowerCase().includes(needle) || (r === ring && e.subtitle.toLocaleLowerCase().includes(needle));
+  const nothing = () => undefined;
+
+  const firstList: RingList = {
+    list: sortList(first, sortBy).filter((e) => matches(e, 1)),
+    total: first.length,
+    left: 0,
+    loading: net.connections.isLoading,
+    failed: net.connections.isError && !net.connections.data,
+    fetchingMore: false,
+    more: nothing,
+    retry: () => void net.connections.refetch(),
+  };
+
+  const deepList = (r: 2 | 3, q: typeof ring2): RingList => {
+    const pages = q.data?.pages;
+    if (pages) {
+      const seen = new Set<string>();
+      const list: Entry[] = [];
+      for (const page of pages) {
+        for (const u of page.people) {
+          if (seen.has(u.id)) continue;
+          seen.add(u.id);
+          list.push(deepEntry(r, u));
+        }
+      }
+      const total = pages[pages.length - 1]!.total;
+      return {
+        // Already in order and searched on the server; the device narrows it while a new search loads
+        list: list.filter((e) => matches(e, r)),
+        total,
+        left: q.hasNextPage ? Math.max(0, total - list.length) : 0,
+        loading: false,
+        failed: false,
+        fetchingMore: q.isFetchingNextPage,
+        more: () => void q.fetchNextPage(),
+        retry: () => void q.refetch(),
+      };
+    }
+    // No answer (offline, server trouble): the people kept with the saved network numbers, as before paging
+    const saved = (stats.data as { usersByDepth?: Record<number, DepthUser[]> } | undefined)?.usersByDepth?.[r];
+    if (q.isError && saved) {
+      const list = saved.map((u) => deepEntry(r, u));
+      return {
+        list: sortList(list, deepSort).filter((e) => matches(e, r)),
+        total: list.length,
+        left: 0,
+        loading: false,
+        failed: false,
+        fetchingMore: false,
+        more: nothing,
+        retry: () => void q.refetch(),
+      };
+    }
+    return {
+      list: [],
+      total: 0,
+      left: 0,
+      loading: q.isLoading,
+      failed: q.isError,
+      fetchingMore: false,
+      more: nothing,
+      retry: () => void q.refetch(),
+    };
+  };
+
+  const lists: Record<Ring, RingList> = { 1: firstList, 2: deepList(2, ring2), 3: deepList(3, ring3) };
+  const current = lists[ring];
+  const filtered = current.list;
   // Matches in the other rings, by name only ("through Oleg" would list half of a ring)
   const elsewhere = needle
     ? (([1, 2, 3] as Ring[])
         .filter((r) => r !== ring)
-        .map((r) => ({
-          ring: r,
-          list: sortList(
-            byRing[r].filter((e) => e.name.toLocaleLowerCase().includes(needle)),
-            sortBy === 'brought' && r !== 1 ? 'recent' : sortBy,
-          ),
-        }))
+        .map((r) => ({ ring: r, ...lists[r] }))
         .filter((group) => group.list.length > 0))
     : [];
 
@@ -186,10 +308,12 @@ export function PeoplePage() {
   const splitRecent = ring === 1 && sort === 'recent';
   const recent = splitRecent ? filtered.filter((e) => now - e.at < WEEK_MS) : [];
   const rest = splitRecent ? filtered.filter((e) => now - e.at >= WEEK_MS) : filtered;
-  const loading = ring === 1 ? net.connections.isLoading : stats.isLoading && !stats.data;
-  const total = entries.length;
+  const loading = current.loading;
+  // The whole ring: the exact count from the network numbers while a search narrows the list
+  const statsCount = (stats.data as { byDepth?: Record<number, number> } | undefined)?.byDepth?.[ring];
+  const total = ring === 1 || (!serverSearch && !current.loading && !current.failed) ? current.total : (statsCount ?? current.total);
   // A failed list is not an empty one (no connection, server trouble)
-  const failed = ring === 1 ? net.connections.isError && !net.connections.data : stats.isError && !stats.data;
+  const failed = current.failed;
 
   const open = (entry: Entry) => {
     if (entry.pendingId) {
@@ -212,6 +336,14 @@ export function PeoplePage() {
         onClick={() => open(entry)}
       />
     ));
+
+  // The next page of a ring read from the server (the 2nd and 3rd handshake can hold thousands)
+  const showMore = (list: RingList) =>
+    list.left > 0 ? (
+      <Button variant="secondary" className="mt-3 w-full" disabled={list.fetchingMore} onClick={list.more}>
+        {t('add.showMore', { total: list.left })}
+      </Button>
+    ) : null;
 
   const sortOptions: { value: SortKey; label: string }[] = [
     { value: 'recent', label: t('people.sortRecent') },
@@ -318,7 +450,7 @@ export function PeoplePage() {
           ) : failed ? (
             <div className="mt-8 text-center">
               <p className="text-body-s font-semibold text-ink-muted">{t('common.error')}</p>
-              <Button variant="secondary" size="md" className="mt-3" onClick={() => void (ring === 1 ? net.connections.refetch() : stats.refetch())}>
+              <Button variant="secondary" size="md" className="mt-3" onClick={current.retry}>
                 {t('common.retry')}
               </Button>
             </div>
@@ -336,6 +468,7 @@ export function PeoplePage() {
                   {rows(rest)}
                 </Group>
               ) : null}
+              {showMore(current)}
             </>
           )}
           {/* The search covers every handshake: matches from the other rings follow, each under its ring */}
@@ -345,14 +478,18 @@ export function PeoplePage() {
                 <p className="mb-1 px-1 text-micro font-bold text-ink-muted">{t('people.alsoElsewhere')}</p>
               ) : null}
               {elsewhere.map((group) => (
-                <Group
-                  key={group.ring}
-                  title={t('people.title', { ring: t(`circle.rings.full${group.ring}`), count: group.list.length })}
-                  className="mt-3 first:mt-0"
-                  stagger
-                >
-                  {rows(group.list)}
-                </Group>
+                <div key={group.ring} className="mt-3 first:mt-0">
+                  <Group
+                    title={t('people.title', {
+                      ring: t(`circle.rings.full${group.ring}`),
+                      count: group.left > 0 ? group.total : group.list.length,
+                    })}
+                    stagger
+                  >
+                    {rows(group.list)}
+                  </Group>
+                  {showMore(group)}
+                </div>
               ))}
             </section>
           ) : null}

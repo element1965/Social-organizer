@@ -9,11 +9,14 @@ import { countConnections } from '../services/connection-request.service.js';
 import { bfsNetwork, networkReach, roundFarCount, VISIBLE_RINGS, type FarCount } from '../services/network.service.js';
 import { getGraph, invalidateGraph } from '../services/graph-cache.service.js';
 import { suggestAcquaintances } from '../services/suggestion.service.js';
+import { ringPeople, RING_SORTS } from '../services/ring-people.service.js';
 
 /** Rings shown only as a rounded count; `beyond` in the answer is the rest of the reach (6th). */
 const FAR_RINGS = [4, 5] as const;
 /** Cap on people sent with details; BFS order, so the nearer rings are always complete first. */
 const NETWORK_DETAIL_LIMIT = 1000;
+/** Largest page of `ringPeople` */
+const RING_PAGE_MAX = 100;
 
 /** Direct connections of each person, read from the graph in memory. */
 async function connectionCounts(db: Parameters<typeof getGraph>[0], userIds: string[]): Promise<Map<string, number>> {
@@ -24,6 +27,24 @@ async function connectionCounts(db: Parameters<typeof getGraph>[0], userIds: str
     out.set(id, n === undefined ? 0 : graph.degree(n));
   }
   return out;
+}
+
+/**
+ * Whose network the person's network screens show: their own, or, while they have no connection yet,
+ * the network of the person they asked to connect with (pending request).
+ */
+async function networkRoot(db: Parameters<typeof getGraph>[0], userId: string): Promise<string> {
+  const hasConn = await db.connection.findFirst({
+    where: { OR: [{ userAId: userId }, { userBId: userId }] },
+    select: { id: true },
+  });
+  if (hasConn) return userId;
+  const pending = await db.pendingConnection.findFirst({
+    where: { fromUserId: userId, status: 'PENDING' },
+    select: { toUserId: true },
+    orderBy: { createdAt: 'desc' },
+  });
+  return pending?.toUserId ?? userId;
 }
 
 export const connectionRouter = router({
@@ -121,20 +142,7 @@ export const connectionRouter = router({
     }),
 
   getNetworkStats: protectedProcedure.query(async ({ ctx }) => {
-    // If user has no connections, fallback to inviter's network (pending connection)
-    let bfsUserId = ctx.userId;
-    const hasConn = await ctx.db.connection.findFirst({
-      where: { OR: [{ userAId: ctx.userId }, { userBId: ctx.userId }] },
-      select: { id: true },
-    });
-    if (!hasConn) {
-      const pending = await ctx.db.pendingConnection.findFirst({
-        where: { fromUserId: ctx.userId, status: 'PENDING' },
-        select: { toUserId: true },
-        orderBy: { createdAt: 'desc' },
-      });
-      if (pending) bfsUserId = pending.toUserId;
-    }
+    const bfsUserId = await networkRoot(ctx.db, ctx.userId);
 
     // Counts cover the whole reach of a request (networkReach); names and details only the visible
     // rings (1–3). Beyond them only rounded counts leave the server: who is there stays private.
@@ -251,6 +259,25 @@ export const connectionRouter = router({
       },
     };
   }),
+
+  /**
+   * One page of the people at one handshake (1–3), complete however large the ring is: ordered and
+   * searched by name on the server, with the path to each person. Rings beyond the 3rd are never listed.
+   */
+  ringPeople: protectedProcedure
+    .input(
+      z.object({
+        ring: z.union([z.literal(1), z.literal(2), z.literal(3)]),
+        cursor: z.number().int().min(0).nullish(),
+        limit: z.number().int().min(1).max(RING_PAGE_MAX).default(50),
+        search: z.string().max(100).optional(),
+        sort: z.enum(RING_SORTS).default('recent'),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      const root = await networkRoot(ctx.db, ctx.userId);
+      return ringPeople(ctx.db, root, { ...input, cursor: input.cursor ?? 0 });
+    }),
 
   getNickname: protectedProcedure
     .input(z.object({ targetUserId: z.string() }))
