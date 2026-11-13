@@ -25,7 +25,7 @@ import { getDb } from '@so/db';
 import { isAdmin } from './admin.js';
 import { startInactiveCleanupTimer, logInactiveCleanupConfig } from './services/inactive-cleanup.service.js';
 import { readAvatar, backfillAvatars } from './services/avatar.service.js';
-import { startRuntimeMetrics } from './services/runtime-metrics.service.js';
+import { countRequest, startRuntimeMetrics } from './services/runtime-metrics.service.js';
 import { findInvitePreview, findSosPreview, pickLanguage, renderInvitePreview, renderSosPreview } from './services/invite-preview.service.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -168,6 +168,9 @@ async function start() {
     );
 
     // Rate limits (SO-14): strict on sign-in procedures, a calm global cap on everything else
+    app.addHook('onRequest', async () => {
+      countRequest();
+    });
     app.addHook('onRequest', async (req, reply) => {
       const ip = clientIp(req.raw);
       // Profile photos are small, cached for good and come hundreds at a time when a large circle opens

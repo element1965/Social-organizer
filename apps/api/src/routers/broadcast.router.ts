@@ -90,7 +90,7 @@ export const broadcastRouter = router({
             replyMarkup: buildMarkup(lang),
           };
         });
-        await sendTgMessages(messages);
+        await sendTgMessages(messages, 'bulk');
         sent = messages.length;
       } else {
         // Photo/video: send individually with delay to avoid rate-limiting
