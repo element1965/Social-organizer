@@ -38,6 +38,8 @@ export function NativePushBootstrap() {
   // after a full-page reload (e.g. returning from Sign in with Apple).
   const { t } = useTranslation();
   const gateAllowed = Capacitor.getPlatform() === 'android';
+  // iOS: no gate, but the token refresh and the tap on a push work the same way (SO-51); never prompts here
+  const listenAllowed = gateAllowed || Capacitor.getPlatform() === 'ios';
   const isAuthenticated = useAuth((s) => s.isAuthenticated);
   const navigate = useNavigate();
   const queryClient = useQueryClient();
@@ -47,9 +49,9 @@ export function NativePushBootstrap() {
   const [permStatus, setPermStatus] = useState<PermStatus>('checking');
   const [requesting, setRequesting] = useState(false);
 
-  // Set up FCM listeners (once per session) — Android only
+  // Set up push listeners (once per session) — Android and iOS; only Android may show the gate
   useEffect(() => {
-    if (!gateAllowed || !isAuthenticated || listenersSet.current) return;
+    if (!listenAllowed || !isAuthenticated || listenersSet.current) return;
     listenersSet.current = true;
 
     let cleanup: (() => void) | undefined;
@@ -62,7 +64,7 @@ export function NativePushBootstrap() {
           const fcmToken = token.value;
           localStorage.setItem(NATIVE_TOKEN_KEY, fcmToken);
           setPermStatus('hidden');
-          registerNativeMutation.mutate({ token: fcmToken, platform: 'android' });
+          registerNativeMutation.mutate({ token: fcmToken, platform: Capacitor.getPlatform() });
         });
 
         const errListener = await PushNotifications.addListener('registrationError', (err) => {
@@ -112,7 +114,7 @@ export function NativePushBootstrap() {
 
     return () => cleanup?.();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [gateAllowed, isAuthenticated]);
+  }, [listenAllowed, isAuthenticated]);
 
   // Reset when user logs out
   useEffect(() => {

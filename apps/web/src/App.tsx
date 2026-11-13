@@ -123,7 +123,10 @@ const ModerationPreview = import.meta.env.DEV
   ? lazy(() => import('./pages/ModerationPreviewPage').then((module) => ({ default: module.ModerationPreviewPage })))
   : null;
 
-/** In-app path for an https App Link on our origin (only /invite/<token>, as declared in AndroidManifest.xml). */
+/**
+ * In-app path for an https App Link / Universal Link on our origin: /invite/<token>, /i/<id> and /sos/<id>, as declared
+ * in AndroidManifest.xml and apple-app-site-association. Anything else stays in the browser.
+ */
 function appLinkPath(raw: string): string | null {
   let url: URL;
   try {
@@ -134,7 +137,7 @@ function appLinkPath(raw: string): string | null {
   if (url.protocol !== 'https:') return null;
   const host = url.hostname.toLowerCase();
   const ours = host === 'orginizer.com' || host === 'www.orginizer.com' || host === window.location.hostname.toLowerCase();
-  if (!ours || !/^\/invite\/[A-Za-z0-9_-]+\/?$/.test(url.pathname)) return null;
+  if (!ours || !/^\/(invite|i|sos)\/[A-Za-z0-9_-]+\/?$/.test(url.pathname)) return null;
   return url.pathname + url.search;
 }
 

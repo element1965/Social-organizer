@@ -2,6 +2,7 @@ import { z } from 'zod';
 import { TRPCError } from '@trpc/server';
 import { router, protectedProcedure, publicProcedure } from '../trpc.js';
 import { VAPID_PUBLIC_KEY } from '../services/web-push.service.js';
+import { apnsConfigured } from '../services/apns.service.js';
 
 export const pushRouter = router({
   vapidPublicKey: publicProcedure.query(() => {
@@ -56,6 +57,9 @@ export const pushRouter = router({
       platform: z.string().default('android'),
     }))
     .mutation(async ({ ctx, input }) => {
+      // An iOS token is useless until the server can send through APNs: storing it would make delivery
+      // pick the app over Telegram (hasPush) and the person would get nothing. The app re-registers on start.
+      if (input.platform === 'ios' && !apnsConfigured()) return { success: true, stored: false };
       await ctx.db.nativePushToken.upsert({
         where: { token: input.token },
         create: {

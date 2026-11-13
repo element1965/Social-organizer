@@ -13,8 +13,8 @@ android {
         applicationId "com.socialorganizer.app"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 14
-        versionName "2.3"
+        versionCode 15
+        versionName "2.4"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         // Hosts whose /invite/ links open the app (App Links, see AndroidManifest.xml)
         manifestPlaceholders = [appLinkHost: "www.orginizer.com", appLinkHostAlt: "orginizer.com"]

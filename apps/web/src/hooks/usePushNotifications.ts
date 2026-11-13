@@ -49,7 +49,7 @@ export function usePushNotifications() {
       if (savedToken) {
         setIsSubscribed(true);
         // Re-register to keep token fresh
-        registerNativeMutation.mutate({ token: savedToken, platform: 'android' });
+        registerNativeMutation.mutate({ token: savedToken, platform: Capacitor.getPlatform() });
       }
 
       // Listen for token refresh
@@ -57,7 +57,7 @@ export function usePushNotifications() {
         const fcmToken = token.value;
         localStorage.setItem(NATIVE_TOKEN_KEY, fcmToken);
         setIsSubscribed(true);
-        registerNativeMutation.mutate({ token: fcmToken, platform: 'android' });
+        registerNativeMutation.mutate({ token: fcmToken, platform: Capacitor.getPlatform() });
       });
 
       const errListener = await PushNotifications.addListener('registrationError', (err) => {

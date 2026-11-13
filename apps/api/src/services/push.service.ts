@@ -1,12 +1,13 @@
 import type { PrismaClient } from '@so/db';
 import { sendWebPush, type WebPushPayload } from './web-push.service.js';
 import { sendFcmPush } from './fcm.service.js';
+import { sendApnsPush } from './apns.service.js';
 
 export type { WebPushPayload } from './web-push.service.js';
 
 /**
  * Unified push notification sender.
- * Sends to both Web Push (browser) and FCM (native Android) in parallel.
+ * Sends to Web Push (browser), FCM (native Android) and APNs (native iOS) in parallel.
  */
 export async function sendPushNotification(
   db: PrismaClient,
@@ -18,6 +19,7 @@ export async function sendPushNotification(
   const results = await Promise.allSettled([
     sendWebPush(db, userIds, payload),
     sendFcmPush(db, userIds, payload),
+    sendApnsPush(db, userIds, payload),
   ]);
 
   for (const result of results) {

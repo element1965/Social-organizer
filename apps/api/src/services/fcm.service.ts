@@ -41,7 +41,8 @@ export async function sendFcmPush(
   if (userIds.length === 0) return;
 
   const tokens = await db.nativePushToken.findMany({
-    where: { userId: { in: userIds } },
+    // iOS tokens are APNs device tokens, sent by apns.service.ts
+    where: { userId: { in: userIds }, platform: { not: 'ios' } },
   });
   if (tokens.length === 0) return;
 
