@@ -211,6 +211,7 @@
     "toSelf": "Kembali ke saya",
     "backToFeed": "Umpan",
     "openGraph": "Perluas graf",
+    "graphFailed": "Graf tidak terbuka di perangkat ini. Orang-orang Anda tetap ada di daftar.",
     "eventsPill": "Peristiwa",
     "startPill": "Mulai",
     "gestureHint": "Satu jari memutar, dua memperbesar",

@@ -211,6 +211,7 @@
     "toSelf": "Torna a me",
     "backToFeed": "Bacheca",
     "openGraph": "Espandi il grafo",
+    "graphFailed": "Il grafo non si è aperto su questo dispositivo. Le tue persone sono ancora negli elenchi.",
     "eventsPill": "Eventi",
     "startPill": "Inizio",
     "gestureHint": "Un dito ruota, due zoomano",

@@ -1,4 +1,5 @@
-import { forwardRef, lazy, Suspense, useCallback, useEffect, useImperativeHandle, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { Component, forwardRef, Fragment, lazy, Suspense, useCallback, useEffect, useImperativeHandle, useLayoutEffect, useMemo, useRef, useState, type PropsWithChildren } from 'react';
+import { useTranslation } from 'react-i18next';
 import type { GraphImpulse, GraphNode, GraphView, NetworkGraphHandle } from '@so/graph-3d';
 import { useCircleStore, type Ring } from './circle-store';
 import { useIsDark } from '../../hooks/useIsDark';
@@ -117,6 +118,7 @@ export const CircleGraph = forwardRef<CircleGraphHandle, CircleGraphProps>(funct
       style={{ opacity: dimmed ? 0.55 : 1, transition: 'opacity 420ms cubic-bezier(0.22, 0.8, 0.24, 1)' }}
     >
       {size && data.nodes.length > 0 ? (
+        <GraphErrorBoundary>
         <Suspense fallback={<SceneSkeleton />}>
           <LazyNetworkGraph
             ref={graphRef}
@@ -138,12 +140,54 @@ export const CircleGraph = forwardRef<CircleGraphHandle, CircleGraphProps>(funct
             sceneTheme={dark ? 'dark' : 'light'}
           />
         </Suspense>
+        </GraphErrorBoundary>
       ) : (
         <SceneSkeleton />
       )}
     </div>
   );
 });
+
+/**
+ * A WebGL failure (no context, a lost GPU, a chunk that did not load) stays inside the scene: the Circle
+ * sheet, the lists and the navigation keep working instead of the whole app falling to the reload screen.
+ */
+class GraphErrorBoundary extends Component<PropsWithChildren, { failed: boolean; attempt: number }> {
+  state = { failed: false, attempt: 0 };
+
+  static getDerivedStateFromError(): Partial<{ failed: boolean }> {
+    return { failed: true };
+  }
+
+  componentDidCatch(error: unknown) {
+    console.error('[CircleGraph] the 3D scene failed:', error);
+  }
+
+  retry = () => this.setState((s) => ({ failed: false, attempt: s.attempt + 1 }));
+
+  render() {
+    if (this.state.failed) return <GraphFailed onRetry={this.retry} />;
+    return <Fragment key={this.state.attempt}>{this.props.children}</Fragment>;
+  }
+}
+
+function GraphFailed({ onRetry }: { onRetry: () => void }) {
+  const { t } = useTranslation();
+  return (
+    <div className="absolute inset-0 grid place-items-center px-6" role="status">
+      <div className="flex max-w-xs flex-col items-center gap-3 text-center">
+        <p className="text-body-s font-semibold text-ink-muted">{t('circle.graphFailed')}</p>
+        <button
+          type="button"
+          onClick={onRetry}
+          className="so-focus h-11 rounded-lg bg-surface px-4 text-caption font-bold text-ink shadow-sheet"
+        >
+          {t('common.retry')}
+        </button>
+      </div>
+    </div>
+  );
+}
 
 export function SceneSkeleton() {
   return (

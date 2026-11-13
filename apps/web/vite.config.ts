@@ -68,7 +68,8 @@ export default defineConfig({
   },
   build: {
     outDir: 'dist',
-    sourcemap: true,
+    // No public source maps in production. `pnpm --filter @so/web build --sourcemap` for local debugging.
+    sourcemap: false,
     chunkSizeWarningLimit: 600,
     rollupOptions: {
       output: {

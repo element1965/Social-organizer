@@ -211,6 +211,7 @@
     "toSelf": "Bana dön",
     "backToFeed": "Akış",
     "openGraph": "Grafiği genişlet",
+    "graphFailed": "Grafik bu cihazda açılmadı. Kişileriniz listelerde duruyor.",
     "eventsPill": "Olaylar",
     "startPill": "Başlangıç",
     "gestureHint": "Tek parmak döndürür, iki parmak yakınlaştırır",

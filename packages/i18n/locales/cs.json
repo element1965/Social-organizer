@@ -211,6 +211,7 @@
     "toSelf": "Zpět ke mně",
     "backToFeed": "Přehled",
     "openGraph": "Rozbalit graf",
+    "graphFailed": "Graf se na tomto zařízení neotevřel. Vaši lidé jsou dál v seznamech.",
     "eventsPill": "Události",
     "startPill": "Začátek",
     "gestureHint": "Jedním prstem otáčíte, dvěma přibližujete",

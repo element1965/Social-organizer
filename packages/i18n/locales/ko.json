@@ -211,6 +211,7 @@
     "toSelf": "나에게",
     "backToFeed": "피드",
     "openGraph": "그래프 펼치기",
+    "graphFailed": "이 기기에서 그래프를 열지 못했습니다. 사람들은 목록에서 계속 볼 수 있습니다.",
     "eventsPill": "이벤트",
     "startPill": "시작",
     "gestureHint": "손가락 하나로 돌리고, 두 개로 확대해요",
