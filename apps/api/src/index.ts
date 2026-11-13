@@ -25,7 +25,7 @@ import { getDb } from '@so/db';
 import { isAdmin } from './admin.js';
 import { startInactiveCleanupTimer, logInactiveCleanupConfig } from './services/inactive-cleanup.service.js';
 import { readAvatar, backfillAvatars } from './services/avatar.service.js';
-import { findInvitePreview, pickLanguage, renderInvitePreview } from './services/invite-preview.service.js';
+import { findInvitePreview, findSosPreview, pickLanguage, renderInvitePreview, renderSosPreview } from './services/invite-preview.service.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -468,6 +468,23 @@ async function start() {
       };
       app.get('/invite/:token', (req, reply) => serveInvite(req, reply, (req.params as { token: string }).token));
       app.get('/i/:slug', (req, reply) => serveInvite(req, reply, (req.params as { slug: string }).slug));
+
+      // The public Need page gets its own link card: the author's name and photo, never amounts.
+      app.get('/sos/:id', async (req, reply) => {
+        reply.header('Cache-Control', 'no-cache, no-store, must-revalidate');
+        try {
+          indexHtml ??= await readFile(indexHtmlPath, 'utf8');
+          const preview = await findSosPreview(getDb(), (req.params as { id: string }).id);
+          if (!preview) return reply.type('text/html; charset=utf-8').send(indexHtml);
+          const q = req.query as { lang?: string };
+          const lang = pickLanguage(q.lang, req.headers['accept-language'], preview.language);
+          const url = `${APP_BASE_URL}${req.url.split('?')[0]}`;
+          return reply.type('text/html; charset=utf-8').send(renderSosPreview(indexHtml, preview, { lang, url, origin: APP_BASE_URL }));
+        } catch (err) {
+          req.log.warn({ err }, '[sos-preview] failed, serving the plain page');
+          return reply.sendFile('index.html', WEB_DIST);
+        }
+      });
 
       // SPA fallback: all non-API routes → index.html
       app.setNotFoundHandler((_req, reply) => {

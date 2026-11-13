@@ -37,6 +37,7 @@ export function AddPage() {
     name: item.displayName || item.name,
     photoUrl: item.photoUrl,
     at: new Date(item.createdAt),
+    connections: item.connectionCount,
   }));
   // Nicknames the person gave their acquaintances, for "through whom" in the suggestions
   const names = new Map((connections.data ?? []).map((item) => [item.userId, item.displayName || item.name]));

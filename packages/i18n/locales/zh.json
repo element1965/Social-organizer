@@ -439,7 +439,8 @@
     "undo": "撤销",
     "markError": "标记未能保存，请重试。",
     "paidToggle": "已收到 {{name}} 的",
-    "allReceived": "全部已收到 · {{sum}}"
+    "allReceived": "全部已收到 · {{sum}}",
+    "shareNext": "把这个需求转给其他认识发起人的人。"
   },
   "profile": {
     "phone": "电话",
@@ -1331,7 +1332,12 @@
       "title": "你们可能认识",
       "hint": "你的熟人认识的人。只确认你本人认识的人。",
       "mutual": "共同熟人：{{count}}"
-    }
+    },
+    "named": {
+      "title": "个人邀请",
+      "hint": "写下你认识的人的名字，每行一个。每个链接都会用名字称呼对方。"
+    },
+    "readyLine": "已有 {{min}} 个自己的联系：{{count}} / {{total}}"
   },
   "account": {
     "firstName": "名",

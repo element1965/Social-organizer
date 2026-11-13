@@ -442,7 +442,8 @@
     "undo": "Ångra",
     "markError": "Markeringen sparades inte. Försök igen.",
     "paidToggle": "Mottaget från {{name}}",
-    "allReceived": "Allt mottaget · {{sum}}"
+    "allReceived": "Allt mottaget · {{sum}}",
+    "shareNext": "Skicka detta behov vidare till andra som känner personen bakom det."
   },
   "profile": {
     "phone": "Telefon",
@@ -1338,7 +1339,12 @@
       "title": "Ni kanske känner varandra",
       "hint": "Personer som dina bekanta känner. Bekräfta bara dem du känner personligen.",
       "mutual": "Gemensamma bekanta: {{count}}"
-    }
+    },
+    "named": {
+      "title": "Personliga inbjudningar",
+      "hint": "Namn på personer du känner, ett per rad. Varje länk hälsar personen vid namn."
+    },
+    "readyLine": "Har {{min}} egna kontakter: {{count}} av {{total}}"
   },
   "account": {
     "firstName": "Förnamn",

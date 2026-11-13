@@ -29,7 +29,7 @@ import {
   TextButton,
 } from '../components/onboarding/states';
 import { buildWebInviteUrl } from '../lib/inviteUrl';
-import { inviteSrcParam, type InviteSrcParam } from '@so/shared';
+import { inviteSrcParam, safeAddressee, type InviteSrcParam } from '@so/shared';
 import { clearInviteSrc, firstOpenOf, readInviteSrc, rememberInviteSrc } from '../lib/inviteSrc';
 import { SITE_ORIGIN, storeLinks, useDevice } from '../lib/device';
 import { QR_LOGO_LEVEL, qrLogo } from '../lib/qrLogo';
@@ -49,15 +49,7 @@ function deadReason(err: TrpcLikeError, usedByOther = false): DeadReason {
   return 'notFound';
 }
 
-/**
- * The invited person's name from the link (`?to=Vanya`), for "Vanya, Anna invites you…". It lives only in the
- * address the inviter shared: never stored, never shown to anyone else. Letters, spaces, "-", "'" and ".", up to 40.
- */
-export function safeAddressee(raw: string | null | undefined): string | null {
-  const v = (raw ?? '').normalize('NFC').replace(/\s+/g, ' ').trim();
-  if (!v || v.length > 40 || !/^[\p{L}\p{M}][\p{L}\p{M} .'’-]*$/u.test(v)) return null;
-  return v;
-}
+export { safeAddressee };
 
 /** The web app on a phone or computer (not the installed app or the Telegram Mini App): installing is offered. */
 function offersInstall(): boolean {

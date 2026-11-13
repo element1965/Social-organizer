@@ -442,7 +442,8 @@
     "undo": "Angre",
     "markError": "Merkingen ble ikke lagret. Prøv igjen.",
     "paidToggle": "Mottatt fra {{name}}",
-    "allReceived": "Alt mottatt · {{sum}}"
+    "allReceived": "Alt mottatt · {{sum}}",
+    "shareNext": "Send dette behovet videre til andre som kjenner personen bak det."
   },
   "profile": {
     "phone": "Telefon",
@@ -1338,7 +1339,12 @@
       "title": "Dere kjenner kanskje hverandre",
       "hint": "Personer som dine bekjente kjenner. Bekreft bare dem du kjenner personlig.",
       "mutual": "Felles bekjente: {{count}}"
-    }
+    },
+    "named": {
+      "title": "Personlige invitasjoner",
+      "hint": "Navn på personer du kjenner, ett per linje. Hver lenke hilser personen med navn."
+    },
+    "readyLine": "Har {{min}} egne forbindelser: {{count}} av {{total}}"
   },
   "account": {
     "firstName": "Fornavn",

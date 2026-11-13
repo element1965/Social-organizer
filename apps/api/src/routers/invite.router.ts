@@ -278,12 +278,17 @@ export const inviteRouter = router({
    * previews in messengers do not run the page, so they are not counted.
    */
   opened: publicProcedure
-    .input(z.object({ src: z.enum(INVITE_SRC_PARAMS).optional() }).optional())
+    .input(z.object({
+      src: z.enum(INVITE_SRC_PARAMS).optional(),
+      /** A personal invite page (default) or a public Need page */
+      kind: z.enum(['invite', 'need']).optional(),
+    }).optional())
     .mutation(async ({ ctx, input }) => {
       if (!hit('invite-opened:' + (ctx.ip ?? 'unknown'), 20, MINUTE)) return { ok: true };
+      const source = input?.kind === 'need' ? 'need' : linkSource(input?.src);
       try {
         await ctx.db.$executeRaw`
-          INSERT INTO invite_open_days (day, source, count) VALUES (CURRENT_DATE, ${linkSource(input?.src)}, 1)
+          INSERT INTO invite_open_days (day, source, count) VALUES (CURRENT_DATE, ${source}, 1)
           ON CONFLICT (day, source) DO UPDATE SET count = invite_open_days.count + 1
         `;
       } catch (err) {
