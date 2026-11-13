@@ -8,6 +8,8 @@ import { syncMilestones } from '../services/milestone.service.js';
 export { REQUEST_COOLDOWN_MS } from '../services/connection-request.service.js';
 
 const ACCEPTED_RECENT_MS = 7 * 24 * 60 * 60 * 1000;
+/** A confirmation seen in this visit stays in the feed a little longer, so it does not vanish under the eye */
+const SEEN_GRACE_MS = 30 * 60 * 1000;
 
 export const pendingRouter = router({
   incoming: protectedProcedure.query(async ({ ctx }) => {
@@ -64,22 +66,54 @@ export const pendingRouter = router({
   /**
    * My requests the other person confirmed in the last 7 days: the in-app "X confirmed the acquaintance"
    * for the person who asked. Telegram / push may not reach them (no Start in the bot, no subscription),
-   * so the app itself has to say it. "Seen" is kept on the device.
+   * so the app itself has to say it. Seen and dismissed are kept on the server, so the row says it once
+   * across all devices: a seen row stays only for the current visit (SEEN_GRACE_MS), a dismissed one is gone.
    */
   acceptedRecent: protectedProcedure.query(async ({ ctx }) => {
+    const now = Date.now();
     const rows = await ctx.db.pendingConnection.findMany({
       where: {
         fromUserId: ctx.userId,
         status: 'ACCEPTED',
-        resolvedAt: { gte: new Date(Date.now() - ACCEPTED_RECENT_MS) },
+        resolvedAt: { gte: new Date(now - ACCEPTED_RECENT_MS) },
+        requesterDismissedAt: null,
+        OR: [{ requesterSeenAt: null }, { requesterSeenAt: { gte: new Date(now - SEEN_GRACE_MS) } }],
         toUser: { deletedAt: null },
       },
       include: { toUser: { select: { id: true, name: true, photoUrl: true } } },
       orderBy: { resolvedAt: 'desc' },
       take: 20,
     });
-    return rows.map((r) => ({ id: r.id, at: r.resolvedAt!, person: r.toUser }));
+    return rows.map((r) => ({ id: r.id, at: r.resolvedAt!, person: r.toUser, seen: r.requesterSeenAt != null }));
   }),
+
+  /** The Circle showed these confirmations: they stop counting in the badge, on every device. */
+  markAcceptedSeen: protectedProcedure
+    .input(z.object({ ids: z.array(z.string()).max(50) }))
+    .mutation(async ({ ctx, input }) => {
+      if (!input.ids.length) return { count: 0 };
+      const res = await ctx.db.pendingConnection.updateMany({
+        where: { id: { in: input.ids }, fromUserId: ctx.userId, status: 'ACCEPTED', requesterSeenAt: null },
+        data: { requesterSeenAt: new Date() },
+      });
+      return { count: res.count };
+    }),
+
+  /** One tap on the row: it has said what it had to say and leaves the feed, on every device. */
+  dismissAccepted: protectedProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const now = new Date();
+      await ctx.db.pendingConnection.updateMany({
+        where: { id: input.id, fromUserId: ctx.userId, status: 'ACCEPTED' },
+        data: { requesterDismissedAt: now },
+      });
+      await ctx.db.pendingConnection.updateMany({
+        where: { id: input.id, fromUserId: ctx.userId, status: 'ACCEPTED', requesterSeenAt: null },
+        data: { requesterSeenAt: now },
+      });
+      return { success: true };
+    }),
 
   incomingCount: protectedProcedure.query(async ({ ctx }) => {
     const count = await ctx.db.pendingConnection.count({
