@@ -26,8 +26,6 @@ type SliceNode = {
 /** How often the heavy network queries are re-read on a timer, and how long a fresh answer is reused. */
 export const NETWORK_POLL_MS = 5 * 60_000;
 export const NETWORK_STALE_MS = 60_000;
-/** The cheap count of my own connections: a change in it is how a join made on the other phone shows up here. */
-const COUNT_POLL_MS = 20_000;
 
 /**
  * Graph slice (3 rings) with nicknames applied and a parent for every node, so the UI can say
@@ -36,11 +34,12 @@ const COUNT_POLL_MS = 20_000;
 export function useCircleNetwork() {
   const myId = useAuth((s) => s.userId);
   const utils = trpc.useUtils();
-  // The lists of people are heavy, so they are re-read every 5 minutes; a cheap count of the person's
-  // own connections is watched every minute and a change in it refreshes them at once.
+  // The lists of people are heavy, so they are re-read every 5 minutes; the cheap count of the person's own
+  // connections is re-read whenever the app-wide pulse (hooks/usePulse.ts) sees it change, and a change in it
+  // is how a join made on the other phone shows up here: it refreshes the heavy lists at once.
   const slice = trpc.connection.graphSlice.useQuery(undefined, { refetchInterval: NETWORK_POLL_MS, staleTime: NETWORK_STALE_MS });
   const connections = trpc.connection.list.useQuery(undefined, { refetchInterval: NETWORK_POLL_MS, staleTime: NETWORK_STALE_MS });
-  const count = trpc.connection.getCount.useQuery(undefined, { refetchInterval: COUNT_POLL_MS });
+  const count = trpc.connection.getCount.useQuery();
   const lastCount = useRef<number | null>(null);
   useEffect(() => {
     const now = count.data?.count;

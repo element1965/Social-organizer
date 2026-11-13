@@ -7,7 +7,6 @@ import { useAcceptedRecent } from './useAcceptedRecent';
 import { formatMoney } from '../components/ui2/format';
 
 const DAY_MS = 24 * 60 * 60 * 1000;
-const POLL_MS = 20_000;
 
 export type FeedKind =
   | 'request'
@@ -145,34 +144,22 @@ function cycleEnd(n: NotificationItem): Date | null {
 /**
  * The Circle feed: unread notifications, incoming and outgoing acquaintance requests,
  * collections I take part in, my own open requests and fresh milestones — one list, newest first.
- * Polls the unread counter so new events arrive without a reload.
+ * New events arrive without a reload through the shell's pulse (hooks/usePulse.ts), which re-reads these lists.
  */
 export function useEvents(options: { displayName?: (id: string, fallback: string) => string } = {}) {
   const { t, i18n } = useTranslation();
   const myId = useAuth((s) => s.userId);
-  const utils = trpc.useUtils();
   const name = options.displayName ?? ((_id: string, fallback: string) => fallback);
 
-  // The shell already re-reads the unread count every 30 s; a second timer here doubled the requests
+  // No timers here: the shell's pulse (hooks/usePulse.ts) re-reads each list when its part of the pulse changes
   const unread = trpc.notification.unreadCount.useQuery();
-  const notifications = trpc.notification.list.useQuery({ limit: 100 }, { refetchInterval: 60_000 });
-  const incoming = trpc.pending.incoming.useQuery(undefined, { refetchInterval: POLL_MS });
-  const outgoing = trpc.pending.myPending.useQuery(undefined, { refetchInterval: 60_000 });
-  const participating = trpc.collection.myParticipating.useQuery(undefined, { refetchInterval: 60_000 });
-  const mine = trpc.collection.myActive.useQuery(undefined, { refetchInterval: 60_000 });
-  const milestones = trpc.milestone.list.useQuery(undefined, { refetchInterval: 60_000 });
+  const notifications = trpc.notification.list.useQuery({ limit: 100 });
+  const incoming = trpc.pending.incoming.useQuery();
+  const outgoing = trpc.pending.myPending.useQuery();
+  const participating = trpc.collection.myParticipating.useQuery();
+  const mine = trpc.collection.myActive.useQuery();
+  const milestones = trpc.milestone.list.useQuery();
   const accepted = useAcceptedRecent();
-
-  // A changed unread counter means new notifications: refresh the list right away.
-  const lastCount = useRef<number | null>(null);
-  useEffect(() => {
-    const count = unread.data?.count;
-    if (count == null) return;
-    if (lastCount.current != null && count !== lastCount.current) {
-      void utils.notification.list.invalidate();
-    }
-    lastCount.current = count;
-  }, [unread.data?.count, utils]);
 
   const dateFmt = useMemo(
     () => new Intl.DateTimeFormat(i18n.language, { day: 'numeric', month: 'long' }),

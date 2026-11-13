@@ -8,6 +8,7 @@ import { useGraphSync } from '../../hooks/useGraphSync';
 import { useTelegramHaptics } from '../../hooks/useTelegram';
 import { useTheme } from '../../hooks/useTheme';
 import { useAcceptedRecent } from '../../hooks/useAcceptedRecent';
+import { usePulse } from '../../hooks/usePulse';
 import { AskMark } from './AskMark';
 import { BrandMark } from './BrandMark';
 import { Avatar } from './Avatar';
@@ -277,7 +278,9 @@ function LiveShell() {
   const theme = useTheme((state) => state.mode);
   const setMode = useTheme((state) => state.setMode);
   const ask = useAskProgress();
-  const { data: attention } = trpc.notification.attention.useQuery(undefined, { refetchInterval: 30_000 });
+  // One light poll keeps the badge and every list fresh (hooks/usePulse.ts): no timer per query
+  usePulse();
+  const { data: attention } = trpc.notification.attention.useQuery();
   const accepted = useAcceptedRecent();
   const waiting = (attention?.needs ?? 0) + (attention?.incoming ?? 0) + accepted.unseen;
   const { data: me } = trpc.user.me.useQuery();

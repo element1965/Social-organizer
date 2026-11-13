@@ -7,9 +7,9 @@ import { syncMilestones } from '../services/milestone.service.js';
 
 export { REQUEST_COOLDOWN_MS } from '../services/connection-request.service.js';
 
-const ACCEPTED_RECENT_MS = 7 * 24 * 60 * 60 * 1000;
+export const ACCEPTED_RECENT_MS = 7 * 24 * 60 * 60 * 1000;
 /** A confirmation seen in this visit stays in the feed a little longer, so it does not vanish under the eye */
-const SEEN_GRACE_MS = 30 * 60 * 1000;
+export const SEEN_GRACE_MS = 30 * 60 * 1000;
 
 export const pendingRouter = router({
   incoming: protectedProcedure.query(async ({ ctx }) => {

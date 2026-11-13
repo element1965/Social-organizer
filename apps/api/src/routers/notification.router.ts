@@ -4,6 +4,7 @@ import { router, protectedProcedure, paginationInput } from '../trpc.js';
 import type { PrismaClient } from '@so/db';
 import { recordDismissed, recordOpenedById } from '../services/notify-routing.service.js';
 import { VISIBLE_RINGS } from '../services/network.service.js';
+import { getPulse } from '../services/pulse.service.js';
 
 /** Opening or dismissing a notice must not wipe a cycle acknowledgement (RESPONDED). */
 async function setNotificationStatus(
@@ -163,4 +164,11 @@ export const notificationRouter = router({
     });
     return { count };
   }),
+
+  /**
+   * "What changed": one light poll for an open app instead of a timer per list. Counters and times only;
+   * the client compares each group with the previous answer and re-reads just the lists it stands for
+   * (apps/web/src/hooks/usePulse.ts). See services/pulse.service.ts for what each group covers.
+   */
+  pulse: protectedProcedure.query(({ ctx }) => getPulse(ctx.db, ctx.userId)),
 });
