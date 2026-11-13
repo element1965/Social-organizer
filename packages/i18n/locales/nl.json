@@ -660,7 +660,26 @@
     "loadFailedText": "Het lijkt erop dat er geen verbinding is. De link is bewaard; probeer het opnieuw.",
     "waiting": "Wachten op bevestiging.",
     "network_one": "{{n}} persoon in het netwerk",
-    "network_other": "{{n}} personen in het netwerk"
+    "network_other": "{{n}} personen in het netwerk",
+    "dead": {
+      "deletedTitle": "Deze persoon heeft het account verwijderd",
+      "deletedText": "De uitnodiging werkt niet meer. Vraag iemand anders die je kent om een link.",
+      "usedTitle": "Deze uitnodiging is al gebruikt",
+      "usedText": "Een eenmalige uitnodiging werkt voor één persoon. Vraag om een nieuwe link of laat je QR zien als jullie elkaar zien.",
+      "notFoundTitle": "Link niet gevonden",
+      "notFoundText": "Controleer of de hele link is gekopieerd, of vraag om een nieuwe."
+    },
+    "install": {
+      "title": "Verzoek verzonden",
+      "text": "Installeer de app: die laat het weten zodra {{name}} bevestigt dat jullie elkaar kennen.",
+      "stepSignedIn": "Ingelogd met {{method}}",
+      "stepSaved": "Uitnodiging opgeslagen, het verzoek wacht",
+      "stepSame": "Log in de app opnieuw in met {{method}}",
+      "stepSameAny": "Log in de app op dezelfde manier in als hier",
+      "later": "Later, verder in de browser",
+      "continueWeb": "Verder in de browser",
+      "qrText": "Richt de camera van je telefoon op de code: de appwinkel gaat open."
+    }
   },
   "landing": {
     "site": {

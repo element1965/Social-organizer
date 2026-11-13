@@ -660,7 +660,26 @@
     "loadFailedText": "Yhteyttä ei näytä olevan. Linkki on tallessa. Yritä uudelleen.",
     "waiting": "Odotetaan vahvistusta.",
     "network_one": "{{n}} henkilö verkostossa",
-    "network_other": "{{n}} henkilöä verkostossa"
+    "network_other": "{{n}} henkilöä verkostossa",
+    "dead": {
+      "deletedTitle": "Tämä henkilö on poistanut tilinsä",
+      "deletedText": "Kutsu ei enää toimi. Pyydä linkkiä joltakulta toiselta tutulta.",
+      "usedTitle": "Tämä kutsu on jo käytetty",
+      "usedText": "Kertakutsu toimii yhdelle henkilölle. Pyydä uusi linkki tai näytä QR-koodisi tavatessanne.",
+      "notFoundTitle": "Linkkiä ei löytynyt",
+      "notFoundText": "Tarkista, että koko linkki kopioitiin, tai pyydä uusi."
+    },
+    "install": {
+      "title": "Pyyntö lähetetty",
+      "text": "Asenna sovellus: se kertoo, kun {{name}} vahvistaa, että tunnette toisenne.",
+      "stepSignedIn": "Kirjauduttu: {{method}}",
+      "stepSaved": "Kutsu tallennettu, pyyntö odottaa",
+      "stepSame": "Kirjaudu sovelluksessa uudelleen: {{method}}",
+      "stepSameAny": "Kirjaudu sovelluksessa samalla tavalla kuin tässä",
+      "later": "Myöhemmin, jatka selaimessa",
+      "continueWeb": "Jatka selaimessa",
+      "qrText": "Osoita puhelimen kameralla koodia – sovelluskauppa avautuu."
+    }
   },
   "landing": {
     "site": {

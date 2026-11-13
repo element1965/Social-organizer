@@ -1,8 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import { Capacitor } from '@capacitor/core';
+import { isTelegramWebApp } from '@so/tg-adapter';
+import { QRCodeCanvas } from 'qrcode.react';
 import { useTranslation } from 'react-i18next';
 import { trpc } from '../lib/trpc';
-import { useAuth } from '../hooks/useAuth';
+import { getLastLoginMethod, useAuth, type LoginMethod } from '../hooks/useAuth';
 import { Avatar, Button, Pill, formatMoney } from '../components/ui2';
 import { NetFigure } from '../components/figures';
 import { BrandLine, LanguageCorner, OnboardingFrame, StepText } from '../components/onboarding/OnboardingFrame';
@@ -26,13 +29,42 @@ import {
   TextButton,
 } from '../components/onboarding/states';
 import { buildWebInviteUrl } from '../lib/inviteUrl';
+import { SITE_ORIGIN, storeLinks, useDevice } from '../lib/device';
+import { QR_LOGO_LEVEL, qrLogo } from '../lib/qrLogo';
+import { IconApple, IconPlay } from '../components/site/icons';
 
 /** Thin-space thousands, as everywhere in the app ("1 240"). */
 const num = (n: number) => Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
 const firstName = (name: string) => name.trim().split(/\s+/)[0] || name;
 
-/** Errors that mean the link itself is dead (one screen for all of them). */
+/** Errors that mean the link itself is dead. */
 type TrpcLikeError = { message?: string; data?: { code?: string } | null } | null | undefined;
+/** Why a link is dead: each case has its own screen (SO-24 п.5). */
+type DeadReason = 'deleted' | 'used' | 'notFound';
+function deadReason(err: TrpcLikeError, usedByOther = false): DeadReason {
+  if (usedByOther || err?.message === 'Invite already used') return 'used';
+  if (err?.message === 'INVITER_DELETED') return 'deleted';
+  return 'notFound';
+}
+
+/**
+ * The invited person's name from the link (`?to=Vanya`), for "Vanya, Anna invites you…". It lives only in the
+ * address the inviter shared: never stored, never shown to anyone else. Letters, spaces, "-", "'" and ".", up to 40.
+ */
+export function safeAddressee(raw: string | null | undefined): string | null {
+  const v = (raw ?? '').normalize('NFC').replace(/\s+/g, ' ').trim();
+  if (!v || v.length > 40 || !/^[\p{L}\p{M}][\p{L}\p{M} .'’-]*$/u.test(v)) return null;
+  return v;
+}
+
+/** The web app on a phone or computer (not the installed app or the Telegram Mini App): installing is offered. */
+function offersInstall(): boolean {
+  try {
+    return !Capacitor.isNativePlatform() && !isTelegramWebApp();
+  } catch {
+    return false;
+  }
+}
 /** Not found, inviter deleted, expired (all NOT_FOUND on the API) or already used by someone else. */
 function isDeadError(err: TrpcLikeError): boolean {
   if (!err) return false;
@@ -46,6 +78,8 @@ function isDeadError(err: TrpcLikeError): boolean {
  */
 export function InvitePage() {
   const { token = '' } = useParams<{ token: string }>();
+  const [search] = useSearchParams();
+  const addressee = safeAddressee(search.get('to'));
   const isAuthenticated = useAuth((s) => s.isAuthenticated);
   const logout = useAuth((s) => s.logout);
   const isRealUser = isAuthenticated;
@@ -91,15 +125,15 @@ export function InvitePage() {
     if (dead && readPending() === token) setPending(null);
   }, [dead, token]);
 
-  if (dead) return <DeadLink signedIn={isRealUser && !sessionDead} />;
+  if (dead) return <DeadLink signedIn={isRealUser && !sessionDead} reason={deadReason(invite.error, usedByOther)} />;
   if (transient) return <RetryScreen onRetry={() => void invite.refetch()} busy={invite.isFetching} />;
   if (invite.isLoading || (isRealUser && me.isLoading)) return <Loading />;
-  if (!invite.data) return <DeadLink signedIn={isRealUser} />;
+  if (!invite.data) return <DeadLink signedIn={isRealUser} reason="notFound" />;
 
   const inviter = invite.data.inviter;
   const networkCount = Number((invite.data as { networkCount?: number }).networkCount ?? 0);
   const total = Math.round(Number((invite.data as { totalIntentions?: number }).totalIntentions ?? 0));
-  const hero = <InviteHero name={inviter.name} photoUrl={inviter.photoUrl} networkCount={networkCount} total={total} token={token} />;
+  const hero = <InviteHero name={inviter.name} photoUrl={inviter.photoUrl} networkCount={networkCount} total={total} token={token} addressee={addressee} />;
 
   if (!isRealUser || sessionDead || !me.data) {
     return <SignInFlow top={<BrandLine />} centre redirect={`/invite/${token}`} hero={hero} />;
@@ -114,7 +148,7 @@ export function InvitePage() {
       meId={me.data.id}
       firstRun={firstRun || !me.data.onboardingCompleted}
       cameThroughInvite={cameThroughInvite}
-      hero={<InviteHero name={inviter.name} photoUrl={inviter.photoUrl} networkCount={networkCount} total={total} token={token} signedIn />}
+      hero={<InviteHero name={inviter.name} photoUrl={inviter.photoUrl} networkCount={networkCount} total={total} token={token} addressee={addressee} signedIn />}
     />
   );
 }
@@ -125,6 +159,7 @@ function InviteHero({
   networkCount,
   total,
   token,
+  addressee = null,
   signedIn = false,
 }: {
   name: string;
@@ -133,6 +168,8 @@ function InviteHero({
   total: number;
   /** For the way back from "How it works" */
   token: string;
+  /** The invited person's name from `?to=`, put before the sentence. */
+  addressee?: string | null;
   /** Signed-in variant: no "sign in" in the sentence. */
   signedIn?: boolean;
 }) {
@@ -140,7 +177,7 @@ function InviteHero({
   return (
     <>
       <Avatar name={name} src={photoUrl} size={88} className="mt-10" />
-      <h1 className="mt-4 text-h2 font-bold [text-wrap:balance]">{t('invite.calls', { name })}</h1>
+      <h1 className="mt-4 text-h2 font-bold [text-wrap:balance]">{addressee ? `${addressee}, ` : ''}{t('invite.calls', { name })}</h1>
       <p className="mt-2.5 max-w-[30ch] text-body-s text-ink-muted">{t(signedIn ? 'invite.sayKnown' : 'invite.say', { name: firstName(name) })}</p>
       <div className="mt-4 flex flex-wrap justify-center gap-2">
         <Pill className="whitespace-nowrap">{t('invite.network', { count: networkCount, n: num(networkCount) })}</Pill>
@@ -188,11 +225,16 @@ function AcceptView({
   const navigate = useNavigate();
   const logout = useAuth((s) => s.logout);
   const autoTried = useRef(false);
+  // A newcomer on the web: after the request is saved, offer the app before the intro (SO-24 п.3)
+  const [installStep, setInstallStep] = useState(false);
 
   const accept = trpc.invite.accept.useMutation({
-    onSuccess: () => {
+    onSuccess: (data) => {
       setPending(null);
-      if (firstRun) navigate(introPath(), { replace: true });
+      if (!firstRun) return;
+      const r = data as { alreadyConnected?: boolean; pending?: boolean } | undefined;
+      if (r?.pending && !r.alreadyConnected && offersInstall()) setInstallStep(true);
+      else navigate(introPath(), { replace: true });
     },
     onError: (err) => {
       if (err.data?.code === 'UNAUTHORIZED') {
@@ -246,8 +288,12 @@ function AcceptView({
     );
   }
 
+  if (installStep) {
+    return <InstallStep inviterName={inviterName} token={token} onLater={() => navigate(introPath(), { replace: true })} />;
+  }
+
   if (isDeadError(accept.error)) {
-    return <DeadLink signedIn />;
+    return <DeadLink signedIn reason={deadReason(accept.error)} />;
   }
 
   const errorText = accept.error
@@ -321,8 +367,101 @@ function AcceptView({
   );
 }
 
-/** One screen for every dead link: used, the inviter deleted the account, expired or not found. */
-function DeadLink({ signedIn }: { signedIn: boolean }) {
+const METHOD_NAME: Record<LoginMethod, string> = { google: 'Google', apple: 'Apple', telegram: 'Telegram', email: 'e-mail' };
+
+/**
+ * The request is saved: tell the newcomer it went out, then offer the app with the same sign-in (SO-24 п.3).
+ * A phone gets its own store; a computer gets a QR for the phone. "Later" keeps going in the browser.
+ * No countdown and no automatic redirect, so coming back from the store never loops.
+ */
+function InstallStep({ inviterName, token, onLater }: { inviterName: string; token: string; onLater: () => void }) {
+  const { t } = useTranslation();
+  const device = useDevice();
+  const method = getLastLoginMethod();
+  const links = storeLinks(token);
+  const name = firstName(inviterName);
+  const qrValue = `${SITE_ORIGIN}/get?invite=${encodeURIComponent(token)}`;
+  const storeCls =
+    'so-focus flex h-primary w-full items-center justify-center gap-2.5 rounded-lg bg-ink px-4 text-body-l font-bold text-canvas';
+
+  const store =
+    device === 'android' ? (
+      <a href={links.play} target="_blank" rel="noopener noreferrer" className={storeCls}>
+        <IconPlay />
+        {t('landing.start.play')}
+      </a>
+    ) : device === 'ios' ? (
+      <a href={links.appstore} target="_blank" rel="noopener noreferrer" className={storeCls}>
+        <IconApple />
+        {t('landing.start.appstore')}
+      </a>
+    ) : null;
+
+  return (
+    <OnboardingFrame
+      top={<BrandLine />}
+      corner={<LanguageCorner />}
+      centre
+      foot={
+        <>
+          {store}
+          {store ? (
+            <TextButton onClick={onLater}>{t('invite.install.later')}</TextButton>
+          ) : (
+            <Button className="w-full" onClick={onLater}>
+              {t('invite.install.continueWeb')}
+            </Button>
+          )}
+        </>
+      }
+    >
+      <div className="mt-10 flex justify-center">
+        <StateTile tone="care">
+          <CheckGlyph />
+        </StateTile>
+      </div>
+      <StepText centre title={t('invite.install.title')}>
+        {t('invite.install.text', { name })}
+      </StepText>
+      <ol className="mx-auto mt-4 w-full max-w-[34ch] space-y-2 text-start text-body-s">
+        {method ? (
+          <li className="flex items-start gap-2">
+            <span aria-hidden className="font-bold text-care">✓</span>
+            <span>{t('invite.install.stepSignedIn', { method: METHOD_NAME[method] })}</span>
+          </li>
+        ) : null}
+        <li className="flex items-start gap-2">
+          <span aria-hidden className="font-bold text-care">✓</span>
+          <span>{t('invite.install.stepSaved')}</span>
+        </li>
+        <li className="flex items-start gap-2">
+          <span aria-hidden className="font-bold text-ink-muted">→</span>
+          <span>
+            {method ? t('invite.install.stepSame', { method: METHOD_NAME[method] }) : t('invite.install.stepSameAny')}
+          </span>
+        </li>
+      </ol>
+      {device === 'desktop' ? (
+        <div className="mx-auto mt-5 flex w-full max-w-[34ch] items-center gap-3 text-start">
+          <QRCodeCanvas
+            value={qrValue}
+            size={112}
+            marginSize={2}
+            level={QR_LOGO_LEVEL}
+            imageSettings={qrLogo(112)}
+            role="img"
+            aria-label={t('landing.start.qrAria')}
+            className="shrink-0"
+          />
+          <span className="text-body-s text-ink-muted">{t('invite.install.qrText')}</span>
+        </div>
+      ) : null}
+    </OnboardingFrame>
+  );
+}
+
+/** A dead link, with its own reason: the inviter deleted the account, someone else used it, or it does not exist. */
+function DeadLink({ signedIn, reason }: { signedIn: boolean; reason: DeadReason }) {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const labels = useNetLabels();
@@ -345,7 +484,7 @@ function DeadLink({ signedIn }: { signedIn: boolean }) {
       <div className="mt-4 flex h-[240px] items-center justify-center">
         <NetFigure step={0} labels={labels} className="h-full w-auto" />
       </div>
-      <StepText title={t('invite.deadTitle')}>{t('invite.deadText')}</StepText>
+      <StepText title={t(`invite.dead.${reason}Title`)}>{t(`invite.dead.${reason}Text`)}</StepText>
     </OnboardingFrame>
   );
 }
