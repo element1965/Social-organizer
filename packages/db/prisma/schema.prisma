@@ -165,6 +165,8 @@ model User {
   reviewVotes              CollectionReviewVote[]
   avatar                   UserAvatar?
 
+  // Deleted accounts are few; the graph cache counts them every few seconds
+  @@index([deletedAt])
   @@map("users")
 }
 
@@ -221,6 +223,8 @@ model Connection {
   @@index([userAId])
   @@index([userBId])
   @@index([viaCollectionId])
+  // The graph cache asks for the newest connection every few seconds and reads the rows after it
+  @@index([createdAt])
   @@map("connections")
 }
 

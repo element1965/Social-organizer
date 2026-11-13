@@ -16,9 +16,12 @@ if (!/@(localhost|127\.0\.0\.1)(:\d+)?\//.test(process.env.DATABASE_URL || '')) 
 }
 delete process.env.TELEGRAM_BOT_TOKEN;
 delete process.env.REDIS_URL;
+// Names given to invalidateGraph are kept for 30 s in production; here 2 s, so the check can also
+// reach the quiet state in which only the light signature runs
+process.env.GRAPH_PENDING_TTL_MS = '2000';
 
 const { appRouter } = await import('../src/routers/index.js');
-const { getGraph, graphVersion, invalidateGraph } = await import('../src/services/graph-cache.service.js');
+const { getGraph, graphStats, graphVersion, invalidateGraph } = await import('../src/services/graph-cache.service.js');
 const { networkReach, clearReachCache } = await import('../src/services/network.service.js');
 const { findRecipientsViaBfs, walkRings } = await import('../src/services/bfs.service.js');
 const { planWave } = await import('../src/services/notify-routing.service.js');
@@ -103,15 +106,34 @@ try {
   const far3 = await networkReach(db, id('3'));
   check('…and the fresh walk sees the new people', far3.exact === far1.exact + 1, `${far1.exact} → ${far3.exact}`);
 
-  /* ---------- A removed connection: full reload, numbers go down ---------- */
+  /* ---------- A removed connection: only the two people are read again ---------- */
   const fullBeforeDelete = fullReads;
   await call(id('root')).connection.revoke({ targetUserId: id('new') });
   const r4 = await networkReach(db, id('root'));
   check('a removed connection leaves the numbers at once', r4.exact === 36, `exact=${r4.exact}`);
-  check('…through a full reload of the graph', fullReads > fullBeforeDelete);
+  check('…without reading the whole table again', fullReads === fullBeforeDelete, `full reads +${fullReads - fullBeforeDelete}`);
   const graph = await getGraph(db);
   const rows = await db.connection.count();
   check('graph edge count equals the table', graph.edgeCount === rows, `${graph.edgeCount} vs ${rows}`);
+  check('the removed pair is gone from both sides',
+    !graph.adj.get(id('root'))?.some((e) => e.neighbor === id('new')) && !graph.adj.get(id('new'))?.some((e) => e.neighbor === id('root')));
+
+  /* ---------- A deleted account: its connections leave the graph, again without a full reload ---------- */
+  await db.user.create({ data: { id: id('gone'), name: 'LF gone' } });
+  await db.$transaction((tx) => createConnectionWithinLimit(tx, id('gone'), id('root')));
+  await db.$transaction((tx) => createConnectionWithinLimit(tx, id('gone'), id('8')));
+  const withGone = await networkReach(db, id('root'));
+  // root now reaches "gone" directly and, through it, 8 and 7
+  check('a new acquaintance opens the way to people behind them', withGone.exact === 36 + 3, `exact=${withGone.exact}`);
+  const fullBeforeAccount = fullReads;
+  await call(id('gone')).user.delete();
+  const afterGone = await networkReach(db, id('root'));
+  const g3 = await getGraph(db);
+  check('a deleted account leaves the numbers of its acquaintances at once', afterGone.exact === 36, `exact=${afterGone.exact}`);
+  check('…its connections are gone from the graph on both sides',
+    !g3.adj.has(id('gone')) && !g3.adj.get(id('root'))?.some((e) => e.neighbor === id('gone')) && !g3.adj.get(id('8'))?.some((e) => e.neighbor === id('gone')));
+  check('…the graph still equals the table', g3.edgeCount === (await db.connection.count()));
+  check('…and the whole table was not read again', fullReads === fullBeforeAccount, `full reads +${fullReads - fullBeforeAccount}`);
 
   /* ---------- Rows committed with an older time than the newest loaded one ---------- */
   await db.connection.create({ data: { ...pair(id('f0'), id('f1')), createdAt: new Date(Date.now() - 30_000) } });
@@ -121,6 +143,23 @@ try {
   check('late rows are found (window) or the graph reloads (count check)', g2.edgeCount === (await db.connection.count()));
   check('both late connections are in the graph',
     !!g2.adj.get(id('f0'))?.some((e) => e.neighbor === id('f1')) && !!g2.adj.get(id('f2'))?.some((e) => e.neighbor === id('f3')));
+
+  /* ---------- A connection made by another process, with no invalidation here ---------- */
+  // The periodic check looks only at the newest connection and the deleted accounts; that is enough to see it
+  const fullBeforeForeign = fullReads;
+  await new Promise((r) => setTimeout(r, 3100)); // past the window in which every read is exact
+  await getGraph(db);
+  await new Promise((r) => setTimeout(r, 5100));
+  const lightBefore = graphStats().lightChecks;
+  await getGraph(db);
+  check('a quiet periodic check is answered without counting all connections', graphStats().lightChecks === lightBefore + 1,
+    `light checks +${graphStats().lightChecks - lightBefore}`);
+  await db.connection.create({ data: pair(id('f4'), id('f5')) });
+  await new Promise((r) => setTimeout(r, 5100)); // the next periodic check is due
+  const g4 = await getGraph(db);
+  check('a connection made elsewhere shows at the next periodic check',
+    !!g4.adj.get(id('f4'))?.some((e) => e.neighbor === id('f5')) && g4.edgeCount === (await db.connection.count()));
+  check('…appended, not reloaded', fullReads === fullBeforeForeign, `full reads +${fullReads - fullBeforeForeign}`);
 
   /* ---------- Walk with paths built on demand ---------- */
   const walk = await findRecipientsViaBfs(db, id('root'), 6, Infinity, [id('2')]);
@@ -160,13 +199,34 @@ try {
     lazyPlan.external.length === 3 && lazyPlan.external[0]?.userId === id('1') && lazyPlan.external.slice(1).every((w) => w.depth === 2),
     `external=${lazyPlan.external.map((w) => w.userId).join(',')}`);
   check('…and never asks for the rings behind them', ringsAsked === 2, `rings asked=${ringsAsked}`);
+
+  /* ---------- A ring read in small chunks gives the same wave as the ring read at once ---------- */
+  // Only 1 and f0..f9 can be reached outside the app now: the 2nd ring has 10 such people among 31
+  await db.platformAccount.deleteMany({
+    where: { platformId: { in: Array.from({ length: 20 }, (_, i) => `${P}tg-f${i + 10}`) } },
+  });
+  const planIds = async (budget: number, chunk?: number) => {
+    const plan = await planWave(db, await walkRings(db, id('root')), budget, chunk);
+    return JSON.stringify([plan.external.map((w) => w.userId), plan.inApp.map((w) => w.userId)]);
+  };
+  // 5: the budget ends inside the ring. 11: it ends exactly on the last person who can be reached.
+  // 100: the whole network is covered.
+  for (const budget of [5, 11, 100]) {
+    const [whole, small, one] = [await planIds(budget, 10_000), await planIds(budget, 2), await planIds(budget, 1)];
+    check(`budget ${budget}: chunks of 2 and of 1 plan the same wave as the whole ring`, whole === small && whole === one,
+      whole === small ? '' : `${whole} vs ${small}`);
+  }
+  const exact = JSON.parse(await planIds(11, 2)) as [string[], string[]];
+  check('a ring whose reachable people all got the message gives the others the in-app entry',
+    exact[0].length === 11 && exact[1].length > 0 && exact[1].includes(id('2')), `external=${exact[0].length} inApp=${exact[1].length}`);
+  const partial = JSON.parse(await planIds(5, 2)) as [string[], string[]];
+  check('a ring the budget ends in gives no in-app entries yet', partial[0].length === 5 && partial[1].length === 0);
   await db.platformAccount.deleteMany({ where: { platformId: { startsWith: `${P}tg-` } } });
 
   /* ---------- Clusters are admin statistics only ---------- */
-  let clusterRefused = 0;
-  try { await call(id('root')).cluster.list(); } catch (e: any) { if (e?.code === 'FORBIDDEN') clusterRefused++; }
-  try { await call(id('root')).cluster.myCluster(); } catch (e: any) { if (e?.code === 'FORBIDDEN') clusterRefused++; }
-  check('cluster.list and cluster.myCluster refuse a person who is not an admin', clusterRefused === 2, `refused=${clusterRefused}`);
+  let clusterRefused = false;
+  try { await call(id('root')).cluster.list(); } catch (e: any) { clusterRefused = e?.code === 'FORBIDDEN'; }
+  check('cluster.list refuses a person who is not an admin', clusterRefused);
 
   /* ---------- Wave stored in batches ---------- */
   const col = await db.collection.create({

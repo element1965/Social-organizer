@@ -20,6 +20,7 @@ import { isMailConfigured, MailUnavailableError } from '../services/mail.service
 import { LINKING_CODE_TTL_MINUTES } from '@so/shared';
 import { touchUser } from '../services/activity.service.js';
 import { restoreMutedAccount } from '../services/account-restore.service.js';
+import { invalidateGraph } from '../services/graph-cache.service.js';
 
 /** Access token for a successful sign-in / refresh / link-code flow; counts as activity. */
 function signedInToken(db: Context['db'], userId: string): string {
@@ -83,6 +84,7 @@ async function signInTelegramUser(db: Context['db'], tgUser: TelegramUserData, p
     for (const oa of orphanedAccounts) {
       await db.user.delete({ where: { id: oa.userId } }).catch(() => {});
     }
+    if (orphanedAccounts.length > 0) invalidateGraph(orphanedAccounts.map((oa) => oa.userId));
 
     const name = [tgUser.first_name, tgUser.last_name].filter(Boolean).join(' ') || `User_${platformId}`;
     const lang = tgUser.language_code?.slice(0, 2) || 'en';

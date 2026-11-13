@@ -21,6 +21,8 @@ export const FREQ_WEEK = 6;
 export const IGNORE_LIMIT = 5;
 export const PROBE_AFTER_DAYS = 14;
 const HALF_LIFE_SECONDS = 60 * 24 * 60 * 60;
+/** People of one ring looked at per round of queries: a wave of 300 does not read a ring of 20,000 at once. */
+export const HOLD_CHUNK = 500;
 const DAY_MS = 24 * 60 * 60 * 1000;
 
 /* ---------- Recording ---------- */
@@ -176,7 +178,12 @@ async function holdReasons(db: PrismaClient, ids: string[]): Promise<Map<string,
  * The others in a ring the wave fully covered get the in-app entry; the wave stops inside the ring
  * where the budget ends, and the rest of that ring waits for the next wave.
  */
-export async function planWave(db: PrismaClient, rings: Iterable<BfsRecipient[]>, budget: number): Promise<WavePlan> {
+export async function planWave(
+  db: PrismaClient,
+  rings: Iterable<BfsRecipient[]>,
+  budget: number,
+  chunkSize: number = HOLD_CHUNK,
+): Promise<WavePlan> {
   const plan: WavePlan = { external: [], inApp: [] };
   const iterator = rings[Symbol.iterator]();
   while (plan.external.length < budget) {
@@ -184,14 +191,25 @@ export async function planWave(db: PrismaClient, rings: Iterable<BfsRecipient[]>
     if (step.done) break;
     const ring = step.value;
 
-    const reasons = await holdReasons(db, ring.map((r) => r.userId));
-    const free = ring.filter((r) => reasons.get(r.userId) == null);
-    const held = ring.filter((r) => reasons.get(r.userId) != null);
-    const room = budget - plan.external.length;
-    plan.external.push(...free.slice(0, room));
+    // The ring is read in chunks, in BFS order, and only as far as the wave gets. It is fully covered
+    // when nobody who may get the message is left without one; reading stops at the first such person.
+    const held: BfsRecipient[] = [];
+    let covered = true;
+    for (let from = 0; from < ring.length && covered; from += chunkSize) {
+      const chunk = ring.slice(from, from + chunkSize);
+      const reasons = await holdReasons(db, chunk.map((r) => r.userId));
+      for (const person of chunk) {
+        if (reasons.get(person.userId) != null) held.push(person);
+        else if (plan.external.length < budget) plan.external.push(person);
+        else {
+          covered = false;
+          break;
+        }
+      }
+    }
     // In-app entries do not spend the budget but are bounded by it too: a small request must not
     // land in the feeds of the whole network when few people can be reached outside the app
-    if (free.length <= room) plan.inApp.push(...held.slice(0, Math.max(0, budget - plan.inApp.length)));
+    if (covered) plan.inApp.push(...held.slice(0, Math.max(0, budget - plan.inApp.length)));
   }
   return plan;
 }

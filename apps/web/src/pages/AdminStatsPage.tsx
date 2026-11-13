@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, Navigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { trpc } from '../lib/trpc';
@@ -18,10 +18,19 @@ export function AdminStatsPage() {
   const back = useSmartBack(t('common.back'), '/me');
   const admin = trpc.faq.isAdmin.useQuery();
   const isAdmin = admin.data?.isAdmin === true;
-  const users = trpc.stats.adminAllUsersStats.useQuery(undefined, { enabled: isAdmin });
-  const clusters = trpc.cluster.list.useQuery(undefined, { enabled: isAdmin });
   const [tab, setTab] = useState<'people' | 'clusters' | 'funnel'>('people');
   const [search, setSearch] = useState('');
+  // The server sends one page: the busiest people, or the ones the search finds. Typing waits a moment.
+  const [query, setQuery] = useState('');
+  useEffect(() => {
+    const timer = window.setTimeout(() => setQuery(search.trim()), 300);
+    return () => window.clearTimeout(timer);
+  }, [search]);
+  const users = trpc.stats.adminAllUsersStats.useQuery(query ? { search: query } : undefined, {
+    enabled: isAdmin,
+    placeholderData: (previous) => previous,
+  });
+  const clusters = trpc.cluster.list.useQuery(undefined, { enabled: isAdmin });
 
   if (admin.isLoading) {
     return (
@@ -32,10 +41,11 @@ export function AdminStatsPage() {
   }
   if (!isAdmin) return <Navigate to="/me" replace />;
 
-  const list = users.data ?? [];
+  const list = users.data?.rows ?? [];
   const filtered = list.filter((user) => !search.trim() || user.name.toLowerCase().includes(search.trim().toLowerCase()));
-  const clusterCount = new Set(list.map((user) => user.clusterRootId)).size;
-  const invites = list.reduce((sum, user) => sum + user.inviteCount, 0);
+  const total = users.data?.total ?? 0;
+  const clusterCount = users.data?.clusters ?? 0;
+  const invites = users.data?.invites ?? 0;
 
   return (
     <Screen title={t('profile.statistics')} back={back} width="column">
@@ -56,7 +66,7 @@ export function AdminStatsPage() {
         ) : (
           <>
             <div className="mt-4 grid grid-cols-3 gap-2">
-              <Stat value={String(list.length)} label={t('adminStats.totalUsers')} />
+              <Stat value={String(total)} label={t('adminStats.totalUsers')} />
               <Stat value={String(clusterCount)} label={t('adminStats.totalClusters')} />
               <Stat value={String(invites)} label={t('adminStats.totalInvites')} />
             </div>

@@ -25,6 +25,7 @@ import { getDb } from '@so/db';
 import { isAdmin } from './admin.js';
 import { startInactiveCleanupTimer, logInactiveCleanupConfig } from './services/inactive-cleanup.service.js';
 import { readAvatar, backfillAvatars } from './services/avatar.service.js';
+import { startRuntimeMetrics } from './services/runtime-metrics.service.js';
 import { findInvitePreview, findSosPreview, pickLanguage, renderInvitePreview, renderSosPreview } from './services/invite-preview.service.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -514,6 +515,8 @@ async function start() {
     logInactiveCleanupConfig();
 
     await app.listen({ port: PORT, host: HOST });
+    // One line a minute: event loop, memory, the graph and walk timings (see the scale steps of the launch plan)
+    startRuntimeMetrics();
     console.log(`API server running on http://${HOST}:${PORT}`);
 
     // Gun.js relay — attach to the HTTP server for P2P graph backup sync between clients
