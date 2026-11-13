@@ -21,6 +21,8 @@ delete process.env.REDIS_URL;
 process.env.GRAPH_PENDING_TTL_MS = '2000';
 // A kept reach is served as it is for a minute in production; here for 1.5 s
 process.env.REACH_STALE_MS = '1500';
+// The far rings are reused only in networks with a far part of 500 people or more; the check network is small
+process.env.REACH_FAR_REUSE_MIN = '1';
 
 const { appRouter } = await import('../src/routers/index.js');
 const { getGraph, graphStats, graphVersion, invalidateGraph } = await import('../src/services/graph-cache.service.js');

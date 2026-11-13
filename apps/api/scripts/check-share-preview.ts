@@ -95,6 +95,12 @@ try {
   check('a name with markup is escaped', !closedCard.includes('<b>') && (meta(closedCard, 'og:title') ?? '').startsWith('Max '), String(meta(closedCard, 'og:title')));
   check('no photo keeps the site picture', meta(closedCard, 'og:image') === 'https://example.org/og.png');
 
+  /* ---------- A name that looks like a replacement pattern stays a name ---------- */
+  await db.user.update({ where: { id: id('max') }, data: { name: "Max $& $' `$`" } });
+  const odd = renderSosPreview(HTML, (await findSosPreview(db, closed.id))!, { lang: 'en', url, origin: 'https://example.org' });
+  check('"$&" and "$\'" in a name are not expanded', (odd.match(/<meta /g) ?? []).length === (HTML.match(/<meta /g) ?? []).length + 3 && odd.includes('<div id="root"></div></body></html>') && odd.split('</head>').length === 2,
+    `metas ${(odd.match(/<meta /g) ?? []).length}`);
+
   /* ---------- The invite card still works after the shared writer ---------- */
   const inv = await findInvitePreview(db, id('anna'));
   const invCard = renderInvitePreview(HTML, inv!, { lang: 'en', url: 'https://example.org/i/x', origin: 'https://example.org', to: 'Vanya' });

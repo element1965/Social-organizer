@@ -33,8 +33,9 @@ export async function processTgBroadcast(job: Job<{ messages: TgBroadcastMessage
       else failed++;
     }
 
-    // Pause between batches (skip after last batch)
-    if (i + BATCH_SIZE < messages.length) {
+    // Pause after every full batch, the last one of a job too: the next job starts right away, and two
+    // batches inside one second would pass Telegram's limit of about 30 messages a second
+    if (batch.length === BATCH_SIZE) {
       await new Promise((r) => setTimeout(r, BATCH_DELAY_MS));
     }
   }

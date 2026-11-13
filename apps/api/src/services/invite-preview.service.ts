@@ -172,15 +172,16 @@ function applyCard(
   const setMeta = (attr: 'property' | 'name', key: string, value: string) => {
     const re = new RegExp(`<meta\\s+${attr}="${key.replace(/[.:]/g, '\\$&')}"\\s+content="[^"]*"\\s*/?>`, 'i');
     const tag = `<meta ${attr}="${key}" content="${value}" />`;
-    out = re.test(out) ? out.replace(re, tag) : out.replace('</head>', `    ${tag}\n  </head>`);
+    // Function replacers: a name may contain "$&" or "$'", which a string replacement would expand
+    out = re.test(out) ? out.replace(re, () => tag) : out.replace('</head>', () => `    ${tag}\n  </head>`);
   };
   const dropMeta = (attr: 'property' | 'name', key: string) => {
     const re = new RegExp(`\\s*<meta\\s+${attr}="${key.replace(/[.:]/g, '\\$&')}"\\s+content="[^"]*"\\s*/?>`, 'gi');
     out = out.replace(re, '');
   };
 
-  out = out.replace(/<html lang="[^"]*"/i, `<html lang="${escapeHtml(opts.lang)}"`);
-  out = out.replace(/<title>[^<]*<\/title>/i, `<title>${t}</title>`);
+  out = out.replace(/<html lang="[^"]*"/i, () => `<html lang="${escapeHtml(opts.lang)}"`);
+  out = out.replace(/<title>[^<]*<\/title>/i, () => `<title>${t}</title>`);
   setMeta('name', 'description', d);
   setMeta('property', 'og:title', t);
   setMeta('property', 'og:description', d);
