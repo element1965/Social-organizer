@@ -1384,7 +1384,9 @@
     "factsReported": "알린 참여 수",
     "factsMarked": "작성자가 받음으로 표시",
     "factsNote": "닫힌 필요가 대상이에요. 표시는 필요의 작성자가 하며, Social Organizer는 확인하지 않아요.",
-    "requestDeclined": "아는 사이로 확인되지 않았어요. 서로 아는 사이라면 만났을 때 QR 코드를 보여 주세요."
+    "requestDeclined": "아는 사이로 확인되지 않았어요. 서로 아는 사이라면 만났을 때 QR 코드를 보여 주세요.",
+    "prevPerson": "이전 사람",
+    "nextPerson": "다음 사람"
   },
   "help": {
     "faq": "자주 묻는 질문",

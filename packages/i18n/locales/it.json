@@ -1406,7 +1406,9 @@
     "factsReported": "Partecipazioni comunicate",
     "factsMarked": "Segnato come ricevuto dagli autori",
     "factsNote": "Per i Bisogni chiusi. Il segno lo mette l'autore del Bisogno; Social Organizer non lo verifica.",
-    "requestDeclined": "La conoscenza non è stata confermata. Se vi conoscete, mostratevi il codice QR quando vi incontrate."
+    "requestDeclined": "La conoscenza non è stata confermata. Se vi conoscete, mostratevi il codice QR quando vi incontrate.",
+    "prevPerson": "Persona precedente",
+    "nextPerson": "Persona successiva"
   },
   "help": {
     "faq": "Domande e risposte",

@@ -1395,7 +1395,9 @@
     "factsReported": "Meldt deltakelse",
     "factsMarked": "Merket som mottatt av forfattere",
     "factsNote": "For lukkede Behov. Merket settes av forfatteren av et Behov; Social Organizer kontrollerer det ikke.",
-    "requestDeclined": "Bekjentskapet ble ikke bekreftet. Hvis dere kjenner hverandre, vis hverandre QR-koden når dere møtes."
+    "requestDeclined": "Bekjentskapet ble ikke bekreftet. Hvis dere kjenner hverandre, vis hverandre QR-koden når dere møtes.",
+    "prevPerson": "Forrige person",
+    "nextPerson": "Neste person"
   },
   "help": {
     "faq": "Spørsmål og svar",

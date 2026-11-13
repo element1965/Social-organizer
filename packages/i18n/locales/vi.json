@@ -1384,7 +1384,9 @@
     "factsReported": "Số lần báo tham gia",
     "factsMarked": "Tác giả đánh dấu đã nhận",
     "factsNote": "Tính theo các Nhu cầu đã đóng. Dấu do tác giả của Nhu cầu đặt, Social Organizer không kiểm tra.",
-    "requestDeclined": "Mối quen biết chưa được xác nhận. Nếu hai người quen nhau, hãy cho nhau xem mã QR khi gặp."
+    "requestDeclined": "Mối quen biết chưa được xác nhận. Nếu hai người quen nhau, hãy cho nhau xem mã QR khi gặp.",
+    "prevPerson": "Người trước",
+    "nextPerson": "Người tiếp theo"
   },
   "help": {
     "faq": "Câu hỏi thường gặp",
