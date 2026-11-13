@@ -8,7 +8,7 @@ import {
   verifyToken,
   generateLinkingCode,
 } from '../services/auth.service.js';
-import { validateTelegramInitData, validateTelegramWidget, isTelegramWidgetEnabled, type TelegramUserData } from '../services/telegram.service.js';
+import { validateTelegramInitData, validateTelegramWidget, isTelegramWidgetEnabled, telegramBotId, type TelegramUserData } from '../services/telegram.service.js';
 import { applyBotStartInvite } from '../services/invite-fallback.service.js';
 import { findLinkingCode, LinkCodeRateLimitError } from '../services/link-code.service.js';
 import type { Context } from '../context.js';
@@ -297,6 +297,9 @@ export const authRouter = router({
     email: isMailConfigured(),
     telegramWidget: isTelegramWidgetEnabled(),
     telegramBot: process.env.VITE_TELEGRAM_BOT_USERNAME || 'socialorganizer_bot',
+    // The bot's public numeric id (the part of the token before ":", not the secret). The site's own Telegram
+    // button opens Telegram's login popup with it, so the page never swaps in Telegram's smaller widget.
+    telegramBotId: isTelegramWidgetEnabled() ? telegramBotId() : null,
   })),
 
   /** Sends a one-time code. Same answer for registered and unknown addresses. */
