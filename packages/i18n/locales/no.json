@@ -477,6 +477,7 @@
     "statistics": "Statistikk",
     "peopleTab": "Personer",
     "clustersTab": "Klynger",
+    "funnelTab": "Funnel",
     "aboutVersion": "Versjon {{version}}",
     "openSource": "Åpen kildekode",
     "terms": "Vilkår",
@@ -1132,7 +1133,23 @@
     "totalInvites": "Invitert totalt",
     "invitedCount": "forbindelser",
     "search": "Søk etter navn...",
-    "noResults": "Ingen treff"
+    "noResults": "Ingen treff",
+    "funnel": {
+      "note": "People by the week they signed up, last 8 weeks. \"Opened an invite\" counts guests of invite pages in the same week.",
+      "week": "Week of",
+      "opened": "Opened an invite",
+      "signedUp": "Signed up",
+      "requested": "Sent a request",
+      "connected": "First connection",
+      "five": "5 connections",
+      "unlocked": "Need open",
+      "sources": "By source, last 8 weeks",
+      "source": "Source",
+      "requests": "Requests",
+      "connections": "Connections",
+      "perActive": "Newcomers with a connection per active person",
+      "days": "{{count}} days"
+    }
   },
   "support": {
     "title": "Støttechat",
@@ -1315,7 +1332,12 @@
     "sortLabel": "Sortering",
     "sortNew": "Nyeste først",
     "sortName": "A–Å",
-    "showMore": "Vis flere · {{total}} igjen"
+    "showMore": "Vis flere · {{total}} igjen",
+    "suggest": {
+      "title": "Dere kjenner kanskje hverandre",
+      "hint": "Personer som dine bekjente kjenner. Bekreft bare dem du kjenner personlig.",
+      "mutual": "Felles bekjente: {{count}}"
+    }
   },
   "account": {
     "firstName": "Fornavn",

@@ -474,6 +474,7 @@
     "statistics": "Statistik",
     "peopleTab": "Orang",
     "clustersTab": "Klaster",
+    "funnelTab": "Funnel",
     "aboutVersion": "Versi {{version}}",
     "openSource": "Sumber terbuka",
     "terms": "Ketentuan",
@@ -1127,7 +1128,23 @@
     "totalInvites": "Total diundang",
     "invitedCount": "koneksi",
     "search": "Cari nama...",
-    "noResults": "Tidak ada hasil"
+    "noResults": "Tidak ada hasil",
+    "funnel": {
+      "note": "People by the week they signed up, last 8 weeks. \"Opened an invite\" counts guests of invite pages in the same week.",
+      "week": "Week of",
+      "opened": "Opened an invite",
+      "signedUp": "Signed up",
+      "requested": "Sent a request",
+      "connected": "First connection",
+      "five": "5 connections",
+      "unlocked": "Need open",
+      "sources": "By source, last 8 weeks",
+      "source": "Source",
+      "requests": "Requests",
+      "connections": "Connections",
+      "perActive": "Newcomers with a connection per active person",
+      "days": "{{count}} days"
+    }
   },
   "support": {
     "title": "Obrolan Dukungan",
@@ -1308,7 +1325,12 @@
     "sortLabel": "Urutkan",
     "sortNew": "Terbaru dulu",
     "sortName": "A–Z",
-    "showMore": "Tampilkan lagi · sisa {{total}}"
+    "showMore": "Tampilkan lagi · sisa {{total}}",
+    "suggest": {
+      "title": "Mungkin kalian saling kenal",
+      "hint": "Orang yang dikenal oleh kenalan Anda. Konfirmasi hanya yang Anda kenal secara pribadi.",
+      "mutual": "Kenalan bersama: {{count}}"
+    }
   },
   "account": {
     "firstName": "Nama depan",

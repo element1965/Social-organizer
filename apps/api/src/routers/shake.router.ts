@@ -129,7 +129,7 @@ export const shakeRouter = router({
       if (outcome === 'ready') {
         try {
           await ctx.db.$transaction(async (tx) => {
-            await connectInPersonTx(tx, ctx.userId, otherId);
+            await connectInPersonTx(tx, ctx.userId, otherId, 'shake');
           });
           finishPair(pair, { ok: true });
         } catch (err) {

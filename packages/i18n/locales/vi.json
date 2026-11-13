@@ -474,6 +474,7 @@
     "statistics": "Thống kê",
     "peopleTab": "Người",
     "clustersTab": "Cụm",
+    "funnelTab": "Funnel",
     "aboutVersion": "Phiên bản {{version}}",
     "openSource": "Mã nguồn mở",
     "terms": "Điều khoản",
@@ -1127,7 +1128,23 @@
     "totalInvites": "Tổng số đã mời",
     "invitedCount": "kết nối",
     "search": "Tìm theo tên...",
-    "noResults": "Không có kết quả"
+    "noResults": "Không có kết quả",
+    "funnel": {
+      "note": "People by the week they signed up, last 8 weeks. \"Opened an invite\" counts guests of invite pages in the same week.",
+      "week": "Week of",
+      "opened": "Opened an invite",
+      "signedUp": "Signed up",
+      "requested": "Sent a request",
+      "connected": "First connection",
+      "five": "5 connections",
+      "unlocked": "Need open",
+      "sources": "By source, last 8 weeks",
+      "source": "Source",
+      "requests": "Requests",
+      "connections": "Connections",
+      "perActive": "Newcomers with a connection per active person",
+      "days": "{{count}} days"
+    }
   },
   "support": {
     "title": "Trò chuyện hỗ trợ",
@@ -1308,7 +1325,12 @@
     "sortLabel": "Sắp xếp",
     "sortNew": "Mới nhất trước",
     "sortName": "A–Z",
-    "showMore": "Xem thêm · còn {{total}}"
+    "showMore": "Xem thêm · còn {{total}}",
+    "suggest": {
+      "title": "Có thể hai bạn quen nhau",
+      "hint": "Những người mà người quen của bạn biết. Chỉ xác nhận những người bạn quen trực tiếp.",
+      "mutual": "Người quen chung: {{count}}"
+    }
   },
   "account": {
     "firstName": "Tên",

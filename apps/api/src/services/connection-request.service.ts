@@ -1,6 +1,6 @@
 import type { PrismaClient, Prisma } from '@so/db';
 import { TRPCError } from '@trpc/server';
-import { MAX_CONNECTIONS } from '@so/shared';
+import { MAX_CONNECTIONS, type ConnectionSource } from '@so/shared';
 import { sendPendingNotification } from './notification.service.js';
 import { syncMilestonesForPair } from './milestone.service.js';
 import { invalidateGraph } from './graph-cache.service.js';
@@ -61,7 +61,7 @@ export async function createConnectionWithinLimit(
   tx: Prisma.TransactionClient,
   actorId: string,
   otherId: string,
-  options?: { viaCollectionId?: string },
+  options?: { viaCollectionId?: string; source?: ConnectionSource | string | null },
 ): Promise<'created' | 'exists'> {
   if (actorId === otherId) throw new TRPCError({ code: 'BAD_REQUEST', message: 'Cannot connect to yourself' });
   const [userAId, userBId] = sortPair(actorId, otherId);
@@ -80,6 +80,7 @@ export async function createConnectionWithinLimit(
       userAId,
       userBId,
       viaCollectionId: options?.viaCollectionId ?? null,
+      source: options?.source ?? null,
     },
   });
   // Still inside the transaction: a reload racing the commit is caught by the cache's signature check
@@ -96,8 +97,9 @@ export async function connectInPersonTx(
   tx: Prisma.TransactionClient,
   actorId: string,
   otherId: string,
+  source: ConnectionSource,
 ): Promise<'created' | 'exists'> {
-  const outcome = await createConnectionWithinLimit(tx, actorId, otherId);
+  const outcome = await createConnectionWithinLimit(tx, actorId, otherId, { source });
   await tx.pendingConnection.updateMany({
     where: {
       OR: [
@@ -162,7 +164,8 @@ export async function respondToConnectionRequest(
     if (res.count === 0) return false;
     if (action === 'accept') {
       // Limit is re-checked under row locks; a failure rolls back the status change too
-      await createConnectionWithinLimit(tx, pending.toUserId, pending.fromUserId);
+      // The connection keeps the way the request came in
+      await createConnectionWithinLimit(tx, pending.toUserId, pending.fromUserId, { source: pending.source });
     }
     return true;
   });
@@ -204,6 +207,7 @@ export async function openConnectionRequest(
   db: PrismaClient,
   fromUserId: string,
   toUserId: string,
+  source: ConnectionSource,
 ): Promise<{ id: string } | null> {
   const previous = await db.pendingConnection.findUnique({
     where: { fromUserId_toUserId: { fromUserId, toUserId } },
@@ -220,7 +224,7 @@ export async function openConnectionRequest(
   }
   try {
     return await db.pendingConnection.create({
-      data: { fromUserId, toUserId, createdAt: new Date() },
+      data: { fromUserId, toUserId, source, createdAt: new Date() },
       select: { id: true },
     });
   } catch (err: unknown) {

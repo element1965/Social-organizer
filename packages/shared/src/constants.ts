@@ -21,6 +21,33 @@ export const MIN_CONNECTIONS_TO_CREATE = 10;
 export const ASK_MIN_DIRECT = 5;
 export const ASK_MIN_NETWORK = 10;
 
+/**
+ * Where a connection request (and the connection it becomes) came from. Kept for the admin funnel only:
+ * it shows which way of inviting works, never anything about a person to other people.
+ * - link: the personal invite link; link_tg / link_wa: the same link shared with `?src=tg` / `?src=wa`
+ * - qr: live QR scanned in person; shake: two phones shaken together
+ * - need: joined from a public Need page; direct: a request from a person's page
+ * - suggest: "You may know each other"; bot: the Telegram bot kept a lost invite
+ */
+export const CONNECTION_SOURCES = ['link', 'link_tg', 'link_wa', 'qr', 'shake', 'need', 'direct', 'suggest', 'bot'] as const;
+export type ConnectionSource = (typeof CONNECTION_SOURCES)[number];
+
+/** Values of `?src=` on a shared invite address. */
+export const INVITE_SRC_PARAMS = ['tg', 'wa'] as const;
+export type InviteSrcParam = (typeof INVITE_SRC_PARAMS)[number];
+
+export function inviteSrcParam(raw: string | null | undefined): InviteSrcParam | undefined {
+  return (INVITE_SRC_PARAMS as readonly string[]).includes(raw ?? '') ? (raw as InviteSrcParam) : undefined;
+}
+
+export function linkSource(src: InviteSrcParam | null | undefined): ConnectionSource {
+  return src === 'tg' ? 'link_tg' : src === 'wa' ? 'link_wa' : 'link';
+}
+
+/** "You may know each other": how many acquaintances two people must share, and how many are offered. */
+export const SUGGEST_MIN_MUTUAL = 2;
+export const SUGGEST_LIMIT = 8;
+
 export const CONTACT_TYPES = [
   { type: 'telegram', label: 'Telegram', icon: 'telegram', placeholder: '@username или t.me/...' },
   { type: 'whatsapp', label: 'WhatsApp', icon: 'whatsapp', placeholder: '+380...' },

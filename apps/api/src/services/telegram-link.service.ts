@@ -40,7 +40,7 @@ export async function mergeEmptyAccountInto(db: PrismaClient, emptyId: string, k
       if (already > 0) continue;
       await tx.pendingConnection.upsert({
         where: { fromUserId_toUserId: { fromUserId: keepId, toUserId: p.toUserId } },
-        create: { fromUserId: keepId, toUserId: p.toUserId },
+        create: { fromUserId: keepId, toUserId: p.toUserId, source: p.source },
         update: {},
       });
     }
@@ -139,7 +139,7 @@ export async function linkTelegramByCode(
       if (p.toUserId === target.id) continue;
       await db.pendingConnection.upsert({
         where: { fromUserId_toUserId: { fromUserId: target.id, toUserId: p.toUserId } },
-        create: { fromUserId: target.id, toUserId: p.toUserId },
+        create: { fromUserId: target.id, toUserId: p.toUserId, source: p.source },
         update: {},
       }).catch(() => {});
     }

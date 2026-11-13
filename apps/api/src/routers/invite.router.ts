@@ -8,6 +8,8 @@ import { respondToConnectionRequest, createConnectionWithinLimit, connectInPerso
 import { sendTelegramMessage, type TgReplyMarkup } from '../services/telegram-bot.service.js';
 import { syncMilestonesForPair } from '../services/milestone.service.js';
 import { translateWithCache } from '../services/translate.service.js';
+import { INVITE_SRC_PARAMS, linkSource } from '@so/shared';
+import { hit, MINUTE } from '../services/rate-limit.service.js';
 
 const INVITE_EXPIRED_MESSAGE = 'INVITE_EXPIRED: This invite has expired';
 
@@ -36,6 +38,8 @@ export const inviteRouter = router({
        * newcomer was signing up then becomes an ordinary request to the inviter instead of a dead link.
        */
       viaLink: z.boolean().optional(),
+      /** `?src=` of the shared address the person came through (funnel only) */
+      src: z.enum(INVITE_SRC_PARAMS).optional(),
     }))
     .mutation(async ({ ctx, input }) => {
       console.log('[invite.accept] userId:', ctx.userId, 'token:', input.token.slice(0, 8) + '...');
@@ -119,7 +123,7 @@ export const inviteRouter = router({
           if (claimed.count === 0) {
             throw new TRPCError({ code: 'BAD_REQUEST', message: 'Invite already used' });
           }
-          await connectInPersonTx(tx, ctx.userId, inviterId);
+          await connectInPersonTx(tx, ctx.userId, inviterId, 'qr');
         });
         await syncMilestonesForPair(ctx.db, ctx.userId, inviterId);
         const scanner = await ctx.db.user.findUnique({ where: { id: ctx.userId }, select: { name: true } });
@@ -153,7 +157,7 @@ export const inviteRouter = router({
       // Same rules as a direct request: a declined person is not asked again, a recent withdrawal waits,
       // and an old row makes room for a new one (its own notification). Meeting in person still connects.
       await assertConnectionSlots(ctx.db, ctx.userId, inviterId);
-      const created = await openConnectionRequest(ctx.db, ctx.userId, inviterId);
+      const created = await openConnectionRequest(ctx.db, ctx.userId, inviterId, linkSource(input.src));
       if (!created) return { success: true, pending: true, connectedWith: inviterId };
 
       console.log('[invite.accept] pending connection created:', ctx.userId, '->', inviterId);
@@ -236,6 +240,7 @@ export const inviteRouter = router({
       const outcome = await ctx.db.$transaction(async (tx) => {
         const created = await createConnectionWithinLimit(tx, ctx.userId, creatorId, {
           viaCollectionId: collection.id,
+          source: 'need',
         });
         if (created !== 'created') return created;
         await tx.pendingConnection.updateMany({
@@ -265,6 +270,27 @@ export const inviteRouter = router({
       scanMatchesForUser(ctx.db, creatorId).catch(() => {});
 
       return { success: true, alreadyConnected: false, connectedWith: creatorId };
+    }),
+
+  /**
+   * A guest opened an invite page: one more in today's count for that source (the top of the admin funnel).
+   * Nothing about the person or the link is stored. The page calls it once per browser session; link
+   * previews in messengers do not run the page, so they are not counted.
+   */
+  opened: publicProcedure
+    .input(z.object({ src: z.enum(INVITE_SRC_PARAMS).optional() }).optional())
+    .mutation(async ({ ctx, input }) => {
+      if (!hit('invite-opened:' + (ctx.ip ?? 'unknown'), 20, MINUTE)) return { ok: true };
+      try {
+        await ctx.db.$executeRaw`
+          INSERT INTO invite_open_days (day, source, count) VALUES (CURRENT_DATE, ${linkSource(input?.src)}, 1)
+          ON CONFLICT (day, source) DO UPDATE SET count = invite_open_days.count + 1
+        `;
+      } catch (err) {
+        // A counter must never break the invite page (e.g. the table is not migrated yet)
+        console.error('[invite.opened] not counted:', (err as Error).message);
+      }
+      return { ok: true };
     }),
 
   getByToken: publicProcedure

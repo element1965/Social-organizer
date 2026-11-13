@@ -489,6 +489,7 @@
     "statistics": "إحصاءات",
     "peopleTab": "الأشخاص",
     "clustersTab": "التجمّعات",
+    "funnelTab": "Funnel",
     "aboutVersion": "الإصدار {{version}}",
     "openSource": "مفتوح المصدر",
     "terms": "الشروط",
@@ -1152,7 +1153,23 @@
     "totalInvites": "إجمالي المدعوين",
     "invitedCount": "ارتباطات",
     "search": "البحث بالاسم...",
-    "noResults": "لا نتائج"
+    "noResults": "لا نتائج",
+    "funnel": {
+      "note": "People by the week they signed up, last 8 weeks. \"Opened an invite\" counts guests of invite pages in the same week.",
+      "week": "Week of",
+      "opened": "Opened an invite",
+      "signedUp": "Signed up",
+      "requested": "Sent a request",
+      "connected": "First connection",
+      "five": "5 connections",
+      "unlocked": "Need open",
+      "sources": "By source, last 8 weeks",
+      "source": "Source",
+      "requests": "Requests",
+      "connections": "Connections",
+      "perActive": "Newcomers with a connection per active person",
+      "days": "{{count}} days"
+    }
   },
   "support": {
     "title": "محادثة الدعم",
@@ -1343,7 +1360,12 @@
     "sortLabel": "الترتيب",
     "sortNew": "الأحدث أولاً",
     "sortName": "أ–ي",
-    "showMore": "عرض المزيد · متبقٍ {{total}}"
+    "showMore": "عرض المزيد · متبقٍ {{total}}",
+    "suggest": {
+      "title": "ربما تعرفان بعضكما",
+      "hint": "أشخاص يعرفهم معارفك. أكِّد فقط من تعرفه شخصيًا.",
+      "mutual": "معارف مشتركون: {{count}}"
+    }
   },
   "account": {
     "firstName": "الاسم",

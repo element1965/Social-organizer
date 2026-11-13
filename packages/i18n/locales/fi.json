@@ -477,6 +477,7 @@
     "statistics": "Tilastot",
     "peopleTab": "Ihmiset",
     "clustersTab": "Klusterit",
+    "funnelTab": "Funnel",
     "aboutVersion": "Versio {{version}}",
     "openSource": "Avoin lähdekoodi",
     "terms": "Ehdot",
@@ -1132,7 +1133,23 @@
     "totalInvites": "Kutsuttuja yhteensä",
     "invitedCount": "yhteyksiä",
     "search": "Hae nimellä...",
-    "noResults": "Ei tuloksia"
+    "noResults": "Ei tuloksia",
+    "funnel": {
+      "note": "People by the week they signed up, last 8 weeks. \"Opened an invite\" counts guests of invite pages in the same week.",
+      "week": "Week of",
+      "opened": "Opened an invite",
+      "signedUp": "Signed up",
+      "requested": "Sent a request",
+      "connected": "First connection",
+      "five": "5 connections",
+      "unlocked": "Need open",
+      "sources": "By source, last 8 weeks",
+      "source": "Source",
+      "requests": "Requests",
+      "connections": "Connections",
+      "perActive": "Newcomers with a connection per active person",
+      "days": "{{count}} days"
+    }
   },
   "support": {
     "title": "Tukichat",
@@ -1315,7 +1332,12 @@
     "sortLabel": "Järjestys",
     "sortNew": "Uusimmat ensin",
     "sortName": "A–Ö",
-    "showMore": "Näytä lisää · jäljellä {{total}}"
+    "showMore": "Näytä lisää · jäljellä {{total}}",
+    "suggest": {
+      "title": "Saatatte tuntea toisenne",
+      "hint": "Ihmisiä, jotka tuttavasi tuntevat. Vahvista vain ne, jotka tunnet henkilökohtaisesti.",
+      "mutual": "Yhteisiä tuttavia: {{count}}"
+    }
   },
   "account": {
     "firstName": "Etunimi",
