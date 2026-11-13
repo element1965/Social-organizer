@@ -448,7 +448,8 @@
     "undo": "Cofnij",
     "markError": "Nie udało się zapisać. Spróbuj ponownie.",
     "paidToggle": "Otrzymano od {{name}}",
-    "allReceived": "Wszystko otrzymane · {{sum}}"
+    "allReceived": "Wszystko otrzymane · {{sum}}",
+    "shareNext": "Przekaż tę potrzebę innym, którzy znają jej autora."
   },
   "profile": {
     "phone": "Telefon",
@@ -1352,7 +1353,12 @@
       "title": "Możliwe, że się znacie",
       "hint": "Osoby, które znają Twoi znajomi. Potwierdzaj tylko tych, których znasz osobiście.",
       "mutual": "Wspólni znajomi: {{count}}"
-    }
+    },
+    "named": {
+      "title": "Imienne zaproszenia",
+      "hint": "Imiona osób, które znasz, po jednym w wierszu. Każdy link zwraca się do osoby po imieniu."
+    },
+    "readyLine": "Mają {{min}} własnych połączeń: {{count}} z {{total}}"
   },
   "account": {
     "firstName": "Imię",

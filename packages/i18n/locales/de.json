@@ -442,7 +442,8 @@
     "undo": "Rückgängig",
     "markError": "Markierung nicht gespeichert. Versuch es noch einmal.",
     "paidToggle": "Erhalten von {{name}}",
-    "allReceived": "Alles erhalten · {{sum}}"
+    "allReceived": "Alles erhalten · {{sum}}",
+    "shareNext": "Geben Sie diesen Bedarf an andere weiter, die die Person kennen, die ihn gemeldet hat."
   },
   "profile": {
     "phone": "Telefon",
@@ -1338,7 +1339,12 @@
       "title": "Vielleicht kennen Sie sich",
       "hint": "Menschen, die Ihre Bekannten kennen. Bestätigen Sie nur, wen Sie persönlich kennen.",
       "mutual": "Gemeinsame Bekannte: {{count}}"
-    }
+    },
+    "named": {
+      "title": "Persönliche Einladungen",
+      "hint": "Namen von Menschen, die Sie kennen, einer pro Zeile. Jeder Link begrüßt die Person mit Namen."
+    },
+    "readyLine": "Haben {{min}} eigene Verbindungen: {{count}} von {{total}}"
   },
   "account": {
     "firstName": "Vorname",

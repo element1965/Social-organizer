@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
+import { ASK_MIN_DIRECT } from '@so/shared';
 import { Avatar } from '../ui2/Avatar';
 import { Button } from '../ui2/Button';
 import { Group } from '../ui2/Group';
@@ -13,6 +14,8 @@ export interface ArrivalPerson {
   name: string;
   photoUrl?: string | null;
   at: Date;
+  /** The person's own direct connections, when known */
+  connections?: number;
 }
 
 interface ArrivalListProps {
@@ -72,6 +75,9 @@ export function ArrivalList({ pending, connected, onConfirm }: ArrivalListProps)
   const visible = people.slice(0, shown);
   const left = people.length - visible.length;
   const tools = total > TOOLS_FROM;
+  // How many of the person's acquaintances already have enough direct connections to report a Need.
+  // A fact about the circle, shown to its owner only: no order, no comparison between people.
+  const ready = connected.filter((p) => (p.connections ?? 0) >= ASK_MIN_DIRECT).length;
 
   return (
     <section>
@@ -81,6 +87,11 @@ export function ArrivalList({ pending, connected, onConfirm }: ArrivalListProps)
           <span className="text-label font-bold text-warm-ink">{t('add.waiting', { count: pending.length })}</span>
         ) : null}
       </div>
+      {connected.length > 0 ? (
+        <p className="mb-1.5 px-1 text-label font-semibold text-ink-muted">
+          {t('add.readyLine', { min: ASK_MIN_DIRECT, count: ready, total: connected.length })}
+        </p>
+      ) : null}
       {tools ? (
         <div className="mb-2.5 flex flex-col gap-2">
           <Input

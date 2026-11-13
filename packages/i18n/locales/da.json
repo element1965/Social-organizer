@@ -442,7 +442,8 @@
     "undo": "Fortryd",
     "markError": "Markeringen blev ikke gemt. Prøv igen.",
     "paidToggle": "Modtaget fra {{name}}",
-    "allReceived": "Alt modtaget · {{sum}}"
+    "allReceived": "Alt modtaget · {{sum}}",
+    "shareNext": "Send dette behov videre til andre, der kender personen bag det."
   },
   "profile": {
     "phone": "Telefon",
@@ -1338,7 +1339,12 @@
       "title": "I kender måske hinanden",
       "hint": "Personer, som dine bekendte kender. Bekræft kun dem, du kender personligt.",
       "mutual": "Fælles bekendte: {{count}}"
-    }
+    },
+    "named": {
+      "title": "Personlige invitationer",
+      "hint": "Navne på personer, du kender, ét pr. linje. Hvert link hilser personen ved navn."
+    },
+    "readyLine": "Har {{min}} egne forbindelser: {{count}} af {{total}}"
   },
   "account": {
     "firstName": "Fornavn",

@@ -454,7 +454,8 @@
     "undo": "Undo",
     "markError": "Could not save the mark. Try again.",
     "paidToggle": "Received from {{name}}",
-    "allReceived": "All received · {{sum}}"
+    "allReceived": "All received · {{sum}}",
+    "shareNext": "Pass this Need on to others who know its author."
   },
   "profile": {
     "phone": "Phone",
@@ -1357,7 +1358,12 @@
       "title": "You may know each other",
       "hint": "People your acquaintances know. Confirm only those you know in person.",
       "mutual": "Shared acquaintances: {{count}}"
-    }
+    },
+    "named": {
+      "title": "Personal invitations",
+      "hint": "Names of people you know, one per line. Each link greets the person by name."
+    },
+    "readyLine": "Have {{min}} connections of their own: {{count}} of {{total}}"
   },
   "account": {
     "firstName": "First name",

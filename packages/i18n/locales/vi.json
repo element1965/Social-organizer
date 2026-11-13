@@ -439,7 +439,8 @@
     "undo": "Hoàn tác",
     "markError": "Không lưu được. Hãy thử lại.",
     "paidToggle": "Đã nhận từ {{name}}",
-    "allReceived": "Đã nhận đủ · {{sum}}"
+    "allReceived": "Đã nhận đủ · {{sum}}",
+    "shareNext": "Chuyển nhu cầu này tới những người khác cũng quen người đăng."
   },
   "profile": {
     "phone": "Điện thoại",
@@ -1331,7 +1332,12 @@
       "title": "Có thể hai bạn quen nhau",
       "hint": "Những người mà người quen của bạn biết. Chỉ xác nhận những người bạn quen trực tiếp.",
       "mutual": "Người quen chung: {{count}}"
-    }
+    },
+    "named": {
+      "title": "Lời mời đích danh",
+      "hint": "Tên những người bạn quen, mỗi dòng một tên. Mỗi liên kết sẽ gọi tên người đó."
+    },
+    "readyLine": "Đã có {{min}} kết nối riêng: {{count}} trên {{total}}"
   },
   "account": {
     "firstName": "Tên",
