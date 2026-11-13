@@ -23,7 +23,10 @@ import { StageRail } from '../components/ui2/StageRail';
 import { useShellMode } from '../components/ui2/shell-mode';
 import { useAuth } from '../hooks/useAuth';
 import { useNicknames } from '../hooks/useNicknames';
+import { inflectName } from '@so/shared';
+import { MessengerButtons } from '../components/share/MessengerButtons';
 import { buildSosInviteUrl } from '../lib/inviteUrl';
+import { shareLink } from '../lib/share';
 import { trpc } from '../lib/trpc';
 import { useOffline } from '../lib/connectivity';
 import { isPendingRequest, useDeclineNeed, useExpiryTick, type NotificationItem } from '../hooks/useEvents';
@@ -254,20 +257,17 @@ export function CollectionPage() {
     ? formatDay(new Date(cycleEnd.getTime() + REGULAR_CYCLE_DAYS * 24 * 60 * 60 * 1000), language)
     : '';
 
+  // The same sentence as the public page and its link card ("Anna needs assistance")
+  const shareText = t('sos.headline', {
+    name: language.toLowerCase().startsWith('ru') ? inflectName(data.creator.name, 'dative') : firstName(data.creator.name),
+  });
   const share = async () => {
-    const url = buildSosInviteUrl(data.id);
     try {
-      if (navigator.share) {
-        await navigator.share({ title: t('collection.share'), url });
-        return;
+      const outcome = await shareLink({ title: t('collection.share'), text: shareText, url: buildSosInviteUrl(data.id) });
+      if (outcome === 'copied') {
+        setCopied(true);
+        window.setTimeout(() => setCopied(false), 2000);
       }
-    } catch (error) {
-      if (error instanceof DOMException && error.name === 'AbortError') return;
-    }
-    try {
-      await navigator.clipboard.writeText(url);
-      setCopied(true);
-      window.setTimeout(() => setCopied(false), 2000);
     } catch {
       setCopied(false);
     }
@@ -592,6 +592,7 @@ export function CollectionPage() {
                   <IconQr className="h-5 w-5" />
                 </Button>
               </div>
+              <MessengerButtons className="mt-2.5" text={shareText} urlFor={() => buildSosInviteUrl(data.id)} />
               <p className="mt-3 text-label font-semibold text-ink-muted">{t('collection.publicWarning')}</p>
             </>
           ) : null}
@@ -610,6 +611,17 @@ export function CollectionPage() {
       ) : (
         <ParticipantList people={people} showPaid={false} onPerson={(userIdToOpen) => navigate(`/person/${userIdToOpen}`)} />
       )}
+
+      {/* A participant can pass an open Need on to others who know its author: the page is public anyway */}
+      {!owner && myObl && !closed && !held && data.status === 'ACTIVE' ? (
+        <Card className="mt-3">
+          <p className="text-body-s font-semibold text-ink">{t('collection.shareNext')}</p>
+          <Button className="mt-3 w-full" variant="secondary" icon={<IconShare />} onClick={share}>
+            {copied ? t('collection.shareCopied') : t('add.share')}
+          </Button>
+          <MessengerButtons className="mt-2.5" text={shareText} urlFor={() => buildSosInviteUrl(data.id)} />
+        </Card>
+      ) : null}
 
       {owner && data.type === 'REGULAR' ? <PreviousCycles collectionId={data.id} /> : null}
 

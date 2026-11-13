@@ -445,7 +445,8 @@
     "undo": "Annulla",
     "markError": "Impossibile salvare il segno. Riprova.",
     "paidToggle": "Ricevuto da {{name}}",
-    "allReceived": "Tutto ricevuto · {{sum}}"
+    "allReceived": "Tutto ricevuto · {{sum}}",
+    "shareNext": "Passa questo bisogno ad altre persone che conoscono chi lo ha segnalato."
   },
   "profile": {
     "phone": "Telefono",
@@ -1345,7 +1346,12 @@
       "title": "Forse vi conoscete",
       "hint": "Persone che i tuoi conoscenti conoscono. Conferma solo chi conosci di persona.",
       "mutual": "Conoscenti in comune: {{count}}"
-    }
+    },
+    "named": {
+      "title": "Inviti personali",
+      "hint": "I nomi delle persone che conosci, uno per riga. Ogni link saluta la persona per nome."
+    },
+    "readyLine": "Hanno {{min}} connessioni proprie: {{count}} su {{total}}"
   },
   "account": {
     "firstName": "Nome",

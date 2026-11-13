@@ -442,7 +442,8 @@
     "undo": "Kumoa",
     "markError": "Merkintää ei tallennettu. Yritä uudelleen.",
     "paidToggle": "Saatu henkilöltä {{name}}",
-    "allReceived": "Kaikki saatu · {{sum}}"
+    "allReceived": "Kaikki saatu · {{sum}}",
+    "shareNext": "Välitä tämä tarve muille, jotka tuntevat sen ilmoittajan."
   },
   "profile": {
     "phone": "Puhelin",
@@ -1338,7 +1339,12 @@
       "title": "Saatatte tuntea toisenne",
       "hint": "Ihmisiä, jotka tuttavasi tuntevat. Vahvista vain ne, jotka tunnet henkilökohtaisesti.",
       "mutual": "Yhteisiä tuttavia: {{count}}"
-    }
+    },
+    "named": {
+      "title": "Henkilökohtaiset kutsut",
+      "hint": "Tuntemiesi ihmisten nimet, yksi rivillä. Jokainen linkki tervehtii henkilöä nimeltä."
+    },
+    "readyLine": "Omia yhteyksiä {{min}}: {{count}} / {{total}}"
   },
   "account": {
     "firstName": "Etunimi",

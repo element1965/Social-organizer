@@ -445,7 +445,8 @@
     "undo": "Anulează",
     "markError": "Marcajul nu a fost salvat. Încearcă din nou.",
     "paidToggle": "Primit de la {{name}}",
-    "allReceived": "Totul primit · {{sum}}"
+    "allReceived": "Totul primit · {{sum}}",
+    "shareNext": "Trimite această nevoie și altora care îl cunosc pe autor."
   },
   "profile": {
     "phone": "Telefon",
@@ -1345,7 +1346,12 @@
       "title": "Poate vă cunoașteți",
       "hint": "Persoane pe care le cunosc cunoscuții tăi. Confirmă doar pe cei pe care îi cunoști personal.",
       "mutual": "Cunoscuți comuni: {{count}}"
-    }
+    },
+    "named": {
+      "title": "Invitații personale",
+      "hint": "Numele persoanelor pe care le cunoști, câte unul pe rând. Fiecare link se adresează persoanei pe nume."
+    },
+    "readyLine": "Au {{min}} conexiuni proprii: {{count}} din {{total}}"
   },
   "account": {
     "firstName": "Prenume",

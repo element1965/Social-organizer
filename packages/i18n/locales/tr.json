@@ -442,7 +442,8 @@
     "undo": "Geri al",
     "markError": "İşaret kaydedilemedi. Tekrar deneyin.",
     "paidToggle": "{{name}} kişisinden alındı",
-    "allReceived": "Hepsi alındı · {{sum}}"
+    "allReceived": "Hepsi alındı · {{sum}}",
+    "shareNext": "Bu ihtiyacı, sahibini tanıyan başka kişilere de iletin."
   },
   "profile": {
     "phone": "Telefon",
@@ -1338,7 +1339,12 @@
       "title": "Tanışıyor olabilirsiniz",
       "hint": "Tanıdıklarınızın tanıdığı kişiler. Yalnızca şahsen tanıdıklarınızı onaylayın.",
       "mutual": "Ortak tanıdık: {{count}}"
-    }
+    },
+    "named": {
+      "title": "Kişisel davetler",
+      "hint": "Tanıdığınız kişilerin adları, her satıra bir ad. Her bağlantı kişiye adıyla seslenir."
+    },
+    "readyLine": "Kendi {{min}} bağlantısı olanlar: {{total}} kişiden {{count}}"
   },
   "account": {
     "firstName": "Ad",

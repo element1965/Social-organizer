@@ -439,7 +439,8 @@
     "undo": "Urungkan",
     "markError": "Tanda gagal disimpan. Coba lagi.",
     "paidToggle": "Diterima dari {{name}}",
-    "allReceived": "Semua diterima · {{sum}}"
+    "allReceived": "Semua diterima · {{sum}}",
+    "shareNext": "Teruskan kebutuhan ini kepada orang lain yang mengenal penulisnya."
   },
   "profile": {
     "phone": "Telepon",
@@ -1331,7 +1332,12 @@
       "title": "Mungkin kalian saling kenal",
       "hint": "Orang yang dikenal oleh kenalan Anda. Konfirmasi hanya yang Anda kenal secara pribadi.",
       "mutual": "Kenalan bersama: {{count}}"
-    }
+    },
+    "named": {
+      "title": "Undangan pribadi",
+      "hint": "Nama orang yang Anda kenal, satu per baris. Setiap tautan menyapa orang itu dengan namanya."
+    },
+    "readyLine": "Punya {{min}} koneksi sendiri: {{count}} dari {{total}}"
   },
   "account": {
     "firstName": "Nama depan",

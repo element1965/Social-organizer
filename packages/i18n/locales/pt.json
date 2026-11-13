@@ -445,7 +445,8 @@
     "undo": "Desfazer",
     "markError": "Não foi possível salvar a marca. Tente de novo.",
     "paidToggle": "Recebido de {{name}}",
-    "allReceived": "Tudo recebido · {{sum}}"
+    "allReceived": "Tudo recebido · {{sum}}",
+    "shareNext": "Passe esta necessidade a outras pessoas que conhecem o autor."
   },
   "profile": {
     "phone": "Telefone",
@@ -1345,7 +1346,12 @@
       "title": "Talvez vocês se conheçam",
       "hint": "Pessoas que seus conhecidos conhecem. Confirme apenas quem você conhece pessoalmente.",
       "mutual": "Conhecidos em comum: {{count}}"
-    }
+    },
+    "named": {
+      "title": "Convites pessoais",
+      "hint": "Nomes de pessoas que você conhece, um por linha. Cada link cumprimenta a pessoa pelo nome."
+    },
+    "readyLine": "Têm {{min}} conexões próprias: {{count}} de {{total}}"
   },
   "account": {
     "firstName": "Nome",

@@ -5,6 +5,9 @@ import { Button } from '../ui2/Button';
 import { Card } from '../ui2/Card';
 import { Input } from '../ui2/Input';
 import { IconQr, IconScan, IconShare } from './icons';
+import { NamedInvites } from './NamedInvites';
+import { MessengerButtons } from '../share/MessengerButtons';
+import { withSrc } from '../../lib/messengerShare';
 import { permanentInviteUrl, prettyInvite } from './links';
 import { shareLink } from '../../lib/share';
 import { trpc } from '../../lib/trpc';
@@ -33,6 +36,7 @@ export function LinkCard({ slug, name, customSlug }: LinkCardProps) {
   const [editing, setEditing] = useState(false);
   const [draft, setDraft] = useState('');
   const [editError, setEditError] = useState('');
+  const [namedOpen, setNamedOpen] = useState(false);
   const pretty = prettyInvite(slug);
 
   const share = async () => {
@@ -130,6 +134,12 @@ export function LinkCard({ slug, name, customSlug }: LinkCardProps) {
             {copied ? t('common.copied') : t('add.share')}
           </Button>
           {failed ? <p className="mt-2 text-label font-semibold text-sos">{t('add.shareError')}</p> : null}
+          {/* One tap into the messenger most people use; the link says which one it went through */}
+          <MessengerButtons
+            className="mt-2.5"
+            text={t('add.shareText', { name })}
+            urlFor={(messenger) => withSrc(permanentInviteUrl(slug), messenger)}
+          />
           <div className="mt-2.5 grid grid-cols-2 gap-2.5">
             <Button className="w-full" variant="secondary" icon={<IconQr />} onClick={() => navigate('/add/qr')}>
               {t('add.myQr')}
@@ -139,6 +149,10 @@ export function LinkCard({ slug, name, customSlug }: LinkCardProps) {
             </Button>
           </div>
           <p className="mt-3 text-caption font-semibold text-ink-muted">{t('add.rules')}</p>
+          <Button className="mt-1 -ml-2" variant="text" onClick={() => setNamedOpen(true)}>
+            {t('add.named.title')}
+          </Button>
+          <NamedInvites open={namedOpen} onClose={() => setNamedOpen(false)} slug={slug} name={name} />
         </>
       )}
     </Card>
