@@ -7,6 +7,9 @@
  */
 import type { PrismaClient } from '@so/db';
 import { resources, SUPPORTED_LANGUAGES } from '@so/i18n';
+import { firstName, inflectName, safeAddressee } from '@so/shared';
+
+export { safeAddressee };
 
 /** The same rule as the web client (flow.ts safeInviteToken): letters, digits, "_" and "-", sane length. */
 const TOKEN_RE = /^[\w-]{1,128}$/;
@@ -28,16 +31,6 @@ function lookup(lang: string, key: string): string | null {
 function translate(lang: string, key: string, vars: Record<string, string>): string {
   const raw = lookup(lang, key) ?? lookup('en', key) ?? '';
   return raw.replace(/\{\{\s*(\w+)\s*\}\}/g, (_m, k: string) => vars[k] ?? '');
-}
-
-/**
- * The invited person's name from `?to=` (same rule as the web page): letters, spaces, "-", "'", ".", up to 40.
- * It only exists in the address the inviter shared and is never stored.
- */
-export function safeAddressee(raw: string | null | undefined): string | null {
-  const v = (raw ?? '').normalize('NFC').replace(/\s+/g, ' ').trim();
-  if (!v || v.length > 40 || !/^[\p{L}\p{M}][\p{L}\p{M} .'’-]*$/u.test(v)) return null;
-  return v;
 }
 
 export function escapeHtml(s: string): string {
@@ -94,13 +87,86 @@ export function renderInvitePreview(
   const name = preview.name.trim() || 'Social Organizer';
   const first = name.split(/\s+/)[0] || name;
   const to = safeAddressee(opts.to);
-  const title = `${to ? `${to}, ` : ''}${translate(opts.lang, 'invite.calls', { name })}`;
-  const description = translate(opts.lang, 'invite.say', { name: first });
-  const image = absolutePhoto(preview.photoUrl, opts.origin);
+  return applyCard(html, {
+    title: `${to ? `${to}, ` : ''}${translate(opts.lang, 'invite.calls', { name })}`,
+    description: translate(opts.lang, 'invite.say', { name: first }),
+    image: absolutePhoto(preview.photoUrl, opts.origin),
+    imageAlt: name,
+    lang: opts.lang,
+    url: opts.url,
+  });
+}
 
-  const t = escapeHtml(title);
-  const d = escapeHtml(description);
-  const u = escapeHtml(opts.url);
+export type SosPreview = {
+  name: string;
+  photoUrl: string | null;
+  language: string;
+  /** open: people can still take part; full: the amount is reported; closed; paused (moderation or the circle) */
+  state: 'open' | 'full' | 'closed' | 'paused';
+};
+
+/** Collection ids are cuids; anything else is not looked up. */
+const COLLECTION_ID_RE = /^[a-z0-9]{8,40}$/i;
+
+/**
+ * Who stands behind a public Need page. The card carries what the page itself shows first: the author's
+ * name and photo. No amount, no description, no participants: a link card stays in chats long after
+ * the Need is closed.
+ */
+export async function findSosPreview(db: PrismaClient, rawId: string): Promise<SosPreview | null> {
+  if (!COLLECTION_ID_RE.test(rawId)) return null;
+  const collection = await db.collection.findUnique({
+    where: { id: rawId },
+    select: {
+      status: true,
+      blockReason: true,
+      creator: { select: { name: true, photoUrl: true, language: true, deletedAt: true } },
+    },
+  });
+  if (!collection || collection.creator.deletedAt) return null;
+  const state: SosPreview['state'] =
+    collection.status === 'ACTIVE' ? 'open'
+      : collection.status === 'BLOCKED' ? (collection.blockReason != null ? 'paused' : 'full')
+        : 'closed';
+  return { name: collection.creator.name, photoUrl: collection.creator.photoUrl, language: collection.creator.language, state };
+}
+
+const SOS_STATE_LINE: Record<SosPreview['state'], string> = {
+  open: 'sos.joinCircleBody',
+  full: 'sos.fullLine',
+  closed: 'sos.closedLine',
+  paused: 'sos.suspendedLine',
+};
+
+/** The same headline as the public page ("Anna needs assistance"; Russian puts the name in the dative). */
+export function renderSosPreview(
+  html: string,
+  preview: SosPreview,
+  opts: { lang: string; url: string; origin: string },
+): string {
+  const name = preview.name.trim() || 'Social Organizer';
+  const shown = opts.lang === 'ru' ? inflectName(name, 'dative') : firstName(name);
+  return applyCard(html, {
+    title: translate(opts.lang, 'sos.headline', { name: shown }),
+    description: translate(opts.lang, SOS_STATE_LINE[preview.state], { name: shown }),
+    image: absolutePhoto(preview.photoUrl, opts.origin),
+    imageAlt: name,
+    lang: opts.lang,
+    url: opts.url,
+  });
+}
+
+/** Writes one link card (title, description, picture) into the built index.html. */
+function applyCard(
+  html: string,
+  card: { title: string; description: string; image: string | null; imageAlt: string; lang: string; url: string },
+): string {
+  const { image } = card;
+  const name = card.imageAlt;
+  const opts = { lang: card.lang };
+  const t = escapeHtml(card.title);
+  const d = escapeHtml(card.description);
+  const u = escapeHtml(card.url);
   let out = html;
 
   const setMeta = (attr: 'property' | 'name', key: string, value: string) => {

@@ -439,7 +439,8 @@
     "undo": "실행 취소",
     "markError": "저장하지 못했어요. 다시 시도하세요.",
     "paidToggle": "{{name}}님에게 받음",
-    "allReceived": "모두 받음 · {{sum}}"
+    "allReceived": "모두 받음 · {{sum}}",
+    "shareNext": "이 필요를 작성자를 아는 다른 사람들에게도 전해 주세요."
   },
   "profile": {
     "phone": "전화번호",
@@ -1331,7 +1332,12 @@
       "title": "아는 사이일 수 있어요",
       "hint": "지인이 아는 사람들입니다. 직접 아는 사람만 확인하세요.",
       "mutual": "함께 아는 사람: {{count}}"
-    }
+    },
+    "named": {
+      "title": "이름이 들어간 초대",
+      "hint": "아는 사람의 이름을 한 줄에 하나씩 적으세요. 링크마다 그 사람의 이름으로 인사합니다."
+    },
+    "readyLine": "자신의 연결이 {{min}}개 있는 사람: {{total}}명 중 {{count}}명"
   },
   "account": {
     "firstName": "이름",

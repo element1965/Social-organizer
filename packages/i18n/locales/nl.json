@@ -442,7 +442,8 @@
     "undo": "Ongedaan maken",
     "markError": "Markering niet opgeslagen. Probeer het opnieuw.",
     "paidToggle": "Ontvangen van {{name}}",
-    "allReceived": "Alles ontvangen · {{sum}}"
+    "allReceived": "Alles ontvangen · {{sum}}",
+    "shareNext": "Geef deze behoefte door aan anderen die de melder kennen."
   },
   "profile": {
     "phone": "Telefoon",
@@ -1338,7 +1339,12 @@
       "title": "Misschien kennen jullie elkaar",
       "hint": "Mensen die je kennissen kennen. Bevestig alleen wie je persoonlijk kent.",
       "mutual": "Gemeenschappelijke kennissen: {{count}}"
-    }
+    },
+    "named": {
+      "title": "Persoonlijke uitnodigingen",
+      "hint": "Namen van mensen die je kent, één per regel. Elke link spreekt de persoon bij naam aan."
+    },
+    "readyLine": "Hebben {{min}} eigen verbindingen: {{count}} van {{total}}"
   },
   "account": {
     "firstName": "Voornaam",

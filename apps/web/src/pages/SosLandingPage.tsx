@@ -1,4 +1,5 @@
-import { useParams } from 'react-router-dom';
+import { useEffect } from 'react';
+import { Link, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { isTelegramWebApp } from '@so/tg-adapter';
 import { inflectName } from '../components/collection/name-case';
@@ -9,6 +10,7 @@ import { Button } from '../components/ui2/Button';
 import { formatMoney } from '../components/ui2/format';
 import { IconAdd } from '../components/ui2/icons';
 import { useAuth } from '../hooks/useAuth';
+import { firstOpenOf } from '../lib/inviteSrc';
 import { savePendingSos, sosCollectionPath } from '../lib/inviteUrl';
 import { trpc } from '../lib/trpc';
 
@@ -49,6 +51,15 @@ export function SosLandingPage() {
 
   const collection = isPreview ? DEMO_COLLECTION : fetched.data;
   const loading = !isPreview && fetched.isLoading;
+
+  // A guest who opened a real Need page is counted once per browser session (the admin funnel, source "need")
+  const opened = trpc.invite.opened.useMutation();
+  const countOpen = opened.mutate;
+  const loaded = !!fetched.data;
+  useEffect(() => {
+    if (isPreview || isAuthenticated || !collectionId || !loaded) return;
+    if (firstOpenOf(`sos:${collectionId}`)) countOpen({ kind: 'need' });
+  }, [isPreview, isAuthenticated, collectionId, loaded, countOpen]);
 
   const join = () => {
     if (!collectionId || isPreview) return;
@@ -213,6 +224,11 @@ function PublicBody({
         ) : (
           <p className="text-center text-body-s font-semibold text-ink-muted">{footer}</p>
         )}
+        {/* A guest who does not know the tool yet, or came to a Need that is over, has somewhere to go */}
+        <Link to="/how" className="so-focus mt-4 flex min-h-11 items-center justify-center gap-1.5 text-body-s font-bold text-ink-muted">
+          {t('invite.howItWorks')}
+          <span aria-hidden>→</span>
+        </Link>
       </div>
     </>
   );

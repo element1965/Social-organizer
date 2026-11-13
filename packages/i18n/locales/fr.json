@@ -445,7 +445,8 @@
     "undo": "Annuler",
     "markError": "La marque n’a pas été enregistrée. Réessayez.",
     "paidToggle": "Reçu de {{name}}",
-    "allReceived": "Tout reçu · {{sum}}"
+    "allReceived": "Tout reçu · {{sum}}",
+    "shareNext": "Transmettez ce besoin à d’autres personnes qui connaissent son auteur."
   },
   "profile": {
     "phone": "Téléphone",
@@ -1345,7 +1346,12 @@
       "title": "Vous vous connaissez peut-être",
       "hint": "Des personnes que vos connaissances connaissent. Ne confirmez que celles que vous connaissez personnellement.",
       "mutual": "Connaissances communes : {{count}}"
-    }
+    },
+    "named": {
+      "title": "Invitations personnelles",
+      "hint": "Les noms des personnes que vous connaissez, un par ligne. Chaque lien salue la personne par son nom."
+    },
+    "readyLine": "Ont {{min}} connexions à eux : {{count}} sur {{total}}"
   },
   "account": {
     "firstName": "Prénom",
