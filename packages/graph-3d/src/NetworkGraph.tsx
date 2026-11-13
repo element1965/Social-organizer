@@ -112,6 +112,118 @@ export interface NetworkGraphHandle {
   setView: (view: GraphView, options?: { animate?: boolean }) => void;
 }
 
+/** Where the nodes of a chain are, as vectors (nodes without a position yet are left out). */
+function chainPoints(ids: string[], map: Map<string, SimNode>): THREE.Vector3[] {
+  const out: THREE.Vector3[] = [];
+  for (const id of ids) {
+    const n = map.get(id);
+    if (n && typeof n.x === 'number') out.push(new THREE.Vector3(n.x, n.y ?? 0, n.z ?? 0));
+  }
+  return out;
+}
+
+/** Middle of the box around the points: the look-at point that keeps the whole chain centred. */
+function chainCenter(points: THREE.Vector3[], out = new THREE.Vector3()): THREE.Vector3 {
+  if (points.length === 0) return out.set(0, 0, 0);
+  const min = points[0]!.clone();
+  const max = points[0]!.clone();
+  for (const p of points) {
+    min.min(p);
+    max.max(p);
+  }
+  return out.copy(min).add(max).multiplyScalar(0.5);
+}
+
+/**
+ * The direction to look at a chain from so that it lies flat across the screen: the axis along which the
+ * points spread least (the normal of the plane that fits them best). Of the two ways along that axis the
+ * one on the side of `prefer` (the current camera) is taken, so the camera does not cross the scene.
+ * A straight chain has no single such axis: then the perpendicular nearest to `prefer` is taken.
+ */
+function chainViewDirection(points: THREE.Vector3[], prefer: THREE.Vector3): THREE.Vector3 {
+  const c = chainCenter(points);
+  let xx = 0, xy = 0, xz = 0, yy = 0, yz = 0, zz = 0;
+  for (const p of points) {
+    const x = p.x - c.x, y = p.y - c.y, z = p.z - c.z;
+    xx += x * x; xy += x * y; xz += x * z; yy += y * y; yz += y * z; zz += z * z;
+  }
+  const trace = xx + yy + zz;
+  const start = prefer.lengthSq() > 1e-9 ? prefer.clone().normalize() : new THREE.Vector3(0, 0, 1);
+  if (trace < 1e-6) return start;
+  // Power iteration on (trace·I − C): its largest eigenvector is the smallest one of the covariance C.
+  // Starting from the current view keeps the answer nearest to it when two axes tie (a straight chain).
+  const v = start.clone();
+  const w = new THREE.Vector3();
+  for (let i = 0; i < 40; i++) {
+    w.set(
+      (trace - xx) * v.x - xy * v.y - xz * v.z,
+      -xy * v.x + (trace - yy) * v.y - yz * v.z,
+      -xz * v.x - yz * v.y + (trace - zz) * v.z,
+    );
+    if (w.lengthSq() < 1e-12) break;
+    v.copy(w).normalize();
+  }
+  if (v.dot(start) < 0) v.negate();
+  return v.normalize();
+}
+
+/** Never straight along the up axis: the orbit controls turn badly at the poles. */
+function awayFromPoles(v: THREE.Vector3): THREE.Vector3 {
+  if (Math.abs(v.y) <= 0.92) return v;
+  const y = Math.sign(v.y) * 0.92;
+  const flat = Math.sqrt(1 - y * y);
+  const h = Math.hypot(v.x, v.z);
+  return h > 1e-6 ? v.set((v.x / h) * flat, y, (v.z / h) * flat) : v.set(0, y, flat);
+}
+
+/** Directions spread evenly over the sphere (Fibonacci lattice), made once. */
+const SPHERE_DIRS: THREE.Vector3[] = (() => {
+  const out: THREE.Vector3[] = [];
+  const n = 160;
+  const golden = Math.PI * (3 - Math.sqrt(5));
+  for (let i = 0; i < n; i++) {
+    const y = 1 - (2 * (i + 0.5)) / n;
+    const r = Math.sqrt(1 - y * y);
+    out.push(new THREE.Vector3(Math.cos(golden * i) * r, y, Math.sin(golden * i) * r));
+  }
+  return out;
+})();
+
+/**
+ * The direction to look at a focused chain from. Each person in it must stay apart from every other on
+ * the screen (the centre tile is large, so it needs more room), otherwise a name or a node hides behind
+ * another. Among the directions that keep them apart the one nearest the current view wins, so the
+ * camera does not swing around the scene. `clear` is the room each point needs, in world units.
+ */
+function chainView(points: THREE.Vector3[], clear: number[], prefer: THREE.Vector3): THREE.Vector3 {
+  const from = prefer.lengthSq() > 1e-9 ? prefer.clone().normalize() : new THREE.Vector3(0, 0, 1);
+  if (points.length < 2) return awayFromPoles(from);
+  const candidates = [chainViewDirection(points, from), from.clone(), ...SPHERE_DIRS];
+  const diff = new THREE.Vector3();
+  let best = from.clone();
+  let bestScore = -Infinity;
+  for (const raw of candidates) {
+    const d = awayFromPoles(raw.clone().normalize());
+    // The tightest pair on screen: projected distance minus the room both points need
+    let tightest = Infinity;
+    for (let i = 0; i < points.length; i++) {
+      for (let j = i + 1; j < points.length; j++) {
+        diff.copy(points[i]!).sub(points[j]!);
+        const along = diff.dot(d);
+        const across = Math.sqrt(Math.max(0, diff.lengthSq() - along * along));
+        tightest = Math.min(tightest, across - (clear[i] ?? 0) - (clear[j] ?? 0));
+      }
+    }
+    // Room between the people first; staying near the current view breaks ties (a few world units)
+    const score = Math.min(tightest, 6) + 0.15 * tightest + 4 * d.dot(from);
+    if (score > bestScore) {
+      bestScore = score;
+      best = d;
+    }
+  }
+  return best;
+}
+
 /* ---------- Tuning ---------- */
 
 // LOD distances (camera -> node), compared squared in the frame loop
@@ -137,8 +249,14 @@ const BALL_STRENGTH = 0.22;
 /** Most dots in the far-ring dust; above this, dots stand for several people each. */
 const FAR_DOTS_MAX = 700;
 const ballOuter = (n: number) => 9 * Math.cbrt(Math.max(1, n)) + 22;
-const FOCUS_ROTATE_SPEED = 1.6;  // orbit around a focused node (OrbitControls units)
 const FOCUS_FLY_MS = 900;
+// Framing a focused person with their chain: room around the outermost node for its name and photo
+// (world units), and the band the camera distance stays in
+const FOCUS_PAD = 7;
+// Not closer than this: nearer, the centre tile fills a wide screen (a short chain fits at 40–60)
+const FOCUS_MIN_DIST = 72;
+const FOCUS_MAX_DIST = 240;
+const FOCUS_MIN_RADIUS = 9;
 const BALL_SHELLS = [0, 0.38, 0.7, 1]; // shell radius by depth, as a fraction of the outer radius
 const MAX_NODE_SPEED = 4;        // world units per tick; caps the "explosion" of the first ticks
 const MIN_DOT_PX = 0.0042;       // far dots stay a few pixels; nearer rings stay larger
@@ -1049,17 +1167,31 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
   const onNodeTapRef = useRef(onNodeTap);
   onNodeTapRef.current = onNodeTap;
 
-  // Controlled focus: the frame loop follows and orbits the node, and lifts it above a bottom card
+  // Controlled focus: the camera frames the person together with the chain that leads to them, the frame
+  // loop keeps that chain in the middle while the layout drifts, and lifts it above a bottom card
   const focusControlled = focusId !== undefined;
   const focusControlledRef = useRef(focusControlled);
   focusControlledRef.current = focusControlled;
-  const focusRef = useRef<{ id: string | null; kick: number; lift: number; before: GraphView | null }>({
+  const focusRef = useRef<{
+    id: string | null;
+    kick: number;
+    lift: number;
+    before: GraphView | null;
+    /** The nodes kept in the frame: the chain from me to the focused person, both included */
+    frame: string[];
+    /** While a person is focused the scene does not turn by itself: a turn would swing the chain end-on */
+    hold: boolean;
+  }>({
     id: null,
     kick: 0, // auto-rotate speed to switch to on the next frame (0: none)
     lift: 0,
     before: null,
+    frame: [],
+    hold: false,
   });
   focusRef.current.lift = focusLift;
+  const highlightOrderRef = useRef<string[]>(highlightPath ?? []);
+  highlightOrderRef.current = highlightPath ?? [];
   const labelInsetRef = useRef(labelInsetBottom);
   labelInsetRef.current = labelInsetBottom;
 
@@ -2029,6 +2161,8 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
     const flyQ = new THREE.Quaternion();
     const flyQ2 = new THREE.Quaternion();
     let liftCur = 0;
+    /** Reused every frame: the middle of the focused chain */
+    const focusAim = new THREE.Vector3();
 
     // Performance checks: a page that sets `window.__SO_GRAPH_DEBUG__ = {}` gets the force graph and
     // the time our frame work takes. Nothing happens without it.
@@ -2128,12 +2262,14 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
       }
       const orbit = controls as unknown as { target?: THREE.Vector3 } | undefined;
       if (foc.id && !viewFly.active && orbit?.target) {
-        const n = nodeMapRef.current.get(foc.id);
-        if (n && typeof n.x === 'number') {
+        // Keep the middle of the framed chain in the middle while the layout drifts (camera moves along)
+        const points = chainPoints(foc.frame.length ? foc.frame : [foc.id], nodeMapRef.current);
+        if (points.length > 0) {
+          chainCenter(points, focusAim);
           const t = orbit.target;
-          const dx = (n.x - t.x) * 0.12;
-          const dy = ((n.y ?? 0) - t.y) * 0.12;
-          const dz = ((n.z ?? 0) - t.z) * 0.12;
+          const dx = (focusAim.x - t.x) * 0.12;
+          const dy = (focusAim.y - t.y) * 0.12;
+          const dz = (focusAim.z - t.z) * 0.12;
           if (dx * dx + dy * dy + dz * dz > 1e-8) {
             t.set(t.x + dx, t.y + dy, t.z + dz);
             cam.position.set(cam.position.x + dx, cam.position.y + dy, cam.position.z + dz);
@@ -2154,8 +2290,9 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
         }
       }
 
-      // Smooth auto-rotate ramp. prefers-reduced-motion holds the speed at zero and does not resume.
-      if (reducedRef.current) rotTarget = 0;
+      // Smooth auto-rotate ramp. prefers-reduced-motion holds the speed at zero and does not resume;
+      // so does a focused person (the chain stays side-on until the person lets go or turns the scene).
+      if (reducedRef.current || foc.hold) rotTarget = 0;
       if (controls && (rotTarget !== 0 || rotCur !== 0)) {
         const next = rotCur + (rotTarget - rotCur) * Math.min(1, dt * 0.004);
         if (Math.abs(next - rotCur) > 1e-4) {
@@ -2829,24 +2966,45 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
             target: { x: look.x, y: look.y, z: look.z },
           };
         }
-        const target = new THREE.Vector3(node.x, node.y ?? 0, node.z ?? 0);
-        // Look from outside the ball: mostly along "centre → person", a little along the current view,
-        // so nobody sits between the camera and the person and the turn is not abrupt
-        const view = cam.position.clone().sub(target);
-        if (view.lengthSq() < 1e-6) view.set(0, 0, 1);
-        const out = target.lengthSq() > 1 ? target.clone().normalize() : view.clone().normalize();
-        const dir = out.multiplyScalar(0.7).add(view.normalize().multiplyScalar(0.3));
-        if (dir.lengthSq() < 1e-6) dir.copy(out);
-        // Close enough to read the name, far enough to see the person's own links around them
-        const dist = THREE.MathUtils.clamp(ballOuter(sizeRef.current) * 1.4, 90, 150);
-        flyPose(target.clone().add(dir.normalize().multiplyScalar(dist)), target, FOCUS_FLY_MS);
-        f.kick = FOCUS_ROTATE_SPEED;
+        // Frame the chain from me to the person, not the person alone: the screen passes it as the
+        // highlighted path. Without one (or a stale one) the chain is me and the person.
+        const order = highlightOrderRef.current;
+        let ids = order.length > 1 && order[order.length - 1] === next ? [...order] : [];
+        if (ids.length === 0) {
+          const me = graphDataRef.current.nodes.find((n) => n.isCenter);
+          ids = me && me.id !== next ? [String(me.id), next] : [next];
+        }
+        f.frame = ids;
+        const points = chainPoints(ids, nodeMapRef.current);
+        const center = chainCenter(points);
+        let radius = FOCUS_MIN_RADIUS;
+        for (const p of points) radius = Math.max(radius, p.distanceTo(center));
+        // Look across the chain so that nobody in it hides behind another (the centre tile needs the most
+        // room), from near the side the camera is on now
+        const clear = ids
+          .filter((id) => { const n = nodeMapRef.current.get(id); return n && typeof n.x === 'number'; })
+          .map((id) => (nodeMapRef.current.get(id)?.isCenter ? MARK_SIZE * 0.75 : 3.5));
+        const dir = chainView(points, clear, cam.position.clone().sub(center));
+        // Distance that fits the chain and its names into the part of the screen left free: the bottom card
+        // takes about 2.6 times the lift of the height, and a phone is much narrower than it is tall
+        const el = (fg.renderer() as THREE.WebGLRenderer | undefined)?.domElement;
+        const aspect = el && el.clientHeight > 0 ? el.clientWidth / el.clientHeight : cam.aspect || 1;
+        const tanHalf = Math.tan(THREE.MathUtils.degToRad((cam.fov || 50) / 2));
+        const usable = THREE.MathUtils.clamp(1 - 2.6 * focusRef.current.lift, 0.35, 1);
+        const half = Math.min(Math.atan(tanHalf * usable), Math.atan(tanHalf * aspect * 0.92));
+        const dist = THREE.MathUtils.clamp((radius + FOCUS_PAD) / Math.sin(half), FOCUS_MIN_DIST, FOCUS_MAX_DIST);
+        flyPose(center.clone().add(dir.multiplyScalar(dist)), center, FOCUS_FLY_MS);
+        // Hold still while focused: the auto-rotation would swing the chain end-on
+        f.hold = true;
+        f.kick = 0;
       };
       go(12);
     } else if (prev) {
       // Back to the overview around me, at the usual rotation speed
       const b = f.before;
       f.before = null;
+      f.frame = [];
+      f.hold = false;
       f.kick = AUTO_ROTATE_SPEED;
       if (b) {
         flyPose(
