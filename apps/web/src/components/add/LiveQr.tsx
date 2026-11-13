@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { QRCodeSVG } from 'qrcode.react';
 import { QR_LOGO_LEVEL, qrLogo } from '../../lib/qrLogo';
@@ -24,7 +24,11 @@ function formatLeft(ms: number): string {
   return `${minutes}:${seconds.toString().padStart(2, '0')}`;
 }
 
-export function LiveQr({ onScan, onDone }: { onScan: () => void; onDone: () => void }) {
+/**
+ * Fills the height its parent gives it (a `fill` Screen), buttons at the bottom. `children` go under the buttons,
+ * so an extra action never pushes the screen past the viewport.
+ */
+export function LiveQr({ onScan, onDone, children }: { onScan: () => void; onDone: () => void; children?: ReactNode }) {
   const { t } = useTranslation();
   const generate = trpc.invite.generate.useMutation();
   const generateRef = useRef(generate.mutateAsync);
@@ -160,7 +164,7 @@ export function LiveQr({ onScan, onDone }: { onScan: () => void; onDone: () => v
   const url = pass ? liveInviteUrl(pass.token) : '';
 
   return (
-    <div className="flex min-h-[calc(100dvh-8rem)] flex-col items-center text-center">
+    <div className="flex flex-1 flex-col items-center text-center">
       <div className="relative mt-4 grid h-[260px] w-[260px] max-w-full place-items-center">
         <svg className="absolute inset-0 -rotate-90" viewBox="0 0 260 260" aria-hidden>
           <circle cx="130" cy="130" r="126" className="fill-none stroke-line-strong" strokeWidth="3" />
@@ -207,6 +211,7 @@ export function LiveQr({ onScan, onDone }: { onScan: () => void; onDone: () => v
         <Button className="mt-2 w-full" variant="ghost" onClick={onDone}>
           {t('common.done')}
         </Button>
+        {children}
       </div>
     </div>
   );
