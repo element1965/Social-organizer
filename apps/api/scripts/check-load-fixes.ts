@@ -255,6 +255,32 @@ try {
   check('a ring the budget ends in gives no in-app entries yet', partial[0].length === 5 && partial[1].length === 0);
   await db.platformAccount.deleteMany({ where: { platformId: { startsWith: `${P}tg-` } } });
 
+  /* ---------- Numbers that used to be counted in the database come from the graph ---------- */
+  const ofPerson = (p: string) => ({ OR: [{ userAId: id(p) }, { userBId: id(p) }] });
+  const listed = await call(id('root')).connection.list();
+  const listedOne = listed.find((c) => c.userId === id('1'));
+  check('connection.list shows how many connections each acquaintance has',
+    listedOne?.connectionCount === (await db.connection.count({ where: ofPerson('1') })), `${listedOne?.connectionCount}`);
+  const netStats = await call(id('1')).connection.getNetworkStats();
+  const dayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
+  check('own new connections per period are counted from the graph',
+    netStats.growth.day === (await db.connection.count({ where: { ...ofPerson('1'), createdAt: { gte: dayAgo } } })) &&
+    netStats.growth.year === (await db.connection.count({ where: ofPerson('1') })), JSON.stringify(netStats.growth));
+  const ring2 = netStats.usersByDepth[2]?.find((u) => u.id === id('3'));
+  check('…and so are the connection counts in the lists of rings',
+    ring2?.connectionCount === (await db.connection.count({ where: ofPerson('3') })), `${ring2?.connectionCount}`);
+
+  /* ---------- Telegram: small jobs, a Need's wave before a mailing ---------- */
+  const { tgJobs, TG_JOB_SIZE } = await import('../src/workers/index.js');
+  const many = Array.from({ length: 2 * TG_JOB_SIZE + 100 }, (_, i) => ({ telegramId: String(i), text: 't' }));
+  const waveJobs = tgJobs(many, 'wave');
+  const bulkJobs = tgJobs(many, 'bulk');
+  check('messages are split into jobs of a fixed size, in order',
+    waveJobs.map((j) => j.data.messages.length).join() === [TG_JOB_SIZE, TG_JOB_SIZE, 100].join() &&
+    waveJobs.flatMap((j) => j.data.messages).every((m, i) => m.telegramId === String(i)));
+  check('a wave has a higher priority than a mailing (lower number goes first)',
+    waveJobs.every((j) => j.opts.priority === 1) && bulkJobs.every((j) => j.opts.priority > 1));
+
   /* ---------- Clusters are admin statistics only ---------- */
   let clusterRefused = false;
   try { await call(id('root')).cluster.list(); } catch (e: any) { clusterRefused = e?.code === 'FORBIDDEN'; }

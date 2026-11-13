@@ -7,13 +7,24 @@ import { canViewContacts } from '../services/visibility.service.js';
 import { isAdmin } from '../admin.js';
 import { countConnections } from '../services/connection-request.service.js';
 import { bfsNetwork, networkReach, roundFarCount, VISIBLE_RINGS, type FarCount } from '../services/network.service.js';
-import { invalidateGraph } from '../services/graph-cache.service.js';
+import { getGraph, invalidateGraph } from '../services/graph-cache.service.js';
 import { suggestAcquaintances } from '../services/suggestion.service.js';
 
 /** Rings shown only as a rounded count; `beyond` in the answer is the rest of the reach (6th). */
 const FAR_RINGS = [4, 5] as const;
 /** Cap on people sent with details; BFS order, so the nearer rings are always complete first. */
 const NETWORK_DETAIL_LIMIT = 1000;
+
+/** Direct connections of each person, read from the graph in memory. */
+async function connectionCounts(db: Parameters<typeof getGraph>[0], userIds: string[]): Promise<Map<string, number>> {
+  const graph = await getGraph(db);
+  const out = new Map<string, number>();
+  for (const id of userIds) {
+    const n = graph.find(id);
+    out.set(id, n === undefined ? 0 : graph.degree(n));
+  }
+  return out;
+}
 
 export const connectionRouter = router({
   list: protectedProcedure.query(async ({ ctx }) => {
@@ -31,15 +42,8 @@ export const connectionRouter = router({
       c.userAId === ctx.userId ? c.userBId : c.userAId
     );
 
-    // Count connections for each user
-    const connectionCounts = await ctx.db.$queryRaw<Array<{ user_id: string; count: bigint }>>`
-      SELECT u.id as user_id, COUNT(c.id)::bigint as count
-      FROM users u
-      LEFT JOIN connections c ON (c."userAId" = u.id OR c."userBId" = u.id)
-      WHERE u.id = ANY(${otherUserIds})
-      GROUP BY u.id
-    `;
-    const countMap = new Map(connectionCounts.map((c) => [c.user_id, Number(c.count)]));
+    // How many connections each of them has: from the graph in memory, no query
+    const countMap = await connectionCounts(ctx.db, otherUserIds);
 
     return connections.map((c) => {
       const isA = c.userAId === ctx.userId;
@@ -76,16 +80,7 @@ export const connectionRouter = router({
         c.userAId === input.userId ? c.userBId : c.userAId
       );
 
-      const connectionCounts = otherUserIds.length > 0
-        ? await ctx.db.$queryRaw<Array<{ user_id: string; count: bigint }>>`
-            SELECT u.id as user_id, COUNT(c.id)::bigint as count
-            FROM users u
-            LEFT JOIN connections c ON (c."userAId" = u.id OR c."userBId" = u.id)
-            WHERE u.id = ANY(${otherUserIds})
-            GROUP BY u.id
-          `
-        : [];
-      const countMap = new Map(connectionCounts.map((c) => [c.user_id, Number(c.count)]));
+      const countMap = await connectionCounts(ctx.db, otherUserIds);
 
       return connections.map((c) => {
         const isA = c.userAId === input.userId;
@@ -172,25 +167,17 @@ export const connectionRouter = router({
     // Get all unique user IDs
     const allUserIds = recipients.map((r) => r.user_id);
 
-    // Fetch user details and their connection counts in parallel
-    const [users, connectionCounts] = await Promise.all([
+    // User details from the database; how many connections each has comes from the graph in memory
+    const [users, countMap] = await Promise.all([
       ctx.db.user.findMany({
         where: { id: { in: allUserIds } },
         select: { id: true, name: true, photoUrl: true, remainingBudget: true, createdAt: true },
       }),
-      // Count connections for each user (first handshake count)
-      ctx.db.$queryRaw<Array<{ user_id: string; count: bigint }>>`
-        SELECT u.id as user_id, COUNT(c.id)::bigint as count
-        FROM users u
-        LEFT JOIN connections c ON (c."userAId" = u.id OR c."userBId" = u.id)
-        WHERE u.id = ANY(${allUserIds})
-        GROUP BY u.id
-      `,
+      connectionCounts(ctx.db, allUserIds),
     ]);
 
     // Create maps for quick lookup
     const userMap = new Map(users.map((u) => [u.id, u]));
-    const countMap = new Map(connectionCounts.map((c) => [c.user_id, Number(c.count)]));
 
     // Build usersByDepth with connection counts and budget
     const dayAgoMs = Date.now() - 24 * 60 * 60 * 1000;
@@ -227,32 +214,21 @@ export const connectionRouter = router({
     const monthAgo = new Date(now.getTime() - 28 * 24 * 60 * 60 * 1000);
     const yearAgo = new Date(now.getTime() - 13 * 28 * 24 * 60 * 60 * 1000);
 
-    const [dayCount, weekCount, monthCount, yearCount] = await Promise.all([
-      ctx.db.connection.count({
-        where: {
-          OR: [{ userAId: ctx.userId }, { userBId: ctx.userId }],
-          createdAt: { gte: dayAgo },
-        },
-      }),
-      ctx.db.connection.count({
-        where: {
-          OR: [{ userAId: ctx.userId }, { userBId: ctx.userId }],
-          createdAt: { gte: weekAgo },
-        },
-      }),
-      ctx.db.connection.count({
-        where: {
-          OR: [{ userAId: ctx.userId }, { userBId: ctx.userId }],
-          createdAt: { gte: monthAgo },
-        },
-      }),
-      ctx.db.connection.count({
-        where: {
-          OR: [{ userAId: ctx.userId }, { userBId: ctx.userId }],
-          createdAt: { gte: yearAgo },
-        },
-      }),
-    ]);
+    // The person's own new connections per period: the times are on their edges in the graph
+    const graph = await getGraph(ctx.db);
+    const me = graph.find(ctx.userId);
+    let dayCount = 0;
+    let weekCount = 0;
+    let monthCount = 0;
+    let yearCount = 0;
+    if (me !== undefined) {
+      graph.eachNeighbour(me, (_neighbour, madeAt) => {
+        if (madeAt >= dayAgo.getTime()) dayCount++;
+        if (madeAt >= weekAgo.getTime()) weekCount++;
+        if (madeAt >= monthAgo.getTime()) monthCount++;
+        if (madeAt >= yearAgo.getTime()) yearCount++;
+      });
+    }
 
     return {
       // You + the network as every screen shows it (visible rings exactly, the far part rounded once)
