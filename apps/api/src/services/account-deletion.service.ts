@@ -80,6 +80,10 @@ export async function deleteUserAccount(
     });
 
     // Remove user from the network (delete all connections)
+    const links = await tx.connection.findMany({
+      where: { OR: [{ userAId: userId }, { userBId: userId }] },
+      select: { userAId: true, userBId: true },
+    });
     await tx.connection.deleteMany({
       where: {
         OR: [
@@ -88,8 +92,9 @@ export async function deleteUserAccount(
         ],
       },
     });
-    // Inside the transaction: a reload racing the commit is caught by the cache's signature check
-    invalidateGraph();
+    // Inside the transaction: the first signature check after the commit re-reads these people only.
+    // The acquaintances are named too: each of them lost a direct connection, so their numbers go at once.
+    invalidateGraph([userId, ...links.map((c) => (c.userAId === userId ? c.userBId : c.userAId))]);
 
     if (!hasNetworkTies) {
       // No connections and no invitees — full delete with no traces

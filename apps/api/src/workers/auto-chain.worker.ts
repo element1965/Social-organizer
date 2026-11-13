@@ -12,6 +12,7 @@ import {
 import { translateWithCache } from '../services/translate.service.js';
 import { sendWebPush } from '../services/web-push.service.js';
 import { isRetiredChainMessage } from '../services/mvp-scope.js';
+import { getGraph } from '../services/graph-cache.service.js';
 
 const WEB_APP_URL = process.env.WEB_APP_URL || 'https://www.orginizer.com';
 
@@ -70,18 +71,14 @@ export async function processAutoChain(_job: Job): Promise<void> {
   // Load connected user IDs for variant filtering
   // "invited" = users with at least one confirmed connection OR pending connection
   // "organic" = solo users with no connections at all
-  const connections = await db.connection.findMany({
-    select: { userAId: true, userBId: true },
-  });
+  // Everyone with a confirmed connection is a key of the graph in memory: the table is not read again
+  const { adj } = await getGraph(db);
   const pendingConns = await db.pendingConnection.findMany({
     where: { status: 'PENDING' },
     select: { fromUserId: true, toUserId: true },
   });
   const invitedUserIds = new Set<string>();
-  for (const c of connections) {
-    invitedUserIds.add(c.userAId);
-    invitedUserIds.add(c.userBId);
-  }
+  for (const userId of adj.keys()) invitedUserIds.add(userId);
   for (const p of pendingConns) {
     invitedUserIds.add(p.fromUserId);
     invitedUserIds.add(p.toUserId);

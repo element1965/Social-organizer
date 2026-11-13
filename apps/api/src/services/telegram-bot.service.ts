@@ -5,6 +5,7 @@ import { translateWithCache } from './translate.service.js';
 import { isRetiredChainMessage } from './mvp-scope.js';
 import { touchTelegramUser } from './activity.service.js';
 import { networkReach } from './network.service.js';
+import { invalidateGraph } from './graph-cache.service.js';
 
 const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN || '';
 const WEB_APP_URL = process.env.WEB_APP_URL || 'https://www.orginizer.com';
@@ -70,6 +71,9 @@ export async function removeBlockedUser(chatId: string | number): Promise<Remove
         await db.user.delete({ where: { id: userId } });
         console.log(`[TG Bot] Hard-deleted blocked user ${platformId} (${user?.name}, userId: ${userId})`);
       }
+
+      // The graph re-reads this one person instead of the whole table
+      invalidateGraph([userId]);
 
       blockedCounter.count += 1;
       const info: RemovedUserInfo = {
