@@ -66,7 +66,7 @@ export async function applyBotStartInvite(
   if (!inviter || inviter.deletedAt) return;
 
   // Same rules as the link itself: a declined or recently withdrawn request is not reopened
-  const created = await openConnectionRequest(db, userId, inviterId).catch(() => null);
+  const created = await openConnectionRequest(db, userId, inviterId, 'bot').catch(() => null);
   if (!created) return;
 
   console.log('[invite-fallback] pending connection created from botStart:', userId, '->', inviterId);

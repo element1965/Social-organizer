@@ -9,6 +9,7 @@ import { Pill } from '../components/ui2/Pill';
 import { Screen } from '../components/ui2/Screen';
 import { Segmented } from '../components/ui2/Segmented';
 import { formatMoney } from '../components/ui2/format';
+import { FunnelPanel } from '../components/profile/FunnelPanel';
 import { QueryState } from '../components/profile/QueryState';
 import { useSmartBack } from '../components/profile/useSmartBack';
 
@@ -19,7 +20,7 @@ export function AdminStatsPage() {
   const isAdmin = admin.data?.isAdmin === true;
   const users = trpc.stats.adminAllUsersStats.useQuery(undefined, { enabled: isAdmin });
   const clusters = trpc.cluster.list.useQuery(undefined, { enabled: isAdmin });
-  const [tab, setTab] = useState<'people' | 'clusters'>('people');
+  const [tab, setTab] = useState<'people' | 'clusters' | 'funnel'>('people');
   const [search, setSearch] = useState('');
 
   if (admin.isLoading) {
@@ -46,6 +47,7 @@ export function AdminStatsPage() {
         options={[
           { value: 'people', label: t('profile.peopleTab') },
           { value: 'clusters', label: t('profile.clustersTab') },
+          { value: 'funnel', label: t('profile.funnelTab') },
         ]}
       />
       {tab === 'people' ? (
@@ -89,6 +91,8 @@ export function AdminStatsPage() {
             </div>
           </>
         )
+      ) : tab === 'funnel' ? (
+        <FunnelPanel />
       ) : clusters.isLoading || clusters.isError ? (
         <QueryState isLoading={clusters.isLoading} isError={clusters.isError} onRetry={() => void clusters.refetch()} />
       ) : (

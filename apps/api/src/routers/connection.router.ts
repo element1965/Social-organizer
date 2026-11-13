@@ -8,6 +8,7 @@ import { isAdmin } from '../admin.js';
 import { countConnections } from '../services/connection-request.service.js';
 import { bfsNetwork, networkReach, roundFarCount, VISIBLE_RINGS, type FarCount } from '../services/network.service.js';
 import { invalidateGraph } from '../services/graph-cache.service.js';
+import { suggestAcquaintances } from '../services/suggestion.service.js';
 
 /** Rings shown only as a rounded count; `beyond` in the answer is the rest of the reach (6th). */
 const FAR_RINGS = [4, 5] as const;
@@ -101,6 +102,9 @@ export const connectionRouter = router({
 
   // No `add`: a connection is created only when the other person confirms it (pending request,
   // invite) or through an SOS link. A one-sided add would let anyone farm the SOS threshold (SO-15).
+
+  /** "You may know each other": people at the 2nd handshake who share acquaintances with the person. */
+  suggestions: protectedProcedure.query(({ ctx }) => suggestAcquaintances(ctx.db, ctx.userId)),
 
   getCount: protectedProcedure.query(async ({ ctx }) => {
     // Confirmed acquaintances — the same number the server uses for SOS and the 150 limit (SO-15)

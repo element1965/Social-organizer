@@ -490,6 +490,7 @@
     "statistics": "Statistics",
     "peopleTab": "People",
     "clustersTab": "Clusters",
+    "funnelTab": "Funnel",
     "aboutVersion": "Version {{version}}",
     "openSource": "Open source",
     "terms": "Terms",
@@ -1148,7 +1149,23 @@
     "totalInvites": "Total invited",
     "invitedCount": "connections",
     "search": "Search by name...",
-    "noResults": "No results"
+    "noResults": "No results",
+    "funnel": {
+      "note": "People by the week they signed up, last 8 weeks. \"Opened an invite\" counts guests of invite pages in the same week.",
+      "week": "Week of",
+      "opened": "Opened an invite",
+      "signedUp": "Signed up",
+      "requested": "Sent a request",
+      "connected": "First connection",
+      "five": "5 connections",
+      "unlocked": "Need open",
+      "sources": "By source, last 8 weeks",
+      "source": "Source",
+      "requests": "Requests",
+      "connections": "Connections",
+      "perActive": "Newcomers with a connection per active person",
+      "days": "{{count}} days"
+    }
   },
   "support": {
     "title": "Support Chat",
@@ -1335,7 +1352,12 @@
     "showMore": "Show more · {{total}} left",
     "editLink": "Change link",
     "linkPlaceholder": "your name or nickname",
-    "linkEditHint": "links with the old address will stop working"
+    "linkEditHint": "links with the old address will stop working",
+    "suggest": {
+      "title": "You may know each other",
+      "hint": "People your acquaintances know. Confirm only those you know in person.",
+      "mutual": "Shared acquaintances: {{count}}"
+    }
   },
   "account": {
     "firstName": "First name",

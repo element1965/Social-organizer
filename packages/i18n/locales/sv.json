@@ -478,6 +478,7 @@
     "statistics": "Statistik",
     "peopleTab": "Personer",
     "clustersTab": "Kluster",
+    "funnelTab": "Funnel",
     "aboutVersion": "Version {{version}}",
     "openSource": "Öppen källkod",
     "terms": "Villkor",
@@ -1133,7 +1134,23 @@
     "totalInvites": "Inbjudna totalt",
     "invitedCount": "kopplingar",
     "search": "Sök på namn...",
-    "noResults": "Inga resultat"
+    "noResults": "Inga resultat",
+    "funnel": {
+      "note": "People by the week they signed up, last 8 weeks. \"Opened an invite\" counts guests of invite pages in the same week.",
+      "week": "Week of",
+      "opened": "Opened an invite",
+      "signedUp": "Signed up",
+      "requested": "Sent a request",
+      "connected": "First connection",
+      "five": "5 connections",
+      "unlocked": "Need open",
+      "sources": "By source, last 8 weeks",
+      "source": "Source",
+      "requests": "Requests",
+      "connections": "Connections",
+      "perActive": "Newcomers with a connection per active person",
+      "days": "{{count}} days"
+    }
   },
   "support": {
     "title": "Supportchatt",
@@ -1316,7 +1333,12 @@
     "sortLabel": "Sortering",
     "sortNew": "Nyaste först",
     "sortName": "A–Ö",
-    "showMore": "Visa fler · {{total}} kvar"
+    "showMore": "Visa fler · {{total}} kvar",
+    "suggest": {
+      "title": "Ni kanske känner varandra",
+      "hint": "Personer som dina bekanta känner. Bekräfta bara dem du känner personligen.",
+      "mutual": "Gemensamma bekanta: {{count}}"
+    }
   },
   "account": {
     "firstName": "Förnamn",

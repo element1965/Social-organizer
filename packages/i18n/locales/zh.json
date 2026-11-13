@@ -475,6 +475,7 @@
     "statistics": "统计",
     "peopleTab": "人",
     "clustersTab": "聚类",
+    "funnelTab": "Funnel",
     "aboutVersion": "版本 {{version}}",
     "openSource": "开源",
     "terms": "条款",
@@ -1128,7 +1129,23 @@
     "totalInvites": "邀请总数",
     "invitedCount": "联系",
     "search": "按名字搜索...",
-    "noResults": "没有结果"
+    "noResults": "没有结果",
+    "funnel": {
+      "note": "People by the week they signed up, last 8 weeks. \"Opened an invite\" counts guests of invite pages in the same week.",
+      "week": "Week of",
+      "opened": "Opened an invite",
+      "signedUp": "Signed up",
+      "requested": "Sent a request",
+      "connected": "First connection",
+      "five": "5 connections",
+      "unlocked": "Need open",
+      "sources": "By source, last 8 weeks",
+      "source": "Source",
+      "requests": "Requests",
+      "connections": "Connections",
+      "perActive": "Newcomers with a connection per active person",
+      "days": "{{count}} days"
+    }
   },
   "support": {
     "title": "支持聊天",
@@ -1309,7 +1326,12 @@
     "sortLabel": "排序",
     "sortNew": "最新优先",
     "sortName": "按名称",
-    "showMore": "显示更多 · 还有 {{total}} 人"
+    "showMore": "显示更多 · 还有 {{total}} 人",
+    "suggest": {
+      "title": "你们可能认识",
+      "hint": "你的熟人认识的人。只确认你本人认识的人。",
+      "mutual": "共同熟人：{{count}}"
+    }
   },
   "account": {
     "firstName": "名",

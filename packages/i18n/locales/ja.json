@@ -475,6 +475,7 @@
     "statistics": "統計",
     "peopleTab": "人",
     "clustersTab": "クラスター",
+    "funnelTab": "Funnel",
     "aboutVersion": "バージョン {{version}}",
     "openSource": "オープンソース",
     "terms": "利用規約",
@@ -1128,7 +1129,23 @@
     "totalInvites": "招待の合計",
     "invitedCount": "つながり",
     "search": "名前で検索...",
-    "noResults": "結果はありません"
+    "noResults": "結果はありません",
+    "funnel": {
+      "note": "People by the week they signed up, last 8 weeks. \"Opened an invite\" counts guests of invite pages in the same week.",
+      "week": "Week of",
+      "opened": "Opened an invite",
+      "signedUp": "Signed up",
+      "requested": "Sent a request",
+      "connected": "First connection",
+      "five": "5 connections",
+      "unlocked": "Need open",
+      "sources": "By source, last 8 weeks",
+      "source": "Source",
+      "requests": "Requests",
+      "connections": "Connections",
+      "perActive": "Newcomers with a connection per active person",
+      "days": "{{count}} days"
+    }
   },
   "support": {
     "title": "サポートチャット",
@@ -1309,7 +1326,12 @@
     "sortLabel": "並べ替え",
     "sortNew": "新しい順",
     "sortName": "名前順",
-    "showMore": "さらに表示 · 残り{{total}}人"
+    "showMore": "さらに表示 · 残り{{total}}人",
+    "suggest": {
+      "title": "お知り合いかもしれません",
+      "hint": "あなたの知り合いが知っている人たちです。直接知っている人だけ確認してください。",
+      "mutual": "共通の知り合い：{{count}}"
+    }
   },
   "account": {
     "firstName": "名",

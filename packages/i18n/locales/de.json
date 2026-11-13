@@ -478,6 +478,7 @@
     "statistics": "Statistik",
     "peopleTab": "Personen",
     "clustersTab": "Cluster",
+    "funnelTab": "Funnel",
     "aboutVersion": "Version {{version}}",
     "openSource": "Open Source",
     "terms": "Bedingungen",
@@ -1133,7 +1134,23 @@
     "totalInvites": "Eingeladen insgesamt",
     "invitedCount": "Verbindungen",
     "search": "Nach Name suchen...",
-    "noResults": "Keine Ergebnisse"
+    "noResults": "Keine Ergebnisse",
+    "funnel": {
+      "note": "People by the week they signed up, last 8 weeks. \"Opened an invite\" counts guests of invite pages in the same week.",
+      "week": "Week of",
+      "opened": "Opened an invite",
+      "signedUp": "Signed up",
+      "requested": "Sent a request",
+      "connected": "First connection",
+      "five": "5 connections",
+      "unlocked": "Need open",
+      "sources": "By source, last 8 weeks",
+      "source": "Source",
+      "requests": "Requests",
+      "connections": "Connections",
+      "perActive": "Newcomers with a connection per active person",
+      "days": "{{count}} days"
+    }
   },
   "support": {
     "title": "Support-Chat",
@@ -1316,7 +1333,12 @@
     "sortLabel": "Sortierung",
     "sortNew": "Neueste zuerst",
     "sortName": "A–Z",
-    "showMore": "Mehr zeigen · noch {{total}}"
+    "showMore": "Mehr zeigen · noch {{total}}",
+    "suggest": {
+      "title": "Vielleicht kennen Sie sich",
+      "hint": "Menschen, die Ihre Bekannten kennen. Bestätigen Sie nur, wen Sie persönlich kennen.",
+      "mutual": "Gemeinsame Bekannte: {{count}}"
+    }
   },
   "account": {
     "firstName": "Vorname",
