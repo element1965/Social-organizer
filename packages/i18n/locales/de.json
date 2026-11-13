@@ -660,7 +660,26 @@
     "loadFailedText": "Anscheinend gibt es keine Verbindung. Der Link ist gespeichert, versuchen Sie es erneut.",
     "waiting": "Warten auf Bestätigung.",
     "network_one": "{{n}} Person im Netzwerk",
-    "network_other": "{{n}} Personen im Netzwerk"
+    "network_other": "{{n}} Personen im Netzwerk",
+    "dead": {
+      "deletedTitle": "Diese Person hat ihr Konto gelöscht",
+      "deletedText": "Die Einladung funktioniert nicht mehr. Bitte jemand anderen aus deinem Bekanntenkreis um einen Link.",
+      "usedTitle": "Diese Einladung wurde bereits verwendet",
+      "usedText": "Eine Einmal-Einladung gilt für eine Person. Bitte um einen neuen Link oder zeig deinen QR-Code beim Treffen.",
+      "notFoundTitle": "Link nicht gefunden",
+      "notFoundText": "Prüfe, ob der Link vollständig kopiert wurde, oder bitte um einen neuen."
+    },
+    "install": {
+      "title": "Anfrage gesendet",
+      "text": "Installiere die App: Sie meldet sich, sobald {{name}} bestätigt, dass ihr euch kennt.",
+      "stepSignedIn": "Angemeldet mit {{method}}",
+      "stepSaved": "Einladung gespeichert, die Anfrage wartet",
+      "stepSame": "Melde dich in der App wieder mit {{method}} an",
+      "stepSameAny": "Melde dich in der App genauso an wie hier",
+      "later": "Später, im Browser weiter",
+      "continueWeb": "Im Browser weiter",
+      "qrText": "Richte die Handykamera auf den Code – der App-Store öffnet sich."
+    }
   },
   "landing": {
     "site": {

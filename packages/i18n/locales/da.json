@@ -660,7 +660,26 @@
     "loadFailedText": "Det ligner, at der ikke er forbindelse. Linket er gemt. Prøv igen.",
     "waiting": "Venter på bekræftelse.",
     "network_one": "{{n}} person i netværket",
-    "network_other": "{{n}} personer i netværket"
+    "network_other": "{{n}} personer i netværket",
+    "dead": {
+      "deletedTitle": "Denne person har slettet sin konto",
+      "deletedText": "Invitationen virker ikke længere. Bed en anden, du kender, om et link.",
+      "usedTitle": "Denne invitation er allerede brugt",
+      "usedText": "En engangsinvitation gælder for én person. Bed om et nyt link, eller vis din QR-kode, når I mødes.",
+      "notFoundTitle": "Linket blev ikke fundet",
+      "notFoundText": "Tjek, at hele linket er kopieret, eller bed om et nyt."
+    },
+    "install": {
+      "title": "Anmodning sendt",
+      "text": "Installer appen: den giver besked, når {{name}} bekræfter, at I kender hinanden.",
+      "stepSignedIn": "Logget ind med {{method}}",
+      "stepSaved": "Invitationen er gemt, anmodningen venter",
+      "stepSame": "Log ind i appen med {{method}} igen",
+      "stepSameAny": "Log ind i appen på samme måde som her",
+      "later": "Senere, fortsæt i browseren",
+      "continueWeb": "Fortsæt i browseren",
+      "qrText": "Ret telefonens kamera mod koden – appbutikken åbner."
+    }
   },
   "landing": {
     "site": {

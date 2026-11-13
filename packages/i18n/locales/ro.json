@@ -664,7 +664,26 @@
     "waiting": "Se așteaptă confirmarea.",
     "network_few": "{{n}} persoane în rețea",
     "network_one": "{{n}} persoană în rețea",
-    "network_other": "{{n}} de persoane în rețea"
+    "network_other": "{{n}} de persoane în rețea",
+    "dead": {
+      "deletedTitle": "Această persoană și-a șters contul",
+      "deletedText": "Invitația nu mai funcționează. Cere un link altcuiva pe care îl cunoști.",
+      "usedTitle": "Această invitație a fost deja folosită",
+      "usedText": "O invitație de unică folosință este pentru o singură persoană. Cere un link nou sau arată codul tău QR când vă vedeți.",
+      "notFoundTitle": "Linkul nu a fost găsit",
+      "notFoundText": "Verifică dacă linkul a fost copiat complet sau cere unul nou."
+    },
+    "install": {
+      "title": "Cerere trimisă",
+      "text": "Instalează aplicația: te va anunța când {{name}} confirmă că vă cunoașteți.",
+      "stepSignedIn": "Conectat cu {{method}}",
+      "stepSaved": "Invitația a fost salvată, cererea așteaptă",
+      "stepSame": "În aplicație, conectează-te din nou cu {{method}}",
+      "stepSameAny": "În aplicație, conectează-te la fel ca aici",
+      "later": "Mai târziu, continuă în browser",
+      "continueWeb": "Continuă în browser",
+      "qrText": "Îndreaptă camera telefonului spre cod: se deschide magazinul de aplicații."
+    }
   },
   "landing": {
     "site": {
