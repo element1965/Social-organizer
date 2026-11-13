@@ -31,6 +31,7 @@ import { trpc } from '../lib/trpc';
 import { useOffline } from '../lib/connectivity';
 import { isPendingRequest, useDeclineNeed, useExpiryTick, type NotificationItem } from '../hooks/useEvents';
 import { OfflineHint } from '../components/offline/OfflineNotice';
+import { foldHidden } from '../components/person/PathChain';
 
 
 const REASONS = ['COMPLAINTS', 'SUSPECTED_FRAUD', 'RULES_VIOLATION', 'AUTHOR_REQUEST'] as const;
@@ -219,8 +220,9 @@ export function CollectionPage() {
     if (opened) subtitle = `${typeLabel} · ${t('collection.opened', { when: relativePast(opened, language) })}`;
   }
 
-  const pathNames = (path.data?.path ?? []).map((person, index) => (
-    index === 0 ? t('common.you') : resolve(person.id, person.name)
+  // People beyond my visible rings come without a name: one "…" stands for all of them
+  const pathNames = foldHidden(path.data?.path ?? []).map((person, index) => (
+    !person ? '…' : index === 0 ? t('common.you') : resolve(person.id, person.name)
   ));
   const showPath = !owner && pathNames.length > 1;
   // Stage line (mockups v2): the amount, then the chat, then closed. Reached stages are lit.

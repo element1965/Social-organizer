@@ -3,6 +3,7 @@ import { TRPCError } from '@trpc/server';
 import { router, protectedProcedure, paginationInput } from '../trpc.js';
 import type { PrismaClient } from '@so/db';
 import { recordDismissed, recordOpenedById } from '../services/notify-routing.service.js';
+import { VISIBLE_RINGS } from '../services/network.service.js';
 
 /** Opening or dismissing a notice must not wipe a cycle acknowledgement (RESPONDED). */
 async function setNotificationStatus(
@@ -62,11 +63,16 @@ export const notificationRouter = router({
         : [];
       const countMap = new Map(connectionCounts.map((c) => [c.user_id, Number(c.count)]));
 
+      // A stored path runs from the author of the Need to me. People in it further than my visible rings
+      // (counted from my end) leave the server only as a place in the chain: no id and no name.
+      // The author stays: the Need itself names them.
+      const visiblePath = (raw: string[] | null): string[] =>
+        (raw ?? []).map((id, index, path) => (index > 0 && path.length - 1 - index > VISIBLE_RINGS ? '' : id));
+
       // Resolve handshakePath user IDs to names
       const allPathIds = new Set<string>();
       for (const n of notifications) {
-        const path = n.handshakePath as string[] | null;
-        if (path) for (const id of path) allPathIds.add(id);
+        for (const id of visiblePath(n.handshakePath as string[] | null)) if (id) allPathIds.add(id);
       }
       const pathUsers = allPathIds.size > 0
         ? await ctx.db.user.findMany({
@@ -77,12 +83,11 @@ export const notificationRouter = router({
       const nameMap = new Map(pathUsers.map((u) => [u.id, u.name]));
 
       const items = notifications.map((n) => {
-        const rawPath = n.handshakePath as string[] | null;
+        const path = visiblePath(n.handshakePath as string[] | null);
         return {
           ...n,
-          handshakePathResolved: rawPath
-            ? rawPath.map((id) => ({ id, name: nameMap.get(id) || id }))
-            : [],
+          handshakePath: path,
+          handshakePathResolved: path.map((id) => (id ? { id, name: nameMap.get(id) || id } : { id: '', name: '', hidden: true as const })),
           collection: n.collection
             ? {
                 ...n.collection,

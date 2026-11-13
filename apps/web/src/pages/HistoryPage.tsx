@@ -282,7 +282,8 @@ function ViaSuffix({ userId }: { userId: string }) {
   const nodes = path.data?.path ?? [];
   if (nodes.length <= 2) return null;
   const via = nodes[nodes.length - 2];
-  if (!via) return null;
+  // Beyond my visible rings the server does not say who it is
+  if (!via || via.hidden) return null;
   return <span>{` · ${t('profile.pastVia', { name: resolve(via.id, via.name) })}`}</span>;
 }
 

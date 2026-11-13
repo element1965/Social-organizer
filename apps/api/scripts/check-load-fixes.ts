@@ -203,6 +203,21 @@ try {
   check('an excluded person is passed through but not a recipient', !walk.some((w) => w.userId === id('2')) && !!six);
   check('nobody beyond the 6th handshake', !walk.some((w) => w.userId === id('7')));
 
+  /* ---------- A chain beyond the 3rd handshake does not say who is in it ---------- */
+  const chain6 = (await call(id('root')).connection.findPath({ targetUserId: id('6') })).path;
+  check('a path keeps its full length', chain6.length === 7, `length=${chain6.length}`);
+  check('…the viewer, rings 1–3 and the person asked about are shown',
+    [0, 1, 2, 3, 6].every((i) => !chain6[i]?.hidden && chain6[i]?.id === id(['root', '1', '2', '3', '4', '5', '6'][i]!)));
+  check('…people further than the 3rd handshake come without id, name, photo or numbers',
+    [4, 5].every((i) => chain6[i]?.hidden === true && chain6[i]!.id === '' && chain6[i]!.name === '' && chain6[i]!.photoUrl === null &&
+      chain6[i]!.connectionCount === 0 && chain6[i]!.remainingBudget === null),
+    JSON.stringify(chain6.map((n) => n.hidden ? 'hidden' : n.name)));
+  const chain3 = (await call(id('root')).connection.findPath({ targetUserId: id('3') })).path;
+  check('a path inside the visible rings is shown in full', chain3.length === 4 && chain3.every((n) => !n.hidden && n.name));
+  const chain8 = (await call(id('root')).connection.findPath({ targetUserId: id('8') })).path;
+  check('a longer path hides everyone between the 3rd handshake and the person', chain8.length === 9 &&
+    chain8.filter((n) => n.hidden).length === 4 && chain8[8]?.id === id('8'));
+
   /* ---------- The same walk ring by ring, asked for only as far as the wave needs ---------- */
   const ringList = [...(await walkRings(db, id('root'), 6, [id('2')]))];
   check('rings hold the same people in the same order as the full walk',
@@ -302,6 +317,24 @@ try {
   check('the next wave reaches only people not told yet', total === stored.length + again, `+${again}`);
   const perUser = await db.notification.groupBy({ by: ['userId'], where: { collectionId: col.id }, _count: true });
   check('nobody has two entries for the Need', perUser.every((p) => p._count === 1));
+
+  /* ---------- A notice from far away names only who the person can see ---------- */
+  // The Need of root reaches 6 through 1..5: from 6's end, 1 and 2 are the 5th and 4th handshake
+  await db.notification.deleteMany({ where: { userId: id('6'), collectionId: col.id } });
+  await db.notification.create({
+    data: {
+      userId: id('6'), collectionId: col.id, type: 'NEW_COLLECTION', wave: 9,
+      handshakePath: ['root', '1', '2', '3', '4', '5', '6'].map(id), expiresAt: new Date(Date.now() + 86_400_000),
+    },
+  });
+  const far = (await call(id('6')).notification.list({ limit: 20 })).items.find((n) => n.collectionId === col.id)!;
+  const farPath = far.handshakePathResolved as Array<{ id: string; name: string; hidden?: boolean }>;
+  check('a notice keeps the length of its path', farPath.length === 7 && (far.handshakePath as string[]).length === 7);
+  check('…the author and the 1st–3rd handshake from the reader are named',
+    [0, 3, 4, 5, 6].every((i) => farPath[i]!.id === id(['root', '1', '2', '3', '4', '5', '6'][i]!) && !!farPath[i]!.name));
+  check('…people beyond the 3rd handshake from the reader come without id or name, in both path fields',
+    [1, 2].every((i) => farPath[i]!.id === '' && farPath[i]!.name === '' && farPath[i]!.hidden === true && (far.handshakePath as string[])[i] === ''),
+    JSON.stringify(far.handshakePath));
 
   /* ---------- Uploaded photos ---------- */
   const jpeg = Buffer.concat([Buffer.from([0xff, 0xd8, 0xff, 0xe0]), Buffer.alloc(2000, 7)]);

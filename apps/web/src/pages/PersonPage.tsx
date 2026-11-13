@@ -180,7 +180,8 @@ function PersonScreen() {
   const display = nickname || accountName;
   const online = !!person.lastSeen && Date.now() - new Date(person.lastSeen).getTime() < ONLINE_MS;
   const viaNode = path.length > 2 ? path[path.length - 2] : undefined;
-  const viaName = viaNode ? resolve(viaNode.id, viaNode.name) : '';
+  // Beyond my visible rings the server does not say who it is
+  const viaName = viaNode && !viaNode.hidden ? resolve(viaNode.id, viaNode.name) : '';
   const ring = depth === 1
     ? t('circle.rings.full1')
     : depth === 2
