@@ -292,9 +292,9 @@ node scripts/build-android-staging.mjs --no-web   # reuse apps/web/dist
 
 #### App Links (invite QR opens the app)
 
-`https://<host>/invite/<token>` links (the live QR, shared invites) open the installed app instead of the browser: a phone camera or Google Lens offers the app, and the app routes the link to its invite page (`appLinkPath` in `App.tsx`).
+`https://<host>/invite/<token>`, `/i/<id>` (personal address) and `/sos/<id>` (public Need) links (the live QR, shared invites and Needs) open the installed app instead of the browser: a phone camera or Google Lens offers the app, and the app routes the link to its invite page (`appLinkPath` in `App.tsx`).
 
-- **Manifest:** an `autoVerify` intent-filter for `/invite/`; hosts come from `manifestPlaceholders` in `app/build.gradle` (release: `www.orginizer.com` and `orginizer.com`, staging build: the staging domain).
+- **Manifest:** an `autoVerify` intent-filter for `/invite/`, `/i/` and `/sos/` (store build from versionCode 15); hosts come from `manifestPlaceholders` in `app/build.gradle` (release: `www.orginizer.com` and `orginizer.com`, staging build: the staging domain).
 - **Verification file:** the API serves `/.well-known/assetlinks.json` from env `ANDROID_CERT_SHA256` (comma-separated SHA-256 signing-cert fingerprints) and `ANDROID_APP_PACKAGE` (default `com.socialorganizer.app`). Without fingerprints it returns 404.
 - **Production:** use the Play App Signing certificate (Play Console → App integrity → App signing → SHA-256), not the upload key. The filter ships with the next store build.
 - **Staging:** `ANDROID_APP_PACKAGE=com.socialorganizer.app.staging`, `ANDROID_CERT_SHA256` = the debug keystore fingerprint (`keytool -list -v -keystore ~/.android/debug.keystore -alias androiddebugkey -storepass android`).
@@ -304,6 +304,12 @@ node scripts/build-android-staging.mjs --no-web   # reuse apps/web/dist
 ### iOS (App Store)
 
 Capacitor-based iOS wrapper (`apps/web/ios/`) that loads the production web URL. Build via Xcode (`bash scripts/deploy-ios.sh` → Archive → Upload). Bundle `com.socialorganizer.app`, Apple ID `6768132198`. Listing/metadata are managed through the App Store Connect API (key in `secrets/asc/`). Because the UI is served from the web, most fixes ship via a Railway deploy and a plain re-submit of the same binary — a new Xcode archive is only needed for native/Info.plist changes. Full flow in `IOS_DEPLOY.md`; Sign in with Apple setup in `APPLE_SIGNIN.md`.
+
+#### Universal Links and push on iOS (from version 1.1, build 3)
+
+- **Universal Links:** `App/App.entitlements` declares `applinks:www.orginizer.com` and `applinks:orginizer.com`; the API serves `/.well-known/apple-app-site-association` (and `/apple-app-site-association`) for `/invite/*`, `/i/*`, `/sos/*` with app ID `APPLE_TEAM_ID`.`APPLE_BUNDLE_ID` (defaults: `6MQRV9Q3H5`, `com.socialorganizer.app`). The app routes the link with the same `appLinkPath` as Android. The App ID needs the "Associated Domains" capability and a provisioning profile regenerated after enabling it.
+- **Push:** `aps-environment` in the entitlements and `AppDelegate` hands the APNs device token to `@capacitor/push-notifications`; the app registers it with platform `ios`. The API sends to iOS tokens straight through APNs (`apns.service.ts`, HTTP/2 + ES256 provider token), Android tokens still go through FCM. Env: `APNS_KEY` (contents of the `.p8` from Apple Developer → Keys → Apple Push Notifications service), `APNS_KEY_ID`, optional `APNS_TEAM_ID`, `APNS_BUNDLE_ID`, `APNS_SANDBOX=1` for Xcode debug builds. Without `APNS_KEY` the API does not store iOS tokens, so delivery keeps choosing Telegram for those people. iOS asks for push only from Settings → Notifications (App Store 4.5.4); the tap on a push opens its page.
+- **QR scanner:** `@capacitor-mlkit/barcode-scanning` ships CocoaPods only and this project is SPM, so on iOS the scanner uses the camera in the web view (`NSCameraUsageDescription` is set). The system Camera app opens invite QR codes through Universal Links.
 
 ### Getting the app from the web version
 

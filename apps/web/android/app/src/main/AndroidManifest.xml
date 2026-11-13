@@ -30,7 +30,8 @@
                 <data android:scheme="socialorganizer" />
             </intent-filter>
 
-            <!-- App Links: invite links (live QR, shared invites) open the app instead of the browser.
+            <!-- App Links: invite links (live QR, shared invites), personal addresses (/i/<id>) and public
+                 Need links (/sos/<id>) open the app instead of the browser.
                  Verified against https://<host>/.well-known/assetlinks.json (served by the API).
                  Hosts come from build.gradle (production: orginizer.com, staging build: the staging domain). -->
             <intent-filter android:autoVerify="true">
@@ -41,6 +42,8 @@
                 <data android:host="${appLinkHost}" />
                 <data android:host="${appLinkHostAlt}" />
                 <data android:pathPrefix="/invite/" />
+                <data android:pathPrefix="/i/" />
+                <data android:pathPrefix="/sos/" />
             </intent-filter>
 
         </activity>
