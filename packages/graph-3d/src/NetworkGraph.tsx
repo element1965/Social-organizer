@@ -143,8 +143,8 @@ const BALL_SHELLS = [0, 0.38, 0.7, 1]; // shell radius by depth, as a fraction o
 const MAX_NODE_SPEED = 4;        // world units per tick; caps the "explosion" of the first ticks
 const MIN_DOT_PX = 0.0042;       // far dots stay a few pixels; nearer rings stay larger
 // Dot sizes in world units by LOD level (near, mid, far); the near and mid ones grow with connections
-const DOT_NEAR = 2.6;
-const DOT_MID = 1.75;
+const DOT_NEAR = 3.8;
+const DOT_MID = 1.6;
 const DOT_FAR = 1.1;
 // On-screen cap of a dot (CSS px, times sqrt of the connection factor): a dot the camera passes close to
 // stays a dot instead of filling the view
@@ -166,7 +166,14 @@ const NEAR_HIDE = 6;
 const NEAR_FADE = 20;
 const NEAR_FADE2 = NEAR_FADE * NEAR_FADE;
 const MARK_SIZE = 10;            // centre tile, world units
-const NEAREST_LABELS = 8;        // labels on the nearest ring-1/2 nodes, plus the path
+const NEAREST_LABELS = 8;        // labels on the nearest ring-1/2 nodes, plus the path (a wide view)
+const NEAREST_LABELS_MAX = 16;   // close up, more names fit: one more for every two people within LOD_CLOSE
+const RING2_LABEL_PENALTY = 2.25; // a 2nd-handshake name competes as if it were 1.5× farther than a 1st-handshake one
+const RING1_PHOTO_BONUS = 1.35;  // 1st-handshake photos rank and appear as if they were 35% bigger
+const SPOKE_OPACITY = 0.75;      // links me ↔ 1st handshake, in the accent colour, relative to the path ink
+const RIM_SCALE = 1.14;          // the accent ring around a 1st-handshake photo, relative to the photo
+const DOUBLE_TAP_MS = 320;       // two taps on empty space within this time zoom in
+const DOUBLE_TAP_ZOOM = 0.6;
 const NEAREST_HOLD_MS = 1500;    // a name stays this long after its node leaves the nearest few
 const NEAREST_HOLD_EXTRA = 4;    // at most this many held names on top of NEAREST_LABELS
 const LABEL_FADE_MS = 180;       // name fade in / out
@@ -245,6 +252,8 @@ interface NodeVis {
   glow: THREE.Sprite | null;
   label: SpriteText | null;
   pulse: THREE.Sprite | null;
+  /** Accent ring around a 1st-handshake photo; created the first time that photo shows */
+  rim: THREE.Sprite | null;
   level: number;           // -1 = not applied yet
   sf: number;              // size factor from connection count
   online: boolean;
@@ -451,6 +460,8 @@ class LinkLayer {
   paint(opts: {
     isPath: (key: string) => boolean;
     isSoft: (key: string) => boolean;
+    /** A link between me and a 1st-handshake person (drawn in the accent colour) */
+    isSpoke: (l: LinkEnds) => boolean;
     shown: (n: SimNode) => boolean;
     plain: number; plainOp: number;
     care: number; careOp: number;
@@ -464,9 +475,11 @@ class LinkLayer {
       const soft = shown && !path && opts.isSoft(l.key);
       if (path) onPath.push(l);
       else if (soft) onSoft.push(l);
-      const alpha = shown && !path && !soft ? opts.plainOp : 0;
-      writeLinear(this.col, i * 8, opts.plain, alpha);
-      writeLinear(this.col, i * 8 + 4, opts.plain, alpha);
+      const spoke = shown && !path && !soft && opts.isSpoke(l);
+      const hex = spoke ? opts.care : opts.plain;
+      const alpha = !shown || path || soft ? 0 : spoke ? opts.careOp * SPOKE_OPACITY : opts.plainOp;
+      writeLinear(this.col, i * 8, hex, alpha);
+      writeLinear(this.col, i * 8 + 4, hex, alpha);
     }
     const colAttr = this.plainGeom.getAttribute('color') as THREE.BufferAttribute | undefined;
     if (colAttr) colAttr.needsUpdate = true;
@@ -515,10 +528,13 @@ class LinkLayer {
 const DOT_VERTEX = /* glsl */ `
 attribute float size;
 attribute vec4 rgba;
+attribute float rim;
 uniform float uScale;
 varying vec4 vRgba;
+varying float vRim;
 void main() {
   vRgba = rgba;
+  vRim = rim;
   vec4 mv = modelViewMatrix * vec4(position, 1.0);
   // Same on-screen size as a sprite of \`size\` world units
   gl_PointSize = size * uScale / max(0.001, -mv.z);
@@ -528,11 +544,22 @@ void main() {
 
 const DOT_FRAGMENT = /* glsl */ `
 uniform sampler2D uMap;
+uniform vec3 uRim;
 varying vec4 vRgba;
+varying float vRim;
 void main() {
-  float a = vRgba.a * texture2D(uMap, gl_PointCoord).a;
+  float tex = texture2D(uMap, gl_PointCoord).a;
+  float a = vRgba.a * tex;
   if (a < 0.01) discard;
-  gl_FragColor = vec4(vRgba.rgb, a);
+  vec3 col = vRgba.rgb;
+  // 1st handshake: an accent rim on the outer third of the dot, so the nearest circle reads at a glance
+  if (vRim > 0.5) {
+    float r = length(gl_PointCoord - 0.5) * 2.0;
+    float band = smoothstep(0.6, 0.72, r);
+    col = mix(col, uRim, band);
+    a = max(a, band * tex * (vRgba.a > 0.0 ? 1.0 : 0.0));
+  }
+  gl_FragColor = vec4(col, a);
   #include <colorspace_fragment>
 }
 `;
@@ -550,10 +577,11 @@ class DotLayer {
   private pos = new Float32Array(0);
   private rgba = new Float32Array(0);
   private size = new Float32Array(0);
+  private rim = new Float32Array(0);
 
   constructor(map: THREE.Texture) {
     this.material = new THREE.ShaderMaterial({
-      uniforms: { uMap: { value: map }, uScale: { value: 1 } },
+      uniforms: { uMap: { value: map }, uScale: { value: 1 }, uRim: { value: new THREE.Color() } },
       vertexShader: DOT_VERTEX,
       fragmentShader: DOT_FRAGMENT,
       transparent: true,
@@ -572,6 +600,8 @@ class DotLayer {
     this.pos = new Float32Array(this.cap * 3);
     this.rgba = new Float32Array(this.cap * 4);
     this.size = new Float32Array(this.cap);
+    this.rim = new Float32Array(this.cap);
+    this.geom.setAttribute('rim', new THREE.BufferAttribute(this.rim, 1).setUsage(THREE.DynamicDrawUsage));
     this.geom.setAttribute('position', new THREE.BufferAttribute(this.pos, 3).setUsage(THREE.DynamicDrawUsage));
     this.geom.setAttribute('rgba', new THREE.BufferAttribute(this.rgba, 4).setUsage(THREE.DynamicDrawUsage));
     this.geom.setAttribute('size', new THREE.BufferAttribute(this.size, 1).setUsage(THREE.DynamicDrawUsage));
@@ -582,10 +612,15 @@ class DotLayer {
     this.material.uniforms.uScale!.value = scale;
   }
 
+  /** The accent colour of the 1st-handshake rim */
+  setRim(hex: number) {
+    (this.material.uniforms.uRim!.value as THREE.Color).setHex(hex);
+  }
+
   /** `list` is far → near. */
   write(list: NodeVis[]) {
     this.ensure(list.length);
-    const p = this.pos, c = this.rgba, s = this.size;
+    const p = this.pos, c = this.rgba, s = this.size, r = this.rim;
     for (let i = 0; i < list.length; i++) {
       const v = list[i]!;
       const o = v.outer.position;
@@ -594,8 +629,9 @@ class DotLayer {
       p[i * 3 + 2] = o.z;
       c[i * 4] = v.dotRgba[0]; c[i * 4 + 1] = v.dotRgba[1]; c[i * 4 + 2] = v.dotRgba[2]; c[i * 4 + 3] = v.dotRgba[3];
       s[i] = v.dot.scale.x * v.inner.scale.x;
+      r[i] = (v.node.depth ?? 1) === 1 && !v.node.isDeleted && !v.node.isCenter ? 1 : 0;
     }
-    for (const name of ['position', 'rgba', 'size']) {
+    for (const name of ['position', 'rgba', 'size', 'rim']) {
       (this.geom.getAttribute(name) as THREE.BufferAttribute).needsUpdate = true;
     }
     this.geom.setDrawRange(0, list.length);
@@ -1402,6 +1438,9 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
     layer.paint({
       isPath: (key) => path.dim && path.links.has(key),
       isSoft: (key) => path.soft.has(key),
+      // While a path is highlighted the spokes step back with the other links
+      isSpoke: (l) =>
+        !path.dim && ((!!l.a.isCenter && (l.b.depth ?? 1) === 1) || (!!l.b.isCenter && (l.a.depth ?? 1) === 1)),
       shown: shownNode,
       plain: path.dim ? ink.dim : ink.plain,
       plainOp: path.dim ? ink.dimOp : ink.plainOp,
@@ -1470,7 +1509,8 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
       return;
     }
     const hex = onPath ? palette.careBright : depthColor(palette, Math.max(1, depth));
-    const base = n.isDeleted ? 0.3 : depth <= 1 ? 0.96 : depth === 2 ? 0.74 : 0.5;
+    // The 1st handshake stays bright; the 2nd and 3rd step back so the nearest circle reads first
+    const base = n.isDeleted ? 0.3 : depth <= 1 ? 1 : depth === 2 ? 0.62 : 0.42;
     const parsed = parseColor(hex);
     // Drawn by DotLayer: keep the colour and alpha on the node
     tmpColor.setHex(parsed.color);
@@ -1525,6 +1565,20 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
       v.avatar.scale.set(photoSize, photoSize, 1);
       v.dot.visible = !showPhoto;
       v.dot.scale.set(dotSize, dotSize, 1);
+      // 1st handshake: the photo carries the same accent ring as the dot, so the circle stays visible up close
+      const ring1 = (n.depth ?? 1) === 1 && !n.isDeleted;
+      if (ring1 && showPhoto && !v.rim) {
+        const rim = new THREE.Sprite(res.rimMaterial);
+        rim.raycast = noRaycast;
+        rim.renderOrder = 2.6;
+        v.inner.add(rim);
+        v.rim = rim;
+      }
+      if (v.rim) {
+        v.rim.visible = ring1 && showPhoto;
+        v.rim.scale.set(photoSize * RIM_SCALE, photoSize * RIM_SCALE, 1);
+        v.rim.material = pathRef.current.dim && !onPath ? res.rimDimMaterial : res.rimMaterial;
+      }
     }
 
     // The pulse ring exists only on nodes that have shown it (online or on the path): one object
@@ -1660,6 +1714,7 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
       glow,
       label: null,
       pulse: null,
+      rim: null,
       level: showCached ? 0 : -1,
       sf,
       online: isOnline(node.lastSeen),
@@ -1963,6 +2018,8 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
     const camPos = new THREE.Vector3();
     // Labels that would sit on top of another label on screen (recomputed a few times a second)
     const crowded = new Set<string>();
+    /** Names that passed the overlap check; a fresh name waits for it, so two names never flash on top of each other */
+    const placed = new Set<string>();
     // Nodes whose photo may show now (ranking pass)
     const photoAllowed = new Set<string>();
     // Last time each node was among the nearest few (label hold)
@@ -2122,24 +2179,30 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
 
       if (labelFrame++ % 6 === 0) {
         const ranked: { id: string; d2: number }[] = [];
+        let close = 0;
         for (const v of visRef.current.values()) {
           if (!v.outer.parent) continue;
           const depth = v.node.depth ?? 1;
           if (depth < 1 || depth > 2 || hiddenRef.current.has(depth)) continue;
           const p = v.outer.position;
           const dx = p.x - camPos.x, dy = p.y - camPos.y, dz = p.z - camPos.z;
-          ranked.push({ id: v.node.id, d2: dx * dx + dy * dy + dz * dz });
+          const d2 = dx * dx + dy * dy + dz * dz;
+          if (d2 < LOD_CLOSE2) close++;
+          // 1st handshake first: a 2nd-handshake name has to be clearly nearer to take its place
+          ranked.push({ id: v.node.id, d2: depth === 2 ? d2 * RING2_LABEL_PENALTY : d2 });
         }
         ranked.sort((a, b) => a.d2 - b.d2);
         const next = new Set<string>();
-        for (let i = 0; i < ranked.length && next.size < NEAREST_LABELS; i++) {
+        // Up close there is room for more names (the overlap pass below still hides any that collide)
+        const limit = Math.min(NEAREST_LABELS_MAX, NEAREST_LABELS + Math.floor(close / 2));
+        for (let i = 0; i < ranked.length && next.size < limit; i++) {
           const id = ranked[i]?.id;
           if (id) { next.add(id); nearSince.set(id, now); }
         }
         // A name that just dropped out of the nearest few keeps its place a little longer, so a turning
         // camera does not hand the names from person to person every few frames
         for (const id of nearestRef.current) {
-          if (next.has(id) || next.size >= NEAREST_LABELS + NEAREST_HOLD_EXTRA) continue;
+          if (next.has(id) || next.size >= limit + NEAREST_HOLD_EXTRA) continue;
           if (now - (nearSince.get(id) ?? 0) < NEAREST_HOLD_MS) next.add(id);
         }
         for (const [id, at] of nearSince) if (now - at > NEAREST_HOLD_MS * 4) nearSince.delete(id);
@@ -2155,7 +2218,7 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
           const depth = v.node.depth ?? 1;
           if (hiddenRef.current.has(depth)) continue;
           const dist = Math.max(1, v.outer.position.distanceTo(camPos));
-          const px = (5 * v.sf * ppu) / dist;
+          const px = ((5 * v.sf * ppu) / dist) * (depth === 1 ? RING1_PHOTO_BONUS : 1);
           if (px >= PHOTO_PRELOAD_PX) ranked.push({ v, px });
         }
         ranked.sort((a, b) => b.px - a.px);
@@ -2212,17 +2275,19 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
           const box = boxAt(projV, lw, lh);
           if (!box) continue;
           const onPath = pathRef.current.set.has(v.node.id) && !v.node.isDeleted;
-          items.push({ id: v.node.id, box, prio: v.node.isCenter ? 0 : onPath ? 1 : 2, d2 });
+          const ring1 = (v.node.depth ?? 1) === 1;
+          items.push({ id: v.node.id, box, prio: v.node.isCenter ? 0 : onPath ? 1 : ring1 ? 2 : 3, d2 });
         }
         items.sort((a, b) => a.prio - b.prio || a.d2 - b.d2);
         crowded.clear();
+        placed.clear();
         const kept: Box[] = [];
         for (const it of items) {
           if (it.prio > 0 && it.box.y1 > bandTop) {
             crowded.add(it.id);
             continue;
           }
-          if (it.prio === 2) {
+          if (it.prio >= 2) {
             const hitsName = kept.some((k) => overlaps(k, it.box, 4));
             const hitsFace = !hitsName && faces.some((f) => f.id !== it.id && f.d2 < it.d2 && overlaps(f.box, it.box, 0));
             if (hitsName || hitsFace) {
@@ -2231,6 +2296,7 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
             }
           }
           kept.push(it.box);
+          placed.add(it.id);
         }
       }
 
@@ -2279,7 +2345,7 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
           else if (now - v.unwantedAt >= LABEL_IDLE_MS) dropLabel(v);
         }
         if (v.label) {
-          const wantShown = showLabel && !crowded.has(v.node.id) ? 1 : 0;
+          const wantShown = showLabel && placed.has(v.node.id) ? 1 : 0;
           if (reduced) v.labelShow = wantShown;
           else if (v.labelShow !== wantShown) {
             const step = dt / LABEL_FADE_MS;
@@ -2371,6 +2437,7 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
         dotList.sort(farFirst);
         const canvasH = (fg.renderer() as THREE.WebGLRenderer).domElement.height;
         dots.setScale(((cam as THREE.PerspectiveCamera).projectionMatrix.elements[5] ?? 1) * canvasH * 0.5);
+        dots.setRim(readInk().care);
         dots.write(dotList);
       }
 
@@ -2793,6 +2860,19 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
     }
   }, [focusControlled, focusId, flyPose, lookAt]);
 
+  // Two taps on empty space zoom in around what the camera looks at (pinch and the wheel still work)
+  const lastBgTap = useRef(0);
+  const zoomByRef = useRef<(factor: number) => void>(() => undefined);
+  const handleBackgroundClick = useCallback(() => {
+    const now = performance.now();
+    if (now - lastBgTap.current < DOUBLE_TAP_MS) {
+      lastBgTap.current = 0;
+      zoomByRef.current(DOUBLE_TAP_ZOOM);
+      return;
+    }
+    lastBgTap.current = now;
+  }, []);
+
   const handleNodeHover = useCallback((node: { id?: string | number } | null) => {
     lifeRef.current.hoverId = node?.id != null ? String(node.id) : null;
   }, []);
@@ -2868,6 +2948,8 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
     const dist = Math.max(1, cam.position.length());
     flyTo(cam.position, THREE.MathUtils.clamp(dist * factor, min, max), 280);
   }, [flyTo, flyPose, lookAt]);
+
+  zoomByRef.current = zoomBy;
 
   useImperativeHandle(ref, () => ({
     zoomIn: () => zoomBy(0.8),
@@ -3010,6 +3092,7 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
         // Links are drawn by LinkLayer (one draw call); the library only uses them for the layout
         linkVisibility={false}
         onNodeClick={handleNodeClick}
+        onBackgroundClick={handleBackgroundClick}
         onNodeHover={handleNodeHover}
         onEngineTick={() => { simRef.current = true; }}
         onEngineStop={() => {
@@ -3186,6 +3269,11 @@ function createResources() {
     map: ringTexture, color: parseColor(colors.care).color, transparent: true, opacity: 0.5, depthWrite: false,
   });
   const pulseDimMaterial = pulseMaterial.clone();
+  const rimMaterial = new THREE.SpriteMaterial({
+    map: ringTexture, color: parseColor(colors.care).color, transparent: true, opacity: 0.95, depthWrite: false,
+  });
+  const rimDimMaterial = rimMaterial.clone();
+  rimDimMaterial.opacity = 0.95 * DIM_OPACITY;
 
   // Impulse pulses: one material, tinted from the palette (care for the glow, a lighter care for the core)
   const impulseMaterial = new THREE.ShaderMaterial({
@@ -3255,6 +3343,8 @@ function createResources() {
     hitMaterial,
     pulseMaterial,
     pulseDimMaterial,
+    rimMaterial,
+    rimDimMaterial,
     impulseMaterial,
 
     setColors(next: GraphColors) {
@@ -3264,6 +3354,8 @@ function createResources() {
       const care = parseColor(next.care).color;
       pulseMaterial.color.set(care);
       pulseDimMaterial.color.set(care);
+      rimMaterial.color.set(care);
+      rimDimMaterial.color.set(care);
     },
     setLogo(url: string) {
       const next = url || '/logo.png';
@@ -3345,6 +3437,8 @@ function createResources() {
       materials.clear();
       pulseMaterial.dispose();
       pulseDimMaterial.dispose();
+      rimMaterial.dispose();
+      rimDimMaterial.dispose();
       impulseMaterial.dispose();
       hitMaterial.dispose();
       washMaterial.dispose();

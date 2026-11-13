@@ -38,7 +38,9 @@ export function normalizeEmail(email: string): string {
 }
 
 function hashCode(email: string, code: string): string {
-  const secret = process.env.JWT_SECRET || 'dev-secret';
+  // auth.service.ts refuses to start without JWT_SECRET; never fall back to a known value
+  const secret = process.env.JWT_SECRET;
+  if (!secret) throw new Error('JWT_SECRET is not set');
   return crypto.createHmac('sha256', secret).update(`${email}:${code}`).digest('hex');
 }
 

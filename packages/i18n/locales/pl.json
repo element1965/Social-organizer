@@ -211,6 +211,7 @@
     "toSelf": "Wróć do mnie",
     "backToFeed": "Kanał",
     "openGraph": "Rozwiń graf",
+    "graphFailed": "Graf nie otworzył się na tym urządzeniu. Twoi ludzie nadal są na listach.",
     "eventsPill": "Zdarzenia",
     "startPill": "Start",
     "gestureHint": "Jeden palec obraca, dwa przybliżają",
@@ -1439,7 +1440,9 @@
     "factsReported": "Zgłoszony udział",
     "factsMarked": "Oznaczone przez autorów jako otrzymane",
     "factsNote": "Dotyczy zamkniętych Potrzeb. Oznaczenie ustawia autor Potrzeby; Social Organizer go nie weryfikuje.",
-    "requestDeclined": "Znajomość nie została potwierdzona. Jeśli się znacie, pokażcie sobie kod QR przy spotkaniu."
+    "requestDeclined": "Znajomość nie została potwierdzona. Jeśli się znacie, pokażcie sobie kod QR przy spotkaniu.",
+    "prevPerson": "Poprzednia osoba",
+    "nextPerson": "Następna osoba"
   },
   "help": {
     "faq": "Pytania i odpowiedzi",

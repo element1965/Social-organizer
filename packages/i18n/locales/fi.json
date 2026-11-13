@@ -211,6 +211,7 @@
     "toSelf": "Takaisin minuun",
     "backToFeed": "Syöte",
     "openGraph": "Laajenna graafi",
+    "graphFailed": "Graafi ei auennut tällä laitteella. Ihmisesi ovat yhä listoissa.",
     "eventsPill": "Tapahtumat",
     "startPill": "Alku",
     "gestureHint": "Yksi sormi kääntää, kaksi zoomaa",
@@ -1417,7 +1418,9 @@
     "factsReported": "Ilmoitetut osallistumiset",
     "factsMarked": "Tekijöiden saaduksi merkitsemä",
     "factsNote": "Suljettujen tarpeiden osalta. Merkinnän tekee tarpeen tekijä; Social Organizer ei tarkista sitä.",
-    "requestDeclined": "Tuttavuutta ei vahvistettu. Jos tunnette toisenne, näyttäkää toisillenne QR-koodi tavatessanne."
+    "requestDeclined": "Tuttavuutta ei vahvistettu. Jos tunnette toisenne, näyttäkää toisillenne QR-koodi tavatessanne.",
+    "prevPerson": "Edellinen henkilö",
+    "nextPerson": "Seuraava henkilö"
   },
   "help": {
     "faq": "Kysymykset ja vastaukset",

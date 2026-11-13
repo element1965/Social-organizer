@@ -211,6 +211,7 @@
     "toSelf": "Terug naar mij",
     "backToFeed": "Feed",
     "openGraph": "Graaf uitklappen",
+    "graphFailed": "De graaf ging niet open op dit apparaat. Je mensen staan nog steeds in de lijsten.",
     "eventsPill": "Gebeurtenissen",
     "startPill": "Start",
     "gestureHint": "Eén vinger draait, twee zoomen",
@@ -1417,7 +1418,9 @@
     "factsReported": "Gemelde deelname",
     "factsMarked": "Door auteurs als ontvangen gemarkeerd",
     "factsNote": "Voor gesloten Behoeften. De markering wordt gezet door de auteur van een Behoefte; Social Organizer controleert die niet.",
-    "requestDeclined": "De kennismaking is niet bevestigd. Kennen jullie elkaar, laat elkaar dan je QR-code zien als jullie elkaar zien."
+    "requestDeclined": "De kennismaking is niet bevestigd. Kennen jullie elkaar, laat elkaar dan je QR-code zien als jullie elkaar zien.",
+    "prevPerson": "Vorige persoon",
+    "nextPerson": "Volgende persoon"
   },
   "help": {
     "faq": "Vragen en antwoorden",

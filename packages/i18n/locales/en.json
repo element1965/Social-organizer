@@ -212,6 +212,7 @@
     "toSelf": "Back to me",
     "backToFeed": "Feed",
     "openGraph": "Expand the graph",
+    "graphFailed": "The graph did not open on this device. Your people are still in the lists.",
     "eventsPill": "Events",
     "startPill": "Start",
     "gestureHint": "One finger rotates, two zoom",
@@ -1439,7 +1440,9 @@
     "factsReported": "Participation reported",
     "factsMarked": "Marked as received by authors",
     "factsNote": "For closed Needs. The mark is set by the author of a Need; Social Organizer does not verify it.",
-    "requestDeclined": "The acquaintance was not confirmed. If you know each other, show each other your QR code when you meet."
+    "requestDeclined": "The acquaintance was not confirmed. If you know each other, show each other your QR code when you meet.",
+    "prevPerson": "Previous person",
+    "nextPerson": "Next person"
   },
   "help": {
     "faq": "Questions and answers",

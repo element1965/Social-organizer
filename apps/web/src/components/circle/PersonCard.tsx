@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState, type TouchEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { buildContactUrl, isSafeContactUrl } from '@so/shared';
@@ -11,7 +11,7 @@ import { PathFigure } from '../ui2/PathFigure';
 import { Pill } from '../ui2/Pill';
 import { Sheet } from '../ui2/Sheet';
 import { formatMoney } from '../ui2/format';
-import { IconBack } from '../ui2/icons';
+import { IconBack, IconChevron } from '../ui2/icons';
 import { IconClose } from './icons';
 
 export type CardPerson = {
@@ -31,10 +31,15 @@ type Props = {
   /** floating: the phone card over the scene. column: the desktop right column with "‹ Feed". */
   variant: 'floating' | 'column';
   onClose: () => void;
+  /**
+   * Step through the people of the same handshake without closing the card: arrows, or a sideways swipe
+   * on the card. The graph flies to each one (the screen changes the focused person).
+   */
+  step?: { index: number; total: number; onPrev: () => void; onNext: () => void };
 };
 
 /** Person tapped on the graph: name, ring, path; actions Collection / Open / Contacts. */
-export function PersonCard({ person, variant, onClose }: Props) {
+export function PersonCard({ person, variant, onClose, step }: Props) {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const utils = trpc.useUtils();
@@ -58,6 +63,25 @@ export function PersonCard({ person, variant, onClose }: Props) {
     .filter(Boolean)
     .join(' · ');
   const pathNames = [t('common.you'), ...person.via, person.name];
+
+  // Sideways swipe on the card: next / previous person of the same handshake (mirrored right-to-left)
+  const swipe = useRef<{ x: number; y: number } | null>(null);
+  const onTouchStart = (event: TouchEvent) => {
+    const touch = event.touches[0];
+    swipe.current = touch && event.touches.length === 1 ? { x: touch.clientX, y: touch.clientY } : null;
+  };
+  const onTouchEnd = (event: TouchEvent) => {
+    const start = swipe.current;
+    swipe.current = null;
+    const touch = event.changedTouches[0];
+    if (!start || !touch || !step || step.total < 2) return;
+    const dx = touch.clientX - start.x;
+    const dy = touch.clientY - start.y;
+    if (Math.abs(dx) < 48 || Math.abs(dx) < Math.abs(dy) * 1.5) return;
+    const rtl = document.documentElement.dir === 'rtl';
+    if ((dx < 0) !== rtl) step.onNext();
+    else step.onPrev();
+  };
 
   const actions: Array<{ key: string; label: string; primary: boolean; onClick: () => void }> = [];
   if (person.collection) {
@@ -114,6 +138,8 @@ export function PersonCard({ person, variant, onClose }: Props) {
           variant === 'floating' ? 'so-sheet-in shadow-sheet' : 'shadow-card',
         )}
         aria-label={person.name}
+        onTouchStart={onTouchStart}
+        onTouchEnd={onTouchEnd}
       >
         {variant === 'column' ? (
           <button
@@ -125,10 +151,36 @@ export function PersonCard({ person, variant, onClose }: Props) {
             {t('circle.backToFeed')}
           </button>
         ) : null}
-        {head}
-        <div className="mt-3.5">
-          <PathFigure names={pathNames} />
+        {/* Keyed by person: stepping to the next one fades the content instead of swapping it */}
+        <div key={person.id} className="so-fade-in">
+          {head}
+          <div className="mt-3.5">
+            <PathFigure names={pathNames} />
+          </div>
         </div>
+        {step && step.total > 1 ? (
+          <div className="mt-2 flex items-center justify-between">
+            <button
+              type="button"
+              onClick={step.onPrev}
+              aria-label={t('person.prevPerson')}
+              className="so-focus grid h-9 w-9 place-items-center rounded-[10px] bg-canvas text-ink-muted transition-colors duration-fast ease-so active:bg-surface-2 rtl:rotate-180"
+            >
+              <IconBack className="h-4 w-4" />
+            </button>
+            <span className="text-label font-semibold tabular-nums text-ink-muted" aria-live="polite">
+              {t('path.of', { count: step.index + 1, goal: step.total })}
+            </span>
+            <button
+              type="button"
+              onClick={step.onNext}
+              aria-label={t('person.nextPerson')}
+              className="so-focus grid h-9 w-9 place-items-center rounded-[10px] bg-canvas text-ink-muted transition-colors duration-fast ease-so active:bg-surface-2 rtl:rotate-180"
+            >
+              <IconChevron className="h-4 w-4" />
+            </button>
+          </div>
+        ) : null}
         <div className={cn('mt-3.5 grid gap-2', actions.length === 1 ? 'grid-cols-1' : actions.length === 2 ? 'grid-cols-2' : 'grid-cols-3')}>
           {actions.map((a) => (
             <Button key={a.key} size="md" variant={a.primary ? 'primary' : 'ghost'} onClick={a.onClick}>
