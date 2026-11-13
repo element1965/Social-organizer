@@ -6,6 +6,7 @@ import { Screen } from '../components/ui2/Screen';
 import { ArrivalList } from '../components/add/ArrivalList';
 import { ConfirmSheet } from '../components/add/ConfirmSheet';
 import { LinkCard } from '../components/add/LinkCard';
+import { SuggestList } from '../components/add/SuggestList';
 import { inviteSlug } from '../components/add/links';
 import { ShakeHint } from '../components/shake/ShakeHint';
 import { PathCard } from '../components/circle/PathToRequest';
@@ -37,6 +38,8 @@ export function AddPage() {
     photoUrl: item.photoUrl,
     at: new Date(item.createdAt),
   }));
+  // Nicknames the person gave their acquaintances, for "through whom" in the suggestions
+  const names = new Map((connections.data ?? []).map((item) => [item.userId, item.displayName || item.name]));
   const listFailed = incoming.isError || connections.isError;
   const listLoading = incoming.isLoading || connections.isLoading;
   const total = pending.length + connected.length;
@@ -54,6 +57,7 @@ export function AddPage() {
       <ShakeHint className="mt-4" />
       {/* While asking is locked, the explanation sits below the link: the link is what to do first. */}
       <PathCard className="mt-4" />
+      <SuggestList className="mt-4" names={names} />
       {listFailed ? (
         <div className="mt-4">
           <p className="text-label font-semibold text-sos">{t('add.loadError')}</p>

@@ -478,6 +478,7 @@
     "statistics": "İstatistik",
     "peopleTab": "Kişiler",
     "clustersTab": "Kümeler",
+    "funnelTab": "Funnel",
     "aboutVersion": "Sürüm {{version}}",
     "openSource": "Açık kaynak",
     "terms": "Koşullar",
@@ -1133,7 +1134,23 @@
     "totalInvites": "Toplam davet",
     "invitedCount": "bağlantı",
     "search": "Ada göre ara...",
-    "noResults": "Sonuç yok"
+    "noResults": "Sonuç yok",
+    "funnel": {
+      "note": "People by the week they signed up, last 8 weeks. \"Opened an invite\" counts guests of invite pages in the same week.",
+      "week": "Week of",
+      "opened": "Opened an invite",
+      "signedUp": "Signed up",
+      "requested": "Sent a request",
+      "connected": "First connection",
+      "five": "5 connections",
+      "unlocked": "Need open",
+      "sources": "By source, last 8 weeks",
+      "source": "Source",
+      "requests": "Requests",
+      "connections": "Connections",
+      "perActive": "Newcomers with a connection per active person",
+      "days": "{{count}} days"
+    }
   },
   "support": {
     "title": "Destek Sohbeti",
@@ -1316,7 +1333,12 @@
     "sortLabel": "Sıralama",
     "sortNew": "Önce en yeni",
     "sortName": "A–Z",
-    "showMore": "Daha fazla göster · {{total}} kaldı"
+    "showMore": "Daha fazla göster · {{total}} kaldı",
+    "suggest": {
+      "title": "Tanışıyor olabilirsiniz",
+      "hint": "Tanıdıklarınızın tanıdığı kişiler. Yalnızca şahsen tanıdıklarınızı onaylayın.",
+      "mutual": "Ortak tanıdık: {{count}}"
+    }
   },
   "account": {
     "firstName": "Ad",

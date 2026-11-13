@@ -481,6 +481,7 @@
     "statistics": "Statistici",
     "peopleTab": "Oameni",
     "clustersTab": "Clustere",
+    "funnelTab": "Funnel",
     "aboutVersion": "Versiunea {{version}}",
     "openSource": "Cod deschis",
     "terms": "Condiții",
@@ -1138,7 +1139,23 @@
     "totalInvites": "Total invitați",
     "invitedCount": "legături",
     "search": "Caută după nume...",
-    "noResults": "Niciun rezultat"
+    "noResults": "Niciun rezultat",
+    "funnel": {
+      "note": "People by the week they signed up, last 8 weeks. \"Opened an invite\" counts guests of invite pages in the same week.",
+      "week": "Week of",
+      "opened": "Opened an invite",
+      "signedUp": "Signed up",
+      "requested": "Sent a request",
+      "connected": "First connection",
+      "five": "5 connections",
+      "unlocked": "Need open",
+      "sources": "By source, last 8 weeks",
+      "source": "Source",
+      "requests": "Requests",
+      "connections": "Connections",
+      "perActive": "Newcomers with a connection per active person",
+      "days": "{{count}} days"
+    }
   },
   "support": {
     "title": "Chat suport",
@@ -1323,7 +1340,12 @@
     "sortLabel": "Sortare",
     "sortNew": "Cele mai noi",
     "sortName": "A–Z",
-    "showMore": "Arată mai mult · au rămas {{total}}"
+    "showMore": "Arată mai mult · au rămas {{total}}",
+    "suggest": {
+      "title": "Poate vă cunoașteți",
+      "hint": "Persoane pe care le cunosc cunoscuții tăi. Confirmă doar pe cei pe care îi cunoști personal.",
+      "mutual": "Cunoscuți comuni: {{count}}"
+    }
   },
   "account": {
     "firstName": "Prenume",

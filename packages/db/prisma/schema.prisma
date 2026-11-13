@@ -210,6 +210,9 @@ model Connection {
   createdAt   DateTime @default(now())
   // Set only when invite.acceptSos creates this row. No FK: the collection may be deleted later.
   viaCollectionId String?
+  /// How the two people met in the app (CONNECTION_SOURCES in @so/shared): personal link, live QR, shake,
+  /// a Need page, a direct request, a suggestion, the bot. Admin funnel only; null for older rows.
+  source      String?
 
   userA User @relation("connectionFromUser", fields: [userAId], references: [id], onDelete: Cascade)
   userB User @relation("connectionToUser", fields: [userBId], references: [id], onDelete: Cascade)
@@ -554,6 +557,8 @@ model PendingConnection {
   /// The requester saw "X confirmed the acquaintance" (any device), and when they tapped it away
   requesterSeenAt      DateTime?
   requesterDismissedAt DateTime?
+  /// Where the request came from (CONNECTION_SOURCES); copied to the connection when it is confirmed
+  source     String?
 
   fromUser User @relation("pendingFrom", fields: [fromUserId], references: [id], onDelete: Cascade)
   toUser   User @relation("pendingTo", fields: [toUserId], references: [id], onDelete: Cascade)
@@ -562,6 +567,17 @@ model PendingConnection {
   @@index([toUserId, status])
   @@index([fromUserId, status])
   @@map("pending_connections")
+}
+
+/// Guests who opened an invite page, counted per day and source: the top of the admin funnel.
+/// Only a number: no person, link, address or device is stored.
+model InviteOpenDay {
+  day    DateTime @db.Date
+  source String
+  count  Int      @default(0)
+
+  @@id([day, source])
+  @@map("invite_open_days")
 }
 
 enum ScheduledPostStatus {

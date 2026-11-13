@@ -29,6 +29,8 @@ import {
   TextButton,
 } from '../components/onboarding/states';
 import { buildWebInviteUrl } from '../lib/inviteUrl';
+import { inviteSrcParam, type InviteSrcParam } from '@so/shared';
+import { clearInviteSrc, firstOpenOf, readInviteSrc, rememberInviteSrc } from '../lib/inviteSrc';
 import { SITE_ORIGIN, storeLinks, useDevice } from '../lib/device';
 import { QR_LOGO_LEVEL, qrLogo } from '../lib/qrLogo';
 import { IconApple, IconPlay } from '../components/site/icons';
@@ -65,6 +67,13 @@ function offersInstall(): boolean {
     return false;
   }
 }
+function inTelegram(): boolean {
+  try {
+    return isTelegramWebApp();
+  } catch {
+    return false;
+  }
+}
 /** Not found, inviter deleted, expired (all NOT_FOUND on the API) or already used by someone else. */
 function isDeadError(err: TrpcLikeError): boolean {
   if (!err) return false;
@@ -80,6 +89,9 @@ export function InvitePage() {
   const { token = '' } = useParams<{ token: string }>();
   const [search] = useSearchParams();
   const addressee = safeAddressee(search.get('to'));
+  // Which way the link travelled (funnel only): `?src=` of the shared address, or the bot's Mini App
+  const srcParam = inviteSrcParam(search.get('src'));
+  const src: InviteSrcParam | undefined = srcParam ?? readInviteSrc() ?? (inTelegram() ? 'tg' : undefined);
   const isAuthenticated = useAuth((s) => s.isAuthenticated);
   const logout = useAuth((s) => s.logout);
   const isRealUser = isAuthenticated;
@@ -113,6 +125,18 @@ export function InvitePage() {
   useEffect(() => {
     if (!isRealUser && token && invite.data) setPending(token);
   }, [isRealUser, token, invite.data]);
+
+  // The source survives sign-in the same way; a guest opening a live invite is counted once per session
+  const opened = trpc.invite.opened.useMutation();
+  const countOpen = opened.mutate;
+  const inviteLoaded = !!invite.data;
+  useEffect(() => {
+    if (isRealUser || !token || !inviteLoaded || !firstOpenOf(token)) return;
+    // A fresh visit decides the source: one kept from an older link must not label this one
+    if (srcParam) rememberInviteSrc(srcParam);
+    else clearInviteSrc();
+    countOpen({ src: srcParam ?? (inTelegram() ? 'tg' : undefined) });
+  }, [isRealUser, token, inviteLoaded, srcParam, countOpen]);
 
   const usedByOther =
     !!invite.data?.usedById && !!me.data && invite.data.usedById !== me.data.id;
@@ -148,6 +172,7 @@ export function InvitePage() {
       meId={me.data.id}
       firstRun={firstRun || !me.data.onboardingCompleted}
       cameThroughInvite={cameThroughInvite}
+      src={src}
       hero={<InviteHero name={inviter.name} photoUrl={inviter.photoUrl} networkCount={networkCount} total={total} token={token} addressee={addressee} signedIn />}
     />
   );
@@ -209,6 +234,7 @@ function AcceptView({
   meId,
   firstRun,
   cameThroughInvite,
+  src,
   hero,
 }: {
   token: string;
@@ -219,6 +245,8 @@ function AcceptView({
   /** A new account: auto-accept, then the intro (never the result screen). */
   firstRun: boolean;
   cameThroughInvite: boolean;
+  /** Which way the link travelled, sent with the request (funnel only) */
+  src?: InviteSrcParam;
   hero: React.ReactNode;
 }) {
   const { t } = useTranslation();
@@ -231,6 +259,7 @@ function AcceptView({
   const accept = trpc.invite.accept.useMutation({
     onSuccess: (data) => {
       setPending(null);
+      clearInviteSrc();
       if (!firstRun) return;
       const r = data as { alreadyConnected?: boolean; pending?: boolean } | undefined;
       if (r?.pending && !r.alreadyConnected && offersInstall()) setInstallStep(true);
@@ -253,9 +282,9 @@ function AcceptView({
     if (own || autoTried.current) return;
     if (cameThroughInvite || firstRun) {
       autoTried.current = true;
-      accept.mutate({ token, viaLink: true });
+      accept.mutate({ token, viaLink: true, src });
     }
-  }, [own, cameThroughInvite, firstRun, accept, token]);
+  }, [own, cameThroughInvite, firstRun, accept, token, src]);
 
   // While the request waits, poll so the screen turns into "You know each other" when the inviter confirms
   const result = accept.data as { alreadyConnected?: boolean; pending?: boolean } | undefined;
@@ -341,7 +370,7 @@ function AcceptView({
           loading={accept.isPending || (accept.isSuccess && firstRun)}
           onClick={() => {
             accept.reset();
-            accept.mutate({ token, viaLink: true });
+            accept.mutate({ token, viaLink: true, src });
           }}
         >
           {accept.error ? t('common.retry') : t('invite.known')}

@@ -130,7 +130,11 @@ export const pendingRouter = router({
     }),
 
   sendDirectRequest: protectedProcedure
-    .input(z.object({ targetUserId: z.string() }))
+    .input(z.object({
+      targetUserId: z.string(),
+      /** From a person's page, or from "You may know each other" (funnel only) */
+      source: z.enum(['direct', 'suggest']).default('direct'),
+    }))
     .mutation(async ({ ctx, input }) => {
       if (input.targetUserId === ctx.userId) {
         throw new TRPCError({ code: 'BAD_REQUEST', message: 'Cannot send request to yourself' });
@@ -164,7 +168,7 @@ export const pendingRouter = router({
       }
 
       // Declined, cooling down after a withdrawal, or a parallel request first: the shared rules decide
-      const created = await openConnectionRequest(ctx.db, ctx.userId, input.targetUserId);
+      const created = await openConnectionRequest(ctx.db, ctx.userId, input.targetUserId, input.source);
       if (!created) throw new TRPCError({ code: 'CONFLICT', message: 'Request already pending' });
 
       const [sender, senderTgContact] = await Promise.all([

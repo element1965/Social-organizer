@@ -475,6 +475,7 @@
     "statistics": "สถิติ",
     "peopleTab": "ผู้คน",
     "clustersTab": "คลัสเตอร์",
+    "funnelTab": "Funnel",
     "aboutVersion": "เวอร์ชัน {{version}}",
     "openSource": "โอเพนซอร์ส",
     "terms": "ข้อกำหนด",
@@ -1128,7 +1129,23 @@
     "totalInvites": "เชิญทั้งหมด",
     "invitedCount": "การเชื่อมต่อ",
     "search": "ค้นหาตามชื่อ...",
-    "noResults": "ไม่มีผลลัพธ์"
+    "noResults": "ไม่มีผลลัพธ์",
+    "funnel": {
+      "note": "People by the week they signed up, last 8 weeks. \"Opened an invite\" counts guests of invite pages in the same week.",
+      "week": "Week of",
+      "opened": "Opened an invite",
+      "signedUp": "Signed up",
+      "requested": "Sent a request",
+      "connected": "First connection",
+      "five": "5 connections",
+      "unlocked": "Need open",
+      "sources": "By source, last 8 weeks",
+      "source": "Source",
+      "requests": "Requests",
+      "connections": "Connections",
+      "perActive": "Newcomers with a connection per active person",
+      "days": "{{count}} days"
+    }
   },
   "support": {
     "title": "แชทสนับสนุน",
@@ -1309,7 +1326,12 @@
     "sortLabel": "เรียงลำดับ",
     "sortNew": "ใหม่สุดก่อน",
     "sortName": "ก–ฮ",
-    "showMore": "แสดงเพิ่ม · เหลือ {{total}}"
+    "showMore": "แสดงเพิ่ม · เหลือ {{total}}",
+    "suggest": {
+      "title": "คุณอาจรู้จักกัน",
+      "hint": "คนที่คนรู้จักของคุณรู้จัก ยืนยันเฉพาะคนที่คุณรู้จักเป็นการส่วนตัวเท่านั้น",
+      "mutual": "คนรู้จักร่วมกัน: {{count}}"
+    }
   },
   "account": {
     "firstName": "ชื่อ",
