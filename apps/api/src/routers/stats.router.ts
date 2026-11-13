@@ -1,22 +1,10 @@
 import { z } from 'zod';
 import { TRPCError } from '@trpc/server';
 import { router, protectedProcedure, publicProcedure } from '../trpc.js';
-import { ADMIN_IDS, CLUSTER_ROOT_OVERRIDE } from '../admin.js';
+import { ADMIN_IDS } from '../admin.js';
+import { findClusters } from '../services/cluster.service.js';
 import { networkReach } from '../services/network.service.js';
 import { funnelReport } from '../services/funnel.service.js';
-
-class UnionFindStats {
-  parent = new Map<string, string>();
-  find(x: string): string {
-    if (!this.parent.has(x)) this.parent.set(x, x);
-    if (this.parent.get(x) !== x) this.parent.set(x, this.find(this.parent.get(x)!));
-    return this.parent.get(x)!;
-  }
-  union(a: string, b: string) {
-    const ra = this.find(a), rb = this.find(b);
-    if (ra !== rb) this.parent.set(rb, ra);
-  }
-}
 
 /** Cache for the public site numbers: every guest hits the landing page, the count changes slowly. */
 const PUBLIC_TTL_MS = 10 * 60 * 1000;
@@ -355,84 +343,79 @@ export const statsRouter = router({
       return { helped, helpedBy };
     }),
 
-  // Admin-only: detailed stats for all users across all clusters
-  adminAllUsersStats: protectedProcedure.query(async ({ ctx }) => {
-    if (!ADMIN_IDS.includes(ctx.userId!)) throw new TRPCError({ code: 'FORBIDDEN' });
+  // Admin-only: people with their direct connections and cluster. Connections and clusters come from the
+  // graph in memory; only the people on the page are read from the database (the busiest first, or a search).
+  adminAllUsersStats: protectedProcedure
+    .input(z.object({
+      search: z.string().trim().max(80).optional(),
+      limit: z.number().int().min(1).max(500).default(200),
+    }).optional())
+    .query(async ({ ctx, input }) => {
+      if (!ADMIN_IDS.includes(ctx.userId!)) throw new TRPCError({ code: 'FORBIDDEN' });
+      const limit = input?.limit ?? 200;
+      const search = input?.search || '';
+      const select = { id: true, name: true, photoUrl: true, createdAt: true, lastSeen: true, remainingBudget: true } as const;
 
-    const [users, allConnections] = await Promise.all([
-      ctx.db.user.findMany({
-        where: { deletedAt: null },
-        select: { id: true, name: true, photoUrl: true, createdAt: true, lastSeen: true, remainingBudget: true },
-      }),
-      ctx.db.connection.findMany({ select: { userAId: true, userBId: true } }),
-    ]);
+      const [clusters, total] = await Promise.all([
+        findClusters(ctx.db),
+        ctx.db.user.count({ where: { deletedAt: null } }),
+      ]);
 
-    // Count direct connections per user (= personally invited/connected)
-    const connMap = new Map<string, number>();
-    for (const c of allConnections) {
-      connMap.set(c.userAId, (connMap.get(c.userAId) ?? 0) + 1);
-      connMap.set(c.userBId, (connMap.get(c.userBId) ?? 0) + 1);
-    }
-
-    // Build clusters via Union-Find
-    const uf = new UnionFindStats();
-    for (const c of allConnections) uf.union(c.userAId, c.userBId);
-
-    const { member: NIKITA_ID, root: ANDREI_ID } = CLUSTER_ROOT_OVERRIDE;
-
-    // Map each user to their UF root and group cluster members
-    const userToUfRoot = new Map<string, string>();
-    const clusterGroups = new Map<string, string[]>(); // ufRoot → member IDs
-    for (const u of users) {
-      const ufRoot = uf.parent.has(u.id) ? uf.find(u.id) : u.id;
-      userToUfRoot.set(u.id, ufRoot);
-      if (!clusterGroups.has(ufRoot)) clusterGroups.set(ufRoot, []);
-      clusterGroups.get(ufRoot)!.push(u.id);
-    }
-
-    // Determine display root for each cluster (oldest member; Andrei for Nikita's cluster)
-    const userById = new Map(users.map(u => [u.id, u]));
-    const clusterDisplay = new Map<string, { id: string; name: string }>(); // ufRoot → display
-
-    for (const [ufRoot, memberIds] of clusterGroups) {
-      const hasNikita = memberIds.includes(NIKITA_ID);
-      let best: typeof users[0] | undefined;
-      for (const uid of memberIds) {
-        const u = userById.get(uid);
-        if (!u) continue;
-        if (hasNikita && u.id === ANDREI_ID) { best = u; break; }
-        if (!hasNikita && (!best || u.createdAt < best.createdAt)) best = u;
+      let users;
+      if (search) {
+        users = await ctx.db.user.findMany({
+          where: { deletedAt: null, name: { contains: search, mode: 'insensitive' } },
+          select,
+          take: limit,
+        });
+      } else {
+        // The people with the most connections first; the page is filled up with the newest accounts
+        const top = [...clusters.rootOf.keys()].sort((a, b) => clusters.degree(b) - clusters.degree(a)).slice(0, limit);
+        users = await ctx.db.user.findMany({ where: { id: { in: top }, deletedAt: null }, select });
+        if (users.length < limit) {
+          users.push(...(await ctx.db.user.findMany({
+            where: { deletedAt: null, id: { notIn: top } },
+            select,
+            orderBy: { createdAt: 'desc' },
+            take: limit - users.length,
+          })));
+        }
       }
-      // Fallback: if Andrei not in Nikita's cluster, use oldest
-      if (hasNikita && (!best || best.id !== ANDREI_ID)) {
-        best = memberIds
-          .map(id => userById.get(id))
-          .filter((u): u is typeof users[0] => !!u)
-          .sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime())[0];
-      }
-      clusterDisplay.set(ufRoot, { id: best?.id ?? ufRoot, name: best?.name ?? 'Unknown' });
-    }
 
-    const result = users.map(u => {
-      const ufRoot = userToUfRoot.get(u.id) ?? u.id;
-      const display = clusterDisplay.get(ufRoot) ?? { id: u.id, name: u.name };
+      const rootIds = [...new Set(users.map((u) => clusters.rootOf.get(u.id) ?? u.id))];
+      const rootNames = new Map(
+        (await ctx.db.user.findMany({ where: { id: { in: rootIds } }, select: { id: true, name: true } })).map((u) => [u.id, u.name]),
+      );
+      const inClusters = clusters.rootOf.size;
+
+      const rows = users.map((u) => {
+        const rootId = clusters.rootOf.get(u.id) ?? u.id;
+        const connections = clusters.degree(u.id);
+        return {
+          id: u.id,
+          name: u.name,
+          photoUrl: u.photoUrl,
+          createdAt: u.createdAt,
+          lastSeen: u.lastSeen,
+          remainingBudget: Math.round(u.remainingBudget ?? 0),
+          connectionCount: connections,
+          inviteCount: connections,
+          clusterRootId: rootId,
+          clusterRootName: rootNames.get(rootId) ?? u.name,
+        };
+      });
+      rows.sort((a, b) => b.connectionCount - a.connectionCount || (a.name < b.name ? -1 : 1));
+
       return {
-        id: u.id,
-        name: u.name,
-        photoUrl: u.photoUrl,
-        createdAt: u.createdAt,
-        lastSeen: u.lastSeen,
-        remainingBudget: Math.round(u.remainingBudget ?? 0),
-        connectionCount: connMap.get(u.id) ?? 0,
-        inviteCount: connMap.get(u.id) ?? 0,
-        clusterRootId: display.id,
-        clusterRootName: display.name,
+        /** Everyone with an account, whatever the page shows */
+        total,
+        /** Connected groups plus the people who have no connections yet */
+        clusters: clusters.list.length + Math.max(0, total - inClusters),
+        /** Sum of direct connections over everyone */
+        invites: clusters.totalDegree,
+        rows,
       };
-    });
-
-    result.sort((a, b) => b.inviteCount - a.inviteCount || b.connectionCount - a.connectionCount);
-    return result;
-  }),
+    }),
 
   // Admin-only: weekly cohorts from an opened invite to an open Need, and connections by source. Counts only.
   adminFunnel: protectedProcedure.query(async ({ ctx }) => {

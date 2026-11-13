@@ -61,7 +61,7 @@ export async function mergeEmptyAccountInto(db: PrismaClient, emptyId: string, k
     }
   });
   await restoreMutedAccount(db, keepId);
-  invalidateGraph();
+  invalidateGraph([emptyId, keepId]);
   console.log('[telegram-link] merged empty account', emptyId, 'into', keepId);
 }
 
@@ -151,6 +151,7 @@ export async function linkTelegramByCode(
     await db.user.delete({ where: { id: duplicateId } }).catch(async () => {
       await db.user.update({ where: { id: duplicateId }, data: { deletedAt: new Date() } }).catch(() => {});
     });
+    invalidateGraph([duplicateId]);
     console.log('[telegram-link] merged empty duplicate', duplicateId, 'into', target.id);
   } else {
     await db.platformAccount.create({

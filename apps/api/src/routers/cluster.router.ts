@@ -1,129 +1,56 @@
 import { TRPCError } from '@trpc/server';
-import { CLUSTER_ROOT_OVERRIDE, isAdmin } from '../admin.js';
+import { isAdmin } from '../admin.js';
 import { router, protectedProcedure } from '../trpc.js';
+import { findClusters } from '../services/cluster.service.js';
+import { remainingBudgets } from '../services/network.service.js';
+
+/** Rows sent to the admin screen: the largest clusters, then a few people who have no connections yet. */
+const CLUSTER_LIMIT = 200;
+const ISOLATED_LIMIT = 50;
+/** The newest accounts looked through to find them: people without connections are almost always recent. */
+const ISOLATED_SCAN = 2_000;
 
 /**
  * Clusters are whole connected components: names and intentions of people far beyond the caller's
- * visible rings, and a read of the whole connections table. Admin statistics only.
+ * visible rings. Admin statistics only.
  */
 function assertAdmin(userId: string | null | undefined) {
   if (!userId || !isAdmin(userId)) throw new TRPCError({ code: 'FORBIDDEN' });
 }
 
-// Union-Find for connected components
-class UnionFind {
-  parent: Map<string, string> = new Map();
-  rank: Map<string, number> = new Map();
-
-  find(x: string): string {
-    if (!this.parent.has(x)) { this.parent.set(x, x); this.rank.set(x, 0); }
-    if (this.parent.get(x) !== x) this.parent.set(x, this.find(this.parent.get(x)!));
-    return this.parent.get(x)!;
-  }
-
-  union(a: string, b: string) {
-    const ra = this.find(a), rb = this.find(b);
-    if (ra === rb) return;
-    const rankA = this.rank.get(ra)!, rankB = this.rank.get(rb)!;
-    if (rankA < rankB) this.parent.set(ra, rb);
-    else if (rankA > rankB) this.parent.set(rb, ra);
-    else { this.parent.set(rb, ra); this.rank.set(ra, rankA + 1); }
-  }
-}
-
 export const clusterRouter = router({
   list: protectedProcedure.query(async ({ ctx }) => {
     assertAdmin(ctx.userId);
-    // Load all connections
-    const connections = await ctx.db.connection.findMany({
-      select: { userAId: true, userBId: true },
-    });
+    const [clusters, budgets] = await Promise.all([findClusters(ctx.db), remainingBudgets(ctx.db)]);
+    const top = clusters.list.slice(0, CLUSTER_LIMIT);
 
-    // Build union-find
-    const uf = new UnionFind();
-    for (const c of connections) { uf.union(c.userAId, c.userBId); }
+    // People without a single connection: each is a cluster of one. Only the newest are listed, and they
+    // are picked out by the graph in memory (an anti-join over connections took 3 s on 100,000 people).
+    const [roots, newest] = await Promise.all([
+      ctx.db.user.findMany({ where: { id: { in: top.map((c) => c.rootUserId) } }, select: { id: true, name: true } }),
+      ctx.db.user.findMany({
+        where: { deletedAt: null },
+        select: { id: true, name: true, remainingBudget: true },
+        orderBy: { createdAt: 'desc' },
+        take: ISOLATED_SCAN,
+      }),
+    ]);
+    const isolated = newest.filter((u) => clusters.degree(u.id) === 0).slice(0, ISOLATED_LIMIT);
+    const nameOf = new Map(roots.map((u) => [u.id, u.name]));
+    const mine = clusters.rootOf.get(ctx.userId);
 
-    // Group users by root
-    const clusters = new Map<string, Set<string>>();
-    for (const uid of uf.parent.keys()) {
-      const root = uf.find(uid);
-      if (!clusters.has(root)) clusters.set(root, new Set());
-      clusters.get(root)!.add(uid);
-    }
-
-    // Collect IDs of users already in clusters
-    const usersInClusters = new Set(uf.parent.keys());
-
-    // Load isolated users (no connections) — visible to everyone
-    const isolatedUsers = await ctx.db.user.findMany({
-      where: { id: { notIn: [...usersInClusters] }, deletedAt: null },
-      select: { id: true, name: true, remainingBudget: true, createdAt: true },
-    });
-
-    // Find which cluster current user belongs to
-    const myRoot = uf.parent.has(ctx.userId) ? uf.find(ctx.userId) : null;
-
-    // Load budget data for all users in clusters
-    const allUserIds = [...uf.parent.keys()];
-    const users = await ctx.db.user.findMany({
-      where: { id: { in: allUserIds } },
-      select: { id: true, name: true, remainingBudget: true, createdAt: true, deletedAt: true },
-    });
-    const userMap = new Map(users.map(u => [u.id, u]));
-    const activeUserIds = new Set(users.filter(u => !u.deletedAt).map(u => u.id));
-
-    // Build cluster info
-    const result: Array<{
-      rootUserId: string;
-      rootUserName: string;
-      memberCount: number;
-      totalBudget: number;
-      isMine: boolean;
-    }> = [];
-
-    for (const [root, members] of clusters) {
-      const memberCount = [...members].filter(id => activeUserIds.has(id)).length;
-      // Skip empty clusters (all members deleted)
-      if (memberCount === 0) continue;
-
-      // Exception: in the cluster containing Никита Соловей, use Андрей Любалин as root
-      const { member: NIKITA_ID, root: ANDREI_ID } = CLUSTER_ROOT_OVERRIDE;
-
+    const result = top.map((cluster) => {
       let totalBudget = 0;
-      let best: typeof users[number] | undefined;
-      const hasNikita = members.has(NIKITA_ID);
-      for (const uid of members) {
-        if (!activeUserIds.has(uid)) continue;
-        const u = userMap.get(uid);
-        if (u) {
-          totalBudget += u.remainingBudget ?? 0;
-          if (hasNikita && u.id === ANDREI_ID) {
-            best = u; // Force Andrei as root for this cluster
-          } else if (!hasNikita && (!best || u.createdAt < best.createdAt)) {
-            best = u;
-          }
-        }
-      }
-      // Fallback: if Andrei not found in Nikita's cluster, use earliest
-      if (hasNikita && !best) {
-        for (const uid of members) {
-          if (!activeUserIds.has(uid)) continue;
-          const u = userMap.get(uid);
-          if (u && (!best || u.createdAt < best.createdAt)) best = u;
-        }
-      }
-
-      result.push({
-        rootUserId: best?.id || root,
-        rootUserName: best?.name || 'Unknown',
-        memberCount,
+      for (const id of cluster.members) totalBudget += budgets.get(id) ?? 0;
+      return {
+        rootUserId: cluster.rootUserId,
+        rootUserName: nameOf.get(cluster.rootUserId) ?? 'Unknown',
+        memberCount: cluster.members.length,
         totalBudget: Math.round(totalBudget),
-        isMine: myRoot === root,
-      });
-    }
-
-    // Add isolated users as individual "clusters" of size 1
-    for (const u of isolatedUsers) {
+        isMine: mine === cluster.rootUserId,
+      };
+    });
+    for (const u of isolated) {
       result.push({
         rootUserId: u.id,
         rootUserName: u.name,
@@ -132,47 +59,6 @@ export const clusterRouter = router({
         isMine: u.id === ctx.userId,
       });
     }
-
-    // Sort by memberCount desc
-    result.sort((a, b) => b.memberCount - a.memberCount);
     return result;
-  }),
-
-  myCluster: protectedProcedure.query(async ({ ctx }) => {
-    assertAdmin(ctx.userId);
-    const connections = await ctx.db.connection.findMany({
-      select: { userAId: true, userBId: true },
-    });
-
-    const uf = new UnionFind();
-    for (const c of connections) { uf.union(c.userAId, c.userBId); }
-
-    if (!uf.parent.has(ctx.userId)) {
-      return { memberCount: 1, totalBudget: 0, members: [] };
-    }
-
-    const myRoot = uf.find(ctx.userId);
-    const memberIds: string[] = [];
-    for (const [uid] of uf.parent) {
-      if (uf.find(uid) === myRoot) memberIds.push(uid);
-    }
-
-    const members = await ctx.db.user.findMany({
-      where: { id: { in: memberIds }, deletedAt: null },
-      select: { id: true, name: true, photoUrl: true, remainingBudget: true },
-    });
-
-    const totalBudget = members.reduce((sum, m) => sum + (m.remainingBudget ?? 0), 0);
-
-    return {
-      memberCount: members.length,
-      totalBudget: Math.round(totalBudget),
-      members: members.map(m => ({
-        id: m.id,
-        name: m.name,
-        photoUrl: m.photoUrl,
-        budget: Math.round(m.remainingBudget ?? 0),
-      })),
-    };
   }),
 });

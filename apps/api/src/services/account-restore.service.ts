@@ -32,7 +32,7 @@ export async function restoreMutedAccount(
       ...(profile.photoUrl && !user.photoUrl ? { photoUrl: profile.photoUrl } : {}),
     },
   });
-  invalidateGraph();
+  invalidateGraph([userId]);
   console.log(`[account-restore] restored muted account ${userId} on sign-in`);
   return true;
 }
