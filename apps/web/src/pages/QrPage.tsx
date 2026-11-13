@@ -38,9 +38,10 @@ export function QrPage() {
   }, [count.data?.count, utils, banner, t]);
 
   return (
-    <Screen title={t('add.myQr')} back={{ label: t('nav.add'), to: '/add' }} width="column">
-      <LiveQr onScan={() => navigate('/add/scan')} onDone={() => navigate('/add')} />
-      <EnableShakeButton className="mt-4 w-full" />
+    <Screen title={t('add.myQr')} back={{ label: t('nav.add'), to: '/add' }} width="column" fill>
+      <LiveQr onScan={() => navigate('/add/scan')} onDone={() => navigate('/add')}>
+        <EnableShakeButton className="mt-2 w-full" />
+      </LiveQr>
     </Screen>
   );
 }
