@@ -190,7 +190,9 @@ export const collectionRouter = router({
 
       // The author has seen the responses: they won't come again in the grouped message (SO-45)
       if (collection.creatorId === ctx.userId) {
-        ctx.db.collection.update({ where: { id: collection.id }, data: { creatorViewedAt: new Date() } })
+        // Raw SQL on purpose: an ORM update would also move "updatedAt", which other people's apps watch
+        // (notification.pulse) — the author keeping the page open would make every notified person refetch
+        ctx.db.$executeRaw`UPDATE collections SET "creatorViewedAt" = NOW() WHERE id = ${collection.id}`
           .catch(() => {});
       }
 

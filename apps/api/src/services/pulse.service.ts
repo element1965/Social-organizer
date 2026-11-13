@@ -9,25 +9,26 @@ import { ACCEPTED_RECENT_MS, SEEN_GRACE_MS } from '../routers/pending.router.js'
  * names or contents. Reads only: every query is answered from an index of the person's own rows, or from
  * the graph in memory (connections), and they run in parallel.
  */
+/** Each group is null when its query failed this time: the client then keeps its previous value for it. */
 export interface Pulse {
   /** notification.list / unreadCount / attention: notices still on the list (UNREAD or READ). */
-  notifications: { active: number; unread: number; live: number; changedAt: number };
+  notifications: { active: number; unread: number; live: number; changedAt: number } | null;
   /** pending.incoming: connection requests waiting for my answer. */
-  incoming: { count: number; latestAt: number };
+  incoming: { count: number; latestAt: number } | null;
   /** pending.myPending: my own requests still waiting. */
-  outgoing: { count: number; latestAt: number };
+  outgoing: { count: number; latestAt: number } | null;
   /** pending.acceptedRecent: my requests the other person confirmed, as that list sees them. */
-  accepted: { count: number; unseen: number; latestAt: number };
+  accepted: { count: number; unseen: number; latestAt: number } | null;
   /** collection.myActive: my own active or paused Needs and the pledges on them. */
-  mine: NeedStamp;
+  mine: NeedStamp | null;
   /** collection.myParticipating: the Needs I pledged to and every pledge on them. */
-  participating: NeedStamp;
+  participating: NeedStamp | null;
   /** milestone.list. */
-  milestones: { reached: number; unseen: number; latestAt: number };
+  milestones: { reached: number; unseen: number; latestAt: number } | null;
   /** moderation.myOpenReviews: open circle questions addressed to me. */
-  reviews: { open: number; due: number; votes: number };
+  reviews: { open: number; due: number; votes: number } | null;
   /** connection.getCount: my confirmed connections. */
-  connections: { count: number };
+  connections: { count: number } | null;
 }
 
 export interface NeedStamp {
@@ -76,7 +77,9 @@ export async function getPulse(db: PrismaClient, userId: string): Promise<Pulse>
   const acceptedSince = new Date(now - ACCEPTED_RECENT_MS);
   const seenSince = new Date(now - SEEN_GRACE_MS);
 
-  const [notices, incoming, outgoing, accepted, mine, participating, milestones, reviews, graph] = await Promise.all([
+  // Settled one by one: a query that fails leaves its group out (null) instead of failing the whole pulse,
+  // so the other lists keep refreshing
+  const settled = await Promise.allSettled([
     // notifications(userId, status) index; the Need's own updatedAt catches a Need closed or paused under a notice
     db.$queryRaw<Array<{ active: number; unread: number; live: number; notice_at: Date | null; need_at: Date | null }>>`
       SELECT count(*)::int AS active,
@@ -152,28 +155,40 @@ export async function getPulse(db: PrismaClient, userId: string): Promise<Pulse>
       WHERE r.status = 'OPEN' AND ${userId} = ANY(r."audienceIds")`,
     getGraph(db),
   ]);
+  const names = ['notifications', 'incoming', 'outgoing', 'accepted', 'mine', 'participating', 'milestones', 'reviews', 'connections'];
+  const failures = settled.flatMap((r, i) => (r.status === 'rejected' ? [`${names[i]}: ${String((r.reason as Error)?.message ?? r.reason).slice(0, 160)}`] : []));
+  if (failures.length > 0) console.error('[pulse] groups failed:', failures.join('; '));
+  const value = <T>(r: PromiseSettledResult<T>): T | null => (r.status === 'fulfilled' ? r.value : null);
+  const [notices, incoming, outgoing, accepted, mine, participating, milestones, reviews, graph] = [
+    value(settled[0]), value(settled[1]), value(settled[2]), value(settled[3]), value(settled[4]),
+    value(settled[5]), value(settled[6]), value(settled[7]), value(settled[8]),
+  ] as const;
 
-  const n = notices[0];
-  const node = graph.find(userId);
-  const reached = milestones._count._all;
+  const n = notices?.[0];
+  const node = graph?.find(userId);
   return {
-    notifications: {
-      active: num(n?.active),
-      unread: num(n?.unread),
-      live: num(n?.live),
-      changedAt: Math.max(ms(n?.notice_at), ms(n?.need_at)),
-    },
-    incoming: { count: incoming._count._all, latestAt: ms(incoming._max.createdAt) },
-    outgoing: { count: outgoing._count._all, latestAt: ms(outgoing._max.createdAt) },
-    accepted: {
-      count: accepted._count._all,
-      unseen: accepted._count._all - accepted._count.requesterSeenAt,
-      latestAt: ms(accepted._max.resolvedAt),
-    },
-    mine: needStamp(mine[0]),
-    participating: needStamp(participating[0]),
-    milestones: { reached, unseen: reached - milestones._count.seenAt, latestAt: ms(milestones._max.achievedAt) },
-    reviews: { open: num(reviews[0]?.open), due: num(reviews[0]?.due), votes: num(reviews[0]?.votes) },
-    connections: { count: node === undefined ? 0 : graph.degree(node) },
+    notifications: notices
+      ? { active: num(n?.active), unread: num(n?.unread), live: num(n?.live), changedAt: Math.max(ms(n?.notice_at), ms(n?.need_at)) }
+      : null,
+    incoming: incoming ? { count: incoming._count._all, latestAt: ms(incoming._max.createdAt) } : null,
+    outgoing: outgoing ? { count: outgoing._count._all, latestAt: ms(outgoing._max.createdAt) } : null,
+    accepted: accepted
+      ? {
+          count: accepted._count._all,
+          unseen: accepted._count._all - accepted._count.requesterSeenAt,
+          latestAt: ms(accepted._max.resolvedAt),
+        }
+      : null,
+    mine: mine ? needStamp(mine[0]) : null,
+    participating: participating ? needStamp(participating[0]) : null,
+    milestones: milestones
+      ? {
+          reached: milestones._count._all,
+          unseen: milestones._count._all - milestones._count.seenAt,
+          latestAt: ms(milestones._max.achievedAt),
+        }
+      : null,
+    reviews: reviews ? { open: num(reviews[0]?.open), due: num(reviews[0]?.due), votes: num(reviews[0]?.votes) } : null,
+    connections: graph ? { count: node === undefined ? 0 : graph.degree(node) } : null,
   };
 }

@@ -116,7 +116,21 @@ export async function ringPeople(db: PrismaClient, rootId: string, query: RingQu
   } else {
     // One query over the whole ring: the ids (and the in-memory keys) go in as arrays
     const brought = cols.degree.map((d) => Math.max(0, d - 1));
-    const where = search ? Prisma.sql`AND u.name ILIKE ${likePattern(search)}` : Prisma.empty;
+    // A search also finds people by the acquaintances they are reached through ("through Oleg"): the
+    // matching names among the path people are found first, then marked per person of the ring
+    let viaHit: boolean[] = cols.ids.map(() => false);
+    if (search) {
+      const pathPeople = [...new Set([...cols.via1, ...cols.via2].filter((v): v is string => !!v))];
+      const hits = pathPeople.length
+        ? await db.$queryRaw<Array<{ id: string }>>`
+            SELECT id FROM users
+            WHERE id = ANY(${pathPeople}::text[]) AND "deletedAt" IS NULL AND name ILIKE ${likePattern(search)}
+          `
+        : [];
+      const hit = new Set(hits.map((h) => h.id));
+      viaHit = cols.ids.map((_, i) => hit.has(cols.via1[i] ?? '') || hit.has(cols.via2[i] ?? ''));
+    }
+    const where = search ? Prisma.sql`AND (u.name ILIKE ${likePattern(search)} OR r.via_hit)` : Prisma.empty;
     const orderBy =
       sort === 'name'
         ? Prisma.sql`lower(u.name), u.id`
@@ -127,7 +141,7 @@ export async function ringPeople(db: PrismaClient, rootId: string, query: RingQu
             : Prisma.sql`r.at DESC, u.id`;
     const rows = await db.$queryRaw<Array<{ id: string; total: bigint }>>`
       SELECT u.id, COUNT(*) OVER () AS total
-      FROM unnest(${cols.ids}::text[], ${cols.at}::float8[], ${brought}::int[]) AS r(id, at, brought)
+      FROM unnest(${cols.ids}::text[], ${cols.at}::float8[], ${brought}::int[], ${viaHit}::boolean[]) AS r(id, at, brought, via_hit)
       JOIN users u ON u.id = r.id
       WHERE u."deletedAt" IS NULL ${where}
       ORDER BY ${orderBy}
@@ -140,7 +154,7 @@ export async function ringPeople(db: PrismaClient, rootId: string, query: RingQu
       // Past the end: count separately so the answer still says how many there are
       const [row] = await db.$queryRaw<Array<{ total: bigint }>>`
         SELECT COUNT(*) AS total
-        FROM unnest(${cols.ids}::text[]) AS r(id)
+        FROM unnest(${cols.ids}::text[], ${viaHit}::boolean[]) AS r(id, via_hit)
         JOIN users u ON u.id = r.id
         WHERE u."deletedAt" IS NULL ${where}
       `;

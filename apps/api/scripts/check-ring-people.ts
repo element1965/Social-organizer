@@ -176,7 +176,24 @@ try {
       found.rows.map((r) => r.name).join(' | '));
   }
   const inRing3 = await allPages(3, 'recent', 50, 'NeEdLe');
-  check('search in ring 3', inRing3.rows.map((r) => r.id).join() === id('z3') && inRing3.totals[0] === 1);
+  // By name (z3) and by the acquaintance they are reached through (x7 and y2 are named "…needle…")
+  const viaNeedle = ring3.rows.filter((r) => r.via.some((v) => v.id === id('x7') || v.id === id('y2'))).map((r) => r.id);
+  const expectedRing3 = [...new Set([id('z3'), ...viaNeedle])];
+  check('search in ring 3, by name and by the acquaintance on the path',
+    sameSet(inRing3.rows.map((r) => r.id), expectedRing3) && inRing3.totals[0] === expectedRing3.length,
+    `${inRing3.rows.map((r) => r.id).join()} vs ${expectedRing3.join()}`);
+
+  // A search finds people by who they are reached through
+  await db.user.update({ where: { id: id('x5') }, data: { name: 'Pathfinder Quill' } });
+  for (const sort of ['recent', 'name'] as const) {
+    const throughX5 = await allPages(3, sort, 2, 'pathFINDER');
+    const expected = ring3.rows.filter((r) => r.via.some((v) => v.id === id('x5'))).map((r) => r.id);
+    check(`search in ring 3 ("${sort}") finds people reached through a matching acquaintance`,
+      expected.length > 0 && sameSet(throughX5.rows.map((r) => r.id), expected) && throughX5.totals.every((t) => t === expected.length),
+      `${throughX5.rows.map((r) => r.id).join()} vs ${expected.join()}`);
+  }
+  const x5self = await allPages(2, 'name', 50, 'pathfinder');
+  check('…and in ring 2 the acquaintance itself', x5self.rows.map((r) => r.id).join() === id('x5'), x5self.rows.map((r) => r.id).join());
   const literal = await allPages(2, 'name', 50, 'needle_');
   check('"_" and "%" in a search are plain characters', literal.rows.map((r) => r.id).join() === id('y2'), literal.rows.map((r) => r.name).join());
   const none = await me.connection.ringPeople({ ring: 2, sort: 'name', limit: 50, search: 'no-such-person' });
@@ -188,8 +205,11 @@ try {
   await db.user.create({ data: { id: id('new'), name: 'RP new' } });
   await db.pendingConnection.create({ data: { fromUserId: id('new'), toUserId: id('me'), status: 'PENDING' } });
   const newcomer = await call(id('new')).connection.ringPeople({ ring: 1, sort: 'name', limit: 10 });
-  check('a newcomer with a pending request sees that person\'s 1st ring (as the network numbers do)',
-    sameSet(newcomer.people.map((r) => r.id), [id('a'), id('b')]));
+  check('a newcomer with only a pending request sees nobody listed (a request is not an acquaintance)',
+    newcomer.people.length === 0 && newcomer.total === 0);
+  const newcomerStats = await call(id('new')).connection.getNetworkStats();
+  check('…and the network numbers of that person come without names',
+    Object.keys(newcomerStats.usersByDepth).length === 0 && (newcomerStats.byDepth[1] ?? 0) > 0, JSON.stringify(newcomerStats.byDepth));
 } finally {
   await cleanup();
   await db.$disconnect();
