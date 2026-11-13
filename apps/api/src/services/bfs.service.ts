@@ -1,7 +1,7 @@
 import type { PrismaClient } from '@so/db';
 import { getGraph } from './graph-cache.service.js';
 import type { HandshakeGraph } from './graph-store.js';
-import { NETWORK_MAX_DEPTH } from './network.service.js';
+import { NETWORK_MAX_DEPTH, VISIBLE_RINGS } from './network.service.js';
 
 export interface BfsRecipient {
   userId: string;
@@ -126,10 +126,23 @@ export async function walkRings(
   })();
 }
 
-type PathPerson = { id: string; name: string; photoUrl: string | null; connectionCount: number; remainingBudget: number | null };
+type PathPerson = {
+  id: string;
+  name: string;
+  photoUrl: string | null;
+  connectionCount: number;
+  remainingBudget: number | null;
+  /** A person beyond the viewer's visible rings: only their place in the chain is sent, never who they are */
+  hidden?: boolean;
+};
 
 /**
  * BFS for finding shortest path between two users.
+ *
+ * Privacy: the chain may run beyond the 3rd handshake (a Need reaches the 6th, a person page can be opened
+ * for anyone). People in it further than VISIBLE_RINGS from the viewer are sent as a placeholder with no
+ * id, name, photo or numbers, so the length of the chain is known and who is in it is not. The viewer and
+ * the person they asked about are always sent as they are: the viewer opened that person by id.
  */
 export async function findPathBetweenUsers(
   db: PrismaClient,
@@ -157,18 +170,24 @@ export async function findPathBetweenUsers(
     fullPath = graph.pathOfLastWalk(to).map((n) => graph.ids[n]!);
   }
 
+  const last = fullPath.length - 1;
+  const hidden = (index: number) => index > VISIBLE_RINGS && index < last;
   const users = await db.user.findMany({
-    where: { id: { in: fullPath } },
+    where: { id: { in: fullPath.filter((_, index) => !hidden(index)) } },
     select: { id: true, name: true, photoUrl: true, remainingBudget: true },
   });
   const userMap = new Map(users.map((u) => [u.id, u]));
   const out: PathPerson[] = [];
-  for (const id of fullPath) {
+  fullPath.forEach((id, index) => {
+    if (hidden(index)) {
+      out.push({ id: '', name: '', photoUrl: null, connectionCount: 0, remainingBudget: null, hidden: true });
+      return;
+    }
     const user = userMap.get(id);
-    if (!user) continue;
+    if (!user) return;
     const n = graph.find(id);
     out.push({ ...user, connectionCount: n === undefined ? 0 : graph.degree(n) });
-  }
+  });
   return out;
 }
 

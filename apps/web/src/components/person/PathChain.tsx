@@ -11,7 +11,19 @@ export type PathNode = {
   photoUrl: string | null;
   connectionCount: number;
   remainingBudget: number | null;
+  /** Beyond the viewer's visible rings: the server sends only the place in the chain */
+  hidden?: boolean;
 };
+
+/** One cell per visible person; people beyond the visible rings fold into one "…" cell. */
+export function foldHidden<T extends { hidden?: boolean }>(nodes: T[]): Array<T | null> {
+  const out: Array<T | null> = [];
+  for (const node of nodes) {
+    if (!node.hidden) out.push(node);
+    else if (out[out.length - 1] !== null) out.push(null);
+  }
+  return out;
+}
 
 type PathChainProps = {
   nodes: PathNode[];
@@ -54,12 +66,24 @@ export function PathChain({ nodes, targetLabel }: PathChainProps) {
   const { t } = useTranslation();
   const resolve = useNicknames();
   if (nodes.length < 2) return null;
-  const compact = nodes.length >= 4;
-  const last = nodes.length - 1;
+  const cells = foldHidden(nodes);
+  const compact = cells.length >= 4;
+  const last = cells.length - 1;
 
   return (
     <ol aria-label={t('person.pathLabel')} className="mt-2 flex w-full min-w-0 list-none">
-      {nodes.map((node, index) => {
+      {cells.map((node, index) => {
+        if (!node) {
+          // People the viewer cannot see: only that the chain passes through them
+          return (
+            <li key={`hidden-${index}`} className="relative flex min-w-[40px] flex-[0.5] basis-0">
+              <JoinMark />
+              <span className="flex h-9 flex-1 items-center justify-center text-body font-bold text-ink-muted" aria-hidden>
+                …
+              </span>
+            </li>
+          );
+        }
         const self = index === 0;
         const target = index === last;
         const full = self
@@ -87,7 +111,7 @@ export function PathChain({ nodes, targetLabel }: PathChainProps) {
         );
         const cell = 'flex min-w-[72px] flex-1 basis-0 flex-col items-center';
         return (
-          <li key={node.id} className="relative flex min-w-[72px] flex-1 basis-0">
+          <li key={`${node.id}-${index}`} className="relative flex min-w-[72px] flex-1 basis-0">
             {self ? null : <JoinMark />}
             {self || target ? (
               <div className={cell}>{body}</div>
