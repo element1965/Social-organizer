@@ -21,10 +21,27 @@ const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID as string | undef
 const APPLE_SERVICE_ID = import.meta.env.VITE_APPLE_SERVICE_ID as string | undefined;
 export const RESEND_SECONDS = 60;
 
-declare global {
-  interface Window {
-    onTelegramAuth?: (user: Record<string, unknown>) => void;
-  }
+/** Telegram's login script (telegram-widget.js) adds Telegram.Login.auth, which opens the login popup. */
+type TelegramLogin = {
+  auth: (
+    options: { bot_id: number; request_access?: 'write'; lang?: string },
+    callback: (user: Record<string, unknown> | false) => void,
+  ) => void;
+};
+function telegramLogin(): TelegramLogin | null {
+  return (window as unknown as { Telegram?: { Login?: TelegramLogin } }).Telegram?.Login ?? null;
+}
+
+const TELEGRAM_LOGIN_SCRIPT = 'https://telegram.org/js/telegram-widget.js?22';
+
+/** Loads Telegram's login script once, ahead of the click: the popup must open inside the click itself. */
+function loadTelegramLogin() {
+  if (typeof document === 'undefined' || document.getElementById('so-telegram-login')) return;
+  const s = document.createElement('script');
+  s.id = 'so-telegram-login';
+  s.src = TELEGRAM_LOGIN_SCRIPT;
+  s.async = true;
+  document.head.appendChild(s);
 }
 
 /** "CODE:number" from the server → [code, number] */
@@ -191,34 +208,15 @@ export function useSignIn({ redirect, onCodeSent, onTelegramOpened }: UseSignInO
     onSuccess: onTokens('telegram'),
     onError: () => setError(t('login.failedWith', { provider: 'Telegram' }), 'PROVIDER_FAILED'),
   });
-  /** On the website with the Login Widget enabled, Telegram renders its own button into this container. */
-  const useWidget = !inTelegram && !!methods?.telegramWidget;
-  const widgetRef = useRef<HTMLDivElement | null>(null);
-  const [widgetHost, setWidgetHost] = useState<HTMLDivElement | null>(null);
-  const attachWidget = useCallback((node: HTMLDivElement | null) => {
-    widgetRef.current = node;
-    setWidgetHost(node);
-  }, []);
-
-  // Server-checked Telegram Login Widget on the website
+  /**
+   * On the website with the Login Widget enabled, our own Telegram button opens Telegram's login popup
+   * (Telegram.Login.auth, the same server-checked data as the widget). Telegram's widget button is never
+   * drawn, so the page does not swap our button for its smaller one once the methods arrive.
+   */
+  const widgetBotId = !inTelegram && methods?.telegramWidget ? (methods.telegramBotId ?? null) : null;
   useEffect(() => {
-    if (!useWidget || !widgetHost || !methods?.telegramBot) return;
-    window.onTelegramAuth = (user) => {
-      setError('');
-      telegramWidgetMutation.mutate(user as Parameters<typeof telegramWidgetMutation.mutate>[0]);
-    };
-    const s = document.createElement('script');
-    s.src = 'https://telegram.org/js/telegram-widget.js?22';
-    s.async = true;
-    s.setAttribute('data-telegram-login', methods.telegramBot);
-    s.setAttribute('data-size', 'large');
-    s.setAttribute('data-radius', '16');
-    s.setAttribute('data-request-access', 'write');
-    s.setAttribute('data-onauth', 'onTelegramAuth(user)');
-    widgetHost.innerHTML = '';
-    widgetHost.appendChild(s);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [useWidget, widgetHost, methods?.telegramBot]);
+    if (widgetBotId) loadTelegramLogin();
+  }, [widgetBotId]);
 
   const handleTelegram = () => {
     setError('');
@@ -226,6 +224,15 @@ export function useSignIn({ redirect, onCodeSent, onTelegramOpened }: UseSignInO
     if (initData) {
       setLoading(true);
       telegramLoginMutation.mutate({ initData }, { onSettled: () => setLoading(false) });
+      return;
+    }
+    const login = widgetBotId ? telegramLogin() : null;
+    if (login && widgetBotId) {
+      login.auth({ bot_id: widgetBotId, request_access: 'write', lang: i18n.language }, (user) => {
+        // false: the person closed the popup; nothing to report
+        if (!user) return;
+        telegramWidgetMutation.mutate(user as Parameters<typeof telegramWidgetMutation.mutate>[0]);
+      });
       return;
     }
     // Website without the Telegram button: continue in the bot's mini app, keeping the invite
@@ -377,8 +384,6 @@ export function useSignIn({ redirect, onCodeSent, onTelegramOpened }: UseSignInO
     providers,
     start,
     emailCodes,
-    useWidget,
-    attachWidget,
     googleBtnRef,
     busy,
     error,

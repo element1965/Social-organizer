@@ -4,6 +4,7 @@ import { getDb } from '@so/db';
 import { translateWithCache } from './translate.service.js';
 import { isRetiredChainMessage } from './mvp-scope.js';
 import { touchTelegramUser } from './activity.service.js';
+import { networkReach } from './network.service.js';
 
 const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN || '';
 const WEB_APP_URL = process.env.WEB_APP_URL || 'https://www.orginizer.com';
@@ -248,7 +249,7 @@ export const BOT_START_REMINDERS = [
   },
   {
     level: 2,
-    text: '🤝 {inviterName} пригласил тебя в сеть взаимной поддержки. Открой приложение — регистрация за 1 минуту.',
+    text: '🤝 {inviterName} приглашает тебя в свою сеть. Открой приложение, регистрация займёт минуту.',
     buttonText: 'Присоединиться',
   },
   {
@@ -551,124 +552,297 @@ export async function sendCollectionNotificationTg(
 // Bot /start message translations for all 27 supported languages
 const SITE = 'https://www.orginizer.com/';
 interface BotLocale {
-  invite: (name: string, inviterName: string, people: number, totalUsd: number) => string;
+  invite: (name: string, inviterName: string, stats: InviteStats | null) => string;
   acceptBtn: string;
   welcome: (name: string) => string;
   openBtn: string;
 }
+
+/** Puts values into a template; a function replacer, so a "$" in a name is never read as a pattern */
+function fill(template: string, values: Record<string, string>): string {
+  return template.replace(/\{(\w+)\}/g, (match, key: string) => values[key] ?? match);
+}
+
 function makeBotLocale(
-  welcomeWord: string, // "Welcome" / "Добро пожаловать" — with lowercase first letter
-  inviteBody: (inviterName: string, people: number, totalUsd: number) => string,
+  welcomeWord: string, // "welcome to" / "добро пожаловать в", lower-case first letter
+  text: { invite: string; inviteNoStats: string; welcome: string },
   acceptBtn: string,
-  welcomeBody: string,
   openBtn: string,
   learnMore: string,
 ): BotLocale {
+  const hello = (name: string) =>
+    `👋 ${name ? name + ', ' + welcomeWord : welcomeWord.charAt(0).toUpperCase() + welcomeWord.slice(1)} <b>Social Organizer</b>!`;
+  const more = `🌐 <a href="${SITE}">${learnMore}</a>`;
   return {
-    invite: (name, inviterName, people, totalUsd) =>
-      `👋 ${name ? name + ', ' + welcomeWord : welcomeWord.charAt(0).toUpperCase() + welcomeWord.slice(1)} <b>Social Organizer</b>!\n\n${inviteBody(inviterName, people, totalUsd)}\n\n🌐 <a href="${SITE}">${learnMore}</a>`,
+    invite: (name, inviterName, stats) => {
+      const line = stats
+        ? fill(text.invite, { inv: inviterName, p: groupDigits(stats.people), usd: `${groupDigits(stats.declaredUsd)} $` })
+        : fill(text.inviteNoStats, { inv: inviterName });
+      return `${hello(name)}\n\n${line}\n\n${more}`;
+    },
     acceptBtn: `🤝 ${acceptBtn}`,
-    welcome: (name) =>
-      `👋 ${name ? name + ', ' + welcomeWord : welcomeWord.charAt(0).toUpperCase() + welcomeWord.slice(1)} <b>Social Organizer</b>!\n\n${welcomeBody}\n\n🌐 <a href="${SITE}">${learnMore}</a>`,
+    welcome: (name) => `${hello(name)}\n\n${text.welcome}\n\n${more}`,
     openBtn: `📱 ${openBtn}`,
   };
 }
 
-/** Get global network stats: total users + total declared budget in USD */
-async function getNetworkStats(): Promise<{ people: number; totalUsd: number }> {
+/**
+ * The inviter behind an invite token (InviteLink token, user id or referralSlug), with or without a Telegram
+ * account: the invite message names them either way.
+ */
+async function findInviter(token: string): Promise<{ id: string; name: string } | null> {
   const db = getDb();
-  const [people, agg] = await Promise.all([
-    db.user.count(),
-    db.user.aggregate({ _sum: { monthlyBudget: true } }),
-  ]);
-  return { people, totalUsd: Math.round(agg._sum.monthlyBudget ?? 0) };
+  const select = { id: true, name: true, deletedAt: true } as const;
+  const invite = await db.inviteLink.findUnique({ where: { token }, select: { inviter: { select } } });
+  const user =
+    invite?.inviter
+    ?? (await db.user.findUnique({ where: { id: token }, select }))
+    ?? (await db.user.findUnique({ where: { referralSlug: token.toLowerCase() }, select }));
+  return user && !user.deletedAt ? { id: user.id, name: user.name } : null;
+}
+
+export type InviteStats = { people: number; declaredUsd: number };
+
+/**
+ * The inviter's own network, counted exactly as their Profile shows it: the people in the visible rings 1–3
+ * and their "Declared participation of the network" (networkReach). The old message summed every account in
+ * the database, deleted ones included, with their monthlyBudget, so its numbers matched nothing in the app.
+ */
+async function inviterNetworkStats(userId: string): Promise<InviteStats | null> {
+  const reach = await networkReach(getDb(), userId);
+  return reach.visible > 0 ? { people: reach.visible, declaredUsd: reach.canHelpVisible } : null;
+}
+
+/** 10052 → "10 052" (thin space), the grouping the app uses */
+export function groupDigits(n: number): string {
+  return Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '\u2009');
 }
 
 const BOT_STRINGS: Record<string, BotLocale> = {
   en: makeBotLocale(
-    'welcome to', (inv, p, usd) => `<b>${inv}</b> invites you to a mutual aid network.\nToday in the network: ${p} people and $${usd}.`,
-    'Accept Invitation', 'A platform for mutual support through trusted networks.', 'Open App', 'Learn more'),
+    "welcome to",
+    {
+      invite: "<b>{inv}</b> invites you to their network on Social Organizer.\nPeople in the network: {p}. Declared participation of the network: {usd}.",
+      inviteNoStats: "<b>{inv}</b> invites you to their network on Social Organizer.",
+      welcome: "A network of people you know in person. When one of you has a hard time, the others can share the load.",
+    },
+    "Accept Invitation", "Open App", "Learn more"),
   ru: makeBotLocale(
-    'добро пожаловать в', (inv, p, usd) => `<b>${inv}</b> приглашает Вас в сеть взаимопомощи.\nСегодня в сети: ${p} человек и $${usd}.`,
-    'Принять приглашение', 'Платформа взаимной поддержки через доверенные сети.', 'Открыть приложение', 'Узнать больше'),
+    "добро пожаловать в",
+    {
+      invite: "<b>{inv}</b> приглашает вас в свою сеть в Social Organizer.\nЛюдей в сети: {p}. Заявленное участие сети: {usd}.",
+      inviteNoStats: "<b>{inv}</b> приглашает вас в свою сеть в Social Organizer.",
+      welcome: "Сеть из людей, которых вы знаете лично. Когда кому-то из вас трудно, остальные могут разделить ношу.",
+    },
+    "Принять приглашение", "Открыть приложение", "Узнать больше"),
   uk: makeBotLocale(
-    'ласкаво просимо до', (inv, p, usd) => `<b>${inv}</b> запрошує Вас до мережі взаємодопомоги.\nСьогодні в мережі: ${p} людей та $${usd}.`,
-    'Прийняти запрошення', 'Платформа взаємної підтримки через довірені мережі.', 'Відкрити застосунок', 'Дізнатися більше'),
+    "ласкаво просимо до",
+    {
+      invite: "<b>{inv}</b> запрошує вас до своєї мережі в Social Organizer.\nЛюдей у мережі: {p}. Заявлена участь мережі: {usd}.",
+      inviteNoStats: "<b>{inv}</b> запрошує вас до своєї мережі в Social Organizer.",
+      welcome: "Мережа людей, яких ви знаєте особисто. Коли комусь із вас важко, решта можуть розділити ношу.",
+    },
+    "Прийняти запрошення", "Відкрити застосунок", "Дізнатися більше"),
   be: makeBotLocale(
-    'вітаем у', (inv, p, usd) => `<b>${inv}</b> запрашае Вас у сетку ўзаемадапамогі.\nСёння ў сетцы: ${p} чалавек і $${usd}.`,
-    'Прыняць запрашэнне', 'Платформа ўзаемнай падтрымкі праз давераныя сеткі.', 'Адкрыць дадатак', 'Даведацца больш'),
+    "вітаем у",
+    {
+      invite: "<b>{inv}</b> запрашае вас у сваю сетку ў Social Organizer.\nЛюдзей у сетцы: {p}. Заяўлены ўдзел сеткі: {usd}.",
+      inviteNoStats: "<b>{inv}</b> запрашае вас у сваю сетку ў Social Organizer.",
+      welcome: "Сетка людзей, якіх вы ведаеце асабіста. Калі камусьці з вас цяжка, астатнія могуць падзяліць цяжар.",
+    },
+    "Прыняць запрашэнне", "Адкрыць дадатак", "Даведацца больш"),
   es: makeBotLocale(
-    'bienvenido a', (inv, p, usd) => `<b>${inv}</b> te invita a una red de ayuda mutua.\nHoy en la red: ${p} personas y $${usd}.`,
-    'Aceptar invitación', 'Una plataforma de apoyo mutuo a través de redes de confianza.', 'Abrir app', 'Saber más'),
+    "bienvenido a",
+    {
+      invite: "<b>{inv}</b> les invita a su red en Social Organizer.\nPersonas en la red: {p}. Participación declarada de la red: {usd}.",
+      inviteNoStats: "<b>{inv}</b> les invita a su red en Social Organizer.",
+      welcome: "Una red de personas que conoce en persona. Cuando a uno de ustedes le va mal, los demás pueden repartirse la carga.",
+    },
+    "Aceptar invitación", "Abrir app", "Saber más"),
   fr: makeBotLocale(
-    'bienvenue sur', (inv, p, usd) => `<b>${inv}</b> vous invite dans un réseau d'entraide.\nAujourd'hui dans le réseau : ${p} personnes et $${usd}.`,
-    'Accepter l\'invitation', 'Une plateforme d\'entraide à travers des réseaux de confiance.', 'Ouvrir l\'appli', 'En savoir plus'),
+    "bienvenue sur",
+    {
+      invite: "<b>{inv}</b> vous invite dans son réseau sur Social Organizer.\nPersonnes dans le réseau: {p}. Participation déclarée du réseau: {usd}.",
+      inviteNoStats: "<b>{inv}</b> vous invite dans son réseau sur Social Organizer.",
+      welcome: "Un réseau de personnes que vous connaissez en personne. Quand l’un de vous traverse une période difficile, les autres peuvent l’aider à porter le poids.",
+    },
+    "Accepter l'invitation", "Ouvrir l'appli", "En savoir plus"),
   de: makeBotLocale(
-    'willkommen bei', (inv, p, usd) => `<b>${inv}</b> lädt Sie in ein Netzwerk gegenseitiger Hilfe ein.\nHeute im Netzwerk: ${p} Personen und $${usd}.`,
-    'Einladung annehmen', 'Eine Plattform für gegenseitige Unterstützung durch vertrauenswürdige Netzwerke.', 'App öffnen', 'Mehr erfahren'),
+    "willkommen bei",
+    {
+      invite: "<b>{inv}</b> lädt Sie in sein Netzwerk bei Social Organizer ein.\nMenschen im Netzwerk: {p}. Erklärte Beteiligung des Netzwerks: {usd}.",
+      inviteNoStats: "<b>{inv}</b> lädt Sie in sein Netzwerk bei Social Organizer ein.",
+      welcome: "Ein Netzwerk aus Menschen, die Sie persönlich kennen. Wenn es einem von Ihnen schlecht geht, können die anderen die Last mittragen.",
+    },
+    "Einladung annehmen", "App öffnen", "Mehr erfahren"),
   pt: makeBotLocale(
-    'bem-vindo ao', (inv, p, usd) => `<b>${inv}</b> convida você para uma rede de ajuda mútua.\nHoje na rede: ${p} pessoas e $${usd}.`,
-    'Aceitar convite', 'Uma plataforma de apoio mútuo através de redes de confiança.', 'Abrir app', 'Saiba mais'),
+    "bem-vindo ao",
+    {
+      invite: "<b>{inv}</b> convida você para a rede dele no Social Organizer.\nPessoas na rede: {p}. Participação declarada da rede: {usd}.",
+      inviteNoStats: "<b>{inv}</b> convida você para a rede dele no Social Organizer.",
+      welcome: "Uma rede de pessoas que você conhece pessoalmente. Quando alguém do grupo passa por um aperto, os outros podem dividir o peso.",
+    },
+    "Aceitar convite", "Abrir app", "Saiba mais"),
   it: makeBotLocale(
-    'benvenuto in', (inv, p, usd) => `<b>${inv}</b> ti invita in una rete di aiuto reciproco.\nOggi nella rete: ${p} persone e $${usd}.`,
-    'Accetta invito', 'Una piattaforma di supporto reciproco attraverso reti fidate.', 'Apri app', 'Scopri di più'),
+    "benvenuto in",
+    {
+      invite: "<b>{inv}</b> ti invita nella sua rete su Social Organizer.\nPersone nella rete: {p}. Partecipazione dichiarata della rete: {usd}.",
+      inviteNoStats: "<b>{inv}</b> ti invita nella sua rete su Social Organizer.",
+      welcome: "Una rete di persone che conosci di persona. Quando uno di voi è in difficoltà, gli altri possono dividersi il peso.",
+    },
+    "Accetta invito", "Apri app", "Scopri di più"),
   pl: makeBotLocale(
-    'witaj w', (inv, p, usd) => `<b>${inv}</b> zaprasza Cię do sieci wzajemnej pomocy.\nDziś w sieci: ${p} osób i $${usd}.`,
-    'Przyjmij zaproszenie', 'Platforma wzajemnego wsparcia przez zaufane sieci.', 'Otwórz aplikację', 'Dowiedz się więcej'),
+    "witaj w",
+    {
+      invite: "<b>{inv}</b> zaprasza Cię do swojej sieci w Social Organizer.\nOsób w sieci: {p}. Zadeklarowany udział sieci: {usd}.",
+      inviteNoStats: "<b>{inv}</b> zaprasza Cię do swojej sieci w Social Organizer.",
+      welcome: "Sieć ludzi, których znasz osobiście. Gdy komuś z was jest ciężko, pozostali mogą pomóc udźwignąć ten ciężar.",
+    },
+    "Przyjmij zaproszenie", "Otwórz aplikację", "Dowiedz się więcej"),
   nl: makeBotLocale(
-    'welkom bij', (inv, p, usd) => `<b>${inv}</b> nodigt u uit voor een netwerk van wederzijdse hulp.\nVandaag in het netwerk: ${p} mensen en $${usd}.`,
-    'Uitnodiging accepteren', 'Een platform voor wederzijdse ondersteuning via vertrouwde netwerken.', 'App openen', 'Meer info'),
+    "welkom bij",
+    {
+      invite: "<b>{inv}</b> nodigt je uit voor zijn netwerk op Social Organizer.\nMensen in het netwerk: {p}. Aangegeven deelname van het netwerk: {usd}.",
+      inviteNoStats: "<b>{inv}</b> nodigt je uit voor zijn netwerk op Social Organizer.",
+      welcome: "Een netwerk van mensen die je persoonlijk kent. Heeft iemand van jullie het moeilijk, dan kunnen de anderen de last delen.",
+    },
+    "Uitnodiging accepteren", "App openen", "Meer info"),
   cs: makeBotLocale(
-    'vítej v', (inv, p, usd) => `<b>${inv}</b> vás zve do sítě vzájemné pomoci.\nDnes v síti: ${p} lidí a $${usd}.`,
-    'Přijmout pozvánku', 'Platforma vzájemné podpory prostřednictvím důvěryhodných sítí.', 'Otevřít aplikaci', 'Zjistit více'),
+    "vítej v",
+    {
+      invite: "<b>{inv}</b> vás zve do své sítě v Social Organizer.\nLidí v síti: {p}. Deklarovaná účast sítě: {usd}.",
+      inviteNoStats: "<b>{inv}</b> vás zve do své sítě v Social Organizer.",
+      welcome: "Síť lidí, které znáte osobně. Když je někomu z vás těžko, ostatní mu mohou pomoct unést břemeno.",
+    },
+    "Přijmout pozvánku", "Otevřít aplikaci", "Zjistit více"),
   ro: makeBotLocale(
-    'bun venit la', (inv, p, usd) => `<b>${inv}</b> vă invită într-o rețea de ajutor reciproc.\nAstăzi în rețea: ${p} persoane și $${usd}.`,
-    'Acceptă invitația', 'O platformă de sprijin reciproc prin rețele de încredere.', 'Deschide aplicația', 'Află mai multe'),
+    "bun venit la",
+    {
+      invite: "<b>{inv}</b> te invită în rețeaua lui pe Social Organizer.\nOameni în rețea: {p}. Participarea declarată a rețelei: {usd}.",
+      inviteNoStats: "<b>{inv}</b> te invită în rețeaua lui pe Social Organizer.",
+      welcome: "O rețea de oameni pe care îi cunoști personal. Când unuia dintre voi îi e greu, ceilalți pot duce greul împreună.",
+    },
+    "Acceptă invitația", "Deschide aplicația", "Află mai multe"),
   tr: makeBotLocale(
-    'hoş geldin,', (inv, p, usd) => `<b>${inv}</b> sizi bir karşılıklı yardım ağına davet ediyor.\nBugün ağda: ${p} kişi ve $${usd}.`,
-    'Daveti kabul et', 'Güvenilir ağlar aracılığıyla karşılıklı destek platformu.', 'Uygulamayı aç', 'Daha fazla bilgi'),
+    "hoş geldin,",
+    {
+      invite: "<b>{inv}</b> sizi Social Organizer üzerindeki ağına davet ediyor.\nAğdaki kişi sayısı: {p}. Ağın beyan ettiği katılım: {usd}.",
+      inviteNoStats: "<b>{inv}</b> sizi Social Organizer üzerindeki ağına davet ediyor.",
+      welcome: "Yüz yüze tanıdığınız insanlardan oluşan bir ağ. Biriniz zor durumda kaldığında diğerleri yükü paylaşabilir.",
+    },
+    "Daveti kabul et", "Uygulamayı aç", "Daha fazla bilgi"),
   ar: makeBotLocale(
-    'مرحباً بك في', (inv, p, usd) => `<b>${inv}</b> يدعوك إلى شبكة مساعدة متبادلة.\nاليوم في الشبكة: ${p} شخص و $${usd}.`,
-    'قبول الدعوة', 'منصة للدعم المتبادل من خلال شبكات موثوقة.', 'فتح التطبيق', 'اعرف المزيد'),
+    "مرحباً بك في",
+    {
+      invite: "يدعوك <b>{inv}</b> إلى شبكته على Social Organizer.\nالأشخاص في الشبكة: {p}. المشاركة المعلنة للشبكة: {usd}.",
+      inviteNoStats: "يدعوك <b>{inv}</b> إلى شبكته على Social Organizer.",
+      welcome: "شبكة من أشخاص تعرفهم شخصيًا. عندما يمر أحدكم بوقت صعب، يتقاسم الباقون العبء.",
+    },
+    "قبول الدعوة", "فتح التطبيق", "اعرف المزيد"),
   he: makeBotLocale(
-    'ברוך הבא ל', (inv, p, usd) => `<b>${inv}</b> מזמין אותך לרשת עזרה הדדית.\nהיום ברשת: ${p} אנשים ו-$${usd}.`,
-    'קבל הזמנה', 'פלטפורמה לתמיכה הדדית דרך רשתות מהימנות.', 'פתח אפליקציה', 'למידע נוסף'),
+    "ברוך הבא ל",
+    {
+      invite: "הוזמנתם לרשת של <b>{inv}</b> ב-Social Organizer.\nאנשים ברשת: {p}. ההשתתפות המוצהרת של הרשת: {usd}.",
+      inviteNoStats: "הוזמנתם לרשת של <b>{inv}</b> ב-Social Organizer.",
+      welcome: "רשת של אנשים שאתם מכירים אישית. כשלאחד מכם קשה, האחרים יכולים לחלוק איתו בנטל.",
+    },
+    "קבל הזמנה", "פתח אפליקציה", "למידע נוסף"),
   hi: makeBotLocale(
-    'में आपका स्वागत है,', (inv, p, usd) => `<b>${inv}</b> आपको पारस्परिक सहायता नेटवर्क में आमंत्रित करते हैं।\nआज नेटवर्क में: ${p} लोग और $${usd}.`,
-    'निमंत्रण स्वीकार करें', 'विश्वसनीय नेटवर्क के माध्यम से पारस्परिक सहायता का मंच।', 'ऐप खोलें', 'और जानें'),
+    "में आपका स्वागत है,",
+    {
+      invite: "<b>{inv}</b> आपको Social Organizer पर अपने नेटवर्क में आमंत्रित करते हैं।\nनेटवर्क में लोग: {p}. नेटवर्क की घोषित भागीदारी: {usd}.",
+      inviteNoStats: "<b>{inv}</b> आपको Social Organizer पर अपने नेटवर्क में आमंत्रित करते हैं।",
+      welcome: "उन लोगों का नेटवर्क जिन्हें आप व्यक्तिगत रूप से जानते हैं। जब आप में से किसी पर मुश्किल आती है, बाकी लोग बोझ बाँट सकते हैं।",
+    },
+    "निमंत्रण स्वीकार करें", "ऐप खोलें", "और जानें"),
   zh: makeBotLocale(
-    '欢迎来到', (inv, p, usd) => `<b>${inv}</b> 邀请您加入互助网络。\n网络现有：${p} 人，$${usd}。`,
-    '接受邀请', '通过可信赖网络实现互助的平台。', '打开应用', '了解更多'),
+    "欢迎来到",
+    {
+      invite: "<b>{inv}</b> 邀请你加入自己在 Social Organizer 上的网络。\n网络中的人数: {p}. 网络已表明的参与: {usd}.",
+      inviteNoStats: "<b>{inv}</b> 邀请你加入自己在 Social Organizer 上的网络。",
+      welcome: "由你亲自认识的人组成的网络。你们当中有人遇到困难时，其他人可以一起分担。",
+    },
+    "接受邀请", "打开应用", "了解更多"),
   ja: makeBotLocale(
-    'へようこそ、', (inv, p, usd) => `<b>${inv}</b>が相互扶助ネットワークに招待しています。\n現在のネットワーク：${p}人、$${usd}。`,
-    '招待を受ける', '信頼できるネットワークを通じた相互支援プラットフォーム。', 'アプリを開く', '詳細を見る'),
+    "へようこそ、",
+    {
+      invite: "<b>{inv}</b> さんが Social Organizer の自分のネットワークにあなたを招待しています。\nネットワークの人数: {p}. ネットワークの表明された参加: {usd}.",
+      inviteNoStats: "<b>{inv}</b> さんが Social Organizer の自分のネットワークにあなたを招待しています。",
+      welcome: "直接知っている人たちのネットワークです。誰かが困っているとき、ほかの人たちは負担を分け合えます。",
+    },
+    "招待を受ける", "アプリを開く", "詳細を見る"),
   ko: makeBotLocale(
-    '에 오신 것을 환영합니다,', (inv, p, usd) => `<b>${inv}</b>님이 상호 부조 네트워크에 초대합니다.\n현재 네트워크: ${p}명, $${usd}.`,
-    '초대 수락', '신뢰할 수 있는 네트워크를 통한 상호 지원 플랫폼.', '앱 열기', '자세히 알아보기'),
+    "에 오신 것을 환영합니다,",
+    {
+      invite: "<b>{inv}</b> 님이 Social Organizer의 네트워크에 초대했어요.\n네트워크 인원: {p}. 네트워크가 밝힌 참여: {usd}.",
+      inviteNoStats: "<b>{inv}</b> 님이 Social Organizer의 네트워크에 초대했어요.",
+      welcome: "직접 아는 사람들로 이루어진 네트워크예요. 누군가 어려울 때 다른 사람들이 짐을 나눠 질 수 있어요.",
+    },
+    "초대 수락", "앱 열기", "자세히 알아보기"),
   th: makeBotLocale(
-    'ยินดีต้อนรับสู่', (inv, p, usd) => `<b>${inv}</b> เชิญคุณเข้าร่วมเครือข่ายช่วยเหลือซึ่งกันและกัน\nวันนี้ในเครือข่าย: ${p} คน และ $${usd}`,
-    'รับคำเชิญ', 'แพลตฟอร์มสนับสนุนซึ่งกันและกันผ่านเครือข่ายที่เชื่อถือได้', 'เปิดแอป', 'เรียนรู้เพิ่มเติม'),
+    "ยินดีต้อนรับสู่",
+    {
+      invite: "<b>{inv}</b> เชิญคุณเข้าร่วมเครือข่ายของเขาบน Social Organizer\nจำนวนคนในเครือข่าย: {p}. การมีส่วนร่วมที่เครือข่ายแจ้งไว้: {usd}.",
+      inviteNoStats: "<b>{inv}</b> เชิญคุณเข้าร่วมเครือข่ายของเขาบน Social Organizer",
+      welcome: "เครือข่ายของคนที่คุณรู้จักตัวต่อตัว เมื่อใครสักคนในกลุ่มลำบาก คนอื่นก็ช่วยกันแบกได้",
+    },
+    "รับคำเชิญ", "เปิดแอป", "เรียนรู้เพิ่มเติม"),
   vi: makeBotLocale(
-    'chào mừng đến với', (inv, p, usd) => `<b>${inv}</b> mời bạn vào mạng lưới hỗ trợ lẫn nhau.\nHôm nay trong mạng: ${p} người và $${usd}.`,
-    'Chấp nhận lời mời', 'Nền tảng hỗ trợ lẫn nhau thông qua mạng lưới đáng tin cậy.', 'Mở ứng dụng', 'Tìm hiểu thêm'),
+    "chào mừng đến với",
+    {
+      invite: "<b>{inv}</b> mời bạn vào mạng lưới của họ trên Social Organizer.\nSố người trong mạng lưới: {p}. Mức tham gia đã nêu của mạng lưới: {usd}.",
+      inviteNoStats: "<b>{inv}</b> mời bạn vào mạng lưới của họ trên Social Organizer.",
+      welcome: "Một mạng lưới những người bạn quen trực tiếp. Khi một người trong các bạn gặp khó khăn, những người còn lại có thể san sẻ gánh nặng.",
+    },
+    "Chấp nhận lời mời", "Mở ứng dụng", "Tìm hiểu thêm"),
   id: makeBotLocale(
-    'selamat datang di', (inv, p, usd) => `<b>${inv}</b> mengundang Anda ke jaringan bantuan bersama.\nHari ini di jaringan: ${p} orang dan $${usd}.`,
-    'Terima undangan', 'Platform dukungan bersama melalui jaringan terpercaya.', 'Buka aplikasi', 'Pelajari lebih lanjut'),
+    "selamat datang di",
+    {
+      invite: "<b>{inv}</b> mengundang Anda ke jaringannya di Social Organizer.\nOrang dalam jaringan: {p}. Partisipasi jaringan yang dinyatakan: {usd}.",
+      inviteNoStats: "<b>{inv}</b> mengundang Anda ke jaringannya di Social Organizer.",
+      welcome: "Jaringan orang yang Anda kenal secara pribadi. Kalau salah satu dari Anda sedang kesulitan, yang lain bisa ikut menanggung bebannya.",
+    },
+    "Terima undangan", "Buka aplikasi", "Pelajari lebih lanjut"),
   sv: makeBotLocale(
-    'välkommen till', (inv, p, usd) => `<b>${inv}</b> bjuder in dig till ett nätverk för ömsesidig hjälp.\nIdag i nätverket: ${p} personer och $${usd}.`,
-    'Acceptera inbjudan', 'En plattform för ömsesidigt stöd genom pålitliga nätverk.', 'Öppna appen', 'Läs mer'),
+    "välkommen till",
+    {
+      invite: "<b>{inv}</b> bjuder in dig till sitt nätverk på Social Organizer.\nPersoner i nätverket: {p}. Nätverkets angivna deltagande: {usd}.",
+      inviteNoStats: "<b>{inv}</b> bjuder in dig till sitt nätverk på Social Organizer.",
+      welcome: "Ett nätverk av människor du känner personligen. När någon av er har det svårt kan de andra dela bördan.",
+    },
+    "Acceptera inbjudan", "Öppna appen", "Läs mer"),
   da: makeBotLocale(
-    'velkommen til', (inv, p, usd) => `<b>${inv}</b> inviterer dig til et netværk for gensidig hjælp.\nI dag i netværket: ${p} personer og $${usd}.`,
-    'Accepter invitation', 'En platform for gensidig støtte gennem pålidelige netværk.', 'Åbn appen', 'Læs mere'),
+    "velkommen til",
+    {
+      invite: "<b>{inv}</b> inviterer dig til sit netværk på Social Organizer.\nMennesker i netværket: {p}. Netværkets erklærede deltagelse: {usd}.",
+      inviteNoStats: "<b>{inv}</b> inviterer dig til sit netværk på Social Organizer.",
+      welcome: "Et netværk af mennesker, du kender personligt. Når en af jer har det svært, kan de andre dele byrden.",
+    },
+    "Accepter invitation", "Åbn appen", "Læs mere"),
   fi: makeBotLocale(
-    'tervetuloa palveluun', (inv, p, usd) => `<b>${inv}</b> kutsuu sinut keskinäisen avun verkostoon.\nTänään verkostossa: ${p} henkilöä ja $${usd}.`,
-    'Hyväksy kutsu', 'Keskinäisen tuen alusta luotettavien verkostojen kautta.', 'Avaa sovellus', 'Lue lisää'),
+    "tervetuloa palveluun",
+    {
+      invite: "<b>{inv}</b> kutsuu sinut verkostoonsa Social Organizerissa.\nIhmisiä verkostossa: {p}. Verkoston ilmoitettu osallistuminen: {usd}.",
+      inviteNoStats: "<b>{inv}</b> kutsuu sinut verkostoonsa Social Organizerissa.",
+      welcome: "Verkosto ihmisistä, jotka tunnet henkilökohtaisesti. Kun yhdellä teistä on vaikeaa, muut voivat jakaa taakan.",
+    },
+    "Hyväksy kutsu", "Avaa sovellus", "Lue lisää"),
   no: makeBotLocale(
-    'velkommen til', (inv, p, usd) => `<b>${inv}</b> inviterer deg til et nettverk for gjensidig hjelp.\nI dag i nettverket: ${p} personer og $${usd}.`,
-    'Aksepter invitasjon', 'En plattform for gjensidig støtte gjennom pålitelige nettverk.', 'Åpne appen', 'Les mer'),
+    "velkommen til",
+    {
+      invite: "<b>{inv}</b> inviterer deg til nettverket sitt på Social Organizer.\nPersoner i nettverket: {p}. Nettverkets oppgitte deltakelse: {usd}.",
+      inviteNoStats: "<b>{inv}</b> inviterer deg til nettverket sitt på Social Organizer.",
+      welcome: "Et nettverk av folk du kjenner personlig. Når en av dere har det vanskelig, kan de andre dele byrden.",
+    },
+    "Aksepter invitasjon", "Åpne appen", "Les mer"),
   sr: makeBotLocale(
-    'добродошли у', (inv, p, usd) => `<b>${inv}</b> вас позива у мрежу узајамне помоћи.\nДанас у мрежи: ${p} људи и $${usd}.`,
-    'Прихвати позив', 'Платформа за узајамну подршку кроз мреже поверења.', 'Отвори апликацију', 'Сазнајте више'),
+    "добродошли у",
+    {
+      invite: "<b>{inv}</b> вас позива у своју мрежу у Social Organizer.\nЉуди у мрежи: {p}. Изјављено учешће мреже: {usd}.",
+      inviteNoStats: "<b>{inv}</b> вас позива у своју мрежу у Social Organizer.",
+      welcome: "Мрежа људи које лично познајете. Када је неком од вас тешко, остали могу да поделе терет.",
+    },
+    "Прихвати позив", "Отвори апликацију", "Сазнајте више"),
 };
 
 /** "More..." button text for all supported languages */
@@ -880,14 +1054,12 @@ export async function handleTelegramUpdate(update: TgUpdate): Promise<void> {
 
       console.log(`[TG Bot] /start invite from chat ${chatId}, token: ${inviteToken.slice(0, 8)}...`);
 
-      // Get inviter name and network stats for the invite message
-      const [inviter, stats] = await Promise.all([
-        findInviterTg(inviteToken).catch(() => null),
-        getNetworkStats().catch(() => ({ people: 0, totalUsd: 0 })),
-      ]);
+      // The inviter and their network, in the same numbers their Profile shows
+      const inviter = await findInviter(inviteToken).catch(() => null);
+      const stats = inviter ? await inviterNetworkStats(inviter.id).catch(() => null) : null;
       const inviterName = inviter?.name || 'Someone';
 
-      await sendTelegramMessage(chatId, loc.invite(tgEscape(name), tgEscape(inviterName), stats.people, stats.totalUsd), {
+      await sendTelegramMessage(chatId, loc.invite(tgEscape(name), tgEscape(inviterName), stats), {
         inline_keyboard: [[{ text: loc.acceptBtn, web_app: { url: webAppUrl } }]],
       });
 

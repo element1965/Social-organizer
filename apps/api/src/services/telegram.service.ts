@@ -113,6 +113,12 @@ export function validateTelegramWidget(data: TelegramWidgetAuth): TelegramUserDa
 }
 
 /** The web sign-in button needs the bot's domain set in BotFather; until then it stays off. */
+/** The bot's numeric id: the public part of the token before ":" (also visible as the bot's user id). */
+export function telegramBotId(): number | null {
+  const id = Number(TELEGRAM_BOT_TOKEN.split(':')[0]);
+  return Number.isSafeInteger(id) && id > 0 ? id : null;
+}
+
 export function isTelegramWidgetEnabled(): boolean {
   return !!TELEGRAM_BOT_TOKEN && process.env.TELEGRAM_LOGIN_WIDGET === '1';
 }

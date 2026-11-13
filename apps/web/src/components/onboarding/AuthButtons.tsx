@@ -65,7 +65,7 @@ export function AuthButtons({
   legal?: boolean;
 }) {
   const { t } = useTranslation();
-  const { providers, start, busy, useWidget, attachWidget, googleBtnRef } = signIn;
+  const { providers, start, busy, googleBtnRef } = signIn;
 
   return (
     <div className="w-full text-left">
@@ -101,10 +101,8 @@ export function AuthButtons({
             );
           }
           if (p === 'telegram') {
-            return useWidget ? (
-              // Telegram's own Login Widget (server-checked); it cannot be restyled
-              <div key={p} ref={attachWidget} className="flex min-h-primary w-full items-center justify-center" />
-            ) : (
+            // Always our button: on the website it opens Telegram's login popup, elsewhere the bot or the mini app
+            return (
               <AuthButton
                 key={p}
                 icon={<TelegramMark />}
