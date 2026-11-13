@@ -1,5 +1,14 @@
-import { CLUSTER_ROOT_OVERRIDE } from '../admin.js';
+import { TRPCError } from '@trpc/server';
+import { CLUSTER_ROOT_OVERRIDE, isAdmin } from '../admin.js';
 import { router, protectedProcedure } from '../trpc.js';
+
+/**
+ * Clusters are whole connected components: names and intentions of people far beyond the caller's
+ * visible rings, and a read of the whole connections table. Admin statistics only.
+ */
+function assertAdmin(userId: string | null | undefined) {
+  if (!userId || !isAdmin(userId)) throw new TRPCError({ code: 'FORBIDDEN' });
+}
 
 // Union-Find for connected components
 class UnionFind {
@@ -24,6 +33,7 @@ class UnionFind {
 
 export const clusterRouter = router({
   list: protectedProcedure.query(async ({ ctx }) => {
+    assertAdmin(ctx.userId);
     // Load all connections
     const connections = await ctx.db.connection.findMany({
       select: { userAId: true, userBId: true },
@@ -129,6 +139,7 @@ export const clusterRouter = router({
   }),
 
   myCluster: protectedProcedure.query(async ({ ctx }) => {
+    assertAdmin(ctx.userId);
     const connections = await ctx.db.connection.findMany({
       select: { userAId: true, userBId: true },
     });

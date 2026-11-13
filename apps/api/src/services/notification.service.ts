@@ -2,7 +2,7 @@ import { createRequire } from 'node:module';
 import { dirname, resolve } from 'node:path';
 import type { PrismaClient } from '@so/db';
 import { NOTIFICATION_TTL_HOURS, REGULAR_CYCLE_DAYS } from '@so/shared';
-import { findRecipientsViaBfs, type BfsRecipient } from './bfs.service.js';
+import { findRecipientsViaBfs, walkRings, type BfsRecipient } from './bfs.service.js';
 import { planWave, recordSent } from './notify-routing.service.js';
 import type { TgReplyMarkup } from './telegram-bot.service.js';
 import { deliver, deliverMany } from './delivery.service.js';
@@ -75,8 +75,10 @@ export async function sendCollectionNotifications(
   let recipients: BfsRecipient[];
   let external: BfsRecipient[];
   if (isRequest) {
-    const reach = await findRecipientsViaBfs(db, creatorId, undefined, Infinity, [...ignoredUserIds]);
-    const plan = await planWave(db, reach, maxRecipients ?? reach.length);
+    // Rings are walked one at a time and only while the budget lasts: a $300 Need in a network of a
+    // million people stops in the 2nd–3rd ring instead of walking everyone up to the 6th handshake
+    const rings = await walkRings(db, creatorId, undefined, ignoredUserIds);
+    const plan = await planWave(db, rings, maxRecipients ?? Infinity);
     recipients = [...plan.external, ...plan.inApp];
     external = plan.external;
   } else {

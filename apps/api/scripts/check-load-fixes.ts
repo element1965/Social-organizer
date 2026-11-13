@@ -20,7 +20,8 @@ delete process.env.REDIS_URL;
 const { appRouter } = await import('../src/routers/index.js');
 const { getGraph, graphVersion, invalidateGraph } = await import('../src/services/graph-cache.service.js');
 const { networkReach, clearReachCache } = await import('../src/services/network.service.js');
-const { findRecipientsViaBfs } = await import('../src/services/bfs.service.js');
+const { findRecipientsViaBfs, walkRings } = await import('../src/services/bfs.service.js');
+const { planWave } = await import('../src/services/notify-routing.service.js');
 const { createConnectionWithinLimit } = await import('../src/services/connection-request.service.js');
 const { sendCollectionNotifications } = await import('../src/services/notification.service.js');
 const { backfillAvatars, readAvatar } = await import('../src/services/avatar.service.js');
@@ -128,6 +129,44 @@ try {
     JSON.stringify(six?.path) === JSON.stringify(['root', '1', '2', '3', '4', '5', '6'].map(id)), JSON.stringify(six?.path));
   check('an excluded person is passed through but not a recipient', !walk.some((w) => w.userId === id('2')) && !!six);
   check('nobody beyond the 6th handshake', !walk.some((w) => w.userId === id('7')));
+
+  /* ---------- The same walk ring by ring, asked for only as far as the wave needs ---------- */
+  const ringList = [...(await walkRings(db, id('root'), 6, [id('2')]))];
+  check('rings hold the same people in the same order as the full walk',
+    JSON.stringify(ringList.flat().map((w) => w.userId)) === JSON.stringify(walk.map((w) => w.userId)));
+  check('each ring is one handshake, nearest first',
+    ringList.every((ring, i) => ring.every((w) => w.depth === ring[0]!.depth) && (i === 0 || ring[0]!.depth > ringList[i - 1]![0]!.depth)));
+  const sixInRing = ringList.flat().find((w) => w.userId === id('6'));
+  check('a ring entry carries the handshake path', JSON.stringify(sixInRing?.path) === JSON.stringify(six?.path));
+
+  // People 1 and the fan can be reached outside the app, so a budget of 3 is spent in the 2nd ring
+  const reachablePeople = ['1', ...Array.from({ length: 30 }, (_, i) => `f${i}`)];
+  await db.platformAccount.createMany({
+    data: reachablePeople.map((p) => ({ userId: id(p), platform: 'TELEGRAM' as const, platformId: `${P}tg-${p}` })),
+  });
+  let ringsAsked = 0;
+  const lazyRings = await walkRings(db, id('root'));
+  const counted: Iterable<Awaited<ReturnType<typeof findRecipientsViaBfs>>> = {
+    [Symbol.iterator]: () => ({
+      next: () => {
+        const step = lazyRings.next();
+        if (!step.done) ringsAsked++;
+        return step as IteratorResult<Awaited<ReturnType<typeof findRecipientsViaBfs>>>;
+      },
+    }),
+  };
+  const lazyPlan = await planWave(db, counted, 3);
+  check('a wave of 3 takes the 1st ring and the start of the 2nd',
+    lazyPlan.external.length === 3 && lazyPlan.external[0]?.userId === id('1') && lazyPlan.external.slice(1).every((w) => w.depth === 2),
+    `external=${lazyPlan.external.map((w) => w.userId).join(',')}`);
+  check('…and never asks for the rings behind them', ringsAsked === 2, `rings asked=${ringsAsked}`);
+  await db.platformAccount.deleteMany({ where: { platformId: { startsWith: `${P}tg-` } } });
+
+  /* ---------- Clusters are admin statistics only ---------- */
+  let clusterRefused = 0;
+  try { await call(id('root')).cluster.list(); } catch (e: any) { if (e?.code === 'FORBIDDEN') clusterRefused++; }
+  try { await call(id('root')).cluster.myCluster(); } catch (e: any) { if (e?.code === 'FORBIDDEN') clusterRefused++; }
+  check('cluster.list and cluster.myCluster refuse a person who is not an admin', clusterRefused === 2, `refused=${clusterRefused}`);
 
   /* ---------- Wave stored in batches ---------- */
   const col = await db.collection.create({

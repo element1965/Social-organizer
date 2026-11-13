@@ -102,6 +102,43 @@ export async function findRecipientsViaBfs(
 }
 
 /**
+ * The same walk as findRecipientsViaBfs, handed out one handshake ring at a time: the people at the
+ * 1st handshake, then the 2nd, and so on, in the same order. A ring is computed only when it is asked
+ * for, so a wave that spends its budget in the 2nd ring never walks the rest of the network.
+ * Excluded people are passed through but are in no ring; a ring with nobody left is skipped.
+ */
+export async function walkRings(
+  db: PrismaClient,
+  startUserId: string,
+  maxDepth: number = NETWORK_MAX_DEPTH,
+  excludeUserIds: Iterable<string> = [],
+): Promise<Generator<BfsRecipient[], void, void>> {
+  const { adj, deleted } = await getGraph(db);
+  const excludeSet = excludeUserIds instanceof Set ? (excludeUserIds as Set<string>) : new Set(excludeUserIds);
+
+  return (function* () {
+    const seen = new Set<string>([startUserId]);
+    let frontier: BfsNode[] = [new BfsNode(startUserId, 0, null, null)];
+    for (let depth = 1; depth <= maxDepth && frontier.length > 0; depth++) {
+      const next: BfsNode[] = [];
+      const ring: BfsNode[] = [];
+      for (const current of frontier) {
+        const { maxConnAt } = current;
+        for (const { neighbor, createdAt } of adj.get(current.userId) || []) {
+          if (seen.has(neighbor) || deleted.has(neighbor)) continue;
+          seen.add(neighbor);
+          const node = new BfsNode(neighbor, depth, maxConnAt && maxConnAt > createdAt ? maxConnAt : createdAt, current);
+          next.push(node);
+          if (!excludeSet.has(neighbor)) ring.push(node);
+        }
+      }
+      frontier = next;
+      if (ring.length > 0) yield ring;
+    }
+  })();
+}
+
+/**
  * BFS for finding shortest path between two users.
  */
 export async function findPathBetweenUsers(
