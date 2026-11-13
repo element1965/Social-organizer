@@ -77,7 +77,7 @@ export function ComplainSheet({
             maxLength={280}
             rows={3}
             onChange={(event) => setComment(event.target.value)}
-            className="w-full resize-none rounded-lg border border-line bg-surface-2 px-3.5 py-3 text-body-s font-semibold text-ink outline-none placeholder:text-ink-subtle focus:border-care"
+            className="w-full resize-none rounded-lg border border-line bg-surface-2 px-3.5 py-3 so-field text-body-s font-semibold text-ink outline-none placeholder:text-ink-subtle focus:border-care"
           />
           <span className="mt-1.5 block text-label font-semibold text-ink-muted">
             {t('moderation.commentHint')}

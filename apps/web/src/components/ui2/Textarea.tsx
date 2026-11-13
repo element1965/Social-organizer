@@ -28,7 +28,7 @@ export function Textarea({ label, hint, error, value, max, className, id, rows =
         aria-invalid={error ? true : undefined}
         aria-describedby={note ? hintId : undefined}
         className={cn(
-          'min-h-[88px] w-full resize-none rounded-lg border bg-surface-2 px-3.5 py-3 text-body-s font-semibold text-ink outline-none placeholder:text-ink-subtle',
+          'min-h-[88px] w-full resize-none rounded-lg border bg-surface-2 px-3.5 py-3 so-field text-body-s font-semibold text-ink outline-none placeholder:text-ink-subtle',
           'focus:border-care',
           error ? 'border-sos' : 'border-line',
           className,
