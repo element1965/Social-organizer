@@ -325,10 +325,14 @@ export function CirclePage() {
     return () => window.clearTimeout(timer);
   }, [firstMilestone, otherSheetOpen]);
 
-  const closeMilestone = () => {
-    if (milestone) markMilestone.mutate({ kind: milestone });
-    setMilestone(null);
-  };
+  // Seen as soon as it is shown, not only when closed with the button: leaving the screen (Android back,
+  // another tab) used to keep it unseen, so the same "First handshake with …" came back on every device
+  const markMilestoneRef = useRef(markMilestone.mutate);
+  markMilestoneRef.current = markMilestone.mutate;
+  useEffect(() => {
+    if (milestone) markMilestoneRef.current({ kind: milestone });
+  }, [milestone]);
+  const closeMilestone = () => setMilestone(null);
 
   // New event while the app is open: banner on top, the row slides into the feed.
   useNewEvents(events, !loading, (fresh) => {

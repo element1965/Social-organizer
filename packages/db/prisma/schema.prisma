@@ -551,6 +551,9 @@ model PendingConnection {
   status     PendingConnectionStatus @default(PENDING)
   resolvedAt DateTime?
   createdAt  DateTime                @default(now())
+  /// The requester saw "X confirmed the acquaintance" (any device), and when they tapped it away
+  requesterSeenAt      DateTime?
+  requesterDismissedAt DateTime?
 
   fromUser User @relation("pendingFrom", fields: [fromUserId], references: [id], onDelete: Cascade)
   toUser   User @relation("pendingTo", fields: [toUserId], references: [id], onDelete: Cascade)
