@@ -4,6 +4,12 @@ import { useAuth } from './useAuth';
 
 /** The shortest interval any of the replaced timers had (incoming requests). */
 export const PULSE_MS = 20_000;
+/**
+ * A safety net: every list is re-read this often whatever the pulse says. It catches what no stamp stands
+ * for (a milestone reached through other people's connections, a changed name or photo in a list) and
+ * keeps the lists alive if the pulse itself keeps failing.
+ */
+export const SAFETY_MS = 5 * 60_000;
 
 type Utils = ReturnType<typeof trpc.useUtils>;
 
@@ -60,15 +66,27 @@ export function usePulse() {
   useEffect(() => {
     const data = pulse.data as Record<string, unknown> | undefined;
     if (!data || !userId) return;
-    const groups: Record<string, string> = {};
-    for (const key of Object.keys(DEPENDENTS)) groups[key] = JSON.stringify(data[key] ?? null);
     const prev = last.current?.userId === userId ? last.current.groups : null;
+    const groups: Record<string, string> = {};
+    for (const key of Object.keys(DEPENDENTS)) {
+      const group = data[key];
+      // A group the server could not read this time (null) keeps its previous value: no refetch for it
+      groups[key] = group == null ? (prev?.[key] ?? '') : JSON.stringify(group);
+    }
     last.current = { userId, groups };
     if (!prev) return;
     const stale = new Set<List>();
     for (const key of Object.keys(DEPENDENTS)) {
-      if (prev[key] !== groups[key]) for (const list of DEPENDENTS[key]!) stale.add(list);
+      if (prev[key] && groups[key] && prev[key] !== groups[key]) for (const list of DEPENDENTS[key]!) stale.add(list);
     }
     for (const list of stale) void LISTS[list](utils);
   }, [pulse.data, userId, utils]);
+
+  useEffect(() => {
+    if (!userId) return;
+    const timer = window.setInterval(() => {
+      for (const list of Object.keys(LISTS) as List[]) void LISTS[list](utils);
+    }, SAFETY_MS);
+    return () => window.clearInterval(timer);
+  }, [userId, utils]);
 }

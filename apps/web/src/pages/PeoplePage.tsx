@@ -133,14 +133,15 @@ export function PeoplePage() {
   const ring2 = useRingPeople(2, serverSearch, deepSort, ring === 2 || serverSearch !== '');
   const ring3 = useRingPeople(3, serverSearch, deepSort, ring === 3 || serverSearch !== '');
 
-  // The network numbers are re-read on a timer and when my connections change: the lists follow them
+  // The network numbers are re-read on a timer and when my connections change: the lists follow them,
+  // but only when the rings really changed (a re-read with the same numbers would fetch every page again)
   const utils = trpc.useUtils();
-  const statsAt = stats.dataUpdatedAt;
-  const lastStatsAt = useRef(statsAt);
+  const ringsKey = stats.data ? JSON.stringify(stats.data.byDepth) : '';
+  const lastRingsKey = useRef(ringsKey);
   useEffect(() => {
-    if (lastStatsAt.current && statsAt !== lastStatsAt.current) void utils.connection.ringPeople.invalidate();
-    lastStatsAt.current = statsAt;
-  }, [statsAt, utils]);
+    if (lastRingsKey.current && ringsKey && ringsKey !== lastRingsKey.current) void utils.connection.ringPeople.invalidate();
+    if (ringsKey) lastRingsKey.current = ringsKey;
+  }, [ringsKey, utils]);
 
   const sortList = useMemo(() => {
     const collator = new Intl.Collator(i18n.language, { sensitivity: 'base' });

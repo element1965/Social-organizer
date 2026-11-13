@@ -143,6 +143,9 @@ export const connectionRouter = router({
 
   getNetworkStats: protectedProcedure.query(async ({ ctx }) => {
     const bfsUserId = await networkRoot(ctx.db, ctx.userId);
+    // Someone with no connection yet gets the numbers of the network they asked to join, as a preview,
+    // never the people in it: a request is not an acquaintance, and anyone can send one to anyone
+    const borrowed = bfsUserId !== ctx.userId;
 
     // Counts cover the whole reach of a request (networkReach); names and details only the visible
     // rings (1–3). Beyond them only rounded counts leave the server: who is there stays private.
@@ -250,7 +253,7 @@ export const connectionRouter = router({
       networkCanHelp: counts.canHelp,
       byDepth,
       far,
-      usersByDepth,
+      usersByDepth: borrowed ? {} : usersByDepth,
       growth: {
         day: dayCount,
         week: weekCount,
@@ -276,6 +279,8 @@ export const connectionRouter = router({
     )
     .query(async ({ ctx, input }) => {
       const root = await networkRoot(ctx.db, ctx.userId);
+      // A borrowed network (no connection yet, only a request) is numbers only: nobody is listed
+      if (root !== ctx.userId) return { people: [], total: 0, nextCursor: null };
       return ringPeople(ctx.db, root, { ...input, cursor: input.cursor ?? 0 });
     }),
 
