@@ -1406,7 +1406,9 @@
     "factsReported": "Participare declarată",
     "factsMarked": "Marcat de autori ca primit",
     "factsNote": "Pentru Nevoile închise. Marcajul este pus de autorul Nevoii; Social Organizer nu îl verifică.",
-    "requestDeclined": "Cunoștința nu a fost confirmată. Dacă vă cunoașteți, arătați-vă codul QR când vă vedeți."
+    "requestDeclined": "Cunoștința nu a fost confirmată. Dacă vă cunoașteți, arătați-vă codul QR când vă vedeți.",
+    "prevPerson": "Persoana anterioară",
+    "nextPerson": "Persoana următoare"
   },
   "help": {
     "faq": "Întrebări și răspunsuri",

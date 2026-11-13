@@ -1406,7 +1406,9 @@
     "factsReported": "Participaciones declaradas",
     "factsMarked": "Marcado como recibido por autores",
     "factsNote": "Sobre Necesidades cerradas. La marca la pone el autor de la Necesidad; Social Organizer no la verifica.",
-    "requestDeclined": "No se confirmó el conocimiento. Si os conocéis, mostraos el código QR cuando os veáis."
+    "requestDeclined": "No se confirmó el conocimiento. Si os conocéis, mostraos el código QR cuando os veáis.",
+    "prevPerson": "Persona anterior",
+    "nextPerson": "Persona siguiente"
   },
   "help": {
     "faq": "Preguntas y respuestas",
