@@ -18,6 +18,12 @@ interface Timing {
 }
 
 const empty = (): Timing => ({ count: 0, totalMs: 0, maxMs: 0 });
+let requests = 0;
+
+/** One HTTP request reached the server (every route). The line shows how many came in the last minute. */
+export function countRequest(): void {
+  requests++;
+}
 const walks: Record<WalkKind, Timing> = { reach: empty(), wave: empty() };
 
 /** A network walk finished: `reach` is the count up to the 6th handshake, `wave` is choosing who a Need notifies. */
@@ -59,12 +65,14 @@ export function takeRuntimeMetrics(loop?: ReturnType<typeof monitorEventLoopDela
     loopP50Ms: loop ? ms(loop.percentile(50)) : 0,
     loopP95Ms: loop ? ms(loop.percentile(95)) : 0,
     loopMaxMs: loop ? ms(loop.max) : 0,
+    requests,
     rssMb: mb(memory.rss),
     heapMb: mb(memory.heapUsed),
     graph,
     reach: { ...walks.reach },
     wave: { ...walks.wave },
   };
+  requests = 0;
   walks.reach = empty();
   walks.wave = empty();
   loop?.reset();
@@ -75,9 +83,9 @@ export function formatRuntimeMetrics(m: ReturnType<typeof takeRuntimeMetrics>): 
   const g = m.graph;
   return (
     `[metrics] loop p50 ${m.loopP50Ms} ms p95 ${m.loopP95Ms} ms max ${m.loopMaxMs} ms · ` +
-    `rss ${m.rssMb} MB heap ${m.heapMb} MB · ` +
+    `requests ${m.requests} · rss ${m.rssMb} MB heap ${m.heapMb} MB · ` +
     `graph ${g.people} people ${g.connections} connections, reloads ${g.fullLoads} (last ${g.lastLoadMs} ms), ` +
-    `re-reads ${g.refreshes}, appends ${g.appends}, light checks ${g.lightChecks}, exact signature ${g.lastSignatureMs} ms · ` +
+    `re-reads ${g.refreshes}, appends ${g.appends}, rebuilds ${g.compactions}, loose ${g.overflow}+${g.holes}, light checks ${g.lightChecks}, exact signature ${g.lastSignatureMs} ms · ` +
     `reach ${timingText(m.reach)} · wave ${timingText(m.wave)}`
   );
 }

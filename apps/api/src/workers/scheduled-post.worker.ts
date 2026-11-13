@@ -109,7 +109,7 @@ export async function processScheduledPost(_job: Job): Promise<void> {
             replyMarkup: buildMarkup(lang),
           };
         });
-        await sendTgMessages(messages);
+        await sendTgMessages(messages, 'bulk');
         sent = messages.length;
       } else {
         for (let i = 0; i < tgAccounts.length; i++) {

@@ -139,12 +139,30 @@ export async function enqueueCheckBlock(collectionId: string): Promise<void> {
   await queue.add('check-block', { collectionId });
 }
 
-/** Enqueue Telegram broadcast messages */
-export async function enqueueTgBroadcast(messages: TgBroadcastMessage[]): Promise<void> {
+/** Messages per queue job: 250 take about ten seconds to send, so that is the longest a wave waits behind one. */
+export const TG_JOB_SIZE = 250;
+/** BullMQ priorities (1 is first): a Need's wave goes before a mailing to everyone. */
+export const TG_PRIORITY = { wave: 1, bulk: 10 } as const;
+
+/**
+ * Enqueue Telegram messages. They are split into jobs of TG_JOB_SIZE: the worker sends one job at a
+ * time, 25 messages a second, so one job of a hundred thousand messages would hold everything else for
+ * over an hour. With small jobs and priorities a wave waits for the current chunk of a mailing at most.
+ */
+export async function enqueueTgBroadcast(messages: TgBroadcastMessage[], kind: keyof typeof TG_PRIORITY = 'wave'): Promise<void> {
   if (messages.length === 0) return;
   const redis = getRedisConnection();
   const queue = new Queue('telegram-broadcast', queueOpts(redis));
-  await queue.add('tg-broadcast', { messages });
+  await queue.addBulk(tgJobs(messages, kind));
+}
+
+/** The jobs a list of messages becomes: chunks of TG_JOB_SIZE in the same order, each with the priority of its kind. */
+export function tgJobs(messages: TgBroadcastMessage[], kind: keyof typeof TG_PRIORITY) {
+  const jobs: Array<{ name: string; data: { messages: TgBroadcastMessage[] }; opts: { priority: number } }> = [];
+  for (let from = 0; from < messages.length; from += TG_JOB_SIZE) {
+    jobs.push({ name: 'tg-broadcast', data: { messages: messages.slice(from, from + TG_JOB_SIZE) }, opts: { priority: TG_PRIORITY[kind] } });
+  }
+  return jobs;
 }
 
 let responseDigestQueue: Queue | null = null;

@@ -1204,8 +1204,14 @@ export async function handleTelegramUpdate(update: TgUpdate): Promise<void> {
   );
 }
 
-/** Send an array of TG messages via direct send or BullMQ */
-export async function sendTgMessages(messages: Array<{ telegramId: string; text: string; replyMarkup?: TgReplyMarkup }>): Promise<void> {
+/**
+ * Send an array of TG messages via direct send or BullMQ.
+ * `kind`: 'wave' for messages about a Need (sent first), 'bulk' for mailings to everyone.
+ */
+export async function sendTgMessages(
+  messages: Array<{ telegramId: string; text: string; replyMarkup?: TgReplyMarkup }>,
+  kind: 'wave' | 'bulk' = 'wave',
+): Promise<void> {
   if (messages.length === 0) return;
   const DIRECT_SEND_THRESHOLD = 25;
 
@@ -1224,7 +1230,7 @@ export async function sendTgMessages(messages: Array<{ telegramId: string; text:
 
   try {
     const { enqueueTgBroadcast } = await import('../workers/index.js');
-    await enqueueTgBroadcast(messages);
+    await enqueueTgBroadcast(messages, kind);
     console.log(`[TG] Enqueued ${messages.length} messages via BullMQ`);
   } catch (err) {
     console.error('[TG] BullMQ failed, fallback to direct:', err);
