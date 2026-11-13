@@ -211,6 +211,7 @@
     "toSelf": "Wróć do mnie",
     "backToFeed": "Kanał",
     "openGraph": "Rozwiń graf",
+    "graphFailed": "Graf nie otworzył się na tym urządzeniu. Twoi ludzie nadal są na listach.",
     "eventsPill": "Zdarzenia",
     "startPill": "Start",
     "gestureHint": "Jeden palec obraca, dwa przybliżają",

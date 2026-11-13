@@ -211,6 +211,7 @@
     "toSelf": "Terug naar mij",
     "backToFeed": "Feed",
     "openGraph": "Graaf uitklappen",
+    "graphFailed": "De graaf ging niet open op dit apparaat. Je mensen staan nog steeds in de lijsten.",
     "eventsPill": "Gebeurtenissen",
     "startPill": "Start",
     "gestureHint": "Eén vinger draait, twee zoomen",

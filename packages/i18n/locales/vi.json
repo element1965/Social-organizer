@@ -211,6 +211,7 @@
     "toSelf": "Quay về bạn",
     "backToFeed": "Bảng tin",
     "openGraph": "Mở rộng sơ đồ",
+    "graphFailed": "Không mở được sơ đồ trên thiết bị này. Những người của bạn vẫn có trong danh sách.",
     "eventsPill": "Sự kiện",
     "startPill": "Bắt đầu",
     "gestureHint": "Một ngón xoay, hai ngón phóng to",

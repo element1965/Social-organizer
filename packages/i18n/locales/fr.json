@@ -211,6 +211,7 @@
     "toSelf": "Retour vers moi",
     "backToFeed": "Fil",
     "openGraph": "Déplier le graphe",
+    "graphFailed": "Le graphe ne s'est pas ouvert sur cet appareil. Vos personnes restent dans les listes.",
     "eventsPill": "Événements",
     "startPill": "Début",
     "gestureHint": "Un doigt pour tourner, deux pour zoomer",

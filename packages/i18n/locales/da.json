@@ -211,6 +211,7 @@
     "toSelf": "Tilbage til mig",
     "backToFeed": "Feed",
     "openGraph": "Fold grafen ud",
+    "graphFailed": "Grafen kunne ikke åbnes på denne enhed. Dine personer er stadig i listerne.",
     "eventsPill": "Hændelser",
     "startPill": "Start",
     "gestureHint": "Én finger roterer, to zoomer",

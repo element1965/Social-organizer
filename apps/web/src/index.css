@@ -20,6 +20,17 @@ body {
   color: rgb(var(--so-ink));
 }
 
+/* Page zoom is allowed (index.html viewport), so iOS would zoom in on any field with text under 16px
+   when it gets focus. On touch screens fields keep at least 16px; the !important beats the
+   per-field size utilities. */
+@media (pointer: coarse) {
+  input:not([type='checkbox']):not([type='radio']):not([type='range']),
+  textarea,
+  select {
+    font-size: max(1rem, 1em) !important;
+  }
+}
+
 /* Solid strip under the status bar so scrolled content does not run under the clock */
 body::before {
   content: '';

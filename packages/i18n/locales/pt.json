@@ -211,6 +211,7 @@
     "toSelf": "Voltar para mim",
     "backToFeed": "Feed",
     "openGraph": "Expandir o grafo",
+    "graphFailed": "O grafo não abriu neste dispositivo. As suas pessoas continuam nas listas.",
     "eventsPill": "Eventos",
     "startPill": "Início",
     "gestureHint": "Um dedo gira, dois aproximam",

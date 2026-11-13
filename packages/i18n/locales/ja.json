@@ -211,6 +211,7 @@
     "toSelf": "自分に戻る",
     "backToFeed": "フィード",
     "openGraph": "グラフを広げる",
+    "graphFailed": "この端末ではグラフを開けませんでした。つながりのある人はリストで確認できます。",
     "eventsPill": "出来事",
     "startPill": "開始",
     "gestureHint": "指1本で回転、指2本で拡大",

@@ -211,6 +211,7 @@
     "toSelf": "Înapoi la mine",
     "backToFeed": "Flux",
     "openGraph": "Extinde graful",
+    "graphFailed": "Graful nu s-a deschis pe acest dispozitiv. Oamenii tăi sunt în continuare în liste.",
     "eventsPill": "Evenimente",
     "startPill": "Start",
     "gestureHint": "Un deget rotește, două fac zoom",

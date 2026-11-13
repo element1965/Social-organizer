@@ -211,6 +211,7 @@
     "toSelf": "回到我",
     "backToFeed": "动态",
     "openGraph": "展开图谱",
+    "graphFailed": "此设备无法打开图谱。你的联系人仍在列表中。",
     "eventsPill": "事件",
     "startPill": "开始",
     "gestureHint": "单指旋转，双指缩放",

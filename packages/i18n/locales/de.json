@@ -211,6 +211,7 @@
     "toSelf": "Zurück zu mir",
     "backToFeed": "Feed",
     "openGraph": "Graph ausklappen",
+    "graphFailed": "Der Graph ließ sich auf diesem Gerät nicht öffnen. Ihre Personen stehen weiter in den Listen.",
     "eventsPill": "Ereignisse",
     "startPill": "Start",
     "gestureHint": "Ein Finger dreht, zwei zoomen",

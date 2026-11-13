@@ -211,6 +211,7 @@
     "toSelf": "Tillbaka till mig",
     "backToFeed": "Flöde",
     "openGraph": "Fäll ut grafen",
+    "graphFailed": "Grafen öppnades inte på den här enheten. Dina personer finns kvar i listorna.",
     "eventsPill": "Händelser",
     "startPill": "Start",
     "gestureHint": "Ett finger roterar, två zoomar",

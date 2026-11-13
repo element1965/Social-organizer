@@ -212,6 +212,7 @@
     "toSelf": "Back to me",
     "backToFeed": "Feed",
     "openGraph": "Expand the graph",
+    "graphFailed": "The graph did not open on this device. Your people are still in the lists.",
     "eventsPill": "Events",
     "startPill": "Start",
     "gestureHint": "One finger rotates, two zoom",
