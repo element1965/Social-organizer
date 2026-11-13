@@ -188,7 +188,12 @@
     "waitText": "Kilka sekund. Okno {{provider}} zamknie się samo.",
     "waitBack": "Wróć do logowania",
     "lastMethodEmail": "Ostatnim razem logowanie było <b>kodem z e-maila</b>.",
-    "expiredTextEmail": "Sesja wygasła. Ostatnim razem logowanie było <b>kodem z e-maila</b>. Po zalogowaniu wrócisz w to samo miejsce."
+    "expiredTextEmail": "Sesja wygasła. Ostatnim razem logowanie było <b>kodem z e-maila</b>. Po zalogowaniu wrócisz w to samo miejsce.",
+    "inviteCode": "Mam kod zaproszenia",
+    "inviteCodeLabel": "Kod lub link zaproszenia",
+    "inviteCodePlaceholder": "Wklej kod lub cały link",
+    "inviteCodeBad": "To nie wygląda na kod zaproszenia. Sprawdź go lub wklej cały link.",
+    "inviteCodeOpen": "Otwórz zaproszenie"
   },
   "nav": {
     "circle": "Krąg",
@@ -648,7 +653,7 @@
     "website": "Strona internetowa"
   },
   "invite": {
-    "calls": "{{name}} zaprasza Cię do swojego kręgu",
+    "calls": "{{name}} zaprasza Cię",
     "say": "Wzajemne wsparcie między osobami, które się znają. Zaloguj się, a {{name}} potwierdzi, że się znacie.",
     "canHelp": "zadeklarowany udział sieci: {{amount}}",
     "known": "Znamy się",
@@ -690,7 +695,8 @@
       "later": "Później, kontynuuj w przeglądarce",
       "continueWeb": "Kontynuuj w przeglądarce",
       "qrText": "Skieruj aparat telefonu na kod — otworzy się sklep z aplikacjami."
-    }
+    },
+    "howItWorks": "Jak działa Social Organizer"
   },
   "landing": {
     "site": {

@@ -188,7 +188,12 @@
     "waitText": "Birkaç saniye. {{provider}} penceresi kendiliğinden kapanır.",
     "waitBack": "Girişe dön",
     "lastMethodEmail": "Son girişinizi <b>e-posta koduyla</b> yaptınız.",
-    "expiredTextEmail": "Oturumunuz sona erdi. Son girişinizi <b>e-posta koduyla</b> yaptınız; girişten sonra kaldığınız yere döneceksiniz."
+    "expiredTextEmail": "Oturumunuz sona erdi. Son girişinizi <b>e-posta koduyla</b> yaptınız; girişten sonra kaldığınız yere döneceksiniz.",
+    "inviteCode": "Davet kodum var",
+    "inviteCodeLabel": "Davet kodu veya bağlantısı",
+    "inviteCodePlaceholder": "Kodu veya bağlantının tamamını yapıştırın",
+    "inviteCodeBad": "Bu bir davet koduna benzemiyor. Kontrol edin veya bağlantının tamamını yapıştırın.",
+    "inviteCodeOpen": "Daveti aç"
   },
   "nav": {
     "circle": "Çevre",
@@ -642,7 +647,7 @@
     "website": "Web sitesi"
   },
   "invite": {
-    "calls": "{{name}} sizi çevresine davet ediyor",
+    "calls": "{{name}} sizi davet ediyor",
     "say": "Birbirini tanıyan kişiler arasında karşılıklı destek. Giriş yapın; {{name}}, birbirinizi tanıdığınızı onaylar.",
     "canHelp": "ağın beyan ettiği katılım: {{amount}}",
     "known": "Birbirimizi tanıyoruz",
@@ -682,7 +687,8 @@
       "later": "Daha sonra, tarayıcıda devam et",
       "continueWeb": "Tarayıcıda devam et",
       "qrText": "Telefon kamerasını koda tut: uygulama mağazası açılır."
-    }
+    },
+    "howItWorks": "Social Organizer nasıl çalışır"
   },
   "landing": {
     "site": {

@@ -188,7 +188,12 @@
     "waitText": "Ett par sekunder. Fönstret för {{provider}} stängs av sig själv.",
     "waitBack": "Tillbaka till inloggningen",
     "lastMethodEmail": "Förra gången loggade du in med <b>en kod till e-posten</b>.",
-    "expiredTextEmail": "Din session har gått ut. Förra gången loggade du in med <b>en kod till e-posten</b>. Efter inloggningen tar vi dig tillbaka dit du var."
+    "expiredTextEmail": "Din session har gått ut. Förra gången loggade du in med <b>en kod till e-posten</b>. Efter inloggningen tar vi dig tillbaka dit du var.",
+    "inviteCode": "Jag har en inbjudningskod",
+    "inviteCodeLabel": "Inbjudningskod eller länk",
+    "inviteCodePlaceholder": "Klistra in koden eller hela länken",
+    "inviteCodeBad": "Det här ser inte ut som en inbjudningskod. Kontrollera den eller klistra in hela länken.",
+    "inviteCodeOpen": "Öppna inbjudan"
   },
   "nav": {
     "circle": "Krets",
@@ -642,7 +647,7 @@
     "website": "Webbplats"
   },
   "invite": {
-    "calls": "{{name}} bjuder in dig till sin krets",
+    "calls": "{{name}} bjuder in dig",
     "say": "Ömsesidigt bistånd mellan personer som känner varandra. Logga in, så bekräftar {{name}} att ni känner varandra.",
     "canHelp": "nätverkets angivna deltagande: {{amount}}",
     "known": "Vi känner varandra",
@@ -682,7 +687,8 @@
       "later": "Senare, fortsätt i webbläsaren",
       "continueWeb": "Fortsätt i webbläsaren",
       "qrText": "Rikta telefonens kamera mot koden – appbutiken öppnas."
-    }
+    },
+    "howItWorks": "Så fungerar Social Organizer"
   },
   "landing": {
     "site": {

@@ -328,6 +328,8 @@ Invite page details (SO-24):
 - **Addressing the invited person:** `?to=Name` (letters, spaces, `-`, `'`, `.`, up to 40) puts "Name, …" before the title on the page and in the preview. It lives only in the shared address and is never stored. `/i/<slug>` keeps the query when it redirects.
 - **After the request is saved:** a newcomer on the web (not the installed app, not the Mini App) sees "Request sent" with the sign-in method used, a reminder to sign in to the app the same way (the request is already on the server, so it is there after install) and the device's store; a computer gets a QR to `/get?invite=…`. "Later / Continue in the browser" goes on to the intro. No countdown or automatic redirect, so coming back from the store never loops.
 - **Dead links** have their own screens: the inviter deleted the account (`INVITER_DELETED`), a one-time invite was used by someone else, or the link does not exist.
+- **Invitation code by hand:** the sign-in screen (`/login`, when there is no pending invite) has "I have an invitation code". It takes the bare code (invite token, personal ID or user id), `/i/<slug>`, or a whole pasted message with the link (`inviteCodeFromInput` in `onboarding/flow.ts`), and opens `/invite/<code>` — the request is created there, after sign-in, as with the link.
+- **Wording:** the title is "<Name> invites you" (no "circle", per the client's request of 30.10); Arabic and Hebrew use the gender-neutral "An invitation from <Name>". The corner language chip uses logical `end-*` placement and the top row reserves room for it, so the brand line is never covered (320 px, RTL).
 
 ### Connecting Telegram to an existing account
 

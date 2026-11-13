@@ -188,7 +188,12 @@
     "waitText": "Vài giây thôi. Cửa sổ {{provider}} sẽ tự đóng.",
     "waitBack": "Quay lại đăng nhập",
     "lastMethodEmail": "Lần trước bạn đăng nhập bằng <b>mã email</b>.",
-    "expiredTextEmail": "Phiên của bạn đã hết hạn. Lần trước bạn đăng nhập bằng <b>mã email</b>; sau khi đăng nhập, chúng tôi sẽ đưa bạn về chỗ cũ."
+    "expiredTextEmail": "Phiên của bạn đã hết hạn. Lần trước bạn đăng nhập bằng <b>mã email</b>; sau khi đăng nhập, chúng tôi sẽ đưa bạn về chỗ cũ.",
+    "inviteCode": "Tôi có mã mời",
+    "inviteCodeLabel": "Mã mời hoặc liên kết",
+    "inviteCodePlaceholder": "Dán mã hoặc toàn bộ liên kết",
+    "inviteCodeBad": "Đây có vẻ không phải mã mời. Hãy kiểm tra lại hoặc dán toàn bộ liên kết.",
+    "inviteCodeOpen": "Mở lời mời"
   },
   "nav": {
     "circle": "Vòng tròn",
@@ -639,7 +644,7 @@
     "website": "Trang web"
   },
   "invite": {
-    "calls": "{{name}} mời bạn vào vòng tròn của họ",
+    "calls": "{{name}} mời bạn",
     "say": "Hỗ trợ lẫn nhau giữa những người quen biết nhau. Hãy đăng nhập, và {{name}} sẽ xác nhận là quen nhau.",
     "canHelp": "mức tham gia đã nêu của mạng lưới: {{amount}}",
     "known": "Chúng tôi quen nhau",
@@ -678,7 +683,8 @@
       "later": "Để sau, tiếp tục trên trình duyệt",
       "continueWeb": "Tiếp tục trên trình duyệt",
       "qrText": "Hướng camera điện thoại vào mã — cửa hàng ứng dụng sẽ mở."
-    }
+    },
+    "howItWorks": "Social Organizer hoạt động thế nào"
   },
   "landing": {
     "site": {

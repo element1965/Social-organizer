@@ -41,8 +41,9 @@ export function OnboardingFrame({
   const panel = usePanelLayout();
   const body = (
     <>
-      {top ? <div className="flex h-[26px] items-center">{top}</div> : null}
-      {corner ? <div className={cn('absolute right-4 z-10', panel ? 'right-6 top-6' : 'top-[18px]')}>{corner}</div> : null}
+      {/* pe-20: the corner chip never covers the brand (320 px, long names, RTL) */}
+      {top ? <div className={cn('flex h-[26px] min-w-0 items-center', corner && 'pe-20')}>{top}</div> : null}
+      {corner ? <div className={cn('absolute end-4 z-10', panel ? 'end-6 top-6' : 'top-[18px]')}>{corner}</div> : null}
       <div className={cn('flex flex-col', centre && 'items-center text-center')}>{children}</div>
       {foot ? <div className="mt-auto w-full pt-8">{foot}</div> : null}
     </>
@@ -72,9 +73,9 @@ export function OnboardingFrame({
 export function BrandLine() {
   const { t } = useTranslation();
   return (
-    <span className="flex items-center gap-2 text-body-s font-extrabold tracking-tight">
+    <span className="flex min-w-0 items-center gap-2 text-body-s font-extrabold tracking-tight">
       <BrandMark size={26} />
-      {t('common.appName')}
+      <span className="truncate">{t('common.appName')}</span>
     </span>
   );
 }
