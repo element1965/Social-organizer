@@ -12,7 +12,7 @@ import { cn } from '../lib/utils';
 // FAQ content lives in the DB (one row per language, translations share groupId = source item id).
 
 const fieldCls =
-  'w-full rounded-lg border border-line bg-surface-2 px-3.5 py-2.5 text-body-s font-semibold text-ink outline-none placeholder:text-ink-subtle focus:border-care';
+  'w-full rounded-lg border border-line bg-surface-2 px-3.5 py-2.5 so-field text-body-s font-semibold text-ink outline-none placeholder:text-ink-subtle focus:border-care';
 
 /** http(s), mailto, tel, or a site path. Anything else is shown as plain text. */
 const SAFE_FAQ_URL = /^(https?:|mailto:|tel:|\/)/i;

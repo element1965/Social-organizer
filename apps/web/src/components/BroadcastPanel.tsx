@@ -15,7 +15,7 @@ type Variant = 'all' | 'invited' | 'organic';
 const emptyMessage: MessageData = { text: '', mediaType: 'text' };
 
 const fieldCls =
-  'w-full rounded-lg border border-line bg-surface-2 px-3.5 py-2.5 text-body-s font-semibold text-ink outline-none placeholder:text-ink-subtle focus:border-care disabled:opacity-50';
+  'w-full rounded-lg border border-line bg-surface-2 px-3.5 py-2.5 so-field text-body-s font-semibold text-ink outline-none placeholder:text-ink-subtle focus:border-care disabled:opacity-50';
 
 const STATUS_TONE: Record<string, PillTone> = {
   PENDING: 'warm',

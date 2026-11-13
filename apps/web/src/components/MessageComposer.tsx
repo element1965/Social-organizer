@@ -20,7 +20,7 @@ interface MessageComposerProps {
 }
 
 const fieldCls =
-  'w-full rounded-lg border border-line bg-surface-2 px-3.5 py-2.5 text-body-s font-semibold text-ink outline-none placeholder:text-ink-subtle focus:border-care disabled:opacity-50';
+  'w-full rounded-lg border border-line bg-surface-2 px-3.5 py-2.5 so-field text-body-s font-semibold text-ink outline-none placeholder:text-ink-subtle focus:border-care disabled:opacity-50';
 
 /** Detect media type from URL string */
 function detectMediaTypeFromUrl(url: string): 'photo' | 'video' | 'text' {
