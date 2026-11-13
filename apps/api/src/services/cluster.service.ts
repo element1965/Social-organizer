@@ -29,37 +29,46 @@ export interface Clusters {
 }
 
 export async function findClusters(db: PrismaClient): Promise<Clusters> {
-  const { adj, deleted } = await getGraph(db);
-  const seen = new Set<string>();
+  const graph = await getGraph(db);
+  const seen = new Uint8Array(graph.size);
   const list: ClusterInfo[] = [];
   const rootOf = new Map<string, string>();
   let totalDegree = 0;
+  const { member: founder, root: founderRoot } = CLUSTER_ROOT_OVERRIDE;
 
-  for (const start of adj.keys()) {
-    if (seen.has(start)) continue;
+  for (let start = 0; start < graph.size; start++) {
+    if (seen[start] === 1 || graph.degree(start) === 0) continue;
     // A deleted account that still has connections (muted by the bot) stays a way through, as before
-    const component: string[] = [start];
-    seen.add(start);
-    for (let i = 0; i < component.length; i++) {
-      for (const { neighbor } of adj.get(component[i]!) ?? []) {
-        if (seen.has(neighbor)) continue;
-        seen.add(neighbor);
-        component.push(neighbor);
-      }
+    const component: number[] = [start];
+    seen[start] = 1;
+    graph.walk(start, Infinity, (n) => {
+      seen[n] = 1;
+      component.push(n);
+    }, true);
+
+    const members: string[] = [];
+    let hasFounder = false;
+    for (const n of component) {
+      const id = graph.ids[n]!;
+      if (id === founder) hasFounder = true;
+      if (graph.isDeleted(n)) continue;
+      members.push(id);
+      totalDegree += graph.degree(n);
     }
-    const members = component.filter((id) => !deleted.has(id));
     if (members.length === 0) continue;
-    for (const id of members) totalDegree += adj.get(id)?.length ?? 0;
 
     let rootUserId = members[0]!;
     for (const id of members) if (id < rootUserId) rootUserId = id;
-    const { member, root } = CLUSTER_ROOT_OVERRIDE;
-    if (component.includes(member) && members.includes(root)) rootUserId = root;
+    if (hasFounder && members.includes(founderRoot)) rootUserId = founderRoot;
 
     list.push({ rootUserId, members });
     for (const id of members) rootOf.set(id, rootUserId);
   }
 
   list.sort((a, b) => b.members.length - a.members.length || (a.rootUserId < b.rootUserId ? -1 : 1));
-  return { list, rootOf, degree: (userId) => adj.get(userId)?.length ?? 0, totalDegree };
+  const degree = (userId: string) => {
+    const n = graph.find(userId);
+    return n === undefined ? 0 : graph.degree(n);
+  };
+  return { list, rootOf, degree, totalDegree };
 }

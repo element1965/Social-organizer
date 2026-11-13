@@ -85,10 +85,28 @@ try {
   line('Full reloads caused by these two changes', `${reloaded}${reloaded > 0 ? '  <-- expected 0' : ''}`);
 
   /* ---------- Walks ---------- */
+  // After a change every read re-checks the table for 3 s; the walks are measured outside that window,
+  // with the budgets already in memory, as a request in a running server finds them
+  await new Promise((r) => setTimeout(r, 3200));
   clearReachCache();
   const reachTimes: number[] = [];
   let reachSample = await networkReach(db, sample[0]!);
   clearReachCache();
+
+  // The walk alone, without the cache and the budgets around it
+  const walkTimes: number[] = [];
+  const g = await getGraph(db);
+  for (const id of sample) {
+    const root = g.find(id)!;
+    const startedAt = performance.now();
+    const reached = g.tally(root, 6, new Float32Array(0), 3).people;
+    walkTimes.push(Math.round((performance.now() - startedAt) * 10) / 10);
+    if (reached === 0) failed++;
+  }
+  line('Counting walk to the 6th handshake alone', `${walkTimes.join(', ')} ms`);
+  const loose = graphStats();
+  line('Graph: people, connections, outside the flat lists', `${loose.people}, ${loose.connections}, ${loose.overflow} added + ${loose.holes} removed`);
+  line('Memory: heap, typed arrays', `${mb()} MB, ${Math.round(process.memoryUsage().arrayBuffers / 1048576)} MB`);
   for (const id of sample) {
     const [value, ms] = await timed(() => networkReach(db, id));
     reachTimes.push(ms);
@@ -115,8 +133,8 @@ try {
 
   /* ---------- Hot queries: time and whole-table reads ---------- */
   console.log('\nQuery'.padEnd(71) + ' time      reads a whole table');
-  const neighbours = (graph.adj.get(sample[2]!) ?? []).map((e) => e.neighbor);
-  const ring = [...graph.adj.keys()].slice(0, 500);
+  const neighbours = graph.neighbours(graph.find(sample[2]!)!).map((n) => graph.ids[n]!);
+  const ring = graph.ids.slice(0, 500);
   const user = sample[2]!;
   const need = 'q' + '1'.padStart(24, '0');
   const since = new Date(Date.now() - 7 * 86_400_000);

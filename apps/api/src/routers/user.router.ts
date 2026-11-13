@@ -1,3 +1,4 @@
+import { noteBudgetChanged } from '../services/network.service.js';
 import { z } from 'zod';
 import { router, protectedProcedure } from '../trpc.js';
 import { isDataUrl, storeAvatar } from '../services/avatar.service.js';
@@ -194,7 +195,7 @@ export const userRouter = router({
         throw new TRPCError({ code: 'BAD_REQUEST', message: 'MIN_AMOUNT_USD' });
       }
 
-      return ctx.db.user.update({
+      const updated = await ctx.db.user.update({
         where: { id: ctx.userId },
         data: {
           monthlyBudget: amountUSD,
@@ -202,6 +203,9 @@ export const userRouter = router({
           budgetUpdatedAt: new Date(),
         },
       });
+      // The sums of other people's networks read this person's number again before the next walk
+      noteBudgetChanged(ctx.userId);
+      return updated;
     }),
 
   updateReferralSlug: protectedProcedure
