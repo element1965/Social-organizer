@@ -115,10 +115,8 @@ export function ReviewFeedRows() {
   const { t, i18n } = useTranslation();
   const [params, setParams] = useSearchParams();
   const utils = trpc.useUtils();
-  const reviews = trpc.moderation.myOpenReviews.useQuery(undefined, {
-    retry: false,
-    refetchInterval: 60_000,
-  });
+  // Kept fresh by the app-wide pulse (hooks/usePulse.ts)
+  const reviews = trpc.moderation.myOpenReviews.useQuery(undefined, { retry: false });
   const vote = trpc.moderation.vote.useMutation({
     onSuccess: async () => {
       await Promise.all([

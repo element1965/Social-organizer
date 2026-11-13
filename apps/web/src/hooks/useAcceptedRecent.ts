@@ -8,13 +8,14 @@ import { useAuth } from './useAuth';
  * in the Circle feed and counts it in the navigation badge until the Circle has been opened.
  * Seen and dismissed are kept on the server (pending.markAcceptedSeen / dismissAccepted), so a confirmation
  * is announced once, not again on every new device; the server stops returning it once it is seen.
+ * Kept fresh by the app-wide pulse (hooks/usePulse.ts), not by a timer of its own.
  */
 export type AcceptedItem = { id: string; at: number; person: { id: string; name: string; photoUrl: string | null }; unseen: boolean };
 
 export function useAcceptedRecent() {
   const userId = useAuth((s) => s.userId);
   const utils = trpc.useUtils();
-  const query = trpc.pending.acceptedRecent.useQuery(undefined, { refetchInterval: 30_000, enabled: !!userId });
+  const query = trpc.pending.acceptedRecent.useQuery(undefined, { enabled: !!userId });
   const markSeenMutation = trpc.pending.markAcceptedSeen.useMutation();
   const dismissMutation = trpc.pending.dismissAccepted.useMutation({
     onSettled: () => void utils.pending.acceptedRecent.invalidate(),
