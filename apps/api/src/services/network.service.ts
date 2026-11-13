@@ -180,9 +180,14 @@ export async function remainingBudgets(db: PrismaClient): Promise<Map<string, nu
   return budgetOf;
 }
 
-/** Budgets by person number of `graph`. People who joined the graph since the last call are filled in. */
-async function budgetsFor(db: PrismaClient, graph: HandshakeGraph): Promise<Float32Array> {
-  await freshBudgets(db);
+/**
+ * Budgets by person number of `graph`. People who joined the graph since the last call are filled in.
+ *
+ * Synchronous on purpose, and the caller must walk the graph before its next `await`: the array is one
+ * shared buffer, and a request holding another graph (around a full reload, which renumbers everyone)
+ * lays it out again for its own graph as soon as it runs.
+ */
+function budgetsFor(graph: HandshakeGraph): Float32Array {
   if (budgetGraph !== graph) {
     budgetGraph = graph;
     budgetFilled = 0;
@@ -243,9 +248,10 @@ const NOBODY: Measure = { byDepth: {}, people: 0, canHelp: 0 };
 /** The whole reach, to the 6th handshake: one walk, split into the visible rings and the far ones. */
 async function fullReach(db: PrismaClient, rootId: string): Promise<{ value: NetworkReach; far: FarPart }> {
   const graph = await getGraph(db);
-  const budgets = await budgetsFor(db, graph);
+  await freshBudgets(db);
+  // No await from here to the end of the walk (see budgetsFor)
   const root = graph.find(rootId);
-  const all = root === undefined ? NOBODY : measure(graph, root, budgets, NETWORK_MAX_DEPTH);
+  const all = root === undefined ? NOBODY : measure(graph, root, budgetsFor(graph), NETWORK_MAX_DEPTH);
   const near: Measure = { byDepth: {}, people: 0, canHelp: all.nearCanHelp ?? 0 };
   const far: FarPart = { byDepth: {}, people: 0, canHelp: all.canHelp - near.canHelp };
   for (const [key, n] of Object.entries(all.byDepth)) {
@@ -259,9 +265,10 @@ async function fullReach(db: PrismaClient, rootId: string): Promise<{ value: Net
 /** Only the visible rings are walked again; the far part is the one measured earlier. */
 async function nearReach(db: PrismaClient, rootId: string, far: FarPart): Promise<NetworkReach> {
   const graph = await getGraph(db);
-  const budgets = await budgetsFor(db, graph);
+  await freshBudgets(db);
+  // No await from here to the end of the walk (see budgetsFor)
   const root = graph.find(rootId);
-  return compose(root === undefined ? NOBODY : measure(graph, root, budgets, VISIBLE_RINGS), far);
+  return compose(root === undefined ? NOBODY : measure(graph, root, budgetsFor(graph), VISIBLE_RINGS), far);
 }
 
 /**
@@ -270,7 +277,7 @@ async function nearReach(db: PrismaClient, rootId: string, far: FarPart): Promis
  * - while nothing in the graph changed, for REACH_TTL_MS (only the budgets inside the sum can move);
  * - after the graph changed somewhere, for REACH_STALE_MS at most; then the visible rings 1–3 are walked
  *   again (a few hundred or thousand people) and the far rings, which are shown rounded anyway, are
- *   reused for up to REACH_FAR_TTL_MS;
+ *   reused for up to REACH_FAR_TTL_MS, in networks whose far part is at least REACH_FAR_REUSE_MIN people;
  * - a person whose own connections changed is dropped at once (invalidateGraph passes the ids),
  *   so their own new acquaintance is in the numbers on the next request, far rings included.
  * Server-side thresholds (the path to a request) use the same value: exact for the person's own
@@ -279,6 +286,13 @@ async function nearReach(db: PrismaClient, rootId: string, far: FarPart): Promis
 const REACH_TTL_MS = 5 * 60_000;
 const REACH_STALE_MS = Number(process.env.REACH_STALE_MS) || 60_000;
 const REACH_FAR_TTL_MS = 60 * 60_000;
+/**
+ * The far part is reused only when it is this large. A person who moved between the visible and the far
+ * rings since it was measured is counted twice or not at all until the next full walk; in a far part of
+ * hundreds that is inside the rounding, in a small network it could tip the threshold of a request, and
+ * a small network costs nothing to walk in full.
+ */
+const REACH_FAR_REUSE_MIN = process.env.REACH_FAR_REUSE_MIN !== undefined ? Number(process.env.REACH_FAR_REUSE_MIN) : 500;
 const REACH_CACHE_MAX = 20_000;
 
 interface ReachEntry {
@@ -347,7 +361,7 @@ export async function networkReach(db: PrismaClient, rootId: string): Promise<Ne
   if (pending) return pending;
 
   const epoch = reachEpoch;
-  const reuseFar = hit && now - hit.farAt < REACH_FAR_TTL_MS ? hit : null;
+  const reuseFar = hit && now - hit.farAt < REACH_FAR_TTL_MS && hit.far.people >= REACH_FAR_REUSE_MIN ? hit : null;
   const promise = timedWalk('reach', async () => {
     const result = reuseFar
       ? { value: await nearReach(db, rootId, reuseFar.far), far: reuseFar.far, farAt: reuseFar.farAt }

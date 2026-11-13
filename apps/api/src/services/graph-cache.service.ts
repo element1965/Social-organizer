@@ -253,8 +253,11 @@ export async function getGraph(db: PrismaClient): Promise<Graph> {
     try {
       const prev = cached;
       if (prev) {
-        // Nothing was changed here and the exact count is recent: the light parts are enough to say "no change"
-        if (!dirty && pendingPeople(Date.now()).length === 0 && Date.now() - prev.exactAt < EXACT_MS) {
+        // Outside the window that follows a change here, and with a recent exact count, the light parts are
+        // enough to say "no change". Names still waiting for a slow transaction do not force the count:
+        // an addition moves the light signature, and a removal that commits later than DIRTY_MS is found
+        // by the next exact check.
+        if (!dirty && Date.now() - prev.exactAt < EXACT_MS) {
           const light = await readLightSignature(db);
           if (light.maxAt === prev.signature.maxAt && light.deleted === prev.signature.deleted) {
             stats.lightChecks++;
