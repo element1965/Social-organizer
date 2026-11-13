@@ -1,5 +1,6 @@
 import type { PrismaClient } from '@so/db';
 import { getGraph, graphVersion, onGraphInvalidated } from './graph-cache.service.js';
+import { timedWalk } from './runtime-metrics.service.js';
 
 export interface NetworkMember {
   user_id: string;
@@ -179,7 +180,7 @@ export function clearReachCache(userIds?: string[]): void {
 }
 
 export async function networkReach(db: PrismaClient, rootId: string): Promise<NetworkReach> {
-  if (isReachDirty(rootId, Date.now())) return computeNetworkReach(db, rootId);
+  if (isReachDirty(rootId, Date.now())) return timedWalk('reach', () => computeNetworkReach(db, rootId));
   const hit = reachCache.get(rootId);
   if (hit) {
     const age = Date.now() - hit.at;
@@ -189,7 +190,7 @@ export async function networkReach(db: PrismaClient, rootId: string): Promise<Ne
   if (pending) return pending;
 
   const epoch = reachEpoch;
-  const promise = computeNetworkReach(db, rootId)
+  const promise = timedWalk('reach', () => computeNetworkReach(db, rootId))
     .then((value) => {
       if (epoch === reachEpoch) {
         if (reachCache.size >= REACH_CACHE_MAX) {
@@ -219,7 +220,7 @@ const BUDGET_SQL_MAX_IDS = 5_000;
 let budgetSnapshot: { at: number; byUser: Map<string, number> } | null = null;
 let budgetLoading: Promise<Map<string, number>> | null = null;
 
-async function remainingBudgets(db: PrismaClient): Promise<Map<string, number>> {
+export async function remainingBudgets(db: PrismaClient): Promise<Map<string, number>> {
   if (budgetSnapshot && Date.now() - budgetSnapshot.at < BUDGET_SNAPSHOT_MS) return budgetSnapshot.byUser;
   if (!budgetLoading) {
     budgetLoading = db.user
