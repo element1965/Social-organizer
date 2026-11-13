@@ -674,7 +674,26 @@
     "loadFailedTitle": "Could not open the invite",
     "loadFailedText": "It looks like there is no connection. The link is saved; please try again.",
     "waiting": "Waiting for confirmation.",
-    "howItWorks": "How Social Organizer works"
+    "howItWorks": "How Social Organizer works",
+    "dead": {
+      "deletedTitle": "This person has left Social Organizer",
+      "deletedText": "They deleted their account, so this invite no longer works. Ask someone else you know for their link.",
+      "usedTitle": "This invite has already been used",
+      "usedText": "A one-time invite works for one person. Ask for a new link or show your QR when you meet.",
+      "notFoundTitle": "Link not found",
+      "notFoundText": "Check that the whole link was copied, or ask for a new one."
+    },
+    "install": {
+      "title": "Request sent",
+      "text": "Install the app: it will tell you when {{name}} confirms that you know each other.",
+      "stepSignedIn": "Signed in with {{method}}",
+      "stepSaved": "Invite saved, the request is waiting",
+      "stepSame": "In the app, sign in with {{method}} again",
+      "stepSameAny": "In the app, sign in the same way as here",
+      "later": "Later, continue in the browser",
+      "continueWeb": "Continue in the browser",
+      "qrText": "Point your phone camera at the code: it opens the app store."
+    }
   },
   "landing": {
     "site": {

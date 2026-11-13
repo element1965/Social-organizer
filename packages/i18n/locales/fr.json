@@ -664,7 +664,26 @@
     "waiting": "En attente de confirmation.",
     "network_many": "{{n}} de personnes dans le réseau",
     "network_one": "{{n}} personne dans le réseau",
-    "network_other": "{{n}} personnes dans le réseau"
+    "network_other": "{{n}} personnes dans le réseau",
+    "dead": {
+      "deletedTitle": "Cette personne a supprimé son compte",
+      "deletedText": "L’invitation ne fonctionne plus. Demandez un lien à quelqu’un d’autre que vous connaissez.",
+      "usedTitle": "Cette invitation a déjà été utilisée",
+      "usedText": "Une invitation à usage unique vaut pour une seule personne. Demandez un nouveau lien ou montrez votre QR lors d’une rencontre.",
+      "notFoundTitle": "Lien introuvable",
+      "notFoundText": "Vérifiez que le lien a été copié en entier, ou demandez-en un nouveau."
+    },
+    "install": {
+      "title": "Demande envoyée",
+      "text": "Installez l’application : elle vous préviendra quand {{name}} confirmera que vous vous connaissez.",
+      "stepSignedIn": "Connexion avec {{method}}",
+      "stepSaved": "Invitation enregistrée, la demande est en attente",
+      "stepSame": "Dans l’application, reconnectez-vous avec {{method}}",
+      "stepSameAny": "Dans l’application, connectez-vous de la même façon qu’ici",
+      "later": "Plus tard, continuer dans le navigateur",
+      "continueWeb": "Continuer dans le navigateur",
+      "qrText": "Pointez l’appareil photo du téléphone vers le code : la boutique d’applications s’ouvre."
+    }
   },
   "landing": {
     "site": {

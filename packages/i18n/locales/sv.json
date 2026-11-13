@@ -660,7 +660,26 @@
     "loadFailedText": "Det verkar saknas anslutning. Länken är sparad, försök igen.",
     "waiting": "Väntar på bekräftelse.",
     "network_one": "{{n}} person i nätverket",
-    "network_other": "{{n}} personer i nätverket"
+    "network_other": "{{n}} personer i nätverket",
+    "dead": {
+      "deletedTitle": "Den här personen har tagit bort sitt konto",
+      "deletedText": "Inbjudan fungerar inte längre. Be någon annan du känner om en länk.",
+      "usedTitle": "Den här inbjudan har redan använts",
+      "usedText": "En engångsinbjudan gäller en person. Be om en ny länk eller visa din QR-kod när ni ses.",
+      "notFoundTitle": "Länken hittades inte",
+      "notFoundText": "Kontrollera att hela länken kopierades, eller be om en ny."
+    },
+    "install": {
+      "title": "Förfrågan skickad",
+      "text": "Installera appen: den meddelar dig när {{name}} bekräftar att ni känner varandra.",
+      "stepSignedIn": "Inloggad med {{method}}",
+      "stepSaved": "Inbjudan sparad, förfrågan väntar",
+      "stepSame": "Logga in i appen med {{method}} igen",
+      "stepSameAny": "Logga in i appen på samma sätt som här",
+      "later": "Senare, fortsätt i webbläsaren",
+      "continueWeb": "Fortsätt i webbläsaren",
+      "qrText": "Rikta telefonens kamera mot koden – appbutiken öppnas."
+    }
   },
   "landing": {
     "site": {

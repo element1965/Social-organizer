@@ -668,7 +668,26 @@
     "network_few": "{{n}} osoby w sieci",
     "network_many": "{{n}} osób w sieci",
     "network_one": "{{n}} osoba w sieci",
-    "network_other": "{{n}} osoby w sieci"
+    "network_other": "{{n}} osoby w sieci",
+    "dead": {
+      "deletedTitle": "Ta osoba usunęła konto",
+      "deletedText": "Zaproszenie już nie działa. Poproś o link kogoś innego ze znajomych.",
+      "usedTitle": "To zaproszenie zostało już użyte",
+      "usedText": "Jednorazowe zaproszenie działa dla jednej osoby. Poproś o nowy link lub pokaż swój kod QR przy spotkaniu.",
+      "notFoundTitle": "Nie znaleziono linku",
+      "notFoundText": "Sprawdź, czy link został skopiowany w całości, albo poproś o nowy."
+    },
+    "install": {
+      "title": "Prośba wysłana",
+      "text": "Zainstaluj aplikację: powiadomi cię, gdy {{name}} potwierdzi znajomość.",
+      "stepSignedIn": "Zalogowano przez {{method}}",
+      "stepSaved": "Zaproszenie zapisane, prośba czeka na odpowiedź",
+      "stepSame": "W aplikacji zaloguj się ponownie przez {{method}}",
+      "stepSameAny": "W aplikacji zaloguj się tak samo jak tutaj",
+      "later": "Później, kontynuuj w przeglądarce",
+      "continueWeb": "Kontynuuj w przeglądarce",
+      "qrText": "Skieruj aparat telefonu na kod — otworzy się sklep z aplikacjami."
+    }
   },
   "landing": {
     "site": {

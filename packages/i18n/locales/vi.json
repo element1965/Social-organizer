@@ -656,7 +656,26 @@
     "loadFailedTitle": "Không mở được lời mời",
     "loadFailedText": "Có vẻ mất kết nối. Liên kết đã được lưu; vui lòng thử lại.",
     "waiting": "Đang chờ xác nhận.",
-    "network_other": "{{n}} người trong mạng lưới"
+    "network_other": "{{n}} người trong mạng lưới",
+    "dead": {
+      "deletedTitle": "Người này đã xóa tài khoản",
+      "deletedText": "Lời mời không còn hiệu lực. Hãy xin liên kết từ một người quen khác.",
+      "usedTitle": "Lời mời này đã được sử dụng",
+      "usedText": "Lời mời dùng một lần chỉ dành cho một người. Hãy xin liên kết mới hoặc đưa mã QR của bạn khi gặp nhau.",
+      "notFoundTitle": "Không tìm thấy liên kết",
+      "notFoundText": "Kiểm tra xem liên kết đã được sao chép đầy đủ chưa, hoặc xin liên kết mới."
+    },
+    "install": {
+      "title": "Đã gửi yêu cầu",
+      "text": "Cài ứng dụng: ứng dụng sẽ báo khi {{name}} xác nhận hai bạn quen nhau.",
+      "stepSignedIn": "Đã đăng nhập bằng {{method}}",
+      "stepSaved": "Đã lưu lời mời, yêu cầu đang chờ",
+      "stepSame": "Trong ứng dụng, hãy đăng nhập lại bằng {{method}}",
+      "stepSameAny": "Trong ứng dụng, hãy đăng nhập giống như ở đây",
+      "later": "Để sau, tiếp tục trên trình duyệt",
+      "continueWeb": "Tiếp tục trên trình duyệt",
+      "qrText": "Hướng camera điện thoại vào mã — cửa hàng ứng dụng sẽ mở."
+    }
   },
   "landing": {
     "site": {

@@ -664,7 +664,26 @@
     "waiting": "Aguardando confirmação.",
     "network_many": "{{n}} de pessoas na rede",
     "network_one": "{{n}} pessoa na rede",
-    "network_other": "{{n}} pessoas na rede"
+    "network_other": "{{n}} pessoas na rede",
+    "dead": {
+      "deletedTitle": "Esta pessoa excluiu a conta",
+      "deletedText": "O convite não funciona mais. Peça um link a outra pessoa que você conhece.",
+      "usedTitle": "Este convite já foi usado",
+      "usedText": "Um convite de uso único vale para uma pessoa. Peça um novo link ou mostre seu QR quando se encontrarem.",
+      "notFoundTitle": "Link não encontrado",
+      "notFoundText": "Verifique se o link foi copiado por inteiro ou peça um novo."
+    },
+    "install": {
+      "title": "Pedido enviado",
+      "text": "Instale o app: ele avisará quando {{name}} confirmar que vocês se conhecem.",
+      "stepSignedIn": "Entrou com {{method}}",
+      "stepSaved": "Convite salvo, o pedido está aguardando",
+      "stepSame": "No app, entre novamente com {{method}}",
+      "stepSameAny": "No app, entre da mesma forma que aqui",
+      "later": "Mais tarde, continuar no navegador",
+      "continueWeb": "Continuar no navegador",
+      "qrText": "Aponte a câmera do celular para o código: a loja de apps vai abrir."
+    }
   },
   "landing": {
     "site": {

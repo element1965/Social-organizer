@@ -656,7 +656,26 @@
     "loadFailedTitle": "Tidak dapat membuka undangan",
     "loadFailedText": "Sepertinya tidak ada koneksi. Tautan tersimpan; silakan coba lagi.",
     "waiting": "Menunggu konfirmasi.",
-    "network_other": "{{n}} orang di jaringan"
+    "network_other": "{{n}} orang di jaringan",
+    "dead": {
+      "deletedTitle": "Orang ini telah menghapus akunnya",
+      "deletedText": "Undangan tidak berlaku lagi. Minta tautan dari kenalan lain.",
+      "usedTitle": "Undangan ini sudah dipakai",
+      "usedText": "Undangan sekali pakai hanya untuk satu orang. Minta tautan baru atau tunjukkan QR Anda saat bertemu.",
+      "notFoundTitle": "Tautan tidak ditemukan",
+      "notFoundText": "Pastikan tautan disalin lengkap, atau minta tautan baru."
+    },
+    "install": {
+      "title": "Permintaan terkirim",
+      "text": "Pasang aplikasinya: aplikasi akan memberi tahu saat {{name}} mengonfirmasi bahwa kalian saling kenal.",
+      "stepSignedIn": "Masuk dengan {{method}}",
+      "stepSaved": "Undangan disimpan, permintaan menunggu",
+      "stepSame": "Di aplikasi, masuk lagi dengan {{method}}",
+      "stepSameAny": "Di aplikasi, masuk dengan cara yang sama seperti di sini",
+      "later": "Nanti, lanjutkan di browser",
+      "continueWeb": "Lanjutkan di browser",
+      "qrText": "Arahkan kamera ponsel ke kode — toko aplikasi akan terbuka."
+    }
   },
   "landing": {
     "site": {

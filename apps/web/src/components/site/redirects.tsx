@@ -9,8 +9,10 @@ import { safeInviteToken } from '../onboarding/flow';
  */
 export function SlugRedirect() {
   const { slug } = useParams();
+  const { search } = useLocation();
   const token = safeInviteToken(slug);
-  return <Navigate to={token ? `/invite/${token}` : '/'} replace />;
+  // The query rides along: `?to=` (the invited person's name, SO-24) and `?lang=` must reach the invite page
+  return <Navigate to={token ? { pathname: `/invite/${token}`, search } : '/'} replace />;
 }
 
 /** Old landing URLs (`/welcome`, `/arvut`) open the home page; the query (`?invite=`, `?redirect=`) is kept. */
