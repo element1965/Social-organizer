@@ -480,6 +480,7 @@
     "statistics": "סטטיסטיקה",
     "peopleTab": "אנשים",
     "clustersTab": "אשכולות",
+    "funnelTab": "Funnel",
     "aboutVersion": "גרסה {{version}}",
     "openSource": "קוד פתוח",
     "terms": "תנאים",
@@ -1137,7 +1138,23 @@
     "totalInvites": "סה״כ הוזמנו",
     "invitedCount": "קשרים",
     "search": "חיפוש לפי שם...",
-    "noResults": "אין תוצאות"
+    "noResults": "אין תוצאות",
+    "funnel": {
+      "note": "People by the week they signed up, last 8 weeks. \"Opened an invite\" counts guests of invite pages in the same week.",
+      "week": "Week of",
+      "opened": "Opened an invite",
+      "signedUp": "Signed up",
+      "requested": "Sent a request",
+      "connected": "First connection",
+      "five": "5 connections",
+      "unlocked": "Need open",
+      "sources": "By source, last 8 weeks",
+      "source": "Source",
+      "requests": "Requests",
+      "connections": "Connections",
+      "perActive": "Newcomers with a connection per active person",
+      "days": "{{count}} days"
+    }
   },
   "support": {
     "title": "צ'אט תמיכה",
@@ -1322,7 +1339,12 @@
     "sortLabel": "מיון",
     "sortNew": "החדשים קודם",
     "sortName": "א–ת",
-    "showMore": "להציג עוד · נשארו {{total}}"
+    "showMore": "להציג עוד · נשארו {{total}}",
+    "suggest": {
+      "title": "אולי אתם מכירים",
+      "hint": "אנשים שהמכרים שלכם מכירים. אשרו רק את מי שאתם מכירים אישית.",
+      "mutual": "מכרים משותפים: {{count}}"
+    }
   },
   "account": {
     "firstName": "שם פרטי",

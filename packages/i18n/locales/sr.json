@@ -480,6 +480,7 @@
     "statistics": "Статистика",
     "peopleTab": "Људи",
     "clustersTab": "Кластери",
+    "funnelTab": "Funnel",
     "aboutVersion": "Верзија {{version}}",
     "openSource": "Отворени код",
     "terms": "Услови",
@@ -1137,7 +1138,23 @@
     "totalInvites": "Укупно позваних",
     "invitedCount": "везе",
     "search": "Претрага по имену...",
-    "noResults": "Нема резултата"
+    "noResults": "Нема резултата",
+    "funnel": {
+      "note": "People by the week they signed up, last 8 weeks. \"Opened an invite\" counts guests of invite pages in the same week.",
+      "week": "Week of",
+      "opened": "Opened an invite",
+      "signedUp": "Signed up",
+      "requested": "Sent a request",
+      "connected": "First connection",
+      "five": "5 connections",
+      "unlocked": "Need open",
+      "sources": "By source, last 8 weeks",
+      "source": "Source",
+      "requests": "Requests",
+      "connections": "Connections",
+      "perActive": "Newcomers with a connection per active person",
+      "days": "{{count}} days"
+    }
   },
   "support": {
     "title": "Ћет подршке",
@@ -1322,7 +1339,12 @@
     "sortLabel": "Сортирање",
     "sortNew": "Најновији прво",
     "sortName": "А–Ш",
-    "showMore": "Прикажи још · преостало {{total}}"
+    "showMore": "Прикажи још · преостало {{total}}",
+    "suggest": {
+      "title": "Можда се познајете",
+      "hint": "Људи које познају ваши познаници. Потврдите само оне које лично познајете.",
+      "mutual": "Заједнички познаници: {{count}}"
+    }
   },
   "account": {
     "firstName": "Име",

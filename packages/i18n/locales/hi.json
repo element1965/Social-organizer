@@ -477,6 +477,7 @@
     "statistics": "आँकड़े",
     "peopleTab": "लोग",
     "clustersTab": "क्लस्टर",
+    "funnelTab": "Funnel",
     "aboutVersion": "संस्करण {{version}}",
     "openSource": "ओपन सोर्स",
     "terms": "शर्तें",
@@ -1132,7 +1133,23 @@
     "totalInvites": "कुल आमंत्रित",
     "invitedCount": "संबंध",
     "search": "नाम से खोजें...",
-    "noResults": "कोई परिणाम नहीं"
+    "noResults": "कोई परिणाम नहीं",
+    "funnel": {
+      "note": "People by the week they signed up, last 8 weeks. \"Opened an invite\" counts guests of invite pages in the same week.",
+      "week": "Week of",
+      "opened": "Opened an invite",
+      "signedUp": "Signed up",
+      "requested": "Sent a request",
+      "connected": "First connection",
+      "five": "5 connections",
+      "unlocked": "Need open",
+      "sources": "By source, last 8 weeks",
+      "source": "Source",
+      "requests": "Requests",
+      "connections": "Connections",
+      "perActive": "Newcomers with a connection per active person",
+      "days": "{{count}} days"
+    }
   },
   "support": {
     "title": "सहायता चैट",
@@ -1315,7 +1332,12 @@
     "sortLabel": "क्रम",
     "sortNew": "नए पहले",
     "sortName": "A–Z",
-    "showMore": "और दिखाएँ · {{total}} बाकी"
+    "showMore": "और दिखाएँ · {{total}} बाकी",
+    "suggest": {
+      "title": "शायद आप एक-दूसरे को जानते हैं",
+      "hint": "वे लोग जिन्हें आपके परिचित जानते हैं। केवल उन्हीं की पुष्टि करें जिन्हें आप व्यक्तिगत रूप से जानते हैं।",
+      "mutual": "साझा परिचित: {{count}}"
+    }
   },
   "account": {
     "firstName": "नाम",

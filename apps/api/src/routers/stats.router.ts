@@ -3,6 +3,7 @@ import { TRPCError } from '@trpc/server';
 import { router, protectedProcedure, publicProcedure } from '../trpc.js';
 import { ADMIN_IDS, CLUSTER_ROOT_OVERRIDE } from '../admin.js';
 import { networkReach } from '../services/network.service.js';
+import { funnelReport } from '../services/funnel.service.js';
 
 class UnionFindStats {
   parent = new Map<string, string>();
@@ -431,6 +432,12 @@ export const statsRouter = router({
 
     result.sort((a, b) => b.inviteCount - a.inviteCount || b.connectionCount - a.connectionCount);
     return result;
+  }),
+
+  // Admin-only: weekly cohorts from an opened invite to an open Need, and connections by source. Counts only.
+  adminFunnel: protectedProcedure.query(async ({ ctx }) => {
+    if (!ADMIN_IDS.includes(ctx.userId!)) throw new TRPCError({ code: 'FORBIDDEN' });
+    return funnelReport(ctx.db);
   }),
 
   // Current network capabilities: what the people a request reaches can still give this period

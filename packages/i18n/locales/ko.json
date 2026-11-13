@@ -474,6 +474,7 @@
     "statistics": "통계",
     "peopleTab": "사람들",
     "clustersTab": "클러스터",
+    "funnelTab": "Funnel",
     "aboutVersion": "버전 {{version}}",
     "openSource": "오픈 소스",
     "terms": "이용약관",
@@ -1127,7 +1128,23 @@
     "totalInvites": "초대한 사람 수",
     "invitedCount": "연결",
     "search": "이름으로 검색...",
-    "noResults": "결과가 없어요"
+    "noResults": "결과가 없어요",
+    "funnel": {
+      "note": "People by the week they signed up, last 8 weeks. \"Opened an invite\" counts guests of invite pages in the same week.",
+      "week": "Week of",
+      "opened": "Opened an invite",
+      "signedUp": "Signed up",
+      "requested": "Sent a request",
+      "connected": "First connection",
+      "five": "5 connections",
+      "unlocked": "Need open",
+      "sources": "By source, last 8 weeks",
+      "source": "Source",
+      "requests": "Requests",
+      "connections": "Connections",
+      "perActive": "Newcomers with a connection per active person",
+      "days": "{{count}} days"
+    }
   },
   "support": {
     "title": "지원 채팅",
@@ -1308,7 +1325,12 @@
     "sortLabel": "정렬",
     "sortNew": "최신순",
     "sortName": "이름순",
-    "showMore": "더 보기 · {{total}}명 남음"
+    "showMore": "더 보기 · {{total}}명 남음",
+    "suggest": {
+      "title": "아는 사이일 수 있어요",
+      "hint": "지인이 아는 사람들입니다. 직접 아는 사람만 확인하세요.",
+      "mutual": "함께 아는 사람: {{count}}"
+    }
   },
   "account": {
     "firstName": "이름",

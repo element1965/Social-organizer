@@ -477,6 +477,7 @@
     "statistics": "Statistieken",
     "peopleTab": "Mensen",
     "clustersTab": "Clusters",
+    "funnelTab": "Funnel",
     "aboutVersion": "Versie {{version}}",
     "openSource": "Open source",
     "terms": "Voorwaarden",
@@ -1132,7 +1133,23 @@
     "totalInvites": "Totaal uitgenodigd",
     "invitedCount": "verbindingen",
     "search": "Zoeken op naam...",
-    "noResults": "Geen resultaten"
+    "noResults": "Geen resultaten",
+    "funnel": {
+      "note": "People by the week they signed up, last 8 weeks. \"Opened an invite\" counts guests of invite pages in the same week.",
+      "week": "Week of",
+      "opened": "Opened an invite",
+      "signedUp": "Signed up",
+      "requested": "Sent a request",
+      "connected": "First connection",
+      "five": "5 connections",
+      "unlocked": "Need open",
+      "sources": "By source, last 8 weeks",
+      "source": "Source",
+      "requests": "Requests",
+      "connections": "Connections",
+      "perActive": "Newcomers with a connection per active person",
+      "days": "{{count}} days"
+    }
   },
   "support": {
     "title": "Ondersteuningschat",
@@ -1315,7 +1332,12 @@
     "sortLabel": "Sorteren",
     "sortNew": "Nieuwste eerst",
     "sortName": "A–Z",
-    "showMore": "Meer tonen · nog {{total}}"
+    "showMore": "Meer tonen · nog {{total}}",
+    "suggest": {
+      "title": "Misschien kennen jullie elkaar",
+      "hint": "Mensen die je kennissen kennen. Bevestig alleen wie je persoonlijk kent.",
+      "mutual": "Gemeenschappelijke kennissen: {{count}}"
+    }
   },
   "account": {
     "firstName": "Voornaam",
