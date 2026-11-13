@@ -71,14 +71,14 @@ export async function processAutoChain(_job: Job): Promise<void> {
   // Load connected user IDs for variant filtering
   // "invited" = users with at least one confirmed connection OR pending connection
   // "organic" = solo users with no connections at all
-  // Everyone with a confirmed connection is a key of the graph in memory: the table is not read again
-  const { adj } = await getGraph(db);
+  // Who has a confirmed connection is known to the graph in memory: the table is not read again
+  const graph = await getGraph(db);
   const pendingConns = await db.pendingConnection.findMany({
     where: { status: 'PENDING' },
     select: { fromUserId: true, toUserId: true },
   });
   const invitedUserIds = new Set<string>();
-  for (const userId of adj.keys()) invitedUserIds.add(userId);
+  for (let n = 0; n < graph.size; n++) if (graph.degree(n) > 0) invitedUserIds.add(graph.ids[n]!);
   for (const p of pendingConns) {
     invitedUserIds.add(p.fromUserId);
     invitedUserIds.add(p.toUserId);

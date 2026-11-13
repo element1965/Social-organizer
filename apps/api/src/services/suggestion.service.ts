@@ -24,25 +24,30 @@ const CANDIDATE_POOL = 50;
  * withdrawn), an ignore entry on either side, a deleted account, anyone at the 150 limit.
  */
 export async function suggestAcquaintances(db: PrismaClient, userId: string): Promise<Suggestion[]> {
-  const { adj, deleted } = await getGraph(db);
-  const mine = adj.get(userId) ?? [];
+  const graph = await getGraph(db);
+  const me = graph.find(userId);
+  if (me === undefined) return [];
+  const mine = graph.neighbours(me);
   if (mine.length === 0 || mine.length >= MAX_CONNECTIONS) return [];
 
-  const direct = new Set(mine.map((e) => e.neighbor));
-  const shared = new Map<string, { via: string[]; newest: number }>();
-  for (const { neighbor } of mine) {
-    if (deleted.has(neighbor)) continue;
-    for (const { neighbor: other, createdAt } of adj.get(neighbor) ?? []) {
-      if (other === userId || direct.has(other) || deleted.has(other)) continue;
-      let entry = shared.get(other);
-      if (!entry) shared.set(other, (entry = { via: [], newest: 0 }));
-      entry.via.push(neighbor);
-      if (createdAt.getTime() > entry.newest) entry.newest = createdAt.getTime();
-    }
+  // Person numbers inside the walk; ids only for the few people that come out of it
+  const direct = new Set(mine);
+  const sharedByNumber = new Map<number, { via: string[]; newest: number }>();
+  for (const acquaintance of mine) {
+    if (graph.isDeleted(acquaintance)) continue;
+    const viaId = graph.ids[acquaintance]!;
+    graph.eachNeighbour(acquaintance, (other, madeAt) => {
+      if (other === me || direct.has(other) || graph.isDeleted(other)) return;
+      let entry = sharedByNumber.get(other);
+      if (!entry) sharedByNumber.set(other, (entry = { via: [], newest: 0 }));
+      entry.via.push(viaId);
+      if (madeAt > entry.newest) entry.newest = madeAt;
+    });
   }
 
-  const pool = [...shared.entries()]
-    .filter(([id, s]) => s.via.length >= SUGGEST_MIN_MUTUAL && (adj.get(id)?.length ?? 0) < MAX_CONNECTIONS)
+  const pool = [...sharedByNumber.entries()]
+    .filter(([n, s]) => s.via.length >= SUGGEST_MIN_MUTUAL && graph.degree(n) < MAX_CONNECTIONS)
+    .map(([n, s]): [string, { via: string[]; newest: number }] => [graph.ids[n]!, s])
     .sort((a, b) => b[1].via.length - a[1].via.length || b[1].newest - a[1].newest || (a[0] < b[0] ? -1 : 1))
     .slice(0, CANDIDATE_POOL);
   if (pool.length === 0) return [];
