@@ -225,7 +225,7 @@ The network must survive losing the database or the hosting provider. Three inde
 - **Compression.** JSON and text answers over 1 KB are sent with brotli or gzip (`@fastify/compress`).
 - **No credentials in the repo.** Ops scripts read the database from `DATABASE_URL` (or `RAILWAY_DATABASE_URL` for scripts that write to both local and Railway); passwords and tokens live in Railway variables and the portal. `CLAUDE.md` (local agent notes with service ids) is git-ignored and not tracked.
 - **No public source maps.** The production web build has `sourcemap: false` (`apps/web/vite.config.ts`); build with `--sourcemap` locally to debug.
-- **Page zoom is allowed** (no `user-scalable=no` / `maximum-scale` in `index.html`). On touch screens form fields keep at least 16 px (`index.css`), so iOS does not zoom in on focus; the 3D scene keeps pinch for its own camera (OrbitControls sets `touch-action: none` on the canvas).
+- **Page zoom is allowed** (no `user-scalable=no` / `maximum-scale` in `index.html`). Fields drawn at 15 px (`text-body-s`) carry `so-field`, which lifts them to 16 px on touch screens (`index.css`), so iOS does not zoom in on focus; large fields such as the Need amount keep their own size; the 3D scene keeps pinch for its own camera (OrbitControls sets `touch-action: none` on the canvas).
 
 ### Restore the database on a new host
 ```
