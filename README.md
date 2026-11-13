@@ -248,6 +248,15 @@ The hourly `cleanup-blocked-pending` worker treated any failed `getChat` as "use
 - **Services:** PostgreSQL 17, Redis 7, Fastify API
 - **GitHub:** https://github.com/element1965/Social-organizer
 
+### Railway service config (Infrastructure as Code)
+
+The API service settings live in `.railway/railway.ts` (Railway IaC): Nixpacks build `pnpm install && pnpm db:generate && pnpm build && cp -r apps/web/dist apps/api/dist/public`, start `node apps/api/dist/index.js`, healthcheck `/health`, restart on failure (10 retries), domain `www.orginizer.com:3001` and the `/app/gun-data` volume. It replaces `railway.json` (Config as Code), which Railway stops reading on 2026-12-01.
+
+- **Railway does not read `.railway/` on deploy.** Settings reach the service only through the CLI: `railway config plan` (read-only diff against the linked environment), then `railway config apply`. Editing the file and pushing changes nothing on Railway.
+- **Partial:** the file exports `partial = "Social-organizer"` and declares only the API service and its volume, so PostgreSQL, Redis and db-backup are never touched by an apply. Variables are unmanaged (`variables: { managed: false }`): secrets stay in Railway.
+- **SDK:** the root dev dependency `railway` (pinned) is needed to evaluate the file. On Windows the SDK cannot find `railway.cmd`; point it at the binary: `_="$APPDATA/npm/node_modules/@railway/cli/bin/railway.exe" "$APPDATA/npm/node_modules/@railway/cli/bin/railway.exe" config plan` (Git Bash).
+- **Switch-over order:** `railway config apply` first (it writes the same settings `railway.json` carries into the service), then delete `railway.json`. Deleting it before the apply would make deploys fall back to the dashboard defaults (Railpack, `pnpm install && pnpm build`), which skip Prisma generate and the web copy into `apps/api/dist/public`.
+
 ### Staging (redesign test server)
 
 A separate Railway environment `staging` in the same project runs the `redesign` branch with its own Postgres and Redis.
