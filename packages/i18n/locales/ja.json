@@ -211,6 +211,7 @@
     "toSelf": "自分に戻る",
     "backToFeed": "フィード",
     "openGraph": "グラフを広げる",
+    "graphFailed": "この端末ではグラフを開けませんでした。つながりのある人はリストで確認できます。",
     "eventsPill": "出来事",
     "startPill": "開始",
     "gestureHint": "指1本で回転、指2本で拡大",
@@ -1406,7 +1407,9 @@
     "factsReported": "知らせた参加の数",
     "factsMarked": "作成者が受け取り済みと記録",
     "factsNote": "終了したニーズが対象です。記録はニーズの作成者が付けるもので、Social Organizer は確認しません。",
-    "requestDeclined": "知り合いであることは確認されませんでした。知り合いなら、会ったときにお互いの QR コードを見せ合ってください。"
+    "requestDeclined": "知り合いであることは確認されませんでした。知り合いなら、会ったときにお互いの QR コードを見せ合ってください。",
+    "prevPerson": "前の人",
+    "nextPerson": "次の人"
   },
   "help": {
     "faq": "よくある質問",

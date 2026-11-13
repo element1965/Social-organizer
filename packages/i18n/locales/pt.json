@@ -211,6 +211,7 @@
     "toSelf": "Voltar para mim",
     "backToFeed": "Feed",
     "openGraph": "Expandir o grafo",
+    "graphFailed": "O grafo não abriu neste dispositivo. As suas pessoas continuam nas listas.",
     "eventsPill": "Eventos",
     "startPill": "Início",
     "gestureHint": "Um dedo gira, dois aproximam",
@@ -1428,7 +1429,9 @@
     "factsReported": "Participação informada",
     "factsMarked": "Marcado pelos autores como recebido",
     "factsNote": "Para Necessidades encerradas. A marca é definida pelo autor da Necessidade; o Social Organizer não a verifica.",
-    "requestDeclined": "O conhecimento não foi confirmado. Se vocês se conhecem, mostrem o código QR um ao outro quando se encontrarem."
+    "requestDeclined": "O conhecimento não foi confirmado. Se vocês se conhecem, mostrem o código QR um ao outro quando se encontrarem.",
+    "prevPerson": "Pessoa anterior",
+    "nextPerson": "Próxima pessoa"
   },
   "help": {
     "faq": "Perguntas frequentes",

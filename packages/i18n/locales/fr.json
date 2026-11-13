@@ -211,6 +211,7 @@
     "toSelf": "Retour vers moi",
     "backToFeed": "Fil",
     "openGraph": "Déplier le graphe",
+    "graphFailed": "Le graphe ne s'est pas ouvert sur cet appareil. Vos personnes restent dans les listes.",
     "eventsPill": "Événements",
     "startPill": "Début",
     "gestureHint": "Un doigt pour tourner, deux pour zoomer",
@@ -1428,7 +1429,9 @@
     "factsReported": "Participations déclarées",
     "factsMarked": "Marqué reçu par les auteurs",
     "factsNote": "Pour les Besoins fermés. La marque est posée par l’auteur du Besoin ; Social Organizer ne la vérifie pas.",
-    "requestDeclined": "La connaissance n'a pas été confirmée. Si vous vous connaissez, montrez-vous votre QR code quand vous vous voyez."
+    "requestDeclined": "La connaissance n'a pas été confirmée. Si vous vous connaissez, montrez-vous votre QR code quand vous vous voyez.",
+    "prevPerson": "Personne précédente",
+    "nextPerson": "Personne suivante"
   },
   "help": {
     "faq": "Questions et réponses",

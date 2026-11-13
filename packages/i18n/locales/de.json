@@ -211,6 +211,7 @@
     "toSelf": "Zurück zu mir",
     "backToFeed": "Feed",
     "openGraph": "Graph ausklappen",
+    "graphFailed": "Der Graph ließ sich auf diesem Gerät nicht öffnen. Ihre Personen stehen weiter in den Listen.",
     "eventsPill": "Ereignisse",
     "startPill": "Start",
     "gestureHint": "Ein Finger dreht, zwei zoomen",
@@ -1417,7 +1418,9 @@
     "factsReported": "Beteiligungsmeldungen",
     "factsMarked": "Von Autoren als erhalten markiert",
     "factsNote": "Bei geschlossenen Bedarfen. Die Markierung setzt der Autor eines Bedarfs; Social Organizer prüft sie nicht.",
-    "requestDeclined": "Die Bekanntschaft wurde nicht bestätigt. Wenn ihr euch kennt, zeigt euch beim Treffen gegenseitig den QR-Code."
+    "requestDeclined": "Die Bekanntschaft wurde nicht bestätigt. Wenn ihr euch kennt, zeigt euch beim Treffen gegenseitig den QR-Code.",
+    "prevPerson": "Vorherige Person",
+    "nextPerson": "Nächste Person"
   },
   "help": {
     "faq": "Fragen und Antworten",

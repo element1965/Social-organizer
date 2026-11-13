@@ -63,7 +63,7 @@ function useBoxHeight<T extends HTMLElement>() {
 
 /** Circle: the network scene, numbers, ring chips and the event feed (screens.md §1, §16). */
 export function CirclePage() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const location = useLocation();
   const mode = useShellMode();
@@ -234,6 +234,19 @@ export function CirclePage() {
       collection: request?.collectionId ? { id: request.collectionId, amount: request.amountValue ?? null } : null,
     };
   }, [selectedId, net, events]);
+
+  // The card steps through the people of the same handshake, ordered by name (the same order as the lists)
+  const step = useMemo(() => {
+    if (!cardPerson) return undefined;
+    const collator = new Intl.Collator(i18n.language, { sensitivity: 'base' });
+    const same = [...net.people.values()]
+      .filter((p) => p.depth === cardPerson.depth && p.id !== net.myId)
+      .sort((a, b) => collator.compare(a.name, b.name));
+    const index = same.findIndex((p) => p.id === cardPerson.id);
+    if (index < 0 || same.length < 2) return undefined;
+    const go = (delta: number) => openLayer('person', same[(index + delta + same.length) % same.length]!.id);
+    return { index, total: same.length, onPrev: () => go(-1), onNext: () => go(1) };
+  }, [cardPerson, net.people, net.myId, i18n.language, openLayer]);
 
   const onNodeTap = useCallback(
     (id: string) => {
@@ -422,7 +435,7 @@ export function CirclePage() {
         stats={<NetStats variant="card" people={peopleCount} canHelp={canHelp} />}
         newCount={events.filter((e) => e.hot).length}
         feed={feedBody}
-        person={cardPerson ? <PersonCard person={cardPerson} variant="column" onClose={closeCard} /> : null}
+        person={cardPerson ? <PersonCard person={cardPerson} variant="column" onClose={closeCard} step={step} /> : null}
         sheets={sheets}
       />
     );
@@ -440,7 +453,7 @@ export function CirclePage() {
       feed={feedBody}
       eventsCount={events.length}
       hint={hint}
-      person={cardPerson ? <PersonCard person={cardPerson} variant="floating" onClose={closeCard} /> : null}
+      person={cardPerson ? <PersonCard person={cardPerson} variant="floating" onClose={closeCard} step={step} /> : null}
       onOpenGraph={() => openLayer('graph')}
       onBackToFeed={() => openLayer('feed')}
       onSceneTap={() => {
