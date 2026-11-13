@@ -656,7 +656,26 @@
     "loadFailedTitle": "无法打开邀请",
     "loadFailedText": "好像没有网络。链接已保存，请重试。",
     "waiting": "等待确认。",
-    "network_other": "网络中 {{n}} 人"
+    "network_other": "网络中 {{n}} 人",
+    "dead": {
+      "deletedTitle": "此人已删除账户",
+      "deletedText": "邀请已失效。请向其他认识的人索取链接。",
+      "usedTitle": "此邀请已被使用",
+      "usedText": "一次性邀请只适用于一个人。请索取新链接，或见面时出示你的二维码。",
+      "notFoundTitle": "未找到链接",
+      "notFoundText": "请检查链接是否完整复制，或索取新链接。"
+    },
+    "install": {
+      "title": "请求已发送",
+      "text": "安装应用：{{name}} 确认你们相识时，应用会通知你。",
+      "stepSignedIn": "已通过 {{method}} 登录",
+      "stepSaved": "邀请已保存，请求等待回复",
+      "stepSame": "在应用中再次通过 {{method}} 登录",
+      "stepSameAny": "在应用中用与这里相同的方式登录",
+      "later": "稍后，在浏览器中继续",
+      "continueWeb": "在浏览器中继续",
+      "qrText": "用手机摄像头对准二维码，即可打开应用商店。"
+    }
   },
   "landing": {
     "site": {

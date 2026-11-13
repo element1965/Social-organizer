@@ -660,7 +660,26 @@
     "loadFailedText": "Det ser ut som det ikke er noen forbindelse. Lenken er lagret. Prøv igjen.",
     "waiting": "Venter på bekreftelse.",
     "network_one": "{{n}} person i nettverket",
-    "network_other": "{{n}} personer i nettverket"
+    "network_other": "{{n}} personer i nettverket",
+    "dead": {
+      "deletedTitle": "Denne personen har slettet kontoen sin",
+      "deletedText": "Invitasjonen virker ikke lenger. Be noen andre du kjenner om en lenke.",
+      "usedTitle": "Denne invitasjonen er allerede brukt",
+      "usedText": "En engangsinvitasjon gjelder for én person. Be om en ny lenke eller vis QR-koden din når dere møtes.",
+      "notFoundTitle": "Fant ikke lenken",
+      "notFoundText": "Sjekk at hele lenken ble kopiert, eller be om en ny."
+    },
+    "install": {
+      "title": "Forespørsel sendt",
+      "text": "Installer appen: den sier fra når {{name}} bekrefter at dere kjenner hverandre.",
+      "stepSignedIn": "Logget inn med {{method}}",
+      "stepSaved": "Invitasjonen er lagret, forespørselen venter",
+      "stepSame": "Logg inn i appen med {{method}} igjen",
+      "stepSameAny": "Logg inn i appen på samme måte som her",
+      "later": "Senere, fortsett i nettleseren",
+      "continueWeb": "Fortsett i nettleseren",
+      "qrText": "Rett telefonkameraet mot koden – appbutikken åpnes."
+    }
   },
   "landing": {
     "site": {

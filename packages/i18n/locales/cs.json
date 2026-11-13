@@ -668,7 +668,26 @@
     "network_few": "{{n}} lidé v síti",
     "network_many": "{{n}} člověka v síti",
     "network_one": "{{n}} člověk v síti",
-    "network_other": "{{n}} lidí v síti"
+    "network_other": "{{n}} lidí v síti",
+    "dead": {
+      "deletedTitle": "Tento člověk smazal účet",
+      "deletedText": "Pozvánka už nefunguje. Požádejte o odkaz někoho jiného ze známých.",
+      "usedTitle": "Tato pozvánka už byla použita",
+      "usedText": "Jednorázová pozvánka funguje pro jednoho člověka. Požádejte o nový odkaz nebo ukažte svůj QR při setkání.",
+      "notFoundTitle": "Odkaz nenalezen",
+      "notFoundText": "Zkontrolujte, že je odkaz zkopírovaný celý, nebo požádejte o nový."
+    },
+    "install": {
+      "title": "Žádost odeslána",
+      "text": "Nainstalujte si aplikaci: dá vám vědět, až {{name}} potvrdí, že se znáte.",
+      "stepSignedIn": "Přihlášení přes {{method}}",
+      "stepSaved": "Pozvánka uložena, žádost čeká na odpověď",
+      "stepSame": "V aplikaci se znovu přihlaste přes {{method}}",
+      "stepSameAny": "V aplikaci se přihlaste stejně jako tady",
+      "later": "Později, pokračovat v prohlížeči",
+      "continueWeb": "Pokračovat v prohlížeči",
+      "qrText": "Namiřte fotoaparát telefonu na kód — otevře se obchod s aplikacemi."
+    }
   },
   "landing": {
     "site": {

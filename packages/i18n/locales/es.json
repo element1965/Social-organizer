@@ -664,7 +664,26 @@
     "waiting": "Esperando la confirmación.",
     "network_many": "{{n}} de personas en la red",
     "network_one": "{{n}} persona en la red",
-    "network_other": "{{n}} personas en la red"
+    "network_other": "{{n}} personas en la red",
+    "dead": {
+      "deletedTitle": "Esta persona eliminó su cuenta",
+      "deletedText": "La invitación ya no funciona. Pide un enlace a otra persona que conozcas.",
+      "usedTitle": "Esta invitación ya se usó",
+      "usedText": "Una invitación de un solo uso sirve para una persona. Pide un enlace nuevo o muestra tu QR cuando os veáis.",
+      "notFoundTitle": "Enlace no encontrado",
+      "notFoundText": "Comprueba que el enlace se copió completo o pide uno nuevo."
+    },
+    "install": {
+      "title": "Solicitud enviada",
+      "text": "Instala la app: te avisará cuando {{name}} confirme que os conocéis.",
+      "stepSignedIn": "Sesión iniciada con {{method}}",
+      "stepSaved": "Invitación guardada, la solicitud está pendiente",
+      "stepSame": "En la app, vuelve a entrar con {{method}}",
+      "stepSameAny": "En la app, entra de la misma forma que aquí",
+      "later": "Más tarde, seguir en el navegador",
+      "continueWeb": "Seguir en el navegador",
+      "qrText": "Apunta la cámara del teléfono al código: se abrirá la tienda de apps."
+    }
   },
   "landing": {
     "site": {

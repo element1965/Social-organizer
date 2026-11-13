@@ -660,7 +660,26 @@
     "loadFailedText": "Bağlantı yok gibi görünüyor. Bağlantı kaydedildi; lütfen yeniden deneyin.",
     "waiting": "Onay bekleniyor.",
     "network_one": "Ağda {{n}} kişi",
-    "network_other": "Ağda {{n}} kişi"
+    "network_other": "Ağda {{n}} kişi",
+    "dead": {
+      "deletedTitle": "Bu kişi hesabını sildi",
+      "deletedText": "Davet artık çalışmıyor. Tanıdığın başka birinden bağlantı iste.",
+      "usedTitle": "Bu davet zaten kullanıldı",
+      "usedText": "Tek kullanımlık davet bir kişi içindir. Yeni bir bağlantı iste ya da buluştuğunuzda QR kodunu göster.",
+      "notFoundTitle": "Bağlantı bulunamadı",
+      "notFoundText": "Bağlantının tamamının kopyalandığını kontrol et ya da yenisini iste."
+    },
+    "install": {
+      "title": "İstek gönderildi",
+      "text": "Uygulamayı yükle: {{name}} tanıştığınızı onayladığında haber verir.",
+      "stepSignedIn": "{{method}} ile giriş yapıldı",
+      "stepSaved": "Davet kaydedildi, istek bekliyor",
+      "stepSame": "Uygulamada yeniden {{method}} ile giriş yap",
+      "stepSameAny": "Uygulamada burada olduğu gibi giriş yap",
+      "later": "Daha sonra, tarayıcıda devam et",
+      "continueWeb": "Tarayıcıda devam et",
+      "qrText": "Telefon kamerasını koda tut: uygulama mağazası açılır."
+    }
   },
   "landing": {
     "site": {

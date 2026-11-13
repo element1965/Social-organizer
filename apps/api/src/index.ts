@@ -4,7 +4,8 @@ import { startGunRelay } from './gun-relay.js';
 import { fileURLToPath } from 'node:url';
 import { dirname, resolve } from 'node:path';
 import { existsSync } from 'node:fs';
-import Fastify, { type FastifyReply } from 'fastify';
+import { readFile } from 'node:fs/promises';
+import Fastify, { type FastifyReply, type FastifyRequest } from 'fastify';
 import cors from '@fastify/cors';
 import compress from '@fastify/compress';
 import multipart from '@fastify/multipart';
@@ -24,6 +25,7 @@ import { getDb } from '@so/db';
 import { isAdmin } from './admin.js';
 import { startInactiveCleanupTimer, logInactiveCleanupConfig } from './services/inactive-cleanup.service.js';
 import { readAvatar, backfillAvatars } from './services/avatar.service.js';
+import { findInvitePreview, pickLanguage, renderInvitePreview } from './services/invite-preview.service.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -443,6 +445,29 @@ async function start() {
           }
         },
       });
+
+      // Personal invite pages carry the inviter's name and photo in the HTML itself (SO-24):
+      // messengers build the link card without running JavaScript. Reading a preview creates nothing.
+      const indexHtmlPath = resolve(WEB_DIST, 'index.html');
+      let indexHtml: string | null = null;
+      const serveInvite = async (req: FastifyRequest, reply: FastifyReply, token: string) => {
+        reply.header('Cache-Control', 'no-cache, no-store, must-revalidate');
+        try {
+          indexHtml ??= await readFile(indexHtmlPath, 'utf8');
+          const preview = await findInvitePreview(getDb(), token);
+          if (!preview) return reply.type('text/html; charset=utf-8').send(indexHtml);
+          const q = req.query as { lang?: string; to?: string };
+          const lang = pickLanguage(q.lang, req.headers['accept-language'], preview.language);
+          const url = `${APP_BASE_URL}${req.url.split('?')[0]}`;
+          const html = renderInvitePreview(indexHtml, preview, { lang, url, origin: APP_BASE_URL, to: q.to });
+          return reply.type('text/html; charset=utf-8').send(html);
+        } catch (err) {
+          req.log.warn({ err }, '[invite-preview] failed, serving the plain page');
+          return reply.sendFile('index.html', WEB_DIST);
+        }
+      };
+      app.get('/invite/:token', (req, reply) => serveInvite(req, reply, (req.params as { token: string }).token));
+      app.get('/i/:slug', (req, reply) => serveInvite(req, reply, (req.params as { slug: string }).slug));
 
       // SPA fallback: all non-API routes → index.html
       app.setNotFoundHandler((_req, reply) => {
