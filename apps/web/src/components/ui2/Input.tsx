@@ -82,7 +82,7 @@ function TextField({ label, hint, error, variant, className, id, ...rest }: Text
             'w-full border bg-surface-2 text-ink outline-none placeholder:text-ink-subtle',
             'focus:border-care',
             search
-              ? 'h-secondary rounded-lg pl-10 pr-3 text-body-s font-semibold'
+              ? 'h-secondary rounded-lg pl-10 pr-3 so-field text-body-s font-semibold'
               : 'h-primary rounded-lg px-3.5 text-body-l font-semibold',
             error ? 'border-sos' : 'border-line',
             className,

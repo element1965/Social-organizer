@@ -304,7 +304,7 @@ export function ChatAssistant() {
           }}
           placeholder={t('chat.placeholder')}
           aria-label={t('chat.inputLabel')}
-          className="max-h-32 min-h-11 w-full min-w-0 flex-1 resize-none overflow-y-auto break-words rounded-lg border border-line bg-surface-2 px-3.5 py-2.5 text-body-s font-semibold leading-5 text-ink outline-none placeholder:text-ink-subtle focus:border-care disabled:opacity-50"
+          className="max-h-32 min-h-11 w-full min-w-0 flex-1 resize-none overflow-y-auto break-words rounded-lg border border-line bg-surface-2 px-3.5 py-2.5 so-field text-body-s font-semibold leading-5 text-ink outline-none placeholder:text-ink-subtle focus:border-care disabled:opacity-50"
           disabled={isListening || isLoading}
         />
         <Button
