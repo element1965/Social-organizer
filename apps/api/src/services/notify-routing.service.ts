@@ -169,18 +169,20 @@ async function holdReasons(db: PrismaClient, ids: string[]): Promise<Map<string,
 }
 
 /**
- * Splits the people a wave can reach (BFS order, nearest first, whole reach) into external and in-app.
+ * Splits the people a wave can reach into external and in-app. `rings` hands out one handshake ring
+ * at a time, nearest first (walkRings); the next ring is asked for only while the budget is not spent,
+ * so the cost of a wave follows its amount, not the size of the network.
  * Ring by ring: the ones who may get the message go first, in BFS order, until the budget is spent.
  * The others in a ring the wave fully covered get the in-app entry; the wave stops inside the ring
  * where the budget ends, and the rest of that ring waits for the next wave.
  */
-export async function planWave(db: PrismaClient, candidates: BfsRecipient[], budget: number): Promise<WavePlan> {
+export async function planWave(db: PrismaClient, rings: Iterable<BfsRecipient[]>, budget: number): Promise<WavePlan> {
   const plan: WavePlan = { external: [], inApp: [] };
-  let i = 0;
-  while (i < candidates.length && plan.external.length < budget) {
-    const depth = candidates[i]!.depth;
-    const ring: BfsRecipient[] = [];
-    while (i < candidates.length && candidates[i]!.depth === depth) ring.push(candidates[i++]!);
+  const iterator = rings[Symbol.iterator]();
+  while (plan.external.length < budget) {
+    const step = iterator.next();
+    if (step.done) break;
+    const ring = step.value;
 
     const reasons = await holdReasons(db, ring.map((r) => r.userId));
     const free = ring.filter((r) => reasons.get(r.userId) == null);
