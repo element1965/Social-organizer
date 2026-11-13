@@ -1,5 +1,6 @@
 import type { PrismaClient } from '@so/db';
 import { getGraph } from './graph-cache.service.js';
+import type { HandshakeGraph } from './graph-store.js';
 import { NETWORK_MAX_DEPTH } from './network.service.js';
 
 export interface BfsRecipient {
@@ -11,27 +12,34 @@ export interface BfsRecipient {
 }
 
 /**
- * One person reached by the walk. The path is rebuilt from the parents only when somebody reads it:
- * a wave over a large network reaches far more people than it finally notifies, and a ready-made
- * array per person was most of the memory of a request.
+ * One person reached by a ring-by-ring walk. The path is rebuilt from the walk's parent links only when
+ * somebody reads it: a wave over a large network reaches far more people than it finally notifies.
  */
-class BfsNode implements BfsRecipient {
+class RingEntry implements BfsRecipient {
+  readonly userId: string;
   private built: string[] | null = null;
 
   constructor(
-    readonly userId: string,
+    private readonly graph: HandshakeGraph,
+    private readonly person: number,
     readonly depth: number,
-    readonly maxConnAt: Date | null,
-    private readonly parent: BfsNode | null,
-  ) {}
+    private readonly parent: Int32Array,
+    private readonly newestAt: number,
+  ) {
+    this.userId = graph.ids[person]!;
+  }
+
+  get maxConnAt(): Date | null {
+    return this.newestAt > 0 ? new Date(this.newestAt) : null;
+  }
 
   get path(): string[] {
     if (!this.built) {
       const out: string[] = new Array(this.depth + 1);
-      let node: BfsNode | null = this;
-      for (let i = this.depth; node && i >= 0; i--) {
-        out[i] = node.userId;
-        node = node.parent;
+      let n = this.person;
+      for (let i = this.depth; i >= 0 && n >= 0; i--) {
+        out[i] = this.graph.ids[n]!;
+        n = this.parent[n]!;
       }
       this.built = out;
     }
@@ -40,23 +48,18 @@ class BfsNode implements BfsRecipient {
 }
 
 /**
- * Get all user IDs reachable from startUserId (the connected component).
- * Lightweight BFS over the cached graph (graph-cache.service).
+ * Get all user IDs reachable from startUserId (the connected component), the start included.
+ * Deleted accounts are a way through here, as before.
  */
 export async function getNetworkUserIds(db: PrismaClient, startUserId: string): Promise<string[]> {
-  const { adj } = await getGraph(db);
-  const visited = new Set<string>([startUserId]);
-  const queue = [startUserId];
-  let qi = 0;
-  while (qi < queue.length) {
-    for (const { neighbor } of adj.get(queue[qi++]!) || []) {
-      if (!visited.has(neighbor)) {
-        visited.add(neighbor);
-        queue.push(neighbor);
-      }
-    }
-  }
-  return [...visited];
+  const graph = await getGraph(db);
+  const out = [startUserId];
+  const root = graph.find(startUserId);
+  if (root === undefined) return out;
+  graph.walk(root, Infinity, (n) => {
+    out.push(graph.ids[n]!);
+  }, true);
+  return out;
 }
 
 /**
@@ -74,30 +77,23 @@ export async function findRecipientsViaBfs(
   maxRecipients: number = 10000,
   excludeUserIds: string[] = [],
 ): Promise<BfsRecipient[]> {
-  const { adj, deleted } = await getGraph(db);
-  const excludeSet = new Set(excludeUserIds);
-
-  const seen = new Set<string>([startUserId]);
+  const graph = await getGraph(db);
+  const root = graph.find(startUserId);
   const recipients: BfsRecipient[] = [];
-  const queue: BfsNode[] = [new BfsNode(startUserId, 0, null, null)];
+  if (root === undefined || maxRecipients <= 0) return recipients;
+  const exclude = new Set(excludeUserIds);
 
-  for (let qi = 0; qi < queue.length && recipients.length < maxRecipients; qi++) {
-    const current = queue[qi]!;
-    const { depth, maxConnAt } = current;
-    if (depth >= maxDepth) continue;
-    for (const { neighbor, createdAt } of adj.get(current.userId) || []) {
-      if (seen.has(neighbor) || deleted.has(neighbor)) continue;
-      seen.add(neighbor);
-      const newMaxConnAt = maxConnAt && maxConnAt > createdAt ? maxConnAt : createdAt;
-      const node = new BfsNode(neighbor, depth + 1, newMaxConnAt, current);
-      queue.push(node);
-      if (excludeSet.has(neighbor)) continue;
-      recipients.push(node);
+  // The walk's arrays go back to a pool when the loop ends, so every path is built before that
+  for (const ring of graph.rings(root, maxDepth, true)) {
+    for (const person of ring.people) {
+      if (exclude.has(graph.ids[person]!)) continue;
+      const entry = new RingEntry(graph, person, ring.depth, ring.parent, ring.newestAt[person]!);
+      void entry.path;
+      recipients.push(entry);
       // The cap is exact: one notification per unit of the amount, never more
-      if (recipients.length >= maxRecipients) break;
+      if (recipients.length >= maxRecipients) return recipients;
     }
   }
-
   return recipients;
 }
 
@@ -113,30 +109,24 @@ export async function walkRings(
   maxDepth: number = NETWORK_MAX_DEPTH,
   excludeUserIds: Iterable<string> = [],
 ): Promise<Generator<BfsRecipient[], void, void>> {
-  const { adj, deleted } = await getGraph(db);
-  const excludeSet = excludeUserIds instanceof Set ? (excludeUserIds as Set<string>) : new Set(excludeUserIds);
+  const graph = await getGraph(db);
+  const root = graph.find(startUserId);
+  const exclude = excludeUserIds instanceof Set ? (excludeUserIds as Set<string>) : new Set(excludeUserIds);
 
   return (function* () {
-    const seen = new Set<string>([startUserId]);
-    let frontier: BfsNode[] = [new BfsNode(startUserId, 0, null, null)];
-    for (let depth = 1; depth <= maxDepth && frontier.length > 0; depth++) {
-      const next: BfsNode[] = [];
-      const ring: BfsNode[] = [];
-      for (const current of frontier) {
-        const { maxConnAt } = current;
-        for (const { neighbor, createdAt } of adj.get(current.userId) || []) {
-          if (seen.has(neighbor) || deleted.has(neighbor)) continue;
-          seen.add(neighbor);
-          const node = new BfsNode(neighbor, depth, maxConnAt && maxConnAt > createdAt ? maxConnAt : createdAt, current);
-          next.push(node);
-          if (!excludeSet.has(neighbor)) ring.push(node);
-        }
+    if (root === undefined) return;
+    for (const ring of graph.rings(root, maxDepth)) {
+      const out: BfsRecipient[] = [];
+      for (const person of ring.people) {
+        if (exclude.has(graph.ids[person]!)) continue;
+        out.push(new RingEntry(graph, person, ring.depth, ring.parent, ring.newestAt[person]!));
       }
-      frontier = next;
-      if (ring.length > 0) yield ring;
+      if (out.length > 0) yield out;
     }
   })();
 }
+
+type PathPerson = { id: string; name: string; photoUrl: string | null; connectionCount: number; remainingBudget: number | null };
 
 /**
  * BFS for finding shortest path between two users.
@@ -146,87 +136,40 @@ export async function findPathBetweenUsers(
   fromUserId: string,
   toUserId: string,
   maxDepth: number = 20,
-): Promise<Array<{ id: string; name: string; photoUrl: string | null; connectionCount: number; remainingBudget: number | null }>> {
+): Promise<PathPerson[]> {
+  const graph = await getGraph(db);
+  const from = graph.find(fromUserId);
+  const to = graph.find(toUserId);
+
+  let fullPath: string[];
   if (fromUserId === toUserId) {
-    const user = await db.user.findUnique({
-      where: { id: fromUserId },
-      select: { id: true, name: true, photoUrl: true, remainingBudget: true },
-    });
-    if (!user) return [];
-    const countResult = await db.$queryRaw<Array<{ count: bigint }>>`
-      SELECT COUNT(c.id)::bigint as count
-      FROM connections c
-      WHERE c."userAId" = ${fromUserId} OR c."userBId" = ${fromUserId}
-    `;
-    return [{ ...user, connectionCount: Number(countResult[0]?.count || 0) }];
+    fullPath = [fromUserId];
+  } else {
+    if (from === undefined || to === undefined) return [];
+    let found = false;
+    graph.walk(from, maxDepth, (n) => {
+      if (n !== to) return;
+      found = true;
+      return false;
+    }, true);
+    if (!found) return [];
+    // Read right away: the next walk on the graph reuses the same scratch
+    fullPath = graph.pathOfLastWalk(to).map((n) => graph.ids[n]!);
   }
 
-  const { adj } = await getGraph(db);
-
-  // BFS from fromUserId to toUserId
-  const visited = new Map<string, string | null>(); // userId -> parent
-  visited.set(fromUserId, null);
-  const queue: string[] = [fromUserId];
-  let qi = 0;
-  let found = false;
-
-  while (qi < queue.length) {
-    const current = queue[qi++]!;
-    const depth = getPathLength(visited, current, fromUserId);
-    if (depth >= maxDepth) continue;
-
-    for (const { neighbor } of adj.get(current) || []) {
-      if (visited.has(neighbor)) continue;
-      visited.set(neighbor, current);
-      if (neighbor === toUserId) { found = true; break; }
-      queue.push(neighbor);
-    }
-    if (found) break;
-  }
-
-  if (!found) return [];
-
-  // Reconstruct path
-  const fullPath: string[] = [];
-  let cur: string | null = toUserId;
-  while (cur !== null) {
-    fullPath.unshift(cur);
-    cur = visited.get(cur) ?? null;
-  }
-
-  // Get users and their connection counts
-  const [users, connectionCounts] = await Promise.all([
-    db.user.findMany({
-      where: { id: { in: fullPath } },
-      select: { id: true, name: true, photoUrl: true, remainingBudget: true },
-    }),
-    db.$queryRaw<Array<{ user_id: string; count: bigint }>>`
-      SELECT u.id as user_id, COUNT(c.id)::bigint as count
-      FROM users u
-      LEFT JOIN connections c ON (c."userAId" = u.id OR c."userBId" = u.id)
-      WHERE u.id = ANY(${fullPath})
-      GROUP BY u.id
-    `,
-  ]);
-
-  const userMap = new Map(users.map(u => [u.id, u]));
-  const countMap = new Map(connectionCounts.map((c) => [c.user_id, Number(c.count)]));
-
-  return fullPath.map(id => {
+  const users = await db.user.findMany({
+    where: { id: { in: fullPath } },
+    select: { id: true, name: true, photoUrl: true, remainingBudget: true },
+  });
+  const userMap = new Map(users.map((u) => [u.id, u]));
+  const out: PathPerson[] = [];
+  for (const id of fullPath) {
     const user = userMap.get(id);
-    if (!user) return null;
-    return { ...user, connectionCount: countMap.get(id) || 0 };
-  }).filter(Boolean) as Array<{ id: string; name: string; photoUrl: string | null; connectionCount: number; remainingBudget: number | null }>;
-}
-
-function getPathLength(visited: Map<string, string | null>, node: string, root: string): number {
-  let len = 0;
-  let cur: string | null = node;
-  while (cur !== null && cur !== root) {
-    len++;
-    cur = visited.get(cur) ?? null;
+    if (!user) continue;
+    const n = graph.find(id);
+    out.push({ ...user, connectionCount: n === undefined ? 0 : graph.degree(n) });
   }
-  return len;
+  return out;
 }
 
 /**
@@ -240,6 +183,7 @@ export async function getGraphSlice(
   nodes: Array<{ id: string; name: string; photoUrl: string | null; depth: number; connectionCount: number; lastSeen: Date | null }>;
   edges: Array<{ from: string; to: string }>;
 }> {
+  const graph = await getGraph(db);
   const recipients = await findRecipientsViaBfs(db, userId, depth, 500, []);
 
   const userIds = new Set<string>([userId]);
@@ -255,32 +199,23 @@ export async function getGraphSlice(
     }
   }
 
-  const userIdArr = [...userIds];
+  const users = await db.user.findMany({
+    where: { id: { in: [...userIds] } },
+    select: { id: true, name: true, photoUrl: true, lastSeen: true },
+  });
 
-  const [users, connectionCounts] = await Promise.all([
-    db.user.findMany({
-      where: { id: { in: userIdArr } },
-      select: { id: true, name: true, photoUrl: true, lastSeen: true },
-    }),
-    db.$queryRaw<Array<{ user_id: string; count: bigint }>>`
-      SELECT u.id as user_id, COUNT(c.id)::bigint as count
-      FROM users u
-      LEFT JOIN connections c ON (c."userAId" = u.id OR c."userBId" = u.id)
-      WHERE u.id = ANY(${userIdArr})
-      GROUP BY u.id
-    `,
-  ]);
-
-  const countMap = new Map(connectionCounts.map((c) => [c.user_id, Number(c.count)]));
-
-  const nodes = users.map((u) => ({
-    id: u.id,
-    name: u.name,
-    photoUrl: u.photoUrl,
-    depth: depthMap.get(u.id) ?? 0,
-    connectionCount: countMap.get(u.id) ?? 0,
-    lastSeen: u.lastSeen,
-  }));
+  const nodes = users.map((u) => {
+    const n = graph.find(u.id);
+    return {
+      id: u.id,
+      name: u.name,
+      photoUrl: u.photoUrl,
+      depth: depthMap.get(u.id) ?? 0,
+      // Direct connections, from the graph in memory
+      connectionCount: n === undefined ? 0 : graph.degree(n),
+      lastSeen: u.lastSeen,
+    };
+  });
 
   // Deduplicate edges
   const edgeSet = new Set<string>();

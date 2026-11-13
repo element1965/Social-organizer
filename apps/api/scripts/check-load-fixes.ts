@@ -19,6 +19,8 @@ delete process.env.REDIS_URL;
 // Names given to invalidateGraph are kept for 30 s in production; here 2 s, so the check can also
 // reach the quiet state in which only the light signature runs
 process.env.GRAPH_PENDING_TTL_MS = '2000';
+// A kept reach is served as it is for a minute in production; here for 1.5 s
+process.env.REACH_STALE_MS = '1500';
 
 const { appRouter } = await import('../src/routers/index.js');
 const { getGraph, graphStats, graphVersion, invalidateGraph } = await import('../src/services/graph-cache.service.js');
@@ -47,14 +49,17 @@ async function cleanup() {
   invalidateGraph();
 }
 
-/** Counts full reads of the connections table (a reload) against appends (a ranged read). */
-let fullReads = 0;
-let rangedReads = 0;
-const realFindMany = db.connection.findMany.bind(db.connection);
-(db.connection as any).findMany = (args: any) => {
-  if (args?.where?.createdAt) rangedReads++;
-  else if (!args?.where) fullReads++;
-  return realFindMany(args);
+/** How the graph was brought up to date so far: full loads of the table against the cheaper updates. */
+const fullLoads = () => graphStats().fullLoads;
+const updates = () => graphStats().appends + graphStats().refreshes;
+type G = Awaited<ReturnType<typeof getGraph>>;
+const linked = (g: G, a: string, b: string) => {
+  const [x, y] = [g.find(id(a)), g.find(id(b))];
+  return x !== undefined && y !== undefined && g.hasEdge(x, y) && g.hasEdge(y, x);
+};
+const degreeOf = (g: G, a: string) => {
+  const n = g.find(id(a));
+  return n === undefined ? 0 : g.degree(n);
 };
 
 try {
@@ -80,19 +85,19 @@ try {
   check('visible rings 1–3 are counted exactly', r1.visible === 33, `visible=${r1.visible}`);
   check('sum of remaining budgets over the reach', r1.canHelp === 36 * 5, `canHelp=${r1.canHelp}`);
 
-  const reads = { full: fullReads, ranged: rangedReads };
+  const reads = { full: fullLoads(), updates: updates() };
   const r2 = await networkReach(db, id('root'));
   check('a second request is answered from the kept value (same object)', r2 === r1);
-  check('…without reading connections again', fullReads === reads.full && rangedReads === reads.ranged);
+  check('…without reading connections again', fullLoads() === reads.full && updates() === reads.updates);
 
   /* ---------- A new connection: appended, visible at once for the two people ---------- */
   await db.user.create({ data: { id: id('new'), name: 'LF new', monthlyBudget: 7, remainingBudget: 7 } });
   const versionBefore = graphVersion();
-  const fullBefore = fullReads;
+  const fullBefore = fullLoads();
   await db.$transaction((tx) => createConnectionWithinLimit(tx, id('root'), id('new')));
   const r3 = await networkReach(db, id('root'));
   check('own new connection is in the numbers on the next request', r3.exact === 37 && r3.canHelp === 36 * 5 + 7, `exact=${r3.exact} canHelp=${r3.canHelp}`);
-  check('the graph was appended, not reloaded', fullReads === fullBefore && graphVersion() > versionBefore, `full reads +${fullReads - fullBefore}`);
+  check('the graph was appended, not reloaded', fullLoads() === fullBefore && graphVersion() > versionBefore, `full reads +${fullLoads() - fullBefore}`);
   const rNew = await networkReach(db, id('new'));
   check('the newcomer sees the network through the new connection', rNew.exact === 1 + 1 + 31 + 1 + 1 + 1, `exact=${rNew.exact}`);
 
@@ -106,17 +111,44 @@ try {
   const far3 = await networkReach(db, id('3'));
   check('…and the fresh walk sees the new people', far3.exact === far1.exact + 1, `${far1.exact} → ${far3.exact}`);
 
+  /* ---------- After the kept value goes stale: visible rings again, far rings as measured before ---------- */
+  // Seen from 6: 5, 4 and 3 are visible (with 7 and 8 on the other side); 2, 1 and then root with the fan are far.
+  // A newcomer next to 5 is at the 2nd handshake; a newcomer next to 1 is at the 6th.
+  clearReachCache();
+  const before6 = await networkReach(db, id('6'));
+  await db.user.createMany({ data: [{ id: id('near'), name: 'LF near', remainingBudget: 3 }, { id: id('far'), name: 'LF far', remainingBudget: 4 }] });
+  await db.$transaction((tx) => createConnectionWithinLimit(tx, id('5'), id('near')));
+  await db.$transaction((tx) => createConnectionWithinLimit(tx, id('1'), id('far')));
+  // Any request brings the graph up to date; here nobody else is asking, so the check does
+  await getGraph(db);
+  check('a kept value is served as it is while fresh', (await networkReach(db, id('6'))) === before6);
+  await sleep(1600);
+  const stale6 = await networkReach(db, id('6'));
+  check('once stale, a newcomer in the visible rings is counted at once',
+    stale6.visible === before6.visible + 1 && stale6.canHelpVisible === before6.canHelpVisible + 3,
+    `visible ${before6.visible} → ${stale6.visible}`);
+  check('…while the far rings stay as measured (they are shown rounded and refreshed hourly)',
+    stale6.exact === before6.exact + 1 && stale6.canHelp === before6.canHelp + 3, `exact ${before6.exact} → ${stale6.exact}`);
+  clearReachCache();
+  const fresh6 = await networkReach(db, id('6'));
+  check('a full walk then counts the far newcomer too', fresh6.exact === before6.exact + 2 && fresh6.canHelp === before6.canHelp + 7,
+    `exact ${fresh6.exact}, canHelp ${fresh6.canHelp}`);
+  // Back to the network the next checks expect
+  await call(id('5')).connection.revoke({ targetUserId: id('near') });
+  await call(id('1')).connection.revoke({ targetUserId: id('far') });
+  await db.user.deleteMany({ where: { id: { in: [id('near'), id('far')] } } });
+
   /* ---------- A removed connection: only the two people are read again ---------- */
-  const fullBeforeDelete = fullReads;
+  const fullBeforeDelete = fullLoads();
   await call(id('root')).connection.revoke({ targetUserId: id('new') });
   const r4 = await networkReach(db, id('root'));
   check('a removed connection leaves the numbers at once', r4.exact === 36, `exact=${r4.exact}`);
-  check('…without reading the whole table again', fullReads === fullBeforeDelete, `full reads +${fullReads - fullBeforeDelete}`);
+  check('…without reading the whole table again', fullLoads() === fullBeforeDelete, `full reads +${fullLoads() - fullBeforeDelete}`);
   const graph = await getGraph(db);
   const rows = await db.connection.count();
   check('graph edge count equals the table', graph.edgeCount === rows, `${graph.edgeCount} vs ${rows}`);
   check('the removed pair is gone from both sides',
-    !graph.adj.get(id('root'))?.some((e) => e.neighbor === id('new')) && !graph.adj.get(id('new'))?.some((e) => e.neighbor === id('root')));
+    !linked(graph, 'root', 'new') && degreeOf(graph, 'new') === 1);
 
   /* ---------- A deleted account: its connections leave the graph, again without a full reload ---------- */
   await db.user.create({ data: { id: id('gone'), name: 'LF gone' } });
@@ -125,15 +157,15 @@ try {
   const withGone = await networkReach(db, id('root'));
   // root now reaches "gone" directly and, through it, 8 and 7
   check('a new acquaintance opens the way to people behind them', withGone.exact === 36 + 3, `exact=${withGone.exact}`);
-  const fullBeforeAccount = fullReads;
+  const fullBeforeAccount = fullLoads();
   await call(id('gone')).user.delete();
   const afterGone = await networkReach(db, id('root'));
   const g3 = await getGraph(db);
   check('a deleted account leaves the numbers of its acquaintances at once', afterGone.exact === 36, `exact=${afterGone.exact}`);
   check('…its connections are gone from the graph on both sides',
-    !g3.adj.has(id('gone')) && !g3.adj.get(id('root'))?.some((e) => e.neighbor === id('gone')) && !g3.adj.get(id('8'))?.some((e) => e.neighbor === id('gone')));
+    degreeOf(g3, 'gone') === 0 && !linked(g3, 'root', 'gone') && !linked(g3, '8', 'gone'));
   check('…the graph still equals the table', g3.edgeCount === (await db.connection.count()));
-  check('…and the whole table was not read again', fullReads === fullBeforeAccount, `full reads +${fullReads - fullBeforeAccount}`);
+  check('…and the whole table was not read again', fullLoads() === fullBeforeAccount, `full reads +${fullLoads() - fullBeforeAccount}`);
 
   /* ---------- Rows committed with an older time than the newest loaded one ---------- */
   await db.connection.create({ data: { ...pair(id('f0'), id('f1')), createdAt: new Date(Date.now() - 30_000) } });
@@ -142,11 +174,11 @@ try {
   const g2 = await getGraph(db);
   check('late rows are found (window) or the graph reloads (count check)', g2.edgeCount === (await db.connection.count()));
   check('both late connections are in the graph',
-    !!g2.adj.get(id('f0'))?.some((e) => e.neighbor === id('f1')) && !!g2.adj.get(id('f2'))?.some((e) => e.neighbor === id('f3')));
+    linked(g2, 'f0', 'f1') && linked(g2, 'f2', 'f3'));
 
   /* ---------- A connection made by another process, with no invalidation here ---------- */
   // The periodic check looks only at the newest connection and the deleted accounts; that is enough to see it
-  const fullBeforeForeign = fullReads;
+  const fullBeforeForeign = fullLoads();
   await new Promise((r) => setTimeout(r, 3100)); // past the window in which every read is exact
   await getGraph(db);
   await new Promise((r) => setTimeout(r, 5100));
@@ -158,8 +190,8 @@ try {
   await new Promise((r) => setTimeout(r, 5100)); // the next periodic check is due
   const g4 = await getGraph(db);
   check('a connection made elsewhere shows at the next periodic check',
-    !!g4.adj.get(id('f4'))?.some((e) => e.neighbor === id('f5')) && g4.edgeCount === (await db.connection.count()));
-  check('…appended, not reloaded', fullReads === fullBeforeForeign, `full reads +${fullReads - fullBeforeForeign}`);
+    linked(g4, 'f4', 'f5') && g4.edgeCount === (await db.connection.count()));
+  check('…appended, not reloaded', fullLoads() === fullBeforeForeign, `full reads +${fullLoads() - fullBeforeForeign}`);
 
   /* ---------- Walk with paths built on demand ---------- */
   const walk = await findRecipientsViaBfs(db, id('root'), 6, Infinity, [id('2')]);

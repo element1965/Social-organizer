@@ -1,7 +1,8 @@
 import type { PrismaClient } from '@so/db';
+import { GraphBuilder, HandshakeGraph } from './graph-store.js';
 
 /**
- * The whole handshake graph, kept in process memory.
+ * The whole handshake graph, kept in process memory as numbers (graph-store.ts).
  *
  * Every network walk used to load the full `connections` table, which grows with the platform, not with
  * one person's network. Now the table is read once and re-read only when it has changed. A signature
@@ -20,18 +21,7 @@ import type { PrismaClient } from '@so/db';
  * Callers must treat the graph as read-only: it is shared.
  */
 
-export interface Edge {
-  neighbor: string;
-  createdAt: Date;
-}
-
-export interface Graph {
-  adj: Map<string, Edge[]>;
-  /** Deleted accounts: never part of anyone's network. */
-  deleted: Set<string>;
-  /** Number of connections in `adj` (each counted once). */
-  edgeCount: number;
-}
+export type Graph = HandshakeGraph;
 
 interface Signature {
   count: number;
@@ -62,6 +52,9 @@ const PENDING_TTL_MS = Number(process.env.GRAPH_PENDING_TTL_MS) || 30_000;
 /** More people than this waiting to be re-read: one full reload is cheaper and simpler. */
 const PENDING_MAX = 2_000;
 
+/** Rows per query of the full load: the table is never held in memory as one array of objects. */
+const LOAD_CHUNK = 50_000;
+
 let cached: { graph: Graph; signature: Signature; checkedAt: number; exactAt: number } | null = null;
 let loading: { generation: number; promise: Promise<Graph> } | null = null;
 let generation = 0;
@@ -79,18 +72,20 @@ const stats = {
   lightChecks: 0,
   appends: 0,
   refreshes: 0,
+  compactions: 0,
   lastLoadMs: 0,
   lastSignatureMs: 0,
 };
 
 /** Numbers for the runtime metrics line: how the graph is kept up to date and how big it is. */
-export function graphStats(): typeof stats & { people: number; connections: number } {
-  return { ...stats, people: cached?.graph.adj.size ?? 0, connections: cached?.graph.edgeCount ?? 0 };
+export function graphStats(): typeof stats & { people: number; connections: number; overflow: number; holes: number } {
+  const g = cached?.graph;
+  return { ...stats, people: g?.peopleCount ?? 0, connections: g?.edgeCount ?? 0, ...(g?.looseness() ?? { overflow: 0, holes: 0 }) };
 }
 
 const invalidationListeners: Array<(userIds?: string[]) => void> = [];
 
-/** Derived caches (network reach) subscribe here to drop what an invalidation makes stale. */
+/** Derived caches (network reach, budgets) subscribe here to drop what an invalidation makes stale. */
 export function onGraphInvalidated(listener: (userIds?: string[]) => void): void {
   invalidationListeners.push(listener);
 }
@@ -164,50 +159,29 @@ function sameSignature(a: Signature, b: Signature): boolean {
   return a.count === b.count && a.maxAt === b.maxAt && a.deleted === b.deleted;
 }
 
-/** Adds one connection to the graph; false when it is already there. */
-function addEdge(graph: Graph, userAId: string, userBId: string, createdAt: Date): boolean {
-  let a = graph.adj.get(userAId);
-  if (!a) graph.adj.set(userAId, (a = []));
-  else if (a.some((e) => e.neighbor === userBId)) return false;
-  let b = graph.adj.get(userBId);
-  if (!b) graph.adj.set(userBId, (b = []));
-  a.push({ neighbor: userBId, createdAt });
-  b.push({ neighbor: userAId, createdAt });
-  graph.edgeCount++;
-  return true;
-}
-
-/** Takes every connection of one person out of the graph, on both sides. */
-function removePerson(graph: Graph, userId: string): void {
-  const own = graph.adj.get(userId);
-  if (!own) return;
-  for (const { neighbor } of own) {
-    const theirs = graph.adj.get(neighbor);
-    if (theirs) {
-      const at = theirs.findIndex((e) => e.neighbor === userId);
-      if (at >= 0) theirs.splice(at, 1);
-      if (theirs.length === 0) graph.adj.delete(neighbor);
-    }
-    graph.edgeCount--;
-  }
-  graph.adj.delete(userId);
-}
-
 async function load(db: PrismaClient): Promise<{ graph: Graph; signature: Signature }> {
   const startedAt = performance.now();
-  // Signature first: a change that lands while the rows are read makes the next check reload again
+  // Signature first: a change that lands while the rows are read makes the next check bring it in
   const signature = await readSignature(db);
-  const [connections, deletedUsers] = await Promise.all([
-    db.connection.findMany({ select: { userAId: true, userBId: true, createdAt: true } }),
-    db.user.findMany({ where: { deletedAt: { not: null } }, select: { id: true } }),
-  ]);
-  const graph: Graph = { adj: new Map(), deleted: new Set(deletedUsers.map((u) => u.id)), edgeCount: 0 };
-  for (const c of connections) addEdge(graph, c.userAId, c.userBId, c.createdAt);
+  const builder = new GraphBuilder();
+  // In chunks by the primary key: a table of millions of rows never becomes one array of objects
+  for (let after = ''; ; ) {
+    const rows = await db.$queryRaw<Array<{ id: string; a: string; b: string; t: number }>>`
+      SELECT id, "userAId" AS a, "userBId" AS b, (EXTRACT(EPOCH FROM "createdAt") * 1000)::float8 AS t
+      FROM connections WHERE id > ${after} ORDER BY id LIMIT ${LOAD_CHUNK}
+    `;
+    for (const r of rows) builder.add(r.a, r.b, Math.round(r.t));
+    if (rows.length < LOAD_CHUNK) break;
+    after = rows[rows.length - 1]!.id;
+  }
+  const graph = builder.finish();
+  const deletedUsers = await db.user.findMany({ where: { deletedAt: { not: null } }, select: { id: true } });
+  for (const u of deletedUsers) graph.setDeleted(graph.person(u.id), true);
   stats.fullLoads++;
   stats.lastLoadMs = Math.round(performance.now() - startedAt);
   // The first load is the start-up; later ones are the expensive path the metrics watch for
   if (stats.fullLoads > 1) {
-    console.log(`[graph] full reload: ${graph.edgeCount} connections, ${graph.adj.size} people, ${stats.lastLoadMs} ms`);
+    console.log(`[graph] full reload: ${graph.edgeCount} connections, ${graph.peopleCount} people, ${stats.lastLoadMs} ms`);
   }
   return { graph, signature };
 }
@@ -218,15 +192,19 @@ async function load(db: PrismaClient): Promise<{ graph: Graph; signature: Signat
  * row landed outside the window): the caller then reloads everything.
  */
 async function appendNew(db: PrismaClient, graph: Graph, sinceMs: number, next: Signature): Promise<boolean> {
-  if (graph.deleted.size !== next.deleted || next.count <= graph.edgeCount || next.maxAt < sinceMs) return false;
+  if (graph.deletedCount !== next.deleted || next.count <= graph.edgeCount || next.maxAt < sinceMs) return false;
   const rows = await db.connection.findMany({
     where: { createdAt: { gte: new Date(sinceMs - APPEND_OVERLAP_MS), lte: new Date(next.maxAt) } },
     select: { userAId: true, userBId: true, createdAt: true },
   });
   // The graph is shared, so it is only touched once the numbers are known to add up
-  const fresh = rows.filter((c) => !graph.adj.get(c.userAId)?.some((e) => e.neighbor === c.userBId));
+  const fresh = rows.filter((c) => {
+    const a = graph.find(c.userAId);
+    const b = graph.find(c.userBId);
+    return a === undefined || b === undefined || !graph.hasEdge(a, b);
+  });
   if (graph.edgeCount + fresh.length !== next.count) return false;
-  for (const c of fresh) addEdge(graph, c.userAId, c.userBId, c.createdAt);
+  for (const c of fresh) graph.addEdge(graph.person(c.userAId), graph.person(c.userBId), c.createdAt.getTime());
   return graph.edgeCount === next.count;
 }
 
@@ -244,15 +222,21 @@ async function refreshPeople(db: PrismaClient, graph: Graph, ids: string[], next
     db.user.findMany({ where: { id: { in: ids } }, select: { id: true, deletedAt: true } }),
   ]);
   // No await from here on: readers never see a person half re-read
-  for (const id of ids) removePerson(graph, id);
-  for (const c of rows) addEdge(graph, c.userAId, c.userBId, c.createdAt);
+  for (const id of ids) {
+    const n = graph.find(id);
+    if (n !== undefined) graph.removePerson(n);
+  }
+  for (const c of rows) graph.addEdge(graph.person(c.userAId), graph.person(c.userBId), c.createdAt.getTime());
   const deletedNow = new Set(users.filter((u) => u.deletedAt).map((u) => u.id));
   for (const id of ids) {
     // An account that no longer exists at all is simply gone: it has no connections left either
-    if (deletedNow.has(id)) graph.deleted.add(id);
-    else graph.deleted.delete(id);
+    if (deletedNow.has(id)) graph.setDeleted(graph.person(id), true);
+    else {
+      const n = graph.find(id);
+      if (n !== undefined) graph.setDeleted(n, false);
+    }
   }
-  return graph.edgeCount === next.count && graph.deleted.size === next.deleted;
+  return graph.edgeCount === next.count && graph.deletedCount === next.deleted;
 }
 
 /** The current graph. Concurrent callers share one load. */
@@ -289,6 +273,11 @@ export async function getGraph(db: PrismaClient): Promise<Graph> {
           prev.checkedAt = Date.now();
           stats[kind]++;
           version++;
+          // Enough changes have piled up outside the flat lists: fold them in (people keep their numbers)
+          if (prev.graph.needsCompaction()) {
+            prev.graph.compact();
+            stats.compactions++;
+          }
           return prev.graph;
         };
         // Still the newest graph (no reload replaced it meanwhile): bring the change in without a reload
