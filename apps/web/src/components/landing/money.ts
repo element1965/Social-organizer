@@ -1,59 +1,32 @@
-import { COUNTRY_TO_CURRENCY } from '@so/shared';
-
 /**
- * The sums of the landing story in the reader's currency: a car repair worth about $300 (so Maria's Need still
- * reaches about 300 people, one per dollar), the smallest share (about $1) and yours (about $5). The rates are
- * rough on purpose and rounded to sums people say aloud. The region of the browser language picks the currency;
- * without one, the page language does; anything else is told in dollars.
+ * The sums of the landing story, in dollars as the app counts them. A modest car repair costs very different
+ * money from India to Norway, so the repair follows the price level of the reader's country (the region of the
+ * browser language; without one, the page language), in whole hundreds so "up to N people" reads the same in
+ * every grammar. A Need reaches up to one person per dollar, so the reach is the same number. The smallest share
+ * stays $1 and yours $5.
  */
 export interface StoryMoney {
-  currency: string;
   repair: number;
   min: number;
   mine: number;
 }
 
-/** Repair, smallest share, your share. `repair` is a whole multiple of `mine / 5` (the scene counts in those steps). */
-const SUMS: Record<string, [number, number, number]> = {
-  USD: [300, 1, 5],
-  EUR: [250, 1, 5],
-  GBP: [220, 1, 5],
-  CHF: [250, 1, 5],
-  CAD: [400, 1, 5],
-  AUD: [450, 2, 10],
-  NZD: [500, 2, 10],
-  RUB: [25000, 100, 500],
-  UAH: [12000, 50, 200],
-  BYN: [1000, 3, 20],
-  KZT: [150000, 500, 2500],
-  PLN: [1100, 5, 20],
-  CZK: [6000, 20, 100],
-  RON: [1300, 5, 20],
-  RSD: [30000, 100, 500],
-  TRY: [13000, 50, 200],
-  ILS: [1000, 5, 20],
-  SEK: [3000, 10, 50],
-  NOK: [3000, 10, 50],
-  DKK: [2000, 5, 40],
-  JPY: [45000, 100, 1000],
-  KRW: [400000, 1000, 5000],
-  CNY: [2000, 10, 50],
-  INR: [25000, 100, 500],
-  IDR: [5000000, 20000, 100000],
-  VND: [7500000, 20000, 100000],
-  THB: [10000, 30, 200],
-  BRL: [1600, 5, 25],
-  MXN: [5500, 20, 100],
-  SAR: [1100, 5, 20],
-  AED: [1100, 5, 20],
-  EGP: [15000, 50, 250],
-};
+/** Dollars for a small car repair, by price level. */
+const TIERS: [number, string[]][] = [
+  [600, ['CH', 'NO', 'IS', 'DK', 'LU', 'LI', 'MC']],
+  [500, ['US', 'CA', 'GB', 'IE', 'DE', 'AT', 'NL', 'BE', 'FR', 'FI', 'SE', 'AU', 'NZ', 'IL', 'SG', 'HK', 'AE', 'QA', 'KW', 'BH']],
+  [400, ['IT', 'ES', 'PT', 'JP', 'KR', 'TW', 'SA', 'OM', 'GR', 'CY', 'MT', 'SI', 'EE']],
+  [300, ['CZ', 'SK', 'PL', 'HU', 'LT', 'LV', 'HR', 'RO', 'BG', 'RU', 'KZ', 'CN', 'MY', 'TR', 'MX', 'BR', 'AR', 'CL', 'UY', 'CR', 'PA', 'ZA', 'ME']],
+  [200, ['UA', 'BY', 'MD', 'RS', 'BA', 'MK', 'AL', 'GE', 'AM', 'AZ', 'UZ', 'KG', 'TH', 'ID', 'PH', 'VN', 'CO', 'PE', 'EC', 'BO', 'PY', 'DO', 'GT', 'EG', 'MA', 'TN', 'DZ', 'JO', 'LB', 'IQ', 'IR', 'MN']],
+  [100, ['IN', 'PK', 'BD', 'NP', 'LK', 'MM', 'KH', 'LA', 'KE', 'NG', 'GH', 'ET', 'UG', 'TZ', 'RW', 'TJ']],
+];
+const BY_REGION = new Map(TIERS.flatMap(([usd, regions]) => regions.map((r) => [r, usd] as const)));
 
-/** The currency of a page language when the browser names no region. */
-const BY_LANGUAGE: Record<string, string> = {
-  en: 'USD', ru: 'RUB', uk: 'UAH', be: 'BYN', de: 'EUR', fr: 'EUR', es: 'EUR', it: 'EUR', pt: 'BRL', nl: 'EUR',
-  fi: 'EUR', pl: 'PLN', cs: 'CZK', ro: 'RON', sr: 'RSD', tr: 'TRY', he: 'ILS', ar: 'USD', hi: 'INR', id: 'IDR',
-  vi: 'VND', th: 'THB', ja: 'JPY', ko: 'KRW', zh: 'CNY', sv: 'SEK', no: 'NOK', da: 'DKK',
+/** The price level of a page language's main country, when the browser names no region. */
+const BY_LANGUAGE: Record<string, number> = {
+  en: 500, ru: 300, uk: 200, be: 200, de: 500, fr: 500, es: 300, it: 400, pt: 300, nl: 500, fi: 500, pl: 300,
+  cs: 300, ro: 300, sr: 200, tr: 300, he: 500, ar: 300, hi: 100, id: 200, vi: 200, th: 200, ja: 400, ko: 400,
+  zh: 300, sv: 500, no: 600, da: 600,
 };
 
 /** The region of the browser language: one of the page language first, then any. */
@@ -63,8 +36,9 @@ function browserRegion(lang: string): string | null {
   const own = list.filter((tag) => tag.toLowerCase().split('-')[0] === lang);
   for (const tag of [...own, ...list]) {
     try {
-      const region = new Intl.Locale(tag).region;
-      if (region) return region.toUpperCase();
+      const region = new Intl.Locale(tag).region?.toUpperCase();
+      // a country (a region like 419, Latin America, says nothing about prices)
+      if (region && /^[A-Z]{2}$/.test(region)) return region;
     } catch {
       /* not a language tag */
     }
@@ -74,15 +48,13 @@ function browserRegion(lang: string): string | null {
 
 export function storyMoney(lang: string): StoryMoney {
   const region = browserRegion(lang);
-  const byRegion = region ? COUNTRY_TO_CURRENCY[region] : undefined;
-  const currency = byRegion && SUMS[byRegion] ? byRegion : SUMS[BY_LANGUAGE[lang] ?? ''] ? BY_LANGUAGE[lang]! : 'USD';
-  const [repair, min, mine] = SUMS[currency]!;
-  return { currency, repair, min, mine };
+  const repair = (region ? BY_REGION.get(region) : undefined) ?? BY_LANGUAGE[lang] ?? 300;
+  return { repair, min: 1, mine: 5 };
 }
 
-/** "$300", "25 000 ₽", "￥45,000": the sign the reader knows, no cents. */
-export function moneyFormat(lang: string, currency: string): Intl.NumberFormat {
-  const base = { style: 'currency', currency, minimumFractionDigits: 0, maximumFractionDigits: 0 } as const;
+/** "$500", "500 $": dollars the way the locale writes them, no cents. */
+export function dollarFormat(lang: string): Intl.NumberFormat {
+  const base = { style: 'currency', currency: 'USD', minimumFractionDigits: 0, maximumFractionDigits: 0 } as const;
   try {
     return new Intl.NumberFormat(lang, { ...base, currencyDisplay: 'narrowSymbol' });
   } catch {

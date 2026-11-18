@@ -770,7 +770,7 @@
         "b4": {
           "label": "2 · O nevoie",
           "say": "Ioanei i s-a stricat mașina, iar fără ea nu poate ajunge la serviciu. Reparația costă {{repair}}.",
-          "late": "Ioana anunță o nevoie și adaugă linkul unui chat. O nevoie de {{repair}} ajunge până la 300 de oameni, începând cu cei mai apropiați."
+          "late": "Ioana anunță o nevoie și adaugă linkul unui chat. O nevoie de {{repair}} ajunge până la {{reach}} de oameni, începând cu cei mai apropiați."
         },
         "b5": {
           "label": "3 · Fiecare decide singur",

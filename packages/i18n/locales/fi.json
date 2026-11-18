@@ -766,7 +766,7 @@
         "b4": {
           "label": "2 · Tarve",
           "say": "Lauran auto on hajonnut, eikä hän pääse ilman sitä töihin. Korjaus maksaa {{repair}}.",
-          "late": "Laura ilmoittaa tarpeesta ja lisää linkin keskusteluun. Kun tarvitaan {{repair}}, tieto tarpeesta tavoittaa enintään 300 ihmistä, lähimmät ensin."
+          "late": "Laura ilmoittaa tarpeesta ja lisää linkin keskusteluun. Kun tarvitaan {{repair}}, tieto tarpeesta tavoittaa enintään {{reach}} ihmistä, lähimmät ensin."
         },
         "b5": {
           "label": "3 · Jokainen päättää itse",

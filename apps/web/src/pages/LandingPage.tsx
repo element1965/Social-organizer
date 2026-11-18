@@ -11,7 +11,7 @@ import { initGlide } from '../components/landing/glide';
 import { initGrow, type GrowHandle, type GrowOptions } from '../components/landing/grow';
 import { initNextNet, type NextNetHandle } from '../components/landing/nextNet';
 import type { SceneHandle, SceneOptions } from '../components/landing/scene';
-import { moneyFormat, storyMoney } from '../components/landing/money';
+import { dollarFormat, storyMoney } from '../components/landing/money';
 import '../components/landing/landing.css';
 
 /**
@@ -38,9 +38,6 @@ const TALL = new Set([4, 6]);
 const FAQ = [1, 2, 3, 4] as const;
 
 const ext = { target: '_blank', rel: 'noopener noreferrer' } as const;
-/** A sum with a dotted sign ("2.000 kr.", "1100 ر.س.") already ends the sentence: no second dot after it. */
-const noDoubleDot = (text: string, sums: Record<string, string>) =>
-  Object.values(sums).reduce((out, sum) => (/\.\u200f?$/.test(sum) ? out.split(`${sum}.`).join(sum) : out), text);
 const reducedMotion = () => typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 /** Answers open and close with a height animation; the native details element keeps it accessible. */
@@ -85,14 +82,15 @@ export function LandingPage() {
   const nf = useMemo(() => new Intl.NumberFormat(lang), [lang]);
   const nf1 = useMemo(() => new Intl.NumberFormat(lang, { minimumFractionDigits: 1, maximumFractionDigits: 1 }), [lang]);
   const nf2 = useMemo(() => new Intl.NumberFormat(lang, { minimumFractionDigits: 2, maximumFractionDigits: 2 }), [lang]);
-  // the story's sums in the reader's currency: the repair, the smallest share and yours
+  // the story's sums in dollars: the repair at the price level of the reader's country, up to one person
+  // reached per dollar, the smallest share and yours
   const money = useMemo(() => storyMoney(lang), [lang]);
   const sums = useMemo(() => {
-    const mf = moneyFormat(lang, money.currency);
-    return { repair: mf.format(money.repair), min: mf.format(money.min), mine: mf.format(money.mine) };
-  }, [lang, money]);
+    const usd = dollarFormat(lang);
+    return { repair: usd.format(money.repair), reach: nf.format(money.repair), min: usd.format(money.min), mine: usd.format(money.mine) };
+  }, [lang, money, nf]);
   /** A story line with the sums filled in. */
-  const tm = (key: string) => noDoubleDot(t(key, sums), sums);
+  const tm = (key: string) => t(key, sums);
   // Maria's tag is "name · sum"; the graph's labels show the name alone, as the app does
   const mariaTag = tm('landing.v2.story.tags.maria');
   const mariaDot = mariaTag.indexOf('·');

@@ -762,7 +762,7 @@
         "b4": {
           "label": "2 · Kebutuhan",
           "say": "Mobil Siti rusak, dan tanpa mobil ia tidak bisa berangkat kerja. Biaya perbaikannya {{repair}}.",
-          "late": "Siti menyampaikan kebutuhan dan menambahkan tautan ke chat. Kebutuhan {{repair}} menjangkau hingga 300 orang, dimulai dari yang terdekat."
+          "late": "Siti menyampaikan kebutuhan dan menambahkan tautan ke chat. Kebutuhan {{repair}} menjangkau hingga {{reach}} orang, dimulai dari yang terdekat."
         },
         "b5": {
           "label": "3 · Setiap orang memutuskan sendiri",

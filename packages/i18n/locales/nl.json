@@ -766,7 +766,7 @@
         "b4": {
           "label": "2 · Een behoefte",
           "say": "De auto van Sanne is kapot en zonder auto komt ze niet op haar werk. De reparatie kost {{repair}}.",
-          "late": "Sanne meldt een behoefte en voegt een link naar een chat toe. Bij een behoefte van {{repair}} krijgen maximaal 300 mensen bericht, te beginnen bij de mensen die Sanne zelf kent."
+          "late": "Sanne meldt een behoefte en voegt een link naar een chat toe. Bij een behoefte van {{repair}} krijgen maximaal {{reach}} mensen bericht, te beginnen bij de mensen die Sanne zelf kent."
         },
         "b5": {
           "label": "3 · Ieder beslist zelf",

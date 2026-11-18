@@ -766,7 +766,7 @@
         "b4": {
           "label": "2 · Ein Bedarf",
           "say": "Julias Auto ist kaputt, und ohne Auto kommt sie nicht zur Arbeit. Die Reparatur kostet {{repair}}.",
-          "late": "Julia meldet einen Bedarf und fügt einen Link zu einem Chat hinzu. Ein Bedarf von {{repair}} erreicht bis zu 300 Menschen, die Nächsten zuerst."
+          "late": "Julia meldet einen Bedarf und fügt einen Link zu einem Chat hinzu. Ein Bedarf von {{repair}} erreicht bis zu {{reach}} Menschen, die Nächsten zuerst."
         },
         "b5": {
           "label": "3 · Alle entscheiden selbst",

@@ -766,7 +766,7 @@
         "b4": {
           "label": "2 · Et behov",
           "say": "Bilen til Ingrid har gått i stykker, og uten den kommer hun seg ikke på jobb. Reparasjonen koster {{repair}}.",
-          "late": "Ingrid melder om et behov og legger ved en lenke til en chat. Et behov på {{repair}} når opptil 300 personer, de nærmeste først."
+          "late": "Ingrid melder om et behov og legger ved en lenke til en chat. Et behov på {{repair}} når opptil {{reach}} personer, de nærmeste først."
         },
         "b5": {
           "label": "3 · Alle bestemmer selv",

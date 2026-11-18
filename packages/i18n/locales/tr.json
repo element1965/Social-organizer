@@ -766,7 +766,7 @@
         "b4": {
           "label": "2 · İhtiyaç",
           "say": "Ayşe'nin arabası bozuldu ve araba olmadan işe gidemiyor. Tamir {{repair}} tutuyor.",
-          "late": "Ayşe bir ihtiyaç bildiriyor ve bir sohbet bağlantısı ekliyor. {{repair}} tutarındaki bir ihtiyaç, en yakınlardan başlayarak en fazla 300 kişiye ulaşır."
+          "late": "Ayşe bir ihtiyaç bildiriyor ve bir sohbet bağlantısı ekliyor. {{repair}} tutarındaki bir ihtiyaç, en yakınlardan başlayarak en fazla {{reach}} kişiye ulaşır."
         },
         "b5": {
           "label": "3 · Herkes kendisi karar verir",

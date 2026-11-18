@@ -762,7 +762,7 @@
         "b4": {
           "label": "2 · Nhu cầu",
           "say": "Ô tô của Linh bị hỏng, mà không có xe thì cô ấy không đi làm được. Sửa xe hết {{repair}}.",
-          "late": "Linh thông báo một nhu cầu và kèm liên kết tới nhóm chat. Nhu cầu {{repair}} sẽ tới tối đa 300 người, bắt đầu từ người gần nhất."
+          "late": "Linh thông báo một nhu cầu và kèm liên kết tới nhóm chat. Nhu cầu {{repair}} sẽ tới tối đa {{reach}} người, bắt đầu từ người gần nhất."
         },
         "b5": {
           "label": "3 · Mỗi người tự quyết định",

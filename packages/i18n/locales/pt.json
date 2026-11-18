@@ -770,7 +770,7 @@
         "b4": {
           "label": "2 · Uma necessidade",
           "say": "O carro de Beatriz quebrou, e sem ele ela não consegue ir trabalhar. O conserto custa {{repair}}.",
-          "late": "Beatriz informa uma necessidade e adiciona o link de um chat. Uma necessidade de {{repair}} chega a até 300 pessoas, as mais próximas primeiro."
+          "late": "Beatriz informa uma necessidade e adiciona o link de um chat. Uma necessidade de {{repair}} chega a até {{reach}} pessoas, as mais próximas primeiro."
         },
         "b5": {
           "label": "3 · Cada um decide por si",

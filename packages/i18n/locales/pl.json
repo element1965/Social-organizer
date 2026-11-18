@@ -774,7 +774,7 @@
         "b4": {
           "label": "2 · Potrzeba",
           "say": "Joannie zepsuł się samochód, a bez niego nie dojedzie do pracy. Naprawa kosztuje {{repair}}.",
-          "late": "Joanna zgłasza potrzebę i dodaje link do czatu. O potrzebie na kwotę {{repair}} dowie się do 300 osób, zaczynając od najbliższych."
+          "late": "Joanna zgłasza potrzebę i dodaje link do czatu. O potrzebie na kwotę {{repair}} dowie się do {{reach}} osób, zaczynając od najbliższych."
         },
         "b5": {
           "label": "3 · Każdy decyduje sam",

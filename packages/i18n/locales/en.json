@@ -766,7 +766,7 @@
         "b4": {
           "label": "2 · A Need",
           "say": "Sarah's car has broken down, and without it she can't get to work. The repair costs {{repair}}.",
-          "late": "Sarah reports a Need and adds a link to a chat. A {{repair}} Need reaches up to 300 people, nearest first."
+          "late": "Sarah reports a Need and adds a link to a chat. A {{repair}} Need reaches up to {{reach}} people, nearest first."
         },
         "b5": {
           "label": "3 · Everyone decides for themselves",

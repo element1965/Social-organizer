@@ -260,25 +260,25 @@ export function initScene(els: SceneElements, initial: SceneOptions): SceneHandl
   }
   const oleg = fromYou.par[maria]!;
   const fromMaria = bfs(maria);
-  const reach = fromMaria.q.slice(1, 301); // up to 300 people, nearest first
-
-  const parts = [you, oleg];
-  for (const i of reach) if (parts.length < 44 && i !== you && i !== oleg && rnd() < 0.2) parts.push(i);
-  let lena = parts[2]!;
-  for (const i of parts.slice(2))
-    if (fromMaria.d[i] === 1) {
-      lena = i;
-      break;
-    }
-  // the participants' sums, in steps of a fifth of your share: you name five steps, the others add up to the repair
+  // the cast that follows the sum: up to one person per dollar hears of the Need, nearest first; some of them
+  // take part (you with five steps, Oleg), Lena among those who know Maria directly. The participants' sums are
+  // in steps of a fifth of your share and add up to the repair.
   const menu = [1, 2, 3, 5, 5, 5, 10, 10, 10, 15, 20];
-  const pick = parts.map((_, i) => (i === 0 ? 5 : menu[(rnd() * menu.length) | 0]!));
+  let reach: number[] = [];
+  let parts: number[] = [];
+  let lena = oleg;
   let amt: number[] = [];
   let repairTotal = 0;
   const setMoney = (m: SceneOptions['money']) => {
+    let s = 7; // a sequence of its own: a new sum must not move the birds
+    const r = () => (s = (s * 16807) % 2147483647) / 2147483647;
+    reach = fromMaria.q.slice(1, m.repair + 1);
+    parts = [you, oleg];
+    for (const i of reach) if (parts.length < 44 && i !== you && i !== oleg && r() < 0.2) parts.push(i);
+    lena = parts.slice(2).find((i) => fromMaria.d[i] === 1) ?? parts[2] ?? oleg;
     const step = m.mine / 5;
     const total = Math.max(parts.length * 2, Math.round(m.repair / step));
-    const a = pick.slice();
+    const a = parts.map((_, i) => (i === 0 ? 5 : menu[(r() * menu.length) | 0]!));
     let sum = a.reduce((x, y) => x + y, 0);
     let i = 1;
     while (sum !== total) {
@@ -1056,8 +1056,8 @@ export function initScene(els: SceneElements, initial: SceneOptions): SceneHandl
     }
     if (k === MORPH) {
       // next time the Need may start from you: the flock becomes your rings, and the people you know hear first
-      // the Need spreads once the rings have formed: your acquaintances, then theirs, up to 300 people
-      const n = Math.round(ease(Math.min(spread, remap(p, 0.18, 0.5))) * 300);
+      // the Need spreads once the rings have formed: your acquaintances, then theirs, one person per dollar
+      const n = Math.round(ease(Math.min(spread, remap(p, 0.18, 0.5))) * reach.length);
       for (let r = 1; r < Math.min(n + 1, fromYou.q.length); r++) setG(fromYou.q[r]!, C.warm, 1.25);
       setT(you, C.sos, 1.8);
       out.halo = you;

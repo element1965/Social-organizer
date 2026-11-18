@@ -770,7 +770,7 @@
         "b4": {
           "label": "2 · Un besoin",
           "say": "La voiture de Sophie est tombée en panne, et sans voiture elle ne peut pas aller travailler. La réparation coûte {{repair}}.",
-          "late": "Sophie annonce un besoin et ajoute un lien vers un chat. Un besoin de {{repair}} atteint jusqu’à 300 personnes, les plus proches d’abord."
+          "late": "Sophie annonce un besoin et ajoute un lien vers un chat. Un besoin de {{repair}} atteint jusqu’à {{reach}} personnes, les plus proches d’abord."
         },
         "b5": {
           "label": "3 · Chacun décide pour soi",

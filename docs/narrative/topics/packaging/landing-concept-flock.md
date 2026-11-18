@@ -388,10 +388,15 @@ The user: «Птицы в 3д сцене к концу должны превра
   «Когда кому-то нужна помощь, вы видите цепочку знакомых от этого человека до вас.»
 - **Local names.** Each language has its own three people (Russian keeps Мария, Олег, Лена; English Sarah,
   Tom, Emma); translators chose names common in the language's main countries and inflected them.
-- **Sums in the reader's currency.** The repair is about $300 in the currency of the browser's region (the
-  page language when the browser names no region), with the smallest share about $1 and yours about $5,
-  rounded to sums people say (`components/landing/money.ts`); "up to 300 people" stays, as $1 still means
-  one person reached. The participants' sums in the scene add up to the local repair.
+- **The repair at the reader's price level, in dollars.** A first version converted the sums into local
+  currencies; the user corrected it: «Я не просил тебя конвертировать все в валюты, можно было оставить цену в
+  $ просто для некоторых стран это большие деньги, а для некоторых на них ничего не сделаешь». Now the sums stay
+  in dollars, as the app counts, and the repair follows the price level of the browser's region (the page
+  language when it names none) in whole hundreds: $100 India, $200 Ukraine or Thailand, $300 Russia or
+  Poland, $400 Italy or Japan, $500 the US or Germany, $600 Norway or Switzerland
+  (`components/landing/money.ts`). A Need reaches up to one person per dollar, so «до N человек», the
+  counters, the participants and the spread in the graph follow the same number; whole hundreds keep the
+  grammar of "N people" the same in every language. Shares stay $1 and $5.
 - **Phone scrolling.** On touch screens the page follows the finger and the momentum is ours: a swipe in the
   story moves exactly one beat, a fling stops at the next rest point ahead (the top of a section, the last
   screen of a tall one), so nothing is skipped. Inside a section taller than the screen nothing pulls, for

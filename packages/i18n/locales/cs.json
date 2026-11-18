@@ -774,7 +774,7 @@
         "b4": {
           "label": "2 · Potřeba",
           "say": "Janě se porouchalo auto a bez něj se nedostane do práce. Oprava stojí {{repair}}.",
-          "late": "Jana oznámí potřebu a přidá odkaz na chat. O potřebě ve výši {{repair}} se dozví až 300 lidí, nejdřív ti nejbližší."
+          "late": "Jana oznámí potřebu a přidá odkaz na chat. O potřebě ve výši {{repair}} se dozví až {{reach}} lidí, nejdřív ti nejbližší."
         },
         "b5": {
           "label": "3 · Každý se rozhoduje sám",
