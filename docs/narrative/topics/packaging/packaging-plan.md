@@ -58,5 +58,6 @@ Installed skills that fit:
 - [Open questions](../meta/open-questions.md) — decisions needed before stage 3.
 - [Sources](../meta/sources.md) — where the pool's material came from.
 - [Landing concepts](landing-concepts.md) — input for stage 3.
+- [Landing concept "The flock and the seed"](landing-concept-flock.md) — the chosen direction for stage 3 (prototype, 2026-11-18).
 - [Funding strategy](../funding/funding-strategy.md) — parallel track: donors.
 - [Cold start through community leaders](../audiences/cold-start-influencers.md) — parallel track: growth.

@@ -17,7 +17,7 @@ summary: A new landing concept after the user rejected both chat concepts — th
 On 2026-11-18 the user rejected both concepts from the chats ([landing concepts](landing-concepts.md)) and
 asked for something new, made with the design skills and the narrative: closer to concept A (the
 network as the hero), with storytelling and examples, possibly 3D and Higgsfield graphics or video.
-**Status: proposal, waiting for the user.** Work so far: brief, references, direction
+**Status: rejected by the user ("a bit banal"); superseded by [the flock and the seed](landing-concept-flock.md).** Work so far: brief, references, direction
 (`ui-design-workflow` steps 1–3, lead skill `design-taste-frontend`); no build. All Russian copy was
 written first and checked by an editor subagent; the English follows at build time.
 
