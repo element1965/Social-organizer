@@ -370,6 +370,35 @@ The user: «Дальше делай переводы на все языки, а�
   left-to-right isolate and keep Social Organizer on one line; Japanese and Chinese headings wrap at
   phrases; every caption after a live number is a plural family.
 
+### 19. From the allegory to the app, local names and sums, phone scrolling (2026-11-18)
+
+The user: «Птицы в 3д сцене к концу должны превращаться в граф, такой же как у нас в приложении, чтобы от
+аллегории перейти к реальному применению и виду плавно и фон соответственно должен тоже измениться. Имена
+нужно адаптировать под локаль и стоимость ремонта машины тоже (примерно). Сейчас на телефоне можно пролистать
+много разделов сразу и пропустить многое… разделы которые не помещаются в экран по высоте тяжело читать».
+
+- **The flock becomes the app's graph.** Beat 8 («Вы») gathers the birds round you onto the app's shells by
+  handshake (rings 1 to 3 at 0.38, 0.7 and 1 of the ball, then a dust; the farthest birds leave), each bird
+  shrinking into a dot as it arrives; the sky gives way to the app's scene with its centre wash, and you
+  become the care tile with the logo. Once the rings have formed, your Need spreads ring by ring to 300
+  people: the people you know hear first. A new beat 9 «В приложении» shows the app's view (faint links,
+  the care spokes to your acquaintances, the names as app labels) with Maria's Need travelling to you along
+  the chain Maria → Oleg → you, pulses and a breathing ring, and carries the call to action. Copy:
+  «Так ваша сеть выглядит в приложении: вы в центре, вокруг ваши знакомые, дальше их знакомые.» /
+  «Когда кому-то нужна помощь, вы видите цепочку знакомых от этого человека до вас.»
+- **Local names.** Each language has its own three people (Russian keeps Мария, Олег, Лена; English Sarah,
+  Tom, Emma); translators chose names common in the language's main countries and inflected them.
+- **Sums in the reader's currency.** The repair is about $300 in the currency of the browser's region (the
+  page language when the browser names no region), with the smallest share about $1 and yours about $5,
+  rounded to sums people say (`components/landing/money.ts`); "up to 300 people" stays, as $1 still means
+  one person reached. The participants' sums in the scene add up to the local repair.
+- **Phone scrolling.** On touch screens the page follows the finger and the momentum is ours: a swipe in the
+  story moves exactly one beat, a fling stops at the next rest point ahead (the top of a section, the last
+  screen of a tall one), so nothing is skipped. Inside a section taller than the screen nothing pulls, for
+  touch and wheel alike, so it reads like a normal page. CSS scroll snapping was rejected: Safari breaks
+  free scrolling inside snap areas taller than the screen.
+- **App.** «Возможно, вы знакомы» on the Add screen starts folded to three people with an "N more" button.
+
 ## Related
 - [The core message](../core/core-message.md) — source: every line on the page.
 - [The Need protocol](../mechanics/need-protocol.md) — evidence: up to N people, nearest first, from $1, reversible, the chat.

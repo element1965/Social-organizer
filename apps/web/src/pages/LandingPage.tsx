@@ -11,11 +11,13 @@ import { initGlide } from '../components/landing/glide';
 import { initGrow, type GrowHandle, type GrowOptions } from '../components/landing/grow';
 import { initNextNet, type NextNetHandle } from '../components/landing/nextNet';
 import type { SceneHandle, SceneOptions } from '../components/landing/scene';
+import { moneyFormat, storyMoney } from '../components/landing/money';
 import '../components/landing/landing.css';
 
 /**
  * Home for a guest: one scroll-told story over a fixed 3D flock of starlings (how a network of people you know
- * works, in eight beats), then the growth model, what comes next, the experiment, questions and the app.
+ * works, in nine beats; at the end the flock becomes the graph the app shows), then the growth model, what comes
+ * next, the experiment, questions and the app.
  * Ported from the concept prototype (local/media/concept-6, v9; docs/narrative/topics/packaging/landing-concept-flock.md).
  * The page stays in the entry chunk so its words paint at once; Three.js and the scene load with a dynamic import.
  * Signed-in users get the circle instead (App.tsx).
@@ -29,7 +31,9 @@ const ICON_CREDITS = 'Gil Barbara logos (CC0), Lucide (ISC)';
 /** People with connections in the network on the date in `join.now`. */
 const NETWORK_NOW = 287;
 
-const BEATS = [1, 2, 3, 4, 5, 6, 7, 8] as const;
+const BEATS = [1, 2, 3, 4, 5, 6, 7, 8, 9] as const;
+/** The last beat: the network as the app shows it; it carries the call to action. */
+const LAST_BEAT = 9;
 const TALL = new Set([4, 6]);
 const FAQ = [1, 2, 3, 4] as const;
 
@@ -78,11 +82,18 @@ export function LandingPage() {
   const nf = useMemo(() => new Intl.NumberFormat(lang), [lang]);
   const nf1 = useMemo(() => new Intl.NumberFormat(lang, { minimumFractionDigits: 1, maximumFractionDigits: 1 }), [lang]);
   const nf2 = useMemo(() => new Intl.NumberFormat(lang, { minimumFractionDigits: 2, maximumFractionDigits: 2 }), [lang]);
+  // the story's sums in the reader's currency: the repair, the smallest share and yours
+  const money = useMemo(() => storyMoney(lang), [lang]);
+  const sums = useMemo(() => {
+    const mf = moneyFormat(lang, money.currency);
+    return { repair: mf.format(money.repair), min: mf.format(money.min), mine: mf.format(money.mine) };
+  }, [lang, money]);
 
   const rootRef = useRef<HTMLDivElement>(null);
   const navRef = useRef<HTMLElement>(null);
   const skyRef = useRef<HTMLDivElement>(null);
   const nightRef = useRef<HTMLDivElement>(null);
+  const graphBgRef = useRef<HTMLDivElement>(null);
   const sceneRef = useRef<HTMLCanvasElement>(null);
   const storyRef = useRef<HTMLDivElement>(null);
   const mainRef = useRef<HTMLElement>(null);
@@ -117,6 +128,7 @@ export function LandingPage() {
     rtl,
     format: (n) => nf.format(n),
     label: (key, n) => (key === 'reached' ? t('landing.v2.story.hud.reached', { count: n }) : t('landing.v2.story.hud.people', { count: n })),
+    money: { repair: money.repair, mine: money.mine },
   };
   const growOptions: GrowOptions = {
     rtl,
@@ -173,7 +185,7 @@ export function LandingPage() {
         const root = rootRef.current;
         const canvas = sceneRef.current;
         const tags = tagRefs.current;
-        if (!root || !canvas || !skyRef.current || !nightRef.current || !storyRef.current || !hudRef.current) return;
+        if (!root || !canvas || !skyRef.current || !nightRef.current || !graphBgRef.current || !storyRef.current || !hudRef.current) return;
         if (!hudReachedRef.current || !hudReportedRef.current || !hudPeopleRef.current || !railRef.current) return;
         if (!tags.you || !tags.oleg || !tags.maria || !tags.lena) return;
         try {
@@ -183,6 +195,7 @@ export function LandingPage() {
               canvas,
               sky: skyRef.current,
               night: nightRef.current,
+              graphBg: graphBgRef.current,
               story: storyRef.current,
               beats: beatRefs.current.filter((b): b is HTMLElement => !!b),
               lates: lateRefs.current,
@@ -213,8 +226,9 @@ export function LandingPage() {
   // scroll finishing, the growth model and the "next" network
   useEffect(() => {
     const main = mainRef.current;
+    const root = rootRef.current;
     const beats = beatRefs.current.filter((b): b is HTMLElement => !!b);
-    const stopGlide = main ? initGlide(beats, main) : () => {};
+    const stopGlide = main && root ? initGlide(beats, main, root) : () => {};
     const els = {
       canvas: growCvRef.current,
       chart: growChartRef.current,
@@ -248,7 +262,7 @@ export function LandingPage() {
     sceneHandle.current?.update(optionsRef.current.scene);
     growHandle.current?.update(optionsRef.current.grow);
     nextHandle.current?.update({ rtl: optionsRef.current.rtl });
-  }, [lang, rtl]);
+  }, [lang, rtl, money]);
 
   // chapter rail: a click scrolls to the moment the beat is fully told (its middle)
   const goBeat = (e: ReactMouseEvent<HTMLAnchorElement>, b: number) => {
@@ -310,19 +324,20 @@ export function LandingPage() {
 
       <div className="sky" ref={skyRef} aria-hidden="true" />
       <div className="night" ref={nightRef} aria-hidden="true" />
+      <div className="graphbg" ref={graphBgRef} aria-hidden="true" />
       <canvas className="scene" ref={sceneRef} aria-hidden="true" />
       <div className="scrim" aria-hidden="true" />
       <div className="tags" aria-hidden="true">
-        <span className="tag below" ref={(el) => void (tagRefs.current.you = el)}>
+        <span className="tag t-you below" ref={(el) => void (tagRefs.current.you = el)}>
           {t('landing.v2.story.tags.you')}
         </span>
-        <span className="tag" ref={(el) => void (tagRefs.current.oleg = el)}>
+        <span className="tag t-oleg" ref={(el) => void (tagRefs.current.oleg = el)}>
           {t('landing.v2.story.tags.oleg')}
         </span>
-        <span className="tag sos right" ref={(el) => void (tagRefs.current.maria = el)}>
-          {t('landing.v2.story.tags.maria')}
+        <span className="tag t-maria sos right" ref={(el) => void (tagRefs.current.maria = el)}>
+          {t('landing.v2.story.tags.maria', sums)}
         </span>
-        <span className="tag care below" ref={(el) => void (tagRefs.current.lena = el)}>
+        <span className="tag t-lena care below" ref={(el) => void (tagRefs.current.lena = el)}>
           {t('landing.v2.story.tags.lena')}
         </span>
       </div>
@@ -333,7 +348,7 @@ export function LandingPage() {
         </div>
         <div className="reported" ref={hudReportedRef}>
           <b />
-          <span>{t('landing.v2.story.hud.reported')}</span>
+          <span>{t('landing.v2.story.hud.reported', sums)}</span>
         </div>
         <div className="people" ref={hudPeopleRef}>
           <b />
@@ -379,7 +394,7 @@ export function LandingPage() {
               <div className="wrap">
                 <div className="copy">
                   <span className="mono">{t(`landing.v2.story.b${b}.label`)}</span>
-                  <p className="say">{t(`landing.v2.story.b${b}.say`)}</p>
+                  <p className="say">{t(`landing.v2.story.b${b}.say`, sums)}</p>
                   {b === 2 ? (
                     <div className="late" ref={(el) => void (lateRefs.current[b] = el)}>
                       <p className="stat">
@@ -391,10 +406,10 @@ export function LandingPage() {
                     </div>
                   ) : b === 1 ? null : (
                     <p className="late" ref={(el) => void (lateRefs.current[b] = el)}>
-                      {t(`landing.v2.story.b${b}.late`)}
+                      {t(`landing.v2.story.b${b}.late`, sums)}
                     </p>
                   )}
-                  {b === 8 ? (
+                  {b === LAST_BEAT ? (
                     <div className="actions">
                       <a className="btn care" href="#start">
                         {t('landing.v2.hero.cta')}

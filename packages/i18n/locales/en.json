@@ -765,28 +765,33 @@
         },
         "b4": {
           "label": "2 · A Need",
-          "say": "Maria's car has broken down, and without it she can't get to work. The repair costs $300.",
-          "late": "Maria reports a Need and adds a link to a chat. A $300 Need reaches up to 300 people, nearest first."
+          "say": "Sarah's car has broken down, and without it she can't get to work. The repair costs {{repair}}.",
+          "late": "Sarah reports a Need and adds a link to a chat. A {{repair}} Need reaches up to 300 people, nearest first."
         },
         "b5": {
           "label": "3 · Everyone decides for themselves",
-          "say": "You know Oleg, and Oleg knows Maria. You can see this chain and ask Oleg what happened.",
+          "say": "You know Tom, and Tom knows Sarah. You can see this chain and ask Tom what happened.",
           "late": "Whether to take part is your choice."
         },
         "b6": {
           "label": "4 · A little from many",
-          "say": "Anyone willing to take part names an amount from $1. You name $5.",
+          "say": "Anyone willing to take part names an amount from {{min}}. You name {{mine}}.",
           "late": "It's an intention, and nothing is paid now. While the Need is open, you can change the amount or withdraw."
         },
         "b7": {
           "label": "5 · People agree directly",
-          "say": "Maria and the participants talk it over in the chat. Lena suggests a cheaper garage.",
+          "say": "Sarah and the participants talk it over in the chat. Emma suggests a cheaper garage.",
           "late": "If money is involved, people hand it over themselves. The app never touches it."
         },
         "b8": {
           "label": "You",
-          "say": "Tomorrow it could be you in Maria's place.",
+          "say": "Tomorrow it could be you in Sarah's place.",
           "late": "Then the people you know will be the first to hear about your Need."
+        },
+        "b9": {
+          "label": "In the app",
+          "say": "This is how your network looks in the app: you in the middle, the people you know around you, the people they know further out.",
+          "late": "When someone needs help, you see the chain of acquaintances from them to you."
         },
         "rail": {
           "1": "Flock",
@@ -796,18 +801,19 @@
           "5": "Decision",
           "6": "Participation",
           "7": "Chat",
-          "8": "You"
+          "8": "You",
+          "9": "App"
         },
         "tags": {
           "you": "You",
-          "oleg": "Oleg",
-          "maria": "Maria · $300",
-          "lena": "Lena"
+          "oleg": "Tom",
+          "maria": "Sarah · {{repair}}",
+          "lena": "Emma"
         },
         "hud": {
           "reached_one": "heard about the Need",
           "reached_other": "heard about the Need",
-          "reported": "of $300 reported",
+          "reported": "of {{repair}} reported",
           "people_one": "participant",
           "people_other": "participants"
         }

@@ -223,5 +223,8 @@ html.dark,
   --lv-text-3: #82938e;
   --lv-foot-link: #cfdcd8;
   --lv-foot-fine: #66766f;
+  /* the app's graph (graph-3d palette): its names and the wash behind the ball */
+  --lv-node: #e7eeeb;
+  --lv-wash: #1b332e;
   color-scheme: dark;
 }

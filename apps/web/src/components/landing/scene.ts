@@ -2,9 +2,10 @@
  * The story scene of the landing: instanced starlings over a photographed sky; the scroll position drives the
  * camera and the story. Ported from the concept prototype (local/media/concept-6, v9) with its numbers unchanged.
  *
- * Two formations: the ribbon of the opening shot and the cloud in which the story is told. The cloud has fixed
- * neighbours (7 nearest, made mutual); Maria's Need spreads by breadth-first search, nearest first.
- * Loaded with a dynamic import, so Three.js stays out of the app bundle.
+ * Three formations: the ribbon of the opening shot, the cloud in which the story is told, and at the end the
+ * graph the app draws: the same people as rings of dots around you (your acquaintances, theirs, then a dust),
+ * over the app's dark scene. The cloud has fixed neighbours (7 nearest, made mutual); Maria's Need spreads by
+ * breadth-first search, nearest first. Loaded with a dynamic import, so Three.js stays out of the app bundle.
  */
 import * as THREE from 'three';
 import { LineSegments2 } from 'three/examples/jsm/lines/LineSegments2.js';
@@ -12,11 +13,13 @@ import { LineSegmentsGeometry } from 'three/examples/jsm/lines/LineSegmentsGeome
 import { LineMaterial } from 'three/examples/jsm/lines/LineMaterial.js';
 
 export interface SceneElements {
-  /** The landing root; gets `past` once the story has scrolled away. */
+  /** The landing root; gets `past` once the story has scrolled away and `graph` while the graph is shown. */
   root: HTMLElement;
   canvas: HTMLCanvasElement;
   sky: HTMLElement;
   night: HTMLElement;
+  /** The app's dark scene with its centre wash; fades in as the flock turns into the graph. */
+  graphBg: HTMLElement;
   story: HTMLElement;
   beats: HTMLElement[];
   lates: (HTMLElement | null)[];
@@ -34,6 +37,8 @@ export interface SceneOptions {
   format: (n: number) => string;
   /** The words under a counter, in the plural form its number takes. */
   label: (key: 'reached' | 'people', n: number) => string;
+  /** The repair and your share in the reader's currency (money.ts): the participants' sums add up to the repair. */
+  money: { repair: number; mine: number };
 }
 
 export interface SceneHandle {
@@ -53,6 +58,8 @@ interface Shot {
 interface BeatOut {
   thin: [number, number][];
   thick: [number, number][];
+  /** The Need's way to you in the app: asker, link, you (drawn as a bent line with pulses). */
+  path: number[] | null;
   halo: number;
   ring: number;
   T: { you?: boolean; oleg?: boolean; maria?: boolean; lena?: boolean };
@@ -70,7 +77,10 @@ export function initScene(els: SceneElements, initial: SceneOptions): SceneHandl
   const small = innerWidth < 760;
   const lowEnd = (navigator.hardwareConcurrency || 8) <= 4;
   const N = small ? 2000 : lowEnd ? 4000 : 6500;
-  const { canvas, sky: skyEl, night: nightEl, beats, story } = els;
+  const { canvas, sky: skyEl, night: nightEl, graphBg, beats, story } = els;
+  /** The last beat: the network as the app shows it. The one before it turns the flock into that graph. */
+  const LAST = beats.length - 1;
+  const MORPH = LAST - 1;
 
   let seed = 11;
   const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
@@ -260,18 +270,108 @@ export function initScene(els: SceneElements, initial: SceneOptions): SceneHandl
       lena = i;
       break;
     }
+  // the participants' sums, in steps of a fifth of your share: you name five steps, the others add up to the repair
   const menu = [1, 2, 3, 5, 5, 5, 10, 10, 10, 15, 20];
-  const amt = parts.map((_, i) => (i === 0 ? 5 : menu[(rnd() * menu.length) | 0]!));
-  {
-    let sum = amt.reduce((a, b) => a + b, 0);
+  const pick = parts.map((_, i) => (i === 0 ? 5 : menu[(rnd() * menu.length) | 0]!));
+  let amt: number[] = [];
+  let repairTotal = 0;
+  const setMoney = (m: SceneOptions['money']) => {
+    const step = m.mine / 5;
+    const total = Math.max(parts.length * 2, Math.round(m.repair / step));
+    const a = pick.slice();
+    let sum = a.reduce((x, y) => x + y, 0);
     let i = 1;
-    while (sum !== 300) {
-      const d = Math.sign(300 - sum);
-      if (amt[i]! + d >= 1) {
-        amt[i] = amt[i]! + d;
+    while (sum !== total) {
+      const d = Math.sign(total - sum);
+      if (a[i]! + d >= 1) {
+        a[i] = a[i]! + d;
         sum += d;
       }
-      i = 1 + (i % (amt.length - 1));
+      i = 1 + (i % (a.length - 1));
+    }
+    amt = a.map((v) => v * step);
+    repairTotal = total * step;
+  };
+  setMoney(opts.money);
+
+  // ---- formation 3: the same people as the app draws them, rings of dots around you ----
+  // Shell radii by handshake (the app's ball: 0.38, 0.7 and 1 of the outer radius). People beyond the third
+  // handshake are a dust around it; the farthest leave the picture.
+  const SHELL = [0, 3.6, 6.7, 9.6];
+  const DUST = 6;
+  const dep = fromYou.d;
+  const GPOS = new Float32Array(N * 3);
+  /** When a bird sets off: your acquaintances first, the dust last. */
+  const GO = new Float32Array(N);
+  /** How much of a dot the graph shows: 1 on a ring, less for the dust, 0 for a bird that leaves. */
+  const GV = new Float32Array(N);
+  /** Dot size in world units. */
+  const GSZ = new Float32Array(N);
+  /** Each bird's progress into the graph this frame. */
+  const GI = new Float32Array(N);
+  {
+    const yx = NET[you * 3]!;
+    const yy = NET[you * 3 + 1]!;
+    const yz = NET[you * 3 + 2]!;
+    const dotK = small ? 1.3 : 1;
+    // directions from you: your acquaintances spread all round; everyone else sits near the person they came
+    // through, so the links run outwards in short branches, as the app's force layout draws them
+    const DX = new Float32Array(N * 3);
+    const unit = (i: number, x: number, y: number, z: number) => {
+      const m = Math.hypot(x, y, z) || 1;
+      DX[i * 3] = x / m;
+      DX[i * 3 + 1] = y / m;
+      DX[i * 3 + 2] = z / m;
+    };
+    for (let i = 0; i < N; i++) unit(i, gauss(), gauss(), gauss());
+    for (const i of fromYou.q) {
+      const d = dep[i]!;
+      if (d === 1) {
+        const rx = NET[i * 3]! - yx;
+        const ry = NET[i * 3 + 1]! - yy;
+        const rz = NET[i * 3 + 2]! - yz;
+        const l = Math.hypot(rx, ry, rz) || 1;
+        unit(i, rx / l + gauss() * 0.7, ry / l + gauss() * 0.7, rz / l + gauss() * 0.7);
+      } else if (d > 1) {
+        const p = fromYou.par[i]! * 3;
+        const spread = d <= 3 ? 0.42 : 0.6;
+        unit(i, DX[p]! + gauss() * spread, DX[p + 1]! + gauss() * spread, DX[p + 2]! + gauss() * spread);
+      }
+    }
+    // Maria a little aside from Oleg, so the Need's way to you reads as a bend, not a dot
+    {
+      const o = oleg * 3;
+      const ox = DX[o]!, oy = DX[o + 1]!, oz = DX[o + 2]!;
+      let px = -oz, pz = ox; // perpendicular to Oleg's direction, in the horizontal plane
+      const pl = Math.hypot(px, pz) || 1;
+      px /= pl;
+      pz /= pl;
+      unit(maria, ox + px * 0.85, oy - 0.25, oz + pz * 0.85);
+    }
+    for (let i = 0; i < N; i++) {
+      const d = dep[i]! < 0 ? 99 : dep[i]!;
+      const r = d === 0 ? 0 : d <= 3 ? SHELL[d]! * (0.9 + 0.2 * rnd()) : SHELL[3]! * (1.3 + 0.28 * (d - 4) + 0.35 * rnd());
+      const far = d > DUST ? 1.8 : 1;
+      GPOS[i * 3] = yx + DX[i * 3]! * r * far;
+      GPOS[i * 3 + 1] = yy + DX[i * 3 + 1]! * r * far;
+      GPOS[i * 3 + 2] = yz + DX[i * 3 + 2]! * r * far;
+      GO[i] = (Math.min(d, DUST + 1) / (DUST + 1)) * 0.55 + rnd() * 0.08;
+      GV[i] = d === 0 ? 0 : d <= 3 ? 1 : d <= DUST ? 0.55 - 0.12 * (d - 4) : 0;
+      GSZ[i] = dotK * (d === 1 ? 0.34 : d === 2 ? 0.26 : d === 3 ? 0.21 : 0.12);
+    }
+  }
+  const ring1 = fromYou.q.filter((i) => dep[i] === 1);
+  // links as the app draws them: each person to the one they came through, and some inside the rings
+  const gEdges: number[] = [];
+  for (let i = 0; i < N; i++) if (dep[i]! >= 2 && dep[i]! <= 3) gEdges.push(i, fromYou.par[i]!);
+  for (let i = 0; i < N; i++) {
+    const d = dep[i]!;
+    if (d < 1 || d > 3) continue;
+    for (const j of adj[i]!) {
+      if (j <= i || dep[j]! < 1 || dep[j]! > 3 || Math.abs(dep[j]! - d) > 1 || rnd() >= 0.3) continue;
+      // a link inside the rings only between people the layout put near each other: no chords across the ball
+      const gd = Math.hypot(GPOS[i * 3]! - GPOS[j * 3]!, GPOS[i * 3 + 1]! - GPOS[j * 3 + 1]!, GPOS[i * 3 + 2]! - GPOS[j * 3 + 2]!);
+      if (gd < 4.2) gEdges.push(i, j);
     }
   }
 
@@ -326,6 +426,16 @@ export function initScene(els: SceneElements, initial: SceneOptions): SceneHandl
     care: new THREE.Color(0x5fd3c6),
     sos: new THREE.Color(0xff6a5c),
     dim: new THREE.Color(0x3a4a46),
+    // the app's graph (graph-3d palette): dots by handshake, the dust, the scene
+    g1: new THREE.Color(0xe7eeeb),
+    g2: new THREE.Color(0x9fb0aa),
+    g3: new THREE.Color(0x5f7069),
+    dust: new THREE.Color(0x4d5d58),
+    scene: new THREE.Color(0x0b1513),
+  };
+  const ringCol = (i: number) => {
+    const d = dep[i]!;
+    return d === 0 ? C.you : d === 1 ? C.g1 : d === 2 ? C.g2 : d === 3 ? C.g3 : C.dust;
   };
   for (let i = 0; i < N; i++) {
     col[i * 3] = C.base.r;
@@ -342,14 +452,17 @@ export function initScene(els: SceneElements, initial: SceneOptions): SceneHandl
     t.colorSpace = THREE.SRGBColorSpace;
     return t;
   };
-  const glowTex = spriteTex((x) => {
-    const gr = x.createRadialGradient(64, 64, 0, 64, 64, 64);
-    gr.addColorStop(0, 'rgba(255,106,92,1)');
-    gr.addColorStop(0.25, 'rgba(255,106,92,.5)');
-    gr.addColorStop(1, 'rgba(255,106,92,0)');
-    x.fillStyle = gr;
-    x.fillRect(0, 0, 128, 128);
-  });
+  const glow = (r: number, g: number, b: number) =>
+    spriteTex((x) => {
+      const gr = x.createRadialGradient(64, 64, 0, 64, 64, 64);
+      gr.addColorStop(0, `rgba(${r},${g},${b},1)`);
+      gr.addColorStop(0.25, `rgba(${r},${g},${b},.5)`);
+      gr.addColorStop(1, `rgba(${r},${g},${b},0)`);
+      x.fillStyle = gr;
+      x.fillRect(0, 0, 128, 128);
+    });
+  const glowTex = glow(255, 106, 92);
+  const careTex = glow(95, 211, 198);
   const ringTex = spriteTex((x) => {
     x.strokeStyle = 'rgba(255,255,255,.95)';
     x.lineWidth = 5;
@@ -357,11 +470,110 @@ export function initScene(els: SceneElements, initial: SceneOptions): SceneHandl
     x.arc(64, 64, 50, 0, 6.283);
     x.stroke();
   });
+  // you in the app: the logo on a care tile (as BrandMark draws it), drawn once the logo has loaded
+  const tileCanvas = document.createElement('canvas');
+  tileCanvas.width = tileCanvas.height = 128;
+  const tileTex = new THREE.CanvasTexture(tileCanvas);
+  tileTex.colorSpace = THREE.SRGBColorSpace;
+  const drawTile = (img: HTMLImageElement | null) => {
+    const x = tileCanvas.getContext('2d');
+    if (!x) return;
+    x.clearRect(0, 0, 128, 128);
+    x.fillStyle = 'rgb(13,148,136)';
+    x.beginPath();
+    if (typeof x.roundRect === 'function') x.roundRect(4, 4, 120, 120, 35);
+    else x.rect(4, 4, 120, 120);
+    x.fill();
+    if (img && img.naturalWidth) {
+      const w = 82;
+      const h = Math.round((w * img.naturalHeight) / img.naturalWidth);
+      const m = document.createElement('canvas');
+      m.width = w;
+      m.height = h;
+      const mx = m.getContext('2d');
+      if (mx) {
+        mx.drawImage(img, 0, 0, w, h);
+        mx.globalCompositeOperation = 'source-in';
+        mx.fillStyle = 'rgb(255,255,255)';
+        mx.fillRect(0, 0, w, h);
+        x.drawImage(m, 64 - w / 2, 64 - h / 2);
+      }
+    }
+    tileTex.needsUpdate = true;
+  };
+  drawTile(null);
+  const logo = new Image();
+  logo.onload = () => drawTile(logo);
+  logo.src = '/logo.png';
+
   const haloMat = new THREE.SpriteMaterial({ map: glowTex, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, fog: false });
   const ringMat = new THREE.SpriteMaterial({ map: ringTex, transparent: true, depthWrite: false, fog: false });
+  const tileMat = new THREE.SpriteMaterial({ map: tileTex, transparent: true, depthWrite: false, depthTest: false, fog: false });
+  const careMat = new THREE.SpriteMaterial({ map: careTex, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, fog: false });
   const halo = new THREE.Sprite(haloMat);
   const ringS = new THREE.Sprite(ringMat);
-  scene.add(halo, ringS);
+  const tile = new THREE.Sprite(tileMat);
+  const tileGlow = new THREE.Sprite(careMat);
+  tileGlow.renderOrder = 2;
+  tile.renderOrder = 3;
+  const pulses = [0, 1, 2].map(() => new THREE.Sprite(careMat));
+  scene.add(halo, ringS, tileGlow, tile, ...pulses);
+
+  // the graph's dots: one draw for all, round, sized by handshake; they take over from the birds
+  const P = new Float32Array(N * 3);
+  const dotAlpha = new Float32Array(N);
+  const dotSize = new Float32Array(N);
+  const dotGeo = new THREE.BufferGeometry();
+  const dotPosAttr = new THREE.BufferAttribute(P, 3).setUsage(THREE.DynamicDrawUsage);
+  const dotColAttr = new THREE.BufferAttribute(col, 3).setUsage(THREE.DynamicDrawUsage);
+  const dotAlphaAttr = new THREE.BufferAttribute(dotAlpha, 1).setUsage(THREE.DynamicDrawUsage);
+  const dotSizeAttr = new THREE.BufferAttribute(dotSize, 1).setUsage(THREE.DynamicDrawUsage);
+  dotGeo.setAttribute('position', dotPosAttr);
+  dotGeo.setAttribute('aColor', dotColAttr);
+  dotGeo.setAttribute('aAlpha', dotAlphaAttr);
+  dotGeo.setAttribute('aSize', dotSizeAttr);
+  const dotMat = new THREE.ShaderMaterial({
+    uniforms: { uScale: { value: 1 }, uMax: { value: 16 }, uMin: { value: 1.5 } },
+    vertexShader: `
+      attribute vec3 aColor; attribute float aAlpha; attribute float aSize;
+      uniform float uScale; uniform float uMax; uniform float uMin;
+      varying vec3 vColor; varying float vAlpha;
+      void main() {
+        vec4 mv = modelViewMatrix * vec4(position, 1.0);
+        gl_Position = projectionMatrix * mv;
+        float px = aSize * uScale / max(0.001, -mv.z);
+        // far dots stay a few pixels and fade instead of vanishing; near ones are capped (the app does the same)
+        vAlpha = aAlpha * clamp(px / uMin, 0.0, 1.0);
+        gl_PointSize = clamp(px, uMin, uMax);
+        vColor = aColor;
+      }`,
+    fragmentShader: `
+      varying vec3 vColor; varying float vAlpha;
+      void main() {
+        float r = length(gl_PointCoord - 0.5);
+        float a = smoothstep(0.5, 0.38, r) * vAlpha;
+        if (a < 0.01) discard;
+        gl_FragColor = vec4(vColor, a);
+        #include <colorspace_fragment>
+      }`,
+    transparent: true,
+    depthWrite: false,
+  });
+  const dots = new THREE.Points(dotGeo, dotMat);
+  dots.frustumCulled = false;
+  dots.visible = false;
+  scene.add(dots);
+
+  // the graph's links: thin, faint, one draw
+  const linkArr = new Float32Array(gEdges.length * 3);
+  const linkGeo = new THREE.BufferGeometry();
+  const linkAttr = new THREE.BufferAttribute(linkArr, 3).setUsage(THREE.DynamicDrawUsage);
+  linkGeo.setAttribute('position', linkAttr);
+  const linkMat = new THREE.LineBasicMaterial({ color: 0xe7eeeb, transparent: true, opacity: 0, depthWrite: false, fog: false });
+  const links = new THREE.LineSegments(linkGeo, linkMat);
+  links.frustumCulled = false;
+  links.visible = false;
+  scene.add(links);
 
   const thinMat = new LineMaterial({ color: 0xd9efea, linewidth: 1.4, transparent: true, opacity: 0.7, depthWrite: false });
   const thickMat = new LineMaterial({ color: 0xffffff, linewidth: 3, transparent: true, opacity: 0.95, depthWrite: false });
@@ -401,13 +613,70 @@ export function initScene(els: SceneElements, initial: SceneOptions): SceneHandl
     buf.needsUpdate = true;
     obj.geometry.instanceCount = n;
   };
+  // the Need's way in the app: each step a gentle bend (graph-3d PATH_CURVE), sampled into the thick line
+  const CURVE_STEPS = 14;
+  const curve = new Float32Array((CURVE_STEPS * 2 + 1) * 3);
+  let curvePts = 0;
+  const setCurve = (ids: number[]) => {
+    let n = 0;
+    for (let s = 0; s + 1 < ids.length; s++) {
+      const a = ids[s]! * 3;
+      const b = ids[s + 1]! * 3;
+      const ax = P[a]!, ay = P[a + 1]!, az = P[a + 2]!;
+      const bx = P[b]!, by = P[b + 1]!, bz = P[b + 2]!;
+      const len = Math.hypot(bx - ax, by - ay, bz - az);
+      const cx = (ax + bx) / 2;
+      const cy = (ay + by) / 2 + len * 0.15;
+      const cz = (az + bz) / 2;
+      for (let k = s === 0 ? 0 : 1; k <= CURVE_STEPS; k++) {
+        const u = k / CURVE_STEPS;
+        const w0 = (1 - u) * (1 - u);
+        const w1 = 2 * u * (1 - u);
+        const w2 = u * u;
+        curve[n * 3] = w0 * ax + w1 * cx + w2 * bx;
+        curve[n * 3 + 1] = w0 * ay + w1 * cy + w2 * by;
+        curve[n * 3 + 2] = w0 * az + w1 * cz + w2 * bz;
+        n++;
+      }
+    }
+    curvePts = n;
+    const segs = Math.min(n - 1, MAXSEG);
+    thick2.visible = segs > 0;
+    const buf = lineBuf.get(thick2);
+    if (!buf || segs <= 0) return;
+    const arr = buf.array as Float32Array;
+    for (let k = 0; k < segs; k++) {
+      arr.set(curve.subarray(k * 3, k * 3 + 6), k * 6);
+    }
+    buf.needsUpdate = true;
+    thick2.geometry.instanceCount = segs;
+  };
+  /** A point a fraction `u` along the sampled path (by length). */
+  const along = (u: number, out: THREE.Vector3) => {
+    let total = 0;
+    for (let k = 1; k < curvePts; k++)
+      total += Math.hypot(curve[k * 3]! - curve[k * 3 - 3]!, curve[k * 3 + 1]! - curve[k * 3 - 2]!, curve[k * 3 + 2]! - curve[k * 3 - 1]!);
+    let left = u * total;
+    for (let k = 1; k < curvePts; k++) {
+      const seg = Math.hypot(curve[k * 3]! - curve[k * 3 - 3]!, curve[k * 3 + 1]! - curve[k * 3 - 2]!, curve[k * 3 + 2]! - curve[k * 3 - 1]!);
+      if (left <= seg || k === curvePts - 1) {
+        const f = seg > 0 ? clamp(left / seg) : 0;
+        return out.set(
+          lerp(curve[k * 3 - 3]!, curve[k * 3]!, f),
+          lerp(curve[k * 3 - 2]!, curve[k * 3 + 1]!, f),
+          lerp(curve[k * 3 - 1]!, curve[k * 3 + 2]!, f),
+        );
+      }
+      left -= seg;
+    }
+    return out.set(curve[0]!, curve[1]!, curve[2]!);
+  };
 
   // ---- motion: the shape breathes and drifts; every bird flaps and bobs; neighbours stay neighbours ----
-  const P = new Float32Array(N * 3);
   const PREV = new Float32Array(N * 3);
   const DIR = new Float32Array(N * 3);
   for (let i = 0; i < N; i++) DIR[i * 3] = 1;
-  const place = (T: number, morph: number, calm: number) => {
+  const place = (T: number, morph: number, calm: number, g: number) => {
     const ampH = 1.8;
     const ampN = lerp(1.6, 0.7, calm);
     const drift = 3 * Math.sin(T * 0.045);
@@ -432,9 +701,20 @@ export function initScene(els: SceneElements, initial: SceneOptions): SceneHandl
       nz += bob * Math.sin(T * 0.9 + ph * 2.3);
       const s = ease(clamp((morph - 0.38 * (1 - U[i]!)) / 0.62));
       const lift = Math.sin(Math.PI * s) * (3 + 5 * ((ph * 7) % 1));
-      P[ix] = lerp(hx, nx, s);
-      P[ix + 1] = lerp(hy, ny, s) + lift;
-      P[ix + 2] = lerp(hz, nz, s);
+      let px = lerp(hx, nx, s);
+      let py = lerp(hy, ny, s) + lift;
+      let pz = lerp(hz, nz, s);
+      // the graph: each bird glides to its ring, the nearer rings first, with a small arc on the way
+      const gi = g <= 0 ? 0 : ease(clamp((g - 0.5 * GO[i]!) / 0.5));
+      GI[i] = gi;
+      if (gi > 0) {
+        px = lerp(px, GPOS[ix]!, gi);
+        py = lerp(py, GPOS[ix + 1]!, gi) + Math.sin(Math.PI * gi) * (1 + 2 * ((ph * 3) % 1));
+        pz = lerp(pz, GPOS[ix + 2]!, gi);
+      }
+      P[ix] = px;
+      P[ix + 1] = py;
+      P[ix + 2] = pz;
     }
   };
   const M4 = new THREE.Matrix4();
@@ -459,7 +739,8 @@ export function initScene(els: SceneElements, initial: SceneOptions): SceneHandl
       DIR[ix + 2] = lerp(DIR[ix + 2]!, dz / l, 0.12);
       D.set(DIR[ix], DIR[ix + 1]!, DIR[ix + 2]!).normalize();
       QT.setFromUnitVectors(X, D);
-      const sc = 0.58 * scl[i]! * lerp(1.45, 1, s);
+      // a bird shrinks into its dot as it reaches the graph
+      const sc = 0.58 * scl[i]! * lerp(1.45, 1, s) * (1 - clamp(GI[i]! * 1.25));
       SC.set(sc, sc, sc);
       PO.set(P[ix]!, P[ix + 1]!, P[ix + 2]!);
       M4.compose(PO, QT, SC);
@@ -467,6 +748,27 @@ export function initScene(els: SceneElements, initial: SceneOptions): SceneHandl
     }
     birds.instanceMatrix.needsUpdate = true;
     PREV.set(P);
+  };
+  // the dots follow the birds into the graph: size by handshake, a highlight grows them like the birds
+  const syncDots = () => {
+    for (let i = 0; i < N; i++) {
+      const gi = GI[i]!;
+      dotAlpha[i] = gi <= 0 ? 0 : clamp(gi * 1.6 - 0.25) * GV[i]!;
+      dotSize[i] = GSZ[i]! * (0.6 + 0.4 * scl[i]!);
+    }
+    dotPosAttr.needsUpdate = true;
+    dotColAttr.needsUpdate = true;
+    dotAlphaAttr.needsUpdate = true;
+    dotSizeAttr.needsUpdate = true;
+  };
+  const syncLinks = () => {
+    for (let e = 0; e < gEdges.length; e++) {
+      const i = gEdges[e]! * 3;
+      linkArr[e * 3] = P[i]!;
+      linkArr[e * 3 + 1] = P[i + 1]!;
+      linkArr[e * 3 + 2] = P[i + 2]!;
+    }
+    linkAttr.needsUpdate = true;
   };
 
   // ---- scroll → story time t (beat index + progress) ----
@@ -485,6 +787,7 @@ export function initScene(els: SceneElements, initial: SceneOptions): SceneHandl
   const V = (i: number, o: THREE.Vector3) => o.set(P[i * 3]!, P[i * 3 + 1]!, P[i * 3 + 2]!);
   const tmpA = new THREE.Vector3();
   const tmpB = new THREE.Vector3();
+  let clock = 0;
   const shot = (k: number, o: Shot) => {
     const wide = innerWidth > 860;
     // the subject sits beside the words: to the right of them, or to the left in a right-to-left language
@@ -493,6 +796,8 @@ export function initScene(els: SceneElements, initial: SceneOptions): SceneHandl
     const offY = wide ? 0 : 0.16;
     o.off = off;
     o.offY = offY;
+    // the graph fills the width of a phone: the camera stands back by the screen's narrowness
+    const narrow = Math.max(1, 0.9 / (innerWidth / innerHeight));
     switch (k) {
       case 0:
         o.t.set(14, 9, 0);
@@ -546,11 +851,19 @@ export function initScene(els: SceneElements, initial: SceneOptions): SceneHandl
         o.yaw = -0.2;
         o.pitch = 0.1;
         break;
-      default:
-        V(you, o.t);
-        o.d = 66;
+      case MORPH:
+        // the flock gathers round you into the app's rings
+        o.t.set(NET[you * 3]!, NET[you * 3 + 1]!, NET[you * 3 + 2]!);
+        o.d = 46 * narrow;
         o.yaw = 0.1;
-        o.pitch = 0.05;
+        o.pitch = 0.1;
+        break;
+      default:
+        // the app's view: the camera circles slowly, as the graph in the app does
+        o.t.set(NET[you * 3]!, NET[you * 3 + 1]!, NET[you * 3 + 2]!);
+        o.d = 42 * narrow;
+        o.yaw = 0.1 + (reduce ? 0 : clock * 0.05);
+        o.pitch = 0.16;
     }
     return o;
   };
@@ -574,7 +887,7 @@ export function initScene(els: SceneElements, initial: SceneOptions): SceneHandl
       CAM.offY = SA.offY;
     } else {
       shot(k - 1, SA);
-      shot(Math.min(k, 8), SB);
+      shot(Math.min(k, LAST), SB);
       const e = easeIO(remap(p, 0, 0.42));
       CAM.t.lerpVectors(SA.t, SB.t, e);
       CAM.d = lerp(SA.d, SB.d, e);
@@ -608,7 +921,7 @@ export function initScene(els: SceneElements, initial: SceneOptions): SceneHandl
   // chapter rail: shows where you are
   const rail = (t: number) => {
     const k = Math.floor(t + 0.02);
-    els.rail.classList.toggle('on', k >= 1 && k <= 8);
+    els.rail.classList.toggle('on', k >= 1 && k <= LAST);
     els.railLinks.forEach((a, n) => {
       const b = n + 1;
       a.classList.toggle('on', b === k);
@@ -625,20 +938,24 @@ export function initScene(els: SceneElements, initial: SceneOptions): SceneHandl
   const hRL = els.hudReached.querySelector('span');
   const hPL = els.hudPeople.querySelector('span');
   let lastHud = '';
+  const tmpC = new THREE.Color();
   const setT = (i: number, c: THREE.Color, s = 1) => {
     colT[i * 3] = c.r;
     colT[i * 3 + 1] = c.g;
     colT[i * 3 + 2] = c.b;
     scl[i] = lerp(scl[i]!, s, 0.15);
   };
+  /** In the graph a colour is reached as the bird arrives: a dark bird on the sky, a light dot on the scene. */
+  const setG = (i: number, c: THREE.Color, s = 1) => setT(i, tmpC.copy(C.base).lerp(c, GI[i]!), s);
   const beatState = (t: number): BeatOut => {
     const k = Math.floor(t);
     const p = t - k;
     els.lates.forEach((el, j) => {
       if (el) el.classList.toggle('on', j < k || (j === k && p > 0.2));
     });
-    for (let i = 0; i < N; i++) setT(i, C.base, 1);
-    const out: BeatOut = { thin: [], thick: [], halo: -1, ring: -1, T: {} };
+    const out: BeatOut = { thin: [], thick: [], path: null, halo: -1, ring: -1, T: {} };
+    if (k >= MORPH) for (let i = 0; i < N; i++) setG(i, ringCol(i), 1);
+    else for (let i = 0; i < N; i++) setT(i, C.base, 1);
     let reached = 0;
     let reported = 0;
     let people = 0;
@@ -718,7 +1035,7 @@ export function initScene(els: SceneElements, initial: SceneOptions): SceneHandl
     if (k === 7) {
       // the participants' chat
       reached = reach.length;
-      reported = 300;
+      reported = repairTotal;
       people = parts.length;
       for (const i of reach) setT(i, C.dim, 1);
       parts.forEach((i) => {
@@ -730,19 +1047,30 @@ export function initScene(els: SceneElements, initial: SceneOptions): SceneHandl
       out.T.maria = true;
       out.T.lena = true;
     }
-    if (k >= 8) {
-      // next time the Need may start from you
-      const n = Math.round(ease(remap(p, 0.06, 0.46)) * 600);
-      for (let r = 1; r < Math.min(n, fromYou.q.length); r++) setT(fromYou.q[r]!, C.warm, 1.15);
+    if (k === MORPH) {
+      // next time the Need may start from you: the flock becomes your rings, and the people you know hear first
+      // the Need spreads once the rings have formed: your acquaintances, then theirs, up to 300 people
+      const n = Math.round(ease(Math.min(spread, remap(p, 0.18, 0.5))) * 300);
+      for (let r = 1; r < Math.min(n + 1, fromYou.q.length); r++) setG(fromYou.q[r]!, C.warm, 1.25);
       setT(you, C.sos, 1.8);
       out.halo = you;
       out.T.you = true;
     }
+    if (k >= LAST) {
+      // the app's view: your rings, and a Need on its way to you along the chain Maria → Oleg → you
+      setG(maria, C.sos, 1.6);
+      setG(oleg, C.care, 1.35);
+      out.thin = ring1.map((j) => [you, j] as [number, number]);
+      out.path = [maria, oleg, you];
+      out.ring = maria;
+      out.T.you = out.T.oleg = out.T.maria = true;
+    }
     els.hud.classList.toggle('on', k >= 4 && k <= 7);
     els.hudReported.classList.toggle('off', k < 6);
     els.hudPeople.classList.toggle('off', k < 6);
+    // the counters keep their last numbers while they fade out
     const hud = `${reached}|${reported}|${people}`;
-    if (hud !== lastHud) {
+    if (k >= 4 && k <= 7 && hud !== lastHud) {
       lastHud = hud;
       if (hR) hR.textContent = opts.format(reached);
       if (hRep) hRep.textContent = opts.format(reported);
@@ -775,6 +1103,11 @@ export function initScene(els: SceneElements, initial: SceneOptions): SceneHandl
     camera.updateProjectionMatrix();
     thinMat.resolution.set(innerWidth, innerHeight);
     thickMat.resolution.set(innerWidth, innerHeight);
+    // a dot of size s at distance z is s * uScale / z device pixels tall
+    const pr = renderer.getPixelRatio();
+    dotMat.uniforms.uScale!.value = (innerHeight * pr * 0.5) / Math.tan((camera.fov * Math.PI) / 360);
+    dotMat.uniforms.uMax!.value = 12 * pr;
+    dotMat.uniforms.uMin!.value = 1.6 * pr;
   };
   resize();
   addEventListener('resize', resize);
@@ -789,25 +1122,52 @@ export function initScene(els: SceneElements, initial: SceneOptions): SceneHandl
   io.observe(story);
 
   let tS = storyT();
-  let clock = 0;
+  let gS = 0;
+  /** How far the Need of the morph beat has spread, 0 to 1; it starts when the rings are nearly formed. */
+  let spread = 0;
   let last = performance.now();
+  let lastBg = '';
+  let graphOn = false;
+  const fogNight = new THREE.Color();
+  const tmpP = new THREE.Vector3();
   const tick = (dt: number, target: number) => {
     clock += reduce ? 0 : dt;
     uTime.value = clock;
     tS += (target - tS) * (reduce ? 1 : Math.min(1, dt * 4));
+    // the graph has its own, slower pace: the flock takes a moment to gather however fast the page moves
+    const gTarget = clamp((tS - MORPH) / 0.3);
+    gS += (gTarget - gS) * (reduce ? 1 : Math.min(1, dt * 1.1));
+    if (Math.abs(gTarget - gS) < 1e-3) gS = gTarget;
+    spread = reduce ? 1 : clamp(spread + (Math.floor(tS) === MORPH && gS > 0.8 ? dt / 1.8 : -dt / 0.6));
     const morph = clamp((tS - 0.15) / 1.15);
     const calm = clamp(tS - 1);
-    place(clock + 20, morph, calm);
+    place(clock + 20, morph, calm, gS);
     const st = beatState(tS);
     for (let i = 0; i < N * 3; i++) col[i]! += (colT[i]! - col[i]!) * 0.14;
-    if (birds.instanceColor) birds.instanceColor.needsUpdate = true;
-    syncBirds(morph);
+    const allDots = gS >= 1;
+    birds.visible = !allDots;
+    if (!allDots) {
+      if (birds.instanceColor) birds.instanceColor.needsUpdate = true;
+      syncBirds(morph);
+    } else PREV.set(P);
+    dots.visible = gS > 0;
+    links.visible = gS > 0.4;
+    if (dots.visible) syncDots();
+    if (links.visible) {
+      syncLinks();
+      linkMat.opacity = 0.14 * ease(remap(gS, 0.4, 1));
+    }
     frameCamera(tS, clock, dt);
     rail(tS);
+    const k = Math.floor(tS);
     setLines(thin, st.thin, P);
-    setLines(thick2, st.thick, P);
-    thinMat.color.set(Math.floor(tS) === 7 ? 0x5fd3c6 : 0xd9efea);
-    thinMat.opacity = Math.floor(tS) === 7 ? 0.4 : 0.7;
+    if (st.path) setCurve(st.path);
+    else setLines(thick2, st.thick, P);
+    const graphView = k >= LAST;
+    thinMat.color.set(k === 7 || graphView ? 0x5fd3c6 : 0xd9efea);
+    thinMat.opacity = k === 7 ? 0.4 : graphView ? 0.55 : 0.7;
+    thickMat.color.set(graphView ? 0x5fd3c6 : 0xffffff);
+    thickMat.linewidth = graphView ? 2.2 : 3;
     halo.visible = st.halo >= 0;
     if (halo.visible) {
       V(st.halo, halo.position);
@@ -816,20 +1176,64 @@ export function initScene(els: SceneElements, initial: SceneOptions): SceneHandl
     ringS.visible = st.ring >= 0;
     if (ringS.visible) {
       V(st.ring, ringS.position);
-      ringS.scale.setScalar(CS.d * 0.045);
+      // in the app the person with the Need keeps a breathing ring
+      const breathe = graphView && !reduce ? 1 + 0.18 * Math.sin(clock * 3) : 1;
+      ringS.scale.setScalar(CS.d * (graphView ? 0.022 : 0.045) * breathe);
+      ringMat.color.set(graphView ? 0xff6a5c : 0xffffff);
     }
+    // you become the app's tile: the logo on care
+    const tileA = ease(remap(gS, 0.45, 0.9));
+    tile.visible = tileGlow.visible = tileA > 0;
+    if (tile.visible) {
+      V(you, tile.position);
+      tileGlow.position.copy(tile.position);
+      tile.scale.setScalar(CS.d * 0.032 * (0.6 + 0.4 * tileA));
+      tileGlow.scale.setScalar(CS.d * 0.075);
+      tileMat.opacity = tileA;
+      careMat.opacity = 0.55 * tileA;
+    }
+    // pulses travel along the Need's way to you
+    pulses.forEach((s, n) => {
+      s.visible = !!st.path && curvePts > 1 && !reduce;
+      if (!s.visible) return;
+      along((clock * 0.3 + n / pulses.length) % 1, s.position);
+      s.scale.setScalar(CS.d * 0.03);
+    });
     tagAt(els.tags.you, you, st.T.you);
     tagAt(els.tags.oleg, oleg, st.T.oleg);
     tagAt(els.tags.maria, maria, st.T.maria);
     tagAt(els.tags.lena, lena, st.T.lena);
-    // the evening darkens as the story goes on
+    const nowGraph = gS > 0.55;
+    if (nowGraph !== graphOn) {
+      graphOn = nowGraph;
+      els.root.classList.toggle('graph', graphOn);
+    }
+    // the evening darkens as the story goes on; then the app's scene takes over, its wash centred on you
     const nt = clamp((tS - 2.6) / 5);
     nightEl.style.opacity = (nt * 0.62).toFixed(3);
+    const bgA = ease(gS);
+    if (bgA > 0) {
+      V(you, tmpP).project(camera);
+      const bg = `${bgA.toFixed(3)}|${Math.round(((tmpP.x + 1) / 2) * innerWidth)}|${Math.round(((1 - tmpP.y) / 2) * innerHeight)}`;
+      if (bg !== lastBg) {
+        lastBg = bg;
+        const [a, gx, gy] = bg.split('|');
+        graphBg.style.opacity = a!;
+        graphBg.style.setProperty('--gx', `${gx}px`);
+        graphBg.style.setProperty('--gy', `${gy}px`);
+      }
+    } else if (lastBg) {
+      lastBg = '';
+      graphBg.style.opacity = '0';
+    }
     // the sky follows the camera: it slides against the yaw and the side offset, sinks as the camera rises,
     // and closes in on close shots
-    const close = clamp((94 - CS.d) / 80);
-    skyEl.style.transform = `translate3d(${(-CS.yaw * 9 + CS.off * 5).toFixed(2)}%, ${(clamp(tS / 3) * 5 + CS.pitch * 18).toFixed(2)}%, 0) scale(${(1.04 + close * 0.14).toFixed(3)})`;
-    fog.color.setRGB(lerp(0.42, 0.07, nt), lerp(0.5, 0.14, nt), lerp(0.53, 0.13, nt));
+    if (bgA < 1) {
+      const close = clamp((94 - CS.d) / 80);
+      skyEl.style.transform = `translate3d(${(-CS.yaw * 9 + CS.off * 5).toFixed(2)}%, ${(clamp(tS / 3) * 5 + CS.pitch * 18).toFixed(2)}%, 0) scale(${(1.04 + close * 0.14).toFixed(3)})`;
+    }
+    fogNight.setRGB(lerp(0.42, 0.07, nt), lerp(0.5, 0.14, nt), lerp(0.53, 0.13, nt));
+    fog.color.copy(fogNight).lerp(C.scene, bgA);
     renderer.render(scene, camera);
   };
 
@@ -851,16 +1255,27 @@ export function initScene(els: SceneElements, initial: SceneOptions): SceneHandl
       },
       state: () => {
         const t = storyT();
-        return { y: Math.round(scrollY), beat: Math.floor(t), p: +(t % 1).toFixed(3) };
+        return { y: Math.round(scrollY), beat: Math.floor(t), p: +(t % 1).toFixed(3), g: +gS.toFixed(3) };
       },
-      cast: { you, maria, oleg, lena, reach: reach.length, parts: parts.length },
+      cast: {
+        you,
+        maria,
+        oleg,
+        lena,
+        reach: reach.length,
+        parts: parts.length,
+        rings: [1, 2, 3, 4, 5, 6].map((d) => fromYou.q.filter((i) => dep[i] === d).length),
+        links: gEdges.length / 2,
+        repair: repairTotal,
+      },
     };
   }
 
   return {
     update(next) {
       // a new language: numbers are written again; a new direction moves the subject to the other side (the
-      // damped camera follow glides there)
+      // damped camera follow glides there); a new currency gives the participants new sums
+      if (next.money.repair !== opts.money.repair || next.money.mine !== opts.money.mine) setMoney(next.money);
       opts = next;
       lastHud = '';
     },
@@ -868,13 +1283,22 @@ export function initScene(els: SceneElements, initial: SceneOptions): SceneHandl
       cancelAnimationFrame(raf);
       removeEventListener('resize', resize);
       io.disconnect();
-      els.root.classList.remove('past');
+      logo.onload = null;
+      els.root.classList.remove('past', 'graph');
       geo.dispose();
       mat.dispose();
       glowTex.dispose();
+      careTex.dispose();
       ringTex.dispose();
+      tileTex.dispose();
       haloMat.dispose();
       ringMat.dispose();
+      tileMat.dispose();
+      careMat.dispose();
+      dotGeo.dispose();
+      dotMat.dispose();
+      linkGeo.dispose();
+      linkMat.dispose();
       thinGeo.dispose();
       thickGeo.dispose();
       thinMat.dispose();

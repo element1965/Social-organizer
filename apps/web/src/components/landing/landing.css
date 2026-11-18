@@ -61,6 +61,8 @@ html.lv-page body { background-color: rgb(var(--so-scene)); }
 /* the fixed scene: the sky graded towards the brand scene colour, the flock, the night */
 .lv .sky { position: fixed; inset: -10% -10% 0 -10%; z-index: 0; background: var(--lv-sky) center bottom / cover no-repeat; transform-origin: 50% 70%; will-change: transform; }
 .lv .night { position: fixed; inset: 0; z-index: 0; background: linear-gradient(180deg, var(--lv-night) 0%, var(--lv-scene) 55%, var(--lv-scene-2) 100%); opacity: 0; pointer-events: none; }
+/* the app's scene at the end of the story: its dark ground and centre wash, centred on you (scene.ts sets --gx, --gy) */
+.lv .graphbg { position: fixed; inset: 0; z-index: 0; opacity: 0; pointer-events: none; background: radial-gradient(circle at var(--gx, 60%) var(--gy, 50%), var(--lv-wash) 0, var(--lv-scene-2) 24vmax, var(--lv-scene) 52vmax); }
 .lv .scene { position: fixed; inset: 0; z-index: 1; width: 100%; height: 100%; pointer-events: none; }
 .lv .scrim { position: fixed; inset: 0; z-index: 1; pointer-events: none; background: linear-gradient(90deg, rgba(5, 12, 11, .7) 0%, rgba(5, 12, 11, .42) 30%, rgba(5, 12, 11, 0) 56%); }
 .lv .tags { position: fixed; inset: 0; z-index: 2; pointer-events: none; }
@@ -70,6 +72,13 @@ html.lv-page body { background-color: rgb(var(--so-scene)); }
 .lv .tag.care { background: var(--lv-care); }
 .lv .tag.right { transform: translate(14px, -50%); }
 .lv .tag.below { transform: translate(-50%, 14px); }
+/* in the graph the names read as the app's labels: plain bold text under the dot */
+.lv.graph .tag { background: none; padding: 0; font: 700 12px/1.2 var(--sans); color: var(--lv-node); text-shadow: 0 1px 8px rgba(5, 12, 11, .95); transform: translate(-50%, 12px); }
+.lv.graph .tag.t-maria { transform: translate(18px, -50%); }
+html[dir="rtl"] .lv.graph .tag.t-maria { transform: translate(calc(-100% - 18px), -50%); }
+.lv.graph .tag.sos { color: var(--lv-sos-scene); }
+.lv.graph .tag.t-you, .lv.graph .tag.t-oleg { color: var(--lv-care-scene); }
+.lv.graph .tag.t-you { transform: translate(-50%, 26px); }
 .lv .hud { position: fixed; z-index: 3; inset-inline-end: var(--gut); bottom: 34px; display: flex; gap: 34px; pointer-events: none; opacity: 0; transition: opacity .4s; }
 .lv .hud.on { opacity: 1; }
 .lv .hud div { display: flex; flex-direction: column; gap: 8px; transition: opacity .4s; }
@@ -78,7 +87,7 @@ html.lv-page body { background-color: rgb(var(--so-scene)); }
 .lv .hud .off { opacity: .28; }
 .lv .hud .reached b { color: var(--lv-warm); }
 .lv .hud .reported b, .lv .hud .people b { color: var(--lv-care-scene); }
-.lv.past .sky, .lv.past .night, .lv.past .scene, .lv.past .scrim, .lv.past .tags, .lv.past .hud, .lv.past .rail { visibility: hidden; }
+.lv.past .sky, .lv.past .night, .lv.past .graphbg, .lv.past .scene, .lv.past .scrim, .lv.past .tags, .lv.past .hud, .lv.past .rail { visibility: hidden; }
 
 /* chapter rail */
 .lv .rail { position: fixed; z-index: 6; inset-inline-end: 26px; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 15px; opacity: 0; pointer-events: none; transition: opacity .4s; }
