@@ -305,6 +305,8 @@ node scripts/build-android-staging.mjs --no-web   # reuse apps/web/dist
 
 Capacitor-based iOS wrapper (`apps/web/ios/`) that loads the production web URL. Build via Xcode (`bash scripts/deploy-ios.sh` → Archive → Upload). Bundle `com.socialorganizer.app`, Apple ID `6768132198`. Listing/metadata are managed through the App Store Connect API (key in `secrets/asc/`). Because the UI is served from the web, most fixes ship via a Railway deploy and a plain re-submit of the same binary — a new Xcode archive is only needed for native/Info.plist changes. Full flow in `IOS_DEPLOY.md`; Sign in with Apple setup in `APPLE_SIGNIN.md`.
 
+**Cloud build without a Mac:** `.github/workflows/ios-release.yml` (GitHub Actions, macOS runner, manual start with a build number) builds the web app, syncs Capacitor, archives with manual signing (distribution certificate + profile "Social Organizer App Store CI") and uploads the IPA to App Store Connect (TestFlight). Repository secrets: `IOS_DIST_P12` (base64), `IOS_DIST_P12_PASSWORD`, `IOS_PROFILE` (base64 `.mobileprovision`), `ASC_KEY_ID`, `ASC_ISSUER_ID`, `ASC_KEY_P8`. The same values are kept in the project fields of the Lambertain portal.
+
 #### Universal Links and push on iOS (from version 1.1, build 3)
 
 - **Universal Links:** `App/App.entitlements` declares `applinks:www.orginizer.com` and `applinks:orginizer.com`; the API serves `/.well-known/apple-app-site-association` (and `/apple-app-site-association`) for `/invite/*`, `/i/*`, `/sos/*` with app ID `APPLE_TEAM_ID`.`APPLE_BUNDLE_ID` (defaults: `6MQRV9Q3H5`, `com.socialorganizer.app`). The app routes the link with the same `appLinkPath` as Android. The App ID needs the "Associated Domains" capability and a provisioning profile regenerated after enabling it.
