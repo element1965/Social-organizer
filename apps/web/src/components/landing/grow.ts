@@ -10,7 +10,9 @@ export interface GrowElements {
   slider: HTMLInputElement;
   value: HTMLElement;
   people: HTMLElement;
+  peopleLabel: HTMLElement;
   waves: HTMLElement;
+  wavesLabel: HTMLElement;
   state: HTMLElement;
   restart: HTMLElement;
 }
@@ -21,6 +23,8 @@ export interface GrowOptions {
   formatValue: (v: number) => string;
   formatInt: (v: number) => string;
   labels: { grows: string; dies: string; full: string; axisX: string; axisY: string };
+  /** The words under a stat, in the plural form its number takes. */
+  count: (key: 'statPeople' | 'statWaves', n: number) => string;
 }
 
 export interface GrowHandle {
@@ -161,6 +165,8 @@ export function initGrow(els: GrowElements, initial: GrowOptions): GrowHandle {
   const stats = () => {
     els.people.textContent = opts.formatInt(nodes.length);
     els.waves.textContent = opts.formatInt(wave);
+    els.peopleLabel.textContent = opts.count('statPeople', nodes.length);
+    els.wavesLabel.textContent = opts.count('statWaves', wave);
     chart();
   };
   const stepWave = () => {

@@ -101,6 +101,8 @@ export function LandingPage() {
   const growValueRef = useRef<HTMLElement>(null);
   const growPeopleRef = useRef<HTMLElement>(null);
   const growWavesRef = useRef<HTMLElement>(null);
+  const growPeopleLabelRef = useRef<HTMLSpanElement>(null);
+  const growWavesLabelRef = useRef<HTMLSpanElement>(null);
   const growStateRef = useRef<HTMLElement>(null);
   const growRestartRef = useRef<HTMLButtonElement>(null);
   const nextCvRef = useRef<HTMLCanvasElement>(null);
@@ -111,12 +113,17 @@ export function LandingPage() {
   const nextHandle = useRef<NextNetHandle | null>(null);
 
   // what the imperative parts need from the current language
-  const sceneOptions: SceneOptions = { rtl, format: (n) => nf.format(n) };
+  const sceneOptions: SceneOptions = {
+    rtl,
+    format: (n) => nf.format(n),
+    label: (key, n) => (key === 'reached' ? t('landing.v2.story.hud.reached', { count: n }) : t('landing.v2.story.hud.people', { count: n })),
+  };
   const growOptions: GrowOptions = {
     rtl,
     formatValue: (v) => nf1.format(v),
     formatInt: (v) => nf.format(v),
     labels: { grows: t('landing.v2.grow.grows'), dies: t('landing.v2.grow.dies'), full: t('landing.v2.grow.full'), axisX: t('landing.v2.grow.axisX'), axisY: t('landing.v2.grow.axisY') },
+    count: (key, n) => (key === 'statPeople' ? t('landing.v2.grow.statPeople', { count: n }) : t('landing.v2.grow.statWaves', { count: n })),
   };
   const optionsRef = useRef({ scene: sceneOptions, grow: growOptions, rtl });
   optionsRef.current = { scene: sceneOptions, grow: growOptions, rtl };
@@ -215,11 +222,16 @@ export function LandingPage() {
       value: growValueRef.current,
       people: growPeopleRef.current,
       waves: growWavesRef.current,
+      peopleLabel: growPeopleLabelRef.current,
+      wavesLabel: growWavesLabelRef.current,
       state: growStateRef.current,
       restart: growRestartRef.current,
     };
-    if (els.canvas && els.chart && els.slider && els.value && els.people && els.waves && els.state && els.restart) {
-      growHandle.current = initGrow({ canvas: els.canvas, chart: els.chart, slider: els.slider, value: els.value, people: els.people, waves: els.waves, state: els.state, restart: els.restart }, optionsRef.current.grow);
+    if (els.canvas && els.chart && els.slider && els.value && els.people && els.waves && els.peopleLabel && els.wavesLabel && els.state && els.restart) {
+      growHandle.current = initGrow(
+        { canvas: els.canvas, chart: els.chart, slider: els.slider, value: els.value, people: els.people, peopleLabel: els.peopleLabel, waves: els.waves, wavesLabel: els.wavesLabel, state: els.state, restart: els.restart },
+        optionsRef.current.grow,
+      );
     }
     if (nextCvRef.current) nextHandle.current = initNextNet(nextCvRef.current, { rtl: optionsRef.current.rtl });
     return () => {
@@ -317,7 +329,7 @@ export function LandingPage() {
       <div className="hud" ref={hudRef} aria-hidden="true">
         <div className="reached" ref={hudReachedRef}>
           <b />
-          <span>{t('landing.v2.story.hud.reached')}</span>
+          <span />
         </div>
         <div className="reported" ref={hudReportedRef}>
           <b />
@@ -325,7 +337,7 @@ export function LandingPage() {
         </div>
         <div className="people" ref={hudPeopleRef}>
           <b />
-          <span>{t('landing.v2.story.hud.people')}</span>
+          <span />
         </div>
       </div>
 
@@ -425,11 +437,11 @@ export function LandingPage() {
                 <div className="stats">
                   <div>
                     <b className="n" ref={growPeopleRef} />
-                    <span>{t('landing.v2.grow.statPeople')}</span>
+                    <span ref={growPeopleLabelRef} />
                   </div>
                   <div>
                     <b ref={growWavesRef} />
-                    <span>{t('landing.v2.grow.statWaves')}</span>
+                    <span ref={growWavesLabelRef} />
                   </div>
                   <canvas ref={growChartRef} aria-hidden="true" />
                 </div>

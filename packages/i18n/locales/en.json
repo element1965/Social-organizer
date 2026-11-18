@@ -741,7 +741,7 @@
       },
       "hero": {
         "title": "Your circle is bigger than you think.",
-        "lead": "Social Organizer brings together people who know each other in person. When one of them is in trouble, the people they know hear first, then the people those people know.",
+        "lead": "Social Organizer brings together people who know each other in person. When someone is in trouble, their acquaintances hear about it first, then the people those acquaintances know.",
         "cta": "Build your network",
         "how": "How it works",
         "facts": "Free · no fees · open source"
@@ -761,7 +761,7 @@
         "b3": {
           "label": "1 · A network of people you know",
           "say": "You invite someone you know in person, and you both confirm you know each other.",
-          "late": "Then they invite their own."
+          "late": "Then they invite people they know."
         },
         "b4": {
           "label": "2 · A Need",
@@ -805,9 +805,11 @@
           "lena": "Lena"
         },
         "hud": {
-          "reached": "heard about the Need",
+          "reached_one": "heard about the Need",
+          "reached_other": "heard about the Need",
           "reported": "of $300 reported",
-          "people": "participants"
+          "people_one": "participant",
+          "people_other": "participants"
         }
       },
       "grow": {
@@ -817,13 +819,15 @@
         "slider": "Each person invites on average",
         "unit": "people",
         "threshold": "threshold",
-        "statPeople": "people in the network",
-        "statWaves": "waves of invitations",
+        "statPeople_one": "person in the network",
+        "statPeople_other": "people in the network",
+        "statWaves_one": "wave of invitations",
+        "statWaves_other": "waves of invitations",
         "dies": "Growth has stopped",
         "grows": "The network grows on its own",
         "full": "The model has run out of new people",
         "restart": "Start over",
-        "hint": "Tap the field to start from someone else",
+        "hint": "Tap the model to start from someone else",
         "note": "A simplified model. Circles of acquaintances overlap, and nobody has to invite anyone.",
         "axisX": "waves",
         "axisY": "people"
@@ -831,7 +835,7 @@
       "next": {
         "label": "Next",
         "title": "A dollar of help is only the beginning",
-        "text": "Over time, we want people to use their network of acquaintances to find a tradesperson someone vouches for, partners for a shared project, supporters for their own initiative. And to agree on it, as they do now, directly.",
+        "text": "Over time, we want people to use their network of acquaintances to find a tradesperson someone vouches for, partners for a shared project, like-minded people for an initiative of their own. And to agree on it directly, as they do now.",
         "now": "Now",
         "later": "Later",
         "need": "Need",
@@ -843,26 +847,26 @@
         "label": "Experiment",
         "title": "Join the experiment",
         "text": "The app and the theory exist. Now they need testing in practice, and that takes people.",
-        "now": "people with connections in the network on 13 November 2026",
+        "now": "people connected in the network as of 13 November 2026",
         "cta": "Write to the team",
         "share": "Share",
         "shared": "Link copied",
         "safe": "The team replies only from @socialorganizer_bot and never asks for money, sign-in codes or card details.",
         "w1Title": "Build a network in your community",
-        "w1": "If you have a community of your own, try the app there. We'll help you explain it in words your people use.",
+        "w1": "If you have a community of your own, try the app there. We'll help you explain it in words your community uses.",
         "w2Title": "Tell others about the project",
         "w2": "Send this page to people who might care, or write about Social Organizer yourself.",
         "w3Title": "Help with the research or the code",
-        "w3": "The theory is set out in <report>Andrei Lubalin's report</report>, and the code is open on <code>GitHub</code>. Join the testing or the work on the app."
+        "w3": "The theory is set out in <report>Andrei Lubalin's report</report>, and the code is open on <code>GitHub</code>. Help test the theory or work on the app."
       },
       "faq": {
         "title": "Questions",
         "q1": "Who makes sure people keep their word?",
-        "a1": "There are no middlemen. You decide whom to trust and deal with people directly, and through the chain of friends you can find out who you're dealing with.",
+        "a1": "There are no middlemen. You decide whom to trust and deal with people directly, and through the chain of acquaintances you can find out who you're dealing with.",
         "q2": "Is this insurance or a fund?",
         "a2": "No. Nobody pays in advance and nobody promises a payout. There's no common pot and no treasurer.",
         "q3": "Is this a donation drive?",
-        "a3": "No. A Need reaches only people linked to the author through friends, and next time you may be the one who asks.",
+        "a3": "No. A Need reaches only people linked to its author through acquaintances, and next time you may be the one who asks.",
         "q4": "Is this a pyramid scheme?",
         "a4": "No. Nobody pays to join and nobody earns from invites."
       },

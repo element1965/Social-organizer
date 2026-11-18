@@ -257,6 +257,15 @@ html[dir="rtl"] .lv .join .bg, html[dir="rtl"] .lv .final .bg { transform: scale
 html[dir="rtl"] .lv .rail span { transform: translateX(-6px); }
 /* Arabic letters join: tracking would break the words apart */
 html[lang="ar"] .lv, html[lang="ar"] .lv * { letter-spacing: 0 !important; }
+/* Japanese, Chinese, Korean and Thai: the Latin face's tracking crowds their glyphs; headings wrap at phrases
+   (auto-phrase where the browser has it, Korean keeps words whole) and balance their lines, so no lone syllable */
+html:is([lang="ja"], [lang="zh"], [lang="ko"], [lang="th"]) .lv,
+html:is([lang="ja"], [lang="zh"], [lang="ko"], [lang="th"]) .lv * { letter-spacing: 0 !important; }
+html:is([lang="ja"], [lang="zh"]) .lv { word-break: auto-phrase; }
+html[lang="ko"] .lv { word-break: keep-all; }
+html:is([lang="ja"], [lang="zh"], [lang="ko"], [lang="th"]) .lv :is(h1, h2, h3) { text-wrap: balance; }
+html:is([lang="ja"], [lang="zh"], [lang="ko"]) .lv :is(h1, h2) { line-height: 1.14; }
+html[lang="th"] .lv :is(h1, h2) { line-height: 1.25; }
 
 @media (max-width: 1240px) {
   .lv .nav .wrap { gap: 20px; }
@@ -324,6 +333,11 @@ html[lang="ar"] .lv, html[lang="ar"] .lv * { letter-spacing: 0 !important; }
 /* narrow phones: the logo without the name keeps the header on one line */
 @media (max-width: 400px) {
   .lv .brand span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  .lv .badge { gap: 8px; padding-inline: 10px; }
+  .lv .badge span { font-size: 14px; }
+}
+@media (max-width: 340px) {
+  .lv .stores { grid-template-columns: minmax(0, 1fr); }
 }
 @media (prefers-reduced-motion: reduce) {
   html.lv-page { scroll-behavior: auto; }

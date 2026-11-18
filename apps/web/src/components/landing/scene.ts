@@ -32,6 +32,8 @@ export interface SceneElements {
 export interface SceneOptions {
   rtl: boolean;
   format: (n: number) => string;
+  /** The words under a counter, in the plural form its number takes. */
+  label: (key: 'reached' | 'people', n: number) => string;
 }
 
 export interface SceneHandle {
@@ -620,6 +622,8 @@ export function initScene(els: SceneElements, initial: SceneOptions): SceneHandl
   const hR = els.hudReached.querySelector('b');
   const hRep = els.hudReported.querySelector('b');
   const hP = els.hudPeople.querySelector('b');
+  const hRL = els.hudReached.querySelector('span');
+  const hPL = els.hudPeople.querySelector('span');
   let lastHud = '';
   const setT = (i: number, c: THREE.Color, s = 1) => {
     colT[i * 3] = c.r;
@@ -743,6 +747,8 @@ export function initScene(els: SceneElements, initial: SceneOptions): SceneHandl
       if (hR) hR.textContent = opts.format(reached);
       if (hRep) hRep.textContent = opts.format(reported);
       if (hP) hP.textContent = opts.format(people);
+      if (hRL) hRL.textContent = opts.label('reached', reached);
+      if (hPL) hPL.textContent = opts.label('people', people);
     }
     return out;
   };
