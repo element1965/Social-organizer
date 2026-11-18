@@ -72,6 +72,25 @@ note it affects.
    confirmation step ([latent connectedness](../theory/latent-connectedness.md)).
 8. **Who confirms a completed action.** The report says a participant can confirm a completed
    action; in the app only the Need's author marks "received".
+9. **Activity facts are hidden at zero.** The person page shows "Participation reported" and
+   "Marked as received by authors" only when the first is above zero, and nobody sees how many Needs
+   a person reported. A person who only asks looks like a newcomer. Options from the test run: show
+   the facts on the Need page next to the author's name, also at zero, with "in the network since
+   <month>"; decide whether the number of Needs is shown as a fact.
+10. **Circle moderation has two exits.** The author can close a Need during a review (it ends
+    INCONCLUSIVE and the complaints are removed), and nobody can complain after a Need is closed.
+    Proposed by a test run: no close or cancel while a review is open (or let the review finish), and
+    a complaint window of about 14 days after closing. Check first how often it happens.
+11. **One-tap inquiry.** The handshake chain on the Need page is plain names
+    (`components/ui2/PathFigure.tsx`); making them links to the person pages, and showing "N people
+    from your circle know the author" (the shared-acquaintance count already exists for
+    suggestions), would shorten the "find out for yourself" step without a new feature.
+12. **No LICENSE file.** The README says MIT, but the repository has no `LICENSE` file. Donors and
+    contributors will check it.
+13. **Live landing copy overstates two rules.** `landing.steps.s3Text` says a Need "reaches exactly
+    {{n}} people" and "closes once participants cover the amount". In code a Need sends up to N
+    external messages (people at their message limit get an in-app entry instead), and when the
+    amount is reported the Need pauses; only the author closes it (found by a test run, 2026-11-18).
 
 ## Related
 - [Sources](sources.md) — where the material came from.

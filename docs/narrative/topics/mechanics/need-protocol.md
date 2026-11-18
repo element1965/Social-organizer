@@ -74,7 +74,10 @@ Evidence: `constants.ts:21-22`, `services/ask-access.service.ts:41-73`, `PathToR
   beyond the 3rd ring shown as "…"); the progress meter; the stage rail "Amount / Chat / Closed";
   `collection.closesNote` = "{{name}} closes the Need. Reported Participation may not reach the amount needed."
 - The author's **activity facts are one tap away**: the name opens `/person/:id` with
-  "Participation reported" and "Marked as received by authors" (`PersonPage.tsx:402-408`).
+  "Participation reported" and "Marked as received by authors" (`PersonPage.tsx:402-408`). The block
+  is **hidden while the person has reported no Participation** (`reported > 0`, `PersonPage.tsx:401`),
+  so someone who only reports Needs looks the same as a newcomer. The number of Needs a person
+  reported is **not shown** to others (`stats.participationFacts` counts Participation only).
 - The participants' chat button appears only after Participation (UI). Note: the API returns the
   link to any signed-in viewer (see [open questions](../meta/open-questions.md)).
 
@@ -119,7 +122,20 @@ not through the service", button "Join". Joining creates a **direct connection w
 without confirmation** (150 cap applies). The author has a QR sheet ("Need QR", "Download for print")
 and share buttons; link previews are generated for messengers.
 
-### 11. First-run teaching that exists
+### 11. Circle moderation (complaints)
+
+People decide, not the platform: participants can complain about an open Need; **3 complaints**
+open a review in which the author's direct connections answer "problem", "OK" or "don't know"
+within **48 hours**. Quorum: at least 3 answers and 30% of those asked. **UPHELD** needs at least two
+"problem" answers and more "problem" than "OK"; then the Need is paused ("decision of the circle").
+No quorum or a tie is INCONCLUSIVE. A person whose complaints are dismissed twice cannot complain
+for 30 days. An admin can also pause a Need with a reason. Evidence:
+`apps/api/src/services/moderation-rules.ts`, `moderation.service.ts`, `collection.block/unblock`.
+Gaps found by a test run (2026-11-18): the author can close the Need during a review, which ends it
+as INCONCLUSIVE and removes the complaints (`collection.router.ts:334-346`, `moderation.service.ts:446,471-473`);
+after a Need is closed or cancelled, nobody can complain (`complainGate`, `moderation.service.ts:114`).
+
+### 12. First-run teaching that exists
 
 `/intro` (3 frames, "You are at the centre of your circle"), `/seed` ("Your intention", presets
 1/5/15/30), empty home ("You are the first in your circle."), milestone pop-ups, `/how`, the
