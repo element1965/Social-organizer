@@ -28,7 +28,7 @@ visuals (starling murmuration, frost from one seed, mycelium), the user chose tw
 Mycelium was dropped: the "wood wide web" image is worn out, and the claim that trees feed each other
 through fungi is disputed by researchers.
 
-**Status: prototype v4, waiting for the user.** Sections 10 to 12 below supersede the screen plan, the
+**Status: prototype v5, waiting for the user.** Sections 10 to 13 below supersede the screen plan, the
 flock scene, the copy and the visual system of v1 (sections 2, 3, 5 and 6). Prototype (git-excluded):
 `local/media/concept-6/prototype/index.html` in the main checkout; open it in a browser.
 
@@ -252,6 +252,31 @@ steps and finish the scroll for the reader at some moments; then review and impr
 - **Growth model.** Invitations per person now have a low spread (R = 1,5 means one or two), and the
   first person always invites two, so above the threshold the network never dies by bad luck and
   below it always fades; on phones the words, the model's frame and the controls stack.
+
+### 13. Prototype v5 (2026-11-18): copy from the docs, the app, donors, one font
+
+- **Copy** now comes from the accepted core message (the five beats, Maria's scene, why join now,
+  what comes next, the donor line, FAQ and denials), not new prose. Every fact appears once:
+  Facebook only in the "people" beat; "free, no fees, open code" only in the hero line; "money never
+  goes through the app" only in beat 5; the trust section and the 4,57 moment are gone; FAQ keeps
+  only questions the page does not answer elsewhere (who makes sure people keep their word,
+  insurance or fund, donation drive, pyramid).
+- **The app** closes the page («Сеть собирают заранее»): how to start (open a friend's link or
+  sign in and invite the first five), badges with real marks for Google Play
+  (`com.socialorganizer.app`), App Store (`id6768132198`), the browser (`/login`) and Telegram
+  (`@socialorganizer_bot`), the sign-in methods (Google, Apple, Telegram, e-mail code; no password)
+  and a QR to `/get` on desktop. The header has «Войти». No screenshots of the redesigned app exist
+  yet; the old store screenshots were not used.
+- **Donors** rebuilt as a plain brief on paper: «Приложение и теория уже есть», «Что уже есть»
+  (287 people with connections on 13 November 2026; Android, iPhone, browser; Lubalin's report, July
+  2026), «На что нужны средства» (launch in communities; research into whether the network grows by
+  itself), buttons to the team through the Telegram bot and to the report on Zenodo. The [figure removed]
+  working model stays out: the funding note marks it as a brainstorm.
+- **Next** is a dark live network: a Need runs a few handshakes and Participation answers back;
+  dashed sparks are the signals we want later (a recommended tradesperson, a joint project).
+- **One font: Manrope**, the app's own. Measured in the browser: x-height 0,75 vs 0,746 (Onest),
+  58 vs 56 characters per 540 px line at 18 px, tabular figures in both; no readability difference
+  worth changing the app, so the landing follows the app and drops JetBrains Mono.
 
 ## Related
 - [The core message](../core/core-message.md) — source: every line on the page.
