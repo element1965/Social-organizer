@@ -4,13 +4,17 @@ import { Link } from 'react-router-dom';
 import { Avatar } from '../ui2/Avatar';
 import { Button } from '../ui2/Button';
 import { Group } from '../ui2/Group';
+import { IconChevron } from '../ui2/icons';
 import { IconClose } from './icons';
+import { cn } from '../../lib/utils';
 import { refreshNetwork } from '../../lib/refreshNetwork';
 import { trpc } from '../../lib/trpc';
 
 /** People the person tapped away, on this device only: the list is a convenience, not a record. */
 const HIDDEN_KEY = 'so.suggest.hidden';
 const HIDDEN_MAX = 200;
+/** People shown while the list is folded: a long list of suggestions must not push the screen far down. */
+const FOLDED = 3;
 
 function readHidden(): string[] {
   try {
@@ -32,7 +36,7 @@ function saveHidden(ids: string[]): void {
 /**
  * "You may know each other": people at the 2nd handshake who share two or more acquaintances with the
  * person. "We know each other" sends the usual request, which the other person confirms. Nothing is
- * shown when there is nobody to offer.
+ * shown when there is nobody to offer. The list starts folded to the first few people; one button opens the rest.
  */
 export function SuggestList({ names, className }: { names?: Map<string, string>; className?: string }) {
   const { t } = useTranslation();
@@ -43,6 +47,7 @@ export function SuggestList({ names, className }: { names?: Map<string, string>;
   const [sent, setSent] = useState<string[]>([]);
   const [busy, setBusy] = useState<string | null>(null);
   const [failed, setFailed] = useState<string | null>(null);
+  const [open, setOpen] = useState(false);
 
   const send = trpc.pending.sendDirectRequest.useMutation({
     onSuccess: (result, input) => {
@@ -57,6 +62,8 @@ export function SuggestList({ names, className }: { names?: Map<string, string>;
 
   const people = useMemo(() => (list.data ?? []).filter((p) => !hidden.includes(p.id)), [list.data, hidden]);
   if (people.length === 0) return null;
+  const rest = people.length - FOLDED;
+  const shown = open || rest <= 0 ? people : people.slice(0, FOLDED);
 
   const hide = (id: string) => {
     const next = [...hidden.filter((v) => v !== id), id];
@@ -71,7 +78,7 @@ export function SuggestList({ names, className }: { names?: Map<string, string>;
         <p className="mt-0.5 text-caption font-semibold text-ink-muted">{t('add.suggest.hint')}</p>
       </div>
       <Group>
-        {people.map((person) => {
+        {shown.map((person) => {
           const via = person.via.map((v) => names?.get(v.id) || v.name).join(', ');
           const isSent = sent.includes(person.id);
           return (
@@ -128,6 +135,17 @@ export function SuggestList({ names, className }: { names?: Map<string, string>;
           );
         })}
       </Group>
+      {rest > 0 ? (
+        <button
+          type="button"
+          aria-expanded={open}
+          onClick={() => setOpen((v) => !v)}
+          className="so-focus mx-1 mt-1 flex min-h-11 items-center gap-1 text-body-s font-bold text-care"
+        >
+          {open ? t('circle.feed.stack.less') : t('circle.feed.stack.more', { count: rest })}
+          <IconChevron className={cn('h-4 w-4 transition-transform motion-reduce:transition-none', open ? '-rotate-90' : 'rotate-90')} />
+        </button>
+      ) : null}
     </section>
   );
 }
