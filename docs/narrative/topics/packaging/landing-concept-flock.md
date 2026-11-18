@@ -28,7 +28,7 @@ visuals (starling murmuration, frost from one seed, mycelium), the user chose tw
 Mycelium was dropped: the "wood wide web" image is worn out, and the claim that trees feed each other
 through fungi is disputed by researchers.
 
-**Status: prototype v2, waiting for the user.** Section 10 below supersedes the screen plan, the
+**Status: prototype v3, waiting for the user.** Sections 10 and 11 below supersede the screen plan, the
 flock scene, the copy and the visual system of v1 (sections 2, 3, 5 and 6). Prototype (git-excluded):
 `local/media/concept-6/prototype/index.html` in the main checkout; open it in a browser.
 
@@ -204,6 +204,32 @@ instead of the app's logo.
   vouches, Lena finds a cheaper garage, the chat).
 - **After the story:** facts (4,57), how the network grows (the frost model), next stage, donors,
   FAQ, final call.
+
+### 11. Prototype v3 (2026-11-18)
+
+The user: the birds are "явный прогресс"; make the growth screen more interesting, clear and
+interactive; remove or rework the frost-on-glass picture; animate the FAQ; smooth the moves between
+steps and finish the scroll for the reader at some moments; then review and improve the site.
+
+- **Growth model** replaces the frost: one warm seed person; each newcomer invites Poisson(R)
+  acquaintances (a slider from 0,5 to 2,5, the track red below the threshold 1 and care-teal above);
+  the chance that an invitation reaches someone already in the network grows with the network
+  (circles overlap, drawn as a short dashed warm line), so growth slows and stops when the model
+  runs out of new people. Newcomers fly in from the person who invited them; live counts (people,
+  waves) and a small chart of people per wave; a click anywhere restarts from that point.
+  Outcomes: «Рост остановился», «Сеть растёт сама», «Новых людей в модели больше нет».
+- **Frost photographs removed.** "Next" shows the signals as a small diagram: now, a Need and
+  Participation (solid, a warm pulse runs from one to the other); later, recommended tradespeople
+  and joint projects (dashed). Donors take the starling close-up.
+- **FAQ** answers open and close with a height animation; the icon turns at once.
+- **Smoother story:** shots blend over the first 62 % of a beat with an ease-in-out, and a damped
+  follow on the camera removes the kinks between shots; native `scroll-snap-type: y proximity` with
+  one snap point per beat at the moment the beat is fully told (0,62 / 0,85 / 0,55 / 0,8 / 0,6 / 0,78
+  / 0,6 / 0,82 of its height), so the page finishes the scroll only when the reader stops near it.
+- **Review fixes:** a chapter rail on the right (Стая · Люди · Сеть · Потребность · Решение ·
+  Участие · Чат · Вы; click jumps to the snap point); the 4,57 moment counts down from 4,74 (2011)
+  to 4,57 (2016); a soft hand-over from the dark story to the light sections; on phones the scene
+  keeps the top of the screen and the beat's words sit in a card pinned to the bottom.
 
 ## Related
 - [The core message](../core/core-message.md) — source: every line on the page.
