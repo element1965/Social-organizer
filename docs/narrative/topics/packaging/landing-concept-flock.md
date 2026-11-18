@@ -28,9 +28,10 @@ visuals (starling murmuration, frost from one seed, mycelium), the user chose tw
 Mycelium was dropped: the "wood wide web" image is worn out, and the claim that trees feed each other
 through fungi is disputed by researchers.
 
-**Status: prototype v9, waiting for the user.** Sections 10 to 16 below supersede the screen plan, the
-flock scene, the copy and the visual system of v1 (sections 2, 3, 5 and 6). Prototype (git-excluded):
-`local/media/concept-6/prototype/index.html` in the main checkout; open it in a browser.
+**Status: live on the site since 2026-11-18 (section 18), in all 28 app languages.** Sections 10 to 16
+below supersede the screen plan, the flock scene, the copy and the visual system of v1 (sections 2, 3,
+5 and 6). The prototype stays as a reference (git-excluded): `local/media/concept-6/prototype/index.html`
+in the main checkout.
 
 ## Details
 
@@ -340,6 +341,34 @@ tagged «с лендинга · тема». Forwarding is limited to 5 messages 
 anti-scam line: «Команда отвечает только из @socialorganizer_bot и никогда не просит деньги, коды
 входа или данные карты.» The team answers through the bot (the in-app support reply), never from
 personal accounts. Builders and researchers go to GitHub. No public e-mail and no web form.
+
+### 18. In the app, in 28 languages (2026-11-18)
+
+The user: «Дальше делай переводы на все языки, адаптируй, проверь другими моделями тексты (саб агентами)
+и выкатывай лендинг в мейн».
+
+- **Code.** `apps/web/src/pages/LandingPage.tsx` renders the page; `components/landing/` holds the
+  imperative parts ported from v9 with few changes: `scene.ts` (Three.js, a dynamic import, so signed-in
+  users never load it), `glide.ts`, `grow.ts`, `nextNet.ts`, `landing.css` (scoped under `.lv`, dark in
+  both app themes, colours as tokens). Everything is disposed on unmount. Header adds the app's language
+  chip; on phones under 400 px the brand shows only the logo.
+- **Differences from v9.** Scroll finishing glides only in the gesture's direction, and a section under
+  1.2 screens has one rest point; the counters are hidden from screen readers; without WebGL all beat
+  text shows at once; counter captions agree with their number (i18next plural forms: «3 человека в
+  сети», «44 участника», "1 wave of invitations").
+- **Copy.** Russian is the original; the English is written as its own text from the core message. The
+  other 26 languages: Claude translated each from both, then GPT and Grok reviewed every language
+  independently (meaning, grammar after numbers, the app's glossary, badge wording), then a Claude
+  editor decided on every finding. Typical real catches: "friends" for acquaintances in the FAQ,
+  "supporters" for «единомышленники», a tradesperson "guaranteed" instead of recommended, the Hebrew
+  spelling of Lubalin reading as Lublin, a Turkish counter saying people "felt a need". English after
+  review: the FAQ says acquaintances, the next section says like-minded people, "Help test the theory or
+  work on the app". Decision logs per language: `local/media/concept-6/i18n/reviews/decisions/`
+  (git-excluded, main checkout).
+- **Rules learned for translated landing copy.** Names of the story stay in the reader's script; money
+  is written the way each locale writes dollars; Arabic and Hebrew wrap `@socialorganizer_bot` in a
+  left-to-right isolate and keep Social Organizer on one line; Japanese and Chinese headings wrap at
+  phrases; every caption after a live number is a plural family.
 
 ## Related
 - [The core message](../core/core-message.md) — source: every line on the page.
