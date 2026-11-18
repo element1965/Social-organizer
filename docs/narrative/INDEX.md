@@ -5,7 +5,7 @@ theory, the principles, the verified mechanics, the trust research, audiences, f
 and sources. It serves the packaging work (landing, web, in-app teaching, promotion, donors) and the
 project skills `so-trust-lens`, `so-story` and `so-explainer` in `.claude/skills/`.
 
-Start here if you are new: [What SO is](topics/core/what-so-is.md) →
+Start here if you are new: [The core message](topics/core/core-message.md) → [What SO is](topics/core/what-so-is.md) →
 [Principles](topics/principles/principles.md) → [The Need protocol](topics/mechanics/need-protocol.md) →
 [Invitational coordination](topics/theory/invitational-coordination.md) →
 [Trust conditions in SO](topics/trust/trust-conditions-in-so.md).
@@ -32,6 +32,7 @@ Start here if you are new: [What SO is](topics/core/what-so-is.md) →
 ## Registry
 ### core
 - `20261118-causal-chain` — **The causal chain — from risk sharing to a self-developing environment** — `topics/core/causal-chain.md` — The project's central thesis (brainstorm of 2026-11-17): risk sharing starts the process, direct cooperation is its natural continuation, and the resulting social environment can develop on its own — with what is a fact and what is a hypothesis.
+- `20261118-core-message` — **The core message (draft for the team)** — `topics/core/core-message.md` — Stage 2 of the packaging plan — the headline, the one sentence, the story in five beats, the answer to "why join now", the questions a newcomer still asks, three proof points, what SO is not, one line and one ask per audience, and how to test it (EN and RU). Draft, revised after a cold read, waiting for the team.
 - `20261118-what-so-is` — **What Social Organizer is (and is not)** — `topics/core/what-so-is.md` — Canonical descriptions of Social Organizer at several lengths (EN and RU), what it is not, and the facts that stay true in every description.
 
 ### theory
