@@ -30,7 +30,7 @@ compensation"). This note sorts claims by how safe they are.
 - Everyone sees the handshake chain to the author and the author's activity facts.
 - Nobody scores or rates people in SO.
 - No operation in the app moves money, creates an obligation or assigns anyone to act (the report's "zero direct operational harm").
-- The world's social graph is already highly connected: 4.74 degrees of separation among 721 million Facebook users (2012), 3.57 among 1.59 billion (2016). Cite the studies.
+- The world's social graph is already highly connected: two Facebook users were on average 4.74 handshakes apart in 2011 (721 million users) and 4.57 in 2016 (1.59 billion), that is fewer than four people in between. Cite the studies and do not mix the two measures (handshakes vs people in between).
 
 ### Careful (say how sure we are)
 

@@ -49,7 +49,7 @@ video draft has the author on camera at the start and the end (see the
 [video idea](how-it-works-video-idea.md)).
 
 Fit with the theory: scene 01 is the report's empirical premise (the world is already connected,
-3.57–4.74 degrees) turned into a headline.
+fewer than four people between two Facebook users in 2016) turned into a headline.
 
 ### Concept B — "one situation, three moving steps" (landing-references chat)
 

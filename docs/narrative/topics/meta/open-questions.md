@@ -35,7 +35,7 @@ note it affects.
 2. **Dollars or euros in examples.** The brainstorm and both landing chats use euros (€1, €300,
    €5,000); the app counts in US dollars. Proposal: dollars in everything that shows the app.
 3. **First audience for stage 2.** Participants through community leaders, or builders and donors?
-4. **Opening.** Candidate from the landing chat: "The world is already connected" (3.57 degrees),
+4. **Opening.** Candidate from the landing chat: "The world is already connected" (fewer than four people in between, 2016),
    which is also the report's premise. Or a real human case from the network, with consent.
 5. **"What becomes possible next" on the landing?** Concept A puts initiatives and collaborators on
    the participant-facing page as a future stage; the parked-topics rule keeps them off it.
@@ -43,6 +43,11 @@ note it affects.
    in a Need now and initiatives later (see the vocabulary note).
 7. **Landing concept** (stage 3, not now): two ChatGPT proposals are collected in the landing
    concepts note. The user has not seen them yet; show them when the landing work starts.
+
+8. **A figure in the report.** Lubalin's report gives 4.74 (2011) and 3.57 (2016) as the same
+   measure. 4.74 is the average distance in links; 3.57 is the number of people in between (the 2016
+   distance is 4.57, Facebook Research). Worth correcting in the report and in talks before donors
+   or researchers notice.
 
 ### Funding decisions
 

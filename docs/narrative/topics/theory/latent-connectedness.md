@@ -5,12 +5,12 @@ tags: [theory, core, mechanics]
 created: 2026-11-18
 updated: 2026-11-18
 related: [20261118-invitational-coordination, 20261118-autocatalytic-law, 20261118-need-protocol, 20261118-what-so-is]
-summary: The empirical premise (the world's social graph is already connected — 4.74 and 3.57 degrees in Facebook data), the motivation (a calculable benefit of spreading one person's loss among many), the four conditions of activation, and what Social Organizer does and does not do as a "social utility".
+summary: The empirical premise (the world's social graph is already connected — 4.74 handshakes between two Facebook users in 2011, 4.57 in 2016, fewer than four people in between), the motivation (a calculable benefit of spreading one person's loss among many), the four conditions of activation, and what Social Organizer does and does not do as a "social utility".
 ---
 
 # Latent global connectedness and the conditions of its activation
 
-> Summary: The empirical premise (the world's social graph is already connected — 4.74 and 3.57 degrees in Facebook data), the motivation (a calculable benefit of spreading one person's loss among many), the four conditions of activation, and what Social Organizer does and does not do as a "social utility".
+> Summary: The empirical premise (the world's social graph is already connected — 4.74 handshakes between two Facebook users in 2011, 4.57 in 2016, fewer than four people in between), the motivation (a calculable benefit of spreading one person's loss among many), the four conditions of activation, and what Social Organizer does and does not do as a "social utility".
 
 ## Context
 
@@ -23,9 +23,15 @@ manifest as a functioning global P2P environment of mutual assistance?*
 
 ### The empirical premise: the world is already connected
 
-- Facebook, about 721 million users and 69 billion connections: 99.91% of users in one connected
-  component, average distance **4.74** connections (Backstrom et al., 2012, "Four degrees of separation").
-- 1.59 billion active users: average distance **3.57** (Edunov et al., 2016, "Three and a half degrees of separation").
+- Facebook in 2011, about 721 million users and 69 billion connections: 99.91% of users in one
+  connected component, average distance **4.74** links, that is 3.74 people in between (Backstrom
+  et al., 2012, "Four degrees of separation").
+- Facebook in 2016, 1.59 billion active users: average distance **4.57** links, that is **3.57**
+  people in between (Edunov et al., 2016, "Three and a half degrees of separation").
+
+In SO's words a handshake is one link, so: 4.74 handshakes in 2011, 4.57 in 2016, fewer than four
+people in between. Note: the report gives "4.74" and "3.57" as the same measure; they are not (3.57
+is the number of people in between, checked against the Facebook Research post on 2026-11-18).
 
 Global horizontal connectedness exists and does not need to be built. It is **latent**: the paths
 are real, but they do not coordinate mutual assistance beyond each person's immediate relations.
