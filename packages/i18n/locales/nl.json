@@ -188,7 +188,12 @@
     "waitText": "Een paar seconden. Het venster van {{provider}} sluit vanzelf.",
     "waitBack": "Terug naar inloggen",
     "lastMethodEmail": "De vorige keer logde je in met <b>een e-mailcode</b>.",
-    "expiredTextEmail": "Je sessie is verlopen. De vorige keer logde je in met <b>een e-mailcode</b>; na het inloggen brengen we je terug naar waar je was."
+    "expiredTextEmail": "Je sessie is verlopen. De vorige keer logde je in met <b>een e-mailcode</b>; na het inloggen brengen we je terug naar waar je was.",
+    "inviteCode": "Ik heb een uitnodigingscode",
+    "inviteCodeLabel": "Uitnodigingscode of link",
+    "inviteCodePlaceholder": "Plak de code of de hele link",
+    "inviteCodeBad": "Dit lijkt geen uitnodigingscode. Controleer hem of plak de hele link.",
+    "inviteCodeOpen": "Uitnodiging openen"
   },
   "nav": {
     "circle": "Kring",
@@ -642,7 +647,7 @@
     "website": "Website"
   },
   "invite": {
-    "calls": "{{name}} nodigt je uit in hun kring",
+    "calls": "{{name}} nodigt je uit",
     "say": "Onderlinge hulp tussen mensen die elkaar kennen. Log in, dan bevestigt {{name}} dat jullie elkaar kennen.",
     "canHelp": "aangegeven deelname van het netwerk: {{amount}}",
     "known": "We kennen elkaar",
@@ -682,7 +687,8 @@
       "later": "Later, verder in de browser",
       "continueWeb": "Verder in de browser",
       "qrText": "Richt de camera van je telefoon op de code: de appwinkel gaat open."
-    }
+    },
+    "howItWorks": "Zo werkt Social Organizer"
   },
   "landing": {
     "site": {

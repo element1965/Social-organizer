@@ -371,6 +371,24 @@ async function start() {
       ]);
     });
 
+    // iOS Universal Links: the same links as the Android App Links above open the installed app
+    // (camera QR, messengers, Safari). The app declares applinks:<host> in App.entitlements.
+    // APPLE_TEAM_ID defaults to the team in the Xcode project, APPLE_BUNDLE_ID to the store bundle.
+    const appleAppSiteAssociation = async (_req: unknown, reply: import('fastify').FastifyReply) => {
+      const appId = `${process.env.APPLE_TEAM_ID || '6MQRV9Q3H5'}.${process.env.APPLE_BUNDLE_ID || 'com.socialorganizer.app'}`;
+      const paths = ['/invite/*', '/i/*', '/sos/*'];
+      reply.header('Content-Type', 'application/json');
+      reply.header('Cache-Control', 'public, max-age=3600');
+      return reply.send({
+        applinks: {
+          apps: [],
+          details: [{ appIDs: [appId], appID: appId, components: paths.map((path) => ({ '/': path })), paths }],
+        },
+      });
+    };
+    app.get('/.well-known/apple-app-site-association', appleAppSiteAssociation);
+    app.get('/apple-app-site-association', appleAppSiteAssociation);
+
     // Sign in with Apple — domain verification file.
     // Apple requires hosting the association file at this exact path when configuring
     // the Services ID. Paste the file contents into the APPLE_DOMAIN_ASSOCIATION env var.

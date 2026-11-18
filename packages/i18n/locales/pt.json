@@ -188,7 +188,12 @@
     "waitText": "Alguns segundos. A janela do {{provider}} fecha sozinha.",
     "waitBack": "Voltar à entrada",
     "lastMethodEmail": "Na última vez, você entrou com <b>um código por e-mail</b>.",
-    "expiredTextEmail": "Sua sessão expirou. Na última vez, você entrou com <b>um código por e-mail</b>; depois de entrar, levamos você de volta para onde estava."
+    "expiredTextEmail": "Sua sessão expirou. Na última vez, você entrou com <b>um código por e-mail</b>; depois de entrar, levamos você de volta para onde estava.",
+    "inviteCode": "Tenho um código de convite",
+    "inviteCodeLabel": "Código ou link do convite",
+    "inviteCodePlaceholder": "Cole o código ou o link inteiro",
+    "inviteCodeBad": "Isso não parece um código de convite. Confira ou cole o link inteiro.",
+    "inviteCodeOpen": "Abrir o convite"
   },
   "nav": {
     "circle": "Círculo",
@@ -645,7 +650,7 @@
     "website": "Site"
   },
   "invite": {
-    "calls": "{{name}} convida você para o círculo",
+    "calls": "{{name}} convida você",
     "say": "Assistência mútua entre pessoas que se conhecem. Entre, e {{name}} vai confirmar que vocês se conhecem.",
     "canHelp": "participação declarada da rede: {{amount}}",
     "known": "Conhecemo-nos",
@@ -686,7 +691,8 @@
       "later": "Mais tarde, continuar no navegador",
       "continueWeb": "Continuar no navegador",
       "qrText": "Aponte a câmera do celular para o código: a loja de apps vai abrir."
-    }
+    },
+    "howItWorks": "Como funciona o Social Organizer"
   },
   "landing": {
     "site": {

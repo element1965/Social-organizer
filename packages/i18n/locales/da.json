@@ -188,7 +188,12 @@
     "waitText": "Et par sekunder. Vinduet fra {{provider}} lukker af sig selv.",
     "waitBack": "Tilbage til login",
     "lastMethodEmail": "Sidste gang loggede du ind med <b>en e-mailkode</b>.",
-    "expiredTextEmail": "Din session er udløbet. Sidste gang loggede du ind med <b>en e-mailkode</b>. Når du er logget ind, fører vi dig tilbage til der, hvor du var."
+    "expiredTextEmail": "Din session er udløbet. Sidste gang loggede du ind med <b>en e-mailkode</b>. Når du er logget ind, fører vi dig tilbage til der, hvor du var.",
+    "inviteCode": "Jeg har en invitationskode",
+    "inviteCodeLabel": "Invitationskode eller link",
+    "inviteCodePlaceholder": "Indsæt koden eller hele linket",
+    "inviteCodeBad": "Det ligner ikke en invitationskode. Tjek den, eller indsæt hele linket.",
+    "inviteCodeOpen": "Åbn invitationen"
   },
   "nav": {
     "circle": "Kreds",
@@ -642,7 +647,7 @@
     "website": "Hjemmeside"
   },
   "invite": {
-    "calls": "{{name}} inviterer dig til sin kreds",
+    "calls": "{{name}} inviterer dig",
     "say": "Gensidig hjælp mellem personer, der kender hinanden. Log ind, så bekræfter {{name}}, at I kender hinanden.",
     "canHelp": "netværkets erklærede deltagelse: {{amount}}",
     "known": "Vi kender hinanden",
@@ -682,7 +687,8 @@
       "later": "Senere, fortsæt i browseren",
       "continueWeb": "Fortsæt i browseren",
       "qrText": "Ret telefonens kamera mod koden – appbutikken åbner."
-    }
+    },
+    "howItWorks": "Sådan virker Social Organizer"
   },
   "landing": {
     "site": {

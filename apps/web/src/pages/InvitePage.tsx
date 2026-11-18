@@ -211,7 +211,7 @@ function InviteHero({
         className="so-focus mt-4 inline-flex min-h-11 items-center gap-1 text-body-s font-bold text-care"
       >
         {t('invite.howItWorks')}
-        <span aria-hidden>→</span>
+        <span aria-hidden className="inline-block rtl:-scale-x-100">→</span>
       </Link>
     </>
   );

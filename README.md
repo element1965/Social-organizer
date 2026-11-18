@@ -301,9 +301,9 @@ node scripts/build-android-staging.mjs --no-web   # reuse apps/web/dist
 
 #### App Links (invite QR opens the app)
 
-`https://<host>/invite/<token>` links (the live QR, shared invites) open the installed app instead of the browser: a phone camera or Google Lens offers the app, and the app routes the link to its invite page (`appLinkPath` in `App.tsx`).
+`https://<host>/invite/<token>`, `/i/<id>` (personal address) and `/sos/<id>` (public Need) links (the live QR, shared invites and Needs) open the installed app instead of the browser: a phone camera or Google Lens offers the app, and the app routes the link to its invite page (`appLinkPath` in `App.tsx`).
 
-- **Manifest:** an `autoVerify` intent-filter for `/invite/`; hosts come from `manifestPlaceholders` in `app/build.gradle` (release: `www.orginizer.com` and `orginizer.com`, staging build: the staging domain).
+- **Manifest:** an `autoVerify` intent-filter for `/invite/`, `/i/` and `/sos/` (store build from versionCode 15); hosts come from `manifestPlaceholders` in `app/build.gradle` (release: `www.orginizer.com` and `orginizer.com`, staging build: the staging domain).
 - **Verification file:** the API serves `/.well-known/assetlinks.json` from env `ANDROID_CERT_SHA256` (comma-separated SHA-256 signing-cert fingerprints) and `ANDROID_APP_PACKAGE` (default `com.socialorganizer.app`). Without fingerprints it returns 404.
 - **Production:** use the Play App Signing certificate (Play Console → App integrity → App signing → SHA-256), not the upload key. The filter ships with the next store build.
 - **Staging:** `ANDROID_APP_PACKAGE=com.socialorganizer.app.staging`, `ANDROID_CERT_SHA256` = the debug keystore fingerprint (`keytool -list -v -keystore ~/.android/debug.keystore -alias androiddebugkey -storepass android`).
@@ -313,6 +313,14 @@ node scripts/build-android-staging.mjs --no-web   # reuse apps/web/dist
 ### iOS (App Store)
 
 Capacitor-based iOS wrapper (`apps/web/ios/`) that loads the production web URL. Build via Xcode (`bash scripts/deploy-ios.sh` → Archive → Upload). Bundle `com.socialorganizer.app`, Apple ID `6768132198`. Listing/metadata are managed through the App Store Connect API (key in `secrets/asc/`). Because the UI is served from the web, most fixes ship via a Railway deploy and a plain re-submit of the same binary — a new Xcode archive is only needed for native/Info.plist changes. Full flow in `IOS_DEPLOY.md`; Sign in with Apple setup in `APPLE_SIGNIN.md`.
+
+**Cloud build without a Mac:** `.github/workflows/ios-release.yml` (GitHub Actions, macOS runner, manual start with a build number) builds the web app, syncs Capacitor, archives with manual signing (distribution certificate + profile "Social Organizer App Store CI") and uploads the IPA to App Store Connect (TestFlight). Repository secrets: `IOS_DIST_P12` (base64), `IOS_DIST_P12_PASSWORD`, `IOS_PROFILE` (base64 `.mobileprovision`), `ASC_KEY_ID`, `ASC_ISSUER_ID`, `ASC_KEY_P8`. The same values are kept in the project fields of the Lambertain portal.
+
+#### Universal Links and push on iOS (from version 1.1, build 3)
+
+- **Universal Links:** `App/App.entitlements` declares `applinks:www.orginizer.com` and `applinks:orginizer.com`; the API serves `/.well-known/apple-app-site-association` (and `/apple-app-site-association`) for `/invite/*`, `/i/*`, `/sos/*` with app ID `APPLE_TEAM_ID`.`APPLE_BUNDLE_ID` (defaults: `6MQRV9Q3H5`, `com.socialorganizer.app`). The app routes the link with the same `appLinkPath` as Android. The App ID needs the "Associated Domains" capability and a provisioning profile regenerated after enabling it.
+- **Push:** `aps-environment` in the entitlements and `AppDelegate` hands the APNs device token to `@capacitor/push-notifications`; the app registers it with platform `ios`. The API sends to iOS tokens straight through APNs (`apns.service.ts`, HTTP/2 + ES256 provider token), Android tokens still go through FCM. Env: `APNS_KEY` (contents of the `.p8` from Apple Developer → Keys → Apple Push Notifications service), `APNS_KEY_ID`, optional `APNS_TEAM_ID`, `APNS_BUNDLE_ID`, `APNS_SANDBOX=1` for Xcode debug builds. Without `APNS_KEY` the API does not store iOS tokens, so delivery keeps choosing Telegram for those people. iOS asks for push only from Settings → Notifications (App Store 4.5.4); the tap on a push opens its page.
+- **QR scanner:** `@capacitor-mlkit/barcode-scanning` ships CocoaPods only and this project is SPM, so on iOS the scanner uses the camera in the web view (`NSCameraUsageDescription` is set). The system Camera app opens invite QR codes through Universal Links.
 
 ### Getting the app from the web version
 
@@ -337,6 +345,8 @@ Invite page details (SO-24):
 - **Addressing the invited person:** `?to=Name` (letters, spaces, `-`, `'`, `.`, up to 40) puts "Name, …" before the title on the page and in the preview. It lives only in the shared address and is never stored. `/i/<slug>` keeps the query when it redirects.
 - **After the request is saved:** a newcomer on the web (not the installed app, not the Mini App) sees "Request sent" with the sign-in method used, a reminder to sign in to the app the same way (the request is already on the server, so it is there after install) and the device's store; a computer gets a QR to `/get?invite=…`. "Later / Continue in the browser" goes on to the intro. No countdown or automatic redirect, so coming back from the store never loops.
 - **Dead links** have their own screens: the inviter deleted the account (`INVITER_DELETED`), a one-time invite was used by someone else, or the link does not exist.
+- **Invitation code by hand:** the sign-in screen (`/login`, when there is no pending invite) has "I have an invitation code". It takes the bare code (invite token, personal ID or user id), `/i/<slug>`, or a whole pasted message with the link (`inviteCodeFromInput` in `onboarding/flow.ts`), and opens `/invite/<code>` — the request is created there, after sign-in, as with the link.
+- **Wording:** the title is "<Name> invites you" (no "circle", per the client's request of 30.10); Arabic and Hebrew use the gender-neutral "An invitation from <Name>". The corner language chip uses logical `end-*` placement and the top row reserves room for it, so the brand line is never covered (320 px, RTL).
 
 ### Connecting Telegram to an existing account
 

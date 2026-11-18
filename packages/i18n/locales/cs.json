@@ -188,7 +188,12 @@
     "waitText": "Pár sekund. Okno {{provider}} se zavře samo.",
     "waitBack": "Zpět k přihlášení",
     "lastMethodEmail": "Minule jste se přihlásili <b>kódem z e-mailu</b>.",
-    "expiredTextEmail": "Platnost relace vypršela. Minule jste se přihlásili <b>kódem z e-mailu</b>; po přihlášení vás vrátíme tam, kde jste byli."
+    "expiredTextEmail": "Platnost relace vypršela. Minule jste se přihlásili <b>kódem z e-mailu</b>; po přihlášení vás vrátíme tam, kde jste byli.",
+    "inviteCode": "Mám kód pozvánky",
+    "inviteCodeLabel": "Kód nebo odkaz pozvánky",
+    "inviteCodePlaceholder": "Vložte kód nebo celý odkaz",
+    "inviteCodeBad": "Tohle nevypadá jako kód pozvánky. Zkontrolujte ho, nebo vložte celý odkaz.",
+    "inviteCodeOpen": "Otevřít pozvánku"
   },
   "nav": {
     "circle": "Kruh",
@@ -648,7 +653,7 @@
     "website": "Webové stránky"
   },
   "invite": {
-    "calls": "{{name}} vás zve do svého kruhu",
+    "calls": "{{name}} vás zve",
     "say": "Vzájemná pomoc mezi lidmi, kteří se znají. Přihlaste se a {{name}} potvrdí, že se znáte.",
     "canHelp": "deklarovaná účast sítě: {{amount}}",
     "known": "Známe se",
@@ -690,7 +695,8 @@
       "later": "Později, pokračovat v prohlížeči",
       "continueWeb": "Pokračovat v prohlížeči",
       "qrText": "Namiřte fotoaparát telefonu na kód — otevře se obchod s aplikacemi."
-    }
+    },
+    "howItWorks": "Jak funguje Social Organizer"
   },
   "landing": {
     "site": {
