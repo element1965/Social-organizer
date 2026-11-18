@@ -28,7 +28,7 @@ visuals (starling murmuration, frost from one seed, mycelium), the user chose tw
 Mycelium was dropped: the "wood wide web" image is worn out, and the claim that trees feed each other
 through fungi is disputed by researchers.
 
-**Status: prototype v3, waiting for the user.** Sections 10 and 11 below supersede the screen plan, the
+**Status: prototype v4, waiting for the user.** Sections 10 to 12 below supersede the screen plan, the
 flock scene, the copy and the visual system of v1 (sections 2, 3, 5 and 6). Prototype (git-excluded):
 `local/media/concept-6/prototype/index.html` in the main checkout; open it in a browser.
 
@@ -230,6 +230,28 @@ steps and finish the scroll for the reader at some moments; then review and impr
   Участие · Чат · Вы; click jumps to the snap point); the 4,57 moment counts down from 4,74 (2011)
   to 4,57 (2016); a soft hand-over from the dark story to the light sections; on phones the scene
   keeps the top of the screen and the beat's words sit in a card pinned to the bottom.
+
+### 12. Prototype v4 (2026-11-18): scrolling, copy, growth layout
+
+- **Scroll.** The user: the steps were "fixed in the wrong places". Cause: the rest points sat at
+  0,6–0,85 of a beat (where its animation ended), while the beat's words sit in its middle, so at
+  rest the text slid under the header. Now every beat rests at its middle and finishes its
+  animation before it (camera by 0,42, reveals by about 0,45). Native `scroll-snap` (proximity)
+  stopped at random places, so a scripted finish replaced it: when the reader stops inside the
+  story, the page glides to the next beat's middle in the direction of the scroll, or back if they
+  moved less than 16 % of the screen; wheel, touch or key cancels; after the last beat the story
+  lets go. Tested with real wheel input and scripted runs on 1440×900 and 390×844 (forward, small
+  nudges, back, a long fling, leaving the story); screenshots of all nine rest points on both.
+- **Copy.** The user: the first screen should not open with Facebook and "fewer than four people";
+  the texts were still odd and too long. Hero now: «Ваш круг больше, чем кажется.» / «Вы собираете
+  сеть из тех, кого знаете лично, и их знакомых. Когда кому-то трудно, первыми об этом узнают
+  близкие, а помогает тот, кто захочет.» The Facebook figure stays only as evidence in «Что уже
+  есть». Every beat is cut to one thought (for example «Через два-три рукопожатия вы уже никого не
+  знаете в лицо.»), the model's ring counts are gone, FAQ answers are shorter. The current lines
+  live in `window.COPY` in the prototype.
+- **Growth model.** Invitations per person now have a low spread (R = 1,5 means one or two), and the
+  first person always invites two, so above the threshold the network never dies by bad luck and
+  below it always fades; on phones the words, the model's frame and the controls stack.
 
 ## Related
 - [The core message](../core/core-message.md) — source: every line on the page.
