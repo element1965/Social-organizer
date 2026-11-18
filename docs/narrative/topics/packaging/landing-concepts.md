@@ -4,7 +4,7 @@ title: Landing concepts from the brainstorm (not decided)
 tags: [packaging, comparables]
 created: 2026-11-18
 updated: 2026-11-18
-related: [20261118-packaging-plan, 20261118-comparables, 20261118-how-it-works-video-idea, 20261118-latent-connectedness, 20261118-parked-topics, 20261118-core-message]
+related: [20261118-packaging-plan, 20261118-comparables, 20261118-how-it-works-video-idea, 20261118-latent-connectedness, 20261118-parked-topics, 20261118-core-message, 20261118-landing-concept-lights]
 summary: Two brainstorm proposals for the new landing — "The World Is Already Connected" (five scenes around the real 3D graph in a demo mode) and the "one life situation, three moving steps" first screen from the landing-references chat — with the corrections they need against the live app and our rules.
 ---
 
@@ -88,6 +88,11 @@ screen and of the scroll scenes, Maria's $300 Need runs through scenes 03–04 (
 block: guess, watch the wave, name your part), and B's 45–60 second video with real screens sits
 behind "Посмотреть, как это работает". Waiting for the user's choice.
 
+### Rejected (2026-11-18)
+
+The user did not like either concept and asked for something new, closer to A, with storytelling
+and examples. The new proposal is ["The network that is already there"](landing-concept-lights.md).
+
 ### What both agree on
 
 The network is shown, not described; real app components rather than stock pictures; minimal text;
@@ -100,3 +105,4 @@ This matches the `so-explainer` method (act, predict, see).
 - [How It Works video idea](how-it-works-video-idea.md) — related: the video drafts.
 - [Latent connectedness](../theory/latent-connectedness.md) — source: "the world is already connected".
 - [Parked topics](../future/parked-topics.md) — constrains: the "next" section.
+- ["The network that is already there"](landing-concept-lights.md) — replaces: the new proposal.
