@@ -4,7 +4,7 @@ title: Landing concept "The network that is already there" (proposal)
 tags: [packaging, mechanics, trust]
 created: 2026-11-18
 updated: 2026-11-18
-related: [20261118-core-message, 20261118-landing-concepts, 20261118-latent-connectedness, 20261118-evolution-of-trust, 20261118-need-protocol, 20261118-packaging-plan, 20261118-cold-start-influencers]
+related: [20261118-landing-concept-flock, 20261118-core-message, 20261118-landing-concepts, 20261118-latent-connectedness, 20261118-evolution-of-trust, 20261118-need-protocol, 20261118-packaging-plan, 20261118-cold-start-influencers]
 summary: A new landing concept after the user rejected both chat concepts — the network shown as light that is already there, two layers (life on video, the network as a graph), the visitor inside Maria's 48-hour story with one honest decision, a role flip and the next stage — with the analysis behind it, the screen plan, the visual system, the tech, a Higgsfield shot list and the open decisions.
 ---
 

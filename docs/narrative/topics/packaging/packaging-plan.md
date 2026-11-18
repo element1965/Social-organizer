@@ -4,7 +4,7 @@ title: Packaging plan — from the data pool to the landing and in-app teaching
 tags: [packaging, toolkit]
 created: 2026-11-18
 updated: 2026-11-18
-related: [20261118-landing-concept-lights, 20261118-core-message, 20261118-how-it-works-video-idea, 20261118-audiences, 20261118-open-questions, 20261118-sources, 20261118-landing-concepts, 20261118-funding-strategy, 20261118-cold-start-influencers]
+related: [20261118-landing-concept-flock, 20261118-landing-concept-lights, 20261118-core-message, 20261118-how-it-works-video-idea, 20261118-audiences, 20261118-open-questions, 20261118-sources, 20261118-landing-concepts, 20261118-funding-strategy, 20261118-cold-start-influencers]
 summary: The agreed order of the packaging work (collect the pool → distil what matters → redesign the landing and web → in-app teaching) and which project and installed skills serve each stage.
 ---
 
