@@ -4,7 +4,7 @@ title: Landing concepts from the brainstorm (not decided)
 tags: [packaging, comparables]
 created: 2026-11-18
 updated: 2026-11-18
-related: [20261118-packaging-plan, 20261118-comparables, 20261118-how-it-works-video-idea, 20261118-latent-connectedness, 20261118-parked-topics]
+related: [20261118-packaging-plan, 20261118-comparables, 20261118-how-it-works-video-idea, 20261118-latent-connectedness, 20261118-parked-topics, 20261118-core-message]
 summary: Two brainstorm proposals for the new landing — "The World Is Already Connected" (five scenes around the real 3D graph in a demo mode) and the "one life situation, three moving steps" first screen from the landing-references chat — with the corrections they need against the live app and our rules.
 ---
 
@@ -78,6 +78,15 @@ Reference landings from that chat are listed in [comparables](../audiences/compa
 | "Social Organizer helps to report a Need…" | People act; the app is the channel (`so-story`). |
 | "What becomes possible next: initiatives" on the landing | A parked topic: decide whether a clearly marked future section belongs on a participant-facing page ([open questions](../meta/open-questions.md)). |
 | "Initiatives — crowdfunding of intentions" | Correct as is: the term covers Participation in a Need today and initiatives later (user, 2026-11-18). |
+
+### Shown to the user (2026-11-18)
+
+Both concepts were shown as structure sketches with the accepted [core message](../core/core-message.md)
+(headline «Мир теснее, чем кажется.», the Maria scene, the next-stage line). Recommendation given:
+**A as the backbone, with B's human story inside it** — the network stays the hero of the first
+screen and of the scroll scenes, Maria's $300 Need runs through scenes 03–04 (the `so-explainer`
+block: guess, watch the wave, name your part), and B's 45–60 second video with real screens sits
+behind "Посмотреть, как это работает". Waiting for the user's choice.
 
 ### What both agree on
 
