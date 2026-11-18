@@ -4,7 +4,7 @@ title: Parked topics — not part of the current story
 tags: [future]
 created: 2026-11-18
 updated: 2026-11-18
-related: [20261118-direct-cooperation, 20261118-causal-chain, 20261118-how-it-works-video-idea]
+related: [20261118-direct-cooperation, 20261118-causal-chain, 20261118-how-it-works-video-idea, 20261118-core-message]
 summary: Topics deliberately kept out of the current video, landing and onboarding (mutual offset of obligations, initiatives, AI agents, non-monetary Needs) and why.
 ---
 
@@ -28,8 +28,11 @@ blur the first, simplest story and make claims the app cannot back yet.
 | **Direct cooperation** | Finding partners in the graph, friendly prices | Next stage after risk sharing | [Direct cooperation](direct-cooperation.md), builder/donor materials |
 | **Non-monetary Needs** | A Need expressed other than in dollars | Open product question after the release (launch-readiness §3) | — |
 
-Rule: a participant-facing piece (video, landing, onboarding, invite) does not mention these.
-A builder or donor piece may, in a clearly marked "what comes next" section. The landing concept
+Rule (updated 2026-11-18 at the user's request): participant-facing pieces may name the next stage
+of **coordination** (finding people through the network, joint initiatives) in one clearly labelled
+"next" line, in an honest future («мы хотим»), as in section 8 of the [core message](../core/core-message.md).
+Builder and donor pieces may say more. AI agents and the mutual offset of obligations stay out of
+both for now. The landing concept
 "The World Is Already Connected" proposes such a section on the landing itself; that is an open
 decision ([landing concepts](../packaging/landing-concepts.md)).
 

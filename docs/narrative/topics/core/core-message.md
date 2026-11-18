@@ -1,16 +1,16 @@
 ---
 id: 20261118-core-message
-title: The core message (draft for the team)
+title: The core message
 tags: [core, packaging, vocabulary]
 created: 2026-11-18
 updated: 2026-11-18
-related: [20261118-what-so-is, 20261118-principles, 20261118-claims, 20261118-need-protocol, 20261118-latent-connectedness, 20261118-audiences, 20261118-landing-concepts, 20261118-packaging-plan]
-summary: Stage 2 of the packaging plan — the headline, the one sentence, a short scene, the story in five beats, the answer to "why join now", the questions a newcomer asks, proof points, what SO is not, one line and one ask per audience, and a five-person test. Russian is written first, English is its own version. Draft 2 after an editor's pass, waiting for the team.
+related: [20261118-what-so-is, 20261118-principles, 20261118-claims, 20261118-need-protocol, 20261118-latent-connectedness, 20261118-audiences, 20261118-landing-concepts, 20261118-packaging-plan, 20261118-causal-chain, 20261118-direct-cooperation]
+summary: Stage 2 of the packaging plan, accepted by the user — the headline, the one sentence, a short scene, the story in five beats, why join now, a newcomer's questions, proof points, what comes next, what SO is not, one line and one ask per audience, and a five-person test (Russian first, English as its own version).
 ---
 
-# The core message (draft for the team)
+# The core message
 
-> Summary: Stage 2 of the packaging plan — the headline, the one sentence, a short scene, the story in five beats, the answer to "why join now", the questions a newcomer asks, proof points, what SO is not, one line and one ask per audience, and a five-person test. Russian is written first, English is its own version. Draft 2 after an editor's pass, waiting for the team.
+> Summary: Stage 2 of the packaging plan, accepted by the user — the headline, the one sentence, a short scene, the story in five beats, why join now, a newcomer's questions, proof points, what comes next, what SO is not, one line and one ask per audience, and a five-person test (Russian first, English as its own version).
 
 ## Context
 
@@ -22,8 +22,9 @@ Sources: [what SO is](what-so-is.md), [principles](../principles/principles.md),
 [latent connectedness](../theory/latent-connectedness.md), [audiences](../audiences/audiences.md),
 [landing concepts](../packaging/landing-concepts.md).
 
-**Status: draft 2 of 2026-11-18, waiting for the team** (the user and Andrei Lubalin). History in
-section 12. Once accepted, the canonical lines in [what SO is](what-so-is.md) follow this note.
+**Status: accepted by the user on 2026-11-18** ("гораздо лучше"), with a section on what comes
+next added at the user's request; waiting for Andrei Lubalin and the five-person test. History in
+section 13. Once accepted, the canonical lines in [what SO is](what-so-is.md) follow this note.
 
 ## Details
 
@@ -115,7 +116,43 @@ in the app, where people meet it: in a pitch it read as recruiting.
 Sources: Backstrom et al., 2012 (2011 data); Edunov et al., 2016; A. Lubalin's report, July 2026.
 Internal figure: 287 people with connections on 13 November 2026.
 
-### 8. Чем это не является / What it is not (FAQ and press, not the first screen)
+### 8. Что дальше / What comes next (always labelled as the next stage)
+
+Added at the user's request (2026-11-18): show that mutual help by the dollar is only the first and
+simplest stage, and that the same network can later carry other kinds of coordination. Future tense
+stays honest: «мы хотим», «мы рассчитываем», never «вы сможете» as a promise.
+
+**Для лендинга и участников** (над строкой пометка «Дальше» / "Next"):
+
+| RU | EN |
+|---|---|
+| Помощь по доллару только начало. Мы хотим, чтобы со временем через сеть знакомств люди находили мастера по рекомендации, партнёров для общего проекта, единомышленников для своей инициативы. И договаривались, как и сейчас, напрямую. | A dollar of help is only the beginning. Over time, we want people to use their network of acquaintances to find a tradesperson someone vouches for, partners for a shared project, supporters for their own initiative. And to agree on it, as they do now, directly. |
+
+**Для разработчиков, исследователей и доноров:**
+
+**RU.** Начинается всё с распределения рисков. Человек сообщает о потребности, а знакомые и знакомые
+знакомых отвечают участием: называют, сколько готовы дать, от одного доллара. Дело простое, и в нём
+люди закладывают основу: подтверждают личные знакомства, привыкают договариваться напрямую, а каждый
+накапливает свою историю участия. Мы рассчитываем, что со временем на этой основе люди начнут
+координироваться и в других делах: искать мастеров и партнёров по цепочкам знакомств, запускать общие
+инициативы и поддерживать их своим участием так же, как сегодня откликаются на чужую потребность.
+Пока в приложении только два сигнала: потребность и участие. Каждый следующий этап мы будем
+проверять на практике.
+
+**EN.** It all starts with risk sharing. A person reports a Need, and the people they know, and the
+people those people know, respond with Participation: they say how much they're ready to give, from
+$1. It is a simple act, and through it people lay the groundwork: they confirm personal
+acquaintances, get used to agreeing directly, and each builds up a history of participation. Over
+time we expect people to build on it and coordinate in other things too: finding tradespeople and
+partners through chains of acquaintances, starting joint initiatives and backing them with their
+Participation, just as today they respond to someone's Need. For now the app carries only two
+signals: Need and Participation. We will test each next stage in practice.
+
+The theory behind it: the [causal chain](causal-chain.md) and [direct cooperation](../future/direct-cooperation.md);
+the "crowdfunding of intentions" covers both a Need today and initiatives later. AI agents and the
+mutual offset of obligations stay out of this section.
+
+### 9. Чем это не является / What it is not (FAQ and press, not the first screen)
 
 | RU | EN |
 |---|---|
@@ -124,7 +161,7 @@ Internal figure: 287 people with connections on 13 November 2026.
 | Это не сбор пожертвований: потребность видят только люди, связанные с автором через знакомых, а в следующий раз попросить можете вы. | It's not a donation drive: a Need reaches only people linked to the author through friends, and next time you may be the one who asks. |
 | Это не пирамида: за вход никто не платит, на приглашениях никто не зарабатывает. | It's not a pyramid: nobody pays to join and nobody earns from invites. |
 
-### 9. Одна фраза и одна просьба для каждой аудитории / One line and one ask per audience
+### 10. Одна фраза и одна просьба для каждой аудитории / One line and one ask per audience
 
 | Audience | RU: фраза → просьба | EN: line → ask |
 |---|---|---|
@@ -134,7 +171,7 @@ Internal figure: 287 people with connections on 13 November 2026.
 | Donor | Приложение и теория уже есть, осталось испытать их на практике. → Профинансируйте запуск в сообществах и исследование, которое проверит, может ли сеть расти сама. | The app and the theory exist; what's left is to test them in practice. → Fund the launch in communities and research that checks whether the network can grow on its own. |
 | Press, regulator | Два сигнала: потребность и участие. Они идут по цепочке знакомств, а деньги через приложение не проходят. → Подробности в FAQ и условиях использования. | Two signals, a Need and a Participation, travel along chains of acquaintances; no money goes through the app. → Details are in the FAQ and the terms. |
 
-### 10. Слова и правила / Words and rules
+### 11. Слова и правила / Words and rules
 
 Always: сеть знакомых / network of people you know, потребность / Need, участие / Participation,
 распределение рисков / risk sharing, сначала ближайшие / nearest first.
@@ -147,11 +184,11 @@ reported Participation, a member of the network is «человек в сети�
 the chain between two people is counted in handshakes and the people in between are counted
 separately.
 
-Out of this message: direct cooperation, initiatives, AI agents and mutual offset of obligations
-([parked topics](../future/parked-topics.md)). The Law of Autocatalytic Inevitability is for builders and
+Direct cooperation and initiatives appear only in section 8, labelled as the next stage; AI agents
+and the mutual offset of obligations stay out ([parked topics](../future/parked-topics.md)). The Law of Autocatalytic Inevitability is for builders and
 donors only, always with its conditions ([the law](../theory/autocatalytic-law.md)).
 
-### 11. Проверка на людях / How to check it with people (before stage 3)
+### 12. Проверка на людях / How to check it with people (before stage 3)
 
 Show the headline block, the scene and the five beats to five people who have never seen SO. Ask:
 1. Что происходит, когда кто-то сообщает о потребности на 300 долларов? (о ней узнают до 300 человек, сначала ближайшие; каждый решает сам)
@@ -163,7 +200,7 @@ Show the headline block, the scene and the five beats to five people who have ne
 It passes if four of five answer all five in their own words. Write down every reading of it as
 insurance, a fund, a pyramid or a donation site.
 
-### 12. History of this draft
+### 13. History of this draft
 
 - **Draft 1** (2026-11-18): a cold read by a model with no context found that Participation read as
   a payment, "one person for each dollar" as "300 people give $1 each", the access rule and "every
@@ -176,8 +213,12 @@ insurance, a fund, a pyramid or a donation site.
   «отвечать» instead of «участвовать») and, most important, **the Facebook figures**: 3.57 is the
   number of people in between, the chain itself is 4.57 handshakes (2016); 4.74 is the 2011 chain.
   The editor rated the liveliness 6/10 for lack of a person, so the scene (section 3) was added.
+- **Accepted** (2026-11-18): the user approved draft 2 and asked to show the future potential of the
+  network; section 8 was written in Russian first and checked by the editor, who replaced a confident
+  future («смогут») with an honest one («мы хотим», «мы рассчитываем») and removed «врач» (medical
+  connotation) and «цены для своих» (reads as a trading feature).
 
-### 13. What it changes on the live site (stage 3, not now)
+### 14. What it changes on the live site (stage 3, not now)
 
 - `landing.steps.s3Text` says a Need "reaches exactly {{n}} people" and "closes once participants
   cover the amount". It should say "up to" and "stops taking Participation once the amount is
@@ -189,6 +230,7 @@ insurance, a fund, a pyramid or a donation site.
 - [Principles](../principles/principles.md), [claims](../principles/claims.md) — constrain: every line here.
 - [The Need protocol](../mechanics/need-protocol.md) — evidence: "up to", $1, the access rule.
 - [Latent connectedness](../theory/latent-connectedness.md) — source: the headline's premise and the corrected figures.
-- [Audiences](../audiences/audiences.md) — source: section 9.
+- [Audiences](../audiences/audiences.md) — source: section 10.
 - [Landing concepts](../packaging/landing-concepts.md) — next: stage 3 builds on this message.
+- [The causal chain](causal-chain.md), [direct cooperation](../future/direct-cooperation.md) — source: section 8.
 - [Packaging plan](../packaging/packaging-plan.md) — parent: stage 2.

@@ -37,8 +37,8 @@ note it affects.
 3. **First audience for stage 2.** Participants through community leaders, or builders and donors?
 4. **Opening.** Candidate from the landing chat: "The world is already connected" (fewer than four people in between, 2016),
    which is also the report's premise. Or a real human case from the network, with consent.
-5. **"What becomes possible next" on the landing?** Concept A puts initiatives and collaborators on
-   the participant-facing page as a future stage; the parked-topics rule keeps them off it.
+5. ~~"What becomes possible next" on the landing?~~ Decided 2026-11-18: yes, one labelled "next"
+   line about coordination in the network (core message, section 8).
 6. ~~"Crowdfunding of intentions": one meaning only?~~ Decided 2026-11-18: it is both, Participation
    in a Need now and initiatives later (see the vocabulary note).
 7. **Landing concept** (stage 3, not now): two ChatGPT proposals are collected in the landing

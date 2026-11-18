@@ -26,7 +26,7 @@ the web part, and teaching inside the app. Nothing beyond stage 1 is started yet
 | # | Stage | Output | Status |
 |---|---|---|---|
 | 1 | **Collect the pool** | This knowledge base (`docs/narrative/`), project skills `so-trust-lens`, `so-story`, `so-explainer` | Done 2026-11-18; extend as the brainstorm continues |
-| 2 | **Distil** | The few messages that carry the project: one line, the story order, the answer to "why join now", the answers per audience | Draft 2026-11-18: [the core message](../core/core-message.md), revised after a cold read; waiting for the team and a five-person test |
+| 2 | **Distil** | The few messages that carry the project: one line, the story order, the answer to "why join now", the answers per audience | Accepted by the user 2026-11-18: [the core message](../core/core-message.md); waiting for Andrei Lubalin's read and a five-person test |
 | 3 | **Landing and web redesign** | New landing, `/how`, invite and public Need pages built on stage 2 | Not started; two concepts collected in [landing concepts](landing-concepts.md) |
 | 4 | **In-app teaching** | First-run teaching inside existing steps (intro, empty Circle, path to the first Need, first Participation) | Not started |
 | — | Ideas parked for later decision | The "How It Works" video ([idea](how-it-works-video-idea.md)), the influencer pilot ([plan](../audiences/cold-start-influencers.md)), the funding programme ([strategy](../funding/funding-strategy.md)) | Ideas only |

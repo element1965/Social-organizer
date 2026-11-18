@@ -35,16 +35,21 @@ the network comes first, signals travel inside it, coordination is a consequence
 
 ### Canonical lines
 
+The [core message](core-message.md) (accepted 2026-11-18) is the source; these lines follow it.
+
 | Length | EN | RU |
 |---|---|---|
-| Name line (landing hero) | First, a network of people you know | Сначала сеть из людей, которых вы знаете |
+| Headline | It's a smaller world than you think. | Мир теснее, чем кажется. |
+| Heading of the first step | First, a network of people you know | Сначала сеть из людей, которых вы знаете |
 | One line | People you know share each other's risks. | Люди, которые знают друг друга, распределяют риски друг друга. |
-| One sentence | In Social Organizer, people who know each other, and the people they know, share each other's risks: a Need reaches as many people as it names dollars, nearest first, and each of them decides whether to take a small part. | В Social Organizer люди, которые знают друг друга, и их знакомые делят риски: потребность получают столько людей, сколько в ней долларов, сначала ближайшие, и каждый сам решает, взять ли небольшую часть. |
+| One sentence | When one of you is in trouble, they report a Need. If they need $300, up to 300 people hear about it: first the people they know, then the people those people know. Each decides whether to take on a small part of the amount. | Когда кому-то из вас трудно, он сообщает о потребности. Если ему нужно 300 долларов, о ней узнают до 300 человек: сначала его знакомые, потом их знакомые. Каждый сам решает, взять ли на себя небольшую часть суммы. |
 | Published video title | Direct Mutual Support Through Real Connections | Прямая взаимная поддержка через реальные связи |
-| Candidate hero (brainstorm, not decided) | The world is already connected. Now we can act together. | Мир уже связан. Теперь мы можем действовать вместе. |
-| Candidate line (brainstorm, not decided) | Little from many. Enough for one. | Немного от многих — достаточно для одного. |
+| Next stage (labelled) | A dollar of help is only the beginning. | Помощь по доллару только начало. |
 
-**One paragraph (EN).** You build a network of people you know in person, and they build theirs.
+The longer texts (the scene, the five beats, the next stage) are in the [core message](core-message.md).
+The two paragraphs below are the earlier versions, kept for reference.
+
+**One paragraph (EN, earlier).** You build a network of people you know in person, and they build theirs.
 When one of you has a hard time, you report a Need with an amount and a chat link. It reaches as
 many people as it names dollars, nearest by handshakes first, and each of them sees who connects
 them to you. They find out what happened in their own way, report Participation if they want to,
@@ -52,7 +57,7 @@ often a dollar or a few, and agree on the rest with you directly. Nobody in the 
 money or decides who deserves it. Being part of such a network makes your own risks bearable in
 advance, because tomorrow the Need may be yours.
 
-**Один абзац (RU).** Вы собираете сеть из людей, которых знаете лично, а они собирают свою. Когда
+**Один абзац (RU, ранняя версия).** Вы собираете сеть из людей, которых знаете лично, а они собирают свою. Когда
 кому-то из вас трудно, вы сообщаете о потребности: сумма и ссылка на чат. Её получают столько
 людей, сколько в ней долларов, сначала ближайшие по рукопожатиям, и каждый видит, через кого он
 связан с вами. Люди сами выясняют обстоятельства, при желании сообщают об участии (часто это
