@@ -28,7 +28,7 @@ visuals (starling murmuration, frost from one seed, mycelium), the user chose tw
 Mycelium was dropped: the "wood wide web" image is worn out, and the claim that trees feed each other
 through fungi is disputed by researchers.
 
-**Status: prototype v5, waiting for the user.** Sections 10 to 13 below supersede the screen plan, the
+**Status: prototype v7, waiting for the user.** Sections 10 to 14 below supersede the screen plan, the
 flock scene, the copy and the visual system of v1 (sections 2, 3, 5 and 6). Prototype (git-excluded):
 `local/media/concept-6/prototype/index.html` in the main checkout; open it in a browser.
 
@@ -277,6 +277,26 @@ steps and finish the scroll for the reader at some moments; then review and impr
 - **One font: Manrope**, the app's own. Measured in the browser: x-height 0,75 vs 0,746 (Onest),
   58 vs 56 characters per 540 px line at 18 px, tabular figures in both; no readability difference
   worth changing the app, so the landing follows the app and drops JetBrains Mono.
+
+### 14. Prototype v7 (2026-11-18): the page as one story and one instruction
+
+The page now reads in one line: the promise (hero) → how people are connected (the flock, then
+4,57 handshakes with a link to Facebook's study) → the five steps on Maria's example → "tomorrow it
+could be you" with the way in → how the network grows (the model) → what comes next (signals now
+and later) → donors (what exists, with links; what money is for) → objections (FAQ) → how to start
+(three steps, every platform, QR) → footer (GitHub, Telegram, sign-in).
+
+- Every reference is a link: the study, the report on Zenodo, Android, iPhone, the browser, GitHub
+  (`element1965/Social-organizer`, public), the team through the Telegram bot.
+- Donors and FAQ are dark like the rest of the page; donors are two glass cards over the starling
+  photograph.
+- The last story beat was empty because of a broken script substitution; it is restored and ends
+  on the call to action.
+- The sky follows the camera (slides with the yaw and the side offset, sinks as the camera rises,
+  closes in on near shots); the colour grade is baked into the image.
+- Performance: canvas pixel ratio capped at 1,5; fewer birds on 4-core devices; line buffers
+  written in place; the finished growth model and the static part of the "Next" network are not
+  redrawn; images decode asynchronously.
 
 ## Related
 - [The core message](../core/core-message.md) — source: every line on the page.
