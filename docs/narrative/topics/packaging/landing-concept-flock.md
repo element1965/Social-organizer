@@ -28,7 +28,8 @@ visuals (starling murmuration, frost from one seed, mycelium), the user chose tw
 Mycelium was dropped: the "wood wide web" image is worn out, and the claim that trees feed each other
 through fungi is disputed by researchers.
 
-**Status: prototype, waiting for the user.** Prototype (git-excluded):
+**Status: prototype v2, waiting for the user.** Section 10 below supersedes the screen plan, the
+flock scene, the copy and the visual system of v1 (sections 2, 3, 5 and 6). Prototype (git-excluded):
 `local/media/concept-6/prototype/index.html` in the main checkout; open it in a browser.
 
 ## Details
@@ -171,6 +172,38 @@ Exact prompts sit next to each file as `*.prompt.txt`.
 - Where «Поддержать проект» and «Прочитать теорию» lead (a donor page, Lubalin's report).
 - The English version is written as its own text, not translated.
 - Whether to show real app screens next to the step cards (live components, never mock-ups).
+
+### 10. Prototype v2 (2026-11-18): why and what changed
+
+The user reviewed v1 in the browser: "очень слабо как лендинг"; the 3D flock "не информативна и
+только отвлекает (постоянно кружа по экрану)"; fonts and typography disliked; texts "отвратительные,
+очень AI slop"; birds standing still are also wrong ("движение должно быть, но при скролле история
+продолжается"); and the palette came from the photographs instead of the brand, with a drawn mark
+instead of the app's logo.
+
+- **One scroll-told scene.** A fixed WebGL layer over a photographed sky plate (Codex,
+  `sky-plate-v1.png`, no birds) runs behind nine beats: the opening ribbon of the murmuration; one
+  bird and its seven neighbours; handshake rings spreading from it (the model's real counts); you and
+  your circle; Maria's Need reaching up to 300 birds nearest first; the chain you, Oleg, Maria;
+  Participation adding up to 300 dollars; the participants' chat; the next Need starting from you.
+- **Motion that does not distract.** The flock never wanders: the shape breathes with a slow,
+  low-frequency wave, each bird flaps and bobs, and the neighbour graph stays fixed, so lines and
+  labels stay readable. Only scrolling moves the camera and advances the story; counters and the
+  wave are scrubbed by scroll. Birds nearer than half the shot distance are clipped so nothing
+  crosses the text. About 6,500 instanced birds on desktop, 2,400 on phones, 3 ms a frame.
+- **Brand.** The app's logo (`apps/web/public/logo*.png`) and tokens (`apps/web/src/styles/tokens.css`):
+  scene #0b1513, care #087f71 (Participation, main buttons), sos #c5342c (a Need), warm #f2be68 (those
+  who heard of it), ring nodes #e7eeeb / #9fb0aa / #5f7069. The sky is graded towards the scene colour
+  and darkens into night as the story goes on.
+- **Type.** Onest (a Cyrillic-first grotesk) for display and text, JetBrains Mono for labels and
+  numbers. The app itself uses Manrope: decide whether the site follows the app or the app follows.
+- **Copy.** Rewritten as one evening's story in the second person, then edited against the stop-slop
+  rules and the project rules (key: `window.COPY` in the prototype). Kept against the editor: «через
+  приложение не проходят», «узнают до 300 человек», «приложение к ним не прикасается», «может
+  понадобиться». The separate "Together" section is gone: the story now carries coordination (Oleg
+  vouches, Lena finds a cheaper garage, the chat).
+- **After the story:** facts (4,57), how the network grows (the frost model), next stage, donors,
+  FAQ, final call.
 
 ## Related
 - [The core message](../core/core-message.md) — source: every line on the page.
