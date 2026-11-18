@@ -210,7 +210,8 @@
     "scan": "Scansiona",
     "how": "Come funziona",
     "person": "Persona",
-    "collection": "Bisogno"
+    "collection": "Bisogno",
+    "attention": "ti aspetta"
   },
   "circle": {
     "toSelf": "Torna a me",
@@ -285,7 +286,18 @@
       "milestoneFirstNeed": "Primo bisogno",
       "milestoneFirstNeedSub": "Il messaggio viaggia per strette di mano",
       "milestoneFirstPart": "Prima partecipazione",
-      "milestoneFirstPartSub": "Chi ha comunicato il bisogno vede la tua partecipazione"
+      "milestoneFirstPartSub": "Chi ha comunicato il bisogno vede la tua partecipazione",
+      "accepted": "ha confermato la conoscenza · siete l'uno nel cerchio dell'altro",
+      "stack": {
+        "waiting": "In attesa di conferma",
+        "incoming": "Vogliono collegarsi con te",
+        "accepted": "Ora nel tuo cerchio",
+        "participating": "Partecipi",
+        "closed": "Completati",
+        "names": "{{names}} e altri {{count}}",
+        "more": "Altri {{count}}",
+        "less": "Mostra meno"
+      }
     },
     "start": {
       "lead": "Nel tuo cerchio ci sei solo tu.",
@@ -548,7 +560,8 @@
     "notifyPushOff": "Attiva le notifiche push per vederle su questo dispositivo.",
     "notifyNewCollections": "Nuovi bisogni",
     "notifyNewCollectionsHint": "Avvisami quando una persona di cui posso ricevere avvisi comunica un bisogno",
-    "notifyMyEventsHint": "Le richieste di conoscenza e i messaggi di partecipazione al mio bisogno arrivano sempre. La partecipazione arriva in un solo messaggio."
+    "notifyMyEventsHint": "Le richieste di conoscenza e i messaggi di partecipazione al mio bisogno arrivano sempre. La partecipazione arriva in un solo messaggio.",
+    "telegramLinkMerged": "Telegram è collegato. Sei nel tuo account di sempre, il secondo account vuoto è stato eliminato. Sugli altri dispositivi accedi allo stesso modo."
   },
   "faq": {
     "title": "Domande frequenti",
@@ -716,6 +729,177 @@
       "qrTitle": "L'app sul telefono",
       "qrText": "Inquadra con la fotocamera: si apre lo store giusto.",
       "qrAria": "Codice QR con un link all'app"
+    },
+    "v2": {
+      "meta": {
+        "title": "Social Organizer: una rete di persone che conosci",
+        "description": "Una rete di persone che si conoscono di persona. Quando qualcuno è in difficoltà, in tanti possono aiutare."
+      },
+      "nav": {
+        "label": "Sezioni",
+        "how": "Come funziona",
+        "grow": "Come cresce",
+        "join": "Unisciti",
+        "faq": "Domande",
+        "signin": "Accedi"
+      },
+      "hero": {
+        "title": "Il tuo cerchio è più grande di quanto pensi.",
+        "lead": "Social Organizer riunisce persone che si conoscono di persona. Quando una di loro è in difficoltà, lo vengono a sapere prima i suoi conoscenti, poi i conoscenti dei conoscenti.",
+        "cta": "Crea la tua rete",
+        "how": "Come funziona",
+        "facts": "Gratis · senza commissioni · codice aperto"
+      },
+      "story": {
+        "sceneAria": "Uno stormo di storni: ogni uccello rappresenta una persona della rete",
+        "railAria": "Capitoli della storia",
+        "b1": {
+          "label": "Storni",
+          "say": "Uno storno tiene d'occhio solo sei o sette vicini, eppure uno stormo di migliaia di uccelli vola come un corpo solo."
+        },
+        "b2": {
+          "label": "Persone",
+          "say": "Le persone sono collegate allo stesso modo.",
+          "stat": "strette di mano separavano in media due utenti di Facebook scelti a caso nel 2016: meno di quattro persone in mezzo. <study>Lo studio</study>"
+        },
+        "b3": {
+          "label": "1 · Una rete di conoscenti",
+          "say": "Inviti qualcuno che conosci di persona, e tutti e due confermate di conoscervi.",
+          "late": "Poi, a sua volta, invita chi conosce."
+        },
+        "b4": {
+          "label": "2 · Un bisogno",
+          "say": "A Maria si è rotta la macchina, e senza auto non può andare al lavoro. La riparazione costa 300 $.",
+          "late": "Maria comunica un bisogno e aggiunge il link a una chat. Un bisogno di 300 $ raggiunge fino a 300 persone, le più vicine per prime."
+        },
+        "b5": {
+          "label": "3 · Ognuno decide da sé",
+          "say": "Tu conosci Oleg, e Oleg conosce Maria. Vedi questa catena e puoi chiedere a Oleg che cosa è successo.",
+          "late": "Partecipare o no lo scegli tu."
+        },
+        "b6": {
+          "label": "4 · Poco da tanti",
+          "say": "Chi vuole partecipare indica un importo da 1 $ in su. Tu indichi 5 $.",
+          "late": "È un'intenzione, adesso non si paga niente. Finché il bisogno è aperto, puoi cambiare l'importo o ritirare la partecipazione."
+        },
+        "b7": {
+          "label": "5 · Accordi diretti",
+          "say": "Maria e i partecipanti ne parlano in chat. Lena consiglia un'officina più economica.",
+          "late": "Se ci sono di mezzo dei soldi, le persone se li danno direttamente. L'app non li tocca mai."
+        },
+        "b8": {
+          "label": "Tu",
+          "say": "Domani al posto di Maria potresti esserci tu.",
+          "late": "Allora i primi a sapere del tuo bisogno saranno i tuoi conoscenti."
+        },
+        "rail": {
+          "1": "Stormo",
+          "2": "Persone",
+          "3": "Rete",
+          "4": "Bisogno",
+          "5": "Scelta",
+          "6": "Partecipazione",
+          "7": "Chat",
+          "8": "Tu"
+        },
+        "tags": {
+          "you": "Tu",
+          "oleg": "Oleg",
+          "maria": "Maria · 300 $",
+          "lena": "Lena"
+        },
+        "hud": {
+          "reached_one": "ha saputo del bisogno",
+          "reached_many": "hanno saputo del bisogno",
+          "reached_other": "hanno saputo del bisogno",
+          "reported": "dichiarati su 300 $",
+          "people_one": "partecipante",
+          "people_many": "di partecipanti",
+          "people_other": "partecipanti"
+        }
+      },
+      "grow": {
+        "title": "Come cresce la rete",
+        "text": "Ogni nuovo arrivato invita le persone che conosce. Scegli quante in media e guarda cosa succede alla rete.",
+        "canvasAria": "Modello di crescita della rete: gli inviti partono da una sola persona",
+        "slider": "Ognuno invita in media",
+        "unit": "persone",
+        "threshold": "soglia",
+        "statPeople_one": "persona nella rete",
+        "statPeople_many": "di persone nella rete",
+        "statPeople_other": "persone nella rete",
+        "statWaves_one": "ondata di inviti",
+        "statWaves_many": "di ondate di inviti",
+        "statWaves_other": "ondate di inviti",
+        "dies": "La crescita si è fermata",
+        "grows": "La rete cresce da sola",
+        "full": "Nel modello non ci sono più persone nuove",
+        "restart": "Ricomincia",
+        "hint": "Tocca il modello per ripartire da un'altra persona",
+        "note": "È un modello semplificato. I cerchi di conoscenti si sovrappongono, e nessuno è obbligato a invitare nessuno.",
+        "axisX": "ondate",
+        "axisY": "persone"
+      },
+      "next": {
+        "label": "Prossimi passi",
+        "title": "Un dollaro di aiuto è solo l'inizio",
+        "text": "Con il tempo vorremmo che le persone usassero la loro rete di conoscenti per trovare un artigiano consigliato da qualcuno, soci per un progetto comune, persone affini per una propria iniziativa. E che si accordassero direttamente, come oggi.",
+        "now": "Oggi",
+        "later": "Più avanti",
+        "need": "Bisogno",
+        "participation": "Partecipazione",
+        "tradesperson": "Un artigiano fidato",
+        "project": "Un progetto comune"
+      },
+      "join": {
+        "label": "Esperimento",
+        "title": "Unisciti all'esperimento",
+        "text": "L'app e la teoria ci sono già. Ora vanno messe alla prova sul campo, e per questo servono persone.",
+        "now": "persone con legami nella rete al 13 novembre 2026",
+        "cta": "Scrivi al team",
+        "share": "Condividi",
+        "shared": "Link copiato",
+        "safe": "Il team risponde solo da @socialorganizer_bot e non chiede mai soldi, codici di accesso o dati della carta.",
+        "w1Title": "Crea una rete nella tua comunità",
+        "w1": "Se hai una comunità tua, prova l'app lì. Ti aiutiamo a spiegarla con le parole della tua gente.",
+        "w2Title": "Parla del progetto",
+        "w2": "Manda questa pagina a chi potrebbe interessare, o scrivi tu di Social Organizer.",
+        "w3Title": "Aiuta con la ricerca o il codice",
+        "w3": "La teoria è descritta nel <report>rapporto di Andrei Lubalin</report>, e il codice è pubblico su <code>GitHub</code>. Aiuta a mettere alla prova la teoria o a sviluppare l'app."
+      },
+      "faq": {
+        "title": "Domande",
+        "q1": "Chi garantisce che le persone mantengano la parola?",
+        "a1": "Non ci sono intermediari. Decidi tu di chi fidarti e tratti direttamente con le persone. E attraverso la catena di conoscenti puoi sapere con chi hai a che fare.",
+        "q2": "È un'assicurazione o un fondo?",
+        "a2": "No. Nessuno paga in anticipo e nessuno promette indennizzi. Non c'è una cassa comune né un tesoriere.",
+        "q3": "È una raccolta fondi?",
+        "a3": "No. Un bisogno raggiunge solo persone legate all'autore tramite conoscenti, e la prossima volta potresti essere tu a chiedere.",
+        "q4": "È uno schema piramidale?",
+        "a4": "No. Nessuno paga per entrare e nessuno guadagna dagli inviti."
+      },
+      "start": {
+        "label": "L'app",
+        "title": "La rete va costruita prima che serva",
+        "text": "In una giornata difficile non ci sono né il tempo né le forze per farlo.",
+        "s1": "Apri il link di una persona che conosci, oppure accedi direttamente con Google, Apple, Telegram o con un codice via e-mail. Non serve una password.",
+        "s2": "Aggiungi le persone che conosci di persona: con un link, un codice QR o scuotendo i telefoni uno accanto all'altro.",
+        "s3": "Indica la tua intenzione: l'importo che di solito sei disposto a dare quando qualcuno nella rete è in difficoltà.",
+        "qr": "Inquadra qui con la fotocamera del telefono e si aprirà lo store giusto.",
+        "playTop": "Disponibile su",
+        "play": "Google Play",
+        "iosTop": "Scarica su",
+        "ios": "App Store",
+        "webTop": "Apri",
+        "web": "nel browser",
+        "tgTop": "Apri in",
+        "tg": "Telegram"
+      },
+      "footer": {
+        "about": "Social Organizer · progetto non profit a codice aperto",
+        "credits": "Illustrazioni generate con l'IA · Icone: {{icons}}",
+        "links": "Link"
+      }
     }
   },
   "how": {
@@ -849,6 +1033,7 @@
         "aria": "Tavolo hui"
       }
     },
+    "backToInvite": "Torna all'invito",
     "compare": {
       "title": "L'esempio più vicino: il mutuo aiuto online in Cina",
       "lead": "Dal 2018 al 2021 le piattaforme cinesi di mutuo aiuto online hanno raccolto centinaia di milioni di membri: la più grande, Xianghubao, ne aveva più di 100 milioni. <b>I membri si dividevano il costo delle gravi malattie l'uno dell'altro, pochi dollari l'anno ciascuno.</b> Nel 2021 le autorità hanno chiuso l'intero settore, perché l'operatore di ogni piattaforma gestiva di fatto un'assicurazione.",
@@ -1200,7 +1385,8 @@
       "namePlaceholder": "Nome e cognome",
       "nameHint": "Così ti vedranno le persone del tuo cerchio.",
       "nameMin": "Inserisci il tuo nome"
-    }
+    },
+    "haveTelegramLink": "Hai già usato Social Organizer tramite Telegram? Collegalo"
   },
   "add": {
     "linkLabel": "Il tuo link",
@@ -1262,6 +1448,9 @@
     "sortNew": "Più recenti",
     "sortName": "A–Z",
     "showMore": "Mostra altri · ne restano {{total}}",
+    "editLink": "Modifica link",
+    "linkPlaceholder": "il tuo nome o nickname",
+    "linkEditHint": "i link con il vecchio indirizzo smetteranno di funzionare",
     "suggest": {
       "title": "Forse vi conoscete",
       "hint": "Persone che i tuoi conoscenti conoscono. Conferma solo chi conosci di persona.",
@@ -1306,6 +1495,9 @@
     "keepPastNote": "senza il tuo nome",
     "deleteFailed": "Impossibile eliminare l'account. Controlla la connessione e riprova.",
     "deleteCountsFailed": "Impossibile caricare cosa verrebbe eliminato. Controlla la connessione e riprova.",
+    "showEmail": "Mostra la mia e-mail nei contatti",
+    "showEmailOn": "Visibile nei tuoi contatti: {{email}}.",
+    "showEmailOff": "L'e-mail con cui accedi la vedi solo tu.",
     "goneConnections_many": "Le tue connessioni con {{count}} persone e le richieste",
     "goneConnections_one": "La tua connessione con {{count}} persona e le richieste",
     "goneConnections_other": "Le tue connessioni con {{count}} persone e le richieste",

@@ -210,7 +210,8 @@
     "scan": "Pindai",
     "how": "Cara kerja",
     "person": "Orang",
-    "collection": "Kebutuhan"
+    "collection": "Kebutuhan",
+    "attention": "menunggu Anda"
   },
   "circle": {
     "toSelf": "Kembali ke saya",
@@ -279,7 +280,18 @@
       "milestoneFirstNeed": "Kebutuhan pertama",
       "milestoneFirstNeedSub": "Pesan berjalan lewat jabat tangan",
       "milestoneFirstPart": "Partisipasi pertama",
-      "milestoneFirstPartSub": "Penyampai kebutuhan melihat partisipasi Anda"
+      "milestoneFirstPartSub": "Penyampai kebutuhan melihat partisipasi Anda",
+      "accepted": "mengonfirmasi perkenalan · Anda berdua kini ada di lingkaran satu sama lain",
+      "stack": {
+        "waiting": "Menunggu konfirmasi",
+        "incoming": "Ingin terhubung",
+        "accepted": "Kini di lingkaran Anda",
+        "participating": "Anda ikut",
+        "closed": "Selesai",
+        "names": "{{names}} dan {{count}} lainnya",
+        "more": "{{count}} lainnya",
+        "less": "Ciutkan"
+      }
     },
     "start": {
       "lead": "Anda yang pertama di lingkaran Anda.",
@@ -542,7 +554,8 @@
     "notifyPushOff": "Nyalakan notifikasi push agar terlihat di perangkat ini.",
     "notifyNewCollections": "Kebutuhan baru",
     "notifyNewCollectionsHint": "Beri tahu saya saat seseorang yang boleh saya terima notifikasinya menyampaikan kebutuhan",
-    "notifyMyEventsHint": "Permintaan perkenalan dan pesan partisipasi pada kebutuhan saya selalu datang. Partisipasi datang dalam satu pesan."
+    "notifyMyEventsHint": "Permintaan perkenalan dan pesan partisipasi pada kebutuhan saya selalu datang. Partisipasi datang dalam satu pesan.",
+    "telegramLinkMerged": "Telegram terhubung. Anda berada di akun lama Anda; akun kedua yang kosong sudah dihapus. Di perangkat lain, masuk dengan cara yang sama."
   },
   "faq": {
     "title": "FAQ",
@@ -708,6 +721,169 @@
       "qrTitle": "Aplikasi di ponsel Anda",
       "qrText": "Arahkan kamera: toko yang tepat akan terbuka.",
       "qrAria": "Kode QR dengan tautan ke aplikasi"
+    },
+    "v2": {
+      "meta": {
+        "title": "Social Organizer: jaringan orang yang Anda kenal",
+        "description": "Jaringan orang yang saling kenal secara langsung. Saat seseorang kesulitan, banyak orang bisa membantu."
+      },
+      "nav": {
+        "label": "Bagian",
+        "how": "Cara kerja",
+        "grow": "Pertumbuhan",
+        "join": "Ikut terlibat",
+        "faq": "Pertanyaan",
+        "signin": "Masuk"
+      },
+      "hero": {
+        "title": "Lingkaran Anda lebih besar dari yang Anda kira.",
+        "lead": "Social Organizer mempertemukan orang yang saling kenal secara langsung. Saat salah satu dari mereka kesulitan, orang yang ia kenal tahu lebih dulu, lalu orang yang dikenal orang-orang itu.",
+        "cta": "Bangun jaringan Anda",
+        "how": "Lihat cara kerjanya",
+        "facts": "Gratis · tanpa biaya · sumber terbuka"
+      },
+      "story": {
+        "sceneAria": "Kawanan burung jalak: setiap burung mewakili satu orang di jaringan",
+        "railAria": "Bab cerita",
+        "b1": {
+          "label": "Jalak",
+          "say": "Seekor jalak hanya memperhatikan enam atau tujuh burung di dekatnya, tetapi kawanan ribuan ekor terbang seperti satu tubuh."
+        },
+        "b2": {
+          "label": "Manusia",
+          "say": "Manusia terhubung dengan cara yang sama.",
+          "stat": "jabat tangan: rata-rata jarak antara dua pengguna Facebook acak pada 2016. Di antara mereka ada kurang dari empat orang. <study>Studinya</study>"
+        },
+        "b3": {
+          "label": "1 · Jaringan orang yang Anda kenal",
+          "say": "Anda mengundang orang yang Anda kenal secara langsung, dan Anda berdua mengonfirmasi bahwa Anda saling mengenal.",
+          "late": "Lalu ia mengundang orang-orang yang ia kenal."
+        },
+        "b4": {
+          "label": "2 · Kebutuhan",
+          "say": "Mobil Maria rusak, dan tanpa mobil ia tidak bisa berangkat kerja. Biaya perbaikannya 300 $.",
+          "late": "Maria menyampaikan kebutuhan dan menambahkan tautan ke chat. Kebutuhan 300 $ menjangkau hingga 300 orang, dimulai dari yang terdekat."
+        },
+        "b5": {
+          "label": "3 · Setiap orang memutuskan sendiri",
+          "say": "Anda kenal Oleg, dan Oleg kenal Maria. Anda bisa melihat rantai ini dan bertanya kepada Oleg apa yang terjadi.",
+          "late": "Ikut atau tidak, Anda yang memilih."
+        },
+        "b6": {
+          "label": "4 · Sedikit dari banyak orang",
+          "say": "Siapa pun yang mau ikut menyebutkan jumlah, mulai 1 $. Anda menyebutkan 5 $.",
+          "late": "Itu sebuah niat, tidak ada yang dibayar sekarang. Selama kebutuhan masih terbuka, Anda bisa mengubah jumlahnya atau menarik partisipasi."
+        },
+        "b7": {
+          "label": "5 · Bersepakat langsung",
+          "say": "Maria dan para peserta membicarakannya di chat. Lena menyarankan bengkel yang lebih murah.",
+          "late": "Kalau menyangkut uang, orang menyerahkannya sendiri. Aplikasi tidak pernah menyentuh uang."
+        },
+        "b8": {
+          "label": "Anda",
+          "say": "Besok, Anda yang bisa berada di posisi Maria.",
+          "late": "Saat itu, orang-orang yang Anda kenal akan jadi yang pertama tahu tentang kebutuhan Anda."
+        },
+        "rail": {
+          "1": "Kawanan",
+          "2": "Manusia",
+          "3": "Jaringan",
+          "4": "Kebutuhan",
+          "5": "Keputusan",
+          "6": "Partisipasi",
+          "7": "Chat",
+          "8": "Anda"
+        },
+        "tags": {
+          "you": "Anda",
+          "oleg": "Oleg",
+          "maria": "Maria · 300 $",
+          "lena": "Lena"
+        },
+        "hud": {
+          "reached_other": "orang sudah tahu tentang kebutuhan ini",
+          "reported": "dari 300 $ dinyatakan",
+          "people_other": "peserta"
+        }
+      },
+      "grow": {
+        "title": "Bagaimana jaringan tumbuh",
+        "text": "Setiap pendatang baru mengundang orang yang ia kenal. Atur berapa rata-ratanya, lalu lihat apa yang terjadi pada jaringan.",
+        "canvasAria": "Model pertumbuhan jaringan: undangan menyebar dari satu orang",
+        "slider": "Setiap orang rata-rata mengundang",
+        "unit": "orang",
+        "threshold": "ambang",
+        "statPeople_other": "orang di jaringan",
+        "statWaves_other": "gelombang undangan",
+        "dies": "Pertumbuhan berhenti",
+        "grows": "Jaringan tumbuh sendiri",
+        "full": "Model kehabisan orang baru",
+        "restart": "Mulai lagi",
+        "hint": "Ketuk modelnya untuk mulai dari orang lain",
+        "note": "Model ini disederhanakan. Lingkaran kenalan saling tumpang tindih, dan tidak ada yang wajib mengundang siapa pun.",
+        "axisX": "gelombang",
+        "axisY": "orang"
+      },
+      "next": {
+        "label": "Berikutnya",
+        "title": "Bantuan 1 $ hanyalah awal",
+        "text": "Ke depan, kami ingin orang memakai jaringan kenalannya untuk menemukan tukang yang direkomendasikan seseorang, rekan untuk proyek bersama, orang yang sepemikiran untuk inisiatif sendiri. Dan bersepakat langsung, seperti sekarang.",
+        "now": "Sekarang",
+        "later": "Nanti",
+        "need": "Kebutuhan",
+        "participation": "Partisipasi",
+        "tradesperson": "Tukang tepercaya",
+        "project": "Proyek bersama"
+      },
+      "join": {
+        "label": "Eksperimen",
+        "title": "Ikuti eksperimen ini",
+        "text": "Aplikasi dan teorinya sudah ada. Sekarang keduanya perlu diuji dalam praktik, dan untuk itu dibutuhkan orang.",
+        "now": "orang punya koneksi di jaringan per 13 November 2026",
+        "cta": "Tulis ke tim",
+        "share": "Bagikan",
+        "shared": "Tautan disalin",
+        "safe": "Tim hanya membalas dari @socialorganizer_bot dan tidak pernah meminta uang, kode masuk, atau data kartu.",
+        "w1Title": "Bangun jaringan di komunitas Anda",
+        "w1": "Kalau Anda punya komunitas sendiri, coba aplikasinya di sana. Kami akan membantu menjelaskannya dengan bahasa yang dipakai di komunitas Anda.",
+        "w2Title": "Ceritakan proyek ini",
+        "w2": "Kirim halaman ini kepada orang yang mungkin peduli, atau tulis sendiri tentang Social Organizer.",
+        "w3Title": "Bantu riset atau kode",
+        "w3": "Teorinya dijelaskan dalam <report>laporan Andrei Lubalin</report>, dan kodenya terbuka di <code>GitHub</code>. Bantu uji teorinya atau kembangkan aplikasinya."
+      },
+      "faq": {
+        "title": "Pertanyaan",
+        "q1": "Siapa yang memastikan orang menepati janji?",
+        "a1": "Tidak ada perantara. Anda sendiri yang memutuskan siapa yang dipercaya dan berurusan langsung dengan orangnya. Lewat rantai kenalan, Anda bisa tahu dengan siapa Anda berurusan.",
+        "q2": "Apakah ini asuransi atau dana bersama?",
+        "a2": "Bukan. Tidak ada yang membayar di muka dan tidak ada yang menjanjikan pembayaran. Tidak ada kas bersama dan tidak ada bendahara.",
+        "q3": "Apakah ini penggalangan donasi?",
+        "a3": "Bukan. Kebutuhan hanya sampai ke orang yang terhubung dengan penyampainya lewat kenalan, dan lain kali mungkin Anda yang meminta.",
+        "q4": "Apakah ini skema piramida?",
+        "a4": "Bukan. Tidak ada yang membayar untuk bergabung dan tidak ada yang mendapat uang dari undangan."
+      },
+      "start": {
+        "label": "Aplikasi",
+        "title": "Bangun jaringan sebelum Anda membutuhkannya",
+        "text": "Di hari yang berat, tidak ada waktu dan tenaga untuk itu.",
+        "s1": "Buka tautan dari orang yang Anda kenal, atau masuk sendiri dengan Google, Apple, Telegram, atau kode yang dikirim lewat email. Tanpa kata sandi.",
+        "s2": "Tambahkan orang yang Anda kenal secara langsung: lewat tautan, kode QR, atau dengan menggoyangkan ponsel berdampingan.",
+        "s3": "Tetapkan niat Anda: jumlah yang biasanya siap Anda berikan saat seseorang di jaringan sedang kesulitan.",
+        "qr": "Arahkan kamera ponsel ke sini, toko yang sesuai akan terbuka.",
+        "playTop": "Tersedia di",
+        "play": "Google Play",
+        "iosTop": "Unduh di",
+        "ios": "App Store",
+        "webTop": "Buka",
+        "web": "di browser",
+        "tgTop": "Buka di",
+        "tg": "Telegram"
+      },
+      "footer": {
+        "about": "Social Organizer · proyek nirlaba dengan kode sumber terbuka",
+        "credits": "Ilustrasi dibuat dengan AI · Ikon: {{icons}}",
+        "links": "Tautan"
+      }
     }
   },
   "how": {
@@ -841,6 +1017,7 @@
         "aria": "Meja hui"
       }
     },
+    "backToInvite": "Kembali ke undangan",
     "compare": {
       "title": "Contoh terdekat: saling membantu online di Tiongkok",
       "lead": "Pada 2018 hingga 2021 platform saling membantu online di Tiongkok menghimpun ratusan juta anggota: yang terbesar, Xianghubao, punya lebih dari 100 juta. <b>Anggota menanggung bersama biaya penyakit berat satu sama lain, beberapa dolar setahun per orang.</b> Pada 2021 regulator menutup seluruh sektor itu karena operator setiap platform pada dasarnya menjalankan asuransi.",
@@ -1190,7 +1367,8 @@
       "namePlaceholder": "Nama depan dan belakang",
       "nameHint": "Begitulah orang-orang di lingkaran Anda akan melihat Anda.",
       "nameMin": "Masukkan nama Anda"
-    }
+    },
+    "haveTelegramLink": "Pernah memakai Social Organizer lewat Telegram? Hubungkan"
   },
   "add": {
     "linkLabel": "Tautan Anda",
@@ -1250,6 +1428,9 @@
     "sortNew": "Terbaru dulu",
     "sortName": "A–Z",
     "showMore": "Tampilkan lagi · sisa {{total}}",
+    "editLink": "Ubah tautan",
+    "linkPlaceholder": "nama atau nama panggilan Anda",
+    "linkEditHint": "tautan dengan alamat lama akan berhenti berfungsi",
     "suggest": {
       "title": "Mungkin kalian saling kenal",
       "hint": "Orang yang dikenal oleh kenalan Anda. Konfirmasi hanya yang Anda kenal secara pribadi.",
@@ -1294,6 +1475,9 @@
     "keepPastNote": "tanpa nama Anda",
     "deleteFailed": "Tidak dapat menghapus akun. Periksa koneksi dan coba lagi.",
     "deleteCountsFailed": "Tidak dapat memuat apa yang akan dihapus. Periksa koneksi dan coba lagi.",
+    "showEmail": "Tampilkan email saya di kontak",
+    "showEmailOn": "Ditampilkan di kontak Anda: {{email}}.",
+    "showEmailOff": "Email untuk masuk hanya terlihat oleh Anda.",
     "goneConnections_other": "Koneksi Anda dengan {{count}} orang dan permintaan",
     "goneOwn_other": "{{count}} kebutuhan terbuka Anda akan ditutup",
     "goneJoinedToo_other": "dan partisipasi Anda pada {{count}} kebutuhan terbuka",

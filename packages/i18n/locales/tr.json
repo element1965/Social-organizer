@@ -210,7 +210,8 @@
     "scan": "Tara",
     "how": "Nasıl çalışır",
     "person": "Kişi",
-    "collection": "İhtiyaç"
+    "collection": "İhtiyaç",
+    "attention": "sizi bekliyor"
   },
   "circle": {
     "toSelf": "Bana dön",
@@ -282,7 +283,18 @@
       "milestoneFirstNeed": "İlk ihtiyaç",
       "milestoneFirstNeedSub": "Bildirim tokalaşmalarla ilerliyor",
       "milestoneFirstPart": "İlk katılım",
-      "milestoneFirstPartSub": "İhtiyacı bildiren kişi katılımınızı görüyor"
+      "milestoneFirstPartSub": "İhtiyacı bildiren kişi katılımınızı görüyor",
+      "accepted": "tanışıklığı onayladı · artık birbirinizin çevresindesiniz",
+      "stack": {
+        "waiting": "Onay bekleniyor",
+        "incoming": "Tanışmak istiyorlar",
+        "accepted": "Artık çevrenizde",
+        "participating": "Katılıyorsunuz",
+        "closed": "Tamamlananlar",
+        "names": "{{names}} ve {{count}} kişi daha",
+        "more": "{{count}} tane daha",
+        "less": "Daha az göster"
+      }
     },
     "start": {
       "lead": "Çevrenizdeki ilk kişi sizsiniz.",
@@ -545,7 +557,8 @@
     "notifyPushOff": "Bu cihazda görmek için push bildirimlerini açın.",
     "notifyNewCollections": "Yeni ihtiyaçlar",
     "notifyNewCollectionsHint": "Hakkında bildirim alabileceğim biri ihtiyaç bildirdiğinde haber verin",
-    "notifyMyEventsHint": "Tanışma istekleri ve ihtiyacınıza gelen katılım bildirimleri her zaman gelir. Katılım bildirimleri tek iletide gelir."
+    "notifyMyEventsHint": "Tanışma istekleri ve ihtiyacınıza gelen katılım bildirimleri her zaman gelir. Katılım bildirimleri tek iletide gelir.",
+    "telegramLinkMerged": "Telegram bağlandı. Mevcut hesabınızdasınız, boş olan ikinci hesap silindi. Diğer cihazlarınızda da aynı şekilde giriş yapın."
   },
   "faq": {
     "title": "Sık sorulan sorular",
@@ -712,6 +725,173 @@
       "qrTitle": "Telefonunuzdaki uygulama",
       "qrText": "Kameranızı tutun: doğru mağaza açılır.",
       "qrAria": "Uygulama bağlantılı QR kodu"
+    },
+    "v2": {
+      "meta": {
+        "title": "Social Organizer: tanıdığınız insanların ağı",
+        "description": "Birbirini yüz yüze tanıyan insanların ağı. Biri zor durumda kaldığında pek çok kişi yardım edebilir."
+      },
+      "nav": {
+        "label": "Bölümler",
+        "how": "Nasıl çalışır",
+        "grow": "Ağ nasıl büyür",
+        "join": "Dahil olun",
+        "faq": "Sorular",
+        "signin": "Giriş yap"
+      },
+      "hero": {
+        "title": "Çevreniz sandığınızdan büyük.",
+        "lead": "Social Organizer birbirini yüz yüze tanıyan insanları bir araya getirir. Biri zor durumda kaldığında önce onun tanıdıkları duyar, sonra onların tanıdıkları.",
+        "cta": "Ağınızı kurun",
+        "how": "Nasıl çalışır",
+        "facts": "Ücretsiz · komisyon yok · açık kaynak"
+      },
+      "story": {
+        "sceneAria": "Bir sığırcık sürüsü: her kuş ağdaki bir kişiyi temsil ediyor",
+        "railAria": "Hikâyenin bölümleri",
+        "b1": {
+          "label": "Sığırcıklar",
+          "say": "Bir sığırcık yalnızca altı yedi komşusunu izler, ama binlerce kuştan oluşan sürü tek bir beden gibi uçar."
+        },
+        "b2": {
+          "label": "İnsanlar",
+          "say": "İnsanlar da aynı şekilde bağlıdır.",
+          "stat": "tokalaşma: 2016'da rastgele iki Facebook kullanıcısı arasındaki ortalama mesafe buydu. Yani aralarında dörtten az kişi vardı. <study>Araştırma</study>"
+        },
+        "b3": {
+          "label": "1 · Tanıdıklardan bir ağ",
+          "say": "Yüz yüze tanıdığınız birini davet edersiniz ve ikiniz de tanıştığınızı onaylarsınız.",
+          "late": "Sonra o da kendi tanıdıklarını davet eder."
+        },
+        "b4": {
+          "label": "2 · İhtiyaç",
+          "say": "Maria'nın arabası bozuldu ve araba olmadan işe gidemiyor. Tamir 300 $ tutuyor.",
+          "late": "Maria bir ihtiyaç bildiriyor ve bir sohbet bağlantısı ekliyor. 300 $ tutarındaki bir ihtiyaç, en yakınlardan başlayarak en fazla 300 kişiye ulaşır."
+        },
+        "b5": {
+          "label": "3 · Herkes kendisi karar verir",
+          "say": "Siz Oleg'i tanıyorsunuz, Oleg de Maria'yı. Bu zinciri görüyor ve Oleg'e ne olduğunu sorabiliyorsunuz.",
+          "late": "Katılıp katılmamak sizin seçiminiz."
+        },
+        "b6": {
+          "label": "4 · Çok kişiden azar azar",
+          "say": "Katılmak isteyen herkes bir tutar belirtir, en az 1 $. Siz 5 $ belirtiyorsunuz.",
+          "late": "Bu bir niyet, şu an hiçbir şey ödenmiyor. İhtiyaç açık olduğu sürece tutarı değiştirebilir ya da katılımınızı geri çekebilirsiniz."
+        },
+        "b7": {
+          "label": "5 · İnsanlar doğrudan anlaşır",
+          "say": "Maria ve katılımcılar sohbette konuşuyor. Lena daha ucuz bir tamirci öneriyor.",
+          "late": "Para söz konusuysa insanlar onu birbirlerine kendileri verir. Uygulama paraya hiç dokunmaz."
+        },
+        "b8": {
+          "label": "Siz",
+          "say": "Yarın Maria'nın yerinde siz olabilirsiniz.",
+          "late": "O zaman ihtiyacınızı ilk duyanlar tanıdıklarınız olur."
+        },
+        "rail": {
+          "1": "Sürü",
+          "2": "İnsanlar",
+          "3": "Ağ",
+          "4": "İhtiyaç",
+          "5": "Karar",
+          "6": "Katılım",
+          "7": "Sohbet",
+          "8": "Siz"
+        },
+        "tags": {
+          "you": "Siz",
+          "oleg": "Oleg",
+          "maria": "Maria · 300 $",
+          "lena": "Lena"
+        },
+        "hud": {
+          "reached_one": "kişi ihtiyaçtan haberdar oldu",
+          "reached_other": "kişi ihtiyaçtan haberdar oldu",
+          "reported": "belirtildi, hedef 300 $",
+          "people_one": "katılımcı",
+          "people_other": "katılımcı"
+        }
+      },
+      "grow": {
+        "title": "Ağ nasıl büyür",
+        "text": "Her yeni gelen, tanıdığı kişileri davet eder. Ortalama kaç kişi olacağını seçin ve ağa ne olduğunu izleyin.",
+        "canvasAria": "Ağ büyüme modeli: davetler tek bir kişiden yayılıyor",
+        "slider": "Kişi başına ortalama davet",
+        "unit": "kişi",
+        "threshold": "eşik",
+        "statPeople_one": "kişi ağda",
+        "statPeople_other": "kişi ağda",
+        "statWaves_one": "davet dalgası",
+        "statWaves_other": "davet dalgası",
+        "dies": "Büyüme durdu",
+        "grows": "Ağ kendi kendine büyüyor",
+        "full": "Modelde yeni insan kalmadı",
+        "restart": "Baştan başla",
+        "hint": "Başka birinden başlamak için modele dokunun",
+        "note": "Basitleştirilmiş bir model. Tanıdık çevreleri birbiriyle kesişir ve kimse kimseyi davet etmek zorunda değil.",
+        "axisX": "dalgalar",
+        "axisY": "kişi"
+      },
+      "next": {
+        "label": "Sonrası",
+        "title": "Bir dolarlık yardım yalnızca başlangıç",
+        "text": "Zamanla insanların tanıdık ağı üzerinden birinin tavsiye ettiği bir usta, bir proje için ortaklar, kendi girişimleri için fikirdaşlar bulmalarını istiyoruz. Ve bunu, bugün olduğu gibi, doğrudan aralarında kararlaştırmalarını.",
+        "now": "Şimdi",
+        "later": "Sonra",
+        "need": "İhtiyaç",
+        "participation": "Katılım",
+        "tradesperson": "Güvenilir usta",
+        "project": "Ortak proje"
+      },
+      "join": {
+        "label": "Deney",
+        "title": "Deneye katılın",
+        "text": "Uygulama da teori de var. Şimdi bunları gerçek hayatta sınamak gerekiyor ve bunun için insanlar lazım.",
+        "now": "kişi 13 Kasım 2026 itibarıyla ağda bağlantılı",
+        "cta": "Ekibe yazın",
+        "share": "Paylaş",
+        "shared": "Bağlantı kopyalandı",
+        "safe": "Ekip yalnızca @socialorganizer_bot üzerinden yanıt verir ve asla para, giriş kodu ya da kart bilgisi istemez.",
+        "w1Title": "Topluluğunuzda bir ağ kurun",
+        "w1": "Kendi topluluğunuz varsa uygulamayı orada deneyin. Onu topluluğunuzun kullandığı kelimelerle anlatmanıza yardım ederiz.",
+        "w2Title": "Projeyi başkalarına anlatın",
+        "w2": "Bu sayfayı ilgilenebilecek kişilere gönderin ya da Social Organizer hakkında kendiniz yazın.",
+        "w3Title": "Araştırmaya ya da koda yardım edin",
+        "w3": "Teori <report>Andrei Lubalin'in raporunda</report> anlatılıyor, kod ise <code>GitHub</code>'da açık. Teoriyi sınamaya ya da uygulama üzerinde çalışmaya yardım edin."
+      },
+      "faq": {
+        "title": "Sorular",
+        "q1": "İnsanların sözünü tutmasını kim sağlıyor?",
+        "a1": "Aracı yok. Kime güveneceğinize siz karar verirsiniz, insanlarla doğrudan anlaşırsınız. Tanıdık zinciri sayesinde kiminle muhatap olduğunuzu da öğrenebilirsiniz.",
+        "q2": "Bu bir sigorta ya da fon mu?",
+        "a2": "Hayır. Kimse önceden ödeme yapmaz, kimse ödeme vaat etmez. Ortak bir kasa da sayman da yok.",
+        "q3": "Bu bir bağış kampanyası mı?",
+        "a3": "Hayır. İhtiyaç yalnızca sahibiyle tanıdıklar üzerinden bağlantılı kişilere ulaşır ve bir dahaki sefere isteyen siz olabilirsiniz.",
+        "q4": "Bu bir saadet zinciri mi?",
+        "a4": "Hayır. Kimse katılmak için para ödemez, kimse davetlerden kazanç sağlamaz."
+      },
+      "start": {
+        "label": "Uygulama",
+        "title": "Ağınızı önceden kurun",
+        "text": "Zor bir günde buna ne zaman ne de güç kalır.",
+        "s1": "Tanıdığınız birinden gelen bağlantıyı açın ya da kendiniz Google, Apple, Telegram veya e-postayla gelen bir kodla giriş yapın. Şifre gerekmez.",
+        "s2": "Yüz yüze tanıdığınız kişileri ekleyin: bir bağlantıyla, QR kodla ya da telefonlarınızı yan yana sallayarak.",
+        "s3": "Niyetinizi belirleyin: ağınızdan biri zor durumda kaldığında genelde vermeye hazır olduğunuz tutar.",
+        "qr": "Telefonunuzun kamerasını buraya tutun, doğru mağaza açılır.",
+        "playTop": "Şimdi edinin",
+        "play": "Google Play'den",
+        "iosTop": "Şimdi indirin",
+        "ios": "App Store'dan",
+        "webTop": "Şimdi açın",
+        "web": "Tarayıcıda",
+        "tgTop": "Şimdi açın",
+        "tg": "Telegram'da"
+      },
+      "footer": {
+        "about": "Social Organizer · kâr amacı gütmeyen, açık kaynaklı bir proje",
+        "credits": "Görseller yapay zekâyla üretildi · Simgeler: {{icons}}",
+        "links": "Bağlantılar"
+      }
     }
   },
   "how": {
@@ -845,6 +1025,7 @@
         "aria": "Hui masası"
       }
     },
+    "backToInvite": "Davete dön",
     "compare": {
       "title": "En yakın örnek: Çin'de çevrimiçi karşılıklı yardım",
       "lead": "2018'den 2021'e kadar Çin'deki çevrimiçi karşılıklı yardım platformları yüz milyonlarca üye topladı: en büyüğü Xianghubao'nun 100 milyondan fazla üyesi vardı. <b>Üyeler birbirlerinin ağır hastalık masraflarını paylaştı, kişi başı yılda birkaç dolar.</b> 2021'de düzenleyiciler tüm sektörü kapattı, çünkü her platformun işletmecisi fiilen sigorta işletiyordu.",
@@ -1195,7 +1376,8 @@
       "namePlaceholder": "Ad ve soyad",
       "nameHint": "Çevrenizdeki kişiler sizi böyle görecek.",
       "nameMin": "Adınızı girin"
-    }
+    },
+    "haveTelegramLink": "Social Organizer'ı daha önce Telegram üzerinden mi kullandınız? Bağlayın"
   },
   "add": {
     "linkLabel": "Bağlantınız",
@@ -1256,6 +1438,9 @@
     "sortNew": "Önce en yeni",
     "sortName": "A–Z",
     "showMore": "Daha fazla göster · {{total}} kaldı",
+    "editLink": "Bağlantıyı değiştir",
+    "linkPlaceholder": "adınız veya takma adınız",
+    "linkEditHint": "eski adresli bağlantılar çalışmayı bırakır",
     "suggest": {
       "title": "Tanışıyor olabilirsiniz",
       "hint": "Tanıdıklarınızın tanıdığı kişiler. Yalnızca şahsen tanıdıklarınızı onaylayın.",
@@ -1300,6 +1485,9 @@
     "keepPastNote": "adınız olmadan",
     "deleteFailed": "Hesap silinemedi. Bağlantınızı kontrol edip yeniden deneyin.",
     "deleteCountsFailed": "Nelerin silineceği yüklenemedi. Bağlantınızı kontrol edip yeniden deneyin.",
+    "showEmail": "E-postamı iletişim bilgilerinde göster",
+    "showEmailOn": "İletişim bilgilerinizde görünüyor: {{email}}.",
+    "showEmailOff": "Giriş e-postanızı yalnızca siz görürsünüz.",
     "goneConnections_one": "{{count}} kişiyle bağlantınız ve istekler",
     "goneConnections_other": "{{count}} kişiyle bağlantılarınız ve istekler",
     "goneOwn_one": "Açık ihtiyacınız kapanır",

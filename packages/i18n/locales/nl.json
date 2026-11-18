@@ -210,7 +210,8 @@
     "scan": "Scannen",
     "how": "Hoe het werkt",
     "person": "Persoon",
-    "collection": "Behoefte"
+    "collection": "Behoefte",
+    "attention": "wacht op jou"
   },
   "circle": {
     "toSelf": "Terug naar mij",
@@ -282,7 +283,18 @@
       "milestoneFirstNeed": "Eerste behoefte",
       "milestoneFirstNeedSub": "Het bericht gaat via handdrukken",
       "milestoneFirstPart": "Eerste deelname",
-      "milestoneFirstPartSub": "De indiener van de behoefte ziet je deelname"
+      "milestoneFirstPartSub": "De indiener van de behoefte ziet je deelname",
+      "accepted": "heeft de kennismaking bevestigd · jullie zitten nu in elkaars kring",
+      "stack": {
+        "waiting": "Wachten op bevestiging",
+        "incoming": "Willen je toevoegen",
+        "accepted": "Nu in je kring",
+        "participating": "Je doet mee",
+        "closed": "Afgerond",
+        "names": "{{names}} en nog {{count}}",
+        "more": "Nog {{count}} tonen",
+        "less": "Minder tonen"
+      }
     },
     "start": {
       "lead": "Jij bent de eerste in je kring.",
@@ -545,7 +557,8 @@
     "notifyPushOff": "Zet pushmeldingen aan om ze op dit apparaat te zien.",
     "notifyNewCollections": "Nieuwe behoeften",
     "notifyNewCollectionsHint": "Laat het weten wanneer iemand over wie ik een melding kan krijgen een behoefte meldt",
-    "notifyMyEventsHint": "Verbindingsverzoeken en deelname aan mijn behoefte komen altijd binnen. Deelname komt in één bericht."
+    "notifyMyEventsHint": "Verbindingsverzoeken en deelname aan mijn behoefte komen altijd binnen. Deelname komt in één bericht.",
+    "telegramLinkMerged": "Telegram is gekoppeld. Je bent ingelogd op je bestaande account. Het lege tweede account is verwijderd. Log op je andere apparaten op dezelfde manier in."
   },
   "faq": {
     "title": "Veelgestelde vragen",
@@ -712,6 +725,173 @@
       "qrTitle": "De app op je telefoon",
       "qrText": "Richt je camera: de juiste winkel gaat open.",
       "qrAria": "QR-code met een link naar de app"
+    },
+    "v2": {
+      "meta": {
+        "title": "Social Organizer: een netwerk van mensen die je kent",
+        "description": "Een netwerk van mensen die elkaar persoonlijk kennen. Zit iemand in de problemen, dan kunnen velen helpen."
+      },
+      "nav": {
+        "label": "Onderdelen",
+        "how": "Hoe het werkt",
+        "grow": "Hoe het groeit",
+        "join": "Meedoen",
+        "faq": "Vragen",
+        "signin": "Inloggen"
+      },
+      "hero": {
+        "title": "Je kring is groter dan je denkt.",
+        "lead": "In Social Organizer komen mensen samen die elkaar persoonlijk kennen. Zit iemand in de problemen, dan horen de eigen kennissen het eerst, daarna hun kennissen.",
+        "cta": "Bouw je netwerk",
+        "how": "Hoe het werkt",
+        "facts": "Gratis · geen commissie · open source"
+      },
+      "story": {
+        "sceneAria": "Een zwerm spreeuwen: elke vogel staat voor een persoon in het netwerk",
+        "railAria": "Hoofdstukken van het verhaal",
+        "b1": {
+          "label": "Spreeuwen",
+          "say": "Een spreeuw let maar op zes of zeven buren, en toch vliegt een zwerm van duizenden als één geheel."
+        },
+        "b2": {
+          "label": "Mensen",
+          "say": "Mensen zijn op dezelfde manier verbonden.",
+          "stat": "handdrukken scheidden in 2016 gemiddeld twee willekeurige Facebook-gebruikers: er zaten minder dan vier mensen tussen. <study>Het onderzoek</study>"
+        },
+        "b3": {
+          "label": "1 · Een netwerk van kennissen",
+          "say": "Je nodigt iemand uit die je persoonlijk kent, en jullie bevestigen allebei dat jullie elkaar kennen.",
+          "late": "Daarna nodigt die persoon de eigen kennissen uit."
+        },
+        "b4": {
+          "label": "2 · Een behoefte",
+          "say": "De auto van Maria is kapot en zonder auto komt ze niet op haar werk. De reparatie kost 300 $.",
+          "late": "Maria meldt een behoefte en voegt een link naar een chat toe. Een behoefte van 300 $ bereikt tot 300 mensen, de dichtstbijzijnden eerst."
+        },
+        "b5": {
+          "label": "3 · Ieder beslist zelf",
+          "say": "Jij kent Oleg, en Oleg kent Maria. Je ziet deze keten en kunt Oleg vragen wat er is gebeurd.",
+          "late": "Of je meedoet, kies je zelf."
+        },
+        "b6": {
+          "label": "4 · Van velen een beetje",
+          "say": "Wie wil meedoen, noemt een bedrag vanaf 1 $. Jij noemt 5 $.",
+          "late": "Dat is een intentie, je betaalt nu niets. Zolang de behoefte open is, kun je het bedrag wijzigen of je deelname intrekken."
+        },
+        "b7": {
+          "label": "5 · Rechtstreeks afspreken",
+          "say": "Maria en de deelnemers bespreken alles in de chat. Lena raadt een goedkopere garage aan.",
+          "late": "Gaat het om geld, dan dragen mensen het zelf over. Er loopt nooit geld via de app."
+        },
+        "b8": {
+          "label": "Jij",
+          "say": "Morgen sta jij misschien op de plek van Maria.",
+          "late": "Dan horen jouw kennissen als eersten over je behoefte."
+        },
+        "rail": {
+          "1": "Zwerm",
+          "2": "Mensen",
+          "3": "Netwerk",
+          "4": "Behoefte",
+          "5": "Keuze",
+          "6": "Deelname",
+          "7": "Chat",
+          "8": "Jij"
+        },
+        "tags": {
+          "you": "Jij",
+          "oleg": "Oleg",
+          "maria": "Maria · 300 $",
+          "lena": "Lena"
+        },
+        "hud": {
+          "reached_one": "persoon heeft van de behoefte gehoord",
+          "reached_other": "mensen hebben van de behoefte gehoord",
+          "reported": "van 300 $ genoemd",
+          "people_one": "deelnemer",
+          "people_other": "deelnemers"
+        }
+      },
+      "grow": {
+        "title": "Hoe het netwerk groeit",
+        "text": "Iedere nieuwkomer nodigt eigen kennissen uit. Stel in hoeveel het er gemiddeld zijn en kijk wat er met het netwerk gebeurt.",
+        "canvasAria": "Model van netwerkgroei: uitnodigingen verspreiden zich vanaf één persoon",
+        "slider": "Gemiddeld uitgenodigd per persoon",
+        "unit": "mensen",
+        "threshold": "drempel",
+        "statPeople_one": "persoon in het netwerk",
+        "statPeople_other": "mensen in het netwerk",
+        "statWaves_one": "golf van uitnodigingen",
+        "statWaves_other": "golven van uitnodigingen",
+        "dies": "De groei is gestopt",
+        "grows": "Het netwerk groeit vanzelf",
+        "full": "Het model heeft geen nieuwe mensen meer",
+        "restart": "Opnieuw beginnen",
+        "hint": "Tik op het model om bij iemand anders te beginnen",
+        "note": "Een vereenvoudigd model. Kennissenkringen overlappen, en niemand hoeft iemand uit te nodigen.",
+        "axisX": "golven",
+        "axisY": "mensen"
+      },
+      "next": {
+        "label": "Vooruitblik",
+        "title": "Een dollar hulp is pas het begin",
+        "text": "Op termijn willen we dat mensen via hun netwerk van kennissen ook een vakman op aanbeveling vinden, partners voor een gezamenlijk project en gelijkgestemden voor een eigen initiatief. En dat ze, net als nu, rechtstreeks afspraken maken.",
+        "now": "Nu",
+        "later": "Later",
+        "need": "Behoefte",
+        "participation": "Deelname",
+        "tradesperson": "Een aanbevolen vakman",
+        "project": "Een gezamenlijk project"
+      },
+      "join": {
+        "label": "Experiment",
+        "title": "Doe mee aan het experiment",
+        "text": "De app en de theorie zijn er al. Nu moeten ze in de praktijk worden getest, en daar zijn mensen voor nodig.",
+        "now": "mensen met connecties in het netwerk op 13 november 2026",
+        "cta": "Schrijf naar het team",
+        "share": "Delen",
+        "shared": "Link gekopieerd",
+        "safe": "Het team antwoordt alleen vanuit @socialorganizer_bot en vraagt nooit om geld, inlogcodes of kaartgegevens.",
+        "w1Title": "Bouw een netwerk in je gemeenschap",
+        "w1": "Heb je een eigen gemeenschap, probeer de app daar dan uit. We helpen je om hem uit te leggen in de woorden die ze daar gebruiken.",
+        "w2Title": "Vertel anderen over het project",
+        "w2": "Stuur deze pagina naar mensen voor wie het iets kan betekenen, of schrijf zelf over Social Organizer.",
+        "w3Title": "Help mee met het onderzoek of de code",
+        "w3": "De theorie staat in <report>het rapport van Andrei Lubalin</report>, en de code is openbaar op <code>GitHub</code>. Help de theorie te testen of werk mee aan de app."
+      },
+      "faq": {
+        "title": "Vragen",
+        "q1": "Wie zorgt ervoor dat mensen hun woord houden?",
+        "a1": "Er zijn geen tussenpersonen. Jij beslist wie je vertrouwt en spreekt rechtstreeks met mensen af. Via de keten van kennissen kun je nagaan met wie je te maken hebt.",
+        "q2": "Is dit een verzekering of een fonds?",
+        "a2": "Nee. Niemand betaalt vooraf en niemand belooft een uitkering. Er is geen gezamenlijke pot en geen penningmeester.",
+        "q3": "Is dit een inzamelingsactie?",
+        "a3": "Nee. Een behoefte bereikt alleen mensen die via kennissen met de indiener verbonden zijn, en de volgende keer ben jij misschien degene die vraagt.",
+        "q4": "Is dit een piramidespel?",
+        "a4": "Nee. Niemand betaalt om mee te doen en niemand verdient aan uitnodigingen."
+      },
+      "start": {
+        "label": "De app",
+        "title": "Bouw je netwerk voordat je het nodig hebt",
+        "text": "Op een slechte dag heb je daar geen tijd of energie voor.",
+        "s1": "Open een link van iemand die je kent, of log zelf in met Google, Apple, Telegram of een code per e-mail. Een wachtwoord is niet nodig.",
+        "s2": "Voeg mensen toe die je persoonlijk kent: met een link, een QR-code of door jullie telefoons naast elkaar te schudden.",
+        "s3": "Stel je intentie in: het bedrag dat je meestal wilt geven als iemand in het netwerk in de problemen zit.",
+        "qr": "Richt de camera van je telefoon hierop, dan gaat de juiste winkel open.",
+        "playTop": "Ontdek het op",
+        "play": "Google Play",
+        "iosTop": "Download in de",
+        "ios": "App Store",
+        "webTop": "Openen",
+        "web": "in de browser",
+        "tgTop": "Openen in",
+        "tg": "Telegram"
+      },
+      "footer": {
+        "about": "Social Organizer · een opensourceproject zonder winstoogmerk",
+        "credits": "Illustraties gemaakt met AI · Iconen: {{icons}}",
+        "links": "Links"
+      }
     }
   },
   "how": {
@@ -845,6 +1025,7 @@
         "aria": "Hui-tafel"
       }
     },
+    "backToInvite": "Terug naar de uitnodiging",
     "compare": {
       "title": "Het meest verwante voorbeeld: Chinese online onderlinge hulp",
       "lead": "Van 2018 tot 2021 verzamelden de Chinese online platforms voor onderlinge hulp honderden miljoenen leden: de grootste, Xianghubao, had er meer dan 100 miljoen. <b>Leden deelden de kosten van elkaars ernstige ziekte, elk enkele dollars per jaar.</b> In 2021 sloten toezichthouders de hele sector, omdat de beheerder van elk platform in feite een verzekering runde.",
@@ -1195,7 +1376,8 @@
       "namePlaceholder": "Voor- en achternaam",
       "nameHint": "Zo zien mensen uit je kring je.",
       "nameMin": "Vul je naam in"
-    }
+    },
+    "haveTelegramLink": "Al eerder Social Organizer via Telegram gebruikt? Telegram koppelen"
   },
   "add": {
     "linkLabel": "Je link",
@@ -1256,6 +1438,9 @@
     "sortNew": "Nieuwste eerst",
     "sortName": "A–Z",
     "showMore": "Meer tonen · nog {{total}}",
+    "editLink": "Link wijzigen",
+    "linkPlaceholder": "je naam of bijnaam",
+    "linkEditHint": "links met het oude adres werken dan niet meer",
     "suggest": {
       "title": "Misschien kennen jullie elkaar",
       "hint": "Mensen die je kennissen kennen. Bevestig alleen wie je persoonlijk kent.",
@@ -1300,6 +1485,9 @@
     "keepPastNote": "zonder je naam",
     "deleteFailed": "Het account kon niet worden verwijderd. Controleer je verbinding en probeer opnieuw.",
     "deleteCountsFailed": "Kon niet laden wat er verwijderd zou worden. Controleer je verbinding en probeer opnieuw.",
+    "showEmail": "Mijn e-mailadres tonen bij contactgegevens",
+    "showEmailOn": "Zichtbaar bij je contactgegevens: {{email}}.",
+    "showEmailOff": "Alleen jij ziet het e-mailadres waarmee je inlogt.",
     "goneConnections_one": "Je verbinding met {{count}} persoon en verzoeken",
     "goneConnections_other": "Je verbindingen met {{count}} personen en verzoeken",
     "goneOwn_one": "Je open behoefte wordt gesloten",

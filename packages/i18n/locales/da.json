@@ -210,7 +210,8 @@
     "scan": "Scan",
     "how": "Sådan fungerer det",
     "person": "Person",
-    "collection": "Behov"
+    "collection": "Behov",
+    "attention": "venter på dig"
   },
   "circle": {
     "toSelf": "Tilbage til mig",
@@ -282,7 +283,18 @@
       "milestoneFirstNeed": "Første behov",
       "milestoneFirstNeedSub": "Beskeden går via håndtryk",
       "milestoneFirstPart": "Første deltagelse",
-      "milestoneFirstPartSub": "Den, der har meldt behovet, kan se din deltagelse"
+      "milestoneFirstPartSub": "Den, der har meldt behovet, kan se din deltagelse",
+      "accepted": "har bekræftet bekendtskabet · I er nu i hinandens kreds",
+      "stack": {
+        "waiting": "Venter på bekræftelse",
+        "incoming": "Vil i kontakt med dig",
+        "accepted": "Nu i din kreds",
+        "participating": "Du deltager",
+        "closed": "Afsluttede",
+        "names": "{{names}} og {{count}} til",
+        "more": "Vis {{count}} flere",
+        "less": "Vis mindre"
+      }
     },
     "start": {
       "lead": "Du er den første i din kreds.",
@@ -545,7 +557,8 @@
     "notifyPushOff": "Slå push-notifikationer til for at se dem på denne enhed.",
     "notifyNewCollections": "Nye behov",
     "notifyNewCollectionsHint": "Giv mig besked, når en person, jeg kan få besked om, melder et behov",
-    "notifyMyEventsHint": "Forbindelsesanmodninger og meldinger om deltagelse i mit behov kommer altid. Deltagelse kommer i én besked."
+    "notifyMyEventsHint": "Forbindelsesanmodninger og meldinger om deltagelse i mit behov kommer altid. Deltagelse kommer i én besked.",
+    "telegramLinkMerged": "Telegram er forbundet. Du er logget ind på din eksisterende konto, og den tomme ekstra konto er fjernet. Log ind på samme måde på dine andre enheder."
   },
   "faq": {
     "title": "Ofte stillede spørgsmål",
@@ -712,6 +725,173 @@
       "qrTitle": "Appen på din telefon",
       "qrText": "Ret kameraet: den rigtige butik åbner.",
       "qrAria": "QR-kode med et link til appen"
+    },
+    "v2": {
+      "meta": {
+        "title": "Social Organizer: et netværk af mennesker, du kender",
+        "description": "Et netværk af mennesker, der kender hinanden personligt. Når nogen er i knibe, kan mange hjælpe."
+      },
+      "nav": {
+        "label": "Sektioner",
+        "how": "Sådan fungerer det",
+        "grow": "Sådan vokser det",
+        "join": "Vær med",
+        "faq": "Spørgsmål",
+        "signin": "Log ind"
+      },
+      "hero": {
+        "title": "Din kreds er større, end du tror.",
+        "lead": "I Social Organizer samles mennesker, der kender hinanden personligt. Når nogen er i knibe, hører deres bekendte det først og derefter de mennesker, de kender.",
+        "cta": "Byg dit netværk",
+        "how": "Sådan fungerer det",
+        "facts": "Gratis · ingen gebyrer · åben kildekode"
+      },
+      "story": {
+        "sceneAria": "En stæreflok: hver fugl står for et menneske i netværket",
+        "railAria": "Historiens kapitler",
+        "b1": {
+          "label": "Stære",
+          "say": "En stær holder kun øje med seks eller syv naboer, men alligevel flyver en flok på flere tusinde som én."
+        },
+        "b2": {
+          "label": "Mennesker",
+          "say": "Mennesker er forbundet på samme måde.",
+          "stat": "håndtryk adskilte i 2016 i gennemsnit to tilfældige Facebook-brugere: færre end fire mennesker imellem. <study>Undersøgelsen</study>"
+        },
+        "b3": {
+          "label": "1 · Et netværk af bekendte",
+          "say": "Du inviterer en, du kender personligt, og I bekræfter begge, at I kender hinanden.",
+          "late": "Derefter inviterer vedkommende sine egne bekendte."
+        },
+        "b4": {
+          "label": "2 · Et behov",
+          "say": "Marias bil er gået i stykker, og uden den kan hun ikke komme på arbejde. Reparationen koster 300 $.",
+          "late": "Maria melder et behov og tilføjer et link til en chat. Et behov på 300 $ når op til 300 mennesker, de nærmeste først."
+        },
+        "b5": {
+          "label": "3 · Alle bestemmer selv",
+          "say": "Du kender Oleg, og Oleg kender Maria. Du kan se kæden og spørge Oleg, hvad der er sket.",
+          "late": "Om du vil deltage, vælger du selv."
+        },
+        "b6": {
+          "label": "4 · Lidt fra mange",
+          "say": "Alle, der vil deltage, angiver et beløb fra 1 $. Du angiver 5 $.",
+          "late": "Det er en hensigt, og der betales ikke noget nu. Så længe behovet er åbent, kan du ændre beløbet eller trække din deltagelse tilbage."
+        },
+        "b7": {
+          "label": "5 · Direkte aftaler",
+          "say": "Maria og deltagerne taler det igennem i chatten. Lena foreslår et billigere værksted.",
+          "late": "Hvis der er penge involveret, giver folk dem selv videre. Appen rører aldrig pengene."
+        },
+        "b8": {
+          "label": "Dig",
+          "say": "I morgen kan det være dig, der står i Marias sted.",
+          "late": "Så er det dine bekendte, der først hører om dit behov."
+        },
+        "rail": {
+          "1": "Flok",
+          "2": "Mennesker",
+          "3": "Netværk",
+          "4": "Behov",
+          "5": "Valg",
+          "6": "Deltagelse",
+          "7": "Chat",
+          "8": "Dig"
+        },
+        "tags": {
+          "you": "Dig",
+          "oleg": "Oleg",
+          "maria": "Maria · 300 $",
+          "lena": "Lena"
+        },
+        "hud": {
+          "reached_one": "har hørt om behovet",
+          "reached_other": "har hørt om behovet",
+          "reported": "af 300 $ angivet",
+          "people_one": "deltager",
+          "people_other": "deltagere"
+        }
+      },
+      "grow": {
+        "title": "Sådan vokser netværket",
+        "text": "Hver ny person inviterer sine bekendte. Indstil, hvor mange i gennemsnit, og se, hvad der sker med netværket.",
+        "canvasAria": "Model af netværkets vækst: invitationer spreder sig ud fra én person",
+        "slider": "Hver person inviterer i gennemsnit",
+        "unit": "personer",
+        "threshold": "tærskel",
+        "statPeople_one": "person i netværket",
+        "statPeople_other": "mennesker i netværket",
+        "statWaves_one": "bølge af invitationer",
+        "statWaves_other": "bølger af invitationer",
+        "dies": "Væksten er gået i stå",
+        "grows": "Netværket vokser af sig selv",
+        "full": "Der er ikke flere nye mennesker i modellen",
+        "restart": "Start forfra",
+        "hint": "Tryk på modellen for at starte fra en anden",
+        "note": "En forenklet model. Omgangskredse overlapper hinanden, og ingen behøver at invitere nogen.",
+        "axisX": "bølger",
+        "axisY": "mennesker"
+      },
+      "next": {
+        "label": "Fremover",
+        "title": "En dollar i hjælp er kun begyndelsen",
+        "text": "Med tiden vil vi gerne have, at folk gennem deres netværk af bekendte også finder en anbefalet håndværker, partnere til et fælles projekt og ligesindede til deres eget initiativ. Og at de, som nu, aftaler det direkte.",
+        "now": "Nu",
+        "later": "Senere",
+        "need": "Behov",
+        "participation": "Deltagelse",
+        "tradesperson": "En anbefalet håndværker",
+        "project": "Et fælles projekt"
+      },
+      "join": {
+        "label": "Eksperiment",
+        "title": "Vær med i eksperimentet",
+        "text": "Appen og teorien findes allerede. Nu skal de afprøves i praksis, og det kræver mennesker.",
+        "now": "mennesker med forbindelser i netværket pr. 13. november 2026",
+        "cta": "Skriv til teamet",
+        "share": "Del",
+        "shared": "Linket er kopieret",
+        "safe": "Teamet svarer kun fra @socialorganizer_bot og beder aldrig om penge, loginkoder eller kortoplysninger.",
+        "w1Title": "Byg et netværk i dit fællesskab",
+        "w1": "Har du dit eget fællesskab, så prøv appen der. Vi hjælper dig med at forklare den med de ord, fællesskabet bruger.",
+        "w2Title": "Fortæl andre om projektet",
+        "w2": "Send siden til folk, den kan betyde noget for, eller skriv selv om Social Organizer.",
+        "w3Title": "Hjælp med forskningen eller koden",
+        "w3": "Teorien er beskrevet i <report>Andrei Lubalins rapport</report>, og koden er åben på <code>GitHub</code>. Hjælp med at teste teorien eller med at udvikle appen."
+      },
+      "faq": {
+        "title": "Spørgsmål",
+        "q1": "Hvem sørger for, at folk holder ord?",
+        "a1": "Der er ingen mellemled. Du bestemmer selv, hvem du stoler på, og aftaler tingene direkte med folk. Gennem kæden af bekendte kan du finde ud af, hvem du har med at gøre.",
+        "q2": "Er det en forsikring eller en fond?",
+        "a2": "Nej. Ingen betaler på forhånd, og ingen lover en udbetaling. Der er ingen fælles kasse og ingen kasserer.",
+        "q3": "Er det en indsamling?",
+        "a3": "Nej. Et behov når kun mennesker, der er forbundet med afsenderen gennem bekendte, og næste gang er det måske dig, der beder om hjælp.",
+        "q4": "Er det et pyramidespil?",
+        "a4": "Nej. Ingen betaler for at være med, og ingen tjener på invitationer."
+      },
+      "start": {
+        "label": "Appen",
+        "title": "Byg dit netværk, før du får brug for det",
+        "text": "På en dårlig dag er der hverken tid eller kræfter til det.",
+        "s1": "Åbn et link fra en, du kender, eller log selv ind med Google, Apple, Telegram eller en kode på e-mail. Du behøver ingen adgangskode.",
+        "s2": "Tilføj mennesker, du kender personligt: med et link, en QR-kode eller ved at ryste telefonerne ved siden af hinanden.",
+        "s3": "Angiv din hensigt: det beløb, du normalt er klar til at give, når nogen i netværket er i knibe.",
+        "qr": "Ret telefonens kamera hertil, så åbner den rigtige butik.",
+        "playTop": "Hent den i",
+        "play": "Google Play",
+        "iosTop": "Hent i",
+        "ios": "App Store",
+        "webTop": "Åbn",
+        "web": "i browseren",
+        "tgTop": "Åbn i",
+        "tg": "Telegram"
+      },
+      "footer": {
+        "about": "Social Organizer · et ikke-kommercielt projekt med åben kildekode",
+        "credits": "Illustrationerne er lavet med AI · Ikoner: {{icons}}",
+        "links": "Links"
+      }
     }
   },
   "how": {
@@ -845,6 +1025,7 @@
         "aria": "Hui-bord"
       }
     },
+    "backToInvite": "Tilbage til invitationen",
     "compare": {
       "title": "Det nærmeste eksempel: Kinas gensidige hjælp på nettet",
       "lead": "Fra 2018 til 2021 samlede Kinas onlineplatforme til gensidig hjælp hundredvis af millioner medlemmer: den største, Xianghubao, havde over 100 millioner. <b>Medlemmerne delte udgifterne til hinandens alvorlige sygdomme, nogle få dollar om året hver.</b> I 2021 lukkede myndighederne hele branchen, fordi hver platforms operatør i praksis drev en forsikring.",
@@ -1195,7 +1376,8 @@
       "namePlaceholder": "Fornavn og efternavn",
       "nameHint": "Sådan ser folk i din kreds dig.",
       "nameMin": "Indtast dit navn"
-    }
+    },
+    "haveTelegramLink": "Har du allerede brugt Social Organizer via Telegram? Forbind Telegram"
   },
   "add": {
     "linkLabel": "Dit link",
@@ -1256,6 +1438,9 @@
     "sortNew": "Nyeste først",
     "sortName": "A–Å",
     "showMore": "Vis flere · {{total}} tilbage",
+    "editLink": "Skift link",
+    "linkPlaceholder": "dit navn eller kaldenavn",
+    "linkEditHint": "links med den gamle adresse holder op med at virke",
     "suggest": {
       "title": "I kender måske hinanden",
       "hint": "Personer, som dine bekendte kender. Bekræft kun dem, du kender personligt.",
@@ -1300,6 +1485,9 @@
     "keepPastNote": "uden dit navn",
     "deleteFailed": "Kunne ikke slette kontoen. Tjek forbindelsen, og prøv igen.",
     "deleteCountsFailed": "Kunne ikke indlæse, hvad der ville blive slettet. Tjek forbindelsen, og prøv igen.",
+    "showEmail": "Vis min e-mail under kontakter",
+    "showEmailOn": "Vises under dine kontakter: {{email}}.",
+    "showEmailOff": "Kun du kan se den e-mail, du logger ind med.",
     "goneConnections_one": "Din forbindelse med {{count}} person og anmodninger",
     "goneConnections_other": "Dine forbindelser med {{count}} personer og anmodninger",
     "goneOwn_one": "Dit åbne behov lukkes",

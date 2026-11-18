@@ -210,7 +210,8 @@
     "scan": "Skannaa",
     "how": "Näin se toimii",
     "person": "Henkilö",
-    "collection": "Tarve"
+    "collection": "Tarve",
+    "attention": "odottaa sinua"
   },
   "circle": {
     "toSelf": "Takaisin minuun",
@@ -282,7 +283,18 @@
       "milestoneFirstNeed": "Ensimmäinen tarve",
       "milestoneFirstNeedSub": "Viesti kulkee kädenpuristuksia pitkin",
       "milestoneFirstPart": "Ensimmäinen osallistuminen",
-      "milestoneFirstPartSub": "Tarpeen ilmoittaja näkee osallistumisesi"
+      "milestoneFirstPartSub": "Tarpeen ilmoittaja näkee osallistumisesi",
+      "accepted": "vahvisti tuttavuuden · olette nyt toistenne piireissä",
+      "stack": {
+        "waiting": "Odotetaan vahvistusta",
+        "incoming": "Haluavat yhteyden",
+        "accepted": "Nyt piirissäsi",
+        "participating": "Osallistut",
+        "closed": "Päättyneet",
+        "names": "{{names}} ja {{count}} muuta",
+        "more": "Näytä {{count}} lisää",
+        "less": "Näytä vähemmän"
+      }
     },
     "start": {
       "lead": "Olet ensimmäinen piirissäsi.",
@@ -545,7 +557,8 @@
     "notifyPushOff": "Ota push-ilmoitukset käyttöön, jotta näet ne tällä laitteella.",
     "notifyNewCollections": "Uudet tarpeet",
     "notifyNewCollectionsHint": "Kerro, kun joku, josta minulle voi tulla ilmoitus, ilmoittaa tarpeesta",
-    "notifyMyEventsHint": "Tuttavuuspyynnöt ja osallistumisilmoitukset tarpeeseeni tulevat aina. Osallistumiset tulevat yhdessä viestissä."
+    "notifyMyEventsHint": "Tuttavuuspyynnöt ja osallistumisilmoitukset tarpeeseeni tulevat aina. Osallistumiset tulevat yhdessä viestissä.",
+    "telegramLinkMerged": "Telegram on yhdistetty. Olet aiemmalla tililläsi, ja tyhjä toinen tili poistettiin. Kirjaudu samalla tavalla muilla laitteillasi."
   },
   "faq": {
     "title": "Usein kysytyt kysymykset",
@@ -712,6 +725,173 @@
       "qrTitle": "Sovellus puhelimeesi",
       "qrText": "Osoita kameralla: oikea kauppa avautuu.",
       "qrAria": "QR-koodi, jossa on linkki sovellukseen"
+    },
+    "v2": {
+      "meta": {
+        "title": "Social Organizer: tuttujen ihmisten verkosto",
+        "description": "Verkosto ihmisistä, jotka tuntevat toisensa henkilökohtaisesti. Kun joku on pulassa, moni voi auttaa."
+      },
+      "nav": {
+        "label": "Osiot",
+        "how": "Näin se toimii",
+        "grow": "Näin se kasvaa",
+        "join": "Lähde mukaan",
+        "faq": "Kysymykset",
+        "signin": "Kirjaudu"
+      },
+      "hero": {
+        "title": "Piirisi on suurempi kuin luulet.",
+        "lead": "Social Organizer kokoaa yhteen ihmiset, jotka tuntevat toisensa henkilökohtaisesti. Kun joku on pulassa, siitä kuulevat ensin hänen tuttunsa ja sitten heidän tuttunsa.",
+        "cta": "Rakenna verkostosi",
+        "how": "Näin se toimii",
+        "facts": "Ilmainen · ei palvelumaksuja · avoin lähdekoodi"
+      },
+      "story": {
+        "sceneAria": "Kottaraisparvi: jokainen lintu on yksi verkoston ihminen",
+        "railAria": "Tarinan luvut",
+        "b1": {
+          "label": "Kottaraiset",
+          "say": "Kottarainen seuraa vain kuutta tai seitsemää naapuriaan, mutta tuhansien lintujen parvi lentää yhtenä joukkona."
+        },
+        "b2": {
+          "label": "Ihmiset",
+          "say": "Ihmiset ovat yhteydessä toisiinsa samalla tavalla.",
+          "stat": "kädenpuristusta erotti vuonna 2016 keskimäärin kaksi satunnaista Facebook-käyttäjää toisistaan: välissä alle neljä ihmistä. <study>Tutkimus</study>"
+        },
+        "b3": {
+          "label": "1 · Tuttujen verkosto",
+          "say": "Kutsut jonkun, jonka tunnet henkilökohtaisesti, ja vahvistatte molemmat tuntevanne toisenne.",
+          "late": "Sitten hän kutsuu omat tuttunsa."
+        },
+        "b4": {
+          "label": "2 · Tarve",
+          "say": "Marian auto on hajonnut, eikä hän pääse ilman sitä töihin. Korjaus maksaa 300 $.",
+          "late": "Maria ilmoittaa tarpeesta ja lisää linkin keskusteluun. 300 dollarin tarve tavoittaa enintään 300 ihmistä, lähimmät ensin."
+        },
+        "b5": {
+          "label": "3 · Jokainen päättää itse",
+          "say": "Sinä tunnet Olegin, ja Oleg tuntee Marian. Näet tämän ketjun ja voit kysyä Olegilta, mitä on tapahtunut.",
+          "late": "Päätät itse, osallistutko."
+        },
+        "b6": {
+          "label": "4 · Vähän monelta",
+          "say": "Halukkaat nimeävät summan, vähintään 1 $. Sinä nimeät 5 $.",
+          "late": "Se on aikomus, eikä mitään makseta nyt. Niin kauan kuin tarve on avoinna, voit muuttaa summaa tai perua osallistumisesi."
+        },
+        "b7": {
+          "label": "5 · Sovitaan suoraan",
+          "say": "Maria ja osallistujat käyvät asian läpi keskustelussa. Lena suosittelee edullisempaa korjaamoa.",
+          "late": "Jos kyse on rahasta, ihmiset luovuttavat sen itse. Sovellus ei koske rahaan koskaan."
+        },
+        "b8": {
+          "label": "Sinä",
+          "say": "Huomenna Marian paikalla voit olla sinä.",
+          "late": "Silloin tuttusi kuulevat tarpeestasi ensimmäisinä."
+        },
+        "rail": {
+          "1": "Parvi",
+          "2": "Ihmiset",
+          "3": "Verkosto",
+          "4": "Tarve",
+          "5": "Päätös",
+          "6": "Osallistuminen",
+          "7": "Keskustelu",
+          "8": "Sinä"
+        },
+        "tags": {
+          "you": "Sinä",
+          "oleg": "Oleg",
+          "maria": "Maria · 300 $",
+          "lena": "Lena"
+        },
+        "hud": {
+          "reached_one": "on kuullut tarpeesta",
+          "reached_other": "on kuullut tarpeesta",
+          "reported": "/ 300 $ ilmoitettu",
+          "people_one": "osallistuja",
+          "people_other": "osallistujaa"
+        }
+      },
+      "grow": {
+        "title": "Näin verkosto kasvaa",
+        "text": "Jokainen uusi tulija kutsuu tuttujaan. Valitse, montako kukin kutsuu keskimäärin, ja katso, mitä verkostolle tapahtuu.",
+        "canvasAria": "Verkoston kasvun malli: kutsut leviävät yhdestä ihmisestä",
+        "slider": "Jokainen kutsuu keskimäärin",
+        "unit": "ihmistä",
+        "threshold": "kynnys",
+        "statPeople_one": "ihminen verkostossa",
+        "statPeople_other": "ihmistä verkostossa",
+        "statWaves_one": "kutsuaalto",
+        "statWaves_other": "kutsuaaltoa",
+        "dies": "Kasvu pysähtyi",
+        "grows": "Verkosto kasvaa itsestään",
+        "full": "Mallista loppuivat uudet ihmiset",
+        "restart": "Aloita alusta",
+        "hint": "Napauta mallia, niin verkosto alkaa toisesta ihmisestä",
+        "note": "Yksinkertaistettu malli. Tuttavapiirit menevät päällekkäin, eikä kenenkään ole pakko kutsua ketään.",
+        "axisX": "aallot",
+        "axisY": "ihmiset"
+      },
+      "next": {
+        "label": "Seuraavaksi",
+        "title": "Dollarin apu on vasta alkua",
+        "text": "Ajan mittaan haluamme, että ihmiset löytävät tuttavaverkostonsa kautta myös suositellun ammattilaisen, kumppaneita yhteiseen hankkeeseen ja samanhenkisiä omaan aloitteeseensa. Ja sopivat asioista, kuten nytkin, suoraan.",
+        "now": "Nyt",
+        "later": "Myöhemmin",
+        "need": "Tarve",
+        "participation": "Osallistuminen",
+        "tradesperson": "Suositeltu ammattilainen",
+        "project": "Yhteinen hanke"
+      },
+      "join": {
+        "label": "Kokeilu",
+        "title": "Lähde mukaan kokeiluun",
+        "text": "Sovellus ja teoria ovat jo olemassa. Nyt ne pitää testata käytännössä, ja siihen tarvitaan ihmisiä.",
+        "now": "ihmistä, joilla on yhteyksiä verkostossa, tilanne 13.11.2026",
+        "cta": "Kirjoita tiimille",
+        "share": "Jaa",
+        "shared": "Linkki kopioitu",
+        "safe": "Tiimi vastaa vain tililtä @socialorganizer_bot eikä koskaan pyydä rahaa, kirjautumiskoodeja tai korttitietoja.",
+        "w1Title": "Rakenna verkosto omaan yhteisöösi",
+        "w1": "Jos sinulla on oma yhteisö, kokeile sovellusta siellä. Autamme selittämään sen yhteisösi omin sanoin.",
+        "w2Title": "Kerro hankkeesta muille",
+        "w2": "Lähetä tämä sivu ihmisille, joille se voi olla tärkeä, tai kirjoita itse Social Organizerista.",
+        "w3Title": "Auta tutkimuksessa tai koodissa",
+        "w3": "Teoria on kuvattu <report>Andrei Lubalinin raportissa</report>, ja koodi on avoimesti saatavilla <code>GitHub</code>issa. Auta testaamaan teoriaa tai kehittämään sovellusta."
+      },
+      "faq": {
+        "title": "Kysymykset",
+        "q1": "Kuka huolehtii, että ihmiset pitävät sanansa?",
+        "a1": "Välikäsiä ei ole. Päätät itse, keihin luotat, ja sovit asioista suoraan ihmisten kanssa. Tuttavaketjun kautta voit selvittää, kenen kanssa olet tekemisissä.",
+        "q2": "Onko tämä vakuutus vai rahasto?",
+        "a2": "Ei. Kukaan ei maksa etukäteen eikä kukaan lupaa korvausta. Yhteistä kassaa tai rahastonhoitajaa ei ole.",
+        "q3": "Onko tämä lahjoituskeräys?",
+        "a3": "Ei. Tarve tavoittaa vain ihmiset, jotka ovat tuttujen kautta yhteydessä sen ilmoittajaan, ja ensi kerralla pyytäjä voit olla sinä.",
+        "q4": "Onko tämä pyramidipeli?",
+        "a4": "Ei. Kukaan ei maksa liittymisestä eikä kukaan ansaitse kutsuilla."
+      },
+      "start": {
+        "label": "Sovellus",
+        "title": "Rakenna verkostosi ennen kuin tarvitset sitä",
+        "text": "Huonona päivänä siihen ei ole aikaa eikä voimia.",
+        "s1": "Avaa tutulta saamasi linkki tai kirjaudu itse Googlella, Applella, Telegramilla tai sähköpostiin tulevalla koodilla. Salasanaa ei tarvita.",
+        "s2": "Lisää ihmiset, jotka tunnet henkilökohtaisesti: linkillä, QR-koodilla tai ravistamalla puhelimia vierekkäin.",
+        "s3": "Aseta aikomuksesi: summa, jonka olet yleensä valmis antamaan, kun joku verkostossa on pulassa.",
+        "qr": "Osoita puhelimen kameralla tähän, niin oikea kauppa avautuu.",
+        "playTop": "Saatavilla",
+        "play": "Google Playssa",
+        "iosTop": "Lataa",
+        "ios": "App Storesta",
+        "webTop": "Avaa",
+        "web": "selaimessa",
+        "tgTop": "Avaa",
+        "tg": "Telegramissa"
+      },
+      "footer": {
+        "about": "Social Organizer · voittoa tavoittelematon avoimen lähdekoodin hanke",
+        "credits": "Kuvitukset on luotu tekoälyllä · Kuvakkeet: {{icons}}",
+        "links": "Linkit"
+      }
     }
   },
   "how": {
@@ -845,6 +1025,7 @@
         "aria": "Hui-pöytä"
       }
     },
+    "backToInvite": "Takaisin kutsuun",
     "compare": {
       "title": "Lähin esimerkki: Kiinan keskinäinen apu verkossa",
       "lead": "Vuodesta 2018 vuoteen 2021 Kiinan verkossa toimivat keskinäisen avun alustat keräsivät satoja miljoonia jäseniä: suurimmalla, Xianghubaolla, oli yli 100 miljoonaa. <b>Jäsenet jakoivat toistensa vakavien sairauksien kulut, kukin vain muutaman dollarin vuodessa.</b> Vuonna 2021 viranomaiset sulkivat koko alan, koska jokaisen alustan ylläpitäjä pyöritti käytännössä vakuutusta.",
@@ -1195,7 +1376,8 @@
       "namePlaceholder": "Etunimi ja sukunimi",
       "nameHint": "Näin piirisi ihmiset näkevät sinut.",
       "nameMin": "Kirjoita nimesi"
-    }
+    },
+    "haveTelegramLink": "Oletko jo käyttänyt Social Organizeria Telegramin kautta? Yhdistä Telegram"
   },
   "add": {
     "linkLabel": "Linkkisi",
@@ -1256,6 +1438,9 @@
     "sortNew": "Uusimmat ensin",
     "sortName": "A–Ö",
     "showMore": "Näytä lisää · jäljellä {{total}}",
+    "editLink": "Muuta linkkiä",
+    "linkPlaceholder": "nimesi tai nimimerkkisi",
+    "linkEditHint": "vanhaa osoitetta käyttävät linkit lakkaavat toimimasta",
     "suggest": {
       "title": "Saatatte tuntea toisenne",
       "hint": "Ihmisiä, jotka tuttavasi tuntevat. Vahvista vain ne, jotka tunnet henkilökohtaisesti.",
@@ -1300,6 +1485,9 @@
     "keepPastNote": "ilman nimeäsi",
     "deleteFailed": "Tiliä ei voitu poistaa. Tarkista yhteys ja yritä uudelleen.",
     "deleteCountsFailed": "Ei saatu ladattua, mitä poistettaisiin. Tarkista yhteys ja yritä uudelleen.",
+    "showEmail": "Näytä sähköpostini yhteystiedoissa",
+    "showEmailOn": "Näkyy yhteystiedoissasi: {{email}}.",
+    "showEmailOff": "Vain sinä näet sähköpostin, jolla kirjaudut.",
     "goneConnections_one": "Yhteys {{count}} henkilöön ja pyynnöt",
     "goneConnections_other": "Yhteydet {{count}} henkilöön ja pyynnöt",
     "goneOwn_one": "Avoin tarpeesi sulkeutuu",

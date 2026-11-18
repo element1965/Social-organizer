@@ -210,7 +210,8 @@
     "scan": "Skenovat",
     "how": "Jak to funguje",
     "person": "Člověk",
-    "collection": "Potřeba"
+    "collection": "Potřeba",
+    "attention": "čeká na vás"
   },
   "circle": {
     "toSelf": "Zpět ke mně",
@@ -288,7 +289,18 @@
       "milestoneFirstNeed": "První potřeba",
       "milestoneFirstNeedSub": "Oznámení putuje po podáních ruky",
       "milestoneFirstPart": "První účast",
-      "milestoneFirstPartSub": "Autor potřeby vidí vaši účast"
+      "milestoneFirstPartSub": "Autor potřeby vidí vaši účast",
+      "accepted": "potvrdil(a) známost · jste navzájem ve svých kruzích",
+      "stack": {
+        "waiting": "Čekáme na potvrzení",
+        "incoming": "Chtějí se propojit",
+        "accepted": "Nově ve vašem kruhu",
+        "participating": "Účastníte se",
+        "closed": "Uzavřené",
+        "names": "{{names}} a další {{count}}",
+        "more": "Další {{count}}",
+        "less": "Zobrazit méně"
+      }
     },
     "start": {
       "lead": "Ve svém kruhu jste první.",
@@ -551,7 +563,8 @@
     "notifyPushOff": "Zapněte push oznámení, ať je vidíte na tomto zařízení.",
     "notifyNewCollections": "Nové potřeby",
     "notifyNewCollectionsHint": "Dát vědět, když potřebu oznámí někdo, o kom mi mohou chodit oznámení",
-    "notifyMyEventsHint": "Žádosti o připojení a oznámení o účasti v mé potřebě chodí vždy. Účast přijde jedním oznámením."
+    "notifyMyEventsHint": "Žádosti o připojení a oznámení o účasti v mé potřebě chodí vždy. Účast přijde jedním oznámením.",
+    "telegramLinkMerged": "Telegram je propojen. Jste ve svém dosavadním účtu, prázdný druhý účet byl odstraněn. Na dalších zařízeních se přihlaste stejným způsobem."
   },
   "faq": {
     "title": "Otázky a odpovědi",
@@ -720,6 +733,181 @@
       "qrTitle": "Aplikace do telefonu",
       "qrText": "Namiřte foťák: otevře se ten správný obchod.",
       "qrAria": "QR kód s odkazem na aplikaci"
+    },
+    "v2": {
+      "meta": {
+        "title": "Social Organizer: síť známých",
+        "description": "Síť lidí, kteří se znají osobně. Když je někomu těžko, může pomoct hodně lidí."
+      },
+      "nav": {
+        "label": "Sekce",
+        "how": "Jak to funguje",
+        "grow": "Růst sítě",
+        "join": "Zapojte se",
+        "faq": "Otázky",
+        "signin": "Přihlásit se"
+      },
+      "hero": {
+        "title": "Váš kruh je větší, než se zdá.",
+        "lead": "V Social Organizer se scházejí lidé, kteří se znají osobně. Když je někomu těžko, dozvědí se to nejdřív jeho známí, pak jejich známí.",
+        "cta": "Vybudujte svou síť",
+        "how": "Jak to funguje",
+        "facts": "Zdarma · bez poplatků · otevřený kód"
+      },
+      "story": {
+        "sceneAria": "Hejno špačků: každý pták představuje člověka v síti",
+        "railAria": "Kapitoly příběhu",
+        "b1": {
+          "label": "Špačci",
+          "say": "Špaček sleduje jen šest nebo sedm sousedů, a přesto hejno tisíců ptáků letí jako jeden celek."
+        },
+        "b2": {
+          "label": "Lidé",
+          "say": "Lidé jsou propojeni stejně.",
+          "stat": "podání ruky dělilo v roce 2016 v průměru dva náhodné uživatele Facebooku: mezi nimi byly necelé čtyři osoby. <study>Studie</study>"
+        },
+        "b3": {
+          "label": "1 · Síť známých",
+          "say": "Pozvete někoho, koho znáte osobně, a oba potvrdíte, že se znáte.",
+          "late": "Ten pak pozve své známé."
+        },
+        "b4": {
+          "label": "2 · Potřeba",
+          "say": "Marii se porouchalo auto a bez něj se nedostane do práce. Oprava stojí 300 $.",
+          "late": "Marie oznámí potřebu a přidá odkaz na chat. Potřeba na 300 $ se dostane až k 300 lidem, nejdřív k těm nejbližším."
+        },
+        "b5": {
+          "label": "3 · Každý se rozhoduje sám",
+          "say": "Znáte Olega a Oleg zná Marii. Vidíte tento řetězec a můžete se Olega zeptat, co se stalo.",
+          "late": "Jestli se zapojíte, je na vás."
+        },
+        "b6": {
+          "label": "4 · Trochu od mnoha",
+          "say": "Kdo se chce zapojit, uvede částku od jednoho dolaru. Vy uvedete 5 $.",
+          "late": "Je to záměr, teď se nic neplatí. Dokud je potřeba otevřená, můžete částku změnit nebo účast odvolat."
+        },
+        "b7": {
+          "label": "5 · Přímá domluva",
+          "say": "Marie a účastníci všechno probírají v chatu. Lena doporučí levnější servis.",
+          "late": "Pokud jde o peníze, lidé si je předají sami. Aplikace na peníze nesahá."
+        },
+        "b8": {
+          "label": "Vy",
+          "say": "Zítra můžete být na místě Marie vy.",
+          "late": "Pak se o vaší potřebě jako první dozvědí vaši známí."
+        },
+        "rail": {
+          "1": "Hejno",
+          "2": "Lidé",
+          "3": "Síť",
+          "4": "Potřeba",
+          "5": "Volba",
+          "6": "Účast",
+          "7": "Chat",
+          "8": "Vy"
+        },
+        "tags": {
+          "you": "Vy",
+          "oleg": "Oleg",
+          "maria": "Marie · 300 $",
+          "lena": "Lena"
+        },
+        "hud": {
+          "reached_one": "ví o potřebě",
+          "reached_few": "vědí o potřebě",
+          "reached_many": "ví o potřebě",
+          "reached_other": "ví o potřebě",
+          "reported": "z 300 $ uvedeno",
+          "people_one": "účastník",
+          "people_few": "účastníci",
+          "people_many": "účastníka",
+          "people_other": "účastníků"
+        }
+      },
+      "grow": {
+        "title": "Jak síť roste",
+        "text": "Každý nový člověk pozve své známé. Nastavte, kolik jich v průměru pozve, a uvidíte, co se se sítí stane.",
+        "canvasAria": "Model růstu sítě: pozvánky se šíří od jednoho člověka",
+        "slider": "Každý pozve v průměru",
+        "unit": "člověka",
+        "threshold": "práh",
+        "statPeople_one": "člověk v síti",
+        "statPeople_few": "lidé v síti",
+        "statPeople_many": "člověka v síti",
+        "statPeople_other": "lidí v síti",
+        "statWaves_one": "vlna pozvánek",
+        "statWaves_few": "vlny pozvánek",
+        "statWaves_many": "vlny pozvánek",
+        "statWaves_other": "vln pozvánek",
+        "dies": "Růst se zastavil",
+        "grows": "Síť roste sama",
+        "full": "V modelu už nejsou noví lidé",
+        "restart": "Začít znovu",
+        "hint": "Klepnutím na model začnete od někoho jiného",
+        "note": "Model je zjednodušený. Kruhy známých se překrývají a nikdo nemusí nikoho zvát.",
+        "axisX": "vlny",
+        "axisY": "lidé"
+      },
+      "next": {
+        "label": "Dál",
+        "title": "Pomoc po dolaru je teprve začátek",
+        "text": "Chceme, aby lidé časem přes síť známých našli řemeslníka na doporučení, partnery pro společný projekt nebo stejně smýšlející lidi pro vlastní iniciativu. A domlouvali se, stejně jako teď, přímo.",
+        "now": "Teď",
+        "later": "Později",
+        "need": "Potřeba",
+        "participation": "Účast",
+        "tradesperson": "Prověřený řemeslník",
+        "project": "Společný projekt"
+      },
+      "join": {
+        "label": "Experiment",
+        "title": "Zapojte se do experimentu",
+        "text": "Aplikace i teorie už existují. Teď je musíme ověřit v praxi a na to potřebujeme lidi.",
+        "now": "lidí má v síti známé (k 13. listopadu 2026)",
+        "cta": "Napsat týmu",
+        "share": "Sdílet",
+        "shared": "Odkaz zkopírován",
+        "safe": "Tým odpovídá jen z @socialorganizer_bot a nikdy nežádá peníze, přihlašovací kódy ani údaje o kartě.",
+        "w1Title": "Vybudujte síť ve své komunitě",
+        "w1": "Pokud máte vlastní komunitu, vyzkoušejte aplikaci tam. Pomůžeme vám o ní mluvit slovy, která používá vaše komunita.",
+        "w2Title": "Řekněte o projektu dalším",
+        "w2": "Pošlete tuto stránku lidem, kterým by mohla být blízká, nebo o Social Organizer napište sami.",
+        "w3Title": "Pomozte s výzkumem nebo kódem",
+        "w3": "Teorii popsal Andrei Lubalin ve <report>své zprávě</report>, kód je otevřený na <code>GitHub</code>u. Pomozte ověřit teorii nebo se zapojte do práce na aplikaci."
+      },
+      "faq": {
+        "title": "Otázky",
+        "q1": "Kdo dohlédne na to, aby lidé dodrželi slovo?",
+        "a1": "Žádní prostředníci nejsou. Sami se rozhodujete, komu věřit, a s lidmi se domlouváte přímo. A přes řetězec známých zjistíte, s kým máte co do činění.",
+        "q2": "Je to pojištění nebo fond?",
+        "a2": "Ne. Nikdo neplatí předem a nikdo neslibuje výplatu. Není tu žádná společná kasa ani pokladník.",
+        "q3": "Je to sbírka darů?",
+        "a3": "Ne. Potřebu vidí jen lidé, kteří jsou s autorem spojeni přes známé, a příště můžete o pomoc žádat vy.",
+        "q4": "Je to pyramidová hra?",
+        "a4": "Ne. Nikdo neplatí za vstup a nikdo nevydělává na pozvánkách."
+      },
+      "start": {
+        "label": "Aplikace",
+        "title": "Síť se staví předem",
+        "text": "V těžký den na to není čas ani síla.",
+        "s1": "Otevřete odkaz od známého, nebo se přihlaste sami: přes Google, Apple, Telegram nebo kódem z e-mailu. Heslo nepotřebujete.",
+        "s2": "Přidejte lidi, které znáte osobně: odkazem, QR kódem nebo protřepáním telefonů vedle sebe.",
+        "s3": "Nastavte svůj záměr: částku, kterou obvykle chcete dát, když je někomu v síti těžko.",
+        "qr": "Namiřte sem fotoaparát telefonu a otevře se ten správný obchod.",
+        "playTop": "Nyní na",
+        "play": "Google Play",
+        "iosTop": "Stáhnout v",
+        "ios": "App Store",
+        "webTop": "Otevřít",
+        "web": "v prohlížeči",
+        "tgTop": "Otevřít v",
+        "tg": "Telegram"
+      },
+      "footer": {
+        "about": "Social Organizer · neziskový projekt s otevřeným kódem",
+        "credits": "Ilustrace vytvořila umělá inteligence · Ikony: {{icons}}",
+        "links": "Odkazy"
+      }
     }
   },
   "how": {
@@ -853,6 +1041,7 @@
         "aria": "Stůl hui"
       }
     },
+    "backToInvite": "Zpět na pozvánku",
     "compare": {
       "title": "Nejbližší příklad: čínská online vzájemná pomoc",
       "lead": "V letech 2018 až 2021 sdružovaly čínské online platformy vzájemné pomoci stovky milionů členů: největší z nich, Xianghubao, jich měla přes 100 milionů. <b>Členové si navzájem hradili náklady na vážné nemoci, každý jen pár dolarů ročně.</b> V roce 2021 úřady zavřely celé odvětví, protože provozovatel každé platformy fakticky provozoval pojištění.",
@@ -1205,7 +1394,8 @@
       "namePlaceholder": "Jméno a příjmení",
       "nameHint": "Takto vás uvidí lidé ve vašem okruhu.",
       "nameMin": "Zadejte jméno"
-    }
+    },
+    "haveTelegramLink": "Už jste se přihlašovali přes Telegram? Propojte ho"
   },
   "add": {
     "linkLabel": "Váš odkaz",
@@ -1268,6 +1458,9 @@
     "sortNew": "Nejnovější",
     "sortName": "A–Z",
     "showMore": "Zobrazit další · zbývá {{total}}",
+    "editLink": "Změnit odkaz",
+    "linkPlaceholder": "vaše jméno nebo přezdívka",
+    "linkEditHint": "odkazy se starou adresou přestanou fungovat",
     "suggest": {
       "title": "Možná se znáte",
       "hint": "Lidé, které znají vaši známí. Potvrzujte jen ty, které znáte osobně.",
@@ -1312,6 +1505,9 @@
     "keepPastNote": "bez vašeho jména",
     "deleteFailed": "Účet se nepodařilo smazat. Zkontrolujte připojení a zkuste to znovu.",
     "deleteCountsFailed": "Nepodařilo se načíst, co se smaže. Zkontrolujte připojení a zkuste to znovu.",
+    "showEmail": "Zobrazovat můj e-mail v kontaktech",
+    "showEmailOn": "V kontaktech: {{email}}.",
+    "showEmailOff": "E-mail pro přihlášení vidíte jen vy.",
     "goneConnections_few": "Vaše spojení s {{count}} lidmi a žádosti",
     "goneConnections_many": "Vaše spojení s {{count}} člověka a žádosti",
     "goneConnections_one": "Vaše spojení s {{count}} člověkem a žádosti",

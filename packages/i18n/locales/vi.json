@@ -210,7 +210,8 @@
     "scan": "Quét",
     "how": "Cách hoạt động",
     "person": "Người",
-    "collection": "Nhu cầu"
+    "collection": "Nhu cầu",
+    "attention": "đang chờ bạn"
   },
   "circle": {
     "toSelf": "Quay về bạn",
@@ -279,7 +280,18 @@
       "milestoneFirstNeed": "Nhu cầu đầu tiên",
       "milestoneFirstNeedSub": "Thông báo đang đi theo các cái bắt tay",
       "milestoneFirstPart": "Lần tham gia đầu tiên",
-      "milestoneFirstPartSub": "Người đăng nhu cầu thấy sự tham gia của bạn"
+      "milestoneFirstPartSub": "Người đăng nhu cầu thấy sự tham gia của bạn",
+      "accepted": "đã xác nhận quen nhau · hai bạn đã ở trong vòng tròn của nhau",
+      "stack": {
+        "waiting": "Đang chờ xác nhận",
+        "incoming": "Muốn kết nối",
+        "accepted": "Đã vào vòng tròn của bạn",
+        "participating": "Bạn đang tham gia",
+        "closed": "Đã kết thúc",
+        "names": "{{names}} và {{count}} người khác",
+        "more": "Thêm {{count}} người",
+        "less": "Thu gọn"
+      }
     },
     "start": {
       "lead": "Bạn là người đầu tiên trong vòng tròn của bạn.",
@@ -542,7 +554,8 @@
     "notifyPushOff": "Bật thông báo push để thấy trên thiết bị này.",
     "notifyNewCollections": "Nhu cầu mới",
     "notifyNewCollectionsHint": "Báo tôi khi người mà tôi có thể nhận thông báo về họ thông báo một nhu cầu",
-    "notifyMyEventsHint": "Yêu cầu kết nối và thông báo tham gia vào nhu cầu của tôi luôn đến. Các thông báo tham gia đến trong một tin."
+    "notifyMyEventsHint": "Yêu cầu kết nối và thông báo tham gia vào nhu cầu của tôi luôn đến. Các thông báo tham gia đến trong một tin.",
+    "telegramLinkMerged": "Telegram đã được kết nối. Bạn đang ở tài khoản cũ của mình, tài khoản thứ hai trống đã bị xóa. Trên các thiết bị khác, hãy đăng nhập theo cách tương tự."
   },
   "faq": {
     "title": "Câu hỏi thường gặp",
@@ -708,6 +721,169 @@
       "qrTitle": "Ứng dụng trên điện thoại của bạn",
       "qrText": "Hướng camera: cửa hàng đúng sẽ mở.",
       "qrAria": "Mã QR với liên kết tới ứng dụng"
+    },
+    "v2": {
+      "meta": {
+        "title": "Social Organizer: mạng lưới người quen",
+        "description": "Mạng lưới những người quen nhau ngoài đời. Khi ai đó gặp khó khăn, nhiều người có thể giúp."
+      },
+      "nav": {
+        "label": "Các mục",
+        "how": "Cách hoạt động",
+        "grow": "Mạng lưới lớn dần",
+        "join": "Góp sức",
+        "faq": "Câu hỏi",
+        "signin": "Đăng nhập"
+      },
+      "hero": {
+        "title": "Vòng tròn của bạn lớn hơn bạn nghĩ.",
+        "lead": "Social Organizer kết nối những người quen nhau ngoài đời. Khi một người gặp khó khăn, người quen của họ biết trước, rồi đến người quen của những người đó.",
+        "cta": "Xây mạng lưới của bạn",
+        "how": "Xem cách hoạt động",
+        "facts": "Miễn phí · không thu phí · mã nguồn mở"
+      },
+      "story": {
+        "sceneAria": "Đàn chim sáo đá: mỗi con chim là một người trong mạng lưới",
+        "railAria": "Các chương của câu chuyện",
+        "b1": {
+          "label": "Sáo đá",
+          "say": "Một con sáo đá chỉ để ý sáu, bảy con bên cạnh, vậy mà cả đàn hàng nghìn con vẫn bay như một."
+        },
+        "b2": {
+          "label": "Con người",
+          "say": "Con người cũng gắn kết với nhau như thế.",
+          "stat": "cái bắt tay: khoảng cách trung bình giữa hai người dùng Facebook bất kỳ vào năm 2016. Ở giữa họ chưa tới bốn người. <study>Nghiên cứu</study>"
+        },
+        "b3": {
+          "label": "1 · Mạng lưới người quen",
+          "say": "Bạn mời một người bạn quen ngoài đời, và cả hai xác nhận là quen nhau.",
+          "late": "Rồi người đó mời người quen của họ."
+        },
+        "b4": {
+          "label": "2 · Nhu cầu",
+          "say": "Xe của Maria bị hỏng, mà không có xe thì cô ấy không đi làm được. Sửa xe hết 300 $.",
+          "late": "Maria thông báo một nhu cầu và kèm liên kết tới nhóm chat. Nhu cầu 300 $ sẽ tới tối đa 300 người, bắt đầu từ người gần nhất."
+        },
+        "b5": {
+          "label": "3 · Mỗi người tự quyết định",
+          "say": "Bạn quen Oleg, còn Oleg quen Maria. Bạn thấy được chuỗi này và có thể hỏi Oleg chuyện gì đã xảy ra.",
+          "late": "Có tham gia hay không là do bạn chọn."
+        },
+        "b6": {
+          "label": "4 · Mỗi người một ít",
+          "say": "Ai muốn tham gia thì nêu một số tiền, từ 1 $. Bạn nêu 5 $.",
+          "late": "Đó là dự định, bây giờ chưa phải trả gì. Khi nhu cầu còn mở, bạn có thể đổi số tiền hoặc rút lại."
+        },
+        "b7": {
+          "label": "5 · Mọi người thỏa thuận trực tiếp",
+          "say": "Maria và những người tham gia bàn bạc trong chat. Lena gợi ý một tiệm sửa xe rẻ hơn.",
+          "late": "Nếu có chuyện tiền bạc, mọi người tự đưa cho nhau. Ứng dụng không bao giờ đụng tới tiền."
+        },
+        "b8": {
+          "label": "Bạn",
+          "say": "Ngày mai, người ở vị trí của Maria có thể là bạn.",
+          "late": "Khi đó, người quen của bạn sẽ là những người đầu tiên biết về nhu cầu của bạn."
+        },
+        "rail": {
+          "1": "Đàn chim",
+          "2": "Con người",
+          "3": "Mạng lưới",
+          "4": "Nhu cầu",
+          "5": "Quyết định",
+          "6": "Tham gia",
+          "7": "Chat",
+          "8": "Bạn"
+        },
+        "tags": {
+          "you": "Bạn",
+          "oleg": "Oleg",
+          "maria": "Maria · 300 $",
+          "lena": "Lena"
+        },
+        "hud": {
+          "reached_other": "người đã biết về nhu cầu",
+          "reported": "trên 300 $ đã được nêu",
+          "people_other": "người tham gia"
+        }
+      },
+      "grow": {
+        "title": "Mạng lưới lớn lên thế nào",
+        "text": "Mỗi người mới đều mời người quen của mình. Hãy chọn trung bình bao nhiêu người và xem mạng lưới thay đổi ra sao.",
+        "canvasAria": "Mô hình phát triển mạng lưới: lời mời lan ra từ một người",
+        "slider": "Mỗi người mời trung bình",
+        "unit": "người",
+        "threshold": "ngưỡng",
+        "statPeople_other": "người trong mạng lưới",
+        "statWaves_other": "đợt mời",
+        "dies": "Mạng lưới ngừng phát triển",
+        "grows": "Mạng lưới tự phát triển",
+        "full": "Mô hình đã hết người mới",
+        "restart": "Bắt đầu lại",
+        "hint": "Chạm vào mô hình để bắt đầu từ một người khác",
+        "note": "Đây là mô hình đơn giản hóa. Các vòng người quen chồng lên nhau, và không ai bắt buộc phải mời ai.",
+        "axisX": "đợt",
+        "axisY": "người"
+      },
+      "next": {
+        "label": "Tiếp theo",
+        "title": "Giúp nhau 1 $ mới chỉ là khởi đầu",
+        "text": "Về sau, chúng tôi muốn mọi người dùng mạng lưới người quen để tìm thợ có người giới thiệu, đối tác cho một dự án chung, người cùng chí hướng cho sáng kiến của mình, rồi thỏa thuận trực tiếp với nhau như bây giờ.",
+        "now": "Bây giờ",
+        "later": "Sau này",
+        "need": "Nhu cầu",
+        "participation": "Tham gia",
+        "tradesperson": "Thợ đáng tin",
+        "project": "Dự án chung"
+      },
+      "join": {
+        "label": "Thử nghiệm",
+        "title": "Hãy cùng thử nghiệm",
+        "text": "Ứng dụng và lý thuyết đã có. Giờ cần người cùng kiểm chứng chúng trong thực tế.",
+        "now": "người có kết nối trong mạng lưới tính đến ngày 13 tháng 11 năm 2026",
+        "cta": "Nhắn cho nhóm",
+        "share": "Chia sẻ",
+        "shared": "Đã chép liên kết",
+        "safe": "Nhóm chỉ trả lời qua @socialorganizer_bot và không bao giờ yêu cầu bạn gửi tiền, mã đăng nhập hay thông tin thẻ.",
+        "w1Title": "Xây mạng lưới trong cộng đồng của bạn",
+        "w1": "Nếu bạn có một cộng đồng riêng, hãy thử ứng dụng ở đó. Chúng tôi sẽ giúp bạn giải thích bằng lời lẽ mà mọi người ở đó vẫn dùng.",
+        "w2Title": "Kể về dự án",
+        "w2": "Gửi trang này cho những người có thể quan tâm, hoặc tự viết về Social Organizer.",
+        "w3Title": "Giúp nghiên cứu hoặc viết mã",
+        "w3": "Lý thuyết được trình bày trong <report>báo cáo của Andrei Lubalin</report>, còn mã nguồn được công khai trên <code>GitHub</code>. Hãy giúp kiểm chứng lý thuyết hoặc phát triển ứng dụng."
+      },
+      "faq": {
+        "title": "Câu hỏi",
+        "q1": "Ai đảm bảo mọi người giữ lời?",
+        "a1": "Không có trung gian. Bạn tự quyết định tin ai và làm việc trực tiếp với mọi người, còn qua chuỗi người quen, bạn có thể biết mình đang giao thiệp với ai.",
+        "q2": "Đây có phải bảo hiểm hay quỹ không?",
+        "a2": "Không. Không ai trả tiền trước và không ai hứa chi trả. Không có két chung, cũng không có thủ quỹ.",
+        "q3": "Đây có phải một đợt quyên góp không?",
+        "a3": "Không. Nhu cầu chỉ tới những người có liên hệ với người đăng qua người quen, và lần sau người cần nhờ có thể là bạn.",
+        "q4": "Đây có phải mô hình kim tự tháp không?",
+        "a4": "Không. Không ai phải trả tiền để vào, và không ai kiếm tiền từ lời mời."
+      },
+      "start": {
+        "label": "Ứng dụng",
+        "title": "Hãy xây mạng lưới trước khi cần đến",
+        "text": "Vào ngày khó khăn, bạn sẽ không còn thời gian hay sức lực cho việc này.",
+        "s1": "Mở liên kết từ người bạn quen, hoặc tự đăng nhập bằng Google, Apple, Telegram hay mã gửi qua email. Không cần mật khẩu.",
+        "s2": "Thêm những người bạn quen ngoài đời: bằng liên kết, mã QR hoặc lắc hai điện thoại cạnh nhau.",
+        "s3": "Đặt dự định của bạn: số tiền bạn thường sẵn sàng đưa khi ai đó trong mạng lưới gặp khó khăn.",
+        "qr": "Hướng camera điện thoại vào đây, cửa hàng phù hợp sẽ mở ra.",
+        "playTop": "Tải nội dung trên",
+        "play": "Google Play",
+        "iosTop": "Tải về trên",
+        "ios": "App Store",
+        "webTop": "Mở",
+        "web": "trên trình duyệt",
+        "tgTop": "Mở trong",
+        "tg": "Telegram"
+      },
+      "footer": {
+        "about": "Social Organizer · dự án phi lợi nhuận, mã nguồn mở",
+        "credits": "Hình minh họa do AI tạo · Biểu tượng: {{icons}}",
+        "links": "Liên kết"
+      }
     }
   },
   "how": {
@@ -841,6 +1017,7 @@
         "aria": "Bàn hui"
       }
     },
+    "backToInvite": "Quay lại lời mời",
     "compare": {
       "title": "Ví dụ gần nhất: tương trợ trực tuyến ở Trung Quốc",
       "lead": "Từ 2018 đến 2021, các nền tảng tương trợ trực tuyến của Trung Quốc thu hút hàng trăm triệu thành viên: lớn nhất là Xianghubao, với hơn 100 triệu. <b>Các thành viên chia nhau chi phí bệnh nặng của nhau, mỗi người vài đô la một năm.</b> Năm 2021, cơ quan quản lý đóng cả lĩnh vực, vì đơn vị vận hành của mỗi nền tảng thực chất đang làm bảo hiểm.",
@@ -1190,7 +1367,8 @@
       "namePlaceholder": "Họ và tên",
       "nameHint": "Người trong vòng kết nối của bạn sẽ thấy bạn như thế này.",
       "nameMin": "Nhập tên của bạn"
-    }
+    },
+    "haveTelegramLink": "Đã dùng Social Organizer qua Telegram? Hãy kết nối"
   },
   "add": {
     "linkLabel": "Liên kết của bạn",
@@ -1250,6 +1428,9 @@
     "sortNew": "Mới nhất trước",
     "sortName": "A–Z",
     "showMore": "Xem thêm · còn {{total}}",
+    "editLink": "Đổi liên kết",
+    "linkPlaceholder": "tên hoặc biệt danh của bạn",
+    "linkEditHint": "các liên kết với địa chỉ cũ sẽ ngừng hoạt động",
     "suggest": {
       "title": "Có thể hai bạn quen nhau",
       "hint": "Những người mà người quen của bạn biết. Chỉ xác nhận những người bạn quen trực tiếp.",
@@ -1294,6 +1475,9 @@
     "keepPastNote": "không có tên bạn",
     "deleteFailed": "Không xóa được tài khoản. Hãy kiểm tra kết nối và thử lại.",
     "deleteCountsFailed": "Không tải được những gì sẽ bị xóa. Hãy kiểm tra kết nối và thử lại.",
+    "showEmail": "Hiện email của tôi trong thông tin liên hệ",
+    "showEmailOn": "Đang hiện trong thông tin liên hệ của bạn: {{email}}.",
+    "showEmailOff": "Chỉ bạn thấy email đăng nhập của mình.",
     "goneConnections_other": "Kết nối của bạn với {{count}} người và các yêu cầu",
     "goneOwn_other": "{{count}} nhu cầu đang mở của bạn sẽ đóng",
     "goneJoinedToo_other": "và sự tham gia của bạn vào {{count}} nhu cầu đang mở",

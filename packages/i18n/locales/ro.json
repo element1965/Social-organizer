@@ -210,7 +210,8 @@
     "scan": "Scanează",
     "how": "Cum funcționează",
     "person": "Persoană",
-    "collection": "Nevoie"
+    "collection": "Nevoie",
+    "attention": "te așteaptă"
   },
   "circle": {
     "toSelf": "Înapoi la mine",
@@ -285,7 +286,18 @@
       "milestoneFirstNeed": "Prima nevoie",
       "milestoneFirstNeedSub": "Mesajul merge pe strângeri de mână",
       "milestoneFirstPart": "Prima participare",
-      "milestoneFirstPartSub": "Autorul nevoii îți vede participarea"
+      "milestoneFirstPartSub": "Autorul nevoii îți vede participarea",
+      "accepted": "a confirmat cunoștința · sunteți unul în cercul celuilalt",
+      "stack": {
+        "waiting": "Așteaptă confirmarea",
+        "incoming": "Vor să se conecteze cu tine",
+        "accepted": "Acum în cercul tău",
+        "participating": "Participi",
+        "closed": "Încheiate",
+        "names": "{{names}} și încă {{count}}",
+        "more": "Încă {{count}}",
+        "less": "Arată mai puțin"
+      }
     },
     "start": {
       "lead": "Ești prima persoană din cercul tău.",
@@ -548,7 +560,8 @@
     "notifyPushOff": "Pornește notificările push ca să le vezi pe acest dispozitiv.",
     "notifyNewCollections": "Nevoi noi",
     "notifyNewCollectionsHint": "Spune-mi când cineva despre care pot primi notificări anunță o nevoie",
-    "notifyMyEventsHint": "Cererile de conexiune și anunțurile de participare la nevoia mea vin mereu. Participările vin într-un singur mesaj."
+    "notifyMyEventsHint": "Cererile de conexiune și anunțurile de participare la nevoia mea vin mereu. Participările vin într-un singur mesaj.",
+    "telegramLinkMerged": "Telegram este conectat. Ești în contul tău existent, iar al doilea cont, gol, a fost șters. Pe celelalte dispozitive conectează-te la fel."
   },
   "faq": {
     "title": "Întrebări frecvente",
@@ -716,6 +729,177 @@
       "qrTitle": "Aplicația pe telefon",
       "qrText": "Îndreaptă camera: se deschide magazinul potrivit.",
       "qrAria": "Cod QR cu un link către aplicație"
+    },
+    "v2": {
+      "meta": {
+        "title": "Social Organizer: o rețea de oameni pe care îi cunoști",
+        "description": "O rețea de oameni care se cunosc personal. Când cuiva îi e greu, mulți pot ajuta."
+      },
+      "nav": {
+        "label": "Secțiuni",
+        "how": "Cum funcționează",
+        "grow": "Cum crește",
+        "join": "Implică-te",
+        "faq": "Întrebări",
+        "signin": "Conectează-te"
+      },
+      "hero": {
+        "title": "Cercul tău e mai mare decât crezi.",
+        "lead": "Social Organizer adună oameni care se cunosc personal. Când unuia dintre ei îi e greu, află mai întâi cunoscuții lui, apoi cunoscuții acestora.",
+        "cta": "Construiește-ți rețeaua",
+        "how": "Cum funcționează",
+        "facts": "Gratuit · fără comisioane · cod deschis"
+      },
+      "story": {
+        "sceneAria": "Un stol de grauri: fiecare pasăre înseamnă un om din rețea",
+        "railAria": "Capitolele poveștii",
+        "b1": {
+          "label": "Grauri",
+          "say": "Un graur urmărește doar șase-șapte vecini, și totuși un stol de mii de păsări zboară ca una singură."
+        },
+        "b2": {
+          "label": "Oameni",
+          "say": "Oamenii sunt legați la fel.",
+          "stat": "strângeri de mână despărțeau în medie doi utilizatori Facebook aleși la întâmplare în 2016: mai puțin de patru oameni între ei. <study>Studiul</study>"
+        },
+        "b3": {
+          "label": "1 · O rețea de cunoscuți",
+          "say": "Inviți pe cineva pe care îl cunoști personal, iar amândoi confirmați că vă cunoașteți.",
+          "late": "Apoi și el își invită cunoscuții."
+        },
+        "b4": {
+          "label": "2 · O nevoie",
+          "say": "Mariei i s-a stricat mașina, iar fără ea nu poate ajunge la serviciu. Reparația costă 300 $.",
+          "late": "Maria anunță o nevoie și adaugă linkul unui chat. O nevoie de 300 $ ajunge până la 300 de oameni, începând cu cei mai apropiați."
+        },
+        "b5": {
+          "label": "3 · Fiecare decide singur",
+          "say": "Tu îl cunoști pe Oleg, iar Oleg o cunoaște pe Maria. Vezi acest lanț și îl poți întreba pe Oleg ce s-a întâmplat.",
+          "late": "Dacă participi sau nu, alegi tu."
+        },
+        "b6": {
+          "label": "4 · Câte puțin de la mulți",
+          "say": "Cine vrea să participe indică o sumă, de la 1 $ în sus. Tu indici 5 $.",
+          "late": "E o intenție, acum nu plătești nimic. Cât timp nevoia e deschisă, poți schimba suma sau îți poți retrage participarea."
+        },
+        "b7": {
+          "label": "5 · Înțelegere directă",
+          "say": "Maria și participanții discută totul în chat. Lena recomandă un service mai ieftin.",
+          "late": "Dacă e vorba de bani, oamenii și-i dau direct unii altora. Aplicația nu se atinge de ei."
+        },
+        "b8": {
+          "label": "Tu",
+          "say": "Mâine, în locul Mariei ai putea fi tu.",
+          "late": "Atunci cunoscuții tăi vor afla primii de nevoia ta."
+        },
+        "rail": {
+          "1": "Stol",
+          "2": "Oameni",
+          "3": "Rețea",
+          "4": "Nevoie",
+          "5": "Decizie",
+          "6": "Participare",
+          "7": "Chat",
+          "8": "Tu"
+        },
+        "tags": {
+          "you": "Tu",
+          "oleg": "Oleg",
+          "maria": "Maria · 300 $",
+          "lena": "Lena"
+        },
+        "hud": {
+          "reached_one": "a aflat despre nevoie",
+          "reached_few": "au aflat despre nevoie",
+          "reached_other": "au aflat despre nevoie",
+          "reported": "declarați din 300 $",
+          "people_one": "participant",
+          "people_few": "participanți",
+          "people_other": "de participanți"
+        }
+      },
+      "grow": {
+        "title": "Cum crește rețeaua",
+        "text": "Fiecare om nou își invită cunoscuții. Alege câți, în medie, și vezi ce se întâmplă cu rețeaua.",
+        "canvasAria": "Modelul de creștere a rețelei: invitațiile pornesc de la un singur om",
+        "slider": "Fiecare invită în medie",
+        "unit": "persoane",
+        "threshold": "prag",
+        "statPeople_one": "persoană în rețea",
+        "statPeople_few": "persoane în rețea",
+        "statPeople_other": "de persoane în rețea",
+        "statWaves_one": "val de invitații",
+        "statWaves_few": "valuri de invitații",
+        "statWaves_other": "de valuri de invitații",
+        "dies": "Creșterea s-a oprit",
+        "grows": "Rețeaua crește singură",
+        "full": "În model nu mai sunt oameni noi",
+        "restart": "Ia-o de la capăt",
+        "hint": "Atinge modelul ca să începi de la altcineva",
+        "note": "Modelul e simplificat. Cercurile de cunoscuți se suprapun și nimeni nu e obligat să invite pe nimeni.",
+        "axisX": "valuri",
+        "axisY": "oameni"
+      },
+      "next": {
+        "label": "Mai departe",
+        "title": "Un dolar de ajutor e doar începutul",
+        "text": "Ne dorim ca, în timp, oamenii să găsească prin rețeaua de cunoscuți un meșter recomandat de cineva, parteneri pentru un proiect comun, oameni cu aceleași idei pentru propria inițiativă. Și să se înțeleagă direct, ca acum.",
+        "now": "Acum",
+        "later": "Mai târziu",
+        "need": "Nevoie",
+        "participation": "Participare",
+        "tradesperson": "Un meșter de încredere",
+        "project": "Un proiect comun"
+      },
+      "join": {
+        "label": "Experiment",
+        "title": "Alătură-te experimentului",
+        "text": "Aplicația și teoria există deja. Acum trebuie verificate în practică, iar pentru asta ne trebuie oameni.",
+        "now": "de oameni cu legături în rețea la 13 noiembrie 2026",
+        "cta": "Scrie echipei",
+        "share": "Distribuie",
+        "shared": "Link copiat",
+        "safe": "Echipa răspunde doar de pe @socialorganizer_bot și nu cere niciodată bani, coduri de conectare sau datele cardului.",
+        "w1Title": "Construiește o rețea în comunitatea ta",
+        "w1": "Dacă ai o comunitate a ta, încearcă aplicația acolo. Te ajutăm s-o explici pe limba oamenilor tăi.",
+        "w2Title": "Povestește despre proiect",
+        "w2": "Trimite pagina asta celor care ar putea fi interesați sau scrie tu despre Social Organizer.",
+        "w3Title": "Ajută la cercetare sau la dezvoltare",
+        "w3": "Teoria e descrisă în <report>raportul lui Andrei Lubalin</report>, iar codul e public pe <code>GitHub</code>. Ajută la verificarea teoriei sau la dezvoltarea aplicației."
+      },
+      "faq": {
+        "title": "Întrebări",
+        "q1": "Cine se asigură că oamenii se țin de cuvânt?",
+        "a1": "Nu există intermediari. Tu decizi în cine ai încredere și te înțelegi direct cu oamenii. Iar prin lanțul de cunoscuți poți afla cu cine ai de-a face.",
+        "q2": "Este o asigurare sau un fond?",
+        "a2": "Nu. Nimeni nu plătește în avans și nimeni nu promite vreo plată. Nu se strâng bani la comun și nu există casier.",
+        "q3": "Este o campanie de donații?",
+        "a3": "Nu. O nevoie ajunge doar la oameni legați de autor prin cunoscuți, iar data viitoare s-ar putea să ceri tu.",
+        "q4": "Este o schemă piramidală?",
+        "a4": "Nu. Nimeni nu plătește ca să intre și nimeni nu câștigă din invitații."
+      },
+      "start": {
+        "label": "Aplicația",
+        "title": "Rețeaua se construiește din timp",
+        "text": "Într-o zi grea nu ai nici timp, nici putere pentru asta.",
+        "s1": "Deschide linkul primit de la un cunoscut sau conectează-te direct cu Google, Apple, Telegram ori cu un cod primit pe e-mail. Nu-ți trebuie parolă.",
+        "s2": "Adaugă oamenii pe care îi cunoști personal: cu un link, cu un cod QR sau scuturând telefoanele unul lângă altul.",
+        "s3": "Stabilește-ți intenția: suma pe care de obicei ești gata s-o dai când cuiva din rețea îi e greu.",
+        "qr": "Îndreaptă aici camera telefonului și se va deschide magazinul potrivit.",
+        "playTop": "Disponibil pe",
+        "play": "Google Play",
+        "iosTop": "Descarcă din",
+        "ios": "App Store",
+        "webTop": "Deschide",
+        "web": "în browser",
+        "tgTop": "Deschide în",
+        "tg": "Telegram"
+      },
+      "footer": {
+        "about": "Social Organizer · proiect non-profit, cu cod deschis",
+        "credits": "Ilustrații generate cu AI · Pictograme: {{icons}}",
+        "links": "Linkuri"
+      }
     }
   },
   "how": {
@@ -849,6 +1033,7 @@
         "aria": "Masa hui"
       }
     },
+    "backToInvite": "Înapoi la invitație",
     "compare": {
       "title": "Cel mai apropiat exemplu: ajutorul reciproc online din China",
       "lead": "Între 2018 și 2021, platformele chineze online de ajutor reciproc au adunat sute de milioane de membri: cea mai mare, Xianghubao, avea peste 100 de milioane. <b>Membrii își împărțeau costul bolii grave a celorlalți, câțiva dolari pe an fiecare.</b> În 2021, autoritățile de reglementare au închis întregul sector, pentru că operatorul fiecărei platforme administra, de fapt, o asigurare.",
@@ -1200,7 +1385,8 @@
       "namePlaceholder": "Nume și prenume",
       "nameHint": "Așa te vor vedea oamenii din cercul tău.",
       "nameMin": "Introdu numele"
-    }
+    },
+    "haveTelegramLink": "Ai folosit deja Social Organizer prin Telegram? Conectează-l"
   },
   "add": {
     "linkLabel": "Linkul tău",
@@ -1262,6 +1448,9 @@
     "sortNew": "Cele mai noi",
     "sortName": "A–Z",
     "showMore": "Arată mai mult · au rămas {{total}}",
+    "editLink": "Schimbă linkul",
+    "linkPlaceholder": "numele tău sau porecla",
+    "linkEditHint": "linkurile cu adresa veche nu vor mai funcționa",
     "suggest": {
       "title": "Poate vă cunoașteți",
       "hint": "Persoane pe care le cunosc cunoscuții tăi. Confirmă doar pe cei pe care îi cunoști personal.",
@@ -1306,6 +1495,9 @@
     "keepPastNote": "fără numele tău",
     "deleteFailed": "Nu s-a putut șterge contul. Verifică conexiunea și încearcă din nou.",
     "deleteCountsFailed": "Nu s-a putut încărca ce s-ar șterge. Verifică conexiunea și încearcă din nou.",
+    "showEmail": "Afișează e-mailul meu în contacte",
+    "showEmailOn": "Apare în contactele tale: {{email}}.",
+    "showEmailOff": "E-mailul de conectare îl vezi doar tu.",
     "goneConnections_few": "Legăturile tale cu {{count}} persoane și cererile",
     "goneConnections_one": "Legătura ta cu {{count}} persoană și cererile",
     "goneConnections_other": "Legăturile tale cu {{count}} de persoane și cererile",
