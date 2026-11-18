@@ -32,7 +32,9 @@ gun-data/
 
 # Claude Code local instructions (may contain secrets/tokens)
 CLAUDE.md
-.claude/
+.claude/*
+# Project skills are shared with the team (no secrets in them)
+!.claude/skills/
 
 # Logs
 *.log

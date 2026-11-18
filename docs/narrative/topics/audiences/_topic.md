@@ -1,0 +1,6 @@
+# Audiences
+
+Who we talk to and what we compare with.
+
+- [Audiences and what each needs to hear](audiences.md) — The five audiences of the packaging work (future participants, community leaders and influencers, like-minded builders, donors, press and regulators), their main question, the answer, and which material serves each.
+- [Comparables — what to learn from other products and traditions](comparables.md) — Products and traditions to study for packaging SO (Splitwise, Signal, Olio, Partiful, GoFundMe, Kickstarter, Patreon, China's mutual aid platforms, ROSCA traditions, Nicky Case's explorables): what each does well and how to apply it without copying what SO is not.

@@ -1,0 +1,60 @@
+---
+id: 20261118-claims
+title: Claims — what we may say in public
+tags: [principles, vocabulary]
+created: 2026-11-18
+updated: 2026-11-18
+related: [20261118-principles, 20261118-vocabulary, 20261118-causal-chain, 20261118-evolution-of-trust]
+summary: Which statements about SO are safe facts, which need careful wording (theses, hypotheses, research), and which are forbidden, with rewrites.
+---
+
+# Claims — what we may say in public
+
+> Summary: Which statements about SO are safe facts, which need careful wording (theses, hypotheses, research), and which are forbidden, with rewrites.
+
+## Context
+
+Donors, journalists, store reviewers and regulators read our texts literally. The 2026-11-17
+brainstorm insisted on precision ("the possibility to compensate a loss is not a guarantee of
+compensation"). This note sorts claims by how safe they are.
+
+## Details
+
+### Safe facts (true in the app today)
+
+- A Need reaches as many people as it names dollars, nearest by handshakes first.
+- Each connection is confirmed by both people.
+- Participation is voluntary, starts at $1 and can be changed or withdrawn while the Need is open.
+- Every Need has a participants' chat, in any messenger.
+- SO does not accept, transfer or hold money and takes no fee. Open source, non-profit.
+- Everyone sees the handshake chain to the author and the author's activity facts.
+- Nobody scores or rates people in SO.
+
+### Careful (say how sure we are)
+
+| Statement | How to say it |
+|---|---|
+| The network grows on its own (autocatalytic growth, "inevitability") | "We expect…", "the design aims at…"; present it as a thesis to test with data. |
+| Risk sharing makes direct cooperation more attractive | "can make", and label it as the next stage. |
+| Game theory shows trust will grow | "Game theory describes the conditions under which trust tends to grow; SO is built to create them." Credit Axelrod and Nicky Case. |
+| Fraud becomes visible | "can become known to people connected with both sides"; never "fraud is impossible". |
+| Numbers about the network (people, Needs covered) | Only from production data, with the date. |
+| 6 → 36 → 216 | "a simplified example: circles overlap, and nobody has to take part" (as on `/how`). |
+| "People have fewer close friends than in 1985" | Avoid: the survey is disputed. |
+
+### Forbidden (rewrite)
+
+| Do not say | Say |
+|---|---|
+| "Help is guaranteed" / "you will be covered" | "People you know can share the load. Each decides for themselves." |
+| "Insurance without insurers" / "a mutual fund" | "Risk sharing among people who know each other. Not insurance." |
+| "The app verifies people / ensures honesty" | "You see who connects you and what they did before, and you can ask." |
+| "Trusted / verified users", "trust score" | "people confirmed by someone they know" |
+| "Donate", "contribute to the pool" | "Report Participation" |
+| "The app decides who gets help" | "Each person decides." |
+
+## Related
+- [Principles](principles.md) — source: the principles behind these limits.
+- [Vocabulary](vocabulary.md) — companion: word-level rules.
+- [The causal chain](../core/causal-chain.md) — context: theses vs facts.
+- [The Evolution of Trust](../trust/evolution-of-trust.md) — context: what the research does and does not show.
