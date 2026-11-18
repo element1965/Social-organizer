@@ -28,7 +28,7 @@ visuals (starling murmuration, frost from one seed, mycelium), the user chose tw
 Mycelium was dropped: the "wood wide web" image is worn out, and the claim that trees feed each other
 through fungi is disputed by researchers.
 
-**Status: prototype v7, waiting for the user.** Sections 10 to 14 below supersede the screen plan, the
+**Status: prototype v8, waiting for the user.** Sections 10 to 15 below supersede the screen plan, the
 flock scene, the copy and the visual system of v1 (sections 2, 3, 5 and 6). Prototype (git-excluded):
 `local/media/concept-6/prototype/index.html` in the main checkout; open it in a browser.
 
@@ -297,6 +297,24 @@ and later) → donors (what exists, with links; what money is for) → objection
 - Performance: canvas pixel ratio capped at 1,5; fewer birds on 4-core devices; line buffers
   written in place; the finished growth model and the static part of the "Next" network are not
   redrawn; images decode asynchronously.
+
+### 15. Prototype v8 (2026-11-18): scroll finishing for the whole page
+
+The user: the previous scene pulled the scroll back when leaving the story (and when coming back up);
+the finishing had to work on every screen size; the growth model had to start only when the reader
+reaches it; the new blocks looked bad on phones.
+
+- The "small nudge returns to the beat" rule caused the pull-back: a trackpad scrolls in short bursts,
+  and every pause pulled the page back. Now the page has rest points everywhere (the middle of every
+  story beat, the top of every later section, the bottom of a section taller than the screen, and the
+  page bottom); when a gesture ends, the page glides to the nearest rest point except the one it rested
+  on before the gesture, so it never pulls back; a move under 40 px changes nothing; inside a tall
+  section the reader scrolls freely.
+- Tested with scripted runs at 1440×900 and 390×844: beat → growth → next and back, a 30 px nudge, a
+  trackpad-like run of 25 px steps both ways, the page end (the footer stays reachable); screenshots at
+  1440×900, 1280×720, 768×1024 and 390×844.
+- The growth model starts when at least 60 % of the model's own frame is on screen and pauses when it
+  leaves.
 
 ## Related
 - [The core message](../core/core-message.md) — source: every line on the page.
