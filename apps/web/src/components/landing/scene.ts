@@ -684,6 +684,16 @@ export function initScene(els: SceneElements, initial: SceneOptions): SceneHandl
     for (let i = 0; i < N; i++) {
       const ix = i * 3;
       const ph = PH[i]!;
+      // the graph: each bird glides to its ring, the nearer rings first, with a small arc on the way
+      const gi = g <= 0 ? 0 : ease(clamp((g - 0.5 * GO[i]!) / 0.5));
+      GI[i] = gi;
+      if (gi >= 1) {
+        // arrived: the flight no longer matters
+        P[ix] = GPOS[ix]!;
+        P[ix + 1] = GPOS[ix + 1]!;
+        P[ix + 2] = GPOS[ix + 2]!;
+        continue;
+      }
       let hx = RIB[ix]! + drift;
       let hy = RIB[ix + 1]!;
       let hz = RIB[ix + 2]!; // the ribbon: a slow wave runs along it
@@ -704,9 +714,6 @@ export function initScene(els: SceneElements, initial: SceneOptions): SceneHandl
       let px = lerp(hx, nx, s);
       let py = lerp(hy, ny, s) + lift;
       let pz = lerp(hz, nz, s);
-      // the graph: each bird glides to its ring, the nearer rings first, with a small arc on the way
-      const gi = g <= 0 ? 0 : ease(clamp((g - 0.5 * GO[i]!) / 0.5));
-      GI[i] = gi;
       if (gi > 0) {
         px = lerp(px, GPOS[ix]!, gi);
         py = lerp(py, GPOS[ix + 1]!, gi) + Math.sin(Math.PI * gi) * (1 + 2 * ((ph * 3) % 1));
