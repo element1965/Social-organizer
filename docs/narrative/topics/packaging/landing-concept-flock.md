@@ -28,7 +28,7 @@ visuals (starling murmuration, frost from one seed, mycelium), the user chose tw
 Mycelium was dropped: the "wood wide web" image is worn out, and the claim that trees feed each other
 through fungi is disputed by researchers.
 
-**Status: prototype v8, waiting for the user.** Sections 10 to 15 below supersede the screen plan, the
+**Status: prototype v9, waiting for the user.** Sections 10 to 16 below supersede the screen plan, the
 flock scene, the copy and the visual system of v1 (sections 2, 3, 5 and 6). Prototype (git-excluded):
 `local/media/concept-6/prototype/index.html` in the main checkout; open it in a browser.
 
@@ -315,6 +315,20 @@ reaches it; the new blocks looked bad on phones.
   1440×900, 1280×720, 768×1024 and 390×844.
 - The growth model starts when at least 60 % of the model's own frame is on screen and pauses when it
   leaves.
+
+### 16. Prototype v9 (2026-11-18): people for the experiment, not money
+
+The user: «Мы не ищем деньги через сайт, мы больше ищем людей, кто хочет поучаствовать в эксперименте и
+помочь рассказать о нём»; the donor blocks were uneven and looked bad, worst on phones; the author is
+«Андрей Любалин» in Russian (the report on Zenodo spells him "Lubalin, Andrei", so English keeps Lubalin).
+
+The donor section is replaced by «Присоединяйтесь к эксперименту» (`#join`, header «Участвовать»):
+«Приложение и теория уже есть. Теперь их нужно проверить на практике, и для этого нужны люди.», the
+287 figure with its date, three numbered ways in the language of the start section (no boxes):
+build a network in your community (we help explain it in your people's language), tell others about
+the project, help with the research or the code (links to the report and GitHub); buttons «Написать
+команде» (the Telegram bot) and «Поделиться» (the system share sheet on phones, a copied link
+elsewhere). Money and the [figure removed] working model stay off the site.
 
 ## Related
 - [The core message](../core/core-message.md) — source: every line on the page.

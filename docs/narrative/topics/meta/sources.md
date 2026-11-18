@@ -48,6 +48,10 @@ is not copied into this public repository; the notes keep the substance.
 - The TEDx talk mentioned in the landing chat (link).
 - The list of people and organisations already written to (to check the candidate lists).
 
+### Names
+
+The theory's author is Andrei Lubalin in English (as on the Zenodo report) and «Андрей Любалин» in Russian (the user, 2026-11-18); never «Лубалин».
+
 ## Related
 - [Open questions](open-questions.md) — follow-up: what to collect and decide next.
 - [The Evolution of Trust](../trust/evolution-of-trust.md) — the research source in detail.
