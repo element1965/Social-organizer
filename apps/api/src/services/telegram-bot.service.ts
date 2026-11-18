@@ -183,6 +183,56 @@ interface TgUpdate {
 
 export const SUPPORT_CHAT_ID = -4946509857;
 
+// ---- Contact from the landing page: t.me/<bot>?start=team[_topic] ----
+// A person who opens the bot from the landing's "write to the team" gets a short prompt and topic buttons,
+// not the app's welcome, and is not added to the "never opened the app" reminders. Their messages reach the
+// support chat tagged with the topic. Forwarding is rate-limited per chat, and the support chat can mute a
+// chat with "/mute <chatId>" ("/unmute <chatId>" undoes it). The state lives in memory and resets on restart.
+const TEAM_TOPICS = ['community', 'story', 'research'] as const;
+type TeamTopic = (typeof TEAM_TOPICS)[number] | 'other';
+const TEAM_TOPIC_RU: Record<TeamTopic, string> = { community: 'сообщество', story: 'рассказать о проекте', research: 'исследование или код', other: 'без темы' };
+const TEAM_CONTACT_TTL_MS = 24 * 3_600_000;
+const FORWARD_LIMIT_HOUR = 5;
+const FORWARD_LIMIT_DAY = 20;
+const teamContacts = new Map<string, { topic: TeamTopic; at: number }>();
+const forwardLog = new Map<string, number[]>();
+const limitNoticeAt = new Map<string, number>();
+const mutedChats = new Set<string>();
+
+const TEAM_TEXT: Record<'ru' | 'en', {
+  intro: string; topics: Record<(typeof TEAM_TOPICS)[number], string>; picked: (t: string) => string; thanks: string; limit: string;
+}> = {
+  ru: {
+    intro: 'Здравствуйте! Это команда Social Organizer. Выберите тему или сразу напишите сообщение, мы ответим здесь.\n\nКоманда отвечает только из этого бота и никогда не просит деньги, коды входа или данные карты.',
+    topics: { community: 'Сообщество', story: 'Рассказать о проекте', research: 'Исследование или код' },
+    picked: (t) => `Тема: ${t}. Напишите сообщение, мы ответим здесь.`,
+    thanks: 'Спасибо! Команда получила сообщение и ответит здесь.',
+    limit: 'Мы получили ваши сообщения и ответим, как только сможем.',
+  },
+  en: {
+    intro: 'Hello! This is the Social Organizer team. Pick a topic or just write your message, and we will reply here.\n\nThe team replies only from this bot and never asks for money, sign-in codes or card details.',
+    topics: { community: 'Community', story: 'Tell others', research: 'Research or code' },
+    picked: (t) => `Topic: ${t}. Write your message and we will reply here.`,
+    thanks: 'Thank you! The team has your message and will reply here.',
+    limit: 'We have your messages and will reply as soon as we can.',
+  },
+};
+function teamText(lang?: string) {
+  return ['ru', 'uk', 'be', 'kk'].includes((lang || '').slice(0, 2)) ? TEAM_TEXT.ru : TEAM_TEXT.en;
+}
+function isTeamTopic(v: string): v is (typeof TEAM_TOPICS)[number] {
+  return (TEAM_TOPICS as readonly string[]).includes(v);
+}
+/** True when this chat may forward one more message to the support chat (5 an hour, 20 a day). */
+function allowForward(chatKey: string): boolean {
+  const now = Date.now();
+  if (forwardLog.size > 5000) { for (const [k, v] of forwardLog) if (!v.length || now - v[v.length - 1]! > 86_400_000) forwardLog.delete(k); }
+  const log = (forwardLog.get(chatKey) ?? []).filter((t) => now - t < 86_400_000);
+  const lastHour = log.filter((t) => now - t < 3_600_000).length;
+  if (lastHour >= FORWARD_LIMIT_HOUR || log.length >= FORWARD_LIMIT_DAY) { forwardLog.set(chatKey, log); return false; }
+  log.push(now); forwardLog.set(chatKey, log); return true;
+}
+
 /** Track a /start press — save chatId for follow-up if user never opens the app */
 async function trackBotStart(chatId: string, name: string, lang: string, inviteToken?: string, username?: string): Promise<void> {
   const db = getDb();
@@ -1018,6 +1068,17 @@ export async function handleTelegramUpdate(update: TgUpdate): Promise<void> {
     await handleConnectionRequestButton(cbq);
     return;
   }
+  if (cbq?.data?.startsWith('team:')) {
+    const topic = cbq.data.slice('team:'.length);
+    await answerCallbackQuery(cbq.id);
+    if (isTeamTopic(topic)) {
+      const chat = String(cbq.message?.chat.id ?? cbq.from.id);
+      const t = teamText(cbq.from.language_code);
+      teamContacts.set(chat, { topic, at: Date.now() });
+      await sendTelegramMessage(chat, t.picked(t.topics[topic]));
+    }
+    return;
+  }
   if (cbq?.data === 'next_chain') {
     const sent = await sendNextChainMessage(cbq.from.id);
     if (sent) {
@@ -1043,6 +1104,16 @@ export async function handleTelegramUpdate(update: TgUpdate): Promise<void> {
 
   // If no text and no media — ignore
   if (!text && !hasMedia) return;
+
+  // The support chat itself: only the mute commands; it is never forwarded to itself
+  if (chatId === SUPPORT_CHAT_ID) {
+    const m = text.match(/^\/(mute|unmute)(?:@\w+)?\s+(-?\d+)/);
+    if (m) {
+      if (m[1] === 'mute') mutedChats.add(m[2]!); else mutedChats.delete(m[2]!);
+      await sendTelegramMessage(SUPPORT_CHAT_ID, m[1] === 'mute' ? `🔇 Чат ${m[2]} заглушён до перезапуска` : `🔊 Чат ${m[2]} снова пересылается`);
+    }
+    return;
+  }
 
   // Handle /start with invite deep link: /start invite_TOKEN
   if (text.startsWith('/start')) {
@@ -1133,6 +1204,22 @@ export async function handleTelegramUpdate(update: TgUpdate): Promise<void> {
       return;
     }
 
+    // /start team[_topic] — "write to the team" from the landing: a prompt, no app welcome, no reminders
+    if (param === 'team' || param?.startsWith('team_')) {
+      const t = teamText(lang);
+      const topic = param.slice('team_'.length);
+      if (isTeamTopic(topic)) {
+        teamContacts.set(String(chatId), { topic, at: Date.now() });
+        await sendTelegramMessage(chatId, t.picked(t.topics[topic]));
+      } else {
+        teamContacts.set(String(chatId), { topic: 'other', at: Date.now() });
+        await sendTelegramMessage(chatId, t.intro, {
+          inline_keyboard: TEAM_TOPICS.map((k) => [{ text: t.topics[k], callback_data: `team:${k}` }]),
+        });
+      }
+      return;
+    }
+
     // Plain /start — open the app + link to landing
     await sendTelegramMessage(chatId, loc.welcome(tgEscape(name)), {
       inline_keyboard: [[{ text: loc.openBtn, web_app: { url: WEB_APP_URL } }]],
@@ -1149,11 +1236,25 @@ export async function handleTelegramUpdate(update: TgUpdate): Promise<void> {
   const userTag = from?.username ? ` (@${from.username})` : '';
   const tgUserId = from?.id ? ` [${from.id}]` : '';
   const platformId = String(chatId);
+  const contact = teamContacts.get(platformId);
+  const fromLanding = !!contact && Date.now() - contact.at < TEAM_CONTACT_TTL_MS;
+
+  // Muted chats are dropped; a chat over the limit gets one notice an hour and nothing is forwarded
+  if (mutedChats.has(platformId)) return;
+  if (!allowForward(platformId)) {
+    const last = limitNoticeAt.get(platformId) ?? 0;
+    if (Date.now() - last > 3_600_000) {
+      limitNoticeAt.set(platformId, Date.now());
+      await sendTelegramMessage(chatId, teamText(from?.language_code).limit);
+    }
+    return;
+  }
 
   // Send user info header first
+  const landingTag = fromLanding ? ` · с лендинга · ${TEAM_TOPIC_RU[contact!.topic]}` : '';
   await sendTelegramMessage(
     SUPPORT_CHAT_ID,
-    `💬 <b>Сообщение от пользователя</b>\n\n👤 ${userName}${userTag}${tgUserId}${!hasMedia && text ? `\n\n${text}` : ''}`,
+    `💬 <b>Сообщение от пользователя</b>${landingTag}\n\n👤 ${userName}${userTag}${tgUserId}${!hasMedia && text ? `\n\n${text}` : ''}\n\n<i>Заглушить: /mute ${platformId}</i>`,
   );
 
   // Forward the original message (preserves photos, videos, documents, etc.)
@@ -1194,7 +1295,11 @@ export async function handleTelegramUpdate(update: TgUpdate): Promise<void> {
     }).catch((err) => console.error('[Support] Failed to save TG message:', err));
   }
 
-  // Reply to user
+  // Reply to user: a landing contact gets a short thanks in their language, without the app button
+  if (fromLanding) {
+    await sendTelegramMessage(chatId, teamText(from?.language_code).thanks);
+    return;
+  }
   await sendTelegramMessage(
     chatId,
     `Thank you for your message! Our team has received it. 🙏`,

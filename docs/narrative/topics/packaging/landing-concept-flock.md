@@ -330,6 +330,17 @@ the project, help with the research or the code (links to the report and GitHub)
 команде» (the Telegram bot) and «Поделиться» (the system share sheet on phones, a copied link
 elsewhere). Money and the [figure removed] working model stay off the site.
 
+### 17. Contact without spam or scam (2026-11-18)
+
+«Написать команде» opens `t.me/socialorganizer_bot?start=team`. The bot then answers with a prompt and
+three topic buttons (Сообщество, Рассказать о проекте, Исследование или код), skips the app welcome
+and the "never opened the app" reminders, and forwards the person's messages to the support chat
+tagged «с лендинга · тема». Forwarding is limited to 5 messages an hour and 20 a day per chat;
+`/mute <chatId>` in the support chat silences one sender. The landing and the bot say the same
+anti-scam line: «Команда отвечает только из @socialorganizer_bot и никогда не просит деньги, коды
+входа или данные карты.» The team answers through the bot (the in-app support reply), never from
+personal accounts. Builders and researchers go to GitHub. No public e-mail and no web form.
+
 ## Related
 - [The core message](../core/core-message.md) — source: every line on the page.
 - [The Need protocol](../mechanics/need-protocol.md) — evidence: up to N people, nearest first, from $1, reversible, the chat.
