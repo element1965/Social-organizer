@@ -4,7 +4,7 @@ title: The three conditions of trust in Social Organizer
 tags: [trust, mechanics, principles]
 created: 2026-11-18
 updated: 2026-11-18
-related: [20261118-evolution-of-trust, 20261118-trust-archetypes, 20261118-need-protocol, 20261118-principles, 20261118-causal-chain]
+related: [20261118-evolution-of-trust, 20261118-trust-archetypes, 20261118-need-protocol, 20261118-principles, 20261118-causal-chain, 20261118-invitational-coordination]
 summary: How each SO mechanic supports (or would break) the three conditions under which trust evolves — repeat interactions, win-wins, low miscommunication — and why SO changes the game instead of policing players.
 ---
 
@@ -87,6 +87,15 @@ prevent every dishonest act by administrative control. It creates an environment
 *social* consequences become visible. Case: "we are each other's environment": each person who
 joins and takes part changes the game for the people around them.
 
+### The same lesson in the project's own theory
+
+Lubalin's report reaches Case's conclusion from sociology: a coordination mechanism sets the
+conditions of interaction, the conditions make some strategies rational, and recurring strategies
+become the social environment. SO implements the invitational mechanism (idea → consensus →
+assistance), where refusal carries no imposed consequence. Read the two together: Case shows *which*
+conditions let trust grow; Lubalin shows *which kind of mechanism* produces an environment with those
+conditions. See [invitational coordination](../theory/invitational-coordination.md).
+
 ### Precision rules
 
 - Game theory *suggests*; it does not prove that SO will work. Say "the conditions under which
@@ -102,3 +111,4 @@ joins and takes part changes the game for the people around them.
 - [The Need protocol](../mechanics/need-protocol.md) — evidence: verified mechanics behind each row.
 - [Principles](../principles/principles.md) — supports: no arbiter, no rating, people decide.
 - [The causal chain](../core/causal-chain.md) — extends: from risk sharing to direct cooperation.
+- [Invitational coordination](../theory/invitational-coordination.md) — converges: the project's own theory of the same lesson.

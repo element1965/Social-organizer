@@ -29,7 +29,9 @@ blur the first, simplest story and make claims the app cannot back yet.
 | **Non-monetary Needs** | A Need expressed other than in dollars | Open product question after the release (launch-readiness §3) | — |
 
 Rule: a participant-facing piece (video, landing, onboarding, invite) does not mention these.
-A builder or donor piece may, in a clearly marked "what comes next" section.
+A builder or donor piece may, in a clearly marked "what comes next" section. The landing concept
+"The World Is Already Connected" proposes such a section on the landing itself; that is an open
+decision ([landing concepts](../packaging/landing-concepts.md)).
 
 ## Related
 - [Direct cooperation](direct-cooperation.md) — the nearest of the next stages.

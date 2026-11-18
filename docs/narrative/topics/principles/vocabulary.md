@@ -4,7 +4,7 @@ title: Vocabulary — words to use and words to avoid (EN/RU)
 tags: [vocabulary, principles]
 created: 2026-11-18
 updated: 2026-11-18
-related: [20261118-principles, 20261118-claims, 20261118-need-protocol]
+related: [20261118-principles, 20261118-claims, 20261118-need-protocol, 20261118-invitational-coordination]
 summary: Canonical English and Russian terms for SO (Need, Participation, intention, risk sharing, handshake, participants' chat, activity…), the words that are forbidden in public, and the style rules for SO texts.
 ---
 
@@ -44,6 +44,14 @@ video and pitch texts use the same words, so that what people hear matches what 
 
 **Internal only** (strategy, partners, theory): "referential graph" / «референтный граф»,
 "peer-to-peer mutual risk pooling", "dynamic crowdfunding of intentions", "autocatalytic growth".
+
+**Theory register** (Lubalin's report; for builders, researchers, donors): subject; coercive vs
+**invitational** interaction; idea → consensus → assistance; **social utility**; informational
+messages; significant relations; formalising relations; **referential inheritance**; bounded
+local field; latent global connectedness; critical mass N*; reproduction number m(N).
+
+**Term collision to resolve:** "crowdfunding of intentions" names Participation in a Need in the
+video brief, and *initiatives* (a future stage) in the landing concept. Use it for one of them only.
 In public say "network of people you know", "risk sharing", "amounts add up, as in crowdfunding".
 
 ### Avoid in public
@@ -72,3 +80,4 @@ In public say "network of people you know", "risk sharing", "amounts add up, as 
 - [Principles](principles.md) — supports: why these words.
 - [Claims](claims.md) — supports: what we may promise.
 - [The Need protocol](../mechanics/need-protocol.md) — evidence: the strings the UI uses today.
+- [Invitational coordination](../theory/invitational-coordination.md) — source: the theory register.

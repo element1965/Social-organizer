@@ -4,7 +4,7 @@ title: Idea — a "How It Works" video (from the brainstorm, not started)
 tags: [packaging, mechanics]
 created: 2026-11-18
 updated: 2026-11-18
-related: [20261118-user-journey, 20261118-packaging-plan, 20261118-parked-topics]
+related: [20261118-user-journey, 20261118-packaging-plan, 20261118-parked-topics, 20261118-landing-concepts]
 summary: The brainstorm's proposal for a 2–3 minute practical video complementing the published "Direct Mutual Support Through Real Connections" — its plot, principle and scope — recorded as an idea; no task has been given.
 ---
 
@@ -31,6 +31,8 @@ in-app teaching can reuse it.
   the app does instead of them.
 - **Scope:** no initiatives, AI agents or mutual offset of obligations ([parked](../future/parked-topics.md)).
 - **Uses:** landing, YouTube, distribution through influencers.
+- **Other drafts:** the landing chats propose a ~2-minute version with the author on camera at the
+  start and end, and a 45–60 second version with real screens ([landing concepts](landing-concepts.md)).
 
 ### Facts already checked, if the idea is taken up
 
@@ -44,3 +46,4 @@ match the current screens; their sign-in and recording code can be reused.
 - [User journey](../mechanics/user-journey.md) — the verified plot.
 - [Packaging plan](packaging-plan.md) — where this idea sits among the stages.
 - [Parked topics](../future/parked-topics.md) — what the video would leave out.
+- [Landing concepts](landing-concepts.md) — the other video drafts.

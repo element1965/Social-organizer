@@ -4,7 +4,7 @@ title: Claims — what we may say in public
 tags: [principles, vocabulary]
 created: 2026-11-18
 updated: 2026-11-18
-related: [20261118-principles, 20261118-vocabulary, 20261118-causal-chain, 20261118-evolution-of-trust]
+related: [20261118-principles, 20261118-vocabulary, 20261118-causal-chain, 20261118-evolution-of-trust, 20261118-autocatalytic-law, 20261118-latent-connectedness]
 summary: Which statements about SO are safe facts, which need careful wording (theses, hypotheses, research), and which are forbidden, with rewrites.
 ---
 
@@ -29,12 +29,15 @@ compensation"). This note sorts claims by how safe they are.
 - SO does not accept, transfer or hold money and takes no fee. Open source, non-profit.
 - Everyone sees the handshake chain to the author and the author's activity facts.
 - Nobody scores or rates people in SO.
+- No operation in the app moves money, creates an obligation or assigns anyone to act (the report's "zero direct operational harm").
+- The world's social graph is already highly connected: 4.74 degrees of separation among 721 million Facebook users (2012), 3.57 among 1.59 billion (2016). Cite the studies.
 
 ### Careful (say how sure we are)
 
 | Statement | How to say it |
 |---|---|
-| The network grows on its own (autocatalytic growth, "inevitability") | "We expect…", "the design aims at…"; present it as a thesis to test with data. |
+| The network grows on its own (autocatalytic growth, "inevitability") | State the law as the author does: conditional on a critical mass N* and a reproduction number m(N) > 1, both to be measured in deployment. Never "proven to spread worldwide". |
+| The MVP | "Grew from one participant to about 300 through real relations and handled real cases" (report, July 2026); it did not test the law. |
 | Risk sharing makes direct cooperation more attractive | "can make", and label it as the next stage. |
 | Game theory shows trust will grow | "Game theory describes the conditions under which trust tends to grow; SO is built to create them." Credit Axelrod and Nicky Case. |
 | Fraud becomes visible | "can become known to people connected with both sides"; never "fraud is impossible". |
@@ -58,3 +61,5 @@ compensation"). This note sorts claims by how safe they are.
 - [Vocabulary](vocabulary.md) — companion: word-level rules.
 - [The causal chain](../core/causal-chain.md) — context: theses vs facts.
 - [The Evolution of Trust](../trust/evolution-of-trust.md) — context: what the research does and does not show.
+- [The Law of Autocatalytic Inevitability](../theory/autocatalytic-law.md) — source: the conditional wording and the tests.
+- [Latent connectedness](../theory/latent-connectedness.md) — source: the operational-harm and connectedness facts.

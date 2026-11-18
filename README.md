@@ -485,7 +485,7 @@ Before this split the entry was 1858 KB / 558 KB gzip and the landing also pulle
 
 ## Narrative and project skills
 
-`docs/narrative/` is the knowledge base for explaining the project: what Social Organizer is and is not, its principles, the words to use and avoid, which public claims are safe, the Need protocol as the live app implements it (checked against the code, with the places where `SPEC.md` is outdated), the game theory of trust applied to it (Nicky Case's *The Evolution of Trust*, Axelrod), audiences, comparable products, next stages, sources and open questions. Start at [docs/narrative/INDEX.md](docs/narrative/INDEX.md); every note has a stable id and is listed there.
+`docs/narrative/` is the knowledge base for explaining the project: what Social Organizer is and is not, the project's own theory (Andrei Lubalin's report *From Human Behaviour to Social Coordination*, 2026: invitational coordination, latent connectedness, the conditional Law of Autocatalytic Inevitability), its principles, the words to use and avoid, which public claims are safe, the Need protocol as the live app implements it (checked against the code, with the places where `SPEC.md` is outdated), the game theory of trust applied to it (Nicky Case's *The Evolution of Trust*, Axelrod), audiences, comparable products, cold start through community leaders, the funding frame, landing concepts, next stages, sources and open questions. Start at [docs/narrative/INDEX.md](docs/narrative/INDEX.md); every note has a stable id and is listed there.
 
 Project skills for Claude Code live in `.claude/skills/` and are versioned (the rest of `.claude/` stays git-ignored):
 

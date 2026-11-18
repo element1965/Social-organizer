@@ -4,7 +4,7 @@ title: What Social Organizer is (and is not)
 tags: [core, vocabulary]
 created: 2026-11-18
 updated: 2026-11-18
-related: [20261118-causal-chain, 20261118-principles, 20261118-vocabulary, 20261118-claims, 20261118-comparables]
+related: [20261118-causal-chain, 20261118-principles, 20261118-vocabulary, 20261118-claims, 20261118-comparables, 20261118-invitational-coordination, 20261118-latent-connectedness, 20261118-landing-concepts]
 summary: Canonical descriptions of Social Organizer at several lengths (EN and RU), what it is not, and the facts that stay true in every description.
 ---
 
@@ -41,6 +41,8 @@ the network comes first, signals travel inside it, coordination is a consequence
 | One line | People you know share each other's risks. | Люди, которые знают друг друга, распределяют риски друг друга. |
 | One sentence | In Social Organizer, people who know each other, and the people they know, share each other's risks: a Need reaches as many people as it names dollars, nearest first, and each of them decides whether to take a small part. | В Social Organizer люди, которые знают друг друга, и их знакомые делят риски: потребность получают столько людей, сколько в ней долларов, сначала ближайшие, и каждый сам решает, взять ли небольшую часть. |
 | Published video title | Direct Mutual Support Through Real Connections | Прямая взаимная поддержка через реальные связи |
+| Candidate hero (brainstorm, not decided) | The world is already connected. Now we can act together. | Мир уже связан. Теперь мы можем действовать вместе. |
+| Candidate line (brainstorm, not decided) | Little from many. Enough for one. | Немного от многих — достаточно для одного. |
 
 **One paragraph (EN).** You build a network of people you know in person, and they build theirs.
 When one of you has a hard time, you report a Need with an amount and a chat link. It reaches as
@@ -71,12 +73,16 @@ advance, because tomorrow the Need may be yours.
 
 ### Internal framing (for builders and theory, not for a first contact)
 
-The project's canonical glossary (`glossary_social_organizer.md`, Russian) describes SO as a
-method and a tool that activates latent social connectedness ("five handshakes") into a
-functioning peer-to-peer environment of mutual aid and direct cooperation; "not a platform, not a
-service, not a product". Use this framing with builders, researchers and donors who ask about the
-theory. Its claim of "mathematically proven inevitability" is a thesis of the author; in public
-copy present the growth dynamic as an expectation to test (see [claims](../principles/claims.md)).
+In Lubalin's report (2026) Social Organizer is a **social utility** that implements invitational
+coordination: people formalise their existing significant relations by invitation and bilateral
+acceptance, the relations combine into a referential graph, and two informational messages (Need,
+Participation) start direct interaction that happens outside the utility. Its purpose is to
+activate the latent global connectedness that already exists (3.57–4.74 degrees of separation in
+Facebook data). See [invitational coordination](../theory/invitational-coordination.md) and
+[latent connectedness](../theory/latent-connectedness.md). The canonical glossary
+(`glossary_social_organizer.md`, Russian) says the same in earlier words ("not a platform, not a
+service, not a product"). The Law of Autocatalytic Inevitability is **conditional** in the author's
+own text; state it with its thresholds ([the law](../theory/autocatalytic-law.md), [claims](../principles/claims.md)).
 
 ## Related
 - [The causal chain](causal-chain.md) — extends: why risk sharing leads to direct cooperation.
@@ -84,3 +90,6 @@ copy present the growth dynamic as an expectation to test (see [claims](../princ
 - [Vocabulary](../principles/vocabulary.md) — supports: the words to use and avoid.
 - [Claims](../principles/claims.md) — constrains: what we may promise in public.
 - [Comparables](../audiences/comparables.md) — contrasts: products people will compare SO with.
+- [Invitational coordination](../theory/invitational-coordination.md) — theory: the mechanism SO implements.
+- [Latent connectedness](../theory/latent-connectedness.md) — theory: what the utility does and does not do.
+- [Landing concepts](../packaging/landing-concepts.md) — source: the candidate lines.

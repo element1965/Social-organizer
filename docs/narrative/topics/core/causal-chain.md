@@ -4,7 +4,7 @@ title: The causal chain — from risk sharing to a self-developing environment
 tags: [core, future, trust]
 created: 2026-11-18
 updated: 2026-11-18
-related: [20261118-what-so-is, 20261118-direct-cooperation, 20261118-trust-conditions-in-so, 20261118-parked-topics]
+related: [20261118-what-so-is, 20261118-direct-cooperation, 20261118-trust-conditions-in-so, 20261118-parked-topics, 20261118-autocatalytic-law, 20261118-invitational-coordination]
 summary: The project's central thesis (brainstorm of 2026-11-17): risk sharing starts the process, direct cooperation is its natural continuation, and the resulting social environment can develop on its own — with what is a fact and what is a hypothesis.
 ---
 
@@ -29,7 +29,7 @@ links 1–2; links 3–5 are the horizon and must be labelled as the next stage.
 | 2 | **Protection through mutual risk sharing.** A person takes part in covering others' risks because they want their own life to be predictable. A referential graph, activity history and the habit of direct contact form. | Works in the app (Need and Participation). |
 | 3 | **Beyond the first circle.** Looking for a builder, a doctor, a project partner or a flat, a person can find candidates in the graph, see the chain of acquaintances and their activity history. Friendly prices, direct agreements and joint initiatives can spread through one social fabric instead of staying inside separate communities. | Next stage. Partly visible today (profiles, chains); the old skills matching is switched off in the MVP (`mvp-scope.ts`). Not a product promise. |
 | 4 | **The risk of cooperation changes.** If a direct deal fails (a €5,000 advance, no work done), the person who lost can report a Need to cover the loss, and the story may become known to people connected to both sides. Two parallel processes: the loss is spread among volunteers; the social consequences become visible. No central arbiter. | Possible today in mechanics (any Need); the framing is a thesis. |
-| 5 | **A self-reproducing dynamic.** More cooperation → more history of interactions → more information for the next decisions → more direct cooperation. The environment can then develop independently of the first tool. | Hypothesis to validate with data. |
+| 5 | **A self-reproducing dynamic.** More cooperation → more history of interactions → more information for the next decisions → more direct cooperation. The environment can then develop independently of the first tool. | Hypothesis to validate with data: the [law](../theory/autocatalytic-law.md) names the thresholds (N*, m(N) > 1) and the parameters to measure. |
 
 ### The central thesis, in the author's words
 
@@ -70,3 +70,5 @@ successful behaviour gets imitated, "we are each other's environment". See
 - [Direct cooperation](../future/direct-cooperation.md) — details: link 3–4 as the next stage.
 - [Trust conditions in SO](../trust/trust-conditions-in-so.md) — supports: the game-theory reading of the chain.
 - [Parked topics](../future/parked-topics.md) — boundary: what we do not mix into the current story.
+- [The Law of Autocatalytic Inevitability](../theory/autocatalytic-law.md) — formalises: link 5.
+- [Invitational coordination](../theory/invitational-coordination.md) — grounds: why the chain needs an invitational mechanism.
