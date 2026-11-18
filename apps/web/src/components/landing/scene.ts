@@ -326,7 +326,11 @@ export function initScene(els: SceneElements, initial: SceneOptions): SceneHandl
     for (let i = 0; i < N; i++) unit(i, gauss(), gauss(), gauss());
     for (const i of fromYou.q) {
       const d = dep[i]!;
-      if (d === 1) {
+      // the chain of the last beat has its own places: Oleg below you and to the side, Maria further out, both
+      // across the camera's line of sight, so the Need's way to you always reads as a bend
+      if (i === oleg) unit(i, -0.55, -0.8, 0.15);
+      else if (i === maria) unit(i, -0.95, -0.35, 0.1);
+      else if (d === 1) {
         const rx = NET[i * 3]! - yx;
         const ry = NET[i * 3 + 1]! - yy;
         const rz = NET[i * 3 + 2]! - yz;
@@ -337,16 +341,6 @@ export function initScene(els: SceneElements, initial: SceneOptions): SceneHandl
         const spread = d <= 3 ? 0.42 : 0.6;
         unit(i, DX[p]! + gauss() * spread, DX[p + 1]! + gauss() * spread, DX[p + 2]! + gauss() * spread);
       }
-    }
-    // Maria a little aside from Oleg, so the Need's way to you reads as a bend, not a dot
-    {
-      const o = oleg * 3;
-      const ox = DX[o]!, oy = DX[o + 1]!, oz = DX[o + 2]!;
-      let px = -oz, pz = ox; // perpendicular to Oleg's direction, in the horizontal plane
-      const pl = Math.hypot(px, pz) || 1;
-      px /= pl;
-      pz /= pl;
-      unit(maria, ox + px * 0.85, oy - 0.25, oz + pz * 0.85);
     }
     for (let i = 0; i < N; i++) {
       const d = dep[i]! < 0 ? 99 : dep[i]!;
@@ -866,10 +860,10 @@ export function initScene(els: SceneElements, initial: SceneOptions): SceneHandl
         o.pitch = 0.1;
         break;
       default:
-        // the app's view: the camera circles slowly, as the graph in the app does
+        // the app's view: the camera sways slowly round the graph, never so far that the chain turns end-on
         o.t.set(NET[you * 3]!, NET[you * 3 + 1]!, NET[you * 3 + 2]!);
         o.d = 42 * narrow;
-        o.yaw = 0.1 + (reduce ? 0 : clock * 0.05);
+        o.yaw = 0.1 + (reduce ? 0 : 0.35 * Math.sin(clock * 0.08));
         o.pitch = 0.16;
     }
     return o;
@@ -1088,7 +1082,10 @@ export function initScene(els: SceneElements, initial: SceneOptions): SceneHandl
     return out;
   };
   const v3 = new THREE.Vector3();
+  /** Where Oleg's label was put this frame: Maria's goes to the side away from it. */
+  let olegX = -1;
   const tagAt = (el: HTMLElement, i: number, on: boolean | undefined) => {
+    if (el === els.tags.oleg) olegX = -1;
     if (!on) {
       el.classList.remove('on');
       return;
@@ -1100,12 +1097,17 @@ export function initScene(els: SceneElements, initial: SceneOptions): SceneHandl
     }
     const x = clamp(((v3.x + 1) / 2) * innerWidth, 40, innerWidth - 40);
     const y = clamp(((1 - v3.y) / 2) * innerHeight, 90, innerHeight - 40);
+    if (el === els.tags.oleg) olegX = x;
     if (el === els.tags.maria) {
-      // her label sits beside the dot; with no room on that side (a long sum on a phone) it moves to the other
-      // (the pill of the story is always on the right; the graph's label is on the left in a right-to-left page)
+      // her label sits beside the dot: in the graph on the side away from Oleg's, and wherever it would leave
+      // the screen, on the other side (the story's pill is on the right; the graph's label starts on the left in
+      // a right-to-left page)
       const w = el.offsetWidth + 20;
-      const onLeft = opts.rtl && graphOn;
-      el.classList.toggle('flip', onLeft ? x - w < 8 : x + w > innerWidth - 8);
+      const startLeft = opts.rtl && graphOn;
+      let left = graphOn && olegX >= 0 ? x < olegX : startLeft;
+      if (left && x - w < 8) left = false;
+      else if (!left && x + w > innerWidth - 8) left = true;
+      el.classList.toggle('flip', left !== startLeft);
     }
     el.style.left = `${x}px`;
     el.style.top = `${y}px`;
