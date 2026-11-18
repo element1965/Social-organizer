@@ -196,3 +196,32 @@ html.dark,
 
   color-scheme: dark;
 }
+
+/*
+ * The guest landing (components/landing): one dark scene in both app themes, so it keeps its own copies of the
+ * brand colours instead of the theme-dependent ones above.
+ */
+.lv {
+  --lv-scene: #0b1513;
+  --lv-scene-2: #132420;
+  --lv-night: #050c0b;
+  --lv-deep: #071210;
+  --lv-foot: #070e0d;
+  --lv-sky: #4f6470;
+  --lv-white: #ffffff;
+  --lv-black: #000000;
+  --lv-ink: #14211e;
+  --lv-muted: #5c6d68;
+  --lv-paper: #ffffff;
+  --lv-care: #087f71;
+  --lv-care-hover: #08675c;
+  --lv-care-scene: #5fd3c6;
+  --lv-sos: #c5342c;
+  --lv-sos-scene: #ff6a5c;
+  --lv-warm: #f2be68;
+  --lv-text-2: #b6c6c1;
+  --lv-text-3: #82938e;
+  --lv-foot-link: #cfdcd8;
+  --lv-foot-fine: #66766f;
+  color-scheme: dark;
+}

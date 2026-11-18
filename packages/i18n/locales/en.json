@@ -719,97 +719,175 @@
       "terms": "Terms",
       "deleteAccount": "Delete account"
     },
-    "meta": {
-      "title": "Social Organizer — a network of people you know",
-      "description": "Build a network of people you know in person and share each other’s risks. A Need reaches exactly as many people as the dollars it names, nearest first. Participants decide for themselves and act directly. Open source, a non-profit project."
-    },
-    "hero": {
-      "title": "First, a network of people you know",
-      "lead": "Social Organizer starts with your network: people you know in person, and the people they know. When one of you has a hard time, the others can share the load. <b>A Need reaches exactly as many people as the dollars it names, nearest first</b>, and each of them may take a small part.",
-      "factOpen": "Open source",
-      "factNonprofit": "Non-profit",
-      "factNoMoney": "Voluntary participation",
-      "play": "Get it on Google Play",
-      "appstore": "Download on the App Store",
-      "startWeb": "Start in the browser",
-      "web": "In the browser",
-      "how": "See how it works",
-      "tgAlt": "Prefer Telegram?",
-      "tgOpen": "Open it there",
-      "sceneAria": "A network grows from you, handshake by handshake; a Need travels in it and participants report Participation",
-      "sceneYou": "You",
-      "sceneAsk": "Need · {{amount}}",
-      "sceneDone": "Participation · {{amount}}",
-      "statPeople_one": "{{n}} person in one network",
-      "statPeople_other": "{{n}} people in one network",
-      "statDepth": "3 handshakes",
-      "sceneNet": "Your network · {n}"
-    },
-    "steps": {
-      "title": "How it works",
-      "lead": "You build the network first. Needs and Participation travel inside it.",
-      "s1Title": "You build your network",
-      "s1Text": "Add people you know in person, by a link or a QR code. <b>Each of them confirms that you know each other.</b>",
-      "s2Title": "It reaches further than you see",
-      "s2Text": "Through your people you reach theirs: the 2nd and 3rd handshake. <b>You see three handshakes deep, and nobody sees the whole network.</b>",
-      "s3Title": "A Need reaches as many people as it names dollars",
-      "s3Text": "A Need of {{amount}} reaches exactly {{n}} people, nearest by handshakes first. <b>Each of them gets one chance to take part</b>, and the Need closes once participants cover the amount.",
-      "s4Title": "Coordination follows",
-      "s4Text": "Whoever wants to reports Participation, and the amounts add up, as in crowdfunding. <b>Participants agree on the details directly</b>, in their own chat."
-    },
-    "chain": {
-      "title": "A Need travels by handshakes",
-      "lead": "You see Maria’s Need because Oleg knows her, and you know Oleg. It reaches only as many people as it names dollars, the nearest first. <b>You owe nothing</b> and may leave it unanswered."
-    },
-    "nots": {
-      "title": "What Social Organizer does not do",
-      "moneyTitle": "Processes no payments",
-      "moneyText": "It does not accept, transfer or hold funds. Whatever participants do, they do directly, outside the service.",
-      "feeTitle": "Takes no fee",
-      "feeText": "The code is open, the project is non-profit, and you pay nothing for it.",
-      "choiceTitle": "Does not decide for you",
-      "choiceText": "You choose whom to add, whether to take part and how. You can say no, and nothing breaks."
-    },
     "start": {
-      "title": "Start with people you already know",
-      "lead": "<b>Got a link from someone you know?</b> Open it, and you land in their circle. No link? Sign in and invite your first five yourself.",
       "play": "Google Play",
       "appstore": "App Store",
-      "telegram": "Open in Telegram",
-      "web": "In the browser",
       "qrTitle": "The app on your phone",
       "qrText": "Point your camera: the right store opens.",
       "qrAria": "QR code with a link to the app"
     },
-    "principles": {
-      "title": "Principles",
-      "p1Title": "Voluntary participation",
-      "p1Text": "Nobody has to respond. You decide each time whether to take part.",
-      "p2Title": "Independent decision",
-      "p2Text": "No organiser decides for you, and nobody scores you. If you decline, nothing happens to you.",
-      "p3Title": "Direct connection between participants",
-      "p3Text": "Participants agree and act among themselves, with nobody in between.",
-      "p4Title": "The network comes first",
-      "p4Text": "Signals travel only through confirmed acquaintances. You share risks with people you know directly, without a common pot or an operator."
-    },
-    "faq": {
-      "title": "The essentials",
-      "q1": "What does Social Organizer do?",
-      "a1": "It helps you build a network of people you know in person, and lets two signals, Need and Participation, travel through it. It does not act on behalf of participants.",
-      "q2": "Do I have to take part?",
-      "a2": "No. You decide for yourself whether to take part.",
-      "q3": "Does the service guarantee assistance?",
-      "a3": "No. The result depends on what participants decide and do.",
-      "q4": "Does Social Organizer process payments?",
-      "a4": "No. Social Organizer does not accept, transfer or hold funds. Anything participants do between themselves, they do directly, outside the service.",
-      "q5": "Do participants hand over money?",
-      "a5": "They may. A Need names an amount, and a Participation names how much a participant is ready to hand over. If participants hand over money, they do it themselves and directly, by their own arrangement. Social Organizer does not verify whether a handover took place.",
-      "q6": "What are the amounts in?",
-      "a6": "In US dollars: a common unit of account, so you can compare amounts. Participants choose the currency and the way themselves.",
-      "q7": "How is it different from online mutual aid platforms?",
-      "a7": "Each of China’s mutual aid platforms had one operator that charged members and promised payouts, like an insurer. In 2021 regulators shut them all down. Social Organizer has no operator and no pot: people who know each other send two signals and decide for themselves.",
-      "q8": "Is this insurance?",
-      "a8": "No. An insurer takes your money in advance and promises a payout. Here you pay nothing in advance and nobody promises anything. When someone in your network has a hard time, the people who decide to take part each take a small share."
+    "v2": {
+      "meta": {
+        "title": "Social Organizer: a network of people you know",
+        "description": "A network of people who know each other in person. When someone is in trouble, many can help."
+      },
+      "nav": {
+        "label": "Sections",
+        "how": "How it works",
+        "grow": "How it grows",
+        "join": "Get involved",
+        "faq": "Questions",
+        "signin": "Sign in"
+      },
+      "hero": {
+        "title": "Your circle is bigger than you think.",
+        "lead": "Social Organizer brings together people who know each other in person. When one of them is in trouble, the people they know hear first, then the people those people know.",
+        "cta": "Build your network",
+        "how": "How it works",
+        "facts": "Free · no fees · open source"
+      },
+      "story": {
+        "sceneAria": "A flock of starlings: each bird stands for a person in the network",
+        "railAria": "Story chapters",
+        "b1": {
+          "label": "Starlings",
+          "say": "A starling keeps track of only six or seven neighbours, yet a flock of thousands flies as one."
+        },
+        "b2": {
+          "label": "People",
+          "say": "People are connected the same way.",
+          "stat": "handshakes separated two random Facebook users on average in 2016: fewer than four people in between. <study>The study</study>"
+        },
+        "b3": {
+          "label": "1 · A network of people you know",
+          "say": "You invite someone you know in person, and you both confirm you know each other.",
+          "late": "Then they invite their own."
+        },
+        "b4": {
+          "label": "2 · A Need",
+          "say": "Maria's car has broken down, and without it she can't get to work. The repair costs $300.",
+          "late": "Maria reports a Need and adds a link to a chat. A $300 Need reaches up to 300 people, nearest first."
+        },
+        "b5": {
+          "label": "3 · Everyone decides for themselves",
+          "say": "You know Oleg, and Oleg knows Maria. You can see this chain and ask Oleg what happened.",
+          "late": "Whether to take part is your choice."
+        },
+        "b6": {
+          "label": "4 · A little from many",
+          "say": "Anyone willing to take part names an amount from $1. You name $5.",
+          "late": "It's an intention, and nothing is paid now. While the Need is open, you can change the amount or withdraw."
+        },
+        "b7": {
+          "label": "5 · People agree directly",
+          "say": "Maria and the participants talk it over in the chat. Lena suggests a cheaper garage.",
+          "late": "If money is involved, people hand it over themselves. The app never touches it."
+        },
+        "b8": {
+          "label": "You",
+          "say": "Tomorrow it could be you in Maria's place.",
+          "late": "Then the people you know will be the first to hear about your Need."
+        },
+        "rail": {
+          "1": "Flock",
+          "2": "People",
+          "3": "Network",
+          "4": "Need",
+          "5": "Decision",
+          "6": "Participation",
+          "7": "Chat",
+          "8": "You"
+        },
+        "tags": {
+          "you": "You",
+          "oleg": "Oleg",
+          "maria": "Maria · $300",
+          "lena": "Lena"
+        },
+        "hud": {
+          "reached": "heard about the Need",
+          "reported": "of $300 reported",
+          "people": "participants"
+        }
+      },
+      "grow": {
+        "title": "How the network grows",
+        "text": "Every newcomer invites people they know. Set how many on average and see what happens to the network.",
+        "canvasAria": "Network growth model: invitations spread out from one person",
+        "slider": "Each person invites on average",
+        "unit": "people",
+        "threshold": "threshold",
+        "statPeople": "people in the network",
+        "statWaves": "waves of invitations",
+        "dies": "Growth has stopped",
+        "grows": "The network grows on its own",
+        "full": "The model has run out of new people",
+        "restart": "Start over",
+        "hint": "Tap the field to start from someone else",
+        "note": "A simplified model. Circles of acquaintances overlap, and nobody has to invite anyone.",
+        "axisX": "waves",
+        "axisY": "people"
+      },
+      "next": {
+        "label": "Next",
+        "title": "A dollar of help is only the beginning",
+        "text": "Over time, we want people to use their network of acquaintances to find a tradesperson someone vouches for, partners for a shared project, supporters for their own initiative. And to agree on it, as they do now, directly.",
+        "now": "Now",
+        "later": "Later",
+        "need": "Need",
+        "participation": "Participation",
+        "tradesperson": "A trusted tradesperson",
+        "project": "A shared project"
+      },
+      "join": {
+        "label": "Experiment",
+        "title": "Join the experiment",
+        "text": "The app and the theory exist. Now they need testing in practice, and that takes people.",
+        "now": "people with connections in the network on 13 November 2026",
+        "cta": "Write to the team",
+        "share": "Share",
+        "shared": "Link copied",
+        "safe": "The team replies only from @socialorganizer_bot and never asks for money, sign-in codes or card details.",
+        "w1Title": "Build a network in your community",
+        "w1": "If you have a community of your own, try the app there. We'll help you explain it in words your people use.",
+        "w2Title": "Tell others about the project",
+        "w2": "Send this page to people who might care, or write about Social Organizer yourself.",
+        "w3Title": "Help with the research or the code",
+        "w3": "The theory is set out in <report>Andrei Lubalin's report</report>, and the code is open on <code>GitHub</code>. Join the testing or the work on the app."
+      },
+      "faq": {
+        "title": "Questions",
+        "q1": "Who makes sure people keep their word?",
+        "a1": "There are no middlemen. You decide whom to trust and deal with people directly, and through the chain of friends you can find out who you're dealing with.",
+        "q2": "Is this insurance or a fund?",
+        "a2": "No. Nobody pays in advance and nobody promises a payout. There's no common pot and no treasurer.",
+        "q3": "Is this a donation drive?",
+        "a3": "No. A Need reaches only people linked to the author through friends, and next time you may be the one who asks.",
+        "q4": "Is this a pyramid scheme?",
+        "a4": "No. Nobody pays to join and nobody earns from invites."
+      },
+      "start": {
+        "label": "The app",
+        "title": "Build your network before you need it",
+        "text": "On a bad day there's no time or energy for it.",
+        "s1": "Open a link from someone you know, or sign in yourself with Google, Apple, Telegram or a code sent by e-mail. No password needed.",
+        "s2": "Add people you know in person: with a link, a QR code or by shaking your phones side by side.",
+        "s3": "Set your intention: the amount you're usually ready to give when someone in the network is in trouble.",
+        "qr": "Point your phone's camera here and the right store will open.",
+        "playTop": "Get it on",
+        "play": "Google Play",
+        "iosTop": "Download on the",
+        "ios": "App Store",
+        "webTop": "Open",
+        "web": "in the browser",
+        "tgTop": "Open in",
+        "tg": "Telegram"
+      },
+      "footer": {
+        "about": "Social Organizer · a non-profit, open-source project",
+        "credits": "Illustrations are AI-generated · Icons: {{icons}}",
+        "links": "Links"
+      }
     }
   },
   "how": {

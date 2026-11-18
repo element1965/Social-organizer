@@ -64,39 +64,6 @@ export function authButtons(dev: Device): AuthButtons {
   return { order: AUTH_ORDER[dev] };
 }
 
-export type StoreId = 'play' | 'appstore' | 'web' | 'telegram';
-
-export interface StoreButton {
-  id: StoreId;
-  /** The device's own store (or the browser on desktop) is dark/primary; the rest are light. */
-  primary: boolean;
-}
-
-export interface StoreButtons {
-  buttons: StoreButton[];
-  /** Desktop only: a QR card that opens the right store from a phone camera. */
-  qr: boolean;
-}
-
-/** Store block: the device's store first and dark, the rest light; a QR for the phone on desktop. */
-export function storeButtons(dev: Device): StoreButtons {
-  if (dev === 'android') {
-    return { buttons: [{ id: 'play', primary: true }, { id: 'web', primary: false }, { id: 'telegram', primary: false }], qr: false };
-  }
-  if (dev === 'ios') {
-    return { buttons: [{ id: 'appstore', primary: true }, { id: 'web', primary: false }, { id: 'telegram', primary: false }], qr: false };
-  }
-  return {
-    buttons: [
-      { id: 'web', primary: true },
-      { id: 'play', primary: false },
-      { id: 'appstore', primary: false },
-      { id: 'telegram', primary: false },
-    ],
-    qr: true,
-  };
-}
-
 /** Canonical public origin: the QR on the desktop site must open production, not the host it was shown on. */
 export const SITE_ORIGIN = 'https://www.orginizer.com';
 

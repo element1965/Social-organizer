@@ -714,99 +714,12 @@
       "terms": "Podmínky",
       "deleteAccount": "Smazat účet"
     },
-    "meta": {
-      "title": "Social Organizer — síť lidí, které znáte",
-      "description": "Vybudujte si síť lidí, které znáte osobně, a sdílejte navzájem svá rizika. Potřeba se dostane k tolika lidem, kolik dolarů uvádí, nejdřív k těm nejbližším. Účastníci se rozhodují sami a jednají přímo. Otevřený kód, nezisková služba."
-    },
-    "hero": {
-      "title": "Nejdřív síť lidí, které znáte",
-      "lead": "Social Organizer začíná vaší sítí: lidmi, které znáte osobně, a lidmi, které znají oni. Když je někomu z vás těžko, ostatní mu mohou pomoct unést břemeno. <b>Potřeba se dostane k tolika lidem, kolik dolarů uvádí, nejdřív k těm nejbližším</b>, a každý z nich může převzít malou část.",
-      "factOpen": "Otevřený kód",
-      "factNonprofit": "Neziskový",
-      "factNoMoney": "Dobrovolná účast",
-      "play": "Nainstalovat z Google Play",
-      "appstore": "Stáhnout v App Store",
-      "startWeb": "Začít v prohlížeči",
-      "web": "V prohlížeči",
-      "how": "Zjistěte, jak to funguje",
-      "tgAlt": "Raději Telegram?",
-      "tgOpen": "Otevřít tam",
-      "sceneAria": "Síť roste od vás, podání ruky za podáním ruky; potřeba v ní putuje a účastníci oznamují účast",
-      "sceneYou": "Vy",
-      "sceneAsk": "potřeba · {{amount}}",
-      "sceneDone": "účast · {{amount}}",
-      "statDepth": "3 podání ruky",
-      "statPeople_few": "{{n}} lidé v jedné síti",
-      "statPeople_many": "{{n}} člověka v jedné síti",
-      "statPeople_one": "{{n}} člověk v jedné síti",
-      "statPeople_other": "{{n}} lidí v jedné síti",
-      "sceneNet": "Vaše síť · {n}"
-    },
-    "steps": {
-      "title": "Jak to funguje",
-      "lead": "Nejdřív budujete síť. Potřeby a účast putují uvnitř ní.",
-      "s1Title": "Budujete svou síť",
-      "s1Text": "Přidejte lidi, které znáte osobně, odkazem nebo QR kódem. <b>Každý z nich potvrdí, že se znáte.</b>",
-      "s2Title": "Sahá dál, než vidíte",
-      "s2Text": "Přes své lidi se dostanete k jejich lidem: 2. a 3. podání ruky. <b>Vidíte do hloubky tří podání ruky a celou síť nevidí nikdo.</b>",
-      "s3Title": "Potřeba se dostane k tolika lidem, kolik dolarů uvádí",
-      "s3Text": "Potřeba na {{amount}} se dostane přesně k {{n}} lidem, nejdřív k nejbližším podle podání ruky. <b>Každý z nich dostane jednu příležitost zapojit se</b> a potřeba se uzavře, jakmile účastníci pokryjí částku.",
-      "s4Title": "Koordinace přichází potom",
-      "s4Text": "Kdo chce, oznámí účast a částky se sčítají jako při crowdfundingu. <b>Podrobnosti si účastníci domlouvají přímo</b>, ve svém chatu."
-    },
-    "chain": {
-      "title": "Oznámení putuje po podáních ruky",
-      "lead": "Potřebu Marie vidíte, protože ji zná Oleg a Olega znáte vy. Dostane se jen k tolika lidem, kolik dolarů uvádí, nejdřív k nejbližším. <b>Nic nikomu nedlužíte</b> a můžete ji nechat bez odpovědi."
-    },
-    "nots": {
-      "title": "Co Social Organizer nedělá",
-      "moneyTitle": "Nezpracovává platby",
-      "moneyText": "Nepřijímá, nepřevádí ani nedrží finanční prostředky. Cokoli účastníci dělají, dělají přímo, mimo službu.",
-      "feeTitle": "Nebere poplatek",
-      "feeText": "Kód je otevřený, projekt je neziskový a vy za něj nic neplatíte.",
-      "choiceTitle": "Nerozhoduje za vás",
-      "choiceText": "Sami si vybíráte, koho přidáte, zda se zapojíte a jak. Můžete odmítnout a nic se nerozbije."
-    },
     "start": {
-      "title": "Začněte lidmi, které už znáte",
-      "lead": "<b>Máte odkaz od někoho, koho znáte?</b> Otevřete ho a ocitnete se v jeho kruhu. Odkaz nemáte? Přihlaste se a prvních pět pozvěte sami.",
       "play": "Google Play",
       "appstore": "App Store",
-      "telegram": "Otevřít v Telegramu",
-      "web": "V prohlížeči",
       "qrTitle": "Aplikace do telefonu",
       "qrText": "Namiřte foťák: otevře se ten správný obchod.",
       "qrAria": "QR kód s odkazem na aplikaci"
-    },
-    "principles": {
-      "title": "Principy",
-      "p1Title": "Dobrovolná účast",
-      "p1Text": "Nikdo nemusí reagovat. Pokaždé se sami rozhodnete, zda se zapojíte.",
-      "p2Title": "Nezávislé rozhodnutí",
-      "p2Text": "Žádný organizátor nerozhoduje za vás a nikdo vás nehodnotí. Když odmítnete, nic se vám nestane.",
-      "p3Title": "Přímé spojení účastníků",
-      "p3Text": "Účastníci se dohodnou a jednají mezi sebou, bez prostředníků.",
-      "p4Title": "Na prvním místě je síť",
-      "p4Text": "Signály putují jen přes potvrzené známosti. Rizika sdílíte s lidmi, které znáte osobně, bez společné pokladny a bez provozovatele."
-    },
-    "faq": {
-      "title": "Stručně o hlavním",
-      "q1": "Co Social Organizer dělá?",
-      "a1": "Pomáhá vám vybudovat síť lidí, které znáte osobně, a nechává jí putovat dva signály, potřebu a účast. Nejedná za účastníky.",
-      "q2": "Musím se zapojit?",
-      "a2": "Ne. O účasti rozhodujete sami.",
-      "q3": "Zaručuje služba pomoc?",
-      "a3": "Ne. Výsledek závisí na tom, co účastníci rozhodnou a udělají.",
-      "q4": "Zpracovává Social Organizer platby?",
-      "a4": "Ne. Social Organizer nepřijímá, nepřevádí ani nedrží finanční prostředky. Cokoli účastníci mezi sebou dělají, dělají přímo, mimo službu.",
-      "q5": "Předávají účastníci peníze?",
-      "a5": "Mohou. V oznámení o potřebě účastník uvádí částku a v oznámení o účasti, kolik je ochoten předat. Pokud účastníci peníze předávají, dělají to sami a přímo, podle své dohody. Social Organizer neověřuje, zda k předání došlo.",
-      "q6": "V čem jsou uvedeny částky?",
-      "a6": "V amerických dolarech: je to společná účetní jednotka, abyste mohli částky porovnat. Měnu a způsob si účastníci volí sami.",
-      "q7": "Čím se liší od online platforem vzájemné pomoci?",
-      "a7": "Každá čínská platforma vzájemné pomoci měla jednoho provozovatele, který vybíral od členů peníze a sliboval výplaty jako pojišťovna. V roce 2021 je regulátoři všechny zavřeli. Social Organizer nemá provozovatele ani pokladnu: lidé, kteří se znají, posílají dva signály a rozhodují sami.",
-      "q8": "Je to pojištění?",
-      "a8": "Ne. Pojišťovna si od vás peníze bere předem a slibuje výplatu. Tady předem nic neplatíte a nikdo nic neslibuje. Když je někomu ve vaší síti těžko, ti, kdo se rozhodnou zapojit, převezmou každý malou část."
     }
   },
   "how": {

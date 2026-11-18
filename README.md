@@ -50,7 +50,7 @@ Social organizer/
 - **Backend:** Fastify + tRPC + Prisma + PostgreSQL 17 + BullMQ + Redis
 - **Frontend:** React 19 + Vite + Tailwind CSS + ui2
 - **Mobile:** React Native (Expo) + NativeWind (stub)
-- **3D:** Three.js + react-force-graph-3d, loaded only with the Circle
+- **3D:** Three.js + react-force-graph-3d for the Circle; Three.js alone for the guest landing's starling flock. Both load on demand
 - **Backup:** Gun.js (IndexedDB)
 - **i18n:** i18next (28 languages: en, ru, es, fr, de, pt, it, zh, ja, ko, ar, hi, tr, pl, uk, nl, sv, da, fi, no, cs, ro, th, vi, id, sr, be, he)
 
@@ -384,7 +384,7 @@ Old paths `/dashboard`, `/network`, `/notifications`, `/matches`, `/skills`, `/n
 
 ### 3D Visualization (graph-3d)
 
-`NetworkGraph` (react-force-graph-3d) draws the signed-in Circle. The planet, globe, cloud, and handshake-path scenes are gone. The graph chunk (Three.js plus the force-graph libraries, about 1.3 MB / 357 KB gzip) loads when the Circle opens, not on the guest landing.
+`NetworkGraph` (react-force-graph-3d) draws the signed-in Circle. The planet, globe, cloud, and handshake-path scenes are gone. The graph chunk (the force-graph libraries and the Three.js addons they use, about 254 KB / 74 KB gzip) loads when the Circle opens, together with the Three.js core chunk (about 1069 KB / 285 KB gzip) that the guest landing's flock scene also uses.
 
 - *Stable data* — node objects are kept between renders and only a structural change (who is in the graph, names, photos) updates the graph; `connectionCount` / `lastSeen` are applied in place. A parent re-render no longer rebuilds all nodes and restarts the simulation (it was ~8 FPS on 500 nodes).
 - *Cheap nodes* — shared textures/materials, sprites instead of spheres, one frame loop for LOD (avatar + label → dot → star-like dot with a minimum on-screen size; near dots are capped at 11 px and photos at 34 px on screen, so the camera passing close never fills the view with one node), labels and photos created lazily within a per-frame budget (500 nodes mount in ~0.4 s instead of ~4.5 s); decorative sprites are excluded from hover raycasting; the pulse ring exists only on nodes that show it.
@@ -412,14 +412,16 @@ Old paths `/dashboard`, `/network`, `/notifications`, `/matches`, `/skills`, `/n
 
 ### Bundle size (vite build, guest landing)
 
-Measured on this branch. The guest document does not preload Three.js, the force-graph, or Gun, and it does not request `telegram-web-app.js`.
+Measured on this branch (2026-11-18). The guest document does not preload Three.js, the force-graph, or Gun, and it does not request `telegram-web-app.js`. The landing's words paint from the entry chunk; its flock scene then loads Three.js with a dynamic import.
 
 | Chunk | Raw | Gzip | When |
 |-------|-----|------|------|
-| index (entry, includes locales) | 1560 KB | 474 KB | Always |
-| CSS | 76 KB | 15 KB | Always |
-| CirclePage | 42 KB | 13 KB | After sign-in (prefetched) |
-| graph3d (Three.js + force-graph) | 1317 KB | 357 KB | When the Circle graph loads |
+| index (entry) | 607 KB | 193 KB | Always |
+| CSS | 78 KB | 17 KB | Always |
+| scene (landing flock) | 30 KB | 11 KB | Guest landing, after the words paint |
+| three (Three.js core) | 1069 KB | 285 KB | Guest landing scene; the Circle graph |
+| CirclePage | 47 KB | 15 KB | After sign-in (prefetched) |
+| graph3d (force-graph + Three.js addons) | 254 KB | 74 KB | When the Circle graph loads |
 | gun | 43 KB | 17 KB | Signed-in shell |
 | jsQR | 131 KB | 47 KB | Scan screen |
 
@@ -510,7 +512,7 @@ Project skills for Claude Code live in `.claude/skills/` and are versioned (the 
 
 The `redesign` branch replaces the old dashboard, network page, and planet landing with four tabs: Circle, Ask, Add, and Profile. Guests see the public site at `/` and the explainer at `/how`. Screen specs are in [docs/redesign/](docs/redesign/README.md).
 
-The landing (`LandingPage.tsx`, `components/site/`) tells the story in the order it happens: first a network of people you know, then a Need that reaches exactly as many people as the dollars it names (one notification per unit, nearest by handshakes first, as `bfs.service.ts` does), and coordination as the consequence. The reason for the network is stated as risk sharing: it makes each person's risks bearable by spreading one person's risk across many people who know each other — shared, never "pooled" (no pot, no operator, no promised payouts; the FAQ answers "Is this insurance?" with no). Sections: the hero, four steps (you build your network, it reaches further than you see, a Need reaches as many people as it names dollars, coordination follows), Principles, the path through acquaintances, what the tool does not do, and a short FAQ (the payments answer lives there, not in the hero). `/how` follows the same order (a new person, handshake rings, the path) and ends with the closest real example: China's online mutual aid platforms (Xianghubao and others, closed in 2021), side by side with Social Organizer in a table. The old hui table is gone from the page. The hero is a dark scene panel with a live 3D network behind the copy (`components/site/heroGraph.ts`): about 90 fake people on depth shells around "You", drawn with Canvas 2D and its own perspective projection, so the landing does not load Three.js. On load the network first grows out of "You", shell by shell, with a counter pill (about 4 s, once); then it plays the app story in a loop (a Need on the far shell, a comet along the handshake path to you, a wave through the circle, shares coming back until the asker's ring is full). Drag rotates it, vertical swipes still scroll. It costs about 0.2 ms of script per frame, caps the pixel ratio at 1.5 (1 on slow devices or slow frames), stops off screen and in hidden tabs, and is a still frame under reduced motion. The ball position comes from CSS variables on `.site-hero` (`--hero-gx`, `--hero-gr`, `--hero-graph-h`).
+The landing (`pages/LandingPage.tsx`, imperative parts in `components/landing/`) tells one story while the reader scrolls, over a fixed 3D flock of starlings: a starling watches only six or seven neighbours, yet the flock moves as one; people are connected the same way (4.57 handshakes between two random Facebook users, with a link to the study); then five steps: a network of people you know, a Need (Maria's car, $300, reaching up to 300 people nearest first), everyone decides for themselves (the chain you → Oleg → Maria), a little from many (an intention from $1, not a payment), people agree directly in the chat (the app never touches money), and "tomorrow it could be you". After the story: an interactive growth model (each person invites R people on average; below 1 the network dies out, above it grows on its own), what comes next (tradespeople, shared projects), the experiment ("Write to the team" opens the bot with `?start=team`, share, three ways to help, links to Andrei Lubalin's report and the code), questions (not insurance, not a donation drive, not a pyramid) and the app (three steps, store badges, a QR to `/get` on desktop). The scene (`components/landing/scene.ts`, Three.js, loaded with a dynamic import) draws 2000 to 6500 instanced birds with fixed neighbours; the scroll position sets the story time, one camera shot per beat with a damped follow, a photographed sky that moves with the camera, counters and name tags. `glide.ts` finishes a scroll gesture at the nearest rest point in its direction (the middle of a beat, the top of a section) and never pulls the reader back; it is off under reduced motion. `grow.ts` and `nextNet.ts` are Canvas 2D. Everything stops and is disposed when the page unmounts. The copy lives under `landing.v2` in every locale; the page stays dark in both themes (its colours are the `.lv` tokens in `styles/tokens.css`) and mirrors for right-to-left languages. `/how` keeps its own order (a new person, handshake rings, the path) and ends with the closest real example: China's online mutual aid platforms (Xianghubao and others, closed in 2021), side by side with Social Organizer in a table.
 
 Motion: CSS only (no animation library), in `apps/web/src/styles/motion.css` plus Tailwind transitions, one easing (`ease-so`) and three lengths (150 ms presses and toggles, about 240 ms things that appear or leave, 320 ms sheets). Every screen's content rises in on mount (`Screen`); tabs (`Segmented`) slide one highlight to the chosen option; the People list slides in from the side of the handshake it came from and its rows come in one after another (`Group stagger`, also History and the offline list); sheets and dialogs fade their backdrop and slide or shrink out on close (`usePresence` in `components/ui2/presence.ts` keeps them mounted for the exit); banners leave upwards; a swiped feed row eases back or flies off, and dismissed rows and the "Get the app" card fold away (`.so-collapse`); the switch knob stretches while pressed; buttons, chips and tappable rows react to the press; the active tab icon bumps and badges pop in; Meter segments grow; input errors fade in. Entrances use `backwards` fill so no transform stays behind (it would trap `position: fixed` children). With the system's reduced-motion setting all of it is off, and exits happen at once. The offline boundary is keyed per screen, so /people/1 → /people/2 keeps the People screen mounted and animates instead of rebuilding it.
 

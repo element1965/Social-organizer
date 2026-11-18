@@ -59,96 +59,20 @@
 .site-foot .links a:hover { color: var(--ink); }
 .site-foot .phone-only { display: none; }
 
-/* ---------- landing ---------- */
-/*
- * The hero is a dark scene panel (class "dark" in the markup, so the copy takes the dark tokens) with the live 3D
- * network behind the copy (HeroScene / heroGraph.ts). Where the ball sits is set here and read by the canvas:
- * --hero-gx: centre x as a share of the width; --hero-gr: ball radius as a share of the width (also capped by the
- * height); --hero-graph-h: height of the zone the ball is centred in (0 = the whole panel).
- */
-.site-hero { --hero-gx: .7; --hero-gr: .26; --hero-graph-h: 0; position: relative; isolation: isolate; display: flex; align-items: center; min-height: 600px; margin: 8px 24px 0; padding: 72px 56px; border-radius: var(--r-2xl); overflow: hidden; background: var(--scene); color: var(--ink); box-shadow: var(--shadow-banner); }
-.site-hero-graph { position: absolute; inset: 0; z-index: 0; width: 100%; height: 100%; display: block; cursor: grab; touch-action: pan-y; animation: site-fade .9s var(--ease-out) both; }
-.site-hero-graph.drag { cursor: grabbing; }
-/* Scrim so the copy stays readable over the network. It lets the pointer through to the canvas. */
-.site-hero::after { content: ''; position: absolute; inset: 0; z-index: 1; pointer-events: none; background: linear-gradient(90deg, rgb(var(--so-scene) / .92) 0%, rgb(var(--so-scene) / .7) 34%, rgb(var(--so-scene) / 0) 58%); }
-/* The copy lets drags through between its blocks; the blocks themselves stay selectable and clickable. */
-.site-hero-copy { position: relative; z-index: 2; width: 100%; max-width: 560px; min-width: 0; pointer-events: none; }
-.site-hero-copy > * { pointer-events: auto; }
-.site-hero h1 { font-size: clamp(44px, 4.6vw, 60px); line-height: .98; letter-spacing: -.05em; font-weight: 800; text-wrap: balance; overflow-wrap: break-word; }
-.site-hero .lead { margin-top: 20px; font-size: 19px; line-height: 1.45; color: var(--muted); max-width: 44ch; }
-.site-hero .lead b { color: var(--care-text); }
-@keyframes site-fade { from { opacity: 0; } to { opacity: 1; } }
-.site-hero .site-proof { display: flex; align-items: center; gap: 10px; margin-top: 20px; font-size: 15px; font-weight: 700; color: var(--ink); font-variant-numeric: tabular-nums; }
-.site-proof .dots { display: inline-flex; }
-.site-proof .dots i { width: 22px; height: 22px; border-radius: 50%; background: var(--care); box-shadow: 0 0 0 2px var(--scene); }
-.site-proof .dots i + i { margin-left: -7px; }
-.site-proof .dots i:nth-child(2) { background: var(--node-1); }
-.site-proof .dots i:nth-child(3) { background: var(--surface-2); box-shadow: 0 0 0 2px var(--scene), inset 0 0 0 1px var(--line-strong); }
-.site-cta { display: flex; gap: 12px; margin-top: 28px; flex-wrap: wrap; }
-.site-alt { display: flex; align-items: center; gap: 8px; margin-top: 14px; font-size: 14px; font-weight: 700; color: var(--muted); }
-.site-alt svg { width: 18px; height: 18px; color: var(--link); }
-.site-alt a { color: var(--care-text); display: inline-flex; align-items: center; min-height: 24px; padding: 0 2px; }
-.site-facts { display: flex; gap: 8px; margin-top: 22px; flex-wrap: wrap; }
-.site-pill { display: inline-flex; align-items: center; height: 26px; padding: 0 10px; border-radius: var(--r-sm); background: var(--surface-2); color: var(--muted); font-size: 12px; font-weight: 700; }
-.site-hero-tag { position: absolute; z-index: 2; right: 24px; bottom: 20px; height: 30px; padding: 0 12px; border-radius: var(--r-sm); background: rgb(var(--so-node-1) / .12); color: var(--node-1); font-size: 13px; font-weight: 700; display: grid; place-items: center; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); pointer-events: none; }
-
+/* ---------- sections and figures (/how and other public pages) ---------- */
 .site-sec { padding: 72px 48px; border-top: 1px solid var(--line-soft); }
-/* The hero panel is its own frame: no divider right under it. */
-.site-hero + .site-sec { border-top: 0; }
 .site-sec h2 { font-size: 40px; letter-spacing: -.04em; line-height: 1.04; font-weight: 800; text-wrap: balance; }
 .site-sec .lead { margin-top: 12px; font-size: 17px; line-height: 1.5; color: var(--muted); max-width: 60ch; }
 .site-sec .lead b { color: var(--ink); }
 .site-say { margin-top: 18px; font-size: 17px; line-height: 1.45; max-width: 40ch; color: var(--ink); }
 .site-say b { color: var(--care-text); }
-/* "How it works": one sticky figure, the text blocks scroll past it (StepStory in LandingPage.tsx). */
-.site-story { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; margin-top: 24px; }
-/* The figure stays in the middle of the screen while the steps scroll past it. */
-.site-story .fig { --fig-h: min(440px, calc(100vh - 48px)); position: sticky; top: calc((100vh - var(--fig-h)) / 2); align-self: start; height: var(--fig-h); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px; background: var(--paper); border-radius: var(--r-2xl); box-shadow: var(--shadow-card); padding: 20px; }
-.site-story .pic { flex: 1; min-height: 0; width: 100%; display: flex; align-items: center; justify-content: center; }
-.site-story .pic svg { height: 100%; width: auto; max-width: 100%; }
-.site-story .bars { display: flex; gap: 6px; }
-.site-story .bars i { width: 28px; height: 4px; border-radius: 2px; background: var(--line); transition: background var(--dur-base, .26s); }
-.site-story .bars i.on { background: var(--care); }
-.site-story .texts { list-style: none; margin: 0; padding: 0; }
-.site-story .beat { min-height: 62vh; display: flex; flex-direction: column; justify-content: center; opacity: .35; transition: opacity .35s var(--ease-out); }
-.site-story li:last-child .beat { min-height: 50vh; }
-.site-story .beat.on { opacity: 1; }
-.site-story .n { display: inline-grid; place-items: center; width: 32px; height: 32px; border-radius: 10px; background: var(--care); color: var(--on-care); font-weight: 800; font-size: 14px; }
-.site-story h3 { margin-top: 14px; font-size: 28px; letter-spacing: -.035em; line-height: 1.1; font-weight: 800; }
-.site-story p { margin-top: 10px; color: var(--muted); font-size: 17px; line-height: 1.5; max-width: 40ch; }
-.site-story p b { color: var(--ink); }
-.site-two { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; }
 .site-chips { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 22px; }
 .site-chips button { height: 40px; padding: 0 14px; border-radius: var(--r-md); border: 0; background: var(--paper); box-shadow: inset 0 0 0 1px var(--line); color: var(--ink); font: 700 15px/1 var(--font); cursor: pointer; }
 .site-chips button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); box-shadow: none; }
 .site-fig svg { width: 100%; height: auto; display: block; }
 .site-fig.chain { width: 100%; max-width: 480px; margin: 0 auto; }
 .site-fig.orbit { width: 440px; max-width: 100%; margin: 0 auto; }
-.site-nots { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 36px; }
-.site-not { background: var(--paper); border-radius: var(--r-xl); padding: 22px; box-shadow: var(--shadow-card); }
-.site-not i { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 13px; background: var(--canvas); color: var(--ink); }
-.site-not i svg { width: 22px; height: 22px; }
-.site-not h3 { margin-top: 14px; font-size: 17px; line-height: 1.25; font-weight: 800; }
-.site-not p { margin-top: 6px; color: var(--muted); line-height: 1.5; }
-.site-nots.four { grid-template-columns: repeat(4, 1fr); }
-.site-not .n { display: inline-grid; place-items: center; width: 32px; height: 32px; border-radius: 10px; background: var(--care); color: var(--on-care); font-weight: 800; font-size: 14px; }
-.site-faq { margin-top: 28px; max-width: 760px; }
-.site-faq details { border-bottom: 1px solid var(--line); }
-.site-faq summary { display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 56px; padding: 10px 0; cursor: pointer; list-style: none; font-size: 18px; font-weight: 700; color: var(--ink); }
-.site-faq summary::-webkit-details-marker { display: none; }
-.site-faq summary::after { content: '+'; flex: none; font-size: 22px; font-weight: 500; color: var(--muted); }
-.site-faq details[open] summary::after { content: '−'; }
-.site-faq summary:focus-visible { outline: 2px solid var(--care); outline-offset: 2px; border-radius: 6px; }
-.site-faq p { margin: 0 0 18px; color: var(--muted); font-size: 16px; line-height: 1.55; max-width: 62ch; }
 .site-note { margin-top: 14px; color: var(--muted); font-size: 15px; line-height: 1.5; max-width: 46ch; }
-.site-stores { display: flex; gap: 12px; margin-top: 28px; flex-wrap: wrap; }
-.site-store { height: 56px; padding: 0 20px; border-radius: var(--r-lg); background: var(--ink); color: var(--canvas); display: inline-flex; align-items: center; justify-content: center; gap: 10px; font-weight: 700; font-size: 16px; }
-.site-store svg { width: 22px; height: 22px; }
-.site-store.light { background: var(--paper); color: var(--ink); box-shadow: inset 0 0 0 1px var(--line); }
-.site-qr { display: inline-flex; align-items: center; gap: 14px; margin-top: 16px; padding: 12px 16px 12px 12px; border-radius: var(--r-lg); background: var(--paper); box-shadow: var(--shadow-card); font-size: 14px; line-height: 1.4; }
-.site-qr canvas { width: 64px; height: 64px; border-radius: var(--r-sm); flex: none; }
-.site-qr b { display: block; font-size: 15px; letter-spacing: -.01em; }
-.site-qr span span { color: var(--muted); }
 
 /* ---------- /how ---------- */
 .site-hero1 { padding: 40px 48px 56px; max-width: 62ch; }
@@ -205,8 +129,6 @@
 .site .rvg > :nth-child(4) { transition-delay: 240ms; }
 @media (prefers-reduced-motion: reduce) {
   .site .rv, .site .rvg > * { opacity: 1; transform: none; transition: none; }
-  .site-hero-graph { animation: none; }
-  .site-story .beat { transition: none; }
   .site-btn { transition: none; }
   .site-btn:active { transform: none; }
 }
@@ -223,39 +145,20 @@
 /* tablet and narrow desktop windows: the hero and the two-column sections stack before the phone layout */
 @container (max-width: 960px) {
   /* Stacked: the ball sits in a zone on top, the copy below it over a scrim that rises from the bottom. */
-  .site-hero { --hero-gx: .5; --hero-gr: .4; --hero-graph-h: 380px; align-items: flex-end; min-height: 0; padding: calc(var(--hero-graph-h) - 24px) 40px 48px; }
-  .site-hero::after { background: linear-gradient(180deg, rgb(var(--so-scene) / 0) 0, rgb(var(--so-scene) / 0) calc(var(--hero-graph-h) - 110px), rgb(var(--so-scene) / .86) calc(var(--hero-graph-h) + 10px)); }
-  .site-hero-copy { max-width: none; }
-  .site-hero-tag { top: calc(var(--hero-graph-h) - 56px); bottom: auto; right: auto; left: 50%; transform: translateX(-50%); }
-  .site-hero .lead { max-width: 60ch; }
-  .site-two, .site-how .site-sec { grid-template-columns: 1fr; }
-  .site-nots, .site-nots.four { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+  .site-how .site-sec { grid-template-columns: 1fr; }
 }
 
 /* the site at phone width: same markup, one column */
 @container (max-width: 600px) {
   .site-top { padding: 0 16px; height: 64px; gap: 12px; }
   .site-top nav, .site-top .site-lang { display: none; }
-  .site-hero { --hero-graph-h: 300px; --hero-gr: .44; margin: 4px 12px 0; padding: calc(var(--hero-graph-h) - 20px) 20px 32px; border-radius: var(--r-xl); }
-  .site-hero h1 { font-size: 40px; }
   .site-hero1 h1 { font-size: 36px; }
-  .site-hero .lead { margin-top: 14px; }
-  .site-cta { margin-top: 22px; }
-  .site-hero .lead, .site-hero1 .lead { font-size: 17px; }
-  .site-cta { flex-direction: column; }
-  .site-cta .site-btn { width: 100%; }
+  .site-hero1 .lead { font-size: 17px; }
   .site-sec { padding: 40px 16px; }
   .site-sec h2 { font-size: 30px; }
   .site-endcta h2 { font-size: 28px; }
-  .site-story { grid-template-columns: 1fr; gap: 0; margin-top: 16px; }
   /* box-shadow paints the strip above the card in the page colour, so text never shows over it */
-  .site-story .fig { top: 8px; z-index: 1; box-shadow: 0 -8px 0 var(--canvas), var(--shadow-card); height: 236px; padding: 12px; gap: 10px; border-radius: var(--r-xl); }
-  .site-story .beat { min-height: 46vh; padding: 24px 0; }
-  .site-story li:last-child .beat { min-height: 0; }
-  .site-story h3 { font-size: 23px; }
-  .site-story p { font-size: 16px; }
-  .site-nots, .site-nots.four { grid-template-columns: 1fr; gap: 14px; }
-  .site-two, .site-how .site-sec { grid-template-columns: 1fr; gap: 24px; }
+  .site-how .site-sec { grid-template-columns: 1fr; gap: 24px; }
   .site-how .site-say { font-size: 16px; }
   /* comparison: each row label on its own line above the two answers */
   .site-compare tr { display: grid; grid-template-columns: 1fr 1fr; }
@@ -263,8 +166,6 @@
   .site-compare tbody th { grid-column: 1 / -1; width: auto; padding-bottom: 0; }
   .site-compare tbody td { border-top: 0; padding-top: 6px; }
   .site-fig.orbit { width: 320px; }
-  .site-stores { flex-direction: column; }
-  .site-qr { display: none; }
   .site-hero1 { padding: 16px 16px 36px; }
   .site-endcta { flex-direction: column; align-items: stretch; padding: 40px 16px 48px; }
   .site-endcta h2 { margin: 0 0 4px; }

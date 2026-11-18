@@ -2,9 +2,8 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 
 // Packages that exist only to draw the Circle graph. Kept together so the
-// guest landing does not download them.
+// guest landing does not download them (Three.js has a chunk of its own, see below).
 const GRAPH_PACKAGES = new Set([
-  'three',
   'react-force-graph-3d',
   '3d-force-graph',
   'three-spritetext',
@@ -82,6 +81,13 @@ export default defineConfig({
           const pkg = packageName(id);
           if (!pkg) return;
           if (pkg === 'gun') return 'gun';
+          // Three.js core alone: the guest landing's flock scene needs it without the graph libraries. The
+          // examples the graph uses (controls, renderers) go with the graph; the landing's line addons stay
+          // with the scene that imports them.
+          if (pkg === 'three') {
+            if (/[\\/]three[\\/]examples[\\/]jsm[\\/]lines[\\/]/.test(id)) return;
+            return /[\\/]three[\\/]examples[\\/]/.test(id) ? 'graph3d' : 'three';
+          }
           if (GRAPH_PACKAGES.has(pkg) || pkg.startsWith('@react-three/') || pkg.startsWith('d3-') || pkg.startsWith('ngraph.')) {
             return 'graph3d';
           }

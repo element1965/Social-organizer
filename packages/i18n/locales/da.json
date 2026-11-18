@@ -706,97 +706,12 @@
       "terms": "Vilkår",
       "deleteAccount": "Slet konto"
     },
-    "meta": {
-      "title": "Social Organizer — et netværk af mennesker, du kender",
-      "description": "Byg et netværk af mennesker, du kender personligt, og del hinandens risici. Et behov når lige så mange mennesker, som det nævner dollar, de nærmeste først. Deltagerne bestemmer selv og handler direkte. Open source, et nonprofitprojekt."
-    },
-    "hero": {
-      "title": "Først et netværk af mennesker, du kender",
-      "lead": "Social Organizer begynder med dit netværk: mennesker, du kender personligt, og dem, de kender. Når en af jer har det svært, kan de andre dele byrden. <b>Et behov når lige så mange mennesker, som det nævner dollar, de nærmeste først</b>, og hver af dem kan tage en lille del.",
-      "factOpen": "Åben kildekode",
-      "factNonprofit": "Ikke-kommerciel",
-      "factNoMoney": "Frivillig deltagelse",
-      "play": "Hent den i Google Play",
-      "appstore": "Hent den i App Store",
-      "startWeb": "Start i browseren",
-      "web": "I browseren",
-      "how": "Se, hvordan det fungerer",
-      "tgAlt": "Hellere Telegram?",
-      "tgOpen": "Åbn den der",
-      "sceneAria": "Et netværk vokser ud fra dig, håndtryk for håndtryk; et behov bevæger sig i det, og deltagerne melder deltagelse",
-      "sceneYou": "Dig",
-      "sceneAsk": "behov · {{amount}}",
-      "sceneDone": "deltagelse · {{amount}}",
-      "statDepth": "3 håndtryk",
-      "statPeople_one": "{{n}} person i ét netværk",
-      "statPeople_other": "{{n}} personer i ét netværk",
-      "sceneNet": "Dit netværk · {n}"
-    },
-    "steps": {
-      "title": "Sådan fungerer det",
-      "lead": "Først bygger du netværket. Behov og deltagelse bevæger sig inde i det.",
-      "s1Title": "Du bygger dit netværk",
-      "s1Text": "Tilføj mennesker, du kender personligt, med et link eller en QR-kode. <b>Hver af dem bekræfter, at I kender hinanden.</b>",
-      "s2Title": "Det rækker længere, end du kan se",
-      "s2Text": "Gennem dine folk når du deres: det 2. og 3. håndtryk. <b>Du ser tre håndtryk ud, og ingen ser hele netværket.</b>",
-      "s3Title": "Et behov når lige så mange mennesker, som det nævner dollar",
-      "s3Text": "Et behov på {{amount}} når præcis {{n}} mennesker, de nærmeste via håndtryk først. <b>Hver af dem får én chance for at deltage</b>, og behovet lukker, når deltagerne har dækket beløbet.",
-      "s4Title": "Koordineringen følger",
-      "s4Text": "Dem, der har lyst, melder deltagelse, og beløbene lægges sammen, som ved crowdfunding. <b>Deltagerne aftaler detaljerne direkte</b>, i deres egen chat."
-    },
-    "chain": {
-      "title": "En besked om et behov går via håndtryk",
-      "lead": "Du ser Marias behov, fordi Oleg kender hende, og du kender Oleg. Det når kun lige så mange mennesker, som det nævner dollar, de nærmeste først. <b>Du skylder ingenting</b> og må gerne lade det stå ubesvaret."
-    },
-    "nots": {
-      "title": "Det, Social Organizer ikke gør",
-      "moneyTitle": "Behandler ingen betalinger",
-      "moneyText": "Den modtager, overfører eller opbevarer ikke penge. Hvad end deltagerne gør, gør de direkte, uden for tjenesten.",
-      "feeTitle": "Tager intet gebyr",
-      "feeText": "Koden er åben, projektet er ikke-kommercielt, og du betaler intet for det.",
-      "choiceTitle": "Bestemmer ikke for dig",
-      "choiceText": "Du vælger selv, hvem du tilføjer, om du deltager, og hvordan. Du kan sige nej, og intet går i stykker."
-    },
     "start": {
-      "title": "Start med personer, du allerede kender",
-      "lead": "<b>Har du fået et link af en, du kender?</b> Åbn det, så lander du i deres kreds. Intet link? Log ind og inviter selv de første fem.",
       "play": "Google Play",
       "appstore": "App Store",
-      "telegram": "Åbn i Telegram",
-      "web": "I browseren",
       "qrTitle": "Appen på din telefon",
       "qrText": "Ret kameraet: den rigtige butik åbner.",
       "qrAria": "QR-kode med et link til appen"
-    },
-    "principles": {
-      "title": "Principper",
-      "p1Title": "Frivillig deltagelse",
-      "p1Text": "Ingen behøver at svare. Du bestemmer hver gang, om du vil deltage.",
-      "p2Title": "Uafhængig beslutning",
-      "p2Text": "Ingen organisator bestemmer for dig, og ingen bedømmer dig. Hvis du siger nej, sker der ikke noget med dig.",
-      "p3Title": "Direkte forbindelse mellem deltagerne",
-      "p3Text": "Deltagerne aftaler og handler indbyrdes, uden mellemled.",
-      "p4Title": "Netværket kommer først",
-      "p4Text": "Signaler går kun gennem bekræftede bekendtskaber. Du deler risici med mennesker, du kender direkte, uden en fælles pulje og uden en operatør."
-    },
-    "faq": {
-      "title": "Det vigtigste kort",
-      "q1": "Hvad gør Social Organizer?",
-      "a1": "Den hjælper dig med at bygge et netværk af mennesker, du kender personligt, og lader to signaler, behov og deltagelse, bevæge sig gennem det. Den handler ikke på deltagernes vegne.",
-      "q2": "Skal jeg deltage?",
-      "a2": "Nej. Du bestemmer selv, om du vil deltage.",
-      "q3": "Garanterer tjenesten hjælp?",
-      "a3": "Nej. Resultatet afhænger af, hvad deltagerne beslutter og gør.",
-      "q4": "Behandler Social Organizer betalinger?",
-      "a4": "Nej. Social Organizer modtager, overfører eller opbevarer ikke penge. Alt, hvad deltagerne gør mellem sig, gør de direkte, uden for tjenesten.",
-      "q5": "Giver deltagerne penge videre?",
-      "a5": "Det kan de. Et behov angiver et beløb, og en deltagelse angiver, hvor meget en deltager er klar til at give videre. Hvis deltagerne giver penge videre, gør de det selv og direkte, efter deres egen aftale. Social Organizer kontrollerer ikke, om en overdragelse har fundet sted.",
-      "q6": "Hvad er beløbene angivet i?",
-      "a6": "I amerikanske dollar: en fælles regneenhed, så du kan sammenligne beløb. Deltagerne vælger selv valuta og fremgangsmåde.",
-      "q7": "Hvordan adskiller den sig fra onlineplatforme til gensidig hjælp?",
-      "a7": "Hver af Kinas platforme til gensidig hjælp havde én operatør, som opkrævede penge hos medlemmerne og lovede udbetalinger som et forsikringsselskab. I 2021 lukkede myndighederne dem alle. Social Organizer har hverken operatør eller pulje: mennesker, der kender hinanden, sender to signaler og bestemmer selv.",
-      "q8": "Er det en forsikring?",
-      "a8": "Nej. Et forsikringsselskab tager dine penge på forhånd og lover en udbetaling. Her betaler du ikke noget på forhånd, og ingen lover noget. Når en i dit netværk har det svært, tager de, der beslutter at deltage, hver en lille del."
     }
   },
   "how": {
