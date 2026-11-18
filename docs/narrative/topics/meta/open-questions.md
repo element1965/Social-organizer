@@ -39,14 +39,16 @@ note it affects.
    which is also the report's premise. Or a real human case from the network, with consent.
 5. **"What becomes possible next" on the landing?** Concept A puts initiatives and collaborators on
    the participant-facing page as a future stage; the parked-topics rule keeps them off it.
-6. **"Crowdfunding of intentions"**: Participation in a Need, or initiatives? One meaning only.
-7. **Landing concept**: A (five scenes, network as hero), B (one situation, three steps), or a mix.
+6. ~~"Crowdfunding of intentions": one meaning only?~~ Decided 2026-11-18: it is both, Participation
+   in a Need now and initiatives later (see the vocabulary note).
+7. **Landing concept** (stage 3, not now): two ChatGPT proposals are collected in the landing
+   concepts note. The user has not seen them yet; show them when the landing work starts.
 
 ### Funding decisions
 
-1. **Independence condition.** Accept funding only with no transfer of control, no
-   commercialisation and no donor right to define how the environment works?
-2. **Two tracks.** How to arrange institutional funding of SO and personal patronage of the author
+1. ~~Independence condition.~~ Decided 2026-11-18: not a question for this stage; the core stays
+   open and non-profit, commercial ideas may later be added on top, carefully.
+2. **Two tracks** (later, when funding talks start). How to arrange institutional funding of SO and personal patronage of the author
    (possibly separate agreements).
 3. **Verify the funder facts** the chat gave (programmes, grant sizes) before any outreach.
 

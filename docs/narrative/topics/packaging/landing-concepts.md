@@ -16,7 +16,8 @@ summary: Two brainstorm proposals for the new landing — "The World Is Already 
 
 Input for stage 3 of the [packaging plan](packaging-plan.md). Sources: the second part of the chat
 "Финансирование социальной инновации" (`6afce8ee…`) and the chat "Аналоги лендингов" (`6af7620c…`),
-both read 2026-11-18. The author's brief in both: the current landing is "one text"; it should be
+both read 2026-11-18. These are ChatGPT's proposals inside those chats; the user had not looked at
+them as concepts yet (2026-11-18), so show them before asking for a choice. The author's brief in both: the current landing is "one text"; it should be
 dynamic, simple, possibly with a person telling the story; the graph prototype on the page is worth
 keeping. **Status: ideas, nothing chosen.**
 
@@ -76,7 +77,7 @@ Reference landings from that chat are listed in [comparables](../audiences/compa
 | "The history of confirmed actions creates the basis of reputation" | Say "activity history"; reputation forms between people, the app gives no score. |
 | "Social Organizer helps to report a Need…" | People act; the app is the channel (`so-story`). |
 | "What becomes possible next: initiatives" on the landing | A parked topic: decide whether a clearly marked future section belongs on a participant-facing page ([open questions](../meta/open-questions.md)). |
-| "Initiatives — crowdfunding of intentions" | The same phrase is used elsewhere for Participation in a Need. Pick one meaning. |
+| "Initiatives — crowdfunding of intentions" | Correct as is: the term covers Participation in a Need today and initiatives later (user, 2026-11-18). |
 
 ### What both agree on
 

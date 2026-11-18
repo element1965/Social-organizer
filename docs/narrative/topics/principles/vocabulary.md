@@ -50,8 +50,10 @@ video and pitch texts use the same words, so that what people hear matches what 
 messages; significant relations; formalising relations; **referential inheritance**; bounded
 local field; latent global connectedness; critical mass N*; reproduction number m(N).
 
-**Term collision to resolve:** "crowdfunding of intentions" names Participation in a Need in the
-video brief, and *initiatives* (a future stage) in the landing concept. Use it for one of them only.
+**Crowdfunding of intentions** (decided by the user, 2026-11-18): one mechanism with both uses.
+Today it is Participation in a Need: people declare intentions, and the intentions add up to the
+amount. Later it is initiatives: people declare intentions to back a common project. Internal term;
+in public say "amounts add up, as in crowdfunding".
 In public say "network of people you know", "risk sharing", "amounts add up, as in crowdfunding".
 
 ### Avoid in public
