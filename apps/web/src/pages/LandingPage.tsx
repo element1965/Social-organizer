@@ -38,6 +38,9 @@ const TALL = new Set([4, 6]);
 const FAQ = [1, 2, 3, 4] as const;
 
 const ext = { target: '_blank', rel: 'noopener noreferrer' } as const;
+/** A sum with a dotted sign ("2.000 kr.", "1100 ر.س.") already ends the sentence: no second dot after it. */
+const noDoubleDot = (text: string, sums: Record<string, string>) =>
+  Object.values(sums).reduce((out, sum) => (/\.\u200f?$/.test(sum) ? out.split(`${sum}.`).join(sum) : out), text);
 const reducedMotion = () => typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 /** Answers open and close with a height animation; the native details element keeps it accessible. */
@@ -88,6 +91,13 @@ export function LandingPage() {
     const mf = moneyFormat(lang, money.currency);
     return { repair: mf.format(money.repair), min: mf.format(money.min), mine: mf.format(money.mine) };
   }, [lang, money]);
+  /** A story line with the sums filled in. */
+  const tm = (key: string) => noDoubleDot(t(key, sums), sums);
+  // Maria's tag is "name · sum"; the graph's labels show the name alone, as the app does
+  const mariaTag = tm('landing.v2.story.tags.maria');
+  const mariaDot = mariaTag.indexOf('·');
+  const mariaName = mariaDot > 0 ? mariaTag.slice(0, mariaDot).trim() : mariaTag;
+  const mariaSum = mariaDot > 0 ? mariaTag.slice(mariaDot) : '';
 
   const rootRef = useRef<HTMLDivElement>(null);
   const navRef = useRef<HTMLElement>(null);
@@ -335,7 +345,8 @@ export function LandingPage() {
           {t('landing.v2.story.tags.oleg')}
         </span>
         <span className="tag t-maria sos right" ref={(el) => void (tagRefs.current.maria = el)}>
-          {t('landing.v2.story.tags.maria', sums)}
+          {mariaName}
+          {mariaSum ? <span className="sum"> {mariaSum}</span> : null}
         </span>
         <span className="tag t-lena care below" ref={(el) => void (tagRefs.current.lena = el)}>
           {t('landing.v2.story.tags.lena')}
@@ -348,7 +359,7 @@ export function LandingPage() {
         </div>
         <div className="reported" ref={hudReportedRef}>
           <b />
-          <span>{t('landing.v2.story.hud.reported', sums)}</span>
+          <span>{tm('landing.v2.story.hud.reported')}</span>
         </div>
         <div className="people" ref={hudPeopleRef}>
           <b />
@@ -394,7 +405,7 @@ export function LandingPage() {
               <div className="wrap">
                 <div className="copy">
                   <span className="mono">{t(`landing.v2.story.b${b}.label`)}</span>
-                  <p className="say">{t(`landing.v2.story.b${b}.say`, sums)}</p>
+                  <p className="say">{tm(`landing.v2.story.b${b}.say`)}</p>
                   {b === 2 ? (
                     <div className="late" ref={(el) => void (lateRefs.current[b] = el)}>
                       <p className="stat">
@@ -406,7 +417,7 @@ export function LandingPage() {
                     </div>
                   ) : b === 1 ? null : (
                     <p className="late" ref={(el) => void (lateRefs.current[b] = el)}>
-                      {t(`landing.v2.story.b${b}.late`, sums)}
+                      {tm(`landing.v2.story.b${b}.late`)}
                     </p>
                   )}
                   {b === LAST_BEAT ? (

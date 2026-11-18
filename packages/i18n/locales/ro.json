@@ -769,28 +769,33 @@
         },
         "b4": {
           "label": "2 · O nevoie",
-          "say": "Mariei i s-a stricat mașina, iar fără ea nu poate ajunge la serviciu. Reparația costă 300 $.",
-          "late": "Maria anunță o nevoie și adaugă linkul unui chat. O nevoie de 300 $ ajunge până la 300 de oameni, începând cu cei mai apropiați."
+          "say": "Ioanei i s-a stricat mașina, iar fără ea nu poate ajunge la serviciu. Reparația costă {{repair}}.",
+          "late": "Ioana anunță o nevoie și adaugă linkul unui chat. O nevoie de {{repair}} ajunge până la 300 de oameni, începând cu cei mai apropiați."
         },
         "b5": {
           "label": "3 · Fiecare decide singur",
-          "say": "Tu îl cunoști pe Oleg, iar Oleg o cunoaște pe Maria. Vezi acest lanț și îl poți întreba pe Oleg ce s-a întâmplat.",
+          "say": "Tu îl cunoști pe Mihai, iar Mihai o cunoaște pe Ioana. Vezi acest lanț și îl poți întreba pe Mihai ce s-a întâmplat.",
           "late": "Dacă participi sau nu, alegi tu."
         },
         "b6": {
           "label": "4 · Câte puțin de la mulți",
-          "say": "Cine vrea să participe indică o sumă, de la 1 $ în sus. Tu indici 5 $.",
+          "say": "Cine vrea să participe indică o sumă, de la {{min}} în sus. Tu indici {{mine}}.",
           "late": "E o intenție, acum nu plătești nimic. Cât timp nevoia e deschisă, poți schimba suma sau îți poți retrage participarea."
         },
         "b7": {
           "label": "5 · Înțelegere directă",
-          "say": "Maria și participanții discută totul în chat. Lena recomandă un service mai ieftin.",
+          "say": "Ioana și participanții discută totul în chat. Alina recomandă un service mai ieftin.",
           "late": "Dacă e vorba de bani, oamenii și-i dau direct unii altora. Aplicația nu se atinge de ei."
         },
         "b8": {
           "label": "Tu",
-          "say": "Mâine, în locul Mariei ai putea fi tu.",
+          "say": "Mâine, în locul Ioanei ai putea fi tu.",
           "late": "Atunci cunoscuții tăi vor afla primii de nevoia ta."
+        },
+        "b9": {
+          "label": "În aplicație",
+          "say": "Așa arată rețeaua ta în aplicație: tu în centru, în jur cunoscuții tăi, mai departe cunoscuții lor.",
+          "late": "Când cineva are nevoie de ajutor, vezi lanțul de cunoscuți de la acea persoană până la tine."
         },
         "rail": {
           "1": "Stol",
@@ -800,19 +805,20 @@
           "5": "Decizie",
           "6": "Participare",
           "7": "Chat",
-          "8": "Tu"
+          "8": "Tu",
+          "9": "Aplicație"
         },
         "tags": {
           "you": "Tu",
-          "oleg": "Oleg",
-          "maria": "Maria · 300 $",
-          "lena": "Lena"
+          "oleg": "Mihai",
+          "maria": "Ioana · {{repair}}",
+          "lena": "Alina"
         },
         "hud": {
           "reached_one": "a aflat despre nevoie",
           "reached_few": "au aflat despre nevoie",
           "reached_other": "au aflat despre nevoie",
-          "reported": "declarați din 300 $",
+          "reported": "declarați din {{repair}}",
           "people_one": "participant",
           "people_few": "participanți",
           "people_other": "de participanți"

@@ -765,28 +765,33 @@
         },
         "b4": {
           "label": "2 · Et behov",
-          "say": "Bilen til Maria har gått i stykker, og uten den kommer hun seg ikke på jobb. Reparasjonen koster 300 $.",
-          "late": "Maria melder om et behov og legger ved en lenke til en chat. Et behov på 300 $ når opptil 300 personer, de nærmeste først."
+          "say": "Bilen til Ingrid har gått i stykker, og uten den kommer hun seg ikke på jobb. Reparasjonen koster {{repair}}.",
+          "late": "Ingrid melder om et behov og legger ved en lenke til en chat. Et behov på {{repair}} når opptil 300 personer, de nærmeste først."
         },
         "b5": {
           "label": "3 · Alle bestemmer selv",
-          "say": "Du kjenner Oleg, og Oleg kjenner Maria. Du ser denne kjeden og kan spørre Oleg hva som har skjedd.",
+          "say": "Du kjenner Lars, og Lars kjenner Ingrid. Du ser denne kjeden og kan spørre Lars hva som har skjedd.",
           "late": "Om du vil delta, velger du selv."
         },
         "b6": {
           "label": "4 · Litt fra mange",
-          "say": "Alle som vil delta, oppgir et beløp fra 1 $. Du oppgir 5 $.",
+          "say": "Alle som vil delta, oppgir et beløp fra {{min}}. Du oppgir {{mine}}.",
           "late": "Det er en intensjon, og ingenting betales nå. Så lenge behovet er åpent, kan du endre beløpet eller trekke tilbake deltakelsen."
         },
         "b7": {
           "label": "5 · Direkte avtale",
-          "say": "Maria og deltakerne snakker sammen i chatten. Lena foreslår et billigere verksted.",
+          "say": "Ingrid og deltakerne snakker sammen i chatten. Kari foreslår et billigere verksted.",
           "late": "Gjelder det penger, gir folk dem videre selv. Appen rører aldri pengene."
         },
         "b8": {
           "label": "Du",
-          "say": "I morgen kan det være du som er i Marias sted.",
+          "say": "I morgen kan det være du som er i Ingrids sted.",
           "late": "Da er det de du kjenner, som først får høre om behovet ditt."
+        },
+        "b9": {
+          "label": "I appen",
+          "say": "Slik ser nettverket ditt ut i appen: du i midten, rundt deg dine bekjente, lenger ute deres bekjente.",
+          "late": "Når noen trenger hjelp, ser du kjeden av bekjente fra den personen til deg."
         },
         "rail": {
           "1": "Flokk",
@@ -796,18 +801,19 @@
           "5": "Valg",
           "6": "Deltakelse",
           "7": "Chat",
-          "8": "Du"
+          "8": "Du",
+          "9": "Appen"
         },
         "tags": {
           "you": "Du",
-          "oleg": "Oleg",
-          "maria": "Maria · 300 $",
-          "lena": "Lena"
+          "oleg": "Lars",
+          "maria": "Ingrid · {{repair}}",
+          "lena": "Kari"
         },
         "hud": {
           "reached_one": "har hørt om behovet",
           "reached_other": "har hørt om behovet",
-          "reported": "av 300 $ oppgitt",
+          "reported": "av {{repair}} oppgitt",
           "people_one": "deltaker",
           "people_other": "deltakere"
         }

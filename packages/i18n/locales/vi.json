@@ -761,28 +761,33 @@
         },
         "b4": {
           "label": "2 · Nhu cầu",
-          "say": "Xe của Maria bị hỏng, mà không có xe thì cô ấy không đi làm được. Sửa xe hết 300 $.",
-          "late": "Maria thông báo một nhu cầu và kèm liên kết tới nhóm chat. Nhu cầu 300 $ sẽ tới tối đa 300 người, bắt đầu từ người gần nhất."
+          "say": "Ô tô của Linh bị hỏng, mà không có xe thì cô ấy không đi làm được. Sửa xe hết {{repair}}.",
+          "late": "Linh thông báo một nhu cầu và kèm liên kết tới nhóm chat. Nhu cầu {{repair}} sẽ tới tối đa 300 người, bắt đầu từ người gần nhất."
         },
         "b5": {
           "label": "3 · Mỗi người tự quyết định",
-          "say": "Bạn quen Oleg, còn Oleg quen Maria. Bạn thấy được chuỗi này và có thể hỏi Oleg chuyện gì đã xảy ra.",
+          "say": "Bạn quen Tuấn, còn Tuấn quen Linh. Bạn thấy được chuỗi này và có thể hỏi Tuấn chuyện gì đã xảy ra.",
           "late": "Có tham gia hay không là do bạn chọn."
         },
         "b6": {
           "label": "4 · Mỗi người một ít",
-          "say": "Ai muốn tham gia thì nêu một số tiền, từ 1 $. Bạn nêu 5 $.",
+          "say": "Ai muốn tham gia thì nêu một số tiền, từ {{min}}. Bạn nêu {{mine}}.",
           "late": "Đó là dự định, bây giờ chưa phải trả gì. Khi nhu cầu còn mở, bạn có thể đổi số tiền hoặc rút lại."
         },
         "b7": {
           "label": "5 · Mọi người thỏa thuận trực tiếp",
-          "say": "Maria và những người tham gia bàn bạc trong chat. Lena gợi ý một tiệm sửa xe rẻ hơn.",
+          "say": "Linh và những người tham gia bàn bạc trong nhóm chat. Thảo gợi ý một gara sửa ô tô rẻ hơn.",
           "late": "Nếu có chuyện tiền bạc, mọi người tự đưa cho nhau. Ứng dụng không bao giờ đụng tới tiền."
         },
         "b8": {
           "label": "Bạn",
-          "say": "Ngày mai, người ở vị trí của Maria có thể là bạn.",
+          "say": "Ngày mai, người ở vị trí của Linh có thể là bạn.",
           "late": "Khi đó, người quen của bạn sẽ là những người đầu tiên biết về nhu cầu của bạn."
+        },
+        "b9": {
+          "label": "Trong ứng dụng",
+          "say": "Trong ứng dụng, mạng lưới của bạn trông như thế này: bạn ở giữa, xung quanh là người quen của bạn, xa hơn là người quen của họ.",
+          "late": "Khi ai đó cần giúp đỡ, bạn thấy chuỗi người quen nối từ người đó đến bạn."
         },
         "rail": {
           "1": "Đàn chim",
@@ -792,17 +797,18 @@
           "5": "Quyết định",
           "6": "Tham gia",
           "7": "Chat",
-          "8": "Bạn"
+          "8": "Bạn",
+          "9": "Ứng dụng"
         },
         "tags": {
           "you": "Bạn",
-          "oleg": "Oleg",
-          "maria": "Maria · 300 $",
-          "lena": "Lena"
+          "oleg": "Tuấn",
+          "maria": "Linh · {{repair}}",
+          "lena": "Thảo"
         },
         "hud": {
           "reached_other": "người đã biết về nhu cầu",
-          "reported": "trên 300 $ đã được nêu",
+          "reported": "trên {{repair}} đã được nêu",
           "people_other": "người tham gia"
         }
       },

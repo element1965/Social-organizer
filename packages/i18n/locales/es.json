@@ -769,28 +769,33 @@
         },
         "b4": {
           "label": "2 · Una necesidad",
-          "say": "A María se le ha averiado el coche, y sin él no puede ir a trabajar. La reparación cuesta 300 $.",
-          "late": "María comunica una necesidad y añade el enlace a un chat. Una necesidad de 300 $ llega hasta 300 personas, primero a las más cercanas."
+          "say": "A Lucía se le ha averiado el coche, y sin él no puede ir a trabajar. La reparación cuesta {{repair}}.",
+          "late": "Lucía comunica una necesidad y añade el enlace a un chat. Una necesidad de {{repair}} llega hasta 300 personas, primero a las más cercanas."
         },
         "b5": {
           "label": "3 · Cada uno decide",
-          "say": "Usted conoce a Oleg, y Oleg conoce a María. Ve esta cadena y puede preguntarle a Oleg qué ha pasado.",
+          "say": "Usted conoce a Carlos, y Carlos conoce a Lucía. Ve esta cadena y puede preguntarle a Carlos qué ha pasado.",
           "late": "Participar o no lo decide usted."
         },
         "b6": {
           "label": "4 · Un poco de muchos",
-          "say": "Quien quiera participar indica una cantidad a partir de 1 $. Usted indica 5 $.",
+          "say": "Quien quiera participar indica una cantidad a partir de {{min}}. Usted indica {{mine}}.",
           "late": "Es una intención, ahora no se paga nada. Mientras la necesidad siga abierta, puede cambiar la cantidad o retirar su participación."
         },
         "b7": {
           "label": "5 · Acuerdo directo",
-          "say": "María y los participantes lo hablan en el chat. Lena propone un taller más barato.",
+          "say": "Lucía y los participantes lo hablan en el chat. Ana propone un taller más barato.",
           "late": "Si hay dinero de por medio, las personas se lo entregan directamente. La aplicación nunca lo toca."
         },
         "b8": {
           "label": "Usted",
-          "say": "Mañana usted podría estar en el lugar de María.",
+          "say": "Mañana usted podría estar en el lugar de Lucía.",
           "late": "Entonces sus conocidos serán los primeros en enterarse de su necesidad."
+        },
+        "b9": {
+          "label": "En la aplicación",
+          "say": "Así se ve su red en la aplicación: usted en el centro, a su alrededor sus conocidos y, más allá, los conocidos de ellos.",
+          "late": "Cuando alguien necesita ayuda, usted ve la cadena de conocidos que va de esa persona hasta usted."
         },
         "rail": {
           "1": "Bandada",
@@ -800,19 +805,20 @@
           "5": "Decisión",
           "6": "Participación",
           "7": "Chat",
-          "8": "Usted"
+          "8": "Usted",
+          "9": "Aplicación"
         },
         "tags": {
           "you": "Usted",
-          "oleg": "Oleg",
-          "maria": "María · 300 $",
-          "lena": "Lena"
+          "oleg": "Carlos",
+          "maria": "Lucía · {{repair}}",
+          "lena": "Ana"
         },
         "hud": {
           "reached_one": "sabe de la necesidad",
           "reached_many": "saben de la necesidad",
           "reached_other": "saben de la necesidad",
-          "reported": "declarados de 300 $",
+          "reported": "declarados de {{repair}}",
           "people_one": "participante",
           "people_many": "de participantes",
           "people_other": "participantes"

@@ -75,7 +75,11 @@ html.lv-page body { background-color: rgb(var(--so-scene)); }
 /* in the graph the names read as the app's labels: plain bold text under the dot */
 .lv.graph .tag { background: none; padding: 0; font: 700 12px/1.2 var(--sans); color: var(--lv-node); text-shadow: 0 1px 8px rgba(5, 12, 11, .95); transform: translate(-50%, 12px); }
 .lv.graph .tag.t-maria { transform: translate(18px, -50%); }
+.lv.graph .tag .sum { display: none; }
 html[dir="rtl"] .lv.graph .tag.t-maria { transform: translate(calc(-100% - 18px), -50%); }
+/* no room beside the dot: the label goes to the other side (scene.ts sets .flip) */
+.lv .tag.right.flip, .lv.graph .tag.t-maria.flip { transform: translate(calc(-100% - 18px), -50%); }
+html[dir="rtl"] .lv.graph .tag.t-maria.flip { transform: translate(18px, -50%); }
 .lv.graph .tag.sos { color: var(--lv-sos-scene); }
 .lv.graph .tag.t-you, .lv.graph .tag.t-oleg { color: var(--lv-care-scene); }
 .lv.graph .tag.t-you { transform: translate(-50%, 26px); }

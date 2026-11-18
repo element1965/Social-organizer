@@ -769,28 +769,33 @@
         },
         "b4": {
           "label": "2 · Un bisogno",
-          "say": "A Maria si è rotta la macchina, e senza auto non può andare al lavoro. La riparazione costa 300 $.",
-          "late": "Maria comunica un bisogno e aggiunge il link a una chat. Un bisogno di 300 $ raggiunge fino a 300 persone, le più vicine per prime."
+          "say": "A Giulia si è rotta la macchina, e senza auto non può andare al lavoro. La riparazione costa {{repair}}.",
+          "late": "Giulia comunica un bisogno e aggiunge il link a una chat. Un bisogno di {{repair}} raggiunge fino a 300 persone, le più vicine per prime."
         },
         "b5": {
           "label": "3 · Ognuno decide da sé",
-          "say": "Tu conosci Oleg, e Oleg conosce Maria. Vedi questa catena e puoi chiedere a Oleg che cosa è successo.",
+          "say": "Tu conosci Marco, e Marco conosce Giulia. Vedi questa catena e puoi chiedere a Marco che cosa è successo.",
           "late": "Partecipare o no lo scegli tu."
         },
         "b6": {
           "label": "4 · Poco da tanti",
-          "say": "Chi vuole partecipare indica un importo da 1 $ in su. Tu indichi 5 $.",
+          "say": "Chi vuole partecipare indica un importo da {{min}} in su. Tu indichi {{mine}}.",
           "late": "È un'intenzione, adesso non si paga niente. Finché il bisogno è aperto, puoi cambiare l'importo o ritirare la partecipazione."
         },
         "b7": {
           "label": "5 · Accordi diretti",
-          "say": "Maria e i partecipanti ne parlano in chat. Lena consiglia un'officina più economica.",
+          "say": "Giulia e i partecipanti ne parlano in chat. Sara consiglia un'officina più economica.",
           "late": "Se ci sono di mezzo dei soldi, le persone se li danno direttamente. L'app non li tocca mai."
         },
         "b8": {
           "label": "Tu",
-          "say": "Domani al posto di Maria potresti esserci tu.",
+          "say": "Domani al posto di Giulia potresti esserci tu.",
           "late": "Allora i primi a sapere del tuo bisogno saranno i tuoi conoscenti."
+        },
+        "b9": {
+          "label": "Nell'app",
+          "say": "Ecco come appare la tua rete nell'app: tu al centro, intorno i tuoi conoscenti, più in là i loro conoscenti.",
+          "late": "Quando qualcuno ha bisogno di aiuto, vedi la catena di conoscenti che va da quella persona fino a te."
         },
         "rail": {
           "1": "Stormo",
@@ -800,19 +805,20 @@
           "5": "Scelta",
           "6": "Partecipazione",
           "7": "Chat",
-          "8": "Tu"
+          "8": "Tu",
+          "9": "App"
         },
         "tags": {
           "you": "Tu",
-          "oleg": "Oleg",
-          "maria": "Maria · 300 $",
-          "lena": "Lena"
+          "oleg": "Marco",
+          "maria": "Giulia · {{repair}}",
+          "lena": "Sara"
         },
         "hud": {
           "reached_one": "ha saputo del bisogno",
           "reached_many": "hanno saputo del bisogno",
           "reached_other": "hanno saputo del bisogno",
-          "reported": "dichiarati su 300 $",
+          "reported": "dichiarati su {{repair}}",
           "people_one": "partecipante",
           "people_many": "di partecipanti",
           "people_other": "partecipanti"

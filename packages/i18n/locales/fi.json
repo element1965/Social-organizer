@@ -765,28 +765,33 @@
         },
         "b4": {
           "label": "2 · Tarve",
-          "say": "Marian auto on hajonnut, eikä hän pääse ilman sitä töihin. Korjaus maksaa 300 $.",
-          "late": "Maria ilmoittaa tarpeesta ja lisää linkin keskusteluun. 300 dollarin tarve tavoittaa enintään 300 ihmistä, lähimmät ensin."
+          "say": "Lauran auto on hajonnut, eikä hän pääse ilman sitä töihin. Korjaus maksaa {{repair}}.",
+          "late": "Laura ilmoittaa tarpeesta ja lisää linkin keskusteluun. Kun tarvitaan {{repair}}, tieto tarpeesta tavoittaa enintään 300 ihmistä, lähimmät ensin."
         },
         "b5": {
           "label": "3 · Jokainen päättää itse",
-          "say": "Sinä tunnet Olegin, ja Oleg tuntee Marian. Näet tämän ketjun ja voit kysyä Olegilta, mitä on tapahtunut.",
+          "say": "Sinä tunnet Mikon, ja Mikko tuntee Lauran. Näet tämän ketjun ja voit kysyä Mikolta, mitä on tapahtunut.",
           "late": "Päätät itse, osallistutko."
         },
         "b6": {
           "label": "4 · Vähän monelta",
-          "say": "Halukkaat nimeävät summan, vähintään 1 $. Sinä nimeät 5 $.",
+          "say": "Halukkaat ilmoittavat summan, joka on vähintään {{min}}. Sinä ilmoitat {{mine}}.",
           "late": "Se on aikomus, eikä mitään makseta nyt. Niin kauan kuin tarve on avoinna, voit muuttaa summaa tai perua osallistumisesi."
         },
         "b7": {
           "label": "5 · Sovitaan suoraan",
-          "say": "Maria ja osallistujat käyvät asian läpi keskustelussa. Lena suosittelee edullisempaa korjaamoa.",
+          "say": "Laura ja osallistujat käyvät asian läpi keskustelussa. Tiina suosittelee edullisempaa korjaamoa.",
           "late": "Jos kyse on rahasta, ihmiset luovuttavat sen itse. Sovellus ei koske rahaan koskaan."
         },
         "b8": {
           "label": "Sinä",
-          "say": "Huomenna Marian paikalla voit olla sinä.",
+          "say": "Huomenna Lauran paikalla voit olla sinä.",
           "late": "Silloin tuttusi kuulevat tarpeestasi ensimmäisinä."
+        },
+        "b9": {
+          "label": "Sovelluksessa",
+          "say": "Näin verkostosi näkyy sovelluksessa: sinä keskellä, ympärilläsi tuttusi ja kauempana heidän tuttunsa.",
+          "late": "Kun joku tarvitsee apua, näet tuttujen ketjun hänestä sinuun asti."
         },
         "rail": {
           "1": "Parvi",
@@ -796,18 +801,19 @@
           "5": "Päätös",
           "6": "Osallistuminen",
           "7": "Keskustelu",
-          "8": "Sinä"
+          "8": "Sinä",
+          "9": "Sovellus"
         },
         "tags": {
           "you": "Sinä",
-          "oleg": "Oleg",
-          "maria": "Maria · 300 $",
-          "lena": "Lena"
+          "oleg": "Mikko",
+          "maria": "Laura · {{repair}}",
+          "lena": "Tiina"
         },
         "hud": {
           "reached_one": "on kuullut tarpeesta",
           "reached_other": "on kuullut tarpeesta",
-          "reported": "/ 300 $ ilmoitettu",
+          "reported": "/ {{repair}} ilmoitettu",
           "people_one": "osallistuja",
           "people_other": "osallistujaa"
         }

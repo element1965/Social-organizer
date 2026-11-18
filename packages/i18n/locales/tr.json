@@ -765,28 +765,33 @@
         },
         "b4": {
           "label": "2 · İhtiyaç",
-          "say": "Maria'nın arabası bozuldu ve araba olmadan işe gidemiyor. Tamir 300 $ tutuyor.",
-          "late": "Maria bir ihtiyaç bildiriyor ve bir sohbet bağlantısı ekliyor. 300 $ tutarındaki bir ihtiyaç, en yakınlardan başlayarak en fazla 300 kişiye ulaşır."
+          "say": "Ayşe'nin arabası bozuldu ve araba olmadan işe gidemiyor. Tamir {{repair}} tutuyor.",
+          "late": "Ayşe bir ihtiyaç bildiriyor ve bir sohbet bağlantısı ekliyor. {{repair}} tutarındaki bir ihtiyaç, en yakınlardan başlayarak en fazla 300 kişiye ulaşır."
         },
         "b5": {
           "label": "3 · Herkes kendisi karar verir",
-          "say": "Siz Oleg'i tanıyorsunuz, Oleg de Maria'yı. Bu zinciri görüyor ve Oleg'e ne olduğunu sorabiliyorsunuz.",
+          "say": "Siz Murat'ı tanıyorsunuz, Murat da Ayşe'yi. Bu zinciri görüyor ve Murat'a ne olduğunu sorabiliyorsunuz.",
           "late": "Katılıp katılmamak sizin seçiminiz."
         },
         "b6": {
           "label": "4 · Çok kişiden azar azar",
-          "say": "Katılmak isteyen herkes bir tutar belirtir, en az 1 $. Siz 5 $ belirtiyorsunuz.",
+          "say": "Katılmak isteyen herkes en az {{min}} olmak üzere bir tutar belirtir. Sizin belirttiğiniz tutar {{mine}}.",
           "late": "Bu bir niyet, şu an hiçbir şey ödenmiyor. İhtiyaç açık olduğu sürece tutarı değiştirebilir ya da katılımınızı geri çekebilirsiniz."
         },
         "b7": {
           "label": "5 · İnsanlar doğrudan anlaşır",
-          "say": "Maria ve katılımcılar sohbette konuşuyor. Lena daha ucuz bir tamirci öneriyor.",
+          "say": "Ayşe ve katılımcılar sohbette konuşuyor. Elif daha ucuz bir tamirci öneriyor.",
           "late": "Para söz konusuysa insanlar onu birbirlerine kendileri verir. Uygulama paraya hiç dokunmaz."
         },
         "b8": {
           "label": "Siz",
-          "say": "Yarın Maria'nın yerinde siz olabilirsiniz.",
+          "say": "Yarın Ayşe'nin yerinde siz olabilirsiniz.",
           "late": "O zaman ihtiyacınızı ilk duyanlar tanıdıklarınız olur."
+        },
+        "b9": {
+          "label": "Uygulamada",
+          "say": "Ağınız uygulamada böyle görünür: siz ortadasınız, çevrenizde tanıdıklarınız, daha dışarıda onların tanıdıkları.",
+          "late": "Birinin yardıma ihtiyacı olduğunda, o kişiden size uzanan tanıdık zincirini görürsünüz."
         },
         "rail": {
           "1": "Sürü",
@@ -796,18 +801,19 @@
           "5": "Karar",
           "6": "Katılım",
           "7": "Sohbet",
-          "8": "Siz"
+          "8": "Siz",
+          "9": "Uygulama"
         },
         "tags": {
           "you": "Siz",
-          "oleg": "Oleg",
-          "maria": "Maria · 300 $",
-          "lena": "Lena"
+          "oleg": "Murat",
+          "maria": "Ayşe · {{repair}}",
+          "lena": "Elif"
         },
         "hud": {
           "reached_one": "kişi ihtiyaçtan haberdar oldu",
           "reached_other": "kişi ihtiyaçtan haberdar oldu",
-          "reported": "belirtildi, hedef 300 $",
+          "reported": "belirtildi, hedef {{repair}}",
           "people_one": "katılımcı",
           "people_other": "katılımcı"
         }

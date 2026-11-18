@@ -773,28 +773,33 @@
         },
         "b4": {
           "label": "2 · Potrzeba",
-          "say": "Marii zepsuł się samochód, a bez niego nie dojedzie do pracy. Naprawa kosztuje 300 $.",
-          "late": "Maria zgłasza potrzebę i dodaje link do czatu. Potrzeba na 300 $ dotrze do najwyżej 300 osób, zaczynając od najbliższych."
+          "say": "Joannie zepsuł się samochód, a bez niego nie dojedzie do pracy. Naprawa kosztuje {{repair}}.",
+          "late": "Joanna zgłasza potrzebę i dodaje link do czatu. O potrzebie na kwotę {{repair}} dowie się do 300 osób, zaczynając od najbliższych."
         },
         "b5": {
           "label": "3 · Każdy decyduje sam",
-          "say": "Znasz Olega, a Oleg zna Marię. Widzisz ten łańcuch i możesz zapytać Olega, co się stało.",
+          "say": "Znasz Marka, a Marek zna Joannę. Widzisz ten łańcuch i możesz zapytać Marka, co się stało.",
           "late": "To Ty wybierasz, czy wziąć udział."
         },
         "b6": {
           "label": "4 · Po trochu od wielu",
-          "say": "Kto chce wziąć udział, podaje kwotę od jednego dolara. Ty podajesz 5 $.",
+          "say": "Kto chce wziąć udział, podaje kwotę od {{min}}. Ty podajesz {{mine}}.",
           "late": "To zamiar, teraz nic nie płacisz. Dopóki potrzeba jest otwarta, możesz zmienić kwotę albo wycofać udział."
         },
         "b7": {
           "label": "5 · Bezpośrednie ustalenia",
-          "say": "Maria i uczestnicy omawiają wszystko na czacie. Lena poleca tańszy warsztat.",
+          "say": "Joanna i uczestnicy omawiają wszystko na czacie. Kasia poleca tańszy warsztat.",
           "late": "Jeśli chodzi o pieniądze, ludzie przekazują je sobie sami. Aplikacja nie dotyka pieniędzy."
         },
         "b8": {
           "label": "Ty",
-          "say": "Jutro na miejscu Marii możesz być Ty.",
+          "say": "Jutro na miejscu Joanny możesz być Ty.",
           "late": "Wtedy o Twojej potrzebie pierwsi dowiedzą się Twoi znajomi."
+        },
+        "b9": {
+          "label": "W aplikacji",
+          "say": "Tak wygląda Twoja sieć w aplikacji: Ty w środku, wokół Twoi znajomi, dalej ich znajomi.",
+          "late": "Gdy ktoś potrzebuje pomocy, widzisz łańcuch znajomych od tej osoby do Ciebie."
         },
         "rail": {
           "1": "Stado",
@@ -804,20 +809,21 @@
           "5": "Decyzja",
           "6": "Udział",
           "7": "Czat",
-          "8": "Ty"
+          "8": "Ty",
+          "9": "Aplikacja"
         },
         "tags": {
           "you": "Ty",
-          "oleg": "Oleg",
-          "maria": "Maria · 300 $",
-          "lena": "Lena"
+          "oleg": "Marek",
+          "maria": "Joanna · {{repair}}",
+          "lena": "Kasia"
         },
         "hud": {
           "reached_one": "osoba dowiedziała się o potrzebie",
           "reached_few": "osoby dowiedziały się o potrzebie",
           "reached_many": "osób dowiedziało się o potrzebie",
           "reached_other": "osoby dowiedziało się o potrzebie",
-          "reported": "z 300 $ zgłoszono",
+          "reported": "z {{repair}} zgłoszono",
           "people_one": "uczestnik",
           "people_few": "uczestników",
           "people_many": "uczestników",

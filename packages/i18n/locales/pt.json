@@ -769,28 +769,33 @@
         },
         "b4": {
           "label": "2 · Uma necessidade",
-          "say": "O carro de Maria quebrou, e sem ele ela não consegue ir trabalhar. O conserto custa 300 $.",
-          "late": "Maria informa uma necessidade e adiciona o link de um chat. Uma necessidade de 300 $ chega a até 300 pessoas, as mais próximas primeiro."
+          "say": "O carro de Beatriz quebrou, e sem ele ela não consegue ir trabalhar. O conserto custa {{repair}}.",
+          "late": "Beatriz informa uma necessidade e adiciona o link de um chat. Uma necessidade de {{repair}} chega a até 300 pessoas, as mais próximas primeiro."
         },
         "b5": {
           "label": "3 · Cada um decide por si",
-          "say": "Você conhece Oleg, e Oleg conhece Maria. Você vê essa cadeia e pode perguntar a Oleg o que aconteceu.",
+          "say": "Você conhece João, e João conhece Beatriz. Você vê essa cadeia e pode perguntar a João o que aconteceu.",
           "late": "Participar ou não, quem escolhe é você."
         },
         "b6": {
           "label": "4 · Um pouco de muitos",
-          "say": "Quem quiser participar indica um valor a partir de 1 $. Você indica 5 $.",
+          "say": "Quem quiser participar indica um valor a partir de {{min}}. Você indica {{mine}}.",
           "late": "É uma intenção, nada é pago agora. Enquanto a necessidade estiver aberta, você pode mudar o valor ou retirar a participação."
         },
         "b7": {
           "label": "5 · Acordo direto",
-          "say": "Maria e os participantes conversam no chat. Lena sugere uma oficina mais barata.",
+          "say": "Beatriz e os participantes conversam no chat. Carol sugere uma oficina mais barata.",
           "late": "Se houver dinheiro envolvido, as pessoas o entregam diretamente. O aplicativo nunca mexe nele."
         },
         "b8": {
           "label": "Você",
-          "say": "Amanhã você pode estar no lugar de Maria.",
+          "say": "Amanhã você pode estar no lugar de Beatriz.",
           "late": "Aí os seus conhecidos serão os primeiros a saber da sua necessidade."
+        },
+        "b9": {
+          "label": "No aplicativo",
+          "say": "É assim que a sua rede aparece no aplicativo: você no centro, em volta os seus conhecidos e, mais adiante, os conhecidos deles.",
+          "late": "Quando alguém precisa de ajuda, você vê a cadeia de conhecidos que vai dessa pessoa até você."
         },
         "rail": {
           "1": "Bando",
@@ -800,19 +805,20 @@
           "5": "Decisão",
           "6": "Participação",
           "7": "Chat",
-          "8": "Você"
+          "8": "Você",
+          "9": "Aplicativo"
         },
         "tags": {
           "you": "Você",
-          "oleg": "Oleg",
-          "maria": "Maria · 300 $",
-          "lena": "Lena"
+          "oleg": "João",
+          "maria": "Beatriz · {{repair}}",
+          "lena": "Carol"
         },
         "hud": {
           "reached_one": "soube da necessidade",
           "reached_many": "souberam da necessidade",
           "reached_other": "souberam da necessidade",
-          "reported": "declarados de 300 $",
+          "reported": "declarados de {{repair}}",
           "people_one": "participante",
           "people_many": "de participantes",
           "people_other": "participantes"

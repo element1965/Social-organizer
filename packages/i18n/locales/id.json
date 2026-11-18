@@ -761,28 +761,33 @@
         },
         "b4": {
           "label": "2 · Kebutuhan",
-          "say": "Mobil Maria rusak, dan tanpa mobil ia tidak bisa berangkat kerja. Biaya perbaikannya 300 $.",
-          "late": "Maria menyampaikan kebutuhan dan menambahkan tautan ke chat. Kebutuhan 300 $ menjangkau hingga 300 orang, dimulai dari yang terdekat."
+          "say": "Mobil Siti rusak, dan tanpa mobil ia tidak bisa berangkat kerja. Biaya perbaikannya {{repair}}.",
+          "late": "Siti menyampaikan kebutuhan dan menambahkan tautan ke chat. Kebutuhan {{repair}} menjangkau hingga 300 orang, dimulai dari yang terdekat."
         },
         "b5": {
           "label": "3 · Setiap orang memutuskan sendiri",
-          "say": "Anda kenal Oleg, dan Oleg kenal Maria. Anda bisa melihat rantai ini dan bertanya kepada Oleg apa yang terjadi.",
+          "say": "Anda kenal Agus, dan Agus kenal Siti. Anda bisa melihat rantai ini dan bertanya kepada Agus apa yang terjadi.",
           "late": "Ikut atau tidak, Anda yang memilih."
         },
         "b6": {
           "label": "4 · Sedikit dari banyak orang",
-          "say": "Siapa pun yang mau ikut menyebutkan jumlah, mulai 1 $. Anda menyebutkan 5 $.",
+          "say": "Siapa pun yang mau ikut menyebutkan jumlah, mulai dari {{min}}. Anda menyebutkan {{mine}}.",
           "late": "Itu sebuah niat, tidak ada yang dibayar sekarang. Selama kebutuhan masih terbuka, Anda bisa mengubah jumlahnya atau menarik partisipasi."
         },
         "b7": {
           "label": "5 · Bersepakat langsung",
-          "say": "Maria dan para peserta membicarakannya di chat. Lena menyarankan bengkel yang lebih murah.",
+          "say": "Siti dan para peserta membicarakannya di chat. Rina menyarankan bengkel yang lebih murah.",
           "late": "Kalau menyangkut uang, orang menyerahkannya sendiri. Aplikasi tidak pernah menyentuh uang."
         },
         "b8": {
           "label": "Anda",
-          "say": "Besok, Anda yang bisa berada di posisi Maria.",
+          "say": "Besok, Anda yang bisa berada di posisi Siti.",
           "late": "Saat itu, orang-orang yang Anda kenal akan jadi yang pertama tahu tentang kebutuhan Anda."
+        },
+        "b9": {
+          "label": "Di aplikasi",
+          "say": "Seperti inilah jaringan Anda di aplikasi: Anda di tengah, di sekitar Anda orang yang Anda kenal, lebih jauh lagi orang yang mereka kenal.",
+          "late": "Saat seseorang butuh bantuan, Anda melihat rantai kenalan dari orang itu sampai ke Anda."
         },
         "rail": {
           "1": "Kawanan",
@@ -792,17 +797,18 @@
           "5": "Keputusan",
           "6": "Partisipasi",
           "7": "Chat",
-          "8": "Anda"
+          "8": "Anda",
+          "9": "Aplikasi"
         },
         "tags": {
           "you": "Anda",
-          "oleg": "Oleg",
-          "maria": "Maria · 300 $",
-          "lena": "Lena"
+          "oleg": "Agus",
+          "maria": "Siti · {{repair}}",
+          "lena": "Rina"
         },
         "hud": {
           "reached_other": "orang sudah tahu tentang kebutuhan ini",
-          "reported": "dari 300 $ dinyatakan",
+          "reported": "dari {{repair}} dinyatakan",
           "people_other": "peserta"
         }
       },

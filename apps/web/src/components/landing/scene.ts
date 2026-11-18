@@ -1100,6 +1100,13 @@ export function initScene(els: SceneElements, initial: SceneOptions): SceneHandl
     }
     const x = clamp(((v3.x + 1) / 2) * innerWidth, 40, innerWidth - 40);
     const y = clamp(((1 - v3.y) / 2) * innerHeight, 90, innerHeight - 40);
+    if (el === els.tags.maria) {
+      // her label sits beside the dot; with no room on that side (a long sum on a phone) it moves to the other
+      // (the pill of the story is always on the right; the graph's label is on the left in a right-to-left page)
+      const w = el.offsetWidth + 20;
+      const onLeft = opts.rtl && graphOn;
+      el.classList.toggle('flip', onLeft ? x - w < 8 : x + w > innerWidth - 8);
+    }
     el.style.left = `${x}px`;
     el.style.top = `${y}px`;
     el.classList.add('on');

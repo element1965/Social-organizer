@@ -765,28 +765,33 @@
         },
         "b4": {
           "label": "2 · Ein Bedarf",
-          "say": "Marias Auto ist kaputt, und ohne Auto kommt sie nicht zur Arbeit. Die Reparatur kostet 300 $.",
-          "late": "Maria meldet einen Bedarf und fügt einen Link zu einem Chat hinzu. Ein Bedarf von 300 $ erreicht bis zu 300 Menschen, die Nächsten zuerst."
+          "say": "Julias Auto ist kaputt, und ohne Auto kommt sie nicht zur Arbeit. Die Reparatur kostet {{repair}}.",
+          "late": "Julia meldet einen Bedarf und fügt einen Link zu einem Chat hinzu. Ein Bedarf von {{repair}} erreicht bis zu 300 Menschen, die Nächsten zuerst."
         },
         "b5": {
           "label": "3 · Alle entscheiden selbst",
-          "say": "Sie kennen Oleg, und Oleg kennt Maria. Sie sehen diese Kette und können Oleg fragen, was passiert ist.",
+          "say": "Sie kennen Markus, und Markus kennt Julia. Sie sehen diese Kette und können Markus fragen, was passiert ist.",
           "late": "Sie entscheiden selbst, ob Sie sich beteiligen."
         },
         "b6": {
           "label": "4 · Von vielen ein wenig",
-          "say": "Wer sich beteiligen möchte, nennt einen Betrag ab 1 $. Sie nennen 5 $.",
+          "say": "Wer sich beteiligen möchte, nennt einen Betrag ab {{min}}. Sie nennen {{mine}}.",
           "late": "Das ist eine Absicht, bezahlt wird jetzt nichts. Solange der Bedarf offen ist, können Sie den Betrag ändern oder Ihre Beteiligung zurückziehen."
         },
         "b7": {
           "label": "5 · Direkte Absprache",
-          "say": "Maria und die Beteiligten besprechen alles im Chat. Lena empfiehlt eine günstigere Werkstatt.",
+          "say": "Julia und die Beteiligten besprechen alles im Chat. Steffi empfiehlt eine günstigere Werkstatt.",
           "late": "Geht es um Geld, übergeben die Menschen es selbst. Die App kommt mit dem Geld nie in Berührung."
         },
         "b8": {
           "label": "Sie",
-          "say": "Morgen könnten Sie an Marias Stelle sein.",
+          "say": "Morgen könnten Sie an Julias Stelle sein.",
           "late": "Dann erfahren Ihre Bekannten als Erste von Ihrem Bedarf."
+        },
+        "b9": {
+          "label": "In der App",
+          "say": "So sieht Ihr Netzwerk in der App aus: Sie in der Mitte, um Sie herum Ihre Bekannten, weiter außen deren Bekannte.",
+          "late": "Braucht jemand Hilfe, sehen Sie die Kette der Bekannten, die von dieser Person zu Ihnen führt."
         },
         "rail": {
           "1": "Schwarm",
@@ -796,18 +801,19 @@
           "5": "Entscheidung",
           "6": "Beteiligung",
           "7": "Chat",
-          "8": "Sie"
+          "8": "Sie",
+          "9": "App"
         },
         "tags": {
           "you": "Sie",
-          "oleg": "Oleg",
-          "maria": "Maria · 300 $",
-          "lena": "Lena"
+          "oleg": "Markus",
+          "maria": "Julia · {{repair}}",
+          "lena": "Steffi"
         },
         "hud": {
           "reached_one": "Person hat vom Bedarf erfahren",
           "reached_other": "Personen haben vom Bedarf erfahren",
-          "reported": "von 300 $ angegeben",
+          "reported": "von {{repair}} angegeben",
           "people_one": "beteiligte Person",
           "people_other": "Beteiligte"
         }

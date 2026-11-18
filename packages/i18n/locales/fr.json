@@ -769,28 +769,33 @@
         },
         "b4": {
           "label": "2 · Un besoin",
-          "say": "La voiture de Maria est tombée en panne, et sans voiture elle ne peut pas aller travailler. La réparation coûte 300 $.",
-          "late": "Maria annonce un besoin et ajoute un lien vers un chat. Un besoin de 300 $ atteint jusqu’à 300 personnes, les plus proches d’abord."
+          "say": "La voiture de Sophie est tombée en panne, et sans voiture elle ne peut pas aller travailler. La réparation coûte {{repair}}.",
+          "late": "Sophie annonce un besoin et ajoute un lien vers un chat. Un besoin de {{repair}} atteint jusqu’à 300 personnes, les plus proches d’abord."
         },
         "b5": {
           "label": "3 · Chacun décide pour soi",
-          "say": "Vous connaissez Oleg, et Oleg connaît Maria. Vous voyez cette chaîne et pouvez demander à Oleg ce qui s’est passé.",
+          "say": "Vous connaissez Julien, et Julien connaît Sophie. Vous voyez cette chaîne et pouvez demander à Julien ce qui s’est passé.",
           "late": "Participer ou non, c’est vous qui choisissez."
         },
         "b6": {
           "label": "4 · Un peu de chacun",
-          "say": "Chaque personne prête à participer indique un montant à partir de 1 $. Vous indiquez 5 $.",
+          "say": "Chaque personne prête à participer indique un montant à partir de {{min}}. Vous indiquez {{mine}}.",
           "late": "C’est une intention, rien n’est payé maintenant. Tant que le besoin est ouvert, vous pouvez modifier le montant ou retirer votre participation."
         },
         "b7": {
           "label": "5 · On s’arrange directement",
-          "say": "Maria et les participants en discutent dans le chat. Lena propose un garage moins cher.",
+          "say": "Sophie et les participants en discutent dans le chat. Léa propose un garage moins cher.",
           "late": "S’il est question d’argent, les gens se le remettent eux-mêmes. L’application n’y touche jamais."
         },
         "b8": {
           "label": "Vous",
-          "say": "Demain, ce pourrait être vous à la place de Maria.",
+          "say": "Demain, ce pourrait être vous à la place de Sophie.",
           "late": "Alors vos connaissances seront les premières au courant de votre besoin."
+        },
+        "b9": {
+          "label": "Dans l’application",
+          "say": "Voici votre réseau dans l’application : vous au centre, vos connaissances autour de vous, puis leurs connaissances plus loin.",
+          "late": "Quand quelqu’un a besoin d’aide, vous voyez la chaîne de connaissances qui va de cette personne jusqu’à vous."
         },
         "rail": {
           "1": "Nuée",
@@ -800,19 +805,20 @@
           "5": "Décision",
           "6": "Participation",
           "7": "Chat",
-          "8": "Vous"
+          "8": "Vous",
+          "9": "Application"
         },
         "tags": {
           "you": "Vous",
-          "oleg": "Oleg",
-          "maria": "Maria · 300 $",
-          "lena": "Lena"
+          "oleg": "Julien",
+          "maria": "Sophie · {{repair}}",
+          "lena": "Léa"
         },
         "hud": {
           "reached_one": "est au courant du besoin",
           "reached_many": "sont au courant du besoin",
           "reached_other": "sont au courant du besoin",
-          "reported": "déclarés sur 300 $",
+          "reported": "déclarés sur {{repair}}",
           "people_one": "participant",
           "people_many": "de participants",
           "people_other": "participants"

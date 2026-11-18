@@ -773,28 +773,33 @@
         },
         "b4": {
           "label": "2 · Potřeba",
-          "say": "Marii se porouchalo auto a bez něj se nedostane do práce. Oprava stojí 300 $.",
-          "late": "Marie oznámí potřebu a přidá odkaz na chat. Potřeba na 300 $ se dostane až k 300 lidem, nejdřív k těm nejbližším."
+          "say": "Janě se porouchalo auto a bez něj se nedostane do práce. Oprava stojí {{repair}}.",
+          "late": "Jana oznámí potřebu a přidá odkaz na chat. O potřebě ve výši {{repair}} se dozví až 300 lidí, nejdřív ti nejbližší."
         },
         "b5": {
           "label": "3 · Každý se rozhoduje sám",
-          "say": "Znáte Olega a Oleg zná Marii. Vidíte tento řetězec a můžete se Olega zeptat, co se stalo.",
+          "say": "Znáte Tomáše a Tomáš zná Janu. Vidíte tento řetězec a můžete se Tomáše zeptat, co se stalo.",
           "late": "Jestli se zapojíte, je na vás."
         },
         "b6": {
           "label": "4 · Trochu od mnoha",
-          "say": "Kdo se chce zapojit, uvede částku od jednoho dolaru. Vy uvedete 5 $.",
+          "say": "Kdo se chce zapojit, uvede částku od {{min}}. Vy uvedete {{mine}}.",
           "late": "Je to záměr, teď se nic neplatí. Dokud je potřeba otevřená, můžete částku změnit nebo účast odvolat."
         },
         "b7": {
           "label": "5 · Přímá domluva",
-          "say": "Marie a účastníci všechno probírají v chatu. Lena doporučí levnější servis.",
+          "say": "Jana a účastníci všechno probírají v chatu. Katka doporučí levnější servis.",
           "late": "Pokud jde o peníze, lidé si je předají sami. Aplikace na peníze nesahá."
         },
         "b8": {
           "label": "Vy",
-          "say": "Zítra můžete být na místě Marie vy.",
+          "say": "Zítra můžete být na místě Jany vy.",
           "late": "Pak se o vaší potřebě jako první dozvědí vaši známí."
+        },
+        "b9": {
+          "label": "V aplikaci",
+          "say": "Takhle vypadá vaše síť v aplikaci: vy uprostřed, kolem vaši známí, dál jejich známí.",
+          "late": "Když někdo potřebuje pomoc, vidíte řetězec známých od tohoto člověka až k vám."
         },
         "rail": {
           "1": "Hejno",
@@ -804,20 +809,21 @@
           "5": "Volba",
           "6": "Účast",
           "7": "Chat",
-          "8": "Vy"
+          "8": "Vy",
+          "9": "Aplikace"
         },
         "tags": {
           "you": "Vy",
-          "oleg": "Oleg",
-          "maria": "Marie · 300 $",
-          "lena": "Lena"
+          "oleg": "Tomáš",
+          "maria": "Jana · {{repair}}",
+          "lena": "Katka"
         },
         "hud": {
           "reached_one": "ví o potřebě",
           "reached_few": "vědí o potřebě",
           "reached_many": "ví o potřebě",
           "reached_other": "ví o potřebě",
-          "reported": "z 300 $ uvedeno",
+          "reported": "z {{repair}} uvedeno",
           "people_one": "účastník",
           "people_few": "účastníci",
           "people_many": "účastníka",
