@@ -786,6 +786,13 @@
           "people_other": "deelnemers"
         }
       },
+      "app": {
+        "title": "De app zelf",
+        "example": "Voorbeeld",
+        "circle": "Je Kring: de mensen die je kent en de mensen die zij kennen. De Behoefte van Sanne bereikt je via Jeroen.",
+        "need": "De Behoefte van Sanne: je meldt jouw deel, en de deelnemers spreken af in hun eigen chat.",
+        "add": "Hier begint het: stuur je link of laat je QR zien aan mensen die je persoonlijk kent."
+      },
       "grow": {
         "title": "Hoe het netwerk groeit",
         "text": "Iedere nieuwkomer nodigt eigen kennissen uit. Stel in hoeveel het er gemiddeld zijn en kijk wat er met het netwerk gebeurt.",

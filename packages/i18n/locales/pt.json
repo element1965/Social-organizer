@@ -792,6 +792,13 @@
           "people_other": "participantes"
         }
       },
+      "app": {
+        "title": "O aplicativo em si",
+        "example": "Exemplo",
+        "circle": "Seu Círculo: as pessoas que você conhece e as que elas conhecem. A Necessidade de Beatriz chega até você por meio de João.",
+        "need": "A Necessidade de Beatriz: você informa a sua parte, e os participantes combinam tudo no próprio chat.",
+        "add": "Tudo começa aqui: envie seu link ou mostre seu QR para quem você conhece pessoalmente."
+      },
       "grow": {
         "title": "Como a rede cresce",
         "text": "Cada pessoa nova convida os próprios conhecidos. Escolha quantos, em média, e veja o que acontece com a rede.",

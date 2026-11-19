@@ -786,6 +786,13 @@
           "people_other": "Beteiligte"
         }
       },
+      "app": {
+        "title": "Die App selbst",
+        "example": "Beispiel",
+        "circle": "Ihr Kreis: die Menschen, die Sie kennen, und die, die diese kennen. Julias Bedarf erreicht Sie über Markus.",
+        "need": "Julias Bedarf: Sie melden Ihren Anteil, und die Beteiligten sprechen sich in ihrem eigenen Chat ab.",
+        "add": "Hier fängt es an: Schicken Sie Ihren Link oder zeigen Sie Ihren QR Menschen, die Sie persönlich kennen."
+      },
       "grow": {
         "title": "Wie das Netzwerk wächst",
         "text": "Jede neue Person lädt eigene Bekannte ein. Stellen Sie ein, wie viele im Schnitt, und sehen Sie, was mit dem Netzwerk passiert.",

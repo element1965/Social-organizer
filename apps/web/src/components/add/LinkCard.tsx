@@ -3,11 +3,9 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { isValidReferralSlug } from '@so/shared';
 import { Button } from '../ui2/Button';
-import { Card } from '../ui2/Card';
 import { Input } from '../ui2/Input';
-import { IconQr, IconScan, IconShare } from './icons';
+import { LinkCardView } from './LinkCardView';
 import { NamedInvites } from './NamedInvites';
-import { MessengerButtons } from '../share/MessengerButtons';
 import { withSrc } from '../../lib/messengerShare';
 import { permanentInviteUrl, prettyInvite } from './links';
 import { shareLink } from '../../lib/share';
@@ -80,76 +78,57 @@ export function LinkCard({ slug, name }: LinkCardProps) {
     }
   };
 
+  const editor = editing ? (
+    <form
+      className="mt-2"
+      onSubmit={(event) => {
+        event.preventDefault();
+        void save();
+      }}
+    >
+      <Input
+        aria-label={t('add.linkLabel')}
+        value={draft}
+        autoFocus
+        autoCapitalize="none"
+        autoCorrect="off"
+        spellCheck={false}
+        maxLength={30}
+        placeholder={t('add.linkPlaceholder')}
+        hint={`${pretty.host}/${draft.trim().toLowerCase() || '…'} · ${t('add.linkEditHint')}`}
+        error={editError || undefined}
+        onChange={(event) => {
+          setDraft(event.target.value);
+          if (editError) setEditError('');
+        }}
+      />
+      <div className="mt-3 grid grid-cols-2 gap-2.5">
+        <Button type="button" className="w-full" variant="secondary" onClick={() => setEditing(false)}>
+          {t('common.cancel')}
+        </Button>
+        <Button type="submit" className="w-full" loading={updateSlug.isPending}>
+          {t('common.save')}
+        </Button>
+      </div>
+    </form>
+  ) : undefined;
+
   return (
-    <Card className="mt-4">
-      <p className="text-label font-semibold text-ink-muted">{t('add.linkLabel')}</p>
-      {editing ? (
-        <form
-          className="mt-2"
-          onSubmit={(event) => {
-            event.preventDefault();
-            void save();
-          }}
-        >
-          <Input
-            aria-label={t('add.linkLabel')}
-            value={draft}
-            autoFocus
-            autoCapitalize="none"
-            autoCorrect="off"
-            spellCheck={false}
-            maxLength={30}
-            placeholder={t('add.linkPlaceholder')}
-            hint={`${pretty.host}/${draft.trim().toLowerCase() || '…'} · ${t('add.linkEditHint')}`}
-            error={editError || undefined}
-            onChange={(event) => {
-              setDraft(event.target.value);
-              if (editError) setEditError('');
-            }}
-          />
-          <div className="mt-3 grid grid-cols-2 gap-2.5">
-            <Button type="button" className="w-full" variant="secondary" onClick={() => setEditing(false)}>
-              {t('common.cancel')}
-            </Button>
-            <Button type="submit" className="w-full" loading={updateSlug.isPending}>
-              {t('common.save')}
-            </Button>
-          </div>
-        </form>
-      ) : (
-        <>
-          <p className="mt-1 break-all text-title font-extrabold leading-tight text-ink">
-            <span className="text-ink-muted">{pretty.host}/</span>
-            {pretty.slug}
-          </p>
-          <Button className="mt-1 -ms-2" variant="text" onClick={startEdit}>
-            {t('add.editLink')}
-          </Button>
-          <Button className="mt-3 w-full" icon={<IconShare />} loading={busy} onClick={() => void share()}>
-            {copied ? t('common.copied') : t('add.share')}
-          </Button>
-          {failed ? <p className="mt-2 text-label font-semibold text-sos">{t('add.shareError')}</p> : null}
-          {/* One tap into the messenger most people use; the link says which one it went through */}
-          <MessengerButtons
-            className="mt-2.5"
-            text={t('add.shareText', { name })}
-            urlFor={(messenger) => withSrc(permanentInviteUrl(slug), messenger)}
-          />
-          <div className="mt-2.5 grid grid-cols-2 gap-2.5">
-            <Button className="w-full" variant="secondary" icon={<IconQr />} onClick={() => navigate('/add/qr')}>
-              {t('add.myQr')}
-            </Button>
-            <Button className="w-full" variant="secondary" icon={<IconScan />} onClick={() => navigate('/add/scan')}>
-              {t('add.scan')}
-            </Button>
-          </div>
-          <p className="mt-3 text-caption font-semibold text-ink-muted">{t('add.rules')}</p>
-          <Button className="mt-1 -ms-2" variant="text" onClick={() => setNamedOpen(true)}>
-            {t('add.named.title')}
-          </Button>
-          <NamedInvites open={namedOpen} onClose={() => setNamedOpen(false)} slug={slug} name={name} />
-        </>
-      )}
-    </Card>
+    <LinkCardView
+      slug={slug}
+      shareText={t('add.shareText', { name })}
+      urlFor={(messenger) => withSrc(permanentInviteUrl(slug), messenger)}
+      editor={editor}
+      onEdit={startEdit}
+      onShare={() => void share()}
+      shareBusy={busy}
+      copied={copied}
+      failed={failed}
+      onQr={() => navigate('/add/qr')}
+      onScan={() => navigate('/add/scan')}
+      onNamed={() => setNamedOpen(true)}
+    >
+      <NamedInvites open={namedOpen} onClose={() => setNamedOpen(false)} slug={slug} name={name} />
+    </LinkCardView>
   );
 }

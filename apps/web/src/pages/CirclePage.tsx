@@ -5,6 +5,7 @@ import { hideBackButton, isTelegramWebApp, showBackButton } from '@so/tg-adapter
 import { trpc } from '../lib/trpc';
 import { currentNavigation, raiseActionError } from '../lib/errors';
 import { cn } from '../lib/utils';
+import { useAuth } from '../hooks/useAuth';
 import { useNetworkFigure } from '../hooks/useNetworkFigure';
 import { useAskAccess } from '../hooks/useAskAccess';
 import { MILESTONE_KEYS, useDeclineNeed, useEvents, useNewEvents, type FeedEvent, type MilestoneKind } from '../hooks/useEvents';
@@ -75,6 +76,7 @@ export function CirclePage() {
   const banner = useBanner();
   const utils = trpc.useUtils();
 
+  const myId = useAuth((s) => s.userId);
   const net = useCircleNetwork();
   // The network figure and its ring chips: the query shared with Profile, My intention and the Need screen
   const { figure } = useNetworkFigure();
@@ -402,6 +404,7 @@ export function CirclePage() {
           A sent request ("waiting") is already told by the start card itself. */}
       {events.some((e) => e.kind !== 'waiting') ? (
         <EventFeed
+          myId={myId}
           events={events.filter((e) => e.kind !== 'waiting')}
           loading={loading}
           onOpen={openEvent}
@@ -423,6 +426,7 @@ export function CirclePage() {
       {/* Not for someone already allowed to ask (authors, developers, admins): the ring and the sheet say "open" */}
       {connectionsReady && direct < ASK_MIN_DIRECT && gate.data?.allowed !== true ? <GrowStrip direct={direct} onOpen={() => setPathOpen(true)} /> : null}
       <EventFeed
+        myId={myId}
         events={events}
         loading={loading}
         onOpen={openEvent}

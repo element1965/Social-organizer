@@ -798,6 +798,13 @@
           "people_other": "účastníků"
         }
       },
+      "app": {
+        "title": "Samotná aplikace",
+        "example": "Příklad",
+        "circle": "Váš Kruh: lidé, které znáte, a lidé, které znají oni. Potřeba Jany se k vám dostane přes Tomáše.",
+        "need": "Potřeba Jany: oznámíte svůj podíl a účastníci se domluví ve vlastním chatu.",
+        "add": "Začíná to tady: pošlete svůj odkaz nebo ukažte svůj QR lidem, které osobně znáte."
+      },
       "grow": {
         "title": "Jak síť roste",
         "text": "Každý nový člověk pozve své známé. Nastavte, kolik jich v průměru pozve, a uvidíte, co se se sítí stane.",

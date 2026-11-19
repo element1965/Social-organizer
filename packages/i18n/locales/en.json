@@ -786,6 +786,13 @@
           "people_other": "participants"
         }
       },
+      "app": {
+        "title": "The app itself",
+        "example": "Example",
+        "circle": "Your Circle: the people you know and the people they know. Sarah’s Need reaches you through Tom.",
+        "need": "Sarah’s Need: you report your share, and the participants agree in their own chat.",
+        "add": "It starts here: send your link or show your QR to people you know in person."
+      },
       "grow": {
         "title": "How the network grows",
         "text": "Every newcomer invites people they know. Set how many on average and see what happens to the network.",

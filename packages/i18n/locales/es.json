@@ -792,6 +792,13 @@
           "people_other": "participantes"
         }
       },
+      "app": {
+        "title": "La aplicación en sí",
+        "example": "Ejemplo",
+        "circle": "Su Círculo: las personas que usted conoce y las que ellas conocen. La Necesidad de Lucía le llega a través de Carlos.",
+        "need": "La Necesidad de Lucía: usted indica su parte y los participantes se ponen de acuerdo en su propio chat.",
+        "add": "Todo empieza aquí: envíe su enlace o muestre su QR a las personas que conoce en persona."
+      },
       "grow": {
         "title": "Cómo crece la red",
         "text": "Cada persona nueva invita a sus conocidos. Elija a cuántos de media y vea qué pasa con la red.",

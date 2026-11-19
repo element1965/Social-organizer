@@ -798,6 +798,13 @@
           "people_other": "uczestnika"
         }
       },
+      "app": {
+        "title": "Sama aplikacja",
+        "example": "Przykład",
+        "circle": "Twój Krąg: ludzie, których znasz, i ludzie, których oni znają. Potrzeba Joanny dociera do ciebie przez Marka.",
+        "need": "Potrzeba Joanny: zgłaszasz swój udział, a uczestnicy umawiają się na własnym czacie.",
+        "add": "Wszystko zaczyna się tutaj: wyślij swój link albo pokaż swój kod QR osobom, które znasz osobiście."
+      },
       "grow": {
         "title": "Jak rośnie sieć",
         "text": "Każda nowa osoba zaprasza swoich znajomych. Ustaw, ilu średnio, i zobacz, co stanie się z siecią.",

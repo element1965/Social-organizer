@@ -786,6 +786,13 @@
           "people_other": "katılımcı"
         }
       },
+      "app": {
+        "title": "Uygulamanın kendisi",
+        "example": "Örnek",
+        "circle": "Çevreniz: tanıdığınız kişiler ve onların tanıdıkları. Ayşe’nin İhtiyacı size Murat üzerinden ulaşıyor.",
+        "need": "Ayşe’nin İhtiyacı: payınızı bildiriyorsunuz, katılımcılar da kendi sohbetlerinde anlaşıyor.",
+        "add": "Her şey burada başlıyor: bağlantınızı gönderin ya da QR’ınızı yüz yüze tanıdığınız kişilere gösterin."
+      },
       "grow": {
         "title": "Ağ nasıl büyür",
         "text": "Her yeni gelen, tanıdığı kişileri davet eder. Ortalama kaç kişi olacağını seçin ve ağa ne olduğunu izleyin.",

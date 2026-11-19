@@ -786,6 +786,13 @@
           "people_other": "osallistujaa"
         }
       },
+      "app": {
+        "title": "Itse sovellus",
+        "example": "Esimerkki",
+        "circle": "Piirisi: ihmiset, jotka tunnet, ja ihmiset, jotka he tuntevat. Lauran Tarve tulee sinulle Mikon kautta.",
+        "need": "Lauran Tarve: ilmoitat oman osuutesi, ja osallistujat sopivat asioista omassa keskustelussaan.",
+        "add": "Kaikki alkaa tästä: lähetä linkkisi tai näytä QR-koodisi ihmisille, jotka tunnet henkilökohtaisesti."
+      },
       "grow": {
         "title": "Näin verkosto kasvaa",
         "text": "Jokainen uusi tulija kutsuu tuttujaan. Valitse, montako kukin kutsuu keskimäärin, ja katso, mitä verkostolle tapahtuu.",
