@@ -8,8 +8,8 @@
 	<!-- Universal Links: /invite/, /i/ and /sos/ open the app (apple-app-site-association is served by the API) -->
 	<key>com.apple.developer.associated-domains</key>
 	<array>
-		<string>applinks:www.orginizer.com</string>
-		<string>applinks:orginizer.com</string>
+		<string>applinks:$(SO_APP_LINK_HOST)</string>
+		<string>applinks:$(SO_APP_LINK_HOST_ALT)</string>
 	</array>
 </dict>
 </plist>

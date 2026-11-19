@@ -18,7 +18,7 @@ export function isRetiredUrl(url: string | null | undefined): boolean {
   if (!url || SKILLS_FEATURE_ENABLED) return false;
   let path: string;
   try {
-    path = new URL(url, 'https://www.orginizer.com').pathname;
+    path = new URL(url, 'http://localhost').pathname;
   } catch {
     return false;
   }

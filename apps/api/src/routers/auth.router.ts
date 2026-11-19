@@ -1,3 +1,4 @@
+import { TELEGRAM_BOT_USERNAME } from '../deployment.js';
 import { createUserWithReferralSlug } from '../services/referral-slug.service.js';
 import { z } from 'zod';
 import { router, publicProcedure, protectedProcedure } from '../trpc.js';
@@ -302,7 +303,7 @@ export const authRouter = router({
     apple: !!process.env.APPLE_SERVICE_ID,
     email: isMailConfigured(),
     telegramWidget: isTelegramWidgetEnabled(),
-    telegramBot: process.env.VITE_TELEGRAM_BOT_USERNAME || 'socialorganizer_bot',
+    telegramBot: TELEGRAM_BOT_USERNAME,
     // The bot's public numeric id (the part of the token before ":", not the secret). The site's own Telegram
     // button opens Telegram's login popup with it, so the page never swaps in Telegram's smaller widget.
     telegramBotId: isTelegramWidgetEnabled() ? telegramBotId() : null,

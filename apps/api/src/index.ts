@@ -1,3 +1,4 @@
+import { WEB_APP_URL, WEB_APP_ALT_URL, ANDROID_APP_PACKAGE, APPLE_TEAM_ID, APPLE_BUNDLE_ID, NATIVE_AUTH_SCHEME } from './deployment.js';
 import { userIdFromAuthHeader } from './services/auth.service.js';
 import { hit, clientIp, MINUTE } from './services/rate-limit.service.js';
 import { startGunRelay } from './gun-relay.js';
@@ -22,6 +23,7 @@ import { verifyAppleIdToken, findOrCreateAppleUser } from './services/apple.serv
 import { AccountExistsError } from './services/identity.service.js';
 import { backfillBotStartInvites } from './services/invite-fallback.service.js';
 import { getDb } from '@so/db';
+import { logMailConfig } from './services/mail.service.js';
 import { isAdmin } from './admin.js';
 import { startInactiveCleanupTimer, logInactiveCleanupConfig } from './services/inactive-cleanup.service.js';
 import { readAvatar, backfillAvatars } from './services/avatar.service.js';
@@ -73,7 +75,6 @@ const WEB_DIST = existsSync(resolve(__dirname, 'public'))
   ? resolve(__dirname, 'public')
   : resolve(__dirname, '../../web/dist');
 
-const APP_BASE_URL = process.env.WEB_APP_URL || 'https://www.orginizer.com';
 const SITE_FILES = new Set([
   '/favicon.ico', '/apple-touch-icon.png', '/robots.txt', '/sitemap.xml', '/manifest.webmanifest',
   '/icon-192.png', '/icon-512.png', '/icon-maskable-512.png', '/push-badge.png', '/og-image.png',
@@ -96,12 +97,12 @@ function appleRedirect(
     // The reason lets the sign-in screen show the next step (SO-21). Older clients treat any unknown reason
     // as "failed", so "cancelled" and the extra "m" parameter are backward compatible.
     const extra = maskedEmail ? `&m=${encodeURIComponent(maskedEmail)}` : '';
-    if (platform === 'ios') return appleHtmlRedirect(reply, `socialorganizer://auth-error?reason=${reason}${extra}`);
+    if (platform === 'ios') return appleHtmlRedirect(reply, `${NATIVE_AUTH_SCHEME}://auth-error?reason=${reason}${extra}`);
     if (platform === 'android') {
-      const fb = encodeURIComponent(`${APP_BASE_URL}/login?error=${reason}${extra}`);
-      return appleHtmlRedirect(reply, `intent://auth-error?reason=${reason}${extra}#Intent;scheme=socialorganizer;package=com.socialorganizer.app;S.browser_fallback_url=${fb};end`);
+      const fb = encodeURIComponent(`${WEB_APP_URL}/login?error=${reason}${extra}`);
+      return appleHtmlRedirect(reply, `intent://auth-error?reason=${reason}${extra}#Intent;scheme=${NATIVE_AUTH_SCHEME};package=${ANDROID_APP_PACKAGE};S.browser_fallback_url=${fb};end`);
     }
-    return reply.redirect(`${APP_BASE_URL}/login?error=${reason}${extra}`, 302);
+    return reply.redirect(`${WEB_APP_URL}/login?error=${reason}${extra}`, 302);
   }
 
   const params = new URLSearchParams({
@@ -113,14 +114,14 @@ function appleRedirect(
   }).toString();
 
   if (platform === 'ios') {
-    return appleHtmlRedirect(reply, `socialorganizer://auth-success?${params}`);
+    return appleHtmlRedirect(reply, `${NATIVE_AUTH_SCHEME}://auth-success?${params}`);
   }
   if (platform === 'android') {
-    const fb = encodeURIComponent(APP_BASE_URL);
-    return appleHtmlRedirect(reply, `intent://auth-success?${params}#Intent;scheme=socialorganizer;package=com.socialorganizer.app;S.browser_fallback_url=${fb};end`);
+    const fb = encodeURIComponent(WEB_APP_URL);
+    return appleHtmlRedirect(reply, `intent://auth-success?${params}#Intent;scheme=${NATIVE_AUTH_SCHEME};package=${ANDROID_APP_PACKAGE};S.browser_fallback_url=${fb};end`);
   }
   // web
-  return reply.redirect(`${APP_BASE_URL}/auth/apple/done#${params}`, 302);
+  return reply.redirect(`${WEB_APP_URL}/auth/apple/done#${params}`, 302);
 }
 
 function appleHtmlRedirect(reply: FastifyReply, target: string) {
@@ -140,12 +141,11 @@ async function start() {
     // CORS
     // CORS: only our own web/app origins (the app is served from the same domain) (SO-14)
     const allowedOrigins = new Set([
-      'https://www.orginizer.com',
-      'https://orginizer.com',
+      new URL(WEB_APP_URL).origin,
+      ...(WEB_APP_ALT_URL ? [new URL(WEB_APP_ALT_URL).origin] : []),
       'capacitor://localhost',
       'https://localhost',
       'http://localhost:3000',
-      ...(process.env.WEB_APP_URL ? [new URL(process.env.WEB_APP_URL).origin] : []),
     ]);
     await app.register(cors, {
       origin: (origin, cb) => cb(null, !origin || allowedOrigins.has(origin)),
@@ -368,7 +368,7 @@ async function start() {
           relation: ['delegate_permission/common.handle_all_urls'],
           target: {
             namespace: 'android_app',
-            package_name: process.env.ANDROID_APP_PACKAGE || 'com.socialorganizer.app',
+            package_name: ANDROID_APP_PACKAGE,
             sha256_cert_fingerprints: fingerprints,
           },
         },
@@ -379,7 +379,7 @@ async function start() {
     // (camera QR, messengers, Safari). The app declares applinks:<host> in App.entitlements.
     // APPLE_TEAM_ID defaults to the team in the Xcode project, APPLE_BUNDLE_ID to the store bundle.
     const appleAppSiteAssociation = async (_req: unknown, reply: import('fastify').FastifyReply) => {
-      const appId = `${process.env.APPLE_TEAM_ID || '6MQRV9Q3H5'}.${process.env.APPLE_BUNDLE_ID || 'com.socialorganizer.app'}`;
+      const appId = `${APPLE_TEAM_ID}.${APPLE_BUNDLE_ID}`;
       const paths = ['/invite/*', '/i/*', '/sos/*'];
       reply.header('Content-Type', 'application/json');
       reply.header('Cache-Control', 'public, max-age=3600');
@@ -492,8 +492,8 @@ async function start() {
           if (!preview) return reply.type('text/html; charset=utf-8').send(indexHtml);
           const q = req.query as { lang?: string; to?: string };
           const lang = pickLanguage(q.lang, req.headers['accept-language'], preview.language);
-          const url = `${APP_BASE_URL}${req.url.split('?')[0]}`;
-          const html = renderInvitePreview(indexHtml, preview, { lang, url, origin: APP_BASE_URL, to: q.to });
+          const url = `${WEB_APP_URL}${req.url.split('?')[0]}`;
+          const html = renderInvitePreview(indexHtml, preview, { lang, url, origin: WEB_APP_URL, to: q.to });
           return reply.type('text/html; charset=utf-8').send(html);
         } catch (err) {
           req.log.warn({ err }, '[invite-preview] failed, serving the plain page');
@@ -513,8 +513,8 @@ async function start() {
           if (!preview) return reply.type('text/html; charset=utf-8').send(indexHtml);
           const q = req.query as { lang?: string };
           const lang = pickLanguage(q.lang, req.headers['accept-language'], preview.language);
-          const url = `${APP_BASE_URL}${req.url.split('?')[0]}`;
-          return reply.type('text/html; charset=utf-8').send(renderSosPreview(indexHtml, preview, { lang, url, origin: APP_BASE_URL }));
+          const url = `${WEB_APP_URL}${req.url.split('?')[0]}`;
+          return reply.type('text/html; charset=utf-8').send(renderSosPreview(indexHtml, preview, { lang, url, origin: WEB_APP_URL }));
         } catch (err) {
           req.log.warn({ err }, '[sos-preview] failed, serving the plain page');
           return reply.sendFile('index.html', WEB_DIST);
@@ -564,11 +564,10 @@ async function start() {
       console.warn('Gun.js relay init failed:', err);
     }
 
-    // Startup diagnostics
-    const hasBotToken = !!process.env.TELEGRAM_BOT_TOKEN;
-    const hasFeedbackChat = !!process.env.FEEDBACK_CHAT_ID;
-    const hasRedis = !!process.env.REDIS_URL;
-    console.log(`[Startup] TELEGRAM_BOT_TOKEN: ${hasBotToken ? 'set' : 'MISSING'}, FEEDBACK_CHAT_ID: ${hasFeedbackChat ? 'set' : 'MISSING'}, REDIS_URL: ${hasRedis ? 'set' : 'MISSING'}`);
+    if (!process.env.REDIS_URL) console.log('[Redis] REDIS_URL is unset. BullMQ workers are disabled.');
+    if (!process.env.TELEGRAM_BOT_TOKEN) console.log('[Telegram] TELEGRAM_BOT_TOKEN is unset. Telegram sign-in and delivery are disabled.');
+    if (!process.env.FIREBASE_SERVICE_ACCOUNT) console.log('[FCM] FIREBASE_SERVICE_ACCOUNT is unset. Android push is disabled.');
+    logMailConfig();
 
     // Register Telegram webhook (fire-and-forget)
     if (process.env.TELEGRAM_BOT_TOKEN && process.env.WEB_APP_URL) {

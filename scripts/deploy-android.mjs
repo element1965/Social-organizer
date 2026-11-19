@@ -12,6 +12,7 @@
  *   node scripts/deploy-android.mjs [--track internal|alpha|beta|production]
  */
 
+import { DEFAULT_ANDROID_APP_PACKAGE } from '../packages/shared/src/deployment-defaults.ts';
 import { execSync } from 'child_process';
 import { existsSync, readFileSync, createReadStream, rmSync } from 'fs';
 import { resolve, dirname } from 'path';
@@ -23,7 +24,7 @@ const ROOT = resolve(__dirname, '..');
 const WEB_DIR = resolve(ROOT, 'apps/web');
 const ANDROID_DIR = resolve(WEB_DIR, 'android');
 const AAB_PATH = resolve(ANDROID_DIR, 'app/build/outputs/bundle/release/app-release.aab');
-const PACKAGE_NAME = 'com.socialorganizer.app';
+const PACKAGE_NAME = process.env.VITE_ANDROID_APP_PACKAGE || DEFAULT_ANDROID_APP_PACKAGE;
 
 const trackArg = process.argv.indexOf('--track');
 const TRACK = trackArg !== -1 ? process.argv[trackArg + 1] : 'internal';

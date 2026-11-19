@@ -1,3 +1,4 @@
+import { DEFAULT_APPLE_BUNDLE_ID, DEFAULT_APPLE_TEAM_ID } from '@so/shared';
 /**
  * Push to the iOS app straight through APNs (token-based auth, HTTP/2), without Firebase on the device.
  * The iOS app hands its APNs device token to @capacitor/push-notifications, which registers it with
@@ -18,8 +19,8 @@ import type { PrismaClient } from '@so/db';
 import type { WebPushPayload } from './web-push.service.js';
 
 const KEY_ID = process.env.APNS_KEY_ID?.trim() || '';
-const TEAM_ID = process.env.APNS_TEAM_ID?.trim() || process.env.APPLE_TEAM_ID?.trim() || '6MQRV9Q3H5';
-const BUNDLE_ID = process.env.APNS_BUNDLE_ID?.trim() || process.env.APPLE_BUNDLE_ID?.trim() || 'com.socialorganizer.app';
+const TEAM_ID = process.env.APNS_TEAM_ID?.trim() || process.env.APPLE_TEAM_ID?.trim() || DEFAULT_APPLE_TEAM_ID;
+const BUNDLE_ID = process.env.APNS_BUNDLE_ID?.trim() || process.env.APPLE_BUNDLE_ID?.trim() || DEFAULT_APPLE_BUNDLE_ID;
 const HOST = process.env.APNS_SANDBOX === '1' ? 'https://api.sandbox.push.apple.com' : 'https://api.push.apple.com';
 
 let privateKey: KeyObject | null = null;

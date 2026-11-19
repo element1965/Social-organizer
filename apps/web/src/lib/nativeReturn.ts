@@ -1,3 +1,4 @@
+import { ANDROID_APP_PACKAGE, NATIVE_AUTH_SCHEME } from './deployment';
 /*
  * How the system browser hands a Google sign-in back to the native app. The Apple flow does the same on the
  * server (apps/api/src/index.ts, appleRedirect). iOS opens the app by its URL scheme; Android gets an intent://
@@ -22,6 +23,6 @@ export function nativeAuthUrl(
   query: string,
   fallback: string,
 ): string {
-  if (platform === 'ios') return `socialorganizer://${path}?${query}`;
-  return `intent://${path}?${query}#Intent;scheme=socialorganizer;package=com.socialorganizer.app;S.browser_fallback_url=${encodeURIComponent(fallback)};end`;
+  if (platform === 'ios') return `${NATIVE_AUTH_SCHEME}://${path}?${query}`;
+  return `intent://${path}?${query}#Intent;scheme=${NATIVE_AUTH_SCHEME};package=${ANDROID_APP_PACKAGE};S.browser_fallback_url=${encodeURIComponent(fallback)};end`;
 }

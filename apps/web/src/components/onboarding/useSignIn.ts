@@ -1,3 +1,4 @@
+import { TELEGRAM_BOT_USERNAME, APPLE_RETURN_URL, GOOGLE_RETURN_URL } from '../../lib/deployment';
 /*
  * Every sign-in path of the app in one hook, shared by the Login and Invite screens.
  * Ported one-to-one from the previous LoginPage: Google (GIS on desktop, full redirect on mobile browsers,
@@ -246,7 +247,7 @@ export function useSignIn({ redirect, onCodeSent, onTelegramOpened }: UseSignInO
 
   /** The bot link, carrying the current Need or an invite. */
   const telegramBotUrl = () => {
-    const bot = methods?.telegramBot || 'socialorganizer_bot';
+    const bot = methods?.telegramBot || TELEGRAM_BOT_USERNAME;
     if (sosId) return `https://t.me/${bot}?startapp=sos_${sosId}`;
     const inviteToken = pendingInviteToken
       || safeInviteToken(explicitRedirect?.match(/^\/invite\/([\w-]+)(?:[?#]|$)/)?.[1]);
@@ -290,7 +291,7 @@ export function useSignIn({ redirect, onCodeSent, onTelegramOpened }: UseSignInO
       const params = new URLSearchParams({
         response_type: 'id_token',
         client_id: GOOGLE_CLIENT_ID,
-        redirect_uri: 'https://www.orginizer.com/auth/google/callback',
+        redirect_uri: GOOGLE_RETURN_URL,
         scope: 'openid email profile',
         nonce: Math.random().toString(36).slice(2),
         // p: the callback page sends iOS back by the URL scheme and Android by an intent:// link
@@ -357,7 +358,7 @@ export function useSignIn({ redirect, onCodeSent, onTelegramOpened }: UseSignInO
       response_type: 'code id_token',
       response_mode: 'form_post',
       client_id: APPLE_SERVICE_ID,
-      redirect_uri: 'https://www.orginizer.com/api/auth/apple/callback',
+      redirect_uri: APPLE_RETURN_URL,
       scope: 'name email',
       nonce: Math.random().toString(36).slice(2),
       state: JSON.stringify(stateObj),

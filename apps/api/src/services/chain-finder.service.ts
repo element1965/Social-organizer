@@ -1,8 +1,8 @@
+import { WEB_APP_URL } from '../deployment.js';
 import { Prisma, type PrismaClient } from '@so/db';
 import { sendTelegramMessage, type TgReplyMarkup } from './telegram-bot.service.js';
 import { getNetworkUserIds } from './bfs.service.js';
 
-const WEB_APP_URL = process.env.WEB_APP_URL || 'https://www.orginizer.com';
 const MAX_CHAIN_LENGTH = 5;
 
 interface Edge {

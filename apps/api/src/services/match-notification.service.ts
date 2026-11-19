@@ -1,10 +1,10 @@
+import { WEB_APP_URL } from '../deployment.js';
 import type { PrismaClient } from '@so/db';
 import { resources } from '@so/i18n';
 import { sendTelegramMessage, type TgReplyMarkup } from './telegram-bot.service.js';
 import { sendPushNotification } from './push.service.js';
 import { getNetworkUserIds } from './bfs.service.js';
 
-const WEB_APP_URL = process.env.WEB_APP_URL || 'https://www.orginizer.com';
 
 interface MatchInfo {
   userId: string;

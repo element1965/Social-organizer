@@ -809,7 +809,7 @@
         "cta": "Schrijf naar het team",
         "share": "Delen",
         "shared": "Link gekopieerd",
-        "safe": "Het team antwoordt alleen vanuit @socialorganizer_bot en vraagt nooit om geld, inlogcodes of kaartgegevens.",
+        "safe": "Het team antwoordt alleen vanuit {{bot}} en vraagt nooit om geld, inlogcodes of kaartgegevens.",
         "w1Title": "Bouw een netwerk in je gemeenschap",
         "w1": "Heb je een eigen gemeenschap, probeer de app daar dan uit. We helpen je om hem uit te leggen in de woorden die ze daar gebruiken.",
         "w2Title": "Vertel anderen over het project",

@@ -1,3 +1,4 @@
+import { TELEGRAM_BOT_USERNAME } from '../lib/deployment';
 import { Capacitor } from '@capacitor/core';
 import { trpc } from '../lib/trpc';
 
@@ -14,7 +15,7 @@ export function useConnectTelegram() {
     const win = Capacitor.isNativePlatform() ? null : window.open('', '_blank');
     generate.mutate(undefined, {
       onSuccess: ({ code }) => {
-        const bot = import.meta.env.VITE_TELEGRAM_BOT_USERNAME || 'socialorganizer_bot';
+        const bot = TELEGRAM_BOT_USERNAME;
         const url = `https://t.me/${bot}?startapp=link_${code}`;
         if (win) win.location.href = url;
         else window.open(url, '_blank');

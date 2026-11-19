@@ -1,3 +1,4 @@
+import { WEB_APP_URL } from '../lib/deployment';
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { trpc } from '../lib/trpc';
@@ -59,7 +60,7 @@ export function GoogleCallbackPage() {
     const goError = (reason: 'failed' | 'account_exists' | 'cancelled' = 'failed', masked?: string | null) => {
       const extra = masked ? `&m=${encodeURIComponent(masked)}` : '';
       if (isNativeCallback) {
-        toApp(nativeAuthUrl(platform, 'auth-error', `reason=${reason}${extra}`, `https://www.orginizer.com/login?error=${reason}${extra}`));
+        toApp(nativeAuthUrl(platform, 'auth-error', `reason=${reason}${extra}`, `${WEB_APP_URL}/login?error=${reason}${extra}`));
       } else {
         navigate(`/login?error=${reason}${extra}`, { replace: true });
       }
@@ -90,7 +91,7 @@ export function GoogleCallbackPage() {
             });
             // Android: intent:// closes the Custom Tab (socialorganizer:// would leave it open with a blank page).
             // iOS: socialorganizer://, since Safari cannot open intent://; the app closes the browser itself.
-            toApp(nativeAuthUrl(platform, 'auth-success', p.toString(), 'https://www.orginizer.com'));
+            toApp(nativeAuthUrl(platform, 'auth-success', p.toString(), WEB_APP_URL));
           } else {
             const path = afterSignInPath(data.userId, !!data.isNew);
             login(data.accessToken, data.refreshToken, data.userId);

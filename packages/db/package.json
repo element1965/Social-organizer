@@ -15,6 +15,7 @@
   "scripts": {
     "build": "tsc",
     "typecheck": "tsc --noEmit",
+    "setup": "prisma generate && node --env-file=.env prisma/seed-dev.ts --check-local && prisma db push --skip-generate && node --env-file=.env prisma/seed-dev.ts --if-empty",
     "generate": "prisma generate",
     "migrate": "prisma migrate dev",
     "push": "prisma db push",

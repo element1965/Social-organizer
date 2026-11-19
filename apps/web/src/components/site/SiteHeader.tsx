@@ -1,3 +1,4 @@
+import { TELEGRAM_BOT_URL } from '../../lib/deployment';
 import { useState } from 'react';
 import { isTelegramWebApp } from '@so/tg-adapter';
 import { useIsDark } from '../../hooks/useIsDark';
@@ -12,7 +13,7 @@ import { IconMoon, IconSun } from '../ui2/icons';
 
 export const GITHUB_URL = 'https://github.com/element1965/Social-organizer';
 /** Guests have no in-app Help: the support bot answers questions. */
-export const HELP_URL = 'https://t.me/socialorganizer_bot';
+export const HELP_URL = TELEGRAM_BOT_URL;
 
 export type SiteSection = 'how' | 'help' | 'legal' | undefined;
 

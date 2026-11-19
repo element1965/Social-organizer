@@ -1,3 +1,4 @@
+import { TELEGRAM_MINI_APP_BOT } from '../lib/deployment';
 import { useEffect } from 'react';
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -34,7 +35,6 @@ const DEMO_COLLECTION = import.meta.env.DEV ? {
   _count: { obligations: 7 },
 } : null;
 
-const TELEGRAM_BOT = (import.meta.env.VITE_TELEGRAM_BOT_USERNAME as string | undefined)?.trim() || '';
 
 /** Old API exposes blockReason; the new one exposes suspended and never the raw reason. */
 function isSuspended(collection: { status: string; suspended?: boolean; blockReason?: string | null }): boolean {
@@ -156,8 +156,8 @@ export function SosLandingPage() {
             closed={asDate(collection.closedAt)}
             suspended={isSuspended(collection)}
             language={language}
-            telegramUrl={!isPreview && collectionId && TELEGRAM_BOT && !isTelegramWebApp()
-              ? `https://t.me/${TELEGRAM_BOT}?startapp=sos_${collectionId}`
+            telegramUrl={!isPreview && collectionId && TELEGRAM_MINI_APP_BOT && !isTelegramWebApp()
+              ? `https://t.me/${TELEGRAM_MINI_APP_BOT}?startapp=sos_${collectionId}`
               : null}
             guest={!isAuthenticated && !isTelegramWebApp()}
             onJoin={join}

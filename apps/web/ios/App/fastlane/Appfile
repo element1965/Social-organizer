@@ -1,1 +1,1 @@
-app_identifier("com.socialorganizer.app")
+app_identifier(ENV["VITE_APPLE_BUNDLE_ID"].to_s.empty? ? "com.socialorganizer.app" : ENV["VITE_APPLE_BUNDLE_ID"])

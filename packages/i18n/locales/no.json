@@ -809,7 +809,7 @@
         "cta": "Skriv til teamet",
         "share": "Del",
         "shared": "Lenken er kopiert",
-        "safe": "Teamet svarer bare fra @socialorganizer_bot og ber aldri om penger, innloggingskoder eller kortopplysninger.",
+        "safe": "Teamet svarer bare fra {{bot}} og ber aldri om penger, innloggingskoder eller kortopplysninger.",
         "w1Title": "Bygg et nettverk i fellesskapet ditt",
         "w1": "Har du et eget fellesskap, så prøv appen der. Vi hjelper deg å forklare den med ordene fellesskapet bruker.",
         "w2Title": "Fortell andre om prosjektet",

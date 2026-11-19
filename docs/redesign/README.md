@@ -82,39 +82,16 @@ that note is out of date until those screens move to tokens.
 | PostgreSQL | 17, port **5434**, user `postgres` / password `1111` | `winget install PostgreSQL.PostgreSQL.17` with `--serverport 5434` |
 | Redis | not set up yet (optional, see below) | — |
 
-### Env files (not committed)
-
-- `packages/db/.env` — `DATABASE_URL` for Prisma.
-- `apps/api/.env` — loaded by `pnpm dev` (`tsx watch --env-file-if-exists=.env`). Needs `DATABASE_URL`,
-  `JWT_SECRET` (16+ chars), `WEB_APP_URL=http://localhost:3000`; integration keys are optional.
-- `apps/web/.env` — `VITE_*` build-time variables.
-
-### First run
-
-```bash
-pnpm install
-pnpm db:generate
-cd packages/db && npx prisma db push && cd ../..
-pnpm build
-pnpm dev
-```
-
-- Web: http://localhost:3000 (Vite proxies `/trpc`, `/api`, `/gun` to the API).
-- API: http://localhost:3001, healthcheck `/health`.
-
-**Why `db push` and not `migrate deploy`:** migration `20260207165421_add_faq_items` inserts FAQ rows that
-reference a production user id, so the migration chain fails on an empty database. `db push` creates the
-current schema without that data. Use `migrate deploy` only against databases that already have the history.
+Follow the [root quick start](../../README.md#quick-start) for the environment
+files, database setup, and dev servers. The examples run the web app on port
+3060 and the API on port 3061.
 
 ### Test data
 
-`packages/db/prisma/seed-dev.ts` wipes the **local** database and fills it with fictional people
-(it refuses to run unless `DATABASE_URL` points to localhost):
-
-```bash
-cd packages/db
-../../apps/api/node_modules/.bin/tsx prisma/seed-dev.ts
-```
+`pnpm db:setup` seeds fictional people into an empty local database. The
+standalone `packages/db/prisma/seed-dev.ts` script resets user data when run
+without arguments. Use the root quick start for a first run or to keep
+existing users.
 
 | Account | State |
 |---------|-------|
@@ -124,7 +101,7 @@ cd packages/db
 
 ### Signing in locally
 
-- **E-mail code:** without `RESEND_API_KEY`, the dev API writes messages to `%TEMP%\so-dev-mail.log`
+- **E-mail code:** the API example writes messages to `apps/api/so-dev-mail.log`
   (override with `DEV_MAIL_OUTBOX`) — read the code there.
 - **Demo mode is removed.** There is no `demo-token` and no mock tRPC link. Sign in against the local API.
 - Telegram / Google / Apple sign-in need the corresponding keys in the env files.
@@ -134,9 +111,9 @@ cd packages/db
 Two ways, from quick to stable:
 
 1. **Dev server over Wi-Fi.** Vite listens on all interfaces (`server.host: true`), so with the phone on the same
-   network open `http://<pc-ip>:3000` (find the IP with `ipconfig`; the Vite banner prints it as "Network"). The API is
+   network open `http://<pc-ip>:3060` (find the IP with `ipconfig`; the Vite banner prints it as "Network"). The API is
    reached through the Vite proxy, which rewrites the browser's Origin to `localhost:3000` for the CORS allowlist.
-   Sign in with the e-mail code from `%TEMP%\so-dev-mail.log`; Google/Apple/Telegram sign-in do not work on a LAN
+   Sign in with the e-mail code from `apps/api/so-dev-mail.log`; Google/Apple/Telegram sign-in do not work on a LAN
    address. Plain http also means no PWA install and no camera (the QR scanner needs a secure context).
 2. **Staging on Railway.** A second deployment of the `redesign` branch with its own database and a railway.app
    domain (https): the phone opens it in Chrome, installs it as a PWA from the browser menu, and the camera, web push and
@@ -148,7 +125,7 @@ Two ways, from quick to stable:
 Without `REDIS_URL` the API starts normally and skips the BullMQ workers (reminders, broadcasts,
 scheduled cycle close, notification expiry); currency rates are fetched without cache.
 Memurai's MSI failed to install on this machine and Microsoft Garnet lacks commands BullMQ needs,
-so Redis is disabled for now. Set `REDIS_URL=redis://localhost:6379` once a Redis 6.2+ server runs locally.
+so Redis is disabled for now. Set `REDIS_URL=redis://127.0.0.1:63799` to use Redis from the root Compose file.
 
 ## What the redesign changed
 

@@ -1,3 +1,4 @@
+import { TELEGRAM_BOT_USERNAME } from '../../lib/deployment';
 /*
  * The sign-in flow shared by /login and /invite/:token: the main step (a hero from the page + buttons),
  * then e-mail → code, the password form for old accounts (only via ?mode=password), "Continue in Telegram"
@@ -192,7 +193,7 @@ export function SignInFlow({
 
   // ---- Continue in Telegram (№16): the site opened the bot in another tab ----
   if (step === 'telegram') {
-    const bot = '@socialorganizer_bot';
+    const bot = '@' + TELEGRAM_BOT_USERNAME;
     return (
       <OnboardingFrame
         top={<BrandLine />}

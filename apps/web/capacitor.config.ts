@@ -1,15 +1,22 @@
 import type { CapacitorConfig } from '@capacitor/cli';
+import {
+  DEFAULT_ANDROID_APP_PACKAGE,
+  DEFAULT_APPLE_BUNDLE_ID,
+  DEFAULT_WEB_APP_URL,
+} from '../../packages/shared/src/deployment-defaults';
 
 // Light --so-canvas from src/styles/tokens.css, closest to the existing white native splash.
 const startupCanvas = '#f3f6f4';
 
 const config: CapacitorConfig = {
-  appId: 'com.socialorganizer.app',
+  appId: process.argv.includes('ios')
+    ? process.env.VITE_APPLE_BUNDLE_ID || DEFAULT_APPLE_BUNDLE_ID
+    : process.env.VITE_ANDROID_APP_PACKAGE || DEFAULT_ANDROID_APP_PACKAGE,
   appName: 'Social Organizer',
   webDir: 'dist',
   server: {
     // Point to the production API — the Android app is a standalone client
-    url: 'https://www.orginizer.com',
+    url: process.env.VITE_WEB_APP_URL || DEFAULT_WEB_APP_URL,
     cleartext: false,
   },
   android: {

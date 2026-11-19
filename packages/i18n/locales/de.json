@@ -809,7 +809,7 @@
         "cta": "Dem Team schreiben",
         "share": "Teilen",
         "shared": "Link kopiert",
-        "safe": "Das Team antwortet nur über @socialorganizer_bot und fragt nie nach Geld, Anmeldecodes oder Kartendaten.",
+        "safe": "Das Team antwortet nur über {{bot}} und fragt nie nach Geld, Anmeldecodes oder Kartendaten.",
         "w1Title": "Bauen Sie ein Netzwerk in Ihrer Gemeinschaft auf",
         "w1": "Wenn Sie eine eigene Gemeinschaft haben, probieren Sie die App dort aus. Wir helfen Ihnen, sie mit den Worten zu erklären, die man dort benutzt.",
         "w2Title": "Erzählen Sie anderen vom Projekt",

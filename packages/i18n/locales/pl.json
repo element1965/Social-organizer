@@ -825,7 +825,7 @@
         "cta": "Napisz do zespołu",
         "share": "Udostępnij",
         "shared": "Link skopiowany",
-        "safe": "Zespół odpowiada tylko z @socialorganizer_bot i nigdy nie prosi o pieniądze, kody logowania ani dane karty.",
+        "safe": "Zespół odpowiada tylko z {{bot}} i nigdy nie prosi o pieniądze, kody logowania ani dane karty.",
         "w1Title": "Zbuduj sieć w swojej społeczności",
         "w1": "Jeśli masz własną społeczność, wypróbuj tam aplikację. Pomożemy Ci opowiedzieć o niej słowami, których używa Twoja społeczność.",
         "w2Title": "Opowiedz innym o projekcie",

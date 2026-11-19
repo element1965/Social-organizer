@@ -801,7 +801,7 @@
         "cta": "Tulis ke tim",
         "share": "Bagikan",
         "shared": "Tautan disalin",
-        "safe": "Tim hanya membalas dari @socialorganizer_bot dan tidak pernah meminta uang, kode masuk, atau data kartu.",
+        "safe": "Tim hanya membalas dari {{bot}} dan tidak pernah meminta uang, kode masuk, atau data kartu.",
         "w1Title": "Bangun jaringan di komunitas Anda",
         "w1": "Kalau Anda punya komunitas sendiri, coba aplikasinya di sana. Kami akan membantu menjelaskannya dengan bahasa yang dipakai di komunitas Anda.",
         "w2Title": "Ceritakan proyek ini",

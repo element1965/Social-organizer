@@ -1,3 +1,4 @@
+import { NATIVE_AUTH_SCHEME, WEB_APP_HOSTS } from './lib/deployment';
 import { lazy, Suspense, useEffect, useRef, useState, type ComponentType } from 'react';
 import { BrowserRouter, Navigate, Outlet, Route, Routes, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -138,7 +139,7 @@ function appLinkPath(raw: string): string | null {
   }
   if (url.protocol !== 'https:') return null;
   const host = url.hostname.toLowerCase();
-  const ours = host === 'orginizer.com' || host === 'www.orginizer.com' || host === window.location.hostname.toLowerCase();
+  const ours = WEB_APP_HOSTS.includes(host) || host === window.location.hostname.toLowerCase();
   if (!ours || !/^\/(invite|i|sos)\/[A-Za-z0-9_-]+\/?$/.test(url.pathname)) return null;
   return url.pathname + url.search;
 }
@@ -166,13 +167,13 @@ function GoogleAuthDeepLinkHandler() {
         navigate(appPath);
         return;
       }
-      if (!url.startsWith('socialorganizer://auth-')) return;
+      if (!url.startsWith(`${NATIVE_AUTH_SCHEME}://auth-`)) return;
       if (processedRef.current.has(url)) return;
       processedRef.current.add(url);
 
       Browser.close().catch(() => {});
 
-      if (!url.startsWith('socialorganizer://auth-success')) {
+      if (!url.startsWith(`${NATIVE_AUTH_SCHEME}://auth-success`)) {
         const errParams = new URLSearchParams(url.split('?')[1] || '');
         const reason = errParams.get('reason');
         // account_exists may carry the masked e-mail ("an•••@gmail.com"); cancelled is a calm notice, not an error

@@ -1,3 +1,4 @@
+import { TELEGRAM_BOT_USERNAME, TELEGRAM_BOT_URL } from '../lib/deployment';
 import { useEffect, useMemo, useRef, useState, type MouseEvent as ReactMouseEvent } from 'react';
 import { Link } from 'react-router-dom';
 import { Trans, useTranslation } from 'react-i18next';
@@ -26,7 +27,7 @@ import '../components/landing/landing.css';
 
 const STUDY_URL = 'https://research.facebook.com/blog/2016/02/three-and-a-half-degrees-of-separation/';
 const REPORT_URL = 'https://zenodo.org/records/21629935';
-const BOT_URL = 'https://t.me/socialorganizer_bot';
+const BOT_URL = TELEGRAM_BOT_URL;
 const TEAM_URL = `${BOT_URL}?start=team`;
 const ICON_CREDITS = 'Gil Barbara logos (CC0)';
 /** People with connections in the network on the date in `join.now`. */
@@ -552,7 +553,7 @@ export function LandingPage() {
               <p className="shared" aria-live="polite">
                 {shared ? t('landing.v2.join.shared') : ''}
               </p>
-              <p className="safe">{t('landing.v2.join.safe')}</p>
+              <p className="safe">{t('landing.v2.join.safe', { bot: '@' + TELEGRAM_BOT_USERNAME })}</p>
             </div>
             <ol className="ways">
               <li>

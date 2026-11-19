@@ -8,7 +8,7 @@ import {
 // No fallback: a known default secret would let anyone sign tokens (SO-14).
 const JWT_SECRET = process.env.JWT_SECRET ?? '';
 if (JWT_SECRET.length < 16) {
-  throw new Error('JWT_SECRET is not set (or shorter than 16 chars) — refusing to start');
+  throw new Error('JWT_SECRET must be at least 16 characters. For local development, copy apps/api/.env.example to apps/api/.env. Set a unique secret in production.');
 }
 
 interface JwtPayload {

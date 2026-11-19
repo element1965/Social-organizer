@@ -1,3 +1,4 @@
+import { WEB_APP_URL } from '../deployment.js';
 import { z } from 'zod';
 import { router, protectedProcedure } from '../trpc.js';
 import { TRPCError } from '@trpc/server';
@@ -121,7 +122,7 @@ export const broadcastRouter = router({
       sendWebPush(ctx.db, allUsers.map((u) => u.id), {
         title: 'Social Organizer',
         body: input.text.replace(/<[^>]+>/g, '').slice(0, 100),
-        url: `${process.env.WEB_APP_URL || 'https://www.orginizer.com'}/dashboard`,
+        url: `${WEB_APP_URL}/dashboard`,
       }).catch((err) => console.error('[WebPush Broadcast] Failed:', err));
 
       // Confirm in support chat

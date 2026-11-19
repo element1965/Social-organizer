@@ -817,7 +817,7 @@
         "cta": "Écrire à l’équipe",
         "share": "Partager",
         "shared": "Lien copié",
-        "safe": "L’équipe ne répond que depuis @socialorganizer_bot et ne demande jamais d’argent, de code de connexion ni de données de carte bancaire.",
+        "safe": "L’équipe ne répond que depuis {{bot}} et ne demande jamais d’argent, de code de connexion ni de données de carte bancaire.",
         "w1Title": "Créez un réseau dans votre communauté",
         "w1": "Si vous avez votre propre communauté, essayez l’application avec elle. Nous vous aiderons à la présenter avec les mots de votre communauté.",
         "w2Title": "Parlez du projet autour de vous",
