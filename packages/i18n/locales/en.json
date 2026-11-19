@@ -687,7 +687,8 @@
       "footerNote": "Open source · Non-profit project",
       "privacy": "Privacy",
       "terms": "Terms",
-      "deleteAccount": "Delete account"
+      "deleteAccount": "Delete account",
+      "groups": "For groups"
     },
     "start": {
       "play": "Google Play",
@@ -1046,6 +1047,67 @@
           "There is no pot and no payouts to shut down"
         ]
       ]
+    },
+    "groupsLink": "Bringing your group? How to start together"
+  },
+  "groups": {
+    "meta": {
+      "title": "For groups — Social Organizer",
+      "description": "How to bring your group into Social Organizer together: why a group starts faster than one person, the first steps, and texts to copy into your group chat."
+    },
+    "hero": {
+      "title": "Bring your group in together",
+      "lead": "Your group already stands by its own people. In Social Organizer, when one of you reports a Need, the people that person knows hear about it first, then the people they know: up to one person for each dollar still needed."
+    },
+    "why": {
+      "title": "Why start as a group",
+      "lead": "To report a Need, you need <b>{{direct}} people in your circle</b> who have confirmed they know you, and <b>{{network}} people in your network</b>, counted to the 6th handshake. Your circle counts in your network; you don't.",
+      "aloneLabel": "On your own",
+      "alone": "Both counts start at zero, and you wait for each person you know to join.",
+      "groupLabel": "{{n}} of you",
+      "group": "If {{n}} of you join and each confirms {{direct}} others from the group, every one of you can report a Need the same day."
+    },
+    "own": {
+      "title": "Your group keeps its own way",
+      "lead": "Whatever your group calls itself, a chama, a paluwagan or a church group, its own way stays: your meetings, your rules, your treasurer.",
+      "text1": "Social Organizer holds no money, has no pot and takes no fee. When someone reports a Need, each of you decides alone whether to take part, from $1. While the Need is open, you can change the amount or withdraw.",
+      "text2": "The author of the Need and the participants agree in their own chat, in any messenger. Money, if any, goes directly between people."
+    },
+    "steps": {
+      "title": "How to start",
+      "s1": "Install the app and sign in. Open “{{add}}” and send your link to the group chat with “{{share}}”.",
+      "s2": "Each person who opens your link and taps “{{known}}” comes to you. Confirm the people you know in person.",
+      "s3": "Meet once. In the app, one of you opens “{{myQr}}” and the other taps “{{scan}}”. A live code confirms the acquaintance at once, so in one evening each of you can confirm {{direct}} others.",
+      "s4": "Each of you sets “{{stake}}”: the amount you are usually ready to give when someone in the network is in trouble. Then invite the people you know outside the group."
+    },
+    "texts": {
+      "title": "Texts for your group chat",
+      "lead": "Copy a text into your group chat and change anything you like.",
+      "linkNote": "Your personal link is in the app, on the “{{add}}” screen. Paste it in place of {{placeholder}}.",
+      "linkMine": "Your own link is already in the texts.",
+      "placeholder": "[your link]",
+      "copy": "Copy text",
+      "copied": "Copied",
+      "copyFailed": "Could not copy. Select the text and copy it by hand.",
+      "languages": "Language of the texts",
+      "pageLanguage": "Page language",
+      "inviteLabel": "Invite to join",
+      "explainLabel": "In two lines",
+      "confirmLabel": "Confirm each other",
+      "invite": "I've joined Social Organizer. People who know each other in person build a network there. If one of us reports a Need because of a job loss or urgent surgery, the people who know that person hear first, then the people they know. No money goes through the app. Join through my link, and I'll confirm that we know each other: {{link}}",
+      "explain": "Social Organizer brings together people who know each other in person. When one of us reports a Need, each person decides whether to take part, from $1, and any money goes directly between people. {{link}}",
+      "confirm": "To everyone who has joined: to report a Need, each of us needs 5 confirmed acquaintances and 10 people in the network. Post your own link here (“{{add}}” → “{{share}}”). Open the links of people you know in person and tap “{{known}}”. When someone comes through your link, confirm them. At our next meeting we can do it faster: “{{myQr}}” and “{{scan}}”."
+    },
+    "honest": {
+      "title": "Tell your group plainly",
+      "list": [
+        "A Need may not be covered. Each person decides alone.",
+        "Nobody gets a rating. People in your network see two numbers: how often someone reported Participation, and how often authors marked it as received."
+      ]
+    },
+    "cta": {
+      "title": "Start with your group",
+      "note": "Want help explaining it in your group's own words? Write to the team."
     }
   },
   "legal": {

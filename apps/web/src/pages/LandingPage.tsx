@@ -560,7 +560,9 @@ export function LandingPage() {
             </div>
             <ol className="ways">
               <li>
-                <b>{t('landing.v2.join.w1Title')}</b>
+                <b>
+                  <Link to="/groups">{t('landing.v2.join.w1Title')}</Link>
+                </b>
                 <span>{t('landing.v2.join.w1')}</span>
               </li>
               <li>

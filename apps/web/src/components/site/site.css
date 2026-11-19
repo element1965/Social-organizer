@@ -95,6 +95,9 @@
 .site-sum span { color: var(--muted); font-size: 15px; font-weight: 600; }
 .site-endcta { padding: 64px 48px 72px; border-top: 1px solid var(--line-soft); display: flex; align-items: center; gap: 12px; }
 .site-endcta h2 { font-size: 32px; letter-spacing: -.035em; line-height: 1.08; font-weight: 800; flex: 1; margin-inline-end: 16px; }
+.site-endcta-copy { flex: 1; margin-inline-end: 16px; }
+.site-endcta-copy h2 { margin: 0; }
+.site-endcta-copy .site-note a { color: var(--care-text); font-weight: 700; text-decoration: underline; text-underline-offset: 3px; }
 
 /* ---------- centred panel (sign-in, invite, public collection) from 1024 px ---------- */
 .site-centre { flex: 1; display: grid; place-items: center; padding: 24px 48px 64px; }
@@ -118,6 +121,30 @@
 .site-prose li + li { margin-top: 4px; }
 .site-prose a { color: var(--care-text); text-decoration: underline; text-underline-offset: 3px; }
 .site-prose .m { color: var(--muted); }
+
+/* ---------- for groups (/groups) ---------- */
+.site-groups .site-sec > * { max-width: 760px; }
+.site-groups .gr-p { margin-top: 12px; font-size: 17px; line-height: 1.5; color: var(--ink); max-width: 60ch; }
+.site-groups .gr-counts { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 28px; }
+.site-groups .gr-count { background: var(--paper); border-radius: var(--r-xl); box-shadow: var(--shadow-card); padding: 20px 22px; }
+.site-groups .gr-count h3 { font-size: 15px; font-weight: 800; color: var(--muted); }
+.site-groups .gr-count.met h3 { color: var(--care-text); }
+.site-groups .gr-count dl { display: grid; grid-template-columns: 1fr auto; gap: 6px 16px; margin-top: 12px; font-size: 17px; }
+.site-groups .gr-count dt { color: var(--ink); font-weight: 600; }
+.site-groups .gr-count dd { font-weight: 800; font-variant-numeric: tabular-nums; color: var(--muted); }
+.site-groups .gr-count.met dd { color: var(--care-text); }
+.site-groups .gr-count p { margin-top: 14px; font-size: 15px; line-height: 1.5; color: var(--muted); }
+.site-groups .gr-steps { margin-top: 20px; counter-reset: gr; display: flex; flex-direction: column; gap: 14px; }
+.site-groups .gr-steps li { counter-increment: gr; position: relative; padding-inline-start: 44px; font-size: 17px; line-height: 1.5; color: var(--ink); max-width: 62ch; }
+.site-groups .gr-steps li::before { content: counter(gr); position: absolute; inset-inline-start: 0; top: 0; width: 30px; height: 30px; border-radius: 50%; background: var(--ink); color: var(--canvas); display: grid; place-items: center; font-weight: 800; font-size: 15px; }
+.site-groups .gr-texts { display: flex; flex-direction: column; gap: 16px; margin-top: 20px; }
+.site-groups .gr-text { background: var(--paper); border-radius: var(--r-xl); box-shadow: var(--shadow-card); padding: 20px 22px; }
+.site-groups .gr-text h3 { font-size: 15px; font-weight: 800; color: var(--muted); }
+.site-groups .gr-text p { margin-top: 8px; font-size: 16px; line-height: 1.55; color: var(--ink); overflow-wrap: anywhere; }
+.site-groups .gr-copy { display: flex; align-items: center; gap: 12px; margin-top: 14px; }
+.site-groups .gr-copy span { font-size: 14px; color: var(--muted); }
+.site-groups .gr-honest { margin-top: 16px; display: flex; flex-direction: column; gap: 10px; padding-inline-start: 22px; list-style: disc; }
+.site-groups .gr-honest li { font-size: 17px; line-height: 1.5; color: var(--ink); max-width: 62ch; }
 
 /* ---------- scroll reveal (lib/scrollPlay.ts) ---------- */
 .site .rv { opacity: 0; transform: translateY(18px); transition: opacity .6s var(--ease-out), transform .6s var(--ease-out); }
@@ -179,4 +206,7 @@
   .site-legal { padding: 8px 16px 48px; }
   .site-prose h1 { font-size: 30px; }
   .site-prose p, .site-prose li { font-size: 15px; }
+  .site-groups .gr-counts { grid-template-columns: 1fr; }
+  .site-groups .gr-p, .site-groups .gr-steps li, .site-groups .gr-honest li { font-size: 16px; }
+  .site-endcta-copy { margin: 0 0 4px; }
 }

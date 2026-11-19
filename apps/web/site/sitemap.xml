@@ -2,6 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>%WEB_APP_URL%/</loc></url>
   <url><loc>%WEB_APP_URL%/how</loc></url>
+  <url><loc>%WEB_APP_URL%/groups</loc></url>
   <url><loc>%WEB_APP_URL%/terms</loc></url>
   <url><loc>%WEB_APP_URL%/privacy</loc></url>
   <url><loc>%WEB_APP_URL%/delete-account</loc></url>

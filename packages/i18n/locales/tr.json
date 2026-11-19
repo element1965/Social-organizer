@@ -687,7 +687,8 @@
       "footerNote": "Açık kaynak · Kâr amacı gütmeyen proje",
       "privacy": "Gizlilik",
       "terms": "Koşullar",
-      "deleteAccount": "Hesabı sil"
+      "deleteAccount": "Hesabı sil",
+      "groups": "Gruplar için"
     },
     "start": {
       "play": "Google Play",
@@ -1046,6 +1047,67 @@
           "Kapatılacak havuz da ödeme de yok"
         ]
       ]
+    },
+    "groupsLink": "Grubunuzla mı geliyorsunuz? Birlikte nasıl başlanır"
+  },
+  "groups": {
+    "meta": {
+      "title": "Gruplar için — Social Organizer",
+      "description": "Social Organizer'a grubunuzla birlikte nasıl katılırsınız: bir grubun neden tek bir kişiden daha hızlı başladığı, ilk adımlar ve grup sohbetiniz için metinler."
+    },
+    "hero": {
+      "title": "Grubunuzla birlikte gelin",
+      "lead": "Grubunuz zaten kendi insanlarına sahip çıkıyor. Social Organizer'da grubunuzdan biri bir ihtiyaç bildirdiğinde önce o kişiyi tanıyanlara, ardından onların tanıdıklarına haber gider. Ağda en yakından başlanır. Her turda, hâlâ gereken tutarın her doları için en fazla bir kişiye bildirim gider."
+    },
+    "why": {
+      "title": "Neden grup olarak başlamalı",
+      "lead": "İhtiyaç bildirmek için çevrenizde sizi tanıdığını onaylamış <b>{{direct}} kişi</b> ve ağınızda 6. tokalaşmaya kadar <b>{{network}} kişi</b> gerekir. Çevreniz ağa dahildir, siz değilsiniz.",
+      "aloneLabel": "Tek başınıza",
+      "alone": "İki sayaç da sıfırdan başlar ve her tanıdığınızın katılmasını beklersiniz.",
+      "groupLabel": "{{n}} kişiyseniz",
+      "group": "{{n}} kişi katılır ve her biriniz gruptan {{direct}} kişiyi onaylarsa, hepiniz aynı gün ihtiyaç bildirebilirsiniz."
+    },
+    "own": {
+      "title": "Grubunuz kendi usulünü korur",
+      "lead": "Grubunuzun adı ne olursa olsun (chama, paluwagan ya da bir cemaat grubu), kendi usulü kalır: toplantılarınız, kurallarınız, saymanınız.",
+      "text1": "Social Organizer para tutmaz, ortak kasası yoktur ve ücret almaz. Biri ihtiyaç bildirdiğinde, her biriniz katılıp katılmayacağına kendisi karar verir, 1 $'dan başlayarak. İhtiyaç açık kaldığı sürece tutarı değiştirebilir ya da vazgeçebilirsiniz.",
+      "text2": "İhtiyacı bildiren ve katılımcılar kendi sohbetlerinde, herhangi bir mesajlaşma uygulamasında anlaşır. Para, söz konusu olursa, doğrudan kişiler arasında el değiştirir."
+    },
+    "steps": {
+      "title": "Nasıl başlanır",
+      "s1": "Uygulamayı yükleyip giriş yapın. “{{add}}” bölümünü açın ve bağlantınızı “{{share}}” ile grup sohbetine gönderin.",
+      "s2": "Bağlantınızı açıp “{{known}}” düğmesine dokunan herkes size gelir. Yüz yüze tanıdığınız kişileri onaylayın.",
+      "s3": "Bir kez buluşun. Uygulamada biri “{{myQr}}” ekranını açar, diğeri “{{scan}}” düğmesine dokunur. Canlı kod tanışıklığı hemen onaylar, böylece bir akşamda her biriniz {{direct}} kişiyi onaylayabilir.",
+      "s4": "Her biriniz “{{stake}}” tutarını belirler: ağdan biri zor durumda kaldığında genelde vermeye hazır olduğunuz tutar. Sonra grubun dışındaki tanıdıklarınızı davet edin."
+    },
+    "texts": {
+      "title": "Grup sohbetiniz için metinler",
+      "lead": "Bir metni grup sohbetine kopyalayın ve istediğinizi değiştirin.",
+      "linkNote": "Kişisel bağlantınız uygulamada, “{{add}}” ekranındadır. {{placeholder}} yerine yapıştırın.",
+      "linkMine": "Bağlantınız metinlerde zaten var.",
+      "placeholder": "[bağlantınız]",
+      "copy": "Metni kopyala",
+      "copied": "Kopyalandı",
+      "copyFailed": "Kopyalanamadı. Metni seçip elle kopyalayın.",
+      "languages": "Metinlerin dili",
+      "pageLanguage": "Sayfanın dili",
+      "inviteLabel": "Katılmaya davet",
+      "explainLabel": "İki cümlede",
+      "confirmLabel": "Birbirinizi onaylayın",
+      "invite": "Social Organizer'a katıldım. Orada birbirini yüz yüze tanıyan insanlar bir ağ kuruyor. Birimiz işini kaybettiği veya acil ameliyat gerektiği için bir ihtiyaç bildirirse önce o kişiyi tanıyanlar, sonra onların tanıdıkları haber alır. Uygulamadan para geçmez. Bağlantımla katıl, birbirimizi tanıdığımızı onaylayayım: {{link}}",
+      "explain": "Social Organizer birbirini yüz yüze tanıyan insanları bir araya getirir. Birimiz ihtiyaç bildirdiğinde herkes katılıp katılmayacağına kendisi karar verir, 1 $'dan başlayarak; para da söz konusu olursa doğrudan kişiler arasında el değiştirir. {{link}}",
+      "confirm": "Katılan herkese: ihtiyaç bildirebilmek için her birimizin onaylı 5 tanıdığı ve ağda 10 kişisi olmalı. Kendi bağlantınızı buraya atın (“{{add}}” → “{{share}}”). Yüz yüze tanıdığınız kişilerin bağlantılarını açın ve “{{known}}” düğmesine dokunun. Biri sizin bağlantınızla gelirse onaylayın. Bir sonraki buluşmada daha hızlı olur: “{{myQr}}” ve “{{scan}}”."
+    },
+    "honest": {
+      "title": "Grubunuza açıkça söyleyin",
+      "list": [
+        "Bir ihtiyaç karşılanmayabilir. Herkes kendisi karar verir.",
+        "Kimseye puan verilmez. Ağınızdaki kişiler iki sayı görür: bir kişinin kaç kez katıldığı ve ihtiyaçları bildirenlerin bu katılımların kaçını alındı olarak işaretlediği."
+      ]
+    },
+    "cta": {
+      "title": "Grubunuzla başlayın",
+      "note": "Bunu grubunuzun kendi sözleriyle anlatmak için yardım ister misiniz? Ekibe yazın."
     }
   },
   "legal": {

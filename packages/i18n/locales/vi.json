@@ -683,7 +683,8 @@
       "footerNote": "Mã nguồn mở · Dự án phi lợi nhuận",
       "privacy": "Quyền riêng tư",
       "terms": "Điều khoản",
-      "deleteAccount": "Xóa tài khoản"
+      "deleteAccount": "Xóa tài khoản",
+      "groups": "Dành cho nhóm"
     },
     "start": {
       "play": "Google Play",
@@ -1038,6 +1039,67 @@
           "Không có quỹ và không có khoản chi trả nào để đóng"
         ]
       ]
+    },
+    "groupsLink": "Bạn đến cùng nhóm? Cách bắt đầu cùng nhau"
+  },
+  "groups": {
+    "meta": {
+      "title": "Dành cho nhóm — Social Organizer",
+      "description": "Cách cả nhóm cùng tham gia Social Organizer: vì sao một nhóm bắt đầu nhanh hơn một người, những bước đầu tiên và các đoạn tin để gửi vào nhóm chat."
+    },
+    "hero": {
+      "title": "Hãy đến cùng cả nhóm",
+      "lead": "Nhóm của bạn vốn đã đùm bọc người của mình. Trong Social Organizer, khi có người trong nhóm thông báo nhu cầu, thông báo đến trước hết với người quen của người đó, rồi đến người quen của họ. Hệ thống báo cho những người gần nhất trong mạng lưới trước. Trong mỗi đợt, hệ thống báo cho tối đa một người trên mỗi đô la còn thiếu."
+    },
+    "why": {
+      "title": "Vì sao nên bắt đầu theo nhóm",
+      "lead": "Để thông báo nhu cầu, bạn cần <b>{{direct}} người trong vòng tròn</b> đã xác nhận quen bạn và <b>{{network}} người trong mạng lưới</b>, tính đến cái bắt tay thứ 6. Vòng tròn của bạn được tính vào mạng lưới, còn bạn thì không.",
+      "aloneLabel": "Một mình",
+      "alone": "Cả hai bộ đếm bắt đầu từ số 0, và bạn chờ từng người quen tham gia.",
+      "groupLabel": "Nhóm {{n}} người",
+      "group": "Nếu {{n}} người trong nhóm cùng tham gia và mỗi người xác nhận {{direct}} người khác trong nhóm, ai cũng có thể thông báo nhu cầu ngay trong ngày."
+    },
+    "own": {
+      "title": "Nhóm vẫn giữ cách của mình",
+      "lead": "Dù nhóm của bạn gọi là gì (chama, paluwagan hay nhóm nhà thờ), cách làm của nhóm vẫn giữ nguyên: các buổi họp, quy tắc và thủ quỹ của nhóm.",
+      "text1": "Social Organizer không giữ tiền, không có két chung và không thu phí. Khi có người thông báo nhu cầu, mỗi người tự quyết định có tham gia hay không, từ $1. Khi nhu cầu còn mở, bạn có thể đổi số tiền hoặc rút lại.",
+      "text2": "Người thông báo nhu cầu và những người tham gia tự thỏa thuận trong nhóm chat riêng, trên bất kỳ ứng dụng nhắn tin nào. Tiền, nếu có, chuyển trực tiếp giữa người với người."
+    },
+    "steps": {
+      "title": "Bắt đầu thế nào",
+      "s1": "Cài ứng dụng và đăng nhập. Mở “{{add}}” và gửi đường link của bạn vào nhóm chat bằng “{{share}}”.",
+      "s2": "Ai mở link của bạn và chạm “{{known}}” sẽ đến với bạn. Hãy xác nhận những người bạn quen ngoài đời.",
+      "s3": "Gặp nhau một lần. Trong ứng dụng, một người mở “{{myQr}}”, người kia chạm “{{scan}}”. Mã trực tiếp xác nhận quen biết ngay lập tức, nên chỉ trong một buổi tối mỗi người có thể xác nhận {{direct}} người khác.",
+      "s4": "Mỗi người đặt “{{stake}}”: số tiền bạn thường sẵn sàng đưa khi ai đó trong mạng lưới gặp khó khăn. Sau đó mời người quen bên ngoài nhóm."
+    },
+    "texts": {
+      "title": "Tin nhắn cho nhóm chat",
+      "lead": "Sao chép một đoạn vào nhóm chat và sửa tùy ý.",
+      "linkNote": "Link cá nhân của bạn có trong ứng dụng, ở màn hình “{{add}}”. Dán vào chỗ {{placeholder}}.",
+      "linkMine": "Link của bạn đã có sẵn trong các đoạn tin.",
+      "placeholder": "[link của bạn]",
+      "copy": "Sao chép",
+      "copied": "Đã sao chép",
+      "copyFailed": "Không sao chép được. Hãy chọn đoạn văn và sao chép thủ công.",
+      "languages": "Ngôn ngữ của tin nhắn",
+      "pageLanguage": "Ngôn ngữ của trang",
+      "inviteLabel": "Mời tham gia",
+      "explainLabel": "Trong hai câu",
+      "confirmLabel": "Xác nhận lẫn nhau",
+      "invite": "Mình đã tham gia Social Organizer. Ở đó, những người quen nhau ngoài đời cùng xây một mạng lưới. Nếu ai trong nhóm mình thông báo nhu cầu vì gặp chuyện khó khăn như mất việc hoặc cần phẫu thuật gấp, người quen của người đó biết trước, rồi đến người quen của họ. Không có tiền nào đi qua ứng dụng. Tham gia qua link của mình nhé, mình sẽ xác nhận là chúng ta quen nhau: {{link}}",
+      "explain": "Social Organizer kết nối những người quen nhau ngoài đời. Khi ai trong chúng ta thông báo nhu cầu, mỗi người tự quyết định có tham gia hay không, từ $1, và tiền, nếu có, chuyển trực tiếp giữa người với người. {{link}}",
+      "confirm": "Gửi mọi người đã tham gia: để thông báo nhu cầu, mỗi chúng ta cần 5 người quen đã xác nhận và 10 người trong mạng lưới. Hãy gửi link của mình vào đây (“{{add}}” → “{{share}}”). Mở link của những người bạn quen ngoài đời và chạm “{{known}}”. Ai đến qua link của bạn thì xác nhận họ. Buổi gặp tới sẽ nhanh hơn: “{{myQr}}” và “{{scan}}”."
+    },
+    "honest": {
+      "title": "Nói thẳng với nhóm",
+      "list": [
+        "Một nhu cầu có thể không được đáp ứng đủ. Mỗi người tự quyết định.",
+        "Không ai bị chấm điểm. Mọi người trong mạng lưới của bạn thấy hai con số: một người đã tham gia bao nhiêu lần và bao nhiêu lượt tham gia trong số đó được người tạo nhu cầu đánh dấu là đã nhận được."
+      ]
+    },
+    "cta": {
+      "title": "Bắt đầu cùng nhóm của bạn",
+      "note": "Cần giúp giải thích bằng lời của nhóm bạn? Hãy nhắn cho đội ngũ."
     }
   },
   "legal": {

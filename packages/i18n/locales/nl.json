@@ -687,7 +687,8 @@
       "footerNote": "Open source · Project zonder winstoogmerk",
       "privacy": "Privacy",
       "terms": "Voorwaarden",
-      "deleteAccount": "Account verwijderen"
+      "deleteAccount": "Account verwijderen",
+      "groups": "Voor groepen"
     },
     "start": {
       "play": "Google Play",
@@ -1046,6 +1047,67 @@
           "Er is geen pot en er zijn geen uitkeringen om stil te leggen"
         ]
       ]
+    },
+    "groupsLink": "Kom je met je groep? Zo begin je samen"
+  },
+  "groups": {
+    "meta": {
+      "title": "Voor groepen — Social Organizer",
+      "description": "Zo kom je met je hele groep naar Social Organizer: waarom een groep sneller begint dan één persoon, de eerste stappen en teksten voor je groepschat."
+    },
+    "hero": {
+      "title": "Kom met je hele groep",
+      "lead": "Je groep staat nu al voor de eigen mensen klaar. In Social Organizer horen kennissen van de persoon die een behoefte meldt het eerst, en daarna hun kennissen. De mensen die het dichtst bij die persoon staan in het netwerk krijgen als eersten bericht. Elke ronde krijgt maximaal één persoon bericht per dollar die nog nodig is."
+    },
+    "why": {
+      "title": "Waarom als groep beginnen",
+      "lead": "Om een behoefte te melden heb je <b>{{direct}} mensen in je kring</b> nodig die bevestigd hebben dat ze je kennen, en <b>{{network}} mensen in je netwerk</b>, tot de 6e handdruk. Je kring telt mee in het netwerk, jij zelf niet.",
+      "aloneLabel": "Alleen",
+      "alone": "Beide tellers beginnen bij nul en je wacht tot elke kennis erbij komt.",
+      "groupLabel": "Met {{n}} personen",
+      "group": "Als jullie met {{n}} personen meedoen en per persoon {{direct}} anderen uit de groep bevestigen, kan ieder van jullie dezelfde dag een behoefte melden."
+    },
+    "own": {
+      "title": "Je groep houdt haar eigen manier",
+      "lead": "Hoe je groep ook heet (een chama, een paluwagan of een kerkgroep), haar eigen manier blijft: jullie bijeenkomsten, jullie regels, jullie penningmeester.",
+      "text1": "Social Organizer bewaart geen geld, heeft geen gezamenlijke kas en rekent geen kosten. Als iemand een behoefte meldt, beslis je zelf of je meedoet. Dat kan vanaf $ 1. Zolang de behoefte open is, kun je het bedrag wijzigen of je terugtrekken.",
+      "text2": "Wie de behoefte meldde en de deelnemers spreken af in hun eigen chat, in elke messenger. Geld, als het zover komt, gaat rechtstreeks tussen mensen."
+    },
+    "steps": {
+      "title": "Zo begin je",
+      "s1": "Installeer de app en log in. Open ‘{{add}}’ en stuur je link met ‘{{share}}’ naar de groepschat.",
+      "s2": "Wie je link opent en op ‘{{known}}’ tikt, komt bij jou. Bevestig de mensen die je persoonlijk kent.",
+      "s3": "Kom één keer bij elkaar. In de app opent de een ‘{{myQr}}’ en tikt de ander op ‘{{scan}}’. Een live code bevestigt de kennismaking meteen, dus op één avond kan ieder {{direct}} anderen bevestigen.",
+      "s4": "Ieder stelt ‘{{stake}}’ in: het bedrag dat je meestal wilt geven als iemand in het netwerk in de problemen zit. Nodig daarna kennissen buiten de groep uit."
+    },
+    "texts": {
+      "title": "Teksten voor je groepschat",
+      "lead": "Kopieer een tekst naar de groepschat en verander wat je wilt.",
+      "linkNote": "Je persoonlijke link staat in de app, op het scherm ‘{{add}}’. Plak hem op de plek van {{placeholder}}.",
+      "linkMine": "Je eigen link staat al in de teksten.",
+      "placeholder": "[jouw link]",
+      "copy": "Tekst kopiëren",
+      "copied": "Gekopieerd",
+      "copyFailed": "Kopiëren lukte niet. Selecteer de tekst en kopieer hem met de hand.",
+      "languages": "Taal van de teksten",
+      "pageLanguage": "Taal van de pagina",
+      "inviteLabel": "Uitnodigen",
+      "explainLabel": "In twee zinnen",
+      "confirmLabel": "Elkaar bevestigen",
+      "invite": "Ik zit nu op Social Organizer. Mensen die elkaar persoonlijk kennen bouwen daar een netwerk. Als iemand uit onze groep een behoefte meldt na baanverlies of voor een spoedoperatie, horen de kennissen van die persoon het eerst, daarna hun kennissen. Er gaat geen geld via de app. Doe mee via mijn link, dan bevestig ik dat we elkaar kennen: {{link}}",
+      "explain": "Social Organizer brengt mensen samen die elkaar persoonlijk kennen. Als een van ons een behoefte meldt, bepaal je zelf of je meedoet. Dat kan vanaf $ 1. Geld gaat, als het zover komt, rechtstreeks tussen mensen. {{link}}",
+      "confirm": "Aan iedereen die al meedoet: om een behoefte te melden heeft ieder van ons 5 bevestigde kennissen en 10 mensen in het netwerk nodig. Zet hier je eigen link neer (‘{{add}}’ → ‘{{share}}’). Open de links van mensen die je persoonlijk kent en tik op ‘{{known}}’. Komt iemand via jouw link binnen, bevestig die dan. Bij de volgende bijeenkomst gaat het sneller: ‘{{myQr}}’ en ‘{{scan}}’."
+    },
+    "honest": {
+      "title": "Zeg het je groep eerlijk",
+      "list": [
+        "Een behoefte wordt misschien niet gedekt. Ieder beslist zelf.",
+        "Niemand krijgt een beoordeling. Mensen in uw netwerk zien twee getallen: hoe vaak iemand meedeed en hoeveel van die deelnames door de mensen die de behoeften meldden als ontvangen zijn gemarkeerd."
+      ]
+    },
+    "cta": {
+      "title": "Begin met je groep",
+      "note": "Hulp nodig om het in de woorden van je groep uit te leggen? Schrijf het team."
     }
   },
   "legal": {

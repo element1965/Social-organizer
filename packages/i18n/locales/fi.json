@@ -687,7 +687,8 @@
       "footerNote": "Avoin lähdekoodi · Voittoa tavoittelematon hanke",
       "privacy": "Tietosuoja",
       "terms": "Ehdot",
-      "deleteAccount": "Poista tili"
+      "deleteAccount": "Poista tili",
+      "groups": "Ryhmille"
     },
     "start": {
       "play": "Google Play",
@@ -1046,6 +1047,67 @@
           "Ei ole kassaa eikä korvauksia, joita voisi sulkea"
         ]
       ]
+    },
+    "groupsLink": "Tuletko ryhmän kanssa? Näin aloitatte yhdessä"
+  },
+  "groups": {
+    "meta": {
+      "title": "Ryhmille — Social Organizer",
+      "description": "Näin ryhmänne liittyy Social Organizeriin yhdessä: miksi ryhmä pääsee alkuun nopeammin kuin yksi ihminen, ensimmäiset askeleet ja tekstit ryhmächattiin."
+    },
+    "hero": {
+      "title": "Tulkaa koko ryhmä yhdessä",
+      "lead": "Ryhmäsi pitää jo nyt omistaan huolta. Kun joku ryhmästä ilmoittaa tarpeesta Social Organizerissa, siitä saavat tiedon ensin hänet tuntevat ihmiset ja sitten heidän tuttavansa. Ilmoitus etenee verkostossa lähimmistä alkaen. Kullakin kierroksella ilmoitetaan enintään yhdelle henkilölle jokaista vielä puuttuvaa dollaria kohden."
+    },
+    "why": {
+      "title": "Miksi aloittaa ryhmänä",
+      "lead": "Jotta voit ilmoittaa tarpeesta, tarvitset <b>{{direct}} ihmistä piiriisi</b>, jotka ovat vahvistaneet tuntevansa sinut, ja <b>{{network}} ihmistä verkostoosi</b> 6. kädenpuristukseen asti. Piirisi lasketaan verkostoon, sinua itseäsi ei.",
+      "aloneLabel": "Yksin",
+      "alone": "Molemmat laskurit alkavat nollasta, ja odotat, että jokainen tuttava liittyy.",
+      "groupLabel": "{{n}} yhdessä",
+      "group": "Jos teitä liittyy {{n}} ja jokainen vahvistaa {{direct}} muuta ryhmästä, kuka tahansa teistä voi ilmoittaa tarpeesta samana päivänä."
+    },
+    "own": {
+      "title": "Ryhmänne pitää omat tapansa",
+      "lead": "Olipa ryhmänne nimi mikä tahansa (chama, paluwagan tai seurakuntapiiri), sen tavat pysyvät: tapaamisenne, sääntönne, rahastonhoitajanne.",
+      "text1": "Social Organizer ei säilytä rahaa, sillä ei ole yhteistä kassaa eikä se peri maksuja. Kun joku ilmoittaa tarpeesta, jokainen teistä päättää itse, osallistuuko, alkaen 1 $. Niin kauan kuin tarve on auki, voit muuttaa summaa tai vetäytyä.",
+      "text2": "Tarpeesta ilmoittanut ja osallistujat sopivat asioista omassa chatissaan, missä tahansa viestisovelluksessa. Raha, jos sitä liikkuu, kulkee suoraan ihmisten välillä."
+    },
+    "steps": {
+      "title": "Näin pääsette alkuun",
+      "s1": "Asenna sovellus ja kirjaudu. Avaa ”{{add}}” ja lähetä linkkisi ryhmächattiin painikkeella ”{{share}}”.",
+      "s2": "Jokainen, joka avaa linkkisi ja napauttaa ”{{known}}”, tulee luoksesi. Vahvista ne, jotka tunnet henkilökohtaisesti.",
+      "s3": "Tavatkaa kerran. Sovelluksessa toinen avaa ”{{myQr}}” ja toinen napauttaa ”{{scan}}”. Elävä koodi vahvistaa tuttavuuden heti, joten yhden illan aikana jokainen voi vahvistaa {{direct}} muuta.",
+      "s4": "Jokainen asettaa kohdan ”{{stake}}”: summan, jonka on yleensä valmis antamaan, kun joku verkostossa on pulassa. Kutsukaa sitten tuttavia ryhmän ulkopuolelta."
+    },
+    "texts": {
+      "title": "Tekstit ryhmächattiin",
+      "lead": "Kopioi teksti ryhmächattiin ja muuta mitä haluat.",
+      "linkNote": "Henkilökohtainen linkkisi on sovelluksessa, näkymässä ”{{add}}”. Liitä se kohdan {{placeholder}} tilalle.",
+      "linkMine": "Oma linkkisi on jo teksteissä.",
+      "placeholder": "[linkkisi]",
+      "copy": "Kopioi teksti",
+      "copied": "Kopioitu",
+      "copyFailed": "Kopiointi ei onnistunut. Valitse teksti ja kopioi se käsin.",
+      "languages": "Tekstien kieli",
+      "pageLanguage": "Sivun kieli",
+      "inviteLabel": "Kutsu mukaan",
+      "explainLabel": "Kahdella lauseella",
+      "confirmLabel": "Vahvistakaa toisenne",
+      "invite": "Olen nyt mukana Social Organizerissa. Siellä ihmiset, jotka tuntevat toisensa henkilökohtaisesti, rakentavat verkoston. Jos joku meistä ilmoittaa tarpeesta esimerkiksi työpaikan menetyksen tai kiireellisen leikkauksen vuoksi, siitä kuulevat ensin hänet tuntevat ihmiset, sitten heidän tuttavansa. Sovelluksen kautta ei kulje rahaa. Liity linkkini kautta, niin vahvistan, että tunnemme toisemme: {{link}}",
+      "explain": "Social Organizer kokoaa yhteen ihmiset, jotka tuntevat toisensa henkilökohtaisesti. Kun joku meistä ilmoittaa tarpeesta, jokainen päättää itse, osallistuuko, alkaen 1 $, ja raha, jos sitä liikkuu, kulkee suoraan ihmisten välillä. {{link}}",
+      "confirm": "Kaikille, jotka ovat liittyneet: jotta voimme ilmoittaa tarpeesta, jokainen meistä tarvitsee 5 vahvistettua tuttavaa ja 10 ihmistä verkostoon. Jakakaa tänne oma linkkinne (”{{add}}” → ”{{share}}”). Avatkaa niiden linkit, jotka tunnette henkilökohtaisesti, ja napauttakaa ”{{known}}”. Kun joku tulee linkkinne kautta, vahvistakaa hänet. Seuraavassa tapaamisessa se käy nopeammin: ”{{myQr}}” ja ”{{scan}}”."
+    },
+    "honest": {
+      "title": "Kerro ryhmälle suoraan",
+      "list": [
+        "Tarve ei välttämättä täyty. Jokainen päättää itse.",
+        "Ketään ei arvioida. Verkostosi ihmiset näkevät kaksi lukua: montako kertaa henkilö osallistui ja montako osallistumista tarpeiden tekijät merkitsivät vastaanotetuiksi."
+      ]
+    },
+    "cta": {
+      "title": "Aloita ryhmäsi kanssa",
+      "note": "Haluatko apua sen selittämiseen ryhmäsi omin sanoin? Kirjoita tiimille."
     }
   },
   "legal": {

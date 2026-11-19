@@ -108,6 +108,7 @@ const PrivacyPage = lazyPage(() => import('./pages/PrivacyPage'), 'PrivacyPage')
 const TermsPage = lazyPage(() => import('./pages/TermsPage'), 'TermsPage');
 const DeleteAccountPage = lazyPage(() => import('./pages/DeleteAccountPage'), 'DeleteAccountPage');
 const HowPage = lazyPage(() => import('./pages/HowPage'), 'HowPage');
+const GroupsPage = lazyPage(() => import('./pages/GroupsPage'), 'GroupsPage');
 const GoogleCallbackPage = lazyPage(() => import('./pages/GoogleCallbackPage'), 'GoogleCallbackPage');
 const AppleCallbackPage = lazyPage(() => import('./pages/AppleCallbackPage'), 'AppleCallbackPage');
 const loadPeople = () => import('./pages/PeoplePage');
@@ -412,6 +413,7 @@ export function App() {
               <Route path="/invite/:token" element={<InvitePage />} />
               <Route path="/sos/:collectionId" element={<SosLandingPage />} />
               <Route path="/how" element={<HowPage />} />
+              <Route path="/groups" element={<GroupsPage />} />
               <Route path="/intro" element={<ProtectedRoute><IntroPage /></ProtectedRoute>} />
               <Route path="/seed" element={<ProtectedRoute><SeedPage /></ProtectedRoute>} />
             </Route>

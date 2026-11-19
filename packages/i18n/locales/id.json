@@ -683,7 +683,8 @@
       "footerNote": "Sumber terbuka · Proyek nirlaba",
       "privacy": "Privasi",
       "terms": "Ketentuan",
-      "deleteAccount": "Hapus akun"
+      "deleteAccount": "Hapus akun",
+      "groups": "Untuk kelompok"
     },
     "start": {
       "play": "Google Play",
@@ -1038,6 +1039,67 @@
           "Tidak ada dana dan pembayaran yang bisa ditutup"
         ]
       ]
+    },
+    "groupsLink": "Datang bersama kelompok? Cara memulai bersama"
+  },
+  "groups": {
+    "meta": {
+      "title": "Untuk kelompok — Social Organizer",
+      "description": "Cara bergabung ke Social Organizer bersama seluruh kelompok: kenapa kelompok lebih cepat mulai daripada satu orang, langkah pertama, dan teks untuk obrolan grup Anda."
+    },
+    "hero": {
+      "title": "Datanglah bersama seluruh kelompok",
+      "lead": "Kelompok Anda sudah terbiasa saling menopang. Di Social Organizer, saat seseorang dari kelompok Anda menyampaikan kebutuhan, pemberitahuan dikirim ke kenalan orang itu, lalu ke kenalan mereka. Yang terdekat di jaringan mendapat kabar lebih dulu. Tiap putaran memberi kabar kepada paling banyak satu orang per dolar yang masih dibutuhkan."
+    },
+    "why": {
+      "title": "Kenapa mulai sebagai kelompok",
+      "lead": "Untuk menyampaikan kebutuhan, Anda perlu <b>{{direct}} orang di lingkaran Anda</b> yang sudah mengonfirmasi bahwa mereka mengenal Anda, dan <b>{{network}} orang di jaringan Anda</b> sampai jabat tangan ke-6. Lingkaran Anda dihitung dalam jaringan, Anda sendiri tidak.",
+      "aloneLabel": "Sendirian",
+      "alone": "Kedua hitungan mulai dari nol, dan Anda menunggu setiap kenalan bergabung.",
+      "groupLabel": "Bersama {{n}} orang",
+      "group": "Jika {{n}} orang dari Anda bergabung dan masing-masing mengonfirmasi {{direct}} orang lain di kelompok, setiap orang bisa menyampaikan kebutuhan pada hari yang sama."
+    },
+    "own": {
+      "title": "Kelompok Anda tetap dengan caranya sendiri",
+      "lead": "Apa pun nama kelompok Anda (chama, paluwagan, atau kelompok gereja), caranya tetap: pertemuan Anda, aturan Anda, bendahara Anda.",
+      "text1": "Social Organizer tidak menyimpan uang, tidak punya kas bersama, dan tidak memungut biaya. Saat seseorang menyampaikan kebutuhan, setiap orang memutuskan sendiri apakah ikut, mulai $1. Selama kebutuhan masih terbuka, Anda bisa mengubah jumlahnya atau mundur.",
+      "text2": "Penyampai kebutuhan dan para peserta bersepakat di obrolan mereka sendiri, di aplikasi pesan apa pun. Uang, jika ada, berpindah langsung antarorang."
+    },
+    "steps": {
+      "title": "Cara memulai",
+      "s1": "Pasang aplikasinya dan masuk. Buka “{{add}}” dan kirim tautan Anda ke obrolan grup dengan “{{share}}”.",
+      "s2": "Setiap orang yang membuka tautan Anda dan mengetuk “{{known}}” akan datang kepada Anda. Konfirmasi orang yang Anda kenal secara langsung.",
+      "s3": "Bertemulah sekali. Di aplikasi, satu orang membuka “{{myQr}}” dan yang lain mengetuk “{{scan}}”. Kode langsung mengonfirmasi perkenalan seketika, jadi dalam satu malam setiap orang bisa mengonfirmasi {{direct}} orang lain.",
+      "s4": "Setiap orang mengatur “{{stake}}”: jumlah yang biasanya siap diberikan saat seseorang di jaringan sedang kesulitan. Lalu undang kenalan di luar kelompok."
+    },
+    "texts": {
+      "title": "Teks untuk obrolan grup",
+      "lead": "Salin teks ke obrolan grup dan ubah sesuka Anda.",
+      "linkNote": "Tautan pribadi Anda ada di aplikasi, di layar “{{add}}”. Tempelkan sebagai pengganti {{placeholder}}.",
+      "linkMine": "Tautan Anda sudah ada di teks.",
+      "placeholder": "[tautan Anda]",
+      "copy": "Salin teks",
+      "copied": "Tersalin",
+      "copyFailed": "Gagal menyalin. Pilih teksnya dan salin secara manual.",
+      "languages": "Bahasa teks",
+      "pageLanguage": "Bahasa halaman",
+      "inviteLabel": "Ajak bergabung",
+      "explainLabel": "Dalam dua kalimat",
+      "confirmLabel": "Saling konfirmasi",
+      "invite": "Saya sudah bergabung di Social Organizer. Di sana, orang-orang yang saling kenal secara langsung membangun jaringan. Kalau seseorang di kelompok kita menyampaikan kebutuhan karena kesulitan serius, seperti kehilangan pekerjaan atau perlu operasi mendesak, kenalan orang itu mendapat kabar lebih dulu, lalu kenalan mereka. Tidak ada uang yang lewat aplikasi. Bergabunglah lewat tautan saya, nanti saya konfirmasi bahwa kita saling kenal: {{link}}",
+      "explain": "Social Organizer mempertemukan orang-orang yang saling kenal secara langsung. Saat salah satu dari kita menyampaikan kebutuhan, setiap orang memutuskan sendiri apakah ikut, mulai $1, dan uang, jika ada, berpindah langsung antarorang. {{link}}",
+      "confirm": "Untuk semua yang sudah bergabung: agar bisa menyampaikan kebutuhan, setiap orang perlu 5 kenalan yang terkonfirmasi dan 10 orang di jaringan. Kirim tautan Anda sendiri di sini (“{{add}}” → “{{share}}”). Buka tautan orang yang Anda kenal secara langsung dan ketuk “{{known}}”. Kalau ada yang datang lewat tautan Anda, konfirmasi dia. Di pertemuan berikutnya bisa lebih cepat: “{{myQr}}” dan “{{scan}}”."
+    },
+    "honest": {
+      "title": "Katakan terus terang kepada kelompok",
+      "list": [
+        "Kebutuhan mungkin tidak terpenuhi. Setiap orang memutuskan sendiri.",
+        "Tidak ada yang diberi penilaian. Orang di jaringan Anda melihat dua angka: berapa kali seseorang ikut serta dan berapa kali partisipasinya ditandai sebagai diterima oleh pembuat kebutuhan."
+      ]
+    },
+    "cta": {
+      "title": "Mulai bersama kelompok Anda",
+      "note": "Ingin bantuan menjelaskannya dengan bahasa kelompok Anda? Tulis ke tim."
     }
   },
   "legal": {

@@ -687,7 +687,8 @@
       "footerNote": "Open Source · Gemeinnütziges Projekt",
       "privacy": "Datenschutz",
       "terms": "Bedingungen",
-      "deleteAccount": "Konto löschen"
+      "deleteAccount": "Konto löschen",
+      "groups": "Für Gruppen"
     },
     "start": {
       "play": "Google Play",
@@ -1046,6 +1047,67 @@
           "Es gibt keinen Topf und keine Auszahlungen, die man abschalten könnte"
         ]
       ]
+    },
+    "groupsLink": "Sie kommen mit Ihrer Gruppe? So starten Sie gemeinsam"
+  },
+  "groups": {
+    "meta": {
+      "title": "Für Gruppen — Social Organizer",
+      "description": "Wie Ihre Gruppe gemeinsam zu Social Organizer kommt: warum eine Gruppe schneller startet als eine Person allein, die ersten Schritte und Texte für Ihren Gruppenchat."
+    },
+    "hero": {
+      "title": "Kommen Sie als ganze Gruppe",
+      "lead": "Ihre Gruppe steht schon heute zu ihren Leuten. Wenn jemand aus Ihrer Gruppe in Social Organizer einen Bedarf meldet, werden zuerst Menschen aus dem direkten Bekanntenkreis dieser Person benachrichtigt, dann deren Bekannte. Die kürzesten Verbindungen im Netzwerk kommen zuerst an die Reihe. Pro Welle wird höchstens eine Person je noch fehlendem Dollar benachrichtigt."
+    },
+    "why": {
+      "title": "Warum als Gruppe beginnen",
+      "lead": "Um einen Bedarf zu melden, brauchen Sie <b>{{direct}} Personen in Ihrem Kreis</b>, die die Bekanntschaft bestätigt haben, und <b>{{network}} Personen im Netzwerk</b> bis zum 6. Handschlag. Ihr Kreis zählt zum Netzwerk, Sie selbst nicht.",
+      "aloneLabel": "Allein",
+      "alone": "Beide Zähler stehen auf null, und Sie warten darauf, dass Menschen beitreten, die Sie kennen.",
+      "groupLabel": "Zu {{n}}",
+      "group": "Wenn {{n}} von Ihnen beitreten und pro Person die Bekanntschaft mit {{direct}} anderen aus der Gruppe bestätigt wird, können alle noch am selben Tag einen Bedarf melden."
+    },
+    "own": {
+      "title": "Ihre Gruppe bleibt bei ihrer Art",
+      "lead": "Wie auch immer Ihre Gruppe heißt (Chama, Paluwagan oder Kirchengemeinde), Ihre Treffen, Ihre Regeln und Ihre Kassenführung bleiben wie gewohnt.",
+      "text1": "Social Organizer verwahrt kein Geld, hat keine gemeinsame Kasse und nimmt keine Gebühr. Wenn jemand einen Bedarf meldet, entscheiden Sie selbst, ob Sie sich beteiligen. Das geht ab 1 $. Solange der Bedarf offen ist, können Sie den Betrag ändern oder sich zurückziehen.",
+      "text2": "Wer den Bedarf gemeldet hat und die Teilnehmenden sprechen sich im eigenen Chat ab, in jedem Messenger. Geld, wenn überhaupt, geht direkt von Mensch zu Mensch."
+    },
+    "steps": {
+      "title": "So fangen Sie an",
+      "s1": "Installieren Sie die App und melden Sie sich an. Öffnen Sie „{{add}}“ und senden Sie Ihren Link mit „{{share}}“ in den Gruppenchat.",
+      "s2": "Wer Ihren Link öffnet und auf „{{known}}“ tippt, kommt zu Ihnen. Bestätigen Sie die Menschen, die Sie persönlich kennen.",
+      "s3": "Treffen Sie sich einmal. In der App öffnet eine Person „{{myQr}}“, die andere tippt auf „{{scan}}“. Ein Live-Code bestätigt die Bekanntschaft sofort. So können Sie an einem Abend {{direct}} Bekanntschaften pro Person bestätigen.",
+      "s4": "Legen Sie unter „{{stake}}“ fest, welchen Betrag Sie üblicherweise geben würden, wenn jemand im Netzwerk in Schwierigkeiten steckt. Dann laden Sie Bekannte außerhalb der Gruppe ein."
+    },
+    "texts": {
+      "title": "Texte für Ihren Gruppenchat",
+      "lead": "Kopieren Sie einen Text in den Gruppenchat und ändern Sie, was Sie möchten.",
+      "linkNote": "Ihren persönlichen Link finden Sie in der App auf dem Bildschirm „{{add}}“. Fügen Sie ihn anstelle von {{placeholder}} ein.",
+      "linkMine": "Ihr Link steht schon in den Texten.",
+      "placeholder": "[Ihr Link]",
+      "copy": "Text kopieren",
+      "copied": "Kopiert",
+      "copyFailed": "Kopieren hat nicht geklappt. Markieren Sie den Text und kopieren Sie ihn von Hand.",
+      "languages": "Sprache der Texte",
+      "pageLanguage": "Sprache der Seite",
+      "inviteLabel": "Zum Mitmachen einladen",
+      "explainLabel": "In zwei Sätzen",
+      "confirmLabel": "Einander bestätigen",
+      "invite": "Ich bin jetzt bei Social Organizer. Dort bauen Menschen, die sich persönlich kennen, ein Netzwerk auf. Wenn jemand von uns nach einem schweren Einschnitt wie einem Jobverlust oder einer dringenden OP einen Bedarf meldet, erfahren es zuerst Menschen, die diese Person kennen, dann deren Bekannte. Über die App läuft kein Geld. Komm über meinen Link dazu, dann bestätige ich, dass wir uns kennen: {{link}}",
+      "explain": "Social Organizer bringt Menschen zusammen, die sich persönlich kennen. Meldet jemand von uns einen Bedarf, entscheiden wir individuell, ob wir uns beteiligen. Das geht ab 1 $, und Geld geht, wenn überhaupt, direkt von Mensch zu Mensch. {{link}}",
+      "confirm": "An alle, die schon dabei sind: Um einen Bedarf zu melden, brauchen wir pro Person 5 bestätigte Bekanntschaften und 10 Personen im Netzwerk. Postet hier euren eigenen Link („{{add}}“ → „{{share}}“). Öffnet die Links der Leute, die ihr persönlich kennt, und tippt auf „{{known}}“. Bestätigt die Bekanntschaft mit den Personen, die über euren Link dazukommen. Beim nächsten Treffen geht es schneller: „{{myQr}}“ und „{{scan}}“."
+    },
+    "honest": {
+      "title": "Sagen Sie es Ihrer Gruppe offen",
+      "list": [
+        "Ein Bedarf wird vielleicht nicht gedeckt. Ob Sie sich beteiligen, entscheiden Sie selbst.",
+        "Niemand bekommt eine Bewertung. Die Menschen in Ihrem Netzwerk sehen zwei Zahlen: wie oft sich jemand beteiligt hat und wie viele dieser Beteiligungen die Personen, die den jeweiligen Bedarf gemeldet haben, als erhalten markiert haben."
+      ]
+    },
+    "cta": {
+      "title": "Beginnen Sie mit Ihrer Gruppe",
+      "note": "Sie möchten Hilfe, es in den Worten Ihrer Gruppe zu erklären? Schreiben Sie dem Team."
     }
   },
   "legal": {

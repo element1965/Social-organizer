@@ -16,6 +16,7 @@ Route pages other than the guest landing are `React.lazy`. The Circle chunk is p
 |------|------|-------------|
 | LandingPage | `/` (guest) | Public site. Signed-in `/` is the Circle |
 | HowPage | `/how` | How it works |
+| GroupsPage | `/groups` | For organisers who bring an existing group: why a group starts faster than one person (5 confirmed acquaintances and 10 people in the network, so 11 people who each confirm 5 others), what stays the group's own, the first steps, and three texts to copy into the group chat (a signed-in visitor gets their own link in them). Linked from the landing, the site footer and the end of `/how`. Kiswahili and Tagalog chat texts are drafted in the page module and stay hidden until a native review |
 | LoginPage | `/login` | E-mail code, Telegram, Google, Apple |
 | IntroPage | `/intro` | First-run intro (`/onboarding` redirects here) |
 | SeedPage | `/seed` | First-run name step: asked only when the account has no real name yet (e-mail sign-up), otherwise passes straight on; `?end=1` (after the intro) closes the first run |

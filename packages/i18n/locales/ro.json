@@ -691,7 +691,8 @@
       "footerNote": "Cod deschis · Proiect non-profit",
       "privacy": "Confidențialitate",
       "terms": "Condiții",
-      "deleteAccount": "Șterge contul"
+      "deleteAccount": "Șterge contul",
+      "groups": "Pentru grupuri"
     },
     "start": {
       "play": "Google Play",
@@ -1054,6 +1055,67 @@
           "Nu există fond și nici plăți care să poată fi închise"
         ]
       ]
+    },
+    "groupsLink": "Vii cu grupul tău? Cum începeți împreună"
+  },
+  "groups": {
+    "meta": {
+      "title": "Pentru grupuri — Social Organizer",
+      "description": "Cum intrați în Social Organizer cu tot grupul: de ce un grup pornește mai repede decât o persoană singură, primii pași și texte pentru chatul grupului."
+    },
+    "hero": {
+      "title": "Veniți cu tot grupul",
+      "lead": "Grupul tău își sprijină deja oamenii. În Social Organizer, când cineva din grup anunță o nevoie, vestea ajunge întâi la persoanele care cunosc direct persoana care a anunțat nevoia, apoi la cunoscuții lor. Notificările pornesc de la legăturile cele mai apropiate din rețea. În fiecare rundă se notifică cel mult o persoană pentru fiecare dolar care mai lipsește."
+    },
+    "why": {
+      "title": "De ce să începeți ca grup",
+      "lead": "Ca să anunți o nevoie, ai nevoie de <b>{{direct}} persoane în cercul tău</b> care au confirmat că te cunosc și de <b>{{network}} persoane în rețea</b>, până la a 6-a strângere de mână. Cercul tău se numără în rețea, tu nu.",
+      "aloneLabel": "Pe cont propriu",
+      "alone": "Ambele contoare pornesc de la zero și aștepți să se alăture persoanele pe care le cunoști.",
+      "groupLabel": "{{n}} împreună",
+      "group": "Dacă intrați {{n}} și fiecare confirmă {{direct}} persoane din grup, oricare dintre voi poate anunța o nevoie chiar în aceeași zi."
+    },
+    "own": {
+      "title": "Grupul vostru își păstrează felul lui",
+      "lead": "Oricum s-ar numi grupul vostru (chama, paluwagan sau grup de la biserică), păstrați întâlnirile, regulile și felul în care vă gestionați banii.",
+      "text1": "Social Organizer nu păstrează bani, nu are o casă comună și nu ia comision. Când cineva anunță o nevoie, participarea e o alegere personală. Poți participa de la 1 $. Cât timp nevoia e deschisă, poți schimba suma sau te poți retrage.",
+      "text2": "Persoana care a anunțat nevoia și persoanele care participă se înțeleg în propriul chat, în orice aplicație de mesagerie. Banii, dacă e cazul, merg direct de la om la om."
+    },
+    "steps": {
+      "title": "Cum începeți",
+      "s1": "Instalează aplicația și autentifică-te. Deschide „{{add}}” și trimite linkul tău în chatul grupului cu „{{share}}”.",
+      "s2": "Cine îți deschide linkul și atinge „{{known}}” ajunge la tine. Confirmă oamenii pe care îi cunoști personal.",
+      "s3": "Întâlniți-vă o dată. O persoană deschide „{{myQr}}” în aplicație, iar alta atinge „{{scan}}”. Codul live confirmă pe loc că vă cunoașteți. Într-o seară puteți confirma {{direct}} cunoștințe de persoană.",
+      "s4": "Setează în „{{stake}}” suma pe care ai putea s-o dai de obicei când cuiva din rețea îi e greu. Apoi invită persoane pe care le cunoști din afara grupului."
+    },
+    "texts": {
+      "title": "Texte pentru chatul grupului",
+      "lead": "Copiază un text în chatul grupului și schimbă ce vrei.",
+      "linkNote": "Linkul tău personal e în aplicație, pe ecranul „{{add}}”. Lipește-l în locul lui {{placeholder}}.",
+      "linkMine": "Linkul tău e deja în texte.",
+      "placeholder": "[linkul tău]",
+      "copy": "Copiază textul",
+      "copied": "Copiat",
+      "copyFailed": "Nu s-a putut copia. Selectează textul și copiază-l manual.",
+      "languages": "Limba textelor",
+      "pageLanguage": "Limba paginii",
+      "inviteLabel": "Invitație",
+      "explainLabel": "În două fraze",
+      "confirmLabel": "Confirmați că vă cunoașteți",
+      "invite": "Acum sunt în Social Organizer. Acolo, oameni care se cunosc personal construiesc o rețea. Dacă cineva din grup anunță o nevoie din cauza unui necaz serios, cum ar fi pierderea locului de muncă sau o operație urgentă, află întâi persoanele care cunosc direct persoana care a făcut anunțul, apoi cunoscuții lor. Prin aplicație nu trec bani. Intră prin linkul meu și confirm că ne cunoaștem: {{link}}",
+      "explain": "Social Organizer adună oameni care se cunosc personal. Când cineva din grup anunță o nevoie, participarea e o alegere personală, de la 1 $. Banii, dacă e cazul, merg direct de la om la om. {{link}}",
+      "confirm": "Pentru persoanele care s-au alăturat deja: ca să anunțăm o nevoie, avem nevoie de 5 cunoștințe confirmate și 10 persoane în rețea pentru fiecare cont. Puneți aici linkul vostru („{{add}}” → „{{share}}”). Deschideți linkurile persoanelor pe care le cunoașteți personal și atingeți „{{known}}”. Confirmați că vă cunoașteți cu persoanele care vin prin linkul vostru. La următoarea întâlnire merge mai repede: „{{myQr}}” și „{{scan}}”."
+    },
+    "honest": {
+      "title": "Spune-le direct celor din grup",
+      "list": [
+        "O nevoie poate să nu fie acoperită. Participarea e o alegere personală.",
+        "Nimeni nu primește o notă. Oamenii din rețeaua ta văd două numere: de câte ori a participat o persoană și câte dintre participări au fost marcate ca primite de persoanele care au anunțat nevoile."
+      ]
+    },
+    "cta": {
+      "title": "Începe cu grupul tău",
+      "note": "Vrei ajutor ca s-o explici cu vorbele grupului tău? Scrie-i echipei."
     }
   },
   "legal": {

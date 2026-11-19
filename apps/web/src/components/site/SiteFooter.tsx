@@ -18,6 +18,7 @@ export function SiteFooter() {
         <a href={HELP_URL} target="_blank" rel="noopener noreferrer" className="phone-only">
           {t('landing.site.help')}
         </a>
+        <Link to="/groups">{t('landing.site.groups')}</Link>
         <a href={GITHUB_URL} target="_blank" rel="noopener noreferrer">
           {t('landing.site.github')}
         </a>
