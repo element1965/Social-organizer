@@ -874,6 +874,11 @@ export function initScene(els: SceneElements, initial: SceneOptions): SceneHandl
   const CAM = mk();
   const CS = mk();
   let csInit = false;
+  /** From "You" to "In the app" the graph turns round its own axis a few times as the page scrolls. */
+  const SPIN_TURNS = 2;
+  let spin = 0;
+  /** The graph is still turning: the labels beside it wait, or they would jump from side to side. */
+  let spinning = false;
   const frameCamera = (t: number, T: number, dt: number) => {
     const k = Math.floor(t);
     const p = t - k;
@@ -899,6 +904,12 @@ export function initScene(els: SceneElements, initial: SceneOptions): SceneHandl
     }
     // a second, damped follow removes the kinks where one shot hands over to the next
     const a = csInit ? 1 - Math.exp(-dt * 3) : 1;
+    // the turn follows the scroll with its own, slower pace, so it eases out after the page has stopped;
+    // it is a separate angle, so the sky behind, which follows the yaw, does not run away
+    const spinE = reduce ? 0 : easeIO(remap(t, MORPH + 0.5, LAST + 0.45));
+    const spinT = spinE * SPIN_TURNS * Math.PI * 2;
+    spin = csInit ? spin + (spinT - spin) * (1 - Math.exp(-dt * 1.6)) : spinT;
+    spinning = Math.abs(spinT - spin) > 0.2 || (spinE > 0.005 && spinE < 0.995);
     csInit = true;
     CS.t.lerp(CAM.t, a);
     CS.d = lerp(CS.d, CAM.d, a);
@@ -906,10 +917,12 @@ export function initScene(els: SceneElements, initial: SceneOptions): SceneHandl
     CS.pitch = lerp(CS.pitch, CAM.pitch, a);
     CS.off = lerp(CS.off, CAM.off, a);
     CS.offY = lerp(CS.offY, CAM.offY, a);
-    const yaw = CS.yaw + (reduce ? 0 : 0.02 * Math.sin(T * 0.2));
+    const yaw = CS.yaw + spin + (reduce ? 0 : 0.02 * Math.sin(T * 0.2));
     const cp = Math.cos(CS.pitch);
     camera.position.set(CS.t.x + Math.sin(yaw) * CS.d * cp, CS.t.y + Math.sin(CS.pitch) * CS.d, CS.t.z + Math.cos(yaw) * CS.d * cp);
     camera.lookAt(CS.t);
+    // the labels are placed before the render: they need this frame's camera, not the last one
+    camera.updateMatrixWorld();
     const w = innerWidth;
     const h = innerHeight;
     camera.setViewOffset(w, h, -CS.off * w, CS.offY * h, w, h);
@@ -1216,8 +1229,8 @@ export function initScene(els: SceneElements, initial: SceneOptions): SceneHandl
       s.scale.setScalar(CS.d * 0.03);
     });
     tagAt(els.tags.you, you, st.T.you);
-    tagAt(els.tags.oleg, oleg, st.T.oleg);
-    tagAt(els.tags.maria, maria, st.T.maria);
+    tagAt(els.tags.oleg, oleg, st.T.oleg && !spinning);
+    tagAt(els.tags.maria, maria, st.T.maria && !spinning);
     tagAt(els.tags.lena, lena, st.T.lena);
     const nowGraph = gS > 0.55;
     if (nowGraph !== graphOn) {
@@ -1271,7 +1284,7 @@ export function initScene(els: SceneElements, initial: SceneOptions): SceneHandl
       },
       state: () => {
         const t = storyT();
-        return { y: Math.round(scrollY), beat: Math.floor(t), p: +(t % 1).toFixed(3), g: +gS.toFixed(3) };
+        return { y: Math.round(scrollY), beat: Math.floor(t), p: +(t % 1).toFixed(3), g: +gS.toFixed(3), spin: +spin.toFixed(2), spinning };
       },
       cast: {
         you,
