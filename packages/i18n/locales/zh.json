@@ -187,6 +187,7 @@
     "waitTitle": "正在通过 {{provider}} 登录…",
     "waitText": "几秒钟。{{provider}} 窗口会自己关闭。",
     "waitBack": "返回登录",
+    "waitOpenApp": "打开应用",
     "lastMethodEmail": "上次你用<b>邮箱验证码</b>登录。",
     "expiredTextEmail": "登录已过期。上次你用<b>邮箱验证码</b>登录；登录后会回到你刚才的位置。",
     "inviteCode": "我有邀请码",

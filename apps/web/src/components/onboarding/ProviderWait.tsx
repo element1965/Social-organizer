@@ -2,6 +2,7 @@
  * "Signing in with Google / Apple / Telegram…" in the shared frame (auth.html №10, №14): brand, the provider
  * mark in a tile, one sentence and the care spinner. After 10 s a way back to the sign-in screen appears,
  * in case the tab hangs. `bare` drops the brand and the way back (Telegram Mini App: Telegram draws the header).
+ * `appLink`: the sign-in finished in the system browser and the app did not open by itself; a tap opens it.
  */
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -9,12 +10,21 @@ import { useTranslation } from 'react-i18next';
 import { BrandLine, OnboardingFrame } from './OnboardingFrame';
 import { AppleMark, GoogleMark, TelegramMark } from './brand';
 import { Spinner, StateTile, TextButton } from './states';
+import { Button } from '../ui2';
 import { BrandMark } from '../ui2/BrandMark';
 
 export type WaitProvider = 'google' | 'apple' | 'telegram';
 const NAME: Record<WaitProvider, string> = { google: 'Google', apple: 'Apple', telegram: 'Telegram' };
 
-export function ProviderWait({ provider, bare = false }: { provider: WaitProvider; bare?: boolean }) {
+export function ProviderWait({
+  provider,
+  bare = false,
+  appLink = null,
+}: {
+  provider: WaitProvider;
+  bare?: boolean;
+  appLink?: string | null;
+}) {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [slow, setSlow] = useState(false);
@@ -41,7 +51,16 @@ export function ProviderWait({ provider, bare = false }: { provider: WaitProvide
     <OnboardingFrame
       top={<BrandLine />}
       centre
-      foot={slow ? <TextButton onClick={() => navigate('/login', { replace: true })}>{t('login.waitBack')}</TextButton> : null}
+      foot={
+        appLink ? (
+          // Inside the system browser "back to sign-in" would open the site there, not the app
+          <Button className="w-full" onClick={() => { window.location.href = appLink; }}>
+            {t('login.waitOpenApp')}
+          </Button>
+        ) : slow ? (
+          <TextButton onClick={() => navigate('/login', { replace: true })}>{t('login.waitBack')}</TextButton>
+        ) : null
+      }
     >
       <div className="mt-[72px]">
         <StateTile>{mark}</StateTile>

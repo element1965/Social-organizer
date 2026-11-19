@@ -187,6 +187,7 @@
     "waitTitle": "Masuk dengan {{provider}}…",
     "waitText": "Beberapa detik. Jendela {{provider}} akan tertutup sendiri.",
     "waitBack": "Kembali ke masuk",
+    "waitOpenApp": "Buka aplikasi",
     "lastMethodEmail": "Terakhir kali Anda masuk dengan <b>kode email</b>.",
     "expiredTextEmail": "Sesi Anda telah berakhir. Terakhir kali Anda masuk dengan <b>kode email</b>; setelah masuk, kami mengembalikan Anda ke tempat sebelumnya.",
     "inviteCode": "Saya punya kode undangan",

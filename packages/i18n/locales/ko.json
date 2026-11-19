@@ -187,6 +187,7 @@
     "waitTitle": "{{provider}}로 로그인하는 중…",
     "waitText": "몇 초면 돼요. {{provider}} 창은 저절로 닫혀요.",
     "waitBack": "로그인으로 돌아가기",
+    "waitOpenApp": "앱 열기",
     "lastMethodEmail": "지난번에는 <b>이메일 코드</b>로 로그인했어요.",
     "expiredTextEmail": "세션이 만료됐어요. 지난번에는 <b>이메일 코드</b>로 로그인했고, 로그인하면 있던 곳으로 돌아갈게요.",
     "inviteCode": "초대 코드가 있어요",

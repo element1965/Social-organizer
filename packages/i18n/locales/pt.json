@@ -187,6 +187,7 @@
     "waitTitle": "Entrando com {{provider}}…",
     "waitText": "Alguns segundos. A janela do {{provider}} fecha sozinha.",
     "waitBack": "Voltar à entrada",
+    "waitOpenApp": "Abrir o aplicativo",
     "lastMethodEmail": "Na última vez, você entrou com <b>um código por e-mail</b>.",
     "expiredTextEmail": "Sua sessão expirou. Na última vez, você entrou com <b>um código por e-mail</b>; depois de entrar, levamos você de volta para onde estava.",
     "inviteCode": "Tenho um código de convite",

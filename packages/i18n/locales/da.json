@@ -187,6 +187,7 @@
     "waitTitle": "Logger ind med {{provider}}…",
     "waitText": "Et par sekunder. Vinduet fra {{provider}} lukker af sig selv.",
     "waitBack": "Tilbage til login",
+    "waitOpenApp": "Åbn appen",
     "lastMethodEmail": "Sidste gang loggede du ind med <b>en e-mailkode</b>.",
     "expiredTextEmail": "Din session er udløbet. Sidste gang loggede du ind med <b>en e-mailkode</b>. Når du er logget ind, fører vi dig tilbage til der, hvor du var.",
     "inviteCode": "Jeg har en invitationskode",

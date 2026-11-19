@@ -187,6 +187,7 @@
     "waitTitle": "Anmeldung mit {{provider}}…",
     "waitText": "Ein paar Sekunden. Das Fenster von {{provider}} schließt sich von selbst.",
     "waitBack": "Zurück zur Anmeldung",
+    "waitOpenApp": "App öffnen",
     "lastMethodEmail": "Zuletzt haben Sie sich mit <b>einem E-Mail-Code</b> angemeldet.",
     "expiredTextEmail": "Ihre Sitzung ist abgelaufen. Zuletzt haben Sie sich mit <b>einem E-Mail-Code</b> angemeldet; nach der Anmeldung bringen wir Sie dorthin zurück, wo Sie waren.",
     "inviteCode": "Ich habe einen Einladungscode",

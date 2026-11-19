@@ -187,6 +187,7 @@
     "waitTitle": "Đang đăng nhập bằng {{provider}}…",
     "waitText": "Vài giây thôi. Cửa sổ {{provider}} sẽ tự đóng.",
     "waitBack": "Quay lại đăng nhập",
+    "waitOpenApp": "Mở ứng dụng",
     "lastMethodEmail": "Lần trước bạn đăng nhập bằng <b>mã email</b>.",
     "expiredTextEmail": "Phiên của bạn đã hết hạn. Lần trước bạn đăng nhập bằng <b>mã email</b>; sau khi đăng nhập, chúng tôi sẽ đưa bạn về chỗ cũ.",
     "inviteCode": "Tôi có mã mời",

@@ -187,6 +187,7 @@
     "waitTitle": "Logowanie przez {{provider}}…",
     "waitText": "Kilka sekund. Okno {{provider}} zamknie się samo.",
     "waitBack": "Wróć do logowania",
+    "waitOpenApp": "Otwórz aplikację",
     "lastMethodEmail": "Ostatnim razem logowanie było <b>kodem z e-maila</b>.",
     "expiredTextEmail": "Sesja wygasła. Ostatnim razem logowanie było <b>kodem z e-maila</b>. Po zalogowaniu wrócisz w to samo miejsce.",
     "inviteCode": "Mam kod zaproszenia",

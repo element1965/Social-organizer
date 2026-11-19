@@ -187,6 +187,7 @@
     "waitTitle": "Te conectăm cu {{provider}}…",
     "waitText": "Câteva secunde. Fereastra {{provider}} se închide singură.",
     "waitBack": "Înapoi la conectare",
+    "waitOpenApp": "Deschide aplicația",
     "lastMethodEmail": "Data trecută te-ai conectat cu <b>un cod pe e-mail</b>.",
     "expiredTextEmail": "Sesiunea a expirat. Data trecută te-ai conectat cu <b>un cod pe e-mail</b>; după conectare te ducem înapoi unde erai.",
     "inviteCode": "Am un cod de invitație",

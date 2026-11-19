@@ -187,6 +187,7 @@
     "waitTitle": "{{provider}} ile giriş yapılıyor…",
     "waitText": "Birkaç saniye. {{provider}} penceresi kendiliğinden kapanır.",
     "waitBack": "Girişe dön",
+    "waitOpenApp": "Uygulamayı aç",
     "lastMethodEmail": "Son girişinizi <b>e-posta koduyla</b> yaptınız.",
     "expiredTextEmail": "Oturumunuz sona erdi. Son girişinizi <b>e-posta koduyla</b> yaptınız; girişten sonra kaldığınız yere döneceksiniz.",
     "inviteCode": "Davet kodum var",

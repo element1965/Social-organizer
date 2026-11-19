@@ -187,6 +187,7 @@
     "waitTitle": "Connexion avec {{provider}}…",
     "waitText": "Quelques secondes. La fenêtre {{provider}} se fermera toute seule.",
     "waitBack": "Retour à la connexion",
+    "waitOpenApp": "Ouvrir l’application",
     "lastMethodEmail": "La dernière fois, vous vous êtes connecté avec <b>un code par e-mail</b>.",
     "expiredTextEmail": "Votre session a expiré. La dernière fois, vous vous êtes connecté avec <b>un code par e-mail</b> ; après la connexion, nous vous ramènerons là où vous étiez.",
     "inviteCode": "J'ai un code d'invitation",

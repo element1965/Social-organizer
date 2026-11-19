@@ -287,7 +287,8 @@ export function useSignIn({ redirect, onCodeSent, onTelegramOpened }: UseSignInO
         redirect_uri: 'https://www.orginizer.com/auth/google/callback',
         scope: 'openid email profile',
         nonce: Math.random().toString(36).slice(2),
-        state: JSON.stringify({ native: '1' }),
+        // p: the callback page sends iOS back by the URL scheme and Android by an intent:// link
+        state: JSON.stringify({ native: '1', p: Capacitor.getPlatform() }),
       });
       Browser.open({ url: `https://accounts.google.com/o/oauth2/v2/auth?${params.toString()}` });
       return;

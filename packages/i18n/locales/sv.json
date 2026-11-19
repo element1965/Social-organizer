@@ -187,6 +187,7 @@
     "waitTitle": "Loggar in med {{provider}}…",
     "waitText": "Ett par sekunder. Fönstret för {{provider}} stängs av sig själv.",
     "waitBack": "Tillbaka till inloggningen",
+    "waitOpenApp": "Öppna appen",
     "lastMethodEmail": "Förra gången loggade du in med <b>en kod till e-posten</b>.",
     "expiredTextEmail": "Din session har gått ut. Förra gången loggade du in med <b>en kod till e-posten</b>. Efter inloggningen tar vi dig tillbaka dit du var.",
     "inviteCode": "Jag har en inbjudningskod",

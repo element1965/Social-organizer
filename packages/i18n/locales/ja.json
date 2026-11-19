@@ -187,6 +187,7 @@
     "waitTitle": "{{provider}}でログインしています…",
     "waitText": "数秒です。{{provider}}のウィンドウは自動で閉じます。",
     "waitBack": "ログインに戻る",
+    "waitOpenApp": "アプリを開く",
     "lastMethodEmail": "前回は<b>メールのコード</b>でログインしました。",
     "expiredTextEmail": "セッションの期限が切れました。前回は<b>メールのコード</b>でログインしています。ログインすると、先ほどまでいた場所に戻します。",
     "inviteCode": "招待コードを持っています",

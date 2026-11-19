@@ -187,6 +187,7 @@
     "waitTitle": "Přihlašování přes {{provider}}…",
     "waitText": "Pár sekund. Okno {{provider}} se zavře samo.",
     "waitBack": "Zpět k přihlášení",
+    "waitOpenApp": "Otevřít aplikaci",
     "lastMethodEmail": "Minule jste se přihlásili <b>kódem z e-mailu</b>.",
     "expiredTextEmail": "Platnost relace vypršela. Minule jste se přihlásili <b>kódem z e-mailu</b>; po přihlášení vás vrátíme tam, kde jste byli.",
     "inviteCode": "Mám kód pozvánky",

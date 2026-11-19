@@ -187,6 +187,7 @@
     "waitTitle": "Signing in with {{provider}}…",
     "waitText": "A couple of seconds. The {{provider}} window will close by itself.",
     "waitBack": "Back to sign-in",
+    "waitOpenApp": "Open the app",
     "lastMethodEmail": "Last time you signed in with <b>an e-mail code</b>.",
     "expiredTextEmail": "Your session has expired. Last time you signed in with <b>an e-mail code</b>; after signing in we will take you back to where you were.",
     "inviteCode": "I have an invitation code",

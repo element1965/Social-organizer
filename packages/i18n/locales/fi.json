@@ -187,6 +187,7 @@
     "waitTitle": "Kirjaudutaan palvelulla {{provider}}…",
     "waitText": "Pari sekuntia. {{provider}}-ikkuna sulkeutuu itsestään.",
     "waitBack": "Takaisin kirjautumiseen",
+    "waitOpenApp": "Avaa sovellus",
     "lastMethodEmail": "Viimeksi kirjauduit <b>sähköpostikoodilla</b>.",
     "expiredTextEmail": "Istuntosi on vanhentunut. Viimeksi kirjauduit <b>sähköpostikoodilla</b>. Kirjautumisen jälkeen viemme sinut takaisin siihen, mihin jäit.",
     "inviteCode": "Minulla on kutsukoodi",

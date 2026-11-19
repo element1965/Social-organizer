@@ -187,6 +187,7 @@
     "waitTitle": "Inloggen met {{provider}}…",
     "waitText": "Een paar seconden. Het venster van {{provider}} sluit vanzelf.",
     "waitBack": "Terug naar inloggen",
+    "waitOpenApp": "App openen",
     "lastMethodEmail": "De vorige keer logde je in met <b>een e-mailcode</b>.",
     "expiredTextEmail": "Je sessie is verlopen. De vorige keer logde je in met <b>een e-mailcode</b>; na het inloggen brengen we je terug naar waar je was.",
     "inviteCode": "Ik heb een uitnodigingscode",
