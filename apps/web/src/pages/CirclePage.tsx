@@ -14,6 +14,7 @@ import { MainBar } from '../components/ui2/MainBar';
 import { Sheet } from '../components/ui2/Sheet';
 import { useShellMode } from '../components/ui2/shell-mode';
 import { BrandMark } from '../components/ui2/BrandMark';
+import { Avatar } from '../components/ui2/Avatar';
 import { IconBack, IconBell, IconSearch } from '../components/ui2/icons';
 import { CircleGraph, type CircleGraphHandle } from '../components/circle/CircleGraph';
 import { useCircleStore, type Ring } from '../components/circle/circle-store';
@@ -26,6 +27,7 @@ import { PersonCard, type CardPerson } from '../components/circle/PersonCard';
 import { RingChips } from '../components/circle/RingChips';
 import { useFarRings } from '../components/circle/far-rings';
 import { StartCard } from '../components/circle/StartCard';
+import { WaitingCard, type WaitingPerson } from '../components/circle/WaitingCard';
 import { JoinCard } from '../components/circle/JoinCard';
 import { GetAppCard } from '../components/app/GetApp';
 import { useCircleNetwork } from '../components/circle/network';
@@ -123,7 +125,11 @@ export function CirclePage() {
   const far = useFarRings(figure?.far);
   const farRings = far.dots;
   const canHelp = figure?.canHelp ?? null;
-  const profileDone = Boolean(me.data?.name?.trim()) && (me.data?.monthlyBudget ?? 0) > 0;
+  // An empty circle waiting for my first request: who has to confirm it (the inviter, usually)
+  const intro = trpc.pending.introStatus.useQuery(undefined, { enabled: empty, staleTime: 30_000, refetchInterval: empty ? 30_000 : false });
+  const waitingFor: WaitingPerson | null = empty && intro.data?.state === 'waiting' && intro.data.person
+    ? { id: intro.data.person.id, name: intro.data.person.name, photoUrl: intro.data.person.photoUrl ?? null }
+    : null;
 
   /* ----- layers and URL (system Back closes the graph and the card) ----- */
 
@@ -368,7 +374,7 @@ export function CirclePage() {
   /* ----- pieces ----- */
 
   const renderGraph = (insetTop = 0) => empty ? (
-    <EmptyScene name={me.data?.name ?? ''} />
+    <EmptyScene name={me.data?.name ?? ''} waitingFor={waitingFor} />
   ) : (
     <CircleGraph
       ref={graphRef}
@@ -402,7 +408,12 @@ export function CirclePage() {
           onDismiss={dismissEvent}
         />
       ) : null}
-      <StartCard profileDone={profileDone} direct={direct} waiting={(events.some((e) => e.kind === 'waiting'))} />
+      {waitingFor ? <WaitingCard person={waitingFor} /> : null}
+      <StartCard
+        intention={me.data?.monthlyBudget ?? null}
+        direct={direct}
+        waiting={waitingFor != null || events.some((e) => e.kind === 'waiting')}
+      />
       <GetAppCard />
     </>
   ) : (
@@ -844,8 +855,11 @@ function PhoneCircle({
   );
 }
 
-/** Empty network: my mark and name with a dashed orbit where the first people will stand. */
-function EmptyScene({ name }: { name: string }) {
+/**
+ * Empty network: my mark and name with a dashed orbit where the first people will stand. While my request waits,
+ * the person who has to confirm it already stands on the orbit, dashed: the first handshake in waiting.
+ */
+function EmptyScene({ name, waitingFor }: { name: string; waitingFor: WaitingPerson | null }) {
   return (
     <div className="absolute inset-0 grid place-items-center" aria-hidden>
       <div className="relative grid h-56 w-56 place-items-center rounded-full border border-dashed border-node-2/35">
@@ -853,6 +867,17 @@ function EmptyScene({ name }: { name: string }) {
           <BrandMark size={48} className="shadow-[0_0_40px_rgb(var(--so-care-scene)/0.35)]" />
           <span className="text-body-s font-extrabold text-node-1">{name}</span>
         </div>
+        {waitingFor ? (
+          // On the orbit (224 px across) at its end side, level with my mark: the top of the orbit runs under the header
+          <div className="absolute start-full top-1/2 -translate-x-1/2 -translate-y-1/2 rtl:translate-x-1/2">
+            <span className="block rounded-full border-2 border-dashed border-node-2/70 p-[3px]">
+              <Avatar name={waitingFor.name} src={waitingFor.photoUrl} size={36} />
+            </span>
+            <span className="absolute start-1/2 top-full mt-1 max-w-[96px] -translate-x-1/2 truncate text-micro font-bold text-node-2 rtl:translate-x-1/2">
+              {waitingFor.name.trim().split(/\s+/)[0]}
+            </span>
+          </div>
+        ) : null}
       </div>
     </div>
   );

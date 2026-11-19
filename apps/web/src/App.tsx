@@ -14,7 +14,7 @@ import { AppShell } from './components/ui2/AppShell';
 import { AppLoader } from './components/ui2/AppLoader';
 import { ProfileRedirect } from './components/ui2/stubs';
 import { useAuth } from './hooks/useAuth';
-import { afterSignInPath, readPendingInvite, safeInviteToken, safeMasked, safePath, setPendingInvite } from './components/onboarding/flow';
+import { afterSignInPath, safeInviteToken, safeMasked, safePath, setPendingInvite } from './components/onboarding/flow';
 import { LandingPage } from './pages/LandingPage';
 import { GetRedirect, RedirectHome, SlugRedirect } from './components/site/redirects';
 import { HomeGate, OfflineRouteBoundary, PeopleGate, PersonGate } from './components/offline/gates';
@@ -187,14 +187,11 @@ function GoogleAuthDeepLinkHandler() {
         const rt = params.get('rt');
         const uid = params.get('uid');
         if (at && rt && uid) {
-          login(at, rt, uid);
-          // Prefer the invite token carried through the OAuth round-trip (inv),
-          // fall back to one saved before the browser was opened.
-          const pendingInvite = safeInviteToken(params.get('inv')) || readPendingInvite();
-          // Keep pendingInviteToken until InvitePage accepts it.
+          const pendingInvite = safeInviteToken(params.get('inv'));
           if (pendingInvite) setPendingInvite(pendingInvite);
-          // A new account goes through the intro first (components/onboarding/flow.ts)
-          navigate(afterSignInPath(params.get('isNew') === '1', pendingInvite ? `/invite/${pendingInvite}` : null), { replace: true });
+          const path = afterSignInPath(uid, params.get('isNew') === '1');
+          login(at, rt, uid);
+          navigate(path, { replace: true });
         } else {
           navigate('/login', { replace: true });
         }

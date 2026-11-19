@@ -153,7 +153,8 @@
       "people_one": "Ağınızda {{count}} kişi",
       "people_other": "Ağınızda {{count}} kişi",
       "peopleShort_one": "{{count}} kişi",
-      "peopleShort_other": "{{count}} kişi"
+      "peopleShort_other": "{{count}} kişi",
+      "empty": "Ağınız tanıdığınız bir kişiyle başlar"
     },
     "rings": {
       "short1": "1.",
@@ -220,11 +221,12 @@
     "start": {
       "lead": "Çevrenizdeki ilk kişi sizsiniz.",
       "body": "İhtiyaç bildirimi onaylanmış tokalaşmalar boyunca ilerler: yakınınızda kimse yokken sinyalin gidecek yeri yoktur.",
-      "step1": "Profil",
-      "step1Sub": "Ad ve niyet",
       "step2": "İlk kişi",
       "step2Sub": "Bağlantınızı gönderin veya QR gösterin",
-      "step2Waiting": "İstek gönderildi, onay bekleniyor"
+      "step2Waiting": "İstek gönderildi, onay bekleniyor",
+      "intention": "Niyetim",
+      "intentionIs": "Niyetim: {{amount}}",
+      "intentionSub": "Tanıdığınız biri ihtiyaç bildirdiğinde söylemeye hazır olduğunuz tutar."
     },
     "acquaint": {
       "sub": "Birbirinizi tanıdığınızı onaylamanızı istiyor",
@@ -250,6 +252,11 @@
       "loading": "Ağ yükleniyor…",
       "ready": "Grafik güncellendi",
       "added": "Ağınız büyüdü: +{{count}}"
+    },
+    "waiting": {
+      "title": "{{name}} adlı kişinin onayı bekleniyor",
+      "text": "{{name}} tanıştığınızı onayladığında, {{name}} adlı kişinin tanıdıkları ve onların tanıdıkları burada görünür.",
+      "remindText": "Merhaba {{name}}! Artık Social Organizer'dayım. Lütfen birbirimizi tanıdığımızı onayla."
     }
   },
   "people": {
@@ -397,7 +404,17 @@
     "markError": "İşaret kaydedilemedi. Tekrar deneyin.",
     "paidToggle": "{{name}} kişisinden alındı",
     "allReceived": "Hepsi alındı · {{sum}}",
-    "shareNext": "Bu ihtiyacı, sahibini tanıyan başka kişilere de iletin."
+    "shareNext": "Bu ihtiyacı, sahibini tanıyan başka kişilere de iletin.",
+    "firstNext": {
+      "title": "Şimdi ne olacak",
+      "seen": "{{name}} katılımınızı görüyor.",
+      "chat": "İhtiyacı bildiren kişinin eklediği sohbet bağlantısını artık açabilirsiniz.",
+      "keepQuestion": "Ağınızdaki sonraki ihtiyaçlar için niyetiniz {{amount}} olarak kalsın mı?",
+      "keepWhy": "Niyetiniz sonraki ihtiyaçlarda sizin için doldurulur. Size ulaşabilen kişilerin ağ tutarına eklenir.",
+      "keepYes": "{{amount}} kalsın",
+      "kept": "Tamam: niyetiniz {{amount}}. Profil'den değiştirebilirsiniz.",
+      "intro": "Ağın nasıl işlediğini görün"
+    }
   },
   "profile": {
     "phone": "Telefon",
@@ -1163,14 +1180,19 @@
     "headline": "{{name}} desteğe ihtiyaç duyuyor",
     "ofGoal": "{{amount}} içinden",
     "peopleLine": "Katılımcılar: {{count}} · para doğrudan devredilir, hizmet üzerinden değil",
-    "joinCircle": "{{name}} çevresine katılacaksınız.",
+    "joinCircle": "Giriş yaptıktan sonra ihtiyacı açtığınızda, ihtiyacı oluşturan kişiyi şahsen tanıdığınızı onaylar ve o kişinin çevresine katılırsınız.",
     "joinCircleBody": "Katılarak bu kişiyi kişisel olarak tanıdığınızı onaylarsınız.",
-    "join": "Katıl",
     "joinNext": "Sırada giriş var: Apple, Google, Telegram veya e-posta.",
     "openTelegram": "Telegram'da aç",
     "closedLine": "İhtiyaç kapandı.",
     "suspendedLine": "İhtiyaç duraklatıldı.",
-    "fullLine": "Gereken tutar belirtildi."
+    "fullLine": "Gereken tutar belirtildi.",
+    "takePart": "Katıl",
+    "nextTitle": "Katılmaya karar verirseniz",
+    "next1": "Vermeye hazır olduğunuz tutarı söylersiniz. {{amount}} ile başlayabilirsiniz.",
+    "next2": "Sohbet bağlantısı eklendiyse katıldıktan sonra açabilirsiniz.",
+    "next3": "İş paraya gelirse parayı ihtiyacı oluşturan kişiye bizzat verirsiniz. Burada hiçbir şey ödemezsiniz: Social Organizer para almaz ve aktarmaz.",
+    "signInTitle": "Bu ihtiyaca katılmak için giriş yapın"
   },
   "adminStats": {
     "totalUsers": "Kullanıcılar",
@@ -1302,12 +1324,6 @@
       "aria": "Çevre şeması"
     },
     "seed": {
-      "title": "Niyetiniz",
-      "text": "Ağınızdan biri ihtiyaç bildirdiğinde bu tutar sizin için kendiliğinden doldurulur ve onu her zaman değiştirebilirsiniz. Bu tutarlar toplanarak «{{canHelp}}» olur. Social Organizer para kabul etmez.",
-      "label": "Niyetim",
-      "presets": "Hazır tutarlar",
-      "hint": "Hazır bir tutar seçin ya da kendiniz yazın. Profilde istediğiniz zaman değiştirebilirsiniz.",
-      "min": "En az 1 $",
       "failed": "Kaydedilemedi. Bağlantınızı kontrol edip yeniden deneyin.",
       "sent": "İstek gönderildi.",
       "sentText": "{{name}} onayladığında 1. tokalaşmanız olur.",
@@ -1316,7 +1332,8 @@
       "name": "Adım",
       "namePlaceholder": "Ad ve soyad",
       "nameHint": "Çevrenizdeki kişiler sizi böyle görecek.",
-      "nameMin": "Adınızı girin"
+      "nameMin": "Adınızı girin",
+      "nameTitle": "Adınız"
     },
     "haveTelegramLink": "Social Organizer'ı daha önce Telegram üzerinden mi kullandınız? Bağlayın"
   },

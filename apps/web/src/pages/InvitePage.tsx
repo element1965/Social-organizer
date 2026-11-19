@@ -89,9 +89,9 @@ export function InvitePage() {
   const logout = useAuth((s) => s.logout);
   const isRealUser = isAuthenticated;
   // A newcomer decided by the sign-in path (flow.ts), read once before effects can clear anything
-  const [firstRun, setFirstRun] = useState(isFirstRunPending);
+  const userId = useAuth((s) => s.userId);
+  const firstRun = isFirstRunPending(userId);
 
-  // Read before any effect: TelegramBootstrap drops the pending token as soon as a signed-in person lands here.
   // Signing in from this invite is the "yes", so it is accepted without asking again.
   const [cameThroughInvite, setCameThroughInvite] = useState(() => !!token && readPending() === token);
 
@@ -102,7 +102,6 @@ export function InvitePage() {
   if (isAuthenticated && guestHere) {
     setGuestHere(false);
     if (token) setCameThroughInvite(true);
-    if (isFirstRunPending()) setFirstRun(true);
   }
 
   const invite = trpc.invite.getByToken.useQuery({ token }, { enabled: !!token });
@@ -273,6 +272,7 @@ function AcceptView({
     },
   });
 
+  const userId = useAuth((s) => s.userId);
   const own = inviterId === meId;
 
   useEffect(() => {
@@ -380,7 +380,7 @@ function AcceptView({
           type="button"
           onClick={() => {
             setPending(null);
-            navigate(homePath(), { replace: true });
+            navigate(homePath(userId), { replace: true });
           }}
           className="so-focus mt-2 block min-h-11 w-full text-center text-body-s font-bold text-ink-muted"
         >
@@ -492,6 +492,7 @@ function InstallStep({ inviterName, token, onLater }: { inviterName: string; tok
 
 /** A dead link, with its own reason: the inviter deleted the account, someone else used it, or it does not exist. */
 function DeadLink({ signedIn, reason }: { signedIn: boolean; reason: DeadReason }) {
+  const userId = useAuth((s) => s.userId);
   const { t } = useTranslation();
   const navigate = useNavigate();
   const labels = useNetLabels();
@@ -500,7 +501,7 @@ function DeadLink({ signedIn, reason }: { signedIn: boolean; reason: DeadReason 
       top={<BrandLine />}
       foot={
         <>
-          <Button className="w-full" onClick={() => navigate(signedIn ? homePath() : '/', { replace: true })}>
+          <Button className="w-full" onClick={() => navigate(signedIn ? homePath(userId) : '/', { replace: true })}>
             {t('invite.openApp')}
           </Button>
           {signedIn ? null : (

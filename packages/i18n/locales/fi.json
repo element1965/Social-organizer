@@ -153,7 +153,8 @@
       "people_one": "{{count}} henkilö verkostossasi",
       "people_other": "{{count}} henkilöä verkostossasi",
       "peopleShort_one": "{{count}} henkilö",
-      "peopleShort_other": "{{count}} henkilöä"
+      "peopleShort_other": "{{count}} henkilöä",
+      "empty": "Verkostosi alkaa yhdestä tutusta ihmisestä"
     },
     "rings": {
       "short1": "1.",
@@ -220,11 +221,12 @@
     "start": {
       "lead": "Olet ensimmäinen piirissäsi.",
       "body": "Viesti tarpeesta kulkee vahvistettuja kädenpuristuksia pitkin: kun lähellä ei ole ketään, signaalilla ei ole minne mennä.",
-      "step1": "Profiili",
-      "step1Sub": "Nimi ja aikomus",
       "step2": "Ensimmäinen henkilö",
       "step2Sub": "Lähetä linkkisi tai näytä QR",
-      "step2Waiting": "Pyyntö lähetetty, odotetaan vahvistusta"
+      "step2Waiting": "Pyyntö lähetetty, odotetaan vahvistusta",
+      "intention": "Aikomukseni",
+      "intentionIs": "Aikomukseni: {{amount}}",
+      "intentionSub": "Summa, jonka olet valmis kertomaan, kun joku tuttusi ilmoittaa tarpeesta."
     },
     "acquaint": {
       "sub": "Pyytää sinua vahvistamaan, että tunnette toisenne",
@@ -250,6 +252,11 @@
       "loading": "Ladataan verkostoa…",
       "ready": "Graafi päivitetty",
       "added": "Verkostosi kasvoi: +{{count}}"
+    },
+    "waiting": {
+      "title": "Odotetaan vahvistusta: {{name}}",
+      "text": "Kun {{name}} vahvistaa, että tunnette toisenne, tänne ilmestyvät ihmiset, jotka {{name}} tuntee, ja heidän tuttunsa.",
+      "remindText": "Hei {{name}}! Olen nyt Social Organizerissa. Vahvistatko, että tunnemme toisemme?"
     }
   },
   "people": {
@@ -397,7 +404,17 @@
     "markError": "Merkintää ei tallennettu. Yritä uudelleen.",
     "paidToggle": "Saatu henkilöltä {{name}}",
     "allReceived": "Kaikki saatu · {{sum}}",
-    "shareNext": "Välitä tämä tarve muille, jotka tuntevat sen ilmoittajan."
+    "shareNext": "Välitä tämä tarve muille, jotka tuntevat sen ilmoittajan.",
+    "firstNext": {
+      "title": "Mitä nyt tapahtuu",
+      "seen": "{{name}} näkee osallistumisesi.",
+      "chat": "Tarpeen ilmoittajan keskustelulinkki on nyt käytettävissäsi.",
+      "keepQuestion": "Pidetäänkö {{amount}} aikomuksenasi verkostosi seuraavissa tarpeissa?",
+      "keepWhy": "Aikomuksesi täytetään automaattisesti tuleviin tarpeisiin. Se lasketaan mukaan niiden verkoston lukuun, jotka voivat tavoittaa sinut.",
+      "keepYes": "Pidä {{amount}}",
+      "kept": "Valmis: aikomuksesi on {{amount}}. Voit muuttaa sitä Profiilissa.",
+      "intro": "Katso, miten verkosto toimii"
+    }
   },
   "profile": {
     "phone": "Puhelin",
@@ -1163,14 +1180,19 @@
     "headline": "{{name}} tarvitsee apua",
     "ofGoal": "/ {{amount}}",
     "peopleLine": "Osallistujia: {{count}} · raha luovutetaan suoraan, ei palvelun kautta",
-    "joinCircle": "Sinusta tulee osa henkilön {{name}} piiriä.",
+    "joinCircle": "Kun avaat tarpeen kirjautumisen jälkeen, vahvistat tuntevasi tarpeen julkaisijan henkilökohtaisesti ja liityt julkaisijan piiriin.",
     "joinCircleBody": "Liittymällä vahvistat, että tunnet tämän henkilön henkilökohtaisesti.",
-    "join": "Liity",
     "joinNext": "Seuraavaksi kirjautuminen: Apple, Google, Telegram tai sähköposti.",
     "openTelegram": "Avaa Telegramissa",
     "closedLine": "Tämä tarve on suljettu.",
     "suspendedLine": "Tämä tarve on keskeytetty.",
-    "fullLine": "Tarvittava summa on ilmoitettu."
+    "fullLine": "Tarvittava summa on ilmoitettu.",
+    "takePart": "Osallistu",
+    "nextTitle": "Jos osallistut",
+    "next1": "Kerrot summan, jonka olet valmis antamaan. Voit aloittaa summalla {{amount}}.",
+    "next2": "Jos tarpeeseen on lisätty keskustelulinkki, voit avata sen osallistuttuasi.",
+    "next3": "Jos kyse on rahasta, annat sen itse suoraan tarpeen julkaisijalle. Täällä et maksa mitään: Social Organizer ei vastaanota eikä siirrä rahaa.",
+    "signInTitle": "Kirjaudu sisään osallistuaksesi tähän tarpeeseen"
   },
   "adminStats": {
     "totalUsers": "Käyttäjät",
@@ -1302,12 +1324,6 @@
       "aria": "Piirin kaavio"
     },
     "seed": {
-      "title": "Aikomuksesi",
-      "text": "Kun joku verkostostasi ilmoittaa tarpeesta, tämä summa täytetään valmiiksi, ja voit aina muuttaa sitä. Näistä summista muodostuu ”{{canHelp}}”. Social Organizer ei vastaanota rahaa.",
-      "label": "Aikomukseni",
-      "presets": "Valmiit summat",
-      "hint": "Valitse valmis summa tai kirjoita omasi. Voit muuttaa sitä milloin tahansa Profiilissa.",
-      "min": "Vähintään 1 $",
       "failed": "Tallennus ei onnistunut. Tarkista yhteys ja yritä uudelleen.",
       "sent": "Pyyntö lähetetty.",
       "sentText": "Kun {{name}} vahvistaa, hänestä tulee 1. kädenpuristuksesi.",
@@ -1316,7 +1332,8 @@
       "name": "Nimeni",
       "namePlaceholder": "Etunimi ja sukunimi",
       "nameHint": "Näin piirisi ihmiset näkevät sinut.",
-      "nameMin": "Kirjoita nimesi"
+      "nameMin": "Kirjoita nimesi",
+      "nameTitle": "Nimesi"
     },
     "haveTelegramLink": "Oletko jo käyttänyt Social Organizeria Telegramin kautta? Yhdistä Telegram"
   },

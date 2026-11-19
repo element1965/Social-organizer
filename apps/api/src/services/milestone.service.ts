@@ -22,7 +22,8 @@ export const MILESTONES = ['FIRST_CONNECTION', 'NEED_UNLOCKED', 'FIRST_NEED', 'F
 
 export type MilestoneKind = (typeof MILESTONES)[number];
 
-type Fact = { at: Date; relatedUserId?: string | null; knownBefore?: boolean };
+type Fact = { at: Date; relatedUserId?: string | null; obligationId?: string; knownBefore?: boolean };
+type EarnedMilestone = Pick<Fact, 'relatedUserId' | 'obligationId'> & { kind: MilestoneKind };
 
 /** A milestone found while catching up is announced only if it happened within this time. */
 const FRESH_MS = 24 * 60 * 60 * 1000;
@@ -62,16 +63,16 @@ async function findFact(db: PrismaClient, userId: string, kind: MilestoneKind): 
     case 'FIRST_PARTICIPATION': {
       const first = await db.obligation.findFirst({
         where: { userId, collection: { creatorId: { not: userId } } },
-        orderBy: { createdAt: 'asc' },
-        select: { createdAt: true },
+        orderBy: [{ createdAt: 'asc' }, { id: 'asc' }],
+        select: { id: true, createdAt: true },
       });
-      return first ? { at: first.createdAt } : null;
+      return first ? { at: first.createdAt, obligationId: first.id } : null;
     }
   }
 }
 
 /**
- * Records milestones the user has reached but that are not stored yet. Returns the kinds created by this call.
+ * Records milestones the user has reached but that are not stored yet. Returns the milestones created by this call and the facts that identify them.
  *
  * - default: the milestone was reached by what just happened, so it is stored as not seen (the feed row and the
  *   short confirmation follow);
@@ -83,14 +84,14 @@ export async function syncMilestones(
   db: PrismaClient,
   userId: string,
   opts: { restored?: boolean; silent?: boolean } = {},
-): Promise<MilestoneKind[]> {
+): Promise<EarnedMilestone[]> {
   const existing = await db.userMilestone.findMany({ where: { userId }, select: { kind: true } });
   const have = new Set<string>(existing.map((m) => m.kind));
   const missing = MILESTONES.filter((kind) => !have.has(kind));
   if (missing.length === 0) return [];
 
   const now = Date.now();
-  const created: MilestoneKind[] = [];
+  const created: EarnedMilestone[] = [];
   for (const kind of missing) {
     const fact = await findFact(db, userId, kind);
     if (!fact) continue;
@@ -106,17 +107,23 @@ export async function syncMilestones(
       }],
       skipDuplicates: true, // another request recorded it first — keep that one
     });
-    if (res.count > 0) created.push(kind);
+    if (res.count > 0) created.push({ kind, relatedUserId: fact.relatedUserId, obligationId: fact.obligationId });
   }
   return created;
 }
 
 /** Call right after a connection between two users is created. Never throws. */
-export async function syncMilestonesForPair(db: PrismaClient, a: string, b: string): Promise<void> {
-  await Promise.all([a, b].map((id) => syncMilestonesQuietly(db, id)));
+export async function syncMilestonesForPair(db: PrismaClient, a: string, b: string): Promise<EarnedMilestone[]> {
+  const [earned] = await Promise.all([syncMilestonesQuietly(db, a), syncMilestonesQuietly(db, b)]);
+  return earned;
 }
 
 /** Call right after something that may reach a milestone (a new Need, a new Participation). Never throws. */
-export async function syncMilestonesQuietly(db: PrismaClient, userId: string): Promise<void> {
-  await syncMilestones(db, userId).catch((err) => console.error('[milestones] sync failed for', userId, err));
+export async function syncMilestonesQuietly(db: PrismaClient, userId: string): Promise<EarnedMilestone[]> {
+  try {
+    return await syncMilestones(db, userId);
+  } catch (err) {
+    console.error('[milestones] sync failed for', userId, err);
+    return [];
+  }
 }

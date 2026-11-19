@@ -36,6 +36,8 @@ import { ActionError } from '../components/errors/ActionError';
 import { isDefinitiveLoadError, NeedLoadError } from '../components/errors/ErrorState';
 import { errorKind, invalidFields } from '../lib/errors';
 import { foldHidden } from '../components/person/PathChain';
+import { FirstParticipation } from '../components/collection/FirstParticipation';
+import { isFirstRunPending } from '../components/onboarding/flow';
 
 
 const REASONS = ['COMPLAINTS', 'SUSPECTED_FRAUD', 'RULES_VIOLATION', 'AUTHOR_REQUEST'] as const;
@@ -77,7 +79,7 @@ export function CollectionPage() {
   const userId = useAuth((state) => state.userId);
   const resolve = useNicknames();
   const utils = trpc.useUtils();
-  const startedSos = useRef(false);
+  const startedSos = useRef<string | null>(null);
 
   const me = trpc.user.me.useQuery();
   const admin = trpc.faq.isAdmin.useQuery();
@@ -148,16 +150,15 @@ export function CollectionPage() {
       void refreshNetwork(utils);
     },
   });
-  // Records the stake of a first public-link join on the side (quietly); the Participation is placed either way
-  const setBudget = trpc.user.setMonthlyBudget.useMutation({
-    meta: { notifyOnError: false },
-    onSuccess: () => void utils.stats.networkFigure.invalidate(),
-  });
+  // A newcomer (first run still pending) is told what happens after their first Participation here, once
+  const firstRun = isFirstRunPending(userId);
 
   useEffect(() => {
     const data = collection.data;
-    if (startedSos.current || !isSos || !data || !userId || data.creatorId === userId) return;
-    startedSos.current = true;
+    if (!isSos || !data || !userId || data.creatorId === userId) return;
+    const key = `${userId}:${data.id}`;
+    if (startedSos.current === key) return;
+    startedSos.current = key;
     acceptSos.mutate({ collectionId: data.id });
   }, [isSos, collection.data, userId, acceptSos]);
 
@@ -246,6 +247,9 @@ export function CollectionPage() {
   const renewal = data.type === 'REGULAR' && data.cycleNumber > 1 && data.currentCycleStart != null;
   const needsConfirm = !!myObl && renewal && myObl.cycleConfirmed === false && !held && !closed && data.status === 'ACTIVE';
   const showDecline = !owner && !!myObl && !closed && !held;
+  const canOpenChat = !owner && !!myObl && !needsConfirm && !closed && !held && !editing && isHttpsUrl(data.chatLink);
+  const firstParticipation = createObligation.data;
+  const firstHandshake = acceptSos.variables?.collectionId === data.id && acceptSos.data?.firstConnection === true;
   // Asked to help, not yet in, and the notice is still open: "Not now" ends the impulse on the Circle
   const pendingIds = (noticeItems ?? [])
     .filter((n) => n.collectionId === data.id && isPendingRequest(n, Date.now()))
@@ -355,11 +359,7 @@ export function CollectionPage() {
         isSubscription: data.type === 'REGULAR',
       });
     };
-    // A public-link join with no stake yet records that stake, matching the previous collection screen.
-    if (isSos && (me.data?.monthlyBudget ?? 0) === 0) {
-      setBudget.mutate({ amount, inputCurrency: 'USD' }, { onSettled: place });
-      return;
-    }
+    // The intention is never changed on the side: a newcomer is asked about it after taking part (FirstParticipation)
     place();
   };
 
@@ -518,7 +518,7 @@ export function CollectionPage() {
             error={joinError || serverFieldError(createObligation.error, 'amount', t('errors.invalid'))}
             hint={joinError ? undefined : t('collection.minStake', { amount: formatMoney(stake) })}
           />
-          <Button className="mt-4 w-full" loading={createObligation.isPending || setBudget.isPending} disabled={offline} onClick={join}>{t('collection.participate')}</Button>
+          <Button className="mt-4 w-full" loading={createObligation.isPending} disabled={offline || acceptSos.isPending} onClick={join}>{t('collection.participate')}</Button>
           {offline ? <OfflineHint /> : null}
           <ActionError error={actionErrorBesides(createObligation.error, 'amount')} />
           {waitsForMe ? (
@@ -629,7 +629,7 @@ export function CollectionPage() {
             </div>
           )}
           {/* Hidden while the amount is edited: one main action at a time */}
-          {isHttpsUrl(data.chatLink) && !editing ? (
+          {canOpenChat ? (
             <Button className="mt-4 w-full" icon={<IconChat />} onClick={() => window.open(data.chatLink, '_blank', 'noopener,noreferrer')}>
               {t('collection.openCollectionChat')}
             </Button>
@@ -639,6 +639,17 @@ export function CollectionPage() {
             <Button variant="textDanger" className="mt-2 w-full" onClick={() => setDeclineOpen(true)}>{t('collection.decline')}</Button>
           ) : null}
         </Card>
+      ) : null}
+
+      {/* A newcomer's first Participation, made just now on this page: what happens next, once */}
+      {firstRun && !owner && myObl && firstParticipation?.firstParticipation && firstParticipation.id === myObl.id && !closed && !held ? (
+        <FirstParticipation
+          authorName={firstName(creatorName)}
+          amount={myObl.amount}
+          intention={me.data?.monthlyBudget ?? null}
+          firstHandshake={firstHandshake}
+          hasChat={canOpenChat}
+        />
       ) : null}
 
       {owner && !closed ? (

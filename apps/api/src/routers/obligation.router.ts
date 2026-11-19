@@ -43,9 +43,11 @@ export const obligationRouter = router({
         );
       }
 
+      const earned = await syncMilestonesQuietly(ctx.db, ctx.userId);
+      const firstParticipation = earned.some((m) =>
+        m.kind === 'FIRST_PARTICIPATION' && m.obligationId === obligation.id);
       await syncCollectionGoal(ctx.db, input.collectionId);
-      await syncMilestonesQuietly(ctx.db, ctx.userId); // "first Participation"
-      return obligation;
+      return { ...obligation, firstParticipation };
     }),
 
   myList: protectedProcedure.query(async ({ ctx }) => {

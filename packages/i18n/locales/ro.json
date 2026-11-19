@@ -155,7 +155,8 @@
       "people_other": "{{count}} de persoane în rețeaua ta",
       "peopleShort_few": "{{count}} persoane",
       "peopleShort_one": "{{count}} persoană",
-      "peopleShort_other": "{{count}} de persoane"
+      "peopleShort_other": "{{count}} de persoane",
+      "empty": "Rețeaua ta începe cu o persoană pe care o cunoști"
     },
     "rings": {
       "short1": "prima",
@@ -223,11 +224,12 @@
     "start": {
       "lead": "Ești prima persoană din cercul tău.",
       "body": "Mesajul despre o nevoie merge pe strângerile de mână confirmate: dacă nu e nimeni aproape, semnalul nu are unde să ajungă.",
-      "step1": "Profil",
-      "step1Sub": "Nume și intenție",
       "step2": "Prima persoană",
       "step2Sub": "Trimite linkul sau arată codul QR",
-      "step2Waiting": "Cerere trimisă, se așteaptă confirmarea"
+      "step2Waiting": "Cerere trimisă, se așteaptă confirmarea",
+      "intention": "Intenția mea",
+      "intentionIs": "Intenția mea: {{amount}}",
+      "intentionSub": "Suma pe care ești gata să o spui când cineva cunoscut anunță o nevoie."
     },
     "acquaint": {
       "sub": "Îți cere să confirmi că vă cunoașteți",
@@ -253,6 +255,11 @@
       "loading": "Se încarcă rețeaua…",
       "ready": "Graf actualizat",
       "added": "Rețeaua ta a crescut: +{{count}}"
+    },
+    "waiting": {
+      "title": "Așteptăm confirmarea de la {{name}}",
+      "text": "După ce {{name}} confirmă că vă cunoașteți, aici apar oamenii pe care {{name}} îi cunoaște și cunoscuții lor.",
+      "remindText": "Salut, {{name}}! Sunt acum în Social Organizer. Te rog, confirmă că ne cunoaștem."
     }
   },
   "people": {
@@ -400,7 +407,17 @@
     "markError": "Marcajul nu a fost salvat. Încearcă din nou.",
     "paidToggle": "Primit de la {{name}}",
     "allReceived": "Totul primit · {{sum}}",
-    "shareNext": "Trimite această nevoie și altora care îl cunosc pe autor."
+    "shareNext": "Trimite această nevoie și altora care îl cunosc pe autor.",
+    "firstNext": {
+      "title": "Ce urmează",
+      "seen": "{{name}} vede participarea ta.",
+      "chat": "Linkul de chat adăugat de persoana care a anunțat nevoia este acum disponibil.",
+      "keepQuestion": "Păstrezi {{amount}} ca intenția ta pentru următoarele nevoi din rețea?",
+      "keepWhy": "Intenția ta se completează automat la nevoile viitoare. Ea intră în totalul rețelei persoanelor care pot ajunge la tine.",
+      "keepYes": "Păstrează {{amount}}",
+      "kept": "Gata: intenția ta este {{amount}}. O poți schimba în Profil.",
+      "intro": "Vezi cum funcționează rețeaua"
+    }
   },
   "profile": {
     "phone": "Telefon",
@@ -1171,14 +1188,19 @@
     "headline": "{{name}} are nevoie de ajutor",
     "ofGoal": "din {{amount}}",
     "peopleLine": "Participanți: {{count}} · banii se predau direct, nu prin serviciu",
-    "joinCircle": "Vei face parte din cercul lui {{name}}.",
+    "joinCircle": "Când deschizi nevoia după autentificare, confirmi că o cunoști personal pe persoana care a publicat nevoia și intri în cercul de cunoștințe al acelei persoane.",
     "joinCircleBody": "Alăturându-te, confirmi că cunoști persoana aceasta personal.",
-    "join": "Alătură-te",
     "joinNext": "Urmează conectarea: Apple, Google, Telegram sau e-mail.",
     "openTelegram": "Deschide în Telegram",
     "closedLine": "Nevoia aceasta e închisă.",
     "suspendedLine": "Nevoia aceasta e în pauză.",
-    "fullLine": "Suma necesară este declarată."
+    "fullLine": "Suma necesară este declarată.",
+    "takePart": "Participă",
+    "nextTitle": "Dacă alegi să participi",
+    "next1": "Spui suma pe care ești gata să o dai. Poți începe cu {{amount}}.",
+    "next2": "Dacă a fost adăugat un link de chat, îl poți deschide după ce participi.",
+    "next3": "Dacă e vorba de bani, îi dai chiar tu persoanei care a publicat nevoia. Aici nu plătești nimic: Social Organizer nu primește și nu transferă bani.",
+    "signInTitle": "Conectează-te ca să participi la această nevoie"
   },
   "adminStats": {
     "totalUsers": "Utilizatori",
@@ -1311,12 +1333,6 @@
       "aria": "Schema cercului"
     },
     "seed": {
-      "title": "Intenția ta",
-      "text": "Când cineva din rețeaua ta anunță o nevoie, suma aceasta se completează singură și o poți schimba oricând. Din astfel de sume se adună „{{canHelp}}”. Social Organizer nu primește bani.",
-      "label": "Intenția mea",
-      "presets": "Sume pregătite",
-      "hint": "Alege o sumă pregătită sau scrie-o pe a ta. O poți schimba oricând în Profil.",
-      "min": "Cel puțin 1 $",
       "failed": "Nu s-a putut salva. Verifică conexiunea și încearcă din nou.",
       "sent": "Cerere trimisă.",
       "sentText": "Când {{name}} confirmă, devine prima ta strângere de mână.",
@@ -1325,7 +1341,8 @@
       "name": "Numele meu",
       "namePlaceholder": "Nume și prenume",
       "nameHint": "Așa te vor vedea oamenii din cercul tău.",
-      "nameMin": "Introdu numele"
+      "nameMin": "Introdu numele",
+      "nameTitle": "Numele tău"
     },
     "haveTelegramLink": "Ai folosit deja Social Organizer prin Telegram? Conectează-l"
   },

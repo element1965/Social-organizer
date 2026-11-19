@@ -157,7 +157,8 @@
       "peopleShort_few": "{{count}} lidé",
       "peopleShort_many": "{{count}} člověka",
       "peopleShort_one": "{{count}} člověk",
-      "peopleShort_other": "{{count}} lidí"
+      "peopleShort_other": "{{count}} lidí",
+      "empty": "Vaše síť začíná jedním známým člověkem"
     },
     "rings": {
       "short1": "1.",
@@ -226,11 +227,12 @@
     "start": {
       "lead": "Ve svém kruhu jste první.",
       "body": "Oznámení o potřebě putuje po potvrzených podáních ruky: dokud nikdo není nablízku, signál nemá kam jít.",
-      "step1": "Profil",
-      "step1Sub": "Jméno a záměr",
       "step2": "První člověk",
       "step2Sub": "Pošlete odkaz, nebo ukažte QR",
-      "step2Waiting": "Žádost odeslána, čekáme na potvrzení"
+      "step2Waiting": "Žádost odeslána, čekáme na potvrzení",
+      "intention": "Můj záměr",
+      "intentionIs": "Můj záměr: {{amount}}",
+      "intentionSub": "Částka, kterou jste ochotni uvést, když někdo ze známých oznámí potřebu."
     },
     "acquaint": {
       "sub": "Žádá vás, abyste potvrdili, že se znáte",
@@ -256,6 +258,11 @@
       "loading": "Načítáme síť známostí…",
       "ready": "Graf aktualizován",
       "added": "Síť vyrostla: +{{count}}"
+    },
+    "waiting": {
+      "title": "Čekáme, až {{name}} potvrdí známost",
+      "text": "Až {{name}} potvrdí, že se znáte, objeví se tu lidé, které zná {{name}}, a jejich známí.",
+      "remindText": "Ahoj, {{name}}! Už jsem v Social Organizer. Potvrď prosím, že se známe."
     }
   },
   "people": {
@@ -403,7 +410,17 @@
     "markError": "Označení se nepodařilo uložit. Zkuste to znovu.",
     "paidToggle": "Přijato od {{name}}",
     "allReceived": "Vše přijato · {{sum}}",
-    "shareNext": "Předejte tuto potřebu dalším, kdo znají jejího autora."
+    "shareNext": "Předejte tuto potřebu dalším, kdo znají jejího autora.",
+    "firstNext": {
+      "title": "Co bude dál",
+      "seen": "{{name}} vidí vaši účast.",
+      "chat": "Odkaz na chat od osoby, která oznámila potřebu, je teď k dispozici.",
+      "keepQuestion": "Ponechat {{amount}} jako váš záměr pro další potřeby ve vaší síti?",
+      "keepWhy": "Váš záměr se u dalších potřeb vyplní automaticky. Počítá se do údaje o síti lidí, kteří se k vám mohou dostat.",
+      "keepYes": "Ponechat {{amount}}",
+      "kept": "Hotovo. Váš záměr: {{amount}}. Změnit ho můžete v profilu.",
+      "intro": "Jak síť funguje"
+    }
   },
   "profile": {
     "phone": "Telefon",
@@ -1179,14 +1196,19 @@
     "headline": "{{name}} potřebuje pomoc",
     "ofGoal": "z {{amount}}",
     "peopleLine": "Účastníci: {{count}} · peníze se předávají přímo, ne přes službu",
-    "joinCircle": "Stanete se součástí kruhu {{name}}.",
+    "joinCircle": "Otevřením potřeby po přihlášení potvrdíte, že osobně znáte autora potřeby, a přidáte se do autorova kruhu.",
     "joinCircleBody": "Připojením potvrzujete, že tohoto člověka znáte osobně.",
-    "join": "Připojit se",
     "joinNext": "Dál je přihlášení: Apple, Google, Telegram nebo e-mail.",
     "openTelegram": "Otevřít v Telegramu",
     "closedLine": "Tato potřeba je uzavřená.",
     "suspendedLine": "Tato potřeba je pozastavená.",
-    "fullLine": "Potřebná částka je uvedena."
+    "fullLine": "Potřebná částka je uvedena.",
+    "takePart": "Zúčastnit se",
+    "nextTitle": "Když se rozhodnete zúčastnit",
+    "next1": "Uvedete částku, kterou jste ochotni dát. Můžete začít od {{amount}}.",
+    "next2": "Pokud je připojený odkaz na chat, můžete ho po zapojení otevřít.",
+    "next3": "Pokud dojde na peníze, předáte je přímo autorovi potřeby. Tady nic neplatíte: Social Organizer peníze nepřijímá ani nepřevádí.",
+    "signInTitle": "Přihlaste se a zúčastněte se této potřeby"
   },
   "adminStats": {
     "totalUsers": "Uživatelé",
@@ -1320,12 +1342,6 @@
       "aria": "Schéma kruhu"
     },
     "seed": {
-      "title": "Váš záměr",
-      "text": "Když někdo z vaší sítě oznámí potřebu, tato částka se vyplní sama a vždy ji můžete změnit. Z takových částek se skládá „{{canHelp}}“. Social Organizer peníze nepřijímá.",
-      "label": "Můj záměr",
-      "presets": "Hotové částky",
-      "hint": "Vyberte z hotových, nebo zadejte vlastní částku. Změnit ji můžete kdykoli v Profilu.",
-      "min": "Alespoň 1 $",
       "failed": "Nepodařilo se uložit. Zkontrolujte připojení a zkuste to znovu.",
       "sent": "Žádost odeslána.",
       "sentText": "Až {{name}} potvrdí, stane se vaším 1. podáním ruky.",
@@ -1334,7 +1350,8 @@
       "name": "Moje jméno",
       "namePlaceholder": "Jméno a příjmení",
       "nameHint": "Takto vás uvidí lidé ve vašem okruhu.",
-      "nameMin": "Zadejte jméno"
+      "nameMin": "Zadejte jméno",
+      "nameTitle": "Vaše jméno"
     },
     "haveTelegramLink": "Už jste se přihlašovali přes Telegram? Propojte ho"
   },

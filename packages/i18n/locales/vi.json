@@ -151,7 +151,8 @@
       "explain": "Những người trong mạng lưới của bạn (đến cái bắt tay thứ 6) còn sẵn sàng nêu thêm bao nhiêu trong kỳ này: tổng dự định của họ. Thông báo về nhu cầu đi theo từng đợt, từ người gần nhất đến cái bắt tay thứ 6. Đây chỉ là con số tham khảo, không phải lời hứa: mỗi người tự quyết định có tham gia hay không.",
       "weekDelta": "+{{amount}} tuần này",
       "people_other": "{{count}} người trong mạng lưới của bạn",
-      "peopleShort_other": "{{count}} người"
+      "peopleShort_other": "{{count}} người",
+      "empty": "Mạng lưới của bạn bắt đầu từ một người bạn quen"
     },
     "rings": {
       "short1": "Cái bắt tay thứ 1",
@@ -217,11 +218,12 @@
     "start": {
       "lead": "Bạn là người đầu tiên trong vòng tròn của bạn.",
       "body": "Thông báo về nhu cầu đi theo các cái bắt tay đã xác nhận: khi chưa có ai gần, tín hiệu không có chỗ để đi.",
-      "step1": "Hồ sơ",
-      "step1Sub": "Tên và dự định",
       "step2": "Người đầu tiên",
       "step2Sub": "Gửi liên kết hoặc hiện QR",
-      "step2Waiting": "Đã gửi yêu cầu, đang chờ xác nhận"
+      "step2Waiting": "Đã gửi yêu cầu, đang chờ xác nhận",
+      "intention": "Dự định của tôi",
+      "intentionIs": "Dự định của tôi: {{amount}}",
+      "intentionSub": "Số tiền bạn sẵn sàng nêu khi một người quen thông báo nhu cầu."
     },
     "acquaint": {
       "sub": "Nhờ bạn xác nhận là quen nhau",
@@ -247,6 +249,11 @@
       "loading": "Đang tải mạng lưới…",
       "ready": "Đã cập nhật biểu đồ",
       "added": "Mạng lưới của bạn tăng: +{{count}}"
+    },
+    "waiting": {
+      "title": "Đang chờ {{name}} xác nhận",
+      "text": "Khi {{name}} xác nhận hai người quen nhau, những người {{name}} quen và người quen của họ sẽ hiện ở đây.",
+      "remindText": "Chào {{name}}! Mình đã vào Social Organizer. Bạn xác nhận giúp là mình quen nhau nhé."
     }
   },
   "people": {
@@ -394,7 +401,17 @@
     "markError": "Không lưu được. Hãy thử lại.",
     "paidToggle": "Đã nhận từ {{name}}",
     "allReceived": "Đã nhận đủ · {{sum}}",
-    "shareNext": "Chuyển nhu cầu này tới những người khác cũng quen người đăng."
+    "shareNext": "Chuyển nhu cầu này tới những người khác cũng quen người đăng.",
+    "firstNext": {
+      "title": "Bây giờ thì sao",
+      "seen": "{{name}} thấy sự tham gia của bạn.",
+      "chat": "Bạn đã có thể mở đường dẫn vào chat của người báo nhu cầu.",
+      "keepQuestion": "Giữ {{amount}} làm dự định của bạn cho các nhu cầu tiếp theo trong mạng lưới?",
+      "keepWhy": "Dự định của bạn được điền sẵn cho các nhu cầu sau. Số tiền này được tính vào tổng của mạng lưới những người có thể tìm đến bạn.",
+      "keepYes": "Giữ {{amount}}",
+      "kept": "Xong: dự định của bạn là {{amount}}. Bạn có thể đổi trong Hồ sơ.",
+      "intro": "Xem mạng lưới hoạt động thế nào"
+    }
   },
   "profile": {
     "phone": "Điện thoại",
@@ -1155,14 +1172,19 @@
     "headline": "{{name}} cần được hỗ trợ",
     "ofGoal": "trên {{amount}}",
     "peopleLine": "Người tham gia: {{count}} · tiền được chuyển trực tiếp, không qua dịch vụ",
-    "joinCircle": "Bạn sẽ trở thành một phần vòng tròn của {{name}}.",
+    "joinCircle": "Khi mở nhu cầu sau khi đăng nhập, bạn xác nhận mình quen biết người báo nhu cầu và tham gia vòng tròn của người đó.",
     "joinCircleBody": "Khi tham gia, bạn xác nhận rằng mình quen người này trực tiếp.",
-    "join": "Tham gia",
     "joinNext": "Tiếp theo là đăng nhập: Apple, Google, Telegram hoặc email.",
     "openTelegram": "Mở trong Telegram",
     "closedLine": "Nhu cầu này đã đóng.",
     "suspendedLine": "Nhu cầu này đang tạm dừng.",
-    "fullLine": "Số tiền cần đã được nêu đủ."
+    "fullLine": "Số tiền cần đã được nêu đủ.",
+    "takePart": "Tham gia",
+    "nextTitle": "Nếu bạn tham gia",
+    "next1": "Bạn nêu số tiền mình sẵn sàng góp. Có thể bắt đầu từ {{amount}}.",
+    "next2": "Nếu có đường dẫn vào chat, bạn có thể mở sau khi tham gia.",
+    "next3": "Nếu đến chuyện tiền, bạn tự tay đưa tiền cho người báo nhu cầu. Ở đây bạn không trả gì: Social Organizer không nhận và không chuyển tiền.",
+    "signInTitle": "Đăng nhập để tham gia nhu cầu này"
   },
   "adminStats": {
     "totalUsers": "Người dùng",
@@ -1293,12 +1315,6 @@
       "aria": "Sơ đồ vòng tròn"
     },
     "seed": {
-      "title": "Dự định của bạn",
-      "text": "Khi ai đó trong mạng lưới của bạn thông báo một nhu cầu, số tiền này sẽ được điền sẵn, và bạn luôn có thể đổi. Các số tiền đó cộng lại thành “{{canHelp}}”. Social Organizer không nhận tiền.",
-      "label": "Dự định của tôi",
-      "presets": "Số tiền có sẵn",
-      "hint": "Chọn số có sẵn hoặc nhập số của bạn. Có thể đổi bất cứ lúc nào trong Hồ sơ.",
-      "min": "Ít nhất 1 $",
       "failed": "Không lưu được. Hãy kiểm tra kết nối và thử lại.",
       "sent": "Đã gửi yêu cầu.",
       "sentText": "Khi {{name}} xác nhận, họ trở thành cái bắt tay thứ 1 của bạn.",
@@ -1307,7 +1323,8 @@
       "name": "Tên của tôi",
       "namePlaceholder": "Họ và tên",
       "nameHint": "Người trong vòng kết nối của bạn sẽ thấy bạn như thế này.",
-      "nameMin": "Nhập tên của bạn"
+      "nameMin": "Nhập tên của bạn",
+      "nameTitle": "Tên của bạn"
     },
     "haveTelegramLink": "Đã dùng Social Organizer qua Telegram? Hãy kết nối"
   },

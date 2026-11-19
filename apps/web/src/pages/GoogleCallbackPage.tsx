@@ -2,9 +2,8 @@ import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { trpc } from '../lib/trpc';
 import { useAuth } from '../hooks/useAuth';
-import { takePendingSosPath } from '../lib/inviteUrl';
 import { nativeAuthUrl, nativePlatform, type NativePlatform } from '../lib/nativeReturn';
-import { afterSignInPath, readPendingInvite, safeMasked } from '../components/onboarding/flow';
+import { afterSignInPath, safeMasked } from '../components/onboarding/flow';
 import { ProviderWait } from '../components/onboarding/ProviderWait';
 
 // Handles Google OAuth redirect callback.
@@ -93,14 +92,9 @@ export function GoogleCallbackPage() {
             // iOS: socialorganizer://, since Safari cannot open intent://; the app closes the browser itself.
             toApp(nativeAuthUrl(platform, 'auth-success', p.toString(), 'https://www.orginizer.com'));
           } else {
+            const path = afterSignInPath(data.userId, !!data.isNew);
             login(data.accessToken, data.refreshToken, data.userId);
-            // The pending invite stays until InvitePage accepts it (that is how it knows to auto-accept).
-            // A new account goes through the intro (onboarding/flow.ts); an SOS link waits behind it.
-            const pendingInvite = readPendingInvite();
-            const target = takePendingSosPath() || (pendingInvite ? `/invite/${pendingInvite}` : null);
-            const path = afterSignInPath(!!data.isNew, target);
-            if (path === '/') navigate('/', { replace: true });
-            else window.location.href = path;
+            navigate(path, { replace: true });
           }
         },
         onError: (err) =>

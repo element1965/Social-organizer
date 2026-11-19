@@ -155,7 +155,8 @@
       "people_other": "{{count}} personnes dans votre réseau",
       "peopleShort_many": "{{count}} de personnes",
       "peopleShort_one": "{{count}} personne",
-      "peopleShort_other": "{{count}} personnes"
+      "peopleShort_other": "{{count}} personnes",
+      "empty": "Votre réseau commence par une personne que vous connaissez"
     },
     "rings": {
       "short1": "1re",
@@ -223,11 +224,12 @@
     "start": {
       "lead": "Vous êtes la première personne de votre cercle.",
       "body": "Un message sur un besoin circule le long des poignées de main confirmées : s’il n’y a personne à proximité, le signal n’a nulle part où aller.",
-      "step1": "Profil",
-      "step1Sub": "Nom et intention",
       "step2": "Première personne",
       "step2Sub": "Envoyez votre lien ou montrez le QR",
-      "step2Waiting": "Demande envoyée, en attente de confirmation"
+      "step2Waiting": "Demande envoyée, en attente de confirmation",
+      "intention": "Mon intention",
+      "intentionIs": "Mon intention : {{amount}}",
+      "intentionSub": "Le montant que vous êtes prêt à indiquer quand une personne que vous connaissez annonce un besoin."
     },
     "acquaint": {
       "sub": "Vous demande de confirmer que vous vous connaissez",
@@ -253,6 +255,11 @@
       "loading": "Chargement de son réseau…",
       "ready": "Graphe mis à jour",
       "added": "Votre réseau a grandi : +{{count}}"
+    },
+    "waiting": {
+      "title": "En attente de la confirmation de {{name}}",
+      "text": "Dès que {{name}} confirme que vous vous connaissez, les personnes que {{name}} connaît apparaissent ici, avec leurs connaissances.",
+      "remindText": "Salut {{name}} ! Je suis sur Social Organizer. Peux-tu confirmer qu’on se connaît ?"
     }
   },
   "people": {
@@ -400,7 +407,17 @@
     "markError": "La marque n’a pas été enregistrée. Réessayez.",
     "paidToggle": "Reçu de {{name}}",
     "allReceived": "Tout reçu · {{sum}}",
-    "shareNext": "Transmettez ce besoin à d’autres personnes qui connaissent son auteur."
+    "shareNext": "Transmettez ce besoin à d’autres personnes qui connaissent son auteur.",
+    "firstNext": {
+      "title": "Et maintenant",
+      "seen": "{{name}} voit votre participation.",
+      "chat": "Le lien de discussion de la personne qui a signalé le besoin est maintenant disponible.",
+      "keepQuestion": "Garder {{amount}} comme intention pour les prochains besoins de votre réseau ?",
+      "keepWhy": "Votre intention est préremplie pour les prochains besoins. Elle compte dans le montant du réseau des personnes qui peuvent vous atteindre.",
+      "keepYes": "Garder {{amount}}",
+      "kept": "C’est fait : votre intention est de {{amount}}. Vous pouvez la modifier dans le Profil.",
+      "intro": "Voir comment fonctionne le réseau"
+    }
   },
   "profile": {
     "phone": "Téléphone",
@@ -1171,14 +1188,19 @@
     "headline": "{{name}} a besoin d’aide",
     "ofGoal": "sur {{amount}}",
     "peopleLine": "Participants : {{count}} · l’argent se remet directement, sans passer par le service",
-    "joinCircle": "Vous ferez partie du cercle de {{name}}.",
+    "joinCircle": "En ouvrant le besoin après connexion, vous confirmez connaître personnellement la personne qui l’a publié et rejoignez son cercle.",
     "joinCircleBody": "En rejoignant, vous confirmez que vous connaissez cette personne personnellement.",
-    "join": "Rejoindre",
     "joinNext": "Ensuite, la connexion : Apple, Google, Telegram ou e-mail.",
     "openTelegram": "Ouvrir dans Telegram",
     "closedLine": "Ce besoin est fermé.",
     "suspendedLine": "Ce besoin est en pause.",
-    "fullLine": "Le montant nécessaire est déclaré."
+    "fullLine": "Le montant nécessaire est déclaré.",
+    "takePart": "Participer",
+    "nextTitle": "Si vous participez",
+    "next1": "Vous indiquez le montant que vous êtes prêt à donner. Vous pouvez commencer par {{amount}}.",
+    "next2": "Si un lien de discussion a été ajouté, vous pourrez l’ouvrir après avoir participé.",
+    "next3": "S’il est question d’argent, vous le remettez vous-même à la personne qui a publié le besoin. Ici, vous ne payez rien : Social Organizer ne reçoit ni ne transfère d’argent.",
+    "signInTitle": "Connectez-vous pour participer à ce besoin"
   },
   "adminStats": {
     "totalUsers": "Utilisateurs",
@@ -1311,12 +1333,6 @@
       "aria": "Schéma du cercle"
     },
     "seed": {
-      "title": "Votre intention",
-      "text": "Quand quelqu’un de votre réseau annonce un besoin, ce montant est prérempli pour vous, et vous pouvez toujours le modifier. Ces montants forment « {{canHelp}} ». Social Organizer n’accepte pas d’argent.",
-      "label": "Mon intention",
-      "presets": "Montants proposés",
-      "hint": "Choisissez un montant proposé ou saisissez le vôtre. Vous pouvez le modifier à tout moment dans Profil.",
-      "min": "Au moins 1 $",
       "failed": "Enregistrement impossible. Vérifiez votre connexion et réessayez.",
       "sent": "Demande envoyée.",
       "sentText": "Dès que {{name}} confirme, cette personne devient votre 1re poignée de main.",
@@ -1325,7 +1341,8 @@
       "name": "Mon nom",
       "namePlaceholder": "Prénom et nom",
       "nameHint": "C’est ainsi que les personnes de votre cercle vous verront.",
-      "nameMin": "Saisissez votre nom"
+      "nameMin": "Saisissez votre nom",
+      "nameTitle": "Votre nom"
     },
     "haveTelegramLink": "Vous avez déjà utilisé Social Organizer via Telegram ? Connectez Telegram"
   },

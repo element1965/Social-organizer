@@ -219,7 +219,7 @@ export const inviteRouter = router({
 
       const creatorId = collection.creatorId;
       if (creatorId === ctx.userId) {
-        return { success: true, alreadyConnected: true, connectedWith: creatorId };
+        return { success: true, alreadyConnected: true, connectedWith: creatorId, firstConnection: false };
       }
 
       const [userAId, userBId] = [ctx.userId, creatorId].sort();
@@ -227,7 +227,7 @@ export const inviteRouter = router({
         where: { userAId_userBId: { userAId: userAId!, userBId: userBId! } },
       });
       if (existing) {
-        return { success: true, alreadyConnected: true, connectedWith: creatorId };
+        return { success: true, alreadyConnected: true, connectedWith: creatorId, firstConnection: false };
       }
 
       // A closed, cancelled, or held collection must not add a handshake.
@@ -256,10 +256,11 @@ export const inviteRouter = router({
         return created;
       });
       if (outcome !== 'created') {
-        return { success: true, alreadyConnected: true, connectedWith: creatorId };
+        return { success: true, alreadyConnected: true, connectedWith: creatorId, firstConnection: false };
       }
 
-      await syncMilestonesForPair(ctx.db, ctx.userId, creatorId);
+      const earned = await syncMilestonesForPair(ctx.db, ctx.userId, creatorId);
+      const firstConnection = earned.some((m) => m.kind === 'FIRST_CONNECTION' && m.relatedUserId === creatorId);
 
       const applicant = await ctx.db.user.findUnique({
         where: { id: ctx.userId },
@@ -269,7 +270,7 @@ export const inviteRouter = router({
       scanMatchesForUser(ctx.db, ctx.userId).catch(() => {});
       scanMatchesForUser(ctx.db, creatorId).catch(() => {});
 
-      return { success: true, alreadyConnected: false, connectedWith: creatorId };
+      return { success: true, alreadyConnected: false, connectedWith: creatorId, firstConnection };
     }),
 
   /**

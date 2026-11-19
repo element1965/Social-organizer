@@ -1,98 +1,53 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { getStartParam } from '@so/tg-adapter';
 import { useTelegramInit, useTelegramBackButton } from '../hooks/useTelegram';
 import { useAuth } from '../hooks/useAuth';
 import { ProviderWait } from './onboarding/ProviderWait';
 import { TelegramFailed } from './onboarding/TelegramFailed';
-import { safeInviteToken } from './onboarding/flow';
-
-/** Collection ids and invite tokens from start params / storage are opaque url-safe strings. */
-const isSafeToken = (token: string | null | undefined): token is string => safeInviteToken(token) !== null;
+import { afterSignInPath, safeInviteToken, setPendingInvite, telegramStartPath } from './onboarding/flow';
 
 export function TelegramBootstrap({ children }: { children: React.ReactNode }) {
   const { isReady, isTelegram, failed, retry, dismiss } = useTelegramInit();
   const isAuthenticated = useAuth((s) => s.isAuthenticated);
   const navigate = useNavigate();
   const location = useLocation();
-  const startParamHandled = useRef(false);
+  const userId = useAuth((s) => s.userId);
+  const [routed, setRouted] = useState(false);
 
   useTelegramBackButton();
 
-  // After auth, navigate based on start_param or redirect from public pages
   useEffect(() => {
-    if (!isReady || !isAuthenticated) return;
+    if (!isTelegram || !isReady || !isAuthenticated || !userId || routed) return;
 
-    // Check start_param or pending invite for deep linking (only once per session)
-    if (!startParamHandled.current) {
-      startParamHandled.current = true;
-
-      // If already on /invite/:token (opened via bot's web_app button), let InvitePage handle it
-      if (location.pathname.startsWith('/invite/')) {
-        localStorage.removeItem('pendingInviteToken');
-        return;
-      }
-
-      // Telegram deep link start_param (only in TG)
-      if (isTelegram) {
-        const startParam = getStartParam();
-        let inviteToken: string | null = null;
-        if (startParam?.startsWith('collection_')) {
-          const collectionId = startParam.slice('collection_'.length);
-          if (isSafeToken(collectionId)) {
-            navigate(`/collection/${encodeURIComponent(collectionId)}`, { replace: true });
-            return;
-          }
-        }
-
-        if (startParam?.startsWith('sos_')) {
-          const collectionId = startParam.slice('sos_'.length);
-          if (isSafeToken(collectionId)) {
-            navigate(`/collection/${encodeURIComponent(collectionId)}?sos=true`, { replace: true });
-            return;
-          }
-        }
-
-        if (startParam?.startsWith('invite_')) {
-          const t = startParam.slice('invite_'.length);
-          if (isSafeToken(t)) inviteToken = t;
-        }
-
-        if (!inviteToken) {
-          const stored = localStorage.getItem('pendingInviteToken');
-          if (isSafeToken(stored)) inviteToken = stored;
-        }
-
-        if (inviteToken) {
-          localStorage.setItem('pendingInviteToken', inviteToken);
-          navigate(`/invite/${encodeURIComponent(inviteToken)}`, { replace: true });
-          return;
-        }
-      } else {
-        // Non-TG: check pendingInviteToken from localStorage
-        const inviteToken = localStorage.getItem('pendingInviteToken');
-        if (inviteToken) {
-          localStorage.removeItem('pendingInviteToken');
-          if (isSafeToken(inviteToken)) {
-            navigate(`/invite/${encodeURIComponent(inviteToken)}`, { replace: true });
-            return;
-          }
-        }
-      }
+    const { pathname, search, hash } = location;
+    const current = pathname + search + hash;
+    const params = new URLSearchParams(search);
+    const linkInvite = pathname === '/' ? safeInviteToken(params.get('invite')) : null;
+    const startPath = telegramStartPath(getStartParam()) ?? (linkInvite ? `/invite/${linkInvite}` : null);
+    const isEntry = pathname === '/' || pathname === '/login' || pathname === '/welcome';
+    const redirect = pathname.startsWith('/invite/') || pathname.startsWith('/collection/')
+      ? current
+      : startPath ?? (isEntry ? params.get('redirect') : current);
+    if (startPath && redirect === startPath && startPath.startsWith('/invite/')) {
+      setPendingInvite(startPath.slice('/invite/'.length));
     }
+    const path = afterSignInPath(userId, false, redirect);
+    if (path !== current) navigate(path, { replace: true });
+    setRouted(true);
+  }, [isTelegram, isReady, isAuthenticated, userId, routed, location, navigate]);
 
-    // Signed-in people leave the public entry pages. "/" is the circle now, so it stays.
-    // A pending invite is left for InvitePage; sending them home here used to drop it.
-    if (location.pathname === '/welcome' || location.pathname === '/login') {
-      const hasPendingInvite = localStorage.getItem('pendingInviteToken');
-      if (!hasPendingInvite) {
-        navigate('/', { replace: true });
-      }
+  // Leave /login if it was opened with a session. Successful web and native sign-ins
+  // already own their navigation, so this effect runs on route entry only.
+  useEffect(() => {
+    if (!isTelegram && location.pathname === '/login' && useAuth.getState().isAuthenticated) {
+      navigate('/', { replace: true });
     }
-  }, [isTelegram, isReady, isAuthenticated, location.pathname, navigate]);
+  }, [isTelegram, location.key, location.pathname, navigate]);
 
-  // Telegram auto sign-in in progress (auth.html №14): the mark, the spinner, one line
-  if (isTelegram && !isReady) return <ProviderWait provider="telegram" bare />;
+  if (isTelegram && (!isReady || (isAuthenticated && !routed))) {
+    return <ProviderWait provider="telegram" bare />;
+  }
   // It did not work and there is no session (№15): say so instead of silently landing on the sign-in screen
   if (isTelegram && failed && !isAuthenticated) {
     return (

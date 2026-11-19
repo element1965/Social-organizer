@@ -15,6 +15,7 @@ import {
 import { useAuth } from './useAuth';
 import { paintTelegramTheme } from './useTheme';
 import { trpc } from '../lib/trpc';
+import { markFirstRun } from '../components/onboarding/flow';
 import i18n from 'i18next';
 
 function syncTelegramTheme() {
@@ -53,6 +54,9 @@ export function useTelegramInit() {
             return;
           }
           console.log('[TG Auth] login success, userId:', result.userId);
+          // A Telegram account made just now goes through the same first run as on the web (TelegramBootstrap
+          // routes it); marked before the session exists, so the routing effect already sees it
+          if (result.isNew) markFirstRun(result.userId);
           login(result.accessToken, result.refreshToken, result.userId);
           // Result of "Connect Telegram" from the app settings (start_param link_CODE)
           const linkResult = (result as { linkResult?: string }).linkResult;
