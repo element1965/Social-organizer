@@ -121,6 +121,7 @@ const ROOT_PATHS = [
   '/add',
   '/me',
   '/how',
+  '/groups',
   '/get',
   '/privacy',
   '/terms',

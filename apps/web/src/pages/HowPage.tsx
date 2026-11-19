@@ -156,7 +156,14 @@ export function HowPage() {
       </Reveal>
 
       <Reveal as="section" className="site-endcta" aria-labelledby="cta-title">
-        <h2 id="cta-title">{t('how.cta.title')}</h2>
+        <div className="site-endcta-copy">
+          <h2 id="cta-title">{t('how.cta.title')}</h2>
+          {backToInvite ? null : (
+            <p className="site-note">
+              <Link to="/groups">{t('how.groupsLink')}</Link>
+            </p>
+          )}
+        </div>
         {backToInvite ? (
           <Link className="site-btn primary" to={backToInvite}>
             {t('how.backToInvite')}

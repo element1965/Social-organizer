@@ -691,7 +691,8 @@
       "footerNote": "Código aberto · Projeto sem fins lucrativos",
       "privacy": "Privacidade",
       "terms": "Termos",
-      "deleteAccount": "Excluir conta"
+      "deleteAccount": "Excluir conta",
+      "groups": "Para grupos"
     },
     "start": {
       "play": "Google Play",
@@ -1054,6 +1055,67 @@
           "Não há fundo nem pagamentos para fechar"
         ]
       ]
+    },
+    "groupsLink": "Vai trazer seu grupo? Como começar juntos"
+  },
+  "groups": {
+    "meta": {
+      "title": "Para grupos — Social Organizer",
+      "description": "Como entrar no Social Organizer com o grupo todo: por que um grupo começa mais rápido que uma pessoa sozinha, os primeiros passos e textos para o chat do grupo."
+    },
+    "hero": {
+      "title": "Venha com o grupo todo",
+      "lead": "Seu grupo já apoia os seus. No Social Organizer, quando alguém do grupo informa uma necessidade, o aviso chega primeiro às pessoas que conhecem quem fez o relato, e depois aos contatos dessas pessoas. Os contatos mais próximos na rede recebem o aviso primeiro. A cada rodada, é avisada no máximo uma pessoa por dólar que ainda falta."
+    },
+    "why": {
+      "title": "Por que começar em grupo",
+      "lead": "Para informar uma necessidade, você precisa de <b>{{direct}} pessoas no seu círculo</b> que confirmaram que conhecem você e de <b>{{network}} pessoas na sua rede</b>, até o 6.º aperto de mão. Seu círculo conta na rede; você não.",
+      "aloneLabel": "Por conta própria",
+      "alone": "Os dois contadores começam do zero, e você espera as pessoas que conhece entrarem.",
+      "groupLabel": "Com {{n}} pessoas",
+      "group": "Se {{n}} pessoas do grupo entrarem e cada pessoa confirmar outras {{direct}}, todas poderão informar uma necessidade no mesmo dia."
+    },
+    "own": {
+      "title": "Seu grupo mantém o seu jeito",
+      "lead": "Seja qual for o nome do seu grupo (chama, paluwagan ou grupo da igreja), vocês mantêm suas reuniões, suas regras e seu jeito de cuidar das contas.",
+      "text1": "O Social Organizer não guarda dinheiro, não tem caixa comum e não cobra taxa. Quando alguém informa uma necessidade, participar é uma escolha pessoal, a partir de US$ 1. Enquanto a necessidade estiver aberta, você pode mudar o valor ou desistir.",
+      "text2": "Quem informou a necessidade e quem participa combinam no próprio chat, em qualquer mensageiro. O dinheiro, se houver, passa direto entre as pessoas."
+    },
+    "steps": {
+      "title": "Como começar",
+      "s1": "Instale o app e entre. Abra “{{add}}” e envie seu link para o chat do grupo com “{{share}}”.",
+      "s2": "Quem abrir seu link e tocar em “{{known}}” chega até você. Confirme quem você conhece pessoalmente.",
+      "s3": "Encontrem-se uma vez. No app, uma pessoa abre “{{myQr}}” e outra toca em “{{scan}}”. Um código ao vivo confirma na hora que vocês se conhecem. Em uma noite, dá para confirmar {{direct}} contatos por pessoa.",
+      "s4": "Em “{{stake}}”, informe o valor que normalmente poderia dar se alguém da rede passasse por um aperto. Depois, convide pessoas que você conhece fora do grupo."
+    },
+    "texts": {
+      "title": "Textos para o chat do grupo",
+      "lead": "Copie um texto para o chat do grupo e mude o que quiser.",
+      "linkNote": "Seu link pessoal está no app, na tela “{{add}}”. Cole-o no lugar de {{placeholder}}.",
+      "linkMine": "Seu link já está nos textos.",
+      "placeholder": "[seu link]",
+      "copy": "Copiar texto",
+      "copied": "Copiado",
+      "copyFailed": "Não foi possível copiar. Selecione o texto e copie à mão.",
+      "languages": "Idioma dos textos",
+      "pageLanguage": "Idioma da página",
+      "inviteLabel": "Convidar",
+      "explainLabel": "Em duas frases",
+      "confirmLabel": "Confirmar que vocês se conhecem",
+      "invite": "Entrei no Social Organizer. Lá, pessoas que se conhecem pessoalmente constroem uma rede. Se alguém do grupo informar uma necessidade por um aperto sério, como perder o emprego ou precisar de uma cirurgia urgente, as pessoas que conhecem quem informou a necessidade ficam sabendo primeiro, e depois os contatos delas. Nenhum dinheiro passa pelo app. Entre pelo meu link, e eu confirmo que a gente se conhece: {{link}}",
+      "explain": "O Social Organizer reúne pessoas que se conhecem pessoalmente. Quando alguém do grupo informa uma necessidade, participar é uma escolha pessoal, a partir de US$ 1. O dinheiro, se houver, passa direto entre as pessoas. {{link}}",
+      "confirm": "Para quem já entrou: para informar uma necessidade, é preciso ter 5 contatos confirmados e 10 pessoas na rede por conta. Postem aqui o próprio link (“{{add}}” → “{{share}}”). Abram os links de quem vocês conhecem pessoalmente e toquem em “{{known}}”. Confirmem que conhecem as pessoas que chegarem pelo seu link. No próximo encontro vai ser mais rápido: “{{myQr}}” e “{{scan}}”."
+    },
+    "honest": {
+      "title": "Diga ao grupo com franqueza",
+      "list": [
+        "Uma necessidade pode não ser coberta. Participar é uma escolha pessoal.",
+        "Ninguém recebe uma nota. As pessoas da sua rede veem dois números: quantas vezes uma pessoa participou e quantas dessas participações foram marcadas como recebidas por quem informou as necessidades."
+      ]
+    },
+    "cta": {
+      "title": "Comece com o seu grupo",
+      "note": "Quer ajuda para explicar com as palavras do seu grupo? Escreva para a equipe."
     }
   },
   "legal": {

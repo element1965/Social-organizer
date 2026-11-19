@@ -3,7 +3,7 @@ id: 20261118-need-protocol
 title: The Need protocol as the live app implements it
 tags: [mechanics]
 created: 2026-11-18
-updated: 2026-11-18
+updated: 2026-11-20
 related: [20261118-user-journey, 20261118-trust-conditions-in-so, 20261118-vocabulary, 20261118-open-questions]
 summary: Verified fact sheet of what the production app does today (network, access rule, Need, notification waves, Participation, closing, regular cycles, public page), with numbers, UI strings and code references, plus where SPEC.md is outdated.
 ---
@@ -37,12 +37,14 @@ partly outdated** (table at the end). Re-verify before any video or landing goes
 
 ### 2. Access rule for reporting a Need
 
-At least **5 direct connections and 10 people in the network** (rings 1–3), checked on the server.
+At least **5 direct connections and 10 people in the network**, checked on the server. The network count
+goes to the 6th handshake (`NETWORK_MAX_DEPTH = 6`), includes the direct connections and excludes the person;
+so a group that joins together needs 11 people for everyone to pass (each confirming at least 5 of the others).
 Until then the Need tab opens the "path" sheet: `path.title` = "Almost there: soon people will
 learn of your Need", with "Your circle N of 5" and "Network N of 10" and a "Remind" button.
 There is **no cap** on the first amount (decision 2026-11-09), only a soft warning when it exceeds
 the network's declared participation: `ask.amountWarn`.
-Evidence: `constants.ts:21-22`, `services/ask-access.service.ts:41-73`, `PathToRequest.tsx:136-167`, `config/ask.ts:3`.
+Evidence: `constants.ts:21-22`, `services/ask-access.service.ts:41-73`, `services/network.service.ts` (`bfsNetwork`, self excluded), `network-figure.ts:13`, `PathToRequest.tsx:136-167`, `config/ask.ts:3`.
 
 ### 3. Reporting a Need (`/ask`)
 

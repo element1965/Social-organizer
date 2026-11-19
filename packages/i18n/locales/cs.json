@@ -695,7 +695,8 @@
       "footerNote": "Otevřený kód · Neziskový projekt",
       "privacy": "Soukromí",
       "terms": "Podmínky",
-      "deleteAccount": "Smazat účet"
+      "deleteAccount": "Smazat účet",
+      "groups": "Pro skupiny"
     },
     "start": {
       "play": "Google Play",
@@ -1062,6 +1063,67 @@
           "Není tu pokladna ani výplaty, které by šlo zavřít"
         ]
       ]
+    },
+    "groupsLink": "Přicházíte se skupinou? Jak začít spolu"
+  },
+  "groups": {
+    "meta": {
+      "title": "Pro skupiny — Social Organizer",
+      "description": "Jak se přidat do Social Organizer s celou skupinou: proč je rychlejší začít společně než zvlášť, první kroky a hotové texty do vašeho chatu."
+    },
+    "hero": {
+      "title": "Přijďte celou skupinou",
+      "lead": "Vaše skupina už teď stojí za svými lidmi. V Social Organizer se oznámení o potřebě dostane nejdřív k lidem, kteří osobně znají osobu, jež ji oznámila, pak k jejich známým, od nejbližších v síti. V každé vlně se upozorní nejvýše jedna osoba za každý dolar, který ještě chybí."
+    },
+    "why": {
+      "title": "Proč začít jako skupina",
+      "lead": "K oznámení potřeby je zapotřebí <b>{{direct}} lidí ve vašem kruhu</b>, kteří potvrdili známost, a <b>{{network}} lidí v síti</b> do 6. podání ruky. Do sítě se počítá váš kruh. Vlastní účet se do ní nezahrnuje.",
+      "aloneLabel": "Bez skupiny",
+      "alone": "Oba počty začínají na nule a čekáte, až se přidají lidé, které znáte.",
+      "groupLabel": "Když je vás {{n}}",
+      "group": "Pokud se vás přidá {{n}} a potvrdíte si známost s {{direct}} lidmi ze skupiny na osobu, může potřebu oznámit kdokoli z vás ještě týž den."
+    },
+    "own": {
+      "title": "Vaše skupina si ponechá své zvyky",
+      "lead": "Ať už se vaše skupina jmenuje jakkoli (chama, paluwagan nebo farní společenství), její zvyky zůstávají: vaše schůzky, vaše pravidla i způsob, jakým spravujete peníze.",
+      "text1": "Social Organizer nedrží peníze, nemá společnou kasu a nebere poplatky. Když někdo oznámí potřebu, rozhodnutí o účasti je na vás. Zapojit se dá od 1 $. Dokud je potřeba otevřená, můžete částku změnit nebo účast zrušit.",
+      "text2": "Lidé, kteří oznámili potřebu nebo se do ní zapojili, se domlouvají ve vlastním chatu, v jakékoli aplikaci pro zasílání zpráv. Peníze, pokud vůbec, jdou přímo mezi lidmi."
+    },
+    "steps": {
+      "title": "Jak začít",
+      "s1": "Nainstalujte si aplikaci a přihlaste se. Otevřete „{{add}}“ a pošlete svůj odkaz do chatu skupiny tlačítkem „{{share}}“.",
+      "s2": "Kdo otevře váš odkaz a klepne na „{{known}}“, přijde k vám. Potvrďte ty, které znáte osobně.",
+      "s3": "Sejděte se. Ukažte v aplikaci kód z obrazovky „{{myQr}}“, aby ho druhá osoba mohla načíst přes „{{scan}}“. Živý kód potvrdí známost hned, takže za jeden večer můžete potvrdit {{direct}} známostí na osobu.",
+      "s4": "V položce „{{stake}}“ nastavte částku, kterou obvykle můžete dát, když je někomu v síti těžko. Pak pozvěte známé mimo skupinu."
+    },
+    "texts": {
+      "title": "Texty do chatu skupiny",
+      "lead": "Zkopírujte text do chatu skupiny a změňte, co chcete.",
+      "linkNote": "Váš osobní odkaz najdete v aplikaci na obrazovce „{{add}}“. Vložte ho místo {{placeholder}}.",
+      "linkMine": "Váš odkaz už v textech je.",
+      "placeholder": "[váš odkaz]",
+      "copy": "Kopírovat text",
+      "copied": "Zkopírováno",
+      "copyFailed": "Kopírování se nepovedlo. Označte text a zkopírujte ho ručně.",
+      "languages": "Jazyk textů",
+      "pageLanguage": "Jazyk stránky",
+      "inviteLabel": "Pozvánka",
+      "explainLabel": "Ve dvou větách",
+      "confirmLabel": "Potvrďte se navzájem",
+      "invite": "Jsem teď v Social Organizer. Lidé, kteří se znají osobně, tam staví síť. Když někdo z nás oznámí potřebu kvůli vážným potížím, třeba ztrátě práce nebo urgentní operaci, dozvědí se o ní nejdřív lidé, kteří danou osobu znají, pak jejich známí. Přes aplikaci nejdou žádné peníze. Přidej se přes můj odkaz a já potvrdím, že se známe: {{link}}",
+      "explain": "Social Organizer spojuje lidi, kteří se znají osobně. Když někdo z nás oznámí potřebu, účast je osobní rozhodnutí a zapojit se dá od 1 $. Peníze, pokud vůbec, jdou přímo mezi lidmi. {{link}}",
+      "confirm": "Pro všechny v síti: k oznámení potřeby je zapotřebí 5 potvrzených známostí a 10 lidí v síti na osobu. Pošlete sem svůj odkaz („{{add}}“ → „{{share}}“). Otevírejte odkazy lidí, které znáte osobně, a klepněte na „{{known}}“. Potvrďte známost s lidmi, kteří přijdou přes váš odkaz. Na příští schůzce to půjde rychleji: „{{myQr}}“ a „{{scan}}“."
+    },
+    "honest": {
+      "title": "Řekněte skupině na rovinu",
+      "list": [
+        "Potřeba nemusí být pokrytá. Účast je na osobním rozhodnutí.",
+        "Nikdo nedostává hodnocení. Lidé ve vaší síti vidí dvě čísla: počet účastí dané osoby a počet účastí, které autoři potřeb označili jako přijaté."
+      ]
+    },
+    "cta": {
+      "title": "Začněte se svou skupinou",
+      "note": "Chcete pomoct vysvětlit to slovy vaší skupiny? Napište týmu."
     }
   },
   "legal": {

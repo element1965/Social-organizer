@@ -687,7 +687,8 @@
       "footerNote": "Öppen källkod · Ideellt projekt",
       "privacy": "Integritet",
       "terms": "Villkor",
-      "deleteAccount": "Radera konto"
+      "deleteAccount": "Radera konto",
+      "groups": "För grupper"
     },
     "start": {
       "play": "Google Play",
@@ -1046,6 +1047,67 @@
           "Det finns ingen kassa och inga utbetalningar att stänga"
         ]
       ]
+    },
+    "groupsLink": "Kommer du med en grupp? Så börjar ni tillsammans"
+  },
+  "groups": {
+    "meta": {
+      "title": "För grupper — Social Organizer",
+      "description": "Så kommer er grupp med i Social Organizer tillsammans: varför en grupp kommer igång snabbare än en ensam person, de första stegen och texter till er gruppchatt."
+    },
+    "hero": {
+      "title": "Kom med hela gruppen",
+      "lead": "Din grupp ställer redan upp för sina egna. I Social Organizer får de som känner personen som anmäler ett behov veta om det först, sedan deras bekanta. De närmaste i nätverket får veta först. I varje omgång underrättas högst en person per dollar som fortfarande behövs."
+    },
+    "why": {
+      "title": "Varför börja som grupp",
+      "lead": "För att anmäla ett behov behöver du <b>{{direct}} personer i din krets</b> som har bekräftat att de känner dig, och <b>{{network}} personer i ditt nätverk</b> till och med 6:e handslaget. Din krets räknas in i nätverket, du själv gör det inte.",
+      "aloneLabel": "Ensam",
+      "alone": "Båda räknarna börjar på noll, och du väntar på att varje bekant ska komma med.",
+      "groupLabel": "{{n}} tillsammans",
+      "group": "Om {{n}} av er går med och var och en bekräftar {{direct}} andra i gruppen kan vem som helst av er anmäla ett behov samma dag."
+    },
+    "own": {
+      "title": "Er grupp behåller sitt eget sätt",
+      "lead": "Vad er grupp än kallar sig (en chama, en paluwagan eller en församlingsgrupp) består dess sätt: era möten, era regler, er kassör.",
+      "text1": "Social Organizer förvarar inga pengar, har ingen gemensam kassa och tar ingen avgift. När någon anmäler ett behov bestämmer var och en av er själv om ni vill delta, från 1 $. Så länge behovet är öppet kan du ändra beloppet eller dra dig ur.",
+      "text2": "Den som anmälde behovet och deltagarna kommer överens i sin egen chatt, i vilken meddelandeapp som helst. Pengar, om det blir aktuellt, går direkt mellan människor."
+    },
+    "steps": {
+      "title": "Så kommer ni igång",
+      "s1": "Installera appen och logga in. Öppna ”{{add}}” och skicka din länk till gruppchatten med ”{{share}}”.",
+      "s2": "Den som öppnar din länk och trycker på ”{{known}}” kommer till dig. Bekräfta dem du känner personligen.",
+      "s3": "Träffas en gång. I appen öppnar den ena ”{{myQr}}” och den andra trycker på ”{{scan}}”. En livekod bekräftar bekantskapen direkt, så på en kväll kan var och en bekräfta {{direct}} andra.",
+      "s4": "Var och en ställer in ”{{stake}}”: beloppet du brukar vara beredd att ge när någon i nätverket hamnar i knipa. Bjud sedan in bekanta utanför gruppen."
+    },
+    "texts": {
+      "title": "Texter till gruppchatten",
+      "lead": "Kopiera en text till gruppchatten och ändra vad du vill.",
+      "linkNote": "Din personliga länk finns i appen, på skärmen ”{{add}}”. Klistra in den i stället för {{placeholder}}.",
+      "linkMine": "Din egen länk står redan i texterna.",
+      "placeholder": "[din länk]",
+      "copy": "Kopiera text",
+      "copied": "Kopierat",
+      "copyFailed": "Det gick inte att kopiera. Markera texten och kopiera den för hand.",
+      "languages": "Texternas språk",
+      "pageLanguage": "Sidans språk",
+      "inviteLabel": "Bjud in",
+      "explainLabel": "I två meningar",
+      "confirmLabel": "Bekräfta varandra",
+      "invite": "Jag är med i Social Organizer nu. Där bygger människor som känner varandra personligen ett nätverk. Om någon av oss anmäler ett behov efter att ha förlorat jobbet eller för att en akut operation behövs, får de som känner personen veta först, sedan deras bekanta. Inga pengar går via appen. Gå med via min länk så bekräftar jag att vi känner varandra: {{link}}",
+      "explain": "Social Organizer för samman människor som känner varandra personligen. När någon av oss anmäler ett behov bestämmer var och en själv om de vill delta, från 1 $, och pengar går, om det blir aktuellt, direkt mellan människor. {{link}}",
+      "confirm": "Till alla som har gått med: för att anmäla ett behov behöver var och en av oss 5 bekräftade bekanta och 10 personer i nätverket. Lägg upp din egen länk här (”{{add}}” → ”{{share}}”). Öppna länkarna från dem ni känner personligen och tryck på ”{{known}}”. Kommer någon via din länk, bekräfta dem. På nästa träff går det snabbare: ”{{myQr}}” och ”{{scan}}”."
+    },
+    "honest": {
+      "title": "Säg det rakt ut till gruppen",
+      "list": [
+        "Ett behov kanske inte täcks. Var och en bestämmer själv.",
+        "Ingen får ett betyg. Personer i ditt nätverk ser två siffror: hur många gånger någon har deltagit och hur många av deltagandena som de som anmälde behoven har markerat som mottagna."
+      ]
+    },
+    "cta": {
+      "title": "Börja med din grupp",
+      "note": "Vill du ha hjälp att förklara det med gruppens egna ord? Skriv till teamet."
     }
   },
   "legal": {
