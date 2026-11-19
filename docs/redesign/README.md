@@ -1,25 +1,23 @@
 # Redesign workspace
 
-Work on the app redesign (simpler interaction, simpler onboarding, a more modern look) happens on the
-`redesign` branch. Everything is tested locally first and merged into `main` only when ready —
-**a push to `main` auto-deploys production on Railway**, so never push unfinished work there.
+The [archive](../archive/README.md) contains the working documents for the redesign.
+This page keeps the prototype links and local device-testing notes.
 
 ## Inputs
 
-Research, mockups and other working materials are kept outside git, in the local `local/` folder
-(excluded via `.git/info/exclude`). This repository is public: never commit them.
+Private research and other unpublished working material stay in the ignored local folder.
 
 Redesign documents (Russian):
 
-- [ux-audit.md](ux-audit.md) — UI/UX audit of the current app vs the mockups, decisions taken (§7), 3D graph plan (§8).
-- [screens.md](screens.md) — screen-by-screen spec: elements, data sources (tRPC), states, done criteria.
-- [master-plan.md](master-plan.md) — stages, dependency map, tracker table and the delegation workflow; one ready-to-paste
-  brief per work package in [briefs/](briefs/).
-- [dev-plan.md](dev-plan.md) — work packages WP1–WP10 for parallel agents: file ownership, dependencies, done criteria.
-- [design-system.md](design-system.md) — tokens, type scale, sizes, components and patterns with rules; the live style
+- [ux-audit.md](../archive/redesign/ux-audit.md) — UI/UX audit of the current app vs the mockups, decisions taken (§7), 3D graph plan (§8).
+- [screens.md](../archive/redesign/screens.md) — screen-by-screen spec: elements, data sources (tRPC), states, done criteria.
+- [master-plan.md](../archive/redesign/master-plan.md) — stages, dependency map, tracker table and the delegation workflow; one ready-to-paste
+  brief per work package in [briefs/](../archive/redesign/briefs/).
+- [dev-plan.md](../archive/redesign/dev-plan.md) — work packages WP1–WP10 for parallel agents: file ownership, dependencies, done criteria.
+- [design-system.md](../archive/redesign/design-system.md) — tokens, type scale, sizes, components and patterns with rules; the live style
   guide is [mockups/v2/design-system.html](mockups/v2/design-system.html), canonical values in
   [mockups/v2/tokens.css](mockups/v2/tokens.css).
-- [coverage.md](coverage.md) — every route, screen and feature of `main` mapped to its place in the redesign (kept, merged,
+- [coverage.md](../archive/redesign/coverage.md) — every route, screen and feature of `main` mapped to its place in the redesign (kept, merged,
   removed with a reason) plus the open product questions.
 - [mockups/](mockups/) — interactive prototype `app.html` (20 screens/states, the buttons under the phone switch them)
   and the landing concept `hui.html`. Open from any static server, e.g. `npx -y http-server docs/redesign/mockups -p 8787`,
@@ -32,20 +30,7 @@ Redesign documents (Russian):
 **Native apps load the production web URL** (`apps/web/capacitor.config.ts`), so every web deploy from `main`
 reaches iOS/Android users immediately, without a store release.
 
-## Apply before deploy
-
-Railway does not run migrations. Before `redesign` is merged into `main`, apply these to production by hand
-(set `DATABASE_URL` to the production database's public URL from the Railway variables, exported in the
-shell or in `packages/db/.env` with the local value restored afterwards, then run
-`cd packages/db && npx prisma migrate deploy`; see "Deployment" → "Migrations" in the root README.md), in this order:
-
-- `20261109120000_ask_block_reason_invite_ttl`
-- `20261109140000_connection_via_collection`
-- `20261109160000_collection_moderation` (also creates the partial index `collection_reviews_one_open_idx`)
-- `20261109180000_user_inactivity_cleanup` (`users.inactivityStage`, `users.inactivityWarnedAt`). The API tolerates
-  the columns being missing (activity falls back to `lastSeen` only), but the daily cleanup fails until it is applied.
-- `20261110100000_collection_description_receipts` (`collections.description`, table `obligation_receipts`). Required:
-  the API reads both, so collection pages and the cycle close fail until it is applied.
+See the [deployment notes](../operations.md#redesign-migrations) for the production migration history.
 
 ## Design tokens
 
@@ -67,7 +52,7 @@ Rules for redesigned code: use semantic tokens only, no raw `gray-*` / `blue-*` 
 (tokens switch themes by themselves). The old ramps (`gray`, `blue`, `teal`, `green`, `red`, `amber`, ...)
 stay in `apps/web/tailwind.config.js` because these screens still use them: support chat, FAQ, the
 assistant, broadcast, the message composer, the native push prompt, the protected-route spinner, and
-`components/ui/rich-text.tsx`. `docs/redesign/design-system.md` still says to delete the ramps in WP9;
+`components/ui/rich-text.tsx`. `docs/archive/redesign/design-system.md` still says to delete the ramps in WP9;
 that note is out of date until those screens move to tokens.
 
 ## Local development on Windows
@@ -79,8 +64,8 @@ that note is out of date until those screens move to tokens.
 | Git | 2.56 | `winget install Git.Git` |
 | Node.js | 22 (see `.node-version`) | `winget install OpenJS.NodeJS.22` |
 | pnpm | 10.4.1 (see `packageManager`) | `npm i -g pnpm@10.4.1` |
-| PostgreSQL | 17, port **5434**, user `postgres` / password `1111` | `winget install PostgreSQL.PostgreSQL.17` with `--serverport 5434` |
-| Redis | not set up yet (optional, see below) | — |
+| PostgreSQL | 17, host port **54329** | Root Compose file |
+| Redis | Optional, host port **63799** | Root Compose file |
 
 Follow the [root quick start](../../README.md#quick-start) for the environment
 files, database setup, and dev servers. The examples run the web app on port
@@ -108,17 +93,14 @@ existing users.
 
 ### Testing on a phone
 
-Two ways, from quick to stable:
-
-1. **Dev server over Wi-Fi.** Vite listens on all interfaces (`server.host: true`), so with the phone on the same
+**Dev server over Wi-Fi.** Vite listens on all interfaces (`server.host: true`), so with the phone on the same
    network open `http://<pc-ip>:3060` (find the IP with `ipconfig`; the Vite banner prints it as "Network"). The API is
    reached through the Vite proxy, which rewrites the browser's Origin to `localhost:3000` for the CORS allowlist.
    Sign in with the e-mail code from `apps/api/so-dev-mail.log`; Google/Apple/Telegram sign-in do not work on a LAN
    address. Plain http also means no PWA install and no camera (the QR scanner needs a secure context).
-2. **Staging on Railway.** A second deployment of the `redesign` branch with its own database and a railway.app
-   domain (https): the phone opens it in Chrome, installs it as a PWA from the browser menu, and the camera, web push and
-   OAuth redirects (once the staging domain is added in the Google/Apple consoles) all work. Production keeps serving
-   `main` untouched. The native Android/iOS wrappers load production, so they are not part of this loop.
+
+The former Railway redesign staging environment was deleted. For HTTPS-only device features,
+use a separate test deployment with its own database and integration settings.
 
 ### Redis
 
@@ -141,15 +123,6 @@ sessionStorage `__telegram__initParams`, or an iframe that has those stored para
 The extra checks cover a full-page reload inside Telegram Desktop, iOS, Android, and Web A/K, where the
 launch hash is already gone. A normal browser does not wait on the script, and `@so/tg-adapter` still
 sees `window.Telegram` before React boots inside a Mini App.
-
-## Production migrations to apply by hand
-
-These folders are in `packages/db/prisma/migrations` and need a manual apply on production:
-
-- `20261109120000_ask_block_reason_invite_ttl`
-- `20261109140000_connection_via_collection`
-- `20261109160000_collection_moderation`
-- inactivity-cleanup migration — being added in parallel; the folder name is not in this branch yet
 
 Locale files are owned by the translations work. Keys that this cleanup left unused (do not delete them here):
 `videoGuide.*`, `retired.title`, `retired.text`, `retired.back`, `requiredInfo.*`, `milestones.*`,

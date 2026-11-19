@@ -85,7 +85,7 @@ Participation) start direct interaction that happens outside the utility. Its pu
 activate the latent global connectedness that already exists (on average 4.57 handshakes, fewer than
 four people in between, among Facebook users in 2016). See [invitational coordination](../theory/invitational-coordination.md) and
 [latent connectedness](../theory/latent-connectedness.md). The canonical glossary
-(`glossary_social_organizer.md`, Russian) says the same in earlier words ("not a platform, not a
+([archived glossary](../../../archive/glossary_social_organizer.md), Russian) says the same in earlier words ("not a platform, not a
 service, not a product"). The Law of Autocatalytic Inevitability is **conditional** in the author's
 own text; state it with its thresholds ([the law](../theory/autocatalytic-law.md), [claims](../principles/claims.md)).
 
