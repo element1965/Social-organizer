@@ -14,11 +14,15 @@ export function markLoginMethod(method: LoginMethod) {
 }
 
 /**
- * Forget everything this device saved about the signed-in person's network (the offline copy and the stats
- * cache). Fire-and-forget: if the page unloads first, the start-up sweep (main.tsx) finishes the job.
+ * Forget everything this device saved about the signed-in person's network (the offline copy, the stats
+ * cache and the saved network figure). Fire-and-forget: if the page unloads first, the start-up sweep
+ * (main.tsx) finishes the job.
  */
 export function wipeSavedCopy() {
-  try { localStorage.removeItem('so_networkStats'); } catch { /* storage unavailable */ }
+  try {
+    localStorage.removeItem('so_networkStats');
+    localStorage.removeItem('so_networkFigure');
+  } catch { /* storage unavailable */ }
   void clearLocal().catch(() => undefined);
 }
 
@@ -80,3 +84,53 @@ export const useAuth = create<AuthState>((set) => ({
     set({ accessToken, refreshToken });
   },
 }));
+
+/** The account id inside a token's payload (`sub`, as the API signs it), read locally without verification. */
+function tokenSubject(token: string): string | null {
+  try {
+    const part = token.split('.')[1];
+    if (!part) return null;
+    const json = atob(part.replace(/-/g, '+').replace(/_/g, '/').padEnd(Math.ceil(part.length / 4) * 4, '='));
+    const sub = (JSON.parse(json) as { sub?: unknown }).sub;
+    return typeof sub === 'string' ? sub : null;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Brings this tab's store in line with the session stored on the device, which another tab may have changed
+ * (signed out, or signed in as someone else). Account-scoped queries re-key on the new `userId` at once.
+ * The three keys are written one by one, so a half-written session (one account's token with another's id) is
+ * left alone: the store changes only when the tokens belong to the stored `userId`, or when all three are gone.
+ */
+export function syncAuthFromStorage(): void {
+  let stored: { accessToken: string | null; refreshToken: string | null; userId: string | null };
+  try {
+    stored = {
+      accessToken: localStorage.getItem('accessToken'),
+      refreshToken: localStorage.getItem('refreshToken'),
+      userId: localStorage.getItem('userId'),
+    };
+  } catch {
+    return;
+  }
+  const signedOut = !stored.accessToken && !stored.refreshToken && !stored.userId;
+  const consistent =
+    signedOut ||
+    (!!stored.accessToken && !!stored.userId && tokenSubject(stored.accessToken) === stored.userId &&
+      (!stored.refreshToken || tokenSubject(stored.refreshToken) === stored.userId));
+  // Mid-write: wait for the next storage event
+  if (!consistent) return;
+  const now = useAuth.getState();
+  if (now.accessToken === stored.accessToken && now.refreshToken === stored.refreshToken && now.userId === stored.userId) return;
+  useAuth.setState({ ...stored, isAuthenticated: !!stored.accessToken });
+}
+
+if (typeof window !== 'undefined') {
+  window.addEventListener('storage', (event) => {
+    if (event.key === null || event.key === 'accessToken' || event.key === 'refreshToken' || event.key === 'userId') {
+      syncAuthFromStorage();
+    }
+  });
+}

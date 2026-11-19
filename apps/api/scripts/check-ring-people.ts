@@ -208,8 +208,10 @@ try {
   check('a newcomer with only a pending request sees nobody listed (a request is not an acquaintance)',
     newcomer.people.length === 0 && newcomer.total === 0);
   const newcomerStats = await call(id('new')).connection.getNetworkStats();
-  check('…and the network numbers of that person come without names',
-    Object.keys(newcomerStats.usersByDepth).length === 0 && (newcomerStats.byDepth[1] ?? 0) > 0, JSON.stringify(newcomerStats.byDepth));
+  check('…and the numbers of that network come only as a preview, without names; their own figure is zero',
+    Object.keys(newcomerStats.usersByDepth).length === 0 && (newcomerStats.preview?.people ?? 0) > 0 &&
+      newcomerStats.networkPeople === 0 && newcomerStats.networkCanHelp === 0 && Object.keys(newcomerStats.byDepth).length === 0,
+    JSON.stringify({ preview: newcomerStats.preview, people: newcomerStats.networkPeople }));
 } finally {
   await cleanup();
   await db.$disconnect();

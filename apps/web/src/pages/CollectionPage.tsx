@@ -27,6 +27,7 @@ import { inflectName } from '@so/shared';
 import { MessengerButtons } from '../components/share/MessengerButtons';
 import { buildSosInviteUrl } from '../lib/inviteUrl';
 import { shareLink } from '../lib/share';
+import { refreshNetwork } from '../lib/refreshNetwork';
 import { trpc } from '../lib/trpc';
 import { useOffline } from '../lib/connectivity';
 import { isPendingRequest, useDeclineNeed, useExpiryTick, type NotificationItem } from '../hooks/useEvents';
@@ -112,16 +113,22 @@ export function CollectionPage() {
   const closeCollection = trpc.collection.close.useMutation({ onSuccess: refresh });
   const updateChat = trpc.collection.updateChatLink.useMutation({ onSuccess: refresh });
   const updateGoal = trpc.collection.updateAmount.useMutation({ onSuccess: refresh });
+  // A connection made or removed here changes the network: the figure, lists and graph are read again at once
   const removeJoiner = trpc.collection.removeJoiner.useMutation({
     onSuccess: () => {
       refresh();
-      utils.connection.list.invalidate();
+      void refreshNetwork(utils);
     },
   });
   const block = trpc.collection.block.useMutation({ onSuccess: refresh });
   const unblock = trpc.collection.unblock.useMutation({ onSuccess: refresh });
-  const acceptSos = trpc.invite.acceptSos.useMutation({ onSuccess: refresh });
-  const setBudget = trpc.user.setMonthlyBudget.useMutation();
+  const acceptSos = trpc.invite.acceptSos.useMutation({
+    onSuccess: () => {
+      refresh();
+      void refreshNetwork(utils);
+    },
+  });
+  const setBudget = trpc.user.setMonthlyBudget.useMutation({ onSuccess: () => void utils.stats.networkFigure.invalidate() });
 
   useEffect(() => {
     const data = collection.data;

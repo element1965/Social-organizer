@@ -4,7 +4,8 @@ import { useTranslation } from 'react-i18next';
 import { hideBackButton, isTelegramWebApp, showBackButton } from '@so/tg-adapter';
 import { trpc } from '../lib/trpc';
 import { cn } from '../lib/utils';
-import { useCachedNetworkStats } from '../hooks/useCachedNetworkStats';
+import { useNetworkFigure } from '../hooks/useNetworkFigure';
+import { useAskAccess } from '../hooks/useAskAccess';
 import { MILESTONE_KEYS, useDeclineNeed, useEvents, useNewEvents, type FeedEvent, type MilestoneKind } from '../hooks/useEvents';
 import { useBanner } from '../components/ui2/Banner';
 import { Button } from '../components/ui2/Button';
@@ -26,7 +27,7 @@ import { useFarRings } from '../components/circle/far-rings';
 import { StartCard } from '../components/circle/StartCard';
 import { JoinCard } from '../components/circle/JoinCard';
 import { GetAppCard } from '../components/app/GetApp';
-import { useCircleNetwork, NETWORK_POLL_MS, NETWORK_STALE_MS } from '../components/circle/network';
+import { useCircleNetwork } from '../components/circle/network';
 import { IconAim, IconFit, IconMinus, IconPlus, IconShrink, IconUp } from '../components/circle/icons';
 import { ASK_MIN_DIRECT } from '@so/shared';
 
@@ -72,8 +73,10 @@ export function CirclePage() {
   const utils = trpc.useUtils();
 
   const net = useCircleNetwork();
-  const stats = useCachedNetworkStats();
-  const caps = trpc.stats.networkCapabilities.useQuery(undefined, { refetchInterval: NETWORK_POLL_MS, staleTime: NETWORK_STALE_MS });
+  // The network figure and its ring chips: the query shared with Profile, My intention and the Need screen
+  const { figure } = useNetworkFigure();
+  // The request gate, only for the "N of 5" strip (the same query the tab ring reads)
+  const gate = useAskAccess();
   const me = trpc.user.me.useQuery();
   const { events, impulses, loading, markAcceptedSeen, dismissAccepted } = useEvents({ displayName: net.displayName });
 
@@ -110,17 +113,15 @@ export function CirclePage() {
   const direct = Math.max(net.connections.data?.length ?? 0, net.joining ? 1 : 0);
   const connectionsReady = net.connections.isSuccess || net.joining != null;
   const empty = connectionsReady && direct === 0;
-  const byDepth = (stats.data?.byDepth ?? {}) as Record<number, number>;
-  const counts: Record<Ring, number> = { 1: byDepth[1] ?? 0, 2: byDepth[2] ?? 0, 3: byDepth[3] ?? 0 };
-  // The whole reach of a request, as on the profile (rounded beyond the 3rd ring); older cached stats lack it
-  // The headline counts only people of the visible rings (1–3): who the person can see in the graph.
-  // The far part is told separately and rounded; older cached stats lack the field
-  const networkPeople = (stats.data as { networkPeople?: number } | undefined)?.networkPeople;
-  const peopleCount = empty ? 0 : networkPeople ?? counts[1] + counts[2] + counts[3];
-  // 4th and 5th rings: only rounded counts, drawn as anonymous dust
-  const farRings = useFarRings().dots;
-  // Money: the checkable sum of the visible rings; the full reach is only a ceiling next to it
-  const canHelp = empty ? 0 : caps.data?.visibleTotal ?? caps.data?.total ?? 0;
+  // The network figure (people up to the 6th handshake and their declared participation) with its chips, as one
+  // value from one answer; it carries its own zeros (a person without connections gets 0 from the server)
+  const counts: Record<Ring, number> = figure?.rings ?? { 1: 0, 2: 0, 3: 0 };
+  // Header people = 1st + 2nd + 3rd + the far chip (4th–6th, one rounded count, also drawn as anonymous dust)
+  // null while there is no figure (loading, nothing live or saved): the header shows its placeholder, never 0
+  const peopleCount = figure?.people ?? null;
+  const far = useFarRings(figure?.far);
+  const farRings = far.dots;
+  const canHelp = figure?.canHelp ?? null;
   const profileDone = Boolean(me.data?.name?.trim()) && (me.data?.monthlyBudget ?? 0) > 0;
 
   /* ----- layers and URL (system Back closes the graph and the card) ----- */
@@ -397,7 +398,8 @@ export function CirclePage() {
     <>
       {net.joining ? <JoinCard joining={net.joining} onDone={net.clearJoining} /> : null}
       <ReviewFeedRows />
-      {connectionsReady && direct < ASK_MIN_DIRECT ? <GrowStrip direct={direct} onOpen={() => setPathOpen(true)} /> : null}
+      {/* Not for someone already allowed to ask (authors, developers, admins): the ring and the sheet say "open" */}
+      {connectionsReady && direct < ASK_MIN_DIRECT && gate.data?.allowed !== true ? <GrowStrip direct={direct} onOpen={() => setPathOpen(true)} /> : null}
       <EventFeed
         events={events}
         loading={loading}
@@ -431,6 +433,7 @@ export function CirclePage() {
         graphRef={graphRef}
         empty={empty}
         counts={counts}
+        farLabel={far.label}
         hiddenRings={hiddenRings}
         stats={<NetStats variant="card" people={peopleCount} canHelp={canHelp} />}
         newCount={events.filter((e) => e.hot).length}
@@ -448,6 +451,7 @@ export function CirclePage() {
       graphRef={graphRef}
       empty={empty}
       counts={counts}
+      farLabel={far.label}
       hiddenRings={hiddenRings}
       stats={<NetStats variant="scene" people={peopleCount} canHelp={canHelp} />}
       feed={feedBody}
@@ -477,6 +481,7 @@ type PhoneProps = {
   graphRef: React.RefObject<CircleGraphHandle | null>;
   empty: boolean;
   counts: Record<Ring, number>;
+  farLabel: string | undefined;
   hiddenRings: Ring[];
   stats: React.ReactNode;
   feed: React.ReactNode;
@@ -495,6 +500,7 @@ function PhoneCircle({
   graphRef,
   empty,
   counts,
+  farLabel,
   hiddenRings,
   stats,
   feed,
@@ -735,6 +741,7 @@ function PhoneCircle({
       {empty ? null : (
         <RingChips
           counts={counts}
+          farLabel={farLabel}
           hiddenRings={hiddenRings}
           onSelf={() => graphRef.current?.focusOnMe()}
           className={cn(
@@ -846,6 +853,7 @@ type DesktopProps = {
   graphRef: React.RefObject<CircleGraphHandle | null>;
   empty: boolean;
   counts: Record<Ring, number>;
+  farLabel: string | undefined;
   hiddenRings: Ring[];
   stats: React.ReactNode;
   newCount: number;
@@ -854,7 +862,7 @@ type DesktopProps = {
   sheets: React.ReactNode;
 };
 
-function DesktopCircle({ sidebar, graph, graphRef, empty, counts, hiddenRings, stats, newCount, feed, person, sheets }: DesktopProps) {
+function DesktopCircle({ sidebar, graph, graphRef, empty, counts, farLabel, hiddenRings, stats, newCount, feed, person, sheets }: DesktopProps) {
   const { t } = useTranslation();
   const ctl =
     'so-focus grid h-10 w-10 place-items-center rounded-md border border-node-1/15 bg-scene-2/80 text-node-1 backdrop-blur-md hover:bg-scene-3';
@@ -899,7 +907,7 @@ function DesktopCircle({ sidebar, graph, graphRef, empty, counts, hiddenRings, s
           {graph}
           {empty ? null : (
             <>
-              <RingChips counts={counts} hiddenRings={hiddenRings} className="absolute left-4 top-4 z-10" />
+              <RingChips counts={counts} farLabel={farLabel} hiddenRings={hiddenRings} className="absolute left-4 top-4 z-10" />
               <div className="absolute right-4 top-4 z-10 flex flex-col gap-2">
                 <button type="button" className={ctl} aria-label={t('circle.zoomIn')} onClick={() => graphRef.current?.zoomIn()}>
                   <IconPlus className="h-5 w-5" />

@@ -7,6 +7,7 @@ import { isAdmin } from '../admin.js';
 import { invalidateGraph } from '../services/graph-cache.service.js';
 import { recordOpened } from '../services/notify-routing.service.js';
 import { getAskAccess, assertAskAllowed, isSpecialAsker } from '../services/ask-access.service.js';
+import { accountScope, assertAccount } from '../services/account-scope.js';
 import { ADMIN_BLOCK_REASONS } from '../config/ask.js';
 import { activeObligationTotals, syncCollectionGoal } from '../services/collection-amount.js';
 import { settleOpenReviews } from '../services/moderation.service.js';
@@ -25,7 +26,8 @@ function assertAdmin(userId: string) {
 
 export const collectionRouter = router({
   /** Whether the user may create a request, with the numbers the "path to request" card renders. */
-  askAccess: protectedProcedure.query(async ({ ctx }) => {
+  askAccess: protectedProcedure.input(accountScope).query(async ({ ctx, input }) => {
+    assertAccount(ctx.userId, input);
     const access = await getAskAccess(ctx.db, ctx.userId);
     const special = await isSpecialAsker(ctx.db, ctx.userId);
     return special ? { ...access, allowed: true } : access;

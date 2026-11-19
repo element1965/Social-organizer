@@ -83,9 +83,12 @@ try {
   /* ---------- Reach: numbers, depth limit, cache ---------- */
   const r1 = await networkReach(db, id('root'));
   // Rings from root: 1 → {1}, 2 → {2, f0..f29}, 3 → {3}, 4 → {4}, 5 → {5}, 6 → {6}; 7 and 8 are beyond
-  check('reach counts people up to the 6th handshake', r1.exact === 36, `exact=${r1.exact}`);
+  check('the request gate counts people up to the 6th handshake', r1.exact === 36, `exact=${r1.exact}`);
   check('visible rings 1–3 are counted exactly', r1.visible === 33, `visible=${r1.visible}`);
-  check('sum of remaining budgets over the reach', r1.canHelp === 36 * 5, `canHelp=${r1.canHelp}`);
+  // Rings 4–6 hold three people: one rounded projection ("a few"), and the headline adds exactly what the chip shows
+  check('the far rings are one rounded count, and the headline is the visible rings plus that count',
+    r1.far.few && r1.people === r1.visible + r1.far.count, `far=${JSON.stringify(r1.far)} people=${r1.people}`);
+  check('sum of remaining budgets up to the 6th handshake', r1.canHelp === 36 * 5, `canHelp=${r1.canHelp}`);
 
   const reads = { full: fullLoads(), updates: updates() };
   const r2 = await networkReach(db, id('root'));
@@ -127,14 +130,15 @@ try {
   await sleep(1600);
   const stale6 = await networkReach(db, id('6'));
   check('once stale, a newcomer in the visible rings is counted at once',
-    stale6.visible === before6.visible + 1 && stale6.canHelpVisible === before6.canHelpVisible + 3,
+    stale6.visible === before6.visible + 1 && stale6.people === before6.people + 1 && stale6.canHelp === before6.canHelp + 3,
     `visible ${before6.visible} → ${stale6.visible}`);
   check('…while the far rings stay as measured (they are shown rounded and refreshed hourly)',
-    stale6.exact === before6.exact + 1 && stale6.canHelp === before6.canHelp + 3, `exact ${before6.exact} → ${stale6.exact}`);
+    stale6.exact === before6.exact + 1, `exact ${before6.exact} → ${stale6.exact}`);
   clearReachCache();
   const fresh6 = await networkReach(db, id('6'));
-  check('a full walk then counts the far newcomer too', fresh6.exact === before6.exact + 2 && fresh6.canHelp === before6.canHelp + 7,
-    `exact ${fresh6.exact}, canHelp ${fresh6.canHelp}`);
+  // The far newcomer is at the 6th handshake: inside the rounding of the far count, in the sum exactly
+  check('a full walk then counts the far newcomer too', fresh6.exact === before6.exact + 2 &&
+    fresh6.canHelp === before6.canHelp + 7, `exact ${fresh6.exact}, canHelp ${fresh6.canHelp}`);
   // Back to the network the next checks expect
   await call(id('5')).connection.revoke({ targetUserId: id('near') });
   await call(id('1')).connection.revoke({ targetUserId: id('far') });

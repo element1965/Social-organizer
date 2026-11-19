@@ -228,7 +228,7 @@
     "fit": "Ajustar a rede",
     "stats": {
       "canHelp": "Participação declarada da rede",
-      "explain": "Quanto as pessoas que você vê (até o 3.º aperto de mão) ainda estão dispostas a indicar neste período: a soma das intenções delas. A mensagem sobre uma necessidade sai em ondas, das mais próximas até o 6.º aperto de mão. É uma referência, não uma promessa: cada pessoa decide por si se vai participar.",
+      "explain": "Quanto as pessoas da sua rede (até o 6.º aperto de mão) ainda estão dispostas a indicar neste período: a soma das intenções delas. A mensagem sobre uma necessidade sai em ondas, das mais próximas até o 6.º aperto de mão. É uma referência, não uma promessa: cada pessoa decide por si se vai participar.",
       "weekDelta": "+{{amount}} esta semana",
       "people_many": "{{count}} de pessoas na sua rede",
       "people_one": "{{count}} pessoa na sua rede",
@@ -246,8 +246,8 @@
       "full3": "3.º aperto de mão",
       "open": "{{ring}}: {{count}}. Abrir a lista",
       "caption": "Apertos de mão",
-      "farther": "4.º–5.º: ~{{value}}",
-      "fartherFew": "4.º–5.º: alguns"
+      "farther": "4.º–6.º: ~{{value}}",
+      "fartherFew": "4.º–6.º: alguns"
     },
     "feed": {
       "title": "Feed",

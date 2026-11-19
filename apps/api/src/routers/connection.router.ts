@@ -6,13 +6,12 @@ import { getGraphSlice, findPathBetweenUsers } from '../services/bfs.service.js'
 import { canViewContacts } from '../services/visibility.service.js';
 import { isAdmin } from '../admin.js';
 import { countConnections } from '../services/connection-request.service.js';
-import { bfsNetwork, networkReach, roundFarCount, VISIBLE_RINGS, type FarCount } from '../services/network.service.js';
+import { bfsNetwork, networkReach, publicFigure, VISIBLE_RINGS } from '../services/network.service.js';
+import { accountScope, assertAccount } from '../services/account-scope.js';
 import { getGraph, invalidateGraph } from '../services/graph-cache.service.js';
 import { suggestAcquaintances } from '../services/suggestion.service.js';
 import { ringPeople, RING_SORTS } from '../services/ring-people.service.js';
 
-/** Rings shown only as a rounded count; `beyond` in the answer is the rest of the reach (6th). */
-const FAR_RINGS = [4, 5] as const;
 /** Cap on people sent with details; BFS order, so the nearer rings are always complete first. */
 const NETWORK_DETAIL_LIMIT = 1000;
 /** Largest page of `ringPeople` */
@@ -141,30 +140,27 @@ export const connectionRouter = router({
       return { path };
     }),
 
-  getNetworkStats: protectedProcedure.query(async ({ ctx }) => {
-    const bfsUserId = await networkRoot(ctx.db, ctx.userId);
-    // Someone with no connection yet gets the numbers of the network they asked to join, as a preview,
-    // never the people in it: a request is not an acquaintance, and anyone can send one to anyone
-    const borrowed = bfsUserId !== ctx.userId;
+  getNetworkStats: protectedProcedure.input(accountScope).query(async ({ ctx, input }) => {
+    assertAccount(ctx.userId, input);
+    const previewRoot = await networkRoot(ctx.db, ctx.userId);
+    // Someone with no connection yet also gets the figure of the network they asked to join, as `preview`,
+    // never the people in it (a request is not an acquaintance, and anyone can send one to anyone). Their
+    // own figure stays their own: zeros.
+    const borrowed = previewRoot !== ctx.userId;
 
-    // Counts cover the whole reach of a request (networkReach); names and details only the visible
-    // rings (1–3). Beyond them only rounded counts leave the server: who is there stays private.
-    const [counts, recipients] = await Promise.all([
-      networkReach(ctx.db, bfsUserId),
-      bfsNetwork(ctx.db, bfsUserId, NETWORK_DETAIL_LIMIT, VISIBLE_RINGS),
+    // Counts come from one walk to the 6th handshake (networkReach); names and details only the visible
+    // rings (1–3). Beyond them only one rounded count leaves the server: who is there stays private.
+    const [counts, recipients, previewReach] = await Promise.all([
+      networkReach(ctx.db, ctx.userId),
+      borrowed ? Promise.resolve([]) : bfsNetwork(ctx.db, ctx.userId, NETWORK_DETAIL_LIMIT, VISIBLE_RINGS),
+      borrowed ? networkReach(ctx.db, previewRoot) : Promise.resolve(null),
     ]);
+    const figure = publicFigure(counts);
 
     const byDepth: Record<number, number> = {};
     for (let depth = 1; depth <= VISIBLE_RINGS; depth++) {
       if (counts.byDepth[depth]) byDepth[depth] = counts.byDepth[depth]!;
     }
-    const far = {
-      ...Object.fromEntries(FAR_RINGS.map((depth) => [depth, roundFarCount(counts.byDepth[depth] ?? 0)])),
-      /** Everyone further than the last far ring */
-      beyond: roundFarCount(
-        Object.entries(counts.byDepth).reduce((sum, [depth, n]) => (Number(depth) > FAR_RINGS[FAR_RINGS.length - 1]! ? sum + n : sum), 0),
-      ),
-    } as Record<4 | 5, FarCount> & { beyond: FarCount };
 
     const userIdsByDepth: Record<number, string[]> = {};
     const connAtMap = new Map<string, Date | null>();
@@ -242,18 +238,18 @@ export const connectionRouter = router({
     }
 
     return {
-      // You + the network as every screen shows it (visible rings exactly, the far part rounded once)
-      totalReachable: 1 + counts.shown,
-      /** The same as `totalReachable` without you: the "N people" next to "can help" */
-      /** People in the visible rings 1–3 (the headline) and, separately, the rounded far part */
-      networkPeople: counts.visible,
-      networkFar: counts.farShown,
-      networkShown: counts.shown,
-      networkCanHelpVisible: counts.canHelpVisible,
-      networkCanHelp: counts.canHelp,
+      /**
+       * The network figure, the same pair `collection.askAccess` carries (people up to the 6th handshake and
+       * their declared participation): `networkPeople` = 1st + 2nd + 3rd (`byDepth`) + `farRings.count`
+       */
+      networkPeople: figure.people,
+      networkCanHelp: figure.canHelp,
       byDepth,
-      far,
-      usersByDepth: borrowed ? {} : usersByDepth,
+      /** The 4th to 6th rings as one rounded count: the far chip and the dust around the graph */
+      farRings: figure.far,
+      /** While the person has no connection: the figure of the network they asked to join, never shown as theirs */
+      preview: previewReach ? { people: previewReach.people, canHelp: previewReach.canHelp } : null,
+      usersByDepth,
       growth: {
         day: dayCount,
         week: weekCount,

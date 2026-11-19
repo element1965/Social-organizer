@@ -228,7 +228,7 @@
     "fit": "Sovita verkosto",
     "stats": {
       "canHelp": "Verkoston ilmoitettu osallistuminen",
-      "explain": "Paljonko näkemäsi ihmiset (3. kädenpuristukseen asti) ovat vielä valmiita nimeämään tällä jaksolla: se on heidän aikomustensa summa. Viesti tarpeesta kulkee aaltoina, lähimmistä alkaen, 6. kädenpuristukseen asti. Tämä on suuntaa antava luku, ei lupaus: jokainen päättää itse, osallistuuko.",
+      "explain": "Paljonko verkostosi ihmiset (6. kädenpuristukseen asti) ovat vielä valmiita nimeämään tällä jaksolla: se on heidän aikomustensa summa. Viesti tarpeesta kulkee aaltoina, lähimmistä alkaen, 6. kädenpuristukseen asti. Tämä on suuntaa antava luku, ei lupaus: jokainen päättää itse, osallistuuko.",
       "weekDelta": "+{{amount}} tällä viikolla",
       "people_one": "{{count}} henkilö verkostossasi",
       "people_other": "{{count}} henkilöä verkostossasi",
@@ -244,8 +244,8 @@
       "full3": "3. kädenpuristus",
       "open": "{{ring}}: {{count}}. Avaa lista",
       "caption": "Kädenpuristukset",
-      "farther": "4.–5.: ~{{value}}",
-      "fartherFew": "4.–5.: muutama"
+      "farther": "4.–6.: ~{{value}}",
+      "fartherFew": "4.–6.: muutama"
     },
     "feed": {
       "title": "Syöte",

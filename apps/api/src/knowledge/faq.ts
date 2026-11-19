@@ -20,7 +20,7 @@ Q: What is "My intention"?
 A: The amount you are ready to name when someone in your network reports a Need, in whole dollars. It is filled in for you when you report Participation, and you can name more. It is not per month and it does not go down. Change it in Profile → My intention, or choose "I can't help right now". Social Organizer does not accept or transfer money.
 
 Q: What does "Declared participation of the network" mean?
-A: It's the sum of the intentions named by people in your network (up to 3 handshake levels). It is a reference figure, not a promise, not a fund and not an account: everyone decides for themselves each time.
+A: It's the sum of the intentions named by people in your network (up to 6 handshake levels, the same people a Need can reach); the Circle, Profile, My intention and the Need screen show the same figure. It is a reference figure, not a promise, not a fund and not an account: everyone decides for themselves each time.
 
 Q: How many people are notified about my Need?
 A: The amount you enter sets how many people are notified: a Need for $100 notifies up to 100 people, nearest first, in waves along your handshake chains.
