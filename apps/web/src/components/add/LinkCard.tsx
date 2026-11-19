@@ -122,7 +122,7 @@ export function LinkCard({ slug, name }: LinkCardProps) {
             <span className="text-ink-muted">{pretty.host}/</span>
             {pretty.slug}
           </p>
-          <Button className="mt-1 -ml-2" variant="text" onClick={startEdit}>
+          <Button className="mt-1 -ms-2" variant="text" onClick={startEdit}>
             {t('add.editLink')}
           </Button>
           <Button className="mt-3 w-full" icon={<IconShare />} loading={busy} onClick={() => void share()}>
@@ -144,7 +144,7 @@ export function LinkCard({ slug, name }: LinkCardProps) {
             </Button>
           </div>
           <p className="mt-3 text-caption font-semibold text-ink-muted">{t('add.rules')}</p>
-          <Button className="mt-1 -ml-2" variant="text" onClick={() => setNamedOpen(true)}>
+          <Button className="mt-1 -ms-2" variant="text" onClick={() => setNamedOpen(true)}>
             {t('add.named.title')}
           </Button>
           <NamedInvites open={namedOpen} onClose={() => setNamedOpen(false)} slug={slug} name={name} />

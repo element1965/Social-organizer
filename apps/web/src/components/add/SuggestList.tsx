@@ -1,3 +1,4 @@
+import { LiveNotice } from '../ui2/LiveNotice';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
@@ -6,7 +7,6 @@ import { Button } from '../ui2/Button';
 import { Group } from '../ui2/Group';
 import { IconChevron } from '../ui2/icons';
 import { IconClose } from './icons';
-import { cn } from '../../lib/utils';
 import { refreshNetwork } from '../../lib/refreshNetwork';
 import { trpc } from '../../lib/trpc';
 
@@ -87,7 +87,7 @@ export function SuggestList({ names, className }: { names?: Map<string, string>;
             // for the name next to "We know each other" in the longer languages.
             <div key={person.id} className="px-4 py-2.5">
               <div className="flex items-center gap-2">
-                <Link to={`/person/${person.id}`} className="so-focus flex min-w-0 flex-1 items-center gap-3 text-left">
+                <Link to={`/person/${person.id}`} className="so-focus flex min-w-0 flex-1 items-center gap-3 text-start">
                   <Avatar name={person.name} src={person.photoUrl} size={40} />
                   <span className="min-w-0 flex-1">
                     <span className="block truncate text-body font-body text-ink">{person.name}</span>
@@ -110,7 +110,10 @@ export function SuggestList({ names, className }: { names?: Map<string, string>;
               </div>
               <div className="mt-2 ps-[52px]">
                 {isSent ? (
-                  <p className="text-label font-bold text-ink-muted">{t('person.requestSent')}</p>
+                  <>
+                    <LiveNotice>{t('person.requestSent')}</LiveNotice>
+                    <p aria-hidden className="text-label font-bold text-ink-muted">{t('person.requestSent')}</p>
+                  </>
                 ) : (
                   <Button
                     variant="secondary"
@@ -144,7 +147,7 @@ export function SuggestList({ names, className }: { names?: Map<string, string>;
           className="so-focus mx-1 mt-1 flex min-h-11 items-center gap-1 text-body-s font-bold text-care"
         >
           {open ? t('circle.feed.stack.less') : t('circle.feed.stack.more', { count: rest })}
-          <IconChevron className={cn('h-4 w-4 transition-transform motion-reduce:transition-none', open ? '-rotate-90' : 'rotate-90')} />
+          <IconChevron direction={open ? 'up' : 'down'} className="h-4 w-4 transition-transform motion-reduce:transition-none" />
         </button>
       ) : null}
     </section>

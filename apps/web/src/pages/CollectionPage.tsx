@@ -662,7 +662,7 @@ export function CollectionPage() {
           ) : (
             <button
               type="button"
-              className="so-focus flex w-full items-center gap-3 rounded-lg bg-canvas px-3.5 py-3 text-left"
+              className="so-focus flex w-full items-center gap-3 rounded-lg bg-canvas px-3.5 py-3 text-start"
               onClick={() => { setChatValue(data.chatLink); setChatError(''); updateChat.reset(); setChatEditing(true); }}
             >
               <span className="min-w-0 flex-1">
@@ -827,8 +827,8 @@ export function CollectionPage() {
                 aria-pressed={reason === item}
                 onClick={() => setReason(item)}
                 className={reason === item
-                  ? 'so-focus min-h-row rounded-lg bg-ink px-4 text-left text-body font-bold text-canvas'
-                  : 'so-focus min-h-row rounded-lg border border-line bg-canvas px-4 text-left text-body font-bold text-ink'}
+                  ? 'so-focus min-h-row rounded-lg bg-ink px-4 text-start text-body font-bold text-canvas'
+                  : 'so-focus min-h-row rounded-lg border border-line bg-canvas px-4 text-start text-body font-bold text-ink'}
               >
                 {t(`collection.reason.${item}`)}
               </button>

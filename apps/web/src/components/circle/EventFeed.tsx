@@ -162,7 +162,7 @@ export function EventFeed({ events, loading, onOpen, onDismiss }: EventFeedProps
                       className="so-focus mx-1 flex min-h-11 items-center gap-1 text-body-s font-bold text-care"
                     >
                       {expanded ? t('circle.feed.stack.less') : t('circle.feed.stack.more', { count: item.events.length })}
-                      <IconChevron className={cn('h-4 w-4 transition-transform motion-reduce:transition-none', expanded ? '-rotate-90' : 'rotate-90')} />
+                      <IconChevron direction={expanded ? 'up' : 'down'} className="h-4 w-4 transition-transform motion-reduce:transition-none" />
                     </button>
                   </li>
                 );
@@ -226,9 +226,11 @@ export function EventFeed({ events, loading, onOpen, onDismiss }: EventFeedProps
                         type="button"
                         onClick={remove}
                         aria-label={t('circle.feed.dismiss', { name: event.title })}
-                        className="so-focus absolute right-1 top-1 grid h-6 w-6 place-items-center rounded-full bg-surface-2 text-ink-muted opacity-0 shadow-float transition-opacity focus:opacity-100 group-hover:opacity-100 motion-reduce:transition-none"
+                        className="so-focus absolute end-0 top-0 grid h-11 w-11 place-items-center rounded-md text-ink-muted opacity-0 transition-opacity pointer-events-none focus:pointer-events-auto focus:opacity-100 group-hover:pointer-events-auto group-hover:opacity-100 motion-reduce:transition-none"
                       >
-                        <IconClose className="h-3 w-3" />
+                        <span className="grid h-6 w-6 place-items-center rounded-full bg-surface-2 shadow-float">
+                          <IconClose className="h-3 w-3" />
+                        </span>
                       </button>
                     ) : null}
                   </div>
@@ -258,11 +260,11 @@ function StackCard({ kind, events, expanded, onToggle }: { kind: FeedKind; event
       type="button"
       aria-expanded={expanded}
       onClick={onToggle}
-      className="so-event-in so-focus flex min-h-16 w-full items-center gap-3 rounded-[20px] bg-surface px-2.5 py-2.5 text-left shadow-card"
+      className="so-event-in so-focus flex min-h-16 w-full items-center gap-3 rounded-[20px] bg-surface px-2.5 py-2.5 text-start shadow-card"
     >
       <span className="flex shrink-0 items-center">
         {events.slice(0, 3).map((e, i) => (
-          <Avatar key={e.id} name={e.title} src={e.photoUrl} size={36} className={cn('ring-2 ring-surface', i > 0 && '-ml-5')} />
+          <Avatar key={e.id} name={e.title} src={e.photoUrl} size={36} className={cn('ring-2 ring-surface', i > 0 && '-ms-5')} />
         ))}
       </span>
       <span className="min-w-0 flex-1">
@@ -275,7 +277,7 @@ function StackCard({ kind, events, expanded, onToggle }: { kind: FeedKind; event
         <span className="mt-0.5 block truncate text-label font-semibold text-ink-muted">{who}</span>
       </span>
       {total > 0 ? <span className="text-body font-extrabold tabular-nums text-ink">{formatMoney(total)}</span> : null}
-      <IconChevron className={cn('h-[18px] w-[18px] shrink-0 text-ink-subtle transition-transform motion-reduce:transition-none', expanded ? '-rotate-90' : 'rotate-90')} />
+      <IconChevron direction={expanded ? 'up' : 'down'} className="h-[18px] w-[18px] shrink-0 text-ink-subtle transition-transform motion-reduce:transition-none" />
     </button>
   );
 }

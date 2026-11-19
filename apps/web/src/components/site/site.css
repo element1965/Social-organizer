@@ -43,7 +43,7 @@
 .site-top nav { display: flex; gap: 24px; font-weight: 700; font-size: 15px; }
 .site-top nav a { color: var(--muted); }
 .site-top nav a:hover, .site-top nav a[aria-current="page"] { color: var(--ink); }
-.site-top .right { margin-left: auto; display: flex; gap: 10px; align-items: center; }
+.site-top .right { margin-inline-start: auto; display: flex; gap: 10px; align-items: center; }
 /* Language chip: opens the shared language sheet (components/profile/LanguageSheet.tsx). */
 .site-lang { display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-width: 44px; height: 40px; padding: 0 12px; border: 0; border-radius: var(--r-md); background: var(--paper); box-shadow: inset 0 0 0 1px var(--line); color: var(--muted); font: 700 14px/1 var(--font); text-transform: uppercase; cursor: pointer; transition: color var(--dur-fast); }
 .site-lang:hover { color: var(--ink); }
@@ -94,7 +94,7 @@
 .site-sum b { font-size: 40px; letter-spacing: -.05em; font-weight: 800; font-variant-numeric: tabular-nums; }
 .site-sum span { color: var(--muted); font-size: 15px; font-weight: 600; }
 .site-endcta { padding: 64px 48px 72px; border-top: 1px solid var(--line-soft); display: flex; align-items: center; gap: 12px; }
-.site-endcta h2 { font-size: 32px; letter-spacing: -.035em; line-height: 1.08; font-weight: 800; flex: 1; margin-right: 16px; }
+.site-endcta h2 { font-size: 32px; letter-spacing: -.035em; line-height: 1.08; font-weight: 800; flex: 1; margin-inline-end: 16px; }
 
 /* ---------- centred panel (sign-in, invite, public collection) from 1024 px ---------- */
 .site-centre { flex: 1; display: grid; place-items: center; padding: 24px 48px 64px; }
@@ -106,13 +106,13 @@
 .site-toc { position: sticky; top: 24px; align-self: start; display: flex; flex-direction: column; gap: 10px; font-size: 14px; font-weight: 700; padding-top: 8px; }
 .site-toc a { color: var(--muted); }
 .site-toc a:hover, .site-toc a[aria-current="page"] { color: var(--ink); }
-.site-toc .sub { display: flex; flex-direction: column; gap: 8px; margin: 2px 0 6px 12px; padding-left: 12px; border-left: 1px solid var(--line); font-weight: 600; font-size: 13px; }
+.site-toc .sub { display: flex; flex-direction: column; gap: 8px; margin-block: 2px 6px; margin-inline-start: 12px; padding-inline-start: 12px; border-inline-start: 1px solid var(--line); font-weight: 600; font-size: 13px; }
 .site-prose h1 { font-size: 40px; letter-spacing: -.04em; line-height: 1.05; font-weight: 800; }
 .site-prose .meta { color: var(--muted); font-size: 14px; font-weight: 600; margin: 10px 0 28px; }
 .site-prose h2 { font-size: 22px; letter-spacing: -.03em; line-height: 1.2; margin: 32px 0 0; font-weight: 800; scroll-margin-top: 24px; }
 .site-prose p, .site-prose li { font-size: 16px; line-height: 1.6; color: var(--ink); font-weight: 500; }
 .site-prose p { margin-top: 10px; }
-.site-prose ul, .site-prose ol { margin: 10px 0 0; padding-left: 22px; }
+.site-prose ul, .site-prose ol { margin: 10px 0 0; padding-inline-start: 22px; }
 .site-prose ul { list-style: disc; }
 .site-prose ol { list-style: decimal; }
 .site-prose li + li { margin-top: 4px; }

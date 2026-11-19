@@ -1,3 +1,4 @@
+import { LiveNotice } from '../components/ui2/LiveNotice';
 import { useEffect, useRef, useState } from 'react';
 import { Navigate, useNavigate, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -339,8 +340,11 @@ function PersonScreen() {
               {t('person.requestDeclined')}
             </p>
           ) : requestSent ? (
-            <div className="flex items-center gap-3 rounded-lg bg-care-soft py-1 pl-4 pr-1">
-              <p className="min-w-0 flex-1 py-2 text-body-s font-bold text-care">{t('person.requestSent')}</p>
+            <div className="flex items-center gap-3 rounded-lg bg-care-soft py-1 ps-4 pe-1">
+              <>
+                <LiveNotice>{t('person.requestSent')}</LiveNotice>
+                <p aria-hidden className="min-w-0 flex-1 py-2 text-body-s font-bold text-care">{t('person.requestSent')}</p>
+              </>
               <Button
                 variant="text"
                 className="min-h-[44px] px-3"

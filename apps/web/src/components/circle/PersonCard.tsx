@@ -125,7 +125,7 @@ export function PersonCard({ person, variant, onClose, step }: Props) {
           type="button"
           onClick={onClose}
           aria-label={t('common.close')}
-          className="so-focus grid h-9 w-9 place-items-center rounded-[10px] bg-canvas text-ink-muted"
+          className="so-focus grid h-11 w-11 shrink-0 place-items-center rounded-[10px] bg-canvas text-ink-muted"
         >
           <IconClose className="h-4 w-4" />
         </button>
@@ -148,7 +148,7 @@ export function PersonCard({ person, variant, onClose, step }: Props) {
           <button
             type="button"
             onClick={onClose}
-            className="so-focus -ml-1 mb-3 inline-flex min-h-11 items-center gap-0.5 text-body-s font-bold text-care"
+            className="so-focus -ms-1 mb-3 inline-flex min-h-11 items-center gap-0.5 text-body-s font-bold text-care"
           >
             <IconBack className="h-5 w-5" />
             {t('circle.backToFeed')}
@@ -167,7 +167,7 @@ export function PersonCard({ person, variant, onClose, step }: Props) {
               type="button"
               onClick={step.onPrev}
               aria-label={t('person.prevPerson')}
-              className="so-focus grid h-9 w-9 place-items-center rounded-[10px] bg-canvas text-ink-muted transition-colors duration-fast ease-so active:bg-surface-2 rtl:rotate-180"
+              className="so-focus grid h-11 w-11 shrink-0 place-items-center rounded-[10px] bg-canvas text-ink-muted transition-colors duration-fast ease-so active:bg-surface-2"
             >
               <IconBack className="h-4 w-4" />
             </button>
@@ -178,7 +178,7 @@ export function PersonCard({ person, variant, onClose, step }: Props) {
               type="button"
               onClick={step.onNext}
               aria-label={t('person.nextPerson')}
-              className="so-focus grid h-9 w-9 place-items-center rounded-[10px] bg-canvas text-ink-muted transition-colors duration-fast ease-so active:bg-surface-2 rtl:rotate-180"
+              className="so-focus grid h-11 w-11 shrink-0 place-items-center rounded-[10px] bg-canvas text-ink-muted transition-colors duration-fast ease-so active:bg-surface-2"
             >
               <IconChevron className="h-4 w-4" />
             </button>

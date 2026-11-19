@@ -78,7 +78,7 @@ export function ResultSheet({ person, onClose }: ResultSheetProps) {
           <span className="relative block">
             <Avatar name={person.name} src={person.photoUrl} size={48} />
             {person.pending ? null : (
-              <span className="absolute -bottom-1 -right-1 grid h-[22px] w-[22px] place-items-center rounded-full bg-care text-care-on ring-[3px] ring-surface">
+              <span className="absolute -bottom-1 -end-1 grid h-[22px] w-[22px] place-items-center rounded-full bg-care text-care-on ring-[3px] ring-surface">
                 <IconCheck className="h-3 w-3" />
               </span>
             )}

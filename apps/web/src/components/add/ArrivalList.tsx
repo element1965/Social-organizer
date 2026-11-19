@@ -128,7 +128,7 @@ export function ArrivalList({ pending, connected, onConfirm }: ArrivalListProps)
               key={person.pendingId}
               type="button"
               onClick={() => onConfirm(person)}
-              className="so-focus flex min-h-row w-full items-center gap-3 px-4 py-2 text-left"
+              className="so-focus flex min-h-row w-full items-center gap-3 px-4 py-2 text-start"
             >
               <Avatar name={person.name} src={person.photoUrl} size={40} />
               <span className="min-w-0 flex-1">
@@ -143,7 +143,7 @@ export function ArrivalList({ pending, connected, onConfirm }: ArrivalListProps)
             </button>
           ))}
           {visible.map((person) => (
-            <Link key={person.id} to={`/person/${person.id}`} className="so-focus flex min-h-row w-full items-center gap-3 px-4 py-2 text-left">
+            <Link key={person.id} to={`/person/${person.id}`} className="so-focus flex min-h-row w-full items-center gap-3 px-4 py-2 text-start">
               <Avatar name={person.name} src={person.photoUrl} size={40} />
               <span className="min-w-0 flex-1">
                 <span className="block truncate text-body font-body text-ink">{person.name}</span>

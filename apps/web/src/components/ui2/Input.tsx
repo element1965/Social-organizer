@@ -72,7 +72,7 @@ function TextField({ label, hint, error, variant, className, id, ...rest }: Text
     <FieldChrome id={fieldId} label={label} hint={hint} error={error}>
       <span className="relative block">
         {search ? (
-          <IconSearch className="pointer-events-none absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-ink-subtle" />
+          <IconSearch className="pointer-events-none absolute start-3 top-1/2 h-5 w-5 -translate-y-1/2 text-ink-subtle" />
         ) : null}
         <input
           id={fieldId}
@@ -82,7 +82,7 @@ function TextField({ label, hint, error, variant, className, id, ...rest }: Text
             'w-full border bg-surface-2 text-ink outline-none placeholder:text-ink-subtle',
             'focus:border-care',
             search
-              ? 'h-secondary rounded-lg pl-10 pr-3 so-field text-body-s font-semibold'
+              ? 'h-secondary rounded-lg ps-10 pe-3 so-field text-body-s font-semibold'
               : 'h-primary rounded-lg px-3.5 text-body-l font-semibold',
             error ? 'border-sos' : 'border-line',
             className,

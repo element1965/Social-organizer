@@ -128,7 +128,7 @@ export function MessageComposer({ value, onChange, disabled }: MessageComposerPr
             <span className="flex items-center gap-1 text-label font-semibold text-care">
               <IconAttachment className="h-3 w-3" />
               {mediaFileName}
-              <button type="button" onClick={clearMedia} className="so-focus ml-1 text-ink-subtle hover:text-sos" aria-label={t('common.close')}>
+              <button type="button" onClick={clearMedia} className="so-focus ms-1 text-ink-subtle hover:text-sos" aria-label={t('common.close')}>
                 <IconClose className="h-3 w-3" />
               </button>
             </span>

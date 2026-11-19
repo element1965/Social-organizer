@@ -81,7 +81,7 @@ export function ParticipantList({ people, showPaid, onPerson, onPaid, onRemove, 
             <li key={person.id} className="flex min-h-row items-center gap-3 px-4 py-2">
               <Avatar name={person.name} src={person.photoUrl} size={40} />
               <span className="min-w-0 flex-1">
-                <button type="button" className="so-focus block max-w-full text-left" onClick={() => onPerson?.(person.userId)}>
+                <button type="button" className="so-focus block max-w-full text-start" onClick={() => onPerson?.(person.userId)}>
                   <span className="block truncate text-body font-body text-ink">{person.name}</span>
                   <span className="mt-0.5 block truncate text-label font-semibold text-ink-muted">{person.subtitle}</span>
                 </button>

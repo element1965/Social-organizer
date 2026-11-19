@@ -50,7 +50,7 @@ export function EventRow({ icon, title, subtitle, note, amount, hot = false, onC
         className={cn(
           'flex min-h-16 items-center gap-3 rounded-[20px] bg-surface px-2.5 py-2.5 shadow-card',
           !dragging && 'transition-transform duration-base ease-so motion-reduce:transition-none',
-          onClick && 'w-full text-left',
+          onClick && 'w-full text-start',
         )}
         style={{ transform: offset ? `translateX(${offset}px)` : undefined }}
         onPointerDown={(event) => {
@@ -89,7 +89,7 @@ export function EventRow({ icon, title, subtitle, note, amount, hot = false, onC
         }}
       >
         {onClick ? (
-          <button type="button" onClick={onClick} className="flex min-w-0 flex-1 items-center gap-3 text-left">
+          <button type="button" onClick={onClick} className="flex min-w-0 flex-1 items-center gap-3 text-start">
             {content}
           </button>
         ) : (

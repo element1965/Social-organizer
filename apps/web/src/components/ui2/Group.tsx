@@ -68,14 +68,14 @@ export function Row({
     </>
   );
 
-  const className = 'so-focus flex min-h-row w-full items-center gap-3 px-4 py-2 text-left';
+  const className = 'so-focus flex min-h-row w-full items-center gap-3 px-4 py-2 text-start';
   // Tappable rows darken briefly under the finger
   const pressable = cn(className, 'transition-colors duration-fast ease-so active:bg-surface-2 motion-reduce:transition-none');
 
   if (variant === 'toggle') {
     return (
       <div className={className}>
-        <button type="button" className="so-focus flex min-w-0 flex-1 items-center gap-3 text-left" onClick={() => onCheckedChange?.(!checked)}>
+        <button type="button" className="so-focus flex min-w-0 flex-1 items-center gap-3 text-start" onClick={() => onCheckedChange?.(!checked)}>
           {icon ? <span className="grid h-9 w-9 shrink-0 place-items-center text-ink">{icon}</span> : null}
           <span className="min-w-0 flex-1">
             <span className="block truncate text-body font-body text-ink">{title}</span>

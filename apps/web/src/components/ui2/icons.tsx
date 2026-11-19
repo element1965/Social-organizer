@@ -1,4 +1,5 @@
 import type { SVGProps } from 'react';
+import { cn } from '../../lib/utils';
 
 type IconProps = SVGProps<SVGSVGElement>;
 
@@ -72,17 +73,21 @@ export function IconPerson(props: IconProps) {
   );
 }
 
-export function IconChevron(props: IconProps) {
+const chevronDirection = { forward: 'rtl:-scale-x-100', down: 'rotate-90', up: '-rotate-90' };
+
+export function IconChevron({ direction = 'forward', className, ...props }: IconProps & {
+  direction?: keyof typeof chevronDirection;
+}) {
   return (
-    <Svg strokeWidth={1.8} {...props}>
+    <Svg strokeWidth={1.8} {...props} className={cn(chevronDirection[direction], className)}>
       <path d="m9 6 6 6-6 6" />
     </Svg>
   );
 }
 
-export function IconBack(props: IconProps) {
+export function IconBack({ className, ...props }: IconProps) {
   return (
-    <Svg strokeWidth={2.2} {...props}>
+    <Svg strokeWidth={2.2} {...props} className={cn('rtl:-scale-x-100', className)}>
       <path d="M14.5 5.5 8 12l6.5 6.5" />
     </Svg>
   );

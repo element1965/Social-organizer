@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { cn } from '../../lib/utils';
 import { trpc } from '../../lib/trpc';
 import { useNicknames } from '../../hooks/useNicknames';
 import { Avatar } from '../ui2/Avatar';
@@ -38,7 +37,7 @@ export function PreviousCycles({ collectionId }: { collectionId: string }) {
         onClick={() => setOpen((value) => !value)}
       >
         <span className="min-w-0 flex-1 text-body font-bold text-ink">{t('collection.cyclesTitle')}</span>
-        <IconChevron className={cn('h-[18px] w-[18px] shrink-0 text-ink-subtle', open ? 'rotate-90' : 'rtl:rotate-180')} />
+        <IconChevron direction={open ? 'down' : 'forward'} className="h-[18px] w-[18px] shrink-0 text-ink-subtle" />
       </button>
       {open ? (
         <ul className="list-none border-t border-line px-2 pb-2 pt-1">
@@ -67,7 +66,7 @@ export function PreviousCycles({ collectionId }: { collectionId: string }) {
                     </span>
                   </span>
                   {expandable ? (
-                    <IconChevron className={cn('h-[18px] w-[18px] shrink-0 text-ink-subtle', expanded ? 'rotate-90' : 'rtl:rotate-180')} />
+                    <IconChevron direction={expanded ? 'down' : 'forward'} className="h-[18px] w-[18px] shrink-0 text-ink-subtle" />
                   ) : null}
                 </button>
                 {expanded ? (

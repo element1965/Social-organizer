@@ -30,7 +30,7 @@ export function NetStats({ people, canHelp, weekDelta, variant, className }: Net
 
   const body =
     variant === 'scene' ? (
-      <span className="flex w-full items-end justify-between gap-3 text-left">
+      <span className="flex w-full items-end justify-between gap-3 text-start">
         <span className="min-w-0">
           <b className="block truncate text-[17px] font-extrabold tracking-tight text-node-1">
             {waiting ? pending : t('circle.stats.people', { count: people ?? 0 })}
@@ -40,13 +40,13 @@ export function NetStats({ people, canHelp, weekDelta, variant, className }: Net
             <IconInfo className="h-3.5 w-3.5 shrink-0" />
           </span>
         </span>
-        <span className="shrink-0 text-right">
+        <span className="shrink-0 text-end">
           <b className="block text-h3 font-extrabold tabular-nums text-node-1">{waiting ? pending : formatMoney(canHelp ?? 0)}</b>
           {delta ? <span className="block text-label font-bold text-care-scene">{delta}</span> : null}
         </span>
       </span>
     ) : (
-      <span className="block w-full text-left">
+      <span className="block w-full text-start">
         <span className="flex items-center gap-1 text-label font-bold text-ink-muted">
           {t('circle.stats.canHelp')}
           <IconInfo className="h-3.5 w-3.5 shrink-0" />

@@ -16,7 +16,7 @@
   --so-surface-2: 233 238 236;
   --so-ink: 20 33 30;
   --so-ink-muted: 92 109 104;
-  --so-ink-subtle: 138 154 149;
+  --so-ink-subtle: 94 109 104;
   --so-line: 20 33 30;
 
   --so-care: 8 127 113;
@@ -143,7 +143,7 @@ html.dark,
   --so-surface-2: 36 48 43;
   --so-ink: 231 238 235;
   --so-ink-muted: 147 165 159;
-  --so-ink-subtle: 111 129 123;
+  --so-ink-subtle: 143 161 154;
   --so-line: 231 238 235;
 
   --so-care: 70 165 150;

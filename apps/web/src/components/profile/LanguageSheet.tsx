@@ -70,7 +70,7 @@ export function LanguageSheet({ open, onClose }: { open: boolean; onClose: () =>
               lang={code}
               aria-pressed={selected}
               className={cn(
-                'so-focus flex min-h-12 items-center gap-2 rounded-md px-3 text-left text-body transition-colors',
+                'so-focus flex min-h-12 items-center gap-2 rounded-md px-3 text-start text-body transition-colors',
                 selected ? 'bg-care-soft font-bold text-care' : 'font-semibold text-ink hover:bg-surface-2',
               )}
               onClick={() => pick(code)}

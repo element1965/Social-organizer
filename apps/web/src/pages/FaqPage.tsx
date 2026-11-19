@@ -220,7 +220,7 @@ export function FaqPage({ embedded = false }: { embedded?: boolean }) {
               {t('faq.insertLink')}
             </Button>
             {showLinkPopup && (
-              <div className="absolute left-0 top-full z-10 mt-1 w-72 space-y-2 rounded-xl border border-line bg-surface p-3 shadow-float">
+              <div className="absolute start-0 top-full z-10 mt-1 w-72 space-y-2 rounded-xl border border-line bg-surface p-3 shadow-float">
                 <input
                   type="text"
                   value={linkText}
@@ -280,7 +280,7 @@ export function FaqPage({ embedded = false }: { embedded?: boolean }) {
                   type="button"
                   onClick={() => setFormImageUrl(null)}
                   aria-label={t('common.close')}
-                  className="so-focus absolute -right-2 -top-2 grid h-5 w-5 place-items-center rounded-full bg-sos text-sos-on"
+                  className="so-focus absolute -end-2 -top-2 grid h-5 w-5 place-items-center rounded-full bg-sos text-sos-on"
                 >
                   <IconClose className="h-3 w-3" />
                 </button>
@@ -331,10 +331,10 @@ export function FaqPage({ embedded = false }: { embedded?: boolean }) {
                   type="button"
                   onClick={() => handleToggle(item.id)}
                   aria-expanded={isExpanded}
-                  className="so-focus flex min-h-row w-full items-center gap-3 px-4 py-3 text-left"
+                  className="so-focus flex min-h-row w-full items-center gap-3 px-4 py-3 text-start"
                 >
                   <span className="min-w-0 flex-1 text-body font-body text-ink">{item.question}</span>
-                  <IconChevron className={cn('h-[18px] w-[18px] shrink-0 text-ink-subtle transition-transform duration-fast', isExpanded && 'rotate-90')} />
+                  <IconChevron direction={isExpanded ? 'down' : 'forward'} className="h-[18px] w-[18px] shrink-0 text-ink-subtle transition-transform duration-fast motion-reduce:transition-none" />
                 </button>
                 {isExpanded && !isBeingEdited && (
                   <div className="px-4 pb-4">

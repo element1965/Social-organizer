@@ -344,7 +344,7 @@ export function AccountPage() {
       <div className="mt-2 flex items-center gap-4">
         <button type="button" className="so-focus relative rounded-2xl" onClick={() => fileRef.current?.click()}>
           <Avatar name={profile.name} src={profile.photoUrl} size={88} />
-          <span className="absolute bottom-0 right-0 grid h-8 w-8 place-items-center rounded-full bg-care text-care-on">
+          <span className="absolute bottom-0 end-0 grid h-8 w-8 place-items-center rounded-full bg-care text-care-on">
             <CameraIcon />
           </span>
         </button>
@@ -485,7 +485,7 @@ export function AccountPage() {
             <button
               key={contact.type}
               type="button"
-              className="so-focus flex min-h-row w-full items-center rounded-md px-2 text-left text-body font-semibold text-ink"
+              className="so-focus flex min-h-row w-full items-center rounded-md px-2 text-start text-body font-semibold text-ink"
               onClick={() => {
                 setExtras((list) => [...list, { type: contact.type, value: '' }]);
                 setPickOpen(false);

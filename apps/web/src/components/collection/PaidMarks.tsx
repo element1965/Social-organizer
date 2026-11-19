@@ -153,7 +153,7 @@ function FloatingBars({ children }: { children: ReactNode }) {
 function CloseOffer({ sum, onClose, onDismiss }: { sum: number; onClose: () => void; onDismiss: () => void }) {
   const { t } = useTranslation();
   return (
-    <div role="status" className="so-event-in flex items-center gap-2 rounded-lg bg-surface-2 py-2 pl-4 pr-2 shadow-sheet ring-1 ring-line">
+    <div role="status" className="so-event-in flex items-center gap-2 rounded-lg bg-surface-2 py-2 ps-4 pe-2 shadow-sheet ring-1 ring-line">
       <span className="min-w-0 flex-1 text-body-s font-bold text-ink">{t('collection.allReceived', { sum: formatMoney(sum) })}</span>
       <Button variant="danger" size="sm" className="h-10 shrink-0 px-4" onClick={onClose}>
         {t('collection.close')}
@@ -183,7 +183,7 @@ export function UndoBar({ undo, onUndo, onDone }: { undo: Undo | null; onUndo: (
     <div
       role="status"
       key={undo.key}
-      className="flex items-center gap-3 rounded-lg bg-ink py-2 pl-4 pr-2 text-canvas shadow-sheet"
+      className="flex items-center gap-3 rounded-lg bg-ink py-2 ps-4 pe-2 text-canvas shadow-sheet"
     >
       <span className="min-w-0 flex-1 truncate text-body-s font-semibold">{undo.text}</span>
       <button type="button" onClick={onUndo} className="so-focus h-10 shrink-0 rounded-md px-3 text-body-s font-extrabold text-care-bright">
@@ -242,7 +242,7 @@ export function MarkTransfersSheet({
         type="button"
         aria-pressed={all}
         onClick={() => setPicked(all ? new Set() : new Set(people.map((row) => row.id)))}
-        className="so-focus mb-2 flex min-h-row w-full items-center gap-3 rounded-lg bg-surface-2 px-4 py-2 text-left"
+        className="so-focus mb-2 flex min-h-row w-full items-center gap-3 rounded-lg bg-surface-2 px-4 py-2 text-start"
       >
         <span className="min-w-0 flex-1 text-body font-bold text-ink">{t('collection.selectAll', { n: people.length })}</span>
         <Tick on={all} />
@@ -256,7 +256,7 @@ export function MarkTransfersSheet({
                 type="button"
                 aria-pressed={on}
                 onClick={() => flip(row.id)}
-                className="so-focus flex min-h-row w-full items-center gap-3 px-4 py-2 text-left"
+                className="so-focus flex min-h-row w-full items-center gap-3 px-4 py-2 text-start"
               >
                 <Avatar name={row.name} src={row.photoUrl} size={36} />
                 <span className="min-w-0 flex-1 truncate text-body font-body text-ink">{row.name}</span>

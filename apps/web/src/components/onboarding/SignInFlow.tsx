@@ -403,7 +403,7 @@ export function SignInFlow({
                   required
                   label={t('auth.password')}
                   value={password}
-                  className="pr-24"
+                  className="pe-24"
                   onChange={(event) => {
                     setPassword(event.target.value);
                     if (signIn.error) signIn.setError('');
@@ -414,7 +414,7 @@ export function SignInFlow({
                   type="button"
                   onClick={() => setShowPassword((v) => !v)}
                   aria-pressed={showPassword}
-                  className="so-focus absolute right-2 top-[30px] grid h-11 place-items-center rounded-md px-2 text-caption font-bold text-care"
+                  className="so-focus absolute end-2 top-[30px] grid h-11 place-items-center rounded-md px-2 text-caption font-bold text-care"
                 >
                   {showPassword ? t('login.pwHide') : t('login.pwShow')}
                 </button>

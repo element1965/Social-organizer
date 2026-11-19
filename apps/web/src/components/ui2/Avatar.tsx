@@ -24,7 +24,7 @@ export function Avatar({ name, src, size = 40, online = false, className }: Avat
     <span className={cn('relative inline-grid shrink-0 place-items-center bg-care-soft font-extrabold text-care', sizeClass[size], className)}>
       {src ? <img src={src} alt="" className="h-full w-full rounded-[inherit] object-cover" /> : letter}
       {online ? (
-        <i className="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full bg-care ring-[3px] ring-surface" />
+        <i className="absolute -bottom-0.5 -end-0.5 h-3 w-3 rounded-full bg-care ring-[3px] ring-surface" />
       ) : null}
     </span>
   );

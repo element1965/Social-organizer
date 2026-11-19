@@ -257,8 +257,8 @@ export function ChatAssistant() {
             className={cn(
               'max-w-[85%] whitespace-pre-wrap break-words rounded-2xl p-3 text-body-s',
               msg.role === 'user'
-                ? 'ml-auto rounded-br-md bg-care text-care-on'
-                : 'rounded-bl-md border border-line bg-surface text-ink',
+                ? 'ms-auto rounded-ee-md bg-care text-care-on'
+                : 'rounded-es-md border border-line bg-surface text-ink',
             )}
           >
             {msg.content}

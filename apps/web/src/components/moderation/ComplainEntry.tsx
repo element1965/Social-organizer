@@ -11,7 +11,7 @@ const REASONS = ['COMPLAINTS', 'SUSPECTED_FRAUD', 'RULES_VIOLATION', 'ACCOUNT_HA
 type ComplaintReason = (typeof REASONS)[number];
 
 const choiceClass = (selected: boolean) => cn(
-  'so-focus min-h-row w-full whitespace-normal rounded-lg px-4 py-3 text-left text-body-s font-bold',
+  'so-focus min-h-row w-full whitespace-normal rounded-lg px-4 py-3 text-start text-body-s font-bold',
   selected ? 'bg-ink text-canvas' : 'border border-line bg-canvas text-ink',
 );
 
