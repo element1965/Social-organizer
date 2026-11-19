@@ -314,7 +314,7 @@ export function LandingPage() {
       <header className="nav" ref={navRef}>
         <div className="wrap">
           <a className="brand" href="#top">
-            <img src="/logo.png" alt="" width={31} height={22} />
+            <img src="/icon-192.png" alt="" width={22} height={22} />
             <span>Social Organizer</span>
           </a>
           <nav aria-label={t('landing.v2.nav.label')}>
@@ -643,7 +643,7 @@ export function LandingPage() {
       <footer>
         <div className="wrap">
           <div className="fl">
-            <img src="/logo.png" alt="" width={25} height={18} />
+            <img src="/icon-192.png" alt="" width={18} height={18} />
             <span>{t('landing.v2.footer.about')}</span>
           </div>
           <nav className="fr" aria-label={t('landing.v2.footer.links')}>

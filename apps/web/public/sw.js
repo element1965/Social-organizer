@@ -19,7 +19,7 @@ const MAX_ASSET_ENTRIES = 250;
 const NEVER_HANDLE = [/^\/trpc(\/|$)/, /^\/api(\/|$)/, /^\/gun(\/|$)/, /^\/health(\/|$)/, /^\/videos\//, /^\/sw\.js$/, /\.map$/];
 const IMMUTABLE = [/^\/assets\//, /^\/fonts\//];
 const REVALIDATED_STATIC = new Set([
-  '/logo.png', '/logo-dark.png', '/favicon.ico', '/apple-touch-icon.png', '/manifest.webmanifest',
+  '/logo.png', '/favicon.ico', '/apple-touch-icon.png', '/manifest.webmanifest',
   '/icon-192.png', '/icon-512.png', '/icon-maskable-512.png', '/push-badge.png',
 ]);
 

@@ -76,7 +76,7 @@ const WEB_DIST = existsSync(resolve(__dirname, 'public'))
 const APP_BASE_URL = process.env.WEB_APP_URL || 'https://www.orginizer.com';
 const SITE_FILES = new Set([
   '/favicon.ico', '/apple-touch-icon.png', '/robots.txt', '/sitemap.xml', '/manifest.webmanifest',
-  '/icon-192.png', '/icon-512.png', '/icon-maskable-512.png', '/push-badge.png',
+  '/icon-192.png', '/icon-512.png', '/icon-maskable-512.png', '/push-badge.png', '/og-image.png',
 ]);
 
 // Bounce the Apple Sign In result back to the client.

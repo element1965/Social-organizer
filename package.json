@@ -17,6 +17,7 @@
     "clean": "turbo clean && rm -rf node_modules"
   },
   "devDependencies": {
+    "fontkit": "2.0.4",
     "railway": "3.16.0",
     "turbo": "^2.4.0",
     "typescript": "^5.7.0"
