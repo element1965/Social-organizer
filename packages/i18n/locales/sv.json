@@ -718,8 +718,8 @@
         },
         "b4": {
           "label": "2 · Ett behov",
-          "say": "Annas bil har gått sönder, och utan den kan hon inte ta sig till jobbet. Reparationen kostar {{repair}}.",
-          "late": "Anna anmäler ett behov och lägger till en länk till en chatt. Ett behov på {{repair}} når upp till {{reach}} personer, de närmaste först."
+          "say": "Till exempel har Anna förlorat jobbet, och om en vecka ska hyran betalas. Hon saknar {{shortfall}}.",
+          "late": "Anna anmäler ett behov och lägger till en länk till en chatt. Ett behov på {{shortfall}} når upp till {{reach}} personer, de närmaste först."
         },
         "b5": {
           "label": "3 · Var och en bestämmer själv",
@@ -733,7 +733,7 @@
         },
         "b7": {
           "label": "5 · Direkt överenskommelse",
-          "say": "Anna och deltagarna pratar igenom allt i chatten. Lotta tipsar om en billigare verkstad.",
+          "say": "Anna och deltagarna pratar igenom allt i chatten. Lotta skriver att butiken där hon jobbar söker personal.",
           "late": "Handlar det om pengar lämnar folk själva över dem. Appen rör aldrig pengarna."
         },
         "b8": {
@@ -759,13 +759,13 @@
         "tags": {
           "you": "Du",
           "oleg": "Johan",
-          "maria": "Anna · {{repair}}",
+          "maria": "Anna · {{shortfall}}",
           "lena": "Lotta"
         },
         "hud": {
           "reached_one": "har hört om behovet",
           "reached_other": "har hört om behovet",
-          "reported": "av {{repair}} angivet",
+          "reported": "av {{shortfall}} angivet",
           "people_one": "deltagare",
           "people_other": "deltagare"
         }

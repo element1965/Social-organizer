@@ -718,8 +718,8 @@
         },
         "b4": {
           "label": "2 · Tarve",
-          "say": "Lauran auto on hajonnut, eikä hän pääse ilman sitä töihin. Korjaus maksaa {{repair}}.",
-          "late": "Laura ilmoittaa tarpeesta ja lisää linkin keskusteluun. Kun tarvitaan {{repair}}, tieto tarpeesta tavoittaa enintään {{reach}} ihmistä, lähimmät ensin."
+          "say": "Esimerkiksi Laura on menettänyt työnsä, ja viikon päästä pitää maksaa vuokra. Häneltä puuttuu {{shortfall}}.",
+          "late": "Laura ilmoittaa tarpeesta ja lisää linkin keskusteluun. Kun tarvitaan {{shortfall}}, tieto tarpeesta tavoittaa enintään {{reach}} ihmistä, lähimmät ensin."
         },
         "b5": {
           "label": "3 · Jokainen päättää itse",
@@ -733,7 +733,7 @@
         },
         "b7": {
           "label": "5 · Sovitaan suoraan",
-          "say": "Laura ja osallistujat käyvät asian läpi keskustelussa. Tiina suosittelee edullisempaa korjaamoa.",
+          "say": "Laura ja osallistujat käyvät asian läpi keskustelussa. Tiina kertoo, että kauppaan, jossa hän on töissä, haetaan työntekijää.",
           "late": "Jos kyse on rahasta, ihmiset luovuttavat sen itse. Sovellus ei koske rahaan koskaan."
         },
         "b8": {
@@ -759,13 +759,13 @@
         "tags": {
           "you": "Sinä",
           "oleg": "Mikko",
-          "maria": "Laura · {{repair}}",
+          "maria": "Laura · {{shortfall}}",
           "lena": "Tiina"
         },
         "hud": {
           "reached_one": "on kuullut tarpeesta",
           "reached_other": "on kuullut tarpeesta",
-          "reported": "/ {{repair}} ilmoitettu",
+          "reported": "/ {{shortfall}} ilmoitettu",
           "people_one": "osallistuja",
           "people_other": "osallistujaa"
         }

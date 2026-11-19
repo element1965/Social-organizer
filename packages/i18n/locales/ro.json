@@ -722,8 +722,8 @@
         },
         "b4": {
           "label": "2 · O nevoie",
-          "say": "Ioanei i s-a stricat mașina, iar fără ea nu poate ajunge la serviciu. Reparația costă {{repair}}.",
-          "late": "Ioana anunță o nevoie și adaugă linkul unui chat. O nevoie de {{repair}} ajunge până la {{reach}} de oameni, începând cu cei mai apropiați."
+          "say": "De exemplu, Ioana și-a pierdut locul de muncă, iar peste o săptămână trebuie să plătească chiria. Îi lipsesc {{shortfall}}.",
+          "late": "Ioana anunță o nevoie și adaugă linkul unui chat. O nevoie de {{shortfall}} ajunge până la {{reach}} de oameni, începând cu cei mai apropiați."
         },
         "b5": {
           "label": "3 · Fiecare decide singur",
@@ -737,7 +737,7 @@
         },
         "b7": {
           "label": "5 · Înțelegere directă",
-          "say": "Ioana și participanții discută totul în chat. Alina recomandă un service mai ieftin.",
+          "say": "Ioana și participanții discută totul în chat. Alina scrie că la magazinul unde lucrează se caută cineva.",
           "late": "Dacă e vorba de bani, oamenii și-i dau direct unii altora. Aplicația nu se atinge de ei."
         },
         "b8": {
@@ -763,14 +763,14 @@
         "tags": {
           "you": "Tu",
           "oleg": "Mihai",
-          "maria": "Ioana · {{repair}}",
+          "maria": "Ioana · {{shortfall}}",
           "lena": "Alina"
         },
         "hud": {
           "reached_one": "a aflat despre nevoie",
           "reached_few": "au aflat despre nevoie",
           "reached_other": "au aflat despre nevoie",
-          "reported": "declarați din {{repair}}",
+          "reported": "declarați din {{shortfall}}",
           "people_one": "participant",
           "people_few": "participanți",
           "people_other": "de participanți"

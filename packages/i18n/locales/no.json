@@ -718,8 +718,8 @@
         },
         "b4": {
           "label": "2 · Et behov",
-          "say": "Bilen til Ingrid har gått i stykker, og uten den kommer hun seg ikke på jobb. Reparasjonen koster {{repair}}.",
-          "late": "Ingrid melder om et behov og legger ved en lenke til en chat. Et behov på {{repair}} når opptil {{reach}} personer, de nærmeste først."
+          "say": "For eksempel har Ingrid mistet jobben, og om en uke skal husleia betales. Hun mangler {{shortfall}}.",
+          "late": "Ingrid melder om et behov og legger ved en lenke til en chat. Et behov på {{shortfall}} når opptil {{reach}} personer, de nærmeste først."
         },
         "b5": {
           "label": "3 · Alle bestemmer selv",
@@ -733,7 +733,7 @@
         },
         "b7": {
           "label": "5 · Direkte avtale",
-          "say": "Ingrid og deltakerne snakker sammen i chatten. Kari foreslår et billigere verksted.",
+          "say": "Ingrid og deltakerne snakker sammen i chatten. Kari skriver at butikken der hun jobber, leter etter en ny medarbeider.",
           "late": "Gjelder det penger, gir folk dem videre selv. Appen rører aldri pengene."
         },
         "b8": {
@@ -759,13 +759,13 @@
         "tags": {
           "you": "Du",
           "oleg": "Lars",
-          "maria": "Ingrid · {{repair}}",
+          "maria": "Ingrid · {{shortfall}}",
           "lena": "Kari"
         },
         "hud": {
           "reached_one": "har hørt om behovet",
           "reached_other": "har hørt om behovet",
-          "reported": "av {{repair}} oppgitt",
+          "reported": "av {{shortfall}} oppgitt",
           "people_one": "deltaker",
           "people_other": "deltakere"
         }

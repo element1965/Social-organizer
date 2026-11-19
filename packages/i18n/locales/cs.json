@@ -726,8 +726,8 @@
         },
         "b4": {
           "label": "2 · Potřeba",
-          "say": "Janě se porouchalo auto a bez něj se nedostane do práce. Oprava stojí {{repair}}.",
-          "late": "Jana oznámí potřebu a přidá odkaz na chat. O potřebě ve výši {{repair}} se dozví až {{reach}} lidí, nejdřív ti nejbližší."
+          "say": "Například Jana přišla o práci a za týden má platit nájem. Chybí jí {{shortfall}}.",
+          "late": "Jana oznámí potřebu a přidá odkaz na chat. O potřebě ve výši {{shortfall}} se dozví až {{reach}} lidí, nejdřív ti nejbližší."
         },
         "b5": {
           "label": "3 · Každý se rozhoduje sám",
@@ -741,7 +741,7 @@
         },
         "b7": {
           "label": "5 · Přímá domluva",
-          "say": "Jana a účastníci všechno probírají v chatu. Katka doporučí levnější servis.",
+          "say": "Jana a účastníci všechno probírají v chatu. Katka píše, že u nich v obchodě hledají někoho do práce.",
           "late": "Pokud jde o peníze, lidé si je předají sami. Aplikace na peníze nesahá."
         },
         "b8": {
@@ -767,7 +767,7 @@
         "tags": {
           "you": "Vy",
           "oleg": "Tomáš",
-          "maria": "Jana · {{repair}}",
+          "maria": "Jana · {{shortfall}}",
           "lena": "Katka"
         },
         "hud": {
@@ -775,7 +775,7 @@
           "reached_few": "vědí o potřebě",
           "reached_many": "ví o potřebě",
           "reached_other": "ví o potřebě",
-          "reported": "z {{repair}} uvedeno",
+          "reported": "z {{shortfall}} uvedeno",
           "people_one": "účastník",
           "people_few": "účastníci",
           "people_many": "účastníka",

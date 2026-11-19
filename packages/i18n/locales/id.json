@@ -714,8 +714,8 @@
         },
         "b4": {
           "label": "2 · Kebutuhan",
-          "say": "Mobil Siti rusak, dan tanpa mobil ia tidak bisa berangkat kerja. Biaya perbaikannya {{repair}}.",
-          "late": "Siti menyampaikan kebutuhan dan menambahkan tautan ke chat. Kebutuhan {{repair}} menjangkau hingga {{reach}} orang, dimulai dari yang terdekat."
+          "say": "Misalnya, Siti kehilangan pekerjaan, dan seminggu lagi ia harus membayar sewa rumah. Ia kekurangan {{shortfall}}.",
+          "late": "Siti menyampaikan kebutuhan dan menambahkan tautan ke chat. Kebutuhan {{shortfall}} menjangkau hingga {{reach}} orang, dimulai dari yang terdekat."
         },
         "b5": {
           "label": "3 · Setiap orang memutuskan sendiri",
@@ -729,7 +729,7 @@
         },
         "b7": {
           "label": "5 · Bersepakat langsung",
-          "say": "Siti dan para peserta membicarakannya di chat. Rina menyarankan bengkel yang lebih murah.",
+          "say": "Siti dan para peserta membicarakannya di chat. Rina menulis bahwa toko tempatnya bekerja sedang mencari karyawan.",
           "late": "Kalau menyangkut uang, orang menyerahkannya sendiri. Aplikasi tidak pernah menyentuh uang."
         },
         "b8": {
@@ -755,12 +755,12 @@
         "tags": {
           "you": "Anda",
           "oleg": "Agus",
-          "maria": "Siti · {{repair}}",
+          "maria": "Siti · {{shortfall}}",
           "lena": "Rina"
         },
         "hud": {
           "reached_other": "orang sudah tahu tentang kebutuhan ini",
-          "reported": "dari {{repair}} dinyatakan",
+          "reported": "dari {{shortfall}} dinyatakan",
           "people_other": "peserta"
         }
       },

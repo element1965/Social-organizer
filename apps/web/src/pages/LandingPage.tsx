@@ -87,12 +87,12 @@ export function LandingPage() {
   const nf = useMemo(() => new Intl.NumberFormat(lang), [lang]);
   const nf1 = useMemo(() => new Intl.NumberFormat(lang, { minimumFractionDigits: 1, maximumFractionDigits: 1 }), [lang]);
   const nf2 = useMemo(() => new Intl.NumberFormat(lang, { minimumFractionDigits: 2, maximumFractionDigits: 2 }), [lang]);
-  // the story's sums in dollars: the repair at the price level of the reader's country, up to one person
+  // the story's sums in dollars: the shortfall at the price level of the reader's country, up to one person
   // reached per dollar, the smallest share and yours
   const money = useMemo(() => storyMoney(lang), [lang]);
   const sums = useMemo(() => {
     const usd = dollarFormat(lang);
-    return { repair: usd.format(money.repair), reach: nf.format(money.repair), min: usd.format(money.min), mine: usd.format(money.mine) };
+    return { shortfall: usd.format(money.shortfall), reach: nf.format(money.shortfall), min: usd.format(money.min), mine: usd.format(money.mine) };
   }, [lang, money, nf]);
   /** A story line with the sums filled in. */
   const tm = (key: string) => t(key, sums);
@@ -141,7 +141,7 @@ export function LandingPage() {
     rtl,
     format: (n) => nf.format(n),
     label: (key, n) => (key === 'reached' ? t('landing.v2.story.hud.reached', { count: n }) : t('landing.v2.story.hud.people', { count: n })),
-    money: { repair: money.repair, mine: money.mine },
+    money: { shortfall: money.shortfall, mine: money.mine },
   };
   const growOptions: GrowOptions = {
     rtl,

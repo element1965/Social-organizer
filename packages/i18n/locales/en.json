@@ -718,8 +718,8 @@
         },
         "b4": {
           "label": "2 · A Need",
-          "say": "Sarah's car has broken down, and without it she can't get to work. The repair costs {{repair}}.",
-          "late": "Sarah reports a Need and adds a link to a chat. A {{repair}} Need reaches up to {{reach}} people, nearest first."
+          "say": "Say Sarah has lost her job and the rent is due in a week. She's {{shortfall}} short.",
+          "late": "Sarah reports a Need and adds a link to a chat. A {{shortfall}} Need reaches up to {{reach}} people, nearest first."
         },
         "b5": {
           "label": "3 · Everyone decides for themselves",
@@ -733,7 +733,7 @@
         },
         "b7": {
           "label": "5 · People agree directly",
-          "say": "Sarah and the participants talk it over in the chat. Emma suggests a cheaper garage.",
+          "say": "Sarah and the participants talk it over in the chat. Emma says the shop where she works is hiring.",
           "late": "If money is involved, people hand it over themselves. The app never touches it."
         },
         "b8": {
@@ -759,13 +759,13 @@
         "tags": {
           "you": "You",
           "oleg": "Tom",
-          "maria": "Sarah · {{repair}}",
+          "maria": "Sarah · {{shortfall}}",
           "lena": "Emma"
         },
         "hud": {
           "reached_one": "heard about the Need",
           "reached_other": "heard about the Need",
-          "reported": "of {{repair}} reported",
+          "reported": "of {{shortfall}} reported",
           "people_one": "participant",
           "people_other": "participants"
         }

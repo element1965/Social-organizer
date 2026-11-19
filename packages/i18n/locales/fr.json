@@ -722,8 +722,8 @@
         },
         "b4": {
           "label": "2 · Un besoin",
-          "say": "La voiture de Sophie est tombée en panne, et sans voiture elle ne peut pas aller travailler. La réparation coûte {{repair}}.",
-          "late": "Sophie annonce un besoin et ajoute un lien vers un chat. Un besoin de {{repair}} atteint jusqu’à {{reach}} personnes, les plus proches d’abord."
+          "say": "Par exemple, Sophie a perdu son emploi, et dans une semaine il faut payer le loyer. Il lui manque {{shortfall}}.",
+          "late": "Sophie annonce un besoin et ajoute un lien vers un chat. Un besoin de {{shortfall}} atteint jusqu’à {{reach}} personnes, les plus proches d’abord."
         },
         "b5": {
           "label": "3 · Chacun décide pour soi",
@@ -737,7 +737,7 @@
         },
         "b7": {
           "label": "5 · On s’arrange directement",
-          "say": "Sophie et les participants en discutent dans le chat. Léa propose un garage moins cher.",
+          "say": "Sophie et les participants en discutent dans le chat. Léa écrit que le magasin où elle travaille cherche quelqu’un.",
           "late": "S’il est question d’argent, les gens se le remettent eux-mêmes. L’application n’y touche jamais."
         },
         "b8": {
@@ -763,14 +763,14 @@
         "tags": {
           "you": "Vous",
           "oleg": "Julien",
-          "maria": "Sophie · {{repair}}",
+          "maria": "Sophie · {{shortfall}}",
           "lena": "Léa"
         },
         "hud": {
           "reached_one": "est au courant du besoin",
           "reached_many": "sont au courant du besoin",
           "reached_other": "sont au courant du besoin",
-          "reported": "déclarés sur {{repair}}",
+          "reported": "déclarés sur {{shortfall}}",
           "people_one": "participant",
           "people_many": "de participants",
           "people_other": "participants"

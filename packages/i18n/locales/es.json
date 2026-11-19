@@ -722,8 +722,8 @@
         },
         "b4": {
           "label": "2 · Una necesidad",
-          "say": "A Lucía se le ha averiado el coche, y sin él no puede ir a trabajar. La reparación cuesta {{repair}}.",
-          "late": "Lucía comunica una necesidad y añade el enlace a un chat. Una necesidad de {{repair}} llega hasta {{reach}} personas, primero a las más cercanas."
+          "say": "Por ejemplo, Lucía ha perdido su trabajo y dentro de una semana tiene que pagar el alquiler. Le faltan {{shortfall}}.",
+          "late": "Lucía comunica una necesidad y añade el enlace a un chat. Una necesidad de {{shortfall}} llega hasta {{reach}} personas, primero a las más cercanas."
         },
         "b5": {
           "label": "3 · Cada uno decide",
@@ -737,7 +737,7 @@
         },
         "b7": {
           "label": "5 · Acuerdo directo",
-          "say": "Lucía y los participantes lo hablan en el chat. Ana propone un taller más barato.",
+          "say": "Lucía y los participantes lo hablan en el chat. Ana escribe que en la tienda donde trabaja buscan a alguien.",
           "late": "Si hay dinero de por medio, las personas se lo entregan directamente. La aplicación nunca lo toca."
         },
         "b8": {
@@ -763,14 +763,14 @@
         "tags": {
           "you": "Usted",
           "oleg": "Carlos",
-          "maria": "Lucía · {{repair}}",
+          "maria": "Lucía · {{shortfall}}",
           "lena": "Ana"
         },
         "hud": {
           "reached_one": "sabe de la necesidad",
           "reached_many": "saben de la necesidad",
           "reached_other": "saben de la necesidad",
-          "reported": "declarados de {{repair}}",
+          "reported": "declarados de {{shortfall}}",
           "people_one": "participante",
           "people_many": "de participantes",
           "people_other": "participantes"

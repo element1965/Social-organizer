@@ -10,6 +10,8 @@ summary: The landing concept the user chose on 2026-11-18 — a starling flock (
 
 # Landing concept "The flock and the seed" (prototype)
 
+> **Note (2026-11-19):** the example story changed from a broken-down car to a job loss; this note is historical, the current scene is in [the core message](../core/core-message.md), section 3.
+
 > Summary: The landing concept the user chose on 2026-11-18 — a starling flock (no leader, each bird watches a few neighbours, a wave passes neighbour to neighbour) as the picture of the network and frost growing from one seed as the picture of growth past a threshold, with the process itself explained plainly — as a ten-screen landing plan, the final Russian copy, two code interactives, the generated media and how to port it into apps/web.
 
 ## Context

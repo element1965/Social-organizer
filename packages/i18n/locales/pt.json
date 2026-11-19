@@ -722,8 +722,8 @@
         },
         "b4": {
           "label": "2 · Uma necessidade",
-          "say": "O carro de Beatriz quebrou, e sem ele ela não consegue ir trabalhar. O conserto custa {{repair}}.",
-          "late": "Beatriz informa uma necessidade e adiciona o link de um chat. Uma necessidade de {{repair}} chega a até {{reach}} pessoas, as mais próximas primeiro."
+          "say": "Por exemplo, Beatriz perdeu o emprego, e daqui a uma semana precisa pagar o aluguel. Faltam {{shortfall}}.",
+          "late": "Beatriz informa uma necessidade e adiciona o link de um chat. Uma necessidade de {{shortfall}} chega a até {{reach}} pessoas, as mais próximas primeiro."
         },
         "b5": {
           "label": "3 · Cada um decide por si",
@@ -737,7 +737,7 @@
         },
         "b7": {
           "label": "5 · Acordo direto",
-          "say": "Beatriz e os participantes conversam no chat. Carol sugere uma oficina mais barata.",
+          "say": "Beatriz e os participantes conversam no chat. Carol escreve que a loja onde ela trabalha está contratando.",
           "late": "Se houver dinheiro envolvido, as pessoas o entregam diretamente. O aplicativo nunca mexe nele."
         },
         "b8": {
@@ -763,14 +763,14 @@
         "tags": {
           "you": "Você",
           "oleg": "João",
-          "maria": "Beatriz · {{repair}}",
+          "maria": "Beatriz · {{shortfall}}",
           "lena": "Carol"
         },
         "hud": {
           "reached_one": "soube da necessidade",
           "reached_many": "souberam da necessidade",
           "reached_other": "souberam da necessidade",
-          "reported": "declarados de {{repair}}",
+          "reported": "declarados de {{shortfall}}",
           "people_one": "participante",
           "people_many": "de participantes",
           "people_other": "participantes"
