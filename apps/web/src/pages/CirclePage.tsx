@@ -367,7 +367,7 @@ export function CirclePage() {
 
   /* ----- pieces ----- */
 
-  const graph = empty ? (
+  const renderGraph = (insetTop = 0) => empty ? (
     <EmptyScene name={me.data?.name ?? ''} />
   ) : (
     <CircleGraph
@@ -383,6 +383,7 @@ export function CirclePage() {
       focusId={selectedId}
       focusLift={phone ? 0.16 : 0}
       farRings={farRings}
+      insetTop={insetTop}
       labelInsetBottom={phone ? PHONE_CHIPS_INSET : 0}
     />
   );
@@ -439,7 +440,7 @@ export function CirclePage() {
     return (
       <DesktopCircle
         sidebar={mode === 'sidebar'}
-        graph={graph}
+        graph={renderGraph()}
         graphRef={graphRef}
         empty={empty}
         counts={counts}
@@ -457,7 +458,7 @@ export function CirclePage() {
   return (
     <PhoneCircle
       layer={layer}
-      graph={graph}
+      renderGraph={renderGraph}
       graphRef={graphRef}
       empty={empty}
       counts={counts}
@@ -487,7 +488,7 @@ export function CirclePage() {
 
 type PhoneProps = {
   layer: Layer;
-  graph: React.ReactNode;
+  renderGraph: (insetTop: number) => React.ReactNode;
   graphRef: React.RefObject<CircleGraphHandle | null>;
   empty: boolean;
   counts: Record<Ring, number>;
@@ -506,7 +507,7 @@ type PhoneProps = {
 
 function PhoneCircle({
   layer,
-  graph,
+  renderGraph,
   graphRef,
   empty,
   counts,
@@ -523,6 +524,7 @@ function PhoneCircle({
   sheets,
 }: PhoneProps) {
   const { t } = useTranslation();
+  const [headerRef, headerHeight] = useBoxHeight<HTMLDivElement>();
   const [rootRef, height] = useBoxHeight<HTMLDivElement>();
   const [feedRef, feedContentH] = useBoxHeight<HTMLDivElement>();
   // An empty circle has nothing to show in the graph, so the sheet grows to fit the start card and its
@@ -692,13 +694,14 @@ function PhoneCircle({
           onSceneTap();
         }}
       >
-        {graph}
+        {renderGraph(feedLayer ? headerHeight : 0)}
       </div>
 
       {/* Header: brand and numbers; fades out when the graph opens. */}
       <div
+        ref={headerRef}
         className={cn(
-          'pointer-events-none absolute inset-x-0 top-0 z-10 bg-gradient-to-b from-scene/90 via-scene/55 to-transparent px-5 pb-8 pt-[calc(0.5rem+var(--sa-top))]',
+          'pointer-events-none absolute inset-x-0 top-0 z-10 circle-header-scrim px-5 pb-8 pt-[calc(0.5rem+var(--sa-top))]',
           ease,
           feedLayer ? 'opacity-100' : '-translate-y-4 opacity-0',
         )}
