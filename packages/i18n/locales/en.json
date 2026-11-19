@@ -153,7 +153,8 @@
       "peopleShort_other": "{{count}} people",
       "canHelp": "Declared participation of the network",
       "explain": "What the people in your network (up to the 6th handshake) are still ready to name this period: the sum of their intentions. A Need goes out in waves, nearest first, up to the 6th handshake. This is a reference figure, not a promise: everyone decides for themselves whether to take part.",
-      "weekDelta": "+{{amount}} this week"
+      "weekDelta": "+{{amount}} this week",
+      "empty": "Your network starts with one person you know"
     },
     "rings": {
       "short1": "1st",
@@ -220,11 +221,12 @@
     "start": {
       "lead": "You are the first in your circle.",
       "body": "A Need travels along confirmed handshakes: with nobody nearby, the signal has nowhere to go.",
-      "step1": "Profile",
-      "step1Sub": "Name and intention",
       "step2": "First person",
       "step2Sub": "Send your link or show the QR",
-      "step2Waiting": "Request sent, waiting for confirmation"
+      "step2Waiting": "Request sent, waiting for confirmation",
+      "intention": "My intention",
+      "intentionIs": "My intention: {{amount}}",
+      "intentionSub": "The amount you are ready to name when someone you know reports a Need."
     },
     "acquaint": {
       "sub": "Asks you to confirm you know each other",
@@ -250,6 +252,11 @@
       "loading": "Loading their network…",
       "ready": "Graph updated",
       "added": "Your network grew: +{{count}}"
+    },
+    "waiting": {
+      "title": "Waiting for {{name}} to confirm",
+      "text": "Once {{name}} confirms that you know each other, the people {{name}} knows appear here, along with their acquaintances.",
+      "remindText": "Hi {{name}}! I'm in Social Organizer now. Please confirm that we know each other."
     }
   },
   "people": {
@@ -397,7 +404,17 @@
     "markError": "Could not save the mark. Try again.",
     "paidToggle": "Received from {{name}}",
     "allReceived": "All received · {{sum}}",
-    "shareNext": "Pass this Need on to others who know its author."
+    "shareNext": "Pass this Need on to others who know its author.",
+    "firstNext": {
+      "title": "What happens now",
+      "seen": "{{name}} sees your Participation.",
+      "chat": "The author's chat link is now available to you.",
+      "keepQuestion": "Keep {{amount}} as your intention for the next Needs in your network?",
+      "keepWhy": "Your intention is filled in for future Needs. It counts in the network figure for people who can reach you.",
+      "keepYes": "Keep {{amount}}",
+      "kept": "Done: your intention is {{amount}}. You can change it in Profile.",
+      "intro": "See how the network works"
+    }
   },
   "profile": {
     "phone": "Phone",
@@ -1163,14 +1180,19 @@
     "headline": "{{name}} needs assistance",
     "ofGoal": "of {{amount}}",
     "peopleLine": "Participants: {{count}} · money is handed over directly, not through the service",
-    "joinCircle": "You will become part of {{name}}'s circle.",
+    "joinCircle": "After signing in, opening the Need confirms that you know its author personally and adds you to the author's circle.",
     "joinCircleBody": "By joining, you confirm that you know this person personally.",
-    "join": "Join",
     "joinNext": "Next is sign-in: Apple, Google, Telegram, or email.",
     "openTelegram": "Open in Telegram",
     "closedLine": "This Need is closed.",
     "suspendedLine": "This Need is paused.",
-    "fullLine": "The amount needed is reported."
+    "fullLine": "The amount needed is reported.",
+    "takePart": "Take part",
+    "nextTitle": "If you take part",
+    "next1": "You name the amount you are ready to give. You can start with {{amount}}.",
+    "next2": "If the author added a chat link, you can open it after taking part.",
+    "next3": "If it comes to money, you hand it to the author yourself. You pay nothing here: Social Organizer does not accept or transfer money.",
+    "signInTitle": "Sign in to take part in this Need"
   },
   "adminStats": {
     "totalUsers": "Users",
@@ -1302,12 +1324,6 @@
       "aria": "Circle diagram"
     },
     "seed": {
-      "title": "Your intention",
-      "text": "When someone in your network reports a Need, this amount is filled in for you, and you can always change it. These amounts add up to “{{canHelp}}”. Social Organizer does not accept money.",
-      "label": "My intention",
-      "presets": "Preset amounts",
-      "hint": "Pick a preset or type your own amount. You can change it any time in Profile.",
-      "min": "At least 1 $",
       "failed": "Could not save. Check your connection and try again.",
       "sent": "Request sent.",
       "sentText": "Once {{name}} confirms, they become your 1st handshake.",
@@ -1316,7 +1332,8 @@
       "name": "My name",
       "namePlaceholder": "First and last name",
       "nameHint": "This is how people in your circle will see you.",
-      "nameMin": "Enter your name"
+      "nameMin": "Enter your name",
+      "nameTitle": "Your name"
     },
     "haveTelegramLink": "Already used Social Organizer through Telegram? Connect it"
   },

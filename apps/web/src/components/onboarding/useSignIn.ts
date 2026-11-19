@@ -13,9 +13,8 @@ import { Browser } from '@capacitor/browser';
 import { isTelegramWebApp, getTGInitData } from '@so/tg-adapter';
 import { useAuth, markLoginMethod, type LoginMethod } from '../../hooks/useAuth';
 import { trpc } from '../../lib/trpc';
-import { takePendingSosPath } from '../../lib/inviteUrl';
 import { AUTH_ORDER, detectDevice, type AuthProvider } from '../../lib/device';
-import { afterSignInPath, readPendingInvite, safeInviteToken, safeMasked, safePath } from './flow';
+import { afterSignInPath, readPendingInvite, safeInviteToken, safeMasked, safePath, savePendingSos, sosIdFromPath } from './flow';
 
 const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID as string | undefined;
 const APPLE_SERVICE_ID = import.meta.env.VITE_APPLE_SERVICE_ID as string | undefined;
@@ -85,7 +84,8 @@ export function useSignIn({ redirect, onCodeSent, onTelegramOpened }: UseSignInO
   // The invite survives every method: it stays in localStorage until InvitePage accepts it
   const pendingInviteToken = readPendingInvite();
   // Only same-origin relative paths are followed (?redirect= is user-controlled)
-  const effectiveRedirect = safePath(redirect) || (pendingInviteToken ? `/invite/${pendingInviteToken}` : null);
+  const explicitRedirect = safePath(redirect);
+  const sosId = sosIdFromPath(explicitRedirect);
 
   const [loading, setLoading] = useState(false);
   const [error, setErrorText] = useState('');
@@ -120,18 +120,16 @@ export function useSignIn({ redirect, onCodeSent, onTelegramOpened }: UseSignInO
 
   /**
    * Finish a sign-in. First run is decided here from isNew (new accounts are created with
-   * onboardingCompleted=true, so user.me cannot tell). Anything but home opens with a full page load:
-   * fresh tRPC caches, and no race with TelegramBootstrap, which sends a signed-in person on /login to "/".
+   * onboardingCompleted=true, so user.me cannot tell). A sign-in made on a public page (a Need, an invite)
+   * continues in the app without a reload. The query cache is cleared when the account changes (App.tsx).
    */
   const onTokens = (method: LoginMethod | null) => async (data: Tokens) => {
     if (method) markLoginMethod(method);
-    const target = effectiveRedirect || safePath(takePendingSosPath());
     // Old accounts that never finished onboarding get the first run too
     const isNew = !!data.isNew || !(await isOnboarded(data.accessToken));
-    const path = afterSignInPath(isNew, target);
+    const path = afterSignInPath(data.userId, isNew, explicitRedirect);
     login(data.accessToken, data.refreshToken, data.userId);
-    if (path === '/') navigate('/', { replace: true });
-    else window.location.href = path;
+    navigate(path, { replace: true });
   };
 
   // ---- E-mail code ----
@@ -246,11 +244,12 @@ export function useSignIn({ redirect, onCodeSent, onTelegramOpened }: UseSignInO
     onTelegramOpened?.();
   };
 
-  /** The bot link, carrying the pending invite as startapp=invite_… (token validated and encoded). */
+  /** The bot link, carrying the current Need or an invite. */
   const telegramBotUrl = () => {
     const bot = methods?.telegramBot || 'socialorganizer_bot';
+    if (sosId) return `https://t.me/${bot}?startapp=sos_${sosId}`;
     const inviteToken = pendingInviteToken
-      || safeInviteToken(effectiveRedirect?.startsWith('/invite/') ? effectiveRedirect.slice('/invite/'.length).split(/[?#]/)[0] : null);
+      || safeInviteToken(explicitRedirect?.match(/^\/invite\/([\w-]+)(?:[?#]|$)/)?.[1]);
     return inviteToken ? `https://t.me/${bot}?startapp=invite_${encodeURIComponent(inviteToken)}` : `https://t.me/${bot}`;
   };
 
@@ -286,6 +285,7 @@ export function useSignIn({ redirect, onCodeSent, onTelegramOpened }: UseSignInO
     if (!GOOGLE_CLIENT_ID) return;
     // Native Android/iOS: Chrome Custom Tab / SFSafariViewController (WebView blocks Google sign-in)
     if (Capacitor.isNativePlatform()) {
+      savePendingSos(sosId);
       markLoginMethod('google');
       const params = new URLSearchParams({
         response_type: 'id_token',
@@ -303,6 +303,7 @@ export function useSignIn({ redirect, onCodeSent, onTelegramOpened }: UseSignInO
     // so use a full-page redirect; GoogleCallbackPage finishes sign-in and restores the invite
     if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)
       || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)) {
+      savePendingSos(sosId);
       markLoginMethod('google');
       const params = new URLSearchParams({
         response_type: 'id_token',
@@ -337,7 +338,7 @@ export function useSignIn({ redirect, onCodeSent, onTelegramOpened }: UseSignInO
         }
       }
     });
-  }, [t, inTelegram, handleGoogleCredential]);
+  }, [t, inTelegram, handleGoogleCredential, sosId]);
 
   // ---- Apple ----
   const handleApple = useCallback(() => {
@@ -347,6 +348,7 @@ export function useSignIn({ redirect, onCodeSent, onTelegramOpened }: UseSignInO
       return;
     }
     if (!APPLE_SERVICE_ID) return;
+    savePendingSos(sosId);
     markLoginMethod('apple');
     // state.p tells the backend where to bounce the result; inv carries the invite through the round-trip
     const stateObj: Record<string, string> = { p: Capacitor.getPlatform() };
@@ -363,7 +365,7 @@ export function useSignIn({ redirect, onCodeSent, onTelegramOpened }: UseSignInO
     const url = `https://appleid.apple.com/auth/authorize?${params.toString()}`;
     if (Capacitor.isNativePlatform()) Browser.open({ url });
     else window.location.href = url;
-  }, [t, inTelegram, pendingInviteToken]);
+  }, [t, inTelegram, pendingInviteToken, sosId]);
 
   // ---- Which buttons, in which order ----
   const device = detectDevice();

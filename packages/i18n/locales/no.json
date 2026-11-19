@@ -153,7 +153,8 @@
       "people_one": "{{count}} person i nettverket ditt",
       "people_other": "{{count}} personer i nettverket ditt",
       "peopleShort_one": "{{count}} person",
-      "peopleShort_other": "{{count}} personer"
+      "peopleShort_other": "{{count}} personer",
+      "empty": "Nettverket ditt begynner med én person du kjenner"
     },
     "rings": {
       "short1": "1.",
@@ -220,11 +221,12 @@
     "start": {
       "lead": "Du er den første i kretsen din.",
       "body": "Et behov går langs bekreftede håndtrykk: når ingen er i nærheten, har signalet ingen steder å gå.",
-      "step1": "Profil",
-      "step1Sub": "Navn og intensjon",
       "step2": "Første person",
       "step2Sub": "Send lenken din eller vis QR-koden",
-      "step2Waiting": "Forespørselen er sendt, venter på bekreftelse"
+      "step2Waiting": "Forespørselen er sendt, venter på bekreftelse",
+      "intention": "Min intensjon",
+      "intentionIs": "Min intensjon: {{amount}}",
+      "intentionSub": "Beløpet du er klar til å oppgi når noen du kjenner melder et behov."
     },
     "acquaint": {
       "sub": "Ber deg bekrefte at dere kjenner hverandre",
@@ -250,6 +252,11 @@
       "loading": "Laster inn nettverket…",
       "ready": "Grafen er oppdatert",
       "added": "Nettverket ditt vokste: +{{count}}"
+    },
+    "waiting": {
+      "title": "Venter på at {{name}} bekrefter",
+      "text": "Når {{name}} bekrefter at dere kjenner hverandre, dukker menneskene {{name}} kjenner opp her, sammen med deres bekjente.",
+      "remindText": "Hei {{name}}! Nå er jeg på Social Organizer. Kan du bekrefte at vi kjenner hverandre?"
     }
   },
   "people": {
@@ -397,7 +404,17 @@
     "markError": "Merkingen ble ikke lagret. Prøv igjen.",
     "paidToggle": "Mottatt fra {{name}}",
     "allReceived": "Alt mottatt · {{sum}}",
-    "shareNext": "Send dette behovet videre til andre som kjenner personen bak det."
+    "shareNext": "Send dette behovet videre til andre som kjenner personen bak det.",
+    "firstNext": {
+      "title": "Hva skjer nå",
+      "seen": "{{name}} ser deltakelsen din.",
+      "chat": "Chattelenken fra den som meldte behovet, er nå tilgjengelig for deg.",
+      "keepQuestion": "Beholde {{amount}} som intensjonen din for de neste behovene i nettverket ditt?",
+      "keepWhy": "Intensjonen din fylles ut ved framtidige behov. Den teller med i nettverkstallet til dem som kan nå deg.",
+      "keepYes": "Behold {{amount}}",
+      "kept": "Ferdig: intensjonen din er {{amount}}. Du kan endre den under Profil.",
+      "intro": "Se hvordan nettverket fungerer"
+    }
   },
   "profile": {
     "phone": "Telefon",
@@ -1163,14 +1180,19 @@
     "headline": "{{name}} trenger bistand",
     "ofGoal": "av {{amount}}",
     "peopleLine": "Deltakere: {{count}} · penger overleveres direkte, ikke via tjenesten",
-    "joinCircle": "Du blir en del av kretsen til {{name}}.",
+    "joinCircle": "Når du åpner behovet etter innlogging, bekrefter du at du kjenner den som la ut behovet personlig, og blir med i vedkommendes krets.",
     "joinCircleBody": "Ved å bli med bekrefter du at du kjenner denne personen personlig.",
-    "join": "Bli med",
     "joinNext": "Neste er innlogging: Apple, Google, Telegram eller e-post.",
     "openTelegram": "Åpne i Telegram",
     "closedLine": "Behovet er lukket.",
     "suspendedLine": "Behovet er satt på pause.",
-    "fullLine": "Beløpet som trengs er oppgitt."
+    "fullLine": "Beløpet som trengs er oppgitt.",
+    "takePart": "Delta",
+    "nextTitle": "Hvis du deltar",
+    "next1": "Du oppgir beløpet du er klar til å gi. Du kan begynne med {{amount}}.",
+    "next2": "Hvis det er lagt til en chattelenke, kan du åpne den når du har deltatt.",
+    "next3": "Hvis det blir snakk om penger, gir du dem selv direkte til den som la ut behovet. Her betaler du ingenting: Social Organizer tar ikke imot og overfører ikke penger.",
+    "signInTitle": "Logg inn for å delta i dette behovet"
   },
   "adminStats": {
     "totalUsers": "Brukere",
@@ -1302,12 +1324,6 @@
       "aria": "Kretsdiagram"
     },
     "seed": {
-      "title": "Din intensjon",
-      "text": "Når noen i nettverket ditt melder om et behov, fylles dette beløpet inn for deg, og du kan alltid endre det. Disse beløpene utgjør til sammen «{{canHelp}}». Social Organizer tar ikke imot penger.",
-      "label": "Min intensjon",
-      "presets": "Ferdigbeløp",
-      "hint": "Velg et ferdigbeløp eller skriv ditt eget. Du kan endre det når som helst i Profil.",
-      "min": "Minst 1 $",
       "failed": "Kunne ikke lagre. Sjekk tilkoblingen og prøv igjen.",
       "sent": "Forespørsel sendt.",
       "sentText": "Når {{name}} bekrefter, blir personen ditt 1. håndtrykk.",
@@ -1316,7 +1332,8 @@
       "name": "Navnet mitt",
       "namePlaceholder": "Fornavn og etternavn",
       "nameHint": "Slik ser folk i kretsen din deg.",
-      "nameMin": "Skriv inn navnet ditt"
+      "nameMin": "Skriv inn navnet ditt",
+      "nameTitle": "Navnet ditt"
     },
     "haveTelegramLink": "Har du brukt Social Organizer via Telegram før? Koble til Telegram"
   },

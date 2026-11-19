@@ -1,5 +1,12 @@
 export const MAX_CONNECTIONS = 150;
+/** Participation in a Need: at least 1 $ (1 $ = 1 person reached). */
 export const MIN_OBLIGATION_AMOUNT = 1;
+/**
+ * The intention (monthlyBudget, "My intention"): 0 means "I can't take part right now"; any other value is at
+ * least MIN_OBLIGATION_AMOUNT. New accounts start at DEFAULT_INTENTION_AMOUNT.
+ */
+export const MIN_INTENTION_AMOUNT = 0;
+export const DEFAULT_INTENTION_AMOUNT = 1;
 export const MIN_COLLECTION_AMOUNT = 10;
 /** Longest chat link a Need may carry (the server's schema and the app's field check both read this). */
 export const MAX_CHAT_LINK_LENGTH = 500;

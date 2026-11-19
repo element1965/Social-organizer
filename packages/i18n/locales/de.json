@@ -153,7 +153,8 @@
       "people_one": "{{count}} Person in Ihrem Netzwerk",
       "people_other": "{{count}} Personen in Ihrem Netzwerk",
       "peopleShort_one": "{{count}} Person",
-      "peopleShort_other": "{{count}} Personen"
+      "peopleShort_other": "{{count}} Personen",
+      "empty": "Ihr Netzwerk beginnt mit einem Menschen, den Sie kennen"
     },
     "rings": {
       "short1": "1.",
@@ -220,11 +221,12 @@
     "start": {
       "lead": "Sie sind die erste Person in Ihrem Kreis.",
       "body": "Die Meldung eines Bedarfs geht über bestätigte Handschläge: Wenn niemand in der Nähe ist, hat das Signal keinen Weg.",
-      "step1": "Profil",
-      "step1Sub": "Name und Absicht",
       "step2": "Erste Person",
       "step2Sub": "Senden Sie Ihren Link oder zeigen Sie den QR",
-      "step2Waiting": "Anfrage gesendet, wir warten auf die Bestätigung"
+      "step2Waiting": "Anfrage gesendet, wir warten auf die Bestätigung",
+      "intention": "Meine Absicht",
+      "intentionIs": "Meine Absicht: {{amount}}",
+      "intentionSub": "Der Betrag, den Sie nennen möchten, wenn jemand, den Sie kennen, einen Bedarf meldet."
     },
     "acquaint": {
       "sub": "Bittet Sie zu bestätigen, dass Sie sich kennen",
@@ -250,6 +252,11 @@
       "loading": "Netzwerk wird geladen…",
       "ready": "Graph aktualisiert",
       "added": "Dein Netzwerk ist gewachsen: +{{count}}"
+    },
+    "waiting": {
+      "title": "Wir warten darauf, dass {{name}} bestätigt, dass Sie sich kennen",
+      "text": "Sobald {{name}} bestätigt, dass Sie sich kennen, erscheinen hier die Menschen, die {{name}} kennt, und deren Bekannte.",
+      "remindText": "Hallo {{name}}! Ich bin jetzt bei Social Organizer. Bitte bestätige, dass wir uns kennen."
     }
   },
   "people": {
@@ -397,7 +404,17 @@
     "markError": "Markierung nicht gespeichert. Versuch es noch einmal.",
     "paidToggle": "Erhalten von {{name}}",
     "allReceived": "Alles erhalten · {{sum}}",
-    "shareNext": "Geben Sie diesen Bedarf an andere weiter, die die Person kennen, die ihn gemeldet hat."
+    "shareNext": "Geben Sie diesen Bedarf an andere weiter, die die Person kennen, die ihn gemeldet hat.",
+    "firstNext": {
+      "title": "Wie es weitergeht",
+      "seen": "{{name}} sieht Ihre Beteiligung.",
+      "chat": "Der Chatlink zum Bedarf steht Ihnen jetzt zur Verfügung.",
+      "keepQuestion": "{{amount}} als Ihre Absicht für die nächsten Bedarfe in Ihrem Netzwerk behalten?",
+      "keepWhy": "Ihre Absicht wird bei künftigen Bedarfen automatisch eingetragen. Sie zählt zur Netzwerkzahl der Menschen, die Sie erreichen können.",
+      "keepYes": "{{amount}} behalten",
+      "kept": "Erledigt: Ihre Absicht ist {{amount}}. Ändern können Sie sie im Profil.",
+      "intro": "So funktioniert das Netzwerk"
+    }
   },
   "profile": {
     "phone": "Telefon",
@@ -1163,14 +1180,19 @@
     "headline": "{{name}} braucht Unterstützung",
     "ofGoal": "von {{amount}}",
     "peopleLine": "Beteiligte: {{count}} · Geld wird direkt übergeben, nicht über den Dienst",
-    "joinCircle": "Sie werden Teil des Kreises von {{name}}.",
+    "joinCircle": "Wenn Sie den Bedarf nach der Anmeldung öffnen, bestätigen Sie, dass Sie die Person, die den Bedarf gemeldet hat, persönlich kennen, und treten ihrem Kreis bei.",
     "joinCircleBody": "Mit dem Beitritt bestätigen Sie, dass Sie diese Person persönlich kennen.",
-    "join": "Beitreten",
     "joinNext": "Als Nächstes die Anmeldung: Apple, Google, Telegram oder E-Mail.",
     "openTelegram": "In Telegram öffnen",
     "closedLine": "Dieser Bedarf ist geschlossen.",
     "suspendedLine": "Dieser Bedarf ist pausiert.",
-    "fullLine": "Der benötigte Betrag ist angegeben."
+    "fullLine": "Der benötigte Betrag ist angegeben.",
+    "takePart": "Mitmachen",
+    "nextTitle": "Wenn Sie mitmachen",
+    "next1": "Sie nennen den Betrag, den Sie geben möchten. Sie können mit {{amount}} anfangen.",
+    "next2": "Wenn zum Bedarf ein Chatlink hinzugefügt wurde, können Sie ihn nach der Teilnahme öffnen.",
+    "next3": "Wenn es um Geld geht, geben Sie es der Person, die den Bedarf gemeldet hat, selbst. Hier zahlen Sie nichts: Social Organizer nimmt kein Geld an und überweist keins.",
+    "signInTitle": "Melden Sie sich an, um bei diesem Bedarf mitzumachen"
   },
   "adminStats": {
     "totalUsers": "Nutzer",
@@ -1302,12 +1324,6 @@
       "aria": "Schema des Kreises"
     },
     "seed": {
-      "title": "Ihre Absicht",
-      "text": "Wenn jemand aus Ihrem Netzwerk einen Bedarf meldet, wird dieser Betrag für Sie eingetragen, und Sie können ihn jederzeit ändern. Aus diesen Beträgen ergibt sich „{{canHelp}}“. Social Organizer nimmt kein Geld an.",
-      "label": "Meine Absicht",
-      "presets": "Vorgegebene Beträge",
-      "hint": "Wählen Sie einen vorgegebenen Betrag oder geben Sie Ihren eigenen ein. Ändern können Sie ihn jederzeit im Profil.",
-      "min": "Mindestens 1 $",
       "failed": "Speichern fehlgeschlagen. Prüfen Sie die Verbindung und versuchen Sie es erneut.",
       "sent": "Anfrage gesendet.",
       "sentText": "Sobald {{name}} bestätigt, wird die Person Ihr 1. Handschlag.",
@@ -1316,7 +1332,8 @@
       "name": "Mein Name",
       "namePlaceholder": "Vor- und Nachname",
       "nameHint": "So sehen die Menschen in Ihrem Kreis Sie.",
-      "nameMin": "Geben Sie Ihren Namen ein"
+      "nameMin": "Geben Sie Ihren Namen ein",
+      "nameTitle": "Ihr Name"
     },
     "haveTelegramLink": "Haben Sie Social Organizer schon über Telegram genutzt? Telegram verbinden"
   },

@@ -6,9 +6,10 @@ import { Button } from '../components/ui2';
 import { NetFigure, type NetStep } from '../components/figures';
 import { OnboardingFrame } from '../components/onboarding/OnboardingFrame';
 import { useNetLabels } from '../components/onboarding/figureLabels';
-import { isFirstRunPending, safePath } from '../components/onboarding/flow';
+import { isFirstRunPending, namePath, safePath } from '../components/onboarding/flow';
 import { cn } from '../lib/utils';
 import { isTelegramWebApp } from '@so/tg-adapter';
+import { useAuth } from '../hooks/useAuth';
 import { useConnectTelegram } from '../hooks/useConnectTelegram';
 
 const STEPS: NetStep[] = [0, 1, 2];
@@ -17,7 +18,8 @@ const STEPS: NetStep[] = [0, 1, 2];
  * Intro (screens.md §14, onboarding.html №5–7): three frames over the same network, which stays in place
  * while only the highlight changes. No brand line; "Skip" in the corner (not on the last frame).
  * First run (?first=1 from the sign-in path; see components/onboarding/flow.ts): user.completeOnboarding, then the
- * intention question, carrying ?next=. A rewatch from Help returns to /me/help.
+ * name step (only when the account has no real name yet), carrying ?next=. A newcomer who came for a Need meets
+ * this after taking part (an offer on the Need page), not before. A rewatch from Help returns to /me/help.
  */
 export function IntroPage() {
   const { t } = useTranslation();
@@ -26,6 +28,7 @@ export function IntroPage() {
   const utils = trpc.useUtils();
   const [params] = useSearchParams();
   const next = safePath(params.get('next'));
+  const userId = useAuth((s) => s.userId);
   const me = trpc.user.me.useQuery();
   const complete = trpc.user.completeOnboarding.useMutation({ meta: { notifyOnError: false } });
   const [step, setStep] = useState<NetStep>(0);
@@ -34,7 +37,7 @@ export function IntroPage() {
   // user.me only covers old accounts that never finished. Decided once; until then Skip/Done wait.
   const firstRun = useRef<boolean | null>(null);
   if (firstRun.current === null) {
-    if (params.get('first') === '1' || isFirstRunPending()) firstRun.current = true;
+    if (params.get('first') === '1' || isFirstRunPending(userId)) firstRun.current = true;
     else if (me.data) firstRun.current = !me.data.onboardingCompleted;
     else if (me.isError) firstRun.current = false;
   }
@@ -59,7 +62,7 @@ export function IntroPage() {
         /* the intro must never trap anyone */
       }
       utils.user.me.setData(undefined, (old) => (old ? { ...old, onboardingCompleted: true } : old));
-      navigate(next ? `/seed?first=1&next=${encodeURIComponent(next)}` : '/seed?first=1', { replace: true });
+      navigate(namePath(next, true), { replace: true });
       return;
     }
     navigate('/me/help', { replace: true });

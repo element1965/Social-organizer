@@ -28,6 +28,21 @@ export function NetStats({ people, canHelp, weekDelta, variant, className }: Net
   );
   const delta = weekDelta && weekDelta > 0 ? t('circle.stats.weekDelta', { amount: formatMoney(weekDelta) }) : null;
 
+  // Nobody yet: "0 people · 0 $" tells nothing, so the header says where the network starts instead (audit A2)
+  if (people === 0) {
+    return (
+      <p
+        className={cn(
+          'block w-full text-start font-extrabold tracking-tight',
+          variant === 'card' ? 'rounded-xl bg-surface p-4 text-body text-ink shadow-card' : 'text-[17px] text-node-1',
+          className,
+        )}
+      >
+        {t('circle.stats.empty')}
+      </p>
+    );
+  }
+
   const body =
     variant === 'scene' ? (
       <span className="flex w-full items-end justify-between gap-3 text-start">

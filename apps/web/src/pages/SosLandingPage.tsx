@@ -1,18 +1,21 @@
 import { useEffect } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { isTelegramWebApp } from '@so/tg-adapter';
+import { MIN_OBLIGATION_AMOUNT } from '@so/shared';
 import { inflectName } from '../components/collection/name-case';
 import { asDate, firstName, formatDay, relativePast } from '../components/collection/text';
 import { isDefinitiveLoadError, NeedLoadError } from '../components/errors/ErrorState';
 import { Logo } from '../components/Logo';
+import { BackLink } from '../components/onboarding/OnboardingFrame';
+import { SignInFlow } from '../components/onboarding/SignInFlow';
 import { Avatar } from '../components/ui2/Avatar';
 import { Button } from '../components/ui2/Button';
 import { formatMoney } from '../components/ui2/format';
 import { IconAdd } from '../components/ui2/icons';
 import { useAuth } from '../hooks/useAuth';
 import { firstOpenOf } from '../lib/inviteSrc';
-import { savePendingSos, sosCollectionPath } from '../lib/inviteUrl';
+import { sosCollectionPath } from '../components/onboarding/flow';
 import { trpc } from '../lib/trpc';
 
 // /sos/preview: a sample Need for working on this page, in development builds only. In production the
@@ -42,6 +45,8 @@ function isSuspended(collection: { status: string; suspended?: boolean; blockRea
 export function SosLandingPage() {
   const { collectionId } = useParams<{ collectionId: string }>();
   const { t, i18n } = useTranslation();
+  const navigate = useNavigate();
+  const [params, setParams] = useSearchParams();
   const isAuthenticated = useAuth((state) => state.isAuthenticated);
   const isPreview = DEMO_COLLECTION != null && collectionId === 'preview';
   const language = i18n.language;
@@ -67,19 +72,49 @@ export function SosLandingPage() {
     if (firstOpenOf(`sos:${collectionId}`)) countOpen({ kind: 'need' });
   }, [isPreview, isAuthenticated, collectionId, loaded, countOpen]);
 
+  // A guest signs in right here, with the author's name and photo on the screen (?join=1, so system Back returns
+  // to the Need). A signed-in person, or one inside the Telegram Mini App, goes on to the Need without a reload.
   const join = () => {
     if (!collectionId || isPreview) return;
     const path = sosCollectionPath(collectionId);
     if (isAuthenticated || isTelegramWebApp()) {
-      window.location.href = path;
+      navigate(path);
       return;
     }
-    savePendingSos(collectionId);
-    window.location.href = `/login?redirect=${encodeURIComponent(path)}`;
+    const next = new URLSearchParams(params);
+    next.set('join', '1');
+    setParams(next);
   };
+  const signingIn = params.get('join') === '1' && !isAuthenticated && !isTelegramWebApp() && !isPreview;
 
   const given = (name: string) => (inflect ? inflectName(name, 'dative') : firstName(name));
-  const circle = (name: string) => (inflect ? inflectName(name, 'genitive') : firstName(name));
+
+  if (signingIn && collection && collectionId && collection.status === 'ACTIVE') {
+    const hasGoal = collection.amount != null && collection.amount > 0;
+    return (
+      <SignInFlow
+        top={<BackLink label={t('common.back')} to={`/sos/${encodeURIComponent(collectionId)}`} />}
+        centre
+        redirect={sosCollectionPath(collectionId)}
+        hero={
+          <>
+            <Avatar name={collection.creator.name} src={collection.creator.photoUrl} size={64} className="mt-8" />
+            <h1 className="mt-4 text-h2 font-bold [text-wrap:balance]">
+              {t('sos.signInTitle')}
+            </h1>
+            {hasGoal ? (
+              <p className="mt-2 text-body-s font-semibold tabular-nums text-ink-muted">
+                {formatMoney(collection.currentAmount)} {t('sos.ofGoal', { amount: formatMoney(collection.amount ?? 0) })}
+              </p>
+            ) : null}
+            <p className="mt-2.5 max-w-[32ch] text-body-s text-ink-muted">
+              {t('sos.joinCircle')}
+            </p>
+          </>
+        }
+      />
+    );
+  }
 
   return (
     <div
@@ -112,7 +147,6 @@ export function SosLandingPage() {
             name={collection.creator.name}
             photoUrl={collection.creator.photoUrl}
             headline={t('sos.headline', { name: given(collection.creator.name) })}
-            circleName={circle(collection.creator.name)}
             typeLabel={collection.type === 'REGULAR' ? t('collection.monthly') : t('collection.oneTime')}
             status={collection.status}
             amount={collection.amount}
@@ -125,6 +159,7 @@ export function SosLandingPage() {
             telegramUrl={!isPreview && collectionId && TELEGRAM_BOT && !isTelegramWebApp()
               ? `https://t.me/${TELEGRAM_BOT}?startapp=sos_${collectionId}`
               : null}
+            guest={!isAuthenticated && !isTelegramWebApp()}
             onJoin={join}
           />
         )}
@@ -137,7 +172,7 @@ type PublicBodyProps = {
   name: string;
   photoUrl: string | null;
   headline: string;
-  circleName: string;
+  /** The author's name as "to Anna" takes it (dative in Russian) */
   typeLabel: string;
   status: string;
   amount: number | null;
@@ -148,6 +183,8 @@ type PublicBodyProps = {
   suspended: boolean;
   language: string;
   telegramUrl: string | null;
+  /** Not signed in: the button leads to sign-in first, and the page says so. */
+  guest: boolean;
   onJoin: () => void;
 };
 
@@ -155,7 +192,6 @@ function PublicBody({
   name,
   photoUrl,
   headline,
-  circleName,
   typeLabel,
   status,
   amount,
@@ -166,6 +202,7 @@ function PublicBody({
   suspended,
   language,
   telegramUrl,
+  guest,
   onJoin,
 }: PublicBodyProps) {
   const { t } = useTranslation();
@@ -210,27 +247,45 @@ function PublicBody({
       </section>
 
       {joinable ? (
+        // What taking part means, before anyone signs in: an amount named here, the chat, money only between people
+        <section className="mt-3 w-full rounded-xl bg-surface p-4 text-start shadow-card" aria-labelledby="sos-next">
+          <h2 id="sos-next" className="text-body-s font-extrabold">{t('sos.nextTitle')}</h2>
+          <ol className="mt-2 flex list-none flex-col gap-2 p-0">
+            {[
+              t('sos.next1', { amount: formatMoney(MIN_OBLIGATION_AMOUNT) }),
+              t('sos.next2'),
+              t('sos.next3'),
+            ].map((line, index) => (
+              <li key={line} className="grid grid-cols-[24px_1fr] items-start gap-2.5 text-caption font-semibold text-ink">
+                <i className="grid h-6 w-6 place-items-center rounded-full bg-care-soft text-micro font-extrabold not-italic text-care" aria-hidden>
+                  {index + 1}
+                </i>
+                <span>{line}</span>
+              </li>
+            ))}
+          </ol>
+        </section>
+      ) : null}
+
+      {joinable ? (
         <div className="mt-3 flex w-full items-start gap-3 rounded-lg bg-care-soft p-3.5 text-start text-caption font-semibold">
           <span className="grid h-9 w-9 shrink-0 place-items-center rounded-md bg-surface text-care">
             <IconAdd className="h-5 w-5" />
           </span>
-          <p>
-            <b className="font-extrabold">{t('sos.joinCircle', { name: circleName })}</b>{' '}
-            {t('sos.joinCircleBody')}
-          </p>
+          <p>{t('sos.joinCircle')}</p>
         </div>
       ) : null}
 
       <div className="mt-auto w-full pb-2 pt-8">
         {joinable ? (
           <>
-            <Button className="w-full" onClick={onJoin}>{t('sos.join')}</Button>
+            <Button className="w-full" onClick={onJoin}>{t('sos.takePart')}</Button>
             {telegramUrl ? (
               <a href={telegramUrl} className="mt-3 block text-center text-body-s font-extrabold text-care">
                 {t('sos.openTelegram')}
               </a>
             ) : null}
-            <p className="mt-3 text-center text-label font-semibold text-ink-muted">{t('sos.joinNext')}</p>
+            {guest ? <p className="mt-3 text-center text-label font-semibold text-ink-muted">{t('sos.joinNext')}</p> : null}
           </>
         ) : (
           <p className="text-center text-body-s font-semibold text-ink-muted">{footer}</p>

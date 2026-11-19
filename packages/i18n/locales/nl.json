@@ -153,7 +153,8 @@
       "people_one": "{{count}} persoon in je netwerk",
       "people_other": "{{count}} personen in je netwerk",
       "peopleShort_one": "{{count}} persoon",
-      "peopleShort_other": "{{count}} personen"
+      "peopleShort_other": "{{count}} personen",
+      "empty": "Je netwerk begint met één persoon die je kent"
     },
     "rings": {
       "short1": "1e",
@@ -220,11 +221,12 @@
     "start": {
       "lead": "Jij bent de eerste in je kring.",
       "body": "Een bericht over een behoefte gaat langs bevestigde handdrukken: zolang er niemand in de buurt is, kan het signaal nergens heen.",
-      "step1": "Profiel",
-      "step1Sub": "Naam en intentie",
       "step2": "Eerste persoon",
       "step2Sub": "Stuur je link of toon de QR",
-      "step2Waiting": "Verzoek verstuurd, wachten op bevestiging"
+      "step2Waiting": "Verzoek verstuurd, wachten op bevestiging",
+      "intention": "Mijn intentie",
+      "intentionIs": "Mijn intentie: {{amount}}",
+      "intentionSub": "Het bedrag dat je wilt noemen als iemand die je kent een behoefte meldt."
     },
     "acquaint": {
       "sub": "Vraagt je te bevestigen dat jullie elkaar kennen",
@@ -250,6 +252,11 @@
       "loading": "Netwerk wordt geladen…",
       "ready": "Graaf bijgewerkt",
       "added": "Je netwerk is gegroeid: +{{count}}"
+    },
+    "waiting": {
+      "title": "Wachten op bevestiging van {{name}}",
+      "text": "Zodra {{name}} bevestigt dat jullie elkaar kennen, verschijnen hier de mensen die {{name}} kent, en hun kennissen.",
+      "remindText": "Hoi {{name}}! Ik zit nu op Social Organizer. Wil je bevestigen dat we elkaar kennen?"
     }
   },
   "people": {
@@ -397,7 +404,17 @@
     "markError": "Markering niet opgeslagen. Probeer het opnieuw.",
     "paidToggle": "Ontvangen van {{name}}",
     "allReceived": "Alles ontvangen · {{sum}}",
-    "shareNext": "Geef deze behoefte door aan anderen die de melder kennen."
+    "shareNext": "Geef deze behoefte door aan anderen die de melder kennen.",
+    "firstNext": {
+      "title": "Wat er nu gebeurt",
+      "seen": "{{name}} ziet je deelname.",
+      "chat": "De chatlink van degene die de behoefte meldde, is nu beschikbaar.",
+      "keepQuestion": "{{amount}} houden als je intentie voor de volgende behoeften in je netwerk?",
+      "keepWhy": "Je intentie wordt bij toekomstige behoeften ingevuld. Ze telt mee in het netwerkbedrag van mensen die jou kunnen bereiken.",
+      "keepYes": "{{amount}} houden",
+      "kept": "Klaar: je intentie is {{amount}}. Je kunt die wijzigen in je Profiel.",
+      "intro": "Zo werkt het netwerk"
+    }
   },
   "profile": {
     "phone": "Telefoon",
@@ -1163,14 +1180,19 @@
     "headline": "{{name}} heeft hulp nodig",
     "ofGoal": "van {{amount}}",
     "peopleLine": "Deelnemers: {{count}} · geld wordt rechtstreeks overgedragen, niet via de dienst",
-    "joinCircle": "Je wordt deel van de kring van {{name}}.",
+    "joinCircle": "Als je na het inloggen de behoefte opent, bevestig je dat je de persoon die de behoefte heeft geplaatst persoonlijk kent en word je lid van diens kring.",
     "joinCircleBody": "Door mee te doen, bevestig je dat je deze persoon persoonlijk kent.",
-    "join": "Meedoen",
     "joinNext": "Daarna log je in: Apple, Google, Telegram of e-mail.",
     "openTelegram": "Openen in Telegram",
     "closedLine": "Deze behoefte is gesloten.",
     "suspendedLine": "Deze behoefte is gepauzeerd.",
-    "fullLine": "Het benodigde bedrag is genoemd."
+    "fullLine": "Het benodigde bedrag is genoemd.",
+    "takePart": "Doe mee",
+    "nextTitle": "Als je meedoet",
+    "next1": "Je noemt het bedrag dat je wilt geven. Je kunt beginnen met {{amount}}.",
+    "next2": "Als er een chatlink is toegevoegd, kun je die openen nadat je hebt meegedaan.",
+    "next3": "Als het om geld gaat, geef je het zelf rechtstreeks aan de persoon die de behoefte heeft geplaatst. Hier betaal je niets: Social Organizer ontvangt en verstuurt geen geld.",
+    "signInTitle": "Log in om mee te doen aan deze behoefte"
   },
   "adminStats": {
     "totalUsers": "Gebruikers",
@@ -1302,12 +1324,6 @@
       "aria": "Schema van de kring"
     },
     "seed": {
-      "title": "Je intentie",
-      "text": "Wanneer iemand in je netwerk een behoefte meldt, wordt dit bedrag voor je ingevuld, en je kunt het altijd aanpassen. Samen vormen deze bedragen “{{canHelp}}”. Social Organizer ontvangt geen geld.",
-      "label": "Mijn intentie",
-      "presets": "Voorgestelde bedragen",
-      "hint": "Kies een voorstel of typ je eigen bedrag. Je kunt het altijd wijzigen in Profiel.",
-      "min": "Minstens 1 $",
       "failed": "Opslaan mislukt. Controleer je verbinding en probeer opnieuw.",
       "sent": "Verzoek verstuurd.",
       "sentText": "Zodra {{name}} bevestigt, is dat je 1e handdruk.",
@@ -1316,7 +1332,8 @@
       "name": "Mijn naam",
       "namePlaceholder": "Voor- en achternaam",
       "nameHint": "Zo zien mensen uit je kring je.",
-      "nameMin": "Vul je naam in"
+      "nameMin": "Vul je naam in",
+      "nameTitle": "Je naam"
     },
     "haveTelegramLink": "Al eerder Social Organizer via Telegram gebruikt? Telegram koppelen"
   },

@@ -3,7 +3,7 @@ import { z } from 'zod';
 import { router, protectedProcedure } from '../trpc.js';
 import { isDataUrl, storeAvatar } from '../services/avatar.service.js';
 import { TRPCError } from '@trpc/server';
-import { CONTACT_TYPES, CONTACT_TYPE_IDS, MAX_CONTACT_VALUE_LENGTH, hasForeignScheme, CURRENCY_CODES, MIN_OBLIGATION_AMOUNT, contactValueAllowed, isValidReferralSlug } from '@so/shared';
+import { CONTACT_TYPES, CONTACT_TYPE_IDS, MAX_CONTACT_VALUE_LENGTH, hasForeignScheme, CURRENCY_CODES, MIN_INTENTION_AMOUNT, MIN_OBLIGATION_AMOUNT, contactValueAllowed, isValidReferralSlug } from '@so/shared';
 import { canViewContacts } from '../services/visibility.service.js';
 import { deleteUserAccount } from '../services/account-deletion.service.js';
 import { ensureReferralSlug, isReferralSlugConflict } from '../services/referral-slug.service.js';
@@ -191,7 +191,7 @@ export const userRouter = router({
 
   setMonthlyBudget: protectedProcedure
     .input(z.object({
-      amount: z.number().int().min(0), // whole $ only: 1 $ = 1 unit
+      amount: z.number().int().min(MIN_INTENTION_AMOUNT), // whole $ only: 1 $ = 1 unit
       inputCurrency: z.literal('USD').default('USD'), // amounts are in $ only: 1 $ = 1 unit, no conversion (SO-40)
     }))
     .mutation(async ({ ctx, input }) => {

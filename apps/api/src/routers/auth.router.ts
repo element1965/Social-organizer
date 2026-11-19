@@ -43,9 +43,14 @@ async function linkCodeOrThrow(ctx: { db: Context['db']; ip: string }, code: str
 
 /**
  * Find or create the user behind a verified Telegram identity (Mini App initData or the
- * web Login Widget) and refresh the profile photo and @username contact. Returns the userId.
+ * web Login Widget) and refresh the profile photo and @username contact. Returns the userId and whether the
+ * account was created just now (the client starts the first run for a new one, as for the other sign-ins).
  */
-async function signInTelegramUser(db: Context['db'], tgUser: TelegramUserData, platformToken: string): Promise<string> {
+async function signInTelegramUser(
+  db: Context['db'],
+  tgUser: TelegramUserData,
+  platformToken: string,
+): Promise<{ userId: string; isNew: boolean }> {
   const platformId = String(tgUser.id);
   let platformAccount = await db.platformAccount.findUnique({
     where: {
@@ -58,6 +63,7 @@ async function signInTelegramUser(db: Context['db'], tgUser: TelegramUserData, p
   });
 
   let userId: string;
+  let isNew = false;
 
   if (platformAccount) {
     userId = platformAccount.userId;
@@ -105,6 +111,7 @@ async function signInTelegramUser(db: Context['db'], tgUser: TelegramUserData, p
       },
     });
     userId = user.id;
+    isNew = true;
   }
 
   // Auto-save/update Telegram username as contact
@@ -121,7 +128,7 @@ async function signInTelegramUser(db: Context['db'], tgUser: TelegramUserData, p
   applyBotStartInvite(db, userId, platformId).catch((err) => {
     console.error('[loginWithTelegram] invite fallback failed:', err);
   });
-  return userId;
+  return { userId, isNew };
 }
 
 function toEmailCodeTrpcError(err: unknown): unknown {
@@ -214,12 +221,12 @@ export const authRouter = router({
         linkResult = await linkTelegramByCode(ctx.db, startParam.slice('link_'.length), platformId, input.initData, [`ip:${ctx.ip}`, `tg:${platformId}`]);
       }
 
-      const userId = await signInTelegramUser(ctx.db, tgUser, input.initData);
+      const { userId, isNew } = await signInTelegramUser(ctx.db, tgUser, input.initData);
 
       const accessToken = signedInToken(ctx.db, userId);
       const refreshToken = createRefreshToken(userId);
 
-      return { accessToken, refreshToken, userId, ...(linkResult ? { linkResult } : {}) };
+      return { accessToken, refreshToken, userId, isNew, ...(linkResult ? { linkResult } : {}) };
     }),
 
   loginWithGoogle: publicProcedure
@@ -339,8 +346,8 @@ export const authRouter = router({
       if (!isTelegramWidgetEnabled()) throw new TRPCError({ code: 'PRECONDITION_FAILED', message: 'TELEGRAM_WIDGET_DISABLED' });
       const tgUser = validateTelegramWidget(input);
       if (!tgUser) throw new TRPCError({ code: 'UNAUTHORIZED', message: 'Invalid Telegram login data' });
-      const userId = await signInTelegramUser(ctx.db, tgUser, `widget:${input.auth_date}`);
-      return { accessToken: signedInToken(ctx.db, userId), refreshToken: createRefreshToken(userId), userId };
+      const { userId, isNew } = await signInTelegramUser(ctx.db, tgUser, `widget:${input.auth_date}`);
+      return { accessToken: signedInToken(ctx.db, userId), refreshToken: createRefreshToken(userId), userId, isNew };
     }),
 
   refresh: publicProcedure

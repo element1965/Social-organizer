@@ -151,7 +151,8 @@
       "explain": "Berapa lagi yang siap disebutkan pada periode ini oleh orang-orang di jaringan Anda (hingga jabat tangan ke-6): jumlah niat mereka. Pesan tentang kebutuhan berjalan bergelombang, dari yang terdekat, hingga jabat tangan ke-6. Ini hanya acuan, bukan janji: setiap orang memutuskan sendiri apakah ikut serta.",
       "weekDelta": "+{{amount}} minggu ini",
       "people_other": "{{count}} orang di jaringan Anda",
-      "peopleShort_other": "{{count}} orang"
+      "peopleShort_other": "{{count}} orang",
+      "empty": "Jaringan Anda dimulai dari satu orang yang Anda kenal"
     },
     "rings": {
       "short1": "jabat tangan ke-1",
@@ -217,11 +218,12 @@
     "start": {
       "lead": "Anda yang pertama di lingkaran Anda.",
       "body": "Pesan tentang kebutuhan berjalan lewat jabat tangan yang dikonfirmasi: jika belum ada orang di dekat Anda, sinyal tidak punya tujuan.",
-      "step1": "Profil",
-      "step1Sub": "Nama dan niat",
       "step2": "Orang pertama",
       "step2Sub": "Kirim tautan Anda atau tunjukkan QR",
-      "step2Waiting": "Permintaan terkirim, menunggu konfirmasi"
+      "step2Waiting": "Permintaan terkirim, menunggu konfirmasi",
+      "intention": "Niat saya",
+      "intentionIs": "Niat saya: {{amount}}",
+      "intentionSub": "Jumlah yang siap Anda sebutkan saat seseorang yang Anda kenal menyampaikan kebutuhan."
     },
     "acquaint": {
       "sub": "Meminta Anda mengonfirmasi bahwa Anda saling mengenal",
@@ -247,6 +249,11 @@
       "loading": "Memuat jaringan…",
       "ready": "Grafik diperbarui",
       "added": "Jaringan Anda bertambah: +{{count}}"
+    },
+    "waiting": {
+      "title": "Menunggu konfirmasi {{name}}",
+      "text": "Setelah {{name}} mengonfirmasi bahwa kalian saling kenal, orang-orang yang dikenal {{name}} dan kenalan mereka akan muncul di sini.",
+      "remindText": "Halo {{name}}! Aku sekarang sudah di Social Organizer. Tolong konfirmasi bahwa kita saling kenal, ya."
     }
   },
   "people": {
@@ -394,7 +401,17 @@
     "markError": "Tanda gagal disimpan. Coba lagi.",
     "paidToggle": "Diterima dari {{name}}",
     "allReceived": "Semua diterima · {{sum}}",
-    "shareNext": "Teruskan kebutuhan ini kepada orang lain yang mengenal penulisnya."
+    "shareNext": "Teruskan kebutuhan ini kepada orang lain yang mengenal penulisnya.",
+    "firstNext": {
+      "title": "Apa yang terjadi sekarang",
+      "seen": "{{name}} melihat partisipasi Anda.",
+      "chat": "Tautan chat dari orang yang menyampaikan kebutuhan kini tersedia untuk Anda.",
+      "keepQuestion": "Simpan {{amount}} sebagai niat Anda untuk kebutuhan berikutnya di jaringan Anda?",
+      "keepWhy": "Niat Anda akan terisi otomatis untuk kebutuhan berikutnya. Jumlah ini masuk dalam angka jaringan orang yang dapat menjangkau Anda.",
+      "keepYes": "Simpan {{amount}}",
+      "kept": "Selesai: niat Anda {{amount}}. Anda bisa mengubahnya di Profil.",
+      "intro": "Lihat cara kerja jaringan"
+    }
   },
   "profile": {
     "phone": "Telepon",
@@ -1155,14 +1172,19 @@
     "headline": "{{name}} membutuhkan bantuan",
     "ofGoal": "dari {{amount}}",
     "peopleLine": "Peserta: {{count}} · uang diserahkan langsung, bukan lewat layanan",
-    "joinCircle": "Anda akan menjadi bagian dari lingkaran {{name}}.",
+    "joinCircle": "Saat membuka kebutuhan setelah masuk, Anda mengonfirmasi bahwa Anda mengenal pembuat kebutuhan secara pribadi dan bergabung dengan lingkarannya.",
     "joinCircleBody": "Dengan bergabung, Anda mengonfirmasi bahwa Anda mengenal orang ini secara pribadi.",
-    "join": "Gabung",
     "joinNext": "Berikutnya masuk: Apple, Google, Telegram, atau email.",
     "openTelegram": "Buka di Telegram",
     "closedLine": "Kebutuhan ini ditutup.",
     "suspendedLine": "Kebutuhan ini dijeda.",
-    "fullLine": "Jumlah yang dibutuhkan sudah dinyatakan."
+    "fullLine": "Jumlah yang dibutuhkan sudah dinyatakan.",
+    "takePart": "Ikut serta",
+    "nextTitle": "Jika Anda ikut serta",
+    "next1": "Anda menyebutkan jumlah yang siap Anda berikan. Bisa mulai dari {{amount}}.",
+    "next2": "Jika ada tautan chat yang ditambahkan, Anda bisa membukanya setelah ikut berpartisipasi.",
+    "next3": "Jika sampai ke soal uang, Anda sendiri yang menyerahkannya langsung kepada pembuat kebutuhan. Di sini Anda tidak membayar apa pun: Social Organizer tidak menerima atau mentransfer uang.",
+    "signInTitle": "Masuk untuk ikut serta dalam kebutuhan ini"
   },
   "adminStats": {
     "totalUsers": "Pengguna",
@@ -1293,12 +1315,6 @@
       "aria": "Diagram lingkaran"
     },
     "seed": {
-      "title": "Niat Anda",
-      "text": "Saat seseorang di jaringan Anda menyampaikan kebutuhan, jumlah ini terisi otomatis, dan Anda selalu bisa mengubahnya. Dari jumlah-jumlah ini terbentuk “{{canHelp}}”. Social Organizer tidak menerima uang.",
-      "label": "Niat saya",
-      "presets": "Jumlah siap pakai",
-      "hint": "Pilih jumlah siap pakai atau ketik jumlah Anda sendiri. Anda bisa mengubahnya kapan saja di Profil.",
-      "min": "Minimal 1 $",
       "failed": "Tidak dapat menyimpan. Periksa koneksi dan coba lagi.",
       "sent": "Permintaan terkirim.",
       "sentText": "Setelah {{name}} mengonfirmasi, mereka menjadi jabat tangan ke-1 Anda.",
@@ -1307,7 +1323,8 @@
       "name": "Nama saya",
       "namePlaceholder": "Nama depan dan belakang",
       "nameHint": "Begitulah orang-orang di lingkaran Anda akan melihat Anda.",
-      "nameMin": "Masukkan nama Anda"
+      "nameMin": "Masukkan nama Anda",
+      "nameTitle": "Nama Anda"
     },
     "haveTelegramLink": "Pernah memakai Social Organizer lewat Telegram? Hubungkan"
   },

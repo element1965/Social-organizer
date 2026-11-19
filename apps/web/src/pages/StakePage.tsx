@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { DEFAULT_INTENTION_AMOUNT, MIN_INTENTION_AMOUNT, MIN_OBLIGATION_AMOUNT } from '@so/shared';
 import { trpc } from '../lib/trpc';
 import { useNetworkFigure } from '../hooks/useNetworkFigure';
 import { Button } from '../components/ui2/Button';
@@ -18,7 +19,9 @@ function parseStake(raw: string): number | null {
   const cleaned = raw.trim().replace(',', '.');
   if (!/^\d+$/.test(cleaned)) return null;
   const amount = Number(cleaned);
-  if (!Number.isInteger(amount) || amount < 0) return null;
+  // The intention rule (packages/shared): 0 is "I can't take part right now", otherwise at least the Participation minimum
+  if (!Number.isInteger(amount) || amount < MIN_INTENTION_AMOUNT) return null;
+  if (amount > 0 && amount < MIN_OBLIGATION_AMOUNT) return null;
   return amount;
 }
 
@@ -38,8 +41,8 @@ export function StakePage() {
   });
 
   const saved = me.data?.monthlyBudget;
-  // Not set yet counts as 1 $ everywhere else (a collection's minimum), so the field starts there
-  const current = saved == null ? '1' : String(Math.round(saved));
+  // New accounts start with the default intention (1 $); an account without a value starts the field there too
+  const current = saved == null ? String(DEFAULT_INTENTION_AMOUNT) : String(Math.round(saved));
   const [raw, setRaw] = useState<string | null>(null);
   const value = raw ?? current;
   const parsed = parseStake(value);

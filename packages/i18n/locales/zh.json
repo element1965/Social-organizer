@@ -151,7 +151,8 @@
       "explain": "你网络里的人（最远到第6度握手）在本周期还愿意表明的金额：这是他们意向之和。需求消息会分批发出，从最近的人开始，最远到第6度握手。这只是参考数字，不是承诺：是否参与，每个人自己决定。",
       "weekDelta": "本周 +{{amount}}",
       "people_other": "你的网络里有 {{count}} 人",
-      "peopleShort_other": "{{count}} 人"
+      "peopleShort_other": "{{count}} 人",
+      "empty": "你的网络从一位熟人开始"
     },
     "rings": {
       "short1": "第1次",
@@ -217,11 +218,12 @@
     "start": {
       "lead": "你是圈子里的第一个人。",
       "body": "需求消息沿已确认的握手传递：附近还没有人，信号就无处可去。",
-      "step1": "资料",
-      "step1Sub": "名字和意向",
       "step2": "第一个人",
       "step2Sub": "发送链接或出示二维码",
-      "step2Waiting": "申请已发送，等待确认"
+      "step2Waiting": "申请已发送，等待确认",
+      "intention": "我的意向",
+      "intentionIs": "我的意向：{{amount}}",
+      "intentionSub": "熟人告知需求时你准备说出的金额。"
     },
     "acquaint": {
       "sub": "请你确认你们认识",
@@ -247,6 +249,11 @@
       "loading": "正在加载人脉网络…",
       "ready": "图谱已更新",
       "added": "你的网络扩大了：+{{count}}"
+    },
+    "waiting": {
+      "title": "等待 {{name}} 确认",
+      "text": "{{name}} 确认你们相识后，{{name}} 认识的人以及他们的熟人会出现在这里。",
+      "remindText": "{{name}}，你好！我现在在用 Social Organizer。请确认我们彼此认识。"
     }
   },
   "people": {
@@ -394,7 +401,17 @@
     "markError": "标记未能保存，请重试。",
     "paidToggle": "已收到 {{name}} 的",
     "allReceived": "全部已收到 · {{sum}}",
-    "shareNext": "把这个需求转给其他认识发起人的人。"
+    "shareNext": "把这个需求转给其他认识发起人的人。",
+    "firstNext": {
+      "title": "接下来",
+      "seen": "{{name}} 能看到你的参与。",
+      "chat": "现在可以打开需求发布者提供的聊天链接了。",
+      "keepQuestion": "在你网络里之后的需求中，保留 {{amount}} 作为你的意向吗？",
+      "keepWhy": "以后有需求时，系统会预填你的意向金额。能联系到你的人，其网络金额会计入你的意向。",
+      "keepYes": "保留 {{amount}}",
+      "kept": "好了：你的意向是 {{amount}}。可以在“资料”里修改。",
+      "intro": "看看网络如何运作"
+    }
   },
   "profile": {
     "phone": "电话",
@@ -1155,14 +1172,19 @@
     "headline": "{{name}} 需要互助",
     "ofGoal": "/ {{amount}}",
     "peopleLine": "参与者：{{count}} · 钱款由参与者直接交付，不经过本服务",
-    "joinCircle": "你将成为 {{name}} 的圈子的一员。",
+    "joinCircle": "登录后打开需求，即表示你确认与需求发布者本人相识，并加入发布者的圈子。",
     "joinCircleBody": "加入即表示你确认亲自认识这个人。",
-    "join": "加入",
     "joinNext": "下一步是登录：Apple、Google、Telegram 或邮箱。",
     "openTelegram": "在 Telegram 中打开",
     "closedLine": "这个需求已关闭。",
     "suspendedLine": "这个需求已暂停。",
-    "fullLine": "所需金额已表明。"
+    "fullLine": "所需金额已表明。",
+    "takePart": "参与",
+    "nextTitle": "如果你决定参与",
+    "next1": "你说出愿意给出的金额，可以从 {{amount}} 开始。",
+    "next2": "如果发布者添加了聊天链接，参与后就可以打开。",
+    "next3": "如果涉及钱款，由你亲手交给需求发布者。在这里你不用付任何钱：Social Organizer 不接收、不转移钱款。",
+    "signInTitle": "登录以参与这项需求"
   },
   "adminStats": {
     "totalUsers": "用户",
@@ -1293,12 +1315,6 @@
       "aria": "圈子示意图"
     },
     "seed": {
-      "title": "你的意向",
-      "text": "当你网络里有人告知需求时，这个金额会自动填好，你也随时可以修改。这些金额加起来就是“{{canHelp}}”。Social Organizer 不接收钱款。",
-      "label": "我的意向",
-      "presets": "预设金额",
-      "hint": "选一个预设，或自己输入。随时可在资料里修改。",
-      "min": "至少 1 $",
       "failed": "无法保存。请检查网络后重试。",
       "sent": "申请已发送。",
       "sentText": "{{name}} 确认后，就会成为你的第1次握手。",
@@ -1307,7 +1323,8 @@
       "name": "我的名字",
       "namePlaceholder": "姓名",
       "nameHint": "你圈子里的人会这样看到你。",
-      "nameMin": "请输入名字"
+      "nameMin": "请输入名字",
+      "nameTitle": "你的名字"
     },
     "haveTelegramLink": "以前通过 Telegram 用过 Social Organizer？连接 Telegram"
   },

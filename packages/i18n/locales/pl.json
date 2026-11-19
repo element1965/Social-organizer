@@ -157,7 +157,8 @@
       "peopleShort_few": "{{count}} osoby",
       "peopleShort_many": "{{count}} osób",
       "peopleShort_one": "{{count}} osoba",
-      "peopleShort_other": "{{count}} osoby"
+      "peopleShort_other": "{{count}} osoby",
+      "empty": "Twoja sieć zaczyna się od jednej znajomej osoby"
     },
     "rings": {
       "short1": "1. uścisk dłoni",
@@ -226,11 +227,12 @@
     "start": {
       "lead": "Jesteś pierwszy w swoim kręgu.",
       "body": "Wiadomość o potrzebie idzie po potwierdzonych uściskach dłoni: gdy nikogo obok nie ma, sygnał nie ma dokąd iść.",
-      "step1": "Profil",
-      "step1Sub": "Imię i zamiar",
       "step2": "Pierwsza osoba",
       "step2Sub": "Wyślij link albo pokaż kod QR",
-      "step2Waiting": "Zgłoszenie wysłane, czekamy na potwierdzenie"
+      "step2Waiting": "Zgłoszenie wysłane, czekamy na potwierdzenie",
+      "intention": "Mój zamiar",
+      "intentionIs": "Mój zamiar: {{amount}}",
+      "intentionSub": "Kwota, którą możesz podać, gdy ktoś ze znajomych zgłosi potrzebę."
     },
     "acquaint": {
       "sub": "Prosi, żeby potwierdzić, że się znacie",
@@ -256,6 +258,11 @@
       "loading": "Wczytujemy sieć znajomości…",
       "ready": "Graf zaktualizowany",
       "added": "Sieć urosła: +{{count}}"
+    },
+    "waiting": {
+      "title": "Czekamy, aż {{name}} potwierdzi znajomość",
+      "text": "Gdy {{name}} potwierdzi, że się znacie, pojawią się tu osoby, które zna {{name}}, i ich znajomi.",
+      "remindText": "Cześć, {{name}}! Jestem już w Social Organizer. Potwierdź, proszę, że się znamy."
     }
   },
   "people": {
@@ -403,7 +410,17 @@
     "markError": "Nie udało się zapisać. Spróbuj ponownie.",
     "paidToggle": "Otrzymano od {{name}}",
     "allReceived": "Wszystko otrzymane · {{sum}}",
-    "shareNext": "Przekaż tę potrzebę innym, którzy znają jej autora."
+    "shareNext": "Przekaż tę potrzebę innym, którzy znają jej autora.",
+    "firstNext": {
+      "title": "Co dalej",
+      "seen": "{{name}} widzi Twój udział.",
+      "chat": "Link do czatu od osoby, która zgłosiła potrzebę, jest już dostępny.",
+      "keepQuestion": "Zostawić {{amount}} jako Twój zamiar przy kolejnych potrzebach w sieci?",
+      "keepWhy": "Twój zamiar uzupełnia się automatycznie przy kolejnych potrzebach. Wlicza się do kwoty sieci osób, które mogą do Ciebie dotrzeć.",
+      "keepYes": "Zostaw {{amount}}",
+      "kept": "Gotowe. Twój zamiar: {{amount}}. Możesz go zmienić w profilu.",
+      "intro": "Zobacz, jak działa sieć"
+    }
   },
   "profile": {
     "phone": "Telefon",
@@ -1179,14 +1196,19 @@
     "headline": "{{name}} potrzebuje wsparcia",
     "ofGoal": "z {{amount}}",
     "peopleLine": "Uczestnicy: {{count}} · pieniądze przekazuje się bezpośrednio, nie przez serwis",
-    "joinCircle": "Staniesz się częścią kręgu {{name}}.",
+    "joinCircle": "Otwierając potrzebę po zalogowaniu, potwierdzasz, że osobiście znasz jej autora, i dołączasz do kręgu autora.",
     "joinCircleBody": "Dołączając, potwierdzasz, że znasz tę osobę osobiście.",
-    "join": "Dołącz",
     "joinNext": "Dalej logowanie: Apple, Google, Telegram albo e-mail.",
     "openTelegram": "Otwórz w Telegramie",
     "closedLine": "Potrzeba jest zamknięta.",
     "suspendedLine": "Potrzeba jest wstrzymana.",
-    "fullLine": "Potrzebna kwota jest zgłoszona."
+    "fullLine": "Potrzebna kwota jest zgłoszona.",
+    "takePart": "Weź udział",
+    "nextTitle": "Jeśli zdecydujesz się wziąć udział",
+    "next1": "Podajesz kwotę, którą możesz dać. Możesz zacząć od {{amount}}.",
+    "next2": "Jeśli dodano link do czatu, możesz go otworzyć po zgłoszeniu udziału.",
+    "next3": "Jeśli dojdzie do przekazania pieniędzy, przekazujesz je osobiście autorowi potrzeby. Tutaj nic nie płacisz: Social Organizer nie przyjmuje ani nie przekazuje pieniędzy.",
+    "signInTitle": "Zaloguj się, aby wziąć udział w tej potrzebie"
   },
   "adminStats": {
     "totalUsers": "Użytkownicy",
@@ -1320,12 +1342,6 @@
       "aria": "Schemat kręgu"
     },
     "seed": {
-      "title": "Twój zamiar",
-      "text": "Gdy ktoś z Twojej sieci zgłosi potrzebę, ta kwota wpisze się sama, a zawsze możesz ją zmienić. Z takich kwot składa się „{{canHelp}}”. Social Organizer nie przyjmuje pieniędzy.",
-      "label": "Mój zamiar",
-      "presets": "Gotowe kwoty",
-      "hint": "Wybierz gotową albo wpisz swoją. Zmienisz ją w każdej chwili w Profilu.",
-      "min": "Co najmniej 1 $",
       "failed": "Nie udało się zapisać. Sprawdź internet i spróbuj jeszcze raz.",
       "sent": "Zgłoszenie wysłane.",
       "sentText": "Gdy {{name}} potwierdzi, stanie się Twoim 1. uściskiem dłoni.",
@@ -1334,7 +1350,8 @@
       "name": "Moje imię",
       "namePlaceholder": "Imię i nazwisko",
       "nameHint": "Tak zobaczą Cię osoby z Twojego kręgu.",
-      "nameMin": "Wpisz imię"
+      "nameMin": "Wpisz imię",
+      "nameTitle": "Twoje imię"
     },
     "haveTelegramLink": "Korzystasz już z Social Organizer przez Telegram? Połącz go"
   },

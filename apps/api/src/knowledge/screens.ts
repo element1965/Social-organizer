@@ -4,7 +4,7 @@ APP SCREENS GUIDE:
 The signed-in app has four tabs on a phone: Circle / Круг (/), Need / Потребность (/ask), Add / Добавить (/add), Profile / Профиль (/me). A wide screen uses the same destinations in a sidebar and adds People / Люди. Guests see the public site at / and the explainer at /how. Old addresses redirect: /dashboard, /network, /notifications, /welcome, /arvut, /matches, /skills, /needs → /; /create → /ask; /settings → /me; /faq → /me/help; /onboarding → /intro; /profile/:userId → /person/:id.
 
 CIRCLE / КРУГ (/)
-Signed-in home. A 3D graph of the circle (three rings of handshakes) and a feed of Needs and acquaintance events. The header shows "N people in your network" and "Declared participation of the network": the network up to the 6th handshake, the same two numbers as on Profile, My intention and the Need screen. Ring chips (1st, 2nd, 3rd) open People for that ring; one more chip, "4th–6th: ~N", is a rounded count of the farther people, who are never named. The header people count is the three ring chips plus that chip. Search opens People. An empty circle asks the person to add someone they know.
+Signed-in home. A 3D graph of the circle (three rings of handshakes) and a feed of Needs and acquaintance events. The header shows "N people in your network" and "Declared participation of the network": the network up to the 6th handshake, the same two numbers as on Profile, My intention and the Need screen. Ring chips (1st, 2nd, 3rd) open People for that ring; one more chip, "4th–6th: ~N", is a rounded count of the farther people, who are never named. The header people count is the three ring chips plus that chip. Search opens People. An empty circle asks the person to add someone they know; its first step is My intention (1 $ by default, "Change" opens it), and while an invite request waits it shows who has to confirm it, with "Remind" (a share to that person through the person's own messenger).
 
 PEOPLE / ЛЮДИ (/people, /people/1, /people/2, /people/3)
 People of one ring, with search and a switch that shows or hides that ring on the graph.
@@ -57,7 +57,7 @@ LOGIN (/login)
 One screen for new and existing people: Google, Apple, Telegram (automatic inside the Mini App; on the site, the Telegram button or the bot), or an e-mail code (6 digits, resend after 60 seconds). No password. If the e-mail already belongs to an account, the screen asks for an e-mail code first.
 
 INTRO (/intro)
-First-run intro. It can be replayed from Help. /onboarding redirects here.
+First-run intro. It can be replayed from Help. /onboarding redirects here. A newcomer who came by a public Need link goes to the Need first and is offered the intro after taking part ("See how the network works").
 
 INVITE (/invite/:token)
 Opens from a personal invite link. An authenticated person accepts; otherwise the token waits through sign-in and is accepted after. There is one invite link per person, shared from Add.
