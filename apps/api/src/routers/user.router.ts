@@ -3,9 +3,10 @@ import { z } from 'zod';
 import { router, protectedProcedure } from '../trpc.js';
 import { isDataUrl, storeAvatar } from '../services/avatar.service.js';
 import { TRPCError } from '@trpc/server';
-import { CONTACT_TYPES, CONTACT_TYPE_IDS, MAX_CONTACT_VALUE_LENGTH, hasForeignScheme, CURRENCY_CODES, MIN_OBLIGATION_AMOUNT, contactValueAllowed } from '@so/shared';
+import { CONTACT_TYPES, CONTACT_TYPE_IDS, MAX_CONTACT_VALUE_LENGTH, hasForeignScheme, CURRENCY_CODES, MIN_OBLIGATION_AMOUNT, contactValueAllowed, isValidReferralSlug } from '@so/shared';
 import { canViewContacts } from '../services/visibility.service.js';
 import { deleteUserAccount } from '../services/account-deletion.service.js';
+import { ensureReferralSlug, isReferralSlugConflict } from '../services/referral-slug.service.js';
 
 export const userRouter = router({
   me: protectedProcedure.query(async ({ ctx }) => {
@@ -214,24 +215,29 @@ export const userRouter = router({
       return updated;
     }),
 
+  inviteSlug: protectedProcedure.query(async ({ ctx }) => ({
+    referralSlug: await ensureReferralSlug(ctx.db, ctx.userId),
+  })),
+
   updateReferralSlug: protectedProcedure
     .input(z.object({
-      slug: z.string()
-        .min(3, 'Minimum 3 characters')
-        .max(30, 'Maximum 30 characters')
-        .regex(/^[a-zA-Z0-9_-]+$/, 'Only letters, numbers, _ and -'),
+      slug: z.string().refine(isValidReferralSlug, 'Invalid or reserved referral slug'),
     }))
     .mutation(async ({ ctx, input }) => {
       const lower = input.slug.toLowerCase();
-      const existing = await ctx.db.user.findUnique({ where: { referralSlug: lower } });
-      if (existing && existing.id !== ctx.userId) {
-        throw new TRPCError({ code: 'CONFLICT', message: 'This slug is already taken' });
+      try {
+        await ctx.db.user.update({
+          where: { id: ctx.userId },
+          data: { referralSlug: lower },
+          select: { id: true },
+        });
+        return { referralSlug: lower };
+      } catch (error) {
+        if (isReferralSlugConflict(error)) {
+          throw new TRPCError({ code: 'CONFLICT', message: 'This slug is already taken' });
+        }
+        throw error;
       }
-      return ctx.db.user.update({
-        where: { id: ctx.userId },
-        data: { referralSlug: lower },
-        select: { referralSlug: true },
-      });
     }),
 
   checkRequiredInfo: protectedProcedure.query(async ({ ctx }) => {

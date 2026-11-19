@@ -1,13 +1,13 @@
 import { useRef, useState } from 'react';
-import { Check, Globe, ImagePlus, Link2, Loader2, Pencil, Trash2, X } from 'lucide-react';
+import { IconCheck, IconChevron, IconGlobe, IconImagePlus, IconLink, IconSpinner, IconPencil, IconTrash, IconClose } from '../components/ui2/icons';
 import { useTranslation } from 'react-i18next';
 import { trpc, accountFetch, currentAccount } from '../lib/trpc';
-import { isAborted } from '../lib/errors';
+import { currentNavigation, raiseActionError } from '../lib/errors';
 import { Button } from '../components/ui2/Button';
 import { Card } from '../components/ui2/Card';
 import { Group } from '../components/ui2/Group';
 import { Sheet } from '../components/ui2/Sheet';
-import { IconChevron } from '../components/ui2/icons';
+
 import { cn } from '../lib/utils';
 
 // FAQ content lives in the DB (one row per language, translations share groupId = source item id).
@@ -48,19 +48,12 @@ function FaqAnswer({ text }: { text: string }) {
 
 export function FaqPage({ embedded = false }: { embedded?: boolean }) {
   const { t, i18n } = useTranslation();
-  const lang = i18n.language.split('-')[0] || 'ru';
+  const lang = i18n.language.split('-')[0] || 'en';
   const utils = trpc.useUtils();
 
-  const { data: items = [], isLoading } = trpc.faq.list.useQuery({ language: lang });
+  const { data: displayItems = [], isLoading } = trpc.faq.list.useQuery({ language: lang });
   const { data: adminData } = trpc.faq.isAdmin.useQuery();
   const isAdmin = adminData?.isAdmin ?? false;
-
-  // If no items for current language, try Russian fallback
-  const { data: fallbackItems = [] } = trpc.faq.list.useQuery(
-    { language: 'ru' },
-    { enabled: items.length === 0 && lang !== 'ru' && !isLoading },
-  );
-  const displayItems = items.length > 0 ? items : fallbackItems;
 
   const createMutation = trpc.faq.create.useMutation({ onSuccess: () => utils.faq.list.invalidate() });
   const updateMutation = trpc.faq.update.useMutation({ onSuccess: () => utils.faq.list.invalidate() });
@@ -98,6 +91,7 @@ export function FaqPage({ embedded = false }: { embedded?: boolean }) {
 
     // The account of the admin who picked the file: the upload is dropped quietly if another one signs in meanwhile
     const account = currentAccount();
+    const navigation = currentNavigation();
     setUploading(true);
     try {
       const formData = new FormData();
@@ -109,8 +103,7 @@ export function FaqPage({ embedded = false }: { embedded?: boolean }) {
       });
 
       if (!res.ok) {
-        const err = (await res.json().catch(() => ({}))) as { error?: unknown };
-        alert(typeof err.error === 'string' ? err.error : t('faq.uploadFailed'));
+        raiseActionError({ data: { httpStatus: res.status } }, navigation);
         return;
       }
 
@@ -118,8 +111,7 @@ export function FaqPage({ embedded = false }: { embedded?: boolean }) {
       // Store as /api/media/<fileId> URL for display
       setFormImageUrl(`/api/media/${data.fileId}`);
     } catch (error) {
-      if (isAborted(error)) return;
-      alert(t('faq.uploadFailed'));
+      raiseActionError(error, navigation);
     } finally {
       setUploading(false);
       if (fileInputRef.current) fileInputRef.current.value = '';
@@ -129,7 +121,7 @@ export function FaqPage({ embedded = false }: { embedded?: boolean }) {
   const handleCreate = () => {
     if (!formQuestion.trim() || !formAnswer.trim()) return;
     createMutation.mutate(
-      { question: formQuestion.trim(), answer: formAnswer.trim(), imageUrl: formImageUrl, language: lang, sortOrder: displayItems.length + 1 },
+      { question: formQuestion.trim(), answer: formAnswer.trim(), imageUrl: formImageUrl, language: lang, sortOrder: displayItems.filter((item) => item.language === lang).length + 1 },
       {
         onSuccess: () => {
           setFormQuestion('');
@@ -186,7 +178,7 @@ export function FaqPage({ embedded = false }: { embedded?: boolean }) {
       {showAdminTools && (
         <div className="mb-3 flex items-center justify-end gap-2">
           {displayItems.some(i => !(i as typeof i & { isLocalized?: boolean }).isLocalized) && (
-            <Button size="md" variant="secondary" onClick={() => localizeAllMutation.mutate()} loading={localizeAllMutation.isPending} icon={<Globe className="h-4 w-4" />}>
+            <Button size="md" variant="secondary" onClick={() => localizeAllMutation.mutate()} loading={localizeAllMutation.isPending} icon={<IconGlobe className="h-4 w-4" />}>
               {t('faq.localizeAll')}
             </Button>
           )}
@@ -223,7 +215,7 @@ export function FaqPage({ embedded = false }: { embedded?: boolean }) {
               variant="secondary"
               size="md"
               onClick={() => { setShowLinkPopup(!showLinkPopup); setLinkText(''); setLinkUrl(''); }}
-              icon={<Link2 className="h-4 w-4" />}
+              icon={<IconLink className="h-4 w-4" />}
             >
               {t('faq.insertLink')}
             </Button>
@@ -262,7 +254,7 @@ export function FaqPage({ embedded = false }: { embedded?: boolean }) {
                       }
                       setShowLinkPopup(false);
                     }}
-                    icon={<Check className="h-4 w-4" />}
+                    icon={<IconCheck className="h-4 w-4" />}
                   >
                     {t('faq.insert')}
                   </Button>
@@ -290,7 +282,7 @@ export function FaqPage({ embedded = false }: { embedded?: boolean }) {
                   aria-label={t('common.close')}
                   className="so-focus absolute -right-2 -top-2 grid h-5 w-5 place-items-center rounded-full bg-sos text-sos-on"
                 >
-                  <X className="h-3 w-3" />
+                  <IconClose className="h-3 w-3" />
                 </button>
               </div>
             ) : (
@@ -300,7 +292,7 @@ export function FaqPage({ embedded = false }: { embedded?: boolean }) {
                 onClick={() => fileInputRef.current?.click()}
                 disabled={uploading}
                 loading={uploading}
-                icon={<ImagePlus className="h-4 w-4" />}
+                icon={<IconImagePlus className="h-4 w-4" />}
               >
                 {t('faq.addPhoto')}
               </Button>
@@ -312,11 +304,11 @@ export function FaqPage({ embedded = false }: { embedded?: boolean }) {
               onClick={editingId ? handleUpdate : handleCreate}
               disabled={!formQuestion.trim() || !formAnswer.trim()}
               loading={saving}
-              icon={<Check className="h-4 w-4" />}
+              icon={<IconCheck className="h-4 w-4" />}
             >
               {t('common.save')}
             </Button>
-            <Button variant="secondary" size="md" onClick={cancelEdit} icon={<X className="h-4 w-4" />}>
+            <Button variant="secondary" size="md" onClick={cancelEdit} icon={<IconClose className="h-4 w-4" />}>
               {t('common.cancel')}
             </Button>
           </div>
@@ -360,14 +352,14 @@ export function FaqPage({ embedded = false }: { embedded?: boolean }) {
                           variant="icon"
                           aria-label={t('faq.edit')}
                           onClick={() => startEdit({ ...item, imageUrl: faqItem.imageUrl })}
-                          icon={<Pencil className="h-4 w-4" />}
+                          icon={<IconPencil className="h-4 w-4" />}
                         />
                         <Button
                           variant="icon"
                           className="text-sos"
                           aria-label={t('faq.deleteConfirm')}
                           onClick={() => setDeleteId(item.id)}
-                          icon={<Trash2 className="h-4 w-4" />}
+                          icon={<IconTrash className="h-4 w-4" />}
                         />
                         <Button
                           variant="icon"
@@ -376,7 +368,7 @@ export function FaqPage({ embedded = false }: { embedded?: boolean }) {
                           title={faqItem.isLocalized ? t('faq.localized') : t('faq.localizeAll')}
                           onClick={() => localizeMutation.mutate({ id: item.id })}
                           disabled={localizeMutation.isPending}
-                          icon={localizeMutation.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Globe className="h-4 w-4" />}
+                          icon={localizeMutation.isPending ? <IconSpinner className="h-4 w-4 animate-spin" /> : <IconGlobe className="h-4 w-4" />}
                         />
                       </div>
                     )}

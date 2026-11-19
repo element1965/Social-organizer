@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FileText, Loader2, Paperclip, Send, Volume2, X } from 'lucide-react';
+import { IconFile, IconSpinner, IconAttachment, IconSend, IconVolume, IconClose } from '../components/ui2/icons';
 import { trpc, accountFetch, currentAccount } from '../lib/trpc';
 import { Avatar } from '../components/ui2/Avatar';
 import { Button } from '../components/ui2/Button';
@@ -64,7 +64,7 @@ function MediaPreview({ fileId, mediaType, mediaName, isAdmin }: {
   if (mediaType === 'voice') {
     return (
       <div className="flex items-center gap-2">
-        <Volume2 className="h-4 w-4 shrink-0" />
+        <IconVolume className="h-4 w-4 shrink-0" />
         <audio src={url} controls className="h-8 max-w-[180px]" preload="metadata" />
       </div>
     );
@@ -79,7 +79,7 @@ function MediaPreview({ fileId, mediaType, mediaName, isAdmin }: {
         isAdmin ? 'bg-canvas/20 text-care-on' : 'bg-link-soft text-link',
       )}
     >
-      <FileText className="h-4 w-4 shrink-0" />
+      <IconFile className="h-4 w-4 shrink-0" />
       <span className="max-w-[160px] truncate">{mediaName || t('support.file')}</span>
     </a>
   );
@@ -227,7 +227,7 @@ export function SupportChatPage() {
             <div className="mb-1 flex shrink-0 items-center gap-2 rounded-lg border border-line bg-link-soft px-3 py-2 text-body-s text-link">
               <span className="min-w-0 flex-1 truncate">{attachment.name || attachment.mediaType}</span>
               <button type="button" onClick={() => setAttachment(null)} className="so-focus shrink-0 text-sos" aria-label={t('common.close')}>
-                <X className="h-4 w-4" />
+                <IconClose className="h-4 w-4" />
               </button>
             </div>
           )}
@@ -245,7 +245,7 @@ export function SupportChatPage() {
               onClick={() => fileInputRef.current?.click()}
               disabled={uploading}
               aria-label={t('support.attachFile')}
-              icon={uploading ? <Loader2 className="h-5 w-5 animate-spin" /> : <Paperclip className="h-5 w-5" />}
+              icon={uploading ? <IconSpinner className="h-5 w-5 animate-spin" /> : <IconAttachment className="h-5 w-5" />}
             />
             <input
               value={reply}
@@ -264,7 +264,7 @@ export function SupportChatPage() {
               disabled={(!reply.trim() && !attachment) || sendReply.isPending}
               loading={sendReply.isPending}
               aria-label={t('chat.send')}
-              icon={<Send className="h-4 w-4" />}
+              icon={<IconSend className="h-4 w-4" />}
             />
           </div>
         </div>

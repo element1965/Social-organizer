@@ -1,0 +1,32 @@
+User-agent: *
+Disallow: /add
+Disallow: /api
+Disallow: /ask
+Disallow: /auth
+Disallow: /collection
+Disallow: /create
+Disallow: /dashboard
+Disallow: /dev
+Disallow: /faq
+Disallow: /get
+Disallow: /gun
+Disallow: /health
+Disallow: /intro
+Disallow: /login
+Disallow: /matches
+Disallow: /me
+Disallow: /needs
+Disallow: /network
+Disallow: /notifications
+Disallow: /onboarding
+Disallow: /people
+Disallow: /person
+Disallow: /profile
+Disallow: /seed
+Disallow: /settings
+Disallow: /skills
+Disallow: /support
+Disallow: /trpc
+
+# Crawlers can read the noindex headers on /i/, /invite/ and /sos/.
+Sitemap: https://www.orginizer.com/sitemap.xml

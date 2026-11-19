@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { BarChart3, Check, Clock, Link2, Pencil, Play, Send, Trash2, ToggleLeft, ToggleRight } from 'lucide-react';
+import { IconChart, IconCheck, IconClock, IconLink, IconPencil, IconPlay, IconSend, IconTrash, IconToggleOff, IconToggleOn } from './ui2/icons';
 import { useTranslation } from 'react-i18next';
 import { trpc, accountFetch, currentAccount } from '../lib/trpc';
 import { isAborted } from '../lib/errors';
@@ -270,7 +270,7 @@ export function BroadcastPanel() {
       {tab === 'send' && (
         <>
           <MessageComposer value={msg} onChange={setMsg} disabled={isPending} />
-          <Button className="w-full" onClick={handleSend} disabled={!msg.text.trim()} loading={sendAllMutation.isPending} icon={<Send className="h-4 w-4" />}>
+          <Button className="w-full" onClick={handleSend} disabled={!msg.text.trim()} loading={sendAllMutation.isPending} icon={<IconSend className="h-4 w-4" />}>
             {sendAllMutation.isPending ? t('broadcast.sending') : t('broadcast.send')}
           </Button>
         </>
@@ -281,7 +281,7 @@ export function BroadcastPanel() {
           <MessageComposer value={scheduledMsg} onChange={setScheduledMsg} disabled={isPending} />
           <label className="block">
             <span className="mb-1.5 flex items-center gap-1.5 text-label font-semibold text-ink-muted">
-              <Clock className="h-3.5 w-3.5" />
+              <IconClock className="h-3.5 w-3.5" />
               {t('broadcast.scheduledAt')}
             </span>
             <input
@@ -297,7 +297,7 @@ export function BroadcastPanel() {
             onClick={handleSchedule}
             disabled={!scheduledMsg.text.trim() || !scheduledAt}
             loading={scheduleMutation.isPending}
-            icon={<Clock className="h-4 w-4" />}
+            icon={<IconClock className="h-4 w-4" />}
           >
             {scheduleMutation.isPending ? t('broadcast.scheduling') : t('broadcast.schedule')}
           </Button>
@@ -322,7 +322,7 @@ export function BroadcastPanel() {
                   <div className="flex items-center gap-2">
                     {post.sentCount != null && (
                       <span className="flex items-center gap-1">
-                        <BarChart3 className="h-3 w-3" />
+                        <IconChart className="h-3 w-3" />
                         {post._count.deliveries} / {(post.deliveries as unknown[]).length} {t('broadcast.reads')}
                       </span>
                     )}
@@ -368,7 +368,7 @@ export function BroadcastPanel() {
             className="w-full"
             disabled={triggerLoading}
             loading={triggerLoading}
-            icon={<Play className="h-4 w-4" />}
+            icon={<IconPlay className="h-4 w-4" />}
             onClick={async () => {
               // The admin who tapped: the trigger is dropped quietly if another account signs in meanwhile
               const account = currentAccount();
@@ -408,7 +408,7 @@ export function BroadcastPanel() {
             onClick={handleAddChain}
             disabled={!chainMsg.text.trim()}
             loading={createChainMutation.isPending}
-            icon={<Link2 className="h-4 w-4" />}
+            icon={<IconLink className="h-4 w-4" />}
           >
             {createChainMutation.isPending ? t('broadcast.adding') : t('broadcast.addChainMessage')}
           </Button>
@@ -434,7 +434,7 @@ export function BroadcastPanel() {
                       <NumField label={t('broadcast.chainInterval')} value={editInterval} min={1} onChange={setEditInterval} />
                     </div>
                     <div className="flex gap-2">
-                      <Button className="flex-1" size="md" onClick={saveEdit} disabled={!editText.trim()} loading={updateChainMutation.isPending} icon={<Check className="h-3.5 w-3.5" />}>
+                      <Button className="flex-1" size="md" onClick={saveEdit} disabled={!editText.trim()} loading={updateChainMutation.isPending} icon={<IconCheck className="h-3.5 w-3.5" />}>
                         {t('common.save')}
                       </Button>
                       <Button className="flex-1" variant="secondary" size="md" onClick={() => setEditingId(null)}>
@@ -468,20 +468,20 @@ export function BroadcastPanel() {
                         )}
                       </div>
                       <div className="flex items-center gap-1">
-                        <Button variant="icon" aria-label={t('broadcast.editChain')} title={t('broadcast.editChain')} onClick={() => startEdit(cm)} icon={<Pencil className="h-4 w-4" />} />
+                        <Button variant="icon" aria-label={t('broadcast.editChain')} title={t('broadcast.editChain')} onClick={() => startEdit(cm)} icon={<IconPencil className="h-4 w-4" />} />
                         <Button
                           variant="icon"
                           aria-label={cm.isActive ? t('broadcast.active') : t('broadcast.inactive')}
                           title={cm.isActive ? t('broadcast.active') : t('broadcast.inactive')}
                           onClick={() => updateChainMutation.mutate({ id: cm.id, isActive: !cm.isActive })}
-                          icon={cm.isActive ? <ToggleRight className="h-5 w-5 text-care" /> : <ToggleLeft className="h-5 w-5 text-ink-subtle" />}
+                          icon={cm.isActive ? <IconToggleOn className="h-5 w-5 text-care" /> : <IconToggleOff className="h-5 w-5 text-ink-subtle" />}
                         />
                         <Button
                           variant="icon"
                           className="text-sos"
                           aria-label={t('broadcast.deleteConfirm')}
                           onClick={() => setDeleteId(cm.id)}
-                          icon={<Trash2 className="h-4 w-4" />}
+                          icon={<IconTrash className="h-4 w-4" />}
                         />
                       </div>
                     </div>

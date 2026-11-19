@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
+import { isValidReferralSlug } from '@so/shared';
 import { Button } from '../ui2/Button';
 import { Card } from '../ui2/Card';
 import { Input } from '../ui2/Input';
@@ -16,13 +17,9 @@ import { errorCode } from '../../lib/errors';
 interface LinkCardProps {
   slug: string;
   name: string;
-  /** The id the person chose; empty while the link still carries the internal user id */
-  customSlug?: string | null;
 }
 
-const SLUG_RE = /^[a-z0-9_-]{3,30}$/;
-
-export function LinkCard({ slug, name, customSlug }: LinkCardProps) {
+export function LinkCard({ slug, name }: LinkCardProps) {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const utils = trpc.useUtils();
@@ -57,24 +54,25 @@ export function LinkCard({ slug, name, customSlug }: LinkCardProps) {
   };
 
   const startEdit = () => {
-    // Without a chosen id the link carries the internal one: start from an empty field instead
-    setDraft(customSlug ?? '');
+    setDraft(slug);
     setEditError('');
     setEditing(true);
   };
 
   const save = async () => {
     const next = draft.trim().toLowerCase();
-    if (next === (customSlug ?? '')) {
+    if (next === slug) {
       setEditing(false);
       return;
     }
-    if (!SLUG_RE.test(next)) {
+    if (!isValidReferralSlug(next)) {
       setEditError(t('account.slugInvalid'));
       return;
     }
     try {
-      await updateSlug.mutateAsync({ slug: next });
+      const updated = await updateSlug.mutateAsync({ slug: next });
+      await utils.user.inviteSlug.cancel();
+      utils.user.inviteSlug.setData(undefined, updated);
       await utils.user.me.invalidate();
       setEditing(false);
     } catch (error) {

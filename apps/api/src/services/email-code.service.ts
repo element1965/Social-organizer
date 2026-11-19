@@ -1,3 +1,4 @@
+import { createUserWithReferralSlug } from './referral-slug.service.js';
 import crypto from 'node:crypto';
 import type { PrismaClient } from '@so/db';
 import { sendMail } from './mail.service.js';
@@ -138,15 +139,13 @@ async function findOrCreateEmailUser(db: PrismaClient, email: string): Promise<{
     return { userId: existing.id, isNew: false };
   }
   try {
-    const user = await db.user.create({
-      data: {
-        email,
-        emailVerifiedAt: new Date(),
-        name: email.split('@')[0] || 'User',
-        monthlyBudget: 1,
-        remainingBudget: 1,
-        onboardingCompleted: true,
-      },
+    const user = await createUserWithReferralSlug(db, {
+      email,
+      emailVerifiedAt: new Date(),
+      name: email.split('@')[0] || 'User',
+      monthlyBudget: 1,
+      remainingBudget: 1,
+      onboardingCompleted: true,
     });
     return { userId: user.id, isNew: true };
   } catch (err) {

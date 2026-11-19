@@ -52,6 +52,7 @@ export function ProfilePage() {
   const push = usePushNotifications();
 
   const me = trpc.user.me.useQuery();
+  const invite = trpc.user.inviteSlug.useQuery();
   const settings = trpc.settings.get.useQuery();
   const { figure } = useNetworkFigure();
   const needCounts = useNeedCounts();
@@ -143,7 +144,8 @@ export function ProfilePage() {
     : onCount === flags.length
       ? t('profile.notificationsAll')
       : t('profile.notificationsSome');
-  const slugLine = profile.referralSlug ? `${publicHost()}/i/${profile.referralSlug}` : publicHost();
+  const slug = invite.data?.referralSlug ?? profile.referralSlug;
+  const slugLine = slug ? `${publicHost()}/i/${slug}` : publicHost();
   const since = t('profile.memberSince', { date: formatLongDate(profile.createdAt, i18n.language) });
   const supportCount = conversations.data?.length ?? 0;
 

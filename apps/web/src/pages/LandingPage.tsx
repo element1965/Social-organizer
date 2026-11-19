@@ -7,6 +7,7 @@ import { GITHUB_URL, LanguageSelect, useLoginHref } from '../components/site/Sit
 import { usePendingInvite, useStoreLinks } from '../components/site/DeviceEntry';
 import { useDocumentTitle } from '../components/site/hooks';
 import { SITE_ORIGIN } from '../lib/device';
+import { IconGlobe } from '../components/site/icons';
 import { initGlide } from '../components/landing/glide';
 import { initGrow, type GrowHandle, type GrowOptions } from '../components/landing/grow';
 import { initNextNet, type NextNetHandle } from '../components/landing/nextNet';
@@ -27,7 +28,7 @@ const STUDY_URL = 'https://research.facebook.com/blog/2016/02/three-and-a-half-d
 const REPORT_URL = 'https://zenodo.org/records/21629935';
 const BOT_URL = 'https://t.me/socialorganizer_bot';
 const TEAM_URL = `${BOT_URL}?start=team`;
-const ICON_CREDITS = 'Gil Barbara logos (CC0), Lucide (ISC)';
+const ICON_CREDITS = 'Gil Barbara logos (CC0)';
 /** People with connections in the network on the date in `join.now`. */
 const NETWORK_NOW = 287;
 
@@ -70,16 +71,6 @@ function toggleFaq(e: ReactMouseEvent<HTMLElement>) {
     d.open = true;
     a.animate([{ height: '0px', opacity: 0 }, { height: `${a.offsetHeight}px`, opacity: 1 }], { duration: 380, easing: 'cubic-bezier(.2,.7,.2,1)' });
   }
-}
-
-function GlobeIcon() {
-  // Lucide "globe" (ISC)
-  return (
-    <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
-      <circle cx="12" cy="12" r="10" />
-      <path d="M12 2a14.5 14.5 0 0 0 0 20a14.5 14.5 0 0 0 0-20M2 12h20" />
-    </svg>
-  );
 }
 
 export function LandingPage() {
@@ -626,7 +617,7 @@ export function LandingPage() {
                   </span>
                 </a>
                 <Link className="badge" to={loginHref}>
-                  <GlobeIcon />
+                  <IconGlobe />
                   <span>
                     <small>{t('landing.v2.start.webTop')}</small>
                     {t('landing.v2.start.web')}

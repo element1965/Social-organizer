@@ -1,9 +1,5 @@
 const PUBLIC_ORIGIN = (import.meta.env.VITE_WEB_APP_URL || 'https://www.orginizer.com').replace(/\/$/, '');
 
-export function inviteSlug(user: { id: string; referralSlug?: string | null }): string {
-  return user.referralSlug || user.id;
-}
-
 /** Label shown on the card: host "orginizer.com/i" + slug "anna". The host drops a leading www. */
 export function prettyInvite(slug: string): { host: string; slug: string } {
   let host = 'orginizer.com';
