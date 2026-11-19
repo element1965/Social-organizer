@@ -1,10 +1,9 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { cn } from '../../lib/utils';
-import { Button } from '../ui2/Button';
-import { Sheet } from '../ui2/Sheet';
 import { formatMoney } from '../ui2/format';
 import { IconInfo } from './icons';
+import { NetFigureSheet } from './NetFigureSheet';
 
 type NetStatsProps = {
   /** null while the figure is loading or unavailable: a placeholder is shown, never 0 */
@@ -45,19 +44,20 @@ export function NetStats({ people, canHelp, weekDelta, variant, className }: Net
 
   const body =
     variant === 'scene' ? (
-      <span className="flex w-full items-end justify-between gap-3 text-start">
-        <span className="min-w-0">
-          <b className="block truncate text-[17px] font-extrabold tracking-tight text-node-1">
+      // The name of the sum takes a line of its own under the two numbers: beside the sum it wrapped on a phone (audit A5)
+      <span className="block w-full text-start">
+        <span className="flex items-end justify-between gap-3">
+          <b className="block min-w-0 truncate text-[17px] font-extrabold tracking-tight text-node-1">
             {waiting ? pending : t('circle.stats.people', { count: people ?? 0 })}
           </b>
-          <span className="mt-0.5 flex items-center gap-1 text-label font-semibold text-node-2">
+          <b className="block shrink-0 text-h3 font-extrabold tabular-nums text-node-1">{waiting ? pending : formatMoney(canHelp ?? 0)}</b>
+        </span>
+        <span className="mt-0.5 flex items-center justify-between gap-3">
+          <span className="flex min-w-0 items-center gap-1 text-label font-semibold text-node-2">
             {t('circle.stats.canHelp')}
             <IconInfo className="h-3.5 w-3.5 shrink-0" />
           </span>
-        </span>
-        <span className="shrink-0 text-end">
-          <b className="block text-h3 font-extrabold tabular-nums text-node-1">{waiting ? pending : formatMoney(canHelp ?? 0)}</b>
-          {delta ? <span className="block text-label font-bold text-care-scene">{delta}</span> : null}
+          {delta ? <span className="shrink-0 text-label font-bold text-care-scene">{delta}</span> : null}
         </span>
       </span>
     ) : (
@@ -92,17 +92,7 @@ export function NetStats({ people, canHelp, weekDelta, variant, className }: Net
         {body}
         {waiting ? <span className="sr-only">{t('common.loading')}</span> : null}
       </button>
-      <Sheet
-        open={open}
-        onClose={() => setOpen(false)}
-        title={t('circle.stats.canHelp')}
-        description={t('circle.stats.explain')}
-        footer={
-          <Button variant="secondary" onClick={() => setOpen(false)}>
-            {t('common.close')}
-          </Button>
-        }
-      />
+      <NetFigureSheet open={open} onClose={() => setOpen(false)} />
     </>
   );
 }

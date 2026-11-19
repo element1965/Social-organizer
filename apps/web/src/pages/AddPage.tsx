@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button } from '../components/ui2/Button';
 import { Card } from '../components/ui2/Card';
+import { EmptyState } from '../components/ui2/EmptyState';
 import { Screen } from '../components/ui2/Screen';
 import { ArrivalList } from '../components/add/ArrivalList';
 import { ConfirmSheet } from '../components/add/ConfirmSheet';
@@ -76,7 +77,7 @@ export function AddPage() {
       ) : listLoading ? (
         <p className="mt-4 px-1 text-label font-semibold text-ink-muted">{t('common.loading')}</p>
       ) : total === 0 ? (
-        <p className="mt-4 px-1 text-caption font-semibold text-ink-muted">{t('add.empty')}</p>
+        <EmptyState className="mt-4" variant="plain" title={t('add.empty')} />
       ) : (
         <ArrivalList pending={pending} connected={connected} onConfirm={setConfirm} />
       )}

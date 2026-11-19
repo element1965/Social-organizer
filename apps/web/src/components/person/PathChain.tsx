@@ -69,8 +69,11 @@ export function PathChain({ nodes, targetLabel }: PathChainProps) {
   const cells = foldHidden(nodes);
   const compact = cells.length >= 4;
   const last = cells.length - 1;
+  const badgeWords = (node: PathNode) =>
+    `${t('people.inCircle', { count: node.connectionCount })} · ${t('person.intentionIs', { amount: budgetText(node.remainingBudget) })}`;
 
   return (
+    <>
     <ol aria-label={t('person.pathLabel')} className="mt-2 flex w-full min-w-0 list-none">
       {cells.map((node, index) => {
         if (!node) {
@@ -101,11 +104,16 @@ export function PathChain({ nodes, targetLabel }: PathChainProps) {
               className={target ? 'ring-2 ring-care' : undefined}
             />
             <span className="mt-1 w-full truncate text-center text-label font-bold text-ink">{label}</span>
-            <span className="mt-0.5 flex w-full min-w-0 items-center justify-center gap-0.5 overflow-hidden whitespace-nowrap text-caption font-semibold text-ink-muted">
+            {/* The two badges are named by the legend under the chain; screen readers get the words */}
+            <span
+              className="mt-0.5 flex w-full min-w-0 items-center justify-center gap-0.5 overflow-hidden whitespace-nowrap text-caption font-semibold text-ink-muted"
+              title={badgeWords(node)}
+            >
+              <span className="sr-only">{badgeWords(node)}</span>
               <IconPeople className="h-3.5 w-3.5 shrink-0" />
-              <span className="tabular-nums">{node.connectionCount}</span>
+              <span className="tabular-nums" aria-hidden>{node.connectionCount}</span>
               <CoinIcon />
-              <span className="truncate tabular-nums">{budgetText(node.remainingBudget)}</span>
+              <span className="truncate tabular-nums" aria-hidden>{budgetText(node.remainingBudget)}</span>
             </span>
           </>
         );
@@ -124,5 +132,11 @@ export function PathChain({ nodes, targetLabel }: PathChainProps) {
         );
       })}
     </ol>
+    {/* Legend: what the two numbers under each person are (audit A5) */}
+    <p className="mt-1.5 flex flex-wrap items-center justify-center gap-x-3 gap-y-0.5 text-caption font-semibold text-ink-muted" aria-hidden>
+      <span className="inline-flex items-center gap-1"><IconPeople className="h-3.5 w-3.5 shrink-0" />{t('person.badgeCircle')}</span>
+      <span className="inline-flex items-center gap-1"><CoinIcon />{t('person.badgeIntention')}</span>
+    </p>
+    </>
   );
 }

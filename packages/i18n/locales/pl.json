@@ -148,7 +148,7 @@
     "fit": "Wpasuj sieć",
     "stats": {
       "canHelp": "Zadeklarowany udział sieci",
-      "explain": "Ile osoby z Twojej sieci (do 6. uścisku dłoni) są jeszcze gotowe zgłosić w tym okresie: to suma ich zamiarów. Wiadomość o potrzebie idzie falami, od najbliższych, do 6. uścisku dłoni. To punkt odniesienia, a nie obietnica: każdy sam decyduje, czy weźmie udział.",
+      "explain": "Suma zamiarów osób z Twojej sieci do 6. uścisku dłoni. Wiadomość o potrzebie idzie falami, od najbliższych, do 6. uścisku dłoni. To punkt odniesienia, a nie obietnica: każdy sam decyduje, czy weźmie udział.",
       "weekDelta": "+{{amount}} w tym tygodniu",
       "people_few": "{{count}} osoby w Twojej sieci",
       "people_many": "{{count}} osób w Twojej sieci",
@@ -212,7 +212,7 @@
       "milestoneFirstNeedSub": "Wiadomość idzie po uściskach dłoni",
       "milestoneFirstPart": "Pierwszy udział",
       "milestoneFirstPartSub": "Autor potrzeby widzi Twój udział",
-      "accepted": "potwierdził(a) znajomość · jesteście nawzajem w swoich kręgach",
+      "accepted": "znajomość potwierdzona · jesteście nawzajem w swoich kręgach",
       "stack": {
         "waiting": "Czekamy na potwierdzenie",
         "incoming": "Chcą się połączyć",
@@ -225,7 +225,7 @@
       }
     },
     "start": {
-      "lead": "Jesteś pierwszy w swoim kręgu.",
+      "lead": "Twój krąg zaczyna się od Ciebie.",
       "body": "Wiadomość o potrzebie idzie po potwierdzonych uściskach dłoni: gdy nikogo obok nie ma, sygnał nie ma dokąd iść.",
       "step2": "Pierwsza osoba",
       "step2Sub": "Wyślij link albo pokaż kod QR",
@@ -275,8 +275,8 @@
     "all": "Wszyscy · {{count}}",
     "confirm": "Potwierdź, że się znacie",
     "inCircle": "{{count}} w swoim kręgu",
-    "noneYet": "Nikogo jeszcze nie dodano",
-    "brought": "Zaprosił(a) {{count}}",
+    "noneYet": "W kręgu na razie tylko Ty",
+    "brought": "W kręgu jeszcze {{count}}",
     "via": "przez {{path}}",
     "empty": "Na razie nikogo",
     "notFound": "Nikogo nie znaleziono",
@@ -284,9 +284,14 @@
     "sortRecent": "Najnowsi",
     "sortName": "Imię",
     "sortIntention": "Zamiar",
-    "sortBrought": "Zaproszeni",
+    "sortBrought": "Wielkość kręgu",
     "foundElsewhere": "Nikt o tym imieniu w tym uścisku dłoni. Znaleziono w innych:",
-    "alsoElsewhere": "Także w innych uściskach dłoni"
+    "alsoElsewhere": "Także w innych uściskach dłoni",
+    "ringHint1": "Osoby, które znasz osobiście.",
+    "ringHint2": "Ich znajomi: między Wami jedna osoba.",
+    "ringHint3": "Krok dalej: między Wami dwie osoby.",
+    "empty1": "Osoby, które znasz osobiście, pojawią się tu po potwierdzeniu znajomości.",
+    "empty2": "Osoby pojawią się tu, gdy kręgi Twoich znajomych urosną."
   },
   "offline": {
     "banner": "Brak połączenia. Wyświetlana jest kopia zapisana na tym urządzeniu, {{time}}.",
@@ -329,7 +334,9 @@
     "noGoal": "Kwota nie jest podana",
     "saveGoal": "Zapisz kwotę",
     "yourAmount": "Twoja kwota",
-    "minStake": "Twój zamiar to {{amount}}. Możesz dać więcej.",
+    "minStake": "Mój zamiar: {{amount}}. Możesz podać więcej.",
+    "zeroStake": "Mój zamiar: {{amount}}",
+    "participationMinimum": "Udział zaczyna się od {{amount}}.",
     "minOne": "Minimum 1 $",
     "whole": "Tylko pełne dolary",
     "participate": "Zgłoś udział",
@@ -346,7 +353,7 @@
     "otherAmount": "Inna kwota",
     "participantsCount": "Uczestnicy: {{count}}",
     "transferred": "Otrzymano",
-    "emptyPeople": "Nikt jeszcze nie dołączył",
+    "emptyPeople": "Nikt jeszcze nie zgłosił udziału",
     "youLower": "ty",
     "firstHandshake": "1. uścisk dłoni",
     "inNetwork": "w Twojej sieci",
@@ -383,7 +390,7 @@
       "AUTHOR_REQUEST": "Na prośbę autora"
     },
     "goalReached": "Potrzebna kwota jest zgłoszona",
-    "pastCrumb": "Potrzeby",
+    "pastCrumb": "Aktywność",
     "chatLabel": "Czat uczestników",
     "openTitle": "Otwarte",
     "openEmpty": "Nie ma otwartych potrzeb",
@@ -420,6 +427,11 @@
       "keepYes": "Zostaw {{amount}}",
       "kept": "Gotowe. Twój zamiar: {{amount}}. Możesz go zmienić w profilu.",
       "intro": "Zobacz, jak działa sieć"
+    },
+    "emptyPeopleBody": "Osoby, które zgłoszą udział, pojawią się tu ze swoją kwotą.",
+    "created": {
+      "title": "Potrzeba wysłana",
+      "body": "Osoby z Twojej sieci dowiedzą się o niej przez uściski dłoni, najpierw najbliższe, maksymalnie jedna osoba na każdego dolara kwoty. Wyślij link znajomym: da się go otworzyć bez aplikacji."
     }
   },
   "profile": {
@@ -461,10 +473,10 @@
     "openSource": "Otwarty kod",
     "terms": "Regulamin",
     "privacy": "Polityka prywatności",
-    "stakeLabel": "Domyślna kwota udziału",
+    "stakeLabel": "Mój zamiar",
     "stakeMin": "Minimum 1",
     "stakeHint": "Tyle jesteś gotów zgłosić, gdy o potrzebie zgłasza ktoś, kogo znasz. Możesz zgłosić więcej. Social Organizer nie przyjmuje ani nie przekazuje pieniędzy.",
-    "stakeNone": "Teraz nie mogę pomóc",
+    "stakeNone": "Teraz nie mogę wziąć udziału",
     "openTab": "Otwarte",
     "pastTab": "Minione",
     "yourCollection": "Twoja potrzeba",
@@ -478,7 +490,7 @@
     "participantMany": "{{count}} uczestników",
     "paused": "Wstrzymana",
     "noOpen": "Nie ma otwartych potrzeb",
-    "noPast": "Brak wpisów",
+    "noPast": "Nic jeszcze nie zamknięto",
     "pastVia": "przez {{name}}",
     "left": "Udział wycofany",
     "goalMissing": "Nie podano kwoty",
@@ -486,11 +498,13 @@
     "logoutByMethod": "Logowanie było przez {{method}}. Wrócisz w ten sam sposób.",
     "logoutByEmail": "Logowanie było kodem wysłanym na <b/>. Wrócisz w ten sam sposób.",
     "logoutEmailOnly": "Wrócisz w ten sam sposób albo kodem wysłanym na <b/>.",
-    "logoutGeneric": "Wrócisz w ten sam sposób, w jaki się logowałeś.",
+    "logoutGeneric": "Wrócisz tą samą metodą logowania.",
     "notifyChannel": "Kanał",
     "notifyTelegramNotLinked": "Połącz Telegram w „Konto”, żeby dostawać tam wiadomości.",
     "stakeSaved": "Zapisano",
-    "needCounts": "Otwarte: {{open}} · Minione: {{past}}"
+    "needCounts": "Otwarte: {{open}} · Minione: {{past}}",
+    "noOpenBody": "Tu są Twoje otwarte potrzeby i te, w których bierzesz udział.",
+    "noPastBody": "Gdy potrzeba zostanie zamknięta, trafi tu razem z kwotami."
   },
   "settings": {
     "title": "Ustawienia",
@@ -535,7 +549,9 @@
     "linkTextPlaceholder": "Tekst linku",
     "insert": "Wstaw",
     "urlPlaceholder": "https://...",
-    "uploadFailed": "Nie udało się wgrać"
+    "uploadFailed": "Nie udało się wgrać",
+    "emptyBody": "Na razie zapytaj asystenta o uściski dłoni, potrzeby i udział.",
+    "askAssistant": "Zapytaj asystenta"
   },
   "chat": {
     "title": "Asystent",
@@ -1264,6 +1280,7 @@
     "reach": "Zobaczą to ludzie z sieci ({{network}}): najpierw Twoi ({{direct}}), potem ich ludzie.",
     "reachEmpty": "Na razie nikogo obok nie ma, więc sygnał nie ma dokąd iść.",
     "submit": "Zgłoś potrzebę",
+    "seeHowToUnlock": "Zobacz, jak uzyskać dostęp",
     "ownTitle": "Twoja potrzeba · {{current}} z {{goal}}",
     "ownNoGoal": "Twoja potrzeba",
     "largeTitle": "Kwota {{amount}}, zgadza się?",
@@ -1286,8 +1303,8 @@
     "preview": "Jak to wygląda",
     "previewHide": "Ukryj przykład",
     "previewCaption": "Tak potrzeba wygląda w kręgu",
-    "allLink": "Wszyscy · {{count}}",
-    "allLinkPlain": "Wszyscy"
+    "allLink": "Aktywność · {{count}}",
+    "allLinkPlain": "Aktywność"
   },
   "path": {
     "title": "Jeszcze trochę i ludzie dowiedzą się o potrzebie",
@@ -1370,7 +1387,7 @@
     "inCircleSince": "W kręgu od {{date}}",
     "inCircleToday": "W kręgu od dzisiaj",
     "inCircleYesterday": "W kręgu od wczoraj",
-    "empty": "Nikt jeszcze nie przyszedł Twoim linkiem.",
+    "empty": "Nikt jeszcze nie przyszedł Twoim linkiem. Wyślij go osobie, którą znasz osobiście.",
     "loadError": "Nie udało się wczytać listy.",
     "qrHint": "Kod żyje minutę i od razu potwierdza znajomość: oboje tu jesteście. Potem odświeży się sam.",
     "scanOther": "Skanuj cudzy",
@@ -1521,7 +1538,11 @@
     "factsNote": "Dotyczy zamkniętych Potrzeb. Oznaczenie ustawia autor Potrzeby; Social Organizer go nie weryfikuje.",
     "requestDeclined": "Znajomość nie została potwierdzona. Jeśli się znacie, pokażcie sobie kod QR przy spotkaniu.",
     "prevPerson": "Poprzednia osoba",
-    "nextPerson": "Następna osoba"
+    "nextPerson": "Następna osoba",
+    "badgeCircle": "w kręgu",
+    "badgeIntention": "zamiar",
+    "intentionIs": "Zamiar: {{amount}}",
+    "noSharedBody": "Gdy jedno z was weźmie udział w potrzebie drugiego, pojawi się to tutaj."
   },
   "help": {
     "faq": "Pytania i odpowiedzi",
@@ -1545,9 +1566,9 @@
       "RULES_VIOLATION": "Naruszenie zasad",
       "ACCOUNT_HACKED": "Wygląda na to, że konto przejęto"
     },
-    "feedTitle": "Ludzie skarżą się na potrzebę {{name}}",
+    "feedTitle": "{{name}} · Skargi dotyczące potrzeby",
     "feedSubtitle": "Wiesz coś o tym?",
-    "questionTitle": "Ludzie skarżą się na potrzebę {{name}}",
+    "questionTitle": "{{name}} · Skargi dotyczące potrzeby",
     "questionBody": "Imion osób, które zgłosiły, nie pokazujemy.",
     "reasonsHeading": "Powody",
     "openCollection": "Otwórz potrzebę",
@@ -1589,7 +1610,7 @@
     "notNow": "Nie teraz"
   },
   "adminPerson": {
-    "budget": "Deklaracja w tym okresie",
+    "budget": "Zamiar",
     "registered": "Rejestracja",
     "registeredValue": "{{date}} · dzień {{n}}",
     "connections": "Bezpośrednie połączenia",
@@ -1598,8 +1619,8 @@
     "needsWithHelp": "Potrzeby z udziałem",
     "tookPartIn": "Udział w potrzebach",
     "historyLabel": "Historia udziału",
-    "given": "Dał(a) · {{n}}",
-    "received": "Otrzymał(a) · {{n}}",
+    "given": "Udział · {{n}}",
+    "received": "Otrzymano · {{n}}",
     "projectDay": "Dzień projektu"
   },
   "participationSummary": {

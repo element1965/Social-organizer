@@ -1,5 +1,7 @@
 import { useRef, useState, type ReactNode } from 'react';
+import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { EmptyState } from '../ui2/EmptyState';
 import { EventRow } from '../ui2/EventRow';
 import { Avatar } from '../ui2/Avatar';
 import { formatMoney } from '../ui2/format';
@@ -285,9 +287,16 @@ function StackCard({ kind, events, expanded, onToggle }: { kind: FeedKind; event
 export function QuietFeed() {
   const { t } = useTranslation();
   return (
-    <div className="mx-1 mt-4 text-center text-caption text-ink-muted">
-      <b className="mb-1 block text-body font-bold text-ink">{t('circle.feed.quietTitle')}</b>
-      {t('circle.feed.quietBody')}
-    </div>
+    <EmptyState
+      className="mt-4"
+      variant="plain"
+      title={t('circle.feed.quietTitle')}
+      body={t('circle.feed.quietBody')}
+      action={(
+        <Link to="/add" className="so-focus flex min-h-11 items-center rounded-md px-2 text-body-s font-bold text-care">
+          {t('nav.addPerson')}
+        </Link>
+      )}
+    />
   );
 }

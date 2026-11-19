@@ -7,6 +7,9 @@ import { cn } from '../lib/utils';
 import { useCachedNetworkStats } from '../hooks/useCachedNetworkStats';
 import { Button } from '../components/ui2/Button';
 import { Chip } from '../components/ui2/Chip';
+import { EmptyState } from '../components/ui2/EmptyState';
+import { shareLink } from '../lib/share';
+import { appOrigin } from '../components/add/links';
 import { Group, Row } from '../components/ui2/Group';
 import { Input } from '../components/ui2/Input';
 import { PersonRow } from '../components/ui2/PersonRow';
@@ -49,7 +52,7 @@ type Entry = {
   value: string | null;
   photoUrl: string | null;
   at: number;
-  /** Their intention this period, for sorting (0 when not set). */
+  /** Their saved intention, for sorting (0 when not set). */
   intention: number;
   /** People they added besides you (1st handshake only). */
   brought: number;
@@ -155,7 +158,7 @@ export function PeoplePage() {
     return (list: Entry[], key: SortKey) => [...list].sort(order[key]);
   }, [i18n.language]);
 
-  // What a person brings to the network: their intention this period (the sum "Declared participation" adds up).
+  // What a person brings to the network: their saved intention (the sum "Declared participation" adds up).
   // Shown at the row end, so a long chain of acquaintances keeps the subtitle to itself
   const pledged = (budget: number | null | undefined) => (budget != null && budget > 0 ? formatMoney(Math.round(budget)) : null);
 
@@ -316,6 +319,20 @@ export function PeoplePage() {
   // A failed list is not an empty one (no connection, server trouble)
   const failed = current.failed;
 
+  // The empty 2nd and 3rd handshake: ask your people to add theirs (the same message as the path sheet)
+  const [reminded, setReminded] = useState(false);
+  const remind = async () => {
+    try {
+      const outcome = await shareLink({ title: t('common.appName'), text: t('path.remindText'), url: appOrigin() });
+      if (outcome === 'copied') {
+        setReminded(true);
+        window.setTimeout(() => setReminded(false), 2000);
+      }
+    } catch {
+      setReminded(false);
+    }
+  };
+
   const open = (entry: Entry) => {
     if (entry.pendingId) {
       setAcquaint({ pendingId: entry.pendingId, personId: entry.id, name: entry.name });
@@ -407,6 +424,8 @@ export function PeoplePage() {
             onChange={(value) => navigate(`/people/${value}`, { replace: true })}
             options={ringOptions}
           />
+          {/* What a handshake means, at the place people first count them */}
+          <p className="px-1 text-label font-semibold text-ink-muted">{t(`people.ringHint${ring}`)}</p>
           <Input
             variant="search"
             type="search"
@@ -456,9 +475,27 @@ export function PeoplePage() {
               </Button>
             </div>
           ) : filtered.length === 0 && requests.length === 0 ? (
-            <p className={cn('text-center text-body-s font-semibold text-ink-muted', elsewhere.length ? 'mt-4' : 'mt-8')}>
-              {needle ? t(elsewhere.length ? 'people.foundElsewhere' : 'people.notFound') : t('people.empty')}
-            </p>
+            needle ? (
+              <p className={cn('text-center text-body-s font-semibold text-ink-muted', elsewhere.length ? 'mt-4' : 'mt-8')}>
+                {t(elsewhere.length ? 'people.foundElsewhere' : 'people.notFound')}
+              </p>
+            ) : (
+              // An empty ring says who will appear in it and gives the one step that fills it (audit A8)
+              <EmptyState
+                className="mt-4"
+                title={t('people.empty')}
+                body={t(ring === 1 ? 'people.empty1' : 'people.empty2')}
+                action={
+                  ring === 1 || first.length === 0 ? (
+                    <Button size="md" onClick={() => navigate('/add')}>{t('nav.addPerson')}</Button>
+                  ) : (
+                    <Button size="md" variant="secondary" onClick={() => void remind()}>
+                      {reminded ? t('common.copied') : t('path.remind')}
+                    </Button>
+                  )
+                }
+              />
+            )
           ) : (
             <>
               {requests.length + recent.length > 0 ? (

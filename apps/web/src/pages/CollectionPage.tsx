@@ -1,5 +1,5 @@
-import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
-import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
+import { useLocation, useNavigate, useNavigationType, useParams, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { MAX_CHAT_LINK_LENGTH, MIN_COLLECTION_AMOUNT, MIN_OBLIGATION_AMOUNT, REGULAR_CYCLE_DAYS } from '@so/shared';
 import { IconChat, IconClock, IconPen, IconQr, IconShare } from '../components/collection/icons';
@@ -23,7 +23,6 @@ import { StageRail } from '../components/ui2/StageRail';
 import { useShellMode } from '../components/ui2/shell-mode';
 import { useAuth } from '../hooks/useAuth';
 import { useNicknames } from '../hooks/useNicknames';
-import { inflectName } from '@so/shared';
 import { MessengerButtons } from '../components/share/MessengerButtons';
 import { buildSosInviteUrl } from '../lib/inviteUrl';
 import { shareLink } from '../lib/share';
@@ -70,6 +69,10 @@ function sheetPair(desktop: boolean, action: ReactNode, dismiss: ReactNode, dest
 
 export function CollectionPage() {
   const { id } = useParams<{ id: string }>();
+  return <CollectionScreen key={id} id={id} />;
+}
+
+function CollectionScreen({ id }: { id: string | undefined }) {
   const [searchParams] = useSearchParams();
   const isSos = searchParams.get('sos') === 'true';
   const { t, i18n } = useTranslation();
@@ -80,6 +83,31 @@ export function CollectionPage() {
   const resolve = useNicknames();
   const utils = trpc.useUtils();
   const startedSos = useRef<string | null>(null);
+  const { pathname, search, hash, state, key } = useLocation();
+  const navigationType = useNavigationType();
+  const [justCreated, setJustCreated] = useState(false);
+  const createdShown = useRef(false);
+
+  useEffect(() => {
+    if ((state as { created?: boolean } | null)?.created === true) {
+      // Clear the flag before the Need loads. POP also covers reloads and old history entries.
+      setJustCreated(navigationType !== 'POP');
+      navigate({ pathname, search, hash }, { replace: true, state: null });
+    } else if (navigationType !== 'REPLACE') {
+      setJustCreated(false);
+    }
+  }, [key, pathname, search, hash, state, navigationType, navigate]);
+
+  const focusCreated = useCallback((node: HTMLHeadingElement | null) => {
+    if (!node || createdShown.current) return;
+    createdShown.current = true;
+    const smooth = !window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+    node.scrollIntoView({ behavior: smooth ? 'smooth' : 'auto', block: 'center' });
+    node.focus({ preventScroll: true });
+  }, []);
+  const circleBack = justCreated
+    ? { label: t('nav.circle'), onClick: () => navigate(-1) }
+    : { label: t('nav.circle'), to: '/' };
 
   const me = trpc.user.me.useQuery();
   const admin = trpc.faq.isAdmin.useQuery();
@@ -213,7 +241,7 @@ export function CollectionPage() {
   // on the switch and the Need is read again for the new account, so it waits like a first load
   if (!id || collection.isLoading || (!collection.data && errorKind(collection.error) === 'aborted')) {
     return (
-      <Screen width="column" back={{ label: t('nav.circle'), to: '/' }}>
+      <Screen width="column" back={circleBack}>
         <p className="pt-6 text-body-s font-semibold text-ink-muted">{t('common.loading')}</p>
       </Screen>
     );
@@ -222,7 +250,7 @@ export function CollectionPage() {
   // closed to this account replaces it. With nothing loaded, the reason is told with the action that helps.
   if (!collection.data || isDefinitiveLoadError(collection.error)) {
     return (
-      <Screen width="column" back={{ label: t('nav.circle'), to: '/' }}>
+      <Screen width="column" back={circleBack}>
         <NeedLoadError
           error={collection.error}
           signedIn
@@ -258,7 +286,13 @@ export function CollectionPage() {
   const showAdmin = admin.data?.isAdmin === true && !closed && (data.status === 'ACTIVE' || held);
   const language = i18n.language;
   const creatorName = resolve(data.creatorId, data.creator.name);
-  const stake = Math.max(MIN_OBLIGATION_AMOUNT, Math.round(me.data?.monthlyBudget || MIN_OBLIGATION_AMOUNT));
+  const intention = me.data?.monthlyBudget;
+  const money = new Intl.NumberFormat(language, {
+    style: 'currency',
+    currency: 'USD',
+    currencyDisplay: 'narrowSymbol',
+    maximumFractionDigits: 0,
+  });
 
   // Every active pledge counts until the person declines. Confirming a cycle does not change the total.
   const mineTotal = activeObligations.filter((row) => row.userId === userId).reduce((sum, row) => sum + row.amount, 0);
@@ -288,9 +322,9 @@ export function CollectionPage() {
 
   const back = closed
     ? { label: t('collection.pastCrumb'), to: '/me/history' }
-    : owner
+    : owner && !justCreated
       ? { label: t('nav.profile'), to: '/me' }
-      : { label: t('nav.circle'), to: '/' };
+      : circleBack;
 
   const people: ParticipantRow[] = activeObligations.map((row) => {
     const mine = row.userId === userId;
@@ -317,7 +351,7 @@ export function CollectionPage() {
 
   // The same sentence as the public page and its link card ("Anna needs assistance")
   const shareText = t('sos.headline', {
-    name: language.toLowerCase().startsWith('ru') ? inflectName(data.creator.name, 'dative') : firstName(data.creator.name),
+    name: firstName(data.creator.name),
   });
   const share = async () => {
     try {
@@ -363,13 +397,13 @@ export function CollectionPage() {
     place();
   };
 
-  // The decision is made: back where the Back action goes. A failure stays on the page and says so.
+  // A successful decline returns to the Circle. A failure stays on the page.
   const notNow = async () => {
     setLeaving(true);
     setLeaveError(null);
     const error = await declineNeed(data.id);
     setLeaving(false);
-    if (!error) navigate(back.to);
+    if (!error) navigate('/');
     else setLeaveError(error);
   };
 
@@ -516,7 +550,12 @@ export function CollectionPage() {
             value={joinAmount}
             onValueChange={(value) => { setJoinAmount(value); setJoinError(''); createObligation.reset(); }}
             error={joinError || serverFieldError(createObligation.error, 'amount', t('errors.invalid'))}
-            hint={joinError ? undefined : t('collection.minStake', { amount: formatMoney(stake) })}
+            hint={intention == null ? undefined : intention === 0 ? (
+              <>
+                {t('collection.zeroStake', { amount: money.format(intention) })}
+                <span className="block">{t('collection.participationMinimum', { amount: money.format(MIN_OBLIGATION_AMOUNT) })}</span>
+              </>
+            ) : t('collection.minStake', { amount: formatMoney(intention) })}
           />
           <Button className="mt-4 w-full" loading={createObligation.isPending} disabled={offline || acceptSos.isPending} onClick={join}>{t('collection.participate')}</Button>
           {offline ? <OfflineHint /> : null}
@@ -654,6 +693,14 @@ export function CollectionPage() {
 
       {owner && !closed ? (
         <Card className="mt-3">
+          {justCreated && !held ? (
+            <div className="mb-3">
+              <h2 ref={focusCreated} tabIndex={-1} className="so-focus rounded-sm text-body font-extrabold text-ink">
+                {t('collection.created.title')}
+              </h2>
+              <p className="mt-1 text-body-s font-semibold text-ink-muted">{t('collection.created.body')}</p>
+            </div>
+          ) : null}
           {chatEditing ? (
             <>
               <Input
@@ -709,6 +756,11 @@ export function CollectionPage() {
           onRemove={setRemoveTarget}
           onSaved={refresh}
           onCloseCollection={() => setCloseOpen(true)}
+          emptyAction={held ? undefined : (
+            <Button size="md" variant="secondary" icon={<IconShare />} onClick={share}>
+              {copied ? t('collection.shareCopied') : t('add.share')}
+            </Button>
+          )}
         />
       ) : (
         <ParticipantList people={people} showPaid={false} onPerson={(userIdToOpen) => navigate(`/person/${userIdToOpen}`)} />

@@ -292,6 +292,7 @@ export function MarkableParticipantList({
   onRemove,
   onSaved,
   onCloseCollection,
+  emptyAction,
 }: {
   people: ParticipantRow[];
   onPerson: (userId: string) => void;
@@ -299,6 +300,7 @@ export function MarkableParticipantList({
   onSaved: () => void;
   /** Opens the "close the collection" confirmation; offered once every transfer is marked. */
   onCloseCollection: () => void;
+  emptyAction?: ReactNode;
 }) {
   const marks = usePaidMarks(rows, onSaved);
   const [sheetOpen, setSheetOpen] = useState(false);
@@ -319,6 +321,7 @@ export function MarkableParticipantList({
         onPaid={marks.toggle}
         onRemove={onRemove}
         onMarkMany={() => setSheetOpen(true)}
+        emptyAction={emptyAction}
       />
       <ActionError error={marks.failed} className="mt-2" />
       <MarkTransfersSheet

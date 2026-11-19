@@ -148,7 +148,7 @@
     "fit": "Anpassa nätverket",
     "stats": {
       "canHelp": "Nätverkets angivna deltagande",
-      "explain": "Vad personerna i ditt nätverk (upp till 6:e handslaget) fortfarande är beredda att ange under perioden: summan av deras avsikter. Ett behov går ut i vågor, närmast först, upp till 6:e handslaget. Det är en riktpunkt, inte ett löfte: var och en bestämmer själv om hen vill delta.",
+      "explain": "Summan av avsikterna hos personerna i ditt nätverk upp till 6:e handslaget. Ett behov går ut i vågor, närmast först, upp till 6:e handslaget. Det är en riktpunkt, inte ett löfte: var och en bestämmer själv om hen vill delta.",
       "weekDelta": "+{{amount}} den här veckan",
       "people_one": "{{count}} person i ditt nätverk",
       "people_other": "{{count}} personer i ditt nätverk",
@@ -219,7 +219,7 @@
       }
     },
     "start": {
-      "lead": "Du är först i din krets.",
+      "lead": "Din krets börjar med dig.",
       "body": "Ett behov går längs bekräftade handslag: när ingen finns nära har signalen ingenstans att ta vägen.",
       "step2": "Första personen",
       "step2Sub": "Skicka din länk eller visa QR-koden",
@@ -269,8 +269,8 @@
     "all": "Alla · {{count}}",
     "confirm": "Bekräfta att ni känner varandra",
     "inCircle": "{{count}} i sin krets",
-    "noneYet": "Har inte lagt till någon ännu",
-    "brought": "Har bjudit in {{count}}",
+    "noneYet": "Hittills bara du i kretsen",
+    "brought": "{{count}} till i kretsen",
     "via": "via {{path}}",
     "empty": "Ingen ännu",
     "notFound": "Ingen hittades",
@@ -278,9 +278,14 @@
     "sortRecent": "Nyaste",
     "sortName": "Namn",
     "sortIntention": "Avsikt",
-    "sortBrought": "Inbjudna",
+    "sortBrought": "Kretsens storlek",
     "foundElsewhere": "Ingen med det namnet i detta handslag. Hittades i andra:",
-    "alsoElsewhere": "Även i andra handslag"
+    "alsoElsewhere": "Även i andra handslag",
+    "ringHint1": "Personer du känner personligen.",
+    "ringHint2": "Deras bekanta: en person mellan er.",
+    "ringHint3": "Ett steg längre: två personer mellan er.",
+    "empty1": "Personer du känner personligen visas här när bekantskapen är bekräftad.",
+    "empty2": "Personer visas här när dina bekantas kretsar växer."
   },
   "offline": {
     "banner": "Ingen anslutning. Visar kopian som sparats på den här enheten, {{time}}.",
@@ -323,7 +328,9 @@
     "noGoal": "Inget belopp angivet",
     "saveGoal": "Spara belopp",
     "yourAmount": "Ditt belopp",
-    "minStake": "Din avsikt är {{amount}}. Du kan ge mer.",
+    "minStake": "Min avsikt: {{amount}}. Du kan ange mer.",
+    "zeroStake": "Min avsikt: {{amount}}",
+    "participationMinimum": "Deltagande börjar vid {{amount}}.",
     "minOne": "Minst 1 $",
     "whole": "Bara hela dollar",
     "participate": "Anmäl deltagande",
@@ -340,7 +347,7 @@
     "otherAmount": "Annat belopp",
     "participantsCount": "Deltagare: {{count}}",
     "transferred": "Mottaget",
-    "emptyPeople": "Ingen har gått med ännu",
+    "emptyPeople": "Ingen har anmält deltagande ännu",
     "youLower": "du",
     "firstHandshake": "1:a handslaget",
     "inNetwork": "i ditt nätverk",
@@ -377,7 +384,7 @@
       "AUTHOR_REQUEST": "På skaparens begäran"
     },
     "goalReached": "Det belopp som behövs är angivet",
-    "pastCrumb": "Behov",
+    "pastCrumb": "Aktivitet",
     "chatLabel": "Deltagarnas chatt",
     "openTitle": "Öppna",
     "openEmpty": "Inga öppna behov",
@@ -414,6 +421,11 @@
       "keepYes": "Behåll {{amount}}",
       "kept": "Klart: din avsikt är {{amount}}. Du kan ändra den under Profil.",
       "intro": "Se hur nätverket fungerar"
+    },
+    "emptyPeopleBody": "De som anmäler deltagande visas här med sitt belopp.",
+    "created": {
+      "title": "Ditt behov är skickat",
+      "body": "Personer i ditt nätverk får veta om det via handslag, de närmaste först, högst en person per dollar av beloppet. Skicka länken till dem du känner: den går att öppna utan appen."
     }
   },
   "profile": {
@@ -455,10 +467,10 @@
     "openSource": "Öppen källkod",
     "terms": "Villkor",
     "privacy": "Integritetspolicy",
-    "stakeLabel": "Standardbelopp för deltagande",
+    "stakeLabel": "Min avsikt",
     "stakeMin": "Minst 1",
     "stakeHint": "Så mycket är du beredd att ange när någon du känner anmäler ett behov. Du kan ange mer. Social Organizer tar inte emot eller överför pengar.",
-    "stakeNone": "Jag kan inte hjälpa just nu",
+    "stakeNone": "Jag kan inte delta just nu",
     "openTab": "Öppna",
     "pastTab": "Tidigare",
     "yourCollection": "Ditt behov",
@@ -472,7 +484,7 @@
     "participantMany": "{{count}} deltagare",
     "paused": "Pausad",
     "noOpen": "Inga öppna behov",
-    "noPast": "Inga poster",
+    "noPast": "Inget stängt ännu",
     "pastVia": "via {{name}}",
     "left": "Deltagande indraget",
     "goalMissing": "Inget belopp angivet",
@@ -484,7 +496,9 @@
     "notifyChannel": "Kanal",
     "notifyTelegramNotLinked": "Anslut Telegram under ”Konto” för att få meddelanden där.",
     "stakeSaved": "Sparat",
-    "needCounts": "Öppna: {{open}} · Tidigare: {{past}}"
+    "needCounts": "Öppna: {{open}} · Tidigare: {{past}}",
+    "noOpenBody": "Dina behov och behoven du deltar i finns här så länge de är öppna.",
+    "noPastBody": "När ett behov stängs flyttar det hit med sina belopp."
   },
   "settings": {
     "title": "Inställningar",
@@ -529,7 +543,9 @@
     "linkTextPlaceholder": "Länktext",
     "insert": "Infoga",
     "urlPlaceholder": "https://...",
-    "uploadFailed": "Uppladdningen misslyckades"
+    "uploadFailed": "Uppladdningen misslyckades",
+    "emptyBody": "Fråga under tiden assistenten om handslag, behov och deltagande.",
+    "askAssistant": "Fråga assistenten"
   },
   "chat": {
     "title": "Assistent",
@@ -1248,6 +1264,7 @@
     "reach": "{{network}} personer kan se den: dina {{direct}} först, sedan deras personer.",
     "reachEmpty": "Ingen finns nära ännu, så signalen har ingenstans att ta vägen.",
     "submit": "Anmäl behov",
+    "seeHowToUnlock": "Se hur du får tillgång",
     "ownTitle": "Ditt behov · {{current}} av {{goal}}",
     "ownNoGoal": "Ditt behov",
     "largeTitle": "Belopp {{amount}}, stämmer det?",
@@ -1270,8 +1287,8 @@
     "preview": "Så ser det ut",
     "previewHide": "Dölj exemplet",
     "previewCaption": "Så ser ett behov ut i kretsen",
-    "allLink": "Alla · {{count}}",
-    "allLinkPlain": "Alla"
+    "allLink": "Aktivitet · {{count}}",
+    "allLinkPlain": "Aktivitet"
   },
   "path": {
     "title": "Snart får folk veta om ditt behov",
@@ -1352,7 +1369,7 @@
     "inCircleSince": "I kretsen sedan {{date}}",
     "inCircleToday": "I kretsen sedan i dag",
     "inCircleYesterday": "I kretsen sedan i går",
-    "empty": "Ingen har kommit via din länk ännu.",
+    "empty": "Ingen har kommit via din länk ännu. Skicka den till någon du känner personligen.",
     "loadError": "Det gick inte att läsa in listan.",
     "qrHint": "Koden gäller en minut och bekräftar bekantskapen direkt: ni är båda här. Sedan uppdateras den av sig själv.",
     "scanOther": "Skanna deras",
@@ -1493,7 +1510,11 @@
     "factsNote": "För stängda behov. Markeringen sätts av behovets författare, Social Organizer kontrollerar den inte.",
     "requestDeclined": "Bekantskapen bekräftades inte. Om ni känner varandra, visa varandra QR-koden när ni ses.",
     "prevPerson": "Föregående person",
-    "nextPerson": "Nästa person"
+    "nextPerson": "Nästa person",
+    "badgeCircle": "i kretsen",
+    "badgeIntention": "avsikt",
+    "intentionIs": "Avsikt: {{amount}}",
+    "noSharedBody": "När en av er deltar i den andras behov visas det här."
   },
   "help": {
     "faq": "Frågor och svar",
@@ -1517,9 +1538,9 @@
       "RULES_VIOLATION": "Regelbrott",
       "ACCOUNT_HACKED": "Kontot verkar övertaget"
     },
-    "feedTitle": "Personer har anmält {{name}}s behov",
+    "feedTitle": "{{name}} · Klagomål om ett behov",
     "feedSubtitle": "Vet du något?",
-    "questionTitle": "Personer har anmält {{name}}s behov",
+    "questionTitle": "{{name}} · Klagomål om ett behov",
     "questionBody": "Namnen på dem som anmälde förblir dolda.",
     "reasonsHeading": "Orsaker",
     "openCollection": "Öppna behovet",
@@ -1561,7 +1582,7 @@
     "notNow": "Inte nu"
   },
   "adminPerson": {
-    "budget": "Åtagande denna period",
+    "budget": "Avsikt",
     "registered": "Registrerad",
     "registeredValue": "{{date}} · dag {{n}}",
     "connections": "Direkta kontakter",

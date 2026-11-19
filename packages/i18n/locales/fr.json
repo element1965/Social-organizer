@@ -96,10 +96,10 @@
     "pwHide": "Masquer",
     "pwUseCode": "Se connecter sans mot de passe, avec un code par e-mail",
     "pwOnlyOld": "Les mots de passe ne restent que pour les comptes créés avant 2026.",
-    "lastMethod": "La dernière fois, vous vous êtes connecté avec <b>{{method}}</b>.",
+    "lastMethod": "La dernière fois, la connexion s’est faite avec <b>{{method}}</b>.",
     "expiredTitle": "Reconnectez-vous",
     "expiredText": "Votre session a expiré. Après la connexion, nous vous ramènerons là où vous étiez.",
-    "expiredTextLast": "Votre session a expiré. La dernière fois, vous vous êtes connecté avec <b>{{method}}</b> ; après la connexion, nous vous ramènerons là où vous étiez.",
+    "expiredTextLast": "Votre session a expiré. La dernière fois, la connexion s’est faite avec <b>{{method}}</b> ; après la connexion, nous vous ramènerons là où vous étiez.",
     "deletedTitle": "Compte supprimé",
     "deletedText": "Votre profil, vos liens et vos besoins ouverts sont supprimés. Les personnes de votre cercle verront « Utilisateur supprimé ».",
     "deletedHome": "Vers l’accueil",
@@ -108,8 +108,8 @@
     "waitText": "Quelques secondes. La fenêtre {{provider}} se fermera toute seule.",
     "waitBack": "Retour à la connexion",
     "waitOpenApp": "Ouvrir l’application",
-    "lastMethodEmail": "La dernière fois, vous vous êtes connecté avec <b>un code par e-mail</b>.",
-    "expiredTextEmail": "Votre session a expiré. La dernière fois, vous vous êtes connecté avec <b>un code par e-mail</b> ; après la connexion, nous vous ramènerons là où vous étiez.",
+    "lastMethodEmail": "La dernière fois, la connexion s’est faite avec <b>un code par e-mail</b>.",
+    "expiredTextEmail": "Votre session a expiré. La dernière fois, la connexion s’est faite avec <b>un code par e-mail</b> ; après la connexion, nous vous ramènerons là où vous étiez.",
     "inviteCode": "J'ai un code d'invitation",
     "inviteCodeLabel": "Code ou lien d'invitation",
     "inviteCodePlaceholder": "Collez le code ou le lien entier",
@@ -148,7 +148,7 @@
     "fit": "Ajuster le réseau",
     "stats": {
       "canHelp": "Participation déclarée du réseau",
-      "explain": "Ce que les personnes de votre réseau (jusqu’à la 6e poignée de main) sont encore prêtes à indiquer sur cette période : la somme de leurs intentions. Le message sur un besoin part par vagues, des plus proches jusqu’à la 6e poignée de main. C’est un repère, pas une promesse : chacun décide lui-même de participer ou non.",
+      "explain": "La somme des intentions des personnes de votre réseau jusqu’à la 6e poignée de main. Le message sur un besoin part par vagues, des plus proches jusqu’à la 6e poignée de main. C’est un repère, pas une promesse : chacun décide lui-même de participer ou non.",
       "weekDelta": "+{{amount}} cette semaine",
       "people_many": "{{count}} de personnes dans votre réseau",
       "people_one": "{{count}} personne dans votre réseau",
@@ -222,14 +222,14 @@
       }
     },
     "start": {
-      "lead": "Vous êtes la première personne de votre cercle.",
+      "lead": "Votre cercle commence par vous.",
       "body": "Un message sur un besoin circule le long des poignées de main confirmées : s’il n’y a personne à proximité, le signal n’a nulle part où aller.",
       "step2": "Première personne",
       "step2Sub": "Envoyez votre lien ou montrez le QR",
       "step2Waiting": "Demande envoyée, en attente de confirmation",
       "intention": "Mon intention",
       "intentionIs": "Mon intention : {{amount}}",
-      "intentionSub": "Le montant que vous êtes prêt à indiquer quand une personne que vous connaissez annonce un besoin."
+      "intentionSub": "Le montant que vous comptez indiquer quand une personne que vous connaissez annonce un besoin."
     },
     "acquaint": {
       "sub": "Vous demande de confirmer que vous vous connaissez",
@@ -272,8 +272,8 @@
     "all": "Tous · {{count}}",
     "confirm": "Confirmez que vous vous connaissez",
     "inCircle": "{{count}} dans son cercle",
-    "noneYet": "N’a encore ajouté personne",
-    "brought": "A fait venir {{count}}",
+    "noneYet": "Personne d’autre que vous dans son cercle pour l’instant",
+    "brought": "{{count}} de plus dans son cercle",
     "via": "par {{path}}",
     "empty": "Personne pour le moment",
     "notFound": "Aucun résultat",
@@ -281,9 +281,14 @@
     "sortRecent": "Récents",
     "sortName": "Nom",
     "sortIntention": "Intention",
-    "sortBrought": "Amenés",
+    "sortBrought": "Taille du cercle",
     "foundElsewhere": "Personne de ce nom dans cette poignée de main. Trouvés dans d'autres :",
-    "alsoElsewhere": "Aussi dans d'autres poignées de main"
+    "alsoElsewhere": "Aussi dans d'autres poignées de main",
+    "ringHint1": "Les personnes que vous connaissez personnellement.",
+    "ringHint2": "Les personnes qu’elles connaissent : une personne entre vous.",
+    "ringHint3": "Un pas plus loin : deux personnes entre vous.",
+    "empty1": "Les personnes que vous connaissez personnellement apparaissent ici une fois la connaissance confirmée.",
+    "empty2": "Des personnes apparaissent ici à mesure que les cercles de vos connaissances s’agrandissent."
   },
   "offline": {
     "banner": "Pas de connexion. Affichage de la copie enregistrée sur cet appareil, {{time}}.",
@@ -326,7 +331,9 @@
     "noGoal": "Aucun montant indiqué",
     "saveGoal": "Enregistrer le montant",
     "yourAmount": "Votre montant",
-    "minStake": "Votre intention est de {{amount}}. Vous pouvez donner davantage.",
+    "minStake": "Mon intention : {{amount}}. Vous pouvez indiquer plus.",
+    "zeroStake": "Mon intention : {{amount}}",
+    "participationMinimum": "La participation commence à {{amount}}.",
     "minOne": "Minimum 1 $",
     "whole": "Uniquement des dollars entiers",
     "participate": "Annoncer ma participation",
@@ -343,7 +350,7 @@
     "otherAmount": "Autre montant",
     "participantsCount": "Participants : {{count}}",
     "transferred": "Reçu",
-    "emptyPeople": "Personne n’a encore rejoint",
+    "emptyPeople": "Aucune participation annoncée pour l’instant",
     "youLower": "vous",
     "firstHandshake": "1re poignée de main",
     "inNetwork": "dans votre réseau",
@@ -380,7 +387,7 @@
       "AUTHOR_REQUEST": "À la demande de l’auteur"
     },
     "goalReached": "Le montant nécessaire est déclaré",
-    "pastCrumb": "Besoins",
+    "pastCrumb": "Activité",
     "chatLabel": "Chat des participants",
     "openTitle": "Ouvertes",
     "openEmpty": "Aucun besoin ouvert",
@@ -396,7 +403,7 @@
     "cycleNone": "Aucune marque",
     "markTransfers": "Indiquer les réceptions",
     "markTitle": "De qui avez-vous déjà reçu de l’argent ?",
-    "markHint": "Cochez toutes les personnes dont le montant indiqué est déjà arrivé. Seul vous voyez la marque elle-même ; Social Organizer ne voit ni ne vérifie les transferts. Une fois le Besoin fermé, le nombre de marques apparaît dans le profil du participant.",
+    "markHint": "Cochez toutes les personnes dont le montant indiqué est déjà arrivé. La marque elle-même n’est visible que par vous ; Social Organizer ne voit ni ne vérifie les transferts. Une fois le Besoin fermé, le nombre de marques apparaît dans le profil du participant.",
     "markPick": "Choisissez de qui vous avez reçu",
     "markConfirm": "Marquer · {{n}} · {{sum}}",
     "selectAll": "Tout le monde · {{n}}",
@@ -417,6 +424,11 @@
       "keepYes": "Garder {{amount}}",
       "kept": "C’est fait : votre intention est de {{amount}}. Vous pouvez la modifier dans le Profil.",
       "intro": "Voir comment fonctionne le réseau"
+    },
+    "emptyPeopleBody": "Les personnes qui annoncent leur participation apparaissent ici avec leur montant.",
+    "created": {
+      "title": "Votre besoin est envoyé",
+      "body": "Les personnes de votre réseau l’apprennent par les poignées de main, les plus proches d’abord, dans la limite d’une personne par dollar du montant. Envoyez le lien à vos connaissances : il s’ouvre aussi sans l’app."
     }
   },
   "profile": {
@@ -424,7 +436,7 @@
     "memberSince": "Membre depuis {{date}}",
     "nicknamePlaceholder": "Votre nom pour eux...",
     "online": "En ligne",
-    "lastSeen": "Vu(e) {{time}}",
+    "lastSeen": "Dernière connexion {{time}}",
     "editCard": "Modifier",
     "participation": "Participation",
     "networkOne": "{{count}} personne",
@@ -458,10 +470,10 @@
     "openSource": "Open source",
     "terms": "Conditions",
     "privacy": "Politique de confidentialité",
-    "stakeLabel": "Montant de participation par défaut",
+    "stakeLabel": "Mon intention",
     "stakeMin": "Minimum 1",
-    "stakeHint": "Ce que vous êtes prêt à indiquer quand une personne que vous connaissez annonce un besoin. Vous pouvez indiquer plus. Social Organizer n’accepte ni ne transfère d’argent.",
-    "stakeNone": "Je ne peux pas aider pour le moment",
+    "stakeHint": "Ce que vous comptez indiquer quand une personne que vous connaissez annonce un besoin. Vous pouvez indiquer plus. Social Organizer n’accepte ni ne transfère d’argent.",
+    "stakeNone": "Je ne peux pas participer pour le moment",
     "openTab": "Ouvertes",
     "pastTab": "Passées",
     "yourCollection": "Votre besoin",
@@ -475,19 +487,21 @@
     "participantMany": "{{count}} participants",
     "paused": "En pause",
     "noOpen": "Aucun besoin ouvert",
-    "noPast": "Aucune entrée",
+    "noPast": "Rien de clos pour l’instant",
     "pastVia": "via {{name}}",
     "left": "Participation retirée",
     "goalMissing": "Aucun montant indiqué",
-    "logoutByMethodEmail": "Vous vous êtes connecté avec {{method}} (<b/>). Vous pouvez revenir de la même façon ou avec un code par e-mail.",
-    "logoutByMethod": "Vous vous êtes connecté avec {{method}}. Vous pouvez revenir de la même façon.",
-    "logoutByEmail": "Vous vous êtes connecté avec un code envoyé à <b/>. Vous pouvez revenir de la même façon.",
+    "logoutByMethodEmail": "Connexion faite avec {{method}} (<b/>). Vous pouvez revenir de la même façon ou avec un code par e-mail.",
+    "logoutByMethod": "Connexion faite avec {{method}}. Vous pouvez revenir de la même façon.",
+    "logoutByEmail": "Connexion faite avec un code envoyé à <b/>. Vous pouvez revenir de la même façon.",
     "logoutEmailOnly": "Vous pouvez revenir de la même façon ou avec un code envoyé à <b/>.",
     "logoutGeneric": "Vous pouvez revenir de la même façon que lors de la connexion.",
     "notifyChannel": "Canal",
     "notifyTelegramNotLinked": "Connectez Telegram dans « Compte » pour y recevoir les messages.",
     "stakeSaved": "Enregistré",
-    "needCounts": "Ouvertes: {{open}} · Passées: {{past}}"
+    "needCounts": "Ouvertes: {{open}} · Passées: {{past}}",
+    "noOpenBody": "Vos besoins et ceux auxquels vous participez restent ici tant qu’ils sont ouverts.",
+    "noPastBody": "Quand un besoin est clos, il arrive ici avec ses montants."
   },
   "settings": {
     "title": "Paramètres",
@@ -532,7 +546,9 @@
     "linkTextPlaceholder": "Texte du lien",
     "insert": "Insérer",
     "urlPlaceholder": "https://...",
-    "uploadFailed": "Échec du téléversement"
+    "uploadFailed": "Échec du téléversement",
+    "emptyBody": "En attendant, posez vos questions à l’assistant sur les poignées de main, les besoins et la participation.",
+    "askAssistant": "Demander à l’assistant"
   },
   "chat": {
     "title": "Assistant",
@@ -1197,7 +1213,7 @@
     "fullLine": "Le montant nécessaire est déclaré.",
     "takePart": "Participer",
     "nextTitle": "Si vous participez",
-    "next1": "Vous indiquez le montant que vous êtes prêt à donner. Vous pouvez commencer par {{amount}}.",
+    "next1": "Vous indiquez le montant que vous comptez donner. Vous pouvez commencer par {{amount}}.",
     "next2": "Si un lien de discussion a été ajouté, vous pourrez l’ouvrir après avoir participé.",
     "next3": "S’il est question d’argent, vous le remettez vous-même à la personne qui a publié le besoin. Ici, vous ne payez rien : Social Organizer ne reçoit ni ne transfère d’argent.",
     "signInTitle": "Connectez-vous pour participer à ce besoin"
@@ -1256,6 +1272,7 @@
     "reach": "{{network}} personnes peuvent la voir : vos {{direct}} d’abord, puis les leurs.",
     "reachEmpty": "Personne n’est encore à proximité, le signal n’a donc nulle part où aller.",
     "submit": "Annoncer un besoin",
+    "seeHowToUnlock": "Voir comment obtenir l’accès",
     "ownTitle": "Votre besoin · {{current}} sur {{goal}}",
     "ownNoGoal": "Votre besoin",
     "largeTitle": "Montant {{amount}}, c’est bien cela ?",
@@ -1278,8 +1295,8 @@
     "preview": "Aperçu",
     "previewHide": "Masquer l’exemple",
     "previewCaption": "Voici comment un besoin apparaît dans le cercle",
-    "allLink": "Tous · {{count}}",
-    "allLinkPlain": "Tous"
+    "allLink": "Activité · {{count}}",
+    "allLinkPlain": "Activité"
   },
   "path": {
     "title": "Encore un peu : bientôt on apprendra votre besoin",
@@ -1361,7 +1378,7 @@
     "inCircleSince": "Dans le cercle depuis le {{date}}",
     "inCircleToday": "Dans le cercle depuis aujourd’hui",
     "inCircleYesterday": "Dans le cercle depuis hier",
-    "empty": "Personne n’est encore arrivée par votre lien.",
+    "empty": "Personne n’est encore arrivé par votre lien. Envoyez-le à une personne que vous connaissez personnellement.",
     "loadError": "Impossible de charger la liste.",
     "qrHint": "Le code dure une minute et confirme la connaissance tout de suite : vous êtes tous les deux là. Ensuite, il se renouvelle tout seul.",
     "scanOther": "Scanner le sien",
@@ -1394,7 +1411,7 @@
     "resultAlready": "Vous êtes déjà dans le même cercle",
     "resultPending": "Demande envoyée. {{name}} confirmera que vous vous connaissez",
     "resultConfirmed": "Connaissance confirmée des deux côtés",
-    "nicknameHint": "C’est ainsi que vous verrez {{name}} sur le graphe et dans les listes. Vous seul le voyez.",
+    "nicknameHint": "C’est ainsi que vous verrez {{name}} sur le graphe et dans les listes. Il n’est visible que par vous.",
     "know": "Nous nous connaissons",
     "dontKnow": "Nous ne nous connaissons pas",
     "confirmBody": "{{name}} est arrivé par votre lien. Confirmez que vous vous connaissez.",
@@ -1474,7 +1491,7 @@
     "ringN": "Poignée de main {{n}}",
     "via": "via {{name}}",
     "nickname": "Nom dans le cercle",
-    "nicknameHint": "Vous seul voyez ceci",
+    "nicknameHint": "Visible par vous uniquement",
     "contactsHidden": "Les contacts sont masqués",
     "noContacts": "Aucun contact",
     "acquainted": "Nous nous connaissons",
@@ -1507,7 +1524,11 @@
     "factsNote": "Pour les Besoins fermés. La marque est posée par l’auteur du Besoin ; Social Organizer ne la vérifie pas.",
     "requestDeclined": "La connaissance n'a pas été confirmée. Si vous vous connaissez, montrez-vous votre QR code quand vous vous voyez.",
     "prevPerson": "Personne précédente",
-    "nextPerson": "Personne suivante"
+    "nextPerson": "Personne suivante",
+    "badgeCircle": "dans son cercle",
+    "badgeIntention": "intention",
+    "intentionIs": "Intention : {{amount}}",
+    "noSharedBody": "Lorsque l’un de vous participe à un besoin de l’autre, cela apparaît ici."
   },
   "help": {
     "faq": "Questions et réponses",
@@ -1531,9 +1552,9 @@
       "RULES_VIOLATION": "Non-respect des règles",
       "ACCOUNT_HACKED": "Le compte semble piraté"
     },
-    "feedTitle": "Des personnes ont signalé le besoin de {{name}}",
+    "feedTitle": "{{name}} · Plaintes au sujet d’un besoin",
     "feedSubtitle": "Savez-vous quelque chose ?",
-    "questionTitle": "Des personnes ont signalé le besoin de {{name}}",
+    "questionTitle": "{{name}} · Plaintes au sujet d’un besoin",
     "questionBody": "Les noms des personnes qui ont signalé restent masqués.",
     "reasonsHeading": "Motifs",
     "openCollection": "Ouvrir le besoin",
@@ -1575,7 +1596,7 @@
     "notNow": "Pas maintenant"
   },
   "adminPerson": {
-    "budget": "Engagement sur cette période",
+    "budget": "Intention",
     "registered": "Inscription",
     "registeredValue": "{{date}} · jour {{n}}",
     "connections": "Connexions directes",

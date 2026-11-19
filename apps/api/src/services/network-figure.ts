@@ -47,7 +47,7 @@ export interface NetworkReach {
   far: FarCount;
   /** The network figure: people up to the 6th handshake, `visible + far.count` */
   people: number;
-  /** The network figure: what everyone up to the 6th handshake can still give this period (remaining budgets) */
+  /** The network figure: the sum of saved intentions up to the 6th handshake */
   canHelp: number;
 }
 

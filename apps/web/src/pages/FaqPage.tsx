@@ -1,6 +1,8 @@
 import { useRef, useState } from 'react';
 import { IconCheck, IconChevron, IconGlobe, IconImagePlus, IconLink, IconSpinner, IconPencil, IconTrash, IconClose } from '../components/ui2/icons';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
+import { EmptyState } from '../components/ui2/EmptyState';
 import { trpc, accountFetch, currentAccount } from '../lib/trpc';
 import { currentNavigation, raiseActionError } from '../lib/errors';
 import { Button } from '../components/ui2/Button';
@@ -50,6 +52,7 @@ export function FaqPage({ embedded = false }: { embedded?: boolean }) {
   const { t, i18n } = useTranslation();
   const lang = i18n.language.split('-')[0] || 'en';
   const utils = trpc.useUtils();
+  const navigate = useNavigate();
 
   const { data: displayItems = [], isLoading } = trpc.faq.list.useQuery({ language: lang });
   const { data: adminData } = trpc.faq.isAdmin.useQuery();
@@ -318,7 +321,12 @@ export function FaqPage({ embedded = false }: { embedded?: boolean }) {
       {isLoading ? (
         <p className="py-8 text-center text-body-s text-ink-muted">{t('common.loading')}</p>
       ) : displayItems.length === 0 ? (
-        <p className="py-8 text-center text-body-s text-ink-muted">{t('faq.empty')}</p>
+        <EmptyState
+          variant="plain"
+          title={t('faq.empty')}
+          body={t('faq.emptyBody')}
+          action={<Button size="md" variant="secondary" onClick={() => navigate('/me/help/assistant')}>{t('faq.askAssistant')}</Button>}
+        />
       ) : (
         <Group>
           {displayItems.map(item => {

@@ -148,7 +148,7 @@
     "fit": "Ajustar a rede",
     "stats": {
       "canHelp": "Participação declarada da rede",
-      "explain": "Quanto as pessoas da sua rede (até o 6.º aperto de mão) ainda estão dispostas a indicar neste período: a soma das intenções delas. A mensagem sobre uma necessidade sai em ondas, das mais próximas até o 6.º aperto de mão. É uma referência, não uma promessa: cada pessoa decide por si se vai participar.",
+      "explain": "A soma das intenções das pessoas da sua rede até o 6.º aperto de mão. A mensagem sobre uma necessidade sai em ondas, das mais próximas até o 6.º aperto de mão. É uma referência, não uma promessa: cada pessoa decide por si se vai participar.",
       "weekDelta": "+{{amount}} esta semana",
       "people_many": "{{count}} de pessoas na sua rede",
       "people_one": "{{count}} pessoa na sua rede",
@@ -222,7 +222,7 @@
       }
     },
     "start": {
-      "lead": "Você é a primeira pessoa do seu círculo.",
+      "lead": "Seu círculo começa com você.",
       "body": "A mensagem sobre uma necessidade percorre os apertos de mão confirmados: sem ninguém por perto, o sinal não tem para onde ir.",
       "step2": "Primeira pessoa",
       "step2Sub": "Envie seu link ou mostre o QR",
@@ -272,8 +272,8 @@
     "all": "Todos · {{count}}",
     "confirm": "Confirme que se conhecem",
     "inCircle": "{{count}} no círculo dessa pessoa",
-    "noneYet": "Ainda não adicionou ninguém",
-    "brought": "Trouxe {{count}}",
+    "noneYet": "Por enquanto, só você no círculo dessa pessoa",
+    "brought": "Mais {{count}} no círculo dessa pessoa",
     "via": "via {{path}}",
     "empty": "Ninguém ainda",
     "notFound": "Ninguém encontrado",
@@ -281,9 +281,14 @@
     "sortRecent": "Recentes",
     "sortName": "Nome",
     "sortIntention": "Intenção",
-    "sortBrought": "Trouxe",
+    "sortBrought": "Tamanho do círculo",
     "foundElsewhere": "Ninguém com esse nome neste aperto de mão. Encontrados em outros:",
-    "alsoElsewhere": "Também em outros apertos de mão"
+    "alsoElsewhere": "Também em outros apertos de mão",
+    "ringHint1": "Pessoas que você conhece pessoalmente.",
+    "ringHint2": "Os conhecidos delas: uma pessoa entre vocês.",
+    "ringHint3": "Um passo além: duas pessoas entre vocês.",
+    "empty1": "As pessoas que você conhece pessoalmente aparecem aqui quando o conhecimento for confirmado.",
+    "empty2": "Pessoas aparecem aqui conforme os círculos dos seus conhecidos crescem."
   },
   "offline": {
     "banner": "Sem conexão. Mostrando a cópia guardada neste dispositivo, {{time}}.",
@@ -326,7 +331,9 @@
     "noGoal": "Valor não indicado",
     "saveGoal": "Salvar valor",
     "yourAmount": "Seu valor",
-    "minStake": "Sua intenção é {{amount}}. Você pode dar mais.",
+    "minStake": "Minha intenção: {{amount}}. Você pode informar mais.",
+    "zeroStake": "Minha intenção: {{amount}}",
+    "participationMinimum": "A participação começa em {{amount}}.",
     "minOne": "Mínimo 1 $",
     "whole": "Apenas dólares inteiros",
     "participate": "Informar participação",
@@ -343,7 +350,7 @@
     "otherAmount": "Outro valor",
     "participantsCount": "Participantes: {{count}}",
     "transferred": "Recebido",
-    "emptyPeople": "Ninguém entrou ainda",
+    "emptyPeople": "Ninguém informou participação ainda",
     "youLower": "você",
     "firstHandshake": "1.º aperto de mão",
     "inNetwork": "na sua rede",
@@ -380,7 +387,7 @@
       "AUTHOR_REQUEST": "A pedido do autor"
     },
     "goalReached": "O valor necessário foi declarado",
-    "pastCrumb": "Necessidades",
+    "pastCrumb": "Atividade",
     "chatLabel": "Chat dos participantes",
     "openTitle": "Abertas",
     "openEmpty": "Nenhuma necessidade aberta",
@@ -417,6 +424,11 @@
       "keepYes": "Manter {{amount}}",
       "kept": "Pronto: sua intenção é {{amount}}. Você pode alterá-la no Perfil.",
       "intro": "Ver como a rede funciona"
+    },
+    "emptyPeopleBody": "Quem informar participação aparece aqui com o próprio valor.",
+    "created": {
+      "title": "Sua necessidade foi enviada",
+      "body": "As pessoas da sua rede ficam sabendo pelos apertos de mão, primeiro as mais próximas, até uma pessoa por dólar do valor. Envie o link para seus conhecidos: dá para abrir sem o app."
     }
   },
   "profile": {
@@ -424,7 +436,7 @@
     "memberSince": "Membro desde {{date}}",
     "nicknamePlaceholder": "Seu nome para eles...",
     "online": "Online",
-    "lastSeen": "Visto(a) {{time}}",
+    "lastSeen": "Última vez online {{time}}",
     "editCard": "Editar",
     "participation": "Participação",
     "networkOne": "{{count}} pessoa",
@@ -458,10 +470,10 @@
     "openSource": "Código aberto",
     "terms": "Termos",
     "privacy": "Política de privacidade",
-    "stakeLabel": "Valor de participação padrão",
+    "stakeLabel": "Minha intenção",
     "stakeMin": "Mínimo 1",
     "stakeHint": "Quanto você está disposto a indicar quando alguém que você conhece informa uma necessidade. Pode indicar mais. O Social Organizer não recebe nem transfere dinheiro.",
-    "stakeNone": "Não posso ajudar agora",
+    "stakeNone": "Não posso participar agora",
     "openTab": "Abertas",
     "pastTab": "Passadas",
     "yourCollection": "Sua necessidade",
@@ -475,7 +487,7 @@
     "participantMany": "{{count}} participantes",
     "paused": "Em pausa",
     "noOpen": "Nenhuma necessidade aberta",
-    "noPast": "Nenhum registro",
+    "noPast": "Nada encerrado ainda",
     "pastVia": "via {{name}}",
     "left": "Participação retirada",
     "goalMissing": "Valor não definido",
@@ -487,7 +499,9 @@
     "notifyChannel": "Canal",
     "notifyTelegramNotLinked": "Conecte o Telegram em «Conta» para receber as mensagens lá.",
     "stakeSaved": "Salvo",
-    "needCounts": "Abertas: {{open}} · Passadas: {{past}}"
+    "needCounts": "Abertas: {{open}} · Passadas: {{past}}",
+    "noOpenBody": "Suas necessidades e as necessidades de que você participa ficam aqui enquanto estiverem abertas.",
+    "noPastBody": "Quando uma necessidade é encerrada, ela vem para cá com seus valores."
   },
   "settings": {
     "title": "Configurações",
@@ -532,7 +546,9 @@
     "linkTextPlaceholder": "Texto do link",
     "insert": "Inserir",
     "urlPlaceholder": "https://...",
-    "uploadFailed": "Falha no envio"
+    "uploadFailed": "Falha no envio",
+    "emptyBody": "Enquanto isso, pergunte ao assistente sobre apertos de mão, necessidades e participação.",
+    "askAssistant": "Perguntar ao assistente"
   },
   "chat": {
     "title": "Assistente",
@@ -1256,6 +1272,7 @@
     "reach": "{{network}} pessoas podem ver: primeiro as suas {{direct}}, depois as pessoas delas.",
     "reachEmpty": "Ainda não há ninguém por perto, então o sinal não tem para onde ir.",
     "submit": "Informar necessidade",
+    "seeHowToUnlock": "Veja como liberar o acesso",
     "ownTitle": "Sua necessidade · {{current}} de {{goal}}",
     "ownNoGoal": "Sua necessidade",
     "largeTitle": "Valor {{amount}}, está certo?",
@@ -1278,8 +1295,8 @@
     "preview": "Como fica",
     "previewHide": "Ocultar o exemplo",
     "previewCaption": "Assim a necessidade aparece no círculo",
-    "allLink": "Todos · {{count}}",
-    "allLinkPlain": "Todos"
+    "allLink": "Atividade · {{count}}",
+    "allLinkPlain": "Atividade"
   },
   "path": {
     "title": "Falta pouco, e as pessoas vão saber da sua necessidade",
@@ -1361,7 +1378,7 @@
     "inCircleSince": "No círculo desde {{date}}",
     "inCircleToday": "No círculo desde hoje",
     "inCircleYesterday": "No círculo desde ontem",
-    "empty": "Ninguém veio pelo seu link ainda.",
+    "empty": "Ninguém veio pelo seu link ainda. Envie para alguém que você conhece pessoalmente.",
     "loadError": "Não foi possível carregar a lista.",
     "qrHint": "O código dura um minuto e confirma que vocês se conhecem na hora: os dois estão aqui. Depois ele se atualiza sozinho.",
     "scanOther": "Escanear o de outra pessoa",
@@ -1507,7 +1524,11 @@
     "factsNote": "Para Necessidades encerradas. A marca é definida pelo autor da Necessidade; o Social Organizer não a verifica.",
     "requestDeclined": "O conhecimento não foi confirmado. Se vocês se conhecem, mostrem o código QR um ao outro quando se encontrarem.",
     "prevPerson": "Pessoa anterior",
-    "nextPerson": "Próxima pessoa"
+    "nextPerson": "Próxima pessoa",
+    "badgeCircle": "no círculo",
+    "badgeIntention": "intenção",
+    "intentionIs": "Intenção: {{amount}}",
+    "noSharedBody": "Quando uma das duas pessoas participa de uma necessidade da outra, isso aparece aqui."
   },
   "help": {
     "faq": "Perguntas frequentes",
@@ -1531,9 +1552,9 @@
       "RULES_VIOLATION": "Violação das regras",
       "ACCOUNT_HACKED": "A conta parece invadida"
     },
-    "feedTitle": "Pessoas denunciaram a necessidade de {{name}}",
+    "feedTitle": "{{name}} · Reclamações sobre uma necessidade",
     "feedSubtitle": "Você sabe de algo?",
-    "questionTitle": "Pessoas denunciaram a necessidade de {{name}}",
+    "questionTitle": "{{name}} · Reclamações sobre uma necessidade",
     "questionBody": "Os nomes de quem denunciou ficam ocultos.",
     "reasonsHeading": "Motivos",
     "openCollection": "Abrir necessidade",
@@ -1575,7 +1596,7 @@
     "notNow": "Agora não"
   },
   "adminPerson": {
-    "budget": "Compromisso neste período",
+    "budget": "Intenção",
     "registered": "Registro",
     "registeredValue": "{{date}} · dia {{n}}",
     "connections": "Conexões diretas",

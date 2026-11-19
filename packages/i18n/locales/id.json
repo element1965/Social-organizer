@@ -148,7 +148,7 @@
     "fit": "Paskan jaringan",
     "stats": {
       "canHelp": "Partisipasi jaringan yang dinyatakan",
-      "explain": "Berapa lagi yang siap disebutkan pada periode ini oleh orang-orang di jaringan Anda (hingga jabat tangan ke-6): jumlah niat mereka. Pesan tentang kebutuhan berjalan bergelombang, dari yang terdekat, hingga jabat tangan ke-6. Ini hanya acuan, bukan janji: setiap orang memutuskan sendiri apakah ikut serta.",
+      "explain": "Jumlah niat orang-orang di jaringan Anda hingga jabat tangan ke-6. Pesan tentang kebutuhan berjalan bergelombang, dari yang terdekat, hingga jabat tangan ke-6. Ini hanya acuan, bukan janji: setiap orang memutuskan sendiri apakah ikut serta.",
       "weekDelta": "+{{amount}} minggu ini",
       "people_other": "{{count}} orang di jaringan Anda",
       "peopleShort_other": "{{count}} orang",
@@ -216,7 +216,7 @@
       }
     },
     "start": {
-      "lead": "Anda yang pertama di lingkaran Anda.",
+      "lead": "Lingkaran Anda dimulai dari Anda.",
       "body": "Pesan tentang kebutuhan berjalan lewat jabat tangan yang dikonfirmasi: jika belum ada orang di dekat Anda, sinyal tidak punya tujuan.",
       "step2": "Orang pertama",
       "step2Sub": "Kirim tautan Anda atau tunjukkan QR",
@@ -266,8 +266,8 @@
     "all": "Semua · {{count}}",
     "confirm": "Konfirmasi bahwa Anda saling mengenal",
     "inCircle": "{{count}} di lingkaran mereka",
-    "noneYet": "Belum menambahkan siapa pun",
-    "brought": "Mengajak {{count}}",
+    "noneYet": "Sejauh ini hanya Anda di lingkarannya",
+    "brought": "{{count}} lagi di lingkarannya",
     "via": "lewat {{path}}",
     "empty": "Belum ada siapa pun",
     "notFound": "Tidak ada yang ditemukan",
@@ -275,9 +275,14 @@
     "sortRecent": "Terbaru",
     "sortName": "Nama",
     "sortIntention": "Niat",
-    "sortBrought": "Diajak",
+    "sortBrought": "Ukuran lingkaran",
     "foundElsewhere": "Tidak ada yang bernama itu di jabat tangan ini. Ditemukan di yang lain:",
-    "alsoElsewhere": "Juga di jabat tangan lain"
+    "alsoElsewhere": "Juga di jabat tangan lain",
+    "ringHint1": "Orang yang Anda kenal secara pribadi.",
+    "ringHint2": "Kenalan mereka: satu orang di antara kalian.",
+    "ringHint3": "Selangkah lebih jauh: dua orang di antara kalian.",
+    "empty1": "Orang yang Anda kenal secara pribadi muncul di sini setelah perkenalan dikonfirmasi.",
+    "empty2": "Orang akan muncul di sini saat lingkaran kenalan Anda bertambah."
   },
   "offline": {
     "banner": "Tidak ada koneksi. Menampilkan salinan yang tersimpan di perangkat ini, {{time}}.",
@@ -320,7 +325,9 @@
     "noGoal": "Jumlah belum disebutkan",
     "saveGoal": "Simpan jumlah",
     "yourAmount": "Jumlah Anda",
-    "minStake": "Niat Anda adalah {{amount}}. Anda bisa memberi lebih.",
+    "minStake": "Niat saya: {{amount}}. Anda bisa menyebut lebih.",
+    "zeroStake": "Niat saya: {{amount}}",
+    "participationMinimum": "Partisipasi mulai dari {{amount}}.",
     "minOne": "Minimum 1 $",
     "whole": "Hanya dolar bulat",
     "participate": "Sampaikan partisipasi",
@@ -337,7 +344,7 @@
     "otherAmount": "Jumlah lain",
     "participantsCount": "Peserta: {{count}}",
     "transferred": "Diterima",
-    "emptyPeople": "Belum ada yang bergabung",
+    "emptyPeople": "Belum ada yang menyampaikan partisipasi",
     "youLower": "Anda",
     "firstHandshake": "Jabat tangan ke-1",
     "inNetwork": "di jaringan Anda",
@@ -374,7 +381,7 @@
       "AUTHOR_REQUEST": "Atas permintaan penulis"
     },
     "goalReached": "Jumlah yang dibutuhkan sudah dinyatakan",
-    "pastCrumb": "Kebutuhan",
+    "pastCrumb": "Aktivitas",
     "chatLabel": "Chat peserta",
     "openTitle": "Terbuka",
     "openEmpty": "Tidak ada kebutuhan terbuka",
@@ -411,6 +418,11 @@
       "keepYes": "Simpan {{amount}}",
       "kept": "Selesai: niat Anda {{amount}}. Anda bisa mengubahnya di Profil.",
       "intro": "Lihat cara kerja jaringan"
+    },
+    "emptyPeopleBody": "Orang yang menyampaikan partisipasi muncul di sini beserta jumlahnya.",
+    "created": {
+      "title": "Kebutuhan Anda sudah dikirim",
+      "body": "Orang di jaringan Anda mengetahuinya lewat jabat tangan, yang terdekat lebih dulu, maksimal satu orang per dolar dari jumlahnya. Kirim tautannya ke kenalan Anda: tautan bisa dibuka tanpa aplikasi."
     }
   },
   "profile": {
@@ -452,10 +464,10 @@
     "openSource": "Sumber terbuka",
     "terms": "Ketentuan",
     "privacy": "Kebijakan privasi",
-    "stakeLabel": "Jumlah partisipasi default",
+    "stakeLabel": "Niat saya",
     "stakeMin": "Minimum 1",
     "stakeHint": "Sebanyak ini yang siap Anda sebutkan saat orang yang Anda kenal menyampaikan kebutuhan. Anda boleh menyebut lebih. Social Organizer tidak menerima dan tidak mentransfer uang.",
-    "stakeNone": "Saya tidak bisa membantu saat ini",
+    "stakeNone": "Saya tidak bisa ikut serta saat ini",
     "openTab": "Terbuka",
     "pastTab": "Sebelumnya",
     "yourCollection": "Kebutuhan Anda",
@@ -469,7 +481,7 @@
     "participantMany": "{{count}} peserta",
     "paused": "Dijeda",
     "noOpen": "Tidak ada kebutuhan terbuka",
-    "noPast": "Tidak ada entri",
+    "noPast": "Belum ada yang ditutup",
     "pastVia": "lewat {{name}}",
     "left": "Partisipasi ditarik",
     "goalMissing": "Jumlah belum diatur",
@@ -481,7 +493,9 @@
     "notifyChannel": "Kanal",
     "notifyTelegramNotLinked": "Hubungkan Telegram di “Akun” agar pesan sampai di sana.",
     "stakeSaved": "Tersimpan",
-    "needCounts": "Terbuka: {{open}} · Sebelumnya: {{past}}"
+    "needCounts": "Terbuka: {{open}} · Sebelumnya: {{past}}",
+    "noOpenBody": "Kebutuhan Anda dan kebutuhan yang Anda ikuti ada di sini selama masih terbuka.",
+    "noPastBody": "Saat kebutuhan ditutup, kebutuhan itu pindah ke sini beserta jumlahnya."
   },
   "settings": {
     "title": "Pengaturan",
@@ -526,7 +540,9 @@
     "linkTextPlaceholder": "Teks tautan",
     "insert": "Sisipkan",
     "urlPlaceholder": "https://...",
-    "uploadFailed": "Gagal mengunggah"
+    "uploadFailed": "Gagal mengunggah",
+    "emptyBody": "Sementara itu, tanyakan kepada asisten tentang jabat tangan, kebutuhan, dan partisipasi.",
+    "askAssistant": "Tanya asisten"
   },
   "chat": {
     "title": "Asisten",
@@ -1240,6 +1256,7 @@
     "reach": "{{network}} orang bisa melihatnya: {{direct}} orang Anda lebih dulu, lalu orang mereka.",
     "reachEmpty": "Belum ada orang di sekitar, jadi sinyal tidak punya tujuan.",
     "submit": "Sampaikan kebutuhan",
+    "seeHowToUnlock": "Lihat cara membuka akses",
     "ownTitle": "Kebutuhan Anda · {{current}} dari {{goal}}",
     "ownNoGoal": "Kebutuhan Anda",
     "largeTitle": "Jumlah {{amount}}, sudah benar?",
@@ -1262,8 +1279,8 @@
     "preview": "Tampilannya",
     "previewHide": "Sembunyikan contoh",
     "previewCaption": "Begini tampilan kebutuhan di lingkaran",
-    "allLink": "Semua · {{count}}",
-    "allLinkPlain": "Semua"
+    "allLink": "Aktivitas · {{count}}",
+    "allLinkPlain": "Aktivitas"
   },
   "path": {
     "title": "Hampir sampai: sebentar lagi orang akan tahu kebutuhan Anda",
@@ -1343,7 +1360,7 @@
     "inCircleSince": "Di lingkaran sejak {{date}}",
     "inCircleToday": "Di lingkaran sejak hari ini",
     "inCircleYesterday": "Di lingkaran sejak kemarin",
-    "empty": "Belum ada yang datang lewat tautan Anda.",
+    "empty": "Belum ada yang datang lewat tautan Anda. Kirimkan ke orang yang Anda kenal secara pribadi.",
     "loadError": "Tidak dapat memuat daftar.",
     "qrHint": "Kode berlaku semenit dan mengonfirmasi kenalan seketika: Anda berdua ada di sini. Lalu kode diperbarui sendiri.",
     "scanOther": "Pindai milik mereka",
@@ -1479,7 +1496,11 @@
     "factsNote": "Untuk Kebutuhan yang sudah ditutup. Tanda ini diberikan oleh penulis Kebutuhan; Social Organizer tidak memeriksanya.",
     "requestDeclined": "Perkenalan tidak dikonfirmasi. Jika kalian saling kenal, tunjukkan kode QR satu sama lain saat bertemu.",
     "prevPerson": "Orang sebelumnya",
-    "nextPerson": "Orang berikutnya"
+    "nextPerson": "Orang berikutnya",
+    "badgeCircle": "di lingkarannya",
+    "badgeIntention": "niat",
+    "intentionIs": "Niat: {{amount}}",
+    "noSharedBody": "Jika salah satu dari Anda berpartisipasi dalam kebutuhan yang lain, partisipasi itu muncul di sini."
   },
   "help": {
     "faq": "Pertanyaan dan jawaban",
@@ -1503,9 +1524,9 @@
       "RULES_VIOLATION": "Pelanggaran aturan",
       "ACCOUNT_HACKED": "Akun ini tampak diambil alih"
     },
-    "feedTitle": "Orang melaporkan kebutuhan {{name}}",
+    "feedTitle": "{{name}} · Keluhan tentang kebutuhan",
     "feedSubtitle": "Anda tahu sesuatu?",
-    "questionTitle": "Orang melaporkan kebutuhan {{name}}",
+    "questionTitle": "{{name}} · Keluhan tentang kebutuhan",
     "questionBody": "Nama orang yang melaporkan tetap tersembunyi.",
     "reasonsHeading": "Alasan",
     "openCollection": "Buka kebutuhan",
@@ -1547,7 +1568,7 @@
     "notNow": "Nanti saja"
   },
   "adminPerson": {
-    "budget": "Komitmen periode ini",
+    "budget": "Niat",
     "registered": "Terdaftar",
     "registeredValue": "{{date}} · hari ke-{{n}}",
     "connections": "Koneksi langsung",

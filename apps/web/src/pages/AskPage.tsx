@@ -1,5 +1,5 @@
 import { useRef, useState, type FormEvent } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { LARGE_AMOUNT_WARNING, MAX_CHAT_LINK_LENGTH, MIN_COLLECTION_AMOUNT } from '@so/shared';
 import { IconChevron } from '../components/ui2/icons';
@@ -70,6 +70,7 @@ function AskBody() {
   const { t, i18n } = useTranslation();
   const offline = useOffline();
   const navigate = useNavigate();
+  const location = useLocation();
   const utils = trpc.useUtils();
   const access = useAskAccess();
   const { figure } = useNetworkFigure();
@@ -78,7 +79,11 @@ function AskBody() {
     meta: { notifyOnError: false },
     onSuccess: (created) => {
       utils.collection.myActive.invalidate();
-      navigate('/', { state: { collectionId: created.id } });
+      // Reuse the Circle entry when the Need tab was opened from it. Otherwise replace
+      // the form with Circle before opening the Need, so Back always lands there.
+      const fromCircle = (location.state as { fromCircle?: boolean } | null)?.fromCircle === true;
+      if (!fromCircle) navigate('/', { replace: true });
+      navigate(`/collection/${created.id}`, { replace: fromCircle, state: { created: true } });
     },
   });
 

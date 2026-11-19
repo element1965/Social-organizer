@@ -7,7 +7,7 @@
  */
 import type { PrismaClient } from '@so/db';
 import { resources, SUPPORTED_LANGUAGES } from '@so/i18n';
-import { firstName, inflectName, safeAddressee } from '@so/shared';
+import { firstName, safeAddressee } from '@so/shared';
 
 export { safeAddressee };
 
@@ -138,14 +138,14 @@ const SOS_STATE_LINE: Record<SosPreview['state'], string> = {
   paused: 'sos.suspendedLine',
 };
 
-/** The same headline as the public page ("Anna needs assistance"; Russian puts the name in the dative). */
+/** The same headline as the public page ("Anna needs assistance"). */
 export function renderSosPreview(
   html: string,
   preview: SosPreview,
   opts: { lang: string; url: string; origin: string },
 ): string {
   const name = preview.name.trim() || 'Social Organizer';
-  const shown = opts.lang === 'ru' ? inflectName(name, 'dative') : firstName(name);
+  const shown = firstName(name);
   return applyCard(html, {
     title: translate(opts.lang, 'sos.headline', { name: shown }),
     description: translate(opts.lang, SOS_STATE_LINE[preview.state], { name: shown }),

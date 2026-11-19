@@ -3,7 +3,6 @@ import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next';
 import { isTelegramWebApp } from '@so/tg-adapter';
 import { MIN_OBLIGATION_AMOUNT } from '@so/shared';
-import { inflectName } from '../components/collection/name-case';
 import { asDate, firstName, formatDay, relativePast } from '../components/collection/text';
 import { isDefinitiveLoadError, NeedLoadError } from '../components/errors/ErrorState';
 import { Logo } from '../components/Logo';
@@ -50,7 +49,6 @@ export function SosLandingPage() {
   const isAuthenticated = useAuth((state) => state.isAuthenticated);
   const isPreview = DEMO_COLLECTION != null && collectionId === 'preview';
   const language = i18n.language;
-  const inflect = language.toLowerCase().startsWith('ru');
 
   const fetched = trpc.collection.getPublic.useQuery(
     { id: collectionId ?? '' },
@@ -86,8 +84,6 @@ export function SosLandingPage() {
     setParams(next);
   };
   const signingIn = params.get('join') === '1' && !isAuthenticated && !isTelegramWebApp() && !isPreview;
-
-  const given = (name: string) => (inflect ? inflectName(name, 'dative') : firstName(name));
 
   if (signingIn && collection && collectionId && collection.status === 'ACTIVE') {
     const hasGoal = collection.amount != null && collection.amount > 0;
@@ -146,7 +142,7 @@ export function SosLandingPage() {
           <PublicBody
             name={collection.creator.name}
             photoUrl={collection.creator.photoUrl}
-            headline={t('sos.headline', { name: given(collection.creator.name) })}
+            headline={t('sos.headline', { name: firstName(collection.creator.name) })}
             typeLabel={collection.type === 'REGULAR' ? t('collection.monthly') : t('collection.oneTime')}
             status={collection.status}
             amount={collection.amount}
@@ -172,7 +168,6 @@ type PublicBodyProps = {
   name: string;
   photoUrl: string | null;
   headline: string;
-  /** The author's name as "to Anna" takes it (dative in Russian) */
   typeLabel: string;
   status: string;
   amount: number | null;

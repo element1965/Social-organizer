@@ -148,7 +148,7 @@
     "fit": "Sovita verkosto",
     "stats": {
       "canHelp": "Verkoston ilmoitettu osallistuminen",
-      "explain": "Paljonko verkostosi ihmiset (6. kädenpuristukseen asti) ovat vielä valmiita nimeämään tällä jaksolla: se on heidän aikomustensa summa. Viesti tarpeesta kulkee aaltoina, lähimmistä alkaen, 6. kädenpuristukseen asti. Tämä on suuntaa antava luku, ei lupaus: jokainen päättää itse, osallistuuko.",
+      "explain": "Verkostosi ihmisten aikomusten summa 6. kädenpuristukseen asti. Viesti tarpeesta kulkee aaltoina, lähimmistä alkaen, 6. kädenpuristukseen asti. Tämä on suuntaa antava luku, ei lupaus: jokainen päättää itse, osallistuuko.",
       "weekDelta": "+{{amount}} tällä viikolla",
       "people_one": "{{count}} henkilö verkostossasi",
       "people_other": "{{count}} henkilöä verkostossasi",
@@ -219,7 +219,7 @@
       }
     },
     "start": {
-      "lead": "Olet ensimmäinen piirissäsi.",
+      "lead": "Piirisi alkaa sinusta.",
       "body": "Viesti tarpeesta kulkee vahvistettuja kädenpuristuksia pitkin: kun lähellä ei ole ketään, signaalilla ei ole minne mennä.",
       "step2": "Ensimmäinen henkilö",
       "step2Sub": "Lähetä linkkisi tai näytä QR",
@@ -269,8 +269,8 @@
     "all": "Kaikki · {{count}}",
     "confirm": "Vahvista, että tunnette toisenne",
     "inCircle": "{{count}} hänen piirissään",
-    "noneYet": "Ei ole vielä lisännyt ketään",
-    "brought": "Toi mukaan {{count}}",
+    "noneYet": "Piirissä toistaiseksi vain sinä",
+    "brought": "Piirissä vielä {{count}}",
     "via": "{{path}} kautta",
     "empty": "Ei vielä ketään",
     "notFound": "Ketään ei löytynyt",
@@ -278,9 +278,14 @@
     "sortRecent": "Uusimmat",
     "sortName": "Nimi",
     "sortIntention": "Aikomus",
-    "sortBrought": "Tuonut mukaan",
+    "sortBrought": "Piirin koko",
     "foundElsewhere": "Tässä kädenpuristuksessa ei ole ketään tällä nimellä. Löytyi muista:",
-    "alsoElsewhere": "Myös muissa kädenpuristuksissa"
+    "alsoElsewhere": "Myös muissa kädenpuristuksissa",
+    "ringHint1": "Ihmiset, jotka tunnet henkilökohtaisesti.",
+    "ringHint2": "Heidän tuttunsa: välissänne yksi ihminen.",
+    "ringHint3": "Askel kauempana: välissänne kaksi ihmistä.",
+    "empty1": "Henkilökohtaisesti tuntemasi ihmiset näkyvät täällä, kun tuttavuus on vahvistettu.",
+    "empty2": "Ihmisiä näkyy täällä, kun tuttujesi piirit kasvavat."
   },
   "offline": {
     "banner": "Ei yhteyttä. Näytetään tälle laitteelle tallennettu kopio, {{time}}.",
@@ -323,7 +328,9 @@
     "noGoal": "Summaa ei ole ilmoitettu",
     "saveGoal": "Tallenna summa",
     "yourAmount": "Summasi",
-    "minStake": "Aikomuksesi on {{amount}}. Voit antaa enemmän.",
+    "minStake": "Aikomukseni: {{amount}}. Voit ilmoittaa enemmän.",
+    "zeroStake": "Aikomukseni: {{amount}}",
+    "participationMinimum": "Osallistumisen vähimmäissumma on {{amount}}.",
     "minOne": "Vähintään 1 $",
     "whole": "Vain kokonaiset dollarit",
     "participate": "Ilmoita osallistumisesta",
@@ -340,7 +347,7 @@
     "otherAmount": "Muu summa",
     "participantsCount": "Osallistujia: {{count}}",
     "transferred": "Saatu",
-    "emptyPeople": "Kukaan ei ole vielä liittynyt",
+    "emptyPeople": "Kukaan ei ole vielä ilmoittanut osallistumisesta",
     "youLower": "sinä",
     "firstHandshake": "1. kädenpuristus",
     "inNetwork": "verkostossasi",
@@ -377,7 +384,7 @@
       "AUTHOR_REQUEST": "Tekijän pyynnöstä"
     },
     "goalReached": "Tarvittava summa on ilmoitettu",
-    "pastCrumb": "Tarpeet",
+    "pastCrumb": "Toiminta",
     "chatLabel": "Osallistujien keskustelu",
     "openTitle": "Avoimet",
     "openEmpty": "Ei avoimia tarpeita",
@@ -414,6 +421,11 @@
       "keepYes": "Pidä {{amount}}",
       "kept": "Valmis: aikomuksesi on {{amount}}. Voit muuttaa sitä Profiilissa.",
       "intro": "Katso, miten verkosto toimii"
+    },
+    "emptyPeopleBody": "Osallistumisesta ilmoittavat näkyvät täällä summineen.",
+    "created": {
+      "title": "Tarpeesi on lähetetty",
+      "body": "Verkostosi ihmiset kuulevat siitä kädenpuristuksia pitkin, lähimmät ensin, enintään yksi ihminen jokaista summan dollaria kohti. Lähetä linkki tutuillesi: sen voi avata ilman sovellusta."
     }
   },
   "profile": {
@@ -455,10 +467,10 @@
     "openSource": "Avoin lähdekoodi",
     "terms": "Ehdot",
     "privacy": "Tietosuojakäytäntö",
-    "stakeLabel": "Osallistumissumma oletuksena",
+    "stakeLabel": "Aikomukseni",
     "stakeMin": "Vähintään 1",
     "stakeHint": "Paljonko olet valmis nimeämään, kun tuttavasi ilmoittaa tarpeesta. Voit nimetä enemmänkin. Social Organizer ei vastaanota eikä siirrä rahaa.",
-    "stakeNone": "En voi auttaa juuri nyt",
+    "stakeNone": "En voi osallistua juuri nyt",
     "openTab": "Avoimet",
     "pastTab": "Aiemmat",
     "yourCollection": "Sinun tarpeesi",
@@ -472,7 +484,7 @@
     "participantMany": "{{count}} osallistujaa",
     "paused": "Keskeytetty",
     "noOpen": "Ei avoimia tarpeita",
-    "noPast": "Ei merkintöjä",
+    "noPast": "Ei vielä suljettuja",
     "pastVia": "{{name}} kautta",
     "left": "Osallistuminen peruttu",
     "goalMissing": "Summaa ei ole asetettu",
@@ -484,7 +496,9 @@
     "notifyChannel": "Kanava",
     "notifyTelegramNotLinked": "Yhdistä Telegram kohdassa ”Tili”, niin viestit tulevat sinne.",
     "stakeSaved": "Tallennettu",
-    "needCounts": "Avoimet: {{open}} · Aiemmat: {{past}}"
+    "needCounts": "Avoimet: {{open}} · Aiemmat: {{past}}",
+    "noOpenBody": "Täällä ovat tarpeesi ja ne tarpeet, joihin osallistut, niin kauan kuin ne ovat avoinna.",
+    "noPastBody": "Kun tarve suljetaan, se siirtyy tänne summineen."
   },
   "settings": {
     "title": "Asetukset",
@@ -529,7 +543,9 @@
     "linkTextPlaceholder": "Linkin teksti",
     "insert": "Lisää",
     "urlPlaceholder": "https://...",
-    "uploadFailed": "Lataus epäonnistui"
+    "uploadFailed": "Lataus epäonnistui",
+    "emptyBody": "Kysy sillä välin avustajalta kädenpuristuksista, tarpeista ja osallistumisesta.",
+    "askAssistant": "Kysy avustajalta"
   },
   "chat": {
     "title": "Avustaja",
@@ -1248,6 +1264,7 @@
     "reach": "{{network}} ihmistä näkee sen: ensin sinun {{direct}}, sitten heidän ihmisensä.",
     "reachEmpty": "Lähellä ei ole vielä ketään, joten signaalilla ei ole minne mennä.",
     "submit": "Ilmoita tarpeesta",
+    "seeHowToUnlock": "Katso, miten saat käyttöoikeuden",
     "ownTitle": "Sinun tarpeesi · {{current}} / {{goal}}",
     "ownNoGoal": "Sinun tarpeesi",
     "largeTitle": "Summa {{amount}}, onko se oikein?",
@@ -1270,8 +1287,8 @@
     "preview": "Miltä se näyttää",
     "previewHide": "Piilota esimerkki",
     "previewCaption": "Tältä tarve näyttää piirissä",
-    "allLink": "Kaikki · {{count}}",
-    "allLinkPlain": "Kaikki"
+    "allLink": "Toiminta · {{count}}",
+    "allLinkPlain": "Toiminta"
   },
   "path": {
     "title": "Melkein perillä: pian tarpeestasi tiedetään",
@@ -1352,7 +1369,7 @@
     "inCircleSince": "Piirissä {{date}} alkaen",
     "inCircleToday": "Piirissä tästä päivästä alkaen",
     "inCircleYesterday": "Piirissä eilisestä alkaen",
-    "empty": "Kukaan ei ole vielä tullut linkilläsi.",
+    "empty": "Kukaan ei ole vielä tullut linkilläsi. Lähetä se jollekulle, jonka tunnet henkilökohtaisesti.",
     "loadError": "Listaa ei voitu ladata.",
     "qrHint": "Koodi kestää minuutin ja vahvistaa tuttavuuden heti: olette molemmat täällä. Sitten se uusiutuu itsestään.",
     "scanOther": "Skannaa toisen",
@@ -1493,7 +1510,11 @@
     "factsNote": "Suljettujen tarpeiden osalta. Merkinnän tekee tarpeen tekijä; Social Organizer ei tarkista sitä.",
     "requestDeclined": "Tuttavuutta ei vahvistettu. Jos tunnette toisenne, näyttäkää toisillenne QR-koodi tavatessanne.",
     "prevPerson": "Edellinen henkilö",
-    "nextPerson": "Seuraava henkilö"
+    "nextPerson": "Seuraava henkilö",
+    "badgeCircle": "piirissä",
+    "badgeIntention": "aikomus",
+    "intentionIs": "Aikomus: {{amount}}",
+    "noSharedBody": "Kun jompikumpi osallistuu toisen tarpeeseen, se näkyy täällä."
   },
   "help": {
     "faq": "Kysymykset ja vastaukset",
@@ -1517,9 +1538,9 @@
       "RULES_VIOLATION": "Sääntöjen rikkominen",
       "ACCOUNT_HACKED": "Tili näyttää vallatulta"
     },
-    "feedTitle": "Ihmiset valittivat henkilön {{name}} tarpeesta",
+    "feedTitle": "{{name}} · Tarpeesta on tehty ilmoituksia",
     "feedSubtitle": "Tiedätkö jotain?",
-    "questionTitle": "Ihmiset valittivat henkilön {{name}} tarpeesta",
+    "questionTitle": "{{name}} · Tarpeesta on tehty ilmoituksia",
     "questionBody": "Ilmoittajien nimet pysyvät piilossa.",
     "reasonsHeading": "Syyt",
     "openCollection": "Avaa tarve",
@@ -1561,7 +1582,7 @@
     "notNow": "Ei nyt"
   },
   "adminPerson": {
-    "budget": "Sitoumus tällä jaksolla",
+    "budget": "Aikomus",
     "registered": "Rekisteröitynyt",
     "registeredValue": "{{date}} · päivä {{n}}",
     "connections": "Suorat yhteydet",

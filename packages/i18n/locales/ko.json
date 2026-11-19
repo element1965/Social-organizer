@@ -148,7 +148,7 @@
     "fit": "네트워크 맞추기",
     "stats": {
       "canHelp": "네트워크가 밝힌 참여",
-      "explain": "내 네트워크의 사람들(6차 악수까지)이 이번 기간에 아직 밝힐 수 있는 금액이에요. 이들의 의향을 합한 값이에요. 필요 알림은 가장 가까운 사람부터 6차 악수까지 차례로 퍼져요. 이는 참고 수치일 뿐 약속이 아니에요. 참여할지는 각자 정해요.",
+      "explain": "내 네트워크에 속한 사람들(6차 악수까지)의 의향을 합한 금액이에요. 필요 알림은 가장 가까운 사람부터 6차 악수까지 차례로 퍼져요. 이는 참고 수치일 뿐 약속이 아니에요. 참여할지는 각자 정해요.",
       "weekDelta": "이번 주 +{{amount}}",
       "people_other": "내 네트워크에 {{count}}명",
       "peopleShort_other": "{{count}}명",
@@ -216,7 +216,7 @@
       }
     },
     "start": {
-      "lead": "이 서클의 첫 사람이에요.",
+      "lead": "내 서클은 나에게서 시작돼요.",
       "body": "필요 알림은 확인된 악수를 따라 이동해요. 주변에 아무도 없으면 신호가 갈 곳이 없어요.",
       "step2": "첫 사람",
       "step2Sub": "링크를 보내거나 QR을 보여 주세요",
@@ -266,8 +266,8 @@
     "all": "전체 · {{count}}",
     "confirm": "아는 사이인지 확인",
     "inCircle": "서클에 {{count}}명",
-    "noneYet": "아직 아무도 추가하지 않았어요",
-    "brought": "{{count}}명 초대",
+    "noneYet": "서클에 아직 나뿐이에요",
+    "brought": "서클에 {{count}}명 더",
     "via": "{{path}} 경유",
     "empty": "아직 아무도 없어요",
     "notFound": "아무도 찾지 못했어요",
@@ -275,9 +275,14 @@
     "sortRecent": "최신",
     "sortName": "이름",
     "sortIntention": "의향",
-    "sortBrought": "초대",
+    "sortBrought": "서클 크기",
     "foundElsewhere": "이 악수에는 해당 이름이 없습니다. 다른 악수에서 찾았습니다:",
-    "alsoElsewhere": "다른 악수에도"
+    "alsoElsewhere": "다른 악수에도",
+    "ringHint1": "직접 아는 사람들이에요.",
+    "ringHint2": "그들의 지인: 사이에 한 사람이 있어요.",
+    "ringHint3": "한 걸음 더: 사이에 두 사람이 있어요.",
+    "empty1": "아는 사이가 확인되면 직접 아는 사람들이 여기에 나타나요.",
+    "empty2": "지인들의 서클이 커지면 여기에 사람들이 나타나요."
   },
   "offline": {
     "banner": "연결되지 않았습니다. 이 기기에 저장된 사본을 표시하고 있습니다({{time}}).",
@@ -320,7 +325,9 @@
     "noGoal": "아직 금액이 없어요",
     "saveGoal": "금액 저장",
     "yourAmount": "내 금액",
-    "minStake": "내 의향은 {{amount}}예요. 더 낼 수 있어요.",
+    "minStake": "내 의향: {{amount}}. 더 많이 밝힐 수 있어요.",
+    "zeroStake": "내 의향: {{amount}}",
+    "participationMinimum": "{{amount}}부터 참여할 수 있어요.",
     "minOne": "최소 1 $",
     "whole": "정수 달러만 돼요",
     "participate": "참여 알리기",
@@ -337,7 +344,7 @@
     "otherAmount": "다른 금액",
     "participantsCount": "참여자 {{count}}명",
     "transferred": "받음",
-    "emptyPeople": "아직 참여한 사람이 없어요",
+    "emptyPeople": "아직 참여를 알린 사람이 없어요",
     "youLower": "나",
     "firstHandshake": "1차 악수",
     "inNetwork": "내 네트워크",
@@ -374,7 +381,7 @@
       "AUTHOR_REQUEST": "작성자의 부탁으로"
     },
     "goalReached": "필요한 금액을 밝혔어요",
-    "pastCrumb": "필요",
+    "pastCrumb": "활동",
     "chatLabel": "참여자 채팅",
     "openTitle": "열린 필요",
     "openEmpty": "열린 필요가 없어요",
@@ -411,6 +418,11 @@
       "keepYes": "{{amount}}으로 두기",
       "kept": "완료: 내 의향은 {{amount}}이에요. 프로필에서 바꿀 수 있어요.",
       "intro": "네트워크가 어떻게 움직이는지 보기"
+    },
+    "emptyPeopleBody": "참여를 알린 사람이 금액과 함께 여기에 나타나요.",
+    "created": {
+      "title": "필요를 보냈어요",
+      "body": "네트워크에서 악수를 따라 가까운 사람부터 금액 1달러당 최대 한 명에게 소식이 전해져요. 지인에게 링크를 보내세요. 앱 없이도 열 수 있어요."
     }
   },
   "profile": {
@@ -452,10 +464,10 @@
     "openSource": "오픈 소스",
     "terms": "이용약관",
     "privacy": "개인정보 처리방침",
-    "stakeLabel": "기본 참여 금액",
+    "stakeLabel": "내 의향",
     "stakeMin": "최소 1",
     "stakeHint": "아는 사람이 필요를 알렸을 때 내가 밝힐 수 있는 금액이에요. 더 밝혀도 돼요. Social Organizer는 돈을 받지도, 보내지도 않아요.",
-    "stakeNone": "지금은 도울 수 없어요",
+    "stakeNone": "지금은 참여할 수 없어요",
     "openTab": "열린 필요",
     "pastTab": "지난 필요",
     "yourCollection": "내 필요",
@@ -469,7 +481,7 @@
     "participantMany": "참여자 {{count}}명",
     "paused": "일시정지",
     "noOpen": "열린 필요가 없어요",
-    "noPast": "기록이 없어요",
+    "noPast": "아직 종료된 것이 없어요",
     "pastVia": "{{name}} 경유",
     "left": "참여를 거뒀어요",
     "goalMissing": "금액이 없어요",
@@ -481,7 +493,9 @@
     "notifyChannel": "채널",
     "notifyTelegramNotLinked": "메시지를 받으려면 “계정”에서 Telegram을 연결해 주세요.",
     "stakeSaved": "저장했어요",
-    "needCounts": "열린 필요: {{open}} · 지난 필요: {{past}}"
+    "needCounts": "열린 필요: {{open}} · 지난 필요: {{past}}",
+    "noOpenBody": "내 필요와 내가 참여하는 필요가 열려 있는 동안 여기에 있어요.",
+    "noPastBody": "필요가 종료되면 금액과 함께 여기로 옮겨져요."
   },
   "settings": {
     "title": "설정",
@@ -526,7 +540,9 @@
     "linkTextPlaceholder": "링크 텍스트",
     "insert": "넣기",
     "urlPlaceholder": "https://...",
-    "uploadFailed": "업로드하지 못했어요"
+    "uploadFailed": "업로드하지 못했어요",
+    "emptyBody": "그동안 어시스턴트에게 악수, 필요, 참여에 대해 물어보세요.",
+    "askAssistant": "어시스턴트에게 묻기"
   },
   "chat": {
     "title": "어시스턴트",
@@ -1169,7 +1185,7 @@
     "invalidContact": "잘못된 형식"
   },
   "sos": {
-    "headline": "{{name}}님에게 도움이 필요해요",
+    "headline": "{{name}}님이 도움을 요청해요",
     "ofGoal": "{{amount}} 중",
     "peopleLine": "참여자 {{count}}명 · 돈은 서비스를 거치지 않고 직접 건네요",
     "joinCircle": "로그인 후 필요를 열면 필요를 알린 사람과 직접 아는 사이임을 확인하고 그 사람의 서클에 들어가요.",
@@ -1240,6 +1256,7 @@
     "reach": "{{network}}명이 볼 수 있어요. 먼저 내 {{direct}}명, 그다음 그 사람들의 사람이요.",
     "reachEmpty": "아직 주변에 아무도 없어서, 신호가 갈 곳이 없어요.",
     "submit": "필요 알리기",
+    "seeHowToUnlock": "이용 방법 알아보기",
     "ownTitle": "내 필요 · {{goal}} 중 {{current}}",
     "ownNoGoal": "내 필요",
     "largeTitle": "금액이 {{amount}}, 맞나요?",
@@ -1262,8 +1279,8 @@
     "preview": "이렇게 보여요",
     "previewHide": "예시 숨기기",
     "previewCaption": "서클에서 필요는 이렇게 보여요",
-    "allLink": "전체 · {{count}}",
-    "allLinkPlain": "전체"
+    "allLink": "활동 · {{count}}",
+    "allLinkPlain": "활동"
   },
   "path": {
     "title": "거의 다 왔어요. 곧 사람들이 내 필요를 알게 돼요",
@@ -1343,7 +1360,7 @@
     "inCircleSince": "{{date}}부터 서클에 있어요",
     "inCircleToday": "오늘부터 서클에 있어요",
     "inCircleYesterday": "어제부터 서클에 있어요",
-    "empty": "아직 내 링크로 들어온 사람이 없어요.",
+    "empty": "아직 내 링크로 들어온 사람이 없어요. 직접 아는 사람에게 보내 보세요.",
     "loadError": "목록을 불러오지 못했어요.",
     "qrHint": "코드는 1분 동안 유지되고, 둘 다 여기 있으니 아는 사이를 바로 확인해요. 그다음 저절로 새로고침돼요.",
     "scanOther": "상대 QR 스캔",
@@ -1479,7 +1496,11 @@
     "factsNote": "닫힌 필요가 대상이에요. 표시는 필요의 작성자가 하며, Social Organizer는 확인하지 않아요.",
     "requestDeclined": "아는 사이로 확인되지 않았어요. 서로 아는 사이라면 만났을 때 QR 코드를 보여 주세요.",
     "prevPerson": "이전 사람",
-    "nextPerson": "다음 사람"
+    "nextPerson": "다음 사람",
+    "badgeCircle": "서클",
+    "badgeIntention": "의향",
+    "intentionIs": "의향: {{amount}}",
+    "noSharedBody": "두 사람 중 한 사람이 상대방의 필요에 참여하면 여기에 표시돼요."
   },
   "help": {
     "faq": "자주 묻는 질문",
@@ -1503,9 +1524,9 @@
       "RULES_VIOLATION": "규칙 위반",
       "ACCOUNT_HACKED": "계정이 넘어간 것 같아요"
     },
-    "feedTitle": "사람들이 {{name}}님의 필요를 신고했어요",
+    "feedTitle": "{{name}} · 필요에 관한 신고",
     "feedSubtitle": "아는 게 있나요?",
-    "questionTitle": "사람들이 {{name}}님의 필요를 신고했어요",
+    "questionTitle": "{{name}} · 필요에 관한 신고",
     "questionBody": "신고한 사람의 이름은 숨겨져요.",
     "reasonsHeading": "이유",
     "openCollection": "필요 열기",
@@ -1547,7 +1568,7 @@
     "notNow": "나중에"
   },
   "adminPerson": {
-    "budget": "이번 기간 약속",
+    "budget": "의향",
     "registered": "가입",
     "registeredValue": "{{date}} · {{n}}일째",
     "connections": "직접 연결",

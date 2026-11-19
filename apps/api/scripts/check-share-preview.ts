@@ -78,8 +78,8 @@ try {
   /* ---------- The card itself ---------- */
   const url = `https://example.org/sos/${open.id}`;
   const ru = renderSosPreview(HTML, p!, { lang: 'ru', url, origin: 'https://example.org' });
-  check('Russian title puts the name in the dative, as the page does', meta(ru, 'og:title') === 'Анне нужно содействие', String(meta(ru, 'og:title')));
-  check('the page title is the same sentence', /<title>Анне нужно содействие<\/title>/.test(ru));
+  check('Russian title uses the name as written', meta(ru, 'og:title') === 'Анна просит о содействии', String(meta(ru, 'og:title')));
+  check('the page title is the same sentence', /<title>Анна просит о содействии<\/title>/.test(ru));
   check('the description says who the page is for', (meta(ru, 'og:description') ?? '').includes('знаете этого человека'), String(meta(ru, 'og:description')));
   check('the picture is the author\'s photo, as a small card',
     meta(ru, 'og:image') === 'https://example.org/anna.jpg' && meta(ru, 'twitter:card') === 'summary' && meta(ru, 'og:image:width') === null);

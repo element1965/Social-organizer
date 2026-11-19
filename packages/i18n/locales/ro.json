@@ -148,7 +148,7 @@
     "fit": "Încadrează rețeaua",
     "stats": {
       "canHelp": "Participarea declarată a rețelei",
-      "explain": "Cât mai sunt gata să declare în această perioadă oamenii din rețeaua ta (până la a 6-a strângere de mână): suma intențiilor lor. Mesajul despre o nevoie pleacă în valuri, de la cei mai apropiați, până la a 6-a strângere de mână. E o valoare orientativă, nu o promisiune: fiecare decide singur dacă participă.",
+      "explain": "Suma intențiilor oamenilor din rețeaua ta până la a 6-a strângere de mână. Mesajul despre o nevoie pleacă în valuri, de la cei mai apropiați, până la a 6-a strângere de mână. E o valoare orientativă, nu o promisiune: fiecare decide singur dacă participă.",
       "weekDelta": "+{{amount}} săptămâna aceasta",
       "people_few": "{{count}} persoane în rețeaua ta",
       "people_one": "{{count}} persoană în rețeaua ta",
@@ -222,7 +222,7 @@
       }
     },
     "start": {
-      "lead": "Ești prima persoană din cercul tău.",
+      "lead": "Cercul tău începe cu tine.",
       "body": "Mesajul despre o nevoie merge pe strângerile de mână confirmate: dacă nu e nimeni aproape, semnalul nu are unde să ajungă.",
       "step2": "Prima persoană",
       "step2Sub": "Trimite linkul sau arată codul QR",
@@ -272,8 +272,8 @@
     "all": "Toți · {{count}}",
     "confirm": "Confirmă că vă cunoașteți",
     "inCircle": "{{count}} în cercul lor",
-    "noneYet": "Nu a adăugat pe nimeni încă",
-    "brought": "A adus {{count}}",
+    "noneYet": "Deocamdată doar tu în cercul său",
+    "brought": "Încă {{count}} în cercul său",
     "via": "prin {{path}}",
     "empty": "Nimeni încă",
     "notFound": "Nu am găsit pe nimeni",
@@ -281,9 +281,14 @@
     "sortRecent": "Recenți",
     "sortName": "Nume",
     "sortIntention": "Intenție",
-    "sortBrought": "Aduși",
+    "sortBrought": "Mărimea cercului",
     "foundElsewhere": "Nimeni cu acest nume în această strângere de mână. Găsiți în altele:",
-    "alsoElsewhere": "Și în alte strângeri de mână"
+    "alsoElsewhere": "Și în alte strângeri de mână",
+    "ringHint1": "Oameni pe care îi cunoști personal.",
+    "ringHint2": "Cunoscuții lor: o persoană între voi.",
+    "ringHint3": "Un pas mai departe: două persoane între voi.",
+    "empty1": "Oamenii pe care îi cunoști personal apar aici după ce cunoștința e confirmată.",
+    "empty2": "Aici apar oameni pe măsură ce cresc cercurile cunoscuților tăi."
   },
   "offline": {
     "banner": "Fără conexiune. Se afișează copia salvată pe acest dispozitiv, {{time}}.",
@@ -326,7 +331,9 @@
     "noGoal": "Suma nu e indicată",
     "saveGoal": "Salvează suma",
     "yourAmount": "Suma ta",
-    "minStake": "Intenția ta este {{amount}}. Poți da mai mult.",
+    "minStake": "Intenția mea: {{amount}}. Poți indica mai mult.",
+    "zeroStake": "Intenția mea: {{amount}}",
+    "participationMinimum": "Participarea începe de la {{amount}}.",
     "minOne": "Minimum 1 $",
     "whole": "Doar dolari întregi",
     "participate": "Anunță participarea",
@@ -343,7 +350,7 @@
     "otherAmount": "Altă sumă",
     "participantsCount": "Participanți: {{count}}",
     "transferred": "Primit",
-    "emptyPeople": "Nimeni nu s-a alăturat încă",
+    "emptyPeople": "Încă nu a anunțat nimeni participarea",
     "youLower": "tu",
     "firstHandshake": "prima strângere de mână",
     "inNetwork": "în rețeaua ta",
@@ -380,7 +387,7 @@
       "AUTHOR_REQUEST": "La rugămintea autorului"
     },
     "goalReached": "Suma necesară este declarată",
-    "pastCrumb": "Nevoi",
+    "pastCrumb": "Activitate",
     "chatLabel": "Chatul participanților",
     "openTitle": "Deschise",
     "openEmpty": "Nicio nevoie deschisă",
@@ -417,6 +424,11 @@
       "keepYes": "Păstrează {{amount}}",
       "kept": "Gata: intenția ta este {{amount}}. O poți schimba în Profil.",
       "intro": "Vezi cum funcționează rețeaua"
+    },
+    "emptyPeopleBody": "Cine anunță participarea apare aici cu suma sa.",
+    "created": {
+      "title": "Nevoia ta a fost trimisă",
+      "body": "Oamenii din rețeaua ta află de ea prin strângeri de mână, întâi cei mai apropiați, cel mult o persoană pentru fiecare dolar din sumă. Trimite linkul cunoscuților: se deschide și fără aplicație."
     }
   },
   "profile": {
@@ -458,10 +470,10 @@
     "openSource": "Cod deschis",
     "terms": "Condiții",
     "privacy": "Politica de confidențialitate",
-    "stakeLabel": "Suma implicită a participării",
+    "stakeLabel": "Intenția mea",
     "stakeMin": "Minimum 1",
     "stakeHint": "Cât ești gata să declari când un cunoscut anunță o nevoie. Poți declara și mai mult. Social Organizer nu primește și nu transferă bani.",
-    "stakeNone": "Nu pot ajuta acum",
+    "stakeNone": "Nu pot participa acum",
     "openTab": "Deschise",
     "pastTab": "Trecute",
     "yourCollection": "Nevoia ta",
@@ -475,7 +487,7 @@
     "participantMany": "{{count}} participanți",
     "paused": "În pauză",
     "noOpen": "Nicio nevoie deschisă",
-    "noPast": "Nicio înregistrare",
+    "noPast": "Nimic închis încă",
     "pastVia": "prin {{name}}",
     "left": "Participare retrasă",
     "goalMissing": "Nicio sumă setată",
@@ -487,7 +499,9 @@
     "notifyChannel": "Canal",
     "notifyTelegramNotLinked": "Conectează Telegram în „Cont” ca să primești mesajele acolo.",
     "stakeSaved": "Salvat",
-    "needCounts": "Deschise: {{open}} · Trecute: {{past}}"
+    "needCounts": "Deschise: {{open}} · Trecute: {{past}}",
+    "noOpenBody": "Aici rămân nevoile tale și cele la care participi, cât timp sunt deschise.",
+    "noPastBody": "Când o nevoie se închide, ajunge aici cu sumele ei."
   },
   "settings": {
     "title": "Setări",
@@ -532,7 +546,9 @@
     "linkTextPlaceholder": "Textul linkului",
     "insert": "Inserează",
     "urlPlaceholder": "https://...",
-    "uploadFailed": "Încărcarea a eșuat"
+    "uploadFailed": "Încărcarea a eșuat",
+    "emptyBody": "Între timp, întreabă asistentul despre strângeri de mână, nevoi și participare.",
+    "askAssistant": "Întreabă asistentul"
   },
   "chat": {
     "title": "Asistent",
@@ -651,7 +667,7 @@
     "install": {
       "title": "Cerere trimisă",
       "text": "Instalează aplicația: te va anunța când {{name}} confirmă că vă cunoașteți.",
-      "stepSignedIn": "Conectat cu {{method}}",
+      "stepSignedIn": "Conectare cu {{method}}",
       "stepSaved": "Invitația a fost salvată, cererea așteaptă",
       "stepSame": "În aplicație, conectează-te din nou cu {{method}}",
       "stepSameAny": "În aplicație, conectează-te la fel ca aici",
@@ -1256,6 +1272,7 @@
     "reach": "O pot vedea {{network}} persoane: mai întâi cei {{direct}} ai tăi, apoi oamenii lor.",
     "reachEmpty": "Încă nu e nimeni aproape, așa că semnalul nu are unde să ajungă.",
     "submit": "Anunță o nevoie",
+    "seeHowToUnlock": "Vezi cum obții acces",
     "ownTitle": "Nevoia ta · {{current}} din {{goal}}",
     "ownNoGoal": "Nevoia ta",
     "largeTitle": "Suma {{amount}}, e corect?",
@@ -1278,8 +1295,8 @@
     "preview": "Cum arată",
     "previewHide": "Ascunde exemplul",
     "previewCaption": "Așa arată o nevoie în cerc",
-    "allLink": "Toți · {{count}}",
-    "allLinkPlain": "Toți"
+    "allLink": "Activitate · {{count}}",
+    "allLinkPlain": "Activitate"
   },
   "path": {
     "title": "Încă puțin, și oamenii vor afla de nevoia ta",
@@ -1361,7 +1378,7 @@
     "inCircleSince": "În cerc din {{date}}",
     "inCircleToday": "În cerc de azi",
     "inCircleYesterday": "În cerc de ieri",
-    "empty": "Nimeni nu a venit încă prin linkul tău.",
+    "empty": "Nimeni nu a venit încă prin linkul tău. Trimite-l cuiva pe care îl cunoști personal.",
     "loadError": "Nu s-a putut încărca lista.",
     "qrHint": "Codul ține un minut și confirmă cunoștința pe loc: sunteți amândoi aici. Apoi se reîmprospătează singur.",
     "scanOther": "Scanează-l pe al lor",
@@ -1507,7 +1524,11 @@
     "factsNote": "Pentru Nevoile închise. Marcajul este pus de autorul Nevoii; Social Organizer nu îl verifică.",
     "requestDeclined": "Cunoștința nu a fost confirmată. Dacă vă cunoașteți, arătați-vă codul QR când vă vedeți.",
     "prevPerson": "Persoana anterioară",
-    "nextPerson": "Persoana următoare"
+    "nextPerson": "Persoana următoare",
+    "badgeCircle": "în cercul său",
+    "badgeIntention": "intenție",
+    "intentionIs": "Intenție: {{amount}}",
+    "noSharedBody": "Când unul dintre voi participă la o nevoie a celuilalt, participarea apare aici."
   },
   "help": {
     "faq": "Întrebări și răspunsuri",
@@ -1531,9 +1552,9 @@
       "RULES_VIOLATION": "Încălcare a regulilor",
       "ACCOUNT_HACKED": "Contul pare preluat"
     },
-    "feedTitle": "Oamenii au raportat nevoia lui {{name}}",
+    "feedTitle": "{{name}} · Reclamații privind o nevoie",
     "feedSubtitle": "Știi ceva?",
-    "questionTitle": "Oamenii au raportat nevoia lui {{name}}",
+    "questionTitle": "{{name}} · Reclamații privind o nevoie",
     "questionBody": "Numele celor care au raportat rămân ascunse.",
     "reasonsHeading": "Motive",
     "openCollection": "Deschide nevoia",
@@ -1575,7 +1596,7 @@
     "notNow": "Nu acum"
   },
   "adminPerson": {
-    "budget": "Angajament în această perioadă",
+    "budget": "Intenție",
     "registered": "Înregistrare",
     "registeredValue": "{{date}} · ziua {{n}}",
     "connections": "Conexiuni directe",

@@ -209,18 +209,3 @@ export async function deliverWithRetry(
   console.error('[moderation] hack mail failed', reviewId, last);
   return false;
 }
-
-/** First token of a name. Cyrillic given names get a rough genitive; other names stay as written. */
-export function inflectFirstName(fullName: string, language: string): string {
-  const name = fullName.trim().split(/\s+/)[0] || fullName;
-  if (!language.toLowerCase().startsWith('ru')) return name;
-  if (!/^[\u0400-\u04FF-]+$/.test(name)) return name;
-  const lower = name.toLocaleLowerCase('ru');
-  const swap = (drop: number, ending: string) => name.slice(0, name.length - drop) + ending;
-  if (lower.endsWith('ия')) return swap(2, 'ии');
-  if (lower.endsWith('ья')) return swap(2, 'ьи');
-  if (lower.endsWith('а')) return swap(1, 'ы');
-  if (lower.endsWith('я')) return swap(1, 'и');
-  if (lower.endsWith('й') || lower.endsWith('ь')) return swap(1, 'я');
-  return `${name}а`;
-}

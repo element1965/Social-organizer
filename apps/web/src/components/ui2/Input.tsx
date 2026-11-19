@@ -4,7 +4,7 @@ import { IconLock, IconSearch } from './icons';
 
 type Common = {
   label?: string;
-  hint?: string;
+  hint?: ReactNode;
   error?: string;
 };
 
