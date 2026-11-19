@@ -8,6 +8,7 @@ import {
   type GraphColors,
   GRAPH_COLORS_LIGHT,
   colorsKey,
+  depthAlpha,
   depthColor,
   lineColor,
   overlayColors,
@@ -99,7 +100,9 @@ export interface NetworkGraphProps {
    * the ball. Pass rounded counts: the dots never map to particular people.
    */
   farRings?: number[];
-  /** Height in CSS px of the UI laid over the bottom of the canvas: names that would fall under it are hidden. */
+  /** Height in CSS px of the UI laid over the top of the canvas. */
+  insetTop?: number;
+  /** Height in CSS px of the UI laid over the bottom of the canvas. */
   labelInsetBottom?: number;
 }
 
@@ -288,7 +291,6 @@ const NEAREST_LABELS = 8;        // labels on the nearest ring-1/2 nodes, plus t
 const NEAREST_LABELS_MAX = 16;   // close up, more names fit: one more for every two people within LOD_CLOSE
 const RING2_LABEL_PENALTY = 2.25; // a 2nd-handshake name competes as if it were 1.5× farther than a 1st-handshake one
 const RING1_PHOTO_BONUS = 1.35;  // 1st-handshake photos rank and appear as if they were 35% bigger
-const SPOKE_OPACITY = 0.75;      // links me ↔ 1st handshake, in the accent colour, relative to the path ink
 const RIM_SCALE = 1.14;          // the accent ring around a 1st-handshake photo, relative to the photo
 const DOUBLE_TAP_MS = 320;       // two taps on empty space within this time zoom in
 const DOUBLE_TAP_ZOOM = 0.6;
@@ -305,6 +307,53 @@ const LABEL_MAX_PX = 13;
 const LABEL_CENTER_MIN_PX = 11;
 const LABEL_CENTER_MAX_PX = 16;
 const LABEL_CAP = 30;
+// Collision clearances in CSS px. Entering names need space, placed names tolerate a small overlap.
+const LABEL_ENTER_PAD = 2;
+const LABEL_EXIT_PAD = -1;
+const LABEL_MARK_PAD = 3;
+const PROTECTED_ANCHORS = ['below', 'above', 'left', 'right'] as const;
+type LabelAnchor = (typeof PROTECTED_ANCHORS)[number];
+const PROTECTED_ANCHORS_WITH_PREVIOUS = [null, ...PROTECTED_ANCHORS] as const;
+type ScreenBox = { x0: number; y0: number; x1: number; y1: number };
+
+function screenBox(): ScreenBox {
+  return { x0: 0, y0: 0, x1: 0, y1: 0 };
+}
+
+function setBox(box: ScreenBox, x: number, y: number, w: number, h: number): void {
+  box.x0 = x - w / 2;
+  box.x1 = x + w / 2;
+  box.y0 = y - h / 2;
+  box.y1 = y + h / 2;
+}
+
+function overlaps(a: ScreenBox, b: ScreenBox, pad: number): boolean {
+  const limit = -pad + 1e-6;
+  return Math.min(a.x1, b.x1) - Math.max(a.x0, b.x0) > limit
+    && Math.min(a.y1, b.y1) - Math.max(a.y0, b.y0) > limit;
+}
+
+function hitsKept(box: ScreenBox, kept: ScreenBox[], pad: number): boolean {
+  for (const other of kept) {
+    if (overlaps(box, other, pad)) return true;
+  }
+  return false;
+}
+
+function fitsViewport(box: ScreenBox, width: number, top: number, bottom: number): boolean {
+  const epsilon = 1e-6;
+  return box.x0 >= -epsilon && box.x1 <= width + epsilon
+    && box.y0 >= top - epsilon && box.y1 <= bottom + epsilon;
+}
+
+function clampCenter(value: number, start: number, end: number, size: number): number {
+  if (size >= end - start) return (start + end) / 2;
+  return THREE.MathUtils.clamp(value, start + size / 2, end - size / 2);
+}
+
+function compareLabels(a: { priority: number; d2: number }, b: { priority: number; d2: number }): number {
+  return a.priority - b.priority || a.d2 - b.d2;
+}
 
 /** Map connectionCount → avatar scale factor (1.0 – 1.6) */
 function sizeFromConnections(count: number): number {
@@ -361,7 +410,7 @@ interface NodeVis {
   dot: THREE.Sprite;
   /** Dot colour (linear rgb) and alpha for DotLayer */
   dotRgba: [number, number, number, number];
-  /** Squared distance to the camera this frame (dot sorting) */
+  /** Squared distance to the camera this frame (dot and label sorting). */
   d2: number;
   /** Label size factor that keeps its lines between LABEL_MIN_PX and LABEL_MAX_PX on screen */
   labelFit: number;
@@ -386,6 +435,9 @@ interface NodeVis {
   wantedAt: number;
   /** 0..1 eased label opacity: names fade in and out instead of blinking while the camera turns */
   labelShow: number;
+  /** The previous placement result, independent of the current fade opacity. */
+  labelPlaced: boolean;
+  labelAnchor: LabelAnchor | null;
   /** 0..1 eased: 0 = the dot, 1 = the full photo; in between the photo grows from the dot size */
   photoShow: number;
   /** The photo is wanted now (screen size, the 40 biggest, the dwell) */
@@ -417,28 +469,69 @@ const EMPTY_IMPULSES: ImpulseState = { items: [], links: EMPTY_SET, set: EMPTY_S
 
 const noRaycast = () => { /* decorative objects must not take part in hover raycasting */ };
 
-/**
- * three-spritetext regenerates its canvas + texture on every property setter. Fill the private
- * fields and generate once. Halo is a stroke in the scene colour (mockup paint-order: stroke).
- */
-function makeLabel(text: string, textHeight: number, color: string, stroke: string, weight: string): SpriteText {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const l = new SpriteText('') as any;
+// Batch updates to SpriteText's canvas settings. Each public setter would rebuild the texture.
+type LabelSprite = SpriteText & {
+  _text: string;
+  _textHeight: number;
+  _color: string;
+  _strokeColor: string;
+  _fontFace: string;
+  _fontWeight: string;
+  _strokeWidth: number;
+  _padding: [number, number];
+  _canvas: HTMLCanvasElement;
+  _genCanvas: () => void;
+};
+
+function drawLabel(label: LabelSprite, color: string, stroke: string, weight: string, halo: number): void {
+  label._color = color;
+  label._strokeColor = stroke;
+  label._fontWeight = weight;
+  label._strokeWidth = halo;
+
+  const ctx = label._canvas.getContext('2d')!;
+  ctx.font = `${weight} ${label.fontSize}px ${label.fontFace}`;
+  ctx.textBaseline = 'bottom';
+  let overhangX = 0;
+  let overhangY = 0;
+  for (const line of label.text.split('\n')) {
+    const ink = ctx.measureText(line);
+    overhangX = Math.max(overhangX, ink.actualBoundingBoxLeft || 0, (ink.actualBoundingBoxRight || 0) - ink.width);
+    overhangY = Math.max(overhangY, (ink.actualBoundingBoxAscent || 0) - label.fontSize, ink.actualBoundingBoxDescent || 0);
+  }
+  const halfStroke = halo * label.fontSize / 20;
+  const worldPerCanvasPx = label.textHeight / label.fontSize;
+  label._padding = [
+    (Math.ceil(halfStroke + overhangX) + 1) * worldPerCanvasPx,
+    (Math.ceil(halfStroke + overhangY) + 1) * worldPerCanvasPx,
+  ];
+  label._genCanvas();
+  label.material.depthWrite = false;
+}
+
+function makeLabel(text: string, textHeight: number, color: string, stroke: string, weight: string, halo: number): SpriteText {
+  const l = new SpriteText('') as LabelSprite;
   l._text = text;
   l._textHeight = textHeight;
-  l._color = color;
-  l._backgroundColor = false;
-  l._padding = 0;
-  l._borderWidth = 0;
-  l._borderRadius = 0;
-  l._strokeWidth = 1.25;
-  l._strokeColor = stroke;
   l._fontFace = 'Manrope, sans-serif';
-  l._fontWeight = weight;
-  l._fontSize = 64;
-  l._genCanvas();
-  l.material.depthWrite = false;
-  return l as SpriteText;
+  drawLabel(l, color, stroke, weight, halo);
+  return l;
+}
+
+/**
+ * My name is the boldest. Dark names on the pale scene read thinner than light names on the dark one (light
+ * text bleeds into a dark ground), so in the light scene the other names get the same weight as mine.
+ */
+function labelWeight(center: boolean, sceneTheme: 'light' | 'dark'): string {
+  return center || sceneTheme === 'light' ? '800' : '700';
+}
+
+/**
+ * Halo around a name, in the scene colour (a tenth of the font size per unit). The light scene's dots are solid
+ * mid-greys, so a name drawn over a cluster needs a wider knock-out than on the dark scene.
+ */
+function labelHalo(sceneTheme: 'light' | 'dark'): number {
+  return sceneTheme === 'light' ? 2.2 : 1.25;
 }
 
 function labelLines(name: string, center: boolean): string {
@@ -583,6 +676,7 @@ class LinkLayer {
     shown: (n: SimNode) => boolean;
     plain: number; plainOp: number;
     care: number; careOp: number;
+    spoke: number; spokeOp: number;
   }) {
     const onPath: LinkEnds[] = [];
     const onSoft: LinkEnds[] = [];
@@ -594,8 +688,8 @@ class LinkLayer {
       if (path) onPath.push(l);
       else if (soft) onSoft.push(l);
       const spoke = shown && !path && !soft && opts.isSpoke(l);
-      const hex = spoke ? opts.care : opts.plain;
-      const alpha = !shown || path || soft ? 0 : spoke ? opts.careOp * SPOKE_OPACITY : opts.plainOp;
+      const hex = spoke ? opts.spoke : opts.plain;
+      const alpha = !shown || path || soft ? 0 : spoke ? opts.spokeOp : opts.plainOp;
       writeLinear(this.col, i * 8, hex, alpha);
       writeLinear(this.col, i * 8 + 4, hex, alpha);
     }
@@ -1123,6 +1217,8 @@ function dropLabel(v: NodeVis) {
   v.label = null;
   v.unwantedAt = 0;
   v.labelShow = 0;
+  v.labelPlaced = false;
+  v.labelAnchor = null;
 }
 
 const NO_HINT = () => '';
@@ -1148,6 +1244,7 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
   focusId,
   focusLift = 0,
   farRings,
+  insetTop = 0,
   labelInsetBottom = 0,
   sceneTheme = 'dark',
 }, ref) {
@@ -1160,6 +1257,8 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
   const colors = useMemo(() => resolveColors(baseColors), [colorKey]); // eslint-disable-line react-hooks/exhaustive-deps
   const colorsRef = useRef(colors);
   colorsRef.current = colors;
+  const sceneThemeRef = useRef(sceneTheme);
+  sceneThemeRef.current = sceneTheme;
 
   // Latest props for stable callbacks (the force graph must not see new function identities)
   const onNodeClickRef = useRef(onNodeClick);
@@ -1192,6 +1291,10 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
   focusRef.current.lift = focusLift;
   const highlightOrderRef = useRef<string[]>(highlightPath ?? []);
   highlightOrderRef.current = highlightPath ?? [];
+  const selectedIdRef = useRef(focusId);
+  selectedIdRef.current = focusId;
+  const insetTopRef = useRef(insetTop);
+  insetTopRef.current = insetTop;
   const labelInsetRef = useRef(labelInsetBottom);
   labelInsetRef.current = labelInsetBottom;
 
@@ -1535,6 +1638,8 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
     plainOp: 1,
     dim: 0,
     dimOp: 1,
+    spoke: 0,
+    spokeOp: 1,
   });
 
   const readInk = useCallback(() => {
@@ -1542,11 +1647,14 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
     const ink = inkRef.current;
     if (ink.src !== palette) {
       const care = parseColor(palette.care);
+      const spoke = parseColor(palette.spoke);
       const plain = parseColor(lineColor(palette.line, false));
       const dim = parseColor(lineColor(palette.line, true));
       ink.src = palette;
       ink.care = care.color;
       ink.careOp = 0.95 * (care.opacity || 1);
+      ink.spoke = spoke.color;
+      ink.spokeOp = spoke.opacity;
       ink.plain = plain.color;
       ink.plainOp = plain.opacity;
       ink.dim = dim.color;
@@ -1578,6 +1686,8 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
       plainOp: path.dim ? ink.dimOp : ink.plainOp,
       care: ink.care,
       careOp: ink.careOp,
+      spoke: ink.spoke,
+      spokeOp: ink.spokeOp,
     });
     linkPaintRef.current = false;
     linkMoveRef.current = true;
@@ -1619,6 +1729,7 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
     const depth = n.depth ?? (n.isCenter ? 0 : 1);
     if (n.isCenter || depth <= 0) return !!n.isCenter;
     if (hiddenRef.current.has(depth)) return false;
+    if (n.id === selectedIdRef.current) return true;
     // Path membership before the ring-3 cutoff, so a highlighted far node still gets its name.
     if (pathRef.current.set.has(n.id) && !n.isDeleted) return true;
     if (depth >= 3) return false;
@@ -1642,7 +1753,8 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
     }
     const hex = onPath ? palette.careBright : depthColor(palette, Math.max(1, depth));
     // The 1st handshake stays bright; the 2nd and 3rd step back so the nearest circle reads first
-    const base = n.isDeleted ? 0.3 : depth <= 1 ? 1 : depth === 2 ? 0.62 : 0.42;
+    // (by opacity in the dark scene, by colour in the light one: see depthAlpha)
+    const base = n.isDeleted ? 0.3 : depthAlpha(sceneThemeRef.current, Math.max(1, depth));
     const parsed = parseColor(hex);
     // Drawn by DotLayer: keep the colour and alpha on the node
     tmpColor.setHex(parsed.color);
@@ -1745,13 +1857,9 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
     const palette = colorsRef.current;
     const n = v.node;
     const onPath = pathRef.current.set.has(n.id) && !n.isDeleted;
-    const color = n.isDeleted ? palette.node3 : onPath ? palette.care : palette.label;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const l = v.label as any;
-    l._color = color;
-    l._strokeColor = palette.scene;
-    l._genCanvas();
-    v.label.material.depthWrite = false;
+    const color = n.isDeleted ? palette.node3 : onPath ? palette.careText : palette.label;
+    drawLabel(v.label as LabelSprite, color, palette.scene,
+      labelWeight(!!n.isCenter, sceneThemeRef.current), labelHalo(sceneThemeRef.current));
     v.label.userData.baseScale = v.label.scale.clone();
     if (v.level >= 0) applyLevel(v, v.level);
   }, [applyLevel]);
@@ -1760,18 +1868,19 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
     const n = v.node;
     const palette = colorsRef.current;
     const onPath = pathRef.current.set.has(n.id) && !n.isDeleted;
-    const color = n.isDeleted ? palette.node3 : onPath ? palette.care : palette.label;
+    const color = n.isDeleted ? palette.node3 : onPath ? palette.careText : palette.label;
     const label = makeLabel(
       labelLines(String(n.name ?? ''), !!n.isCenter),
       n.isCenter ? 4.4 : 3.5,
       color,
       palette.scene,
-      n.isCenter ? '800' : '700',
+      labelWeight(!!n.isCenter, sceneThemeRef.current),
+      labelHalo(sceneThemeRef.current),
     );
     label.raycast = noRaycast;
     label.renderOrder = 4;
     label.userData.baseScale = label.scale.clone();
-    label.userData.lines = labelLines(String(n.name ?? ''), !!n.isCenter).split('\n').length;
+    label.visible = false;
     v.label = label;
     v.inner.add(label);
     applyLevel(v, v.level);
@@ -1863,6 +1972,8 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
       unwantedAt: 0,
       wantedAt: 0,
       labelShow: 0,
+      labelPlaced: false,
+      labelAnchor: null,
       photoShow: showCached ? 1 : 0,
       photoWant: showCached,
       // A photo shown from the cache at mount holds through the first frames, before the first ranking pass
@@ -2148,15 +2259,21 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
     let last = performance.now();
     let labelFrame = 0;
     const camPos = new THREE.Vector3();
-    // Labels that would sit on top of another label on screen (recomputed a few times a second)
-    const crowded = new Set<string>();
-    /** Names that passed the overlap check; a fresh name waits for it, so two names never flash on top of each other */
-    const placed = new Set<string>();
+    const labels: NodeVis[] = [];
+    const candidates: { v: NodeVis; box: ScreenBox; priority: number; d2: number; depth: number }[] = [];
+    const candidatePool: typeof candidates = [];
+    const faces: { id: string; box: ScreenBox; depth: number }[] = [];
+    const mark = screenBox();
+    const bodyBox = screenBox();
+    const anchorBox = screenBox();
+    const kept: ScreenBox[] = [];
     // Nodes whose photo may show now (ranking pass)
     const photoAllowed = new Set<string>();
     // Last time each node was among the nearest few (label hold)
     const nearSince = new Map<string, number>();
+    const worldV = new THREE.Vector3();
     const projV = new THREE.Vector3();
+    const cameraV = new THREE.Vector3();
     const flyV = new THREE.Vector3();
     const flyQ = new THREE.Quaternion();
     const flyQ2 = new THREE.Quaternion();
@@ -2168,6 +2285,125 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
     // the time our frame work takes. Nothing happens without it.
     const debug = (globalThis as { __SO_GRAPH_DEBUG__?: { fg?: unknown; frameMs?: number } }).__SO_GRAPH_DEBUG__;
     if (debug) debug.fg = fg;
+
+    function projectBox(sprite: THREE.Sprite, scale: number, cam: THREE.Camera, w: number, h: number, box: ScreenBox): number {
+      sprite.getWorldPosition(worldV);
+      cameraV.copy(worldV).applyMatrix4(cam.matrixWorldInverse);
+      const depth = -cameraV.z;
+      if (depth <= 0) return 0;
+      projV.copy(cameraV).applyMatrix4(cam.projectionMatrix);
+      if (projV.z < -1 || projV.z > 1) return 0;
+      const pxPerUnit = cam.projectionMatrix.elements[5]! * h / (2 * depth);
+      setBox(box, (projV.x + 1) * w / 2, (1 - projV.y) * h / 2,
+        sprite.scale.x * scale * pxPerUnit, sprite.scale.y * scale * pxPerUnit);
+      return depth;
+    }
+
+    function placeLabels(cam: THREE.Camera, width: number, height: number) {
+      cam.updateMatrixWorld();
+      const top = Math.max(0, insetTopRef.current);
+      const bottom = height - Math.max(0, labelInsetRef.current);
+      const selectedId = selectedIdRef.current;
+      candidates.length = 0;
+      kept.length = 0;
+      let faceCount = 0;
+      let hasMark = false;
+      for (const v of visRef.current.values()) {
+        if (!v.outer.parent || !v.outer.visible || v.lastScale < 0.01 || !v.avatar.visible) continue;
+        if (v.node.isCenter) {
+          hasMark = projectBox(v.avatar, v.lastScale, cam, width, height, mark) > 0;
+        } else {
+          const face = faces[faceCount] ??= { id: '', box: screenBox(), depth: 0 };
+          face.depth = projectBox(v.avatar, v.lastScale, cam, width, height, face.box);
+          if (face.depth > 0) {
+            face.id = v.node.id;
+            faceCount++;
+          }
+        }
+      }
+
+      for (const v of labels) {
+        const label = v.label!;
+        if (!wantsLabel(v) || !v.outer.visible || v.lastScale < 0.01) {
+          v.labelPlaced = false;
+          continue;
+        }
+        const it = candidatePool[candidates.length] ??= { v, box: screenBox(), priority: 0, d2: 0, depth: 0 };
+        it.depth = projectBox(label, v.lastScale, cam, width, height, it.box);
+        if (it.depth === 0) {
+          v.labelPlaced = false;
+          continue;
+        }
+        it.v = v;
+        it.d2 = v.d2;
+        it.priority = v.node.isCenter ? 0 : v.node.id === selectedId ? 1
+          : pathRef.current.set.has(v.node.id) && !v.node.isDeleted ? 2
+          : (v.node.depth ?? 1) === 1 ? 3 : 4;
+        candidates.push(it);
+      }
+      candidates.sort(compareLabels);
+
+      for (const it of candidates) {
+        const { v, box, priority } = it;
+        const label = v.label!;
+        if (priority < 2) {
+          const body = v.avatar.visible ? v.avatar : v.dot;
+          if (projectBox(body, v.lastScale, cam, width, height, bodyBox) > 0 && bottom > top) {
+            const w = box.x1 - box.x0;
+            const h = box.y1 - box.y0;
+            const previous = v.labelAnchor;
+            const xMid = (bodyBox.x0 + bodyBox.x1) / 2;
+            const yMid = (bodyBox.y0 + bodyBox.y1) / 2;
+            let x = clampCenter(xMid, 0, width, w);
+            let y = clampCenter(bodyBox.y1 + LABEL_MARK_PAD + h / 2, top, bottom, h);
+            v.labelAnchor = null;
+            // Try the previous anchor first, then the four sides in reading order.
+            for (const anchor of PROTECTED_ANCHORS_WITH_PREVIOUS) {
+              const side = anchor ?? previous;
+              if (!side || (anchor && side === previous)) continue;
+              const targetX = side === 'left' ? bodyBox.x0 - LABEL_MARK_PAD - w / 2
+                : side === 'right' ? bodyBox.x1 + LABEL_MARK_PAD + w / 2 : xMid;
+              const targetY = side === 'above' ? bodyBox.y0 - LABEL_MARK_PAD - h / 2
+                : side === 'below' ? bodyBox.y1 + LABEL_MARK_PAD + h / 2 : yMid;
+              const cx = clampCenter(targetX, 0, width, w);
+              const cy = clampCenter(targetY, top, bottom, h);
+              setBox(anchorBox, cx, cy, w, h);
+              if (!fitsViewport(anchorBox, width, top, bottom)
+                || overlaps(anchorBox, bodyBox, LABEL_MARK_PAD)
+                || (hasMark && overlaps(anchorBox, mark, LABEL_MARK_PAD))
+                || hitsKept(anchorBox, kept, LABEL_MARK_PAD)) continue;
+              x = cx;
+              y = cy;
+              v.labelAnchor = side;
+              break;
+            }
+            // Keep the name in the usable band even when every anchor collides.
+            label.center.set(0.5 - (x - (box.x0 + box.x1) / 2) / w, 0.5 + (y - (box.y0 + box.y1) / 2) / h);
+            setBox(box, x, y, w, h);
+            v.labelPlaced = true;
+          } else {
+            v.labelPlaced = false;
+          }
+        } else {
+          v.labelAnchor = null;
+          label.center.set(0.5, 0.5);
+          const pad = v.labelPlaced ? LABEL_EXIT_PAD : LABEL_ENTER_PAD;
+          const markPad = v.labelPlaced ? LABEL_MARK_PAD : LABEL_MARK_PAD + LABEL_ENTER_PAD;
+          const inBand = box.y0 >= top && box.y1 <= bottom && box.x1 > 0 && box.x0 < width;
+          v.labelPlaced = inBand && !(hasMark && overlaps(box, mark, markPad)) && !hitsKept(box, kept, pad);
+          if (v.labelPlaced && priority >= 3) {
+            for (let i = 0; i < faceCount; i++) {
+              const face = faces[i]!;
+              if (face.id !== v.node.id && face.depth < it.depth && overlaps(box, face.box, pad)) {
+                v.labelPlaced = false;
+                break;
+              }
+            }
+          }
+        }
+        if (v.labelPlaced) kept.push(box);
+      }
+    }
 
     const frame = (now: number) => {
       raf = requestAnimationFrame(frame);
@@ -2368,76 +2604,8 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
         }
       }
 
-      if (labelFrame % 6 === 1) {
-        // Greedy pass in screen pixels, on the label's real box (it hangs under its node): the centre and
-        // path labels keep their place, the nearest others next. A name that would cover a kept name, or
-        // an avatar nearer to the camera than its own person, is hidden until the view changes. Names that
-        // fall under the panel at the bottom of the canvas are hidden too.
-        const el = (fg.renderer() as THREE.WebGLRenderer).domElement;
-        const W = el.clientWidth || 1;
-        const H = el.clientHeight || 1;
-        const ppu = ((cam as THREE.PerspectiveCamera).projectionMatrix.elements[5] ?? 1) * H * 0.5;
-        const bandTop = H - Math.max(0, labelInsetRef.current);
-        type Box = { x0: number; y0: number; x1: number; y1: number };
-        const boxAt = (world: THREE.Vector3, w: number, h: number): Box | null => {
-          const dist = Math.max(1, world.distanceTo(camPos));
-          projV.copy(world).project(cam);
-          if (projV.z > 1) return null;
-          const cx = (projV.x + 1) * 0.5 * W;
-          const cy = (1 - projV.y) * 0.5 * H;
-          const hw = (w * ppu) / dist / 2;
-          const hh = (h * ppu) / dist / 2;
-          return { x0: cx - hw, y0: cy - hh, x1: cx + hw, y1: cy + hh };
-        };
-        const overlaps = (a: Box, b: Box, pad: number) =>
-          a.x0 < b.x1 + pad && b.x0 < a.x1 + pad && a.y0 < b.y1 + pad && b.y0 < a.y1 + pad;
-
-        const items: { id: string; box: Box; prio: number; d2: number }[] = [];
-        const faces: { id: string; box: Box; d2: number }[] = [];
-        for (const v of visRef.current.values()) {
-          if (!v.outer.parent) continue;
-          const s = Math.max(0, v.lastScale);
-          if (s < 0.01) continue;
-          v.outer.getWorldPosition(projV);
-          const d2 = projV.distanceToSquared(camPos);
-          if (v.avatar.visible) {
-            const size = (v.node.isCenter ? MARK_SIZE : v.avatar.scale.x) * s * 0.9;
-            const box = boxAt(projV.clone(), size, size);
-            if (box) faces.push({ id: v.node.id, box, d2 });
-          }
-          if (!v.label) continue;
-          const lw = v.label.scale.x * s;
-          const lh = v.label.scale.y * s;
-          v.label.getWorldPosition(projV);
-          const box = boxAt(projV, lw, lh);
-          if (!box) continue;
-          const onPath = pathRef.current.set.has(v.node.id) && !v.node.isDeleted;
-          const ring1 = (v.node.depth ?? 1) === 1;
-          items.push({ id: v.node.id, box, prio: v.node.isCenter ? 0 : onPath ? 1 : ring1 ? 2 : 3, d2 });
-        }
-        items.sort((a, b) => a.prio - b.prio || a.d2 - b.d2);
-        crowded.clear();
-        placed.clear();
-        const kept: Box[] = [];
-        for (const it of items) {
-          if (it.prio > 0 && it.box.y1 > bandTop) {
-            crowded.add(it.id);
-            continue;
-          }
-          if (it.prio >= 2) {
-            const hitsName = kept.some((k) => overlaps(k, it.box, 4));
-            const hitsFace = !hitsName && faces.some((f) => f.id !== it.id && f.d2 < it.d2 && overlaps(f.box, it.box, 0));
-            if (hitsName || hitsFace) {
-              crowded.add(it.id);
-              continue;
-            }
-          }
-          kept.push(it.box);
-          placed.add(it.id);
-        }
-      }
-
       dotList.length = 0;
+      labels.length = 0;
       // CSS pixels per world unit at distance 1 (label sizing)
       const pxPerUnit = ((cam as THREE.PerspectiveCamera).projectionMatrix.elements[5] ?? 1)
         * ((fg.renderer() as THREE.WebGLRenderer).domElement.clientHeight || 1) * 0.5;
@@ -2446,6 +2614,7 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
         const p = v.outer.position;
         const dx = p.x - camPos.x, dy = p.y - camPos.y, dz = p.z - camPos.z;
         const d2 = dx * dx + dy * dy + dz * dz;
+        v.d2 = d2;
         let level = d2 < LOD_CLOSE2 ? 0 : d2 < LOD_MEDIUM2 ? 1 : d2 < LOD_FAR2 ? 2 : 3;
         // Hysteresis: going back to a coarser level needs a margin, so a node sitting on a border
         // (camera rotating / node floating) does not flip between avatar and dot every frame
@@ -2469,32 +2638,25 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
         }
 
         const showLabel = wantsLabel(v);
-        const kept = !!v.node.isCenter || (pathRef.current.set.has(v.node.id) && !v.node.isDeleted);
+        const selected = v.node.id === selectedIdRef.current;
         if (showLabel) {
           v.unwantedAt = 0;
           v.wantedAt = now;
-          if (!v.label && (v.node.isCenter || labelBudget > 0)) {
+          if (!v.label && (selected || v.node.isCenter || labelBudget > 0)) {
             createLabel(v);
             if (!v.node.isCenter) labelBudget--;
           }
-        } else if (v.label && !kept) {
+        } else if (v.label) {
+          v.labelPlaced = false;
           if (v.unwantedAt === 0) v.unwantedAt = now;
           else if (now - v.unwantedAt >= LABEL_IDLE_MS) dropLabel(v);
         }
         if (v.label) {
-          const wantShown = showLabel && placed.has(v.node.id) ? 1 : 0;
-          if (reduced) v.labelShow = wantShown;
-          else if (v.labelShow !== wantShown) {
-            const step = dt / LABEL_FADE_MS;
-            v.labelShow = wantShown > v.labelShow ? Math.min(1, v.labelShow + step) : Math.max(0, v.labelShow - step);
-          }
-          v.label.visible = v.labelShow > 0.01;
-          // On-screen size of one text line at fit 1; keep it between the limits
-          if (v.label.visible) {
-            const base = v.label.userData.baseScale as THREE.Vector3;
-            const lines = (v.label.userData.lines as number | undefined) ?? 1;
+          labels.push(v);
+          // The padded sprite is used for collision, while fit limits apply to the text itself.
+          if (showLabel) {
             const k = v.node.isCenter || v.avatar.visible ? 1 : 0.9;
-            const linePx = ((base.y * k) / lines) * pxPerUnit / Math.max(1, Math.sqrt(d2));
+            const linePx = v.label.textHeight * k * pxPerUnit / Math.max(1, Math.sqrt(d2));
             const lo = v.node.isCenter ? LABEL_CENTER_MIN_PX : LABEL_MIN_PX;
             const hi = v.node.isCenter ? LABEL_CENTER_MAX_PX : LABEL_MAX_PX;
             const fit = linePx > hi ? hi / linePx : linePx < lo ? lo / linePx : 1;
@@ -2502,13 +2664,6 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
               v.labelFit = fit;
               applyLevel(v, v.level);
             }
-          }
-          const dimLabel = pathRef.current.dim && !pathRef.current.set.has(v.node.id);
-          const mat = v.label.material as THREE.SpriteMaterial;
-          const op = (dimLabel ? DIM_OPACITY : 1) * v.labelShow;
-          if (mat.opacity !== op) {
-            mat.opacity = op;
-            mat.transparent = true;
           }
         }
 
@@ -2563,8 +2718,33 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
           v.pulse.scale.set(ps, ps, 1);
         }
         if (v.dot.visible && v.outer.visible && v.lastScale > 0.001) {
-          v.d2 = d2;
           dotList.push(v);
+        }
+      }
+
+      if (labelFrame % 6 === 1) {
+        const el = (fg.renderer() as THREE.WebGLRenderer).domElement;
+        placeLabels(cam, el.clientWidth || 1, el.clientHeight || 1);
+      }
+      const path = pathRef.current;
+      for (const v of labels) {
+        const label = v.label!;
+        const protectedLabel = v.node.isCenter || v.node.id === selectedIdRef.current;
+        const wantShown = v.labelPlaced ? 1 : 0;
+        if (reduced) v.labelShow = wantShown;
+        else if (v.labelShow !== wantShown) {
+          const step = dt / LABEL_FADE_MS;
+          v.labelShow = wantShown > v.labelShow ? Math.min(1, v.labelShow + step) : Math.max(0, v.labelShow - step);
+        }
+        label.visible = v.labelShow > 0.01;
+        label.material.depthTest = !protectedLabel;
+        // A protected label may be shifted into view from a node outside the frustum.
+        label.frustumCulled = !protectedLabel;
+        const dimLabel = path.dim && !protectedLabel && !path.set.has(v.node.id);
+        const op = (dimLabel ? DIM_OPACITY : 1) * v.labelShow;
+        if (label.material.opacity !== op) {
+          label.material.opacity = op;
+          label.material.transparent = true;
         }
       }
 
@@ -2627,7 +2807,8 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
         }
         if (labeled.length > LABEL_CAP) {
           const pathNow = pathRef.current;
-          const evictable = labeled.filter((v) => !v.node.isCenter && !(pathNow.set.has(v.node.id) && !v.node.isDeleted));
+          const evictable = labeled.filter((v) => !v.node.isCenter && v.node.id !== selectedIdRef.current
+            && !(pathNow.set.has(v.node.id) && !v.node.isDeleted));
           evictable.sort((a, b) => {
             const au = a.unwantedAt > 0 ? a.unwantedAt : Number.POSITIVE_INFINITY;
             const bu = b.unwantedAt > 0 ? b.unwantedAt : Number.POSITIVE_INFINITY;
@@ -2848,6 +3029,9 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
     }
     const wash = sceneFxRef.current.glow;
     if (wash) wash.material = res.sceneGlowMaterial(colors.scene);
+    // The far-ring dust is built with the palette of its time: a theme switch recolours it in place
+    const dust = (fgRef.current?.scene?.() as THREE.Scene | undefined)?.getObjectByName('so-far') as THREE.Points | undefined;
+    if (dust) (dust.material as THREE.PointsMaterial).color.set(parseColor(colors.node3).color);
     for (const v of visRef.current.values()) {
       paintNode(v);
       restyleLabel(v);
@@ -3168,7 +3352,7 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
     const fonts = document.fonts;
     if (!fonts?.load) return;
     let cancel = false;
-    fonts.load('700 64px Manrope').then(() => {
+    Promise.all([fonts.load('700 64px Manrope'), fonts.load('800 64px Manrope')]).then(() => {
       if (cancel) return;
       for (const v of visRef.current.values()) restyleLabel(v);
     }).catch(() => { /* font stays on the fallback */ });

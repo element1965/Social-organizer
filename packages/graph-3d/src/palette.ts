@@ -4,8 +4,12 @@ export interface GraphColors {
   node1: string;
   node2: string;
   node3: string;
-  /** Rings, path links, path labels. Token `care-scene`. */
+  /** Rings, path links, pulses. Token `care-scene`. */
   care: string;
+  /** Names of the people on a highlighted path: care, dark enough for text (4.5:1) on the scene. */
+  careText: string;
+  /** Links between me and my 1st handshake: care with its alpha. */
+  spoke: string;
   /** Path nodes and the centre tile. Token `care-bright`. */
   careBright: string;
   /** Mark tint on the care tile. White on-care: the tile is care-bright, and the scene does not follow the app theme. */
@@ -24,6 +28,9 @@ export const GRAPH_COLORS: GraphColors = {
   node2: '#9fb0aa',
   node3: '#5f7069',
   care: '#5fd3c6',
+  careText: '#5fd3c6',
+  // care at 0.95 × 0.75: the spokes step back a little from the path links
+  spoke: 'rgba(95,211,198,0.7125)',
   careBright: '#0d9488',
   careOn: '#ffffff',
   line: 'rgba(231,238,235,0.16)',
@@ -33,22 +40,42 @@ export const GRAPH_COLORS: GraphColors = {
   washEdge: '#132420',
 };
 
-/** Light theme: a pale scene, ink dots and names, the darker care teal (AA contrast on light), a white centre glow. */
+/**
+ * Light theme: the pale scene of `.scene-follows-theme` (tokens.css), solid ink dots that step back by ring,
+ * ink names, the light care teal. Measured on the scene (#eef3f1) and on the white centre wash, WCAG ratios:
+ * dots 1st 14.8 / 2nd 6.5 / 3rd 3.3, spokes and path links 4.0, plain links 1.6 (structure, as in the dark
+ * scene's 1.5), names 14.8, path names 6.0.
+ */
 export const GRAPH_COLORS_LIGHT: GraphColors = {
-  scene: '#eef3f1',
-  // Dots are softer than the ink text: a dark ink dot per person would drown the names
-  node1: '#3d5852',
-  node2: '#7f938d',
-  node3: '#b3c0bb',
-  care: '#087f71',
+  scene: '#eef3f1', // --scene (light scene)
+  node1: '#14211e', // --node-1 (light scene) = --ink
+  node2: '#4a5a55', // --node-2 (light scene): the same grey as the "2nd" chip
+  // 40% --ink-muted (#5c6d68) + 60% --node-3 (light scene, #8a9a95): --node-3 itself is 2.6:1 on the scene
+  node3: '#788883',
+  care: '#087f71', // --care
+  careText: '#08675c', // --care-hover: --care is 4.4:1 on the scene, under 4.5:1 for text
+  spoke: 'rgba(8,127,113,0.95)', // --care, as opaque as the path links (at 0.71 it fell to 2.8:1)
   careBright: '#0d9488',
   careOn: '#ffffff',
-  line: 'rgba(20,33,30,0.18)',
+  line: 'rgba(20,33,30,0.24)', // --line-strong
   star: 'rgba(20,33,30,0.3)',
-  label: '#14211e',
+  label: '#14211e', // --ink
   wash: '#ffffff',
   washEdge: '#f7faf9',
 };
+
+/**
+ * Dot opacity by handshake (1st, 2nd, 3rd and further). In the dark scene the far rings fade into the dark;
+ * the light scene keeps its dots solid and steps back by colour, because a translucent grey dot on a pale
+ * ground falls under 3:1 (the 2nd ring was 1.9:1, the 3rd 1.2:1).
+ */
+const DEPTH_ALPHA_DARK = [1, 0.62, 0.42] as const;
+const DEPTH_ALPHA_LIGHT = [1, 1, 1] as const;
+
+export function depthAlpha(sceneTheme: 'light' | 'dark', depth: number): number {
+  const table = sceneTheme === 'light' ? DEPTH_ALPHA_LIGHT : DEPTH_ALPHA_DARK;
+  return depth <= 1 ? table[0] : depth === 2 ? table[1] : table[2];
+}
 
 /** Tooltip card. `theme` changes only these. */
 export interface OverlayColors {

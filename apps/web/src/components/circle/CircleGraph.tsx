@@ -29,7 +29,9 @@ type CircleGraphProps = {
   focusLift?: number;
   /** The rounded count of the 4th to 6th rings (one shell), drawn as anonymous dust around the ball. */
   farRings?: number[];
-  /** CSS px at the bottom of the canvas covered by other UI: names are not drawn there. */
+  /** Height in CSS px of the header over the canvas. */
+  insetTop?: number;
+  /** Height in CSS px of the UI over the bottom of the canvas. */
   labelInsetBottom?: number;
 };
 
@@ -44,7 +46,7 @@ type CircleGraphProps = {
  * People, or a phone/desktop layout switch) and handed back as `initialView`, which skips the intro fly.
  */
 export const CircleGraph = forwardRef<CircleGraphHandle, CircleGraphProps>(function CircleGraph(
-  { myId, people, edges, highlightPath, impulses, hiddenRings, onNodeTap, dimmed, focusId, focusLift, farRings, labelInsetBottom },
+  { myId, people, edges, highlightPath, impulses, hiddenRings, onNodeTap, dimmed, focusId, focusLift, farRings, insetTop, labelInsetBottom },
   ref,
 ) {
   const boxRef = useRef<HTMLDivElement>(null);
@@ -134,6 +136,7 @@ export const CircleGraph = forwardRef<CircleGraphHandle, CircleGraphProps>(funct
             focusId={focusId ?? null}
             focusLift={focusLift}
             farRings={farRings}
+            insetTop={insetTop}
             labelInsetBottom={labelInsetBottom}
             showControls={false}
             theme={dark ? 'dark' : 'light'}
