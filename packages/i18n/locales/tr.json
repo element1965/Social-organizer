@@ -755,7 +755,6 @@
           "say": "Bir sığırcık yalnızca altı yedi komşusunu izler, ama binlerce kuştan oluşan sürü tek bir beden gibi uçar."
         },
         "b2": {
-          "label": "İnsanlar",
           "say": "İnsanlar da aynı şekilde bağlıdır.",
           "stat": "tokalaşma: 2016'da rastgele iki Facebook kullanıcısı arasındaki ortalama mesafe buydu. Yani aralarında dörtten az kişi vardı. <study>Araştırma</study>"
         },
@@ -796,7 +795,6 @@
         },
         "rail": {
           "1": "Sürü",
-          "2": "İnsanlar",
           "3": "Ağ",
           "4": "İhtiyaç",
           "5": "Karar",

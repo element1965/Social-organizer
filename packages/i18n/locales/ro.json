@@ -759,7 +759,6 @@
           "say": "Un graur urmărește doar șase-șapte vecini, și totuși un stol de mii de păsări zboară ca una singură."
         },
         "b2": {
-          "label": "Oameni",
           "say": "Oamenii sunt legați la fel.",
           "stat": "strângeri de mână despărțeau în medie doi utilizatori Facebook aleși la întâmplare în 2016: mai puțin de patru oameni între ei. <study>Studiul</study>"
         },
@@ -800,7 +799,6 @@
         },
         "rail": {
           "1": "Stol",
-          "2": "Oameni",
           "3": "Rețea",
           "4": "Nevoie",
           "5": "Decizie",

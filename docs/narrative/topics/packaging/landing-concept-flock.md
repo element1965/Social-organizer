@@ -404,6 +404,24 @@ The user: «Птицы в 3д сцене к концу должны превра
   free scrolling inside snap areas taller than the screen.
 - **App.** «Возможно, вы знакомы» on the Add screen starts folded to three people with an "N more" button.
 
+### 20. A turn before the app, fewer stops (2026-11-19)
+
+The user: «На лендинге надо крутить несколько раз вокруг свое оси граф при прокруте между You и In The App.
+Подумать над сокращением количества ступеней прокрутки (обьединение некоторых?) Немного долго листать.»
+
+- **The turn.** From «Вы» to «В приложении» the graph turns twice round the vertical axis through you,
+  following the scroll and easing out about two seconds after the page stops; Oleg's and Maria's labels wait
+  until it stops.
+- **Fewer stops.** Measured before: 20 stops to the bottom on a 390×844 phone, 16 at 1440×900. Proposed: join
+  «Скворцы» and «Люди», fit "next" and the app into one phone screen each, and possibly join «Каждый решает
+  сам» with «Понемногу от многих»; the user approved the first two («давай делай»). Now the starling and the
+  people are one beat: its words are the starling's line, then «Люди связаны так же.» and the 4,57 figure;
+  the scene keeps its nine phases and runs through both by the beat's middle, with the wide shot brought
+  closer (44 → 32) because a glide passes the close-up of one bird. On phones the "next" network fills what
+  the words leave of the screen and the app section is tighter. After: 17 stops on the phone (Russian,
+  English, German, Ukrainian, Arabic), 15 on desktop; a 375×667 phone still gets two stops for the taller
+  sections.
+
 ## Related
 - [The core message](../core/core-message.md) — source: every line on the page.
 - [The Need protocol](../mechanics/need-protocol.md) — evidence: up to N people, nearest first, from $1, reversible, the chat.

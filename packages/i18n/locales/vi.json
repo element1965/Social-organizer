@@ -751,7 +751,6 @@
           "say": "Một con sáo đá chỉ để ý sáu, bảy con bên cạnh, vậy mà cả đàn hàng nghìn con vẫn bay như một."
         },
         "b2": {
-          "label": "Con người",
           "say": "Con người cũng gắn kết với nhau như thế.",
           "stat": "cái bắt tay: khoảng cách trung bình giữa hai người dùng Facebook bất kỳ vào năm 2016. Ở giữa họ chưa tới bốn người. <study>Nghiên cứu</study>"
         },
@@ -792,7 +791,6 @@
         },
         "rail": {
           "1": "Đàn chim",
-          "2": "Con người",
           "3": "Mạng lưới",
           "4": "Nhu cầu",
           "5": "Quyết định",

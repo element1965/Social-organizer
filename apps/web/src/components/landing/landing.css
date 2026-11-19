@@ -122,7 +122,8 @@ html[dir="rtl"] .lv.graph .tag.t-maria.flip { transform: translate(18px, -50%); 
 .lv [data-enter] > *:nth-child(3) { animation-delay: .24s; }
 .lv [data-enter] > *:nth-child(4) { animation-delay: .36s; }
 @keyframes lv-enter { from { opacity: 0; transform: translateY(18px); } }
-/* the 4.57 figure in the "people" beat */
+/* the starlings' beat goes on to people: their line reads as a second statement, then the 4.57 figure */
+.lv .late .turn { font-size: clamp(24px, 2.15vw, 32px); line-height: 1.3; letter-spacing: -.015em; color: var(--lv-white); }
 .lv .stat { display: flex; align-items: baseline; gap: 18px; margin-top: 22px; }
 .lv .stat b { font: 300 clamp(56px, 6vw, 88px)/.9 var(--sans); letter-spacing: -.05em; color: var(--lv-white); }
 .lv .stat span { font-size: 16px; line-height: 1.45; color: rgba(255, 255, 255, .8); max-width: 330px; }
@@ -304,8 +305,9 @@ html[lang="th"] .lv :is(h1, h2) { line-height: 1.25; }
   .lv .beat > .wrap { position: sticky; bottom: 18px; }
   .lv .beat:not(.hero) .copy { background: rgba(6, 13, 12, .74); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, .08); border-radius: 18px; padding: 18px 18px 20px; }
   .lv .hero { padding-bottom: 48px; }
-  .lv .say { font-size: 21px; }
+  .lv .say, .lv .late .turn { font-size: 21px; }
   .lv .late { font-size: 16px; margin-top: 12px; }
+  .lv .late .stat { margin-top: 14px; }
   .lv .beat .mono { margin-bottom: 12px; }
   .lv .stat b { font-size: 52px; }
   .lv .stat span { font-size: 14px; }
@@ -324,9 +326,20 @@ html[lang="th"] .lv :is(h1, h2) { line-height: 1.25; }
   .lv .ctrl label.q b { font-size: 22px; }
   .lv .stats { grid-template-columns: auto auto; }
   .lv .stats canvas { grid-column: 1 / -1; }
-  .lv .next { flex-direction: column; align-items: stretch; padding-top: 96px; }
-  .lv .next > canvas { position: relative; inset: auto; height: calc(var(--screen) * .42); order: 2; margin-top: 24px; }
+  /* phones: "next" and the app fit one screen each, so each takes one stop of the scroll; the network fills
+     what the words leave of the screen */
+  .lv .next { flex-direction: column; align-items: stretch; padding: 92px 0 20px; }
+  .lv .next > canvas { position: relative; inset: auto; flex: 1 0 0; height: auto; min-height: calc(var(--screen) * .26); order: 2; margin-top: 18px; }
   .lv .next::after { display: none; }
+  .lv .next h2 { margin-bottom: 18px; }
+  .lv .next p { font-size: 17px; }
+  .lv .legend { margin-top: 22px; }
+  .lv .final { padding: 96px 0 36px; }
+  .lv .final h2 { font-size: 38px; }
+  .lv .final p { margin-top: 16px; font-size: 19px; }
+  .lv .steps { margin-top: 18px; gap: 10px; }
+  .lv .steps li { font-size: 16px; }
+  .lv .stores { margin-top: 22px; }
   .lv .faq .grid, .lv .final .grid { grid-template-columns: 1fr; }
   .lv .qrcard { display: none; }
   .lv .badge { padding: 10px 12px; }

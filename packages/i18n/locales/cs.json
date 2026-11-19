@@ -763,7 +763,6 @@
           "say": "Špaček sleduje jen šest nebo sedm sousedů, a přesto hejno tisíců ptáků letí jako jeden celek."
         },
         "b2": {
-          "label": "Lidé",
           "say": "Lidé jsou propojeni stejně.",
           "stat": "podání ruky dělilo v roce 2016 v průměru dva náhodné uživatele Facebooku: mezi nimi byly necelé čtyři osoby. <study>Studie</study>"
         },
@@ -804,7 +803,6 @@
         },
         "rail": {
           "1": "Hejno",
-          "2": "Lidé",
           "3": "Síť",
           "4": "Potřeba",
           "5": "Volba",

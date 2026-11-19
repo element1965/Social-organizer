@@ -21,7 +21,11 @@ export interface SceneElements {
   /** The app's dark scene with its centre wash; fades in as the flock turns into the graph. */
   graphBg: HTMLElement;
   story: HTMLElement;
+  /** The hero, then the story's beats. */
   beats: HTMLElement[];
+  /** How many of the scene's phases each of `beats` tells (the hero tells one); the scene has one shot per phase. */
+  phases: number[];
+  /** Words that come in late, one per beat. */
   lates: (HTMLElement | null)[];
   tags: { you: HTMLElement; oleg: HTMLElement; maria: HTMLElement; lena: HTMLElement };
   hud: HTMLElement;
@@ -78,9 +82,19 @@ export function initScene(els: SceneElements, initial: SceneOptions): SceneHandl
   const lowEnd = (navigator.hardwareConcurrency || 8) <= 4;
   const N = small ? 2000 : lowEnd ? 4000 : 6500;
   const { canvas, sky: skyEl, night: nightEl, graphBg, beats, story } = els;
-  /** The last beat: the network as the app shows it. The one before it turns the flock into that graph. */
-  const LAST = beats.length - 1;
+  /** Where each beat starts on the scene's time line, in phases. */
+  const phasesOf = (k: number) => Math.max(1, els.phases[k] ?? 1);
+  const phaseStart: number[] = [];
+  let phaseCount = 0;
+  beats.forEach((_, k) => {
+    phaseStart.push(phaseCount);
+    phaseCount += phasesOf(k);
+  });
+  /** The last phase: the network as the app shows it. The one before it turns the flock into that graph. */
+  const LAST = phaseCount - 1;
   const MORPH = LAST - 1;
+  /** A beat's late words come in once the scene is 0.2 into the beat's last phase. */
+  const lateAt = beats.map((_, k) => phaseStart[k]! + phasesOf(k) - 0.8);
 
   let seed = 11;
   const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
@@ -772,7 +786,7 @@ export function initScene(els: SceneElements, initial: SceneOptions): SceneHandl
     linkAttr.needsUpdate = true;
   };
 
-  // ---- scroll → story time t (beat index + progress) ----
+  // ---- scroll → page time (beat index + progress) → scene time (phase index + progress) ----
   const storyT = () => {
     const mid = innerHeight * 0.5;
     let t = 0;
@@ -782,6 +796,17 @@ export function initScene(els: SceneElements, initial: SceneOptions): SceneHandl
       else if (r.top <= mid) t = k + clamp((mid - r.top) / r.height);
     });
     return t;
+  };
+  /**
+   * A beat of n phases runs through n - 0.5 of them by its middle, where the page rests (the last phase fully
+   * told), and through the second half of the last one after it; a beat of one phase maps one to one.
+   */
+  const sceneT = (d: number) => {
+    const k = Math.min(Math.floor(d), beats.length - 1);
+    const p = d - k;
+    const n = phasesOf(k);
+    const s = phaseStart[k]!;
+    return p <= 0.5 ? s + p * (2 * n - 1) : s + n - 1 + p;
   };
 
   // ---- camera shots, one per beat ----
@@ -815,8 +840,10 @@ export function initScene(els: SceneElements, initial: SceneOptions): SceneHandl
         o.pitch = 0.12;
         break;
       case 2:
+        // the page stops here for both the starling and the people (a glide passes the close-up of phase 1), so
+        // the shot stays near enough for the bird's links and wide enough for the handshakes spreading round it
         V(you, o.t);
-        o.d = 44;
+        o.d = 32;
         o.yaw = 0.22;
         o.pitch = 0.08;
         break;
@@ -932,10 +959,10 @@ export function initScene(els: SceneElements, initial: SceneOptions): SceneHandl
     camera.updateProjectionMatrix();
   };
 
-  // chapter rail: shows where you are
-  const rail = (t: number) => {
-    const k = Math.floor(t + 0.02);
-    els.rail.classList.toggle('on', k >= 1 && k <= LAST);
+  // chapter rail: shows where you are (in page time: one mark per beat)
+  const rail = (d: number) => {
+    const k = Math.floor(d + 0.02);
+    els.rail.classList.toggle('on', k >= 1 && k <= beats.length - 1);
     els.railLinks.forEach((a, n) => {
       const b = n + 1;
       a.classList.toggle('on', b === k);
@@ -965,7 +992,7 @@ export function initScene(els: SceneElements, initial: SceneOptions): SceneHandl
     const k = Math.floor(t);
     const p = t - k;
     els.lates.forEach((el, j) => {
-      if (el) el.classList.toggle('on', j < k || (j === k && p > 0.2));
+      if (el) el.classList.toggle('on', t > (lateAt[j] ?? Infinity));
     });
     const out: BeatOut = { thin: [], thick: [], path: null, halo: -1, ring: -1, T: {} };
     if (k >= MORPH) for (let i = 0; i < N; i++) setG(i, ringCol(i), 1);
@@ -1150,7 +1177,9 @@ export function initScene(els: SceneElements, initial: SceneOptions): SceneHandl
   });
   io.observe(story);
 
-  let tS = storyT();
+  /** Page time, eased towards the scroll; the scene's time follows from it. */
+  let tD = storyT();
+  let tS = sceneT(tD);
   let gS = 0;
   /** How far the Need of the morph beat has spread, 0 to 1; it starts when the rings are nearly formed. */
   let spread = 0;
@@ -1162,7 +1191,8 @@ export function initScene(els: SceneElements, initial: SceneOptions): SceneHandl
   const tick = (dt: number, target: number) => {
     clock += reduce ? 0 : dt;
     uTime.value = clock;
-    tS += (target - tS) * (reduce ? 1 : Math.min(1, dt * 4));
+    tD += (target - tD) * (reduce ? 1 : Math.min(1, dt * 4));
+    tS = sceneT(tD);
     // the graph has its own, slower pace: the flock takes a moment to gather however fast the page moves
     const gTarget = clamp((tS - MORPH) / 0.3);
     gS += (gTarget - gS) * (reduce ? 1 : Math.min(1, dt * 1.1));
@@ -1187,7 +1217,7 @@ export function initScene(els: SceneElements, initial: SceneOptions): SceneHandl
       linkMat.opacity = 0.14 * ease(remap(gS, 0.4, 1));
     }
     frameCamera(tS, clock, dt);
-    rail(tS);
+    rail(tD);
     const k = Math.floor(tS);
     setLines(thin, st.thin, P);
     if (st.path) setCurve(st.path);
@@ -1278,13 +1308,15 @@ export function initScene(els: SceneElements, initial: SceneOptions): SceneHandl
 
   if (import.meta.env.DEV) {
     (window as unknown as { __lvScene?: unknown }).__lvScene = {
-      draw: (t: number, n = 40) => {
-        for (let i = 0; i < n; i++) tick(1 / 60, t);
+      /** Draws n frames at page time d; returns the scene time. */
+      draw: (d: number, n = 40) => {
+        for (let i = 0; i < n; i++) tick(1 / 60, d);
         return tS;
       },
       state: () => {
-        const t = storyT();
-        return { y: Math.round(scrollY), beat: Math.floor(t), p: +(t % 1).toFixed(3), g: +gS.toFixed(3), spin: +spin.toFixed(2), spinning };
+        const d = storyT();
+        const t = sceneT(d);
+        return { y: Math.round(scrollY), page: +d.toFixed(3), beat: Math.floor(t), p: +(t % 1).toFixed(3), g: +gS.toFixed(3), spin: +spin.toFixed(2), spinning };
       },
       cast: {
         you,

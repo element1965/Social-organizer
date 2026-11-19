@@ -16,7 +16,7 @@ import '../components/landing/landing.css';
 
 /**
  * Home for a guest: one scroll-told story over a fixed 3D flock of starlings (how a network of people you know
- * works, in nine beats; at the end the flock becomes the graph the app shows), then the growth model, what comes
+ * works, in eight beats; at the end the flock becomes the graph the app shows), then the growth model, what comes
  * next, the experiment, questions and the app.
  * Ported from the concept prototype (local/media/concept-6, v9; docs/narrative/topics/packaging/landing-concept-flock.md).
  * The page stays in the entry chunk so its words paint at once; Three.js and the scene load with a dynamic import.
@@ -31,10 +31,23 @@ const ICON_CREDITS = 'Gil Barbara logos (CC0), Lucide (ISC)';
 /** People with connections in the network on the date in `join.now`. */
 const NETWORK_NOW = 287;
 
-const BEATS = [1, 2, 3, 4, 5, 6, 7, 8, 9] as const;
+/**
+ * The story's beats on the page. `key` names the words (landing.v2.story.b<key>); `phases` is how many of the
+ * scene's nine phases the beat tells: the first one shows the starlings and then the people, so the reader stops
+ * once for both. A tall beat gives its animation more scroll.
+ */
+const BEATS: readonly { key: number; phases: number; tall?: boolean }[] = [
+  { key: 1, phases: 2 },
+  { key: 3, phases: 1 },
+  { key: 4, phases: 1, tall: true },
+  { key: 5, phases: 1 },
+  { key: 6, phases: 1, tall: true },
+  { key: 7, phases: 1 },
+  { key: 8, phases: 1 },
+  { key: 9, phases: 1 },
+];
 /** The last beat: the network as the app shows it; it carries the call to action. */
 const LAST_BEAT = 9;
-const TALL = new Set([4, 6]);
 const FAQ = [1, 2, 3, 4] as const;
 
 const ext = { target: '_blank', rel: 'noopener noreferrer' } as const;
@@ -206,6 +219,7 @@ export function LandingPage() {
               graphBg: graphBgRef.current,
               story: storyRef.current,
               beats: beatRefs.current.filter((b): b is HTMLElement => !!b),
+              phases: [1, ...BEATS.map((b) => b.phases)],
               lates: lateRefs.current,
               tags: { you: tags.you, oleg: tags.oleg, maria: tags.maria, lena: tags.lena },
               hud: hudRef.current,
@@ -273,8 +287,8 @@ export function LandingPage() {
   }, [lang, rtl, money]);
 
   // chapter rail: a click scrolls to the moment the beat is fully told (its middle)
-  const goBeat = (e: ReactMouseEvent<HTMLAnchorElement>, b: number) => {
-    const el = beatRefs.current[b];
+  const goBeat = (e: ReactMouseEvent<HTMLAnchorElement>, n: number) => {
+    const el = beatRefs.current[n];
     if (!el) return;
     e.preventDefault();
     const r = el.getBoundingClientRect();
@@ -366,9 +380,9 @@ export function LandingPage() {
       </div>
 
       <nav className="rail" ref={railRef} aria-label={t('landing.v2.story.railAria')}>
-        {BEATS.map((b, n) => (
-          <a key={b} href={b <= 2 ? '#network' : '#how'} ref={(el) => void (railLinkRefs.current[n] = el)} onClick={(e) => goBeat(e, b)}>
-            <span>{t(`landing.v2.story.rail.${b}`)}</span>
+        {BEATS.map(({ key }, n) => (
+          <a key={key} href={key === 1 ? '#network' : '#how'} ref={(el) => void (railLinkRefs.current[n] = el)} onClick={(e) => goBeat(e, n + 1)}>
+            <span>{t(`landing.v2.story.rail.${key}`)}</span>
             <i />
           </a>
         ))}
@@ -393,19 +407,21 @@ export function LandingPage() {
               </div>
             </div>
           </section>
-          {BEATS.map((b) => (
+          {BEATS.map(({ key: b, tall }, n) => (
             <section
               key={b}
-              className={TALL.has(b) ? 'beat tall' : 'beat'}
+              className={tall ? 'beat tall' : 'beat'}
               id={b === 1 ? 'network' : b === 3 ? 'how' : undefined}
-              ref={(el) => void (beatRefs.current[b] = el)}
+              ref={(el) => void (beatRefs.current[n + 1] = el)}
             >
               <div className="wrap">
                 <div className="copy">
                   <span className="mono">{t(`landing.v2.story.b${b}.label`)}</span>
                   <p className="say">{tm(`landing.v2.story.b${b}.say`)}</p>
-                  {b === 2 ? (
-                    <div className="late" ref={(el) => void (lateRefs.current[b] = el)}>
+                  {b === 1 ? (
+                    // the starlings' beat goes on to people: their words and the 4.57 figure come with the second phase
+                    <div className="late" ref={(el) => void (lateRefs.current[n + 1] = el)}>
+                      <p className="turn">{t('landing.v2.story.b2.say')}</p>
                       <p className="stat">
                         <b>{nf2.format(4.57)}</b>
                         <span>
@@ -413,8 +429,8 @@ export function LandingPage() {
                         </span>
                       </p>
                     </div>
-                  ) : b === 1 ? null : (
-                    <p className="late" ref={(el) => void (lateRefs.current[b] = el)}>
+                  ) : (
+                    <p className="late" ref={(el) => void (lateRefs.current[n + 1] = el)}>
                       {tm(`landing.v2.story.b${b}.late`)}
                     </p>
                   )}

@@ -763,7 +763,6 @@
           "say": "Szpak obserwuje tylko sześciu, siedmiu sąsiadów, a wielotysięczne stado leci jak jedno."
         },
         "b2": {
-          "label": "Ludzie",
           "say": "Ludzie są połączeni tak samo.",
           "stat": "uścisku dłoni dzieliło w 2016 roku średnio dwóch losowych użytkowników Facebooka, czyli mniej niż cztery osoby pomiędzy nimi. <study>Badanie</study>"
         },
@@ -804,7 +803,6 @@
         },
         "rail": {
           "1": "Stado",
-          "2": "Ludzie",
           "3": "Sieć",
           "4": "Potrzeba",
           "5": "Decyzja",

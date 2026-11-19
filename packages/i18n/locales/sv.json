@@ -755,7 +755,6 @@
           "say": "En stare håller bara koll på sex eller sju grannar, men ändå flyger en flock på tusentals fåglar som en enda."
         },
         "b2": {
-          "label": "Människor",
           "say": "Människor är förbundna på samma sätt.",
           "stat": "handslag låg 2016 i genomsnitt mellan två slumpvis utvalda Facebookanvändare: färre än fyra personer emellan. <study>Studien</study>"
         },
@@ -796,7 +795,6 @@
         },
         "rail": {
           "1": "Flock",
-          "2": "Människor",
           "3": "Nätverk",
           "4": "Behov",
           "5": "Beslut",

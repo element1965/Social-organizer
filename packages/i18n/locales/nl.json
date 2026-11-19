@@ -755,7 +755,6 @@
           "say": "Een spreeuw let maar op zes of zeven buren, en toch vliegt een zwerm van duizenden als één geheel."
         },
         "b2": {
-          "label": "Mensen",
           "say": "Mensen zijn op dezelfde manier verbonden.",
           "stat": "handdrukken scheidden in 2016 gemiddeld twee willekeurige Facebook-gebruikers: er zaten minder dan vier mensen tussen. <study>Het onderzoek</study>"
         },
@@ -796,7 +795,6 @@
         },
         "rail": {
           "1": "Zwerm",
-          "2": "Mensen",
           "3": "Netwerk",
           "4": "Behoefte",
           "5": "Keuze",

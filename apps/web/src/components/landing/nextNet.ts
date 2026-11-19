@@ -194,7 +194,10 @@ export function initNextNet(cv: HTMLCanvasElement, initial: { rtl: boolean }): N
     if (cv.clientWidth !== W || cv.clientHeight !== H) build();
   };
   build();
-  addEventListener('resize', onResize);
+  // on a phone the network fills what the words leave of the screen, so its size follows the words too
+  // (a late font, a new language), not only the window
+  const ro = new ResizeObserver(onResize);
+  ro.observe(cv);
   const io = new IntersectionObserver(
     (es) => {
       visible = es[0]!.isIntersecting;
@@ -212,7 +215,7 @@ export function initNextNet(cv: HTMLCanvasElement, initial: { rtl: boolean }): N
     },
     destroy() {
       cancelAnimationFrame(raf);
-      removeEventListener('resize', onResize);
+      ro.disconnect();
       io.disconnect();
       base = null;
     },

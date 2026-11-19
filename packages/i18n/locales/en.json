@@ -755,7 +755,6 @@
           "say": "A starling keeps track of only six or seven neighbours, yet a flock of thousands flies as one."
         },
         "b2": {
-          "label": "People",
           "say": "People are connected the same way.",
           "stat": "handshakes separated two random Facebook users on average in 2016: fewer than four people in between. <study>The study</study>"
         },
@@ -796,7 +795,6 @@
         },
         "rail": {
           "1": "Flock",
-          "2": "People",
           "3": "Network",
           "4": "Need",
           "5": "Decision",

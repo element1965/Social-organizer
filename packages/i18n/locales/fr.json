@@ -759,7 +759,6 @@
           "say": "Un étourneau ne suit que six ou sept voisins, et pourtant une nuée de milliers d’étourneaux vole comme un seul oiseau."
         },
         "b2": {
-          "label": "Les gens",
           "say": "Les gens sont reliés de la même façon.",
           "stat": "poignées de main séparaient en moyenne deux utilisateurs de Facebook pris au hasard en 2016 : moins de quatre personnes entre eux. <study>L’étude</study>"
         },
@@ -800,7 +799,6 @@
         },
         "rail": {
           "1": "Nuée",
-          "2": "Personnes",
           "3": "Réseau",
           "4": "Besoin",
           "5": "Décision",

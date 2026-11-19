@@ -751,7 +751,6 @@
           "say": "Seekor jalak hanya memperhatikan enam atau tujuh burung di dekatnya, tetapi kawanan ribuan ekor terbang seperti satu tubuh."
         },
         "b2": {
-          "label": "Manusia",
           "say": "Manusia terhubung dengan cara yang sama.",
           "stat": "jabat tangan: rata-rata jarak antara dua pengguna Facebook acak pada 2016. Di antara mereka ada kurang dari empat orang. <study>Studinya</study>"
         },
@@ -792,7 +791,6 @@
         },
         "rail": {
           "1": "Kawanan",
-          "2": "Manusia",
           "3": "Jaringan",
           "4": "Kebutuhan",
           "5": "Keputusan",

@@ -755,7 +755,6 @@
           "say": "En stær holder kun øje med seks eller syv naboer, men alligevel flyver en flok på flere tusinde som én."
         },
         "b2": {
-          "label": "Mennesker",
           "say": "Mennesker er forbundet på samme måde.",
           "stat": "håndtryk adskilte i 2016 i gennemsnit to tilfældige Facebook-brugere: færre end fire mennesker imellem. <study>Undersøgelsen</study>"
         },
@@ -796,7 +795,6 @@
         },
         "rail": {
           "1": "Flok",
-          "2": "Mennesker",
           "3": "Netværk",
           "4": "Behov",
           "5": "Valg",

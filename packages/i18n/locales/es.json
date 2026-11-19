@@ -759,7 +759,6 @@
           "say": "Un estornino solo se fija en seis o siete vecinos, y aun así una bandada de miles de aves vuela como una sola."
         },
         "b2": {
-          "label": "Personas",
           "say": "Las personas están conectadas de la misma manera.",
           "stat": "apretones de manos separaban de media a dos usuarios de Facebook elegidos al azar en 2016: menos de cuatro personas entre ellos. <study>El estudio</study>"
         },
@@ -800,7 +799,6 @@
         },
         "rail": {
           "1": "Bandada",
-          "2": "Personas",
           "3": "Red",
           "4": "Necesidad",
           "5": "Decisión",

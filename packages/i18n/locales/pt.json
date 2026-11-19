@@ -759,7 +759,6 @@
           "say": "Um estorninho só presta atenção em seis ou sete vizinhos, e mesmo assim um bando de milhares de aves voa como se fosse uma só."
         },
         "b2": {
-          "label": "Pessoas",
           "say": "As pessoas estão ligadas do mesmo jeito.",
           "stat": "apertos de mão separavam, em média, dois usuários aleatórios do Facebook em 2016: menos de quatro pessoas entre eles. <study>O estudo</study>"
         },
@@ -800,7 +799,6 @@
         },
         "rail": {
           "1": "Bando",
-          "2": "Pessoas",
           "3": "Rede",
           "4": "Necessidade",
           "5": "Decisão",

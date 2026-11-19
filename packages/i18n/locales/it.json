@@ -759,7 +759,6 @@
           "say": "Uno storno tiene d'occhio solo sei o sette vicini, eppure uno stormo di migliaia di uccelli vola come un corpo solo."
         },
         "b2": {
-          "label": "Persone",
           "say": "Le persone sono collegate allo stesso modo.",
           "stat": "strette di mano separavano in media due utenti di Facebook scelti a caso nel 2016: meno di quattro persone in mezzo. <study>Lo studio</study>"
         },
@@ -800,7 +799,6 @@
         },
         "rail": {
           "1": "Stormo",
-          "2": "Persone",
           "3": "Rete",
           "4": "Bisogno",
           "5": "Scelta",

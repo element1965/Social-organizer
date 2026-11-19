@@ -755,7 +755,6 @@
           "say": "En stær følger bare med på seks eller sju naboer, men likevel flyr en flokk på flere tusen som én."
         },
         "b2": {
-          "label": "Mennesker",
           "say": "Mennesker er knyttet sammen på samme måte.",
           "stat": "håndtrykk skilte i 2016 i snitt to tilfeldige Facebook-brukere: færre enn fire mennesker imellom. <study>Studien</study>"
         },
@@ -796,7 +795,6 @@
         },
         "rail": {
           "1": "Flokk",
-          "2": "Mennesker",
           "3": "Nettverk",
           "4": "Behov",
           "5": "Valg",

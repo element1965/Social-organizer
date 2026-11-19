@@ -755,7 +755,6 @@
           "say": "Kottarainen seuraa vain kuutta tai seitsemää naapuriaan, mutta tuhansien lintujen parvi lentää yhtenä joukkona."
         },
         "b2": {
-          "label": "Ihmiset",
           "say": "Ihmiset ovat yhteydessä toisiinsa samalla tavalla.",
           "stat": "kädenpuristusta erotti vuonna 2016 keskimäärin kaksi satunnaista Facebook-käyttäjää toisistaan: välissä alle neljä ihmistä. <study>Tutkimus</study>"
         },
@@ -796,7 +795,6 @@
         },
         "rail": {
           "1": "Parvi",
-          "2": "Ihmiset",
           "3": "Verkosto",
           "4": "Tarve",
           "5": "Päätös",

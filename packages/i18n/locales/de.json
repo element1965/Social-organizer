@@ -755,7 +755,6 @@
           "say": "Ein Star achtet nur auf sechs oder sieben Nachbarn. Trotzdem fliegt ein Schwarm aus Tausenden Vögeln wie ein einziges Wesen."
         },
         "b2": {
-          "label": "Menschen",
           "say": "Menschen sind auf dieselbe Weise verbunden.",
           "stat": "Handschläge trennten 2016 im Schnitt zwei zufällige Facebook-Nutzer: Dazwischen standen weniger als vier Personen. <study>Zur Studie</study>"
         },
@@ -796,7 +795,6 @@
         },
         "rail": {
           "1": "Schwarm",
-          "2": "Menschen",
           "3": "Netzwerk",
           "4": "Bedarf",
           "5": "Entscheidung",
