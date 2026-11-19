@@ -469,12 +469,12 @@ async function start() {
         wildcard: false,
         setHeaders(reply, filePath) {
           if (filePath.endsWith('.html')) {
-            reply.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
-          } else if (filePath.includes('/assets/')) {
-            reply.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
+            reply.header('Cache-Control', 'no-cache, no-store, must-revalidate');
+          } else if (/[\\/]assets[\\/]/.test(filePath)) {
+            reply.header('Cache-Control', 'public, max-age=31536000, immutable');
           } else if (/[\\/]videos[\\/]/.test(filePath)) {
             // Instruction videos: not content-hashed, versioned by ?v= in the client
-            reply.setHeader('Cache-Control', 'public, max-age=2592000');
+            reply.header('Cache-Control', 'public, max-age=2592000');
           }
         },
       });

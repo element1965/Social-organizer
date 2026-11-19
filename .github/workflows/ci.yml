@@ -1,0 +1,45 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_USER: organizer
+          POSTGRES_PASSWORD: organizer-dev
+        ports:
+          - 54329:5432
+        options: >-
+          --health-cmd "pg_isready -U organizer"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    steps:
+      - uses: actions/checkout@v4.4.0
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@v4.4.0
+      - uses: actions/setup-node@v4.4.0
+        with:
+          node-version-file: .node-version
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm db:generate
+      - run: pnpm build
+      - run: pnpm typecheck
+      - run: pnpm i18n:check
+      - run: pnpm lint
+      - run: pnpm test
+        env:
+          DATABASE_URL: postgresql://organizer:organizer-dev@127.0.0.1:54329/social_organizer_test

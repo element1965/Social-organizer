@@ -12,11 +12,13 @@
       "cache": false,
       "persistent": true
     },
-    "lint": {
-      "dependsOn": ["^build"]
-    },
     "typecheck": {
       "dependsOn": ["^build"]
+    },
+    "test": {
+      "dependsOn": ["^build"],
+      "passThroughEnv": ["DATABASE_URL"],
+      "cache": false
     },
     "clean": {
       "cache": false

@@ -147,9 +147,20 @@ and [deploy guidance](https://www.prisma.io/docs/orm/v6/prisma-migrate/workflows
 | `pnpm build` | Build all packages |
 | `pnpm dev` | Start dev servers |
 | `pnpm typecheck` | Type check |
+| `pnpm lint` | Check JavaScript, TypeScript and React Hooks |
+| `pnpm i18n:check` | Check translation keys |
+| `pnpm test` | Run the Need protocol suite against disposable PostgreSQL |
 | `pnpm db:migrate` | Run Prisma migrations |
 | `pnpm db:generate` | Generate Prisma Client |
 | `pnpm db:studio` | Open Prisma Studio |
+
+Set `DATABASE_URL` explicitly when you run the tests: otherwise Prisma picks up
+`packages/db/.env` (your dev database) and the suite's guard refuses to run. For
+the quick-start container or another local server, export `DATABASE_URL` with a database name containing `test`
+and a role with `CREATEDB`. The name in the URL need not exist. The suite
+creates a uniquely named database, applies the schema with `prisma db push`
+and drops its database during teardown. A fresh install needs
+`pnpm db:generate` before running the suite.
 
 ## Environment Variables
 
