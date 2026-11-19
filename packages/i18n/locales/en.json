@@ -232,7 +232,7 @@
       "peopleShort_one": "{{count}} person",
       "peopleShort_other": "{{count}} people",
       "canHelp": "Declared participation of the network",
-      "explain": "What the people you can see (up to the 3rd handshake) are still ready to name this period: the sum of their intentions. A Need goes out in waves, nearest first, up to the 6th handshake. This is a reference figure, not a promise: everyone decides for themselves whether to take part.",
+      "explain": "What the people in your network (up to the 6th handshake) are still ready to name this period: the sum of their intentions. A Need goes out in waves, nearest first, up to the 6th handshake. This is a reference figure, not a promise: everyone decides for themselves whether to take part.",
       "weekDelta": "+{{amount}} this week"
     },
     "rings": {
@@ -244,8 +244,8 @@
       "full3": "3rd handshake",
       "open": "{{ring}}: {{count}}. Open the list",
       "caption": "Handshakes",
-      "farther": "4th–5th: ~{{value}}",
-      "fartherFew": "4th–5th: a few"
+      "farther": "4th–6th: ~{{value}}",
+      "fartherFew": "4th–6th: a few"
     },
     "feed": {
       "title": "Feed",

@@ -14,6 +14,9 @@ import { useShellMode } from '../components/ui2/shell-mode';
 import { formatMoney } from '../components/ui2/format';
 import { Card } from '../components/ui2/Card';
 import { trpc } from '../lib/trpc';
+import { useNetworkFigure } from '../hooks/useNetworkFigure';
+import { useAskAccess } from '../hooks/useAskAccess';
+import { isAccountChanged } from '../hooks/accountScope';
 import { useOffline } from '../lib/connectivity';
 import { OfflineHint } from '../components/offline/OfflineNotice';
 import { PathToRequestSheet } from '../components/circle/PathToRequest';
@@ -67,7 +70,8 @@ function AskBody() {
   const offline = useOffline();
   const navigate = useNavigate();
   const utils = trpc.useUtils();
-  const access = trpc.collection.askAccess.useQuery();
+  const access = useAskAccess();
+  const { figure } = useNetworkFigure();
   const mine = trpc.collection.myActive.useQuery(undefined, { enabled: access.data?.allowed === true });
   const create = trpc.collection.create.useMutation({
     onSuccess: (created) => {
@@ -85,7 +89,8 @@ function AskBody() {
   const amountRef = useRef<HTMLDivElement>(null);
   const chatRef = useRef<HTMLDivElement>(null);
 
-  if (access.isLoading) {
+  // Another tab switched accounts: this tab re-reads the session and the gate re-keys; never a generic error for it
+  if (access.isLoading || isAccountChanged(access.error)) {
     return <p className="mt-6 text-body-s font-semibold text-ink-muted">{t('common.loading')}</p>;
   }
   if (access.isError || !access.data) {
@@ -105,7 +110,11 @@ function AskBody() {
   }
 
   const whole = parseWhole(amount);
-  const canHelp = access.data.networkCanHelp;
+  // The network figure is the only source of the people and the sum shown here: the query shared with the Circle,
+  // the Profile and My intention (everyone up to the 6th handshake, the people a Need can reach in waves, and their
+  // declared participation). askAccess is read only for the gate. Without a figure the hint and the line wait.
+  const canHelp = figure?.canHelp ?? null;
+  const networkPeople = figure?.people ?? null;
   const overHelp = whole != null && canHelp != null && whole > canHelp;
   const amountHint = canHelp == null
     ? undefined
@@ -156,12 +165,14 @@ function AskBody() {
     send();
   };
 
-  const reach = access.data.networkCount === 0 && access.data.directCount === 0
-    ? t('ask.reachEmpty')
-    : t('ask.reach', {
-        network: formatCount(access.data.networkCount, i18n.language),
-        direct: formatCount(access.data.directCount, i18n.language),
-      });
+  const reach = networkPeople == null
+    ? null
+    : networkPeople === 0 && access.data.directCount === 0
+      ? t('ask.reachEmpty')
+      : t('ask.reach', {
+          network: formatCount(networkPeople, i18n.language),
+          direct: formatCount(access.data.directCount, i18n.language),
+        });
 
   return (
     <>
@@ -218,7 +229,7 @@ function AskBody() {
             </button>
           )}
         </div>
-        <p className="mt-4 rounded-lg bg-care-soft px-3.5 py-3 text-caption font-semibold text-ink">{reach}</p>
+        {reach ? <p className="mt-4 rounded-lg bg-care-soft px-3.5 py-3 text-caption font-semibold text-ink">{reach}</p> : null}
         {errors.form ? <p className="mt-3 text-label font-semibold text-sos">{errors.form}</p> : null}
         <Button type="submit" className="mt-4 w-full" loading={create.isPending} disabled={offline}>
           {t('ask.submit')}

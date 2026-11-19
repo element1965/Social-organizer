@@ -20,10 +20,10 @@ INTENTION («Моё намерение», formerly "Minimum participation")
 The amount a person is ready to name when someone in their network reports a Need, in whole dollars. Filled in when they report Participation; they can name more. Not per month, and it does not decrease. This is NOT a pooled fund or shared account.
 
 DECLARED PARTICIPATION OF THE NETWORK («Заявленное участие сети»)
-Sum of the intentions named across the user's network (up to 3 handshake levels). A reference figure, not a promise, not an account and not guaranteed funds.
+Sum of the intentions named across the user's network (up to 6 handshake levels: the same people a Need can reach). The Circle, Profile, My intention and the Need screen show the same figure and the same number of people. A reference figure, not a promise, not an account and not guaranteed funds.
 
 NETWORK
-Your connections and their connections, up to 3 handshake levels deep. Notifications propagate through this network based on handshake chains.
+Your connections, their connections and so on, up to 6 handshake levels deep: this is the "people in your network" number, and these are the people who can see a Need of yours (the Need screen says "N people can see it"). People up to the 3rd handshake are shown by name; the 4th to 6th only as one rounded count. A Need reaches them in waves along handshake chains, nearest first.
 
 IGNORE
 One-sided communication block. Stops notifications from a specific person but keeps the handshake intact. The ignored person is not informed. Reversible anytime from Settings.

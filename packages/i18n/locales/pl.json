@@ -228,7 +228,7 @@
     "fit": "Wpasuj sieć",
     "stats": {
       "canHelp": "Zadeklarowany udział sieci",
-      "explain": "Ile osoby, które widzisz (do 3. uścisku dłoni), są jeszcze gotowe zgłosić w tym okresie: to suma ich zamiarów. Wiadomość o potrzebie idzie falami, od najbliższych, do 6. uścisku dłoni. To punkt odniesienia, a nie obietnica: każdy sam decyduje, czy weźmie udział.",
+      "explain": "Ile osoby z Twojej sieci (do 6. uścisku dłoni) są jeszcze gotowe zgłosić w tym okresie: to suma ich zamiarów. Wiadomość o potrzebie idzie falami, od najbliższych, do 6. uścisku dłoni. To punkt odniesienia, a nie obietnica: każdy sam decyduje, czy weźmie udział.",
       "weekDelta": "+{{amount}} w tym tygodniu",
       "people_few": "{{count}} osoby w Twojej sieci",
       "people_many": "{{count}} osób w Twojej sieci",
@@ -248,8 +248,8 @@
       "full3": "3. uścisk dłoni",
       "open": "{{ring}}: {{count}}. Otwórz listę",
       "caption": "Uściski dłoni",
-      "farther": "4.–5.: ~{{value}}",
-      "fartherFew": "4.–5.: kilka osób"
+      "farther": "4.–6.: ~{{value}}",
+      "fartherFew": "4.–6.: kilka osób"
     },
     "feed": {
       "title": "Kanał",

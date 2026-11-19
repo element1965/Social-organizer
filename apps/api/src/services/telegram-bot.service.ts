@@ -658,13 +658,13 @@ async function findInviter(token: string): Promise<{ id: string; name: string } 
 export type InviteStats = { people: number; declaredUsd: number };
 
 /**
- * The inviter's own network, counted exactly as their Profile shows it: the people in the visible rings 1–3
- * and their "Declared participation of the network" (networkReach). The old message summed every account in
- * the database, deleted ones included, with their monthlyBudget, so its numbers matched nothing in the app.
+ * The inviter's own network, counted exactly as their Profile shows it: the network figure (people up to the
+ * 6th handshake and their "Declared participation of the network", networkReach), and nothing finer. The old message summed every
+ * account in the database, deleted ones included, with their monthlyBudget, so its numbers matched nothing in the app.
  */
 async function inviterNetworkStats(userId: string): Promise<InviteStats | null> {
   const reach = await networkReach(getDb(), userId);
-  return reach.visible > 0 ? { people: reach.visible, declaredUsd: reach.canHelpVisible } : null;
+  return reach.people > 0 ? { people: reach.people, declaredUsd: reach.canHelp } : null;
 }
 
 /** 10052 → "10 052" (thin space), the grouping the app uses */

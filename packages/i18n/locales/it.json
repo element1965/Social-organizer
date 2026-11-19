@@ -228,7 +228,7 @@
     "fit": "Adatta la rete",
     "stats": {
       "canHelp": "Partecipazione dichiarata della rete",
-      "explain": "Quanto le persone che vedi (fino alla 3ª stretta di mano) sono ancora disposte a indicare in questo periodo: la somma delle loro intenzioni. Il messaggio su un bisogno parte a ondate, dai più vicini fino alla 6ª stretta di mano. È un riferimento, non una promessa: ognuno decide da sé se partecipare.",
+      "explain": "Quanto le persone della tua rete (fino alla 6ª stretta di mano) sono ancora disposte a indicare in questo periodo: la somma delle loro intenzioni. Il messaggio su un bisogno parte a ondate, dai più vicini fino alla 6ª stretta di mano. È un riferimento, non una promessa: ognuno decide da sé se partecipare.",
       "weekDelta": "+{{amount}} questa settimana",
       "people_many": "{{count}} persone nella tua rete",
       "people_one": "{{count}} persona nella tua rete",
@@ -246,8 +246,8 @@
       "full3": "3ª stretta di mano",
       "open": "{{ring}}: {{count}}. Apri l'elenco",
       "caption": "Strette di mano",
-      "farther": "4°–5°: ~{{value}}",
-      "fartherFew": "4°–5°: alcuni"
+      "farther": "4°–6°: ~{{value}}",
+      "fartherFew": "4°–6°: alcuni"
     },
     "feed": {
       "title": "Bacheca",

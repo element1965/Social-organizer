@@ -4,7 +4,7 @@ APP SCREENS GUIDE:
 The signed-in app has four tabs on a phone: Circle / Круг (/), Need / Потребность (/ask), Add / Добавить (/add), Profile / Профиль (/me). A wide screen uses the same destinations in a sidebar and adds People / Люди. Guests see the public site at / and the explainer at /how. Old addresses redirect: /dashboard, /network, /notifications, /welcome, /arvut, /matches, /skills, /needs → /; /create → /ask; /settings → /me; /faq → /me/help; /onboarding → /intro; /profile/:userId → /person/:id.
 
 CIRCLE / КРУГ (/)
-Signed-in home. A 3D graph of the circle (three rings of handshakes) and a feed of Needs and acquaintance events. Ring chips open People for that ring. Search opens People. An empty circle asks the person to add someone they know.
+Signed-in home. A 3D graph of the circle (three rings of handshakes) and a feed of Needs and acquaintance events. The header shows "N people in your network" and "Declared participation of the network": the network up to the 6th handshake, the same two numbers as on Profile, My intention and the Need screen. Ring chips (1st, 2nd, 3rd) open People for that ring; one more chip, "4th–6th: ~N", is a rounded count of the farther people, who are never named. The header people count is the three ring chips plus that chip. Search opens People. An empty circle asks the person to add someone they know.
 
 PEOPLE / ЛЮДИ (/people, /people/1, /people/2, /people/3)
 People of one ring, with search and a switch that shows or hides that ring on the graph.
@@ -20,6 +20,7 @@ One person. Avatar, name, online (last seen under 5 minutes) or last seen, and t
 
 NEED / ПОТРЕБНОСТЬ (/ask)
 The form for reporting a Need (the old /create address opens this). One time, or every 28 days (participants confirm the amount each cycle; a reminder goes out 3 days before). Amount in whole dollars, minimum 10. A link to the participants' chat (https) is required — any messenger. Social Organizer records the signal; it does not accept, transfer or hold money.
+The amount field shows "Declared participation of your network is about N" (the same figure as on the Circle and Profile), and the line "N people can see it" counts the same people: everyone up to the 6th handshake, whom the Need reaches in waves, nearest first.
 Reporting a Need stays closed until the circle is large enough (direct handshakes and the wider network). Until then the screen shows what is still missing and points to Add. A person has one open Need of each type. "Report a Need" / «Сообщить о потребности» sends it; what opens is the Need (потребность): "Your Need" / «Ваша потребность».
 
 ADD / ДОБАВИТЬ (/add, /add/qr, /add/scan)
@@ -36,7 +37,7 @@ States:
 
 PROFILE / ПРОФИЛЬ (/me)
 - Account card → Account (/me/account): photo, name, slug, member since. Contacts (hide contacts is a switch). Connect Telegram, for an account that signed in another way, opens the bot with a link code and does not show the digits. Delete account is at the bottom of Account.
-- Participation: "Declared participation of the network" (sum of the intentions named by the circle — a reference figure, not a promise and not money held by anyone). My intention (/me/stake): the amount the person is ready to name when someone they know reports a Need (not per month; it is filled in when they report Participation, and they can name more); "I can't help right now" clears it; Social Organizer does not accept money. Activity (/me/history, Needs and Participation): open count on the row; open ones are also at /me/open, past ones in history.
+- Participation: "Declared participation of the network" (sum of the intentions named by the people of the network up to the 6th handshake, with their number under it, the same figure as on the Circle and the Need screen — a reference figure, not a promise and not money held by anyone). My intention (/me/stake): the amount the person is ready to name when someone they know reports a Need (not per month; it is filled in when they report Participation, and they can name more); "I can't help right now" clears it; Social Organizer does not accept money. Activity (/me/history, Needs and Participation): open count on the row; open ones are also at /me/open, past ones in history.
 - Settings: theme Auto / Light / Dark. Notifications (the notifications channel): cycles (a reminder 3 days before a cycle and again on the day), sounds, and push when the device supports it. The row reads All, Some, or Off. Larger text. Language.
 - More: Help (/me/help), About, Sign out.
 - Admins only: Broadcast (/me/broadcast), Statistics (/me/stats), Support inbox (/support), and the moderation queue.

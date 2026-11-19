@@ -6,6 +6,8 @@ import { trpc } from '../../lib/trpc';
 import { shareLink } from '../../lib/share';
 import { cn } from '../../lib/utils';
 import { appOrigin } from '../add/links';
+import { stepValue } from '../ui2/ask-progress';
+import { useAskAccess } from '../../hooks/useAskAccess';
 import { Avatar } from '../ui2/Avatar';
 import { Button } from '../ui2/Button';
 import { Card } from '../ui2/Card';
@@ -30,19 +32,26 @@ type PathData = {
 };
 
 function usePathData(enabled = true): PathData {
-  const access = trpc.collection.askAccess.useQuery(undefined, { enabled });
+  const access = useAskAccess({ enabled });
   const connections = trpc.connection.list.useQuery(undefined, { enabled });
   // Alone in the network: the only connection they have is me.
   const lonely = (connections.data ?? [])
     .filter((c) => c.connectionCount <= 1)
     .map((c) => ({ userId: c.userId, displayName: c.displayName || c.name, photoUrl: c.photoUrl }));
+  const needDirect = access.data?.needDirect ?? ASK_MIN_DIRECT;
+  const needNetwork = access.data?.needNetwork ?? ASK_MIN_NETWORK;
+  // Allowed is the one answer that counts: authors, developers and admins may ask with unmet thresholds, and an
+  // older answer has no flags. The sheet then shows the open state (no steps), as the tab ring shows it full.
+  const allowed = access.data?.allowed === true;
   return {
     ready: access.isSuccess,
-    allowed: access.data?.allowed === true,
-    direct: access.data?.directCount ?? connections.data?.length ?? 0,
-    network: access.data?.networkCount ?? 0,
-    needDirect: access.data?.needDirect ?? ASK_MIN_DIRECT,
-    needNetwork: access.data?.needNetwork ?? ASK_MIN_NETWORK,
+    allowed,
+    // Each step is complete exactly when the server's flag says so (exact counts): the network figure is
+    // rounded beyond the 3rd ring and must not fill or hold back the step on its own
+    direct: allowed ? needDirect : stepValue(access.data?.directCount ?? connections.data?.length ?? 0, needDirect, access.data?.directMet),
+    network: allowed ? needNetwork : stepValue(access.data?.networkCount ?? 0, needNetwork, access.data?.networkMet),
+    needDirect,
+    needNetwork,
     lonely,
   };
 }
@@ -143,16 +152,17 @@ export function PathToRequestSheet({ open, onClose, children }: { open: boolean;
       open={open}
       onClose={onClose}
       title={pathTitle(t, data)}
-      description={t('path.lead')}
+      // Allowed: the open state, with the way to the Need tab instead of the steps
+      description={data.allowed ? undefined : t('path.lead')}
       footer={
         <>
           <Button
             onClick={() => {
               onClose();
-              navigate('/add');
+              navigate(data.allowed ? '/ask' : '/add');
             }}
           >
-            {t('nav.addPerson')}
+            {data.allowed ? t('nav.ask') : t('nav.addPerson')}
           </Button>
           <Button variant="text" onClick={onClose}>
             {t('path.later')}
@@ -160,7 +170,7 @@ export function PathToRequestSheet({ open, onClose, children }: { open: boolean;
         </>
       }
     >
-      <PathSteps data={data} />
+      {data.allowed ? null : <PathSteps data={data} />}
       {children}
     </Sheet>
   );

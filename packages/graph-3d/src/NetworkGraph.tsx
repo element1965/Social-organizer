@@ -95,7 +95,7 @@ export interface NetworkGraphProps {
   /** While focused, show the node this fraction of the height above the middle (room for a bottom card). */
   focusLift?: number;
   /**
-   * People beyond the drawn rings, nearest first (e.g. [4th, 5th]), drawn only as a dust of dots around
+   * People beyond the drawn rings, one shell per entry, nearest first (the app passes one: the 4th to 6th), drawn only as a dust of dots around
    * the ball. Pass rounded counts: the dots never map to particular people.
    */
   farRings?: number[];
@@ -2771,7 +2771,7 @@ export const NetworkGraph = forwardRef<NetworkGraphHandle, NetworkGraphProps>(fu
     }
   }, [graphData, res, resolveLinks]);
 
-  // Far rings (4th, 5th handshake) as an anonymous dust around the ball: no nodes, no links, no names.
+  // Far rings (4th to 6th handshake) as an anonymous dust around the ball: no nodes, no links, no names.
   // Dots stand for a rounded count and are scattered at random, so they say "how many", never "who" or "via whom".
   const farKey = (farRings ?? []).join(',');
   useEffect(() => {

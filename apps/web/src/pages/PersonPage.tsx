@@ -79,9 +79,8 @@ function PersonScreen() {
       void utils.pending.myPending.invalidate();
       void utils.pending.directStatus.invalidate({ targetUserId: id });
       if ('autoConnected' in result && result.autoConnected) {
-        void utils.connection.findPath.invalidate({ targetUserId: id });
-        void utils.connection.getNickname.invalidate({ targetUserId: id });
-        void utils.connection.list.invalidate();
+        // A handshake was made at once (the other person had already asked): everything network-derived changes
+        void refreshNetwork(utils);
       }
     },
   });

@@ -228,7 +228,7 @@
     "fit": "Ajuster le réseau",
     "stats": {
       "canHelp": "Participation déclarée du réseau",
-      "explain": "Ce que les personnes que vous voyez (jusqu’à la 3e poignée de main) sont encore prêtes à indiquer sur cette période : la somme de leurs intentions. Le message sur un besoin part par vagues, des plus proches jusqu’à la 6e poignée de main. C’est un repère, pas une promesse : chacun décide lui-même de participer ou non.",
+      "explain": "Ce que les personnes de votre réseau (jusqu’à la 6e poignée de main) sont encore prêtes à indiquer sur cette période : la somme de leurs intentions. Le message sur un besoin part par vagues, des plus proches jusqu’à la 6e poignée de main. C’est un repère, pas une promesse : chacun décide lui-même de participer ou non.",
       "weekDelta": "+{{amount}} cette semaine",
       "people_many": "{{count}} de personnes dans votre réseau",
       "people_one": "{{count}} personne dans votre réseau",
@@ -246,8 +246,8 @@
       "full3": "3e poignée de main",
       "open": "{{ring}} : {{count}}. Ouvrir la liste",
       "caption": "Poignées de main",
-      "farther": "4e–5e : ~{{value}}",
-      "fartherFew": "4e–5e : quelques-uns"
+      "farther": "4e–6e : ~{{value}}",
+      "fartherFew": "4e–6e : quelques-uns"
     },
     "feed": {
       "title": "Fil",
