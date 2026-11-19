@@ -60,7 +60,7 @@
 >                    API-клиент (общий для web и mobile)
 >   api/           — Fastify бэкенд + Prisma + BullMQ + Gun.js relay
 >   web/           — React SPA (shadcn/ui + Tailwind) — для FB, Telegram, веб
->   mobile/        — React Native (Expo) + NativeWind — для iOS/Android
+>   mobile/        — (не реализован, удалён в 2026-11; iOS/Android — Capacitor-обёртки в apps/web)
 >   graph-3d/      — Three.js визуализация:
 >                    — web: react-force-graph-3d напрямую
 >                    — mobile: WebView-компонент (тот же Three.js-код,
@@ -68,7 +68,7 @@
 >                    — переиспользуется: логин, дашборд-фон, экран «Моя сеть»
 >   i18n/          — JSON-файлы переводов (25 языков), обёртка i18next
 >                    (i18next работает и в React, и в React Native)
->   fb-adapter/    — Facebook Instant Game обёртка (FBInstant SDK)
+>   fb-adapter/    — (не реализован, удалён в 2026-11)
 >   tg-adapter/    — Telegram Mini App обёртка (WebApp API)
 > ```
 >

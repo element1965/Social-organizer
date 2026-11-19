@@ -44,11 +44,6 @@ pnpm-debug.log*
 # Testing
 coverage/
 
-# Mobile
-apps/mobile/.expo/
-apps/mobile/android/
-apps/mobile/ios/
-
 # Keystore (app signing — never commit)
 keystore/
 *.jks

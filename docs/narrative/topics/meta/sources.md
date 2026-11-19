@@ -36,7 +36,7 @@ public repository; the notes keep the substance.
 | Inspirer's critique, relayed by the user | 2026-11-11 | Network first; $1 = 1 notification; compare with China's platforms; "risk sharing", never "pool" | what-so-is, principles, vocabulary, comparables |
 | Growth decisions of the user | 2026-11-13 | One network; no scheduled messages or extra features | principles, `so-explainer` |
 | `docs/release/launch-readiness.md` | 2026-11-10 | The shared dictionary, store texts, open legal questions | vocabulary, claims, audiences |
-| `glossary_social_organizer.md` (canonical glossary, RU) | — | The author's earlier framing (Dunbar, six degrees, autocatalytic growth) | what-so-is |
+| [Early glossary (Russian)](../../../archive/glossary_social_organizer.md) | — | The author's earlier framing (Dunbar, six degrees, autocatalytic growth) | what-so-is |
 | `SPEC.md` | partly outdated | Original rules; see the "outdated" table in the protocol note | need-protocol |
 | Landing and `/how` strings in `packages/i18n/locales/en.json` | 2026-11-18 | Current public copy | what-so-is, vocabulary |
 | Code check of `main` at `f354569c` (plus the three later Lambertain commits reviewed) | 2026-11-18 | Verified mechanics, numbers, strings, gaps | need-protocol, user-journey, open-questions |
