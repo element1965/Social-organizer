@@ -60,19 +60,9 @@ sudo gem install cocoapods
 npm install -g pnpm
 ```
 
-## Шаг 1 — Иконка приложения
+## Step 1 — App icon and splash
 
-Положи **PNG 1024×1024** (без прозрачности и без скруглённых углов — Apple сама скругляет) сюда:
-
-```
-apps/web/resources/icon.png
-```
-
-По желанию можно добавить splash-экран (PNG 2732×2732):
-```
-apps/web/resources/splash.png
-apps/web/resources/splash-dark.png
-```
+The iOS release script runs `node scripts/generate-site-icons.mjs` after installing dependencies. It writes the 1024×1024 opaque app icon and 2732×2732 splash images into the Xcode asset catalog.
 
 ## Шаг 2 — Apple Developer Portal (в браузере, один раз)
 
@@ -112,11 +102,7 @@ git pull
 bash scripts/deploy-ios.sh
 ```
 
-Скрипт сделает:
-- Соберёт веб-приложение
-- Добавит iOS-платформу (только при первом запуске)
-- Сгенерирует все размеры иконок из `resources/icon.png`
-- Синхронизирует проект и откроет Xcode
+The script creates the iOS project if needed, regenerates the brand assets, builds the web app and its workspace dependencies, syncs iOS, and opens Xcode.
 
 ## Шаг 5 — Xcode
 

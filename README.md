@@ -249,7 +249,9 @@ The hourly `cleanup-blocked-pending` worker treated any failed `getChat` as "use
 - **Migrations:** Railway does not run them; apply them by hand before deploying code that needs them. First set `DATABASE_URL` to the production database's public URL from the Railway variables: export it in your shell (an exported variable wins over `packages/db/.env`), or put it into `packages/db/.env` and restore the local value afterwards. Then run `cd packages/db && npx prisma migrate deploy`.
 - **GitHub:** https://github.com/element1965/Social-organizer
 
-The API serves the favicon, touch icon, web manifest, robots.txt and sitemap.xml from the built web files. The sitemap includes the five public pages. Language selection uses browser preferences or a saved choice at the same URL. Invite and public Need pages send `X-Robots-Tag: noindex` and still provide messenger previews. Regenerate the site and push icons with `node scripts/generate-site-icons.mjs`.
+The API serves the favicon, touch icon, web manifest, robots.txt and sitemap.xml from the built web files. The sitemap includes the five public pages. Language selection uses browser preferences or a saved choice at the same URL. Invite and public Need pages send `X-Robots-Tag: noindex` and use the site's link-preview image when the person has no photo.
+
+Run `node scripts/generate-site-icons.mjs` from the repository root after installing dependencies. It renders the `BrandMark` tile from `apps/web/public/logo.png` for the web, Android and iOS, and the Google Play icon. The generator also writes the native splash images on the light boot canvas, the transparent push badge, and the link preview with bundled Manrope. The iOS release script runs this same generator.
 
 ### Railway service config (Infrastructure as Code)
 
@@ -411,7 +413,7 @@ Old paths `/dashboard`, `/network`, `/notifications`, `/matches`, `/skills`, `/n
 - **UI:** ui2 components + semantic tokens in `styles/tokens.css`. A few older screens still use the legacy Tailwind ramps
 - **i18n:** i18next v25 + react-i18next (28 languages), auto-detect via navigator.language
 - **Icons:** local SVG icons in `ui2` and feature components, plus social network marks
-- **QR:** qrcode.react (the scanner chunk loads jsQR on `/add/scan`). Every code carries the dark logo in the centre (`lib/qrLogo.ts`, error correction level H)
+- **QR:** qrcode.react (the scanner chunk loads jsQR on `/add/scan`). Every code carries the brand tile in the centre (`lib/qrLogo.ts`, error correction level H)
 - **Backup:** @so/gun-backup (Gun.js + IndexedDB), started from the signed-in shell
 
 ### Bundle size (vite build, guest landing)

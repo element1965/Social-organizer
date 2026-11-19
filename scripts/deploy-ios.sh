@@ -15,42 +15,34 @@ command -v xcodebuild >/dev/null 2>&1 || { echo "ERROR: Xcode not found. Install
 command -v pod >/dev/null 2>&1 || { echo "ERROR: CocoaPods not found. Run: sudo gem install cocoapods"; exit 1; }
 command -v pnpm >/dev/null 2>&1 || { echo "ERROR: pnpm not found. Run: npm install -g pnpm"; exit 1; }
 
-# 2. Check icon source
-echo "[2/6] Checking resources..."
-if [ ! -f "$WEB_DIR/resources/icon.png" ]; then
-  echo ""
-  echo "  MISSING: apps/web/resources/icon.png (1024x1024 PNG, no transparency)"
-  echo "  Put your app icon there, then re-run this script."
-  echo ""
-  exit 1
-fi
-
-# 3. Install dependencies
-echo "[3/6] Installing dependencies..."
+# 2. Install dependencies
+echo "[2/6] Installing dependencies..."
 cd "$ROOT_DIR"
 pnpm install
 
-# 4. Build web app
-echo "[4/6] Building web app..."
-pnpm --filter @so/web build
+# 3. Add the iOS platform if needed
+cd "$WEB_DIR"
+if [ ! -d "ios" ]; then
+  echo "[3/6] Adding iOS platform (first time)..."
+  npx cap add ios
+else
+  echo "[3/6] Using the existing iOS project..."
+fi
+
+# 4. Generate the web and native brand assets together
+echo "[4/6] Generating brand assets..."
+cd "$ROOT_DIR"
+node scripts/generate-site-icons.mjs
+
+# 5. Build web app
+echo "[5/6] Building web app..."
+pnpm --filter '@so/web...' build
 # The wrapper loads the production URL, so large static media (served by the web app) stays out of the bundle.
 rm -rf "$WEB_DIR/dist/videos"
 
-# 5. Add iOS platform if not exists
+# 6. Sync web build to iOS
+echo "[6/6] Syncing to iOS..."
 cd "$WEB_DIR"
-if [ ! -d "ios" ]; then
-  echo "[5/6] Adding iOS platform (first time)..."
-  npx cap add ios
-else
-  echo "[5/6] iOS platform already exists, syncing..."
-fi
-
-# 6. Generate icons and splash screens
-echo "[6/6] Generating iOS icons & splash screens..."
-npx capacitor-assets generate --ios
-
-# 7. Sync web build to iOS
-echo "[7/6] Syncing to iOS..."
 npx cap sync ios
 
 echo ""

@@ -1,15 +1,14 @@
 /**
  * The brand mark in the middle of every QR code we draw.
- * The dark logo (594x420) sits on the white plate; `excavate` clears the modules under it.
+ * The same tile used by the web icon sits on the white plate. Excavation clears the modules under it.
  * Codes with a logo must use error correction level 'H' so they still scan with the centre covered.
  */
-const LOGO_SRC = '/logo-dark.png';
-const LOGO_ASPECT = 420 / 594;
+const LOGO_SRC = '/icon-192.png';
 
 export const QR_LOGO_LEVEL = 'H' as const;
 
-/** imageSettings for qrcode.react: the logo takes about 22% of the code's width. */
+/** Keep the excavated area close to that of the previous wider logo. */
 export function qrLogo(size: number) {
-  const width = Math.round(size * 0.22);
-  return { src: LOGO_SRC, width, height: Math.round(width * LOGO_ASPECT), excavate: true };
+  const markSize = Math.round(size * 0.18);
+  return { src: LOGO_SRC, width: markSize, height: markSize, excavate: true };
 }
