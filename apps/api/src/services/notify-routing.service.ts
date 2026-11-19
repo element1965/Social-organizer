@@ -50,18 +50,20 @@ export async function recordSent(db: PrismaClient, userIds: string[]): Promise<v
   `;
 }
 
-/** Any reaction ends the ignore streak. */
-async function bump(db: PrismaClient, userId: string, column: 'opened' | 'responded' | 'dismissed', minutes: number | null) {
+type Db = PrismaClient | Prisma.TransactionClient;
+
+/** Any reaction ends the ignore streak. `amount`: how many reactions of that kind (one per notice). */
+async function bump(db: Db, userId: string, column: 'opened' | 'responded' | 'dismissed', minutes: number | null, amount = 1) {
   const col = Prisma.raw(`"${column}"`);
   const respondedAt = column === 'responded' ? Prisma.sql`now()` : Prisma.sql`NULL`;
   await db.$executeRaw`
     INSERT INTO notify_stats ("userId", ${col}, "ignoreStreak", "responseMinutes", "lastRespondedAt", "decayedAt")
-    VALUES (${userId}, 1, 0, ${minutes}, ${respondedAt}, now())
+    VALUES (${userId}, ${amount}, 0, ${minutes}, ${respondedAt}, now())
     ON CONFLICT ("userId") DO UPDATE SET
       sent = ${decay('sent')},
-      opened = ${decay('opened')} + ${column === 'opened' ? 1 : 0},
-      responded = ${decay('responded')} + ${column === 'responded' ? 1 : 0},
-      dismissed = ${decay('dismissed')} + ${column === 'dismissed' ? 1 : 0},
+      opened = ${decay('opened')} + ${column === 'opened' ? amount : 0},
+      responded = ${decay('responded')} + ${column === 'responded' ? amount : 0},
+      dismissed = ${decay('dismissed')} + ${column === 'dismissed' ? amount : 0},
       "ignoreStreak" = 0,
       "responseMinutes" = CASE
         WHEN ${minutes}::float IS NULL THEN notify_stats."responseMinutes"
@@ -96,13 +98,24 @@ export async function recordOpenedById(db: PrismaClient, userId: string, notific
   if (row) await recordOpened(db, userId, row.collectionId);
 }
 
-/** Swiping away a request entry. */
-export async function recordDismissed(db: PrismaClient, userId: string, notificationId: string): Promise<void> {
-  const row = await db.notification.findFirst({
-    where: { id: notificationId, userId, type: { in: [...REQUEST_TYPES] }, status: { in: ['UNREAD', 'READ'] } },
-    select: { id: true },
+/**
+ * Dismissing request entries (a swipe in the feed, "Not now" on a Need). Only the entries this call itself moved
+ * from open (UNREAD/READ) to DISMISSED are counted: one conditional UPDATE, so of two concurrent calls for the
+ * same entry the second matches nothing (Postgres re-checks the condition after the first one's row lock) and
+ * counts zero. The routing counters see exactly one dismissal per entry, and the ignore streak ends once.
+ * `where` narrows the entries (by id or by collection); the request types and the open status are added here.
+ */
+export async function dismissRequestEntries(
+  db: Db,
+  userId: string,
+  where: { id?: string; collectionId?: string },
+): Promise<number> {
+  const moved = await db.notification.updateMany({
+    where: { ...where, userId, type: { in: [...REQUEST_TYPES] }, status: { in: ['UNREAD', 'READ'] } },
+    data: { status: 'DISMISSED' },
   });
-  if (row) await bump(db, userId, 'dismissed', null);
+  if (moved.count > 0) await bump(db, userId, 'dismissed', null, moved.count);
+  return moved.count;
 }
 
 /**

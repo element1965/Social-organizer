@@ -1,7 +1,8 @@
 import { useRef, useState } from 'react';
 import { Check, Globe, ImagePlus, Link2, Loader2, Pencil, Trash2, X } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { trpc, authFetch } from '../lib/trpc';
+import { trpc, accountFetch, currentAccount } from '../lib/trpc';
+import { isAborted } from '../lib/errors';
 import { Button } from '../components/ui2/Button';
 import { Card } from '../components/ui2/Card';
 import { Group } from '../components/ui2/Group';
@@ -95,28 +96,29 @@ export function FaqPage({ embedded = false }: { embedded?: boolean }) {
     const file = e.target.files?.[0];
     if (!file) return;
 
+    // The account of the admin who picked the file: the upload is dropped quietly if another one signs in meanwhile
+    const account = currentAccount();
     setUploading(true);
     try {
-      const token = localStorage.getItem('accessToken');
       const formData = new FormData();
       formData.append('file', file);
 
-      const res = await authFetch('/api/broadcast/upload', {
+      const res = await accountFetch(account, '/api/broadcast/upload', {
         method: 'POST',
-        headers: { Authorization: `Bearer ${token}` },
         body: formData,
       });
 
       if (!res.ok) {
-        const err = await res.json().catch(() => ({}));
-        alert((err as { error?: string }).error || t('faq.uploadFailed'));
+        const err = (await res.json().catch(() => ({}))) as { error?: unknown };
+        alert(typeof err.error === 'string' ? err.error : t('faq.uploadFailed'));
         return;
       }
 
       const data = (await res.json()) as { fileId: string; mediaType: string };
       // Store as /api/media/<fileId> URL for display
       setFormImageUrl(`/api/media/${data.fileId}`);
-    } catch {
+    } catch (error) {
+      if (isAborted(error)) return;
       alert(t('faq.uploadFailed'));
     } finally {
       setUploading(false);

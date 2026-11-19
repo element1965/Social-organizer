@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { cn } from '../../lib/utils';
-import { trpc } from '../../lib/trpc';
+import { currentAccount, trpc } from '../../lib/trpc';
+import { isAborted } from '../../lib/errors';
 import { Avatar } from '../ui2/Avatar';
 import { Button } from '../ui2/Button';
 import { formatMoney } from '../ui2/format';
@@ -36,9 +37,11 @@ export function usePaidMarks(rows: ParticipantRow[], onSaved: () => void) {
   const savedRef = useRef(onSaved);
   savedRef.current = onSaved;
 
-  const setPaid = trpc.obligation.setPaid.useMutation({ meta: { notifyOnError: false } });
-  const sendRef = useRef(setPaid.mutateAsync);
-  sendRef.current = setPaid.mutateAsync;
+  // Straight through the client (no mutation, no app-level notice: this list tells its own failure), so each
+  // write carries the account of the person who tapped (`context.account`, lib/trpc.ts sessionLink)
+  const utils = trpc.useUtils();
+  const sendRef = useRef(utils.client.obligation.setPaid.mutate);
+  sendRef.current = utils.client.obligation.setPaid.mutate;
 
   // Drop overrides of settled writes that the server has caught up with
   useEffect(() => {
@@ -61,6 +64,9 @@ export function usePaidMarks(rows: ParticipantRow[], onSaved: () => void) {
   const apply = useCallback(
     (ids: string[], paid: boolean, text: string | null) => {
       if (ids.length === 0) return;
+      // The account of the person who tapped, captured now: the queued write goes out for that account only and
+      // is dropped quietly if another one has signed in by the time it leaves
+      const account = currentAccount();
       writes.current += 1;
       const write = writes.current;
       unsettled.current.add(write);
@@ -72,7 +78,7 @@ export function usePaidMarks(rows: ParticipantRow[], onSaved: () => void) {
       });
       setUndo(text ? { text, ids, paid, key: Date.now(), write } : null);
       queue.current = queue.current.then(() =>
-        sendRef.current({ obligationIds: ids, paid }).then(
+        sendRef.current({ obligationIds: ids, paid }, { context: { account } }).then(
           () => {
             unsettled.current.delete(write);
             savedRef.current();
@@ -87,7 +93,8 @@ export function usePaidMarks(rows: ParticipantRow[], onSaved: () => void) {
               return next;
             });
             setUndo((current) => (current?.write === write ? null : current));
-            setFailed(error);
+            // Dropped because another account signed in: not a failure to tell
+            if (!isAborted(error)) setFailed(error);
             savedRef.current();
           },
         ),

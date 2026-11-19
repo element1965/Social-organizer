@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import { BarChart3, Check, Clock, Link2, Pencil, Play, Send, Trash2, ToggleLeft, ToggleRight } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { trpc, authFetch } from '../lib/trpc';
+import { trpc, accountFetch, currentAccount } from '../lib/trpc';
+import { isAborted } from '../lib/errors';
 import { Button } from './ui2/Button';
 import { Pill, type PillTone } from './ui2/Pill';
 import { Segmented } from './ui2/Segmented';
@@ -369,22 +370,21 @@ export function BroadcastPanel() {
             loading={triggerLoading}
             icon={<Play className="h-4 w-4" />}
             onClick={async () => {
+              // The admin who tapped: the trigger is dropped quietly if another account signs in meanwhile
+              const account = currentAccount();
               setTriggerLoading(true);
               setResult(null);
               try {
-                const token = localStorage.getItem('accessToken');
-                const res = await authFetch('/api/trigger-autochain', {
-                  method: 'POST',
-                  headers: { Authorization: `Bearer ${token}` },
-                });
+                const res = await accountFetch(account, '/api/trigger-autochain', { method: 'POST' });
                 if (res.ok) {
                   note(t('broadcast.triggerSuccess'));
                   chainStatsQuery.refetch();
                 } else {
-                  const body = await res.json().catch(() => ({})) as { error?: string };
-                  note(`${t('broadcast.triggerError')}: ${body.error || res.status}`, true);
+                  const body = await res.json().catch(() => ({})) as { error?: unknown };
+                  note(`${t('broadcast.triggerError')}: ${typeof body.error === 'string' ? body.error : res.status}`, true);
                 }
-              } catch {
+              } catch (error) {
+                if (isAborted(error)) return;
                 note(t('broadcast.triggerError'), true);
               } finally {
                 setTriggerLoading(false);

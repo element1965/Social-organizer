@@ -1,4 +1,4 @@
-import { authFetch } from '../lib/trpc';
+import { accountFetch, currentAccount } from '../lib/trpc';
 import { useRef, useState } from 'react';
 import { Link, Loader2, Paperclip, Upload, X } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
@@ -51,17 +51,17 @@ export function MessageComposer({ value, onChange, disabled }: MessageComposerPr
     const file = e.target.files?.[0];
     if (!file) return;
 
+    // The account of the person who picked the file: the upload is dropped if another one signs in meanwhile
+    const account = currentAccount();
     setUploading(true);
     setMediaFileName(file.name);
 
     try {
-      const token = localStorage.getItem('accessToken');
       const formData = new FormData();
       formData.append('file', file);
 
-      const res = await authFetch('/api/broadcast/upload', {
+      const res = await accountFetch(account, '/api/broadcast/upload', {
         method: 'POST',
-        headers: { Authorization: `Bearer ${token}` },
         body: formData,
       });
 

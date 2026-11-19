@@ -20,7 +20,11 @@ type Send = (token: string, platform: string, account: string) => Promise<unknow
 let send: Send | null = null;
 let removeListeners: (() => void) | null = null;
 let attaching: Promise<void> | null = null;
-let optIn: { resolve: () => void; reject: (error: unknown) => void } | null = null;
+// The account each request for a token belongs to, captured when it was made (the person's opt-in, or the
+// start-up refresh); the token that answers it is registered for that account only, never for whoever is
+// signed in by the time the OS replies
+let optIn: { resolve: () => void; reject: (error: unknown) => void; account: string } | null = null;
+let routineAccount: string | null = null;
 const listeners = new Set<() => void>();
 
 function readConfirmed(): { token: string; account: string } | null {
@@ -60,17 +64,36 @@ export function subscribeNativePush(listener: () => void): () => void {
   return () => listeners.delete(listener);
 }
 
-/** A token arrived from the OS: register it for the account signed in now; confirm it only once the server has it. */
+/** A request that belonged to an account that is no longer signed in: dropped quietly (an AbortError is never told). */
+function accountGone(): DOMException {
+  return new DOMException('The signed-in account changed', 'AbortError');
+}
+
+/**
+ * A token arrived from the OS: register it for the account that asked for it (an OS-initiated rotation, with
+ * no request out, belongs to the account signed in now), and only while that account is still signed in. It
+ * counts as confirmed only when the server stored it: an iOS answer `stored: false` (no APNs configured) is
+ * not a confirmation, and an opt-in waiting for it fails and is told.
+ */
 function onToken(token: string) {
   const pending = optIn;
   optIn = null;
-  const account = currentAccount();
-  if (!send || !account) {
+  const account = pending?.account ?? routineAccount ?? currentAccount();
+  routineAccount = null;
+  if (!account || account !== currentAccount()) {
+    pending?.reject(accountGone());
+    return;
+  }
+  if (!send) {
     pending?.reject(new Error('Push registration is not ready'));
     return;
   }
   void send(token, Capacitor.getPlatform(), account).then(
-    () => {
+    (answer) => {
+      if ((answer as { stored?: unknown } | null)?.stored === false) {
+        pending?.reject(new Error('The server did not store the push token'));
+        return;
+      }
       if (currentAccount() === account) writeConfirmed({ token, account });
       pending?.resolve();
     },
@@ -116,6 +139,7 @@ export function detachNativePush() {
 
 /** Start-up: ask the OS for the current token; it is registered quietly when it arrives. */
 export async function refreshNativeToken() {
+  routineAccount = currentAccount();
   const { PushNotifications } = await import('@capacitor/push-notifications');
   await PushNotifications.register();
 }
@@ -125,13 +149,16 @@ export async function refreshNativeToken() {
  * permission was not given; rejects with the failure (refused register(), registration error, server error).
  */
 export async function optInNativePush(register: Send): Promise<'on' | 'denied'> {
+  // The account of the person who tapped, captured before anything waits
+  const account = currentAccount();
   await attachNativePush(register);
   const { PushNotifications } = await import('@capacitor/push-notifications');
   const permission = await PushNotifications.requestPermissions();
   if (permission.receive !== 'granted') return 'denied';
+  if (currentAccount() !== account) throw accountGone();
   const confirmed = new Promise<void>((resolve, reject) => {
     optIn?.reject(new Error('Replaced by a newer opt-in'));
-    optIn = { resolve, reject };
+    optIn = { resolve, reject, account };
   });
   try {
     await PushNotifications.register();

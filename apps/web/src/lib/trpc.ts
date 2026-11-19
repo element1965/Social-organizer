@@ -158,16 +158,35 @@ function keepStatus(res: Response): Response {
   return new Response(JSON.stringify(body), { status: res.status, headers: { 'Content-Type': 'application/json' } });
 }
 
+/** Set on a batch whose operations already went through one renewal (sessionLink): no second renewal for it. */
+const RENEWED_HEADER = 'X-SO-Renewed';
+
+/**
+ * The tRPC-shaped answer for a 401 that came after a renewal succeeded: the session is fine (auth.refresh just
+ * issued a new pair), so the 401 is a proxy's or the server's transient trouble. It is told as "something went
+ * wrong on our side", never as an ended session, and nothing is renewed again for it.
+ */
+const TRANSIENT_AFTER_RENEWAL = {
+  error: { message: 'HTTP 401 after a successful renewal', code: -32603, data: { code: 'INTERNAL_SERVER_ERROR', httpStatus: 502 } },
+};
+
+function transientAfterRenewal(): Response {
+  return new Response(JSON.stringify(TRANSIENT_AFTER_RENEWAL), { status: 502, headers: { 'Content-Type': 'application/json' } });
+}
+
 /**
  * fetch for tRPC: renews the session before it expires and retries once after a 401. The batch is bound to the
  * account its operations were started under: if another account is signed in by the time it is sent (or is
  * about to be sent again after a renewal), it is dropped as cancelled, so it never carries the other
- * account's token.
+ * account's token. A 401 means an ended session only when auth.refresh itself refused the refresh token; a
+ * 401 on the replay after a successful renewal is a transient failure (see TRANSIENT_AFTER_RENEWAL).
  */
 export async function authFetch(input: RequestInfo | URL, rawInit?: RequestInit): Promise<Response> {
   const headers = new Headers(rawInit?.headers);
   const owner = headers.get(ACCOUNT_HEADER);
+  const alreadyRenewed = headers.get(RENEWED_HEADER) !== null;
   headers.delete(ACCOUNT_HEADER);
+  headers.delete(RENEWED_HEADER);
   const init: RequestInit = { ...rawInit, headers };
   const ensureOwner = () => {
     if (owner !== null && owner !== currentAccount()) throw accountChanged();
@@ -181,15 +200,32 @@ export async function authFetch(input: RequestInfo | URL, rawInit?: RequestInit)
   }
   const sentWith = localStorage.getItem('accessToken');
   const res = await trackedFetch(input, withAuth(init));
+  if (res.status === 401 && alreadyRenewed) return transientAfterRenewal();
   if (res.status === 401 && localStorage.getItem('refreshToken')) {
     const renewal = await refreshSession(sentWith);
     ensureOwner();
-    if (renewal === 'renewed') return keepStatus(await trackedFetch(input, withAuth(init)));
+    if (renewal === 'renewed') {
+      const replay = await trackedFetch(input, withAuth(init));
+      return replay.status === 401 ? transientAfterRenewal() : keepStatus(replay);
+    }
     // The renewal itself could not be done (no network, server trouble): this is not a rejected session.
     // Fail like a network error so the 401 never reaches the sign-out path.
     if (renewal === 'unavailable') throw new TypeError('Session renewal is unavailable');
   }
   return keepStatus(res);
+}
+
+/**
+ * authFetch for a direct request (an upload, an admin trigger) made by the person signed in as `account`. The
+ * caller captures `currentAccount()` at the moment the person acts, before anything waits; if another account
+ * is signed in by the time the request leaves or would be replayed after a renewal, it is dropped quietly
+ * (AbortError, see lib/errors.ts isAborted). The token is set by authFetch, never by the caller.
+ */
+export function accountFetch(account: string, input: RequestInfo | URL, init?: RequestInit): Promise<Response> {
+  const headers = new Headers(init?.headers);
+  headers.delete('Authorization');
+  headers.set(ACCOUNT_HEADER, account);
+  return authFetch(input, { ...init, headers });
 }
 
 // --- Per-operation session renewal ---------------------------------------------
@@ -266,10 +302,17 @@ const sessionLink: TRPCLink<AppRouter> = () => ({ op, next }) =>
         observer.error(TRPCClientError.from(accountChanged()));
         return;
       }
-      current = (next(bound) as unknown as LinkObservable).subscribe({
+      const sent = renewed ? { ...bound, context: { ...bound.context, renewed: true } } : bound;
+      current = (next(sent) as unknown as LinkObservable).subscribe({
         next: (value) => observer.next(value),
         complete: () => observer.complete(),
         error: (error) => {
+          // Refused again right after a successful renewal: the server's or a proxy's trouble, not an ended
+          // session (that is decided by auth.refresh alone). Told as a server failure; no further renewal.
+          if (renewed && isUnauthorized(error)) {
+            observer.error(TRPCClientError.from(TRANSIENT_AFTER_RENEWAL));
+            return;
+          }
           if (renewed || !isUnauthorized(error) || !localStorage.getItem('refreshToken')) {
             observer.error(error);
             return;
@@ -307,7 +350,11 @@ export function getTrpcClient() {
             const account = (item.context as { account?: unknown }).account;
             return typeof account === 'string' ? account : currentAccount();
           }));
-          return { [ACCOUNT_HEADER]: accounts.size === 1 ? [...accounts][0]! : MIXED_ACCOUNTS };
+          const renewed = opList.every((item) => (item.context as { renewed?: unknown }).renewed === true);
+          return {
+            [ACCOUNT_HEADER]: accounts.size === 1 ? [...accounts][0]! : MIXED_ACCOUNTS,
+            ...(renewed ? { [RENEWED_HEADER]: '1' } : {}),
+          };
         },
         fetch: authFetch as typeof fetch,
       }),

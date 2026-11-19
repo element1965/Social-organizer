@@ -41,7 +41,11 @@ export const userRouter = router({
         if (!stored) throw new TRPCError({ code: 'BAD_REQUEST', message: 'Unsupported photo' });
         data.photoUrl = stored;
       }
-      return ctx.db.user.update({ where: { id: ctx.userId }, data });
+      return ctx.db.user.update({
+        where: { id: ctx.userId },
+        data,
+        select: { id: true, name: true, bio: true, phone: true, photoUrl: true },
+      });
     }),
 
   getById: protectedProcedure
@@ -180,6 +184,7 @@ export const userRouter = router({
       return ctx.db.user.update({
         where: { id: ctx.userId },
         data: { preferredCurrency: input.currency },
+        select: { preferredCurrency: true },
       });
     }),
 
@@ -202,6 +207,7 @@ export const userRouter = router({
           remainingBudget: amountUSD,
           budgetUpdatedAt: new Date(),
         },
+        select: { monthlyBudget: true, remainingBudget: true, budgetUpdatedAt: true },
       });
       // The sums of other people's networks read this person's number again before the next walk
       noteBudgetChanged(ctx.userId);
