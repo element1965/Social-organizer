@@ -35,7 +35,9 @@ reaches iOS/Android users immediately, without a store release.
 ## Apply before deploy
 
 Railway does not run migrations. Before `redesign` is merged into `main`, apply these to production by hand
-(`cd packages/db && npx prisma migrate deploy` with the public URL, see the root CLAUDE.md), in this order:
+(set `DATABASE_URL` to the production database's public URL from the Railway variables, exported in the
+shell or in `packages/db/.env` with the local value restored afterwards, then run
+`cd packages/db && npx prisma migrate deploy`; see "Deployment" → "Migrations" in the root README.md), in this order:
 
 - `20261109120000_ask_block_reason_invite_ttl`
 - `20261109140000_connection_via_collection`

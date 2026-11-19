@@ -3,8 +3,8 @@ id: 20261118-sources
 title: Sources of the pool
 tags: [sources]
 created: 2026-11-18
-updated: 2026-11-18
-related: [20261118-open-questions, 20261118-evolution-of-trust, 20261118-causal-chain, 20261118-need-protocol, 20261118-invitational-coordination, 20261118-funding-strategy, 20261118-landing-concepts, 20261118-cold-start-influencers]
+updated: 2026-11-19
+related: [20261118-open-questions, 20261118-evolution-of-trust, 20261118-causal-chain, 20261118-need-protocol, 20261118-invitational-coordination, 20261118-landing-concepts, 20261118-audiences]
 summary: Where every part of this knowledge base came from (Lubalin's research report, three brainstorm chats, Andrei Lubalin's messages, Nicky Case's game, repository documents, the code check), with dates and what is still missing.
 ---
 
@@ -14,9 +14,9 @@ summary: Where every part of this knowledge base came from (Lubalin's research r
 
 ## Context
 
-Add a row whenever new material enters the pool, and name the notes it fed. The ChatGPT links are
-organisation-only shares: they open only after signing in to the workspace account. Raw chat text
-is not copied into this public repository; the notes keep the substance.
+Add a row whenever new material enters the pool, and name the notes it fed. The ChatGPT chats are
+private: they are cited by title and date only, without links. Raw chat text is not copied into this
+public repository; the notes keep the substance.
 
 ## Details
 
@@ -26,10 +26,10 @@ is not copied into this public repository; the notes keep the substance.
 | Lubalin, *Discovery of the Law of Autocatalytic Inevitability*, Zenodo, doi 10.5281/zenodo.15778286 | 2025 | First publication of the law (cited by the report, not read here) | autocatalytic-law |
 | Backstrom et al., *Four degrees of separation* (2012); Edunov et al., *Three and a half degrees of separation* (2016) | — | Average distance 4.74 links in 2011 and 4.57 in 2016 (3.74 and 3.57 people in between); checked against the Facebook Research post on 2026-11-18 | latent-connectedness, claims |
 | Kropotkin (1902), Ostrom (1990), Bauwens et al. (2019) | — | Context the report cites: mutual aid, commons governance, peer production | invitational-coordination |
-| ChatGPT chat "Финансирование социальной инновации", `chatgpt.com/share/***REMOVED***` | read 2026-11-18 (after sign-in) | Funding frame and a [figure removed] working model; candidate funders; the independence question; the landing concept "The World Is Already Connected" with a ~2-minute video draft | funding-strategy, landing-concepts, how-it-works-video-idea |
-| ChatGPT chat "Аналоги лендингов", `chatgpt.com/share/***REMOVED***` | read 2026-11-18 | Reference landings (Tanda, Roda, Kiva, Humma, Linear, Lovable); "one situation, three steps" first screen; 45–60 s video | landing-concepts, comparables |
-| ChatGPT chat "Запуск через инфлюенсеров", `chatgpt.com/share/***REMOVED***` | read 2026-11-18 | Why cold e-mail failed; regions and traditions; candidate authors and media; pilot plan and metrics; ~250 members, 10–15k hypothesis | cold-start-influencers, audiences |
-| Excerpt pasted by the user (the "How It Works" video brief) | 2026-11-18 | Video idea: plot, principle, scope; "mutual offset of obligations is a separate theme". Not part of the `6afce8ee` share; its source chat is unknown | how-it-works-video-idea, user-journey, parked-topics |
+| ChatGPT chat "Финансирование социальной инновации" ("Financing a social innovation"), private | read 2026-11-18 | Funding frame (its working notes are kept privately, not in this repository); the independence question; the landing concept "The World Is Already Connected" with a ~2-minute video draft | audiences, landing-concepts, how-it-works-video-idea |
+| ChatGPT chat "Аналоги лендингов" ("Landing references"), private | read 2026-11-18 | Reference landings (Tanda, Roda, Kiva, Humma, Linear, Lovable); "one situation, three steps" first screen; 45–60 s video | landing-concepts, comparables |
+| ChatGPT chat "Запуск через инфлюенсеров" ("Launch through influencers"), private | read 2026-11-18 | Why cold e-mail failed; regions and traditions; ~250 members, 10–15k hypothesis (the pilot plan is kept privately, not in this repository) | audiences |
+| Excerpt pasted by the user (the "How It Works" video brief) | 2026-11-18 | Video idea: plot, principle, scope; "mutual offset of obligations is a separate theme". Not part of the "Financing a social innovation" chat; its source chat is unknown | how-it-works-video-idea, user-journey, parked-topics |
 | Andrei Lubalin, messages of 2026-11-17 21:03–21:06 | 2026-11-17 | Causal chain from risk sharing to direct cooperation; the €5,000 example; no central arbiter; precision rules; the comparables table (the GoFundMe row was cut off in the paste) | causal-chain, direct-cooperation, trust-archetypes, comparables, claims |
 | Nicky Case, *The Evolution of Trust*, https://ncase.me/trust/ (text from github.com/ncase/trust, `words.html`; public domain) | 2017, read 2026-11-18 | The model, numbers, characters, conclusions, teaching method | evolution-of-trust, trust-conditions-in-so, trust-archetypes, `so-trust-lens`, `so-explainer` |
 | Robert Axelrod, *The Evolution of Cooperation* | 1984 | The research Case's game is based on (cited, not read here) | evolution-of-trust |
@@ -46,7 +46,6 @@ is not copied into this public repository; the notes keep the substance.
 - The chat the "How It Works" brief came from.
 - The link and transcript of the published video *Direct Mutual Support Through Real Connections*.
 - The TEDx talk mentioned in the landing chat (link).
-- The list of people and organisations already written to (to check the candidate lists).
 
 ### Names
 
@@ -58,4 +57,4 @@ The theory's author is Andrei Lubalin in English (as on the Zenodo report) and �
 - [The causal chain](../core/causal-chain.md) — the brainstorm's main thesis.
 - [The Need protocol](../mechanics/need-protocol.md) — the code check.
 - [Invitational coordination](../theory/invitational-coordination.md) — the report in detail.
-- [Funding strategy](../funding/funding-strategy.md), [landing concepts](../packaging/landing-concepts.md), [cold start](../audiences/cold-start-influencers.md) — the three chats in detail.
+- [Landing concepts](../packaging/landing-concepts.md), [audiences](../audiences/audiences.md) — what the three chats gave, in detail.

@@ -3,8 +3,8 @@ id: 20261118-comparables
 title: Comparables — what to learn from other products and traditions
 tags: [comparables, audience]
 created: 2026-11-18
-updated: 2026-11-18
-related: [20261118-audiences, 20261118-what-so-is, 20261118-evolution-of-trust, 20261118-landing-concepts, 20261118-cold-start-influencers]
+updated: 2026-11-19
+related: [20261118-audiences, 20261118-what-so-is, 20261118-evolution-of-trust, 20261118-landing-concepts]
 summary: Products and traditions to study for packaging SO (Splitwise, Signal, Olio, Partiful, GoFundMe, Kickstarter, Patreon, China's mutual aid platforms, ROSCA traditions, Nicky Case's explorables): what each does well and how to apply it without copying what SO is not.
 ---
 
@@ -50,4 +50,3 @@ A deeper look at how each of these products words its first screen, its invite a
 - [What SO is](../core/what-so-is.md) — contrasts: the "is not" table.
 - [The Evolution of Trust](../trust/evolution-of-trust.md) — model: the teaching method.
 - [Landing concepts](../packaging/landing-concepts.md) — applies: how the reference landings feed the redesign.
-- [Cold start through community leaders](cold-start-influencers.md) — applies: the traditions as entry points.

@@ -6,7 +6,7 @@
 ## Читать перед стартом
 - `docs/redesign/dev-plan.md` §1 и WP9; `docs/redesign/screens.md` «Что убрать из текущего кода»;
   `docs/redesign/coverage.md` (строки «убрано» с причинами).
-- CLAUDE.md: сборка Android (`node scripts/deploy-android.mjs` — только собрать, без загрузки), версии.
+- Root README.md, section "Google Play (Android)": сборка Android (`./gradlew bundleRelease`, без загрузки), версии.
 
 ## Сделать
 1. Удалить мёртвый код: старые страницы и компоненты из списка в screens.md, `components/ui/` (если не используется),

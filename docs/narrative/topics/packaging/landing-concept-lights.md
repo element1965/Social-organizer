@@ -3,8 +3,8 @@ id: 20261118-landing-concept-lights
 title: Landing concept "The network that is already there" (proposal)
 tags: [packaging, mechanics, trust]
 created: 2026-11-18
-updated: 2026-11-18
-related: [20261118-landing-concept-flock, 20261118-core-message, 20261118-landing-concepts, 20261118-latent-connectedness, 20261118-evolution-of-trust, 20261118-need-protocol, 20261118-packaging-plan, 20261118-cold-start-influencers]
+updated: 2026-11-19
+related: [20261118-landing-concept-flock, 20261118-core-message, 20261118-landing-concepts, 20261118-latent-connectedness, 20261118-evolution-of-trust, 20261118-need-protocol, 20261118-packaging-plan, 20261118-audiences]
 summary: A new landing concept after the user rejected both chat concepts — the network shown as light that is already there, two layers (life on video, the network as a graph), the visitor inside Maria's 48-hour story with one honest decision, a role flip and the next stage — with the analysis behind it, the screen plan, the visual system, the tech, a Higgsfield shot list and the open decisions.
 ---
 
@@ -34,7 +34,7 @@ written first and checked by an editor subagent; the English follows at build ti
 | The Pudding, *The Real Kevin Bacon* (2026): the same dots persist and re-arrange (graph → rows by distance); a stepper with progress, prev/next and keys; a text card over the graph; the path lit | reference, studied 2026-11-18 | **Each dot is one person from the first frame to the last**; the story is a stepper inside one section, not scroll-jacking. |
 | Nicky Case: the network is made of little characters around the title | reference | The nearest people get faces and names (Maria, Oleg, Lena, you); the far rings stay as light. |
 | The user: both chat concepts look conventional; closer to A; storytelling and examples matter | user, 2026-11-18 | Network as hero plus one human story told through it, with life footage. |
-| Audience on low-end phones in Kenya, South Africa, Brazil; 28 languages | [cold start](../audiences/cold-start-influencers.md) | A light first screen (poster, Canvas 2D), video only on demand or on fast connections, no text inside images or video. |
+| Communities with mutual-aid traditions in Kenya, South Africa, Mexico and Brazil are among the audiences; the app ships in 28 languages. Low-end phones and slow connections are an assumption, not measured | [audiences](../audiences/audiences.md); root `README.md` (i18n) | A light first screen (poster, Canvas 2D), video only on demand or on fast connections, no text inside images or video. |
 | The protocol: up to N people, waves every 12 h (Emergency), Need pauses at the amount, no live push, chat in any messenger | [need protocol](../mechanics/need-protocol.md) | The story uses exactly these rules and numbers (300, 210 of 300, 90 more people, 12 hours). |
 | Decision 2026-11-10: no numbers on people's circles | launch-readiness | Progress shown as people lighting up, not a money bar on the hero; sums only on Maria's card and on yours. |
 | Existing assets: `heroGraph.ts` (Canvas 2D, about 90 fake people, 0.2 ms a frame, no Three.js), `@so/graph-3d`, the dark scene palette, Manrope | README, design system | Extend the canvas engine into a story engine; keep the brand. |
@@ -131,4 +131,4 @@ the network are two layers of the same picture; and the next stage grows out of 
 - [The Evolution of Trust](../trust/evolution-of-trust.md) — source: the teaching moves.
 - [The Need protocol](../mechanics/need-protocol.md) — constrains: every number in the story.
 - [Packaging plan](packaging-plan.md) — parent: stage 3.
-- [Cold start through community leaders](../audiences/cold-start-influencers.md) — use: regional versions.
+- [Audiences](../audiences/audiences.md) — use: regional versions (the community traditions).

@@ -3,8 +3,8 @@ id: 20261118-open-questions
 title: Open questions and findings
 tags: [sources, mechanics]
 created: 2026-11-18
-updated: 2026-11-18
-related: [20261118-sources, 20261118-need-protocol, 20261118-claims, 20261118-packaging-plan, 20261118-funding-strategy, 20261118-landing-concepts, 20261118-latent-connectedness]
+updated: 2026-11-19
+related: [20261118-sources, 20261118-need-protocol, 20261118-claims, 20261118-packaging-plan, 20261118-landing-concepts, 20261118-latent-connectedness]
 summary: Questions the team needs to answer before the distillation, landing and funding steps, plus product gaps and bugs found while checking the live app on 2026-11-18.
 ---
 
@@ -21,7 +21,7 @@ note it affects.
 
 ### Material to collect
 
-1. The chat the "How It Works" brief came from (it is not in the `6afce8ee` share).
+1. The chat the "How It Works" brief came from (it is not in the "Financing a social innovation" chat).
 2. The link and transcript of the published video *Direct Mutual Support Through Real Connections*.
 3. The TEDx talk (link), mentioned among the landing's secondary materials.
 4. The end of the GoFundMe row in the comparables table (cut off in the paste).
@@ -104,6 +104,5 @@ note it affects.
 - [The Need protocol](../mechanics/need-protocol.md) — context for the product findings.
 - [Claims](../principles/claims.md) — context for packaging question 1.
 - [Packaging plan](../packaging/packaging-plan.md) — what these decisions unblock.
-- [Funding strategy](../funding/funding-strategy.md) — context for the funding decisions.
 - [Landing concepts](../packaging/landing-concepts.md) — context for packaging questions 4–7.
 - [Latent connectedness](../theory/latent-connectedness.md) — context for finding 7.

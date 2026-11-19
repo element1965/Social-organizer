@@ -65,6 +65,13 @@ scripts/google-play-service-account.json
 *.p8
 secrets/
 
+# Google Cloud service-account keys (never commit): the console names them
+# <project-id>-<12 hex digits>.json
+*-[0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f].json
+*service-account*.json
+
+# Private local material: notes, plans and scripts that stay off the public repo
+/local/
+
 # Misc
 origin_logo.png
-*-[0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f].json

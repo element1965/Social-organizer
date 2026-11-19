@@ -3,8 +3,8 @@ id: 20261118-packaging-plan
 title: Packaging plan — from the data pool to the landing and in-app teaching
 tags: [packaging, toolkit]
 created: 2026-11-18
-updated: 2026-11-18
-related: [20261118-landing-concept-flock, 20261118-landing-concept-lights, 20261118-core-message, 20261118-how-it-works-video-idea, 20261118-audiences, 20261118-open-questions, 20261118-sources, 20261118-landing-concepts, 20261118-funding-strategy, 20261118-cold-start-influencers]
+updated: 2026-11-19
+related: [20261118-landing-concept-flock, 20261118-landing-concept-lights, 20261118-core-message, 20261118-how-it-works-video-idea, 20261118-audiences, 20261118-open-questions, 20261118-sources, 20261118-landing-concepts]
 summary: The agreed order of the packaging work (collect the pool → distil what matters → redesign the landing and web → in-app teaching) and which project and installed skills serve each stage.
 ---
 
@@ -29,7 +29,7 @@ the web part, and teaching inside the app. Nothing beyond stage 1 is started yet
 | 2 | **Distil** | The few messages that carry the project: one line, the story order, the answer to "why join now", the answers per audience | Accepted by the user 2026-11-18: [the core message](../core/core-message.md); waiting for Andrei Lubalin's read and a five-person test |
 | 3 | **Landing and web redesign** | New landing, `/how`, invite and public Need pages built on stage 2 | Concept proposed 2026-11-18: ["The network that is already there"](landing-concept-lights.md) (the chat concepts A and B were rejected) |
 | 4 | **In-app teaching** | First-run teaching inside existing steps (intro, empty Circle, path to the first Need, first Participation) | Not started |
-| — | Ideas parked for later decision | The "How It Works" video ([idea](how-it-works-video-idea.md)), the influencer pilot ([plan](../audiences/cold-start-influencers.md)), the funding programme ([strategy](../funding/funding-strategy.md)) | Ideas only |
+| — | Ideas parked for later decision | The "How It Works" video ([idea](how-it-works-video-idea.md)), the influencer pilot and the funding programme (both kept privately, not in this repository) | Ideas only |
 
 ### Skills per stage
 
@@ -59,5 +59,3 @@ Installed skills that fit:
 - [Sources](../meta/sources.md) — where the pool's material came from.
 - [Landing concepts](landing-concepts.md) — input for stage 3.
 - [Landing concept "The flock and the seed"](landing-concept-flock.md) — the chosen direction for stage 3 (prototype, 2026-11-18).
-- [Funding strategy](../funding/funding-strategy.md) — parallel track: donors.
-- [Cold start through community leaders](../audiences/cold-start-influencers.md) — parallel track: growth.
