@@ -1,9 +1,10 @@
+import { TELEGRAM_BOT_URL } from '../lib/deployment';
 import { Trans, useTranslation } from 'react-i18next';
 import { Prose, type ProseSection } from '../components/site/Prose';
 
 // The terms are kept word for word from the previous page; the owner writes the final version.
 const GITHUB = 'https://github.com/element1965/Social-organizer';
-const BOT = 'https://t.me/socialorganizer_bot';
+const BOT = TELEGRAM_BOT_URL;
 const NCMEC = 'https://www.missingkids.org/gethelpnow/cybertipline';
 
 export function TermsPage() {

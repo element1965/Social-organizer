@@ -801,7 +801,7 @@
         "cta": "Nhắn cho nhóm",
         "share": "Chia sẻ",
         "shared": "Đã chép liên kết",
-        "safe": "Nhóm chỉ trả lời qua @socialorganizer_bot và không bao giờ yêu cầu bạn gửi tiền, mã đăng nhập hay thông tin thẻ.",
+        "safe": "Nhóm chỉ trả lời qua {{bot}} và không bao giờ yêu cầu bạn gửi tiền, mã đăng nhập hay thông tin thẻ.",
         "w1Title": "Xây mạng lưới trong cộng đồng của bạn",
         "w1": "Nếu bạn có một cộng đồng riêng, hãy thử ứng dụng ở đó. Chúng tôi sẽ giúp bạn giải thích bằng lời lẽ mà mọi người ở đó vẫn dùng.",
         "w2Title": "Kể về dự án",

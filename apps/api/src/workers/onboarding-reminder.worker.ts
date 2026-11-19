@@ -1,3 +1,4 @@
+import { WEB_APP_URL } from '../deployment.js';
 import type { Job } from 'bullmq';
 import { getDb } from '@so/db';
 import {
@@ -10,7 +11,6 @@ import {
 } from '../services/telegram-bot.service.js';
 import { translateWithCache } from '../services/translate.service.js';
 
-const WEB_APP_URL = process.env.WEB_APP_URL || 'https://www.orginizer.com';
 
 /** Timing thresholds (in milliseconds) for each reminder level */
 const TIMING_MS = [

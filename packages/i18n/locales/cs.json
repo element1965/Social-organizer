@@ -825,7 +825,7 @@
         "cta": "Napsat týmu",
         "share": "Sdílet",
         "shared": "Odkaz zkopírován",
-        "safe": "Tým odpovídá jen z @socialorganizer_bot a nikdy nežádá peníze, přihlašovací kódy ani údaje o kartě.",
+        "safe": "Tým odpovídá jen z {{bot}} a nikdy nežádá peníze, přihlašovací kódy ani údaje o kartě.",
         "w1Title": "Vybudujte síť ve své komunitě",
         "w1": "Pokud máte vlastní komunitu, vyzkoušejte aplikaci tam. Pomůžeme vám o ní mluvit slovy, která používá vaše komunita.",
         "w2Title": "Řekněte o projektu dalším",

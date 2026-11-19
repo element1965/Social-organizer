@@ -14,6 +14,7 @@
  *   --url         wrap another URL (default: Railway staging)
  */
 
+import { DEFAULT_ANDROID_APP_PACKAGE } from '../packages/shared/src/deployment-defaults.ts';
 import { execSync } from 'child_process';
 import { existsSync, mkdirSync, readdirSync, rmSync } from 'fs';
 import { homedir } from 'os';
@@ -25,7 +26,7 @@ const ROOT = resolve(__dirname, '..');
 const WEB_DIR = resolve(ROOT, 'apps/web');
 const ANDROID_DIR = resolve(WEB_DIR, 'android');
 const APK_PATH = resolve(ANDROID_DIR, 'app/build/outputs/apk/staging/app-staging.apk');
-const PACKAGE = 'com.socialorganizer.app.staging';
+const PACKAGE = (process.env.VITE_ANDROID_APP_PACKAGE || DEFAULT_ANDROID_APP_PACKAGE) + '.staging';
 
 const args = process.argv.slice(2);
 const flag = (name) => args.includes(name);

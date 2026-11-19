@@ -56,32 +56,57 @@ Social organizer/
 
 ## Quick Start
 
+Install Git, Node.js 22.18 or later, pnpm 10.4.1, and Docker with Compose.
+
 ```bash
-# Install dependencies
-pnpm install
-
-# Configure database
+git clone https://github.com/element1965/Social-organizer.git
+cd Social-organizer
+docker compose up -d --wait
+cp apps/api/.env.example apps/api/.env
+cp apps/web/.env.example apps/web/.env
 cp packages/db/.env.example packages/db/.env
-# Edit packages/db/.env if needed
-
-# Run migrations
-pnpm db:migrate
-
-# Build all packages
-pnpm build
-
-# Start dev servers
+pnpm install
+pnpm db:setup
 pnpm dev
 ```
 
-Windows local setup, the empty-database `db push` caveat, and the test accounts are in
-[docs/redesign/README.md](docs/redesign/README.md). Web dev server: http://localhost:3000
-(Vite proxies `/trpc`, `/api`, `/gun` to the API on port 3001).
+In Windows PowerShell, use `Copy-Item` in place of `cp` and `pnpm.cmd` if script execution is disabled.
+
+Open http://localhost:3060, choose **Sign in** and then **Sign in with e-mail**, and enter
+`anna@test.local`. The latest line of `apps/api/so-dev-mail.log` contains your
+six-digit code. Enter it to open Anna's Circle. Try `big@test.local` for a
+larger Circle or `new@test.local` for onboarding.
+
+If you already run local PostgreSQL 17, you can skip Docker. Create a new,
+empty development database and point both `DATABASE_URL` entries at it.
+The example leaves Redis and the external integrations disabled.
+
+Stop the dev servers with Ctrl+C and the containers with `docker compose down`.
+Compose keeps the database on its named volume. With the dev servers stopped,
+rerun `pnpm db:setup` to sync the schema. It skips the demo seed if any users already exist.
 
 ## Database
 
-- **PostgreSQL 17** on port 5434
+- PostgreSQL 17 on host port 54329 with Compose
 - Prisma ORM for migrations and client generation
+
+`pnpm db:setup` uses `prisma db push` for local development. It builds
+the schema from `schema.prisma` without creating migration history or
+inserting the original deployment's FAQ rows. The historical migration
+`20260207165421_add_faq_items` references an author who exists in production.
+A separate replay issue affects `20260224_chain_broken_status`: it sorts
+before the migration that creates `ChainStatus`. Databases built with
+`db:setup` are for local use. Production continues to use the existing
+migration files and `prisma migrate deploy` with no checksum or history
+changes required.
+
+Prisma's v6 documentation describes an edited migration as a checksum change.
+Deploy can warn and continue, while `prisma migrate dev` can ask for a reset.
+With this repository's Prisma 6.19.2, an isolated test of an edited applied
+migration returned exit 0 from `migrate status`. `migrate deploy` then
+applied a pending migration with exit 0.
+See [Prisma's migration history documentation](https://www.prisma.io/docs/orm/v6/prisma-migrate/understanding-prisma-migrate/migration-histories)
+and [deploy guidance](https://www.prisma.io/docs/orm/v6/prisma-migrate/workflows/patching-and-hotfixing).
 
 ### Data Models
 
@@ -128,24 +153,48 @@ Windows local setup, the empty-database `db push` caveat, and the test accounts 
 
 ## Environment Variables
 
-### packages/db/.env
-```
-DATABASE_URL="postgresql://postgres:1111@localhost:5434/social_organizer?schema=public"
-```
+Each service documents its configuration and local defaults in its example file.
 
-### apps/api
-```
-PORT=3001
-DATABASE_URL=postgresql://postgres:1111@localhost:5434/social_organizer?schema=public
-REDIS_URL=redis://localhost:6379
-JWT_SECRET=your-secret-key          # Required, 16+ chars — the API refuses to start without it
-TELEGRAM_BOT_TOKEN=your-bot-token    # Required for Telegram Mini App auth
-FEEDBACK_CHAT_ID=-100xxxxxxxxxx      # Telegram group chat ID for user feedback
-VAPID_PUBLIC_KEY=your-vapid-public-key    # Web Push VAPID public key
-VAPID_PRIVATE_KEY=your-vapid-private-key  # Web Push VAPID private key
-VAPID_SUBJECT=mailto:admin@example.com    # Web Push VAPID subject
-FIREBASE_SERVICE_ACCOUNT={"type":"service_account",...}  # FCM service account JSON (for native push)
-```
+- [API configuration](apps/api/.env.example) for Fastify and its optional integrations.
+- [Web configuration](apps/web/.env.example) for Vite, public links, and OAuth redirects.
+- [Database configuration](packages/db/.env.example) for Prisma and the demo seed.
+
+For a fork, set the public origins and OAuth client IDs in both apps as
+applicable. `VITE_*` settings are public and are embedded when Vite
+builds the web bundle. Configure `MAIL_FROM` and `VAPID_SUBJECT` when you
+enable mail and Web Push.
+
+Native builds use the same public settings when exported into the
+environment before `cap sync` and Android build. In Xcode, set
+`PRODUCT_BUNDLE_IDENTIFIER`, the signing team and profile, and the
+`SO_APP_LINK_HOST`, `SO_APP_LINK_HOST_ALT`, and `SO_NATIVE_AUTH_SCHEME`
+build settings for your target. Register the corresponding domains, app
+IDs, and redirect URLs with your identity providers. For Android push,
+supply Firebase registration files for your app IDs.
+
+### Maintainer scripts
+
+The scripts below use shell environment variables. They are optional for
+the quick start. Scripts meant to connect to a database also require
+`DATABASE_URL` or `RAILWAY_DATABASE_URL` for their intended target.
+
+| Variable | Purpose |
+|----------|---------|
+| `RAILWAY_DATABASE_URL` | Required by the Railway seed and repair scripts. Set the target URL explicitly. |
+| `JAVA_HOME` | Optional JDK location for Android build and release scripts. |
+| `JAVA_TOOL_OPTIONS` | Optional JVM options inherited by the Android staging build. |
+| `ANDROID_HOME`, `ANDROID_SDK_ROOT` | Optional SDK paths for the Android staging build. |
+| `HOME`, `LOCALAPPDATA` | OS-provided paths used to find the SDK when neither Android SDK variable is set. |
+| `GOOGLE_PLAY_SERVICE_ACCOUNT` | Optional service-account JSON for Play Store uploads. |
+| `SEED_LANG` | Optional video demo seed language (default `ru`). |
+| `WEB` | Optional web URL for video capture (default `http://localhost:3000`). |
+| `FFMPEG` | Optional FFmpeg executable path for video capture. |
+| `FFMPEG_THREADS` | Optional FFmpeg encoding thread count for the first-steps capture. |
+| `CHROMIUM_PATH` | Optional Chromium executable path for video capture. |
+| `PLAYWRIGHT_PATH` | Optional Playwright module path for video capture. |
+| `SHOTS` | Optional debug screenshot directory for video capture. |
+| `STEPS_DIR` | Optional output directory for step-by-step illustrations. Required by `add-why.mjs`. |
+| `SKIP_SEED` | Set to `1` to capture the regular-Need video without reseeding. |
 
 ## API (tRPC Endpoints)
 

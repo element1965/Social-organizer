@@ -1,3 +1,5 @@
+import { WEB_APP_URL } from '../../lib/deployment';
+import { DEFAULT_WEB_APP_URL } from '@so/shared';
 /** Shown in About. The web package version is 0.1.0; there is no build number to display. */
 export const APP_VERSION = '0.1.0';
 
@@ -12,10 +14,10 @@ export const ONLINE_MS = 5 * 60 * 1000;
 export const ACCOUNT_NOTICE_KEY = 'so.accountNotice';
 
 export function publicHost(): string {
-  const raw = import.meta.env.VITE_WEB_APP_URL || 'https://www.orginizer.com';
+  const raw = WEB_APP_URL;
   try {
     return new URL(raw).host;
   } catch {
-    return 'www.orginizer.com';
+    return new URL(DEFAULT_WEB_APP_URL).host;
   }
 }

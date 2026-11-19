@@ -19,6 +19,13 @@ const IS_PROD = process.env.NODE_ENV === 'production';
 const DEV_OUTBOX = process.env.DEV_MAIL_OUTBOX || join(tmpdir(), 'so-dev-mail.log');
 const LOG_TO_STDOUT = process.env.MAIL_LOG_TO_STDOUT === '1';
 
+export function logMailConfig(): void {
+  if (RESEND_API_KEY) return;
+  if (LOG_TO_STDOUT) console.log('[mail] Using the test outbox on stdout.');
+  else if (IS_PROD) console.log('[mail] Email sign-in disabled: RESEND_API_KEY is unset.');
+  else console.log('[mail] Using the local outbox at %s', DEV_OUTBOX);
+}
+
 export function isMailConfigured(): boolean {
   return !!RESEND_API_KEY || !IS_PROD || LOG_TO_STDOUT;
 }

@@ -1,3 +1,4 @@
+import { WEB_APP_URL } from '../deployment.js';
 import type { Job } from 'bullmq';
 import { getDb } from '@so/db';
 import {
@@ -14,7 +15,6 @@ import { sendWebPush } from '../services/web-push.service.js';
 import { isRetiredChainMessage } from '../services/mvp-scope.js';
 import { getGraph } from '../services/graph-cache.service.js';
 
-const WEB_APP_URL = process.env.WEB_APP_URL || 'https://www.orginizer.com';
 
 /**
  * Every 30 minutes: process auto-chain messages.

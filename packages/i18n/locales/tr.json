@@ -809,7 +809,7 @@
         "cta": "Ekibe yazın",
         "share": "Paylaş",
         "shared": "Bağlantı kopyalandı",
-        "safe": "Ekip yalnızca @socialorganizer_bot üzerinden yanıt verir ve asla para, giriş kodu ya da kart bilgisi istemez.",
+        "safe": "Ekip yalnızca {{bot}} üzerinden yanıt verir ve asla para, giriş kodu ya da kart bilgisi istemez.",
         "w1Title": "Topluluğunuzda bir ağ kurun",
         "w1": "Kendi topluluğunuz varsa uygulamayı orada deneyin. Onu topluluğunuzun kullandığı kelimelerle anlatmanıza yardım ederiz.",
         "w2Title": "Projeyi başkalarına anlatın",

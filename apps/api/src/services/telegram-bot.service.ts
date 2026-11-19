@@ -1,3 +1,4 @@
+import { WEB_APP_URL, SUPPORT_CHAT_ID } from '../deployment.js';
 import { createHash } from 'node:crypto';
 import { tgEscape } from './tg-html.js';
 import { getDb } from '@so/db';
@@ -8,7 +9,6 @@ import { networkReach } from './network.service.js';
 import { invalidateGraph } from './graph-cache.service.js';
 
 const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN || '';
-const WEB_APP_URL = process.env.WEB_APP_URL || 'https://www.orginizer.com';
 
 /** Counter + info for users removed during a broadcast (blocked bot / deactivated) */
 export const blockedCounter = {
@@ -181,7 +181,7 @@ interface TgUpdate {
   };
 }
 
-export const SUPPORT_CHAT_ID = -4946509857;
+export { SUPPORT_CHAT_ID };
 
 // ---- Contact from the landing page: t.me/<bot>?start=team[_topic] ----
 // A person who opens the bot from the landing's "write to the team" gets a short prompt and topic buttons,
@@ -604,7 +604,7 @@ export async function sendCollectionNotificationTg(
 }
 
 // Bot /start message translations for all 27 supported languages
-const SITE = 'https://www.orginizer.com/';
+const SITE = WEB_APP_URL.replace(/\/$/, '') + '/';
 interface BotLocale {
   invite: (name: string, inviterName: string, stats: InviteStats | null) => string;
   acceptBtn: string;

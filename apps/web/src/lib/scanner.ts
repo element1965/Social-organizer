@@ -1,3 +1,4 @@
+import { WEB_APP_HOSTS, TELEGRAM_BOT_USERNAME } from './deployment';
 import { RESERVED_REFERRAL_SLUGS } from '@so/shared';
 import { Capacitor } from '@capacitor/core';
 import { detectDevice } from './device';
@@ -16,7 +17,7 @@ function decodePart(value: string): string {
 }
 
 const TOKEN = /^[A-Za-z0-9_-]+$/;
-const BOT = (import.meta.env.VITE_TELEGRAM_BOT_USERNAME || 'socialorganizer_bot').toLowerCase();
+const BOT = (TELEGRAM_BOT_USERNAME).toLowerCase();
 
 function tokenOf(value: string): string | null {
   const decoded = decodePart(value).trim();
@@ -26,7 +27,7 @@ function tokenOf(value: string): string | null {
 /** App origins that may carry an invite. Anything else is not our code. */
 function isOurHost(url: URL): boolean {
   const hostname = url.hostname.toLowerCase();
-  if (hostname === 'orginizer.com' || hostname === 'www.orginizer.com') return true;
+  if (WEB_APP_HOSTS.includes(hostname)) return true;
   try {
     return url.host.toLowerCase() === new URL(window.location.origin).host.toLowerCase();
   } catch {

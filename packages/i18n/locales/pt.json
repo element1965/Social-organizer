@@ -817,7 +817,7 @@
         "cta": "Escrever para a equipe",
         "share": "Compartilhar",
         "shared": "Link copiado",
-        "safe": "A equipe só responde pelo @socialorganizer_bot e nunca pede dinheiro, códigos de acesso ou dados do cartão.",
+        "safe": "A equipe só responde pelo {{bot}} e nunca pede dinheiro, códigos de acesso ou dados do cartão.",
         "w1Title": "Monte uma rede na sua comunidade",
         "w1": "Se você tem uma comunidade, experimente o aplicativo nela. Ajudamos a explicá-lo com as palavras que ela usa.",
         "w2Title": "Conte sobre o projeto",

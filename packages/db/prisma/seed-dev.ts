@@ -1,30 +1,34 @@
 /**
  * Local development seed: fictional people only (e-mails on the reserved test.local domain).
- * Wipes and refills a LOCAL database. Refuses to run against anything but localhost.
+ * Use pnpm db:setup to seed an empty local database. Running this file directly resets its data.
  *
  *   cd packages/db && npx tsx prisma/seed-dev.ts
  *
- * Accounts (sign in with "E-mail: we'll send a code"; the dev API writes the code to %TEMP%\so-dev-mail.log):
+ * Accounts (sign in with "E-mail: we'll send a code"; the dev API writes the code to the local mail outbox):
  *   anna@test.local   active member: 6 direct connections, 3-level network, collections, notifications,
  *                     an incoming acquaintance request
  *   new@test.local    brand-new member with an empty circle (onboarding)
  *   maria@test.local  author of an active emergency collection
  *   big@test.local    large network: 36 direct connections, ~250 people over three levels, more in the 4th–5th, its own collections
  */
-import { PrismaClient, type User } from '@prisma/client';
+import { PrismaClient, type Prisma, type User } from '@prisma/client';
 
 const url = process.env.DATABASE_URL ?? '';
 // A staging database may be seeded only when its exact host:port is named in SEED_DEV_ALLOW_HOST,
 // so a production URL left in the environment is never wiped by accident.
+const checkLocal = process.argv.includes('--check-local');
+const ifEmpty = process.argv.includes('--if-empty');
 const allowHost = process.env.SEED_DEV_ALLOW_HOST;
 const isLocal = /@(localhost|127\.0\.0\.1)(:\d+)?\//.test(url);
 const isAllowedRemote = !!allowHost && url.includes(`@${allowHost}/`);
-if (!isLocal && !isAllowedRemote) {
+if (!isLocal && (checkLocal || ifEmpty || !isAllowedRemote)) {
   console.error('seed-dev: DATABASE_URL is not a local database (or SEED_DEV_ALLOW_HOST), refusing to run.');
   process.exit(1);
 }
 
-const db = new PrismaClient();
+if (checkLocal) process.exit(0);
+
+const client = new PrismaClient();
 const DAY = 24 * 60 * 60 * 1000;
 const ago = (days: number) => new Date(Date.now() - days * DAY);
 const inDays = (days: number) => new Date(Date.now() + days * DAY);
@@ -70,7 +74,7 @@ const EDGES: [string, string][] = [
   ['tom', 'eva'], ['mei', 'jon'], ['sara', 'rina'], ['ali', 'max'],
 ];
 
-async function wipe() {
+async function wipe(db: Prisma.TransactionClient) {
   // Child tables first; users cascade the rest
   await db.notification.deleteMany();
   await db.obligation.deleteMany();
@@ -83,8 +87,17 @@ async function wipe() {
   await db.user.deleteMany();
 }
 
-async function main() {
-  await wipe();
+async function main(db: Prisma.TransactionClient) {
+  if (ifEmpty) {
+    // Serialize setup runs and hold off concurrent writes to users until seeding commits.
+    await db.$executeRaw`LOCK TABLE "users" IN SHARE ROW EXCLUSIVE MODE`;
+    if (await db.user.findFirst({ select: { id: true } })) {
+      console.log('seed-dev: users already exist. Skipping demo seed.');
+      return;
+    }
+  } else {
+    await wipe(db);
+  }
 
   const u: Record<string, User> = {};
   for (const [i, p] of PEOPLE.entries()) {
@@ -166,7 +179,7 @@ async function main() {
     await db.obligation.create({ data: { collectionId: closed.id, userId: u[key]!.id, amount, createdAt: ago(19) } });
   }
 
-  const big = await seedBigNetwork();
+  const big = await seedBigNetwork(db);
 
   console.log(`seed-dev: ${PEOPLE.length} users, ${EDGES.length} connections, 3 collections.`);
   console.log(`seed-dev: big@test.local — ${big.people} people in the network (${big.l1}/${big.l2}/${big.l3} by level, ${big.far} in the 4th–5th), ${big.edges} connections.`);
@@ -179,7 +192,7 @@ async function main() {
  * problems on a large network (3D graph, long lists, level grouping, far rings).
  * A fixed-seed generator keeps the same names and links on every run.
  */
-async function seedBigNetwork() {
+async function seedBigNetwork(db: Prisma.TransactionClient) {
   let state = 20261109;
   const rnd = () => ((state = (state * 1103515245 + 12345) % 2147483648) / 2147483648);
   const pick = <T,>(list: readonly T[]) => list[Math.floor(rnd() * list.length)]!;
@@ -306,6 +319,6 @@ async function seedBigNetwork() {
   };
 }
 
-main()
-  .catch((err) => { console.error(err); process.exit(1); })
-  .finally(() => db.$disconnect());
+client.$transaction(main, { timeout: 300_000 })
+  .catch((err) => { console.error(err); process.exitCode = 1; })
+  .finally(() => client.$disconnect());

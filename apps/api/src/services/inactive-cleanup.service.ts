@@ -1,3 +1,4 @@
+import { WEB_APP_URL } from '../deployment.js';
 import type { PrismaClient, Prisma } from '@so/db';
 import { ADMIN_IDS, CLUSTER_ROOT_OVERRIDE } from '../admin.js';
 import { deleteUserAccount } from './account-deletion.service.js';
@@ -33,7 +34,6 @@ const BATCH_SIZE = 50;
 /** Safety cap per run and per stage: spreads a large backlog over several daily runs. */
 const MAX_PER_STAGE = 300;
 
-const WEB_APP_URL = process.env.WEB_APP_URL || 'https://www.orginizer.com';
 const LOCK_KEY = 'so:inactive-account-cleanup';
 const PROTECTED_IDS = [...ADMIN_IDS, CLUSTER_ROOT_OVERRIDE.member, CLUSTER_ROOT_OVERRIDE.root];
 

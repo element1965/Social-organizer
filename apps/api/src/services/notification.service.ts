@@ -1,3 +1,4 @@
+import { WEB_APP_URL } from '../deployment.js';
 import { createRequire } from 'node:module';
 import { dirname, resolve } from 'node:path';
 import type { PrismaClient } from '@so/db';
@@ -9,7 +10,6 @@ import type { TgReplyMarkup } from './telegram-bot.service.js';
 import { deliver, deliverMany } from './delivery.service.js';
 import { tgEscape } from './tg-html.js';
 
-const WEB_APP_URL = process.env.WEB_APP_URL || 'https://www.orginizer.com';
 
 /** People written per insert when a wave is stored. */
 const INSERT_BATCH = 1000;

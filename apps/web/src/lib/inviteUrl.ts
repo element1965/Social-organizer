@@ -1,7 +1,6 @@
+import { WEB_APP_URL, TELEGRAM_MINI_APP_BOT } from './deployment';
 import { isTelegramWebApp } from '@so/tg-adapter';
 
-const TG_BOT_USERNAME = import.meta.env.VITE_TELEGRAM_BOT_USERNAME || '';
-const WEB_APP_URL = import.meta.env.VITE_WEB_APP_URL || 'https://www.orginizer.com';
 
 /**
  * Build invite URL based on current context.
@@ -10,8 +9,8 @@ const WEB_APP_URL = import.meta.env.VITE_WEB_APP_URL || 'https://www.orginizer.c
  * In browser: https://origin/invite/TOKEN
  */
 export function buildInviteUrl(token: string): string {
-  if (isTelegramWebApp() && TG_BOT_USERNAME) {
-    return `https://t.me/${TG_BOT_USERNAME}?start=invite_${token}`;
+  if (isTelegramWebApp() && TELEGRAM_MINI_APP_BOT) {
+    return `https://t.me/${TELEGRAM_MINI_APP_BOT}?start=invite_${token}`;
   }
   return `${window.location.origin}/invite/${token}`;
 }
@@ -28,8 +27,8 @@ export function buildWebInviteUrl(token: string): string {
  * Build Telegram bot invite URL (always points to bot).
  */
 export function buildBotInviteUrl(token: string): string {
-  if (TG_BOT_USERNAME) {
-    return `https://t.me/${TG_BOT_USERNAME}?start=invite_${token}`;
+  if (TELEGRAM_MINI_APP_BOT) {
+    return `https://t.me/${TELEGRAM_MINI_APP_BOT}?start=invite_${token}`;
   }
   return `${window.location.origin}/invite/${token}`;
 }

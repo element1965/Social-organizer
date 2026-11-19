@@ -1,3 +1,4 @@
+import { WEB_APP_URL } from '../deployment.js';
 import { z } from 'zod';
 import { randomBytes } from 'crypto';
 import { router, publicProcedure, protectedProcedure } from '../trpc.js';
@@ -173,7 +174,6 @@ export const inviteRouter = router({
       if (applicant && !applicant.onboardingCompleted) {
         const tgAccount = applicant.platformAccounts[0];
         if (tgAccount) {
-          const WEB_APP_URL = process.env.WEB_APP_URL || 'https://www.orginizer.com';
           const userLang = applicant.language || 'en';
 
           (async () => {

@@ -29,4 +29,4 @@ Disallow: /support
 Disallow: /trpc
 
 # Crawlers can read the noindex headers on /i/, /invite/ and /sos/.
-Sitemap: https://www.orginizer.com/sitemap.xml
+Sitemap: %WEB_APP_URL%/sitemap.xml

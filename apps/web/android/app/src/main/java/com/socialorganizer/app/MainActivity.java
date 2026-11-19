@@ -14,7 +14,6 @@ public class MainActivity extends BridgeActivity {
     private static final String TAG = "InstallReferrer";
     private static final String PREFS = "install_referrer";
     private static final String KEY_PROCESSED = "processed";
-    private static final String WEB_BASE = "https://www.orginizer.com";
     private static final String INVITE_PREFIX = "invite_";
 
     private InstallReferrerClient referrerClient;
@@ -59,7 +58,7 @@ public class MainActivity extends BridgeActivity {
         String token = referrer.substring(INVITE_PREFIX.length());
         // tokens are hex (randomBytes(16).toString('hex')) or alphanumeric referral slugs
         if (!token.matches("[A-Za-z0-9_-]+")) return;
-        String url = WEB_BASE + "/invite/" + token;
+        String url = getString(R.string.install_referrer_web_url) + "/invite/" + token;
         runOnUiThread(() -> {
             if (bridge != null && bridge.getWebView() != null) {
                 bridge.getWebView().loadUrl(url);

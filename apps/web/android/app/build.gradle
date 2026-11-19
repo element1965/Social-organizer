@@ -6,18 +6,26 @@ if (keystorePropertiesFile.exists()) {
     keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 }
 
+def appPackage = System.getenv('VITE_ANDROID_APP_PACKAGE') ?: 'com.socialorganizer.app'
+def webOrigin = new URI(System.getenv('VITE_WEB_APP_URL') ?: 'https://www.orginizer.com')
+def alternateHost = System.getenv('VITE_WEB_APP_ALT_URL')
+    ? new URI(System.getenv('VITE_WEB_APP_ALT_URL')).host
+    : (webOrigin.host == 'www.orginizer.com' ? 'orginizer.com' : webOrigin.host)
+def nativeScheme = System.getenv('VITE_NATIVE_AUTH_SCHEME') ?: 'socialorganizer'
+
 android {
     namespace = "com.socialorganizer.app"
     compileSdk = rootProject.ext.compileSdkVersion
     defaultConfig {
-        applicationId "com.socialorganizer.app"
+        applicationId appPackage
+        resValue "string", "install_referrer_web_url", webOrigin.toString().replaceFirst('/$', '')
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 15
         versionName "2.4"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         // Hosts whose /invite/ links open the app (App Links, see AndroidManifest.xml)
-        manifestPlaceholders = [appLinkHost: "www.orginizer.com", appLinkHostAlt: "orginizer.com"]
+        manifestPlaceholders = [appLinkHost: webOrigin.host, appLinkHostAlt: alternateHost, nativeAuthScheme: nativeScheme]
         aaptOptions {
              // Files and dirs to omit from the packaged assets dir, modified to accommodate modern web apps.
              // Default: https://android.googlesource.com/platform/frameworks/base/+/282e181b58cf72b6ca770dc7ca5f91f135444502/tools/aapt/AaptAssets.cpp#61
@@ -54,7 +62,7 @@ android {
             resValue "string", "title_activity_main", "SO Staging"
             // Staging invite links open SO Staging; orginizer.com links stay with the store app
             def stagingHost = new URI(project.findProperty('stagingUrl') ?: 'https://social-organizer-staging.up.railway.app').host
-            manifestPlaceholders = [appLinkHost: stagingHost, appLinkHostAlt: stagingHost]
+            manifestPlaceholders = [appLinkHost: stagingHost, appLinkHostAlt: stagingHost, nativeAuthScheme: nativeScheme]
             matchingFallbacks = ['debug']
         }
     }

@@ -1,3 +1,4 @@
+import { WEB_APP_URL, TELEGRAM_BOT_USERNAME } from '../deployment.js';
 export const SCREEN_GUIDE = `
 APP SCREENS GUIDE:
 
@@ -24,7 +25,7 @@ The amount field shows "Declared participation of your network is about N" (the 
 Reporting a Need stays closed until the circle is large enough (direct handshakes and the wider network). Until then the screen shows what is still missing and points to Add. A person has one open Need of each type. "Report a Need" / «Сообщить о потребности» sends it; what opens is the Need (потребность): "Your Need" / «Ваша потребность».
 
 ADD / ДОБАВИТЬ (/add, /add/qr, /add/scan)
-One invite link per person (orginizer.com and a QR). Share it, show the QR, or scan someone else's code. Incoming people wait here to be confirmed. When the circle is still too small to ask, a short path card says how many direct and network people are still needed.
+One invite link per person (${new URL(WEB_APP_URL).host.replace(/^www\./, '')} and a QR). Share it, show the QR, or scan someone else's code. Incoming people wait here to be confirmed. When the circle is still too small to ask, a short path card says how many direct and network people are still needed.
 
 NEED (/collection/:id)
 One Need. Author, one time or every 28 days, handshake path, reported Participation against the amount needed, and the participants' chat.
@@ -51,7 +52,7 @@ A participant can complain about a Need (a reason and a short comment). Three co
 ACCOUNT DELETION
 Inside the account: Profile → Account, at the bottom, Delete account, then confirm. It is immediate and cannot be undone. Gone: profile, photo, phone, e-mail, contacts, sign-in methods, connections and invites, the person's open Needs and their part in open Needs, notifications, push, settings, and assistant chats. Other people's circles keep "Deleted user" with no personal data. Past Needs of other people keep the amounts without the name.
 An account that is not used is deleted automatically after 2 years.
-Someone who cannot sign in writes to @socialorganizer_bot with the e-mail or username they used. That deletion is manual, within 30 days. The public page /delete-account explains the same steps.
+Someone who cannot sign in writes to @${TELEGRAM_BOT_USERNAME} with the e-mail or username they used. That deletion is manual, within 30 days. The public page /delete-account explains the same steps.
 
 LOGIN (/login)
 One screen for new and existing people: Google, Apple, Telegram (automatic inside the Mini App; on the site, the Telegram button or the bot), or an e-mail code (6 digits, resend after 60 seconds). No password. If the e-mail already belongs to an account, the screen asks for an e-mail code first.

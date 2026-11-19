@@ -809,7 +809,7 @@
         "cta": "Kirjoita tiimille",
         "share": "Jaa",
         "shared": "Linkki kopioitu",
-        "safe": "Tiimi vastaa vain tililtä @socialorganizer_bot eikä koskaan pyydä rahaa, kirjautumiskoodeja tai korttitietoja.",
+        "safe": "Tiimi vastaa vain tililtä {{bot}} eikä koskaan pyydä rahaa, kirjautumiskoodeja tai korttitietoja.",
         "w1Title": "Rakenna verkosto omaan yhteisöösi",
         "w1": "Jos sinulla on oma yhteisö, kokeile sovellusta siellä. Autamme selittämään sen yhteisösi omin sanoin.",
         "w2Title": "Kerro hankkeesta muille",

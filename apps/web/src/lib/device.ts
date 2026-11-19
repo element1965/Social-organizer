@@ -1,3 +1,4 @@
+import { ANDROID_APP_PACKAGE, IOS_STORE_ID, WEB_APP_URL, TELEGRAM_BOT_URL } from './deployment';
 /*
  * Device-aware entry for the site: the native way in first, Telegram second, the rest as text.
  * Port of docs/redesign/mockups/v2/device.js; returns data, the components render it.
@@ -65,13 +66,13 @@ export function authButtons(dev: Device): AuthButtons {
 }
 
 /** Canonical public origin: the QR on the desktop site must open production, not the host it was shown on. */
-export const SITE_ORIGIN = 'https://www.orginizer.com';
+export const SITE_ORIGIN = WEB_APP_URL;
 
 /** Public store and bot addresses. */
 export const STORE_URL = {
-  play: 'https://play.google.com/store/apps/details?id=com.socialorganizer.app',
-  appstore: 'https://apps.apple.com/app/id6768132198',
-  telegram: 'https://t.me/socialorganizer_bot',
+  play: 'https://play.google.com/store/apps/details?id=' + ANDROID_APP_PACKAGE,
+  appstore: 'https://apps.apple.com/app/id' + IOS_STORE_ID,
+  telegram: TELEGRAM_BOT_URL,
 } as const;
 
 export interface StoreLinks {

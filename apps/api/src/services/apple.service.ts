@@ -1,3 +1,4 @@
+import { APPLE_BUNDLE_ID } from '../deployment.js';
 import { findLinkingCode } from './link-code.service.js';
 import { resolveExternalIdentity } from './identity.service.js';
 import crypto from 'node:crypto';
@@ -16,7 +17,6 @@ const APPLE_KEYS_URL = 'https://appleid.apple.com/auth/keys';
 // Accepted audiences: the web Services ID (web/native browser flow) and, as a
 // fallback, the native app bundle id (in case a native id_token ever reaches here).
 const APPLE_SERVICE_ID = process.env.APPLE_SERVICE_ID || '';
-const APPLE_BUNDLE_ID = process.env.APPLE_BUNDLE_ID || 'com.socialorganizer.app';
 
 export interface AppleUserData {
   sub: string;

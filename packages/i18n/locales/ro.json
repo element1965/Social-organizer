@@ -817,7 +817,7 @@
         "cta": "Scrie echipei",
         "share": "Distribuie",
         "shared": "Link copiat",
-        "safe": "Echipa răspunde doar de pe @socialorganizer_bot și nu cere niciodată bani, coduri de conectare sau datele cardului.",
+        "safe": "Echipa răspunde doar de pe {{bot}} și nu cere niciodată bani, coduri de conectare sau datele cardului.",
         "w1Title": "Construiește o rețea în comunitatea ta",
         "w1": "Dacă ai o comunitate a ta, încearcă aplicația acolo. Te ajutăm s-o explici pe limba oamenilor tăi.",
         "w2Title": "Povestește despre proiect",
