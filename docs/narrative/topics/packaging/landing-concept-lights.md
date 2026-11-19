@@ -10,6 +10,8 @@ summary: A new landing concept after the user rejected both chat concepts — th
 
 # Landing concept "The network that is already there" (proposal)
 
+> **Note (2026-11-19):** the example story changed from a broken-down car to a job loss; this note is historical, the current scene is in [the core message](../core/core-message.md), section 3.
+
 > Summary: A new landing concept after the user rejected both chat concepts — the network shown as light that is already there, two layers (life on video, the network as a graph), the visitor inside Maria's 48-hour story with one honest decision, a role flip and the next stage — with the analysis behind it, the screen plan, the visual system, the tech, a Higgsfield shot list and the open decisions.
 
 ## Context

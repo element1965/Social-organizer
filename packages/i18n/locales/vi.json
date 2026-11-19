@@ -714,8 +714,8 @@
         },
         "b4": {
           "label": "2 · Nhu cầu",
-          "say": "Ô tô của Linh bị hỏng, mà không có xe thì cô ấy không đi làm được. Sửa xe hết {{repair}}.",
-          "late": "Linh thông báo một nhu cầu và kèm liên kết tới nhóm chat. Nhu cầu {{repair}} sẽ tới tối đa {{reach}} người, bắt đầu từ người gần nhất."
+          "say": "Ví dụ, Linh bị mất việc, mà một tuần nữa phải trả tiền nhà. Cô ấy còn thiếu {{shortfall}}.",
+          "late": "Linh thông báo một nhu cầu và kèm liên kết tới nhóm chat. Nhu cầu {{shortfall}} sẽ tới tối đa {{reach}} người, bắt đầu từ người gần nhất."
         },
         "b5": {
           "label": "3 · Mỗi người tự quyết định",
@@ -729,7 +729,7 @@
         },
         "b7": {
           "label": "5 · Mọi người thỏa thuận trực tiếp",
-          "say": "Linh và những người tham gia bàn bạc trong nhóm chat. Thảo gợi ý một gara sửa ô tô rẻ hơn.",
+          "say": "Linh và những người tham gia bàn bạc trong nhóm chat. Thảo nhắn rằng cửa hàng chỗ cô ấy làm đang cần người.",
           "late": "Nếu có chuyện tiền bạc, mọi người tự đưa cho nhau. Ứng dụng không bao giờ đụng tới tiền."
         },
         "b8": {
@@ -755,12 +755,12 @@
         "tags": {
           "you": "Bạn",
           "oleg": "Tuấn",
-          "maria": "Linh · {{repair}}",
+          "maria": "Linh · {{shortfall}}",
           "lena": "Thảo"
         },
         "hud": {
           "reached_other": "người đã biết về nhu cầu",
-          "reported": "trên {{repair}} đã được nêu",
+          "reported": "trên {{shortfall}} đã được nêu",
           "people_other": "người tham gia"
         }
       },

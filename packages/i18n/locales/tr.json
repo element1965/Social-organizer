@@ -718,8 +718,8 @@
         },
         "b4": {
           "label": "2 · İhtiyaç",
-          "say": "Ayşe'nin arabası bozuldu ve araba olmadan işe gidemiyor. Tamir {{repair}} tutuyor.",
-          "late": "Ayşe bir ihtiyaç bildiriyor ve bir sohbet bağlantısı ekliyor. {{repair}} tutarındaki bir ihtiyaç, en yakınlardan başlayarak en fazla {{reach}} kişiye ulaşır."
+          "say": "Örneğin Ayşe işini kaybetti ve bir hafta sonra kirayı ödemesi gerekiyor. {{shortfall}} eksiği var.",
+          "late": "Ayşe bir ihtiyaç bildiriyor ve bir sohbet bağlantısı ekliyor. {{shortfall}} tutarındaki bir ihtiyaç, en yakınlardan başlayarak en fazla {{reach}} kişiye ulaşır."
         },
         "b5": {
           "label": "3 · Herkes kendisi karar verir",
@@ -733,7 +733,7 @@
         },
         "b7": {
           "label": "5 · İnsanlar doğrudan anlaşır",
-          "say": "Ayşe ve katılımcılar sohbette konuşuyor. Elif daha ucuz bir tamirci öneriyor.",
+          "say": "Ayşe ve katılımcılar sohbette konuşuyor. Elif, çalıştığı mağazanın eleman aradığını yazıyor.",
           "late": "Para söz konusuysa insanlar onu birbirlerine kendileri verir. Uygulama paraya hiç dokunmaz."
         },
         "b8": {
@@ -759,13 +759,13 @@
         "tags": {
           "you": "Siz",
           "oleg": "Murat",
-          "maria": "Ayşe · {{repair}}",
+          "maria": "Ayşe · {{shortfall}}",
           "lena": "Elif"
         },
         "hud": {
           "reached_one": "kişi ihtiyaçtan haberdar oldu",
           "reached_other": "kişi ihtiyaçtan haberdar oldu",
-          "reported": "belirtildi, hedef {{repair}}",
+          "reported": "belirtildi, hedef {{shortfall}}",
           "people_one": "katılımcı",
           "people_other": "katılımcı"
         }

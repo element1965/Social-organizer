@@ -718,8 +718,8 @@
         },
         "b4": {
           "label": "2 · Een behoefte",
-          "say": "De auto van Sanne is kapot en zonder auto komt ze niet op haar werk. De reparatie kost {{repair}}.",
-          "late": "Sanne meldt een behoefte en voegt een link naar een chat toe. Bij een behoefte van {{repair}} krijgen maximaal {{reach}} mensen bericht, te beginnen bij de mensen die Sanne zelf kent."
+          "say": "Stel: Sanne is haar baan kwijt en over een week moet de huur betaald worden. Ze komt {{shortfall}} tekort.",
+          "late": "Sanne meldt een behoefte en voegt een link naar een chat toe. Bij een behoefte van {{shortfall}} krijgen maximaal {{reach}} mensen bericht, te beginnen bij de mensen die Sanne zelf kent."
         },
         "b5": {
           "label": "3 · Ieder beslist zelf",
@@ -733,7 +733,7 @@
         },
         "b7": {
           "label": "5 · Rechtstreeks afspreken",
-          "say": "Sanne en de deelnemers bespreken alles in de chat. Lotte raadt een goedkopere garage aan.",
+          "say": "Sanne en de deelnemers bespreken alles in de chat. Lotte schrijft dat ze in de winkel waar zij werkt iemand zoeken.",
           "late": "Gaat het om geld, dan dragen mensen het zelf over. Er loopt nooit geld via de app."
         },
         "b8": {
@@ -759,13 +759,13 @@
         "tags": {
           "you": "Jij",
           "oleg": "Jeroen",
-          "maria": "Sanne · {{repair}}",
+          "maria": "Sanne · {{shortfall}}",
           "lena": "Lotte"
         },
         "hud": {
           "reached_one": "persoon heeft van de behoefte gehoord",
           "reached_other": "mensen hebben van de behoefte gehoord",
-          "reported": "van {{repair}} genoemd",
+          "reported": "van {{shortfall}} genoemd",
           "people_one": "deelnemer",
           "people_other": "deelnemers"
         }

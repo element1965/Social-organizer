@@ -722,8 +722,8 @@
         },
         "b4": {
           "label": "2 · Un bisogno",
-          "say": "A Giulia si è rotta la macchina, e senza auto non può andare al lavoro. La riparazione costa {{repair}}.",
-          "late": "Giulia comunica un bisogno e aggiunge il link a una chat. Un bisogno di {{repair}} raggiunge fino a {{reach}} persone, le più vicine per prime."
+          "say": "Per esempio, Giulia ha perso il lavoro e tra una settimana deve pagare l'affitto. Le mancano {{shortfall}}.",
+          "late": "Giulia comunica un bisogno e aggiunge il link a una chat. Un bisogno di {{shortfall}} raggiunge fino a {{reach}} persone, le più vicine per prime."
         },
         "b5": {
           "label": "3 · Ognuno decide da sé",
@@ -737,7 +737,7 @@
         },
         "b7": {
           "label": "5 · Accordi diretti",
-          "say": "Giulia e i partecipanti ne parlano in chat. Sara consiglia un'officina più economica.",
+          "say": "Giulia e i partecipanti ne parlano in chat. Sara scrive che nel negozio dove lavora cercano qualcuno.",
           "late": "Se ci sono di mezzo dei soldi, le persone se li danno direttamente. L'app non li tocca mai."
         },
         "b8": {
@@ -763,14 +763,14 @@
         "tags": {
           "you": "Tu",
           "oleg": "Marco",
-          "maria": "Giulia · {{repair}}",
+          "maria": "Giulia · {{shortfall}}",
           "lena": "Sara"
         },
         "hud": {
           "reached_one": "ha saputo del bisogno",
           "reached_many": "hanno saputo del bisogno",
           "reached_other": "hanno saputo del bisogno",
-          "reported": "dichiarati su {{repair}}",
+          "reported": "dichiarati su {{shortfall}}",
           "people_one": "partecipante",
           "people_many": "di partecipanti",
           "people_other": "partecipanti"

@@ -718,8 +718,8 @@
         },
         "b4": {
           "label": "2 · Ein Bedarf",
-          "say": "Julias Auto ist kaputt, und ohne Auto kommt sie nicht zur Arbeit. Die Reparatur kostet {{repair}}.",
-          "late": "Julia meldet einen Bedarf und fügt einen Link zu einem Chat hinzu. Ein Bedarf von {{repair}} erreicht bis zu {{reach}} Menschen, die Nächsten zuerst."
+          "say": "Zum Beispiel hat Julia ihre Arbeit verloren, und in einer Woche ist die Miete fällig. Ihr fehlen {{shortfall}}.",
+          "late": "Julia meldet einen Bedarf und fügt einen Link zu einem Chat hinzu. Ein Bedarf von {{shortfall}} erreicht bis zu {{reach}} Menschen, die Nächsten zuerst."
         },
         "b5": {
           "label": "3 · Alle entscheiden selbst",
@@ -733,7 +733,7 @@
         },
         "b7": {
           "label": "5 · Direkte Absprache",
-          "say": "Julia und die Beteiligten besprechen alles im Chat. Steffi empfiehlt eine günstigere Werkstatt.",
+          "say": "Julia und die Beteiligten besprechen alles im Chat. Steffi schreibt, dass bei ihr im Laden jemand gesucht wird.",
           "late": "Geht es um Geld, übergeben die Menschen es selbst. Die App kommt mit dem Geld nie in Berührung."
         },
         "b8": {
@@ -759,13 +759,13 @@
         "tags": {
           "you": "Sie",
           "oleg": "Markus",
-          "maria": "Julia · {{repair}}",
+          "maria": "Julia · {{shortfall}}",
           "lena": "Steffi"
         },
         "hud": {
           "reached_one": "Person hat vom Bedarf erfahren",
           "reached_other": "Personen haben vom Bedarf erfahren",
-          "reported": "von {{repair}} angegeben",
+          "reported": "von {{shortfall}} angegeben",
           "people_one": "beteiligte Person",
           "people_other": "Beteiligte"
         }

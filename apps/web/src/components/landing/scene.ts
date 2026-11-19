@@ -41,8 +41,8 @@ export interface SceneOptions {
   format: (n: number) => string;
   /** The words under a counter, in the plural form its number takes. */
   label: (key: 'reached' | 'people', n: number) => string;
-  /** The repair and your share in the reader's currency (money.ts): the participants' sums add up to the repair. */
-  money: { repair: number; mine: number };
+  /** The shortfall and your share in the reader's currency (money.ts): the participants' sums add up to the shortfall. */
+  money: { shortfall: number; mine: number };
 }
 
 export interface SceneHandle {
@@ -276,22 +276,22 @@ export function initScene(els: SceneElements, initial: SceneOptions): SceneHandl
   const fromMaria = bfs(maria);
   // the cast that follows the sum: up to one person per dollar hears of the Need, nearest first; some of them
   // take part (you with five steps, Oleg), Lena among those who know Maria directly. The participants' sums are
-  // in steps of a fifth of your share and add up to the repair.
+  // in steps of a fifth of your share and add up to the shortfall.
   const menu = [1, 2, 3, 5, 5, 5, 10, 10, 10, 15, 20];
   let reach: number[] = [];
   let parts: number[] = [];
   let lena = oleg;
   let amt: number[] = [];
-  let repairTotal = 0;
+  let shortfallTotal = 0;
   const setMoney = (m: SceneOptions['money']) => {
     let s = 7; // a sequence of its own: a new sum must not move the birds
     const r = () => (s = (s * 16807) % 2147483647) / 2147483647;
-    reach = fromMaria.q.slice(1, m.repair + 1);
+    reach = fromMaria.q.slice(1, m.shortfall + 1);
     parts = [you, oleg];
     for (const i of reach) if (parts.length < 44 && i !== you && i !== oleg && r() < 0.2) parts.push(i);
     lena = parts.slice(2).find((i) => fromMaria.d[i] === 1) ?? parts[2] ?? oleg;
     const step = m.mine / 5;
-    const total = Math.max(parts.length * 2, Math.round(m.repair / step));
+    const total = Math.max(parts.length * 2, Math.round(m.shortfall / step));
     const a = parts.map((_, i) => (i === 0 ? 5 : menu[(r() * menu.length) | 0]!));
     let sum = a.reduce((x, y) => x + y, 0);
     let i = 1;
@@ -304,7 +304,7 @@ export function initScene(els: SceneElements, initial: SceneOptions): SceneHandl
       i = 1 + (i % (a.length - 1));
     }
     amt = a.map((v) => v * step);
-    repairTotal = total * step;
+    shortfallTotal = total * step;
   };
   setMoney(opts.money);
 
@@ -1076,7 +1076,7 @@ export function initScene(els: SceneElements, initial: SceneOptions): SceneHandl
     if (k === 7) {
       // the participants' chat
       reached = reach.length;
-      reported = repairTotal;
+      reported = shortfallTotal;
       people = parts.length;
       for (const i of reach) setT(i, C.dim, 1);
       parts.forEach((i) => {
@@ -1327,7 +1327,7 @@ export function initScene(els: SceneElements, initial: SceneOptions): SceneHandl
         parts: parts.length,
         rings: [1, 2, 3, 4, 5, 6].map((d) => fromYou.q.filter((i) => dep[i] === d).length),
         links: gEdges.length / 2,
-        repair: repairTotal,
+        shortfall: shortfallTotal,
       },
     };
   }
@@ -1336,7 +1336,7 @@ export function initScene(els: SceneElements, initial: SceneOptions): SceneHandl
     update(next) {
       // a new language: numbers are written again; a new direction moves the subject to the other side (the
       // damped camera follow glides there); a new currency gives the participants new sums
-      if (next.money.repair !== opts.money.repair || next.money.mine !== opts.money.mine) setMoney(next.money);
+      if (next.money.shortfall !== opts.money.shortfall || next.money.mine !== opts.money.mine) setMoney(next.money);
       opts = next;
       lastHud = '';
     },

@@ -3,7 +3,7 @@ id: 20261118-core-message
 title: The core message
 tags: [core, packaging, vocabulary]
 created: 2026-11-18
-updated: 2026-11-18
+updated: 2026-11-19
 related: [20261118-what-so-is, 20261118-principles, 20261118-claims, 20261118-need-protocol, 20261118-latent-connectedness, 20261118-audiences, 20261118-landing-concepts, 20261118-packaging-plan, 20261118-causal-chain, 20261118-direct-cooperation]
 summary: Stage 2 of the packaging plan, accepted by the user — the headline, the one sentence, a short scene, the story in five beats, why join now, a newcomer's questions, proof points, what comes next, what SO is not, one line and one ask per audience, and a five-person test (Russian first, English as its own version).
 ---
@@ -57,19 +57,26 @@ take on a small part of the amount.
 
 ### 3. Сцена / A short scene (illustration)
 
-**RU.** У Марии сломалась машина, а без неё она не доберётся до работы. Ремонт стоит 300 долларов.
+**RU.** Мария потеряла работу, а через неделю платить за квартиру: не хватает 300 долларов.
 Мария сообщает о потребности, и о ней узнают её знакомые, а потом их знакомые. Среди них вы: вы
 знаете Олега, а Олег знает Марию. Вы расспрашиваете Олега, что случилось, и сообщаете, что готовы
-дать 5 долларов. Вечером Лена в чате советует мастерскую подешевле. Через два дня Мария пишет, что
-машина снова на ходу.
+дать 5 долларов. Вечером Лена пишет в чате, что у них в магазине ищут человека. Через две недели
+Мария выходит на новую работу.
 
-**EN.** Maria's car has broken down, and without it she can't get to work. The repair costs $300.
-Maria reports a Need, and the people she knows hear about it, then the people they know. You're one
-of them: you know Oleg, and Oleg knows Maria. You ask Oleg what happened and say you're ready to give
-$5. That evening Lena suggests a cheaper garage in the chat. Two days later Maria writes that the car
-is running again.
+**EN.** Maria has lost her job, and the rent is due in a week. She's $300 short. Maria reports a
+Need, and the people she knows hear about it, then the people they know. You're one of them: you
+know Oleg, and Oleg knows Maria. You ask Oleg what happened and say you're ready to give $5. That
+evening Lena writes in the chat that the shop where she works is hiring. Two weeks later Maria
+starts a new job.
 
-Same names as on the landing and `/how`. Label it as an example wherever it appears.
+Same names as on the landing and `/how` (the English landing calls them Sarah, Tom and Emma; each
+locale has its own three names). Label it as an example wherever it appears. The sum is what Maria
+is short of, not the whole rent, so it stays a modest amount that many people can share; on the
+landing it follows the price level of the reader's country ($100 to $600).
+
+Until 2026-11-19 the scene was a broken-down car. The owner replaced it: a car repair is not an
+emergency; real ones are urgent surgery or losing your job and your means of living. Don't bring
+the car back in new copy.
 
 ### 4. Пять шагов / The story in five beats
 
@@ -217,6 +224,9 @@ insurance, a fund, a pyramid or a donation site.
   network; section 8 was written in Russian first and checked by the editor, who replaced a confident
   future («смогут») with an honest one («мы хотим», «мы рассчитываем») and removed «врач» (medical
   connotation) and «цены для своих» (reads as a trading feature).
+- **The scene replaced** (2026-11-19): the owner rejected the car example (a repair is not an
+  emergency) and chose a job loss. The Russian scene in section 3 is the owner's; the English is
+  written from it. The landing story (all 28 locales) changed with it.
 
 ### 14. What it changes on the live site (stage 3, not now)
 

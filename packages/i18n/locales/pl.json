@@ -726,8 +726,8 @@
         },
         "b4": {
           "label": "2 · Potrzeba",
-          "say": "Joannie zepsuł się samochód, a bez niego nie dojedzie do pracy. Naprawa kosztuje {{repair}}.",
-          "late": "Joanna zgłasza potrzebę i dodaje link do czatu. O potrzebie na kwotę {{repair}} dowie się do {{reach}} osób, zaczynając od najbliższych."
+          "say": "Na przykład Joanna straciła pracę, a za tydzień trzeba zapłacić czynsz. Brakuje jej {{shortfall}}.",
+          "late": "Joanna zgłasza potrzebę i dodaje link do czatu. O potrzebie na kwotę {{shortfall}} dowie się do {{reach}} osób, zaczynając od najbliższych."
         },
         "b5": {
           "label": "3 · Każdy decyduje sam",
@@ -741,7 +741,7 @@
         },
         "b7": {
           "label": "5 · Bezpośrednie ustalenia",
-          "say": "Joanna i uczestnicy omawiają wszystko na czacie. Kasia poleca tańszy warsztat.",
+          "say": "Joanna i uczestnicy omawiają wszystko na czacie. Kasia pisze, że w sklepie, w którym pracuje, szukają kogoś do pracy.",
           "late": "Jeśli chodzi o pieniądze, ludzie przekazują je sobie sami. Aplikacja nie dotyka pieniędzy."
         },
         "b8": {
@@ -767,7 +767,7 @@
         "tags": {
           "you": "Ty",
           "oleg": "Marek",
-          "maria": "Joanna · {{repair}}",
+          "maria": "Joanna · {{shortfall}}",
           "lena": "Kasia"
         },
         "hud": {
@@ -775,7 +775,7 @@
           "reached_few": "osoby dowiedziały się o potrzebie",
           "reached_many": "osób dowiedziało się o potrzebie",
           "reached_other": "osoby dowiedziało się o potrzebie",
-          "reported": "z {{repair}} zgłoszono",
+          "reported": "z {{shortfall}} zgłoszono",
           "people_one": "uczestnik",
           "people_few": "uczestników",
           "people_many": "uczestników",

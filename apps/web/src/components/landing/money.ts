@@ -1,17 +1,18 @@
 /**
- * The sums of the landing story, in dollars as the app counts them. A modest car repair costs very different
- * money from India to Norway, so the repair follows the price level of the reader's country (the region of the
+ * The sums of the landing story, in dollars as the app counts them. The heroine has lost her job and is short of
+ * the rent (part of it, not the whole rent). That gap is very different money from India to Norway, so the
+ * shortfall follows the price level of the reader's country (the region of the
  * browser language; without one, the page language), in whole hundreds so "up to N people" reads the same in
  * every grammar. A Need reaches up to one person per dollar, so the reach is the same number. The smallest share
  * stays $1 and yours $5.
  */
 export interface StoryMoney {
-  repair: number;
+  shortfall: number;
   min: number;
   mine: number;
 }
 
-/** Dollars for a small car repair, by price level. */
+/** Dollars short of a month's rent, by price level. */
 const TIERS: [number, string[]][] = [
   [600, ['CH', 'NO', 'IS', 'DK', 'LU', 'LI', 'MC']],
   [500, ['US', 'CA', 'GB', 'IE', 'DE', 'AT', 'NL', 'BE', 'FR', 'FI', 'SE', 'AU', 'NZ', 'IL', 'SG', 'HK', 'AE', 'QA', 'KW', 'BH']],
@@ -48,8 +49,8 @@ function browserRegion(lang: string): string | null {
 
 export function storyMoney(lang: string): StoryMoney {
   const region = browserRegion(lang);
-  const repair = (region ? BY_REGION.get(region) : undefined) ?? BY_LANGUAGE[lang] ?? 300;
-  return { repair, min: 1, mine: 5 };
+  const shortfall = (region ? BY_REGION.get(region) : undefined) ?? BY_LANGUAGE[lang] ?? 300;
+  return { shortfall, min: 1, mine: 5 };
 }
 
 /** "$500", "500 $": dollars the way the locale writes them, no cents. */
