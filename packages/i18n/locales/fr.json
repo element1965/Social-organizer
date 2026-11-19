@@ -369,6 +369,22 @@
     "unavailableBody": "Connectez-vous à Internet et réessayez. Les personnes enregistrées sur cet appareil restent disponibles.",
     "showSaved": "Afficher les personnes enregistrées"
   },
+  "errors": {
+    "notSaved": "Non enregistré",
+    "offline": "Pas de connexion. Vérifiez Internet et réessayez.",
+    "server": "Un problème est survenu de notre côté. Réessayez dans une minute.",
+    "session": "Votre session a expiré. Reconnectez-vous.",
+    "forbidden": "Ce n’est pas disponible pour votre compte.",
+    "rateLimit": "Trop de tentatives. Attendez une minute et réessayez.",
+    "invalid": "Vérifiez ce que vous avez saisi et réessayez.",
+    "linkTooLong": "Le lien est trop long : {{max}} caractères au maximum.",
+    "changed": "Les données ont changé. Actualisez la page et réessayez.",
+    "loadFailed": "Chargement impossible",
+    "needGoneTitle": "Ce besoin est introuvable",
+    "needGoneBody": "Il a peut-être été supprimé, ou le lien est erroné.",
+    "pageGoneTitle": "Cette page n’existe pas",
+    "pageGoneBody": "L’adresse contient peut-être une faute ou n’est plus à jour."
+  },
   "collection": {
     "close": "Fermer le besoin",
     "saveAmount": "Enregistrer",

@@ -24,7 +24,8 @@ import { countForm } from '../components/profile/collections';
 import { useNeedCounts } from '../components/profile/useNeedCounts';
 import { ACCOUNT_NOTICE_KEY, publicHost } from '../components/profile/constants';
 import { formatLongDate } from '../components/profile/dates';
-import { applyFontScale } from '../components/profile/fontScale';
+import { applyFontScale, storedFontScale } from '../components/profile/fontScale';
+import { hasPendingSetting, saveDisplaySetting } from '../lib/pendingSettings';
 import { kyivDayCount } from '../components/admin/adminDay';
 
 function networkKey(count: number, lang: string): 'profile.networkOne' | 'profile.networkFew' | 'profile.networkMany' {
@@ -58,21 +59,22 @@ export function ProfilePage() {
   const isAdmin = admin.data?.isAdmin === true;
   const conversations = trpc.support.listConversations.useQuery(undefined, { enabled: isAdmin });
 
-  const updateTheme = trpc.settings.updateTheme.useMutation({ onSuccess: () => utils.settings.get.invalidate() });
-  const updateSound = trpc.settings.updateSound.useMutation({ onSuccess: () => utils.settings.get.invalidate() });
-  const updateFont = trpc.settings.updateFontScale.useMutation({ onSuccess: () => utils.settings.get.invalidate() });
-  const updateReminder = trpc.settings.updateNotifyRenewalReminder.useMutation({
-    onSuccess: () => utils.settings.get.invalidate(),
-  });
-  const updateStart = trpc.settings.updateNotifyRenewalStart.useMutation({
-    onSuccess: () => utils.settings.get.invalidate(),
-  });
-  const updateChannel = trpc.settings.updateNotifyChannel.useMutation({
-    onSuccess: () => utils.settings.get.invalidate(),
-  });
-  const updateNewCollections = trpc.settings.updateNotifyNewCollections.useMutation({
-    onSuccess: () => utils.settings.get.invalidate(),
-  });
+  const userId = useAuth((state) => state.userId);
+  const refreshSettings = () => void utils.settings.get.invalidate();
+
+  // Theme and larger text are display preferences of this device: they apply at once and stay applied when the
+  // account copy cannot be saved (they must work during an outage). The save is quiet and serialised, and the
+  // latest choice wins (lib/pendingSettings.ts saveDisplaySetting, called below). No "Not saved".
+  // Server-backed switches show the server's value, so after a failure they are where they really are; the
+  // failure is told by the app-level notice. Callbacks live on the mutation (not on each call), so they run
+  // even if this screen is gone by the time the answer comes.
+  const updateSound = trpc.settings.updateSound.useMutation({ onSettled: refreshSettings });
+  // One tap, one write: both cycle notices change together (settings.updateNotifyCycles)
+  const updateCycles = trpc.settings.updateNotifyCycles.useMutation({ onSettled: refreshSettings });
+  const updateChannel = trpc.settings.updateNotifyChannel.useMutation({ onSettled: refreshSettings });
+  const updateNewCollections = trpc.settings.updateNotifyNewCollections.useMutation({ onSettled: refreshSettings });
+  // The text size in use on this device (it may differ from the account copy while a save is pending)
+  const [fontScale, setFontScale] = useState<number | null>(() => storedFontScale());
 
   const [notesOpen, setNotesOpen] = useState(false);
   const [languageOpen, setLanguageOpen] = useState(false);
@@ -81,9 +83,12 @@ export function ProfilePage() {
   const [logoutOpen, setLogoutOpen] = useState(false);
   const [autosaveNote, setAutosaveNote] = useState(false);
 
+  // The account copy sets the size on a new device, but never over a change of this device still waiting to be saved
   useEffect(() => {
-    if (settings.data) applyFontScale(settings.data.fontScale);
-  }, [settings.data]);
+    if (!settings.data || hasPendingSetting(userId, 'fontScale')) return;
+    applyFontScale(settings.data.fontScale);
+    setFontScale(settings.data.fontScale);
+  }, [settings.data, userId]);
 
   useEffect(() => {
     try {
@@ -144,13 +149,10 @@ export function ProfilePage() {
 
   const chooseTheme = (next: ThemeChoice) => {
     setMode(next);
-    updateTheme.mutate({ theme: themeToApi(next) });
+    saveDisplaySetting(utils.client, userId, 'theme', themeToApi(next), refreshSettings);
   };
 
-  const setCycles = (enabled: boolean) => {
-    updateReminder.mutate({ enabled });
-    updateStart.mutate({ enabled });
-  };
+  const setCycles = (enabled: boolean) => updateCycles.mutate({ enabled });
 
   const signOut = () => {
     logout();
@@ -272,11 +274,12 @@ export function ProfilePage() {
         <Row
           title={t('profile.largeType')}
           variant="toggle"
-          checked={prefs.fontScale >= 1.1}
+          checked={(fontScale ?? prefs.fontScale) >= 1.1}
           onCheckedChange={(enabled) => {
             const scale = enabled ? 1.25 : 1;
             applyFontScale(scale);
-            updateFont.mutate({ fontScale: scale });
+            setFontScale(scale);
+            saveDisplaySetting(utils.client, userId, 'fontScale', scale, refreshSettings);
           }}
         />
         <Row title={t('settings.language')} variant="value" value={languageLabel} onClick={() => setLanguageOpen(true)} />

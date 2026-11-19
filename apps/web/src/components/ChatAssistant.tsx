@@ -35,8 +35,8 @@ export function ChatAssistant() {
   const updateVoice = trpc.settings.updateVoiceGender.useMutation({
     onSuccess: () => { void utils.settings.get.invalidate(); },
   });
-  const chatMutation = trpc.chat.send.useMutation();
-  const speakMutation = trpc.chat.speak.useMutation();
+  const chatMutation = trpc.chat.send.useMutation({ meta: { notifyOnError: false } });
+  const speakMutation = trpc.chat.speak.useMutation({ meta: { notifyOnError: false } });
 
   // Scroll to bottom when messages change
   useEffect(() => {

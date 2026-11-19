@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { languageNames, type SupportedLanguage } from '@so/i18n/languages';
 import { useAuth } from '../../hooks/useAuth';
 import { trpc } from '../../lib/trpc';
+import { pendingSettingValue, saveDisplaySetting } from '../../lib/pendingSettings';
 import { cn } from '../../lib/utils';
 import { Sheet } from '../ui2/Sheet';
 
@@ -22,10 +23,13 @@ export function useCurrentLanguage(): SupportedLanguage {
 export function LanguageSheet({ open, onClose }: { open: boolean; onClose: () => void }) {
   const { t, i18n } = useTranslation();
   const isAuthenticated = useAuth((s) => s.isAuthenticated);
+  const userId = useAuth((s) => s.userId);
   const utils = trpc.useUtils();
-  const updateLanguage = trpc.settings.updateLanguage.useMutation({
-    onSuccess: () => utils.settings.get.invalidate(),
-  });
+  // The language is a display preference of this device: it switches at once and stays when the account copy
+  // cannot be saved. That save is quiet and serialised (lib/pendingSettings.ts); a failed one is sent again on
+  // the next start or the next pick (the same language included).
+  const saveLanguage = (code: SupportedLanguage) =>
+    saveDisplaySetting(utils.client, userId, 'language', code, () => void utils.settings.get.invalidate());
   const current = useCurrentLanguage();
   const listRef = useRef<HTMLDivElement>(null);
 
@@ -40,14 +44,18 @@ export function LanguageSheet({ open, onClose }: { open: boolean; onClose: () =>
 
   const pick = (code: SupportedLanguage) => {
     onClose();
-    if (code === current) return;
+    if (code === current) {
+      // Picking the language in use again retries a save of it that failed earlier
+      if (isAuthenticated && pendingSettingValue(userId, 'language') === code) saveLanguage(code);
+      return;
+    }
     void i18n.changeLanguage(code);
     try {
       localStorage.setItem('language', code);
     } catch {
       /* storage unavailable */
     }
-    if (isAuthenticated) updateLanguage.mutate({ language: code });
+    if (isAuthenticated) saveLanguage(code);
   };
 
   return (

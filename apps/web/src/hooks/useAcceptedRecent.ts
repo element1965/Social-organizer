@@ -16,13 +16,20 @@ export function useAcceptedRecent() {
   const userId = useAuth((s) => s.userId);
   const utils = trpc.useUtils();
   const query = trpc.pending.acceptedRecent.useQuery(undefined, { enabled: !!userId });
-  const markSeenMutation = trpc.pending.markAcceptedSeen.useMutation();
-  const dismissMutation = trpc.pending.dismissAccepted.useMutation({
-    onSettled: () => void utils.pending.acceptedRecent.invalidate(),
-  });
+  const markSeenMutation = trpc.pending.markAcceptedSeen.useMutation({ meta: { notifyOnError: false } });
   // Local copies so the badge and the row react at once, before the server answers
   const [seenHere, setSeenHere] = useState<ReadonlySet<string>>(() => new Set());
   const [dismissedHere, setDismissedHere] = useState<ReadonlySet<string>>(() => new Set());
+  // Mutation-level, so it runs even when the row's screen is gone by then: a failed dismiss brings the row back
+  const dismissMutation = trpc.pending.dismissAccepted.useMutation({
+    onError: (_error, input) =>
+      setDismissedHere((prev) => {
+        const next = new Set(prev);
+        next.delete(input.id);
+        return next;
+      }),
+    onSettled: () => void utils.pending.acceptedRecent.invalidate(),
+  });
   const sent = useRef(new Set<string>());
 
   const items = useMemo<AcceptedItem[]>(

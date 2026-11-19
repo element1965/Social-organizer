@@ -101,6 +101,7 @@ export function ComplainEntry({ collectionId }: { collectionId: string }) {
     { enabled: collectionId.length > 0, retry: false, refetchOnWindowFocus: false },
   );
   const complain = trpc.moderation.complain.useMutation({
+    meta: { notifyOnError: false },
     onSuccess: async () => {
       setOpen(false);
       await Promise.all([

@@ -15,7 +15,7 @@ import { DeleteAccountSheet } from '../components/onboarding/AccountSheets';
 import { Avatar } from '../components/ui2/Avatar';
 import { QueryState } from '../components/profile/QueryState';
 import { ACCOUNT_NOTICE_KEY, publicHost } from '../components/profile/constants';
-import { trpcCode } from '../components/profile/errors';
+import { actionErrorKey, errorCode, errorKind, raiseActionError } from '../lib/errors';
 import { useSmartBack } from '../components/profile/useSmartBack';
 
 const FIXED_TYPES = new Set(['email', 'telegram']);
@@ -59,14 +59,14 @@ export function AccountPage() {
   const me = trpc.user.me.useQuery();
   const settings = trpc.settings.get.useQuery();
   const contacts = trpc.user.getContacts.useQuery({});
-  const updateUser = trpc.user.update.useMutation();
-  const updateSlug = trpc.user.updateReferralSlug.useMutation();
-  const updateContacts = trpc.user.updateContacts.useMutation();
+  const updateUser = trpc.user.update.useMutation({ meta: { notifyOnError: false } });
+  const updateSlug = trpc.user.updateReferralSlug.useMutation({ meta: { notifyOnError: false } });
+  const updateContacts = trpc.user.updateContacts.useMutation({ meta: { notifyOnError: false } });
   const showEmail = trpc.user.updateContacts.useMutation();
   const updateHide = trpc.settings.updateHideContacts.useMutation({
     onSuccess: () => utils.settings.get.invalidate(),
   });
-  const deleteAccount = trpc.user.delete.useMutation();
+  const deleteAccount = trpc.user.delete.useMutation({ meta: { notifyOnError: false } });
   const { connect, isPending: connectPending } = useConnectTelegram();
 
   const [ready, setReady] = useState(false);
@@ -187,8 +187,8 @@ export function AccountPage() {
         ]);
         return true;
       } catch (error) {
-        if (trpcCode(error) === 'CONFLICT') setSlugError(t('account.slugTaken'));
-        else setFormError(t('common.error'));
+        if (errorCode(error) === 'CONFLICT') setSlugError(t('account.slugTaken'));
+        else setFormError(t(actionErrorKey(errorKind(error))));
         return false;
       }
     }
@@ -247,7 +247,9 @@ export function AccountPage() {
         utils.user.getContacts.invalidate(),
       ]);
       return !dropped;
-    } catch {
+    } catch (error) {
+      // The save on the way out failed after the person left: tell them once, on the screen they are on now
+      raiseActionError(error);
       return false;
     }
   };

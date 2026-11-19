@@ -366,6 +366,22 @@
     "unavailableBody": "Connect to the internet and try again. The people saved on this device are still available.",
     "showSaved": "Show saved people"
   },
+  "errors": {
+    "notSaved": "Not saved",
+    "offline": "No connection. Check the internet and try again.",
+    "server": "Something went wrong on our side. Try again in a minute.",
+    "session": "Your session has ended. Sign in again.",
+    "forbidden": "This is not available to your account.",
+    "rateLimit": "Too many attempts. Wait a minute and try again.",
+    "invalid": "Check what you entered and try again.",
+    "linkTooLong": "The link is too long: at most {{max}} characters.",
+    "changed": "The data has changed. Refresh the page and try again.",
+    "loadFailed": "Could not load",
+    "needGoneTitle": "This Need is not here",
+    "needGoneBody": "It may have been removed, or the link is wrong.",
+    "pageGoneTitle": "There is no such page",
+    "pageGoneBody": "The address may be mistyped or out of date."
+  },
   "collection": {
     "close": "Close Need",
     "saveAmount": "Save",

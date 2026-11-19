@@ -366,6 +366,22 @@
     "unavailableBody": "İnternete bağlanıp tekrar deneyin. Bu cihazda kayıtlı kişiler kullanılabilir durumda.",
     "showSaved": "Kayıtlı kişileri göster"
   },
+  "errors": {
+    "notSaved": "Kaydedilmedi",
+    "offline": "Bağlantı yok. İnterneti kontrol edip yeniden deneyin.",
+    "server": "Bizim tarafta bir sorun oldu. Bir dakika sonra yeniden deneyin.",
+    "session": "Oturumunuz sona erdi. Yeniden giriş yapın.",
+    "forbidden": "Bu, hesabınız için kullanılamıyor.",
+    "rateLimit": "Çok fazla deneme. Bir dakika bekleyip yeniden deneyin.",
+    "invalid": "Girdiklerinizi kontrol edip yeniden deneyin.",
+    "linkTooLong": "Bağlantı çok uzun: en fazla {{max}} karakter.",
+    "changed": "Veriler değişti. Sayfayı yenileyip yeniden deneyin.",
+    "loadFailed": "Yüklenemedi",
+    "needGoneTitle": "Bu ihtiyaç bulunamadı",
+    "needGoneBody": "Kaldırılmış olabilir ya da bağlantı hatalı.",
+    "pageGoneTitle": "Böyle bir sayfa yok",
+    "pageGoneBody": "Adres yanlış yazılmış ya da eskimiş olabilir."
+  },
   "collection": {
     "close": "İhtiyacı kapat",
     "saveAmount": "Kaydet",

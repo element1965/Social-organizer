@@ -1,6 +1,8 @@
 export const MAX_CONNECTIONS = 150;
 export const MIN_OBLIGATION_AMOUNT = 1;
 export const MIN_COLLECTION_AMOUNT = 10;
+/** Longest chat link a Need may carry (the server's schema and the app's field check both read this). */
+export const MAX_CHAT_LINK_LENGTH = 500;
 export const NOTIFICATION_TTL_HOURS = 24;
 export const RE_NOTIFY_INTERVAL_HOURS = 12;
 export const REGULAR_CYCLE_DAYS = 28;

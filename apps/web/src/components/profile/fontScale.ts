@@ -13,6 +13,16 @@ export function applyFontScale(scale: number) {
   }
 }
 
+/** The scale remembered on this device, or null. */
+export function storedFontScale(): number | null {
+  try {
+    const scale = Number(localStorage.getItem(STORAGE_KEY));
+    return Number.isFinite(scale) && scale > 0 ? scale : null;
+  } catch {
+    return null;
+  }
+}
+
 export function applyStoredFontScale() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);

@@ -1,7 +1,7 @@
 import { lazy, Suspense, useEffect, useRef, useState, type ComponentType } from 'react';
 import { BrowserRouter, Navigate, Outlet, Route, Routes, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { MutationCache, QueryCache, QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { App as CapApp } from '@capacitor/app';
 import { Browser } from '@capacitor/browser';
 import { Capacitor } from '@capacitor/core';
@@ -19,6 +19,9 @@ import { LandingPage } from './pages/LandingPage';
 import { GetRedirect, RedirectHome, SlugRedirect } from './components/site/redirects';
 import { HomeGate, OfflineRouteBoundary, PeopleGate, PersonGate } from './components/offline/gates';
 import { onRecovery } from './lib/connectivity';
+import { currentNavigation, errorCode, isAborted, raiseActionError, wantsNotice } from './lib/errors';
+import { ActionErrorHost } from './components/errors/ActionErrorHost';
+import { NotFoundPage } from './pages/NotFoundPage';
 
 /** Named-export pages, each its own chunk. The guest landing stays in the entry chunk. */
 function lazyPage<M, K extends keyof M>(load: () => Promise<M>, name: K) {
@@ -296,8 +299,53 @@ function ShellGate() {
   );
 }
 
-export function App() {
-  const [queryClient] = useState(() => new QueryClient({
+/** The session check ProtectedRoute runs ([['user','me']] in tRPC's query-key shape). */
+const ME_KEY = [['user', 'me']];
+
+/**
+ * A request was refused because the session ended. An UNAUTHORIZED result only gets this far when the
+ * renewal in lib/trpc.ts (sessionLink, one renewal for all callers) was itself refused; a renewal that failed
+ * for want of a connection arrives as a network error instead and keeps the session. Let the existing session
+ * path decide: refetching `user.me` makes ProtectedRoute see the 401 and send the person to sign in again,
+ * back to the same screen afterwards. One check at a time: a refetch already running is joined, not restarted.
+ */
+function recheckSession(client: QueryClient, error: unknown) {
+  if (errorCode(error) !== 'UNAUTHORIZED') return;
+  void client.invalidateQueries({ queryKey: ME_KEY }, { cancelRefetch: false });
+}
+
+/** The navigation each running mutation started on, so a failure that arrives after the person navigated is not shown. */
+const mutationOrigin = new WeakMap<object, number>();
+
+function isMeQuery(key: readonly unknown[]): boolean {
+  const path = key[0];
+  return Array.isArray(path) && path.join('.') === 'user.me';
+}
+
+function createQueryClient(): QueryClient {
+  const client: QueryClient = new QueryClient({
+    queryCache: new QueryCache({
+      // user.me itself is ProtectedRoute's own signal
+      onError: (error, query) => {
+        if (!isMeQuery(query.queryKey)) recheckSession(client, error);
+      },
+    }),
+    // The safety net for actions: every failed mutation says "Not saved" at the top of the screen, unless its
+    // call site tells the person itself (meta.notifyOnError, lib/errors.ts). A cancelled request is never told.
+    // Nothing is refetched here: the message asks the person to refresh, and a call site that knows which data
+    // went stale refetches exactly that (the Need page does).
+    mutationCache: new MutationCache({
+      onMutate: (_variables, mutation) => {
+        mutationOrigin.set(mutation, currentNavigation());
+      },
+      onError: (error, _variables, _context, mutation) => {
+        if (isAborted(error)) return;
+        recheckSession(client, error);
+        if (!wantsNotice(mutation.meta, error)) return;
+        // The screen it was started on is gone: the failure belongs to that screen, not to this one
+        raiseActionError(error, mutationOrigin.get(mutation));
+      },
+    }),
     // networkMode 'always': a request without a network fails at once and says so (the offline screens react to it)
     // instead of waiting paused; a mutation then fails visibly rather than firing later on its own.
     defaultOptions: {
@@ -310,7 +358,12 @@ export function App() {
       },
       mutations: { networkMode: 'always' },
     },
-  }));
+  });
+  return client;
+}
+
+export function App() {
+  const [queryClient] = useState(createQueryClient);
   const [trpcClient] = useState(() => getTrpcClient());
 
   // Another account signed in, signed out, or a session switched in another tab: nothing the previous account
@@ -410,10 +463,13 @@ export function App() {
                 <Route path="/person/:id" element={<PersonGate><PersonPage /></PersonGate>} />
                 <Route path="/collection/:id" element={<CollectionPage />} />
                 <Route path="/support" element={<SupportChatPage />} />
-                <Route path="*" element={<Navigate to="/" replace />} />
               </Route>
             </Route>
+
+            {/* An address the app does not know: say so (in the shell when signed in) instead of a silent redirect */}
+            <Route path="*" element={<NotFoundPage />} />
           </Routes>
+          <ActionErrorHost />
           </TelegramBootstrap>
         </BrowserRouter>
       </QueryClientProvider>

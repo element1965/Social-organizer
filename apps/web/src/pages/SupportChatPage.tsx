@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FileText, Loader2, Paperclip, Send, Volume2, X } from 'lucide-react';
-import { trpc, authFetch } from '../lib/trpc';
+import { trpc, accountFetch, currentAccount } from '../lib/trpc';
 import { Avatar } from '../components/ui2/Avatar';
 import { Button } from '../components/ui2/Button';
 import { PersonRow } from '../components/ui2/PersonRow';
@@ -127,14 +127,14 @@ export function SupportChatPage() {
   const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
+    // The account of the admin who picked the file: the upload is dropped quietly if another one signs in meanwhile
+    const account = currentAccount();
     setUploading(true);
     try {
-      const token = localStorage.getItem('accessToken');
       const formData = new FormData();
       formData.append('file', file);
-      const res = await authFetch('/api/broadcast/upload', {
+      const res = await accountFetch(account, '/api/broadcast/upload', {
         method: 'POST',
-        headers: { Authorization: `Bearer ${token}` },
         body: formData,
       });
       if (!res.ok) return;

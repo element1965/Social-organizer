@@ -369,6 +369,22 @@
     "unavailableBody": "Collegati a internet e riprova. Le persone salvate su questo dispositivo restano disponibili.",
     "showSaved": "Mostra le persone salvate"
   },
+  "errors": {
+    "notSaved": "Non salvato",
+    "offline": "Nessuna connessione. Controlla internet e riprova.",
+    "server": "Qualcosa è andato storto da parte nostra. Riprova tra un minuto.",
+    "session": "La sessione è scaduta. Accedi di nuovo.",
+    "forbidden": "Non è disponibile per il tuo account.",
+    "rateLimit": "Troppi tentativi. Aspetta un minuto e riprova.",
+    "invalid": "Controlla quello che hai inserito e riprova.",
+    "linkTooLong": "Il link è troppo lungo: al massimo {{max}} caratteri.",
+    "changed": "I dati sono cambiati. Ricarica la pagina e riprova.",
+    "loadFailed": "Impossibile caricare",
+    "needGoneTitle": "Bisogno non trovato",
+    "needGoneBody": "Forse è stato rimosso, oppure il link è sbagliato.",
+    "pageGoneTitle": "Questa pagina non esiste",
+    "pageGoneBody": "Forse l’indirizzo contiene un errore o non è più valido."
+  },
   "collection": {
     "close": "Chiudi il bisogno",
     "saveAmount": "Salva",

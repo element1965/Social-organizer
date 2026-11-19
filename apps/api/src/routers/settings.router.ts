@@ -33,37 +33,37 @@ export const settingsRouter = router({
   updateLanguage: protectedProcedure
     .input(z.object({ language: z.string().min(2).max(5) }))
     .mutation(async ({ ctx, input }) => {
-      return ctx.db.user.update({ where: { id: ctx.userId }, data: { language: input.language } });
+      return ctx.db.user.update({ where: { id: ctx.userId }, data: { language: input.language }, select: { language: true } });
     }),
 
   updateTheme: protectedProcedure
     .input(z.object({ theme: z.enum(['LIGHT', 'DARK', 'SYSTEM']) }))
     .mutation(async ({ ctx, input }) => {
-      return ctx.db.user.update({ where: { id: ctx.userId }, data: { theme: input.theme } });
+      return ctx.db.user.update({ where: { id: ctx.userId }, data: { theme: input.theme }, select: { theme: true } });
     }),
 
   updateSound: protectedProcedure
     .input(z.object({ soundEnabled: z.boolean() }))
     .mutation(async ({ ctx, input }) => {
-      return ctx.db.user.update({ where: { id: ctx.userId }, data: { soundEnabled: input.soundEnabled } });
+      return ctx.db.user.update({ where: { id: ctx.userId }, data: { soundEnabled: input.soundEnabled }, select: { soundEnabled: true } });
     }),
 
   updateVoiceGender: protectedProcedure
     .input(z.object({ voiceGender: z.enum(['MALE', 'FEMALE']) }))
     .mutation(async ({ ctx, input }) => {
-      return ctx.db.user.update({ where: { id: ctx.userId }, data: { voiceGender: input.voiceGender } });
+      return ctx.db.user.update({ where: { id: ctx.userId }, data: { voiceGender: input.voiceGender }, select: { voiceGender: true } });
     }),
 
   updateFontScale: protectedProcedure
     .input(z.object({ fontScale: z.number().min(0.5).max(2.0) }))
     .mutation(async ({ ctx, input }) => {
-      return ctx.db.user.update({ where: { id: ctx.userId }, data: { fontScale: input.fontScale } });
+      return ctx.db.user.update({ where: { id: ctx.userId }, data: { fontScale: input.fontScale }, select: { fontScale: true } });
     }),
 
   updateHideContacts: protectedProcedure
     .input(z.object({ hideContacts: z.boolean() }))
     .mutation(async ({ ctx, input }) => {
-      return ctx.db.user.update({ where: { id: ctx.userId }, data: { hideContacts: input.hideContacts } });
+      return ctx.db.user.update({ where: { id: ctx.userId }, data: { hideContacts: input.hideContacts }, select: { hideContacts: true } });
     }),
 
   updateNotifyRenewalReminder: protectedProcedure
@@ -72,6 +72,18 @@ export const settingsRouter = router({
       return ctx.db.user.update({
         where: { id: ctx.userId },
         data: { notifyRenewalReminder: input.enabled },
+        select: { notifyRenewalReminder: true },
+      });
+    }),
+
+  /** Both cycle notices (the reminder and the start) in one write: the app shows them as one switch */
+  updateNotifyCycles: protectedProcedure
+    .input(z.object({ enabled: z.boolean() }))
+    .mutation(async ({ ctx, input }) => {
+      return ctx.db.user.update({
+        where: { id: ctx.userId },
+        data: { notifyRenewalReminder: input.enabled, notifyRenewalStart: input.enabled },
+        select: { notifyRenewalReminder: true, notifyRenewalStart: true },
       });
     }),
 
@@ -81,6 +93,7 @@ export const settingsRouter = router({
       return ctx.db.user.update({
         where: { id: ctx.userId },
         data: { notifyRenewalStart: input.enabled },
+        select: { notifyRenewalStart: true },
       });
     }),
 
@@ -122,6 +135,8 @@ export const settingsRouter = router({
           latitude: input.latitude ?? undefined,
           longitude: input.longitude ?? undefined,
         },
+        // The city and country only: exact coordinates never go back to the client (SO-14)
+        select: { city: true, countryCode: true },
       });
     }),
 

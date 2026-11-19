@@ -27,7 +27,7 @@ export function IntroPage() {
   const [params] = useSearchParams();
   const next = safePath(params.get('next'));
   const me = trpc.user.me.useQuery();
-  const complete = trpc.user.completeOnboarding.useMutation();
+  const complete = trpc.user.completeOnboarding.useMutation({ meta: { notifyOnError: false } });
   const [step, setStep] = useState<NetStep>(0);
   const touchX = useRef<number | null>(null);
   // First run comes from the sign-in path, not from user.me (new accounts are created already "onboarded").

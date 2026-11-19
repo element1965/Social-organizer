@@ -7,10 +7,20 @@ import { touchUser } from './services/activity.service.js';
 const t = initTRPC.context<Context>().create({
   // Additive error data, so older clients keep working: ACCOUNT_EXISTS_OTHER_METHOD carries the masked e-mail
   // of the existing account ("an•••@gmail.com") for the account-linking screen. Never the full address.
+  // An input that fails the procedure's schema (BAD_REQUEST caused by a ZodError) carries `invalidFields`: the
+  // top-level input fields at fault ("chatLink"), so the client can say which field to check instead of
+  // treating it as a refusal of the current state. Field names only, never values or messages.
   errorFormatter({ shape, error }) {
     const cause = error.cause as { maskedEmail?: unknown } | undefined;
     const maskedEmail = typeof cause?.maskedEmail === 'string' ? cause.maskedEmail : undefined;
-    return maskedEmail ? { ...shape, data: { ...shape.data, maskedEmail } } : shape;
+    const invalidFields = error.code === 'BAD_REQUEST' && error.cause instanceof z.ZodError
+      ? [...new Set(error.cause.issues.map((issue) => String(issue.path[0] ?? '')).filter(Boolean))]
+      : undefined;
+    if (!maskedEmail && !invalidFields) return shape;
+    return {
+      ...shape,
+      data: { ...shape.data, ...(maskedEmail ? { maskedEmail } : {}), ...(invalidFields ? { invalidFields } : {}) },
+    };
   },
 });
 

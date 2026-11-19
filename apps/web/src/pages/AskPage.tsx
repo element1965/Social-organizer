@@ -1,9 +1,9 @@
 import { useRef, useState, type FormEvent } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { LARGE_AMOUNT_WARNING, MIN_COLLECTION_AMOUNT } from '@so/shared';
+import { LARGE_AMOUNT_WARNING, MAX_CHAT_LINK_LENGTH, MIN_COLLECTION_AMOUNT } from '@so/shared';
 import { IconChevron } from '../components/ui2/icons';
-import { amountIssue, formatCount, isHttpsUrl, parseWhole } from '../components/collection/text';
+import { amountIssue, chatLinkIssue, formatCount, parseWhole } from '../components/collection/text';
 import { Button } from '../components/ui2/Button';
 import { Input } from '../components/ui2/Input';
 import { Meter } from '../components/ui2/Meter';
@@ -14,6 +14,7 @@ import { useShellMode } from '../components/ui2/shell-mode';
 import { formatMoney } from '../components/ui2/format';
 import { Card } from '../components/ui2/Card';
 import { trpc } from '../lib/trpc';
+import { actionErrorKey, errorKind, invalidFields } from '../lib/errors';
 import { useNetworkFigure } from '../hooks/useNetworkFigure';
 import { useAskAccess } from '../hooks/useAskAccess';
 import { isAccountChanged } from '../hooks/accountScope';
@@ -74,6 +75,7 @@ function AskBody() {
   const { figure } = useNetworkFigure();
   const mine = trpc.collection.myActive.useQuery(undefined, { enabled: access.data?.allowed === true });
   const create = trpc.collection.create.useMutation({
+    meta: { notifyOnError: false },
     onSuccess: (created) => {
       utils.collection.myActive.invalidate();
       navigate('/', { state: { collectionId: created.id } });
@@ -127,8 +129,10 @@ function AskBody() {
     const issue = amountIssue(amount, MIN_COLLECTION_AMOUNT);
     if (issue === 'whole') next.amount = t('ask.whole');
     else if (issue) next.amount = t('ask.minAmount');
-    if (!chat.trim()) next.chat = t('ask.chatError');
-    else if (!isHttpsUrl(chat)) next.chat = t('ask.chatInvalid');
+    const chatIssue = chatLinkIssue(chat);
+    if (chatIssue === 'empty') next.chat = t('ask.chatError');
+    else if (chatIssue === 'tooLong') next.chat = t('errors.linkTooLong', { max: MAX_CHAT_LINK_LENGTH });
+    else if (chatIssue) next.chat = t('ask.chatInvalid');
     return next;
   };
 
@@ -143,8 +147,8 @@ function AskBody() {
           const message = error.message;
           if (message.includes('ASK_LOCKED')) setErrors({ form: t('ask.serverLocked') });
           else if (message.includes('already have an active')) setErrors({ form: t('ask.alreadyOpen') });
-          else if (message.includes('https://')) setErrors({ chat: t('ask.chatInvalid') });
-          else setErrors({ form: t('common.error') });
+          else if (message.includes('https://') || invalidFields(error)?.includes('chatLink')) setErrors({ chat: t('ask.chatInvalid') });
+          else setErrors({ form: t(actionErrorKey(errorKind(error))) });
         },
       },
     );

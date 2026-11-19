@@ -369,6 +369,22 @@
     "unavailableBody": "Conectează-te la internet și încearcă din nou. Persoanele salvate pe acest dispozitiv rămân disponibile.",
     "showSaved": "Arată persoanele salvate"
   },
+  "errors": {
+    "notSaved": "Nu s-a salvat",
+    "offline": "Fără conexiune. Verifică internetul și încearcă din nou.",
+    "server": "Ceva n-a mers la noi. Încearcă din nou peste un minut.",
+    "session": "Sesiunea a expirat. Conectează-te din nou.",
+    "forbidden": "Asta nu e disponibil pentru contul tău.",
+    "rateLimit": "Prea multe încercări. Așteaptă un minut și încearcă din nou.",
+    "invalid": "Verifică ce ai introdus și încearcă din nou.",
+    "linkTooLong": "Linkul e prea lung: cel mult {{max}} de caractere.",
+    "changed": "Datele s-au schimbat. Reîncarcă pagina și încearcă din nou.",
+    "loadFailed": "Nu s-a putut încărca",
+    "needGoneTitle": "Nevoia nu a fost găsită",
+    "needGoneBody": "Poate a fost ștearsă sau linkul e greșit.",
+    "pageGoneTitle": "Pagina nu există",
+    "pageGoneBody": "Poate adresa are o greșeală sau nu mai e valabilă."
+  },
   "collection": {
     "close": "Închide nevoia",
     "saveAmount": "Salvează",

@@ -366,6 +366,22 @@
     "unavailableBody": "Yhdistä internetiin ja yritä uudelleen. Tälle laitteelle tallennetut ihmiset ovat edelleen käytettävissä.",
     "showSaved": "Näytä tallennetut ihmiset"
   },
+  "errors": {
+    "notSaved": "Ei tallennettu",
+    "offline": "Ei yhteyttä. Tarkista internetyhteys ja yritä uudelleen.",
+    "server": "Meillä meni jotain vikaan. Yritä uudelleen minuutin päästä.",
+    "session": "Istuntosi on päättynyt. Kirjaudu uudelleen.",
+    "forbidden": "Tämä ei ole tilisi käytettävissä.",
+    "rateLimit": "Liian monta yritystä. Odota minuutti ja yritä uudelleen.",
+    "invalid": "Tarkista, mitä kirjoitit, ja yritä uudelleen.",
+    "linkTooLong": "Linkki on liian pitkä: enintään {{max}} merkkiä.",
+    "changed": "Tiedot ovat muuttuneet. Päivitä sivu ja yritä uudelleen.",
+    "loadFailed": "Lataus ei onnistunut",
+    "needGoneTitle": "Tätä tarvetta ei löydy",
+    "needGoneBody": "Se on ehkä poistettu, tai linkissä on virhe.",
+    "pageGoneTitle": "Tällaista sivua ei ole",
+    "pageGoneBody": "Osoitteessa voi olla kirjoitusvirhe, tai se on vanhentunut."
+  },
   "collection": {
     "close": "Sulje tarve",
     "saveAmount": "Tallenna",

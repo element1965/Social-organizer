@@ -99,6 +99,21 @@ function tokenSubject(token: string): string | null {
 }
 
 /**
+ * The account of the session stored on this device right now ('' signed out): the subject of the stored access
+ * token, which is what a request will actually carry, else the stored `userId`. The one answer to "which account
+ * is this" for request binding (lib/trpc.ts), per-account preference saves (lib/pendingSettings.ts) and the
+ * native push token (lib/nativePush.ts); this tab's store follows the same storage through syncAuthFromStorage.
+ */
+export function storedAccount(): string {
+  try {
+    const token = localStorage.getItem('accessToken');
+    return (token ? tokenSubject(token) : null) ?? localStorage.getItem('userId') ?? '';
+  } catch {
+    return '';
+  }
+}
+
+/**
  * Brings this tab's store in line with the session stored on the device, which another tab may have changed
  * (signed out, or signed in as someone else). Account-scoped queries re-key on the new `userId` at once.
  * The three keys are written one by one, so a half-written session (one account's token with another's id) is

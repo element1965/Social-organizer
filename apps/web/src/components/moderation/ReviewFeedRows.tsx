@@ -118,6 +118,7 @@ export function ReviewFeedRows() {
   // Kept fresh by the app-wide pulse (hooks/usePulse.ts)
   const reviews = trpc.moderation.myOpenReviews.useQuery(undefined, { retry: false });
   const vote = trpc.moderation.vote.useMutation({
+    meta: { notifyOnError: false },
     onSuccess: async () => {
       await Promise.all([
         utils.moderation.myOpenReviews.invalidate(),

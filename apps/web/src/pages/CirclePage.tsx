@@ -3,6 +3,7 @@ import { Link, useLocation, useNavigate, useSearchParams } from 'react-router-do
 import { useTranslation } from 'react-i18next';
 import { hideBackButton, isTelegramWebApp, showBackButton } from '@so/tg-adapter';
 import { trpc } from '../lib/trpc';
+import { currentNavigation, raiseActionError } from '../lib/errors';
 import { cn } from '../lib/utils';
 import { useNetworkFigure } from '../hooks/useNetworkFigure';
 import { useAskAccess } from '../hooks/useAskAccess';
@@ -261,35 +262,44 @@ export function CirclePage() {
   /* ----- feed actions ----- */
 
   const markRead = trpc.notification.markRead.useMutation({
+    meta: { notifyOnError: false },
     onSuccess: () => {
       void utils.notification.list.invalidate();
       void utils.notification.unreadCount.invalidate();
       void utils.notification.attention.invalidate();
     },
   });
+  // One swipe is one decision: its notices are dismissed together and a failure is told once (below)
   const dismiss = trpc.notification.dismiss.useMutation({
-    onSuccess: () => {
+    meta: { notifyOnError: false },
+    onSettled: () => {
       void utils.notification.list.invalidate();
       void utils.notification.unreadCount.invalidate();
       void utils.notification.attention.invalidate();
     },
   });
+  const dismissOne = dismiss.mutateAsync as unknown as (input: { id: string }) => Promise<unknown>;
   const declineNeed = useDeclineNeed();
   // A request row is dismissed as a whole Need (read notices too), so its impulse ends with it
   const dismissEvent = useCallback(
     (event: FeedEvent) => {
-      if (event.kind === 'request' && event.collectionId) {
-        // The notices of the row go at once, as before; the read ones of the same Need are swept afterwards
-        const known = event.notificationIds ?? [];
-        for (const id of known) dismiss.mutate({ id });
-        void declineNeed(event.collectionId, [], known);
-        return;
-      }
-      for (const id of event.notificationIds ?? []) dismiss.mutate({ id });
+      const origin = currentNavigation();
+      const ids = event.notificationIds ?? [];
+      const outcome: Promise<unknown | null> = event.kind === 'request' && event.collectionId
+        // All open notices of the Need in one call: recorded whole, or the row stays to try again
+        ? declineNeed(event.collectionId)
+        : Promise.all(ids.map((id) => dismissOne({ id }).then(() => null, (error: unknown) => error ?? new Error('Dismiss failed'))))
+          .then((errors) => errors.find((error) => error != null) ?? null);
+      // Resolves false on failure, so the feed unfolds the row again
+      return outcome.then((error) => {
+        if (error) raiseActionError(error, origin);
+        return !error;
+      });
     },
-    [declineNeed, dismiss],
+    [declineNeed, dismissOne],
   );
   const markMilestone = trpc.milestone.markSeen.useMutation({
+    meta: { notifyOnError: false },
     onSuccess: () => void utils.milestone.list.invalidate(),
   });
 

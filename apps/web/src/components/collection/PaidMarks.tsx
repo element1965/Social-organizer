@@ -1,18 +1,21 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { cn } from '../../lib/utils';
-import { trpc } from '../../lib/trpc';
+import { currentAccount, trpc } from '../../lib/trpc';
+import { isAborted } from '../../lib/errors';
 import { Avatar } from '../ui2/Avatar';
 import { Button } from '../ui2/Button';
 import { formatMoney } from '../ui2/format';
 import { Sheet } from '../ui2/Sheet';
 import { useShellMode } from '../ui2/shell-mode';
+import { ActionError } from '../errors/ActionError';
 import { IconCheck } from './icons';
 import { ParticipantList, type ParticipantRow } from './ParticipantList';
 
 const UNDO_MS = 5000;
 
-type Undo = { text: string; ids: string[]; paid: boolean; key: number };
+/** `write`: the write the Undo belongs to, so only that write's failure takes it away. */
+type Undo = { text: string; ids: string[]; paid: boolean; key: number; write: number };
 
 /**
  * Transfer marks for the author of a collection: one tap marks or unmarks right away (no dialog),
@@ -21,59 +24,88 @@ type Undo = { text: string; ids: string[]; paid: boolean; key: number };
  */
 export function usePaidMarks(rows: ParticipantRow[], onSaved: () => void) {
   const { t } = useTranslation();
-  const [override, setOverride] = useState<Map<string, boolean>>(new Map());
+  // Per row: the mark shown before the server agrees, and the write it came from (a newer tap replaces it)
+  const [override, setOverride] = useState<Map<string, { paid: boolean; write: number }>>(new Map());
   const [undo, setUndo] = useState<Undo | null>(null);
-  const [failed, setFailed] = useState(false);
-  const setPaid = trpc.obligation.setPaid.useMutation();
+  const [failed, setFailed] = useState<unknown>(null);
+  const writes = useRef(0);
+  // Writes not settled yet: their marks are kept on screen whatever an in-between refetch says
+  const unsettled = useRef(new Set<number>());
+  // Writes go out one at a time, in tap order (Mark, Undo, Mark...): each starts when the previous one has
+  // settled, so they reach the database in the order the person made them and the last tap wins
+  const queue = useRef<Promise<void>>(Promise.resolve());
+  const savedRef = useRef(onSaved);
+  savedRef.current = onSaved;
 
-  // Drop overrides the server has caught up with
+  // Straight through the client (no mutation, no app-level notice: this list tells its own failure), so each
+  // write carries the account of the person who tapped (`context.account`, lib/trpc.ts sessionLink)
+  const utils = trpc.useUtils();
+  const sendRef = useRef(utils.client.obligation.setPaid.mutate);
+  sendRef.current = utils.client.obligation.setPaid.mutate;
+
+  // Drop overrides of settled writes that the server has caught up with
   useEffect(() => {
     setOverride((prev) => {
       if (prev.size === 0) return prev;
       const next = new Map(prev);
-      for (const row of rows) if (next.get(row.id) === row.paid) next.delete(row.id);
+      for (const row of rows) {
+        const own = next.get(row.id);
+        if (own && !unsettled.current.has(own.write) && own.paid === row.paid) next.delete(row.id);
+      }
       return next.size === prev.size ? prev : next;
     });
   }, [rows]);
 
   const people = useMemo(
-    () => rows.map((row) => (override.has(row.id) ? { ...row, paid: override.get(row.id)! } : row)),
+    () => rows.map((row) => (override.has(row.id) ? { ...row, paid: override.get(row.id)!.paid } : row)),
     [rows, override],
   );
 
   const apply = useCallback(
     (ids: string[], paid: boolean, text: string | null) => {
       if (ids.length === 0) return;
-      setFailed(false);
+      // The account of the person who tapped, captured now: the queued write goes out for that account only and
+      // is dropped quietly if another one has signed in by the time it leaves
+      const account = currentAccount();
+      writes.current += 1;
+      const write = writes.current;
+      unsettled.current.add(write);
+      setFailed(null);
       setOverride((prev) => {
         const next = new Map(prev);
-        for (const id of ids) next.set(id, paid);
+        for (const id of ids) next.set(id, { paid, write });
         return next;
       });
-      setUndo(text ? { text, ids, paid, key: Date.now() } : null);
-      setPaid.mutate(
-        { obligationIds: ids, paid },
-        {
-          onSuccess: onSaved,
-          onError: () => {
-            // Put the rows back and say so
+      setUndo(text ? { text, ids, paid, key: Date.now(), write } : null);
+      queue.current = queue.current.then(() =>
+        sendRef.current({ obligationIds: ids, paid }, { context: { account } }).then(
+          () => {
+            unsettled.current.delete(write);
+            savedRef.current();
+          },
+          (error: unknown) => {
+            unsettled.current.delete(write);
+            // Take back only the marks that are still this write's own (a later tap on the row keeps its mark),
+            // and only this write's Undo; then read the list again from the server
             setOverride((prev) => {
               const next = new Map(prev);
-              for (const id of ids) next.delete(id);
+              for (const id of ids) if (next.get(id)?.write === write) next.delete(id);
               return next;
             });
-            setUndo(null);
-            setFailed(true);
+            setUndo((current) => (current?.write === write ? null : current));
+            // Dropped because another account signed in: not a failure to tell
+            if (!isAborted(error)) setFailed(error);
+            savedRef.current();
           },
-        },
+        ),
       );
     },
-    [setPaid, onSaved],
+    [],
   );
 
   const toggle = useCallback(
     (row: ParticipantRow) => {
-      const current = override.get(row.id) ?? row.paid;
+      const current = override.get(row.id)?.paid ?? row.paid;
       const paid = !current;
       apply([row.id], paid, t(paid ? 'collection.markedOne' : 'collection.unmarkedOne', { name: row.name }));
     },
@@ -268,7 +300,6 @@ export function MarkableParticipantList({
   /** Opens the "close the collection" confirmation; offered once every transfer is marked. */
   onCloseCollection: () => void;
 }) {
-  const { t } = useTranslation();
   const marks = usePaidMarks(rows, onSaved);
   const [sheetOpen, setSheetOpen] = useState(false);
   const unpaid = marks.people.filter((row) => !row.paid);
@@ -289,7 +320,7 @@ export function MarkableParticipantList({
         onRemove={onRemove}
         onMarkMany={() => setSheetOpen(true)}
       />
-      {marks.failed ? <p role="alert" className="mt-2 px-1 text-label font-semibold text-sos">{t('collection.markError')}</p> : null}
+      <ActionError error={marks.failed} className="mt-2" />
       <MarkTransfersSheet
         open={sheetOpen}
         people={unpaid}

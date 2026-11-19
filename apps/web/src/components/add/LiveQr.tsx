@@ -30,7 +30,7 @@ function formatLeft(ms: number): string {
  */
 export function LiveQr({ onScan, onDone, children }: { onScan: () => void; onDone: () => void; children?: ReactNode }) {
   const { t } = useTranslation();
-  const generate = trpc.invite.generate.useMutation();
+  const generate = trpc.invite.generate.useMutation({ meta: { notifyOnError: false } });
   const generateRef = useRef(generate.mutateAsync);
   generateRef.current = generate.mutateAsync;
   const [pass, setPass] = useState<Pass | null>(null);

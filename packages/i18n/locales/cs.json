@@ -372,6 +372,22 @@
     "unavailableBody": "Připojte se k internetu a zkuste to znovu. Lidé uložení v tomto zařízení jsou stále dostupní.",
     "showSaved": "Zobrazit uložené lidi"
   },
+  "errors": {
+    "notSaved": "Neuloženo",
+    "offline": "Bez připojení. Zkontrolujte internet a zkuste to znovu.",
+    "server": "Něco se pokazilo na naší straně. Zkuste to znovu za minutu.",
+    "session": "Vaše relace skončila. Přihlaste se znovu.",
+    "forbidden": "Pro váš účet to není dostupné.",
+    "rateLimit": "Příliš mnoho pokusů. Počkejte minutu a zkuste to znovu.",
+    "invalid": "Zkontrolujte, co jste zadali, a zkuste to znovu.",
+    "linkTooLong": "Odkaz je příliš dlouhý: nejvýše {{max}} znaků.",
+    "changed": "Údaje se změnily. Obnovte stránku a zkuste to znovu.",
+    "loadFailed": "Nepodařilo se načíst",
+    "needGoneTitle": "Tato potřeba tu není",
+    "needGoneBody": "Možná byla odstraněna, nebo je odkaz chybný.",
+    "pageGoneTitle": "Taková stránka neexistuje",
+    "pageGoneBody": "Adresa je možná překlepnutá nebo zastaralá."
+  },
   "collection": {
     "close": "Uzavřít potřebu",
     "saveAmount": "Uložit",

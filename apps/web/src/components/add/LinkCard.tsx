@@ -11,6 +11,7 @@ import { withSrc } from '../../lib/messengerShare';
 import { permanentInviteUrl, prettyInvite } from './links';
 import { shareLink } from '../../lib/share';
 import { trpc } from '../../lib/trpc';
+import { errorCode } from '../../lib/errors';
 
 interface LinkCardProps {
   slug: string;
@@ -21,15 +22,11 @@ interface LinkCardProps {
 
 const SLUG_RE = /^[a-z0-9_-]{3,30}$/;
 
-function errorCode(error: unknown): string | undefined {
-  return (error as { data?: { code?: string } } | null)?.data?.code;
-}
-
 export function LinkCard({ slug, name, customSlug }: LinkCardProps) {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const utils = trpc.useUtils();
-  const updateSlug = trpc.user.updateReferralSlug.useMutation();
+  const updateSlug = trpc.user.updateReferralSlug.useMutation({ meta: { notifyOnError: false } });
   const [copied, setCopied] = useState(false);
   const [busy, setBusy] = useState(false);
   const [failed, setFailed] = useState(false);

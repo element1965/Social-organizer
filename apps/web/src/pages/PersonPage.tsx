@@ -23,7 +23,8 @@ import { SocialIcon } from '../components/ui/social-icons';
 import { isLive } from '../components/profile/collections';
 import { ONLINE_MS } from '../components/profile/constants';
 import { relativeTime } from '../components/profile/dates';
-import { trpcCode } from '../components/profile/errors';
+import { errorCode } from '../lib/errors';
+import { ActionError } from '../components/errors/ActionError';
 import { instagramHandle, isMobileUa } from '../components/profile/openExternal';
 import { QueryState } from '../components/profile/QueryState';
 import { useSmartBack } from '../components/profile/useSmartBack';
@@ -75,6 +76,11 @@ function PersonScreen() {
     },
   });
   const sendRequest = trpc.pending.sendDirectRequest.useMutation({
+    // Declined, already sent and the cooldown have their own states below; anything else gets the app-level notice
+    meta: {
+      notifyOnError: (error) =>
+        !(error instanceof Error && error.message === 'Request declined') && !['CONFLICT', 'TOO_MANY_REQUESTS'].includes(errorCode(error) ?? ''),
+    },
     onSuccess: (result) => {
       void utils.pending.myPending.invalidate();
       void utils.pending.directStatus.invalidate({ targetUserId: id });
@@ -93,6 +99,7 @@ function PersonScreen() {
     },
   });
   const revoke = trpc.connection.revoke.useMutation({
+    meta: { notifyOnError: false },
     onSuccess: () => {
       void refreshNetwork(utils);
       navigate('/');
@@ -152,7 +159,7 @@ function PersonScreen() {
   if (isSelf) return <Navigate to="/me" replace />;
 
   const loading = me.isLoading || user.isLoading || pathQuery.isLoading;
-  const missing = trpcCode(user.error) === 'NOT_FOUND';
+  const missing = errorCode(user.error) === 'NOT_FOUND';
   if (loading || user.isError || pathQuery.isError || !user.data) {
     return (
       <Screen back={back} width="column">
@@ -224,12 +231,12 @@ function PersonScreen() {
     !declined &&
     ((outgoing.data ?? []).some((row) => row.toUser.id === id) ||
       (sendRequest.isSuccess && !('autoConnected' in sendRequest.data && sendRequest.data.autoConnected)) ||
-      trpcCode(sendRequest.error) === 'CONFLICT');
+      errorCode(sendRequest.error) === 'CONFLICT');
 
   // After a withdrawal a new request waits out a cooldown on the server (against send/withdraw loops)
   const retryIso = direct.data?.retryAt ?? (cancelRequest.isSuccess ? cancelRequest.data.retryAt : null);
   const retryAt = retryIso && new Date(retryIso).getTime() > Date.now() ? new Date(retryIso) : null;
-  const coolingDown = !requestSent && (!!retryAt || trpcCode(sendRequest.error) === 'TOO_MANY_REQUESTS');
+  const coolingDown = !requestSent && (!!retryAt || errorCode(sendRequest.error) === 'TOO_MANY_REQUESTS');
   const retryText = retryAt
     ? new Intl.DateTimeFormat(i18n.language, { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }).format(retryAt)
     : '';
@@ -431,7 +438,7 @@ function PersonScreen() {
       ) : null}
 
       {ring1 ? (
-        <Button variant="textDanger" className="mt-8" onClick={() => setRemoveOpen(true)}>
+        <Button variant="textDanger" className="mt-8" onClick={() => { revoke.reset(); setRemoveOpen(true); }}>
           {t('person.remove')}
         </Button>
       ) : null}
@@ -449,8 +456,10 @@ function PersonScreen() {
             </Button>
           </>
         }
-      />
-      {revoke.isError ? <p className="mt-2 text-label font-semibold text-sos">{t('common.error')}</p> : null}
+      >
+        {/* Inside the sheet: under it the line was hidden by the backdrop */}
+        <ActionError error={revoke.error} className="mt-0" />
+      </Sheet>
     </Screen>
   );
 }

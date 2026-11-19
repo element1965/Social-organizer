@@ -19,7 +19,7 @@ export function GoogleCallbackPage() {
   /** The deep link back to the app, offered as a button in case the browser does not follow it by itself. */
   const [appLink, setAppLink] = useState<string | null>(null);
 
-  const mutation = trpc.auth.loginWithGoogle.useMutation();
+  const mutation = trpc.auth.loginWithGoogle.useMutation({ meta: { notifyOnError: false } });
   // Keep a stable ref so useEffect closure always has the latest mutate fn
   const mutateRef = useRef(mutation.mutate);
   mutateRef.current = mutation.mutate;

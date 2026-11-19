@@ -2,7 +2,7 @@ import { z } from 'zod';
 import { TRPCError } from '@trpc/server';
 import { router, protectedProcedure, paginationInput } from '../trpc.js';
 import type { PrismaClient } from '@so/db';
-import { recordDismissed, recordOpenedById } from '../services/notify-routing.service.js';
+import { dismissRequestEntries, recordOpenedById } from '../services/notify-routing.service.js';
 import { VISIBLE_RINGS } from '../services/network.service.js';
 import { getPulse } from '../services/pulse.service.js';
 
@@ -112,11 +112,49 @@ export const notificationRouter = router({
       return setNotificationStatus(ctx.db, ctx.userId, input.id, 'READ');
     }),
 
+  /**
+   * Swiping an entry away. A request entry that this call itself moves from open to DISMISSED is counted once
+   * for routing (dismissRequestEntries: a conditional update, so a concurrent second call counts nothing); any
+   * other entry only changes its status (never over a cycle acknowledgement, RESPONDED).
+   */
   dismiss: protectedProcedure
     .input(z.object({ id: z.string() }))
     .mutation(async ({ ctx, input }) => {
-      await recordDismissed(ctx.db, ctx.userId, input.id).catch((err) => console.error('[notify-stats] dismiss', err));
-      return setNotificationStatus(ctx.db, ctx.userId, input.id, 'DISMISSED');
+      await ctx.db.$transaction(async (tx) => {
+        await dismissRequestEntries(tx, ctx.userId, { id: input.id });
+        await tx.notification.updateMany({
+          where: { id: input.id, userId: ctx.userId, status: { not: 'RESPONDED' } },
+          data: { status: 'DISMISSED' },
+        });
+      });
+      const row = await ctx.db.notification.findFirst({ where: { id: input.id, userId: ctx.userId } });
+      if (!row) throw new TRPCError({ code: 'NOT_FOUND' });
+      return row;
+    }),
+
+  /**
+   * "Not for me" on a Need: every open request notice of that Need for this person (the row in the feed, the
+   * read ones, older waves) in one transaction, so the decision is recorded whole or not at all. The request
+   * entries this call moved are counted once each for routing, as `dismiss` counts them (concurrent calls
+   * count each entry once in total); the special-role entries only change their status.
+   */
+  dismissNeed: protectedProcedure
+    .input(z.object({ collectionId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const count = await ctx.db.$transaction(async (tx) => {
+        const counted = await dismissRequestEntries(tx, ctx.userId, { collectionId: input.collectionId });
+        const special = await tx.notification.updateMany({
+          where: {
+            userId: ctx.userId,
+            collectionId: input.collectionId,
+            type: { in: ['SPECIAL_AUTHOR', 'SPECIAL_DEVELOPER'] },
+            status: { in: ['UNREAD', 'READ'] },
+          },
+          data: { status: 'DISMISSED' },
+        });
+        return counted + special.count;
+      });
+      return { count };
     }),
 
   dismissAll: protectedProcedure

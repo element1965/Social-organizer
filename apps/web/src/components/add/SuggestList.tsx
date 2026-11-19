@@ -50,6 +50,7 @@ export function SuggestList({ names, className }: { names?: Map<string, string>;
   const [open, setOpen] = useState(false);
 
   const send = trpc.pending.sendDirectRequest.useMutation({
+    meta: { notifyOnError: false },
     onSuccess: (result, input) => {
       setSent((ids) => [...ids, input.targetUserId]);
       void utils.pending.myPending.invalidate();

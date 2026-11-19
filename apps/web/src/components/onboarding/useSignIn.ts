@@ -151,6 +151,7 @@ export function useSignIn({ redirect, onCodeSent, onTelegramOpened }: UseSignInO
     ['INVALID_CODE', 'CODE_EXPIRED', 'TOO_MANY_ATTEMPTS', 'TOO_MANY_CODES', 'EMAIL_UNAVAILABLE'].includes(c) ? c : 'NETWORK';
 
   const requestCode = trpc.auth.requestEmailCode.useMutation({
+    meta: { notifyOnError: false },
     onSuccess: (r) => {
       setError('');
       setResendLeft(r.resendInSec);
@@ -174,6 +175,7 @@ export function useSignIn({ redirect, onCodeSent, onTelegramOpened }: UseSignInO
   });
 
   const verifyCode = trpc.auth.verifyEmailCode.useMutation({
+    meta: { notifyOnError: false },
     onSuccess: onTokens('email'),
     onError: (e) => setError(codeErrorText(e.message), knownCode(parseErr(e.message)[0])),
   });
@@ -192,6 +194,7 @@ export function useSignIn({ redirect, onCodeSent, onTelegramOpened }: UseSignInO
   // ---- Password: sign-in only, for accounts created with a password (only via /login?mode=password).
   // Creating an account with a password was removed from the UI (decision 2026-11-09); the API stays.
   const loginEmailMutation = trpc.auth.loginWithEmail.useMutation({
+    meta: { notifyOnError: false },
     onSuccess: onTokens('email'),
     onError: (err) =>
       err.data?.code === 'UNAUTHORIZED'
@@ -201,10 +204,12 @@ export function useSignIn({ redirect, onCodeSent, onTelegramOpened }: UseSignInO
 
   // ---- Telegram ----
   const telegramLoginMutation = trpc.auth.loginWithTelegram.useMutation({
+    meta: { notifyOnError: false },
     onSuccess: onTokens('telegram'),
     onError: () => setError(t('login.failedWith', { provider: 'Telegram' }), 'PROVIDER_FAILED'),
   });
   const telegramWidgetMutation = trpc.auth.loginWithTelegramWidget.useMutation({
+    meta: { notifyOnError: false },
     onSuccess: onTokens('telegram'),
     onError: () => setError(t('login.failedWith', { provider: 'Telegram' }), 'PROVIDER_FAILED'),
   });
@@ -251,6 +256,7 @@ export function useSignIn({ redirect, onCodeSent, onTelegramOpened }: UseSignInO
 
   // ---- Google ----
   const googleLoginMutation = trpc.auth.loginWithGoogle.useMutation({
+    meta: { notifyOnError: false },
     onSuccess: onTokens('google'),
     onError: (err) => {
       if (err.message === 'ACCOUNT_EXISTS_OTHER_METHOD') {

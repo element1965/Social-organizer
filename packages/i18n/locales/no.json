@@ -366,6 +366,22 @@
     "unavailableBody": "Koble til internett og prøv igjen. Personene som er lagret på denne enheten er fortsatt tilgjengelige.",
     "showSaved": "Vis lagrede personer"
   },
+  "errors": {
+    "notSaved": "Ikke lagret",
+    "offline": "Ingen tilkobling. Sjekk internett og prøv igjen.",
+    "server": "Noe gikk galt hos oss. Prøv igjen om et minutt.",
+    "session": "Økten din er utløpt. Logg inn på nytt.",
+    "forbidden": "Dette er ikke tilgjengelig for kontoen din.",
+    "rateLimit": "For mange forsøk. Vent et minutt og prøv igjen.",
+    "invalid": "Sjekk det du skrev inn, og prøv igjen.",
+    "linkTooLong": "Lenken er for lang: maks {{max}} tegn.",
+    "changed": "Dataene er endret. Last inn siden på nytt og prøv igjen.",
+    "loadFailed": "Kunne ikke lastes inn",
+    "needGoneTitle": "Dette behovet finnes ikke",
+    "needGoneBody": "Det kan ha blitt fjernet, eller lenken er feil.",
+    "pageGoneTitle": "Siden finnes ikke",
+    "pageGoneBody": "Adressen kan være feilskrevet eller utdatert."
+  },
   "collection": {
     "close": "Lukk behovet",
     "saveAmount": "Lagre",

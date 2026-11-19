@@ -366,6 +366,22 @@
     "unavailableBody": "Verbinde dich mit dem Internet und versuche es erneut. Die auf diesem Gerät gespeicherten Personen bleiben verfügbar.",
     "showSaved": "Gespeicherte Personen anzeigen"
   },
+  "errors": {
+    "notSaved": "Nicht gespeichert",
+    "offline": "Keine Verbindung. Prüfen Sie das Internet und versuchen Sie es erneut.",
+    "server": "Bei uns ist etwas schiefgelaufen. Versuchen Sie es in einer Minute erneut.",
+    "session": "Ihre Sitzung ist abgelaufen. Melden Sie sich erneut an.",
+    "forbidden": "Das ist für Ihr Konto nicht verfügbar.",
+    "rateLimit": "Zu viele Versuche. Warten Sie eine Minute und versuchen Sie es erneut.",
+    "invalid": "Prüfen Sie Ihre Eingabe und versuchen Sie es erneut.",
+    "linkTooLong": "Der Link ist zu lang: höchstens {{max}} Zeichen.",
+    "changed": "Die Daten haben sich geändert. Laden Sie die Seite neu und versuchen Sie es erneut.",
+    "loadFailed": "Konnte nicht geladen werden",
+    "needGoneTitle": "Diesen Bedarf gibt es nicht",
+    "needGoneBody": "Er wurde vielleicht entfernt, oder der Link ist fehlerhaft.",
+    "pageGoneTitle": "Diese Seite gibt es nicht",
+    "pageGoneBody": "Die Adresse ist vielleicht falsch geschrieben oder veraltet."
+  },
   "collection": {
     "close": "Bedarf schließen",
     "saveAmount": "Speichern",

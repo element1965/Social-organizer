@@ -25,8 +25,8 @@ export function SeedPage() {
   const utils = trpc.useUtils();
   const { data: me } = trpc.user.me.useQuery();
   const { data: intro } = trpc.pending.introStatus.useQuery(undefined, { staleTime: 30_000 });
-  const setBudget = trpc.user.setMonthlyBudget.useMutation();
-  const updateUser = trpc.user.update.useMutation();
+  const setBudget = trpc.user.setMonthlyBudget.useMutation({ meta: { notifyOnError: false } });
+  const updateUser = trpc.user.update.useMutation({ meta: { notifyOnError: false } });
   const [name, setName] = useState('');
   const [value, setValue] = useState(String(DEFAULT_AMOUNT));
   const seeded = useRef(false);

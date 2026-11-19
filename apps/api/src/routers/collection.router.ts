@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { router, protectedProcedure, publicProcedure } from '../trpc.js';
 import { TRPCError } from '@trpc/server';
-import { MIN_COLLECTION_AMOUNT, NOTIFICATION_RATIO } from '@so/shared';
+import { MAX_CHAT_LINK_LENGTH, MIN_COLLECTION_AMOUNT, NOTIFICATION_RATIO } from '@so/shared';
 import { sendCollectionNotifications, sendCollectionClosedTg } from '../services/notification.service.js';
 import { isAdmin } from '../admin.js';
 import { invalidateGraph } from '../services/graph-cache.service.js';
@@ -14,7 +14,7 @@ import { settleOpenReviews } from '../services/moderation.service.js';
 import { syncMilestonesQuietly } from '../services/milestone.service.js';
 
 /** Chat links are shown as buttons: https only, never javascript: or http (SO-14). */
-const chatLinkSchema = z.string().max(500).url().refine((u) => /^https:\/\//i.test(u), 'Link must start with https://');
+const chatLinkSchema = z.string().max(MAX_CHAT_LINK_LENGTH).url().refine((u) => /^https:\/\//i.test(u), 'Link must start with https://');
 
 /** What the collection is for: plain text, shown as text only (never HTML). Empty becomes null. */
 const descriptionSchema = z.string().trim().max(300);
