@@ -33,13 +33,17 @@ function paint(isDark: boolean) {
   }
 }
 
+export function paintTelegramTheme() {
+  paint(getTGColorScheme() === 'dark');
+}
+
 function applyTheme(mode: ThemeMode) {
   stopSystemListener?.();
   stopSystemListener = null;
 
   // Inside the Mini App the stored choice is ignored. Telegram colorScheme is the only source.
   if (isTelegramWebApp()) {
-    paint(getTGColorScheme() === 'dark');
+    paintTelegramTheme();
     return;
   }
 
@@ -59,6 +63,7 @@ applyTheme(stored);
 export const useTheme = create<ThemeState>((set) => ({
   mode: stored,
   setMode: (mode) => {
+    if (isTelegramWebApp()) return;
     localStorage.setItem('theme', mode);
     applyTheme(mode);
     set({ mode });

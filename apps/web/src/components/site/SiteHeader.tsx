@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { isTelegramWebApp } from '@so/tg-adapter';
 import { useIsDark } from '../../hooks/useIsDark';
 import { Link, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -30,6 +31,7 @@ export function ThemeButton() {
   const { t } = useTranslation();
   const setMode = useTheme((s) => s.setMode);
   const dark = useIsDark();
+  if (isTelegramWebApp()) return null;
   const label = dark ? t('landing.site.themeLight') : t('landing.site.themeDark');
   return (
     <button type="button" className="site-ibtn" data-theme-toggle aria-label={label} title={label} onClick={() => setMode(dark ? 'light' : 'dark')}>

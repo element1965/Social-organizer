@@ -41,7 +41,7 @@ export function Screen({ title, back, action, width = 'full', children, classNam
           {title ? (
             <h1 className="pointer-events-none absolute inset-x-24 truncate text-center text-body-l font-bold">{title}</h1>
           ) : null}
-          {action ? <div className="ml-auto flex items-center">{action}</div> : null}
+          {action ? <div className="ms-auto flex items-center">{action}</div> : null}
         </div>
       ) : null}
       <div

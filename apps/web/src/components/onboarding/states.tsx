@@ -3,6 +3,7 @@
  * four tones, the care spinner, and their glyphs. Tokens only; both themes switch by themselves.
  */
 import type { ReactNode, SVGProps } from 'react';
+import { LiveNotice } from '../ui2/LiveNotice';
 import { cn } from '../../lib/utils';
 
 type P = SVGProps<SVGSVGElement>;
@@ -120,15 +121,16 @@ export function Note({
 }) {
   return (
     <div
-      role={role}
+      role={role === 'alert' ? role : undefined}
       className={cn(
-        'flex items-center gap-3 rounded-lg px-3.5 py-3 text-left text-caption text-ink [&_b]:font-extrabold',
+        'flex items-center gap-3 rounded-lg px-3.5 py-3 text-start text-caption text-ink [&_b]:font-extrabold',
         noteTone[tone].box,
         className,
       )}
     >
       <i className={cn('grid h-9 w-9 shrink-0 place-items-center rounded-md [&_svg]:h-5 [&_svg]:w-5', noteTone[tone].icon)}>{icon}</i>
-      <span>{children}</span>
+      {role === 'status' ? <LiveNotice>{children}</LiveNotice> : null}
+      <span aria-hidden={role === 'status' || undefined}>{children}</span>
     </div>
   );
 }
@@ -141,7 +143,7 @@ export function Spinner({ small = false, label }: { small?: boolean; label?: str
       aria-label={label}
       className={cn(
         'so-spin inline-block shrink-0 rounded-full border-care-soft border-t-care motion-reduce:[animation-duration:2.4s]',
-        small ? 'mr-1.5 h-4 w-4 border-2 align-[-3px]' : 'h-8 w-8 border-[3px]',
+        small ? 'me-1.5 h-4 w-4 border-2 align-[-3px]' : 'h-8 w-8 border-[3px]',
       )}
     />
   );

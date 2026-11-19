@@ -68,7 +68,7 @@ export function AuthButtons({
   const { providers, start, busy, googleBtnRef } = signIn;
 
   return (
-    <div className="w-full text-left">
+    <div className="w-full text-start">
       {notice ? <div className="mb-3">{notice}</div> : null}
       <div className="flex flex-col gap-2.5">
         {providers.map((p) => {

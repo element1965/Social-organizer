@@ -5,8 +5,8 @@ import { formatDayMonth } from './dates';
 
 const STEPS = ['opened', 'signedUp', 'requested', 'connected', 'five', 'unlocked'] as const;
 
-const cell = 'px-2 py-2 text-right text-label font-semibold tabular-nums text-ink';
-const head = 'px-2 py-2 text-right align-bottom text-micro font-bold text-ink-muted';
+const cell = 'px-2 py-2 text-end text-label font-semibold tabular-nums text-ink';
+const head = 'px-2 py-2 text-end align-bottom text-micro font-bold text-ink-muted';
 
 /**
  * Admin statistics → Funnel: weekly sign-up cohorts from an opened invite to an open Need, the ways of
@@ -29,7 +29,7 @@ export function FunnelPanel() {
         <table className="w-full border-collapse">
           <thead>
             <tr className="border-b border-line-soft">
-              <th scope="col" className={`${head} text-left`}>{t('adminStats.funnel.week')}</th>
+              <th scope="col" className={`${head} text-start`}>{t('adminStats.funnel.week')}</th>
               {STEPS.map((step) => (
                 <th key={step} scope="col" className={head}>{t(`adminStats.funnel.${step}`)}</th>
               ))}
@@ -38,7 +38,7 @@ export function FunnelPanel() {
           <tbody>
             {[...weeks].reverse().map((week) => (
               <tr key={week.weekStart} className="border-b border-line-soft last:border-b-0">
-                <th scope="row" className="whitespace-nowrap px-2 py-2 text-left text-label font-bold text-ink-muted">
+                <th scope="row" className="whitespace-nowrap px-2 py-2 text-start text-label font-bold text-ink-muted">
                   {formatDayMonth(`${week.weekStart}T00:00:00Z`, language)}
                 </th>
                 {STEPS.map((step) => (
@@ -58,7 +58,7 @@ export function FunnelPanel() {
           <table className="w-full border-collapse">
             <thead>
               <tr className="border-b border-line-soft">
-                <th scope="col" className={`${head} text-left`}>{t('adminStats.funnel.source')}</th>
+                <th scope="col" className={`${head} text-start`}>{t('adminStats.funnel.source')}</th>
                 <th scope="col" className={head}>{t('adminStats.funnel.opened')}</th>
                 <th scope="col" className={head}>{t('adminStats.funnel.requests')}</th>
                 <th scope="col" className={head}>{t('adminStats.funnel.connections')}</th>
@@ -67,7 +67,7 @@ export function FunnelPanel() {
             <tbody>
               {sources.map((row) => (
                 <tr key={row.source} className="border-b border-line-soft last:border-b-0">
-                  <th scope="row" className="px-2 py-2 text-left text-label font-bold text-ink">{row.source}</th>
+                  <th scope="row" className="px-2 py-2 text-start text-label font-bold text-ink">{row.source}</th>
                   <td className={cell}>{row.opened}</td>
                   <td className={cell}>{row.requests}</td>
                   <td className={cell}>{row.connections}</td>

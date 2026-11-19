@@ -83,7 +83,7 @@ export function AdminStatsPage() {
                     to={`/person/${user.id}`}
                     className="so-focus flex items-center gap-3 border-b border-line-soft px-4 py-2.5 last:border-b-0"
                   >
-                    <span className="w-6 text-right text-label font-bold text-ink-subtle">{index + 1}</span>
+                    <span className="w-6 text-end text-label font-bold text-ink-subtle">{index + 1}</span>
                     <Avatar name={user.name} src={user.photoUrl} size={40} />
                     <span className="min-w-0 flex-1">
                       <span className="block truncate text-body font-body text-ink">{user.name}</span>
@@ -91,7 +91,7 @@ export function AdminStatsPage() {
                         {`${user.clusterRootName} · ${formatMoney(user.remainingBudget)}`}
                       </span>
                     </span>
-                    <span className="text-right">
+                    <span className="text-end">
                       <span className="block text-body font-bold tabular-nums text-ink">{user.inviteCount}</span>
                       <span className="block text-micro font-semibold text-ink-muted">{t('adminStats.invitedCount')}</span>
                     </span>

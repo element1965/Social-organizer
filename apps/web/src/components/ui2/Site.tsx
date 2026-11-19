@@ -61,7 +61,7 @@ export function SiteHeader({
           </a>
         ))}
       </nav>
-      <div className="ml-auto flex items-center gap-2">
+      <div className="ms-auto flex items-center gap-2">
         <span className="grid h-10 min-w-10 place-items-center rounded-md border border-line bg-surface px-2 text-label font-bold">
           {language}
         </span>
@@ -98,7 +98,7 @@ export function SiteFooter({
         {brand}
       </span>
       <span className="text-caption font-semibold text-ink-muted">{note}</span>
-      <nav className="flex flex-wrap gap-4 md:ml-auto">
+      <nav className="flex flex-wrap gap-4 md:ms-auto">
         {links.map((link) => (
           <a key={link.href} href={link.href} className="text-caption font-semibold text-ink-muted">
             {link.label}

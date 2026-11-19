@@ -151,7 +151,7 @@ export default {
         caption: ['0.875rem', { lineHeight: '1.4' }],
         label: ['0.8125rem', { lineHeight: '1.35' }],
         micro: ['0.75rem', { lineHeight: '1.3' }],
-        tab: ['0.6875rem', { lineHeight: '1', letterSpacing: '-0.01em' }],
+        tab: ['0.75rem', { lineHeight: '1', letterSpacing: '-0.01em' }],
       },
       fontWeight: {
         body: '650',

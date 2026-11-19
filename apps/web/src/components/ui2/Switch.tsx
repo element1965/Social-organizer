@@ -26,11 +26,9 @@ export function Switch({ checked, onCheckedChange, label, disabled }: SwitchProp
     >
       <span
         className={cn(
-          // left-0: without it the knob starts at its static position (the track centre) and the
-          // translate pushes it past the right edge
-          'absolute left-0 top-[0.1875rem] h-6 w-6 rounded-full bg-surface shadow-float transition-[transform,width] duration-base ease-so motion-reduce:transition-none',
-          // While pressed the knob widens towards where it will go, as a physical switch gives under the finger
-          checked ? 'translate-x-[1.3125rem] group-active:w-7 group-active:translate-x-[1.0625rem]' : 'translate-x-[0.1875rem] group-active:w-7',
+          'absolute top-[0.1875rem] h-6 w-6 rounded-full bg-surface shadow-float transition-[inset-inline-start,width] duration-base ease-so motion-reduce:transition-none',
+          // On press, the knob stretches in the direction it will move.
+          checked ? 'start-[1.3125rem] group-active:w-7 group-active:start-[1.0625rem]' : 'start-[0.1875rem] group-active:w-7',
         )}
       />
     </button>

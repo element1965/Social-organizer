@@ -40,7 +40,14 @@ export function Segmented<T extends string>({
     // Larger text, a language switch or a resized window change the button widths
     const observer = typeof ResizeObserver === 'undefined' ? null : new ResizeObserver(measure);
     observer?.observe(list);
-    return () => observer?.disconnect();
+    for (const button of list.querySelectorAll('button')) observer?.observe(button);
+    // Re-measure the physical thumb offset when the buttons mirror, even if they keep their sizes.
+    const direction = new MutationObserver(measure);
+    direction.observe(document.documentElement, { attributes: true, attributeFilter: ['dir'] });
+    return () => {
+      observer?.disconnect();
+      direction.disconnect();
+    };
   }, [value, options.length, variant]);
 
   // Animate from the second placement on: the first one only puts the highlight in place

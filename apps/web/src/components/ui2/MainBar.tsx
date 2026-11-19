@@ -23,7 +23,7 @@ export function MainBar({
       <div className={cn('flex h-16 items-center gap-3.5', column && 'mx-auto w-full max-w-[680px] px-4')}>
         {back ? <CrumbLink crumb={back} size="md" /> : null}
         {title ? <h1 className="truncate text-h3 font-extrabold text-ink">{title}</h1> : null}
-        {action ? <div className="ml-auto flex items-center gap-2.5">{action}</div> : null}
+        {action ? <div className="ms-auto flex items-center gap-2.5">{action}</div> : null}
       </div>
     </div>
   );

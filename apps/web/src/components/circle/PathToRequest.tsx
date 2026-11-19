@@ -122,13 +122,13 @@ function PathSteps({ data }: { data: PathData }) {
                 <Link
                   key={c.userId}
                   to={`/person/${c.userId}`}
-                  className="so-focus inline-flex max-w-[140px] items-center gap-1.5 rounded-pill bg-care-soft py-0.5 pl-0.5 pr-2.5 hover:bg-surface-2"
+                  className="so-focus inline-flex max-w-[140px] items-center gap-1.5 rounded-pill bg-care-soft py-0.5 ps-0.5 pe-2.5 hover:bg-surface-2"
                 >
                   <Avatar name={c.displayName} src={c.photoUrl} size={36} className="h-6 w-6 rounded-pill text-micro" />
                   <span className="truncate text-label font-semibold text-ink">{c.displayName.split(/\s+/)[0]}</span>
                 </Link>
               ))}
-              <Button variant="ghost" size="sm" className="ml-auto bg-care-soft text-care" onClick={() => void remind()}>
+              <Button variant="ghost" size="sm" className="ms-auto bg-care-soft text-care" onClick={() => void remind()}>
                 {copied ? t('common.copied') : t('path.remind')}
               </Button>
             </div>
@@ -204,7 +204,7 @@ export function GrowStrip({ direct, onOpen }: { direct: number; onOpen: () => vo
     >
       <span>{t('path.circle')}</span>
       <span className="relative h-1.5 flex-1 overflow-hidden rounded-pill bg-line" aria-hidden>
-        <span className="absolute inset-y-0 left-0 rounded-pill bg-care" style={{ width: `${Math.round(ratio * 100)}%` }} />
+        <span className="absolute inset-y-0 start-0 rounded-pill bg-care" style={{ width: `${Math.round(ratio * 100)}%` }} />
       </span>
       <span className="tabular-nums">{t('path.of', { count: direct, goal: ASK_MIN_DIRECT })}</span>
     </button>

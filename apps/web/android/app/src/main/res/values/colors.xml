@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Light canvas token from src/styles/tokens.css, shared with capacitor.config.ts. -->
+    <color name="startup_canvas">#f3f6f4</color>
+</resources>

@@ -715,7 +715,7 @@ function PhoneCircle({
         type="button"
         onClick={onBackToFeed}
         className={cn(
-          'so-focus absolute left-4 top-[calc(0.5rem+var(--sa-top))] z-20 inline-flex h-9 items-center gap-1 rounded-md border border-node-1/15 bg-scene-2/80 pl-2 pr-3 text-caption font-bold text-node-1 backdrop-blur-md',
+          'so-focus absolute start-4 top-[calc(0.5rem+var(--sa-top))] z-20 inline-flex min-h-11 items-center gap-1 rounded-md border border-node-1/15 bg-scene-2/80 ps-2 pe-3 text-caption font-bold text-node-1 backdrop-blur-md',
           ease,
           feedLayer ? 'pointer-events-none -translate-y-2.5 opacity-0' : 'opacity-100',
         )}
@@ -819,7 +819,7 @@ function PhoneCircle({
           setPull(null);
         }}
         className={cn(
-          'so-focus absolute bottom-4 left-1/2 z-20 inline-flex h-11 -translate-x-1/2 touch-none items-center gap-2 whitespace-nowrap rounded-lg bg-surface pl-3.5 pr-4 text-caption font-bold text-ink shadow-sheet',
+          'so-focus absolute bottom-4 left-1/2 z-20 inline-flex h-11 -translate-x-1/2 touch-none items-center gap-2 whitespace-nowrap rounded-lg bg-surface ps-3.5 pe-4 text-caption font-bold text-ink shadow-sheet',
           pull == null && ease,
           layer === 'graph' ? 'opacity-100' : 'pointer-events-none translate-y-20 opacity-0',
         )}
@@ -917,8 +917,8 @@ function DesktopCircle({ sidebar, graph, graphRef, empty, counts, farLabel, hidd
           {graph}
           {empty ? null : (
             <>
-              <RingChips counts={counts} farLabel={farLabel} hiddenRings={hiddenRings} className="absolute left-4 top-4 z-10" />
-              <div className="absolute right-4 top-4 z-10 flex flex-col gap-2">
+              <RingChips counts={counts} farLabel={farLabel} hiddenRings={hiddenRings} className="absolute start-4 top-4 z-10" />
+              <div className="absolute end-4 top-4 z-10 flex flex-col gap-2">
                 <button type="button" className={ctl} aria-label={t('circle.zoomIn')} onClick={() => graphRef.current?.zoomIn()}>
                   <IconPlus className="h-5 w-5" />
                 </button>
@@ -973,7 +973,7 @@ function Legend() {
     { label: t('circle.rings.short3'), dot: 'bg-node-3' },
   ];
   return (
-    <div className="pointer-events-none absolute bottom-4 left-4 z-10 flex gap-2" aria-hidden>
+    <div className="pointer-events-none absolute bottom-4 start-4 z-10 flex gap-2" aria-hidden>
       {items.map((item) => (
         <span
           key={item.label}

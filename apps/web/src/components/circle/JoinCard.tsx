@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Avatar } from '../ui2/Avatar';
+import { LiveNotice } from '../ui2/LiveNotice';
 import { IconCheck } from '../add/icons';
 import type { CircleNetwork } from './network';
 
@@ -21,12 +22,14 @@ export function JoinCard({ joining, onDone }: { joining: NonNullable<CircleNetwo
     return () => window.clearTimeout(timer);
   }, [loaded, onDone]);
 
+  const title = t('circle.join.title', { name: person.name });
+  const status = loaded
+    ? (added > 0 ? t('circle.join.added', { count: added }) : t('circle.join.ready'))
+    : t('circle.join.loading');
+
   return (
-    <div
-      role="status"
-      aria-live="polite"
-      className="so-join-in relative mb-3 flex items-center gap-3 overflow-hidden rounded-lg bg-care-soft px-3 py-2.5"
-    >
+    <div className="so-join-in relative mb-3 flex items-center gap-3 overflow-hidden rounded-lg bg-care-soft px-3 py-2.5">
+      <LiveNotice>{`${title} ${status}`}</LiveNotice>
       <style>
         {`@keyframes so-join-orbit { to { transform: rotate(360deg); } }
           @keyframes so-join-ping { 0% { transform: scale(1); opacity: .55; } 100% { transform: scale(1.9); opacity: 0; } }
@@ -55,16 +58,14 @@ export function JoinCard({ joining, onDone }: { joining: NonNullable<CircleNetwo
         )}
         <Avatar name={person.name} src={person.photoUrl} size={36} />
         {loaded ? (
-          <span className="absolute -bottom-0.5 -right-0.5 grid h-[18px] w-[18px] place-items-center rounded-full bg-care text-care-on ring-2 ring-care-soft">
+          <span className="absolute -bottom-0.5 -end-0.5 grid h-[18px] w-[18px] place-items-center rounded-full bg-care text-care-on ring-2 ring-care-soft">
             <IconCheck className="h-2.5 w-2.5" />
           </span>
         ) : null}
       </span>
-      <div className="min-w-0 flex-1">
-        <p className="truncate text-label font-bold text-ink">{t('circle.join.title', { name: person.name })}</p>
-        <p className="truncate text-micro font-semibold text-care">
-          {loaded ? (added > 0 ? t('circle.join.added', { count: added }) : t('circle.join.ready')) : t('circle.join.loading')}
-        </p>
+      <div className="min-w-0 flex-1" aria-hidden>
+        <p className="truncate text-label font-bold text-ink">{title}</p>
+        <p className="truncate text-micro font-semibold text-care">{status}</p>
       </div>
       {loaded ? null : (
         <span aria-hidden className="absolute inset-x-0 bottom-0 h-[2px] overflow-hidden bg-care/10">

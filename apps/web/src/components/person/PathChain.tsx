@@ -54,7 +54,7 @@ function CoinIcon() {
 
 function JoinMark() {
   return (
-    <span className="absolute left-0 top-0 flex h-9 w-5 -translate-x-1/2 items-center text-care" aria-hidden>
+    <span className="absolute start-0 top-0 flex h-9 w-5 -translate-x-1/2 rtl:translate-x-1/2 items-center text-care" aria-hidden>
       <span className="h-0.5 flex-1 bg-care" />
       <IconChevron className="h-3 w-3 shrink-0" />
     </span>

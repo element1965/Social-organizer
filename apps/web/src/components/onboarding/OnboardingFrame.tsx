@@ -82,7 +82,7 @@ export function BrandLine() {
 
 /** "‹ Back" in the top row of pushed steps (e-mail, code, password). */
 export function BackLink({ label, onClick, to }: { label: string; onClick?: () => void; to?: string }) {
-  const cls = 'so-focus -ml-1.5 inline-flex min-h-11 items-center gap-0.5 text-body-l font-bold tracking-tight text-care';
+  const cls = 'so-focus -ms-1.5 inline-flex min-h-11 items-center gap-0.5 text-body-l font-bold tracking-tight text-care';
   const icon = <IconBack className="h-[22px] w-[22px]" />;
   if (to) {
     return (

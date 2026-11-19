@@ -82,7 +82,7 @@ function NavItem({ to, label, active, rail, interactive, onActivate, children, b
         </span>
       ) : null}
       {rail ? (
-        <span className="pointer-events-none absolute left-[calc(100%+8px)] top-1/2 z-30 -translate-y-1/2 whitespace-nowrap rounded-sm bg-ink px-2 py-1 text-micro font-bold text-canvas opacity-0 transition-opacity duration-fast ease-so group-hover:opacity-100 group-focus-within:opacity-100 motion-reduce:transition-none">
+        <span className="pointer-events-none absolute start-[calc(100%+8px)] top-1/2 z-30 -translate-y-1/2 whitespace-nowrap rounded-sm bg-ink px-2 py-1 text-micro font-bold text-canvas opacity-0 transition-opacity duration-fast ease-so group-hover:opacity-100 group-focus-within:opacity-100 motion-reduce:transition-none">
           {label}
         </span>
       ) : null}
@@ -148,11 +148,10 @@ export function ShellChrome({
   if (mode === 'tabs') {
     const tab = (to: string, label: string, active: boolean, icon: ReactNode, mark?: { count?: string | null }) => {
       const className = cn(
-        'so-focus flex h-full flex-1 flex-col items-center justify-center gap-1 text-tab font-bold transition-colors duration-base ease-so motion-reduce:transition-none',
+        'so-focus flex h-full min-w-0 flex-1 flex-col items-center justify-center gap-1 pt-4 text-tab font-bold transition-colors duration-base ease-so motion-reduce:transition-none',
         active ? 'text-care' : 'text-ink-subtle',
       );
-      // Every icon sits in the same 28 px box and the label has a fixed line, so the labels line up
-      // whatever the icon (the Ask tile is larger than the line icons)
+      // Fixed icon and label slots keep the icons aligned when a translated label wraps.
       const inner = (
         <>
           <span className={cn('relative grid h-[28px] w-[28px] place-items-center', active && 'so-tab-bump')}>
@@ -160,13 +159,13 @@ export function ShellChrome({
             {mark?.count ? (
               <span
                 key={mark.count}
-                className="so-pop absolute -right-2.5 -top-1.5 grid h-[18px] min-w-[18px] place-items-center rounded-pill bg-sos px-1 text-micro font-bold leading-none tabular-nums text-sos-on"
+                className="so-pop absolute -end-2.5 -top-1.5 grid h-[18px] min-w-[18px] place-items-center rounded-pill bg-sos px-1 text-micro font-bold leading-none tabular-nums text-sos-on"
               >
                 {mark.count}
               </span>
             ) : null}
           </span>
-          <span className="block whitespace-nowrap leading-[16px]">{label}</span>
+          <span className="block min-h-8 max-w-full break-words px-0.5 text-center leading-[16px]">{label}</span>
           {mark?.count ? <span className="sr-only">{t('nav.attention')}</span> : null}
         </>
       );

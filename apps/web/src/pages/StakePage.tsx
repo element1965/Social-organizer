@@ -6,6 +6,7 @@ import { Button } from '../components/ui2/Button';
 import { Card } from '../components/ui2/Card';
 import { Chip } from '../components/ui2/Chip';
 import { Input } from '../components/ui2/Input';
+import { LiveNotice } from '../components/ui2/LiveNotice';
 import { Screen } from '../components/ui2/Screen';
 import { formatMoney } from '../components/ui2/format';
 import { QueryState } from '../components/profile/QueryState';
@@ -67,6 +68,7 @@ export function StakePage() {
               error={showError ? t('profile.stakeMin') : undefined}
               hint={save.isSuccess && unchanged ? t('profile.stakeSaved') : parsed === 0 ? t('profile.stakeNone') : t('profile.stakeHint')}
             />
+            <LiveNotice>{save.isSuccess && unchanged ? t('profile.stakeSaved') : null}</LiveNotice>
           </div>
           <div className="mt-4 flex flex-wrap gap-2">
             {STAKE_PRESETS.map((preset) => (

@@ -10,16 +10,19 @@ import {
   hapticNotification,
   hapticSelection,
   onThemeChanged,
+  setTGChromeColor,
 } from '@so/tg-adapter';
 import { useAuth } from './useAuth';
-import { useTheme } from './useTheme';
+import { paintTelegramTheme } from './useTheme';
 import { trpc } from '../lib/trpc';
 import i18n from 'i18next';
 
 function syncTelegramTheme() {
-  // Re-apply current theme mode (only affects "system" mode which follows Telegram)
-  const { mode, setMode } = useTheme.getState();
-  setMode(mode);
+  paintTelegramTheme();
+  const canvas = getComputedStyle(document.documentElement).getPropertyValue('--so-canvas').trim();
+  // The token is a space-separated RGB triplet; Telegram expects #RRGGBB.
+  if (!/^\d{1,3} \d{1,3} \d{1,3}$/.test(canvas)) return;
+  setTGChromeColor('#' + canvas.split(' ').map((channel) => Number(channel).toString(16).padStart(2, '0')).join(''));
 }
 
 export function useTelegramInit() {
@@ -77,14 +80,16 @@ export function useTelegramInit() {
   };
 
   useEffect(() => {
+    if (!isTelegramWebApp()) return;
+    syncTelegramTheme();
+    initTelegramWebApp();
+    return onThemeChanged(syncTelegramTheme);
+  }, []);
+
+  useEffect(() => {
     if (!isTelegramWebApp() || didRun.current) return;
     didRun.current = true;
-
-    initTelegramWebApp();
-    syncTelegramTheme();
-    const unsub = onThemeChanged(syncTelegramTheme);
     attempt();
-    return unsub;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

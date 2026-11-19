@@ -210,7 +210,7 @@ function PublicBody({
       </section>
 
       {joinable ? (
-        <div className="mt-3 flex w-full items-start gap-3 rounded-lg bg-care-soft p-3.5 text-left text-caption font-semibold">
+        <div className="mt-3 flex w-full items-start gap-3 rounded-lg bg-care-soft p-3.5 text-start text-caption font-semibold">
           <span className="grid h-9 w-9 shrink-0 place-items-center rounded-md bg-surface text-care">
             <IconAdd className="h-5 w-5" />
           </span>
@@ -238,7 +238,7 @@ function PublicBody({
         {/* A guest who does not know the tool yet, or came to a Need that is over, has somewhere to go */}
         <Link to="/how" className="so-focus mt-4 flex min-h-11 items-center justify-center gap-1.5 text-body-s font-bold text-ink-muted">
           {t('invite.howItWorks')}
-          <span aria-hidden>→</span>
+          <span className="rtl:-scale-x-100" aria-hidden>→</span>
         </Link>
       </div>
     </>

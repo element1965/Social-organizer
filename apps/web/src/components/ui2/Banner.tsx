@@ -1,6 +1,7 @@
 import { createContext, useCallback, useContext, useEffect, useRef, useState, type ReactNode } from 'react';
 import { cn } from '../../lib/utils';
 import { prefersReducedMotion } from './presence';
+import { LiveNotice } from './LiveNotice';
 
 export type BannerContent = {
   kicker?: string;
@@ -46,9 +47,6 @@ export function Banner({
   const held = pointerHeld || focusHeld;
   // What is left of the countdown: a hold pauses it, letting go resumes it (never a fresh full duration)
   const remaining = useRef(duration);
-  // Screen readers announce a live region when its text changes, not when it arrives with the text already
-  // in it: the region mounts empty and the words follow a moment later. Focus stays where the person is.
-  const [spoken, setSpoken] = useState(false);
   // A failure message is read in full: never cut to one line
   const wrap = tone === 'sos';
 
@@ -65,11 +63,6 @@ export function Banner({
       onClose?.();
     }, 200);
   }, [onClose]);
-
-  useEffect(() => {
-    const timer = window.setTimeout(() => setSpoken(true), 150);
-    return () => window.clearTimeout(timer);
-  }, []);
 
   useEffect(() => {
     if (duration <= 0 || held) return;
@@ -106,20 +99,7 @@ export function Banner({
         if (!event.currentTarget.contains(event.relatedTarget as Node | null)) setFocusHeld(false);
       }}
     >
-      <div
-        role={tone === 'sos' ? 'alert' : 'status'}
-        aria-live={tone === 'sos' ? 'assertive' : 'polite'}
-        aria-atomic="true"
-        className="sr-only"
-      >
-        {spoken ? (
-          <>
-            {kicker ? <span>{`${kicker} `}</span> : null}
-            <span>{title}</span>
-            {body ? <span>{` ${body}`}</span> : null}
-          </>
-        ) : null}
-      </div>
+      <LiveNotice urgent={tone === 'sos'}>{[kicker, title, body].filter(Boolean).join(' ')}</LiveNotice>
       <div className="flex items-center gap-3 rounded-xl bg-surface p-3 text-ink shadow-banner">
         {icon ? (
           <span className={cn('grid h-9 w-9 shrink-0 place-items-center rounded-md', iconTone[tone])} aria-hidden>{icon}</span>
@@ -153,13 +133,14 @@ const BannerContext = createContext<BannerContextValue | null>(null);
 
 export function BannerProvider({ children }: { children: ReactNode }) {
   const [banner, setBanner] = useState<(BannerContent & { id: number }) | null>(null);
+  const nextId = useRef(0);
   const show = useCallback((next: BannerContent) => {
-    setBanner({ ...next, id: Date.now() });
+    setBanner({ ...next, id: ++nextId.current });
   }, []);
   return (
     <BannerContext.Provider value={{ show }}>
       {children}
-      {banner ? <Banner key={banner.id} {...banner} onClose={() => setBanner(null)} /> : null}
+      {banner ? <Banner key={banner.id} {...banner} onClose={() => setBanner((current) => current?.id === banner.id ? null : current)} /> : null}
     </BannerContext.Provider>
   );
 }

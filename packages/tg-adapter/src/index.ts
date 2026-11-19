@@ -21,11 +21,17 @@ export function isTelegramWebApp(): boolean {
 
 // ---- Initialization ----
 
+const initializedApps = new WeakSet<TelegramWebApp>();
+
 export function initTelegramWebApp(): void {
+  if (!isTelegramWebApp()) return;
   const wa = window.Telegram?.WebApp;
-  if (!wa) return;
+  if (!wa || initializedApps.has(wa)) return;
+  initializedApps.add(wa);
+
   wa.ready();
-  try { wa.disableVerticalSwipes(); } catch { /* old SDK versions */ }
+  wa.expand();
+  try { wa.disableVerticalSwipes?.(); } catch { /* old SDK versions */ }
 }
 
 // ---- User data ----
@@ -57,6 +63,16 @@ export function getStartParam(): string | null {
 }
 
 // ---- Theme ----
+
+export function setTGChromeColor(canvas: string): void {
+  if (!isTelegramWebApp()) return;
+  const wa = window.Telegram?.WebApp;
+  if (!wa?.isVersionAtLeast?.('6.1')) return;
+
+  wa.setBackgroundColor?.(canvas);
+  // Older clients accept only Telegram's own theme colours for the header.
+  wa.setHeaderColor?.(wa.isVersionAtLeast('6.9') ? canvas : 'bg_color');
+}
 
 export function getTGColorScheme(): 'light' | 'dark' {
   return window.Telegram?.WebApp?.colorScheme ?? 'light';

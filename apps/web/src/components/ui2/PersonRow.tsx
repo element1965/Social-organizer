@@ -41,7 +41,7 @@ export function PersonRow({ name, subtitle, value, valueCaption, subtitleLines =
       ) : null}
     </>
   );
-  const className = 'flex min-h-row w-full items-center gap-3 px-4 py-2 text-left';
+  const className = 'flex min-h-row w-full items-center gap-3 px-4 py-2 text-start';
   if (onClick) {
     return (
       <button

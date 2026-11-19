@@ -91,7 +91,7 @@ export function IntroPage() {
               type="button"
               onClick={() => void finish()}
               disabled={complete.isPending || !resolved}
-              className="so-focus grid h-10 place-items-center rounded-md px-3 text-caption font-bold text-ink-muted"
+              className="so-focus grid min-h-11 place-items-center rounded-md px-3 text-caption font-bold text-ink-muted"
             >
               {t('intro.skip')}
             </button>
@@ -126,7 +126,7 @@ export function IntroPage() {
             <Trans i18nKey={`intro.${key}.text`} components={{ b: <b /> }} />
           </p>
         </div>
-        <div className="mt-5 flex items-center justify-center gap-1.5" role="tablist" aria-label={t('intro.progress')}>
+        <div className="mt-2.5 flex items-center justify-center" role="tablist" aria-label={t('intro.progress')}>
           {STEPS.map((i) => (
             <button
               key={i}
@@ -135,7 +135,7 @@ export function IntroPage() {
               aria-selected={i === step}
               aria-label={t('intro.frame', { n: i + 1, total: 3 })}
               onClick={() => go(i)}
-              className="so-focus grid h-6 place-items-center px-0.5"
+              className="so-focus grid h-11 w-11 place-items-center rounded-md"
             >
               <i
                 className={cn(

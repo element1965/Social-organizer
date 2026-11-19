@@ -332,7 +332,7 @@ function AskPreview() {
   const [open, setOpen] = useState(false);
   return (
     <div className="mt-4">
-      <button type="button" className="so-focus text-left text-label font-bold text-care" onClick={() => setOpen((value) => !value)}>
+      <button type="button" className="so-focus text-start text-label font-bold text-care" onClick={() => setOpen((value) => !value)}>
         {open ? t('ask.previewHide') : t('ask.preview')}
       </button>
       {open ? (

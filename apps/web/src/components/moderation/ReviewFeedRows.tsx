@@ -37,7 +37,7 @@ function IconFlag() {
 }
 
 const choiceClass = (selected: boolean) => cn(
-  'so-focus min-h-row w-full whitespace-normal rounded-lg px-4 py-3 text-left text-body-s font-bold disabled:opacity-[0.45]',
+  'so-focus min-h-row w-full whitespace-normal rounded-lg px-4 py-3 text-start text-body-s font-bold disabled:opacity-[0.45]',
   selected ? 'bg-ink text-canvas' : 'border border-line bg-canvas text-ink',
 );
 

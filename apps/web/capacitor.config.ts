@@ -1,5 +1,8 @@
 import type { CapacitorConfig } from '@capacitor/cli';
 
+// Light --so-canvas from src/styles/tokens.css, closest to the existing white native splash.
+const startupCanvas = '#f3f6f4';
+
 const config: CapacitorConfig = {
   appId: 'com.socialorganizer.app',
   appName: 'Social Organizer',
@@ -11,16 +14,17 @@ const config: CapacitorConfig = {
   },
   android: {
     allowMixedContent: false,
+    backgroundColor: startupCanvas,
   },
   ios: {
     scheme: 'socialorganizer',
     preferredContentMode: 'mobile',
-    backgroundColor: '#1e293b',
+    backgroundColor: startupCanvas,
   },
   plugins: {
     StatusBar: {
-      style: 'DARK',
-      backgroundColor: '#1e293b',
+      style: 'LIGHT',
+      backgroundColor: startupCanvas,
       overlaysWebView: false,
     },
     App: {

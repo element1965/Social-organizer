@@ -200,7 +200,7 @@ export function SupportChatPage() {
                   className={cn(
                     'max-w-[85%] space-y-2 rounded-2xl p-3 text-body-s',
                     msg.fromAdmin
-                      ? 'ml-auto rounded-br-md bg-care text-care-on'
+                      ? 'ms-auto rounded-br-md bg-care text-care-on'
                       : 'rounded-bl-md border border-line bg-surface text-ink',
                   )}
                 >
@@ -215,7 +215,7 @@ export function SupportChatPage() {
                   {msg.message && (
                     <p className="whitespace-pre-wrap">{msg.message}</p>
                   )}
-                  <p className={cn('text-micro opacity-60', msg.fromAdmin ? 'text-right' : '')}>
+                  <p className={cn('text-micro opacity-60', msg.fromAdmin ? 'text-end' : '')}>
                     {new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                   </p>
                 </div>

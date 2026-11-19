@@ -1,3 +1,4 @@
+import { isTelegramWebApp } from '@so/tg-adapter';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -197,20 +198,22 @@ export function ProfilePage() {
       </Group>
 
       <Group title={t('settings.title')}>
-        <div className="flex min-h-row flex-wrap items-center justify-between gap-2 px-4 py-2">
-          <span className="text-body font-body text-ink">{t('nav.theme')}</span>
-          <Segmented
-            variant="inline"
-            label={t('nav.theme')}
-            value={mode}
-            onChange={chooseTheme}
-            options={[
-              { value: 'system', label: t('common.themeAuto') },
-              { value: 'light', label: t('common.themeLight') },
-              { value: 'dark', label: t('common.themeDark') },
-            ]}
-          />
-        </div>
+        {isTelegramWebApp() ? null : (
+          <div className="flex min-h-row flex-wrap items-center justify-between gap-2 px-4 py-2">
+            <span className="text-body font-body text-ink">{t('nav.theme')}</span>
+            <Segmented
+              variant="inline"
+              label={t('nav.theme')}
+              value={mode}
+              onChange={chooseTheme}
+              options={[
+                { value: 'system', label: t('common.themeAuto') },
+                { value: 'light', label: t('common.themeLight') },
+                { value: 'dark', label: t('common.themeDark') },
+              ]}
+            />
+          </div>
+        )}
         <div>
           <Row
             title={t('profile.notifications')}

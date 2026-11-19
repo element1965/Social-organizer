@@ -93,6 +93,7 @@ interface TelegramWebApp {
   BackButton: TelegramBackButton;
   MainButton: TelegramMainButton;
   HapticFeedback: TelegramHapticFeedback;
+  isVersionAtLeast(version: string): boolean;
   ready(): void;
   expand(): void;
   close(): void;

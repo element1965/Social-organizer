@@ -35,7 +35,7 @@ export function Meter({ mine, others, goal, showMine }: MeterProps) {
           <i className="h-2 w-2 rounded-full bg-care" />
           {restLabel} {formatMoney(restAmount)}
         </span>
-        <b className="ml-auto font-semibold text-ink">
+        <b className="ms-auto font-semibold text-ink">
           {t('common.goal')} {formatMoney(goal)}
         </b>
       </div>
