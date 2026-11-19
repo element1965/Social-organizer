@@ -87,7 +87,6 @@ const CirclePage = lazyPage(loadCircle, 'CirclePage');
 const LoginPage = lazyPage(() => import('./pages/LoginPage'), 'LoginPage');
 const AskPage = lazyPage(() => import('./pages/AskPage'), 'AskPage');
 const CollectionPage = lazyPage(() => import('./pages/CollectionPage'), 'CollectionPage');
-const OpenCollectionsPage = lazyPage(() => import('./pages/OpenCollectionsPage'), 'OpenCollectionsPage');
 const InvitePage = lazyPage(() => import('./pages/InvitePage'), 'InvitePage');
 const ProfilePage = lazyPage(() => import('./pages/ProfilePage'), 'ProfilePage');
 const AccountPage = lazyPage(() => import('./pages/AccountPage'), 'AccountPage');
@@ -450,7 +449,6 @@ export function App() {
                 <Route path="/me" element={<ProfilePage />} />
                 <Route path="/me/account" element={<AccountPage />} />
                 <Route path="/me/stake" element={<StakePage />} />
-                <Route path="/me/open" element={<OpenCollectionsPage />} />
                 <Route path="/me/history" element={<HistoryPage />} />
                 <Route path="/me/help" element={<HelpPage />} />
                 <Route path="/me/help/faq" element={<FaqScreen />} />

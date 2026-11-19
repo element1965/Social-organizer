@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { CONTACT_TYPES, contactValueAllowed, type ContactType } from '@so/shared';
+import { CONTACT_TYPES, contactValueAllowed, isValidReferralSlug, type ContactType } from '@so/shared';
 import { isTelegramWebApp } from '@so/tg-adapter';
 import { trpc } from '../lib/trpc';
 import { useAuth } from '../hooks/useAuth';
@@ -45,7 +45,7 @@ function slugOk(value: string, original: string): boolean {
   const next = value.trim().toLowerCase();
   if (next === original) return true;
   if (!next && !original) return true;
-  return /^[a-zA-Z0-9_-]{3,30}$/.test(next);
+  return isValidReferralSlug(next);
 }
 
 export function AccountPage() {
@@ -60,7 +60,13 @@ export function AccountPage() {
   const settings = trpc.settings.get.useQuery();
   const contacts = trpc.user.getContacts.useQuery({});
   const updateUser = trpc.user.update.useMutation({ meta: { notifyOnError: false } });
-  const updateSlug = trpc.user.updateReferralSlug.useMutation({ meta: { notifyOnError: false } });
+  const updateSlug = trpc.user.updateReferralSlug.useMutation({
+    meta: { notifyOnError: false },
+    onSuccess: async ({ referralSlug }) => {
+      await utils.user.inviteSlug.cancel();
+      utils.user.inviteSlug.setData(undefined, { referralSlug });
+    },
+  });
   const updateContacts = trpc.user.updateContacts.useMutation({ meta: { notifyOnError: false } });
   const showEmail = trpc.user.updateContacts.useMutation();
   const updateHide = trpc.settings.updateHideContacts.useMutation({

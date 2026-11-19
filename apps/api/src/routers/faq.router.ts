@@ -3,6 +3,7 @@ import { router, protectedProcedure, publicProcedure } from '../trpc.js';
 import { TRPCError } from '@trpc/server';
 import { translateFaqItem } from '../services/translate.service.js';
 import { ADMIN_IDS } from '../admin.js';
+import { readFaq } from '../services/faq.service.js';
 
 const SUPPORTED_LANGUAGES = [
   'en', 'ru', 'es', 'fr', 'de', 'pt', 'it', 'zh', 'ja', 'ko',
@@ -19,47 +20,15 @@ function assertAdmin(userId: string) {
 export const faqRouter = router({
   list: protectedProcedure
     .input(z.object({ language: z.string().default('en') }))
-    .query(async ({ ctx, input }) => {
-      return ctx.db.faqItem.findMany({
-        where: { language: input.language },
-        orderBy: { viewCount: 'desc' },
-      });
-    }),
+    .query(({ ctx, input }) => readFaq(ctx.db, input.language)),
 
   top: publicProcedure
     .input(z.object({ language: z.string().default('en'), limit: z.number().min(1).max(20).default(5) }))
-    .query(async ({ ctx, input }) => {
-      let items = await ctx.db.faqItem.findMany({
-        where: { language: input.language },
-        orderBy: { viewCount: 'desc' },
-        take: input.limit,
-      });
-      // Fallback to English if no items for requested language
-      if (items.length === 0 && input.language !== 'en') {
-        items = await ctx.db.faqItem.findMany({
-          where: { language: 'en' },
-          orderBy: { viewCount: 'desc' },
-          take: input.limit,
-        });
-      }
-      return items;
-    }),
+    .query(({ ctx, input }) => readFaq(ctx.db, input.language, input.limit)),
 
   all: publicProcedure
     .input(z.object({ language: z.string().default('en') }))
-    .query(async ({ ctx, input }) => {
-      let items = await ctx.db.faqItem.findMany({
-        where: { language: input.language },
-        orderBy: { viewCount: 'desc' },
-      });
-      if (items.length === 0 && input.language !== 'en') {
-        items = await ctx.db.faqItem.findMany({
-          where: { language: 'en' },
-          orderBy: { viewCount: 'desc' },
-        });
-      }
-      return items;
-    }),
+    .query(({ ctx, input }) => readFaq(ctx.db, input.language)),
 
   incrementView: protectedProcedure
     .input(z.object({ id: z.string() }))

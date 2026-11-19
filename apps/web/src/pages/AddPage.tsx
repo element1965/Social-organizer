@@ -7,7 +7,7 @@ import { ArrivalList } from '../components/add/ArrivalList';
 import { ConfirmSheet } from '../components/add/ConfirmSheet';
 import { LinkCard } from '../components/add/LinkCard';
 import { SuggestList } from '../components/add/SuggestList';
-import { inviteSlug } from '../components/add/links';
+import { QueryState } from '../components/profile/QueryState';
 import { ShakeHint } from '../components/shake/ShakeHint';
 import { PathCard } from '../components/circle/PathToRequest';
 import { trpc } from '../lib/trpc';
@@ -20,6 +20,9 @@ interface ConfirmPerson {
 export function AddPage() {
   const { t } = useTranslation();
   const me = trpc.user.me.useQuery();
+  const invite = trpc.user.inviteSlug.useQuery();
+  // If the short slug cannot be fetched, the permanent id link still works (old /i/<id> links resolve forever)
+  const slug = invite.data?.referralSlug ?? me.data?.referralSlug ?? (invite.isError ? me.data?.id : undefined);
   // A request through my link can arrive while this screen is open: the app-wide pulse re-reads the list
   const incoming = trpc.pending.incoming.useQuery();
   const connections = trpc.connection.list.useQuery();
@@ -48,8 +51,12 @@ export function AddPage() {
   return (
     <Screen width="column">
       <h1 className="pt-6 text-h1 font-extrabold text-ink">{t('nav.add')}</h1>
-      {me.data ? (
-        <LinkCard slug={inviteSlug(me.data)} name={me.data.name} customSlug={me.data.referralSlug} />
+      {me.data && slug ? (
+        <LinkCard slug={slug} name={me.data.name} />
+      ) : me.isError || invite.isError ? (
+        <Card className="mt-4">
+          <QueryState isError onRetry={() => { void me.refetch(); void invite.refetch(); }} />
+        </Card>
       ) : (
         <Card className="mt-4" aria-busy="true">
           <div className="h-40 animate-pulse rounded-lg bg-surface-2" />

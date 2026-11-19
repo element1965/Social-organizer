@@ -1,3 +1,4 @@
+import { createUserWithReferralSlug } from './referral-slug.service.js';
 import { Prisma, type PrismaClient } from '@so/db';
 import { restoreMutedAccount } from './account-restore.service.js';
 
@@ -86,18 +87,16 @@ async function resolveOnce(db: PrismaClient, id: ExternalIdentity): Promise<{ us
   }
 
   // 3. New person
-  const user = await db.user.create({
-    data: {
-      name: id.name,
-      email,
-      emailVerifiedAt: email ? new Date() : null,
-      photoUrl: id.photoUrl || null,
-      monthlyBudget: 1,
-      remainingBudget: 1,
-      onboardingCompleted: true,
-      platformAccounts: {
-        create: { platform: id.platform, platformId: id.platformId, accessToken: id.accessToken ?? null },
-      },
+  const user = await createUserWithReferralSlug(db, {
+    name: id.name,
+    email,
+    emailVerifiedAt: email ? new Date() : null,
+    photoUrl: id.photoUrl || null,
+    monthlyBudget: 1,
+    remainingBudget: 1,
+    onboardingCompleted: true,
+    platformAccounts: {
+      create: { platform: id.platform, platformId: id.platformId, accessToken: id.accessToken ?? null },
     },
   });
   return { userId: user.id, isNew: true };

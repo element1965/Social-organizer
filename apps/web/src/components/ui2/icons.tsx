@@ -150,3 +150,71 @@ export function IconUserPlus(props: IconProps) {
     </Svg>
   );
 }
+
+export { IconCheck, IconClose } from '../add/icons';
+export { IconClock } from '../circle/icons';
+export { IconGlobe, IconPlay } from '../site/icons';
+
+export function IconChart(props: IconProps) {
+  return <Svg {...props}><path d="M4 4v16h16M8 16v-4m5 4V7m5 9v-6" /></Svg>;
+}
+
+export function IconLink(props: IconProps) {
+  return <Svg {...props}><path d="m10 14 4-4m-6 2-2 2a3 3 0 0 0 4 4l2-2m0-8 2-2a3 3 0 0 1 4 4l-2 2" /></Svg>;
+}
+
+export function IconPencil(props: IconProps) {
+  return <Svg {...props}><path d="m4 20 1-5L16.5 3.5a2.1 2.1 0 0 1 3 3L8 19l-4 1Zm10-14 4 4" /></Svg>;
+}
+
+export function IconSend(props: IconProps) {
+  return <Svg {...props}><path d="m21 3-6 18-4-8-8-4 18-6ZM11 13 21 3" /></Svg>;
+}
+
+export function IconTrash(props: IconProps) {
+  return <Svg {...props}><path d="M4 6h16M9 6V3h6v3M6 6l1 15h10l1-15M10 10v7m4-7v7" /></Svg>;
+}
+
+export function IconToggleOff(props: IconProps) {
+  return <Svg {...props}><rect x="3" y="6" width="18" height="12" rx="6" /><circle cx="9" cy="12" r="2" /></Svg>;
+}
+
+export function IconToggleOn(props: IconProps) {
+  return <Svg {...props}><rect x="3" y="6" width="18" height="12" rx="6" /><circle cx="15" cy="12" r="2" /></Svg>;
+}
+
+export function IconMic(props: IconProps) {
+  return <Svg {...props}><rect x="9" y="3" width="6" height="11" rx="3" /><path d="M6 11v1a6 6 0 0 0 12 0v-1m-6 7v3" /></Svg>;
+}
+
+export function IconMicOff(props: IconProps) {
+  return <Svg {...props}><path d="m3 3 18 18M9 5a3 3 0 0 1 6 1v5M9 9v2a3 3 0 0 0 4 3m-7-3v1a6 6 0 0 0 10 4m2-4v-1m-6 7v3" /></Svg>;
+}
+
+export function IconSpinner(props: IconProps) {
+  return <Svg {...props}><path d="M21 12a9 9 0 1 1-9-9" /></Svg>;
+}
+
+export function IconAttachment(props: IconProps) {
+  return <Svg {...props}><path d="m8 13 6-6a2 2 0 1 1 3 3l-7 7a4 4 0 0 1-6-6l7-7a6 6 0 0 1 9 9l-7 7" /></Svg>;
+}
+
+export function IconUpload(props: IconProps) {
+  return <Svg {...props}><path d="M12 16V3m-4 4 4-4 4 4M4 15v5h16v-5" /></Svg>;
+}
+
+export function IconMail(props: IconProps) {
+  return <Svg {...props}><rect x="3" y="5" width="18" height="14" rx="2" /><path d="m3 7 9 6 9-6" /></Svg>;
+}
+
+export function IconImagePlus(props: IconProps) {
+  return <Svg {...props}><path d="M20 13v6H4V5h8m2 3h7m-3.5-3.5v7M4 17l5-5 4 4 2-2 5 5" /></Svg>;
+}
+
+export function IconFile(props: IconProps) {
+  return <Svg {...props}><path d="M6 3h8l4 4v14H6V3Zm8 0v5h4m-9 5h6m-6 4h6" /></Svg>;
+}
+
+export function IconVolume(props: IconProps) {
+  return <Svg {...props}><path d="M3 9h4l5-4v14l-5-4H3V9Zm12 0a4 4 0 0 1 0 6m3-9a8 8 0 0 1 0 12" /></Svg>;
+}

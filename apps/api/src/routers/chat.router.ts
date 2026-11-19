@@ -3,7 +3,7 @@ import OpenAI from 'openai';
 import { router, protectedProcedure } from '../trpc.js';
 import { getDb } from '@so/db';
 import { SCREEN_GUIDE } from '../knowledge/screens.js';
-import { translateText } from '../services/translate.service.js';
+import { readFaq } from '../services/faq.service.js';
 import { TRPCError } from '@trpc/server';
 import { hit, HOUR } from '../services/rate-limit.service.js';
 
@@ -121,28 +121,7 @@ async function buildSystemPrompt(language: string): Promise<string> {
   const db = getDb();
   // Normalize to 2-char language code so 'ru-RU' → 'ru', 'en-US' → 'en', etc.
   const lang2 = language.slice(0, 2).toLowerCase();
-  // Load FAQ from DB in user's language
-  let faqItems = await db.faqItem.findMany({
-    where: { language: lang2 },
-    orderBy: { viewCount: 'desc' },
-  });
-  // If no FAQ in user's language, load Russian and translate
-  if (faqItems.length === 0 && lang2 !== 'ru') {
-    const ruItems = await db.faqItem.findMany({
-      where: { language: 'ru' },
-      orderBy: { viewCount: 'desc' },
-    });
-    if (ruItems.length > 0) {
-      const ruBlock = ruItems.map(f => `Q: ${f.question}\nA: ${f.answer}`).join('\n\n');
-      try {
-        const translated = await translateText(ruBlock, 'ru', lang2);
-        return buildPrompt(language, 'FREQUENTLY ASKED QUESTIONS:\n\n' + translated);
-      } catch {
-        // If translation fails, use Russian as-is
-        faqItems = ruItems;
-      }
-    }
-  }
+  const faqItems = await readFaq(db, lang2);
 
   const faqBlock = faqItems.length > 0
     ? 'FREQUENTLY ASKED QUESTIONS:\n\n' + faqItems.map(f => `Q: ${f.question}\nA: ${f.answer}`).join('\n\n')

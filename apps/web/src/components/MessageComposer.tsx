@@ -1,6 +1,6 @@
 import { accountFetch, currentAccount } from '../lib/trpc';
 import { useRef, useState } from 'react';
-import { Link, Loader2, Paperclip, Upload, X } from 'lucide-react';
+import { IconLink, IconSpinner, IconAttachment, IconUpload, IconClose } from './ui2/icons';
 import { useTranslation } from 'react-i18next';
 import { Button } from './ui2/Button';
 
@@ -120,16 +120,16 @@ export function MessageComposer({ value, onChange, disabled }: MessageComposerPr
             size="sm"
             onClick={() => fileInputRef.current?.click()}
             disabled={uploading || disabled}
-            icon={uploading ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Upload className="h-3.5 w-3.5" />}
+            icon={uploading ? <IconSpinner className="h-3.5 w-3.5 animate-spin" /> : <IconUpload className="h-3.5 w-3.5" />}
           >
             {t('broadcast.uploadFile')}
           </Button>
           {mediaFileName && (
             <span className="flex items-center gap-1 text-label font-semibold text-care">
-              <Paperclip className="h-3 w-3" />
+              <IconAttachment className="h-3 w-3" />
               {mediaFileName}
               <button type="button" onClick={clearMedia} className="so-focus ml-1 text-ink-subtle hover:text-sos" aria-label={t('common.close')}>
-                <X className="h-3 w-3" />
+                <IconClose className="h-3 w-3" />
               </button>
             </span>
           )}
@@ -149,7 +149,7 @@ export function MessageComposer({ value, onChange, disabled }: MessageComposerPr
 
       <div className="space-y-2">
         <div className="flex items-center gap-1.5 text-label font-semibold text-ink-muted">
-          <Link className="h-3.5 w-3.5" />
+          <IconLink className="h-3.5 w-3.5" />
           {t('broadcast.buttonLink')}
         </div>
         <div className="flex gap-2">

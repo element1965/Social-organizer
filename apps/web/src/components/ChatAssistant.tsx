@@ -1,11 +1,12 @@
 import { useState, useRef, useEffect } from 'react';
-import { Send, Mic, MicOff } from 'lucide-react';
+import { IconSend, IconMic, IconMicOff } from './ui2/icons';
 import { useTranslation } from 'react-i18next';
 import { cn } from '../lib/utils';
 import { trpc } from '../lib/trpc';
 import { Button } from './ui2/Button';
 import { Chip } from './ui2/Chip';
 import { Segmented } from './ui2/Segmented';
+import { useBanner } from './ui2/Banner';
 
 interface Message {
   id: string;
@@ -17,6 +18,7 @@ interface Message {
 export function ChatAssistant() {
   const { t, i18n } = useTranslation();
   const utils = trpc.useUtils();
+  const banner = useBanner();
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [isListening, setIsListening] = useState(false);
@@ -94,7 +96,7 @@ export function ChatAssistant() {
     const SpeechRecognitionAPI = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
 
     if (!SpeechRecognitionAPI) {
-      alert(t('chat.speechNotSupported'));
+      banner.show({ title: t('chat.speechNotSupported') });
       return;
     }
 
@@ -288,7 +290,7 @@ export function ChatAssistant() {
           disabled={isLoading}
           aria-label={isListening ? t('chat.stopListening') : t('chat.startListening')}
           aria-pressed={isListening}
-          icon={isListening ? <MicOff className="h-5 w-5" /> : <Mic className="h-5 w-5" />}
+          icon={isListening ? <IconMicOff className="h-5 w-5" /> : <IconMic className="h-5 w-5" />}
         />
         <textarea
           ref={inputRef}
@@ -313,7 +315,7 @@ export function ChatAssistant() {
           onClick={handleSubmit}
           disabled={!canSend}
           aria-label={t('chat.send')}
-          icon={<Send className="h-5 w-5" />}
+          icon={<IconSend className="h-5 w-5" />}
         />
       </div>
     </div>

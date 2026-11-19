@@ -1,4 +1,4 @@
-import { Mail, Globe, Link } from 'lucide-react';
+import { IconMail, IconGlobe, IconLink } from '../ui2/icons';
 
 // SVG icons for social networks
 const TelegramIcon = () => (
@@ -105,15 +105,15 @@ export function SocialIcon({ type, className = 'w-5 h-5' }: SocialIconProps) {
     );
   }
 
-  // Fallback to lucide icons
+  // Fallback to local icons
   switch (type) {
     case 'mail':
     case 'email':
-      return <Mail className={className} />;
+      return <IconMail className={className} />;
     case 'globe':
     case 'website':
-      return <Globe className={className} />;
+      return <IconGlobe className={className} />;
     default:
-      return <Link className={className} />;
+      return <IconLink className={className} />;
   }
 }

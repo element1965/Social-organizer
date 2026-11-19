@@ -1,3 +1,4 @@
+import { createUserWithReferralSlug } from '../services/referral-slug.service.js';
 import { z } from 'zod';
 import { router, publicProcedure, protectedProcedure } from '../trpc.js';
 import { TRPCError } from '@trpc/server';
@@ -88,20 +89,18 @@ async function signInTelegramUser(db: Context['db'], tgUser: TelegramUserData, p
 
     const name = [tgUser.first_name, tgUser.last_name].filter(Boolean).join(' ') || `User_${platformId}`;
     const lang = tgUser.language_code?.slice(0, 2) || 'en';
-    const user = await db.user.create({
-      data: {
-        name,
-        photoUrl: tgUser.photo_url || null,
-        language: lang,
-        monthlyBudget: 1,
-        remainingBudget: 1,
-        onboardingCompleted: true,
-        platformAccounts: {
-          create: {
-            platform: 'TELEGRAM',
-            platformId,
-            accessToken: platformToken,
-          },
+    const user = await createUserWithReferralSlug(db, {
+      name,
+      photoUrl: tgUser.photo_url || null,
+      language: lang,
+      monthlyBudget: 1,
+      remainingBudget: 1,
+      onboardingCompleted: true,
+      platformAccounts: {
+        create: {
+          platform: 'TELEGRAM',
+          platformId,
+          accessToken: platformToken,
         },
       },
     });
@@ -154,15 +153,13 @@ export const authRouter = router({
       }
 
       const passwordHash = await bcrypt.hash(input.password, 10);
-      const user = await ctx.db.user.create({
-        data: {
-          email: input.email.toLowerCase(),
-          passwordHash,
-          name: input.name || input.email.split('@')[0] || 'User',
-          monthlyBudget: 1,
-          remainingBudget: 1,
-          onboardingCompleted: true,
-        },
+      const user = await createUserWithReferralSlug(ctx.db, {
+        email: input.email.toLowerCase(),
+        passwordHash,
+        name: input.name || input.email.split('@')[0] || 'User',
+        monthlyBudget: 1,
+        remainingBudget: 1,
+        onboardingCompleted: true,
       });
 
       const accessToken = signedInToken(ctx.db, user.id);

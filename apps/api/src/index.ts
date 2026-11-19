@@ -74,6 +74,10 @@ const WEB_DIST = existsSync(resolve(__dirname, 'public'))
   : resolve(__dirname, '../../web/dist');
 
 const APP_BASE_URL = process.env.WEB_APP_URL || 'https://www.orginizer.com';
+const SITE_FILES = new Set([
+  '/favicon.ico', '/apple-touch-icon.png', '/robots.txt', '/sitemap.xml', '/manifest.webmanifest',
+  '/icon-192.png', '/icon-512.png', '/icon-maskable-512.png', '/push-badge.png',
+]);
 
 // Bounce the Apple Sign In result back to the client.
 // - web: 302 to the SPA with tokens in the URL fragment (kept out of server logs)
@@ -452,6 +456,13 @@ async function start() {
 
     // Serve web frontend (if dist exists)
     if (existsSync(WEB_DIST)) {
+      // The old ?invite= entry point can also be shared on the landing and How pages.
+      app.addHook('onRequest', async (req, reply) => {
+        const [path, query] = req.url.split('?', 2);
+        if ((path === '/' || path === '/how') && new URLSearchParams(query).has('invite')) {
+          reply.header('X-Robots-Tag', 'noindex');
+        }
+      });
       await app.register(fastifyStatic, {
         root: WEB_DIST,
         prefix: '/',
@@ -474,6 +485,7 @@ async function start() {
       let indexHtml: string | null = null;
       const serveInvite = async (req: FastifyRequest, reply: FastifyReply, token: string) => {
         reply.header('Cache-Control', 'no-cache, no-store, must-revalidate');
+        reply.header('X-Robots-Tag', 'noindex');
         try {
           indexHtml ??= await readFile(indexHtmlPath, 'utf8');
           const preview = await findInvitePreview(getDb(), token);
@@ -494,6 +506,7 @@ async function start() {
       // The public Need page gets its own link card: the author's name and photo, never amounts.
       app.get('/sos/:id', async (req, reply) => {
         reply.header('Cache-Control', 'no-cache, no-store, must-revalidate');
+        reply.header('X-Robots-Tag', 'noindex');
         try {
           indexHtml ??= await readFile(indexHtmlPath, 'utf8');
           const preview = await findSosPreview(getDb(), (req.params as { id: string }).id);
@@ -508,10 +521,13 @@ async function start() {
         }
       });
 
-      // SPA fallback: all non-API routes → index.html
-      app.setNotFoundHandler((_req, reply) => {
+      // A missing site asset should have a 404, not a successful HTML response.
+      app.setNotFoundHandler((req, reply) => {
+        if (SITE_FILES.has(req.url.split('?')[0]!)) {
+          return reply.code(404).send({ error: 'Not found' });
+        }
         reply.header('Cache-Control', 'no-cache, no-store, must-revalidate');
-        reply.sendFile('index.html', WEB_DIST);
+        return reply.sendFile('index.html', WEB_DIST);
       });
 
       console.log(`Serving web frontend from ${WEB_DIST}`);

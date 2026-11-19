@@ -1,3 +1,4 @@
+import { RESERVED_REFERRAL_SLUGS } from '@so/shared';
 import { Capacitor } from '@capacitor/core';
 import { detectDevice } from './device';
 
@@ -5,41 +6,6 @@ export type ScanTarget =
   | { kind: 'invite'; token: string }
   | { kind: 'sos'; id: string }
   | { kind: 'unknown' };
-
-/** Single path segments that are app routes, not a referral slug. */
-const RESERVED = new Set([
-  'add',
-  'ask',
-  'auth',
-  'arvut',
-  'collection',
-  'create',
-  'dashboard',
-  'delete-account',
-  'dev',
-  'faq',
-  'how',
-  'intro',
-  'invite',
-  'login',
-  'matches',
-  'me',
-  'needs',
-  'network',
-  'notifications',
-  'onboarding',
-  'people',
-  'person',
-  'privacy',
-  'profile',
-  'seed',
-  'settings',
-  'skills',
-  'sos',
-  'support',
-  'terms',
-  'welcome',
-]);
 
 function decodePart(value: string): string {
   try {
@@ -130,7 +96,7 @@ export function parseScannedText(raw: string): ScanTarget {
     return token ? { kind: 'invite', token } : { kind: 'unknown' };
   }
 
-  if (parts.length === 1 && head && TOKEN.test(head) && !RESERVED.has(head.toLowerCase())) {
+  if (parts.length === 1 && head && TOKEN.test(head) && !RESERVED_REFERRAL_SLUGS.has(head.toLowerCase())) {
     return { kind: 'invite', token: head };
   }
   return { kind: 'unknown' };
