@@ -1,5 +1,5 @@
 import { trpc } from '../../lib/trpc';
-import { trpcCode } from './errors';
+import { errorCode } from '../../lib/errors';
 import { isOpenParticipation, isPastParticipation } from './collections';
 
 /**
@@ -14,7 +14,7 @@ export function useNeedCounts(): { open: number; past: number } | null {
   const history = trpc.collection.myHistory.useQuery(undefined, { retry: false });
 
   // An API without myHistory yet counts as no own past Needs rather than hiding the numbers.
-  const historyMissing = history.isError && trpcCode(history.error) === 'NOT_FOUND';
+  const historyMissing = history.isError && errorCode(history.error) === 'NOT_FOUND';
   if (!me.data || !active.data || !participating.data || (!history.data && !historyMissing)) return null;
 
   const selfId = me.data.id;

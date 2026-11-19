@@ -119,7 +119,7 @@ export function InvitePage() {
   }, [isRealUser, token, invite.data]);
 
   // The source survives sign-in the same way; a guest opening a live invite is counted once per session
-  const opened = trpc.invite.opened.useMutation();
+  const opened = trpc.invite.opened.useMutation({ meta: { notifyOnError: false } });
   const countOpen = opened.mutate;
   const inviteLoaded = !!invite.data;
   useEffect(() => {
@@ -249,6 +249,7 @@ function AcceptView({
   const [installStep, setInstallStep] = useState(false);
 
   const accept = trpc.invite.accept.useMutation({
+    meta: { notifyOnError: false },
     onSuccess: (data) => {
       setPending(null);
       clearInviteSrc();

@@ -107,6 +107,7 @@ export function BroadcastPanel() {
   };
 
   const sendAllMutation = trpc.broadcast.sendAll.useMutation({
+    meta: { notifyOnError: false },
     onSuccess: (data) => note(t('broadcast.sentSuccess', { count: data.sent })),
     onError: () => note(t('broadcast.error'), true),
   });
@@ -128,6 +129,7 @@ export function BroadcastPanel() {
   const [scheduledAt, setScheduledAt] = useState('');
   const scheduledList = trpc.broadcast.listScheduled.useQuery(undefined, { enabled: tab === 'scheduled' });
   const scheduleMutation = trpc.broadcast.schedulePost.useMutation({
+    meta: { notifyOnError: false },
     onSuccess: () => {
       note(t('broadcast.scheduledSuccess'));
       setScheduledMsg({ ...emptyMessage });
@@ -137,6 +139,7 @@ export function BroadcastPanel() {
     onError: () => note(t('broadcast.error'), true),
   });
   const cancelMutation = trpc.broadcast.cancelScheduled.useMutation({
+    meta: { notifyOnError: false },
     onSuccess: () => {
       note(t('broadcast.cancelledSuccess'));
       scheduledList.refetch();
@@ -183,6 +186,7 @@ export function BroadcastPanel() {
   const chainList = trpc.broadcast.listChainMessages.useQuery(undefined, { enabled: tab === 'autochain' });
   const chainStatsQuery = trpc.broadcast.chainStats.useQuery(undefined, { enabled: tab === 'autochain' });
   const createChainMutation = trpc.broadcast.createChainMessage.useMutation({
+    meta: { notifyOnError: false },
     onSuccess: () => {
       note(t('broadcast.chainAdded'));
       setChainMsg({ ...emptyMessage });
@@ -243,7 +247,7 @@ export function BroadcastPanel() {
     });
   };
 
-  const markRead = trpc.broadcast.markRead.useMutation();
+  const markRead = trpc.broadcast.markRead.useMutation({ meta: { notifyOnError: false } });
   useEffect(() => { markRead.mutate(); }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const isPending = sendAllMutation.isPending

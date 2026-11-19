@@ -369,6 +369,22 @@
     "unavailableBody": "Conecte-se à internet e tente novamente. As pessoas guardadas neste dispositivo continuam disponíveis.",
     "showSaved": "Mostrar pessoas guardadas"
   },
+  "errors": {
+    "notSaved": "Não salvo",
+    "offline": "Sem conexão. Verifique a internet e tente de novo.",
+    "server": "Algo deu errado do nosso lado. Tente de novo em um minuto.",
+    "session": "Sua sessão terminou. Entre de novo.",
+    "forbidden": "Isso não está disponível para sua conta.",
+    "rateLimit": "Tentativas demais. Espere um minuto e tente de novo.",
+    "invalid": "Confira o que você digitou e tente de novo.",
+    "linkTooLong": "O link é longo demais: no máximo {{max}} caracteres.",
+    "changed": "Os dados mudaram. Atualize a página e tente de novo.",
+    "loadFailed": "Não foi possível carregar",
+    "needGoneTitle": "Não encontramos esta necessidade",
+    "needGoneBody": "Talvez tenha sido removida, ou o link está errado.",
+    "pageGoneTitle": "Esta página não existe",
+    "pageGoneBody": "O endereço pode ter um erro de digitação ou estar desatualizado."
+  },
   "collection": {
     "close": "Encerrar necessidade",
     "saveAmount": "Salvar",

@@ -45,7 +45,7 @@ function useScanConsume() {
   const navigate = useNavigate();
   const utils = trpc.useUtils();
   const me = trpc.user.me.useQuery();
-  const accept = trpc.invite.accept.useMutation();
+  const accept = trpc.invite.accept.useMutation({ meta: { notifyOnError: false } });
   const [person, setPerson] = useState<ScanResultPerson | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
   const hold = useRef(false);

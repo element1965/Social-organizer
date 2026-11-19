@@ -366,6 +366,22 @@
     "unavailableBody": "Maak verbinding met internet en probeer het opnieuw. De mensen die op dit apparaat zijn opgeslagen blijven beschikbaar.",
     "showSaved": "Opgeslagen mensen tonen"
   },
+  "errors": {
+    "notSaved": "Niet opgeslagen",
+    "offline": "Geen verbinding. Controleer je internet en probeer het opnieuw.",
+    "server": "Er ging bij ons iets mis. Probeer het over een minuut opnieuw.",
+    "session": "Je sessie is verlopen. Log opnieuw in.",
+    "forbidden": "Dit is niet beschikbaar voor je account.",
+    "rateLimit": "Te veel pogingen. Wacht een minuut en probeer het opnieuw.",
+    "invalid": "Controleer wat je hebt ingevuld en probeer het opnieuw.",
+    "linkTooLong": "De link is te lang: maximaal {{max}} tekens.",
+    "changed": "De gegevens zijn gewijzigd. Vernieuw de pagina en probeer het opnieuw.",
+    "loadFailed": "Laden is niet gelukt",
+    "needGoneTitle": "Deze behoefte bestaat niet",
+    "needGoneBody": "Misschien is ze verwijderd, of de link klopt niet.",
+    "pageGoneTitle": "Deze pagina bestaat niet",
+    "pageGoneBody": "Misschien staat er een typfout in het adres, of is het verouderd."
+  },
   "collection": {
     "close": "Behoefte sluiten",
     "saveAmount": "Opslaan",

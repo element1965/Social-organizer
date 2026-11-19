@@ -363,6 +363,22 @@
     "unavailableBody": "请连接互联网后重试。保存在此设备上的人员仍可查看。",
     "showSaved": "查看已保存的人员"
   },
+  "errors": {
+    "notSaved": "未保存",
+    "offline": "无网络连接。请检查网络后重试。",
+    "server": "我们这边出了问题。请过一分钟再试。",
+    "session": "登录已过期。请重新登录。",
+    "forbidden": "你的账号无法使用此功能。",
+    "rateLimit": "尝试次数过多。请等一分钟再试。",
+    "invalid": "请检查你输入的内容后再试。",
+    "linkTooLong": "链接太长了：最多 {{max}} 个字符。",
+    "changed": "数据已变化。请刷新页面后再试。",
+    "loadFailed": "加载失败",
+    "needGoneTitle": "找不到这个需求",
+    "needGoneBody": "它可能已被删除，或链接有误。",
+    "pageGoneTitle": "没有这个页面",
+    "pageGoneBody": "地址可能输错了，或已经失效。"
+  },
   "collection": {
     "close": "关闭需求",
     "saveAmount": "保存",

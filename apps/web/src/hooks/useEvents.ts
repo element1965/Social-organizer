@@ -395,41 +395,30 @@ export function useEvents(options: { displayName?: (id: string, fallback: string
 }
 
 /**
- * "Not for me": dismisses the request notices of a Need, which ends its impulse on the graph. The notices in
- * `dismissIds` go first, at once; the rest (the unread and read ones of the same Need) are swept in the background
- * after a list fetch, skipping `skipIds` (already being dismissed by the caller). Resolves true when the asked
- * dismissals worked (with no `dismissIds`: when the sweep did).
+ * "Not for me": dismisses every open request notice of a Need (the visible ones, the read ones, older waves)
+ * with one server call (`notification.dismissNeed`), which ends its impulse on the graph. The decision is
+ * recorded whole or not at all, so a failure leaves the feed row in place to try again. Resolves to null when it
+ * was recorded, or to the original error, so the caller can tell its kind once.
  */
 export function useDeclineNeed() {
   const utils = trpc.useUtils();
-  const dismiss = trpc.notification.dismiss.useMutation();
-  // Typed by hand: the inferred result type is deep enough to trip the compiler
-  const dismissOne = dismiss.mutateAsync as unknown as (input: { id: string }) => Promise<unknown>;
+  // The caller tells the person, once, from the result this resolves to
+  const dismissNeed = trpc.notification.dismissNeed.useMutation({ meta: { notifyOnError: false } });
+  const send = dismissNeed.mutateAsync;
   return useCallback(
-    async (collectionId: string, dismissIds: string[] = [], skipIds: string[] = []): Promise<boolean> => {
-      const handled = new Set([...dismissIds, ...skipIds]);
-      const known = Promise.all(dismissIds.map((id) => dismissOne({ id }).then(() => true, () => false)));
-      const sweep = (async () => {
-        try {
-          const list = (await utils.client.notification.list.query({ limit: 100 })) as unknown as { items: NotificationItem[] };
-          const rest = list.items.filter(
-            (n) => n.collectionId === collectionId && !handled.has(n.id) && REQUEST_TYPES.has(n.type) && (n.status === 'UNREAD' || n.status === 'READ'),
-          );
-          const done = await Promise.all(rest.map((n) => dismissOne({ id: n.id }).then(() => true, () => false)));
-          return done.every(Boolean);
-        } catch {
-          return false;
-        }
-      })();
-      const [knownOk, sweepOk] = await Promise.all([known, sweep]);
-      await Promise.all([
-        utils.notification.list.invalidate(undefined, { refetchType: 'all' }),
-        utils.notification.unreadCount.invalidate(undefined, { refetchType: 'all' }),
-        utils.notification.attention.invalidate(undefined, { refetchType: 'all' }),
-      ]);
-      return dismissIds.length ? knownOk.every(Boolean) : sweepOk;
+    async (collectionId: string): Promise<unknown | null> => {
+      let failure: unknown = null;
+      try {
+        await send({ collectionId });
+      } catch (error) {
+        failure = error ?? new Error('Dismiss failed');
+      }
+      void utils.notification.list.invalidate(undefined, { refetchType: 'all' });
+      void utils.notification.unreadCount.invalidate(undefined, { refetchType: 'all' });
+      void utils.notification.attention.invalidate(undefined, { refetchType: 'all' });
+      return failure;
     },
-    [utils, dismissOne],
+    [utils, send],
   );
 }
 

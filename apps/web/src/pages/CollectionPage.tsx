@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { MIN_COLLECTION_AMOUNT, MIN_OBLIGATION_AMOUNT, REGULAR_CYCLE_DAYS } from '@so/shared';
+import { MAX_CHAT_LINK_LENGTH, MIN_COLLECTION_AMOUNT, MIN_OBLIGATION_AMOUNT, REGULAR_CYCLE_DAYS } from '@so/shared';
 import { IconChat, IconClock, IconPen, IconQr, IconShare } from '../components/collection/icons';
 import { PreviousCycles } from '../components/collection/PreviousCycles';
 import { ParticipantList, type ParticipantRow } from '../components/collection/ParticipantList';
@@ -9,7 +9,7 @@ import { MarkableParticipantList } from '../components/collection/PaidMarks';
 import { QrSheet } from '../components/collection/QrSheet';
 import { CommunityHoldNote } from '../components/moderation/CommunityHoldNote';
 import { ComplainEntry } from '../components/moderation/ComplainEntry';
-import { amountIssue, asDate, firstName, formatDay, isHttpsUrl, parseWhole, relativePast, shortUrl } from '../components/collection/text';
+import { amountIssue, asDate, chatLinkIssue, firstName, formatDay, isHttpsUrl, parseWhole, relativePast, shortUrl } from '../components/collection/text';
 import { Avatar } from '../components/ui2/Avatar';
 import { Button } from '../components/ui2/Button';
 import { Card } from '../components/ui2/Card';
@@ -31,6 +31,9 @@ import { trpc } from '../lib/trpc';
 import { useOffline } from '../lib/connectivity';
 import { isPendingRequest, useDeclineNeed, useExpiryTick, type NotificationItem } from '../hooks/useEvents';
 import { OfflineHint } from '../components/offline/OfflineNotice';
+import { ActionError } from '../components/errors/ActionError';
+import { isDefinitiveLoadError, NeedLoadError } from '../components/errors/ErrorState';
+import { errorKind, invalidFields } from '../lib/errors';
 import { foldHidden } from '../components/person/PathChain';
 
 
@@ -99,29 +102,45 @@ export function CollectionPage() {
     utils.notification.attention.invalidate(undefined, { refetchType: 'all' });
   };
 
-  const createObligation = trpc.obligation.create.useMutation({ onSuccess: refresh });
-  const updateObligation = trpc.obligation.updateAmount.useMutation({ onSuccess: refresh });
-  const confirmCycle = trpc.obligation.confirmCycle.useMutation({ onSuccess: refresh });
+  // Each action of this page says "Not saved" next to its own control (<ActionError>, or the field's own error
+  // for input the server's schema refused), so the app-level notice stays quiet for them (`local`). Only a
+  // refusal of the current state ("changed") reloads this Need's data; no connection, a server failure or
+  // invalid input changes nothing on the server, so nothing is refetched for them.
+  const local = {
+    onError: (error: unknown) => {
+      const kind = errorKind(error);
+      // Only this Need's own data: nothing else was written (the broader refresh is for successful writes)
+      if ((kind === 'changed' || kind === 'notFound') && id) void utils.collection.getById.invalidate({ id });
+    },
+    meta: { notifyOnError: false },
+  } as const;
+  const createObligation = trpc.obligation.create.useMutation({ ...local, onSuccess: refresh });
+  const updateObligation = trpc.obligation.updateAmount.useMutation({ ...local, onSuccess: refresh });
+  const confirmCycle = trpc.obligation.confirmCycle.useMutation({ ...local, onSuccess: refresh });
   // Withdrawing a Participation is a decision too: the request notice must not bring the impulse back
   const decline = trpc.obligation.unsubscribeFromCollection.useMutation({
+    ...local,
     onSuccess: (_row, vars) => {
       refresh();
       void declineNeed(vars.collectionId);
     },
   });
-  const closeCollection = trpc.collection.close.useMutation({ onSuccess: refresh });
-  const updateChat = trpc.collection.updateChatLink.useMutation({ onSuccess: refresh });
-  const updateGoal = trpc.collection.updateAmount.useMutation({ onSuccess: refresh });
+  const closeCollection = trpc.collection.close.useMutation({ ...local, onSuccess: refresh });
+  const updateChat = trpc.collection.updateChatLink.useMutation({ ...local, onSuccess: refresh });
+  const updateGoal = trpc.collection.updateAmount.useMutation({ ...local, onSuccess: refresh });
   const removeJoiner = trpc.collection.removeJoiner.useMutation({
+    ...local,
     onSuccess: () => {
       refresh();
       utils.connection.list.invalidate();
     },
   });
-  const block = trpc.collection.block.useMutation({ onSuccess: refresh });
-  const unblock = trpc.collection.unblock.useMutation({ onSuccess: refresh });
-  const acceptSos = trpc.invite.acceptSos.useMutation({ onSuccess: refresh });
-  const setBudget = trpc.user.setMonthlyBudget.useMutation();
+  const block = trpc.collection.block.useMutation({ ...local, onSuccess: refresh });
+  const unblock = trpc.collection.unblock.useMutation({ ...local, onSuccess: refresh });
+  // Started by the page itself after a public-link join; a failure shows on the page with its own Retry
+  const acceptSos = trpc.invite.acceptSos.useMutation({ ...local, onSuccess: refresh });
+  // Records the stake of a first public-link join on the side; the Participation is placed either way
+  const setBudget = trpc.user.setMonthlyBudget.useMutation({ meta: { notifyOnError: false } });
 
   useEffect(() => {
     const data = collection.data;
@@ -139,7 +158,7 @@ export function CollectionPage() {
   const [otherOpen, setOtherOpen] = useState(false);
   const [declineOpen, setDeclineOpen] = useState(false);
   const [leaving, setLeaving] = useState(false);
-  const [leaveError, setLeaveError] = useState(false);
+  const [leaveError, setLeaveError] = useState<unknown>(null);
   const [closeOpen, setCloseOpen] = useState(false);
   const [qrOpen, setQrOpen] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -162,6 +181,21 @@ export function CollectionPage() {
 
   const direct = useMemo(() => new Set((connections.data ?? []).map((person) => person.userId)), [connections.data]);
 
+  // A sheet opens clean: an earlier failure in it is not shown again
+  const resetDecline = decline.reset;
+  const resetClose = closeCollection.reset;
+  const resetRemove = removeJoiner.reset;
+  const resetBlock = block.reset;
+  const resetUnblock = unblock.reset;
+  useEffect(() => { if (declineOpen) resetDecline(); }, [declineOpen, resetDecline]);
+  useEffect(() => { if (closeOpen) resetClose(); }, [closeOpen, resetClose]);
+  useEffect(() => { if (removeTarget) resetRemove(); }, [removeTarget, resetRemove]);
+  useEffect(() => {
+    if (!adminOpen) return;
+    resetBlock();
+    resetUnblock();
+  }, [adminOpen, resetBlock, resetUnblock]);
+
   if (!id || collection.isLoading) {
     return (
       <Screen width="column" back={{ label: t('nav.circle'), to: '/' }}>
@@ -169,13 +203,17 @@ export function CollectionPage() {
       </Screen>
     );
   }
-  if (collection.isError || !collection.data) {
+  // A failed background refresh keeps what is on screen (offline, a server hiccup); a Need that is gone or
+  // closed to this account replaces it. With nothing loaded, the reason is told with the action that helps.
+  if (!collection.data || isDefinitiveLoadError(collection.error)) {
     return (
       <Screen width="column" back={{ label: t('nav.circle'), to: '/' }}>
-        <Card className="mt-4">
-          <p>{t('common.notFound')}</p>
-          <Button className="mt-3 w-full" onClick={() => collection.refetch()}>{t('common.retry')}</Button>
-        </Card>
+        <NeedLoadError
+          error={collection.error}
+          signedIn
+          onRetry={() => void collection.refetch()}
+          retrying={collection.isFetching}
+        />
       </Screen>
     );
   }
@@ -281,6 +319,12 @@ export function CollectionPage() {
     return issue === 'whole' ? t('collection.whole') : t('collection.minOne');
   };
 
+  // Input the server's schema refused is told at its own field ("check this"), not as a failed action
+  const serverFieldError = (error: unknown, field: string, text: string) =>
+    errorKind(error) === 'invalid' && (invalidFields(error) ?? []).includes(field) ? text : '';
+  const actionErrorBesides = (error: unknown, field: string) =>
+    serverFieldError(error, field, 'x') ? null : error;
+
   const join = () => {
     const message = pledgeMessage(joinAmount);
     const amount = parseWhole(joinAmount);
@@ -308,11 +352,11 @@ export function CollectionPage() {
   // The decision is made: back where the Back action goes. A failure stays on the page and says so.
   const notNow = async () => {
     setLeaving(true);
-    setLeaveError(false);
-    const ok = await declineNeed(data.id, pendingIds);
+    setLeaveError(null);
+    const error = await declineNeed(data.id);
     setLeaving(false);
-    if (ok) navigate(back.to);
-    else setLeaveError(true);
+    if (!error) navigate(back.to);
+    else setLeaveError(error);
   };
 
   const saveEdit = () => {
@@ -337,6 +381,9 @@ export function CollectionPage() {
       return;
     }
     setEditError('');
+    // Both steps start clean, so the message under the card is always about this attempt
+    updateObligation.reset();
+    confirmCycle.reset();
     if (amount !== myObl.amount) {
       await updateObligation.mutateAsync({ obligationId: myObl.id, amount, inputCurrency: 'USD' });
     }
@@ -345,9 +392,11 @@ export function CollectionPage() {
     setEditing(false);
   };
 
+  // The same rule the server applies (https, at most MAX_CHAT_LINK_LENGTH characters)
   const saveChat = () => {
-    if (!isHttpsUrl(chatValue)) {
-      setChatError(t('ask.chatInvalid'));
+    const issue = chatLinkIssue(chatValue);
+    if (issue) {
+      setChatError(issue === 'tooLong' ? t('errors.linkTooLong', { max: MAX_CHAT_LINK_LENGTH }) : t('ask.chatInvalid'));
       return;
     }
     setChatError('');
@@ -408,6 +457,13 @@ export function CollectionPage() {
         ) : null}
       </Card>
 
+      {/* The automatic step after a public-link join failed: say so, with its own way to try again */}
+      <ActionError
+        error={acceptSos.error}
+        onRetry={() => acceptSos.mutate({ collectionId: data.id })}
+        retrying={acceptSos.isPending}
+      />
+
       {communityHold ? <CommunityHoldNote owner={owner} onSupport={openAssistant} /> : null}
 
       {adminHold ? (
@@ -430,10 +486,11 @@ export function CollectionPage() {
             variant="money"
             label={t('collection.noGoal')}
             value={goalAmount}
-            onValueChange={(value) => { setGoalAmount(value); setGoalError(''); }}
-            error={goalError}
+            onValueChange={(value) => { setGoalAmount(value); setGoalError(''); updateGoal.reset(); }}
+            error={goalError || serverFieldError(updateGoal.error, 'amount', t('errors.invalid'))}
           />
           <Button className="mt-3 w-full" loading={updateGoal.isPending} onClick={saveGoal}>{t('collection.saveGoal')}</Button>
+          <ActionError error={actionErrorBesides(updateGoal.error, 'amount')} />
         </Card>
       ) : null}
 
@@ -443,16 +500,17 @@ export function CollectionPage() {
             variant="money"
             label={t('collection.yourAmount')}
             value={joinAmount}
-            onValueChange={(value) => { setJoinAmount(value); setJoinError(''); }}
-            error={joinError}
+            onValueChange={(value) => { setJoinAmount(value); setJoinError(''); createObligation.reset(); }}
+            error={joinError || serverFieldError(createObligation.error, 'amount', t('errors.invalid'))}
             hint={joinError ? undefined : t('collection.minStake', { amount: formatMoney(stake) })}
           />
           <Button className="mt-4 w-full" loading={createObligation.isPending || setBudget.isPending} disabled={offline} onClick={join}>{t('collection.participate')}</Button>
           {offline ? <OfflineHint /> : null}
+          <ActionError error={actionErrorBesides(createObligation.error, 'amount')} />
           {waitsForMe ? (
             <Button variant="text" className="mt-2 min-h-11 w-full" loading={leaving} disabled={offline} onClick={notNow}>{t('invite.notNow')}</Button>
           ) : null}
-          {leaveError ? <p role="alert" className="mt-2 text-label font-semibold text-sos">{t('common.error')}</p> : null}
+          <ActionError error={leaveError} />
         </Card>
       ) : null}
 
@@ -475,7 +533,13 @@ export function CollectionPage() {
           </div>
           {otherOpen ? (
             <div className="mt-3">
-              <Input variant="money" label={t('collection.otherAmount')} value={editAmount} onValueChange={setEditAmount} error={editError} />
+              <Input
+                variant="money"
+                label={t('collection.otherAmount')}
+                value={editAmount}
+                onValueChange={setEditAmount}
+                error={editError || serverFieldError(updateObligation.error, 'amount', t('errors.invalid'))}
+              />
               <Button
                 className="mt-3 w-full"
                 loading={confirmCycle.isPending || updateObligation.isPending}
@@ -486,7 +550,8 @@ export function CollectionPage() {
                     setEditError(message || t('collection.minOne'));
                     return;
                   }
-                  confirm(amount).catch(() => setEditError(t('common.error')));
+                  // A failure shows under the card (ActionError below)
+                  confirm(amount).catch(() => undefined);
                 }}
               >
                 {t('collection.confirmAmount', { amount: formatMoney(parseWhole(editAmount) ?? myObl.amount) })}
@@ -497,7 +562,7 @@ export function CollectionPage() {
               <Button
                 className="w-full"
                 loading={confirmCycle.isPending}
-                onClick={() => confirm(myObl.amount).catch(() => setEditError(t('common.error')))}
+                onClick={() => confirm(myObl.amount).catch(() => undefined)}
               >
                 {t('collection.confirmAmount', { amount: formatMoney(myObl.amount) })}
               </Button>
@@ -511,6 +576,8 @@ export function CollectionPage() {
               {editError ? <p className="text-label font-semibold text-sos">{editError}</p> : null}
             </div>
           )}
+          {/* confirm() resets both before each attempt, so this is always about the last one */}
+          <ActionError error={confirmCycle.error ?? actionErrorBesides(updateObligation.error, 'amount')} />
         </Card>
       ) : null}
 
@@ -518,12 +585,19 @@ export function CollectionPage() {
         <Card className="mt-3">
           {editing ? (
             <>
-              <Input variant="money" label={t('collection.yourAmount')} value={editAmount} onValueChange={setEditAmount} error={editError} />
+              <Input
+                variant="money"
+                label={t('collection.yourAmount')}
+                value={editAmount}
+                onValueChange={setEditAmount}
+                error={editError || serverFieldError(updateObligation.error, 'amount', t('errors.invalid'))}
+              />
               {/* Two full-size buttons side by side: Cancel is as easy to reach as Save */}
               <div className="mt-3 grid grid-cols-2 gap-2">
                 <Button variant="secondary" className="w-full" onClick={() => setEditing(false)}>{t('common.cancel')}</Button>
                 <Button className="w-full" loading={updateObligation.isPending} onClick={saveEdit}>{t('collection.saveAmount')}</Button>
               </div>
+              <ActionError error={actionErrorBesides(updateObligation.error, 'amount')} />
             </>
           ) : (
             <div className="flex items-center gap-3">
@@ -534,7 +608,7 @@ export function CollectionPage() {
               <Button
                 variant="secondary"
                 size="md"
-                onClick={() => { setEditAmount(String(myObl.amount)); setEditError(''); setEditing(true); }}
+                onClick={() => { setEditAmount(String(myObl.amount)); setEditError(''); updateObligation.reset(); setEditing(true); }}
               >
                 {t('collection.change')}
               </Button>
@@ -560,21 +634,22 @@ export function CollectionPage() {
               <Input
                 label={t('collection.chatLabel')}
                 value={chatValue}
-                error={chatError}
+                error={chatError || serverFieldError(updateChat.error, 'chatLink', t('ask.chatInvalid'))}
                 inputMode="url"
                 autoCapitalize="none"
-                onChange={(event) => { setChatValue(event.target.value); setChatError(''); }}
+                onChange={(event) => { setChatValue(event.target.value); setChatError(''); updateChat.reset(); }}
               />
               <div className="mt-3 grid grid-cols-2 gap-2">
                 <Button variant="secondary" className="w-full" onClick={() => setChatEditing(false)}>{t('common.cancel')}</Button>
                 <Button className="w-full" loading={updateChat.isPending} onClick={saveChat}>{t('collection.saveAmount')}</Button>
               </div>
+              <ActionError error={actionErrorBesides(updateChat.error, 'chatLink')} />
             </>
           ) : (
             <button
               type="button"
               className="so-focus flex w-full items-center gap-3 rounded-lg bg-canvas px-3.5 py-3 text-left"
-              onClick={() => { setChatValue(data.chatLink); setChatError(''); setChatEditing(true); }}
+              onClick={() => { setChatValue(data.chatLink); setChatError(''); updateChat.reset(); setChatEditing(true); }}
             >
               <span className="min-w-0 flex-1">
                 <span className="block text-micro font-semibold text-ink-muted">{t('collection.chatLabel')}</span>
@@ -649,7 +724,9 @@ export function CollectionPage() {
           <Button variant="secondary" className="w-full" onClick={() => setDeclineOpen(false)}>{t('collection.stay')}</Button>,
           true,
         )}
-      />
+      >
+        <ActionError error={decline.error} className="mt-0" />
+      </Sheet>
 
       <Sheet
         open={closeOpen}
@@ -664,7 +741,9 @@ export function CollectionPage() {
           <Button variant="secondary" className="w-full" onClick={() => setCloseOpen(false)}>{t('collection.stay')}</Button>,
           true,
         )}
-      />
+      >
+        <ActionError error={closeCollection.error} className="mt-0" />
+      </Sheet>
 
       <Sheet
         open={removeTarget != null}
@@ -690,7 +769,9 @@ export function CollectionPage() {
           <Button variant="secondary" className="w-full" onClick={() => setRemoveTarget(null)}>{t('collection.stay')}</Button>,
           true,
         )}
-      />
+      >
+        <ActionError error={removeJoiner.error} className="mt-0" />
+      </Sheet>
 
       <Sheet
         open={adminOpen}
@@ -705,6 +786,9 @@ export function CollectionPage() {
             loading={block.isPending || unblock.isPending}
             disabled={!held && reason == null}
             onClick={() => {
+              // Only the action about to run may speak in the sheet
+              block.reset();
+              unblock.reset();
               if (held) {
                 unblock.mutate({ id: data.id }, { onSuccess: () => setAdminOpen(false) });
                 return;
@@ -719,6 +803,7 @@ export function CollectionPage() {
           !held,
         )}
       >
+        <ActionError error={block.error ?? unblock.error} className="mt-0 mb-3" />
         {held ? null : (
           <div className="flex flex-col gap-2">
             {REASONS.map((item) => (

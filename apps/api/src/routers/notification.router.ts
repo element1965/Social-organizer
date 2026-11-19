@@ -119,6 +119,26 @@ export const notificationRouter = router({
       return setNotificationStatus(ctx.db, ctx.userId, input.id, 'DISMISSED');
     }),
 
+  /**
+   * "Not for me" on a Need: every open request notice of that Need for this person (the row in the feed, the
+   * read ones, older waves) in one write, so the decision is recorded whole or not at all. Each one is counted
+   * as dismissed, as `dismiss` counts it.
+   */
+  dismissNeed: protectedProcedure
+    .input(z.object({ collectionId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const where = {
+        userId: ctx.userId,
+        collectionId: input.collectionId,
+        type: { in: ['NEW_COLLECTION', 'RE_NOTIFY', 'SPECIAL_AUTHOR', 'SPECIAL_DEVELOPER'] as ('NEW_COLLECTION' | 'RE_NOTIFY' | 'SPECIAL_AUTHOR' | 'SPECIAL_DEVELOPER')[] },
+        status: { in: ['UNREAD', 'READ'] as ('UNREAD' | 'READ')[] },
+      };
+      const rows = await ctx.db.notification.findMany({ where, select: { id: true } });
+      await Promise.all(rows.map((row) => recordDismissed(ctx.db, ctx.userId, row.id).catch((err) => console.error('[notify-stats] dismiss', err))));
+      const result = await ctx.db.notification.updateMany({ where, data: { status: 'DISMISSED' } });
+      return { count: result.count };
+    }),
+
   dismissAll: protectedProcedure
     .mutation(async ({ ctx }) => {
       const result = await ctx.db.notification.updateMany({

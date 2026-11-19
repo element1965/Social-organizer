@@ -363,6 +363,22 @@
     "unavailableBody": "Hãy kết nối internet và thử lại. Những người đã lưu trên thiết bị này vẫn dùng được.",
     "showSaved": "Hiện những người đã lưu"
   },
+  "errors": {
+    "notSaved": "Chưa lưu",
+    "offline": "Không có kết nối. Hãy kiểm tra internet rồi thử lại.",
+    "server": "Có lỗi từ phía chúng tôi. Hãy thử lại sau một phút.",
+    "session": "Phiên đăng nhập đã hết hạn. Hãy đăng nhập lại.",
+    "forbidden": "Tài khoản của bạn không dùng được chức năng này.",
+    "rateLimit": "Bạn đã thử quá nhiều lần. Hãy đợi một phút rồi thử lại.",
+    "invalid": "Hãy kiểm tra nội dung bạn đã nhập rồi thử lại.",
+    "linkTooLong": "Đường liên kết quá dài: tối đa {{max}} ký tự.",
+    "changed": "Dữ liệu đã thay đổi. Hãy tải lại trang rồi thử lại.",
+    "loadFailed": "Không tải được",
+    "needGoneTitle": "Không tìm thấy nhu cầu này",
+    "needGoneBody": "Có thể nó đã bị xoá, hoặc đường liên kết bị sai.",
+    "pageGoneTitle": "Không có trang này",
+    "pageGoneBody": "Có thể địa chỉ bị gõ sai hoặc đã cũ."
+  },
   "collection": {
     "close": "Đóng nhu cầu",
     "saveAmount": "Lưu",

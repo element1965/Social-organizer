@@ -15,6 +15,7 @@ export function AdminReviews() {
   const [pendingId, setPendingId] = useState<string | null>(null);
   const list = trpc.moderation.adminOpenReviews.useQuery(undefined, { retry: false });
   const closeReview = trpc.moderation.adminClose.useMutation({
+    meta: { notifyOnError: false },
     onSuccess: async () => {
       setPendingId(null);
       await Promise.all([

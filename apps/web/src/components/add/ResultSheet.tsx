@@ -31,7 +31,7 @@ export function ResultSheet({ person, onClose }: ResultSheetProps) {
   const { t } = useTranslation();
   const [nickname, setNickname] = useState(person?.nickname ?? '');
   const [error, setError] = useState(false);
-  const setName = trpc.connection.setNickname.useMutation();
+  const setName = trpc.connection.setNickname.useMutation({ meta: { notifyOnError: false } });
   const personId = person?.userId;
   const initial = person?.nickname ?? '';
 

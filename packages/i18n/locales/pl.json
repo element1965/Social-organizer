@@ -372,6 +372,22 @@
     "unavailableBody": "Połącz się z internetem i spróbuj ponownie. Osoby zapisane na tym urządzeniu są nadal dostępne.",
     "showSaved": "Pokaż zapisane osoby"
   },
+  "errors": {
+    "notSaved": "Nie zapisano",
+    "offline": "Brak połączenia. Sprawdź internet i spróbuj jeszcze raz.",
+    "server": "Coś poszło nie tak po naszej stronie. Spróbuj ponownie za minutę.",
+    "session": "Sesja wygasła. Zaloguj się ponownie.",
+    "forbidden": "To nie jest dostępne dla twojego konta.",
+    "rateLimit": "Zbyt wiele prób. Odczekaj minutę i spróbuj ponownie.",
+    "invalid": "Sprawdź, co wpisano, i spróbuj ponownie.",
+    "linkTooLong": "Link jest za długi: maksymalnie {{max}} znaków.",
+    "changed": "Dane się zmieniły. Odśwież stronę i spróbuj ponownie.",
+    "loadFailed": "Nie udało się wczytać",
+    "needGoneTitle": "Tej potrzeby tu nie ma",
+    "needGoneBody": "Mogła zostać usunięta albo link jest błędny.",
+    "pageGoneTitle": "Nie ma takiej strony",
+    "pageGoneBody": "Adres może zawierać literówkę albo być nieaktualny."
+  },
   "collection": {
     "close": "Zamknij potrzebę",
     "saveAmount": "Zapisz",

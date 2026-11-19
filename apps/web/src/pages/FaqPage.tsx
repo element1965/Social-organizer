@@ -64,7 +64,7 @@ export function FaqPage({ embedded = false }: { embedded?: boolean }) {
   const createMutation = trpc.faq.create.useMutation({ onSuccess: () => utils.faq.list.invalidate() });
   const updateMutation = trpc.faq.update.useMutation({ onSuccess: () => utils.faq.list.invalidate() });
   const deleteMutation = trpc.faq.delete.useMutation({ onSuccess: () => utils.faq.list.invalidate() });
-  const incrementViewMutation = trpc.faq.incrementView.useMutation();
+  const incrementViewMutation = trpc.faq.incrementView.useMutation({ meta: { notifyOnError: false } });
   const localizeMutation = trpc.faq.localize.useMutation({ onSuccess: () => utils.faq.list.invalidate() });
 
   const localizeAllMutation = trpc.faq.localizeAll.useMutation({ onSuccess: () => utils.faq.list.invalidate() });

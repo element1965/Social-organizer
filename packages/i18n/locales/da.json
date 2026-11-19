@@ -366,6 +366,22 @@
     "unavailableBody": "Opret forbindelse til internettet, og prøv igen. De personer, der er gemt på denne enhed, er stadig tilgængelige.",
     "showSaved": "Vis gemte personer"
   },
+  "errors": {
+    "notSaved": "Ikke gemt",
+    "offline": "Ingen forbindelse. Tjek internettet, og prøv igen.",
+    "server": "Noget gik galt hos os. Prøv igen om et minut.",
+    "session": "Din session er udløbet. Log ind igen.",
+    "forbidden": "Det er ikke tilgængeligt for din konto.",
+    "rateLimit": "For mange forsøg. Vent et minut, og prøv igen.",
+    "invalid": "Tjek det, du har skrevet, og prøv igen.",
+    "linkTooLong": "Linket er for langt: højst {{max}} tegn.",
+    "changed": "Dataene er ændret. Genindlæs siden, og prøv igen.",
+    "loadFailed": "Kunne ikke indlæses",
+    "needGoneTitle": "Dette behov findes ikke",
+    "needGoneBody": "Det kan være fjernet, eller linket er forkert.",
+    "pageGoneTitle": "Siden findes ikke",
+    "pageGoneBody": "Adressen er måske stavet forkert eller forældet."
+  },
   "collection": {
     "close": "Luk behov",
     "saveAmount": "Gem",

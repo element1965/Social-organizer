@@ -13,6 +13,7 @@ import { Sheet } from '../ui2/Sheet';
 import { formatMoney } from '../ui2/format';
 import { IconBack, IconChevron } from '../ui2/icons';
 import { IconClose } from './icons';
+import { ActionError } from '../errors/ActionError';
 
 export type CardPerson = {
   id: string;
@@ -50,7 +51,9 @@ export function PersonCard({ person, variant, onClose, step }: Props) {
   const filled = (contacts.data ?? []).filter((c) => c.value);
   const [contactsOpen, setContactsOpen] = useState(false);
   const [removeOpen, setRemoveOpen] = useState(false);
+  // Its failure is told inside the confirmation sheet (the app-level banner would sit outside the sheet's focus)
   const revoke = trpc.connection.revoke.useMutation({
+    meta: { notifyOnError: false },
     onSuccess: () => {
       void refreshNetwork(utils);
       setRemoveOpen(false);
@@ -190,7 +193,7 @@ export function PersonCard({ person, variant, onClose, step }: Props) {
         </div>
       </section>
       {variant === 'column' && direct ? (
-        <Button variant="textDanger" className="mt-3" onClick={() => setRemoveOpen(true)}>
+        <Button variant="textDanger" className="mt-3" onClick={() => { revoke.reset(); setRemoveOpen(true); }}>
           {t('person.remove')}
         </Button>
       ) : null}
@@ -236,7 +239,9 @@ export function PersonCard({ person, variant, onClose, step }: Props) {
             </Button>
           </>
         }
-      />
+      >
+        <ActionError error={revoke.error} className="mt-0" />
+      </Sheet>
     </>
   );
 }

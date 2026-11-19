@@ -27,7 +27,7 @@ export function useTelegramInit() {
   /** Mini App sign-in did not work (rejected or missing initData) and there is no stored session. */
   const [failed, setFailed] = useState(false);
   const login = useAuth((s) => s.login);
-  const loginMutation = trpc.auth.loginWithTelegram.useMutation();
+  const loginMutation = trpc.auth.loginWithTelegram.useMutation({ meta: { notifyOnError: false } });
   const didRun = useRef(false);
 
   /** A visible failure (auth.html №15) only when nothing else can sign the person in. */

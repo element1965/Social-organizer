@@ -1,9 +1,9 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback, useSyncExternalStore } from 'react';
 import { Capacitor } from '@capacitor/core';
 import { trpc } from '../lib/trpc';
+import { raiseActionError } from '../lib/errors';
 import { registerServiceWorker } from '../lib/serviceWorker';
-
-const NATIVE_TOKEN_KEY = 'fcm_push_token';
+import { attachNativePush, confirmedNativeToken, optInNativePush, optOutNativePush, subscribeNativePush } from '../lib/nativePush';
 
 function urlBase64ToUint8Array(base64String: string): Uint8Array {
   const padding = '='.repeat((4 - (base64String.length % 4)) % 4);
@@ -16,78 +16,44 @@ function urlBase64ToUint8Array(base64String: string): Uint8Array {
   return outputArray;
 }
 
+/**
+ * The push switch in Profile. Native: registration is owned by lib/nativePush.ts and the switch shows the
+ * token the server confirmed for this account, so leaving and reopening Profile during an opt-in shows the
+ * real state, never a token the server has not accepted. A failed opt-in is told. Web: the browser
+ * subscription, saved to the server before the switch turns on.
+ */
 export function usePushNotifications() {
   const [isSupported, setIsSupported] = useState(false);
-  const [isSubscribed, setIsSubscribed] = useState(false);
+  const [webSubscribed, setWebSubscribed] = useState(false);
   const [loading, setLoading] = useState(false);
   const isNative = Capacitor.isNativePlatform();
-  const nativeInitDone = useRef(false);
+  const utils = trpc.useUtils();
+  const nativeOn = useSyncExternalStore(subscribeNativePush, () => confirmedNativeToken() !== null, () => false);
+  const isSubscribed = isNative ? nativeOn : webSubscribed;
 
   const { data: vapid } = trpc.push.vapidPublicKey.useQuery(undefined, {
     enabled: !isNative,
   });
   const subscribeMutation = trpc.push.subscribe.useMutation();
   const unsubscribeMutation = trpc.push.unsubscribe.useMutation();
-  const registerNativeMutation = trpc.push.registerNativeToken.useMutation();
   const unregisterNativeMutation = trpc.push.unregisterNativeToken.useMutation();
+
+  const registerNative = useCallback(
+    (token: string, platform: string, account: string) =>
+      utils.client.push.registerNativeToken.mutate({ token, platform }, { context: { account } }),
+    [utils],
+  );
 
   // --- Native (Capacitor) ---
   useEffect(() => {
-    if (!isNative || nativeInitDone.current) return;
-    nativeInitDone.current = true;
-
-    let cleanup: (() => void) | undefined;
-
-    (async () => {
+    if (!isNative) return;
+    void attachNativePush(registerNative);
+    void (async () => {
       const { PushNotifications } = await import('@capacitor/push-notifications');
-
       const permResult = await PushNotifications.checkPermissions();
-      const supported = permResult.receive !== 'denied';
-      setIsSupported(supported);
-
-      const savedToken = localStorage.getItem(NATIVE_TOKEN_KEY);
-      if (savedToken) {
-        setIsSubscribed(true);
-        // Re-register to keep token fresh
-        registerNativeMutation.mutate({ token: savedToken, platform: Capacitor.getPlatform() });
-      }
-
-      // Listen for token refresh
-      const regListener = await PushNotifications.addListener('registration', (token) => {
-        const fcmToken = token.value;
-        localStorage.setItem(NATIVE_TOKEN_KEY, fcmToken);
-        setIsSubscribed(true);
-        registerNativeMutation.mutate({ token: fcmToken, platform: Capacitor.getPlatform() });
-      });
-
-      const errListener = await PushNotifications.addListener('registrationError', (err) => {
-        console.error('[FCM] Registration error:', err);
-        setIsSubscribed(false);
-      });
-
-      // Handle notification tap → navigate to URL
-      const actionListener = await PushNotifications.addListener(
-        'pushNotificationActionPerformed',
-        (notification) => {
-          const url = notification.notification.data?.url;
-          if (url && typeof url === 'string') {
-            // Navigate within the WebView
-            const path = url.replace(/^https?:\/\/[^/]+/, '');
-            if (path) window.location.href = path;
-          }
-        },
-      );
-
-      cleanup = () => {
-        regListener.remove();
-        errListener.remove();
-        actionListener.remove();
-      };
+      setIsSupported(permResult.receive !== 'denied');
     })();
-
-    return () => cleanup?.();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isNative]);
+  }, [isNative, registerNative]);
 
   // --- Web Push ---
   useEffect(() => {
@@ -98,7 +64,7 @@ export function usePushNotifications() {
 
     navigator.serviceWorker.ready.then((reg) => {
       reg.pushManager.getSubscription().then((sub) => {
-        setIsSubscribed(!!sub);
+        setWebSubscribed(!!sub);
       });
     });
   }, [isNative]);
@@ -108,14 +74,13 @@ export function usePushNotifications() {
     setLoading(true);
     try {
       if (isNative) {
-        const { PushNotifications } = await import('@capacitor/push-notifications');
-        const permResult = await PushNotifications.requestPermissions();
-        if (permResult.receive !== 'granted') {
-          setLoading(false);
-          return;
+        // Counts only once the server has the token; a failure (also a refused native register()) is told
+        try {
+          await optInNativePush(registerNative);
+        } catch (error) {
+          console.error('[Push] Native opt-in failed:', error);
+          raiseActionError(error);
         }
-        await PushNotifications.register();
-        // Token will arrive via 'registration' listener
       } else {
         if (!vapid?.key) {
           setLoading(false);
@@ -143,27 +108,21 @@ export function usePushNotifications() {
           auth: json.keys!.auth!,
         });
 
-        setIsSubscribed(true);
+        setWebSubscribed(true);
       }
     } catch (err) {
       console.error('[Push] Subscribe failed:', err);
     } finally {
       setLoading(false);
     }
-  }, [isNative, vapid?.key, loading, subscribeMutation]);
+  }, [isNative, vapid?.key, loading, subscribeMutation, registerNative]);
 
   const unsubscribe = useCallback(async () => {
     if (loading) return;
     setLoading(true);
     try {
       if (isNative) {
-        const token = localStorage.getItem(NATIVE_TOKEN_KEY);
-        if (token) {
-          await unregisterNativeMutation.mutateAsync({ token });
-          localStorage.removeItem(NATIVE_TOKEN_KEY);
-        }
-        const { PushNotifications } = await import('@capacitor/push-notifications');
-        await PushNotifications.unregister();
+        await optOutNativePush((token) => unregisterNativeMutation.mutateAsync({ token }));
       } else {
         const reg = await navigator.serviceWorker.ready;
         const sub = await reg.pushManager.getSubscription();
@@ -171,8 +130,8 @@ export function usePushNotifications() {
           await unsubscribeMutation.mutateAsync({ endpoint: sub.endpoint });
           await sub.unsubscribe();
         }
+        setWebSubscribed(false);
       }
-      setIsSubscribed(false);
     } catch (err) {
       console.error('[Push] Unsubscribe failed:', err);
     } finally {

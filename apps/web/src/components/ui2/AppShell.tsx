@@ -1,7 +1,9 @@
-import type { ReactNode } from 'react';
+import { useEffect, type ReactNode } from 'react';
 import { Link, Outlet, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { trpc } from '../../lib/trpc';
+import { flushPendingSettings } from '../../lib/pendingSettings';
+import { useAuth } from '../../hooks/useAuth';
 import { cn } from '../../lib/utils';
 import { useStoredFontScale } from '../profile/fontScale';
 import { useGraphSync } from '../../hooks/useGraphSync';
@@ -272,7 +274,16 @@ function UserFace({ user, compact }: { user: ShellUser; compact?: boolean }) {
   );
 }
 
-function LiveShell() {
+/** Display preferences whose save failed earlier (lib/pendingSettings.ts) are sent again once the app starts signed in. */
+function usePendingSettingsSync() {
+  const userId = useAuth((s) => s.userId);
+  const utils = trpc.useUtils();
+  useEffect(() => {
+    void flushPendingSettings(utils.client, userId);
+  }, [utils, userId]);
+}
+
+function LiveShell({ children }: { children?: ReactNode }) {
   const mode = useShellMode();
   const location = useLocation();
   const theme = useTheme((state) => state.mode);
@@ -311,7 +322,7 @@ function LiveShell() {
         className="min-w-0 flex-1"
         style={{ paddingBottom: showTabs ? 'calc(84px + var(--sa-bottom))' : 'var(--sa-bottom)' }}
       >
-        <Outlet />
+        {children ?? <Outlet />}
       </div>
       {showTabs ? (
         <ShellChrome
@@ -329,13 +340,17 @@ function LiveShell() {
   );
 }
 
-/** Authenticated application frame. Replaces the old phone-column Layout. */
-export function AppShell() {
+/**
+ * Authenticated application frame. Replaces the old phone-column Layout. Renders the route outlet, or
+ * `children` where it is used outside a layout route (the not-found screen).
+ */
+export function AppShell({ children }: { children?: ReactNode }) {
   useStoredFontScale();
   useGraphSync();
+  usePendingSettingsSync();
   return (
     <BannerProvider>
-      <LiveShell />
+      <LiveShell>{children}</LiveShell>
     </BannerProvider>
   );
 }

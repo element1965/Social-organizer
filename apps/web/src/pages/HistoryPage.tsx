@@ -8,7 +8,7 @@ import { Meter } from '../components/ui2/Meter';
 import { Pill } from '../components/ui2/Pill';
 import { Screen } from '../components/ui2/Screen';
 import { Segmented } from '../components/ui2/Segmented';
-import { trpcCode } from '../components/profile/errors';
+import { errorCode } from '../lib/errors';
 import { QueryState } from '../components/profile/QueryState';
 import { countForm, cycleDeadline, isOpenParticipation, isPastParticipation } from '../components/profile/collections';
 import { formatDayMonth } from '../components/profile/dates';
@@ -83,7 +83,7 @@ export function HistoryPage() {
   const [picked, setTab] = useState<'open' | 'past' | null>(null);
 
   // An API that has not loaded this procedure yet must not blank Open and Past.
-  const historyMissing = history.isError && trpcCode(history.error) === 'NOT_FOUND';
+  const historyMissing = history.isError && errorCode(history.error) === 'NOT_FOUND';
   const loading = me.isLoading || active.isLoading || participating.isLoading || (history.isLoading && !history.isError);
   const failed = me.isError || active.isError || participating.isError || (history.isError && !historyMissing);
   const retry = () => {

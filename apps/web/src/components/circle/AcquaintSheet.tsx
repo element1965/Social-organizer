@@ -62,6 +62,7 @@ export function AcquaintSheet({ request, onClose }: Props) {
   };
 
   const accept = trpc.pending.accept.useMutation({
+    meta: { notifyOnError: false },
     onMutate: () => setError(null),
     onSuccess: () => {
       refresh();
@@ -73,6 +74,7 @@ export function AcquaintSheet({ request, onClose }: Props) {
     },
   });
   const reject = trpc.pending.reject.useMutation({
+    meta: { notifyOnError: false },
     onMutate: () => setError(null),
     onSuccess: () => {
       refresh();
@@ -84,6 +86,7 @@ export function AcquaintSheet({ request, onClose }: Props) {
     },
   });
   const nickname = trpc.connection.setNickname.useMutation({
+    meta: { notifyOnError: false },
     onSuccess: () => {
       void utils.connection.list.invalidate();
       onClose();

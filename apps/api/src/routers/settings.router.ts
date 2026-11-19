@@ -75,6 +75,16 @@ export const settingsRouter = router({
       });
     }),
 
+  /** Both cycle notices (the reminder and the start) in one write: the app shows them as one switch */
+  updateNotifyCycles: protectedProcedure
+    .input(z.object({ enabled: z.boolean() }))
+    .mutation(async ({ ctx, input }) => {
+      return ctx.db.user.update({
+        where: { id: ctx.userId },
+        data: { notifyRenewalReminder: input.enabled, notifyRenewalStart: input.enabled },
+      });
+    }),
+
   updateNotifyRenewalStart: protectedProcedure
     .input(z.object({ enabled: z.boolean() }))
     .mutation(async ({ ctx, input }) => {

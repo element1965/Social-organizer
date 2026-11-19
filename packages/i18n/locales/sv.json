@@ -366,6 +366,22 @@
     "unavailableBody": "Anslut till internet och försök igen. Personerna som sparats på den här enheten finns kvar.",
     "showSaved": "Visa sparade personer"
   },
+  "errors": {
+    "notSaved": "Inte sparat",
+    "offline": "Ingen anslutning. Kontrollera internet och försök igen.",
+    "server": "Något gick fel hos oss. Försök igen om en minut.",
+    "session": "Din session har gått ut. Logga in igen.",
+    "forbidden": "Det här är inte tillgängligt för ditt konto.",
+    "rateLimit": "För många försök. Vänta en minut och försök igen.",
+    "invalid": "Kontrollera det du skrev och försök igen.",
+    "linkTooLong": "Länken är för lång: högst {{max}} tecken.",
+    "changed": "Uppgifterna har ändrats. Ladda om sidan och försök igen.",
+    "loadFailed": "Kunde inte läsas in",
+    "needGoneTitle": "Det här behovet finns inte",
+    "needGoneBody": "Det kan ha tagits bort, eller så är länken fel.",
+    "pageGoneTitle": "Sidan finns inte",
+    "pageGoneBody": "Adressen kan vara felstavad eller inaktuell."
+  },
   "collection": {
     "close": "Stäng behovet",
     "saveAmount": "Spara",

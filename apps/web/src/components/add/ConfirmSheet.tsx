@@ -25,8 +25,8 @@ export function ConfirmSheet({ person, onClose }: ConfirmSheetProps) {
   const { t } = useTranslation();
   const utils = trpc.useUtils();
   const [error, setError] = useState<string | null>(null);
-  const accept = trpc.pending.accept.useMutation();
-  const reject = trpc.pending.reject.useMutation();
+  const accept = trpc.pending.accept.useMutation({ meta: { notifyOnError: false } });
+  const reject = trpc.pending.reject.useMutation({ meta: { notifyOnError: false } });
   const busy = accept.isPending || reject.isPending;
 
   const refresh = async () => {

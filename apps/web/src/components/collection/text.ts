@@ -1,3 +1,5 @@
+import { MAX_CHAT_LINK_LENGTH } from '@so/shared';
+
 /** Whole dollars only. Empty and partial input is not a number. */
 export function parseWhole(raw: string): number | null {
   const cleaned = raw.trim().replace(/\s/g, '');
@@ -23,6 +25,17 @@ export function isHttpsUrl(raw: string): boolean {
   } catch {
     return false;
   }
+}
+
+/**
+ * Why a chat link cannot be saved, by the server's own rule (apps/api collection.router `chatLinkSchema`:
+ * an https URL of at most MAX_CHAT_LINK_LENGTH characters).
+ */
+export function chatLinkIssue(raw: string): 'empty' | 'invalid' | 'tooLong' | null {
+  const value = raw.trim();
+  if (!value) return 'empty';
+  if (value.length > MAX_CHAT_LINK_LENGTH) return 'tooLong';
+  return isHttpsUrl(value) ? null : 'invalid';
 }
 
 export function shortUrl(raw: string): string {

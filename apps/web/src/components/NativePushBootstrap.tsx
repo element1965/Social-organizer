@@ -5,11 +5,12 @@ import { useQueryClient } from '@tanstack/react-query';
 import { Capacitor } from '@capacitor/core';
 import { useAuth } from '../hooks/useAuth';
 import { trpc } from '../lib/trpc';
+import { raiseActionError } from '../lib/errors';
+import { attachNativePush, confirmedNativeToken, detachNativePush, optInNativePush, refreshNativeToken } from '../lib/nativePush';
 import { Button } from './ui2/Button';
 import { BrandMark } from './ui2/BrandMark';
 import { OnboardingFrame, StepText } from './onboarding/OnboardingFrame';
 
-const NATIVE_TOKEN_KEY = 'fcm_push_token';
 // The person chose "Not now" or declined the system prompt: never ask again on start (SO-45)
 const GATE_SKIPPED_KEY = 'push_gate_skipped';
 
@@ -44,7 +45,10 @@ export function NativePushBootstrap() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const listenersSet = useRef(false);
-  const registerNativeMutation = trpc.push.registerNativeToken.useMutation();
+  const utils = trpc.useUtils();
+  // Registration itself belongs to lib/nativePush.ts (one owner for the token); this sends it to the server
+  const register = (token: string, platform: string, account: string) =>
+    utils.client.push.registerNativeToken.mutate({ token, platform }, { context: { account } });
 
   const [permStatus, setPermStatus] = useState<PermStatus>('checking');
   const [requesting, setRequesting] = useState(false);
@@ -60,16 +64,7 @@ export function NativePushBootstrap() {
       try {
         const { PushNotifications } = await import('@capacitor/push-notifications');
 
-        const regListener = await PushNotifications.addListener('registration', (token) => {
-          const fcmToken = token.value;
-          localStorage.setItem(NATIVE_TOKEN_KEY, fcmToken);
-          setPermStatus('hidden');
-          registerNativeMutation.mutate({ token: fcmToken, platform: Capacitor.getPlatform() });
-        });
-
-        const errListener = await PushNotifications.addListener('registrationError', (err) => {
-          console.error('[NativePush] FCM registration error:', err);
-        });
+        await attachNativePush(register);
 
         const actionListener = await PushNotifications.addListener(
           'pushNotificationActionPerformed',
@@ -85,19 +80,18 @@ export function NativePushBootstrap() {
         );
 
         cleanup = () => {
-          regListener.remove();
-          errListener.remove();
+          detachNativePush();
           actionListener.remove();
         };
 
         // Check current permission state
-        const savedToken = localStorage.getItem(NATIVE_TOKEN_KEY);
+        const savedToken = confirmedNativeToken();
         const perm = await PushNotifications.checkPermissions();
 
         if (perm.receive === 'granted' || savedToken) {
           setPermStatus('hidden');
-          // Re-register to keep token fresh
-          await PushNotifications.register();
+          // Routine refresh of the token: registered quietly when it arrives
+          await refreshNativeToken();
         } else if (perm.receive === 'denied' || gateSkipped()) {
           // Declined or postponed: the app works without push
           setPermStatus('hidden');
@@ -128,17 +122,14 @@ export function NativePushBootstrap() {
     if (requesting) return;
     setRequesting(true);
     try {
-      const { PushNotifications } = await import('@capacitor/push-notifications');
-      const result = await PushNotifications.requestPermissions();
-      if (result.receive === 'granted') {
-        await PushNotifications.register();
-        // permStatus will be set to 'hidden' via the 'registration' listener
-      } else {
-        skipGate();
-        setPermStatus('hidden');
-      }
+      // The person's own "turn on": it counts once the server has the token; a failure is told on the app
+      const outcome = await optInNativePush(register);
+      if (outcome === 'denied') skipGate();
+      setPermStatus('hidden');
     } catch (err) {
-      console.error('[NativePush] requestPermissions failed:', err);
+      console.error('[NativePush] opt-in failed:', err);
+      setPermStatus('hidden');
+      raiseActionError(err);
     } finally {
       setRequesting(false);
     }

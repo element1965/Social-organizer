@@ -363,6 +363,22 @@
     "unavailableBody": "Sambungkan ke internet lalu coba lagi. Orang-orang yang tersimpan di perangkat ini tetap tersedia.",
     "showSaved": "Tampilkan orang tersimpan"
   },
+  "errors": {
+    "notSaved": "Tidak tersimpan",
+    "offline": "Tidak ada koneksi. Periksa internet Anda dan coba lagi.",
+    "server": "Ada masalah di pihak kami. Coba lagi dalam satu menit.",
+    "session": "Sesi Anda sudah berakhir. Masuk lagi.",
+    "forbidden": "Ini tidak tersedia untuk akun Anda.",
+    "rateLimit": "Terlalu banyak percobaan. Tunggu satu menit, lalu coba lagi.",
+    "invalid": "Periksa yang Anda isi, lalu coba lagi.",
+    "linkTooLong": "Tautannya terlalu panjang: maksimal {{max}} karakter.",
+    "changed": "Datanya sudah berubah. Muat ulang halaman, lalu coba lagi.",
+    "loadFailed": "Gagal memuat",
+    "needGoneTitle": "Kebutuhan ini tidak ditemukan",
+    "needGoneBody": "Mungkin sudah dihapus, atau tautannya salah.",
+    "pageGoneTitle": "Halaman ini tidak ada",
+    "pageGoneBody": "Mungkin alamatnya salah ketik atau sudah tidak berlaku."
+  },
   "collection": {
     "close": "Tutup kebutuhan",
     "saveAmount": "Simpan",

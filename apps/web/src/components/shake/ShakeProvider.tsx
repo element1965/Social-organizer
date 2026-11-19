@@ -102,8 +102,8 @@ function ShakeFlow() {
   const navigate = useNavigate();
   const location = useLocation();
   const utils = trpc.useUtils();
-  const register = trpc.shake.register.useMutation();
-  const respond = trpc.shake.respond.useMutation();
+  const register = trpc.shake.register.useMutation({ meta: { notifyOnError: false } });
+  const respond = trpc.shake.respond.useMutation({ meta: { notifyOnError: false } });
   const [view, setView] = useState<View | null>(null);
   const [busy, setBusy] = useState(false);
   const run = useRef(0);

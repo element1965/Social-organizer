@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { isTelegramWebApp } from '@so/tg-adapter';
 import { inflectName } from '../components/collection/name-case';
 import { asDate, firstName, formatDay, relativePast } from '../components/collection/text';
+import { isDefinitiveLoadError, NeedLoadError } from '../components/errors/ErrorState';
 import { Logo } from '../components/Logo';
 import { Avatar } from '../components/ui2/Avatar';
 import { Button } from '../components/ui2/Button';
@@ -14,7 +15,9 @@ import { firstOpenOf } from '../lib/inviteSrc';
 import { savePendingSos, sosCollectionPath } from '../lib/inviteUrl';
 import { trpc } from '../lib/trpc';
 
-const DEMO_COLLECTION = {
+// /sos/preview: a sample Need for working on this page, in development builds only. In production the
+// address is an ordinary (unknown) id and gets the "not here" state; the sample is not even in the bundle.
+const DEMO_COLLECTION = import.meta.env.DEV ? {
   id: 'preview',
   type: 'EMERGENCY' as const,
   status: 'ACTIVE' as const,
@@ -26,7 +29,7 @@ const DEMO_COLLECTION = {
   suspended: false,
   creator: { id: 'demo', name: 'Андрей Луб', photoUrl: null as string | null },
   _count: { obligations: 7 },
-};
+} : null;
 
 const TELEGRAM_BOT = (import.meta.env.VITE_TELEGRAM_BOT_USERNAME as string | undefined)?.trim() || '';
 
@@ -40,7 +43,7 @@ export function SosLandingPage() {
   const { collectionId } = useParams<{ collectionId: string }>();
   const { t, i18n } = useTranslation();
   const isAuthenticated = useAuth((state) => state.isAuthenticated);
-  const isPreview = collectionId === 'preview';
+  const isPreview = DEMO_COLLECTION != null && collectionId === 'preview';
   const language = i18n.language;
   const inflect = language.toLowerCase().startsWith('ru');
 
@@ -49,11 +52,14 @@ export function SosLandingPage() {
     { enabled: !!collectionId && !isPreview },
   );
 
-  const collection = isPreview ? DEMO_COLLECTION : fetched.data;
+  // A copy already loaded stays through a transient failure (no connection, a server hiccup), never through a
+  // definitive one: a Need that is gone or closed to this person must not keep offering "Join"
+  const collection = isPreview ? DEMO_COLLECTION : isDefinitiveLoadError(fetched.error) ? undefined : fetched.data;
   const loading = !isPreview && fetched.isLoading;
 
-  // A guest who opened a real Need page is counted once per browser session (the admin funnel, source "need")
-  const opened = trpc.invite.opened.useMutation();
+  // A guest who opened a real Need page is counted once per browser session (the admin funnel, source "need").
+  // Background bookkeeping: a failure is not the person's concern.
+  const opened = trpc.invite.opened.useMutation({ meta: { notifyOnError: false } });
   const countOpen = opened.mutate;
   const loaded = !!fetched.data;
   useEffect(() => {
@@ -92,9 +98,14 @@ export function SosLandingPage() {
         {loading ? (
           <p className="mt-16 text-body-s font-semibold text-ink-muted">{t('common.loading')}</p>
         ) : !collection ? (
-          <div className="mt-16 w-full text-center">
-            <p className="text-body-s font-semibold text-ink-muted">{t('common.notFound')}</p>
-            <Button className="mt-4 w-full" onClick={() => fetched.refetch()}>{t('common.retry')}</Button>
+          // Not there, no connection or a server failure: each says so, with the action that helps
+          <div className="mt-6 w-full">
+            <NeedLoadError
+              error={fetched.error}
+              signedIn={isAuthenticated}
+              onRetry={() => void fetched.refetch()}
+              retrying={fetched.isFetching}
+            />
           </div>
         ) : (
           <PublicBody

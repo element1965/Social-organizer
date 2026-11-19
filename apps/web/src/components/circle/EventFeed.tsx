@@ -80,7 +80,8 @@ type EventFeedProps = {
   events: FeedEvent[];
   loading?: boolean;
   onOpen: (event: FeedEvent) => void;
-  onDismiss: (event: FeedEvent) => void;
+  /** May resolve to false when the dismissal failed: the row then comes back. */
+  onDismiss: (event: FeedEvent) => void | Promise<boolean>;
 };
 
 const GROUP_TITLE: Record<FeedGroup, string> = {
@@ -176,15 +177,26 @@ export function EventFeed({ events, loading, onOpen, onDismiss }: EventFeedProps
 
   function renderRow(event: FeedEvent) {
               const dismissable = Boolean(event.notificationIds?.length);
+              // A dismissal that did not go through unfolds the row again (the caller has told the person why)
+              const dismiss = () => {
+                void Promise.resolve(onDismiss(event)).then((ok) => {
+                  if (ok !== false) return;
+                  setLeaving((prev) => {
+                    const next = new Set(prev);
+                    next.delete(event.id);
+                    return next;
+                  });
+                });
+              };
               const remove = () => {
                 // EventRow fires its click right after a swipe; swallow that click.
                 swipedAt.current = Date.now();
                 if (prefersReducedMotion()) {
-                  onDismiss(event);
+                  dismiss();
                   return;
                 }
                 setLeaving((prev) => new Set(prev).add(event.id));
-                window.setTimeout(() => onDismiss(event), 240);
+                window.setTimeout(dismiss, 240);
               };
               return (
                 <li

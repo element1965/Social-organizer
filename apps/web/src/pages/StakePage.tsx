@@ -8,6 +8,7 @@ import { Input } from '../components/ui2/Input';
 import { Screen } from '../components/ui2/Screen';
 import { formatMoney } from '../components/ui2/format';
 import { QueryState } from '../components/profile/QueryState';
+import { ActionError } from '../components/errors/ActionError';
 import { STAKE_PRESETS } from '../components/profile/constants';
 import { useSmartBack } from '../components/profile/useSmartBack';
 
@@ -29,6 +30,7 @@ export function StakePage() {
     enabled: access.isSuccess && access.data.networkCanHelp == null,
   });
   const save = trpc.user.setMonthlyBudget.useMutation({
+    meta: { notifyOnError: false },
     onSuccess: () => {
       void utils.user.me.invalidate();
       void utils.collection.askAccess.invalidate();
@@ -87,7 +89,7 @@ export function StakePage() {
           >
             {t('common.save')}
           </Button>
-          {save.isError ? <p className="mt-2 text-label font-semibold text-sos">{t('common.error')}</p> : null}
+          <ActionError error={save.error} />
 
           <Card className="mt-6" title={t('circle.stats.canHelp')} subtitle={t('circle.stats.explain')}>
             <p className="text-h2 font-extrabold tabular-nums text-ink">
