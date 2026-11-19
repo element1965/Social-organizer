@@ -42,10 +42,7 @@ export function shortUrl(raw: string): string {
   return raw.trim().replace(/^https?:\/\//i, '').replace(/\/$/, '');
 }
 
-export function firstName(name: string): string {
-  const part = name.trim().split(/\s+/)[0];
-  return part || name;
-}
+export { firstName } from '@so/shared';
 
 export function formatCount(value: number, language: string): string {
   return new Intl.NumberFormat(language).format(value);

@@ -148,7 +148,7 @@
     "fit": "适配网络",
     "stats": {
       "canHelp": "网络已表明的参与",
-      "explain": "你网络里的人（最远到第6度握手）在本周期还愿意表明的金额：这是他们意向之和。需求消息会分批发出，从最近的人开始，最远到第6度握手。这只是参考数字，不是承诺：是否参与，每个人自己决定。",
+      "explain": "这是你网络中最远到第6度握手的人的意向总和。需求消息会分批发出，从最近的人开始，最远到第6度握手。这只是参考数字，不是承诺：是否参与，每个人自己决定。",
       "weekDelta": "本周 +{{amount}}",
       "people_other": "你的网络里有 {{count}} 人",
       "peopleShort_other": "{{count}} 人",
@@ -216,7 +216,7 @@
       }
     },
     "start": {
-      "lead": "你是圈子里的第一个人。",
+      "lead": "你的圈子从你开始。",
       "body": "需求消息沿已确认的握手传递：附近还没有人，信号就无处可去。",
       "step2": "第一个人",
       "step2Sub": "发送链接或出示二维码",
@@ -266,8 +266,8 @@
     "all": "全部 · {{count}}",
     "confirm": "确认你们认识",
     "inCircle": "其圈子里有 {{count}} 人",
-    "noneYet": "还没有添加任何人",
-    "brought": "带来 {{count}} 人",
+    "noneYet": "圈子里暂时只有你",
+    "brought": "圈子里还有 {{count}} 人",
     "via": "经由 {{path}}",
     "empty": "还没有人",
     "notFound": "没有找到",
@@ -275,9 +275,14 @@
     "sortRecent": "最新",
     "sortName": "姓名",
     "sortIntention": "意向",
-    "sortBrought": "带来",
+    "sortBrought": "圈子大小",
     "foundElsewhere": "这次握手中没有这个名字。在其他握手中找到:",
-    "alsoElsewhere": "其他握手中也有"
+    "alsoElsewhere": "其他握手中也有",
+    "ringHint1": "你亲自认识的人。",
+    "ringHint2": "他们认识的人：你们之间隔着一个人。",
+    "ringHint3": "再远一步：你们之间隔着两个人。",
+    "empty1": "相识得到确认后，你亲自认识的人会出现在这里。",
+    "empty2": "随着你熟人的圈子扩大，这里会出现更多人。"
   },
   "offline": {
     "banner": "无网络连接。正在显示保存在此设备上的副本，{{time}}。",
@@ -320,7 +325,9 @@
     "noGoal": "尚未注明金额",
     "saveGoal": "保存金额",
     "yourAmount": "你的金额",
-    "minStake": "你的意向是 {{amount}}。你可以给更多。",
+    "minStake": "我的意向：{{amount}}。可以填写更多。",
+    "zeroStake": "我的意向：{{amount}}",
+    "participationMinimum": "参与金额从 {{amount}} 起。",
     "minOne": "最少 1 $",
     "whole": "只能填整数美元",
     "participate": "告知参与",
@@ -337,7 +344,7 @@
     "otherAmount": "其他金额",
     "participantsCount": "参与人数：{{count}}",
     "transferred": "已收到",
-    "emptyPeople": "还没有人加入",
+    "emptyPeople": "还没有人告知参与",
     "youLower": "你",
     "firstHandshake": "第1次握手",
     "inNetwork": "在你的网络里",
@@ -374,7 +381,7 @@
       "AUTHOR_REQUEST": "应发起人要求"
     },
     "goalReached": "所需金额已表明",
-    "pastCrumb": "需求",
+    "pastCrumb": "活动",
     "chatLabel": "参与者聊天",
     "openTitle": "进行中",
     "openEmpty": "没有进行中的需求",
@@ -411,6 +418,11 @@
       "keepYes": "保留 {{amount}}",
       "kept": "好了：你的意向是 {{amount}}。可以在“资料”里修改。",
       "intro": "看看网络如何运作"
+    },
+    "emptyPeopleBody": "告知参与的人会连同金额出现在这里。",
+    "created": {
+      "title": "你的需求已发出",
+      "body": "消息沿着握手传给你网络中的人，由近及远，每 1 美元最多通知一人。把链接发给熟人：不装应用也能打开。"
     }
   },
   "profile": {
@@ -452,10 +464,10 @@
     "openSource": "开源",
     "terms": "条款",
     "privacy": "隐私政策",
-    "stakeLabel": "默认参与金额",
+    "stakeLabel": "我的意向",
     "stakeMin": "最少 1",
     "stakeHint": "认识的人告知需求时，你愿意表明的金额。也可以更多。Social Organizer 不接收也不转移钱款。",
-    "stakeNone": "我现在帮不了",
+    "stakeNone": "我现在无法参与",
     "openTab": "进行中",
     "pastTab": "过往",
     "yourCollection": "你的需求",
@@ -469,7 +481,7 @@
     "participantMany": "{{count}} 人参与",
     "paused": "已暂停",
     "noOpen": "没有进行中的需求",
-    "noPast": "没有记录",
+    "noPast": "还没有已关闭的",
     "pastVia": "经由 {{name}}",
     "left": "已撤回参与",
     "goalMissing": "未设置金额",
@@ -481,7 +493,9 @@
     "notifyChannel": "渠道",
     "notifyTelegramNotLinked": "在“账号”里连接 Telegram，以便在那里接收消息。",
     "stakeSaved": "已保存",
-    "needCounts": "进行中: {{open}} · 过往: {{past}}"
+    "needCounts": "进行中: {{open}} · 过往: {{past}}",
+    "noOpenBody": "你的需求和你参与的需求在进行期间都会在这里。",
+    "noPastBody": "需求关闭后会连同金额移到这里。"
   },
   "settings": {
     "title": "设置",
@@ -526,7 +540,9 @@
     "linkTextPlaceholder": "链接文字",
     "insert": "插入",
     "urlPlaceholder": "https://...",
-    "uploadFailed": "上传失败"
+    "uploadFailed": "上传失败",
+    "emptyBody": "你可以先向助手询问握手、需求和参与。",
+    "askAssistant": "问助手"
   },
   "chat": {
     "title": "助手",
@@ -1240,6 +1256,7 @@
     "reach": "{{network}} 人能看到：先是你这边 {{direct}} 人，然后是他们的人。",
     "reachEmpty": "附近还没有人，信号无处可去。",
     "submit": "告知需求",
+    "seeHowToUnlock": "查看如何解锁",
     "ownTitle": "你的需求 · 需要 {{goal}}，已表明 {{current}}",
     "ownNoGoal": "你的需求",
     "largeTitle": "金额 {{amount}}，对吗？",
@@ -1262,8 +1279,8 @@
     "preview": "看起来是什么样",
     "previewHide": "隐藏示例",
     "previewCaption": "需求在圈子里是这样显示的",
-    "allLink": "全部 · {{count}}",
-    "allLinkPlain": "全部"
+    "allLink": "活动 · {{count}}",
+    "allLinkPlain": "活动"
   },
   "path": {
     "title": "就快了：很快人们就会得知你的需求",
@@ -1343,7 +1360,7 @@
     "inCircleSince": "自 {{date}} 起在圈子里",
     "inCircleToday": "今天起在圈子里",
     "inCircleYesterday": "昨天起在圈子里",
-    "empty": "还没有人通过你的链接来。",
+    "empty": "还没有人通过你的链接来。把它发给你亲自认识的人。",
     "loadError": "无法加载列表。",
     "qrHint": "二维码有效一分钟，并且会立刻确认认识：你们都在场。然后它会自动刷新。",
     "scanOther": "扫描对方的",
@@ -1479,7 +1496,11 @@
     "factsNote": "针对已关闭的需求。标记由需求的作者设置，Social Organizer 不核实。",
     "requestDeclined": "相识未被确认。如果你们认识，见面时互相出示二维码即可。",
     "prevPerson": "上一位",
-    "nextPerson": "下一位"
+    "nextPerson": "下一位",
+    "badgeCircle": "圈子",
+    "badgeIntention": "意向",
+    "intentionIs": "意向：{{amount}}",
+    "noSharedBody": "当你们中的一人参与对方的需求时，这里会显示这次参与。"
   },
   "help": {
     "faq": "常见问题",
@@ -1503,9 +1524,9 @@
       "RULES_VIOLATION": "违反规则",
       "ACCOUNT_HACKED": "这个账号像是被盗了"
     },
-    "feedTitle": "有人投诉了 {{name}} 的需求",
+    "feedTitle": "{{name}} · 需求相关投诉",
     "feedSubtitle": "你知道些什么吗？",
-    "questionTitle": "有人投诉了 {{name}} 的需求",
+    "questionTitle": "{{name}} · 需求相关投诉",
     "questionBody": "举报人的名字不会显示。",
     "reasonsHeading": "原因",
     "openCollection": "打开需求",
@@ -1547,7 +1568,7 @@
     "notNow": "暂不"
   },
   "adminPerson": {
-    "budget": "本期承诺",
+    "budget": "意向",
     "registered": "注册",
     "registeredValue": "{{date}} · 第 {{n}} 天",
     "connections": "直接联系",

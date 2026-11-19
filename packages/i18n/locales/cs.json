@@ -148,7 +148,7 @@
     "fit": "Vejít síť",
     "stats": {
       "canHelp": "Deklarovaná účast sítě",
-      "explain": "Kolik ještě lidé ve vaší síti (až do 6. podání ruky) ochotně uvedou v tomto období: je to součet jejich záměrů. Oznámení o potřebě putuje ve vlnách, od nejbližších až po 6. podání ruky. Je to orientační údaj, ne příslib: každý se sám rozhoduje, zda se zapojí.",
+      "explain": "Součet záměrů lidí ve vaší síti až do 6. podání ruky. Oznámení o potřebě putuje ve vlnách, od nejbližších až po 6. podání ruky. Je to orientační údaj, ne příslib: každý se sám rozhoduje, zda se zapojí.",
       "weekDelta": "+{{amount}} tento týden",
       "people_few": "{{count}} lidé ve vaší síti",
       "people_many": "{{count}} člověka ve vaší síti",
@@ -212,7 +212,7 @@
       "milestoneFirstNeedSub": "Oznámení putuje po podáních ruky",
       "milestoneFirstPart": "První účast",
       "milestoneFirstPartSub": "Autor potřeby vidí vaši účast",
-      "accepted": "potvrdil(a) známost · jste navzájem ve svých kruzích",
+      "accepted": "známost potvrzena · jste navzájem ve svých kruzích",
       "stack": {
         "waiting": "Čekáme na potvrzení",
         "incoming": "Chtějí se propojit",
@@ -225,7 +225,7 @@
       }
     },
     "start": {
-      "lead": "Ve svém kruhu jste první.",
+      "lead": "Váš kruh začíná u vás.",
       "body": "Oznámení o potřebě putuje po potvrzených podáních ruky: dokud nikdo není nablízku, signál nemá kam jít.",
       "step2": "První člověk",
       "step2Sub": "Pošlete odkaz, nebo ukažte QR",
@@ -275,8 +275,8 @@
     "all": "Všichni · {{count}}",
     "confirm": "Potvrďte, že se znáte",
     "inCircle": "{{count}} v jejich kruhu",
-    "noneYet": "Zatím nikoho nepřidal",
-    "brought": "Přivedl(a) {{count}}",
+    "noneYet": "V kruhu zatím jen vy",
+    "brought": "V kruhu ještě {{count}}",
     "via": "přes {{path}}",
     "empty": "Zatím nikdo",
     "notFound": "Nikdo nenalezen",
@@ -284,9 +284,14 @@
     "sortRecent": "Nejnovější",
     "sortName": "Jméno",
     "sortIntention": "Záměr",
-    "sortBrought": "Přivedení",
+    "sortBrought": "Velikost kruhu",
     "foundElsewhere": "V tomto podání ruky nikdo s tímto jménem není. Nalezeni v jiných:",
-    "alsoElsewhere": "Také v jiných podáních ruky"
+    "alsoElsewhere": "Také v jiných podáních ruky",
+    "ringHint1": "Lidé, které znáte osobně.",
+    "ringHint2": "Jejich známí: mezi vámi je jeden člověk.",
+    "ringHint3": "O krok dál: mezi vámi jsou dva lidé.",
+    "empty1": "Lidé, které znáte osobně, se tu objeví po potvrzení známosti.",
+    "empty2": "Lidé se tu objeví, až se kruhy vašich známých rozrostou."
   },
   "offline": {
     "banner": "Bez připojení. Zobrazuje se kopie uložená v tomto zařízení, {{time}}.",
@@ -329,7 +334,9 @@
     "noGoal": "Částka není uvedena",
     "saveGoal": "Uložit částku",
     "yourAmount": "Vaše částka",
-    "minStake": "Váš záměr je {{amount}}. Můžete dát víc.",
+    "minStake": "Můj záměr: {{amount}}. Můžete uvést víc.",
+    "zeroStake": "Můj záměr: {{amount}}",
+    "participationMinimum": "Účast začíná na {{amount}}.",
     "minOne": "Nejméně 1 $",
     "whole": "Jen celá čísla",
     "participate": "Oznámit účast",
@@ -346,7 +353,7 @@
     "otherAmount": "Jiná částka",
     "participantsCount": "Účastníci: {{count}}",
     "transferred": "Přijato",
-    "emptyPeople": "Zatím se nikdo nepřipojil",
+    "emptyPeople": "Zatím nikdo neoznámil účast",
     "youLower": "vy",
     "firstHandshake": "1. podání ruky",
     "inNetwork": "ve vaší síti",
@@ -383,7 +390,7 @@
       "AUTHOR_REQUEST": "Na žádost autora"
     },
     "goalReached": "Potřebná částka je uvedena",
-    "pastCrumb": "Potřeby",
+    "pastCrumb": "Aktivita",
     "chatLabel": "Chat účastníků",
     "openTitle": "Otevřené",
     "openEmpty": "Žádné otevřené potřeby",
@@ -420,6 +427,11 @@
       "keepYes": "Ponechat {{amount}}",
       "kept": "Hotovo. Váš záměr: {{amount}}. Změnit ho můžete v profilu.",
       "intro": "Jak síť funguje"
+    },
+    "emptyPeopleBody": "Kdo oznámí účast, objeví se tu se svou částkou.",
+    "created": {
+      "title": "Potřeba je odeslaná",
+      "body": "Lidé ve vaší síti se o ní dozvědí po podáních ruky, nejdřív ti nejbližší, maximálně jeden člověk na každý dolar částky. Pošlete odkaz známým: otevřít ho jde i bez aplikace."
     }
   },
   "profile": {
@@ -461,10 +473,10 @@
     "openSource": "Otevřený kód",
     "terms": "Podmínky",
     "privacy": "Zásady ochrany soukromí",
-    "stakeLabel": "Výchozí částka účasti",
+    "stakeLabel": "Můj záměr",
     "stakeMin": "Nejméně 1",
     "stakeHint": "Tolik jste ochotni uvést, když o potřebě oznámí někdo, koho znáte. Můžete uvést i víc. Social Organizer peníze nepřijímá ani nepřevádí.",
-    "stakeNone": "Teď nemůžu pomoct",
+    "stakeNone": "Teď se nemůžu zapojit",
     "openTab": "Otevřené",
     "pastTab": "Minulé",
     "yourCollection": "Vaše potřeba",
@@ -478,7 +490,7 @@
     "participantMany": "{{count}} účastníků",
     "paused": "Pozastaveno",
     "noOpen": "Žádné otevřené potřeby",
-    "noPast": "Žádné záznamy",
+    "noPast": "Zatím nic uzavřeného",
     "pastVia": "přes {{name}}",
     "left": "Účast odvolána",
     "goalMissing": "Částka není uvedena",
@@ -490,7 +502,9 @@
     "notifyChannel": "Kanál",
     "notifyTelegramNotLinked": "Propojte Telegram v části „Účet“, aby vám tam chodily zprávy.",
     "stakeSaved": "Uloženo",
-    "needCounts": "Otevřené: {{open}} · Minulé: {{past}}"
+    "needCounts": "Otevřené: {{open}} · Minulé: {{past}}",
+    "noOpenBody": "Tady budou vaše otevřené potřeby a ty, kterých se účastníte.",
+    "noPastBody": "Když se potřeba uzavře, přesune se sem i s částkami."
   },
   "settings": {
     "title": "Nastavení",
@@ -535,7 +549,9 @@
     "linkTextPlaceholder": "Text odkazu",
     "insert": "Vložit",
     "urlPlaceholder": "https://...",
-    "uploadFailed": "Nahrání se nezdařilo"
+    "uploadFailed": "Nahrání se nezdařilo",
+    "emptyBody": "Zatím se zeptejte asistenta na podání ruky, potřeby a účast.",
+    "askAssistant": "Zeptat se asistenta"
   },
   "chat": {
     "title": "Asistent",
@@ -1165,7 +1181,7 @@
     "pendingRejected": "Žádost odmítnuta",
     "pendingView": "Zobrazit",
     "userDeleted": "Uživatel odešel",
-    "userDeletedBody": "{{name}} z vašeho 1. podání ruky smazal(a) účet.",
+    "userDeletedBody": "Účet smazán: {{name}} z vašeho 1. podání ruky.",
     "renewalReminderTitle": "Připomínka obnovení",
     "renewalReminderBody": "{{name}}, za 3 dny začne nový cyklus potřeby, ve které se zapojujete (každých 28 dní, autor: {{creator}}). Účast můžete odvolat kdykoli.",
     "renewalStartTitle": "Začal nový cyklus",
@@ -1264,6 +1280,7 @@
     "reach": "Uvidí to {{network}} lidí: nejdřív vaši {{direct}}, potom jejich lidé.",
     "reachEmpty": "Zatím nikdo není nablízku, signál nemá kam jít.",
     "submit": "Oznámit potřebu",
+    "seeHowToUnlock": "Jak získat přístup",
     "ownTitle": "Vaše potřeba · {{current}} z {{goal}}",
     "ownNoGoal": "Vaše potřeba",
     "largeTitle": "Částka {{amount}}, je to tak?",
@@ -1286,8 +1303,8 @@
     "preview": "Jak to vypadá",
     "previewHide": "Skrýt ukázku",
     "previewCaption": "Takhle potřeba vypadá v kruhu",
-    "allLink": "Všichni · {{count}}",
-    "allLinkPlain": "Všichni"
+    "allLink": "Aktivita · {{count}}",
+    "allLinkPlain": "Aktivita"
   },
   "path": {
     "title": "Už jen kousek a o vaší potřebě se lidé dozvědí",
@@ -1370,7 +1387,7 @@
     "inCircleSince": "V kruhu od {{date}}",
     "inCircleToday": "V kruhu od dneška",
     "inCircleYesterday": "V kruhu od včerejška",
-    "empty": "Přes váš odkaz zatím nikdo nepřišel.",
+    "empty": "Přes váš odkaz zatím nikdo nepřišel. Pošlete ho někomu, koho znáte osobně.",
     "loadError": "Seznam se nepodařilo načíst.",
     "qrHint": "Kód platí minutu a známost potvrdí hned: jste tu oba. Pak se sám obnoví.",
     "scanOther": "Skenovat cizí",
@@ -1521,7 +1538,11 @@
     "factsNote": "U uzavřených potřeb. Značku nastavuje autor potřeby, Social Organizer ji neověřuje.",
     "requestDeclined": "Známost nebyla potvrzena. Pokud se znáte, ukažte si při setkání QR kód.",
     "prevPerson": "Předchozí osoba",
-    "nextPerson": "Další osoba"
+    "nextPerson": "Další osoba",
+    "badgeCircle": "v kruhu",
+    "badgeIntention": "záměr",
+    "intentionIs": "Záměr: {{amount}}",
+    "noSharedBody": "Když se jeden z vás zapojí do potřeby druhého, objeví se to tady."
   },
   "help": {
     "faq": "Otázky a odpovědi",
@@ -1545,9 +1566,9 @@
       "RULES_VIOLATION": "Porušení pravidel",
       "ACCOUNT_HACKED": "Účet vypadá jako převzatý"
     },
-    "feedTitle": "Lidé nahlásili potřebu uživatele {{name}}",
+    "feedTitle": "{{name}} · Stížnosti na potřebu",
     "feedSubtitle": "Víte o tom něco?",
-    "questionTitle": "Lidé nahlásili potřebu uživatele {{name}}",
+    "questionTitle": "{{name}} · Stížnosti na potřebu",
     "questionBody": "Jména těch, kdo nahlásili, neukazujeme.",
     "reasonsHeading": "Důvody",
     "openCollection": "Otevřít potřebu",
@@ -1589,7 +1610,7 @@
     "notNow": "Teď ne"
   },
   "adminPerson": {
-    "budget": "Příslib v tomto období",
+    "budget": "Záměr",
     "registered": "Registrace",
     "registeredValue": "{{date}} · den {{n}}",
     "connections": "Přímá spojení",
@@ -1598,8 +1619,8 @@
     "needsWithHelp": "Potřeby s účastí",
     "tookPartIn": "Účast na potřebách",
     "historyLabel": "Historie účasti",
-    "given": "Dal(a) · {{n}}",
-    "received": "Dostal(a) · {{n}}",
+    "given": "Účast · {{n}}",
+    "received": "Přijato · {{n}}",
     "projectDay": "Den projektu"
   },
   "participationSummary": {

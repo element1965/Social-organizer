@@ -148,7 +148,7 @@
     "fit": "Ağı sığdır",
     "stats": {
       "canHelp": "Ağın beyan ettiği katılım",
-      "explain": "Ağınızdaki kişilerin (6. tokalaşmaya kadar) bu dönemde belirtmeye hâlâ hazır olduğu tutar: niyetlerinin toplamı. İhtiyaç bildirimi dalgalar hâlinde, en yakınlardan başlayarak 6. tokalaşmaya kadar gider. Bu bir gösterge, söz değildir: katılıp katılmamaya herkes kendisi karar verir.",
+      "explain": "Ağınızdaki kişilerin 6. tokalaşmaya kadar olan niyetlerinin toplamı. İhtiyaç bildirimi dalgalar hâlinde, en yakınlardan başlayarak 6. tokalaşmaya kadar gider. Bu bir gösterge, söz değildir: katılıp katılmamaya herkes kendisi karar verir.",
       "weekDelta": "Bu hafta +{{amount}}",
       "people_one": "Ağınızda {{count}} kişi",
       "people_other": "Ağınızda {{count}} kişi",
@@ -219,7 +219,7 @@
       }
     },
     "start": {
-      "lead": "Çevrenizdeki ilk kişi sizsiniz.",
+      "lead": "Çevreniz sizinle başlar.",
       "body": "İhtiyaç bildirimi onaylanmış tokalaşmalar boyunca ilerler: yakınınızda kimse yokken sinyalin gidecek yeri yoktur.",
       "step2": "İlk kişi",
       "step2Sub": "Bağlantınızı gönderin veya QR gösterin",
@@ -269,8 +269,8 @@
     "all": "Tümü · {{count}}",
     "confirm": "Birbirinizi tanıdığınızı onaylayın",
     "inCircle": "Çevresinde {{count}} kişi",
-    "noneYet": "Henüz kimseyi eklemedi",
-    "brought": "{{count}} kişi getirdi",
+    "noneYet": "Çevresinde şimdilik yalnızca siz varsınız",
+    "brought": "Çevresinde {{count}} kişi daha",
     "via": "{{path}} üzerinden",
     "empty": "Henüz kimse yok",
     "notFound": "Kimse bulunamadı",
@@ -278,9 +278,14 @@
     "sortRecent": "En yeni",
     "sortName": "Ad",
     "sortIntention": "Niyet",
-    "sortBrought": "Getirdiği",
+    "sortBrought": "Çevre büyüklüğü",
     "foundElsewhere": "Bu tokalaşmada bu isimde kimse yok. Diğerlerinde bulundu:",
-    "alsoElsewhere": "Diğer tokalaşmalarda da"
+    "alsoElsewhere": "Diğer tokalaşmalarda da",
+    "ringHint1": "Şahsen tanıdığınız kişiler.",
+    "ringHint2": "Onların tanıdıkları: aranızda bir kişi var.",
+    "ringHint3": "Bir adım öte: aranızda iki kişi var.",
+    "empty1": "Şahsen tanıdığınız kişiler, tanışıklık onaylanınca burada görünür.",
+    "empty2": "Tanıdıklarınızın çevresi büyüdükçe burada kişiler görünür."
   },
   "offline": {
     "banner": "Bağlantı yok. Bu cihazda kayıtlı kopya gösteriliyor, {{time}}.",
@@ -323,7 +328,9 @@
     "noGoal": "Tutar belirtilmedi",
     "saveGoal": "Tutarı kaydet",
     "yourAmount": "Tutarınız",
-    "minStake": "Niyetiniz {{amount}}. Daha fazlasını verebilirsiniz.",
+    "minStake": "Niyetim: {{amount}}. Daha fazlasını belirtebilirsiniz.",
+    "zeroStake": "Niyetim: {{amount}}",
+    "participationMinimum": "Katılım {{amount}} tutarından başlar.",
     "minOne": "En az 1 $",
     "whole": "Yalnızca tam dolar",
     "participate": "Katılım bildir",
@@ -340,7 +347,7 @@
     "otherAmount": "Başka tutar",
     "participantsCount": "Katılımcılar: {{count}}",
     "transferred": "Alındı",
-    "emptyPeople": "Henüz kimse katılmadı",
+    "emptyPeople": "Henüz katılım bildiren yok",
     "youLower": "siz",
     "firstHandshake": "1. tokalaşma",
     "inNetwork": "ağınızda",
@@ -377,7 +384,7 @@
       "AUTHOR_REQUEST": "Yazarın isteği üzerine"
     },
     "goalReached": "Gereken tutar belirtildi",
-    "pastCrumb": "İhtiyaçlar",
+    "pastCrumb": "Etkinlik",
     "chatLabel": "Katılımcı sohbeti",
     "openTitle": "Açık",
     "openEmpty": "Açık ihtiyaç yok",
@@ -414,6 +421,11 @@
       "keepYes": "{{amount}} kalsın",
       "kept": "Tamam: niyetiniz {{amount}}. Profil'den değiştirebilirsiniz.",
       "intro": "Ağın nasıl işlediğini görün"
+    },
+    "emptyPeopleBody": "Katılım bildirenler tutarlarıyla birlikte burada görünür.",
+    "created": {
+      "title": "İhtiyacınız gönderildi",
+      "body": "Ağınızdaki kişiler bunu tokalaşmalar üzerinden, en yakından başlayarak öğrenir, tutarın her doları için en fazla bir kişi. Bağlantıyı tanıdıklarınıza gönderin: uygulama olmadan da açılır."
     }
   },
   "profile": {
@@ -455,10 +467,10 @@
     "openSource": "Açık kaynak",
     "terms": "Koşullar",
     "privacy": "Gizlilik politikası",
-    "stakeLabel": "Varsayılan katılım tutarı",
+    "stakeLabel": "Niyetim",
     "stakeMin": "En az 1",
     "stakeHint": "Tanıdığınız biri ihtiyaç bildirdiğinde belirtmeye hazır olduğunuz tutar. Daha fazlasını da belirtebilirsiniz. Social Organizer para kabul etmez ve aktarmaz.",
-    "stakeNone": "Şu anda yardımcı olamıyorum",
+    "stakeNone": "Şu anda katılamıyorum",
     "openTab": "Açık",
     "pastTab": "Geçmiş",
     "yourCollection": "İhtiyacınız",
@@ -472,7 +484,7 @@
     "participantMany": "{{count}} katılımcı",
     "paused": "Duraklatıldı",
     "noOpen": "Açık ihtiyaç yok",
-    "noPast": "Kayıt yok",
+    "noPast": "Henüz kapanan yok",
     "pastVia": "{{name}} üzerinden",
     "left": "Katılım geri çekildi",
     "goalMissing": "Tutar belirtilmedi",
@@ -484,7 +496,9 @@
     "notifyChannel": "Kanal",
     "notifyTelegramNotLinked": "İletilerin oraya gelmesi için Telegram'ı «Hesap» bölümünde bağlayın.",
     "stakeSaved": "Kaydedildi",
-    "needCounts": "Açık: {{open}} · Geçmiş: {{past}}"
+    "needCounts": "Açık: {{open}} · Geçmiş: {{past}}",
+    "noOpenBody": "İhtiyaçlarınız ve katıldığınız ihtiyaçlar açık oldukları sürece burada durur.",
+    "noPastBody": "Bir ihtiyaç kapandığında tutarlarıyla birlikte buraya taşınır."
   },
   "settings": {
     "title": "Ayarlar",
@@ -529,7 +543,9 @@
     "linkTextPlaceholder": "Bağlantı metni",
     "insert": "Ekle",
     "urlPlaceholder": "https://...",
-    "uploadFailed": "Yükleme başarısız"
+    "uploadFailed": "Yükleme başarısız",
+    "emptyBody": "Bu arada asistana tokalaşmaları, ihtiyaçları ve katılımı sorun.",
+    "askAssistant": "Asistana sor"
   },
   "chat": {
     "title": "Asistan",
@@ -1248,6 +1264,7 @@
     "reach": "{{network}} kişi görür: önce sizin {{direct}} kişiniz, sonra onların kişileri.",
     "reachEmpty": "Yakınınızda henüz kimse yok; sinyalin gideceği yer yok.",
     "submit": "İhtiyaç bildir",
+    "seeHowToUnlock": "Nasıl erişeceğinizi görün",
     "ownTitle": "İhtiyacınız · {{goal}} içinden {{current}}",
     "ownNoGoal": "İhtiyacınız",
     "largeTitle": "Tutar {{amount}}, doğru mu?",
@@ -1270,8 +1287,8 @@
     "preview": "Nasıl görünür",
     "previewHide": "Örneği gizle",
     "previewCaption": "İhtiyaç çevrede böyle görünür",
-    "allLink": "Tümü · {{count}}",
-    "allLinkPlain": "Tümü"
+    "allLink": "Etkinlik · {{count}}",
+    "allLinkPlain": "Etkinlik"
   },
   "path": {
     "title": "Az kaldı: ihtiyacınız yakında duyulacak",
@@ -1352,7 +1369,7 @@
     "inCircleSince": "Çevrede {{date}} tarihinden beri",
     "inCircleToday": "Çevrede bugünden beri",
     "inCircleYesterday": "Çevrede dünden beri",
-    "empty": "Bağlantınızla henüz kimse gelmedi.",
+    "empty": "Bağlantınızla henüz kimse gelmedi. Şahsen tanıdığınız birine gönderin.",
     "loadError": "Liste yüklenemedi.",
     "qrHint": "Kod bir dakika durur ve tanıdıklığı hemen onaylar: ikiniz de buradasınız. Sonra kendiliğinden yenilenir.",
     "scanOther": "Onunkini tara",
@@ -1493,7 +1510,11 @@
     "factsNote": "Kapanan ihtiyaçlar için. İşareti ihtiyacın yazarı koyar, Social Organizer bunu doğrulamaz.",
     "requestDeclined": "Tanışıklık onaylanmadı. Birbirinizi tanıyorsanız, buluştuğunuzda QR kodunuzu birbirinize gösterin.",
     "prevPerson": "Önceki kişi",
-    "nextPerson": "Sonraki kişi"
+    "nextPerson": "Sonraki kişi",
+    "badgeCircle": "çevresinde",
+    "badgeIntention": "niyet",
+    "intentionIs": "Niyet: {{amount}}",
+    "noSharedBody": "Biriniz diğerinin ihtiyacına katıldığında, katılım burada görünür."
   },
   "help": {
     "faq": "Sorular ve yanıtlar",
@@ -1517,9 +1538,9 @@
       "RULES_VIOLATION": "Kural ihlali",
       "ACCOUNT_HACKED": "Hesap ele geçirilmiş görünüyor"
     },
-    "feedTitle": "Kişiler {{name}} kişisinin ihtiyacından şikâyet etti",
+    "feedTitle": "{{name}} · Bir ihtiyaçla ilgili şikâyetler",
     "feedSubtitle": "Bir şey biliyor musunuz?",
-    "questionTitle": "Kişiler {{name}} kişisinin ihtiyacından şikâyet etti",
+    "questionTitle": "{{name}} · Bir ihtiyaçla ilgili şikâyetler",
     "questionBody": "Bildirenlerin adları gizli kalır.",
     "reasonsHeading": "Gerekçeler",
     "openCollection": "İhtiyacı aç",
@@ -1561,7 +1582,7 @@
     "notNow": "Şimdi değil"
   },
   "adminPerson": {
-    "budget": "Bu dönemki taahhüt",
+    "budget": "Niyet",
     "registered": "Kayıt",
     "registeredValue": "{{date}} · {{n}}. gün",
     "connections": "Doğrudan bağlantılar",

@@ -148,7 +148,7 @@
     "fit": "Netwerk in beeld",
     "stats": {
       "canHelp": "Aangegeven deelname van het netwerk",
-      "explain": "Wat de mensen in je netwerk (tot de 6e handdruk) deze periode nog bereid zijn te noemen: de som van hun intenties. Een bericht over een behoefte gaat in golven uit, eerst naar de naasten, tot de 6e handdruk. Dit is een richtgetal, geen belofte: iedereen beslist zelf of hij of zij deelneemt.",
+      "explain": "De som van de intenties van de mensen in je netwerk tot de 6e handdruk. Een bericht over een behoefte gaat in golven uit, eerst naar de naasten, tot de 6e handdruk. Dit is een richtgetal, geen belofte: iedereen beslist zelf over deelname.",
       "weekDelta": "+{{amount}} deze week",
       "people_one": "{{count}} persoon in je netwerk",
       "people_other": "{{count}} personen in je netwerk",
@@ -219,7 +219,7 @@
       }
     },
     "start": {
-      "lead": "Jij bent de eerste in je kring.",
+      "lead": "Je kring begint bij jou.",
       "body": "Een bericht over een behoefte gaat langs bevestigde handdrukken: zolang er niemand in de buurt is, kan het signaal nergens heen.",
       "step2": "Eerste persoon",
       "step2Sub": "Stuur je link of toon de QR",
@@ -269,8 +269,8 @@
     "all": "Alles · {{count}}",
     "confirm": "Bevestig dat jullie elkaar kennen",
     "inCircle": "{{count}} in hun kring",
-    "noneYet": "Heeft nog niemand toegevoegd",
-    "brought": "Bracht {{count}} mee",
+    "noneYet": "Alleen jij in hun kring tot nu toe",
+    "brought": "Nog {{count}} in hun kring",
     "via": "via {{path}}",
     "empty": "Nog niemand",
     "notFound": "Niemand gevonden",
@@ -278,9 +278,14 @@
     "sortRecent": "Nieuwste",
     "sortName": "Naam",
     "sortIntention": "Intentie",
-    "sortBrought": "Meegebracht",
+    "sortBrought": "Grootte van de kring",
     "foundElsewhere": "Niemand met die naam in deze handdruk. Gevonden in andere:",
-    "alsoElsewhere": "Ook in andere handdrukken"
+    "alsoElsewhere": "Ook in andere handdrukken",
+    "ringHint1": "Mensen die je persoonlijk kent.",
+    "ringHint2": "Hun kennissen: één persoon tussen jullie.",
+    "ringHint3": "Een stap verder: twee personen tussen jullie.",
+    "empty1": "Mensen die je persoonlijk kent, verschijnen hier zodra de kennismaking is bevestigd.",
+    "empty2": "Hier verschijnen mensen naarmate de kringen van je kennissen groeien."
   },
   "offline": {
     "banner": "Geen verbinding. De kopie die op dit apparaat is opgeslagen wordt getoond, {{time}}.",
@@ -323,7 +328,9 @@
     "noGoal": "Nog geen bedrag",
     "saveGoal": "Bedrag opslaan",
     "yourAmount": "Je bedrag",
-    "minStake": "Je intentie is {{amount}}. Je kunt meer geven.",
+    "minStake": "Mijn intentie: {{amount}}. Je kunt meer opgeven.",
+    "zeroStake": "Mijn intentie: {{amount}}",
+    "participationMinimum": "Deelname begint bij {{amount}}.",
     "minOne": "Minimaal 1 $",
     "whole": "Alleen hele dollars",
     "participate": "Deelname melden",
@@ -340,7 +347,7 @@
     "otherAmount": "Ander bedrag",
     "participantsCount": "Deelnemers: {{count}}",
     "transferred": "Ontvangen",
-    "emptyPeople": "Nog niemand doet mee",
+    "emptyPeople": "Nog geen deelname gemeld",
     "youLower": "jij",
     "firstHandshake": "1e handdruk",
     "inNetwork": "in je netwerk",
@@ -377,7 +384,7 @@
       "AUTHOR_REQUEST": "Op verzoek van de maker"
     },
     "goalReached": "Benodigd bedrag is genoemd",
-    "pastCrumb": "Behoeften",
+    "pastCrumb": "Activiteit",
     "chatLabel": "Chat van de deelnemers",
     "openTitle": "Open",
     "openEmpty": "Geen open behoeften",
@@ -414,6 +421,11 @@
       "keepYes": "{{amount}} houden",
       "kept": "Klaar: je intentie is {{amount}}. Je kunt die wijzigen in je Profiel.",
       "intro": "Zo werkt het netwerk"
+    },
+    "emptyPeopleBody": "Wie deelname meldt, verschijnt hier met het eigen bedrag.",
+    "created": {
+      "title": "Je behoefte is verstuurd",
+      "body": "Mensen in je netwerk horen ervan via handdrukken, de dichtstbijzijnden eerst, maximaal één persoon per dollar van het bedrag. Stuur de link naar mensen die je kent: hij opent ook zonder de app."
     }
   },
   "profile": {
@@ -455,10 +467,10 @@
     "openSource": "Open source",
     "terms": "Voorwaarden",
     "privacy": "Privacybeleid",
-    "stakeLabel": "Standaardbedrag voor deelname",
+    "stakeLabel": "Mijn intentie",
     "stakeMin": "Minimaal 1",
     "stakeHint": "Zoveel ben je bereid te noemen wanneer iemand die je kent een behoefte meldt. Je kunt meer noemen. Social Organizer ontvangt of verstuurt geen geld.",
-    "stakeNone": "Ik kan nu niet helpen",
+    "stakeNone": "Ik kan nu niet meedoen",
     "openTab": "Open",
     "pastTab": "Eerder",
     "yourCollection": "Je behoefte",
@@ -472,7 +484,7 @@
     "participantMany": "{{count}} deelnemers",
     "paused": "Gepauzeerd",
     "noOpen": "Geen open behoeften",
-    "noPast": "Geen items",
+    "noPast": "Nog niets gesloten",
     "pastVia": "via {{name}}",
     "left": "Deelname ingetrokken",
     "goalMissing": "Geen bedrag ingesteld",
@@ -484,7 +496,9 @@
     "notifyChannel": "Kanaal",
     "notifyTelegramNotLinked": "Koppel Telegram bij “Account” om berichten daar te krijgen.",
     "stakeSaved": "Opgeslagen",
-    "needCounts": "Open: {{open}} · Eerder: {{past}}"
+    "needCounts": "Open: {{open}} · Eerder: {{past}}",
+    "noOpenBody": "Je behoeften en de behoeften waaraan je deelneemt staan hier zolang ze open zijn.",
+    "noPastBody": "Als een behoefte sluit, komt die hier met de bedragen."
   },
   "settings": {
     "title": "Instellingen",
@@ -529,7 +543,9 @@
     "linkTextPlaceholder": "Linktekst",
     "insert": "Invoegen",
     "urlPlaceholder": "https://...",
-    "uploadFailed": "Uploaden mislukt"
+    "uploadFailed": "Uploaden mislukt",
+    "emptyBody": "Vraag in de tussentijd de assistent naar handdrukken, behoeften en deelname.",
+    "askAssistant": "Vraag de assistent"
   },
   "chat": {
     "title": "Assistent",
@@ -1248,6 +1264,7 @@
     "reach": "{{network}} mensen kunnen het zien: eerst jouw {{direct}}, daarna hun mensen.",
     "reachEmpty": "Er is nog niemand in de buurt, dus het signaal kan nergens heen.",
     "submit": "Behoefte melden",
+    "seeHowToUnlock": "Bekijk hoe je toegang krijgt",
     "ownTitle": "Je behoefte · {{current}} van {{goal}}",
     "ownNoGoal": "Je behoefte",
     "largeTitle": "Bedrag {{amount}}, klopt dat?",
@@ -1270,8 +1287,8 @@
     "preview": "Zo ziet het eruit",
     "previewHide": "Voorbeeld verbergen",
     "previewCaption": "Zo ziet een behoefte eruit in de kring",
-    "allLink": "Alles · {{count}}",
-    "allLinkPlain": "Alles"
+    "allLink": "Activiteit · {{count}}",
+    "allLinkPlain": "Activiteit"
   },
   "path": {
     "title": "Bijna: straks hoort men van je behoefte",
@@ -1352,7 +1369,7 @@
     "inCircleSince": "In de kring sinds {{date}}",
     "inCircleToday": "In de kring sinds vandaag",
     "inCircleYesterday": "In de kring sinds gisteren",
-    "empty": "Er is nog niemand via je link gekomen.",
+    "empty": "Er is nog niemand via je link gekomen. Stuur hem naar iemand die je persoonlijk kent.",
     "loadError": "De lijst kon niet worden geladen.",
     "qrHint": "De code geldt een minuut en bevestigt meteen dat jullie elkaar kennen: jullie zijn er allebei. Daarna ververst hij vanzelf.",
     "scanOther": "Die van hen scannen",
@@ -1493,7 +1510,11 @@
     "factsNote": "Voor gesloten Behoeften. De markering wordt gezet door de auteur van een Behoefte; Social Organizer controleert die niet.",
     "requestDeclined": "De kennismaking is niet bevestigd. Kennen jullie elkaar, laat elkaar dan je QR-code zien als jullie elkaar zien.",
     "prevPerson": "Vorige persoon",
-    "nextPerson": "Volgende persoon"
+    "nextPerson": "Volgende persoon",
+    "badgeCircle": "in hun kring",
+    "badgeIntention": "intentie",
+    "intentionIs": "Intentie: {{amount}}",
+    "noSharedBody": "Als een van jullie deelneemt aan een behoefte van de ander, verschijnt dat hier."
   },
   "help": {
     "faq": "Vragen en antwoorden",
@@ -1517,9 +1538,9 @@
       "RULES_VIOLATION": "Overtreding van de regels",
       "ACCOUNT_HACKED": "Het account lijkt overgenomen"
     },
-    "feedTitle": "Mensen hebben een klacht over de behoefte van {{name}}",
+    "feedTitle": "{{name}} · Klachten over een behoefte",
     "feedSubtitle": "Weet jij iets?",
-    "questionTitle": "Mensen hebben een klacht over de behoefte van {{name}}",
+    "questionTitle": "{{name}} · Klachten over een behoefte",
     "questionBody": "Namen van de mensen die meldden, blijven verborgen.",
     "reasonsHeading": "Redenen",
     "openCollection": "Behoefte openen",
@@ -1561,7 +1582,7 @@
     "notNow": "Niet nu"
   },
   "adminPerson": {
-    "budget": "Toezegging deze periode",
+    "budget": "Intentie",
     "registered": "Geregistreerd",
     "registeredValue": "{{date}} · dag {{n}}",
     "connections": "Directe verbindingen",

@@ -148,7 +148,7 @@
     "fit": "ネットワークを収める",
     "stats": {
       "canHelp": "ネットワークの表明された参加",
-      "explain": "あなたのネットワークの人たち（6次の握手まで）が、この期間にまだ示してもよいと考えている金額です。その人たちの意向の合計になります。ニーズの知らせは、近い人から順に波のように、6次の握手まで届きます。これは目安であり、約束ではありません。参加するかどうかは、それぞれが自分で決めます。",
+      "explain": "あなたのネットワーク（6次の握手まで）にいる人たちの意向の合計です。ニーズの知らせは、近い人から順に波のように、6次の握手まで届きます。これは目安であり、約束ではありません。参加するかどうかは、それぞれが自分で決めます。",
       "weekDelta": "今週 +{{amount}}",
       "people_other": "あなたのネットワークに{{count}}人",
       "peopleShort_other": "{{count}}人",
@@ -216,7 +216,7 @@
       }
     },
     "start": {
-      "lead": "あなたは、自分のサークルの最初の人です。",
+      "lead": "あなたのサークルは、あなたから始まります。",
       "body": "ニーズの知らせは、確認された握手に沿って進みます。近くに誰もいないと、知らせの行き先がありません。",
       "step2": "最初の人",
       "step2Sub": "リンクを送るか、QRを見せてください",
@@ -266,8 +266,8 @@
     "all": "すべて · {{count}}",
     "confirm": "知り合いであることを確認してください",
     "inCircle": "その人のサークルに{{count}}人",
-    "noneYet": "まだ誰も加えていません",
-    "brought": "{{count}}人を招待",
+    "noneYet": "サークルにはまだあなただけ",
+    "brought": "サークルにほかに{{count}}人",
     "via": "{{path}}経由",
     "empty": "まだ誰もいません",
     "notFound": "見つかりませんでした",
@@ -275,9 +275,14 @@
     "sortRecent": "新しい順",
     "sortName": "名前",
     "sortIntention": "意向",
-    "sortBrought": "招待数",
+    "sortBrought": "サークルの大きさ",
     "foundElsewhere": "この握手には該当する名前の人がいません。他の握手で見つかりました:",
-    "alsoElsewhere": "他の握手にも"
+    "alsoElsewhere": "他の握手にも",
+    "ringHint1": "あなたが直接知っている人たち。",
+    "ringHint2": "その人たちの知り合い。間に1人います。",
+    "ringHint3": "さらに一歩先。間に2人います。",
+    "empty1": "知り合いであることが確認されると、直接知っている人がここに表示されます。",
+    "empty2": "知り合いのサークルが広がると、ここに人が表示されます。"
   },
   "offline": {
     "banner": "接続されていません。この端末に保存したコピーを表示しています（{{time}}）。",
@@ -320,7 +325,9 @@
     "noGoal": "金額はまだありません",
     "saveGoal": "金額を保存",
     "yourAmount": "あなたの金額",
-    "minStake": "あなたの意向は{{amount}}です。それより多くすることもできます。",
+    "minStake": "自分の意向: {{amount}}。もっと多く伝えることもできます。",
+    "zeroStake": "自分の意向: {{amount}}",
+    "participationMinimum": "参加は{{amount}}からです。",
     "minOne": "最低 1 $",
     "whole": "ドルは整数のみです",
     "participate": "参加を知らせる",
@@ -337,7 +344,7 @@
     "otherAmount": "別の金額",
     "participantsCount": "参加者：{{count}}",
     "transferred": "受け取り済み",
-    "emptyPeople": "まだ誰も参加していません",
+    "emptyPeople": "まだ参加の知らせはありません",
     "youLower": "あなた",
     "firstHandshake": "1次の握手",
     "inNetwork": "あなたのネットワーク内",
@@ -374,7 +381,7 @@
       "AUTHOR_REQUEST": "作者のお願いに応じて"
     },
     "goalReached": "必要な金額が表明されました",
-    "pastCrumb": "ニーズ",
+    "pastCrumb": "活動",
     "chatLabel": "参加者のチャット",
     "openTitle": "開いているもの",
     "openEmpty": "開いているニーズはありません",
@@ -411,6 +418,11 @@
       "keepYes": "{{amount}}にする",
       "kept": "完了：あなたの意向は{{amount}}です。プロフィールで変更できます。",
       "intro": "ネットワークのしくみを見る"
+    },
+    "emptyPeopleBody": "参加を知らせた人は、金額と一緒にここに表示されます。",
+    "created": {
+      "title": "ニーズを送りました",
+      "body": "ネットワークの人たちには、握手に沿って近い人から順に、金額1ドルにつき最大1人に知らせが届きます。知り合いにリンクを送りましょう。アプリがなくても開けます。"
     }
   },
   "profile": {
@@ -452,10 +464,10 @@
     "openSource": "オープンソース",
     "terms": "利用規約",
     "privacy": "プライバシーポリシー",
-    "stakeLabel": "参加額の初期値",
+    "stakeLabel": "自分の意向",
     "stakeMin": "最低 1",
     "stakeHint": "知っている人がニーズを知らせたときに、あなたが示してもよいと考えている金額です。もっと示すこともできます。Social Organizer はお金を受け取らず、送金もしません。",
-    "stakeNone": "今は手伝えません",
+    "stakeNone": "今は参加できません",
     "openTab": "開いているもの",
     "pastTab": "過去",
     "yourCollection": "あなたのニーズ",
@@ -469,7 +481,7 @@
     "participantMany": "参加者 {{count}}人",
     "paused": "一時停止中",
     "noOpen": "開いているニーズはありません",
-    "noPast": "記録はありません",
+    "noPast": "終了したものはまだありません",
     "pastVia": "{{name}}経由",
     "left": "参加を取り下げました",
     "goalMissing": "金額は未設定です",
@@ -481,7 +493,9 @@
     "notifyChannel": "チャンネル",
     "notifyTelegramNotLinked": "メッセージをそこで受け取るには、「アカウント」でTelegramを連携してください。",
     "stakeSaved": "保存しました",
-    "needCounts": "開いているもの: {{open}} · 過去: {{past}}"
+    "needCounts": "開いているもの: {{open}} · 過去: {{past}}",
+    "noOpenBody": "あなたのニーズと、参加しているニーズは、開いている間ここに表示されます。",
+    "noPastBody": "ニーズが終了すると、金額と一緒にここへ移ります。"
   },
   "settings": {
     "title": "設定",
@@ -526,7 +540,9 @@
     "linkTextPlaceholder": "リンクのテキスト",
     "insert": "挿入",
     "urlPlaceholder": "https://...",
-    "uploadFailed": "アップロードできませんでした"
+    "uploadFailed": "アップロードできませんでした",
+    "emptyBody": "その間、握手、ニーズ、参加についてアシスタントに聞いてみてください。",
+    "askAssistant": "アシスタントに聞く"
   },
   "chat": {
     "title": "アシスタント",
@@ -1169,7 +1185,7 @@
     "invalidContact": "無効な形式"
   },
   "sos": {
-    "headline": "{{name}}さんに助け合いが必要です",
+    "headline": "{{name}}さんが助けを求めています",
     "ofGoal": "{{amount}}のうち",
     "peopleLine": "参加者：{{count}} · お金はサービスを通さず、直接手渡します",
     "joinCircle": "ログイン後にニーズを開くと、投稿者と個人的な面識があることを確認したことになり、投稿者のサークルに加わります。",
@@ -1240,6 +1256,7 @@
     "reach": "{{network}}人に見えます。まず直接の{{direct}}人、次にその人たちの知り合いです。",
     "reachEmpty": "まだ近くに誰もいないので、知らせの行き先がありません。",
     "submit": "ニーズを知らせる",
+    "seeHowToUnlock": "利用条件を見る",
     "ownTitle": "あなたのニーズ · {{goal}}のうち{{current}}",
     "ownNoGoal": "あなたのニーズ",
     "largeTitle": "金額は{{amount}}です。これでよいですか？",
@@ -1262,8 +1279,8 @@
     "preview": "見え方",
     "previewHide": "例を隠す",
     "previewCaption": "サークルでは、ニーズはこのように見えます",
-    "allLink": "すべて · {{count}}",
-    "allLinkPlain": "すべて"
+    "allLink": "活動 · {{count}}",
+    "allLinkPlain": "活動"
   },
   "path": {
     "title": "もう少しで、あなたのニーズが届きます",
@@ -1343,7 +1360,7 @@
     "inCircleSince": "{{date}}からサークルにいます",
     "inCircleToday": "今日からサークルにいます",
     "inCircleYesterday": "昨日からサークルにいます",
-    "empty": "あなたのリンクから来た人は、まだいません。",
+    "empty": "あなたのリンクから来た人は、まだいません。直接知っている人に送りましょう。",
     "loadError": "一覧を読み込めませんでした。",
     "qrHint": "コードは1分で、その場で知り合いであることを確認します。二人ともここにいます。その後、コードは自動で更新されます。",
     "scanOther": "相手のコードを読み取る",
@@ -1479,7 +1496,11 @@
     "factsNote": "終了したニーズが対象です。記録はニーズの作成者が付けるもので、Social Organizer は確認しません。",
     "requestDeclined": "知り合いであることは確認されませんでした。知り合いなら、会ったときにお互いの QR コードを見せ合ってください。",
     "prevPerson": "前の人",
-    "nextPerson": "次の人"
+    "nextPerson": "次の人",
+    "badgeCircle": "サークル",
+    "badgeIntention": "意向",
+    "intentionIs": "意向: {{amount}}",
+    "noSharedBody": "どちらかが相手のニーズに参加すると、ここに表示されます。"
   },
   "help": {
     "faq": "よくある質問",
@@ -1503,9 +1524,9 @@
       "RULES_VIOLATION": "ルール違反",
       "ACCOUNT_HACKED": "アカウントが乗っ取られたようです"
     },
-    "feedTitle": "{{name}}さんのニーズが報告されました",
+    "feedTitle": "{{name}} · ニーズへの苦情",
     "feedSubtitle": "何かご存じですか？",
-    "questionTitle": "{{name}}さんのニーズが報告されました",
+    "questionTitle": "{{name}} · ニーズへの苦情",
     "questionBody": "報告した人の名前は伏せられます。",
     "reasonsHeading": "理由",
     "openCollection": "ニーズを開く",
@@ -1547,7 +1568,7 @@
     "notNow": "今はしない"
   },
   "adminPerson": {
-    "budget": "今期の申し出",
+    "budget": "意向",
     "registered": "登録",
     "registeredValue": "{{date}} · {{n}}日目",
     "connections": "直接のつながり",

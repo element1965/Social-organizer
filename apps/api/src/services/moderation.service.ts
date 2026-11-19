@@ -1,3 +1,4 @@
+import { firstName } from '@so/shared';
 import { WEB_APP_URL } from '../deployment.js';
 import { Prisma, type PrismaClient } from '@so/db';
 import { TRPCError } from '@trpc/server';
@@ -17,7 +18,6 @@ import {
   deliverWithRetry,
   dismissalRecordsStrikes,
   hackedMajority,
-  inflectFirstName,
   pledgeOldEnough,
   reviewAudience,
   reviewKind,
@@ -278,15 +278,15 @@ async function notifyReviewAudience(db: PrismaClient, reviewId: string): Promise
 
   const url = `${WEB_APP_URL}/?review=${review.id}`;
   await Promise.all([...buckets.entries()].map(async ([lang, ids]) => {
-    const name = inflectFirstName(review.collection.creator.name, lang);
+    const name = firstName(review.collection.creator.name);
     const payload = lang === 'ru'
       ? {
-          title: 'Люди жалуются на сбор',
-          body: `Люди жалуются на сбор ${name}. Вы что-то знаете?`,
+          title: 'Жалобы на потребность',
+          body: `${name} — автор потребности, на которую поступили жалобы. Вы что-то знаете?`,
         }
       : {
-          title: 'People reported a collection',
-          body: `People reported ${name}'s collection. Do you know anything?`,
+          title: 'Complaints about a Need',
+          body: `${name} posted a Need that people reported. Do you know anything?`,
         };
     await sendPushNotification(db, ids, { ...payload, url });
   }));

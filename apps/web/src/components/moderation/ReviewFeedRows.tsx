@@ -3,7 +3,6 @@ import { Link, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { trpc } from '../../lib/trpc';
 import { cn } from '../../lib/utils';
-import { inflectName } from '../collection/name-case';
 import { firstName } from '../collection/text';
 import { EventRow } from '../ui2/EventRow';
 import { Sheet } from '../ui2/Sheet';
@@ -21,11 +20,6 @@ export type ReviewSheetData = {
   reasons: ReasonCount[];
   myVote: VoteAnswer | null;
 };
-
-function circleName(fullName: string, language: string): string {
-  if (language.toLowerCase().startsWith('ru')) return inflectName(fullName, 'genitive');
-  return firstName(fullName);
-}
 
 function IconFlag() {
   return (
@@ -56,8 +50,8 @@ export function ReviewSheet({
   error?: string | null;
   onVote?: (answer: VoteAnswer) => void;
 }) {
-  const { t, i18n } = useTranslation();
-  const name = review ? circleName(review.authorName, i18n.language) : '';
+  const { t } = useTranslation();
+  const name = review ? firstName(review.authorName) : '';
   const voted = review?.myVote != null;
 
   return (
@@ -112,7 +106,7 @@ function isVote(value: string | null | undefined): value is VoteAnswer {
 
 /** Feed rows for circle questions addressed to the signed-in person. Renders nothing when there are none. */
 export function ReviewFeedRows() {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const [params, setParams] = useSearchParams();
   const utils = trpc.useUtils();
   // Kept fresh by the app-wide pulse (hooks/usePulse.ts)
@@ -159,7 +153,7 @@ export function ReviewFeedRows() {
       {rows.length > 0 ? (
         <ul className="mb-2 flex flex-col gap-2">
           {rows.map((row) => {
-            const name = circleName(row.authorName, i18n.language);
+            const name = firstName(row.authorName);
             return (
               <li key={row.id}>
                 <EventRow

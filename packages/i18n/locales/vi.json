@@ -148,7 +148,7 @@
     "fit": "Vừa khít mạng lưới",
     "stats": {
       "canHelp": "Mức tham gia đã nêu của mạng lưới",
-      "explain": "Những người trong mạng lưới của bạn (đến cái bắt tay thứ 6) còn sẵn sàng nêu thêm bao nhiêu trong kỳ này: tổng dự định của họ. Thông báo về nhu cầu đi theo từng đợt, từ người gần nhất đến cái bắt tay thứ 6. Đây chỉ là con số tham khảo, không phải lời hứa: mỗi người tự quyết định có tham gia hay không.",
+      "explain": "Tổng dự định của những người trong mạng lưới của bạn đến cái bắt tay thứ 6. Thông báo về nhu cầu đi theo từng đợt, từ người gần nhất đến cái bắt tay thứ 6. Đây chỉ là con số tham khảo, không phải lời hứa: mỗi người tự quyết định có tham gia hay không.",
       "weekDelta": "+{{amount}} tuần này",
       "people_other": "{{count}} người trong mạng lưới của bạn",
       "peopleShort_other": "{{count}} người",
@@ -216,7 +216,7 @@
       }
     },
     "start": {
-      "lead": "Bạn là người đầu tiên trong vòng tròn của bạn.",
+      "lead": "Vòng tròn của bạn bắt đầu từ bạn.",
       "body": "Thông báo về nhu cầu đi theo các cái bắt tay đã xác nhận: khi chưa có ai gần, tín hiệu không có chỗ để đi.",
       "step2": "Người đầu tiên",
       "step2Sub": "Gửi liên kết hoặc hiện QR",
@@ -266,8 +266,8 @@
     "all": "Tất cả · {{count}}",
     "confirm": "Xác nhận là quen nhau",
     "inCircle": "{{count}} người trong vòng tròn của họ",
-    "noneYet": "Chưa thêm ai",
-    "brought": "Đã mời {{count}}",
+    "noneYet": "Hiện chỉ có bạn trong vòng tròn",
+    "brought": "Thêm {{count}} người trong vòng tròn",
     "via": "qua {{path}}",
     "empty": "Chưa có ai",
     "notFound": "Không tìm thấy ai",
@@ -275,9 +275,14 @@
     "sortRecent": "Mới nhất",
     "sortName": "Tên",
     "sortIntention": "Dự định",
-    "sortBrought": "Đã mời",
+    "sortBrought": "Cỡ vòng tròn",
     "foundElsewhere": "Không có ai tên đó trong cái bắt tay này. Tìm thấy ở những cái khác:",
-    "alsoElsewhere": "Cũng có ở các cái bắt tay khác"
+    "alsoElsewhere": "Cũng có ở các cái bắt tay khác",
+    "ringHint1": "Những người bạn quen biết trực tiếp.",
+    "ringHint2": "Người quen của họ: giữa hai bên có một người.",
+    "ringHint3": "Xa thêm một bước: giữa hai bên có hai người.",
+    "empty1": "Những người bạn quen biết trực tiếp sẽ hiện ở đây khi việc quen biết được xác nhận.",
+    "empty2": "Mọi người sẽ hiện ở đây khi vòng tròn của người quen bạn lớn dần."
   },
   "offline": {
     "banner": "Không có kết nối. Đang hiển thị bản sao đã lưu trên thiết bị này, {{time}}.",
@@ -320,7 +325,9 @@
     "noGoal": "Chưa nêu số tiền",
     "saveGoal": "Lưu số tiền",
     "yourAmount": "Số tiền của bạn",
-    "minStake": "Dự định của bạn là {{amount}}. Bạn có thể góp nhiều hơn.",
+    "minStake": "Dự định của tôi: {{amount}}. Bạn có thể nêu nhiều hơn.",
+    "zeroStake": "Dự định của tôi: {{amount}}",
+    "participationMinimum": "Mức tham gia tối thiểu là {{amount}}.",
     "minOne": "Tối thiểu 1 $",
     "whole": "Chỉ số nguyên đô la",
     "participate": "Thông báo tham gia",
@@ -337,7 +344,7 @@
     "otherAmount": "Số tiền khác",
     "participantsCount": "Người tham gia: {{count}}",
     "transferred": "Đã nhận",
-    "emptyPeople": "Chưa có ai tham gia",
+    "emptyPeople": "Chưa ai thông báo tham gia",
     "youLower": "bạn",
     "firstHandshake": "Cái bắt tay thứ 1",
     "inNetwork": "trong mạng lưới của bạn",
@@ -374,7 +381,7 @@
       "AUTHOR_REQUEST": "Theo đề nghị của người tạo"
     },
     "goalReached": "Số tiền cần đã được nêu đủ",
-    "pastCrumb": "Nhu cầu",
+    "pastCrumb": "Hoạt động",
     "chatLabel": "Chat của người tham gia",
     "openTitle": "Đang mở",
     "openEmpty": "Không có nhu cầu đang mở",
@@ -411,6 +418,11 @@
       "keepYes": "Giữ {{amount}}",
       "kept": "Xong: dự định của bạn là {{amount}}. Bạn có thể đổi trong Hồ sơ.",
       "intro": "Xem mạng lưới hoạt động thế nào"
+    },
+    "emptyPeopleBody": "Ai thông báo tham gia sẽ hiện ở đây cùng khoản của mình.",
+    "created": {
+      "title": "Đã gửi nhu cầu của bạn",
+      "body": "Mọi người trong mạng lưới của bạn biết qua các cái bắt tay, người gần nhất trước, tối đa một người cho mỗi đô la trong số tiền đã nêu. Hãy gửi liên kết cho người quen: mở được cả khi không có ứng dụng."
     }
   },
   "profile": {
@@ -452,10 +464,10 @@
     "openSource": "Mã nguồn mở",
     "terms": "Điều khoản",
     "privacy": "Chính sách quyền riêng tư",
-    "stakeLabel": "Mức tham gia mặc định",
+    "stakeLabel": "Dự định của tôi",
     "stakeMin": "Tối thiểu 1",
     "stakeHint": "Số tiền bạn sẵn sàng nêu khi người quen thông báo một nhu cầu. Bạn có thể nêu nhiều hơn. Social Organizer không nhận và không chuyển tiền.",
-    "stakeNone": "Hiện tôi chưa giúp được",
+    "stakeNone": "Hiện tôi chưa tham gia được",
     "openTab": "Đang mở",
     "pastTab": "Trước đây",
     "yourCollection": "Nhu cầu của bạn",
@@ -469,7 +481,7 @@
     "participantMany": "{{count}} người tham gia",
     "paused": "Tạm dừng",
     "noOpen": "Không có nhu cầu đang mở",
-    "noPast": "Không có mục nào",
+    "noPast": "Chưa có gì đã đóng",
     "pastVia": "qua {{name}}",
     "left": "Đã rút lại sự tham gia",
     "goalMissing": "Chưa đặt số tiền",
@@ -481,7 +493,9 @@
     "notifyChannel": "Kênh",
     "notifyTelegramNotLinked": "Kết nối Telegram trong «Tài khoản» để nhận tin ở đó.",
     "stakeSaved": "Đã lưu",
-    "needCounts": "Đang mở: {{open}} · Trước đây: {{past}}"
+    "needCounts": "Đang mở: {{open}} · Trước đây: {{past}}",
+    "noOpenBody": "Nhu cầu của bạn và những nhu cầu bạn tham gia sẽ ở đây khi còn mở.",
+    "noPastBody": "Khi một nhu cầu đóng lại, nó chuyển về đây cùng các khoản tiền."
   },
   "settings": {
     "title": "Cài đặt",
@@ -526,7 +540,9 @@
     "linkTextPlaceholder": "Văn bản liên kết",
     "insert": "Chèn",
     "urlPlaceholder": "https://...",
-    "uploadFailed": "Tải lên thất bại"
+    "uploadFailed": "Tải lên thất bại",
+    "emptyBody": "Trong lúc chờ, hãy hỏi trợ lý về cái bắt tay, nhu cầu và việc tham gia.",
+    "askAssistant": "Hỏi trợ lý"
   },
   "chat": {
     "title": "Trợ lý",
@@ -1240,6 +1256,7 @@
     "reach": "{{network}} người sẽ thấy: trước là {{direct}} người của bạn, rồi tới người của họ.",
     "reachEmpty": "Chưa có ai gần, nên tín hiệu không có chỗ để đi.",
     "submit": "Thông báo nhu cầu",
+    "seeHowToUnlock": "Xem cách mở quyền truy cập",
     "ownTitle": "Nhu cầu của bạn · {{current}} trên {{goal}}",
     "ownNoGoal": "Nhu cầu của bạn",
     "largeTitle": "Số tiền {{amount}}, đúng không?",
@@ -1262,8 +1279,8 @@
     "preview": "Trông như thế nào",
     "previewHide": "Ẩn ví dụ",
     "previewCaption": "Nhu cầu trông như thế này trong vòng tròn",
-    "allLink": "Tất cả · {{count}}",
-    "allLinkPlain": "Tất cả"
+    "allLink": "Hoạt động · {{count}}",
+    "allLinkPlain": "Hoạt động"
   },
   "path": {
     "title": "Sắp rồi: mọi người sắp biết về nhu cầu của bạn",
@@ -1343,7 +1360,7 @@
     "inCircleSince": "Trong vòng tròn từ {{date}}",
     "inCircleToday": "Trong vòng tròn từ hôm nay",
     "inCircleYesterday": "Trong vòng tròn từ hôm qua",
-    "empty": "Chưa có ai vào bằng liên kết của bạn.",
+    "empty": "Chưa có ai vào bằng liên kết của bạn. Hãy gửi cho người bạn quen biết trực tiếp.",
     "loadError": "Không tải được danh sách.",
     "qrHint": "Mã sống một phút và xác nhận quen nhau ngay: cả hai đang ở đây. Rồi mã tự làm mới.",
     "scanOther": "Quét mã của họ",
@@ -1479,7 +1496,11 @@
     "factsNote": "Tính theo các Nhu cầu đã đóng. Dấu do tác giả của Nhu cầu đặt, Social Organizer không kiểm tra.",
     "requestDeclined": "Mối quen biết chưa được xác nhận. Nếu hai người quen nhau, hãy cho nhau xem mã QR khi gặp.",
     "prevPerson": "Người trước",
-    "nextPerson": "Người tiếp theo"
+    "nextPerson": "Người tiếp theo",
+    "badgeCircle": "trong vòng tròn",
+    "badgeIntention": "dự định",
+    "intentionIs": "Dự định: {{amount}}",
+    "noSharedBody": "Khi một trong hai người tham gia vào nhu cầu của người kia, lượt tham gia đó sẽ hiện ở đây."
   },
   "help": {
     "faq": "Câu hỏi thường gặp",
@@ -1503,9 +1524,9 @@
       "RULES_VIOLATION": "Vi phạm quy tắc",
       "ACCOUNT_HACKED": "Tài khoản có vẻ bị chiếm"
     },
-    "feedTitle": "Mọi người báo cáo nhu cầu của {{name}}",
+    "feedTitle": "{{name}} · Khiếu nại về một nhu cầu",
     "feedSubtitle": "Bạn có biết gì không?",
-    "questionTitle": "Mọi người báo cáo nhu cầu của {{name}}",
+    "questionTitle": "{{name}} · Khiếu nại về một nhu cầu",
     "questionBody": "Tên những người báo cáo được giữ kín.",
     "reasonsHeading": "Lý do",
     "openCollection": "Mở nhu cầu",
@@ -1547,7 +1568,7 @@
     "notNow": "Để sau"
   },
   "adminPerson": {
-    "budget": "Cam kết kỳ này",
+    "budget": "Dự định",
     "registered": "Đăng ký",
     "registeredValue": "{{date}} · ngày {{n}}",
     "connections": "Kết nối trực tiếp",

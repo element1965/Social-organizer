@@ -152,7 +152,7 @@
       "peopleShort_one": "{{count}} person",
       "peopleShort_other": "{{count}} people",
       "canHelp": "Declared participation of the network",
-      "explain": "What the people in your network (up to the 6th handshake) are still ready to name this period: the sum of their intentions. A Need goes out in waves, nearest first, up to the 6th handshake. This is a reference figure, not a promise: everyone decides for themselves whether to take part.",
+      "explain": "The sum of intentions of people in your network up to the 6th handshake. A Need goes out in waves, nearest first, up to the 6th handshake. This is a reference figure, not a promise: everyone decides for themselves whether to take part.",
       "weekDelta": "+{{amount}} this week",
       "empty": "Your network starts with one person you know"
     },
@@ -219,7 +219,7 @@
       }
     },
     "start": {
-      "lead": "You are the first in your circle.",
+      "lead": "Your circle starts with you.",
       "body": "A Need travels along confirmed handshakes: with nobody nearby, the signal has nowhere to go.",
       "step2": "First person",
       "step2Sub": "Send your link or show the QR",
@@ -269,8 +269,8 @@
     "all": "All · {{count}}",
     "confirm": "Confirm you know each other",
     "inCircle": "{{count}} in their circle",
-    "noneYet": "Has not added anyone yet",
-    "brought": "Brought in {{count}}",
+    "noneYet": "Only you in their circle so far",
+    "brought": "{{count}} more in their circle",
     "via": "through {{path}}",
     "empty": "Nobody yet",
     "notFound": "Nobody found",
@@ -278,9 +278,14 @@
     "sortRecent": "Newest",
     "sortName": "Name",
     "sortIntention": "Intention",
-    "sortBrought": "Brought in",
+    "sortBrought": "Circle size",
     "foundElsewhere": "Nobody by that name in this handshake. Found in others:",
-    "alsoElsewhere": "Also in other handshakes"
+    "alsoElsewhere": "Also in other handshakes",
+    "ringHint1": "People you know personally.",
+    "ringHint2": "The people they know: one person between you.",
+    "ringHint3": "One step further: two people between you.",
+    "empty1": "People you know personally appear here once your acquaintance is confirmed.",
+    "empty2": "People appear here as the circles of your acquaintances grow."
   },
   "offline": {
     "banner": "No connection. Showing the copy saved on this device, {{time}}.",
@@ -323,7 +328,9 @@
     "noGoal": "No amount yet",
     "saveGoal": "Save amount",
     "yourAmount": "Your amount",
-    "minStake": "Your intention is {{amount}}. You can name more.",
+    "minStake": "My intention: {{amount}}. You can name more.",
+    "zeroStake": "My intention: {{amount}}",
+    "participationMinimum": "Participation starts at {{amount}}.",
     "minOne": "Minimum 1 $",
     "whole": "Whole dollars only",
     "participate": "Report Participation",
@@ -340,7 +347,7 @@
     "otherAmount": "Other amount",
     "participantsCount": "Participants: {{count}}",
     "transferred": "Received",
-    "emptyPeople": "No one has joined yet",
+    "emptyPeople": "No Participation reported yet",
     "youLower": "you",
     "firstHandshake": "1st handshake",
     "inNetwork": "in your network",
@@ -377,7 +384,7 @@
       "AUTHOR_REQUEST": "At the author's request"
     },
     "goalReached": "Amount needed is reported",
-    "pastCrumb": "Needs",
+    "pastCrumb": "Activity",
     "chatLabel": "Participants’ chat",
     "openTitle": "Open",
     "openEmpty": "No open Needs",
@@ -414,6 +421,11 @@
       "keepYes": "Keep {{amount}}",
       "kept": "Done: your intention is {{amount}}. You can change it in Profile.",
       "intro": "See how the network works"
+    },
+    "emptyPeopleBody": "People who report Participation appear here with their amounts.",
+    "created": {
+      "title": "Your Need is out",
+      "body": "People in your network hear about it by handshakes, nearest first, up to one person per dollar of the amount. Send the link to people you know: they can open it without the app."
     }
   },
   "profile": {
@@ -455,10 +467,10 @@
     "openSource": "Open source",
     "terms": "Terms",
     "privacy": "Privacy policy",
-    "stakeLabel": "Default participation amount",
+    "stakeLabel": "My intention",
     "stakeMin": "Minimum 1",
     "stakeHint": "How much you are ready to name when someone you know reports a Need. You can name more. Social Organizer does not accept or transfer money.",
-    "stakeNone": "I can't help right now",
+    "stakeNone": "I can't take part right now",
     "openTab": "Open",
     "pastTab": "Past",
     "yourCollection": "Your Need",
@@ -472,7 +484,7 @@
     "participantMany": "{{count}} participants",
     "paused": "Paused",
     "noOpen": "No open Needs",
-    "noPast": "No entries",
+    "noPast": "Nothing closed yet",
     "pastVia": "via {{name}}",
     "left": "Participation withdrawn",
     "goalMissing": "No amount set",
@@ -484,7 +496,9 @@
     "notifyChannel": "Channel",
     "notifyTelegramNotLinked": "Connect Telegram in Account to get messages there.",
     "stakeSaved": "Saved",
-    "needCounts": "Open: {{open}} · Past: {{past}}"
+    "needCounts": "Open: {{open}} · Past: {{past}}",
+    "noOpenBody": "Your Needs and the Needs you take part in stay here while they are open.",
+    "noPastBody": "When a Need closes, it moves here with its amounts."
   },
   "settings": {
     "title": "Settings",
@@ -529,7 +543,9 @@
     "linkTextPlaceholder": "Link text",
     "insert": "Insert",
     "urlPlaceholder": "https://...",
-    "uploadFailed": "Upload failed"
+    "uploadFailed": "Upload failed",
+    "emptyBody": "Meanwhile, ask the assistant about handshakes, Needs and Participation.",
+    "askAssistant": "Ask the assistant"
   },
   "chat": {
     "title": "Assistant",
@@ -1248,6 +1264,7 @@
     "reach": "{{network}} people can see it: your {{direct}} first, then their people.",
     "reachEmpty": "No one is nearby yet, so the signal has nowhere to go.",
     "submit": "Report a Need",
+    "seeHowToUnlock": "See how to unlock",
     "ownTitle": "Your Need · {{current}} of {{goal}}",
     "ownNoGoal": "Your Need",
     "largeTitle": "Amount {{amount}}, is that right?",
@@ -1270,8 +1287,8 @@
     "preview": "What it looks like",
     "previewHide": "Hide the example",
     "previewCaption": "This is how a Need looks in the circle",
-    "allLink": "All · {{count}}",
-    "allLinkPlain": "All"
+    "allLink": "Activity · {{count}}",
+    "allLinkPlain": "Activity"
   },
   "path": {
     "title": "Almost there: soon people will learn of your Need",
@@ -1354,7 +1371,7 @@
     "inCircleSince": "In the circle since {{date}}",
     "inCircleToday": "In the circle since today",
     "inCircleYesterday": "In the circle since yesterday",
-    "empty": "No one has come through your link yet.",
+    "empty": "No one has come through your link yet. Send it to someone you know personally.",
     "loadError": "Could not load the list.",
     "qrHint": "The code lasts a minute and confirms the acquaintance right away: you are both here. Then it refreshes on its own.",
     "scanOther": "Scan theirs",
@@ -1493,7 +1510,11 @@
     "factsNote": "For closed Needs. The mark is set by the author of a Need; Social Organizer does not verify it.",
     "requestDeclined": "The acquaintance was not confirmed. If you know each other, show each other your QR code when you meet.",
     "prevPerson": "Previous person",
-    "nextPerson": "Next person"
+    "nextPerson": "Next person",
+    "badgeCircle": "in their circle",
+    "badgeIntention": "intention",
+    "intentionIs": "Intention: {{amount}}",
+    "noSharedBody": "When one of you takes part in the other's Need, it appears here."
   },
   "help": {
     "faq": "Questions and answers",
@@ -1517,9 +1538,9 @@
       "RULES_VIOLATION": "Rules violation",
       "ACCOUNT_HACKED": "The account looks taken over"
     },
-    "feedTitle": "People complained about {{name}}'s Need",
+    "feedTitle": "{{name}} · Complaints about a Need",
     "feedSubtitle": "Do you know anything?",
-    "questionTitle": "People complained about {{name}}'s Need",
+    "questionTitle": "{{name}} · Complaints about a Need",
     "questionBody": "Names of the people who reported stay hidden.",
     "reasonsHeading": "Reasons",
     "openCollection": "Open Need",
@@ -1561,7 +1582,7 @@
     "notNow": "Not now"
   },
   "adminPerson": {
-    "budget": "Pledged this period",
+    "budget": "Intention",
     "registered": "Registered",
     "registeredValue": "{{date}} · day {{n}}",
     "connections": "Direct connections",
@@ -1577,9 +1598,9 @@
   "participationSummary": {
     "title": "Participation so far",
     "gave": "You took part",
-    "received": "In your needs",
-    "count": "pledges: {{n}}",
-    "marked": "On closed needs, authors marked {{marked}} of {{reported}} pledges as received. People in your network see these two numbers."
+    "received": "In your Needs",
+    "count": "Participation: {{n}}",
+    "marked": "On closed Needs, authors marked {{marked}} of {{reported}} as received. People in your network see these two numbers."
   },
   "shake": {
     "title": "Shake match",

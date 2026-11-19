@@ -15,6 +15,8 @@ import { Screen } from '../components/ui2/Screen';
 import { Segmented } from '../components/ui2/Segmented';
 import { formatMoney } from '../components/ui2/format';
 import { AdminReviews } from '../components/moderation/AdminReviews';
+import { NetFigureSheet } from '../components/circle/NetFigureSheet';
+import { IconInfo } from '../components/circle/icons';
 import { AboutSheet } from '../components/profile/AboutSheet';
 import { GetAppSheet } from '../components/app/GetApp';
 import { isInNativeApp } from '../components/app/getAppPrompt';
@@ -83,6 +85,7 @@ export function ProfilePage() {
   const [aboutOpen, setAboutOpen] = useState(false);
   const [appOpen, setAppOpen] = useState(false);
   const [logoutOpen, setLogoutOpen] = useState(false);
+  const [figureOpen, setFigureOpen] = useState(false);
   const [autosaveNote, setAutosaveNote] = useState(false);
 
   // The account copy sets the size on a new device, but never over a change of this device still waiting to be saved
@@ -176,15 +179,21 @@ export function ProfilePage() {
       {autosaveNote ? <p className="mt-2 px-1 text-label font-semibold text-ink-muted">{t('account.autosaveDropped')}</p> : null}
 
       <Group title={t('profile.participation')}>
+        {/* The agreed name in full, on two lines if needed; a tap explains the sum, as the ⓘ on the Circle does */}
         <Row
           title={t('circle.stats.canHelp')}
           subtitle={figure ? t(networkKey(networkPeople, i18n.language), { count: networkPeople }) : undefined}
           variant="value"
           value={canHelp == null ? undefined : formatMoney(canHelp)}
           chevron={false}
+          wrap
+          onClick={() => setFigureOpen(true)}
+          trailing={<IconInfo className="h-4 w-4 shrink-0 text-ink-subtle" />}
         />
         <Row
           title={t('profile.minimum')}
+          subtitle={t('circle.start.intentionSub')}
+          wrap
           variant="value"
           value={profile.monthlyBudget == null ? t('profile.stakeEmpty') : formatMoney(profile.monthlyBudget)}
           to="/me/stake"
@@ -320,6 +329,7 @@ export function ProfilePage() {
         </section>
       ) : null}
 
+      <NetFigureSheet open={figureOpen} onClose={() => setFigureOpen(false)} />
       <LanguageSheet open={languageOpen} onClose={() => setLanguageOpen(false)} />
       <AboutSheet open={aboutOpen} onClose={() => setAboutOpen(false)} />
       <GetAppSheet open={appOpen} onClose={() => setAppOpen(false)} />

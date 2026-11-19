@@ -17,7 +17,6 @@ import {
   deliverWithRetry,
   dismissalRecordsStrikes,
   hackedMajority,
-  inflectFirstName,
   leaderUnassailable,
   PLEDGE_MIN_AGE_MS,
   pledgeOldEnough,
@@ -180,11 +179,6 @@ check('closed collection stays closed', communityHoldPatch({ status: 'CLOSED', b
   check('hack mail log names the review', logs.some((line) => line.includes('rev-9')), true);
 }
 
-check('Анна genitive', inflectFirstName('Анна Петрова', 'ru'), 'Анны');
-check('Мария genitive', inflectFirstName('Мария', 'ru'), 'Марии');
-check('Олег genitive', inflectFirstName('Олег', 'ru'), 'Олега');
-check('latin name stays', inflectFirstName('Anna', 'ru'), 'Anna');
-check('english uses the written name', inflectFirstName('Анна', 'en'), 'Анна');
 
 function loadEnvFile(file: string) {
   try {

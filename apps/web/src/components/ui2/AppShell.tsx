@@ -64,9 +64,10 @@ type ItemProps = {
   onActivate: () => void;
   children: ReactNode;
   badge?: string | null;
+  state?: { fromCircle: true };
 };
 
-function NavItem({ to, label, active, rail, interactive, onActivate, children, badge }: ItemProps) {
+function NavItem({ to, label, active, rail, interactive, onActivate, children, badge, state }: ItemProps) {
   const className = cn(
     'so-focus group relative flex items-center gap-3 rounded-md text-body-s font-bold transition-colors duration-base ease-so motion-reduce:transition-none',
     rail ? 'h-[52px] w-[52px] justify-center' : 'h-11 px-3',
@@ -96,7 +97,7 @@ function NavItem({ to, label, active, rail, interactive, onActivate, children, b
     );
   }
   return (
-    <Link to={to} className={className} aria-current={active ? 'page' : undefined} aria-label={rail ? label : undefined} onClick={onActivate}>
+    <Link to={to} state={state} className={className} aria-current={active ? 'page' : undefined} aria-label={rail ? label : undefined} onClick={onActivate}>
       {inner}
     </Link>
   );
@@ -123,6 +124,7 @@ export function ShellChrome({
   const rail = false;
   const badge = badgeLabel(unread);
   const helpCurrent = pathname === '/me/help';
+  const askState = pathname === '/' ? { fromCircle: true } as const : undefined;
 
   const circle = (
     <NavItem to="/" label={t('nav.circle')} active={section === 'circle'} rail={rail} interactive={interactive} onActivate={activate} badge={badge}>
@@ -135,7 +137,7 @@ export function ShellChrome({
     </NavItem>
   );
   const askItem = (
-    <NavItem to="/ask" label={t('nav.ask')} active={section === 'ask'} rail={rail} interactive={interactive} onActivate={activate}>
+    <NavItem to="/ask" state={askState} label={t('nav.ask')} active={section === 'ask'} rail={rail} interactive={interactive} onActivate={activate}>
       <AskMark progress={ask} />
     </NavItem>
   );
@@ -177,7 +179,7 @@ export function ShellChrome({
         );
       }
       return (
-        <Link key={to} to={to} role="tab" aria-selected={active} className={className} onClick={activate}>
+        <Link key={to} to={to} state={to === '/ask' ? askState : undefined} role="tab" aria-selected={active} className={className} onClick={activate}>
           {inner}
         </Link>
       );

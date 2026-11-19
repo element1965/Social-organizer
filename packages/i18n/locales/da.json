@@ -148,7 +148,7 @@
     "fit": "Tilpas netværket",
     "stats": {
       "canHelp": "Netværkets erklærede deltagelse",
-      "explain": "Hvad menneskerne i dit netværk (op til 6. håndtryk) stadig er klar til at angive i denne periode: summen af deres hensigter. En besked om et behov går ud i bølger, nærmeste først, op til 6. håndtryk. Det er et pejlemærke, ikke et løfte: alle bestemmer selv, om de vil deltage.",
+      "explain": "Summen af hensigterne hos folk i dit netværk op til 6. håndtryk. En besked om et behov går ud i bølger, nærmeste først, op til 6. håndtryk. Det er et pejlemærke, ikke et løfte: alle bestemmer selv, om de vil deltage.",
       "weekDelta": "+{{amount}} denne uge",
       "people_one": "{{count}} person i dit netværk",
       "people_other": "{{count}} personer i dit netværk",
@@ -219,7 +219,7 @@
       }
     },
     "start": {
-      "lead": "Du er den første i din kreds.",
+      "lead": "Din kreds begynder med dig.",
       "body": "En besked om et behov går via bekræftede håndtryk: når der ikke er nogen i nærheden, har signalet ingen steder at gå hen.",
       "step2": "Første person",
       "step2Sub": "Send dit link, eller vis QR-koden",
@@ -269,8 +269,8 @@
     "all": "Alle · {{count}}",
     "confirm": "Bekræft, at I kender hinanden",
     "inCircle": "{{count}} i deres kreds",
-    "noneYet": "Har ikke tilføjet nogen endnu",
-    "brought": "Har bragt {{count}} med",
+    "noneYet": "Kun dig i deres kreds indtil videre",
+    "brought": "{{count}} mere i deres kreds",
     "via": "via {{path}}",
     "empty": "Ingen endnu",
     "notFound": "Ingen fundet",
@@ -278,9 +278,14 @@
     "sortRecent": "Nyeste",
     "sortName": "Navn",
     "sortIntention": "Hensigt",
-    "sortBrought": "Bragt med",
+    "sortBrought": "Kredsens størrelse",
     "foundElsewhere": "Ingen med det navn i dette håndtryk. Fundet i andre:",
-    "alsoElsewhere": "Også i andre håndtryk"
+    "alsoElsewhere": "Også i andre håndtryk",
+    "ringHint1": "Folk, du kender personligt.",
+    "ringHint2": "Dem, de kender: én person imellem jer.",
+    "ringHint3": "Et skridt længere: to personer imellem jer.",
+    "empty1": "Folk, du kender personligt, vises her, når jeres bekendtskab er bekræftet.",
+    "empty2": "Folk vises her, når dine bekendtes kredse vokser."
   },
   "offline": {
     "banner": "Ingen forbindelse. Viser kopien gemt på denne enhed, {{time}}.",
@@ -323,7 +328,9 @@
     "noGoal": "Intet beløb endnu",
     "saveGoal": "Gem beløb",
     "yourAmount": "Dit beløb",
-    "minStake": "Din hensigt er {{amount}}. Du kan give mere.",
+    "minStake": "Min hensigt: {{amount}}. Du kan angive mere.",
+    "zeroStake": "Min hensigt: {{amount}}",
+    "participationMinimum": "Deltagelse starter ved {{amount}}.",
     "minOne": "Mindst 1 $",
     "whole": "Kun hele dollar",
     "participate": "Meld deltagelse",
@@ -340,7 +347,7 @@
     "otherAmount": "Andet beløb",
     "participantsCount": "Deltagere: {{count}}",
     "transferred": "Modtaget",
-    "emptyPeople": "Ingen er med endnu",
+    "emptyPeople": "Ingen har meldt deltagelse endnu",
     "youLower": "dig",
     "firstHandshake": "1. håndtryk",
     "inNetwork": "i dit netværk",
@@ -377,7 +384,7 @@
       "AUTHOR_REQUEST": "På opretterens anmodning"
     },
     "goalReached": "Det nødvendige beløb er angivet",
-    "pastCrumb": "Behov",
+    "pastCrumb": "Aktivitet",
     "chatLabel": "Deltagernes chat",
     "openTitle": "Åbne",
     "openEmpty": "Ingen åbne behov",
@@ -414,6 +421,11 @@
       "keepYes": "Behold {{amount}}",
       "kept": "Færdig: din hensigt er {{amount}}. Du kan ændre den under Profil.",
       "intro": "Se, hvordan netværket fungerer"
+    },
+    "emptyPeopleBody": "De, der melder deltagelse, vises her med deres beløb.",
+    "created": {
+      "title": "Dit behov er sendt",
+      "body": "Folk i dit netværk hører om det via håndtryk, de nærmeste først, op til én person for hver dollar af beløbet. Send linket til folk, du kender: de kan åbne det uden appen."
     }
   },
   "profile": {
@@ -455,10 +467,10 @@
     "openSource": "Åben kildekode",
     "terms": "Vilkår",
     "privacy": "Privatlivspolitik",
-    "stakeLabel": "Standardbeløb for deltagelse",
+    "stakeLabel": "Min hensigt",
     "stakeMin": "Mindst 1",
     "stakeHint": "Så meget er du klar til at angive, når en, du kender, melder et behov. Du kan angive mere. Social Organizer modtager eller overfører ikke penge.",
-    "stakeNone": "Jeg kan ikke hjælpe lige nu",
+    "stakeNone": "Jeg kan ikke deltage lige nu",
     "openTab": "Åbne",
     "pastTab": "Tidligere",
     "yourCollection": "Dit behov",
@@ -472,7 +484,7 @@
     "participantMany": "{{count}} deltagere",
     "paused": "Sat på pause",
     "noOpen": "Ingen åbne behov",
-    "noPast": "Ingen poster",
+    "noPast": "Intet lukket endnu",
     "pastVia": "via {{name}}",
     "left": "Deltagelse trukket tilbage",
     "goalMissing": "Intet beløb angivet",
@@ -484,7 +496,9 @@
     "notifyChannel": "Kanal",
     "notifyTelegramNotLinked": "Forbind Telegram under »Konto« for at få beskeder dér.",
     "stakeSaved": "Gemt",
-    "needCounts": "Åbne: {{open}} · Tidligere: {{past}}"
+    "needCounts": "Åbne: {{open}} · Tidligere: {{past}}",
+    "noOpenBody": "Dine behov og de behov, du deltager i, står her, mens de er åbne.",
+    "noPastBody": "Når et behov lukker, flytter det hertil med sine beløb."
   },
   "settings": {
     "title": "Indstillinger",
@@ -529,7 +543,9 @@
     "linkTextPlaceholder": "Linktekst",
     "insert": "Indsæt",
     "urlPlaceholder": "https://...",
-    "uploadFailed": "Upload mislykkedes"
+    "uploadFailed": "Upload mislykkedes",
+    "emptyBody": "Spørg imens assistenten om håndtryk, behov og deltagelse.",
+    "askAssistant": "Spørg assistenten"
   },
   "chat": {
     "title": "Assistent",
@@ -1248,6 +1264,7 @@
     "reach": "{{network}} personer kan se den: dine {{direct}} først, derefter deres personer.",
     "reachEmpty": "Der er ingen i nærheden endnu, så signalet har ingen steder at gå hen.",
     "submit": "Meld et behov",
+    "seeHowToUnlock": "Se, hvordan du får adgang",
     "ownTitle": "Dit behov · {{current}} af {{goal}}",
     "ownNoGoal": "Dit behov",
     "largeTitle": "Beløb {{amount}}, er det rigtigt?",
@@ -1270,8 +1287,8 @@
     "preview": "Sådan ser det ud",
     "previewHide": "Skjul eksemplet",
     "previewCaption": "Sådan ser et behov ud i kredsen",
-    "allLink": "Alle · {{count}}",
-    "allLinkPlain": "Alle"
+    "allLink": "Aktivitet · {{count}}",
+    "allLinkPlain": "Aktivitet"
   },
   "path": {
     "title": "Næsten i mål: snart får andre kendskab til dit behov",
@@ -1352,7 +1369,7 @@
     "inCircleSince": "I kredsen siden {{date}}",
     "inCircleToday": "I kredsen siden i dag",
     "inCircleYesterday": "I kredsen siden i går",
-    "empty": "Ingen er kommet via dit link endnu.",
+    "empty": "Ingen er kommet via dit link endnu. Send det til en, du kender personligt.",
     "loadError": "Kunne ikke indlæse listen.",
     "qrHint": "Koden varer et minut og bekræfter bekendtskabet med det samme: I er her begge. Så opdaterer den sig selv.",
     "scanOther": "Scan deres",
@@ -1493,7 +1510,11 @@
     "factsNote": "For lukkede behov. Markeringen sættes af behovets forfatter; Social Organizer kontrollerer den ikke.",
     "requestDeclined": "Bekendtskabet blev ikke bekræftet. Hvis I kender hinanden, så vis hinanden QR-koden, når I mødes.",
     "prevPerson": "Forrige person",
-    "nextPerson": "Næste person"
+    "nextPerson": "Næste person",
+    "badgeCircle": "i deres kreds",
+    "badgeIntention": "hensigt",
+    "intentionIs": "Hensigt: {{amount}}",
+    "noSharedBody": "Når en af jer deltager i den andens behov, vises det her."
   },
   "help": {
     "faq": "Spørgsmål og svar",
@@ -1517,9 +1538,9 @@
       "RULES_VIOLATION": "Brud på reglerne",
       "ACCOUNT_HACKED": "Kontoen ser ud til at være overtaget"
     },
-    "feedTitle": "Personer har klaget over {{name}}s behov",
+    "feedTitle": "{{name}} · Klager over et behov",
     "feedSubtitle": "Ved du noget?",
-    "questionTitle": "Personer har klaget over {{name}}s behov",
+    "questionTitle": "{{name}} · Klager over et behov",
     "questionBody": "Navnene på dem, der anmeldte, forbliver skjulte.",
     "reasonsHeading": "Årsager",
     "openCollection": "Åbn behov",
@@ -1561,7 +1582,7 @@
     "notNow": "Ikke nu"
   },
   "adminPerson": {
-    "budget": "Tilsagn i denne periode",
+    "budget": "Hensigt",
     "registered": "Registreret",
     "registeredValue": "{{date}} · dag {{n}}",
     "connections": "Direkte forbindelser",

@@ -148,7 +148,7 @@
     "fit": "Netzwerk einpassen",
     "stats": {
       "canHelp": "Erklärte Beteiligung des Netzwerks",
-      "explain": "Wie viel die Menschen in Ihrem Netzwerk (bis zum 6. Handschlag) in diesem Zeitraum noch nennen möchten: die Summe ihrer Absichten. Die Meldung eines Bedarfs geht in Wellen hinaus, zuerst an die Nächsten, bis zum 6. Handschlag. Das ist ein Richtwert, kein Versprechen: Jede Person entscheidet selbst, ob sie sich beteiligt.",
+      "explain": "Die Summe der Absichten der Menschen in Ihrem Netzwerk bis zum 6. Handschlag. Die Meldung eines Bedarfs geht in Wellen hinaus, zuerst an die Nächsten, bis zum 6. Handschlag. Das ist ein Richtwert, kein Versprechen: Jede Person entscheidet selbst, ob sie sich beteiligt.",
       "weekDelta": "+{{amount}} diese Woche",
       "people_one": "{{count}} Person in Ihrem Netzwerk",
       "people_other": "{{count}} Personen in Ihrem Netzwerk",
@@ -219,7 +219,7 @@
       }
     },
     "start": {
-      "lead": "Sie sind die erste Person in Ihrem Kreis.",
+      "lead": "Ihr Kreis beginnt bei Ihnen.",
       "body": "Die Meldung eines Bedarfs geht über bestätigte Handschläge: Wenn niemand in der Nähe ist, hat das Signal keinen Weg.",
       "step2": "Erste Person",
       "step2Sub": "Senden Sie Ihren Link oder zeigen Sie den QR",
@@ -269,8 +269,8 @@
     "all": "Alle · {{count}}",
     "confirm": "Bestätigen Sie, dass Sie sich kennen",
     "inCircle": "{{count}} im eigenen Kreis",
-    "noneYet": "Hat noch niemanden hinzugefügt",
-    "brought": "Hat {{count}} eingeladen",
+    "noneYet": "Im Kreis bisher nur Sie",
+    "brought": "{{count}} weitere im eigenen Kreis",
     "via": "über {{path}}",
     "empty": "Noch niemand",
     "notFound": "Niemand gefunden",
@@ -278,9 +278,14 @@
     "sortRecent": "Neueste",
     "sortName": "Name",
     "sortIntention": "Absicht",
-    "sortBrought": "Eingeladen",
+    "sortBrought": "Kreisgröße",
     "foundElsewhere": "Niemand mit diesem Namen in diesem Handschlag. Gefunden in anderen:",
-    "alsoElsewhere": "Auch in anderen Handschlägen"
+    "alsoElsewhere": "Auch in anderen Handschlägen",
+    "ringHint1": "Menschen, die Sie persönlich kennen.",
+    "ringHint2": "Deren Bekannte: eine Person zwischen Ihnen.",
+    "ringHint3": "Einen Schritt weiter: zwei Personen zwischen Ihnen.",
+    "empty1": "Menschen, die Sie persönlich kennen, erscheinen hier, sobald die Bekanntschaft bestätigt ist.",
+    "empty2": "Hier erscheinen Menschen, sobald die Kreise Ihrer Bekannten wachsen."
   },
   "offline": {
     "banner": "Keine Verbindung. Angezeigt wird die auf diesem Gerät gespeicherte Kopie, {{time}}.",
@@ -323,7 +328,9 @@
     "noGoal": "Noch kein Betrag",
     "saveGoal": "Betrag speichern",
     "yourAmount": "Ihr Betrag",
-    "minStake": "Ihre Absicht ist {{amount}}. Sie können mehr geben.",
+    "minStake": "Meine Absicht: {{amount}}. Sie können mehr angeben.",
+    "zeroStake": "Meine Absicht: {{amount}}",
+    "participationMinimum": "Beteiligung ist ab {{amount}} möglich.",
     "minOne": "Mindestens 1 $",
     "whole": "Nur ganze Dollar",
     "participate": "Beteiligung melden",
@@ -340,7 +347,7 @@
     "otherAmount": "Anderer Betrag",
     "participantsCount": "Teilnehmende: {{count}}",
     "transferred": "Erhalten",
-    "emptyPeople": "Noch ist niemand dabei",
+    "emptyPeople": "Noch keine Beteiligung gemeldet",
     "youLower": "Sie",
     "firstHandshake": "1. Handschlag",
     "inNetwork": "in Ihrem Netzwerk",
@@ -377,7 +384,7 @@
       "AUTHOR_REQUEST": "Auf Wunsch des Autors"
     },
     "goalReached": "Benötigter Betrag ist angegeben",
-    "pastCrumb": "Bedarfe",
+    "pastCrumb": "Aktivität",
     "chatLabel": "Chat der Beteiligten",
     "openTitle": "Offen",
     "openEmpty": "Keine offenen Bedarfe",
@@ -414,6 +421,11 @@
       "keepYes": "{{amount}} behalten",
       "kept": "Erledigt: Ihre Absicht ist {{amount}}. Ändern können Sie sie im Profil.",
       "intro": "So funktioniert das Netzwerk"
+    },
+    "emptyPeopleBody": "Wer eine Beteiligung meldet, erscheint hier mit dem eigenen Betrag.",
+    "created": {
+      "title": "Ihr Bedarf ist unterwegs",
+      "body": "Menschen in Ihrem Netzwerk erfahren davon über Handschläge, die Nächsten zuerst, höchstens eine Person pro Dollar des Betrags. Senden Sie den Link an Bekannte: Er lässt sich auch ohne App öffnen."
     }
   },
   "profile": {
@@ -455,10 +467,10 @@
     "openSource": "Open Source",
     "terms": "Bedingungen",
     "privacy": "Datenschutzerklärung",
-    "stakeLabel": "Standardbetrag der Beteiligung",
+    "stakeLabel": "Meine Absicht",
     "stakeMin": "Mindestens 1",
     "stakeHint": "So viel möchten Sie nennen, wenn eine Person, die Sie kennen, einen Bedarf meldet. Sie können auch mehr nennen. Social Organizer nimmt kein Geld an und überweist keines.",
-    "stakeNone": "Ich kann gerade nicht helfen",
+    "stakeNone": "Ich kann mich gerade nicht beteiligen",
     "openTab": "Offen",
     "pastTab": "Vergangene",
     "yourCollection": "Ihr Bedarf",
@@ -472,7 +484,7 @@
     "participantMany": "{{count}} Teilnehmer",
     "paused": "Pausiert",
     "noOpen": "Keine offenen Bedarfe",
-    "noPast": "Keine Einträge",
+    "noPast": "Noch nichts geschlossen",
     "pastVia": "über {{name}}",
     "left": "Beteiligung zurückgezogen",
     "goalMissing": "Kein Betrag angegeben",
@@ -484,7 +496,9 @@
     "notifyChannel": "Kanal",
     "notifyTelegramNotLinked": "Verbinden Sie Telegram unter „Konto“, damit die Nachrichten dort ankommen.",
     "stakeSaved": "Gespeichert",
-    "needCounts": "Offen: {{open}} · Vergangene: {{past}}"
+    "needCounts": "Offen: {{open}} · Vergangene: {{past}}",
+    "noOpenBody": "Hier stehen Ihre Bedarfe und die, an denen Sie sich beteiligen, solange sie offen sind.",
+    "noPastBody": "Wird ein Bedarf geschlossen, kommt er mit seinen Beträgen hierher."
   },
   "settings": {
     "title": "Einstellungen",
@@ -529,7 +543,9 @@
     "linkTextPlaceholder": "Linktext",
     "insert": "Einfügen",
     "urlPlaceholder": "https://...",
-    "uploadFailed": "Hochladen fehlgeschlagen"
+    "uploadFailed": "Hochladen fehlgeschlagen",
+    "emptyBody": "Fragen Sie bis dahin den Assistenten nach Handschlägen, Bedarfen und Beteiligung.",
+    "askAssistant": "Assistenten fragen"
   },
   "chat": {
     "title": "Assistent",
@@ -1248,6 +1264,7 @@
     "reach": "{{network}} Personen können sie sehen: zuerst Ihre {{direct}}, dann deren Leute.",
     "reachEmpty": "Noch ist niemand in der Nähe, das Signal hat keinen Weg.",
     "submit": "Bedarf melden",
+    "seeHowToUnlock": "So erhalten Sie Zugang",
     "ownTitle": "Ihr Bedarf · {{current}} von {{goal}}",
     "ownNoGoal": "Ihr Bedarf",
     "largeTitle": "Betrag {{amount}}, stimmt das?",
@@ -1270,8 +1287,8 @@
     "preview": "So sieht es aus",
     "previewHide": "Beispiel ausblenden",
     "previewCaption": "So sieht ein Bedarf im Kreis aus",
-    "allLink": "Alle · {{count}}",
-    "allLinkPlain": "Alle"
+    "allLink": "Aktivität · {{count}}",
+    "allLinkPlain": "Aktivität"
   },
   "path": {
     "title": "Fast geschafft: Bald erfahren Menschen von Ihrem Bedarf",
@@ -1352,7 +1369,7 @@
     "inCircleSince": "Im Kreis seit {{date}}",
     "inCircleToday": "Im Kreis seit heute",
     "inCircleYesterday": "Im Kreis seit gestern",
-    "empty": "Über Ihren Link ist noch niemand gekommen.",
+    "empty": "Über Ihren Link ist noch niemand gekommen. Senden Sie ihn an jemanden, den Sie persönlich kennen.",
     "loadError": "Die Liste konnte nicht geladen werden.",
     "qrHint": "Der Code gilt eine Minute und bestätigt die Bekanntschaft sofort: Sie sind beide hier. Danach erneuert er sich von selbst.",
     "scanOther": "Deren Code scannen",
@@ -1493,7 +1510,11 @@
     "factsNote": "Bei geschlossenen Bedarfen. Die Markierung setzt der Autor eines Bedarfs; Social Organizer prüft sie nicht.",
     "requestDeclined": "Die Bekanntschaft wurde nicht bestätigt. Wenn ihr euch kennt, zeigt euch beim Treffen gegenseitig den QR-Code.",
     "prevPerson": "Vorherige Person",
-    "nextPerson": "Nächste Person"
+    "nextPerson": "Nächste Person",
+    "badgeCircle": "im Kreis",
+    "badgeIntention": "Absicht",
+    "intentionIs": "Absicht: {{amount}}",
+    "noSharedBody": "Wenn sich eine Person am Bedarf der anderen beteiligt, erscheint das hier."
   },
   "help": {
     "faq": "Fragen und Antworten",
@@ -1517,9 +1538,9 @@
       "RULES_VIOLATION": "Verstoß gegen die Regeln",
       "ACCOUNT_HACKED": "Das Konto wirkt übernommen"
     },
-    "feedTitle": "Personen haben den Bedarf von {{name}} gemeldet",
+    "feedTitle": "{{name}} · Beschwerden zu einem Bedarf",
     "feedSubtitle": "Wissen Sie etwas?",
-    "questionTitle": "Personen haben den Bedarf von {{name}} gemeldet",
+    "questionTitle": "{{name}} · Beschwerden zu einem Bedarf",
     "questionBody": "Die Namen der meldenden Personen bleiben verborgen.",
     "reasonsHeading": "Gründe",
     "openCollection": "Bedarf öffnen",
@@ -1561,7 +1582,7 @@
     "notNow": "Nicht jetzt"
   },
   "adminPerson": {
-    "budget": "Zusage in diesem Zeitraum",
+    "budget": "Absicht",
     "registered": "Registriert",
     "registeredValue": "{{date}} · Tag {{n}}",
     "connections": "Direkte Verbindungen",

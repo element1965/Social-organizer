@@ -1,7 +1,8 @@
-import { useMemo, useRef } from 'react';
+import { useMemo, useRef, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { cn } from '../../lib/utils';
 import { Avatar } from '../ui2/Avatar';
+import { EmptyState } from '../ui2/EmptyState';
 import { formatMoney } from '../ui2/format';
 import { IconCheck } from './icons';
 
@@ -25,9 +26,11 @@ type ParticipantListProps = {
   onRemove?: (row: ParticipantRow) => void;
   /** Opens the "Mark transfers" sheet. Shown while two or more transfers are not marked. */
   onMarkMany?: () => void;
+  /** The one next step while nobody has reported Participation (the author: share the Need) */
+  emptyAction?: ReactNode;
 };
 
-export function ParticipantList({ people, showPaid, onPerson, onPaid, onRemove, onMarkMany }: ParticipantListProps) {
+export function ParticipantList({ people, showPaid, onPerson, onPaid, onRemove, onMarkMany, emptyAction }: ParticipantListProps) {
   const { t } = useTranslation();
 
   // For the author: unmarked first. The order is taken when a row is first seen, so a row does not
@@ -72,9 +75,7 @@ export function ParticipantList({ people, showPaid, onPerson, onPaid, onRemove, 
         </div>
       ) : null}
       {people.length === 0 ? (
-        <p className="rounded-lg bg-surface px-4 py-6 text-center text-body-s font-semibold text-ink-muted shadow-card">
-          {t('collection.emptyPeople')}
-        </p>
+        <EmptyState title={t('collection.emptyPeople')} body={t('collection.emptyPeopleBody')} action={emptyAction} />
       ) : (
         <ul className="divide-y divide-line-soft overflow-hidden rounded-lg bg-surface shadow-card">
           {rows.map((person) => (

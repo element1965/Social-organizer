@@ -1,9 +1,12 @@
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { trpc } from '../lib/trpc';
+import { useAskAccess } from '../hooks/useAskAccess';
 import { useNicknames } from '../hooks/useNicknames';
 import { Avatar } from '../components/ui2/Avatar';
+import { Button } from '../components/ui2/Button';
+import { EmptyState } from '../components/ui2/EmptyState';
 import { Meter } from '../components/ui2/Meter';
 import { Pill } from '../components/ui2/Pill';
 import { Screen } from '../components/ui2/Screen';
@@ -74,6 +77,8 @@ function useWhenVisible<T extends Element>(): [(node: T | null) => void, boolean
 export function HistoryPage() {
   const { t, i18n } = useTranslation();
   const back = useSmartBack(t('common.back'), '/me');
+  const navigate = useNavigate();
+  const askAccess = useAskAccess();
   const me = trpc.user.me.useQuery();
   const active = trpc.collection.myActive.useQuery();
   const participating = trpc.collection.myParticipating.useQuery();
@@ -132,7 +137,17 @@ export function HistoryPage() {
         <QueryState isLoading={loading && !failed} isError={failed} onRetry={retry} />
       ) : tab === 'open' ? (
         openRows.length === 0 ? (
-          <p className="py-8 text-center text-body font-semibold text-ink-muted">{t('profile.noOpen')}</p>
+          // What will be here, and the step that puts something here (audit A8)
+          <EmptyState
+            className="mt-3"
+            title={t('profile.noOpen')}
+            body={t('profile.noOpenBody')}
+            action={askAccess.data ? (
+              <Button size="md" onClick={() => navigate('/ask')}>
+                {askAccess.data.allowed ? t('ask.submit') : t('ask.seeHowToUnlock')}
+              </Button>
+            ) : undefined}
+          />
         ) : (
           <div className="so-stagger mt-3 space-y-3">
             {openRows.map((entry) =>
@@ -145,7 +160,8 @@ export function HistoryPage() {
           </div>
         )
       ) : pastRows.length === 0 ? (
-        <p className="py-8 text-center text-body font-semibold text-ink-muted">{t('profile.noPast')}</p>
+        // The Open tab, the other step, is right above
+        <EmptyState className="mt-3" title={t('profile.noPast')} body={t('profile.noPastBody')} />
       ) : (
         <div className="so-stagger mt-3 space-y-3">
           {pastRows.map((entry) =>

@@ -12,6 +12,7 @@ import { useNicknames } from '../hooks/useNicknames';
 import { Avatar } from '../components/ui2/Avatar';
 import { Button } from '../components/ui2/Button';
 import { Card } from '../components/ui2/Card';
+import { EmptyState } from '../components/ui2/EmptyState';
 import { Group, Row } from '../components/ui2/Group';
 import { Input } from '../components/ui2/Input';
 import { Screen } from '../components/ui2/Screen';
@@ -25,6 +26,8 @@ import { isLive } from '../components/profile/collections';
 import { ONLINE_MS } from '../components/profile/constants';
 import { relativeTime } from '../components/profile/dates';
 import { errorCode } from '../lib/errors';
+import { ErrorState } from '../components/errors/ErrorState';
+import { AlertGlyph } from '../components/onboarding/states';
 import { ActionError } from '../components/errors/ActionError';
 import { instagramHandle, isMobileUa } from '../components/profile/openExternal';
 import { QueryState } from '../components/profile/QueryState';
@@ -418,7 +421,21 @@ function PersonScreen() {
         <p className="mt-2 px-1 text-label font-semibold text-ink-muted">{t('person.factsNote')}</p>
       ) : null}
 
-      {joined.length > 0 || helpedYou.length > 0 ? (
+      {participating.isError || history.isError ? (
+        <ErrorState
+          glyph={<AlertGlyph />}
+          title={t('errors.loadFailed')}
+          body={t('errors.server')}
+          action={(
+            <Button variant="secondary" onClick={() => {
+              if (participating.isError) void participating.refetch();
+              if (history.isError) void history.refetch();
+            }}>
+              {t('common.retry')}
+            </Button>
+          )}
+        />
+      ) : !participating.isSuccess || !history.isSuccess ? null : joined.length > 0 || helpedYou.length > 0 ? (
         <Group title={t('person.shared')}>
           {joined.map((row) => (
             <Row
@@ -433,8 +450,9 @@ function PersonScreen() {
             <Row key={row.id} title={t('person.helpedYou')} subtitle={formatMoney(row.amount)} />
           ))}
         </Group>
-      ) : participating.isSuccess && activeAsks.length === 0 ? (
-        <p className="mt-6 px-1 text-body-s font-semibold text-ink-muted">{t('person.noShared')}</p>
+      ) : activeAsks.length === 0 ? (
+        // No step to offer here: the line says what will appear (audit A8)
+        <EmptyState className="mt-6" title={t('person.noShared')} body={t('person.noSharedBody')} />
       ) : null}
 
       {isAdmin && !deleted ? (
