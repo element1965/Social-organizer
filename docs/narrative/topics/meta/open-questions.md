@@ -3,8 +3,8 @@ id: 20261118-open-questions
 title: Open questions and findings
 tags: [sources, mechanics]
 created: 2026-11-18
-updated: 2026-11-18
-related: [20261118-sources, 20261118-need-protocol, 20261118-claims, 20261118-packaging-plan, 20261118-funding-strategy, 20261118-landing-concepts, 20261118-latent-connectedness]
+updated: 2026-11-19
+related: [20261118-sources, 20261118-need-protocol, 20261118-claims, 20261118-packaging-plan, 20261118-landing-concepts, 20261118-latent-connectedness]
 summary: Questions the team needs to answer before the distillation, landing and funding steps, plus product gaps and bugs found while checking the live app on 2026-11-18.
 ---
 
@@ -21,7 +21,7 @@ note it affects.
 
 ### Material to collect
 
-1. The chat the "How It Works" brief came from (it is not in the `6afce8ee` share).
+1. The chat the "How It Works" brief came from (it is not in the "Financing a social innovation" chat).
 2. The link and transcript of the published video *Direct Mutual Support Through Real Connections*.
 3. The TEDx talk (link), mentioned among the landing's secondary materials.
 4. The end of the GoFundMe row in the comparables table (cut off in the paste).
@@ -92,8 +92,9 @@ note it affects.
     (`components/ui2/PathFigure.tsx`); making them links to the person pages, and showing "N people
     from your circle know the author" (the shared-acquaintance count already exists for
     suggestions), would shorten the "find out for yourself" step without a new feature.
-12. **No LICENSE file.** The README says MIT, but the repository has no `LICENSE` file. Donors and
-    contributors will check it.
+12. ~~No LICENSE file.~~ Decided 2026-11-19: the code is licensed under AGPL-3.0-or-later; the
+    repository has a `LICENSE` file and the README's License section says what the licence does not
+    cover (the name, the logo, third-party material).
 13. **Live landing copy overstates two rules.** `landing.steps.s3Text` says a Need "reaches exactly
     {{n}} people" and "closes once participants cover the amount". In code a Need sends up to N
     external messages (people at their message limit get an in-app entry instead), and when the
@@ -104,6 +105,5 @@ note it affects.
 - [The Need protocol](../mechanics/need-protocol.md) — context for the product findings.
 - [Claims](../principles/claims.md) — context for packaging question 1.
 - [Packaging plan](../packaging/packaging-plan.md) — what these decisions unblock.
-- [Funding strategy](../funding/funding-strategy.md) — context for the funding decisions.
 - [Landing concepts](../packaging/landing-concepts.md) — context for packaging questions 4–7.
 - [Latent connectedness](../theory/latent-connectedness.md) — context for finding 7.

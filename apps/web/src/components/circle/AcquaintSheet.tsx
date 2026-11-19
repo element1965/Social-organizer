@@ -56,7 +56,7 @@ export function AcquaintSheet({ request, onClose }: Props) {
     void utils.connection.list.invalidate();
     void utils.connection.graphSlice.invalidate();
     void utils.connection.getNetworkStats.invalidate();
-    void utils.stats.networkCapabilities.invalidate();
+    void utils.stats.networkFigure.invalidate();
     void utils.milestone.list.invalidate();
     void utils.collection.askAccess.invalidate();
   };

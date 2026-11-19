@@ -228,7 +228,7 @@
     "fit": "Anpassa nätverket",
     "stats": {
       "canHelp": "Nätverkets angivna deltagande",
-      "explain": "Vad personerna du ser (upp till 3:e handslaget) fortfarande är beredda att ange under perioden: summan av deras avsikter. Ett behov går ut i vågor, närmast först, upp till 6:e handslaget. Det är en riktpunkt, inte ett löfte: var och en bestämmer själv om hen vill delta.",
+      "explain": "Vad personerna i ditt nätverk (upp till 6:e handslaget) fortfarande är beredda att ange under perioden: summan av deras avsikter. Ett behov går ut i vågor, närmast först, upp till 6:e handslaget. Det är en riktpunkt, inte ett löfte: var och en bestämmer själv om hen vill delta.",
       "weekDelta": "+{{amount}} den här veckan",
       "people_one": "{{count}} person i ditt nätverk",
       "people_other": "{{count}} personer i ditt nätverk",
@@ -244,8 +244,8 @@
       "full3": "3:e handslaget",
       "open": "{{ring}}: {{count}}. Öppna listan",
       "caption": "Handslag",
-      "farther": "4:e–5:e: ~{{value}}",
-      "fartherFew": "4:e–5:e: några få"
+      "farther": "4:e–6:e: ~{{value}}",
+      "fartherFew": "4:e–6:e: några få"
     },
     "feed": {
       "title": "Flöde",

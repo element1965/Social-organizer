@@ -228,7 +228,7 @@
     "fit": "Vừa khít mạng lưới",
     "stats": {
       "canHelp": "Mức tham gia đã nêu của mạng lưới",
-      "explain": "Những người bạn nhìn thấy (đến cái bắt tay thứ 3) còn sẵn sàng nêu thêm bao nhiêu trong kỳ này: tổng dự định của họ. Thông báo về nhu cầu đi theo từng đợt, từ người gần nhất đến cái bắt tay thứ 6. Đây chỉ là con số tham khảo, không phải lời hứa: mỗi người tự quyết định có tham gia hay không.",
+      "explain": "Những người trong mạng lưới của bạn (đến cái bắt tay thứ 6) còn sẵn sàng nêu thêm bao nhiêu trong kỳ này: tổng dự định của họ. Thông báo về nhu cầu đi theo từng đợt, từ người gần nhất đến cái bắt tay thứ 6. Đây chỉ là con số tham khảo, không phải lời hứa: mỗi người tự quyết định có tham gia hay không.",
       "weekDelta": "+{{amount}} tuần này",
       "people_other": "{{count}} người trong mạng lưới của bạn",
       "peopleShort_other": "{{count}} người"
@@ -242,8 +242,8 @@
       "full3": "Cái bắt tay thứ 3",
       "open": "{{ring}}: {{count}}. Mở danh sách",
       "caption": "Bắt tay",
-      "farther": "Thứ 4–5: ~{{value}}",
-      "fartherFew": "Thứ 4–5: vài người"
+      "farther": "Thứ 4–6: ~{{value}}",
+      "fartherFew": "Thứ 4–6: vài người"
     },
     "feed": {
       "title": "Bảng tin",

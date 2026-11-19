@@ -228,7 +228,7 @@
     "fit": "Netzwerk einpassen",
     "stats": {
       "canHelp": "Erklärte Beteiligung des Netzwerks",
-      "explain": "Wie viel die Menschen, die Sie sehen (bis zum 3. Handschlag), in diesem Zeitraum noch nennen möchten: die Summe ihrer Absichten. Die Meldung eines Bedarfs geht in Wellen hinaus, zuerst an die Nächsten, bis zum 6. Handschlag. Das ist ein Richtwert, kein Versprechen: Jede Person entscheidet selbst, ob sie sich beteiligt.",
+      "explain": "Wie viel die Menschen in Ihrem Netzwerk (bis zum 6. Handschlag) in diesem Zeitraum noch nennen möchten: die Summe ihrer Absichten. Die Meldung eines Bedarfs geht in Wellen hinaus, zuerst an die Nächsten, bis zum 6. Handschlag. Das ist ein Richtwert, kein Versprechen: Jede Person entscheidet selbst, ob sie sich beteiligt.",
       "weekDelta": "+{{amount}} diese Woche",
       "people_one": "{{count}} Person in Ihrem Netzwerk",
       "people_other": "{{count}} Personen in Ihrem Netzwerk",
@@ -244,8 +244,8 @@
       "full3": "3. Handschlag",
       "open": "{{ring}}: {{count}}. Liste öffnen",
       "caption": "Handschläge",
-      "farther": "4.–5.: ~{{value}}",
-      "fartherFew": "4.–5.: einige"
+      "farther": "4.–6.: ~{{value}}",
+      "fartherFew": "4.–6.: einige"
     },
     "feed": {
       "title": "Feed",

@@ -21,7 +21,7 @@ export function HomeGate({ children }: { children: ReactNode }) {
   const { t } = useTranslation();
   const offline = useOffline();
   const live = useLiveNetwork();
-  if (offline && !live) return <SavedPeople title={t('nav.circle')} />;
+  if (offline && !live) return <SavedPeople title={t('nav.circle')} home />;
   return <>{children}</>;
 }
 
@@ -94,7 +94,7 @@ class Boundary extends Component<{ children: ReactNode; pathname: string }, Boun
     const { error, checked } = this.state;
     if (!error) return this.props.children;
     if (isChunkLoadError(error)) {
-      if (isOffline()) return <OfflineFallback people={isPeopleScreen(this.props.pathname)} />;
+      if (isOffline()) return <OfflineFallback people={isPeopleScreen(this.props.pathname)} home={this.props.pathname === '/'} />;
       // Nothing has failed yet, so the app may not know the connection is gone: ask the server once.
       // No answer means offline (rendered above on the next pass); an answer means a real missing file.
       if (!checked) return <ConnectionCheck onDone={() => this.setState({ checked: true })} />;
@@ -127,10 +127,11 @@ function ConnectionCheck({ onDone }: { onDone: () => void }) {
  * The offline stand-in for a screen whose code is missing. A failed lazy import stays failed for the page's
  * life, so when the connection comes back the page reloads to fetch the screen for real.
  */
-function OfflineFallback({ people }: { people: boolean }) {
+function OfflineFallback({ people, home }: { people: boolean; home: boolean }) {
   const { t } = useTranslation();
   useEffect(() => onRecovery(() => window.location.reload()), []);
-  return people ? <SavedPeople title={t('nav.circle')} /> : <OfflineUnavailable />;
+  // The Circle's stand-in also shows the saved network figure
+  return people ? <SavedPeople title={t('nav.circle')} home={home} /> : <OfflineUnavailable />;
 }
 
 /**

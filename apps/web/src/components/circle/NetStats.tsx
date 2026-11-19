@@ -7,9 +7,10 @@ import { formatMoney } from '../ui2/format';
 import { IconInfo } from './icons';
 
 type NetStatsProps = {
-  people: number;
-  /** What the visible rings 1–3 can give */
-  canHelp: number;
+  /** null while the figure is loading or unavailable: a placeholder is shown, never 0 */
+  people: number | null;
+  /** The network figure's sum: what everyone up to the 6th handshake can still give (useNetworkFigure); null as above */
+  canHelp: number | null;
   /** Week delta. Not in the API yet (ux-audit §7.1 p.6): hidden while undefined. */
   weekDelta?: number;
   variant: 'scene' | 'card';
@@ -20,6 +21,11 @@ type NetStatsProps = {
 export function NetStats({ people, canHelp, weekDelta, variant, className }: NetStatsProps) {
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
+  // No figure yet (loading, or nothing live or saved): a placeholder, so an empty network (0) stays distinguishable
+  const waiting = people == null || canHelp == null;
+  const pending = (
+    <span className="inline-block h-4 w-16 animate-pulse rounded-sm bg-line align-middle motion-reduce:animate-none" aria-hidden />
+  );
   const delta = weekDelta && weekDelta > 0 ? t('circle.stats.weekDelta', { amount: formatMoney(weekDelta) }) : null;
 
   const body =
@@ -27,7 +33,7 @@ export function NetStats({ people, canHelp, weekDelta, variant, className }: Net
       <span className="flex w-full items-end justify-between gap-3 text-left">
         <span className="min-w-0">
           <b className="block truncate text-[17px] font-extrabold tracking-tight text-node-1">
-            {t('circle.stats.people', { count: people })}
+            {waiting ? pending : t('circle.stats.people', { count: people ?? 0 })}
           </b>
           <span className="mt-0.5 flex items-center gap-1 text-label font-semibold text-node-2">
             {t('circle.stats.canHelp')}
@@ -35,7 +41,7 @@ export function NetStats({ people, canHelp, weekDelta, variant, className }: Net
           </span>
         </span>
         <span className="shrink-0 text-right">
-          <b className="block text-h3 font-extrabold tabular-nums text-node-1">{formatMoney(canHelp)}</b>
+          <b className="block text-h3 font-extrabold tabular-nums text-node-1">{waiting ? pending : formatMoney(canHelp ?? 0)}</b>
           {delta ? <span className="block text-label font-bold text-care-scene">{delta}</span> : null}
         </span>
       </span>
@@ -46,8 +52,10 @@ export function NetStats({ people, canHelp, weekDelta, variant, className }: Net
           <IconInfo className="h-3.5 w-3.5 shrink-0" />
         </span>
         <span className="mt-1.5 flex flex-wrap items-baseline gap-x-3 gap-y-1">
-          <b className="text-h2 font-extrabold tabular-nums text-ink">{formatMoney(canHelp)}</b>
-          <span className="text-caption font-semibold text-ink-muted">{t('circle.stats.peopleShort', { count: people })}</span>
+          <b className="text-h2 font-extrabold tabular-nums text-ink">{waiting ? pending : formatMoney(canHelp ?? 0)}</b>
+          {waiting ? null : (
+            <span className="text-caption font-semibold text-ink-muted">{t('circle.stats.peopleShort', { count: people ?? 0 })}</span>
+          )}
           {delta ? <span className="text-caption font-bold text-care">{delta}</span> : null}
         </span>
       </span>
@@ -67,6 +75,7 @@ export function NetStats({ people, canHelp, weekDelta, variant, className }: Net
         )}
       >
         {body}
+        {waiting ? <span className="sr-only">{t('common.loading')}</span> : null}
       </button>
       <Sheet
         open={open}

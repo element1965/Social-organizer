@@ -1,7 +1,7 @@
 import { createTRPCReact } from '@trpc/react-query';
 import { httpBatchLink, TRPCClientError, type TRPCLink } from '@trpc/client';
 import type { AppRouter } from '../../../api/src/routers/index';
-import { useAuth } from '../hooks/useAuth';
+import { storedAccount, useAuth } from '../hooks/useAuth';
 import { isNetworkFailure, reportReachable, reportUnreachable } from './connectivity';
 
 export const trpc = createTRPCReact<AppRouter>();
@@ -45,9 +45,12 @@ let refreshing: Promise<Renewal> | null = null;
 /** The refresh token auth.refresh itself last refused: asking again with it cannot succeed. */
 let refusedToken: string | null = null;
 
-/** The account signed in on this device right now ('' for a guest). Requests are bound to it (see sessionLink). */
+/**
+ * The account signed in on this device right now ('' for a guest): hooks/useAuth.ts storedAccount, the same
+ * stored session the auth store follows (syncAuthFromStorage). Requests are bound to it (see sessionLink).
+ */
 export function currentAccount(): string {
-  return localStorage.getItem('userId') ?? '';
+  return storedAccount();
 }
 
 /** A request made for an account that is no longer the signed-in one: dropped quietly, never told. */

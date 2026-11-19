@@ -367,13 +367,16 @@ export class HandshakeGraph {
    * The walk behind every network number: how many people are at each handshake from `root`, and the sum
    * of `weights` (what they can give) over them, with the part from the first `nearDepth` rings apart.
    * The same people as `walk` reaches, without a call per person and without paths.
+   *
+   * `nearEnd`: the people of the first `nearDepth` rings are queue entries 1 to `nearEnd` - 1 of this walk,
+   * read with `lastTallyMembers`, `countLastTallyBelow` and `reachedByLastWalk` before the next walk starts.
    */
   tally(
     root: number,
     maxDepth: number,
     weights: Float32Array,
     nearDepth: number,
-  ): { byDepth: number[]; people: number; weight: number; nearWeight: number } {
+  ): { byDepth: number[]; people: number; weight: number; nearWeight: number; nearEnd: number } {
     this.scratch();
     if (this.stamp >= 0x7fffffff) {
       this.seenAt.fill(0);
@@ -389,6 +392,8 @@ export class HandshakeGraph {
     queue[0] = root;
     let head = 0;
     let tail = 1;
+    /** End of the near rings in `queue` */
+    let nearEnd = 1;
     for (let depth = 1; depth <= maxDepth && head < tail; depth++) {
       const end = tail;
       let ringWeight = 0;
@@ -416,9 +421,33 @@ export class HandshakeGraph {
       }
       byDepth[depth] = tail - end;
       weight += ringWeight;
-      if (depth <= nearDepth) nearWeight += ringWeight;
+      if (depth <= nearDepth) {
+        nearWeight += ringWeight;
+        nearEnd = tail;
+      }
     }
-    return { byDepth, people: tail - 1, weight, nearWeight };
+    return { byDepth, people: tail - 1, weight, nearWeight, nearEnd };
+  }
+
+  /** People at queue entries 1 to `end` - 1 of the last walk whose number is below `below` (a copy). */
+  lastTallyMembers(end: number, below: number): Int32Array {
+    let n = 0;
+    for (let i = 1; i < end; i++) if (this.queue[i]! < below) n++;
+    const out = new Int32Array(n);
+    for (let i = 1, k = 0; i < end; i++) if (this.queue[i]! < below) out[k++] = this.queue[i]!;
+    return out;
+  }
+
+  /** How many people at queue entries 1 to `end` - 1 of the last walk have a number below `below`. */
+  countLastTallyBelow(end: number, below: number): number {
+    let n = 0;
+    for (let i = 1; i < end; i++) if (this.queue[i]! < below) n++;
+    return n;
+  }
+
+  /** Whether the last walk (tally or walk) reached this person; valid until the next walk starts. */
+  reachedByLastWalk(n: number): boolean {
+    return n >= 0 && n < this.seenAt.length && this.seenAt[n] === this.stamp;
   }
 
   /** The handshake path from the root of the last walk to a person it reached, both included. */

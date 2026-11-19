@@ -228,7 +228,7 @@
     "fit": "Tilpass nettverket",
     "stats": {
       "canHelp": "Nettverkets oppgitte deltakelse",
-      "explain": "Hvor mye personene du ser (opp til 3. håndtrykk) fortsatt er klare til å oppgi i denne perioden: summen av deres intensjoner. Meldingen om et behov går i bølger, nærmeste først, opp til 6. håndtrykk. Dette er et rettesnor, ikke et løfte: alle bestemmer selv om de vil delta.",
+      "explain": "Hvor mye personene i nettverket ditt (opp til 6. håndtrykk) fortsatt er klare til å oppgi i denne perioden: summen av deres intensjoner. Meldingen om et behov går i bølger, nærmeste først, opp til 6. håndtrykk. Dette er et rettesnor, ikke et løfte: alle bestemmer selv om de vil delta.",
       "weekDelta": "+{{amount}} denne uken",
       "people_one": "{{count}} person i nettverket ditt",
       "people_other": "{{count}} personer i nettverket ditt",
@@ -244,8 +244,8 @@
       "full3": "3. håndtrykk",
       "open": "{{ring}}: {{count}}. Åpne listen",
       "caption": "Håndtrykk",
-      "farther": "4.–5.: ~{{value}}",
-      "fartherFew": "4.–5.: noen få"
+      "farther": "4.–6.: ~{{value}}",
+      "fartherFew": "4.–6.: noen få"
     },
     "feed": {
       "title": "Strøm",

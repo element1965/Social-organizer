@@ -24,7 +24,9 @@ Start here if you are new: [The core message](topics/core/core-message.md) → [
 - New material → add a row to `topics/meta/sources.md`.
 - Use only the tags below; add a tag here before using it.
 - English text; quote Russian originals where the exact wording matters.
-- This repository is public: keep raw chat transcripts and private contact details out of it.
+- This repository is public: keep raw chat transcripts and private contact details out of it, and
+  also outreach target lists, prospective funders and fundraising budgets (those are kept privately,
+  not in this repository).
 
 ## Controlled tags
 `core`, `theory`, `principles`, `vocabulary`, `mechanics`, `trust`, `audience`, `comparables`, `funding`, `future`, `packaging`, `toolkit`, `sources`
@@ -56,11 +58,7 @@ Start here if you are new: [The core message](topics/core/core-message.md) → [
 
 ### audiences
 - `20261118-audiences` — **Audiences and what each needs to hear** — `topics/audiences/audiences.md` — The five audiences of the packaging work (future participants, community leaders and influencers, like-minded builders, donors, press and regulators), their main question, the answer, and which material serves each.
-- `20261118-cold-start-influencers` — **Cold start through community leaders — pilot plan (brainstorm)** — `topics/audiences/cold-start-influencers.md` — Why cold e-mails failed and community leaders who carry mutual-aid traditions may work instead; the regions and traditions; candidate authors and media (unverified, not contacted); the pilot plan and what to measure.
 - `20261118-comparables` — **Comparables — what to learn from other products and traditions** — `topics/audiences/comparables.md` — Products and traditions to study for packaging SO (Splitwise, Signal, Olio, Partiful, GoFundMe, Kickstarter, Patreon, China's mutual aid platforms, ROSCA traditions, Nicky Case's explorables): what each does well and how to apply it without copying what SO is not.
-
-### funding
-- `20261118-funding-strategy` — **Funding strategy — what we ask donors to fund (brainstorm)** — `topics/funding/funding-strategy.md` — The brainstorm's funding frame ("Financing a social innovation" chat): fund the deployment and empirical test of an existing social innovation, not an app; a preliminary [figure removed] model; candidate funders to research; the independence condition; institutional funding vs personal patronage. Ideas, not decisions.
 
 ### future
 - `20261118-direct-cooperation` — **Direct cooperation — the natural continuation (next stage)** — `topics/future/direct-cooperation.md` — Andrei Lubalin's reasoning (2026-11-17) on why direct cooperation grows out of mutual risk sharing — finding partners in the graph, the €5,000 failed-deal example, no central arbiter — and the precision limits.

@@ -366,6 +366,12 @@ export function App() {
   const [queryClient] = useState(createQueryClient);
   const [trpcClient] = useState(() => getTrpcClient());
 
+  // Another account signed in, signed out, or a session switched in another tab: nothing the previous account
+  // read may stay in memory under the new one (lists such as the connections are not keyed by account)
+  useEffect(() => useAuth.subscribe((state, previous) => {
+    if (state.userId !== previous.userId) queryClient.clear();
+  }), [queryClient]);
+
   // The connection came back (the browser says so, or the server answers again): refresh what is on screen
   // (spread over a few seconds: after an outage every open app comes back at the same moment)
   useEffect(() => onRecovery(() => {

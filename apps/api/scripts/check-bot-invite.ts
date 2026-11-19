@@ -1,6 +1,6 @@
 /**
  * Local check of the bot's invite message: the numbers it shows are the inviter's own network, the same
- * "people in the visible rings 1–3" and "Declared participation of the network" their Profile shows.
+ * network figure (people up to the 6th handshake and "Declared participation of the network") their Profile shows.
  * Runs the real /start handler against a LOCAL database; Telegram calls are intercepted, nothing leaves.
  *
  * Usage (from apps/api):
@@ -49,8 +49,8 @@ if (!inviter) {
   process.exit(1);
 }
 const reach = await networkReach(db, inviter.id);
-const people = groupDigits(reach.visible);
-const usd = `${groupDigits(reach.canHelpVisible)} $`;
+const people = groupDigits(reach.people);
+const usd = `${groupDigits(reach.canHelp)} $`;
 console.log(`Profile of ${inviter.name}: ${people} people, declared participation ${usd}`);
 
 for (const lang of ['en', 'ru', 'de', 'ja']) {

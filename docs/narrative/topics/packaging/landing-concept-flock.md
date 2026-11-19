@@ -3,7 +3,7 @@ id: 20261118-landing-concept-flock
 title: Landing concept "The flock and the seed" (prototype)
 tags: [packaging, mechanics, core]
 created: 2026-11-18
-updated: 2026-11-18
+updated: 2026-11-19
 related: [20261118-core-message, 20261118-need-protocol, 20261118-claims, 20261118-vocabulary, 20261118-latent-connectedness, 20261118-autocatalytic-law, 20261118-landing-concept-lights, 20261118-landing-concepts, 20261118-packaging-plan]
 summary: The landing concept the user chose on 2026-11-18 — a starling flock (no leader, each bird watches a few neighbours, a wave passes neighbour to neighbour) as the picture of the network and frost growing from one seed as the picture of growth past a threshold, with the process itself explained plainly — as a ten-screen landing plan, the final Russian copy, two code interactives, the generated media and how to port it into apps/web.
 ---
@@ -271,8 +271,8 @@ steps and finish the scroll for the reader at some moments; then review and impr
 - **Donors** rebuilt as a plain brief on paper: «Приложение и теория уже есть», «Что уже есть»
   (287 people with connections on 13 November 2026; Android, iPhone, browser; Lubalin's report, July
   2026), «На что нужны средства» (launch in communities; research into whether the network grows by
-  itself), buttons to the team through the Telegram bot and to the report on Zenodo. The [figure removed]
-  working model stays out: the funding note marks it as a brainstorm.
+  itself), buttons to the team through the Telegram bot and to the report on Zenodo. The
+  fundraising model from the brainstorm stays out: it is not a decision.
 - **Next** is a dark live network: a Need runs a few handshakes and Participation answers back;
   dashed sparks are the signals we want later (a recommended tradesperson, a joint project).
 - **One font: Manrope**, the app's own. Measured in the browser: x-height 0,75 vs 0,746 (Onest),
@@ -329,7 +329,7 @@ The donor section is replaced by «Присоединяйтесь к экспе�
 build a network in your community (we help explain it in your people's language), tell others about
 the project, help with the research or the code (links to the report and GitHub); buttons «Написать
 команде» (the Telegram bot) and «Поделиться» (the system share sheet on phones, a copied link
-elsewhere). Money and the [figure removed] working model stay off the site.
+elsewhere). Money and the fundraising model stay off the site.
 
 ### 17. Contact without spam or scam (2026-11-18)
 

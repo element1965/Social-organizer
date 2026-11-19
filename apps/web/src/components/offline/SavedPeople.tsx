@@ -2,6 +2,8 @@ import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useSavedCopy } from '../../hooks/useSavedCopy';
+import { useNetworkFigure } from '../../hooks/useNetworkFigure';
+import { NetStats } from '../circle/NetStats';
 import { Button } from '../ui2/Button';
 import { Group } from '../ui2/Group';
 import { Input } from '../ui2/Input';
@@ -11,11 +13,16 @@ import { OfflineHint, OfflineNotice } from './OfflineNotice';
 
 const SEARCH_FROM = 8;
 
-/** Offline home and people list: the people saved on this device, grouped by handshake level (direct first). */
-export function SavedPeople({ title }: { title: string }) {
+/**
+ * Offline home and people list: the people saved on this device, grouped by handshake level (direct first).
+ * As the home (`home`), it also shows the person's network figure: the live one if it is there, otherwise the
+ * figure saved on this device for this account (useNetworkFigure), the same numbers the Circle showed last.
+ */
+export function SavedPeople({ title, home = false }: { title: string; home?: boolean }) {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { status, model } = useSavedCopy(true);
+  const { figure } = useNetworkFigure();
   const [query, setQuery] = useState('');
   const needle = query.trim().toLocaleLowerCase();
 
@@ -35,6 +42,7 @@ export function SavedPeople({ title }: { title: string }) {
     <Screen title={title} width="column">
       <div className="flex flex-col gap-3 pt-2">
         <OfflineNotice syncedAt={model?.syncedAt} />
+        {home && figure ? <NetStats variant="card" people={figure.people} canHelp={figure.canHelp} /> : null}
         <div>
           <Button className="w-full" disabled aria-describedby="offline-need-hint">
             {t('nav.ask')}

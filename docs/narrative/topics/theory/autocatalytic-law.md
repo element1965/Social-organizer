@@ -3,8 +3,8 @@ id: 20261118-autocatalytic-law
 title: The Law of Autocatalytic Inevitability — thresholds, measurement, limits
 tags: [theory, principles, funding]
 created: 2026-11-18
-updated: 2026-11-18
-related: [20261118-latent-connectedness, 20261118-invitational-coordination, 20261118-claims, 20261118-causal-chain, 20261118-funding-strategy]
+updated: 2026-11-19
+related: [20261118-latent-connectedness, 20261118-invitational-coordination, 20261118-claims, 20261118-causal-chain, 20261118-audiences]
 summary: Lubalin's formal law of self-sustaining activation (k, q(N), p(N), m(N) > 1, critical mass N*), why "inevitability" is conditional, the parameters a deployment must measure, the conditions that would disconfirm it, and what the MVP did and did not test.
 ---
 
@@ -91,4 +91,4 @@ working estimate, not a measured threshold.
 - [Invitational coordination](invitational-coordination.md) — prerequisite: the mechanism type.
 - [Claims](../principles/claims.md) — applies: the public wording rule.
 - [The causal chain](../core/causal-chain.md) — applies: link 5 (the self-reproducing dynamic).
-- [Funding strategy](../funding/funding-strategy.md) — applies: measurement is what research funding buys.
+- [Audiences](../audiences/audiences.md) — applies: for donors, measurement is what research funding buys.

@@ -3,7 +3,8 @@ import { TRPCError } from '@trpc/server';
 import { router, protectedProcedure, publicProcedure } from '../trpc.js';
 import { ADMIN_IDS } from '../admin.js';
 import { findClusters } from '../services/cluster.service.js';
-import { networkReach } from '../services/network.service.js';
+import { networkReach, publicFigure } from '../services/network.service.js';
+import { accountScope, assertAccount } from '../services/account-scope.js';
 import { funnelReport } from '../services/funnel.service.js';
 
 /** Cache for the public site numbers: every guest hits the landing page, the count changes slowly. */
@@ -423,33 +424,20 @@ export const statsRouter = router({
     return funnelReport(ctx.db);
   }),
 
-  // Current network capabilities: what the people a request reaches can still give this period
-  networkCapabilities: protectedProcedure.query(async ({ ctx }) => {
-    // If user has no connections, fallback to inviter's network (pending connection)
-    let userId = ctx.userId;
-    const hasConn = await ctx.db.connection.findFirst({
-      where: { OR: [{ userAId: ctx.userId }, { userBId: ctx.userId }] },
-      select: { id: true },
-    });
-    if (!hasConn) {
-      const pending = await ctx.db.pendingConnection.findFirst({
-        where: { fromUserId: ctx.userId, status: 'PENDING' },
-        select: { toUserId: true },
-        orderBy: { createdAt: 'desc' },
-      });
-      if (pending) userId = pending.toUserId;
-    }
+  /**
+   * The person's own network figure, the one pair every screen shows (Circle, Profile, My intention, Need):
+   * people up to the 6th handshake and their declared participation, with the ring chips that add up to the
+   * people count (1st + 2nd + 3rd + the far chip). Only the kept walk (networkReach), no database query.
+   * A person with no connection yet gets zeros, never the network of someone else.
+   */
+  networkFigure: protectedProcedure.input(accountScope).query(async ({ ctx, input }) => {
+    assertAccount(ctx.userId, input);
+    return publicFigure(await networkReach(ctx.db, ctx.userId));
+  }),
 
-    // The same reach and the same sum as the profile and the ask screen (networkReach):
-    // everyone a request travels to, up to the 6th handshake, without the person themselves
-    const reach = await networkReach(ctx.db, userId);
-    // total/people: everyone a request can reach (a ceiling); visible*: the rings 1–3, which the person can see
-    return {
-      total: reach.canHelp,
-      people: reach.shown,
-      visibleTotal: reach.canHelpVisible,
-      visiblePeople: reach.visible,
-      farPeople: reach.farShown,
-    };
+  /** The same figure in the shape older app versions read (`total`, `people`) */
+  networkCapabilities: protectedProcedure.query(async ({ ctx }) => {
+    const figure = publicFigure(await networkReach(ctx.db, ctx.userId));
+    return { total: figure.canHelp, people: figure.people };
   }),
 });

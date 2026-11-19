@@ -228,7 +228,7 @@
     "fit": "Paskan jaringan",
     "stats": {
       "canHelp": "Partisipasi jaringan yang dinyatakan",
-      "explain": "Berapa lagi yang siap disebutkan pada periode ini oleh orang-orang yang Anda lihat (hingga jabat tangan ke-3): jumlah niat mereka. Pesan tentang kebutuhan berjalan bergelombang, dari yang terdekat, hingga jabat tangan ke-6. Ini hanya acuan, bukan janji: setiap orang memutuskan sendiri apakah ikut serta.",
+      "explain": "Berapa lagi yang siap disebutkan pada periode ini oleh orang-orang di jaringan Anda (hingga jabat tangan ke-6): jumlah niat mereka. Pesan tentang kebutuhan berjalan bergelombang, dari yang terdekat, hingga jabat tangan ke-6. Ini hanya acuan, bukan janji: setiap orang memutuskan sendiri apakah ikut serta.",
       "weekDelta": "+{{amount}} minggu ini",
       "people_other": "{{count}} orang di jaringan Anda",
       "peopleShort_other": "{{count}} orang"
@@ -242,8 +242,8 @@
       "full3": "Jabat tangan ke-3",
       "open": "{{ring}}: {{count}}. Buka daftar",
       "caption": "Jabat tangan",
-      "farther": "Ke-4–5: ~{{value}}",
-      "fartherFew": "Ke-4–5: beberapa"
+      "farther": "Ke-4–6: ~{{value}}",
+      "fartherFew": "Ke-4–6: beberapa"
     },
     "feed": {
       "title": "Umpan",

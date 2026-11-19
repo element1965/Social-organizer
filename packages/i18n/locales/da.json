@@ -228,7 +228,7 @@
     "fit": "Tilpas netværket",
     "stats": {
       "canHelp": "Netværkets erklærede deltagelse",
-      "explain": "Hvad de mennesker, du kan se (op til 3. håndtryk), stadig er klar til at angive i denne periode: summen af deres hensigter. En besked om et behov går ud i bølger, nærmeste først, op til 6. håndtryk. Det er et pejlemærke, ikke et løfte: alle bestemmer selv, om de vil deltage.",
+      "explain": "Hvad menneskerne i dit netværk (op til 6. håndtryk) stadig er klar til at angive i denne periode: summen af deres hensigter. En besked om et behov går ud i bølger, nærmeste først, op til 6. håndtryk. Det er et pejlemærke, ikke et løfte: alle bestemmer selv, om de vil deltage.",
       "weekDelta": "+{{amount}} denne uge",
       "people_one": "{{count}} person i dit netværk",
       "people_other": "{{count}} personer i dit netværk",
@@ -244,8 +244,8 @@
       "full3": "3. håndtryk",
       "open": "{{ring}}: {{count}}. Åbn listen",
       "caption": "Håndtryk",
-      "farther": "4.–5.: ~{{value}}",
-      "fartherFew": "4.–5.: nogle få"
+      "farther": "4.–6.: ~{{value}}",
+      "fartherFew": "4.–6.: nogle få"
     },
     "feed": {
       "title": "Feed",

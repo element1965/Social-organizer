@@ -27,6 +27,7 @@ import { inflectName } from '@so/shared';
 import { MessengerButtons } from '../components/share/MessengerButtons';
 import { buildSosInviteUrl } from '../lib/inviteUrl';
 import { shareLink } from '../lib/share';
+import { refreshNetwork } from '../lib/refreshNetwork';
 import { trpc } from '../lib/trpc';
 import { useOffline } from '../lib/connectivity';
 import { isPendingRequest, useDeclineNeed, useExpiryTick, type NotificationItem } from '../hooks/useEvents';
@@ -128,19 +129,30 @@ export function CollectionPage() {
   const closeCollection = trpc.collection.close.useMutation({ ...local, onSuccess: refresh });
   const updateChat = trpc.collection.updateChatLink.useMutation({ ...local, onSuccess: refresh });
   const updateGoal = trpc.collection.updateAmount.useMutation({ ...local, onSuccess: refresh });
+  // A connection made or removed here changes the network: the figure, lists and graph are read again at once
   const removeJoiner = trpc.collection.removeJoiner.useMutation({
     ...local,
     onSuccess: () => {
       refresh();
-      utils.connection.list.invalidate();
+      void refreshNetwork(utils);
     },
   });
   const block = trpc.collection.block.useMutation({ ...local, onSuccess: refresh });
   const unblock = trpc.collection.unblock.useMutation({ ...local, onSuccess: refresh });
-  // Started by the page itself after a public-link join; a failure shows on the page with its own Retry
-  const acceptSos = trpc.invite.acceptSos.useMutation({ ...local, onSuccess: refresh });
-  // Records the stake of a first public-link join on the side; the Participation is placed either way
-  const setBudget = trpc.user.setMonthlyBudget.useMutation({ meta: { notifyOnError: false } });
+  // Started by the page itself after a public-link join; a failure shows on the page with its own Retry.
+  // The join makes a connection, so the network is read again too.
+  const acceptSos = trpc.invite.acceptSos.useMutation({
+    ...local,
+    onSuccess: () => {
+      refresh();
+      void refreshNetwork(utils);
+    },
+  });
+  // Records the stake of a first public-link join on the side (quietly); the Participation is placed either way
+  const setBudget = trpc.user.setMonthlyBudget.useMutation({
+    meta: { notifyOnError: false },
+    onSuccess: () => void utils.stats.networkFigure.invalidate(),
+  });
 
   useEffect(() => {
     const data = collection.data;
@@ -196,7 +208,9 @@ export function CollectionPage() {
     resetUnblock();
   }, [adminOpen, resetBlock, resetUnblock]);
 
-  if (!id || collection.isLoading) {
+  // A request dropped because another account signed in (lib/trpc.ts) is not a failure: the cache is cleared
+  // on the switch and the Need is read again for the new account, so it waits like a first load
+  if (!id || collection.isLoading || (!collection.data && errorKind(collection.error) === 'aborted')) {
     return (
       <Screen width="column" back={{ label: t('nav.circle'), to: '/' }}>
         <p className="pt-6 text-body-s font-semibold text-ink-muted">{t('common.loading')}</p>

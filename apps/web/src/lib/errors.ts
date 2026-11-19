@@ -1,4 +1,5 @@
 import { isNetworkFailure, isOffline } from './connectivity';
+import { isAccountChanged } from '../hooks/accountScope';
 
 /**
  * What went wrong with a request, in the terms the person needs: what happened and what to do next.
@@ -23,7 +24,7 @@ export type ErrorKind =
    * BAD_REQUEST refusals that are not schema errors ("Collection is not active").
    */
   | 'changed'
-  /** The request was cancelled (navigation, unmount): never told to anyone. */
+  /** The request was cancelled, or refused as made for another account (ACCOUNT_CHANGED): never told to anyone. */
   | 'aborted'
   /** Everything else: a 5xx, a broken answer, an unknown failure. */
   | 'server';
@@ -59,10 +60,16 @@ function httpStatus(error: ErrorLike): number | undefined {
   return typeof status === 'number' ? status : undefined;
 }
 
-/** A cancelled request: fetch's AbortError, directly or as the cause tRPC keeps. */
+/**
+ * A request that is nobody's to be told about: cancelled (fetch's AbortError, directly or as the cause tRPC keeps:
+ * navigation, unmount, or lib/trpc.ts dropping a request of an account that is no longer signed in), or refused by
+ * the server as made for another account (ACCOUNT_CHANGED, HTTP 409 from the account-scoped network queries:
+ * the tab re-reads the stored session and the query re-keys, see hooks/accountScope.ts). Never "the data changed".
+ */
 export function isAborted(error: unknown): boolean {
   const like = asErrorLike(error);
   if (!like) return false;
+  if (isAccountChanged(error)) return true;
   if (like.name === 'AbortError') return true;
   const cause = asErrorLike(like.cause);
   return cause?.name === 'AbortError';

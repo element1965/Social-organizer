@@ -228,7 +228,7 @@
     "fit": "Encajar la red",
     "stats": {
       "canHelp": "Participación declarada de la red",
-      "explain": "Cuánto más están dispuestas a indicar en este periodo las personas que usted ve (hasta el 3.er apretón de manos): es la suma de sus intenciones. El mensaje sobre una necesidad se envía por oleadas, de los más cercanos hasta el 6.º apretón de manos. Es una referencia, no una promesa: cada quien decide por sí mismo si participa.",
+      "explain": "Cuánto más están dispuestas a indicar en este periodo las personas de su red (hasta el 6.º apretón de manos): es la suma de sus intenciones. El mensaje sobre una necesidad se envía por oleadas, de los más cercanos hasta el 6.º apretón de manos. Es una referencia, no una promesa: cada quien decide por sí mismo si participa.",
       "weekDelta": "+{{amount}} esta semana",
       "people_many": "{{count}} de personas en su red",
       "people_one": "{{count}} persona en su red",
@@ -246,8 +246,8 @@
       "full3": "3.er apretón",
       "open": "{{ring}}: {{count}}. Abrir la lista",
       "caption": "Apretones de manos",
-      "farther": "4.º–5.º: ~{{value}}",
-      "fartherFew": "4.º–5.º: algunos"
+      "farther": "4.º–6.º: ~{{value}}",
+      "fartherFew": "4.º–6.º: algunos"
     },
     "feed": {
       "title": "Actividad",

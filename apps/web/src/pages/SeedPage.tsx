@@ -57,6 +57,7 @@ export function SeedPage() {
       await updateUser.mutateAsync({ name: name.trim() });
       await setBudget.mutateAsync({ amount, inputCurrency: 'USD' });
       await utils.user.me.invalidate();
+      void utils.stats.networkFigure.invalidate();
       clearFirstRun();
       navigate(next ?? '/', { replace: true });
     } catch {

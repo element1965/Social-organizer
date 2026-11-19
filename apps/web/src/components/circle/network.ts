@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { trpc } from '../../lib/trpc';
 import { useAuth } from '../../hooks/useAuth';
+import { refreshNetwork } from '../../lib/refreshNetwork';
 import { announceJoin, JOIN_MAX_MS, sliceSize, useJoining } from './joining';
 
 export type NetPerson = {
@@ -50,10 +51,9 @@ export function useCircleNetwork() {
       void announceJoin(utils, undefined, sliceSize(utils));
     }
     if (lastCount.current !== null && lastCount.current !== now) {
-      void utils.connection.graphSlice.invalidate();
-      void utils.connection.list.invalidate();
-      void utils.connection.getNetworkStats.invalidate();
-      void utils.stats.networkCapabilities.invalidate();
+      // The same shared refresh as the pulse and every connection made here (lists, graph, figure, stats, gate):
+      // the fallback for a change the pulse did not report
+      void refreshNetwork(utils);
     }
     lastCount.current = now;
   }, [count.data?.count, utils]);

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { trpc } from '../lib/trpc';
+import { useNetworkFigure } from '../hooks/useNetworkFigure';
 import { Button } from '../components/ui2/Button';
 import { Card } from '../components/ui2/Card';
 import { Chip } from '../components/ui2/Chip';
@@ -25,16 +26,13 @@ export function StakePage() {
   const back = useSmartBack(t('common.back'), '/me');
   const utils = trpc.useUtils();
   const me = trpc.user.me.useQuery();
-  const access = trpc.collection.askAccess.useQuery();
-  const caps = trpc.stats.networkCapabilities.useQuery(undefined, {
-    enabled: access.isSuccess && access.data.networkCanHelp == null,
-  });
+  const { figure } = useNetworkFigure();
   const save = trpc.user.setMonthlyBudget.useMutation({
     meta: { notifyOnError: false },
     onSuccess: () => {
       void utils.user.me.invalidate();
+      void utils.stats.networkFigure.invalidate();
       void utils.collection.askAccess.invalidate();
-      void utils.stats.networkCapabilities.invalidate();
     },
   });
 
@@ -46,7 +44,8 @@ export function StakePage() {
   const parsed = parseStake(value);
   const showError = value.trim() !== '' && parsed == null;
   const unchanged = saved != null && parsed === Math.round(saved);
-  const canHelp = access.data?.networkCanHelpVisible ?? caps.data?.visibleTotal ?? access.data?.networkCanHelp ?? caps.data?.total ?? null;
+  // The network figure, from the query shared with the Circle, the Profile and the Need screen (up to the 6th handshake)
+  const canHelp = figure?.canHelp ?? null;
 
   const submit = () => {
     if (parsed == null) return;
@@ -95,6 +94,10 @@ export function StakePage() {
             <p className="text-h2 font-extrabold tabular-nums text-ink">
               {canHelp == null ? t('common.loading') : formatMoney(canHelp)}
             </p>
+            {/* The same pair as on the Circle, the Profile and the Need screen: the sum and the people behind it */}
+            {figure ? (
+              <p className="mt-1 text-label font-semibold tabular-nums text-ink-muted">{t('circle.stats.people', { count: figure.people })}</p>
+            ) : null}
 
           </Card>
         </>

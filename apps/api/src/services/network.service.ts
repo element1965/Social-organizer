@@ -1,6 +1,7 @@
 import type { PrismaClient } from '@so/db';
 import { getGraph, graphVersion, onGraphInvalidated } from './graph-cache.service.js';
 import type { HandshakeGraph } from './graph-store.js';
+import { measure, ReachKeeper, stillReusable, type FarCount, type FarSnapshot, type NetworkReach } from './network-figure.js';
 import { timedWalk } from './runtime-metrics.service.js';
 
 export interface NetworkMember {
@@ -31,48 +32,30 @@ export async function bfsNetwork(
   return out;
 }
 
-/**
- * How far a request for help travels: the waves go out from the author, nearest first, up to this many
- * handshakes. "Your network" everywhere in the app means exactly these people.
- */
-export const NETWORK_MAX_DEPTH = 6;
-/** Rings whose people are shown by name (graph, People lists). Beyond them only rounded counts. */
-export const VISIBLE_RINGS = 3;
-
-export type FarCount = { count: number; approx: boolean; few: boolean };
+export {
+  NETWORK_MAX_DEPTH,
+  VISIBLE_RINGS,
+  roundFarCount,
+  type FarCount,
+  type NetworkReach,
+} from './network-figure.js';
 
 /**
- * Rounds a count of people the viewer may not see, so it cannot be used to tell when one
- * particular person joined or left: under 5 is only "a few", then steps of 10, 50, then 2 significant digits.
+ * The network figure as every screen shows it, and nothing finer: people up to the 6th handshake (rings 1–3
+ * exactly, the 4th to 6th as one rounded count), and the sum of what they can still give.
  */
-export function roundFarCount(n: number): FarCount {
-  if (n <= 0) return { count: 0, approx: false, few: false };
-  if (n < 5) return { count: 0, approx: true, few: true };
-  const step = n < 100 ? 10 : n < 1000 ? 50 : 10 ** (Math.floor(Math.log10(n)) - 1);
-  const count = Math.max(step, Math.round(n / step) * step);
-  return { count, approx: true, few: false };
-}
-
-/**
- * The one set of network numbers every screen shows (home, profile, the ask screen):
- * - `shown`: people in the network, the visible rings exactly and the far part rounded once
- *   (an exact total would reveal how many are in the private far rings);
- * - `exact`: the same without rounding, for server-side thresholds only;
- * - `canHelp`: the sum of what these people can still give this period (remaining budgets).
- * The person themselves is not counted in either.
- */
-export interface NetworkReach {
-  byDepth: Record<number, number>;
-  exact: number;
-  shown: number;
-  /** People in the visible rings 1–3 (exact: they are shown by name) */
-  visible: number;
-  /** People beyond the visible rings, rounded the same way as `shown` */
-  farShown: number;
-  /** Ceiling: what everyone up to the 6th handshake can still give */
+export function publicFigure(reach: NetworkReach): {
+  people: number;
   canHelp: number;
-  /** What the visible rings 1–3 can give: the part a person can check by eye */
-  canHelpVisible: number;
+  rings: { 1: number; 2: number; 3: number };
+  far: FarCount;
+} {
+  return {
+    people: reach.people,
+    canHelp: reach.canHelp,
+    rings: { 1: reach.byDepth[1] ?? 0, 2: reach.byDepth[2] ?? 0, 3: reach.byDepth[3] ?? 0 },
+    far: reach.far,
+  };
 }
 
 /* ---------- What people can give, kept beside the graph ---------- */
@@ -204,106 +187,64 @@ function budgetsFor(graph: HandshakeGraph): Float32Array {
 
 /* ---------- The reach ---------- */
 
-interface Measure {
-  byDepth: Record<number, number>;
-  people: number;
-  canHelp: number;
-  /** The part of `canHelp` that comes from the visible rings */
-  nearCanHelp?: number;
-}
-
-/** People and budgets from `root`, ring by ring, up to `maxDepth`. Synchronous: the budgets are in hand. */
-function measure(graph: HandshakeGraph, root: number, budgets: Float32Array, maxDepth: number): Measure {
-  const t = graph.tally(root, maxDepth, budgets, VISIBLE_RINGS);
-  const byDepth: Record<number, number> = {};
-  for (let depth = 1; depth <= maxDepth; depth++) if (t.byDepth[depth]! > 0) byDepth[depth] = t.byDepth[depth]!;
-  return { byDepth, people: t.people, canHelp: t.weight, nearCanHelp: t.nearWeight };
-}
-
-/** The far part of a reach (rings beyond the visible ones), kept apart so it can be reused. */
-interface FarPart {
-  byDepth: Record<number, number>;
-  people: number;
-  canHelp: number;
-}
-
-function compose(near: Measure, far: FarPart): NetworkReach {
-  const visible = near.people;
-  // A handful beyond the rings ("a few" in the chips) is still counted as it is, so the headline does not understate
-  const rounded = roundFarCount(far.people);
-  const farShown = far.people > 0 ? (rounded.few ? far.people : rounded.count) : 0;
-  return {
-    byDepth: { ...near.byDepth, ...far.byDepth },
-    exact: visible + far.people,
-    shown: visible + farShown,
-    visible,
-    farShown,
-    canHelp: Math.round(near.canHelp + far.canHelp),
-    canHelpVisible: Math.round(near.canHelp),
-  };
-}
-
-const NOBODY: Measure = { byDepth: {}, people: 0, canHelp: 0 };
-
-/** The whole reach, to the 6th handshake: one walk, split into the visible rings and the far ones. */
-async function fullReach(db: PrismaClient, rootId: string): Promise<{ value: NetworkReach; far: FarPart }> {
+/**
+ * One answer: the graph and the budgets are acquired once, then (synchronously) the visible rings are walked
+ * with the kept far part when that is safe, or the whole reach is walked on the same graph and budgets.
+ */
+async function walkReach(
+  db: PrismaClient,
+  rootId: string,
+  reuse: { entry: ReachEntry; far: FarSnapshot } | null,
+): Promise<{ value: NetworkReach; far: FarSnapshot; reused: boolean }> {
   const graph = await getGraph(db);
   await freshBudgets(db);
-  // No await from here to the end of the walk (see budgetsFor)
-  const root = graph.find(rootId);
-  const all = root === undefined ? NOBODY : measure(graph, root, budgetsFor(graph), NETWORK_MAX_DEPTH);
-  const near: Measure = { byDepth: {}, people: 0, canHelp: all.nearCanHelp ?? 0 };
-  const far: FarPart = { byDepth: {}, people: 0, canHelp: all.canHelp - near.canHelp };
-  for (const [key, n] of Object.entries(all.byDepth)) {
-    const part = Number(key) <= VISIBLE_RINGS ? near : far;
-    part.byDepth[Number(key)] = n;
-    part.people += n;
-  }
-  return { value: compose(near, far), far };
-}
-
-/** Only the visible rings are walked again; the far part is the one measured earlier. */
-async function nearReach(db: PrismaClient, rootId: string, far: FarPart): Promise<NetworkReach> {
-  const graph = await getGraph(db);
-  await freshBudgets(db);
-  // No await from here to the end of the walk (see budgetsFor)
-  const root = graph.find(rootId);
-  return compose(root === undefined ? NOBODY : measure(graph, root, budgetsFor(graph), VISIBLE_RINGS), far);
+  // No await from here to the end of the walk (see budgetsFor). The kept far part is taken only if it is still
+  // the one that was kept with its list: the keeper may have dropped the list while this walk waited above
+  const far = reuse ? stillReusable(reachCache, rootId, reuse.entry, reuse.far) : null;
+  return measure(graph, graph.find(rootId), budgetsFor(graph), far);
 }
 
 /**
  * A walk up to the 6th handshake touches most of a large network, and every screen asks for it
- * (home, profile, the ask screen, each of them on a timer). The numbers are kept per person:
+ * (Circle, Profile, My intention, the Need screen, each of them on a timer). One walk gives the network
+ * figure and the request gate. The numbers are kept per person:
  * - while nothing in the graph changed, for REACH_TTL_MS (only the budgets inside the sum can move);
  * - after the graph changed somewhere, for REACH_STALE_MS at most; then the visible rings 1–3 are walked
- *   again (a few hundred or thousand people) and the far rings, which are shown rounded anyway, are
- *   reused for up to REACH_FAR_TTL_MS, in networks whose far part is at least REACH_FAR_REUSE_MIN people;
+ *   again (a few hundred or thousand people) and the far rings 4–6, which are shown as one rounded count,
+ *   are reused for up to REACH_FAR_TTL_MS, in networks whose far part is at least REACH_FAR_REUSE_MIN people.
+ *   The reuse is refused, and everything walked again on the same graph, when the people of the graph as it
+ *   was at the full walk who are in rings 1–3 are not exactly the same as then (their numbers are kept beside
+ *   the far part, checked one by one): someone who crossed could be counted in both parts or in neither.
+ *   What the reuse can still miss is change inside the far rings only: people joining or leaving rings 4–6,
+ *   accounts deleted there, and changed budgets there, for up to an hour;
  * - a person whose own connections changed is dropped at once (invalidateGraph passes the ids),
  *   so their own new acquaintance is in the numbers on the next request, far rings included.
  * Server-side thresholds (the path to a request) use the same value: exact for the person's own
- * connections and the visible rings, at most an hour behind for the far ones.
+ * connections and the visible rings, at most an hour behind for the far ones (and only in networks of
+ * REACH_FAR_REUSE_MIN people or more, far above the threshold).
+ *
+ * Memory of the exact check: 4 bytes per person in rings 1–3 per kept answer, none above NEAR_IDS_MAX people
+ * (200 KB), and REACH_NEAR_IDS_BUDGET numbers (16 MB) over all kept answers: past it, the oldest answers lose
+ * their list but stay kept (they are walked in full when stale instead of reusing the far part).
  */
 const REACH_TTL_MS = 5 * 60_000;
 const REACH_STALE_MS = Number(process.env.REACH_STALE_MS) || 60_000;
 const REACH_FAR_TTL_MS = 60 * 60_000;
-/**
- * The far part is reused only when it is this large. A person who moved between the visible and the far
- * rings since it was measured is counted twice or not at all until the next full walk; in a far part of
- * hundreds that is inside the rounding, in a small network it could tip the threshold of a request, and
- * a small network costs nothing to walk in full.
- */
+/** The far part is reused only when it is this large: a small network costs nothing to walk in full. */
 const REACH_FAR_REUSE_MIN = process.env.REACH_FAR_REUSE_MIN !== undefined ? Number(process.env.REACH_FAR_REUSE_MIN) : 500;
 const REACH_CACHE_MAX = 20_000;
+const REACH_NEAR_IDS_BUDGET = 4_000_000;
 
 interface ReachEntry {
   value: NetworkReach;
   at: number;
   version: number;
-  far: FarPart;
+  far: FarSnapshot;
   farAt: number;
 }
 
-const reachCache = new Map<string, ReachEntry>();
+/** The kept answers; their rings 1-3 lists are limited separately (ReachKeeper, network-figure.ts). */
+const reachCache = new ReachKeeper<ReachEntry>(REACH_CACHE_MAX, REACH_NEAR_IDS_BUDGET);
 const reachLoading = new Map<string, Promise<NetworkReach>>();
 /** Bumped when entries are dropped, so a walk that started before does not store an old answer. */
 let reachEpoch = 0;
@@ -351,7 +292,7 @@ export function clearReachCache(userIds?: string[]): void {
 
 export async function networkReach(db: PrismaClient, rootId: string): Promise<NetworkReach> {
   const now = Date.now();
-  if (isReachDirty(rootId, now)) return timedWalk('reach', async () => (await fullReach(db, rootId)).value);
+  if (isReachDirty(rootId, now)) return timedWalk('reach', async () => (await walkReach(db, rootId, null)).value);
   const hit = reachCache.get(rootId);
   if (hit) {
     const age = now - hit.at;
@@ -363,20 +304,10 @@ export async function networkReach(db: PrismaClient, rootId: string): Promise<Ne
   const epoch = reachEpoch;
   const reuseFar = hit && now - hit.farAt < REACH_FAR_TTL_MS && hit.far.people >= REACH_FAR_REUSE_MIN ? hit : null;
   const promise = timedWalk('reach', async () => {
-    const result = reuseFar
-      ? { value: await nearReach(db, rootId, reuseFar.far), far: reuseFar.far, farAt: reuseFar.farAt }
-      : { ...(await fullReach(db, rootId)), farAt: Date.now() };
+    const result = await walkReach(db, rootId, reuseFar ? { entry: reuseFar, far: reuseFar.far } : null);
     if (epoch === reachEpoch) {
-      if (reachCache.size >= REACH_CACHE_MAX) {
-        // Oldest entries first (a Map keeps insertion order)
-        let drop = REACH_CACHE_MAX / 10;
-        for (const key of reachCache.keys()) {
-          reachCache.delete(key);
-          if (--drop <= 0) break;
-        }
-      }
-      reachCache.delete(rootId);
-      reachCache.set(rootId, { value: result.value, at: Date.now(), version: graphVersion(), far: result.far, farAt: result.farAt });
+      const farAt = result.reused && reuseFar ? reuseFar.farAt : Date.now();
+      reachCache.set(rootId, { value: result.value, at: Date.now(), version: graphVersion(), far: result.far, farAt });
     }
     return result.value;
   }).finally(() => reachLoading.delete(rootId));

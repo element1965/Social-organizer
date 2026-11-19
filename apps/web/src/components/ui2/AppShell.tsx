@@ -288,7 +288,8 @@ function LiveShell({ children }: { children?: ReactNode }) {
   const location = useLocation();
   const theme = useTheme((state) => state.mode);
   const setMode = useTheme((state) => state.setMode);
-  const ask = useAskProgress();
+  // The ring belongs to the signed-in account only (another account's value is never shown)
+  const ask = useAskProgress(useAuth((s) => s.userId));
   // One light poll keeps the badge and every list fresh (hooks/usePulse.ts): no timer per query
   usePulse();
   const { data: attention } = trpc.notification.attention.useQuery();

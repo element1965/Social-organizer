@@ -27,7 +27,7 @@ type CircleGraphProps = {
   focusId?: string | null;
   /** Fraction of the height to raise the focused person by (room for a card at the bottom). */
   focusLift?: number;
-  /** Rounded counts of the 4th and 5th rings, drawn as anonymous dust around the ball. */
+  /** The rounded count of the 4th to 6th rings (one shell), drawn as anonymous dust around the ball. */
   farRings?: number[];
   /** CSS px at the bottom of the canvas covered by other UI: names are not drawn there. */
   labelInsetBottom?: number;

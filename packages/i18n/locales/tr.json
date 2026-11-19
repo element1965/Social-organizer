@@ -228,7 +228,7 @@
     "fit": "Ağı sığdır",
     "stats": {
       "canHelp": "Ağın beyan ettiği katılım",
-      "explain": "Gördüğünüz kişilerin (3. tokalaşmaya kadar) bu dönemde belirtmeye hâlâ hazır olduğu tutar: niyetlerinin toplamı. İhtiyaç bildirimi dalgalar hâlinde, en yakınlardan başlayarak 6. tokalaşmaya kadar gider. Bu bir gösterge, söz değildir: katılıp katılmamaya herkes kendisi karar verir.",
+      "explain": "Ağınızdaki kişilerin (6. tokalaşmaya kadar) bu dönemde belirtmeye hâlâ hazır olduğu tutar: niyetlerinin toplamı. İhtiyaç bildirimi dalgalar hâlinde, en yakınlardan başlayarak 6. tokalaşmaya kadar gider. Bu bir gösterge, söz değildir: katılıp katılmamaya herkes kendisi karar verir.",
       "weekDelta": "Bu hafta +{{amount}}",
       "people_one": "Ağınızda {{count}} kişi",
       "people_other": "Ağınızda {{count}} kişi",
@@ -244,8 +244,8 @@
       "full3": "3. tokalaşma",
       "open": "{{ring}}: {{count}}. Listeyi aç",
       "caption": "Tokalaşmalar",
-      "farther": "4.–5.: ~{{value}}",
-      "fartherFew": "4.–5.: birkaç kişi"
+      "farther": "4.–6.: ~{{value}}",
+      "fartherFew": "4.–6.: birkaç kişi"
     },
     "feed": {
       "title": "Akış",

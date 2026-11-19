@@ -228,7 +228,7 @@
     "fit": "Netwerk in beeld",
     "stats": {
       "canHelp": "Aangegeven deelname van het netwerk",
-      "explain": "Wat de mensen die je kunt zien (tot de 3e handdruk) deze periode nog bereid zijn te noemen: de som van hun intenties. Een bericht over een behoefte gaat in golven uit, eerst naar de naasten, tot de 6e handdruk. Dit is een richtgetal, geen belofte: iedereen beslist zelf of hij of zij deelneemt.",
+      "explain": "Wat de mensen in je netwerk (tot de 6e handdruk) deze periode nog bereid zijn te noemen: de som van hun intenties. Een bericht over een behoefte gaat in golven uit, eerst naar de naasten, tot de 6e handdruk. Dit is een richtgetal, geen belofte: iedereen beslist zelf of hij of zij deelneemt.",
       "weekDelta": "+{{amount}} deze week",
       "people_one": "{{count}} persoon in je netwerk",
       "people_other": "{{count}} personen in je netwerk",
@@ -244,8 +244,8 @@
       "full3": "3e handdruk",
       "open": "{{ring}}: {{count}}. Lijst openen",
       "caption": "Handdrukken",
-      "farther": "4e–5e: ~{{value}}",
-      "fartherFew": "4e–5e: een paar"
+      "farther": "4e–6e: ~{{value}}",
+      "fartherFew": "4e–6e: een paar"
     },
     "feed": {
       "title": "Feed",

@@ -228,7 +228,7 @@
     "fit": "Vejít síť",
     "stats": {
       "canHelp": "Deklarovaná účast sítě",
-      "explain": "Kolik ještě lidé, které vidíte (až do 3. podání ruky), ochotně uvedou v tomto období: je to součet jejich záměrů. Oznámení o potřebě putuje ve vlnách, od nejbližších až po 6. podání ruky. Je to orientační údaj, ne příslib: každý se sám rozhoduje, zda se zapojí.",
+      "explain": "Kolik ještě lidé ve vaší síti (až do 6. podání ruky) ochotně uvedou v tomto období: je to součet jejich záměrů. Oznámení o potřebě putuje ve vlnách, od nejbližších až po 6. podání ruky. Je to orientační údaj, ne příslib: každý se sám rozhoduje, zda se zapojí.",
       "weekDelta": "+{{amount}} tento týden",
       "people_few": "{{count}} lidé ve vaší síti",
       "people_many": "{{count}} člověka ve vaší síti",
@@ -248,8 +248,8 @@
       "full3": "3. podání ruky",
       "open": "{{ring}}: {{count}}. Otevřít seznam",
       "caption": "Podání ruky",
-      "farther": "4.–5.: ~{{value}}",
-      "fartherFew": "4.–5.: několik"
+      "farther": "4.–6.: ~{{value}}",
+      "fartherFew": "4.–6.: několik"
     },
     "feed": {
       "title": "Přehled",

@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { trpc } from '../lib/trpc';
 import { useAuth } from './useAuth';
+import { refreshNetwork } from '../lib/refreshNetwork';
 
 /** The shortest interval any of the replaced timers had (incoming requests). */
 export const PULSE_MS = 20_000;
@@ -27,6 +28,10 @@ const LISTS = {
   milestones: (u: Utils) => u.milestone.list.invalidate(),
   reviews: (u: Utils) => u.moderation.myOpenReviews.invalidate(),
   connectionCount: (u: Utils) => u.connection.getCount.invalidate(),
+  // Everything derived from the person's own connections (a request confirmed in the bot, a join on another
+  // device): the one shared refresh, the same as after a connection made in this app (lists, graph, network
+  // figure, network stats, request gate, milestones). Not part of the safety net: those queries poll on their own.
+  network: (u: Utils) => refreshNetwork(u),
 } satisfies Record<string, (u: Utils) => Promise<unknown>>;
 
 type List = keyof typeof LISTS;
@@ -45,9 +50,9 @@ const DEPENDENTS: Record<string, List[]> = {
   participating: ['participating', 'attention', 'notifications'],
   milestones: ['milestones'],
   reviews: ['reviews'],
-  // The Circle watches this count (components/circle/network.ts): a change there announces a join and
-  // refreshes the heavy network queries. The milestone list carries the same number.
-  connections: ['connectionCount', 'milestones'],
+  // A change in the person's own connections: the shared network refresh (lists, graph, figure, stats, gate,
+  // the connection count the Circle watches to announce a join, and the milestones that carry the same number).
+  connections: ['network'],
 };
 
 /**
@@ -85,7 +90,7 @@ export function usePulse() {
   useEffect(() => {
     if (!userId) return;
     const timer = window.setInterval(() => {
-      for (const list of Object.keys(LISTS) as List[]) void LISTS[list](utils);
+      for (const list of Object.keys(LISTS) as List[]) if (list !== 'network') void LISTS[list](utils);
     }, SAFETY_MS);
     return () => window.clearInterval(timer);
   }, [userId, utils]);

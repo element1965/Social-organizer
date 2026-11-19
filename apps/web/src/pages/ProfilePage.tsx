@@ -6,6 +6,7 @@ import { trpc } from '../lib/trpc';
 import { useAuth } from '../hooks/useAuth';
 import { useTheme } from '../hooks/useTheme';
 import { usePushNotifications } from '../hooks/usePushNotifications';
+import { useNetworkFigure } from '../hooks/useNetworkFigure';
 import { Avatar } from '../components/ui2/Avatar';
 import { Group, Row } from '../components/ui2/Group';
 import { Pill } from '../components/ui2/Pill';
@@ -52,10 +53,7 @@ export function ProfilePage() {
 
   const me = trpc.user.me.useQuery();
   const settings = trpc.settings.get.useQuery();
-  const access = trpc.collection.askAccess.useQuery();
-  const caps = trpc.stats.networkCapabilities.useQuery(undefined, {
-    enabled: access.isSuccess && access.data.networkCanHelp == null,
-  });
+  const { figure } = useNetworkFigure();
   const needCounts = useNeedCounts();
   const admin = trpc.faq.isAdmin.useQuery();
   const isAdmin = admin.data?.isAdmin === true;
@@ -123,9 +121,10 @@ export function ProfilePage() {
   const prefs = settings.data;
   const langCode = (i18n.language.split('-')[0] || 'en') as SupportedLanguage;
   const languageLabel = langCode in languageNames ? languageNames[langCode] : langCode;
-  // The sum the person can check (rings 1–3); the full reach is a ceiling, told on the Circle and in the minimum screen
-  const canHelp = access.data?.networkCanHelpVisible ?? caps.data?.visibleTotal ?? access.data?.networkCanHelp ?? caps.data?.total ?? null;
-  const visiblePeople = access.data?.networkVisible ?? access.data?.networkCount ?? 0;
+  // The network figure, the pair from the query shared with the Circle, My intention and the Need screen:
+  // people up to the 6th handshake and their declared participation
+  const canHelp = figure?.canHelp ?? null;
+  const networkPeople = figure?.people ?? 0;
   const cyclesOn = prefs.notifyRenewalReminder && prefs.notifyRenewalStart;
   const soundOn = prefs.soundEnabled;
   const pushState = push.isSupported ? push.isSubscribed : null;
@@ -176,7 +175,7 @@ export function ProfilePage() {
       <Group title={t('profile.participation')}>
         <Row
           title={t('circle.stats.canHelp')}
-          subtitle={access.data ? t(networkKey(visiblePeople, i18n.language), { count: visiblePeople }) : undefined}
+          subtitle={figure ? t(networkKey(networkPeople, i18n.language), { count: networkPeople }) : undefined}
           variant="value"
           value={canHelp == null ? undefined : formatMoney(canHelp)}
           chevron={false}

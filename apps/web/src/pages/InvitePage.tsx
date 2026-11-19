@@ -29,6 +29,7 @@ import {
   TextButton,
 } from '../components/onboarding/states';
 import { buildWebInviteUrl } from '../lib/inviteUrl';
+import { refreshNetwork } from '../lib/refreshNetwork';
 import { inviteSrcParam, safeAddressee, type InviteSrcParam } from '@so/shared';
 import { clearInviteSrc, firstOpenOf, readInviteSrc, rememberInviteSrc } from '../lib/inviteSrc';
 import { SITE_ORIGIN, storeLinks, useDevice } from '../lib/device';
@@ -248,13 +249,16 @@ function AcceptView({
   // A newcomer on the web: after the request is saved, offer the app before the intro (SO-24 п.3)
   const [installStep, setInstallStep] = useState(false);
 
+  const utils = trpc.useUtils();
   const accept = trpc.invite.accept.useMutation({
     meta: { notifyOnError: false },
     onSuccess: (data) => {
       setPending(null);
       clearInviteSrc();
-      if (!firstRun) return;
       const r = data as { alreadyConnected?: boolean; pending?: boolean } | undefined;
+      // A handshake made at once (an in-person code, an earlier request): the network figure and lists change now
+      if (!r?.pending) void refreshNetwork(utils);
+      if (!firstRun) return;
       if (r?.pending && !r.alreadyConnected && offersInstall()) setInstallStep(true);
       else navigate(introPath(), { replace: true });
     },
@@ -285,6 +289,10 @@ function AcceptView({
   const intro = trpc.pending.introStatus.useQuery(undefined, { enabled: waiting && !firstRun, refetchInterval: 5000 });
   const confirmedNow = waiting && intro.data?.state === 'connected' && intro.data.person?.id === inviterId;
   const connected = accept.isSuccess && (!!result?.alreadyConnected || confirmedNow || !result?.pending);
+  // The inviter confirmed while this screen waited: the handshake exists now
+  useEffect(() => {
+    if (confirmedNow) void refreshNetwork(utils);
+  }, [confirmedNow, utils]);
 
   if (own) {
     return (

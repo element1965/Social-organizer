@@ -113,6 +113,7 @@ export function sweepSavedCopy() {
   try {
     if (localStorage.getItem('accessToken')) return;
     localStorage.removeItem('so_networkStats');
+    localStorage.removeItem('so_networkFigure');
   } catch {
     return;
   }

@@ -228,7 +228,7 @@
     "fit": "Încadrează rețeaua",
     "stats": {
       "canHelp": "Participarea declarată a rețelei",
-      "explain": "Cât mai sunt gata să declare în această perioadă oamenii pe care îi vezi (până la a 3-a strângere de mână): suma intențiilor lor. Mesajul despre o nevoie pleacă în valuri, de la cei mai apropiați, până la a 6-a strângere de mână. E o valoare orientativă, nu o promisiune: fiecare decide singur dacă participă.",
+      "explain": "Cât mai sunt gata să declare în această perioadă oamenii din rețeaua ta (până la a 6-a strângere de mână): suma intențiilor lor. Mesajul despre o nevoie pleacă în valuri, de la cei mai apropiați, până la a 6-a strângere de mână. E o valoare orientativă, nu o promisiune: fiecare decide singur dacă participă.",
       "weekDelta": "+{{amount}} săptămâna aceasta",
       "people_few": "{{count}} persoane în rețeaua ta",
       "people_one": "{{count}} persoană în rețeaua ta",
@@ -246,8 +246,8 @@
       "full3": "a treia strângere de mână",
       "open": "{{ring}}: {{count}}. Deschide lista",
       "caption": "Strângeri de mână",
-      "farther": "4–5: ~{{value}}",
-      "fartherFew": "4–5: câțiva"
+      "farther": "4–6: ~{{value}}",
+      "fartherFew": "4–6: câțiva"
     },
     "feed": {
       "title": "Flux",

@@ -3,7 +3,7 @@ id: 20261118-landing-concepts
 title: Landing concepts from the brainstorm (not decided)
 tags: [packaging, comparables]
 created: 2026-11-18
-updated: 2026-11-18
+updated: 2026-11-19
 related: [20261118-packaging-plan, 20261118-comparables, 20261118-how-it-works-video-idea, 20261118-latent-connectedness, 20261118-parked-topics, 20261118-core-message, 20261118-landing-concept-lights]
 summary: Two brainstorm proposals for the new landing — "The World Is Already Connected" (five scenes around the real 3D graph in a demo mode) and the "one life situation, three moving steps" first screen from the landing-references chat — with the corrections they need against the live app and our rules.
 ---
@@ -15,7 +15,7 @@ summary: Two brainstorm proposals for the new landing — "The World Is Already 
 ## Context
 
 Input for stage 3 of the [packaging plan](packaging-plan.md). Sources: the second part of the chat
-"Финансирование социальной инновации" (`6afce8ee…`) and the chat "Аналоги лендингов" (`6af7620c…`),
+"Финансирование социальной инновации" and the chat "Аналоги лендингов" (both private ChatGPT chats),
 both read 2026-11-18. These are ChatGPT's proposals inside those chats; the user had not looked at
 them as concepts yet (2026-11-18), so show them before asking for a choice. The author's brief in both: the current landing is "one text"; it should be
 dynamic, simple, possibly with a person telling the story; the graph prototype on the page is worth
