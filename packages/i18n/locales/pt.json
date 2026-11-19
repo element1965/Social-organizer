@@ -749,7 +749,7 @@
         "lead": "O Social Organizer reúne pessoas que se conhecem pessoalmente. Quando uma delas passa por um aperto, os conhecidos dela ficam sabendo primeiro, depois os conhecidos deles.",
         "cta": "Montar minha rede",
         "how": "Como funciona",
-        "facts": "Grátis · sem taxas · código aberto"
+        "facts": "Grátis · sem taxas · <code>código aberto</code>"
       },
       "story": {
         "sceneAria": "Um bando de estorninhos: cada pássaro representa uma pessoa da rede",

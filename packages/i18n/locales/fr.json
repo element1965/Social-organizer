@@ -749,7 +749,7 @@
         "lead": "Social Organizer réunit des personnes qui se connaissent personnellement. Quand l’une d’elles est en difficulté, ses connaissances l’apprennent en premier, puis les leurs.",
         "cta": "Créer mon réseau",
         "how": "Comment ça marche",
-        "facts": "Gratuit · sans commission · open source"
+        "facts": "Gratuit · sans commission · <code>open source</code>"
       },
       "story": {
         "sceneAria": "Une nuée d’étourneaux : chaque oiseau représente une personne du réseau",

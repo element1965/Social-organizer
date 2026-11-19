@@ -745,7 +745,7 @@
         "lead": "I Social Organizer samlas människor som känner varandra personligen. När någon hamnar i knipa får hens bekanta veta det först, sedan deras bekanta.",
         "cta": "Bygg ditt nätverk",
         "how": "Så fungerar det",
-        "facts": "Gratis · inga avgifter · öppen källkod"
+        "facts": "Gratis · inga avgifter · <code>öppen källkod</code>"
       },
       "story": {
         "sceneAria": "En stareflock: varje fågel står för en människa i nätverket",

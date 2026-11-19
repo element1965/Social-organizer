@@ -745,7 +745,7 @@
         "lead": "Social Organizer kokoaa yhteen ihmiset, jotka tuntevat toisensa henkilökohtaisesti. Kun joku on pulassa, siitä kuulevat ensin hänen tuttunsa ja sitten heidän tuttunsa.",
         "cta": "Rakenna verkostosi",
         "how": "Näin se toimii",
-        "facts": "Ilmainen · ei palvelumaksuja · avoin lähdekoodi"
+        "facts": "Ilmainen · ei palvelumaksuja · <code>avoin lähdekoodi</code>"
       },
       "story": {
         "sceneAria": "Kottaraisparvi: jokainen lintu on yksi verkoston ihminen",

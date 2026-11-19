@@ -127,8 +127,8 @@ html[dir="rtl"] .lv.graph .tag.t-maria.flip { transform: translate(18px, -50%); 
 .lv .stat { display: flex; align-items: baseline; gap: 18px; margin-top: 22px; }
 .lv .stat b { font: 300 clamp(56px, 6vw, 88px)/.9 var(--sans); letter-spacing: -.05em; color: var(--lv-white); }
 .lv .stat span { font-size: 16px; line-height: 1.45; color: rgba(255, 255, 255, .8); max-width: 330px; }
-.lv .stat a, .lv .faq .a a { color: var(--lv-care-scene); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; transition: color .2s; }
-.lv .stat a:hover { color: var(--lv-white); }
+.lv .stat a, .lv .faq .a a, .lv .facts a { color: var(--lv-care-scene); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; transition: color .2s; }
+.lv .stat a:hover, .lv .facts a:hover { color: var(--lv-white); }
 
 /* sections after the story */
 .lv .sec { position: relative; z-index: 5; overflow: hidden; }

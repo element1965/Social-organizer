@@ -745,7 +745,7 @@
         "lead": "In Social Organizer komen mensen samen die elkaar persoonlijk kennen. Zit iemand in de problemen, dan horen de eigen kennissen het eerst, daarna hun kennissen.",
         "cta": "Bouw je netwerk",
         "how": "Hoe het werkt",
-        "facts": "Gratis · geen commissie · open source"
+        "facts": "Gratis · geen commissie · <code>open source</code>"
       },
       "story": {
         "sceneAria": "Een zwerm spreeuwen: elke vogel staat voor een persoon in het netwerk",

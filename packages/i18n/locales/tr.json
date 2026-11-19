@@ -745,7 +745,7 @@
         "lead": "Social Organizer birbirini yüz yüze tanıyan insanları bir araya getirir. Biri zor durumda kaldığında önce onun tanıdıkları duyar, sonra onların tanıdıkları.",
         "cta": "Ağınızı kurun",
         "how": "Nasıl çalışır",
-        "facts": "Ücretsiz · komisyon yok · açık kaynak"
+        "facts": "Ücretsiz · komisyon yok · <code>açık kaynak</code>"
       },
       "story": {
         "sceneAria": "Bir sığırcık sürüsü: her kuş ağdaki bir kişiyi temsil ediyor",

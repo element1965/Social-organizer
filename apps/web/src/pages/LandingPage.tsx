@@ -403,7 +403,9 @@ export function LandingPage() {
                     {t('landing.v2.hero.how')}
                   </a>
                 </div>
-                <p className="facts">{t('landing.v2.hero.facts')}</p>
+                <p className="facts">
+                  <Trans i18nKey="landing.v2.hero.facts" components={{ code: linkCode }} />
+                </p>
               </div>
             </div>
           </section>

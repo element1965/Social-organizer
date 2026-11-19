@@ -749,7 +749,7 @@
         "lead": "Social Organizer reúne a personas que se conocen personalmente. Cuando una de ellas pasa por un mal momento, primero se enteran sus conocidos y después los conocidos de estos.",
         "cta": "Crear mi red",
         "how": "Cómo funciona",
-        "facts": "Gratis · sin comisiones · código abierto"
+        "facts": "Gratis · sin comisiones · <code>código abierto</code>"
       },
       "story": {
         "sceneAria": "Una bandada de estorninos: cada pájaro representa a una persona de la red",

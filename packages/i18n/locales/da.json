@@ -745,7 +745,7 @@
         "lead": "I Social Organizer samles mennesker, der kender hinanden personligt. Når nogen er i knibe, hører deres bekendte det først og derefter de mennesker, de kender.",
         "cta": "Byg dit netværk",
         "how": "Sådan fungerer det",
-        "facts": "Gratis · ingen gebyrer · åben kildekode"
+        "facts": "Gratis · ingen gebyrer · <code>åben kildekode</code>"
       },
       "story": {
         "sceneAria": "En stæreflok: hver fugl står for et menneske i netværket",

@@ -749,7 +749,7 @@
         "lead": "Social Organizer riunisce persone che si conoscono di persona. Quando una di loro è in difficoltà, lo vengono a sapere prima i suoi conoscenti, poi i conoscenti dei conoscenti.",
         "cta": "Crea la tua rete",
         "how": "Come funziona",
-        "facts": "Gratis · senza commissioni · codice aperto"
+        "facts": "Gratis · senza commissioni · <code>codice aperto</code>"
       },
       "story": {
         "sceneAria": "Uno stormo di storni: ogni uccello rappresenta una persona della rete",

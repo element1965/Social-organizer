@@ -745,7 +745,7 @@
         "lead": "Social Organizer brings together people who know each other in person. When someone is in trouble, their acquaintances hear about it first, then the people those acquaintances know.",
         "cta": "Build your network",
         "how": "How it works",
-        "facts": "Free · no fees · open source"
+        "facts": "Free · no fees · <code>open source</code>"
       },
       "story": {
         "sceneAria": "A flock of starlings: each bird stands for a person in the network",
