@@ -9,6 +9,8 @@ export default defineConfig(
     '**/dist/', '**/node_modules/', '**/.turbo/', '**/build/', '**/.gradle/',
     'apps/web/android/app/src/main/assets/public/', 'apps/web/ios/App/App/public/',
     'docs/redesign/mockups/',
+    // Local-only material and other checkouts (agent worktrees live under .claude/worktrees)
+    '.claude/', 'local/',
   ]),
   {
     files: ['**/*.{js,mjs,cjs,ts,tsx,mts,cts}'],
