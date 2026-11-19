@@ -92,8 +92,9 @@ note it affects.
     (`components/ui2/PathFigure.tsx`); making them links to the person pages, and showing "N people
     from your circle know the author" (the shared-acquaintance count already exists for
     suggestions), would shorten the "find out for yourself" step without a new feature.
-12. **No LICENSE file.** The README says MIT, but the repository has no `LICENSE` file. Donors and
-    contributors will check it.
+12. ~~No LICENSE file.~~ Decided 2026-11-19: the code is licensed under AGPL-3.0-or-later; the
+    repository has a `LICENSE` file and the README's License section says what the licence does not
+    cover (the name, the logo, third-party material).
 13. **Live landing copy overstates two rules.** `landing.steps.s3Text` says a Need "reaches exactly
     {{n}} people" and "closes once participants cover the amount". In code a Need sends up to N
     external messages (people at their message limit get an in-app entry instead), and when the
