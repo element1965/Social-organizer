@@ -22,13 +22,15 @@ html.lv-page body { background-color: rgb(var(--so-scene)); }
   text-rendering: optimizeLegibility;
 }
 .lv *, .lv *::before, .lv *::after { box-sizing: border-box; }
-.lv img, .lv canvas { display: block; }
-.lv a { color: inherit; }
+/* element defaults stop at the app's own screens in the "In the app" chapter (.lvapp-stage), which keep their
+   utility classes (mt-3 on a p, text-care on a link, text-h1 on an h1); :where keeps the old weight of each rule */
+.lv :is(img, canvas):where(:not(.lvapp-stage *)) { display: block; }
+.lv a:where(:not(.lvapp-stage *)) { color: inherit; }
 .lv .wrap { width: 100%; max-width: var(--wrap); margin: 0 auto; padding: 0 var(--gut); }
-.lv h1, .lv h2, .lv h3 { font-weight: 400; margin: 0; }
-.lv h1 { font-size: clamp(52px, 7.4vw, 116px); line-height: .95; letter-spacing: -.045em; }
-.lv h2 { font-size: clamp(38px, 4.6vw, 70px); line-height: 1; letter-spacing: -.035em; }
-.lv p { margin: 0; }
+.lv :is(h1, h2, h3):where(:not(.lvapp-stage *)) { font-weight: 400; margin: 0; }
+.lv h1:where(:not(.lvapp-stage *)) { font-size: clamp(52px, 7.4vw, 116px); line-height: .95; letter-spacing: -.045em; }
+.lv h2:where(:not(.lvapp-stage *)) { font-size: clamp(38px, 4.6vw, 70px); line-height: 1; letter-spacing: -.035em; }
+.lv p:where(:not(.lvapp-stage *)) { margin: 0; }
 .lv .mono { font: 700 12px/1 var(--mono); letter-spacing: .12em; text-transform: uppercase; }
 
 /* buttons: step on hover, press on click */

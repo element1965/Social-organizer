@@ -1,0 +1,148 @@
+/*
+ * "In the app" (AppChapter): three phones with the app's own screens on the landing's dark ground. The screens are
+ * drawn at a phone's real size (390 x 844) and scaled by --k into the frame, so the app's type and spacing stay
+ * exactly as in the app. Colours inside the phones are the app's tokens (they follow the app theme); the frame and
+ * the captions use the landing's.
+ */
+.lv .lvapp { background: var(--lv-scene); padding: 132px 0 120px; }
+.lv .lvapp-head { max-width: 640px; margin-bottom: 64px; }
+.lv .lvapp-head .mono { display: block; margin-bottom: 20px; color: var(--lv-care-scene); }
+
+.lv .lvapp-row {
+  --k: .72;
+  --bezel: 9px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: clamp(28px, 4vw, 72px);
+  max-width: var(--wrap);
+  margin: 0 auto;
+  padding: 28px var(--gut) 0;
+}
+.lv .lvapp-shot {
+  --lift: 0px;
+  flex: 0 0 auto;
+  width: calc(390px * var(--k) + 2 * var(--bezel));
+  margin: 0;
+  transform: translateY(var(--lift));
+}
+/* the Need, the middle of the story, stands a little forward */
+.lv .lvapp-need { --lift: -28px; }
+
+/* entrance once the chapter is in view: the phones rise in one after another */
+.lv .lvapp-row .lvapp-stage { opacity: 0; transform: translateY(36px); transition: opacity .7s ease, transform .9s cubic-bezier(.2, .7, .2, 1); transition-delay: calc(var(--i) * 120ms); }
+.lv .lvapp-row.on .lvapp-stage { opacity: 1; transform: none; }
+
+.lv .lvapp-stage { position: relative; }
+.lv .lvapp-phone {
+  position: relative;
+  width: calc(390px * var(--k) + 2 * var(--bezel));
+  height: calc(844px * var(--k) + 2 * var(--bezel));
+  border-radius: calc(52px * var(--k) + var(--bezel));
+  background: var(--lv-night);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, .16), 0 34px 70px rgba(0, 0, 0, .5);
+}
+.lv .lvapp-empty { background: var(--lv-scene-2); }
+.lv .lvapp-screen {
+  position: absolute;
+  top: var(--bezel);
+  left: var(--bezel);
+  width: 390px;
+  height: 844px;
+  overflow: hidden;
+  border-radius: 52px;
+  transform: scale(var(--k));
+  transform-origin: 0 0;
+  /* the app's own type, not the landing's */
+  font: 400 16px/1.5 var(--font);
+  font-variant-numeric: normal;
+  letter-spacing: normal;
+  text-align: start;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* "Example", on the frame's top corner */
+.lv .lvapp-badge {
+  position: absolute;
+  top: -12px;
+  inset-inline-start: 22px;
+  z-index: 2;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: var(--lv-warm);
+  color: var(--lv-ink);
+  font: 700 11px/1 var(--sans);
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+
+/* the graph's names over its picture: bold, under the dot, with a halo of the scene colour (as graph-3d draws them) */
+.lv .lvapp-name {
+  position: absolute;
+  transform: translate(-50%, 11px);
+  font: 800 12px/1.15 var(--font);
+  color: rgb(var(--so-node-1));
+  white-space: nowrap;
+  text-shadow: 0 0 2px rgb(var(--so-scene)), 0 0 4px rgb(var(--so-scene)), 0 0 8px rgb(var(--so-scene));
+}
+.lv .lvapp-me { transform: translate(-50%, 24px); font-size: 14px; }
+.lv .lvapp-asker { color: rgb(var(--so-care-scene)); }
+
+/* the live QR as a card leaning out of the Add phone */
+.lv .lvapp-qr {
+  position: absolute;
+  bottom: calc(40px * var(--k) + 84px * var(--k));
+  inset-inline-end: calc(-46px * var(--k));
+  width: calc(300px * var(--k) * .8);
+  height: calc(400px * var(--k) * .8);
+  border-radius: 22px;
+  overflow: hidden;
+}
+.lv .lvapp-qr-in {
+  width: 300px;
+  padding: 12px 20px 22px;
+  transform: scale(calc(var(--k) * .8));
+  transform-origin: 0 0;
+  font: 400 16px/1.5 var(--font);
+  font-variant-numeric: normal;
+  letter-spacing: normal;
+}
+html[dir="rtl"] .lv .lvapp-qr-in { transform-origin: 100% 0; margin-inline-start: auto; }
+
+.lv .lvapp figcaption { margin-top: 30px; max-width: 34ch; }
+.lv .lvapp figcaption .mono { display: block; margin-bottom: 10px; color: var(--lv-care-scene); }
+.lv .lvapp figcaption p { font-size: 16px; line-height: 1.5; color: var(--lv-text-2); }
+.lv .lvapp-foot { margin-top: 56px; display: flex; justify-content: center; }
+
+@media (max-width: 1100px) {
+  .lv .lvapp-row { --k: .62; }
+}
+
+/* a phone: one screen at a time, swiped sideways, the next one peeking */
+@media (max-width: 910px) {
+  .lv .lvapp { padding: 92px 0 80px; }
+  .lv .lvapp-head { margin-bottom: 36px; }
+  .lv .lvapp-row {
+    --k: .7;
+    justify-content: flex-start;
+    gap: 22px;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: var(--gut);
+    padding-bottom: 8px;
+    scrollbar-width: none;
+  }
+  .lv .lvapp-row::-webkit-scrollbar { display: none; }
+  .lv .lvapp-shot { scroll-snap-align: start; --lift: 0px; }
+  .lv .lvapp-shot:last-child { padding-inline-end: var(--gut); box-sizing: content-box; }
+  .lv .lvapp-qr { inset-inline-end: calc(14px * var(--k)); }
+  .lv .lvapp-foot { justify-content: flex-start; margin-top: 36px; }
+}
+@media (max-width: 380px) {
+  .lv .lvapp-row { --k: .64; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lv .lvapp-row .lvapp-stage { opacity: 1; transform: none; transition: none; }
+}

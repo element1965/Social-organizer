@@ -7,7 +7,6 @@ import { Avatar } from '../ui2/Avatar';
 import { formatMoney } from '../ui2/format';
 import { cn } from '../../lib/utils';
 import { IconBell, IconHand, IconPeople, IconUserPlus } from '../ui2/icons';
-import { useAuth } from '../../hooks/useAuth';
 import { FEED_GROUPS, feedGroup, type FeedEvent, type FeedGroup, type FeedKind } from '../../hooks/useEvents';
 import { IconClock, IconClose, IconDone, IconFlag, IconPause, IconRepeat } from './icons';
 import { IconChevron } from '../ui2/icons';
@@ -79,6 +78,7 @@ const ICONS: Record<FeedKind, ReactNode> = {
 };
 
 type EventFeedProps = {
+  myId: string | null;
   events: FeedEvent[];
   loading?: boolean;
   onOpen: (event: FeedEvent) => void;
@@ -97,9 +97,8 @@ const GROUP_TITLE: Record<FeedGroup, string> = {
  * The Circle feed in sections by meaning (what waits for me, my Needs, Needs I am in, people), newest first inside
  * each. Rows of my own Needs carry the flag, rows of Needs I take part in the hand.
  */
-export function EventFeed({ events, loading, onOpen, onDismiss }: EventFeedProps) {
+export function EventFeed({ myId, events, loading, onOpen, onDismiss }: EventFeedProps) {
   const { t } = useTranslation();
-  const myId = useAuth((s) => s.userId);
   const swipedAt = useRef(0);
   // Open stacks and "N more" lists, by key; closed by default
   const [open, setOpen] = useState<Set<string>>(() => new Set());

@@ -30,7 +30,7 @@ const lintSkip = new Set([
   path.join(srcRoot, 'components', 'ui', 'social-icons.tsx'),
   path.join(srcRoot, 'styles', 'tokens.css'),
   // QR codes stay black on white in every theme, or phone cameras do not find them
-  path.join(srcRoot, 'components', 'add', 'LiveQr.tsx'),
+  path.join(srcRoot, 'components', 'add', 'QrCodeView.tsx'),
 ]);
 
 function walk(entry, out) {

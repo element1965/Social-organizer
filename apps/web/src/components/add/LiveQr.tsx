@@ -1,16 +1,14 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
-import { QRCodeSVG } from 'qrcode.react';
-import { QR_LOGO_LEVEL, qrLogo } from '../../lib/qrLogo';
 import { Button } from '../ui2/Button';
 import { trpc } from '../../lib/trpc';
 import { IconScan } from './icons';
+import { QrCodeView } from './QrCodeView';
 import { liveInviteUrl } from './links';
 
 const TTL_MS = 60_000;
 const MIN_GAP_MS = 3_000;
 const MAX_BACKOFF_MS = 30_000;
-const RING = 2 * Math.PI * 126;
 
 interface Pass {
   token: string;
@@ -165,45 +163,13 @@ export function LiveQr({ onScan, onDone, children }: { onScan: () => void; onDon
 
   return (
     <div className="flex flex-1 flex-col items-center text-center">
-      <div className="relative mt-4 grid h-[260px] w-[260px] max-w-full place-items-center">
-        <svg className="absolute inset-0 -rotate-90" viewBox="0 0 260 260" aria-hidden>
-          <circle cx="130" cy="130" r="126" className="fill-none stroke-line-strong" strokeWidth="3" />
-          <circle
-            cx="130"
-            cy="130"
-            r="126"
-            className="fill-none stroke-care"
-            strokeWidth="3"
-            strokeLinecap="round"
-            strokeDasharray={RING}
-            strokeDashoffset={RING * (1 - fraction)}
-          />
-        </svg>
-        {/* Always black on white with a 4-module quiet zone, whatever the theme: phone cameras and Google Lens
-            do not find a code that touches a dark background, only our own scanner forgives that. */}
-        <div className="grid h-[200px] w-[200px] place-items-center overflow-hidden rounded-xl bg-white shadow-float" role="img" aria-label={t('add.myQr')}>
-          {url ? (
-            <QRCodeSVG
-              value={url}
-              size={196}
-              marginSize={4}
-              level={QR_LOGO_LEVEL}
-              imageSettings={qrLogo(196)}
-              fgColor="#000000"
-              bgColor="#ffffff"
-            />
-          ) : null}
-        </div>
-      </div>
-      <p className="mt-3.5 text-h2 font-extrabold tabular-nums text-ink" aria-live="polite">
-        {pass ? formatLeft(remaining) : '1:00'}
-      </p>
-      <p className="mt-1.5 max-w-[30ch] text-caption font-semibold text-ink-muted">{t('add.qrHint')}</p>
-      {failed ? (
-        <button type="button" className="so-focus mt-3 text-label font-bold text-sos" onClick={() => setRetry((value) => value + 1)}>
-          {t('add.qrError')}
-        </button>
-      ) : null}
+      <QrCodeView
+        url={url}
+        fraction={fraction}
+        timeLabel={pass ? formatLeft(remaining) : '1:00'}
+        failed={failed}
+        onRetry={() => setRetry((value) => value + 1)}
+      />
       <div className="mt-auto w-full pt-8">
         <Button className="w-full" variant="secondary" icon={<IconScan />} onClick={onScan}>
           {t('add.scanOther')}

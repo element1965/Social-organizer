@@ -792,6 +792,13 @@
           "people_other": "partecipanti"
         }
       },
+      "app": {
+        "title": "L’app vera e propria",
+        "example": "Esempio",
+        "circle": "Il tuo Cerchio: le persone che conosci e quelle che conoscono loro. Il Bisogno di Giulia ti arriva tramite Marco.",
+        "need": "Il Bisogno di Giulia: comunichi la tua parte e i partecipanti si accordano nella loro chat.",
+        "add": "Si comincia da qui: manda il tuo link o mostra il tuo QR alle persone che conosci di persona."
+      },
       "grow": {
         "title": "Come cresce la rete",
         "text": "Ogni nuovo arrivato invita le persone che conosce. Scegli quante in media e guarda cosa succede alla rete.",

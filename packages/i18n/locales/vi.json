@@ -780,6 +780,13 @@
           "people_other": "người tham gia"
         }
       },
+      "app": {
+        "title": "Chính ứng dụng",
+        "example": "Ví dụ",
+        "circle": "Vòng tròn của bạn: những người bạn quen và những người họ quen. Nhu cầu của Linh đến với bạn qua Tuấn.",
+        "need": "Nhu cầu của Linh: bạn báo phần của mình, còn những người tham gia tự thỏa thuận trong nhóm chat của họ.",
+        "add": "Mọi thứ bắt đầu từ đây: gửi liên kết hoặc đưa mã QR của bạn cho những người bạn quen biết ngoài đời."
+      },
       "grow": {
         "title": "Mạng lưới lớn lên thế nào",
         "text": "Mỗi người mới đều mời người quen của mình. Hãy chọn trung bình bao nhiêu người và xem mạng lưới thay đổi ra sao.",

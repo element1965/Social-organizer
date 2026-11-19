@@ -792,6 +792,13 @@
           "people_other": "de participanți"
         }
       },
+      "app": {
+        "title": "Aplicația în sine",
+        "example": "Exemplu",
+        "circle": "Cercul tău: oamenii pe care îi cunoști și oamenii pe care îi cunosc ei. Nevoia Ioanei ajunge la tine prin Mihai.",
+        "need": "Nevoia Ioanei: îți anunți partea, iar participanții se înțeleg în propriul lor chat.",
+        "add": "Totul începe aici: trimite linkul tău sau arată QR-ul tău oamenilor pe care îi cunoști personal."
+      },
       "grow": {
         "title": "Cum crește rețeaua",
         "text": "Fiecare om nou își invită cunoscuții. Alege câți, în medie, și vezi ce se întâmplă cu rețeaua.",

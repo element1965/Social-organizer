@@ -786,6 +786,13 @@
           "people_other": "deltakere"
         }
       },
+      "app": {
+        "title": "Selve appen",
+        "example": "Eksempel",
+        "circle": "Kretsen din: folk du kjenner, og folk de kjenner. Ingrids Behov når deg gjennom Lars.",
+        "need": "Ingrids Behov: du melder din andel, og deltakerne avtaler resten i sin egen chat.",
+        "add": "Det begynner her: send lenken din eller vis QR-en din til folk du kjenner personlig."
+      },
       "grow": {
         "title": "Slik vokser nettverket",
         "text": "Hver ny person inviterer sine bekjente. Still inn hvor mange i snitt, og se hva som skjer med nettverket.",

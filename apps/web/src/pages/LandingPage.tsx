@@ -14,6 +14,7 @@ import { initGrow, type GrowHandle, type GrowOptions } from '../components/landi
 import { initNextNet, type NextNetHandle } from '../components/landing/nextNet';
 import type { SceneHandle, SceneOptions } from '../components/landing/scene';
 import { dollarFormat, storyMoney } from '../components/landing/money';
+import { AppChapter } from '../components/landing/AppChapter';
 import '../components/landing/landing.css';
 
 /**
@@ -440,6 +441,8 @@ export function LandingPage() {
             </section>
           ))}
         </div>
+
+        <AppChapter shortfall={money.shortfall} mine={money.mine} />
 
         <section className="sec grow" id="grow" aria-labelledby="lv-grow-title">
           <canvas ref={growCvRef} role="img" aria-label={t('landing.v2.grow.canvasAria')} />

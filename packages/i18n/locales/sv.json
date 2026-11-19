@@ -786,6 +786,13 @@
           "people_other": "deltagare"
         }
       },
+      "app": {
+        "title": "Själva appen",
+        "example": "Exempel",
+        "circle": "Din Krets: de du känner och de som de känner. Annas Behov når dig genom Johan.",
+        "need": "Annas Behov: du rapporterar din andel, och deltagarna kommer överens i sin egen chatt.",
+        "add": "Det börjar här: skicka din länk eller visa din QR för människor du känner personligen."
+      },
       "grow": {
         "title": "Så växer nätverket",
         "text": "Varje ny person bjuder in sina bekanta. Ställ in hur många i genomsnitt och se vad som händer med nätverket.",

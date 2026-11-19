@@ -786,6 +786,13 @@
           "people_other": "deltagere"
         }
       },
+      "app": {
+        "title": "Selve appen",
+        "example": "Eksempel",
+        "circle": "Din Kreds: de mennesker, du kender, og dem, de kender. Annes Behov når frem til dig gennem Jens.",
+        "need": "Annes Behov: du melder din andel, og deltagerne aftaler resten i deres egen chat.",
+        "add": "Det begynder her: send dit link, eller vis din QR til folk, du kender personligt."
+      },
       "grow": {
         "title": "Sådan vokser netværket",
         "text": "Hver ny person inviterer sine bekendte. Indstil, hvor mange i gennemsnit, og se, hvad der sker med netværket.",

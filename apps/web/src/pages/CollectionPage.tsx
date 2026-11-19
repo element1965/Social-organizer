@@ -2,7 +2,8 @@ import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } fro
 import { useLocation, useNavigate, useNavigationType, useParams, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { MAX_CHAT_LINK_LENGTH, MIN_COLLECTION_AMOUNT, MIN_OBLIGATION_AMOUNT, REGULAR_CYCLE_DAYS } from '@so/shared';
-import { IconChat, IconClock, IconPen, IconQr, IconShare } from '../components/collection/icons';
+import { IconClock, IconPen, IconQr, IconShare } from '../components/collection/icons';
+import { MyParticipationCard, NeedSummaryCard } from '../components/collection/NeedCards';
 import { PreviousCycles } from '../components/collection/PreviousCycles';
 import { ParticipantList, type ParticipantRow } from '../components/collection/ParticipantList';
 import { MarkableParticipantList } from '../components/collection/PaidMarks';
@@ -10,16 +11,12 @@ import { QrSheet } from '../components/collection/QrSheet';
 import { CommunityHoldNote } from '../components/moderation/CommunityHoldNote';
 import { ComplainEntry } from '../components/moderation/ComplainEntry';
 import { amountIssue, asDate, chatLinkIssue, firstName, formatDay, isHttpsUrl, parseWhole, relativePast, shortUrl } from '../components/collection/text';
-import { Avatar } from '../components/ui2/Avatar';
 import { Button } from '../components/ui2/Button';
 import { Card } from '../components/ui2/Card';
 import { formatMoney } from '../components/ui2/format';
 import { Input } from '../components/ui2/Input';
-import { Meter } from '../components/ui2/Meter';
-import { PathFigure } from '../components/ui2/PathFigure';
 import { Screen } from '../components/ui2/Screen';
 import { Sheet } from '../components/ui2/Sheet';
-import { StageRail } from '../components/ui2/StageRail';
 import { useShellMode } from '../components/ui2/shell-mode';
 import { useAuth } from '../hooks/useAuth';
 import { useNicknames } from '../hooks/useNicknames';
@@ -481,29 +478,17 @@ function CollectionScreen({ id }: { id: string | undefined }) {
       title={desktop ? (owner ? t('collection.yours') : t('collection.title')) : undefined}
       action={headerAction}
     >
-      <Card className="mt-2">
-        {showPath ? <div className="mb-4"><PathFigure names={pathNames} /></div> : null}
-        <div className="flex items-center gap-3">
-          <Avatar name={creatorName} src={data.creator.photoUrl} size={48} />
-          <div className="min-w-0">
-            <button type="button" className="so-focus block truncate text-title font-extrabold" onClick={() => navigate(`/person/${data.creatorId}`)}>
-              {creatorName}
-            </button>
-            <p className="mt-0.5 text-label font-semibold text-ink-muted">{subtitle}</p>
-          </div>
-        </div>
-        {hasGoal ? (
-          <Meter mine={mineTotal} others={othersTotal} goal={data.amount ?? 0} showMine={!owner && mineTotal > 0} />
-        ) : (
-          <p className="mt-3 text-label font-semibold text-ink-muted">{t('collection.noGoal')}</p>
-        )}
-        <StageRail steps={stages} done={stageDone} />
-        {showCloseNote ? (
-          <p className="mt-3 text-label font-semibold text-ink-muted">
-            {t('collection.closesNote', { name: firstName(creatorName) })}
-          </p>
-        ) : null}
-      </Card>
+      <NeedSummaryCard
+        pathNames={showPath ? pathNames : undefined}
+        creatorName={creatorName}
+        photoUrl={data.creator.photoUrl}
+        onCreator={() => navigate(`/person/${data.creatorId}`)}
+        subtitle={subtitle}
+        meter={hasGoal ? { mine: mineTotal, others: othersTotal, goal: data.amount ?? 0, showMine: !owner && mineTotal > 0 } : null}
+        stages={stages}
+        stageDone={stageDone}
+        note={showCloseNote ? t('collection.closesNote', { name: firstName(creatorName) }) : null}
+      />
 
       {/* The automatic step after a public-link join failed: say so, with its own way to try again */}
       <ActionError
@@ -635,8 +620,9 @@ function CollectionScreen({ id }: { id: string | undefined }) {
       ) : null}
 
       {!owner && myObl && !needsConfirm && !closed && !held ? (
-        <Card className="mt-3">
-          {editing ? (
+        <MyParticipationCard
+          amount={myObl.amount}
+          editor={editing ? (
             <>
               <Input
                 variant="money"
@@ -652,32 +638,13 @@ function CollectionScreen({ id }: { id: string | undefined }) {
               </div>
               <ActionError error={actionErrorBesides(updateObligation.error, 'amount')} />
             </>
-          ) : (
-            <div className="flex items-center gap-3">
-              <div className="min-w-0 flex-1">
-                <b className="block text-h3 font-extrabold tabular-nums">{formatMoney(myObl.amount)}</b>
-                <span className="text-label font-semibold text-ink-muted">{t('collection.youParticipate')}</span>
-              </div>
-              <Button
-                variant="secondary"
-                size="md"
-                onClick={() => { setEditAmount(String(myObl.amount)); setEditError(''); updateObligation.reset(); setEditing(true); }}
-              >
-                {t('collection.change')}
-              </Button>
-            </div>
-          )}
-          {/* Hidden while the amount is edited: one main action at a time */}
-          {canOpenChat ? (
-            <Button className="mt-4 w-full" icon={<IconChat />} onClick={() => window.open(data.chatLink, '_blank', 'noopener,noreferrer')}>
-              {t('collection.openCollectionChat')}
-            </Button>
-          ) : null}
-          <p className="mt-3 text-label font-semibold text-ink-muted">{t('collection.moneyNote')}</p>
-          {showAdmin && showDecline ? (
+          ) : undefined}
+          onChange={() => { setEditAmount(String(myObl.amount)); setEditError(''); updateObligation.reset(); setEditing(true); }}
+          onOpenChat={canOpenChat ? () => window.open(data.chatLink, '_blank', 'noopener,noreferrer') : undefined}
+          footer={showAdmin && showDecline ? (
             <Button variant="textDanger" className="mt-2 w-full" onClick={() => setDeclineOpen(true)}>{t('collection.decline')}</Button>
-          ) : null}
-        </Card>
+          ) : undefined}
+        />
       ) : null}
 
       {/* A newcomer's first Participation, made just now on this page: what happens next, once */}
