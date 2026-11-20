@@ -13,7 +13,7 @@ Theory and related material are available in [From Human Behaviour to Social Coo
 
 ## Project writing skills
 
-The project keeps its Claude Code skills under `.claude/skills/`.
+The project's Claude Code skills (how the project is told, explained and reviewed) are kept by the maintainers outside the repository.
 
 | Skill | Use |
 |---|---|

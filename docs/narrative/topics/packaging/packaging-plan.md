@@ -33,7 +33,7 @@ the web part, and teaching inside the app. Nothing beyond stage 1 is started yet
 
 ### Skills per stage
 
-Project skills (in `.claude/skills/`, versioned with the repo):
+Project skills (kept by the maintainers outside the repository, not versioned here):
 
 | Skill | Use it for |
 |---|---|

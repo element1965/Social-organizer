@@ -3,7 +3,7 @@
 The pool of everything we know about how to explain Social Organizer: the idea, the project's own
 theory, the principles, the verified mechanics, the trust research, audiences, funding, next stages
 and sources. It serves the packaging work (landing, web, in-app teaching, promotion, donors) and the
-project skills `so-trust-lens`, `so-story` and `so-explainer` in `.claude/skills/`.
+project skills `so-trust-lens`, `so-story` and `so-explainer` (kept by the maintainers outside the repository).
 
 Start here if you are new: [The core message](topics/core/core-message.md) → [What SO is](topics/core/what-so-is.md) →
 [Principles](topics/principles/principles.md) → [The Need protocol](topics/mechanics/need-protocol.md) →

@@ -30,11 +30,9 @@ packages/db/prisma/migrations/**/migration_lock.toml
 # Gun.js
 gun-data/
 
-# Claude Code local instructions (may contain secrets/tokens)
+# Claude Code local instructions and project skills stay on the maintainers' machines
 CLAUDE.md
-.claude/*
-# Project skills are shared with the team (no secrets in them)
-!.claude/skills/
+.claude/
 
 # Logs
 *.log
