@@ -1,3 +1,4 @@
+import type { Campaign } from '@so/shared';
 import { randomInt } from 'node:crypto';
 import { Prisma, type PrismaClient } from '@so/db';
 import { isValidReferralSlug } from '@so/shared';
@@ -23,8 +24,18 @@ async function withGeneratedSlug<T>(write: (slug: string) => Promise<T>): Promis
   throw new Error('Could not allocate a unique referral slug');
 }
 
-export function createUserWithReferralSlug(db: PrismaClient, data: Prisma.UserCreateInput) {
-  return withGeneratedSlug((referralSlug) => db.user.create({ data: { ...data, referralSlug } }));
+export async function createUserWithReferralSlug(db: PrismaClient, data: Prisma.UserCreateInput, campaign?: Campaign) {
+  const user = await withGeneratedSlug((referralSlug) => db.user.create({ data: { ...data, referralSlug } }));
+  if (campaign) {
+    await db.$transaction(async (tx) => {
+      // Serialize with deletion so a late campaign write cannot repopulate a deleted profile.
+      const [active] = await tx.$queryRaw<Array<{ id: string }>>`
+        SELECT "id" FROM "users" WHERE "id" = ${user.id} AND "deletedAt" IS NULL FOR UPDATE
+      `;
+      if (active) await tx.userSignupCampaign.create({ data: { userId: user.id, campaign } });
+    }).catch((error) => console.warn('[Signup] Could not save campaign attribution:', error));
+  }
+  return user;
 }
 
 export async function ensureReferralSlug(db: PrismaClient, userId: string): Promise<string> {

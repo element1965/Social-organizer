@@ -9,7 +9,17 @@
 - **Migrations:** Railway does not run them; apply them by hand before deploying code that needs them. First set `DATABASE_URL` to the production database's public URL from the Railway variables: export it in your shell. An exported variable wins over `packages/db/.env`. Then run `cd packages/db && npx prisma migrate deploy`.
 - **GitHub:** https://github.com/element1965/Social-organizer
 
-The API serves the favicon, touch icon, web manifest, robots.txt and sitemap.xml from the built web files. The sitemap includes the five public pages. Language selection uses browser preferences or a saved choice at the same URL. Invite and public Need pages send `X-Robots-Tag: noindex` and use the site's link-preview image when the person has no photo.
+The API serves the site icons, web manifest and robots.txt from the built web files. The sitemap lists the six public pages and their language alternatives. Invite and public Need pages send `X-Robots-Tag: noindex` and use the site link-preview image when the person has no photo.
+
+The production operator applies [the landing campaign migration](../packages/db/prisma/migrations/20261119120000_landing_campaign/migration.sql) before deploying the landing changes. It adds daily counters and optional signup attribution.
+
+### Landing campaign counters
+
+The first-party counter groups views and calls to action by UTC day, `utm_source`, `utm_medium`, `utm_campaign` and referring hostname. The counter stores aggregate counts without cookies, visitor identifiers, IP addresses or referring paths. It uses no banner. Use campaign slugs of up to 64 ASCII letters, digits, hyphens or underscores, starting with a letter or digit. Keep personal data out of campaign tags.
+
+The device keeps the first tagged visit for up to 30 days. At registration, the tags are saved with the new account. Google Play can carry the tags into a new installation with the updated Android wrapper. App Store installs and transitions into a separate Telegram browser may lose the tags.
+
+### Site icons
 
 Run `node scripts/generate-site-icons.mjs` from the repository root after installing dependencies. It renders the `BrandMark` tile from `apps/web/public/logo.png` for the web, Android and iOS, and the Google Play icon. The generator also writes the native splash images on the light boot canvas, the transparent push badge, and the link preview with bundled Manrope. The iOS release script runs this same generator.
 

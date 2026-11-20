@@ -1,3 +1,4 @@
+import { clearCampaign } from '../lib/campaign';
 import { create } from 'zustand';
 import { clearLocal, setActiveUser } from '@so/gun-backup';
 
@@ -52,6 +53,7 @@ export const useAuth = create<AuthState>((set) => ({
   isAuthenticated: !!localStorage.getItem('accessToken'),
 
   login: (accessToken, refreshToken, userId) => {
+    clearCampaign();
     // Someone else signing in on this device must not inherit the previous person's saved copy.
     // The stored id is read before it is overwritten below.
     const previous = localStorage.getItem('userId');

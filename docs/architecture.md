@@ -56,7 +56,7 @@ and [deploy guidance](https://www.prisma.io/docs/orm/v6/prisma-migrate/workflows
 
 ### Data models
 
-The [Prisma schema](../packages/db/prisma/schema.prisma) defines 39 models.
+The [Prisma schema](../packages/db/prisma/schema.prisma) defines 41 models.
 
 | Model | Description |
 |---|---|
@@ -81,6 +81,8 @@ The [Prisma schema](../packages/db/prisma/schema.prisma) defines 39 models.
 | PushSubscription | Web Push subscription (endpoint, keys, user FK) |
 | NativePushToken | Native FCM push token for Android Capacitor app (token, platform, user FK) |
 | PendingConnection | Acquaintance request with status, source, resolution time, and requester seen and dismissal marks. |
+| LandingActionDay | UTC daily counts of landing visits and calls to action by campaign tags and referring hostname |
+| UserSignupCampaign | First-touch campaign tags recorded when an account is created |
 | InviteOpenDay | Guests who opened an invite page: a count per day and source. No person, link, address or device is stored |
 | ScheduledPost | Scheduled broadcast post with status (PENDING/SENT/CANCELLED/FAILED), media, button |
 | ScheduledPostDelivery | Individual delivery tracking per user per scheduled post with readAt for open stats |

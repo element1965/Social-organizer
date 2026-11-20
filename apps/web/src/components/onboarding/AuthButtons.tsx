@@ -65,7 +65,7 @@ export function AuthButtons({
   legal?: boolean;
 }) {
   const { t } = useTranslation();
-  const { providers, start, busy, googleBtnRef } = signIn;
+  const { providers, start, busy, googleBtnRef, googleButtonRequested } = signIn;
 
   return (
     <div className="w-full text-start">
@@ -88,15 +88,17 @@ export function AuthButtons({
           if (p === 'google') {
             return (
               <div key={p}>
-                <AuthButton
-                  icon={<GoogleMark />}
-                  className={cn('border border-line bg-surface text-ink', last === 'google' && LAST_RING)}
-                  onClick={() => start('google')}
-                  disabled={busy}
-                >
-                  {t('login.google')}
-                </AuthButton>
-                <div ref={googleBtnRef} className="hidden" />
+                {!googleButtonRequested && (
+                  <AuthButton
+                    icon={<GoogleMark />}
+                    className={cn('border border-line bg-surface text-ink', last === 'google' && LAST_RING)}
+                    onClick={() => start('google')}
+                    disabled={busy}
+                  >
+                    {t('login.google')}
+                  </AuthButton>
+                )}
+                <div ref={googleBtnRef} className={googleButtonRequested ? 'min-h-primary' : 'hidden'} />
               </div>
             );
           }

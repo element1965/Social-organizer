@@ -1,3 +1,4 @@
+import type { Campaign } from '@so/shared';
 import { createUserWithReferralSlug } from './referral-slug.service.js';
 import { Prisma, type PrismaClient } from '@so/db';
 import { DEFAULT_INTENTION_AMOUNT } from '@so/shared';
@@ -41,6 +42,7 @@ export interface ExternalIdentity {
   name: string;
   photoUrl?: string | null;
   accessToken?: string | null;
+  campaign?: Campaign;
 }
 
 export function isUniqueViolation(err: unknown): boolean {
@@ -99,7 +101,7 @@ async function resolveOnce(db: PrismaClient, id: ExternalIdentity): Promise<{ us
     platformAccounts: {
       create: { platform: id.platform, platformId: id.platformId, accessToken: id.accessToken ?? null },
     },
-  });
+  }, id.campaign);
   return { userId: user.id, isNew: true };
 }
 

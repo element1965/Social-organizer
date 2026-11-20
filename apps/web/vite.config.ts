@@ -1,6 +1,8 @@
 import { readFileSync } from 'node:fs';
 import { defineConfig, loadEnv, type Plugin } from 'vite';
 import react from '@vitejs/plugin-react';
+import { SUPPORTED_LANGUAGES } from '../../packages/i18n/src/languages';
+import { renderPublicSitemap } from '../../packages/shared/src/web-routes';
 import { DEFAULT_WEB_APP_URL } from '../../packages/shared/src/deployment-defaults';
 
 // Packages that exist only to draw the Circle graph. Kept together so the
@@ -56,7 +58,9 @@ const apiProxy = (target: string, extra: Record<string, unknown> = {}) => ({
 function siteMetadata(siteUrl: string): Plugin {
   const render = (template: string) => template.replaceAll('%WEB_APP_URL%', () => siteUrl);
   const files = ['robots.txt', 'sitemap.xml'];
-  const content = (name: string) => render(readFileSync(new URL('./site/' + name, import.meta.url), 'utf8'));
+  const content = (name: string) => name === 'sitemap.xml'
+    ? renderPublicSitemap(siteUrl, SUPPORTED_LANGUAGES)
+    : render(readFileSync(new URL('./site/' + name, import.meta.url), 'utf8'));
   return {
     name: 'site-metadata',
     transformIndexHtml: { order: 'pre', handler: render },

@@ -1,3 +1,5 @@
+import { campaignFrom } from '@so/shared';
+import { firstTouchCampaign } from '../lib/campaign';
 import { WEB_APP_URL } from '../lib/deployment';
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -37,6 +39,7 @@ export function GoogleCallbackPage() {
     let isNativeCallback = false;
     let platform: NativePlatform = 'android';
     let linkCode: string | undefined;
+    let campaign = firstTouchCampaign();
     try {
       const stateRaw = hashParams.get('state') || '';
       const stateObj = JSON.parse(stateRaw);
@@ -44,6 +47,7 @@ export function GoogleCallbackPage() {
       // p: the app's platform (since 2026-11-19); older states fall back to this browser's device
       if (isNativeCallback) platform = nativePlatform(stateObj.p);
       linkCode = stateObj.lc || undefined;
+      if (isNativeCallback) campaign = campaignFrom(stateObj.campaign);
     } catch {
       // Web flow
     }
@@ -78,7 +82,7 @@ export function GoogleCallbackPage() {
     }
 
     mutateRef.current(
-      { idToken, ...(linkCode ? { linkCode } : {}) },
+      { idToken, linkCode, campaign },
       {
         onSuccess(data) {
           if (!data?.accessToken) { goError(); return; }

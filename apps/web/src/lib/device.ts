@@ -1,3 +1,4 @@
+import type { Campaign } from '@so/shared';
 import { ANDROID_APP_PACKAGE, IOS_STORE_ID, WEB_APP_URL, TELEGRAM_BOT_URL } from './deployment';
 /*
  * Device-aware entry for the site: the native way in first, Telegram second, the rest as text.
@@ -86,19 +87,26 @@ export interface StoreLinks {
  * Play Install Referrer API), Telegram a start parameter. Apple only records the campaign token (ct) in App Store
  * Connect analytics; it does not reach the app after install.
  */
-export function storeLinks(invite?: string | null): StoreLinks {
-  if (!invite) return { ...STORE_URL };
-  const ref = `invite_${encodeURIComponent(invite)}`;
-  return {
-    play: `${STORE_URL.play}&referrer=${ref}`,
-    appstore: `${STORE_URL.appstore}?ct=${ref}`,
-    telegram: `${STORE_URL.telegram}?start=${ref}`,
-  };
+export function storeLinks(invite?: string | null, campaign?: Campaign): StoreLinks {
+  const links = { ...STORE_URL };
+  const ref = invite ? 'invite_' + encodeURIComponent(invite) : '';
+  if (ref) {
+    links.appstore += '?ct=' + ref;
+    links.telegram += '?start=' + ref;
+  }
+  if (campaign) {
+    const referrer = new URLSearchParams({ ...campaign, so_campaign: '1' });
+    if (invite) referrer.set('invite', invite);
+    links.play += '&referrer=' + encodeURIComponent(referrer.toString());
+  } else if (ref) {
+    links.play += '&referrer=' + ref;
+  }
+  return links;
 }
 
 /** Where `/get` (the QR on the desktop site) sends a phone: its store; anything else gets the site. */
-export function getTarget(dev: Device, invite?: string | null): string {
-  const links = storeLinks(invite);
+export function getTarget(dev: Device, invite?: string | null, campaign?: Campaign): string {
+  const links = storeLinks(invite, campaign);
   if (dev === 'android') return links.play;
   if (dev === 'ios') return links.appstore;
   return invite ? `/invite/${encodeURIComponent(invite)}` : '/';

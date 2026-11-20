@@ -1,3 +1,4 @@
+import { firstTouchCampaign } from '../../lib/campaign';
 import { TELEGRAM_BOT_USERNAME, APPLE_RETURN_URL, GOOGLE_RETURN_URL } from '../../lib/deployment';
 /*
  * Every sign-in path of the app in one hook, shared by the Login and Invite screens.
@@ -73,6 +74,27 @@ export interface UseSignInOptions {
   onCodeSent?: () => void;
   /** The website opened the Telegram bot in a new tab (no widget, no Mini App). */
   onTelegramOpened?: () => void;
+}
+
+let googleScript: Promise<void> | undefined;
+function loadGoogleSignIn(): Promise<void> {
+  if (window.google?.accounts?.id) return Promise.resolve();
+  googleScript ??= new Promise<void>((resolve, reject) => {
+    const script = document.createElement('script');
+    script.src = 'https://accounts.google.com/gsi/client';
+    script.async = true;
+    script.onload = () => {
+      if (window.google?.accounts?.id) resolve();
+      else reject(new Error('Google sign-in unavailable'));
+    };
+    script.onerror = () => reject(new Error('Google sign-in failed to load'));
+    document.head.append(script);
+  }).catch((error) => {
+    document.querySelector('script[src="https://accounts.google.com/gsi/client"]')?.remove();
+    googleScript = undefined;
+    throw error;
+  });
+  return googleScript;
 }
 
 export function useSignIn({ redirect, onCodeSent, onTelegramOpened }: UseSignInOptions = {}) {
@@ -187,7 +209,7 @@ export function useSignIn({ redirect, onCodeSent, onTelegramOpened }: UseSignInO
   const submitCode = (email: string, value: string) => {
     if (value.length !== 6 || verifyCode.isPending) return;
     setError('');
-    verifyCode.mutate({ email: email.trim(), code: value });
+    verifyCode.mutate({ email: email.trim(), code: value, campaign: firstTouchCampaign() });
   };
 
   // ---- Password: sign-in only, for accounts created with a password (only via /login?mode=password).
@@ -227,7 +249,7 @@ export function useSignIn({ redirect, onCodeSent, onTelegramOpened }: UseSignInO
     const initData = getTGInitData();
     if (initData) {
       setLoading(true);
-      telegramLoginMutation.mutate({ initData }, { onSettled: () => setLoading(false) });
+      telegramLoginMutation.mutate({ initData, campaign: firstTouchCampaign() }, { onSettled: () => setLoading(false) });
       return;
     }
     const login = widgetBotId ? telegramLogin() : null;
@@ -235,7 +257,7 @@ export function useSignIn({ redirect, onCodeSent, onTelegramOpened }: UseSignInO
       login.auth({ bot_id: widgetBotId, request_access: 'write', lang: i18n.language }, (user) => {
         // false: the person closed the popup; nothing to report
         if (!user) return;
-        telegramWidgetMutation.mutate(user as Parameters<typeof telegramWidgetMutation.mutate>[0]);
+        telegramWidgetMutation.mutate({ ...(user as Parameters<typeof telegramWidgetMutation.mutate>[0]), campaign: firstTouchCampaign() });
       });
       return;
     }
@@ -267,15 +289,50 @@ export function useSignIn({ redirect, onCodeSent, onTelegramOpened }: UseSignInO
       setError(t('login.failedWith', { provider: 'Google' }), 'PROVIDER_FAILED');
     },
   });
-  /** Hidden container for the GIS fallback button (desktop, when One Tap is not shown). */
-  const googleBtnRef = useRef<HTMLDivElement>(null);
   const gisInitialized = useRef(false);
+  const [googleButtonRequested, setGoogleButtonRequested] = useState(false);
+  const { mutate: loginWithGoogle } = googleLoginMutation;
 
   const handleGoogleCredential = useCallback((response: GoogleCredentialResponse) => {
     setLoading(true);
     setError('');
-    googleLoginMutation.mutate({ idToken: response.credential }, { onSettled: () => setLoading(false) });
-  }, [googleLoginMutation]);
+    loginWithGoogle({ idToken: response.credential, campaign: firstTouchCampaign() }, { onSettled: () => setLoading(false) });
+  }, [loginWithGoogle, setError]);
+
+  const initializeGoogle = useCallback((google: GoogleAccountsId) => {
+    if (!GOOGLE_CLIENT_ID || gisInitialized.current) return;
+    google.initialize({ client_id: GOOGLE_CLIENT_ID, callback: handleGoogleCredential, use_fedcm_for_prompt: true });
+    gisInitialized.current = true;
+  }, [handleGoogleCredential]);
+
+  const usesGoogleScript = !inTelegram && !Capacitor.isNativePlatform() && detectDevice() === 'desktop';
+  const googleLoadError = t('signin.errFailed');
+  const googleBtnRef = useCallback((container: HTMLDivElement | null) => {
+    if (!container || !usesGoogleScript) return;
+    if (!googleButtonRequested) {
+      // The Google option is visible even while the server's methods query is pending.
+      void loadGoogleSignIn().catch(() => undefined);
+      return;
+    }
+
+    let mounted = true;
+    void loadGoogleSignIn().then(() => {
+      const google = window.google?.accounts?.id;
+      if (!mounted || !google) return;
+      initializeGoogle(google);
+      google.renderButton(container, {
+        type: 'standard', theme: 'outline', size: 'large', width: container.offsetWidth || 320, text: 'continue_with',
+      });
+    }).catch(() => {
+      if (!mounted) return;
+      setGoogleButtonRequested(false);
+      setError(googleLoadError);
+    });
+    return () => {
+      mounted = false;
+      container.replaceChildren();
+    };
+  }, [usesGoogleScript, googleButtonRequested, initializeGoogle, googleLoadError, setError]);
 
   const handleGoogle = useCallback(() => {
     setError('');
@@ -295,15 +352,14 @@ export function useSignIn({ redirect, onCodeSent, onTelegramOpened }: UseSignInO
         scope: 'openid email profile',
         nonce: Math.random().toString(36).slice(2),
         // p: the callback page sends iOS back by the URL scheme and Android by an intent:// link
-        state: JSON.stringify({ native: '1', p: Capacitor.getPlatform() }),
+        state: JSON.stringify({ native: '1', p: Capacitor.getPlatform(), campaign: firstTouchCampaign() }),
       });
       Browser.open({ url: `https://accounts.google.com/o/oauth2/v2/auth?${params.toString()}` });
       return;
     }
     // Mobile browsers (iOS Safari especially): the GIS popup hangs after the account is picked,
     // so use a full-page redirect; GoogleCallbackPage finishes sign-in and restores the invite
-    if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)
-      || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)) {
+    if (!usesGoogleScript) {
       savePendingSos(sosId);
       markLoginMethod('google');
       const params = new URLSearchParams({
@@ -317,29 +373,14 @@ export function useSignIn({ redirect, onCodeSent, onTelegramOpened }: UseSignInO
       window.location.href = `https://accounts.google.com/o/oauth2/v2/auth?${params.toString()}`;
       return;
     }
-    if (!window.google?.accounts?.id) {
-      setError(t('signin.errFailed'));
-      return;
-    }
     markLoginMethod('google');
-    if (!gisInitialized.current) {
-      window.google.accounts.id.initialize({ client_id: GOOGLE_CLIENT_ID, callback: handleGoogleCredential, use_fedcm_for_prompt: true });
-      gisInitialized.current = true;
+    setGoogleButtonRequested(true);
+    const google = window.google?.accounts?.id;
+    if (google) {
+      initializeGoogle(google);
+      google.prompt();
     }
-    // One Tap first; if it is not shown, render the standard button and click it
-    window.google.accounts.id.prompt((notification) => {
-      if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
-        const container = googleBtnRef.current;
-        if (container) {
-          container.innerHTML = '';
-          window.google!.accounts.id.renderButton(container, {
-            type: 'standard', theme: 'outline', size: 'large', width: container.offsetWidth || 320, text: 'continue_with',
-          });
-          container.querySelector<HTMLElement>('[role="button"]')?.click();
-        }
-      }
-    });
-  }, [t, inTelegram, handleGoogleCredential, sosId]);
+  }, [t, inTelegram, usesGoogleScript, initializeGoogle, sosId, setError]);
 
   // ---- Apple ----
   const handleApple = useCallback(() => {
@@ -352,8 +393,7 @@ export function useSignIn({ redirect, onCodeSent, onTelegramOpened }: UseSignInO
     savePendingSos(sosId);
     markLoginMethod('apple');
     // state.p tells the backend where to bounce the result; inv carries the invite through the round-trip
-    const stateObj: Record<string, string> = { p: Capacitor.getPlatform() };
-    if (pendingInviteToken) stateObj.inv = pendingInviteToken;
+    const stateObj = { p: Capacitor.getPlatform(), inv: pendingInviteToken || undefined, campaign: firstTouchCampaign() };
     const params = new URLSearchParams({
       response_type: 'code id_token',
       response_mode: 'form_post',
@@ -366,7 +406,7 @@ export function useSignIn({ redirect, onCodeSent, onTelegramOpened }: UseSignInO
     const url = `https://appleid.apple.com/auth/authorize?${params.toString()}`;
     if (Capacitor.isNativePlatform()) Browser.open({ url });
     else window.location.href = url;
-  }, [t, inTelegram, pendingInviteToken, sosId]);
+  }, [t, inTelegram, pendingInviteToken, sosId, setError]);
 
   // ---- Which buttons, in which order ----
   const device = detectDevice();
@@ -395,6 +435,7 @@ export function useSignIn({ redirect, onCodeSent, onTelegramOpened }: UseSignInO
     start,
     emailCodes,
     googleBtnRef,
+    googleButtonRequested,
     busy,
     error,
     errorCode,

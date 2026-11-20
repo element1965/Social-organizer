@@ -33,7 +33,7 @@ export const resources = {
   cs, ro, th, vi, id, sr, he, be,
 } as const;
 
-export { languageNames, SUPPORTED_LANGUAGES, RTL_LANGUAGES, type SupportedLanguage } from './languages.js';
+export { languageNames, linkLanguage, SUPPORTED_LANGUAGES, RTL_LANGUAGES, type SupportedLanguage } from './languages.js';
 
 export {
   en, ru, es, fr, de, pt, it, zh, ja, ko,

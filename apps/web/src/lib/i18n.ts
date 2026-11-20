@@ -1,6 +1,6 @@
 import i18n, { type BackendModule } from 'i18next';
 import { initReactI18next } from 'react-i18next';
-import { RTL_LANGUAGES } from '@so/i18n/languages';
+import { linkLanguage, RTL_LANGUAGES } from '@so/i18n/languages';
 
 /**
  * Locales are loaded on demand: each `locales/<lang>.json` becomes its own chunk, and the app downloads only the
@@ -17,7 +17,24 @@ for (const [path, load] of Object.entries(loaders)) {
 /** Languages that have a locale file, in a stable order. */
 export const availableLanguages = Object.keys(localeLoaders).sort();
 
+function rememberLinkLanguage(search: string) {
+  const linked = linkLanguage(new URLSearchParams(search).get('lang'));
+  if (linked) {
+    try { localStorage.setItem('language', linked); } catch { /* storage unavailable */ }
+  }
+  return linked;
+}
+
+export function applyLinkLanguage(search: string) {
+  const linked = rememberLinkLanguage(search);
+  if (linked && linked !== i18n.language) void i18n.changeLanguage(linked);
+}
+
 function detectLanguage(): string {
+  // An explicit link takes precedence and is remembered like the language picker.
+  const linked = rememberLinkLanguage(window.location.search);
+  if (linked) return linked;
+
   // 1. Explicit user choice persisted in localStorage
   try {
     const stored = localStorage.getItem('language');

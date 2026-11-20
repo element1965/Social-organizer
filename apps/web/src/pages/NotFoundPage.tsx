@@ -12,7 +12,7 @@ import { useAuth } from '../hooks/useAuth';
 /**
  * An address the app does not know. Signed in: the shell stays (tabs or sidebar) and one button leads to the
  * Circle. A guest gets the public frame with one button to the home page. Old addresses keep their own
- * redirects in App.tsx; the server still answers the app page for any path.
+ * redirects in App.tsx; the server returns this page with HTTP 404 for a missing route.
  */
 export function NotFoundPage() {
   const isAuthenticated = useAuth((s) => s.isAuthenticated);

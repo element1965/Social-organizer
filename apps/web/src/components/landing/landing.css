@@ -62,6 +62,7 @@ html.lv-page body { background-color: rgb(var(--so-scene)); }
 
 /* the fixed scene: the sky graded towards the brand scene colour, the flock, the night */
 .lv .sky { position: fixed; inset: -10% -10% 0 -10%; z-index: 0; background: var(--lv-sky) center bottom / cover no-repeat; transform-origin: 50% 70%; will-change: transform; }
+.lv .sky .poster { width: 100%; height: 100%; object-fit: cover; object-position: center bottom; }
 .lv .night { position: fixed; inset: 0; z-index: 0; background: linear-gradient(180deg, var(--lv-night) 0%, var(--lv-scene) 55%, var(--lv-scene-2) 100%); opacity: 0; pointer-events: none; }
 /* the app's scene at the end of the story: its dark ground and centre wash, centred on you (scene.ts sets --gx, --gy) */
 .lv .graphbg { position: fixed; inset: 0; z-index: 0; opacity: 0; pointer-events: none; background: radial-gradient(circle at var(--gx, 60%) var(--gy, 50%), var(--lv-wash) 0, var(--lv-scene-2) 24vmax, var(--lv-scene) 52vmax); }
@@ -112,7 +113,7 @@ html[dir="rtl"] .lv.graph .tag.t-maria.flip { transform: translate(18px, -50%); 
 .lv .copy { max-width: 560px; }
 .lv .say { font-size: clamp(24px, 2.15vw, 32px); line-height: 1.3; letter-spacing: -.015em; }
 .lv .late { margin-top: 22px; font-size: clamp(18px, 1.35vw, 21px); line-height: 1.55; color: rgba(255, 255, 255, .84); opacity: 0; transform: translateY(10px); transition: opacity .6s, transform .6s; }
-.lv .late.on { opacity: 1; transform: none; }
+.lv:not(.scene-ready) .late, .lv .late.on { opacity: 1; transform: none; }
 .lv .late:empty { display: none; }
 .lv .beat .mono { color: var(--lv-care-scene); margin-bottom: 22px; display: block; }
 .lv .hero .copy { max-width: 640px; }
@@ -359,6 +360,36 @@ html[lang="th"] .lv :is(h1, h2) { line-height: 1.25; }
   .lv footer .wrap { grid-template-columns: 1fr; }
 }
 /* narrow phones: the logo without the name keeps the header on one line */
+@media (max-width: 600px) {
+  .lv .hud {
+    inset-inline-end: var(--gut);
+    width: fit-content;
+    max-width: calc(100% - 2 * var(--gut));
+    gap: 12px;
+    padding: 8px 10px;
+    border-radius: 10px;
+    background: var(--lv-night);
+  }
+  .lv .hud span, .lv .hud .off b { color: var(--lv-text-2); }
+  .lv .hud .off { opacity: 1; }
+  .lv .hud div { gap: 4px; min-width: 0; overflow-wrap: anywhere; }
+  .lv .stores { display: flex; flex-wrap: wrap; gap: 8px; }
+  .lv .stores .badge { min-height: 44px; padding: 6px 8px; gap: 6px; }
+  .lv .stores .badge:not(.primary) span { font-size: 13px; }
+  .lv .stores .badge:not(.primary) small { display: none; }
+  .lv .stores .badge:not(.primary) :is(img, svg) { width: 16px; height: 16px; }
+  .lv .stores .badge.primary {
+    flex: 1 0 100%;
+    min-height: 62px;
+    padding-inline: 16px;
+    gap: 12px;
+    background: var(--lv-care);
+  }
+  .lv .stores .badge.primary:hover { background: var(--lv-care-hover); }
+  .lv .stores .badge.primary span { font-size: 17px; }
+  .lv .stores .badge.primary small { opacity: 1; }
+}
+
 @media (max-width: 400px) {
   .lv .brand span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
   .lv .badge { gap: 8px; padding-inline: 10px; }
